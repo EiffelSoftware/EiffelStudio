@@ -5,8 +5,8 @@
 				<envision_pseudo_name>30</envision_pseudo_name>
 				<envision_location>Eiffel\Eiffel for .NET\Conventions</envision_location>
 				<envision_title>Naming Conventions</envision_title>
-				<studio_location/>
-				<studio_title/>
+				<studio_location></studio_location>
+				<studio_title></studio_title>
 			</toc>
 		</help>
 	</meta_data>
@@ -129,11 +129,7 @@ SYSTEM_QUEUE</class_name>
 		<heading>
 			<size>2</size>Eiffel Feature Names
 		</heading>
-		<paragraph>By convention, 
-			<link>
-				<url/>
-				<label>feature</label>
-			</link> names in Eiffel use all lower case characters, and like class names, words are separated by underscore. Also as with class names, the names of members from .NET assemblies will be represented in a form that complies with the Eiffel convention.
+		<paragraph>By convention, feature names in Eiffel use all lower case characters, and like class names, words are separated by underscore. Also as with class names, the names of members from .NET assemblies will be represented in a form that complies with the Eiffel convention.
 		</paragraph>
 		<paragraph>Let's look at some simple examples. First some feature names from the Eiffel Base Library. </paragraph>
 		<code_block>
@@ -180,11 +176,7 @@ Member of type <class_name>System.Text.StringBuilder</class_name>
 	<comment>Appends the string representation of a specified Unicode character to the end of this instance.
 </comment>
 </code_block>
-		<paragraph>The Eiffel language does not allow 
-			<link>
-				<url/>
-				<label>overloading</label>
-			</link> routine names. That means that you cannot code multiple routines with the same name in a single class. That in itself is not a problem. But it also means that to work in the .NET environment, where overloading is allowed some compromise has to be made. So, what happens is this: if you are programming in Eiffel for .NET and you are using types from a .NET assembly, those types will be presented to you as if they are Eiffel classes. We have already seen that the type and feature names will be shown in the Eiffel naming convention. With overloaded feature names, the presentation will use name augmentation to disambiguate the overloaded versions. What you see is a distinct feature name for each overloaded version. The basic feature name is augmented by adding the types of its respective arguments, separated by underscore.
+		<paragraph>The Eiffel language does not allow overloading routine names. That means that you cannot code multiple routines with the same name in a single class. That in itself is not a problem. But it also means that to work in the .NET environment, where overloading is allowed some compromise has to be made. So, what happens is this: if you are programming in Eiffel for .NET and you are using types from a .NET assembly, those types will be presented to you as if they are Eiffel classes. We have already seen that the type and feature names will be shown in the Eiffel naming convention. With overloaded feature names, the presentation will use name augmentation to disambiguate the overloaded versions. What you see is a distinct feature name for each overloaded version. The basic feature name is augmented by adding the types of its respective arguments, separated by underscore.
 		</paragraph>
 		<paragraph>Let's look again at the two 
 			<code>
@@ -212,11 +204,7 @@ Member of type <class_name>System.Text.StringBuilder</class_name>
 	<comment>Appends the string representation of a specified Unicode character to the end of this instance.</comment>
 
 </code_block>
-		<paragraph>The overloading story does not end quite yet. The .NET object model allows the overloading of constructors. This issue will be discussed in the section 
-			<link>
-				<url/>
-				<label>Constructors and Creation Procedures</label>
-			</link>.
+		<paragraph>The overloading story does not end quite yet. The .NET object model allows the overloading of constructors. This issue will be discussed in the section Constructors and Creation Procedures.
 		</paragraph>
 		<heading>
 			<size>2</size>.NET Properties as Eiffel Features
@@ -227,18 +215,10 @@ Member of type <class_name>System.Text.StringBuilder</class_name>
 				<bold>strengthen encapsulation,</bold> because values cannot be receive assignment without executing the property's "set" code
 			</item>
 			<item>
-				<bold>uniform access </bold>
-				<link>
-					<url/>
-					<label>queries</label>
-				</link> because properties are queries, but unlike previous C-style OO languages in which properties did not exist, if a property is used in programming a client class, the programmer does not need to know whether the data provided by the property was done so from memory or through computation. This leaves the producer of the class with the property the latitude to change the implementation without breaking existing clients.
+				<bold>uniform access </bold>queries because properties are queries, but unlike previous C-style OO languages in which properties did not exist, if a property is used in programming a client class, the programmer does not need to know whether the data provided by the property was done so from memory or through computation. This leaves the producer of the class with the property the latitude to change the implementation without breaking existing clients.
 			</item>
 		</list>
-		<paragraph>In Eiffel, the same goals are fulfilled, but a little differently. Simple 
-			<link>
-				<url/>
-				<label>attributes</label>
-			</link> are well-encapsulated, because the Eiffel language does not allow direct assignment to them from outside the control of their class. So any assignment of the form 
+		<paragraph>In Eiffel, the same goals are fulfilled, but a little differently. Simple attributes are well-encapsulated, because the Eiffel language does not allow direct assignment to them from outside the control of their class. So any assignment of the form 
 			<code>
 				<feature_name>x</feature_name>
 			</code>. 
@@ -247,18 +227,10 @@ Member of type <class_name>System.Text.StringBuilder</class_name>
 			</code> := 
 			<code>
 				<feature_name>y</feature_name>
-			</code> is not valid in Eiffel. To allow 
-			<link>
-				<url/>
-				<label>client</label>
-			</link> to set values of the attribute 
+			</code> is not valid in Eiffel. To allow client to set values of the attribute 
 			<code>
 				<feature_name>f</feature_name>
-			</code>, the 
-			<link>
-				<url/>
-				<label>producer</label>
-			</link> of the class of which 
+			</code>, the producer of the class of which 
 			<code>
 				<feature_name>x</feature_name>
 			</code> is an instance would have built a command (a " 
@@ -299,11 +271,7 @@ Member of type <class_name>System.Text.StringBuilder</class_name>
 			</code> is an attribute or a function, that is, whether the 
 			<code>
 				<feature_name>count</feature_name>
-			</code> is returned from memory or through computation. In fact, it could be either, but that is a matter for its producer to deal with. As 
-			<link>
-				<url/>
-				<label>reuse consumers</label>
-			</link> the implementation of 
+			</code> is returned from memory or through computation. In fact, it could be either, but that is a matter for its producer to deal with. As reuse consumer the implementation of 
 			<code>
 				<feature_name>count</feature_name>
 			</code>is not important to us ...but the fact that the producer can change the implementation without causing our code to need modification is very important to us.
@@ -371,11 +339,7 @@ Member of type <class_name>System.Text.StringBuilder</class_name>
 		</heading>
 		<paragraph>In the .NET object model it is possible for certain members of a type to be "static". When these members are used, they are used without an instance of the class as a target. In essence, they are called on the class itself. </paragraph>
 		<paragraph>In Eiffel for .NET, these staticmembers will made available with feature names derivedusing the same conventions as ordinary features, but applying them will be a bit different. </paragraph>
-		<paragraph>There is not a concept analogous to static members in Eiffel. The model for object-oriented computation in Eiffel specifies that whenever 
-			<link>
-				<url/>
-				<label>feature application</label>
-			</link> takes place, there must be an object, i.e. an instance of some class, that serves as a target.
+		<paragraph>There is not a concept analogous to static members in Eiffel. The model for object-oriented computation in Eiffel specifies that whenever feature application takes place, there must be an object, i.e. an instance of some class, that serves as a target.
 		</paragraph>
 		<paragraph>In order to use .NET types that include static members, a special syntax has been added into Eiffel for .NET. The following example uses this syntax to call a static function:</paragraph>
 		<code_block>

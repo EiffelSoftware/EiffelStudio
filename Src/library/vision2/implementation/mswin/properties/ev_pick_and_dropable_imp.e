@@ -282,17 +282,11 @@ feature -- Implementation
 							-- Return list item at cursor position.
 					if tree_item /= Void then
 						if not tree_item.interface.drop_actions.empty then
-				-- If the cursor is over an item and the item is a
-				-- pick and drop target then we set the target id to that of the
-				-- item, as the items are conceptually 'above' the list and so
-				-- if a list and one of its items are pnd targets then the 
-				-- item should recieve.
 							current_target_object_id :=
 								tree_item.interface.object_id
 						end
 					end
 				end
-
 
 				mcl ?= current_target
 				if mcl /= Void then
@@ -306,11 +300,6 @@ feature -- Implementation
 							-- Return list item at cursor position.
 					if mcl_item /= Void then
 						if not mcl_item.interface.drop_actions.empty then
-				-- If the cursor is over an item and the item is a
-				-- pick and drop target then we set the target id to that of the
-				-- item, as the items are conceptually 'above' the list and so
-				-- if a list and one of its items are pnd targets then the 
-				-- item should recieve.
 							current_target_object_id :=
 								mcl_item.interface.object_id
 						end
@@ -491,6 +480,9 @@ end -- class EV_PICK_AND_DROPABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.22  2000/03/30 17:07:02  rogers
+--| Removed duplicate comments in pointed_target.
+--|
 --| Revision 1.21  2000/03/27 20:59:15  pichery
 --| Added "heavy" mouse capture notion in pick&drop mechanism.
 --| This is NOW the default mouse capture method. The old method

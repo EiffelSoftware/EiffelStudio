@@ -1039,6 +1039,9 @@ rt_public char *wclass_name(void)
 
 rt_private void write_long(char *where, long int value)
 {
+	/* Note: This body has been copied to `debug.c' for the update
+	 * of once functions for supermelted code, so don't forget to update
+	 * `debug.c' accordingly when modifying this routine */
 	/* Write 'value' in possibly mis-aligned address 'where' */
 
 	union {

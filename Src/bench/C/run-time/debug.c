@@ -125,6 +125,9 @@ rt_private void call_up(int level);					/* Move cursor upwards */
 int breakpoint_number = 0;
 int recorded_breakpoint_number = 0;
 
+/* Updating once supermelted routines */
+rt_private void write_long(char *where, long int value);
+
 #ifndef lint
 rt_private char *rcsid =
 	"$Id$";
@@ -1074,6 +1077,17 @@ rt_public void drecord_bc(int body_idx, int body_id, char *addr)
 
 	dispatch[body_idx] = body_id;		/* Set-up indirection table */
 
+	if (*addr) {
+		/* It's a once routine
+		 * Assign a key to it */
+		write_long (addr + 1, EIF_once_count);
+		EIF_once_count++;	/* Increment dynamically the number of onces */
+			/* Allocate room for once values */
+		EIF_once_values = (char **) realloc ((void *) EIF_once_values, EIF_once_count * sizeof (char *));
+			/* needs malloc; crashes otherwise on some pure C-ansi compiler (SGI)*/
+		if (EIF_once_values == (char **) 0) /* Out of memory */
+			enomem(); /* Raise an out-of memory exceptions */
+	}
 }
 
 /*
@@ -1254,4 +1268,23 @@ rt_public struct item *docall(EIF_CONTEXT register uint32 body_id, register int 
 	return opop();				/* Return the result of the once function */
 								/* and remove it from the operational stack */
 	EIF_END_GET_CONTEXT
+}
+
+rt_private void write_long(char *where, long int value)
+{
+	/* Routine taken from `update.c' and this one should be modified in relation
+	 * to the content of `update.c' */
+	/* Write 'value' in possibly mis-aligned address 'where' */
+
+	union {
+		char xtract[sizeof(long)];
+		long value;
+	} xlong;
+	register1 char *p = (char *) &xlong;
+	register2 int i;
+
+	xlong.value = value;
+
+	for (i = 0; i < sizeof(long); i++)
+		where [i] = *p++;
 }

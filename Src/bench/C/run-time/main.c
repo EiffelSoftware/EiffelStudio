@@ -110,11 +110,11 @@ rt_public void failure(void);					/* The Eiffel exectution failed */
 rt_private Signal_t emergency(int sig);			/* Emergency exit */
 rt_public unsigned TIMEOUT;     /* Time out for interprocess communications */
 
-long EIF_once_count;	/* Total nr. of once routines */
-long EIF_bonce_count;	/* Nr. of once routines in bytecode */
+long EIF_once_count = 0;	/* Total nr. of once routines */
+long EIF_bonce_count = 0;	/* Nr. of once routines in bytecode */
 
 #ifndef EIF_THREADS
-char **EIF_once_values;
+char **EIF_once_values = (char **) 0;	/* Array to save the value of each computed once */
 #endif
 
 char starting_working_directory [MAX_PATH];	/* Store the working directory during the session, */
@@ -131,14 +131,17 @@ rt_public void once_init (void)
 	   This also assigns an offset to each module. The
 	   sum of the module offset and a once routines own
 	   key index gives the index in 'once_keys' */
+	/* Addition: we also the previous value of EIF_once_count to
+	 * EIF_once_count, since some once routines could have been
+	 * supermelted */
 
-	EIF_once_count = EIF_bonce_count;
+	EIF_once_count = EIF_once_count + EIF_bonce_count;
 
 	egc_system_mod_init ();
 
 	/* Allocate room for once values */
 
-	EIF_once_values = (char **) malloc (EIF_once_count * sizeof (char *));
+	EIF_once_values = (char **) realloc (EIF_once_values, EIF_once_count * sizeof (char *));
 			/* needs malloc; crashes otherwise on some pure C-ansi compiler (SGI)*/
 	if (EIF_once_values == (char **) 0) /* Out of memory */
 		enomem();

@@ -37,15 +37,6 @@ feature -- Access
 			end
 		end
 
-feature {EV_CONTAINER_IMP} -- Implementation
-
---	on_draw (struct: WEL_DRAW_ITEM_STRUCT) is
---			-- All the items containers contain items which are
---			-- pixmap container, then, we need this feature to
---			-- call the `on_draw' feature of the items.
---		do
---		end
-
 end -- class EV_ITEM_HOLDER_IMP
 
 --|----------------------------------------------------------------

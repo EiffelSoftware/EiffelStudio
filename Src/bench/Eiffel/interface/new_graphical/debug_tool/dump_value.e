@@ -28,9 +28,16 @@ inherit
 			{NONE} all
 		end
 
+	DEBUG_OUTPUT_SYSTEM_I		
+		export
+			{NONE} all
+		end
+
 create
 	make_boolean, make_character, make_integer, make_integer_64, make_real,
 	make_double, make_pointer, make_object,	make_manifest_string
+	,
+	make_object_for_dotnet
 
 feature -- Initialization
 
@@ -39,7 +46,7 @@ feature -- Initialization
 		do
 			value_boolean := value
 			type := Type_boolean
-			dynamic_type := dtype
+			dynamic_class := dtype
 		ensure
 			type /= Type_unknown
 		end
@@ -49,7 +56,7 @@ feature -- Initialization
 		do
 			value_character := value
 			type := Type_character
-			dynamic_type := dtype
+			dynamic_class := dtype
 		ensure
 			type /= Type_unknown
 		end
@@ -59,7 +66,7 @@ feature -- Initialization
 		do
 			value_integer := value
 			type := Type_integer
-			dynamic_type := dtype
+			dynamic_class := dtype
 		ensure
 			type /= Type_unknown
 		end
@@ -69,7 +76,7 @@ feature -- Initialization
 		do
 			value_integer_64 := value
 			type := Type_integer_64
-			dynamic_type := dtype
+			dynamic_class := dtype
 		ensure
 			type /= Type_unknown
 		end
@@ -79,7 +86,7 @@ feature -- Initialization
 		do
 			value_real := value
 			type := Type_real
-			dynamic_type := dtype
+			dynamic_class := dtype
 		ensure
 			type /= Type_unknown
 		end
@@ -89,7 +96,7 @@ feature -- Initialization
 		do
 			value_double := value
 			type := Type_double
-			dynamic_type := dtype
+			dynamic_class := dtype
 		ensure
 			type /= Type_unknown
 		end
@@ -99,7 +106,7 @@ feature -- Initialization
 		do
 			value_pointer := value
 			type := Type_pointer
-			dynamic_type := dtype
+			dynamic_class := dtype
 		ensure
 			type /= Type_unknown
 		end
@@ -109,7 +116,7 @@ feature -- Initialization
 		do
 			value_object := value
 			type := Type_object
-			dynamic_type := dtype
+			dynamic_class := dtype
 		ensure
 			type /= Type_unknown
 		end
@@ -119,11 +126,56 @@ feature -- Initialization
 		do
 			value_object := value
 			type := Type_string
-			dynamic_type := dtype
+			dynamic_class := dtype
 		ensure
 			type /= Type_unknown
 		end
 
+feature -- dotnet
+
+	is_dotnet_value: BOOLEAN
+	
+	is_external_type: BOOLEAN
+			-- Is the value corresponding to an external type ?
+			-- (ex: like SystemObject for dotnet)
+
+	value_dotnet: ICOR_DEBUG_VALUE
+
+	value_object_dotnet: ICOR_DEBUG_OBJECT_VALUE
+	
+	value_class_token: INTEGER
+	
+	value_frame_dotnet: ICOR_DEBUG_FRAME
+
+	make_object_for_dotnet (icd_frame: ICOR_DEBUG_FRAME; icd_value: ICOR_DEBUG_VALUE; 
+			icd_object: ICOR_DEBUG_OBJECT_VALUE; a_value_class_token: INTEGER; value: STRING; dtype: CLASS_TYPE; 
+			a_b_is_null: BOOLEAN; a_b_is_external_type: BOOLEAN) is
+			-- make a object item initialized to `value'
+		do
+			is_dotnet_value := True
+			value_dotnet := icd_value
+			value_frame_dotnet := icd_frame
+			value_object_dotnet := icd_object
+			value_class_token := a_value_class_token
+			if a_b_is_null then
+				value_object := Void
+			else
+				value_object := value
+			end
+			type := Type_object
+			
+			if dtype /= Void then
+				dynamic_class_type := dtype
+				dynamic_class := dtype.associated_class
+				debug ("DEBUGGER_EIFNET_DATA")
+					print ("[>] dyn_class_type = " + dtype.full_il_type_name + "%N")
+				end
+			end
+			is_external_type := a_b_is_external_type
+		ensure
+			type /= Type_unknown
+		end
+		
 feature -- Status report
 
 	same_as (other: DUMP_VALUE): BOOLEAN is
@@ -165,6 +217,8 @@ feature -- Status report
 
 	has_formatted_output: BOOLEAN is
 			-- Does `Current' have an associated string representation?
+			-- yes if it is a STRING, or conform to STRING
+			-- or conform to DEBUG_OUTPUT
 		local
 			dc: CLASS_C
 		do
@@ -172,13 +226,17 @@ feature -- Status report
 				Result := True
 			elseif type = Type_object and not is_void then
 				if Eiffel_system.string_class.is_compiled then
-					if dynamic_type.simple_conform_to (Eiffel_system.string_class.compiled_class) then
+					if 
+--						dynamic_class /= Void 
+--						and then 
+						dynamic_class.simple_conform_to (Eiffel_system.string_class.compiled_class) 
+					then
 						Result := True
 					else
 						dc := debuggable_class
-						Result := dynamic_type /= Void and then
+						Result := --dynamic_class /= Void and then
 									dc /= Void and then
-									dynamic_type.simple_conform_to (dc)
+									dynamic_class.simple_conform_to (dc)
 					end
 				end
 			end
@@ -186,6 +244,29 @@ feature -- Status report
 				print ("DUMP_VALUE.has_formatted_output is ")
 				print (Result)
 				print ("%N")
+			end
+		end
+
+	string_representation_for_dotnet (min, max: INTEGER): STRING is
+		require
+			object_with_debug_output: address /= Void and has_formatted_output	
+			dotnet: is_dotnet_value
+		local
+			sc: CLASS_C
+			l_conform_to_string: BOOLEAN
+			l_app_exec_dotnet: APPLICATION_EXECUTION_DOTNET
+		do
+			sc := Eiffel_system.string_class.compiled_class
+			l_conform_to_string := dynamic_class /= sc and then dynamic_class.simple_conform_to (sc)
+			l_app_exec_dotnet := Application.imp_dotnet
+			if dynamic_class = sc or l_conform_to_string then
+				if value_object_dotnet = Void then
+					Result := "Void"
+				else
+					Result := l_app_exec_dotnet.string_value_from_string_class_object_value (value_object_dotnet)
+				end					
+			else
+				Result := l_app_exec_dotnet.debug_output_value_from_object_value (value_dotnet, value_object_dotnet, value_frame_dotnet, dynamic_class_type)
 			end
 		end
 
@@ -198,6 +279,7 @@ feature -- Status report
 			f: E_FEATURE
 			expr: EB_EXPRESSION
 			obj: DEBUGGED_OBJECT
+			l_attributes: LIST [ABSTRACT_DEBUG_VALUE]
 			cv_spec: SPECIAL_VALUE
 			int_value: DEBUG_VALUE [INTEGER]
 			l_count: INTEGER
@@ -206,65 +288,71 @@ feature -- Status report
 			l_area_name, l_count_name: STRING
 		do
 			debug ("debug_recv")
-				print ("DUMP_VALUE.string_representation of " + dynamic_type.name_in_upper + "%N")
+				print ("DUMP_VALUE.string_representation of " + dynamic_class.name_in_upper + "%N")
 			end
-			sc := Eiffel_system.string_class.compiled_class
-			l_conform_to_string := dynamic_type /= sc and then dynamic_type.simple_conform_to (sc)
-			if dynamic_type = sc or l_conform_to_string then
-				if l_conform_to_string then
-						-- Take name of `area' and `count' from STRING in descendant version.
-					f := sc.feature_with_name (area_name).ancestor_version (dynamic_type)
-					l_area_name := f.name
-					f := sc.feature_with_name (count_name).ancestor_version (dynamic_type)
-					l_count_name := f.name
-				else
-					l_area_name := area_name
-					l_count_name := count_name
-				end
-				create obj.make (value_object, min, max)
-				from
-					obj.attributes.start
-				until
-					obj.attributes.after
-				loop
-					cv_spec ?= obj.attributes.item
-					if cv_spec /= Void and then cv_spec.name.is_equal (l_area_name) then
-						Result := cv_spec.raw_string_value
-						Result.prune_all ('%U')
+				
+			if is_dotnet_value then
+				Result := string_representation_for_dotnet (min, max)
+			else
+				sc := Eiffel_system.string_class.compiled_class
+				l_conform_to_string := dynamic_class /= sc and then dynamic_class.simple_conform_to (sc)
+				if dynamic_class = sc or l_conform_to_string then
+					if l_conform_to_string then
+							-- Take name of `area' and `count' from STRING in descendant version.
+						f := sc.feature_with_name (area_name).ancestor_version (dynamic_class)
+						l_area_name := f.name
+						f := sc.feature_with_name (count_name).ancestor_version (dynamic_class)
+						l_count_name := f.name
 					else
-						int_value ?= obj.attributes.item					
-						if int_value /= Void and then int_value.name.is_equal (l_count_name) then
-							l_count := int_value.value
+						l_area_name := area_name
+						l_count_name := count_name
+					end
+					create obj.make (value_object, min, max)
+					l_attributes := obj.attributes
+					from
+						l_attributes.start
+					until
+						l_attributes.after
+					loop
+						cv_spec ?= l_attributes.item
+						if cv_spec /= Void and then cv_spec.name.is_equal (l_area_name) then
+							Result := cv_spec.raw_string_value
+							Result.prune_all ('%U')
+						else
+							int_value ?= l_attributes.item					
+							if int_value /= Void and then int_value.name.is_equal (l_count_name) then
+								l_count := int_value.value
+							end
+						end
+						l_attributes.forth
+					end
+						-- At the point `area' and `count' from STRING should have been found in
+						-- STRING object.
+					check
+						count_attribute_found: True
+						area_attribute_found: True
+					end
+					if Result /= Void then
+							-- We now have retrieved the full `area' of STRING object. Let's check
+							-- if we need to display the complete area, or just part of it.
+						Result.keep_head (l_count.min (Result.count))
+						
+							-- If what is displayed is less than the count of the STRING object,
+							-- we display `...' to show that there is something more.
+						if l_count > (max - min + 1) then
+							Result.append ("...")
 						end
 					end
-					obj.attributes.forth
-				end
-					-- At the point `area' and `count' from STRING should have been found in
-					-- STRING object.
-				check
-					count_attribute_found: True
-					area_attribute_found: True
-				end
-				if Result /= Void then
-						-- We now have retrieved the full `area' of STRING object. Let's check
-						-- if we need to display the complete area, or just part of it.
-					Result.keep_head (l_count.min (Result.count))
-					
-						-- If what is displayed is less than the count of the STRING object,
-						-- we display `...' to show that there is something more.
-					if l_count > (max - min + 1) then
-						Result.append ("...")
-					end
-				end
-			else
-				create expr.make_with_object (
-					create {DEBUGGED_OBJECT}.make_with_class (value_object, debuggable_class),
-					debuggable_name)
-				expr.evaluate
-				if expr.error_message = Void and then not expr.final_result_value.is_void then
-					Result := expr.final_result_value.string_representation (min, max)
 				else
-					Result := expr.error_message
+					create expr.make_with_object (
+						create {DEBUGGED_OBJECT}.make_with_class (value_object, debuggable_class),
+						debuggable_name)
+					expr.evaluate
+					if expr.error_message = Void and then not expr.final_result_value.is_void then
+						Result := expr.final_result_value.string_representation (min, max)
+					else
+						Result := expr.error_message
+					end
 				end
 			end
 			if Result = Void then
@@ -299,6 +387,7 @@ feature -- Status report
 
 	full_output: STRING is
 			-- Complete output, including string representation.
+			--| `output_value' = "This is a string"
 		do
 			Result := clone (output_value)
 			if type /= type_string and has_formatted_output then
@@ -364,26 +453,35 @@ feature -- Access
 
 	type_and_value: STRING is
 			-- String representation of the type and value of `Current'.
+			--| CLASS_NAME = `full_output'
 		do
 			create Result.make (100)
-			if dynamic_type /= Void then
-				Result.append (dynamic_type.name_in_upper)
+			if dynamic_class /= Void then
+				Result.append (dynamic_class.name_in_upper)
 				if type = Type_object then
 					Result.append_character (' ')
 				else
 					Result.append_character ('=')
 				end
 				Result.append (full_output)
+				if Application.is_dotnet and then is_external_type then
+					Result.append (" -> Token=0x" + value_class_token.to_hex_string)
+				end
 			elseif is_void then
 				Result.append ("NONE = Void")
-			else
-				Result.append ("ANY ")
+			else		
+				Result.append ("ANY ")			
 				Result.append (full_output)
 			end
 		end
 
 	output_value: STRING is
 			-- String representation of the value of `Current'.
+			--| True
+			--| '/123/ :'C'
+			--| 123
+			--| [0x12345678]
+			--| Void
 		do
 			inspect type
 			when Type_boolean then
@@ -437,8 +535,12 @@ feature -- Access
 			end
 		end
 
-	dynamic_type: CLASS_C
-			-- Dynamic type of `Current'. Void iff `is_void'.
+	dynamic_class: CLASS_C
+			-- Dynamic Class of `Current'. Void iff `is_void'.
+			
+	dynamic_class_type: CLASS_TYPE
+			-- Dynamic Class Type of `Current'. Void iff `is_void'.
+			-- Used only in dotnet context (for now)
 	
 	is_void: BOOLEAN is
 			-- Is `Current' a Void reference?
@@ -451,8 +553,6 @@ feature -- Access
 		do
 			Result := type /= Type_object and type /= Type_string
 		end
-
-feature -- Inapplicable
 
 feature {DUMP_VALUE} -- Implementation
 
@@ -470,63 +570,8 @@ feature {DUMP_VALUE} -- Implementation
 	value_object	: STRING -- string standing for the address of the object if type=Type_object, or 
 							 -- String if type=Type_string
 
-feature {NONE} -- Implementation
-
-	debuggable_class: CLASS_C is
-			-- Class that provides the `debug_output' interface, if any.
-		local
-			cis: LIST [CLASS_I]
-			lc: CLASS_C
-		do
-			lc := internal_debuggable_class.item
-			if lc = Void then
-				cis := Eiffel_universe.compiled_classes_with_name (debuggable_name)
-				if not cis.is_empty then
-					Result := cis.first.compiled_class
-				end
-				internal_debuggable_class.put (Result)
-			elseif not lc.is_valid then
-				cis := Eiffel_universe.compiled_classes_with_name (debuggable_name)
-				if not cis.is_empty then
-					Result := cis.first.compiled_class
-				end
-				internal_debuggable_class.put (Result)
-					-- The DEBUG_OUTPUT class has changed. Reset the debug feature.
-				Internal_debug_output_feature.put (Void)
-			else
-				Result := lc
-			end
-		end
-
-	debug_output_feature: E_FEATURE is
-			-- E_feature that corresponds to DEBUG_OUTPUT::debug_output.
-		require
-			has_formatted_output: has_formatted_output
-		do
-			if
-				internal_debug_output_feature.item = Void
-			then
-				internal_debug_output_feature.put (
-					debuggable_class.feature_with_name (debuggable_name))
-			end
-			Result := internal_debug_output_feature.item
-		end
-
-	internal_debuggable_class: CELL [CLASS_C] is
-			-- Last computed `debuggable_class'.
-		once
-			create Result.put (Void)
-		end
-
-	internal_debug_output_feature: CELL [E_FEATURE] is
-			-- Last computed `debug_output_feature'.
-		once
-			create Result.put (Void)
-		end
-
 feature {NONE} -- Private Constants
 	
-	debuggable_name: STRING is "debug_output"
 	area_name: STRING is "area"
 	count_name: STRING is "count"
 	

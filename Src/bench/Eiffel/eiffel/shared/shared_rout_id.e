@@ -3,10 +3,9 @@
 class SHARED_ROUT_ID
 
 inherit
-
 	SHARED_WORKBENCH
 
-feature {NONE}
+feature
 
 	Invariant_rout_id: ROUTINE_ID is
 		once

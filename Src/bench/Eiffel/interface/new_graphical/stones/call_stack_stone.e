@@ -52,27 +52,29 @@ feature {NONE} -- Initialization
 		require
 			level_num: level_num > 0
 		local
-			elem: CALL_STACK_ELEMENT
+			elem: EIFFEL_CALL_STACK_ELEMENT
 			prev_feat: E_FEATURE
 			cur_feat: E_FEATURE
 			l_dynclass: CLASS_C
 		do
 			level_number := level_num
-			elem := Application.status.where.i_th (level_num)
-			l_dynclass := elem.dynamic_class
-			
-			obj_make (elem.object_address, " ", l_dynclass)
-				--| We try to give the feature relative to the dynamic class.
-				--| However, in case of a Precursor, we fall back to the feature in its static context.
-			prev_feat := elem.routine
-			if l_dynclass /= Void and then l_dynclass.has_feature_table then
-				cur_feat := l_dynclass.feature_with_body_index (prev_feat.body_index)
+			elem ?= Application.status.current_call_stack.i_th (level_num)
+			if elem /= Void then
+				l_dynclass := elem.dynamic_class
+				
+				obj_make (elem.object_address, " ", l_dynclass)
+					--| We try to give the feature relative to the dynamic class.
+					--| However, in case of a Precursor, we fall back to the feature in its static context.
+				prev_feat := elem.routine
+				if l_dynclass /= Void and then l_dynclass.has_feature_table then
+					cur_feat := l_dynclass.feature_with_body_index (prev_feat.body_index)
+				end
+				if cur_feat = Void then
+						-- We are in a Precursor.
+					cur_feat := prev_feat
+				end
+				feature_make (cur_feat)
 			end
-			if cur_feat = Void then
-					-- We are in a Precursor.
-				cur_feat := prev_feat
-			end
-			feature_make (cur_feat)
 		end
  
 feature -- Access
@@ -117,7 +119,7 @@ feature -- Access
 	is_valid: BOOLEAN is
 		do
 			Result := fvalid and then Precursor {OBJECT_STONE} and then
-					Application.status.where.count >= level_number
+					Application.status.current_call_stack.count >= level_number
 		end
 
 end -- class BREAKABLE_STONE

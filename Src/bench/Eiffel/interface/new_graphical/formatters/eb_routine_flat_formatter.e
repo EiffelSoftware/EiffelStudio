@@ -68,7 +68,7 @@ feature -- Formatting
 			-- Refresh `widget'.
 		local
 			app_stopped: BOOLEAN
-			stel: CALL_STACK_ELEMENT
+			stel: EIFFEL_CALL_STACK_ELEMENT
 		do
 			if
 				displayed and then
@@ -84,7 +84,7 @@ feature -- Formatting
 				if not last_was_error then
 					app_stopped := Application.is_running and then Application.is_stopped
 					if app_stopped then
-						stel := Application.status.current_stack_element
+						stel ?= Application.status.current_call_stack_element
 						app_stopped := stel.routine.body_index = associated_feature.body_index
 					end
 					if editor.current_text /= formatted_text then

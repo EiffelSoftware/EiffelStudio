@@ -40,7 +40,7 @@ feature
 			offset: INTEGER;
 			address: STRING;
 			reason: INTEGER;
-			status: APPLICATION_STATUS_CLASSIC;	
+			l_status: APPLICATION_STATUS_CLASSIC;	
 			retry_clause: BOOLEAN
 			cse: CALL_STACK_ELEMENT_CLASSIC
 			expr: EB_EXPRESSION
@@ -55,6 +55,7 @@ feature
 				end
 					-- Physical address of objects held in object tools
 					-- may have been change...
+				update_threads_info
 				update_addresses;
 	
 				position := 1;
@@ -98,13 +99,13 @@ feature
 					io.error.put_string (name)
 					io.error.put_new_line
 				end
-				status := Application.imp_classic.status;
+				l_status := Application.imp_classic.status;
 				check
-					application_launched: status /= Void
+					application_launched: l_status /= Void
 				end
-				status.set_is_stopped (True)
-				status.set (name, address, org_type, dyn_type, offset, reason)
-				status.set_exception (last_int, last_string)
+				l_status.set_is_stopped (True)
+				l_status.set (name, address, org_type, dyn_type, offset, reason)
+				l_status.set_exception (last_int, last_string)
 
 				debug ("DEBUGGER_TRACE")
 					io.error.put_string ("STOPPED_HDLR: Finished setting status (Now calling after cmd)%N")
@@ -113,10 +114,10 @@ feature
 				if reason /= Pg_new_breakpoint then
 					need_to_stop := True
 					if reason = Pg_break then
-						status.where.extend (create {CALL_STACK_ELEMENT_CLASSIC}.dummy_make (name, 1, True, offset, address, dyn_type - 1, org_type - 1))
+						l_status.current_call_stack.extend (create {CALL_STACK_ELEMENT_CLASSIC}.dummy_make (name, 1, True, offset, address, dyn_type - 1, org_type - 1))
 						Application.set_current_execution_stack_number (1)
 							-- Test if the breakpoint is conditional, and if so, its condition.
-						cse := Application.imp_classic.status.where.i_th (1)
+						cse := l_status.current_call_stack.i_th (1)
 						expr := Application.condition (cse.routine, cse.break_index)
 						if expr /= Void then
 							expr.evaluate
@@ -130,7 +131,7 @@ feature
 					end
 					if need_to_stop then
 							-- Load the call stack.
-						Application.status.reload_call_stack
+						l_status.reload_call_stack
 						Application.set_current_execution_stack_number (Application.number_of_stack_elements)
 							-- Inspect the application's current state.
 
@@ -142,7 +143,7 @@ feature
 					else
 							-- Relaunch the application.
 						Cont_request.send_breakpoints
-						Application.status.set_is_stopped (False)
+						l_status.set_is_stopped (False)
 						cont_request.send_rqst_3 (Rqst_resume, Resume_cont, Application.interrupt_number, application.critical_stack_depth)
 					end
 				else
@@ -223,6 +224,17 @@ feature {} -- parsing features
 		end;
 
 feature {NONE} -- Implementation
+
+	update_threads_info is
+			-- Update current threads information
+		local
+			s: APPLICATION_STATUS
+		do
+			s := application.status
+			if s /= Void and then s.current_thread_id = 0 then
+				s.set_current_thread_id (1) -- FIXME jfiat: fake Thread ID ... for now
+			end
+		end		
 
 	cont_request: EWB_REQUEST is
 			-- Request to relaunch the application when needed.

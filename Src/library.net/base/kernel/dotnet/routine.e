@@ -109,7 +109,7 @@ feature -- Status report
 		do
 				--| Do not compare implementation data
 			Result := feature {SYSTEM_OBJECT}.equals (internal_operands, other.internal_operands)
-				and then open_map.equals (other.open_map)
+				and then feature {SYSTEM_OBJECT}.equals (open_map, other.open_map)
 				and then (rout_disp = other.rout_disp)
 				and then (target_object = other.target_object)
 				and then (is_cleanup_needed = other.is_cleanup_needed)

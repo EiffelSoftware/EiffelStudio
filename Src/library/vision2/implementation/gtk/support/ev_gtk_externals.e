@@ -330,7 +330,7 @@ feature {NONE} -- code in the glue library
 	
 	c_gtk_signal_connect (widget: POINTER; event: POINTER; 
 			      function: POINTER; object: POINTER; 
-			      cbd: POINTER): INTEGER is
+			      arguments: POINTER): INTEGER is
 		external "C | %"gtk_eiffel.h%""
 		end
 
@@ -422,4 +422,10 @@ feature {NONE} -- code in the glue library
 			"C | %"gtk_eiffel.h%""
 		end
 	
+feature {NONE} -- Implementation
+	
+	routine_address (routine: POINTER): POINTER is
+		do
+			Result := routine
+		end
 end

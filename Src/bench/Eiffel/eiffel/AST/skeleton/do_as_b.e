@@ -1,15 +1,17 @@
-class DO_AS
+class DO_AS_B
 
 inherit
 
-	INTERNAL_AS
-
-feature {}
-
-	begin_keyword: BASIC_TEXT is
-			-- "do" keyword
-		once
-			Result := ti_Do_keyword
+	DO_AS
+		rename
+			compound as old_compound
 		end;
 
-end
+	INTERNAL_AS_B
+		select
+			compound
+		end
+
+feature
+
+end -- class DO_AS_B

@@ -1,35 +1,38 @@
--- Abstract description of an item in the class indexing list
+indexing
 
-class INDEX_AS
+	 description:
+			"Abstract description of an item in the class indexing list. %
+			%Version for Bench.";
+	 date: "$Date$";
+	 revision: "$Revision$"
+
+class INDEX_AS_B
 
 inherit
 
-	AST_EIFFEL
+	INDEX_AS
+		redefine
+			tag, index_list
+		end;
+
+	AST_EIFFEL_B
+		undefine
+			simple_format
 		redefine
 			format
 		end
 
 feature -- Attributes
 
-	tag: ID_AS;
+	tag: ID_AS_B;
 			-- Tag of the index list
 
-	index_list: EIFFEL_LIST [ATOMIC_AS];
+	index_list: EIFFEL_LIST_B [ATOMIC_AS_B];
 			-- Indexes
 
 feature -- Initialization
 
-	set is
-			-- Yacc initialization
-		do
-			tag ?= yacc_arg (0);
-			index_list ?= yacc_arg (1);
-		ensure then
-			list_exists: index_list /= Void;
-		end;
-
-	
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: FORMAT_CONTEXT_B) is
 			-- Reconstitute text.
 		do
 			ctxt.begin;
@@ -81,4 +84,4 @@ feature -- Case storage
 			end
 		end;
 
-end
+end -- class INDEX_AS_B

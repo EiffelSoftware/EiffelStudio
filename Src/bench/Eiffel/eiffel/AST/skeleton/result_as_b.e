@@ -1,22 +1,24 @@
--- Abstract description to access to `Result'
+indexing
 
-class RESULT_AS
+	description:
+		"Abstract description to access to `Result'. %
+		%Version for Bench.";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class RESULT_AS_B
 
 inherit
 
-	ACCESS_AS
+	RESULT_AS;
+
+	ACCESS_AS_B
+		undefine
+			simple_format
 		redefine
 			type_check, byte_node, format,
 			replicate
 		end
-
-feature
-
-	set is
-			-- Yacc initialization
-		do
-			-- Do nothing
-		end;
 
 feature -- Type check, byte code and dead code removal
 
@@ -67,17 +69,12 @@ feature -- Type check, byte code and dead code removal
 			access_line.forth;
 		end;
 
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: FORMAT_CONTEXT_B) is
 		do
 			ctxt.begin;
 			ctxt.prepare_for_result;
 			ctxt.put_string (ctxt.new_types.final_name);
 			ctxt.commit;
-		end;
-
-	access_name: STRING is
-		once
-			Result := "Result"
 		end;
 
 feature -- Replication
@@ -88,5 +85,4 @@ feature -- Replication
 			Result := clone (Current)
 		end;
 
-
-end
+end -- class RESULT_AS_B

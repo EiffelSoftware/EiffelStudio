@@ -1,62 +1,60 @@
--- Abstract description of a parent
+indexing
 
-class PARENT_AS
+	description: "Abstract description of a parent. Version for Bench.";
+	date: "Date: $";
+	revision: "Revision: $"
+
+class PARENT_AS_B
 
 inherit
 
-	AST_EIFFEL
+	PARENT_AS
+		redefine
+			type, renaming, exports,
+			redefining, undefining,
+			selecting
+		end;
+
+	AST_EIFFEL_B
+		undefine
+			simple_format
 		redefine
 			format
 		end
 
 feature -- Attributes
 
-	type: CLASS_TYPE_AS;
+	type: CLASS_TYPE_AS_B;
 			-- Parent type
 
-	renaming: EIFFEL_LIST [RENAME_AS];
+	renaming: EIFFEL_LIST_B [RENAME_AS_B];
 			-- Rename clause
 
-	exports: EIFFEL_LIST [EXPORT_ITEM_AS];
+	exports: EIFFEL_LIST_B [EXPORT_ITEM_AS_B];
 			-- Exports for parent
 
-	redefining: EIFFEL_LIST [FEATURE_NAME];
+	redefining: EIFFEL_LIST_B [FEATURE_NAME_B];
 			-- Redefining clause
 
-	undefining: EIFFEL_LIST [FEATURE_NAME];
+	undefining: EIFFEL_LIST_B [FEATURE_NAME_B];
 			-- Define clause
 
-	selecting: EIFFEL_LIST [FEATURE_NAME];
+	selecting: EIFFEL_LIST_B [FEATURE_NAME_B];
 			-- Select clause
-
-feature -- Initilization
-	
-	set is
-			-- Yacc initilization
-		do
-			type ?= yacc_arg (0);
-			renaming ?= yacc_arg (1);
-			exports ?= yacc_arg (2);
-			undefining ?= yacc_arg (3);
-			redefining ?= yacc_arg (4);
-			selecting ?= yacc_arg (5);
-		ensure then
-			type_exists: type /= Void
-		end;
 
 feature -- Compiled parent computation
 
 	parent_c: PARENT_C is
 			-- Compiled version of a parent. The second pass needs:
 			-- 1. Internal name for features, that means infix/prefix
-			--    features must have a string name
+			--	features must have a string name
 			-- 2. Search table for renaming, redefining, defining and
-			--    selecting clauses (which are more efficient than
-			--    simple fixed lists for queries).
+			--	selecting clauses (which are more efficient than
+			--	simple fixed lists for queries).
 		local
 			renaming_c: EXTEND_TABLE [STRING, STRING];
-			rename_pair: RENAME_AS;
-			old_name, new_name: FEATURE_NAME;
+			rename_pair: RENAME_AS_B;
+			old_name, new_name: FEATURE_NAME_B;
 			vhrc2: VHRC2;
 			export_adapt: EXPORT_ADAPTATION;
 			s: STRING;
@@ -155,13 +153,9 @@ feature -- Compiled parent computation
 			end;
 		end;
 
-	Redef: INTEGER is 1;
-	Undef: INTEGER is 2;
-	Selec: INTEGER is 3;
-
 feature -- formatter
 
-	format (ctxt : FORMAT_CONTEXT) is
+	format (ctxt : FORMAT_CONTEXT_B) is
 			-- Reconstitute text.
 		local
 			end_to_print: BOOLEAN
@@ -243,4 +237,4 @@ feature -- formatter
 			ctxt.commit
 		end;
 
-end
+end -- class PARENT_AS_B

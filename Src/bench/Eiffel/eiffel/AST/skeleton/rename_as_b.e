@@ -1,37 +1,36 @@
--- Abstract description of a renaming pair
+indexing
 
-class RENAME_AS
+	description: "Abstract description of a renaming pair. Version for Bench.";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class RENAME_AS_B
 
 inherit
 
-	AST_EIFFEL
+	RENAME_AS
+		redefine
+			old_name, new_name
+		end;
+
+	AST_EIFFEL_B
+		undefine
+			simple_format
 		redefine
 			format
 		end
 
 feature -- Attributes
 
-	old_name: FEATURE_NAME;
+	old_name: FEATURE_NAME_B;
 			-- Name of the renamed feature
 
-	new_name: FEATURE_NAME;
+	new_name: FEATURE_NAME_B;
 			-- New name
-
-feature -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			old_name ?= yacc_arg (0);
-			new_name ?= yacc_arg (1);
-		ensure then
-			old_name_exists: old_name /= Void;
-			new_name_exists: new_name /= Void;
-		end;
 
 feature -- Formatter
 
-	format (ctxt : FORMAT_CONTEXT) is
+	format (ctxt : FORMAT_CONTEXT_B) is
 			-- Reconstitute text.
 		do
 			ctxt.begin;
@@ -43,4 +42,4 @@ feature -- Formatter
 			ctxt.commit
 		end;
 	
-end
+end -- class RENAME_AS_B

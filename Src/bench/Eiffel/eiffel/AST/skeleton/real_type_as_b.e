@@ -1,10 +1,19 @@
--- Node for type REAL
+indexing
 
-class REAL_TYPE_AS
+	description: "Node for type REAL. Version for Bench.";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class REAL_TYPE_AS_B
 
 inherit
 
-	BASIC_TYPE
+	REAL_TYPE_AS
+		undefine
+			is_deep_equal, same_as
+		end;
+
+	BASIC_TYPE_B
 
 feature
 
@@ -21,7 +30,4 @@ feature
 			!!Result;
 		end;
 
-	dump: STRING is "REAL";
-			-- Dumped trace
-
-end
+end -- class REAL_TYPE_AS_B

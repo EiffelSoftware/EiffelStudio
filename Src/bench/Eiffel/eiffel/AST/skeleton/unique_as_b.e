@@ -1,29 +1,26 @@
--- Description of a unique value
+indexing
 
-class UNIQUE_AS
+	description: "Description of a unique value. Version for Bench.";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class UNIQUE_AS_B
 
 inherit
 
-	ATOMIC_AS
-		redefine
-			is_unique, type_check, format
-		end
-
-feature -- Conveniences
-
-	is_unique: BOOLEAN is
-			-- Is the terminal a unique constant ?
-		do
-			Result := True;
+	UNIQUE_AS
+		undefine
+			string_value
 		end;
 
-feature -- Initialization
+	ATOMIC_AS_B
+		undefine
+			is_unique, simple_format
+		redefine
+			type_check, format
+		end
 
-	set is
-			-- Yacc initialization
-		do
-			-- Do nothing
-		end; -- set
+feature
 
 	type_check is
 			-- Type check a unique type
@@ -31,9 +28,9 @@ feature -- Initialization
 			context.put (Integer_type);
 		end;
 
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: FORMAT_CONTEXT_B) is
 		do
 			ctxt.put_text_item (ti_Unique_keyword);
 		end;
 
-end
+end -- class UNIQUE_AS_B

@@ -1,13 +1,21 @@
--- Node for BOOLEAN type
+indexing
 
-class BOOL_TYPE_AS
+	description: "Node for BOOLEAN type. Version for Bench.";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class BOOL_TYPE_AS_B
 
 inherit
 
-	BASIC_TYPE
+	BOOL_TYPE_AS
+		undefine
+			is_deep_equal, same_as
+		end;
+
+	BASIC_TYPE_B
 
 feature
-
 
 	solved_type (feat_table: FEATURE_TABLE; f: FEATURE_I): BOOLEAN_A is
 			-- Calculated type in function of the feature `f' which has
@@ -16,13 +24,10 @@ feature
 			Result := actual_type;
 		end;
 
-	dump: STRING is "BOOLEAN";
-			-- Dumped trace
-
 	actual_type: BOOLEAN_A is
 			-- Actual boolean type
 		once
 			!!Result
 		end;
 
-end
+end -- class BOOL_TYPE_AS_B

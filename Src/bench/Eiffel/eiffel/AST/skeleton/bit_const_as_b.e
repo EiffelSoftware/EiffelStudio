@@ -1,28 +1,29 @@
--- Node for bit constant
+indexing
 
-class BIT_CONST_AS
+	description: "Node for bit constant. Version for Bench.";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class BIT_CONST_AS_B
 
 inherit
 
-	ATOMIC_AS
+	BIT_CONST_AS
+		redefine
+			value
+		end;
+
+	ATOMIC_AS_B
+		undefine
+			simple_format, string_value
 		redefine
 			byte_node, type_check, value_i, format
 		end
 
 feature -- Attributes
 
-	value: ID_AS;
+	value: ID_AS_B;
 			-- Bit value (sequence of 0 and 1)
-
-feature -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			value ?= yacc_arg (0);
-		ensure then
-			value_exists: not (value = Void or else value.empty);
-		end;
 
 feature -- Type check and byte code
 
@@ -56,11 +57,11 @@ feature
 
 feature -- formatter
 
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: FORMAT_CONTEXT_B) is
 		do
 			ctxt.always_succeed;
 			ctxt.put_string (value)
 			ctxt.put_string ("B");
 		end;
 
-end
+end -- class BIT_CONST_AS_B

@@ -1,32 +1,25 @@
--- Node for string constants
+indexing
 
-class STRING_AS
+	description: "Node for string constants. Version for Bench.";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class STRING_AS_B
 
 inherit
 
-	COMPARABLE
+	STRING_AS
 		undefine
-			is_equal
+			string_value
+		redefine
+			infix "<"
 		end;
-	ATOMIC_AS
+
+	ATOMIC_AS_B
+		undefine
+			simple_format
 		redefine
 			type_check, byte_node, value_i, format
-		end;
-	CHARACTER_ROUTINES
-
-feature -- Attributes
-
-	value: STRING;
-			-- Integer value
-
-feature -- Initilization
-
-	set is
-			-- Yacc initialization
-		do
-			value ?= yacc_arg (0);
-		ensure then
-			value_exists: value /= Void;
 		end;
 
 feature -- Type check and byte code
@@ -60,7 +53,7 @@ feature -- Type check and byte code
 
 feature -- formatter
 
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: FORMAT_CONTEXT_B) is
 			-- Reconstitute text.
 		do
 			ctxt.put_text_item (ti_Double_quote);
@@ -74,9 +67,4 @@ feature -- formatter
 			Result := value_i.str_val < other.value_i.str_val 
 		end;
 
-	set_value (s: STRING) is
-		do
-			value := s;
-		end;
-
-end
+end -- class STRING_AS_B

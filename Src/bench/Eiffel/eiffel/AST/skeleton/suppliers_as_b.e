@@ -1,11 +1,22 @@
--- Abstract description for the supplier type set of a class
+indexing
 
-class SUPPLIERS_AS
+	description:
+			"Abstract description for the supplier type set of a %
+			%class. Version for Bench.";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class SUPPLIERS_AS_B
 
 inherit
 
-	AST_EIFFEL
+	SUPPLIERS_AS
 		redefine
+			supplier_ids, insert_supplier_id
+		end;
+
+	AST_EIFFEL_B
+		undefine
 			pass_address
 		end
 
@@ -15,41 +26,16 @@ creation
 
 feature
 
-	supplier_ids: TWO_WAY_SORTED_SET [ID_AS];
+	supplier_ids: TWO_WAY_SORTED_SET [ID_AS_B];
 			-- Set of supplier class names
 
-	make is
-		do
-			!!supplier_ids.make;
-		end;
-
-	pass_address (n: INTEGER) is
-			-- Yacc/Eiffel interface
-		do
-			c_get_address (n, $Current, $make);
-			c_get_set_put ($insert_supplier_id);
-		end;
-
-	insert_supplier_id (id: ID_AS) is
+	insert_supplier_id (id: ID_AS_B) is
 			-- Insert a new supplier name in `supplier_ids', if
 			-- not already present.
-		require
+		require else
 			good_argument: id /= Void
 		do
 			supplier_ids.extend (id);
 		end; 
 
-	set is 
-			-- Yacc/Eiffel interface
-		do
-			-- Do nothing
-		end; -- set
-
-feature {NONE} -- Externals
-
-	c_get_set_put (ptr: POINTER) is
-		external
-			"C"
-		end;
-
-end
+end -- class SUPPLIERS_AS_B

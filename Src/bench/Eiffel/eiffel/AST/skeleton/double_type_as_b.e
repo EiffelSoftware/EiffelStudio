@@ -1,10 +1,19 @@
--- Node for DOUBLE type
+indexing
 
-class DOUBLE_TYPE_AS
+	description: "Node for DOUBLE type. Version for Bench.";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class DOUBLE_TYPE_AS_B
 
 inherit
 
-	BASIC_TYPE
+	DOUBLE_TYPE_AS
+		undefine
+			is_deep_equal, same_as
+		end;
+
+	BASIC_TYPE_B
 
 feature
 
@@ -21,7 +30,4 @@ feature
 			!!Result;
 		end;
 
-	dump: STRING is "DOUBLE";
-			-- Dumped trace
-
-end
+end -- class DOUBLE_TYPE_AS_B

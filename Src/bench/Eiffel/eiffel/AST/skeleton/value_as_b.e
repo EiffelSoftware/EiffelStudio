@@ -1,10 +1,21 @@
--- Node for Eiffel terminals
+indexing
 
-class VALUE_AS
+	description: "Node for Eiffel terminals. Version for Bench.";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class VALUE_AS_B
 
 inherit
 
-	EXPR_AS
+	VALUE_AS
+		redefine
+			terminal
+		end;
+
+	EXPR_AS_B
+		undefine
+			simple_format
 		redefine
 			type_check, byte_node, format,
 			fill_calls_list, replicate
@@ -12,18 +23,8 @@ inherit
 
 feature -- Attributes
 
-	terminal: ATOMIC_AS;
+	terminal: ATOMIC_AS_B;
 			-- terminal
-
-feature -- Initilization
-
-	set is
-			-- Yacc initialization
-		do
-			terminal ?= yacc_arg (0);
-		ensure then
-			terminal_exists: terminal /= Void
-		end;
 
 feature -- Type check, byte code and dead code removal
 
@@ -47,7 +48,7 @@ feature -- Type check, byte code and dead code removal
 
 feature -- Formatter
 
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: FORMAT_CONTEXT_B) is
 			-- Reconstitute text.
 		do
 			terminal.format (ctxt);
@@ -71,13 +72,4 @@ feature -- Replicate
 			Result.set_terminal (terminal.replicate (ctxt))
 		end;
 
-feature {VALUE_AS}	-- Replication
-
-	set_terminal (t: like terminal) is
-		require
-			valid_arg: t /= Void
-		do
-			terminal := t
-		end;
-
-end
+end -- class VALUE_AS_B

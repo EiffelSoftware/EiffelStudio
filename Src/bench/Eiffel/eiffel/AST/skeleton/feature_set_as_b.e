@@ -1,8 +1,10 @@
-deferred class FEATURE_SET_AS
+deferred class FEATURE_SET_AS_B
 
 inherit
 
-	AST_EIFFEL
+	FEATURE_SET_AS;
+
+	AST_EIFFEL_B
 
 feature -- Export status computing
 
@@ -17,4 +19,4 @@ feature -- Export status computing
 		deferred
 		end;
 
-end
+end -- class FEATURE_SET_AS_B

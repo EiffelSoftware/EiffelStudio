@@ -1,34 +1,38 @@
--- Abstract description of a type declaration
+indexing
 
-class TYPE_DEC_AS
+	description:
+		"Abstract description of a type declaration. %
+		%Version for Bench.";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class TYPE_DEC_AS_B
 
 inherit
 
-	AST_EIFFEL
-		redefine format, fill_calls_list, replicate
-	end
+	TYPE_DEC_AS
+		redefine
+			id_list, type
+		end;
+
+	AST_EIFFEL_B
+		undefine
+			simple_format
+		redefine 
+			format, fill_calls_list, replicate
+		end
 
 feature -- Attributes
 
-	id_list: EIFFEL_LIST [ID_AS];
+	id_list: EIFFEL_LIST_B [ID_AS_B];
 			-- List of ids
 
-	type: TYPE;
+	type: TYPE_B;
 			-- Type
 
 feature -- Initialization
 
-	set is
-			-- Yacc initialization
-		do
-			id_list ?= yacc_arg (0);
-			type ?= yacc_arg (1);
-		ensure then
-			good_list: id_list /= Void;
-			type_exists: type /= Void
-		end;
-
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: FORMAT_CONTEXT_B) is
 			-- Reconstitute text.
 		do
 			ctxt.begin;
@@ -39,13 +43,6 @@ feature -- Initialization
 			ctxt.put_space;
 			type.format(ctxt);
 			ctxt.commit;
-		end;
-
-feature -- Incrementality
-
-	reset is
-		do
-			id_list.start
 		end;
 
 feature  -- Replication
@@ -66,38 +63,4 @@ feature  -- Replication
 				--| useful for like ... only
 		end;
 
-feature {TYPE_DEC_AS} -- Replication
-
-	set_type (t: like type) is
-		require
-			valid_t: t /= Void
-		do
-			type := t
-		end; 
-
-	set_id_list (id: like id_list) is
-		require
-			valid_t: id /= Void
-		do
-			id_list := id
-		end; 
-
-feature -- Debug
-
-	trace is
-		do
-			type.trace;
-			io.error.putstring (id_list.tagged_out);
-			from
-				id_list.start
-			until
-				id_list.after
-			loop
-				io.error.putstring ("Name: ");
-				io.error.putstring (id_list.item);
-				io.error.new_line;
-				id_list.forth
-			end;
-		end
-
-end
+end -- class TYPE_DEC_AS_B

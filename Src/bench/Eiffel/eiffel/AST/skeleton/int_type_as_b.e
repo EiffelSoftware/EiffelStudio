@@ -1,10 +1,19 @@
--- Node for type INTEGER
+indexing
 
-class INT_TYPE_AS
+	description: "Node for type INTEGER. Version for Bench.";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class INT_TYPE_AS_B
 
 inherit
 
-	BASIC_TYPE
+	INT_TYPE_AS
+		undefine
+			is_deep_equal, same_as
+		end;
+
+	BASIC_TYPE_B
 
 feature
 
@@ -15,13 +24,10 @@ feature
 			Result := actual_type;
 		end;
 
-	dump: STRING is "INTEGER";
-			-- Dumped trace
-
 	actual_type: INTEGER_A is
 			-- Actual integer type
 		once
 			!!Result
 		end;
 
-end
+end -- class INT_TYPE_AS_B

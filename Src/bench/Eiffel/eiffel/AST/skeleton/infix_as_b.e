@@ -1,32 +1,42 @@
--- Abstract description of an Eiffel infixed feature name
+indexing
 
-class INFIX_AS
+	description:
+			"Abstract description of an Eiffel infixed feature name. %
+			%Version for Bench.";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class INFIX_AS_B
 
 inherit
 
-	FEATURE_NAME
+	INFIX_AS
+		undefine
+			temp_name
 		redefine
-			is_infix, is_valid, format, main_feature_format,
-			offset
+			fix_operator, infix "<", internal_name, 
+			main_feature_format
+		end;
+
+	FEATURE_NAME_B
+		undefine
+			is_infix, is_valid, offset, 
+			main_feature_format, simple_format
+		redefine
+			format
 		end
 
 feature -- Attributes
 
-	fix_operator: STRING_AS;
+	fix_operator: STRING_AS_B;
 			-- Infix notation
 
 feature -- Conveniences
 
-	is_infix: BOOLEAN is
-			-- is the feature name an infixed notation ?
-		do
-			Result := True;
-		end; -- is_infix
-
-	infix "<" (other: FEATURE_NAME): BOOLEAN is
+	infix "<" (other: FEATURE_NAME_B): BOOLEAN is
 		local
-			infix_feature: INFIX_AS;
-			normal_feature: FEAT_NAME_ID_AS;
+			infix_feature: INFIX_AS_B;
+			normal_feature: FEAT_NAME_ID_AS_B;
 		do
 			normal_feature ?= other;
 			infix_feature ?= other;
@@ -40,29 +50,9 @@ feature -- Conveniences
 			end;
 		end;
 
-feature -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			fix_operator ?= yacc_arg (0);
-				-- (Free) operators are not case sensitive
-			fix_operator.value.to_lower;
-			is_frozen := yacc_bool_arg (0);
-		ensure then
-			fix_operator_exists: fix_operator /= Void
-		end;
-
-
-	set_name (s: STRING) is
-		do
-			!!fix_operator;
-			fix_operator.set_value (s);
-		end;
-
 feature
 
-	internal_name: ID_AS is
+	internal_name: ID_AS_B is
 			-- Internal name used by the compiler
 		local
 			value, to_append: STRING;
@@ -83,55 +73,7 @@ feature
 			Result.to_lower;
 		end;
 
-	Fix_notation: STRING is
-			-- Infix notation prefix for the compiler
-		do
-			Result := "_infix_";
-		end;
-
-	is_valid: BOOLEAN is
-			-- Is the fix notation valid ?
-		local
-			value: STRING;
-		do
-			value := fix_operator.value;
-			Result := code_table.has (value) or else is_free;
-		end;
-
-	is_free: BOOLEAN is
-			-- Is the fix notation a free notation ?
-		local
-			value: STRING;
-			first_char: CHARACTER;
-			i, count: INTEGER;
-		do
-			value := fix_operator.value;
-			first_char := value.item (1);
-			if	first_char = '%A'
-				or else
-				first_char = '%S'
-				or else
-				first_char = '%V'
-				or else
-				first_char = '&'
-			then
-				from
-					Result := True;
-					i := 2;
-					count := value.count;
-				until
-					i > count
-				loop
-					Result := value.item (i) /= '%%';
-					i := i + 1;
-				end;
-			end;
-		ensure then
-			Result implies not code_table.has (fix_operator.value);
-		end;
-
-
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: FORMAT_CONTEXT_B) is
 			-- Reconstitute text.
 		do
 			ctxt.begin;
@@ -155,7 +97,7 @@ feature
 			ctxt.commit;
 		end;
 
-	main_feature_format (ctxt: FORMAT_CONTEXT) is
+	main_feature_format (ctxt: FORMAT_CONTEXT_B) is
 			-- Reconstitute text.
 		do
 			ctxt.begin;
@@ -176,16 +118,4 @@ feature
 			ctxt.commit;
 		end;
 	
-	offset: INTEGER is
-		do
-			if is_frozen then
-				Result := 7
-			end;
-			if is_prefix then
-				Result := Result + 7
-			else
-				Result := Result + 6
-			end
-		end
-
-end
+end -- INFIX_AS_B

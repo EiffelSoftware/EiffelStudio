@@ -1,23 +1,25 @@
-class REQUIRE_AS
+class REQUIRE_AS_B
 
 inherit
 
-	ASSERT_LIST_AS
+	REQUIRE_AS
+		rename
+			assertions as old_assertions
+		undefine
+			clause_name, put_clause_keywords,
+			reset, format_assertions
+		end;
+
+	ASSERT_LIST_AS_B
 		redefine
 			clause_name, put_clause_keywords
+		select
+			assertions
 		end
-
-feature -- Conveniences
-
-	is_else: BOOLEAN is
-			-- Is the assertion list a require else ?
-		do
-			-- Do nothing
-		end;
 
 feature {}
 	
-	clause_name (ctxt: FORMAT_CONTEXT): STRING is
+	clause_name (ctxt: FORMAT_CONTEXT_B): STRING is
 			-- require or require else
 		do
 			if ctxt.first_assertion then
@@ -27,7 +29,7 @@ feature {}
 			end
 		end;
 			
-	put_clause_keywords (ctxt: FORMAT_CONTEXT) is
+	put_clause_keywords (ctxt: FORMAT_CONTEXT_B) is
 			-- Append keywords "require" or "require else".
 		do
 			if ctxt.first_assertion then
@@ -39,4 +41,4 @@ feature {}
 			end
 		end;
 
-end
+end -- class REQUIRE_AS_B

@@ -1,33 +1,28 @@
-class FEATURE_CLAUSE_AS
+class FEATURE_CLAUSE_AS_B
 
 inherit
 
-	AST_EIFFEL
+	FEATURE_CLAUSE_AS
 		redefine
-			format,
-			position
+			clients, features
 		end;
+
+	AST_EIFFEL_B
+		undefine
+			position, simple_format
+		redefine
+			format
+		end;
+
 	SHARED_EXPORT_STATUS;
 
 feature -- Attributes
 
-	clients: CLIENT_AS;
+	clients: CLIENT_AS_B;
 			-- Client list
 
-	features: EIFFEL_LIST [FEATURE_AS];
+	features: EIFFEL_LIST_B [FEATURE_AS_B];
 			-- Features
-
-feature -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			clients ?= yacc_arg (0);
-			features ?= yacc_arg (1);
-			position := yacc_position;
-		ensure then
-			features_exists: features /= Void;
-		end;
 
 feature -- Export status computing
 
@@ -43,10 +38,7 @@ feature -- Export status computing
 
 feature -- Formatting
 
-	position: INTEGER;
-		-- position after feature [{clients}]: expected comment
-
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: FORMAT_CONTEXT_B) is
 			-- Reconstitute text.
 		do
 			ctxt.begin;
@@ -81,4 +73,4 @@ feature -- Formatting
 			end;
 		end;
 
-end
+end -- class FEATURE_CLAUSE_AS_B

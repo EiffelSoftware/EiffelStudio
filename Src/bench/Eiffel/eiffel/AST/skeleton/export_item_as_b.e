@@ -1,29 +1,28 @@
-class EXPORT_ITEM_AS
+class EXPORT_ITEM_AS_B
 
 inherit
 
-	AST_EIFFEL
+	EXPORT_ITEM_AS
+		redefine
+			clients, features
+		end;
+
+	AST_EIFFEL_B
+		undefine
+			simple_format
 		redefine
 			format
 		end;
+
 	SHARED_EXPORT_STATUS;
 
 feature -- Attributes
 
-	clients: CLIENT_AS;
+	clients: CLIENT_AS_B;
 			-- Client list
 
-	features: FEATURE_SET_AS;
+	features: FEATURE_SET_AS_B;
 			-- Feature set
-
-feature -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			clients ?= yacc_arg (0);
-			features ?= yacc_arg (1);
-		end;
 
 feature -- Export status computing
 
@@ -42,7 +41,7 @@ feature -- Export status computing
 
 feature -- formatter
 
-	format (ctxt : FORMAT_CONTEXT) is
+	format (ctxt : FORMAT_CONTEXT_B) is
 			-- Reconstitute text.
 		do
 			ctxt.begin;
@@ -56,4 +55,4 @@ feature -- formatter
 			ctxt.commit
 		end;
 
-end
+end -- class EXPORT_ITEM_AS_B

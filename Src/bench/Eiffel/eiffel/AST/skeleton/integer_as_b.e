@@ -1,35 +1,25 @@
--- Node for integer constant
+indexing
 
-class INTEGER_AS
+	description: "Node for integer constant. Version for Bench.";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class INTEGER_AS_B
 
 inherit
 
-	ATOMIC_AS
+	INTEGER_AS;
+
+	ATOMIC_AS_B
+		undefine
+			is_integer, good_integer,
+			simple_format, string_value
 		redefine
-			is_integer, type_check, byte_node, value_i,
-			make_integer, good_integer, format
-		end
-
-feature -- Attributes
-
-	value: INTEGER;
-			-- Integer value
-
-feature -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			value := yacc_int_arg (0);
+			type_check, byte_node, value_i,
+			make_integer, format
 		end
 
 feature -- Conveniences
-
-	is_integer: BOOLEAN is
-			-- Is it an integer value ?
-		do
-			Result := True;
-		end;
 
 	value_i: INT_VALUE_I is
 			-- Interface value
@@ -52,12 +42,6 @@ feature -- Conveniences
 			Result.set_value (value);
 		end;
 
-	good_integer: BOOLEAN is
-			-- Is the atomic a good integer bound for multi-branch ?
-		do
-			Result := True;
-		end;
-
 	make_integer: INT_VAL_B is
 			-- Integer value
 		do
@@ -66,12 +50,11 @@ feature -- Conveniences
 
 feature -- Formatter 
 
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: FORMAT_CONTEXT_B) is
 			-- Reconstitute text.
 		do
 			ctxt.always_succeed;
 			ctxt.put_string(value.out);
 		end;
-				
 
-end
+end -- class INTEGER_AS_B

@@ -1,8 +1,16 @@
-deferred class INTERNAL_AS
+deferred class INTERNAL_AS_B
 
 inherit
 
-	ROUT_BODY_AS
+	INTERNAL_AS
+		redefine
+			compound
+		end;
+
+	ROUT_BODY_AS_B
+		undefine
+			simple_format, has_instruction,
+			index_of_instruction
 		redefine
 			type_check, byte_node,
 			find_breakable, format,
@@ -11,16 +19,8 @@ inherit
 
 feature -- Attributes
 
-	compound: EIFFEL_LIST [INSTRUCTION_AS];
+	compound: EIFFEL_LIST_B [INSTRUCTION_AS_B];
 			-- Compound
-
-feature -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			compound ?= yacc_arg (0);
-		end
 
 feature -- Type check, byte code and dead code removal
 
@@ -54,7 +54,7 @@ feature -- Debugger
 
 feature -- Formatter
 
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: FORMAT_CONTEXT_B) is
 			-- Reconstitute text.
 		do
 			ctxt.begin;
@@ -80,7 +80,7 @@ feature -- Replication
 			end
 		end;
 
-	Replicate (ctxt: REP_CONTEXT): like Current is
+	replicate (ctxt: REP_CONTEXT): like Current is
 			-- Adapt to Replication
 		do
 			Result := clone (Current);
@@ -90,18 +90,4 @@ feature -- Replication
 			end
 		end;			
 
-feature {INTERNAL_AS} -- Replication
-	
-	set_compound (c: like compound) is
-		do
-			compound := c;
-		end;	
-
-feature {} -- Formatter
-	
-	begin_keyword: TEXT_ITEM is 
-		deferred
-		end;
-	
- 
-end
+end -- class INTERNAL_AS_B

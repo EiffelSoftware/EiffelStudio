@@ -1,34 +1,30 @@
-class CREATE_AS
+class CREATE_AS_B
 
 inherit
 
-	AST_EIFFEL
+	CREATE_AS
+		redefine
+			clients, feature_list
+		end;
+
+	AST_EIFFEL_B
+		undefine
+			simple_format
 		redefine
 			format
 		end
 
 feature -- Attributes
 
-	clients: CLIENT_AS;
+	clients: CLIENT_AS_B;
 			-- Client list
 
-	feature_list: EIFFEL_LIST [FEATURE_NAME];
+	feature_list: EIFFEL_LIST_B [FEATURE_NAME_B];
 			-- Feature list
-
-feature -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			clients ?= yacc_arg (0);
-				--| A void feature_list implies that we
-				--! have an empty creation clause
-			feature_list ?= yacc_arg (1);
-		end;
 
 feature -- formatter
 
-	format (ctxt : FORMAT_CONTEXT) is
+	format (ctxt : FORMAT_CONTEXT_B) is
 			-- Reconstitute text.
 		local
 			last_was_printed: BOOLEAN;
@@ -55,4 +51,5 @@ feature -- formatter
 				ctxt.commit
 			end
 		end;
-end
+
+end -- class CREATE_AS_B

@@ -1,24 +1,28 @@
-class ENSURE_AS
+class ENSURE_AS_B
 
 inherit
 
-	ASSERT_LIST_AS
+	ENSURE_AS
+		rename
+			assertions as old_assertions
+		undefine
+			format_assertions
 		redefine
 			clause_name, put_clause_keywords
-		end
-		
-
-feature
-
-	is_then: BOOLEAN is
-			-- Is the assertion list an ensure then part ?
-		do
-			-- Do nothing
 		end;
 
+	ASSERT_LIST_AS_B
+		undefine
+			reset
+		redefine
+			clause_name, put_clause_keywords
+		select 
+			assertions
+		end
+		
 feature {}
 	
-	clause_name(ctxt: FORMAT_CONTEXT): STRING is
+	clause_name (ctxt: FORMAT_CONTEXT_B): STRING is
 			-- "ensure" or "ensure then"
 		do
 			if ctxt.first_assertion then
@@ -28,7 +32,7 @@ feature {}
 			end
 		end ;
 			
-	put_clause_keywords (ctxt: FORMAT_CONTEXT) is
+	put_clause_keywords (ctxt: FORMAT_CONTEXT_B) is
 			-- Append keywords "ensure" or "ensure then".
 		do
 			if ctxt.first_assertion then
@@ -40,4 +44,4 @@ feature {}
 			end
 		end;
 
-end
+end -- class ENSURE_AS_B

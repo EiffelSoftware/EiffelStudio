@@ -1,24 +1,34 @@
-class EXTERNAL_AS
+class EXTERNAL_AS_B
 
 inherit
 
-	ROUT_BODY_AS
+	EXTERNAL_AS
 		redefine
-			is_external, byte_node, format, type_check
+			language_name, alias_name, set
 		end;
+
+	ROUT_BODY_AS_B
+		undefine
+			is_external, simple_format,
+			has_instruction, index_of_instruction
+		redefine
+			byte_node, format, type_check
+		end;
+
 	SHARED_STATUS;
+
 	SHARED_MELT_ONLY;
+
 	EXTERNAL_CONSTANTS
 
 feature -- Attributes
 
-	language_name: EXTERNAL_LANG_AS;
+	language_name: EXTERNAL_LANG_AS_B;
 			-- Language name
 			-- might be replaced by external_declaration or external_definition
 
-	alias_name: STRING_AS;
+	alias_name: STRING_AS_B;
 			-- Optional external name
-
 
 feature -- Initialization
 
@@ -43,20 +53,6 @@ feature -- Initialization
 
 feature -- Conveniences
 
-	is_external: BOOLEAN is
-			-- Is the current routine body an external one ?
-		do
-			Result := true;
-		end;
-
-	external_name: STRING is
-			-- Alias name: Void if none
-		do
-			if alias_name /= Void then
-				Result := alias_name.value;
-			end;
-		end; -- external_name
-
 	type_check is
 			-- Put a comment here please
 		local
@@ -70,10 +66,12 @@ feature -- Conveniences
 				-- and if a result type is given only with a function
 			if language_name.has_signature then
 				if language_name.has_arg_list and then
-					not (language_name.arg_list.count = context.a_feature.argument_count)
+					not (language_name.arg_list.count = 
+						context.a_feature.argument_count)
 				then
 					raise_an_error := True;
-				elseif language_name.has_return_type /= context.a_feature.is_function then
+				elseif language_name.has_return_type /= 
+										context.a_feature.is_function then
 					raise_an_error := True;
 				end;
 				if raise_an_error then
@@ -86,8 +84,10 @@ feature -- Conveniences
 				-- For DLL - Windows, a signature is compulsory
 			sp_id := language_name.special_id;
 			if ((sp_id = dll16_id) or (sp_id = dll32_id)) and then
-				((context.a_feature.argument_count > 0 and not language_name.has_arg_list) or
-				(context.a_feature.is_function and not language_name.has_return_type))
+				((context.a_feature.argument_count > 0 and not 
+				language_name.has_arg_list) or
+				(context.a_feature.is_function and not 
+				language_name.has_return_type))
 			then
 				!! ext_dll_sign;
 				context.init_error (ext_dll_sign);
@@ -141,7 +141,8 @@ feature -- Byte code
 					until
 						i > arg_c
 					loop
-						local_dec.put (arguments.i_th (i).actual_type.type_i, i);
+						local_dec.put 
+								(arguments.i_th (i).actual_type.type_i, i);
 						i := i + 1;
 					end;
 					Result.set_arguments (local_dec);
@@ -153,7 +154,7 @@ feature -- Byte code
 
 feature -- Formatter
 
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: FORMAT_CONTEXT_B) is
 			-- Reconstitute text
 		do
 			ctxt.always_succeed;
@@ -172,4 +173,4 @@ feature -- Formatter
 			end;
 		end;
 
-end
+end -- class EXTERNAL_AS_B

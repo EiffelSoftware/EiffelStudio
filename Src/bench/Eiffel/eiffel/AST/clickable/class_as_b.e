@@ -1,55 +1,63 @@
--- Abstract description of an Eiffel class
+indexing
 
-class CLASS_AS
+	description: "Abstract description of an Eiffel class. Version for Bench.";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class CLASS_AS_B
 
 inherit
 
-	AST_EIFFEL
+	CLASS_AS
+		redefine
+			class_name, obsolete_message, indexes,
+			generics, parents, creators, features,
+			invariant_part, suppliers, set
+		end;
+
+	AST_EIFFEL_B
+		undefine
+			simple_format
 		redefine
 			format
 		end;
+
 	IDABLE;
+
 	SHARED_INST_CONTEXT;
+
 	STONABLE;
+
 	CLICKER;
 
 feature -- Attributes
 
-	id: INTEGER;
-			-- Class id
-
-	class_name: ID_AS;
+	class_name: ID_AS_B;
 			-- Class name
 
-	obsolete_message: STRING_AS;
+	obsolete_message: STRING_AS_B;
 			-- Obsolete message clause 
 			-- (Void if was not present)
 
-	is_deferred: BOOLEAN;
-			-- Is the class deferred ?
-
-	is_expanded: BOOLEAN;
-			-- Is the class expanded ?
-
-	indexes: EIFFEL_LIST [INDEX_AS];
+	indexes: EIFFEL_LIST_B [INDEX_AS_B];
 			-- Index clause
 
-	generics: EIFFEL_LIST [FORMAL_DEC_AS];
+	generics: EIFFEL_LIST_B [FORMAL_DEC_AS_B];
 			-- Formal generic parameter list
 
-	parents: EIFFEL_LIST [PARENT_AS];
+	parents: EIFFEL_LIST_B [PARENT_AS_B];
 			-- Inheritance clause
 
-	creators: EIFFEL_LIST [CREATE_AS];
+	creators: EIFFEL_LIST_B [CREATE_AS_B];
 			-- Creators
 
-	features: EIFFEL_LIST [FEATURE_CLAUSE_AS];
+	features: EIFFEL_LIST_B [FEATURE_CLAUSE_AS_B];
 			-- Feature list
 
-	invariant_part: INVARIANT_AS;
+	invariant_part: INVARIANT_AS_B;
 			-- Class invariant
 
-	suppliers: SUPPLIERS_AS;
+	suppliers: SUPPLIERS_AS_B;
 			-- Supplier types
 
 feature -- Initialization
@@ -86,14 +94,6 @@ feature -- Initialization
 			suppliers_exists: suppliers /= Void;
 		end;
 
-feature -- Conveniences
-
-	set_id (i: INTEGER) is
-			-- Assign `i' to `id'.
-		do
-			id := i;
-		end;
-
 feature {CLASS_C} -- Class information
 
 	info: CLASS_INFO is
@@ -116,21 +116,22 @@ feature {CLASS_C} -- Class information
 			Result.set_creators (creators);
 		end;
 
-feature -- stoning
+feature -- Stoning
  
 	stone (reference_class: CLASS_C): CLASSC_STONE is
 		local
 			aclass: CLASS_C;
 		do
-			aclass := Universe.class_named (class_name, reference_class.cluster).compiled_class;
+			aclass := Universe.class_named 
+						(class_name, reference_class.cluster).compiled_class;
 			!!Result.make (aclass)
 		end;
 
 	click_list: CLICK_LIST;
  
-feature -- formatting
+feature -- Formatting
 
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: FORMAT_CONTEXT_B) is
 		local
 			flat: FLAT_AST;
 			s: STRING;
@@ -242,7 +243,7 @@ feature {CASE_CLASS_INFO} -- Case storage
 			g_l: FIXED_LIST [S_GENERIC_DATA];
 			i_l: FIXED_LIST [S_TAG_DATA];
 			s_chart: S_CLASS_CHART;
-			gen: FORMAL_DEC_AS;
+			gen: FORMAL_DEC_AS_B;
 			gen_name: STRING;
 			gen_data: S_GENERIC_DATA;
 			type_info: S_TYPE_INFO;
@@ -294,4 +295,4 @@ feature {CASE_CLASS_INFO} -- Case storage
 			end;
 		end;
 
-end
+end -- class CLASS_AS_B

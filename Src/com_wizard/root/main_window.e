@@ -246,12 +246,12 @@ feature -- Element Change
 	add_title (a_title: STRING) is
 			-- Add title `a_title' to window's text.
 		do
-			output_edit.set_caret_position (output_edit.count)
+		--	output_edit.set_caret_position (output_edit.count)
 			new_line
 			output_edit.set_character_format_word (Title_format)
 			output_edit.insert_text (a_title)
 			output_edit.set_character_format_word (Text_format)
-			output_edit.set_caret_position (output_edit.count)
+		--	output_edit.set_caret_position (output_edit.count)
 			new_line
 			process_messages
 		end
@@ -259,12 +259,12 @@ feature -- Element Change
 	add_warning (a_warning: STRING) is
 			-- Add warning `a_warning' to window's text.
 		do
-			output_edit.set_caret_position (output_edit.count)
+		--	output_edit.set_caret_position (output_edit.count)
 			new_line
 			output_edit.set_character_format_word (Warning_format)
 			output_edit.insert_text (a_warning)
 			output_edit.set_character_format_word (Text_format)
-			output_edit.set_caret_position (output_edit.count)
+		--	output_edit.set_caret_position (output_edit.count)
 			new_line
 			process_messages
 		end
@@ -272,12 +272,12 @@ feature -- Element Change
 	add_error (a_error: STRING) is
 			-- Add error `a_error' to window's text.
 		do
-			output_edit.set_caret_position (output_edit.count)
+		--	output_edit.set_caret_position (output_edit.count)
 			new_line
 			output_edit.set_character_format_word (Error_format)
 			output_edit.insert_text (a_error)
 			output_edit.set_character_format_word (Text_format)
-			output_edit.set_caret_position (output_edit.count)
+		--	output_edit.set_caret_position (output_edit.count)
 			new_line
 			process_messages
 		end
@@ -372,9 +372,9 @@ feature {NONE} -- Implementation
 	add_text (a_text: STRING) is
 			-- Add text `a_text' into window's text.
 		do
-			output_edit.set_caret_position (output_edit.count)
+		--	output_edit.set_caret_position (output_edit.count)
 			output_edit.insert_text (a_text)
-			output_edit.set_caret_position (output_edit.count)
+		--	output_edit.set_caret_position (output_edit.count)
 			process_messages
 		end
 	

@@ -14,6 +14,8 @@ feature -- Access
 	Universal_radio_constant: INTEGER is 1026
 	Remote_check_constant: INTEGER is 1015
 	Standard_radio_constant: INTEGER is 1027
+	Minimum_radio_constant: INTEGER is 1029
+	Maximum_radio_constant: INTEGER is 1037
 	Marshaling2_static_constant: INTEGER is 1022
 	Type2_static_constant: INTEGER is 1023
 	Local_check_constant: INTEGER is 1014
@@ -27,7 +29,9 @@ feature -- Access
 	Virtual_table2_radio_constant: INTEGER is 1027
 	Automation2_radio_constant: INTEGER is 1026
 	In_process_check_constant: INTEGER is 1013
-	Generate_code_static_constant: INTEGER is 1021
+	Final_static_constant: INTEGER is 1039
+	Final2_static_constant: INTEGER is 1038
+	Final3_static_constant: INTEGER is 1040
 	Browse2_button_constant: INTEGER is 1012
 	Server_check_constant: INTEGER is 1020
 	Wizard_idl_dialog_constant: INTEGER is 102

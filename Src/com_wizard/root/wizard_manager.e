@@ -30,6 +30,11 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_LOGGER
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -69,11 +74,16 @@ feature -- Access
 	Analysis_title: STRING is "Analysing Type Library"
 			-- Analysis title
 
+	Generation_title: STRING is "Generating Code"
+			-- Generation title
+
 feature -- Basic Operations
 
 	run is
 			-- Start generation.
 		do
+			initialize_log_file
+
 			-- Compile IDL
 			if shared_wizard_environment.abort then
 				finish
@@ -119,6 +129,7 @@ feature -- Basic Operations
 			else
 				generate
 			end
+			close_log_file
 		rescue
 			shared_wizard_environment.set_abort (10)
 			retry
@@ -134,6 +145,8 @@ feature {NONE} -- Implementation
 			parent.add_title (Analysis_title)
 			set_system_descriptor (create {WIZARD_SYSTEM_DESCRIPTOR}.make)
 			system_descriptor.generate (shared_wizard_environment.type_library_file_name)
+
+			parent.add_title (Generation_title)
 			from
 				system_descriptor.start
 			until

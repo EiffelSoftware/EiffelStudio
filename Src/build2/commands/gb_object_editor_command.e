@@ -10,7 +10,7 @@ class
 inherit
 	EB_STANDARD_CMD
 		redefine
-			make, execute, executable,
+			make,
 			new_toolbar_item
 		end
 		
@@ -32,19 +32,11 @@ feature {NONE} -- Initialization
 		do
 			Precursor {EB_STANDARD_CMD}
 			set_tooltip ("New object editor")
-			set_pixmaps (<<(create {GB_SHARED_PIXMAPS}).icon_object_symbol>>)
+			set_pixmaps ((create {GB_SHARED_PIXMAPS}).Icon_object_editor)
 			set_name ("New object editor")
 			set_menu_name ("New object editor")
 		end
 		
-feature -- Access
-
-	executable: BOOLEAN is
-			-- May `execute' be called on `Current'?
-		do
-			Result := system_status.project_open
-		end
-
 feature -- Basic operations
 
 		new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
@@ -54,12 +46,6 @@ feature -- Basic operations
 				Result := Precursor {EB_STANDARD_CMD} (display_text, use_gray_icons)
 				Result.drop_actions.extend (agent update_object_editor (?, Result))
 				Result.drop_actions.set_veto_pebble_function (agent do_not_allow_object_type (?))
-			end
-	
-		execute is
-				-- Execute `Current'. Generates a new, empty object editor.
-			do
-				new_object_editor_empty
 			end
 			
 feature {NONE} -- Implementation

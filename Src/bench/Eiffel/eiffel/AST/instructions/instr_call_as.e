@@ -10,8 +10,7 @@ class
 inherit
 	INSTRUCTION_AS
 		redefine
-			byte_node, fill_calls_list, replicate,
-			starts_with_parenthesis
+			byte_node, starts_with_parenthesis
 		end
 
 	SHARED_TYPES
@@ -72,21 +71,6 @@ feature -- Type check, byte code and dead code removal
 			!!Result
 			Result.set_call (call.byte_node)
 			Result.set_line_number (line_number)
-		end
-
-feature	-- Replication
-
-	fill_calls_list (l: CALLS_LIST) is
-			-- find calls to Current
-		do
-			call.fill_calls_list (l)
-		end
-
-	replicate (ctxt: REP_CONTEXT): like Current is
-			-- Adapt to replication
-		do
-			Result := clone (Current)
-			Result.set_call (call.replicate (ctxt))
 		end
 
 feature {AST_EIFFEL} -- Output

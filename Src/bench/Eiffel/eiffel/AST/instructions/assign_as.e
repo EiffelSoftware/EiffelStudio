@@ -8,7 +8,7 @@ class ASSIGN_AS
 inherit
 	INSTRUCTION_AS
 		redefine
-			byte_node, fill_calls_list, replicate
+			byte_node
 		end
 
 feature {AST_FACTORY} -- Initialization
@@ -111,27 +111,6 @@ feature {NONE} -- Type check, byte code production, dead_code_removal
 			Result.set_target (target.byte_node)
 			Result.set_source (source.byte_node)
 			Result.set_line_number (line_number)
-		end
-
-feature -- Replication
-
-	fill_calls_list (l: CALLS_LIST) is
-			-- Find calls to Current.
-		local
-			new_list: like l
-		do
-			target.fill_calls_list (l)
-			create new_list.make
-			source.fill_calls_list (new_list)
-			l.merge (new_list)
-		end
-
-	replicate (ctxt: REP_CONTEXT): like Current is
-			-- Adapt to replication.
-		do
-			Result := clone (Current)
-			Result.set_target (target.replicate (ctxt))
-			Result.set_source (source.replicate (ctxt.new_ctxt))
 		end
 
 feature {AST_EIFFEL} -- Output

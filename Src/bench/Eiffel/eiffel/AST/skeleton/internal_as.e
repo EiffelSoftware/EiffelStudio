@@ -8,8 +8,7 @@ deferred class INTERNAL_AS
 inherit
 	ROUT_BODY_AS
 		redefine
-			type_check, byte_node,
-			fill_calls_list, replicate, is_empty,
+			type_check, byte_node, is_empty,
 			has_instruction, index_of_instruction,
 			number_of_breakpoint_slots, is_equivalent
 		end
@@ -104,26 +103,6 @@ feature -- Type check, byte code and dead code removal
 			end
 			Result.record_separate_calls_on_arguments
 		end
-
-feature -- Replication
-	
-	fill_calls_list (l: CALLS_LIST) is
-			-- find calls to Current is
-		do
-			if compound /= Void then
-				compound.fill_calls_list (l)
-			end
-		end
-
-	replicate (ctxt: REP_CONTEXT): like Current is
-			-- Adapt to Replication
-		do
-			Result := clone (Current)
-			if compound /= Void then
-				Result.set_compound (
-					compound.replicate (ctxt.new_ctxt))
-			end
-		end;			
 
 feature {AST_EIFFEL} -- Output
 

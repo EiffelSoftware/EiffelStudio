@@ -10,7 +10,7 @@ class CURRENT_AS
 inherit
 	ACCESS_AS
 		redefine
-			type_check, byte_node, replicate,
+			type_check, byte_node,
 			is_equivalent
 		end
 
@@ -58,14 +58,6 @@ feature -- Type check and byte code
 			end
 			Result ?= access_line.access
 			access_line.forth
-		end
-
-feature -- Replication
-
-	replicate (ctxt: REP_CONTEXT): like Current is
-		do
-			ctxt.adapt_current
-			Result := clone (Current)
 		end
 
 feature {AST_EIFFEL} -- Output

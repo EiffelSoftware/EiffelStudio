@@ -9,9 +9,7 @@ class ACCESS_ADDRESS_AS
 inherit
 	ACCESS_ID_AS
 		redefine
-			feature_access_type, format,
-			fill_calls_list, replicate,
-			simple_format
+			feature_access_type, format, simple_format
 		end
 
 	SHARED_TYPES
@@ -91,21 +89,6 @@ feature -- Type check
 			else
 				ctxt.rollback
 			end
-		end
-
-feature	-- Replication
-	
-	fill_calls_list (l: CALLS_LIST) is
- 		do
-			l.add (feature_name)
-		end
-
-	replicate (ctxt: REP_CONTEXT): like Current is
-		do
-			Result := clone (Current)
-			ctxt.adapt_name (feature_name)
-			Result.set_feature_name (ctxt.adapted_name)
-			ctxt.stop_adaptation
 		end
 
 feature {NONE} -- Output

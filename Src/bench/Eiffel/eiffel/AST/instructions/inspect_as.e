@@ -9,10 +9,7 @@ class INSPECT_AS
 inherit
 	INSTRUCTION_AS
 		redefine
-			number_of_breakpoint_slots,
-			byte_node, 
-			fill_calls_list, 
-			replicate
+			number_of_breakpoint_slots, byte_node
 		end
 
 	SHARED_INSPECT
@@ -144,39 +141,6 @@ feature -- Type check, byte code and dead code removal
 				Result.set_else_part (else_part.byte_node)
 			end
 			Result.set_line_number (line_number)
-		end
-
-feature -- Replication
-
-	fill_calls_list (l: CALLS_LIST) is
-			-- find calls to Current
-		local
-			new_list: like l
-		do
-			create new_list.make
-			switch.fill_calls_list (new_list)
-			l.merge (new_list)
-			if case_list /= Void then
-				case_list.fill_calls_list (l)
-			end
-			if else_part /= Void then
-				else_part.fill_calls_list (l)
-			end
-		end
-
-	replicate (ctxt: REP_CONTEXT): like Current is
-			-- Adapt to replication
-		do
-			Result := clone (Current)
-			Result.set_switch (switch.replicate (ctxt))
-			if case_list /= Void then
-				Result.set_case_list (
-					case_list.replicate (ctxt))
-			end
-			if else_part /= Void then
-				Result.set_else_part (
-					else_part.replicate (ctxt))
-			end
 		end
 
 feature {AST_EIFFEL} -- Output

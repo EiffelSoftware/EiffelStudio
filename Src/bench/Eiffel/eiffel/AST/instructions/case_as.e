@@ -10,7 +10,7 @@ inherit
 	AST_EIFFEL
 		redefine
 			number_of_breakpoint_slots, is_equivalent, line_number,
-			type_check, byte_node, fill_calls_list, replicate
+			type_check, byte_node
 		end
 
 feature {AST_FACTORY} -- Initialization
@@ -87,28 +87,6 @@ feature {NONE} -- Type check, byte code production, dead code removal
 					Result.set_compound (tmp2)
 				end
 				Result.set_line_number (line_number)
-			end
-		end
-
-feature -- Replication
-
-	fill_calls_list (l: CALLS_LIST) is
-			-- find calls to Current
-		do	
-			interval.fill_calls_list (l)
-			if compound /= Void then
-				compound.fill_calls_list (l)
-			end
-		end
-
-	replicate (ctxt: REP_CONTEXT): like Current is
-			-- Adapt to replication
-		do
-			Result := clone (Current)
-			Result.set_interval (interval.replicate (ctxt))
-			if compound /= Void then
-				Result.set_compound (
-					compound.replicate (ctxt))
 			end
 		end
 

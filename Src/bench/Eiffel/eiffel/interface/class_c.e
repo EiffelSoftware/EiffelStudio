@@ -1483,6 +1483,7 @@ feature -- Melting
 			feature_i: FEATURE_I
 		do
 			Inst_context.set_cluster (cluster)
+			System.set_current_class (Current)
 
 				-- Melt feature written in the class
 			from

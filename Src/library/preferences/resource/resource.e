@@ -138,7 +138,7 @@ feature -- Actions
 
 feature {NONE} -- Implementation
 
-	manager: RESOURCE_MANAGER
+	manager: PREFERENCE_RESOURCE_MANAGER
 			-- Manager to which Current belongs.
 
 invariant

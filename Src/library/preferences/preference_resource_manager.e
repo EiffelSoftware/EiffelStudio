@@ -13,14 +13,14 @@ indexing
 				the value specified in a default file will be used.  If there is no default file or the resource does appear in the
 				specified default file the value passed to the `new_*_resource_value' will be used.					
 				
-		To add custom resources inherit RESOURCE_MANAGER and implement a custom manager with a feature like 'new_custom_resource_value'.
+		To add custom resources inherit PREFERENCE_RESOURCE_MANAGER and implement a custom manager with a feature like 'new_custom_resource_value'.
 				
 		]"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	RESOURCE_MANAGER
+	PREFERENCE_RESOURCE_MANAGER
 
 create {PREFERENCES}
 	make

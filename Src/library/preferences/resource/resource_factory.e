@@ -12,7 +12,7 @@ class
 
 feature -- Commands
 
-	new_resource (preferences: PREFERENCES; a_manager: RESOURCE_MANAGER; a_name, a_namespace: STRING; a_value: G): H is
+	new_resource (preferences: PREFERENCES; a_manager: PREFERENCE_RESOURCE_MANAGER; a_name, a_namespace: STRING; a_value: G): H is
 			-- Create a new resource with name `a_name' and `a_value'.
 		require
 			preferences_not_void: preferences /= Void
@@ -46,7 +46,7 @@ feature -- Commands
 			if preferences.default_values.has (l_fullname) then				
 				l_desc ?= preferences.default_values.item (l_fullname).item (1)
 				l_value ?= preferences.default_values.item (l_fullname).item (2)
-				if l_desc /= Void then
+				if l_desc /= Void and then not l_desc.is_empty then
 					Result.set_description (l_desc)
 				end				
 				Result.set_default_value (l_value)

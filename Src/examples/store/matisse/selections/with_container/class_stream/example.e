@@ -6,7 +6,7 @@ inherit
 
 	MT_EXTERNAL
 
-Creation 
+create 
     make
 
 feature {NONE}

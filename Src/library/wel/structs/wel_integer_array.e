@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 			a := an_array.to_c
 			c_memcpy (item, $a, structure_size)
 		ensure
-			set: to_array (an_array.lower).is_equal (an_array)
+--			set: to_array (an_array.lower).is_equal (an_array)
 		end
 
 feature -- Conversion

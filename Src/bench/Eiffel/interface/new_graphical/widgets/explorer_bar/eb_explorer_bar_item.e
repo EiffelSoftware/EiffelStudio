@@ -367,15 +367,17 @@ feature {NONE} -- Implementation
 				restore_button.set_tooltip (Interface_names.f_Restore)
 			end
 
+			create close_button
+			close_button.set_pixmap (Pixmaps.icon_close @ 1)
+			close_button.set_tooltip (Interface_names.f_Close)
 			if is_closeable then
-				create close_button
-				close_button.set_pixmap (Pixmaps.icon_close @ 1)
 				close_button.enable_sensitive
 				close_button.select_actions.extend (~close)
-				close_button.set_tooltip (Interface_names.f_Close)
-
-				system_toolbar.extend (close_button)
+			else
+				close_button.disable_sensitive
 			end
+
+			system_toolbar.extend (close_button)
 		end
 
 	rebuild_system_toolbar is
@@ -391,9 +393,7 @@ feature {NONE} -- Implementation
 			if is_maximizable and then not is_maximized then
 				system_toolbar.extend (maximize_button)
 			end
-			if is_closeable then
-				system_toolbar.extend (close_button)
-			end
+			system_toolbar.extend (close_button)
 		end
 
 feature {NONE} -- Constants

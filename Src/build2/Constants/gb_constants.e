@@ -341,6 +341,10 @@ feature -- Generation constants
 			Result := indent + "%T-- Initialize properties of all widgets."
 		end
 		
+feature -- Wizard
+
+	wizard_completion_file_name: STRING is "completion_status.txt"
+		
 feature -- XML saving
 
 	filename: FILE_NAME is

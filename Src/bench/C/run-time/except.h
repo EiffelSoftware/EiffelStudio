@@ -129,11 +129,13 @@ struct eif_except {
 #define EN_OSTK		97			/* Run-time exception catching */
 #define EN_ILVL		98			/* In level: pseudo-type for execution trace */
 #define EN_OLVL		99			/* Out level: pseudo-type for execution trace */
-#ifndef WORKBENCH
-#define EN_NEX		25			/* Number of internal exceptions */
-#else
+#ifdef WORKBENCH
 #define EN_DOL		26			/* $ applied to melted feature */
 #endif
+
+/* Maximum number of internal exceptions (EN_NEX) defined in
+ * eif_constants.h
+ */
 
 /* Exported routines (used by the generated C code or run-time) */
 extern void expop(register1 struct xstack *stk);	/* Pops an execution vector off */

@@ -80,11 +80,11 @@ feature -- Basic operations
 						end
 					else
 						-- Only for fixed containers.
-						wel_move_and_resize (x_position, y_position, width.max (value), height, True)
+--						wel_move_and_resize (x_position, y_position, width.max (value), height, True)
 					end
 				end
 			elseif is_show_requested then
-				wel_move_and_resize (x_position, y_position, width, height, True)
+--				wel_move_and_resize (x_position, y_position, width, height, True)
 			end
 		end
 
@@ -103,14 +103,14 @@ feature -- Basic operations
 						if changed then 
 							parent_imp.notify_change (Nc_minheight)
 						elseif is_show_requested then
-							wel_move_and_resize (x_position, y_position, width, height, True)
+--							wel_move_and_resize (x_position, y_position, width, height, True)
 						end
 					else
-						wel_move_and_resize (x_position, y_position, width, height.max (value), True)
+--						wel_move_and_resize (x_position, y_position, width, height.max (value), True)
 					end
 				end
 			elseif is_show_requested then
-				wel_move_and_resize (x_position, y_position, width, height, True)
+--				wel_move_and_resize (x_position, y_position, width, height, True)
 			end
 		end
 
@@ -167,10 +167,10 @@ feature -- Basic operations
 						if w_cd then
 							parent_imp.notify_change (Nc_minwidth)
 						elseif is_show_requested then
-							wel_move_and_resize (x_position, y_position, width, height, True)
+--							wel_move_and_resize (x_position, y_position, width, height, True)
 						end
 					else
-						wel_move_and_resize (x_position, y_position, width.max (mw), height, True)
+--						wel_move_and_resize (x_position, y_position, width.max (mw), height, True)
 					end
 				end
 
@@ -183,20 +183,20 @@ feature -- Basic operations
 						if h_cd then
 							parent_imp.notify_change (Nc_minheight)
 						elseif is_show_requested then
-							wel_move_and_resize (x_position, y_position, width, height, True)
+--							wel_move_and_resize (x_position, y_position, width, height, True)
 						end
 					else
-						wel_move_and_resize (x_position, y_position, width, height.max (mh), True)
+--						wel_move_and_resize (x_position, y_position, width, height.max (mh), True)
 					end
 				end
 
 			-- The user did set everything already.
  			elseif is_show_requested then
- 				wel_move_and_resize (x_position, y_position, width, height, True)
+--				wel_move_and_resize (x_position, y_position, width, height, True)
  			end
 		end
 
-	notify_change (type: INTEGER) is
+	FIXME_notify_change (type: INTEGER) is
 			-- Called by a child of `Current'.
 			-- - a child has been added/removed.
 			-- - a child's minimum size has in/decreased.
@@ -209,7 +209,7 @@ feature -- Basic operations
 			end
 		end
 
-	OLD_notify_change (type: INTEGER) is
+	notify_change (type: INTEGER) is
 			-- Notify the current widget that the change identify by
 			-- type have been done. For types, see `internal_changes'
 			-- in class EV_SIZEABLE_IMP. If the container is shown, 
@@ -338,6 +338,9 @@ end -- class EV_CONTAINER_SIZEABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/04/17 17:28:58  brendel
+--| Commented out every line that calls wel_move_and_resize.
+--|
 --| Revision 1.14  2000/03/14 16:17:05  brendel
 --| Removed check since it was incorrect.
 --|

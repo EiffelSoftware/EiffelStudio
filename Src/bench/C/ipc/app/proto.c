@@ -917,32 +917,32 @@ rt_private void rec_sinspect(register1 char *object)
 									sp_index++, o_ref += elem_size) {
 					sprintf(buffer, "%ld", sp_index);
 					twrite (buffer, strlen(buffer));
-					if (dt_type == sp_char) {
+					if (dt_type == egc_sp_char) {
 						sprintf(buffer, "CHARACTER");
 						twrite (buffer, strlen(buffer));
 						sprintf(buffer, "%d", *o_ref);
 						twrite (buffer, strlen(buffer));
-					} else if (dt_type == sp_int) {
+					} else if (dt_type == egc_sp_int) {
 						sprintf(buffer, "INTEGER");
 						twrite (buffer, strlen(buffer));
 						sprintf(buffer, "%ld", *(long *)o_ref);
 						twrite (buffer, strlen(buffer));
-					} else if (dt_type == sp_bool) {
+					} else if (dt_type == egc_sp_bool) {
 						sprintf(buffer, "BOOLEAN");
 						twrite (buffer, strlen(buffer));
 						sprintf(buffer, "%s", (*o_ref ? "True" : "False"));
 						twrite (buffer, strlen(buffer));
-					} else if (dt_type == sp_real) {
+					} else if (dt_type == egc_sp_real) {
 						sprintf(buffer, "REAL");
 						twrite (buffer, strlen(buffer));
 						sprintf(buffer, "%g", *(float *)o_ref);
 						twrite (buffer, strlen(buffer));
-					} else if (dt_type == sp_double) {
+					} else if (dt_type == egc_sp_double) {
 						sprintf(buffer, "DOUBLE");
 						twrite (buffer, strlen(buffer));
 						sprintf(buffer, "%.17g", *(double *)o_ref);
 						twrite (buffer, strlen(buffer));
-					} else if (dt_type == sp_pointer) {
+					} else if (dt_type == egc_sp_pointer) {
 						sprintf(buffer, "POINTER");
 						twrite (buffer, strlen(buffer));
 						sprintf(buffer, "0x%lX", *(fnptr *)o_ref);

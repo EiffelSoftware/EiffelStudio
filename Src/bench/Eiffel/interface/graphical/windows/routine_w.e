@@ -126,6 +126,8 @@ feature {NONE}
 			if argument = resize_action then
 				change_class_command.update_text;
 				change_routine_command.update_text;
+				change_class_command.choice.update_position;
+				change_routine_command.choice.update_position
 			else
 				old_execute (argument)
 			end
@@ -145,7 +147,7 @@ feature {NONE}
 	close_windows is
 		do
 	   		search_command.close;
-	   		change_font_command.close (text_window);
+	   		change_font_command.close;
 --			debug_run_command.close;
 			if change_routine_command.choice.is_popped_up then
 				change_routine_command.choice.popdown
@@ -201,13 +203,13 @@ feature {NONE}
 				format_bar.attach_top (showfuture_command, 0);
 				format_bar.attach_left_widget (showpast_command, showfuture_command, 0);
 
-			!!showsynonyms_command.make (format_bar, text_window);
-				format_bar.attach_top (showsynonyms_command, 0);
-				format_bar.attach_left_widget (showfuture_command, showsynonyms_command, 0);
+			!!showhomonyms_command.make (format_bar, text_window);
+				format_bar.attach_top (showhomonyms_command, 0);
+				format_bar.attach_left_widget (showfuture_command, showhomonyms_command, 0);
 
 			!!showstop_command.make (format_bar, text_window);
 				format_bar.attach_top (showstop_command, 0);
-				format_bar.attach_left_widget (showsynonyms_command, showstop_command, 10);
+				format_bar.attach_left_widget (showhomonyms_command, showstop_command, 10);
 		end;
 
 	build_bar is
@@ -281,7 +283,7 @@ feature {NONE}
 --	unbreak_command: DEBUG_NOSTOPIN;	
 --	debug_quit_command: DEBUG_QUIT;
 	showroutclients_command: SHOW_ROUTCLIENTS;
-	showsynonyms_command: SHOW_SYNONYMS;
+	showhomonyms_command: SHOW_HOMONYMS;
 --	debug_showbreak: DEBUG_SHOWBREAK;
 	showpast_command: SHOW_PAST;
 	showhistory_command: SHOW_ROUT_HIST;

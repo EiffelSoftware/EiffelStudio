@@ -360,8 +360,12 @@ feature -- Conversion
 			l: LINKED_LIST [like item]
 		do
 			create l.make
-			l.extend (first)
-			l.extend (second)
+			if first /= Void then
+				l.extend (first)
+			end
+			if second /= Void then
+				l.extend (second)
+			end
 			Result := l
 		end
 
@@ -552,6 +556,9 @@ end -- class EV_SPLIT_AREA
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.27  2000/03/20 18:38:01  king
+--| Corrected linear repsentation bug
+--|
 --| Revision 1.26  2000/03/18 00:52:23  oconnor
 --| formatting, layout and comment tweaks
 --|

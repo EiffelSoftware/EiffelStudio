@@ -12,7 +12,7 @@ deferred class
 inherit
 	EV_FIGURE_MATH
 		export
-			{ANY} generator
+			{NONE} all
 		redefine
 			default_create
 		end

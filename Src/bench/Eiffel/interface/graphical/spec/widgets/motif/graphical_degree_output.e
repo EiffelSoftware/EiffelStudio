@@ -61,11 +61,10 @@ feature -- Start output features
 
 			popup_window;
 			progress_bar.reset_percentage;
-			i_name := clone (icon_name);
-			i_name.extend (' ');
+			!! i_name.make (0);
 			i_name.append (Interface_names.d_Degree);
 			i_name.append (current_degree.out);
-			Project_tool.set_icon_name (i_name);
+			set_project_icon_name (i_name);
 			process_events;
 		end;
 
@@ -83,7 +82,7 @@ feature -- Start output features
 			-- Put message indicating the start of a degree 
 			-- with `total_nbr' passes to be done.
 		local
-			i_name: STRING
+			tmp: STRING
 		do
 			parent.set_title (Interface_names.d_Compilation_progress);
 			total_number := total_nbr;
@@ -99,11 +98,10 @@ feature -- Start output features
 				popup_window;
 			end;
 			progress_bar.reset_percentage;
-			i_name := clone (icon_name);
-			i_name.extend (' ');
-			i_name.append (Interface_names.d_Degree);
-			i_name.append (current_degree.out);
-			Project_tool.set_icon_name (i_name);
+			!! tmp.make (0);
+			tmp.append (Interface_names.d_Degree);
+			tmp.append (current_degree.out);
+			set_project_icon_name (tmp);
 			process_events
 		end;
 
@@ -534,11 +532,13 @@ feature {NONE} -- Implementation
 
 	set_project_icon_name (message: STRING) is
 			-- Set icon name of project_tool to `message'.
+		require
+			valid_icon_name: icon_name /= Void
 		local
 			i_name: STRING
 		do
 			i_name := clone (icon_name);
-			i_name.extend (' ');
+			i_name.append (": ");
 			i_name.append (message);
 			Project_tool.set_icon_name (i_name)
 		end;

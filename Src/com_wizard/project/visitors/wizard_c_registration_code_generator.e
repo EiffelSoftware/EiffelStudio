@@ -937,7 +937,7 @@ feature {NONE} -- Implementation
 	hInstance_set_up: STRING is
 			-- Set up hInstance
 		once
-			create Result := "RT_LNK HINSTANCE eif_hInstance;%N"
+			Result := "RT_LNK HINSTANCE eif_hInstance;%N"
 		end
 
 end -- class WIZARD_C_REGISTRATION_CODE_GENERATOR

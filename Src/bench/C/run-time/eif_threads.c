@@ -37,31 +37,7 @@
 
 
 /* Defaults for condition variables */
-#ifdef EIF_NO_CONDVAR
-#define EIF_COND_INIT(cond, msg)
-#define EIF_COND_CREATE(cond, msg)
-#define EIF_COND_WAIT(cond, mutex, msg)
-#define EIF_COND_BROADCAST(cond, msg)
-#define EIF_COND_SIGNAL(cond, msg)
-#define EIF_COND_DESTROY(cond, msg)
-#define EIF_COND_ATTR_TYPE	unsigned char
-#else /* EIF_NO_CONDVAR */
-#define EIF_COND_ATTR_TYPE		pthread_condattr_t
-#define EIF_COND_CREATE(pcond, msg) \
-	pcond = (EIF_COND_TYPE *) eif_malloc (sizeof(EIF_COND_TYPE)); \
-	if (!(pcond)) eraise("cannot allocate memory for cond. variable", EN_OMEM); \
-	EIF_COND_INIT(pcond,msg)
-#define EIF_COND_INIT(pcond, msg) \
-	if (pthread_cond_init (pcond, NULL)) eraise (msg, EN_EXT)
-#define EIF_COND_WAIT(pcond, pmutex, msg) \
-	if (pthread_cond_wait (pcond, pmutex)) eraise (msg, EN_EXT)
-#define EIF_COND_BROADCAST(pcond, msg) \
-	if (pthread_cond_broadcast (pcond)) eraise (msg, EN_EXT)
-#define EIF_COND_SIGNAL(pcond, msg) \
-	if (pthread_cond_signal (pcond)) eraise (msg, EN_EXT)
-#define EIF_COND_DESTROY(pcond, msg) \
-	if (pthread_cond_destroy (pcond)) eraise (msg, EN_EXT)
-#endif /* EIF_NO_CONDVAR */
+	/* Moved to eif_threads.h */
 
 /* Defaults for semaphores */
 #ifndef EIF_NO_POSIX_SEM
@@ -183,28 +159,8 @@
 #define EIF_THR_GET_PRIORITY(tid,prio)
 
 /* Mutex management */
-#ifdef _CRAY
-#define EIF_MUTEX_INIT(m,msg) \
-    { pthread_mutexattr_t mattr = PTHREAD_MUTEX_INITIALIZER; \
-    if (pthread_mutex_init(m,&mattr)) eraise(msg, EN_EXT);}
-#else /* _CRAY */
-#define EIF_MUTEX_INIT(m,msg) \
-	if (pthread_mutex_init(m,NULL)) eraise(msg, EN_EXT)
-#endif /* _CRAY */
+	/* moved to eif_threads.h */
 
-#define EIF_MUTEX_CREATE(m,msg) \
-	m = (EIF_MUTEX_TYPE *) eif_malloc(sizeof(EIF_MUTEX_TYPE)); \
-	if (!(m)) eraise("cannot allocate memory for mutex creation", EN_OMEM); \
-	EIF_MUTEX_INIT(m,msg)
-#define EIF_MUTEX_LOCK(m,msg) if (pthread_mutex_lock(m)) eraise(msg, EN_EXT)
-#define EIF_MUTEX_TRYLOCK(m,r,msg)	\
-	r = pthread_mutex_trylock(m);	\
-	if (r && (r!=EBUSY)) eraise(msg, EN_EXT)
-#define EIF_MUTEX_UNLOCK(m,msg) if (pthread_mutex_unlock(m)) eraise(msg, EN_OMEM)
-#define EIF_MUTEX_DESTROY(m,msg) \
-	EIF_MUTEX_DESTROY0(m,msg); eif_free(m)
-#define EIF_MUTEX_DESTROY0(m,msg) \
-	if (pthread_mutex_destroy(m)) eraise(msg, EN_EXT)
 #define EIF_TSD_CREATE(key,msg)				\
 	if (pthread_key_create(&(key),NULL))	\
 		eraise(msg, EN_EXT)
@@ -267,20 +223,7 @@
 #define EIF_THR_GET_PRIORITY(tid,prio)
 
 /* Mutex management */
-#define EIF_MUTEX_CREATE(m,msg) \
-        m = CreateMutex(NULL,FALSE,NULL); \
-        if (!m) eraise(msg, EN_EXT);
-#define EIF_MUTEX_LOCK(m,msg) \
-        if (WaitForSingleObject(m, INFINITE) == WAIT_FAILED) \
-        eraise(msg, EN_EXT)
-#define EIF_MUTEX_TRYLOCK(m,r,msg)  \
-        r = (WaitForSingleObject(m,0)); \
-        if (r==WAIT_FAILED) eraise(msg, EN_EXT); \
-        r = (r==WAIT_TIMEOUT)
-#define EIF_MUTEX_UNLOCK(m,msg) \
-        if (!ReleaseMutex(m)) eraise(msg, EN_EXT)
-#define EIF_MUTEX_DESTROY(m,msg) \
-        if (!CloseHandle(m)) eraise(msg, EN_EXT)
+/* moved to eif_threads.h */
 
 
 /* Semaphore management */
@@ -383,22 +326,7 @@ rt_private typedef struct {
 #define EIF_THR_GET_PRIORITY(tid,prio) thr_setprio(tid,&(prio))
 
 /* Mutex management */
-#define EIF_MUTEX_INIT(m,msg) \
-	if (mutex_init((m),USYNC_THREAD,NULL)) eraise(msg, EN_EXT)
-#define EIF_MUTEX_CREATE(m,msg) \
-	m = (EIF_MUTEX_TYPE *) eif_malloc (sizeof(EIF_MUTEX_TYPE)); \
-	if (!(m)) eraise("cannot allocate memory for mutex creation", EN_OMEM); \
-	EIF_MUTEX_INIT(m,msg)
-#define EIF_MUTEX_LOCK(m,msg)		if (mutex_lock(m)) eraise(msg, EN_EXT)
-#define EIF_MUTEX_TRYLOCK(m,r,msg)	\
-		r = mutex_trylock(m); \
-		if(r && (r != EBUSY)) \
-			eraise(msg, EN_EXT)
-#define EIF_MUTEX_UNLOCK(m,msg)		if (mutex_unlock(m)) eraise(msg, EN_EXT)
-#define EIF_MUTEX_DESTROY0(m,msg)	\
-	if (mutex_destroy(m)) eraise(msg, EN_EXT)
-#define EIF_MUTEX_DESTROY(m,msg) \
-	EIF_MUTEX_DESTROY0(m,msg); eif_free(m)
+	/* Moved to eif_threads.h */
 
 /* Thread Specific Data management */
 #define EIF_TSD_CREATE(key,msg) \
@@ -478,16 +406,7 @@ rt_private typedef struct {
 #define EIF_THR_GET_PRIORITY(tid,prio) taskPriorityGet(tid,&(prio))
 
 /* Mutex management */
-#define EIF_MUTEX_CREATE(m,msg)		\
-	if ((m=semBCreate(SEM_Q_FIFO,SEM_FULL))==NULL) eraise(msg, EN_EXT)
-#define EIF_MUTEX_LOCK(m,msg)		\
-	if (semTake(m,WAIT_FOREVER)!=OK) eraise(msg, EN_EXT)
-#define EIF_MUTEX_TRYLOCK(m,r,msg)	\
-	r = (semTake(m,NO_WAIT)==OK)
-#define EIF_MUTEX_UNLOCK(m,msg)		\
-	if (semGive(m)!=OK) eraise(msg, EN_EXT)
-#define EIF_MUTEX_DESTROY(m,msg)	\
-	if (semDelete(m)!=OK) eraise(msg, EN_EXT)
+	/* moved to eif_threads.h */
 
 #ifdef EIF_NO_POSIX_SEM
 #define EIF_SEM_CREATE(sem,count,msg) \

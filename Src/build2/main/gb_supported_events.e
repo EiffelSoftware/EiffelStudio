@@ -16,6 +16,7 @@ feature -- Access
 		once
 			create Result.make (0)
 			Result.extend ("EV_APPLICATION_ACTION_SEQUENCES")
+			Result.extend ("EV_CHECKABLE_LIST_ACTION_SEQUENCES")
 			Result.extend ("EV_BUTTON_ACTION_SEQUENCES")
 			Result.extend ("EV_DRAWING_AREA_ACTION_SEQUENCES")
 			Result.extend ("EV_GAUGE_ACTION_SEQUENCES")
@@ -38,7 +39,7 @@ feature -- Access
 			Result.extend ("EV_WINDOW_ACTION_SEQUENCES")
 			Result.extend ("EV_TITLED_WINDOW_ACTION_SEQUENCES")
 		ensure
-			Result_ok: Result /= Void and Result.count = 22
+			Result_ok: Result /= Void and Result.count = 23
 		end
 		
 	action_sequence_list: ARRAYED_LIST [STRING] is
@@ -77,6 +78,7 @@ feature {NONE} -- Implementation
 			gb_ev_tree_node_action_sequences: GB_EV_TREE_NODE_ACTION_SEQUENCES
 			gb_ev_window_action_sequences: GB_EV_WINDOW_ACTION_SEQUENCES
 			gb_ev_titled_window_action_sequences: GB_EV_TITLED_WINDOW_ACTION_SEQUENCES
+			gb_ev_checkable_list_action_sequences: GB_EV_CHECKABLE_LIST_ACTION_SEQUENCES
 			
 			gb_ev_column_action_sequence: GB_EV_COLUMN_ACTION_SEQUENCE
 			gb_ev_geometry_action_sequence: GB_EV_GEOMETRY_ACTION_SEQUENCE

@@ -73,7 +73,74 @@ feature {NONE} -- Initialization
 			name_set: text.is_equal (a_name)
 		end
 
-feature {NONE} -- Default creation values
+feature -- Standard window class values
+
+	class_icon: WEL_ICON is
+			-- Standard application icon used to create the
+			-- window class.
+			-- Can be redefined to return a user-defined icon.
+		once
+			!! Result.make_by_predefined_id (Idi_application)
+		ensure
+			result_not_void: Result /= Void
+			result_exists: Result.exists
+		end
+
+	class_cursor: WEL_CURSOR is
+			-- Standard arrow cursor used to create the window
+			-- class.
+			-- Can be redefined to return a user-defined cursor.
+		once
+			!! Result.make_by_predefined_id (Idc_arrow)
+		ensure
+			result_not_void: Result /= Void
+			result_exists: Result.exists
+		end
+
+	class_background: WEL_BRUSH is
+			-- Standard window background color used to create the
+			-- window class.
+			-- Can be redefined to return a user-defined brush.
+		once
+			!! Result.make_by_sys_color (Color_window + 1)
+		ensure
+			result_not_void: Result /= Void
+			result_exists: Result.exists
+		end
+
+	class_style: INTEGER is
+			-- Standard style used to create the window class.
+			-- Can be redefined to return a user-defined style.
+		once
+			Result := Cs_hredraw + Cs_vredraw + Cs_dblclks
+		end
+
+	class_menu_name: STRING is
+			-- Window's menu used to create the window class.
+			-- Can be redefined to return a user-defined menu.
+			-- (None by default).
+		once
+			!! Result.make (0)
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	class_name: STRING is
+			-- Window class name used to create the window class.
+			-- Can be redefined to return a user-defined class name.
+		once
+			Result := "WELFrameWindowClass"
+		end
+
+	class_window_procedure: POINTER is
+			-- Standard window procedure
+		once
+			Result := cwel_window_procedure_address
+		ensure
+			result_not_null: Result /= default_pointer
+		end
+
+feature -- Default creation values
 
 	default_style: INTEGER is
 			-- Overlapped window style.
@@ -87,74 +154,20 @@ feature {NONE} -- Default creation values
 		end
 
 	default_x, default_y, default_width, default_height: INTEGER is
-			-- Default position and dimension
+			-- Default position and dimension when the window is
+			-- created.
 		once
 			Result := Cw_usedefault
 		end
 
 	default_id: INTEGER is
-			-- No id
+			-- Default window id.
+			-- (Zero by default).
 		once
 			Result := 0
 		end
 
-feature {NONE} -- Standard window class values
-
-	class_icon: WEL_ICON is
-			-- Standard application icon
-		once
-			!! Result.make_by_predefined_id (Idi_application)
-		ensure
-			result_not_void: Result /= Void
-		end
-
-	class_cursor: WEL_CURSOR is
-			-- Standard arrow cursor
-		once
-			!! Result.make_by_predefined_id (Idc_arrow)
-		ensure
-			result_not_void: Result /= Void
-			result_exists: Result.exists
-		end
-
-	class_background: WEL_BRUSH is
-			-- Standard window background color
-		once
-			!! Result.make_by_sys_color (Color_window + 1)
-		ensure
-			result_not_void: Result /= Void
-			result_exists: Result.exists
-		end
-
-	class_style: INTEGER is
-			-- Standard style
-		once
-			Result := Cs_hredraw + Cs_vredraw + Cs_dblclks
-		end
-
-	class_menu_name: STRING is
-			-- No menu
-		once
-			!! Result.make (0)
-		ensure
-			result_not_void: Result /= Void
-		end
-
-	class_window_procedure: POINTER is
-			-- Standard window procedure
-		once
-			Result := cwel_window_procedure_address
-		ensure
-			result_not_null: Result /= default_pointer
-		end
-
 feature {NONE} -- Implementation
-
-	class_name: STRING is
-			-- Window class name to create
-		once
-			Result := "WELFrameWindowClass"
-		end
 
 	register_class is
 			-- Register the window class if

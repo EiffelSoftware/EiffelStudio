@@ -24,6 +24,13 @@ feature -- Status Report
 			Result := True
 		end
 
+	add_local_assembly_user_precondition (assembly_prefix: STRING; cluster_name: STRING; a_path: STRING): BOOLEAN is
+			-- User-defined preconditions for `add_local_assembly'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
 	remove_assembly_user_precondition (assembly_identifier: STRING): BOOLEAN is
 			-- User-defined preconditions for `remove_assembly'.
 			-- Redefine in descendants if needed.
@@ -87,13 +94,6 @@ feature -- Status Report
 			Result := True
 		end
 
-	is_prefix_allocated_user_precondition (assembly_prefix: STRING): BOOLEAN is
-			-- User-defined preconditions for `is_prefix_allocated'.
-			-- Redefine in descendants if needed.
-		do
-			Result := True
-		end
-
 	assemblies_user_precondition: BOOLEAN is
 			-- User-defined preconditions for `assemblies'.
 			-- Redefine in descendants if needed.
@@ -121,6 +121,17 @@ feature -- Basic Operations
 			-- `a_publickey' [in].  
 		require
 			add_assembly_user_precondition: add_assembly_user_precondition (assembly_prefix, cluster_name, a_name, a_version, a_culture, a_publickey)
+		deferred
+
+		end
+
+	add_local_assembly (assembly_prefix: STRING; cluster_name: STRING; a_path: STRING) is
+			-- Add a local assembly to the project.
+			-- `assembly_prefix' [in].  
+			-- `cluster_name' [in].  
+			-- `a_path' [in].  
+		require
+			add_local_assembly_user_precondition: add_local_assembly_user_precondition (assembly_prefix, cluster_name, a_path)
 		deferred
 
 		end
@@ -208,15 +219,6 @@ feature -- Basic Operations
 			-- `assembly_prefix' [in].  
 		require
 			is_valid_prefix_user_precondition: is_valid_prefix_user_precondition (assembly_prefix)
-		deferred
-
-		end
-
-	is_prefix_allocated (assembly_prefix: STRING): BOOLEAN is
-			-- Has the 'prefix' already been allocated to another assembly
-			-- `assembly_prefix' [in].  
-		require
-			is_prefix_allocated_user_precondition: is_prefix_allocated_user_precondition (assembly_prefix)
 		deferred
 
 		end

@@ -55,12 +55,6 @@ feature -- Access
 			Result := ccom_is_local (initializer)
 		end
 
-	is_signed: BOOLEAN is
-			-- Is the assembly local
-		do
-			Result := ccom_is_signed (initializer)
-		end
-
 	assembly_cluster_name: STRING is
 			-- Assembly cluster name.
 		do
@@ -143,12 +137,6 @@ feature {NONE}  -- Externals
 		end
 
 	ccom_is_local (cpp_obj: POINTER): BOOLEAN is
-			-- Is the assembly local
-		external
-			"C++ [ecom_eiffel_compiler::IEiffelAssemblyProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelAssemblyProperties_impl_proxy.h%"](): EIF_BOOLEAN"
-		end
-
-	ccom_is_signed (cpp_obj: POINTER): BOOLEAN is
 			-- Is the assembly local
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelAssemblyProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelAssemblyProperties_impl_proxy.h%"](): EIF_BOOLEAN"

@@ -42,12 +42,6 @@ feature -- Access
 			-- Put Implementation here.
 		end
 
-	is_signed: BOOLEAN is
-			-- Is the assembly local
-		do
-			-- Put Implementation here.
-		end
-
 	assembly_cluster_name: STRING is
 			-- Assembly cluster name.
 		do

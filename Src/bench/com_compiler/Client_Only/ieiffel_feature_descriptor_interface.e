@@ -314,7 +314,7 @@ feature -- Basic Operations
 		end
 
 	all_callers: IENUM_FEATURE_INTERFACE is
-			-- List of all feature callers, includding callers of ancestor and descendant versions.
+			-- List of all feature callers, including callers of ancestor and descendant versions.
 		require
 			all_callers_user_precondition: all_callers_user_precondition
 		deferred

@@ -85,6 +85,30 @@ feature -- Access
 			Result := ccom_flat_feature_count (initializer)
 		end
 
+	inherited_features: IENUM_FEATURE_INTERFACE is
+			-- List of class inherited features.
+		do
+			Result := ccom_inherited_features (initializer)
+		end
+
+	inherited_feature_count: INTEGER is
+			-- Number of inherited features.
+		do
+			Result := ccom_inherited_feature_count (initializer)
+		end
+
+	creation_routines: IENUM_FEATURE_INTERFACE is
+			-- List of class creation routines.
+		do
+			Result := ccom_creation_routines (initializer)
+		end
+
+	creation_routine_count: INTEGER is
+			-- Number of creation routines.
+		do
+			Result := ccom_creation_routine_count (initializer)
+		end
+
 	clients: IENUM_EIFFEL_CLASS_INTERFACE is
 			-- List of class clients.
 		do
@@ -229,6 +253,30 @@ feature {NONE}  -- Externals
 
 	ccom_flat_feature_count (cpp_obj: POINTER): INTEGER is
 			-- Number of flat class features.
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClassDescriptor_impl_proxy.h%"](): EIF_INTEGER"
+		end
+
+	ccom_inherited_features (cpp_obj: POINTER): IENUM_FEATURE_INTERFACE is
+			-- List of class inherited features.
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClassDescriptor_impl_proxy.h%"](): EIF_REFERENCE"
+		end
+
+	ccom_inherited_feature_count (cpp_obj: POINTER): INTEGER is
+			-- Number of inherited features.
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClassDescriptor_impl_proxy.h%"](): EIF_INTEGER"
+		end
+
+	ccom_creation_routines (cpp_obj: POINTER): IENUM_FEATURE_INTERFACE is
+			-- List of class creation routines.
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClassDescriptor_impl_proxy.h%"](): EIF_REFERENCE"
+		end
+
+	ccom_creation_routine_count (cpp_obj: POINTER): INTEGER is
+			-- Number of creation routines.
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClassDescriptor_impl_proxy.h%"](): EIF_INTEGER"
 		end

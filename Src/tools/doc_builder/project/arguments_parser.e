@@ -177,6 +177,7 @@ feature -- Commands
 			l_help_directory: DIRECTORY			
 			l_toc: TABLE_OF_CONTENTS		
 			l_filter: DOCUMENT_FILTER
+			l_date_time: DATE_TIME
 		do
 			generation_data.set_generating (True)
 			l_constants := Shared_constants.Application_constants								
@@ -289,7 +290,8 @@ feature -- Commands
 			end
 			
 			generation_data.set_generating (False)
-			report ("%NGeneration completed.  Review information above in case of errors.")
+			create l_date_time.make_now
+			report ("%NGeneration completed.  Review information above in case of errors.  Generation completed at: " + l_date_time.date.out + " " + l_date_time.time.out)
 		end
 
 feature {NONE} -- Implementation

@@ -144,7 +144,7 @@ feature {CMD_CUT_ARGUMENT}
 			if i = 1 and then arguments.empty then
 				arguments.extend (arg)
 				if command_tool /= Void then
-					command_tool.add_argument (arg)
+					command_tool.add_argument_icon (arg)
 				end
 			else
 				arguments.go_i_th (i - 1)
@@ -174,7 +174,7 @@ feature {CMD_ADD_ARGUMENT, CMD_CUT_ARGUMENT, CMD_UPDATE_PARENT}
 			!! a.session_init (al.last)
 			arguments.extend (a)
 			if command_tool /= Void then
-				command_tool.add_argument (a)
+				command_tool.add_argument_icon (a)
 			end
 		ensure
 			valid_count: associated_command.arguments.count 

@@ -132,6 +132,15 @@ feature -- Input/output
 			end;
 		end;
 
+	get_filter_name is
+		do
+			if not more_arguments then
+				io.putstring ("--> Filter name: ");
+				get_name;
+			end;
+			get_last_input;
+		end;
+
 	reset_abort is
 		do
 			abort := False

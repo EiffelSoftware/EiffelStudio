@@ -14,7 +14,7 @@ inherit
 		rename
 			make as class_make
 		redefine
-			process_compiled_class
+			process_compiled_class, loop_action
 		end
 
 creation
@@ -86,6 +86,16 @@ feature {NONE} -- Execution
 		do
 			ctxt.set_one_class_only;
 			ctxt.set_order_same_as_text;
+		end;
+
+	loop_action is
+			-- Execute Current command from loop.
+		do
+			command_line_io.get_class_name;
+			class_name := command_line_io.last_input;
+			command_line_io.get_filter_name;
+			filter_name := command_line_io.last_input;
+			check_arguments_and_execute
 		end;
 
 invariant

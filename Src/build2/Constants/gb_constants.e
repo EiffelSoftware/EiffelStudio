@@ -419,8 +419,8 @@ feature -- Generation constants
 	show_feature: STRING is
 			-- `Show' for the window implementation when we are a client of the window.
 		once
-			Result := indent_less_two + "show is" + indent + "-- Show `Current'." + indent_less_one + "do" + indent +
-			"window.show" + indent_less_one + "end"
+			Result := indent_less_two + "show is" + indent + "-- Show `Current'." + indent_less_one + "do" + indent + client_window_string +
+			".show" + indent_less_one + "end"
 		end
 		
 		
@@ -437,6 +437,10 @@ feature -- Generation constants
 			Result := "feature -- Access%N" + indent_less_two + "window: EV_TITLED_WINDOW" + indent_less_one +
 			"-- `Result' is window with which `Current' is implemented"
 		end
+		
+	client_window_string: STRING is "window"
+		-- Name used to access window as a client.
+		
 
 feature -- Wizard
 

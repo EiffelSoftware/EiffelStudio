@@ -1,7 +1,7 @@
 indexing
 	description: "AST representation of binary `>' operation."
 	date: "$Date$"
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 class
 	BIN_GT_AS

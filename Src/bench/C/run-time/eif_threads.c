@@ -135,7 +135,7 @@ rt_private EIF_THR_ENTRY_TYPE eif_thr_entry(EIF_THR_ENTRY_ARG_TYPE arg)
 		initstk();
 		exvect = exset((char *) 0, 0, (char *) 0);
 		exvect->ex_jbuf = (char *) exenv;
-		if (echval = setjmp(exenv))
+		if ((echval = setjmp(exenv)))
 			failure();
 
 #ifdef WORKBENCH

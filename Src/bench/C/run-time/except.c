@@ -1744,7 +1744,7 @@ rt_private void find_call(EIF_CONTEXT_NOARG)
 	 * unless the stack is untrustworthy due to an out of memory condition).
 	 */
 
-	while (item = exnext(MTC_NOARG)) {		/* While not (found or end of stack) */
+	while ((item = exnext(MTC_NOARG))) {		/* While not (found or end of stack) */
 
 		if (
 			item->ex_type == EN_FAIL ||		/* A routine failure (1st call) */

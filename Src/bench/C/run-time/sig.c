@@ -239,7 +239,7 @@ rt_shared void esdpch(EIF_CONTEXT_NOARG)
 	 * returned since then--RAM.
 	 */
 
-	while (sig = spop()) {			/* While there are some buffered signals */
+	while ((sig = spop())) {		/* While there are some buffered signals */
 		handler = esig[sig];		/* Fetch signal handler's address */
 		if (handler) {				/* There is a signal handler */
 			esigblk++;				/* Queue further signals */
@@ -330,7 +330,7 @@ rt_public int esigvec(int sig, struct sigvec *vec, struct sigvec *ovec)
 
 	EIF_GET_CONTEXT
 	Signal_t (*oldfunc)(int);		/* Previous signal handler set */
-	int ignored;				/* Ignore status for previous handler */
+	/*	int ignored;	*/			/* Ignore status for previous handler */
 
 	if (sig >= NSIG) {		/* Bad signal, don't bother issuing system call */
 		errno = EINVAL;

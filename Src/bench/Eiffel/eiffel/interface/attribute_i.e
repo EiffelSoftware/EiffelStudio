@@ -66,6 +66,7 @@ feature
 			Result.set_type_a (type.actual_type)
 			Result.set_written_in (generate_in)
 			Result.set_pattern_id (pattern_id)
+			Result.set_feature_id (feature_id)
 		end
 
 	undefinable: BOOLEAN is

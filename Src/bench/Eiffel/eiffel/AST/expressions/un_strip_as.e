@@ -78,7 +78,7 @@ feature -- Type check, byte code and dead code removal
 						Error_handler.insert_error (vwst1)
 					else
 						!! depend_unit.make (context.a_class.id,
-											attribute_i.feature_id)
+											attribute_i)
 						context.supplier_ids.extend (depend_unit)
 					end
 				end

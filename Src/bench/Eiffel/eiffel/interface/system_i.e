@@ -2249,6 +2249,7 @@ feature -- Final mode generation
 		end
 
 	degree_minus_4 is
+
 			-- Process Degree -4.
 		local
 			a_class: CLASS_C
@@ -2368,7 +2369,8 @@ feature -- Dead code removal
 				root_feat := a_class.feature_table.item (creation_name)
 				remover.record (root_feat, a_class)
 			end
-
+			
+			remover.mark_dispose
 			from
 				local_classes := classes
 				local_classes.start
@@ -2380,7 +2382,6 @@ feature -- Dead code removal
 				from i := 1 until i > nb loop
 					a_class := class_array.item (i)
 					if a_class /= Void then
-						a_class.mark_dispose (remover)
 						if a_class.visible_level.has_visible then
 							a_class.mark_visible (remover)
 						end
@@ -2405,30 +2406,15 @@ feature -- Dead code removal
 				end
 			end
 
-			--FIXME: The following commented lines seems to be useless, because
-			-- we will never mark either an attribute or because they don't
-			-- have any features to be marked.
-			-- The main reason of marking these classes is for the run-time.
-
--- 				-- Protection of the attribute `area' in class TO_SPECIAL
--- 			to_special_class.compiled_class.mark_all_used (remover)
- 
 				-- Protection of `make' from ARRAY
 			array_class.compiled_class.mark_all_used (remover)
- 
--- 				-- Protection of features written in basic reference classes
--- 			character_ref_class.compiled_class.mark_all_used (remover)
--- 			boolean_ref_class.compiled_class.mark_all_used (remover)
--- 			integer_ref_class.compiled_class.mark_all_used (remover)
--- 			real_ref_class.compiled_class.mark_all_used (remover)
--- 			double_ref_class.compiled_class.mark_all_used (remover)
--- 			pointer_ref_class.compiled_class.mark_all_used (remover)
- 
-				-- Protection of feature `make' and `set_count' of class STRING
+
+				-- Protection of feature `make' of class STRING
 			string_class.compiled_class.mark_all_used (remover)
 
 				-- Protection of feature `make' of class TUPLE
 			tuple_class.compiled_class.mark_all_used (remover)
+
 		end
 
 	is_used (f: FEATURE_I): BOOLEAN is
@@ -2436,7 +2422,7 @@ feature -- Dead code removal
 		require
 			good_argument: f /= Void
 		do
-			Result := remover_off or else remover.is_alive (f)
+			Result := remover_off or else remover.is_alive (f.body_id.id)
 		end
 
 feature -- Generation

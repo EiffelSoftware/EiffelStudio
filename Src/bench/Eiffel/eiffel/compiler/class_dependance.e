@@ -5,7 +5,10 @@ class CLASS_DEPENDANCE
 
 inherit
 
-	EXTEND_TABLE [FEATURE_DEPENDANCE, STRING];
+	EXTEND_TABLE [FEATURE_DEPENDANCE, BODY_ID]
+		redefine
+			remove, put, item
+		end
 	IDABLE
 		undefine
 			is_equal, copy
@@ -16,7 +19,6 @@ inherit
 		end
 
 creation
-
 	make
 
 	
@@ -37,4 +39,50 @@ feature
 			Result := System.class_of_id (id);
 		end;
 
+	item (bid: BODY_ID): FEATURE_DEPENDANCE is
+			--securised access to the dependances
+		local
+			body_id: BODY_ID
+		do
+			body_id := updated_id (bid)
+			Result := {EXTEND_TABLE} Precursor (bid)
+		end	
+	
+	put (f: FEATURE_DEPENDANCE; bid: BODY_ID) is
+			-- we must update the correspondance table in the server
+		local
+			body_id: BODY_ID
+		do
+			-- to update the id may be not necessary, but this way we are sure it 
+			-- is the younger one
+			body_id := updated_id (bid)
+			System.depend_server.add_correspondance (body_id, id)
+			{EXTEND_TABLE} Precursor (f, bid)
+		end
+
+	remove (bid: BODY_ID) is
+			-- we must update the correspondance table in the server
+		local
+			body_id: BODY_ID
+		do
+			body_id := updated_id  (bid)
+			System.depend_server.remove_correspondance (bid)
+			{EXTEND_TABLE} Precursor (bid)
+		end
+			
+	updated_id (i: BODY_ID): BODY_ID is
+			-- give the newest id corresponding to body id 'i'
+		do
+			Result := System.ontable.item (i)
+		end;
+
+	change_ids (new_id, old_id: BODY_ID) is
+			-- updates the body ids in the server in case of change
+		local
+			info: FEATURE_DEPENDANCE
+		do
+			info := item (old_id)
+			remove (old_id)
+			put (info, new_id)
+		end
 end

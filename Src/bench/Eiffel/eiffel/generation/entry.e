@@ -41,6 +41,21 @@ feature -- from ENTRY
 			type := t;
 		end;
 
+feature -- for dead code removal
+
+	is_attribute: BOOLEAN is
+			-- is the feature_i associated an attribute ?
+		do
+		end
+	
+	feature_id: INTEGER
+			-- feature id of the feature associated to the entry
+	
+	set_feature_id (i: INTEGER) is
+		do
+			feature_id := i
+		end
+
 feature -- Previously in POLY_UNIT
 
 	id: CLASS_ID

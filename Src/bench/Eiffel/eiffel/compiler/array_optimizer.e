@@ -123,11 +123,9 @@ feature {NONE} -- Array optimization
 				until
 					ftable.after
 				loop
-					feature_name := ftable.key_for_iteration
 					a_feature := ftable.item_for_iteration
 					if a_feature.written_class = a_class then
-
-						depend_list := class_depend.item (feature_name)
+						depend_list := class_depend.item (a_feature.body_id)
 						if
 							depend_list /= Void
 						and then
@@ -182,9 +180,9 @@ debug ("OPTIMIZATION")
 	io.error.putstring (a_class.name)
 	io.error.new_line
 end
-						!!dep.make (a_class.id, a_feature.feature_id)
+						!!dep.make (a_class.id, a_feature)
 						unsafe_features.extend (dep)
-						mark_alive (a_feature, a_feature.rout_id_set.first)
+						mark_alive (a_feature.body_id.id)
 					end
 					ftable.forth
 				end
@@ -195,10 +193,10 @@ end
 				-- Does it work?
 			a_class := System.general_class.compiled_class
 			a_feature := a_class.feature_table.item ("clone")
-			!!dep.make (a_class.id, a_feature.feature_id)
+			!!dep.make (a_class.id, a_feature)
 			unsafe_features.extend (dep)
 			unsafe_body_ids.extend (a_feature.body_id)
-			mark_alive (a_feature, a_feature.rout_id_set.first)
+			mark_alive (a_feature.body_id.id)
 		end
 
 	record_descendants (a_class: CLASS_C) is
@@ -222,23 +220,23 @@ end
 				ftable := a_class.feature_table
 				select_table := ftable.origin_table
 
-				!!dep.make (an_id, select_table.item (put_rout_id).feature_id)
+				!!dep.make (an_id, select_table.item (put_rout_id))
 				special_features.extend (dep)
-				!!dep.make (an_id, select_table.item (item_rout_id).feature_id)
+				!!dep.make (an_id, select_table.item (item_rout_id))
 				special_features.extend (dep)
-				!!dep.make (an_id, select_table.item (infix_at_rout_id).feature_id)
+				!!dep.make (an_id, select_table.item (infix_at_rout_id))
 				special_features.extend (dep)
 
 					-- Record `lower' and `area'
-				!!dep.make (an_id, select_table.item (lower_rout_id).feature_id)
+				!!dep.make (an_id, select_table.item (lower_rout_id))
 				lower_and_area_features.extend (dep)
-				!!dep.make (an_id, select_table.item (area_rout_id).feature_id)
+				!!dep.make (an_id, select_table.item (area_rout_id))
 				lower_and_area_features.extend (dep)
 
 					-- Record unsafe features
-				!!dep.make (an_id, select_table.item (make_area_rout_id).feature_id)
+				!!dep.make (an_id, select_table.item (make_area_rout_id))
 				unsafe_features.extend (dep)
-				!!dep.make (an_id, select_table.item (set_area_rout_id).feature_id)
+				!!dep.make (an_id, select_table.item (set_area_rout_id))
 				unsafe_features.extend (dep)
 				from
 					d := a_class.descendants
@@ -254,13 +252,13 @@ end
 
 feature
 
-	process (a_class: CLASS_C; a_feature: FEATURE_I; depend_list: FEATURE_DEPENDANCE) is
+	process (a_class: CLASS_C; body_index: BODY_INDEX; body_id: BODY_ID; depend_list: FEATURE_DEPENDANCE) is
 		local
 			opt_unit: OPTIMIZE_UNIT
 			byte_code: BYTE_CODE
 		do
 			if array_optimization_on then
-				!!opt_unit.make (a_class.id, a_feature.body_index)
+				!!opt_unit.make (a_class.id, body_index)
 				if
 						-- The feature was marked during the type check
 						-- and hasn't been processed yet
@@ -273,7 +271,7 @@ feature
 						-- then if the routine has a descendant of ARRAY
 						-- as a local variable, an argument or Result and then
 						-- calls put or item on this local/argument/Result
-					byte_code := Byte_server.disk_item (a_feature.body_id)
+					byte_code := Byte_server.disk_item (body_id)
 						-- `disk_item' is used because the byte code will be modified and
 						-- we don't want the modified byte code to remain in the cache
 					if
@@ -301,13 +299,7 @@ feature
 								optimized_features.extend (opt_unit)
 									-- Store the new byte code
 								tmp_opt_byte_server.put (byte_code)
-debug ("OPTIMIZATION", "RECORD")
-	io.error.new_line
-	io.error.putstring (a_class.name)
-	io.error.putstring (" ")
-	io.error.putstring (a_feature.feature_name)
-	io.error.putstring (" is recorded%N")
-end
+
 							end
 
 							check
@@ -432,31 +424,31 @@ feature -- Detection of safe/unsafe features
 			good_feature: a_feature /= Void
 			good_class: a_class /= Void
 		do
-			if not (a_feature.is_attribute or else is_marked (a_feature)) then
-				mark (a_feature, a_class, a_feature.rout_id_set.first)
+			if not (a_feature.is_attribute or else is_treated (a_feature.body_id.id, a_feature.rout_id_set.first)) then
+				mark (a_feature.feature_id, a_feature.body_index, a_feature.body_id, a_class.id, a_feature.written_in, a_feature.rout_id_set.first)
 			end
 		end
 
-	is_safe (f: FEATURE_I): BOOLEAN is
+	is_safe (dep:DEPEND_UNIT): BOOLEAN is
 			-- Can the feature be safely called within an optimized loop?
 		local
 			table: ROUT_TABLE
 			rout_id_val: ROUTINE_ID
-			unit: ROUT_ENTRY
-			written_class, descendant_class: CLASS_C
-			body_table: BODY_INDEX_TABLE
 			other_body_id: BODY_ID
+			unit: ROUT_ENTRY
+			body_table: BODY_INDEX_TABLE
+			descendant_class, written_class: CLASS_C
 		do
-			if f.is_external then
+			if dep.is_external then
 				Result := False
 			else
-				rout_id_val := f.rout_id_set.first
+				rout_id_val := dep.rout_id
 
 				if
 					not rout_id_val.is_attribute and then
 					Tmp_poly_server.has (rout_id_val)
 				then	
-					written_class := f.written_class
+					written_class := dep.written_in.associated_class
 					table ?= Tmp_poly_server.item (rout_id_val)
 					from
 						Result := True
@@ -466,7 +458,7 @@ feature -- Detection of safe/unsafe features
 						table.after or else not Result
 					loop
 						unit := table.item
-						descendant_class := System.class_of_id (unit.id)
+						descendant_class := unit.id.associated_class
 						if descendant_class.simple_conform_to (written_class) then
 							other_body_id := body_table.item (unit.body_index)
 							Result := not unsafe_body_ids.has (other_body_id)
@@ -474,30 +466,19 @@ feature -- Detection of safe/unsafe features
 						table.forth
 					end
 				else
-					Result := not unsafe_body_ids.has (f.body_id)
+					Result := not unsafe_body_ids.has (body_index_table.item (dep.body_index))
 				end
 			end
-debug ("OPTIMIZATION")
-	io.error.putstring ("ARRAY_OPTIMIZER: ")
-    io.error.putstring (f.written_class.name)
-    io.error.putstring (" ")
-    io.error.putstring (f.feature_name)
-    if Result then
-		io.error.putstring (" is safe%N")
-	else
-    	io.error.putstring (" is NOT safe%N")
-	end
-end
 		end
 
 feature {NONE} -- Detection of safe/unsafe features
 
-	propagate_feature (written_class: CLASS_C; original_feature: FEATURE_I
-						depend_list: FEATURE_DEPENDANCE) is
+	propagate_feature (written_class_id: CLASS_ID; original_body_index: BODY_INDEX; original_body_id: BODY_ID; depend_list: FEATURE_DEPENDANCE) is
 		local
 			depend_unit: DEPEND_UNIT
 			depend_feature: FEATURE_I
 			static_class: CLASS_C
+			body_id: BODY_ID
 			unsafe: BOOLEAN
 		do
 			from
@@ -507,31 +488,17 @@ feature {NONE} -- Detection of safe/unsafe features
 			loop
 				depend_unit := depend_list.item
 				if not depend_unit.is_special then
-					static_class := System.class_of_id (depend_unit.id)
-					depend_feature := static_class.feature_table.feature_of_feature_id
-												(depend_unit.feature_id)
+					body_id := body_index_table.item (depend_unit.body_index)
 					if
-						not (depend_feature.is_attribute or else is_marked (depend_feature))
+						not (depend_unit.rout_id.is_attribute or else is_treated (body_id.id, depend_unit.rout_id))
 					then
-debug ("OPTIMIZATION")
-	io.error.putstring ("Propagated to ")
-	io.error.putstring (depend_feature.feature_name)
-	io.error.putstring (" from ")
-	io.error.putstring (static_class.name)
-	io.error.new_line
-end
-						mark (depend_feature, static_class, depend_feature.rout_id_set.first)
+						mark_treated (body_id.id, depend_unit.rout_id)
+						mark (depend_unit.feature_id, depend_unit.body_index, body_id, depend_unit.id, depend_unit.written_in, depend_unit.rout_id)
 					end
 						-- get the status ...
-					if not is_safe (depend_feature) then
+					if not is_safe (depend_unit) then
 						unsafe := True
-						unsafe_body_ids.extend (original_feature.body_id)
-debug ("OPTIMIZATION")
-	io.error.putstring (original_feature.feature_name)
-	io.error.putstring (" from ")
-	io.error.putstring (written_class.name)
-	io.error.putstring (" calls unsafe features!!!!!%N")
-end
+						unsafe_body_ids.extend (body_id)
 					end
 				end
 				depend_list.forth

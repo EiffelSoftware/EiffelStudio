@@ -7,6 +7,10 @@ class SELECT_TABLE
 
 inherit
 
+	COMPILER_EXPORTER
+		undefine
+			copy, is_equal
+		end
 	EXTEND_TABLE [FEATURE_I, ROUTINE_ID];
 	SHARED_HISTORY_CONTROL
 		undefine

@@ -38,7 +38,7 @@ feature
 			Result :=	remover = Void			-- Workbench mode
 						or else System.remover_off		-- Dead code removal disconnected
 						or else equal (body_id, Initialization_body_id)
-						or else remover.is_body_alive (body_id)	-- Final mode
+						or else remover.is_alive (body_id.id)	-- Final mode
 		end;
 
 end

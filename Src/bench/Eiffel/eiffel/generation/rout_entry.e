@@ -5,7 +5,7 @@ class ROUT_ENTRY
 inherit
 	ENTRY
 		redefine
-			update
+			update, is_attribute
 		end
 
 	SHARED_ID_TABLES
@@ -24,6 +24,9 @@ feature -- from ROUT_ENTRY
 
 	pattern_id: PATTERN_ID;
 			-- Pattern id of the entry
+	
+	is_attribute: BOOLEAN is false
+			-- is the feature_i associated an attribute ?	
 
 	set_body_index (i: BODY_INDEX) is
 			-- Assign `i' to `body_index'.
@@ -117,7 +120,8 @@ feature -- from ROUT_ENTRY
 			remover := system_i.remover;
 			Result := 	remover = Void						-- Workbench mode
 						or else system_i.remover_off		-- Dead code removal disconnected
-						or else remover.is_body_alive (body_id)	-- Final mode
+						--or else is_marked
+						or else remover.is_alive (body_id.id)	-- Final mode
 		end;
 
 	routine_name: STRING is

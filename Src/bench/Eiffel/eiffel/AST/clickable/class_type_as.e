@@ -220,7 +220,7 @@ feature -- Conveniences
 					context.supplier_ids.extend (d)
 					f := a_class.creation_feature
 					if f /= Void then
-						!!d.make (a_class.id, f.feature_id)
+						!!d.make (a_class.id, f)
 						context.supplier_ids.extend (d)
 					end
 				end

@@ -20,13 +20,14 @@ creation
 
 feature  -- Initialization
 
-	make (c_id: CLASS_ID; f_id: INTEGER) is
-			-- Initialization
-		require
-			valid_feature_id: f_id > 0
+	make (c_id: CLASS_ID; f: FEATURE_I) is
 		do
 			id := c_id;
-			feature_id := f_id;
+			feature_id := f.feature_id
+			rout_id := f.rout_id_set.first
+			written_in := f.written_in
+			body_index := f.body_index
+			is_external := f.is_external
 		end
 
 	make_expanded_unit (c_id: CLASS_ID) is
@@ -52,6 +53,15 @@ feature
 			-- Feature id
 			--| Note:	-1 is used for creation without creation routine
 			--|			-2 for expanded in local clause
+
+	rout_id: ROUTINE_ID
+
+	body_index: BODY_INDEX
+
+	written_in: CLASS_ID
+
+	is_external: BOOLEAN
+			-- is the feature an external
 
 	is_special: BOOLEAN is
 			-- Is `Current' a special depend_unit, i.e. used

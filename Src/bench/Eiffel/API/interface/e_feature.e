@@ -352,7 +352,7 @@ feature -- Access
 		do
 			!! Result.make;
 			dep := Depend_server.item (cl_class.id);
-			!! current_d.make (associated_class.id, id);
+			!! current_d.make (associated_class.id,associated_feature_i)
 			from
 				-- Loop through the features of each client
 				-- of current_class.
@@ -362,7 +362,8 @@ feature -- Access
 			loop
 				fdep := dep.item_for_iteration;
 				if fdep.has (current_d) then
-					cfeat := dep.key_for_iteration;
+					--cfeat := dep.key_for_iteration;
+					cfeat := fdep.feature_name
 					Result.put_front (cfeat);
 				end;
 				dep.forth;

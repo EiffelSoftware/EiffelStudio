@@ -191,7 +191,7 @@ feature -- Array optimization
 			cl_type ?= context_type; -- Cannot fail
 			base_class := cl_type.base_class;
 			f := base_class.feature_table.item (feature_name);
-			!!dep.make (base_class.id, f.feature_id);
+			!!dep.make (base_class.id, f);
 			Result := optimizer.special_features.has (dep);
 		end;
 
@@ -200,6 +200,7 @@ feature -- Array optimization
 			cl_type: CL_TYPE_I;
 			base_class: CLASS_C;
 			f: FEATURE_I
+			dep: DEPEND_UNIT
 		do
 			cl_type ?= context_type; -- Cannot fail
 			base_class := cl_type.base_class;
@@ -212,7 +213,8 @@ debug ("OPTIMIZATION")
 	io.error.putstring (" is NOT safe%N");
 end;
 			optimizer.test_safety (f, base_class);
-			Result := (not optimizer.is_safe (f))
+			!! dep.make (base_class.id, f)
+			Result := (not optimizer.is_safe (dep))
 				or else (parameters /= Void and then parameters.is_unsafe)
 debug ("OPTIMIZATION")
 	if Result then

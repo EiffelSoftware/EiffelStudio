@@ -10,105 +10,96 @@ inherit
 
 feature
 
-	used_table: ARRAY [ROUT_ID_SET];
-			-- Table of used body ids
+	used_table: ARRAY [BOOLEAN]
+				-- table of used body_ids
 
+	marked_table: ARRAY [ROUT_ID_SET]
+				-- table of marked body_ids
+
+	body_index_table: BODY_INDEX_TABLE	
+				-- to find a body_id from a body_index
+	
 	make is
 			-- Initialization
 		do
-			!!used_table.make (1, System.body_id_counter.total_count);
+			body_index_table := System.body_index_table
+			!! used_table.make (1, System.body_id_counter.total_count)
+			!! marked_table.make (1, System.body_id_counter.total_count)
 		end;
 
+	mark_dispose is
+			-- mark all the dispose functions of the system
+		local
+			dispose_rout_id: ROUTINE_ID
+			table: ROUT_TABLE
+			unit: ROUT_ENTRY
+			old_position: INTEGER
+			body_id: BODY_ID
+		do
+			dispose_rout_id := System.memory_dispose_id
+			table ?= Tmp_poly_server.item (dispose_rout_id);
+			from
+				table.start
+			until
+				table.after
+			loop
+				unit := table.item;
+				body_id := body_index_table.item (unit.body_index)
+				if unit.is_attribute then
+					mark_alive (body_id.id);
+				else
+					old_position := table.position
+					mark (unit.feature_id, unit.body_index, body_id, unit.id, unit.written_in, dispose_rout_id);
+					table.go_to (old_position)	
+				end;
+				table.forth
+			end
+		end
+			
 feature {NONE}
 
-	mark (f: FEATURE_I; static_class: CLASS_C; rout_id_val: ROUTINE_ID) is
+	mark (f: INTEGER;body_index: BODY_INDEX; body_id: BODY_ID static_class_id: CLASS_ID; original_class_id: CLASS_ID; rout_id_val: ROUTINE_ID) is
 			-- Mark feature and its redefinitions
-		require
-			not_is_attribute: not f.is_attribute;
-			rout_id_not_void: rout_id_val /= Void
 		local
-			other_body_id: BODY_ID;
-			descendant_class: CLASS_C;
-			descendant_feature: FEATURE_I;
-			des_orig_table: SELECT_TABLE;
 			table: ROUT_TABLE;
 			old_position: INTEGER;
-			body_table: BODY_INDEX_TABLE;
 			unit: ROUT_ENTRY;
-			redef_unit: TRAVERSAL_UNIT;
---			assert_id_set: ASSERT_ID_SET;
-			inh_assert: INH_ASSERT_INFO;
-			i, nb: INTEGER;
-			ancestor_feature: FEATURE_I;
-			written_class, ancestor_class: CLASS_C;
+			body_id_unit: BODY_ID
 		do
-			mark_and_record (f, static_class, rout_id_val);
+			mark_and_record (f, body_index, body_id, static_class_id, original_class_id);
 
-			check
-				(not Tmp_poly_server.has (rout_id_val)) implies f.is_deferred;
-					-- Case for an non existing routine table: a deferred
-					-- feature without any implementation in descendant classes
-					-- leads to NO routine table.
-			end;
-
--- FIXME
--- If the assertions are on for at least a class in the system,
--- The dead code removal is turned off
-
---			if f.assert_id_set /= Void then
---				-- The routine has chained assertions.
---				-- mark all the previous definitions with assertions
---				-- as used.
---				from
---					assert_id_set := f.assert_id_set;
---					i := 1;
---					nb := assert_id_set.count
---				until
---					i > nb
---				loop
---					inh_assert := assert_id_set.item (i);
---					if inh_assert.has_assertion then
---						ancestor_class := System.class_of_id (inh_assert.written_in);
---						ancestor_feature := ancestor_class.feature_table.feature_of_rout_id
---														(f.rout_id_set);
---						mark_and_record (ancestor_feature, ancestor_class);
---					end;
---					i := i + 1;
---				end;
---			end;
-
-			if Tmp_poly_server.has (rout_id_val) then
+				if Tmp_poly_server.has (rout_id_val) then
 					-- If routine id available: this is not a deferred feature
 					-- without any implementation
-				written_class := f.written_class;
 				table ?= Tmp_poly_server.item (rout_id_val);
 				check
 					table_exists: table /= Void;
 				end;
 				from
-					body_table := System.body_index_table;
 					table.start
 				until
 					table.after
 				loop
 					unit := table.item;
-					if System.class_of_id (unit.id).simple_conform_to (written_class) then
+					if unit.id.associated_class.simple_conform_to (original_class_id.associated_class) then
 						old_position := table.position;
-						other_body_id := body_table.item (unit.body_index);
-						if not bid_rid_is_marked (other_body_id, rout_id_val) then
-							descendant_class := System.class_of_id (unit.id);
-							des_orig_table := descendant_class.feature_table.origin_table
-							descendant_feature := des_orig_table.item(rout_id_val);
-							if
-								not (descendant_feature.is_none_attribute
-									or else descendant_class.is_basic)
-							then
-								if descendant_feature.is_attribute then
-									mark_alive (descendant_feature, rout_id_val);
+						if not is_alive (unit.body_id.id) then
+DEBUG ("DEAD_CODE")
+	io.putstring ("marking for rout_id: ")
+	io.putint (rout_id_val.id)
+	io.putstring ("%N")
+end
+								body_id_unit := body_index_table.item (unit.body_index)
+								if unit.is_attribute then
+DEBUG ("DEAD_CODE")
+	io.putstring ("birth of attribute of body id: ")
+	io.putint (body_id_unit.id)
+	io.putstring ("%N")
+end
+									mark_alive (body_id_unit.id);
 								else
-									mark (descendant_feature, descendant_class, rout_id_val);
+									mark (unit.feature_id, unit.body_index, body_id_unit, unit.id, unit.written_in, rout_id_val);
 								end;
-							end;
 						end;
 						table.go_to (old_position);
 					end;
@@ -117,136 +108,113 @@ feature {NONE}
 			end;
 		end;
 
-	mark_and_record (feat: FEATURE_I; actual_class: CLASS_C; rout_id_val: ROUTINE_ID) is
+	mark_and_record (feature_id: INTEGER; body_index: BODY_INDEX; body_id: BODY_ID; actual_class_id: CLASS_ID; written_class_id: CLASS_ID) is
 			-- Mark feature `feat' alive.
-		require
-			feat_exists: feat /= Void;
-			actual_class_exists: actual_class /= Void;
-			consistency: actual_class.simple_conform_to (feat.written_class);
-			rout_id_not_void: rout_id_val /= Void
 		local
 			depend_list: FEATURE_DEPENDANCE;
-			original_feature: FEATURE_I;
-			written_class: CLASS_C;
+			static_dependances, original_dependances: CLASS_DEPENDANCE
 			just_born: BOOLEAN;
 			like_feature: LIKE_FEATURE;
 			like_Feat: FEATURE_I;
-			r_id: ROUTINE_ID
+			feature_name: STRING
+			static_class, written_class: CLASS_C
+			depend_feature, original_feature: FEATURE_I
+			-- DEBUG
+			a_class: CLASS_C
+			
 		do
-			just_born := not is_alive (feat);
+			just_born := not is_alive (body_id.id);
 				-- Mark feature alive
-			mark_alive (feat, rout_id_val);
+
+
+
+DEBUG("DEAD_CODE")
+	------------------------------------------
+	--		DEBUG			--
+	
+	io.putstring ("MARKING: ")			
+	a_class := actual_class_id.associated_class
+	io.putstring (" (bid: ")
+	io.putint (body_id.id)
+	io.putstring ("; fid: ")
+	io.putint (feature_id)
+	io.putstring (") of ")
+	io.putstring (a_class.lace_class.name)
+	io.putstring (" (")
+	io.putint (a_class.id.id)
+	io.putstring (") originally in ")
+	a_class := written_class_id.associated_class
+	io.putstring (a_class.lace_class.name)
+	io.putstring (" (")
+	io.putint (a_class.id.id)
+	io.putstring (")%N")
+	------------------------------------------
+end
 
 			if just_born then
-
-					-- Marking of the function type if it is
-					-- an anchor.
-				like_feature ?= feat.type
-				if like_feature /= Void then
-					r_id := like_feature.rout_id;
-					like_feat := actual_class.feature_table.
-						feature_of_rout_id (r_id)
-					if not like_feat.is_attribute then
-						mark (like_feat, actual_class, r_id)
-					end
-				end
-
+			mark_alive (body_id.id);
 
 					-- Take care of dependances
-				written_class := feat.written_class;
-				if actual_class = written_class then
-					original_feature := feat;
-				else
-					original_feature :=
-						written_class.feature_table.feature_of_body_id
-																(feat.body_id);
-					check
-						original_feature_exists: original_feature /= Void
-					end;
-				end;
-debug ("MARKING")
-    io.error.putstring (original_feature.feature_name);
-    io.error.putstring (" from ");
-    io.error.putstring (actual_class.name);
-    io.error.putstring (" written in ");
-    io.error.putstring (written_class.name);
-    io.error.new_line;
-end;
-				depend_list := Depend_server.item (written_class.id).item
-									(original_feature.feature_name);
+				static_dependances := Depend_server.item (actual_class_id)
+				original_dependances := Depend_server.item (written_class_id)
+				depend_list := original_dependances.item (body_id)
 				if depend_list /= Void then
-					propagate_feature (written_class, original_feature, depend_list);
+					propagate_feature (written_class_id, body_index, body_id, depend_list);
 				end;
-			end;
-		end;
+DEBUG ("DEAD_CODE")
+	io.putstring ("La depend_list contient ")
+	if depend_list /= Void then
+		io.putint (depend_list.count)
+	else
+		io.putstring ("aucun")
+	end
+	io.putstring (" elements.%N")
+	io.putstring ("-----------------------------------------------------%N%N%N")
+end
+			end
+DEBUG ("DEAD_CODE")
+	if not just_born then
+		io.putstring ("already alive%N")
+	end
+end
+		end
 
-	propagate_feature (a_class: CLASS_C; a_feature: FEATURE_I; dep: FEATURE_DEPENDANCE) is
+	propagate_feature (written_class_id: CLASS_ID; original_body_index: BODY_INDEX; original_body_id: BODY_ID; dep: FEATURE_DEPENDANCE) is
 		deferred
 		end
 
-	mark_alive (feat: FEATURE_I; rout_id_val: ROUTINE_ID) is
-			-- Record feature `feat'
-		require
-			good_argument: feat /= Void;
-			rout_id_not_void: rout_id_val /= Void
-		local
-			class_name: STRING
-			temp: ROUT_ID_SET
-			body_id: INTEGER
-		do
-debug ("MARKING")
--- Verbose
-	io.error.putstring ("%TMarking ");
-	io.error.putstring (feat.feature_name);
-	io.error.putstring (" from ");
-	class_name := clone (feat.written_class.name)
-	class_name.to_upper;
-	io.error.putstring (class_name);
-	io.error.new_line;
-end;
-			body_id := feat.body_id.id
-			temp := used_table.item (body_id);
-			if (temp = Void) then
-				!! temp.make (1);
-				used_table.put (temp, body_id);
-			end;
-			temp.force (rout_id_val);
-		end;
-
 feature
 
-	is_marked (feat: FEATURE_I): BOOLEAN is
-		require
-			good_argument: feat /= Void
+	mark_alive (body_id: INTEGER) is
+			-- record feature of body_id body_id
+		do
+			used_table.put (True, body_id)
+		end
+
+	mark_treated (body_id: INTEGER; rout_id: ROUTINE_ID) is
+			-- record feature of body_id body_id
 		local
-			temp: ROUT_ID_SET
+			tmp: ROUT_ID_SET
 		do
-			temp := used_table.item (feat.body_id.id)
-			Result := (temp /= Void) and then temp.has (feat.rout_id_set.first)
-		end;
+			tmp := marked_table.item (body_id)
+			if (tmp = Void) then
+				!! tmp.make (1);
+				marked_table.put (tmp, body_id)
+			end
+			tmp.force (rout_id)
+		end
 
-	bid_rid_is_marked (bid: BODY_ID; rid: ROUTINE_ID): BOOLEAN is
-		require
-			rid_not_void: rid /= Void
+	is_alive (body_id: INTEGER): BOOLEAN is
+		do
+			Result := used_table.item (body_id) 
+		end
+
+	is_treated (body_id: INTEGER; rout_id: ROUTINE_ID): BOOLEAN is
 		local
-			temp: ROUT_ID_SET
+			tmp: ROUT_ID_SET
 		do
-			temp := used_table.item (bid.id)
-			Result := (temp /= Void) and then temp.has (rid)
-		end;
-
-	is_alive (feat: FEATURE_I): BOOLEAN is
-			-- Is the feature `feat' already recorded ?
-		require
-			good_argument: feat /= Void
-		do
-			Result := used_table.item (feat.body_id.id) /= Void
-		end;
-
-	is_body_alive (body_id: BODY_ID): BOOLEAN is
-			-- Is the body id recorded in the `used_table' ?
-		do
-			Result := (used_table.item (body_id.id) /= Void)
-		end;
+			tmp := marked_table.item (body_id)
+			Result := tmp /= Void and then tmp.has (rout_id)
+		end
 
 end

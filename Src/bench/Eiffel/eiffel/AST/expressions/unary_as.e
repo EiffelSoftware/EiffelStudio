@@ -117,7 +117,7 @@ feature -- Type check, byte code and dead code removal
 			end
  
 				-- Suppliers update
-			!!depend_unit.make (last_class.id, prefix_feature.feature_id)
+			!!depend_unit.make (last_class.id, prefix_feature)
 			context.supplier_ids.extend (depend_unit)
 
 				-- Assumes here that a prefix feature has no argument

@@ -696,7 +696,7 @@ feature -- Export checking
 			else
 				class_dependance := Depend_server.item (written_in)
 			end
-			Result := class_dependance.item (feature_name).suppliers
+			Result := class_dependance.item (body_id).suppliers
 		end
 
 feature -- Check
@@ -869,6 +869,7 @@ debug ("SERVER")
 	io.putstring (new_body_id.dump)
 	io.new_line
 end
+			System.depend_server.change_ids (new_body_id, old_body_id)
 			if not is_code_replicated then
 				Body_server.change_id (new_body_id, old_body_id)
 			else
@@ -912,6 +913,7 @@ feature -- Polymorphism
  			Result.set_type_a (type.actual_type)
  			Result.set_written_in (written_in)
  			Result.set_pattern_id (pattern_id)
+			Result.set_feature_id (feature_id)
  		end
  
  	new_attr_entry: ATTR_ENTRY is

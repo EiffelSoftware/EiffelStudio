@@ -776,7 +776,7 @@ rt_public void ridr_multi_int64 (EIF_INTEGER_64 *obj, size_t num)
 		upper = (EIF_INTEGER_64) ntohl(value);
 		idrf.i_decode.i_ptr += I64SIZ;
 				/* rejoin the upper and lower parts */ 
-		*obj++ = (lower & 0x00000000ffffffff) | (upper << 32);
+		*obj++ = (lower & RTI64C(0x00000000ffffffff)) | (upper << 32);
 	}
 }
 
@@ -791,8 +791,8 @@ rt_public void widr_multi_int64 (EIF_INTEGER_64 *obj, size_t num)
 		check_capacity (&idrf.i_encode, I64SIZ);
 	
 		temp = *obj++;		/*split long into upper and lower 4 bytes */
-		lower = (uint32) (temp & 0x00000000ffffffff);
-		upper = (uint32) ((temp >> 32) & 0x00000000ffffffff);
+		lower = (uint32) (temp & RTI64C(0x00000000ffffffff));
+		upper = (uint32) ((temp >> 32) & RTI64C(0x00000000ffffffff));
 		value = htonl((uint32)(lower));
 		memcpy  (idrf.i_encode.i_ptr, &value, 4);
 		value = htonl((uint32)(upper));

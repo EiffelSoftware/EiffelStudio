@@ -164,6 +164,7 @@ feature -- Element change
 	set_tooltip (a_tooltip: STRING) is
 			-- Assign `a_tooltip' to `tooltip'.
 		do
+			tooltip := a_tooltip.twin
 		end
 
 	tooltip: STRING

@@ -104,7 +104,9 @@ end;
 				if (i > last_precompiled_id) then
 					f := files.item (i);
 					if f /= Void and then (f.occurence = 0) then
-						remove_file (f);
+						if not f.is_static then
+							remove_file (f);
+						end
 					end;
 				end;
 				i := i + 1
@@ -216,7 +218,7 @@ end;
 			loop
 				file:= files.item (i);
 				if file /= Void and then file.exists then
-					if file.precompiled then
+					if file.precompiled or file.is_static then
 						Result := file.is_readable
 					else
 						Result := (file.is_readable and file.is_writable)

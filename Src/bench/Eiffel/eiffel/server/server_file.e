@@ -76,6 +76,7 @@ feature
 				basic_close
 			end;
 			id := i;
+			set_is_dynamic (System.is_dynamic);
 debug ("SERVER")
 	io.error.putstring ("Creating file E");
 	io.error.putint (i);
@@ -109,14 +110,14 @@ end;
 		end;
 		
 	open is
-			-- Open file in read mode if precompiled
-			-- in read-write otherwise.
+			-- Open file in read mode if precompiled or part of the static
+			-- system (DLE), in read-write otherwise.
 		require
 			is_closed: not is_open
 		do
-			if precompiled then
+			if Project_read_only.item then
 				open_read
-			elseif Project_read_only.item then
+			elseif precompiled or is_static then
 				open_read
 			else
 				open_read_write
@@ -157,8 +158,10 @@ end;
 		do
 			if prec then
 				temp := Precompilation_path
+			elseif is_static then
+				temp := Extendible_path
 			else
-				temp := Compilation_path;
+				temp := Compilation_path
 			end;
 			!!fname.make_from_string (temp);
 			!!temp.make (5);
@@ -185,5 +188,24 @@ end;
 feature -- Packet size
 
 	packet_size: INTEGER is 100
+
+feature -- DLE
+
+	is_dynamic: BOOLEAN;
+			-- Does the current server file contain 
+			-- dynamic classes' information?
+
+	set_is_dynamic (b: BOOLEAN) is
+			-- Assign `b' to `is_dynamic'.
+		do
+			is_dynamic := b
+		end;
+
+	is_static: BOOLEAN is
+			-- Does the current server file contain static classes' information
+			-- during the Dynamic Class Set construction?
+		do
+			Result := System.is_dynamic and not is_dynamic
+		end;
 
 end

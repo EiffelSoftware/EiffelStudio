@@ -8,6 +8,8 @@ feature {NONE}
 
 	Initialization_id: INTEGER is 2;
 
-	Dispose_id: INTEGER is 3;
+	Dle_make_id: INTEGER is 3;
+
+	Dispose_id: INTEGER is 4;
 
 end

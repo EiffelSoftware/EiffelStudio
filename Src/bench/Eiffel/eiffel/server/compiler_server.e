@@ -7,13 +7,13 @@ inherit
 	SHARED_SCONTROL
 		export
 			{NONE} all
-		undefine
+		redefine
 			copy, is_equal
 		end;
 	SHARED_SERVER
 		export
 			{NONE} all
-		undefine
+		redefine
 			copy, is_equal
 		end;
 	EXTEND_TABLE [SERVER_INFO, INTEGER]
@@ -25,6 +25,20 @@ inherit
 			remove as tbl_remove,
 			change_key as tbl_change_key,
 			has as tbl_has
+		redefine
+			copy, is_equal
+		end;
+	EXTEND_TABLE [SERVER_INFO, INTEGER]
+		rename
+			make as tbl_make,
+			position as tbl_position,
+			item as tbl_item,
+			put as tbl_put,
+			remove as tbl_remove,
+			change_key as tbl_change_key,
+			has as tbl_has
+		redefine
+			is_equal, copy
 		end
 
 feature
@@ -152,8 +166,10 @@ end;
 			info, old_info: SERVER_INFO;
 		do
 			server_file := Server_controler.file_of_id (current_id);
-			if (server_file.count > Size_limit*Server_controler.chunk_size) or else
-				server_file.precompiled
+			if
+				server_file.count > Size_limit * Server_controler.chunk_size
+				or else server_file.precompiled
+				or else server_file.is_static
 			then 
 				set_current_id;
 				server_file := Server_controler.file_of_id (current_id);
@@ -446,6 +462,36 @@ end;
 	 make_index (obj: ANY; file_position, object_count: INTEGER) is
 			-- Index building
 		do
+		end;
+
+feature -- Duplication
+
+	copy (other: like Current) is
+			-- Re-initialize from `other'.
+		do
+			standard_copy (other);
+			set_keys (clone (other.keys));
+				-- `content' should be deep cloned since we don't want to
+				-- share the server_info which are a kind of secondary keys
+				-- (key to access the data on the disk).
+			set_content (deep_clone (other.content));
+			set_deleted_marks (clone (other.deleted_marks));
+				-- `file_ids' is deep cloned as well for the same reason:
+				-- we don't want it to be shared.
+			file_ids := deep_clone (other.file_ids)
+		end;
+
+feature -- Comparison
+
+	is_equal (other: like Current): BOOLEAN is
+			-- Does server contain the same information as `other'?
+		do
+			Result :=
+				equal (keys, other.keys) and
+				deep_equal (content, other.content) and
+				equal (deleted_marks, other.deleted_marks) and
+				current_id = other.current_id and
+				deep_equal (file_ids, other.file_ids)
 		end;
 
 feature {NONE} -- External features

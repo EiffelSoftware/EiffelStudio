@@ -48,8 +48,9 @@ feature
 				file_ids.after
 			loop
 				server_file := Server_controler.file_of_id (file_ids.item);
-				Server_controler.forget_file (server_file);
-				server_file.delete;
+				if not server_file.is_static then
+					Server_controler.remove_file (server_file)
+				end;
 				file_ids.forth
 			end;
 			clear_all;

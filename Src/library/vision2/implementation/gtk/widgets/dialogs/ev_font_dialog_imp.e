@@ -87,7 +87,7 @@ feature -- Access
 			font_imp ?= Result.implementation
 			create a_fullname.make (0)
 			a_fullname.from_c (C.gtk_font_selection_dialog_get_font_name (c_object))
-			Result.preferred_faces.extend (font_imp.substring_dash (a_fullname, 2))
+			Result.preferred_familys.extend (font_imp.substring_dash (a_fullname, 2))
 
 			a_font_height := font_imp.substring_dash (a_fullname, 7)
 			if not a_font_height.is_integer then
@@ -206,6 +206,9 @@ end -- class EV_FONT_DIALOG_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2001/06/14 17:21:43  rogers
+--| Now references preferred_familys instead of preferred_faces.
+--|
 --| Revision 1.6  2001/06/07 23:08:06  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

@@ -129,7 +129,7 @@ feature -- Status Setting
 			text_window.clear_window
 			text_window.hide
 			text_window.process_text (st)
-			text_window.set_position (0)
+			text_window.set_position (1)
 			text_window.show
 		end
 

@@ -9,6 +9,9 @@ class
 
 inherit
 	WIZARD_COMPONENT_EIFFEL_CLIENT_GENERATOR
+		redefine
+			set_default_ancestors
+		end
 
 	WIZARD_EIFFEL_WRITER_GENERATOR
 
@@ -43,7 +46,7 @@ feature -- Basic operations
 
 			a_class_name := name_for_class (a_descriptor.name, a_descriptor.type_kind, True)
 
-			dispatch_interface := (a_descriptor.interface_descriptor.dispinterface or a_descriptor.interface_descriptor.dual)
+			dispatch_interface := (a_descriptor.interface_descriptor.dispinterface and not a_descriptor.interface_descriptor.dual)
 
 			eiffel_writer.set_class_name (a_class_name)
 			eiffel_writer.set_description (a_descriptor.description)
@@ -82,6 +85,18 @@ feature -- Basic operations
 		end
 
 feature {NONE} -- Implementation
+
+	set_default_ancestors (an_eiffel_writer: WIZARD_WRITER_EIFFEL_CLASS) is
+			-- Set default ancestors
+		local
+			tmp_writer: WIZARD_WRITER_INHERIT_CLAUSE
+		do
+			{WIZARD_COMPONENT_EIFFEL_CLIENT_GENERATOR} Precursor (an_eiffel_writer)
+
+			create tmp_writer.make
+			tmp_writer.set_name (Queriable_type)
+			an_eiffel_writer.add_inherit_clause (tmp_writer)
+		end
 
 	add_creation is
 			-- Add creation routines.

@@ -67,7 +67,7 @@ feature -- Basic operations
 			cpp_class_writer.add_member (data_member, Private)
 
 			if 
-				a_descriptor.interface_descriptor.dispinterface or 
+				a_descriptor.interface_descriptor.dispinterface and not  
 				a_descriptor.interface_descriptor.dual 
 			then
 				dispatch_interface := True

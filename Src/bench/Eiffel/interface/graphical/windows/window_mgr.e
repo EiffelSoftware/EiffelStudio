@@ -8,10 +8,17 @@ indexing
 class WINDOW_MGR 
 
 inherit
+	
+	W_MAN_GEN;
 	WINDOWS
 		rename
 			explain_window as win_explain
-		end
+		end;
+	EB_CONSTANTS;
+	RESOURCE_USER
+		redefine
+			update_font_resource, update_color_resource, finish_update
+		end;
 
 creation
 
@@ -28,10 +35,17 @@ feature -- Initialization
 			!!class_win_mgr.make (a_screen, i);
 			!!object_win_mgr.make (a_screen, i);
 			!!explain_win_mgr.make (a_screen, i);
+			Graphical_resources.add_user (Current)	
 		end;
 
 feature -- Properties
 
+	need_to_resynchronize: BOOLEAN;	
+		-- Do all the windows need to be resynchonized?
+	
+	need_to_update_attributes: BOOLEAN;	
+		-- Do all the windows need to update their colors and fonts?
+	
 	routine_win_mgr: ROUTINE_WIN_MGR;
 		-- Manager for routine windows 
 
@@ -168,5 +182,62 @@ feature -- Graphical Interface
 		do
 			routine_win_mgr.raise_editors
 		end;
+
+feature -- Update
+
+	update_font_resource (old_res, new_res: FONT_RESOURCE) is
+			-- Update Current to reflect changes in `a_modified_resource'.
+		do
+			need_to_resynchronize := True;
+			if old_res = Graphical_resources.font then
+				need_to_update_attributes := True;
+			end;
+			old_res.update_with (new_res)
+		end;
+ 
+	update_color_resource (old_res, new_res: COLOR_RESOURCE) is
+			-- Update Current to reflect changes in `a_modified_resource'.
+		do
+			need_to_resynchronize := True;
+			if 
+				old_res = Graphical_resources.background_color or else 
+				old_res = Graphical_resources.foreground_color 
+			then
+				need_to_update_attributes := True;
+			end;
+			old_res.update_with (new_res)
+		end;
+
+	finish_update is
+			-- Finish the update of resources.
+		local
+			att: WINDOW_ATTRIBUTES
+			top_w: TOP;
+			widget: WIDGET
+		do
+			if need_to_update_attributes then
+				!! att;
+				from
+					widget_manager.start
+				until
+					widget_manager.after
+				loop
+					widget := widget_manager.item;
+					if widget.depth = 0 then
+						top_w ?= widget;
+						att.set_composite_attributes (top_w);
+					end;
+					widget_manager.forth
+				end;
+				need_to_update_attributes := False
+			end
+			if need_to_resynchronize then
+				routine_win_mgr.synchronize;
+				class_win_mgr.synchronize;
+				object_win_mgr.synchronize;
+				explain_win_mgr.synchronize;
+				need_to_resynchronize := False;
+			end
+		end;	
 
 end -- class WINDOW_MGR

@@ -929,10 +929,10 @@ feature {NONE} -- External features
 		require
 			s_not_void: s /= Void
 		do
-			Result := s.item (1) = '0' and then s.item (2) = 'x'
+			Result := s.count > 2 and then s.item (1) = '0' and then s.item (2) = 'x'
 		ensure
 			result_condition:
-				Result implies (s.item (1) = '0' and then s.item (2) = 'x')
+				Result implies (s.count > 2 and then s.item (1) = '0' and then s.item (2) = 'x')
 		end
 
 	para: DB_PARA_ODBC

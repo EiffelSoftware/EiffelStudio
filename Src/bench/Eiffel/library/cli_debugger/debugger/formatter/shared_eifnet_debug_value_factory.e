@@ -23,6 +23,8 @@ feature {SHARED_EIFNET_DEBUG_VALUE_FACTORY} -- Bridge
 			-- Bridge to EIFNET_DEBUG_VALUE_FACTORY.debug_value_from 
 		do
 			Result := Edv_factory.debug_value_from (a_icd, a_icd.associated_frame)
+		ensure
+			Result /= Void
 		end
 		
 	debug_value_from_prepared_icdv (a_icd: ICOR_DEBUG_VALUE; a_prep_icd: ICOR_DEBUG_VALUE): EIFNET_ABSTRACT_DEBUG_VALUE is

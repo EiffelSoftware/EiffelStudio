@@ -32,6 +32,8 @@ feature -- Access
 		end
 		
 invariant
-	lists_equal_in_length: (names.count = types.count) and (names.count = comments.count)
+	-- Cannot be executed as the invariant will not execute the once.
+	-- Could reference each atribute in the 
+	--lists_equal_in_length: (names.count = types.count) and (names.count = comments.count)
 
 end -- class GB_ACTION_SEQUENCES

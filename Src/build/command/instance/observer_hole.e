@@ -11,7 +11,7 @@ inherit
 	EB_BUTTON;
 	HOLE
 		redefine
-			process_instance
+			process_instance, compatible
 		select
 			init_toolkit
 		end
@@ -70,6 +70,13 @@ feature
 			Result := Pixmaps.command_instance_dot_pixmap
 		end;
 
+	compatible (st: STONE): BOOLEAN is
+		do
+			Result :=
+				st.stone_type = Stone_types.command_type or else
+				st.stone_type = Stone_types.instance_type
+		end
+
 	set_empty_symbol is
 		do
 			if pixmap /= symbol then
@@ -86,7 +93,7 @@ feature
 
 	stone_type: INTEGER is
 			do
-				Result := Stone_types.instance_type
+				Result := Stone_types.instance_type 
 			end
 
 feature {NONE}

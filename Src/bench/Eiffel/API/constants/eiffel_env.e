@@ -123,14 +123,14 @@ feature -- Access: file name
 	Default_class_file: FILE_NAME is
 		once
 			create Result.make_from_string (Eiffel_installation_dir_name)
-			Result.extend_from_array (<<"studio", "help", "defaults">>)
+			Result.extend_from_array (<<"studio", "help", "defaults", Eiffel_platform>>)
 			Result.set_file_name (Default_class_filename)
 		end
 
 	Default_ace_name: FILE_NAME is
 		once
 			create Result.make_from_string (Eiffel_installation_dir_name)
-			Result.extend_from_array (<<"studio", "help", "defaults">>)
+			Result.extend_from_array (<<"studio", "help", "defaults", Eiffel_platform>>)
 			Result.set_file_name (Default_ace_file)
 		end
 

@@ -1,2 +1,2 @@
-Lace error: `precompiled' cannot be used more than twice in the same Ace file.
-What to do: Remove one of the `precompiled' clauses.
+Lace error: `precompiled' cannot be used during precompilation.
+What to do: Remove `precompiled' clause.

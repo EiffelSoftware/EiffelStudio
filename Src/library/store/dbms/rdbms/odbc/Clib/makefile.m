@@ -1,5 +1,5 @@
 CC = cl
-CFLAGS = -c -Ox -W3 -I$(EIFFEL4)\bench\spec\$(PLATFORM)\include
+CFLAGS = -c -Ox -W3 -I$(ISE_EIFFEL)\bench\spec\$(ISE_PLATFORM)\include
 OBJ = odbc.obj
 
 all:: clean odbc_store.lib
@@ -8,7 +8,7 @@ all:: clean odbc_store.lib
 	$(CC) $(CFLAGS) $<
 
 odbc_store.lib: $(OBJ) odbc.h
-		del $@
+		-del $@
 		lib /OUT:$@ $(OBJ)
 		if not exist ..\..\..\..\spec mkdir ..\..\..\..\spec
 		if not exist ..\..\..\..\spec\msc mkdir ..\..\..\..\spec\msc
@@ -18,4 +18,4 @@ odbc_store.lib: $(OBJ) odbc.h
 odbc.obj: odbc.c odbc.h
 
 clean:
-	del *.obj *.lib
+	-del *.obj *.lib

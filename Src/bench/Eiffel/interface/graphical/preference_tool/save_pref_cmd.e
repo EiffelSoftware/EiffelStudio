@@ -46,8 +46,8 @@ feature {PREFERENCE_COMMAND} -- Execution
 			if wd /= Void then
 				wd.popdown;
 				wd.destroy
-			elseif argument = ok_it then
-					--| OK chosen from the save interface
+			elseif argument = save_it then
+					--| Save chosen from the save interface
 
 				save_resources
 			elseif argument = cancel_it then
@@ -59,7 +59,7 @@ feature {PREFERENCE_COMMAND} -- Execution
 			elseif tool /= Void then
 				if argument /= Void then
 						--| Current is called from
-						--| the OK command.
+						--| the Save command.
 					close_tool := True
 				end;
 				tool.validate_all;
@@ -148,7 +148,8 @@ feature {NONE} -- Implementation
 	build_interface is
 			-- Build the interface for the save command.
 		local
-			check_form, button_form: FORM
+			check_form, button_form: FORM;
+			att: WINDOW_ATTRIBUTES
 		do
 			!! dialog.make ("Save Shell", tool);
 			!! button_form.make ("Button Form", dialog);
@@ -168,6 +169,8 @@ feature {NONE} -- Implementation
 			dialog.attach_bottom_widget (button_form, check_form, 0)
 
 			dialog.set_exclusive_grab;
+			!! att;
+			att.set_composite_attributes (dialog);
 			dialog.popup;
 			dialog.raise
 		end;
@@ -177,18 +180,18 @@ feature {NONE} -- Implementation
 		require
 			form_not_void: form /= Void
 		local
-			ok_button, cancel_button: PUSH_B
+			save_button, cancel_button: PUSH_B
 		do
 			!! cancel_button.make ("Cancel", form);
 			cancel_button.add_activate_action (Current, cancel_it);
-			!! ok_button.make ("Ok", form);
-			ok_button.add_activate_action (Current, ok_it);
+			!! Save_button.make ("Save", form);
+			save_button.add_activate_action (Current, save_it);
 
 			form.set_fraction_base (2);
-			form.attach_bottom (ok_button, 1);
-			form.attach_top (ok_button, 1);
-			form.attach_left_position (ok_button, 0);
-			form.attach_right_position (ok_button, 1);
+			form.attach_bottom (save_button, 1);
+			form.attach_top (save_button, 1);
+			form.attach_left_position (save_button, 0);
+			form.attach_right_position (save_button, 1);
 			form.attach_left_position (cancel_button, 1);
 			form.attach_right_position (cancel_button, 2);
 			form.attach_bottom (cancel_button, 1);
@@ -241,7 +244,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Arguments
 
-	ok_it: ANY is
+	save_it: ANY is
 		once
 			!! Result
 		end;
@@ -271,5 +274,5 @@ feature {NONE} -- Properties
 			-- Should the preference tool be closed
 			-- after saving?
 			-- Ie.: is Current called from the menu entry
-			-- or from the OK button in the preference tool?
+			-- or from the Cancel button in the preference tool?
 end -- class SAVE_PREF_CMD

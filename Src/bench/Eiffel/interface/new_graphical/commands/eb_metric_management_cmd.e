@@ -401,7 +401,7 @@ feature -- Action
 			delete_button.enable_sensitive
 			edit_button.enable_sensitive
 			cell ?= ev_list.selected_item.data
-			a_formula := xml_string (cell.item2, "FORMULA")
+			a_formula := Xml_routines.xml_string (cell.item2, "FORMULA")
 			formula_field.set_text (a_formula)
 			unit_field.set_text (cell.item1.unit)
 		end
@@ -668,7 +668,7 @@ feature -- Measures and metrics deletion.
 				ev_list.after
 			loop
 				cell ?= ev_list.item.data
-				if has_deleted_metric (element_by_name (cell.item2, "DEFINITION")) then
+				if has_deleted_metric (Xml_routines.element_by_name (cell.item2, "DEFINITION")) then
 					deleted_metrics.extend (ev_list.item)
 					ev_list.remove
 				else
@@ -749,7 +749,7 @@ feature -- Edit
 			selected_metric ?= cell.item1
 			linear_tab.name_field.set_text (selected_metric.name)
 			linear_tab.unit_field.set_text (selected_metric.unit)
-			definition := element_by_name (cell.item2, "DEFINITION")
+			definition := Xml_routines.element_by_name (cell.item2, "DEFINITION")
 			element ?= definition.item (1)
 			linear_tab.formula.extend (element.text)
 			element ?= definition.item (3)
@@ -771,8 +771,8 @@ feature -- Edit
 				linear_tab.formula.extend (element.text)
 				i := i + 4
 			end
-			linear_tab.set_displayed_metric (xml_string (cell.item2, "FORMULA"))
-			linear_tab.text_field.set_text (xml_string (cell.item2, "FORMULA"))
+			linear_tab.set_displayed_metric (Xml_routines.xml_string (cell.item2, "FORMULA"))
+			linear_tab.text_field.set_text (Xml_routines.xml_string (cell.item2, "FORMULA"))
 			linear_tab.keep_same_unit_metrics (selected_metric)
 			linear_tab.disable_save
 		end
@@ -792,7 +792,7 @@ feature -- Edit
 			selected_metric ?= cell.item1
 			mratio_tab.name_field.set_text (selected_metric.name)
 			mratio_tab.unit_field.set_text (selected_metric.unit)
-			definition := element_by_name (cell.item2, "DEFINITION")
+			definition := Xml_routines.element_by_name (cell.item2, "DEFINITION")
 			num_element ?= definition.item (1)
 			den_element ?= definition.item (2)
 			num := num_element.text
@@ -802,8 +802,8 @@ feature -- Edit
 			mratio_tab.formula.put_i_th (den, 3)
 			mratio_tab.put_item_with_text (mratio_tab.first_metric_combobox, num)
 			mratio_tab.put_item_with_text (mratio_tab.second_metric_combobox, den)
-			mratio_tab.set_displayed_metric (xml_string (cell.item2, "FORMULA"))
-			mratio_tab.text_field.set_text (xml_string (cell.item2, "FORMULA"))
+			mratio_tab.set_displayed_metric (Xml_routines.xml_string (cell.item2, "FORMULA"))
+			mratio_tab.text_field.set_text (Xml_routines.xml_string (cell.item2, "FORMULA"))
 			if selected_metric.percentage then
 				mratio_tab.percentage_button.enable_select
 			else
@@ -825,7 +825,7 @@ feature -- Edit
 			selected_metric ?= cell.item1
 			sratio_tab.name_field.set_text (selected_metric.name)
 			sratio_tab.unit_field.set_text (selected_metric.unit)
-			definition := element_by_name (cell.item2, "DEFINITION")
+			definition := Xml_routines.element_by_name (cell.item2, "DEFINITION")
 			metric_el ?= definition.item (1)
 			num_el ?= definition.item (2)
 			den_el ?= definition.item (3)
@@ -840,8 +840,8 @@ feature -- Edit
 			sratio_tab.select_metric
 			sratio_tab.put_item_with_text (sratio_tab.first_scope_combobox, num)
 			sratio_tab.put_item_with_text (sratio_tab.second_scope_combobox, den)
-			sratio_tab.set_displayed_metric (xml_string (cell.item2, "FORMULA"))
-			sratio_tab.text_field.set_text (xml_string (cell.item2, "FORMULA"))
+			sratio_tab.set_displayed_metric (Xml_routines.xml_string (cell.item2, "FORMULA"))
+			sratio_tab.text_field.set_text (Xml_routines.xml_string (cell.item2, "FORMULA"))
 			if selected_metric.percentage then
 				sratio_tab.percentage_button.enable_select
 			else
@@ -864,8 +864,8 @@ feature -- Edit
 			derived_tab.name_field.set_text (selected_metric.name)
 			derived_tab.unit_field.set_text (selected_metric.unit)
 			derived_tab.put_item_with_text (derived_tab.raw_metric_combobox, selected_metric.parent_name)
-			definition := element_by_name (cell.item2, "DEFINITION")
-			and_op := xml_boolean (definition, "And")
+			definition := Xml_routines.element_by_name (cell.item2, "DEFINITION")
+			and_op := Xml_routines.xml_boolean (definition, "And")
 			if and_op then
 				derived_tab.and_button.enable_select
 			end
@@ -889,8 +889,8 @@ feature -- Edit
 			effective_derived_tab: derived_tab /= Void
 			effective_definition: definition /= Void
 		do
-			if element_by_name (definition, "Deferred_class") /= Void then
-				if xml_boolean (definition, "Deferred_class") then
+			if Xml_routines.element_by_name (definition, "Deferred_class") /= Void then
+				if Xml_routines.xml_boolean (definition, "Deferred_class") then
 					derived_tab.deferred_class.enable_select
 				else
 					derived_tab.effective_class.enable_select
@@ -898,8 +898,8 @@ feature -- Edit
 			else
 				derived_tab.ignore_deferred_class.enable_select
 			end
-			if element_by_name (definition, "Invariant") /= Void then
-				if xml_boolean (definition, "Invariant") then
+			if Xml_routines.element_by_name (definition, "Invariant") /= Void then
+				if Xml_routines.xml_boolean (definition, "Invariant") then
 					derived_tab.invariant_equi.enable_select
 				else
 					derived_tab.not_invariant_equi.enable_select
@@ -907,8 +907,8 @@ feature -- Edit
 			else
 				derived_tab.ignore_invariant.enable_select
 			end
-			if element_by_name (definition, "Obsolete") /= Void then
-				if xml_boolean (definition, "Obsolete") then
+			if Xml_routines.element_by_name (definition, "Obsolete") /= Void then
+				if Xml_routines.xml_boolean (definition, "Obsolete") then
 					derived_tab.obsolete_class.enable_select
 				else
 					derived_tab.not_obsolete_class.enable_select
@@ -924,15 +924,15 @@ feature -- Edit
 			effective_derived_tab: derived_tab /= Void
 			effective_definition: definition /= Void
 		do
-			if element_by_name (definition, "Self") /= Void then
-				if xml_boolean (definition, "Self") then
+			if Xml_routines.element_by_name (definition, "Self") /= Void then
+				if Xml_routines.xml_boolean (definition, "Self") then
 					derived_tab.self.enable_select
 				else
 					derived_tab.not_self.enable_select
 				end
 			end
-			if element_by_name (definition, "D_or_i_clients") /= Void then
-				if xml_boolean (definition, "D_or_i_clients") then
+			if Xml_routines.element_by_name (definition, "D_or_i_clients") /= Void then
+				if Xml_routines.xml_boolean (definition, "D_or_i_clients") then
 					derived_tab.direct_clients.enable_select
 				else
 					derived_tab.indirect_clients.enable_select
@@ -940,8 +940,8 @@ feature -- Edit
 			else
 				derived_tab.ignore_clients.enable_select
 			end
-			if element_by_name (definition, "D_or_i_suppliers") /= Void then
-				if xml_boolean (definition, "D_or_i_suppliers") then
+			if Xml_routines.element_by_name (definition, "D_or_i_suppliers") /= Void then
+				if Xml_routines.xml_boolean (definition, "D_or_i_suppliers") then
 					derived_tab.direct_suppliers.enable_select
 				else
 					derived_tab.indirect_suppliers.enable_select
@@ -949,8 +949,8 @@ feature -- Edit
 			else
 				derived_tab.ignore_suppliers.enable_select
 			end
-			if element_by_name (definition, "D_or_i_heirs") /= Void then
-				if xml_boolean (definition, "D_or_i_heirs") then
+			if Xml_routines.element_by_name (definition, "D_or_i_heirs") /= Void then
+				if Xml_routines.xml_boolean (definition, "D_or_i_heirs") then
 					derived_tab.direct_heirs.enable_select
 				else
 					derived_tab.indirect_heirs.enable_select
@@ -958,8 +958,8 @@ feature -- Edit
 			else
 				derived_tab.ignore_heirs.enable_select
 			end
-			if element_by_name (definition, "D_or_i_parents") /= Void then
-				if xml_boolean (definition, "D_or_i_parents") then
+			if Xml_routines.element_by_name (definition, "D_or_i_parents") /= Void then
+				if Xml_routines.xml_boolean (definition, "D_or_i_parents") then
 					derived_tab.direct_parents.enable_select
 				else
 					derived_tab.indirect_parents.enable_select
@@ -975,8 +975,8 @@ feature -- Edit
 			effective_derived_tab: derived_tab /= Void
 			effective_definition: definition /= Void
 		do
-			if element_by_name (definition, "Attr_or_rout") /= Void then
-				if xml_boolean (definition, "Attr_or_rout") then
+			if Xml_routines.element_by_name (definition, "Attr_or_rout") /= Void then
+				if Xml_routines.xml_boolean (definition, "Attr_or_rout") then
 					derived_tab.attr.enable_select
 				else
 					derived_tab.rout.enable_select
@@ -984,8 +984,8 @@ feature -- Edit
 			else
 				derived_tab.ignore_attr_rout.enable_select
 			end
-			if element_by_name (definition, "Quer_or_comm") /= Void then
-				if xml_boolean (definition, "Quer_or_comm") then
+			if Xml_routines.element_by_name (definition, "Quer_or_comm") /= Void then
+				if Xml_routines.xml_boolean (definition, "Quer_or_comm") then
 					derived_tab.quer.enable_select
 				else
 					derived_tab.comm.enable_select
@@ -993,8 +993,8 @@ feature -- Edit
 			else
 				derived_tab.ignore_quer_comm.enable_select
 			end
-			if element_by_name (definition, "Function") /= Void then
-				if xml_boolean (definition, "Function") then
+			if Xml_routines.element_by_name (definition, "Function") /= Void then
+				if Xml_routines.xml_boolean (definition, "Function") then
 					derived_tab.func.enable_select
 				else
 					derived_tab.not_func.enable_select
@@ -1002,8 +1002,8 @@ feature -- Edit
 			else
 				derived_tab.ignore_func.enable_select
 			end
-			if element_by_name (definition, "Deferred_feat") /= Void then
-				if xml_boolean (definition, "Deferred_feat") then
+			if Xml_routines.element_by_name (definition, "Deferred_feat") /= Void then
+				if Xml_routines.xml_boolean (definition, "Deferred_feat") then
 					derived_tab.deferred_feat.enable_select
 				else
 					derived_tab.effective_feat.enable_select
@@ -1011,8 +1011,8 @@ feature -- Edit
 			else
 				derived_tab.ignore_deferred_feat.enable_select
 			end
-			if element_by_name (definition, "Exported") /= Void then
-				if xml_boolean (definition, "Exported") then
+			if Xml_routines.element_by_name (definition, "Exported") /= Void then
+				if Xml_routines.xml_boolean (definition, "Exported") then
 					derived_tab.exported.enable_select
 				else
 					derived_tab.not_exported.enable_select
@@ -1020,8 +1020,8 @@ feature -- Edit
 			else
 				derived_tab.ignore_exported.enable_select
 			end
-			if element_by_name (definition, "Pre_equi") /= Void then
-				if xml_boolean (definition, "Pre_equi") then
+			if Xml_routines.element_by_name (definition, "Pre_equi") /= Void then
+				if Xml_routines.xml_boolean (definition, "Pre_equi") then
 					derived_tab.pre_equi.enable_select
 				else
 					derived_tab.not_pre_equi.enable_select
@@ -1029,8 +1029,8 @@ feature -- Edit
 			else
 				derived_tab.ignore_pre_equi.enable_select
 			end
-			if element_by_name (definition, "Post_equi") /= Void then
-				if xml_boolean (definition, "Post_equi") then
+			if Xml_routines.element_by_name (definition, "Post_equi") /= Void then
+				if Xml_routines.xml_boolean (definition, "Post_equi") then
 					derived_tab.post_equi.enable_select
 				else
 					derived_tab.not_post_equi.enable_select
@@ -1038,8 +1038,8 @@ feature -- Edit
 			else
 				derived_tab.ignore_post_equi.enable_select
 			end
-			if element_by_name (definition, "Inherited") /= Void then
-				if xml_boolean (definition, "Inherited") then
+			if Xml_routines.element_by_name (definition, "Inherited") /= Void then
+				if Xml_routines.xml_boolean (definition, "Inherited") then
 					derived_tab.inherited.enable_select
 				else
 					derived_tab.not_inherited.enable_select

@@ -460,7 +460,7 @@ feature -- Importation
 					build_rename_imported_metric_dialog
 
 					name_field_rename.set_text (cell.item1.name)
-					formula_field_rename.set_text (xml_string (cell.item2, "FORMULA"))
+					formula_field_rename.set_text (Xml_routines.xml_string (cell.item2, "FORMULA"))
 					unit_field_rename.set_text (cell.item1.unit)
 						-- modal mode is important.
 					rename_imported_metric_dialog.show_modal_to_window (import_metrics_dialog)
@@ -474,7 +474,7 @@ feature -- Importation
 					cell.item1.set_name (new_name)
 					create l_namespace.make ("", "")
 					cell.item2.remove_attribute_by_name ("Name")
-					add_attribute ("Name", l_namespace, new_name, cell.item2)
+					Xml_routines.add_attribute ("Name", l_namespace, new_name, cell.item2)
 					list_item.pointer_double_press_actions.wipe_out
 					list_item.pointer_double_press_actions.extend (~double_click_remove)
 					current_metric_list.extend (list_item)
@@ -600,7 +600,7 @@ feature -- Importation
 			add_button.enable_sensitive
 			selected_item := importable_metric_list.selected_item
 			cell ?= selected_item.data
-			formula := xml_string (cell.item2, "FORMULA")
+			formula := Xml_routines.xml_string (cell.item2, "FORMULA")
 			unit := cell.item1.unit
 			formula_field_import.set_text (formula)
 			unit_field_import.set_text (unit)
@@ -625,7 +625,7 @@ feature -- Importation
 			else
 				remove_button.disable_sensitive
 			end
-			formula := xml_string (cell.item2, "FORMULA")
+			formula := Xml_routines.xml_string (cell.item2, "FORMULA")
 			unit := cell.item1.unit
 			formula_field_import.set_text (formula)
 			unit_field_import.set_text (unit)

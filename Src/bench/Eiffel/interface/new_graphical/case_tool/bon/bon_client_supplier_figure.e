@@ -164,21 +164,21 @@ feature {CONTEXT_DIAGRAM} -- XML
 		do
 			create l_namespace.make ("", "")
 			create Result.make_child (a_parent, "CLIENT_SUPPLIER_FIGURE", l_namespace)
-			add_attribute ("SRC", l_namespace, client.name, Result)
-			add_attribute ("TRG", l_namespace, supplier.name, Result)
+			Xml_routines.add_attribute ("SRC", l_namespace, client.name, Result)
+			Xml_routines.add_attribute ("TRG", l_namespace, supplier.name, Result)
 			create label_xml_element.make_child (Result, "LABEL", l_namespace)
 			label_xml_element.put_last (
-				xml_node (
+				Xml_routines.xml_node (
 					label_xml_element,
 					"POSITION",
 					 (label_position.out)))
 			label_xml_element.put_last (
-				xml_node (
+				Xml_routines.xml_node (
 					label_xml_element,
 					"LINE",
 					 (line_labelled.out)))
 			label_xml_element.put_last (
-				xml_node (
+				Xml_routines.xml_node (
 					label_xml_element,
 					"SHIFTED",
 					 (name_shifted.out)))
@@ -191,12 +191,12 @@ feature {CONTEXT_DIAGRAM} -- XML
 				loop
 					create vertice_xml_element.make_child (Result, "MIDPOINT", l_namespace)
 					vertice_xml_element.put_last (
-						xml_node (
+						Xml_routines.xml_node (
 							vertice_xml_element,
 							"X_POS",
 							 ((vertices.item.x_abs - client.world.point.x_abs) / client.world.scale_x).rounded.out))
 					vertice_xml_element.put_last (
-						xml_node (
+						Xml_routines.xml_node (
 							vertice_xml_element,
 							"Y_POS",
 							 ((vertices.item.y_abs - client.world.point.y_abs) / client.world.scale_y).rounded.out))
@@ -229,22 +229,22 @@ feature {CONTEXT_DIAGRAM} -- XML
 				node ?= a_cursor.item
 				if node /= Void then
 					if node.name.is_equal ("MIDPOINT") then
-						x_pos := xml_integer (node, "X_POS")
-						y_pos := xml_integer (node, "Y_POS")
+						x_pos := Xml_routines.xml_integer (node, "X_POS")
+						y_pos := Xml_routines.xml_integer (node, "Y_POS")
 						create new_midpoint.make_with_position (x_pos, y_pos)
 						retrieved_midpoints.put_front (new_midpoint)
 					elseif node.name.is_equal ("LABEL") then
-						label_position := xml_double (node, "POSITION")
-						line_labelled := xml_integer (node, "LINE")
-						name_shifted := xml_boolean (node, "SHIFTED")
+						label_position := Xml_routines.xml_double (node, "POSITION")
+						line_labelled := Xml_routines.xml_integer (node, "LINE")
+						name_shifted := Xml_routines.xml_boolean (node, "SHIFTED")
 					else
-						display_warning_message ("Tag: " + node.name + " not known")
+						Xml_routines.display_warning_message ("Tag: " + node.name + " not known")
 					end
 				else
 					debug
 						att_node ?= a_cursor.item
 						if att_node = Void then
-							display_warning_message ("XML element missing")
+							Xml_routines.display_warning_message ("XML element missing")
 						end
 					end
 				end

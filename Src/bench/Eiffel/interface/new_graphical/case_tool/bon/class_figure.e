@@ -441,10 +441,10 @@ feature {LINKABLE_FIGURE_GROUP} -- XML
 			name_in_lower.to_lower
 			create l_namespace.make ("", "")
 			create Result.make_child (a_parent, "CLASS_FIGURE", l_namespace)
-			add_attribute ("NAME", l_namespace, name_in_lower, Result)
-			Result.put_last (xml_node (Result, "X_POS", point.x.out))
-			Result.put_last (xml_node (Result, "Y_POS", point.y.out))
-			Result.put_last (xml_node (Result, "COLOR",
+			Xml_routines.add_attribute ("NAME", l_namespace, name_in_lower, Result)
+			Result.put_last (Xml_routines.xml_node (Result, "X_POS", point.x.out))
+			Result.put_last (Xml_routines.xml_node (Result, "Y_POS", point.y.out))
+			Result.put_last (Xml_routines.xml_node (Result, "COLOR",
 				color.red_8_bit.out + ";" +
 				color.green_8_bit.out + ";" +
 				color.blue_8_bit.out))
@@ -460,10 +460,10 @@ feature {LINKABLE_FIGURE_GROUP} -- XML
 			x_pos, y_pos: INTEGER
 			col: EV_COLOR
 		do
-			x_pos := xml_integer (an_element, "X_POS")
-			y_pos := xml_integer (an_element, "Y_POS")
+			x_pos := Xml_routines.xml_integer (an_element, "X_POS")
+			y_pos := Xml_routines.xml_integer (an_element, "Y_POS")
 			point.set_position (x_pos, y_pos)
-			col := xml_color (an_element, "COLOR")
+			col := Xml_routines.xml_color (an_element, "COLOR")
 			if col /= Void then
 				set_color (col)
 			end

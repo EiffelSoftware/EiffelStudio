@@ -65,8 +65,8 @@ feature {CONTEXT_DIAGRAM} -- XML
 			if vertices.count > 2 then
 				create l_namespace.make ("", "")
 				create Result.make_child (a_parent, "INHERITANCE_FIGURE", l_namespace)
-				add_attribute ("SRC", l_namespace, descendant.name, Result)
-				add_attribute ("TRG", l_namespace, ancestor.name, Result)
+				Xml_routines.add_attribute ("SRC", l_namespace, descendant.name, Result)
+				Xml_routines.add_attribute ("TRG", l_namespace, ancestor.name, Result)
 				from
 					vertices.go_i_th (2)
 				until	
@@ -74,12 +74,12 @@ feature {CONTEXT_DIAGRAM} -- XML
 				loop
 					create vertice_xml_element.make_child (Result, "MIDPOINT", l_namespace)
 					vertice_xml_element.put_last (
-						xml_node (
+						Xml_routines.xml_node (
 							vertice_xml_element,
 							"X_POS",
 							 ((vertices.item.x_abs - ancestor.world.point.x_abs) / ancestor.world.scale_x).rounded.out))
 					vertice_xml_element.put_last (
-						xml_node (
+						Xml_routines.xml_node (
 							vertice_xml_element,
 							"Y_POS",
 							 ((vertices.item.y_abs - ancestor.world.point.y_abs) / ancestor.world.scale_y).rounded.out))
@@ -112,18 +112,18 @@ feature {CONTEXT_DIAGRAM} -- XML
 				node ?= a_cursor.item
 				if node /= Void then
 					if node.name.is_equal ("MIDPOINT") then
-						x_pos := xml_integer (node, "X_POS")
-						y_pos := xml_integer (node, "Y_POS")
+						x_pos := Xml_routines.xml_integer (node, "X_POS")
+						y_pos := Xml_routines.xml_integer (node, "Y_POS")
 						create new_midpoint.make_with_position (x_pos, y_pos)
 						retrieved_midpoints.put_front (new_midpoint)
 					else
-						display_warning_message ("tag: " + node.name + " not known")
+						Xml_routines.display_warning_message ("tag: " + node.name + " not known")
 					end
 				else
 					debug
 						att_node ?= a_cursor.item
 						if att_node = Void then
-							display_warning_message ("XML element missing")
+							Xml_routines.display_warning_message ("XML element missing")
 						end
 					end
 				end

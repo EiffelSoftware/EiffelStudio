@@ -765,16 +765,16 @@ feature {LINKABLE_FIGURE_GROUP} -- XML
 		do
 			create l_namespace.make ("", "")
 			create Result.make_child (a_parent, "CLUSTER_FIGURE", l_namespace)
-			add_attribute ("NAME", l_namespace, cluster_i.cluster_name, Result)
-			Result.put_last (xml_node (Result, "ICONIFIED", iconified.out))
-			Result.put_last (xml_node (Result, "X_POS", point.x.out))
-			Result.put_last (xml_node (Result, "Y_POS", point.y.out))
+			Xml_routines.add_attribute ("NAME", l_namespace, cluster_i.cluster_name, Result)
+			Result.put_last (Xml_routines.xml_node (Result, "ICONIFIED", iconified.out))
+			Result.put_last (Xml_routines.xml_node (Result, "X_POS", point.x.out))
+			Result.put_last (Xml_routines.xml_node (Result, "Y_POS", point.y.out))
 			if iconified then
-				Result.put_last (xml_node (Result, "WIDTH", old_width.out))
-				Result.put_last (xml_node (Result, "HEIGHT", old_height.out))
+				Result.put_last (Xml_routines.xml_node (Result, "WIDTH", old_width.out))
+				Result.put_last (Xml_routines.xml_node (Result, "HEIGHT", old_height.out))
 			else
-				Result.put_last (xml_node (Result, "WIDTH", body_width.out))
-				Result.put_last (xml_node (Result, "HEIGHT", body_height.out))
+				Result.put_last (Xml_routines.xml_node (Result, "WIDTH", body_width.out))
+				Result.put_last (Xml_routines.xml_node (Result, "HEIGHT", body_height.out))
 			end
 		end
 
@@ -788,17 +788,17 @@ feature {LINKABLE_FIGURE_GROUP} -- XML
 			x_pos, y_pos, w, h: INTEGER
 			was_iconified: BOOLEAN
 		do
-			reset_valid_tags 
-			was_iconified := xml_boolean (an_element, "ICONIFIED")
+			Xml_routines.reset_valid_tags 
+			was_iconified := Xml_routines.xml_boolean (an_element, "ICONIFIED")
 			if was_iconified then
 				iconify
 			else
 				deiconify
 			end
-			x_pos := xml_integer (an_element, "X_POS")
-			y_pos := xml_integer (an_element, "Y_POS")
-			w := xml_integer (an_element, "WIDTH")
-			h := xml_integer (an_element, "HEIGHT")
+			x_pos := Xml_routines.xml_integer (an_element, "X_POS")
+			y_pos := Xml_routines.xml_integer (an_element, "Y_POS")
+			w := Xml_routines.xml_integer (an_element, "WIDTH")
+			h := Xml_routines.xml_integer (an_element, "HEIGHT")
 			set_relative_position_and_size (x_pos, y_pos, w, h)
 		end
 

@@ -408,7 +408,7 @@ feature -- Action
 			file_name := open_dialog.file_name
 			if not retried then
 				if file_name /= Void and then not file_name.is_empty then
-					l_deserialized_document := deserialize_document (file_name)
+					l_deserialized_document := Xml_routines.deserialize_document (file_name)
 					if l_deserialized_document /= Void then
 						if l_deserialized_document.root_element.has_attribute_by_name ("System") then
 							system_name := l_deserialized_document.root_element.attribute_by_name ("System").value						
@@ -487,8 +487,8 @@ feature -- Action
 			element_not_void: root_element /= Void
 		do
 			Result := (root_element.name /= Void and then equal (root_element.name, "ARCHIVE")) and
-					root_element.has (element_by_name (root_element, "METRIC_DEFINITIONS")) and
-					root_element.has (element_by_name (root_element, "RECORDED_MEASURES")) and
+					root_element.has (Xml_routines.element_by_name (root_element, "METRIC_DEFINITIONS")) and
+					root_element.has (Xml_routines.element_by_name (root_element, "RECORDED_MEASURES")) and
 					(root_element.has_attribute_by_name ("System") and then root_element.attribute_by_name ("System").value /= Void)
 		end
 
@@ -513,7 +513,7 @@ feature -- Action
 			y_pos := archive_dialog.y_position + 50
 			if not retried then
 				if file_name /= Void and then not file_name.is_empty then
-					l_deserialized_document := deserialize_document (file_name)
+					l_deserialized_document := Xml_routines.deserialize_document (file_name)
 					if l_deserialized_document /= Void then
 						root_element := l_deserialized_document.root_element
 						root_name := root_element.name
@@ -521,8 +521,8 @@ feature -- Action
 							system_name := root_element.attribute_by_name ("System").value
 						end
 		--				right_syntax := (root_name /= Void and then equal (root_name, "ARCHIVE")) and
-		--						root_element.has (element_by_name (root_element, "METRIC_DEFINITIONS")) and
-		--						root_element.has (element_by_name (root_element, "RECORDED_MEASURES")) and
+		--						root_element.has (Xml_routines.element_by_name (root_element, "METRIC_DEFINITIONS")) and
+		--						root_element.has (Xml_routines.element_by_name (root_element, "RECORDED_MEASURES")) and
 		--						system_name /= Void
 						right_syntax := archive_syntax (root_element)
 
@@ -531,7 +531,7 @@ feature -- Action
 							tool.set_default_archive (False)
 							create archived_file.make (file_name)
 							archived_root_element := root_element
-							metric_definitions := element_by_name (archived_root_element, "METRIC_DEFINITIONS")
+							metric_definitions := Xml_routines.element_by_name (archived_root_element, "METRIC_DEFINITIONS")
 							if not metric_definitions.is_empty then
 								create confirm_dialog.make_with_text_and_actions ("Import saved metrics of archive:%N"
 											+ file_name + "?", import_actions_array)
@@ -550,7 +550,7 @@ feature -- Action
 								a_metric := tool.metric (row.i_th (4))
 								current_measure_xml ?= tool.file_manager.measure_header.item (i)
 								check current_measure_xml /= Void end
-								current_measure := xml_double (current_measure_xml, "RESULT")
+								current_measure := Xml_routines.xml_double (current_measure_xml, "RESULT")
 								archived_result := retrieve_archived_result (a_metric, archived_file, root_element, archive_mode, current_measure)
 								row.put_i_th (archived_result, 6)
 								tool.multi_column_list.forth
@@ -688,7 +688,7 @@ feature -- Action
 			if not retried then
 				create l_namespace.make ("", "")
 				create node.make_root ("ARCHIVE", l_namespace)
-				add_attribute ("System", l_namespace, tool.System.name, node)
+				Xml_routines.add_attribute ("System", l_namespace, tool.System.name, node)
 				create archive_header.make
 				archive_header.force_last (node)
 				metric_header := tool.file_manager.metric_header
@@ -705,15 +705,15 @@ feature -- Action
 					a_metric ?= metric_list.item
 					if a_metric = Void or else not a_metric.is_scope_ratio then
 						create xml_element.make_child (node, "MEASURE", l_namespace)
-						add_attribute ("Metric", l_namespace, metric_list.item.name, xml_element)
+						Xml_routines.add_attribute ("Metric", l_namespace, metric_list.item.name, xml_element)
 						metric_result := tool.calculate.calculate_metric (metric_list.item, scope)
-						add_attribute ("Result", l_namespace, metric_result.out, xml_element)
+						Xml_routines.add_attribute ("Result", l_namespace, metric_result.out, xml_element)
 						measure_header.put_last (xml_element)
 					end
 					metric_list.forth
 				end
 				node.put_last (measure_header)
-				save_xml_document (f.name, archive_header)
+				Xml_routines.save_xml_document (f.name, archive_header)
 				tool.progress_dialog.hide
 			end
 		rescue
@@ -746,7 +746,7 @@ feature -- Comparison
 				basic_metric ?= a_metric
 				if basic_metric /= Void or else 
 					tool.calculate.has_metric (a_metric, f) then
-					measure_header := element_by_name (root_element, "RECORDED_MEASURES")
+					measure_header := Xml_routines.element_by_name (root_element, "RECORDED_MEASURES")
 					from
 						measure_header.start
 					until

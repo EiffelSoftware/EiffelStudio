@@ -141,7 +141,7 @@ char *name;		/* Entry we are looking for */
 #ifdef DIRNAMLEN
 	int len = strlen(name);		/* Avoid unncessary calls to strcmp() */
 #endif
-#ifdef __WATCOMC__
+#ifdef __WINDOWS_386__
 	DIR *dp;
 #else
 	DIRENTRY *dp;
@@ -195,7 +195,7 @@ public EIF_OBJ dir_current()
 
 public EIF_CHARACTER eif_dir_separator ()
 {
-#ifdef __WATCOMC__
+#ifdef __WINDOWS_386__
 	return '\\';
 #else
 	return '/';

@@ -47,7 +47,7 @@ int file;
 public EIF_POINTER console_def(file)
 int file;
 {
-#ifdef __WATCOMC__
+#ifdef __WINDOWS_386__
 	return (EIF_POINTER) NULL;
 #else
 	return file_def (file);
@@ -57,7 +57,7 @@ int file;
 public EIF_BOOLEAN console_eof(fp)
 FILE *fp;      
 {
-#ifdef __WATCOMC__
+#ifdef __WINDOWS_386__
 	return eif_console_eof();
 #else
 	return file_feof (fp);
@@ -72,7 +72,7 @@ public void console_pi(f, number)
 FILE *f;
 EIF_INTEGER	number;
 {
-#ifdef __WATCOMC__
+#ifdef __WINDOWS_386__
 	eif_console_putint (number);
 #else
 	file_pi (f, number);	
@@ -83,7 +83,7 @@ public void console_pr(f, number)
 FILE *f;
 EIF_REAL number;
 {
-#ifdef __WATCOMC__
+#ifdef __WINDOWS_386__
 	eif_console_putreal (number);
 #else
 	file_pr (f, number);	
@@ -95,7 +95,7 @@ FILE *f;
 char *str;
 EIF_INTEGER len;
 {
-#ifdef __WATCOMC__
+#ifdef __WINDOWS_386__
 	eif_console_putstring (str, len);
 #else
 	file_ps (f, str, len);
@@ -106,7 +106,7 @@ public void console_pc(f, c)
 FILE *f;
 EIF_CHARACTER c;
 {
-#ifdef __WATCOMC__
+#ifdef __WINDOWS_386__
 	eif_console_putchar (c);
 #else
 	file_pc (f, c);
@@ -117,7 +117,7 @@ public void console_pd(f, val)
 FILE *f;
 EIF_DOUBLE val;
 {
-#ifdef __WATCOMC__
+#ifdef __WINDOWS_386__
 	eif_console_putdouble (val);
 #else
 	file_pd (f, val);
@@ -137,7 +137,7 @@ FILE *f;
 public void console_next_line(f)
 FILE *f;
 {
-#ifdef __WATCOMC__
+#ifdef __WINDOWS_386__
 #else
 	file_tnil (f);
 #endif
@@ -146,7 +146,7 @@ FILE *f;
 public EIF_INTEGER console_readint(f) 
 FILE *f;     
 {
-#ifdef __WATCOMC__
+#ifdef __WINDOWS_386__
 	return eif_console_readint();
 #else
 	return file_gi (f);
@@ -156,7 +156,7 @@ FILE *f;
 public EIF_REAL console_readreal(f) 
 FILE *f;     
 {
-#ifdef __WATCOMC__
+#ifdef __WINDOWS_386__
 	return eif_console_readreal();
 #else
 	return file_gr (f);
@@ -166,7 +166,7 @@ FILE *f;
 public EIF_DOUBLE console_readdouble(f) 
 FILE *f;     
 {
-#ifdef __WATCOMC__
+#ifdef __WINDOWS_386__
 	return eif_console_readdouble();
 #else
 	return file_gd(f);
@@ -175,7 +175,7 @@ FILE *f;
 public EIF_CHARACTER console_readchar(f)
 FILE *f;
 {
-#ifdef __WATCOMC__
+#ifdef __WINDOWS_386__
 	return eif_console_readchar();
 #else
 	return file_gc (f);
@@ -188,7 +188,7 @@ char *s;		/* Target buffer where read characters are written */
 EIF_INTEGER bound;		/* Size of the target buffer */
 EIF_INTEGER start;		/* Amount of characters already held in buffer */
 {
-#ifdef __WATCOMC__
+#ifdef __WINDOWS_386__
 	return eif_console_readline (s, bound, start);
 #else
 	return file_gs (f, s, bound, start);
@@ -200,7 +200,7 @@ FILE *f;		/* File stream descriptor */
 char *s;		/* Target buffer where read characters are written */
 EIF_INTEGER bound;		/* Size of the target buffer */
 {
-#ifdef __WATCOMC__
+#ifdef __WINDOWS_386__
 	return eif_console_readstream (s, bound);
 #else
 	return file_gss (f, s, bound);
@@ -213,7 +213,7 @@ char *s;		/* Target buffer where read characters are written */
 EIF_INTEGER bound;		/* Size of the target buffer */
 EIF_INTEGER start;		/* Amount of characters already held in buffer */
 {
-#ifdef __WATCOMC__
+#ifdef __WINDOWS_386__
 	return eif_console_readword (s, bound, start);
 #else
 	return file_gw (f, s, bound, start);
@@ -223,7 +223,7 @@ EIF_INTEGER start;		/* Amount of characters already held in buffer */
 public EIF_CHARACTER console_separator(f)
 FILE *f;
 {
-#ifdef __WATCOMC__
+#ifdef __WINDOWS_386__
 	return (EIF_CHARACTER) ' ';
 #else
 	return file_lh (f);
@@ -233,7 +233,7 @@ FILE *f;
 public void console_file_close (f)
 FILE *f;
 {
-#ifdef __WATCOMC__
+#ifdef __WINDOWS_386__
 #else
 	file_close (f);
 #endif

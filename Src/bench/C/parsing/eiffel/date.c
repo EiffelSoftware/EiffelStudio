@@ -31,7 +31,7 @@ EIF_INTEGER date;
 {
 	/* Check to see if the directory `path' has changed after `date' */
 
-#ifdef __WATCOMC__
+#ifdef __WINDOWS_386__
 	return (EIF_BOOLEAN) 1;
 #else
 	static struct stat info;

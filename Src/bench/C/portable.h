@@ -18,7 +18,7 @@
 #include "config.h"
 #endif
 
-#ifdef __WATCOMC__
+#ifdef __WINDOWS_386__
 #include "confmagc.h"
 #else
 #include "confmagic.h"

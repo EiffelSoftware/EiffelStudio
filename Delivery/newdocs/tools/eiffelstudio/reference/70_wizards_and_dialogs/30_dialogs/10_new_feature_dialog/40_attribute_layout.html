@@ -1,0 +1,58 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<HTML>
+	<HEAD>
+		<TITLE>New attribute layout</TITLE>
+		<META NAME="MS-HKWD" CONTENT="new feature dialog, new attribute layout">
+		<LINK REL=StyleSheet HREF="/default.css">
+	</HEAD>
+
+	<BODY>
+		<H1>New attribute layout</H1>
+		<CENTER>
+		<IMG SRC="/images/eiffelstudio/feature-wizard-attribute.png" border="0">
+		</CENTER>
+
+		<P>When clicking <B>Attribute</B>, the window changes to the attribute layout. It has the following components:
+
+		<UL>
+			<LI><A HREF="50_feature_properties_modification/00_feature_clauses.html">Feature clause selection</A>
+			<LI><A HREF="50_feature_properties_modification/10_name_field.html">Feature name field</A>
+			<LI><A HREF="50_feature_properties_modification/80_type_selection.html">Type selection</A>
+			<LI><A HREF="50_feature_properties_modification/30_comment_field.html">Header comment field</A>
+			<LI><A HREF="50_feature_properties_modification/90_invariant_field.html">Invariant field</A>
+			<LI><A HREF="50_feature_properties_modification/95_set_procedure.html">Set-procedure checkbox</A>
+		</UL>
+
+		<H2>Example</H2>
+
+		<CENTER>
+		<IMG SRC="/images/eiffelstudio/feature-wizard-attribute-example.png">
+		</CENTER>
+		<CODE><PRE>class
+    PRODUCT
+
+feature {NONE} -- Access
+
+    price: DOUBLE
+            -- Cost in dollars.
+
+feature -- Element change
+
+    set_price (a_price: DOUBLE) is
+            -- Assign `a_price' to `price'.
+        require
+            a_price_non_negative: a_price >= 0.0
+        do
+            price := a_price
+        ensure
+            price_assigned: price = a_price
+        end
+
+invariant
+    price_non_negative: price >= 0.0
+
+end -- class PRODUCT</PRE></CODE>
+
+</BODY>
+</HTML>

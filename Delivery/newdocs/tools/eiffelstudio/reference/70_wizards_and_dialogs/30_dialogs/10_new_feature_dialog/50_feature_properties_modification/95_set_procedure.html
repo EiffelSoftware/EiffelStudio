@@ -1,0 +1,37 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<HTML>
+	<HEAD>
+		<TITLE>Set-procedure</TITLE>
+		<LINK REL=StyleSheet HREF="/default.css">
+	</HEAD>
+
+	<BODY>
+		<H1>Set-procedure</H1>
+
+		<P>When creating an attribute, it is common that you will also need a set-procedure for it. For example, for attribute <SPAN CLASS="efeature">property</SPAN> you need a procedure <SPAN CLASS="efeature">set_property</SPAN> to set it. This feature takes one argument of the same type as <SPAN CLASS="efeature">property</SPAN> or is anchored to it. The only thing you have to do with the feature wizard is check the button <B>Generate set procedure</B>.</P>
+
+		<CENTER>
+		<IMG SRC="/images/eiffelstudio/feature-wizard-setprocedure.png">
+		</CENTER>
+
+		<P>The feature that is generated in addition to the attribute itself is placed in feature clause <SPAN CLASS="ecomment">Element change</SPAN> and is exported to all classes. If you have selected or entered an invariant, the precondition will protect this invariant. Example of a generated set-procedure:</P>
+
+		<CENTER>
+		<IMG SRC="/images/eiffelstudio/feature-wizard-setprocedure-example.png">
+		</CENTER>
+
+		<CODE><PRE>feature -- Element change
+
+    set_button (a_button: EV_BUTTON) is
+            -- Assign `a_button' to `button'.
+        require
+            a_button_not_void: a_button /= Void
+        do
+            button := a_button
+        ensure
+            button_assigned: button = a_button
+        end</PRE></CODE>
+
+	</BODY>
+</HTML>

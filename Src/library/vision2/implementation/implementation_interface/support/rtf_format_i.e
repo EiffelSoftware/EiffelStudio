@@ -17,9 +17,15 @@ feature -- Access
 
 	highlight_color: INTEGER
 			-- Highlighting applied to text.
+			
+	highlight_set: BOOLEAN
+		-- Has `highlight_color' been explicitly set and does not correspond to auto?
 
 	text_color: INTEGER
 			-- Text color of format
+			
+	color_set: BOOLEAN
+		-- Has `text_color' been explicitly set and does not correspond to auto?
 
 	is_bold: BOOLEAN
 			-- Is format bold?
@@ -34,7 +40,7 @@ feature -- Access
 			-- New string containing terse printable representation
 			-- of current object
 		do
-			Result := character_format.out + font_height.out + text_color.out + highlight_color.out + is_bold.out
+			Result := character_format.out + font_height.out + text_color.out + highlight_color.out + is_bold.out + highlight_set.out + color_set.out
 		end
 
 feature -- Element change
@@ -45,6 +51,7 @@ feature -- Element change
 			a_highlight_color_non_negative: a_highlight_color >= 0
 		do
 			highlight_color := a_highlight_color
+			highlight_set := True
 		ensure
 			highlight_color_assigned: highlight_color = a_highlight_color
 		end
@@ -55,6 +62,7 @@ feature -- Element change
 			a_text_color_non_negative: a_text_color >= 0
 		do
 			text_color := a_text_color
+			color_set := True
 		ensure
 			text_color_assigned: text_color = a_text_color
 		end

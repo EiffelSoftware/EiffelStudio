@@ -63,19 +63,19 @@ feature -- Status report
 	is_correct: BOOLEAN is
 			-- Is transaction set up correctly?
 		do
-			Result := check_query (transaction~is_correct)
+			Result := check_query (agent transaction.is_correct)
 		end
 	 
 	error: BOOLEAN is
 			-- Has an error occurred in current transaction?
 		do
-			Result := check_query (transaction~error)
+			Result := check_query (agent transaction.error)
 		end
 
 	succeeded: BOOLEAN is
 			-- Has the transaction succeeded?
 		do
-			Result := check_query (transaction~succeeded)
+			Result := check_query (agent transaction.succeeded)
 		end
 	 
 	insertable (t: TRANSACTION): BOOLEAN is
@@ -90,7 +90,7 @@ feature -- Status setting
 	reset_error is
 			-- Reset error flags.
 		do
-			execute_command (~reset_error_flags)
+			execute_command (agent reset_error_flags)
 		end
 
 feature -- Basic operations
@@ -103,7 +103,7 @@ feature -- Basic operations
 			source.open
 			first_source := source
 			if not transaction.error then
-				execute_command (~do_transaction)
+				execute_command (agent do_transaction)
 			end
 			debug Io.error.put_string ("- CLOSE SOURCE -%N") end
 			source.close

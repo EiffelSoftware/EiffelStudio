@@ -22,6 +22,11 @@ inherit
 		end
 		
 	GB_CONSTANTS
+	
+	EIFFEL_RESERVED_WORDS
+		undefine
+			is_equal, copy, default_create
+		end
 
 feature {NONE} -- Initialization
 
@@ -96,7 +101,9 @@ feature {GB_SYSTEM_WINDOW} -- Implementation
 			warning_dialog: EV_WARNING_DIALOG
 			invalid_text: STRING
 			application_name_lower, class_name_lower: STRING
+			warning_message: STRING
 		do
+				-- Check for invalid eiffel names as language specification.
 			validate_successful := True
 			application_name_lower := application_class_name_field.text.as_lower
 			class_name_lower := main_window_class_name_field.text.as_lower
@@ -106,11 +113,24 @@ feature {GB_SYSTEM_WINDOW} -- Implementation
 				invalid_text := class_name_lower
 			end
 			if invalid_text /= Void then
+				warning_message := Class_invalid_name_warning
+			else
+				warning_message := Reserved_word_warning
+			end
+				-- Check for names that are Eiffel reserved words.
+			if reserved_words.has (application_name_lower) then
+				invalid_text := application_name_lower
+			elseif reserved_words.has (class_name_lower) then
+				invalid_text := class_name_lower
+			end
+			if invalid_text /= Void then
 				select_in_parent
-				create warning_dialog.make_with_text (invalid_text + Class_invalid_name_warning)
+				create warning_dialog.make_with_text ("'" + invalid_text + warning_message)
 				warning_dialog.show_modal_to_window (main_window)
 				validate_successful := False				
 			end
+
+				-- Check for conflicting names.
 			if application_name_lower.is_equal (class_name_lower) or 
 				application_name_lower.is_equal (class_name_lower + class_implementation_extension.as_lower) then
 				select_in_parent

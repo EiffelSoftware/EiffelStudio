@@ -135,6 +135,7 @@ feature -- Basic Operations
 		local
 			p_active_site_item: POINTER
 			a_stub: ECOM_STUB
+			msg_item: POINTER
 		do
 			if p_active_site /= Void then
 				if (p_active_site.item = default_pointer) then
@@ -145,7 +146,10 @@ feature -- Basic Operations
 				end
 				p_active_site_item := p_active_site.item
 			end
-			ccom_do_verb (initializer, i_verb, lpmsg.item, p_active_site_item, lindex, hwnd_parent, lprc_pos_rect.item)
+			if lpmsg /= Void then
+				msg_item := lpmsg.item
+			end
+			ccom_do_verb (initializer, i_verb, msg_item, p_active_site_item, lindex, hwnd_parent, lprc_pos_rect.item)
 		end
 
 	enum_verbs (pp_enum_ole_verb: CELL [IENUM_OLEVERB_INTERFACE]) is

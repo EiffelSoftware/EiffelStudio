@@ -25,7 +25,7 @@ feature -- Basic Operations
 			documents := docs
 			from
 			until
-				document_index > docs.count
+				document_index = docs.count
 			loop
 				spell_check (docs.i_th (document_index + 1).name)
 			end

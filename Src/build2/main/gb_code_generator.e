@@ -934,10 +934,19 @@ feature {NONE} -- Implementation
 				end
 				
 					-- Add code for Precursor call in `intialize'.
+				
 				if info.generate_as_client then
-					add_generated_string (class_text, "initialize_constants", precursor_tag)
+					if constants.all_constants.is_empty then
+						remove_line_containing (precursor_tag, class_text)					
+					else
+						add_generated_string (class_text, "initialize_constants", precursor_tag)
+					end
 				else
-					add_generated_string (class_text, "Precursor {" + info.type + "}" + Indent + "initialize_constants", precursor_tag)
+					if constants.all_constants.is_empty then
+						add_generated_string (class_text, "Precursor {" + info.type + "}", precursor_tag)
+					else
+						add_generated_string (class_text, "Precursor {" + info.type + "}" + Indent + "initialize_constants", precursor_tag)
+					end
 				end
 				
 					-- Add code for creation of widgets to `class_text'.

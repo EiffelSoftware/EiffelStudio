@@ -78,6 +78,7 @@ fullrd pixmap
 fullrd split_area
 fullrd test_all_widgets
 fullrd test_events
+fullrd widget_test
 fullrd tests
 fullrd tutorial
 cd ..

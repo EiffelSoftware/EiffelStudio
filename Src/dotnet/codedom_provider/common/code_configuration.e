@@ -21,6 +21,8 @@ indexing
 							<prefix value="WEB_" assembly="System.Web.dll"/>
 							<prefix value="WEB_" assembly="System.Web.RegularExpressions.dll"/>
 							<prefix value="WEB_" assembly="System.Web.Services.dll"/>
+							<prefix value="WEB_" assembly="System.Web.Mobile.dll"/>
+							<prefix value="WEB_" assembly="System.Web.UI.MobileControls.Adapters.dll"/>
 						</prefixes>
 						<compiler>
 							<default_root_class>ANY</default_root_class>
@@ -167,6 +169,8 @@ feature -- Access
 			Result.extend ("WEB_", "system.web.dll")
 			Result.extend ("WEB_", "system.web.regularexpressions.dll")
 			Result.extend ("WEB_", "system.web.services.dll")
+			Result.extend ("WEB_", "system.web.mobile.dll")
+			Result.extend ("WEB_", "system.web.ui.mobilecontrols.adapters.dll")
 		end
 		
 feature -- Basic Operations
@@ -253,7 +257,7 @@ feature {NONE} -- Implementation
 	initialize_prefixes is
 			-- Initialize prefixes to default values.
 		do
-			create internal_prefixes.make (4)
+			create internal_prefixes.make (10)
 			from
 				Default_prefixes.start
 			until

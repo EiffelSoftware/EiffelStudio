@@ -150,7 +150,9 @@ feature {EV_ANY_I} -- WEL Implementation
 			child: WEL_WINDOW
 			widget_imp: EV_WIDGET_IMP
 			container: EV_CONTAINER_IMP
+			old_cursor: like cursor
 		do
+			old_cursor := clone (cursor)
 			from
 				go_i_th (1)
 			until
@@ -171,6 +173,8 @@ feature {EV_ANY_I} -- WEL Implementation
 
 				index := index + 1
 			end
+				-- Restore cursor of `Current'.
+			go_to (old_cursor)
 		end
 		
 
@@ -201,6 +205,9 @@ end -- class EV_WIDGET_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.25  2001/06/13 22:28:45  rogers
+--| `adjust_tab_ordering' now restores the cursor of `Current'.
+--|
 --| Revision 1.24  2001/06/07 23:08:16  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

@@ -481,7 +481,7 @@ feature -- Third pass: byte code production and type check
 				-- Feature table of the class
 			feature_i, def_resc: FEATURE_I
 				-- A feature of the class
-			feature_changed, not_empty: BOOLEAN
+			feature_changed: BOOLEAN
 				-- Is the current feature `feature_i' changed ?
 			dependances: CLASS_DEPENDANCE
 			rep_dep: REP_CLASS_DEPEND
@@ -933,17 +933,8 @@ end
 			else
 				melted_set.merge (melt_set)
 			end
-			not_empty := not melt_set.empty
-			if not_empty then
-					-- If features have been changed, then byte code
-					-- must be reproduced
-				System.freeze_set1.put (Current)
-				System.melted_set.put (Current)
-			end
-			if not_empty or else propagators.invariant_removed then
-					-- If code has been melted or else if invariant
-					-- has been removed, hash table must be updated
-				System.freeze_set2.put (Current)
+
+			if not melted_set.empty or else propagators.invariant_removed then
 				System.melted_set.put (Current)
 			end
 
@@ -1139,6 +1130,8 @@ feature -- Generation
 	pass4 is
 			-- Generation of C files for each type associated to the current
 			-- class
+			--|Don't forget to modify also `generate_workbench_files' when modifying
+			--|this function
 		do
 			Inst_context.set_cluster (cluster)
 			types.pass4
@@ -1242,15 +1235,14 @@ feature -- Melting
 				tbl.melt
 			end
 				-- Mark the class to be frozen later again.
-			System.freeze_set1.put (Current)
-			System.freeze_set2.put (Current)
-				-- Mark the class melted
 			System.melted_set.put (Current)
 			pass4_controler.insert_new_class (Current)
 		end
 
 	melt_feature_table is
 			-- Melt feature table.
+			--|Don't forget to modify also `melt_feature_and_descriptor_tables'
+			--|when modifying this function
 		require
 			good_context: System.melted_set.has (Current)
 		do
@@ -1262,7 +1254,27 @@ feature -- Melting
 
 	melt_descriptor_tables is
 			-- Melt descriptor tables of associated class types
+			--|Don't forget to modify also `melt_feature_and_descriptor_tables'
+			--|when modifying this function
+		require
+			good_context: System.melted_set.has (Current)
 		do
+			feature_table.origin_table.melt (Current)
+		end
+
+	melt_feature_and_descriptor_tables is
+			-- Melt feature table.
+			-- Melt descriptor tables of associated class types
+		require
+			good_context: System.melted_set.has (Current)
+		do
+				-- Melt feature table.
+			if not types.empty then
+				Inst_context.set_cluster (cluster)
+				types.melt_feature_table
+			end
+
+				-- Melt descriptor tables
 			feature_table.origin_table.melt (Current)
 		end
 
@@ -1271,6 +1283,8 @@ feature -- Workbench feature and descriptor table generation
 	generate_feature_table is
 			-- Generation of workbench mode feature table for
 			-- the current class
+			--|Don't forget to modify also `generate_workbench_files' when modifying
+			--|this function
 		local
 			table_file_name: STRING
 			file: INDENT_FILE
@@ -1286,11 +1300,48 @@ feature -- Workbench feature and descriptor table generation
 			file.close
 		end
 
+	generate_workbench_files is
+			-- replace generate_decriptor_table,
+			-- generate_feature_table and pass4
+			-- in case of first compilation.
+			-- Just a problem of efficiency
+		local
+			table_file_name: STRING
+			file: INDENT_FILE
+		do
+				-- Generation of workbench mode descriptor tables
+				-- of associated class types.
+				--|Note: when precompiling a system a class might
+				--|have no generic derivations
+			if has_types then
+				feature_table.origin_table.generate (Current)
+			end
+
+				-- Generation of workbench mode feature table for
+				-- the current class
+			table_file_name := full_file_name
+			table_file_name.append_integer (id.id)
+			table_file_name.append_character (feature_table_file_suffix)
+			table_file_name.append (Dot_c)
+			!!file.make (table_file_name)
+			file.open_write
+			file.putstring ("#include %"eif_macros.h%"%N#include %"eif_struct.h%"%N%N")
+			feature_table.generate (file)
+			file.close
+
+				-- Generation of C files for each type associated to the current
+				-- class
+			Inst_context.set_cluster (cluster)
+			types.pass4
+ 		end
+
 	generate_descriptor_tables is
 			-- Generation of workbench mode descriptor tables
 			-- of associated class types.
 			--|Note: when precompiling a system a class might
 			--|have no generic derivations
+			--|Don't forget to modify also `generate_workbench_files' when modifying
+			--|this function
 		do
 			if has_types then
 				feature_table.origin_table.generate (Current)
@@ -1390,7 +1441,6 @@ old_skeleton.trace
 io.error.new_line
 end
 
-						System.freeze_set2.put (Current)
 						System.melted_set.put (Current)
 					else
 debug ("SKELETON")
@@ -2332,6 +2382,19 @@ feature -- Supplier checking
 
 feature -- Order relation for inheritance and topological sort
 
+	simple_conform_to (other: CLASS_C): BOOLEAN is
+			-- Is `other' an ancestor of Current?
+		require
+			good_argument: other /= Void
+			conformance_table_exists: conformance_table /= Void
+		do
+			Result := other.topological_id <= topological_id
+						-- A parent has necessarily a class id
+						-- less or equal than the one of the heir class
+					and then conformance_table.item (other.topological_id)
+						-- Check conformance table
+		end
+
 	conform_to (other: CLASS_C): BOOLEAN is
 			-- Is `other' an ancestor of Current ?
 		require
@@ -3228,7 +3291,7 @@ end
 			end
 			!! melted_info.make (a_feature)
 			melted_set.put (melted_info)
-			System.freeze_set1.put (Current)
+			System.melted_set.put (Current)
 		end
 
 feature -- Merging

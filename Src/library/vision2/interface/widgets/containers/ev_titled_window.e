@@ -21,7 +21,7 @@ create
 	default_create,
 	make_for_test
 
-feature  -- Access
+feature -- Access
 
 	accelerators: ACTIVE_LIST [EV_ACCELERATOR]
 			-- Key combination shortcuts associated with this window.
@@ -58,7 +58,6 @@ feature -- Status report
 
 	is_minimized: BOOLEAN is
 			-- Is displayed iconified/minimised?
-		require
 		do
 			Result := implementation.is_minimized
 		ensure
@@ -67,7 +66,6 @@ feature -- Status report
 
 	is_maximized: BOOLEAN is
 			-- Is displayed at maximum size?
-		require
 		do
 			Result := implementation.is_maximized
 		ensure
@@ -195,6 +193,9 @@ end -- class EV_TITLED_WINDOW
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/03/07 01:35:37  brendel
+--| Cosmetics
+--|
 --| Revision 1.6  2000/03/01 20:07:36  king
 --| Corrected export clauses for implementation and create_imp/act_seq
 --|

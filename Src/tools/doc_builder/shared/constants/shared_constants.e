@@ -32,10 +32,10 @@ feature -- Access
 			create Result			
 		end
 		
-	Transformation_constants: XSL_TRANSFORM_CONSTANTS is
-			-- XSL transformation constants
+	Output_constants: OUTPUT_CONSTANTS is
+			-- Output constants
 		once
-			create Result	
+			create Result			
 		end
 
 end -- class SHARED_CONSTANTS

@@ -11,7 +11,9 @@ feature -- Once objects
 	Application_window: DOC_BUILDER_WINDOW is
 			-- Root application window
 		once
-			Result := window_cell.item
+			if window_cell /= Void then
+				Result := window_cell.item	
+			end
 		end
 
 	Shared_project: DOCUMENT_PROJECT is
@@ -75,15 +77,18 @@ feature {NONE} -- Status Setting
 
 	set_root_window (window: DOC_BUILDER_WINDOW) is
 			-- The main application window
-		local
-			l_window: DOC_BUILDER_WINDOW
-		once
-			create window_cell.put (window)
-			l_window ?= Application_window
+		do
+			window_cell.put (window)
+		ensure
+			window_cell_set: window_cell.item = window
 		end
 		
-	window_cell: CELL [DOC_BUILDER_WINDOW]
-			-- Window Container		
+	window_cell: CELL [DOC_BUILDER_WINDOW] is
+			-- Window Container
+		once
+			create Result.put (Void)
+		end
+		
 
 	location_string_titles: ARRAYED_LIST [STRING] is
 			-- Location string title in current hierarchy of files

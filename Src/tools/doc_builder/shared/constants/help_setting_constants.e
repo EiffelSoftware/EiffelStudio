@@ -20,7 +20,7 @@ feature -- Access
 	is_web_help: BOOLEAN
 			-- Help for web page content?
 			
-	toc: XML_TABLE_OF_CONTENTS
+	toc: TABLE_OF_CONTENTS
 			-- Table of Contents
 			
 	help_project_name: STRING

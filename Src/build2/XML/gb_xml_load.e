@@ -77,7 +77,11 @@ inherit
 		export
 			{NONE} all 
 		end
-
+		
+	GB_SHARED_CONSTANTS
+		export
+			{NONE} all
+		end
 
 feature -- Basic operation
 
@@ -356,11 +360,8 @@ feature {NONE} -- Implementation
 	create_system is
 			-- Create a system from the parsed XML file.
 		local
-			application_element: XM_ELEMENT
-			window_element: XM_ELEMENT
-			current_element: XM_ELEMENT
-			current_name: STRING
-			current_type: STRING
+			application_element, window_element, current_element, constants_element, constant_item_element: XM_ELEMENT
+			current_name, current_type: STRING
 			directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
 		do
 			application_element := pipe_callback.document.root_element
@@ -392,6 +393,19 @@ feature {NONE} -- Implementation
 									end
 								end
 								current_element.forth
+							end
+						elseif current_type.is_equal (Constants_string) then
+							constants_element := current_element
+							from
+								constants_element.start
+							until
+								constants_element.off
+							loop
+								constant_item_element ?= constants_element.item_for_iteration
+								if constant_item_element /= Void then
+									constants.build_constant_from_xml (constant_item_element)	
+								end
+								constants_element.forth
 							end
 						else
 							build_window (current_element, "")							

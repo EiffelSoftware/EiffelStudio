@@ -49,7 +49,6 @@ feature {NONE} -- Implementation
 				progress_report.step
 			end
 			if not environment.abort then		
-				message_output.add_message (Compilation_Successful)
 			
 				-- Compiling Eiffel
 				if environment.compile_eiffel then
@@ -64,9 +63,6 @@ feature {NONE} -- Implementation
 						progress_report.step
 					end
 				end
-			end
-			if not environment.abort then		
-				message_output.add_title (Compilation_Successful)
 			end
 		end
 
@@ -86,9 +82,6 @@ feature {NONE} -- Private Access
 
 	C_server_compilation_title: STRING is "Compiling C server code"
 			-- C compilation message.
-
-	Compilation_successful: STRING is "Compilation Completed"
-			-- Compilation successful message.
 
 	Eiffel_compilation_title: STRING is "Compiling Eiffel code"
 			-- Eiffel compilation message.

@@ -880,10 +880,10 @@ EIF_POINTER font_box_create (char * a_name, EIF_POINTER a_parent, EIF_BOOLEAN di
  * Callbacks
  */
 	client = (font_box_data *) cmalloc (sizeof (font_box_data));
-	XtAddCallback (non_stand_list, XmNbrowseSelectionCallback, font_box_select_non_stand, client);
-	XtAddCallback (stand_fonts_button, XmNactivateCallback, font_box_switch_to_stand, client);
-	XtAddCallback (non_stand_fonts_button, XmNactivateCallback, font_box_switch_to_non_stand, client);
-	XtAddCallback (form, XmNdestroyCallback, font_box_destroy_action, client);
+	XtAddCallback (non_stand_list, XmNbrowseSelectionCallback, (XtCallbackProc) font_box_select_non_stand, client);
+	XtAddCallback (stand_fonts_button, XmNactivateCallback, (XtCallbackProc) font_box_switch_to_stand, client);
+	XtAddCallback (non_stand_fonts_button, XmNactivateCallback, (XtCallbackProc) font_box_switch_to_non_stand, client);
+	XtAddCallback (form, XmNdestroyCallback, (XtCallbackProc) font_box_destroy_action, client);
 
 /*
  * Fill the client structure
@@ -977,17 +977,17 @@ EIF_POINTER font_box_create (char * a_name, EIF_POINTER a_parent, EIF_BOOLEAN di
 	font_box_fill_menu (&point_menu_buttons, point_menu, &number_point, &point_menu_list);
 	font_box_fill_menu (&resolution_menu_buttons, resolution_menu, &number_resolution, &resolution_menu_list);
 	for (i = 0; i < number_family; i++)
-		XtAddCallback (family_menu_buttons [i], XmNactivateCallback, font_box_set_family, client);
+		XtAddCallback (family_menu_buttons [i], XmNactivateCallback, (XtCallbackProc) font_box_set_family, client);
 	for (i = 0; i < number_weight; i++)
-		XtAddCallback (weight_menu_buttons [i], XmNactivateCallback, font_box_set_weight, client);
+		XtAddCallback (weight_menu_buttons [i], XmNactivateCallback, (XtCallbackProc) font_box_set_weight, client);
 	for (i = 0; i < number_slant; i++)
-		XtAddCallback (slant_menu_buttons [i], XmNactivateCallback, font_box_set_slant, client);
+		XtAddCallback (slant_menu_buttons [i], XmNactivateCallback, (XtCallbackProc) font_box_set_slant, client);
 	for (i = 0; i < number_width; i++)
-		XtAddCallback (width_menu_buttons [i], XmNactivateCallback, font_box_set_width, client);
+		XtAddCallback (width_menu_buttons [i], XmNactivateCallback, (XtCallbackProc) font_box_set_width, client);
 	for (i = 0; i < number_point; i++)
-		XtAddCallback (point_menu_buttons [i], XmNactivateCallback, font_box_set_point, client);
+		XtAddCallback (point_menu_buttons [i], XmNactivateCallback, (XtCallbackProc) font_box_set_point, client);
 	for (i = 0; i < number_resolution; i++)
-		XtAddCallback (resolution_menu_buttons [i], XmNactivateCallback, font_box_set_resolution, client);
+		XtAddCallback (resolution_menu_buttons [i], XmNactivateCallback, (XtCallbackProc) font_box_set_resolution, client);
 
 /*
  * Fill the client structure
@@ -1141,7 +1141,7 @@ void font_box_set_font (char *font_name, EIF_POINTER client)
 	strcpy(f_name, font_name);
 	temp = (font_box_data *) client;
 	temp->current_font_name = f_name;
-	font_box_update_family (client);
+	font_box_update_family ((font_box_data*)client);
 	temp->current_stand_font = font_box_match_stand_font (temp);
 	temp->current_font_name = temp->stand_fonts_list [temp->current_stand_font]->name;
 	font_box_show_font (temp);

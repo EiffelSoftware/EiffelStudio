@@ -17,7 +17,7 @@ inherit
 			interface
 		end
 
-	WEL_TTF_CONSTANTS
+	WEL_TOOLTIP_CONSTANTS
 
 feature -- Initialization
 

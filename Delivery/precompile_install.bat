@@ -36,7 +36,6 @@ echo %DEL% /s Makefile.SH >> cleanup.bat
 echo %DEL% /s *.bak >> cleanup.bat
 echo %DEL% /s *.pdb >> cleanup.bat
 echo %DEL% * >> cleanup.bat
-echo %DEL% cleanup.bat >> cleanup.bat
 
 rem Precompiling EiffelBase
 cd precomp\spec\windows\base

@@ -34,7 +34,7 @@ feature -- Attributes
 		require
 			good_type: generic_type /= Void;
 			good_class: a_class /= Void
---							 and then a_class.changed;
+--			class_changed: a_class.changed;
 		local
 			type_i: GEN_TYPE_I;
 			i, nb: INTEGER;
@@ -43,21 +43,23 @@ feature -- Attributes
 			insertion_list: FILTER_LIST;
 		do
 				-- Evaluation of a type class
-			type_i := generic_type.type_i;
+			type_i := generic_type.type_i
+
 				-- In case of expanded
-			type_i.set_is_expanded (False);
+			type_i.set_is_expanded (False)
+
 				-- Check if it is a data or a filter
 			if type_i.has_formal then
 					-- It is a filter: the insertion list is the filter
 					-- list of `a_class'
-				insertion_list := a_class.filters;
+				insertion_list := a_class.filters
 				check
 					class_has_generics: a_class.generics /= Void
 				end;
 			else
 					-- it is a data: the insertion list is the Current one
-				insertion_list := Current;
-			end;
+				insertion_list := Current
+			end
 debug
 	io.error.putstring ("Dispatch : ");
 	io.error.putstring (a_class.name);
@@ -69,27 +71,27 @@ end;
 
 				-- Look for the item in the insertion list
 			insertion_list.start;
-			insertion_list.search (type_i);
+			insertion_list.search (type_i)
 			if insertion_list.after then
 					-- New data or item
-				insertion_list.put_front (type_i);
-			end;
+				insertion_list.put_front (type_i)
+			end
 
 				-- Recursion on the generic types
 			from
-				i := 1;
-				generics := generic_type.generics;
-				nb := generics.count;
+				i := 1
+				generics := generic_type.generics
+				nb := generics.count
 			until
 				i > nb
 			loop
-				another_generic ?= generics.item (i).actual_type;
+				another_generic ?= generics.item (i).actual_type
 				if another_generic /= Void then
-					dispatch (another_generic, a_class);
-				end;
-				i := i + 1;
-			end;
-		end;
+					dispatch (another_generic, a_class)
+				end
+				i := i + 1
+			end
+		end
 
 	process is
 			-- Process the list in order to find new class types

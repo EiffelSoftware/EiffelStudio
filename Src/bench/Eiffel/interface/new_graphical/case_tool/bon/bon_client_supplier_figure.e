@@ -543,7 +543,7 @@ feature {BON_DIAGRAM_FACTORY} -- Drawing
 			if l.is_end_arrow then
 				l.end_arrow.i_th_point (2).set_angle (l.end_angle)
 				t1 := l.end_arrow.point_array
-				p := l.end_draw_point
+				p := l.point_b
 			else
 				p := l.point_b
 			end
@@ -559,7 +559,7 @@ feature {BON_DIAGRAM_FACTORY} -- Drawing
 			if l.is_start_arrow then
 				l.start_arrow.i_th_point (2).set_angle (l.start_angle)
 				t2 := l.start_arrow.point_array
-				p := l.start_draw_point
+				p := l.point_a
 			else
 				p := l.point_a
 			end
@@ -625,7 +625,7 @@ feature {EB_DIAGRAM_TO_PS_COMMAND} -- Postscript
 			if l.is_end_arrow then
 				l.end_arrow.i_th_point (2).set_angle (l.end_angle)
 				t1 := l.end_arrow.point_array
-				p := l.end_draw_point
+				p := l.point_b
 			else
 				p := l.point_b
 			end
@@ -641,7 +641,7 @@ feature {EB_DIAGRAM_TO_PS_COMMAND} -- Postscript
 			if l.is_start_arrow then
 				l.start_arrow.i_th_point (2).set_angle (l.start_angle)
 				t2 := l.start_arrow.point_array
-				p := l.start_draw_point
+				p := l.point_a
 			else
 				p := l.point_a
 			end

@@ -160,7 +160,7 @@ feature {BON_DIAGRAM_FACTORY} -- Drawing
 					p := line.start_arrow
 					p.i_th_point (2).set_angle (line.start_angle)
 					d.fill_polygon (offset_coordinates (p.point_array))
-					s := line.start_draw_point
+					s := line.point_a
 				else
 					s := line.point_a
 				end
@@ -168,7 +168,7 @@ feature {BON_DIAGRAM_FACTORY} -- Drawing
 					p := line.end_arrow
 					p.i_th_point (2).set_angle (line.end_angle)
 					d.fill_polygon (offset_coordinates (p.point_array))
-					t := line.end_draw_point
+					t := line.point_b
 				else
 					t := line.point_b
 				end

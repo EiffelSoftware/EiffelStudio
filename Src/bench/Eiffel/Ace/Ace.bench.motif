@@ -99,7 +99,6 @@ cluster
 		unredefined_error:	"$BENCH/Eiffel/API/error/eiffel/unredefined";
 			-- Resources
 		resources:			"$BENCH/Eiffel/API/resources/common";
-		resources_bench:	"$BENCH/Eiffel/API/resources/bench";
 			-- Profiling
 		converter:			"$BENCH/Eiffel/API/profiler/converter";
 		profiling:			"$BENCH/Eiffel/API/profiler/profiling";
@@ -149,7 +148,7 @@ cluster
 		wizard_bench:		"$BENCH/Eiffel/interface/graphical/wizard/bench";
 
 		platform_common:	"$BENCH/Eiffel/interface/graphical/spec/common";
-		platform_motif:		"$BENCH/Eiffel/interface/graphical/spec/motif";
+		platform_spec:		"$BENCH/Eiffel/interface/graphical/spec/motif";
 
 	-- Communications
 
@@ -161,14 +160,24 @@ cluster
 		case_bench:			"$BENCH/Eiffel/case_storage/bench";
 
 	-- Vision
-		graph_resources:	"$EIFFEL3/library/vision/implement/motif/Resources";
-		graph_widgets:		"$EIFFEL3/library/vision/implement/motif/widgets";
+		graph_widgets:		"$EIFFEL3/library/vision/implement/motif";
 		graph_toolkit:		"$EIFFEL3/library/vision/implement/toolkit";
-		graph_X:			"$EIFFEL3/library/vision/implement/X";
-		graph_commands:		"$EIFFEL3/library/vision/oui/commands";
+		graph_commands:		"$EIFFEL3/library/vision/oui/context_data";
 		graph_kernel:		"$EIFFEL3/library/vision/oui/kernel";
 		graph_oui_widgets:	"$EIFFEL3/library/vision/oui/widgets";
 		graph_tools:		"$EIFFEL3/library/vision/tools";
+
+	-- Mel
+
+		m1:					"$EIFFEL3/library/mel/callback_structs";
+		m2:					"$EIFFEL3/library/mel/constants";
+		m3:					"$EIFFEL3/library/mel/events";
+		m4:					"$EIFFEL3/library/mel/extra";
+		m5:					"$EIFFEL3/library/mel/gadgets";
+		m6:					"$EIFFEL3/library/mel/implementation";
+		m7:					"$EIFFEL3/library/mel/kernel";
+		m8:					"$EIFFEL3/library/mel/resources";
+		m9:					"$EIFFEL3/library/mel/widgets";
 
 	-- Net
 		abstract_socket:        "$EIFFEL3/library/net/abstract/socket";
@@ -182,19 +191,20 @@ cluster
 external
 
 	include_path:
-		"$(BENCH)/C/parsing/shared",
-		"$(EIFFEL3)/library/mel/Clib";
+		"\$(BENCH)/C/parsing/shared",
+		"\$(EIFFEL3)/library/mel/Clib";
 
 	object:
 		"$(BENCH)/C/parsing/eiffel/libweiffel.a",
 		"$(BENCH)/C/parsing/lace/liblace.a",
 		"$(BENCH)/C/parsing/shared/libparsing.a",
 		"$(BENCH)/C/platform/libplatform.a",
-		"$(EIFFEL3)/library/vision/spec/$(PLATFORM)/lib/motif_Clib.a",
-		"$(EIFFEL3)/library/vision/spec/$(PLATFORM)/lib/Xt.a",
+		"$(EIFFEL3)/library/mel/spec/$(PLATFORM)/lib/libMel.a",
+		"$(EIFFEL3)/library/mel/spec/$(PLATFORM)/lib/libXpm.a",
+		"$(EIFFEL3)/library/net/spec/$(PLATFORM)/lib/libnet.a",
 		"$(BENCH)/C/ipc/ewb/libewb.a",
 		"$(BENCH)/C/ipc/shared/libipc.a",
-		"$(BENCH)/C/liman/client/libliman.a",
+		"$(BENCH)/C/liman/lm/liblm.a",
 		"$(BENCH)/C/liman/shared/libshared.a",
 		"$(BENCH)/C/idrs/libidr.a",
 		"-lXm -lXt -lX11"

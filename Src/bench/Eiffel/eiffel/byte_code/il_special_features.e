@@ -138,7 +138,15 @@ feature -- IL code generation
 				il_generator.put_default_value (type)
 
 			when one_type then
-				il_generator.put_integer_constant (type, 1)
+				inspect type_of (type)
+				when integer_type then
+					il_generator.put_integer_constant (type, 1)
+				when double_type then
+					il_generator.put_double_constant (1.0)
+				when Real_type then
+					il_generator.put_double_constant (1.0)
+					il_generator.convert_to_real
+				end
 
 			when to_integer_8_type then
 				il_generator.convert_to_integer_8

@@ -33,9 +33,9 @@ feature -- Initialization
 		require
 			not_initialized: not initialized
 			is_new: project_dir.is_new
-			is_readable: project_dir.is_readable
-			is_writable: project_dir.is_writable
-			is_executable: project_dir.is_executable
+			is_readable: project_dir.is_base_readable
+			is_writable: project_dir.is_base_writable
+			is_executable: project_dir.is_base_executable
 			--is_creatable: project_dir.is_creatable
 			prev_read_write_error: not read_write_error
 		local
@@ -50,9 +50,7 @@ feature -- Initialization
 			workb.make
 			Workbench.init
 			set_is_initialized
-			if Platform_constants.is_windows then
-				Execution_environment.change_working_directory (project_dir.name)
-			end
+ 			Execution_environment.change_working_directory (project_dir.name)
 		ensure
 			initialized: initialized
 		end
@@ -81,62 +79,65 @@ feature -- Initialization
 		do
 			set_error_status (Ok_status)
 
-			p_eif := project_dir.project_eif_file;
-			e_project := p_eif.retrieved_project;
-			if p_eif.error then
-				if p_eif.is_corrupted then
-					set_error_status (Retrieve_corrupt_error_status);
-				elseif p_eif.is_interrupted then
-					set_error_status (Retrieve_interrupt_error_status);
+			check_existence (project_dir)
+
+			if not error_occurred then
+
+				p_eif := project_dir.project_eif_file;
+				e_project := p_eif.retrieved_project;
+				if p_eif.error then
+					if p_eif.is_corrupted then
+						set_error_status (Retrieve_corrupt_error_status);
+					elseif p_eif.is_interrupted then
+						set_error_status (Retrieve_interrupt_error_status);
+					else
+						set_error_status (Retrieve_incompatible_error_status);
+						incompatible_version_number.append (p_eif.project_version_number)
+					end
 				else
-					set_error_status (Retrieve_incompatible_error_status);
-					incompatible_version_number.append (p_eif.project_version_number)
-				end
-			else
 --!! FIXME: check Concurrent_Eiffel license
-				Project_directory.make_from_string (project_dir.name);
-				system := e_project.system;
-				!! init_work.make (e_project.saved_workbench);
-				Workbench.init;
-				Compilation_modes.set_is_extendible (Comp_system.extendible);
-				Compilation_modes.set_is_extending (Comp_system.is_dynamic);
-				if Comp_system.is_precompiled then
-					precomp_dirs := Workbench.precompiled_directories;
-					from
-						precomp_dirs.start
-					until
-						precomp_dirs.after
-					loop
-						precomp_dirs.item_for_iteration.update_path;
-						precomp_dirs.forth
-					end;
-					Precompilation_directories.copy (precomp_dirs);
-					!! remote_dir.make (project_dir.name);
-					remote_dir.set_licensed (Comp_system.licensed_precompilation)
-					remote_dir.set_system_name (Comp_system.system_name)
-					Precompilation_directories.force
+					Project_directory.make_from_string (project_dir.name);
+					system := e_project.system;
+					!! init_work.make (e_project.saved_workbench);
+					Workbench.init;
+					Compilation_modes.set_is_extendible (Comp_system.extendible);
+					Compilation_modes.set_is_extending (Comp_system.is_dynamic);
+					if Comp_system.is_precompiled then
+						precomp_dirs := Workbench.precompiled_directories;
+						from
+							precomp_dirs.start
+						until
+							precomp_dirs.after
+						loop
+							precomp_dirs.item_for_iteration.update_path;
+							precomp_dirs.forth
+						end;
+						Precompilation_directories.copy (precomp_dirs);
+						!! remote_dir.make (project_dir.name);
+						remote_dir.set_licensed (Comp_system.licensed_precompilation)
+						remote_dir.set_system_name (Comp_system.system_name)
+						Precompilation_directories.force
 							(remote_dir, Comp_system.compilation_id);
-				else
-					if Comp_system.uses_precompiled then
-						!! precomp_r;
-						precomp_r.set_precomp_dir
+					else
+						if Comp_system.uses_precompiled then
+							!! precomp_r;
+							precomp_r.set_precomp_dir
+						end;
+						if Comp_system.is_dynamic then
+							!! extendible_r;
+							extendible_r.set_extendible_dir
+						end;
 					end;
-					if Comp_system.is_dynamic then
-						!! extendible_r;
-						extendible_r.set_extendible_dir
-					end;
-				end;
 
-				Comp_system.server_controler.init;
-				Universe.update_cluster_paths;
+					Comp_system.server_controler.init;
+					Universe.update_cluster_paths;
+					
+					check_permissions (project_dir)
 
-				check_permissions (project_dir)
-
-				if not error_occurred then
-					set_is_initialized;
-					if Platform_constants.is_windows then
+					if not error_occurred then
+						set_is_initialized;
 						Execution_environment.change_working_directory (project_dir.name)
-					end;
+					end
 				end
 			end
 		ensure
@@ -726,20 +727,30 @@ feature {APPLICATION_EXECUTION}
 
 feature {NONE} -- Implementation
 
-	check_permissions (project_dir: PROJECT_DIRECTORY) is
-			-- Check the permissions of `project_dir'.
+	check_existence (project_dir: PROJECT_DIRECTORY) is
+			-- Check the permissions of `project_dir' before to retrieve
+			-- the project.
 		require
 			valid_project_dir: project_dir /= Void;
 			status_ok: not error_occurred
 		do
-			if not system.is_precompiled and then project_dir.is_project_writable then
+			if not project_dir.exists then
+				set_error_status (file_error_status);
+			end
+		end;
+
+	check_permissions (project_dir: PROJECT_DIRECTORY) is
+			-- Check the permissions of `project_dir' after the retrieving
+			-- of the project.
+		do
+			if not System.is_precompiled and then project_dir.is_writable then
 				set_file_status (write_status)
-			elseif project_dir.is_project_readable then
+			elseif project_dir.is_readable then
 				set_file_status (read_only_status)
 			else
 				set_error_status (file_error_status);
 			end
-		end;
+		end
 
 feature {NONE} -- Implementation
 

@@ -39,9 +39,6 @@ guint c_ev_gtk_callback_marshal_idle_connect (EIF_OBJECT);
 
 guint c_ev_gtk_callback_marshal_delete_connect (GtkObject*, EIF_OBJECT);
 
-void* gtk_value_pointer (EIF_POINTER);
-
-int gtk_value_int (EIF_POINTER);
 
 #endif
 
@@ -50,6 +47,9 @@ int gtk_value_int (EIF_POINTER);
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.3  2004/02/06 00:32:20  king
+// Removed externals that are now written in Eiffel using inline
+//
 // Revision 1.2  2003/04/15 01:32:31  king
 // Now new marshal proxy is correctly executed, updated arg function to gtk2
 //

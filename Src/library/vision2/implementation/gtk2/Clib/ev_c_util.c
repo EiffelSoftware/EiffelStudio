@@ -10,17 +10,6 @@
 #include "ev_c_util.h"
 #include "eif_except.h"
 
-EIF_REAL double_array_i_th (double *double_array, int index)
-{
-	return (EIF_REAL) double_array [index];
-}
-
-GValue* gtk_args_array_i_th (GValue** value_array, int index)
-{
-//	printf ("Calling gtk_args_array_i_th to retrieve a GValue of %s\n", G_VALUE_TYPE_NAME ((GValue*)value_array + index));
-	return (GValue*)value_array + index;
-}
-
 void ev_gtk_log (
 	const gchar* log_domain,
 	GLogLevelFlags log_level,
@@ -1107,6 +1096,9 @@ char **wait_cursor_xpm (void) {
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.4  2004/02/06 00:31:23  king
+// Removed externals that are now written in Eiffel using inline
+//
 // Revision 1.3  2003/04/16 17:13:10  king
 // Initial gtk2 default marshaller implementation
 //

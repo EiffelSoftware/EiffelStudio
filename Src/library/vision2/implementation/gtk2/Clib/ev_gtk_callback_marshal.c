@@ -77,18 +77,6 @@ void c_ev_gtk_new_callback_marshal (
 	}
 }
 
-// FIXME temporary wrapper for GTK_VALUE_POINTER should really be elsewhere
-void* gtk_value_pointer (EIF_POINTER p)
-{
-	//printf ("Calling gtk_value_pointer with a GValue that represents %s\n", G_VALUE_TYPE_NAME((GValue*)p));
-	return g_value_peek_pointer ((GValue*)p);
-}
-
-int gtk_value_int (EIF_POINTER p)
-{
-//	printf ("Calling gtk_value_uint with a GValue that represents %s\n", G_VALUE_TYPE_NAME(p));
-	return (g_value_get_uint ((GValue*)p));
-}
 
 void dummy_callback (void)
 {

@@ -17,6 +17,7 @@ inherit
 		redefine
 			default_style,
 			on_menu_command,
+			on_accelerator_command,
 			on_paint,
 			on_size,
 			realize,
@@ -141,6 +142,12 @@ feature {NONE} -- Implementation
 			else
 				bar.execute (menu_id)
 			end
+		end
+
+	on_accelerator_command (accelerator_id: INTEGER) is
+			-- The `acelerator_id' has been activated.
+		do
+			on_menu_command (accelerator_id)
 		end
 
 	on_size (size_type: INTEGER; a_width, a_height: INTEGER) is

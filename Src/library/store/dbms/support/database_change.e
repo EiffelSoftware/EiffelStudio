@@ -1,5 +1,5 @@
 indexing
-	description: "Implmentation of DB_CHANGE";
+	description: "Implementation of DB_CHANGE";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -66,7 +66,10 @@ feature -- Element change
 			end
 			if tmp_string /= Void then
 				if immediate_execution then
+						-- Allocate a new descriptor, just for the exec_immediate.
+					temp_descriptor := db_spec.new_descriptor
 					handle.status.set (db_spec.exec_immediate (temp_descriptor, tmp_string))
+					handle.status.set (db_spec.terminate_order (temp_descriptor))		
 				else
 					if is_ok then
 						handle.status.set (db_spec.start_order (temp_descriptor))

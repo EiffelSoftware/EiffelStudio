@@ -93,6 +93,8 @@ feature -- Basic operations
 		local   
 				c_temp: ANY
 				sql_temp: STRING
+
+				visu_sql_private: STRING
 		do
 			if db_spec.support_stored_proc then
 				sql_temp := db_spec.sql_adapt_db (sql)
@@ -105,6 +107,7 @@ feature -- Basic operations
 				private_string.append (db_spec.sql_as)
 				private_string.append (sql_temp)
 				private_string.append (db_spec.sql_end)
+				visu_sql_private:= clone(private_string)
 				if (handle.execution_type.immediate_execution) then
 					private_change.modify (private_string)
 				else 
@@ -243,7 +246,9 @@ feature {NONE} -- Implementation
 	set_p_exists is
 			-- Set `p_exists'
 		local
+			-- Add temp_double ... David S.
 			temp_int: INTEGER_REF
+			temp_double: DOUBLE_REF
 			tuple: DB_TUPLE
 		do
 			if (db_spec.support_proc > 0) then
@@ -256,8 +261,12 @@ feature {NONE} -- Implementation
 				!! tuple.copy (private_selection.cursor)
 				if not tuple.empty then
 					temp_int ?= tuple.item (1)
+					temp_double ?= tuple.item (1)
 					if temp_int /= Void then
 						p_exists := temp_int.item > 0
+					else 	if temp_double /= Void then
+								p_exists := temp_double.item >0
+							end
 					end
 					if db_spec.has_row_number then
 						row_number := temp_int.item

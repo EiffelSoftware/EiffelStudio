@@ -56,6 +56,7 @@ feature -- Initialization
 				request_select.load_result
 			end
 			request_select.terminate
+
 		end
 
 
@@ -120,7 +121,7 @@ feature -- Basic operations
 			-- Implement an ACTION operation
 		do
 			request_select.object_convert (tmp_acc_col)
-			request_select.cursor_to_object
+			request_select.cursor_to_object			
 			table.extend (tmp_acc_col.duplicate)
 			tmp_acc_col.clear_all
 		end
@@ -384,7 +385,6 @@ feature {NONE} -- Status report
 		do
 			Result := db_spec.Max_char_size
 		end
-
 
 end -- class DATABASE_REPOSITORY
 

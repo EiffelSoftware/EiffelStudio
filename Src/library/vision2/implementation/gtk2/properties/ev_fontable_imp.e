@@ -46,7 +46,6 @@ feature -- Status setting
 			font_imp ?= private_font.implementation
 			a_font_description := font_imp.font_description
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_modify_font (fontable_widget, a_font_description)
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_free (a_font_description)
 		end
 
 feature {NONE} -- Implementation

@@ -82,7 +82,7 @@ feature -- Incrementality
 				Result := same_signature (other) and then
 					equal (alias_name, other_ext.alias_name) and then
 					encapsulated = other_ext.encapsulated
-				if Result and then encapsulated then
+				if Result then
 					Result := equal (extension, other_ext.extension)
 				end
 			end

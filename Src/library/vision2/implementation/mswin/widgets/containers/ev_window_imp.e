@@ -261,7 +261,8 @@ feature -- Element change
 	set_size (new_width:INTEGER; new_height: INTEGER) is
 			-- Resize the widget and don't notify the parent.
 		do
-			resize (minimum_width.max(new_width), minimum_height.max (new_height))
+			resize (maximum_width.min (minimum_width.max(new_width)),
+				maximum_height.min (minimum_height.max (new_height)))
 		end
 
 	set_minimum_width (value: INTEGER) is
@@ -390,8 +391,8 @@ feature -- Assertion features
 			-- we must redefine it because windows do not
 			-- allow as little windows as we want.
 		do
-			Result := (width = new_width or else width = minimum_width.max (system_metrics.window_minimum_width)) and then
-				  (height = new_height or else height = minimum_height.max (system_metrics.window_minimum_height))
+			Result := (width = new_width or else width = minimum_width.max (system_metrics.window_minimum_width) or else width = maximum_width) and then
+				  (height = new_height or else height = minimum_height.max (system_metrics.window_minimum_height)or else height = maximum_height)
 		end
 
 feature {EV_STATIC_MENU_BAR_IMP} -- Implementation

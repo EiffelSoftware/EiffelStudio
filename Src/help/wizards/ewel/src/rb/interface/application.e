@@ -32,7 +32,7 @@ feature -- Initialization
 			if not retried then
 				wel_make
 			else
-				interface.display_text (std_error, "An internal error occured%NPlease contact <support@eiffel.com>")
+				interface.display_text (std_error, "An internal error occurred%NPlease contact <support@eiffel.com>")
 			end
 		rescue
 			retried := true

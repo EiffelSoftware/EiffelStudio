@@ -130,7 +130,11 @@ feature -- Implementation
 	oracle_b,odbc_b: EV_RADIO_BUTTON
 		-- Database Type selection thanks to radio buttons.
 
-	pixmap_location: STRING is "essai.bmp"
+	pixmap_location: FILE_NAME is
 			-- Pixmap location
+		once
+			create Result.make_from_string ("essai")
+			Result.add_extension ("bmp")
+		end
 
 end -- class WIZARD_INITIAL_STATE

@@ -96,7 +96,7 @@ feature {NONE} -- Implementation
 			title.set_text ("WEL Application Type")
 			subtitle.set_text ("You can choose the type of your application between%N a Frame-based or a Dialog based window")
 			message.set_text ("A Frame-Based Application uses a main window, or %"frame%", which can have %
-								%%Nmenus, subwindows, etc. (Eiffelbench is an example of Frame-Based Application.)%
+								%%Nmenus, subwindows, etc. (EiffelStudio is an example of Frame-Based Application.)%
 								%%N%NA Dialog-Based Application uses a sequence of dialogs.%
 								%%N(This wizard is an example of Dialog-Based Application.)%
 								%")

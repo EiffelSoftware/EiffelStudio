@@ -1,0 +1,83 @@
+system
+	STORE_WIZARD_ORACLE
+
+root
+	WIZARD_PROJECT_MANAGER(wizard_tool): "make_and_launch"
+
+default
+	assertion (ensure)
+	multithreaded (no)
+	exception_trace (yes)
+	console_application (no)
+	dynamic_runtime (no)
+	dead_code_removal (yes)
+	profile (no)
+	line_generation (no)
+	debug  (no)
+	array_optimization (no)
+	inlining (no)
+	inlining_size ("4")
+	--precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/base");
+
+
+cluster
+	
+	root_cluster: "c:\cedric\Wizard\estore"
+	wizard(root_cluster): "$\src"
+	oracle_specific(root_cluster): "$\src\oracle_specific"
+
+
+		-- EiffelBase
+	all base:				"$EIFFEL4/library/base"
+		exclude
+			"desc";"table_eiffel3"
+		end
+
+	all vision2: 			"$EIFFEL4\library\vision2"
+		exclude
+			"gtk"
+			"test"
+		end
+
+	all Events:				"$EIFFEL4\library\event"
+
+	all wel: 				"$EIFFEL4\library\wel"
+
+	all wizard_tool:				"$EIFFEL4\library\wizard"
+		exclude
+			"unix";"CVS"
+		end
+
+-- EiffelTime
+	time:				"$EIFFEL4\library\time";
+	time_format(time):	"$\format";
+	time_english(time):	"$\format\english";
+
+	-- EiffelStore
+	estore_support:		"$EIFFEL4\library\store\support"
+	estore_interface:	"$EIFFEL4\library\store\interface"
+	estore_db_support:	"$EIFFEL4\library\store\dbms\support"
+	estore_rdbms:		"$EIFFEL4\library\store\dbms\rdbms\oracle"
+--	estore_odbc:		"$EIFFEL4\library\store\dbms\rdbms\odbc"
+
+
+external
+	include_path:		
+						"$EIFFEL4\library\store\dbms\rdbms\oracle\Clib",
+--						"$EIFFEL4\library\store\dbms\rdbms\odbc\Clib",
+						"$EIFFEL4\library\wel\spec\windows\include",
+						"C:\ORACLE\ORA81\Oci\Include",
+						"$EIFFEL4\library\vision2\spec\include"
+
+	object: 			"$EIFFEL4\library\store\spec\$(COMPILER)\lib\support.lib",
+						"$EIFFEL4\library\wel\spec\msc\lib\wel.lib",
+						"$EIFFEL4\library\vision2\spec\$(COMPILER)\lib\vision2.lib",
+						"$EIFFEL4\library\vision2\spec\$(COMPILER)\lib\libpng.lib",
+						"$EIFFEL4\library\vision2\spec\$(COMPILER)\lib\zlib.lib",
+						"$EIFFEL4\library\time\clib\datetime.lib",
+						"$EIFFEL4\library\store\spec\$(COMPILER)\lib\oracle_store.lib",
+--						"$EIFFEL4\library\store\spec\$(COMPILER)\lib\odbc32.lib",
+--						"$EIFFEL4\library\store\spec\$(COMPILER)\lib\odbc_store.lib",
+						"C:\ORACLE\ORA81\Oci\lib\msvc\oci.lib"
+end
+

@@ -277,8 +277,14 @@ feature {EV_ANY_IMP} -- Agent implementation routines
 		do
 			integer_tuple.put (feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_int (args), 1)
 			Result := integer_tuple
-		end	
-		
+		end
+
+	gtk_args_to_tuple (n_args: INTEGER; args: POINTER): TUPLE [INTEGER, POINTER] is
+			-- Tuple containing the data passed from our custom Gtk marshal
+		do
+			Result := [n_args, args]
+		end
+
 	column_resize_callback_translate (n: INTEGER; args: POINTER): TUPLE is
 			-- Translate function for MCL
 		local

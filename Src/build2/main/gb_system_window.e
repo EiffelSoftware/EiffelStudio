@@ -151,6 +151,7 @@ feature {NONE} -- Initialization
 			hbox: EV_HORIZONTAL_BOX
 		do
 			set_title ("Project configuration")
+			set_icon_pixmap ((create {GB_SHARED_PIXMAPS}).icon_system_window)
 
 			create hbox
 			hbox.set_padding (Small_padding_size)
@@ -190,6 +191,9 @@ feature {NONE} -- Initialization
 			hbox.disable_item_expand (vbox)
 
 			extend (hbox)
+			
+				-- Set up default buttons.
+			set_default_cancel_button (button)
 			
 				-- Closing window
 			close_request_actions.wipe_out

@@ -67,6 +67,11 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	GB_SHARED_PIXMAPS
+		export
+			{NONE} all
+		end
 
 create
 	make
@@ -110,6 +115,7 @@ feature -- Basic operations
 			do
 				if system_status.project_modified then
 					create dialog.make_with_text (Save_prompt)
+					dialog.set_icon_pixmap (Icon_build_window @ 1)
 					dialog.show_modal_to_window (main_window)
 						-- Do nothing if cancel was pressed.
 					if not dialog.selected_button.is_equal (Ev_cancel) then

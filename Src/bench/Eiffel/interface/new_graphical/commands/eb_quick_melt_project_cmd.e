@@ -9,8 +9,8 @@ class
 inherit
 	EB_MELT_PROJECT_CMD
 		redefine
-			perform_compilation,
-			name
+			perform_compilation
+--			name
 		end
 
 creation
@@ -25,10 +25,10 @@ feature
 			Eiffel_project.quick_melt
 		end
 
-	name: STRING is
-			-- Name of the command.
-		do
-			Result := Interface_names.f_Quick_update
-		end
+--	name: STRING is
+--			-- Name of the command.
+--		do
+--			Result := Interface_names.f_Quick_update
+--		end
 
 end -- class EB_QUICK_MELT_PROJECT_CMD

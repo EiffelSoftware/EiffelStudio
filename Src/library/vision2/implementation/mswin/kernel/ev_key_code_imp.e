@@ -492,157 +492,157 @@ feature -- Alpabetical keys
 	Key_a: INTEGER is
 			-- A virtual key code for the "a" key. 
 		do
-			Result := 97
+			Result := 65
 		end
 
 	Key_b: INTEGER is 
 			-- A virtual key code for the "b" key. 
 		do
-			Result := 98
+			Result := 66
 		end
 
 	Key_c: INTEGER is 
 			-- A virtual key code for the "c" key. 
 		do
-			Result := 99
+			Result := 67
 		end
 
 	Key_d: INTEGER is 
 			-- A virtual key code for the "d" key. 
 		do
-			Result := 100
+			Result := 68
 		end
 
 	Key_e: INTEGER is 
 			-- A virtual key code for the "e" key. 
 		do
-			Result := 101
+			Result := 69
 		end
 
 	Key_f: INTEGER is 
 			-- A virtual key code for the "f" key. 
 		do
-			Result := 102
+			Result := 70
 		end
 
 	Key_g: INTEGER is 
 			-- A virtual key code for the "g" key. 
 		do
-			Result := 103
+			Result := 71
 		end
 
 	Key_h: INTEGER is 
 			-- A virtual key code for the "h" key. 
 		do
-			Result := 104
+			Result := 72
 		end
 
 	Key_i: INTEGER is 
 			-- A virtual key code for the "i" key. 
 		do
-			Result := 105
+			Result := 73
 		end
 
 	Key_j: INTEGER is 
 			-- A virtual key code for the "j" key. 
 		do
-			Result := 106
+			Result := 74
 		end
 
 	Key_k: INTEGER is 
 			-- A virtual key code for the "k" key. 
 		do
-			Result := 107
+			Result := 75
 		end
 
 	Key_l: INTEGER is 
 			-- A virtual key code for the "l" key. 
 		do
-			Result := 108
+			Result := 76
 		end
 
 	Key_m: INTEGER is 
 			-- A virtual key code for the "m" key. 
 		do
-			Result := 109
+			Result := 77
 		end
 
 	Key_n: INTEGER is 
 			-- A virtual key code for the "n" key. 
 		do
-			Result := 110
+			Result := 78
 		end
 
 	Key_o: INTEGER is 
 			-- A virtual key code for the "o" key. 
 		do
-			Result := 111
+			Result := 79
 		end
 
 	Key_p: INTEGER is 
 			-- A virtual key code for the "p" key. 
 		dO
-			Result := 112
+			Result := 80
 		end
  
 	Key_q: INTEGER is 
 			-- A virtual key code for the "q" key. 
 		do
-			Result := 113
+			Result := 81
 		end
 
 	Key_r: INTEGER is 
 			-- A virtual key code for the "r" key. 
 		do
-			Result := 114
+			Result := 82
 		end
 
 	Key_s: INTEGER is 
 			-- A virtual key code for the "s" key. 
 		do
-			Result := 115
+			Result := 83
 		end
 
 	Key_t: INTEGER is 
 			-- A virtual key code for the "t" key. 
 		do
-			Result := 116
+			Result := 84
 		end
 
 	Key_u: INTEGER is 
 			-- A virtual key code for the "u" key. 
 		do
-			Result := 117
+			Result := 85
 		end
 
 	Key_v: INTEGER is 
 			-- A virtual key code for the "v" key. 
 		do
-			Result := 118
+			Result := 86
 		end
 
 	Key_w: INTEGER is 
 			-- A virtual key code for the "w" key. 
 		do
-			Result := 119
+			Result := 87
 		end
 
 	Key_x: INTEGER is 
 			-- A virtual key code for the "x" key. 
 		do
-			Result := 120
+			Result := 88
 		end
 
 	Key_y: INTEGER is 
 			-- A virtual key code for the "y" key. 
 		do
-			Result := 121
+			Result := 89
 		end
 
 	Key_z: INTEGER is 
 			-- A virtual key code for the "z" key. 
 		do
-			Result := 122
+			Result := 90
 		end
 
 end -- class EV_KEY_CODE_IMP

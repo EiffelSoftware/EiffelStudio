@@ -16,6 +16,10 @@
 #include "err_msg.h"
 #include <ctype.h>
 
+#ifdef EIF_OS2
+#include <io.h>
+#endif
+
 /* private functions for lex */
 static int process();
 static int process_name();

@@ -35,8 +35,6 @@ feature {NONE} -- Initialization
 			!! frame.make_with_text (Current, "Busy...")
 			frame.set_foreground_color (color.red)
 
-			!! pix.make_from_file ("d:\divers_kaci\cfg\lak2.bmp")
-
 			!! frame.make_with_text (Current, "another cursor")
 			frame.set_foreground_color (color.red)
 			create hbox.make (frame)

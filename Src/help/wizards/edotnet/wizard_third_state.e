@@ -24,22 +24,28 @@ feature {NONE} -- Implementation
 		local
 			an_assembly: ASSEMBLY_INFORMATION
 			gac_assemblies: IL_ASSEMBLY_FACADE
+			rescued: BOOLEAN
 		do
-			set_help_filename (h_filename)
-			Precursor {BENCH_WIZARD_INTERMEDIARY_STATE_WINDOW} (an_info)
-			
-			(create {CLI_COM}).initialize_com
-			create gac_assemblies.make
-			from
-				gac_assemblies.start
-			until
-				gac_assemblies.after
-			loop
-				create an_assembly.make_from_info (gac_assemblies.assembly_name, gac_assemblies.assembly_version, gac_assemblies.assembly_culture, gac_assemblies.assembly_public_key_token, "dummy")
-				wizard_information.available_assemblies.extend (an_assembly)
+			if not rescued then
+				set_help_filename (h_filename)
+				Precursor {BENCH_WIZARD_INTERMEDIARY_STATE_WINDOW} (an_info)
 				
-				gac_assemblies.forth
+				create gac_assemblies.make
+				from
+					gac_assemblies.start
+				until
+					gac_assemblies.after
+				loop
+					create an_assembly.make_from_info (gac_assemblies.assembly_name, gac_assemblies.assembly_version, gac_assemblies.assembly_culture, gac_assemblies.assembly_public_key_token, "dummy")
+					wizard_information.available_assemblies.extend (an_assembly)
+					
+					gac_assemblies.forth
+				end
 			end
+		rescue
+			rescued := True
+			(create {EXCEPTIONS}).raise ("com_exception")
+			retry
 		end
 
 feature -- Access

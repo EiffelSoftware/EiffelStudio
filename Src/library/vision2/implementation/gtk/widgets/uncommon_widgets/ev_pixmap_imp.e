@@ -32,11 +32,6 @@ inherit
 			width,
 			height
 		end
-
-	MEMORY
-		redefine
-			dispose
-		end
 	
 creation
 	make,
@@ -133,21 +128,6 @@ feature {EV_PIXMAPABLE_IMP} -- Implementation
 			-- using `make_with_size'.
 			-- This means we will use the pixmap in a drawing
 			-- area.
-
-feature {} -- Removal
-
-	dispose is
-			-- Action to be executed just before garbage collection
-			-- reclaims an object.
-			-- Default version does nothing; redefine in descendants
-			-- to perform specific dispose actions. Those actions
-			-- should only take care of freeing external resources;
-			-- they should not perform remote calls on other objects
-			-- since these may also be dead and reclaimed.
-		do
-			-- Destroy the gtkPixmap.
-			gtk_widget_destroy (widget)
-		end
 
 feature {NONE} -- Inapplicable
 

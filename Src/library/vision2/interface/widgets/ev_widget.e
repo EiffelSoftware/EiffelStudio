@@ -140,7 +140,6 @@ feature -- Status report
 			-- or the user want to resize the widget
 		require
 			exists: not destroyed
-			managed: managed
 		do
 			Result := implementation.horizontal_resizable	
 		end
@@ -150,7 +149,6 @@ feature -- Status report
 			-- or the user want to resize the widget
 		require
 			exists: not destroyed
-			managed: managed
 		do
 			Result := implementation.vertical_resizable	
 		end
@@ -200,22 +198,6 @@ feature -- Status setting
 		ensure
 			has_focus: has_focus
 		end
-
---	set_sensitive is
-			-- Set current widget in sensitive mode.
-			-- This means that any events with an
-			-- event type of KeyPress, KeyRelease,
-			-- ButtonPress, ButtonRelease, MotionNotify,
-			-- EnterNotify, LeaveNotify, FocusIn or
-			-- FocusOut will not dispatched to current
-			-- widget and to all its children.
---		require
---			exists: not destroyed
---		do
---			implementation.set_insensitive (False)
---		ensure
---			insensitive = False
---		end
 
 	set_insensitive (flag: BOOLEAN) is
 			-- Set current widget in insensitive mode.
@@ -275,7 +257,6 @@ feature -- Status setting
 			-- Adapt `resize_type' to `flag'.
 		require
 			exists: not destroyed
-			managed: managed or is_window
 		do
 			implementation.set_horizontal_resize (flag)
 		ensure
@@ -286,7 +267,6 @@ feature -- Status setting
 			-- Adapt `resize_type' to `flag'.
 		require
 			exists: not destroyed
-			managed: managed or is_window
 		do
 			implementation.set_vertical_resize (flag)
 		ensure

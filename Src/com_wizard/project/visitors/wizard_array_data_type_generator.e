@@ -13,20 +13,21 @@ inherit
 
 feature -- Basic operations
 
-	process (an_array_descriptor: WIZARD_ARRAY_DATA_TYPE_DESCRIPTOR;
-					a_visitor: WIZARD_DATA_TYPE_VISITOR) is
+	process (a_array_descriptor: WIZARD_ARRAY_DATA_TYPE_DESCRIPTOR; a_visitor: WIZARD_DATA_TYPE_VISITOR) is
 			-- Process ARRAY
 		require
-			valid_descriptor: an_array_descriptor /= Void
+			valid_descriptor: a_array_descriptor /= Void
 			valid_visitor: a_visitor /= Void
 		local
-			an_element_type: INTEGER
-			dimension_count: INTEGER
-			local_counter: INTEGER
-			array_size: ARRAY [INTEGER]
+			l_element_type: INTEGER
+			l_count: INTEGER
+			l_counter: INTEGER
+			l_size: ARRAY [INTEGER]
 			i: INTEGER
-			element_descriptor: WIZARD_DATA_TYPE_DESCRIPTOR
-			element_visitor: WIZARD_DATA_TYPE_VISITOR
+			l_descriptor: WIZARD_DATA_TYPE_DESCRIPTOR
+			l_visitor: WIZARD_DATA_TYPE_VISITOR
+			l_c_cast_type, l_eiffel_cast_type: STRING
+			l_call_generated_ec: BOOLEAN
 		do
 			create ce_function_name.make (100)
 			create ec_function_name.make (100)
@@ -44,146 +45,101 @@ feature -- Basic operations
 			create c_post_type.make (0)
 			create eiffel_type.make (50)
 
+			l_count := a_array_descriptor.dimension_count
+			l_descriptor := a_array_descriptor.array_element_descriptor
+			l_visitor := l_descriptor.visitor
+			l_element_type := l_visitor.vt_type
+			l_size := a_array_descriptor.array_size.twin
 			need_generate_ce := True
 			need_generate_ec := True
-
-			dimension_count := an_array_descriptor.dimension_count
-			element_descriptor := an_array_descriptor.array_element_descriptor
-			element_visitor := element_descriptor.visitor
-			an_element_type := element_visitor.vt_type
-			array_size := an_array_descriptor.array_size.twin
+			
+			l_call_generated_ec := l_visitor.vt_type /= Vt_record
 
 			from
-				i := array_size.lower
+				i := l_size.lower
 			until
-				i > array_size.upper
+				i > l_size.upper
 			loop
-				c_post_type.append (Open_bracket)
-				c_post_type.append_integer (array_size.item (i))
-				c_post_type.append (Close_bracket)
+				c_post_type.append ("[")
+				c_post_type.append_integer (l_size.item (i))
+				c_post_type.append ("]")
 				i := i + 1
 			end
-
-			local_counter := counter (an_array_descriptor)
-
-			ce_function_return_type.append (Eif_reference)
-
+			l_counter := counter (a_array_descriptor)
+			ce_function_return_type.append ("EIF_REFERENCE")
 			writable := True
 
-			if is_void (an_element_type) then
-				message_output.add_warning ("ARRAY of type void is not supprted")
-
-			elseif is_ptr (an_element_type) or is_safearray (an_element_type) or
-					is_user_defined (an_element_type) then
-								
+			if is_void (l_element_type) then
+				message_output.add_warning ("ARRAY of type void is not supported")
+			elseif is_ptr (l_element_type) or is_safearray (l_element_type) or is_user_defined (l_element_type) then
 				is_array_basic_type := False
 				ce_function_name.append ("ccom_ce_array_non_automation_")
-				ce_function_name.append_integer (local_counter)
+				ce_function_name.append_integer (l_counter)
 
 				ec_function_name.append ("ccom_ec_array_non_automation")
-				ec_function_name.append_integer (local_counter)
+				ec_function_name.append_integer (l_counter)
 
-				c_type.append (element_visitor.c_type)
-				if dimension_count = 1 then
+				c_type.append (l_visitor.c_type)
+				if l_count = 1 then
 					eiffel_type.append (Array_type)
 				else
 					eiffel_type.append (Ecom_array_type)
 				end
 				
 				eiffel_type.append (Open_bracket)
-				eiffel_type.append (element_visitor.eiffel_type)
+				eiffel_type.append (l_visitor.eiffel_type)
 				eiffel_type.append (Close_bracket)
 				
 				ce_function_signature.append (c_type)
-				ce_function_signature.append (Asterisk)
-				ce_function_signature.append (Space)
-				ce_function_signature.append (An_array)
-				ce_function_signature.append (Comma_space)
-				ce_function_signature.append (Eif_object)
-				ce_function_signature.append (Space)
-				ce_function_signature.append ("an_object")
-			
-				ce_function_body := ce_array_function_body_non_automation 
-						(element_visitor.ce_function_name,
-						element_visitor.c_type,
-						element_visitor.eiffel_type,
-						dimension_count, array_size,
-						element_visitor.is_structure)
-
-				ec_function_signature.append (Eif_reference)
-				ec_function_signature.append (Space)
-				ec_function_signature.append (A_ref)
-				ec_function_signature.append (Comma_space)
+				ce_function_signature.append ("* an_array, EIF_OBJECT an_object")			
+				ce_function_body := ce_array_function_body_non_automation (l_visitor.ce_function_name, l_visitor.c_type, l_visitor.eiffel_type, l_count, l_size, l_visitor.is_structure)
+				ec_function_signature.append ("EIF_REFERENCE a_ref, ")
 				ec_function_signature.append (c_type)
-				ec_function_signature.append (Asterisk)
-				ec_function_signature.append (Space)
-				ec_function_signature.append (Old_keyword)
-				
-				ec_function_body := ec_array_function_body_non_automation 
-						(element_visitor.ec_function_name,
-						element_visitor.c_type,
-						element_visitor.eiffel_type,
-						dimension_count, array_size,
-						element_visitor.is_structure)
-				
-				ec_function_return_type.append (element_visitor.c_type)
-				ec_function_return_type.append (Asterisk)
-				
-
+				ec_function_signature.append ("* old ")
+				ec_function_body := ec_array_function_body_non_automation (l_visitor.ec_function_name, l_visitor.c_type, l_visitor.eiffel_type, l_count, l_size, l_visitor.is_structure)
+				ec_function_return_type.append (l_visitor.c_type)
+				ec_function_return_type.append ("*")
 			else 
-				is_array_basic_type := element_visitor.is_basic_type
+				is_array_basic_type := l_visitor.is_basic_type
 				ce_function_name.append ("ccom_ce_array_")
-				ce_function_name.append (element_visitor.c_type)
-				ce_function_name.append (Underscore)
-				ce_function_name.append_integer (local_counter)
+				ce_function_name.append (l_visitor.c_type)
+				ce_function_name.append ("_")
+				ce_function_name.append_integer (l_counter)
 				to_legal_name_for_c_function (ce_function_name)
 
 				ec_function_name.append ("ccom_ec_array_automation")
-				ec_function_name.append_integer (local_counter)
+				ec_function_name.append_integer (l_counter)
 
-				c_type := element_visitor.c_type.twin
-				if dimension_count = 1 then
-					eiffel_type.append (Array_type)
+				c_type := l_visitor.c_type.twin
+				if l_count = 1 then
+					eiffel_type.append ("ARRAY")
 				else
-					eiffel_type.append (Ecom_array_type)
+					eiffel_type.append ("ECOM_ARRAY")
 				end
-				eiffel_type.append (Space)
-				eiffel_type.append (Open_bracket)
-				eiffel_type.append (element_visitor.eiffel_type)
-				eiffel_type.append (Close_bracket)
+				eiffel_type.append (" [")
+				eiffel_type.append (l_visitor.eiffel_type)
+				eiffel_type.append ("]")
 
 				ce_function_signature.append (c_type)
-				ce_function_signature.append (Asterisk)
-				ce_function_signature.append (Space)
-				ce_function_signature.append (An_array)
-				ce_function_signature.append (Comma_space)
-				ce_function_signature.append (Eif_object)
-				ce_function_signature.append (Space)
-				ce_function_signature.append ("an_object")
-
-				ce_function_body := 
-						ce_array_function_body_automation (vartype_namer.ce_array_function_name (element_visitor.vt_type), 
-							dimension_count, array_size, is_array_basic_type)
-
-				ec_function_signature.append (Eif_reference)
-				ec_function_signature.append (Space)
-				ec_function_signature.append (A_ref)
-				ec_function_signature.append (Comma_space)
+				ce_function_signature.append ("* an_array, EIF_OBJECT an_object")
+				ce_function_body := ce_array_function_body_automation (vartype_namer.ce_array_function_name (l_visitor.vt_type), l_count, l_size, is_array_basic_type)
+				ec_function_signature.append ("EIF_REFERENCE a_ref, ")
 				ec_function_signature.append (c_type)
-				ec_function_signature.append (Asterisk)
-				ec_function_signature.append (Space)
-				ec_function_signature.append (Old_keyword)
-
-				ec_function_body := ec_array_function_body_automation 
-					(vartype_namer.ec_array_function_name (element_visitor.vt_type),
-					dimension_count, element_visitor.need_generate_ec)
-
-				ec_function_return_type.append (element_visitor.c_type)
-				ec_function_return_type.append (Asterisk)
+				ec_function_signature.append ("* old")
+				if not l_call_generated_ec then
+					-- Generating conversion for a record, use runtime function that takes a void* as argument
+					l_c_cast_type := "void*"
+					create l_eiffel_cast_type.make (50)
+					l_eiffel_cast_type.append (l_visitor.c_type)
+					l_eiffel_cast_type.append ("*")
+				end
+				ec_function_body := ec_array_function_body_automation (vartype_namer.ec_array_function_name (l_visitor.vt_type), l_count, l_c_cast_type, l_eiffel_cast_type)
+				ec_function_return_type.append (l_visitor.c_type)
+				ec_function_return_type.append ("*")
 			end
 
-			create c_definition_header_file_name.make (0)
-			vt_type := an_array_descriptor.type
+			c_definition_header_file_name := l_visitor.c_definition_header_file_name
+			vt_type := a_array_descriptor.type
 			set_visitor_atributes (a_visitor)
 		end
 
@@ -201,28 +157,13 @@ feature {NONE} -- Implementation
 			valid_element_count: element_count.count = dim_count
 		local
 			i: INTEGER
-			zero_index: STRING
 		do
 			create Result.make (10000)
-
-			-- EIF_INTEGER  some_element_counts [dim_count];
-			--                               value of ^
-
-			Result.append (Tab)
-			Result.append (Eif_integer)
-			Result.append (Space)
-			Result.append ("some_element_counts")
-			Result.append (Space)
-			Result.append (Open_bracket)
+			Result.append ("%TEIF_INTEGER some_element_counts [")
 			Result.append_integer (dim_count)
-			Result.append (Close_bracket)
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
-			Result.append (New_line_tab)
-
+			Result.append ("];%R%N%R%N%T")
 			from
 				i := 1
-				create zero_index.make (50)
 			variant
 				dim_count - i + 1
 			until
@@ -233,59 +174,34 @@ feature {NONE} -- Implementation
 				--              value of ^          value of ^
 
 				Result.append ("some_element_counts")
-				Result.append (Space)
-				Result.append (Open_bracket)
+				Result.append (" [")
 				Result.append_integer (i - 1)
-				Result.append (Close_bracket)
-				Result.append (Space)
-				Result.append (Equal_sign)
-				Result.append (Space)
+				Result.append ("] = ")
 				Result.append_integer (element_count.item (i))
-				Result.append (Semicolon)
-				Result.append (New_line_tab)
-
-				zero_index.append (Open_bracket)
-				zero_index.append_integer (0)
-				zero_index.append (Close_bracket)
-
+				Result.append (";%R%N%T")
 				i := i + 1
 			end
-			Result.append (New_line_tab)
+			Result.append ("%R%N%T")
 
 			-- return Ce_mapper.rt_function_name (&an_array[0]..[0], dim_count, some_element_counts, an_object);
 			--       value of ^                 value of ^          value of ^  value of ^
 
-			Result.append (Return)
-			Result.append (Space)
-			Result.append (Ce_mapper)
-			Result.append (Dot)
+			Result.append ("return rt_ce.")
 			Result.append (rt_function_name)
-			Result.append (Space)
-			Result.append (Open_parenthesis)
+			Result.append (" (")
 			if not is_basic_array then
-				Result.append (Open_parenthesis)
-				Result.append (Eif_pointer)
-				Result.append (Close_parenthesis)
+				Result.append ("(EIF_POINTER)")
 			end
 			Result.append ("an_array")
-			Result.append (Comma)
-			Result.append (Space)
+			Result.append (", ")
 			Result.append_integer (dim_count)
-			Result.append (Comma)
-			Result.append (Space)
-			Result.append ("some_element_counts")
-			Result.append (Comma)
-			Result.append (Space)
-			Result.append ("an_object")
-			Result.append (Close_parenthesis)
-			Result.append (Semicolon)
+			Result.append (", some_element_counts, an_object);")
 		ensure
 			non_void_result: Result /= Void
 			non_empty_result: not Result.is_empty
 		end
 
-	ce_array_function_body_non_automation 
-					(element_ce_function, element_c_type, element_eiffel_type: STRING;
+	ce_array_function_body_non_automation (element_ce_function, element_c_type, element_eiffel_type: STRING;
 					dim_count: INTEGER; element_count: ARRAY [INTEGER];
 					is_element_structure: BOOLEAN): STRING is
 			-- C to Eiffel function body for ARRAY (of non_automation data type elements).
@@ -297,838 +213,151 @@ feature {NONE} -- Implementation
 			valid_element_count: element_count /= Void and then element_count.count = dim_count
 		local
 			i: INTEGER
-			zero_index: STRING
 		do
-			create Result.make (10000)
-
-			-- EIF_INTEGER some_element_counts [dim_count];
-			--                               value of ^
-
-			Result.append (Tab)
-			Result.append (Eif_integer)
-			Result.append (Space)
-			Result.append ("some_element_counts")
-			Result.append (Space)
-			Result.append (Open_bracket)
+			create Result.make (2000)
+			Result.append ("%TEIF_INTEGER some_element_counts [")
 			Result.append_integer (dim_count)
-			Result.append (Close_bracket)
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
-
-			-- EIF_INTEGER element_number;
-
-			Result.append (Eif_integer)
-			Result.append (Space)
-			Result.append ("element_number")
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
-
-			-- EIF_OBJECT result, intermediate_array, eif_lower_indices, eif_element_count;
-
-			Result.append (Eif_object)
-			Result.append (Space)
-			Result.append ("result")
-			Result.append (Space_equal_space)
-			Result.append (Zero)
-			Result.append (Comma)
-			Result.append (Space)
-			Result.append ("intermediate_array")
-			Result.append (Space_equal_space)
-			Result.append (Zero)
-			Result.append (Comma)
-			Result.append (Space)
-			Result.append ("eif_lower_indices")
-			Result.append (Space_equal_space)
-			Result.append (Zero)
-			Result.append (Comma)
-			Result.append (Space)
-			Result.append ("eif_element_count")
-			Result.append (Space_equal_space)
-			Result.append (Zero)
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
-
-			-- EIF_TYPE_ID type_id, int_array_id;
-
-			Result.append (Eif_type_id)
-			Result.append (Space)
-			Result.append ("type_id")
-			Result.append (Space_equal_space)
-			Result.append (Minus)
-			Result.append (One)
-			Result.append (Comma)
-			Result.append (Space)
-			Result.append ("int_array_id")
-			Result.append (Space_equal_space)
-			Result.append (Minus)
-			Result.append (One)
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
-
-			-- EIF_PROCEDURE make, put;
-
-			Result.append (Eif_procedure)
-			Result.append (Space)
-			Result.append ("make")
-			Result.append (Space_equal_space)
-			Result.append (Zero)
-			Result.append (Comma)
-			Result.append (Space)
-			Result.append ("put")
-			Result.append (Space_equal_space)
-			Result.append (Zero)
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
-
-			-- int i;
-
-			Result.append (Int)
-			Result.append (Space)
-			Result.append ("i")
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
-
-			-- EIF_INTEGER * lower_indices;
-
-			Result.append (Eif_integer)
-			Result.append (Space)
-			Result.append (Asterisk)
-			Result.append (Space)
-			Result.append ("lower_indices")
-			Result.append (Space_equal_space)
-			Result.append (Zero)
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
-
-			-- element_c_type * an_array_element;
-			-- value of ^
-
+			Result.append ("];%R%N%T")
+			Result.append ("EIF_INTEGER element_number;%R%N%T")
+			Result.append ("EIF_OBJECT result = 0, intermediate_array = 0, eif_lower_indices = 0, eif_element_count = 0;%R%N%T")
+			Result.append ("EIF_TYPE_ID type_id = -1, int_array_id = -1;%R%N%T")
+			Result.append ("EIF_PROCEDURE make = 0, put = 0;%R%N%T")
+			Result.append ("int i;%R%N%T")
+			Result.append ("EIF_INTEGER * lower_indices = 0;%R%N%T")
 			Result.append (element_c_type)
-			Result.append (Space)
+			Result.append (" ")
 			if is_element_structure then
-				Result.append (Asterisk)
-				Result.append (Space)
+				Result.append ("* ")
 			end
-			Result.append ("an_array_element")
-			Result.append (Space_equal_space)
-			Result.append (Zero)
-			Result.append (Semicolon)
-			Result.append (New_line)
-			Result.append (New_line_tab)
-
+			Result.append (" an_array_element = 0;%R%N%R%N%T")
 			from
 				i := 1
-				create zero_index.make (50)
 			variant
 				dim_count - i + 1
 			until
 				i > dim_count
 			loop
-
-				-- some_element_counts [i-1] = element_count.item (i);
-				--              value of ^           value of ^
-
-				Result.append ("some_element_counts")
-				Result.append (Space)
-				Result.append (Open_bracket)
+				Result.append ("some_element_counts [")
 				Result.append_integer (i - 1)
-				Result.append (Close_bracket)
-				Result.append (Space)
-				Result.append (Equal_sign)
-				Result.append (Space)
+				Result.append ("] = ")
 				Result.append_integer (element_count.item (i))
-				Result.append (Semicolon)
-				Result.append (New_line_tab)
-
-				zero_index.append (Open_bracket)
-				zero_index.append_integer (0)
-				zero_index.append (Close_bracket)
-
+				Result.append (";%R%N%T")
 				i := i + 1
 			end
-			Result.append (New_line_tab)
-
-			-- type_id = eif_type_id ("ARRAY [element_eiffel_type]");
-			--                               value of ^
-
-			Result.append ("type_id")
-			Result.append (Space)
-			Result.append (Equal_sign)
-			Result.append (Space)
-			Result.append (Eif_type_id_function_name)
-			Result.append (Space)
-			Result.append (Open_parenthesis)
-			Result.append (Double_quote)
-			Result.append (Array_type)
-			Result.append (Space)
-			Result.append (Open_bracket)
+			Result.append ("type_id = eif_type_id (%"ARRAY [")
 			Result.append (element_eiffel_type)
-			Result.append (Close_bracket)
-			Result.append (Double_quote)
-			Result.append (Close_parenthesis)
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
-
-			-- make = eif_procedure ("make", type_id);
-
-			Result.append ("make")
-			Result.append (Space)
-			Result.append (Equal_sign)
-			Result.append (Space)
-			Result.append (Eif_procedure_name)
-			Result.append (Space)
-			Result.append (Open_parenthesis)
-			Result.append (Double_quote)
-			Result.append ("make")
-			Result.append (Double_quote)
-			Result.append (Comma)
-			Result.append (Space)
-			Result.append ("type_id")
-			Result.append (Close_parenthesis)
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
-
-			-- put = eif_procedure ("put", type_id);
-
-			Result.append ("put")
-			Result.append (Space)
-			Result.append (Equal_sign)
-			Result.append (Space)
-			Result.append (Eif_procedure_name)
-			Result.append (Space)
-			Result.append (Open_parenthesis)
-			Result.append (Double_quote)
-			Result.append ("put")
-			Result.append (Double_quote)
-			Result.append (Comma)
-			Result.append (Space)
-			Result.append ("type_id")
-			Result.append (Close_parenthesis)
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
-
-			-- element_number = (EIF_INTEGER)Ce_mapper.ccom_element_number (dim_count, some_element_counts);
-			--                             value of ^                                  value of ^
-
-			Result.append ("element_number")
-			Result.append (Space)
-			Result.append (Equal_sign)
-			Result.append (Space)
-			Result.append (Open_parenthesis)
-			Result.append (Eif_integer)
-			Result.append (Close_parenthesis)
+			Result.append ("]%");%R%N%T")
+			Result.append ("make = eif_procedure (%"make%", type_id);%R%N%T")
+			Result.append ("put = eif_procedure (%"put%", type_id);%R%N%T")
+			Result.append ("element_number = (EIF_INTEGER)")
 			Result.append (Ce_mapper)
-			Result.append (Dot)
-			Result.append ("ccom_element_number")
-			Result.append (Space)
-			Result.append (Open_parenthesis)
+			Result.append (".ccom_element_number (")
 			Result.append_integer (dim_count)
-			Result.append (Comma)
-			Result.append (Space)
-			Result.append ("some_element_counts")
-			Result.append (Close_parenthesis)
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
-
-			-- if ((an_object == NULL) || (eif_access (an_object) == NULL))
-
-			Result.append (If_keyword)
-			Result.append (Space)
-			Result.append (Open_parenthesis)
-			Result.append (Open_parenthesis)
-			Result.append (An_object)
-			Result.append (Space)
-			Result.append (C_equal)
-			Result.append (Space)
-			Result.append (Null)
-			Result.append (Close_parenthesis)
-			Result.append (Space)
-			Result.append (C_or)
-			Result.append (Space)
-			Result.append (Open_parenthesis)
-			Result.append (Eif_access)
-			Result.append (Space)
-			Result.append (Open_parenthesis)
-			Result.append (An_object)
-			Result.append (Close_parenthesis)
-			Result.append (Space)
-			Result.append (C_equal)
-			Result.append (Space)
-			Result.append (Null)
-			Result.append (Close_parenthesis)
-			Result.append (Close_parenthesis)
-			Result.append (New_line_tab)
-
-			-- {
-
-			Result.append (Open_curly_brace)
-			Result.append (New_line_tab_tab)
-
-			-- intermediate_array = eif_create (type_id);
-
-			Result.append ("intermediate_array")
-			Result.append (Space)
-			Result.append (Equal_sign)
-			Result.append (Space)
-			Result.append (Eif_create)
-			Result.append (Space)
-			Result.append (Open_parenthesis)
-			Result.append ("type_id")
-			Result.append (Close_parenthesis)
-			Result.append (Semicolon)
-			Result.append (New_line_tab_tab)
-
-			-- make (eif_access (intermediate_array), 1, element_number);
-
-			Result.append ("make")
-			Result.append (Space)
-			Result.append (Open_parenthesis)
-			Result.append (Eif_access)
-			Result.append (Space)
-			Result.append (Open_parenthesis)
-			Result.append ("intermediate_array")
-			Result.append (Close_parenthesis)
-			Result.append (Comma)
-			Result.append (Space)
-			Result.append_integer (1)
-			Result.append (Comma)
-			Result.append (Space)
-			Result.append ("element_number")
-			Result.append (Close_parenthesis)
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
-
-			-- }
-
-			Result.append (Close_curly_brace)
-			Result.append (New_line_tab)
-
-			-- else
-
-			Result.append (Else_keyword)
-			Result.append (New_line_tab_tab)
-
-			-- intermidiate_array = an_object;
-
-			Result.append ("intermediate_array")
-			Result.append (Space_equal_space)
-			Result.append (An_object)
-			Result.append (Semicolon)
-			Result.append (New_line)
-			Result.append (New_line_tab)
-
-			-- for (i = 0; i < element_number; i++)
-
-			Result.append (For)
-			Result.append (Space)
-			Result.append (Open_parenthesis)
-			Result.append ("i")
-			Result.append (Space)
-			Result.append (Equal_sign)
-			Result.append (Space)
-			Result.append_integer (0)
-			Result.append (Semicolon)
-			Result.append (Space)
-			Result.append ("i")
-			Result.append (Space)
-			Result.append (Less)
-			Result.append (Space)
-			Result.append ("element_number")
-			Result.append (Semicolon)
-			Result.append (Space)
-			Result.append ("i")
-			Result.append (Plus)
-			Result.append (Plus)
-			Result.append (Close_parenthesis)
-			Result.append (New_line_tab)
-
-			-- {
-
-			Result.append (Open_curly_brace)
-			Result.append (New_line_tab_tab)
-
-				-- an_array_element = (element_c_type *)(&(ccom_c_array_element (an_array, i, element_c_type)));
-				--                value of ^                                                               value of ^
-
-				Result.append ("an_array_element")
-				Result.append (Space)
-				Result.append (Equal_sign)
-				Result.append (Space)
-				Result.append (Open_parenthesis)
-				Result.append (element_c_type)
-
-				if is_element_structure then
-					Result.append (Asterisk)
-				end
-
-				Result.append (Close_parenthesis)
-				Result.append (Open_parenthesis)
-
-				if is_element_structure then
-					Result.append (Ampersand)
-				end
-
-				Result.append (Open_parenthesis)
-				Result.append ("ccom_c_array_element")
-				Result.append (Space)
-				Result.append (Open_parenthesis)
-				Result.append ("an_array")
-				Result.append (Comma)
-				Result.append (Space)
-				Result.append ("i")
-				Result.append (Comma)
-				Result.append (Space)
-				Result.append (element_c_type)
-				Result.append (Close_parenthesis)
-				Result.append (Close_parenthesis)
-				Result.append (Close_parenthesis)
-				Result.append (Semicolon)
-				Result.append (New_line_tab_tab)
-
-				-- put (eif_access (intermediate_array), element_ce_function ((element_c_type)an_array_element), i + 1);
-				--                                                         value of ^             value of ^
-
-				Result.append ("put")
-				Result.append (Space)
-				Result.append (Open_parenthesis)
-				Result.append (Eif_access)
-				Result.append (Space)
-				Result.append (Open_parenthesis)
-				Result.append ("intermediate_array")
-				Result.append (Close_parenthesis)
-				Result.append (Comma)
-				Result.append (Space)
-				Result.append (element_ce_function)
-				Result.append (Space)
-				Result.append (Open_parenthesis)
-
-				if is_element_structure then
- 					Result.append (Asterisk)
-				end
-				Result.append (Open_parenthesis)
-				Result.append (element_c_type)
-				if is_element_structure then
-					Result.append (Asterisk)
-				end
-				Result.append (Close_parenthesis)
-				Result.append ("an_array_element")
-				Result.append (Close_parenthesis)
-				Result.append (Comma)
-				Result.append (Space)
-				Result.append ("i")
-				Result.append (Space)
-				Result.append (Plus)
-				Result.append (Space)
-				Result.append_integer (1)
-				Result.append (Close_parenthesis)
-				Result.append (Semicolon)
-				Result.append (New_line_tab)
-
-			-- }
-
-			Result.append (Close_curly_brace)
-			Result.append (New_line)
-			Result.append (New_line_tab)
-
-			-- if ((an_object == NULL) || (eif_access (an_object) == NULL))
-
-			Result.append (If_keyword)
-			Result.append (Space)
-			Result.append (Open_parenthesis)
-			Result.append (Open_parenthesis)
-			Result.append (An_object)
-			Result.append (Space)
-			Result.append (C_equal)
-			Result.append (Space)
-			Result.append (Null)
-			Result.append (Close_parenthesis)
-			Result.append (Space)
-			Result.append (C_or)
-			Result.append (Space)
-			Result.append (Open_parenthesis)
-			Result.append (Eif_access)
-			Result.append (Space)
-			Result.append (Open_parenthesis)
-			Result.append (An_object)
-			Result.append (Close_parenthesis)
-			Result.append (Space)
-			Result.append (C_equal)
-			Result.append (Space)
-			Result.append (Null)
-			Result.append (Close_parenthesis)
-			Result.append (Close_parenthesis)
-			Result.append (New_line_tab)
-
-			-- {
-
-			Result.append (Open_curly_brace)
-			Result.append (New_line_tab_tab)
-			
-			if (dim_count = 1) then
-
-				Result.append ("result")
-				Result.append (Space)
-				Result.append (Equal_sign)
-				Result.append (Space)
-				Result.append ("intermediate_array")
-				Result.append (Semicolon)
-				Result.append (New_line_tab)
-
-			else
-
-				Result.append ("int_array_id")
-				Result.append (Space)
-				Result.append (Equal_sign)
-				Result.append (Space)
-				Result.append (Eif_type_id_function_name)
-				Result.append (Space)
-				Result.append (Open_parenthesis)
-				Result.append (Double_quote)
-				Result.append ("ARRAY")
-				Result.append (Space)
-				Result.append (Open_bracket)
-				Result.append ("INTEGER")
-				Result.append (Close_bracket)
-				Result.append (Double_quote)
-				Result.append (Close_parenthesis)
-				Result.append (Semicolon)
-				Result.append (New_line_tab_tab)
-
-				Result.append ("make")
-				Result.append (Space)
-				Result.append (Equal_sign)
-				Result.append (Space)
-				Result.append (Eif_procedure_name)
-				Result.append (Space)
-				Result.append (Open_parenthesis)
-				Result.append (Double_quote)
-				Result.append ("make")
-				Result.append (Double_quote)
-				Result.append (Comma)
-				Result.append (Space)
-				Result.append ("int_array_id")
-				Result.append (Close_parenthesis)
-				Result.append (Semicolon)
-				Result.append (New_line_tab_tab)
-
-				Result.append ("eif_lower_indices")				
-				Result.append (Space)
-				Result.append (Equal_sign)
-				Result.append (Space)
-				Result.append (Eif_create)
-				Result.append (Space)
-				Result.append (Open_parenthesis)
-				Result.append ("int_array_id")
-				Result.append (Close_parenthesis)
-				Result.append (Semicolon)
-				Result.append (New_line_tab_tab)
-
-				Result.append ("make")
-				Result.append (Space)
-				Result.append (Open_parenthesis)
-				Result.append (Eif_access)
-				Result.append (Space)
-				Result.append (Open_parenthesis)
-				Result.append ("eif_lower_indices")
-				Result.append (Close_parenthesis)
-				Result.append (Comma)
-				Result.append (Space)
-				Result.append_integer (1)
-				Result.append (Comma)
-				Result.append (Space)
-				Result.append_integer (dim_count)
-				Result.append (Close_parenthesis)
-				Result.append (Semicolon)
-				Result.append (New_line_tab_tab)
-
-				Result.append (New_line_tab_tab)
-
-				Result.append ("lower_indices")
-				Result.append (Space)
-				Result.append (Equal_sign)
-				Result.append (Space)
-				Result.append (Open_parenthesis)
-				Result.append (Eif_integer)
-				Result.append (Space)
-				Result.append (Asterisk)
-				Result.append (Close_parenthesis)
-				Result.append (Space)
-				Result.append (Calloc)
-				Result.append (Space)
-				Result.append (Open_parenthesis)
-				Result.append_integer (dim_count)
-				Result.append (Comma)
-				Result.append (Space)
-				Result.append (Sizeof)
-				Result.append (Space)
-				Result.append (Open_parenthesis)
-				Result.append (Eif_integer)
-				Result.append (Close_parenthesis)
-				Result.append (Close_parenthesis)
-				Result.append (Semicolon)
-				Result.append (New_line_tab_tab)
-
-				Result.append (For)
-				Result.append (Space)
-				Result.append (Open_parenthesis)
-				Result.append ("i")
-				Result.append (Space)
-				Result.append (Equal_sign)
-				Result.append (Space)
-				Result.append_integer (0)
-				Result.append (Semicolon)
-				Result.append (Space)
-				Result.append ("i")
-				Result.append (Space)
-				Result.append (Less)
-				Result.append (Space)
-				Result.append_integer (dim_count)
-				Result.append (Semicolon)
-				Result.append (Space)
-				Result.append ("i")
-				Result.append (Plus)
-				Result.append (Plus)
-				Result.append (Close_parenthesis)
-				Result.append (New_line_tab_tab_tab)
-
-				Result.append ("lower_indices")
-				Result.append (Space)
-				Result.append (Open_bracket)
-				Result.append ("i")
-				Result.append (Close_bracket)
-				Result.append (Space)
-				Result.append (Equal_sign)
-				Result.append (Space)
-				Result.append_integer (1)
-				Result.append (Semicolon)
-				Result.append (New_line_tab_tab)
-
-				Result.append (Eif_make_from_c)
-				Result.append (Space)
-				Result.append (Open_parenthesis)
-				Result.append (Eif_access)
-				Result.append (Space)
-				Result.append (Open_parenthesis)
-				Result.append ("eif_lower_indices")
-				Result.append (Close_parenthesis)
-				Result.append (Comma)
-				Result.append (Space)
-				Result.append ("lower_indices")
-				Result.append (Comma)
-				Result.append (Space)
-				Result.append_integer (dim_count)
-				Result.append (Comma)
-				Result.append (Space)
-				Result.append (Eif_integer)
-				Result.append (Close_parenthesis)
-				Result.append (Semicolon)
-				Result.append (New_line_tab_tab)
-
-				Result.append (Free)
-				Result.append (Space)
-				Result.append (Open_parenthesis)
-				Result.append ("lower_indices")
-				Result.append (Close_parenthesis)
-				Result.append (Semicolon)
-				Result.append (New_line_tab_tab)
-
-				Result.append ("eif_element_count")
-				Result.append (Space)
-				Result.append (Equal_sign)
-				Result.append (Space)
-				Result.append (Eif_create)
-				Result.append (Space)
-				Result.append (Open_parenthesis)
-				Result.append ("int_array_id")
-				Result.append (Close_parenthesis)
-				Result.append (Semicolon)
-				Result.append (New_line_tab_tab)
-
-				Result.append ("make")
-				Result.append (Space)
-				Result.append (Open_parenthesis)
-				Result.append (Eif_access)
-				Result.append (Space)
-				Result.append (Open_parenthesis)
-				Result.append ("eif_element_count")
-				Result.append (Close_parenthesis)
-				Result.append (Comma)
-				Result.append (Space)
-				Result.append_integer (1)
-				Result.append (Comma)
-				Result.append (Space)
-				Result.append_integer (dim_count)
-				Result.append (Close_parenthesis)
-				Result.append (Semicolon)
-				Result.append (New_line_tab_tab)
-
-				Result.append (Eif_make_from_c)
-				Result.append (Space)
-				Result.append (Open_parenthesis)
-				Result.append (Eif_access)
-				Result.append (Space)
-				Result.append (Open_parenthesis)
-				Result.append ("eif_element_count")
-				Result.append (Close_parenthesis)
-				Result.append (Comma)
-				Result.append (Space)
-				Result.append ("some_element_counts")
-				Result.append (Comma)
-				Result.append (Space)
-				Result.append_integer (dim_count)
-				Result.append (Comma)
-				Result.append (Space)
-				Result.append (Eif_integer)
-				Result.append (Close_parenthesis)
-				Result.append (Semicolon)
-				Result.append (New_line_tab_tab)
-
-				Result.append ("type_id")
-				Result.append (Space)
-				Result.append (Equal_sign)
-				Result.append (Space)
-				Result.append (Eif_type_id_function_name)
-				Result.append (Space)
-				Result.append (Open_parenthesis)
-				Result.append (Double_quote)
-				Result.append ("ECOM_ARRAY")
-				Result.append (Space)
-				Result.append (Open_bracket)
-				Result.append (element_eiffel_type)
-				Result.append (Close_bracket)
-				Result.append (Double_quote)
-				Result.append (Close_parenthesis)
-				Result.append (Semicolon)
-				Result.append (New_line_tab_tab)	
-
-				Result.append ("make")
-				Result.append (Space)
-				Result.append (Equal_sign)
-				Result.append (Space)
-				Result.append (Eif_procedure_name)
-				Result.append (Space)
-				Result.append (Open_parenthesis)
-				Result.append (Double_quote)
-				Result.append ("make_from_array")
-				Result.append (Double_quote)
-				Result.append (Comma)
-				Result.append (Space)
-				Result.append ("type_id")
-				Result.append (Close_parenthesis)
-				Result.append (Semicolon)
-				Result.append (New_line_tab_tab)
-
-				Result.append ("result")
-				Result.append (Space)
-				Result.append (Equal_sign)
-				Result.append (Space)
-				Result.append (Eif_create)
-				Result.append (Space)
-				Result.append (Open_parenthesis)
-				Result.append ("type_id")
-				Result.append (Close_parenthesis)
-				Result.append (Semicolon)
-				Result.append (New_line_tab_tab)
-
-				Result.append ("make")
-				Result.append (Space)
-				Result.append (Open_parenthesis)
-				Result.append (Eif_access)
-				Result.append (Space)
-				Result.append (Open_parenthesis)
-				Result.append ("result")
-				Result.append (Close_parenthesis)
-				Result.append (Comma)
-				Result.append (Space)
-				Result.append (Eif_access)
-				Result.append (Open_parenthesis)
-				Result.append ("intermediate_array")
-				Result.append (Close_parenthesis)
-				Result.append (Comma)
-				Result.append (Space)
-				Result.append_integer (dim_count)
-				Result.append (Comma)
-				Result.append (Space)
-				Result.append (Eif_access)
-				Result.append (Open_parenthesis)
-				Result.append ("eif_lower_indices")
-				Result.append (Close_parenthesis)
-				Result.append (Comma)
-				Result.append (Space)
-				Result.append (Eif_access)
-				Result.append (Open_parenthesis)
-				Result.append ("eif_element_count")
-				Result.append (Close_parenthesis)
-				Result.append (Close_parenthesis)
-				Result.append (Semicolon)
-				Result.append (New_line_tab_tab)
-
-				Result.append (Eif_wean)
-				Result.append (Space)
-				Result.append (Open_parenthesis)
-				Result.append ("intermediate_array")
-				Result.append (Close_parenthesis)
-				Result.append (Semicolon)
-				Result.append (New_line_tab_tab)
+			Result.append (", some_element_counts);%R%N%T")
+			Result.append ("if ((an_object == NULL) || (eif_access (an_object) == NULL))%R%N%T{%R%N%T%T")
+			Result.append ("intermediate_array = eif_create (type_id);%R%N%T%T")
+			Result.append ("make (eif_access (intermediate_array), 1, element_number);%R%N%T}%R%N%T")
+			Result.append ("else%R%N%T%T")
+			Result.append ("intermidiate_array = an_object;%R%N%R%N%T")
+			Result.append ("for (i = 0; i < element_number; i++)%R%N%T{%R%N%T%T")
+			Result.append ("an_array_element = (")
+			Result.append (element_c_type)
+			if is_element_structure then
+				Result.append ("*")
 			end
-			
-			Result.append (Return)
-			Result.append (Space)
-			Result.append (Eif_wean)
-			Result.append (Space)
-			Result.append (Open_parenthesis)
-			Result.append ("result")
-			Result.append (Close_parenthesis)
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
-			
-			-- }
-
-			Result.append (Close_curly_brace)
-			Result.append (New_line_tab)
-			Result.append (Else_keyword)
-			Result.append (New_line_tab_tab)
-
-			Result.append (Return)
-			Result.append (Space)
-			Result.append (Null)
-			Result.append (Semicolon)
+			Result.append (")(")
+			if is_element_structure then
+				Result.append ("&")
+			end
+			Result.append ("(ccom_c_array_element (an_array, i, ")
+			Result.append (element_c_type)
+			Result.append (")));%R%N%T%T")
+			Result.append (";%R%N%T")
+			Result.append (";%R%N%T")
+			Result.append ("put (eif_access (intermediate_array), ")
+			Result.append (element_ce_function)
+			Result.append (" (")
+			if is_element_structure then
+				Result.append ("*")
+			end
+			Result.append (")an_array_element), i, + 1);%R%N%T}%R%N%R%N%T")
+			Result.append ("if ((an_object == NULL) || (eif_access (an_object) == NULL))%R%N%T{%R%N%T%T")
+			if (dim_count = 1) then
+				Result.append ("result = intermediate_array;%R%N%T")
+			else
+				Result.append ("int_array_id = eif_type_id (%"ARRAY [INTEGER]%");%R%N%T%T")
+				Result.append ("make = eif_procedure (%"make%", int_array_id);%R%N%T%T")
+				Result.append ("eif_lower_indices = eif_create (int_array_id);%R%N%T%T")
+				Result.append ("make (eif_access (eif_lower_indices), 1, ")
+				Result.append_integer (dim_count)
+				Result.append (";%R%N%R%N%T%T")
+				Result.append ("lower_indices = (EIF_INTEGER *) calloc (")
+				Result.append_integer (dim_count)
+				Result.append (", sizeof (EIF_INTEGER));%R%N%T%T")
+				Result.append ("for (i = 0; i < ")
+				Result.append_integer (dim_count)
+				Result.append ("; i++)%R%N%T%T%T")
+				Result.append ("lower_indices [i] = 1;%R%N%T%T")
+				Result.append ("eif_make_from_c (eif_access (eif_lower_indices), lower_indices, ")
+				Result.append_integer (dim_count)
+				Result.append (", EIF_INTEGER);%R%N%T%T")
+				Result.append ("free (lower_indices);%%R%N%T%T")
+				Result.append ("eif_element_count = eif_create (int_array_id);%R%N%T%T")
+				Result.append ("make (eif_access (eif_element_count), 1, ")
+				Result.append_integer (dim_count)
+				Result.append (");%R%N%T%T")
+				Result.append ("eif_make_from_c (eif_access (eif_element_count), some_element_counts, ")
+				Result.append_integer (dim_count)
+				Result.append (", EIF_INTEGER);%R%N%T%T")
+				Result.append ("type_id = eif_type_id (%"ECOM_ARRAY [")
+				Result.append (element_eiffel_type)
+				Result.append ("]%");%R%N%T%T")
+				Result.append ("make = eif_procedure (%"make_from_array%", type_id);%R%N%T%T")
+				Result.append ("result = eif_create (type_id);%R%N%T%T")
+				Result.append ("make (eif_access (result), eif_access (intermediate_array), ")
+				Result.append_integer (dim_count)
+				Result.append (", eif_access (eif_lower_indices), eif_access (eif_element_count));%R%N%T%T")
+				Result.append ("eif_wean (intermediate_array);%R%N%T%T")
+			end
+			Result.append ("return eif_wean (result);%R%N%T}%R%N%T")
+			Result.append ("else%R%N%T%T")
+			Result.append ("return NULL;")
 		ensure
 			non_void_body: Result /= Void
 			valid_body: not Result.is_empty
 		end
 
-	ec_array_function_body_automation (rt_function_name: STRING; dim_count: INTEGER; need_generate: BOOLEAN): STRING is
+	ec_array_function_body_automation (a_rt_function_name: STRING; a_dim_count: INTEGER; a_c_cast_type, a_eiffel_cast_type: STRING): STRING is
 			--
 		require
-			non_void_rt_function_name: rt_function_name /= Void
-			valid_rt_function_name: not rt_function_name.is_empty
-			valid_dim_count: dim_count > 0
+			non_void_rt_function_name: a_rt_function_name /= Void
+			valid_rt_function_name: not a_rt_function_name.is_empty
+			valid_dim_count: a_dim_count > 0
 		do
-			create Result.make (10000)
-
-			-- return ec_mapper.`rt_functuion_name' (`A_ref', `dim_count', `Old_keyword');
-
-			Result.append (Tab)
-			Result.append (Return)
-			Result.append (Space)
-			if need_generate then
-				Result.append (Generated_ec_mapper)
-			else
-				Result.append (Ec_mapper)
+			create Result.make (200)
+			Result.append ("%Treturn ")
+			if a_eiffel_cast_type /= Void then
+				Result.append ("(")
+				Result.append (a_eiffel_cast_type)
+				Result.append (") (")
 			end
-			Result.append (Dot)
-			Result.append (rt_function_name)
-			Result.append (Space)
-			Result.append (Open_parenthesis)
-			Result.append (A_ref)
-			Result.append (Comma_space)
-			Result.append_integer (dim_count)
-			Result.append (Comma_space)
-			Result.append (Old_keyword)
-			Result.append (Close_parenthesis)
-			Result.append (Semicolon)
-			
+			Result.append (Ec_mapper)
+			Result.append (".")
+			Result.append (a_rt_function_name)
+			Result.append (" (a_ref, ")
+			Result.append_integer (a_dim_count)
+			Result.append (", ")
+			if a_c_cast_type /= Void then
+				Result.append ("(")
+				Result.append (a_c_cast_type)
+				Result.append (")")
+			end
+			Result.append ("old)")
+			if a_eiffel_cast_type /= Void then
+				Result.append (");")
+			else
+				Result.append (";")
+			end
 		ensure
 			non_void_body: Result /= Void
 			valid_body: not Result.is_empty
@@ -1148,418 +377,64 @@ feature {NONE} -- Implementation
 			valid_dim_count: dim_count > 0
 			valid_element_count: element_count /= Void and then element_count.count = dim_count
 		do
-			create Result.make (10000)
-			Result.append (Tab)
-			
-			-- EIF_OBJECT eif_array;
-			
-			Result.append (Eif_object)
-			Result.append (Space)
-			Result.append (Eif_array)
-			Result.append (Space_equal_space)
-			Result.append (Zero)
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
-			
-			-- EIF_TYPE_ID type_id;
-			
-			Result.append (Eif_type_id)
-			Result.append (Space)
-			Result.append (Type_id)
-			Result.append (Space_equal_space)
-			Result.append (Minus)
-			Result.append (One)
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
-			
-			-- EIF_REFERENCE_FUNCTION item;
-			
-			Result.append (Eif_reference_function)
-			Result.append (Space)
-			Result.append (Item_clause)
-			Result.append (Space_equal_space)
-			Result.append (Zero)
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
-			
-			-- EIF_INTEGER_FUNCTION count;
-			
-			Result.append (Eif_integer_function)
-			Result.append (Space)
-			Result.append (Count_word)
-			Result.append (Space_equal_space)
-			Result.append (Zero)
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
-			
-			-- `element_c_type' * array;
-			
+			create Result.make (2000)
+			Result.append ("%TEIF_OBJECT eif_array = 0;%R%N%T")
+			Result.append ("EIF_TYPE_ID type_id = -1;%R%N%T")			
+			Result.append ("EIF_REFERENCE_FUNCTION item = 0;%R%N%T")
+			Result.append ("EIF_INTEGER_FUNCTION count = 0;%R%N%T")
 			Result.append (element_c_type)
-			Result.append (Asterisk)
-			Result.append (Space)
-			Result.append (Array_word)
-			Result.append (Space_equal_space)
-			Result.append (Zero)
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
-			
-			-- `element_c_type' an_element;
-			
+			Result.append ("* array = 0;%R%N%T")
 			Result.append (element_c_type)
-			Result.append (Space)
-			Result.append (An_element)
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
-			
-			-- int a_count, i;
-			
-			Result.append (Int)
-			Result.append (Space)
-			Result.append (A_count_word)
-			Result.append (Comma_space)
-			Result.append ("i")
-			Result.append (Semicolon)
-			Result.append (New_line)
-			Result.append (New_line_tab)
-			
-			-- eif_array = eif_protect (a_ref);
-			
-			Result.append (Eif_array)
-			Result.append (Space_equal_space)
-			Result.append (Eif_protect)
-			Result.append (Space)
-			Result.append (Open_parenthesis)
-			Result.append (A_ref)
-			Result.append (Close_parenthesis)
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
-			
+			Result.append (" an_element;%R%N%T")
+			Result.append ("int a_count, i;%R%N%R%N%T")
+			Result.append ("eif_array = eif_protect (a_ref);%R%N%T")
 			if (dim_count > 1) then
-				-- type_id = eif_type_id ("ECOM_ARRAY [`element_eiffel_type']");
-				
-				Result.append (Type_id)
-				Result.append (Space_equal_space)
-				Result.append (Eif_type_id_function_name)
-				Result.append (Space)
-				Result.append (Open_parenthesis)
-				Result.append (Double_quote)
-				Result.append (Ecom_array_type)
-				Result.append (Space)
-				Result.append (Open_bracket)
+				Result.append ("type_id = eif_type_id (%"ECOM_ARRAY [")
 				Result.append (element_eiffel_type)
-				Result.append (Close_bracket)
-				Result.append (Double_quote)
-				Result.append (Close_parenthesis)
-				Result.append (Semicolon)
-				Result.append (New_line_tab)
-				
-				-- item = eif_reference_function ("array_item", type_id);
-				
-				Result.append (Item_clause)
-				Result.append (Space_equal_space)
-				Result.append (Eif_reference_function_name)
-				Result.append (Space)
-				Result.append (Open_parenthesis)
-				Result.append (Double_quote)
-				Result.append (Array_item)
-				Result.append (Double_quote)
-				Result.append (Comma_space)
-				Result.append (Type_id)
-				Result.append (Close_parenthesis)
-				Result.append (Semicolon)
-				Result.append (New_line_tab)
-				
+				Result.append ("]%");%R%N%T")
+				Result.append ("item = eif_reference_function (%"array_item%", type_id);%R%N%T")
 			else
-				-- type_id = eif_type_id ("ARRAY [`element_eiffel_type']");
-				
-				Result.append (Type_id)
-				Result.append (Space_equal_space)
-				Result.append (Eif_type_id_function_name)
-				Result.append (Space)
-				Result.append (Open_parenthesis)
-				Result.append (Double_quote)
-				Result.append (Array_type)
-				Result.append (Space)
-				Result.append (Open_bracket)
+				Result.append ("type_id = eif_type_id (%"ARRAY [")
 				Result.append (element_eiffel_type)
-				Result.append (Close_bracket)
-				Result.append (Double_quote)
-				Result.append (Close_parenthesis)
-				Result.append (Semicolon)
-				Result.append (New_line_tab)
-				
-				-- item = eif_reference_function ("item", type_id);
-
-				Result.append (Item_clause)
-				Result.append (Space_equal_space)
-				Result.append (Eif_reference_function_name)
-				Result.append (Space)
-				Result.append (Open_parenthesis)
-				Result.append (Double_quote)
-				Result.append (Item_clause)
-				Result.append (Double_quote)
-				Result.append (Comma_space)
-				Result.append (Type_id)
-				Result.append (Close_parenthesis)
-				Result.append (Semicolon)
-				Result.append (New_line_tab)
-								
+				Result.append ("]%");%R%N%T")
+				Result.append ("item = eif_reference_function (%"item%", type_id);%R%N%T")
 			end
-			
-			-- count = eif_integer_function ("count", type_id);
-			
-			Result.append (Count_word)
-			Result.append (Space_equal_space)
-			Result.append (Eif_integer_function_name)
-			Result.append (Space)
-			Result.append (Open_parenthesis)
-			Result.append (Double_quote)
-			Result.append (Count_word)
-			Result.append (Double_quote)
-			Result.append (Comma_space)
-			Result.append (Type_id)
-			Result.append (Close_parenthesis)
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
-			
-			-- a_count = (int) count (eif_access (eif_array));
-			
-			Result.append (A_count_word)
-			Result.append (Space_equal_space)
-			Result.append (Open_parenthesis)
-			Result.append (Int)
-			Result.append (Close_parenthesis)
-			Result.append (Space)
-			Result.append (Count_word)
-			Result.append (Space)
-			Result.append (Open_parenthesis)
-			Result.append (Eif_access)
-			Result.append (Space)
-			Result.append (Open_parenthesis)
-			Result.append (Eif_array)
-			Result.append (Close_parenthesis)
-			Result.append (Close_parenthesis)
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
-			
-			-- array = (`element_c_type' *) CoTaskMemAlloc (a_count * sizeof (`element_c_type'));
-			
-			Result.append (Array_word)
-			Result.append (Space_equal_space)
-			Result.append (Open_parenthesis)
+			Result.append ("count = eif_integer_function (%"count%", type_id);%R%N%T")
+			Result.append ("a_count = (int) count (eif_access (eif_array));%R%N%T")
+			Result.append ("array = (")
 			Result.append (element_c_type)
-			Result.append (Space)
-			Result.append (Asterisk)
-			Result.append (Close_parenthesis)
-			Result.append (Space)
-			Result.append (Co_task_mem_alloc)
-			Result.append (Space)
-			Result.append (Open_parenthesis)
-			Result.append (A_count_word)
-			Result.append (Space)
-			Result.append (Asterisk)
-			Result.append (Space)
-			Result.append (Sizeof)
-			Result.append (Space)
-			Result.append (Open_parenthesis)
+			Result.append (" *) CoTaskMemAlloc (a_count * sizeof (")
 			Result.append (element_c_type)
-			Result.append (Close_parenthesis)
-			Result.append (Close_parenthesis)
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
-			
-			-- for (i = 0; i < a_count; i++)
-			
-			Result.append (For)
-			Result.append (Space)
-			Result.append (Open_parenthesis)
-			Result.append ("i")
-			Result.append (Space_equal_space)
-			Result.append_integer (0)
-			Result.append (Semicolon)
-			Result.append (Space)
-			Result.append ("i")
-			Result.append (Space)
-			Result.append (Less)
-			Result.append (Space)
-			Result.append (A_count_word)
-			Result.append (Semicolon)
-			Result.append (Space)
-			Result.append ("i")
-			Result.append (Plus)
-			Result.append (Plus)
-			Result.append (Close_parenthesis)
-			Result.append (New_line_tab)
-			
-			-- {
-			
-			Result.append (Open_curly_brace)
-			Result.append (New_line_tab_tab)
-			
-			--  	an_element = `element_ec_function' 
-			--						(item (eif_access (eif_array), (EIF_INTEGER) (i + 1)));
-			
-				Result.append (An_element)
-				Result.append (Space_equal_space)
-				Result.append (element_ec_function)
-				Result.append (Space_open_parenthesis)
-				Result.append (Item_clause)
-				Result.append (Space)
-				Result.append (Open_parenthesis)
-				Result.append (Eif_access)
-				Result.append (Space)
-				Result.append (Open_parenthesis)
-				Result.append (Eif_array)
-				Result.append (Close_parenthesis)
-				Result.append (Comma_space)
-				Result.append (Open_parenthesis)
-				Result.append (Eif_integer)
-				Result.append (Close_parenthesis)
-				Result.append (Space)
-				Result.append (Open_parenthesis)
-				Result.append ("i")
-				Result.append (Space)
-				Result.append (Plus)
-				Result.append (Space)
-				Result.append_integer (1)
-				Result.append (Close_parenthesis)
-				Result.append (Close_parenthesis)
-				Result.append (Close_parenthesis)
-				Result.append (Semicolon)
-				Result.append (New_line_tab_tab)
-				
-				if is_element_structure then
-					-- memcpy (((`element_c_type' *) array + i), &an_element, sizeof (`element_c_type'));
-					
-					Result.append (Memcpy)
-					Result.append (Open_parenthesis)
-					Result.append (Open_parenthesis)
-					Result.append (Open_parenthesis)
-					Result.append (element_c_type)
-					Result.append (Space)
-					Result.append (Asterisk)
-					Result.append (Close_parenthesis)
-					Result.append (Space)
-					Result.append (Array_word)
-					Result.append (Space)
-					Result.append (Plus)
-					Result.append (Space)
-					Result.append ("i")
-					Result.append (Close_parenthesis)
-					Result.append (Comma_space)
-					Result.append (Ampersand)
-					Result.append (An_element)
-					Result.append (Comma_space)
-					Result.append (Sizeof)
-					Result.append (Space)
-					Result.append (Open_parenthesis)
-					Result.append (element_c_type)
-					Result.append (Close_parenthesis)
-					Result.append (Close_parenthesis)
-					Result.append (Semicolon)
-					Result.append (New_line_tab)
-					
-				else
-					-- *((`element_c_type' *) array + i) = an_element;
-					
-					Result.append (Asterisk)
-					Result.append (Open_parenthesis)
-					Result.append (Open_parenthesis)
-					Result.append (element_c_type)
-					Result.append (Space)
-					Result.append (Asterisk)
-					Result.append (Close_parenthesis)
-					Result.append (Space)
-					Result.append (Array_word)
-					Result.append (Space)
-					Result.append (Plus)
-					Result.append (Space)
-					Result.append ("i")
-					Result.append (Close_parenthesis)
-					Result.append (Space_equal_space)
-					Result.append (An_element)
-					Result.append (Semicolon)
-					Result.append (New_line_tab)
-					
-				end
-			-- }
-			
-			Result.append (Close_curly_brace)
-			Result.append (New_line_tab)
-			
-			-- eif_wean (eif_array);
-			
-			Result.append (Eif_wean)
-			Result.append (Space)
-			Result.append (Open_parenthesis)
-			Result.append (Eif_array)
-			Result.append (Close_parenthesis)
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
-			
-
-			-- if (old != NULL)
-
-			Result.append (If_keyword)
-			Result.append (Space_open_parenthesis)
-			Result.append (Old_keyword)
-			Result.append (Space)
-			Result.append (C_not_equal)
-			Result.append (Space)
-			Result.append (Null)
-			Result.append (Close_parenthesis)
-			Result.append (New_line_tab)
-
-			-- {
-
-			Result.append (Open_curly_brace)
-			Result.append (New_line_tab_tab)
-
-			-- 	memcpy (old, array, a_count * sizeof (`element_c_type'));
-
-			Result.append (Memcpy)
-			Result.append (Space_open_parenthesis)
-			Result.append (Old_keyword)
-			Result.append (Comma_space)
-			Result.append (Array_word)
-			Result.append (Comma_space)
-			Result.append (A_count_word)
-			Result.append (Space)
-			Result.append (Asterisk)
-			Result.append (Space)
-			Result.append (Sizeof)
-			Result.append (Space_open_parenthesis)
+			Result.append ("));%R%N%T")
+			Result.append ("array = (")
 			Result.append (element_c_type)
-			Result.append (Close_parenthesis)
-			Result.append (Close_parenthesis)
-			Result.append (Semicolon)
-			Result.append (New_line_tab_tab)
-
-			-- 	return NULL;
-
-			Result.append (Return)
-			Result.append (Space)
-			Result.append (Null)
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
-
-			-- }
-
-			Result.append (Close_curly_brace)
-			Result.append (New_line_tab)
-
-			-- else
-
-			Result.append (Else_keyword)
-			Result.append (New_line_tab_tab)
-
-			-- 	return array;
-			
-			Result.append (Return)
-			Result.append (Space)
-			Result.append (Array_word)
-			Result.append (Semicolon)
-
+			Result.append (" *) CoTaskMemAlloc (a_count * sizeof (")
+			Result.append (element_c_type)
+			Result.append ("));%R%N%T")
+			Result.append ("for (i = 0; i < a_count; i++)%R%N%T{%R%N%T%T")
+			Result.append ("an_element = ")
+			Result.append (element_ec_function)
+			Result.append (" (item (eif_access (eif_array), (EIF_INTEGER) (i + 1)));%R%N%T")
+			if is_element_structure then
+				Result.append ("memcpy (((")
+				Result.append (element_c_type)
+				Result.append (" *) array + i), &an_element, sizeof (")
+				Result.append (element_c_type)
+				Result.append ("));%R%N%T")
+			else
+				Result.append ("*((")
+				Result.append (element_c_type)
+				Result.append (" *) array + i) = an_element;%R%N%T")
+			end
+			Result.append ("}%R%N%T")
+			Result.append ("eif_wean (eif_array);%R%N%T")
+			Result.append ("if (old != NULL)%R%N%T{%R%N%T%T")
+			Result.append ("memcpy (old, array, a_count * sizeof (")
+			Result.append (element_c_type)
+			Result.append ("));%R%N%T%T")
+			Result.append ("return NULL;%R%N%T}%R%N%T")
+			Result.append ("else%R%N%T%T")
+			Result.append ("return array;")
 		ensure
 			non_void_body: Result /= Void
 			valid_body: not Result.is_empty

@@ -180,7 +180,7 @@ feature -- Processing
 			
 			create c_post_type.make (100)
 			c_definition_header_file_name := l_interface.c_definition_header_file_name
-			c_declaration_header_file_name := l_interface.c_definition_header_file_name
+			c_declaration_header_file_name := l_interface.c_declaration_header_file_name
 			eiffel_type := name_for_class (coclass_descriptor.name, coclass_descriptor.type_kind, environment.is_client)
 
 			is_coclass := True
@@ -296,8 +296,7 @@ feature -- Processing
 				ce_function_signature.append (" * a_interface")
 
 				create ce_function_body.make (10000)
-				ce_function_body.append (ce_function_body_interface 
-						(impl_interface.impl_eiffel_class_name (True)))
+				ce_function_body.append (ce_function_body_interface (impl_interface.impl_eiffel_class_name (True)))
 
 				create ce_function_return_type.make (100)
 				ce_function_return_type.append (Eif_reference)
@@ -369,24 +368,18 @@ feature -- Processing
 			ec_function_return_type.append (c_type)
 
 			create ec_function_signature.make (100)
-			ec_function_signature.append (Eif_reference)
-			ec_function_signature.append (Space)
-			ec_function_signature.append (Eif_ref_variable)
+			ec_function_signature.append ("EIF_REFERENCE eif_ref")
 
 			ec_function_body := ec_function_body_wrapper (eiffel_type, c_type)
-			if 
-				record_descriptor.name.is_equal ("RemotableHandle") or 
-				record_descriptor.name.is_equal ("_RemotableHandle") or
-				record_descriptor.name.is_equal ("tag_RemotableHandle")
-			then
+			if record_descriptor.name.is_equal ("RemotableHandle") or record_descriptor.name.is_equal ("_RemotableHandle") or record_descriptor.name.is_equal ("tag_RemotableHandle") then
 				is_structure := False
 				is_basic_type := True
 				vt_type := Vt_void
 				need_generate_ce := False
 				need_generate_ec := False
-				c_definition_header_file_name := ("").twin
-				cecil_type := ("EIF_INTEGER").twin
-				c_type := Void_c_keyword.twin
+				c_definition_header_file_name := ""
+				cecil_type := "EIF_INTEGER"
+				c_type := "void"
 			end
 		end
 
@@ -451,15 +444,12 @@ feature {NONE} -- Implementation
 			valid_c_type: not a_c_type.is_empty
 		do
 			create Result.make (1000)
-			Result.append ("[
-	EIF_OBJECT eif_object = 0;
-	EIF_POINTER a_pointer = 0;
-	
-	eif_object = eif_protect (eif_ref);
-	a_pointer = (EIF_POINTER) eif_field (eif_access (eif_object), %"item%", EIF_POINTER);
-	eif_wean (eif_object);
-	return * (
-]")
+			Result.append ("%TEIF_OBJECT eif_object = 0;%R%N%T")
+			Result.append ("EIF_POINTER a_pointer = 0;%R%N%R%N%T")
+			Result.append ("eif_object = eif_protect (eif_ref);%R%N%T")
+			Result.append ("a_pointer = (EIF_POINTER) eif_field (eif_access (eif_object), %"item%", EIF_POINTER);%R%N%T")
+			Result.append ("eif_wean (eif_object);%R%N%T")
+			Result.append ("return * (")
 			Result.append (a_c_type)
 			Result.append (" *) a_pointer;")
 		ensure
@@ -477,21 +467,15 @@ feature {NONE} -- Implementation
 			valid_ce_function: not ce_function_for_alias.is_empty
 		do
 			create Result.make (1000)
-			Result.append ("[
-	EIF_TYPE_ID type_id = -1;
-	EIF_PROCEDURE make = 0;
-	EIF_OBJECT result = 0;
-	
-	type_id = eif_type_id (%"
-]")
+			Result.append ("EIF_TYPE_ID type_id = -1;%R%N%T")
+			Result.append ("EIF_PROCEDURE make = 0;%R%N%T")
+			Result.append ("EIF_OBJECT result = 0;%R%N%%R%NT")
+			Result.append ("type_id = eif_type_id (%"")
 			Result.append (a_class_name)
-			Result.append ("[
-%");
-	result = eif_create (type_id);
-	make = eif_procedure (%"make_from_alias%", type_id);
-	
-	make (eif_access (result), 
-]")
+			Result.append ("%");%R%N%T")
+			Result.append ("result = eif_create (type_id);%R%N%T")
+			Result.append ("make = eif_procedure (%"make_from_alias%", type_id);%R%N%R%N%T")
+			Result.append ("make (eif_access (result), ")
 			if need_generate_alias then
 				Result.append (Generated_ce_mapper)
 			else
@@ -504,7 +488,7 @@ feature {NONE} -- Implementation
 				Result.append (", ")
 				Result.append ("NULL")
 			end
-			Result.append ("));%N%N%Treturn eif_wean (result);")
+			Result.append ("));%R%N%R%N%Treturn eif_wean (result);")
 		ensure
 			non_void_body: Result /= Void
 			valid_body: not Result.is_empty

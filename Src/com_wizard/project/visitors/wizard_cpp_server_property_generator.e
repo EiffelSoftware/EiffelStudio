@@ -29,35 +29,31 @@ feature -- Basic operations
 
 			-- Access feature
 			create l_name.make (100)
-			l_name.append (Get_clause)
+			l_name.append ("get_")
 			l_name.append (a_property.name)
 			c_access_feature.set_name (l_name)
 
 			c_access_feature.set_body (access_body (a_property.component_eiffel_name (a_component), l_visitor))
-			c_access_feature.set_result_type (Std_method_imp)
+			c_access_feature.set_result_type ("STDMETHODIMP")
 			c_access_feature.set_comment (a_property.description)
 
 			-- Set c signature
 			create l_signature.make (100)
-			l_signature.append (Beginning_comment_paramflag)
-			l_signature.append (Out_keyword)
-			l_signature.append (End_comment_paramflag)
+			l_signature.append (" /* [out] */ ")
 			l_signature.append (l_visitor.c_type)
 			l_signature.append (l_visitor.c_post_type)
-			l_signature.append (Asterisk)
-			l_signature.append (Space)
-			l_signature.append (Argument_name)
+			l_signature.append ("* a_value")
 			c_access_feature.set_signature (l_signature)
 
 			-- Setting feature
 			create l_name.make (100)
-			l_name.append (Set_clause)
+			l_name.append ("set_")
 			l_name.append (a_property.name)
 			c_setting_feature.set_name (l_name)
 
 			-- set c setting body
 			create l_string.make (100)
-			l_string.append (Set_clause)
+			l_string.append ("set_")
 			l_string.append (a_property.component_eiffel_name (a_component))
 			c_setting_feature.set_body (setting_body (l_string, l_visitor))
 
@@ -66,13 +62,10 @@ feature -- Basic operations
 
 			-- Set c signature
 			create l_signature.make (100)
-			l_signature.append (Beginning_comment_paramflag)
-			l_signature.append (In)
-			l_signature.append (End_comment_paramflag)
+			l_signature.append (" /* [in] */ ")
 			l_signature.append (l_visitor.c_type)
 			l_signature.append (l_visitor.c_post_type)
-			l_signature.append (Space)
-			l_signature.append (Argument_name)
+			l_signature.append (" a_value")
 			c_setting_feature.set_signature (l_signature)
 		end
 
@@ -84,49 +77,31 @@ feature {NONE} -- Implementation
 			non_void_name: l_name /= Void
 			non_void_visitor: l_visitor /= Void
 		do
-			create Result.make (10000)
-			Result.append (Ecatch)
-
-			Result.append (New_line_tab)
+			create Result.make (1000)
+			Result.append ("%TECATCH;%R%N%R%N%T")
 			Result.append (cecil_function (l_name, l_visitor))
 
-			Result.append (New_line_tab)
-
-			Result.append (Asterisk)
-			Result.append (Argument_name)
-			Result.append (Space_equal_space)
-
-			if 
-				l_visitor.is_basic_type or
-				l_visitor.is_enumeration
-			then
-				Result.append (Open_parenthesis)
+			Result.append ("%R%N%T*a_value = ")
+			if l_visitor.is_basic_type or l_visitor.is_enumeration then
+				Result.append ("(")
 				Result.append (l_visitor.c_type)
-				Result.append (Close_parenthesis)
-				Result.append (Tmp_variable_name)
+				Result.append (")tmp_value")
 			else
 				if l_visitor.need_generate_ec then
 					Result.append (Generated_ec_mapper)
 				else
-					Result.append (Ec_mapper)
+					Result.append ("rt_ec")
 				end
-				Result.append (Dot)
+				Result.append (".")
 				Result.append (l_visitor.ec_function_name)
-				Result.append (Space_open_parenthesis)
-				Result.append (Tmp_variable_name)
+				Result.append (" (tmp_value")
 				if l_visitor.writable then
-					Result.append (Comma_space)
-					Result.append (Null)
+					Result.append (", NULL")
 				end
-				Result.append (Close_parenthesis)
+				Result.append (")")
 			end
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
-			Result.append (End_ecatch)
-			Result.append (Return)
-			Result.append (Space)
-			Result.append (S_ok)
-			Result.append (Semicolon)
+			Result.append (";%R%N%TEND_ECATCH;%R%N%T")
+			Result.append ("return S_OK;")
 		end
 
 	setting_body (l_name: STRING; l_visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
@@ -136,16 +111,12 @@ feature {NONE} -- Implementation
 			non_void_visitor: l_visitor /= Void
 		do
 			create Result.make (1000)
-			Result.append (Ecatch)
+			Result.append ("%TECATCH;%R%N")
 			Result.append (set_variable (l_visitor))
-			Result.append (New_line_tab)
+			Result.append ("%R%N%T")
 			Result.append (cecil_procedure (l_name, l_visitor))
-			Result.append (New_line_tab)
-			Result.append (End_ecatch)
-			Result.append (Return)
-			Result.append (Space)
-			Result.append (S_ok)
-			Result.append (Semicolon)
+			Result.append ("%R%N%TEND_ECATCH;%R%N%T")
+			Result.append ("return S_OK;")
 		end
 
 	set_variable (l_visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
@@ -157,50 +128,29 @@ feature {NONE} -- Implementation
 			Result.append (Tab)
 			if l_visitor.is_basic_type or l_visitor.is_enumeration then
 				Result.append (l_visitor.cecil_type)
-				Result.append (Space)
-				Result.append (Tmp_variable_name)
-				Result.append (Space_equal_space)
-				Result.append (Open_parenthesis)
+				Result.append (" tmp_value = (")
 				Result.append (l_visitor.cecil_type)
-				Result.append (Close_parenthesis)
-				Result.append (Argument_name)
+				Result.append (")a_value")
 			elseif (l_visitor.vt_type = Vt_bool) then
 				Result.append (l_visitor.cecil_type)
-				Result.append (Space)
-				Result.append (Tmp_variable_name)
-				Result.append (Space_equal_space)
-				Result.append (Ce_mapper)
-				Result.append (Dot)
+				Result.append (" tmp_value = rt_ce.")
 				Result.append (l_visitor.ce_function_name)
-				Result.append (Space_open_parenthesis)
-				Result.append (Argument_name)
-				Result.append (Close_parenthesis)
+				Result.append (" (a_value)")
 			else
-				Result.append (Eif_object)
-				Result.append (Space)
-				Result.append (Tmp_variable_name)
-				Result.append (Semicolon)
-				Result.append (New_line_tab)
-				Result.append (Tmp_variable_name)
-				Result.append (Space_equal_space)
-				Result.append (Eif_protect)
-				Result.append (Space_open_parenthesis)
+				Result.append ("EIF_OBJECT tmp_value;%R%N%T")
+				Result.append ("tmp_value = eif_protect (")
 				if l_visitor.need_generate_ce then
 					Result.append (Generated_ce_mapper)
 				else
-					Result.append (Ce_mapper)
+					Result.append ("rt_ce")
 				end
-				Result.append (Dot)
+				Result.append (".")
 				Result.append (l_visitor.ce_function_name)
-				Result.append (Space_open_parenthesis)
-				Result.append (Argument_name)
-
+				Result.append (" (a_value")
 				if l_visitor.writable then
-					Result.append (Comma_space)
-					Result.append (Null)
+					Result.append (", NULL")
 				end
-				Result.append (Close_parenthesis)
-				Result.append (Close_parenthesis)
+				Result.append ("))")
 			end
 
 			Result.append (Semicolon)
@@ -256,77 +206,29 @@ feature {NONE} -- Implementation
 			end
 
 			Result := cecil_function_code (cecil_function_type, cecil_function_name, function_name)
-			Result.append (New_line_tab)
+			Result.append ("%R%N%T")
 
-			-- 'cecil_type' tmp_value;
-			
 			Result.append (cecil_type)
-			Result.append (Space)
-			Result.append (Tmp_variable_name)
+			Result.append (" tmp_value")
 			
-			if 
-				not (l_visitor.is_basic_type or
-				l_visitor.is_enumeration or
-				l_visitor.vt_type = Vt_bool)
-			then
-				Result.append (Space_equal_space)
-				Result.append (Zero)
+			if not (l_visitor.is_basic_type or l_visitor.is_enumeration or l_visitor.vt_type = Vt_bool) then
+				Result.append (" = 0")
 			end
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
+			Result.append (";%R%N%T")
 			
-			-- if (eiffel_function != NULL)
+			Result.append ("if (eiffel_function != NULL)%R%N%T%T")
 			
-			Result.append ("if (eiffel_function != NULL)")
-			Result.append (New_line_tab_tab)
-			
-			-- tmp_value = (`cecil_type')eiffel_function (eif_access (eiffel_object))
-			
-
-			Result.append (Tmp_variable_name)
-			Result.append (Space_equal_space)
-			Result.append ("(FUNCTION_CAST (")
+			Result.append ("tmp_value = (FUNCTION_CAST (")
 			Result.append (cecil_type)
-			Result.append (Comma_space)
-			Result.append (open_parenthesis)
-			Result.append (Eif_reference)
-			Result.append (Close_parenthesis)
-			Result.append (Close_parenthesis)
-
-			Result.append (Eiffel_function_variable_name)
-			Result.append (Close_parenthesis)
-			Result.append (Space_open_parenthesis)
-			Result.append (Eif_access)
-			Result.append (Space_open_parenthesis)
-			Result.append (Eiffel_object)
-			Result.append (Close_parenthesis)
-			Result.append (Close_parenthesis)
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
+			Result.append (", (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));%R%N%T")
 			
-			-- else
+			Result.append ("else%R%N%T%T")
 			
-			Result.append (Else_keyword)
-			Result.append (New_line_tab_tab)
-			
-			-- tmp_value = eif_field (eif_access (eiffel_object), %"`function_name'%", `cecil_type')
-			
-			Result.append (Tmp_variable_name)
-			Result.append (Space_equal_space)
-			Result.append ("eif_field (")
-			Result.append (Eif_access)
-			Result.append (Space_open_parenthesis)
-			Result.append (Eiffel_object)
-			Result.append (Close_parenthesis)
-			Result.append (Comma_space)
-			Result.append (Double_quote)
+			Result.append ("tmp_value = eif_field (eif_access (eiffel_object), %"")
 			Result.append (function_name)
-			Result.append (Double_quote)
-			Result.append (Comma_space)
+			Result.append ("%", ")
 			Result.append (cecil_type)
-			Result.append (Close_parenthesis)
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
+			Result.append (");%R%N%T")
 		ensure
 			non_void_function: Result /= Void
 			valid_function: not Result.is_empty
@@ -341,31 +243,15 @@ feature {NONE} -- Implementation
 			not_empty: not function_type.is_empty and then not function_name.is_empty
 							and then not call_func_name.is_empty
 		do
-			-- EIF_type_FUNCTION eiffel_function = 0;
-			
-			create Result.make (10000)
+			create Result.make (200)
 			Result.append (function_type)
-			Result.append (Space)
-			Result.append (Eiffel_function_variable_name)
-			Result.append ("= 0")
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
-
-			-- eiffel_function = eif_type_function ("call_func_name", tid);
+			Result.append (" eiffel_function = 0;%R%N%T")
 			
-			Result.append (Eiffel_function_variable_name)
-			Result.append (Space_equal_space)
-
+			Result.append ("eiffel_function = ")
 			Result.append (function_name)
-			Result.append (Space_open_parenthesis)
-			Result.append (Double_quote)
+			Result.append (" (%"")
 			Result.append (call_func_name)
-			Result.append (Double_quote)
-			Result.append (Comma_space)
-			Result.append (Type_id)
-			Result.append (Close_parenthesis)
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
+			Result.append ("%", type_id);%R%N%T")
 		ensure
 			non_void_code: Result /= Void
 			valid_code: not Result.is_empty
@@ -377,67 +263,31 @@ feature {NONE} -- Implementation
 			non_void_name: function_name /= Void
 			non_void_visitor: l_visitor /= Void
 		do
-			-- EIF_PROCEDURE eiffel_procedure
 			create Result.make (10000)
-			Result.append (Eif_procedure)
-			Result.append (Space)
-			Result.append (Eiffel_procedure_variable_name)
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
+			Result.append ("EIF_PROCEDURE eiffel_procedure;%R%N%T")
 
-			-- eiffel_procedure = eif_procedure ("func_name", tid)
-			Result.append (Eiffel_procedure_variable_name)
-			Result.append (Space_equal_space)
-			Result.append (Eif_procedure_name)
-			Result.append (Space_open_parenthesis)
-			Result.append (Double_quote)
+			Result.append ("eiffel_procedure = eif_procedure (%"")
 			Result.append (function_name)
-			Result.append (Double_quote)
-			Result.append (Comma_space)
-			Result.append (Type_id)
-			Result.append (Close_parenthesis)
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
+			Result.append ("%", type_id);%R%N%T")
 
-			-- eif_procedure (eif_access (eiffel_object),
 			Result.append ("(FUNCTION_CAST (void, (EIF_REFERENCE, ")
 			if l_visitor.is_basic_type or l_visitor.is_enumeration then
 				Result.append (l_visitor.cecil_type)
 			elseif l_visitor.vt_type = Vt_bool then
-				Result.append (Eif_boolean)
+				Result.append ("EIF_BOOLEAN")
 			else
-				Result.append (Eif_reference)
+				Result.append ("EIF_REFERENCE")
 			end
 
-			Result.append (Close_parenthesis)
-			Result.append (Close_parenthesis)
-			Result.append (Eiffel_procedure_variable_name)
-			Result.append (Close_parenthesis)
-			Result.append (Space_open_parenthesis)
-			Result.append (Eif_access)
-			Result.append (Space_open_parenthesis)
-			Result.append (Eiffel_object)
-			Result.append (Close_parenthesis)
-			Result.append (Comma_space)
-			if l_visitor.is_basic_type or (l_visitor.vt_type = Vt_bool) or l_visitor.is_enumeration then
-				Result.append (Tmp_variable_name)
+			Result.append ("))eiffel_procedure) (eif_access (eiffel_object), ")
+			if l_visitor.is_basic_type or l_visitor.vt_type = Vt_bool or l_visitor.is_enumeration then
+				Result.append ("tmp_value")
 			else
-				Result.append (Eif_access)
-				Result.append (Space_open_parenthesis)
-				Result.append (Tmp_variable_name)
-				Result.append (Close_parenthesis)
+				Result.append ("eif_access (tmp_value)")
 			end
-			Result.append (Close_parenthesis)
-			Result.append (Semicolon)
-
-			-- eif_wean ('tmp_object')
-			if not (l_visitor.is_basic_type or (l_visitor.vt_type = Vt_bool) or l_visitor.is_enumeration) then
-				Result.append (New_line_tab)
-				Result.append (Eif_wean)
-				Result.append (Space_open_parenthesis)
-				Result.append (Tmp_variable_name)
-				Result.append (Close_parenthesis)
-				Result.append (Semicolon)
+			Result.append (");")
+			if not (l_visitor.is_basic_type or l_visitor.vt_type = Vt_bool or l_visitor.is_enumeration) then
+				Result.append ("%R%N%Teif_wean (tmp_value);")
 			end
 		ensure
 			non_void_procedure: Result /= Void

@@ -65,7 +65,7 @@ feature -- Initialization
 			coclass_writer.add_other_source (iid_definition (source_interface.name, source_interface.guid))
 			
 			inner_class_writer.set_name (inner_class_name)
-			inner_class_writer.set_header ("To deal with identity relationship of IConnectionPoin,%N" +
+			inner_class_writer.set_header ("To deal with identity relationship of IConnectionPoin,%R%N" +
 				a_interface.c_type_name + "-specific inner class.")
 			
 			inner_class_writer.set_definition_header_file_name (inner_class_definition_header_file)
@@ -227,14 +227,14 @@ feature -- Access
 			
 			Result.set_signature ("REFIID riid, void ** ppv")
 			
-			Result.set_body ("%Tif ((riid == IID_IUnknown) || (riid == IID_IConnectionPoint))%N%T%T%
-									%*ppv = static_cast<IConnectionPoint *> (this);%N%T%
-								%else%N%T%
-								%{%N%T%T%
-									%*ppv = NULL;%N%T%T%
-									%return E_NOINTERFACE;%N%T%
-								%}%N%T%
-								%((IUnknown *)* ppv)->AddRef ();%N%T%
+			Result.set_body ("%Tif ((riid == IID_IUnknown) || (riid == IID_IConnectionPoint))%R%N%T%T%
+									%*ppv = static_cast<IConnectionPoint *> (this);%R%N%T%
+								%else%R%N%T%
+								%{%R%N%T%T%
+									%*ppv = NULL;%R%N%T%T%
+									%return E_NOINTERFACE;%R%N%T%
+								%}%R%N%T%
+								%((IUnknown *)* ppv)->AddRef ();%R%N%T%
 								%return S_OK;")
 		ensure
 			non_void: Result /= Void
@@ -286,9 +286,9 @@ feature -- Access
 			
 			Result.set_signature ("IID * piid")
 			
-			Result.set_body ("%Tif (piid == NULL)%N%T%T%
-									%return E_POINTER;%N%T%
-								%*piid = " + iid_name (source_interface.name) + ";%N%T%
+			Result.set_body ("%Tif (piid == NULL)%R%N%T%T%
+									%return E_POINTER;%R%N%T%
+								%*piid = " + iid_name (source_interface.name) + ";%R%N%T%
 								%return S_OK;")
 		ensure
 			non_void: Result /= Void
@@ -306,9 +306,9 @@ feature -- Access
 			
 			Result.set_signature ("IConnectionPointContainer ** ppcpc")
 			
-			Result.set_body ("%Tif (ppcpc == NULL)%N%T%T%
-									%return E_POINTER;%N%T%
-								%(*ppcpc = outer)->AddRef ();%N%T%
+			Result.set_body ("%Tif (ppcpc == NULL)%R%N%T%T%
+									%return E_POINTER;%R%N%T%
+								%(*ppcpc = outer)->AddRef ();%R%N%T%
 								%return S_OK;")
 		ensure
 			non_void: Result /= Void
@@ -329,32 +329,32 @@ feature -- Access
 			Result.set_signature ("IUnknown * pUnk, DWORD * pdwCookie")
 			
 			create body.make (1000)
-			body.append ("%Tif ((pUnk == NULL) || (pdwCookie == NULL))%N%T%T%
-							%return E_POINTER;%N%T%
-							%*pdwCookie = 0;%N%T") 
+			body.append ("%Tif ((pUnk == NULL) || (pdwCookie == NULL))%R%N%T%T%
+							%return E_POINTER;%R%N%T%
+							%*pdwCookie = 0;%R%N%T") 
 			if
 				source_interface.namespace /= Void and then
 				not source_interface.namespace.is_empty
 			then
 				body.append (source_interface.namespace + "::")
 			end
-			body.append (source_interface.name + " * p" + source_interface.name + ";%N%T%
+			body.append (source_interface.name + " * p" + source_interface.name + ";%R%N%T%
 							%HRESULT hr = pUnk->QueryInterface (" + 
 								iid_name (source_interface.name) + 
-								", (void**)&p" + source_interface.name + ");%N%T%
-							%if (hr == E_NOINTERFACE)%N%T%T%
-							%hr = CONNECT_E_NOCONNECTION;%N%T%
-							%if (SUCCEEDED(hr))%N%T%
-							%{%N%T%T%
-							%EIF_INTEGER_FUNCTION eiffel_function = 0;%N%T%T%
+								", (void**)&p" + source_interface.name + ");%R%N%T%
+							%if (hr == E_NOINTERFACE)%R%N%T%T%
+							%hr = CONNECT_E_NOCONNECTION;%R%N%T%
+							%if (SUCCEEDED(hr))%R%N%T%
+							%{%R%N%T%T%
+							%EIF_INTEGER_FUNCTION eiffel_function = 0;%R%N%T%T%
 							%eiffel_function = eif_integer_function (%"" + 
-										add_feature_name (source_interface) + "%", type_id);%N%T%T%
+										add_feature_name (source_interface) + "%", type_id);%R%N%T%T%
 							%EIF_OBJECT tmp_object = eif_protect (" + Ce_mapper +
 								".ccom_ce_pointed_interface (p" + source_interface.name + 
-								", %"" + source_interface.implemented_interface.eiffel_class_name + "%"));%N%T%T%
+								", %"" + source_interface.implemented_interface.eiffel_class_name + "%"));%R%N%T%T%
 							%*pdwCookie = (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE, EIF_REFERENCE))eiffel_function)" + 
-								"(eif_access (eiffel_object), eif_wean (tmp_object));%N%T%
-							%}%N%T%
+								"(eif_access (eiffel_object), eif_wean (tmp_object));%R%N%T%
+							%}%R%N%T%
 							%return hr;")
 			Result.set_body (body)
 		ensure
@@ -377,18 +377,18 @@ feature -- Access
 			
 			create body.make (1000)
 			body.append ("%T%
-							%EIF_BOOLEAN_FUNCTION eiffel_function = 0;%N%T%
+							%EIF_BOOLEAN_FUNCTION eiffel_function = 0;%R%N%T%
 							%eiffel_function = eif_boolean_function (%"" +
-								has_feature_name (source_interface) + "%", type_id);%N%T%
+								has_feature_name (source_interface) + "%", type_id);%R%N%T%
 							%EIF_BOOLEAN a_bool = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE, EIF_INTEGER))eiffel_function)" + 
-								"(eif_access (eiffel_object), (EIF_INTEGER)dwCookie);%N%T%
-							%if (a_bool != EIF_TRUE)%N%T%T%
-								%return CONNECT_E_NOCONNECTION;%N%T%
-							%EIF_PROCEDURE eiffel_procedure = 0;%N%T%
+								"(eif_access (eiffel_object), (EIF_INTEGER)dwCookie);%R%N%T%
+							%if (a_bool != EIF_TRUE)%R%N%T%T%
+								%return CONNECT_E_NOCONNECTION;%R%N%T%
+							%EIF_PROCEDURE eiffel_procedure = 0;%R%N%T%
 							%eiffel_procedure = eif_procedure (%"" +
-								remove_feature_name (source_interface) + "%", type_id);%N%T%
+								remove_feature_name (source_interface) + "%", type_id);%R%N%T%
 							%(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_INTEGER))eiffel_procedure)" + 
-								"(eif_access (eiffel_object), (EIF_INTEGER)dwCookie);%N%T%
+								"(eif_access (eiffel_object), (EIF_INTEGER)dwCookie);%R%N%T%
 							%return S_OK;")
 			Result.set_body (body)
 		ensure

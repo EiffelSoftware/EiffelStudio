@@ -388,7 +388,7 @@ feature {NONE} -- Implementation
 						visitor.is_coclass_pointer_pointer
 					then
 						Result.append (New_line_tab_tab)
-						Result.append ("if (*" + arg_name + " != NULL)%N%T%T%T(*")
+						Result.append ("if (*" + arg_name + " != NULL)%R%N%T%T%T(*")
 						Result.append (arg_name)
 						Result.append (")->AddRef ();")
 					end
@@ -423,9 +423,9 @@ feature {NONE} -- Implementation
 					visitor.is_coclass_pointer_pointer
 				then
 					Result.append (New_line_tab)
-					Result.append ("if (*" + arg_name + " != NULL)%N%T%T(*")
+					Result.append ("if (*" + arg_name + " != NULL)%R%N%T%T(*")
 					Result.append (arg_name)
-					Result.append (")->Release ();%N%T")
+					Result.append (")->Release ();%R%N%T")
 				
 				elseif visitor.is_pointed then
 					pointed_descriptor ?= descriptor
@@ -433,12 +433,12 @@ feature {NONE} -- Implementation
 						pointed_visitor := pointed_descriptor.pointed_data_type_descriptor.visitor
 						if pointed_visitor.need_free_memory then
 							Result.append (New_line_tab)
-							Result.append ("if (*" + arg_name + " != NULL)%N%T%T")
+							Result.append ("if (*" + arg_name + " != NULL)%R%N%T%T")
 							if pointed_visitor.need_generate_free_memory then
 								Result.append (Generated_ce_mapper + ".")
 							end
 							Result.append (pointed_visitor.free_memory_function_name)
-							Result.append (" (*" + arg_name + ");%N%T")
+							Result.append (" (*" + arg_name + ");%R%N%T")
 						end
 					end
 				end
@@ -486,24 +486,28 @@ feature {NONE} -- Implementation
 				not visitor.is_enumeration and
 				visitor.vt_type /= Vt_bool
 			then
-				Result.append ("if (" + Tmp_variable_name + " != NULL)%N%T{%N%T%T")
-				Result.append ("EIF_OBJECT tmp_object = eif_protect (" + Tmp_variable_name + ");%N%T%T")
+				Result.append ("if (" + Tmp_variable_name + " != NULL)%R%N%T{%R%N%T%T")
+				Result.append ("EIF_OBJECT tmp_object = eif_protect (" + Tmp_variable_name + ");%R%N%T%T")
 				if visitor.is_structure_pointer then
 					Result.append ("EIF_TYPE_ID retval_type_id = eif_type_id (%"" + 
-								visitor.eiffel_type + "%");%N%T%T")
-					Result.append ("EIF_PROCEDURE set_shared = eif_procedure (%"set_shared%", retval_type_id);%N%T%T")
-					Result.append ("(FUNCTION_CAST (void, (EIF_REFERENCE)) set_shared) (eif_access (tmp_object));%N%T%T")
+								visitor.eiffel_type + "%");%R%N%T%T")
+					Result.append ("EIF_PROCEDURE set_shared = eif_procedure (%"set_shared%", retval_type_id);%R%N%T%T")
+					Result.append ("(FUNCTION_CAST (void, (EIF_REFERENCE)) set_shared) (eif_access (tmp_object));%R%N%T%T")
 				end
 			end
 			
 			if visitor.is_structure then
-				Result.append (visitor.c_type + " * tmp" + arg_name + 
-						" = (" + visitor.c_type + " *) eif_field (eif_access(tmp_object), %"item%", EIF_POINTER);%N%T%T")
+				Result.append (visitor.c_type)
+				Result.append (" * tmp")
+				Result.append (arg_name)
+				Result.append (" = (")
+				Result.append (visitor.c_type)
+				Result.append (" *) eif_field (eif_access(tmp_object), %"item%", EIF_POINTER);%R%N%T%T")
 				
 				if is_variant (visitor.vt_type) then
-					Result.append ("VariantCopy (" + arg_name + ", tmp" + arg_name + ");%N%T%T")
+					Result.append ("VariantCopy (" + arg_name + ", tmp" + arg_name + ");%R%N%T%T")
 				else
-					Result.append ("memcpy (" + arg_name + ", tmp" + arg_name + ", sizeof (" + visitor.c_type + "));%N%T%T")
+					Result.append ("memcpy (" + arg_name + ", tmp" + arg_name + ", sizeof (" + visitor.c_type + "));%R%N%T%T")
 				end
 			else
 				Result.append (Asterisk)
@@ -544,9 +548,9 @@ feature {NONE} -- Implementation
 				not visitor.is_enumeration and
 				visitor.vt_type /= Vt_bool
 			then
-				Result.append ("%N%T%Teif_wean (tmp_object);%N%T}")
+				Result.append ("%R%N%T%Teif_wean (tmp_object);%R%N%T}")
 				if not visitor.is_structure then
-					Result.append ("%N%Telse%N%T%T*" + arg_name + " = NULL;")
+					Result.append ("%R%N%Telse%R%N%T%T*" + arg_name + " = NULL;")
 				end
 			end
 		end

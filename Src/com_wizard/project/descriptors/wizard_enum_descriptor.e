@@ -42,28 +42,33 @@ feature -- Access
 
 	creation_message: STRING is
 			-- Creation message for wizard output
+		local
+			l_element: WIZARD_ENUM_ELEMENT_DESCRIPTOR
+			l_description: STRING
 		do
-			Result := Added.twin
-			Result.append (Space)
-			Result.append (Enumerator)
-			Result.append (Space)
+			create Result.make (512)
+			Result.append ("Added enumerator ")
 			Result.append (name)
-			Result.append (New_line_tab)
-			Result.append (Elements_string)
+			Result.append ("%R%N%T")
+			Result.append ("Elements:")
 			from
 				elements.start
 			until
 				elements.after
 			loop
-				Result.append (New_line_tab)
-				Result.append (elements.item.name)
-				Result.append (Colon)
-				Result.append (Space)
-				Result.append (elements.item.value.out)
-				Result.append (New_line_tab_tab)
-				Result.append (elements.item.description)
+				l_element := elements.item
+				Result.append ("%R%N%T")
+				Result.append (l_element.name)
+				Result.append (": ")
+				Result.append (l_element.value.out)
+				l_description := l_element.description
+				if l_description /= Void and then not l_description.is_empty then
+					Result.append ("%R%N%T%T-- ")
+					Result.append (l_description)
+				end
 				elements.forth
 			end
+			Result.append ("%R%N")
 		end
 
 	is_added: BOOLEAN

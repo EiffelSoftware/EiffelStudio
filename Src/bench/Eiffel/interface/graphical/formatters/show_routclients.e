@@ -145,15 +145,15 @@ feature {NONE} -- Properties
 	create_structured_text (f: FEATURE_STONE): STRUCTURED_TEXT is
 			-- Display Senders of `f`.
 		local
-			cmd: E_SHOW_CALLERS;
+			cmd: E_SHOW_CALLERS
 		do
-			!! Result.make;
-			!! cmd.make (f.e_feature, Result);
+			!! cmd.make (f.e_feature);
 			if to_show_all_callers then
 				cmd.set_all_callers;
 			end;
 			if cmd.has_valid_feature then
-				cmd.execute
+				cmd.execute;
+				Result := cmd.structured_text
 			end
 		end;
 

@@ -59,10 +59,10 @@ feature {NONE} -- Properties
 		local
 			cmd: E_SHOW_ROUTINE_IMPLEMENTERS;
 		do
-			!! Result.make;
-			!! cmd.make (f.e_feature, Result);
+			!! cmd.make (f.e_feature);
 			if cmd.has_valid_feature then
-				cmd.execute
+				cmd.execute;
+				Result := cmd.structured_text
 			end;
 		end;
 

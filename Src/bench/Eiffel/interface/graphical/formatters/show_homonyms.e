@@ -59,9 +59,9 @@ feature {NONE} -- Properties
 		local
 			cmd: E_SHOW_ROUTINE_HOMONYMNS;
 		do
-			!! Result.make;
-			!! cmd.make (f.e_feature, Result);
+			!! cmd.make (f.e_feature);
 			cmd.execute;
+			Result := cmd.structured_text
 		end;
 
 feature {NONE} -- Implementation

@@ -62,9 +62,9 @@ feature {NONE} -- Attributes
 		local
 			cmd: E_SHOW_CLUSTERS
 		do
-			!! Result.make;
-			!! cmd.make (Result);
-			cmd.execute
+			!! cmd.make;
+			cmd.execute;
+			Result := cmd.structured_text
 		end;
 
 feature {NONE} -- Implementation

@@ -61,11 +61,11 @@ feature {NONE} -- Properties
 	create_structured_text (c: CLASSC_STONE): STRUCTURED_TEXT is
 			-- Show universe: classes in alphabetical order.
 		local
-			cmd: E_SHOW_CLASSES;
+			cmd: E_SHOW_CLASSES
 		do
-			!! Result.make;
-			!! cmd.make (Result);
+			!! cmd.make;
 			cmd.execute;
+			Result := cmd.structured_text
 		end;
 
 feature {NONE} -- Implementation

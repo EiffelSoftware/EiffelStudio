@@ -64,9 +64,9 @@ feature {NONE} -- Properties
 		local
 			cmd: E_SHOW_CLUSTER_HIERARCHY;
 		do
-			!! Result.make;
-			!! cmd.make (Result);
+			!! cmd.make;
 			cmd.execute;
+			Result := cmd.structured_text
 		end;
 
 feature {NONE} -- Implementation

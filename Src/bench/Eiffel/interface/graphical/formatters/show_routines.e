@@ -57,11 +57,11 @@ feature {NONE} -- Properties
 
 	create_structured_text (c: CLASSC_STONE): STRUCTURED_TEXT is
 		local
-			cmd: E_SHOW_ROUTINES;
+			cmd: E_SHOW_ROUTINES
 		do
-			!! Result.make;
-			!! cmd.make (c.e_class, Result);
-			cmd.execute
+			!! cmd.make (c.e_class);
+			cmd.execute;
+			Result := cmd.structured_text
 		end;
 
 feature {NONE} -- Implementation

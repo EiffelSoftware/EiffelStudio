@@ -62,9 +62,9 @@ feature {NONE} -- Attributes
 		local
 			cmd: E_SHOW_DESCENDANTS;
 		do
-			!! Result.make;
-			!! cmd.make (c.e_class, Result);
-			cmd.execute
+			!! cmd.make (c.e_class);
+			cmd.execute;
+			Result := cmd.structured_text
 		end;
 
 feature {NONE} -- Implementation

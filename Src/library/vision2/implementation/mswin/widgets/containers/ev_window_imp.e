@@ -749,6 +749,7 @@ feature {NONE} -- Implementation
 		do
 			interface.close_actions.call ([])
 				-- Call the close events
+			set_default_processing (False)
 		end
 
 feature {EV_PND_TRANSPORTER_IMP}
@@ -884,6 +885,9 @@ end -- class EV_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.27  2000/02/29 22:15:54  rogers
+--| In on_wm_close, after calling the events, now set_default_processing (False)  to stop windows automatically closing the window, or exiting the application.
+--|
 --| Revision 1.26  2000/02/29 19:24:40  rogers
 --| Connected the move_actions.
 --|

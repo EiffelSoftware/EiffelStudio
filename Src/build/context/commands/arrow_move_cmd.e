@@ -53,7 +53,7 @@ feature
 			end;
 		end;
 
-feature {CONTEXT_TREE, SELECTION_MANAGER}
+feature {NEW_CONTEXT_TREE, CONTEXT_TREE, SELECTION_MANAGER}
 
 	move_context (d_x, d_y: INTEGER) is
 		local

@@ -32,9 +32,9 @@ feature
 			
 		do
 			!!Result.make (0);
-			Result.append (c_name);
 			
 			if context /= Void then
+				Result.append (c_name);
 				Result.append (" (");
 				
 				if context.label /= Void then

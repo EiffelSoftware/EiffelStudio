@@ -6,12 +6,6 @@ indexing
 class
 	CONSUMED_TYPE
 
-inherit
-	SHARED_TYPE_ID
-		export
-			{NONE} all
-		end
-
 create
 	make
 
@@ -189,7 +183,7 @@ feature -- Functions used for easy browsing of data from ConsumerWrapper.
 			-- Reference type of `Current'.
 		do
 			if internal_associated_reference_type = Void then
-				create internal_associated_reference_type.make (dotnet_name, 1 + assembly_id_offset)
+				create internal_associated_reference_type.make (dotnet_name, 1)
 				-- FIXME IEK The assembly id of 1 has to be checked
 			end
 			Result := internal_associated_reference_type

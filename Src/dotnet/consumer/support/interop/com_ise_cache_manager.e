@@ -106,7 +106,7 @@ feature -- Basic Oprtations
 		end
 		
 	assembly_info_from_assembly (apath: SYSTEM_STRING): COM_ASSEMBLY_INFORMATION is
-			-- retrieve the assembly information from a assembly
+			-- retrieve a local assembly's information
 		require
 			non_void_path: apath /= Void
 			non_empty_path: apath.get_length > 0

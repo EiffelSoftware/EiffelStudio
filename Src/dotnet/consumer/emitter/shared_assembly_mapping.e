@@ -5,12 +5,6 @@ indexing
 
 class
 	SHARED_ASSEMBLY_MAPPING
-	
-inherit
-	SHARED_TYPE_ID
-		export
-			{NONE} all
-		end
 
 feature -- Access
 
@@ -40,11 +34,11 @@ feature -- Access
 						l_name := t.get_full_name
 						create {CONSUMED_ARRAY_TYPE} Result.make (
 							create {STRING}.make_from_cil (t.get_full_name),
-							am.found_item + assembly_id_offset,
+							am.found_item,
 							referenced_type_from_type (t.get_element_type))
 					else
 						create Result.make (create {STRING}.make_from_cil (t.get_full_name),
-							am.found_item + assembly_id_offset)
+							am.found_item)
 					end
 				end
 			end

@@ -16,7 +16,10 @@ inherit
 			linear_representation
 		end
 		
-	MT_RS_CONTAINABLE 
+	MT_RS_CONTAINABLE
+		undefine
+			copy, is_equal
+		end
 	
 creation
 	make

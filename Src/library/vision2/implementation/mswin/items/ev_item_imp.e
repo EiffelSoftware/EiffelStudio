@@ -15,7 +15,8 @@ inherit
 
 	EV_PIXMAPABLE_IMP
 		redefine
-			interface
+			interface,
+			pixmap_equal_to
 		end
 
 	EV_PICK_AND_DROPABLE_ITEM_IMP

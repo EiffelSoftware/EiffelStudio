@@ -23,6 +23,7 @@
 #include "hector.h"
 #include "size.h"
 #include "option.h"
+#include "bits.h"
 
 #ifdef __cplusplus
 extern "C" {

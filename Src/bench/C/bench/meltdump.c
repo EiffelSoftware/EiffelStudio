@@ -1,6 +1,8 @@
-#include            <stdio.h>
-#include            <malloc.h>
-#include            "melted.h"
+#include <stdlib.h>
+#include <stdio.h>
+#include <malloc.h>
+#include <memory.h>
+#include "melted.h"
 
 /*------------------------------------------------------------------*/
 
@@ -104,7 +106,6 @@ static  void    prepare_types ()
 {
 	long    count, acount, i, ctype;
 	short   slen, pcount, dtype;
-	char    c;
 	char    *dname;
 
 	(void) rchar ();
@@ -126,6 +127,8 @@ static  void    prepare_types ()
 	{
 		fprintf (stderr, "Out of memory\n");
 		panic ();
+	} else {
+		memset (dtype_names, 0, dtype_size * sizeof (char *));
 	}
 
 	ctype_size  = 256;
@@ -136,6 +139,8 @@ static  void    prepare_types ()
 	{
 		fprintf (stderr, "Out of memory\n");
 		panic ();
+	} else {
+		memset (ctype_names, 0, ctype_size * sizeof (char *));
 	}
 
 	count = rlong ();
@@ -144,7 +149,7 @@ static  void    prepare_types ()
 	{
 		dtype = rshort ();
 		slen  = rshort ();
-		dname = malloc (slen + 1);
+		dname = malloc (slen + 2);
 
 		if (dname == (char *) 0)
 		{
@@ -167,7 +172,9 @@ static  void    prepare_types ()
 
 		if (dtype >= dtype_size)
 		{
-			dtype_size += 256;
+			int old_size = dtype_size;
+
+			dtype_size = ((dtype_size + 256) > dtype ? dtype_size : dtype + 256) ;
 
 			dtype_names = (char **) realloc ((char *) dtype_names,
 											 dtype_size * sizeof (char *));
@@ -175,6 +182,8 @@ static  void    prepare_types ()
 			{
 				fprintf (stderr, "Out of memory\n");
 				panic ();
+			} else {
+				memset (dtype_names + old_size, 0, (dtype_size - old_size) * sizeof (char *));
 			}
 		}
 
@@ -237,7 +246,9 @@ static  void    prepare_types ()
 
 		if (ctype >= ctype_size)
 		{
-			ctype_size += 256;
+			int old_size = ctype_size;
+
+			ctype_size = ((ctype_size + 256) > ctype ? ctype_size : ctype + 256) ;
 
 			ctype_names = (char **) realloc ((char *) ctype_names,
 											 ctype_size * sizeof (char *));
@@ -245,6 +256,8 @@ static  void    prepare_types ()
 			{
 				fprintf (stderr, "Out of memory\n");
 				panic ();
+			} else {
+				memset (ctype_names + old_size, 0, (ctype_size - old_size) * sizeof (char *));
 			}
 		}
 
@@ -258,8 +271,6 @@ static  void    prepare_types ()
 static  void    analyze_file ()
 
 {
-	long    count;
-
 	if (rchar ())
 	{
 		fprintf (mfp, "Needs update   : YES\n");
@@ -314,7 +325,6 @@ static  void    analyze_cnodes ()
 {
 	long    count, acount, i, ctype;
 	short   slen, pcount, pid, dtype;
-	char    c;
 	char    *dname;
 
 	printf ("Analyzing Cnodes\n");
@@ -334,7 +344,7 @@ static  void    analyze_cnodes ()
 
 		slen = rshort ();
 
-		dname = malloc (slen + 1);
+		dname = malloc (slen + 2);
 
 		if (dname == (char *) 0)
 		{
@@ -602,7 +612,7 @@ static  void    analyze_dispatch_table ()
 static  void    read_byte_code ()
 
 {
-	long    body_id, bsize, pattern_id;
+	long    body_id, bsize;
 	int     i;
 
 	printf ("Analyzing Byte code\n");
@@ -692,7 +702,7 @@ static  void    read_byte_code ()
 			panic ();
 		}
 
-		if (fwrite (melt [body_id], sizeof (char), bsize, bfp) != bsize)
+		if (fwrite (melt [body_id], sizeof (char), bsize, bfp) != (size_t) bsize)
 		{
 			fprintf (stderr,"Write error\n");
 			panic ();
@@ -753,8 +763,7 @@ static  void    analyze_conformance ()
 static  void    analyze_parents ()
 
 {
-	short   dtype, gcount, i;
-	int     asize;
+	short   dtype, gcount;
 	char    c;
 
 	printf ("Analyzing Parents\n");
@@ -1005,8 +1014,8 @@ static  void    analyze_desc ()
 /*
 					fprintf (mfp,"  I/T : [%5d, %5d]\n", (int) info, (int) type);
 */
-					dinfo [i++] = info;
-					dinfo [i++] = type;
+					dinfo [i++] = (short) info;
+					dinfo [i++] = (short) type;
 /* GENERIC CONFORMANCE */
 
 					while (rshort() != -1)
@@ -1128,7 +1137,7 @@ static  char    *rbuf (int size)
 		panic ();
 	}
 
-	if (fread (result, sizeof (char), size, ifp) != size)
+	if (fread (result, sizeof (char), size, ifp) != (size_t) size)
 	{
 		fprintf (stderr,"Read error (rbuf)\n");
 		free (result);

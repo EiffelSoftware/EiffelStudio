@@ -228,7 +228,7 @@ MT_FINAL_OBJECTS = \
 	$(INDIR)\MToption.$obj \
 	$(INDIR)\MTconsole.$obj \
 	$(TOP)\idrs\mtidrs.$obj \
-	$(INDIR)\MTrun_idrs.$obj \
+	$(INDIR)\MTrun_idr.$obj \
 	$(INDIR)\MTpath_name.$obj \
 	$(INDIR)\MTobject_id.$obj \
 	$(INDIR)\MTcompress.$obj \

@@ -1,30 +1,16 @@
 indexing
-
-	description:
-		"A datagram packet for use with datagram sockets.";
-
-	status: "See notice at end of class";
-	date: "$Date$";
+	description: "A datagram packet for use with datagram sockets."
+	status: "See notice at end of class"
+	date: "$Date$"
 	revision: "$Revision$"
 
 class
-
 	DATAGRAM_PACKET 
 
 inherit
-
-	PACKET
-		rename
-			make as old_make
-		redefine
-			valid_position, put_element, element
-		end
-
 	PACKET
 		redefine
 			make, valid_position, put_element, element
-		select
-			make
 		end
 
 creation
@@ -36,7 +22,7 @@ feature -- Initialization
 	make (size: INTEGER) is
 			-- Create a packet of buffer size `size'.
 		do
-			old_make (size + c_packet_number_size)
+			Precursor {PACKET} (size + c_packet_number_size)
 		end
 
 feature -- Measurement
@@ -52,31 +38,31 @@ feature -- Status_report
 	data_info: PACKET is
 			-- Return received data packet.
 		local
-			ext: ANY
+			l_count: INTEGER
 		do
-			create Result.make (data_area_size);
-			ext := Result.data;
-			c_get_data ($ext, $data, Result.count)
-		end;
+			l_count:= data_area_size
+			create Result.make (l_count)
+			Result.data.area.memory_copy (data.area + c_packet_number_size, l_count)
+		end
 
 	packet_number: INTEGER is
 			-- Packet number of this packet
 		require
 			data_not_void: data /= Void
 		do
-			Result := c_get_number ($data)
-		end;
+			Result := c_get_number (data.area)
+		end
 
 	valid_position (pos: INTEGER): BOOLEAN is
 			-- Is the position `pos' a valid data position?
 		do
 			Result := (pos >= 0 and pos < data_area_size)
-		end;
+		end
 
 	element (pos: INTEGER): CHARACTER is
 			-- Element located at data position `pos'
 		do
-			Result := data.item (pos + c_packet_number_size)
+			Result := data.item (pos + c_packet_number_size).ascii_char
 		end
 
 feature -- Status_setting
@@ -85,28 +71,25 @@ feature -- Status_setting
 			-- Set the data area of `p' into the current data area.
 		require
 			large_enough: p /= Void and then p.count <= data_area_size
-		local
-			ext: ANY
 		do
-			ext := p.data;
-			c_set_data ($data, $ext, p.count)
-		end;
+			(data.area + c_packet_number_size).memory_copy (p.data.area, p.count)
+		end
 
 	set_packet_number (n: INTEGER) is
 			-- Set packet number of current packet.
 		require
-			number_big_enough: n >= c_int32_min;
+			number_big_enough: n >= c_int32_min
 			number_small_enough: n <= c_int32_max
 		do
-			c_set_number ($data, n)
+			c_set_number (data.area, n)
 		ensure
 			number_set: packet_number = n
-		end;
+		end
 
 	put_element (an_item: CHARACTER; pos: INTEGER) is
 			-- Put `an_item' at data position `pos'.
 		do
-			data.put (an_item, (pos + c_packet_number_size))
+			data.put (an_item.code.to_integer_8, (pos + c_packet_number_size))
 		ensure then
 			element_put: element (pos) = an_item
 		end
@@ -116,31 +99,19 @@ feature {NONE} -- Externals
 	c_packet_number_size: INTEGER is
 			-- Offset to effectively access the data in the packet
 		external
-			"C"
-		end;
+			"C macro use %"eif_eiffel.h%""
+		alias
+			"sizeof(uint32)"
+		end
 
 	c_get_number (pd: POINTER): INTEGER is
 			-- Get packet number from the `pd' pointed data area.
 		external
 			"C"
-		end;
+		end
 
 	c_set_number (pd: POINTER; num: INTEGER) is
 			-- Set packet number with ` num' in the `pd' pointed data area.
-		external
-			"C"
-		end;
-
-	c_set_data (pd, sd: POINTER; sd_count: INTEGER) is
-			-- Set the data from `pd' pointed area into the `sd'
-			-- pointed area with `sd_count' amount of bytes.
-		external
-			"C"
-		end;
-
-	c_get_data (rd, pd: POINTER; pd_count: INTEGER) is
-			-- Get the data from `rd' pointed area into the `pd'
-			-- pointed area with `sd_count' amount of bytes.
 		external
 			"C"
 		end
@@ -153,7 +124,7 @@ feature -- Externals
 			"C [macro %"eif_portable.h%"]"
 		alias
 			"INT32_MIN"
-		end;
+		end
 
 	c_int32_max: INTEGER is
 			-- Max value for signed integer 32 bits

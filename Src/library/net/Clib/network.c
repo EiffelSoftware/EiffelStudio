@@ -1112,13 +1112,7 @@ void c_set_non_blocking(EIF_INTEGER fd)
 #endif
 }
 
-EIF_INTEGER c_packet_number_size(void)
-	/*x size of packet number data structure in packet */
-{
-	return (EIF_INTEGER) (sizeof(uint32));
-}
-
-EIF_INTEGER c_get_number(EIF_OBJECT data_obj)
+EIF_INTEGER c_get_number(EIF_POINTER data_obj)
 	/*x packet number out of packet structure */
 {
 	/* Note: it is assumed here the size of a long integer (EIF_INTEGER)
@@ -1145,7 +1139,7 @@ EIF_INTEGER c_get_number(EIF_OBJECT data_obj)
 #endif
 }
 
-void c_set_number(EIF_OBJ data_obj, EIF_INTEGER num)
+void c_set_number(EIF_POINTER data_obj, EIF_INTEGER num)
 	/*x set packet number in packet structure */
 {
 	/* Note: it is assumed here the size of a long integer (EIF_INTEGER)
@@ -1165,19 +1159,6 @@ void c_set_number(EIF_OBJ data_obj, EIF_INTEGER num)
 	memcpy(((char *) data_obj), &value, sizeof(uint32));
 #endif
 }
-
-void c_set_data(EIF_OBJ pdata_obj, EIF_OBJ sdata_obj, EIF_INTEGER count)
-	/*x copy count amout of bytes from pdata_obj into sdata_obj */
-{
-	memcpy(sdata_obj, (pdata_obj + c_packet_number_size()), count);
-}
-
-void c_get_data(EIF_OBJ rdata_obj, EIF_OBJ pdata_obj, EIF_INTEGER count)
-	/*x copy count amount of bytes from rdata_obj into pdata_obj */
-{
-	memcpy((pdata_obj + c_packet_number_size()), rdata_obj, count);
-}
-
 
 void c_shutdown(EIF_INTEGER sock, EIF_INTEGER how)
 	/*x shut down a socket with `how' modality */

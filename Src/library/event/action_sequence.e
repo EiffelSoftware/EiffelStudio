@@ -113,7 +113,7 @@ feature -- Basic operations
 					is_aborted_stack.extend (False)
 					snapshot.start
 				variant
-					snapshot.count - snapshot.index
+					snapshot.count + 1 - snapshot.index
 				until
 					snapshot.after
 					or is_aborted_stack.item
@@ -406,6 +406,9 @@ end
 --|-----------------------------------------------------------------------------
 --| 
 --| $Log$
+--| Revision 1.15  2000/03/01 03:08:58  oconnor
+--| fixed look invariant in call
+--|
 --| Revision 1.14  2000/02/25 20:28:16  oconnor
 --| Removed cursor_stack.
 --| Copy contents of action sequence into local `snapshot' in `call'.

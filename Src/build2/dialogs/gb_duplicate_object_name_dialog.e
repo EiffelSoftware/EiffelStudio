@@ -30,4 +30,5 @@ feature {NONE} -- Initialization
 			set_default_push_button(button ("Modify"))
 			set_default_cancel_button(button (ev_cancel))
 		end
+		
 end -- class GB_DUPLICATE_OBJECT_NAME_DIALOG

@@ -95,7 +95,7 @@ feature -- Status
 			is_in_register := register /= Void and register /= No_register
 			if is_in_register and register.c_type.is_pointer then
 					-- Access is stored in a pointer register
-				Result := true
+				Result := True
 			else
 				if parent = Void or else parent.target.is_current then
 						-- True access: we may need Current.
@@ -156,7 +156,7 @@ feature -- Status
 				-- If it is predefined, then it is single.
 			Result := is_predefined
 			if not Result then
-				Result := true
+				Result := True
 					-- It is not predefined. If it has parameters, then none
 					-- of them may have a call or allocate memory (manifest arrays,
 					-- strings, ...).
@@ -169,7 +169,7 @@ feature -- Status
 						i = nb or not Result
 					loop
 						expr_b := l_area.item (i)
-						Result := not (expr_b.has_call or else expr_b.allocates_memory)
+						Result := not expr_b.allocates_memory and not expr_b.has_call
 						i := i + 1
 					end
 				end
@@ -179,7 +179,7 @@ feature -- Status
 	is_polymorphic: BOOLEAN is
 			-- Is the access polymorphic ?
 		do
-			Result := false
+			Result := False
 		end
 
 feature -- Element change

@@ -3,12 +3,13 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class EXTERNAL_AS
+class
+	EXTERNAL_AS
 
 inherit
 	ROUT_BODY_AS
 		redefine
-			byte_node, type_check, is_external
+			is_external
 		end
 
 	EXTERNAL_CONSTANTS
@@ -32,6 +33,13 @@ feature {AST_FACTORY} -- Initialization
 			end
 		ensure
 			language_name_set: language_name = l
+		end
+
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
 		end
 
 feature -- Attributes

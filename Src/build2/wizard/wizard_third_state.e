@@ -50,7 +50,10 @@ feature -- Basic Operation
 			end
 			debugging_information.select_actions.extend (agent update_debugging_information)
 			
-			choice_box.extend (locals_grouped)
+			-- Effectively removed from wizard, as it is not very important.
+			-- For now, it can jsut stay here, but if it is really going to be
+			-- removed for good, then just take it out.
+			--choice_box.extend (locals_grouped)
 			choice_box.extend (attributes_local)
 			choice_box.extend (debugging_information)
 			set_updatable_entries(<<>>)
@@ -108,18 +111,20 @@ feature {NONE} -- Implementation
 				project_settings.disable_debugging_output
 			end
 		end
-		
-		
-		
-		
+
 	locals_grouped: EV_CHECK_BUTTON
+		-- Should all local declarations be grouped, or individual?
 	
 	attributes_local: EV_CHECK_BUTTON
+		-- Should attributes be declared locally, or as attributes
+		-- of the class?
 	
 	debugging_information: EV_CHECK_BUTTON
+		-- Should debugging information be generated for each
+		-- connected event.
 	
 	project_settings: GB_PROJECT_SETTINGS is
-			-- 
+			-- `Result' is current project settings of the system.
 		do
 			Result := system_status.current_project_settings
 		end

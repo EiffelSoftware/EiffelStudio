@@ -1,7 +1,5 @@
 indexing
-	description:
-		"Implementation of data resource factory"
-
+	description: "Implementation of data resource factory" 
 	status:	"See note at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -10,7 +8,6 @@ class
 	DATA_RESOURCE_FACTORY_IMPL
 
 create
-	
 	make
 
 feature {NONE} -- Initialization
@@ -171,14 +168,14 @@ feature {NONE} -- Implementation (Factory setup)
 				inspect
 					id
 				when 1 then
-					url_function := ~create_file_url
-					resource_function := ~create_file_resource
+					url_function := agent create_file_url
+					resource_function := agent create_file_resource
 				when 2 then
-					url_function := ~create_http_url
-					resource_function := ~create_http_resource
+					url_function := agent create_http_url
+					resource_function := agent create_http_resource
 				when 3 then
-					url_function := ~create_ftp_url
-					resource_function := ~create_ftp_resource
+					url_function := agent create_ftp_url
+					resource_function := agent create_ftp_resource
 				end
 			end
 		end

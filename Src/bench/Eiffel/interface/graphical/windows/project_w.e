@@ -24,34 +24,23 @@ inherit
 		export
 			{GRAPHICAL_DEGREE_OUTPUT} implementation
 		end;
-	EXCEPTIONS
-		rename
-			raise as raise_exception
-		end;
-	SET_WINDOW_ATTRIBUTES;
-	SHARED_APPLICATION_EXECUTION;
-	EXECUTION_ENVIRONMENT;
+	WINDOW_ATTRIBUTES;
 	INTERFACE_W;
 	EB_CONSTANTS;
+	SHARED_APPLICATION_EXECUTION;
 	RESOURCE_USER
 		redefine
 			update_integer_resource, update_boolean_resource
 		end;
 
-creation
-
-	make
-
 feature -- Initialization
 
-	make is
+	make (a_screen: SCREEN) is
 			-- Create a project application.
 		local
-			a_screen: SCREEN;
 			app_stopped_cmd: APPLICATION_STOPPED_CMD
 		do
 			Project_tool_resources.add_user (Current);
-			a_screen := ebench_display;
 			base_make (tool_name, a_screen);
 			!! history.make;
 			register;
@@ -142,24 +131,6 @@ feature -- Properties
 			!! Result
 		end;
 
-	ebench_display: SCREEN is
-		local
-			display_name: STRING;
-		do
-			!! Result.make ("");
-			if not Result.is_valid then
-				io.error.putstring ("Cannot open display %"");
-				display_name := get ("DISPLAY");
-				if display_name /= Void then
-					io.error.putstring (display_name);
-				end;
-				io.error.putstring ("%"%N%
-					%Check that $DISPLAY is properly set and that you are%N%
-					%authorized to connect to the corresponding server%N");
-				raise_exception ("Invalid display");
-			end;
-		end;
-
 	eb_shell: EB_SHELL is
 		do
 			Result := Void
@@ -209,14 +180,6 @@ feature -- Window Settings
 		end;
 
 feature -- Window Implementation
-
-	close_windows is 
-		local
-			cf: CHANGE_FONT
-		do 
-			cf ?= change_font_cmd_holder.associated_command;
-			cf.close
-		end;
 
 	popup_file_selection is
 		do
@@ -375,7 +338,6 @@ feature -- Execution Implementation
 				end
 			elseif arg = popdown then
 				is_project_tool_hidden := True;
-				close_windows;
 				window_manager.hide_all_editors;
 				if 	system_tool.realized and then system_tool.shown then
 					system_tool.hide;
@@ -401,6 +363,11 @@ feature -- Execution Implementation
 		end;
 
 feature -- Update
+
+	close_windows is
+			-- Close associated windows.
+		do
+		end;
 
 	clear_object_tool is
 			-- Clear the contents of the object tool if shown.
@@ -637,7 +604,6 @@ feature -- Graphical Interface
 			!! menu_bar.make (new_name, std_form);
 			!! file_menu.make ("File", menu_bar);
 			!! edit_menu.make ("Edit", menu_bar);
-			edit_menu.button.set_insensitive;
 			!! compile_menu.make ("Compile", menu_bar);
 			!! debug_menu.make ("Debug", menu_bar);
 			!! format_menu.make ("Formats", menu_bar);
@@ -646,6 +612,7 @@ feature -- Graphical Interface
 			!! help_menu.make ("Help", menu_bar);
 			menu_bar.set_help_button (help_menu.menu_button);
 
+			!! sep.make ("", edit_menu);
 				--| Creation of empty menus that are disabled goes here,
 				--| for we want to create the object and / or feature portion
 				--| on demand and not on purpose.
@@ -692,8 +659,6 @@ feature -- Graphical Interface
 			quit_cmd: QUIT_PROJECT;
 			quit_button: EB_BUTTON;
 			quit_menu_entry: EB_MENU_ENTRY;
-			change_font_cmd: CHANGE_FONT;
-			change_font_button: EB_BUTTON;
 			explain_cmd: EXPLAIN_HOLE;
 			explain_button: EB_BUTTON_HOLE;
 			explain_menu_entry: EB_MENU_ENTRY;
@@ -706,6 +671,8 @@ feature -- Graphical Interface
 			routine_cmd: ROUTINE_HOLE;
 			routine_button: EB_BUTTON_HOLE;
 			routine_menu_entry: EB_MENU_ENTRY;
+			shell_cmd: SHELL_COMMAND;
+			shell_button: EB_BUTTON_HOLE;
 			object_cmd: OBJECT_HOLE;
 			object_button: EB_BUTTON_HOLE;
 			object_menu_entry: EB_MENU_ENTRY;
@@ -731,13 +698,14 @@ feature -- Graphical Interface
 			update_menu_entry: EB_MENU_ENTRY;
 			version_button: PUSH_B;
 		do
-			!! open_command.make (text_window);
+			!! open_command.make (Current);
 			!! classic_bar.make (l_Command_bar_name, toolbar_parent);
-			!! quit_cmd.make (text_window);
+			!! quit_cmd.make (Current);
 			!! quit_menu_entry.make (quit_cmd, file_menu);
 			!! quit_cmd_holder.make_plain (quit_cmd);
 			quit_cmd_holder.set_menu_entry (quit_menu_entry);
 			!! version_button.make (Version_number, help_menu);
+			build_edit_menu (classic_bar);
 
 				-- Close all command
 			!! close_all.make (Current);
@@ -767,6 +735,8 @@ feature -- Graphical Interface
 			!! routine_button.make (routine_cmd, classic_bar);
 			!! routine_menu_entry.make (routine_cmd, open_routines_menu);
 			!! routine_hole_holder.make (routine_cmd, routine_button, routine_menu_entry);
+			!! shell_cmd.make (Current);
+			!! shell_button.make (shell_cmd, classic_bar);
 			!! object_cmd.make (Current);
 			!! object_button.make (object_cmd, classic_bar);
 			!! object_menu_entry.make (object_cmd, open_objects_menu);
@@ -782,28 +752,23 @@ feature -- Graphical Interface
 			!! clear_bp_menu_entry.make (clear_bp_cmd, debug_menu);
 			!! clear_bp_cmd_holder.make (clear_bp_cmd, clear_bp_button, clear_bp_menu_entry);
 
-			!! show_prof_cmd.make (text_window);
+			!! show_prof_cmd.make (Current);
 			!! show_prof_menu_entry.make (show_prof_cmd, window_menu);
 			!! show_profile_cmd_holder.make_plain (show_prof_cmd);
 			show_profile_cmd_holder.set_menu_entry (show_prof_menu_entry);
 
-			!! change_font_cmd.make (text_window);
-			--if not change_font_cmd.tabs_disabled then
-				--change_font_button.add_button_press_action (3, change_font_cmd, change_font_cmd.tab_setting)
-			--end;
-			!! change_font_cmd_holder.make_plain (change_font_cmd);
 			!! sep.make ("", window_menu);
-			!! show_pref_cmd.make (text_window);
+			!! show_pref_cmd.make (Current);
 			!! show_pref_menu_entry.make (show_pref_cmd, window_menu);
 			!! show_preference_cmd_holder.make_plain (show_pref_cmd);
 			show_preference_cmd_holder.set_menu_entry (show_pref_menu_entry);
 
-			!! display_feature_cmd.make (text_window);
+			!! display_feature_cmd.make (Current);
 			!! display_feature_button.make (display_feature_cmd, classic_bar);
 			!! display_feature_menu_entry.make (display_feature_cmd, format_menu);
 			!! display_feature_cmd_holder.make (display_feature_cmd, display_feature_button, display_feature_menu_entry);
 
-			!! display_object_cmd.make (text_window);
+			!! display_object_cmd.make (Current);
 			!! display_object_button.make (display_object_cmd, classic_bar);
 			!! display_object_menu_entry.make (display_object_cmd, format_menu);
 			!! display_object_cmd_holder.make (display_object_cmd, display_object_button, display_object_menu_entry);
@@ -824,9 +789,12 @@ feature -- Graphical Interface
 			classic_bar.attach_top (class_button, 0);
 			classic_bar.attach_bottom (class_button, 0);
 			classic_bar.attach_left_widget (class_button, routine_button, 0);
+			classic_bar.attach_left_widget (routine_button, shell_button, 0);
 			classic_bar.attach_top (routine_button, 0);
 			classic_bar.attach_bottom (routine_button, 0);
-			classic_bar.attach_left_widget (routine_button, object_button, 0);
+			classic_bar.attach_top (shell_button, 0);
+			classic_bar.attach_bottom (shell_button, 0);
+			classic_bar.attach_left_widget (shell_button, object_button, 0);
 			classic_bar.attach_top (object_button, 0);
 			classic_bar.attach_bottom (object_button, 0);
 			classic_bar.attach_left_widget (object_button, clear_bp_button, 0);
@@ -839,6 +807,9 @@ feature -- Graphical Interface
 			classic_bar.attach_right (update_button, 0);
 			classic_bar.attach_top (update_button, 0);
 			classic_bar.attach_bottom (update_button, 0);
+			classic_bar.attach_top (search_cmd_holder.associated_button, 0);
+			classic_bar.attach_bottom (search_cmd_holder.associated_button, 0);
+			classic_bar.attach_right_widget (update_button, search_cmd_holder.associated_button, 3);
 
 			classic_bar.attach_left_widget (stop_points_button, display_feature_button, 60);
 			classic_bar.attach_top (display_feature_button, 0);
@@ -888,7 +859,7 @@ feature -- Graphical Interface
 			debug_run_button.set_action ("!c<Btn1Down>", debug_run_cmd, debug_run_cmd.melt_and_run);
 			!! debug_run_menu_entry.make (debug_run_cmd, debug_menu);
 			!! debug_run_cmd_holder.make (debug_run_cmd, debug_run_button, debug_run_menu_entry);
-			!! debug_status_cmd.make (text_window);
+			!! debug_status_cmd.make (Current);
 			!! debug_status_button.make (debug_status_cmd, format_bar);
 			!! debug_status_menu_entry.make (debug_status_cmd, debug_menu);
 			!! debug_status_cmd_holder.make (debug_status_cmd, debug_status_button, debug_status_menu_entry);
@@ -905,7 +876,7 @@ feature -- Graphical Interface
 			!! down_exception_stack_holder.make (display_exception_cmd,
 						down_exception_stack_button, display_exception_menu_entry);
 
-			!! debug_quit_cmd.make (text_window);
+			!! debug_quit_cmd.make (Current);
 			!! debug_quit_button.make (debug_quit_cmd, format_bar);
 			debug_quit_button.set_action ("!c<Btn1Down>", debug_quit_cmd, debug_quit_cmd.kill_it);
 			!! debug_quit_menu_entry.make (debug_quit_cmd, debug_menu);
@@ -936,7 +907,7 @@ feature -- Graphical Interface
 
 			!! sep.make (new_name, debug_menu)
 
-			!! run_final_cmd.make (text_window);
+			!! run_final_cmd.make (Current);
 			!! run_final_menu_entry.make (run_final_cmd, debug_menu);
 			!! run_final_cmd_holder.make_plain (run_final_cmd);
 			run_final_cmd_holder.set_menu_entry (run_final_menu_entry);
@@ -985,7 +956,7 @@ feature -- Graphical Interface
 			precompile_cmd: PRECOMPILE_PROJECT;
 			precompile_menu_entry: EB_MENU_ENTRY;
 		do
---			!! special_cmd.make (text_window);
+--			!! special_cmd.make (Current);
 --			!! special_cmd_holder.make_plain (special_cmd);
 -- This becomes a general purpose about box.
 
@@ -1083,8 +1054,6 @@ feature -- Commands
 	finalize_cmd_holder: COMMAND_HOLDER;
 
 	precompile_cmd_holder: COMMAND_HOLDER;
-
-	change_font_cmd_holder: COMMAND_HOLDER;
 
 	run_final_cmd_holder: COMMAND_HOLDER;
  
@@ -1229,13 +1198,27 @@ feature {NONE} -- Implementation
 		local
 			sep: SEPARATOR;
 			entry: EB_MENU_ENTRY;
-			cmd: RAISE_TOOL_CMD
+			cmd: RAISE_TOOL_CMD;
+			a_font: FONT;
+			a_color: COLOR
 		do
 			if a_menu.children_count = 1 then
 				!! sep.make ("", a_menu);
 			end
 			!! cmd.make (a_tool)
 			!! entry.make_tools_menu (cmd, a_menu)
+			a_font := Graphical_resources.font.actual_value;
+			if a_font /= Void then
+				entry.set_font (a_font)
+			end;
+			a_color := Graphical_resources.background_color.actual_value;
+			if a_color /= Void then
+				entry.set_background_color (a_color)
+			end;
+			a_color := Graphical_resources.foreground_color.actual_value;
+			if a_color /= Void then
+				entry.set_foreground_color (a_color)
+			end
 		end;
 
 	change_tool_in_menu (a_tool: BAR_AND_TEXT; a_menu: MENU_PULL) is

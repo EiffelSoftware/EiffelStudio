@@ -134,9 +134,8 @@ feature {COMPILER_EXPORTER}
 			-- to T.
 			-- Otherwise, computed type of Current conforms to A.
 		local
-			gen_type, array_type: GEN_TYPE_A
+			gen_type: GEN_TYPE_A
 			generic_param, type_a: TYPE_A
-			l_generics: ARRAY [TYPE_A]
 			i, nb: INTEGER
 		do
 			nb := count

@@ -72,6 +72,13 @@ gunzip -c $EXPORT_DIR/build/build.gz > $INSTALL_DIR/build/spec/$ISE_PLATFORM/bin
 chmod a+rx $INSTALL_DIR/build/spec/$ISE_PLATFORM/bin/build
 chmod go-w $INSTALL_DIR/build/spec/$ISE_PLATFORM/bin/build 
 
+remtrace copying CD key validator
+move setup $INSTALL_DIR/register
+chmod a+rx $INSTALL_DIR/register
+mkdir $INSTALL_DIR/setup
+cp $INSTALL_DIR/studio/bitmaps/png/logo.png $INSTALL_DIR/setup/install_logo.png
+cp $INSTALL_DIR/studio/bitmaps/png/activation.png $INSTALL_DIR/setup/install_left.png
+
 remtrace Building Enterprise CD image
 mv Eiffel53 cdrom
 cp cdrom/Eiffel53/INSTALL cdrom	

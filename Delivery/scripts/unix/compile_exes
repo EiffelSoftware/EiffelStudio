@@ -201,11 +201,14 @@ cd $EXPORT_DIR/build2/modified_libraries/exml/lib/implementation/expat/compiler_
 default_make
 cd $EXPORT_DIR/build
 untgz_ccode build
-strip build
 gzip build
 if [ -z "$MULTIPLE_EDITIONS" ]; then
 	gunzip -c build.gz > $INSTALL_DIR/build/spec/$ISE_PLATFORM/bin
 fi
+
+remtrace Recompile CD key validator
+cd $EXPORT_DIR
+untgz_ccode setup
 
 remtrace Recompile EiffelStudio
 cd $EXPORT_DIR
@@ -214,7 +217,6 @@ safe_md $EXPORT_DIR/ecs
 remtrace Enterprise edition
 cp ec.tar.gz ec.tar.gz.old
 untgz_ccode ec
-strip ec
 gzip ec
 move ec.gz $EXPORT_DIR/ecs/ec_enterprise.gz
 
@@ -225,7 +227,6 @@ else
 	cp ecfree.tar.gz ecfree.tar.gz.old
 	move ecfree.tar.gz ec.tar.gz
 	untgz_ccode ec
-	strip ec
 	gzip ec
 	move ec.gz $EXPORT_DIR/ecs/ec_free.gz
 fi

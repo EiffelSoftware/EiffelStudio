@@ -110,3 +110,19 @@ fi
 clean_project
 move quick_finalize.tar.gz $EXPORT_DIR
 
+remtrace Compiling CD key validator
+cd $EIFFEL_SRC
+mkdir tools
+cd tools
+exprt -r $DEFAULT_CVS_TAG -d cd_key_validator Src/tools/cd_key_validator
+cd cd_key_validator/eiffel_studio_52
+clean_project
+finalize ace.unix.ace
+tgz_ccode setup
+if [ ! -f setup.tar.gz ]; then
+	echo Could not finalize a new setup
+	CANCEL
+fi
+clean_project
+move setup.tar.gz $EXPORT_DIR
+

@@ -91,7 +91,6 @@ feature
 				end;
 
 					-- Update the freeze list for changed hash tables.
-				System.freeze_set2.put (associated_class);
 				System.melted_set.put (associated_class);
 			elseif (assert_prop_list /= Void) then
 					-- Propagation of assertion modifications only.

@@ -8,6 +8,16 @@ BODY {
 	WIDTH=100%;
 }
 
+TABLE {
+	BACKGROUND=#FFFEEF;
+	FONT-FAMILY=Verdana, Arial, Helvetica, sans-serif;
+	MARGIN=5px 5px 5px 5px;
+	PADDING=0px 0px 0px 0px;
+	COLOR=#000000;
+	FONT-SIZE=100%;
+	WIDTH=90%;
+}
+
 OL, UL {
 	MARGIN-TOP=.5em;
 	MARGIN-BOTTOM=2em; 
@@ -63,6 +73,11 @@ PRE.SYNTAX {
 
 TD, SPAN, DIV {
 	PADDING-BOTTOM=0.4mm; 
+}
+
+TD {
+	PADDING-BOTTOM=0.4mm; 
+	BACKGROUND=#EEEDDE;	
 }
 
 IMG {
@@ -191,4 +206,8 @@ A:hover {
 .nolink1, .nolink2 {
 	BACKGROUND-COLOR=#FFCC00;
 	COLOR=#330066;
+}
+
+.seealso {
+	BACKGROUND-COLOR=#DDDDDD;
 }

@@ -28,9 +28,6 @@ inherit
 
 	EV_TEXT_COMPONENT_IMP
 		export {EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP}
-			on_left_button_down,
-			on_middle_button_down,
-			on_right_button_down,
 			on_left_button_up,
 			on_middle_button_up,
 			on_right_button_up,
@@ -44,7 +41,11 @@ inherit
 			on_kill_focus,
 			on_set_cursor
 		undefine
-			height
+			height,
+			on_right_button_down,
+			on_middle_button_down,
+			on_left_button_down,
+			pnd_press
 		redefine
 			set_minimum_width_in_characters,
 			set_default_minimum_size,
@@ -346,6 +347,15 @@ feature -- Basic operation
 		end
 
 feature {NONE} -- Implementation
+
+	internal_propagate_pointer_press (keys, x_pos, y_pos, button: INTEGER) is
+		-- Propagate `keys', `x_pos' and `y_pos' to the appropriate item event.
+		do
+			--|FIXME Implement
+			check
+				False
+			end
+		end
 
 	is_item_imp_selected (li_imp: EV_LIST_ITEM_IMP): BOOLEAN is
 			-- Is `li_imp' selected?
@@ -688,6 +698,9 @@ end -- class EV_COMBO_BOX_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.69  2000/04/11 17:02:39  rogers
+--| Added internal_propagate_pointer_press.
+--|
 --| Revision 1.68  2000/04/06 17:01:42  rogers
 --| Undefined count from WEL_COMBO_BOX_eXbutton_rectangle: WEL_RECT
 --|

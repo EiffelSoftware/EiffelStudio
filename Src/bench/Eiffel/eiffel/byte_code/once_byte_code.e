@@ -32,7 +32,9 @@ feature
 			type_i := real_type (result_type);
 			generated_file.putstring ("if (MTOG((");
 			type_i.c_type.generate (generated_file);
-			generated_file.putstring ("*),*key,PResult))");
+			generated_file.putstring ("*),*(EIF_once_values + EIF_oidx_off + ");
+			generated_file.putint (context.once_index);
+			generated_file.putstring ("),PResult))");
 			generated_file.new_line;
 			generated_file.indent;
 				-- Full generation for a once function, but a single
@@ -62,7 +64,7 @@ feature
 						-- 'PResult' won't be set via the key.
 					generated_file.putstring ("PResult = (");
 					type_i.c_type.generate (generated_file);
-					generated_file.putstring ("*) RTOC((char **)0);");
+					generated_file.putstring ("*) RTOC(0);");
 				else
 					-- If not a reference, we need to allocate some place
 					-- where to store the Result (We can't store Result
@@ -79,7 +81,9 @@ feature
 				generated_file.putstring ("*) 1;");
 			end;
 			generated_file.new_line;
-			generated_file.putstring ("MTOS(*key,PResult);");
+			generated_file.putstring ("MTOS(*(EIF_once_values + EIF_oidx_off + ");
+			generated_file.putint (context.once_index);
+			generated_file.putstring ("),PResult);");
 			generated_file.new_line;
 			if context.workbench_mode then
 					-- Real body id to be stored in the id list of already
@@ -96,15 +100,8 @@ feature
 
 	generate_result_declaration is
 			-- Generate declaration of the Result entity
-		local
-			ctype: TYPE_C;
 		do
-			ctype := real_type (result_type).c_type;
-			ctype.generate (generated_file);
-			generated_file.putstring ("Result = ");
-			ctype.generate_cast (generated_file);
-			generated_file.putstring ("0;");
-			generated_file.new_line;
+			generated_file.putstring ("%N#define Result *PResult%N");
 		end;
 
 feature -- Inlining

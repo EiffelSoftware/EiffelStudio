@@ -11,6 +11,9 @@ inherit
 	EV_FILE_DIALOG_I
 
 	EV_SELECTION_DIALOG_IMP
+		redefine
+			add_dialog_close_command
+		end
 
 feature -- Access
 
@@ -45,7 +48,7 @@ feature -- Status report
 		local
 			p: POINTER
 		do
-			p := c_gtk_file_selection_get_file_name (widget)
+			p := c_gtk_selection_get_selection_entry (widget)
 			create Result.make (0)
 			Result.from_c (p)
 		end
@@ -55,7 +58,7 @@ feature -- Status report
 		local
 			p: POINTER
 		do
-			p := c_gtk_file_selection_get_dir_name (widget)
+			p := c_gtk_file_selection_get_dir (widget)
 			create Result.make (0)
 			Result.from_c (p)
 		end
@@ -139,6 +142,30 @@ feature -- Element change
 			gtk_file_selection_set_filename (widget, $a)
 		end
 
+feature {NONE} -- Basic operation
+
+	add_dialog_close_command (p: POINTER) is
+			-- Add a close command to the given pointer (gtk_button)
+			-- on a `clicked' signal.
+			-- redefined because for file dialogs, clicking on
+			-- the `ok' button should only only close the dialog
+			-- if there is a file selected.
+		local
+			cmd: EV_ROUTINE_COMMAND
+			arg: EV_ARGUMENT1 [EV_FILE_DIALOG_IMP]
+
+			list_com: EV_GTK_COMMAND_LIST			
+		do
+			if (p = ok_widget) then
+				create cmd.make (~ok_widget_execute)
+			else
+				create cmd.make (~execute)
+			end
+
+			create arg.make (Current)
+			add_command (p, "clicked", cmd, arg, default_pointer)
+		end
+
 feature -- Event - command association
 
 	add_ok_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
@@ -149,19 +176,19 @@ feature -- Event - command association
 			ok_close_command: EV_COMMAND
 			list_com: EV_GTK_COMMAND_LIST
 		do
-			-- We have to remove the close command and put it back
-			-- to have it executed after all commands.
-
-			-- Remove the close command.
-			(event_command_array @ ok_clicked_id).finish
-			ok_close_command := (event_command_array @ ok_clicked_id).command_list.item
-			remove_single_command (ok_widget, ok_clicked_id, ok_close_command)
+--			-- We have to remove the close command and put it back
+--			-- to have it executed after all commands.
+--
+--			-- Remove the close command.
+--			(event_command_array @ ok_clicked_id).finish
+--			ok_close_command := (event_command_array @ ok_clicked_id).command_list.item
+--			remove_single_command (ok_widget, ok_clicked_id, ok_close_command)
 
 			-- Add the command.
-			add_command (ok_widget, "clicked", cmd, arg)
+			add_command (ok_widget, "clicked", cmd, arg, default_pointer)
 
-			-- re-add a new close command.
-			add_dialog_close_command (ok_widget)
+--			-- re-add a new close command.
+--			add_dialog_close_command (ok_widget)
 		end
 
 feature -- Event -- removing command association
@@ -175,6 +202,23 @@ feature -- Event -- removing command association
 
 			-- re-add a new close command.
 			add_dialog_close_command (ok_widget)
+		end
+
+feature {EV_FILE_DIALOG_IMP} -- Execute procedure
+
+	ok_widget_execute (argument: EV_ARGUMENT1[EV_STANDARD_DIALOG_I]; data: EV_EVENT_DATA) is
+			-- Command to close the dialog when the user clicks
+			-- on the `ok' button, only if there is a file selected.
+		local
+			dialog_imp: EV_STANDARD_DIALOG_IMP
+		do
+			if (not file_name.is_equal ("")) then
+				dialog_imp ?= argument.first
+				dialog_imp.hide
+					-- Hide the gtk object
+					-- The user must no forget to destroy
+					-- the dialog when no more needed.
+			end
 		end
 
 end -- class EV_FILE_DIALOG_IMP

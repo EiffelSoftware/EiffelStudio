@@ -29,7 +29,9 @@ feature -- Creation of CLASS_TYPE skeleton
 				forth;
 				i := i + 1
 			end;
-			Result.sort
+			if i >= 1 then
+				Result.sort
+			end
 		end;
 
 feature -- Output

@@ -559,7 +559,14 @@ end
 		require
 			 good_argument: a_class /= Void
 		do
-			internal_remove_class (a_class, 0)
+				-- FIXME: Manu 08/07/2002: because of the way we initialize
+				-- EXTERNAL_CLASS_C from the XML, we are missing some information
+				-- that will generate incorrect VHPR error when removing an external
+				-- class from the system. Therefore, we never remove EXTERNAL_CLASS_C
+				-- from the system after they have been added.
+			if not a_class.is_true_external then
+				internal_remove_class (a_class, 0)
+			end
 		end
 
 	class_of_id (id: INTEGER): CLASS_C is

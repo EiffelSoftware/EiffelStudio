@@ -81,14 +81,8 @@ feature -- Query
 
 	context_last_type: TYPE_A is
 			-- Type of static access.
-		local
-			class_type_as: CLASS_TYPE_AS
 		do
-			class_type_as ?= class_type
-			check
-				class_type_as_not_void: class_type_as /= Void
-			end
-			Result := class_type_as.actual_type
+			Result := class_type.actual_type
 		end
 
 	associated_constant: CONSTANT_I is
@@ -109,7 +103,6 @@ feature -- Type check, byte code and dead code removal
 	type_check is
 			-- Type checking of a static access.
 		local
-			l_formal: FORMAL_A
 			l_gen_type: GEN_TYPE_A
 			l_type: TYPE_A
 			vsta1: VSTA1
@@ -117,9 +110,8 @@ feature -- Type check, byte code and dead code removal
 		do
 				-- Check validity of class specification
 			l_type := class_type.actual_type
-			l_formal ?= l_type
-			if l_formal /= Void then
-				create vsta1.make (l_formal.dump, feature_name)
+			if l_type.is_formal or l_type.has_like then
+				create vsta1.make (l_type.dump, feature_name)
 				vsta1.set_class (context.current_class)
 				error_handler.insert_error (vsta1)
 				error_handler.raise_error

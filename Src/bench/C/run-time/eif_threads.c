@@ -370,7 +370,9 @@ rt_public void eif_thr_create_with_args (EIF_OBJECT thr_root_obj,
 	EIF_MUTEX_UNLOCK(eif_children_mutex, "Couldn't unlock children mutex");
 	LAUNCH_MUTEX_LOCK;
 	if (detach != (EIF_BOOLEAN) 5) {
+#ifndef EIF_WIN32
 		EIF_THR_ATTR_TYPE attr;
+#endif
 		EIF_THR_ATTR_INIT(attr,priority,policy,detach);
 		EIF_THR_CREATE_WITH_ATTR(eif_thr_entry, routine_ctxt, *tid, attr,
 								 "Cannot create thread\n");
@@ -738,6 +740,34 @@ rt_public void eif_exit_eiffel_code()
 rt_private int counter = 0;
 #endif
 
+#ifdef EIF_ASSERTIONS
+/*
+doc:	<routine name="eif_is_synchronized" return_type="int" export="shared">
+doc:		<summary>Check if all threads are in a paused state, so that GC can safely be performed.</summary>
+doc:		<return_value>1 when synchronized, 0 otherwise</return_value>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>To be done while already pocessing the `eif_gc_mutex' lock.</synchronization>
+doc:	</routine>
+*/
+
+rt_shared int eif_is_synchronized (void)
+{
+	int i;
+
+	for (i = 0; i < rt_globals_list.count; i ++) {
+		if (((rt_global_context_t *) (rt_globals_list.threads.data [i]))->gc_thread_status_cx ==
+			EIF_THREAD_RUNNING) {
+			return 0;
+#ifdef DEBUG
+		} else {
+			printf ("Status is %d\n", ((rt_global_context_t *) (rt_globals_list.threads.data [i]))->gc_thread_status_cx);
+#endif
+		}
+	}
+	return 1;
+}
+#endif
+
 rt_shared void eif_synchronize_gc (rt_global_context_t *rt_globals)
 	/* Synchronize all threads under GC control */
 {
@@ -793,19 +823,24 @@ rt_shared void eif_synchronize_gc (rt_global_context_t *rt_globals)
 			 * No synchronization is required as we are still under the protection
 			 * of `eif_gc_mutex'. */
 		gc_thread_collection_count++;	
+#ifdef DEBUG
+		printf ("+");
+#endif
 	}
+
+	ENSURE("Synchronized", eif_is_synchronized());
 }
 
 rt_shared void eif_unsynchronize_gc (rt_global_context_t *rt_globals)
 	/* Free all threads under GC control from GC control */
 {
-#ifdef DEBUG
-	printf ("... finishing %d\n", counter);
-	counter++;
-#endif
 	gc_thread_collection_count--;
 
 	if (gc_thread_collection_count == 0) {
+#ifdef DEBUG
+		printf ("... finishing %d\n", counter);
+		counter++;
+#endif
 			/* Here we have still the lock of `gc_mutex'. So it is safe to update
 			 * `eif_is_gc_collecting'. */
 		eif_is_gc_collecting = 0;
@@ -817,6 +852,10 @@ rt_shared void eif_unsynchronize_gc (rt_global_context_t *rt_globals)
 			 * have to unlock the `eif_gc_mutex' mutex only at the last call
 			 * to `eif_unsynchronize_gc'. */
 		EIF_GC_MUTEX_UNLOCK;
+	} else {
+#ifdef DEBUG
+		printf ("-");
+#endif
 	}
 }
 #endif
@@ -1012,9 +1051,6 @@ rt_public EIF_POINTER eif_thr_mutex_create(void) {
 	EIF_MUTEX_TYPE *a_mutex_pointer;
 
 	EIF_MUTEX_CREATE(a_mutex_pointer, "cannot create mutex\n");
-#ifdef DEBUG
-	printf ("Created mutex %x\n", a_mutex_pointer);
-#endif
 	return (EIF_POINTER) a_mutex_pointer;
 }
 
@@ -1047,9 +1083,6 @@ rt_public EIF_BOOLEAN eif_thr_mutex_trylock(EIF_POINTER mutex_pointer) {
 rt_public void eif_thr_mutex_destroy(EIF_POINTER mutex_pointer) {
 	EIF_MUTEX_TYPE *a_mutex_pointer = (EIF_MUTEX_TYPE *) mutex_pointer;
 
-#ifdef DEBUG
-	printf ("Destroying mutex %x\n", a_mutex_pointer);
-#endif
 	if (a_mutex_pointer != (EIF_MUTEX_TYPE *) 0) {
 		EIF_MUTEX_DESTROY(a_mutex_pointer, "cannot destroy mutex\n");
 		a_mutex_pointer = (EIF_MUTEX_TYPE *) 0;
@@ -1067,9 +1100,6 @@ rt_public EIF_POINTER eif_thr_sem_create (EIF_INTEGER count)
 	EIF_SEM_TYPE *a_sem_pointer;
 
 	EIF_SEM_CREATE(a_sem_pointer, count, "cannot create semaphore\n");
-#ifdef DEBUG
-	printf ("Created semaphore %x\n", a_sem_pointer);
-#endif
 	return (EIF_POINTER) a_sem_pointer;
 #else
 	return (EIF_POINTER) 0;
@@ -1117,9 +1147,6 @@ rt_public void eif_thr_sem_destroy (EIF_POINTER sem)
 {
 #ifndef EIF_NO_SEM
 	EIF_SEM_TYPE *a_sem_pointer = (EIF_SEM_TYPE *) sem;
-#ifdef DEBUG
-	printf ("Destroying semaphore %x\n", a_sem_pointer);
-#endif
 	if (a_sem_pointer != (EIF_SEM_TYPE *) 0) {
 		EIF_SEM_DESTROY(a_sem_pointer, "cannot destroy semaphore");
 		a_sem_pointer = (EIF_SEM_TYPE *) 0;
@@ -1137,9 +1164,6 @@ rt_public EIF_POINTER eif_thr_cond_create (void)
 	EIF_COND_TYPE *cond;
 
 	EIF_COND_CREATE(cond, "cannot create cond. variable");
-#ifdef DEBUG
-	printf ("Created cond. var %x\n", cond);
-#endif
 	return (EIF_POINTER) cond;
 #else
 	return (EIF_POINTER) 0;
@@ -1200,9 +1224,6 @@ rt_public void eif_thr_cond_destroy (EIF_POINTER cond_ptr)
 {
 #ifndef EIF_NO_CONDVAR
 	EIF_COND_TYPE *cond = (EIF_COND_TYPE *) cond_ptr;
-#ifdef DEBUG
-	printf ("Destroying cond. var %x\n", cond);
-#endif
 	EIF_COND_DESTROY(cond, "destroying condition variable");
 #endif /* EIF_NO_CONDVAR */
 }

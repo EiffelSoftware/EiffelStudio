@@ -174,6 +174,7 @@ feature {NONE} -- Initialization
 
 				if data_type = Loadpixmap_hbitmap then
 					create bitmap.make_by_pointer(rgb_data)
+--| FIXME ARNAUD: see if the following lines are correct for the GC.
 --					bitmap.set_unshared
 					create mask_bitmap.make_by_pointer(alpha_data)
 --					mask_bitmap.set_unshared
@@ -207,7 +208,6 @@ feature {NONE} -- Initialization
 				-- Initialize the new device context
 			dc_to_reset := True
 		end
-		
 
 feature -- Access
 
@@ -260,8 +260,9 @@ feature -- Status setting
 		local
 			s_dc				: WEL_SCREEN_DC
 			mem_dc				: WEL_MEMORY_DC
+			a_mask_bitmap_dc	: WEL_MEMORY_DC
 			old_bitmap_dc		: like bitmap_dc
-			old_mask_bitmap_dc	: like mask_bitmap_dc
+			old_mask_bitmap_dc	: WEL_MEMORY_DC
 			old_width			: INTEGER
 			old_height			: INTEGER
 		do
@@ -273,10 +274,6 @@ feature -- Status setting
 			old_width := width
 			old_height := height
 
-				-- release the old bitmap
-			if bitmap_dc.bitmap_selected then
-				bitmap_dc.unselect_bitmap
-			end
 				-- create and assign a new bitmap & bitmap_dc
 			create s_dc
 			s_dc.get
@@ -306,31 +303,29 @@ feature -- Status setting
 
 				-- Delete the old bitmap_dc.
 			old_bitmap_dc.delete
+			old_bitmap_dc := Void
 
 			------------------------------
 			-- Resize the mask (if any) --
 			------------------------------
 			if mask_bitmap /= Void then
 				
-					-- Retrieve the current values
-				old_mask_bitmap_dc := mask_bitmap_dc
+				-- Create the mask dc.
+				create old_mask_bitmap_dc.make
+				old_mask_bitmap_dc.select_bitmap(mask_bitmap)
 
-					-- release the old bitmap
-				if mask_bitmap_dc.bitmap_selected then
-					mask_bitmap_dc.unselect_bitmap
-				end
 					-- create and assign a new bitmap & bitmap_dc
-				create mask_bitmap_dc.make
+				create a_mask_bitmap_dc.make
 				create mask_bitmap.make_compatible (
-					mask_bitmap_dc, 
+					a_mask_bitmap_dc, 
 					new_width, 
 					new_height
 					)
-				mask_bitmap_dc.select_bitmap (mask_bitmap)
+				a_mask_bitmap_dc.select_bitmap (mask_bitmap)
 
 					-- Copy the content of the old bitmap into the
 					-- new one
-				mask_bitmap_dc.bit_blt(
+				a_mask_bitmap_dc.bit_blt(
 					0,							-- x source
 					0,							-- y source
 					new_width.min(old_width),	-- width source
@@ -393,13 +388,6 @@ feature -- Element change
 				end
 				bitmap_dc.select_bitmap (bitmap)
 
-				if mask_bitmap /= Void then
-					if mask_bitmap_dc.bitmap_selected then
-						mask_bitmap_dc.unselect_bitmap
-					end
-					mask_bitmap_dc.select_bitmap(mask_bitmap)
-				end
-
 				bitmap_dc.set_background_opaque
 				bitmap_dc.set_background_transparent
 				reset_pen
@@ -447,9 +435,6 @@ feature {NONE} -- Implementation
 
 	bitmap_dc: WEL_MEMORY_DC
 			-- The DC of the bitmap in memory.
-
-	mask_bitmap_dc: WEL_MEMORY_DC
-			-- The DC of the mask bitmap in memory
 
 	display_bitmap: WEL_BITMAP
 			-- Temporary bitmap used for display
@@ -542,7 +527,8 @@ feature {NONE} -- Implementation
 					   display_mask_bitmap = Void or 
 					   update_display_bitmap then
 						create display_mask_bitmap.make_by_bitmap(mask_bitmap)
-						create display_mask_dc.make_by_dc(display_dc)
+						create display_mask_dc.make
+						--_by_dc(display_dc)
 						display_mask_dc.select_bitmap(display_mask_bitmap)
 						display_mask_dc.pat_blt(
 							0, 
@@ -944,7 +930,6 @@ feature {NONE} -- Externals
 
 invariant
 	bitmap_not_void: is_initialized implies bitmap /= Void
-	mask_consistent: mask_bitmap /= Void implies mask_bitmap_dc /= Void
 
 end -- class EV_PIXMAP_IMP
 
@@ -969,6 +954,9 @@ end -- class EV_PIXMAP_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.25  2000/03/28 23:53:24  pichery
+--| Fixed bugs about mask
+--|
 --| Revision 1.24  2000/03/28 20:08:59  pichery
 --| fixed compilation bug
 --|

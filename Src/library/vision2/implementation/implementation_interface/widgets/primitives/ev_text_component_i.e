@@ -1,5 +1,4 @@
 indexing
-
 	description: 
 		"EiffelVision text component, implementation interface."
 	status: "See notice at end of class"
@@ -15,13 +14,9 @@ inherit
 		redefine
 			build
 		end
-	
-feature {NONE} -- Initialization
 
-	make (par: EV_CONTAINER) is
-		deferred
-		end
-	
+	EV_BAR_ITEM_I
+
 feature {EV_WIDGET} -- Initialization
 
 	build is
@@ -32,10 +27,10 @@ feature {EV_WIDGET} -- Initialization
 			set_expand (True)
 			set_vertical_resize (True)
 			set_horizontal_resize (True)
---			!! color.make_rgb (255, 255, 255)
---			set_background_color (color)
---			!! color.make_rgb (0, 0, 0)
---			set_foreground_color (color)
+			!! color.make_rgb (255, 255, 255)
+			set_background_color (color)
+			!! color.make_rgb (0, 0, 0)
+			set_foreground_color (color)
 		end
 
 feature -- Access
@@ -51,10 +46,8 @@ feature -- Access
 			-- Length of the text in the widget
 		require
 			exists: not destroyed
-		do
-			Result := text.count
+		deferred
 		end
-
 
 feature -- Status setting
 	

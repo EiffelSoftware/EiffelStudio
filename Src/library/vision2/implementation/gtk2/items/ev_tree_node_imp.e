@@ -464,8 +464,12 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 			item_imp: EV_TREE_NODE_IMP
 			par_tree_imp: EV_TREE_IMP
 		do
-			if count = 1 then
-				expanded_on_last_item_removal := is_expanded
+			if count = 1 then 
+				if parent_tree /= Void then
+					expanded_on_last_item_removal := is_expanded
+				else
+					expanded_on_last_item_removal := False
+				end
 			end
 			item_imp ?= (child_array @ (a_position)).implementation
 

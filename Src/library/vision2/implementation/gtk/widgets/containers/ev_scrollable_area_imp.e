@@ -29,12 +29,15 @@ create
 feature {NONE} -- Initialization
 	
         make (an_interface: like interface) is
-                        -- Initialize. 
+                        -- Initialize.
 		do
 			base_make (an_interface)
-			set_c_object (
+			set_c_object (C.gtk_event_box_new)
+			scroll_window := (
 				C.gtk_scrolled_window_new (Default_pointer, Default_pointer)
 			)
+			C.gtk_widget_show (scroll_window)
+			C.gtk_container_add (c_object, scroll_window)
 
 			set_scrolling_policy (C.GTK_POLICY_ALWAYS_ENUM, C.GTK_POLICY_ALWAYS_ENUM)
 
@@ -43,7 +46,7 @@ feature {NONE} -- Initialization
 
 			viewport := C.gtk_viewport_new (Default_pointer, Default_pointer)
 			C.gtk_widget_show (viewport)
-			C.gtk_container_add (c_object, viewport)
+			C.gtk_container_add (scroll_window, viewport)
 		end
 
 feature -- Access
@@ -153,16 +156,19 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
+	scroll_window: POINTER
+			-- Pointer to the gtk scrolling window.
+
 	horizontal_adjustment: POINTER is
 			-- Pointer to the adjustment struct of the hscrollbar
 		do
-			Result := C.gtk_scrolled_window_get_hadjustment (c_object)
+			Result := C.gtk_scrolled_window_get_hadjustment (scroll_window)
 		end
 
 	vertical_adjustment: POINTER is
 			-- Pointer to the adjustment struct of the vscrollbar
 		do
-			Result := C.gtk_scrolled_window_get_vadjustment (c_object)
+			Result := C.gtk_scrolled_window_get_vadjustment (scroll_window)
 		end
 
 	horizontal_policy: INTEGER
@@ -175,7 +181,7 @@ feature {NONE} -- Implementation
 			-- Set the policy for both scrollbars.
 		do
 			C.gtk_scrolled_window_set_policy (
-				c_object,
+				scroll_window,
 				hscrollpol,
 				vscrollpol
 			)
@@ -212,6 +218,9 @@ end -- class EV_SCROLLABLE_AREA_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2000/03/21 22:39:43  king
+--| Made c_object an event_box
+--|
 --| Revision 1.10  2000/02/22 18:39:38  oconnor
 --| updated copyright date and formatting
 --|

@@ -71,12 +71,6 @@ feature -- IL Generation
 			Inst_context.set_cluster (class_c.cluster)
 			is_frozen_class := class_c.is_frozen
 
-				-- Generate custom attributes if defined on Eiffel classes
-				-- to be generated.
-			if not class_c.is_external then
-				ast_context.set_current_class (class_c)
-			end
-
 				-- Initialize implementation.
 			set_current_class (class_c)
 			set_current_class_type (class_type)

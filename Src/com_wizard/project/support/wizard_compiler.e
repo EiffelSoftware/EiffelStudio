@@ -21,6 +21,16 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_RESCUABLE
+		export
+			{NONE} all
+		end
+	
+	WIZARD_VARIABLE_NAME_MAPPER
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -246,11 +256,79 @@ feature {NONE} -- Implementation
 			a_file.close
 		end
 
+	generate_user_def_file is
+			-- Generate DLL definition file
+		local
+			a_string: STRING
+			a_raw_file: RAW_FILE
+			retried: BOOLEAN
+		do
+			if not retried then
+				a_string := clone (Shared_wizard_environment.destination_folder)
+				a_string.append (User_def_file_name)
+				create a_raw_file.make_open_write (a_string)
+				a_raw_file.put_string (server_dll_export (Register_dll_server_function_name, Dll_register_server, Register_server_ordinal))
+				a_raw_file.put_string (server_dll_export (Unregister_dll_server_function_name, Dll_unregister_server, Unregister_server_ordinal))
+				a_raw_file.put_string (server_dll_export (Get_class_object_function_name, Dll_get_class_object, Get_class_object_ordianl))
+				a_raw_file.put_string (server_dll_export (Can_unload_dll_now_function_name, Dll_can_unload_now, Can_unload_now_ordinal))
+				a_raw_file.close
+			end
+		rescue
+			if not failed_on_rescue then
+				retried := True
+				retry
+			end
+		end	
+
+	Register_server_ordinal: INTEGER is 1
+			-- Ordinal of DllRegisterServer function
+
+	Unregister_server_ordinal: INTEGER is 2
+			-- Ordinal of DllUnregisterServer function
+
+	Get_class_object_ordianl: INTEGER is 3
+			-- Ordinal of DllGetClassObject function
+
+	Can_unload_now_ordinal: INTEGER is 4
+			-- Ordinal of DllCanUnloadNow function
+
+	server_dll_export (a_eiffel_name, a_c_name: STRING; a_ordinal: INTEGER): STRING is
+			-- Generate the specified export for the DLL definition file
+		require
+			non_void_eiffel_name: a_eiffel_name /= Void
+			non_void_c_name: a_c_name /= Void
+			valid_eiffel_name: not a_eiffel_name.empty
+			valid_c_name: not a_c_name.empty
+			valid_ordinal: a_ordinal >= 1
+		do
+			Result := clone (registration_class_name)
+			Result.append (Semicolon)
+			Result.append (Space)
+			Result.append (a_eiffel_name)
+			Result.append (Space)
+			Result.append (At_sign)
+			Result.append (Space)
+			Result.append (a_ordinal.out)
+			Result.append (Space)
+			Result.append (Alias_keyword)
+			Result.append (Space)
+			Result.append (a_c_name)
+			Result.append (Space)
+			Result.append (Call_type)
+			Result.append (Space)
+			Result.append (Stdcall)
+			Result.append (New_line)
+		ensure
+			valid_export: Result /= Void
+		end
+
 	server_generated_ace_file: STRING is
 			-- Beginning of server generated Ace file
 		do
+			generate_user_def_file
 			Result := client_generated_ace_file
 			Result.replace_substring_all (Any_type, Shared_wizard_environment.project_name)
+			Result.replace_substring_all (Default_keyword, Shared_library_option)
 		end
 
 	client_generated_ace_file: STRING is
@@ -272,7 +350,7 @@ feature {NONE} -- Implementation
 			Result.append (Include)
 			Result.append (Double_quote)
 			Result.append (Comma)
-			Result.append (New_line_tab_tab_tab)
+			Result.append (New_line_tab_tab)
 			Result.append (Tab)
 			Result.append (Double_quote)
 			Result.append (clone (Shared_wizard_environment.destination_folder))
@@ -281,7 +359,7 @@ feature {NONE} -- Implementation
 			Result.append (Include)
 			Result.append (Double_quote)
 			Result.append (Comma)
-			Result.append (New_line_tab_tab_tab)
+			Result.append (New_line_tab_tab)
 			Result.append (Tab)
 			Result.append (Double_quote)
 			Result.append (clone (Shared_wizard_environment.destination_folder))
@@ -371,7 +449,17 @@ feature {NONE} -- Implementation
 			Result := "es4 -freeze -batch -ace "
 			Result.append (Ace_file_name)
 		end
-			
+
+	user_def_file_name: STRING is
+			-- ".def" file name used for DLL compilation
+		do
+			Result := clone (Shared_wizard_environment.project_name)
+			Result.append (Def_file_extension)
+		end
+	
+	Def_file_extension: STRING is ".def"
+			-- DLL definition file extension
+
 	Ace_file_name: STRING is "Ace.ace"
 			-- Ace file name
 
@@ -398,13 +486,13 @@ feature {NONE} -- Implementation
 		%	inlining (no)%N%
 		%	inlining_size (%"4%")%N%N%
 		%cluster%N%
-		%	root_cluster: %".%";%N%T%
-		%	server (root_cluster):				%"$\component%"%N%T%T%
-		%		-- EiffelBase%N%T%
-		%	all base:						%"$EIFFEL4\library\base%"%N%T%T%
-		%		exclude%N%T%T%T%
-		%			%"table_eiffel3%"%N%T%T%
-		%		end%N%N%T%
+		%	root_cluster: %".%";%N%
+		%	server (root_cluster):				%"$\component%"%N%
+		%		-- EiffelBase%N%
+		%	all base:						%"$EIFFEL4\library\base%"%N%
+		%		exclude%N%
+		%			%"table_eiffel3%"%N%
+		%		end%N%N%
 		%		visible%N%
 		%			INTEGER_REF;%N%
 		%			CHARACTER_REF;%N%
@@ -415,26 +503,26 @@ feature {NONE} -- Implementation
 		%			STRING;%N%
 		%		end%N%N%
 		%	-- WEL%N%T%
-		%	all wel:						%"$EIFFEL4\library\wel%"%N%N%T%
-		%	all time: 						%"$EIFFEL4\library\time%"%N%T%T%
-		%		exclude%N%T%T%T%
-		%			%"french%";%N%T%T%
-		%			%"german%"%N%T%T%
-		%		end;%N%N%T%
-		%	-- EiffelCOM%N%T%
-		%	all ecom:						%"$EIFFEL4\library\com%"%N%T%
+		%	all wel:						%"$EIFFEL4\library\wel%"%N%N%
+		%	all time: 						%"$EIFFEL4\library\time%"%N%
+		%		exclude%N%
+		%			%"french%";%N%
+		%			%"german%"%N%
+		%		end;%N%N%
+		%	-- EiffelCOM%N%
+		%	all ecom:						%"$EIFFEL4\library\com%"%N%
 		%	all common:						%"..\common%"%N%N%
 		%external%N%
 		%	include_path:	%"$EIFFEL4\library\wel\spec\windows\include%",%N%
-		%					%"$EIFFEL4\library\com\library\include%",%N%
-		%					%"$EIFFEL4\library\com\runtime\include%",%N"
+		%			%"$EIFFEL4\library\com\library\include%",%N%
+		%			%"$EIFFEL4\library\com\runtime\include%",%N"
 
 	End_ace_file: STRING is
 			-- End of ace file used to precompile generated Eiffel system
 		"	object: 	%"$(EIFFEL4)\library\wel\spec\$(COMPILER)\lib\wel.lib%",%N%
-		%				%"$(EIFFEL4)\library\time\spec\msc\lib\datetime.lib%",%N%
-		%				%"$(EIFFEL4)\library\com\spec\msc\lib\com.lib%",%N%
-		%				%"$(EIFFEL4)\library\com\spec\msc\lib\com_runtime.lib%",%N"
+		%			%"$(EIFFEL4)\library\time\spec\msc\lib\datetime.lib%",%N%
+		%			%"$(EIFFEL4)\library\com\spec\msc\lib\com.lib%",%N%
+		%			%"$(EIFFEL4)\library\com\spec\msc\lib\com_runtime.lib%",%N"
 
 	Eifgen: STRING is "EIFGEN"
 			-- Eifgen folder name
@@ -447,5 +535,23 @@ feature {NONE} -- Implementation
 
 	Driver_executable: STRING is "driver.exe"
 			-- Precompilation driver executable
+
+	Default_keyword: STRING is "default"
+			-- Lace `default' keyword
+	
+	Shared_library_option: STRING is
+			-- Dll definition file for Ace file
+		do
+			Result := "default%N%Tshared_library_definition (%""
+			Result.append (Def_file_name)
+			Result.append (")%"")
+			Result.append (Semicolon)
+		end
+
+	Stdcall: STRING is "__stdcall"
+			-- Dll function calling convention
+
+	Call_type: STRING is "call_type"
+			-- DLL Defintion type call_type option
 
 end -- class WIZARD_IDL_COMPILER

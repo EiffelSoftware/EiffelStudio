@@ -39,7 +39,9 @@ feature
 	solved_type (feat_table: FEATURE_TABLE; f: FEATURE_I): CL_TYPE_A is
 		do
 			Result := {CLASS_TYPE_AS} Precursor (feat_table, f)
-			Result.set_is_true_expanded (True)
+			if not Result.is_basic then
+				Result.set_is_true_expanded (True)
+			end
 			record_exp_dependance (Result.associated_class)
 		end
 
@@ -47,7 +49,9 @@ feature
 			-- Expanded actual class type
 		do
 			Result := {CLASS_TYPE_AS} Precursor
-			Result.set_is_true_expanded (True)
+			if not Result.is_basic then
+				Result.set_is_true_expanded (True)
+			end
 			record_exp_dependance (Result.associated_class)
 		end
 

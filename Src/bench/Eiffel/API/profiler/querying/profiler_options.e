@@ -29,13 +29,43 @@ feature -- Status setting
 
 feature -- Status report
 
-	output_names: ARRAY [STRING]
-		-- The names of the columns to display.
+	output_names: ARRAY [STRING];
+			-- The names of the columns to display
 
-	filenames: ARRAY [STRING]
-		-- The names of the files to be taken into account.
+	filenames: ARRAY [STRING];
+			-- The names of the files to be taken into account
 
-	language_names: ARRAY [STRING]
-		-- The languages to be taken into account.
+	language_names: ARRAY [STRING];
+			-- The languages to be taken into account
+
+	image: STRING is
+			-- Options as a string value
+		do
+			!! Result.make (0);
+
+				--| Get the filenames
+			from
+				idx := 1;
+				Result.append ("Filenames:%N----------%N%N");
+			until
+				idx > filenames.count
+			loop
+				Result.append (filenames @ idx);
+				Result.append ("%N");
+				idx := idx + 1
+			end
+
+				--| Get the language names
+			from
+				idx := 1;
+				Result.append ("%NLanguages:%N----------%N%N");
+			until
+				idx > language_names.count
+			loop
+				Result.append (language_names @ idx)
+				Result.append ("%N");
+				idx := idx + 1
+			end
+		end
 
 end -- class PROFILER_OPTIONS

@@ -75,7 +75,9 @@ feature -- Basic Operation
 			check
 				links_correct: top_object.instance_referers.has (an_object.id) and an_object.associated_top_level_object = top_object.id
 			end
-			
+			create original_referers.make (10)
+				-- Store the original referers of `an_object'.
+			original_referers := an_object.instance_referers.twin
 			top_object.remove_client_representation (an_object)
 			an_object.unconnect_instance_referers (top_object, an_object)
 			internal_shallow_flatten (an_object, top_object)
@@ -99,43 +101,91 @@ feature -- Basic Operation
 			new_object: GB_OBJECT
 			top_object: GB_OBJECT
 			an_object: GB_OBJECT
-			new_objects, old_objects: ARRAYED_LIST [GB_OBJECT]
 			parent_object: GB_PARENT_OBJECT
 			old_pos: INTEGER
 			original_link_object, new_link_object, original_instance_object: GB_OBJECT
 			is_selected: BOOLEAN
+			new_children, original_children: ARRAYED_LIST [GB_OBJECT]
+			current_new_child, current_original_child: GB_OBJECT			
 		do
+				-- Retrieve the objects which are the subject of this flattening.
 			an_object := object_handler.deep_object_from_id (object_id)
 			top_object := object_handler.deep_object_from_id (top_id)
 			
 				-- Create a new representation of `new_object'.
 			new_object := top_object.new_top_level_representation
+			
+				-- Recursively retrieve all children of `new_object' and `an_object'.
+			create new_children.make (50)
+			new_object.all_children_recursive (new_children)
+			create original_children.make (50)
+			an_object.all_children_recursive (original_children)
+			
+				-- Now convert all asssociated top level objects on loading to actual associated top level object references.
+				-- Without this, the objects would not act as instances of top level objects.
+			from
+				new_children.start
+			until
+				new_children.off
+			loop
+				current_new_child := new_children.item
+				if current_new_child.associated_top_level_object_on_loading > 0 then
+					current_new_child.set_associated_top_level_object (object_handler.deep_object_from_id (current_new_child.associated_top_level_object_on_loading))
+				end
+				new_children.forth
+			end
+			
+				-- Now copy all instance referers and client representations from the original object children
+				-- to the new object children.
+			from
+				new_children.start
+				original_children.start
+			until
+				new_children.off
+			loop
+				current_new_child := new_children.item
+				current_original_child := original_children.item
+				
+					-- Clear the client representations and merge those from the original object.
+				current_new_child.all_client_representations.wipe_out
+				current_new_child.all_client_representations.merge_right (current_original_child.all_client_representations.twin)
+				
+					-- Clear the instance_refers and merge those from the original object.
+				current_new_child.instance_referers.clear_all
+				current_new_child.instance_referers.merge (current_original_child.instance_referers)
+				
+				new_children.forth
+				original_children.forth
+			end
 
-				-- Now ensure that the bewly created objects have the same id's as the
+				-- Now ensure that the newly created objects have the same id's as the
 				-- originals and are contained within the global list of objects.
-			create new_objects.make (50)
-			create old_objects.make (50)
+				-- Simply iterate and replace, being sure to remove the original representations
+				-- from the object list.
 			object_handler.remove_object (new_object)
 			new_object.set_id (an_object.id)
-			new_object.all_children_recursive (new_objects)
-			an_object.all_children_recursive (old_objects)
 			object_handler.remove_object (an_object)
 			object_handler.add_object_to_objects (new_object)
 			from
-				new_objects.start
-				old_objects.start
+				new_children.start
+				original_children.start
 			until
-				new_objects.off
+				new_children.off
 			loop
-				object_handler.remove_object (new_objects.item)
-				new_objects.item.set_id (old_objects.item.id)
-				object_handler.remove_object (old_objects.item)
-				object_handler.add_object_to_objects (new_objects.item)
-				old_objects.forth
-				new_objects.forth
+				current_new_child := new_children.item
+				current_original_child := original_children.item
+				
+				object_handler.remove_object (current_new_child)
+				current_new_child.set_id (current_original_child.id)
+				object_handler.remove_object (current_original_child)
+				object_handler.add_object_to_objects (current_new_child)
+				
+				new_children.forth
+				original_children.forth
 			end
 
 				-- Now replace the new representation of the object in the old parent.
+				-- Paying attention to the original selected state.
 			if an_object.layout_item.is_selected then
 				is_selected := True
 			end
@@ -161,10 +211,11 @@ feature -- Basic Operation
 				new_link_object := object_handler.deep_object_from_id (new_links.item)
 				original_link_object := object_handler.deep_object_from_id (original_links.item)
 				original_instance_object := object_handler.deep_object_from_id (original_instances.item)
-					
+
+						-- Perform the reconnection of the clients.
+				new_link_object.remove_client_representation (original_instance_object)
 				new_link_object.instance_referers.remove (original_instance_object.id)
 				new_link_object.unconnect_instance_referers (new_link_object, original_instance_object)
-			
 				original_link_object.instance_referers.extend (original_instance_object.id, original_instance_object.id)
 				original_link_object.connect_instance_referers (original_link_object, original_instance_object)
 				
@@ -172,6 +223,9 @@ feature -- Basic Operation
 				original_links.forth
 				original_instances.forth
 			end
+		
+				-- Restore the original referers of `new_object'.
+			new_object.instance_referers.merge (original_referers)
 			
 				-- Now update the instance referers for the top level object that had been flattened.
 			an_object := object_handler.deep_object_from_id (object_id)
@@ -181,10 +235,9 @@ feature -- Basic Operation
 			top_object.instance_referers.put (new_object.id, new_object.id)
 			new_object.set_associated_top_level_object (top_object)			
 			
-			
+				-- Add a new client representation for the unflatten.
 			top_object.add_client_representation (new_object)
-			
-			
+
 			update_editors_for_change
 			command_handler.update
 			check_undo_while_debugging	
@@ -202,6 +255,9 @@ feature -- Basic Operation
 				object_name := an_object.name
 			else
 				object_name := name_and_type_from_object (an_object)
+			end
+			if is_deep_flatten then
+				object_name.append (" deep")
 			end
 			Result := object_name  + " flattened"
 		end
@@ -237,6 +293,7 @@ feature {NONE} -- Implementation
 				current_object.represent_as_non_locked_instance
 				current_object.update_representations_for_name_or_type_change
 			end
+
 			associated_object.instance_referers.remove (current_object.id)
 			
 			current_object_children := current_object.children
@@ -266,11 +323,13 @@ feature {NONE} -- Implementation
 						original_link_object := current_associated_item
 						new_link_object := object_handler.deep_object_from_id (current_associated_item.associated_top_level_object)
 						original_instance_object := current_item
-						
+
 						original_link_object.instance_referers.remove (original_instance_object.id)
+						
 						new_link_object.instance_referers.extend (original_instance_object.id, original_instance_object.id)
 						current_item.set_associated_top_level_object (new_link_object)
 						current_object.connect_instance_referers (new_link_object, original_instance_object)
+						new_link_object.add_client_representation (original_instance_object)
 	
 							-- Ensure that the representations are updated to reflect the fact that they are locked.
 						current_item.represent_as_locked_instance
@@ -312,11 +371,16 @@ feature {NONE} -- Implementation
 				l_editors.forth
 			end
 		end
-		
 
 	new_links: ARRAYED_LIST [INTEGER]
 	original_links: ARRAYED_LIST [INTEGER]
 	original_instances: ARRAYED_LIST [INTEGER]
+		-- Strutures used to keep track of the changed client representation
+		-- links when they are rerouted during a flatten. They are subsequently
+		-- restored from the contents of these arrays.
+	
+	original_referers: HASH_TABLE [INTEGER, INTEGER]
+		-- All original referers of flattened object
 	
 feature {NONE} -- Contract Support	
 

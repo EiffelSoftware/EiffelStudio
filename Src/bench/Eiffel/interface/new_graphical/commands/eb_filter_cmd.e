@@ -16,22 +16,14 @@ inherit
 
 	EB_GENERAL_DATA
 	EB_SHARED_FORMAT_TABLES
-
---	WARNER_CALLBACKS
---		rename
---			execute_warner_ok as modified_warner_ok_press
---		end
+	EB_CONFIRM_SAVE_CALLBACK
 
 creation
 	make
 
-feature -- Callbacks
+feature {EB_CONFIRM_SAVE_DIALOG} -- Callbacks
 
-	execute_warner_help is
-		do
-		end
-
-	modified_warner_ok_press (argument: ANY) is
+	process is
 			-- If it comes here this means ok has
 			-- been pressed in the warner window
 			-- for text modification.
@@ -44,15 +36,11 @@ feature -- Properties
 	filter_window: EB_FILTER_DIALOG
 			-- Associated popup window
 
-	user_warned: BOOLEAN
-		-- Has a confirmation dialog been displayed yet?
-
 	filter_it: EV_ARGUMENT1 [ANY] is
 			-- Argument for the command.
 		once
 			create Result.make (Void)
 		end
-
 
 	filter_name: STRING is
 			-- Name of the filter to be applied
@@ -109,11 +97,10 @@ feature {EB_FILTER_DIALOG} -- Implementation
 				filter_window.call (Current)
 			elseif argument = filter_it then
 					-- Display the filter output in `text_window'
-				if tool.text_window.changed and then not (user_warned) then
-					create csd.make_and_launch (tool, Current, argument)
-					user_warned := True
+				if tool.text_window.changed then
+					create csd.make_and_launch (tool, Current)
 				else
-					tool.last_format.filter (filter_name)
+					process
 				end
 			elseif tool.stone /= Void then
 					-- Execute the shell command

@@ -57,11 +57,15 @@ feature -- Basic Operation
 			choice_box.disable_item_expand (rb_project_type_dll)
 			choice_box.extend (create {EV_CELL}) -- expandable item
 
+			choice_box.extend (create {EV_LABEL})
+			choice_box.extend (create {EV_HORIZONTAL_SEPARATOR})
+			choice_box.extend (create {EV_LABEL})
+
 			choice_box.set_padding (dialog_unit_to_pixels(1))
 			choice_box.set_minimum_width (choice_box.width)
 			choice_box.extend (root_class_name.widget)
 			choice_box.disable_item_expand (root_class_name.widget)
-			
+
 			choice_box.extend (creation_routine_name.widget)
 			choice_box.disable_item_expand (creation_routine_name.widget)
 			choice_box.extend (create {EV_CELL}) -- expandable item
@@ -71,7 +75,7 @@ feature -- Basic Operation
 			else
 				rb_project_type_exe.enable_select
 			end
-			
+
 			set_updatable_entries(<<
 				rb_project_type_exe.select_actions,
 				rb_project_type_dll.select_actions,
@@ -156,13 +160,13 @@ feature {NONE} -- Implementation
 
 	preview_pixmap: EV_PIXMAP
 			-- Pixmap used to preview the application.
-			
+	
 	rb_project_type_exe: EV_RADIO_BUTTON
 	rb_project_type_dll: EV_RADIO_BUTTON
 
 	root_class_name: WIZARD_SMART_TEXT_FIELD
 	creation_routine_name: WIZARD_SMART_TEXT_FIELD
-	
+
 	is_valid_identifier (a_name: STRING): BOOLEAN is
 			-- Is `a_name' a valid Eiffel identifier?
 		require

@@ -40,8 +40,7 @@ feature {CACHE_READER} -- Access
 			Result.append (create {STRING}.make_from_cil (name.get_culture_info.get_name))
 			
 			-- local unsigned assemblies will not have this attribute, and so we must test to see if it is null or not
-			if name.get_public_key_token /= Void then
-		
+			if key /= Void and then not key.is_empty then
 				Result.append ("-")
 				Result.append (key)
 			end

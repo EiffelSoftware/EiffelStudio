@@ -39,7 +39,7 @@ feature
 			-- than `thresold' (not so old!), return `i' itself
 		do
 			if has (i) then
-				Result := tbl_item (i)
+				Result := found_item
 			else
 				Result := i
 			end

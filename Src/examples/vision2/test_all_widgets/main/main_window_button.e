@@ -29,7 +29,7 @@ feature {NONE} --Initialization
 
 			set_text (button_name)
 			if pixmap_file_name /= Void and then not pixmap_file_name.empty then
-				!! p.make_from_file (Current, pixmap_file_name)
+--				!! p.make_from_file (Current, pixmap_file_name)
 			end
 			demo_window := cmd
 			demo_window.set_effective_button (Current)

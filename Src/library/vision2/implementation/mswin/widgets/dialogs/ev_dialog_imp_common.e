@@ -72,7 +72,7 @@ inherit
 			on_wm_menu_command, on_mouse_move, on_wm_window_pos_changing, 
 			on_show, on_char, on_left_button_down,
 			on_get_min_max_info, on_left_button_double_click, destroy,
-			on_sys_key_up, on_wm_command, on_activate
+			on_sys_key_up, on_wm_command, on_activate, on_wm_setting_change
 		redefine
 			setup_dialog,
 			process_message,

@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 --			set_border_width (4)
 			Create title.make_with_text (Current, name)
 			title.set_minimum_height (50)
-			title.set_expand (False)
+			set_child_expandable (title, False)
 			tool := a_tool
 			Create resources.make
 			Create raise_cmd.make (Current)
@@ -163,7 +163,8 @@ feature -- Output
 			res: EB_RESOURCE_DISPLAY
 		do
 --			holder.set_selected (True)
-			if not displayed then
+--			if not displayed then
+			if not shown then
 				from
 					resources.start
 				until

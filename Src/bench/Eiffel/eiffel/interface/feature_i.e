@@ -62,6 +62,11 @@ inherit
 	SHARED_NAMES_HEAP
 		
 	DEBUG_OUTPUT
+
+	COMPARABLE
+		undefine
+			is_equal
+		end
 			
 feature -- Access
 
@@ -174,6 +179,17 @@ feature -- Access
 			if Result = 0 then
 				Result := feature_name_id
 			end
+		end
+
+feature -- Comparison
+
+	infix "<" (other: FEATURE_I): BOOLEAN is
+			-- Comparison of FEATURE_I based on their name.
+		do
+			check
+				feature_names_not_void: feature_name /= Void and other.feature_name /= Void
+			end
+			Result := feature_name < other.feature_name
 		end
 
 feature -- Debugger access

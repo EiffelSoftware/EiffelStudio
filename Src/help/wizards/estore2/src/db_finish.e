@@ -29,11 +29,13 @@ feature -- basic Operations
 			build_finish
 			launch_operations
 			send_errors
-			Precursor
+	--		Precursor
 				-- FIXME: `Precursor' should be used but there is a bug in EiffelVision2.
-	--		entries_changed := False
-	--		current_application.destroy
-				--
+				-- `first_window' is not destroyed but the application ends. The ensure
+				-- clause `first_window.is_destroyed' is thus not met but can be commented.
+			entries_changed := False
+			current_application.destroy
+				-- 
 		end
 
 	display_state_text is

@@ -1,0 +1,81 @@
+system
+	"EiffelSoftware.MetadataConsumer"
+
+root
+	EMITTER: make
+
+default
+	assertion (check)
+	assertion (require)
+	msil_generation (yes)
+	line_generation (yes)
+	profile (no)
+	trace (yes)
+	il_verifiable (yes)
+	cls_compliant (yes)
+	dotnet_naming_convention (no)
+	use_cluster_name_as_namespace (no)
+	use_all_cluster_name_as_namespace (no)
+	msil_generation_type ("dll")
+	namespace ("EiffelSoftware.MetadataConsumer")
+	version ("5.5.624.0")
+	msil_key_file_name ("$EIFFEL_SRC\dotnet\helpers\isekey.snk")
+	msil_clr_version ("v1.0.3705")
+	msil_assembly_compatibility ("None")
+	check_vape (yes)
+	console_application (yes)
+	syntax_warning (no)
+	address_expression (no)
+	array_optimization (no)
+	dead_code_removal (yes)
+	dynamic_runtime (no)
+	exception_trace (no)
+	inlining (no)
+	multithreaded (no)
+
+cluster
+	all base:		"$EIFFEL_SRC\library\base"
+		exclude
+			"table_eiffel3"; "desc"; "classic"; "CVS"; 
+		default
+			namespace ("Base")
+		end
+
+	all base_net:		"$EIFFEL_SRC\library.net\base"
+		exclude
+			"CVS"; 
+		default
+			namespace ("Base")
+		end
+
+	all emitter:		"$EIFFEL_SRC\dotnet\consumer"
+		exclude
+			"CVS"; "EIFGEN"; 
+		visible
+			COM_CACHE_MANAGER
+				end
+			COM_ASSEMBLY_INFORMATION
+				end
+			CACHE_REFLECTION
+				end
+		end
+
+	all helpers:		"$EIFFEL_SRC\dotnet\helpers"
+		exclude
+			"CVS"; 
+		end
+
+assembly
+	"mscorlib":	"mscorlib","1.0.3300.0","neutral","b77a5c561934e089"
+
+	"System":	"System","1.0.3300.0","neutral","b77a5c561934e089"
+		prefix
+			"SYSTEM_DLL_"
+		end
+
+	"System.Xml":	"System.Xml","1.0.3300.0","neutral","b77a5c561934e089"
+		prefix
+			"XML_"
+		end
+		
+end

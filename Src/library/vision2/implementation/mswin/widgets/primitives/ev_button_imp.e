@@ -67,7 +67,7 @@ inherit
 	WEL_BITMAP_BUTTON
 		rename
 			make as wel_make,
-			parent as wel_parent,
+			parent as wel_window_parent,
 			set_parent as wel_set_parent,
 			font as wel_font,
 			shown as is_displayed,
@@ -120,7 +120,8 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			wel_make (default_parent, "", 0, 0, 0, 0, 0)
-			extra_width := 10
+			extra_width := 16
+			text_alignment := Text_alignment_left
 		end
 
 	initialize is
@@ -134,6 +135,16 @@ feature -- Access
 
 	extra_width: INTEGER
 			-- Extra width on the size.
+
+	wel_parent: WEL_WINDOW is
+		do
+			Result := wel_window_parent
+		end
+
+	is_default_push_button: BOOLEAN
+			-- Is this button currently a default push button 
+			-- for a particular container?
+
 feature -- Status setting
 
 	set_default_minimum_size is
@@ -144,14 +155,14 @@ feature -- Status setting
 		do
 			if pixmap_imp /= Void then
 				w := extra_width + pixmap_imp.width
-				h := 7 * pixmap_imp.height // 4
+				h := 20 * pixmap_imp.height // 9
 			elseif text /= "" then
 				fw ?= font.implementation
 				check
 					font_not_void: fw /= Void
 				end
 				w := extra_width + fw.string_width (wel_text)
-				h := 7 * fw.height // 4 
+				h := 19 * fw.height // 9
 			else
 				w := extra_width
 				h := 7
@@ -165,6 +176,7 @@ feature -- Status setting
 			-- Set button `text' to be left aligned.
 		do
 			set_style (default_style + Bs_left)
+			text_alignment := Text_alignment_left
 			invalidate
 		end
 
@@ -172,6 +184,7 @@ feature -- Status setting
 			-- Set button `text' to be right aligned.
 		do
 			set_style(default_style + Bs_right)
+			text_alignment := Text_alignment_right
 			invalidate
 		end
 
@@ -179,7 +192,54 @@ feature -- Status setting
 			-- Set button `text' to be centered.
 		do
 			set_style(default_style + Bs_center)
+			text_alignment := Text_alignment_center
 			invalidate
+		end
+
+	enable_default_push_button is
+			-- Set the style of the button corresponding
+			-- to the default push button.
+		local
+			align_style: INTEGER
+		do
+			inspect text_alignment
+			when Text_alignment_left then
+				align_style := Bs_left
+			when Text_alignment_right then
+				align_style := Bs_right
+			when Text_alignment_center then
+				align_style := Bs_center
+			end
+
+			set_style (align_style + Default_style + Bs_defpushbutton)
+			is_default_push_button := True
+
+			if parent_imp /= Void then
+				invalidate
+			end
+		end
+
+	disable_default_push_button is
+			-- Remove the style of the button corresponding
+			-- to the default push button.
+		local
+			align_style: INTEGER
+		do
+			inspect text_alignment
+			when Text_alignment_left then
+				align_style := Bs_left
+			when Text_alignment_right then
+				align_style := Bs_right
+			when Text_alignment_center then
+				align_style := Bs_center
+			end
+
+			set_style (align_style + Default_style)
+			is_default_push_button := False
+
+			if parent_imp /= Void then
+				invalidate
+			end
 		end
 
 feature -- Element change
@@ -208,6 +268,21 @@ feature -- Element change
 		end
 
 feature {NONE} -- WEL Implementation
+
+	text_alignment: INTEGER
+			-- Current text alignment. Possible value are
+			--	* Text_alignment_left
+			--	* Text_alignment_right
+			--	* Text_alignment_center
+
+	Text_alignment_left: INTEGER is 0
+			-- Left aligned text.
+
+	Text_alignment_right: INTEGER is 1
+			-- Right aligned text.
+
+	Text_alignment_center: INTEGER is 2
+			-- Centered text.
 
 	default_style: INTEGER is
 			-- Default style used to create the control
@@ -304,6 +379,10 @@ end -- class EV_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.47  2000/04/29 03:32:54  pichery
+--| Improved buttons: new default size,
+--| new feature (default_push_button).
+--|
 --| Revision 1.46  2000/04/25 00:32:53  rogers
 --| Removed wel_window_parent hack.
 --|

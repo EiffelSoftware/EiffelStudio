@@ -310,7 +310,7 @@ feature {MULTIPLE_SPLIT_AREA} -- Implementation
 			put_back_in_split_area: parent_area.linear_representation.has (tool)
 		end
 
-feature {NONE} -- Implementation
+feature {MULTIPLE_SPLIT_AREA} -- Implementation
 
 	parent_dockable_dialog (widget: EV_WIDGET): EV_DOCKABLE_DIALOG is
 			-- `Result' is dialog parent of `widget'.
@@ -327,6 +327,8 @@ feature {NONE} -- Implementation
 				Result := dialog
 			end	
 		end
+		
+feature {NONE} -- Implementation
 		
 	parent_window (widget: EV_WIDGET): EV_WINDOW is
 			-- `Result' is window parent of `widget'.

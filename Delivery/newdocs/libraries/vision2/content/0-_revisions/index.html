@@ -62,6 +62,7 @@
 				miscellaneous features that were missing relevent postconditions.</LI>
 <LI><B>EV_TEXT</B> Added `has_word_wrapping', `enable_word_wrapping' and `disable_word_wrapping'. These features allow you to switch between horizontal word wrapping, in which lines too long to be displayed will be wrapped, and no word wrapping, in which horizontal scroll bars will be displayed, allowing you to view the complete contents of each line. Previously EV_TEXT would always wrap lines, and the default beaviour is `has_word_wrapping' as it was before these changes.</LI>
 		<LI><B>EV_TEXT_COMPONENT</B> - Added `has_selection' precondition to `selected_text' which requires that `has_selection' must be True for you to call `selected_text'.</LI>
+		<LI><B>EV_FILE_DIALOG</B> - Added `valid_file_title' for validation of a file name excluding the path.</LI>
 		</ul>
 		<P><b>Breaking changes</b></P>
 		<UL>
@@ -100,6 +101,7 @@
 						selection if called twice.</LI>
 					<LI><B>EV_CELL</B> - If you removed the item, the minimum size was not updated to reflect this, thereby retaining the minimum size as constrained by the minimum size of the now removed item.</li>
 					<LI><B>EV_TREE_ITEM</B>/<B>EV_TREE</B> - A call to `disable_select' on an EV_TREE_ITEM will now actually remove the selection from the tree. Previously, the style of the item was changed, but a call to `selected_item' on the tree would still return the item.</LI>
+				<LI><B>EV_FILE_DIALOG</B> - Fixed precondition violation when you calling `set_file_name' which was  rejecting directory separators.</LI>
 				</ul>
 			<li>
 				<b>Gtk</b></li>

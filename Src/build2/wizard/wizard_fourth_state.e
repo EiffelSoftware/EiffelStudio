@@ -27,6 +27,8 @@ inherit
 	GB_SHARED_SYSTEM_STATUS
 	
 	GB_SHARED_XML_HANDLER
+	
+	GB_SHARED_OBJECT_HANDLER
 
 create
 	make
@@ -48,8 +50,6 @@ feature -- Basic Operation
 				-- We only want to generate the interface once.
 			if choice_box.is_empty then
 				(create {GB_MAIN_WINDOW}).generate_interface (choice_box)
-				 -- Now we must load the project but only when launched as a modify item
-				 -- envision wizard.
 			end
 			
 				-- If we are modifying an existing Envision .bpr, then
@@ -63,10 +63,14 @@ feature -- Basic Operation
 				else
 					open_with_name (argument_array @ 1)	
 				end
+			elseif not already_displayed then
+				Object_handler.add_initial_window
 			end
+			
 			set_updatable_entries(<<>>)
 			first_window.enable_user_resize
 			first_window.enable_maximize
+			already_displayed := True
 		end
 		
 	open_with_name (f: STRING) is
@@ -110,6 +114,8 @@ feature -- Basic Operation
 		do
 			Precursor
 		end
+
+feature -- Access
 		
 	is_final_state: BOOLEAN is
 			-- Are we the final state of the wizard?
@@ -121,6 +127,9 @@ feature -- Basic Operation
 			end
 		end
 		
+	already_displayed: BOOLEAN
+		-- Has `Current' already been displayed, as determined
+		-- by `build' having been previously called?
 
 feature {NONE} -- Implementation
 

@@ -79,7 +79,7 @@ feature -- Access
 			end
 		end
 
-	parent_imp: EV_LIST_IMP
+	parent_imp: EV_ITEM_LIST_IMP [EV_LIST_ITEM]
 		-- Parent of `Current'
 	
 	set_parent (a_parent: like parent) is
@@ -241,6 +241,10 @@ end -- class EV_LIST_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.43  2000/03/30 16:35:52  rogers
+--| Changed parent_imp from EV_LIST_IMP to
+--| EV_ITEM_LIST_IMP [EV_LIST_ITEM]
+--|
 --| Revision 1.42  2000/03/29 22:13:09  brendel
 --| Implemented `set_text'.
 --| Clean-up.

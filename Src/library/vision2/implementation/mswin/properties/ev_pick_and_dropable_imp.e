@@ -24,24 +24,30 @@ feature -- Implementation
 			transporter: EV_PND_TRANSPORTER_IMP
 			arg1, arg2: EV_ARGUMENT2 [INTEGER, EV_PND_SOURCE_IMP]
 		do
-			if args.first /= Void then
-				args.first.execute (data)
-			end
-			if transportable then
-				create transporter
-				transporter.transport (Current, args.first)
-				create arg1.make (2, Current)
-				create arg2.make (3, Current)
+			if not data.first_button_pressed
+			and then not data.second_button_pressed
+			and then not data.shift_key_pressed
+			and then not data.control_key_pressed
+			then
+				if args.first /= Void then
+					args.first.execute (data)
+				end
+				if transportable then
+					create transporter
+					transporter.transport (Current, args.first)
+					create arg1.make (2, Current)
+					create arg2.make (3, Current)
+	
+					-- We add the commands
+					remove_single_command (Cmd_button_three_press, args.second)
+					widget_source.add_command (Cmd_button_three_press, transporter, arg1)
+					widget_source.add_command (Cmd_button_one_press, transporter, arg2)
+					widget_source.add_command (Cmd_button_two_press, transporter, arg2)
 
-				-- We add the commands
-				remove_single_command (Cmd_button_three_press, args.second)
-				widget_source.add_command (Cmd_button_three_press, transporter, arg1)
-				widget_source.add_command (Cmd_button_one_press, transporter, arg2)
-				widget_source.add_command (Cmd_button_two_press, transporter, arg2)
-
-				-- We set a command that draw the line
-				create arg1.make (1, Current)
-				widget_source.add_command (Cmd_motion_notify, transporter, arg1)
+					-- We set a command that draw the line
+					create arg1.make (1, Current)
+					widget_source.add_command (Cmd_motion_notify, transporter, arg1)
+				end
 			end
 		end
 

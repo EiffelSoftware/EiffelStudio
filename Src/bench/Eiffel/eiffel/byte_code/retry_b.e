@@ -17,6 +17,8 @@ feature
 			c: like Context
 			workbench_mode: BOOLEAN
 		do
+			generate_line_info;
+
 				-- Clean up the trace and profiling stacks
 			c := Context
 			workbench_mode := c.workbench_mode

@@ -16,6 +16,7 @@ feature
 		do
 			!!Result;
 			Result.fill_from (Current)
+			Result.set_line_number (line_number)
 		end;
 
 	add_array_to_generate (arr_desc: INTEGER) is

@@ -309,6 +309,8 @@ feature
 	generate is
 			-- Generate assignment
 		do
+			generate_line_info;
+
 			if last_in_result then
 					-- Assignement in Result is the last expression and
 					-- the source does not use GCable variable, or only in

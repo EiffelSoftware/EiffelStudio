@@ -117,6 +117,8 @@ feature
 			target_type: TYPE_I;
 			is_expanded: BOOLEAN;
 		do
+			generate_line_info;
+
 			target_type := Context.real_type (target.type);
 
 			if target.is_result and last_in_result then

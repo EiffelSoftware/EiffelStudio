@@ -10,13 +10,28 @@ inherit
 			find_assign_result, last_all_in_result,
 			has_loop, assigns_to, is_unsafe,
 			optimized_byte_node, calls_special_features,
-			size, pre_inlined_code, inlined_byte_code
+			size, pre_inlined_code, inlined_byte_code,
+			line_number, set_line_number
 		end;
 	VOID_REGISTER
 		export
 			{NONE} all
 		end;
 	
+feature -- Access
+
+	line_number : INTEGER;
+
+feature -- Line number setting
+
+	set_line_number (lnr : INTEGER) is
+
+		do
+			line_number := lnr
+		ensure then
+			line_number_set : line_number = lnr
+		end
+
 feature 
 
 	expr: EXPR_B;
@@ -80,6 +95,7 @@ feature
 	generate is
 			-- Generate C code in `generated_file'.
 		do
+			generate_line_info;
 			generated_file.putstring (" else {");
 			generated_file.new_line;
 			generated_file.indent;

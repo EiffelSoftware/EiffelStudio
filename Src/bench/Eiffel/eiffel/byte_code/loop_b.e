@@ -71,6 +71,7 @@ feature
 		do
 			!!Result;
 			Result.fill_from (Current);
+			Result.set_line_number (line_number);
 		end;
 
 feature -- Byte code generation

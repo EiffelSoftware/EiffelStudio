@@ -57,6 +57,7 @@ feature -- C code generation
 			if call /= Void then
 				Result.set_call (call.enlarged);
 			end;
+			Result.set_line_number (line_number)
 		end;
 
 feature -- Byte code generation

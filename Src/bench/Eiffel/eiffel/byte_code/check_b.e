@@ -58,6 +58,8 @@ feature
 		local
 			workbench_mode: BOOLEAN;
 		do
+			generate_line_info;
+
 			if check_list /= Void then
 				workbench_mode := context.workbench_mode;
 				context.set_assertion_type (In_check);

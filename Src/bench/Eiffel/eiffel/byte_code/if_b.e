@@ -139,6 +139,7 @@ feature
 	generate is
 			-- Generate C code in `generated_file'.
 		do
+			generate_line_info;
 				-- Outstanding of if..then..else..end
 			generated_file.new_line;
 			condition.generate;

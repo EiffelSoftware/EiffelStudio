@@ -75,6 +75,8 @@ feature
 		local
 			static_type: STRING;
 		do
+			generate_line_info;
+
 			if compound /= Void then
 				if context.final_mode then
 					if generate_for_final_mode then

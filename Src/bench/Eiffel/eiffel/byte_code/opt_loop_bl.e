@@ -65,6 +65,7 @@ feature
 
 	generate is
 		do
+			generate_line_info;
 			generate_assertions;
 			generate_declarations;
 			generate_initializations;
@@ -163,24 +164,24 @@ feature
 				end
 				generated_file.new_line;
 			end;
-            if generated_offsets /= Void then
-                from
-                    generated_offsets.start
-                until
-                    generated_offsets.after
-                loop
+			if generated_offsets /= Void then
+				from
+					generated_offsets.start
+				until
+					generated_offsets.after
+				loop
 					id := generated_offsets.item;
-                    r_name := reg_name (id);
-                    generated_file.putstring ("RTAIOFFSETS(");
-                    generated_file.putstring (r_name);
+					r_name := reg_name (id);
+					generated_file.putstring ("RTAIOFFSETS(");
+					generated_file.putstring (r_name);
 					generated_file.putstring (gc_comma);
 					generated_file.putstring (register_acces (id));
-                    generated_file.putstring (gc_rparan_comma);
+					generated_file.putstring (gc_rparan_comma);
 					generated_file.new_line;
-                    generated_offsets.forth
-                end
+					generated_offsets.forth
+				end
 				generated_file.new_line;
-            end
+			end
 		end;
 
 	generate_free is

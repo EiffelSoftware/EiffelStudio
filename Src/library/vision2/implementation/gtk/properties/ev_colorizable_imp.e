@@ -70,6 +70,9 @@ feature -- Status setting
 			-- Assign `a_color' to `foreground_color'
 		do
 			real_set_background_color (visual_widget, a_color)
+			if visual_widget /= c_object then
+				real_set_background_color (c_object, a_color)
+			end
 		end
 
 	real_set_background_color (a_c_object: POINTER; a_color: EV_COLOR) is
@@ -86,7 +89,7 @@ feature -- Status setting
 			r, g, b, nr, ng, nb, m, mx: INTEGER
 		do
 			style := C.gtk_widget_struct_style (a_c_object)
-			color := C.gtk_style_struct_bg (a_c_object)
+			color := C.gtk_style_struct_bg (style)
 			r := a_color.red_16_bit
 			g := a_color.green_16_bit
 			b := a_color.blue_16_bit
@@ -151,6 +154,9 @@ feature -- Status setting
 			-- Assign `a_color' to `foreground_color'
 		do
 			real_set_foreground_color (visual_widget, a_color)
+			if visual_widget /= c_object then
+				real_set_foreground_color (c_object, a_color)
+			end	
 		end
 
 	real_set_foreground_color (a_c_object: POINTER; a_color: EV_COLOR) is
@@ -167,7 +173,7 @@ feature -- Status setting
 			r, g, b, m: INTEGER
 		do
 			style := C.gtk_widget_struct_style (a_c_object)
-			color := C.gtk_style_struct_fg (a_c_object)
+			color := C.gtk_style_struct_fg (style)
 			r := a_color.red_16_bit
 			g := a_color.green_16_bit
 			b := a_color.blue_16_bit

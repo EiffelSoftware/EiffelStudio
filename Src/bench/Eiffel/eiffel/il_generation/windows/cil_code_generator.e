@@ -734,11 +734,12 @@ feature -- Class info
 			native_array ?= class_type
 			if native_array /= Void then
 					-- Generate association with a NATIVE_ARRAY []
-				uni_string.set_string (native_array.il_type_name)
+				name := native_array.il_type_name
+				uni_string.set_string (name)
 				l_type_token := md_emit.define_type_ref (uni_string, assembly_token (class_type))
 				class_mapping.put (l_type_token, class_type.static_type_id)
-				external_class_mapping.put (class_type.type, native_array.il_type_name)
-				external_token_mapping.put (l_type_token, native_array.il_type_name)
+				external_class_mapping.put (class_type.type, name)
+				external_token_mapping.put (l_type_token, name)
 			else
 				name := class_type.full_il_type_name
 				if not class_c.is_external then
@@ -1643,7 +1644,7 @@ feature -- Features info
 		end
 
 	argument_actual_type (a_type: TYPE_I): TYPE_I is
-			-- Compute real type of Current.
+			-- Compute real type of Current in current generated class.
 		require
 			a_type_not_void: a_type /= Void
 		do
@@ -1664,29 +1665,16 @@ feature -- Features info
 			valid_sig: a_sig /= Void
 			valid_type: a_type /= Void
 		local
-			l_gen_type: GEN_TYPE_I
-			l_type: TYPE_I
-			l_ref: REFERENCE_I
+			l_gen_type: NATIVE_ARRAY_TYPE_I
 		do
 			if a_type.is_basic then
 				a_sig.set_return_type (a_type.element_type, 0)
 			else
 				l_gen_type ?= a_type
-				if l_gen_type /= Void and then l_gen_type.base_class.is_native_array then
-					check
-						l_gen_type_has_generics: l_gen_type.true_generics /= Void
-						l_gen_type_valid_count: l_gen_type.true_generics.valid_index (1)
-					end
+				if l_gen_type /= Void then
 					a_sig.set_return_type (
 						feature {MD_SIGNATURE_CONSTANTS}.Element_type_szarray, 0)
-					l_type := l_gen_type.meta_generic.item (1)
-					l_ref ?= l_type
-					if l_ref /= Void and then not l_type.is_true_expanded then
-						a_sig.set_type (
-							feature {MD_SIGNATURE_CONSTANTS}.Element_type_object, 0)
-					else
-						set_signature_type (a_sig, l_gen_type.true_generics.item (1))
-					end
+					set_signature_type (a_sig, l_gen_type.true_generics.item (1))
 				else
 					a_sig.set_return_type (a_type.element_type,
 						class_type_token (a_type.static_type_id))
@@ -1700,28 +1688,15 @@ feature -- Features info
 			valid_sig: a_sig /= Void
 			valid_type: a_type /= Void
 		local
-			l_gen_type: GEN_TYPE_I
-			l_type: TYPE_I
-			l_ref: REFERENCE_I
+			l_gen_type: NATIVE_ARRAY_TYPE_I
 		do
 			if a_type.is_basic then
 				a_sig.set_type (a_type.element_type, 0)
 			else
 				l_gen_type ?= a_type
-				if l_gen_type /= Void and then l_gen_type.base_class.is_native_array then
-					check
-						l_gen_type_has_generics: l_gen_type.true_generics /= Void
-						l_gen_type_valid_count: l_gen_type.true_generics.valid_index (1)
-					end
+				if l_gen_type /= Void then
 					a_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_szarray, 0)
-					l_type := l_gen_type.meta_generic.item (1)
-					l_ref ?= l_type
-					if l_ref /= Void and then not l_type.is_true_expanded then
-						a_sig.set_type (
-							feature {MD_SIGNATURE_CONSTANTS}.Element_type_object, 0)
-					else
-						set_signature_type (a_sig, l_gen_type.true_generics.item (1))
-					end
+					set_signature_type (a_sig, l_gen_type.true_generics.item (1))
 				else
 					a_sig.set_type (a_type.element_type,
 						class_type_token (a_type.static_type_id))
@@ -2772,7 +2747,7 @@ feature {IL_CODE_GENERATOR} -- Local saving
 				until
 					l_locals.after
 				loop
-					set_signature_type (l_sig, l_locals.item.first)
+					set_signature_type (l_sig, argument_actual_type (l_locals.item.first))
 					l_locals.forth
 				end
 

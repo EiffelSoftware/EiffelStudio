@@ -12,22 +12,19 @@ class ARRAY [G] inherit
 
 	RESIZABLE [G]
 		redefine
-			full, copy, is_equal,
-			consistent, setup
+			full, copy, is_equal
 		end;
 
 	INDEXABLE [G, INTEGER]
 		redefine
-			copy, is_equal,
-			consistent, setup
+			copy, is_equal
 		end;
 
 	TO_SPECIAL [G]
 		export
 			{ARRAY} set_area
 		redefine
-			copy, is_equal,
-			consistent, setup
+			copy, is_equal
 		end
 
 creation
@@ -65,13 +62,6 @@ feature -- Initialization
 			area := a.area;
 			lower := a.lower;
 			upper := a.upper
-		end;
-
-	setup (other: like Current) is
-			-- Perform actions on a freshly created object so that
-			-- the contents of `other' can be safely copied onto it.
-		do
-			make_area (other.capacity)
 		end;
 
 feature -- Access
@@ -170,13 +160,6 @@ feature -- Comparison
 		end;
 
 feature -- Status report
-
-	consistent (other: like Current): BOOLEAN is
-				-- Is object in a consistent state so that `other'
-				-- may be copied onto it? (Default answer: yes).
-		do
-			Result := (capacity = other.capacity)
-		end;
 
 	full: BOOLEAN is
 			-- Is structure filled to capacity? (Answer: yes)

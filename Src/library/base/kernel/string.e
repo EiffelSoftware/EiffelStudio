@@ -13,33 +13,28 @@ class STRING inherit
 	INDEXABLE [CHARACTER, INTEGER]
 		redefine
 			copy, is_equal, out, prune_all,
-			consistent, setup,
 			changeable_comparison_criterion
 		end;
 
 	RESIZABLE [CHARACTER]
 		redefine
 			copy, is_equal, out,
-			consistent, setup,
 			changeable_comparison_criterion
 		end;
 
 	HASHABLE
 		redefine
-			copy, is_equal, out,
-			consistent, setup
+			copy, is_equal, out
 		end;
 
 	COMPARABLE
 		redefine
-			copy, is_equal, out,
-			consistent, setup
+			copy, is_equal, out
 		end;
 
 	TO_SPECIAL [CHARACTER]
 		redefine
-			copy, is_equal, out,
-			consistent, setup
+			copy, is_equal, out
 		end;
 
 creation
@@ -124,13 +119,6 @@ feature -- Initialization
 		ensure
 			valid_count: count = end_pos - start_pos + 1
 		end
-
-	setup (other: like Current) is
-			-- Perform actions on a freshly created object so that
-			-- the contents of `other' can be safely copied onto it.
-		do
-			remake (other.capacity)
-		end;
 
 feature -- Access
 
@@ -301,13 +289,6 @@ feature -- Comparison
 		end;
 
 feature -- Status report
-
-	consistent (other: like Current): BOOLEAN is
-				-- Is object in a consistent state so that `other'
-				-- may be copied onto it? (Default answer: yes).
-		do
-			Result := (other.capacity = capacity)
-		end;
 
 	extendible: BOOLEAN is true;
 			-- May new items be added? (Answer: yes.)

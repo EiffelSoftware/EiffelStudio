@@ -35,7 +35,7 @@ feature {NONE} -- Access
 	eiffel_names: HASH_TABLE [HASH_TABLE [STRING, STRING], STRING]
 			-- give hash_table of eiffel names for a dotnet type name.
 
-	key_args (args: NATIVE_ARRAY [PARAMETER_INFO]; return_type: TYPE): STRING is
+	key_args (args: NATIVE_ARRAY [PARAMETER_INFO]; return_type: TYPE; declared_type: TYPE): STRING is
 			-- return signature corresponding to args.
 		local
 			i: INTEGER
@@ -46,11 +46,14 @@ feature {NONE} -- Access
 			until
 				args = Void or else i = args.count
 			loop
-				Result.append (create {STRING}.make_from_cil (args.item (i).parameter_type.name))
+				Result.append (create {STRING}.make_from_cil (args.item (i).parameter_type.full_name))
 				i := i + 1
 			end
 			if return_type /= Void then
-				Result.append (create {STRING}.make_from_cil (return_type.name))
+				Result.append (create {STRING}.make_from_cil (return_type.full_name))
+			end
+			if declared_type /= Void then
+				Result.append (create {STRING}.make_from_cil (declared_type.full_name))
 			end
 		ensure
 			non_void_result: Result /= Void
@@ -59,7 +62,7 @@ feature {NONE} -- Access
 
 feature	-- Access
 
-	unique_eiffel_name (a_dotnet_name: SYSTEM_STRING; args: NATIVE_ARRAY [PARAMETER_INFO]; return_type: TYPE): STRING is
+	unique_eiffel_name (a_dotnet_name: SYSTEM_STRING; args: NATIVE_ARRAY [PARAMETER_INFO]; return_type: TYPE; declaring_type: TYPE): STRING is
 		require
 			non_void_a_dotnet_name: a_dotnet_name /= Void
 			non_void_args: args /= Void
@@ -67,7 +70,7 @@ feature	-- Access
 			l_dotnet_name: STRING
 		do
 			create l_dotnet_name.make_from_cil (a_dotnet_name)
-			Result := eiffel_names.item (l_dotnet_name).item (key_args (args, return_type))
+			Result := eiffel_names.item (l_dotnet_name).item (key_args (args, return_type, declaring_type))
 		end
 		
 		
@@ -167,10 +170,10 @@ feature -- Basic Operations
 				loop
 					method := method_list.item
 					if eiffel_names.has (method.dotnet_name) then
-						eiffel_names.item (method.dotnet_name).put (method.eiffel_name, key_args (method.internal_method.get_parameters, method.internal_method.return_type))					
+						eiffel_names.item (method.dotnet_name).put (method.eiffel_name, key_args (method.internal_method.get_parameters, method.internal_method.return_type, method.internal_method.declaring_type))
 					else
 						create eiffel_args.make (1)
-						eiffel_args.put (method.eiffel_name, key_args (method.internal_method.get_parameters, method.internal_method.return_type))
+						eiffel_args.put (method.eiffel_name, key_args (method.internal_method.get_parameters, method.internal_method.return_type, method.internal_method.declaring_type))
 						eiffel_names.put (eiffel_args, method.dotnet_name)
 					end
 					method_list.forth

@@ -72,9 +72,10 @@ feature {NONE}
 			text_item: STRING;
 			i: INTEGER;
 		do
+			set_fraction_base (2);
 			!!text_c;
 			!!text.make (text_c.eiffel_type, Current);
-			text.set_size (100, 60);
+			text.set_size (110, 110);
 			!!text_type.make (Widget_names.text_name, text_c);
 			text_type.initialize_callbacks (text);
 
@@ -93,6 +94,7 @@ feature {NONE}
 				scroll_list.forth;
 				i := i + 1
 			end;
+			scroll_list.set_size (110, 110);
 			!!scroll_list_type.make (Widget_names.scroll_list_name, scroll_list_c);
 			scroll_list_type.initialize_callbacks (scroll_list);
 
@@ -112,7 +114,7 @@ feature {NONE}
 
 			attach_left (text, 1);
 			attach_left_widget (text, scroll_list, 10);
-			attach_right (scroll_list, 1);
+			--attach_right (scroll_list, 1);
 
 			attach_left (drawing_area.scrolled_window, 1);
 

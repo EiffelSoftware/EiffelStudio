@@ -89,19 +89,19 @@ feature {NONE} -- Implementation
 	file_gib (file: POINTER): INTEGER is
 			-- Get an integer from `file'
 		external
-			"C | %"eif_file.h%""
+			"C (FILE *): EIF_INTEGER | %"eif_file.h%""
 		end;
 
 	file_grb (file: POINTER): REAL is
 			-- Read a real from `file'
 		external
-			"C | %"eif_file.h%""
+			"C (FILE *): EIF_REAL | %"eif_file.h%""
 		end;
 
 	file_gdb (file: POINTER): DOUBLE is
 			-- Read a double from `file'
 		external
-			"C | %"eif_file.h%""
+			"C (FILE *): EIF_DOUBLE | %"eif_file.h%""
 		end;
 
 	file_open (f_name: POINTER; how: INTEGER): POINTER is
@@ -125,7 +125,7 @@ feature {NONE} -- Implementation
 			-- File pointer to `file', reopened to have new name `f_name'
 			-- in a mode specified by `how'.
 		external
-			"C | %"eif_file.h%""
+			"C (char *, EIF_INTEGER, FILE *): EIF_POINTER | %"eif_file.h%""
 		alias
 			"file_binary_reopen"
 		end;
@@ -133,19 +133,19 @@ feature {NONE} -- Implementation
 	file_pib (file: POINTER; n: INTEGER) is
 			-- Put `n' to end of `file'.
 		external
-			"C | %"eif_file.h%""
+			"C (FILE *, EIF_INTEGER) | %"eif_file.h%""
 		end;
 
 	file_prb (file: POINTER; r: REAL) is
 			-- Put `r' to end of `file'.
 		external
-			"C | %"eif_file.h%""
+			"C (FILE *, EIF_REAL) | %"eif_file.h%""
 		end;
 
 	file_pdb (file: POINTER; d: DOUBLE) is
 			-- Put `d' to end of `file'.
 		external
-			"C | %"eif_file.h%""
+			"C (FILE *, EIF_DOUBLE) | %"eif_file.h%""
 		end;
 
 invariant

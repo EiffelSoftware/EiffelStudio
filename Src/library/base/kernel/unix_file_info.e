@@ -261,25 +261,25 @@ feature {NONE} -- Implementation
 	file_stat (name, stat_buf: POINTER) is
 			-- Get information from file `name' into `stat_buf'
 		external
-			"C | %"eif_file.h%""
+			"C (char *, struct stat *) | %"eif_file.h%""
 		end;
 
 	file_access (f_name: ANY; which: INTEGER): BOOLEAN is
 			-- Perform access test `which' on `f_name' using real ID.
 		external
-			"C | %"eif_file.h%""
+			"C (char *, EIF_INTEGER): EIF_BOOLEAN | %"eif_file.h%""
 		end;
 
 	file_eaccess (stat_buf: POINTER; which: INTEGER): BOOLEAN is
 			-- Perform access tests using effective ID.
 		external
-			"C | %"eif_file.h%""
+			"C (struct stat *, EIF_INTEGER): EIF_BOOLEAN | %"eif_file.h%""
 		end;
 
 	file_info (stat_buf: POINTER; which: INTEGER): INTEGER is
 			-- Extract information `which' from information buffer
 		external
-			"C | %"eif_file.h%""
+			"C (struct stat *, EIF_INTEGER): EIF_INTEGER | %"eif_file.h%""
 		end;
 
 	file_owner (uid: INTEGER): STRING is

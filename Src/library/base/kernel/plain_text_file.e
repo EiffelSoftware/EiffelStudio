@@ -96,37 +96,37 @@ feature {NONE} -- Implementation
 	file_gi (file: POINTER): INTEGER is
 			-- Get an integer from `file'
 		external
-			"C | %"eif_file.h%""
+			"C (FILE *): EIF_INTEGER | %"eif_file.h%""
 		end;
 
 	file_gr (file: POINTER): REAL is
 			-- Read a real from `file'
 		external
-			"C | %"eif_file.h%""
+			"C (FILE *): EIF_REAL | %"eif_file.h%""
 		end;
 
 	file_gd (file: POINTER): DOUBLE is
 			-- Read a double from `file'
 		external
-			"C | %"eif_file.h%""
+			"C (FILE *): EIF_DOUBLE | %"eif_file.h%""
 		end;
 
 	file_pi (file: POINTER; n: INTEGER) is
 			-- Put `n' to end of `file'.
 		external
-			"C | %"eif_file.h%""
+			"C (FILE *, EIF_INTEGER) | %"eif_file.h%""
 		end;
 
 	file_pr (file: POINTER; r: REAL) is
 			-- Put `r' to end of `file'.
 		external
-			"C | %"eif_file.h%""
+			"C (FILE *, EIF_REAL) | %"eif_file.h%""
 		end;
 
 	file_pd (file: POINTER; d: DOUBLE) is
 			-- Put `d' to end of `file'.
 		external
-			"C | %"eif_file.h%""
+			"C (FILE *, EIF_DOUBLE) | %"eif_file.h%""
 		end;
 
 invariant

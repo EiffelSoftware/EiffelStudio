@@ -1388,7 +1388,7 @@ feature {NONE} -- Implementation
 	file_link (from_name, to_name: POINTER) is
 			-- Link `to_name' to `from_name'
 		external
-			"C | %"eif_file.h%""
+			"C (FILE *, FILE *) | %"eif_file.h%""
 		end;
 
 	file_unlink (fname: POINTER) is
@@ -1414,31 +1414,31 @@ feature {NONE} -- Implementation
 			-- File pointer to `file', reopened to have new name `f_name'
 			-- in a mode specified by `how'.
 		external
-			"C | %"eif_file.h%""
+			"C (char *, EIF_INTEGER, FILE *): EIF_POINTER | %"eif_file.h%""
 		end;
 
 	file_close (file: POINTER) is
 			-- Close `file'.
 		external
-			"C | %"eif_file.h%""
+			"C (FILE *) | %"eif_file.h%""
 		end;
 
 	file_flush (file: POINTER) is
 			-- Flush `file'.
 		external
-			"C | %"eif_file.h%""
+			"C (FILE *) | %"eif_file.h%""
 		end;
 
 	file_fd (file: POINTER): INTEGER is
 			-- Operating system's file descriptor
 		external
-			"C | %"eif_file.h%""
+			"C (FILE *): EIF_INTEGER | %"eif_file.h%""
 		end;
 
 	file_gc (file: POINTER): CHARACTER is
 			-- Access the next character
 		external
-			"C | %"eif_file.h%""
+			"C (FILE *): EIF_CHARACTER | %"eif_file.h%""
 		end;
 
 	file_gs (file: POINTER; a_string: POINTER; length, begin: INTEGER): INTEGER is
@@ -1447,7 +1447,7 @@ feature {NONE} -- Implementation
 			-- If it does not fit, result is `length' - `begin' + 1.
 			-- If it fits, result is number of characters read.
 		external
-			"C | %"eif_file.h%""
+			"C (FILE *, char *, EIF_INTEGER, EIF_INTEGER): EIF_INTEGER | %"eif_file.h%""
 		end;
 
 	file_gss (file: POINTER; a_string: POINTER; length: INTEGER): INTEGER is
@@ -1455,7 +1455,7 @@ feature {NONE} -- Implementation
 			-- into `a_string'. If it does not fit, result is `length' + 1.
 			-- Otherwise, result is the number of characters read.
 		external
-			"C | %"eif_file.h%""
+			"C (FILE *, char *, EIF_INTEGER): EIF_INTEGER | %"eif_file.h%""
 		end;
 
 	file_gw (file: POINTER; a_string: POINTER; length, begin: INTEGER): INTEGER is
@@ -1466,32 +1466,32 @@ feature {NONE} -- Implementation
 			-- If it does not fit, result is `length' - `begin' + 1,
 			-- otherwise result is number of characters read.
 		external
-			"C | %"eif_file.h%""
+			"C (FILE *, char *, EIF_INTEGER, EIF_INTEGER): EIF_INTEGER | %"eif_file.h%""
 		end;
 
 	file_lh (file: POINTER): CHARACTER is
 			-- Look ahead in `file' and find out the value of the next
 			-- character. Do not read over character.
 		external
-			"C | %"eif_file.h%""
+			"C (FILE *): EIF_CHARACTER | %"eif_file.h%""
 		end;
 
 	file_size (file: POINTER): INTEGER is
 			-- Size of `file'
 		external
-			"C | %"eif_file.h%""
+			"C (FILE *): EIF_INTEGER | %"eif_file.h%""
 		end;
 
 	file_tnil (file: POINTER) is
 			-- Read upto next input line.
 		external
-			"C | %"eif_file.h%""
+			"C (FILE *) | %"eif_file.h%""
 		end;
 
 	file_tell (file: POINTER): INTEGER is
 			-- Current cursor position in file.
 		external
-			"C | %"eif_file.h%""
+			"C (FILE *): EIF_INTEGER | %"eif_file.h%""
 		end;
 
 	file_touch (f_name: POINTER) is
@@ -1542,49 +1542,49 @@ feature {NONE} -- Implementation
 	file_tnwl (file: POINTER) is
 			-- Print a new-line to `file'.
 		external
-			"C | %"eif_file.h%""
+			"C (FILE *) | %"eif_file.h%""
 		end;
 
 	file_append (file, from_file: POINTER; length: INTEGER) is
 			-- Append a copy of `from_file' to `file'
 		external
-			"C | %"eif_file.h%""
+			"C (FILE *, FILE *, EIF_INTEGER) | %"eif_file.h%""
 		end;
 
 	file_ps (file: POINTER; a_string: POINTER; length: INTEGER) is
 			-- Print `a_string' to `file'.
 		external
-			"C | %"eif_file.h%""
+			"C (FILE *, char *, EIF_INTEGER) | %"eif_file.h%""
 		end;
 
 	file_pc (file: POINTER; c: CHARACTER) is
 			-- Put `c' to end of `file'.
 		external
-			"C | %"eif_file.h%""
+			"C (FILE *, EIF_CHARACTER) | %"eif_file.h%""
 		end;
 
 	file_go (file: POINTER; abs_position: INTEGER) is
 			-- Go to absolute `position', originated from start.
 		external
-			"C | %"eif_file.h%""
+			"C (FILE *, EIF_INTEGER) | %"eif_file.h%""
 		end;
 
 	file_recede (file: POINTER; abs_position: INTEGER) is
 			-- Go to absolute `position', originated from end.
 		external
-			"C | %"eif_file.h%""
+			"C (FILE *, EIF_INTEGER) | %"eif_file.h%""
 		end;
 
 	file_move (file: POINTER; offset: INTEGER) is
 			-- Move file pointer by `offset'.
 		external
-			"C | %"eif_file.h%""
+			"C (FILE *, EIF_INTEGER) | %"eif_file.h%""
 		end;
 
 	file_feof (file: POINTER): BOOLEAN is
 			-- End of file?
 		external
-			"C | %"eif_file.h%""
+			"C (FILE *): EIF_BOOLEAN | %"eif_file.h%""
 		end;
 
 	file_exists (f_name: POINTER): BOOLEAN is

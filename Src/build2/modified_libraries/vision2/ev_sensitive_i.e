@@ -47,7 +47,7 @@ feature -- Status setting
 			is_desensitive: not user_is_sensitive
 		end
 
-feature {EV_ANY_I, GB_EV_SENSITIVE} -- Implementation
+feature {EV_ANY_I, GB_EV_SENSITIVE, GB_GENERATION_COMMAND} -- Implementation
 
 	enable_sensitive is
 			-- Make object sensitive to user input.

@@ -127,14 +127,14 @@ feature {NONE} -- Implementation
 	dialog: GB_CODE_GENERATION_DIALOG
 		-- Displays generation output.
 
-	generate_single_window (object: GB_OBJECT) is
+	generate_single_window (object_stone: GB_STANDARD_OBJECT_STONE) is
 			-- Generate code for `object' only.
 		require
-			object_not_void: object /= Void
-			object_is_top_level: object.is_top_level_object
-			object_named: object.name /= Void and then not object.name.is_empty
+			object_stone_not_void: object_stone /= Void
+			object_is_top_level: object_stone.object.is_top_level_object
+			object_named: object_stone.object.name /= Void and then not object_stone.object.name.is_empty
 		do
-			create dialog.make_for_single_generation (object.name)
+			create dialog.make_for_single_generation (object_stone.object.name)
 			dialog.show_modal_to_window (main_window)
 		end
 		
@@ -144,11 +144,11 @@ feature {NONE} -- Implementation
 		require
 			pebble_not_void: pebble /= Void
 		local
-			object: GB_OBJECT
+			object: GB_STANDARD_OBJECT_STONE
 		do
 			object ?= pebble
 			if object /= Void then
-				Result := object.is_top_level_object and not object.name.is_empty
+				Result := object.object.is_top_level_object and not object.object.name.is_empty
 			end
 		end
 

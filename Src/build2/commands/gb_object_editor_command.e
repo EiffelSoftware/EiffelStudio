@@ -73,22 +73,24 @@ feature -- Basic operations
 			
 feature {NONE} -- Implementation
 
-		do_not_allow_object_type (transported_object: GB_OBJECT): BOOLEAN is
+		do_not_allow_object_type (object_stone: GB_STANDARD_OBJECT_STONE): BOOLEAN is
 				-- May `transported_object' be dropped on a toolbar button
+			require
+				object_stone_not_void: object_stone /= Void
 				-- representation of `Current'.
 			do
 					-- If the object is not void, it means that
 					-- we are not currently picking a type.
-				if transported_object.object /= Void then
+				if object_stone.object.object /= Void then
 					Result := True
 				end
 			end
 			
-		update_object_editor (an_object: GB_OBJECT; button: EB_COMMAND_TOOL_BAR_BUTTON) is
+		update_object_editor (object_stone: GB_STANDARD_OBJECT_STONE; button: EB_COMMAND_TOOL_BAR_BUTTON) is
 				-- If `button' is parented (at any level) in a GB_OBJECT_EDITOR then assign `object' to
 				-- the parent object editor, otherwise create a new object_editor containing `object'.
 			require
-				an_object_not_void: an_object /= Void
+				object_stone_not_void: object_stone /= Void
 				button_not_void: button /= Void
 				button_parented: button.parent /= Void
 				button_tool_bar_parented: button.parent.parent /= Void
@@ -106,7 +108,7 @@ feature {NONE} -- Implementation
 				loop
 					an_object_editor ?= container
 					if an_object_editor /= Void then
-						an_object_editor.set_object (an_object)
+						an_object_editor.set_object (object_stone.object)
 						found := True
 					end
 					container ?= container.parent
@@ -114,7 +116,7 @@ feature {NONE} -- Implementation
 					-- If `button' was not parented at some level in a GB_OBJECT_EDITOR
 					-- then we must generate a new object editor.
 				if not found then
-					new_object_editor (an_object)
+					new_object_editor (object_stone.object)
 				end
 			end
 			

@@ -86,18 +86,18 @@ feature {NONE} -- Initialization
 					else
 						sys_name := "sample"
 					end
-					create f.make_open_write (Eiffel_ace.file_name)
-					if f.exists and then f.is_writable then
-						f.putstring (blank_ace_file (sys_name))
-						f.close
-						create ace.make (Eiffel_ace.file_name)
-						check is_valid end
-					end
+--					create f.make_open_write (Eiffel_ace.file_name)
+--					if f.exists and then f.is_writable then
+--						f.putstring (blank_ace_file (sys_name))
+--						f.close
+--						create ace.make (Eiffel_ace.file_name)
+--						check is_valid end
+--					end
 				end
 			end
-		rescue
-			retried := True
-			retry
+--		rescue
+--			retried := True
+--			retry
 		end
 	
 feature -- Access
@@ -568,11 +568,12 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	dirty: BOOLEAN
-			-- are the project setting dirty and require saving?
 
 	ace: ACE_FILE_ACCESSER
 			-- Access to the Ace file.
+
+	dirty: BOOLEAN
+			-- are the project setting dirty and require saving?
 
 	blank_ace_file (sys_name: STRING): STRING is
 			-- Minimal ace file generated when a syntax error is detected.

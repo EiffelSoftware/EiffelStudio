@@ -4,7 +4,6 @@ inherit
 	FORMAT_BUTTON
 
 creation
-
 	make
 
 feature 

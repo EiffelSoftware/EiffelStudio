@@ -1,15 +1,14 @@
-
 deferred class WINDOW_C 
 
 inherit
 
-
-	COMMAND;
+	COMMAND
 
 	CONTEXT_SHARED
 		export
 			{NONE} all
-		end;
+		end
+
 	COMPOSITE_C
 		rename
 			reset_modified_flags as composite_reset_modified_flags
@@ -19,7 +18,8 @@ inherit
 			intermediate_name, is_bulletin, full_name,
 			deleted, remove_yourself, group_name,
 			set_x_y, set_size, set_visual_name
-		end;
+		end
+
 	COMPOSITE_C
 		redefine
 			create_context, cut, position_initialization,
@@ -34,185 +34,181 @@ inherit
 	
 feature 
 
-	group_name: STRING is do end;
+	group_name: STRING is do end
 
-	title: STRING;
+	title: STRING
 
-	title_modified: BOOLEAN;
+	title_modified: BOOLEAN
 
 	set_title (new_title: STRING) is
 			-- Set`title' to `new_title'
 		do
-			title_modified := True;
-			widget_set_title (new_title);
-			visual_name := clone (new_title);
+			title_modified := True
+			widget_set_title (new_title)
+			visual_name := clone (new_title)
 			update_tree_element
-		end;
+		end
 
-	resize_policy_disabled: BOOLEAN;
+	resize_policy_disabled: BOOLEAN
 
-	resize_policy_modified: BOOLEAN;
+	resize_policy_modified: BOOLEAN
 
 	disable_resize_policy (flag: BOOLEAN) is
         do
-            resize_policy_modified := True;
-            resize_policy_disabled := flag;
+            resize_policy_modified := True
+            resize_policy_disabled := flag
             if flag then
-                widget_forbid_resize;
+                widget_forbid_resize
                     -- The current size must be saved
                 size_modified := True
             else
                 widget_allow_resize
-            end;
-        end;
+            end
+        end
 
 	reset_modified_flags is
 		do
-			composite_reset_modified_flags;
-			title_modified := False;
-			resize_policy_modified := False;
-		end;
+			composite_reset_modified_flags
+			title_modified := False
+			resize_policy_modified := False
+		end
 
 	set_grid (pix: PIXMAP) is
-		local
-			null_pointer: POINTER;
 		do
 			if pix = Void then
 				if bg_pixmap_name /= Void then
-					set_bg_pixmap_name (bg_pixmap_name)	
+					set_bg_pixmap_name (bg_pixmap_name)
 				else
-					if default_pixmap_value /= null_pointer then
-						c_efb_set_bg_pixmap (widget.implementation.screen_object, default_pixmap_value);  
+					if def_pixmap /= Void then
+						widget.set_background_pixmap (def_pixmap)
 					else
-						set_default_pixmap;
-						c_efb_set_bg_pixmap (widget.implementation.screen_object, default_pixmap_value); 
-					end;
-				end;
+						set_default_pixmap
+						widget.set_background_pixmap (def_pixmap)
+					end
+				end
 			else
 				if pix.is_valid then
-					widget.set_managed (False);
-					widget.set_background_pixmap (pix);
-					widget.set_managed (True);
-				end;
+					widget.set_managed (False)
+					widget.set_background_pixmap (pix)
+					widget.set_managed (True)
+				end
 			end
-		end;
+		end
 
-	default_pixmap_value: POINTER;
+	def_pixmap: PIXMAP
 
 	set_default_pixmap is
 		do
-			default_pixmap_value := 
-				c_efb_get_bg_pixmap (widget.implementation.screen_object)
-		end;
+			def_pixmap := widget.background_pixmap
+		end
 
 feature {NONE}
 
 	widget_set_title (s: STRING) is
 		deferred
-		end;
+		end
 
 	widget_forbid_resize is
 		deferred
-		end;
+		end
 
 	widget_allow_resize is
 		deferred
-		end;
+		end
 
 feature 
 
 
 	set_start_hidden (flag: BOOLEAN) is
 		do
-			start_hidden := flag;
-			start_hidden_modified := True;
-		end;
+			start_hidden := flag
+			start_hidden_modified := True
+		end
 
-	start_hidden: BOOLEAN;
+	start_hidden: BOOLEAN
 
-	start_hidden_modified: BOOLEAN;
-
+	start_hidden_modified: BOOLEAN
 
 	set_visual_name (s: STRING) is
 		do
 			if (s = Void) then
-				visual_name := Void;
-				update_tree_element;
+				visual_name := Void
+				update_tree_element
 				set_title (label)
 			else
-				set_title (s);
-			end;
-		end;
+				set_title (s)
+			end
+		end
 
 	shown: BOOLEAN is
 			-- is the widget shown
 		require
-			valid_widget: widget /= Void;
+			valid_widget: widget /= Void
 		do
-			Result := widget.shown;
-		end;
+			Result := widget.shown
+		end
 
 	is_bulletin: BOOLEAN is
 		do
 			Result := True
-		end;
+		end
 
 	is_in_a_group: BOOLEAN is
 		do
 			Result := False
-		end;
+		end
 
 	link_to_parent is
 		require else
-			True;
+			True
 		do
-			window_list.finish;
-			window_list.put_right (Current);
-		end;
+			window_list.finish
+			window_list.put_right (Current)
+		end
 
 	root: CONTEXT is
 		require else
-			valid_parent: True;
+			valid_parent: True
 		do
 			Result := Current
-		end;
+		end
 
 	set_position (x_pos, y_pos: INTEGER) is
 		do
-			set_x_y (x_pos, y_pos);
-		end;
+			set_x_y (x_pos, y_pos)
+		end
 
 	set_x_y (new_x, new_y: INTEGER) is
 			-- Set new position of widget
 		do
-			old_x := new_x;
-			old_y := new_y;
-			position_modified := True;
-			widget.set_x_y (new_x, new_y);
-		end;
+			old_x := new_x
+			old_y := new_y
+			position_modified := True
+			widget.set_x_y (new_x, new_y)
+		end
 
 	set_size (new_w, new_h: INTEGER) is
 			-- Set new size of widget
 		do
-			old_width := new_w;
-			old_height := new_h;
-			size_modified := True;
-			widget.set_size (new_w, new_h);
-		end;
+			old_width := new_w
+			old_height := new_h
+			size_modified := True
+			widget.set_size (new_w, new_h)
+		end
 
 	
 feature {CONTEXT}
 
 	full_name: STRING is
 		do
-			!!Result.make (0);
-			Result.append (entity_name);
-		end;
+			!!Result.make (0)
+			Result.append (entity_name)
+		end
 
 	intermediate_name: STRING is
 		do
-			Result := full_name;
-		end;
+			Result := full_name
+		end
 
 	
 feature 
@@ -220,123 +216,110 @@ feature
 	create_context (a_parent: COMPOSITE_C): like Current is
 			-- Create a context of the same type
 		local
-			void_parent: COMPOSITE;
-			create_command: CONTEXT_CREATE_CMD;
+			void_parent: COMPOSITE
+			create_command: CONTEXT_CREATE_CMD
 		do
-			Result := New;
-			Result.link_to_parent;
-			Result.generate_internal_name;
-			Result.oui_create (void_parent);
+			Result := New
+			Result.link_to_parent
+			Result.generate_internal_name
+			Result.oui_create (void_parent)
 			if not (widget = Void) then
-				Result.set_size (width, height);
-				copy_attributes (Result);
-			end;
-			!!create_command;
-			create_command.execute (Result);
-		end;
+				Result.set_size (width, height)
+				copy_attributes (Result)
+			end
+			!!create_command
+			create_command.execute (Result)
+		end
 
 	deleted : BOOLEAN is
 		do
-			window_list.start;
-			window_list.search (Current);
+			window_list.start
+			window_list.search (Current)
 			Result := window_list.after
-		end;
+		end
 
 	remove_yourself is
 		local
 			command: CONTEXT_CUT_CMD
 		do
-			!!command;
-			command.execute (Current);
+			!!command
+			command.execute (Current)
 			tree.display (Current)
-		end;
+		end
 
 	cut is
 		require else
-			no_parent: True;
+			no_parent: True
 		do
-			window_list.start;
-			window_list.search (Current);
+			window_list.start
+			window_list.search (Current)
 			if not window_list.exhausted then
-				window_list.remove;
-			end;
-			widget.set_managed (False);
-			tree.cut (tree_element);
-			context_catalog.clear_editors (Current);
-		end;
+				window_list.remove
+			end
+			widget.set_managed (False)
+			tree.cut (tree_element)
+			context_catalog.clear_editors (Current)
+		end
 
 	add_window_geometry_action is 
 		require
-			widget_not_void: widget /= Void;
+			widget_not_void: widget /= Void
 		deferred 
-		end;
+		end
 
 	remove_window_geometry_action is 
 		require 
-			widget_not_void: widget /= Void;
+			widget_not_void: widget /= Void
 		deferred 
-		end;
+		end
 	
 	skip_configure_action is
 		deferred
-		end;
+		end
 	
 	skip_two_configure_action is
 		deferred
-		end;
-
+		end
 
 	execute (argument: like Current) is
 		do
 			if win_cmd = void then
-				old_x := x;
-				old_y := y;
-				old_width := width;
-				old_height := height;
-				!!win_cmd.make (Current);
+				old_x := x
+				old_y := y
+				old_width := width
+				old_height := height
+				!!win_cmd.make (Current)
 			elseif argument = Fourth then
-				!!win_cmd.make (Current);
-				old_x := x;
-				old_y := y;
-				old_width := width;
-				old_height := height;
-				win_cmd.execute (argument);
+				!!win_cmd.make (Current)
+				old_x := x
+				old_y := y
+				old_width := width
+				old_height := height
+				win_cmd.execute (argument)
 			elseif argument = Fifth then
-				add_window_geometry_action;
+				add_window_geometry_action
 			elseif argument = Sixth then
-				skip_configure_action;
-			end;
-		end;
+				skip_configure_action
+			end
+		end
 
-	old_x, old_y, old_width, old_height: INTEGER;
+	old_x, old_y, old_width, old_height: INTEGER
 
 feature {NONE}
 
-	win_cmd: WIN_CONFIG_CMD;
+	win_cmd: WIN_CONFIG_CMD
 
 	position_initialization (context_name: STRING): STRING is
 			-- Eiffel code for the position of current context
 			-- depending on the type of its parent
 		do
-			!!Result.make (0);
+			!!Result.make (0)
 			if position_modified then
-				function_int_int_to_string (Result, "", "set_x_y", x, y);
-			end;
+				function_int_int_to_string (Result, "", "set_x_y", x, y)
+			end
 			if size_modified then
-				function_int_int_to_string (Result, "", "set_size", width, height);
-			end;
-		end;
-
-feature {NONE} -- External
-
-	c_efb_get_bg_pixmap (w: POINTER): POINTER is
-		external
-			"C"
-		end;
-
-	c_efb_set_bg_pixmap (w, pix: POINTER) is
-		external
-			"C"
-		end;
+				function_int_int_to_string (Result,"","set_size",width, height)
+			end
+		end
 
 end

@@ -1,4 +1,3 @@
-
 class CONTEXT_EDITOR 
 
 inherit
@@ -6,6 +5,7 @@ inherit
 	WIDGET_NAMES
 	EDITOR_NAMES
 	EDITOR_FORMS
+
 	TOP_SHELL
 		rename
 			make as shell_make,
@@ -17,6 +17,7 @@ inherit
 		redefine
 			delete_window_action
 		end
+
 	TOP_SHELL
 		export
 			{NONE} all
@@ -29,6 +30,7 @@ inherit
 		select
 			realize, make, show, hide
 		end
+
 	WINDOWS
 
 creation
@@ -42,17 +44,10 @@ feature {NONE}
 	
 feature 
 
+	-- Context edited in the context editor
 	edited_context: CONTEXT
-			-- Context edited in the context editor
-
 	current_form: EDITOR_FORM
-
 	current_form_number: INTEGER
-
-	
-feature {NONE}
-
--- menu_button: OPTION_MENU
 
 	
 feature 
@@ -75,7 +70,6 @@ feature
 
 	form_list: ARRAY [EDITOR_FORM]
 
-	
 feature {ALIGNMENT_CMD}
 
 	alignment_form: ALIGNMENT_FORM
@@ -92,14 +86,11 @@ feature
 	make (a_name: STRING a_screen: SCREEN) is
 		local
 			i: INTEGER
-
 			close_button: CLOSE_CONTEXT_EDITOR
-
 			geometry_form: GEOMETRY_FORM
 			label_text_form: LABEL_TEXT_FORM
 			perm_wind_form: PERM_WIND_FORM
 			temp_wind_form: TEMP_WIND_FORM
---form_position: FORM_POSITION
 			separator_form: SEPARATOR_FORM
 			text_form: TEXT_FORM
 			menu_form: MENU_FORM
@@ -119,20 +110,16 @@ feature
 			!!form_list.make (1, form_number)
 
 			shell_make (a_name, a_screen)
---set_size (260, 480)
 			!!top_form.make (F_orm, Current)
 
 			!!context_hole.make (Current)
 			context_hole.make_visible (top_form)
 			!!first_separator.make (S_eparator, top_form)
 			first_separator.set_horizontal (True)
---!!menu_button.make (G_eometry_form_name, Current)
---menu_button.set_insensitive
 			!!second_separator.make (S_eparator, top_form)
 			second_separator.set_horizontal (True)
 			!!close_button.make (Current, Current)
 			close_button.make_visible (top_form)
--- menu_button.set_text ("Options")
 			!!formats.make ("formats", top_form) 
 			formats.set_row_layout
 			formats.set_preferred_count (1)
@@ -153,10 +140,6 @@ feature
 			top_form.attach_right (formats, 1)
 			top_form.attach_bottom_widget (formats, second_separator, 1)
 
---top_form.attach_top_widget (first_separator, menu_button.option_button, 5)
---top_form.attach_left (menu_button.option_button, 10)
-
---top_form.attach_top_widget (menu_button.option_button, second_separator, 5)
 			top_form.attach_left (second_separator, 0)
 			top_form.attach_right (second_separator, 0)
 
@@ -169,7 +152,6 @@ feature
 			!!perm_wind_form.make (Current)
 			!!temp_wind_form.make (Current)
 			!!separator_form.make (Current)
---form_position.Create (Current)
 			!!text_form.make (Current)
 			!!menu_form.make (Current)
 			!!bar_form.make (Current)
@@ -188,28 +170,23 @@ feature
 			!!grid_form.make (Current)
 
 			!!format.make (formats, Current)
+
+			-- set the editor toggle on as an editor is active
+			context_hole.main_panel.t4.set_toggle_on
 		end
 
 	realize is
 		do
--- menu_button.set_insensitive
 			shell_realize
-			
 		end
 
 	show is
 		do
-			if context_hole.original_stone /= Void then
---menu_button.set_sensitive
-			else
--- menu_button.set_insensitive
-			end
 			shell_show
 		end
 
 	hide is
 		do
---menu_button.set_insensitive
 			shell_hide
 		end
 
@@ -219,7 +196,6 @@ feature
 			top_form.attach_top_widget (first_separator, a_form, 1)
 			top_form.attach_left (a_form, 1)
 			top_form.attach_right (a_form, 1)
---top_form.attach_bottom (a_form, 1)
 			top_form.attach_bottom_widget (second_separator, a_form, 1)
 		end
 
@@ -240,24 +216,10 @@ feature
 			end
 			if other_editor = Void then
 				if new_context /= edited_context then
--- menu_button.set_insensitive
 					old_edited_context := edited_context
 					edited_context := new_context
 					context_hole.set_context (edited_context)
 					option_list := edited_context.option_list
--- menu_button.update (option_list)
-					if edited_context.is_bulletin then
--- menu_button.add_button (alignment_form_number)
--- menu_button.add_button (grid_form_number)
-					end
-					if not (edited_context.resize_policy = Void) then
--- menu_button.add_button (bulletin_resize_form_number)
-					end
--- menu_button.add_button (color_form_number)
-					if edited_context.is_fontable then
--- menu_button.add_button (font_form_number)
-					end
---menu_button.add_button (behavior_form_number)
 					if edited_context.editor_form = 0 then
 						edited_context.set_editor_form (option_list.item (1))
 					end
@@ -282,7 +244,6 @@ feature
 						end
 						i := i + 1
 					end
---	list := menu_button.additionnal_list
 					!!list.make
 					from
 					list.start
@@ -314,7 +275,6 @@ feature
 						set_form (edited_context.editor_form)
 					end
 				end
---				menu_button.set_sensitive
 			else
 				other_editor.raise
 			end
@@ -329,7 +289,6 @@ feature
 			if other_editor = Void then
 				set_form (a_form_number)
 			else
--- menu_button.set_previous_selected_button	
 				other_editor.raise
 			end
 		end
@@ -344,7 +303,6 @@ feature
 			unmanage
 			current_form_number := a_form_number
 			edited_context.set_editor_form (a_form_number)
--- menu_button.set_form (edited_context.editor_form)
 			new_form := form_list.item (edited_context.editor_form)
 			if not new_form.is_initialized then
 				!!mp
@@ -397,7 +355,6 @@ feature -- Reseting
 				reset_behavior_editor
 				edited_context.set_editor_form (current_form_number)
 				edited_context := Void
--- menu_button.option_button.set_insensitive
 				current_form.hide
 				current_form := Void
 				current_form_number := 0

@@ -46,7 +46,6 @@ feature {NONE}
 	work (argument: ANY) is
 		do
 			if main_panel.project_initialized then
-				toggle
 				if armed then
 					window_mgr.show_all_editors
 				else

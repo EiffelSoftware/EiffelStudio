@@ -14,12 +14,9 @@ inherit
 			command_line as exec_command_line
 		export
 			{NONE} all
-		end
+		end;
+	SHARED_LICENSE
 
-creation
-
-	make
-	
 feature 
 
 	make is
@@ -28,25 +25,28 @@ feature
 			init.perform_initial_check;
 			if init.error then
 				io.error.putstring ("EiffelBuild stopped%N");
-				if init.licence.registered then
-					init.licence.unregister;
-				end;
 				exit
-			else
+			elseif init_licence then
 				init_windowing;
 				init_project;
 				read_command_line;
 				iterate;
-				init.licence.unregister;				
+				discard_licence
 			end;
 		rescue
-			if init.licence.registered then
-				init.licence.unregister;
-			end;
+			discard_licence;
 			save_rescue
 		end;
 	
 feature {NONE}
+
+	init_licence: BOOLEAN is
+		do
+			licence.get_registration_info;
+			licence.set_version (3);
+			licence.set_application_name ("eiffelbuild");
+			Result := licence.connected
+		end;
 
 	init: INIT_CHECK;
 	

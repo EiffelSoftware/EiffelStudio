@@ -46,7 +46,7 @@ feature {NONE}
 	work (argument: ANY) is
 		do
 			if main_panel.project_initialized then
-				toggle
+				-- do nothing for the moment
 			end
 		end
 

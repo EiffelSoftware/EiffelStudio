@@ -5,11 +5,6 @@ inherit
 
 	UNIX_ENV;
 
-	BUILD_LIC
-		redefine
-			build_dir
-	end;
-
 feature 
 
 	error: BOOLEAN;
@@ -23,22 +18,6 @@ feature
 			check_eiffelbuild_var_name;
 			if not error then
 				check_bitmaps_directory;
-				if not error then
-					licence.get_registration_info;
-					licence.set_application_name ("eiffelbuild");
-					licence.set_version(1);
-					licence.register;
-					if licence.registered then
-						licence.open_licence;
-						if licence.licenced then
-							error := False;
-						else
-							error := True;
-						end;
-					else
-						error := True;
-					end;
-				end;
 			end;
 		end;
 	

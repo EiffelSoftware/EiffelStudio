@@ -50,6 +50,11 @@ feature {NONE}
 			Result := symbol_file_content ("help.symb")
 		end;
 
+	Ok_pixmap: PIXMAP is
+		once
+			Result := symbol_file_content ("ok_tick.symb")
+		end
+
 	Quit_pixmap: PIXMAP is
 		once
 			Result := symbol_file_content ("quit.symb")

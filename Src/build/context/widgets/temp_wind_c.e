@@ -258,6 +258,7 @@ feature {NONE}
 			-- depending on the type of its parent
 		do
 			!!Result.make (0);
+			widget.set_default_position (False)
 			if position_modified then
 				function_int_int_to_string (Result, "", "set_x_y", x, y);
 			end;

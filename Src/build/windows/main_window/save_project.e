@@ -29,8 +29,6 @@ feature
 
 	rescued: BOOLEAN;
 	
-	licence_lost: BOOLEAN;
-
 	work (argument: ANY) is
 		local
 			storer: STORER;	
@@ -64,25 +62,8 @@ feature
 		end;
 
 	licence_checked: BOOLEAN is
-		local
-			msg: STRING;
 		do
-			licence.alive;
-			if licence.is_alive then
-				licence_lost := False;
-				Result := True;
-			else
-				if licence_lost then
-					Result := False;
-				else
-					licence_lost := True;
-					Result := True;
-					!!msg.make (0);
-					msg.append ("You have lost your license.%N");
-					msg.append ("This is the last save until you obtain you license back.");
-					warning_box.popup (Current, msg);
-				end;
-			end;
+			Result := True;
 		end;
 
 

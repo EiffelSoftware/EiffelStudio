@@ -46,7 +46,6 @@ feature {NONE}
 	work (argument: ANY) is
 		do
 			if main_panel.project_initialized then
-				toggle
                 if armed then
 					if main_panel.history_window.realized then
 						main_panel.history_window.show
@@ -54,7 +53,9 @@ feature {NONE}
 						main_panel.history_window.realize
 					end
                 else
-                    main_panel.history_window.hide
+					if main_panel.history_window.realized then
+						main_panel.history_window.hide
+					end
                 end
 			end
 		end

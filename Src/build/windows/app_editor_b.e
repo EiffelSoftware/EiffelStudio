@@ -46,16 +46,21 @@ feature {NONE}
 	work (argument: ANY) is
 		do
 			if main_panel.project_initialized then
-				toggle
-				if main_panel.app_editor.realized then
-					main_panel.app_editor.show
+				if armed then
+					if main_panel.app_editor.realized then
+						main_panel.app_editor.show
+					else
+						main_panel.app_editor.realize
+					end
+					if main_panel.app_editor.selected_figure = Void then
+						main_panel.app_editor.set_default_selected
+					else
+						main_panel.app_editor.display_transitions
+					end
 				else
-					main_panel.app_editor.realize
-				end
-				if main_panel.app_editor.selected_figure = Void then
-					main_panel.app_editor.set_default_selected
-				else
-					main_panel.app_editor.display_transitions
+					if main_panel.app_editor.realized then
+						main_panel.app_editor.hide
+					end
 				end
 			end
 		end

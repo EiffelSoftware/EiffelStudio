@@ -1,4 +1,3 @@
-
 class FONT_CMD 
 
 inherit
@@ -15,9 +14,6 @@ inherit
 		export
 			{NONE} all
 		end
-
-
-
 	
 feature {NONE}
 
@@ -28,41 +24,29 @@ feature {NONE}
 
 	old_font_name: STRING;
 
+	old_font: FONT
+
 	font_list: POINTER;
 
 	context_work is
-		
 		do
-			old_font_name := context.font_name;
-			if (old_font_name = Void) then 
-				font_list := c_efb_get_font_list (context.widget.implementation.screen_object);
-				!!old_font_name.make (0);
-			end;
-		end;
+			old_font_name := context.font_name
+			if (old_font_name = Void) then
+				old_font := context.font
+				!!old_font_name.make (0)
+			end
+		end
 
 	context_undo is
-		
-		local
-			new_font_name: STRING;
+		local 
+			new_font_name: STRING
 		do
-			new_font_name := context.font_name;
-			context.set_font_named (old_font_name);
+			new_font_name := context.font_name
+			context.set_font_named (old_font_name)
 			if old_font_name.empty then
-				c_efb_set_font_list (context.widget.implementation.screen_object, font_list)
-			end;
-			old_font_name := new_font_name;
-		end;
-
-feature {NONE} -- External features
-
-	c_efb_get_font_list (a_w: POINTER): POINTER is
-		external
-			"C"
-		end; 
-
-	c_efb_set_font_list (a_w, a_f: POINTER) is
-		external
-			"C"
-		end;
+				context.set_font_named (old_font.name)
+			end
+			old_font_name := new_font_name
+		end
 
 end

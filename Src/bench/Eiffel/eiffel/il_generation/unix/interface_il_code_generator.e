@@ -205,8 +205,8 @@ feature -- IL Generation
 				feat := select_tbl.item (features.item_for_iteration)
 
 				if
-					feat.feature_name_id /= feature {PREDEFINED_NAMES}.Void_name_id and then
-					(not feat.is_external or else feat.is_c_external)
+					feat.feature_name_id /= feature {PREDEFINED_NAMES}.Void_name_id
+					and then (not feat.is_external or else feat.is_c_external)
 				then
 						-- Generate code for current class only.
 					if not feat.is_deferred then
@@ -236,6 +236,16 @@ feature -- IL Generation
 				end
 				features.forth
 			end
+
+				-- FIXME: Should be removed as this should automatically
+				-- done.
+				-- Generate `Finalize' from System.Object.			
+			feat := select_tbl.item (internal_finalize_rout_id)
+			meta_data_generator.generate_feature (feat, True)
+			generate_implementation_feature_il (feat.feature_id)
+			current_class_type.generate_il_feature (feat)
+				-- Generate call to `Finalize' implementation.
+			implementation.generate_finalize_feature (feat.feature_id)
 		end
 
 	generate_il_implementation_inherited
@@ -267,8 +277,7 @@ feature -- IL Generation
 
 				if
 					inh_feat.feature_name_id /= feature {PREDEFINED_NAMES}.Void_name_id
---					and then
---					(not inh_feat.is_external or else inh_feat.is_c_external)
+					and then (not inh_feat.is_external or else inh_feat.is_c_external)
 				then
 						-- Generate local definition of `inh_feat' which
 						-- calls static definition.
@@ -305,7 +314,7 @@ feature -- IL Generation
 			end
 		end
 
-	generate_local_feature (feat, inh_feat: FEATURE_I; class_type: CLASS_TYPE; replicated: BOOLEAN) is
+	generate_local_feature (feat, inh_feat: FEATURE_I; class_type: CLASS_TYPE; is_replicated: BOOLEAN) is
 			-- Generate a feature `feat' implemented in `current_class_type', ie
 			-- generate encapsulation that calls its static implementation.
 		require
@@ -313,30 +322,30 @@ feature -- IL Generation
 			class_type_not_void: class_type /= Void
 		local
 			l_is_method_impl_generated: BOOLEAN
-			l_def: DEF_PROC_I
 			dup_feat: FEATURE_I
 			proc: PROCEDURE_I
-			ext: EXTERNAL_I
 		do
 			if feat.rout_id_set.has (internal_duplicate_rout_id) then
 				meta_data_generator.generate_feature (feat, False)
 				implementation.generate_feature_internal_duplicate (feat.feature_id)
 			else
 				if not is_frozen_class then
-						-- Generate static definition of `feat'.
-					meta_data_generator.generate_feature (feat, True)
-					generate_implementation_feature_il (feat.feature_id)
-					if not replicated then
+					if not is_replicated then
+							-- Generate static definition of `feat'.
+						meta_data_generator.generate_feature (feat, True)
+						generate_implementation_feature_il (feat.feature_id)
 						current_class_type.generate_il_feature (feat)
-					else
-						generate_replicated_feature (feat, class_type)
 					end
 	
 						-- Generate local definition of `feat' which
 						-- calls static definition.
 					if inh_feat /= Void then
-						l_is_method_impl_generated := feat.feature_name_id /= inh_feat.feature_name_id
+						l_is_method_impl_generated :=
+							feat.feature_name_id /= inh_feat.feature_name_id
 						if not l_is_method_impl_generated then
+								-- Generate local definition signature using the parent
+								-- signature. We do not do it on the parent itself because
+								-- its `feature_id' is not appropriate in `current_class_type'.
 							Byte_context.set_class_type (class_type)
 							dup_feat := feat.duplicate
 							if dup_feat.is_procedure then
@@ -352,9 +361,22 @@ feature -- IL Generation
 					else
 						meta_data_generator.generate_feature (feat, False)
 					end
-					generate_feature_il (feat.feature_id,
-						current_class_type.implementation_id,
-						feat.feature_id)
+
+
+					if not is_replicated then
+							-- We call locally above generated static feature
+						generate_feature_il (feat.feature_id,
+							current_class_type.implementation_id,
+							feat.feature_id)
+					else
+							-- We call static feature corresponding to current replicated feature.
+							-- This static feature is defined in parent which explains the search
+							-- made below to find in which parent's type.
+						generate_feature_il (feat.feature_id,
+							implemented_type (feat.written_in,
+								current_class_type.type).associated_class_type.implementation_id,
+							feat.written_feature_id)
+					end
 				else
 					generate_implementation_feature_il (feat.feature_id)
 					current_class_type.generate_il_feature (feat)
@@ -366,15 +388,6 @@ feature -- IL Generation
 					-- inherited method to current defined one.
 				generate_method_impl (feat.feature_id,
 					class_type.static_type_id, inh_feat.feature_id)
-			end
-
-			if inh_feat /= Void then
-				l_def ?= inh_feat
-				if l_def /= Void then
-					if l_def.extension /= Void then
-							-- Generate MethodImpl from Interface feature to current.
-					end
-				end
 			end
 		end
 
@@ -395,6 +408,9 @@ feature -- IL Generation
 				if inh_feat /= Void then
 					l_is_method_impl_generated := feat.feature_name_id /= inh_feat.feature_name_id
 					if not l_is_method_impl_generated then
+							-- Generate local definition signature using the parent
+							-- signature. We do not do it on the parent itself because
+							-- its `feature_id' is not appropriate in `current_class_type'.
 						Byte_context.set_class_type (class_type)
 						dup_feat := feat.duplicate
 						if dup_feat.is_procedure then
@@ -427,17 +443,6 @@ feature -- IL Generation
 				generate_method_impl (feat.feature_id,
 					class_type.static_type_id, inh_feat.feature_id)
 			end
-		end
-
-	generate_replicated_feature (rep_feat: FEATURE_I; class_type: CLASS_TYPE) is
-			-- Generate encapsulation that calls `rep_feat'.
-		require
-			rep_feat_not_void: rep_feat /= Void
-			class_type_not_void: class_type /= Void
-		do
-			Byte_context.set_class_type (class_type)
-			class_type.generate_il_feature (rep_feat)
-			Byte_context.set_class_type (current_class_type)
 		end
 
 	mark_as_treated (feat: FEATURE_I) is

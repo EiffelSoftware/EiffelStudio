@@ -36,7 +36,7 @@ feature {STOPPED_HDLR} -- Initialization
 			-- Set the various attributes identifying current 
 			-- position in source code.
 		local
-			stack_num: INTEGER
+--			stack_num: INTEGER
 			cont_request: EWB_REQUEST
 		do
 			object_address := obj
@@ -58,13 +58,13 @@ feature {STOPPED_HDLR} -- Initialization
 				break_index := offs
 		
 					-- create the call stack
-				create where.make
+				create where.dummy_make
 	
-				stack_num := Application.current_execution_stack_number
-				if stack_num > where.count then
-					stack_num := where.count
-				end
-				Application.set_current_execution_stack(stack_num)
+--				stack_num := Application.current_execution_stack_number
+--				if stack_num > where.count then
+--					stack_num := where.count
+--				end
+--				Application.set_current_execution_stack(stack_num)
 			else
 				-- application has stopped to take into account the
 				-- new breakpoints. So let's send the new breakpoints
@@ -151,14 +151,16 @@ feature -- Access
 				reason = Pg_interrupt or else
 				reason = Pg_raise or else
 				reason = Pg_viol or else
-				reason = Pg_new_breakpoint
+				reason = Pg_new_breakpoint or else
+				reason = Pg_step
 		ensure
 			true_implies_correct_reason: 
 				Result implies (reason = Pg_break) or else
 						(reason = Pg_interrupt) or else
 						(reason = Pg_raise) or else
 						(reason = Pg_viol) or else
-						(reason = Pg_new_breakpoint)
+						(reason = Pg_new_breakpoint) or else
+						(reason = Pg_step)
 		end
 
 	is_at (f_body_index: INTEGER; index: INTEGER): BOOLEAN is
@@ -270,6 +272,9 @@ feature -- Output
 					st.add_string ("New breakpoint(s) to commit")
 					st.add_new_line
 					display_exception (st)
+				when Pg_step then
+					st.add_string ("Step completed")
+					st.add_new_line
 				else
 					st.add_string ("Unknown")
 					st.add_new_line

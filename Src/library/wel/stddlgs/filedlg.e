@@ -102,6 +102,8 @@ feature -- Access
 			selected: selected
 		do
 			Result := cwel_open_file_name_get_nfileoffset (item) + 1
+		ensure
+			result_greater_than_or_equal_to_one: Result >= 1
 		end
 
 	file_extension_offset: INTEGER is
@@ -112,6 +114,8 @@ feature -- Access
 			selected: selected
 		do
 			Result := cwel_open_file_name_get_nfileextension (item) + 1
+		ensure
+			result_greater_than_or_equal_to_one: Result >= 1
 		end
 
 	Max_file_name_length: INTEGER is 1024
@@ -200,8 +204,8 @@ feature -- Element change
 			-- the filter names and `filter_patterns' is an
 			-- array of string containing the filter patterns.
 			-- Example:
-			--   filter_names = <<"Text file", "All file">>
-			--   filter_patterns = <<"*.txt", "*.*">>
+			--	filter_names = <<"Text file", "All file">>
+			--	filter_patterns = <<"*.txt", "*.*">>
 		require
 			exists: exists
 			filter_names_not_void: filter_names /= Void

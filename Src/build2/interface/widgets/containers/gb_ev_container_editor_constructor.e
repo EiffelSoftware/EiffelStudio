@@ -152,6 +152,7 @@ feature {NONE} -- Implementation
 		local
 			container: EV_CONTAINER
 			display_object: GB_DISPLAY_OBJECT
+			second: like ev_type
 		do
 				-- First set up display object.
 			container ?= an_object.object
@@ -167,8 +168,11 @@ feature {NONE} -- Implementation
 			check
 				object_was_a_contained: display_object /= Void
 			end
-			if (objects @ 2).merged_radio_button_groups = Void or not (objects @ 2).merged_radio_button_groups.has (display_object.child) then
-				(objects @ 2).merge_radio_button_groups (display_object.child)	
+			second := objects @ 2
+			if second /= Void then
+				if second.merged_radio_button_groups = Void or not second.merged_radio_button_groups.has (display_object.child) then
+					second.merge_radio_button_groups (display_object.child)	
+				end
 			end
 				-- Now update the project status, as something has changed.
 			enable_project_modified

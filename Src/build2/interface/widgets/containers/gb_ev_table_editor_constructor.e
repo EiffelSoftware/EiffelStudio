@@ -341,8 +341,11 @@ feature {NONE} -- Implementation
 				first.set_item_span (v, columns, rows)
 					-- Now we need to get the widget represented in objects at the
 					-- second place.
-				second_widget := (objects @ 2).item (first.item_column_position (v), first.item_row_position (v))
-				(objects @ 2).set_item_span (second_widget, columns, rows)
+				
+				if objects @ 2 /= Void then
+					second_widget := (objects @ 2).item (first.item_column_position (v), first.item_row_position (v))
+					(objects @ 2).set_item_span (second_widget, columns, rows)
+				end
 					-- Flag that notification is required for all corresponding editors.
 				must_update_editors := True
 					-- Update project.
@@ -360,10 +363,14 @@ feature {NONE} -- Implementation
 			 first.item_column_span (v) /= columns or first.item_row_span (v) /= rows then
 					-- Now we need to get the widget represented in objects at the
 					-- second place. We must do this before we move the first widget.
-				second_widget := (objects @ 2).item (first.item_column_position (v), first.item_row_position (v))
+				if objects @ 2 /= Void then
+					second_widget := (objects @ 2).item (first.item_column_position (v), first.item_row_position (v))
+				end
 	
 				first.set_item_position_and_span (v, a_column, a_row, columns, rows)
-				(objects @ 2).set_item_position_and_span (second_widget, a_column, a_row, columns, rows)
+				if objects @ 2 /= Void then
+					(objects @ 2).set_item_position_and_span (second_widget, a_column, a_row, columns, rows)
+				end
 					-- Flag that notification is required for all corresponding editors.
 				must_update_editors := True
 					-- Update project.

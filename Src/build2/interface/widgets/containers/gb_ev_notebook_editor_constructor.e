@@ -99,9 +99,14 @@ feature {NONE} -- Implementation
 			-- on layout item `index'. We cannot use `for_all_objects' as
 			-- we need to get access to the real widget in each representation
 			-- so doing it this way is easier.
+		local
+			second: like ev_type
 		do
 			first.set_item_text (first.i_th (index), text_field.text)
-			(objects @ 2).set_item_text ((objects @ 2).i_th (index), text_field.text)
+			second := objects @ 2
+			if second /= Void then
+				second.set_item_text (second.i_th (index), text_field.text)
+			end
 			enable_project_modified
 		end
 		

@@ -19,6 +19,8 @@ feature {NONE} -- Initialization
 
 	make (cmd: EB_PRETTY_PRINT_CMD) is
 			-- Initialize `Current'.
+		require
+			cmd_not_void: cmd /= Void
 		local
 			hb: EV_HORIZONTAL_BOX
 			exit_button: EV_BUTTON
@@ -39,6 +41,7 @@ feature {NONE} -- Initialization
 			exit_button.select_actions.extend (~destroy)
 			create slice_button.make_with_text (Interface_names.b_Slice)
 			slice_button.select_actions.extend (slice_cmd~execute)
+			slice_button.disable_sensitive
 			
 				-- Setting up the editor.
 			create editor.make
@@ -46,7 +49,7 @@ feature {NONE} -- Initialization
 			create f
 			create vb
 			create hb
-			f.set_minimum_size (200, 150)
+			f.set_minimum_size (400, 200)
 			f.extend (editor.widget)
 			vb.extend (f)
 			vb.set_padding (Layout_constants.Small_padding_size)
@@ -66,6 +69,7 @@ feature {NONE} -- Initialization
 			dialog.set_default_cancel_button (exit_button)
 			dialog.set_default_push_button (slice_button)
 			editor.drop_actions.extend (~on_stone_dropped)
+			editor.drop_actions.set_veto_pebble_function (agent is_stone_valid)
 		end
 
 feature -- Status report
@@ -76,12 +80,24 @@ feature -- Status report
 			Result := dialog = Void
 		end
 
+	has_object: BOOLEAN is
+			-- Has an object been assigned to current?
+		do
+			Result := current_object /= Void
+		end
+		
 	current_object: OBJECT_STONE
 			-- Object `Current' is displaying.
 
 	dialog: EV_DIALOG
 			-- Dialog where `editor' is displayed.
 
+	is_stone_valid (st: OBJECT_STONE): BOOLEAN is
+			-- Is `st' valid stone for Current?
+		do
+			Result := st /= Void and then parent.accepts_stone (st)
+		end
+		
 feature -- Status setting
 
 	raise is
@@ -92,14 +108,13 @@ feature -- Status setting
 
 	set_stone (st: OBJECT_STONE) is
 			-- Give a new object to `Current' and refresh the display.
+		require
+			stone_valid: is_stone_valid (st)	
 		do
 			current_object := st
 			parent.tool.debugger_manager.kept_objects.extend (st.object_address)
-			if slice_cmd.is_resizable (st) then
-				slice_cmd.enable_sensitive
-			else
-				slice_cmd.disable_sensitive
-			end
+			slice_cmd.enable_sensitive
+			slice_button.enable_sensitive
 			refresh
 		end
 
@@ -108,17 +123,10 @@ feature -- Status setting
 		local
 			dmp: DUMP_VALUE
 		do
-			if Application.status.is_stopped then
+			if Application.status.is_stopped and has_object then
 				create dmp.make_object (current_object.object_address, current_object.dynamic_class)
-				if dmp.is_void then
-					editor.load_basic_text ("Void")
-				elseif dmp.has_formatted_output then
-					editor.load_basic_text (dmp.string_representation (slice_cmd.slice_min, slice_cmd.slice_max))
-				else
-						-- XR: This shouldn't happen, because the command should filter out
-						-- objects that have no formatted output.
-					editor.load_basic_text ("[" + current_object.object_address + "]")
-				end
+				editor.load_basic_text (
+					dmp.string_representation (slice_cmd.slice_min, slice_cmd.slice_max))
 			else
 				editor.clear_window
 			end
@@ -163,5 +171,9 @@ feature {NONE} -- Event handling
 		do
 			set_stone (st)
 		end
+
+invariant
+	has_parent_command: parent /= Void
+	valid_stone: has_object implies is_stone_valid (current_object)
 
 end -- class EB_PRETTY_PRINT_DIALOG

@@ -23,20 +23,22 @@ feature -- Access
 			-- calculated by adding `x' to the
 			-- x-coord of the widget's parent window.
 		do
-			check
-				not_yet_implemented: False
-			end			
+			Result := absol_x			
 		end
+
+	absol_x: INTEGER
+			-- Value used for storing absolute x.
 
 	absolute_y: INTEGER is
 			-- absolute y of the mouse pointer
 			-- calculated by adding `y' to the
 			-- y-coord of the widget's parent window.
 		do
-			check
-				not_yet_implemented: False
-			end
+			Result := absol_y
 		end
+
+	absol_y: INTEGER
+			-- Value used for storing absolute y.
 
 feature -- Initialization
 	
@@ -56,6 +58,9 @@ feature -- Initialization
 			first:= bit_set (gtk_state, 256)
 			second:= bit_set (gtk_state, 512)
 			third:= bit_set (gtk_state, 1024)
+
+			absol_x := c_gdk_event_absolute_x (p)
+			absol_y := c_gdk_event_absolute_y (p)
 
 			set_all (widget, c_gdk_event_x (p), c_gdk_event_y (p),
 					c_gdk_event_button (p), shift,

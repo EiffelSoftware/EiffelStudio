@@ -17,11 +17,21 @@ inherit
 			selected_text
 		end
 
-	EV_TEXT_IMP
+	EV_SCROLLABLE_TEXT_IMP
 		rename
-			wel_make as multiple_line_edit_make
+			wel_make as multiple_line_edit_make,
+			make as scrollable_make,
+			make_with_text as scrollable_make_with_text
 		export
-			{NONE} add_change_command, remove_change_commands
+			{NONE} 
+				add_change_command, 
+				remove_change_commands,
+				scrollable_make,
+				scrollable_make_with_text,
+				show_vertical_scroll_bar,
+				hide_vertical_scroll_bar,
+				show_horizontal_scroll_bar,
+				hide_horizontal_scroll_bar
 		undefine
 			text,
 			set_text,
@@ -48,8 +58,6 @@ inherit
 			set_position,
 			append_text,
 			prepend_text,
-			make_with_text,
-			make,
 			on_char,
 			on_key_down,
 			on_key_up
@@ -129,16 +137,19 @@ feature {NONE} -- Initialization
 			set_event_mask (enm_change + enm_keyevents)
 		end
 
-	make_with_text (txt: STRING) is
+	make_with_text (txt: STRING; hscroll: BOOLEAN) is
+			-- Create a rich text area with `par' as parent and
+			-- `txt' as text. If `hscroll' then horizontally scrollable.
 		do
-			{EV_TEXT_IMP} Precursor (txt)
+			scrollable_make_with_text (txt, hscroll, True)
 			enable_all_notifications
 		end
 	
-	make is
+	make (hscroll: BOOLEAN) is
+			-- Create an empty rich text area with `par' as
+			-- parent. If `hscroll' then horizontally scrollable.
 		do
-			{EV_TEXT_IMP} Precursor
-			--enable_all_notifications
+			scrollable_make (hscroll, True)
 			set_event_mask (enm_keyevents + enm_change)
 		end
 
@@ -197,7 +208,7 @@ feature -- Element change
 	set_background_color (color: EV_COLOR) is
 			-- Make `color' the new `background_color'
 		do
-			{EV_TEXT_IMP} Precursor (color)
+			{EV_SCROLLABLE_TEXT_IMP} Precursor (color)
 			wel_set_background_color (background_color_imp)
 		end
 
@@ -282,29 +293,33 @@ feature {NONE} -- WEL Implementation
    			-- Default style used to create the control
   		do
   			Result := ws_visible + ws_child
-					+ Ws_vscroll + Ws_border 
+					+ Ws_vscroll + Ws_border
+					+ Es_autovscroll
 					+ Es_multiline
 					+ Es_disablenoscroll
+			if has_horizontal_scrolling then
+				Result := Result + Es_autohscroll + Ws_hscroll
+			end
 		end
 
 	on_char (character_code, key_data: INTEGER) is
 		do
 			{WEL_RICH_EDIT_IMPROVED} Precursor (character_code, key_data)
-			--{EV_TEXT_IMP} Precursor (character_code, key_data)
+			{EV_SCROLLABLE_TEXT_IMP} Precursor (character_code, key_data)
 		end
 
 	on_key_down (virtual_key, key_data: INTEGER) is
 			-- Wm_keydown message
 		do
 			{WEL_RICH_EDIT_IMPROVED} Precursor (virtual_key, key_data)
-			{EV_TEXT_IMP} Precursor (virtual_key, key_data)
+			{EV_SCROLLABLE_TEXT_IMP} Precursor (virtual_key, key_data)
 		end
 
 	on_key_up (virtual_key, key_data: INTEGER) is
 			-- Wm_keydown message
 		do
 			{WEL_RICH_EDIT_IMPROVED} Precursor (virtual_key, key_data)
-			-- {EV_TEXT_IMP} Precursor (virtual_key, key_data)
+			{EV_SCROLLABLE_TEXT_IMP} Precursor (virtual_key, key_data)
 		end
 
 	get_insert_character_data (chr: CHARACTER): EV_INSERT_TEXT_EVENT_DATA is

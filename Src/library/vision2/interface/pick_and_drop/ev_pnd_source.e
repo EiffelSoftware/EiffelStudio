@@ -61,8 +61,8 @@ feature -- Basic action
 			implementation.activate_pick_and_drop (cmd, args)
 		end
 
-	desactivate_pick_and_drop is
-			-- Desactivate the pick and drop mechanism.
+	deactivate_pick_and_drop is
+			-- Deactivate the pick and drop mechanism.
 		do
 			implementation.desactivate_pick_and_drop
 		end

@@ -11,7 +11,25 @@ class
 
 inherit
 	EV_PND_EVENT_DATA_I
+
 	EV_BUTTON_EVENT_DATA_IMP
+		rename
+			widget as source
+		end
+
+feature -- Implementation
+
+	set_absolute_x (value: INTEGER) is
+			-- Let `value' be the absolute x coord
+		do
+			absol_x := value
+		end
+
+	set_absolute_y (value: INTEGER) is
+			-- Let `value' be the absolute x coord
+		do
+			absol_y := value
+		end
 	
 end -- class EV_PND_EVENT_DATA_IMP
 

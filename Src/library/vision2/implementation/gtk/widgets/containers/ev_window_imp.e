@@ -36,6 +36,8 @@ feature {NONE} -- Initialization
 			c_gtk_widget_set_all_events (widget)
 
 			initialize
+			set_title ("")
+			-- set title also realizes the window
 		end
 
         make_with_owner (par: EV_WINDOW) is
@@ -57,6 +59,8 @@ feature {NONE} -- Initialization
 			c_gtk_widget_set_all_events (widget)
 
 			initialize
+			set_title("")
+			-- set title also realizes the window.
 		end
 
 feature  -- Access
@@ -66,8 +70,15 @@ feature  -- Access
 			-- displayed by the window manager when
 			-- application is iconified
 		do
-			Result := "Sorry, not yet implemented."
+			if icon_name_holder /= Void then
+				Result := icon_name_holder
+			else
+				Result := title
+			end
 		end
+
+	icon_name_holder: STRING
+			-- Name holder for applications icon name
 
 --| FIXME
 --| Christophe, PR-2186
@@ -85,14 +96,14 @@ feature  -- Access
                         end
                 end
 
-        icon_pixmap: EV_PIXMAP is
+        icon_pixmap: EV_PIXMAP --is
                         -- Bitmap that could be used by the window manager
                         -- as the application's icon
-		do
-			check
-                                not_yet_implemented: False
-                        end
-		end
+		--do
+		--	check
+                 --               not_yet_implemented: False
+                 --       end
+		--end
 	
 feature -- Status report
 
@@ -151,14 +162,14 @@ feature -- Status setting
 			-- Raise a window. ie: put the window on the front
 			-- of the screen.
 		do
-			gdk_window_raise (widget)
+			gdk_window_raise (c_gdk_window_from_gtk_widget(widget))
 		end
 
 	lower is
 			-- Lower a window. ie: put the window on the back
 			-- of the screen.
 		do
-			gdk_window_lower (widget)
+			gdk_window_lower (c_gdk_window_from_gtk_widget(widget))
 		end
 
 	minimize is
@@ -192,9 +203,11 @@ feature -- Element change
                         -- Set `icon_name' to `new_name'.
 		local
 			temp_name: ANY
+			gdkwin: POINTER
 		do
 			temp_name := new_name.to_c
-			gdk_window_set_icon_name(widget, $new_name)
+			c_gtk_window_set_icon_name(widget, $temp_name)
+			icon_name_holder := new_name
                 end
 
         set_icon_mask (mask: EV_PIXMAP) is
@@ -207,24 +220,40 @@ feature -- Element change
                         -- Set `icon_pixmap' to `pixmap'.
 		local
 			pixmap_imp: EV_PIXMAP_IMP
+			tempwind: EV_UNTITLED_WINDOW
 		do
+			create tempwind.make_top_level
+			tempwind.show
+			icon_pixmap := pixmap
 			pixmap_imp ?= pixmap.implementation
 			gtk_pixmap_get (pixmap_imp.widget, $gdkpix, $gdkmask)
-			gdk_window_set_icon (widget, pixmap_imp.create_window, pixmap_imp.gdk_pixmap_widget, gdkmask)
+			gdk_window_set_icon (c_gdk_window_from_gtk_widget (widget), pixmap_imp.create_window, gdkpix, gdkmask)
+			--c_gtk_window_set_icon (widget, pixmap_imp.create_window, gdkpix, gdkmask)
                 end
 
 	gdkpix, gdkmask : POINTER
 
 feature -- External
 
+
 	gtk_pixmap_get (gtk_pixmap, gdk_pixmap, gdk_bitmap: POINTER) is
 		external
 			"C (GtkPixmap *, GdkPixmap *, GdkBitmap *) | <gtk/gtk.h>"
 		end
 
+	c_gtk_window_set_icon (window, icon_window, pixmap, mask: POINTER) is
+		external
+			"C (GtkWidget *, GdkWindow *, GdkPixmap *, GdkBitmap *) | %"gtk_eiffel.h%""
+		end
+
 	gdk_window_set_icon (window, icon_window, pixmap, mask: POINTER) is
 		external
-			"C (GdkWindow *, GdkWindow *, GdkPixmap *, GdkBitmap *) | <gdk/gdk.h>"
+			"C (GdkWindow *, GdkWindow *, GdkPixmap *, GdkBitmap *) | <gtk/gtk.h>"
+		end
+
+	c_gtk_window_set_icon_name (window, name: POINTER) is
+		external
+			"C (GtkWindow *, gchar *) | %"gtk_eiffel.h%""
 		end
 
 	gdk_window_raise (window: POINTER) is
@@ -236,6 +265,7 @@ feature -- External
 		external
 			"C (GdkWindow *) | <gdk/gdk.h>"
 		end
+
 
 end -- class EV_WINDOW_IMP
 

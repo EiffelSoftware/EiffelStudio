@@ -11,6 +11,23 @@ inherit
 	EV_PND_EVENT_DATA_I
 
 	EV_BUTTON_EVENT_DATA_IMP
+		rename
+			widget as source
+		end
+
+feature -- Implementation
+
+	set_absolute_x (value: INTEGER) is
+				-- dummy routine for GTK compatibility
+			do
+				-- Do nothing
+			end
+
+	set_absolute_y (value: INTEGER) is
+				-- dummy routine used for GTK compatibility
+			do
+				-- Do nothing
+			end
 
 end -- class EV_PND_EVENT_DATA_IMP
 

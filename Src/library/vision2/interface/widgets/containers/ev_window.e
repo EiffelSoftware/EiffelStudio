@@ -75,7 +75,7 @@ feature  -- Access
 		do
 			Result := implementation.icon_name
 		ensure
-			valid_result: Result = implementation.icon_name
+			valid_result: Result.is_equal (implementation.icon_name)
 		end 
 	
 	icon_mask: EV_PIXMAP is
@@ -181,6 +181,7 @@ feature -- Element change
 
 	set_icon_name (txt: STRING) is
 			-- Assign `txt' to icon name.
+			-- Displayed when application is iconized.
 		require
 			exists: not destroyed
 			valid_name: txt /= Void

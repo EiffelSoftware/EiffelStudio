@@ -1,12 +1,11 @@
 indexing
-
 	description: 
 		"EiffelVision text area, gtk implementation."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 class
 	EV_TEXT_IMP
 	

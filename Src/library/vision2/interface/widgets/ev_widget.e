@@ -29,6 +29,7 @@ feature {NONE} -- Initialization
 		deferred
 		ensure
 --			parent_set: parent = par
+--| FIXME Why is this commented?
 		end
 
 	widget_make (par: EV_CONTAINER) is

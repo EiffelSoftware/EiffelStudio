@@ -130,15 +130,24 @@ feature {EV_PND_TRANSPORTER_I} -- Access
 		end
 
 	get_pnd_data (data_type: EV_PND_TYPE; data: ANY; button_data: EV_BUTTON_EVENT_DATA): EV_PND_EVENT_DATA is
+		local
+			widg: EV_WIDGET
 		do
+			widg ?= current.interface
+			check
+				widget_exists: widg /= Void
+			end
 			create Result.make
 			Result.implementation.set_data_type (data_type)
 			Result.implementation.set_data (data)
+			Result.implementation.set_target (widg)
 			Result.implementation.set_all (button_data.widget, button_data.x,
 				button_data.y, button_data.button, button_data.shift_key_pressed,
 				button_data.control_key_pressed, button_data.first_button_pressed,
 				button_data.second_button_pressed, button_data.third_button_pressed)
 			Result.implementation.set_button (button_data.button)
+			Result.implementation.set_absolute_x (button_data.absolute_x)
+			Result.implementation.set_absolute_y (button_data.absolute_y)
 		end
 
 end -- class EV_PND_TARGET_I

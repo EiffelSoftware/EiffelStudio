@@ -25,14 +25,20 @@
 
 #define c_gdk_event_type(p) (((GdkEvent*)p)->type)
 
+
 /*------------------------------------------------------------------------------
  Motion, button
 ------------------------------------------------------------------------------*/
 
 #define c_gdk_event_x(p) (((GdkEventButton*)p)->x)/* double */
 #define c_gdk_event_y(p) (((GdkEventButton*)p)->y) /* double */
+#define c_gdk_event_absolute_x(p) (((GdkEventButton*)p)->x_root) /* double */
+#define c_gdk_event_absolute_y(p) (((GdkEventButton*)p)->y_root) /* double */
+
+
 #define c_gdk_event_state(p) (((GdkEventKey*)p)->state) /* integer */
 #define c_gdk_event_button(p) (((GdkEventButton*)p)->button)/* integer */
+
 
 /*------------------------------------------------------------------------------
  Key

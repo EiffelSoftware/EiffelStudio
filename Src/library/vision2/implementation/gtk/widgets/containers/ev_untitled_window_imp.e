@@ -50,6 +50,8 @@ feature -- Initialization
 			gtk_window_set_position (GTK_WINDOW (widget), WINDOW_POSITION_CENTER)
 
 			initialize
+			set_title ("")
+			-- set title also realizes the window.
 		end
 
 	make_with_owner (par: EV_UNTITLED_WINDOW) is
@@ -65,6 +67,7 @@ feature -- Initialization
 
 			-- Attach the window to `par'.
 			gtk_window_set_transient_for (widget, par_imp.widget)
+
 		end
 
 	make_with_position (pos: INTEGER) is
@@ -89,6 +92,7 @@ feature -- Initialization
 		do
 			make_with_owner (par)
 			gtk_window_set_position (GTK_WINDOW (widget), pos)
+
 		end
 
 	make_root_with_position (pos: INTEGER) is
@@ -129,6 +133,8 @@ feature  -- Access
 			-- instance to have
 		do
 			Result := c_gtk_window_maximum_height (widget)
+			io.putint (Result)
+			io.new_line
 		end
 
 	title: STRING is
@@ -208,14 +214,14 @@ feature -- Element change
 			-- Set `maximum_width' to `max_width'.
 		do
 			-- to be tested
-			gdk_window_set_hints(widget, x, y, 0, 0, max_width, maximum_height, True)
+			gdk_window_set_hints(c_gdk_window_from_gtk_widget (widget), x, y, 0, 0, max_width, maximum_height, True)
 		end 
 
 	set_maximum_height (max_height: INTEGER) is
 			-- Set `maximum_height' to `max_height'.
 		do
 			-- to be tested
-			gdk_window_set_hints(widget, x, y, 0, 0, maximum_width, max_height, True)
+			gdk_window_set_hints(c_gdk_window_from_gtk_widget (widget), x, y, 0, 0, maximum_width, max_height, True)
 		end
 
 	set_title (new_title: STRING) is
@@ -225,6 +231,9 @@ feature -- Element change
 		do
 			a := new_title.to_c	
 			gtk_window_set_title (widget, $a)
+
+			-- Give the gtk window a corresponding gdk window
+			gtk_widget_realize (widget)
                 end
 
 	set_widget_group (group_widget: EV_WIDGET) is
@@ -436,6 +445,13 @@ feature {EV_APPLICATION_IMP} -- Implementation
 
 	has_close_command: BOOLEAN
 			-- Did the user add a close command to the window?
+
+feature -- External
+
+	--c_gtk_window_set_hints (window: POINTER; wx, wy, minwid, minhght, maxwid, maxhght: INTEGER; flag: BOOLEAN) is
+	--	external
+	--		"C (GtkWidget *, gint, gint, gint, gint, gint, gint, gint) | %"gtk_eiffel.h%""
+	--	end
 
 end -- class EV_UNTITLED_WINDOW_IMP
 

@@ -11,6 +11,27 @@ deferred class
 
 inherit
 	EV_TEXT_I
+		rename
+			make as text_make,
+			make_with_text as text_make_with_text
+		export
+			{NONE} text_make, text_make_with_text
+		end
+
+feature -- Inititalization
+
+	make (hscroll, vscroll: BOOLEAN) is
+			-- If `hscroll' True then horizontally scrollable.
+			-- If `vscroll' True then vertically scrollable.
+		deferred
+		end
+
+	make_with_text (txt: STRING; hscroll, vscroll: BOOLEAN) is
+			-- The text is set to `txt'.
+			-- If `hscroll' True then horizontally scrollable.
+			-- If `vscroll' True then vertically scrollable.
+		deferred
+		end
 
 feature -- Status Report
 	

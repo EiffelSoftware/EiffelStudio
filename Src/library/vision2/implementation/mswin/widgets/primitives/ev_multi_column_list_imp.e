@@ -691,6 +691,21 @@ feature -- Inapplicable
 			end
 		end
 
+feature {EV_PND_TRANSPORTER_IMP}
+
+	child_y (child: EV_MULTI_COLUMN_LIST_ROW_IMP): INTEGER is
+			-- `Result' is relative ycoor of row to `parent_imp'
+		do
+			Result := (top_index - internal_get_index (child)) * 16 
+			+ (top_index - internal_get_index (child)) - window_frame_height
+		end
+
+	child_x: INTEGER is
+			-- `Result' is relative xcoor of row to `parent_imp'
+		do
+			Result := window_frame_width - 1
+		end
+
 feature {NONE} -- Feature that should be directly implemented by externals
 
 	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is

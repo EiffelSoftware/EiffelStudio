@@ -54,8 +54,9 @@ feature -- Implementation
 			end
 		end
 
-	terminate_transport (cmd: EV_INTERNAL_COMMAND) is
-			-- Terminate the pick and drop mechanim.
+	terminate_transport (cmd: EV_INTERNAL_COMMAND; flag: BOOLEAN) is
+			-- Terminate the pick and drop mechanism.
+			-- flag is used to prevent unwanted executing callbacks in GTK.
 		local
 			com: EV_ROUTINE_COMMAND
 			arg: EV_ARGUMENT2 [EV_INTERNAL_COMMAND, EV_COMMAND]

@@ -166,7 +166,7 @@ feature -- Status setting
 						else
 							value := list.item
 							if index < value then
-								list.put_right (index)
+								list.put_left (index)
 								placed := True
 							elseif index > value then
 								list.forth
@@ -182,6 +182,8 @@ feature -- Status setting
 			-- Notify the changes here
 		end
 
+
+
 feature -- Element change
 
 	add_child (child_imp: EV_WIDGET_IMP) is
@@ -196,9 +198,19 @@ feature -- Element change
 			-- the container.
 			local
 				child: EV_WIDGET
+				index: INTEGER
 		do
 			child ?= child_imp.interface
-			set_child_expandable (child, True)
+			index := ev_children.index_of (child_imp, 1)
+			if non_expandable_children /= Void then
+				non_expandable_children.prune_all (index)
+					if non_expandable_children.empty then
+						non_expandable_children := Void
+					else
+						update_non_expandable_children (index)
+					end
+				end
+
 			ev_children.prune_all (child_imp)
 			if not ev_children.empty then
 				notify_change (Nc_minsize)
@@ -217,6 +229,24 @@ feature -- Assertion
  		end
 
 feature {NONE} -- Basic operation
+ 
+	update_non_expandable_children (index: INTEGER) is
+		local 
+			value: INTEGER
+			i: INTEGER
+		do
+		if index <= non_expandable_children.count then
+			from
+				non_expandable_children.go_i_th (index)
+			until
+				non_expandable_children.off
+			loop
+				value := non_expandable_children.item
+				non_expandable_children.remove
+				non_expandable_children.put_left (value - 1)
+			end
+		end
+		end
 
 	rest (total_rest: INTEGER): INTEGER is
 				-- Give the rest we must add to the current child of

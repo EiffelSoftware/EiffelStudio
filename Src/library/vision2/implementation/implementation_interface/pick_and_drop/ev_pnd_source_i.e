@@ -51,16 +51,15 @@ feature -- Access
 			-- Add `cmd' (if not Void) to the list of commands to be
 			-- executed just before initializing the transport.
 		local
-			com: EV_ROUTINE_COMMAND
 			icom: EV_INTERNAL_COMMAND
 			arg: EV_ARGUMENT2 [EV_INTERNAL_COMMAND, EV_COMMAND]
 		do
-			create com.make (~initialize_transport)
+			create initialized_command.make (~initialize_transport)
 			if cmd /= Void then
 				create icom.make (cmd, args)
 			end
-			create arg.make (icom, com)
-			add_button_press_command (3, com, arg)
+			create arg.make (icom, initialized_command)
+			add_button_press_command (3, initialized_command, arg)
 		end
 
 	desactivate_pick_and_drop is
@@ -136,15 +135,19 @@ feature {EV_PND_SOURCE_I} -- Implementation
 
 feature {EV_PND_TRANSPORTER_I} -- Implemented in descendants
 
-	terminate_transport (cmd: EV_INTERNAL_COMMAND) is
-			-- Terminate the pick and drop mechanim.
+	terminate_transport (cmd: EV_INTERNAL_COMMAND; flag: BOOLEAN) is
+			-- Terminate the pick and drop mechanism.
 		deferred
 		end
 
 	widget_source: EV_WIDGET_IMP is
-			-- Widget drag source used for transport
+			-- Widget drag source used for transport.
 		deferred
 		end
+
+	initialized_command: EV_ROUTINE_COMMAND
+			-- Command used for initializing pick and drop.
+
 
 end -- class EV_PND_SOURCE_I
 

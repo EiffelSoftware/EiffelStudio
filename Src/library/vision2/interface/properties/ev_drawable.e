@@ -17,6 +17,111 @@ inherit
 		end
 	MATH_CONST
 
+feature -- Drawing
+
+	--| FIXME VB 19991116 These features are for compatibility purposes.
+	--| When the interface has been frozen, they can be directly passed to
+	--| the implementation or something for performance gain.
+	--| Note: We want to hang on to the drawing primitives!
+
+	set_attributes (figure: EV_ATOMIC_FIGURE) is
+			-- Set the attributes of `figure' as the current attributes
+			-- of the canvas. Check if it is a closed figure to get a bgcolor.
+		local
+			closed_figure: EV_CLOSED_FIGURE
+		do
+			set_foreground_color (figure.foreground_color)
+			set_line_width (figure.line_width)
+			set_logical_mode (figure.logical_function_mode)	
+			closed_figure ?= figure
+			if closed_figure /= Void and then closed_figure.fill_color /= Void then
+				set_background_color (closed_figure.fill_color)
+			end
+		end
+
+	draw_figure_dot (dot: EV_FIGURE_DOT) is
+			-- Draw a standard representation of `dot' to the canvas.
+		do
+			set_attributes (dot)
+			draw_point (
+				create {EV_COORDINATES}.set (
+					dot.point.x_abs, dot.point.y_abs))
+		end
+
+	draw_figure_line (line: EV_FIGURE_LINE) is
+			-- Draw a standard representation of `line' to the canvas.
+		do
+			set_attributes (line)
+			draw_segment (
+				create {EV_COORDINATES}.set (
+					line.point_a.x_abs, line.point_a.y_abs),
+				create {EV_COORDINATES}.set (
+					line.point_b.x_abs, line.point_b.y_abs))
+		end
+
+	draw_figure_arrow (arrow: EV_FIGURE_ARROW) is
+			-- Draw a standard representation of `arrow' to the canvas.
+		do
+			set_attributes (arrow)
+			draw_segment (
+				create {EV_COORDINATES}.set (
+					arrow.point_a.x_abs, arrow.point_a.y_abs),
+				create {EV_COORDINATES}.set (
+					arrow.point_b.x_abs, arrow.point_b.y_abs))
+			--| FIXME VB To be implemented: arrowhead.
+		end
+
+	draw_figure_arc (arc: EV_FIGURE_ARC) is
+			-- Draw a standard representation of `arc' to the canvas.
+		do
+			set_attributes (arc)
+			draw_polyline (arc.point_array, False)
+		end
+
+	draw_figure_polyline (polyline: EV_FIGURE_POLYLINE) is
+			-- Draw a standard representation of `polyline' to the canvas.
+		do
+			set_attributes (polyline)
+			draw_polyline (polyline.point_array, polyline.closed)
+		end
+
+	draw_figure_text (text_figure: EV_FIGURE_TEXT) is
+			-- Draw a standard representation of `text_figure' to the canvas.
+		do
+			set_attributes (text_figure)
+			set_font (text_figure.font)
+			--| FIXME Scale factor & rotation
+			draw_text (create {EV_COORDINATES}.set (
+				text_figure.point.x_abs, text_figure.point.y_abs),
+				text_figure.text)
+		end
+
+	draw_figure_rectangle (rectangle: EV_FIGURE_RECTANGLE) is
+			-- Draw a standard representation of `rectangle' to the canvas.
+		do
+			set_attributes (rectangle)
+			if rectangle.fill_color /= Void then
+				draw_rectangle (rectangle.center, rectangle.width,
+					rectangle.height, rectangle.orientation)
+			else
+				fill_rectangle (rectangle.center, rectangle.width,
+					rectangle.height, rectangle.orientation)
+			end
+		end
+
+	draw_figure_ellipse (ellipse: EV_FIGURE_ELLIPSE) is
+			-- Draw a standard representation of `ellipse' to the canvas.
+		do
+			set_attributes (ellipse)
+			if ellipse.fill_color /= Void then
+				draw_ellipse (ellipse.center, ellipse.radius1,
+					ellipse.radius2, ellipse.orientation)
+			else
+				fill_ellipse (ellipse.center, ellipse.radius1,
+					ellipse.radius2, ellipse.orientation)
+			end
+		end
+
 feature -- Access
 
 	background_color: EV_COLOR is
@@ -235,6 +340,9 @@ feature -- Drawing operations
 	draw_ellipse (pt: EV_COORDINATES; r1, r2: INTEGER; orientation: EV_ANGLE) is
 			-- Draw an ellipse centered in `pt' with a great radius of `r1' and a small radius
 			-- of `r2' with the orientation `orientation'.
+			--| FIXME VB 19991116 Performance problem.
+			-- Please note that the current implementation is slow,
+			-- when `orientation' is not 0.0.
 		require
 			exists: not destroyed
 			drawable: is_drawable

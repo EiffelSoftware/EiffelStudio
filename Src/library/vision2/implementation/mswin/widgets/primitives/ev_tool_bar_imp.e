@@ -580,6 +580,35 @@ feature {NONE} -- WEL Implementation
 			process_tab_key (virtual_key)
 		end
 
+feature {EV_PND_TRANSPORTER_IMP}
+
+	child_x (button: EV_TOOL_BAR_BUTTON): INTEGER is
+			-- `Result' is relative xcoor of `button' to `parent_imp'.
+		local
+			button_rectangle: WEL_RECT
+			but: EV_TOOL_BAR_BUTTON_IMP
+		do
+			but ?= button.implementation
+			button_rectangle := button_rect (internal_get_index (but))
+			Result := button_rectangle.left
+		end
+
+	child_y_absolute (button: EV_TOOL_BAR_BUTTON): INTEGER is
+			-- `Result' is absolute ycoor of `button'.	
+		local
+			button_rectangle: WEL_RECT
+			window_rectangle: WEL_RECT
+			but: EV_TOOL_BAR_BUTTON_IMP
+			b: EV_INTERNAL_TOOL_BAR_IMP
+		do
+			but ?= button.implementation
+			button_rectangle := button_rect (internal_get_index (but))
+			window_rectangle := window_rect
+			b := bar
+			Result := b.window_rect.top + ((window_rect.height - button_rectangle.height)//2) - 1
+			
+		end
+
 feature {NONE} -- Feature that should be directly implemented by externals
 
 	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is

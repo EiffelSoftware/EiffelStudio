@@ -63,27 +63,30 @@ feature {EV_PND_SOURCE_I} -- Transport
 			dropped.set_item (False)
 		end
 
-	drop_command (args: EV_ARGUMENT2 [EV_PND_SOURCE_I, EV_INTERNAL_COMMAND]; ev_data: EV_BUTTON_EVENT_DATA) is
+	drop_command (args: EV_ARGUMENT2 [EV_PND_SOURCE_I, EV_INTERNAL_COMMAND]; ev_data: EV_PND_EVENT_DATA) is
 			-- Drop the data in a target.
-		local
-			target: EV_PND_TARGET_I
-		do
-			target := pointed_target
-			cancel_command (args, ev_data)
-			if target /= Void then
-				target.receive (args.first.data_type, args.first.transported_data, ev_data)
-			end
+		deferred
 		end
 
 	cancel_command (args: EV_ARGUMENT2 [EV_PND_SOURCE_I, EV_INTERNAL_COMMAND]; ev_data: EV_BUTTON_EVENT_DATA) is
 			-- Drag canceled.
+		local
+			widg: EV_BUTTON_IMP
 		do
 			dropped.set_item (True)
-			args.first.terminate_transport (args.second)
+			
+			if ev_data = Void then
+				-- Cancel command has been called from drop
+				args.first.terminate_transport (args.second, True)
+			else
+				-- Cancel command executed as a callback
+				args.first.terminate_transport (args.second, False)
+			end
 			args.first.widget_source.release_capture
 			draw_segment (origin, destination)
 				-- Reset the cursor
-			--args.first.widget_source.set_cursor (Void)
+			widg ?= args.first.widget_source
+			args.first.widget_source.set_cursor (Void)
 		end
 
 feature {NONE} -- Implementation
@@ -93,10 +96,9 @@ feature {NONE} -- Implementation
 		local
 			screen: EV_SCREEN
 		do
-			io.putstring ("Hello%N")
-			--create screen.make
-			--screen.set_logical_mode (10)
-			--screen.draw_segment (pt1, pt2)
+			create screen.make
+			screen.set_logical_mode (10)
+			screen.draw_segment (pt1, pt2)
 		end
 
 	pointed_target: EV_PND_TARGET_I is
@@ -126,7 +128,7 @@ feature {NONE} -- Implementation
 						args.first.widget_source.set_cursor (curs)
 					end
 				else
-					-- set "forbiden" cursor
+					-- set "forbidden" cursor
 					create curs_code.make
 					create curs.make_by_code (curs_code.no)
 					args.first.widget_source.set_cursor (curs)

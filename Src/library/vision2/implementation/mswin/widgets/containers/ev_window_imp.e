@@ -716,6 +716,29 @@ feature {NONE} -- Implementation
 			end
 		end
 
+feature {EV_PND_TRANSPORTER_IMP}
+
+	title_height: INTEGER is
+			-- `Result' is absolute x position of client rect.
+		do
+			Result := title_bar_height
+		end
+
+	frame_height: INTEGER is
+		do
+			Result := window_frame_height
+		end
+
+	frame_width: INTEGER is
+		do
+			Result := window_frame_width
+		end
+	
+	border_width: INTEGER is
+		do
+			Result := window_border_width
+		end
+
 feature {NONE} -- Feature that should be directly implemented by externals
 
 	mouse_message_x (lparam: INTEGER): INTEGER is

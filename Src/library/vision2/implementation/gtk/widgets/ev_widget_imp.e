@@ -95,12 +95,9 @@ feature -- Access
 			-- Cursor used currently on the widget.
 		do
 			if cursor_imp = Void then
-				create Result.make
+				Result := Void
 			else
 				Result ?= cursor_imp.interface
-				check
-					cursor_interface_exists: Result /= Void
-				end
 			end
 		end
 
@@ -379,12 +376,18 @@ feature -- Element change
 
 	set_cursor (cur: EV_CURSOR) is
 			-- Make `cur' the cursor of the widget.
+		local
+			cursor_pointer: POINTER
 		do
-			cursor_imp ?= cur.implementation
-			check
-				cursor_implementation_exists: cursor_imp /= Void
+			if cur /= Void then
+				cursor_imp ?= cur.implementation
+				check
+					cursor_implementation_exists: cursor_imp /= Void
+				end
+				cursor_pointer := cursor_imp.cursor
+			else
+				cursor_imp := Void
 			end
-
 					-- Disconnect previous callback if any
 			if cursor_signal_tag /= 0 then
 				gtk_signal_disconnect (widget, cursor_signal_tag)
@@ -393,8 +396,10 @@ feature -- Element change
 				-- that sets the cursor on mouse entry to prevent
 				-- Gtk assertion violation when setting a widgets
 				-- cursor when its root window isn't shown
+			
+			
 
-			cursor_signal_tag := c_gtk_widget_set_cursor (widget, cursor_imp.cursor)
+			cursor_signal_tag := c_gtk_widget_set_cursor (widget, cursor_pointer)
 		end
 
 	c_gtk_widget_set_cursor (wid: POINTER; cur: POINTER): INTEGER is
@@ -922,32 +927,7 @@ feature -- Implementation
 		end
 
 	destroy_con_id: INTEGER
-			--
-
-
-	absolute_x: INTEGER is
-			-- Horizontal position relative to (X) root-window.
-		do
-			Result := c_gtk_absolute_x (widget)
-		end
-
-	c_gtk_absolute_x (wid: POINTER): INTEGER is
-		external
-			"C (GtkWidget *): EIF_INTEGER | %"gtk_eiffel.h%""
-		end
-
-	absolute_y: INTEGER is
-			-- Vertical position relative to (X) root-window.
-		do
-			Result := c_gtk_absolute_y (widget)
-		end
-
-	c_gtk_absolute_y (wid: POINTER): INTEGER is
-		external
-			"C (GtkWidget *): EIF_INTEGER | %"gtk_eiffel.h%""
-		end
-
-
+			-- 
 end -- class EV_WIDGET_IMP
 
 --!----------------------------------------------------------------

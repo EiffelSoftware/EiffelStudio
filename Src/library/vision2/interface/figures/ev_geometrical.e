@@ -27,10 +27,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	get_notified: EV_FIGURE is
-		do
-			Result ?= notified
-		end
+	--get_notified: EV_FIGURE is
+	--	do
+	--		Result ?= notified
+	--	end
 
 	origin: EV_COORDINATES is
 			-- Origin of figure (used by `self_rotate' and `self_scale')
@@ -112,7 +112,7 @@ feature -- Status setting
 				modified := True
 			else
 				recompute
-				get_notified.set_modified
+			--	get_notified.set_modified
 			end
 		end
 
@@ -124,7 +124,7 @@ feature -- Status setting
 				modified := True
 			else
 				recompute
-				get_notified.set_modified_with (arg)
+			--	get_notified.set_modified_with (arg)
 			end
 		end
 

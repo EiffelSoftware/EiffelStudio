@@ -71,7 +71,7 @@ feature {NONE} -- Initialization
 			real_signal_connect (
 				list_widget,
 				"unselect_child",
-				agent deselect_callback,
+				agent gtk_marshal.list_item_deselect_callback_intermediary (c_object, ?, ?),
 				Void
 			)
 		end
@@ -80,21 +80,22 @@ feature {NONE} -- Initialization
 		do
 			{EV_ITEM_LIST_IMP} Precursor
 			{EV_PRIMITIVE_IMP} Precursor
-			
-			--| FIXME IEK These shoud be modified to use Gtk_marshal
+
 			real_signal_connect (
 				list_widget,
 				"select_child",
-				agent select_callback,
+				agent gtk_marshal.list_item_select_callback_intermediary (c_object, ?, ?),
 				Void
 			)
 			real_signal_connect (
 				visual_widget,
 				"button-press-event",
-				agent on_list_clicked,
+				agent gtk_marshal.list_clicked_intermediary (c_object),
 				Default_translate
 			)
 		end
+
+feature {INTERMEDIARY_ROUTINES} -- Initialization
 
 	select_callback (n_args: INTEGER; args: POINTER) is
 			-- Called when a list item is selected.
@@ -243,6 +244,20 @@ feature {EV_LIST_ITEM_LIST_IMP, EV_LIST_ITEM_IMP} -- Implementation
 
 	list_widget: POINTER
 	
+feature {INTERMEDIARY_ROUTINES} -- Implementation	
+	
+	on_list_clicked is
+			-- The list was clicked.
+		do
+			if not has_focus then
+				set_focus	
+			end
+			if not list_has_been_clicked then
+				clear_selection
+			end
+			list_has_been_clicked := False
+		end	
+	
 feature {NONE} -- Implementation
 
 	call_select_actions (selected_item_imp: EV_LIST_ITEM_IMP) is
@@ -317,28 +332,16 @@ feature {NONE} -- Implementation
 			v_imp.real_signal_connect (
 				v_imp.c_object,
 				"key-press-event",
-				agent on_key_pressed,
+				agent gtk_marshal.list_key_pressed_intermediary (c_object, ?, ?, ?),
 				key_event_translate_agent
 			)	
 			v_imp.real_signal_connect (
 				v_imp.c_object,
 				"button-press-event",
-				agent on_item_clicked,
+				agent gtk_marshal.list_item_clicked_intermediary (c_object),
 				Default_translate
 				)
 			v_imp.key_press_actions.extend (agent on_key_pressed)
-		end
-	
-	on_list_clicked is
-			-- The list was clicked.
-		do
-			if not has_focus then
-				set_focus	
-			end
-			if not list_has_been_clicked then
-				clear_selection
-			end
-			list_has_been_clicked := False
 		end
 
 	create_focus_in_actions: EV_NOTIFY_ACTION_SEQUENCE is
@@ -383,7 +386,7 @@ feature {NONE} -- Implementation
 	list_has_been_clicked: BOOLEAN
 		-- Are we between "item_clicked" and "list_clicked" event.
 		
-feature {EV_GTK_CALLBACK_MARSHAL} -- Implementation
+feature {INTERMEDIARY_ROUTINES} -- Implementation
 		
 	on_key_pressed (ev_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN) is
 			-- Called when a list item is selected.

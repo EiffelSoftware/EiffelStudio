@@ -183,7 +183,7 @@ feature {NONE} -- Implementation
 	old_value: INTEGER
 			-- Value of `value' when last "value-changed" signal occurred.
 			
-feature {EV_GTK_CALLBACK_MARSHAL} -- Implementation
+feature {INTERMEDIARY_ROUTINES} -- Implementation
 
 	value_changed_handler is
 			-- Called when `value' changes.

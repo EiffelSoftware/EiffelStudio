@@ -21,7 +21,7 @@ inherit
 
 	EV_TEXT_FIELD_ACTION_SEQUENCES_IMP
 		export
-			{EV_GTK_CALLBACK_MARSHAL}
+			{INTERMEDIARY_ROUTINES}
 				return_actions_internal
 		redefine
 			create_return_actions

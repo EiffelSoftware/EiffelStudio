@@ -61,13 +61,13 @@ feature {NONE} -- Initialization
 			real_signal_connect (
 				gtk_font_selection_dialog_struct_ok_button (c_object),
 				"clicked",
-				agent on_ok,
+				agent Gtk_marshal.font_dialog_on_ok_intermediary (c_object),
 				Void
 			)
 			real_signal_connect (
 				gtk_font_selection_dialog_struct_cancel_button (c_object),
 				"clicked",
-				agent on_cancel,
+				agent Gtk_marshal.font_dialog_on_cancel_intermediary (c_object),
 				Void
 			)
 			enable_closeable

@@ -59,9 +59,10 @@ feature -- Implementation
 			if button_press_connection_id > 0 then
 				signal_disconnect (button_press_connection_id)
 			end
-			signal_connect (
+			real_signal_connect (
+				c_object,
 				"button-press-event",
-				agent start_transport_filter,
+				agent gtk_marshal.start_transport_filter_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?),
 				default_translate
 			)
 			button_press_connection_id := last_signal_connection_id
@@ -179,9 +180,10 @@ feature -- Implementation
 					end
 					interface.pointer_motion_actions.block
 					pre_pick_steps (a_x, a_y, a_screen_x, a_screen_y)
-					signal_connect (
+					real_signal_connect (
+						c_object,
 						"motion-notify-event",
-						agent add_grab_cb,
+						agent Gtk_marshal.add_grab_cb_intermediary (c_object),
 						default_translate
 					)
 					grab_callback_connection_id := last_signal_connection_id
@@ -205,9 +207,10 @@ feature -- Implementation
 					end
 
 					signal_disconnect (button_press_connection_id)
-					signal_connect (
+					real_signal_connect (
+						c_object,
 						"button-press-event",
-						agent end_transport_filter,
+						agent Gtk_marshal.end_transport_filter_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?),
 						default_translate
 					)
 					button_press_connection_id := last_signal_connection_id
@@ -215,29 +218,33 @@ feature -- Implementation
 						check
 							release_not_connected: button_release_connection_id = 0
 						end
-						signal_connect (
+						real_signal_connect (
+							c_object,
 							"button-release-event",
-							agent end_transport,
+							agent Gtk_marshal.end_transport_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?),
 							default_translate
 						)
 						button_release_connection_id := last_signal_connection_id
 					end
 
-					signal_connect (
+					real_signal_connect (
+						c_object,
 						"motion-notify-event",
-						agent temp_execute,
+						agent Gtk_marshal.temp_execute_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?),
 						default_translate
 					)
 					motion_notify_connection_id := last_signal_connection_id
-					signal_connect (
+					real_signal_connect (
+						c_object,
 						"enter_notify_event",
-						agent signal_emit_stop (c_object, "enter_notify_event"),
+						agent Gtk_marshal.signal_emit_stop_intermediary (c_object, "enter_notify_event"),
 						default_translate
 					)
 					enter_notify_connection_id := last_signal_connection_id
-					signal_connect (
+					real_signal_connect (
+						c_object,
 						"leave_notify_event",
-						agent signal_emit_stop (c_object, "leave_notify_event"),
+						agent Gtk_marshal.signal_emit_stop_intermediary (c_object, "leave_notify_event"),
 						default_translate
 					)
 					leave_notify_connection_id := last_signal_connection_id
@@ -249,7 +256,7 @@ feature -- Implementation
 							mode_is_drag_and_drop implies
 							button_release_connection_id > 0
 					end
-					signal_emit_stop (c_object, "button-press-event")
+					Gtk_marshal.signal_emit_stop_intermediary (c_object, "button-press-event")
 
 				elseif ready_for_pnd_menu (a_button) then
 					app_imp ?= (create {EV_ENVIRONMENT}).application.implementation

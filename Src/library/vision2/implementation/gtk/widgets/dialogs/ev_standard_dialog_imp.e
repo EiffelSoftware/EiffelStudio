@@ -184,13 +184,13 @@ feature {NONE} -- Implementation
 		do
 			on_cancel
 		end
+		
+	user_clicked_ok: BOOLEAN
+		-- Has the user explicitly cancelled the dialog.
 
-	on_cancel is
-			-- Close window and call action sequence.
-		do
-			selected_button := ev_cancel
-			C.gtk_widget_hide (c_object)
-		end
+	interface: EV_STANDARD_DIALOG
+
+feature {INTERMEDIARY_ROUTINES} -- Implmentation
 
 	on_ok is
 			-- Close window and call action sequence.
@@ -199,11 +199,13 @@ feature {NONE} -- Implementation
 			selected_button := internal_accept
 			C.gtk_widget_hide (c_object)
 		end
-		
-	user_clicked_ok: BOOLEAN
-		-- Has the user explicitly cancelled the dialog.
 
-	interface: EV_STANDARD_DIALOG
+	on_cancel is
+			-- Close window and call action sequence.
+		do
+			selected_button := ev_cancel
+			C.gtk_widget_hide (c_object)
+		end
 
 end -- class EV_STANDARD_DIALOG_IMP
 

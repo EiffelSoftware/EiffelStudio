@@ -12,7 +12,6 @@ deferred class
 inherit
 	EV_TOOL_BAR_BUTTON_ACTION_SEQUENCES_I
 
-
 feature -- Event handling
 
 	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE is

@@ -539,7 +539,7 @@ feature {NONE} -- Implementation
 			-- Vertical_box to have a possibility for a menu on the
 			-- top and a status bar at the bottom.
 
-feature {EV_GTK_CALLBACK_MARSHAL}
+feature {INTERMEDIARY_ROUTINES}
 
 	call_close_request_actions is
 			-- Call the close request actions.
@@ -549,7 +549,6 @@ feature {EV_GTK_CALLBACK_MARSHAL}
 			end
 		end
 
-			
 feature {EV_MENU_BAR_IMP} -- Implementation
 
 	accel_group: POINTER

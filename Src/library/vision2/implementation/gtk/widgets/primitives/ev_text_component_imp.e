@@ -23,7 +23,7 @@ inherit
 
 	EV_TEXT_COMPONENT_ACTION_SEQUENCES_IMP
 		export
-			{EV_GTK_CALLBACK_MARSHAL} change_actions_internal	
+			{INTERMEDIARY_ROUTINES} change_actions_internal	
 		redefine
 			create_change_actions
 		end

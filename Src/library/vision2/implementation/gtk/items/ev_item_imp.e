@@ -11,7 +11,10 @@ inherit
 	EV_ITEM_I
 		redefine
 			interface,
-			initialize
+			initialize,
+			pointer_motion_actions_internal,
+			pointer_button_press_actions_internal,
+			pointer_double_press_actions_internal
 		select
 			interface,
 			initialize
@@ -24,9 +27,6 @@ inherit
 			interface as widget_interface,
 			parent as widget_parent,
 			initialize as widget_initialize,
-			pointer_motion_actions_internal as widget_pointer_motion_actions_internal,
-			pointer_button_press_actions_internal as widget_pointer_button_press_actions_internal,
-			pointer_double_press_actions_internal as widget_pointer_double_press_actions_internal,
 			parent_imp as widget_parent_imp
 		export {NONE}
 			widget_interface,
@@ -39,7 +39,10 @@ inherit
 		redefine
 			button_press_switch,
 			create_pointer_button_press_actions,
-			create_pointer_double_press_actions
+			create_pointer_double_press_actions,
+			pointer_motion_actions_internal,
+			pointer_button_press_actions_internal,
+			pointer_double_press_actions_internal
 		end
 
 	EV_PIXMAPABLE_IMP
@@ -121,6 +124,14 @@ feature {EV_ANY_IMP} -- Implementation
 		end
 
 	interface: EV_ITEM
+
+feature {NONE} -- Implmentation
+
+	pointer_motion_actions_internal: EV_POINTER_MOTION_ACTION_SEQUENCE
+	
+	pointer_button_press_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE
+	
+	pointer_double_press_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE
 
 end -- class EV_ITEM_IMP
 

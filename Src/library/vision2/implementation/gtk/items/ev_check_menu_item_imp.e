@@ -10,14 +10,20 @@ class
 inherit
 	EV_CHECK_MENU_ITEM_I
 		redefine
-			interface
+			interface,
+			pointer_motion_actions_internal,
+			pointer_button_press_actions_internal,
+			pointer_double_press_actions_internal
 		end
 
 	EV_MENU_ITEM_IMP
 		redefine
 			make,
 			interface,
-			menu_item_type
+			menu_item_type,
+			pointer_motion_actions_internal,
+			pointer_button_press_actions_internal,
+			pointer_double_press_actions_internal
 		end
 
 create
@@ -69,6 +75,14 @@ feature {EV_MENU_ITEM_LIST_IMP} -- Implementation
 		do
 			Result := Check_type
 		end
+
+feature {EV_ANY_I} -- Implementation
+
+	pointer_motion_actions_internal: EV_POINTER_MOTION_ACTION_SEQUENCE
+
+	pointer_button_press_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE
+
+	pointer_double_press_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE
 
 feature {NONE} -- Implementation
 

@@ -9,6 +9,15 @@ class
 
 inherit
 	EV_TIMEOUT_I
+		redefine
+			interface
+		end
+		
+	EV_ANY_IMP
+		redefine
+			interface,
+			destroy
+		end
 
 create
 	make
@@ -19,6 +28,7 @@ feature -- Initialization
 			-- Call base make only.
 		do
 			base_make (an_interface)
+			set_c_object (C.gtk_label_new (NULL))
 		end
 
 	initialize is 
@@ -52,14 +62,16 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
+	interface: EV_TIMEOUT
+
 	timeout_connection_id: INTEGER
 		-- GTK handle on timeout connection.
 
-	C: EV_C_EXTERNALS is
-			-- Access to external C functions.
-		once
-			create Result
-		end
+--	C: EV_C_EXTERNALS is
+--			-- Access to external C functions.
+--		once
+--			create Result
+--		end
 		
 	timeout_agent: PROCEDURE [EV_TIMEOUT_IMP, TUPLE] is
 			-- 

@@ -359,7 +359,7 @@ feature {NONE} -- Implementation
 			Precursor {EV_TEXT_FIELD_IMP}
 		end
 		
-feature {EV_GTK_CALLBACK_MARSHAL} -- Implementation
+feature {INTERMEDIARY_ROUTINES} -- Implementation
 		
 	on_button_released is
 		do

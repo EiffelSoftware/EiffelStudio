@@ -1022,7 +1022,7 @@ feature -- Metadata description
 
 				l_type_token := md_emit.define_type (l_uni_string, l_attributes,
 					single_inheritance_token, last_parents)
-				
+
 				if not il_code_generator.is_single_module then
 					class_type.set_last_type_token (l_type_token)
 				end
@@ -1423,11 +1423,14 @@ feature -- Mapping between Eiffel compiler and generated tokens
 	internal_external_token_mapping: HASH_TABLE [INTEGER, STRING]
 			-- Quickly find a type token given its external name.
 
+	class_data_mapping: ARRAY [INTEGER]
+			-- Array of class tokens indexed by their `class_id'.
+
 	class_mapping: ARRAY [INTEGER]
-			-- Array of type token indexed by their `type_id'.
+			-- Array of type tokens indexed by their `type_id'.
 
 	single_parent_mapping: ARRAY [INTEGER]
-			-- Array of type token showing single inheritance parent for a given `type_id'.
+			-- Array of type tokens showing single inheritance parent for a given `type_id'.
 
 	internal_constructor_token: ARRAY [INTEGER]
 			-- Array of ctor token indexed by their `type_id'.
@@ -1531,6 +1534,104 @@ feature -- Mapping between Eiffel compiler and generated tokens
 			end
 		ensure
 			class_token_valid: Result /= 0
+		end
+
+	define_assembly_reference (a_name, a_version, a_culture, a_key: STRING): INTEGER is
+			-- Define an assembly reference matching given parameters
+		require
+			a_name_not_void: a_name /= Void
+		local
+			l_ass_info: MD_ASSEMBLY_INFO
+			l_version: VERSION
+			l_major, l_minor, l_build, l_revision: INTEGER
+			l_key_token: MD_PUBLIC_KEY_TOKEN
+		do
+			if defined_assemblies.has (a_name) then
+				Result := defined_assemblies.found_item
+			else
+				if a_name.is_equal ("mscorlib") then
+					Result := mscorlib_token
+				elseif a_name.is_equal (runtime_namespace) then
+					Result := ise_runtime_token
+				else
+					create l_ass_info.make
+
+					create l_version
+					if l_version.is_version_valid (a_version) then
+						l_version.set_version (a_version)
+						l_major := l_version.major
+						l_minor := l_version.minor
+						l_build := l_version.build
+						l_revision := l_version.revision
+
+						l_ass_info.set_major_version (l_major.to_integer_16)
+						l_ass_info.set_minor_version (l_minor.to_integer_16)
+						l_ass_info.set_build_number (l_build.to_integer_16)
+						l_ass_info.set_revision_number (l_revision.to_integer_16)
+					end
+
+					if a_key /= Void then
+						create l_key_token.make_from_string (a_key)
+					end
+
+						-- NOTE: cannot use `uni_string' buffer as current feature can
+						-- be used with other features that already uses it to define
+						-- some metadata.
+					Result := md_emit.define_assembly_ref (create {UNI_STRING}.make (a_name), l_ass_info, l_key_token)
+				end
+				defined_assemblies.put (Result, a_name)
+			end
+		ensure
+			is_token_defined: Result /= 0
+			is_token_assembly_ref: Result & feature {MD_TOKEN_TYPES}.md_mask =  feature {MD_TOKEN_TYPES}.md_assembly_ref
+		end
+
+	class_data_token (class_c: CLASS_C): INTEGER is
+			-- Token for class data  of `class_c'
+		require
+			class_c_not_void: class_c /= Void
+			class_c_not_external: not class_c.is_external
+		local
+			class_id: INTEGER
+			class_data_name: UNI_STRING
+			class_assembly_info: ASSEMBLY_INFO
+			class_module: IL_MODULE
+		do
+			class_id := class_c.class_id
+			Result := class_data_mapping.item (class_id)
+			if Result = 0 then
+				create class_data_name.make (class_c.il_data_name)
+				if class_c.is_precompiled then
+					class_assembly_info := class_c.assembly_info
+					Result := md_emit.define_type_ref (
+						class_data_name,
+						define_assembly_reference (
+							class_assembly_info.assembly_name,
+							class_assembly_info.version,
+							class_assembly_info.culture,
+							class_assembly_info.public_key_token))
+				else
+					class_module := il_code_generator.il_module_for_class (class_c)
+					if class_module = Current then
+						Result := md_emit.define_type (
+							class_data_name,
+							feature {MD_TYPE_ATTRIBUTES}.auto_class | feature {MD_TYPE_ATTRIBUTES}.auto_layout |
+							feature {MD_TYPE_ATTRIBUTES}.is_class | feature {MD_TYPE_ATTRIBUTES}.public |
+							feature {MD_TYPE_ATTRIBUTES}.sealed,
+							object_type_token,
+							Void)
+					else
+						Result := md_emit.define_type_ref (class_data_name, module_reference_token (class_module))
+					end
+				end
+				class_data_mapping.put (Result, class_id)
+			end
+		ensure
+			is_token_defined: Result /= 0
+			is_type_token: 
+				Result & feature {MD_TOKEN_TYPES}.md_mask = feature {MD_TOKEN_TYPES}.md_type_def or else
+				Result & feature {MD_TOKEN_TYPES}.md_mask = feature {MD_TOKEN_TYPES}.md_type_ref or else
+				Result & feature {MD_TOKEN_TYPES}.md_mask = feature {MD_TOKEN_TYPES}.md_type_spec
 		end
 
 	class_types: ARRAY [CLASS_TYPE] is
@@ -1833,28 +1934,21 @@ feature -- Mapping between Eiffel compiler and generated tokens
 			end
 		end
 
-	module_reference_token (a_class_type: CLASS_TYPE): INTEGER is
-			-- Given `a_class_type' from current assembly find its associated module token.
+	module_reference_token (a_module: IL_MODULE): INTEGER is
+			-- Given `a_module' from current assembly find its associated module token.
 		require
 			is_generated: is_generated
-			a_class_type_not_void: a_class_type /= Void
-			a_class_type_is_generated: a_class_type.is_generated
+			a_module_not_void: a_module /= Void
+			a_module_not_current: a_module /= Current
 		local
-			l_module: IL_MODULE
 			l_uni_string: UNI_STRING
 		do
-			l_module := il_code_generator.il_module (a_class_type)
-			check
-					-- Cannot be current since we are looking for a reference to another
-					-- module.
-				l_module_not_current: l_module /= Current
-			end
-			Result := internal_module_references.item (l_module)
+			Result := internal_module_references.item (a_module)
 			if Result = 0 then
 					-- ModuleRef token has not yet computed.
-				create l_uni_string.make (l_module.module_name)
+				create l_uni_string.make (a_module.module_name)
 				Result := md_emit.define_module_ref (l_uni_string)
-				internal_module_references.put (Result, l_module)
+				internal_module_references.put (Result, a_module)
 			end
 		end
 
@@ -1867,15 +1961,9 @@ feature -- Mapping between Eiffel compiler and generated tokens
 			a_class_not_void: a_class_type /= Void
 			not_inserted: internal_assemblies.item (a_class_type.implementation_id) = 0
 		local
-			l_ass_info: MD_ASSEMBLY_INFO
 			l_indexes: INDEXING_CLAUSE_AS
 			l_info: ARRAY [STRING]
 			l_name, l_key_string, l_culture, l_version_string: STRING
-			l_version: VERSION
-			l_token: INTEGER
-			l_key_token: MD_PUBLIC_KEY_TOKEN
-			l_major, l_minor, l_build, l_revision: INTEGER
-			l_uni_string: UNI_STRING
 			l_external_class: EXTERNAL_CLASS_C
 			l_assembly: ASSEMBLY_I
 			l_precompiled_assembly: ASSEMBLY_INFO
@@ -1890,9 +1978,9 @@ feature -- Mapping between Eiffel compiler and generated tokens
 					-- We need to find in which module it is being defined. If no `module_ref'
 					-- token is found for this module, we need to create one for Current module.
 					--FIXME: I'm not sure what to do when `a_class_type' is defined in current
-					-- moudle.
+					-- module.
 				internal_assemblies.put (
-					module_reference_token (a_class_type), a_class_type.implementation_id)
+					module_reference_token (il_code_generator.il_module (a_class_type)), a_class_type.implementation_id)
 			else
 				if
 					not a_class_type.is_external and then
@@ -1929,48 +2017,9 @@ feature -- Mapping between Eiffel compiler and generated tokens
 						end
 					end
 				end
-				if defined_assemblies.has (l_name) then
-					internal_assemblies.put (defined_assemblies.found_item,
-						a_class_type.implementation_id)
-				else
-					if l_name.is_equal ("mscorlib") then
-						internal_assemblies.put (mscorlib_token, a_class_type.implementation_id)
-						defined_assemblies.put (mscorlib_token, l_name)
-					elseif l_name.is_equal (runtime_namespace) then
-						internal_assemblies.put (ise_runtime_token, a_class_type.implementation_id)
-						defined_assemblies.put (ise_runtime_token, l_name)
-					else
-						create l_ass_info.make
-
-						create l_version
-						if l_version.is_version_valid (l_version_string) then
-							l_version.set_version (l_version_string)
-							l_major := l_version.major
-							l_minor := l_version.minor
-							l_build := l_version.build
-							l_revision := l_version.revision
-
-							l_ass_info.set_major_version (l_major.to_integer_16)
-							l_ass_info.set_minor_version (l_minor.to_integer_16)
-							l_ass_info.set_build_number (l_build.to_integer_16)
-							l_ass_info.set_revision_number (l_revision.to_integer_16)
-						end
-
-						if l_key_string /= Void then
-							create l_key_token.make_from_string (l_key_string)
-						end
-
-							-- NOTE: cannot use `uni_string' buffer as current feature can
-							-- be used with other features that already uses it to define
-							-- some metadata.
-						create l_uni_string.make (l_name)
-
-						l_token := md_emit.define_assembly_ref (l_uni_string, l_ass_info,
-							l_key_token)
-						internal_assemblies.put (l_token, a_class_type.implementation_id)
-						defined_assemblies.put (l_token, l_name)
-					end
-				end
+				internal_assemblies.put (
+					define_assembly_reference (l_name, l_version_string, l_culture, l_key_string),
+					a_class_type.implementation_id)
 			end
 		ensure
 			updated: internal_assemblies.item (a_class_type.implementation_id) /= 0
@@ -1987,6 +2036,7 @@ feature {NONE} -- Once per modules being generated.
 			is_generated: is_generated
 			a_type_count_positive: a_type_count > 0
 		do
+			create class_data_mapping.make (0, system.class_counter.count)
 			create class_mapping.make (0, a_type_count)
 			create single_parent_mapping.make (0, a_type_count)
 			create internal_external_token_mapping.make (a_type_count)
@@ -2526,6 +2576,7 @@ feature {NONE} -- Cleaning
 			-- Free all used memory.
 		do
 			assembly_info := Void
+			class_data_mapping := Void
 			class_mapping := Void
 			dbg_writer := Void
 			default_sig := Void

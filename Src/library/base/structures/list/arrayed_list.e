@@ -525,7 +525,8 @@ feature -- Duplication
 			until
 				other.after
 			loop
-				extend (other.item)
+				extend (other.item);
+				other.forth
 			end;
 			other.go_to (c);
 		end;

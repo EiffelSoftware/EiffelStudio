@@ -315,7 +315,7 @@ rt_public EIF_REFERENCE emalloc(uint32 ftype)
 		&& nbytes <= eif_gs_limit )
 #else	/* EIF_MEMORY_OPTIMIZATION */
 
-	if (!(gen_scavenge & GS_OFF) && nbytes <= eif_gs_limit && 0 == Disp_rout(type)) 
+	if (!(gen_scavenge & GS_OFF) && ((int) nbytes <= eif_gs_limit) && (0 == Disp_rout(type))) 
 #endif	/* EIF_MEMORY_OPTIMIZATION */
 	{
 		object = malloc_from_zone(nbytes);
@@ -418,7 +418,7 @@ rt_public EIF_REFERENCE strmalloc(unsigned int nbytes)
 	printf ("STRMALLOC_DEBUG: Allocation of string of size %d\n", nbytes);
 #endif 	/* STRMALLOC_DEBUG */
 
-	if (nbytes > eif_gs_limit)		/* Is string too big to be 
+	if ((int) nbytes > eif_gs_limit)		/* Is string too big to be 
 									 * in generational scavenge zone. */
 	{
 
@@ -913,8 +913,8 @@ rt_private EIF_REFERENCE malloc_free_list(unsigned int nbytes, union overhead **
 		 */
 
 		if (CHUNK_TYPE(hlist) == C_T) {
-			if (nbytes <= (c_data.ml_total - c_data.ml_used)) {
-				if (nbytes >= full_coalesc(C_T))
+			if (nbytes <= (unsigned int) (c_data.ml_total - c_data.ml_used)) {
+				if (nbytes >= (unsigned int) full_coalesc(C_T))
 #ifdef HAS_SMART_MMAP
 				{
 					free_unused ();
@@ -931,8 +931,8 @@ rt_private EIF_REFERENCE malloc_free_list(unsigned int nbytes, union overhead **
 			} else 
 				return (EIF_REFERENCE) 0;				/* Not enough memory */
 		} else {
-			if (nbytes <= (e_data.ml_total - e_data.ml_used)) {
-				if (nbytes >= full_coalesc(EIFFEL_T))
+			if (nbytes <= (unsigned int) (e_data.ml_total - e_data.ml_used)) {
+				if (nbytes >= (unsigned int) full_coalesc(EIFFEL_T))
 #ifdef HAS_SMART_MMAP
 				{
 					free_unused ();
@@ -982,8 +982,8 @@ rt_private EIF_REFERENCE malloc_free_list(unsigned int nbytes, union overhead **
 	 */
 		
 	if (CHUNK_TYPE(hlist) == C_T) {
-		if (nbytes <= (c_data.ml_total - c_data.ml_used)) {
-			if (nbytes <= full_coalesc(C_T)) {		/* Coalescing helped */
+		if (nbytes <= (unsigned int) (c_data.ml_total - c_data.ml_used)) {
+			if (nbytes <= (unsigned int) full_coalesc(C_T)) {		/* Coalescing helped */
 				result = allocate_free_list(nbytes, hlist);
 				if ((EIF_REFERENCE) 0 != result)
 					return result;					/* We must have it */
@@ -997,8 +997,8 @@ rt_private EIF_REFERENCE malloc_free_list(unsigned int nbytes, union overhead **
 #endif
 		}
 	} else {
-		if (nbytes <= (e_data.ml_total - e_data.ml_used)) {
-			if (nbytes <= full_coalesc(EIFFEL_T)) {	/* Coalescing helped */
+		if (nbytes <= (unsigned int) (e_data.ml_total - e_data.ml_used)) {
+			if (nbytes <= (unsigned int) full_coalesc(EIFFEL_T)) {	/* Coalescing helped */
 				result = allocate_free_list(nbytes, hlist);
 				if ((EIF_REFERENCE) 0 != result)
 					return result;					/* We must have it */

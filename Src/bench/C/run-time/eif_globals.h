@@ -126,7 +126,7 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 	struct stack once_set_cx;		/* Once functions */
 	uint32 age_table_cx[TENURE_MAX];	/* Number of objects/age */
 	uint32 size_table_cx[TENURE_MAX];	/* Amount of bytes/age */
-	uint32 tenure_cx;					/* Hector needs to see that */
+	int tenure_cx;					/* Hector needs to see that */
 	EIF_INTEGER	clsc_per_cx;			/* Period of full coalescing. */
 	long plsc_per_cx;					/* Period of plsc in acollect */
 	int gc_running_cx;					/* Is the GC running */
@@ -426,7 +426,7 @@ RT_LNK struct stack loc_stack;			/* Local indirection stack */
 RT_LNK struct stack loc_set;	/* Local variable stack */
 extern struct stack moved_set;	/* Describes the new generation */
 extern struct stack once_set;	/* Once functions */
-extern uint32 tenure;			/* Tenure value for next generation cycle */
+extern int tenure;			/* Tenure value for next generation cycle */
 extern long plsc_per;			/* Period of plsc() in acollect() */
 /* To start timing or not for GC-profiling */
 extern int gc_running;			/* Is the GC currently running */

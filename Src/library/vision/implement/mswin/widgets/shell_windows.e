@@ -21,7 +21,8 @@ inherit
 			set_width,
 			width,
 			real_x,
-			real_y
+			real_y,
+			set_enclosing_size
 		end
 
 	SHELL_I
@@ -188,8 +189,11 @@ feature -- Status setting
 			if private_attributes.height /= new_height then
 				private_attributes.set_height (new_height)
 				if exists then
-					wel_set_height (new_height + shell_height)
+					wel_set_height (maximal_height.min (new_height + shell_height))
 				end
+			end
+			if realized then
+				resize_shell_children (width, maximal_height.min (new_height + shell_height))
 			end
 		ensure then
 			correct_client_height: exists implies client_height = new_height
@@ -204,12 +208,13 @@ feature -- Status setting
 				private_attributes.set_height (new_height)
 				private_attributes.set_width (new_width)
 				if exists then
-					resize (new_width + shell_width,
-						new_height + shell_height)
+					resize (maximal_width.min (new_width + shell_width),
+						maximal_height.min (new_height + shell_height))
 				end
 			end
 			if realized then
-				resize_shell_children (new_width, new_height)
+				resize_shell_children (maximal_width.min (new_width + shell_width)
+					, maximal_height.min (new_height + shell_height))
 			end
 		ensure then
 			correct_width: exists implies client_width = new_width
@@ -223,8 +228,11 @@ feature -- Status setting
 			if private_attributes.width /= new_width then
 				private_attributes.set_width (new_width)
 				if exists then
-					wel_set_width (new_width + shell_width)
+					wel_set_width (maximal_width.min (new_width + shell_width))
 				end
+			end
+			if realized then
+				resize_shell_children (maximal_width.min (new_width + shell_width), height)
 			end
 		ensure then
 			correct_width: exists implies client_width = new_width
@@ -244,6 +252,43 @@ feature -- Status setting
 		end
 
 feature {NONE} -- Implementation
+
+	set_enclosing_size is
+			-- Set the enclozing size.
+		local
+			c: ARRAYED_LIST [WIDGET_WINDOWS]
+			i, maxxw, maxyh, tmp, w, h: INTEGER
+			current_item: WIDGET_WINDOWS
+			fw: FORM_WINDOWS
+		do
+			from 
+				c := children_list
+				c.start
+			until
+				c.after
+			loop
+				current_item := c.item
+				if current_item /= Void and then current_item.managed then
+					tmp := current_item.x + current_item.width
+					if tmp > maxxw then
+						maxxw := tmp
+					end
+					tmp := current_item.y + current_item.height
+					if tmp > maxyh  then
+						maxyh := tmp
+					end
+				end
+				c.forth
+			end
+			w := private_attributes.width
+			h := private_attributes.height
+			if w < maxxw + shell_width and then h < maxyh + shell_height then 
+				set_size (maxxw + shell_width, maxyh + shell_height)
+			else
+				if w < maxxw + shell_width then set_width (maxxw + shell_width) end
+				if h < maxyh + shell_height then set_height (maxyh + shell_height) end
+			end
+		end
 
 	on_size (size_type: INTEGER; a_width, a_height: INTEGER) is
 			-- Wm_size message

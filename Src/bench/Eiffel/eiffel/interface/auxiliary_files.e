@@ -452,7 +452,7 @@ feature -- Plug and Makefile file
 			string_cl, bit_cl, array_cl, rout_cl: CLASS_C
 			arr_type_id, str_type_id, type_id: INTEGER
 			id: TYPE_ID
-			to_c_feat, set_count_feat, creation_feature: FEATURE_I
+			to_c_feat, set_count_feat, set_make_feat, creation_feature: FEATURE_I
 			set_rout_disp_feat: FEATURE_I
 			creators: EXTEND_TABLE [EXPORT_I, STRING]
 			dispose_name, str_make_name, init_name, set_count_name, to_c_name: STRING
@@ -492,9 +492,9 @@ feature -- Plug and Makefile file
 			creators.start
 
 				-- Make string declaration
-			creation_feature := string_cl.feature_table.item (creators.key_for_iteration)
 			set_count_feat := string_cl.feature_table.item ("set_count")
-			str_make_name := creation_feature.body_id.feature_name (id)
+			set_make_feat := string_cl.feature_table.item ("make")
+			str_make_name := set_make_feat.body_id.feature_name (id)
 			set_count_name := set_count_feat.body_id.feature_name (id)
 			buffer.putstring ("extern void ")
 			buffer.putstring (str_make_name)

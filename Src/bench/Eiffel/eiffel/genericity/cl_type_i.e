@@ -275,9 +275,9 @@ feature -- Status
 		end
 
 	is_valid: BOOLEAN is
-			-- Is the base class still in the system ?
+			-- Is the base class still in the system and matches its specification?
 		do
-			Result := base_class /= Void
+			Result := base_class /= Void and then (base_class.generics = Void)
 		end
 
 	is_reference: BOOLEAN is

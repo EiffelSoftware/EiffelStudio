@@ -14,7 +14,8 @@ inherit
 			make_gen_type_byte_code,
 			generate_cid_array,
 			generate_cid_init,
-			il_type_name
+			il_type_name,
+			is_valid
 		end
 
 create
@@ -74,6 +75,12 @@ feature
 			if not l_is_precompiled then
 				Result := internal_il_type_name (clone (l_class_c.name), a_prefix)
 			end
+		end
+
+	is_valid: BOOLEAN is
+			-- Are all the base classes still in the system ?
+		do
+			Result := base_class /= Void and then meta_generic.is_valid
 		end
 
 feature -- Generic conformance

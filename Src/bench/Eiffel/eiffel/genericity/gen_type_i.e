@@ -66,7 +66,10 @@ feature -- Access
 	is_valid: BOOLEAN is
 			-- Are all the base classes still in the system ?
 		do
-			Result := base_class /= Void and then meta_generic.is_valid
+			Result := base_class /= Void and then
+				(base_class.generics /= Void and then
+					base_class.generics.count = meta_generic.count) and then
+				meta_generic.is_valid
 		end
 
 	duplicate: like Current is

@@ -8,7 +8,7 @@ inherit
 creation
 	make
 	
-feature 
+feature -- Access
 
 	id (t: CLASS_AS_B): CLASS_ID is
 			-- Id associated with `t'
@@ -21,6 +21,8 @@ feature
 		once
 			!! Result.make
 		end
+
+feature -- Server size configuration
 
 	Size_limit: INTEGER is 200
 			-- Size of the AST_SERVER file (200 Ko)

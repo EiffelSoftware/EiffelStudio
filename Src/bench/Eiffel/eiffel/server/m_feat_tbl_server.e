@@ -8,7 +8,7 @@ inherit
 creation
 	make
 	
-feature 
+feature -- Access
 
 	id (t: MELTED_FEATURE_TABLE): TYPE_ID is
 			-- Id associated with `t'
@@ -21,6 +21,8 @@ feature
 		once
 			!! Result.make;
 		end
+
+feature -- Server size configuration
 
 	Size_limit: INTEGER is 50
 			-- Size of the M_FEAT_TBL_SERVER file (50 Ko)

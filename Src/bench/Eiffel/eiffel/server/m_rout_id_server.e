@@ -8,7 +8,7 @@ inherit
 creation
 	make
 
-feature
+feature -- Access
 
 	id (t: MELTED_ROUTID_ARRAY): CLASS_ID is
 			-- Id associated with `t'
@@ -21,6 +21,8 @@ feature
 		once
 			!! Result.make
 		end
+
+feature -- Server size configuration
 
 	Size_limit: INTEGER is 50
 			-- Size of the M_ROUT_ID_SERVER file (50 Ko)

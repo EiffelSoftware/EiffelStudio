@@ -260,9 +260,6 @@ feature -- Status setting
 					implementation_not_void: app_imp /= Void
 				end
 				app_imp.remove_root_window (Current)
-				if parent_imp /= Void then
-					parent_imp.disable_sensitive
-				end
 	
 					-- Remove parent/children relationship
 				interface.wipe_out
@@ -1242,6 +1239,9 @@ end -- class EV_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.54  2001/06/08 18:55:48  pichery
+--| Removed useless code
+--|
 --| Revision 1.53  2001/06/07 23:08:15  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

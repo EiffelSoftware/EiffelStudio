@@ -54,7 +54,10 @@ APIENTRY WinMain(HANDLE hInstance, HANDLE hPrevInstance,
 }
 
 typedef void (* EIF_CLEANUP)();
-EIF_CLEANUP eif_fn_table [20];
+
+#define EIF_CLEANUP_TABLE_SIZE 20
+
+EIF_CLEANUP eif_fn_table [EIF_CLEANUP_TABLE_SIZE];
 int eif_fn_count = 0;
 
 void eif_cleanup()
@@ -76,8 +79,10 @@ void eif_cleanup()
 
 void eif_register_cleanup(EIF_CLEANUP f)
 {
+	if (eif_fn_count == EIF_CLEANUP_TABLE_SIZE)
+		eraise ("Cleanup table overflow");
+
 	eif_fn_table [eif_fn_count] = f;
 	eif_fn_count ++;
 }
 
- 

@@ -6,6 +6,26 @@ indexing
 class
 	MD_STRONG_NAME
 
+feature -- Status report
+
+	present: BOOLEAN is
+			-- True if `mscorsn.dll' is available, False otherwise.
+		local
+			l_val: INTEGER
+			retried: BOOLEAN
+		once
+			if not retried then
+					-- We try to call `get_error'. If the DLL exists, it 
+					-- will work, if it does not exist it will not reach
+					-- `Result := True', thus `Result' will be False.
+				l_val := get_error
+				Result := True
+			end
+		rescue
+			retried := True
+			retry
+		end
+		
 feature -- Constants
 
 	sn_leave_key: INTEGER is 0x00000001
@@ -17,7 +37,7 @@ feature -- C externals
 	get_error: INTEGER is
 			-- Retrieve error code if any.
 		external
-			"C macro signature : EIF_INTEGER use <StrongName.h>"
+			"dllwin mscorsn.dll signature : EIF_INTEGER use <StrongName.h>"
 		alias
 			"StrongNameErrorInfo"
 		end
@@ -25,7 +45,7 @@ feature -- C externals
 	strong_name_free_buffer (a_key_blob: POINTER) is
 			-- Free buffer allocated by routines below.
 		external
-			"C macro signature (BYTE *) use <StrongName.h>"
+			"dllwin mscorsn.dll signature (BYTE *) use <StrongName.h>"
 		alias
 			"StrongNameFreeBuffer"
 		end
@@ -35,7 +55,7 @@ feature -- C externals
 		is
 			-- Generate a new key pair for strong name use.
 		external
-			"C macro signature (LPCWSTR, DWORD, BYTE **, ULONG *): EIF_INTEGER use <StrongName.h>"
+			"dllwin mscorsn.dll signature (LPCWSTR, DWORD, BYTE **, ULONG *): EIF_INTEGER use <StrongName.h>"
 		alias
 			"StrongNameKeyGen"
 		end
@@ -45,7 +65,7 @@ feature -- C externals
 		is
 			-- Import key pair into a key container.
 		external
-			"C macro signature (LPCWSTR, BYTE *, ULONG): EIF_INTEGER use <StrongName.h>"
+			"dllwin mscorsn.dll signature (LPCWSTR, BYTE *, ULONG): EIF_INTEGER use <StrongName.h>"
 		alias
 			"StrongNameKeyInstall"
 		end
@@ -53,7 +73,7 @@ feature -- C externals
 	strong_name_delete (a_container_name: POINTER): INTEGER is
 			-- Import key pair into a key container.
 		external
-			"C macro signature (LPCWSTR): EIF_INTEGER use <StrongName.h>"
+			"dllwin mscorsn.dll signature (LPCWSTR): EIF_INTEGER use <StrongName.h>"
 		alias
 			"StrongNameKeyDelete"
 		end
@@ -64,7 +84,7 @@ feature -- C externals
 			-- Retrieve the public portion of a key pair.
 		external
 			"[
-				C macro signature (LPCWSTR, BYTE *, ULONG, BYTE **, ULONG *): EIF_INTEGER
+				dllwin mscorsn.dll signature (LPCWSTR, BYTE *, ULONG, BYTE **, ULONG *): EIF_INTEGER
 				use <StrongName.h>
 			]"
 		alias
@@ -75,7 +95,7 @@ feature -- C externals
 			-- Compute size of buffer in `a_hash_size' needed to hold a hash
 			-- for a given hash algorithm `a_hash_alg'.
 		external
-			"C macro signature (ULONG, DWORD *): EIF_INTEGER use <StrongName.h>"
+			"dllwin mscorsn.dll signature (ULONG, DWORD *): EIF_INTEGER use <StrongName.h>"
 		alias
 			"StrongNameHashSize"
 		end
@@ -85,7 +105,7 @@ feature -- C externals
 		is
 			-- Compute size that needs to be allocated for a signature in an assembly.
 		external
-			"C macro signature (BYTE *, ULONG, DWORD *): EIF_INTEGER use <StrongName.h>"
+			"dllwin mscorsn.dll signature (BYTE *, ULONG, DWORD *): EIF_INTEGER use <StrongName.h>"
 		alias
 			"StrongNameSignatureSize"
 		end
@@ -96,7 +116,7 @@ feature -- C externals
 			-- Hash and sign a manifest.
 		external
 			"[
-				C macro signature (LPCWSTR, LPCWSTR, BYTE *, ULONG, BYTE **, ULONG *): EIF_INTEGER
+				dllwin mscorsn.dll signature (LPCWSTR, LPCWSTR, BYTE *, ULONG, BYTE **, ULONG *): EIF_INTEGER
 				use <StrongName.h>
 			]"
 		alias
@@ -109,7 +129,7 @@ feature -- C externals
 			-- Create a strong name token from a public key blob.
 		external
 			"[
-				C macro signature (BYTE *, ULONG, BYTE **, ULONG *): EIF_INTEGER
+				dllwin mscorsn.dll signature (BYTE *, ULONG, BYTE **, ULONG *): EIF_INTEGER
 				use <StrongName.h>
 			]"
 		alias
@@ -122,7 +142,7 @@ feature -- C externals
 			-- Compute hash of `a_blob' using `a_hash_alg_id'.
 		external
 			"[
-				C macro signature (LPCWSTR, unsigned int *, BYTE *, DWORD, DWORD *): EIF_INTEGER
+				dllwin mscorsn.dll signature (LPCWSTR, unsigned int *, BYTE *, DWORD, DWORD *): EIF_INTEGER
 				use <StrongName.h>
 			]"
 		alias
@@ -135,7 +155,7 @@ feature -- C externals
 				-- Compute hash of `a_blob' using `a_hash_alg_id'.
 		external
 			"[
-				C macro
+				dllwin mscorsn.dll
 				signature (BYTE *, DWORD, unsigned int *, BYTE *, DWORD, DWORD *): EIF_INTEGER
 				use <StrongName.h>
 			]"

@@ -593,14 +593,14 @@ feature -- Update
 			Compilation_modes.set_is_precompiling (True)
 			Compilation_modes.set_is_freezing
 			Workbench.recompile
-				-- FIXME: We don't purge the system, because of a problems with IDs
-				-- and we give a `False' arguments to `prepare_before_saving'
-				-- i.e. the system which is using the precompiled can think that some
-				-- IDs are available but they are not. This is due because of a bad
-				-- merging of SERVER_CONTROLs from the different precompiled libraries.
-			Comp_system.prepare_before_saving (False)
 
 			if successful then
+					-- FIXME: We don't purge the system, because of a problems with IDs
+					-- and we give a `False' arguments to `prepare_before_saving'
+					-- i.e. the system which is using the precompiled can think that some
+					-- IDs are available but they are not. This is due because of a bad
+					-- merging of SERVER_CONTROLs from the different precompiled libraries.
+				Comp_system.prepare_before_saving (False)
 				Comp_system.set_licensed_precompilation (licensed)
 				Comp_system.save_precompilation_info
 				save_project

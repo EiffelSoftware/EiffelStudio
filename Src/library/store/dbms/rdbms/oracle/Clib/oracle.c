@@ -236,6 +236,10 @@ int ora_exec_immediate (int no_desc, text order[1024])
 		if (error_number) {
 			return error_number;
 		}
+	// Change by David S : Need to free the descriptor after the ora_exec_immediate 
+	// but to do now in Eiffel file
+//	free (cda [no_des]);
+//	cda [no_des] = NULL;
 	}	
 	return error_number;
 }

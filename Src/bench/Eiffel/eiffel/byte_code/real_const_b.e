@@ -22,7 +22,7 @@ feature -- Evaluation
 	evaluate: VALUE_I is
 			-- Evaluation of Current.
 		do
-			create {REAL_VALUE_I} Result.make (value.to_double)
+			create {REAL_VALUE_I} Result.make_double (value.to_double)
 		end
 
 feature -- Status report

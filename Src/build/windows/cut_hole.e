@@ -49,10 +49,15 @@ feature {NONE}
 	process_any (dropped: STONE) is
 		local
 			r: REMOVABLE;
+			n: NAMABLE
 		do
 			r ?= dropped;
 			if (r /= Void) then
 				r.remove_yourself;
+				n ?= r;
+				if n /= Void and then namer_window.namable = n then
+					namer_window.popdown
+				end
 			end;
 		end;
 

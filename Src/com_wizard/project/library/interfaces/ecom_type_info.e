@@ -126,7 +126,7 @@ feature -- Access
 		end
 
 	impl_type_flag (an_index: INTEGER): INTEGER is
-			-- IMPLTYPEFLAGS enumeration
+			-- See ECOM_IMPL_TYPE_FLAGS for return values.
 		do
 			Result := ccom_get_impl_type_flags (initializer, an_index)
 		ensure

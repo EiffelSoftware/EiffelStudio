@@ -47,10 +47,14 @@ feature -- Access
 			Result := "Modify Pixmap"
 		end
 
-	close_text: STRING is
-			-- `Result' is STRING constant named `close_text'.
-		once
-			Result := "Close"
+	lightbulb_png: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		Once
+			create Result
+			create a_file_name.make_from_string (png_location)
+			a_file_name.extend ("lightbulb.png")
+			Result.set_with_named_file (a_file_name)
 		end
 
 	constants_dialog_title: STRING is
@@ -65,12 +69,6 @@ feature -- Access
 			Result := 80
 		end
 
-	ok_button_text: STRING is
-			-- `Result' is STRING constant named `ok_button_text'.
-		once
-			Result := "OK"
-		end
-
 	next_tip_text: STRING is
 			-- `Result' is STRING constant named `next_tip_text'.
 		once
@@ -83,14 +81,10 @@ feature -- Access
 			Result := "Project Configuration"
 		end
 
-	lightbulb_png: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		Once
-			create Result
-			create a_file_name.make_from_string (png_location)
-			a_file_name.extend ("lightbulb.png")
-			Result.set_with_named_file (a_file_name)
+	png_location: STRING is
+			-- `Result' is DIRECTORY constant named `png_location'.
+		once
+			Result := "D:\Eiffel54\build\bitmaps\png"
 		end
 
 	new_button_add_text: STRING is
@@ -117,22 +111,28 @@ feature -- Access
 			Result := 4
 		end
 
+	medium_padding: INTEGER is 
+			-- `Result' is INTEGER constant named medium_padding.
+		once
+			Result := 8
+		end
+
 	pixmap_settings_dialog_title: STRING is
 			-- `Result' is STRING constant named `pixmap_settings_dialog_title'.
 		once
 			Result := "Pixmap Selection"
 		end
 
-	modify_button_text: STRING is
-			-- `Result' is STRING constant named `modify_button_text'.
-		once
-			Result := "Modify"
-		end
-
 	negative: INTEGER is 
 			-- `Result' is INTEGER constant named negative.
 		once
 			Result := -100
+		end
+
+	ok_button_text: STRING is
+			-- `Result' is STRING constant named `ok_button_text'.
+		once
+			Result := "OK"
 		end
 
 	large_spacing_width: INTEGER is 
@@ -153,16 +153,16 @@ feature -- Access
 			Result := "Cancel"
 		end
 
-	medium_padding: INTEGER is 
-			-- `Result' is INTEGER constant named medium_padding.
+	close_text: STRING is
+			-- `Result' is STRING constant named `close_text'.
 		once
-			Result := 8
+			Result := "Close"
 		end
 
-	png_location: STRING is
-			-- `Result' is DIRECTORY constant named `png_location'.
+	modify_button_text: STRING is
+			-- `Result' is STRING constant named `modify_button_text'.
 		once
-			Result := "D:\Eiffel54\build\bitmaps\png"
+			Result := "Modify"
 		end
 
 

@@ -9,28 +9,12 @@ class STRING_PREF_RES
 
 inherit
 	PREFERENCE_RESOURCE
-		rename
-			make as form_make
 		redefine
 			associated_resource, validate
-		end;
-	COMMAND
+		end
 
 creation
 	make
-
-feature {NONE} -- Initialization
-
-	make (a_resource: like associated_resource; new_parent: COMPOSITE) is
-			-- Initialize Current with `a_resource' as `associated_resource',
-			-- and `new_parent' as `a_parent'.
-		require
-			a_resource_not_void: a_resource /= Void;
-			new_parent_not_void: new_parent /= Void
-		do
-			associated_resource := a_resource;
-			a_parent := new_parent
-		end
 
 feature -- Validation
 
@@ -51,22 +35,40 @@ feature -- Validation
 			end
 		end
 
-feature {PREFERENCE_CATEGORY} -- User Interface
+feature -- Element change
 
-	display is
-			-- Display Current
+	reset is
+			-- Reset the text field.
 		local
 			txt: STRING
 		do
-			init;
-			text.enable_resize_width;
-			text.set_single_line_mode;
 			txt := associated_resource.value;
 			if txt /= Void then
 				text.set_text (txt);
 			end;
-			--text.set_rows (5);
-			--text.hide_horizontal_scrollbar
+		end;
+
+feature {PREFERENCE_CATEGORY} -- User Interface
+
+	init (a_parent: COMPOSITE) is
+			-- Display Current
+		do
+			form_make ("", a_parent);
+
+			!! name_label.make (associated_resource.visual_name, Current);
+			!! text.make ("", Current);
+
+			attach_top (name_label, 1);
+			attach_bottom (name_label, 1);
+			attach_left (name_label, 1);
+
+			attach_top (text, 1);
+			attach_bottom (text, 1);
+			attach_left_widget (name_label, text, 5);
+			attach_right (text, 1)
+
+			text.set_width (150)
+			text.add_activate_action (Current, Void);
 		end
 
 feature {PREFERENCE_CATEGORY} -- Access
@@ -77,10 +79,10 @@ feature {PREFERENCE_CATEGORY} -- Access
 			ar: like associated_resource
 		do
 			ar := associated_resource
-			if text = Void or else ar.value.is_equal (text.text) then
+			if text = Void or else equal (ar.value, (text.text)) then
 					--| text /= Void means text has been displayed
 					--| and thus the user could have changed the value.
-				if ar.value /= Void then
+				if ar.value = Void or else ar.value.empty then
 					file.putstring ("%"%"");
 				else
 					if ar.value @ 1 /= '%"' then
@@ -91,6 +93,8 @@ feature {PREFERENCE_CATEGORY} -- Access
 						file.putchar ('%"')
 					end
 				end
+			elseif text.text.empty then
+				file.putstring ("%"%"")
 			else
 				if text.text @ 1 /= '%"' then
 					file.putchar ('%"')
@@ -115,28 +119,8 @@ feature {PREFERENCE_CATEGORY} -- Access
 		local
 			new_res: like associated_resource
 		do
-			!! new_res.make (associated_resource.name, text.text);
+			!! new_res.make_with_values (associated_resource.name, text.text);
 			!! Result.make (associated_resource, new_res)
-		end
-
-feature {NONE} -- Initialization
-
-	init is
-			-- Create and attach widgets to Current
-		do
-			form_make ("", a_parent);
-
-			!! name_label.make (associated_resource.name, Current);
-			!! text.make ("", Current);
-
-			attach_top (name_label, 1);
-			attach_bottom (name_label, 1);
-			attach_left (name_label, 1);
-
-			attach_top (text, 1);
-			attach_bottom (text, 1);
-			attach_left_widget (name_label, text, 5);
-			attach_right (text, 1)
 		end
 
 feature {NONE} -- Properties
@@ -144,7 +128,7 @@ feature {NONE} -- Properties
 	associated_resource: STRING_RESOURCE;
 			-- Resource Current represnts
 
-	text: TEXT
+	text: TEXT_FIELD
 			-- Edit box to represent Current's value
 
 end -- class STRING_PREF_RES

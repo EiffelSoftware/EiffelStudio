@@ -27,32 +27,14 @@ feature
 			Result := get_cardinal (screen_object, $ext_name_child)
 		end;
 
-	child_list: POINTER;
-
-	set_child_list is
+	get_ith_child (pos: INTEGER): POINTER is
 		local
 			ext_name: ANY;
 		do
 			ext_name := Mchildren.to_c;
-			child_list := get_widget_children (screen_object, $ext_name);
-		ensure
-			child_list_not_null: child_list /= null_pointer;
-		end;
-
-	get_ith_child (pos: INTEGER): POINTER is
-		do
-			if child_list = null_pointer then
-				set_child_list;
-			end;
-			Result := get_i_widget_child (child_list, pos);
-
-		end;
-
-feature {NONE}
-	
-	null_pointer: POINTER is
-			-- Null pointer
-		do
+			Result := get_i_widget_child (
+						get_widget_children (screen_object, $ext_name), 
+						pos);
 		end;
 
 feature {NONE} -- External features
@@ -73,6 +55,7 @@ feature {NONE} -- External features
 		external
 			"C"
 		end;
+
 end
 
 

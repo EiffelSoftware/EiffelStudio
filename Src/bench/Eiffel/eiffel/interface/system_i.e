@@ -368,6 +368,9 @@ feature -- Properties
 			-- Does a `preobj' file exist for the current precompiled project?
 			-- This file might not exist as a result of merging precompilations
 
+	licensed_precompilation: BOOLEAN
+			-- Is the precompiled library protected by a license?
+
 	makefile_generator: MAKEFILE_GENERATOR;
 			-- Makefile generator.
 
@@ -1019,6 +1022,8 @@ end;
 
 				-- Byte code production and type checking
 			process_pass (pass3_controler);
+
+			Error_handler.set_error_position (0);
 
 			if
 				not Compilation_modes.is_precompiling and
@@ -3783,6 +3788,12 @@ feature
 			-- Set `has_precompiled_preobj' to `b'.
 		do
 			has_precompiled_preobj := b
+		end
+
+	set_licensed_precompilation (b: BOOLEAN) is
+			-- Set `licensed_precompilation' to `b'.
+		do
+			licensed_precompilation := b
 		end
 
 	set_code_replication_off (b: BOOLEAN) is

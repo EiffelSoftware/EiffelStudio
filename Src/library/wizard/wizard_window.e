@@ -47,49 +47,46 @@ feature {NONE} -- Initialization
 			h1: EV_HORIZONTAL_BOX
 			h_sep: EV_HORIZONTAL_SEPARATOR
 		do	
-			create h_sep
-			a_box.extend(h_sep)
-			a_box.disable_item_expand(h_sep)
-			create navigation_bar
-			a_box.extend (navigation_bar)
-			a_box.disable_item_expand (navigation_bar)
+			create previous_b.make_with_text_and_action ("< Back ", agent previous_page)
+			previous_b.align_text_center
+			set_default_size_for_button (previous_b)
 
-			create previous_b.make_with_text_and_action ("< Back ", ~previous_page)
-			create next_b.make_with_text_and_action ("Next >", ~next_page)	
-			create cancel_b.make_with_text_and_action ("Cancel", ~cancel_actions)
-			create help_b.make_with_text_and_action ("Help", ~show_help)
+			create next_b.make_with_text_and_action ("Next >", agent next_page)	
+			next_b.align_text_center
+			set_default_size_for_button (next_b)
 
-			navigation_bar.extend (create {EV_CELL})
+			create cancel_b.make_with_text_and_action ("Cancel", agent cancel_actions)
+			cancel_b.align_text_center
+			set_default_size_for_button (cancel_b)
+
+			create help_b.make_with_text_and_action ("Help", agent show_help)
+			help_b.align_text_center
+			set_default_size_for_button (help_b)
+			help_b.hide
 
 			create h1
-			navigation_bar.extend (h1)
-			navigation_bar.disable_item_expand (h1)
-
 			h1.extend (previous_b)
-			previous_b.set_minimum_width (Default_button_width)
-			previous_b.set_minimum_height (Default_button_height)
-			previous_b.align_text_center
 			h1.disable_item_expand(previous_b)
-
 			h1.extend (next_b)
-			next_b.set_minimum_width (Default_button_width)
-			next_b.set_minimum_height (Default_button_height)
-			next_b.align_text_center
 			h1.disable_item_expand (next_b)
 
-			navigation_bar.extend (cancel_b)
-			navigation_bar.disable_item_expand (cancel_b)
-			cancel_b.set_minimum_width (Default_button_width)
-			cancel_b.set_minimum_height (Default_button_height)
-			cancel_b.align_text_center
-
-			help_b.set_minimum_height (Default_button_height)
-			help_b.set_minimum_width (Default_button_width)
-			help_b.align_text_center
-			
+			create navigation_bar
 			navigation_bar.set_padding (dialog_unit_to_pixels(11))
 			navigation_bar.set_border_width (dialog_unit_to_pixels(11))
-		enD
+			navigation_bar.extend (help_b)
+			navigation_bar.disable_item_expand (help_b)
+			navigation_bar.extend (create {EV_CELL})
+			navigation_bar.extend (h1)
+			navigation_bar.disable_item_expand (h1)
+			navigation_bar.extend (cancel_b)
+			navigation_bar.disable_item_expand (cancel_b)
+			
+			create h_sep
+			a_box.extend (h_sep)
+			a_box.disable_item_expand (h_sep)
+			a_box.extend (navigation_bar)
+			a_box.disable_item_expand (navigation_bar)
+		end
 		
 	load_first_state is
 			-- Load first state.
@@ -109,8 +106,7 @@ feature -- Basic Operations
 			check
 				non_void_help_button: help_b /= Void
 			end
-			navigation_bar.extend (help_b)
-			navigation_bar.disable_item_expand (help_b)
+			help_b.show
 		end
 		
 feature -- Command

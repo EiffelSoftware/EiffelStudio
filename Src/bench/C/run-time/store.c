@@ -995,6 +995,8 @@ rt_private void make_header(EIF_CONTEXT_NOARG)
 	xfree (s_buffer);
 	s_buffer = (char *) 0;
 	expop(&eif_stack);
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_public void sort_attributes(int dtype)
@@ -1184,6 +1186,8 @@ rt_private void imake_header(EIF_CONTEXT_NOARG)
 	xfree (s_buffer);
 	s_buffer = (char *) 0;
 	expop(&eif_stack);
+
+	EIF_END_GET_CONTEXT
 }
 
 

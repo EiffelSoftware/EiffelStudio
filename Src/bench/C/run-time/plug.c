@@ -73,6 +73,8 @@ rt_public char *argarr(EIF_CONTEXT int argc, char **argv)
 	epop(&loc_stack, 1);		/* Remove protection for area */
 	epop(&loc_stack, 1);		/* Remove protection for array */
 	return array;
+
+	EIF_END_GET_CONTEXT
 }
 
 /*
@@ -189,6 +191,8 @@ rt_public char *striparr(EIF_CONTEXT register char *curr, register int dtype, re
 	epop(&loc_stack, 1);		/* Remove protection for area */
 	epop(&loc_stack, 1);		/* Remove protection for array */
 	return array;
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_public char *makestr(EIF_CONTEXT register char *s, register int len)
@@ -216,6 +220,8 @@ rt_public char *makestr(EIF_CONTEXT register char *s, register int len)
 	epop(&loc_stack, 1);			/* Remove protection */
 
 	return string;
+
+	EIF_END_GET_CONTEXT
 }
 
 /*
@@ -307,6 +313,8 @@ rt_public void chkinv (EIF_CONTEXT char *obj, int where)
 	bzero (inv_mark_tablep, scount);
 
 	recursive_chkinv(MTC dtype, obj, where);	/* Recurive invariant check */
+
+	EIF_END_GET_CONTEXT
 }
 
 #ifdef WORKBENCH
@@ -402,6 +410,8 @@ rt_private void recursive_chkinv(EIF_CONTEXT int dtype, char *obj, int where)
 
 	/* No more propection for `obj' */
 	epop(&loc_stack, 1);
+
+	EIF_END_GET_CONTEXT
 }
 
 #ifdef WORKBENCH

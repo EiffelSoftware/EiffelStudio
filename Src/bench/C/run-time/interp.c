@@ -274,6 +274,8 @@ rt_public void xinterp(EIF_CONTEXT char *icval)
 	(void) interpret(MTC INTERP_CMPD, 0);	/* Start interpretation */
 	expop(&eif_stack);					/* Pop pseudo vector */
 	dpop();								/* Remove calling context */
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_public void xiinv(EIF_CONTEXT char *icval, int where)
@@ -304,6 +306,8 @@ rt_public void xiinv(EIF_CONTEXT char *icval, int where)
 	(void) interpret(MTC INTERP_INVA, where);
 	expop(&eif_stack);					/* Pop pseudo vector */
 	dpop();								/* Remove calling context */
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_public void xinitint(EIF_CONTEXT_NOARG)
@@ -315,6 +319,8 @@ rt_public void xinitint(EIF_CONTEXT_NOARG)
 	iregs = (struct item **) cmalloc(iregsz);
 	if (iregs == (struct item **) 0)	/* Not enough room */
 		enomem(MTC_NOARG);
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_private void interpret(EIF_CONTEXT int flag, int where)
@@ -3263,6 +3269,7 @@ null:
 	}
 	}							/* Remember: indentation was wrong--RAM */
 	/* NOTREACHED */
+	EIF_END_GET_CONTEXT
 }
 
 
@@ -3297,6 +3304,7 @@ rt_private void icheck_inv(EIF_CONTEXT char *obj, struct stochunk *scur, struct 
 		irecursive_chkinv(MTC dtype, obj, scur, stop, where);
 		IC = old_IC;				/* Restore IC */
 	}
+	EIF_END_GET_CONTEXT
 }
 
 rt_private void irecursive_chkinv(EIF_CONTEXT int dtype, char *obj, struct stochunk *scur, struct item *stop, int where)
@@ -3400,6 +3408,8 @@ rt_private void irecursive_chkinv(EIF_CONTEXT int dtype, char *obj, struct stoch
 
 	/* No more propection for `obj' */
 	epop(&loc_stack, 1);
+
+	EIF_END_GET_CONTEXT
 }
 
 /*
@@ -4064,6 +4074,8 @@ rt_private int icall(EIF_CONTEXT int fid, int stype, int is_extern)
 #endif
 	IC = old_IC;					/* Restore IC back-up */
 	return result;
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_private int ipcall(EIF_CONTEXT int32 origin, int32 offset, int is_extern)
@@ -4131,6 +4143,8 @@ rt_private int ipcall(EIF_CONTEXT int32 origin, int32 offset, int is_extern)
 #endif
 	IC = old_IC;					/* Restore IC back-up */
 	return result;
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_private void interp_access(int fid, int stype, uint32 type)
@@ -4268,6 +4282,8 @@ rt_private void assign(EIF_CONTEXT long int fid, int stype, uint32 type)
 #undef i
 #undef b
 #undef l
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_private void passign(EIF_CONTEXT int32 origin, int32 f_offset, uint32 type)
@@ -4333,6 +4349,8 @@ rt_private void passign(EIF_CONTEXT int32 origin, int32 f_offset, uint32 type)
 #undef i
 #undef b
 #undef l
+
+	EIF_END_GET_CONTEXT
 }
 
 void call_disp(EIF_CONTEXT uint32 dtype, char *object)
@@ -4345,6 +4363,8 @@ void call_disp(EIF_CONTEXT uint32 dtype, char *object)
 	OLD_IC = IC;
 	(wdisp (dtype))(object);
 	IC = OLD_IC;
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_private void address(int32 fid, int stype)
@@ -4386,6 +4406,8 @@ rt_private double get_double(EIF_CONTEXT_NOARG)
 		*p++ = *IC++;
 
 	return *(double *) &xdouble;	/* Correctly aligned by union */
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_private float get_float(EIF_CONTEXT_NOARG)
@@ -4406,6 +4428,8 @@ rt_private float get_float(EIF_CONTEXT_NOARG)
 		*p++ = *IC++;
 	
 	return *(float *) &xfloat;		/* Correctly aligned by union */
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_private long get_long(EIF_CONTEXT_NOARG)
@@ -4426,6 +4450,8 @@ rt_private long get_long(EIF_CONTEXT_NOARG)
 		*p++ = *IC++;
 	
 	return *(long *) &xlong;		/* Correctly aligned by union */
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_private short get_short(EIF_CONTEXT_NOARG)
@@ -4446,6 +4472,8 @@ rt_private short get_short(EIF_CONTEXT_NOARG)
 		*p++ = *IC++;
 	
 	return *(short *) &xshort;		/* Correctly aligned by union */
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_private uint32 get_uint32(EIF_CONTEXT_NOARG)
@@ -4466,6 +4494,8 @@ rt_private uint32 get_uint32(EIF_CONTEXT_NOARG)
 		*p++ = *IC++;
 
 	return *(uint32 *) &xuint32;	  /* Correctly aligned by union */
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_private fnptr get_fnptr(EIF_CONTEXT_NOARG)
@@ -4486,6 +4516,8 @@ rt_private fnptr get_fnptr(EIF_CONTEXT_NOARG)
 		*p++ = *IC++;
 	
 	return *(fnptr *) &xfnptr;		/* Correctly aligned by union */
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_private char *get_address(EIF_CONTEXT_NOARG)
@@ -4506,6 +4538,8 @@ rt_private char *get_address(EIF_CONTEXT_NOARG)
 		*p++ = *IC++;
 	
 	return *(char **) &xaddress;	/* Correctly aligned by union */
+
+	EIF_END_GET_CONTEXT
 }
 
 /*
@@ -4697,6 +4731,8 @@ rt_private void init_registers(EIF_CONTEXT_NOARG)
 	iargnum = last = iget();		/* Push # of arguments */
 	last->type = SK_INT;			/* Initializes record */
 	last->it_long = argnum;			/* Got this from byte code */
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_private void allocate_registers(EIF_CONTEXT_NOARG)
@@ -4737,6 +4773,7 @@ rt_private void allocate_registers(EIF_CONTEXT_NOARG)
 			iregs = new;
 		}
 	}
+	EIF_END_GET_CONTEXT
 }
 
 rt_shared void sync_registers(EIF_CONTEXT struct stochunk *stack_cur, struct item *stack_top)
@@ -4798,6 +4835,8 @@ rt_shared void sync_registers(EIF_CONTEXT struct stochunk *stack_cur, struct ite
 	 */
 	
 	dsync();						/* Resynchronize cached status */
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_private void pop_registers(EIF_CONTEXT_NOARG)
@@ -4834,6 +4873,8 @@ rt_private void pop_registers(EIF_CONTEXT_NOARG)
 		result = iget();				/* Get a new result record */
 		bcopy(&saved_result, result, ITEM_SZ);
 	}
+
+	EIF_END_GET_CONTEXT
 }
 
 /*
@@ -5202,6 +5243,7 @@ rt_public struct item *ivalue(EIF_CONTEXT int code, int num)
 	}
 
 	/* NOTREACHED */
+	EIF_END_GET_CONTEXT
 }
 
 #ifdef DEBUG

@@ -40,7 +40,6 @@
 #include "main.h"
 #endif
 
-#define NBLOCKS			26		/* Number of block lists (max size is 2^27-1) */
 
 /* For debugging */
 #define dprintf(n)		if (DEBUG & (n)) printf
@@ -91,7 +90,7 @@
 /* This structure records some general information about the memory, the number
  * of chunck, etc... These informations are available via the meminfo() routine.
  */
-rt_shared struct emallinfo m_data = {
+rt_shared struct emallinfo m_data = { /* %%ss mt */
 	0,		/* ml_chunk */
 	0,		/* ml_total */
 	0,		/* ml_used */
@@ -102,13 +101,13 @@ rt_shared struct emallinfo m_data = {
  * enables us to pilot the garbage collector correctly or to call coalescing
  * over the memory only if it is has a chance to succeed.
  */
-rt_shared struct emallinfo c_data = {		/* Informations on C memory */
+rt_shared struct emallinfo c_data = {		/* Informations on C memory */ /* %%ss mt */
 	0,		/* ml_chunk */
 	0,		/* ml_total */
 	0,		/* ml_used */
 	0,		/* ml_over */
 };	
-rt_shared struct emallinfo e_data = {		/* Informations on Eiffel memory */
+rt_shared struct emallinfo e_data = {		/* Informations on Eiffel memory */ /* %%ss mt */
 	0,		/* ml_chunk */
 	0,		/* ml_total */
 	0,		/* ml_used */
@@ -116,7 +115,7 @@ rt_shared struct emallinfo e_data = {		/* Informations on Eiffel memory */
 };	
 
 /* Record head and tail of the chunk list */
-rt_shared struct ck_list cklst = {
+rt_shared struct ck_list cklst = {	/* %%ss mt */
 	(struct chunk *) 0,			/* ck_head */
 	(struct chunk *) 0,			/* ck_tail */
 	(struct chunk *) 0,			/* cck_head */
@@ -132,26 +131,26 @@ rt_shared struct ck_list cklst = {
  * As an exception, index 0 holds block with a size of zero, and as
  * there cannot be blocks of size 1 (OVERHEAD > 1 anyway), it's ok--RAM.
  */
-rt_private union overhead *c_hlist[NBLOCKS];	/* H list for C blocks */
-rt_private union overhead *e_hlist[NBLOCKS];	/* H list for Eiffel blocks */
+rt_private union overhead *c_hlist[NBLOCKS];	/* H list for C blocks */ /* %%ss mt */
+rt_private union overhead *e_hlist[NBLOCKS];	/* H list for Eiffel blocks */ /* %%ss mt */
 
 /* The following arrays act as a buffer cache for every operation in the
  * free list. They simply record the address of the last access. Whenever we
  * wish to insert/find an element in the list, we first look at the buffer
  * cache value to see if we can start the traversing from that point.
  */
-rt_private union overhead *c_buffer[NBLOCKS];	/* Buffer cache for C list */
-rt_private union overhead *e_buffer[NBLOCKS];	/* Buffer cache for Eiffel list */
+rt_private union overhead *c_buffer[NBLOCKS];	/* Buffer cache for C list */ /* %%ss mt */
+rt_private union overhead *e_buffer[NBLOCKS];	/* Buffer cache for Eiffel list */ /* %%ss mt */
 
 /* The sc_from and sc_to zone are the scavenge zone used by the generation
  * scavenging garbage collector. They are shared with the garbage collector.
  * These zones may be put back into the free list in case we are low in RAM.
  */
-rt_shared struct sc_zone sc_from;			/* Scavenging 'from' zone */
-rt_shared struct sc_zone sc_to;			/* Scavenging 'to' zone */
+rt_shared struct sc_zone sc_from;		/* Scavenging 'from' zone */ /* %%ss mt */
+rt_shared struct sc_zone sc_to;			/* Scavenging 'to' zone */ /* %%ss mt */
 
 /* General malloc/GC flag */
-rt_shared uint32 gen_scavenge = GS_SET;	/* Generation scavenging to be set */
+rt_shared uint32 gen_scavenge = GS_SET;	/* Generation scavenging to be set */ /* %%ss mt */
 
 /* Each time an Eiffel object is created in the free-list (via emalloc or
  * tenuring), we record its size in eiffel_usage variable. Then, once the amount
@@ -238,7 +237,7 @@ rt_public char *emalloc(uint32 type)
 	 * "No more memory" exception. The routine returns the pointer on a new
 	 * object holding at least 'nbytes'.
 	 */
-
+	EIF_GET_CONTEXT
 	char *object;				/* Pointer to the freshly created object */
 	unsigned int nbytes;		/* Object's size */
 
@@ -332,6 +331,8 @@ rt_public char *emalloc(uint32 type)
 	eraise("object allocation", EN_MEM);	/* Signals no more memory */
 
 	return (char *) 0;				/* They chose to ignore EN_MEN */
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_public char *spmalloc(unsigned int nbytes)
@@ -363,7 +364,7 @@ rt_public char *sprealloc(char *ptr, long int nbitems)
              		/* New number of items wanted */
 {
 	/* Reallocation of a special object `ptr' for new count `nbitems' */
-
+	EIF_GET_CONTEXT
 	union overhead *zone;		/* Malloc information zone */
 	char  *(*init)();			/* Initialization routine to be called */
 	char *ref, *object;
@@ -474,6 +475,8 @@ rt_public char *sprealloc(char *ptr, long int nbitems)
 	}
 
 	return object;
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_public char *cmalloc(unsigned int nbytes)
@@ -523,7 +526,7 @@ rt_shared char *xmalloc(unsigned int nbytes, int type, int gc_flag)
 	 * The function returns a pointer to the free location found, or a null
 	 * pointer if there is no memory available.
 	 */
- 
+	EIF_GET_CONTEXT 
 	int mod;			/* Remainder for padding */
 	char *result;		/* Pointer to the free memory location we found */
 
@@ -566,6 +569,8 @@ rt_shared char *xmalloc(unsigned int nbytes, int type, int gc_flag)
 	}
 
 	return result;	/* Pointer to free data space or null if out of memory */
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_private char *malloc_free_list(unsigned int nbytes, union overhead **hlist, int gc_flag)
@@ -575,7 +580,7 @@ rt_private char *malloc_free_list(unsigned int nbytes, union overhead **hlist, i
 	 * and the garbage collector called, if gc_flag is on. It is assumed
 	 * that 'nbytes' is a correctly padded number.
 	 */
-
+	EIF_GET_CONTEXT
 	char *result;					/* Location of the malloc'ed block */
 
 	/* We keep an acoounting of the amount of memory allocated for Eiffel in
@@ -728,6 +733,8 @@ rt_private char *malloc_free_list(unsigned int nbytes, union overhead **hlist, i
 
 	/* No other choice but to request for more core */
 	return allocate_from_core(nbytes, hlist, MB_EO);
+
+	EIF_END_GET_CONTEXT
 }
 
 #ifdef HAS_SMART_MMAP
@@ -760,7 +767,7 @@ rt_private char *allocate_free_list(register unsigned int nbytes, register union
 	 * free list described in 'hlist'. Return the address of the (splited)
 	 * block if found, a null pointer otherwise.
 	 */
-
+	EIF_GET_CONTEXT
 	register1 uint32 r;					/* For shifting purposes */
 	register2 uint32 i;					/* Index in hlist */
 	register3 union overhead *selected;	/* The selected block */
@@ -800,7 +807,7 @@ rt_private char *allocate_free_list(register unsigned int nbytes, register union
 				BUFFER(hlist)[i] = hlist[i];	/* Update cache */
 			break;				/* Found it, selected points to it */
 		} else {
-			/* Walk trhough list, until we find a good block. This
+			/* Walk through list, until we find a good block. This
 			 * is only done for the first 'i'. Afterwards, either the
 			 * first item will fit, or we'll have to report failure.
 			 */
@@ -839,6 +846,8 @@ rt_private char *allocate_free_list(register unsigned int nbytes, register union
 	 * having been split). Memory accounting is done in set_up().
 	 */
 	return set_up(selected, nbytes);
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_shared char *get_to_from_core (unsigned int nbytes)
@@ -846,21 +855,22 @@ rt_shared char *get_to_from_core (unsigned int nbytes)
 	/* For the partial scavenging algorithm, gets a new free chunk for
 	 * the to_space.
 	 */
+	EIF_GET_CONTEXT
 
 	return allocate_from_core (nbytes, e_hlist, MB_CHUNK);
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_private char *allocate_from_core(unsigned int nbytes, union overhead **hlist, char block_type)
-                    
-                        
-                			/* Eiffel object or memory chunk */
+             	/* Eiffel object or memory chunk */
 {
 	/* Given a correctly padded size 'nbytes', we ask for some core to be
 	 * able to make a chunk capable of holding 'nbytes'. The chunk will be
 	 * placed in the specified H list. The function returns the address of
 	 * the new block or null if no more core is available.
 	 */
-
+	EIF_GET_CONTEXT
 	register2 union overhead *selected;		/* The selected block */
 	register1 struct chunk *chkbase;		/* Base address of new chunk */
 	
@@ -935,6 +945,8 @@ rt_private char *allocate_from_core(unsigned int nbytes, union overhead **hlist,
 		return set_up(selected, nbytes);
 	else
 		return set_up_chunk(selected, nbytes);
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_private union overhead *add_core(register unsigned int nbytes, int type)
@@ -950,7 +962,7 @@ rt_private union overhead *add_core(register unsigned int nbytes, int type)
 	 * pointer if no more memory is available. The chunk is linked in the main
 	 * list, but left out of any free list.
 	 */
-	
+	EIF_GET_CONTEXT	
 	register1 union overhead *oldbrk;		/* Previous break value */
 	register2 int32 asked = (int32) nbytes;	/* Bytes requested */
 
@@ -1111,6 +1123,8 @@ bzero (oldbrk, sizeof(struct chunk) + OVERHEAD);
 #endif
 
 	return oldbrk;			/* Pointer to new free zone */
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_shared void rel_core(void)
@@ -1137,7 +1151,7 @@ rt_private int free_last_chunk(void)
 	 * anything referenced by the process (otherwise, you get a free ticket for
 	 * a memory fault)--RAM.
 	 */
-
+	EIF_GET_CONTEXT
 	int nbytes;				/* Number of bytes to be freed */
 	char *last_addr;		/* The first address beyond the last chunk */
 	union overhead *arena;	/* The address of the arena enclosed in chunk */
@@ -1212,15 +1226,11 @@ rt_private int free_last_chunk(void)
 	 */
 
 #if (!defined HAS_SMART_MMAP) && defined HAS_SBRK
-	/*{*/
-		/* char *brk;*/	/* The current value for the beak */ /* %%ss moved from above */
-		/* brk = (char *) sbrk(0);*/	/* Fetch current break value */
-		/* if (brk != last_addr) {*/	/* There *is* something */
-	if (((char *) sbrk(0)) != last_addr) { /* Fetch current break value *//* There *is* something */
+	/* Fetch current break value */
+	if (((char *) sbrk(0)) != last_addr) { /* There *is* something */
 		SIGRESUME;					/* End of critical section */
 		return -2;					/* Sorry, cannot shrink data segment */
 	}
-	/*}*/
 #endif
 	
 	/* Save a copy of the informations held in the header of the last chunk:
@@ -1259,22 +1269,19 @@ rt_private int free_last_chunk(void)
 #ifdef HAS_SMART_MMAP
 	if (munmap (last_chk, nbytes) == -1) {
 		if (i != -1)
-			connect_free_list (arena, 1);
+			connect_free_list (arena, i); /* %%ss i was 1 */
 		SIGRESUME;
 		return -1;
 	}
 #else
 #ifdef HAS_SBRK
-	/*{ *//* int status;*/ /* Status returned by the sbrk() system call */ /* %%ss moved from above */
-		/* status = (int) sbrk(-nbytes);*/	/* Shrink process's data segment */
-		/*if (status == -1) {*/				/* System call failed */
-	if (((int) sbrk(-nbytes)) == -1) {	/* Shrink process's data segment *//* System call failed */
+	/* Shrink process's data segment */
+	if (((int) sbrk(-nbytes)) == -1) {	/* System call failed */
 		if (i != -1)					/* Was removed from free list */
 			connect_free_list(arena, i);/* Put block back in free list */
 		SIGRESUME;						/* End of critical section */
 		return -1;						/* Propagate failure */
-	} 
-	/*}*/
+	}
 #else
     free (last_chk);
 #endif
@@ -1364,6 +1371,8 @@ rt_private int free_last_chunk(void)
 
 	return 0;			/* Signals no error */
 #endif
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_private char *set_up(register union overhead *selected, unsigned int nbytes)
@@ -1373,7 +1382,7 @@ rt_private char *set_up(register union overhead *selected, unsigned int nbytes)
 	 * correct flags in the malloc info zone (header). We then return the
 	 * address the user will know (points to the first datum byte).
 	 */
-
+	EIF_GET_CONTEXT
 	register2 uint32 r;		/* For temporary storage */
 	register3 uint32 i;		/* To store true size */
 
@@ -1425,6 +1434,8 @@ rt_private char *set_up(register union overhead *selected, unsigned int nbytes)
 #endif
 
 	return (char *) (selected + 1);		/* Free data space */
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_private char *set_up_chunk(register union overhead *selected, unsigned int nbytes)
@@ -1432,7 +1443,7 @@ rt_private char *set_up_chunk(register union overhead *selected, unsigned int nb
 	/* Same as set_up() but for memory chunk when they are explicitely
 	 * allocated from core for the partial scavenging.
 	 */
-
+	EIF_GET_CONTEXT
 	register2 uint32 r;		/* For temporary storage */
 	register3 uint32 i;		/* To store true size */
 
@@ -1484,6 +1495,8 @@ rt_private char *set_up_chunk(register union overhead *selected, unsigned int nb
 #endif
 
 	return (char *) (selected + 1);		/* Free data space */
+
+	EIF_END_GET_CONTEXT	
 }
 
 rt_public void xfree(register char *ptr)
@@ -1494,7 +1507,7 @@ rt_public void xfree(register char *ptr)
 	 * The contents of the block are preserved, though one should not
 	 * rely on this as it may change without notice.
 	 */
-	
+	EIF_GET_CONTEXT	
 	uint32 r;					/* For shifting purposes */
 	union overhead *zone;		/* The to-be-freed zone */
 	uint32 i;					/* Index in hlist */
@@ -1551,6 +1564,8 @@ rt_public void xfree(register char *ptr)
 		(zone->ov_size & B_CTYPE) ? "C" : "Eiffel",
 		ptr, zone->ov_size & B_SIZE);
 #endif
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_public void xfreechunk(char *ptr)
@@ -1564,7 +1579,7 @@ rt_public void xfreechunk(char *ptr)
 	 * memory used is updated if the block is not a block freed by partial
 	 * scavenging (as the objects it was holding have already been counted).
 	 */
-	
+	EIF_GET_CONTEXT
 	uint32 r;					/* For shifting purposes */
 	union overhead *zone;		/* The to-be-freed zone */
 	uint32 i;					/* Index in hlist */
@@ -1614,6 +1629,8 @@ rt_public void xfreechunk(char *ptr)
 		(zone->ov_size & B_CTYPE) ? "C" : "Eiffel",
 		ptr, zone->ov_size & B_SIZE);
 #endif
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_public char *xcalloc(unsigned int nelem, unsigned int elsize)
@@ -1697,7 +1714,7 @@ rt_public char *xrealloc(register char *ptr, register unsigned int nbytes, int g
 	 * free is performed: the GC will take care of the object (this is crucial
 	 * when reallocing an object which is part of the moved set).
 	 */
-	
+	EIF_GET_CONTEXT
 	register1 uint32 r;					/* For shifting purposes */
 	register2 uint32 i;					/* Index in free list */
 	register3 union overhead *zone;		/* The to-be-reallocated zone */
@@ -1914,6 +1931,8 @@ rt_public char *xrealloc(register char *ptr, register unsigned int nbytes, int g
 #endif
 
 	return (char *) zone;		/* Pointer to new arena or 0 if failed */
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_public struct emallinfo *meminfo(int type)
@@ -1923,6 +1942,7 @@ rt_public struct emallinfo *meminfo(int type)
 	 * to malloc, however, but may fool the garbage collector.
 	 * Type selects the kind of information wanted.
 	 */
+	EIF_GET_CONTEXT
 
 	switch(type) {
 	case M_C:
@@ -1932,6 +1952,8 @@ rt_public struct emallinfo *meminfo(int type)
 	}
 	
 	return &m_data;		/* Pointer to static data */
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_shared int split_block(register union overhead *selected, register uint32 nbytes)
@@ -1947,7 +1969,7 @@ rt_shared int split_block(register union overhead *selected, register uint32 nby
 	 * Caller is responsible for issuing a SIGBLOCK before any call to
 	 * this critical routine.
 	 */
-
+	EIF_GET_CONTEXT
 	register5 uint32 flags;				/* Flags of original block */
 	register1 uint32 r;					/* For shifting purposes */
 	register2 uint32 i;					/* Index in free list */
@@ -2005,6 +2027,8 @@ rt_shared int split_block(register union overhead *selected, register uint32 nby
 #endif
 
 	return r & B_SIZE;			/* Length of split block */
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_private int coalesc(register union overhead *zone)
@@ -2019,7 +2043,7 @@ rt_private int coalesc(register union overhead *zone)
 	 * It is up to the caller to issue a SIGBLOCK prior any call to this
 	 * critical routine.
 	 */
-
+	EIF_GET_CONTEXT
 	register1 uint32 r;					/* For shifting purposes */
 	register2 uint32 i;					/* Index in hlist */
 	register3 union overhead *next;		/* Pointer to next block */
@@ -2075,6 +2099,8 @@ rt_private int coalesc(register union overhead *zone)
 #endif
 
 	return (i & B_SIZE) + OVERHEAD;		/* Number of coalesced free bytes */
+
+	EIF_END_GET_CONTEXT
 }
 		
 rt_private void connect_free_list(register union overhead *zone, register uint32 i)
@@ -2089,7 +2115,7 @@ rt_private void connect_free_list(register union overhead *zone, register uint32
 	 * It is up to the caller to ensure signal exceptions are blocked when
 	 * entering in this critical routine.
 	 */
-	
+	EIF_GET_CONTEXT
 	register1 union overhead *last;		/* Pointer to last block */
 	register2 union overhead *p;		/* To walk along free list */
 	register4 union overhead **hlist;	/* The free list */
@@ -2158,6 +2184,8 @@ rt_private void connect_free_list(register union overhead *zone, register uint32
 	last->ov_next = zone;
 	zone->ov_next = (union overhead *) 0;	/* Last element in list */
 	blist[i] = zone;						/* Record last insertion point */
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_private void disconnect_free_list(register union overhead *next, register uint32 i)
@@ -2169,7 +2197,7 @@ rt_private void disconnect_free_list(register union overhead *next, register uin
 	 * It is up to the caller to ensure signal exceptions are blocked when
 	 * entering in this critical routine.
 	 */
-			
+	EIF_GET_CONTEXT		
 	register3 union overhead *p;		/* To walk along free list */
 	register4 union overhead **hlist;	/* The free list */
 	register5 union overhead **blist;	/* Associated buffer cache */
@@ -2224,6 +2252,8 @@ rt_private void disconnect_free_list(register union overhead *next, register uin
 		hlist[i] = hlist[i]->ov_next;
 		blist[i] = hlist[i];		/* Record last operation on free list */
 	}
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_shared void lxtract(union overhead *next)
@@ -2342,7 +2372,7 @@ rt_shared int full_coalesc(int chunk_type)
 	 * size of the largest block made available by coalescing, or 0 if
 	 * no coalescing ever occurred.
 	 */
-	
+	EIF_GET_CONTEXT
 	int started_here = 0;
 
 	register1 struct chunk *c;		/* To walk along chunk list */
@@ -2411,6 +2441,8 @@ rt_shared int full_coalesc(int chunk_type)
 		}
 
 	return max_size;		/* Maximum size of coalesced block or 0 */
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_private char *malloc_from_zone(unsigned int nbytes)
@@ -2418,7 +2450,7 @@ rt_private char *malloc_from_zone(unsigned int nbytes)
 	/* Try to allocate 'nbytes' in the scavenge zone. Returns a pointer to the
 	 * object's location or a null pointer if an error occurred.
 	 */
-	 
+	EIF_GET_CONTEXT
 	char *object;			/* Address of the allocated object */
 	uint32 mod;				/* Remainder for padding */
 
@@ -2501,6 +2533,8 @@ rt_private char *malloc_from_zone(unsigned int nbytes)
 #endif
 
 	return (char *) (((union overhead *) object ) + 1);	/* Free data space */
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_private int create_scavenge_zones(void)
@@ -2510,7 +2544,7 @@ rt_private int create_scavenge_zones(void)
 	 * zones are created and the routine returns 0 or no zone is allocated at
 	 * all and -1 is returned.
 	 */
-
+	EIF_GET_CONTEXT
 	char *from;		/* From zone */
 	char *to;		/* To zone */
 
@@ -2543,6 +2577,8 @@ rt_private int create_scavenge_zones(void)
 	gen_scavenge = GS_ON;		/* Generation scavenging activated */
 
 	return 0;					/* Allocation was ok */
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_private void explode_scavenge_zone(struct sc_zone *sc)
@@ -2553,7 +2589,7 @@ rt_private void explode_scavenge_zone(struct sc_zone *sc)
 	 * in use for the statistics, but now we have to account for the overhead
 	 * used by each stored object...
 	 */
-
+	EIF_GET_CONTEXT
 	register1 uint32 flags;				/* Store some flags */
 	register2 union overhead *zone;		/* Malloc info zone */
 	register3 union overhead *next;		/* Next zone to be studied */
@@ -2657,15 +2693,20 @@ rt_private void explode_scavenge_zone(struct sc_zone *sc)
 		e_data.ml_over += flags;
 
 	SIGRESUME;							/* End of critical section */
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_public void sc_stop(void)
 {
 	/* Stop the scavenging process by freeing the zones */
+	EIF_GET_CONTEXT
 
 	gen_scavenge = GS_OFF;				/* Generation scavenging is off */
 	xfree(sc_to.sc_arena);				/* This one is completely free */
 	explode_scavenge_zone(&sc_from);	/* While this one has to be exploded */
+
+	EIF_END_GET_CONTEXT
 }
 
 /*
@@ -3285,15 +3326,16 @@ rt_public eif_mem_info(EIF_BOOLEAN flag)
 
 
 
-rt_private uint32 *type_use = 0;       /* Object usage table by dynamic type */
-rt_private uint32 c_mem;				/* C memory used (bytes) */
+rt_private uint32 *type_use = 0;       /* Object usage table by dynamic type */ /* %%ss mt */
+rt_private uint32 c_mem;				/* C memory used (bytes) */ /* %%ss mt */
 
-rt_private void inspect();	/* %%ss undefine */
+rt_private void inspect();
 rt_private void check_obj(char *object);
 
 
 rt_private void check_obj(char *object)
 {
+	EIF_GET_CONTEXT
 	int dtype;
 	uint32 flags;
 	uint32 mflags;
@@ -3309,6 +3351,8 @@ rt_private void check_obj(char *object)
 
 	if (dtype <= scount)
 		type_use[flags & EO_TYPE]++;
+
+	EIF_END_GET_CONTEXT
 }
 
 
@@ -3366,6 +3410,7 @@ rt_private void inspect_chunk(register char *chunk, register char *arena, int ty
 
 rt_private void eif_memck(void)
 {
+	EIF_GET_CONTEXT
 	struct chunk *chunk;		/* Current chunk */
 	char *arena;				/* Arena in chunk */
 
@@ -3396,10 +3441,13 @@ rt_private void eif_memck(void)
 		inspect_chunk((char *)&sc_from, sc_from.sc_arena, ZONE_T);
 
 	fflush(stdout);				/* Make sure we always see messages */
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_public void eif_trace_types(FILE *f)
 {
+	EIF_GET_CONTEXT
 	int i;
 	uint32 use;
 	uint32 usage;
@@ -3414,6 +3462,8 @@ rt_public void eif_trace_types(FILE *f)
 	}
 	fprintf(f, "C memory usage (bytes): %ld\n", c_mem);
 	fflush(f);
+
+	EIF_END_GET_CONTEXT
 }
 
 

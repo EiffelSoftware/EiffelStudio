@@ -418,6 +418,8 @@ rt_public char *rt_nmake(EIF_CONTEXT long int objectCount)
 	} */
 #endif
 	return newadd;
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_public char *grt_make(void)
@@ -598,6 +600,8 @@ rt_public char *grt_nmake(EIF_CONTEXT long int objectCount)
 	expop(&eif_stack);
 
 	return newadd;
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_public char *irt_make(void)
@@ -814,6 +818,8 @@ rt_public char *irt_nmake(EIF_CONTEXT long int objectCount)
 	} */
 #endif
 	return newadd;
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_private void rt_clean(void)
@@ -1192,6 +1198,8 @@ printf ("Allocating sorted_attributes (scount: %d) %lx\n", scount, sorted_attrib
 	xfree (r_buffer);
 	r_buffer = (char *) 0;
 	expop(&eif_stack);
+
+	EIF_END_GET_CONTEXT
 }
 
 
@@ -1395,6 +1403,8 @@ rt_private void iread_header(EIF_CONTEXT_NOARG)
 	xfree (r_buffer);
 	r_buffer = (char*) 0;
 	expop(&eif_stack);
+
+	EIF_END_GET_CONTEXT
 }
 
 

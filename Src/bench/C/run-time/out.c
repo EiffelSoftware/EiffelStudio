@@ -83,6 +83,8 @@ rt_public char *c_tagged_out(EIF_CONTEXT EIF_OBJ object)
 	xfree(tagged_out);	/* Buffer not needed anymore */
 
 	return result;		/* An Eiffel string */
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_public char *build_out(EIF_CONTEXT EIF_OBJ object)
@@ -114,6 +116,8 @@ rt_public char *build_out(EIF_CONTEXT EIF_OBJ object)
 	write_out();
 
 	return tagged_out;		/* This arena must be freed manually */
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_private void buffer_allocate(EIF_CONTEXT_NOARG)
@@ -126,6 +130,8 @@ rt_private void buffer_allocate(EIF_CONTEXT_NOARG)
 		enomem(MTC_NOARG);
 	tagged_max = TAG_SIZE;
 	tagged_len = 0;
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_private void rec_write(EIF_CONTEXT register char *object, int tab)
@@ -271,6 +277,7 @@ rt_private void rec_write(EIF_CONTEXT register char *object, int tab)
 			}
 		}
 	}
+	EIF_END_GET_CONTEXT
 }
 
 rt_private void rec_swrite(EIF_CONTEXT register char *object, int tab)
@@ -365,6 +372,8 @@ rt_private void rec_swrite(EIF_CONTEXT register char *object, int tab)
 					System(Dtype(reference)).cn_generator, reference);
 			write_out();
 		}
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_private void write_tab(EIF_CONTEXT register int tab)
@@ -376,6 +385,8 @@ rt_private void write_tab(EIF_CONTEXT register int tab)
 		sprintf(buffero,"  ");
 		write_out();
 	}
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_private void write_char (EIF_CHARACTER c, char *buf)
@@ -399,8 +410,11 @@ rt_private void write_char (EIF_CHARACTER c, char *buf)
 rt_private void write_out(EIF_CONTEXT_NOARG)
 {
 	EIF_GET_CONTEXT
+
 	/* Print private string `buffer' in `tagged_out'. */
 	write_string(buffero);
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_private void write_string(EIF_CONTEXT char *str)
@@ -421,6 +435,8 @@ rt_private void write_string(EIF_CONTEXT char *str)
 	}
 	/* Append `str' to `tagged_out' */
 	strcat(tagged_out, str);
+
+	EIF_END_GET_CONTEXT
 }
 
 /*
@@ -438,37 +454,52 @@ rt_public char *c_outb(EIF_BOOLEAN b)
 rt_public char *c_outi(EIF_CONTEXT EIF_INTEGER i)
 {
 	EIF_GET_CONTEXT
+
 	sprintf(buffero, "%ld", i);
 	return makestr(buffero, strlen(buffero));
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_public char *c_outr(EIF_CONTEXT EIF_REAL f)
 {
 	EIF_GET_CONTEXT
+
 	sprintf(buffero, "%g", f);
 	return makestr(buffero, strlen(buffero));
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_public char *c_outd(EIF_CONTEXT EIF_DOUBLE d)
 {
 	EIF_GET_CONTEXT
+
 	sprintf(buffero, "%.17g", d);
 	return makestr(buffero, strlen(buffero));
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_public char *c_outc(EIF_CONTEXT EIF_CHARACTER c)
 {
 	EIF_GET_CONTEXT
+
 	buffero[0] = c;
 	buffero[1] = '\0';
 	return makestr(buffero, 1);
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_public char *c_outp(EIF_CONTEXT EIF_POINTER p)
 {
 	EIF_GET_CONTEXT
+
 	sprintf(buffero, "0x%lX", p);
 	return makestr(buffero, strlen(buffero));
+
+	EIF_END_GET_CONTEXT
 }
 
 #ifdef WORKBENCH
@@ -525,6 +556,8 @@ rt_shared char *simple_out(EIF_CONTEXT struct item *val)
 	}
 
 	return tagged_out;
+
+	EIF_END_GET_CONTEXT
 }
 
 #endif

@@ -27,6 +27,8 @@ feature {NONE}
 feature 
 
 	make (tf: EB_TEXT_FIELD; a_parent: COMPOSITE; cmd: COMMAND; ed: CONTEXT_EDITOR) is
+		local
+			set_win_att: SET_WINDOW_ATTRIBUTES_COM
 		do
 			text_field := tf;
 			command := cmd;
@@ -35,6 +37,8 @@ feature
 			hide_help_button;
 			add_ok_action (Current, First);
 			add_cancel_action (Current, Second);
+			!! set_win_att;
+			set_win_att.execute (Current);
 			set_exclusive_grab
 		end;
 

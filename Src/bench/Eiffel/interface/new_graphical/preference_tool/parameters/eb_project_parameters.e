@@ -21,7 +21,7 @@ feature {TTY_RESOURCES} -- Initialization
 			create tool_y.make ("project_tool_y", rt, 0)
 			create tool_width.make ("project_tool_width", rt, 481)
 			create tool_height.make ("project_tool_height", rt, 340)
-			create command_bar.make ("project_tool_command_bar", rt, true)
+			create command_bar.make ("project_tool_command_bar", rt, True)
 			create format_bar.make ("project_tool_format_bar", rt, True)
 			create raise_on_error.make ("raise_on_error", rt, True)
 			create graphical_output_disabled.make ("graphical_output_disabled", rt, False)

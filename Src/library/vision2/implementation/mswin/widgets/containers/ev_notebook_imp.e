@@ -13,6 +13,8 @@ inherit
 	EV_NOTEBOOK_I
 
 	EV_CONTAINER_IMP
+		rename
+			on_set_focus as widget_on_set_focus
 		redefine
 			set_insensitive,
 			set_default_minimum_size,
@@ -51,7 +53,6 @@ inherit
 			on_right_button_double_click,
 			on_mouse_move,
 			on_key_up,
-			on_set_focus,
 			on_kill_focus,
 			on_set_cursor,
 			on_draw_item,
@@ -130,7 +131,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_default_minimum_size is
+		set_default_minimum_size is
 			-- Set the current minimum size.
 		do
 			set_font (font)
@@ -427,18 +428,17 @@ feature {NONE} -- Implementation
 		local
 			tab_control: WEL_TAB_CONTROL_ITEM
 			window: WEL_WINDOW
+			window2: WEL_WINDOW
+			found: BOOLEAN
+			hwnd: POINTER
 		do
-			if virtual_key = Vk_tab and then flag_set (style, Ws_tabstop) then
+			if virtual_key = Vk_tab then
 				if key_down (Vk_shift) then
 					tab_action (False)
 				else
 					tab_control := get_item (current_selection)
-					if tab_control = Void then
-						tab_action (True)
-					else
-						window ?= tab_control.window
-						window.set_focus
-					end
+					window ?= tab_control.window
+					window.set_focus
 				end
 			end
 		end
@@ -599,7 +599,7 @@ feature {NONE} -- WEL Implementation
 		do
 			Result := Ws_child + Ws_group + Ws_tabstop 
 				+ Ws_visible + Ws_clipchildren + Ws_clipsiblings
-				+ Tcs_singleline + Tcs_focusonbuttondown
+				+ Tcs_singleline -- + Tcs_focusonbuttondown
 		end
 
 	default_ex_style: INTEGER is

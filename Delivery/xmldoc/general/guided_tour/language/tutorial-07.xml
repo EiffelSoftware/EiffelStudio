@@ -34,10 +34,7 @@
 		<paragraph>An 
 			<bold>object</bold>, as may be created during the execution of a system, is an instance of some class of the system.
 		</paragraph>
-		<paragraph>Classes and objects belong to different worlds: a class is an element of the software text; an object is a data structure created during execution.  Although is possible to define a class whose instances represent classes (as class 
-			<code>
-				<class_name>E_CLASS</class_name>
-			</code> in the  Eiffel Software  libraries, used to access properties of classes at run time), this does not eliminate the distinction between a static, compile-time notion, class, and a dynamic, run-time notion, object.
+		<paragraph>Classes and objects belong to different worlds: a class is an element of the software text; an object is a data structure created during execution.  Although is possible to define a class whose instances represent classes, this does not eliminate the distinction between a static, compile-time notion, class, and a dynamic, run-time notion, object.
 		</paragraph>
 		<paragraph>An object is either an atomic object (integer, real, boolean, double) or a composite object made of a number of 
 			<bold>fields</bold>, represented by adjacent rectangles on the conventional run-time diagrams:
@@ -1377,7 +1374,7 @@
 		<paragraph>As the name suggests, 
 			<code>
 				<string>Some_file_or_network_connection</string>
-			</code> can be an external medium of various possible kinds, not just a file but possibly a database or network.   Eiffel Software 's EiffelNet client-server library indeed uses the 
+			</code> can be an external medium of various possible kinds, not just a file but possibly a database or network. The EiffelNet client-server library indeed uses the 
 			<code>
 				<string>store</string>
 			</code>
@@ -1429,7 +1426,7 @@
 		<paragraph>
 			<bold>Reliability</bold> : memory management errors, such as the incorrect reclamation of an object that is still referenced by a distant part of the structure, are a notorious source of dangerous and hard-to-correct bugs.
 		</paragraph>
-		<paragraph> Eiffel Software  Eiffel provides a sophisticated 
+		<paragraph>The Eiffel Software's implementation of Eiffel provides a sophisticated 
 			<bold>garbage collector</bold> which efficiently handles the automatic reclamation process, while causing no visible degradation of a system's performance and response time.
 		</paragraph>
 		<heading>

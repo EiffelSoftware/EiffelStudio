@@ -9,7 +9,7 @@ inherit
 
 	ROUT_BODY_AS_B
 		undefine
-			is_external
+			is_external, is_equivalent
 		redefine
 			byte_node, type_check
 		end;

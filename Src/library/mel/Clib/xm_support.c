@@ -78,7 +78,7 @@ EIF_INTEGER count;
 
 	for (i = 0; i < (int) count; i++)
 		XmStringFree (((XmString *)list) [i]);
-	XtFree ((XmString) list);
+	XtFree ((char *) list);
 }
 
 EIF_POINTER get_xm_string_table (w, res)
@@ -122,12 +122,11 @@ EIF_POINTER list;
 EIF_POINTER xm_string;
 EIF_INTEGER pos;
 {
-	XmString motif_string;
 	int *position_list;
 	int position_count;
 	int result = 0;
 
-	if (XmListGetMatchPos ((Widget) list, xm_string, 
+	if (XmListGetMatchPos ((Widget) list, (XmString) xm_string, 
 			&position_list, &position_count)) {
 		if (position_count >= (int) pos) 
 			result = *(position_list += ((int) pos-1));
@@ -173,7 +172,7 @@ EIF_INTEGER pos;
 	int *position_list;
 	int position_count;
 
-	if (XmListGetMatchPos ((Widget) list, xm_string, 
+	if (XmListGetMatchPos ((Widget) list, (XmString) xm_string, 
 			&position_list, &position_count)) {
 		for (; (*position_list < (int) pos) && (position_count>0);
 			position_list++, position_count--);

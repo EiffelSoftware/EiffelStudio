@@ -35,23 +35,21 @@ feature -- Access
 	parent_imp: EV_ITEM_HOLDER_IMP is
 			-- The parent of the Current widget
 			-- Can be void.
-		require
-			exists: not destroyed
 		deferred
 		end
 
-	top_parent_imp: EV_ITEM_HOLDER_IMP is
-			-- Top item holder containing the current item.
-		local
-			itm: EV_ITEM_IMP
-		do
-			itm ?= parent_imp
-			if itm = Void then
-				Result ?= parent_imp
-			else
-				Result := itm.top_parent_imp
-			end
-		end
+--	top_parent_imp: EV_ITEM_HOLDER_IMPis
+--			-- Top item holder containing the current item.
+--		local
+--			itm: EV_ITEM_IMP
+--		do
+--			itm ?= parent_imp
+--			if itm = Void then
+--				Result ?= parent_imp
+--			else
+--				Result := itm.top_parent_imp
+--			end
+--		end
 
 	index: INTEGER is
 			-- Index of the current item.
@@ -60,7 +58,7 @@ feature -- Access
 			has_parent: parent_imp /= Void
 		deferred
 		ensure
-			valid_index: index >= 1 and index <= parent.count + 1
+			valid_index: Result >= 1 and Result <= parent.count
 		end
 
 feature -- Element change

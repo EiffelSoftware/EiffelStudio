@@ -85,6 +85,18 @@ feature -- Access
 			Result ?= {EV_SIMPLE_ITEM} Precursor
 		end
 
+	top_parent: EV_TREE_ITEM_HOLDER is
+			-- Top item holder that contains the current item.
+		require
+			exists: not destroyed
+		do
+			if implementation.top_parent_imp = Void then
+				Result := Void
+			else
+				Result ?= implementation.top_parent_imp.interface
+			end
+		end
+
 feature -- Status report
 
 	is_selected: BOOLEAN is

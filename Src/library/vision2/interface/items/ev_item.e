@@ -52,17 +52,17 @@ feature -- Access
 			Result := implementation.parent
 		end
 
-	top_parent: EV_ITEM_HOLDER [EV_ITEM] is
-			-- Top item holder that contains the current item.
-		require
-			exists: not destroyed
-		do
-			if implementation.top_parent_imp = Void then
-				Result := Void
-			else
-				Result ?= implementation.top_parent_imp.interface
-			end
-		end
+--	top_parent: EV_ITEM_HOLDER [EV_ITEM] is
+--			-- Top item holder that contains the current item.
+--		require
+--			exists: not destroyed
+--		do
+--			if implementation.top_parent_imp = Void then
+--				Result := Void
+--			else
+--				Result ?= implementation.top_parent_imp.interface
+--			end
+--		end
 
 	data: ANY
 			-- A data kept by the item

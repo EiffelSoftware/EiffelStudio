@@ -51,7 +51,7 @@ feature
 				if command /= Void then
 					option_error := True
 				else
-					if current_option < (argument_count - 1) then
+					if current_option < argument_count then
 						if argument (current_option + 1).is_equal ("-keep") then
 							current_option := current_option + 1;
 							keep := True;

@@ -1,0 +1,187 @@
+Version 1.6 - 20 August 2000
+
+	geyacc:
+
+	* One can now use manifest strings (e.g. "<=" or "..")
+	  in place of identifiers (e.g. LE or DOTDOT) in grammar
+	  rules (suggested by Berend de Boer).
+	* Anchored types are now accepted in %type declarations.
+	* Improved format of tokens in verbose file (suggested
+	  by Roger Browne).
+	* Added ISE's language extensions to the Eiffel parser
+	  example (suggested by Patrick Flaherty).
+	* The Eiffel parser example now accepts empty Eiffel
+	  source files (suggested by Alexander Kogtenkov).
+	* Added a few words in the documentation about the Eiffel
+	  debug instructions spread out in the parser skeleton
+	  class (suggested by Francis Drai).
+
+	gelex:
+
+	* Added redefinable routine `default_action' to YY_SCANNER
+	  when default rule is matched (suggested by David Massart).
+	* Added `pre_action' and `post_action', called when
+	  %option pre-action and %option post-action are specified
+	  (suggested by Alexander Kogtenkov).
+	* Added `pre_eof_action' and `post_eof_action', called when
+	  %option pre-eof-action and %option post-eof-action are
+	  specified.
+	* Added '%option line' to generate code for line and column
+	  counting (suggested by Alexander Kogtenkov).
+	* Added '%option position' to generate code for character
+	  counting since the beginning of the input source.
+	* Fixed bug when the input buffer contains a null character
+	  (reported by Emmanuel Stapf).
+	* Fixed bug when scanning a token larger than the size of
+	  the input buffer (reported by Emmanuel Stapf).
+
+	Gobo Eiffel Structure Library:
+
+	* DS_TRAVERSABLE: removed postcondition from routine
+	  `valid_cursor' and made `internal_cursor' deferred
+	  (suggested by Andreas Leitner).
+	* DS_SEARCHABLE: added features `same_items' and
+	  `same_equality_tester'.
+	* DS_ARRAYED_LIST, DS_ARRAYED_STACK: got rid of garbage
+	  (i.e. old items at indexes count+1..capacity) in
+	  removal features.
+	* DS_TABLE, DS_SPARSE_TABLE, DS_HASH_TABLE: added
+	  fetaure `put_new'.
+	* DS_SPARSE_TABLE, DS_HASH_TABLE: added fetaure
+	  `replace_found_item'.
+	* DS_SPARSE_TABLE, DS_HASH_TABLE: new optimized
+	  implementation (requested by Jacques Bouchard).
+	* DS_SPARSE_TABLE: added feature `key'; optimization
+	  of feature `force' (avoid unnecessary resizing).
+	* HASH_TABLE: optimization of features `put' and
+	  `force' (avoid unnecessary resizing).
+	* DS_SORTER: Added features `reverse_sort' and
+	  `reverse_sorted'.
+
+	Gobo Eiffel Kernel Library:
+
+	* Added class KL_DIRECTORY to allow Eiffel compiler
+	  portable directory access.
+
+	Gobo Eiffel Utility Library:
+
+	* Fixed bug in feature `append_decimal_integer' from
+	  class UT_INTEGER_FORMATTER when dealing with negative
+	  values.
+
+Version 1.5 - 2 October 1999
+
+	geyacc:
+
+	* Fixed bug in verbose mode: the useless rules and
+	  nonterminals were not displayed properly (reported
+	  by Berend de Boer).
+	* Fixed bug when dealing with two consecutive semantic
+	  actions in a rule (reported by Alexander Kogtenkov).
+	* Fixed bug whereby the end-of-file was not recognized
+	  properly (reported by Patrick Doyle).
+	* Updated documentation to state that the Eiffel type
+	  for the semantic of a mid-rule action is the same 
+	  type as declared for the full grouping (reported by
+	  Andreas Auras).
+
+	Gobo Eiffel Structure Library:
+
+	* The documentation has been greatly improved.
+	* Added a `test' directory as a starting point for
+	  a test suite.
+	* Added a cluster containing an implementation of the
+	  main EiffelBase classes based on the Gobo containers.
+	* Added support for internal iterations (a la EiffelBase).
+	  Some feature renaming was necessary: routines with an
+	  external cursor as argument, such as `put_right',
+	  have been renamed with the `_cursor' suffix, as in
+	  `put_right_cursor'. The original feature names have
+	  been reused by the internal traversal interface, e.g.
+	  `put_right' inserts an item to the right of the
+	  internal cursor position.
+	* Cursors are always kept valid. There is no need for
+	  calls to `a_cursor.is_valid' anymore.
+	* DS_LINEAR_CURSOR does not inherit from DS_INDEXED_CURSOR
+	  anymore.
+	* Added classes DS_QUEUE and DS_LINKED_QUEUE.
+
+Version 1.4 - 14 April 1999
+
+	* Multiple types for semantic values now supported
+	  in geyacc.
+	* In geyacc, $$ entities are now initialized to their
+	  default Eiffel values at the beginning of semantic
+	  actions and the default for missing actions is "{}"
+	  (it used to be "{$$ := $1}" as in yacc and Bison).
+	* Added warning/error in geyacc when $N in a semantic
+	  action does not match with a symbol in the rule.
+	* Fixed bug in output of geyacc verbose mode (option -v).
+	* Routine `clear_all' from YY_PARSER_SKELETON clears
+	  internal stacks by default (call to `clear_stacks').
+	* Added two new types in $GOBO\library\kernel:
+	  STRING_BUFFER and FIXED_ARRAY (array with lower
+	  bound equal to zero). These two types are used
+	  instead of STRING and ARRAY in gelex and geyacc
+	  skeleton classes for optimization purposes.
+	  STRING_BUFFER maps either to SPECIAL [CHARACTER]
+	  or STRING, and FIXED_ARRAY [G] maps either to
+	  SPECIAL [G] or ARRAY [G] depending on the Eiffel
+	  compiler used. Only ISE Eiffel port has been
+	  optimized so far. SmallEiffel port can be optimized
+	  as well using FAST_ARRAY [G] or NATIVE_ARRAY [G].
+	* Added features `Empty_buffer', `append_text_to_string'
+	  and `append_text_substring_to_string' to YY_SCANNER.
+	* Added a precondition to routine `set_start_condition'
+	  in class YY_SCANNER.
+	* Resize input buffer if a call to `unread_character'
+	  results in too much text being pushed back (it was
+	  raising an run-time error in previous releases).
+	* Added command-line option -x to gelex and geyacc
+	  to allow the generation of semantic actions in
+	  separate routines.
+	* Added command-line option -z to gelex to force the
+	  generated code to use an "inspect" instruction to
+	  find out which action to execute. The default is to
+	  use binary-search implemented with "if" instructions.
+	* Fixed operator precedence bug in "$GOBO\example\
+	  parse\eiffel\eiffel_parser.y".
+
+Version 1.3 - 15 August 1998
+
+	* Geyacc has been totally rewritten in Eiffel.
+	* Replaced attribute `output_file' by procedure
+	  `output' in class YY_SCANNER to avoid unnecessary
+	  console creation in Windows mode with Visual Eiffel.
+	* Fixed bug in gelex in "equivalence class" mode when
+	  dealing with regular expressions of the form x{4}.
+	* Added warnings in gelex when a rule cannot be
+	  matched and when the default rule can be matched
+	  despite the %option nodefault or -s option.
+	* Renamed classes KL_SHARED_*_ROUTINES as 
+	  KL_IMPORTED_*_ROUTINES. (The old class names are
+	  still temporarily valid using the classes in cluster
+	  "$GOBO\library\kernel\obsolete".)
+	* Gepp now supports #include "filename" instructions.
+	* The second generic parameter of DS_HASH_TABLE is now
+	  constrained to HASHABLE (HASHABLE was not part of 
+	  SmallEiffel in previous releases).
+	* Cluster `error' has been added to the Gobo Eiffel
+	  Utility Library to support a flexible error
+	  reporting mechanism.
+
+Version 1.2 - 17 December 1997
+
+	* New implementation for variable trailing context
+	  in gelex, with warnings for dangerous trailing
+	  contexts of form such as x*/xz*.
+	* Improved documentation.
+
+Version 1.1 - 29 October 1997
+
+	* Bug fixed wrt variable trailing context in gelex.
+
+Version 1.0 - 14 October 1997
+
+	* First public release.
+	* Gold Award at the Eiffel Class Struggle '97.

@@ -129,7 +129,7 @@ feature -- Access
 	all_floating_tools: ARRAYED_LIST [EV_DIALOG] is
 			-- `Result' is all tools that are independent of the main window.
 			-- The `tools_always_on_top' command applies to these windows only.
-		do
+		once
 			create Result.make (4)
 			Result.extend (builder_window)
 			Result.extend (display_window)
@@ -140,7 +140,7 @@ feature -- Access
 		
 	all_storable_tools: ARRAYED_LIST [GB_STORABLE_TOOL] is
 			-- All tools that are storable.
-		do
+		once
 			create Result.make (4)	
 			Result.extend (Component_selector)
 			Result.extend (Layout_constructor)

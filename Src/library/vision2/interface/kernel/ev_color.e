@@ -10,8 +10,7 @@ class
 inherit
 	EV_ANY
 		redefine
-			implementation,
-			same
+			implementation
 		end
 
 create
@@ -132,14 +131,6 @@ feature -- Comparison
 			-- Is this the same color as the other
 		do
 			Result := other.red = red and other.green = green and other.blue = blue
-		end
-
-	same (other: like Current): BOOLEAN is
-			-- Does Current widget and `other' correspond
-			-- to the same screen object?
-		do
-			Result := (other.red = red) and (other.blue = blue) and
-						(other.green = green)
 		end
 
 feature -- Implementation

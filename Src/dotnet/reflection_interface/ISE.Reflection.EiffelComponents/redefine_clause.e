@@ -1,7 +1,7 @@
 indexing
 	description: "Representation of a redefine clause"
 	external_name: "ISE.Reflection.RedefineClause"
---	attribute: create {SYSTEM_RUNTIME_INTEROPSERVICES_CLASSINTERFACEATTRIBUTE}.make_classinterfaceattribute (2) end
+	attribute: create {SYSTEM_RUNTIME_INTEROPSERVICES_CLASSINTERFACEATTRIBUTE}.make_classinterfaceattribute ((create {SYSTEM_RUNTIME_INTEROPSERVICES_CLASSINTERFACETYPE}).auto_dual) end
 
 class
 	REDEFINE_CLAUSE

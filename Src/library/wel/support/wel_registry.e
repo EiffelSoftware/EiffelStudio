@@ -28,7 +28,7 @@ feature -- Actions
 		require
 			at_least_one_back_slash: key_path /= Void and then key_path.has('\')
 		local
-			node_list: LINKED_LIST [STRING]
+			node_list: ARRAYED_LIST [STRING]
 			index_value, i: POINTER
 		do
 			node_list := value_keys_list (key_path)
@@ -60,7 +60,7 @@ feature -- Actions
 		require
 			at_least_one_back_slash: key_path /= Void and then key_path.has('\')
 		local
-			node_list: LINKED_LIST [STRING]
+			node_list: ARRAYED_LIST [STRING]
 			index_value, i: POINTER
 		do
 			node_list := value_keys_list(key_path)
@@ -93,7 +93,7 @@ feature -- Actions
 			key_name_possible: value_name /= Void and then not value_name.is_empty
 			at_least_one_back_slash: key_path /= Void and then key_path.has('\')
 		local
-			node_list: LINKED_LIST [STRING]
+			node_list: ARRAYED_LIST [STRING]
 			index_value, i: POINTER
 			stop: BOOLEAN
 		do
@@ -129,7 +129,7 @@ feature -- Status
 
 feature {NONE} -- Internal Results
 
-	value_keys_list (path: STRING): LINKED_LIST [STRING] is
+	value_keys_list (path: STRING): ARRAYED_LIST [STRING] is
 			-- From a path ( "a\b\c\...\x") 
 			-- Return a list of string: a,b,c,d,e,...x
 		require
@@ -138,7 +138,7 @@ feature {NONE} -- Internal Results
 			i,j: INTEGER
 			s: STRING
 		do
-			create Result.make
+			create Result.make (10)
 			from
 				i :=1
 				j := 1

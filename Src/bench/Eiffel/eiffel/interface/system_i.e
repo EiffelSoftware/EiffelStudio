@@ -2698,17 +2698,29 @@ end
 		local
 			table: POLY_TABLE [ENTRY]
 			used: SEARCH_TABLE [INTEGER]
+			l_rout_id: INTEGER
+			l_buf: like generation_buffer
+			l_header_buf: like header_generation_buffer
+			l_table_name: STRING
+			l_poly_file: INDENT_FILE
+			l_gen_tables: ARRAYED_LIST [INTEGER]
 		do
+				-- Generate tables and their initialization routines.
 			Attr_generator.init (generation_buffer)
 			Rout_generator.init (header_generation_buffer)
 
 			from
 				used := Eiffel_table.used
 				used.start
+					-- Usually we do not have that many generic tables.
+				create l_gen_tables.make (100)
 			until
 				used.after
 			loop
 				table := Tmp_poly_server.item (used.item_for_iteration)
+				if table.has_type_table and then not table.has_one_type then
+					l_gen_tables.extend (used.item_for_iteration)
+				end
 				table.write
 				used.forth
 			end
@@ -2719,6 +2731,74 @@ end
 
 			Attr_generator.finish
 			Rout_generator.finish
+
+				-- Call initialization routines for all tables used in system.
+			l_buf := generation_buffer
+			l_buf.clear_all
+			l_header_buf := header_generation_buffer
+			l_header_buf.clear_all
+
+			l_header_buf.putstring ("#include %"eif_eiffel.h%"")
+			l_header_buf.new_line
+			l_header_buf.new_line
+			l_header_buf.start_c_specific_code
+
+			l_buf.new_line
+			l_buf.new_line
+
+				-- Initialize first routines.
+			l_buf.putstring ("void egc_routine_tables_init (void) {")
+			l_buf.new_line
+			l_buf.indent
+			from
+				used.start
+			until
+				used.after
+			loop
+				l_rout_id := used.item_for_iteration
+				l_table_name := Encoder.table_name (l_rout_id)
+					-- Declare initialization routine for table
+				l_header_buf.putstring ("extern void ")
+				l_header_buf.putstring (l_table_name)
+				l_header_buf.putstring ("_init(void);")
+				l_header_buf.new_line
+
+					-- Call the routine
+				l_buf.putstring (l_table_name)
+				l_buf.putstring ("_init();")
+				l_buf.new_line
+				used.forth
+			end
+				-- Initialize then table used for finding out
+				-- redefinition of a generic type.
+			from
+				l_gen_tables.start
+			until
+				l_gen_tables.after
+			loop
+				l_rout_id := l_gen_tables.item
+				l_table_name := Encoder.type_table_name (l_rout_id)
+					-- Declare initialization routine for table
+				l_header_buf.putstring ("extern void ")
+				l_header_buf.putstring (l_table_name)
+				l_header_buf.putstring ("_init(void);")
+				l_header_buf.new_line
+
+					-- Call the routine
+				l_buf.putstring (l_table_name)
+				l_buf.putstring ("_init();")
+				l_buf.new_line
+				l_gen_tables.forth
+			end
+			l_buf.exdent
+			l_buf.putstring ("};")
+			l_buf.new_line
+
+			l_buf.end_c_specific_code
+			create l_poly_file.make_c_code_file (final_file_name (epoly, dot_c, 1))
+			l_header_buf.put_in_file (l_poly_file)
+			l_buf.put_in_file (l_poly_file)
+			l_poly_file.close
 		end
 
 	generate_size_table is

@@ -59,6 +59,7 @@ extern int current_position;
 extern char * general_buffer;
 extern long buffer_size;
 extern int end_of_buffer;
+extern void set_buffer_size (int);
 
 /* compression */
 extern char * cmps_general_buffer;
@@ -103,9 +104,9 @@ extern void estore(EIF_INTEGER file_desc, char *object);
 extern void eestore(EIF_INTEGER file_desc, char *object);
 extern void sstore (EIF_INTEGER file_desc, char *object);
 
-extern long stream_estore(char **stream, long size, char *object);
-extern long stream_eestore(char **stream, long size, char *object);
-extern long stream_sstore (char **stream, long size, char *object);
+extern long stream_estore(char **stream, long size, char *object, EIF_INTEGER *);
+extern long stream_eestore(char **stream, long size, char *object, EIF_INTEGER *);
+extern long stream_sstore (char **stream, long size, char *object, EIF_INTEGER *);
 
 extern char **stream_malloc (int stream_size);
 #ifdef __cplusplus

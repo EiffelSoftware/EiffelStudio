@@ -132,6 +132,12 @@ rt_private char *rcsid =
 
 /* Convenience functions */
 
+/* Set the default buffer_size to a certain value */
+rt_public void set_buffer_size (int new_size) 
+{
+	buffer_size = new_size;
+}
+
 /* Initialize store function pointers and globals */
 /* reset buffer size if argument is non null */
 rt_public void rt_init_store(
@@ -214,7 +220,7 @@ rt_public void estore(EIF_INTEGER file_desc, char *object)
 	EIF_END_GET_CONTEXT
 }
 
-rt_public long stream_estore(char **buffer, long size, char *object)
+rt_public long stream_estore(char **buffer, long size, char *object, EIF_INTEGER *real_size)
 {
 	rt_init_store (
 		store_write,
@@ -234,6 +240,7 @@ rt_public long stream_estore(char **buffer, long size, char *object)
 
 	*buffer = stream_buffer;
 	rt_reset_store ();
+	*real_size = stream_buffer_position;
 	return stream_buffer_size;
 }
 
@@ -267,7 +274,7 @@ rt_public void eestore(EIF_INTEGER file_desc, char *object)
 	EIF_END_GET_CONTEXT
 }
 
-rt_public long stream_eestore(char **buffer, long size, char *object)
+rt_public long stream_eestore(char **buffer, long size, char *object, EIF_INTEGER *real_size)
 {
 	rt_init_store (
 		store_write,
@@ -287,6 +294,7 @@ rt_public long stream_eestore(char **buffer, long size, char *object)
 	*buffer = stream_buffer;
 
 	rt_reset_store ();
+	*real_size = stream_buffer_position;
 	return stream_buffer_size;
 }
 
@@ -321,7 +329,7 @@ rt_public void sstore (EIF_INTEGER file_desc, char *object)
 	EIF_END_GET_CONTEXT
 }
 
-rt_public long stream_sstore (char **buffer, long size, char *object)
+rt_public long stream_sstore (char **buffer, long size, char *object, EIF_INTEGER *real_size)
 {
 	rt_init_store (
 		store_write,
@@ -347,6 +355,7 @@ rt_public long stream_sstore (char **buffer, long size, char *object)
 
 	*buffer = stream_buffer;
 	rt_reset_store ();
+	*real_size = stream_buffer_position;
 	return stream_buffer_size;
 }
 

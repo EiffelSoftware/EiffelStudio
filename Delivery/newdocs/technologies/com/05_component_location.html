@@ -1,0 +1,103 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML EXPERIMENTAL 970324//EN">
+<HTML>
+<HEAD>
+<META NAME="GENERATOR" CONTENT="Microsoft FrontPage 4.0">
+		<LINK REL=StyleSheet HREF="../../default.css">
+
+<TITLE>The Component Location</TITLE><meta name="Microsoft Border" content="t, default">
+</HEAD>
+<BODY >
+<h1>
+
+<A NAME="38980">
+ </A>
+The Component Location</h1>
+
+<DIV>
+<h2 >
+<A NAME="pgfId=374106">
+ </A>
+Types of Components</h2>
+
+<A NAME="pgfId=374059">
+ </A>
+ActiveX, DirectX, OCX, COM+, ADO+, ASP etc. who never heard of these 
+technologies? They all represent yet another use of the COM standard. 
+This paragraph will focus on categorizing COM components according to 
+their own properties as well as the context in which they are used. 
+The categorization will define how the EiffelCOM wizard should be 
+used to wrap or create a component.
+
+</DIV>
+<A NAME="pgfId=374067">
+ </A>
+The first criteria that defines the type of component is from where 
+it will be accessed: will the component be loaded in the client process 
+or will the component be a remote server for a distributed application? 
+In the former case, the component is compiled as a Dynamic Link Libraries 
+(DLL) while in the latter case it is a standard executable.
+
+<DIV>
+<h2 >
+<A NAME="pgfId=374079">
+ </A>
+In-process Components</h2>
+
+<A NAME="pgfId=374078">
+ </A>
+Typical instances of DLL components are found in technologies such as 
+OCX, ActiveX, or ASP. These are small, downloadable binaries that will 
+be loaded and executed in a container. The container acts as a client 
+of the component. The EiffelCOM wizard provides the ability to wrap 
+such components by providing access to its interface to any Eiffel 
+container. It is also possible to create a new In-process component 
+in Eiffel. 
+<p>
+One main difference with out-of-process components (other 
+than the nature of the module, DLL versus executable) is the way 
+in-process components are activated. In the case of out-of-process 
+components, the component will specify COM when it is ready to 
+receive calls from client. In the case of an in-process server the 
+call is coming directly from COM: COM first loads the DLL into the 
+client process and then calls the exported function DllGetClassObject 
+to access the component class object. The other three exported 
+functions of an in-process component are DllRegister to register 
+the component in the Windows registry, DllUnregister to unregister 
+the component from the registry and finally DllCanUnloadNow which 
+gets called by COM whenever it tries to unload the component from 
+memory. These four functions must be accessible from outside the 
+DLL for the in-process component to work properly.
+
+</DIV>
+<DIV>
+<h2 >
+<A NAME="pgfId=374087">
+ </A>
+Out-of-process Components</h2>
+
+<A NAME="pgfId=374091">
+ </A>
+These components are standard executable acting as servers that 
+can be accessed locally or over a network. Typically used in a 
+three tier client server architecture, the major difference with 
+in-process servers (other than the module type - executable 
+instead of DLL) is their lifetime. In-process components are 
+typically loaded to achieve a specific task and unloaded just 
+after while out-of-process components are servers supposed to 
+run continuously. The EiffelCOM wizard allows to build clients 
+for such servers in Eiffel. It also provides the ability to create 
+such servers.
+
+</DIV>
+
+        <p class="seealso">See Also: <a href="../../tools/wizards/com/index.html">EiffelCOM
+        wizard</a>, <a href="../../libraries/com/index.html">EiffelCOM library</a>,
+<a href="01_introduction.html">Introduction</a>,
+<a href="02_Generalities.html">Generalities</a>,
+<a href="03_Interfaces.html">COM Interfaces</a>,
+<a href="04_coclass.html">Coclasses</a>,
+<a href="06_Access_Type.html">Access Type</a>,
+<a href="07_Deeper_into_COM.html">Deeper into COM</a>
+
+<p>&nbsp;</p>
+</BODY>

@@ -1,0 +1,524 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML EXPERIMENTAL 970324//EN">
+<HTML>
+<HEAD>
+<META NAME="GENERATOR" CONTENT="Microsoft FrontPage 4.0">
+		<LINK REL=StyleSheet HREF="../../default.css">
+
+<TITLE>Access Type</TITLE><meta name="Microsoft Border" content="t, default">
+</HEAD>
+<BODY >
+<h1>
+
+<A NAME="11538">
+ </A>
+Access Type</h1>
+
+<A NAME="pgfId=374105">
+ </A>
+Regardless of its location, a COM components can be accessed either directly through 
+interface's virtual table or through OLE Automation.
+
+<h2>
+<A NAME="pgfId=374892">
+ </A>
+<A NAME="25753">
+ </A>
+ Automation</h2>
+
+<A NAME="pgfId=375770">
+ </A>
+Accessing a COM component through Automation means using a well known interface 
+to access to a group of methods and properties. 
+This interface is called IDispatch, and it includes the method 
+<span class = "efeature"> invoke </span>
+that allows to call a method, set or get a property on the Automation server. One 
+advantage of that approach is that the interface has a known virtual table
+layout. 
+As a result, Windows can include a built-in
+marshaler for that interface (See <a HREF="07_Deeper_into_COM.html#20493" CLASS="XRef">Marshaling.</a>
+ for information on what a marshaler is). The supported types (known as Automation types) 
+ and their Eiffel equivalents are listed in the following table:
+
+<OL>
+<TABLE BORDER="1">
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId=376038">
+ </A>
+COM Type</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId=376040">
+ </A>
+Eiffel equivalent</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId=376042">
+ </A>
+Description</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<p>
+<A NAME="pgfId=376044">
+ </A>
+ VARIANT_BOOL</p>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId=376046">
+ </A>
+BOOLEAN</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId=376048">
+ </A>
+Standard boolean</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<p>
+<A NAME="pgfId=376050">
+ </A>
+unsigned char</p>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId=376052">
+ </A>
+CHARACTER</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId=376054">
+ </A>
+Standard character</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<p>
+<A NAME="pgfId=376056">
+ </A>
+double</p>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId=376058">
+ </A>
+DOUBLE</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId=376060">
+ </A>
+Standard double</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<p>
+<A NAME="pgfId=376062">
+ </A>
+float</p>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId=376064">
+ </A>
+REAL</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId=376066">
+ </A>
+2 bytes real</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<p>
+<A NAME="pgfId=376068">
+ </A>
+int</p>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId=376070">
+ </A>
+INTEGER</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId=376072">
+ </A>
+Standard integer</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<p>
+<A NAME="pgfId=376074">
+ </A>
+long</p>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId=376076">
+ </A>
+INTEGER</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId=376078">
+ </A>
+Standard integer</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<p>
+<A NAME="pgfId=376080">
+ </A>
+short</p>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId=376082">
+ </A>
+INTEGER</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId=376084">
+ </A>
+2 bytes integer</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<p>
+<A NAME="pgfId=376086">
+ </A>
+BSTR</p>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId=376088">
+ </A>
+STRING</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId=376090">
+ </A>
+Standard string</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<p>
+<A NAME="pgfId=376092">
+ </A>
+CURRENCY</p>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId=376094">
+ </A>
+ECOM_CURRENCY</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId=376096">
+ </A>
+Currency value</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<p>
+<A NAME="pgfId=376098">
+ </A>
+DATE</p>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId=376100">
+ </A>
+DATE_TIME</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId=376102">
+ </A>
+Standard date</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<p>
+<A NAME="pgfId=376104">
+ </A>
+SCODE</p>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId=376106">
+ </A>
+INTEGER</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId=376108">
+ </A>
+Return status</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId=376110">
+ </A>
+Interface IDispatch *</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId=376112">
+ </A>
+ ECOM_INTERFACE</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId=376114">
+ </A>
+Automation interface</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId=376116">
+ </A>
+Interface IUnknown *</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId=376118">
+ </A>
+ ECOM_INTERFACE</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId=376120">
+ </A>
+Generic interface</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId=376312">
+ </A>
+dispinterface</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId=376314">
+ </A>
+ ECOM_INTERFACE</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId=376316">
+ </A>
+Automation interface</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId=376306">
+ </A>
+Coclass Typename </P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId=376308">
+ </A>
+TYPE_NAME</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId=376310">
+ </A>
+Component main class</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId=376300">
+ </A>
+SAFEARRAY(TypeName)</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId=376302">
+ </A>
+ ECOM_ARRAY [TypeName]</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId=376304">
+ </A>
+Array</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId=376294">
+ </A>
+TypeName*</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId=376296">
+ </A>
+CELL [TypeName]</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId=376298">
+ </A>
+Pointer to type</P>
+</TD>
+</TR>
+<TR>
+<TD COLSPAN="1">
+VARIANT
+</TD>
+<TD COLSPAN="1">
+ECOM_VARIANT
+</TD>
+<TD COLSPAN="1">
+Variant value
+</TD>
+</TR>
+<TR>
+<TD COLSPAN="1">
+enum
+</TD>
+<TD COLSPAN="1">
+INTEGER
+</TD>
+<TD COLSPAN="1">
+Enumeration
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId=376288">
+ </A>
+Decimal</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId=376290">
+ </A>
+ECOM_DECIMAL</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId=376292">
+ </A>
+ Decimal value</P>
+</TD>
+</TR>
+</TABLE>
+</OL>
+
+<A NAME="pgfId=375774">
+ </A>
+The other advantage is a more dynamic discovery of the methods and properties of 
+a component at runtime. Indeed the IDispatch interface also includes methods to 
+check whether a method or property is available and, in that case, get its 
+identifier. This process is called late binding and allows component to 
+discover at runtime what are other components functionality.<p>
+<A NAME="pgfId=374931">
+ </A>
+This approach has also a lot of drawbacks: first, late binding is not an 
+efficient way of calling a function on an interface since its identifier 
+must first be requested and then the function called. That's two round 
+trips which can be expensive in a distributed environment.
+Second, since the marshaler is built-in, it has to know in advance all 
+the possible types that a function can accept to be able to
+marshal the corresponding data. There are consequently a limitation on 
+the number of types that one can use in signatures of functions on an 
+Automation compatible interface. The set of available types is called 
+Variant and cover most of the standard types. It does not allow however 
+the passing of complex user defined data types. For these reasons Automation 
+is mostly used in scripting environments (where speed is not an important 
+factor) to accomplish simple tasks.
+
+<h2 >
+<A NAME="pgfId=374939">
+ </A>
+ Direct Access</h2>
+
+<A NAME="pgfId=374943">
+ </A>
+Direct interface access is the preferred way to access remote servers 
+where speed becomes a concern and data types are specific to the application. 
+The first interface pointer on the component is obtained through the class 
+object (see
+<A HREF="04_coclass.html#37472" CLASS="XRef">Class Object.</A>
+). Other interfaces on the component are obtained by calling the QueryInterface 
+function.
+  <p>
+<A NAME="pgfId=374962">
+ </A>
+As information on any interface cannot be accessed dynamically, the 
+description of the interfaces must be provided to tools that need to 
+handle the components such as the EiffelCOM wizard. The official way of 
+describing components and interfaces is through IDL. Once an IDL file has 
+been written to describe a component it can be compiled with MIDL to 
+generate both a type library and the code for the marshaller specific to 
+that interface.
+
+
+<h2 >
+<A NAME="pgfId=374974">
+ </A>
+EiffelCOM</h2>
+
+<A NAME="pgfId=374978">
+ </A>
+The idea in EiffelCOM is the way a component is accessed is implementation 
+detail that the user should not have to deal with. Of course he should be 
+able to choose what kind of access he wants to use but this choice should 
+have no impact on the design of the Eiffel system itself. For that reason, 
+the Eiffel code generated by the wizard follows the same architecture 
+independently of the choice made for interface access and marshalling. 
+The difference lies in the runtime where the actual calls to the 
+components are implemented.
+
+
+        <p class="seealso">See Also: <a href="../../tools/wizards/com/index.html">EiffelCOM
+        wizard</a>, <a href="../../libraries/com/index.html">EiffelCOM library</a>,
+<a href="01_introduction.html">Introduction</a>,
+<a href="02_Generalities.html">Generalities</a>,
+<a href="03_Interfaces.html">COM Interfaces</a>,
+<a href="04_coclass.html">Coclasses</a>,
+<a href="05_component_location.html">Component Location</a>,
+<a href="07_Deeper_into_COM.html">Deeper into COM</a>
+<p>&nbsp;</p>
+</BODY>

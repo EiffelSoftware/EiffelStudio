@@ -1,0 +1,134 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML EXPERIMENTAL 970324//EN">
+<HTML>
+<HEAD>
+<META NAME="GENERATOR" CONTENT="Microsoft FrontPage 4.0">
+		<LINK REL=StyleSheet HREF="../../default.css">
+
+<TITLE>Deeper into COM</TITLE><meta name="Microsoft Border" content="t, default">
+</HEAD>
+
+<BODY >
+<h1>
+<A NAME="pgfId=374907">
+ </A>
+Deeper into COM </h1>
+<p>
+<A NAME="pgfId=375010">
+ </A>
+The next paragraph gives some details on the COM internals. 
+The understanding of these details are not required to use 
+the EiffelCOM wizard but might help making better decisions 
+when designing new EiffelCOM components.
+
+<h2 >
+<A NAME="pgfId=374911">
+ </A>
+ Apartments</h2>
+
+<A NAME="pgfId=375024">
+ </A>
+The first interesting subject that requires more in-depth cover 
+is the execution context of a component. Components can be run 
+in the same process as the client but can also run in a separate 
+process even on a different machine.
+  <p>
+<A NAME="pgfId=375034">
+ </A>
+This superficial description only take into accounts processes. 
+What happens if a component uses multithreading to achieve it 
+tasks? In a case of a remote server, this scenario does not seem 
+too esoteric. The problem is that a server does not (and should 
+not) know in advance what its clients will be. It cannot assume 
+that the client will be able to take advantage of its 
+multithreading capabilities. Conversely a multithreaded client 
+should not rely on the server ability to handle concurrent access.
+  <p>
+<A NAME="pgfId=375038">
+ </A>
+The solution chosen in the COM specification is to define an 
+additional execution context called an apartment. When COM 
+loads a component it creates the apartment in which the component 
+will run. Multiple instances of a multithreaded component will 
+leave together in the same apartment since asynchronous calls will 
+be handled correctly and there is no need to add any synchronization 
+layer. On the other hand, singlethreaded component will be alone in 
+their apartment and any concurrent calls coming from clients will be 
+first synchronized before entering the apartment. These two behaviors 
+define two different kinds of apartments: Multi Threaded Apartments 
+(MTA) and Single Threaded Apartments (STA).
+
+<center>
+<p class="figuretitle">
+<span CLASS="ff.figtitle">
+<A NAME="pgfId=375060">
+ </A>
+Apartments</span>
+</center><p>
+<center>
+<IMG SRC="images/com-2.gif" width="512" height="190">
+</center>
+
+<A NAME="pgfId=375221">
+ </A>
+Apartments solve the problem of concurrency by removing the necessity 
+of knowing the multithreaded capability of a component and its clients. 
+Multithreaded clients can always make asynchronous calls and depending 
+on whether the component handles concurrent access or not, they will be 
+forwarded or first synchronized. There can be multiple instances of STA 
+running in one process while there will be at most one MTA.
+
+<h2 >
+<A NAME="20493">
+ </A>
+ Marshaling</h2>
+
+<A NAME="pgfId=375011">
+ </A>
+At this point you might wonder how calls can &quot;cross&quot; the apartments boundaries. Components from a STA can make calls to components running in a MTA and vice versa. These apartments might be running in different processes or even on different machines. The approach chose in the COM specification is using the proxy and stub patterns.
+  <p>
+<A NAME="pgfId=375247">
+ </A>
+The idea is to trick the client of an interface by providing an interface proxy in its apartment. The proxy include exactly the same function as the interface itself but their implementation will just forward the call to the actual interface. The client has no idea whether the entity it is dealing with is the actual interface or just a proxy. One of the main interest of that approach is that the client implementation is independent from the location of the component.
+  <p>
+<A NAME="pgfId=375243">
+ </A>
+Last explanation is not totally accurate: the call will not be forwarded to the actual interface but to its stub. The stub is the counterpart of the proxy, it represents the client for the interface. The interface doesn't know either whether it is communicating with the actual client or a stub. Although it is not totally true that the component implementation is independent from the location of the client, the stub pattern still helps keeping code identical for the implementation of the interface themselves. The implementation of a component will still be different whether it is an in-process or out-of-process component since it will have to be a DLL in one case and a executable in the other. The design of the interfaces might also differ since out-of-process servers will tend to avoid too many round trips.
+
+
+<center>
+<span class="figuretitle">
+<A NAME="pgfId=375253">
+ </A>
+Cross Apartment Calls</span>
+</center><p>
+<center>
+<IMG SRC="images/com-3.gif"  width="475" height="153">
+</center>
+
+
+<A NAME="pgfId=375483">
+ </A>
+There is one proxy/stub pair per interface. The proxy or the stub is loaded dynamically only when needed. This proxy/stub pair constitute the marshaller. The reason for having a single name for two different things come from how MIDL generates its code. MIDL will produce files for one DLL in which both the proxy and the stub will be included. This DLL is the marshaller.
+
+<DIV>
+<h2 >
+<A NAME="pgfId=375517">
+ </A>
+Summary</h2>
+
+<A NAME="pgfId=375521">
+ </A>
+This brief introduction to the Component Object Model should be enough to get started with the EiffelCOM wizard. It specifies the main characteristics that define the type of a component and that need to be given to the wizard along with the definition file.
+
+</DIV>
+        <p class="seealso">See Also: <a href="../../tools/wizards/com/index.html">EiffelCOM
+        wizard</a>, <a href="../../libraries/com/index.html">EiffelCOM library</a>,
+<a href="01_introduction.html">Introduction</a>,
+<a href="02_Generalities.html">Generalities</a>,
+<a href="03_Interfaces.html">COM Interfaces</a>,
+<a href="04_coclass.html">Coclasses</a>,
+<a href="05_component_location.html">Component Location</a>,
+<a href="06_Access_Type.html">Access Type</a>
+
+        <p>&nbsp;</p>
+</BODY>

@@ -46,6 +46,8 @@ feature {NONE} -- Initialization
 			if temp_string /= Void then
 				temp_int := temp_string.to_integer
 			end
+			
+			--| FIXME IEK Do not continue running system if gtk version is less than 1.2.8
 			if temp_int = 1 or temp_int = 2 then
 				print (
 					"Vision2 GTK Debug Mode, Gtk version = " +
@@ -58,6 +60,9 @@ feature {NONE} -- Initialization
 				C.gdk_set_show_events (False)
 			end
 
+			--| FIXME IEK
+			-- Only load rc file if system is ec.
+			-- Check argument zero to compare execution paths.
 			temp_string := get ("ISE_EIFFEL")
 			previous_gtk_rc_files := get ("GTK_RC_FILES")
 			put (temp_string + "/eifinit/bench/spec/gtk/studiorc", "GTK_RC_FILES")			

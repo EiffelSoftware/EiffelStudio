@@ -16,6 +16,8 @@ feature -- Attributes
 	features: EIFFEL_LIST [FEATURE_AS];
 			-- Features
 
+	comment: EIFFEL_COMMENTS;
+
 feature -- Initialization
 
 	set is
@@ -66,6 +68,23 @@ feature
 			end
 		end;
 
+	has_equiv_declaration (other: like Current): BOOLEAN is
+		-- Has this feature clause a declaration equivalent to `other' feature clause?
+		-- i.e. `feature {CLIENTS} -- Comment'
+	do
+		if other = Void then
+				Result := False
+		else
+			if clients = Void and other.clients = Void and then
+				equal (comment, other.comment) then
+					Result := True
+			elseif clients /= Void and then other.clients /= Void  then
+					Result := clients.is_equiv (other.clients) and then
+						equal (comment, other.comment)
+			end
+		end
+	end;
+
 feature -- Formatting
 
 	position: INTEGER;
@@ -84,6 +103,8 @@ feature -- Formatting
 				clients.simple_format (ctxt);
 			end;
 
+			format_comment (ctxt);
+
 			ctxt.next_line;
 			ctxt.indent_one_more;
 			ctxt.next_line;
@@ -93,6 +114,10 @@ feature -- Formatting
 			ctxt.indent_one_less;
 			--ctxt.next_line
 			ctxt.commit;
+		end;
+
+	format_comment (ctxt: FORMAT_CONTEXT) is
+		do
 		end;
 
 	set_features (f: like features) is
@@ -106,18 +131,13 @@ feature -- Formatting
 		end;
 
 	set_comments (c: EIFFEL_FILE) is
+			-- Set comments for clause AND features.
 		do
-			if features /= Void and then c/= Void then
-				from
-					features.start
-				until
-					features.after
-				loop
-					c.go_after (features.item.start_position)
-					features.item.set_comment (c.trailing_comment)
-					features.forth
-				end
-			end
+		end;
+
+	set_comment (c: like comment) is
+			-- Set comment for clause.
+		do
 		end;
 
 	is_equiv (other: like Current): BOOLEAN is

@@ -81,7 +81,7 @@ feature {NONE} -- Initialization
 			set_step (10)
 			set_value (1)
 			set_leap (10)
-			set_range (1, 100)
+			set_range (1 |..| 100)
 		end
 
 feature -- Access
@@ -247,6 +247,10 @@ end -- class EV_PROGRESS_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2000/02/14 22:30:34  brendel
+--| Changed to comply with signature change of `set_range' in EV_GAUGE.
+--| Now takes INTEGER_INTERVAL instead of 2 integers.
+--|
 --| Revision 1.11  2000/02/14 11:40:44  oconnor
 --| merged changes from prerelease_20000214
 --|

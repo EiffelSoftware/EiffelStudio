@@ -41,4 +41,4 @@ feature {NONE} -- Properties
 
 	editor_type: CLASS_W;
 
-end 
+end -- class CLASS_WIN_MGR

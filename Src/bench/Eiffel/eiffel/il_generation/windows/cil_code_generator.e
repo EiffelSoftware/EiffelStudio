@@ -227,6 +227,9 @@ feature {NONE} -- Access
 	once_generation: BOOLEAN
 			-- Are we currently generating a once feature?
 
+	global_once_generation: BOOLEAN
+			-- Are we currently generating a per-process once feature?
+
 feature {NONE} -- Debug info
 
 	dbg_writer: DBG_WRITER is
@@ -375,6 +378,14 @@ feature -- Settings
 			once_generation := v
 		ensure
 			once_generation_set: once_generation = v
+		end
+
+	set_global_once_generation (v: BOOLEAN) is
+			-- Set `global_once_generation' to `v'.
+		do
+			global_once_generation := v
+		ensure
+			global_once_generation_set: global_once_generation = v
 		end
 
 	set_current_module_with (a_class_type: CLASS_TYPE) is
@@ -1707,9 +1718,13 @@ feature -- Features info
 				i := i + 1				
 			end
 
+				-- Define all features used by ISE runtime
 			define_runtime_features (class_type)
+				-- Define definition of SYSTEM_OBJECT features for .NET types
 			define_system_object_features (class_type)
+				-- Generate default constructor
 			current_module.define_default_constructor (class_type, False)
+				-- Generate invariant routine
 			generate_invariant_feature (class_c.invariant_feature)
 
 				-- Generate type features for formal generic parameters.
@@ -4008,7 +4023,9 @@ feature -- Once management
 				current_class_token,
 				feature {MD_FIELD_ATTRIBUTES}.Public | feature {MD_FIELD_ATTRIBUTES}.Static,
 				done_sig)
-			current_module.define_thread_static_attribute (done_token)
+			if not global_once_generation then
+				current_module.define_thread_static_attribute (done_token)
+			end
 
 			Il_debug_info_recorder.record_once_info (current_class_type, Byte_context.current_feature, name, done_token, 0)
 		end
@@ -4031,7 +4048,9 @@ feature -- Once management
 			result_token := md_emit.define_field (uni_string,
 				current_class_token,
 				feature {MD_FIELD_ATTRIBUTES}.Public | feature {MD_FIELD_ATTRIBUTES}.Static, l_sig)
-			current_module.define_thread_static_attribute (result_token)
+			if not global_once_generation then
+				current_module.define_thread_static_attribute (result_token)
+			end
 				
 			Il_debug_info_recorder.record_once_info (current_class_type, Byte_context.current_feature, name, 0, result_token)
 		end

@@ -13,7 +13,7 @@ inherit
 			is_numeric,
 			same_as, element_type, il_convert_from,
 			description, sk_value, generate_cecil_value, hash_code,
-			generate_byte_code_cast, generated_id, heaviest, typecode
+			generate_byte_code_cast, generated_id, heaviest
 		end
 
 	BYTE_CONST
@@ -67,12 +67,6 @@ feature -- Access
 			-- Internal code for generation
 		do
 			Result := C_float
-		end
-
-	typecode: INTEGER is
-			-- Typecode for TUPLE element.
-		do
-			Result := feature {SHARED_TYPECODE}.real_code
 		end
 
 feature -- Status report

@@ -15,7 +15,7 @@ inherit
 			is_numeric,
 			same_as, element_type, il_convert_from,
 			description, sk_value, generate_cecil_value, hash_code,
-			generate_byte_code_cast, generated_id, heaviest, typecode
+			generate_byte_code_cast, generated_id, heaviest
 		end
 
 	BYTE_CONST
@@ -75,17 +75,6 @@ feature -- Access
 			when 32 then Result := C_int32
 			when 64 then Result := C_int64
 			end
-		end
-
-	typecode: INTEGER is
-			-- Typecode for TUPLE element.
-		do
-			inspect size
-			when 8 then Result := feature {SHARED_TYPECODE}.integer_8_code
-			when 16 then Result := feature {SHARED_TYPECODE}.integer_16_code
-			when 32 then Result := feature {SHARED_TYPECODE}.integer_code
-			when 64 then Result := feature {SHARED_TYPECODE}.integer_64_code
-			end	
 		end
 
 	generate_byte_code_cast (ba: BYTE_ARRAY) is

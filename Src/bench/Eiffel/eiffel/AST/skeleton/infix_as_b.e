@@ -55,6 +55,7 @@ feature
 		local
 			value, to_append: STRING;
 		do
+-- FIXME: same implementation as parent, different type
 			temp_name.wipe_out;
 			temp_name.append (Fix_notation);
 			value := fix_operator.value;

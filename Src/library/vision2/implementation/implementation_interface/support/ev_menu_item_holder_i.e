@@ -12,13 +12,12 @@ deferred class
 inherit
 	EV_ANY_I
 
-feature {EV_MENU_ITEM_CONTAINER} -- Implementation
+feature -- Element change
 	
-	add_item (an_item: EV_MENU_ITEM) is
+	add_item (an_item: EV_MENU_ITEM_IMP) is
 			-- Add `an_item' into container.
 		require
 			exist: not destroyed
-			valid_item: is_valid (an_item)
 		deferred
 		end
 

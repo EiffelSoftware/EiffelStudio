@@ -125,11 +125,7 @@ feature -- Access
 			current_name: STRING
 			display_object: GB_DISPLAY_OBJECT
 		do
-			if is_component then
-				a_new_object := object_handler.build_object_from_string (element.attribute_by_name (type_string).value)
-			else
-				a_new_object := object_handler.build_object_from_string (element.attribute_by_name (type_string).value)--_and_assign_id (element.attribute_by_name (type_string).value)
-			end
+			a_new_object := object_handler.build_object_from_string (element.attribute_by_name (type_string).value)
 			
 			object_handler.add_object (object, a_new_object, object.children.count + 1)
 			from
@@ -192,45 +188,88 @@ feature -- Access
 			current_element: XM_ELEMENT
 			original_parent: XM_ELEMENT
 			top_level_object: GB_OBJECT
+			deleted_count: INTEGER
+			element_info: ELEMENT_INFORMATION
+			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
+			top_id: INTEGER
+			temp_element: XM_ELEMENT
+			current_id: INTEGER
 		do
-			create all_elements.make (10)
-			create all_ids.make (10)
-			update_xml (element, all_elements, all_ids)
-			create xml_store
+			temp_element ?= child_element_by_name (element, internal_properties_string)
+			if temp_element /= Void then
+				full_information := get_unique_full_info (temp_element)
+				element_info := full_information @ (reference_id_string)
+				if element_info /= Void then
+					top_id := element_info.data.to_integer
+				end
+			end
+			
+				-- We perform this loop so that if we are flattening instances of top level structures
+				-- that no longer exist, and the flattened versions reference other top level structures
+				-- that no longer exist the flattening is performed recusively.
 			from
-				all_ids.start
-				all_elements.start
+				deleted_count := -1
 			until
-				all_ids.off
+				deleted_count = 0
 			loop
-				top_level_object := object_handler.objects @ all_ids.item
-				if top_level_object /= Void then
-					xml_store.store_individual_object (top_level_object)
-					new_element ?= xml_store.last_stored_individual_object.first
-					convert_element_to_instance (new_element, all_ids.item, 1)
-				else
-						-- In this case the top level object referenced within the
-						-- element is no longer in the project so we must simply flatten
-						-- the element. A quick way to do this is to pass `2' to `convert_element_to_instance'
-					new_element ?= all_elements.item.twin
-					convert_element_to_instance (new_element, 0, 2)
-				end
-				
-				current_element := all_elements.item
-				original_parent := current_element.parent_element
+				deleted_count := 0
+				create all_elements.make (10)
+				create all_ids.make (10)
+				update_xml (element, all_elements, all_ids)
+				create xml_store
 				from
-					original_parent.start
+					all_ids.start
+					all_elements.start
 				until
-					original_parent.off
+					all_ids.off
 				loop
-					if original_parent.item_for_iteration = current_element then
-						original_parent.replace (new_element, original_parent.index)
+					current_id := all_ids.item
+						
+						-- In this case we are a top level instance but are deleted, so
+						-- we must create a new instance of the top level object, not a
+						-- new reference.
+					if current_id = top_id and object_handler.deleted_objects.has (current_id) then
+						top_level_object := object_handler.deep_object_from_id (current_id)
+						xml_store.store_individual_object (top_level_object)
+						new_element ?= xml_store.last_stored_individual_object.first
+					else
+						top_level_object := object_handler.objects @ current_id
+						if top_level_object /= Void then
+								-- The top level object still exists, so simply create a new instance.
+							xml_store.store_individual_object (top_level_object)
+							new_element ?= xml_store.last_stored_individual_object.first
+							convert_element_to_instance (new_element, current_id, 1)
+						else	
+								-- Only must increase the deleted count if the id is not the
+								-- root object id. i.e. The root node of `element' as `element'
+								-- is representing a top level object and not an instance.
+								deleted_count := deleted_count + 1
+								
+								-- If the object thas been deleted, we simply retrieve it without
+								-- converting it to an instance.
+							top_level_object := object_handler.deleted_objects @ current_id
+							xml_store.store_individual_object (top_level_object)
+							new_element ?= xml_store.last_stored_individual_object.first
+						end
 					end
-					original_parent.forth
-				end
 				
-				all_ids.forth
-				all_elements.forth
+						-- Now replace the old element representing the object with the
+						-- new and up to date version.
+					current_element := all_elements.item
+					original_parent := current_element.parent_element
+					from
+						original_parent.start
+					until
+						original_parent.off
+					loop
+						if original_parent.item_for_iteration = current_element then
+							original_parent.replace (new_element, original_parent.index)
+						end
+						original_parent.forth
+					end
+					all_ids.forth
+					all_elements.forth
+				end
 			end
 		end
 		

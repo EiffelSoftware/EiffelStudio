@@ -40,7 +40,7 @@ feature -- Access
 	menu_name: STRING is
 			-- Name as it appears in menus.
 		do
-			Result := Show_hide_builder_window_menu_text
+			Result := Show_hide_constants_window_menu_text
 		end
 
 	pixmap: ARRAY [EV_PIXMAP] is

@@ -22,18 +22,6 @@ creation
 	
 feature {NONE} -- Initialization
 
-    make (par: EV_WINDOW) is
-			-- Create a window with a parent. Current
-			-- window will be closed when the parent is
-			-- closed. The parent of window is a window 
-			-- (and not any EV_CONTAINER).
-		do
-			!EV_WINDOW_IMP!implementation.make (par)
-			implementation.set_interface (Current)
-			implementation.plateform_build (par.implementation)
-			implementation.build
-		end
-	
     make_top_level is
 			-- Create a top level window (a Window 
 			-- without a parent).
@@ -45,7 +33,19 @@ feature {NONE} -- Initialization
 			implementation.plateform_build (Void)
 			implementation.build
 		end
-	
+
+    make (par: EV_WINDOW) is
+			-- Create a window with a parent. Current
+			-- window will be closed when the parent is
+			-- closed. The parent of window is a window 
+			-- (and not any EV_CONTAINER).
+		do
+			!EV_WINDOW_IMP!implementation.make (par)
+			implementation.set_interface (Current)
+			implementation.plateform_build (par.implementation)
+			implementation.build
+		end
+
 feature  -- Access
  
 	parent: EV_WINDOW is
@@ -193,77 +193,78 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_maximum_width (max_width: INTEGER) is
-			-- Make `max_width' the new `maximum_width'.
+	set_maximum_width (value: INTEGER) is
+			-- Make `value' the new `maximum_width'.
 		require
 			exists: not destroyed
-			large_enough: max_width >= 0
+			large_enough: value >= 0
 		do
-			implementation.set_maximum_width (max_width)
+			implementation.set_maximum_width (value)
 		ensure
-			max_width = max_width
+			maximum_width_set: maximum_width = value
 		end 
 
-	set_maximum_height (max_height: INTEGER) is
-			-- Make `max_height' the new `maximum_height'.
+	set_maximum_height (value: INTEGER) is
+			-- Make `value' the new `maximum_height'.
 		require
 			exists: not destroyed
-			large_enough: max_height >= 0
+			large_enough: value >= 0
 		do
-			implementation.set_maximum_height (max_height)
+			implementation.set_maximum_height (value)
 		ensure
-			max_height = max_height
+			maximum_height_set: maximum_height = value
 		end
 
-	set_title (new_title: STRING) is
-                        -- Set `title' to `new_title'.
-                require
-                        exists: not destroyed
-                        not_title_void: new_title /= Void
-                do
-                        implementation.set_title (new_title)
-                end
-
-	set_icon_name (new_name: STRING) is
-			-- Set `icon_name' to `new_name'.
+	set_title (txt: STRING) is
+			-- Make `text' the new title.
 		require
 			exists: not destroyed
-			Valid_name: new_name /= Void
+			valid_title: txt /= Void
 		do
-			implementation.set_icon_name (new_name)
+			implementation.set_title (txt)
 		end
 
-	set_icon_mask (mask: EV_PIXMAP) is
-                        -- Set `icon_mask' to `mask'.
-                require
-                        exists: not destroyed
-                        not_mask_void: mask /= Void
-                do
-                        implementation.set_icon_mask (mask)
-                end
+	set_icon_name (txt: STRING) is
+			-- Make `txt' the new icon name.
+		require
+			exists: not destroyed
+			valid_name: txt /= Void
+		do
+			implementation.set_icon_name (txt)
+		end
+
+	set_icon_mask (pixmap: EV_PIXMAP) is
+			-- Make `pixmap' the new icon mask.
+		require
+			exists: not destroyed
+			valid_mask: pixmap.is_valid
+		do
+			implementation.set_icon_mask (pixmap)
+		end
 
 	set_icon_pixmap (pixmap: EV_PIXMAP) is
-                        -- Set `icon_pixmap' to `pixmap'.
-                require
-                        exists: not destroyed
-                        not_pixmap_void: pixmap /= Void
---XX                        valid_pixmap: pixmap.is_valid
-                do
-                        implementation.set_icon_pixmap (pixmap)
-                end
+			-- Make `pixmap' the new icon pixmap.
+		require
+			exists: not destroyed
+			valid_pixmap: pixmap.is_valid
+		do
+			implementation.set_icon_pixmap (pixmap)
+		end
 
-	set_widget_group (group_widget: EV_WIDGET) is
-                        -- Set `widget_group' to `group_widget'.
-                require
-                        exists: not destroyed
-                do
-                        implementation.set_widget_group (group_widget)
-                end
+	set_widget_group (widget: EV_WIDGET) is
+			-- Make Current part of the group of `widget'.
+		require
+			exists: not destroyed
+			valid_widget: widget.is_valid
+		do
+			implementation.set_widget_group (widget)
+		end
 
 feature -- Event - command association
 
 	add_close_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
-			-- Make `cmd' the executed command when the window is closed.
+			-- Add `cmd' to the list of commands to be executed
+			-- when the window is closed.
 		require
 			exists: not destroyed
 			valid_command: cmd /= Void
@@ -272,7 +273,8 @@ feature -- Event - command association
 		end
 
 	add_resize_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
-			-- Make `cmd' the executed command when the window is resized.
+			-- Add `cmd' to the list of commands to be executed
+			-- when the window is resized.
 		require
 			exists: not destroyed
 			valid_command: cmd /= Void
@@ -281,7 +283,8 @@ feature -- Event - command association
 		end
 
 	add_move_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
-			-- Make `cmd' the executes command when the widget is resized.
+			-- Add `cmd' to the list of commands to be executed
+			-- when the widget is moved.
 		require
 			exists: not destroyed
 			valid_command: cmd /= Void
@@ -304,15 +307,15 @@ feature {EV_APPLICATION, EV_APPLICATION_IMP} -- Implementation
 			-- Associate the window with 'app'. Is this 
 			-- is done, exiting the window will exit the 
 			-- application, unless delete_command is set.
+		require
+			exists: not destroyed
 		do
 			implementation.set_application (app)
 		end
 		
 invariant
-
 --        Depth_is_zero: depth = 0
 --        Has_no_parent: parent = Void
-
 		
 end -- class EV_WINDOW
 

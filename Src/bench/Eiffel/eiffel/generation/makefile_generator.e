@@ -348,7 +348,7 @@ feature -- Sub makefile generation
 				-- Generate object list.
 			generate_system_objects_lists;
 				-- Generate partial object.
-			Make_file.putstring ("all: Emain.o")
+			Make_file.putstring ("all: emain.o")
 			from i := 1 until i > partial_system_objects loop
 				Make_file.putchar (' ');
 				Make_file.putstring (System_object_prefix);
@@ -863,11 +863,11 @@ feature -- Generation (Linking rules)
 			Make_file.putstring (System_object_prefix);
 			Make_file.putint (1);
 			Make_file.putchar (Directory_separator);
-			Make_file.putstring ("Emain.o: Makefile%N%T cd ");
+			Make_file.putstring ("emain.o: Makefile%N%T cd ");
 			Make_file.putstring (System_object_prefix);
 			Make_file.putint (1);
 			Make_file.putstring (" ; $(SHELL) Makefile.SH ; ")
-			Make_file.putstring ("$(MAKE) Emain.o%N%N")
+			Make_file.putstring ("$(MAKE) emain.o%N%N")
 			from i := 1 until i > partial_system_objects loop
 				Make_file.putstring (System_object_prefix);
 				Make_file.putint (1);

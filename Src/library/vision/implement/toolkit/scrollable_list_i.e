@@ -44,6 +44,8 @@ inherit
 			remove_right as ll_remove_right,
 			wipe_out as ll_wipe_out,
 			lower as ll_lower
+		undefine
+			is_equal
 		end
 
 feature  -- Element change

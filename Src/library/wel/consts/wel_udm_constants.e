@@ -52,6 +52,15 @@ feature -- Access
 			"UDM_GETRANGE"
 		end
 		
+	Udm_getrange32: INTEGER is
+			-- Retrieves the minimum and maximum positions (range)
+			-- for an up-down control.
+		external
+			"C [macro %"cctrl.h%"]"
+		alias
+			"UDM_GETRANGE32"
+		end
+		
 	Udm_setaccel: INTEGER is
 			-- Sets the acceleration for an up-down control.
 		external

@@ -2156,7 +2156,7 @@ feature -- Line Info for debugging
 		do
 		end
 
-	put_debug_info (location: TOKEN_LOCATION) is
+	put_debug_info (location: LOCATION_AS) is
 			-- Generate debug information for `location' to enable to
 			-- find corresponding Eiffel class file in IL code.
 		do
@@ -2169,7 +2169,7 @@ feature -- Line Info for debugging
 		do
 		end
 
-	put_silent_debug_info (location: TOKEN_LOCATION) is
+	put_silent_debug_info (location: LOCATION_AS) is
 			-- Generate debug information for `location' to enable to
 			-- find corresponding Eiffel class file in IL code.
 			-- but ignored from the EiffelStudio Debugger (.NET)

@@ -16,7 +16,8 @@ inherit
 		end
 
 create
-        default_create
+        default_create,
+        make_with_title
         
 feature -- Event handling
 

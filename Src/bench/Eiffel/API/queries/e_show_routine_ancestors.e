@@ -80,7 +80,7 @@ feature -- Execution
 			until
 				parents.after
 			loop
-				e_parent := parents.item.associated_eclass;
+				e_parent := parents.item.associated_class;
 				if not classes.has (e_parent) then
 					rec_add_parents (classes, e_parent);
 				end;

@@ -272,7 +272,7 @@ feature {NONE} -- Implementation
 			until
 				parents.after
 			loop
-				c := parents.item.associated_eclass;
+				c := parents.item.associated_class;
 				if not processed.has (c) then
 					processed.extend (c)
 				end;

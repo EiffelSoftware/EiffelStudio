@@ -10,8 +10,7 @@ inherit
 	BASIC_A
 		redefine
 			is_integer, associated_class,
-			same_as, is_numeric, heaviest, internal_conform_to,
-			associated_eclass
+			same_as, is_numeric, heaviest, internal_conform_to
 		end
 
 feature -- Property
@@ -27,8 +26,8 @@ feature -- Access
 			Result := other.is_integer
 		end
 
-	associated_eclass: CLASS_C is
-			-- Associated eiffel class
+	associated_class: CLASS_C is
+			-- Class INTEGER
 		once
 			Result := System.integer_class.compiled_class
 		end
@@ -62,14 +61,6 @@ feature {COMPILER_EXPORTER}
 			-- C type
 		once
 			Result := Long_c_type
-		end
-
-	associated_class: CLASS_C is
-			-- Class INTEGER
-		require else
-			integer_class_compiled: System.integer_class.compiled
-		once
-			Result := System.integer_class.compiled_class
 		end
 
 end -- class INTEGER_A

@@ -63,7 +63,7 @@ feature -- Stoning
  
 	associated_eiffel_class (ref_class: CLASS_C): CLASS_C is
 		do  
-			Result := actual_type.associated_eclass;
+			Result := actual_type.associated_class;
 		end;
 
 end -- class FORMAL_AS_B

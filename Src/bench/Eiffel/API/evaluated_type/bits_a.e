@@ -10,8 +10,7 @@ inherit
 		redefine
 			is_bits, internal_conform_to, associated_class, dump,
 			heaviest, same_as, append_to,
-			check_conformance, format, associated_eclass,
-			is_equivalent
+			check_conformance, format, is_equivalent
 		end
 
 feature -- Property
@@ -40,10 +39,10 @@ feature -- Access
 						other_bits.bit_count = bit_count
 		end
 
-	associated_eclass: CLASS_C is
-			-- Associated eiffel class
+	associated_class: CLASS_C is
+			-- Associated class
 		once
-			Result := Eiffel_system.bit_class.compiled_class
+			Result := System.bit_class.compiled_class
 		end
 
 	bit_count: INTEGER
@@ -124,14 +123,6 @@ feature {COMPILER_EXPORTER}
 			else
 				Result := Current
 			end
-		end
-
-	associated_class: CLASS_C is
-			-- Associated class
-		require else
-			bit_class_compiled: System.bit_class.compiled
-		once
-			Result := System.bit_class.compiled_class
 		end
 
 	type_i: BIT_I is

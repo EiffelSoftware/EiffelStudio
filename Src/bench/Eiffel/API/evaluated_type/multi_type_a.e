@@ -39,8 +39,11 @@ feature -- Property
 
 	is_multi_type: BOOLEAN is True
 
-	associated_eclass: CLASS_C is
-			-- Associated eiffel class
+
+feature -- Access
+
+	associated_class: CLASS_C is
+			-- Class ARRAY
 		once
 			Result := System.array_class.compiled_class
 		end
@@ -148,14 +151,6 @@ feature {COMPILER_EXPORTER}
 			if Result then
 				last_type := gen_type
 			end
-		end
-
-	associated_class: CLASS_C is
-			-- Class ARRAY
-		require else
-			array_class_compiled: System.array_class.compiled
-		once
-			Result := System.array_class.compiled_class
 		end
 
 	array_type_a: TYPE_A is

@@ -11,7 +11,7 @@ inherit
 	BASIC_A
 		redefine
 			is_real, associated_class, same_as, is_numeric, heaviest,
-			internal_conform_to, associated_eclass
+			internal_conform_to
 		end
 
 feature -- Property
@@ -19,10 +19,8 @@ feature -- Property
 	is_real: BOOLEAN is True
 			-- Is the current type a real type ?
 
-feature -- Access
-
-	associated_eclass: CLASS_C is
-			-- Associated eiffel class
+	associated_class: CLASS_C is
+			-- Class REAL
 		once
 			Result := System.real_class.compiled_class
 		end
@@ -58,14 +56,6 @@ feature {COMPILER_EXPORTER}
 			-- C type
 		once
 			Result := Float_c_type
-		end
-
-	associated_class: CLASS_C is
-			-- Class REAL
-		require else
-			real_class_compiled: System.real_class.compiled
-		once
-			Result := System.real_class.compiled_class
 		end
 
 	same_as (other: TYPE_A): BOOLEAN is

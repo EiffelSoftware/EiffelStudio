@@ -10,8 +10,7 @@ inherit
 	LIKE_TYPE_A
 		redefine
 			is_like_current, has_associated_class,
-			associated_eclass, type_i, associated_class,
-			internal_conform_to
+			type_i, associated_class, internal_conform_to
 		end
 
 creation
@@ -40,7 +39,10 @@ feature -- Properties
 	has_associated_class: BOOLEAN is False
 			-- Does Current have associated class?
 
-	associated_eclass: CLASS_C is
+feature -- Access
+
+	associated_class: CLASS_C is
+			-- Class associated to the current type
 		do
 		end
 
@@ -102,11 +104,6 @@ feature {NONE} -- Implementation
 		end
 	
 	instantiation_in (type: TYPE_A written_id: CLASS_ID): like Current is
-		do
-		end
-
-	associated_class: CLASS_C is
-			-- Class associated to the current type
 		do
 		end
 

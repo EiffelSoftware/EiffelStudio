@@ -27,11 +27,10 @@ creation
 feature {NONE} -- Initialization
 
         make (parent: EV_CONTAINER) is
-                        -- Create a gtk label.
+                        -- Create a gtk entry.
                 do
-                        widget := gtk_entry_new ()
+                        widget := gtk_entry_new
                 end
-
 
 feature -- Access
 
@@ -42,12 +41,6 @@ feature -- Access
 			p := gtk_entry_get_text (widget)
 			!!Result.make (0)
 			Result.from_c (p)
-		end
-
-	text_length: INTEGER is
-			-- Length of the text of the widget
-		do
-			Result := text.count
 		end
 
 feature -- Status setting

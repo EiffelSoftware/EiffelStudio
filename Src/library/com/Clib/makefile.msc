@@ -1,4 +1,5 @@
-# Requires environment variable LIBRARY and ISE_EIFFEL.
+# Requires environment variable ISE_EIFFEL.
+
 
 CC = cl
 CFLAGS = -c -Zi -D "_WIN32_DCOM" -I$(ISE_EIFFEL)\bench\spec\windows\include\ -I..\spec\windows\include -c -Tp

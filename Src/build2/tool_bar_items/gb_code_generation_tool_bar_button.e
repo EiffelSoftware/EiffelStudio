@@ -6,6 +6,8 @@ indexing
 
 class
 	GB_CODE_GENERATION_TOOL_BAR_BUTTON
+	
+	--| FIXME, make_into a command.
 
 inherit
 	EV_TOOL_BAR_BUTTON
@@ -55,15 +57,15 @@ feature {NONE} -- Implementation
 			-- Display a dialog to receive the code generation options
 			-- from the user.
 		local
-			dialog: EV_INFORMATION_DIALOG
-			code_generator: GB_CODE_GENERATOR
+			dialog: GB_CODE_GENERATION_DIALOG
 		do
-			create dialog.make_with_text ("Generating.....")
+			create dialog.make_default
 			dialog.show_relative_to_window (system_status.main_window)
-			create code_generator
-			code_generator.generate
-			--code_generation_dialog.show_modal_to_window (parent_window (parent))
-			dialog.destroy
+			dialog.start_generation
+
+			dialog.hide
+			dialog.show_completion
+			dialog.show_modal_to_window (system_status.main_window)
 		end
 		
 		

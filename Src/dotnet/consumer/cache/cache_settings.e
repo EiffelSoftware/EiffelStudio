@@ -8,17 +8,17 @@ class
 
 feature -- Access
 
-	short_cache_name: STRING is "md"
+	short_cache_name: STRING is "md_test"
 			-- Short cache name.
 			-- Note: this should be as short as possible given file name
 			-- length restriction on Windows. This is name used when
-			-- running in `concervative_mode'
+			-- running in `conservative_mode'
 			
 	cache_name: STRING is "MetadataConsumer"
 			-- Cache name.
 			
-	concervative_mode: BOOLEAN is True
-			-- State to indicate if cache should be concervative when creating paths
+	conservative_mode: BOOLEAN is True
+			-- State to indicate if cache should be conservative when creating paths
 			-- to cached contents	
 
 end -- class CACHE_SETTINGS

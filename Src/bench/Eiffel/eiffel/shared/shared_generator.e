@@ -28,10 +28,4 @@ feature {NONE}
 			end
 		end;
 
-	Desc_generator: DESC_GENERATOR is
-			-- Generator of precompiled descriptor tables
-		once
-			!! Result
-		end;
-
 end

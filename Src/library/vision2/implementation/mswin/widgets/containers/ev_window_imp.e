@@ -33,7 +33,6 @@ inherit
 			client_height,
 			client_y,
 			parent_ask_resize,
-			dimensions_set,
 			set_default_minimum_size,
 			compute_minimum_width,
 			compute_minimum_height,
@@ -61,7 +60,7 @@ inherit
 			shown as is_displayed,
 			set_width as wel_set_width,
 			set_height as wel_set_height,
-			item as wel_window_item,
+			item as wel_item,
 			enabled as is_sensitive,
 			set_x as set_x_position,
 			set_y as set_y_position,
@@ -593,19 +592,6 @@ feature {NONE} -- Implementation
 			end
 			sbi ?= menu_bar.implementation
 			sbi.menu_item_clicked (menu_id)
-		end
-
-feature -- Assertion features
-
-	dimensions_set (new_width, new_height: INTEGER): BOOLEAN is
-			-- Check if the dimensions of the widget are set to 
-			-- the values given or the minimum values possible 
-			-- for that widget.
-			-- we must redefine it because windows do not
-			-- allow as little windows as we want.
-		do
-			Result := (width = new_width or else width = minimum_width.max (window_minimum_width) or else width = maximum_width) and then
-				  (height = new_height or else height = minimum_height.max (window_minimum_height)or else height = maximum_height)
 		end
 
 feature {EV_TITLED_WINDOW, EV_APPLICATION_IMP} -- Accelerators
@@ -1179,6 +1165,9 @@ end -- class EV_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.50  2000/06/08 20:48:06  rogers
+--| Removed dimensions set, and item from WEL is now renamed as wel_item.
+--|
 --| Revision 1.49  2000/06/07 17:27:59  oconnor
 --| merged from DEVEL tag MERGED_TO_TRUNK_20000607
 --|

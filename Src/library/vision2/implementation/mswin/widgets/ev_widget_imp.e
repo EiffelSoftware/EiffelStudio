@@ -76,6 +76,17 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	cursor: EV_CURSOR is
+			-- Cursor used currently on the widget.
+		do
+			if cursor_imp = Void then
+--				!! Result.make
+				Result := Void
+			else
+				Result ?= cursor_imp.interface
+			end
+		end
+
 	background_color: EV_COLOR is
 			-- Color used for the background of the widget
 		do
@@ -236,18 +247,6 @@ feature -- Status setting
 			end
 		end
 
-	set_background_color (color: EV_COLOR) is
-			-- Make `color' the new `background_color'
-		do
-			background_color_imp ?= color.implementation
-		end
-
-	set_foreground_color (color: EV_COLOR) is
-			-- Make `color' the new `foreground_color'
-		do
-			foreground_color_imp ?= color.implementation
-		end
-
 	set_default_minimum_size is
 			-- Initialize the size of the widget.
 			-- Redefine by some widgets.
@@ -263,6 +262,28 @@ feature -- Element change
 			-- `par' can be Void then the parent is the
 			-- default_parent.
 		deferred
+		end
+
+	set_cursor (value: EV_CURSOR) is
+			-- Make `value' the new cursor of the widget
+		do
+			if value /= Void then
+				cursor_imp ?= value.implementation
+			else
+				cursor_imp := Void
+			end
+		end
+
+	set_background_color (color: EV_COLOR) is
+			-- Make `color' the new `background_color'
+		do
+			background_color_imp ?= color.implementation
+		end
+
+	set_foreground_color (color: EV_COLOR) is
+			-- Make `color' the new `foreground_color'
+		do
+			foreground_color_imp ?= color.implementation
 		end
 
 feature -- Accelerators - command association
@@ -505,6 +526,9 @@ feature -- Event -- removing command association
 		end
 
 feature -- Implementation
+
+	cursor_imp: EV_CURSOR_IMP
+			-- Current cursor used on the widget.
 
 	background_color_imp: EV_COLOR_IMP
 			-- Color used for the background of the widget
@@ -760,6 +784,18 @@ feature {NONE} -- Implementation, focus event
 			execute_command (Cmd_lose_focus, Void)
 		end
 
+feature {NONE} -- Implementation, cursor of the widget
+
+	on_set_cursor (hit_code: INTEGER) is
+			-- Wm_setcursor message.
+			-- See class WEL_HT_CONSTANTS for valid `hit_code' values.
+		do
+			if cursor_imp /= Void then --hit_code = Htclient then
+				cursor_imp.set
+				disable_default_processing
+			end
+		end
+
 feature -- Deferred features
 
 	top_level_window_imp: WEL_WINDOW is
@@ -825,6 +861,10 @@ feature -- Deferred features
 	wel_destroy is
 		deferred
 		end	
+
+	disable_default_processing is
+		deferred
+		end
 
 end -- class EV_WIDGET_IMP
 

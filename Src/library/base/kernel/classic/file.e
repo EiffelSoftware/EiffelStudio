@@ -1431,21 +1431,21 @@ feature {NONE} -- Implementation
 	file_open (f_name: POINTER; how: INTEGER): POINTER is
 			-- File pointer for file `f_name', in mode `how'.
 		external
-			"C | %"eif_file.h%""
+			"C signature (char *, int): EIF_POINTER use %"eif_file.h%""
 		end
 
 	file_dopen (fd, how: INTEGER): POINTER is
 			-- File pointer for file of descriptor `fd' in mode `how'
 			-- (which must fit the way `fd' was obtained).
 		external
-			"C | %"eif_file.h%""
+			"C signature (int, int): EIF_POINTER use %"eif_file.h%""
 		end
 
 	file_reopen (f_name: POINTER; how: INTEGER; file: POINTER): POINTER is
 			-- File pointer to `file', reopened to have new name `f_name'
 			-- in a mode specified by `how'.
 		external
-			"C (char *, EIF_INTEGER, FILE *): EIF_POINTER | %"eif_file.h%""
+			"C (char *, int, FILE *): EIF_POINTER | %"eif_file.h%""
 		end
 
 	file_close (file: POINTER) is
@@ -1542,32 +1542,32 @@ feature {NONE} -- Implementation
 			-- `flag' = 1 -> add permissions,
 			-- `flag' = 0 -> remove permissions.
 		external
-			"C | %"eif_file.h%""
+			"C signature (char *, char *, char *, int) use %"eif_file.h%""
 		end
 
 	file_chmod (f_name: POINTER; mask: INTEGER) is
 			-- Change mode of `f_name' to `mask'.
 		external
-			"C | %"eif_file.h%""
+			"C signature (char *, int) use %"eif_file.h%""
 		end
 
 	file_chown (f_name: POINTER; new_owner: INTEGER) is
 			-- Change owner of `f_name' to `new_owner'
 		external
-			"C | %"eif_file.h%""
+			"C signature (char *, int) use %"eif_file.h%""
 		end
 
 	file_chgrp (f_name: POINTER; new_group: INTEGER) is
 			-- Change group of `f_name' to `new_group'
 		external
-			"C | %"eif_file.h%""
+			"C signature (char *, int) use %"eif_file.h%""
 		end
 
 	file_utime (f_name: POINTER; time, how: INTEGER) is
 			-- Set access, modification time or both (`how' = 0,1,2) on
 			-- `f_name', using `time' as time stamp.
 		external
-			"C | %"eif_file.h%""
+			"C signature (char *, int, int) use %"eif_file.h%""
 		end
 
 	file_tnwl (file: POINTER) is

@@ -112,7 +112,7 @@ feature {NONE} -- Implementation
 	file_open (f_name: POINTER; how: INTEGER): POINTER is
 			-- File pointer for file `f_name', in mode `how'.
 		external
-			"C | %"eif_file.h%""
+			"C signature (char *, int): EIF_POINTER use %"eif_file.h%""
 		alias
 			"file_binary_open"
 		end
@@ -121,7 +121,7 @@ feature {NONE} -- Implementation
 			-- File pointer for file of descriptor `fd' in mode `how'
 			-- (which must fit the way `fd' was obtained).
 		external
-			"C | %"eif_file.h%""
+			"C signature (int, int): EIF_POINTER use %"eif_file.h%""
 		alias
 			"file_binary_dopen"
 		end
@@ -130,7 +130,7 @@ feature {NONE} -- Implementation
 			-- File pointer to `file', reopened to have new name `f_name'
 			-- in a mode specified by `how'.
 		external
-			"C (char *, EIF_INTEGER, FILE *): EIF_POINTER | %"eif_file.h%""
+			"C (char *, int, FILE *): EIF_POINTER | %"eif_file.h%""
 		alias
 			"file_binary_reopen"
 		end

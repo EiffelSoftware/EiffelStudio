@@ -400,7 +400,7 @@ feature -- Reverse engineering details
 			is_reversed_engineered: is_reversed_engineered
 		end
 
-feature {CLASS_DATA, CLASS_CONTENT_SERVER, RESCUE_INFO} -- Implementation
+feature {CLASS_DATA, CLASS_CONTENT_SERVER, RESCUE_INFO, FORMAT_CASE_STORAGE} -- Implementation
 
 	disk_content: S_CLASS_CONTENT;
 			-- Information stored to disk

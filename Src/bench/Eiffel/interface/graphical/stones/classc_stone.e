@@ -74,9 +74,9 @@ feature -- dragging
 
 	stone_name: STRING is do Result := l_Class end;
  
-	click_list: ARRAY [CLICK_STONE] is
+	click_list: CLICK_STONE_ARRAY is
 		do
-			Result := e_class.click_list
+			!! Result.make (e_class.click_list, e_class)
 		end;
  
 	file_name: STRING is
@@ -89,21 +89,11 @@ feature -- dragging
 
 	set_file_name (s: STRING) is do end;
 
---	feature_named (n: STRING): FEATURE_STONE is
---			-- Feature whose internal name is `n'
---		do
---			--if Error_handler.has_error then
---				--Result := Tmp_feat_tbl_server.item (id).item (n)
---			--else
---				--Result := Feat_tbl_server.item (id).item (n)
---			--end
---		end;
- 
 	clickable: BOOLEAN is
 			-- Is Current an element with recorded structures information?
-			-- Yes. (FIXME?)
 		do
-			Result := e_class.is_clickable
+			Result := e_class.has_feature_table or else
+					e_class.has_ast
 		end
 
 feature -- Status report
@@ -125,7 +115,7 @@ feature -- Synchronization
 		do
 			if e_class /= Void then
 				if Eiffel_system.class_of_id (e_class.id) = e_class then
-					Result := e_class.stone
+					!CLASSC_STONE! Result.make (e_class)
 				else
 					new_cluster := Eiffel_universe.cluster_of_name 
 							(e_class.cluster.cluster_name);
@@ -133,7 +123,7 @@ feature -- Synchronization
 						new_cluster /= Void and then
 						new_cluster.classes.has_item (e_class.lace_class)
 					then
-						Result := e_class.lace_class.stone
+						!CLASSI_STONE! Result.make (e_class.lace_class)
 					end
 				end
 			end

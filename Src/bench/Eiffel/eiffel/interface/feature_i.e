@@ -183,6 +183,8 @@ feature
 
 	set_written_in (s: like written_in) is
 			-- Assign `s' to `written_in'.
+		require
+			s_not_void: s /= Void
 		do
 			written_in := s;
 		end;
@@ -234,7 +236,7 @@ feature
 		require
 			good_argument: a_class /= Void
 		do
-			Result := equal (a_class.id, written_in)
+			Result := a_class.id.is_equal (written_in)
 		end;
 
 	to_generate_in (a_class: CLASS_C): BOOLEAN is
@@ -242,7 +244,7 @@ feature
 		require
 			good_argument: a_class /= Void
 		do
-			Result := equal (a_class.id, written_in)
+			Result := a_class.id.is_equal (written_in)
 		end;
 
 	generation_class_id: CLASS_ID is
@@ -288,7 +290,7 @@ feature -- Incrementality
 		require
 			good_argument: other /= Void
 		do
-			Result :=	equal (written_in, other.written_in)
+			Result :=	written_in.is_equal (other.written_in)
 						and then
 						is_selected = other.is_selected
 						and then	
@@ -311,7 +313,7 @@ feature -- Incrementality
 						has_postcondition = other.has_postcondition;
 debug ("ACTIVITY")
 	if not Result then
-			io.error.putbool (equal (written_in, other.written_in)); io.error.new_line;
+			io.error.putbool (written_in.is_equal (other.written_in)); io.error.new_line;
 			io.error.putbool (is_selected = other.is_selected); io.error.new_line;
 			io.error.putbool (rout_id_set.same_as (other.rout_id_set)); io.error.new_line;
 			io.error.putbool (is_origin = other.is_origin); io.error.new_line;
@@ -346,7 +348,7 @@ end;
 			good_argumnet: other /= Void
 
 		do
-			Result :=	equal (written_in, other.written_in)
+			Result :=	written_in.is_equal (other.written_in)
 						and then	
 						rout_id_set.same_as (other.rout_id_set)
 						and then
@@ -954,7 +956,7 @@ feature -- Polymorphism
  				if is_attr then
  					Result := 	feature_id = other.feature_id
 				else
-	 				Result :=	equal (written_in, other.written_in)
+	 				Result :=   written_in.is_equal (other.written_in)
  								and then
  								equal (body_index, other.body_index)
  								and then
@@ -996,7 +998,7 @@ feature -- Signature checking
 			-- Check the argument names
 		require
 			argument_names_exists: argument_names /= Void;
-			written_in_class: equal (written_in, feat_table.feat_tbl_id);
+			written_in_class: written_in.is_equal (feat_table.feat_tbl_id);
 				-- The feature must be written in the associated class
 				-- of `feat_table'.
 		local
@@ -1156,7 +1158,7 @@ debug ("CHECK_EXPANDED")
 	io.error.putstring (feature_name);
 	io.error.new_line;
 end;
-			if equal (class_c.id, written_in) then
+			if class_c.id.is_equal (written_in) then
 					-- Check validity of an expanded result type
 
 					-- `set_type' has been called in `check_types' so
@@ -1558,6 +1560,8 @@ feature -- Replication
 
 	unselected (in: CLASS_ID): FEATURE_I is
 			-- Unselected feature
+		require
+			in_not_void: in /= Void
 		deferred
 		ensure
 			Result_exists: Result /= Void;
@@ -1680,7 +1684,7 @@ feature -- C code generation
 		require
 			valid_file: file /= Void;
 			file_open_for_writing: file.is_open_write or file.is_open_append;
-			written_in_type: equal (class_type.associated_class.id, generation_class_id)
+			written_in_type: class_type.associated_class.id.is_equal (generation_class_id)
 			not_deferred: not is_deferred;
 		local
 			byte_code: BYTE_CODE;
@@ -1940,7 +1944,6 @@ feature -- Case storage informatio
 			valid_f: f /= Void;
 		local
 			result_type: S_RESULT_DATA;
-			id: INTEGER;
 			type_a: TYPE_A;
 			classc: CLASS_C;
 			gen_type_a: GEN_TYPE_A

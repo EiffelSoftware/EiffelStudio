@@ -496,7 +496,8 @@ feature -- Generation, Header
 				%MKDEP = $mkdep %H$(DPFLAGS) --%N%
 				%MV = $mv%N%
 				%RANLIB = $ranlib%N%
-				%RM = $rm -f%N%N");
+				%RM = $rm -f%N%
+				%RMDIR = $rmdir%N%N");
 			Make_file.putstring ("%
 				%!GROK!THIS!%N%
 				%$spitshell >>Makefile <<'!NO!SUBS!'%N");

@@ -33,6 +33,7 @@ feature {NONE} -- Initialization
 --			create dash_pattern.make
 --			dash_pattern.put_right (4)
 --			dash_pattern.put_right (4)
+			line_width := 1
 			logical_function_mode := GXcopy
 			create foreground_color.make
 		end

@@ -298,7 +298,27 @@ feature -- Error status
 						error_status = retrieve_error_status 
 		end;
 
-feature -- Setting
+feature -- Status report
+
+	degree_output: DEGREE_OUTPUT is
+			-- Degree output messages during compilation 
+			-- (By default it redirects output compilation
+			-- messages to io.)
+		do
+			Result := degree_output_cell.item
+		end
+
+feature -- Status setting
+
+	set_degree_output (a_degree_ouput: like degree_output) is
+			-- Set `degree_output' to `a_degree_ouput'.
+		require
+			non_void_a_degree_ouput: a_degree_ouput /= Void
+		do
+			degree_output_cell.put (a_degree_ouput)
+		ensure
+			set: degree_output = a_degree_ouput
+		end;
 
 	set_error_displayer (ed: like error_displayer) is
 			-- Set `error_displayer' to `ed'.
@@ -619,6 +639,15 @@ feature {E_PROJECT, PRECOMP_R, EXTENDIBLE_R} -- Implementation
 
 feature {NONE} -- Implementation
 
+	degree_output_cell: CELL [DEGREE_OUTPUT] is
+			-- Degree output window
+		local
+			deg_output: DEGREE_OUTPUT
+		once
+			!! deg_output;
+			!! Result.put (deg_output)
+		end;
+
 	link_driver is
 		local
 			uf: PLAIN_TEXT_FILE;
@@ -652,7 +681,6 @@ feature {NONE} -- Implementation
 			end;
 		end;
 
-
 	dle_link_system is
 			-- Link executable and melted.eif files from the static system.
 		require
@@ -684,5 +712,9 @@ feature {NONE} -- Implementation
 					file_name)
 			end
 		end;
+
+invariant
+
+	degree_output_not_void: degree_output /= Void
 
 end -- class E_PROJECT

@@ -119,17 +119,26 @@ feature -- Access
 	real_x: INTEGER is
 			-- Relative x-position of the client-area to the screen.
 		do
-			Result := absolute_x + window_frame_width
+			if exists then
+				Result := absolute_x + window_frame_width
+			else
+				Result := private_attributes.x + window_frame_width
+			end
 		end
 
 	real_y: INTEGER is
 			-- Relative y-position of the client-area to the screen.
 		do
-			if has_menu then
-				Result := absolute_y + title_bar_height + window_border_height +
-					window_frame_height + menu_bar_height
+			if exists then
+				if has_menu then
+					Result := absolute_y + title_bar_height + window_border_height +
+						window_frame_height + menu_bar_height
+				else
+					Result := absolute_y + title_bar_height + window_border_height +
+						window_frame_height
+				end
 			else
-				Result := absolute_y + title_bar_height + window_border_height +
+				Result := private_attributes.y + title_bar_height + window_border_height +
 					window_frame_height
 			end
 		end

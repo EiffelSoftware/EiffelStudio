@@ -54,6 +54,9 @@ feature -- Generation
 				generate_reference_to_assemblies
 				il_generator.start_module_generation (file_name, System.line_generation)
 				generate_types
+				if System.generate_eac_metadata then
+					generate_metadata
+				end
 				generate_il_code
 				generate_entry_point
 				il_generator.end_module_generation
@@ -314,6 +317,38 @@ feature -- Code generation
 			end
 		end
 
+feature -- Metadata generation (.NET only)
+
+	generate_metadata is
+			-- Store Eiffel names to allow roundtrip
+			-- when consuming metadata again.
+		local
+			i, nb: INTEGER
+			class_c: CLASS_C
+			classes: ARRAY [CLASS_C]
+			metadata_generator: EAC_META_DATA_GENERATOR
+		do
+			classes := sorted_classes (System.classes)
+			from
+				i := classes.lower
+				nb := classes.upper
+				create metadata_generator.make
+			variant
+				nb - i + 1
+			until
+				i > nb
+			loop
+				class_c := classes.item (i)
+				if class_c /= Void and then class_c.is_external and then
+				class_c.ast.top_indexes /= Void and then
+				class_c.ast.top_indexes.assembly_name /= Void then
+					metadata_generator.add (class_c)
+				end
+				i := i + 1
+			end
+			metadata_generator.generate
+		end
+		
 feature {NONE} -- Sort
 
 	sorted_classes (system_classes: CLASS_C_SERVER): ARRAY [CLASS_C] is

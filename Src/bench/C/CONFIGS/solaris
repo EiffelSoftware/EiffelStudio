@@ -43,7 +43,7 @@ wkeiflib='wkbench'
 suffix='.a'
 
 optimize='-O'
-wkoptimze=''
+wkoptimize=''
 
 large=''
 mkdep='/lannion3/manuelt/Misc/mkdep'

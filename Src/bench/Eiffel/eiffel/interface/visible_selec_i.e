@@ -7,13 +7,13 @@ inherit
 			trace as basic_trace
 		redefine
 			nb_visible, generate_cecil_table, has_visible, mark_visible,
-			is_visible, make_byte_code
+			is_visible, make_byte_code, dle_generate_cecil_table
 		end;
 	VISIBLE_I
 		redefine
 			trace,
 			nb_visible, generate_cecil_table, has_visible, mark_visible,
-			is_visible, make_byte_code
+			is_visible, make_byte_code, dle_generate_cecil_table
 		select
 			trace
 		end;
@@ -163,4 +163,51 @@ feature
 			end;
 		end;
 				
+feature -- DLE
+
+	dle_generate_cecil_table (a_class: CLASS_C) is
+			-- Generate cecil table
+		local
+			types: TYPE_LIST;
+			type: CLASS_TYPE
+		do
+			if a_class.is_dynamic then
+				prepare_table (a_class.feature_table);
+					-- Generation
+				Cecil1.generate_name_table (Cecil_file, a_class.id);
+				if byte_context.final_mode then
+					from
+						types := a_class.types;
+						types.start
+					until
+						types.after
+					loop
+						Cecil1.generate_final (Cecil_file, types.item.type_id);
+						types.forth
+					end
+				else
+					Cecil1.generate_workbench (Cecil_file, a_class.id)
+				end
+			elseif a_class.has_dynamic then
+				prepare_table (a_class.feature_table);
+				Cecil_file.putstring ("extern char **cl");
+				Cecil_file.putint (a_class.id);
+				Cecil_file.putstring (";%N%N");
+				if byte_context.final_mode then
+					from
+						types := a_class.types;
+						types.start
+					until
+						types.after
+					loop
+						type := types.item;
+						if type.is_dynamic then
+							Cecil1.generate_final (Cecil_file, type.type_id)
+						end;
+						types.forth
+					end
+				end
+			end
+		end;
+
 end

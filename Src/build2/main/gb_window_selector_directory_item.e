@@ -94,7 +94,9 @@ feature {GB_XML_LOAD} -- Implementation
 			check
 				item_not_parented: an_item.parent = Void
 			end
-			extend (an_item)				
+			extend (an_item)
+				-- Ensure that `Current' is expanded
+			expand
 		ensure
 			item_contained: has (an_item)
 		end

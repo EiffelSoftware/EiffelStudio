@@ -13,6 +13,11 @@ inherit
 			default_create
 		end
 		
+	CONSTANTS
+		undefine
+			png_location, default_create
+		end
+		
 feature -- Access
 
 	ev_type: EV_PIXMAPABLE

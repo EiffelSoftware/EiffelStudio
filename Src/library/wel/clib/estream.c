@@ -63,9 +63,9 @@ DWORD CALLBACK cwel_editstream_out_callback (DWORD dwCookie, LPBYTE pbBuff, LONG
 	// *pcb will be set to the actual size of data read (and processed).
 	// We always read all data so it will be set to cb.
 
-	EIF_REFERENCE eif_str_buffer;
-
 	WGTCX
+
+	EIF_REFERENCE eif_str_buffer;
 
 	if (dwCookie)
 	{

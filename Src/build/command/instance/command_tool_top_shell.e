@@ -85,13 +85,14 @@ feature -- Creation
 			
 			del_com: DELETE_WINDOW
 		do
+			command_editor.set_command_tool (Current)
+			command_editor.create_interface
 			if Pixmaps.command_instance_pixmap.is_valid then
 				set_icon_pixmap (Pixmaps.command_instance_pixmap)
 			end
 			initialize_window_attributes
 			!! del_com.make (Current)
 			set_delete_command (del_com)
-			command_editor.set_command_tool (Current)
 			Precursor
 		end
 

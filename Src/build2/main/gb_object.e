@@ -442,7 +442,7 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_TYPE_SELECTOR_ITEM} -- Access
 			Result := False
 		end
 		
-feature {GB_INTEGER_INPUT_FIELD, GB_STRING_INPUT_FIELD, GB_EV_ANY} -- Basic operations
+feature {GB_INTEGER_INPUT_FIELD, GB_STRING_INPUT_FIELD, GB_EV_ANY, GB_EV_EDITOR_CONSTRUCTOR} -- Basic operations
 
 	add_constant_context (context: GB_CONSTANT_CONTEXT) is
 			-- Add `context' to `constants'.
@@ -469,7 +469,6 @@ feature -- Basic operations
 			object_parent_not_full: not parent_object.is_full
 		do
 			add_new_object_in_parent (a_component.object)
-			
 		end
 
 	add_new_object_in_parent (an_object: GB_OBJECT) is

@@ -83,15 +83,11 @@ feature -- Color
 
 	set_background_color (new_color: COLOR) is
 			-- Set background color to `new_color'.
-		require else
-			Valid_new_color: new_color /= Void
 		do
 		end;
 
 	set_foreground_color (new_color: COLOR) is
 			-- Set foreground color to `new_color'.
-		require else
-			Valid_new_color: new_color /= Void
 		do
 		end
 
@@ -104,8 +100,6 @@ feature -- Background Pixmap
 
 	set_background_pixmap (new_pixmap: PIXMAP) is
 			-- Set background pixmap to `new_pixmap'.
-		require else
-			argument_not_void: not (new_pixmap = Void)
 		do
 		end;
 
@@ -124,10 +118,6 @@ feature
 			a_bar ?= other;
 			Result := (a_bar = Void)
 		end;
-
-	
-feature 
-
 
 end
 

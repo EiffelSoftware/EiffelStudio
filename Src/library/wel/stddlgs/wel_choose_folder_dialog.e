@@ -259,14 +259,14 @@ feature {NONE} -- External
 
 	cwin_sh_browse_for_folder (browse_info: POINTER): POINTER is
 			external
-				"C [macro %"wel.h%"] (LPBROWSEINFO): EIF_POINTER"
+				"C [macro %"choose_folder.h%"] (LPBROWSEINFO): EIF_POINTER"
 			alias
 				"SHBrowseForFolder"
 			end
 	
 	cwin_sh_get_path_from_id_list (id_list, a_folder_name: POINTER) is
 			external
-				"C [macro %"wel.h%"] (LPCITEMIDLIST, LPSTR)"
+				"C [macro %"choose_folder.h%"] (LPCITEMIDLIST, LPSTR)"
 			alias
 				"SHGetPathFromIDList"
 			end

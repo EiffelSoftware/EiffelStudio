@@ -14,7 +14,8 @@ inherit
 		redefine
 			symbol, full_symbol, icon_symbol,
 			name, stone_type, process_class, process_feature,
-			compatible, process_classi, receive, menu_name, accelerator
+			process_class_syntax, process_classi,
+			compatible, receive, menu_name, accelerator
 		end
 
 creation
@@ -90,6 +91,15 @@ feature -- Update
 			end
 		end;
 
+	process_class_syntax (syn: CL_SYNTAX_STONE) is
+		do
+			if tool = Project_tool then
+				create_class_tool (syn)
+			else
+				tool.receive (syn)
+			end
+		end;
+
 	process_classi (st: CLASSI_STONE) is
 		do
 			if tool = Project_tool then
@@ -108,13 +118,13 @@ feature -- Update
 			end
 		end;
 
-    receive (a_stone: STONE) is
-            -- Process dropped stone `a_stone'
-        do
-            if a_stone.is_valid and then compatible (a_stone) then
-                a_stone.process (Current)
-            end
-        end;
+	receive (a_stone: STONE) is
+			-- Process dropped stone `a_stone'
+		do
+			if a_stone.is_valid and then compatible (a_stone) then
+				a_stone.process (Current)
+			end
+		end;
 
 feature {NONE} -- Implementation
 

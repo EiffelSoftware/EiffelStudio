@@ -15,20 +15,21 @@ inherit
 		end
 
 creation
-	make,
+	make_with_size,
 	make_from_file
 
-	
 feature {NONE} -- Initialization
 
-	make (par: EV_PIXMAPABLE) is
-			-- Pixmap with 'par' as parent and 'txt' as 
-			-- text label
+	make_with_size (w, h: INTEGER) is
+			-- Create a pixmap with 'w' and `h' as size.
+		require
+			valid_width: w > 0
+			valid_height: h > 0
 		do
-			!EV_PIXMAP_IMP!implementation.make (par)
-			par.implementation.add_pixmap (Current)
-		end			
-	
+			!EV_PIXMAP_IMP! implementation.make_with_size (w, h)
+			implementation.set_interface (Current)
+		end
+
 	make_from_file (par: EV_PIXMAPABLE; file_name: STRING) is
 			-- Load the pixmap described in 'file_name'.
 			-- If the file does not exist, an exception is
@@ -37,9 +38,9 @@ feature {NONE} -- Initialization
 		require
 			file_name_exists: file_name /= Void
 		do
-			!EV_PIXMAP_IMP!implementation.make (par)
+			!EV_PIXMAP_IMP! implementation.make
+			implementation.set_interface (Current)
 			read_from_file (file_name)
-			par.implementation.add_pixmap (Current)
 		end
 
 feature -- Measurement
@@ -54,8 +55,7 @@ feature -- Measurement
 			Result := implementation.height
 		end
 
-feature -- Element change
-	
+feature -- Basic operation	
 	read_from_file (file_name: STRING) is
 			-- Load the pixmap described in 'file_name'.
 			-- If the file does not exist, an exception is
@@ -83,7 +83,7 @@ feature -- Implementation
 
 	implementation: EV_PIXMAP_I
 			-- Implementation of pixmap
-	
+
 end -- class EV_PIXMAP
 
 --|----------------------------------------------------------------

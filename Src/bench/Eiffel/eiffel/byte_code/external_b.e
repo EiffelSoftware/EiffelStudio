@@ -330,7 +330,14 @@ feature -- IL code generation
 					-- only when we do not call a static feature.
 				if cl_type.is_reference then
 						-- Normal call, we simply push current object.
-					il_generator.generate_current
+					if is_static_call then
+							-- Bug fix until we generate direct static access
+							-- to C external.
+						(create {CREATE_TYPE}.make (
+							create {CL_TYPE_I}.make (written_in))).generate_il
+					else
+						il_generator.generate_current
+					end
 				else
 					if real_metamorphose then
 							-- Feature is written in an inherited class of current

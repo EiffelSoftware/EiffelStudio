@@ -3,7 +3,7 @@ class SAVE_AS_SYSTEM
 
 inherit
 
-	SHARED_WORKBENCH;
+	SHARED_EIFFEL_PROJECT;
 	SAVE_AS_FILE
 		redefine
 			make, update_more
@@ -27,7 +27,7 @@ feature
 		do
 			show_text ?= text_window.last_format;
 			if show_text /= Void then
-				Lace.set_file_name (text_window.file_name)
+				Eiffel_project.set_lace_file_name (text_window.file_name)
 			end;
 		end
 

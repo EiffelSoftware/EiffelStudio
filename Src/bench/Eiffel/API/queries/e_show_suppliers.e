@@ -18,7 +18,7 @@ creation
 
 feature -- Output
 
-	execute is
+	work is
 			-- Execute Current command.
 		local
 			suppliers: SORTED_TWO_WAY_LIST [CLASS_I];

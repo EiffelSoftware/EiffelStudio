@@ -18,7 +18,7 @@ creation
 
 feature -- Execution
 
-	execute is
+	work is
 			-- Show system statistics.
 		local
 			stats: SYSTEM_STATISTICS

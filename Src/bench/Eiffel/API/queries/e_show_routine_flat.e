@@ -29,7 +29,7 @@ feature -- Access
 
 feature -- Execution
 
-	execute is
+	work is
 		local
 			ctxt: FEATURE_TEXT_FORMATTER;
 			text_filter: TEXT_FILTER

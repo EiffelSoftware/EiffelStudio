@@ -9,6 +9,8 @@ class E_SHOW_SHORT
 
 inherit
 	E_CLASS_CMD
+		rename
+			work as execute
 		redefine
 			execute
 		end

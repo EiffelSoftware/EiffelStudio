@@ -17,7 +17,7 @@ creation
 
 feature -- Execution
 
-	execute is
+	work is
 			-- Execute Current command.
 		local
 			clients: SORTED_TWO_WAY_LIST [CLASS_I];

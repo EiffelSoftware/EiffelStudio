@@ -19,8 +19,7 @@ inherit
 			invalidate,
 			invalid_rectangle,
 			update_rectangle,
-			bounding_box,
-			trace
+			bounding_box
 		end
 
 	ARRAYED_LIST [EV_FIGURE]
@@ -300,25 +299,6 @@ feature {NONE} -- Implementation
 			if w /= Void then
 				w.full_redraw
 			end
-		end
-		
-feature -- Obsolete
-
-	trace is
-			-- Write a textual representation of the group to
-			-- the standard output.
-		Obsolete
-			"Please do not use this feature as it will shortly be removed."
-		do
-			from
-				io.error.put_string ("Group: " + point.out + "%N")
-				start
-			until
-				after
-			loop
-				item.trace
-				forth
-			end			
 		end
 
 end -- class EV_FIGURE_GROUP

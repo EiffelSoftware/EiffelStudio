@@ -1,0 +1,72 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+<html>
+
+<head>
+<TITLE>Introduction</TITLE>
+<META NAME="MS-HKWD" CONTENT="execute an application">
+<META NAME="MS-HKWD" CONTENT="run an application">
+<META NAME="MS-HKWD" CONTENT="launch an application">
+<META NAME="MS-HKWD" CONTENT="debug an application">
+<META NAME="MS-HKWD" CONTENT="application, run">
+<META NAME="MS-HKWD" CONTENT="application, arguments">
+<META NAME="MS-HKWD" CONTENT="arguments">
+<LINK REL=StyleSheet HREF="../../../../../default.css">
+</head>
+
+<body>
+
+<h1>Running with arguments</h1>
+<p>While working on a project, you may want to launch it with one or more
+arguments. 
+<p>There are two ways to specify arguments for a program from EiffelStudio:
+<ul>
+	<li>From the <a href="../../25_project_settings/20_debug.html">Debug tab</a>
+      in the Project Settings window.
+    <li>By right-clicking any of the buttons on the debugging toolbar and using
+      the argument dialog.</li>
+</ul>
+
+
+<h2>Using the Argument Dialog<BR>
+</h2>
+<p>By right-clicking any of the debugging buttons in the debugging toolbar the
+following argument dialog will be displayed.</p>
+<p>&nbsp;</p>
+<p align="center"><img border="0" src="../../../../../images/eiffelstudio/debugger/argument_dialog.png" width="552" height="387"></p>
+<p align="left">&nbsp;</p>
+<p align="left">The dialog allows you to change the current working directory of
+the system, and to specify arguments to be passed to the system at execution
+time.&nbsp;&nbsp; New Program arguments may be added to the system and current
+ones can be removed or edited.&nbsp; </p>
+<p align="left">There are two tabs provided, Project Arguments and My
+Arguments.&nbsp; Project Arguments denotes all arguments in the system Ace
+file.&nbsp; Any changes performed in this tab will thus affect the contents of
+the Ace file.&nbsp; My Arguments denotes arguments for the current
+compilation.&nbsp; Since these arguments are compilation specific they are
+stored in a separate file and do not affect the system Ace file in any
+way.&nbsp; The main advantage of using this distinction is that it allows
+developers to specify their own custom arguments without affecting the Ace
+file.&nbsp; If the Ace file is shared between a number of developers then it
+need not be affected.&nbsp; Hence the argument dialog gives both project-level
+and user-level argument control.&nbsp; </p>
+<p align="left">To add a new argument simply type the argument in the Current
+Argument text area and click the Add button.&nbsp; </p>
+<p align="left">To remove an existing argument select the argument you wish to
+remove in either the drop-down list box or in the list and click Remove.</p>
+<p align="left">To edit an argument select the argument you wish to edit in the
+list and double-click it.&nbsp; This will display an editable text field
+in-place of the argument.&nbsp; Once done editing just click outside the list
+box.&nbsp; The picture below shows in-place editing of an argument.</p>
+<p align="left">&nbsp;</p>
+<p>&nbsp;</p>
+<p align="center"><img border="0" src="../../../../../images/eiffelstudio/debugger/argument_dialog_editing.png" width="552" height="387"></p>
+<p align="left">&nbsp;</p>
+
+<p align="left">Once the appropriate argument is selected then the system can be
+run with this argument using the Run or Run &amp; Close button.&nbsp; The latter
+runs the system and also closes the argument dialog.&nbsp; To run without any
+arguments uncheck the Enable Arguments check box.</p>
+
+</body>
+
+</html>

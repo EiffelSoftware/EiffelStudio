@@ -569,6 +569,17 @@ feature -- Status setting
 
 feature -- Element change
 
+	set_parent (a_parent: WEL_WINDOW) is
+			-- Change the parent of the current window.
+		require
+			exists: exists
+			a_parent_not_void: a_parent /= Void
+			a_parent_exists: a_parent.exists
+		do
+			parent := a_parent
+			cwin_set_parent (item, a_parent.item)
+		end
+
 	set_text (a_text: STRING) is
 			-- Set the window text
 		require
@@ -1438,6 +1449,14 @@ feature {NONE} -- Externals
 		alias
 			"CreateWindowEx"
 		end
+
+	cwin_set_parent (hwmd_child, hwmd_parent: POINTER) is
+			-- Change the parent of the given child
+		external
+			"C [macro <winuser.h>] (HWND, HWND)"
+		alias
+			"SetParent"
+		end 
 
 	cwin_destroy_window (hwnd: POINTER) is
 			-- SDK DestroyWindow

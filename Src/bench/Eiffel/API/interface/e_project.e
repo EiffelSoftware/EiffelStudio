@@ -593,7 +593,23 @@ feature -- Update
 			else
 				path := Final_generation_path
 			end
-			invoke_finish_freezing (path, freeze_command_name)
+			invoke_finish_freezing (path, freeze_command_name, True)
+		end
+
+	call_finish_freezing_and_wait (workbench_mode: BOOLEAN) is
+			-- Call `finish_freezing' after freezing
+			-- an eiffel project in W_code or F_wode
+			-- depending on the value `workbench_mode'.
+			-- Wait until C compilation is done.
+		local
+			path: STRING
+		do
+			if workbench_mode then
+				path := Workbench_generation_path
+			else
+				path := Final_generation_path
+			end
+			invoke_finish_freezing (path, freeze_command_name, False)
 		end
 
 	precompile (licensed: BOOLEAN) is

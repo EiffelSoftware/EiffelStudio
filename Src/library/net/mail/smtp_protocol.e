@@ -132,13 +132,21 @@ feature {NONE} -- Basic operations
 		local
 			response: STRING
 		do
-			socket.put_string (s + "%N")
-			socket.read_line
-			response:= socket.last_string
-			smtp_code_number := decode (response)
-			if (smtp_code_number /= expected_code) then
+			socket.put_string (s + "%R%N")
+			if not socket.interface_error then
+				socket.read_line
+				if not socket.interface_error then
+					response:= socket.last_string
+					smtp_code_number := decode (response)
+					if (smtp_code_number /= expected_code) then
+						enable_transfer_error
+						set_transfer_error_message (smtp_reply)
+					end
+				end
+			end
+			if socket.interface_error then
 				enable_transfer_error
-				set_transfer_error_message (smtp_reply)
+				set_transfer_error_message ("Interface error")
 			end
 		end
 
@@ -239,7 +247,7 @@ feature {NONE} -- Basic operations
 			mail_message:= clone (memory_resource.mail_message)
 			mail_signature:= memory_resource.mail_signature
 
-			send_command (Mail_from + header_from, Ok)
+			send_command (Mail_from + "<" + header_from + ">", Ok)
 			if not error then
 				from 
 					recipients.start
@@ -247,7 +255,7 @@ feature {NONE} -- Basic operations
 					recipients.after
 				loop
 					if not error then
-						send_command (Mail_to + recipients.item, Ok)
+						send_command (Mail_to + "<" + recipients.item + ">", Ok)
 					end
 					recipients.forth
 				end
@@ -258,8 +266,8 @@ feature {NONE} -- Basic operations
 					if mail_signature /= Void then
 						mail_message.append ("%N" + mail_signature)
 					end
-					mail_message.replace_substring_all ("%N.", ".%N")
-					mail_message.append ("%N.")
+					mail_message.replace_substring_all ("%N.", "%N..")
+					mail_message.append ("%N.%N")
 					if not error then
 						send_command (mail_message, Ok)
 					end

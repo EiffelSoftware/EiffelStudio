@@ -95,7 +95,7 @@ feature -- Status report
 		do
 			Result := case_sensitive_t.is_managed and then
 				case_sensitive_t.is_sensitive and then
-				find_backwards_t.state
+				case_sensitive_t.state
 		end
 
 	replace_mode: BOOLEAN is

@@ -19,7 +19,7 @@ feature -- Initialization
 	make is
 			-- Create `implementation'.
 		do
-			!! data
+			create data
 		ensure
 			data_not_void: data /= void
 		end

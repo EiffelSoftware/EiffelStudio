@@ -27,7 +27,7 @@ feature -- Conversion
 		local
 			d_str: STRING
 		do
-			!! d_str.make(20) 
+			create d_str.make(20) 
 			d_str := db_spec.date_to_str (object)
 			date_buffer.wipe_out
 			date_buffer.append (d_str)
@@ -47,7 +47,7 @@ feature {NONE} -- Status report
 	date_buffer: STRING is
 			-- String constant
 		once
-			!! Result.make (20)
+			create Result.make (20)
 		end
 
 end -- class DATABASE_FORMAT

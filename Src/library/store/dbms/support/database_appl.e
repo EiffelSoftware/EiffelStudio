@@ -15,7 +15,9 @@ inherit
 	DB_CONSTANT
 
 creation
-	login, login_and_connect
+	default_create,
+	login,
+	login_and_connect
 
 feature -- Initialization
 
@@ -26,7 +28,7 @@ feature -- Initialization
 			password_ok: db_spec.password_ok (password)
 		do
 			if not is_logged_to_base then
-				!! session_login.make
+				create session_login.make
 			end
 			session_login.set (user_name, password)
 		ensure
@@ -45,7 +47,7 @@ feature -- Initialization
 		do
 			login (user_name, password)
 			set_base
-			!! session_control.make
+			create session_control.make
 			session_control.connect
 		end
 
@@ -57,7 +59,7 @@ feature -- Status setting
 			argument_exist: roleId /= Void 
 		do
 			if not is_logged_to_base then
-				!! session_login.make
+				create session_login.make
 			end
 			session_login.set_role (roleId, rolePassWd)
 		ensure
@@ -67,10 +69,10 @@ feature -- Status setting
 	set_data_source(dsn : STRING) is
 			-- Set database name with 'dbName'.
 		require
-			argument_exist: dsn /= Void 
+	--FIXME		argument_exist: dsn /= Void 
 		do
 			if not is_logged_to_base then
-				!! session_login.make
+				create session_login.make
 			end
 			session_login.set_data_source (dsn)
 		ensure
@@ -84,7 +86,7 @@ feature -- Status setting
 			argument_exist: groupId /= Void
 		do
 			if not is_logged_to_base then
-				!! session_login.make
+				create session_login.make
 			end
 			session_login.set_group (groupId)
 		ensure
@@ -99,15 +101,15 @@ feature -- Status setting
 		do
 			database_make (Selection_string_size)
 			if session_database = Void then
-				!! session_database
+				create session_database
 			end
 			handle.set_database (session_database)
 			if session_status = Void then
-				!! session_status.make
+				create session_status.make
 			end
 			handle.set_status (session_status)
 			if session_execution_type = Void then
-				!! session_execution_type.make
+				create session_execution_type.make
 			end
 			handle.set_execution_type (session_execution_type)
 			database_handle.set_login (session_login)
@@ -125,7 +127,7 @@ feature -- Status setting
 			argument_exist: application_name /= Void
 		do
 			if not is_logged_to_base then
-				!! session_login.make
+				create session_login.make
 			end
 			session_login.set_application (application_name)
 		ensure
@@ -138,7 +140,7 @@ feature -- Status setting
 			argument_exist: host_name /= Void
 		do
 			if not is_logged_to_base then
-				!! session_login.make
+				create session_login.make
 			end
 			session_login.set_hostname (host_name)
 		ensure

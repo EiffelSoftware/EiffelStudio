@@ -1,5 +1,5 @@
  indexing
-	description: "";
+	description: "Description of a database table column";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -17,7 +17,6 @@ feature -- Status report
 
 	owner, table_owner, table_schem: STRING 
 		-- Owner id of table of name `table_name'
-
 
 	table_name: STRING
 		-- Table name
@@ -101,7 +100,7 @@ feature -- Status report
 	duplicate: like Current is
 			-- Duplicate copy of Current
 		do
-			!! Result
+			create Result
 			Result.set_all (column_id, data_type, data_length, scale, radix, precision, nullable, default_length, num_distinct, low_value, high_value, density, owner_id, table_id, status,
 					data_default, table_qualifier, table_owner, table_name, table_type, column_name, column_nulls,column_typename, creation_date)
 		end

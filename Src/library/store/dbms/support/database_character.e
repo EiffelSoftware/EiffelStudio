@@ -34,7 +34,7 @@ feature -- Status report
 	eiffel_ref: CHARACTER_REF is
 			-- Shared character reference 
 		once
-			!! Result
+			create Result
 		end
 
 end -- class DATABASE_CHARACTER

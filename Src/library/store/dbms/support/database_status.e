@@ -29,7 +29,7 @@ feature -- Status report
 	error_message: STRING is
 			-- Error message from database server
 		do
-			!! Result.make (10)
+			create Result.make (10)
 			Result.from_c (db_spec.get_error_message)
 		end
 
@@ -42,7 +42,7 @@ feature -- Status report
 	warning_message: STRING is
 			-- Warning message from database server
 		do
-			!! Result.make (10)
+			create Result.make (10)
 			Result.from_c (db_spec.get_warn_message)
 		end
 

@@ -34,7 +34,7 @@ feature -- Status report
 	eiffel_ref: BOOLEAN_REF is
 			-- Shared boolean reference
 		once
-			!! Result
+			create Result
 		end
 
 end -- class DATABASE_BOOLEAN

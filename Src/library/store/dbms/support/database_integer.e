@@ -34,7 +34,7 @@ feature -- Status report
 	eiffel_ref: INTEGER_REF is
 			-- Shared integer reference
 		once
-			!! Result
+			create Result
 		end
 
 end -- class DATABASE_INTEGER

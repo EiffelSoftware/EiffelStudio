@@ -47,6 +47,11 @@ feature -- Access
 			Result.from_c (p)
 		end
 
+	text_length: INTEGER is
+		do
+			Result := text.count
+		end
+
 	select_item (index: INTEGER) is
 			-- Give the item of the list at the one-base
 			-- index. (Gtk uses 0 based indexs, I think)

@@ -17,6 +17,13 @@ inherit
 		undefine
 			build
 		end
+feature -- Access
+
+	text_length: INTEGER is
+			-- Length of the text in the widget
+		do
+			Result := text.count
+		end
 
 feature -- status settings
 

@@ -1,3 +1,8 @@
+indexing
+	description: "Entry point for EiffelBuild."
+	Id: "$Id$"
+	Date: "$Date$"
+	Revision: "$Revision$"
 
 class EBUILD 
 
@@ -6,7 +11,8 @@ inherit
 	CONSTANTS;
 	ARGUMENTS;
 	WINDOWS;
-	SHARED_BUILD_LICENSE;
+	SHARED_LICENSE;
+-- samik	GRAPHICS;
 	UNIX_SIGNALS
 		rename
 			meaning as sig_meanging,
@@ -14,10 +20,10 @@ inherit
 			catch as sig_catch
 		end;
 
-	-- added by samik
+-- added by samik
 creation
 	make
-	-- end of samik
+-- end of samik
 
 feature 
 

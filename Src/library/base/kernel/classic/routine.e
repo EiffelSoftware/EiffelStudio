@@ -603,105 +603,105 @@ feature {NONE} -- Externals
 
 	rout_obj_new_args (cnt: INTEGER): POINTER is
 			-- Initialize for new operands.
-		external "C | %"eif_rout_obj.h%""
+		external "C use %"eif_rout_obj.h%""
 		end
 
 	rout_obj_free_args (args: POINTER) is
 			-- Free `args'.
-		external "C | %"eif_rout_obj.h%""
+		external "C use %"eif_rout_obj.h%""
 		end
 
 	rout_obj_putb (args: POINTER; idx: INTEGER; val: POINTER) is
 			-- Adapt `args' for `idx' and `val'.
-		external "C[macro %"eif_rout_obj.h%"]"
+		external "C macro use %"eif_rout_obj.h%""
 		end
 
 	rout_obj_putwc (args: POINTER; idx: INTEGER; val: POINTER) is
 			-- Adapt `args' for `idx' and `val'.
-		external "C[macro %"eif_rout_obj.h%"]"
+		external "C macro use %"eif_rout_obj.h%""
 		end
 
 	rout_obj_putc (args: POINTER; idx: INTEGER; val: POINTER) is
 			-- Adapt `args' for `idx' and `val'.
-		external "C[macro %"eif_rout_obj.h%"]"
+		external "C macro use %"eif_rout_obj.h%""
 		end
 
 	rout_obj_putd (args: POINTER; idx: INTEGER; val: POINTER) is
 			-- Adapt `args' for `idx' and `val'.
-		external "C[macro %"eif_rout_obj.h%"]"
+		external "C macro use %"eif_rout_obj.h%""
 		end
 
 	rout_obj_puti8 (args: POINTER; idx: INTEGER; val: POINTER) is
 			-- Adapt `args' for `idx' and `val'.
-		external "C[macro %"eif_rout_obj.h%"]"
+		external "C macro use %"eif_rout_obj.h%""
 		end
 
 	rout_obj_puti16 (args: POINTER; idx: INTEGER; val: POINTER) is
 			-- Adapt `args' for `idx' and `val'.
-		external "C[macro %"eif_rout_obj.h%"]"
+		external "C macro use %"eif_rout_obj.h%""
 		end
 
 	rout_obj_puti32 (args: POINTER; idx: INTEGER; val: POINTER) is
 			-- Adapt `args' for `idx' and `val'.
-		external "C[macro %"eif_rout_obj.h%"]"
+		external "C macro use %"eif_rout_obj.h%""
 		end
 
 	rout_obj_puti64 (args: POINTER; idx: INTEGER; val: POINTER) is
 			-- Adapt `args' for `idx' and `val'.
-		external "C[macro %"eif_rout_obj.h%"]"
+		external "C macro use %"eif_rout_obj.h%""
 		end
 
 	rout_obj_putp (args: POINTER; idx: INTEGER; val: POINTER) is
 			-- Adapt `args' for `idx' and `val'.
-		external "C[macro %"eif_rout_obj.h%"]"
+		external "C macro use %"eif_rout_obj.h%""
 		end
 
 	rout_obj_putf (args: POINTER; idx: INTEGER; val: POINTER) is
 			-- Adapt `args' for `idx' and `val'.
-		external "C[macro %"eif_rout_obj.h%"]"
+		external "C macro use %"eif_rout_obj.h%""
 		end
 
 	rout_obj_putr (args: POINTER; idx: INTEGER; val: POINTER) is
 			-- Adapt `args' for `idx' and `val'.
-		external "C[macro %"eif_rout_obj.h%"]"
+		external "C macro use %"eif_rout_obj.h%""
 		end
 
 	eif_gen_conf (type1, type2: INTEGER): BOOLEAN is
 			-- Does `type1' conform to `type2'?
-		external "C (int16, int16): EIF_BOOLEAN | %"eif_gen_conf.h%""
+		external "C signature (int16, int16): EIF_BOOLEAN use %"eif_gen_conf.h%""
 		end
 
 	eif_gen_create (obj: POINTER; pos: INTEGER): POINTER is
 			-- Adapt `args' for `idx' and `val'.
-		external "C | %"eif_gen_conf.h%""
+		external "C use %"eif_gen_conf.h%""
 		end
 
 	eif_gen_param_id (stype: INTEGER; obj: POINTER; pos: INTEGER): INTEGER is
 			-- Type of generic parameter in `obj' at position `pos'.
 		external
-			"C (int16, EIF_REFERENCE, int): EIF_INTEGER | %"eif_gen_conf.h%""
+			"C signature (int16, EIF_REFERENCE, int): EIF_INTEGER use %"eif_gen_conf.h%""
 		end
 
 	eif_gen_typecode (obj: POINTER; pos: INTEGER): CHARACTER is
 			-- Code for generic parameter `pos' in `obj'.
 		external
-			"C | %"eif_gen_conf.h%""
+			"C use %"eif_gen_conf.h%""
 		end
 
 	eif_gen_typecode_str (obj: POINTER): STRING is
 			-- Code name for generic parameter `pos' in `obj'.
-		external "C | %"eif_gen_conf.h%""
+		external "C use %"eif_gen_conf.h%""
 		end
 
 	eif_gen_tuple_typecode_str (obj: POINTER): STRING is
 			-- Code name for generic parameter `pos' in `obj'.
-		external "C | %"eif_gen_conf.h%""
+		external "C use %"eif_gen_conf.h%""
 		end
 
 	eif_gen_count (obj: POINTER): INTEGER is
 			-- Number of generic parameters of `obj'.
 		external
-			"C | %"eif_gen_conf.h%""
+			"C use %"eif_gen_conf.h%""
 		end
 
 feature -- Obsolete

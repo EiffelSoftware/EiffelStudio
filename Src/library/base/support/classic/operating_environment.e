@@ -28,7 +28,7 @@ feature
 	home_directory_supported: BOOLEAN is
 			-- Is the notion of home directory supported on this platform?
 		external
-			"C | %"eif_path_name.h%""
+			"C use %"eif_path_name.h%""
 		alias
 			"eif_home_dir_supported"
 		end
@@ -36,7 +36,7 @@ feature
 	root_directory_supported: BOOLEAN is
 			-- Is the notion of root directory supported on this platform?
 		external
-			"C | %"eif_path_name.h%""
+			"C use %"eif_path_name.h%""
 		alias
 			"eif_root_dir_supported"
 		end
@@ -44,7 +44,7 @@ feature
 	case_sensitive_path_names: BOOLEAN is
 			-- Are path names case sensitive?
 		external
-			"C | %"eif_path_name.h%""
+			"C use %"eif_path_name.h%""
 		alias
 			"eif_case_sensitive_path_names"
 		end
@@ -53,14 +53,14 @@ feature {NONE} -- Implementation
 
 	c_dir_separator: CHARACTER is
 		external
-			"C | %"eif_dir.h%""
+			"C use %"eif_dir.h%""
 		alias
 			"eif_dir_separator"
 		end
 
 	eif_current_dir_representation: STRING is
 		external
-			"C | %"eif_path_name.h%""
+			"C use %"eif_path_name.h%""
 		end
 
 indexing

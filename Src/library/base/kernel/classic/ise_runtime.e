@@ -14,7 +14,7 @@ feature -- Feature specific to ISE runtime.
 	frozen c_standard_clone (other: POINTER): ANY is
 			-- New object of same dynamic type as `other'
 		external
-			"C | %"eif_copy.h%""
+			"C use %"eif_copy.h%""
 		alias
 			"eclone"
 		end
@@ -23,7 +23,7 @@ feature -- Feature specific to ISE runtime.
 			-- Does dynamic type of object attached to `obj1' conform to
 			-- dynamic type of object attached to `obj2'?
 		external
-			"C [macro %"eif_plug.h%"]"
+			"C macro use %"eif_plug.h%""
 		alias
 			"econfg"
 		end
@@ -32,7 +32,7 @@ feature -- Feature specific to ISE runtime.
 			-- Are dynamic type of object attached to `obj1' and
 			-- dynamic type of object attached to `obj2' the same?
 		external
-			"C [macro %"eif_plug.h%"]"
+			"C macro use %"eif_plug.h%""
 		alias
 			"estypeg"
 		end
@@ -40,7 +40,7 @@ feature -- Feature specific to ISE runtime.
 	frozen c_standard_is_equal (target, source: POINTER): BOOLEAN is
 			-- C external performing standard equality
 		external
-			"C | %"eif_equal.h%""
+			"C use %"eif_equal.h%""
 		alias
 			"eequal"
 		end
@@ -48,7 +48,7 @@ feature -- Feature specific to ISE runtime.
 	frozen c_standard_copy (source, target: POINTER) is
 			-- C external performing standard copy
 		external
-			"C | %"eif_copy.h%""
+			"C use %"eif_copy.h%""
 		alias
 			"ecopy"
 		end
@@ -57,7 +57,7 @@ feature -- Feature specific to ISE runtime.
 			-- New object structure recursively duplicated from the one
 			-- attached to `other'
 		external
-			"C | %"eif_copy.h%""
+			"C use %"eif_copy.h%""
 		alias
 			"edclone"
 		end
@@ -66,7 +66,7 @@ feature -- Feature specific to ISE runtime.
 			-- Are `some' and `other' attached to recursively isomorphic
 			-- object structures?
 		external
-			"C | %"eif_equal.h%""
+			"C use %"eif_equal.h%""
 		alias
 			"ediso"
 		end
@@ -74,13 +74,13 @@ feature -- Feature specific to ISE runtime.
 	frozen c_tagged_out (some: ANY): STRING is
 			-- Printable representation of current object
 		external
-			"C | %"eif_out.h%""
+			"C use %"eif_out.h%""
 		end
 
 	frozen c_generator_of_type (type_id: INTEGER): STRING is
 			-- Name of the generating class of current object
 		external
-			"C | %"eif_out.h%""
+			"C use %"eif_out.h%""
 		end
 
 	frozen c_generator (some: POINTER): STRING is
@@ -91,7 +91,7 @@ feature -- Feature specific to ISE runtime.
 
 	frozen check_assert (b: BOOLEAN): BOOLEAN is
 		external
-			"C | %"eif_copy.h%""
+			"C use %"eif_copy.h%""
 		alias
 			"c_check_assert"
 		end
@@ -105,7 +105,7 @@ feature -- Feature specific to ISE runtime.
 
  	frozen c_generating_type_of_type (type_id: INTEGER): STRING is
  		external
- 			"C | %"eif_gen_conf.h%""
+ 			"C use %"eif_gen_conf.h%""
  		alias
  			"eif_gen_typename_of_type"
  		end
@@ -115,7 +115,7 @@ feature -- Internal C routines
 	type_id_from_name (s: POINTER): INTEGER is
 			-- Dynamic type whose name is represented by `s'.
 		external
-			"C (char *): EIF_INTEGER | %"eif_cecil.h%""
+			"C signature (char *): EIF_INTEGER use %"eif_cecil.h%""
 		alias
 			"eif_type_id"
 		end

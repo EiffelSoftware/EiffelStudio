@@ -308,7 +308,13 @@ feature {NONE} -- Implementation
 		end
 		
 	retrieve_and_set_integer_value (a_type_name: STRING): INTEGER is
-			--
+			-- Result is integer data associated with `a_type_name'.
+			-- If the data of `a_type_name' is a constant, then create a new constant_context
+			-- within the system, and return the integer data of the constant.
+			-- Should only be user while loading a project from XML, and after a call to 
+			-- `get_unique_full_info'.
+		require
+			a_type_name_not_void: a_type_name /= Void
 		local
 			integer_constant: GB_INTEGER_CONSTANT
 			element_info: ELEMENT_INFORMATION
@@ -328,6 +334,33 @@ feature {NONE} -- Implementation
 			end				
 		end
 		
+	retrieve_and_set_string_value (a_type_name: STRING): STRING is
+			-- Result is string data associated with `a_type_name'.
+			-- If the data of `a_type_name' is a constant, then create a new constant_context
+			-- within the system, and return the integer data of the constant.
+			-- Should only be user while loading a project from XML, and after a call to 
+			-- `get_unique_full_info'.
+		require
+			a_type_name_not_void: a_type_name /= Void
+		local
+			string_constant: GB_STRING_CONSTANT
+			element_info: ELEMENT_INFORMATION
+			constant_context: GB_CONSTANT_CONTEXT
+		do
+			element_info := full_information @ a_type_name
+			if element_info /= Void then
+				if element_info.is_constant then
+					string_constant ?= Constants.all_constants.item (element_info.data)
+					create constant_context.make_with_context (string_constant, object, type, a_type_name)
+					string_constant.add_referer (constant_context)
+					object.add_constant_context (constant_context)
+					Result := string_constant.value
+				else
+					Result := element_info.data
+				end
+			end				
+		end
+		
 	add_integer_element (element: XM_ELEMENT; name: STRING; current_value: INTEGER) is
 			-- Add an element containing an INTEGER to `element', with name `name' and
 			-- value `current_value' if no constant is specified, of the value of the constant
@@ -340,6 +373,21 @@ feature {NONE} -- Implementation
 				add_element_containing_integer_constant (element, name, object.constants.item (type + name).constant.name)
 			else
 				add_element_containing_integer (element, name, current_value)
+			end
+		end
+		
+	add_string_element (element: XM_ELEMENT; name: STRING; current_value: STRING) is
+			-- Add an element containing a STRING to `element', with name `name' and
+			-- value `current_value' if no constant is specified, of the value of the constant
+			-- in another constant element, if the current setting is represented by a constant.
+		require
+			element_not_void: element /= Void
+			name_not_void: name /= Void
+		do	
+			if object.constants.item (type + name) /= Void then
+				add_element_containing_integer_constant (element, name, object.constants.item (type + name).constant.name)
+			else
+				add_element_containing_string (element, name, current_value)
 			end
 		end
 		

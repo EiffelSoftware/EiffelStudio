@@ -147,8 +147,7 @@ feature {VALIDATOR_TOOL_DIALOG} -- Validation
 				invalid_files.wipe_out
 				progress_generator.set_title ("File Validation")
 				progress_generator.set_upper_range (documents.count)
---				progress_generator.set_procedure (agent validate_against_xml)
-				progress_generator.set_procedure (agent format_all_files)
+				progress_generator.set_procedure (agent validate_against_xml)
 				progress_generator.set_heading_text ("Validating project files...")				
 				progress_generator.generate	
 			end
@@ -346,35 +345,6 @@ feature {NONE} -- Implementation
 					if not invalid_files.has (l_document.name) then
 						add_invalid_file (l_document.name)
 					end
-				end
-				l_documents.forth
-				progress_generator.update_progress_report
-			end
-		end	
-		
-	format_all_files is
-			-- Validate all files for XML validity
-		local
-			l_documents: ARRAYED_LIST [DOCUMENT]
-			l_document: DOCUMENT
-		do		
-			from
-				l_documents := documents
-				l_documents.start
-			until
-				l_documents.after
-			loop
-				l_document := l_documents.item
-				progress_generator.set_status_text (l_document.name)
-				if not l_document.is_valid_xml then
-					if not invalid_files.has (l_document.name) then
-						add_invalid_file (l_document.name)
-					end
-				else
-					format_document (deserialize_text (l_document.text), l_document.name)
-					l_document.set_text (last_ostring)
-					l_document.set_text (pretty_xml (l_document.text))
-					l_document.save
 				end
 				l_documents.forth
 				progress_generator.update_progress_report

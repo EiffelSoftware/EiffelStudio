@@ -92,10 +92,7 @@ feature {NONE} -- Initialization
 			toolbar_validate.select_actions.extend 			(agent Shared_document_editor.validate_document)
 			toolbar_properties.select_actions.extend 		(agent open_document_properties_dialog)
 			output_combo.select_actions.extend 				(agent update_output_filter)
-			
-					-- Temporary toolbar button
-			testing_button.select_actions.extend (agent Shared_document_editor.do_document_test)
-			
+											
 					-- TOC Widget Events
 			toc_new_button.select_actions.extend 			(agent open_new_toc_dialog)
 			toc_open_button.select_actions.extend 			(agent Shared_toc_manager.open_toc)

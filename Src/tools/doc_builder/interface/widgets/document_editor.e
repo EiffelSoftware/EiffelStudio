@@ -397,16 +397,4 @@ feature {NONE} -- Implementation
 			end			
 		end		
 
-feature -- Temporary
-
-	do_document_test is
-			-- Do testing on current document
-		local
-			l_xml: XML_ROUTINES
-		do
-			create l_xml
-			l_xml.format_document (l_xml.deserialize_text (current_document.text), current_document.name)
-			current_document.set_text (l_xml.last_ostring)
-		end	
-
 end -- class DOCUMENT_EDITOR

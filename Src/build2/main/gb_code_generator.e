@@ -203,7 +203,7 @@ feature {NONE} -- Implementation
 				
 				set_progress (0.8)
 					-- Generate the widget building code.
-				generate_structure (current_document.root_element, 1, "")
+				generate_structure (current_document.root_element, 1, "", "")
 				
 				set_progress (0.9)
 					-- Generate the widget setting code.
@@ -293,7 +293,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	generate_structure (element: XML_ELEMENT; depth: INTEGER; parent_name: STRING) is
+	generate_structure (element: XML_ELEMENT; depth: INTEGER; parent_name, parent_type: STRING) is
 			-- With information in `element', generate code which will
 			-- parent all objects.
 		local
@@ -306,7 +306,6 @@ feature {NONE} -- Implementation
 			found_name: STRING
 			menu_bar_object: GB_MENU_BAR_OBJECT
 		do
-			
 				-- Retrieve the current type represented by `element'.
 			if element.has_attribute_by_name (type_string) then
 				current_type := element.attribute_by_name (type_string).value.to_utf8
@@ -323,7 +322,7 @@ feature {NONE} -- Implementation
 						if found_name = Void then
 							found_name := ""
 						end
-						generate_structure (current_element, depth + 1, found_name)
+						generate_structure (current_element, depth + 1, found_name, current_type)
 					else
 						if current_name.is_equal (Internal_properties_string) and depth > 2 then
 								full_information := get_unique_full_info (current_element)
@@ -342,12 +341,17 @@ feature {NONE} -- Implementation
 									if menu_bar_object /= Void then
 										add_build ("set_menu_bar (" + element_info.data + ")")
 									else
-										add_build (new_object.extend_xml_representation (element_info.data))						
+										if not parent_type.is_equal ("EV_TABLE") then
+											add_build (new_object.extend_xml_representation (element_info.data))						
+										end
 									end
 								else
-									add_build (parent_name + "." + new_object.extend_xml_representation (element_info.data))
-										-- Store the parent and child attribute names in `parent_child'.
-									
+										-- Tables need to use put, but this is done in conjunction with the placement.
+										-- So here, we do not add the children of the table, as it will be done later.
+									if not parent_type.is_equal ("EV_TABLE") then
+										add_build (parent_name + "." + new_object.extend_xml_representation (element_info.data))
+									end
+										-- Store the parent and child attribute names in `parent_child'.									
 									parent_child.extend (parent_name)
 									parent_child.extend (element_info.data)
 								end

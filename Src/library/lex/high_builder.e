@@ -706,8 +706,8 @@ feature {NONE}
 
 	remove_separators is
 			-- Remove ' ' '\n' and '\t' of description except
-			-- when there are between quotes.
-			-- This routine also compute description_length.
+			-- when they are between quotes.
+			-- This routine also computes description_length.
 		require
 			dollar_in_description: description.item (description.count) = '%/001/'
 		local

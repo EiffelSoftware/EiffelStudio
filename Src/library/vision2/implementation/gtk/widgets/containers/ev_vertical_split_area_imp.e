@@ -1,3 +1,4 @@
+--| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 
@@ -52,6 +53,9 @@ end -- class EV_VERTICAL_SPLIT_AREA_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/02/17 21:46:49  oconnor
+--| unrelased
+--|
 --| Revision 1.5  2000/02/14 11:40:32  oconnor
 --| merged changes from prerelease_20000214
 --|

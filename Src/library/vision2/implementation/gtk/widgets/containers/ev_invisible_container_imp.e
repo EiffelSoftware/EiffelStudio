@@ -1,3 +1,4 @@
+--| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 
@@ -62,6 +63,9 @@ end -- class EV_INVISIBLE_CONTAINER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/02/17 21:46:49  oconnor
+--| unrelased
+--|
 --| Revision 1.6  2000/02/14 11:40:31  oconnor
 --| merged changes from prerelease_20000214
 --|

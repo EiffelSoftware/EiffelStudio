@@ -131,6 +131,9 @@ feature -- Access
 			-- using creation expression, since type checking 
 			-- on CREATION_EXPR_AS will report a not sufficiently
 			-- exported creation routine.
+			
+	last_conversion_info: CONVERSION_INFO
+			-- Information about last conversion
 
 feature -- Setting
 
@@ -221,6 +224,14 @@ feature -- Setting
 		do
 			locals := l;
 		end;
+
+	set_last_conversion_info (l: like last_conversion_info) is
+			-- Assign `l' to `last_conversion_info'.
+		do
+			last_conversion_info := l
+		ensure
+			last_conversion_info_set: last_conversion_info = l
+		end
 
 	feature_name_id: INTEGER is
 			-- Name of the current feature analyzed
@@ -430,6 +441,7 @@ feature -- Managing the type stack
 			creation_types.wipe_out;
 			parameters.wipe_out;
 			instruction_line.wipe_out;
+			last_conversion_info := Void
 			level1 := False;
 			level2 := False;
 			level3 := False;

@@ -98,6 +98,12 @@ EIF_INTEGER c_errorno()
 	return (EIF_INTEGER) errno;
 }
 
+void c_reset_error()
+	/*x Reset the global last error number variable */
+{
+	errno = 0;
+}
+
 EIF_INTEGER family_no_support()
 	/*x Address family not supported by protocol family */
 {

@@ -36,15 +36,21 @@ feature
 
 	poll: MEDIUM_POLLER
 
-	make_chat is
+	make_chat (argv: ARRAY [STRING]) is
 		do
-			make (2000)
-			max_to_poll := 1
-			!!poll.make_read_only
-			!!connections.make
-			connections.compare_objects
-			in.set_non_blocking
-			execute
+			if argv.count /= 2 then
+				io.error.putstring ("Usage: ")
+				io.error.putstring (argv.item (0))
+				io.error.putstring (" port_number%N")
+			else	
+				make (argv.item (1).to_integer)
+				max_to_poll := 1
+				!!poll.make_read_only
+				!!connections.make
+				connections.compare_objects
+				in.set_non_blocking
+				execute
+			end
 		rescue
 			io.error.putstring ("IN RESCUE%N")
 			!!message_out.make_message

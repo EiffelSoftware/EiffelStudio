@@ -1,0 +1,36 @@
+CC = cl
+MAKE = nmake
+INCLUDE_PATH = $(EIFFEL4)\bench\spec\windows\include
+DELDIR = rmdir /S
+LN = copy 
+RM = del
+CP = copy
+FINISH_FREEZING = $(EIFFEL4)\bench\spec\windows\bin\finish_freezing
+ES4 = $(EIFFEL4)\bench\spec\windows\bin\es4
+CFLAGS = -DEIF_WIN32
+LIBS = 
+OBJECT = main.obj
+VERSION_NUMBER=43
+
+all: fext.obj compile_eiffel compile_c  mklink 
+
+compile_eiffel:
+	$(ES4) -freeze
+compile_c:
+	cd EIFGEN\W_code
+	$(FINISH_FREEZING)
+	cd ..\..
+mklink: 
+	$(LN) EIFGEN\W_code\tst.exe tst.exe
+	$(LN) EIFGEN\W_code\tst.melted tst.melted
+
+fext.obj: fext.c
+	$(CC) -DVERSION=$(VERSION_NUMBER) -I$(INCLUDE_PATH) -c fext.c 
+clean:
+	$(RM) fext.obj 
+	$(RM) core 
+	$(RM) tst.epr
+	$(RM) tst.exe
+	$(RM) tst.melted
+	$(DELDIR) EIFGEN
+	

@@ -295,7 +295,7 @@ feature {CLUSTER_FIGURE} -- Status setting
 			a_cluster_not_void: a_cluster /= Void
 			a_cluster_in_diagram: cluster_layer.has (a_cluster)
 		local
-			l: EXTEND_TABLE [CLASS_I, STRING]
+			l: HASH_TABLE [CLASS_I, STRING]
 		do
 			l := a_cluster.cluster_i.classes
 			from
@@ -724,7 +724,7 @@ feature {NONE} -- Synchronizing
 			a_cluster_not_void: a_cluster /= Void
 			a_cluster_in_diagram: cluster_layer.has (a_cluster)
 		local
-			l: EXTEND_TABLE [CLASS_I, STRING]
+			l: HASH_TABLE [CLASS_I, STRING]
 			fig: CLASS_FIGURE
 		do
 			l := a_cluster.cluster_i.classes

@@ -92,7 +92,7 @@ feature -- Access
 	classes: SORTED_TWO_WAY_LIST [CLASS_I] is
 			-- All classes from `clusters'.
 		local
-			cl: EXTEND_TABLE [CLASS_I, STRING]
+			cl: HASH_TABLE [CLASS_I, STRING]
 		do
 			create Result.make
 			from clusters.start until clusters.after loop
@@ -116,7 +116,7 @@ feature -- Access
 		require
 			cluster_not_void: cluster /= Void
 		local
-			cl: EXTEND_TABLE [CLASS_I, STRING]
+			cl: HASH_TABLE [CLASS_I, STRING]
 		do
 			create Result.make
 			cl := cluster.classes

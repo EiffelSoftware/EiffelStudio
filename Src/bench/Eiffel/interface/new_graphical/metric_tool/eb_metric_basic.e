@@ -138,7 +138,7 @@ feature -- Default agents
 			cluster_set: s.cluster_i /= Void
 		local
 			sub_clusters: ARRAYED_LIST [CLUSTER_I]
-			classes: EXTEND_TABLE [CLASS_I, STRING]
+			classes: HASH_TABLE [CLASS_I, STRING]
 			a_class_scope, scope: EB_METRIC_SCOPE
 			progress_value: INTEGER
 		do

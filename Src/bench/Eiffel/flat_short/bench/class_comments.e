@@ -8,7 +8,7 @@ indexing
 class CLASS_COMMENTS
 
 inherit
-	EXTEND_TABLE [EIFFEL_COMMENTS, INTEGER]
+	HASH_TABLE [EIFFEL_COMMENTS, INTEGER]
 		rename
 			make as table_make
 		export

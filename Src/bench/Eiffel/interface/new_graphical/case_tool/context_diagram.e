@@ -1041,7 +1041,7 @@ feature {EB_CONTEXT_EDITOR, EB_SELECT_DEPTH_COMMAND} -- Synchronizing
 			-- Display progress bar if `progress_dialog' exists.
 		local
 			current_cluster_i: CLUSTER_I
-			class_list: EXTEND_TABLE [CLASS_I, STRING]
+			class_list: HASH_TABLE [CLASS_I, STRING]
 			cf: CLASS_FIGURE
 		do
 			if not cancelled then

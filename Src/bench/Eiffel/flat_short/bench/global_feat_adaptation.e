@@ -101,11 +101,11 @@ feature -- Properties
 
 	target_feature_table: FEATURE_TABLE;
 
-	source_locals: EXTEND_TABLE [TYPE_A, STRING];
+	source_locals: HASH_TABLE [TYPE_A, STRING];
 			-- Evaluated local types of source_enclosing_feature
 			-- in source_enclosing_class
 
-	target_locals: EXTEND_TABLE [TYPE_A, STRING];
+	target_locals: HASH_TABLE [TYPE_A, STRING];
 			-- Evaluated local types of target_enclosing_feature
 			-- in target_enclosing_class
 
@@ -278,7 +278,7 @@ feature {FORMAT_CONTEXT} -- Implementation
 			-- Set source_locals and target_locals
 			-- according to feature as `source_as'.
 		local
-			s_locals: EXTEND_TABLE [LOCAL_INFO, STRING]
+			s_locals: HASH_TABLE [LOCAL_INFO, STRING]
 			old_cluster: CLUSTER_I
 			s_type, t_type: TYPE_A
 			l_name: STRING

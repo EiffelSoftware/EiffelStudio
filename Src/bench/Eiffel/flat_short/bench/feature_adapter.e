@@ -62,7 +62,7 @@ feature -- Element change
 			i, l_count: INTEGER
 			list: ARRAYED_LIST [FEATURE_I]
 			t_feat: FEATURE_I
-			rep_table: EXTEND_TABLE [ARRAYED_LIST [FEATURE_I], INTEGER]
+			rep_table: HASH_TABLE [ARRAYED_LIST [FEATURE_I], INTEGER]
 			f_name: FEATURE_NAME
 			is_precompiled: BOOLEAN
 		do

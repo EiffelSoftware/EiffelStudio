@@ -60,7 +60,7 @@ feature -- Actions
 			-- Exports XMI, according to the user selection.
 		local
 			current_compiled_class: CLASS_C
-			current_cluster: EXTEND_TABLE[CLASS_I,STRING]
+			current_cluster: HASH_TABLE[CLASS_I,STRING]
 			current_cluster_id: INTEGER
 			new_xmi_cluster: XMI_CLUSTER
 			new_xmi_class: XMI_CLASS

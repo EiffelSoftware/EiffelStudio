@@ -106,7 +106,7 @@ feature {NONE} -- Execution
 			cluster: CLUSTER_I;
 			cluster_name: STRING;
 			matcher: KMP_WILD
-			classes: EXTEND_TABLE [CLASS_I, STRING]
+			classes: HASH_TABLE [CLASS_I, STRING]
 		do
 			if (choice /= Void) and then (arg = choice) then
 				check

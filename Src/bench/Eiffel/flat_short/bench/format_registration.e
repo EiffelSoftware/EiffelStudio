@@ -64,7 +64,7 @@ feature -- Properties
 	target_feature_table: FEATURE_TABLE;
 			-- Feature table for target_class
 
-	creators: EXTEND_TABLE [EXPORT_I, STRING]
+	creators: HASH_TABLE [EXPORT_I, STRING]
 			-- Creators of `target_class'
 
 	current_class: CLASS_C;
@@ -100,7 +100,7 @@ feature -- Properties
 	invariant_server: INVARIANT_SERVER;
 			-- Invariant server
 
-	target_replicated_feature_table: EXTEND_TABLE [
+	target_replicated_feature_table: HASH_TABLE [
 			ARRAYED_LIST [FEATURE_I], INTEGER];
 	   		-- Table containing replicated (conceptual) features of
 	   		-- class being flattend indexed by body_index

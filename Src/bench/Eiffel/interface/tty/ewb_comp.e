@@ -9,6 +9,11 @@ feature
 
 	name: STRING is "compile";
 
+	loop_execute is
+		do
+			execute
+		end;
+
 	execute is
 		do
 			init_project;

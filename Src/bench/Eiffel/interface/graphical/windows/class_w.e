@@ -15,12 +15,13 @@ inherit
 	BAR_AND_TEXT
 		rename
 			make as normal_create,
-			build_edit_bar as old_build_edit_bar
+			build_edit_bar as old_build_edit_bar,
+			reset as old_reset
 		redefine
 			text_window, build_format_bar, hole,
 			tool_name, open_command, save_command,
 			save_as_command, quit_command, editable,
-			create_edit_buttons
+			create_edit_buttons, set_default_position
 		end;
 	BAR_AND_TEXT
 		rename
@@ -29,9 +30,10 @@ inherit
 			text_window, build_format_bar, hole,
 			tool_name, open_command, save_command,
 			save_as_command, quit_command, editable,
-			build_edit_bar, create_edit_buttons
+			build_edit_bar, create_edit_buttons, reset,
+			set_default_position
 		select
-			build_edit_bar
+			build_edit_bar, reset
 		end
 
 creation
@@ -54,6 +56,13 @@ feature
 		do
 			--Result := class_name_tf.text.empty or else
 						--Universe.class_stone (class_name_tf.text)
+		end;
+
+	reset is
+			-- Reset the window contents
+		do
+			old_reset;
+			change_class_command.clear
 		end;
 
 	save_new_class (c_name: STRING; f_name: STRING) is
@@ -84,6 +93,7 @@ feature
 		require
 			valid_arg: s /= Void
 		do
+			s.to_upper;
 			change_class_command.set_text (s);
 		end;
 
@@ -180,6 +190,14 @@ feature {NONE}
 			valid_arg: (s /= Void) and then not s.empty
 		do
 			format_label.set_text (s);
+		end;
+
+	set_default_position is
+        local
+            i: INTEGER;
+        do
+            i := 10 * window_manager.class_windows_count;
+			set_x_y (220 + i, 100 + i)
 		end;
 
 	showflat_command: SHOW_FLAT;

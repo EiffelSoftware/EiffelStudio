@@ -49,6 +49,9 @@ feature
 --get_xterm_in_xterminal (xterm_name);
 		end;
 
+    set_default_position is do end;
+    set_default_size is do end;
+
 	close_windows is do end;
 
 	popup_file_selection is

@@ -9,6 +9,8 @@ feature
 
 	name: STRING is "clean";
 
+	loop_execute is do end;
+
 	execute is
 		do
 			if confirmed then

@@ -314,7 +314,12 @@ static int get_string()
 	} else {
 		end_position++;
 		*s= '\0';
-		return TE_STRING;
+		if (s == token_str)
+				/* empty string (it is allowed only in some
+					manifest strings) */
+			return EIF_ERROR6;
+		else
+			return TE_STRING;
 	}
 }
 

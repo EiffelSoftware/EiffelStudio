@@ -56,10 +56,10 @@ feature
 			Result := System.onbidt
 		end;
 
-    updated_id (i: INTEGER): INTEGER is
-        do
-            Result := ontable.item (i)
-        end;
+	updated_id (i: INTEGER): INTEGER is
+		do
+			Result := ontable.item (i)
+		end;
 
 	useless_body_ids: ARRAY [INTEGER];
 			-- Set of body ids which have to desappear after a successfull

@@ -26,12 +26,6 @@ feature
 		deferred
 		end;
 
-	a_type (a_cluster: CLUSTER_I): TYPE_A is
-			-- Returns the actual type associated in the
-			-- context of `a_cluster'
-		do
-		end;
-
 	trace is
 		do
 			io.error.putstring (dump);

@@ -3,33 +3,29 @@ class EDITOR_MGR
 
 inherit
 
-	GRAPHICS;
 	CURSOR_W;
+	GRAPHICS;
 	
 feature {NONE}
-
-	editor_type: BAR_AND_TEXT;
-
-feature 
 
 	active_editors: LINKED_LIST [like editor_type];
 			-- Editors currently active 
 
-feature {NONE}
+	editor_type: BAR_AND_TEXT;
+			-- Abstract window type. Redefined in descendants
+			-- for specific window creation
 
 	free_list: LINKED_LIST [like editor_type];
 			-- Editors that has been requested to be destroyed 
 
 	free_list_max: INTEGER;
 
-	identifier: STRING;
-
 	screen: SCREEN;
+			-- Screen used for window creation
 
 	make (a_screen: SCREEN; i: INTEGER) is
 			-- Create a window manager. All editors will be create 
-			-- using `a_name' as the identifier and `a_screen' as
-			-- the parent.
+			-- with `a_screen' as the parent.
 		do
 			free_list_max := i;
 			screen := a_screen;
@@ -38,6 +34,11 @@ feature {NONE}
 		end;
 
 feature {WINDOW_MGR}
+
+	count: INTEGER is
+		do
+			Result := active_editors.count
+		end;
 
 	empty_editor: like editor_type is
 			-- Retrieve an empty editor. If not found
@@ -58,8 +59,8 @@ feature {WINDOW_MGR}
 		end;
 
 	editor: like editor_type is
-			-- Creates a new editor or retrieves a previously destroyed
-			-- (i.e. hidden) editor. 
+			-- Creates new editor. (Either creates one or
+			-- retrieves one from the free_list).
 		do
 			if
 				not free_list.empty
@@ -76,11 +77,13 @@ feature {WINDOW_MGR}
 		end;
 
 	has (ed: like editor_type): BOOLEAN is
+			-- Is editor `ed' displayed?
 		do
 			Result := active_editors.has (ed)
 		end;
 
 	hide_editors is
+			-- Hide all active editors.
 		do
 			from
 				active_editors.start
@@ -93,6 +96,7 @@ feature {WINDOW_MGR}
 		end;
 
 	show_editors is
+			-- Show all active editors.
 		local
 			ed: like editor_type
 		do
@@ -109,6 +113,7 @@ feature {WINDOW_MGR}
 		end;
 
 	remove (ed: like editor_type) is
+			-- Remove an editor `ed'.
 		do
 			active_editors.start;
 			active_editors.search (ed);
@@ -122,8 +127,27 @@ feature {WINDOW_MGR}
 					ed.destroy
 				else
 					free_list.add (ed)
-				end
+				end;
+			else
+					--| Should never happen but this is ultra
+					--| safe programming.
+				ed.hide;
+				ed.reset;
+				ed.destroy;
 			end;
+		end;
+
+	raise_editors is
+			-- Raise all active editors.
+		do
+			from
+				active_editors.start
+			until
+				active_editors.after
+			loop
+				active_editors.item.raise;
+				active_editors.forth
+			end
 		end;
 
 end 

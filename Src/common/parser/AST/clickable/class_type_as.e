@@ -7,7 +7,7 @@ inherit
 	TYPE
 		redefine
 			has_like, format, fill_calls_list, replicate,
-			check_constraint_type, a_type
+			check_constraint_type
 		end;
 	SHARED_INST_CONTEXT;
 	STONABLE
@@ -80,19 +80,14 @@ feature -- Conveniences
 
 	actual_type: CL_TYPE_A is
 			-- Actual class type without processing like types
-		do
-			Result := a_type (Inst_context.cluster);
-		end;
-
-	a_type (a_cluster: CLUSTER_I): CL_TYPE_A is
-			-- Returns the actual type associated in the
-			-- context of `a_cluster'
 		local
 			a_class: CLASS_C;
 			gen_type: GEN_TYPE_A;
 			actual_generic: ARRAY [TYPE_A];
 			i, count: INTEGER;
+			a_cluster: CLUSTER_I;
 		do
+			a_cluster := Inst_context.cluster;
 			if generics = Void then
 				!!Result;
 			else
@@ -173,7 +168,7 @@ feature -- Conveniences
 					end;
 					if vtug /= Void then
 						vtug.set_class (a_class);
-						vtug.set_type (a_type (cluster));
+						vtug.set_type (actual_type);
 						vtug.set_base_class (associated_class);
 						Error_handler.insert_error (vtug);
 					elseif generics /= Void then
@@ -202,8 +197,8 @@ feature -- Conveniences
 							if not error then
 								t2 := cl_generics.item.constraint;
 								if t2 /= Void then
-									t1.a_type (cluster).check_const_gen_conformance
-										(t2.a_type (cluster), a_class);
+									t1.actual_type.check_const_gen_conformance
+										(t2.actual_type, a_class);
 									error := Error_handler.new_error;
 								end;
 							end;
@@ -220,6 +215,9 @@ feature -- Conveniences
 		local
 			dumped_class_name: STRING;
 		do
+-- FIXME append_clickable_signature should be redefined
+-- some parts of the signature can be clickable !!!
+
 			!!Result.make (class_name.count);
 			dumped_class_name := class_name.duplicate;
 			dumped_class_name.to_upper;
@@ -231,7 +229,7 @@ feature -- Conveniences
 				until
 					generics.after
 				loop
-					generics.item.trace;
+					Result.append (generics.item.dump);
 					if not generics.islast then
 						Result.append (", ");
 					end;
@@ -264,6 +262,8 @@ feature -- stoning
 						Inst_context.cluster).compiled_class);
 			if generics /= void then
 				ctxt.put_special (" [");
+				ctxt.no_new_line_between_tokens;
+				ctxt.set_separator (", ");
 				generics.format (ctxt);
 				ctxt.put_special ("]");
 			end;

@@ -116,6 +116,11 @@ feature {NONE}
 			Result := pixmap_file_content ("quit.bm");
 		end;
 
+	bm_Removestop: PIXMAP is
+		do
+			Result := pixmap_file_content ("removestop.bm");
+		end;
+
 	bm_Routine: PIXMAP is
 		do
 			Result := pixmap_file_content ("routine.bm");
@@ -164,6 +169,11 @@ feature {NONE}
 	bm_Showancestors: PIXMAP is
 		do
 			Result := pixmap_file_content ("showancestors.bm");
+		end;
+
+	bm_Showhistory: PIXMAP is
+		do
+			Result := pixmap_file_content ("showhistory.bm");
 		end;
 
 	bm_Showattributes: PIXMAP is

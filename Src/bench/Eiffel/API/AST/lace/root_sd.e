@@ -50,6 +50,13 @@ feature -- Initialization
 			end;
 		end;
 
+	compile_all_classes: BOOLEAN is
+			-- Is the root class NONE, i.e. all the classes must be
+			-- compiled
+		do
+			Result := none_sd.is_equal (root_name)
+		end;
+
 	adapt is
 			-- Adapt system
 		local
@@ -61,7 +68,13 @@ feature -- Initialization
 			found: BOOLEAN;
 			vd29: VD29;
 			vd30: VD30;
+			id_sd: ID_SD;
+			compile_all: BOOLEAN;
 		do
+			if compile_all_classes then
+				compile_all := True;
+				root_name := any_sd;
+			end;
 			if cluster_mark = Void then
 				from
 					clusters := Universe.clusters;
@@ -114,8 +127,27 @@ feature -- Initialization
 			end;
 				-- Check sum error
 			Error_handler.checksum;
+
+				-- Reset `root_name'
+			if compile_all then
+				root_name := none_sd;
+			end;
 		end;
-		
+
+feature {NONE}
+
+	any_sd: ID_SD is
+		once
+			!!Result.make (3);
+			Result.append ("any")
+		end;
+
+	none_sd: ID_SD is
+		once
+			!!Result.make (4);
+			Result.append ("none")
+		end;
+
 feature -- stoning
  
 	stone (reference_class: CLASS_C): CLASSC_STONE is

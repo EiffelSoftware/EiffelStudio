@@ -5,7 +5,8 @@ inherit
 	FEATURE_I
 		rename
 			transfer_to as basic_transfer_to,
-			process_pattern as basic_process_pattern
+			process_pattern as basic_process_pattern,
+			check_expanded as basic_check_expanded
 		redefine
 			new_rout_unit, melt, access, generate, new_rout_id,
 			in_pass3, is_none_attribute, set_type, type, is_attribute,
@@ -18,9 +19,9 @@ inherit
 			new_rout_unit, melt, access, generate, new_rout_id,
 			in_pass3, is_none_attribute, set_type, type, is_attribute,
 			has_poly_unit, undefinable, to_generate_in, generation_class_id,
-			to_melt_in
+			to_melt_in, check_expanded
 		select
-			transfer_to, process_pattern
+			transfer_to, process_pattern, check_expanded
 		end;
 	SHARED_DECLARATIONS;
 	BYTE_CONST
@@ -116,6 +117,28 @@ feature
 			-- Has the current feature in class `a_class" ?
 		do
 			Result := a_class.id = generate_in
+		end;
+
+	check_expanded (class_c: CLASS_C) is
+			-- Check the expanded validity rules
+		local
+			vlec: VLEC;
+			solved_type: TYPE_A;
+		do
+			basic_check_expanded (class_c);
+			if class_c.is_expanded then
+				solved_type ?= type;
+				if
+					solved_type.is_expanded
+				and then
+					solved_type.associated_class = class_c
+				then
+					!!vlec;
+					vlec.set_class (solved_type.associated_class);
+					vlec.set_client (class_c);
+					Error_handler.insert_error (vlec);
+				end;
+			end;
 		end;
 
 	access (access_type: TYPE_I): ACCESS_B is

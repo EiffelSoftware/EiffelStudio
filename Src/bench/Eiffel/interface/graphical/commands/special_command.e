@@ -39,6 +39,6 @@ feature
 			Result := bm_Default 
 		end;
  
-	command_name: STRING is do Result := "ISE Eiffel3" end;
+	command_name: STRING is do Result := "ISE Eiffel3 (v3.2)" end;
 
 end

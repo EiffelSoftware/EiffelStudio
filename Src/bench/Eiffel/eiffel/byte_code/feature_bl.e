@@ -254,6 +254,9 @@ end;
 					-- deferred feature in which case we have to be careful
 					-- and get the routine name of the first entry in the
 					-- routine table.
+-- FIXME
+-- deferred routine => feature_name ?????
+
 				rout_table ?= entry;
 				internal_name := rout_table.feature_name (typ.type_id).twin;
 				generated_file.putstring (internal_name);

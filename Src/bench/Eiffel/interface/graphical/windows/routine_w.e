@@ -14,11 +14,13 @@ inherit
 	BAR_AND_TEXT
 		rename
 			attach_all as default_attach_all,
-			make as normal_create
+			make as normal_create,
+			reset as old_reset
 		redefine
 			hole, build_format_bar, text_window,
 			build_bar, tool_name, close_windows,
-			build_widgets
+			build_widgets, set_default_size,
+			set_default_position
 		end
 
 	BAR_AND_TEXT
@@ -27,9 +29,10 @@ inherit
 		redefine
 			hole, build_format_bar, text_window,
 			build_bar, tool_name, close_windows,
-			build_widgets, attach_all
+			build_widgets, attach_all, reset,
+			set_default_size, set_default_position
 		select
-			attach_all
+			attach_all, reset
 		end
 
 creation
@@ -46,11 +49,31 @@ feature
 			normal_create (a_screen);
 		end;
 
+	reset is
+			-- Reset the window contents
+		do
+			old_reset;
+			change_class_command.clear;
+			change_routine_command.clear;
+		end;
+	
+	update_edit_bar is
+		local
+			root_stone: FEATURE_STONE;
+			f_name: STRING
+		do
+			root_stone := text_window.root_stone;
+			if root_stone /= Void then
+				change_class_command.update_classc (root_stone.class_c);
+				change_routine_command.set_text (root_stone.feature_i.feature_name);
+			end
+		end; 
+	
 feature
 
 	build_widgets is
 		do
-			set_size (440, 500);
+			set_default_size;
 				!!text_window.make (new_name, global_form, Current);
 				!!edit_bar.make (new_name, global_form);
 				build_bar;
@@ -78,14 +101,30 @@ feature
 			global_form.attach_bottom (command_bar, 0);
 		end
 
+	change_class_command: CHANGE_CL_ROUT;
+	change_routine_command: CHANGE_ROUTINE;
+
 feature {NONE}
+
+	set_default_size is
+        do
+			set_size (600, 450)
+		end;
+
+	set_default_position is
+		local
+			i: INTEGER;
+		do
+			i := 10 * window_manager.routine_windows_count;
+			set_x_y (500 + i, i)
+		end;
 
 	close_windows is
 		do
-            search_command.close;
-            change_font_command.close (text_window);
+	   		search_command.close;
+	   		change_font_command.close (text_window);
 			debug_run_command.close
-        end;
+	   	 end;
 
 	tool_name: STRING is do Result := l_Routine end;
 
@@ -104,14 +143,17 @@ feature {NONE}
 --			!!next_command.make (format_bar, text_window);
 --			!!line_command.make (format_bar, text_window);
 --			!!continue_command.make (format_bar, text_window);
-
 			!!break_command.make (command_bar, text_window);
 				command_bar.attach_left (break_command, 0);
 				command_bar.attach_top (break_command, 100);
 
+			!!unbreak_command.make (command_bar, text_window);
+				command_bar.attach_left (unbreak_command, 0);
+				command_bar.attach_top_widget (break_command, unbreak_command, 0);
+
 			!!debug_showbreak.make (command_bar, text_window);
 				command_bar.attach_left (debug_showbreak, 0);
-				command_bar.attach_top_widget (break_command, debug_showbreak, 0);
+				command_bar.attach_top_widget (unbreak_command, debug_showbreak, 0);
 
 			!!debug_run_command.make (command_bar, text_window);
 				command_bar.attach_left (debug_run_command, 0);
@@ -133,9 +175,13 @@ feature {NONE}
 				format_bar.attach_top (showroutclients_command, 0);
 				format_bar.attach_left_widget (showtext_command, showroutclients_command, 0);
 
+			!!showhistory_command.make (format_bar, text_window);
+				format_bar.attach_top (showhistory_command, 0);
+				format_bar.attach_left_widget (showroutclients_command, showhistory_command, 0);
+
 			!!showpast_command.make (format_bar, text_window);
 				format_bar.attach_top (showpast_command, 0);
-				format_bar.attach_left_widget (showroutclients_command, showpast_command, 0);
+				format_bar.attach_left_widget (showhistory_command, showpast_command, 0);
 
 			!!showfuture_command.make (format_bar, text_window);
 				format_bar.attach_top (showfuture_command, 0);
@@ -154,10 +200,24 @@ feature {NONE}
 			-- Build top bar: editing commands.
 		local
 			quit_cmd: QUIT_FILE;
+			form: FORM;
+			label: LABEL;
 		do
+			edit_bar.set_fraction_base (2);
+			!!form.make ("", edit_bar);
+				!!label.make ("", form);
+				label.set_text ("from: ");
+				!!change_class_command.make (form, text_window);
+				form.attach_top (change_class_command, 0);
+				form.attach_top (label, 0);
+				form.attach_bottom (label, 0);
+				form.attach_left (label, 0);
+				form.attach_left_widget (label, change_class_command, 0);
+				form.attach_right (change_class_command, 0);
 			!!hole.make (edit_bar, Current);
 			!!class_hole.make (edit_bar, Current);
 			!!type_teller.make (new_name, edit_bar);
+			!!change_routine_command.make (edit_bar, text_window);
 			type_teller.set_center_alignment;
 			!!search_command.make (edit_bar, text_window);
 			!!change_font_command.make (edit_bar, text_window);
@@ -169,14 +229,22 @@ feature {NONE}
 
 				clean_type;
 
-				edit_bar.attach_left_widget (class_hole, type_teller, 0);
+				edit_bar.attach_top (form, 0);
+				edit_bar.attach_bottom (form, 0);
+				edit_bar.attach_top (change_routine_command, 0);
+				edit_bar.attach_bottom (change_routine_command, 0);
 				edit_bar.attach_top (type_teller, 0);
-				edit_bar.attach_right_widget (search_command, type_teller, 0);
+				edit_bar.attach_left_widget (class_hole, type_teller, 0);
+				edit_bar.attach_left (change_routine_command, 170);
 				edit_bar.attach_bottom (type_teller, 0);
 				edit_bar.attach_top (search_command, 0);
-				edit_bar.attach_right_widget (change_font_command, search_command, 25);
+				edit_bar.attach_left_position (form, 1);
+				edit_bar.attach_right_position (change_routine_command, 1);
+				edit_bar.attach_right_widget (change_routine_command, type_teller, 0);
+				edit_bar.attach_right_widget (search_command, form, 0);
+				edit_bar.attach_right_widget (change_font_command, search_command, 0);
 				edit_bar.attach_top (change_font_command, 0);
-				edit_bar.attach_right_widget (quit_cmd, change_font_command, 25);
+				edit_bar.attach_right_widget (quit_cmd, change_font_command, 10);
 				edit_bar.attach_top (quit_cmd, 0);
 				edit_bar.attach_right (quit_cmd, 0);
 		end;
@@ -188,10 +256,12 @@ feature {NONE}
 --	continue_command: CONTINUE;
 --	break_command: SET_BREAKPOINT;
 	break_command: DEBUG_STOPIN;	
+	unbreak_command: DEBUG_NOSTOPIN;	
 	debug_quit_command: DEBUG_QUIT;
 	showroutclients_command: SHOW_ROUTCLIENTS;
 	debug_showbreak: DEBUG_SHOWBREAK;
 	showpast_command: SHOW_PAST;
+	showhistory_command: SHOW_ROUT_HIST;
 	showfuture_command: SHOW_FUTURE;
 	showflat_command: SHOW_ROUT_FLAT;
 	shell_command: SHELL_COMMAND;

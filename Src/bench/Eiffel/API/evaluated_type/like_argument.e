@@ -63,7 +63,7 @@ feature -- Primitives
 			argument_type: TYPE;
 		do
 			if Like_control.is_on then
-				Error_handler.raise ("Like cycle");
+				Like_control.raise_error
 			else
 				argument_type := f.arguments.i_th (position);
 				Result := twin;

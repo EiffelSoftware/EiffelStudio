@@ -143,12 +143,13 @@ extern char token_str[];
 %token		EIF_ERROR3;
 %token		EIF_ERROR4;
 %token		EIF_ERROR5;
+%token		EIF_ERROR6;
 %token		EIF_ERROR7;
 
 
 %type <node> Class_declaration Indexing Index Index_clause Identifier Index_value
 Manifest_constant Boolean_constant Character_constant Integer_constant
-Real_constant Bit_constant Manifest_string Obsolete Feature_clause
+Real_constant Bit_constant Non_empty_string Manifest_string Obsolete Feature_clause
 Feature_clause_list
 Clients Feature_declaration
 Declaration_body Inheritance Parent Rename New_exports New_export_item
@@ -395,12 +396,12 @@ Prefix:
 	;
 
 Infix_operator:
-	TE_STRING
+	Manifest_string
 		{
 		extern int is_infix();
 
 		$$ = click_list_push ();
-		click_list_set (create_string (token_str), $$);
+		click_list_set ($1, $$);
 
 		if (0 == is_infix(token_str))	/* Check infixed declaration */
 			yyerror((char *) 0);
@@ -408,12 +409,12 @@ Infix_operator:
 	;
 
 Prefix_operator:
-	TE_STRING
+	Manifest_string
 		{
 		extern int is_prefix();
 
 		$$ = click_list_push ();
-		click_list_set (create_string (token_str), $$);
+		click_list_set ($1, $$);
 
 		if (0 == is_prefix(token_str))	/* Check prefixed declaration */
 			yyerror((char *) 0);
@@ -637,13 +638,13 @@ Routine_body: 				Internal
 								{$$ = create_node(DEFERRED_AS);}
 	;
 
-External:					TE_EXTERNAL Manifest_string External_name
+External:					TE_EXTERNAL Non_empty_string External_name
 								{$$ = create_node2(EXTERNAL_AS,$2,$3);}
 	;
 
 External_name:				/* empty */
 								{$$ = NULL;}
-	|						TE_ALIAS Manifest_string
+	|						TE_ALIAS Non_empty_string
 								{$$ = $2;}
 	;
 
@@ -988,9 +989,9 @@ Debug_keys:					/* empty */
 								{$$ = list_new(CONSTRUCT_LIST_AS);}
 	;
 
-Debug_key_list:				Manifest_string
+Debug_key_list:				Non_empty_string
 								{list_push($1);}
-	|						Debug_key_list TE_COMMA Manifest_string
+	|						Debug_key_list TE_COMMA Non_empty_string
 								{list_push($3);}
 	;
 							
@@ -1314,6 +1315,12 @@ Bit_constant:			TE_A_BIT
 	;
 
 Manifest_string:		TE_STRING
+							{$$ = create_string(token_str);}
+	|					EIF_ERROR6
+							{$$ = create_string(token_str);}
+	;
+
+Non_empty_string:		TE_STRING
 							{$$ = create_string(token_str);}
 	;
 

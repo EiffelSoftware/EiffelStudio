@@ -1,4 +1,5 @@
 -- Error when there is twice or more a feature name in a selection clause
+-- The error code is in fact VMSS2 !!!!
 
 class VMSS3
 

@@ -20,12 +20,29 @@ feature {NONE}
 
 	work (argument: ANY) is
 			-- Open a file.
+		local
+			fn: STRING;
+			f: UNIX_FILE;
+			temp: STRING
 		do
 			if argument = warner then
 				-- The user has eventually been warned that he will lose his stuff
 				name_chooser.call (Current) 
 			elseif argument = name_chooser then
-				text_window.show_file (name_chooser.selected_file)
+				fn := name_chooser.selected_file.duplicate;
+				!! f.make (fn);
+				if
+					f.exists and then f.is_readable and then f.is_plain
+				then
+					text_window.show_file (fn);
+					text_window.display_header (fn)
+				else
+					!!temp.make (0);
+					temp.append ("File: ");
+					temp.append (fn);
+					temp.append ("%Ncannot be read. Try again?");
+					warner.custom_call (Current, temp, " Ok ", Void, "Cancel");
+				end
 			else
 				-- First click on open
 				if text_window.changed then

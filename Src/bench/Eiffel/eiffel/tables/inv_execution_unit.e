@@ -32,7 +32,8 @@ feature
 			assoc: CLASS_C;
 		do
 			assoc := associated_class;
-			Result := assoc /= Void and then assoc.has_invariant
+			Result := assoc /= Void and then assoc.has_invariant and then
+				assoc.invariant_feature.body_id = body_id
 		end;
 
 	associated_class: CLASS_C is

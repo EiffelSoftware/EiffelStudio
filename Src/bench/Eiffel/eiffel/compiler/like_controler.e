@@ -10,7 +10,6 @@ inherit
 			off as linked_set_off,
 			wipe_out as old_wipe_out
 		end;
-
 	LINKED_SET [INTEGER]
 		rename
 			off as linked_set_off
@@ -18,8 +17,9 @@ inherit
 			wipe_out, make
 		select
 			wipe_out, make
-		end
-
+		end;
+	EXCEPTIONS;
+	SHARED_RESCUE_STATUS
 
 creation
 
@@ -60,6 +60,12 @@ feature
 			is_on := False;
 		ensure then 
 			not_active: not is_on;
+		end;
+
+	raise_error is
+		do
+			Rescue_status.set_is_like_exception (True);
+			raise ("Like cycle");
 		end;
 
 end

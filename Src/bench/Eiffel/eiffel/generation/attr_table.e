@@ -43,16 +43,47 @@ feature
 			-- the maximum entry id ?
 		local
 			pos: INTEGER;
+			current_type_id: INTEGER;
+			entry: ATTR_ENTRY;
+			cl_type: CLASS_TYPE;
+			first_class: CLASS_C;
 		do
 			pos := position;
-			goto_used (type_id);
-			if not after then
+				-- If it is not a poofter finalization
+				-- we have a quicker algorithm handy.
+			if not System.poofter_finalization then
+				goto_used (type_id);
+				if not after then
+					from
+						cl_type := System.class_type_of_id (type_id);
+						first_class := cl_type.associated_class;
+						forth
+					until
+						after or else Result
+					loop
+						entry := item;
+						cl_type := System.class_type_of_id (entry.type_id);
+						if cl_type.associated_class.conform_to (first_class) then
+							Result := item.used;
+						end;
+						forth
+					end;
+				end;
+			else
 				from
-					forth
+					cl_type := System.class_type_of_id (type_id);
+					first_class := cl_type.associated_class;
+					start
 				until
 					after or else Result
 				loop
-					Result := item.used;
+					current_type_id := item.type_id;
+					if current_type_id /= type_id then
+						cl_type := System.class_type_of_id (current_type_id);
+						if cl_type.associated_class.conform_to (first_class) then
+							Result := item.used
+						end;
+					end;
 					forth
 				end;
 			end;

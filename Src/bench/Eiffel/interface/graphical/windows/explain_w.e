@@ -6,7 +6,7 @@ inherit
 	BAR_AND_TEXT
 		redefine
 			text_window, build_format_bar, hole,
-			tool_name
+			tool_name, set_default_position
 		end
 
 creation
@@ -36,5 +36,13 @@ feature {NONE}
 
 	hole: EXPLAIN_HOLE;
 			-- Hole caraterizing current
+
+	set_default_position is
+        local
+            i: INTEGER;
+        do
+            i := 10 * window_manager.explain_windows_count;
+			set_x_y (600 + i, i)
+		end;
 
 end

@@ -24,6 +24,11 @@
 #include <pwd.h>
 #include <grp.h>
 
+#ifdef I_STRING
+#include <string.h>
+#else
+#include <strings.h>
+#endif
 #ifdef I_TIME
 #include <time.h>
 #endif
@@ -50,6 +55,7 @@
 #define FS_END		2			/* End of file for `fseek' */
 #define ST_MODE		0x0fff		/* Keep only permission mode */
 #define NAME_MAX	10			/* Maximum length for user/group name */
+#define PATH_MAX	512			/* Maximum length of full path name */
 
 private char *file_fopen();		/* Open file */
 private char *file_fdopen();	/* Open file descriptor (UNIX specific) */
@@ -390,7 +396,7 @@ FILE *f;
 	double d;     
 
 	errno = 0;
-	if (0 > fscanf(f, "%f", &d))
+	if (0 > fscanf(f, "%lf", &d))
 		eio();
 	swallow_nl(f);
 
@@ -622,7 +628,8 @@ struct stat *buf;		/* Structure to fill in */
 	for (;;) {
 		errno = 0;						/* Reset error condition */
 #ifdef HAS_LSTAT
-		status = lstat(path, buf);		/* Watch for symbolic links */
+	/* We do not use lstat anymore -- Fred */
+		status = stat(path, buf);		/* Watch for symbolic links */
 #else
 		status = stat(path, buf);		/* Get file statistics */
 #endif
@@ -1109,7 +1116,16 @@ char *path;
 	 * with no write permissions...
 	 */
 
-	/* FIXME */
+	char temp [PATH_MAX];
+	char *ptr;
+
+	strcpy (temp, path);
+	ptr = rindex(temp, '/');
+	if (ptr != (char *) 0)
+		*ptr = '\0';
+	else
+		strcpy (temp, ".");
+	return (-1 != access(temp, W_OK)) ? '\01' : '\0';
 }
 
 public long file_fd(f)

@@ -3,12 +3,11 @@ class EWB_FS
 
 inherit
 
-	EWB_CMD;
-	SHARED_SERVER
+	EWB_CMD
 
 creation
 
-	make
+	make, null
 
 feature -- Creation
 
@@ -31,6 +30,16 @@ feature
 
 	name: STRING is "print %"flat-short%" form";
 
+	loop_execute is
+		do
+			get_class_name;
+			class_name := last_input;
+			class_name.to_lower;
+			troffed := False;
+			only_current_class := False;
+			execute;
+		end;
+
 	execute is
 		local
 			class_c: CLASS_C;
@@ -51,6 +60,7 @@ feature
 						io.error.putstring (" is not in the system%N");
 					else
 						!!ctxt.make (class_c);
+						ctxt.set_troff_format;
 						ctxt.set_is_short;
 						if only_current_class then
 							ctxt.set_current_class_only

@@ -35,7 +35,7 @@ feature -- making
 			is_valid
 		do
 			!!Result.make (0);
-			Result.append ("Routine: ");
+			Result.append ("Feature: ");
 			Result.append (feature_i.feature_name);
 			Result.append ("    Class: ");
 			Result.append (class_c.signature);
@@ -50,7 +50,10 @@ feature -- dragging
 			cn: STRING;
 		do
 			Result := normal_origin_text;
-			if (Result /= Void) then
+			if 
+				(Result /= Void) and then
+				Result.count >= end_position
+			then
 				Result := Result.substring (start_position, end_position);
 				!! temp.make (0);
 				temp.append ("-- Version from class: ");

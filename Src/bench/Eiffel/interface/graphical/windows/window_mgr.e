@@ -59,14 +59,23 @@ feature
 	display (ed: TOOL_W) is
 			-- Display `ed' (or raise `ed' if already
 			-- displayed).
+		local
+			bt: BAR_AND_TEXT
 		do
 			if
 				ed.realized
 			then
+				bt ?= ed;
 				if
 					not ed.shown
 				then
-					ed.show
+--					if bt /= Void then
+--						bt.set_default_size;
+--						bt.show;
+--						bt.set_default_position;
+--					else
+						ed.show;
+--					end;
 				else
 					ed.raise
 				end
@@ -113,5 +122,45 @@ feature
 			object_win_mgr.show_editors;
 			explain_win_mgr.show_editors;
 		end
+
+	raise_class_windows is
+		do
+			class_win_mgr.raise_editors
+		end;
+
+	raise_explain_windows is
+		do
+			explain_win_mgr.raise_editors
+		end;
+
+	raise_object_windows is
+		do
+			object_win_mgr.raise_editors
+		end;
+
+	raise_routine_windows is
+		do
+			routine_win_mgr.raise_editors
+		end;
+
+	class_windows_count: INTEGER is
+		do
+			Result := class_win_mgr.count
+		end;	
+
+	routine_windows_count: INTEGER is
+		do
+			Result := routine_win_mgr.count
+		end;	
+
+	object_windows_count: INTEGER is
+		do
+			Result := object_win_mgr.count
+		end;	
+
+	explain_windows_count: INTEGER is
+		do
+			Result := explain_win_mgr.count
+		end;	
 
 end 

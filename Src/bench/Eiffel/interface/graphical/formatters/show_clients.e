@@ -33,27 +33,10 @@ feature {NONE}
 	display_info (i: INTEGER; c: CLASSC_STONE) is
 			-- Display clients of `c' in tree form.
 		local
-			clients: LINKED_LIST [CLASS_C];
-			class_c, a_client: CLASS_C
+			ewb_clients: EWB_CLIENTS
 		do
-			text_window.put_string ("Clients of class ");
-			class_c := c.class_c;
-			class_c.append_clickable_signature (text_window);
-			text_window.put_string (":%N%N");
-			from
-				clients := class_c.clients;
-				clients.start
-			until
-				clients.after
-			loop
-				a_client := clients.item;
-				if (class_c /= a_client) then
-					text_window.put_string (tabs (1));
-					a_client.append_clickable_signature (text_window);
-					text_window.new_line;
-				end;
-				clients.forth
-			end
+			!! ewb_clients.null;
+			ewb_clients.display_clients (text_window, c.class_c);
 		end
 
 end

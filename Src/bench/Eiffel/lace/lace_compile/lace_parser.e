@@ -3,8 +3,8 @@ class LACE_PARSER
 inherit
 
 	SHARED_ERROR_HANDLER;
-	EXCEPTIONS;
 	MEMORY;
+	SHARED_RESCUE_STATUS
 
 feature
 
@@ -23,9 +23,10 @@ feature
 				Result := True;
 			end;
 		rescue
-			-- FIXME
+			if Rescue_status.is_unexpected_exception then
 				error_happened := True;
 				retry;
+			end
 		end;
 
 	parse_file (file_name: STRING) is
@@ -62,7 +63,7 @@ feature
 				end;
 			end;
 		rescue
-			if exception = Programmer_exception then
+			if Rescue_status.is_error_exception then
 				collection_on;
 					-- Close file in case of syntax error in lace file
 				if file /= Void then

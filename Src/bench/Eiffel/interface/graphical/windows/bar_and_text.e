@@ -11,7 +11,16 @@ inherit
 		end;
 	TOP_SHELL
 		rename
+			make as shell_make,
+			realize as shell_realize
+		end;
+	TOP_SHELL
+		rename
 			make as shell_make
+		redefine
+			realize
+		select
+			realize
 		end
 
 creation
@@ -28,8 +37,13 @@ feature
 			build_widgets;
 			set_icon_pixmap (hole.symbol);
 			set_icon_name (tool_name);
-			--realize;
 			transporter_init
+		end;
+
+	realize is
+		do
+			--set_default_position;
+			shell_realize
 		end;
 
 	set_default_format is
@@ -49,7 +63,7 @@ feature
 	build_widgets is
 			-- Build system widget.
 		do
-			set_size (440, 500);
+			set_default_size;
 				!!text_window.make (new_name, global_form, Current);
 				!!edit_bar.make (new_name, global_form);
 				build_bar;
@@ -57,6 +71,15 @@ feature
 				build_format_bar;
 				text_window.set_last_format (default_format);
 			attach_all
+		end;
+
+	set_default_size is
+		do
+			set_size (440, 500)
+		end;
+
+	set_default_position is
+		do
 		end;
 
 	showtext_command: SHOW_TEXT;

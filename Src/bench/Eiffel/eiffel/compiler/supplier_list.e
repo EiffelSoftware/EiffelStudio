@@ -102,6 +102,9 @@ feature {NONE}
 		local
 			id: INTEGER
 		do
+debug ("ACTIVITY")
+	io.error.putstring ("SUPPLIER_lIST.suppliers%N");
+end;
 			!!Result.make;
 			from
 				l.start
@@ -110,6 +113,10 @@ feature {NONE}
 			loop
 				id := l.item.id;
 				if not Result.has (id) then
+debug ("ACTIVITY")
+	io.error.putint (id);
+	io.error.new_line;
+end;
 					Result.add (id);
 				end;
 				l.forth
@@ -124,7 +131,9 @@ feature {NONE}
 			from
 				start
 			until	
-				item.supplier.id = id
+					-- The test for `after' is a defensive programming
+					-- test!!!
+				after or else item.supplier.id = id
 			loop
 				forth;
 			end;
@@ -160,6 +169,9 @@ feature {NONE}
 			id: INTEGER;
 			s: SORTED_SET [INTEGER];
 		do
+debug ("ACTIVITY")
+	trace;
+end;
 			s := suppliers (l);
 			from	
 				Result := True;
@@ -181,6 +193,7 @@ feature
 	trace is
 			-- Debug purpose
 		do
+			io.error.putstring ("SUPPLIER_LIST.trace%N");
 			from
 				start
 			until

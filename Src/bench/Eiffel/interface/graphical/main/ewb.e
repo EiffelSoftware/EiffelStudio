@@ -13,7 +13,8 @@ inherit
 			build_dir as Eiffel3_dir_name
 		undefine
 			Eiffel3_dir_name
-		end
+		end;
+	SHARED_RESCUE_STATUS
 
 creation
 
@@ -35,9 +36,6 @@ feature -- Licence managment
 
 	discard_licence is
 		do
---			if licence.licenced then
---				licence.free_licence;
---			end;
 			if licence.registered then
 				licence.unregister
 			end;
@@ -70,12 +68,15 @@ feature
 					end;
 				end;
 			else
+				-- Ensure clean exit in case of exception
 			end;
 		rescue
 			discard_licence;
-			io.error.putstring ("EiffelBench: internal error%N");
-			retried := True;
-			--retry
+--			if not Rescue_status.fail_on_rescue then
+--				io.error.putstring ("EiffelBench: internal error%N");
+--				retried := True;
+--				retry
+--			end;
 		end;
 	
 feature {NONE}

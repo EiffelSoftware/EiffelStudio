@@ -33,7 +33,6 @@ feature
 						--| show text command.
 					text_window.last_format.format (formatted);
 				end
-				--execute_licenced (formatted);
 				restore_cursors;
 			elseif not text_window.changed then
 				if argument = text_window then

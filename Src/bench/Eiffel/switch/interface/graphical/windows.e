@@ -45,17 +45,6 @@ end;
 			!!Result.make (project_tool)
 		end;
 
-	error_popup_window: CLICK_WINDOW is
-			-- Popup error window. In the case of 
-			-- batch mode it is the term window.
-		do
-			if batch_mode then
-				Result := term_window
-			else
-				Result := warner
-			end;
-		end;
-
 	error_window: CLICK_WINDOW is
 			-- Error window that displays error message
 		do

@@ -19,14 +19,14 @@ feature
 
 	symbol: PIXMAP is 
 		once 
-			Result := bm_Showfs 
+			Result := bm_Showshort 
 		end;
  
 feature {NONE}
 
-	command_name: STRING is do Result := l_Showfs end;
+	command_name: STRING is do Result := l_Showshort end;
 
-	title_part: STRING is do Result := l_Flatshort_form_of end;
+	title_part: STRING is do Result := l_Short_form_of end;
 
 	display_info (i: INTEGER; c: CLASSC_STONE) is
 			-- Display flat|short form of `c'.

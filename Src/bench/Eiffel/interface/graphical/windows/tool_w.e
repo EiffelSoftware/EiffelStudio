@@ -33,6 +33,8 @@ feature -- Window features
 	set_title (s: STRING) is deferred end;
 	destroy is deferred end;
 	hide is deferred end
+	set_default_position is deferred end;
+	set_default_size is deferred end;
 
 feature
 
@@ -52,6 +54,7 @@ feature
 		do
 			set_title (tool_name);
 			set_default_format;
+			set_default_size;
 			text_window.clear_window;
 		end;
 

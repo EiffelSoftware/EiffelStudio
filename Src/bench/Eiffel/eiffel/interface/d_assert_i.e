@@ -5,11 +5,17 @@ inherit
 
 	REQUIRE_I
 		redefine
-			check_precond
+			check_precond, has_checking
 		end;
 	SHARED_BYTE_CONTEXT
 	
 feature 
+
+	has_checking: BOOLEAN is
+			-- Is there any assertion checking?
+		do
+			Result := False
+		end;
 
 	check_precond: BOOLEAN is
 			-- Must preconditions be checked ?

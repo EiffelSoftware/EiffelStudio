@@ -9,13 +9,15 @@ inherit
 			transfer_to as attribute_transfer_to
 		redefine
 			replicated, code_id, unselected, is_replicated,
-			is_code_replicated, set_is_code_replicated
+			is_code_replicated, set_is_code_replicated,
+			set_code_id
 		end;
 	ATTRIBUTE_I
 		redefine
 			replicated, code_id, unselected, transfer_to, 
 			is_replicated, is_code_replicated,
-			set_is_code_replicated
+			set_is_code_replicated,
+			set_code_id
 		select
 			transfer_to
 		end;

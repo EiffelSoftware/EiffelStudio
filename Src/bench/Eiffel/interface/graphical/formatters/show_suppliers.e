@@ -32,28 +32,10 @@ feature {NONE}
 	display_info (i: INTEGER; c: CLASSC_STONE) is
 			-- Display suppliers of `c' in tree form.
 		local
-			suppliers: SUPPLIER_LIST;
-			class_c: CLASS_C;
-			a_supplier: CLASS_C;
+			ewb_suppliers: EWB_SUPPLIERS
 		do
-			class_c := c.class_c;
-			text_window.put_string ("Suppliers of class ");
-			class_c.append_clickable_signature (text_window);
-			text_window.put_string (":%N%N");	
-			from
-				suppliers := class_c.suppliers;
-				suppliers.start
-			until
-				suppliers.after
-			loop
-				a_supplier := suppliers.item.supplier;
-				if (class_c /= a_supplier) then
-					text_window.put_string (tabs (1));
-					a_supplier.append_clickable_signature (text_window);
-					text_window.new_line;
-				end;
-				suppliers.forth
-			end
+			!! ewb_suppliers.null;
+			ewb_suppliers.display_suppliers (text_window, c.class_c);
 		end
 
 end

@@ -6,6 +6,11 @@ inherit
 	
 feature 
 
+	has_checking: BOOLEAN is
+			-- Is there any assertion checking?
+		do
+		end;
+
 	check_precond: BOOLEAN is
 			-- Must preconditions be checked ?
 		do
@@ -48,6 +53,10 @@ feature
 	make_byte_code (ba: BYTE_ARRAY) is
 			-- Generate byte code representation of the assertion
 		do
+debug ("OPTIONS");
+	io.error.putstring ("Make byte code: ");
+	trace;
+end;
 			ba.append (byte_code)
 		end;
 

@@ -8,7 +8,7 @@ inherit
 	PROJECT_CONTEXT;
 	ICONED_COMMAND;
 	SHARED_DEBUG;
-	SHARED_DIALOG
+	SHARED_RESCUE_STATUS
  
 creation
 
@@ -24,44 +24,76 @@ feature
 	
 feature {NONE}
 
+	assert_confirmed: BOOLEAN;
+
 	work (argument: ANY) is
 			-- Finalize the project.
         local
-        	project_dir: PROJECT_DIR;
-		file: UNIX_FILE;
+			file: UNIX_FILE;
+			temp: STRING;
         do
 			debug_info.wipe_out;
 			if project_tool.initialized then
 				error_window.clear_window;
 				if Lace.file_name /= Void then
 					if argument = text_window then
+						assert_confirmed := False;
 						warner.custom_call (Current,
 							"Finalizing implies some C compilation%N%
-                            %and linking. Do you want to do it now?",
-                            "Finalize now", "Cancel", Void);
-					elseif argument = warner then
-						set_global_cursor (watch_cursor);
-						project_tool.set_changed (true);
-						Workbench.recompile;
-						if Workbench.successfull then
-							System.server_controler.wipe_out;
-							project_tool.set_changed (false);
-							save_workbench_file;
-								-- The project is saved before the finalization
-								-- so that it can be reused after the finalization.
-							System.finalized_generation;
-							finish_freezing;
--- FIXME
--- FIXME
--- FIXME
-
--- Exit from the application or retrieve the workbench from disk
-
--- Retrieving from disk implies a `reset' on all the windows to synchronize the
--- various stones.
-
--- Exiting: Popup window
-							error_window.put_string ("System recompiled%N");
+                           	%and linking. Do you want to do it now?",
+                           	"Finalize now", Void, "Cancel");
+					elseif 
+						(argument = warner) or else
+						(argument = Void)
+					then
+						if not assert_confirmed then
+							assert_confirmed := True;
+							warner.custom_call (Current,
+								"By default assertions enabled in the Ace%N%
+								%file are kept in final mode.%N%
+								%A final executable with assertion checking%N%
+								%enabled is sub-optimal in speed and size.%N",
+                            	"Keep assertions", "Discard assertions", Void); 
+						else
+							set_global_cursor (watch_cursor);
+							project_tool.set_changed (true);
+							Workbench.recompile;
+							if Workbench.successfull then
+								System.server_controler.wipe_out;
+								project_tool.set_changed (false);
+								save_failed := False;
+								save_workbench_file;
+								if save_failed then
+									!! temp.make (0);
+									temp.append ("Could not write to ");
+									temp.append (Project_file_name);
+									temp.append ("%NPlease check permissions and disk space");
+									temp.append ("%NThen press Finalize again%N");
+									error_window.put_string (temp);
+								else	
+										-- If the argument is `warner' the user 
+										-- pressed on "Keep assertions"
+									System.finalized_generation (argument = warner);
+									finish_freezing;
+									if System.poofter_finalization then
+										error_window.put_string 
+											("Warning: the finalized system might not be optimal%N");
+										error_window.put_string 
+											("%Tin size and speed. In order to produce and optimal%N");
+										error_window.put_string 
+											("%Texecutable, finalize the system from scratch and do%N");
+										error_window.put_string 
+											("%Tnot use precompilation.%N%N");
+									end;
+									if (argument = warner) and then Lace.has_assertions then
+										error_window.put_string 
+											("Warning: the finalized system incorporates assertions.%N");
+										error_window.put_string 
+											("%TIt might therefore not be optimal in size and speed%N%N");
+									end;
+									error_window.put_string ("System recompiled%N");
+								end;
+							end;
 						end;
 					end;
 					restore_cursors;
@@ -76,43 +108,40 @@ feature {NONE}
 				elseif argument = name_chooser then
 					Lace.set_file_name (name_chooser.selected_file);
 					work (Current)
-				else
+				elseif argument = text_window then
 					warner.custom_call (Current, l_Specify_ace,
 						"Choose", "Template", "Cancel");
 				end;
-			elseif argument = name_chooser then
-				!!project_dir.make (name_chooser.selected_file);
-				project_dir.check_directory (warner);
-				if project_dir.is_valid then
-					project_tool.open_command.make_project (project_dir);
-					work (Current)
-				end
-			elseif argument = warner then
-				name_chooser.call (Current)
-			elseif argument = void then
-				-- help window
-			else
-				warner.call(Current, l_Initialize);
 			end;
 		end;
 	
-    save_workbench_file is
-            -- Save the `.workbench' file.
-        local
-            file: UNIX_FILE
-        do
-            !!file.make (Project_file_name);
-            file.open_write;
-            workbench.basic_store (file);
-            file.close;
-        rescue
-            if not file.is_closed then
-                file.close
-            end;
-            Dialog_window.display 
-				("Error in opening/writing EIFFELGEN/.workbench file ");
-            retry
-        end;
+	retried: BOOLEAN;
+	save_failed: BOOLEAN;
+
+	save_workbench_file is
+			-- Save the `.workbench' file.
+		local
+			file: UNIX_FILE;
+			temp: STRING
+		do
+			if not retried then
+				!!file.make (Project_file_name);
+				file.open_write;
+				workbench.basic_store (file);
+				file.close;
+			else
+				retried := False
+				if not file.is_closed then
+					file.close
+				end;
+				save_failed := True;
+			end
+		rescue
+			if Rescue_status.is_unexpected_exception then
+				retried := True;
+				retry
+			end
+		end;
 
 feature 
 

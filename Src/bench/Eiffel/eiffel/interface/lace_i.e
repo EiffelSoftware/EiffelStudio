@@ -4,9 +4,9 @@ class LACE_I
 
 inherit
 
-	EXCEPTIONS;
 	SHARED_WORKBENCH;
 	SHARED_ERROR_HANDLER;
+	SHARED_RESCUE_STATUS;
 	SHARED_LACE_PARSER
 
 feature
@@ -62,7 +62,7 @@ feature
 			root_ast ?= Parser.ast;
 			build_universe;
 		rescue
-			if exception = Programmer_exception then
+			if Rescue_status.is_error_exception then
 					-- Reset `Workbench'
 				successfull := False;
 			end
@@ -106,7 +106,7 @@ feature
 				successfull := True;
 			end
 		rescue
-			if exception = Programmer_exception then
+			if Rescue_status.is_error_exception then
 					-- Reset `Workbench'
 				if old_system /= Void then
 					Universe.copy (old_universe);
@@ -122,6 +122,33 @@ feature
 			-- Was last parsing successful?
 		do
 			Result := root_ast /= Void
+		end
+
+	compile_all_classes: BOOLEAN is
+			-- Is the root class NONE, i.e. all the classes must be compiled
+		require
+			parsed: parsed
+		do
+			Result := root_ast.compile_all_classes
+		end;
+
+feature 
+
+	has_assertions: BOOLEAN is
+			-- Has assertion checking explicitely been requested
+			-- in the Ace file?
+		local
+			clusters: LINKED_LIST [CLUSTER_I];
+		do
+			from
+				clusters := Universe.clusters;
+				clusters.start
+			until
+				clusters.after or else Result
+			loop
+				Result := clusters.item.has_assertions;
+				clusters.forth
+			end	
 		end
 
 feature {NONE} -- Externals

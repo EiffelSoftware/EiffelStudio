@@ -44,6 +44,8 @@ feature
 
 	close_windows is do end;
 
+	set_default_position is do end;
+	set_default_size is do end;
 
 	--tool_name: STRING is do Result := l_Showcustom end;
 	tool_name: STRING is do Result := "Custom" end;

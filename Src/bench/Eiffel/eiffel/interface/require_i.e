@@ -4,10 +4,17 @@ inherit
 
 	NO_I
 		redefine
-			check_precond, generation_value, byte_code
+			check_precond, generation_value, byte_code,
+			has_checking
 		end
 	
 feature 
+
+	has_checking: BOOLEAN is
+			-- Is there any assertion checking?
+		do
+			Result := True
+		end;
 
 	check_precond: BOOLEAN is
 			-- Must preconditions be checked ?

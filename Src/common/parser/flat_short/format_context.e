@@ -5,6 +5,9 @@ inherit
 	SPECIAL_AST;
 	SHARED_SERVER;
 	SHARED_INST_CONTEXT;
+	SHARED_RESCUE_STATUS;
+	SHARED_ERROR_HANDLER;
+	WINDOWS
 
 creation
 
@@ -27,7 +30,14 @@ feature -- Flat and flat/short modes
 			is_short_bool.set_value (True);
 		end;
 
+	set_troff_format is
+		do
+			troff_format := True
+		end;
+
 feature
+
+	rescued: BOOLEAN;
 
 	make (c: CLASS_C) is
 		do
@@ -38,7 +48,8 @@ feature
 			class_c_set: class_c = c;
 			batch_mode:	not in_bench_mode;
 			analyze_ancestors: not current_class_only;
-			do_flat: not is_short
+			do_flat: not is_short;
+			not_troff_format: not troff_format
 		end;
 
 	execute is
@@ -51,30 +62,45 @@ feature
 			name: STRING;
 			file: UNIX_FILE;
 		do
-			!!previous.make;
-			!!text.make;
-			!!first_format.make(class_c.actual_type);
-			upper_name := class_c.class_name.duplicate;
-			upper_name.to_upper;
-			previous.add (first_format);
-			if is_short then
-				client := system.any_class.compiled_class;
-			end;
-			!!flat_struct.make (class_c, client);
-			flat_struct.fill (current_class_only);
-			if flat_struct.ast /= void then
-				prepare_class_text;
+			if not rescued then
+				!!previous.make;
+				!!text.make;
+				!!first_format.make(class_c.actual_type);
+				upper_name := class_c.class_name.duplicate;
+				upper_name.to_upper;
+				previous.add (first_format);
+				if is_short then
+					client := system.any_class.compiled_class;
+				end;
+				!!flat_struct.make (class_c, client);
 				System.set_current_class (class_c);
-				Inst_context.set_cluster (class_c.cluster);
-				flat_struct.ast.format (Current);
+				flat_struct.fill (current_class_only);
+				if flat_struct.ast /= void then
+					prepare_class_text;
+					Inst_context.set_cluster (class_c.cluster);
+					flat_struct.ast.format (Current);
+					Inst_context.set_cluster (Void);
+				end;
 				System.set_current_class (Void);
-				Inst_context.set_cluster (Void);
+			else
+				rescued := False
+			end
+		rescue
+			if Rescue_status.is_error_exception then
+				Rescue_status.set_is_error_exception (False);
+				Error_handler.trace;
+				rescued := True;
+				retry
 			end
 		end;
 
 	current_class_only: BOOLEAN;
 			-- Is Current only processing `class_c' and not
 			-- its ancestors?
+
+	troff_format: BOOLEAN;
+			-- Is Current going to be a troff format? (Used 
+			-- remove from CLASSNAME within assertions)
 
 	flat_struct: FLAT_STRUCT
 			-- Structure used for processing the flat (or short)
@@ -698,8 +724,7 @@ feature -- comments
 	put_origin_comment is
 		local
 			s: STRING;
-			origin_comment: EIFFEL_COMMENTS;
-			class_name: STRING;
+			c: CLASS_C;
 		do
 			if 
 				format.global_types.source_class 
@@ -708,15 +733,10 @@ feature -- comments
 				begin;
 				next_line;
 				!!s.make (50);
-				s.append (" (from ");
-				class_name := format.global_types.
-					source_class.class_name.duplicate;
-				class_name.to_upper;
-				s.append (class_name);
-				s.append (")");
-				!!origin_comment.make (-1);
-				origin_comment.add (s);
-				put_comment (origin_comment);
+				put_string ("-- (from ");
+				c := format.global_types.source_class;
+				put_class_name (c);
+				put_string (")");
 				commit;
 			end;
 		end;
@@ -729,15 +749,5 @@ feature -- comments
 			Result := class_c.generics.i_th (pos).formal_name.duplicate;
 			Result.to_upper;
 		end;
-
-
-feature -- Feature comments (for FORMAT_FEAT_CONTEXT)
-
-	start_position: INTEGER is
-		do
-			Result := -1
-		end
-
-	put_feature_comments is do end;
 
 end	

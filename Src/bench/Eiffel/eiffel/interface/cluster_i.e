@@ -6,7 +6,8 @@ inherit
 
 	SHARED_ERROR_HANDLER;
 	SHARED_WORKBENCH;
-	SHARED_ENV
+	SHARED_ENV;
+	SHARED_RESCUE_STATUS
 
 creation
 
@@ -43,6 +44,12 @@ feature -- Attributes
 			-- Is the cluster precompiled
 			-- It won't be removed even if it is no more
 			-- in the local Ace file
+
+	exclude_list: FIXED_LIST [STRING];
+			-- List of files to exclude
+
+	include_list: FIXED_LIST [STRING];
+			-- List of files to include
 
 feature -- Conveniences
 
@@ -111,6 +118,8 @@ feature -- Creation feature
 			old_cluster := old_cluster_i;
 			is_precompiled := old_cluster_i.is_precompiled;
 			set_date (old_cluster_i.date);
+			exclude_list := old_cluster_i.exclude_list;
+			include_list := old_cluster_i.include_list;
 			from
 				cl := old_cluster.classes;
 				cl.start;
@@ -158,7 +167,7 @@ feature -- Creation feature
 			end;
 			rename_clause.renamings.put (new_name, old_name);
 		end;
-	
+
 	rename_clause_for (cl: CLUSTER_I): RENAME_I is
 			-- Rename clause of classes from cluster `cl'
 		require
@@ -189,9 +198,10 @@ feature -- Creation feature
 				cluster_file.open_read;
 			end;
 		rescue
-			-- FIXME
+			if Rescue_status.is_unexpected_exception then
 				Result := True;
 				retry;
+			end
 		end;
 
 	duplicate: CLUSTER_I is
@@ -201,7 +211,7 @@ feature -- Creation feature
 			Result.copy_old_cluster (Current);
 		end;
 
-	new_cluster (name: STRING): CLUSTER_I is
+	new_cluster (name: STRING; ex_l, inc_l: LACE_LIST [FILE_NAME_SD]): CLUSTER_I is
 		local
 			changed_classes: LINKED_LIST [CLASS_I];
 			unchanged_classes: LINKED_LIST [CLASS_I];
@@ -212,9 +222,9 @@ feature -- Creation feature
 
 				-- If the cluster has changed,
 				-- do a degree 6
-			if changed then
+			if changed (ex_l, inc_l) then
 				Result.set_old_cluster (duplicate);
-				Result.fill;
+				Result.fill (ex_l, inc_l);
 			else
 				Result.copy_old_cluster (Current)
 			end;
@@ -229,22 +239,22 @@ feature -- Creation feature
 			io.new_line;
 		end;
 
-	fill is
+	fill (ex_l, inc_l: LACE_LIST [FILE_NAME_SD]) is
 			-- Fill the cluster name table with what is found in the path. If 
 			-- `old_cluster' exists, fill current with it.
 		require
 			table_is_empty: classes.empty;
 		local
-			file_name: STRING;
-			i: INTEGER;
-			a_class: CLASS_I;
-			class_path, class_name: STRING;
-			vd01: VD01;
-			vd11: VD11;
-			vd22: VD22;
 			cluster_file: DIRECTORY;
-			str: ANY;
-			file_date: INTEGER;
+			file_name: STRING;
+			i, j: INTEGER;
+			class_path: STRING;
+			vd01: VD01;
+			vd07: VD07;
+			vd12: VD12;
+			vd22: VD22;
+			class_file: EXTEND_FILE;
+			found: BOOLEAN;
 		do
 				-- Check if the path is valid
 			!!cluster_file.make (path);
@@ -256,6 +266,57 @@ feature -- Creation feature
 				Error_handler.raise_error;
 			end;
 			display_degree_6;
+
+				-- Process the include and exclude lists
+			if ex_l /= Void then
+				from
+					!!exclude_list.make (ex_l.count);
+					i := 1;
+				until
+					i > ex_l.count
+				loop
+					file_name := Environ.interpret (ex_l.i_th (i).file__name);
+					!!class_path.make (path.count + file_name.count + 1);
+					class_path.append (path);
+					class_path.append ("/");
+					class_path.append (file_name);
+					!!class_file.make (class_path)
+					if not class_file.exists then
+						!!vd12;
+						vd12.set_cluster (Current);
+						vd12.set_file_name (file_name);
+						Error_handler.insert_error (vd12);
+					else
+						exclude_list.put_i_th (file_name, i);
+					end;
+					i := i + 1;
+				end;
+			end;
+			if inc_l /= Void then
+				from
+					!!include_list.make (inc_l.count);
+					i := 1;
+				until
+					i > inc_l.count
+				loop
+					file_name := Environ.interpret (inc_l.i_th (i).file__name);
+					!!class_path.make (path.count + file_name.count + 1);
+					class_path.append (path);
+					class_path.append ("/");
+					class_path.append (file_name);
+					!!class_file.make (class_path)
+					if not class_file.exists then
+						!!vd07;
+						vd07.set_cluster (Current);
+						vd07.set_file_name (file_name);
+						Error_handler.insert_error (vd07);
+					else
+						include_list.put_i_th (file_name, i);
+					end;
+					i := i + 1;
+				end;
+			end;
+			Error_handler.checksum;
 
 				-- Set date first
 			date := new_date;
@@ -275,55 +336,26 @@ feature -- Creation feature
 				loop
 					i := file_name.count;
 	
-					if i > 2 then
-						if
-							file_name.item (i - 1) = '.'
+					if i > 2 and then
+						(file_name.item (i - 1) = '.'
 							and
-							file_name.item (i) = 'e'
-						then
-							!!class_path.make
-											(path.count + file_name.count + 1);
-							class_path.append (path);
-							class_path.append ("/");
-							class_path.append (file_name);
-							class_name := read_class_name_in_file (class_path);
-							if class_name /= Void then
-								a_class := classes.item (class_name);
-								if a_class /= Void then
-									-- Error
-									!!vd11;
-									vd11.set_a_class (a_class);
-									vd11.set_file_name (file_name);
-									vd11.set_cluster (Current);
-									Error_handler.insert_error (vd11);
-									Error_handler.raise_error;
+							file_name.item (i) = 'e')
+					then
+						found := False;
+						if exclude_list /= Void then
+							from
+								i := 1
+							until
+								i > exclude_list.count or else found
+							loop
+								if file_name.is_equal (exclude_list.i_th (i)) then
+									found := True
 								end;
-									-- Valid eiffel class in file
-								if old_cluster /= Void then
-									a_class := old_cluster.classes.item (class_name);
-									if a_class /= Void then
-											-- The file name may have changed even
-											-- if the class was already in this cluster
-										a_class.set_base_name (file_name);
-										a_class.set_cluster (Current);
-										str := class_path.to_c;
-										file_date := eif_date ($str);
-										if a_class.date /= file_date then
-												-- The class has changed
-											Workbench.change_class (a_class);
-											a_class.set_date;
-										end;
-									end;
-								end;
-								if a_class = Void then
-									!!a_class.make;
-									a_class.set_class_name (class_name);
-									a_class.set_base_name (file_name);
-									a_class.set_cluster (Current);
-									a_class.set_date;
-								end;
-								classes.put (a_class, class_name);
+								i := i + 1;
 							end;
+						end;
+						if not found then
+							insert_class_from_file (file_name);
 						end;
 					end;
 
@@ -331,8 +363,88 @@ feature -- Creation feature
 					file_name := cluster_file.lastentry;
 				end;
 				cluster_file.close;
+				if include_list /= Void then
+					from
+						i := 1
+					until
+						i >  include_list.count
+					loop
+						file_name := include_list.i_th (i);
+						found := False;
+						if exclude_list /= Void then
+							from
+								j := 1
+							until
+								j > exclude_list.count or else found
+							loop
+								if file_name.is_equal (exclude_list.i_th (j)) then
+									found := True
+								end;
+								j := j + 1;
+							end;
+						end;
+						if not found then
+							insert_class_from_file (file_name);
+						end;
+						i := i + 1;
+					end;
+				end;
 			end;
 			Error_handler.checksum;
+		end;
+
+	insert_class_from_file (file_name: STRING) is
+		local
+			class_path: STRING;
+			a_class: CLASS_I;
+			class_name: STRING;
+			vd11: VD11;
+			cluster_file: DIRECTORY;
+			str: ANY;
+			file_date: INTEGER;
+		do
+			!!class_path.make (path.count + file_name.count + 1);
+			class_path.append (path);
+			class_path.append ("/");
+			class_path.append (file_name);
+			class_name := read_class_name_in_file (class_path);
+			if class_name /= Void then
+				a_class := classes.item (class_name);
+				if a_class /= Void then
+					-- Error
+					!!vd11;
+					vd11.set_a_class (a_class);
+					vd11.set_file_name (file_name);
+					vd11.set_cluster (Current);
+					Error_handler.insert_error (vd11);
+					Error_handler.raise_error;
+				end;
+					-- Valid eiffel class in file
+				if old_cluster /= Void then
+					a_class := old_cluster.classes.item (class_name);
+					if a_class /= Void then
+							-- The file name may have changed even
+							-- if the class was already in this cluster
+						a_class.set_base_name (file_name);
+						a_class.set_cluster (Current);
+						str := class_path.to_c;
+						file_date := eif_date ($str);
+						if a_class.date /= file_date then
+								-- The class has changed
+							Workbench.change_class (a_class);
+							a_class.set_date;
+						end;
+					end;
+				end;
+				if a_class = Void then
+					!!a_class.make;
+					a_class.set_class_name (class_name);
+					a_class.set_base_name (file_name);
+					a_class.set_cluster (Current);
+					a_class.set_date;
+				end;
+				classes.put (a_class, class_name);
+			end;
 		end;
 
 	read_class_name_in_file (file_name: STRING): STRING is
@@ -550,10 +662,26 @@ feature -- Creation feature
 			end;
 		end;
 
+	is_kernel_cluster: BOOLEAN is
+			-- Is the current cluster the kernel cluster
+		do
+			if classes.has ("any") then
+				Result := True
+			end;
+		end;
+
 	remove_cluster is
 			-- Remove all the classes from the current cluster
 			-- i.e. the cluster has been removed from the system
+		local
+			vd40: VD40;
 		do
+			if is_kernel_cluster then
+				!!vd40;
+				vd40.set_cluster (Current);
+				Error_handler.insert_error (vd40);
+				Error_handler.raise_error;
+			end;
 			from
 				classes.start
 			until
@@ -663,8 +791,10 @@ feature -- Creation feature
 			Result := eif_date ($ptr)
 		end;
 
-	changed: BOOLEAN is
+	changed (ex_l, inc_l: LACE_LIST [FILE_NAME_SD]): BOOLEAN is
 			-- Is the cluster directory changed ?
+		local
+			i: INTEGER;
 		do
 			Result := date /= new_date;
 			if Not Result then
@@ -676,8 +806,66 @@ feature -- Creation feature
 					Result := classes.item_for_iteration.date_has_changed;
 					classes.forth
 				end;
+				if not Result then
+					if inc_l = Void then
+						Result := include_list /= Void
+					elseif include_list = Void or else
+						inc_l.count /= include_list.count
+					then
+						Result := True
+					else
+						from
+							i := 1;
+						until
+							i > inc_l.count or else result
+						loop
+							include_list.start;
+							include_list.search_same (inc_l.i_th (i).file__name);
+							Result := include_list.after
+							i := i + 1;
+						end
+					end;
+				end;
+				if not Result then
+					if ex_l = Void then
+						Result := exclude_list /= Void
+					elseif exclude_list = Void or else
+						ex_l.count /= exclude_list.count
+					then
+						Result := True
+					else
+						from
+							i := 1;
+						until
+							i > ex_l.count or else result
+						loop
+							exclude_list.start;
+							exclude_list.search_same (ex_l.i_th (i).file__name);
+							Result := exclude_list.after
+							i := i + 1;
+						end
+					end;
+				end;
 			end;
 		end;
+
+feature 
+
+	has_assertions: BOOLEAN is
+			-- Has assertion checking explicitely been requested
+			-- in this cluster?
+		do
+			from
+				classes.start
+			until
+				classes.after or else Result
+			loop
+				Result := 
+					classes.item_for_iteration.assertion_level.has_checking
+				classes.forth
+			end
+		end
+		
 
 feature {NONE} -- Externals
 

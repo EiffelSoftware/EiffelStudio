@@ -22,6 +22,7 @@ inherit
 			{ANY}
 				cursor
 		end;
+	SHARED_RESCUE_STATUS
 
 creation
 
@@ -61,11 +62,13 @@ feature
 					remove_sublist
 				end
 			end;
-			rescue
+		rescue
+			if Rescue_status.is_unexpected_exception then
 				if not cursor_out then
 					cursor_out := true;
 					retry
 				end;
+			end
 		end;
 
 

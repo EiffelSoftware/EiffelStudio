@@ -6,6 +6,7 @@ inherit
 
 	EXCEPTIONS;
 	WINDOWS;
+	SHARED_RESCUE_STATUS
 
 creation
 
@@ -83,6 +84,7 @@ end;
 debug
 error_window.put_string ("Raising error%N");
 end;
+			Rescue_status.set_is_error_exception (True);
 			raise ("Compiler error");
 		end;
 

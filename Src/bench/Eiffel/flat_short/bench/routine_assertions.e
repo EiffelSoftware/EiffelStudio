@@ -5,6 +5,12 @@ creation
 	
 feature
 
+	precondition: REQUIRE_AS;
+
+	postcondition: ENSURE_AS;
+		
+	origin: FEATURE_I;
+
 	make (ast: FEATURE_FSAS) is
 		do
 			precondition := ast.precondition;
@@ -24,14 +30,6 @@ feature
 			origin := feat;
 		end;
 
-
-	precondition: REQUIRE_AS;
-
-	postcondition: ENSURE_AS;
-		
-	origin: FEATURE_I;
-
-
 	format_precondition (ctxt: FORMAT_CONTEXT) is
 		do
 			ctxt.begin;
@@ -40,13 +38,19 @@ feature
 			ctxt.commit
 		end;
 
-
 	format_postcondition (ctxt: FORMAT_CONTEXT) is
 		do
 			ctxt.begin;
 			ctxt.set_source_context (origin);
 			postcondition.format (ctxt);
 			ctxt.commit;
+		end;
+
+	written_in: INTEGER is
+		require
+			origin_set: origin /= Void
+		do
+			Result := origin.written_in
 		end;
 
 	trace is

@@ -8,6 +8,11 @@ feature
 
 	name: STRING is "freeze";
 
+	loop_execute is
+		do
+			execute
+		end
+
 	execute is
 		do
 			if confirmed then

@@ -41,10 +41,20 @@ feature -- Type check, byte code, dead code removal and formatter
 
 	format(ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text
+		local
+			source_cl, target_cl: CLASS_C;
 		do
 			ctxt.begin;
 			if assertions /= void then
 				ctxt.put_keyword (clause_name (ctxt));
+				if not ctxt.troff_format then
+					source_cl := ctxt.format.global_types.source_class;
+					target_cl := ctxt.format.global_types.target_class;
+					if source_cl /= target_cl then
+						ctxt.put_string (" -- from ");
+						ctxt.put_class_name (source_cl);
+					end;
+				end;
 				ctxt.indent_one_more; 
 				ctxt.next_line;
 				ctxt.set_separator (";");

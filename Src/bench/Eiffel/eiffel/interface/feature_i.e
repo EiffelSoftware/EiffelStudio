@@ -542,6 +542,18 @@ feature -- Conveniences
 
 feature -- Export checking
 
+--	has_special_export: BOOLEAN is
+--			-- The export status is special, i.e. the feature
+--			-- is not exported to all the other classes.
+--			-- A call to this feature must be recorded specially
+--			-- in the dependances for incrementality purpose:
+--			-- If the hierarchy changes, the call may be invalid.
+--		require
+--			has_export_status: export_status /= Void;
+--		do
+--			Result := not export_status.is_all
+--		end;
+
 	is_exported_for (client: CLASS_C): BOOLEAN is
 			-- Is the current feature exported to class `client' ?
 		require
@@ -1045,6 +1057,9 @@ end;
 						Error_handler.insert_error (vtec2);
 					end
 				end;
+				if solved_type.has_generics then
+					system.expanded_checker.check_actual_type (solved_type);
+				end;
 				if arguments /= Void then
 					arguments.check_expanded (class_c, Current);
 				end;
@@ -1382,6 +1397,12 @@ feature -- Replication
 			Result := body_id;
 		end;
 
+	set_code_id (i: INTEGER) is
+			-- Assign `i' to code_id.
+		do
+			-- Do nothing
+		end;
+
 	access_in: INTEGER is
 			-- Id of the class where the current feature can be accessed
 			-- through its routine id
@@ -1653,7 +1674,7 @@ feature -- PS
 					Result.append (arguments.item.dump);
 					arguments.forth;
 					if not arguments.after then
-						Result.append (", ")
+						Result.append ("; ")
 					end
 				end;
 				Result.append (")")
@@ -1683,7 +1704,7 @@ feature -- PS
 					arguments.item.append_clickable_signature (a_clickable);
 					arguments.forth;
 					if not arguments.offright then
-						a_clickable.put_string (", ")
+						a_clickable.put_string ("; ")
 					end
 				end;
 				a_clickable.put_char (')')
@@ -1693,10 +1714,6 @@ feature -- PS
 				type.append_clickable_signature (a_clickable);
 			end;
 			end;
-		rescue
-			io.error.putstring ("%NError while building the feature signature%N");
-			Error := True;
-			retry
 		end;
 
 	append_clickable_name (a_clickable: CLICK_WINDOW; c: CLASS_C) is

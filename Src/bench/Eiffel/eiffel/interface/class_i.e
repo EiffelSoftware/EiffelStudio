@@ -81,6 +81,13 @@ feature
 	reset_options is
 			-- Reset the option values of the class
 		do
+debug
+	io.error.putstring ("reset_options: ");
+	if class_name /= Void then
+		io.error.putstring (class_name);
+	end;
+	io.error.new_line;
+end;
 			assertion_level := Default_level;
 			trace_level := No_trace;
 			optimize_level := No_optimize;
@@ -119,12 +126,6 @@ feature
 			-- Assign `b' to `changed'.
 		do
 			changed := b;
-			pass2_done := False;
-		end;
-
-	set_pass2_done is
-		do
-			pass2_done := True
 		end;
 
 	set_compiled_class (c: CLASS_C) is
@@ -223,6 +224,12 @@ feature -- Comveniences
 			-- Assign `l' to `assertion_level'.
 		do
 			assertion_level := l;
+debug
+	io.error.putstring ("set_assertion_level (");
+	io.error.putstring (class_name);
+	io.error.putstring ("): ");
+	l.trace;
+end;
 		end;
 
 	set_trace_level (t: TRACE_I) is

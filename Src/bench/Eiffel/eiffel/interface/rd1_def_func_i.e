@@ -9,12 +9,14 @@ inherit
 			transfer_to as d_def_func_transfer_to
 		redefine
 			code_id, is_replicated, is_code_replicated,
-			set_is_code_replicated
+			set_is_code_replicated,
+			set_code_id
 		end;
 	D_DEF_FUNC_I
 		redefine
 			code_id, transfer_to, is_replicated,
-			is_code_replicated, set_is_code_replicated
+			is_code_replicated, set_is_code_replicated,
+			set_code_id
 		select
 			transfer_to
 		end;

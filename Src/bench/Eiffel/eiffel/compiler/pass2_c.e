@@ -55,7 +55,8 @@ feature
 
 	execute is
 		local
-			temp: STRING
+			temp: STRING;
+			do_pass2: BOOLEAN;
 		do
 				-- Verbose
 			io.putstring ("Degree 4: class ");
@@ -64,11 +65,17 @@ feature
 			io.putstring (temp);
 			io.new_line;
 
-			if	
-				(associated_class.changed
-			or else
-				associated_class.changed2)
-			then
+			if associated_class.changed then
+				do_pass2 := True;
+					-- Incrementality: pass3 can be done successfully
+					-- on a class marked changed and then
+					-- the class is reinserted in pass2_controler
+				pass3_controler.insert_new_class (associated_class);
+				pass4_controler.insert_new_class (associated_class);
+			else
+				do_pass2 := associated_class.changed2
+			end;
+			if do_pass2 then
 					-- Analysis of inheritance for a class
 				analyzer.pass2 (Current, supplier_status_modified);
 

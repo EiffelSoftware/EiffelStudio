@@ -1,15 +1,12 @@
-
-
 class EWB_DESCENDANTS 
 
 inherit
 
-	EWB_CMD;
-	SHARED_SERVER
+	EWB_CMD
 
 creation
 
-	make
+	make, null
 
 feature -- Creation
 
@@ -24,6 +21,14 @@ feature -- Creation
 feature
 
 	name: STRING is "compute the descendants";
+
+	loop_execute is
+		do
+			get_class_name;
+			class_name := last_input;
+			class_name.to_lower;
+			execute;
+		end;
 
 	execute is
 		local
@@ -58,9 +63,9 @@ feature
 			until
 				descendants.after
 			loop
-				io.error.putstring (tabs(i));
-				io.error.putstring (descendants.item.signature);
-				io.error.new_line;
+				io.putstring (tabs(i));
+				io.putstring (descendants.item.signature);
+				io.new_line;
 				print_descendants (descendants.item, i + 1);
 				descendants.forth
 			end

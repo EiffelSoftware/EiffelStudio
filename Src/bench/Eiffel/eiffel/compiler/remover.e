@@ -80,7 +80,7 @@ feature {NONE}
 			unit: ROUT_UNIT;
 			c: BI_LINKABLE [ROUT_UNIT];
 			redef_unit: TRAVERSAL_UNIT;
-			assert_id_set: ASSERT_ID_SET;
+--			assert_id_set: ASSERT_ID_SET;
 			inh_assert: INH_ASSERT_INFO;
 			i, nb: INTEGER;
 			ancestor_feature: FEATURE_I;
@@ -99,28 +99,31 @@ feature {NONE}
 					-- leads to NO routine table.
 			end;
 
+-- FIXME
+-- If the assertions are on for at least a class in the system,
+-- The dead code removal is turned off
 
-			if f.assert_id_set /= Void then
-				-- The routine has chained assertions.
-				-- mark all the previous definitions with assertions
-				-- as used.
-				from
-					assert_id_set := f.assert_id_set;
-					i := 1;
-					nb := assert_id_set.count
-				until
-					i > nb
-				loop
-					inh_assert := assert_id_set.item (i);
-					if inh_assert.has_assertion then
-						ancestor_class := System.class_of_id (inh_assert.written_in);
-						ancestor_feature := ancestor_class.feature_table.feature_of_rout_id
-														(f.rout_id_set);
-						mark_and_record (ancestor_feature, ancestor_class);
-					end;
-					i := i + 1;
-				end;
-			end;
+--			if f.assert_id_set /= Void then
+--				-- The routine has chained assertions.
+--				-- mark all the previous definitions with assertions
+--				-- as used.
+--				from
+--					assert_id_set := f.assert_id_set;
+--					i := 1;
+--					nb := assert_id_set.count
+--				until
+--					i > nb
+--				loop
+--					inh_assert := assert_id_set.item (i);
+--					if inh_assert.has_assertion then
+--						ancestor_class := System.class_of_id (inh_assert.written_in);
+--						ancestor_feature := ancestor_class.feature_table.feature_of_rout_id
+--														(f.rout_id_set);
+--						mark_and_record (ancestor_feature, ancestor_class);
+--					end;
+--					i := i + 1;
+--				end;
+--			end;
 
 			if Tmp_poly_server.has (rout_id_val) then
 					-- If routine id available: this is not a deferred feature
@@ -237,14 +240,18 @@ end;
 			-- Record feature `feat'
 		require
 			good_argument: feat /= Void
+		local
+			class_name: STRING;
 		do
-debug
-	io.error.putstring ("Feature ");
-	io.error.putstring (feat.feature_name);
-	io.error.putstring (" from ");
-	io.error.putstring (feat.written_class.class_name);
-	io.error.putstring (" is alive%N");
-end;
+				-- Verbose
+			io.putstring ("%TMarking ");
+			io.putstring (feat.feature_name);
+			io.putstring (" from ");
+			class_name := feat.written_class.class_name.duplicate;
+			class_name.to_upper;
+			io.putstring (class_name);
+			io.new_line;
+
 			used_table.put (True, feat.body_id);
 		ensure
 			is_alive: is_alive (feat)

@@ -9,7 +9,7 @@ inherit
 		rename
 			make as file_sel_d_create
 		end;
-	BUILD_LIC
+	LIC_EXITER
 
 creation
 
@@ -26,6 +26,7 @@ feature
 			add_ok_action (Current, Current);
 			add_cancel_action (Current, Void);
 			set_title (l_Select_a_file);
+			set_exclusive_grab
 		end;
 
 	call (a_command: COMMAND_W) is
@@ -37,18 +38,6 @@ feature
 			last_caller_recorded: last_caller = a_command
 		end;
 
-feature -- Licence managment
- 
-	discard_licence is
-		do
---			if licence.licenced then
---				licence.free_licence;
---			end;
-			if licence.registered then
-				licence.unregister
-			end;
-		end;
-	
 feature {NONE}
 
 	work (argument: ANY) is
@@ -60,7 +49,7 @@ feature {NONE}
 				set_global_cursor (watch_cursor);
 				project_tool.set_changed (false);
 				if not project_tool.initialized then
-					discard_licence;
+					discard_license;
 					exit
 				end;
 			end

@@ -3,12 +3,11 @@ class EWB_FLAT
 
 inherit
 
-	EWB_CMD;
-	SHARED_SERVER
+	EWB_CMD
 
 creation
 
-	make
+	make, null
 
 feature -- Creation
 
@@ -23,6 +22,14 @@ feature -- Creation
 feature
 
 	name: STRING is "print %"flat%" form";
+
+	loop_execute is
+		do
+			get_class_name;
+			class_name := last_input;
+			class_name.to_lower;
+			execute;
+		end;
 
 	execute is
 		local

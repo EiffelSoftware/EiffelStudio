@@ -8,7 +8,8 @@ class STRING_B
 inherit
 	EXPR_B
 		redefine
-			enlarged, make_byte_code, generate_il
+			enlarged, make_byte_code, generate_il,
+			is_simple_expr, allocates_memory
 		end
 	
 feature -- Access
@@ -43,6 +44,12 @@ feature -- Properties
 			-- Register `r' is not used for string value computation
 		do
 		end
+
+	is_simple_expr: BOOLEAN is True
+			-- A string is a simple expression
+
+	allocates_memory: BOOLEAN is True
+			-- Current always allocates memory.
 
 feature -- IL code generation
 

@@ -10,9 +10,10 @@ deferred class
 
 inherit
 	EV_TEXT_FIELD_I
-		
 
 	EV_LIST_I
+		rename
+			rows as count
 		undefine
 			build
 		end
@@ -40,15 +41,15 @@ feature -- Measurement
 		require
 			exists: not destroyed
 		deferred
-	end
+		end
 
-feature {NONE} -- Implemntation
+feature {NONE} -- Inapplicable
 
 	set_multiple_selection is
 			-- Not allowed for a combo box
 		do
 			check
-				not_allowed_for_combo_box: False
+				Inapplicable: False
 			end
 		end
 

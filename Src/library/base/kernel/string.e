@@ -805,8 +805,11 @@ feature -- Conversion
 			-- An integer which a C function may cast into a pointer
 			-- to a `C' form of current string.
 			-- Useful only for interfacing with C software.
+		local
+			c: INTEGER
 		do
-			if count = 0 or else item (count) /= '%U' then
+			c := count;
+			if c = 0 or else item (c) /= '%U' then
 				extend ('%U');
 				count := count - 1;
 			end;

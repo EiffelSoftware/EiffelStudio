@@ -121,7 +121,7 @@ feature -- Input
 		do
 			from
 				if last_string = Void then
-					create_last_string
+					create_last_string (0)
 				end
 				str_area := last_string.area
 				str_cap := last_string.capacity
@@ -165,9 +165,10 @@ feature -- Input
 			str_area: ANY
 		do
 			if last_string = Void then
-				create_last_string
+				create_last_string (nb_char)
+			else
+				last_string.grow (nb_char)
 			end
-			last_string.resize (nb_char)
 			str_area := last_string.area
 			new_count := console_readstream (file_pointer, $str_area, nb_char)
 			last_string.set_count (new_count)
@@ -184,7 +185,7 @@ feature -- Input
 		do
 			from
 				if last_string = Void then
-					create_last_string
+					create_last_string (0)
 				end
 				str_area := last_string.area
 				str_cap := last_string.capacity

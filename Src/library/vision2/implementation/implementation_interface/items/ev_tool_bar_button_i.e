@@ -11,7 +11,7 @@ deferred class
 inherit
 	EV_SIMPLE_ITEM_I
 		redefine
-			top_parent_imp,
+			--top_parent_imp,
 			pixmap_size_ok
 		end
 
@@ -26,11 +26,11 @@ feature -- Access
 		deferred
 		end
 
-	top_parent_imp: EV_TOOL_BAR_IMP is
-			-- Top item holder containing the current item.
-		do
-			Result ?= {EV_SIMPLE_ITEM_I} Precursor
-		end
+--	top_parent_imp: EV_TOOL_BAR_IMP is
+--			-- Top item holder containing the current item.
+--		do
+--			Result ?= {EV_SIMPLE_ITEM_I} Precursor
+--		end
 
 feature -- Status report
 

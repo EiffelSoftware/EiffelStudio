@@ -10,53 +10,84 @@ class
 
 inherit
 	WEL_FRAME_WINDOW
-		rename
-			on_wm_erase_background as old_erase_background
 		redefine
-			on_size
-		end			
-
-
-	WEL_FRAME_WINDOW
-		redefine
-			on_wm_erase_background,
-			on_size
-		select
-			on_wm_erase_background
-		end		
+			default_style,
+			on_show,
+			on_size,
+			on_destroy,
+			on_get_min_max_info
+		end
 
 
 creation
-	make_top
+	make_top,
+	make_child
 
 
 feature
 	
-	attach_container (the_container: EV_CONTAINER_IMP) is
+	initialize (the_container: EV_CONTAINER_IMP) is
 		do
 			container := the_container
 		end
 
-feature {NONE} -- Implementation
 
-	on_wm_erase_background (wparam: INTEGER) is
+feature {NONE} -- Access
+
+	container: EV_CONTAINER_IMP
+
+
+feature {NONE} -- Implementation 
+
+	default_style: INTEGER is
+			-- Set with the option `Ws_clipchildren' to avoid flashing.
+		once
+			Result := Ws_overlappedwindow + Ws_clipchildren
+		end
+
+	on_show is
 		do
-			if container.the_child = Void then
-				old_erase_background (wparam)
-			else
-				disable_default_processing
+			if container.the_child /= Void then
+				container.parent_ask_resize (container.the_child.minimum_width, container.the_child.minimum_height)
 			end
 		end
 
 	on_size (size_type, a_width, a_height: INTEGER) is
 		do
 			if container.the_child /= Void then
-				container.the_child.parent_ask_resize (a_width, a_height)
+					container.the_child.parent_ask_resize (a_width, a_height)
 			end
 		end
 
-feature {NONE} -- Access
+	on_destroy is
+		do
+			if container.parent_imp /= Void then
+				container.parent_imp.set_insensitive (False)
+			end
+		end
 
-	container: EV_CONTAINER_IMP
-
+	on_get_min_max_info (min_max_info: WEL_MIN_MAX_INFO) is
+		local
+			min_track: WEL_POINT
+		do
+			!! min_track.make (container.the_child.minimum_width + 2*window_frame_width, container.the_child.minimum_height + title_bar_height + window_border_height + 2 * window_frame_height)
+			min_max_info.set_min_track_size (min_track)
+		end
+	
 end -- class EV_WEL_FRAME_WINDOW
+
+--|----------------------------------------------------------------
+--| Windows Eiffel Library: library of reusable components for ISE Eiffel.
+--| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--| May be used only with ISE Eiffel, under terms of user license. 
+--| Contact ISE for any other use.
+--|
+--| Interactive Software Engineering Inc.
+--| ISE Building, 2nd floor
+--| 270 Storke Road, Goleta, CA 93117 USA
+--| Telephone 805-685-1006, Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <support@eiffel.com>
+--| For latest info see award-winning pages: http://www.eiffel.com
+--|----------------------------------------------------------------

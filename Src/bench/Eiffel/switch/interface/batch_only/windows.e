@@ -3,6 +3,10 @@
 
 class WINDOWS
 
+inherit
+
+	SHARED_STATUS
+
 feature
 
 	error_window: TERM_WINDOW is once !!Result end;

@@ -43,6 +43,7 @@
 			<item>
 				<bold>EV_ANY_HANDLER</bold> - This is the only class to which `default_create' from EV_ANY is supposed to be exported. However, paticular descendents were exporting `default_create' to ANY instead. This has now been fixed.
 			</item>
+			<item><bold>EV_MESSAGE_DIALOG</bold> - `make_with_text_and_actions' has now been added to the list of creation procedures.</item>
 		</list>
 		<paragraph>
 			<bold>Bug fixes</bold>

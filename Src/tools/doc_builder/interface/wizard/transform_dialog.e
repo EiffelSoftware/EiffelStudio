@@ -71,30 +71,26 @@ feature {NONE} -- Implementation
 			l_constants: APPLICATION_CONSTANTS
 		do
 			l_constants := Shared_constants.Application_constants
-			if not Wizard_data.is_html_to_help_convert then
-				if loc_text.text.is_empty then
-					set_validation_error ((create {MESSAGE_CONSTANTS}).empty_location)
-				else
-					create l_dir.make (loc_text.text)
-				end
+			if loc_text.text.is_empty then
+				set_validation_error ((create {MESSAGE_CONSTANTS}).empty_location)
 			else
-					-- For XML -> HTML -> Help always put HTML into intermediate directory
-				create l_dir.make (l_constants.Temporary_html_directory)
-				if l_dir.exists then
-					l_dir.recursive_delete
-				end
-				l_dir.create_dir
+				create l_dir.make (loc_text.text)
 			end
+				-- For [XML -> HTML -> Help] always put HTML into intermediate directory
+			create l_dir.make (l_constants.Temporary_html_directory)
 			if l_dir.exists then
-					-- TO DO: Inform if not empty
+				l_dir.recursive_delete
+			end
+			l_dir.create_dir
+			if l_dir.exists then				
 				Result := True
 				l_constants.set_html_location (l_dir.name)
 				if studio_radio.is_selected then
-					l_constants.set_output_filter (feature {APPLICATION_CONSTANTS}.studio_filter)
+--					l_constants.set_output_filter (feature {APPLICATION_CONSTANTS}.studio_filter)
 				elseif envision_radio.is_selected then
-					l_constants.set_output_filter (feature {APPLICATION_CONSTANTS}.envision_filter)
+--					l_constants.set_output_filter (feature {APPLICATION_CONSTANTS}.envision_filter)
 				elseif all_radio.is_selected then
-					l_constants.set_output_filter (feature {APPLICATION_CONSTANTS}.all_filter)
+--					l_constants.set_output_filter (feature {APPLICATION_CONSTANTS}.all_filter)
 				end
 			else
 				set_validation_error ((create {MESSAGE_CONSTANTS}).directory_not_exist)

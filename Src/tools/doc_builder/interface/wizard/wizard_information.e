@@ -50,9 +50,9 @@ feature -- Status Setting
 				is_help_convert := True
 				is_html_to_help_convert := False
 			when to_html_to_help then
-				is_html_convert := False
-				is_help_convert := False
-				is_html_to_help_convert := True	
+				is_html_convert := True
+				is_help_convert := True
+				is_html_to_help_convert := True
 			end
 		end
 
@@ -72,6 +72,6 @@ feature {NONE} -- Implementation
 invariant
 	html_conversion_exclusive: is_html_convert implies (not is_help_convert and not is_html_to_help_convert)
 	help_conversion_exclusive: is_help_convert implies (not is_html_convert and not is_html_to_help_convert)
-	help_to_html_conversion_exclusive: is_html_to_help_convert implies (not is_help_convert and not is_html_convert)
+	help_to_html_conversion_exclusive: is_html_to_help_convert implies (is_help_convert and is_html_convert)
 
 end -- class WIZARD_INFORMATION

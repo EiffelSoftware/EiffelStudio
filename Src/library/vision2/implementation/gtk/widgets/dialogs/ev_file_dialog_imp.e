@@ -25,6 +25,7 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			set_c_object (C.gtk_file_selection_new (eiffel_to_c ("Select file")))
+			C.gtk_object_ref (c_object)
 			C.gtk_window_set_modal (c_object, True)
 			filter := "*.*"
 			start_directory := "."
@@ -132,6 +133,9 @@ end -- class EV_FILE_DIALOG_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/02/26 01:49:39  oconnor
+--| added ref after creation of dialog
+--|
 --| Revision 1.7  2000/02/22 18:39:37  oconnor
 --| updated copyright date and formatting
 --|

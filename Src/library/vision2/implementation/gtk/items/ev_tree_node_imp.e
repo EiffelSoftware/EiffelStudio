@@ -383,6 +383,13 @@ feature {EV_TREE_IMP} -- Implementation
 			end
 		end
 		
+	is_viewable: BOOLEAN is
+			-- Is Current viewable by user?
+		do
+			Result := feature {EV_GTK_EXTERNALS}.gtk_ctree_is_viewable (parent_tree_imp.list_widget, tree_node_ptr)
+		end
+		
+		
 	text: STRING is
 			-- Text displayed.
 		do
@@ -519,8 +526,7 @@ feature {EV_TREE_IMP} -- Implementation
 					par_t_imp.update_pnd_connection (True)
 				end	
 				item_imp.check_branch_pixmaps
-			end			
-	
+			end
 			child_array.go_i_th (i)
 			child_array.put_left (v)
 		end

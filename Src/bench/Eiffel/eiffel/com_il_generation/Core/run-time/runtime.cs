@@ -10,6 +10,8 @@ using System;
 using System.Collections;
 using System.Text;
 using System.Reflection;
+using ISE.Runtime.CA;
+using ISE.Runtime.Enums;
 
 namespace ISE.Runtime {
 
@@ -82,6 +84,64 @@ feature -- Assertions
 
 	public static string assertion_tag;
 		// Tag of last checked assertion
+
+	public static void assertion_initialize (RuntimeTypeHandle type_handle)
+		// Initializes runtime datastructure for assembly associated with
+		// `type_handle'.
+	{
+		assertion_levels = new Hashtable (100);
+		Assembly a = Type.GetTypeFromHandle (type_handle).Assembly;
+
+		#if ASSERTIONS
+			ASSERTIONS.CHECK ("There should be an assembly", a != null);
+		#endif
+
+		object [] cas = a.GetCustomAttributes (typeof (ASSERTION_LEVEL_ATTRIBUTE), false);
+		if ((cas != null) && (cas.Length > 0)) {
+			foreach (object ca in cas) {
+				ASSERTION_LEVEL_ATTRIBUTE level_attribute = (ASSERTION_LEVEL_ATTRIBUTE) ca;
+				assertion_levels.Add (
+					level_attribute.class_type,			// key
+					level_attribute.assertion_level);	// value
+			}
+		}
+	}
+
+	public static bool is_assertion_checked (Type t, ASSERTION_LEVEL_ENUM val)
+		// Are assertions checked for type `t' for assertion type `val'.
+		// Note that `val' is not a combination.
+	{
+		ASSERTION_LEVEL_ENUM type_assertion_level;
+		bool Result;
+
+		#if ASSERTIONS
+			ASSERTIONS.CHECK ("Valid val",
+				(val == ASSERTION_LEVEL_ENUM.no) ||
+				(val == ASSERTION_LEVEL_ENUM.check) ||
+				(val == ASSERTION_LEVEL_ENUM.require) ||
+				(val == ASSERTION_LEVEL_ENUM.ensure) ||
+				(val == ASSERTION_LEVEL_ENUM.loop) ||
+				(val == ASSERTION_LEVEL_ENUM.invariant));
+		#endif
+
+		Result = !in_assertion();
+		if (Result) {
+			if (assertion_levels.ContainsKey (t)) {
+				type_assertion_level = (ASSERTION_LEVEL_ENUM) assertion_levels [t];
+			} else {
+				type_assertion_level = ASSERTION_LEVEL_ENUM.no;
+			}
+			Result = ((type_assertion_level & val) == val);
+		}
+		return Result;
+	}
+
+/*
+feature {NONE} -- Implementation
+*/
+	private static Hashtable assertion_levels;
+		// HASH_TABLE [ASSERTION_LEVEL_ENUM, Type] to store for each Eiffe type
+		// its associated assertion level.
 
 /*
 feature {NONE} -- Implementations: Assertions

@@ -37,6 +37,9 @@ feature -- Access
 	local_assembly_list: EV_EDITABLE_LIST
 			-- List of assembly used in Current project.
 
+	md_cache_path: EV_PATH_FIELD
+			-- Alternative metadata cache path.
+
 feature -- Parent access
 
 	system_window: EB_SYSTEM_WINDOW
@@ -51,8 +54,19 @@ feature -- Store/Retrieve
 			l_assembly_sd: ASSEMBLY_SD
 			l_row: EV_MULTI_COLUMN_LIST_ROW
 			pref_string: ID_SD
+			l_defaults: LACE_LIST [D_OPTION_SD]
 		do
 			if msil_widgets_enabled then
+				
+				l_defaults := root_ast.defaults
+				if l_defaults = Void then
+					create l_defaults.make (1)
+					root_ast.set_defaults (l_defaults)
+				end
+				if not md_cache_path.is_empty then
+					l_defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.metadata_cache_path, md_cache_path.text, False))
+				end
+					
 				al := root_ast.assemblies
 				check
 					correctly_retrieved: al = Void or else al.is_empty
@@ -124,7 +138,32 @@ feature {NONE} -- Filling
 			al: LACE_LIST [ASSEMBLY_SD]
 			assembly: ASSEMBLY_SD
 			list_row: EV_MULTI_COLUMN_LIST_ROW
+			l_defaults: LACE_LIST [D_OPTION_SD]
+			l_free_opt: FREE_OPTION_SD
+			l_removed: BOOLEAN
 		do
+			l_defaults := root_ast.defaults
+			if l_defaults /= Void then
+				from
+					l_defaults.start
+				until
+					l_defaults.after
+				loop
+					l_free_opt ?= l_defaults.item.option
+					if l_free_opt /= Void and then l_free_opt.code = feature {FREE_OPTION_SD}.metadata_cache_path then
+						if l_defaults.item.value.is_name then
+							md_cache_path.set_text (l_defaults.item.value.value)
+							l_defaults.remove
+							l_removed := True
+						end	
+					end
+					if not l_removed then
+						l_defaults.forth	
+					end
+					l_removed := False
+				end
+			end
+			
 			al ?= root_ast.assemblies
 			if al /= Void then
 				from
@@ -218,61 +257,6 @@ feature -- Actions
 				assembly_list.remove
 			end	
 		end
-	
-	show_gac_assembly_dialog is
-			-- Show the GAC assembly dialog to allow for adding of
-			-- GAC assemblies
-		local
-			gac_dialog: EV_DIALOG
-			vbox, item_box: EV_VERTICAL_BOX
-			hbox: EV_HORIZONTAL_BOX
-			cell: EV_CELL
-			label: EV_LABEL
-			assembly_list: EV_MULTI_COLUMN_LIST
-			assembly_add_button, assembly_cancel_button: EV_BUTTON
-		do			
-			create gac_dialog
-			gac_dialog.set_title ("GAC Assembly Dialog")	
-			
-			create vbox
-			vbox.set_border_width (Layout_constants.Small_border_size)
-			vbox.set_padding (Layout_constants.Small_padding_size)
-
-			create item_box
-			item_box.set_padding (Layout_constants.Tiny_padding_size)
-			create label.make_with_text ("Global Assembly Cache")
-			label.align_text_left
-			create assembly_list
-			assembly_list.disable_multiple_selection
-			assembly_list.set_column_titles (<<"Assembly Name", "Version", "Culture", "Public Key">>)
-			assembly_list.pointer_double_press_actions.force_extend (agent add_gac_assembly_reference (assembly_list))
-			item_box.extend (label)
-			item_box.disable_item_expand (label)
-			item_box.extend (assembly_list)
-			vbox.extend (item_box)
-
-			create hbox
-			hbox.set_padding (Layout_constants.Tiny_padding_size)
-			create cell
-			hbox.extend (cell)
-			create assembly_add_button.make_with_text_and_action 
-				("Add", agent add_gac_assembly_reference (assembly_list))
-			assembly_add_button.set_minimum_width (80)
-			create assembly_cancel_button.make_with_text_and_action 
-				("Close", agent gac_dialog.destroy)
-			assembly_cancel_button.set_minimum_width (80)
-			hbox.extend (assembly_add_button)
-			hbox.extend (assembly_cancel_button)
-			hbox.disable_item_expand (assembly_add_button)
-			hbox.disable_item_expand (assembly_cancel_button)
-			vbox.extend (hbox)
-			vbox.disable_item_expand (hbox)
-
-			gac_dialog.extend (vbox)
-			gac_dialog.set_size (400, 400)	
-			populate_gac_assembly_dialog (assembly_list)
-			gac_dialog.show_modal_to_window (system_window.window)
-		end
 
 	add_local_assembly_reference is
 			-- Open the browse dialog for adding of local assembly reference
@@ -331,7 +315,7 @@ feature -- Actions
 			elseif ass_type.is_equal ("Local") then
 				local_assembly_list.remove_selected_item
 			end
-		end
+		end		
 
 feature {NONE} -- Initialization
 
@@ -339,12 +323,32 @@ feature {NONE} -- Initialization
 			-- Create widget corresponding to `General' tab in notebook.
 		require
 			top_not_void: top /= Void
+		local		
+			l_frame: EV_FRAME
+			l_hbox: EV_HORIZONTAL_BOX
 		do
 			system_window := top
 			tab_make
 			default_create
 			
-			extend (msil_assembly_info ("GAC", agent show_gac_assembly_dialog, agent remove_reference ("GAC")))
+			set_border_width (5)
+			set_padding (3)
+			
+			create l_frame.make_with_text ("Eiffel Assembly Cache Options")
+			create md_cache_path.make_with_text_and_parent ("Cache Path:", system_window.window)
+			create l_hbox
+			l_hbox.set_border_width (Layout_constants.Small_border_size)
+			l_hbox.set_padding (Layout_constants.Small_padding_size)
+			l_hbox.extend (md_cache_path)
+			l_frame.extend (l_hbox)
+			extend (l_frame)
+			disable_item_expand (l_frame)
+			
+				-- As soon as we do a successful compilation we cannot
+				-- change some options.
+			widgets_set_before_has_compilation_started.extend (md_cache_path)
+
+			extend (msil_assembly_info ("GAC", Void, agent remove_reference ("GAC")))
 			extend (msil_assembly_info ("local", agent add_local_assembly_reference, agent remove_reference ("Local")))
 			
 			msil_specific_widgets.extend (Current)
@@ -404,19 +408,27 @@ feature {NONE} -- Initialization
 				item_box.extend (local_assembly_list)
 			end
 			
-			create add_button.make_with_text_and_action ("Add", add_proc)
-			create remove_button.make_with_text_and_action ("Remove", remove_proc)
+			if add_proc /= Void then
+				create add_button.make_with_text_and_action ("Add", add_proc)
+			end
+			if remove_proc /= Void then
+				create remove_button.make_with_text_and_action ("Remove", remove_proc)	
+			end
 			vbox.extend (item_box)
 			create hbox
 			hbox.set_padding (Layout_constants.Tiny_padding_size)
 			create cell
-			add_button.set_minimum_width (80)
-			remove_button.set_minimum_width (80)
 			hbox.extend (cell)
-			hbox.extend (add_button)
-			hbox.extend (remove_button)
-			hbox.disable_item_expand (add_button)
-			hbox.disable_item_expand (remove_button)
+			if add_proc /= Void then
+				add_button.set_minimum_width (80)
+				hbox.extend (add_button)
+				hbox.disable_item_expand (add_button)
+			end
+			if remove_proc /= Void then
+				remove_button.set_minimum_width (80)
+				hbox.extend (remove_button)	
+				hbox.disable_item_expand (remove_button)
+			end
 			vbox.extend (hbox)
 			vbox.disable_item_expand (hbox)
 			Result.extend (vbox)
@@ -450,54 +462,6 @@ feature -- Implementation
 			else
 				Result := "local"
 			end	
-		end
-		
-	populate_gac_assembly_dialog (assembly_list: EV_MULTI_COLUMN_LIST) is
-			-- Populate the 'assembly_list' with the list of assemblies in the GAC
-		require
-			list_not_void: assembly_list /= Void
-		local
-			list_row: EV_MULTI_COLUMN_LIST_ROW
-			add_to_gac_dialog: BOOLEAN
-		do
-			create assembly_interface.make
-			if assembly_interface.exists then
-				from
-					assembly_list.wipe_out
-					assembly_interface.start
-				until
-					assembly_interface.after
-				loop
-					from
-						gac_assembly_list.start
-						add_to_gac_dialog := True
-					until
-						gac_assembly_list.after or not add_to_gac_dialog
-					loop
-						list_row := gac_assembly_list.item
-							if list_row.i_th (3).is_equal (assembly_interface.assembly_name) then
-								if list_row.i_th (4).is_equal (assembly_interface.assembly_version) then
-									if list_row.i_th (5).is_equal (assembly_interface.assembly_culture) then 
-										if list_row.i_th (6).is_equal (assembly_interface.assembly_public_key_token) then
-											add_to_gac_dialog := False
-										end
-									end
-								end
-							end
-						gac_assembly_list.forth
-					end
-					if add_to_gac_dialog then
-						create list_row
-						list_row.extend (assembly_interface.assembly_name)
-						list_row.extend (assembly_interface.assembly_version)
-						list_row.extend (assembly_interface.assembly_culture)
-						list_row.extend (assembly_interface.assembly_public_key_token)
-						assembly_list.extend (list_row)
-					end
-					assembly_interface.forth
-				end
-			end
-			assembly_list.resize_column_to_content (1)
 		end
 	
 	unique_assembly_cluster_name (ass_type, a_name, a_culture, a_version, a_public_key: STRING): STRING is

@@ -18,6 +18,9 @@ inherit
 			copy, is_equal
 		end
 
+creation
+	make
+
 feature -- Properties
 
 	class_id: CLASS_ID;
@@ -30,6 +33,13 @@ feature -- Properties
 		do
 			Result := Eiffel_system.class_of_id (class_id);
 		end;
+
+feature {FEATURE_TABLE} -- Element change
+
+	set_capacity (new_capacity: INTEGER) is
+		do
+			capacity := new_capacity
+		end
 
 feature {FEATURE_TABLE} -- Optimization
 

@@ -169,26 +169,25 @@ feature -- Access
 		local
 			cur_width, cur_height: INTEGER
 			screen_dc: WEL_SCREEN_DC
-			size: WEL_SIZE
-			text_metric: WEL_TEXT_METRIC
+			bounding_rect: WEL_RECT
 		do
 			if a_string.is_empty then
 				cur_width := 0
 				cur_height := 0
 			else
+				create bounding_rect.make (0, 0, 32767, 32767)
 				create screen_dc
 				screen_dc.get
 				screen_dc.select_font (Current)
-				
-				create text_metric.make (screen_dc)
-				
-				size := screen_dc.string_size (a_string)
-				cur_width := size.width
-				cur_height := size.height
-				
+
+				screen_dc.draw_text (a_string, bounding_rect, Dt_calcrect | Dt_expandtabs | Dt_noprefix)
+				cur_width := bounding_rect.width
+				cur_height := bounding_rect.height
+
 				screen_dc.unselect_font
 				screen_dc.quick_release
 			end
+
 			Result := [cur_width, cur_height]
 		end
 

@@ -10,7 +10,8 @@ create
 feature {NONE} -- Initialization
 
 	<FL_CREATION_ROUTINE_NAME> is
-			-- Entry point
+		indexing
+			description: "Entry point"
 		do
 			-- To be completed.
 		end

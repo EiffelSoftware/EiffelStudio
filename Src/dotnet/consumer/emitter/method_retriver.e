@@ -4,7 +4,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	METHOD_RETRIVER
+	METHOD_RETRIEVER
 
 feature -- Implementation
 

@@ -1,6 +1,6 @@
 indexing
-	description: "Objects that ..."
-	author: "Mark Howard, AxaRosenberg"
+	description: "Objects that describe a directory containing C code to merge into a single file"
+	author: "Mark Howard, AxaRosenberg - revision 1.12 by Arnaud PICHERY, ISE"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -130,105 +130,115 @@ feature
 			is_cpp_file: BOOLEAN
 			input_string: STRING
 		do
-			input_string := buffered_input_string
-			l_files := c_files
-			if l_files /= Void then
-				l_files.append (x_files)
-			else
-				l_files := x_files
-			end
-			l_directories := directories.linear_representation
-
-debug ("OUTPUT")
-			print ("x/c files%N")
-end
-			if not l_files.empty then 
-				l_big_file_name := clone (name)
-				l_big_file_name.append_character (Directory_separator)
-				l_big_file_name.append (big_file_name)
-				create big_file.make_open_write (l_big_file_name)
-				is_x_file := False
-				from
-					l_files.start
-				until
-					l_files.off
-				loop
-					l_file := l_files.item
-debug ("OUTPUT")
-					print (makefile_sh.last_string)
-					io.new_line
-					print (l_file.name)
-					io.new_line
-end
-					if not is_x_file then
-						is_x_file := l_file.name.substring_index (".x",1) > 0
-					end
-
-					if not is_cpp_file then
-						is_cpp_file := l_file.name.substring_index ("pp", 1) = l_file.name.count - 1
-					end
-					l_file.open_read
-					l_file.read_all (input_string)
-						-- Generate the `line' statement for the C debugger.
-					big_file.put_string ("#line 1 %"" + generate_name (l_file.name) + "%"%N")
-					big_file.put_string (input_string)
-					l_file.close
-					l_files.forth
-				end
-				big_file.close
-
-				l_big_file_name := clone (l_big_file_name)
-				if is_x_file then
-					if is_cpp_file then
-						l_big_file_name.append (".xpp")
-					else
-						l_big_file_name.append (".x")
-					end
+			if makefile_sh /= Void then
+				input_string := buffered_input_string
+				l_files := c_files
+				if l_files /= Void then
+					l_files.append (x_files)
 				else
-					if is_cpp_file then
-						l_big_file_name.append (".cpp")
-					else
-						l_big_file_name.append (".c")
-					end
+					l_files := x_files
 				end
-				big_file.change_name (l_big_file_name)
-			end
+				l_directories := directories.linear_representation
 
-			makefile_sh.open_read
-			makefile_sh.read_stream (makefile_sh.count)
-			makefile_sh.close
+	debug ("OUTPUT")
+				print ("x/c files%N")
+	end
+				if not l_files.empty then 
+					l_big_file_name := clone (name)
+					l_big_file_name.append_character (Directory_separator)
+					l_big_file_name.append (big_file_name)
+					create big_file.make_open_write (l_big_file_name)
+					is_x_file := False
+					from
+						l_files.start
+					until
+						l_files.off
+					loop
+						l_file := l_files.item
+	debug ("OUTPUT")
+						print (makefile_sh.last_string)
+						io.new_line
+						print (l_file.name)
+						io.new_line
+	end
+						if not is_x_file then
+							is_x_file := l_file.name.substring_index (".x",1) > 0
+						end
 
-			if makefile_sh.last_string.substring_index ("OLDOBJECTS", 1) = 0 then
-				makefile_sh.last_string.replace_substring_all ("OBJECTS =",
-					"OBJECTS = " + big_file_name + "." + object_extension + "%N%N" + "OLDOBJECTS = ")
-				makefile_sh.open_write
-				makefile_sh.put_string (makefile_sh.last_string)
-				makefile_sh.put_string ("%N")
+						if not is_cpp_file then
+							is_cpp_file := l_file.name.substring_index ("pp", 1) = l_file.name.count - 1
+						end
+						l_file.open_read
+						l_file.read_all (input_string)
+							-- Generate the `line' statement for the C debugger.
+						big_file.put_string ("#line 1 %"" + generate_name (l_file.name) + "%"%N")
+						big_file.put_string (input_string)
+						l_file.close
+						l_files.forth
+					end -- loop
+					big_file.close
+
+					l_big_file_name := clone (l_big_file_name)
+					if is_x_file then
+						if is_cpp_file then
+							l_big_file_name.append (".xpp")
+						else
+							l_big_file_name.append (".x")
+						end
+					else
+						if is_cpp_file then
+							l_big_file_name.append (".cpp")
+						else
+							l_big_file_name.append (".c")
+						end
+					end
+					big_file.change_name (l_big_file_name)
+				end -- not l_files.empty
+
+				makefile_sh.open_read
+				makefile_sh.read_stream (makefile_sh.count)
 				makefile_sh.close
-			end
+
+				if makefile_sh.last_string.substring_index ("OLDOBJECTS", 1) = 0 then
+					makefile_sh.last_string.replace_substring_all ("OBJECTS =",
+						"OBJECTS = " + big_file_name + "." + object_extension + "%N%N" + "OLDOBJECTS = ")
+					makefile_sh.open_write
+					makefile_sh.put_string (makefile_sh.last_string)
+					makefile_sh.put_string ("%N")
+					makefile_sh.close
+				end
 
 debug ("OUTPUT")
-		print ("Directories%N")
+				print ("Directories%N")
 end
-			-- Do the work an all subdirectories
-			from
-				l_directories.start
-			until
-				l_directories.off
-			loop
+				-- Do the work an all subdirectories
+				from
+					l_directories.start
+				until
+					l_directories.off
+				loop
 debug ("OUTPUT")
-				print (l_directories.item.name)
+					print (l_directories.item.name)
+					io.new_line
+end
+					l_directories.item.convert
+					l_directories.forth
+				end
+debug ("OUTPUT")
+				print ("Makefile SH%N")
+				print (makefile_sh.name)
 				io.new_line
 end
-				l_directories.item.convert
-				l_directories.forth
-			end
-debug ("OUTPUT")
-			print ("Makefile SH%N")
-			print (makefile_sh.name)
-			io.new_line
-end
+			else -- makefile_sh /= void
+				io.put_string("WARNING: jumping directory '")
+				io.put_string(name)
+				io.put_string("'")
+				io.new_line
+				io.put_string("CAUSE: directory does not contain any makefile file")
+				io.new_line
+			end -- makefile_sh /= void
 		end
+
 
 	path (a_name: STRING): STRING is
 		do

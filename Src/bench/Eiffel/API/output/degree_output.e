@@ -102,10 +102,15 @@ feature -- Start output features
 			processed := 0;
 		end;
 
-	put_start_documentation (total_num: integer) is
+	put_start_documentation (total_num: integer; type: STRING) is
 			-- Initialize the document generation.
+		require
+			valid_type: type /= Void
 		do
 			total_number := total_num;
+			io.error.putstring ("Generating ");
+			io.error.putstring (type);
+			io.error.new_line;
 			processed := 0;
 		end;
 
@@ -136,9 +141,8 @@ feature -- Output on per class
 			processed := processed + 1;
 		end;
 
-	skip_degree_6 is
-			-- Process Degree 6 information to skip a cluster
-			-- processing.
+	skip_entity is
+			-- Increment the processed by 1 (for both classes and clusters).
 		do
 			processed := processed + 1
 		end;
@@ -369,6 +373,15 @@ feature {NONE} -- Implementation
 			io.error.putstring (deg_nbr);
 			io.error.putstring (a_name);
 			io.error.new_line
+		end;
+
+	percentage_calculation (to_go: INTEGER): INTEGER is
+			-- Percentage calcuation based on `to_go' and `total_number'
+		do
+			Result := 100 - (100 * to_go) // total_number;
+			if Result = 100 and then to_go /= 0 then
+				Result := 99
+			end	
 		end;
 
 feature {NONE} -- Constants

@@ -143,6 +143,13 @@ feature -- Conversion
 			Result := c_truncated_to_integer (item)
 		end
 
+	truncated_to_integer_64: INTEGER_64 is
+			-- Integer part (same sign, largest absolute
+			-- value no greater than current object's)
+		do
+			Result := c_truncated_to_integer_64 (item)
+		end
+
 	ceiling: INTEGER is
 			-- Smallest integral value no smaller than current object
 		do
@@ -277,6 +284,15 @@ feature {NONE} -- Implementation
 			"C [macro %"eif_misc.h%"]"
 		alias
 			"conv_ri"
+		end
+
+	c_truncated_to_integer_64 (r: REAL): INTEGER_64 is
+			-- Integer part of `r' (same sign, largest absolute
+			-- value no greater than `r''s)
+		external
+			"C macro use %"eif_misc.h%""
+		alias
+			"conv_ri64"
 		end
 
 	c_ceiling (r: REAL): REAL is

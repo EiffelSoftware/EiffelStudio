@@ -60,7 +60,6 @@ XCOPY /S ..\..\..\checkout\compiler_delivery\help\errors "help\errors"
 COPY ..\..\..\checkout\Eiffel\ace\EIFGEN\F_Code\ecdpc.exe spec\windows\bin\
 COPY ..\..\..\checkout\dotnet\consumer\ace\EIFGEN\F_Code\EiffelSoftware.MetadataConsumer.dll spec\windows\bin\
 COPY ..\..\..\checkout\Eiffel\eiffel\com_il_generation\Core\run-time\EiffelSoftware.Runtime.dll spec\windows\bin\
-COPY ..\..\..\checkout\Eiffel\eiffel\com_il_generation\Core\run-time\EiffelSoftware.Runtime.dll ..\..\CodeDom\bin
 XCOPY /S ..\..\..\checkout\compiler_delivery\config\windows\msc config\windows\msc
 XCOPY /S ..\..\..\checkout\compiler_delivery\config\windows\templates config\windows\templates
 CD ..\library

@@ -19,7 +19,7 @@ feature -- Properties
 		deferred
 		end
 
-	signature: STRING
+	c_signature: STRING
 			-- Signature
 
 	include_files: STRING
@@ -29,10 +29,10 @@ feature -- Properties
 			-- Special part
 
 	argument_types: ARRAY [STRING]
-			-- Types of the arguments (extracted from the signature)
+			-- Types of the arguments (extracted from the c_signature)
 
 	return_type: STRING
-			-- Return type (extracted from the signature)
+			-- Return type (extracted from the c_signature)
 
 	header_files: ARRAY [STRING]
 			-- Header files to include
@@ -50,7 +50,7 @@ feature -- Conveniences
 		end
 
 	has_signature: BOOLEAN is
-			-- Does the extension define a signature?
+			-- Does the extension define a c_signature?
 		do
 			Result := return_type /= Void or else argument_types /= Void
 		end
@@ -142,9 +142,9 @@ feature -- Setting
 		end
 
 	set_signature (s: STRING) is
-			-- Assign `s' to `signature'.
+			-- Assign `s' to `c_signature'.
 		do
-			signature := s
+			c_signature := s
 		end
 
 	set_special_part (s: STRING) is
@@ -169,23 +169,23 @@ feature {NONE} -- Implementation
 			arg_count: INTEGER
 			a_type: STRING
 		do
-			if signature /= Void then
-				if signature @ 1 = '(' then
-					end_arg_list := signature.index_of (')', 1)
+			if c_signature /= Void then
+				if c_signature @ 1 = '(' then
+					end_arg_list := c_signature.index_of (')', 1)
 					!! argument_types.make (1, 0)
 					from
 						pos := 2
 					until
 						pos >= end_arg_list
 					loop
-						comma_pos := signature.index_of (',', pos)
+						comma_pos := c_signature.index_of (',', pos)
 						if comma_pos = 0 then
 								-- Last type
 							end_pos := end_arg_list - 1
 						else
 							end_pos := comma_pos - 1
 						end
-						a_type := signature.substring (pos, end_pos)
+						a_type := c_signature.substring (pos, end_pos)
 						a_type.right_adjust
 						a_type.left_adjust
 						if a_type.empty then
@@ -199,12 +199,12 @@ feature {NONE} -- Implementation
 				else
 					end_arg_list := 1
 				end
-				pos := signature.index_of (':', end_arg_list)
+				pos := c_signature.index_of (':', end_arg_list)
 				if pos /= 0 then
-					if pos = signature.count - 1 then
+					if pos = c_signature.count - 1 then
 						raise_error ("Missing return type in signature")
 					else
-						a_type := signature.substring (pos + 1, signature.count)
+						a_type := c_signature.substring (pos + 1, c_signature.count)
 						a_type.right_adjust
 						a_type.left_adjust
 						if a_type.empty then

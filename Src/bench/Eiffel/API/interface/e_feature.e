@@ -438,7 +438,7 @@ feature -- Output
 			st.add_feature (Current, name) 
 		end;
 
-	signature: STRING is
+	feature_signature: STRING is
 			-- Signature of Current feature
 		local
 			args: like arguments

@@ -112,7 +112,7 @@ feature -- Output
 						-- Error happened in a class
 					st.add_string (" in class ");
 					st.add_class_syntax (Current, System.current_class, 
-							System.current_class.signature)
+							System.current_class.class_signature)
 					if error_message /= Void then
 						st.add_new_line;
 						st.add_string (error_message)

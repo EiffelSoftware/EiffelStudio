@@ -417,7 +417,7 @@ feature -- Element change
 
 feature -- Output
 
-	signature: STRING is
+	class_signature: STRING is
 			-- Signature of class
 		local
 			formal_dec: FORMAL_DEC_AS

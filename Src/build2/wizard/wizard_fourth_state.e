@@ -32,9 +32,6 @@ feature -- Basic Operation
 		do 
 			command_handler.update
 			graphically_replace_window (main_window, first_window)
-			if not xml_handler.components_loaded then
-				xml_handler.load_components	
-			end
 			set_updatable_entries(<<>>)
 		end
 

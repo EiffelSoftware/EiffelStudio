@@ -242,7 +242,7 @@ cdd %INIT_DIR
 
 iff not defined NO_INSTALL then
 	remtrace Compile the installation executable
-	WfWI "%USERPROFILE\My Documents\Eiffel5.wsi" /c /p SOURCE_DIR=%INSTALL_DIR
+	WfWI "D:\Installations\Eiffel52\Eiffel5.wsi" /c /p SOURCE_DIR=%INSTALL_DIR
 	cdd %INIT_DIR
 	give_time_to compile the delivery
 endiff

@@ -49,13 +49,16 @@ if not exist ISE.Reflection.EiffelComponents.epr goto generate_components
 if not exist EIFGEN goto generate_components
 cd EIFGEN
 cd W_code
-if not exist ISE.Reflection.EiffelComponents.dll goto generate_components
+if not exist ISE.Reflection.EiffelComponents.dll goto update_path_and_generate_components
 gacutil -u ISE.Reflection.EiffelComponents
 gacutil -i ISE.Reflection.EiffelComponents.dll
 cd ..
 cd ..
 goto components_generated
 
+:update_path_and_generate_components
+cd ..
+cd ..
 :generate_components
 gacutil -u ISE.Reflection.EiffelComponents
 del *.epr
@@ -95,13 +98,16 @@ if not exist ISE.Reflection.EiffelAssemblyCacheNotifier.epr goto generate_notifi
 if not exist EIFGEN goto generate_notifier
 cd EIFGEN
 cd W_code
-if not exist ISE.Reflection.EiffelAssemblyCacheNotifier.dll goto generate_notifier
+if not exist ISE.Reflection.EiffelAssemblyCacheNotifier.dll goto update_path_and_generate_notifier
 gacutil -u ISE.Reflection.EiffelAssemblyCacheNotifier
 gacutil -i ISE.Reflection.EiffelAssemblyCacheNotifier.dll
 cd ..
 cd ..
 goto notifier_generated
 
+:update_path_and_generate_notifier
+cd ..
+cd ..
 :generate_notifier
 gacutil -u ISE.Reflection.EiffelAssemblyCacheNotifier
 del *.epr
@@ -141,13 +147,16 @@ if not exist ISE.Reflection.Support.epr goto generate_support
 if not exist EIFGEN goto generate_support
 cd EIFGEN
 cd W_code
-if not exist ISE.Reflection.Support.dll goto generate_support
+if not exist ISE.Reflection.Support.dll goto update_path_and_generate_support
 gacutil -u ISE.Reflection.Support
 gacutil -i ISE.Reflection.Support.dll
 cd ..
 cd ..
 goto support_generated
 
+:update_path_and_generate_support
+cd ..
+cd ..
 :generate_support
 gacutil -u ISE.Reflection.Support
 del *.epr
@@ -186,13 +195,16 @@ if not exist ISE.Reflection.EiffelAssemblyCacheHandler.epr goto generate_cache_h
 if not exist EIFGEN goto generate_cache_handler
 cd EIFGEN
 cd W_code
-if not exist ISE.Reflection.EiffelAssemblyCacheHandler.dll goto generate_cache_handler
+if not exist ISE.Reflection.EiffelAssemblyCacheHandler.dll goto update_path_and_generate_cache_handler
 gacutil -u ISE.Reflection.EiffelAssemblyCacheHandler
 gacutil -i ISE.Reflection.EiffelAssemblyCacheHandler.dll
 cd ..
 cd ..
 goto cache_handler_generated
 
+:update_path_and_generate_cache_handler
+cd ..
+cd ..
 :generate_cache_handler
 gacutil -u ISE.Reflection.EiffelAssemblyCacheHandler
 del *.epr
@@ -232,13 +244,16 @@ if not exist ISE.Reflection.CodeGenerator.epr goto generate_code_generator
 if not exist EIFGEN goto generate_code_generator
 cd EIFGEN
 cd W_code
-if not exist ISE.Reflection.CodeGenerator.dll goto generate_code_generator
+if not exist ISE.Reflection.CodeGenerator.dll goto update_path_and_generate_code_generator
 gacutil -u ISE.Reflection.CodeGenerator
 gacutil -i ISE.Reflection.CodeGenerator.dll
 cd ..
 cd ..
 goto code_generator_generated
 
+:update_path_and_generate_code_generator
+cd ..
+cd ..
 :generate_code_generator
 gacutil -u ISE.Reflection.CodeGenerator
 del *.epr
@@ -277,13 +292,16 @@ if not exist ISE.Reflection.ReflectionInterface.epr goto generate_reflection_int
 if not exist EIFGEN goto generate_reflection_interface
 cd EIFGEN
 cd W_code
-if not exist ISE.Reflection.ReflectionInterface.dll goto generate_reflection_interface
+if not exist ISE.Reflection.ReflectionInterface.dll goto update_path_and_generate_reflection_interface
 gacutil -u ISE.Reflection.ReflectionInterface
 gacutil -i ISE.Reflection.ReflectionInterface.dll
 cd ..
 cd ..
 goto reflection_interface_generated
 
+:update_path_and_generate_reflection_interface
+cd ..
+cd ..
 :generate_reflection_interface
 gacutil -u ISE.Reflection.ReflectionInterface
 del *.epr
@@ -377,12 +395,15 @@ if not exist folder_browser.epr goto generate_folder_browser
 if not exist EIFGEN goto generate_folder_browser
 cd EIFGEN
 cd F_code
-if not exist folder_browser.dll goto generate_folder_browser
+if not exist folder_browser.dll goto update_path_and_generate_folder_browser
 regsvr32 folder_browser.dll
 cd ..
 cd ..
 goto folder_browser_generated
 
+:update_path_and_generate_folder_browser
+cd ..
+cd ..
 :generate_folder_browser
 del *.epr
 rd /q /s EIFGEN
@@ -427,13 +448,16 @@ if not exist ISE.AssemblyManager.epr goto generate_assembly_manager
 if not exist EIFGEN goto generate_assembly_manager
 cd EIFGEN
 cd W_code
-if not exist ISE.AssemblyManager.dll goto generate_assembly_manager
+if not exist ISE.AssemblyManager.dll goto update_path_and_generate_assembly_manager
 gacutil -u ISE.AssemblyManager
 gacutil -i ISE.AssemblyManager.exe
 cd ..
 cd ..
 goto assembly_manager_generated
 
+:update_path_and_generate_assembly_manager
+cd ..
+cd ..
 :generate_assembly_manager
 gacutil -u ISE.AssemblyManager
 cd ..

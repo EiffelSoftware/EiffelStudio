@@ -277,6 +277,9 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 				-- Initialize CLR runtime version
 			set_clr_runtime_version
 
+				-- Initalize path to alternative metadata cache path
+			set_metadata_cache_path
+
 				-- Then build the clusters with the files *.e found
 				-- in the clusters
 			build_clusters
@@ -820,6 +823,40 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 			end
 			if system.clr_runtime_version = Void then
 				system.set_clr_runtime_version ((create {IL_ENVIRONMENT}).default_version)
+			end
+		end
+		
+	set_metadata_cache_path is
+			-- Initialize `Universe' with metadata_cache_path found in Ace file
+			-- if any. This name can be invalid in which case it does not matter,
+			-- otherwise it helps us to build a valid override cluster during
+			-- `build_clusters'.
+		local
+			l_free_option_sd: FREE_OPTION_SD
+			l_val: OPT_VAL_SD
+			l_has_value: BOOLEAN
+		do
+			if defaults /= Void then
+				from
+					defaults.start
+				until
+					defaults.after
+				loop
+					l_free_option_sd ?= defaults.item.option
+					if
+						l_free_option_sd /= Void and then
+						l_free_option_sd.code = feature {FREE_OPTION_SD}.metadata_cache_path
+					then
+						l_val := defaults.item.value
+						if l_has_value or else not l_val.is_name then
+							l_free_option_sd.error (l_val)
+						else
+							l_has_value := True
+							System.set_metadata_cache_path (l_val.value)
+						end
+					end
+					defaults.forth
+				end
 			end
 		end
 

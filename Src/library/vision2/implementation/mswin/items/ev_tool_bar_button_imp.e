@@ -12,14 +12,19 @@ class
 
 inherit
 	EV_TOOL_BAR_BUTTON_I
+		select
+			parent_imp
+		end
 
 	EV_SIMPLE_ITEM_IMP
+		rename
+			parent_imp as old_parent_imp
 		undefine
-			pixmap_size_ok
+			pixmap_size_ok,
+			parent
 		redefine
 			set_text,
-			set_pixmap,
-			parent_imp
+			set_pixmap
 		end
 
 	EV_ID_IMP
@@ -46,9 +51,6 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-
-	parent_imp: EV_TOOL_BAR_IMP
-			-- Parent implementation
 
 	index: INTEGER is
 			-- Index of the current item.
@@ -83,6 +85,20 @@ feature -- Status report
 		end
 
 feature -- Status setting
+
+	set_parent (par: like parent) is
+			-- Make `par' the new parent of the widget.
+			-- `par' can be Void then the parent is the screen.
+		do
+			if parent_imp /= Void then
+				parent_imp.remove_item (Current)
+				parent_imp := Void
+			end
+			if par /= Void then
+				parent_imp ?= par.implementation
+				parent_imp.add_item (Current)
+			end
+		end
 
 	set_insensitive (flag: BOOLEAN) is
 			-- Make the current button insensitive if `flag' and

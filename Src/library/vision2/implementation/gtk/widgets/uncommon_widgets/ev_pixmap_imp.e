@@ -72,7 +72,7 @@ feature -- Element change
 			end
 			
 		end	
-		
+
 feature {NONE} -- Implementation
 
 	parent_widget: POINTER

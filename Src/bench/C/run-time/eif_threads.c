@@ -1098,7 +1098,7 @@ rt_public void eif_thr_cond_wait_with_timeout (EIF_POINTER cond_ptr, EIF_POINTER
 	EIF_MUTEX_TYPE *mutex = (EIF_MUTEX_TYPE *) mutex_ptr;
 
 	if (cond != (EIF_COND_TYPE *) 0) {
-		EIF_COND_WAIT_WITH_TIMEOUT(cond, mutex, timeout, "cannot cond_wait with timeout");
+		EIF_COND_WAIT_WITH_TIMEOUT(cond, mutex, a_timeout, "cannot cond_wait with timeout");
 	} else
 		eraise ("Trying to cond_wait_with_timeout on NULL", EN_EXT);
 #endif /* EIF_NO_CONDVAR */

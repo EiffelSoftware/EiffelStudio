@@ -1,4 +1,11 @@
-deferred class FILTER
+indexing
+
+	description:
+		"Abstract notion of a profile filter.";
+	date: "$Date$";
+	revision: "$Revision$"
+
+deferred class PROFILE_FILTER
 
 feature -- Checking
 
@@ -24,7 +31,7 @@ feature -- Checking
 
 feature -- Adding
 
-	extend (new_filter: FILTER) is
+	extend (new_filter: PROFILE_FILTER) is
 		deferred
 		end
 
@@ -46,4 +53,4 @@ feature -- Value setting
 		deferred
 		end
 
-end -- class FILTER
+end -- class PROFILE_FILTER

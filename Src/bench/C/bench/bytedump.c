@@ -1318,6 +1318,7 @@ static  EIF_INTEGER blong (void)
 {
 	EIF_INTEGER result;
 	memcpy (&result, ip, sizeof(EIF_INTEGER));
+	ip += sizeof(EIF_INTEGER);
 	
 	return result;
 }
@@ -1327,6 +1328,7 @@ static EIF_DOUBLE bdouble (void)
 {
 	EIF_DOUBLE result;
 	memcpy (&result, ip, sizeof(EIF_DOUBLE));
+	ip += sizeof(EIF_DOUBLE);
 	
 	return result;
 }
@@ -1336,6 +1338,7 @@ static EIF_INTEGER_16 bshort (void)
 {
 	EIF_INTEGER_16 result;
 	memcpy (&result, ip, sizeof(EIF_INTEGER_16));
+	ip += sizeof(EIF_INTEGER_16);
 	
 	return result;
 }

@@ -213,7 +213,7 @@ feature {EIFNET_DEBUG_VALUE_FACTORY, SHARED_EIFNET_DEBUG_VALUE_FORMATTER, DEBUG_
 			l_mp: MANAGED_POINTER
 		do
 			l_mp := value_data_pointer (a_data)
-			Result := l_mp.read_real (0)
+			Result := l_mp.read_real_32 (0)
 		end
 
 	prepared_icor_debug_value_as_double (a_data: ICOR_DEBUG_VALUE): DOUBLE is
@@ -221,7 +221,7 @@ feature {EIFNET_DEBUG_VALUE_FACTORY, SHARED_EIFNET_DEBUG_VALUE_FORMATTER, DEBUG_
 			l_mp: MANAGED_POINTER
 		do
 			l_mp := value_data_pointer (a_data)
-			Result := l_mp.read_double (0)
+			Result := l_mp.read_real_64 (0)
 		end
 
 	prepared_icor_debug_value_as_pointer (a_data: ICOR_DEBUG_VALUE): POINTER is

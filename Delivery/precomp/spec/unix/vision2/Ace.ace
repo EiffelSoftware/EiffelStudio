@@ -29,7 +29,7 @@ cluster
 
 	all base:               "$ISE_EIFFEL/library/base"
 	       exclude
-	            "table"; "desc"; "CVS"; 
+	            "table_eiffel3"; "desc"; "CVS"; 
 	       end
 
 	gel:                "$ISE_EIFFEL/library/gel"

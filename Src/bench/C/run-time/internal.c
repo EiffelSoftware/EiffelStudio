@@ -49,13 +49,17 @@ char *object;
 	int dtype = Dtype(object);
 	uint32 field_type;
 	char *o_ref, *new_obj;
+#ifdef WORKBENCH
+	long offset;
+#endif
 
 	obj_desc = &System(dtype);
 	field_type = obj_desc->cn_types[i];
 #ifndef WORKBENCH
 	o_ref = object + (obj_desc->cn_offsets[i])[dtype];
 #else
-	o_ref = object + ((long *) Table(obj_desc->cn_attr[i]))[dtype];
+	CAttrOffs(offset,obj_desc->cn_attr[i],dtype);
+	o_ref = object + offset;
 #endif
 	switch (field_type & SK_HEAD) {
 	case SK_CHAR:
@@ -260,12 +264,16 @@ char *object;
 	struct cnode *obj_desc;
 	int dtype = Dtype(object);
 	char *o_ref;
+#ifdef WORKBENCH
+	long offset;
+#endif
 
 	obj_desc = &System(dtype);
 #ifndef WORKBENCH
 	o_ref = object + (obj_desc->cn_offsets[i])[dtype];
 #else
-	o_ref = object + ((long *) Table(obj_desc->cn_attr[i]))[dtype];
+	CAttrOffs(offset,obj_desc->cn_attr[i],dtype);
+	o_ref = object + offset;
 #endif
 	return o_ref;
 }

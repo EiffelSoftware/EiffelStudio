@@ -101,7 +101,8 @@ register4 long nbr;
 #ifndef WORKBENCH
 			o_ref = curr + (offsets[nbr_attr][curr_dtype]);		
 #else
-			o_ref = curr + ((long *) Table(rout_ids[nbr_attr])) [curr_dtype];
+			CAttrOffs(offset,rout_ids[nbr_attr],curr_dtype);
+			o_ref = curr + offset;
 #endif
 			switch(type & SK_HEAD) {
 			case SK_REF:
@@ -295,11 +296,10 @@ int where;		/* Invariant is being checked before or after compound? */
 #else
 	{
 		uint32 body_id;
-		uint32 body_index;
+		int16 body_index;
 		struct item *last;
 
-		body_index =
-			((struct ca_info *) Table(INVARIANT_ID))[dtype].ca_id;
+		CBodyIdx(body_index,INVARIANT_ID,dtype);
 		body_id = dispatch[body_index];
 		if (body_id < zeroc) { 		/* Frozen invariant */
 			((void (*)()) frozen[body_id])(obj, where);
@@ -307,7 +307,7 @@ int where;		/* Invariant is being checked before or after compound? */
 			last = iget();
 			last->type = SK_REF;
 			last->it_ref = obj;
-			IC = melt[body_id - zeroc];
+			IC = melt[body_id];
 			xiinv(IC, where);
 		}
 	}
@@ -405,9 +405,9 @@ char *parent;	/* Parent (enclosing object) */
 			long offset;					/* Attribute offset */
 			int exp_dtype;					/* Expanded dynamic type */
 			int32 feature_id;				/* Creation procedure feature id */		
-			int32 static_id;				/* Creation procedure feature id */		
+			int32 static_id;				/* Creation procedure feature id */
 
-			offset = ((long *) Table(cn_attr[i]))[dtype];
+			CAttrOffs(offset,cn_attr[i],dtype);
 			exp_dtype = (int) (type & SK_DTYPE);
 			exp_desc = &System(exp_dtype);
 			feature_id = exp_desc->cn_creation_id;
@@ -435,7 +435,7 @@ char *parent;	/* Parent (enclosing object) */
 			extern int bit_dtype;			/* Bit dynamic type */
 		
 			/* Set dynamic type for bit expanded object */	
-			offset = ((long *) Table(cn_attr[i]))[dtype];
+			CAttrOffs(offset,cn_attr[i],dtype);
 			zone = HEADER(l[0] + offset);
 			zone->ov_flags = bit_dtype;
 			zone->ov_flags |= EO_EXP;

@@ -50,8 +50,9 @@
 #define RTXB(x,y) b_copy(x,y)
 #define RTEB(x,y) b_equal(x,y)
 #ifdef WORKBENCH
-#define RTUD(x) fdtypes[x]  /* Updated dynamic type */
-#define RTLX(x)	cr_exp(x)
+extern int fcount;
+#define RTUD(x) ((x)>=fcount?(x):fdtypes[x])  /* Updated dynamic type */
+#define RTLX(x)   cr_exp(x)
 #endif
 
 /* Macro used for object cloning:
@@ -278,7 +279,6 @@
  *  RTWA(x,y,z) is the access to an attribute
  *  RTVA(x,y,z,t) is a nested access to an attribute (dot expression)
  *  RTWT(x,y,z) fetches the creation type
- *  RTWI(x,y,z) gives the call information structure
  *  RTWP(x,y,z) returns the feature address ($ operator)
  */
 #define RTWF(x,y,z) wfeat(x,y,z)
@@ -286,7 +286,6 @@
 #define RTWA(x,y,z) wattr(x,y,z)
 #define RTVA(x,y,z,t) wattr_inv(x,y,z,t)
 #define RTWT(x,y,z) wtype(x,y,z)
-#define RTWI(x,y,z) wcainfo(x,y,z)
 #define RTWP(x,y,z) wpointer(x,y,z)
 
 #define WDBG(x,y)	is_debug(x,y)				/* Debug option */

@@ -142,6 +142,7 @@ int tab;
 	register6 long **offsets;			   /* Attribute offsets table */
 #else
 	register4 int32 *cn_attr;			   /* Attribute keys */
+	long offset;
 #endif
 	register5 int16 dyn_type;			   /* Object dynamic type */
 	char *o_ref;
@@ -177,7 +178,8 @@ int tab;
 #ifndef WORKBENCH
 		o_ref = object + (offsets[i])[dyn_type];
 #else
-		o_ref = object + ((long *) Table(cn_attr[i]))[dyn_type];
+		CAttrOffs(offset,cn_attr[i],dyn_type);
+		o_ref = object + offset;
 #endif
 		switch(type & SK_HEAD) {
 		case SK_POINTER:

@@ -282,7 +282,6 @@ EIF_TYPE_ID cid;
 	int32 feature_id;
 	int32 rout_id;
 	uint32 body_id;
-	struct ca_info *info;
 	int16 body_index;
 #endif
 
@@ -296,7 +295,7 @@ EIF_TYPE_ID cid;
 #else
 	feature_id = *(int32 *) ct_value(ptr_table, routine);
 	rout_id = (System(dtype).cn_routids)[feature_id];
-	body_index = ((struct ca_info *)Table(rout_id))[dtype].ca_id;
+	CBodyIdx(body_index,rout_id,dtype);
 	body_id = dispatch[body_index];
 
 	if (body_id < zeroc)
@@ -366,6 +365,7 @@ char *name;
 #ifdef WORKBENCH
 	int32 rout_id;					/* Attribute routine id */
 	int16 dtype;					/* Object dynamic type */
+	long offset;
 #endif
 
 	i = locate(object, name);		/* Locate attribute in skeleton */
@@ -377,7 +377,8 @@ char *name;
 #else
 	dtype = Dtype(object);
 	rout_id = System(dtype).cn_attr[i]; 
-	return object + ((long *) Table(rout_id))[dtype];
+	CAttrOffs(offset,rout_id,dtype);
+	return object + offset;
 #endif
 }
 
@@ -452,7 +453,7 @@ char *name;
 #else
 	dtype = Dtype(object);
 	rout_id = System(dtype).cn_attr[i];
-	offset = ((long *) Table(rout_id))[dtype];
+	CAttrOffs(offset,rout_id,dtype);
 
 	return (EIF_BIT) (object + offset);
 #endif

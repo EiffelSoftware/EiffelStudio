@@ -502,10 +502,10 @@ char *enclosing;		/* Enclosing target object (may differ from target) */
 		attr_key = tcn_attr[t_index];
 
 		/* Evaluation of the target attribute offset */
-		t_offset = ((long *) Table(attr_key))[t_type];
+		CAttrOffs(t_offset,attr_key,t_type);
 
 		/* Evaluation of the source attribute offset */
-		s_offset = ((long *) Table(attr_key))[s_type];
+		CAttrOffs(s_offset,attr_key,s_type);
 
 		/* Evaluation of the source index */
 		 for (s_index = 0; scn_attr[s_index] != attr_key; s_index++)

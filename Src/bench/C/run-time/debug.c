@@ -278,7 +278,7 @@ int what;			/* Command (DT_SET, DT_REMOVE, ...) */
 
 	char *where;				/* Location where breakpoint is written */
 
-	where = melt[body_id - zeroc];		/* Start of byte code */
+	where = melt[body_id];				/* Start of byte code */
 	where += offset;					/* And shifted by offset */
 
 	switch (what) {
@@ -914,7 +914,7 @@ char *addr;			/* Address where byte code is stored */
 #endif
 
 	dispatch[body_idx] = body_id;		/* Set-up indirection table */
-	melt[body_id - zeroc] = addr;		/* And record new byte code */
+	melt[body_id] = addr;				/* And record new byte code */
 }
 
 public void dexit(code)

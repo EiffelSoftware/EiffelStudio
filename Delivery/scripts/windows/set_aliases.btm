@@ -74,8 +74,6 @@ REM Finalize at the Eiffel level only
 alias finalize `ec -finalize -ace %$ >>& %INSTALL_LOG`
 REM Melt at the Eiffel level only
 alias melt `ec -freeze -ace %$ >>& %INSTALL_LOG`
-REM Compile .NET system
-alias compile_dotnet `ec -ace %$ >>& %INSTALL_LOG`
 REM Move up the generated finalized exe (its name is the parameter) and delete the compiled files
 alias cleanup_eiffel `iff exist EIFGEN\F_code\%1 then & move EIFGEN\F_code\%1 . & clean_project & endiff`
 

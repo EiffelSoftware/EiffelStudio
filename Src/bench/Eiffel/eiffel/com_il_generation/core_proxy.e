@@ -245,12 +245,13 @@ feature -- Basic Operations
 			ccom_create_feature_description (initializer)
 		end
 
-	define_entry_point (type_id: INTEGER; feature_id: INTEGER) is
+	define_entry_point (creation_type_id: INTEGER; type_id: INTEGER; feature_id: INTEGER) is
 			-- No description available.
+			-- `creation_type_id' [in].  
 			-- `type_id' [in].  
 			-- `feature_id' [in].  
 		do
-			ccom_define_entry_point (initializer, type_id, feature_id)
+			ccom_define_entry_point (initializer, creation_type_id, type_id, feature_id)
 		end
 
 	add_ca (target_type_id: INTEGER; attribute_type_id: INTEGER; arg_count: INTEGER) is
@@ -1273,10 +1274,10 @@ feature {NONE}  -- Externals
 			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"]()"
 		end
 
-	ccom_define_entry_point (cpp_obj: POINTER; type_id: INTEGER; feature_id: INTEGER) is
+	ccom_define_entry_point (cpp_obj: POINTER; creation_type_id: INTEGER; type_id: INTEGER; feature_id: INTEGER) is
 			-- No description available.
 		external
-			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_INTEGER,EIF_INTEGER)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_INTEGER,EIF_INTEGER,EIF_INTEGER)"
 		end
 
 	ccom_last_error (cpp_obj: POINTER): STRING is

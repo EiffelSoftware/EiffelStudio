@@ -185,7 +185,7 @@ feature -- Status Report
 			Result := True
 		end
 
-	define_entry_point_user_precondition (type_id: INTEGER; feature_id: INTEGER): BOOLEAN is
+	define_entry_point_user_precondition (creation_type_id: INTEGER; type_id: INTEGER; feature_id: INTEGER): BOOLEAN is
 			-- User-defined preconditions for `define_entry_point'.
 			-- Redefine in descendants if needed.
 		do
@@ -1347,12 +1347,13 @@ feature -- Basic Operations
 
 		end
 
-	define_entry_point (type_id: INTEGER; feature_id: INTEGER) is
+	define_entry_point (creation_type_id: INTEGER; type_id: INTEGER; feature_id: INTEGER) is
 			-- No description available.
+			-- `creation_type_id' [in].  
 			-- `type_id' [in].  
 			-- `feature_id' [in].  
 		require
-			define_entry_point_user_precondition: define_entry_point_user_precondition (type_id, feature_id)
+			define_entry_point_user_precondition: define_entry_point_user_precondition (creation_type_id, type_id, feature_id)
 		deferred
 
 		end

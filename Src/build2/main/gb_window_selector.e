@@ -205,7 +205,6 @@ feature {GB_WINDOW_SELECTOR_DIRECTORY_ITEM} -- Implementation
 				-- Ensure that when the item is selected, the layout constructor is updated
 				-- to reflect this.
 			selector_item.select_actions.extend (agent selected_window_changed (selector_item))
-			selector_item.deselect_actions.extend (agent window_unselected (selector_item))
 			
 			extend (selector_item)
 		ensure
@@ -249,7 +248,6 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 				-- Ensure that when the item is selected, the layout constructor is updated
 				-- to reflect this.
 			selector_item.select_actions.extend (agent selected_window_changed (selector_item))
-			selector_item.deselect_actions.extend (agent window_unselected (selector_item))
 			
 			extend (selector_item)
 			selector_item.enable_select
@@ -277,17 +275,6 @@ feature {NONE} -- Implementation
 				command_handler.update
 			end
 		end
-		
-	window_unselected (selector_item: GB_WINDOW_SELECTOR_ITEM) is
-			-- `selector_item' has become unselected, so we must
-			-- store current layout of window object referenced by `selector_item'.
-		require
-			selector_item_not_void: selector_item /= Void
-		local
-			titled_window_object: GB_TITLED_WINDOW_OBJECT
-		do
-			titled_window_object := selector_item.object
-		end
 
 	selected_window_changed (selector_item: GB_WINDOW_SELECTOR_ITEM) is
 			-- `selector_item' has become selected so we must update
@@ -302,7 +289,8 @@ feature {NONE} -- Implementation
 		do
 			titled_window_object := selector_item.object
 			layout_constructor.set_root_window (titled_window_object)
-			Object_handler.recursive_do_all (titled_window_object, agent expand_layout_item)
+			titled_window_object.update_representations
+			--Object_handler.recursive_do_all (titled_window_object, agent expand_layout_item)
 			
 				-- Now we must update the displayed display and builder windows.
 				-- Firstly hide the existing windows if shown
@@ -341,16 +329,7 @@ feature {NONE} -- Implementation
 				layout_constructor.first.enable_select
 			end
 		end
-		
-	expand_layout_item (an_object: GB_OBJECT) is
-			-- If `an_object' is expanded, expand `layout_item' of `an_object'.
-		do
-			if an_object.is_expanded then
-				an_object.layout_item.expand				
-			end
-		end
-		
-		
+
 	veto_drop (an_object: GB_OBJECT): BOOLEAN is
 			-- Veto drop of `an_object'. We currently only
 			-- allow windows to be inserted, and those must be

@@ -103,7 +103,7 @@ feature -- Implementation
 		is
 			-- Filter out double click events.
 		do
-			if a_type = feature {EV_GTK_EXTERNALS}.Gdk_button_press_enum then
+			if a_type = feature {EV_GTK_EXTERNALS}.Gdk_button_press_enum and then widget_imp_at_pointer_position = Current then
 				start_transport (
 					a_x,
 					a_y,
@@ -374,10 +374,9 @@ feature -- Implementation
 		end
 		
 	pointer_style: EV_CURSOR is
-			-- 
+			-- Style of the mouse pointer for `Current'
 		deferred
 		end
-		
 
 	call_press_actions (targ: EV_ABSTRACT_PICK_AND_DROPABLE; a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
 		local
@@ -398,7 +397,6 @@ feature -- Implementation
 				end
 			end
 		end
-			
 
 	post_drop_steps is
 			-- Steps to perform once an attempted drop has happened.
@@ -550,6 +548,11 @@ feature {EV_APPLICATION_IMP, EV_PICK_AND_DROPABLE_IMP, EV_DOCKABLE_SOURCE_IMP} -
 		end
 	
 feature {NONE} -- Implementation
+
+	widget_imp_at_pointer_position: EV_WIDGET_IMP is
+			-- Widget implementation at current mouse pointer position (if any)
+		deferred
+		end
 
 	width: INTEGER is deferred end
 	height: INTEGER is deferred end

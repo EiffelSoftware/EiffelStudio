@@ -29,6 +29,8 @@ feature {NONE} -- Initialization
 			!EV_PIXMAP_IMP! implementation.make_with_size (w, h)
 			implementation.set_interface (Current)
 			implementation.unlock
+		ensure
+			is_valid: is_valid (Current)
 		end
 
 	make_from_file (file_name: STRING) is
@@ -43,6 +45,8 @@ feature {NONE} -- Initialization
 			implementation.set_interface (Current)
 			implementation.unlock
 			read_from_file (file_name)
+		ensure
+			is_valid: is_valid (Current)
 		end
 
 feature -- Status report

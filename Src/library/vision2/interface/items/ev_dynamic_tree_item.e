@@ -27,7 +27,8 @@ inherit
 			forth, finish, start, is_empty, index, after, item
 		redefine
 			implementation,
-			parent_of_items_is_current
+			parent_of_items_is_current,
+			count
 		end
 		
 create
@@ -204,6 +205,8 @@ feature -- Status report
 					end
 					Result := linear.after
 				end
+			else
+				Result := Precursor {EV_TREE_NODE}
 			end
 		end
 
@@ -215,6 +218,27 @@ feature -- Status report
 				subtree_function_call
 				if subtree_function.last_result /= Void then
 					Result := subtree_function.last_result.is_empty
+				end
+			end
+		end
+		
+	count: INTEGER is
+			-- Number of elements in `Current'.
+		local
+			items: linear [EV_TREE_NODE]
+		do
+			if subtree_function /= Void then
+				subtree_function_call
+				if subtree_function.last_result /= Void then
+					items := subtree_function.last_result
+					from
+						items.start
+					until
+						items.off
+					loop
+						Result := Result + 1
+						items.forth
+					end
 				end
 			end
 		end

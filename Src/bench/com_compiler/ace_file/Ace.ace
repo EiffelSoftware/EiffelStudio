@@ -76,10 +76,13 @@ default
 	check_vape (yes)
 	console_application (no)
 	syntax_warning (no)
+	address_expression (no)
 	array_optimization (no)
 	dead_code_removal (yes)
+	dynamic_runtime (no)
 	exception_trace (no)
 	inlining (no)
+	multithreaded (no)
 
 
 cluster
@@ -481,6 +484,15 @@ cluster
 
 	dotnet_helpers:		"$EIFFEL_SRC\dotnet\helpers"
 
+	doc_manager_interface:		"$EIFFEL_SRC\dotnet\VisualStudio\tools\documentation_manager\generated\Common\Interfaces"
+
+	all doc_manager:		"$EIFFEL_SRC\dotnet\VisualStudio\tools\documentation_manager\generated\Client"
+		exclude
+			"Include"; "Clib"; 
+		visible
+			idm_dictionary_impl_proxy
+				end
+		end
 
 external
 
@@ -495,7 +507,9 @@ external
 		"$(EIFFEL_SRC)\library\com\spec\windows\include",
 		"$(EIFFEL_SRC)\library\exml\compiler_specific\ise\clib",
 		"$(EIFFEL_SRC)\library\gobo\library\kernel\include",
-		"$(EIFFEL_SRC)\library\wel\spec\windows\include"
+		"$(EIFFEL_SRC)\library\wel\spec\windows\include",
+		"$(EIFFEL_SRC)\dotnet\VisualStudio\tools\documentation_manager\generated\Client\Include",
+		"$(EIFFEL_SRC)\dotnet\VisualStudio\tools\documentation_manager\generated\Common\Include"
 
 	object:
 		"$(EIFFEL_SRC)\C\bench\wcompiler.lib",
@@ -510,6 +524,7 @@ external
 		"$(EIFFEL_SRC)\library\exml\compiler_specific\ise\clib\$(ISE_C_COMPILER)\exml.lib",
 		"$(EIFFEL_SRC)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
 		"corguids.lib",
-		"mscorsn.lib"
+		"mscorsn.lib",
+		"$(EIFFEL_SRC)\dotnet\VisualStudio\tools\documentation_manager\generated\Client\Clib\msc\ecom.lib"
 
 end

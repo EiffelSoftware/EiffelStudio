@@ -35,25 +35,25 @@ namespace ecom_control_library
 class IPropertyBag_impl_proxy
 {
 public:
-	IPropertyBag_impl_proxy (IUnknown * a_pointer);
-	virtual ~IPropertyBag_impl_proxy ();
+  IPropertyBag_impl_proxy (IUnknown * a_pointer);
+  virtual ~IPropertyBag_impl_proxy ();
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_remote_read(  /* [in] */ EIF_OBJECT psz_prop_name,  /* [out] */ VARIANT * p_var,  /* [in] */ ecom_control_library::IErrorLog * p_error_log,  /* [in] */ EIF_INTEGER var_type,  /* [in] */ IUnknown * p_unk_obj );
-
-
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_write(  /* [in] */ EIF_OBJECT psz_prop_name,  /* [in] */ VARIANT * p_var );
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_read(  /* [in] */ EIF_OBJECT psz_prop_name,  /* [out] */ VARIANT * p_var,  /* [in] */ ::IErrorLog * p_error_log);
 
 
-	/*-----------------------------------------------------------
-	IUnknown interface
-	-----------------------------------------------------------*/
-	EIF_POINTER ccom_item();
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_write(  /* [in] */ EIF_OBJECT psz_prop_name,  /* [in] */ VARIANT * p_var );
+
+
+  /*-----------------------------------------------------------
+  IUnknown interface
+  -----------------------------------------------------------*/
+  EIF_POINTER ccom_item();
 
 
 
@@ -61,16 +61,16 @@ protected:
 
 
 private:
-	/*-----------------------------------------------------------
-	Interface pointer
-	-----------------------------------------------------------*/
-	ecom_control_library::IPropertyBag * p_IPropertyBag;
+  /*-----------------------------------------------------------
+  Interface pointer
+  -----------------------------------------------------------*/
+  ::IPropertyBag * p_IPropertyBag;
 
 
-	/*-----------------------------------------------------------
-	Default IUnknown interface pointer
-	-----------------------------------------------------------*/
-	IUnknown * p_unknown;
+  /*-----------------------------------------------------------
+  Default IUnknown interface pointer
+  -----------------------------------------------------------*/
+  IUnknown * p_unknown;
 
 
 

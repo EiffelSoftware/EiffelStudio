@@ -38,7 +38,7 @@ feature -- Basic Operations
 			ccom_is_dirty (initializer)
 		end
 
-	load (pstm: ISTREAM_INTERFACE) is
+	load (pstm: ECOM_STREAM) is
 			-- No description available.
 			-- `pstm' [in].  
 		local
@@ -57,7 +57,7 @@ feature -- Basic Operations
 			ccom_load (initializer, pstm_item)
 		end
 
-	save (pstm: ISTREAM_INTERFACE; f_clear_dirty: INTEGER) is
+	save (pstm: ECOM_STREAM; f_clear_dirty: INTEGER) is
 			-- No description available.
 			-- `pstm' [in].  
 			-- `f_clear_dirty' [in].  
@@ -77,7 +77,7 @@ feature -- Basic Operations
 			ccom_save (initializer, pstm_item, f_clear_dirty)
 		end
 
-	get_size_max (pcb_size: X_ULARGE_INTEGER_RECORD) is
+	get_size_max (pcb_size: ECOM_ULARGE_INTEGER) is
 			-- No description available.
 			-- `pcb_size' [out].  
 		do
@@ -109,19 +109,19 @@ feature {NONE}  -- Externals
 	ccom_load (cpp_obj: POINTER; pstm: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IPersistStream_impl_proxy %"ecom_control_library_IPersistStream_impl_proxy_s.h%"](ecom_control_library::IStream *)"
+			"C++ [ecom_control_library::IPersistStream_impl_proxy %"ecom_control_library_IPersistStream_impl_proxy_s.h%"](IStream *)"
 		end
 
 	ccom_save (cpp_obj: POINTER; pstm: POINTER; f_clear_dirty: INTEGER) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IPersistStream_impl_proxy %"ecom_control_library_IPersistStream_impl_proxy_s.h%"](ecom_control_library::IStream *,EIF_INTEGER)"
+			"C++ [ecom_control_library::IPersistStream_impl_proxy %"ecom_control_library_IPersistStream_impl_proxy_s.h%"](IStream *,EIF_INTEGER)"
 		end
 
 	ccom_get_size_max (cpp_obj: POINTER; pcb_size: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IPersistStream_impl_proxy %"ecom_control_library_IPersistStream_impl_proxy_s.h%"](ecom_control_library::_ULARGE_INTEGER *)"
+			"C++ [ecom_control_library::IPersistStream_impl_proxy %"ecom_control_library_IPersistStream_impl_proxy_s.h%"](ULARGE_INTEGER *)"
 		end
 
 	ccom_delete_ipersist_stream_impl_proxy (a_pointer: POINTER) is

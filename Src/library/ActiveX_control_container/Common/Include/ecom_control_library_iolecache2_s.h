@@ -54,7 +54,7 @@ public:
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP RemoteUpdateCache(  /* [in] */ ecom_control_library::IDataObject * p_data_object, /* [in] */ ULONG grf_updf, /* [in] */ LONG p_reserved ) = 0;
+	virtual STDMETHODIMP UpdateCache(  /* [in] */ ecom_control_library::IDataObject * p_data_object, /* [in] */ ULONG grf_updf, /* [in] */ LONG p_reserved ) = 0;
 
 
 	/*-----------------------------------------------------------

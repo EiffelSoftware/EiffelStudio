@@ -33,19 +33,19 @@ namespace ecom_control_library
 class IPersist_impl_proxy
 {
 public:
-	IPersist_impl_proxy (IUnknown * a_pointer);
-	virtual ~IPersist_impl_proxy ();
+  IPersist_impl_proxy (IUnknown * a_pointer);
+  virtual ~IPersist_impl_proxy ();
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_get_class_id(  /* [out] */ GUID * p_class_id );
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_get_class_id(  /* [out] */ GUID * p_class_id );
 
 
-	/*-----------------------------------------------------------
-	IUnknown interface
-	-----------------------------------------------------------*/
-	EIF_POINTER ccom_item();
+  /*-----------------------------------------------------------
+  IUnknown interface
+  -----------------------------------------------------------*/
+  EIF_POINTER ccom_item();
 
 
 
@@ -53,16 +53,16 @@ protected:
 
 
 private:
-	/*-----------------------------------------------------------
-	Interface pointer
-	-----------------------------------------------------------*/
-	ecom_control_library::IPersist * p_IPersist;
+  /*-----------------------------------------------------------
+  Interface pointer
+  -----------------------------------------------------------*/
+  ::IPersist * p_IPersist;
 
 
-	/*-----------------------------------------------------------
-	Default IUnknown interface pointer
-	-----------------------------------------------------------*/
-	IUnknown * p_unknown;
+  /*-----------------------------------------------------------
+  Default IUnknown interface pointer
+  -----------------------------------------------------------*/
+  IUnknown * p_unknown;
 
 
 

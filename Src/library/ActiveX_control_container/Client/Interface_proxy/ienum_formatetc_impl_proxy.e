@@ -25,13 +25,13 @@ feature {NONE}  -- Initialization
 
 feature -- Basic Operations
 
-	remote_next (celt: INTEGER; rgelt: TAG_FORMATETC_RECORD; pcelt_fetched: INTEGER_REF) is
+	next (celt: INTEGER; rgelt: ARRAY [TAG_FORMATETC_RECORD]; pcelt_fetched: INTEGER_REF) is
 			-- No description available.
 			-- `celt' [in].  
 			-- `rgelt' [out].  
 			-- `pcelt_fetched' [out].  
 		do
-			ccom_remote_next (initializer, celt, rgelt.item, pcelt_fetched)
+			ccom_next (initializer, celt, rgelt, pcelt_fetched)
 		end
 
 	skip (celt: INTEGER) is
@@ -64,10 +64,10 @@ feature {NONE}  -- Implementation
 
 feature {NONE}  -- Externals
 
-	ccom_remote_next (cpp_obj: POINTER; celt: INTEGER; rgelt: POINTER; pcelt_fetched: INTEGER_REF) is
+	ccom_next (cpp_obj: POINTER; celt: INTEGER; rgelt: ARRAY [TAG_FORMATETC_RECORD]; pcelt_fetched: INTEGER_REF) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IEnumFORMATETC_impl_proxy %"ecom_control_library_IEnumFORMATETC_impl_proxy_s.h%"](EIF_INTEGER,ecom_control_library::tagFORMATETC *,EIF_OBJECT)"
+			"C++ [ecom_control_library::IEnumFORMATETC_impl_proxy %"ecom_control_library_IEnumFORMATETC_impl_proxy_s.h%"](EIF_INTEGER,EIF_OBJECT,EIF_OBJECT)"
 		end
 
 	ccom_skip (cpp_obj: POINTER; celt: INTEGER) is

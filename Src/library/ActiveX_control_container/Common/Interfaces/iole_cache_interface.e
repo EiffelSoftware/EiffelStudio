@@ -38,7 +38,7 @@ feature -- Status Report
 			Result := True
 		end
 
-	set_data_user_precondition (p_formatetc: TAG_FORMATETC_RECORD; pmedium: CELL [WIRE_STGMEDIUM_ALIAS]; f_release: INTEGER): BOOLEAN is
+	set_data_user_precondition (p_formatetc: TAG_FORMATETC_RECORD; pmedium: STGMEDIUM_RECORD; f_release: INTEGER): BOOLEAN is
 			-- User-defined preconditions for `set_data'.
 			-- Redefine in descendants if needed.
 		do
@@ -91,7 +91,7 @@ feature -- Basic Operations
 
 		end
 
-	set_data (p_formatetc: TAG_FORMATETC_RECORD; pmedium: CELL [WIRE_STGMEDIUM_ALIAS]; f_release: INTEGER) is
+	set_data (p_formatetc: TAG_FORMATETC_RECORD; pmedium: STGMEDIUM_RECORD; f_release: INTEGER) is
 			-- No description available.
 			-- `p_formatetc' [in].  
 			-- `pmedium' [in].  

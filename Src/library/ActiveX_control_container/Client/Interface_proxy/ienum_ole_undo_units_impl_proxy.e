@@ -25,13 +25,13 @@ feature {NONE}  -- Initialization
 
 feature -- Basic Operations
 
-	remote_next (celt: INTEGER; rgelt: CELL [IOLE_UNDO_UNIT_INTERFACE]; pcelt_fetched: INTEGER_REF) is
+	next (celt: INTEGER; rgelt: ARRAY [IOLE_UNDO_UNIT_INTERFACE]; pcelt_fetched: INTEGER_REF) is
 			-- No description available.
 			-- `celt' [in].  
 			-- `rgelt' [out].  
 			-- `pcelt_fetched' [out].  
 		do
-			ccom_remote_next (initializer, celt, rgelt, pcelt_fetched)
+			ccom_next (initializer, celt, rgelt, pcelt_fetched)
 		end
 
 	skip (celt: INTEGER) is
@@ -64,7 +64,7 @@ feature {NONE}  -- Implementation
 
 feature {NONE}  -- Externals
 
-	ccom_remote_next (cpp_obj: POINTER; celt: INTEGER; rgelt: CELL [IOLE_UNDO_UNIT_INTERFACE]; pcelt_fetched: INTEGER_REF) is
+	ccom_next (cpp_obj: POINTER; celt: INTEGER; rgelt: ARRAY [IOLE_UNDO_UNIT_INTERFACE]; pcelt_fetched: INTEGER_REF) is
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IEnumOleUndoUnits_impl_proxy %"ecom_control_library_IEnumOleUndoUnits_impl_proxy_s.h%"](EIF_INTEGER,EIF_OBJECT,EIF_OBJECT)"

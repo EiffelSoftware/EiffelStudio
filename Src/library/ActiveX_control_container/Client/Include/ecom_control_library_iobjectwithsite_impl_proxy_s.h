@@ -33,25 +33,25 @@ namespace ecom_control_library
 class IObjectWithSite_impl_proxy
 {
 public:
-	IObjectWithSite_impl_proxy (IUnknown * a_pointer);
-	virtual ~IObjectWithSite_impl_proxy ();
+  IObjectWithSite_impl_proxy (IUnknown * a_pointer);
+  virtual ~IObjectWithSite_impl_proxy ();
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_set_site(  /* [in] */ IUnknown * p_unk_site );
-
-
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_get_site(  /* [in] */ GUID * riid,  /* [out] */ EIF_OBJECT ppv_site );
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_set_site(  /* [in] */ IUnknown * p_unk_site );
 
 
-	/*-----------------------------------------------------------
-	IUnknown interface
-	-----------------------------------------------------------*/
-	EIF_POINTER ccom_item();
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_get_site(  /* [in] */ GUID * riid,  /* [out] */ EIF_OBJECT ppv_site );
+
+
+  /*-----------------------------------------------------------
+  IUnknown interface
+  -----------------------------------------------------------*/
+  EIF_POINTER ccom_item();
 
 
 
@@ -59,16 +59,16 @@ protected:
 
 
 private:
-	/*-----------------------------------------------------------
-	Interface pointer
-	-----------------------------------------------------------*/
-	ecom_control_library::IObjectWithSite * p_IObjectWithSite;
+  /*-----------------------------------------------------------
+  Interface pointer
+  -----------------------------------------------------------*/
+  ::IObjectWithSite * p_IObjectWithSite;
 
 
-	/*-----------------------------------------------------------
-	Default IUnknown interface pointer
-	-----------------------------------------------------------*/
-	IUnknown * p_unknown;
+  /*-----------------------------------------------------------
+  Default IUnknown interface pointer
+  -----------------------------------------------------------*/
+  IUnknown * p_unknown;
 
 
 

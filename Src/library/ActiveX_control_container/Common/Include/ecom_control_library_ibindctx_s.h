@@ -58,67 +58,67 @@ namespace ecom_control_library
 class IBindCtx : public IUnknown
 {
 public:
-	IBindCtx () {};
-	~IBindCtx () {};
+  IBindCtx () {};
+  ~IBindCtx () {};
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP RegisterObjectBound(  /* [in] */ IUnknown * punk ) = 0;
-
-
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP RevokeObjectBound(  /* [in] */ IUnknown * punk ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP RegisterObjectBound(  /* [in] */ IUnknown * punk ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP ReleaseBoundObjects( void ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP RevokeObjectBound(  /* [in] */ IUnknown * punk ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP RemoteSetBindOptions(  /* [in] */ ecom_control_library::tagBIND_OPTS2 * pbindopts ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP ReleaseBoundObjects( void ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP RemoteGetBindOptions(  /* [in, out] */ ecom_control_library::tagBIND_OPTS2 * pbindopts ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP SetBindOptions(  /* [in] */ ecom_control_library::tagBIND_OPTS2 * pbindopts ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP GetRunningObjectTable(  /* [out] */ ecom_control_library::IRunningObjectTable * * pprot ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP GetBindOptions(  /* [in, out] */ ecom_control_library::tagBIND_OPTS2 * pbindopts ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP RegisterObjectParam(  /* [in] */ LPWSTR psz_key, /* [in] */ IUnknown * punk ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP GetRunningObjectTable(  /* [out] */ ecom_control_library::IRunningObjectTable * * pprot ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP GetObjectParam(  /* [in] */ LPWSTR psz_key, /* [out] */ IUnknown * * ppunk ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP RegisterObjectParam(  /* [in] */ LPWSTR psz_key, /* [in] */ IUnknown * punk ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP EnumObjectParam(  /* [out] */ ecom_control_library::IEnumString * * ppenum ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP GetObjectParam(  /* [in] */ LPWSTR psz_key, /* [out] */ IUnknown * * ppunk ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP RevokeObjectParam(  /* [in] */ LPWSTR psz_key ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP EnumObjectParam(  /* [out] */ ecom_control_library::IEnumString * * ppenum ) = 0;
+
+
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP RevokeObjectParam(  /* [in] */ LPWSTR psz_key ) = 0;
 
 
 

@@ -215,7 +215,7 @@ feature -- Basic Operations
 			ccom_get_external (initializer, pp_dispatch)
 		end
 
-	translate_url (dw_translate: INTEGER; pch_urlin: INTEGER_REF; ppch_urlout: CELL [INTEGER_REF]) is
+	translate_url (dw_translate: INTEGER; pch_urlin: STRING; ppch_urlout: CELL [STRING]) is
 			-- No description available.
 			-- `dw_translate' [in].  
 			-- `pch_urlin' [in].  
@@ -269,7 +269,7 @@ feature {NONE}  -- Externals
 	ccom_show_ui (cpp_obj: POINTER; dw_id: INTEGER; p_active_object: POINTER; p_command_target: POINTER; p_frame: POINTER; p_doc: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IDocHostUIHandler_impl_proxy %"ecom_control_library_IDocHostUIHandler_impl_proxy_s.h%"](EIF_INTEGER,ecom_control_library::IOleInPlaceActiveObject *,ecom_control_library::IOleCommandTarget *,ecom_control_library::IOleInPlaceFrame *,ecom_control_library::IOleInPlaceUIWindow *)"
+			"C++ [ecom_control_library::IDocHostUIHandler_impl_proxy %"ecom_control_library_IDocHostUIHandler_impl_proxy_s.h%"](EIF_INTEGER,::IOleInPlaceActiveObject *,::IOleCommandTarget *,::IOleInPlaceFrame *,::IOleInPlaceUIWindow *)"
 		end
 
 	ccom_hide_ui (cpp_obj: POINTER) is
@@ -305,7 +305,7 @@ feature {NONE}  -- Externals
 	ccom_resize_border (cpp_obj: POINTER; prc_border: POINTER; p_uiwindow: POINTER; f_rame_window: INTEGER) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IDocHostUIHandler_impl_proxy %"ecom_control_library_IDocHostUIHandler_impl_proxy_s.h%"](ecom_control_library::tagRECT *,ecom_control_library::IOleInPlaceUIWindow *,EIF_INTEGER)"
+			"C++ [ecom_control_library::IDocHostUIHandler_impl_proxy %"ecom_control_library_IDocHostUIHandler_impl_proxy_s.h%"](ecom_control_library::tagRECT *,::IOleInPlaceUIWindow *,EIF_INTEGER)"
 		end
 
 	ccom_translate_accelerator (cpp_obj: POINTER; lpmsg: POINTER; pguid_cmd_group: POINTER; n_cmd_id: INTEGER) is
@@ -323,7 +323,7 @@ feature {NONE}  -- Externals
 	ccom_get_drop_target (cpp_obj: POINTER; p_drop_target: POINTER; pp_drop_target: CELL [IDROP_TARGET_INTERFACE]) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IDocHostUIHandler_impl_proxy %"ecom_control_library_IDocHostUIHandler_impl_proxy_s.h%"](ecom_control_library::IDropTarget *,EIF_OBJECT)"
+			"C++ [ecom_control_library::IDocHostUIHandler_impl_proxy %"ecom_control_library_IDocHostUIHandler_impl_proxy_s.h%"](::IDropTarget *,EIF_OBJECT)"
 		end
 
 	ccom_get_external (cpp_obj: POINTER; pp_dispatch: CELL [ECOM_INTERFACE]) is
@@ -332,7 +332,7 @@ feature {NONE}  -- Externals
 			"C++ [ecom_control_library::IDocHostUIHandler_impl_proxy %"ecom_control_library_IDocHostUIHandler_impl_proxy_s.h%"](EIF_OBJECT)"
 		end
 
-	ccom_translate_url (cpp_obj: POINTER; dw_translate: INTEGER; pch_urlin: INTEGER_REF; ppch_urlout: CELL [INTEGER_REF]) is
+	ccom_translate_url (cpp_obj: POINTER; dw_translate: INTEGER; pch_urlin: STRING; ppch_urlout: CELL [STRING]) is
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IDocHostUIHandler_impl_proxy %"ecom_control_library_IDocHostUIHandler_impl_proxy_s.h%"](EIF_INTEGER,EIF_OBJECT,EIF_OBJECT)"
@@ -341,7 +341,7 @@ feature {NONE}  -- Externals
 	ccom_filter_data_object (cpp_obj: POINTER; p_do: POINTER; pp_doret: CELL [IDATA_OBJECT_INTERFACE]) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IDocHostUIHandler_impl_proxy %"ecom_control_library_IDocHostUIHandler_impl_proxy_s.h%"](ecom_control_library::IDataObject *,EIF_OBJECT)"
+			"C++ [ecom_control_library::IDocHostUIHandler_impl_proxy %"ecom_control_library_IDocHostUIHandler_impl_proxy_s.h%"](::IDataObject *,EIF_OBJECT)"
 		end
 
 	ccom_delete_idoc_host_uihandler_impl_proxy (a_pointer: POINTER) is

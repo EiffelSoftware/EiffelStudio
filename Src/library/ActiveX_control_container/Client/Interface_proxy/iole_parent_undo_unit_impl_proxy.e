@@ -162,7 +162,7 @@ feature {NONE}  -- Externals
 	ccom_do1 (cpp_obj: POINTER; p_undo_manager: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IOleParentUndoUnit_impl_proxy %"ecom_control_library_IOleParentUndoUnit_impl_proxy_s.h%"](ecom_control_library::IOleUndoManager *)"
+			"C++ [ecom_control_library::IOleParentUndoUnit_impl_proxy %"ecom_control_library_IOleParentUndoUnit_impl_proxy_s.h%"](::IOleUndoManager *)"
 		end
 
 	ccom_get_description (cpp_obj: POINTER; p_bstr: CELL [STRING]) is
@@ -186,25 +186,25 @@ feature {NONE}  -- Externals
 	ccom_open (cpp_obj: POINTER; p_puu: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IOleParentUndoUnit_impl_proxy %"ecom_control_library_IOleParentUndoUnit_impl_proxy_s.h%"](ecom_control_library::IOleParentUndoUnit *)"
+			"C++ [ecom_control_library::IOleParentUndoUnit_impl_proxy %"ecom_control_library_IOleParentUndoUnit_impl_proxy_s.h%"](::IOleParentUndoUnit *)"
 		end
 
 	ccom_close (cpp_obj: POINTER; p_puu: POINTER; f_commit: INTEGER) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IOleParentUndoUnit_impl_proxy %"ecom_control_library_IOleParentUndoUnit_impl_proxy_s.h%"](ecom_control_library::IOleParentUndoUnit *,EIF_INTEGER)"
+			"C++ [ecom_control_library::IOleParentUndoUnit_impl_proxy %"ecom_control_library_IOleParentUndoUnit_impl_proxy_s.h%"](::IOleParentUndoUnit *,EIF_INTEGER)"
 		end
 
 	ccom_add (cpp_obj: POINTER; p_uu: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IOleParentUndoUnit_impl_proxy %"ecom_control_library_IOleParentUndoUnit_impl_proxy_s.h%"](ecom_control_library::IOleUndoUnit *)"
+			"C++ [ecom_control_library::IOleParentUndoUnit_impl_proxy %"ecom_control_library_IOleParentUndoUnit_impl_proxy_s.h%"](::IOleUndoUnit *)"
 		end
 
 	ccom_find_unit (cpp_obj: POINTER; p_uu: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IOleParentUndoUnit_impl_proxy %"ecom_control_library_IOleParentUndoUnit_impl_proxy_s.h%"](ecom_control_library::IOleUndoUnit *)"
+			"C++ [ecom_control_library::IOleParentUndoUnit_impl_proxy %"ecom_control_library_IOleParentUndoUnit_impl_proxy_s.h%"](::IOleUndoUnit *)"
 		end
 
 	ccom_get_parent_state (cpp_obj: POINTER; pdw_state: INTEGER_REF) is

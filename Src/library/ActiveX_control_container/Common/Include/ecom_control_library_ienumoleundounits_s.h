@@ -62,7 +62,7 @@ public:
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP RemoteNext(  /* [in] */ ULONG celt, /* [out] */ ecom_control_library::IOleUndoUnit * * rgelt, /* [out] */ ULONG * pcelt_fetched ) = 0;
+	virtual STDMETHODIMP Next(  /* [in] */ ULONG celt, /* [out] */ ecom_control_library::IOleUndoUnit * * rgelt, /* [out] */ ULONG * pcelt_fetched ) = 0;
 
 
 	/*-----------------------------------------------------------

@@ -38,7 +38,7 @@ feature -- Basic Operations
 			ccom_is_dirty (initializer)
 		end
 
-	load (pstm: ISTREAM_INTERFACE) is
+	load (pstm: ECOM_STREAM) is
 			-- No description available.
 			-- `pstm' [in].  
 		local
@@ -57,7 +57,7 @@ feature -- Basic Operations
 			ccom_load (initializer, pstm_item)
 		end
 
-	save (pstm: ISTREAM_INTERFACE; f_clear_dirty: INTEGER) is
+	save (pstm: ECOM_STREAM; f_clear_dirty: INTEGER) is
 			-- No description available.
 			-- `pstm' [in].  
 			-- `f_clear_dirty' [in].  
@@ -77,14 +77,14 @@ feature -- Basic Operations
 			ccom_save (initializer, pstm_item, f_clear_dirty)
 		end
 
-	get_size_max (pcb_size: X_ULARGE_INTEGER_RECORD) is
+	get_size_max (pcb_size: ECOM_ULARGE_INTEGER) is
 			-- No description available.
 			-- `pcb_size' [out].  
 		do
 			ccom_get_size_max (initializer, pcb_size.item)
 		end
 
-	remote_bind_to_object (pbc: IBIND_CTX_INTERFACE; pmk_to_left: IMONIKER_INTERFACE; riid_result: ECOM_GUID; ppv_result: CELL [ECOM_INTERFACE]) is
+	bind_to_object (pbc: IBIND_CTX_INTERFACE; pmk_to_left: IMONIKER_INTERFACE; riid_result: ECOM_GUID; ppv_result: CELL [ECOM_INTERFACE]) is
 			-- No description available.
 			-- `pbc' [in].  
 			-- `pmk_to_left' [in].  
@@ -113,10 +113,10 @@ feature -- Basic Operations
 				end
 				pmk_to_left_item := pmk_to_left.item
 			end
-			ccom_remote_bind_to_object (initializer, pbc_item, pmk_to_left_item, riid_result.item, ppv_result)
+			ccom_bind_to_object (initializer, pbc_item, pmk_to_left_item, riid_result.item, ppv_result)
 		end
 
-	remote_bind_to_storage (pbc: IBIND_CTX_INTERFACE; pmk_to_left: IMONIKER_INTERFACE; riid: ECOM_GUID; ppv_obj: CELL [ECOM_INTERFACE]) is
+	bind_to_storage (pbc: IBIND_CTX_INTERFACE; pmk_to_left: IMONIKER_INTERFACE; riid: ECOM_GUID; ppv_obj: CELL [ECOM_INTERFACE]) is
 			-- No description available.
 			-- `pbc' [in].  
 			-- `pmk_to_left' [in].  
@@ -145,7 +145,7 @@ feature -- Basic Operations
 				end
 				pmk_to_left_item := pmk_to_left.item
 			end
-			ccom_remote_bind_to_storage (initializer, pbc_item, pmk_to_left_item, riid.item, ppv_obj)
+			ccom_bind_to_storage (initializer, pbc_item, pmk_to_left_item, riid.item, ppv_obj)
 		end
 
 	reduce (pbc: IBIND_CTX_INTERFACE; dw_reduce_how_far: INTEGER; ppmk_to_left: CELL [IMONIKER_INTERFACE]; ppmk_reduced: CELL [IMONIKER_INTERFACE]) is
@@ -440,43 +440,43 @@ feature {NONE}  -- Externals
 	ccom_load (cpp_obj: POINTER; pstm: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IMoniker_impl_proxy %"ecom_control_library_IMoniker_impl_proxy_s.h%"](ecom_control_library::IStream *)"
+			"C++ [ecom_control_library::IMoniker_impl_proxy %"ecom_control_library_IMoniker_impl_proxy_s.h%"](IStream *)"
 		end
 
 	ccom_save (cpp_obj: POINTER; pstm: POINTER; f_clear_dirty: INTEGER) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IMoniker_impl_proxy %"ecom_control_library_IMoniker_impl_proxy_s.h%"](ecom_control_library::IStream *,EIF_INTEGER)"
+			"C++ [ecom_control_library::IMoniker_impl_proxy %"ecom_control_library_IMoniker_impl_proxy_s.h%"](IStream *,EIF_INTEGER)"
 		end
 
 	ccom_get_size_max (cpp_obj: POINTER; pcb_size: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IMoniker_impl_proxy %"ecom_control_library_IMoniker_impl_proxy_s.h%"](ecom_control_library::_ULARGE_INTEGER *)"
+			"C++ [ecom_control_library::IMoniker_impl_proxy %"ecom_control_library_IMoniker_impl_proxy_s.h%"](ULARGE_INTEGER *)"
 		end
 
-	ccom_remote_bind_to_object (cpp_obj: POINTER; pbc: POINTER; pmk_to_left: POINTER; riid_result: POINTER; ppv_result: CELL [ECOM_INTERFACE]) is
+	ccom_bind_to_object (cpp_obj: POINTER; pbc: POINTER; pmk_to_left: POINTER; riid_result: POINTER; ppv_result: CELL [ECOM_INTERFACE]) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IMoniker_impl_proxy %"ecom_control_library_IMoniker_impl_proxy_s.h%"](ecom_control_library::IBindCtx *,ecom_control_library::IMoniker *,GUID *,EIF_OBJECT)"
+			"C++ [ecom_control_library::IMoniker_impl_proxy %"ecom_control_library_IMoniker_impl_proxy_s.h%"](::IBindCtx *,::IMoniker *,GUID *,EIF_OBJECT)"
 		end
 
-	ccom_remote_bind_to_storage (cpp_obj: POINTER; pbc: POINTER; pmk_to_left: POINTER; riid: POINTER; ppv_obj: CELL [ECOM_INTERFACE]) is
+	ccom_bind_to_storage (cpp_obj: POINTER; pbc: POINTER; pmk_to_left: POINTER; riid: POINTER; ppv_obj: CELL [ECOM_INTERFACE]) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IMoniker_impl_proxy %"ecom_control_library_IMoniker_impl_proxy_s.h%"](ecom_control_library::IBindCtx *,ecom_control_library::IMoniker *,GUID *,EIF_OBJECT)"
+			"C++ [ecom_control_library::IMoniker_impl_proxy %"ecom_control_library_IMoniker_impl_proxy_s.h%"](::IBindCtx *,::IMoniker *,GUID *,EIF_OBJECT)"
 		end
 
 	ccom_reduce (cpp_obj: POINTER; pbc: POINTER; dw_reduce_how_far: INTEGER; ppmk_to_left: CELL [IMONIKER_INTERFACE]; ppmk_reduced: CELL [IMONIKER_INTERFACE]) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IMoniker_impl_proxy %"ecom_control_library_IMoniker_impl_proxy_s.h%"](ecom_control_library::IBindCtx *,EIF_INTEGER,EIF_OBJECT,EIF_OBJECT)"
+			"C++ [ecom_control_library::IMoniker_impl_proxy %"ecom_control_library_IMoniker_impl_proxy_s.h%"](::IBindCtx *,EIF_INTEGER,EIF_OBJECT,EIF_OBJECT)"
 		end
 
 	ccom_compose_with (cpp_obj: POINTER; pmk_right: POINTER; f_only_if_not_generic: INTEGER; ppmk_composite: CELL [IMONIKER_INTERFACE]) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IMoniker_impl_proxy %"ecom_control_library_IMoniker_impl_proxy_s.h%"](ecom_control_library::IMoniker *,EIF_INTEGER,EIF_OBJECT)"
+			"C++ [ecom_control_library::IMoniker_impl_proxy %"ecom_control_library_IMoniker_impl_proxy_s.h%"](::IMoniker *,EIF_INTEGER,EIF_OBJECT)"
 		end
 
 	ccom_enum (cpp_obj: POINTER; f_forward: INTEGER; ppenum_moniker: CELL [IENUM_MONIKER_INTERFACE]) is
@@ -488,7 +488,7 @@ feature {NONE}  -- Externals
 	ccom_is_equal1 (cpp_obj: POINTER; pmk_other_moniker: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IMoniker_impl_proxy %"ecom_control_library_IMoniker_impl_proxy_s.h%"](ecom_control_library::IMoniker *)"
+			"C++ [ecom_control_library::IMoniker_impl_proxy %"ecom_control_library_IMoniker_impl_proxy_s.h%"](::IMoniker *)"
 		end
 
 	ccom_hash (cpp_obj: POINTER; pdw_hash: INTEGER_REF) is
@@ -500,13 +500,13 @@ feature {NONE}  -- Externals
 	ccom_is_running (cpp_obj: POINTER; pbc: POINTER; pmk_to_left: POINTER; pmk_newly_running: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IMoniker_impl_proxy %"ecom_control_library_IMoniker_impl_proxy_s.h%"](ecom_control_library::IBindCtx *,ecom_control_library::IMoniker *,ecom_control_library::IMoniker *)"
+			"C++ [ecom_control_library::IMoniker_impl_proxy %"ecom_control_library_IMoniker_impl_proxy_s.h%"](::IBindCtx *,::IMoniker *,::IMoniker *)"
 		end
 
 	ccom_get_time_of_last_change (cpp_obj: POINTER; pbc: POINTER; pmk_to_left: POINTER; pfiletime: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IMoniker_impl_proxy %"ecom_control_library_IMoniker_impl_proxy_s.h%"](ecom_control_library::IBindCtx *,ecom_control_library::IMoniker *,ecom_control_library::_FILETIME *)"
+			"C++ [ecom_control_library::IMoniker_impl_proxy %"ecom_control_library_IMoniker_impl_proxy_s.h%"](::IBindCtx *,::IMoniker *,ecom_control_library::_FILETIME *)"
 		end
 
 	ccom_inverse (cpp_obj: POINTER; ppmk: CELL [IMONIKER_INTERFACE]) is
@@ -518,25 +518,25 @@ feature {NONE}  -- Externals
 	ccom_common_prefix_with (cpp_obj: POINTER; pmk_other: POINTER; ppmk_prefix: CELL [IMONIKER_INTERFACE]) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IMoniker_impl_proxy %"ecom_control_library_IMoniker_impl_proxy_s.h%"](ecom_control_library::IMoniker *,EIF_OBJECT)"
+			"C++ [ecom_control_library::IMoniker_impl_proxy %"ecom_control_library_IMoniker_impl_proxy_s.h%"](::IMoniker *,EIF_OBJECT)"
 		end
 
 	ccom_relative_path_to (cpp_obj: POINTER; pmk_other: POINTER; ppmk_rel_path: CELL [IMONIKER_INTERFACE]) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IMoniker_impl_proxy %"ecom_control_library_IMoniker_impl_proxy_s.h%"](ecom_control_library::IMoniker *,EIF_OBJECT)"
+			"C++ [ecom_control_library::IMoniker_impl_proxy %"ecom_control_library_IMoniker_impl_proxy_s.h%"](::IMoniker *,EIF_OBJECT)"
 		end
 
 	ccom_get_display_name (cpp_obj: POINTER; pbc: POINTER; pmk_to_left: POINTER; ppsz_display_name: CELL [STRING]) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IMoniker_impl_proxy %"ecom_control_library_IMoniker_impl_proxy_s.h%"](ecom_control_library::IBindCtx *,ecom_control_library::IMoniker *,EIF_OBJECT)"
+			"C++ [ecom_control_library::IMoniker_impl_proxy %"ecom_control_library_IMoniker_impl_proxy_s.h%"](::IBindCtx *,::IMoniker *,EIF_OBJECT)"
 		end
 
 	ccom_parse_display_name (cpp_obj: POINTER; pbc: POINTER; pmk_to_left: POINTER; psz_display_name: STRING; pch_eaten: INTEGER_REF; ppmk_out: CELL [IMONIKER_INTERFACE]) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IMoniker_impl_proxy %"ecom_control_library_IMoniker_impl_proxy_s.h%"](ecom_control_library::IBindCtx *,ecom_control_library::IMoniker *,EIF_OBJECT,EIF_OBJECT,EIF_OBJECT)"
+			"C++ [ecom_control_library::IMoniker_impl_proxy %"ecom_control_library_IMoniker_impl_proxy_s.h%"](::IBindCtx *,::IMoniker *,EIF_OBJECT,EIF_OBJECT,EIF_OBJECT)"
 		end
 
 	ccom_is_system_moniker (cpp_obj: POINTER; pdw_mksys: INTEGER_REF) is

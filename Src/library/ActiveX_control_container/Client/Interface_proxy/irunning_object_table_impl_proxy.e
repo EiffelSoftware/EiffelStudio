@@ -151,7 +151,7 @@ feature {NONE}  -- Externals
 	ccom_register (cpp_obj: POINTER; grf_flags: INTEGER; punk_object: POINTER; pmk_object_name: POINTER; pdw_register: INTEGER_REF) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IRunningObjectTable_impl_proxy %"ecom_control_library_IRunningObjectTable_impl_proxy_s.h%"](EIF_INTEGER,IUnknown *,ecom_control_library::IMoniker *,EIF_OBJECT)"
+			"C++ [ecom_control_library::IRunningObjectTable_impl_proxy %"ecom_control_library_IRunningObjectTable_impl_proxy_s.h%"](EIF_INTEGER,IUnknown *,::IMoniker *,EIF_OBJECT)"
 		end
 
 	ccom_revoke (cpp_obj: POINTER; dw_register: INTEGER) is
@@ -163,13 +163,13 @@ feature {NONE}  -- Externals
 	ccom_is_running (cpp_obj: POINTER; pmk_object_name: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IRunningObjectTable_impl_proxy %"ecom_control_library_IRunningObjectTable_impl_proxy_s.h%"](ecom_control_library::IMoniker *)"
+			"C++ [ecom_control_library::IRunningObjectTable_impl_proxy %"ecom_control_library_IRunningObjectTable_impl_proxy_s.h%"](::IMoniker *)"
 		end
 
 	ccom_get_object (cpp_obj: POINTER; pmk_object_name: POINTER; ppunk_object: CELL [ECOM_INTERFACE]) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IRunningObjectTable_impl_proxy %"ecom_control_library_IRunningObjectTable_impl_proxy_s.h%"](ecom_control_library::IMoniker *,EIF_OBJECT)"
+			"C++ [ecom_control_library::IRunningObjectTable_impl_proxy %"ecom_control_library_IRunningObjectTable_impl_proxy_s.h%"](::IMoniker *,EIF_OBJECT)"
 		end
 
 	ccom_note_change_time (cpp_obj: POINTER; dw_register: INTEGER; pfiletime: POINTER) is
@@ -181,7 +181,7 @@ feature {NONE}  -- Externals
 	ccom_get_time_of_last_change (cpp_obj: POINTER; pmk_object_name: POINTER; pfiletime: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IRunningObjectTable_impl_proxy %"ecom_control_library_IRunningObjectTable_impl_proxy_s.h%"](ecom_control_library::IMoniker *,ecom_control_library::_FILETIME *)"
+			"C++ [ecom_control_library::IRunningObjectTable_impl_proxy %"ecom_control_library_IRunningObjectTable_impl_proxy_s.h%"](::IMoniker *,ecom_control_library::_FILETIME *)"
 		end
 
 	ccom_enum_running (cpp_obj: POINTER; ppenum_moniker: CELL [IENUM_MONIKER_INTERFACE]) is

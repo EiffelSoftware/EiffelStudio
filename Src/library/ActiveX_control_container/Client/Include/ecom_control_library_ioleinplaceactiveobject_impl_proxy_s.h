@@ -39,55 +39,55 @@ namespace ecom_control_library
 class IOleInPlaceActiveObject_impl_proxy
 {
 public:
-	IOleInPlaceActiveObject_impl_proxy (IUnknown * a_pointer);
-	virtual ~IOleInPlaceActiveObject_impl_proxy ();
+  IOleInPlaceActiveObject_impl_proxy (IUnknown * a_pointer);
+  virtual ~IOleInPlaceActiveObject_impl_proxy ();
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_get_window(  /* [out] */ EIF_OBJECT phwnd );
-
-
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_context_sensitive_help(  /* [in] */ EIF_INTEGER f_enter_mode );
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_get_window(  /* [out] */ EIF_OBJECT phwnd );
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_remote_translate_accelerator();
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_context_sensitive_help(  /* [in] */ EIF_INTEGER f_enter_mode );
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_on_frame_window_activate(  /* [in] */ EIF_INTEGER f_activate );
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_translate_accelerator(MSG * lpmsg);
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_on_doc_window_activate(  /* [in] */ EIF_INTEGER f_activate );
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_on_frame_window_activate(  /* [in] */ EIF_INTEGER f_activate );
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_remote_resize_border(  /* [in] */ ecom_control_library::tagRECT * prc_border,  /* [in] */ GUID * riid,  /* [in] */ ecom_control_library::IOleInPlaceUIWindow * p_uiwindow,  /* [in] */ EIF_INTEGER f_frame_window );
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_on_doc_window_activate(  /* [in] */ EIF_INTEGER f_activate );
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_enable_modeless(  /* [in] */ EIF_INTEGER f_enable );
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_resize_border(  /* [in] */ ecom_control_library::tagRECT * prc_border, /* [in] */ ::IOleInPlaceUIWindow * p_uiwindow,  /* [in] */ EIF_INTEGER f_frame_window );
 
 
-	/*-----------------------------------------------------------
-	IUnknown interface
-	-----------------------------------------------------------*/
-	EIF_POINTER ccom_item();
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_enable_modeless(  /* [in] */ EIF_INTEGER f_enable );
+
+
+  /*-----------------------------------------------------------
+  IUnknown interface
+  -----------------------------------------------------------*/
+  EIF_POINTER ccom_item();
 
 
 
@@ -95,16 +95,16 @@ protected:
 
 
 private:
-	/*-----------------------------------------------------------
-	Interface pointer
-	-----------------------------------------------------------*/
-	ecom_control_library::IOleInPlaceActiveObject * p_IOleInPlaceActiveObject;
+  /*-----------------------------------------------------------
+  Interface pointer
+  -----------------------------------------------------------*/
+  ::IOleInPlaceActiveObject * p_IOleInPlaceActiveObject;
 
 
-	/*-----------------------------------------------------------
-	Default IUnknown interface pointer
-	-----------------------------------------------------------*/
-	IUnknown * p_unknown;
+  /*-----------------------------------------------------------
+  Default IUnknown interface pointer
+  -----------------------------------------------------------*/
+  IUnknown * p_unknown;
 
 
 

@@ -35,25 +35,25 @@ namespace ecom_control_library
 class ISimpleFrameSite_impl_proxy
 {
 public:
-	ISimpleFrameSite_impl_proxy (IUnknown * a_pointer);
-	virtual ~ISimpleFrameSite_impl_proxy ();
+  ISimpleFrameSite_impl_proxy (IUnknown * a_pointer);
+  virtual ~ISimpleFrameSite_impl_proxy ();
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_pre_message_filter(  /* [in] */ EIF_POINTER h_wnd,  /* [in] */ EIF_INTEGER msg,  /* [in] */ EIF_INTEGER wp,  /* [in] */ EIF_INTEGER lp,  /* [out] */ EIF_OBJECT pl_result,  /* [out] */ EIF_OBJECT pdw_cookie );
-
-
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_post_message_filter(  /* [in] */ EIF_POINTER h_wnd,  /* [in] */ EIF_INTEGER msg,  /* [in] */ EIF_INTEGER wp,  /* [in] */ EIF_INTEGER lp,  /* [out] */ EIF_OBJECT pl_result,  /* [in] */ EIF_INTEGER dw_cookie );
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_pre_message_filter(  /* [in] */ EIF_POINTER h_wnd,  /* [in] */ EIF_INTEGER msg,  /* [in] */ EIF_INTEGER wp,  /* [in] */ EIF_INTEGER lp,  /* [out] */ EIF_OBJECT pl_result,  /* [out] */ EIF_OBJECT pdw_cookie );
 
 
-	/*-----------------------------------------------------------
-	IUnknown interface
-	-----------------------------------------------------------*/
-	EIF_POINTER ccom_item();
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_post_message_filter(  /* [in] */ EIF_POINTER h_wnd,  /* [in] */ EIF_INTEGER msg,  /* [in] */ EIF_INTEGER wp,  /* [in] */ EIF_INTEGER lp,  /* [out] */ EIF_OBJECT pl_result,  /* [in] */ EIF_INTEGER dw_cookie );
+
+
+  /*-----------------------------------------------------------
+  IUnknown interface
+  -----------------------------------------------------------*/
+  EIF_POINTER ccom_item();
 
 
 
@@ -61,16 +61,16 @@ protected:
 
 
 private:
-	/*-----------------------------------------------------------
-	Interface pointer
-	-----------------------------------------------------------*/
-	ecom_control_library::ISimpleFrameSite * p_ISimpleFrameSite;
+  /*-----------------------------------------------------------
+  Interface pointer
+  -----------------------------------------------------------*/
+  ::ISimpleFrameSite * p_ISimpleFrameSite;
 
 
-	/*-----------------------------------------------------------
-	Default IUnknown interface pointer
-	-----------------------------------------------------------*/
-	IUnknown * p_unknown;
+  /*-----------------------------------------------------------
+  Default IUnknown interface pointer
+  -----------------------------------------------------------*/
+  IUnknown * p_unknown;
 
 
 

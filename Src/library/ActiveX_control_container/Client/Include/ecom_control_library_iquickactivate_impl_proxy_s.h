@@ -39,31 +39,31 @@ namespace ecom_control_library
 class IQuickActivate_impl_proxy
 {
 public:
-	IQuickActivate_impl_proxy (IUnknown * a_pointer);
-	virtual ~IQuickActivate_impl_proxy ();
+  IQuickActivate_impl_proxy (IUnknown * a_pointer);
+  virtual ~IQuickActivate_impl_proxy ();
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_remote_quick_activate(  /* [in] */ ecom_control_library::tagQACONTAINER * p_qa_container,  /* [out] */ ecom_control_library::tagQACONTROL * p_qa_control );
-
-
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_set_content_extent(  /* [in] */ ecom_control_library::tagSIZEL * psizel );
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_quick_activate(  /* [in] */ ecom_control_library::tagQACONTAINER * p_qa_container,  /* [out] */ ecom_control_library::tagQACONTROL * p_qa_control );
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_get_content_extent(  /* [out] */ ecom_control_library::tagSIZEL * psizel );
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_set_content_extent(  /* [in] */ ecom_control_library::tagSIZEL * psizel );
 
 
-	/*-----------------------------------------------------------
-	IUnknown interface
-	-----------------------------------------------------------*/
-	EIF_POINTER ccom_item();
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_get_content_extent(  /* [out] */ ecom_control_library::tagSIZEL * psizel );
+
+
+  /*-----------------------------------------------------------
+  IUnknown interface
+  -----------------------------------------------------------*/
+  EIF_POINTER ccom_item();
 
 
 
@@ -71,16 +71,16 @@ protected:
 
 
 private:
-	/*-----------------------------------------------------------
-	Interface pointer
-	-----------------------------------------------------------*/
-	ecom_control_library::IQuickActivate * p_IQuickActivate;
+  /*-----------------------------------------------------------
+  Interface pointer
+  -----------------------------------------------------------*/
+  ::IQuickActivate * p_IQuickActivate;
 
 
-	/*-----------------------------------------------------------
-	Default IUnknown interface pointer
-	-----------------------------------------------------------*/
-	IUnknown * p_unknown;
+  /*-----------------------------------------------------------
+  Default IUnknown interface pointer
+  -----------------------------------------------------------*/
+  IUnknown * p_unknown;
 
 
 

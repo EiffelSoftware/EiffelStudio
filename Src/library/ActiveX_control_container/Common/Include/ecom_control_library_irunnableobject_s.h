@@ -46,37 +46,37 @@ namespace ecom_control_library
 class IRunnableObject : public IUnknown
 {
 public:
-	IRunnableObject () {};
-	~IRunnableObject () {};
+  IRunnableObject () {};
+  ~IRunnableObject () {};
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP GetRunningClass(  /* [out] */ GUID * lp_clsid ) = 0;
-
-
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP Run(  /* [in] */ ecom_control_library::IBindCtx * pbc ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP GetRunningClass(  /* [out] */ GUID * lp_clsid ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP RemoteIsRunning( void ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP Run(  /* [in] */ ecom_control_library::IBindCtx * pbc ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP LockRunning(  /* [in] */ LONG f_lock, /* [in] */ LONG f_last_unlock_closes ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP IsRunning( void ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP SetContainedObject(  /* [in] */ LONG f_contained ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP LockRunning(  /* [in] */ LONG f_lock, /* [in] */ LONG f_last_unlock_closes ) = 0;
+
+
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP SetContainedObject(  /* [in] */ LONG f_contained ) = 0;
 
 
 

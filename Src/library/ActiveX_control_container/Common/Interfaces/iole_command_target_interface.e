@@ -10,7 +10,7 @@ inherit
 
 feature -- Status Report
 
-	query_status_user_precondition (pguid_cmd_group: ECOM_GUID; c_cmds: INTEGER; prg_cmds: X_TAG_OLECMD_RECORD; p_cmd_text: X_TAG_OLECMDTEXT_RECORD): BOOLEAN is
+	query_status_user_precondition (pguid_cmd_group: ECOM_GUID; c_cmds: INTEGER; prg_cmds: ARRAY [X_TAG_OLECMD_RECORD]; p_cmd_text: X_TAG_OLECMDTEXT_RECORD): BOOLEAN is
 			-- User-defined preconditions for `query_status'.
 			-- Redefine in descendants if needed.
 		do
@@ -26,7 +26,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	query_status (pguid_cmd_group: ECOM_GUID; c_cmds: INTEGER; prg_cmds: X_TAG_OLECMD_RECORD; p_cmd_text: X_TAG_OLECMDTEXT_RECORD) is
+	query_status (pguid_cmd_group: ECOM_GUID; c_cmds: INTEGER; prg_cmds: ARRAY [X_TAG_OLECMD_RECORD]; p_cmd_text: X_TAG_OLECMDTEXT_RECORD) is
 			-- No description available.
 			-- `pguid_cmd_group' [in].  
 			-- `c_cmds' [in].  
@@ -36,7 +36,6 @@ feature -- Basic Operations
 			non_void_pguid_cmd_group: pguid_cmd_group /= Void
 			valid_pguid_cmd_group: pguid_cmd_group.item /= default_pointer
 			non_void_prg_cmds: prg_cmds /= Void
-			valid_prg_cmds: prg_cmds.item /= default_pointer
 			non_void_p_cmd_text: p_cmd_text /= Void
 			valid_p_cmd_text: p_cmd_text.item /= default_pointer
 			query_status_user_precondition: query_status_user_precondition (pguid_cmd_group, c_cmds, prg_cmds, p_cmd_text)

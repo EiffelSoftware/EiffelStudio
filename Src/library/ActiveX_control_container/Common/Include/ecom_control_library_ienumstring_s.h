@@ -52,7 +52,7 @@ public:
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP RemoteNext(  /* [in] */ ULONG celt, /* [out] */ LPWSTR * rgelt, /* [out] */ ULONG * pcelt_fetched ) = 0;
+	virtual STDMETHODIMP Next(  /* [in] */ ULONG celt, /* [out] */ LPWSTR * rgelt, /* [out] */ ULONG * pcelt_fetched ) = 0;
 
 
 	/*-----------------------------------------------------------

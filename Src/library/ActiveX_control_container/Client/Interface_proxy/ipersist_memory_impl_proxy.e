@@ -38,21 +38,21 @@ feature -- Basic Operations
 			ccom_is_dirty (initializer)
 		end
 
-	remote_load (p_mem: CHARACTER_REF; cb_size: INTEGER) is
+	load (p_mem: CHARACTER_REF; cb_size: INTEGER) is
 			-- No description available.
 			-- `p_mem' [in].  
 			-- `cb_size' [in].  
 		do
-			ccom_remote_load (initializer, p_mem, cb_size)
+			ccom_load (initializer, p_mem, cb_size)
 		end
 
-	remote_save (p_mem: CHARACTER_REF; f_clear_dirty: INTEGER; cb_size: INTEGER) is
+	save (p_mem: CHARACTER_REF; f_clear_dirty: INTEGER; cb_size: INTEGER) is
 			-- No description available.
 			-- `p_mem' [out].  
 			-- `f_clear_dirty' [in].  
 			-- `cb_size' [in].  
 		do
-			ccom_remote_save (initializer, p_mem, f_clear_dirty, cb_size)
+			ccom_save (initializer, p_mem, f_clear_dirty, cb_size)
 		end
 
 	get_size_max (pcb_size: INTEGER_REF) is
@@ -90,13 +90,13 @@ feature {NONE}  -- Externals
 			"C++ [ecom_control_library::IPersistMemory_impl_proxy %"ecom_control_library_IPersistMemory_impl_proxy_s.h%"]()"
 		end
 
-	ccom_remote_load (cpp_obj: POINTER; p_mem: CHARACTER_REF; cb_size: INTEGER) is
+	ccom_load (cpp_obj: POINTER; p_mem: CHARACTER_REF; cb_size: INTEGER) is
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IPersistMemory_impl_proxy %"ecom_control_library_IPersistMemory_impl_proxy_s.h%"](EIF_OBJECT,EIF_INTEGER)"
 		end
 
-	ccom_remote_save (cpp_obj: POINTER; p_mem: CHARACTER_REF; f_clear_dirty: INTEGER; cb_size: INTEGER) is
+	ccom_save (cpp_obj: POINTER; p_mem: CHARACTER_REF; f_clear_dirty: INTEGER; cb_size: INTEGER) is
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IPersistMemory_impl_proxy %"ecom_control_library_IPersistMemory_impl_proxy_s.h%"](EIF_OBJECT,EIF_INTEGER,EIF_INTEGER)"

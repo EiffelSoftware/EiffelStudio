@@ -39,31 +39,31 @@ namespace ecom_control_library
 class IBindHost_impl_proxy
 {
 public:
-	IBindHost_impl_proxy (IUnknown * a_pointer);
-	virtual ~IBindHost_impl_proxy ();
+  IBindHost_impl_proxy (IUnknown * a_pointer);
+  virtual ~IBindHost_impl_proxy ();
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_create_moniker(  /* [in] */ EIF_OBJECT sz_name,  /* [in] */ ecom_control_library::IBindCtx * pbc,  /* [out] */ EIF_OBJECT ppmk,  /* [in] */ EIF_INTEGER dw_reserved );
-
-
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_remote_moniker_bind_to_storage(  /* [in] */ ecom_control_library::IMoniker * pmk,  /* [in] */ ecom_control_library::IBindCtx * pbc,  /* [in] */ ecom_control_library::IBindStatusCallback * p_bsc,  /* [in] */ GUID * riid,  /* [out] */ EIF_OBJECT ppv_obj );
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_create_moniker(  /* [in] */ EIF_OBJECT sz_name,  /* [in] */ ::IBindCtx * pbc,  /* [out] */ EIF_OBJECT ppmk,  /* [in] */ EIF_INTEGER dw_reserved );
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_remote_moniker_bind_to_object(  /* [in] */ ecom_control_library::IMoniker * pmk,  /* [in] */ ecom_control_library::IBindCtx * pbc,  /* [in] */ ecom_control_library::IBindStatusCallback * p_bsc,  /* [in] */ GUID * riid,  /* [out] */ EIF_OBJECT ppv_obj );
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_moniker_bind_to_storage(  /* [in] */ ::IMoniker * pmk,  /* [in] */ ::IBindCtx * pbc,  /* [in] */ ::IBindStatusCallback * p_bsc,  /* [in] */ GUID * riid,  /* [out] */ EIF_OBJECT ppv_obj );
 
 
-	/*-----------------------------------------------------------
-	IUnknown interface
-	-----------------------------------------------------------*/
-	EIF_POINTER ccom_item();
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_moniker_bind_to_object(  /* [in] */ ::IMoniker * pmk,  /* [in] */ ::IBindCtx * pbc,  /* [in] */ ::IBindStatusCallback * p_bsc,  /* [in] */ GUID * riid,  /* [out] */ EIF_OBJECT ppv_obj );
+
+
+  /*-----------------------------------------------------------
+  IUnknown interface
+  -----------------------------------------------------------*/
+  EIF_POINTER ccom_item();
 
 
 
@@ -71,16 +71,16 @@ protected:
 
 
 private:
-	/*-----------------------------------------------------------
-	Interface pointer
-	-----------------------------------------------------------*/
-	ecom_control_library::IBindHost * p_IBindHost;
+  /*-----------------------------------------------------------
+  Interface pointer
+  -----------------------------------------------------------*/
+  ::IBindHost * p_IBindHost;
 
 
-	/*-----------------------------------------------------------
-	Default IUnknown interface pointer
-	-----------------------------------------------------------*/
-	IUnknown * p_unknown;
+  /*-----------------------------------------------------------
+  Default IUnknown interface pointer
+  -----------------------------------------------------------*/
+  IUnknown * p_unknown;
 
 
 

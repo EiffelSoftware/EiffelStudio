@@ -33,19 +33,19 @@ namespace ecom_control_library
 class IErrorLog_impl_proxy
 {
 public:
-	IErrorLog_impl_proxy (IUnknown * a_pointer);
-	virtual ~IErrorLog_impl_proxy ();
+  IErrorLog_impl_proxy (IUnknown * a_pointer);
+  virtual ~IErrorLog_impl_proxy ();
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_add_error(  /* [in] */ EIF_OBJECT psz_prop_name,  /* [in] */ EXCEPINFO * p_excep_info );
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_add_error(  /* [in] */ EIF_OBJECT psz_prop_name,  /* [in] */ EXCEPINFO * p_excep_info );
 
 
-	/*-----------------------------------------------------------
-	IUnknown interface
-	-----------------------------------------------------------*/
-	EIF_POINTER ccom_item();
+  /*-----------------------------------------------------------
+  IUnknown interface
+  -----------------------------------------------------------*/
+  EIF_POINTER ccom_item();
 
 
 
@@ -53,16 +53,16 @@ protected:
 
 
 private:
-	/*-----------------------------------------------------------
-	Interface pointer
-	-----------------------------------------------------------*/
-	ecom_control_library::IErrorLog * p_IErrorLog;
+  /*-----------------------------------------------------------
+  Interface pointer
+  -----------------------------------------------------------*/
+  ::IErrorLog * p_IErrorLog;
 
 
-	/*-----------------------------------------------------------
-	Default IUnknown interface pointer
-	-----------------------------------------------------------*/
-	IUnknown * p_unknown;
+  /*-----------------------------------------------------------
+  Default IUnknown interface pointer
+  -----------------------------------------------------------*/
+  IUnknown * p_unknown;
 
 
 

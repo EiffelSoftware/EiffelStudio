@@ -25,12 +25,12 @@ feature {NONE}  -- Initialization
 
 feature -- Basic Operations
 
-	remote_quick_activate (p_qa_container: TAG_QACONTAINER_RECORD; p_qa_control: TAG_QACONTROL_RECORD) is
+	quick_activate (p_qa_container: TAG_QACONTAINER_RECORD; p_qa_control: TAG_QACONTROL_RECORD) is
 			-- No description available.
 			-- `p_qa_container' [in].  
 			-- `p_qa_control' [out].  
 		do
-			ccom_remote_quick_activate (initializer, p_qa_container.item, p_qa_control.item)
+			ccom_quick_activate (initializer, p_qa_container.item, p_qa_control.item)
 		end
 
 	set_content_extent (psizel: TAG_SIZEL_RECORD) is
@@ -57,7 +57,7 @@ feature {NONE}  -- Implementation
 
 feature {NONE}  -- Externals
 
-	ccom_remote_quick_activate (cpp_obj: POINTER; p_qa_container: POINTER; p_qa_control: POINTER) is
+	ccom_quick_activate (cpp_obj: POINTER; p_qa_container: POINTER; p_qa_control: POINTER) is
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IQuickActivate_impl_proxy %"ecom_control_library_IQuickActivate_impl_proxy_s.h%"](ecom_control_library::tagQACONTAINER *,ecom_control_library::tagQACONTROL *)"

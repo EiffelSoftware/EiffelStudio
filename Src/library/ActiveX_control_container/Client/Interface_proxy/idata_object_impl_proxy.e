@@ -25,20 +25,20 @@ feature {NONE}  -- Initialization
 
 feature -- Basic Operations
 
-	remote_get_data (pformatetc_in: TAG_FORMATETC_RECORD; p_remote_medium: CELL [WIRE_STGMEDIUM_ALIAS]) is
+	get_data (pformatetc_in: TAG_FORMATETC_RECORD; p_medium: STGMEDIUM_RECORD) is
 			-- No description available.
 			-- `pformatetc_in' [in].  
-			-- `p_remote_medium' [out].  
+			-- `p_medium' [out].  
 		do
-			ccom_remote_get_data (initializer, pformatetc_in.item, p_remote_medium)
+			ccom_get_data (initializer, pformatetc_in.item, p_medium.item)
 		end
 
-	remote_get_data_here (p_formatetc: TAG_FORMATETC_RECORD; p_remote_medium: CELL [WIRE_STGMEDIUM_ALIAS]) is
+	get_data_here (p_formatetc: TAG_FORMATETC_RECORD; p_medium: STGMEDIUM_RECORD) is
 			-- No description available.
 			-- `p_formatetc' [in].  
-			-- `p_remote_medium' [in, out].  
+			-- `p_medium' [in, out].  
 		do
-			ccom_remote_get_data_here (initializer, p_formatetc.item, p_remote_medium)
+			ccom_get_data_here (initializer, p_formatetc.item, p_medium.item)
 		end
 
 	query_get_data (p_formatetc: TAG_FORMATETC_RECORD) is
@@ -56,13 +56,13 @@ feature -- Basic Operations
 			ccom_get_canonical_format_etc (initializer, pformatect_in.item, pformatetc_out.item)
 		end
 
-	remote_set_data (p_formatetc: TAG_FORMATETC_RECORD; pmedium: CELL [WIRE_FLAG_STGMEDIUM_ALIAS]; f_release: INTEGER) is
+	set_data (p_formatetc: TAG_FORMATETC_RECORD; pmedium: STGMEDIUM_RECORD; f_release: INTEGER) is
 			-- No description available.
 			-- `p_formatetc' [in].  
 			-- `pmedium' [in].  
 			-- `f_release' [in].  
 		do
-			ccom_remote_set_data (initializer, p_formatetc.item, pmedium, f_release)
+			ccom_set_data (initializer, p_formatetc.item, pmedium.item, f_release)
 		end
 
 	enum_format_etc (dw_direction: INTEGER; ppenum_format_etc: CELL [IENUM_FORMATETC_INTERFACE]) is
@@ -119,16 +119,16 @@ feature {NONE}  -- Implementation
 
 feature {NONE}  -- Externals
 
-	ccom_remote_get_data (cpp_obj: POINTER; pformatetc_in: POINTER; p_remote_medium: CELL [WIRE_STGMEDIUM_ALIAS]) is
+	ccom_get_data (cpp_obj: POINTER; pformatetc_in: POINTER; p_medium: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IDataObject_impl_proxy %"ecom_control_library_IDataObject_impl_proxy_s.h%"](ecom_control_library::tagFORMATETC *,EIF_OBJECT)"
+			"C++ [ecom_control_library::IDataObject_impl_proxy %"ecom_control_library_IDataObject_impl_proxy_s.h%"](ecom_control_library::tagFORMATETC *,STGMEDIUM *)"
 		end
 
-	ccom_remote_get_data_here (cpp_obj: POINTER; p_formatetc: POINTER; p_remote_medium: CELL [WIRE_STGMEDIUM_ALIAS]) is
+	ccom_get_data_here (cpp_obj: POINTER; p_formatetc: POINTER; p_medium: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IDataObject_impl_proxy %"ecom_control_library_IDataObject_impl_proxy_s.h%"](ecom_control_library::tagFORMATETC *,EIF_OBJECT)"
+			"C++ [ecom_control_library::IDataObject_impl_proxy %"ecom_control_library_IDataObject_impl_proxy_s.h%"](ecom_control_library::tagFORMATETC *,STGMEDIUM *)"
 		end
 
 	ccom_query_get_data (cpp_obj: POINTER; p_formatetc: POINTER) is
@@ -143,10 +143,10 @@ feature {NONE}  -- Externals
 			"C++ [ecom_control_library::IDataObject_impl_proxy %"ecom_control_library_IDataObject_impl_proxy_s.h%"](ecom_control_library::tagFORMATETC *,ecom_control_library::tagFORMATETC *)"
 		end
 
-	ccom_remote_set_data (cpp_obj: POINTER; p_formatetc: POINTER; pmedium: CELL [WIRE_FLAG_STGMEDIUM_ALIAS]; f_release: INTEGER) is
+	ccom_set_data (cpp_obj: POINTER; p_formatetc: POINTER; pmedium: POINTER; f_release: INTEGER) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IDataObject_impl_proxy %"ecom_control_library_IDataObject_impl_proxy_s.h%"](ecom_control_library::tagFORMATETC *,EIF_OBJECT,EIF_INTEGER)"
+			"C++ [ecom_control_library::IDataObject_impl_proxy %"ecom_control_library_IDataObject_impl_proxy_s.h%"](ecom_control_library::tagFORMATETC *,STGMEDIUM *,EIF_INTEGER)"
 		end
 
 	ccom_enum_format_etc (cpp_obj: POINTER; dw_direction: INTEGER; ppenum_format_etc: CELL [IENUM_FORMATETC_INTERFACE]) is
@@ -158,7 +158,7 @@ feature {NONE}  -- Externals
 	ccom_dadvise (cpp_obj: POINTER; p_formatetc: POINTER; advf: INTEGER; p_adv_sink: POINTER; pdw_connection: INTEGER_REF) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IDataObject_impl_proxy %"ecom_control_library_IDataObject_impl_proxy_s.h%"](ecom_control_library::tagFORMATETC *,EIF_INTEGER,ecom_control_library::IAdviseSink *,EIF_OBJECT)"
+			"C++ [ecom_control_library::IDataObject_impl_proxy %"ecom_control_library_IDataObject_impl_proxy_s.h%"](ecom_control_library::tagFORMATETC *,EIF_INTEGER,::IAdviseSink *,EIF_OBJECT)"
 		end
 
 	ccom_dunadvise (cpp_obj: POINTER; dw_connection: INTEGER) is

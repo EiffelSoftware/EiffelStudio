@@ -10,8 +10,8 @@ inherit
 
 feature -- Status Report
 
-	remote_read_user_precondition (psz_prop_name: STRING; p_var: ECOM_VARIANT; p_error_log: IERROR_LOG_INTERFACE; var_type: INTEGER; p_unk_obj: ECOM_INTERFACE): BOOLEAN is
-			-- User-defined preconditions for `remote_read'.
+	read_user_precondition (psz_prop_name: STRING; p_var: ECOM_VARIANT; p_error_log: IERROR_LOG_INTERFACE): BOOLEAN is
+			-- User-defined preconditions for `read'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -26,17 +26,15 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	remote_read (psz_prop_name: STRING; p_var: ECOM_VARIANT; p_error_log: IERROR_LOG_INTERFACE; var_type: INTEGER; p_unk_obj: ECOM_INTERFACE) is
+	read (psz_prop_name: STRING; p_var: ECOM_VARIANT; p_error_log: IERROR_LOG_INTERFACE) is
 			-- No description available.
 			-- `psz_prop_name' [in].  
 			-- `p_var' [out].  
 			-- `p_error_log' [in].  
-			-- `var_type' [in].  
-			-- `p_unk_obj' [in].  
 		require
 			non_void_p_var: p_var /= Void
 			valid_p_var: p_var.item /= default_pointer
-			remote_read_user_precondition: remote_read_user_precondition (psz_prop_name, p_var, p_error_log, var_type, p_unk_obj)
+			read_user_precondition: read_user_precondition (psz_prop_name, p_var, p_error_log)
 		deferred
 
 		end

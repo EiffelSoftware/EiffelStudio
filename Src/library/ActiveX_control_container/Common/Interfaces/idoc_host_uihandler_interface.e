@@ -101,7 +101,7 @@ feature -- Status Report
 			Result := True
 		end
 
-	translate_url_user_precondition (dw_translate: INTEGER; pch_urlin: INTEGER_REF; ppch_urlout: CELL [INTEGER_REF]): BOOLEAN is
+	translate_url_user_precondition (dw_translate: INTEGER; pch_urlin: STRING; ppch_urlout: CELL [STRING]): BOOLEAN is
 			-- User-defined preconditions for `translate_url'.
 			-- Redefine in descendants if needed.
 		do
@@ -264,7 +264,7 @@ feature -- Basic Operations
 			valid_pp_dispatch: pp_dispatch.item /= Void
 		end
 
-	translate_url (dw_translate: INTEGER; pch_urlin: INTEGER_REF; ppch_urlout: CELL [INTEGER_REF]) is
+	translate_url (dw_translate: INTEGER; pch_urlin: STRING; ppch_urlout: CELL [STRING]) is
 			-- No description available.
 			-- `dw_translate' [in].  
 			-- `pch_urlin' [in].  

@@ -35,19 +35,19 @@ namespace ecom_control_library
 class ISpecifyPropertyPages_impl_proxy
 {
 public:
-	ISpecifyPropertyPages_impl_proxy (IUnknown * a_pointer);
-	virtual ~ISpecifyPropertyPages_impl_proxy ();
+  ISpecifyPropertyPages_impl_proxy (IUnknown * a_pointer);
+  virtual ~ISpecifyPropertyPages_impl_proxy ();
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_get_pages(  /* [out] */ ecom_control_library::tagCAUUID * p_pages );
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_get_pages(  /* [out] */ ecom_control_library::tagCAUUID * p_pages );
 
 
-	/*-----------------------------------------------------------
-	IUnknown interface
-	-----------------------------------------------------------*/
-	EIF_POINTER ccom_item();
+  /*-----------------------------------------------------------
+  IUnknown interface
+  -----------------------------------------------------------*/
+  EIF_POINTER ccom_item();
 
 
 
@@ -55,16 +55,16 @@ protected:
 
 
 private:
-	/*-----------------------------------------------------------
-	Interface pointer
-	-----------------------------------------------------------*/
-	ecom_control_library::ISpecifyPropertyPages * p_ISpecifyPropertyPages;
+  /*-----------------------------------------------------------
+  Interface pointer
+  -----------------------------------------------------------*/
+  ::ISpecifyPropertyPages * p_ISpecifyPropertyPages;
 
 
-	/*-----------------------------------------------------------
-	Default IUnknown interface pointer
-	-----------------------------------------------------------*/
-	IUnknown * p_unknown;
+  /*-----------------------------------------------------------
+  Default IUnknown interface pointer
+  -----------------------------------------------------------*/
+  IUnknown * p_unknown;
 
 
 

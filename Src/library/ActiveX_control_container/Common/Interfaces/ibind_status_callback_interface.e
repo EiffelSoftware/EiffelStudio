@@ -45,15 +45,15 @@ feature -- Status Report
 			Result := True
 		end
 
-	remote_get_bind_info_user_precondition (grf_bindf: INTEGER_REF; pbindinfo: X_TAG_REM_BINDINFO_RECORD; p_stgmed: TAG_REM_STGMEDIUM_RECORD): BOOLEAN is
-			-- User-defined preconditions for `remote_get_bind_info'.
+	get_bind_info_user_precondition (grf_bindf: INTEGER_REF; pbindinfo: X_TAG_REM_BINDINFO_RECORD): BOOLEAN is
+			-- User-defined preconditions for `get_bind_info'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	remote_on_data_available_user_precondition (grf_bscf: INTEGER; dw_size: INTEGER; p_formatetc: TAG_REM_FORMATETC_RECORD; p_stgmed: TAG_REM_STGMEDIUM_RECORD): BOOLEAN is
-			-- User-defined preconditions for `remote_on_data_available'.
+	on_data_available_user_precondition (grf_bscf: INTEGER; dw_size: INTEGER; p_formatetc: TAG_REM_FORMATETC_RECORD; p_stgmed: TAG_REM_STGMEDIUM_RECORD): BOOLEAN is
+			-- User-defined preconditions for `on_data_available'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -120,23 +120,20 @@ feature -- Basic Operations
 
 		end
 
-	remote_get_bind_info (grf_bindf: INTEGER_REF; pbindinfo: X_TAG_REM_BINDINFO_RECORD; p_stgmed: TAG_REM_STGMEDIUM_RECORD) is
+	get_bind_info (grf_bindf: INTEGER_REF; pbindinfo: X_TAG_REM_BINDINFO_RECORD) is
 			-- No description available.
 			-- `grf_bindf' [out].  
 			-- `pbindinfo' [in, out].  
-			-- `p_stgmed' [in, out].  
 		require
 			non_void_grf_bindf: grf_bindf /= Void
 			non_void_pbindinfo: pbindinfo /= Void
 			valid_pbindinfo: pbindinfo.item /= default_pointer
-			non_void_p_stgmed: p_stgmed /= Void
-			valid_p_stgmed: p_stgmed.item /= default_pointer
-			remote_get_bind_info_user_precondition: remote_get_bind_info_user_precondition (grf_bindf, pbindinfo, p_stgmed)
+			get_bind_info_user_precondition: get_bind_info_user_precondition (grf_bindf, pbindinfo)
 		deferred
 
 		end
 
-	remote_on_data_available (grf_bscf: INTEGER; dw_size: INTEGER; p_formatetc: TAG_REM_FORMATETC_RECORD; p_stgmed: TAG_REM_STGMEDIUM_RECORD) is
+	on_data_available (grf_bscf: INTEGER; dw_size: INTEGER; p_formatetc: TAG_REM_FORMATETC_RECORD; p_stgmed: TAG_REM_STGMEDIUM_RECORD) is
 			-- No description available.
 			-- `grf_bscf' [in].  
 			-- `dw_size' [in].  
@@ -147,7 +144,7 @@ feature -- Basic Operations
 			valid_p_formatetc: p_formatetc.item /= default_pointer
 			non_void_p_stgmed: p_stgmed /= Void
 			valid_p_stgmed: p_stgmed.item /= default_pointer
-			remote_on_data_available_user_precondition: remote_on_data_available_user_precondition (grf_bscf, dw_size, p_formatetc, p_stgmed)
+			on_data_available_user_precondition: on_data_available_user_precondition (grf_bscf, dw_size, p_formatetc, p_stgmed)
 		deferred
 
 		end

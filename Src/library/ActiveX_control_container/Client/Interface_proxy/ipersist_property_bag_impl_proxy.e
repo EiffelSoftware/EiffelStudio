@@ -114,13 +114,13 @@ feature {NONE}  -- Externals
 	ccom_load (cpp_obj: POINTER; p_prop_bag: POINTER; p_error_log: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IPersistPropertyBag_impl_proxy %"ecom_control_library_IPersistPropertyBag_impl_proxy_s.h%"](ecom_control_library::IPropertyBag *,ecom_control_library::IErrorLog *)"
+			"C++ [ecom_control_library::IPersistPropertyBag_impl_proxy %"ecom_control_library_IPersistPropertyBag_impl_proxy_s.h%"](::IPropertyBag *,::IErrorLog *)"
 		end
 
 	ccom_save (cpp_obj: POINTER; p_prop_bag: POINTER; f_clear_dirty: INTEGER; f_save_all_properties: INTEGER) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IPersistPropertyBag_impl_proxy %"ecom_control_library_IPersistPropertyBag_impl_proxy_s.h%"](ecom_control_library::IPropertyBag *,EIF_INTEGER,EIF_INTEGER)"
+			"C++ [ecom_control_library::IPersistPropertyBag_impl_proxy %"ecom_control_library_IPersistPropertyBag_impl_proxy_s.h%"](::IPropertyBag *,EIF_INTEGER,EIF_INTEGER)"
 		end
 
 	ccom_delete_ipersist_property_bag_impl_proxy (a_pointer: POINTER) is

@@ -52,55 +52,55 @@ namespace ecom_control_library
 class IBindStatusCallback : public IUnknown
 {
 public:
-	IBindStatusCallback () {};
-	~IBindStatusCallback () {};
+  IBindStatusCallback () {};
+  ~IBindStatusCallback () {};
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP OnStartBinding(  /* [in] */ ULONG dw_reserved, /* [in] */ ecom_control_library::IBinding * pib ) = 0;
-
-
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP GetPriority(  /* [out] */ LONG * pn_priority ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP OnStartBinding(  /* [in] */ ULONG dw_reserved, /* [in] */ ecom_control_library::IBinding * pib ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP OnLowResource(  /* [in] */ ULONG reserved ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP GetPriority(  /* [out] */ LONG * pn_priority ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP OnProgress(  /* [in] */ ULONG ul_progress, /* [in] */ ULONG ul_progress_max, /* [in] */ ULONG ul_status_code, /* [in] */ LPWSTR sz_status_text ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP OnLowResource(  /* [in] */ ULONG reserved ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP OnStopBinding(  /* [in] */ HRESULT hresult, /* [in] */ LPWSTR sz_error ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP OnProgress(  /* [in] */ ULONG ul_progress, /* [in] */ ULONG ul_progress_max, /* [in] */ ULONG ul_status_code, /* [in] */ LPWSTR sz_status_text ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP RemoteGetBindInfo(  /* [out] */ ULONG * grf_bindf, /* [in, out] */ ecom_control_library::_tagRemBINDINFO * pbindinfo, /* [in, out] */ ecom_control_library::tagRemSTGMEDIUM * p_stgmed ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP OnStopBinding(  /* [in] */ HRESULT hresult, /* [in] */ LPWSTR sz_error ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP RemoteOnDataAvailable(  /* [in] */ ULONG grf_bscf, /* [in] */ ULONG dw_size, /* [in] */ ecom_control_library::tagRemFORMATETC * p_formatetc, /* [in] */ ecom_control_library::tagRemSTGMEDIUM * p_stgmed ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP GetBindInfo(  /* [out] */ ULONG * grf_bindf, /* [in, out] */ ecom_control_library::_tagRemBINDINFO * pbindinfo, /* [in, out] */ ecom_control_library::tagRemSTGMEDIUM * p_stgmed ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP OnObjectAvailable(  /* [in] */ GUID * riid, /* [in] */ IUnknown * punk ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP OnDataAvailable(  /* [in] */ ULONG grf_bscf, /* [in] */ ULONG dw_size, /* [in] */ ecom_control_library::tagRemFORMATETC * p_formatetc, /* [in] */ ecom_control_library::tagRemSTGMEDIUM * p_stgmed ) = 0;
+
+
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP OnObjectAvailable(  /* [in] */ GUID * riid, /* [in] */ IUnknown * punk ) = 0;
 
 
 

@@ -25,7 +25,11 @@ feature {NONE}  -- Initialization
 
 feature -- Basic Operations
 
-	show_context_menu (dw_id: INTEGER; x: INTEGER; y: INTEGER; pcmdt_reserved: ECOM_INTERFACE; pdisp_reserved: ECOM_INTERFACE): ECOM_HRESULT is
+	show_context_menu (dw_id: INTEGER; 
+		x: INTEGER; 
+		y: INTEGER; 
+		pcmdt_reserved: ECOM_INTERFACE; 
+		pdisp_reserved: ECOM_INTERFACE): ECOM_HRESULT is
 			-- No description available.
 			-- `dw_id' [in].  
 			-- `x' [in].  
@@ -66,7 +70,11 @@ feature -- Basic Operations
 			ccom_get_host_info (initializer, pdw_flags, pdw_double_click)
 		end
 
-	show_ui (dw_id: INTEGER; p_active_object: ECOM_INTERFACE; p_command_target: ECOM_INTERFACE; p_frame: ECOM_INTERFACE; p_doc: ECOM_INTERFACE): ECOM_HRESULT is
+	show_ui (dw_id: INTEGER; 
+		p_active_object: ECOM_INTERFACE; 
+		p_command_target: ECOM_INTERFACE; 
+		p_frame: ECOM_INTERFACE; 
+		p_doc: ECOM_INTERFACE): ECOM_HRESULT is
 			-- No description available.
 			-- `dw_id' [in].  
 			-- `p_active_object' [in].  

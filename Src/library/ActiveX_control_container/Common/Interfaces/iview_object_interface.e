@@ -10,7 +10,7 @@ inherit
 
 feature -- Status Report
 
-	draw_user_precondition (dw_draw_aspect: INTEGER; lindex: INTEGER; pv_aspect: INTEGER; ptd: TAG_DVTARGETDEVICE_RECORD; hdc_target_dev: INTEGER; hdc_draw: INTEGER; lprc_bounds: X_RECTL_RECORD; lprc_wbounds: X_RECTL_RECORD; p_continue: ICONTINUE_INTERFACE): BOOLEAN is
+	draw_user_precondition (dw_draw_aspect: INTEGER; lindex: INTEGER; pv_aspect: INTEGER; ptd: TAG_DVTARGETDEVICE_RECORD; hdc_target_dev: INTEGER; hdc_draw: INTEGER; lprc_bounds: X_RECTL_RECORD; lprc_wbounds: X_RECTL_RECORD): BOOLEAN is
 			-- User-defined preconditions for `draw'.
 			-- Redefine in descendants if needed.
 		do
@@ -54,7 +54,14 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	draw (dw_draw_aspect: INTEGER; lindex: INTEGER; pv_aspect: INTEGER; ptd: TAG_DVTARGETDEVICE_RECORD; hdc_target_dev: INTEGER; hdc_draw: INTEGER; lprc_bounds: X_RECTL_RECORD; lprc_wbounds: X_RECTL_RECORD; p_continue: ICONTINUE_INTERFACE) is
+	draw (dw_draw_aspect: INTEGER; 
+			lindex: INTEGER; 
+			pv_aspect: INTEGER; 
+			ptd: TAG_DVTARGETDEVICE_RECORD; 
+			hdc_target_dev: INTEGER; 
+			hdc_draw: INTEGER; 
+			lprc_bounds: X_RECTL_RECORD; 
+			lprc_wbounds: X_RECTL_RECORD) is
 			-- No description available.
 			-- `dw_draw_aspect' [in].  
 			-- `lindex' [in].  
@@ -64,15 +71,12 @@ feature -- Basic Operations
 			-- `hdc_draw' [in].  
 			-- `lprc_bounds' [in].  
 			-- `lprc_wbounds' [in].  
-			-- `p_continue' [in].  
 		require
-			non_void_ptd: ptd /= Void
-			valid_ptd: ptd.item /= default_pointer
 			non_void_lprc_bounds: lprc_bounds /= Void
 			valid_lprc_bounds: lprc_bounds.item /= default_pointer
 			non_void_lprc_wbounds: lprc_wbounds /= Void
 			valid_lprc_wbounds: lprc_wbounds.item /= default_pointer
-			draw_user_precondition: draw_user_precondition (dw_draw_aspect, lindex, pv_aspect, ptd, hdc_target_dev, hdc_draw, lprc_bounds, lprc_wbounds, p_continue)
+			draw_user_precondition: draw_user_precondition (dw_draw_aspect, lindex, pv_aspect, ptd, hdc_target_dev, hdc_draw, lprc_bounds, lprc_wbounds)
 		deferred
 
 		end

@@ -60,37 +60,37 @@ namespace ecom_control_library
 class IOleCache : public IUnknown
 {
 public:
-	IOleCache () {};
-	~IOleCache () {};
+  IOleCache () {};
+  ~IOleCache () {};
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP Cache(  /* [in] */ ecom_control_library::tagFORMATETC * p_formatetc, /* [in] */ ULONG advf, /* [out] */ ULONG * pdw_connection ) = 0;
-
-
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP Uncache(  /* [in] */ ULONG dw_connection ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP Cache(  /* [in] */ ecom_control_library::tagFORMATETC * p_formatetc, /* [in] */ ULONG advf, /* [out] */ ULONG * pdw_connection ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP EnumCache(  /* [out] */ ecom_control_library::IEnumSTATDATA * * ppenum_statdata ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP Uncache(  /* [in] */ ULONG dw_connection ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP InitCache(  /* [in] */ ecom_control_library::IDataObject * p_data_object ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP EnumCache(  /* [out] */ ecom_control_library::IEnumSTATDATA * * ppenum_statdata ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP SetData(  /* [in] */ ecom_control_library::tagFORMATETC * p_formatetc, /* [in] */ ecom_control_library::wireSTGMEDIUM * pmedium, /* [in] */ LONG f_release ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP InitCache(  /* [in] */ ecom_control_library::IDataObject * p_data_object ) = 0;
+
+
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP SetData(  /* [in] */ ecom_control_library::tagFORMATETC * p_formatetc, /* [in] */ ecom_control_library::_userSTGMEDIUM * * pmedium, /* [in] */ LONG f_release ) = 0;
 
 
 

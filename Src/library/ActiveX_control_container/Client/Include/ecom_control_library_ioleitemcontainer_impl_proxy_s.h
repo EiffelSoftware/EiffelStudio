@@ -39,49 +39,49 @@ namespace ecom_control_library
 class IOleItemContainer_impl_proxy
 {
 public:
-	IOleItemContainer_impl_proxy (IUnknown * a_pointer);
-	virtual ~IOleItemContainer_impl_proxy ();
+  IOleItemContainer_impl_proxy (IUnknown * a_pointer);
+  virtual ~IOleItemContainer_impl_proxy ();
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_parse_display_name(  /* [in] */ ecom_control_library::IBindCtx * pbc,  /* [in] */ EIF_OBJECT psz_display_name,  /* [out] */ EIF_OBJECT pch_eaten,  /* [out] */ EIF_OBJECT ppmk_out );
-
-
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_enum_objects(  /* [in] */ EIF_INTEGER grf_flags,  /* [out] */ EIF_OBJECT ppenum );
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_parse_display_name(  /* [in] */ ::IBindCtx * pbc,  /* [in] */ EIF_OBJECT psz_display_name,  /* [out] */ EIF_OBJECT pch_eaten,  /* [out] */ EIF_OBJECT ppmk_out );
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_lock_container(  /* [in] */ EIF_INTEGER f_lock );
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_enum_objects(  /* [in] */ EIF_INTEGER grf_flags,  /* [out] */ EIF_OBJECT ppenum );
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_get_object(  /* [in] */ EIF_OBJECT psz_item,  /* [in] */ EIF_INTEGER dw_speed_needed,  /* [in] */ ecom_control_library::IBindCtx * pbc,  /* [in] */ GUID * riid,  /* [out] */ EIF_OBJECT ppv_object );
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_lock_container(  /* [in] */ EIF_INTEGER f_lock );
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_get_object_storage(  /* [in] */ EIF_OBJECT psz_item,  /* [in] */ ecom_control_library::IBindCtx * pbc,  /* [in] */ GUID * riid,  /* [out] */ EIF_OBJECT ppv_storage );
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_get_object(  /* [in] */ EIF_OBJECT psz_item,  /* [in] */ EIF_INTEGER dw_speed_needed,  /* [in] */ ::IBindCtx * pbc,  /* [in] */ GUID * riid,  /* [out] */ EIF_OBJECT ppv_object );
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_is_running(  /* [in] */ EIF_OBJECT psz_item );
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_get_object_storage(  /* [in] */ EIF_OBJECT psz_item,  /* [in] */ ::IBindCtx * pbc,  /* [in] */ GUID * riid,  /* [out] */ EIF_OBJECT ppv_storage );
 
 
-	/*-----------------------------------------------------------
-	IUnknown interface
-	-----------------------------------------------------------*/
-	EIF_POINTER ccom_item();
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_is_running(  /* [in] */ EIF_OBJECT psz_item );
+
+
+  /*-----------------------------------------------------------
+  IUnknown interface
+  -----------------------------------------------------------*/
+  EIF_POINTER ccom_item();
 
 
 
@@ -89,16 +89,16 @@ protected:
 
 
 private:
-	/*-----------------------------------------------------------
-	Interface pointer
-	-----------------------------------------------------------*/
-	ecom_control_library::IOleItemContainer * p_IOleItemContainer;
+  /*-----------------------------------------------------------
+  Interface pointer
+  -----------------------------------------------------------*/
+  ::IOleItemContainer * p_IOleItemContainer;
 
 
-	/*-----------------------------------------------------------
-	Default IUnknown interface pointer
-	-----------------------------------------------------------*/
-	IUnknown * p_unknown;
+  /*-----------------------------------------------------------
+  Default IUnknown interface pointer
+  -----------------------------------------------------------*/
+  IUnknown * p_unknown;
 
 
 

@@ -10,15 +10,15 @@ inherit
 
 feature -- Status Report
 
-	remote_get_data_user_precondition (pformatetc_in: TAG_FORMATETC_RECORD; p_remote_medium: CELL [WIRE_STGMEDIUM_ALIAS]): BOOLEAN is
-			-- User-defined preconditions for `remote_get_data'.
+	get_data_user_precondition (pformatetc_in: TAG_FORMATETC_RECORD; p_medium: STGMEDIUM_RECORD): BOOLEAN is
+			-- User-defined preconditions for `get_data'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	remote_get_data_here_user_precondition (p_formatetc: TAG_FORMATETC_RECORD; p_remote_medium: CELL [WIRE_STGMEDIUM_ALIAS]): BOOLEAN is
-			-- User-defined preconditions for `remote_get_data_here'.
+	get_data_here_user_precondition (p_formatetc: TAG_FORMATETC_RECORD; p_medium: STGMEDIUM_RECORD): BOOLEAN is
+			-- User-defined preconditions for `get_data_here'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -38,8 +38,8 @@ feature -- Status Report
 			Result := True
 		end
 
-	remote_set_data_user_precondition (p_formatetc: TAG_FORMATETC_RECORD; pmedium: CELL [WIRE_FLAG_STGMEDIUM_ALIAS]; f_release: INTEGER): BOOLEAN is
-			-- User-defined preconditions for `remote_set_data'.
+	set_data_user_precondition (p_formatetc: TAG_FORMATETC_RECORD; pmedium: STGMEDIUM_RECORD; f_release: INTEGER): BOOLEAN is
+			-- User-defined preconditions for `set_data'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -75,35 +75,30 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	remote_get_data (pformatetc_in: TAG_FORMATETC_RECORD; p_remote_medium: CELL [WIRE_STGMEDIUM_ALIAS]) is
+	get_data (pformatetc_in: TAG_FORMATETC_RECORD; p_medium: STGMEDIUM_RECORD) is
 			-- No description available.
 			-- `pformatetc_in' [in].  
-			-- `p_remote_medium' [out].  
+			-- `p_medium' [out].  
 		require
 			non_void_pformatetc_in: pformatetc_in /= Void
 			valid_pformatetc_in: pformatetc_in.item /= default_pointer
-			non_void_p_remote_medium: p_remote_medium /= Void
-			remote_get_data_user_precondition: remote_get_data_user_precondition (pformatetc_in, p_remote_medium)
+			non_void_p_medium: p_medium /= Void
+			valid_p_medium: p_medium.item /= Void
+			get_data_user_precondition: get_data_user_precondition (pformatetc_in, p_medium)
 		deferred
-
-		ensure
-			valid_p_remote_medium: p_remote_medium.item /= Void
 		end
 
-	remote_get_data_here (p_formatetc: TAG_FORMATETC_RECORD; p_remote_medium: CELL [WIRE_STGMEDIUM_ALIAS]) is
+	get_data_here (p_formatetc: TAG_FORMATETC_RECORD; p_medium: STGMEDIUM_RECORD) is
 			-- No description available.
 			-- `p_formatetc' [in].  
-			-- `p_remote_medium' [in, out].  
+			-- `p_medium' [in, out].  
 		require
 			non_void_p_formatetc: p_formatetc /= Void
 			valid_p_formatetc: p_formatetc.item /= default_pointer
-			non_void_p_remote_medium: p_remote_medium /= Void
-			valid_p_remote_medium: p_remote_medium.item /= Void
-			remote_get_data_here_user_precondition: remote_get_data_here_user_precondition (p_formatetc, p_remote_medium)
+			non_void_p_medium: p_medium /= Void
+			valid_p_medium: p_medium.item /= Void
+			get_data_here_user_precondition: get_data_here_user_precondition (p_formatetc, p_medium)
 		deferred
-
-		ensure
-			valid_p_remote_medium: p_remote_medium.item /= Void
 		end
 
 	query_get_data (p_formatetc: TAG_FORMATETC_RECORD) is
@@ -131,7 +126,7 @@ feature -- Basic Operations
 
 		end
 
-	remote_set_data (p_formatetc: TAG_FORMATETC_RECORD; pmedium: CELL [WIRE_FLAG_STGMEDIUM_ALIAS]; f_release: INTEGER) is
+	set_data (p_formatetc: TAG_FORMATETC_RECORD; pmedium: STGMEDIUM_RECORD; f_release: INTEGER) is
 			-- No description available.
 			-- `p_formatetc' [in].  
 			-- `pmedium' [in].  
@@ -141,7 +136,7 @@ feature -- Basic Operations
 			valid_p_formatetc: p_formatetc.item /= default_pointer
 			non_void_pmedium: pmedium /= Void
 			valid_pmedium: pmedium.item /= Void
-			remote_set_data_user_precondition: remote_set_data_user_precondition (p_formatetc, pmedium, f_release)
+			set_data_user_precondition: set_data_user_precondition (p_formatetc, pmedium, f_release)
 		deferred
 
 		end

@@ -22,8 +22,6 @@ class IPersistStream_impl_proxy;
 
 #include "ecom_control_library_IPersistStream_s.h"
 
-#include "ecom_control_library_IStream_s.h"
-
 #include "ecom_control_library__ULARGE_INTEGER_s.h"
 
 #ifdef __cplusplus
@@ -37,43 +35,43 @@ namespace ecom_control_library
 class IPersistStream_impl_proxy
 {
 public:
-	IPersistStream_impl_proxy (IUnknown * a_pointer);
-	virtual ~IPersistStream_impl_proxy ();
+  IPersistStream_impl_proxy (IUnknown * a_pointer);
+  virtual ~IPersistStream_impl_proxy ();
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_get_class_id(  /* [out] */ GUID * p_class_id );
-
-
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_is_dirty();
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_get_class_id(  /* [out] */ GUID * p_class_id );
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_load(  /* [in] */ ecom_control_library::IStream * pstm );
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_is_dirty();
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_save(  /* [in] */ ecom_control_library::IStream * pstm,  /* [in] */ EIF_INTEGER f_clear_dirty );
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_load(  /* [in] */ ::IStream * pstm );
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_get_size_max(  /* [out] */ ecom_control_library::_ULARGE_INTEGER * pcb_size );
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_save(  /* [in] */ ::IStream * pstm,  /* [in] */ EIF_INTEGER f_clear_dirty );
 
 
-	/*-----------------------------------------------------------
-	IUnknown interface
-	-----------------------------------------------------------*/
-	EIF_POINTER ccom_item();
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_get_size_max(  /* [out] */ ULARGE_INTEGER * pcb_size );
+
+
+  /*-----------------------------------------------------------
+  IUnknown interface
+  -----------------------------------------------------------*/
+  EIF_POINTER ccom_item();
 
 
 
@@ -81,16 +79,16 @@ protected:
 
 
 private:
-	/*-----------------------------------------------------------
-	Interface pointer
-	-----------------------------------------------------------*/
-	ecom_control_library::IPersistStream * p_IPersistStream;
+  /*-----------------------------------------------------------
+  Interface pointer
+  -----------------------------------------------------------*/
+  ::IPersistStream * p_IPersistStream;
 
 
-	/*-----------------------------------------------------------
-	Default IUnknown interface pointer
-	-----------------------------------------------------------*/
-	IUnknown * p_unknown;
+  /*-----------------------------------------------------------
+  Default IUnknown interface pointer
+  -----------------------------------------------------------*/
+  IUnknown * p_unknown;
 
 
 

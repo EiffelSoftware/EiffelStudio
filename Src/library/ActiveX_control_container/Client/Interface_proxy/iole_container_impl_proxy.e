@@ -75,7 +75,7 @@ feature {NONE}  -- Externals
 	ccom_parse_display_name (cpp_obj: POINTER; pbc: POINTER; psz_display_name: STRING; pch_eaten: INTEGER_REF; ppmk_out: CELL [IMONIKER_INTERFACE]) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IOleContainer_impl_proxy %"ecom_control_library_IOleContainer_impl_proxy_s.h%"](ecom_control_library::IBindCtx *,EIF_OBJECT,EIF_OBJECT,EIF_OBJECT)"
+			"C++ [ecom_control_library::IOleContainer_impl_proxy %"ecom_control_library_IOleContainer_impl_proxy_s.h%"](::IBindCtx *,EIF_OBJECT,EIF_OBJECT,EIF_OBJECT)"
 		end
 
 	ccom_enum_objects (cpp_obj: POINTER; grf_flags: INTEGER; ppenum: CELL [IENUM_UNKNOWN_INTERFACE]) is

@@ -35,25 +35,25 @@ namespace ecom_control_library
 class IOleWindow_impl_proxy
 {
 public:
-	IOleWindow_impl_proxy (IUnknown * a_pointer);
-	virtual ~IOleWindow_impl_proxy ();
+  IOleWindow_impl_proxy (IUnknown * a_pointer);
+  virtual ~IOleWindow_impl_proxy ();
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_get_window(  /* [out] */ EIF_OBJECT phwnd );
-
-
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_context_sensitive_help(  /* [in] */ EIF_INTEGER f_enter_mode );
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_get_window(  /* [out] */ EIF_OBJECT phwnd );
 
 
-	/*-----------------------------------------------------------
-	IUnknown interface
-	-----------------------------------------------------------*/
-	EIF_POINTER ccom_item();
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_context_sensitive_help(  /* [in] */ EIF_INTEGER f_enter_mode );
+
+
+  /*-----------------------------------------------------------
+  IUnknown interface
+  -----------------------------------------------------------*/
+  EIF_POINTER ccom_item();
 
 
 
@@ -61,16 +61,16 @@ protected:
 
 
 private:
-	/*-----------------------------------------------------------
-	Interface pointer
-	-----------------------------------------------------------*/
-	ecom_control_library::IOleWindow * p_IOleWindow;
+  /*-----------------------------------------------------------
+  Interface pointer
+  -----------------------------------------------------------*/
+  ::IOleWindow * p_IOleWindow;
 
 
-	/*-----------------------------------------------------------
-	Default IUnknown interface pointer
-	-----------------------------------------------------------*/
-	IUnknown * p_unknown;
+  /*-----------------------------------------------------------
+  Default IUnknown interface pointer
+  -----------------------------------------------------------*/
+  IUnknown * p_unknown;
 
 
 

@@ -37,37 +37,37 @@ namespace ecom_control_library
 class IDropTarget_impl_proxy
 {
 public:
-	IDropTarget_impl_proxy (IUnknown * a_pointer);
-	virtual ~IDropTarget_impl_proxy ();
+  IDropTarget_impl_proxy (IUnknown * a_pointer);
+  virtual ~IDropTarget_impl_proxy ();
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_drag_enter(  /* [in] */ ecom_control_library::IDataObject * p_data_obj,  /* [in] */ EIF_INTEGER grf_key_state,  /* [in] */ ecom_control_library::_POINTL * pt,  /* [in, out] */ EIF_OBJECT pdw_effect );
-
-
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_drag_over(  /* [in] */ EIF_INTEGER grf_key_state,  /* [in] */ ecom_control_library::_POINTL * pt,  /* [in, out] */ EIF_OBJECT pdw_effect );
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_drag_enter(  /* [in] */ ::IDataObject * p_data_obj,  /* [in] */ EIF_INTEGER grf_key_state,  /* [in] */ ecom_control_library::_POINTL * pt,  /* [in, out] */ EIF_OBJECT pdw_effect );
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_drag_leave();
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_drag_over(  /* [in] */ EIF_INTEGER grf_key_state,  /* [in] */ ecom_control_library::_POINTL * pt,  /* [in, out] */ EIF_OBJECT pdw_effect );
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_drop(  /* [in] */ ecom_control_library::IDataObject * p_data_obj,  /* [in] */ EIF_INTEGER grf_key_state,  /* [in] */ ecom_control_library::_POINTL * pt,  /* [in, out] */ EIF_OBJECT pdw_effect );
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_drag_leave();
 
 
-	/*-----------------------------------------------------------
-	IUnknown interface
-	-----------------------------------------------------------*/
-	EIF_POINTER ccom_item();
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_drop(  /* [in] */ ::IDataObject * p_data_obj,  /* [in] */ EIF_INTEGER grf_key_state,  /* [in] */ ecom_control_library::_POINTL * pt,  /* [in, out] */ EIF_OBJECT pdw_effect );
+
+
+  /*-----------------------------------------------------------
+  IUnknown interface
+  -----------------------------------------------------------*/
+  EIF_POINTER ccom_item();
 
 
 
@@ -75,16 +75,16 @@ protected:
 
 
 private:
-	/*-----------------------------------------------------------
-	Interface pointer
-	-----------------------------------------------------------*/
-	ecom_control_library::IDropTarget * p_IDropTarget;
+  /*-----------------------------------------------------------
+  Interface pointer
+  -----------------------------------------------------------*/
+  ::IDropTarget * p_IDropTarget;
 
 
-	/*-----------------------------------------------------------
-	Default IUnknown interface pointer
-	-----------------------------------------------------------*/
-	IUnknown * p_unknown;
+  /*-----------------------------------------------------------
+  Default IUnknown interface pointer
+  -----------------------------------------------------------*/
+  IUnknown * p_unknown;
 
 
 

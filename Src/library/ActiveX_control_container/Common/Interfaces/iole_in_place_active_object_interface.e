@@ -10,8 +10,8 @@ inherit
 
 feature -- Status Report
 
-	remote_translate_accelerator_user_precondition: BOOLEAN is
-			-- User-defined preconditions for `remote_translate_accelerator'.
+	translate_accelerator_user_precondition (lpmsg: TAG_MSG_RECORD): BOOLEAN is
+			-- User-defined preconditions for `translate_accelerator'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -31,8 +31,8 @@ feature -- Status Report
 			Result := True
 		end
 
-	remote_resize_border_user_precondition (prc_border: TAG_RECT_RECORD; riid: ECOM_GUID; p_uiwindow: IOLE_IN_PLACE_UIWINDOW_INTERFACE; f_frame_window: INTEGER): BOOLEAN is
-			-- User-defined preconditions for `remote_resize_border'.
+	resize_border_user_precondition (prc_border: TAG_RECT_RECORD; p_uiwindow: IOLE_IN_PLACE_UIWINDOW_INTERFACE; f_frame_window: INTEGER): BOOLEAN is
+			-- User-defined preconditions for `resize_border'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -47,10 +47,16 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	remote_translate_accelerator is
-			-- No description available.
+	translate_accelerator (lpmsg: TAG_MSG_RECORD)is
+			-- Processes menu accelerator-key messages 
+			-- from the container's message queue. 
+			-- This method should only be used for 
+			-- objects created by a DLL object application. 
+			-- `lpmsg' [in] Pointer to the message that might 
+			-- need to be translated. 
 		require
-			remote_translate_accelerator_user_precondition: remote_translate_accelerator_user_precondition
+			non_void_message: lpmsg /= Void
+			translate_accelerator_user_precondition: translate_accelerator_user_precondition (lpmsg)
 		deferred
 
 		end
@@ -73,18 +79,15 @@ feature -- Basic Operations
 
 		end
 
-	remote_resize_border (prc_border: TAG_RECT_RECORD; riid: ECOM_GUID; p_uiwindow: IOLE_IN_PLACE_UIWINDOW_INTERFACE; f_frame_window: INTEGER) is
+	resize_border (prc_border: TAG_RECT_RECORD; p_uiwindow: IOLE_IN_PLACE_UIWINDOW_INTERFACE; f_frame_window: INTEGER) is
 			-- No description available.
 			-- `prc_border' [in].  
-			-- `riid' [in].  
 			-- `p_uiwindow' [in].  
 			-- `f_frame_window' [in].  
 		require
 			non_void_prc_border: prc_border /= Void
 			valid_prc_border: prc_border.item /= default_pointer
-			non_void_riid: riid /= Void
-			valid_riid: riid.item /= default_pointer
-			remote_resize_border_user_precondition: remote_resize_border_user_precondition (prc_border, riid, p_uiwindow, f_frame_window)
+			resize_border_user_precondition: resize_border_user_precondition (prc_border, p_uiwindow, f_frame_window)
 		deferred
 
 		end

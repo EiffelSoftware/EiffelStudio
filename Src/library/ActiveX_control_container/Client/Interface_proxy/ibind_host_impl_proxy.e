@@ -47,7 +47,7 @@ feature -- Basic Operations
 			ccom_create_moniker (initializer, sz_name, pbc_item, ppmk, dw_reserved)
 		end
 
-	remote_moniker_bind_to_storage (pmk: IMONIKER_INTERFACE; pbc: IBIND_CTX_INTERFACE; p_bsc: IBIND_STATUS_CALLBACK_INTERFACE; riid: ECOM_GUID; ppv_obj: CELL [ECOM_INTERFACE]) is
+	moniker_bind_to_storage (pmk: IMONIKER_INTERFACE; pbc: IBIND_CTX_INTERFACE; p_bsc: IBIND_STATUS_CALLBACK_INTERFACE; riid: ECOM_GUID; ppv_obj: CELL [ECOM_INTERFACE]) is
 			-- No description available.
 			-- `pmk' [in].  
 			-- `pbc' [in].  
@@ -87,10 +87,10 @@ feature -- Basic Operations
 				end
 				p_bsc_item := p_bsc.item
 			end
-			ccom_remote_moniker_bind_to_storage (initializer, pmk_item, pbc_item, p_bsc_item, riid.item, ppv_obj)
+			ccom_moniker_bind_to_storage (initializer, pmk_item, pbc_item, p_bsc_item, riid.item, ppv_obj)
 		end
 
-	remote_moniker_bind_to_object (pmk: IMONIKER_INTERFACE; pbc: IBIND_CTX_INTERFACE; p_bsc: IBIND_STATUS_CALLBACK_INTERFACE; riid: ECOM_GUID; ppv_obj: CELL [ECOM_INTERFACE]) is
+	moniker_bind_to_object (pmk: IMONIKER_INTERFACE; pbc: IBIND_CTX_INTERFACE; p_bsc: IBIND_STATUS_CALLBACK_INTERFACE; riid: ECOM_GUID; ppv_obj: CELL [ECOM_INTERFACE]) is
 			-- No description available.
 			-- `pmk' [in].  
 			-- `pbc' [in].  
@@ -130,7 +130,7 @@ feature -- Basic Operations
 				end
 				p_bsc_item := p_bsc.item
 			end
-			ccom_remote_moniker_bind_to_object (initializer, pmk_item, pbc_item, p_bsc_item, riid.item, ppv_obj)
+			ccom_moniker_bind_to_object (initializer, pmk_item, pbc_item, p_bsc_item, riid.item, ppv_obj)
 		end
 
 feature {NONE}  -- Implementation
@@ -146,19 +146,19 @@ feature {NONE}  -- Externals
 	ccom_create_moniker (cpp_obj: POINTER; sz_name: STRING; pbc: POINTER; ppmk: CELL [IMONIKER_INTERFACE]; dw_reserved: INTEGER) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IBindHost_impl_proxy %"ecom_control_library_IBindHost_impl_proxy_s.h%"](EIF_OBJECT,ecom_control_library::IBindCtx *,EIF_OBJECT,EIF_INTEGER)"
+			"C++ [ecom_control_library::IBindHost_impl_proxy %"ecom_control_library_IBindHost_impl_proxy_s.h%"](EIF_OBJECT,::IBindCtx *,EIF_OBJECT,EIF_INTEGER)"
 		end
 
-	ccom_remote_moniker_bind_to_storage (cpp_obj: POINTER; pmk: POINTER; pbc: POINTER; p_bsc: POINTER; riid: POINTER; ppv_obj: CELL [ECOM_INTERFACE]) is
+	ccom_moniker_bind_to_storage (cpp_obj: POINTER; pmk: POINTER; pbc: POINTER; p_bsc: POINTER; riid: POINTER; ppv_obj: CELL [ECOM_INTERFACE]) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IBindHost_impl_proxy %"ecom_control_library_IBindHost_impl_proxy_s.h%"](ecom_control_library::IMoniker *,ecom_control_library::IBindCtx *,ecom_control_library::IBindStatusCallback *,GUID *,EIF_OBJECT)"
+			"C++ [ecom_control_library::IBindHost_impl_proxy %"ecom_control_library_IBindHost_impl_proxy_s.h%"](::IMoniker *,::IBindCtx *,::IBindStatusCallback *,GUID *,EIF_OBJECT)"
 		end
 
-	ccom_remote_moniker_bind_to_object (cpp_obj: POINTER; pmk: POINTER; pbc: POINTER; p_bsc: POINTER; riid: POINTER; ppv_obj: CELL [ECOM_INTERFACE]) is
+	ccom_moniker_bind_to_object (cpp_obj: POINTER; pmk: POINTER; pbc: POINTER; p_bsc: POINTER; riid: POINTER; ppv_obj: CELL [ECOM_INTERFACE]) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IBindHost_impl_proxy %"ecom_control_library_IBindHost_impl_proxy_s.h%"](ecom_control_library::IMoniker *,ecom_control_library::IBindCtx *,ecom_control_library::IBindStatusCallback *,GUID *,EIF_OBJECT)"
+			"C++ [ecom_control_library::IBindHost_impl_proxy %"ecom_control_library_IBindHost_impl_proxy_s.h%"](::IMoniker *,::IBindCtx *,::IBindStatusCallback *,GUID *,EIF_OBJECT)"
 		end
 
 	ccom_delete_ibind_host_impl_proxy (a_pointer: POINTER) is

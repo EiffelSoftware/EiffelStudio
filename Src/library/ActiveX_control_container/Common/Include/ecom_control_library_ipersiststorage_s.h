@@ -29,15 +29,6 @@ class IPersistStorage;
 extern "C" {
 #endif
 
-#ifndef __ecom_control_library_IStorage_FWD_DEFINED__
-#define __ecom_control_library_IStorage_FWD_DEFINED__
-namespace ecom_control_library
-{
-class IStorage;
-}
-#endif
-
-
 
 #ifdef __cplusplus
 extern "C" {
@@ -48,43 +39,43 @@ namespace ecom_control_library
 class IPersistStorage : public ecom_control_library::IPersist
 {
 public:
-	IPersistStorage () {};
-	~IPersistStorage () {};
+  IPersistStorage () {};
+  ~IPersistStorage () {};
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP IsDirty( void ) = 0;
-
-
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP InitNew(  /* [in] */ ecom_control_library::IStorage * pstg ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP IsDirty( void ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP Load(  /* [in] */ ecom_control_library::IStorage * pstg ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP InitNew(  /* [in] */ ::IStorage * pstg ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP Save(  /* [in] */ ecom_control_library::IStorage * p_stg_save, /* [in] */ LONG f_same_as_load ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP Load(  /* [in] */ ::IStorage * pstg ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP SaveCompleted(  /* [in] */ ecom_control_library::IStorage * p_stg_new ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP Save(  /* [in] */ ::IStorage * p_stg_save, /* [in] */ LONG f_same_as_load ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP HandsOffStorage( void ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP SaveCompleted(  /* [in] */ ::IStorage * p_stg_new ) = 0;
+
+
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP HandsOffStorage( void ) = 0;
 
 
 

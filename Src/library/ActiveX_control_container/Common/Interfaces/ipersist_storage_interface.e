@@ -17,28 +17,28 @@ feature -- Status Report
 			Result := True
 		end
 
-	init_new_user_precondition (pstg: ISTORAGE_INTERFACE): BOOLEAN is
+	init_new_user_precondition (pstg: ECOM_STORAGE): BOOLEAN is
 			-- User-defined preconditions for `init_new'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	load_user_precondition (pstg: ISTORAGE_INTERFACE): BOOLEAN is
+	load_user_precondition (pstg: ECOM_STORAGE): BOOLEAN is
 			-- User-defined preconditions for `load'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	save_user_precondition (p_stg_save: ISTORAGE_INTERFACE; f_same_as_load: INTEGER): BOOLEAN is
+	save_user_precondition (p_stg_save: ECOM_STORAGE; f_same_as_load: INTEGER): BOOLEAN is
 			-- User-defined preconditions for `save'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	save_completed_user_precondition (p_stg_new: ISTORAGE_INTERFACE): BOOLEAN is
+	save_completed_user_precondition (p_stg_new: ECOM_STORAGE): BOOLEAN is
 			-- User-defined preconditions for `save_completed'.
 			-- Redefine in descendants if needed.
 		do
@@ -62,7 +62,7 @@ feature -- Basic Operations
 
 		end
 
-	init_new (pstg: ISTORAGE_INTERFACE) is
+	init_new (pstg: ECOM_STORAGE) is
 			-- No description available.
 			-- `pstg' [in].  
 		require
@@ -71,7 +71,7 @@ feature -- Basic Operations
 
 		end
 
-	load (pstg: ISTORAGE_INTERFACE) is
+	load (pstg: ECOM_STORAGE) is
 			-- No description available.
 			-- `pstg' [in].  
 		require
@@ -80,7 +80,7 @@ feature -- Basic Operations
 
 		end
 
-	save (p_stg_save: ISTORAGE_INTERFACE; f_same_as_load: INTEGER) is
+	save (p_stg_save: ECOM_STORAGE; f_same_as_load: INTEGER) is
 			-- No description available.
 			-- `p_stg_save' [in].  
 			-- `f_same_as_load' [in].  
@@ -90,7 +90,7 @@ feature -- Basic Operations
 
 		end
 
-	save_completed (p_stg_new: ISTORAGE_INTERFACE) is
+	save_completed (p_stg_new: ECOM_STORAGE) is
 			-- No description available.
 			-- `p_stg_new' [in].  
 		require

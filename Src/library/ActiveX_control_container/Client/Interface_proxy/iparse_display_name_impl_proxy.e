@@ -60,7 +60,7 @@ feature {NONE}  -- Externals
 	ccom_parse_display_name (cpp_obj: POINTER; pbc: POINTER; psz_display_name: STRING; pch_eaten: INTEGER_REF; ppmk_out: CELL [IMONIKER_INTERFACE]) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IParseDisplayName_impl_proxy %"ecom_control_library_IParseDisplayName_impl_proxy_s.h%"](ecom_control_library::IBindCtx *,EIF_OBJECT,EIF_OBJECT,EIF_OBJECT)"
+			"C++ [ecom_control_library::IParseDisplayName_impl_proxy %"ecom_control_library_IParseDisplayName_impl_proxy_s.h%"](::IBindCtx *,EIF_OBJECT,EIF_OBJECT,EIF_OBJECT)"
 		end
 
 	ccom_delete_iparse_display_name_impl_proxy (a_pointer: POINTER) is

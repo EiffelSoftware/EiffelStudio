@@ -31,14 +31,6 @@ class IPersistStream;
 extern "C" {
 #endif
 
-#ifndef __ecom_control_library_IStream_FWD_DEFINED__
-#define __ecom_control_library_IStream_FWD_DEFINED__
-namespace ecom_control_library
-{
-class IStream;
-}
-#endif
-
 
 
 #ifdef __cplusplus
@@ -50,31 +42,31 @@ namespace ecom_control_library
 class IPersistStream : public ecom_control_library::IPersist
 {
 public:
-	IPersistStream () {};
-	~IPersistStream () {};
+  IPersistStream () {};
+  ~IPersistStream () {};
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP IsDirty( void ) = 0;
-
-
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP Load(  /* [in] */ ecom_control_library::IStream * pstm ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP IsDirty( void ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP Save(  /* [in] */ ecom_control_library::IStream * pstm, /* [in] */ LONG f_clear_dirty ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP Load(  /* [in] */ ::IStream * pstm ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP GetSizeMax(  /* [out] */ ecom_control_library::_ULARGE_INTEGER * pcb_size ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP Save(  /* [in] */ ::IStream * pstm, /* [in] */ LONG f_clear_dirty ) = 0;
+
+
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP GetSizeMax(  /* [out] */ ecom_control_library::_ULARGE_INTEGER * pcb_size ) = 0;
 
 
 

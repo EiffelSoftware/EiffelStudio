@@ -60,67 +60,67 @@ namespace ecom_control_library
 class ITypeLib_2 : public IUnknown
 {
 public:
-	ITypeLib_2 () {};
-	~ITypeLib_2 () {};
+  ITypeLib_2 () {};
+  ~ITypeLib_2 () {};
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP RemoteGetTypeInfoCount(  /* [out] */ UINT * pc_tinfo ) = 0;
-
-
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP a_GetTypeInfo(  /* [in] */ UINT a_index, /* [out] */ ecom_control_library::ITypeInfo_2 * * pp_tinfo ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP GetTypeInfoCount(  /* [out] */ UINT * pc_tinfo ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP GetTypeInfoType(  /* [in] */ UINT a_index, /* [out] */ long * p_tkind ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP a_GetTypeInfo(  /* [in] */ UINT a_index, /* [out] */ ecom_control_library::ITypeInfo_2 * * pp_tinfo ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP GetTypeInfoOfGuid(  /* [in] */ GUID * guid, /* [out] */ ecom_control_library::ITypeInfo_2 * * pp_tinfo ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP GetTypeInfoType(  /* [in] */ UINT a_index, /* [out] */ long * p_tkind ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP RemoteGetLibAttr(  /* [out] */ ecom_control_library::tagTLIBATTR * * pp_tlib_attr, /* [out] */ ecom_control_library::DWORD1 * p_dummy ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP GetTypeInfoOfGuid(  /* [in] */ GUID * guid, /* [out] */ ecom_control_library::ITypeInfo_2 * * pp_tinfo ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP GetTypeComp(  /* [out] */ ecom_control_library::ITypeComp * * pp_tcomp ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP GetLibAttr(  /* [out] */ ecom_control_library::tagTLIBATTR * * pp_tlib_attr, /* [out] */ ecom_control_library::DWORD1 * p_dummy ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP RemoteGetDocumentation(  /* [in] */ INT a_index, /* [in] */ ULONG ref_ptr_flags, /* [out] */ BSTR * p_bstr_name, /* [out] */ BSTR * p_bstr_doc_string, /* [out] */ ULONG * pdw_help_context, /* [out] */ BSTR * p_bstr_help_file ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP GetTypeComp(  /* [out] */ ecom_control_library::ITypeComp * * pp_tcomp ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP RemoteIsName(  /* [in] */ LPWSTR sz_name_buf, /* [in] */ ULONG l_hash_val, /* [out] */ LONG * pf_name, /* [out] */ BSTR * p_bstr_lib_name ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP GetDocumentation(  /* [in] */ INT a_index, /* [in] */ ULONG ref_ptr_flags, /* [out] */ BSTR * p_bstr_name, /* [out] */ BSTR * p_bstr_doc_string, /* [out] */ ULONG * pdw_help_context, /* [out] */ BSTR * p_bstr_help_file ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP RemoteFindName(  /* [in] */ LPWSTR sz_name_buf, /* [in] */ ULONG l_hash_val, /* [out] */ ecom_control_library::ITypeInfo_2 * * pp_tinfo, /* [out] */ LONG * rg_mem_id, /* [in, out] */ USHORT * pc_found, /* [out] */ BSTR * p_bstr_lib_name ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP IsName(  /* [in] */ LPWSTR sz_name_buf, /* [in] */ ULONG l_hash_val, /* [out] */ LONG * pf_name, /* [out] */ BSTR * p_bstr_lib_name ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP LocalReleaseTLibAttr( void ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP FindName(  /* [in] */ LPWSTR sz_name_buf, /* [in] */ ULONG l_hash_val, /* [out] */ ecom_control_library::ITypeInfo_2 * * pp_tinfo, /* [out] */ LONG * rg_mem_id, /* [in, out] */ USHORT * pc_found, /* [out] */ BSTR * p_bstr_lib_name ) = 0;
+
+
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP LocalReleaseTLibAttr( void ) = 0;
 
 
 

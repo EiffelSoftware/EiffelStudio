@@ -57,14 +57,14 @@ feature -- Basic Operations
 			ccom_get_priority (initializer, pn_priority)
 		end
 
-	remote_get_bind_result (pclsid_protocol: ECOM_GUID; pdw_result: INTEGER_REF; psz_result: CELL [STRING]; dw_reserved: INTEGER) is
+	get_bind_result (pclsid_protocol: ECOM_GUID; pdw_result: INTEGER_REF; psz_result: CELL [STRING]; dw_reserved: INTEGER) is
 			-- No description available.
 			-- `pclsid_protocol' [out].  
 			-- `pdw_result' [out].  
 			-- `psz_result' [out].  
 			-- `dw_reserved' [in].  
 		do
-			ccom_remote_get_bind_result (initializer, pclsid_protocol.item, pdw_result, psz_result, dw_reserved)
+			ccom_get_bind_result (initializer, pclsid_protocol.item, pdw_result, psz_result, dw_reserved)
 		end
 
 feature {NONE}  -- Implementation
@@ -107,7 +107,7 @@ feature {NONE}  -- Externals
 			"C++ [ecom_control_library::IBinding_impl_proxy %"ecom_control_library_IBinding_impl_proxy_s.h%"](EIF_OBJECT)"
 		end
 
-	ccom_remote_get_bind_result (cpp_obj: POINTER; pclsid_protocol: POINTER; pdw_result: INTEGER_REF; psz_result: CELL [STRING]; dw_reserved: INTEGER) is
+	ccom_get_bind_result (cpp_obj: POINTER; pclsid_protocol: POINTER; pdw_result: INTEGER_REF; psz_result: CELL [STRING]; dw_reserved: INTEGER) is
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IBinding_impl_proxy %"ecom_control_library_IBinding_impl_proxy_s.h%"](GUID *,EIF_OBJECT,EIF_OBJECT,EIF_INTEGER)"

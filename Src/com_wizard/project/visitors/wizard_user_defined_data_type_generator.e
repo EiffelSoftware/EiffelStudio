@@ -175,9 +175,10 @@ feature -- Processing
 			-- process enumeration
 		do
 			Precursor {WIZARD_TYPE_VISITOR} (enum_descriptor)
-			c_type := clone (enum_descriptor.c_type_name)
+			c_type := clone (Int)
+			cecil_type := clone (Eif_integer)
 			create c_post_type.make (0)
-			c_header_file := clone (enum_descriptor.c_header_file_name)
+			create c_header_file.make (0)
 			eiffel_type := clone (enum_descriptor.eiffel_class_name)
 
 			is_enumeration := True

@@ -52,10 +52,11 @@ feature -- Basic operations
 			tmp_type_lib: ECOM_TYPE_LIB
 			tmp_guid: ECOM_GUID
 			tmp_lib_descriptor: WIZARD_TYPE_LIBRARY_DESCRIPTOR
+			a_count: INTEGER
 		do
 			member_id := a_func_desc.member_id
 			description := a_type_info.documentation (member_id).doc_string
-			argument_count := a_func_desc.total_param_count
+			a_count  := a_func_desc.total_param_count
 			func_kind := a_func_desc.func_kind
 			if func_kind = func_virtual or func_kind = func_purevirtual then
 				vtbl_offset := a_func_desc.vtbl_offset
@@ -79,21 +80,22 @@ feature -- Basic operations
 				name.append_integer (member_id)
 			end
 			eiffel_name := name_for_feature (name)
-			create_arguments (tmp_names, argument_count, a_func_desc.parameters, 
+			arguments := create_arguments (tmp_names, a_count, a_func_desc.parameters, 
 					a_type_info)
+			argument_count := a_count
 			create Result.make (Current)
 		ensure
 			valid_name: name /= Void and then not name.empty
-			valid_arguments: arguments /= Void and then arguments.count = argument_count
+			valid_arguments: arguments /= Void and then arguments.count = a_func_desc.total_param_count
 			valid_reurn_type: return_type /= Void
 		end
 
 	create_arguments (some_names: ARRAY[STRING]; count: INTEGER;
 				parameters: ARRAY[ECOM_ELEM_DESC]; 
-				a_type_info: ECOM_TYPE_INFO) is
+				a_type_info: ECOM_TYPE_INFO):LINKED_LIST[WIZARD_PARAM_DESCRIPTOR] is
 			-- Create arguments
 		require
-			valid_names: some_names /= Void and then some_names.count = count + 1
+			non_void_names: some_names /= Void 
 			valid_parameters: parameters /= Void and then parameters.count = count
 			valid_type_info: a_type_info /= Void
 		local
@@ -101,7 +103,10 @@ feature -- Basic operations
 			a_param_descriptor: WIZARD_PARAM_DESCRIPTOR
 			arg_name: STRING
 		do
-			create arguments.make
+			if some_names.count < count + 1 then
+				some_names.resize (1, count + 1)
+			end
+			create Result.make
 			from
 				i := 2
 			variant
@@ -115,13 +120,13 @@ feature -- Basic operations
 					arg_name.append ("arg_")
 					arg_name.append_integer (i - 1)
 				end
-				a_param_descriptor := parameter_descriptor_factory.create_descriptor (some_names.item (i), a_type_info,
+				a_param_descriptor := parameter_descriptor_factory.create_descriptor (arg_name, a_type_info,
 						parameters.item (i - 1), system_descriptor)
-				arguments.force (a_param_descriptor)
+				Result.force (a_param_descriptor)
 				i := i + 1
 			end
 		ensure
-			valid_arguments: arguments /= Void and then arguments.count = argument_count
+			valid_arguments: Result /= Void and then Result.count = count
 		end
 
 	initialize_descriptor (a_descriptor: WIZARD_FUNCTION_DESCRIPTOR) is

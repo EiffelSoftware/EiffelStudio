@@ -131,6 +131,7 @@ feature -- Basic operations
 			i, count: INTEGER
 			a_function_descriptor: WIZARD_FUNCTION_DESCRIPTOR
 			a_func_desc: ECOM_FUNC_DESC
+			function_descriptor_factory: WIZARD_FUNCTION_DESCRIPTOR_FACTORY
 		do
 			count := a_type_info.type_attr.count_func
 			from
@@ -142,6 +143,7 @@ feature -- Basic operations
 				i = count
 			loop
 				a_func_desc := a_type_info.func_desc (i)
+				create function_descriptor_factory
 				a_function_descriptor := function_descriptor_factory.create_descriptor (a_type_info, a_func_desc)
 				if feature_names.has (a_function_descriptor.name) then
 					a_function_descriptor.name.append_integer (counter)
@@ -164,6 +166,7 @@ feature -- Basic operations
 		local
 			i, count: INTEGER
 			a_property_descriptor: WIZARD_PROPERTY_DESCRIPTOR
+			property_descriptor_factory: WIZARD_PROPERTY_DESCRIPTOR_FACTORY
 		do
 			count := a_type_info.type_attr.count_variables
 			from
@@ -174,6 +177,7 @@ feature -- Basic operations
 			until
 				i = count
 			loop
+				create property_descriptor_factory
 				a_property_descriptor := property_descriptor_factory.create_descriptor (a_type_info, i)
 				if feature_names.has (a_property_descriptor.name) then
 					a_property_descriptor.name.append_integer (counter)

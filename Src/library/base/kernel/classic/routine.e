@@ -10,18 +10,11 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	ROUTINE [BASE_TYPE, OPEN_ARGS -> TUPLE]
+	ROUTINE [BASE_TYPE, OPEN_ARGS -> TUPLE create make end]
 
 inherit
-	MEMORY
-		export
-			{NONE} all
-		redefine
-			dispose, is_equal, copy
-		end
-
 	HASHABLE
-		undefine
+		redefine
 			copy,
 			is_equal
 		end
@@ -34,63 +27,43 @@ feature -- Initialization
 		require
 			other_exists: other /= Void
 			conforming: conforms_to (other)
-		local
-			null_ptr: POINTER
 		do
-			-- Free own C argument structure
-			if rout_cargs /= null_ptr then
-				rout_obj_free_args (rout_cargs)
-				rout_cargs := null_ptr
-			end
-
-			operands := other.operands
-			operands_set_by_user := other.operands_set_by_user
-			closed_operands := other.closed_operands
+			internal_operands := other.internal_operands
 			open_map := other.open_map
-			closed_map := other.closed_map
 			rout_disp := other.rout_disp
+			eiffel_rout_disp := other.eiffel_rout_disp
+			is_cleanup_needed := other.is_cleanup_needed
 		ensure
 			same_call_status: other.callable implies callable
 		end
 
 feature -- Access
 
-	operands: OPEN_ARGS
+	operands: OPEN_ARGS is
 			-- Open operands.
+		local
+			i, nb: INTEGER
+			l_open_map: like open_map
+		do
+			create Result.make
+			l_open_map := open_map
+			if l_open_map /= Void then
+				from
+					i := 0
+					nb := l_open_map.count - 1
+				until
+					i > nb
+				loop
+					Result.put (internal_operands.item (l_open_map.item (i)), i + 1)
+					i := i + 1
+				end
+			end
+		end
 
 	target: ANY is
 			-- Target of call.
 		do
-			if
-				closed_map.count > 0 and then
-				closed_map.item (closed_map.lower) = 0
-			then
-				Result := closed_operands.item (closed_operands.lower)
-			elseif
-				operands /= Void and then operands.count > 0
-			then
-				Result := operands.item (operands.lower)
-			end
-		end
-
-	open_operand_type (i: INTEGER): INTEGER is
-			-- Type of `i'th open operand.
-		require
-			positive: i >= 1
-			within_bounds: i <= open_count
-		do
-			if open_types = Void then
-				create open_types.make (1, open_map.count)
-			end
-			Result := open_types.item (i)
-			if Result = 0 then
-				Result := eif_gen_param_id (
-					- 1,
-					eif_gen_create ($Current, 2),
-					i
-)
-				open_types.force (Result, i)
-			end
+			Result := internal_operands.item (1)
 		end
 
 	hash_code: INTEGER is
@@ -130,15 +103,10 @@ feature -- Status report
 			-- associated with `other'.
 		do
 			--| Do not compare implementation data
-			Result := equal (operands, other.operands)
-							and then
-					 equal (closed_operands, other.closed_operands)
-							and then
-					 equal (open_map, other.open_map)
-							and then
-					 equal (closed_map, other.closed_map)
-							and then
-					 (rout_disp = other.rout_disp)
+			Result := equal (internal_operands, other.internal_operands)
+				and then equal (open_map, other.open_map)
+				and then (rout_disp = other.rout_disp)
+				and then (eiffel_rout_disp = other.eiffel_rout_disp)
 		end
 
 	valid_operands (args: OPEN_ARGS): BOOLEAN is
@@ -159,7 +127,9 @@ feature -- Status report
 			a_pointer_ref: POINTER_REF
 			a_real_ref: REAL_REF
 			int: INTERNAL
+			open_type_codes: STRING
 		do
+			open_type_codes := eif_gen_typecode_str ($Current)
 			if args = Void or open_map = Void then
 				-- Void operands are only allowed
 				-- if object has no open operands.
@@ -258,40 +228,47 @@ feature -- Measurement
 			end
 		end
 
-feature -- Element change
+feature -- Settings
 
-	set_operands (args: OPEN_ARGS) is
+	frozen set_operands (args: OPEN_ARGS) is
 			-- Use `args' as operands for next call.
 		require
 			valid_operands: valid_operands (args)
+		local
+			i, nb: INTEGER
+			l_open_map: like open_map
+			l_internal: like internal_operands
 		do
-			operands := args
-			operands_set_by_user := True
+			l_open_map := open_map
+			if l_open_map /= Void then
+				from
+					i := 0
+					nb := l_open_map.count - 1
+					l_internal := internal_operands
+				until
+					i > nb
+				loop
+					rout_tuple_item_copy ($l_internal, l_open_map.item (i), $args, i + 1)
+					i := i + 1
+				end
+			end
+		ensure
+			operands_set: equal (operands, args)
 		end
 
 feature -- Duplication
 
 	copy (other: like Current) is
 			-- Use same routine as `other'.
-		local
-			null_ptr: POINTER
 		do
-			-- Free own C argument structure
-			if rout_cargs /= null_ptr then
-				rout_obj_free_args (rout_cargs)
-				rout_cargs := null_ptr
-			end
-
-			operands := other.operands
-			operands_set_by_user := other.operands_set_by_user
-			closed_operands := other.closed_operands
+			internal_operands := other.internal_operands
 			open_map := other.open_map
-			closed_map := other.closed_map
 			rout_disp := other.rout_disp
+			eiffel_rout_disp := other.eiffel_rout_disp
+			is_cleanup_needed := other.is_cleanup_needed
 		ensure then
 			same_call_status: other.callable implies callable
 		end
-
 
 feature -- Basic operations
 
@@ -301,15 +278,15 @@ feature -- Basic operations
 			valid_operands: valid_operands (args)
 			callable: callable
 		do
-			operands := args
+			set_operands (args)
 			apply
-			if not operands_set_by_user then
-				operands := Void
+			if is_cleanup_needed then
+				remove_gc_reference
 			end
 		end
 
 	apply is
-			-- Call routine with `operands' as last set.
+			-- Call routine with `args' as last set.
 		require
 			valid_operands: valid_operands (operands)
 			callable: callable
@@ -331,43 +308,13 @@ feature -- Obsolete
 			same_call_status: other.callable implies callable
 		end
 
-
 feature {ROUTINE, E_FEATURE} -- Implementation
 
-	frozen operands_set_by_user: BOOLEAN
-			-- Are operands set throug call to `set_operands'.
-			-- If not, we can delete them after routine call for
-			-- later collection.
+	frozen internal_operands: TUPLE
+			-- All open and closed arguments provided at creation time
 
-	frozen closed_operands: TUPLE
-			-- Closed arguments provided at creation time
-
-	frozen open_map: ARRAY [INTEGER]
+	frozen open_map: SPECIAL [INTEGER]
 			-- Index map for open arguments
-
-	frozen closed_map: ARRAY [INTEGER]
-			-- Index map for closed arguments
-
-	open_type_codes: STRING is
-			-- Type codes for open arguments
-		do
-			if internal_open_type_codes = Void then
-				internal_open_type_codes := eif_gen_typecode_str ($Current)
-			end
-			Result := internal_open_type_codes
-		end
-
-	frozen open_types: ARRAY [INTEGER]
-			-- Types of open operands
-
-	closed_type_codes: STRING is
-			-- Type codes for closed arguments
-		do
-			if closed_operands /= Void and internal_closed_type_codes = Void then
-				internal_closed_type_codes := eif_gen_tuple_typecode_str ($closed_operands)
-			end
-			Result := internal_closed_type_codes
-		end
 
 	frozen rout_disp: POINTER
 			-- Routine dispatcher
@@ -375,201 +322,110 @@ feature {ROUTINE, E_FEATURE} -- Implementation
 	frozen eiffel_rout_disp: POINTER
 			-- Eiffel routine dispatcher
 
-	frozen set_rout_disp (p: POINTER; tp: POINTER; closed_args: TUPLE; 
-						 omap, cmap: ARRAY [INTEGER]) is
+	frozen is_cleanup_needed: BOOLEAN
+			-- If open arguments contain some references, we need
+			-- to clean them up after call.
+
+	frozen set_rout_disp (p: POINTER; tp: POINTER; args: TUPLE; 
+						 omap: ARRAY [INTEGER]) is
 			-- Initialize object. 
 		require
 			p_not_void: p /= Default_pointer
 			tp_not_void: tp /= Default_pointer
-			consistent_args: (closed_args = Void and cmap = Void)
-										or else
-							 (closed_args /= Void and cmap /= Void)
-										and then
-							 (closed_args.count >= cmap.count)
-			valid_maps: not (omap = Void and cmap = Void)
+			args_not_void: args /= Void
 		do
 			rout_disp := p
 			eiffel_rout_disp := tp
-			closed_operands := closed_args
-			open_map := omap
-			closed_map := cmap
-		end
-
-	frozen set_rout_args (closed_args: TUPLE; 
-						 omap, cmap: ARRAY [INTEGER]) is
-			-- Initialize object. 
-		require
-			consistent_args: (closed_args = Void and cmap = Void)
-										or else
-							 (closed_args /= Void and cmap /= Void)
-										and then
-							 (closed_args.count >= cmap.count)
-			valid_maps: not (omap = Void and cmap = Void)
-		do
-			closed_operands := closed_args
-			open_map := omap
-			closed_map := cmap
+			internal_operands := args
+			if omap /= Void then
+				open_map := omap.area
+			else
+				open_map := Void
+			end
+			compute_is_cleanup_needed
+		ensure
+			rout_disp_set: rout_disp = p
+			eiffel_rout_disp_set: eiffel_rout_disp = tp
+			internal_operands_set: internal_operands = args
+			open_map_set: (omap = Void and open_map = Void) or
+				(omap /= Void and then open_map = omap.area)
 		end
 
 feature {NONE} -- Implementation
 
-	frozen internal_open_type_codes: STRING
-
-	frozen internal_closed_type_codes: STRING
-
-	dispose is
-			-- Free routine argument union structure
+	frozen open_types: ARRAY [INTEGER]
+			-- Types of open operands
+			
+	frozen remove_gc_reference is
+			-- Remove all references from `internal_operands' so that GC
+			-- can collect them if necessary.
+		require
+			is_cleanup_needed: is_cleanup_needed
+			has_open_operands: open_map /= Void
 		local
-			null_ptr: POINTER
+			l_open_map: like open_map
+			i, nb, l_pos: INTEGER
+			l_internal: like internal_operands
 		do
-			if rout_cargs /= null_ptr then
-				rout_obj_free_args (rout_cargs)
-				rout_cargs := null_ptr
+			l_open_map := open_map
+			from
+				i := 0
+				nb := l_open_map.count - 1
+				l_internal := internal_operands
+			until
+				i > nb
+			loop
+				l_pos := l_open_map.item (i)
+					-- We only need to clean up references so that GC
+					-- can collect them if necessary.
+				if l_internal.is_reference_item (l_pos) then
+					l_internal.put_reference (Void, l_pos)
+				end
+				i := i + 1
+			end
+		end
+		
+	frozen compute_is_cleanup_needed is
+			-- Set `is_cleanup_needed' to True if some open arguments are references.
+		local
+			l_open_map: like open_map
+			i, nb, l_pos: INTEGER
+			l_internal: like internal_operands
+		do
+			is_cleanup_needed := False
+			l_open_map := open_map
+			if l_open_map /= Void then
+				from
+					i := 0
+					nb := l_open_map.count - 1
+					l_internal := internal_operands
+				until
+					i > nb or is_cleanup_needed
+				loop
+					l_pos := l_open_map.item (i)
+						-- We only need to clean up references so that GC
+						-- can collect them if necessary.
+					if l_internal.is_reference_item (l_pos) then
+						is_cleanup_needed := False
+					end
+					i := i + 1
+				end
 			end
 		end
 
-
-	frozen rout_cargs: POINTER
-			-- Routine operands
-
-	frozen rout_set_cargs is
-			-- Allocate and fill argument structure
-		local
-			new_args: POINTER
-			i, j, ocnt, ccnt: INTEGER
-			code: CHARACTER
-			ref_arg: ANY
-			null_ptr: POINTER
-			was_on: BOOLEAN
-			loc_open_map: like open_map
-			loc_closed_map: like closed_map
-			loc_operands: like operands
-			loc_closed_operands: like closed_operands
-			loc_open_type_codes: like open_type_codes
-			loc_closed_type_codes: like closed_type_codes
+	open_operand_type (i: INTEGER): INTEGER is
+			-- Type of `i'th open operand.
+		require
+			positive: i >= 1
+			within_bounds: i <= open_count
 		do
-			-- We must disable the GC in this routine.
-			was_on := collecting
-			collection_off
-
-
-			-- Compute no. operands, including target.
-
-			loc_open_map := open_map
-			if loc_open_map /= Void then
-				ocnt := loc_open_map.count
-				loc_open_type_codes := open_type_codes
-				loc_operands := operands
+			if open_types = Void then
+				create open_types.make (1, open_map.count)
 			end
-
-			loc_closed_map := closed_map
-			if loc_closed_map /= Void then
-				ccnt := loc_closed_map.count
-				loc_closed_type_codes := closed_type_codes
-				loc_closed_operands := closed_operands
-			end
-
-			-- Create C union structure if necessary
-
-			if rout_cargs = null_ptr then
-				new_args := rout_obj_new_args (ocnt + ccnt + 1)
-				rout_cargs := new_args
-			else
-				new_args := rout_cargs
-			end
-
-			-- Put open operands in C structure
-
-			from
-				i := 1
-			until
-				i > ocnt
-			loop
-				code := loc_open_type_codes.item (i + 1) -- pos. 1 is code of BASE_TYPE!
-				check
-					loc_operands /= Void
-				end
-				j := loc_open_map.item (i)
-
-				inspect code
-					when Eif_boolean_code then
-						rout_putb (new_args, j, loc_operands.boolean_item(i))
-					when Eif_character_code then
-						rout_putc (new_args, j, loc_operands.character_item(i))
-					when Eif_double_code then
-						rout_putd (new_args, j, loc_operands.double_item(i))
-					when Eif_integer_8_code then
-						rout_puti8 (new_args, j, loc_operands.integer_8_item(i))
-					when Eif_integer_16_code then
-						rout_puti16 (new_args, j, loc_operands.integer_16_item(i))
-					when Eif_integer_code then
-						rout_puti32 (new_args, j, loc_operands.integer_32_item(i))
-					when Eif_integer_64_code then
-						rout_puti64 (new_args, j, loc_operands.integer_64_item(i))
-					when Eif_pointer_code then
-						rout_putp (new_args, j, loc_operands.pointer_item(i))
-					when Eif_real_code then
-						rout_putf (new_args, j, loc_operands.real_item(i))
-					when Eif_wide_char_code then
-						rout_putwc (new_args, j, loc_operands.wide_character_item(i))
-					else
-						ref_arg := loc_operands.reference_item(i)
-						rout_putr (new_args, j, $ref_arg)
-				end
-
-				i := i + 1
-			end
-
-			-- Put closed operands in C structure
-
-			from
-				i := 1
-			until
-				i > ccnt
-			loop
-				code := loc_closed_type_codes.item (i)
-				check
-					loc_closed_operands /= Void
-				end
-				j := loc_closed_map.item (i)
-
-				inspect code
-					when Eif_boolean_code then
-						rout_putb (new_args, j, loc_closed_operands.boolean_item(i))
-					when Eif_character_code then
-						rout_putc (new_args, j, loc_closed_operands.character_item(i))
-					when Eif_double_code then
-						rout_putd (new_args, j, loc_closed_operands.double_item(i))
-					when Eif_integer_8_code then
-						rout_puti8 (new_args, j, loc_closed_operands.integer_8_item(i))
-					when Eif_integer_16_code then
-						rout_puti16 (new_args, j, loc_closed_operands.integer_16_item(i))
-					when Eif_integer_code then
-						rout_puti32 (new_args, j, loc_closed_operands.integer_32_item(i))
-					when Eif_integer_64_code then
-						rout_puti64 (new_args, j, loc_closed_operands.integer_64_item(i))
-					when Eif_pointer_code then
-						rout_putp (new_args, j, loc_closed_operands.pointer_item(i))
-					when Eif_real_code then
-						rout_putf (new_args, j, loc_closed_operands.real_item(i))
-					when Eif_wide_char_code then
-						rout_putwc (new_args, j, loc_closed_operands.wide_character_item(i))
-					else
-						ref_arg := loc_closed_operands.reference_item (i)
-						rout_putr (new_args, j, $ref_arg)
-				end
-
-				i := i + 1
-			end
-
-
-			-- Now we turn the GC on again if `was_on'
-			if was_on then
-				collection_on
-			end
-		rescue
-			if was_on then
-				collection_on
+			Result := open_types.item (i)
+			if Result = 0 then
+				Result := eif_gen_param_id (-1, eif_gen_create ($Current, 2), i)
+				open_types.force (Result, i)
 			end
 		end
 
@@ -591,69 +447,11 @@ feature {NONE} -- Runtime constants
 
 feature {NONE} -- Externals
 
-	rout_obj_new_args (cnt: INTEGER): POINTER is
-			-- Initialize for new operands.
-		external "C use %"eif_rout_obj.h%""
-		end
-
-	rout_obj_free_args (args: POINTER) is
-			-- Free `args'.
-		external "C use %"eif_rout_obj.h%""
-		end
-
-	rout_putb (args: POINTER; idx: INTEGER; val: BOOLEAN) is
-			-- Adapt `args' for `idx' and `val'.
-		external "C macro use %"eif_rout_obj.h%""
-		end
-
-	rout_putwc (args: POINTER; idx: INTEGER; val: WIDE_CHARACTER) is
-			-- Adapt `args' for `idx' and `val'.
-		external "C macro use %"eif_rout_obj.h%""
-		end
-
-	rout_putc (args: POINTER; idx: INTEGER; val: CHARACTER) is
-			-- Adapt `args' for `idx' and `val'.
-		external "C macro use %"eif_rout_obj.h%""
-		end
-
-	rout_putd (args: POINTER; idx: INTEGER; val: DOUBLE) is
-			-- Adapt `args' for `idx' and `val'.
-		external "C macro use %"eif_rout_obj.h%""
-		end
-
-	rout_puti8 (args: POINTER; idx: INTEGER; val: INTEGER_8) is
-			-- Adapt `args' for `idx' and `val'.
-		external "C macro use %"eif_rout_obj.h%""
-		end
-
-	rout_puti16 (args: POINTER; idx: INTEGER; val: INTEGER_16) is
-			-- Adapt `args' for `idx' and `val'.
-		external "C macro use %"eif_rout_obj.h%""
-		end
-
-	rout_puti32 (args: POINTER; idx: INTEGER; val: INTEGER) is
-			-- Adapt `args' for `idx' and `val'.
-		external "C macro use %"eif_rout_obj.h%""
-		end
-
-	rout_puti64 (args: POINTER; idx: INTEGER; val: INTEGER_64) is
-			-- Adapt `args' for `idx' and `val'.
-		external "C macro use %"eif_rout_obj.h%""
-		end
-
-	rout_putp (args: POINTER; idx: INTEGER; val: POINTER) is
-			-- Adapt `args' for `idx' and `val'.
-		external "C macro use %"eif_rout_obj.h%""
-		end
-
-	rout_putf (args: POINTER; idx: INTEGER; val: REAL) is
-			-- Adapt `args' for `idx' and `val'.
-		external "C macro use %"eif_rout_obj.h%""
-		end
-
-	rout_putr (args: POINTER; idx: INTEGER; val: POINTER) is
-			-- Adapt `args' for `idx' and `val'.
-		external "C macro use %"eif_rout_obj.h%""
+	rout_tuple_item_copy (a_target: POINTER; a_target_pos: INTEGER; a_source: POINTER; a_source_pos: INTEGER) is
+			-- Copy tuple element at position `a_source_pos' in `a_source' to position
+			-- `a_target_pos' in `a_target'.
+		external
+			"C macro use %"eif_rout_obj.h%""
 		end
 
 	eif_gen_conf (type1, type2: INTEGER): BOOLEAN is
@@ -672,18 +470,7 @@ feature {NONE} -- Externals
 			"C signature (int16, EIF_REFERENCE, int): EIF_INTEGER use %"eif_gen_conf.h%""
 		end
 
-	eif_gen_typecode (obj: POINTER; pos: INTEGER): CHARACTER is
-			-- Code for generic parameter `pos' in `obj'.
-		external
-			"C use %"eif_gen_conf.h%""
-		end
-
 	eif_gen_typecode_str (obj: POINTER): STRING is
-			-- Code name for generic parameter `pos' in `obj'.
-		external "C use %"eif_gen_conf.h%""
-		end
-
-	eif_gen_tuple_typecode_str (obj: POINTER): STRING is
 			-- Code name for generic parameter `pos' in `obj'.
 		external "C use %"eif_gen_conf.h%""
 		end

@@ -540,11 +540,13 @@ end;
 									dependances.remove (feature_name);
 								end;
 										
-									-- Dependances update: add new
-									-- dependances for `feature_name'.
-								f_suppliers := ast_context.supplier_ids.twin;
-								dependances.put (f_suppliers, feature_name);
-								new_suppliers.add_occurence (f_suppliers);
+								if not feature_i.is_code_replicated then
+										-- Dependances update: add new
+										-- dependances for `feature_name'.
+									f_suppliers := ast_context.supplier_ids.twin;
+									dependances.put (f_suppliers, feature_name);
+									new_suppliers.add_occurence (f_suppliers);
+								end;
 
 									-- Byte code processing
 --								if feature_i.is_deferred then
@@ -612,19 +614,42 @@ end;
 				loop
 					feature_i := removed_features.item_for_iteration;
 					feature_name := feature_i.feature_name;
-					f_suppliers := dependances.item (feature_name);
-					if f_suppliers /= Void then
-						new_suppliers.remove_occurence (f_suppliers);
-					end;
-					dependances.remove (feature_name);
+					if not feature_i.is_code_replicated then
+						f_suppliers := dependances.item (feature_name);
+						if f_suppliers /= Void then
+							new_suppliers.remove_occurence (f_suppliers);
+						end;
+						dependances.remove (feature_name);
 
+					end;
+					if 
+						rep_dep /= Void and then 
+						rep_dep.has (feature_name) 
+					then
+debug ("REPLICATION")
+	io.error.putstring ("removing dependency feature :");
+	io.error.putstring (feature_name);
+	io.error.new_line;
+end;
+						rep_dep.remove (feature_name);
+						rep_removed := True;
+					end;
+					body_id := feature_i.body_id;
 						-- Second pass desactive body id of changed
 						-- features only. Deactive body ids of removed
 						-- features.
-					Tmp_body_server.desactive (feature_i.body_id);
+					if Tmp_body_server.has (body_id) then
+						Tmp_body_server.desactive (body_id)
+					else
+						Tmp_rep_feat_server.desactive (body_id)
+					end;
 
 					removed_features.forth;
 				end;
+			end;
+
+			if rep_removed and then rep_dep /= Void then
+				Tmp_rep_depend_server.put (rep_dep)
 			end;
 
 			if new_suppliers /= Void then
@@ -2667,8 +2692,6 @@ feature -- PS
 						Ast_server.has (id)) and then
 					Feat_tbl_server.has (id)
 		end;
-
-	check_expanded is do end;
 
 feature -- Replication
 

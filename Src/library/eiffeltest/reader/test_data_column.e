@@ -18,7 +18,7 @@ feature -- Status report
 	input_accepted (s: STRING): BOOLEAN is
 			-- Is `s' acceptable input for this column?
 		do
-			Result := s /= Void and then not s.empty
+			Result := True
 		end
 
 feature -- Basic operations

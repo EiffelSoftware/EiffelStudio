@@ -16,6 +16,9 @@ inherit
 	EV_TEXT_COMPONENT_I
 
 	EV_BAR_ITEM_I
+		undefine
+			build
+		end
 	
 feature -- Event - command association
 

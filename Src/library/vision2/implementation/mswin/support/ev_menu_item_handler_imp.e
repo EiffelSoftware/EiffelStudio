@@ -26,9 +26,12 @@ feature -- Basic operations
 
 	update_menu is
 			-- Graphical update of the menu
+		local
+			window: EV_UNTITLED_WINDOW_IMP
 		do
-			if has_menu then
-				draw_menu
+			window := top_level_window_imp
+			if window /= Void then
+				window.draw_menu
 			end
 		end
 
@@ -110,13 +113,8 @@ feature {NONE} -- WEL Implementation
 
 feature {EV_POPUP_MENU_IMP} -- Deferred features
 
-	has_menu: BOOLEAN is
-			-- Does the window have a menu?
-		deferred
-		end
-
-	draw_menu is
-			-- Draw the menu bar associated with the window.
+	top_level_window_imp: EV_UNTITLED_WINDOW_IMP is
+			-- Top level window that contains the current widget.
 		deferred
 		end
 

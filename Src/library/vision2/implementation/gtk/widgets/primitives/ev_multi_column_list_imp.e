@@ -266,14 +266,19 @@ feature {NONE} -- Initialization
 			a_position := temp_int.item + 1
 
 			an_item := (ev_children @ a_position)
-			if an_item.select_actions_internal /= Void then
-				an_item.select_actions_internal.call (empty_tuple)
+			if an_item /= previously_selected_node then		
+				if an_item.select_actions_internal /= Void then
+					an_item.select_actions_internal.call (empty_tuple)
+				end
+				if select_actions_internal /= Void then
+					select_actions_internal.call ([an_item.interface])
+				end
+				switch_to_browse_mode_if_necessary
 			end
-			if select_actions_internal /= Void then
-				select_actions_internal.call ([an_item.interface])
-			end
-			switch_to_browse_mode_if_necessary
+			previously_selected_node := an_item
 		end
+		
+	previously_selected_node: EV_MULTI_COLUMN_LIST_ROW_IMP
 
 	deselect_callback (int: TUPLE [INTEGER]) is
 		local

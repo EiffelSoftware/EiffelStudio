@@ -102,13 +102,21 @@ feature -- Status report
 		do
 			Result := implementation.title_shown
 		end
-	
-	get_column_width (column: INTEGER): INTEGER is
-			-- Width of column `column' in pixel.
+
+	column_title (a_column: INTEGER): STRING is
+			-- Title of column `a_column'.
 		require
-			column_exists: column >= 1 and column <= columns
+			column_exists: a_column >= 1 and a_column <= columns
 		do
-			Result := implementation.get_column_width (column)
+			Result := implementation.column_title (a_column)
+		end
+	
+	column_width (a_column: INTEGER): INTEGER is
+			-- Width of column `a_column' in pixels.
+		require
+			column_exists: a_column >= 1 and a_column <= columns
+		do
+			Result := implementation.column_width (a_column)
 		end
 
 feature -- Status setting
@@ -313,6 +321,9 @@ end -- class EV_MULTI_COLUMN_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.36  2000/03/03 18:22:59  king
+--| Renamed get_column_width -> column_width, added column_title
+--|
 --| Revision 1.35  2000/03/03 17:05:29  rogers
 --| Added set_columns and make_with_columns.
 --|

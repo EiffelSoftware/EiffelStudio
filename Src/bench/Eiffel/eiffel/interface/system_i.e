@@ -3357,7 +3357,11 @@ feature -- Main file generation
 			Main_file.generate_protected_extern_declaration ("void", "emain", <<"int", "char **">>);
 
 			if has_separate then
-				Main_file.putstring ("#include %"curserver.h%"%N")
+				Main_file.putstring ("#include %"curextern.h%"%N");
+			else
+				Main_file.putstring ("#ifndef CONCURRENT_EIFFEL%N%
+									%fnptr *separate_pattern = 0;%N%
+									%#endif%N");
 			end
 
 			Main_file.generate_function_signature ("void", "main", True, Main_file,

@@ -201,7 +201,7 @@ feature {NONE} -- Implementation
 	class_icon: WEL_NULL_ICON is
 			-- Icon for drawing icon
 		once
-			!! Result.make
+			!! Result
 		end
 
 	class_name: STRING is

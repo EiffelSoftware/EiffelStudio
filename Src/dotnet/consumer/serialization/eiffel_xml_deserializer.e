@@ -45,6 +45,9 @@ feature -- Basic Operations
 			retried: BOOLEAN
 			bin_des: EIFFEL_BINARY_DESERIALIZER
 			ser: EIFFEL_BINARY_SERIALIZER
+			l_version: STRING
+			l_running_version: STRING
+			l_so: SYSTEM_OBJECT
 		do
 			if not retried then
 				create bin_des
@@ -60,9 +63,21 @@ feature -- Basic Operations
 						read_next
 						if successful and xml_reader.node_type = feature {XML_XML_NODE_TYPE}.xml_declaration then
 							read_next
-							deserialized_object := reference_from_xml
-							create ser
-							ser.serialize (deserialized_object, path)
+							if successful and xml_reader.node_type = feature {XML_XML_NODE_TYPE}.element then
+								l_so := Current
+								l_running_version := l_so.get_type.assembly.get_name.version.to_string
+								l_version := xml_reader.get_attribute (Version_xml_attribute)
+								if l_version /= Void and then l_version.is_equal (l_running_version) then
+										-- ensure compatibility
+									read_next
+									deserialized_object := reference_from_xml
+									create ser
+									ser.serialize (deserialized_object, path)	
+								else
+									last_error := Incompatible_xml_file_error
+									last_error_context := path.twin
+								end
+							end
 						else
 							last_error := Invalid_xml_file_error
 							last_error_context := path.twin
@@ -172,6 +187,8 @@ feature {NONE} -- Implementation
 		local
 			lower, count: INTEGER
 			s: SYSTEM_STRING
+			ar: ARRAY [ANY]
+			compare_obj: BOOLEAN
 		do
 			s := xml_reader.get_attribute (Array_lower_bound_xml_attribute)
 			if s/= Void then
@@ -179,6 +196,10 @@ feature {NONE} -- Implementation
 				s := xml_reader.get_attribute (Array_count_xml_attribute)
 				if s /= Void then
 					count := feature {SYSTEM_CONVERT}.to_int_32_string (s)
+					s := xml_reader.get_attribute (Compare_objects_xml_attribute)
+					if s /= Void then
+						compare_obj := feature {SYSTEM_CONVERT}.to_boolean_string (s)
+					end
 					s := xml_reader.get_attribute (Type_xml_attribute)
 					if s/= Void then
 						if s.equals (Integer_node) then
@@ -196,10 +217,17 @@ feature {NONE} -- Implementation
 						elseif s.equals (String_node) then
 							Result := string_array_from_xml (lower, lower + count - 1)
 						elseif s.equals (None_node) then
-							create {ARRAY [ANY]} Result.make (1, 0)
+							create ar.make (1, 0)
+							Result := ar
 							read_next
 						else
 							Result := reference_array_from_xml (lower, lower + count - 1)
+						end
+						if Result /= Void and then compare_obj then
+							ar ?= Result
+							if ar /= Void then
+								ar.compare_objects	
+							end						
 						end
 					else
 						last_error := Missing_array_generic_type_error
@@ -232,7 +260,6 @@ feature {NONE} -- Implementation
 			name_att := xml_reader.get_attribute (Type_xml_attribute)
 			if name_att /= Void then
 				create name.make_from_cil (name_att)
-	-- FIXME: Hardcoded "Impl." Should really use {INTERNAL}.namespace when implemented
 				dt := dynamic_type_from_string (name.to_integer)
 				if dt = -1 then
 					last_error := Type_not_in_system_error
@@ -511,7 +538,7 @@ feature {NONE} -- Implementation - internal speedup
 		do
 			Result := internal_dynamic_types.item (name)
 			if Result = 0 then
-				l_full_name := "ISE.Cache.Impl." + types.item (name)
+				l_full_name := types.item (name)
 				Result := internal_dynamic_type_from_string (l_full_name)
 				internal_dynamic_types.put (Result, name)
 			end

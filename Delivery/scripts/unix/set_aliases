@@ -1,0 +1,264 @@
+#!/bin/bash
+
+# Define some parameters
+# File in which the status of the installation generation is logged
+INSTALL_LOG=~/local/install.log
+# File in which the status of the installation compilation is logged
+COMPILE_LOG=~/local/compile.log
+# The following directory must contain finalizedbench.ace
+FINALIZATION_DIR=~/local/finalized
+# Where the new delivery is set up. Warning: this directory is erased!
+INSTALL_DIR=~/local/InstalledEiffel50
+# Where the final delivery is set up (local machine). Warning: directory erased too!
+FINAL_INSTALL_DIR=~/local/InstalledEiffel50
+# Where all.tar.gz files should be stored
+EXPORT_DIR=~/local/tgzs
+# What tag to use to CVS export everything
+DEFAULT_CVS_TAG=HEAD
+# Where to check out all source files
+NEW_EIFFEL_SRC=~/local/tmp50dev
+
+
+# OK, this is all for user-defined data. Leave me alone now, I'll do my magic :)
+
+# File management
+# Copy all files
+copy ()
+{
+cp $*
+}
+move ()
+{
+mv $*
+}
+md ()
+{
+mkdir $*
+}
+# Compress a file and move it to $EXPORT_DIR
+tgz ()
+{
+tar -cf $1.tar $1
+gzip $1.tar
+}
+# Completely remove a directory
+fullrd ()
+{
+rm -rf $*
+}
+# Remove a file
+fullrf ()
+{
+rm -f $*
+}
+# Retrieve a file from the old delivery and put it in the new one
+quick_move ()
+{
+if [ $# -eq 1 ]; then
+copy $ISE_EIFFEL/$1 $INSTALL_DIR/$1 >> $INSTALL_LOG
+else
+copy $1 $ISE_EIFFEL/$2 $INSTALL_DIR/$2 >> $INSTALL_LOG
+fi
+}
+# Create a directory if it doesn't exist already
+safe_md ()
+{
+if [ ! -d $1 ]; then
+if [ -e $1 ]; then
+fullrf $1
+fi
+md $1
+fi
+}
+# Save current path into TMP_PATH
+save_path ()
+{
+TMP_PATH=`pwd`
+}
+ 
+# Helpers for the script
+# Give some info on what's happening, both in the log and on the screen
+remtrace ()
+{
+echo $*
+echo -------------------------------- >> $INSTALL_LOG
+echo $* >> $INSTALL_LOG
+}
+# Give info concerning the elapsed time
+give_time_to ()
+{
+local curtime
+remtrace "time used to $* (in seconds):"
+newtime=`date +%s`
+remtrace $(($newtime - $LASTTIME))
+LASTTIME=$newtime
+}
+# Clean exit
+CANCEL ()
+{
+echo Exiting...
+remtrace final time:
+remtrace `date +%c`
+PATH=$OLD_PATH
+if [ "$TMP_EIFFEL_SRC" ]; then
+EIFFEL_SRC=$TMP_EIFFEL_SRC
+fi
+cd $INIT_DIR
+exit
+}                                                                                   
+cancel ()
+{
+CANCEL
+}
+ 
+# CVS Commands: up, checkout, export
+up ()
+{
+cvs -q up -Pd $* >> $INSTALL_LOG
+}
+co ()
+{
+cvs -q co -P $* >> $INSTALL_LOG
+}
+exprt ()
+{
+cvs -q export $* >> $INSTALL_LOG
+}
+# Tries to update or check out. $1: CVS path $2: local path
+safe_up ()
+{
+if [ ! -d $2 ]; then
+if [ -e $2 ]; then fullrf $2; fi
+co -d $2 $1
+else
+up $2
+if $? != 0; then
+echo Couldnt update $2... Checking out instead
+fullrd $2
+co -d $2 $1
+fi
+fi
+}                                                                             
+
+# C Compilation
+default_make ()
+{
+save_path
+finish_freezing -library >> $INSTALL_LOG
+cd $TMP_PATH
+}
+all_makes ()
+{
+save_path
+# What should we do??? Compile for all platforms???
+cd $TMP_PATH
+}
+ 
+# Eiffel Compilation
+# Remove a project from the current directory, if any
+clean_project ()
+{
+if [ -d EIFGEN ]; then fullrd EIFGEN; fi
+if [ -e *.epr ]; then fullrf *.epr; fi
+}
+# Create a portable.tar.gz of the C code. Parameter: name of the .tgz file
+tgz_ccode ()
+{
+if [ -d EIFGEN/F_code ]; then
+cd EIFGEN
+tar -cf $1.tar F_code
+gzip $1.tar
+mv $1.tar.gz ..
+cd ..
+fi
+}
+# Unzip the F_code of $1, compile it, clean up
+untgz_ccode ()
+{
+if [ ! -f $1.tar.gz ]; then
+	remtrace "Couldnt find $1.tar.gz"
+	CANCEL
+fi
+gunzip $1.tar.gz
+tar -xf $1.tar
+if [ ! -d F_code ]; then
+	remtrace "No F_code for $1"
+	CANCEL
+fi
+cd F_code
+finish_freezing -silent
+if [ ! -f $1 ]; then
+	remtrace Couldnt generate $1
+	CANCEL
+fi
+mv $1 ..
+cd ..
+fullrf $1.tar
+fullrd F_code
+}
+# Finish to freeze a finalized version
+fff ()
+{
+if [ -d EIFGEN/F_code ]; then
+cd EIFGEN/F_code
+finish_freezing -silent >> $INSTALL_LOG
+cd ../..
+fi
+}
+# Finish freezing a workbench version
+wff ()
+{
+if [ -d EIFGEN/W_code ]; then
+cd EIFGEN/W_code
+finish_freezing -silent
+cd ../..
+fi
+}
+# Finalize at the Eiffel level only
+finalize ()
+{
+ec -batch -finalize -ace $* >> $INSTALL_LOG
+}
+# Move up the generated finalized exe (its name is the parameter) and delete the compiled files
+cleanup_eiffel ()
+{
+if [ -e EIFGEN/F_code/$1 ]; then
+move EIFGEN/F_code/$1 .
+clean_project
+fi
+}
+# Un.tar.gz the C code, compile it, move the executable ($1) to the current directory, delete the C code
+un_tgz_ccode ()
+{
+if [ -d F_code ]; then
+	fullrd F_code
+fi
+if [ ! -f $1.tar.gz ]; then
+	remtrace Cannot find $1.tar.gz
+	CANCEL
+fi
+gunzip $1.tar.gz
+tar -xf $1.tar
+fullrf $1.tar
+if [ ! -d F_code ]; then
+	remtrace "Tar didnt work?!"
+	CANCEL
+fi
+cd F_code
+finish_freezing -silent >> $INSTALL_LOG
+if [ ! -e $1 ]; then
+	remtrace Couldnt compile $1
+	CANCEL
+fi
+mv $1 ..
+cd ..
+fullrd F_code
+}
+
+
+# Tests....
+testpar ()
+{
+	ls $*
+}                            
+

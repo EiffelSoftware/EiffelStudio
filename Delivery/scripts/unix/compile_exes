@@ -1,0 +1,121 @@
+#!/bin/sh
+ 
+# Set up the environment
+LASTTIME=`date +%s`
+LASTTIME_TOT=`date +%s`
+OLD_PATH=$PATH
+INIT_DIR=`pwd`
+TMP_EIFFEL_SRC=$EIFFEL_SRC
+EIFFEL_SRC=$EXPORT_DIR
+source set_aliases
+INSTALL_LOG=$COMPILE_LOG
+INSTALL_DIR=$FINAL_INSTALL_DIR
+echo > $INSTALL_LOG
+
+# Check everything's fine
+if [ ! -d $EXPORT_DIR ]; then
+	remtrace Couldnt find the directory with the tgzs.
+	CANCEL
+fi
+
+remtrace Clean up the files
+fullrd $INSTALL_DIR
+
+remtrace Compile C code of the libraries
+remtrace \"A tout seigneur tout honneur\", let\'s start with the run-time
+if [ ! -e c.tar.gz ]; then
+	remtrace "No.tar.gz for the C directory"
+	CANCEL
+fi
+gunzip c.tar.gz
+tar -xf c.tar
+if [ ! -d C ]; then
+	remtrace No C directory
+	CANCEL
+fi
+fullrf c.tar
+cd C
+source Configure >> $INSTALL_LOG
+
+remtrace Then the Eiffel libraries
+cd $EXPORT_DIR
+if [ ! -e libs.tar.gz ]; then
+	remtrace "No.tar.gz for the library directory"
+	CANCEL
+fi
+gunzip libs.tar.gz
+tar -xf libs.tar
+if [ ! -d library ]; then
+	remtrace No library directory
+	CANCEL
+fi
+fullrf libs.tar
+
+remtrace Then the C libraries
+if [ ! -e c_lib.tar.gz ]; then
+	remtrace "No.tar.gz for the C_library directory"
+	CANCEL
+fi
+gunzip c_lib.tar.gz
+tar -xf c_lib.tar
+if [ ! -d C_library ]; then
+	remtrace No C_library directory
+	CANCEL
+fi
+fullrf c_lib.tar
+source compile_libraries
+
+remtrace Extract the delivery
+if [ ! -e delivery.tar.gz ]; then
+	remtrace No.tar.gz of the delivery
+	CANCEL
+else
+	remtrace Delivery
+	if [ -d $INSTALL_DIR ]; then fullrd $INSTALL_DIR fi
+	safe_md $INSTALL_DIR
+	mv delivery.tar.gz $INSTALL_DIR
+	cd $INSTALL_DIR
+	gunzip delivery.tar.gz
+	tar -xf delivery.tar
+fi
+
+cd $EXPORT_DIR
+# These directories should already have been created by make_delivery. Whatever...
+safe_md $INSTALL_DIR/studio/spec
+safe_md $INSTALL_DIR/studio/spec/$ISE_PLATFORM
+safe_md $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin
+safe_md $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib
+safe_md $INSTALL_DIR/studio/spec/$ISE_PLATFORM/include
+
+cp C/run-time/lib/*.a $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib 
+cp C/run-time/lib/*.so $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib 
+	
+remtrace Recompile EiffelStudio
+cd $EXPORT_DIR
+untgz_ccode ec
+move ec $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin
+
+remtrace Recompile quick_finalize
+cd $EXPORT_DIR
+untgz_ccode quick_finalize
+move quick_finalize $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin
+
+remtrace "Put estudio in the new delivery"
+# It should already have been compiled by the configure of the run-time.
+cd $EXPORT_DIR/C/ipc/daemon
+if [ ! -f estudio ]; then
+	echo Could not finalize a new estudio
+	CANCEL
+fi
+move estudio $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin
+
+remtrace "Put x2c in the new delivery"
+# It should already have been compiled by the configure of the run-time.
+cd $EXPORT_DIR/C/run-time
+if [ ! -f x2c ]; then
+	echo Could not finalize a new x2c
+	CANCEL
+fi
+move x2c $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin
+
+CANCEL

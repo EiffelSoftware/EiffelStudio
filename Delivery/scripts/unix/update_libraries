@@ -1,0 +1,39 @@
+#!/bin/sh
+
+remtrace Update the Eiffel libraries source
+if [ -e $EIFFEL_SRC ]; then
+fullrd $EIFFEL_SRC
+fi
+md $EIFFEL_SRC
+cd $EIFFEL_SRC
+md library
+cd library
+remtrace base
+exprt -r $DEFAULT_CVS_TAG -d base "Src/library/base"
+remtrace encryption
+exprt -r $DEFAULT_CVS_TAG -d encryption "Src/library/encryption"
+remtrace event
+exprt -r $DEFAULT_CVS_TAG -d event "Src/library/event"
+remtrace exml
+exprt -r $DEFAULT_CVS_TAG -d exml "Src/library/exml"
+remtrace gobo
+exprt -r $DEFAULT_CVS_TAG -d gobo "Src/library/gobo"
+remtrace lex
+exprt -r $DEFAULT_CVS_TAG -d lex "Src/library/lex"
+remtrace net
+exprt -r $DEFAULT_CVS_TAG -d net "Src/library/net"
+remtrace parse
+exprt -r $DEFAULT_CVS_TAG -d parse "Src/library/parse"
+remtrace patterns
+exprt -r $DEFAULT_CVS_TAG -d patterns "Src/library/patterns"
+remtrace time
+exprt -r $DEFAULT_CVS_TAG -d time "Src/library/time"
+remtrace gel
+exprt -r $DEFAULT_CVS_TAG -d gel "Src/library/gel"
+remtrace vision2
+exprt -r $DEFAULT_CVS_TAG -d vision2 "Src/library/vision2"
+remtrace wizard
+exprt -r $DEFAULT_CVS_TAG -d wizard "Src/library/wizard"
+cd $EIFFEL_SRC
+
+

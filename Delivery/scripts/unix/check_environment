@@ -1,0 +1,86 @@
+#!/bin/sh
+
+if [ ! "$ISE_EIFFEL" ]; then
+	echo ISE_EIFFEL not defined. Cannot continue
+	CANCEL
+fi
+if [ ! "$ISE_PLATFORM" ]; then
+	echo ISE_PLATFORM not defined. Cannot continue
+	CANCEL
+fi
+if [ ! "$DEFAULT_CVS_TAG" ]; then
+	echo DEFAULT_CVS_TAG not defined. Cannot continue
+	CANCEL
+fi
+# if [ ! "$ISE_C_COMPILER" ]; then
+# 	echo ISE_C_COMPILER not defined. Cannot continue
+# 	CANCEL
+# fi
+if [ ! "$NO_COMPILE" ]; then
+	if [ ! "$NEW_EIFFEL_SRC" ]; then
+		echo NEW_EIFFEL_SRC not defined. Cannot continue
+		CANCEL
+	fi
+	if [ ! "$FINALIZATION_DIR" ]; then
+		echo FINALIZATION_DIR not defined. Cannot continue
+		CANCEL
+	fi
+	if [ ! -f $FINALIZATION_DIR/finalizedbench.ace ]; then
+		echo No finalization ace available in $FINALIZATION_DIR. Cannot continue
+		CANCEL
+	fi
+	
+	which ec >> $INSTALL_LOG
+	if [ $? -ne	0 ]; then
+		echo Cannot find a version of ec. Cannot continue
+		CANCEL
+	fi
+fi
+which tar >> $INSTALL_LOG
+if [ $? -ne 0 ]; then
+	echo Cannot find a version of tar. Cannot continue without tar
+	CANCEL
+fi
+
+if [ ! "$INSTALL_LOG" ]; then
+	echo Error: No file specified for the log
+	CANCEL
+fi
+if [ ! "$INSTALL_DIR" ]; then
+	echo Error: No path specified for the generated delivery
+	CANCEL
+fi
+if [ -e $INSTALL_DIR ]; then
+	echo Warning: $INSTALL_DIR and $NEW_EIFFEL_SRC will be replaced by the installation script, you will lose everything in it
+fi
+echo Current configuration:
+echo ISE_EIFFEL is $ISE_EIFFEL
+echo ISE_PLATFORM is $ISE_PLATFORM
+echo INSTALL_DIR is $INSTALL_DIR
+echo DOCUMENT_DIR is $DOCUMENT_DIR
+echo Log file is $INSTALL_LOG
+echo ec version is:
+ec -version
+echo -----------------------------
+if [ "$NO_COMPILE" ]; then
+	echo "No compilation will be performed (including EiffelStudio's compilation)"
+fi
+if [ "$NO_NEW_EC" ]; then
+	echo No new version of EiffelStudio will be compiled
+fi
+if [ "$NO_DOCUMENTATION" ]; then
+	echo No documentation will be generated
+fi
+if [ "$NO_WIZARDS" ]; then
+	echo Wizards wont be regenerated
+fi
+if [ "$NO_INSTALL" ]; then
+	echo The delivery will be generated, but not the final installation executable
+fi
+if [ ! "$NO_INSTALL" -a ! "$NO_COMPILE" -a ! "$NO_DOCUMENTATION" -a ! "$NO_WIZARDS" ]; then
+	echo All components will be recompiled
+fi
+echo Type a key to continue, Ctrl-C to abort
+read usrk
+echo Installation parameters are $ISE_EIFFEL, $ISE_PLATFORM, $INSTALL_DIR, $DOCUMENT_DIR >> $INSTALL_LOG
+echo -------------------------------- >> $INSTALL_LOG

@@ -677,10 +677,6 @@ void c_ev_load_png_file(LoadPixmapCtx *pCtx)
 	unsigned long 	sRowSize;		// Size in bytes of a scan line
 	unsigned long 	row;			// Current scan line
 	unsigned long	nErrorCode = LOADPIXMAP_ERROR_NOERROR;
-#ifdef EIF_WIN32
-	HBITMAP 		hbmImage;
-	HBITMAP 		hbmMask;
-#endif
 
 	if ((fp = fopen(pCtx->pszFileName, "rb")) == NULL)
 		return;
@@ -788,8 +784,6 @@ void c_ev_load_png_file(LoadPixmapCtx *pCtx)
 
 	/* close the file */
 	fclose(fp);
-
-
 
 	sRowSize = 4 * ((width * 24 + 31) / 32);
 	pImage = (unsigned char *) malloc(sRowSize * height + 40);

@@ -3,14 +3,14 @@
 CC = cl
 # Debug version
 CFLAGS = -c -Zi -W4 \
-	-I..\spec\windows\include \
+	-I..\spec\include \
 	-I$(EIFFEL4)\C_library\libpng \
 	-I$(EIFFEL4)\C_library\zlib \
 	-I$(EIFFEL4)\bench\spec\windows\include
 
 # Release version
 #CFLAGS = -c -Ox \
-#	-I..\spec\windows\include \
+#	-I..\spec\include \
 #	-I$(EIFFEL4)\C_library\libpng \
 #	-I$(EIFFEL4)\C_library\zlib \
 #	-I$(EIFFEL4)\bench\spec\windows\include

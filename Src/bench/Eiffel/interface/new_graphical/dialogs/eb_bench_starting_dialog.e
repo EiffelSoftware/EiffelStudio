@@ -618,7 +618,7 @@ feature {NONE} -- Implementation
 			if not retried then
 				create available_wizards.make
 	
-				create new_project_directory.make (New_project_wizards_path)
+				create new_project_directory.make ((create {EIFFEL_ENV}).New_project_wizards_path)
 				entries := new_project_directory.linear_representation
 				from
 					entries.start
@@ -691,7 +691,7 @@ feature {NONE} -- Implementation
 				cmd.create_project (dir_name, True)
 				eiffel_ace.set_file_name (ace_name)
 			else
-				ebench_name := clone (Ebench_command_name)
+				ebench_name := clone (Estudio_command_name)
 				ebench_name.append (" -create ")
 				ebench_name.append (dir_name)
 				ebench_name.append (" -ace ")
@@ -840,13 +840,5 @@ feature {NONE} -- Private attributes
 	
 	parent_window: EV_WINDOW
 			-- Parent window, Void if none.
-
-feature {NONE} -- Private constants
-
-	New_project_wizards_path: DIRECTORY_NAME is
-		once
-			create Result.make_from_string (Eiffel_installation_dir_name)
-			Result.extend_from_array (<<"bench", "wizards", "new_projects">>)
-		end
 
 end -- class EB_STARTING_DIALOG

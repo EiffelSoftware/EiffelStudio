@@ -13,18 +13,34 @@ inherit
 
 	FONT_BOX_I;
 
-	MEMORY
+	TERMINAL_M
+		undefine
+			create_widget, is_form, mel_set_foreground_color, set_background,
+			mel_set_background_color, set_foreground
 		redefine
-			dispose
+			make, set_font_from_imp, set_background_color_from_imp,
+			set_foreground_color_from_imp
 		end;
 
-	TERMINAL_M
-		redefine
-			make
-		end;
+	MEL_FONT_BOX
+		rename
+			make as fb_make,
+			make_no_auto_unmanage as fb_make_no_auto_unmanage,
+			foreground_color as mel_foreground_color,
+			set_foreground_color as mel_set_foreground_color,
+			background_color as mel_background_color,
+			background_pixmap as mel_background_pixmap,
+			set_background_color as mel_set_background_color,
+			set_background_pixmap as mel_set_background_pixmap,
+			destroy as mel_destroy,
+			screen as mel_screen,
+			set_button_font as mel_set_button_font,
+			is_shown as shown
+		select
+			fb_make, fb_make_no_auto_unmanage
+		end
 
 creation
-
 	make
 
 feature {NONE} -- Creation
@@ -32,58 +48,33 @@ feature {NONE} -- Creation
 	make (a_font_box: FONT_BOX; man: BOOLEAN; oui_parent: COMPOSITE) is
 			-- Create a motif font box.
 		local
-			ext_name: ANY;
-			form_button: MEL_FORM
+			mc: MEL_COMPOSITE
 		do
-			parent ?= oui_parent.implementation;
+			mc ?= oui_parent.implementation;
 			widget_index := widget_manager.last_inserted_position;
-			ext_name := a_font_box.identifier.to_c;
-			data := font_box_create ($ext_name,
-					parent.screen_object,
-					False, man);
-			screen_object := font_box_form (data);
-			Mel_widgets.add (Current);
-			!! form_button.make_from_existing (xt_parent (font_box_ok_button (data)), Current);
-			!! ok_b.make_from_existing (font_box_ok_button (data), form_button);
-			!! cancel_b.make_from_existing (font_box_cancel_button (data), form_button);
-			!! apply_b.make_from_existing (font_box_apply_button (data), form_button);
-			if man then	
-				manage
-			end
+			fb_make (a_font_box.identifier, mc, man)
 		end;
-
-feature -- Access
-	
-	ok_b, apply_b, cancel_b: MEL_PUSH_BUTTON_GADGET
-			-- Buttons in the font box
-
-	data: POINTER;
-			-- Pointer to the font_box_data structure
 
 feature -- Status report
 
 	font: FONT is
 			-- Font currently selected by the user
-		local
-			str: STRING
 		do
-			!! str.make (1);
-			str.from_c (font_box_current_font (data));
 			!! Result.make;
-			Result.set_name (str)
+			Result.set_name (current_font_name)
 		end;
 
 feature -- Status setting
 
 	set_font (a_font: FONT) is
 			-- Edit `a_font'.
-		require else
-			a_font_exists: not (a_font = Void)
 		local
-			ext_name: ANY
+			font_name: STRING
 		do
-			ext_name := a_font.name.to_c;
-			font_box_set_font ($ext_name, data)
+			font_name := a_font.name;
+			if font_name /= Void then
+				set_font_name (a_font.name)
+			end
 		end;
 
 feature  -- Element change
@@ -92,59 +83,21 @@ feature  -- Element change
 			-- Add `a_command' to the list of action to execute when
 			-- apply button is activated.
 		do
-			apply_b.add_activate_callback (mel_vision_callback (a_command), argument)
+			add_apply_callback (mel_vision_callback (a_command), argument)
 		end;
 
 	add_cancel_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when
 			-- cancel button is activated.
 		do
-			cancel_b.add_activate_callback (mel_vision_callback (a_command), argument)
+			add_cancel_callback (mel_vision_callback (a_command), argument)
 		end;
 
 	add_ok_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when
 			-- ok button is activated.
 		do
-			ok_b.add_activate_callback (mel_vision_callback (a_command), argument)
-		end;
-
-feature -- Display
-
-	show_apply_button is
-			-- Make apply button visible.
-		do
-			font_box_show_apply (data)
-		end;
-
-	show_cancel_button is
-			-- Make cancel button visible.
-		do
-			font_box_show_cancel (data)
-		end;
-
-	show_ok_button is
-			-- Make ok button visible.
-		do
-			font_box_show_ok (data)
-		end
-
-	hide_apply_button is
-			-- Make apply button invisible.
-		do
-			font_box_hide_apply (data)
-		end;
-
-	hide_cancel_button is
-			-- Make cancel button invisible.
-		do
-			font_box_hide_cancel (data)
-		end;
-
-	hide_ok_button is
-			-- Make ok button invisible.
-		do
-			font_box_hide_ok (data)
+			add_ok_callback (mel_vision_callback (a_command), argument)
 		end;
 
 feature -- Removal
@@ -153,109 +106,66 @@ feature -- Removal
 			-- Remove `a_command' from the list of action to execute when
 			-- apply button is activated.
 		do
-			apply_b.remove_activate_callback (mel_vision_callback (a_command), argument)
+			remove_apply_callback (mel_vision_callback (a_command), argument)
 		end;
 
 	remove_cancel_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to execute when
 			-- cancel button is activated.
 		do
-			cancel_b.remove_activate_callback (mel_vision_callback (a_command), argument)
+			remove_cancel_callback (mel_vision_callback (a_command), argument)
 		end;
 
 	remove_ok_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to execute when
 			-- ok button is activated.
 		do
-			ok_b.remove_activate_callback (mel_vision_callback (a_command), argument)
+			remove_ok_callback (mel_vision_callback (a_command), argument)
 		end;
 
-	dispose is
-		do
-			free_data (data);
-			data := default_pointer
-		ensure then
-			data_freed: data = default_pointer
+feature {NONE} -- Implementation
+
+    set_background_color_from_imp (color_imp: COLOR_X) is
+            -- Set the background color from implementation `color_imp'.
+        do
+			mel_set_background_color (color_imp)
 		end;
 
-feature {NONE} -- External features
-
-	font_box_set_font (resource: POINTER; value: POINTER) is
-		external
-			"C"
-		end;
-
-	font_box_apply_button (value: POINTER): POINTER is
-		external
-			"C"
-		end;
-
-	font_box_show_ok (value: POINTER) is
-		external
-			"C"
-		end;
-
-	font_box_show_cancel (value: POINTER) is
-		external
-			"C"
-		end;
-
-	font_box_show_apply (value: POINTER) is
-		external
-			"C"
-		end;
-
-	font_box_hide_ok (value: POINTER) is
-		external
-			"C"
-		end;
-
-	font_box_hide_cancel (value: POINTER) is
-		external
-			"C"
-		end;
-
-	font_box_hide_apply (value: POINTER) is
-		external
-			"C"
-		end;
-
-	font_box_current_font (value: POINTER): POINTER is
-		external
-			"C"
-		end;
-
-	font_box_ok_button (value: POINTER): POINTER is
-		external
-			"C"
-		end;
-
-	font_box_cancel_button (value: POINTER): POINTER is
-		external
-			"C"
-		end;
-
-	font_box_create (b_name: POINTER; scr_obj: POINTER; 
-			is_dial, man: BOOLEAN): POINTER is
-		external
-			"C"
-		end;
-
-	font_box_form (value: POINTER): POINTER is
-		external
-			"C"
-		end;
-
-	free_data (p: POINTER) is
-		external
-			"C"
-		alias
-			"xfree"
+    set_foreground_color_from_imp (color_imp: COLOR_X) is
+            -- Set the background color from implementation `color_imp'.
+        do
+			mel_set_foreground_color (color_imp)
 		end
 
-invariant
-
-	buttons_not_void: cancel_b /= Void and then ok_b /= Void and then apply_b /= Void
+	set_font_from_imp (font_implementation: FONT_X; value: INTEGER) is
+			-- Set text font from `font_implementation'.
+		local
+			a_font_list: MEL_FONT_LIST;
+			an_entry: MEL_FONT_LIST_ENTRY;
+		do
+			if Label_font_value /= value then
+				if font_implementation.is_valid then
+					!! an_entry.make_default_from_font_struct (font_implementation);
+					!! a_font_list.append_entry (an_entry);
+					if a_font_list.is_valid then
+						if value = Button_font_value then
+							mel_set_button_font (a_font_list)
+						else
+							check
+								consistency: value = Text_font_value
+							end;
+							set_scroll_list_font (a_font_list)
+						end
+					a_font_list.destroy
+					else
+						io.error.putstring ("Warning can not allocate font%N");
+					end;
+					an_entry.destroy
+				else
+					io.error.putstring ("Warning can not allocate font%N");
+				end
+			end;
+		end;
 
 end -- class FONT_BOX_M
 

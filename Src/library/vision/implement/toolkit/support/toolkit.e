@@ -63,20 +63,7 @@ feature -- Access
 			no_global_cursor_anymore: (global_cursor = Void)
 		end;
 
-feature -- Access
-	-- these features should probably be removed from toolkit and 
-	-- do !BASE_IMP!implementation
-	
--- 	base (a_base: BASE): BASE_I is
--- 			-- Toolkit implementation of `a_base'
--- 		deferred
--- 		ensure
--- 			widget_exists: Result /= Void
--- 		end;
-
-
 end -- class TOOLKIT
-
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

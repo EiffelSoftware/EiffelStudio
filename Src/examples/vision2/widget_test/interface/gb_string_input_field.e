@@ -54,19 +54,12 @@ feature {NONE} -- Initialization
 		do
 			call_default_create (any)
 			add_label (label_text, tooltip)
-		--	internal_type := a_type
 			editor_constructor ?= any
 			check
 				object_was_editor_constructor: editor_constructor /= Void
 			end
---			internal_gb_ev_any ?= any
---			check
---				internal_gb_ev_any /= Void
---			end
 			
 			has_multiple_line_entry := multiple_line_text_entry
-
-	--		object ?= editor_constructor.object
 			setup_text_field (a_parent, tooltip, an_execution_agent, a_validate_agent)
 		ensure
 			execution_agent_not_void: execution_agent /= Void
@@ -92,6 +85,13 @@ feature -- Basic operations
 		
 	has_multiple_line_entry: BOOLEAN	
 		-- Does `Current' permit the entering of multiple lines of text?
+		
+	hide_label is
+			-- Ensure that label is hidden.
+			-- Not used by the tour, only by EiffelBuild so
+			-- no implementation is required.
+		do
+		end
 
 feature -- Access
 
@@ -121,11 +121,6 @@ feature {NONE} -- Implementation
 
 	value_on_entry: STRING
 		-- Contents of `text_field' when focus in is received.
-		
---	internal_type: STRING
---		--| The type of the property as it will appear in a constant context.
---		--| For example "EV_BUTTONText" is how the constant may appear in an object
---		--| reference, and "Text" is the internal type.
 
 	validate_agent: FUNCTION [ANY, TUPLE [STRING], BOOLEAN]
 		-- Is integer a valid integer for `execution_agent'.

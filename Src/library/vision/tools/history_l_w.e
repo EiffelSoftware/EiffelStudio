@@ -21,59 +21,184 @@ creation
 
 	make
 
-feature -- Creation
+feature {NONE} -- Initialization
 
-    make (a_name: STRING; a_parent: COMPOSITE) is
-            -- Create a graphic representation of the history.
-        require
-            name_not_void: not (a_name = Void);
-            parent_not_void: not (a_parent = Void)
-        do
-            form_d_make (a_name, a_parent);
-            set_size (200,200);
-            set_fraction_base (3);
-            !! scroll_list.make ("list", Current);
-            !! undo_button.make ("undo", Current);
-            !! redo_button.make ("redo", Current);
-            !! close_button.make ("close", Current);
-            attach_top (scroll_list, 5);
-            attach_left (scroll_list, 5);
-            attach_right (scroll_list, 5);
-            attach_bottom_widget (undo_button, scroll_list, 5);
-            detach_top (undo_button);
-            attach_left (undo_button, 5);
-            attach_right_position (undo_button, 1);
-            attach_bottom (undo_button, 5);
-            detach_top (redo_button);
-            attach_left_widget (undo_button, redo_button, 5);
-            attach_right_position (redo_button, 2);
-            attach_bottom (redo_button, 5);
-            detach_top (close_button);
-            attach_left_widget (redo_button, close_button, 5);
-            attach_right (close_button, 5);
-            attach_bottom (close_button, 5);
-            scroll_list.set_single_selection;
-            undo_button.set_text ("Undo");
-            redo_button.set_text ("Redo");
-            close_button.set_text ("Close");
-            undo_button.add_activate_action (undo_command, Current);
-            redo_button.add_activate_action (redo_command, Current);
-            close_button.add_activate_action (close_commmand, Current);
-            scroll_list.add_single_action (click_command, Current);
-            update_widgets;
-        end;
+	make (a_name: STRING; a_parent: COMPOSITE) is
+			-- Create a graphic representation of the history.
+		require
+			name_not_void: a_name /= Void;
+			parent_not_void: a_parent /= Void
+		do
+			form_d_make (a_name, a_parent);
+			set_size (200,200);
+			set_fraction_base (3);
+			!! scroll_list.make ("list", Current);
+			!! undo_button.make ("undo", Current);
+			!! redo_button.make ("redo", Current);
+			!! close_button.make ("close", Current);
+			attach_top (scroll_list, 5);
+			attach_left (scroll_list, 5);
+			attach_right (scroll_list, 5);
+			attach_bottom_widget (undo_button, scroll_list, 5);
+			detach_top (undo_button);
+			attach_left (undo_button, 5);
+			attach_right_position (undo_button, 1);
+			attach_bottom (undo_button, 5);
+			detach_top (redo_button);
+			attach_left_widget (undo_button, redo_button, 5);
+			attach_right_position (redo_button, 2);
+			attach_bottom (redo_button, 5);
+			detach_top (close_button);
+			attach_left_widget (redo_button, close_button, 5);
+			attach_right (close_button, 5);
+			attach_bottom (close_button, 5);
+			scroll_list.set_single_selection;
+			undo_button.set_text ("Undo");
+			redo_button.set_text ("Redo");
+			close_button.set_text ("Close");
+			undo_button.add_activate_action (undo_command, Current);
+			redo_button.add_activate_action (redo_command, Current);
+			close_button.add_activate_action (close_commmand, Current);
+			scroll_list.add_click_action (click_command, Current);
+			scroll_list.start;
+			update_widgets;
+		end;
 
-feature {HISTORY_LIST}
+feature -- Access
+
+	history_list: HISTORY_LIST;
+			-- History based on a list currently associated
+
+feature -- Element change
+
+	set_history_list (a_history_list: HISTORY_LIST) is
+			-- Set the `history_list' to `a_history_list'.
+		local
+			i: INTEGER
+		do
+			if history_list /= Void then
+				history_list.remove_history_window (Current)
+			end;
+			history_list := a_history_list;
+			scroll_list.wipe_out;
+			if history_list /= Void then
+				history_list.add_history_window (Current);
+				from
+					i := 1
+				until
+					i > history_list.count
+				loop
+					scroll_list.extend (history_list.i_th (i));
+					i := i+1
+				end;
+				if not scroll_list.empty then
+					scroll_list.set_visible_item_count (scroll_list.count)
+				end;
+				scroll_list.go_i_th (scroll_list.index);
+				update_widgets
+			end
+		end;
+
+feature {HISTORY_LIST} -- Implementation
 
 	back is
 			-- Move cursor backward one position.
 		do
-			scroll_list.deselect_item;
+			if not scroll_list.off then
+				scroll_list.deselect_item;
+			end;
 			scroll_list.back;
 			update_widgets
 		end;
 
-feature {NONE}
+	forth is
+			-- Move cursor forward one position.
+		do
+			if not scroll_list.off then
+				scroll_list.deselect_item
+			end;
+			scroll_list.forth;
+			update_widgets
+		end;
+
+	go_i_th (i: INTEGER) is
+			-- Move cursor to position `i'.
+		do
+			if not scroll_list.off then
+				scroll_list.deselect_item;
+			end;
+			scroll_list.go_i_th (i);
+			update_widgets
+		end;
+
+feature {HISTORY_LIST}
+
+	record (a_command: UNDOABLE) is
+			-- Insert `a_command' after the cursor position, and place
+			-- cursor upon it
+		do
+			if not scroll_list.off then
+				scroll_list.deselect_item;
+			end;
+			scroll_list.put_right (a_command);
+			scroll_list.forth;
+			update_widgets
+		end;
+
+	remove_after is
+			-- Remove all commands after the cursor position.
+		do
+			scroll_list.remove_right
+		end;
+
+	wipe_out is
+			-- Make history empty.
+		do
+			scroll_list.wipe_out;
+			update_widgets
+		end;
+
+	update_widgets is
+			-- Update the state of different widgets (scroll list, buttons).
+		do
+			if not scroll_list.off then
+				scroll_list.scroll_to_current;
+				scroll_list.select_item
+			end;
+			if scroll_list.before then
+				undo_button.set_insensitive
+			else
+				undo_button.set_sensitive
+			end;
+			if scroll_list.islast or scroll_list.empty then
+				redo_button.set_insensitive 
+			else
+				redo_button.set_sensitive 
+			end
+		end;
+
+feature {NONE} -- Implementation
+
+	redo_button: PUSH_B;
+			-- Button to redo a command
+
+	scroll_list: SCROLLABLE_LIST;
+			-- Scroll list to show command names.
+
+	undo_button: PUSH_B;
+			-- Button to undo a command
+
+	undo_command: HISTORY_UNDO is
+			-- Command associated with the `undo' button.
+		once
+			!! Result
+		end;
+
+	redo_command: HISTORY_REDO is
+			-- Command associated with the `redo' button.
+		once
+			!! Result
+		end;
 
 	click_command: HISTORY_CLCK is
 			-- Command associated with a direct click in the scroll list.
@@ -89,139 +214,6 @@ feature {NONE}
 		once
 			!! Result
 		end;
-
-feature {HISTORY_LIST}
-
-	forth is
-			-- Move cursor forward one position.
-		do
-			scroll_list.deselect_item;
-			scroll_list.forth;
-			update_widgets
-		end;
-
-	go_i_th (i: INTEGER) is
-			-- Move cursor to position `i'.
-		do
-			scroll_list.deselect_item;
-			scroll_list.go_i_th (i);
-			update_widgets
-		end;
-
-feature 
-
-	history_list: HISTORY_LIST;
-			-- History based on a list currently associated
-
-feature {HISTORY_LIST}
-
-	record (a_command_name: STRING) is
-			-- Insert `a_command' after the cursor position, and place
-			-- cursor upon it
-		do
-			scroll_list.put_right (a_command_name);
-			scroll_list.deselect_item;
-			scroll_list.forth;
-			update_widgets
-		end;
-
-feature {NONE}
-
-	redo_button: PUSH_B;
-			-- Button to redo a command
-
-	redo_command: HISTORY_REDO is
-			-- Command associated with the `redo' button.
-		once
-			!! Result
-		end;
-
-feature {HISTORY_LIST}
-
-	remove_after is
-			-- Remove all commands after the cursor position.
-		do
-			scroll_list.remove_right (scroll_list.count-scroll_list.index);
-			scroll_list.deselect_item;
-			update_widgets
-		end;
-
-feature {NONE}
-
-	scroll_list: SCROLL_LIST;
-			-- Scroll list to show command names.
-
-feature 
-
-	set_history_list (a_history_list: HISTORY_LIST) is
-			--
-		local
-			i: INTEGER
-		do
-			if not (history_list = Void) then
-				history_list.remove_history_window (Current)
-			end;
-			history_list := a_history_list;
-			scroll_list.wipe_out;
-			if not (history_list = Void) then
-				history_list.add_history_window (Current);
-				from
-					i := 1
-				until
-					i > history_list.count
-				loop
-					scroll_list.put_left (history_list.i_th (i).name);
-					i := i+1
-				end;
-				if not scroll_list.empty then
-					scroll_list.set_visible_item_count (scroll_list.count)
-				end;
-				scroll_list.go_i_th (scroll_list.index);
-				update_widgets
-			end
-		end;
-
-feature {NONE}
-
-	undo_button: PUSH_B;
-			-- Button to undo a command
-
-	undo_command: HISTORY_UNDO is
-			-- Command associated with the `undo' button.
-		once
-			!! Result
-		end;
-
-	update_widgets is
-			-- Update the state of different widgets (scroll list, buttons).
-		do
-			if not scroll_list.before then
-				scroll_list.scroll_to_current;
-				scroll_list.select_item
-			end;
-			if scroll_list.before
-			then
-				undo_button.set_insensitive
-			else
-				undo_button.set_sensitive
-			end;
-			if scroll_list.islast or scroll_list.empty
-			then
-				redo_button.set_insensitive 
-			else
-				redo_button.set_sensitive 
-			end
-		end;
-
-	
-feature {HISTORY_LIST}
-
-	wipe_out is
-			-- Make history empty.
-		do
-			scroll_list.wipe_out;
-			update_widgets
-		end
 
 invariant
 

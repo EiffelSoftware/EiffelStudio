@@ -49,6 +49,7 @@ feature -- Basic operations
 			external_feature_writer.add_argument (default_pointer_argument)
 
 			set_feature_result_type_and_arguments
+			add_feature_argument_comments
 
 			set_external_feature_result_type_and_arguments
 

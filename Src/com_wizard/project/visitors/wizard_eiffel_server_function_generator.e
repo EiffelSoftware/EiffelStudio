@@ -37,15 +37,12 @@ feature -- Basic operations
 				feature_writer.set_name (a_descriptor.interface_eiffel_name)
 			end
 
-			
-			-- Set arguments and precondition
 			set_feature_result_type_and_arguments
 
-			-- Set return type for C server function
 			visitor := func_desc.return_type.visitor 
 
-			-- Set description, function body
 			feature_writer.set_comment (func_desc.description)
+			add_feature_argument_comments
 			feature_writer.set_body (Exception_body)
 
 			feature_writer.set_effective

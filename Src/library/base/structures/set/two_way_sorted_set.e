@@ -140,11 +140,10 @@ feature -- Element change
 					else
 						from
 						until
-							other.after or else other_item >= item
+							other.after or else other.item >= item
 						loop
-							put_left (other_item);
+							put_left (other.item);
 							other.forth;
-							other_item := other.item
 						end
 					end
 				end

@@ -8,8 +8,6 @@ class
 	DB_TABLE_MANAGER
 
 inherit
-	DB_TABLES_ACCESS_USE
-
 	ABSTRACT_DB_TABLE_MANAGER
 
 creation
@@ -368,9 +366,10 @@ feature -- Queries without result to load.
 
 feature -- Update
 
-	update_tablerow (description: DB_TABLE_DESCRIPTION) is
+	update_tablerow (tablerow: DB_TABLE) is
 			-- Update item with `description' in database.
 		local
+			description: DB_TABLE_DESCRIPTION
 			rescued: BOOLEAN
 			pr: DB_PROC
 			expr: DB_CHANGE
@@ -378,6 +377,7 @@ feature -- Update
 		do
 			if not rescued then
 				has_error := False
+				description := tablerow.table_description
 				proc_name := "UPDATE_" + description.Table_name
 				create pr.make (proc_name)
 				pr.load

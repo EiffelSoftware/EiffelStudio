@@ -9,6 +9,9 @@ indexing
 deferred class
 	ABSTRACT_DB_TABLE_MANAGER
 
+inherit
+	DB_TABLES_ACCESS_USE
+
 feature -- Access
 
 	database_result_list: ARRAYED_LIST [DB_TABLE] is
@@ -47,8 +50,8 @@ feature -- Basic operations
 	prepare_select_with_table (tablecode: INTEGER) is
 			-- Prepare a simple select query on table with code `tablecode'.
 			-- Execute it with `load_result_list'.
---FIXME		require
---FIXME			is_valid_tablecode: is_valid_code (tablecode)
+		require
+			is_valid_tablecode: is_valid_code (tablecode)
 		deferred
 		end
 
@@ -59,7 +62,7 @@ feature -- Basic operations
 		deferred
 		end
 
-	update_tablerow (description: DB_TABLE_DESCRIPTION) is
+	update_tablerow (description: DB_TABLE) is
 			-- Update object with `description' in the database.
 			-- Object should already exist and should have kept
 			-- same ID.

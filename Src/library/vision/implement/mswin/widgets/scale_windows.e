@@ -9,6 +9,10 @@ class
 
 inherit
 	SCALE_I
+		redefine
+			valid_minimum,
+			valid_maximum
+		end
 
 	PRIMITIVE_WINDOWS
 		redefine
@@ -463,6 +467,18 @@ feature {NONE} -- Implementation
 			end
 		end	
 
+	valid_minimum (a_minimum: INTEGER): BOOLEAN is
+			-- Is `a_minimum' valid?
+		do
+			Result := precursor (a_minimum) and a_minimum >= -32768
+		end
+
+	valid_maximum (a_maximum: INTEGER): BOOLEAN is
+			-- Is `a_maximum' valid?
+		do
+			Result := precursor (a_maximum) and a_maximum < 32768
+		end
+
 	scroll_bar: SCALE_SCROLL_BAR_WINDOWS
 			-- Implementation of the scroll bar
 
@@ -481,13 +497,13 @@ feature {NONE} -- Implementation
 	value_height: INTEGER is 20
 			-- Default value of statics
 
-	value_width: INTEGER is 40
+	value_width: INTEGER is 45
 			-- default value of the value static
 
 	scroll_width: INTEGER is
 			-- default width of a vertical scroll bar
 		do
-			Result := (width - 40).max (15)
+			Result := (width - value_width).max (15)
 		end
 
 	scroll_height: INTEGER is

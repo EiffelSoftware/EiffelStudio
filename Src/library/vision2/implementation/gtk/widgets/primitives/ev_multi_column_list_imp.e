@@ -930,7 +930,7 @@ feature -- Implementation
 					signal_emit_stop (c_object, "button-press-event")
 			end
 
-			app_implementation.on_drop (pebble)
+			App_implementation.on_drop (pebble)
 			x_origin := 0
 			y_origin := 0
 			last_pointed_target := Void	

@@ -966,21 +966,6 @@ end;
 
 feature {COMPILER_EXPORTER}
 
-	has_assertions: BOOLEAN is
-			-- Has assertion checking explicitely been requested
-			-- in this cluster?
-		do
-			from
-				classes.start
-			until
-				classes.after or else Result
-			loop
-				Result := 
-					classes.item_for_iteration.assertion_level.has_checking
-				classes.forth
-			end
-		end
-
 	infix "<" (other: like Current): BOOLEAN is
 		do
 			Result := path < other.path

@@ -25,6 +25,10 @@
 #include "plug.h"
 #include "run_idr.h"
 
+#ifdef EIF_OS2
+#include <io.h>
+#endif
+
 #ifdef EIF_WINDOWS
 #include "winsock.h"
 #endif

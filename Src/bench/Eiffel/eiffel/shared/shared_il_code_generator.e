@@ -12,7 +12,7 @@ feature -- IL generator object
 	il_generator: IL_CODE_GENERATOR is
 			-- To generate IL code
 		once
-			create Result.make
+			create {INTERFACE_IL_CODE_GENERATOR} Result.make
 		end
 
 feature -- IL label factory

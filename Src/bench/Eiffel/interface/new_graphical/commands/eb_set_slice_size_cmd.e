@@ -112,22 +112,6 @@ feature -- Status report
 			Result := Interface_names.l_Set_slice_limits_desc
 		end
 
-feature -- Status setting
-
-feature -- Cursor movement
-
-feature -- Element change
-
-feature -- Removal
-
-feature -- Resizing
-
-feature -- Transformation
-
-feature -- Conversion
-
-feature -- Duplication
-
 feature -- Execution
 
 	execute is

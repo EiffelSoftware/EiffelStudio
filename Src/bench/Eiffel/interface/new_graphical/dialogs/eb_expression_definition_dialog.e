@@ -203,8 +203,6 @@ feature -- Access
 	callback: PROCEDURE [ANY, TUPLE]
 			-- Callback that should be called after the dialog is closed.
 
-feature -- Measurement
-
 feature -- Status report
 
 	is_destroyed: BOOLEAN is
@@ -251,28 +249,6 @@ feature -- Status setting
 		do
 			dialog.destroy
 		end
-
-feature -- Cursor movement
-
-feature -- Element change
-
-feature -- Removal
-
-feature -- Resizing
-
-feature -- Transformation
-
-feature -- Conversion
-
-feature -- Duplication
-
-feature -- Miscellaneous
-
-feature -- Basic operations
-
-feature -- Obsolete
-
-feature -- Inapplicable
 
 feature {NONE} -- Event handling
 

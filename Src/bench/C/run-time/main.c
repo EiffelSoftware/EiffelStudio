@@ -59,7 +59,7 @@
 
 #define null (char *) 0					/* Null pointer */
 
-#ifdef EIF_WINDOWS
+#if defined EIF_WINDOWS || defined EIF_OS2
 	/* when malloc() fails, the system dies otherwise !!! */
 	/* FIXME?? */
 rt_public int cc_for_speed = 0;			/* Fast memory allocation */

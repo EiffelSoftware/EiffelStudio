@@ -18,14 +18,14 @@ feature
 	display is
 		do
 			io.set_error_default
-			if not left_child.Void then
+			if not left_child /= Void then
 				left_child.display
 			end
-			if not tree_item.Void then
+			if not tree_item /= Void then
 				io.putchar (' ')
 				io.putint (tree_item.item)
 			end
-			if not right_child.Void then
+			if not right_child /= Void then
 				right_child.display
 			end
 		end

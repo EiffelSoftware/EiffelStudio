@@ -37,6 +37,7 @@ feature -- Type check, byte code and dead code removal
 			current_context: TYPE_A;
 			vwbe3: VWBE3;
 		do
+			Error_handler.set_error_position (start_position);
 			expr.type_check;
 				-- Check if the type of the expression is boolean
 			current_context := context.item;

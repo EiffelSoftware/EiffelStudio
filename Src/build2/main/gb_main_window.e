@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 				-- initialize `Current'.
 		do
 			Precursor {EV_TITLED_WINDOW}
-			set_title (gb_main_window_title)
+			set_title (Product_name)
 			set_icon_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_build_window @ 1)
 				-- Initialize the menu bar for `Current'.
 			create a_menu_bar

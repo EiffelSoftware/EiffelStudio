@@ -1,16 +1,16 @@
 /*-----------------------------------------------------------
-Implemented `IEiffelHTMLDocEvents' Interface.
+Implemented `IEiffelHtmlDocumentationGenerator' Interface.
 -----------------------------------------------------------*/
 
-#ifndef __ECOM_EIFFELCOMCOMPILER_IEIFFELHTMLDOCEVENTS_IMPL_PROXY_S_H__
-#define __ECOM_EIFFELCOMCOMPILER_IEIFFELHTMLDOCEVENTS_IMPL_PROXY_S_H__
+#ifndef __ECOM_EIFFELCOMCOMPILER_IEIFFELHTMLDOCUMENTATIONGENERATOR_IMPL_PROXY_S_H__
+#define __ECOM_EIFFELCOMCOMPILER_IEIFFELHTMLDOCUMENTATIONGENERATOR_IMPL_PROXY_S_H__
 #ifdef __cplusplus
 extern "C" {
 
 
 namespace ecom_EiffelComCompiler
 {
-class IEiffelHTMLDocEvents_impl_proxy;
+class IEiffelHtmlDocumentationGenerator_impl_proxy;
 }
 
 }
@@ -20,7 +20,9 @@ class IEiffelHTMLDocEvents_impl_proxy;
 
 #include "eif_eiffel.h"
 
-#include "ecom_EiffelComCompiler_IEiffelHTMLDocEvents_s.h"
+#include "ecom_EiffelComCompiler_IEiffelHtmlDocumentationGenerator_s.h"
+
+#include "ecom_EiffelComCompiler_IEiffelHtmlDocumentationEvents_s.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -30,40 +32,40 @@ extern "C" {
 extern "C" {
 namespace ecom_EiffelComCompiler
 {
-class IEiffelHTMLDocEvents_impl_proxy
+class IEiffelHtmlDocumentationGenerator_impl_proxy
 {
 public:
-	IEiffelHTMLDocEvents_impl_proxy (IUnknown * a_pointer);
-	virtual ~IEiffelHTMLDocEvents_impl_proxy ();
+	IEiffelHtmlDocumentationGenerator_impl_proxy (IUnknown * a_pointer);
+	virtual ~IEiffelHtmlDocumentationGenerator_impl_proxy ();
 
 	/*-----------------------------------------------------------
-	Put a header message to the output
+	Exclude a cluster from being generated.
 	-----------------------------------------------------------*/
-	void ccom_put_header(  /* [in] */ EIF_OBJECT new_value );
-
-
-	/*-----------------------------------------------------------
-	Put a string to the output
-	-----------------------------------------------------------*/
-	void ccom_put_string(  /* [in] */ EIF_OBJECT new_value );
+	void ccom_add_excluded_cluster(  /* [in] */ EIF_OBJECT bstr_full_cluster_name );
 
 
 	/*-----------------------------------------------------------
-	Put a class name to the output
+	Include a cluster to be generated.
 	-----------------------------------------------------------*/
-	void ccom_put_class_document_message(  /* [in] */ EIF_OBJECT new_value );
+	void ccom_remove_excluded_cluster(  /* [in] */ EIF_OBJECT bstr_full_cluster_name );
 
 
 	/*-----------------------------------------------------------
-	Notify that documentation generating is initializing
+	Generate the HTML documents into path.
 	-----------------------------------------------------------*/
-	void ccom_put_initializing_documentation();
+	void ccom_start_generation(  /* [in] */ EIF_OBJECT bstr_generation_path );
 
 
 	/*-----------------------------------------------------------
-	Notify that the percentage completed has changed
+	Add a callback interface.
 	-----------------------------------------------------------*/
-	void ccom_put_percentage_completed(  /* [in] */ EIF_INTEGER new_value );
+	void ccom_advise_status_callback(  /* [in] */ ecom_EiffelComCompiler::IEiffelHtmlDocumentationEvents * p_ieiffel_html_documentation_events );
+
+
+	/*-----------------------------------------------------------
+	Remove a callback interface.
+	-----------------------------------------------------------*/
+	void ccom_unadvise_status_callback(  /* [in] */ ecom_EiffelComCompiler::IEiffelHtmlDocumentationEvents * p_ieiffel_html_documentation_events );
 
 
 	/*-----------------------------------------------------------
@@ -80,7 +82,7 @@ private:
 	/*-----------------------------------------------------------
 	Interface pointer
 	-----------------------------------------------------------*/
-	ecom_EiffelComCompiler::IEiffelHTMLDocEvents * p_IEiffelHTMLDocEvents;
+	ecom_EiffelComCompiler::IEiffelHtmlDocumentationGenerator * p_IEiffelHtmlDocumentationGenerator;
 
 
 	/*-----------------------------------------------------------

@@ -1,15 +1,15 @@
 /*-----------------------------------------------------------
-Implemented `IEiffelHTMLDocGenerator' Interface.
+Implemented `IEiffelHtmlDocumentationEvents' Interface.
 -----------------------------------------------------------*/
 
-#include "ecom_EiffelComCompiler_IEiffelHTMLDocGenerator_impl_proxy_s.h"
-static const IID IID_IEiffelHTMLDocGenerator_ = {0x86270519,0x790f,0x48cb,{0x88,0x69,0xdb,0x06,0x18,0x4f,0x97,0xb4}};
+#include "ecom_EiffelComCompiler_IEiffelHtmlDocumentationEvents_impl_proxy_s.h"
+static const IID IID_IEiffelHtmlDocumentationEvents_ = {0xb120763e,0xed26,0x4ded,{0xaa,0xfb,0x21,0xfa,0x8b,0x28,0xe8,0x79}};
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-ecom_EiffelComCompiler::IEiffelHTMLDocGenerator_impl_proxy::IEiffelHTMLDocGenerator_impl_proxy( IUnknown * a_pointer )
+ecom_EiffelComCompiler::IEiffelHtmlDocumentationEvents_impl_proxy::IEiffelHtmlDocumentationEvents_impl_proxy( IUnknown * a_pointer )
 {
 	HRESULT hr, hr2;
 	hr = CoInitializeEx (NULL, COINIT_APARTMENTTHREADED);
@@ -27,7 +27,7 @@ ecom_EiffelComCompiler::IEiffelHTMLDocGenerator_impl_proxy::IEiffelHTMLDocGenera
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 
-	hr = a_pointer->QueryInterface(IID_IEiffelHTMLDocGenerator_, (void **)&p_IEiffelHTMLDocGenerator);
+	hr = a_pointer->QueryInterface(IID_IEiffelHtmlDocumentationEvents_, (void **)&p_IEiffelHtmlDocumentationEvents);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -38,25 +38,25 @@ ecom_EiffelComCompiler::IEiffelHTMLDocGenerator_impl_proxy::IEiffelHTMLDocGenera
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-ecom_EiffelComCompiler::IEiffelHTMLDocGenerator_impl_proxy::~IEiffelHTMLDocGenerator_impl_proxy()
+ecom_EiffelComCompiler::IEiffelHtmlDocumentationEvents_impl_proxy::~IEiffelHtmlDocumentationEvents_impl_proxy()
 {
 	p_unknown->Release ();
-	if (p_IEiffelHTMLDocGenerator!=NULL)
-		p_IEiffelHTMLDocGenerator->Release ();
+	if (p_IEiffelHtmlDocumentationEvents!=NULL)
+		p_IEiffelHtmlDocumentationEvents->Release ();
 	CoUninitialize ();
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_BOOLEAN ecom_EiffelComCompiler::IEiffelHTMLDocGenerator_impl_proxy::ccom_is_loaded(  )
+void ecom_EiffelComCompiler::IEiffelHtmlDocumentationEvents_impl_proxy::ccom_notify_initalizing_documentation()
 
 /*-----------------------------------------------------------
-	Is the project loaded?
+	Notify that documentation generating is initializing
 -----------------------------------------------------------*/
 {
 	HRESULT hr;
-	if (p_IEiffelHTMLDocGenerator == NULL)
+	if (p_IEiffelHtmlDocumentationEvents == NULL)
 	{
-		hr = p_unknown->QueryInterface (IID_IEiffelHTMLDocGenerator_, (void **)&p_IEiffelHTMLDocGenerator);
+		hr = p_unknown->QueryInterface (IID_IEiffelHtmlDocumentationEvents_, (void **)&p_IEiffelHtmlDocumentationEvents);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -64,32 +64,26 @@ EIF_BOOLEAN ecom_EiffelComCompiler::IEiffelHTMLDocGenerator_impl_proxy::ccom_is_
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
-	VARIANT_BOOL ret_value = 0;
-	
-	hr = p_IEiffelHTMLDocGenerator->is_loaded( &ret_value);
+	hr = p_IEiffelHtmlDocumentationEvents->NotifyInitalizingDocumentation ();
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
 			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
 		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	
-	
-	EIF_BOOLEAN eiffel_result =  (EIF_BOOLEAN)rt_ce.ccom_ce_boolean (ret_value);
-	return (eiffel_result);
+	};	
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_BOOLEAN ecom_EiffelComCompiler::IEiffelHTMLDocGenerator_impl_proxy::ccom_is_corrupted(  )
+void ecom_EiffelComCompiler::IEiffelHtmlDocumentationEvents_impl_proxy::ccom_notify_percentage_complete(  /* [in] */ EIF_INTEGER ul_percent )
 
 /*-----------------------------------------------------------
-	Is the project oorrupted?
+	Notify that the percentage completed has changed
 -----------------------------------------------------------*/
 {
 	HRESULT hr;
-	if (p_IEiffelHTMLDocGenerator == NULL)
+	if (p_IEiffelHtmlDocumentationEvents == NULL)
 	{
-		hr = p_unknown->QueryInterface (IID_IEiffelHTMLDocGenerator_, (void **)&p_IEiffelHTMLDocGenerator);
+		hr = p_unknown->QueryInterface (IID_IEiffelHtmlDocumentationEvents_, (void **)&p_IEiffelHtmlDocumentationEvents);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -97,74 +91,10 @@ EIF_BOOLEAN ecom_EiffelComCompiler::IEiffelHTMLDocGenerator_impl_proxy::ccom_is_
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
-	VARIANT_BOOL ret_value = 0;
+	ULONG tmp_ul_percent = 0;
+	tmp_ul_percent = (ULONG)ul_percent;
 	
-	hr = p_IEiffelHTMLDocGenerator->is_corrupted( &ret_value);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	
-	
-	EIF_BOOLEAN eiffel_result =  (EIF_BOOLEAN)rt_ce.ccom_ce_boolean (ret_value);
-	return (eiffel_result);
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-EIF_BOOLEAN ecom_EiffelComCompiler::IEiffelHTMLDocGenerator_impl_proxy::ccom_is_incompatible(  )
-
-/*-----------------------------------------------------------
-	Is the project incompatible with the current version of the compiled?
------------------------------------------------------------*/
-{
-	HRESULT hr;
-	if (p_IEiffelHTMLDocGenerator == NULL)
-	{
-		hr = p_unknown->QueryInterface (IID_IEiffelHTMLDocGenerator_, (void **)&p_IEiffelHTMLDocGenerator);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	};
-	VARIANT_BOOL ret_value = 0;
-	
-	hr = p_IEiffelHTMLDocGenerator->is_incompatible( &ret_value);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	
-	
-	EIF_BOOLEAN eiffel_result =  (EIF_BOOLEAN)rt_ce.ccom_ce_boolean (ret_value);
-	return (eiffel_result);
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-void ecom_EiffelComCompiler::IEiffelHTMLDocGenerator_impl_proxy::ccom_add_status_callback(  /* [in] */ ecom_EiffelComCompiler::IEiffelHTMLDocEvents * new_callback )
-
-/*-----------------------------------------------------------
-	Add a callback interface.
------------------------------------------------------------*/
-{
-	HRESULT hr;
-	if (p_IEiffelHTMLDocGenerator == NULL)
-	{
-		hr = p_unknown->QueryInterface (IID_IEiffelHTMLDocGenerator_, (void **)&p_IEiffelHTMLDocGenerator);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	};
-	
-	hr = p_IEiffelHTMLDocGenerator->add_status_callback(new_callback);
+	hr = p_IEiffelHtmlDocumentationEvents->NotifyPercentageComplete(tmp_ul_percent);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -176,16 +106,16 @@ void ecom_EiffelComCompiler::IEiffelHTMLDocGenerator_impl_proxy::ccom_add_status
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_EiffelComCompiler::IEiffelHTMLDocGenerator_impl_proxy::ccom_remove_status_callback(  /* [in] */ ecom_EiffelComCompiler::IEiffelHTMLDocEvents * old_callback )
+void ecom_EiffelComCompiler::IEiffelHtmlDocumentationEvents_impl_proxy::ccom_output_header(  /* [in] */ EIF_OBJECT bstr_msg )
 
 /*-----------------------------------------------------------
-	Remove a callback interface.
+	Put a header message to the output
 -----------------------------------------------------------*/
 {
 	HRESULT hr;
-	if (p_IEiffelHTMLDocGenerator == NULL)
+	if (p_IEiffelHtmlDocumentationEvents == NULL)
 	{
-		hr = p_unknown->QueryInterface (IID_IEiffelHTMLDocGenerator_, (void **)&p_IEiffelHTMLDocGenerator);
+		hr = p_unknown->QueryInterface (IID_IEiffelHtmlDocumentationEvents_, (void **)&p_IEiffelHtmlDocumentationEvents);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -193,8 +123,10 @@ void ecom_EiffelComCompiler::IEiffelHTMLDocGenerator_impl_proxy::ccom_remove_sta
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
+	BSTR tmp_bstr_msg = 0;
+	tmp_bstr_msg = (BSTR)rt_ec.ccom_ec_bstr (eif_access (bstr_msg));
 	
-	hr = p_IEiffelHTMLDocGenerator->remove_status_callback(old_callback);
+	hr = p_IEiffelHtmlDocumentationEvents->OutputHeader(tmp_bstr_msg);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -202,53 +134,21 @@ void ecom_EiffelComCompiler::IEiffelHTMLDocGenerator_impl_proxy::ccom_remove_sta
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	
-	
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-void ecom_EiffelComCompiler::IEiffelHTMLDocGenerator_impl_proxy::ccom_add_excluded_cluster(  /* [in] */ EIF_OBJECT cluster_full_name )
-
-/*-----------------------------------------------------------
-	Exclude a cluster from being generated.
------------------------------------------------------------*/
-{
-	HRESULT hr;
-	if (p_IEiffelHTMLDocGenerator == NULL)
-	{
-		hr = p_unknown->QueryInterface (IID_IEiffelHTMLDocGenerator_, (void **)&p_IEiffelHTMLDocGenerator);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	};
-	BSTR tmp_cluster_full_name = 0;
-	tmp_cluster_full_name = (BSTR)rt_ec.ccom_ec_bstr (eif_access (cluster_full_name));
-	
-	hr = p_IEiffelHTMLDocGenerator->add_excluded_cluster(tmp_cluster_full_name);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	
-	rt_ce.free_memory_bstr (tmp_cluster_full_name);
+	rt_ce.free_memory_bstr (tmp_bstr_msg);
 
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_EiffelComCompiler::IEiffelHTMLDocGenerator_impl_proxy::ccom_remove_excluded_cluster(  /* [in] */ EIF_OBJECT cluster_full_name )
+void ecom_EiffelComCompiler::IEiffelHtmlDocumentationEvents_impl_proxy::ccom_output_string(  /* [in] */ EIF_OBJECT bstr_msg )
 
 /*-----------------------------------------------------------
-	Include a cluster to be generated.
+	Put a string to the output
 -----------------------------------------------------------*/
 {
 	HRESULT hr;
-	if (p_IEiffelHTMLDocGenerator == NULL)
+	if (p_IEiffelHtmlDocumentationEvents == NULL)
 	{
-		hr = p_unknown->QueryInterface (IID_IEiffelHTMLDocGenerator_, (void **)&p_IEiffelHTMLDocGenerator);
+		hr = p_unknown->QueryInterface (IID_IEiffelHtmlDocumentationEvents_, (void **)&p_IEiffelHtmlDocumentationEvents);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -256,10 +156,10 @@ void ecom_EiffelComCompiler::IEiffelHTMLDocGenerator_impl_proxy::ccom_remove_exc
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
-	BSTR tmp_cluster_full_name = 0;
-	tmp_cluster_full_name = (BSTR)rt_ec.ccom_ec_bstr (eif_access (cluster_full_name));
+	BSTR tmp_bstr_msg = 0;
+	tmp_bstr_msg = (BSTR)rt_ec.ccom_ec_bstr (eif_access (bstr_msg));
 	
-	hr = p_IEiffelHTMLDocGenerator->remove_excluded_cluster(tmp_cluster_full_name);
+	hr = p_IEiffelHtmlDocumentationEvents->OutputString(tmp_bstr_msg);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -267,21 +167,21 @@ void ecom_EiffelComCompiler::IEiffelHTMLDocGenerator_impl_proxy::ccom_remove_exc
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	
-	rt_ce.free_memory_bstr (tmp_cluster_full_name);
+	rt_ce.free_memory_bstr (tmp_bstr_msg);
 
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_EiffelComCompiler::IEiffelHTMLDocGenerator_impl_proxy::ccom_generate(  /* [in] */ EIF_OBJECT path )
+void ecom_EiffelComCompiler::IEiffelHtmlDocumentationEvents_impl_proxy::ccom_output_class_document_message(  /* [in] */ EIF_OBJECT bstr_msg )
 
 /*-----------------------------------------------------------
-	Generate the HTML documents into path.
+	Put a class name to the output
 -----------------------------------------------------------*/
 {
 	HRESULT hr;
-	if (p_IEiffelHTMLDocGenerator == NULL)
+	if (p_IEiffelHtmlDocumentationEvents == NULL)
 	{
-		hr = p_unknown->QueryInterface (IID_IEiffelHTMLDocGenerator_, (void **)&p_IEiffelHTMLDocGenerator);
+		hr = p_unknown->QueryInterface (IID_IEiffelHtmlDocumentationEvents_, (void **)&p_IEiffelHtmlDocumentationEvents);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -289,10 +189,10 @@ void ecom_EiffelComCompiler::IEiffelHTMLDocGenerator_impl_proxy::ccom_generate( 
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
-	BSTR tmp_path = 0;
-	tmp_path = (BSTR)rt_ec.ccom_ec_bstr (eif_access (path));
+	BSTR tmp_bstr_msg = 0;
+	tmp_bstr_msg = (BSTR)rt_ec.ccom_ec_bstr (eif_access (bstr_msg));
 	
-	hr = p_IEiffelHTMLDocGenerator->generate(tmp_path);
+	hr = p_IEiffelHtmlDocumentationEvents->OutputClassDocumentMessage(tmp_bstr_msg);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -300,12 +200,46 @@ void ecom_EiffelComCompiler::IEiffelHTMLDocGenerator_impl_proxy::ccom_generate( 
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	
-	rt_ce.free_memory_bstr (tmp_path);
+	rt_ce.free_memory_bstr (tmp_bstr_msg);
 
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_POINTER ecom_EiffelComCompiler::IEiffelHTMLDocGenerator_impl_proxy::ccom_item()
+void ecom_EiffelComCompiler::IEiffelHtmlDocumentationEvents_impl_proxy::ccom_should_continue(  /* [in, out] */ EIF_OBJECT pvb_continue )
+
+/*-----------------------------------------------------------
+	Should compilation continue.
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_IEiffelHtmlDocumentationEvents == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_IEiffelHtmlDocumentationEvents_, (void **)&p_IEiffelHtmlDocumentationEvents);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	VARIANT_BOOL * tmp_pvb_continue = 0;
+	tmp_pvb_continue = (VARIANT_BOOL *)rt_ec.ccom_ec_pointed_boolean (eif_access (pvb_continue), NULL);
+	
+	hr = p_IEiffelHtmlDocumentationEvents->ShouldContinue(tmp_pvb_continue);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	rt_ce.ccom_ce_pointed_boolean ((VARIANT_BOOL *)tmp_pvb_continue, pvb_continue);
+	
+	grt_ce_ISE.ccom_free_memory_pointed_236 (tmp_pvb_continue);
+
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+EIF_POINTER ecom_EiffelComCompiler::IEiffelHtmlDocumentationEvents_impl_proxy::ccom_item()
 
 /*-----------------------------------------------------------
 	IUnknown interface

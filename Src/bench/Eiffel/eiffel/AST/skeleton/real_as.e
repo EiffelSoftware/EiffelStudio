@@ -44,7 +44,7 @@ feature -- Type check and byte code
 	value_i: REAL_VALUE_I is
 			-- Interface value
 		do
-			create Result.make (value.to_double)
+			create Result.make_double (value.to_double)
 		end
 
 	type_check is

@@ -19,7 +19,7 @@ feature {NONE}
 			source.set_action ("!Shift<Btn3Down>", namer_command, Current)
 			source.set_action ("!Ctrl<Btn3Down>", create_editor_command, Current)
 			source.set_action ("!Shift<Btn1Down>", show_command, Current);
-			source.set_action ("!Shift<Btn1Up>", show_command, Void);
+			source.set_action ("<Btn1Up>", show_command, Void);
 		end;
 
 	show_command: SHOW is

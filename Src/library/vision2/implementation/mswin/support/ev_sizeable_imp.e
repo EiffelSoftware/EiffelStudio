@@ -310,7 +310,7 @@ feature -- Basic operation
 							parent_imp.notify_change (Nc_minheight)
 						end
 					else
-						move_and_resize (x, y, value, height.max (value), True)
+						move_and_resize (x, y, width, height.max (value), True)
 					end
 				end
 			end
@@ -503,6 +503,9 @@ end -- EV_SIZEABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.19  2000/03/06 21:19:48  brendel
+--| Fixed bug in internal_set_minimum_width.
+--|
 --| Revision 1.18  2000/02/19 05:45:00  oconnor
 --| released
 --|

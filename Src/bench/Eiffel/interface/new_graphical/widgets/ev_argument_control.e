@@ -230,13 +230,13 @@ feature {NONE} -- Storage
             opt: OPTION_SD
             wd, argument_text, sel_arg: STRING
      	do
-         	if root_ast = Void then
-            	root_ast := retrieve_ace
-            elseif a_root_ast /= Void then
-            	root_ast := a_root_ast
-           	end
+            root_ast := retrieve_ace
 
             defaults := root_ast.defaults
+            if defaults = void then
+				create defaults.make (10)
+				root_ast.set_defaults (defaults)
+			end
             
             from
             	defaults.start
@@ -510,7 +510,6 @@ feature -- Status Setting
 				if l_controls_list.item (l_counter) /= Current then
 					l_control ?= l_controls_list.item (l_counter)
 					l_control.update
---					l_control.synch_check_box (argument_check.is_selected)
 				end
 				l_counter := l_counter + 1
 			end

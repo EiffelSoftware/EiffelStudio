@@ -33,5 +33,10 @@ feature
 			-- To be redefined
 		do
 		end;
+
+	reset_data is
+		do
+			data := Void
+		end;
 	
 end

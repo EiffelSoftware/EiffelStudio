@@ -39,8 +39,7 @@ feature -- Initialization
 				if validator.is_valid then
 					create elements.make
 					create types.make
-					initialize
-					Shared_document_manager.set_schema (Current)				
+					initialize			
 				end			
 			end
 		ensure
@@ -66,6 +65,8 @@ feature -- Initialization
 			elem: XML_XML_SCHEMA_ELEMENT
 			doc_elem: DOCUMENT_SCHEMA_ELEMENT
 		do
+			create doc_elem
+			doc_elem.parent_type_names.wipe_out
 			from
             	cnt := 0
             until

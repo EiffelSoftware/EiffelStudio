@@ -191,7 +191,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Vision2 events
 
-	on_selection_change (a_node: EV_TREE_NODE) is
+	on_selection_change is
 			-- The selection in the tree has changed
 		do
 			if favorites_tree.selected_item /= Void then

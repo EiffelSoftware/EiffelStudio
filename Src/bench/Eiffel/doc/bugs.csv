@@ -36,6 +36,7 @@ Editor,,,,,,,,,,
 ,2,3,"When pasting a text that is larger than the current text, the end of the text is not displayed",,Xavier,,,,EDT0005,11/21/2001
 ,4,2,Problem in pick-and-drop when pushing mouse buttons in a given order,,Julian,,,,EDT0006,11/27/2001
 ,1,4,Pressing Ctrl+Space when no completion is available makes the redo command button sensitivity toggle,,Xavier,,,,EDT0007,11/29/2001
+,2,4,Pressing Page up/Page down while the cursor is not visible scrolls from the cursor instead of from what is visible,,Julian,,,,EDT0008,11/29/2001
 
 
 

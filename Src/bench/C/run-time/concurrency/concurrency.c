@@ -384,7 +384,7 @@ char *end_of_file;
 			line_idx = 0;
 			len = strlen(cur_line);
 		
-			tmp_r = (REMOTE_SERVER *)malloc(sizeof(REMOTE_SERVER));
+			tmp_r = (REMOTE_SERVER *)eiffel_malloc(sizeof(REMOTE_SERVER));
 			valid_memory(tmp_r);
 /*
 			tmp_r->name[0] = '\0';
@@ -464,11 +464,11 @@ char *end_of_file;
 		
 	/* Now, we begin to read information from Configure File */
 	if (fd < 0) {
-		_concur_host_groups = _concur_end_of_host_groups = (RESOURCE_LEVEL *)malloc(sizeof(RESOURCE_LEVEL));
+		_concur_host_groups = _concur_end_of_host_groups = (RESOURCE_LEVEL *)eiffel_malloc(sizeof(RESOURCE_LEVEL));
 		valid_memory(_concur_host_groups);
 		strcpy(_concur_host_groups->name, "Current");
 		_concur_host_groups->next = (RESOURCE_LEVEL *)NULL;
-		_concur_host_groups->host_list = _concur_host_groups->end_of_host_list = (RESOURCE *)malloc(sizeof(RESOURCE)); 
+		_concur_host_groups->host_list = _concur_host_groups->end_of_host_list = (RESOURCE *)eiffel_malloc(sizeof(RESOURCE)); 
 		valid_memory(_concur_host_groups->host_list);
 		_concur_host_groups->host_list->next = (RESOURCE *)NULL;
 		strcpy(_concur_host_groups->host_list->host, _concur_hostname);
@@ -499,7 +499,7 @@ char *end_of_file;
 			break;
 		}
 
-		tmp_grp = (RESOURCE_LEVEL *)malloc(sizeof(RESOURCE_LEVEL));
+		tmp_grp = (RESOURCE_LEVEL *)eiffel_malloc(sizeof(RESOURCE_LEVEL));
 		valid_memory(tmp_grp);
 		tmp_grp->next = NULL;
 		tmp_grp->host_list = tmp_grp->end_of_host_list = (RESOURCE *)NULL;
@@ -556,7 +556,7 @@ char *end_of_file;
 				break;
 			}
 
-			tmp_host = (RESOURCE *)malloc(sizeof(RESOURCE));
+			tmp_host = (RESOURCE *)eiffel_malloc(sizeof(RESOURCE));
 			valid_memory(tmp_host);
 
 			tmp_host->host[0] = '\0';
@@ -777,17 +777,17 @@ RESOURCE_LEVEL *tmp_g, *tmp_g1;
 	for(tmp_r=_concur_rem_sers; tmp_r; ) {
 		tmp_r1 = tmp_r;	
 		tmp_r = tmp_r->next;
-		free(tmp_r1);
+		eiffel_free(tmp_r1);
 	}
 	for(tmp_g=_concur_host_groups; tmp_g; ) {
 		for(tmp_h=tmp_g->host_list; tmp_h; ) {
 			tmp_h1 = tmp_h;	
 			tmp_h = tmp_h->next;
-			free(tmp_h1);
+			eiffel_free(tmp_h1);
 		}
 		tmp_g1 = tmp_g;
 		tmp_g = tmp_g->next;
-		free(tmp_g1);
+		eiffel_free(tmp_g1);
 	}
 	_concur_rem_sers = (REMOTE_SERVER *)NULL;
 	_concur_host_groups = _concur_end_of_host_groups = (RESOURCE_LEVEL *)NULL;
@@ -804,7 +804,7 @@ void add_group(char *gname) {
 	for(tmp_g=_concur_host_groups; tmp_g && strcmp(tmp_g->name, gname); tmp_g=tmp_g->next);
 	if (tmp_g)
 		return;
-	tmp_g=(RESOURCE_LEVEL *)malloc(sizeof(RESOURCE_LEVEL));
+	tmp_g=(RESOURCE_LEVEL *)eiffel_malloc(sizeof(RESOURCE_LEVEL));
 	valid_memory(tmp_g);
 	strcpy(tmp_g->name, gname);
 	tmp_g->next = (RESOURCE_LEVEL *)NULL;
@@ -834,7 +834,7 @@ void add_host (char *gname, char *hname, EIF_INTEGER cap, char *dir, char *exe) 
 	for(tmp_h=tmp_g->host_list; tmp_h &&  memcmp(tmp_h->host, hname, strlen(hname)); tmp_h=tmp_h->next);
 	if (tmp_h)
 		return;
-	tmp_h=(RESOURCE *)malloc(sizeof(RESOURCE));
+	tmp_h=(RESOURCE *)eiffel_malloc(sizeof(RESOURCE));
 	valid_memory(tmp_h);
 	strcpy(tmp_h->host, hname);
 	strcpy(tmp_h->directory, dir);

@@ -182,7 +182,7 @@ rt_public char *striparr(EIF_CONTEXT register char *curr, register int dtype, re
 				new_obj = b_clone(o_ref);
 				break;
 			default:
-				panic(MTC "unknown attribute type");
+				eiffel_panic(MTC "unknown attribute type");
 				/* NOTREACHED */
 			}
 	/* It might seem heavy to add the offset each time instead

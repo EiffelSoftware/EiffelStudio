@@ -475,7 +475,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 								last->it_ref = eif_access(rvar);
 								break;
 						default:
-								panic(MTC "invalid result type");
+								eiffel_panic(MTC "invalid result type");
 					}
 				}
 
@@ -514,7 +514,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 								rvar = henter((char *) 0);
 								break;
 					default:        
-								panic(MTC "invalid result type");
+								eiffel_panic(MTC "invalid result type");
 					}
 				}
 				else
@@ -604,7 +604,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 			break;
 
 		default:
-			panic(MTC botched);
+			eiffel_panic(MTC botched);
 		}
 
 		rescue = (char *) 0;		/* No rescue */
@@ -698,7 +698,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 		case INTERP_INVA:
 			break;
 		default:
-			panic(MTC botched);
+			eiffel_panic(MTC botched);
 		}
 /* end:*/ /* %%ss removed */
 		break;
@@ -800,7 +800,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 			case (SK_INT):
 				break;
 			default:
-				panic (MTC "Illegal cast operation");
+				eiffel_panic (MTC "Illegal cast operation");
 			}
 		last->type = SK_INT;
 		break;
@@ -828,7 +828,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 			case (SK_FLOAT):
 				break;
 			default:
-				panic (MTC "Illegal cast operation");
+				eiffel_panic (MTC "Illegal cast operation");
 			}
 		last->type = SK_FLOAT;
 		break;
@@ -856,7 +856,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 			case (SK_DOUBLE):
 				break;
 			default:
-				panic (MTC "Illegal cast operation");
+				eiffel_panic (MTC "Illegal cast operation");
 			}
 		last->type = SK_DOUBLE;
 		break;
@@ -1238,7 +1238,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 		case BC_LVAR:	assert_type = EX_VAR; break;
 		case BC_INV:	assert_type = (where ? EX_CINV : EX_INVC); break;
 		default:
-			panic(MTC "invalid assertion code");
+			eiffel_panic(MTC "invalid assertion code");
 			/* NOTREADCHED */
 		}
 		switch (*IC++) {				
@@ -1258,7 +1258,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 			break;
 		case BC_NOT_REC: break;		/* Do not record assertion */
 		default:
-			panic(MTC "invalid tag opcode");
+			eiffel_panic(MTC "invalid tag opcode");
 			/* NOTREADCHED */
 		}
 		break;
@@ -1456,7 +1456,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 			type = icur_dtype;
 			break;
 		default:
-			panic(MTC "creation type lost");
+			eiffel_panic(MTC "creation type lost");
 			/* NOTREACHED */
 		}	
 		/* Creation of a new object. We know there will be no call to a
@@ -1511,7 +1511,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 					IC += offset;
 				break;
 			default:
-				panic(MTC "invalid inspect type");
+				eiffel_panic(MTC "invalid inspect type");
 				/* NOTREACHED */
 			}
 		}
@@ -1581,7 +1581,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 					new_obj = last->it_ref;
 					break;
 				default: 
-					panic(MTC "illegal metamorphose type");
+					eiffel_panic(MTC "illegal metamorphose type");
 				}
 				last = iget();
 				last->type = SK_REF;
@@ -2153,7 +2153,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 					break;
 					}
 				default:
-					panic(MTC "illegal access to Current");
+					eiffel_panic(MTC "illegal access to Current");
 				}
 
 				last = oitem(value_offset);
@@ -2161,7 +2161,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 				last->it_ref = (char *) (icurrent->it_ref+offset);
 				break;
 			default:
-				panic(MTC "illegal address access");
+				eiffel_panic(MTC "illegal address access");
 			}
 			if (is_attribute == EIF_FALSE){
 				last = oitem(value_offset);
@@ -2176,7 +2176,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 					case SK_BIT: last->it_ref = (char *) (&(pointed_object->it_bit)); break;
 					case SK_POINTER: last->it_ref = (char *) (&(pointed_object->it_ptr)); break;
 					default:
-						panic(MTC "illegal type for address access");
+						eiffel_panic(MTC "illegal type for address access");
 				}
 			}
 		break;
@@ -2209,7 +2209,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 			case SK_BIT: last->it_ref = (char *) (&(pointed_object->it_bit)); break;
 			case SK_POINTER: last->it_ref = (char *) (&(pointed_object->it_ptr)); break;
 			default:
-				panic(MTC "illegal type for address access");
+				eiffel_panic(MTC "illegal type for address access");
 			}
 		}
 		break;
@@ -2305,7 +2305,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 						sp_area += sizeof(fnptr);
 						break;
 					default:
-						panic(MTC botched);
+						eiffel_panic(MTC botched);
 				}
 			}
 			epop (&loc_stack, 1);			/* Release protection of `new_obj' */
@@ -2393,7 +2393,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 						sp_area += sizeof(fnptr);
 						break;
 					default:
-						panic(MTC botched);
+						eiffel_panic(MTC botched);
 				}
 			}
 			epop (&loc_stack, 1);			/* Release protection of `new_obj' */
@@ -3313,7 +3313,7 @@ null:
 		return;
 
 	default:
-		panic(MTC "illegal opcode");
+		eiffel_panic(MTC "illegal opcode");
 		/* NOTREACHED */
 	}
 	}							/* Remember: indentation was wrong--RAM */
@@ -3496,7 +3496,7 @@ rt_private void monadic_op(int code)
 		case SK_FLOAT:	first->it_float = -first->it_float; break;
 		case SK_DOUBLE:	first->it_double = -first->it_double; break;
 		default:
-			panic(MTC botched);
+			eiffel_panic(MTC botched);
 		}
 		break;
 
@@ -3510,12 +3510,12 @@ rt_private void monadic_op(int code)
 		switch(first->type & SK_HEAD) {
 		case SK_BOOL: first->it_char = !first->it_char; break;
 		default:
-			panic(MTC botched);
+			eiffel_panic(MTC botched);
 		}
 		break;
 
 	default:
-		panic(MTC "invalid monadic opcode");
+		eiffel_panic(MTC "invalid monadic opcode");
 		/* NOTREACHED */
 	}
 }
@@ -3586,7 +3586,7 @@ rt_private void diadic_op(int code)
 			case SK_INT: f->it_char = f->it_long <= s->it_long; b;
 			case SK_FLOAT: f->it_char = (float) f->it_long <= s->it_float; b;
 			case SK_DOUBLE: f->it_char = (double) f->it_long <= s->it_double; b;
-			default: panic(botched);
+			default: eiffel_panic(botched);
 			}
 			break;
 		case SK_FLOAT:
@@ -3594,7 +3594,7 @@ rt_private void diadic_op(int code)
 			case SK_INT: f->it_char = f->it_float <= (float) s->it_long; b;
 			case SK_FLOAT: f->it_char = f->it_float <= s->it_float; b;
 			case SK_DOUBLE: f->it_char = (double) f->it_float <= s->it_double; b;
-			default: panic(botched);
+			default: eiffel_panic(botched);
 			}
 			break;
 		case SK_DOUBLE:
@@ -3602,10 +3602,10 @@ rt_private void diadic_op(int code)
 			case SK_INT: f->it_char = f->it_double <= (double) s->it_long; b;
 			case SK_FLOAT: f->it_char = f->it_double <= (double) s->it_float; b;
 			case SK_DOUBLE: f->it_char = f->it_double <= s->it_double; b;
-			default: panic(botched);
+			default: eiffel_panic(botched);
 			}
 			break;
-		default: panic(MTC botched);
+		default: eiffel_panic(MTC botched);
 		}
 		first->type = SK_BOOL;		/* Result is a boolean */
 		break;
@@ -3624,7 +3624,7 @@ rt_private void diadic_op(int code)
 			case SK_INT: f->it_char = f->it_long < s->it_long; b;
 			case SK_FLOAT: f->it_char = (float) f->it_long < s->it_float; b;
 			case SK_DOUBLE: f->it_char = (double) f->it_long < s->it_double; b;
-			default: panic(MTC botched);
+			default: eiffel_panic(MTC botched);
 			}
 			break;
 		case SK_FLOAT:
@@ -3632,7 +3632,7 @@ rt_private void diadic_op(int code)
 			case SK_INT: f->it_char = f->it_float < (float) s->it_long; b;
 			case SK_FLOAT: f->it_char = f->it_float < s->it_float; b;
 			case SK_DOUBLE: f->it_char = (double) f->it_float < s->it_double; b;
-			default: panic(MTC botched);
+			default: eiffel_panic(MTC botched);
 			}
 			break;
 		case SK_DOUBLE:
@@ -3640,10 +3640,10 @@ rt_private void diadic_op(int code)
 			case SK_INT: f->it_char = f->it_double < (double) s->it_long; b;
 			case SK_FLOAT: f->it_char = f->it_double < (double) s->it_float; b;
 			case SK_DOUBLE: f->it_char = f->it_double < s->it_double; b;
-			default: panic(MTC botched);
+			default: eiffel_panic(MTC botched);
 			}
 			break;
-		default: panic(MTC botched);
+		default: eiffel_panic(MTC botched);
 		}
 		first->type = SK_BOOL;		/* Result is a boolean */
 		break;
@@ -3663,7 +3663,7 @@ rt_private void diadic_op(int code)
 			case SK_INT: f->it_char = f->it_long == s->it_long; b;
 			case SK_FLOAT: f->it_char = (float) f->it_long == s->it_float; b;
 			case SK_DOUBLE: f->it_char = (double) f->it_long == s->it_double; b;
-			default: panic(MTC botched);
+			default: eiffel_panic(MTC botched);
 			}
 			break;
 		case SK_FLOAT:
@@ -3671,7 +3671,7 @@ rt_private void diadic_op(int code)
 			case SK_INT: f->it_char = f->it_float == (float) s->it_long; b;
 			case SK_FLOAT: f->it_char = f->it_float == s->it_float; b;
 			case SK_DOUBLE: f->it_char = (double) f->it_float == s->it_double; b;
-			default: panic(MTC botched);
+			default: eiffel_panic(MTC botched);
 			}
 			break;
 		case SK_DOUBLE:
@@ -3679,7 +3679,7 @@ rt_private void diadic_op(int code)
 			case SK_INT: f->it_char = f->it_double == (double) s->it_long; b;
 			case SK_FLOAT: f->it_char = f->it_double == (double) s->it_float; b;
 			case SK_DOUBLE: f->it_char = f->it_double == s->it_double; b;
-			default: panic(MTC botched);
+			default: eiffel_panic(MTC botched);
 			}
 			break;
 		case SK_REF:
@@ -3688,7 +3688,7 @@ rt_private void diadic_op(int code)
 		case SK_POINTER:
 			first->it_char = first->it_ptr == second->it_ptr;
 			break;
-		default: panic(MTC botched);
+		default: eiffel_panic(MTC botched);
 		}
 		first->type = SK_BOOL;		/* Result is a boolean */
 		break;
@@ -3707,7 +3707,7 @@ rt_private void diadic_op(int code)
 			case SK_INT: f->it_char = f->it_long >= s->it_long; b;
 			case SK_FLOAT: f->it_char = (float) f->it_long >= s->it_float; b;
 			case SK_DOUBLE: f->it_char = (double) f->it_long >= s->it_double; b;
-			default: panic(MTC botched);
+			default: eiffel_panic(MTC botched);
 			}
 			break;
 		case SK_FLOAT:
@@ -3715,7 +3715,7 @@ rt_private void diadic_op(int code)
 			case SK_INT: f->it_char = f->it_float >= (float) s->it_long; b;
 			case SK_FLOAT: f->it_char = f->it_float >= s->it_float; b;
 			case SK_DOUBLE: f->it_char = (double) f->it_float >= s->it_double; b;
-			default: panic(MTC botched);
+			default: eiffel_panic(MTC botched);
 			}
 			break;
 		case SK_DOUBLE:
@@ -3723,11 +3723,11 @@ rt_private void diadic_op(int code)
 			case SK_INT: f->it_char = f->it_double >= (double) s->it_long; b;
 			case SK_FLOAT: f->it_char = f->it_double >= (double) s->it_float; b;
 			case SK_DOUBLE: f->it_char = f->it_double >= s->it_double; b;
-			default: panic(MTC botched);
+			default: eiffel_panic(MTC botched);
 			}
 			break;
 		default:
-			panic(MTC botched);
+			eiffel_panic(MTC botched);
 		}
 		first->type = SK_BOOL;		/* Result is a boolean */
 		break;
@@ -3746,7 +3746,7 @@ rt_private void diadic_op(int code)
 			case SK_INT: f->it_char = f->it_long > s->it_long; b;
 			case SK_FLOAT: f->it_char = (float) f->it_long > s->it_float; b;
 			case SK_DOUBLE: f->it_char = (double) f->it_long > s->it_double; b;
-			default: panic(MTC botched);
+			default: eiffel_panic(MTC botched);
 			}
 			break;
 		case SK_FLOAT:
@@ -3754,7 +3754,7 @@ rt_private void diadic_op(int code)
 			case SK_INT: f->it_char = f->it_float > (float) s->it_long; b;
 			case SK_FLOAT: f->it_char = f->it_float > s->it_float; b;
 			case SK_DOUBLE: f->it_char = (double) f->it_float > s->it_double; b;
-			default: panic(MTC botched);
+			default: eiffel_panic(MTC botched);
 			}
 			break;
 		case SK_DOUBLE:
@@ -3762,10 +3762,10 @@ rt_private void diadic_op(int code)
 			case SK_INT: f->it_char = f->it_double > (double) s->it_long; b;
 			case SK_FLOAT: f->it_char = f->it_double > (double) s->it_float; b;
 			case SK_DOUBLE: f->it_char = f->it_double > s->it_double; b;
-			default: panic(MTC botched);
+			default: eiffel_panic(MTC botched);
 			}
 			break;
-		default: panic(MTC botched);
+		default: eiffel_panic(MTC botched);
 		}
 		first->type = SK_BOOL;		/* Result is a boolean */
 		break;
@@ -3786,7 +3786,7 @@ rt_private void diadic_op(int code)
 			case SK_INT: f->it_char = f->it_long != s->it_long; b;
 			case SK_FLOAT: f->it_char = (float) f->it_long != s->it_float; b;
 			case SK_DOUBLE: f->it_char = (double) f->it_long != s->it_double; b;
-			default: panic(MTC botched);
+			default: eiffel_panic(MTC botched);
 			}
 			break;
 		case SK_FLOAT:
@@ -3794,7 +3794,7 @@ rt_private void diadic_op(int code)
 			case SK_INT: f->it_char = f->it_float != (float) s->it_long; b;
 			case SK_FLOAT: f->it_char = f->it_float != s->it_float; b;
 			case SK_DOUBLE: f->it_char = (double) f->it_float != s->it_double; b;
-			default: panic(MTC botched);
+			default: eiffel_panic(MTC botched);
 			}
 			break;
 		case SK_DOUBLE:
@@ -3802,7 +3802,7 @@ rt_private void diadic_op(int code)
 			case SK_INT: f->it_char = f->it_double != (double) s->it_long; b;
 			case SK_FLOAT: f->it_char = f->it_double != (double) s->it_float; b;
 			case SK_DOUBLE: f->it_char = f->it_double != s->it_double; b;
-			default: panic(MTC botched);
+			default: eiffel_panic(MTC botched);
 			}
 			break;
 		case SK_REF:
@@ -3811,7 +3811,7 @@ rt_private void diadic_op(int code)
 		case SK_POINTER:
 			first->it_char = first->it_ptr != second->it_ptr;
 			break;
-		default: panic(MTC botched);
+		default: eiffel_panic(MTC botched);
 		}
 		first->type = SK_BOOL;		/* Result is a boolean */
 		break;
@@ -3830,7 +3830,7 @@ rt_private void diadic_op(int code)
 			case SK_INT: f->it_long = f->it_long - s->it_long; b;
 			case SK_FLOAT: f->it_float = (float) f->it_long - s->it_float; b;
 			case SK_DOUBLE: f->it_double = (double) f->it_long - s->it_double; b;
-			default: panic(MTC botched);
+			default: eiffel_panic(MTC botched);
 			}
 			break;
 		case SK_FLOAT:
@@ -3839,7 +3839,7 @@ rt_private void diadic_op(int code)
 			case SK_INT: f->it_float = f->it_float - (float) s->it_long; b;
 			case SK_FLOAT: f->it_float = f->it_float - s->it_float; b;
 			case SK_DOUBLE: f->it_double = (double) f->it_float - s->it_double;b;
-			default: panic(MTC botched);
+			default: eiffel_panic(MTC botched);
 			}
 			break;
 		case SK_DOUBLE:
@@ -3848,10 +3848,10 @@ rt_private void diadic_op(int code)
 			case SK_INT: f->it_double = f->it_double - (double) s->it_long; b;
 			case SK_FLOAT: f->it_double = f->it_double - (double) s->it_float; b;
 			case SK_DOUBLE: f->it_double = f->it_double - s->it_double; b;
-			default: panic(MTC botched);
+			default: eiffel_panic(MTC botched);
 			}
 			break;
-		default: panic(MTC botched);
+		default: eiffel_panic(MTC botched);
 		}
 		break;
 
@@ -3864,7 +3864,7 @@ rt_private void diadic_op(int code)
 #endif
 		switch(first->type & SK_HEAD) {
 		case SK_INT: first->it_long = first->it_long % second->it_long; break;
-		default: panic(MTC botched);
+		default: eiffel_panic(MTC botched);
 		}
 		break;
 
@@ -3883,7 +3883,7 @@ rt_private void diadic_op(int code)
 			case SK_INT: f->it_long = f->it_long + s->it_long; b;
 			case SK_FLOAT: f->it_float = (float) f->it_long + s->it_float; b;
 			case SK_DOUBLE: f->it_double = (double) f->it_long + s->it_double; b;
-			default: panic(MTC botched);
+			default: eiffel_panic(MTC botched);
 			}
 			break;
 		case SK_FLOAT:
@@ -3892,7 +3892,7 @@ rt_private void diadic_op(int code)
 			case SK_INT: f->it_float = f->it_float + (float) s->it_long; b;
 			case SK_FLOAT: f->it_float = f->it_float + s->it_float; b;
 			case SK_DOUBLE: f->it_double = (double) f->it_float + s->it_double;b;
-			default: panic(MTC botched);
+			default: eiffel_panic(MTC botched);
 			}
 			break;
 		case SK_DOUBLE:
@@ -3901,11 +3901,11 @@ rt_private void diadic_op(int code)
 			case SK_INT: f->it_double = f->it_double + (double) s->it_long; b;
 			case SK_FLOAT: f->it_double = f->it_double + (double) s->it_float; b;
 			case SK_DOUBLE: f->it_double = f->it_double + s->it_double; b;
-			default: panic(MTC botched);
+			default: eiffel_panic(MTC botched);
 			}
 			break;
 		default:
-			panic(MTC botched);
+			eiffel_panic(MTC botched);
 		}
 		break;
 
@@ -3922,7 +3922,7 @@ rt_private void diadic_op(int code)
 				case SK_INT: f->it_double = (double) pow ((double)f->it_long, (double)s->it_long); b;
 				case SK_FLOAT: f->it_double = (double) pow ((double)f->it_long, (double)s->it_float); b;
 				case SK_DOUBLE: f->it_double = (double) pow ((double)f->it_long, (double)s->it_double); b;
-				default: panic(MTC botched);
+				default: eiffel_panic(MTC botched);
 				}
 				first->type = SK_DOUBLE;
 				break;
@@ -3931,7 +3931,7 @@ rt_private void diadic_op(int code)
 				case SK_INT: f->it_double = (double) pow ((double)f->it_float, (double)s->it_long); b;
 				case SK_FLOAT: f->it_double = (double) pow ((double)f->it_float, (double)s->it_float); b;
 				case SK_DOUBLE: f->it_double = (double) pow ((double)f->it_float, (double)s->it_double); b;
-				default: panic(MTC botched);
+				default: eiffel_panic(MTC botched);
 				}
 				first->type = SK_DOUBLE;
 				break;
@@ -3940,12 +3940,12 @@ rt_private void diadic_op(int code)
 				case SK_INT: f->it_double = (double) pow ((double)f->it_double, (double)s->it_long); b;
 				case SK_FLOAT: f->it_double = (double) pow ((double)f->it_double, (double)s->it_float); b;
 				case SK_DOUBLE: f->it_double = (double) pow ((double)f->it_double, (double)s->it_double); b;
-				default: panic(MTC botched);
+				default: eiffel_panic(MTC botched);
 				}
 				first->type = SK_DOUBLE;
 				break;
 		default:
-			panic(MTC botched);
+			eiffel_panic(MTC botched);
 		}
 		break;
 
@@ -3960,7 +3960,7 @@ rt_private void diadic_op(int code)
 			case SK_INT: f->it_long = f->it_long * s->it_long; b;
 			case SK_FLOAT: f->it_float = (float) f->it_long * s->it_float; b;
 			case SK_DOUBLE: f->it_double = (double) f->it_long * s->it_double; b;
-			default: panic(MTC botched);
+			default: eiffel_panic(MTC botched);
 			}
 			break;
 		case SK_FLOAT:
@@ -3969,7 +3969,7 @@ rt_private void diadic_op(int code)
 			case SK_INT: f->it_float = f->it_float * (float) s->it_long; b;
 			case SK_FLOAT: f->it_float = f->it_float * s->it_float; b;
 			case SK_DOUBLE: f->it_double = (double) f->it_float * s->it_double;b;
-			default: panic(MTC botched);
+			default: eiffel_panic(MTC botched);
 			}
 			break;
 		case SK_DOUBLE:
@@ -3978,11 +3978,11 @@ rt_private void diadic_op(int code)
 			case SK_INT: f->it_double = f->it_double * (double) s->it_long; b;
 			case SK_FLOAT: f->it_double = f->it_double * (double) s->it_float; b;
 			case SK_DOUBLE: f->it_double = f->it_double * s->it_double; b;
-			default: panic(MTC botched);
+			default: eiffel_panic(MTC botched);
 			}
 			break;
 		default:
-			panic(MTC botched);
+			eiffel_panic(MTC botched);
 		}
 		break;
 
@@ -4002,7 +4002,7 @@ rt_private void diadic_op(int code)
 						f->type = SK_DOUBLE; b;
 			case SK_FLOAT: f->it_float = (float) f->it_long / s->it_float; b;
 			case SK_DOUBLE: f->it_double = (double) f->it_long / s->it_double; b;
-			default: panic(MTC botched);
+			default: eiffel_panic(MTC botched);
 			}
 			break;
 		case SK_FLOAT:
@@ -4011,7 +4011,7 @@ rt_private void diadic_op(int code)
 			case SK_FLOAT: f->it_float = f->it_float / s->it_float; b;
 			case SK_DOUBLE: f->it_double = (double) f->it_float / s->it_double;
 							f->type = SK_DOUBLE; b;
-			default: panic(MTC botched);
+			default: eiffel_panic(MTC botched);
 			}
 			break;
 		case SK_DOUBLE:
@@ -4019,11 +4019,11 @@ rt_private void diadic_op(int code)
 			case SK_INT: f->it_double = f->it_double / (double) s->it_long; b;
 			case SK_FLOAT: f->it_double = f->it_double / (double) s->it_float; b;
 			case SK_DOUBLE: f->it_double = f->it_double / s->it_double; b;
-			default: panic(MTC botched);
+			default: eiffel_panic(MTC botched);
 			}
 			break;
 		default:
-			panic(MTC botched);
+			eiffel_panic(MTC botched);
 		}
 		break;
 
@@ -4036,11 +4036,11 @@ rt_private void diadic_op(int code)
 #endif
 		switch(first->type & SK_HEAD) {
 		case SK_INT: first->it_long = first->it_long / second->it_long; break;
-		default: panic(MTC botched);
+		default: eiffel_panic(MTC botched);
 		}
 		break;
 	default:
-		panic(MTC "invalid diadic opcode");
+		eiffel_panic(MTC "invalid diadic opcode");
 		/* NOTREACHED */
 	}
 
@@ -4244,7 +4244,7 @@ rt_private void interp_access(int fid, int stype, uint32 type)
 	case SK_REF: last->it_ref = *(char **) (current + offset); break;
 	case SK_EXP: last->it_ref = (current + offset); break;
 	default:
-		panic(MTC "unknown attribute type");
+		eiffel_panic(MTC "unknown attribute type");
 		/* NOTREACHED */
 	}
 }
@@ -4280,7 +4280,7 @@ rt_private void interp_paccess(int32 origin, int32 f_offset, uint32 type)
 	case SK_REF: last->it_ref = *(char **) (current + offset); break;
 	case SK_EXP: last->it_ref = (current + offset); break;
 	default:
-		panic(MTC "unknown attribute type");
+		eiffel_panic(MTC "unknown attribute type");
 		/* NOTREACHED */
 	}
 }
@@ -4318,14 +4318,14 @@ rt_private void assign(EIF_CONTEXT long int fid, int stype, uint32 type)
 		case SK_INT: *(long *)(i->it_ref + offset) = l->it_long; b;
 		case SK_FLOAT: *(long *) (i->it_ref + offset) = (long) l->it_float; b;
 		case SK_DOUBLE: *(long *) (i->it_ref + offset) = (long) l->it_double; b;
-		default: panic(MTC unknown_type);
+		default: eiffel_panic(MTC unknown_type);
 		}
 		break;
 	case SK_FLOAT:
 		switch (last->type) {
 		case SK_FLOAT: *(float *) (i->it_ref + offset) = l->it_float; b;
 		case SK_DOUBLE: *(float *) (i->it_ref + offset) = (float) l->it_double;b;
-		default: panic(MTC unknown_type);
+		default: eiffel_panic(MTC unknown_type);
 		}
 		break;
 	case SK_DOUBLE: *(double *) (i->it_ref + offset) = l->it_double; b;
@@ -4341,7 +4341,7 @@ rt_private void assign(EIF_CONTEXT long int fid, int stype, uint32 type)
 		RTAR(last->it_ref, ref);
 		*(char **) (ref + offset) = last->it_ref;
 		break;
-	default: panic(MTC unknown_type);
+	default: eiffel_panic(MTC unknown_type);
 	}
 
 
@@ -4385,14 +4385,14 @@ rt_private void passign(EIF_CONTEXT int32 origin, int32 f_offset, uint32 type)
 		case SK_INT: *(long *)(i->it_ref + offset) = l->it_long; b;
 		case SK_FLOAT: *(long *) (i->it_ref + offset) = (long) l->it_float; b;
 		case SK_DOUBLE: *(long *) (i->it_ref + offset) = (long) l->it_double; b;
-		default: panic(MTC unknown_type);
+		default: eiffel_panic(MTC unknown_type);
 		}
 		break;
 	case SK_FLOAT:
 		switch (last->type) {
 		case SK_FLOAT: *(float *) (i->it_ref + offset) = l->it_float; b;
 		case SK_DOUBLE: *(float *) (i->it_ref + offset) = (float) l->it_double;b;
-		default: panic(MTC unknown_type);
+		default: eiffel_panic(MTC unknown_type);
 		}
 		break;
 	case SK_DOUBLE: *(double *) (i->it_ref + offset) = l->it_double; b;
@@ -4408,7 +4408,7 @@ rt_private void passign(EIF_CONTEXT int32 origin, int32 f_offset, uint32 type)
 		RTAR(last->it_ref, ref);
 		*(char **) (ref + offset) = last->it_ref;
 		break;
-	default: panic(MTC unknown_type);
+	default: eiffel_panic(MTC unknown_type);
 	}
 
 
@@ -4718,7 +4718,7 @@ rt_private void init_var(struct item *ptr, long int type)
 	case SK_REF:		ptr->it_ref = (char *) 0; break;
 	case SK_POINTER:	ptr->it_ptr = (char *) 0; break;
 	case SK_VOID:		break;
-	default:			panic(MTC unknown_type);
+	default:			eiffel_panic(MTC unknown_type);
 	}
 }
 
@@ -5091,7 +5091,7 @@ rt_public struct item *opop(EIF_CONTEXT_NOARG)
 
 #ifdef MAY_PANIC
 	if (s == (struct stochunk *) 0)
-		panic("operational stack underflow");
+		eiffel_panic("operational stack underflow");
 #endif
 
 	top = op_stack.st_end = s->sk_end;
@@ -5150,7 +5150,7 @@ rt_private void npop(EIF_CONTEXT register int nb_items)
 #ifdef MAY_PANIC
 	/* Consistency check: we cannot have reached the end of the stack */
 	if (s == (struct stochunk *) 0)
-		panic("operational stack underflow");
+		eiffel_panic("operational stack underflow");
 #endif
 
 	/* Update the stack structure */
@@ -5193,7 +5193,7 @@ rt_public struct item *otop(EIF_CONTEXT_NOARG)
 
 #ifdef MAY_PANIC
 	if (prev == (struct stochunk *) 0)
-		panic("operational stack is empty");
+		eiffel_panic("operational stack is empty");
 #endif
 	
 	return prev->sk_end - 1;			/* Last item of previous chunk */
@@ -5221,7 +5221,7 @@ rt_private struct item *oitem(EIF_CONTEXT uint32 n)
 
 #ifdef MAY_PANIC
 	if (prev == (struct stochunk *) 0)
-		panic("operational stack is empty");
+		eiffel_panic("operational stack is empty");
 #endif
 
 	return prev->sk_end - 1 - (n - (op_stack.st_cur->sk_arena - last_item));
@@ -5317,7 +5317,7 @@ rt_public struct item *ivalue(EIF_CONTEXT int code, int num)
 	case IV_RESULT:						/* Result */
 		return iresult;
 	default:
-		panic(MTC "illegal value request");
+		eiffel_panic(MTC "illegal value request");
 	}
 
 	/* NOTREACHED */
@@ -5574,7 +5574,7 @@ rt_public void idump(FILE *fd, char *start)
 
 		break;
 	default:
-		panic(botched);
+		eiffel_panic(botched);
 	}
 	
 	iinternal_dump(fd, IC);				/* Compound dump */

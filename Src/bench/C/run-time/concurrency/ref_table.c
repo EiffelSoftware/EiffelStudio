@@ -53,7 +53,7 @@ char *obj;
 	/* when we get its OID, it has been kept in "separate_object_id_set"(so */
 	/* it will keep alive at least when it's in the set). Now add the info */
 	/* of the object into the exported objcect list */
-		exported_obj = (EXPORTED_OBJ_LIST_NODE *)malloc(sizeof(EXPORTED_OBJ_LIST_NODE));
+		exported_obj = (EXPORTED_OBJ_LIST_NODE *)eiffel_malloc(sizeof(EXPORTED_OBJ_LIST_NODE));
 		valid_memory(exported_obj); /* check if got enough memory */
 		exported_obj->oid = oid;
 		exported_obj->count = 0;
@@ -156,7 +156,7 @@ EIF_INTEGER proxy_id;
 
 	if (tmp_tab_ptr) {
 	/* some objects have been imported from processor "<host, port>" */
-		tmp_list_ptr = (PROXY_LIST_NODE *)malloc(sizeof(PROXY_LIST_NODE));
+		tmp_list_ptr = (PROXY_LIST_NODE *)eiffel_malloc(sizeof(PROXY_LIST_NODE));
 		valid_memory(tmp_list_ptr);
 		tmp_list_ptr->oid = oid;
 		tmp_list_ptr->proxy_id = proxy_id;
@@ -165,13 +165,13 @@ EIF_INTEGER proxy_id;
 		return;
 	}
 	else {
-		tmp_list_ptr = (PROXY_LIST_NODE *)malloc(sizeof(PROXY_LIST_NODE));
+		tmp_list_ptr = (PROXY_LIST_NODE *)eiffel_malloc(sizeof(PROXY_LIST_NODE));
 		valid_memory(tmp_list_ptr);
 		tmp_list_ptr->oid = oid;
 		tmp_list_ptr->proxy_id = proxy_id;
 		tmp_list_ptr->next = NULL;
 
-		tmp_tab_ptr = (IMPORTED_OBJ_TABLE_NODE *)malloc(sizeof(IMPORTED_OBJ_TABLE_NODE));
+		tmp_tab_ptr = (IMPORTED_OBJ_TABLE_NODE *)eiffel_malloc(sizeof(IMPORTED_OBJ_TABLE_NODE));
 		valid_memory(tmp_tab_ptr);
 		tmp_tab_ptr->hostaddr = host;
 		tmp_tab_ptr->pid = port;
@@ -214,10 +214,10 @@ EIF_INTEGER proxy_id;
 						tmp_tab_ptr1->next = tmp_tab_ptr2->next;
 					else
 						_concur_imported_obj_tab = tmp_tab_ptr2->next;
-					free(tmp_tab_ptr2);
+					eiffel_free(tmp_tab_ptr2);
 				}
 			}
-			free(tmp_list_ptr2);
+			eiffel_free(tmp_list_ptr2);
 			eif_object_id_free(proxy_id); /* delete from object_id_stack */
 			return;
 		}
@@ -273,7 +273,7 @@ EIF_INTEGER flag;
 								tmp_ptr->next = exported_obj->next;
 							else
 								_concur_exported_obj_list = exported_obj->next;
-							free(exported_obj);
+							eiffel_free(exported_obj);
 						}
 					}
 					else {
@@ -283,11 +283,11 @@ EIF_INTEGER flag;
 					}
 
 					if (tmp_ref_ptr)
-						free(tmp_ref_ptr);
+						eiffel_free(tmp_ref_ptr);
 				}
 			
 				if (tmp_ref_ptr)
-					free(tmp_ref_ptr);
+					eiffel_free(tmp_ref_ptr);
 
 				/* now, delete the separate object's reference list from the
 				 * reference table 
@@ -296,7 +296,7 @@ EIF_INTEGER flag;
 					tmp_tab_ptr->next = ref_table_ptr->next;
 				else 
 					_concur_ref_table = ref_table_ptr->next;
-				free(ref_table_ptr);
+				eiffel_free(ref_table_ptr);
 			}
 			else {
 				add_nl;
@@ -315,7 +315,7 @@ EIF_INTEGER flag;
 					(tmp_ref_ptr->count)++;
 				else {
 				/* the processor has never referred to the object before */
-					tmp_ref_ptr = (REF_LIST_NODE *)malloc(sizeof(REF_LIST_NODE));
+					tmp_ref_ptr = (REF_LIST_NODE *)eiffel_malloc(sizeof(REF_LIST_NODE));
 					valid_memory(tmp_ref_ptr);
 					tmp_ref_ptr->oid = cli_oid;
 					tmp_ref_ptr->count = 1;
@@ -325,13 +325,13 @@ EIF_INTEGER flag;
 			}
 			else {
 			/* the separate object has never referrred to an object on local processor */
-				obj_ref_list = (REF_LIST_NODE *)malloc(sizeof(REF_LIST_NODE));
+				obj_ref_list = (REF_LIST_NODE *)eiffel_malloc(sizeof(REF_LIST_NODE));
 				valid_memory(obj_ref_list);
 				obj_ref_list->count = 1;
 				obj_ref_list->oid = cli_oid;
 				obj_ref_list->next = NULL;
 
-				tmp_tab_ptr = (REF_TABLE_NODE *)malloc(sizeof(REF_TABLE_NODE));
+				tmp_tab_ptr = (REF_TABLE_NODE *)eiffel_malloc(sizeof(REF_TABLE_NODE));
 				valid_memory(tmp_tab_ptr);
 				tmp_tab_ptr->hostaddr = cli_host;
 				tmp_tab_ptr->pid = cli_pid;
@@ -352,7 +352,7 @@ EIF_INTEGER flag;
 				strcat(_concur_crash_info, CURIMPERR7);
 				c_raise_concur_exception(exception_implementation_error);
 
-				tmp_ptr = (EXPORTED_OBJ_LIST_NODE *)malloc(sizeof(EXPORTED_OBJ_LIST_NODE));
+				tmp_ptr = (EXPORTED_OBJ_LIST_NODE *)eiffel_malloc(sizeof(EXPORTED_OBJ_LIST_NODE));
 				valid_memory(tmp_ptr);
 				tmp_ptr->oid = cli_oid;
 				tmp_ptr->count = 1;
@@ -375,7 +375,7 @@ EIF_INTEGER flag;
 							tmp_ref_ptr1->next = tmp_ref_ptr->next;
 						else
 							obj_ref_list = tmp_ref_ptr->next;
-						free(tmp_ref_ptr);
+						eiffel_free(tmp_ref_ptr);
 						if (!obj_ref_list)  {
 						/* now, delete the separate object's reference list from 
 						 * the reference table 
@@ -384,7 +384,7 @@ EIF_INTEGER flag;
 								tmp_tab_ptr->next = ref_table_ptr->next;
 							else 
 								_concur_ref_table = ref_table_ptr->next;
-							free(ref_table_ptr);
+							eiffel_free(ref_table_ptr);
 						}
 						else
 							ref_table_ptr->ref_list = obj_ref_list;
@@ -421,7 +421,7 @@ EIF_INTEGER flag;
 						tmp_ptr->next = exported_obj->next;
 					else
 						_concur_exported_obj_list = exported_obj->next;
-					free(exported_obj);
+					eiffel_free(exported_obj);
 				}
 			}
 			else {
@@ -445,7 +445,7 @@ EIF_INTEGER port;
  * when the reference count becomes 0. The reason is the asynchronous 
  * modification to requestor's IMPORTED_OBJ_TABLE and provider's
  * REF_TABLE and EXPORTED_OBJ_LIST. The asynchronous modification owes
- * to the fact that we relay on GC to free separate object proxy.
+ * to the fact that we relay on GC to eiffel_free separate object proxy.
  * So, whenever we exit from an atomic operation, we should clean up
  * the nodes in REF_TABLE and EXPORTED_OBJ_LIST whose reference count
  * becomed 0.
@@ -470,7 +470,7 @@ EIF_INTEGER port;
 			else  {
 				tmp_ref_ptr1 = obj_ref_list;
 				obj_ref_list = obj_ref_list->next;
-				free(tmp_ref_ptr1);
+				eiffel_free(tmp_ref_ptr1);
 			}
 		}
 	
@@ -479,7 +479,7 @@ EIF_INTEGER port;
 				tmp_tab_ptr->next = ref_table_ptr->next;
 			else 
 				_concur_ref_table = ref_table_ptr->next;
-			free(ref_table_ptr);
+			eiffel_free(ref_table_ptr);
 		}
 		else
 			ref_table_ptr->ref_list = tmp_ref_ptr;
@@ -498,7 +498,7 @@ EIF_INTEGER port;
 			/* delete the exported object from "separate_object_id_set". */
 			tmp_ptr = exported_obj;
 			exported_obj = exported_obj->next;
-			free(tmp_ptr);
+			eiffel_free(tmp_ptr);
 		}
 	}
 

@@ -330,17 +330,17 @@ rt_public void dsetbreak(int body_id, uint32 offset, int what)
 	switch (what) {
 	case DT_SET:				/* Set a breakpoint */
 		if ((*where != BC_NEXT) && (*where != BC_BREAK))
-			panic(MTC "byte code botched");
+			eiffel_panic(MTC "byte code botched");
 		*where = BC_BREAK;
 		break;
 	case DT_REMOVE:				/* Remove a breakpoint */
 		if ((*where != BC_NEXT) && (*where != BC_BREAK))
-			panic(MTC "byte code botched");
+			eiffel_panic(MTC "byte code botched");
 		*where = BC_NEXT;
 		break;
 #ifdef MAY_PANIC
 	default:
-		panic("illegal breakpoint request");
+		eiffel_panic("illegal breakpoint request");
 #endif
 	}
 }
@@ -419,7 +419,7 @@ rt_private struct ex_vect *last_call(EIF_CONTEXT_NOARG)
 			item->ex_type == EX_RESC 		/* A rescue clause */
 		)
 			break;			/* Exit loop when found */
-		expop(&eif_stack);	/* Will panic if we underflow, because we can't */
+		expop(&eif_stack);	/* Will eiffel_panic if we underflow, because we can't */
 	}
 
 #ifdef USE_STRUCT_COPY
@@ -678,7 +678,7 @@ rt_public struct dcall *dpop(void)
 
 #ifdef MAY_PANIC
 	if (s == (struct stdchunk *) 0)
-		panic("debugging stack underflow");
+		eiffel_panic("debugging stack underflow");
 #endif
 
 	top = db_stack.st_end = s->sk_end;
@@ -735,7 +735,7 @@ rt_private void npop(register int nb_items)
 #ifdef MAY_PANIC
 	/* Consistency check: we cannot have reached the end of the stack */
 	if (s == (struct stdchunk *) 0)
-		panic("debugging stack underflow");
+		eiffel_panic("debugging stack underflow");
 #endif
 
 	/* Update the stack structure */
@@ -772,7 +772,7 @@ rt_public struct dcall *dtop(void)
 
 #ifdef MAY_PANIC
 	if (prev == (struct stdchunk *) 0)
-		panic("debugging stack is empty");
+		eiffel_panic("debugging stack is empty");
 #endif
 	
 	return prev->sk_end - 1;			/* Last item of previous chunk */
@@ -912,7 +912,7 @@ rt_private void call_up(int level)
 #ifdef MAY_PANIC
 	/* Consistency check: we cannot have reached the top of the stack */
 	if (s == (struct stdchunk *) 0)
-		panic("debugger stack overflow");
+		eiffel_panic("debugger stack overflow");
 #endif
 
 	/* Update the stack structure */
@@ -947,7 +947,7 @@ rt_public int dmake_room(int new)
         		/* Amount of new entries in melting table */
 {
 	/* Pre-extend the melting table, making room for the new byte codes entries.
-	 * This avoids successive realloc() which could cause fragmentation within
+	 * This avoids successive eiffel_realloc() which could cause fragmentation within
 	 * the C memory. The function returns -1 in case of error.
 	 * The table containing the pattern ids of the melted routines also
 	 * needs to be reallocated.

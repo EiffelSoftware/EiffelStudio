@@ -85,7 +85,7 @@ rt_public EIF_POINTER dir_open(char *name)
 #ifdef EIF_WIN32
 	EIF_WIN_DIRENT *c;
 
-	c = malloc (sizeof(EIF_WIN_DIRENT));
+	c = eiffel_malloc (sizeof(EIF_WIN_DIRENT));
 	if (c == (EIF_WIN_DIRENT *) 0)
 		enomem(MTC_NOARG);
 
@@ -96,7 +96,7 @@ rt_public EIF_POINTER dir_open(char *name)
 #elif defined EIF_OS2
 	EIF_OS2_DIRENT *c;
 
-	c = malloc (sizeof(EIF_OS2_DIRENT));
+	c = eiffel_malloc (sizeof(EIF_OS2_DIRENT));
 	if (c == (EIF_OS2_DIRENT *) 0)
 		enomem();
 
@@ -122,7 +122,7 @@ rt_public void dir_close(EIF_WIN_DIRENT *dirp)
 {
 	if (dirp->handle != NULL)
 		FindClose (dirp->handle);
-	free(dirp);
+	eiffel_free(dirp);
 }
 
 #elif defined EIF_OS2
@@ -181,7 +181,7 @@ rt_public char *dir_search(EIF_WIN_DIRENT *dirp, char *name)
 	WIN32_FIND_DATA wfd;
 	char *filename;
 
-	filename = malloc (strlen(name) + strlen (dirp->name) + 2);
+	filename = eiffel_malloc (strlen(name) + strlen (dirp->name) + 2);
 	if (filename == (char *) 0)
 		enomem(MTC_NOARG);
 
@@ -190,7 +190,7 @@ rt_public char *dir_search(EIF_WIN_DIRENT *dirp, char *name)
 		strcat (filename, "\\");
 	strcat (filename, name);
 	h = FindFirstFile (filename, &wfd);
-	free (filename);
+	eiffel_free (filename);
 	if (h != INVALID_HANDLE_VALUE)
 		{
 		FindClose (h);
@@ -210,7 +210,7 @@ rt_public char *dir_search(EIF_OS2_DIRENT *dirp, char *name)
 	ULONG		  ulFindCount	 = 1;		 /* Look for 1 file at a time	 */
 	APIRET		  rc			 = NO_ERROR; /* Return code 				 */
 
-	filename = malloc (strlen(name) + strlen (dirp->name) + 2);
+	filename = eiffel_malloc (strlen(name) + strlen (dirp->name) + 2);
 	if (filename == (char *) 0)
 		enomem();
 
@@ -284,7 +284,7 @@ rt_public char *dir_next(EIF_WIN_DIRENT *dirp)
 		}
 	else
 		{
-		name = malloc (strlen(dirp->name) + 5);
+		name = eiffel_malloc (strlen(dirp->name) + 5);
 		if (name == (char *) 0)
 			enomem(MTC_NOARG);
 
@@ -294,7 +294,7 @@ rt_public char *dir_next(EIF_WIN_DIRENT *dirp)
 		else
 			strcat (name , "\\*.*");
 		h = FindFirstFile (name, &wfd);
-		free (name);
+		eiffel_free (name);
 		if (h != INVALID_HANDLE_VALUE)
 			{
 			dirp->handle = h;
@@ -330,7 +330,7 @@ rt_public char *dir_next(EIF_OS2_DIRENT *dirp)
 		}
 	}
 	else {
-		name = malloc (strlen (dirp->name) + 5);
+		name = eiffel_malloc (strlen (dirp->name) + 5);
 		if (name == (char *) 0)
 			enomem ();
 
@@ -388,7 +388,7 @@ rt_public EIF_OBJ dir_current(void)
 
 	cwd = getcwd(NULL, PATH_MAX);
 	cwd_string = makestr(cwd, strlen (cwd));
-	free (cwd);
+	eiffel_free (cwd);
 	return ((EIF_OBJ)cwd_string);
 }
 
@@ -797,16 +797,16 @@ DIR *opendir(char	*name)
     DIR		*dd;
 
     /* Get memory for the handle, and the pattern. */
-    if ((dd = (DIR *)malloc(sizeof *dd)) == NULL) {
+    if ((dd = (DIR *)eiffel_malloc(sizeof *dd)) == NULL) {
 	errno = ENOMEM;
 	return NULL;
     }
 
     if (strcmp(".",name) == 0) name = "";
 
-    dd->pattern = malloc((unsigned int)(strlen(name) + sizeof "*.*" + 1));
+    dd->pattern = eiffel_malloc((unsigned int)(strlen(name) + sizeof "*.*" + 1));
     if (dd->pattern == NULL) {
-	free((char *)dd);
+	eiffel_free((char *)dd);
 	errno = ENOMEM;
 	return NULL;
     }
@@ -838,8 +838,8 @@ void vmsreaddirversions(DIR *dd, int flag)
 */
 void closedir(DIR *dd)
 {
-    free(dd->pattern);
-    free((char *)dd);
+    eiffel_free(dd->pattern);
+    eiffel_free((char *)dd);
 }
 
 
@@ -862,7 +862,7 @@ static void collectversions(DIR *dd)
 
     /* Add the version wildcard, ignoring the "*.*" put on before */
     i = strlen(dd->pattern);
-    text = malloc((unsigned int)(i + strlen(e->d_name)+ 2 + 1));
+    text = eiffel_malloc((unsigned int)(i + strlen(e->d_name)+ 2 + 1));
     if (text == NULL)
 	return;
     (void)strcpy(text, dd->pattern);
@@ -891,7 +891,7 @@ static void collectversions(DIR *dd)
 	    e->vms_versions[e->vms_verscount] = -1;
     }
 
-    free(text);
+    eiffel_free(text);
 }
 
 

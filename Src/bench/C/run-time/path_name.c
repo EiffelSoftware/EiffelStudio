@@ -55,21 +55,21 @@ rt_public EIF_BOOLEAN eif_is_directory_valid(EIF_POINTER p)
 
 	return EIF_TRUE;	/* FIXME: Manu: 09/17/97 Look at the beginning */
 	len = strlen (p);
-	s = (char *) malloc (len + 1);
+	s = (char *) eiffel_malloc (len + 1);
 	strcpy (s, p);
 	c = s + len - 1;
 	last_bslash = 0;
 	for (i = len;i >= 0; i--, c--)
 		if (*c == '\\')
 			if (strlen(c+1) && !eif_is_directory_name_valid (c+1)) {
-				free(s);
+				eiffel_free(s);
 				return EIF_FALSE;
 			} else
 				if (last_bslash -1 != i) {
 					*c = '\0';
 					last_bslash = i;
 				} else {
-					free(s);
+					eiffel_free(s);
 					return EIF_FALSE; /* two \ is a row */
 				}
 		else 
@@ -77,13 +77,13 @@ rt_public EIF_BOOLEAN eif_is_directory_valid(EIF_POINTER p)
 				/* Form a:xyz\def or a:\xyz\def */
 				if ((strlen (c+1)) && (!eif_is_directory_name_valid (c+1))) {
 					/* Form a:xyz where xyz is invalid */
-					free(s);
+					eiffel_free(s);
 					return EIF_FALSE;
 				} else {
 					/* Form a:\xyz or a: - currently as a:*/
 					* (c+1) = '\0';
 					result = eif_is_volume_name_valid (s);
-					free(s);
+					eiffel_free(s);
 					return result;
 				}
 			else
@@ -95,7 +95,7 @@ rt_public EIF_BOOLEAN eif_is_directory_valid(EIF_POINTER p)
 	else
 		result = EIF_TRUE;
 
-	free(s);
+	eiffel_free(s);
 	return result;
 
 #elif defined (__VMS)
@@ -192,7 +192,7 @@ rt_public EIF_BOOLEAN eif_is_file_valid (EIF_POINTER p)
 	return EIF_TRUE;	/* FIXME: Manu: 09/17/97 Look at the beginning */
 
 	len = strlen (p);
-	s = (char *) malloc (len + 1);
+	s = (char *) eiffel_malloc (len + 1);
 		/* FIXME: memory leak */
 	strcpy (s, p);
 	c = s + len -1;

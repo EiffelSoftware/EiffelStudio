@@ -85,7 +85,7 @@ rt_public void eif_thr_register(void)
 
 	eif_global_context_t *eif_globals;
 
-	eif_globals = (eif_global_context_t *)malloc(sizeof(eif_global_context_t));
+	eif_globals = (eif_global_context_t *)eiffel_malloc(sizeof(eif_global_context_t));
 	if (!eif_globals) eif_thr_panic("No more memory for thread context");
 	eif_init_context(eif_globals);
 	EIF_TSD_SET(eif_global_key,eif_globals,"Couldn't bind context to TSD.");
@@ -216,9 +216,9 @@ rt_public void eif_thr_create_with_args (EIF_OBJ thr_root_obj,
 	EIF_GET_CONTEXT
 
 	start_routine_ctxt_t *routine_ctxt;
-	EIF_THR_TYPE *tid = (EIF_THR_TYPE *) malloc (sizeof (EIF_THR_TYPE));
+	EIF_THR_TYPE *tid = (EIF_THR_TYPE *) eiffel_malloc (sizeof (EIF_THR_TYPE));
 
-	routine_ctxt = (start_routine_ctxt_t *)malloc(sizeof(start_routine_ctxt_t));
+	routine_ctxt = (start_routine_ctxt_t *)eiffel_malloc(sizeof(start_routine_ctxt_t));
 	if (!routine_ctxt)
 		eif_thr_panic("No more memory to launch new thread\n");
 	routine_ctxt->current = hector_addr (efreeze (thr_root_obj));
@@ -232,7 +232,7 @@ rt_public void eif_thr_create_with_args (EIF_OBJ thr_root_obj,
 	   * we create a mutex and a condition variable for join and join_all */
 	  EIF_MUTEX_CREATE(eif_children_mutex, "Couldn't create join mutex");
 #ifndef EIF_NO_CONDVAR
-	  eif_children_cond = (EIF_COND_TYPE *) malloc (sizeof (EIF_COND_TYPE));
+	  eif_children_cond = (EIF_COND_TYPE *) eiffel_malloc (sizeof (EIF_COND_TYPE));
 	  EIF_COND_INIT(eif_children_cond, "Couldn't initialize cond. variable");
 #endif /* EIF_NO_CONDVAR */
 	}
@@ -315,7 +315,7 @@ rt_public void eif_thr_exit(void)
 	/*
 	 * Function called to terminate a thread launched by Eiffel with
 	 * eif_thr_create() or eif_thr_create_with_args().
-	 * All the memory allocated with malloc() for the thread context is freed
+	 * All the memory allocated with eiffel_malloc() for the thread context is freed
 	 * This function must be called from the thread itself (not the parent).
 	 */
 
@@ -340,14 +340,14 @@ rt_public void eif_thr_exit(void)
 	 */
 
 	if (*thr_list == (thr_list_t *) 0) {
-		*thr_list = (thr_list_t *) malloc (sizeof (thr_list_t));
+		*thr_list = (thr_list_t *) eiffel_malloc (sizeof (thr_list_t));
 		(*thr_list)->thread = eif_thr_context->current;
 		(*thr_list)->next = (thr_list_t *) 0;
 	} else {
 		ptr = *thr_list;
 		while (ptr->next)
 			ptr = ptr->next;
-		ptr->next = (thr_list_t *) malloc (sizeof (thr_list_t));
+		ptr->next = (thr_list_t *) eiffel_malloc (sizeof (thr_list_t));
 		ptr->next->thread = eif_thr_context->current;
 		ptr->next->next = (thr_list_t *) 0;
 	}
@@ -360,8 +360,8 @@ rt_public void eif_thr_exit(void)
 	EIF_MUTEX_UNLOCK(eif_thr_context->children_mutex, "Unlock parent mutex");
 
 	reclaim ();						/* Free all allocated memory chunks */
-	free (eif_thr_context->tid);	/* Thread id of the current thread */
-	free (eif_thr_context);			/* Thread context passed by parent */
+	eiffel_free (eif_thr_context->tid);	/* Thread id of the current thread */
+	eiffel_free (eif_thr_context);			/* Thread context passed by parent */
 
 	EIF_THR_EXIT(0);
 	EIF_END_GET_CONTEXT
@@ -386,7 +386,7 @@ rt_private void eif_thr_unfreeze_dead(void)
 		eufreeze (eif_access (thr_list->thread));
 		/* plsc(); */
 		thr_list = thr_list->next;
-		free (ptr);
+		eiffel_free (ptr);
 	}
 
 	eif_globals->unfreeze_list = (thr_list_t *) 0;
@@ -778,7 +778,7 @@ rt_public void eif_thr_cond_destroy (EIF_POINTER cond_ptr)
 rt_public void eif_thr_panic(char *msg)
 {
 	print_err_msg (stderr, "*** Thread panic! ***\n");
-	panic(msg);
+	eiffel_panic(msg);
 	exit(0);
 }
 

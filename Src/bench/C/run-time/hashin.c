@@ -14,7 +14,7 @@
 #include "eif_tools.h"
 #include "eif_hashin.h"
 #include "eif_malloc.h"
-#include "eif_except.h"	/* for panic() */
+#include "eif_except.h"	/* for eiffel_panic() */
 
 #ifdef I_STRING
 #include <string.h>		/* For memset(), bzero() */
@@ -35,6 +35,9 @@ rt_private char *rcsid =
  * that does not redefine malloc and free. If they are redefined, the
  * blocks of memory will be managed the same way.
  * Xavier
+ * Note: We renamed malloc/realloc/panic/calloc in eiffel_... so that
+ * to avoid any conflict of names. 
+ * Manuelt.
  */
 
 rt_public int ht_create(struct htable *ht, int32 n, int sval)
@@ -51,14 +54,14 @@ rt_public int ht_create(struct htable *ht, int32 n, int sval)
 	
 	hsize = nprime((5 * n) / 4);	/* Table's size */
 
-	array = (char *) calloc(hsize, sizeof(long));	/* Mallocs array of keys */
+	array = (char *) eiffel_calloc(hsize, sizeof(long));	/* Mallocs array of keys */
 	if (array == (char *) 0)
 		return -1;					/* Malloc failed */
 	ht->h_keys = (unsigned long *) array;		/* Where array of keys is stored */
 
-	array = (char *) malloc(hsize * sval);			/* Mallocs array of values */
+	array = (char *) eiffel_malloc(hsize * sval);			/* Mallocs array of values */
 	if (array == (char *) 0) {
-		free(ht->h_keys);			/* Free keys array */
+		eiffel_free(ht->h_keys);			/* Free keys array */
 		return -1;					/* Malloc failed */
 	}
 	ht->h_values = array;			/* Where array of keys is stored */
@@ -179,14 +182,14 @@ rt_public char *ht_put(struct htable *ht, register long unsigned int key, char *
 	hsize = ht->h_size;
 	hkeys = ht->h_keys;
 
-	/* Jump from one hashed position to another until we find a free entry or
+	/* Jump from one hashed position to another until we find a eiffel_free entry or
 	 * we reached the end of the table.
 	 */
 	inc = 1 + (key % (hsize - 1));
 	for (pos = key % hsize; tmp_try < hsize; tmp_try++, pos = (pos + inc) % hsize) {
 #ifdef MAY_PANIC
 		if (hkeys[pos] == key)
-			panic("H table key conflict");
+			eiffel_panic("H table key conflict");
 		else
 #endif
 		if (hkeys[pos] == 0) {			/* Found a free location */
@@ -265,17 +268,17 @@ rt_public int ht_xtend(struct htable *ht)
 	for (; size > 0; size--, key++, val += sval)
 #ifdef MAY_PANIC
 		if ((char *) 0 == ht_put(&new_ht, *key, val)) {	/* Failed */
-			free(new_ht.h_values);	/* Free new H table */
-			free(new_ht.h_keys);
-			panic("cannot extend H table");
+			eiffel_free(new_ht.h_values);	/* Free new H table */
+			eiffel_free(new_ht.h_keys);
+			eiffel_panic("cannot extend H table");
 		}
 #else
 		(void) ht_put(&new_ht, *key, val);
 #endif
 
 	/* Free old H table and set H table descriptor */
-	free(ht->h_values);			/* Free in allocation order */
-	free(ht->h_keys);				/* To make free happy (coalescing) */
+	eiffel_free(ht->h_values);			/* Free in allocation order */
+	eiffel_free(ht->h_keys);				/* To make free happy (coalescing) */
 	bcopy(&new_ht, ht, sizeof(struct htable));
 
 	return 0;		/* Extension was ok */
@@ -285,8 +288,8 @@ rt_public void ht_free(struct htable *ht)
 {
 	/* Free hash table arrays and descriptor */
 
-	free(ht->h_values);
-	free(ht->h_keys);
+	eiffel_free(ht->h_values);
+	eiffel_free(ht->h_keys);
 	xfree((char *) ht);
 }
 

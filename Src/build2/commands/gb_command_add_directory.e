@@ -49,14 +49,20 @@ create
 	
 feature {NONE} -- Initialization
 
-		--| FIXME, constants are now no longer undoable.
-		--| Hence the commented sections in this class.
-
-	make (a_directory: STRING) is
+	make (directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM; a_directory: STRING) is
 			-- Create `Current' with directory named `a_directory'.
+		require
+			a_directory_not_void: a_directory /= Void
 		do
 			history.cut_off_at_current_position
 			directory_name := a_directory
+			if directory_item /= Void then
+					-- `directory_item' may be `Void' if we are parenting at the root level
+					-- in the window selector.
+				parent_directory_path := directory_item.path
+			else
+				create parent_directory_path.make (0)
+			end
 		end
 
 feature -- Basic Operation
@@ -69,7 +75,21 @@ feature -- Basic Operation
 			directory_exists_dialog: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
 		do
 			create temp_file_name.make_from_string (generated_path.string)
-			temp_file_name.extend (directory_name)	
+			from
+				parent_directory_path.start
+			until
+				parent_directory_path.off
+			loop
+				temp_file_name.extend (parent_directory_path.item)
+				create directory.make (temp_file_name)
+				if not directory.exists then
+						-- As the current nested directory path in the window selector
+						-- may not actually exist on disk, we must re-create it.
+					create_directory (directory)
+				end
+				parent_directory_path.forth
+			end
+			temp_file_name.extend (directory_name)
 			create directory.make (temp_file_name)
 			if not directory.exists then
 					-- Only create the directory if it is not already present on the disk.
@@ -88,22 +108,61 @@ feature -- Basic Operation
 		do
 			directory_added_succesfully := True
 		end
-		
-		
+
 	directory_added_succesfully: BOOLEAN
 		-- Was last call to `create_directory' successful?
 
 	execute is
 			-- Execute `Current'.
+		require else
+			directory_added_succesfully: directory_added_succesfully
 		local
-			layout_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
+			directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
+			window_node: EV_TREE_NODE_LIST
+			tree_item: EV_TREE_ITEM
 		do
-			create layout_item.make_with_name (directory_name)
-			window_selector.extend (layout_item)
+			if executed_once then
+					-- As we are re-doing an undo, we must create directory again.
+					-- See comment of `executed_once'.
+				create_new_directory
+			end
+			create directory_item.make_with_name (directory_name)
+			if parent_directory_path.is_empty then
+				window_selector.extend (directory_item)	
+			else
+				window_node ?= window_selector
+				from
+					parent_directory_path.start
+				until
+					parent_directory_path.off
+				loop
+					from
+						window_node.start
+					until
+						window_node.off
+					loop
+						if window_node.item.text.is_equal (parent_directory_path.item) then
+							parent_directory_path.forth
+							window_node ?= window_node.item
+						elseif not parent_directory_path.off then
+							window_node.forth
+						end
+					end
+				end
+				window_node.extend (directory_item)
+					-- Ensure `directory_item' is now visible.
+				tree_item ?= window_node
+				check
+					node_was_item: tree_item /= Void
+				end
+				tree_item.expand
+			end
+			
 			if not history.command_list.has (Current) then
 				history.add_command (Current)
 			end
 			command_handler.update
+			executed_once := True
 		end
 		
 	undo is
@@ -113,15 +172,38 @@ feature -- Basic Operation
 		local
 			temp_file_name: FILE_NAME
 			directory: DIRECTORY
-			directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
+			directory_item,	parent_directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
+			directory_path: ARRAYED_LIST [STRING]
 		do
-			directory_item := window_selector.directory_object_from_name (directory_name)
+			directory_path := parent_directory_path.twin
+			directory_path.extend (directory_name)
+			directory_item := window_selector.directory_object_from_name (directory_path)
 			check
-				directory_not_void: directory_item /= Void
+				directory_item_not_void: directory_item /= Void				
 			end
-			window_selector.prune_all (directory_item)
+			if not parent_directory_path.is_empty then
+				parent_directory_item := window_selector.directory_object_from_name (parent_directory_path)
+				check
+					parent_directory_not_void: parent_directory_item /= Void
+					parent_has_directory: directory_item.parent = parent_directory_item
+				end
+				parent_directory_item.prune_all (directory_item)
+			else
+				check
+					contained_in_window_selector: directory_item.parent = window_selector
+				end
+				window_selector.prune_all (directory_item)
+			end
+			
 			create temp_file_name.make_from_string (generated_path.string)
-			temp_file_name.extend (directory_name)	
+			from
+				directory_path.start
+			until
+				directory_path.off
+			loop
+				temp_file_name.extend (directory_path.item)
+				directory_path.forth
+			end
 			create directory.make (temp_file_name)
 			if directory.exists and directory.is_empty then
 				delete_directory (directory)
@@ -137,6 +219,11 @@ feature -- Basic Operation
 
 feature {NONE} -- Implementation
 
+	executed_once: BOOLEAN
+		-- Has `execute' already been called once? If so, we must call `create_new_directory'
+		-- within `execute'. The first time that we call `execute' we do not perform it directly
+		-- as the caller can do this to enable chacking for invalid directory names.
+
 	generated_path: FILE_NAME is
 			-- `Result' is generated directory for current project.
 		do
@@ -146,7 +233,14 @@ feature {NONE} -- Implementation
 		end
 
 	directory_name: STRING
-		-- Name of directory that was deleted. Only the actual name,
+		-- Name of directory that was added. Only the actual name,
 		-- and not the full name, as all directories are relative to the project.
+		
+	parent_directory_path: ARRAYED_LIST [STRING]
+		-- Full path to parent_directory.
+		
+invariant
+	parent_directory_path_not_void: parent_directory_path /= Void
+	directory_name_not_void: directory_name /= Void and not directory_name.is_empty
 
 end -- class GB_COMMAND_ADD_DIRECTORY

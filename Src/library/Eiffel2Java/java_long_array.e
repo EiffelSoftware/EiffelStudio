@@ -23,7 +23,7 @@ feature
 			array_ok: jarray /= default_pointer	
 		end
 
-	item (index: INTEGER): INTEGER is
+	item (index: INTEGER): INTEGER_64 is
 			-- item at "index"
 		require
 			valid_index (index)
@@ -31,7 +31,7 @@ feature
 			Result := c_get_long_array_element (jni.envp, jarray, index )					
 		end
 
-	put (litem: INTEGER; index: INTEGER) is
+	put (litem: INTEGER_64; index: INTEGER) is
 			-- put item at "index"
 		require
 			valid_index (index)

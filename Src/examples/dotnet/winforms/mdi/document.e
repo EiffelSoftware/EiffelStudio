@@ -1,5 +1,5 @@
 indexing
-	description: ""
+	description: "MDI Document"
 
 class
 	DOCUMENT
@@ -9,7 +9,10 @@ inherit
 		rename
 			make as make_form
 		undefine
-			to_string, finalize, equals, get_hash_code
+			to_string,
+			finalize,
+			equals,
+			get_hash_code
 		redefine
 			dispose_boolean
 		end
@@ -28,17 +31,18 @@ feature {NONE} -- Initialization
 		require
 			non_void_doc_name: doc_name /= Void
 		local
-			dummy: SYSTEM_OBJECT
-			mi_file, mi_format, miLoadDoc: WINFORMS_MENU_ITEM
+			mi_file, mi_format, mi_doc: WINFORMS_MENU_ITEM
 			l_array_menu_item: NATIVE_ARRAY [WINFORMS_MENU_ITEM]
+			l_text: STRING
+			res: SYSTEM_OBJECT
 		do
 			initialize_component
 
 				--  Initialize Fonts - use generic fonts to avoid problems across
 				--  different versions of the OS
-			create mono_space_font_family.make_from_generic_family (feature {DRAWING_GENERIC_FONT_FAMILIES}.monospace)
-			create sans_serif_font_family.make_from_generic_family (feature {DRAWING_GENERIC_FONT_FAMILIES}.sans_serif)
-			create serif_font_family.make_from_generic_family (feature {DRAWING_GENERIC_FONT_FAMILIES}.serif)
+			create mono_space_font_family.make (feature {DRAWING_GENERIC_FONT_FAMILIES}.monospace)
+			create sans_serif_font_family.make (feature {DRAWING_GENERIC_FONT_FAMILIES}.sans_serif)
+			create serif_font_family.make (feature {DRAWING_GENERIC_FONT_FAMILIES}.serif)
 			current_font_family := sans_serif_font_family
 
 			set_text (doc_name)
@@ -46,26 +50,38 @@ feature {NONE} -- Initialization
 			check
 				non_void_rich_text_box: rich_text_box /= Void
 			end
-			rich_text_box.set_font (create {DRAWING_FONT}.make_from_family_and_em_size (current_font_family, font_size))
+			rich_text_box.set_font (create {DRAWING_FONT}.make (current_font_family, font_size))
 			rich_text_box.set_text (doc_name)
 
 				-- Add File Menu
-			mi_file := main_menu.menu_items.add (("&File").to_cil)
+			mi_file := main_menu.menu_items.add ("&File")
 			mi_file.set_merge_type (feature {WINFORMS_MENU_MERGE}.merge_items)
 			mi_file.set_merge_order (0)
 
-			miLoadDoc := main_menu.menu_items.add_string_event_handler ((("").to_cil).concat_string_string_string (("&Load Document (").to_cil, doc_name, (")").to_cil), create {EVENT_HANDLER}.make (Current, $on_load_document_clicked))
-			miLoadDoc.set_merge_order (105)
+			l_text := "&Load Document ("
+			l_text.append (doc_name)
+			l_text.append (")")
+			mi_doc := main_menu.menu_items.add (l_text, create {EVENT_HANDLER}.make (Current, $on_load_document_clicked))
+			mi_doc.set_merge_order (105)
 
 				-- Add Formatting Menu
-			mi_format := main_menu.menu_items.add ((("").to_cil).concat_string_string_string (("F&ormat (").to_cil, doc_name, (")").to_cil))
+			l_text := "F&ormat ("
+			l_text.append (doc_name)
+			l_text.append (")")
+			mi_format := main_menu.menu_items.add (l_text)
 			mi_format.set_merge_type (feature {WINFORMS_MENU_MERGE}.add)
 			mi_format.set_merge_order (5)
 
 				-- Font Face sub-menu
-			create mi_sans_serif.make_from_text_and_on_click ((("").to_cil).concat_string_string (("&1. ").to_cil, sans_serif_font_family.name), create {EVENT_HANDLER}.make (Current, $on_format_font_clicked))
-			create mi_serif.make_from_text_and_on_click ((("").to_cil).concat_string_string (("&2. ").to_cil, serif_font_family.name), create {EVENT_HANDLER}.make (Current, $on_format_font_clicked))
-			create mi_mono_space.make_from_text_and_on_click ((("").to_cil).concat_string_string (("&3. ").to_cil, mono_space_font_family.name), create {EVENT_HANDLER}.make (Current, $on_format_font_clicked))
+			l_text := "&1. "
+			l_text.append (sans_serif_font_family.name)
+			create mi_sans_serif.make (l_text, create {EVENT_HANDLER}.make (Current, $on_format_font_clicked))
+			l_text := "&2. "
+			l_text.append (serif_font_family.name)
+			create mi_serif.make (l_text, create {EVENT_HANDLER}.make (Current, $on_format_font_clicked))
+			l_text := "&3. "
+			l_text.append (mono_space_font_family.name)
+			create mi_mono_space.make (l_text, create {EVENT_HANDLER}.make (Current, $on_format_font_clicked))
 			mi_sans_serif.set_checked (True)
 			mi_format_font_checked := mi_sans_serif
 			mi_sans_serif.set_default_item (True) 
@@ -74,12 +90,12 @@ feature {NONE} -- Initialization
 			l_array_menu_item.put (0, mi_sans_serif)
 			l_array_menu_item.put (1, mi_serif)
 			l_array_menu_item.put (2, mi_mono_space)
-			dummy := mi_format.menu_items.add_string_menu_item_array (("Font &Face").to_cil, l_array_menu_item)
+			res := mi_format.menu_items.add ("Font &Face", l_array_menu_item)
 
 				-- Font Size sub-menu
-			create mi_small.make_from_text_and_on_click (("&Small").to_cil, create {EVENT_HANDLER}.make (Current, $on_format_size_clicked))
-			create mi_medium.make_from_text_and_on_click (("&Medium").to_cil, create {EVENT_HANDLER}.make (Current, $on_format_size_clicked))
-			create mi_large.make_from_text_and_on_click (("&Large").to_cil, create {EVENT_HANDLER}.make (Current, $on_format_size_clicked))
+			create mi_small.make ("&Small", create {EVENT_HANDLER}.make (Current, $on_format_size_clicked))
+			create mi_medium.make ("&Medium", create {EVENT_HANDLER}.make (Current, $on_format_size_clicked))
+			create mi_large.make ("&Large", create {EVENT_HANDLER}.make (Current, $on_format_size_clicked))
 			mi_medium.set_checked (True)
 			mi_format_size_checked := mi_medium
 			mi_medium.set_default_item (True)
@@ -88,7 +104,7 @@ feature {NONE} -- Initialization
 			l_array_menu_item.put (0, mi_small)
 			l_array_menu_item.put (1, mi_medium)
 			l_array_menu_item.put (2, mi_large)
-			dummy := mi_format.menu_items.add_string_menu_item_array (("Font &Size").to_cil, l_array_menu_item)
+			res := mi_format.menu_items.add ("Font &Size", l_array_menu_item)
 
 			show
 		ensure
@@ -140,16 +156,16 @@ feature {NONE} -- Implementation
 			create rich_text_box.make
 			create main_menu.make
 
-			rich_text_box.set_text (("").to_cil)
-			l_size.make_from_width_and_height (292, 273)
+			rich_text_box.set_text ("")
+			l_size.make (292, 273)
 			rich_text_box.set_size (l_size)
 			rich_text_box.set_tab_index (0)
 			rich_text_box.set_dock (feature {WINFORMS_DOCK_STYLE}.fill)
 
-			set_text (("").to_cil)
-			l_size.make_from_width_and_height (5, 13)
+			set_text ("")
+			l_size.make (5, 13)
 			set_auto_scale_base_size (l_size)
-			l_size.make_from_width_and_height (392, 117)
+			l_size.make (392, 117)
 			set_client_size (l_size)
 			create main_menu.make
 			set_menu (main_menu)
@@ -169,7 +185,6 @@ feature {NONE} -- Implementation
 	dispose_boolean (a_disposing: BOOLEAN) is
 			-- method called when form is disposed.
 		local
-			dummy: WINFORMS_DIALOG_RESULT
 			retried: BOOLEAN
 		do
 			if not retried then
@@ -205,9 +220,9 @@ feature {NONE} -- Implementation
 			non_void_sender: sender /= Void
 			non_void_args: args /= Void
 		local
-			dummy: WINFORMS_DIALOG_RESULT
+			res: WINFORMS_DIALOG_RESULT
 		do
-			dummy := feature {WINFORMS_MESSAGE_BOX}.show (text)
+			res := feature {WINFORMS_MESSAGE_BOX}.show (text)
 		end
 
 	on_format_font_clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS) is
@@ -232,7 +247,7 @@ feature {NONE} -- Implementation
 				current_font_family := mono_space_font_family
 			end
 
-			rich_text_box.set_font (create {DRAWING_FONT}.make_from_family_and_em_size (current_font_family, font_size))
+			rich_text_box.set_font (create {DRAWING_FONT}.make (current_font_family, font_size))
 		end
 
 	on_format_size_clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS) is
@@ -251,15 +266,15 @@ feature {NONE} -- Implementation
 			mi_format_size_checked := mi_clicked
 
 			font_size_string := mi_clicked.text
-			if font_size_string.equals (("&Small").to_cil) then
+			if ("&Small").is_equal (font_size_string) then
 				font_size := font_sizes ("Small")
-			elseif font_size_string.equals (("&Large").to_cil) then
+			elseif ("&Large").is_equal (font_size_string) then
 				font_size := font_sizes ("Large")
 			else
 				font_size := font_sizes ("Medium")
 			end
 
-			rich_text_box.set_font (create {DRAWING_FONT}.make_from_family_and_em_size (current_font_family, font_size))
+			rich_text_box.set_font (create {DRAWING_FONT}.make (current_font_family, font_size))
 		end
 
 invariant

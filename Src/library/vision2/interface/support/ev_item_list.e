@@ -188,7 +188,6 @@ feature -- Element change
 		ensure
 			item_inserted: first = v
 			new_count: count = old count + 1
-			new_index: index = old index + 1
 			item_parent_is_current: v.parent = Current
 		end
 
@@ -430,6 +429,9 @@ end -- class EV_ITEM_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/03/16 23:14:06  king
+--| Removed inapplicable indexing post cond from put_front
+--|
 --| Revision 1.8  2000/03/15 00:58:44  king
 --| Revised post-conditions for insertions
 --|

@@ -384,7 +384,7 @@ feature -- Basic operation
 			if it /= Void then
 				radio_button ?= it
 				if radio_button /= Void then
-					radio_button.internal_enable_select
+					radio_button.update_radio_states
 				end
 				it.interface.pointer_button_press_actions.call
 				([x_pos - child_x (it.interface),
@@ -731,6 +731,10 @@ end -- class EV_TOOL_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.42  2000/04/05 18:13:15  rogers
+--| Internal_propagate_pointer_press now calls update_radio_states
+--| on the radio_button.
+--|
 --| Revision 1.41  2000/04/05 17:25:41  rogers
 --| Added support for radio_button's in
 --| internal_propagate_pointer_press. Also now call the press_actions

@@ -24,7 +24,8 @@ inherit
 	TOP_I
 
 	MAIN_WINDOW_MANAGER_WINDOWS
-		rename 
+		rename
+			accelerators as wel_accelerators,
 			make as main_window_manager_make
 		end
 
@@ -174,28 +175,28 @@ feature {NONE} -- Implementation
 		local
 			resize_data: RESIZE_CONTEXT_DATA
 		do
-			if size_type = size_minimized then
-				if icon_name /= Void then
-					title_before_iconise := title
-					set_title (icon_name)
-				end
-			else
-				if title_before_iconise /= Void then
-					set_title (title_before_iconise)
-					title_before_iconise := Void
-				end
-				if fixed_size_flag then
+			if not children_resizing then
+				if size_type = size_minimized then
+					if icon_name /= Void then
+						title_before_iconise := title
+						set_title (icon_name)
+					end
+				else
+					if title_before_iconise /= Void then
+						set_title (title_before_iconise)
+						title_before_iconise := Void
+					end
 					resize_shell_children (a_width, a_height)
 				end
-			end
-			if size_type = Size_minimized then
-				shown := False
-				unmap_actions.execute (Current,  Void)
-			elseif size_type = Size_restored or else size_type = Size_maximized then
-				shown := True
-				map_actions.execute (Current, Void)
-				!! resize_data.make (owner, a_width, a_height, size_type)
-				resize_actions.execute (Current, resize_data)
+				if size_type = Size_minimized then
+					shown := False
+					unmap_actions.execute (Current,  Void)
+				elseif size_type = Size_restored or else size_type = Size_maximized then
+					shown := True
+					map_actions.execute (Current, Void)
+					!! resize_data.make (owner, a_width, a_height, size_type)
+					resize_actions.execute (Current, resize_data)
+				end
 			end
 		end
 

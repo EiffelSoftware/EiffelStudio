@@ -28,6 +28,7 @@ feature -- Basic operations
 				a_documentation.name /= Void
 		do
 			name := name_for_feature_with_keyword_check (a_documentation.name)
+			name.put (name.item (1).upper, 1)
 			value := a_value
 			description := a_documentation.doc_string
 

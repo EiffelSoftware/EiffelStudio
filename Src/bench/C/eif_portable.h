@@ -165,7 +165,9 @@ typedef unsigned int		uintptr_t;
 #endif
 
 #else
+#ifndef EIF_SOLARIS
 #include <stdint.h>
+#endif
 #endif
 
 typedef intptr_t	rt_int_ptr;

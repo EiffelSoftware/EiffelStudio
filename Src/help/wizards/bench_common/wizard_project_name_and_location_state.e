@@ -120,13 +120,15 @@ feature {NONE} -- Implementation
 		do
 			curr_project_location := project_location.text
 			curr_project_name := project_name.text
-			sep_index := curr_project_location.last_index_of (Operating_environment.Directory_separator, curr_project_location.count)
-			curr_project_location.head (sep_index)
-			if curr_project_name /= Void then
-				curr_project_location.append (curr_project_name)
+			if curr_project_location /= Void then
+				sep_index := curr_project_location.last_index_of (Operating_environment.Directory_separator, curr_project_location.count)
+				curr_project_location.head (sep_index)
+				if curr_project_name /= Void then
+					curr_project_location.append (curr_project_name)
+				end
+	
+				project_location.set_text (curr_project_location)
 			end
-
-			project_location.set_text (curr_project_location)
 		end
 		
 	validate_directory_string (a_directory: STRING): DIRECTORY_NAME is

@@ -198,9 +198,7 @@ feature
 					if is_boolean then
 						buf.putstring ("EIF_TEST(");
 					else
-						if extension.has_return_type then
-							type_c.generate_cast (buf);
-						end
+						type_c.generate_cast (buf);
 					end;
 					extension.generate_header_files
 
@@ -217,19 +215,12 @@ feature
 						extension.has_include_list
 					then
 						extension.generate_header_files
-						if extension.has_return_type then
-							buf.putchar ('(')
-							buf.putstring (extension.return_type)
-							buf.putchar (')')
-						end
+						type_c.generate_cast (buf);
 						buf.putstring (external_name);
 					else
 						if extension /= Void and then extension.has_signature then
-							if extension.has_return_type then
-								buf.putchar ('(')
-								buf.putstring (extension.return_type)
-								buf.putchar (')')
-							end
+							type_c.generate_cast (buf);
+
 								-- Generate the right name to call the external
 								-- In the case of a signature or a macro, the call will be direct
 								-- In the case of a dll, the encapsulation will be called (encoded name)

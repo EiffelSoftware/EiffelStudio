@@ -239,7 +239,7 @@ feature {NONE} -- GTK C functions for boxes
 
 	c_gtk_box_set_child_expandable (box: POINTER; child: POINTER; flag: BOOLEAN) is
 		external
-			"C (GtkBox *, GtkWidget *, gint flag) | %"gtk_eiffel.h%""
+			"C (GtkBox *, GtkWidget *, gint) | %"gtk_eiffel.h%""
 		end
 
 	c_gtk_box_homogeneous (box: POINTER): INTEGER is

@@ -7,7 +7,7 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	EV_ITEM_LIST [G -> EV_ITEM]
+	EV_ITEM_LIST [reference G -> EV_ITEM]
 
 inherit
 	EV_ANY

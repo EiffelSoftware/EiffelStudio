@@ -6,7 +6,7 @@ indexing
 	revision: "$Revision$"
 	
 deferred class 
-	EV_DYNAMIC_LIST_IMP [G -> EV_CONTAINABLE]
+	EV_DYNAMIC_LIST_IMP [reference G -> EV_CONTAINABLE]
 
 inherit
 	EV_DYNAMIC_LIST_I [G]

@@ -8,7 +8,7 @@ indexing
 	revision: "$Revision$"
 	
 deferred class 
-	EV_DYNAMIC_LIST_IMP [G -> EV_CONTAINABLE, G_IMP -> EV_ANY_I]
+	EV_DYNAMIC_LIST_IMP [reference G -> EV_CONTAINABLE, reference G_IMP -> EV_ANY_I]
 
 inherit
 	EV_DYNAMIC_LIST_I [G]
@@ -18,7 +18,7 @@ feature -- Access
 	i_th (i: INTEGER): like item is
 			-- Item at `i'-th position.
 		do
-			Result := imp_to_int (ev_children.i_th (i))
+			Result ?= ev_children.i_th (i).interface
 		end
 
 feature -- Measurement
@@ -33,9 +33,12 @@ feature {NONE} -- Implementation
 
 	insert_i_th (v: like item; i: INTEGER) is
 			-- Insert `v' at position `i'.
+		local
+			l_item: G_IMP
 		do
+			l_item ?= v.implementation
 			ev_children.go_i_th (i)
-			ev_children.put_left (int_to_imp (v))
+			ev_children.put_left (l_item)
 		end
 
 	remove_i_th (i: INTEGER) is
@@ -51,23 +54,6 @@ feature {EV_ANY_I} -- Implementation
 			-- Internal list of children.
 		deferred
 		end
-
-	int_to_imp (int: G): G_IMP is
-			-- `implementation' of `int'.
-		require
-			int_not_void: int /= Void
-		do
-			if g_imp_converter = Void then
-				create g_imp_converter
-			end
-			Result := g_imp_converter.attempt (int.implementation)
-		ensure
-			not_void: Result /= Void
-		end
-
-feature {NONE} -- Implementation
-
-	g_imp_converter: ASSIGN_ATTEMPT [G_IMP]
 
 end -- class EV_DYNAMIC_LIST_IMP
 

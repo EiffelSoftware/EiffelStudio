@@ -23,6 +23,8 @@ inherit
 			set_project_type,
 			dot_net_naming_convention,
 			set_dot_net_naming_convention,
+			--target_clr_version,
+			--set_target_clr_version,
 			generate_debug_info,
 			set_generate_debug_info,
 			precompiled_library,
@@ -154,6 +156,11 @@ feature -- Access
 			Result := ace.dot_net_naming_convention
 		end
 		
+	target_clr_version: STRING is
+			-- Version of CLR to target
+		do
+			Result := ace.target_clr_version
+		end
 		
 	generate_debug_info: BOOLEAN is
 			-- Generate debug info?
@@ -357,6 +364,12 @@ feature -- Element change
 			-- Assign `a_use_convention' to dot net naming convention
 		do
 			ace.set_dot_net_naming_convention (a_use_convention)
+		end
+		
+	set_target_clr_version (a_version: STRING) is
+			-- Assign 'a_version' to Version of CLR to target
+		do
+			ace.set_target_clr_version (a_version)
 		end
 		
 	set_generate_debug_info (a_generate_debug_info: BOOLEAN) is

@@ -29,7 +29,7 @@ feature {NONE}  -- Externals
 	ccom_create_item (eif_object: like Current): POINTER is
 			-- Initialize `item'
 		external
-			"C++ [new ecom_eiffel_compiler::IEnumCluster_impl_stub %"ecom_eiffel_compiler_IEnumCluster_impl_stub_s.h%"](EIF_OBJECT)"
+			"C++ [new ecom_EiffelComCompiler::IEnumCluster_impl_stub %"ecom_EiffelComCompiler_IEnumCluster_impl_stub_s.h%"](EIF_OBJECT)"
 		end
 
 end -- CLUSTER_ENUMERATOR

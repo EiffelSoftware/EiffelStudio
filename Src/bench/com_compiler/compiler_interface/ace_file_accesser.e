@@ -137,6 +137,12 @@ feature -- Access
 			Result := boolean_default(feature {FREE_OPTION_SD}.Dotnet_naming_convention)
 		end
 		
+	target_clr_version: STRING is
+			-- Version number of CLR compiler targets
+		do
+			Result := string_default(feature {FREE_OPTION_SD}.Msil_clr_version)
+		end
+			
 	use_cluster_name_as_namespace: BOOLEAN is
 			-- should cluster name be used as namespace name?
 		do
@@ -149,8 +155,6 @@ feature -- Access
 			Result := boolean_default (feature {FREE_OPTION_SD}.Use_all_cluster_name_as_namespace)
 		end
 		
-		
-
 	require_evaluated: BOOLEAN is
 			-- Are preconditions evaluated?
 		local
@@ -548,6 +552,14 @@ feature -- Element change
 			set_boolean_default (feature {FREE_OPTION_SD}.Dotnet_naming_convention, a_use_convention)
 		end
 
+	set_target_clr_version (a_version: STRING) is
+			-- Set version number of CLR compiler targets
+		require else
+			valid_version: clr_versions.has(a_version)
+		do
+			set_string_default(feature {FREE_OPTION_SD}.Msil_clr_version, a_version)
+		end
+
 	set_assertions (evaluate_require, evaluate_ensure, evaluate_check, evaluate_loop, evaluate_invariant: BOOLEAN) is
 			-- Change assertion settings.
 		local
@@ -877,6 +889,17 @@ feature -- Environment
 			Result := ace_dictionary.reserved_keywords;			
 		end
 
+	clr_versions: LINKED_LIST[STRING] is
+			-- valid versions of CLR supported by compiler
+		once
+			create Result.make
+			Result.extend("1.0.3705")
+-- TEMP/FIXME Paul
+-- This version number is subject to change.
+			Result.extend("1.1.4322") 
+		end
+
+
 feature -- Constants
 
 	il_generation_no: INTEGER is 0
@@ -949,7 +972,7 @@ feature {NONE} -- Implementation
 				Result.set_comment_list (Parser.comment_list)
 			end
 		end
-
+		
 invariant
 	non_void_root_ast: root_ast /= Void
 	

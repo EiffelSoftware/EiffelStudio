@@ -922,7 +922,7 @@ feature -- Externals
 	ccom_release (cpp_obj: POINTER) is
 			-- Last error code
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub %"ecom_eiffel_compiler_IEiffelClusterProperties_impl_stub_s.h%"]"
+			"C++ [ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub %"ecom_EiffelComCompiler_IEiffelClusterProperties_impl_stub_s.h%"]"
 		alias
 			"Release"
 		end

@@ -474,13 +474,6 @@ feature {COMPILER_EXPORTER}
 						error_found := True
 					end
 
-				when msil_full_name then
-					if value.is_name then
-						System.set_msil_full_name (value.value)	
-					else
-						error_found := True
-					end
-
 				when msil_assembly_compatibility then
 					if value.is_name then
 						System.set_msil_assembly_compatibility (value.value)	

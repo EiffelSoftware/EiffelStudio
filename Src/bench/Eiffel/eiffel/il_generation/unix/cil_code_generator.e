@@ -480,6 +480,7 @@ feature -- Features info
 
 	implementation_generate_feature (
 			feat: FEATURE_I; in_interface, is_static, is_override, is_empty: BOOLEAN)
+		is
 			-- Generate interface `feat' description.
 		require
 			feat_not_void: feat /= Void

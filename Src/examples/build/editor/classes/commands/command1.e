@@ -20,7 +20,7 @@ feature  -- Initialization
 	make (arg1: SCROLLED_T) is
 		do
 			argument1 := arg1
-			{BUILD_OPEN} Precursor (arg1)
+			Precursor {BUILD_OPEN} (arg1)
 		end
 
 feature  -- Command
@@ -34,7 +34,7 @@ feature  -- Command
 				asked_for_name := True
 				file_box.popup (Current)
 			else
-				{BUILD_OPEN} Precursor
+				Precursor {BUILD_OPEN}
 				if equal (open_label, transition_label) then
 					build_open_argument1.set_read_only
 					set_transition_label (view_label)

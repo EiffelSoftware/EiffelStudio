@@ -46,6 +46,7 @@ feature
 				if session.is_ok then
 					selection.load_result
 				end
+				selection.terminate
 				session.disconnect
 			else
 				io.error.putstring ("Invalid user/password!%N")

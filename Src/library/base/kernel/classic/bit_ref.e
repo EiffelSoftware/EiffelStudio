@@ -18,8 +18,6 @@ class BIT_REF inherit
 			conforms_to
 		end
 
-create {NONE}
-
 feature -- Access
 
 	item, infix "@" (i: INTEGER): BOOLEAN is

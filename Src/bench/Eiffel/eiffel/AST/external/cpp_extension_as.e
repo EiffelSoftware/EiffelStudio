@@ -83,7 +83,7 @@ feature -- Type check
 					error := True
 				else
 					arg_type ?= a_feat.arguments.i_th (1)
-					error := not arg_type.is_pointer
+					error := not arg_type.actual_type.is_pointer
 				end
 				if error then
 					create cpp_error
@@ -124,7 +124,7 @@ feature -- Type check
 			when new then
 					-- Must return a pointer
 				arg_type ?= a_feat.type
-				if not arg_type.is_pointer then
+				if not arg_type.actual_type.is_pointer then
 					create cpp_error
 					cpp_error.set_error_message ("The return type must be POINTER")
 					context.init_error (cpp_error)

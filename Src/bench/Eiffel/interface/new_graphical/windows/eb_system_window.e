@@ -271,7 +271,7 @@ feature -- Content saving
 					ace_file.close
 	
 					ace_file.open_write
-					ace_file.put_string (st)
+					st.put_in_file (ace_file)
 					ace_file.close
 					successful_save := True
 				else

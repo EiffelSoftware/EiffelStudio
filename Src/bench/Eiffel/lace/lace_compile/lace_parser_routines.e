@@ -187,7 +187,7 @@ feature {NONE} -- Implementation
 				create f_name.make_from_string (Workbench.backup_subdirectory)
 				f_name.set_file_name ("Ace.ace")
 				create copy_file.make_open_write (f_name)
-				copy_file.put_string (st)
+				st.put_in_file (copy_file)
 				copy_file.close
 			else
 				l_file_name := "Ace.ace"

@@ -1,0 +1,69 @@
+system
+
+	repository_appl
+
+root
+
+	example (root_cluster): "make"
+
+default
+
+	assertion (all);
+
+		-- Check all assertions
+
+	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/base")
+
+		-- Use precompiled base library
+
+cluster
+
+	root_cluster: 	".";
+
+		-- Replace 'root_cluster' and path '.' by the names of the
+		-- root class cluster and corresponding path for your system.
+		-- Add any other clusters that your system will need.
+
+	-- EiffelBase
+
+	access:             "$EIFFEL4/library/base/structures/access";
+	cursors:            "$EIFFEL4/library/base/structures/cursors";
+	cursor_tree:        "$EIFFEL4/library/base/structures/cursor_tree";
+	dispenser:          "$EIFFEL4/library/base/structures/dispenser";
+	iteration:          "$EIFFEL4/library/base/structures/iteration";
+	kernel:             "$EIFFEL4/library/base/kernel";
+	list:               "$EIFFEL4/library/base/structures/list";
+	--obsolete:           "$EIFFEL4/library/base/structures/obsolete";
+	set:                "$EIFFEL4/library/base/structures/set";
+	sort:               "$EIFFEL4/library/base/structures/sort";
+	storage:            "$EIFFEL4/library/base/structures/storage";
+	support:            "$EIFFEL4/library/base/support";
+	table:              "$EIFFEL4/library/base/structures/table";
+	traversing:         "$EIFFEL4/library/base/structures/traversing";
+	tree:               "$EIFFEL4/library/base/structures/tree";
+
+
+	-- EiffelStore
+
+	estore_support:		"$EIFFEL4/library/matisse/support";
+	estore_interface:	"$EIFFEL4/library/matisse/interface";
+	estore_date:		"$EIFFEL4/library/matisse/date_and_time";
+	estore_db_support:	"$EIFFEL4/library/matisse/dbms/support";
+
+	-- Matisse for EiffelStore
+
+    matisse_interface : "$EIFFEL4/library/matisse/dbms/oodbms/matisse/matisse_interface";
+    matisse_entities : "$EIFFEL4/library/matisse/dbms/oodbms/matisse/matisse_entities";
+    matisse_entities_externals : "$EIFFEL4/library/matisse/dbms/oodbms/matisse/matisse_entities/externals";
+    matisse_entities_streams : "$EIFFEL4/library/matisse/dbms/oodbms/matisse/matisse_entities/streams";
+
+external
+
+	object:	"-L$(EIFFEL4)/library/matisse/spec/$(PLATFORM)",
+		"-lsupport",
+		"-lsys_time",
+		"$(EIFFEL4)/library/matisse/dbms/oodbms/matisse/Clib/mt_support.o",
+		"$(EIFFEL4)/library/matisse/lib/csupport.o",
+		"$(EIFFEL4)/library/matisse/lib/libmatisseDE.a"
+
+end

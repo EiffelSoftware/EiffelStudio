@@ -122,6 +122,8 @@ feature {EV_ANY_IMP} -- Implementation
 		do
 			item_parent_imp := a_parent
 		end
+		
+feature {EV_ANY_I} -- Implementation
 
 	interface: EV_ITEM
 

@@ -25,25 +25,25 @@ inherit
 	
 feature {EV_ANY} -- Initialization
 
---|----------------------------------------------------------------
---| Creation sequence for all Vision2 objects is like this:
---|
---| - Default_create is defined once in EV_ANY.
---| - create_implementation is defined in descendants, default_create calls them
---| - After it is created, initialize is called on the implementation, this will
---|   do extra setup work but need not be redefined in every descendant.
---|   (Probably redefined in EV_WIDGET_IMP but not too many other places)
---|   Next default_create calls initialize on Current.
---|
---| `default_create' must be called during creation to satisfy the invariant.
---| The normal pattern is that default_create will produce a properly
---| initialized default object and any special convenience creation features
---| will call default_create then do their extra work.
---|
---| The postcondition of `default_create' checks `is_in_default_state', this
---| returns True by default but should be redefined by decendants to check for
---| proper initial results from class queries.
---|----------------------------------------------------------------
+ --|----------------------------------------------------------------
+ --| Creation sequence for all Vision2 objects is like this:
+ --|
+ --| - Default_create is defined once in EV_ANY.
+ --| - create_implementation is defined in descendants, default_create calls them
+ --| - After it is created, initialize is called on the implementation, this will
+ --|   do extra setup work but need not be redefined in every descendant.
+ --|   (Probably redefined in EV_WIDGET_IMP but not too many other places)
+ --|   Next default_create calls initialize on Current.
+ --|
+ --| `default_create' must be called during creation to satisfy the invariant.
+ --| The normal pattern is that default_create will produce a properly
+ --| initialized default object and any special convenience creation features
+ --| will call default_create then do their extra work.
+ --|
+ --| The postcondition of `default_create' checks `is_in_default_state', this
+ --| returns True by default but should be redefined by decendants to check for
+ --| proper initial results from class queries.
+ --|----------------------------------------------------------------
 
 	frozen default_create is
 			-- Standard creation procedure.
@@ -239,37 +239,39 @@ invariant
 
 end -- class EV_ANY
 
---|----------------------------------------------------------------
---| The "bridge pattern" as used in Vision2
---|
---| The bridge pattern is described in the Design Patterns book (Gamma et al.).
---| It provides a way to seperate interface from implementation so that the two
---| can be structured differently.
---| The bridge pattern comes at the cost of a high maintenence overhead as any
---| change to the interface must be duplicated in the implementation interface.
---| The implementation interface should really be generated from the interface.
---|
---| The following features of the bridge patter are not used in Eiffel Vision.
---| - Hiding of propritary implementation through delivery of interface source
---|   but only compiled implementations. (Not applicable in Eiffel)
---| - Protection of clients from relinking due to implementation changes.
---|   (Not applicable in Eiffel)
---| - Sharing an implementation object among interface objects.
---| - Delaying creation of implementation object.
---|----------------------------------------------------------------
+indexing
+	bridge_pattern: "[
+	 The "bridge pattern" as used in Vision2
+	
+	 The bridge pattern is described in the Design Patterns book (Gamma et al.).
+	 It provides a way to seperate interface from implementation so that the two
+	 can be structured differently.
+	 The bridge pattern comes at the cost of a high maintenence overhead as any
+	 change to the interface must be duplicated in the implementation interface.
+	 The implementation interface should really be generated from the interface.
+	
+	 The following features of the bridge patter are not used in Eiffel Vision.
+	 - Hiding of propritary implementation through delivery of interface source
+	   but only compiled implementations. (Not applicable in Eiffel)
+	 - Protection of clients from relinking due to implementation changes.
+	   (Not applicable in Eiffel)
+	 - Sharing an implementation object among interface objects.
+	 - Delaying creation of implementation object.
+	]"
 
---|-----------------------------------------------------------------------------
+--|----------------------------------------------------------------
 --| EiffelVision2: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--| Copyright (C) 1986-2001 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --| May be used only with ISE Eiffel, under terms of user license. 
 --| Contact ISE for any other use.
 --|
 --| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
+--| ISE Building
+--| 360 Storke Road, Goleta, CA 93117 USA
 --| Telephone 805-685-1006, Fax 805-685-6869
 --| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
+--| Customer support: http://support.eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
---|-----------------------------------------------------------------------------
+--|----------------------------------------------------------------
+

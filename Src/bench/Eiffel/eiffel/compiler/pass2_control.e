@@ -4,25 +4,17 @@
 class PASS2_CONTROL 
 
 inherit
-
-	PASS_CONTROL
-		rename
-			make as basic_make,
-			wipe_out as basic_wipe_out
-		end;
 	PASS_CONTROL
 		redefine
 			wipe_out, make
-		select
-			wipe_out, make
-		end;
+		end
+
 	SHARED_EXTERNALS
 		export
 			{NONE} all
-		end;
+		end
 
 creation
-
 	make
 
 feature
@@ -40,8 +32,8 @@ feature
 	make is
 			-- Initialization
 		do
-			basic_make;
-			!!old_externals.make;
+			{PASS_CONTROL} Precursor
+			!! old_externals.make
 			old_externals.compare_objects
 		end;
 
@@ -74,6 +66,7 @@ feature
 				Externals.remove_occurence (old_externals.item);
 				old_externals.forth;
 			end;
+
 			from
 				new_externals.start
 			until
@@ -87,7 +80,7 @@ feature
 	wipe_out is
 			-- Empty the structure
 		do
-			basic_wipe_out;
+			{PASS_CONTROL} Precursor
 			old_externals.wipe_out;
 			new_externals := Void;
 		end;

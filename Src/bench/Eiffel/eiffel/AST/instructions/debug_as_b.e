@@ -60,6 +60,7 @@ feature -- Type check, byte code and dead code removal
 					Result.set_keys (node_keys);
 				end;
 			end;
+			Result.set_line_number (line_number)
 		end;
 
 feature -- Debugger

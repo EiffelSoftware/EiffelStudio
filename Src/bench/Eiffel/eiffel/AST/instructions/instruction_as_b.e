@@ -12,7 +12,7 @@ inherit
 
 	AST_EIFFEL_B
 		undefine
-			byte_node
+			byte_node, line_number
 		redefine
 			find_breakable, format, type_check
 		end

@@ -40,6 +40,7 @@ feature -- Type check, byte code and dead code removal
 			if check_list /= Void then
 				Result.set_check_list (check_list.byte_node);
 			end;
+			Result.set_line_number (line_number)
 		end;
 
 feature -- Replication

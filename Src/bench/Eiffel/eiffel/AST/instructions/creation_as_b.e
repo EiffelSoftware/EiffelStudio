@@ -308,6 +308,7 @@ feature -- Type check, byte code and dead code removal
 				call_access.set_parent (nested);
 				Result.set_call (nested);
 			end;
+			Result.set_line_number (line_number)
 		end;
 
 feature -- Replication

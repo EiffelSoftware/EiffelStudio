@@ -16,6 +16,9 @@ inherit
 		end;
 
 	AST_EIFFEL_B
+		undefine
+			line_number
+
 		redefine
 			type_check, byte_node, find_breakable, fill_calls_list, replicate
 		end
@@ -57,6 +60,7 @@ feature {NONE} -- Type check, byte code production, dead code removal
 					Result.set_compound (tmp2);
 				end
 			end;
+			Result.set_line_number (line_number)
 		end;
 
 feature -- Debugging

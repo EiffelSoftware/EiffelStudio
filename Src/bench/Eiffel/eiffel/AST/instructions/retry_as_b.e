@@ -23,6 +23,7 @@ feature -- Type check and byte code
 			-- Associated byte code
 		do
 			!!Result
+			Result.set_line_number (line_number)
 		end;
 
 	perform_type_check is

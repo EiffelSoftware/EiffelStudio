@@ -72,6 +72,7 @@ feature -- Access
 			!!Result;
 			Result.set_target (target.byte_node);
 			Result.set_source (source.byte_node);
+			Result.set_line_number (line_number)
 		end;
 
 end -- class REVERSE_AS_B

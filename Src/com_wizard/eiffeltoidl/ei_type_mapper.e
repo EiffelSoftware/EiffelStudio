@@ -17,6 +17,11 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_SHARED_DATA
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -112,7 +117,7 @@ feature -- Basic operations
 			non_void_type: l_type /= Void
 			supported_type: supported_eiffel_type (l_type)
 		local
-			tmp_string: STRING
+			l_text: STRING
 		do
 			in_type := False
 			inout_type := False
@@ -133,11 +138,10 @@ feature -- Basic operations
 			end
 
 			if Result = Void then
-				tmp_string := l_type.twin
-				tmp_string.append (Space)
-				tmp_string.append (message_output.Not_e2idl_convertable_type)
-
-				message_output.add_warning (Current, tmp_string)
+				create l_text.make (l_type.count + 42)
+				l_text.append (l_type)
+				l_text.append (" cannot be converted into a valid COM type")
+				message_output.add_warning (Current, l_text)
 			end
 		end
 

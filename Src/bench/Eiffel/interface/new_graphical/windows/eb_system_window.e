@@ -106,7 +106,7 @@ feature -- Actions
 		do
 			create file_dialog
 			file_dialog.set_filter ("*.ace")
-			file_dialog.open_actions.extend (~retrieve_ace_file (file_dialog))
+			file_dialog.open_actions.extend (agent retrieve_ace_file (file_dialog))
 			file_dialog.show_modal_to_window (window)
 		end
 
@@ -129,7 +129,7 @@ feature -- Actions
 			-- Enable MSIL generation.
 		do
 			if is_initialized then
-				tab_list.do_all ({EB_SYSTEM_TAB}~enable_msil_widgets)
+				tab_list.do_all (agent {EB_SYSTEM_TAB}.enable_msil_widgets)
 			end
 		end
 
@@ -137,7 +137,7 @@ feature -- Actions
 			-- Enable C generation.
 		do
 			if is_initialized then
-				tab_list.do_all ({EB_SYSTEM_TAB}~enable_c_widgets)
+				tab_list.do_all (agent {EB_SYSTEM_TAB}.enable_c_widgets)
 			end
 		end
 		
@@ -205,12 +205,12 @@ feature -- Content initialization
 			l_tab_list: like tab_list
 		do
 			l_tab_list := tab_list
-			l_tab_list.do_all ({EB_SYSTEM_TAB}~reset)
+			l_tab_list.do_all (agent {EB_SYSTEM_TAB}.reset)
 			if Workbench.has_compilation_started then
-				l_tab_list.do_all ({EB_SYSTEM_TAB}~disable_widgets_set_before_has_compilation_started)
+				l_tab_list.do_all (agent {EB_SYSTEM_TAB}.disable_widgets_set_before_has_compilation_started)
 			end
 			if Workbench.is_already_compiled then
-				l_tab_list.do_all ({EB_SYSTEM_TAB}~disable_widgets_set_before_is_already_compiled)
+				l_tab_list.do_all (agent {EB_SYSTEM_TAB}.disable_widgets_set_before_is_already_compiled)
 			end
 			is_content_valid := False
 		end
@@ -223,7 +223,7 @@ feature -- Content initialization
 			has_content: has_content
 			ast_not_void: ast /= Void
 		do
-			tab_list.do_all ({EB_SYSTEM_TAB}~retrieve (root_ast))
+			tab_list.do_all (agent {EB_SYSTEM_TAB}.retrieve (root_ast))
 		end
 
 feature -- Content saving
@@ -238,10 +238,10 @@ feature -- Content saving
 			l_list: like tab_list
 		do
 			l_list := tab_list
-			l_list.do_all ({EB_SYSTEM_TAB}~perform_check)
+			l_list.do_all (agent {EB_SYSTEM_TAB}.perform_check)
 			
 			if
-				l_list.for_all ({EB_SYSTEM_TAB}~is_valid)
+				l_list.for_all (agent {EB_SYSTEM_TAB}.is_valid)
 			then
 				if Eiffel_ace.file_name = Void or else root_ast = Void then
 						-- Creation of AST.
@@ -251,7 +251,7 @@ feature -- Content saving
 					ast := root_ast.duplicate
 				end
 	
-				l_list.do_all ({EB_SYSTEM_TAB}~store (ast))				
+				l_list.do_all (agent {EB_SYSTEM_TAB}.store (ast))				
 	
 				create st.make (2048)
 				ast.save (st)
@@ -305,7 +305,7 @@ feature -- Content saving
 			end
 
 				-- Post­store operation to refresh display
-			l_list.do_all ({EB_SYSTEM_TAB}~post_store_reset)				
+			l_list.do_all (agent {EB_SYSTEM_TAB}.post_store_reset)				
 		end
 
 feature {NONE} -- Initialization
@@ -373,15 +373,15 @@ feature {NONE} -- Initialization
 			vbox.set_border_width (Layout_constants.Default_border_size)
 
 				-- Create Ok button
-			create button.make_with_text_and_action (Interface_names.b_OK, ~ok_action)
+			create button.make_with_text_and_action (Interface_names.b_OK, agent ok_action)
 			extend_button (vbox, button)
 
 				-- Create Cancel button
-			create button.make_with_text_and_action (Interface_names.b_Cancel, ~cancel_action)
+			create button.make_with_text_and_action (Interface_names.b_Cancel, agent cancel_action)
 			extend_button (vbox, button)
 
 				-- Create Apply button
-			create button.make_with_text_and_action (Interface_names.b_Apply, ~apply_action)
+			create button.make_with_text_and_action (Interface_names.b_Apply, agent apply_action)
 			extend_button (vbox, button)
 
 				-- Cosmetics
@@ -397,7 +397,7 @@ feature {NONE} -- Initialization
 			
 				-- Closing window
 			window.close_request_actions.wipe_out
-			window.close_request_actions.put_front (~cancel_action)
+			window.close_request_actions.put_front (agent cancel_action)
 		end
 
 	build_menus is
@@ -426,15 +426,15 @@ feature {NONE} -- Initialization
 			file_menu.extend (create {EV_MENU_SEPARATOR})
 
 			create menu_item.make_with_text (Interface_names.m_ok)
-			menu_item.select_actions.extend (~ok_action)
+			menu_item.select_actions.extend (agent ok_action)
 			file_menu.extend (menu_item)
 
 			create menu_item.make_with_text (Interface_names.m_apply)
-			menu_item.select_actions.extend (~apply_action)
+			menu_item.select_actions.extend (agent apply_action)
 			file_menu.extend (menu_item)
 
 			create menu_item.make_with_text ("Cancel")
-			menu_item.select_actions.extend (~cancel_action)
+			menu_item.select_actions.extend (agent cancel_action)
 			file_menu.extend (menu_item)
 		end
 

@@ -91,6 +91,9 @@ feature -- Access: IL code generation
 	msil_assembly_compatibility: STRING
 			-- Compatibility of current assembly with other assemblies.
 
+	msil_key_file_name: STRING
+			-- Location of key pair used to sign current generated assembly.
+
 	cls_compliant, dotnet_naming_convention: BOOLEAN
 			-- Let the compiler generates CLS compliant metadata along with or
 			-- without using .NET naming convention.
@@ -262,6 +265,14 @@ feature -- Update
 			msil_assembly_compatibility := comp
 		ensure
 			msil_assembly_compatibility_set: msil_assembly_compatibility = comp
+		end
+
+	set_msil_key_file_name (a_file_name: STRING) is
+			-- Set `msil_key_file_name' with `a_file_name'.
+		do
+			msil_key_file_name := a_file_name
+		ensure
+			msil_key_file_name_set: msil_key_file_name = a_file_name
 		end
 
 	set_cls_compliant (v: BOOLEAN) is

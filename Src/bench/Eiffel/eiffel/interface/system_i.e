@@ -2669,8 +2669,9 @@ end
 
 				i := 1
 				nb := type_id_counter.value
-				buffer.putstring ("#include %"eif_macros.h%"%N%N%
-								%long egc_fsize_init[] = {%N")
+				buffer.putstring ("#include %"eif_macros.h%"%N%
+								%#include %"eif_malloc.h%"%N%
+								%%Nlong egc_fsize_init[] = {%N")
 			until
 				i > nb
 			loop

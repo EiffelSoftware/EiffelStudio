@@ -1,5 +1,5 @@
 <document title="8 PRODUCING AND EXPORTING DOCUMENTATION" output="studio">
-	<meta_data/>
+	<meta_data></meta_data>
 	<paragraph>
 		<paragraph>
 			<link>
@@ -318,7 +318,8 @@
 			<bold>not</bold> need to complete the generation now unless you want to.  The generated HTML is available in a subdirectory 
 			<code>
 				<keyword>index-09A</keyword>
-			</code> of the directory where you are reading this document (if electronically from the ISE Eiffel delivery), and also in the corresponding directory on the Eiffel site, at http://www.eiffel.com/doc/manuals/intro/environment/index-09A/.
+			</code> on the Eiffel site, at <link>
+			<url>http://www.eiffel.com/doc/manuals/intro/environment/index-09A/</url><label>http://www.eiffel.com/doc/manuals/intro/environment/index-09A/.</label></link>
 		</paragraph>
 		<note>
 			<italic>The name </italic>

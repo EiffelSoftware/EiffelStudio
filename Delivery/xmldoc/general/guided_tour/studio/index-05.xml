@@ -1,5 +1,5 @@
 <document title="4 COMPILING AND EXECUTING A SYSTEM" output="studio">
-	<meta_data/>
+	<meta_data></meta_data>
 	<paragraph>
 		<paragraph>
 			<link>
@@ -18,7 +18,7 @@
 		</image_link>
 		<paragraph>As this is our first project we want to 
 			<code>
-				<keyword>Create a new project</keyword>.
+				<keyword>Open existing Ace (control file)</keyword>.
 			</code> The three possibilities are:
 		</paragraph>
 		<list ordered="false">
@@ -86,13 +86,13 @@
 		</paragraph>
 		<paragraph>During Eiffel compilation, a progress bar displays the successive compilation steps, or "degrees".  The bulk of our little project is the EiffelBase library, which the EiffelStudio installation procedure has precompiled; so just now there's only a few extra classes to compile, and the process is almost instantaneous on a state-of-the-art computer.  Even if you had to compile the EiffelBase classes, EiffelStudio compilation is so fast that you would hardly have the time to read the "degree" messages; you can see them later in compilations of bigger classes and systems.  </paragraph>
 		<note>
-			<italic>On an IBM Thinkpad, Pentium III 850 MHz, 256 MB, running Windows 2000 Professional, Eiffel compilationtakes about 9 seconds for the entire Guided Tour system including non-precompiled EiffelBase.   </italic>
+			<italic>On an IBM Thinkpad, Pentium III 850 MHz, 256 MB, running Windows 2000 Professional, Eiffel compilation takes about 9 seconds for the entire Guided Tour system including non-precompiled EiffelBase.   </italic>
 		</note>
 		<paragraph>After Eiffel compilation completes you will see the message</paragraph>
 		<code_block>	<keyword>System had to be frozen to include new externals.   </keyword>
 	<keyword>Eiffel compilation system recompiled.   </keyword>
 	<keyword>Background C compilation launched</keyword></code_block>
-		<paragraph>At this stage you can start using EiffelStudio, e.  g.  for browsing, but since C compilation won't take long either (about 15 seconds on our test machine), it's just as well to let it finish.  C compilation messages will appear:</paragraph>
+		<paragraph>At this stage you can start using EiffelStudio, e. g. for browsing, but since C compilation won't take long either (about 15 seconds on our test machine), it's just as well to let it finish.  C compilation messages will appear:</paragraph>
 		<list ordered="false">
 			<item>On Windows, in a new console.  </item>
 			<item>On Unix, in the window from which you launched EiffelStudio.  </item>
@@ -112,7 +112,7 @@
 			<size>2</size>
 			<content>Executing the system</content>
 		</heading>
-		<paragraph>The system doesn't do anything exciting, but let's execute it anyway.  Find the execution icon ("Run with breakpoints") at the top of the EiffelStudio window:</paragraph>
+		<paragraph>The system doesn't do anything exciting, but let's execute it anyway.  Find the execution icon ("Run with breakpoints") at the top of the EiffelStudio window.</paragraph>
 		<paragraph>It would be OK too to use the neighboring icon to the left, "Run without breakpoints", since we haven't set any breakpoints.  Click either icon to execute the system.  </paragraph>
 		<paragraph>This little application doesn't use graphics or anything fancy but simply creates some objects and displays some information.  Output done using the default Eiffel I/O (from the EiffelBase classes 
 			<code>

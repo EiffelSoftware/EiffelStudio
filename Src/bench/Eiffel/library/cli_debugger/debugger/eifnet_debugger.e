@@ -73,7 +73,6 @@ feature -- Initialization
 			-- runtime after while
 		local
 			l_host: CLR_HOST
-			l_factory: CLR_HOST_FACTORY
 		once
 			(create {CLI_COM}).initialize_com
 			l_host := (create {CLR_HOST_FACTORY}).runtime_host (Eiffel_system.System.clr_runtime_version)			
@@ -110,6 +109,8 @@ feature -- Initialization
 					icor_debug_unmanaged_callback_obj.add_ref			
 					icor_debug.set_unmanaged_handler (icor_debug_unmanaged_callback_obj)				
 		
+					init_dbg_synchronisation
+					enable_estudio_callback
 					start_dbg_timer
 					is_debugging := True
 				end
@@ -171,6 +172,15 @@ feature -- Status
 			Result := last_dbg_call_success = 0
 		end
 
+feature -- Callback notification about synchro
+
+	estudio_callback_event is
+			-- 
+		do
+--			print ("eStudio : Notification callback done%N")
+			Application.imp_dotnet.estudio_callback_notify
+		end
+		
 feature -- Interaction with .Net Debugger
 
 	waiting_debugger_callback (a_title: STRING) is
@@ -212,6 +222,20 @@ feature -- Interaction with .Net Debugger
 --			waiting_debugger_callback ("continue")
 			last_dbg_call_success := icor_debug_process.last_call_success
 		end
+		
+	do_clear_exception is
+			-- Clear current exception
+		local
+			l_thread: ICOR_DEBUG_THREAD
+		do
+			l_thread := Eifnet_debugger_info.icd_thread
+			if l_thread /= Void then
+				l_thread.clear_current_exception
+--				check
+--					l_thread.last_call_succeed
+--				end
+			end
+		end	
 
 feature -- Stepping Access
 
@@ -470,11 +494,11 @@ feature -- Bridge to EIFNET_DEBUGGER_INFO
 		do
 			Result := Eifnet_debugger_info.last_managed_callback_is_exception
 		end	
-
---	set_managed_callback_status (cb_id: INTEGER; a_status: BOOLEAN) is
---		do
---			Eifnet_debugger_info.managed_callback_status_info.force (a_status, cb_id)
---		end
+		
+	last_managed_callback_is_eval_exception: BOOLEAN is
+		do
+			Result := Eifnet_debugger_info.last_managed_callback_is_eval_exception
+		end	
 
 	active_exception_value: ICOR_DEBUG_VALUE is
 		local
@@ -593,9 +617,6 @@ feature -- Function Evaluation
 				--| l_icd_value represents the `internal_string_builder' value
 				if l_icd_value /= Void then
 					Result := (create {EIFNET_DEBUG_EXTERNAL_FORMATTER}).string_from_string_builder (l_icd_value)
-				else
-					print ("ERROR ... EIFNET_DEBUGGER::string_value_from_string_class_object_value %N")
-					Result := "Error : Unavailable"				
 				end
 --				if Result = Void then
 --					Result := "Error : Unavailable"				
@@ -623,99 +644,106 @@ feature -- Function Evaluation
 
 			l_status: APPLICATION_STATUS_DOTNET
 			l_debug_info : EIFNET_DEBUG_VALUE_INFO
+			skip_debug_output_evaluation: BOOLEAN
 		do	
-			l_icd := a_icd
-			l_icd_object := a_icd_obj
-
-			l_class_type := a_class_type
-			l_feat := debug_output_feature_i (a_class_type.associated_class)
-			if l_feat /= Void then
-				l_icd_class := l_icd_object.get_class
-				l_icd_module := l_icd_class.get_module
-				l_module_name := l_icd_module.get_name
-			
-				l_feature_token := Il_debug_info_recorder.feature_token_for_feat_and_class_type (l_feat, l_class_type)
-				l_func := l_icd_module.get_function_from_token (l_feature_token)
-
-				if l_func /= Void then
-					l_icd_thread := icor_debug_thread
-					l_icd_eval := l_icd_thread.create_eval
-					l_status := Application.imp_dotnet.status
-					l_status.set_is_evaluating (True)
-
-					--| Let use the evaluating mecanism instead of the normal one
-					--| then let's disable the timer
-
-					stop_dbg_timer 
-	--				l_icd_thread.set_debug_state_as_suspended
+--			skip_debug_output_evaluation := True
+			if skip_debug_output_evaluation then
+				Result := Void --"debug_output evaluation is OFF"
+			else	
+				l_icd := a_icd
+				l_icd_object := a_icd_obj
 	
-					debug  ("DEBUGGER_TRACE_EVAL")
-						print ("%N%N<=^=> Calling feature debug_output on ["+ l_class_type.associated_class.name_in_upper +"] <===>%N")
-						print (    "      in module :: "+ l_module_name+ "%N%N")
-					end
-					l_icd_eval.call_function (l_func, 1, << l_icd >>)
+				l_class_type := a_class_type
+				l_feat := debug_output_feature_i (a_class_type.associated_class)
+				if l_feat /= Void then
+					l_icd_class := l_icd_object.get_class
+					l_icd_module := l_icd_class.get_module
+					l_module_name := l_icd_module.get_name
+				
+					l_feature_token := Il_debug_info_recorder.feature_token_for_feat_and_class_type (l_feat, l_class_type)
+					l_func := l_icd_module.get_function_from_token (l_feature_token)
 	
-					do_continue
+					if l_func /= Void then
+						l_icd_thread := icor_debug_thread
+						l_icd_eval := l_icd_thread.create_eval
+						l_status := Application.imp_dotnet.status
+						l_status.set_is_evaluating (True)
 	
-					debug ("DEBUGGER_TRACE_EVAL")
-						print ("  Calling feature debug_output :: DONE%N")
-						print ("  > lock_and_wait_for_callback:: Going on Waiting  ...%N")
-					end
-					lock_and_wait_for_callback
-					reset_data_changed
---					l_status.set_is_evaluating (False)
---					start_dbg_timer
-					
-					debug ("DEBUGGER_TRACE_EVAL")
-						print ("  > lock_and_wait_for_callback:: Waiting finished ...%N")
-					end
-					if Application.imp_dotnet.eifnet_debugger.last_managed_callback_is_exception then
-						Result := "WARNING: Exception"
---						Result.append_string (last_exception_message)
-						debug ("DEBUGGER_TRACE_EVAL")
-							display_last_exception
-							print ("EIFNET_DEBUGGER.debug_output_.. :: WARNING Exception occured %N")
+						--| Let use the evaluating mecanism instead of the normal one
+						--| then let's disable the timer
+						stop_dbg_timer
+		
+						debug  ("DEBUGGER_TRACE_EVAL")
+							print ("%N%N<=^=> Calling feature debug_output on ["
+									+ l_class_type.associated_class.name_in_upper 
+									+ "] <===>%N")
+							print (    "      in module :: "+ l_module_name+ "%N%N")
 						end
-					else	
---						l_icd_eval := Eifnet_debugger_info.icd_eval
-						if l_icd_eval /= Void then
-							l_icd := l_icd_eval.get_result
-	
-							create l_debug_info.make (l_icd)
-							Result := string_value_from_string_class_object_value (l_debug_info.interface_debug_object_value)							
-						else
-							Result := "WARNING: Exception (IcorDebugEval Null)"	
+						l_icd_eval.call_function (l_func, 1, << l_icd >>)
+--						l_icd_thread.set_debug_state_as_suspended
+						do_continue
+		
+						debug ("DEBUGGER_TRACE_EVAL")
+							print ("  Calling feature debug_output :: DONE%N")
+							print ("  > lock_and_wait_for_callback:: Going on Waiting  ...%N")
+						end
+						lock_and_wait_for_callback
+						reset_data_changed
+						
+						debug ("DEBUGGER_TRACE_EVAL")
+							print ("  > lock_and_wait_for_callback:: Waiting finished ...%N")
+						end
+						if 
+							Application.imp_dotnet.eifnet_debugger.last_managed_callback_is_exception 
+--							or
+--							Application.imp_dotnet.eifnet_debugger.last_managed_callback_is_eval_exception
+						then
+							Result := Void --"WARNING: Could not evaluate output"
 							debug ("DEBUGGER_TRACE_EVAL")
-								print ("EIFNET_DEBUGGER.debug_output_.. :: WARNING: Exception (IcorDebugEval Null) %N")
+								display_last_exception
+								print ("EIFNET_DEBUGGER.debug_output_.. :: WARNING Exception occured %N")
+							end
+							do_clear_exception
+						else	
+							if l_icd_eval /= Void then
+								l_icd := l_icd_eval.get_result
+		
+								create l_debug_info.make (l_icd)
+								Result := string_value_from_string_class_object_value (l_debug_info.interface_debug_object_value)							
+							else
+								Result := Void -- "WARNING: Could not evaluate output"	
+								debug ("DEBUGGER_TRACE_EVAL")
+									print ("EIFNET_DEBUGGER.debug_output_.. :: WARNING: Exception (IcorDebugEval Null) %N")
+								end
 							end
 						end
+	
+						debug ("DEBUGGER_TRACE_EVAL")
+							print ("<=v=> "+l_class_type.associated_class.name_in_upper+".debug_output :: Done <===>%N")
+						end
+						
+						l_status.set_is_evaluating (False)
+						start_dbg_timer					
+					else
+						debug ("DEBUGGER_TRACE_EVAL")
+							print ("EIFNET_DEBUGGER.debug_output_.. :: Unable to retrieve ICorDebugFunction %N")
+							print ("                                :: class name    = ["+l_class_type.full_il_type_name+"]%N")
+							print ("                                :: module_name   = %""+l_module_name+"%"%N")
+							print ("                                :: feature_token = 0x"+l_feature_token.to_hex_string+" %N")
+						end
 					end
-
-					debug ("DEBUGGER_TRACE_EVAL")
-						print ("<=v=> "+l_class_type.associated_class.name_in_upper+".debug_output :: Done <===>%N")
-					end
-					
-					l_status.set_is_evaluating (False)
-					start_dbg_timer					
+	
 				else
 					debug ("DEBUGGER_TRACE_EVAL")
-						print ("EIFNET_DEBUGGER.debug_output_.. :: Unable to retrieve ICorDebugFunction %N")
-						print ("                                :: class name    = ["+l_class_type.full_il_type_name+"]%N")
-						print ("                                :: module_name   = %""+l_module_name+"%"%N")
-						print ("                                :: feature_token = 0x"+l_feature_token.to_hex_string+" %N")
+						print ("EIFNET_DEBUGGER.debug_output_.. :: Unable to retrieve FEATURE_I ["+l_class_type.associated_class.name_in_upper+"] %N")
 					end
 				end
-
-			else
 				debug ("DEBUGGER_TRACE_EVAL")
-					print ("EIFNET_DEBUGGER.debug_output_.. :: Unable to retrieve FEATURE_I ["+l_class_type.associated_class.name_in_upper+"] %N")
+					if Result = Void then
+						print ("EIFNET_DEBUGGER.debug_output_.. :: Error: non debuggable ;) %N")
+					end
 				end
-			end
-			debug ("DEBUGGER_TRACE_EVAL")
-				if Result = Void then
-					print ("EIFNET_DEBUGGER.debug_output_.. :: Error: non debuggable ;) %N")
-				end
-			end
+			end		
 		end	
 		
 feature {NONE}
@@ -726,14 +754,17 @@ feature {NONE}
 			last_managed_callback_is_exception
 		local
 			l_exception_info: EIFNET_DEBUG_VALUE_INFO
+			l_exception: ICOR_DEBUG_VALUE
 		do
-			create l_exception_info.make (active_exception_value)
-
-			print ("%N%NException ....%N")
-			print ("%T Class   => " + l_exception_info.value_class_name + "%N")
-			print ("%T Module  => " + l_exception_info.value_module_file_name + "%N")
-			print ("%T Message => " + (create {EIFNET_EXCEPTION_CODE} ).exception_string_representation (l_exception_info.value_class_token ) + "%N")
-			
+			l_exception := active_exception_value
+			if l_exception /= Void then
+				create l_exception_info.make (active_exception_value)
+	
+				print ("%N%NException ....%N")
+				print ("%T Class   => " + l_exception_info.value_class_name + "%N")
+				print ("%T Module  => " + l_exception_info.value_module_file_name + "%N")
+				print ("%T Message => " + (create {EIFNET_EXCEPTION_CODE} ).exception_string_representation (l_exception_info.value_class_token ) + "%N")			
+			end
 		end
 
 feature {NONE} -- External

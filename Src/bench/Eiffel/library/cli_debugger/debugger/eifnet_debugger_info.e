@@ -177,6 +177,13 @@ feature -- Current CallStack
 		
 	current_callstack_initialized: BOOLEAN
 
+feature -- Evaluation
+
+	is_inside_function_evaluation: BOOLEAN is
+		do
+			Result := Application.imp_dotnet.status.is_evaluating
+		end		
+
 feature -- Progression
 
 	save_current_stack_as_previous is

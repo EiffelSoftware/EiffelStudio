@@ -7,8 +7,6 @@ class EXTERNAL_I
 
 inherit
 	PROCEDURE_I
-		export
-			{NONE} set_private_external_name
 		redefine
 			transfer_to, equiv, update_api,
 			melt, generate,

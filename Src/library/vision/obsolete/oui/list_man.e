@@ -298,7 +298,6 @@ feature -- Insertion
 	put_left (an_item: STRING) is
 			-- Put `an_item' to the left of cursor index.
 			-- Do not move cursor.
-			-- Synonym for `put_left'.
 		require
 			exists: not destroyed
 		do
@@ -310,7 +309,6 @@ feature -- Insertion
 	put_right (an_item: STRING) is
 			-- Put item `v' to the right of cursor position.
 			-- Do not move cursor.
-			-- Synonym for `put_right'.
 		require
 			exists: not destroyed
 		do

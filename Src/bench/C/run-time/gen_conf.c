@@ -850,7 +850,7 @@ rt_public int16 eif_compound_id (int16 *cache, EIF_REFERENCE Current, int16 base
 		else
 			gresult = eif_id_of (*types, &intable, &outtable, 0, 1, &cachable);
 
-
+		
 #ifdef GEN_CONF_DEBUG
 		log_puts (eif_typename(gresult));
 		log_puts (" Dftype = ");
@@ -1313,7 +1313,9 @@ rt_public EIF_REFERENCE eif_gen_tuple_typecode_str (EIF_REFERENCE obj)
 	REQUIRE ("Non negative dftype", dftype >= 0);
 	REQUIRE ("Valid dftype", dftype < next_gen_id);
 
+#ifdef EIF_ASSERTIONS
 	gdp = eif_derivations [dftype];
+#endif
 
 	CHECK ("gdp not null", gdp != (EIF_GEN_DER *)0);
 	CHECK ("Not a bit type", !gdp->is_bit);
@@ -1486,7 +1488,7 @@ rt_public int16 eif_register_bit_type (long size)
 
 rt_public int16 eif_typeof_array_of (int16 dtype)
 {
-	int16   typearr [4], arr_dtype;
+	int16   *typearr, arr_dtype, result;
 
 #ifdef WORKBENCH
 	arr_dtype = RTUD_INV(egc_arr_dtype);
@@ -1494,12 +1496,15 @@ rt_public int16 eif_typeof_array_of (int16 dtype)
 	arr_dtype = egc_arr_dtype;
 #endif
 
+	typearr = (int16 *) eif_malloc (4 * sizeof(int16));
 	typearr [0] = -1;		   /* No static call context */
 	typearr [1] = arr_dtype;   /* Base type of ARRAY     */
 	typearr [2] = dtype;       /* Parameter type */
 	typearr [3] = TERMINATOR;
 
-	return eif_compound_id ((int16 *)0, (EIF_REFERENCE )0,(int16) arr_dtype, typearr);
+	result = eif_compound_id ((int16 *)0, (EIF_REFERENCE )0,(int16) arr_dtype, typearr);
+	eif_free (typearr);
+	return result;
 }
 /*------------------------------------------------------------------*/
 /* Full type name of `obj' as STRING object.                        */
@@ -1885,7 +1890,8 @@ rt_private int16 eif_id_of (int16 stype, int16 **intab,
 							int16 apply_rtud, char *cachable)
 
 {
-	int16   dftype, gcount = 0, i, hcode, ltype, uniformizer = 0;
+	int16   dftype, gcount = 0, i, hcode, uniformizer = 0;
+	int16	ltype; /* No need to initialize it */
 	int16   *save_otab;
 	int     pos, mcmp;
 	char    is_expanded, is_tuple;
@@ -1896,21 +1902,18 @@ rt_private int16 eif_id_of (int16 stype, int16 **intab,
 	/* Get full type */
 
 	dftype = **intab;
-	ltype = TERMINATOR;      /* No 'like' type */
-	is_expanded = (char) 0;
-	is_tuple = (char) 0;
 
-	if (dftype <= EXPANDED_LEVEL)
-	{
+	if (dftype <= EXPANDED_LEVEL) {
 		/* expanded */
 		dftype   = EXPANDED_LEVEL-dftype;
 		is_expanded = '1';
+	} else {
+		is_expanded = (char) 0;
 	}
 
 	/* Check whether it's a TUPLE Type */
 
-	if (dftype == TUPLE_TYPE)
-	{
+	if (dftype == TUPLE_TYPE) {
 		(*intab)++;
 		uniformizer = **intab;  /* Uniformizer of TUPLE */
 		(*intab)++;
@@ -1928,12 +1931,13 @@ rt_private int16 eif_id_of (int16 stype, int16 **intab,
 		}
 
 		is_tuple = '1';
+	} else {
+		is_tuple = (char) 0;
 	}
 
 	/* Process anchored types */
 
-	if ((dftype == LIKE_FEATURE_TYPE)||(dftype == LIKE_PFEATURE_TYPE))
-	{
+	if ((dftype == LIKE_FEATURE_TYPE)||(dftype == LIKE_PFEATURE_TYPE)) {
 		/* Anchor to a feature */
 
 		*cachable = (char) 0;   /* Cannot cache - may change */
@@ -1961,8 +1965,7 @@ rt_private int16 eif_id_of (int16 stype, int16 **intab,
 		return (apply_rtud ? RTUD(dftype) : dftype);
 	}
 
-	if ((dftype == LIKE_ARG_TYPE) || (dftype == LIKE_CURRENT_TYPE))
-	{
+	if ((dftype == LIKE_ARG_TYPE) || (dftype == LIKE_CURRENT_TYPE)) {
 		/* Anchor to argument or Current */
 
 		*cachable = (char) 0;   /* Cannot cache - may change */
@@ -1991,8 +1994,7 @@ rt_private int16 eif_id_of (int16 stype, int16 **intab,
 		return (apply_rtud ? RTUD(dftype) : dftype);
 	}
 
-	if (dftype <= FORMAL_TYPE)
-	{
+	if (dftype <= FORMAL_TYPE) {
 		/* formal generic */
 
 		*cachable = (char) 0;   /* Cannot cache - may change */
@@ -2037,8 +2039,7 @@ rt_private int16 eif_id_of (int16 stype, int16 **intab,
 		return (apply_rtud ? RTUD(dftype) : dftype);
 	}
 
-	if ((dftype < 0) || (dftype >= first_gen_id))
-	{
+	if ((dftype < 0) || (dftype >= first_gen_id)) {
 		/* It's a basic type or an already created gen. type */
 
 		(*intab)++;
@@ -2062,8 +2063,7 @@ rt_private int16 eif_id_of (int16 stype, int16 **intab,
 	if (!is_tuple)
 		gcount = pt->nb_generics;
 
-	if (!is_tuple && (gcount == 0))
-	{
+	if (!is_tuple && (gcount == 0)) {
 		/* Neither a generic type nor a TUPLE type */
 		(*intab)++;
 
@@ -2079,8 +2079,7 @@ rt_private int16 eif_id_of (int16 stype, int16 **intab,
 	save_otab = *outtab;
 	(*intab)++;
 
-	for (hcode = 0, i = gcount; i; --i)
-	{
+	for (hcode = 0, i = gcount; i; --i) {
 		hcode += eif_id_of (stype, intab, outtab, obj_type, 0, cachable);
 	}
 
@@ -2091,8 +2090,7 @@ rt_private int16 eif_id_of (int16 stype, int16 **intab,
 	/*gdp  = eif_derivations [RTUD(dftype)];*/
 	prev = (EIF_GEN_DER *) 0;
 
-	while (gdp != (EIF_GEN_DER *) 0)
-	{
+	while (gdp != (EIF_GEN_DER *) 0) {
 		if ((hcode == gdp->hcode) && 
 			(is_expanded == gdp->is_expanded) &&
 			(gcount == gdp->size))
@@ -2111,8 +2109,7 @@ rt_private int16 eif_id_of (int16 stype, int16 **intab,
 		gdp  = gdp->next;
 	}
 
-	if (gdp == (EIF_GEN_DER *)0)
-	{
+	if (gdp == (EIF_GEN_DER *)0) {
 		/* Not found: we need a new id */
 
 		gdp = eif_new_gen_der((long)gcount, save_otab, dftype, is_expanded, is_tuple, hcode);
@@ -2191,20 +2188,13 @@ rt_private EIF_GEN_DER *eif_new_gen_der(long size, int16 *typearr, int16 base_id
 		goto finish_simple;
 	}
 
-	tp = (int16 *) 0;
-
-	if (size > 8)
-	{
-		/* Large array */
-
+	if (size > 8) {
+			/* Large array */
 		tp = (int16 *) eif_malloc(size*sizeof(int16));
-
 		if (tp == (int16 *)0)
 			enomem();
-	}
-	else
-	{
-		/* Small array */
+	} else {
+			/* Small array */
 		tp = result->stypearr;
 	}
 

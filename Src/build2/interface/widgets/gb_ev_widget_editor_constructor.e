@@ -136,7 +136,14 @@ feature {NONE} -- Implementation
 			-- Reset minimum width of object referenced by `Current'.
 		local
 			original_id: INTEGER
+			constant_context: GB_CONSTANT_CONTEXT
 		do
+				-- Firsty remove the constant if one exists, as we are resetting
+				-- the width and if we leave the constant it cannot be reset.
+			constant_context := object.constants.item (type + minimum_width_string)
+			if constant_context /= Void then
+				constant_context.destroy
+			end
 			reset_width_button.disable_sensitive
 				-- Although the editor will be rebuilt, doing this gives the
 				-- impression of instant feedback, even if there is a small delay
@@ -155,7 +162,14 @@ feature {NONE} -- Implementation
 			-- Reset minimum width of object referenced by `Current'.
 		local
 			original_id: INTEGER
+			constant_context: GB_CONSTANT_CONTEXT
 		do
+				-- Firsty remove the constant if one exists, as we are resetting
+				-- the height and if we leave the constant it cannot be reset.
+			constant_context := object.constants.item (type + minimum_height_string)
+			if constant_context /= Void then
+				constant_context.destroy
+			end
 			reset_height_button.disable_sensitive
 				-- Although the editor will be rebuilt, doing this gives the
 				-- impression of instant feedback, even if there is a small delay

@@ -9,7 +9,7 @@
 
 struct TEiffelCallback
 	{
-	void *pCurrObject;
+	EIF_REFERENCE pCurrObject;
 	void *fnptr;
 	};
 typedef struct TEiffelCallback EiffelCallback;
@@ -26,7 +26,7 @@ BOOL CALLBACK EnumChildProc(HWND hwnd, LPARAM lparam)
 	return TRUE; // TRUE => Continue enumeration.
 	}
 
-void cwel_enum_child_windows_procedure (void *pCurrObject, void *fnptr, HWND hWndParent)
+void cwel_enum_child_windows_procedure (EIF_REFERENCE pCurrObject, void *fnptr, HWND hWndParent)
 	{
 	EiffelCallback eif_callback;
 	eif_callback.pCurrObject = pCurrObject;

@@ -1636,8 +1636,14 @@ char  *c_clname(FILE *file_pointer)
 
 	zzin = file_pointer;
 
-	/* Parsing */
+		/* This function must be called prior any invocation of the lexical
+	 	* analyzer. Its purpose is to put the automaton in the known INIT
+	 	* state. I could have used the undocumented INITIAL state, but this
+	 	* is not supported everywhere (which is why it's undocumented)--RAM.
+	 	*/
 	BEGIN INIT;
+
+		/* Parsing */
 	reset_class_name_parser();
 	result = zzlex();
 

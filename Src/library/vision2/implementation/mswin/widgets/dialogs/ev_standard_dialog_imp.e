@@ -12,6 +12,11 @@ inherit
 	EV_STANDARD_DIALOG_I
 
 	EV_STANDARD_DIALOG_ACTION_SEQUENCES_IMP
+	
+	EV_DIALOG_CONSTANTS
+		export
+			{NONE} all
+		end
 
 feature -- Access
 
@@ -33,13 +38,14 @@ feature -- Status setting
 			set_blocking_window (a_window)
 			modal_to ?= blocking_window.implementation
 			activate (modal_to)
+			set_blocking_window (Void)
 			if selected then
-				selected_button := "OK"
+				selected_button := ev_ok
 				if ok_actions_internal /= Void then
 					ok_actions_internal.call ([])
 				end
 			else
-				selected_button := "Cancel"
+				selected_button := ev_cancel
 				if cancel_actions_internal /= Void then
 					cancel_actions_internal.call ([])
 				end
@@ -90,6 +96,12 @@ end -- class EV_STANDARD_DIALOG_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2001/07/12 20:58:45  rogers
+--| Fixed a bug in `show_modal_to_window'. After `ativate' has been called,
+--| we now set the blocking window to `Void', as blocking window should be
+--| `Void' when the dialog is closed. We also now inherit
+--| EV_DIALOG_CONSTANTS.
+--|
 --| Revision 1.11  2001/06/07 23:08:14  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

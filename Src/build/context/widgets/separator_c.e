@@ -63,6 +63,8 @@ feature
 
 	eiffel_type: STRING is "SEPARATOR";
 
+	full_type_name: STRING is "Separator"
+
 	-- ***********************
 	-- * specific attributes *
 	-- ***********************

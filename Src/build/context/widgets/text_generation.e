@@ -15,7 +15,7 @@ feature {NONE}
 			-- of  the routine 'func_name' with no arguments
 		do
 			function_name (a_string, context, func_name);
-			a_string.append (";%N");
+			a_string.append ("%N");
 		end;
 
 	cond_f_to_string (a_string: STRING; condition: BOOLEAN; context: STRING; func_name1, func_name2: STRING) is
@@ -37,7 +37,7 @@ feature {NONE}
 			function_name (a_string, context, func_name);
 			a_string.append (" (");
 			a_string.append (number.out);
-			a_string.append (");%N");
+			a_string.append (")%N");
 		end;
 
 	function_string_to_string (a_string: STRING; context: STRING; func_name: STRING; string: STRING) is
@@ -47,7 +47,7 @@ feature {NONE}
 			function_name (a_string, context, func_name);
 			a_string.append (" (%"");
 			a_string.append (string);
-			a_string.append ("%");%N");
+			a_string.append ("%")%N");
 		end;
 
 	function_bool_to_string (a_string: STRING; context: STRING; func_name: STRING; bool: BOOLEAN) is
@@ -61,7 +61,7 @@ feature {NONE}
 			else
 				a_string.append ("false");
 			end;
-			a_string.append (");%N");
+			a_string.append (")%N");
 		end;
 
 	function_int_int_to_string (a_string: STRING; context: STRING; func_name: STRING; n1, n2: INTEGER) is
@@ -73,7 +73,7 @@ feature {NONE}
 			a_string.append (n1.out);
 			a_string.append (", ");
 			a_string.append (n2.out);
-			a_string.append (");%N");
+			a_string.append (")%N");
 		end;
 
 end

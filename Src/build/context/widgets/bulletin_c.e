@@ -47,6 +47,8 @@ feature
 
 	eiffel_type: STRING is "EB_BULLETIN"
 
+	full_type_name: STRING is "Bulletin"
+
 	intermediate_name: STRING is
 			-- full name of the context i.e. with root, group, ...
 		local

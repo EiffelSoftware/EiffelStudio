@@ -22,6 +22,7 @@ inherit
 		select
 			context_initialization
 		end;
+-- samik	G_ANY
 
 feature 
 
@@ -38,15 +39,16 @@ feature
 	add_widget_callbacks is
 		local
 			ms_win: STRING
+			mode_backup: INTEGER
 		do
-			--ms_win := "MS_WINDOWS";
-			--if not ms_win.is_equal (toolkit.name) then
-				add_common_callbacks (widget.button);
-				initialize_transport;
-				if (parent = Void) or else not parent.is_group_composite then
-					widget.button.add_enter_action (eb_selection_mgr, Current);
-				end
-			--end;
+			mode_backup := executing_or_editing_mode
+			set_mode (editing_mode)
+			add_common_callbacks (widget.button);
+			initialize_transport;
+			if (parent = Void) or else not parent.is_group_composite then
+				widget.button.add_enter_action (eb_selection_mgr, Current);
+			end
+			set_mode (mode_backup)
 		end;
 
 	remove_widget_callbacks is
@@ -131,6 +133,8 @@ feature {NONE}
 feature 
 
 	eiffel_type: STRING is "OPT_PULL";
+
+	full_type_name: STRING is "Option pull"
 
 	-- *********************
 	-- * Widget attributes *

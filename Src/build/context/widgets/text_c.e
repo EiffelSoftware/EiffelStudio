@@ -61,6 +61,8 @@ feature
 
 	eiffel_type: STRING is "SCROLLED_T";
 
+	full_type_name: STRING is "Scrolled text"
+
 	-- ***********************
 	-- * specific attributes *
 	-- ***********************
@@ -275,8 +277,8 @@ feature {CONTEXT}
 			-- and all its children
 		do
 			!!Result.make (0);
-			Result.append ("%T%T%T!!");
-			Result.append (entity_name);
+			Result.append ("%T%T%T!! ");
+			Result.append (entity_name_in_lower_case);
 			if is_word_wrap_enable then
 				Result.append (".make_word_wrapped (%"");
 			else
@@ -285,7 +287,7 @@ feature {CONTEXT}
 			Result.append (entity_name);
 			Result.append ("%", ");
 			Result.append (parent_name);
-			Result.append (");");
+			Result.append (")");
 			if not (visual_name = Void) then
 				Result.append ("%T-- ");
 				Result.append (visual_name);

@@ -148,6 +148,8 @@ feature
 
 	eiffel_type: STRING is "TOGGLE_B";
 
+	full_type_name: STRING is "Toggle button"
+
 -- ****************
 -- Storage features
 -- ****************

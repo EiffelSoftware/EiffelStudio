@@ -1,29 +1,20 @@
+indexing
+	description: "Context representing a permanent window PERM_WIND."
+	Id: "$Id$"
+	Date: "$Date$"
+	Revision: "$Revision$"
 
 class PERM_WIND_C 
 
 inherit
 
 	WINDOW_C
-		rename
-			remove_yourself as wind_remove_yourself,
-			copy_attributes as old_copy_attributes,
-			reset_modified_flags as old_reset_modified_flags,
-			add_widget_callbacks as window_add_widget_callbacks
 		redefine
-			creation_procedure_text, stored_node,
-			context_initialization, widget, is_perm_window,
-			update_visual_name_in_editor
-		end;
-	WINDOW_C
-		redefine
-			creation_procedure_text, stored_node, 
+			stored_node, 
 			reset_modified_flags, copy_attributes, 
 			context_initialization, 
-			widget, add_widget_callbacks,
-			remove_yourself, is_perm_window, update_visual_name_in_editor
-		select
-			copy_attributes, reset_modified_flags, 
-			add_widget_callbacks, remove_yourself
+			widget, remove_yourself, is_perm_window, 
+			update_visual_name_in_editor, description_text
 		end
 
 feature -- Widget type
@@ -79,6 +70,7 @@ feature
 					-- a configure event before realization.
 				end
 			end;
+			add_undo_redo_accelerator (widget)
 			--widget.top_shell.set_action ("<Map>,<Prop>", Current, Current)
 			add_to_window_list;
 		end;
@@ -95,22 +87,32 @@ feature -- Adding/removing callbacks
 			widget.top_shell.remove_action ("<Configure>");
 		end;
 
+feature 
+
+	full_type_name: STRING is "Permanent window"
+
 feature {NONE}
 
 	Window_seed: STRING is "Perm_wind";
 
 	Window_seed_to_lower: STRING is "perm_wind";
 
-	add_widget_callbacks is
-			-- Define the general behavior of perm window.
-		do
-			window_add_widget_callbacks;
-		end;
-
 	namer: NAMER is
 		once
 			!!Result.make (Window_seed);
 		end;
+
+	description_text: STRING is
+			-- Description text in indexing clause.
+		do
+			!! Result.make (50)
+			Result.append ("Permanent window")
+			if visual_name /= Void then
+				Result.append (": ")
+				Result.append (visual_name)
+			end
+			Result.append (".")
+		end
 
 feature 
 
@@ -135,7 +137,7 @@ feature
 				end;	
 				Shared_window_list.forth;
 			end;
-			wind_remove_yourself;
+			Precursor
 		end;
 
 	is_perm_window: BOOLEAN is
@@ -226,7 +228,7 @@ feature
 
 	reset_modified_flags is
 		do
-			old_reset_modified_flags;
+			Precursor 
 			icon_name_modified := False;
 			iconic_state_modified := False;
 		end;
@@ -251,7 +253,7 @@ feature {NONE}
 				other_context.set_icon_pixmap (icon_pixmap_name);
 			end;
 			other_context.set_start_hidden (start_hidden)
-			old_copy_attributes (other_context);
+			Precursor (other_context);
 		end;
 
 	
@@ -280,19 +282,19 @@ feature {CONTEXT}
 	
 feature {NONE}
 
-	creation_procedure_text: STRING is
-		local
-			creation_procedure: STRING;
-		do
-			creation_procedure := clone (eiffel_type);
-			creation_procedure.to_lower;
-			creation_procedure.append ("_make");
-
-			!!Result.make (100);
-			Result.append ("%N%Tmake (a_name: STRING; a_screen: SCREEN) is%N%T%Tdo%N%T%T%T");
-			Result.append (creation_procedure);
-			Result.append (" (a_name, a_screen);%N");
-		end;
+-- 	creation_procedure_text: STRING is
+-- 		local
+-- 			creation_procedure: STRING;
+-- 		do
+-- 			creation_procedure := clone (eiffel_type);
+-- 			creation_procedure.to_lower;
+-- 			creation_procedure.append ("_make");
+-- 
+-- 			!!Result.make (100);
+-- 			Result.append ("%N%Tmake (a_name: STRING; a_screen: SCREEN) is%N%T%Tdo%N%T%T%T");
+-- 			Result.append (creation_procedure);
+-- 			Result.append (" (a_name, a_screen);%N");
+-- 		end;
 
 -- ****************
 -- Storage features

@@ -181,6 +181,13 @@ feature
 			Result := group_type.entity_name
 		end;
 
+	full_type_name: STRING is 
+		do
+			!! Result.make (15)
+			Result.append ("Group: ")
+			Result.append (eiffel_type)
+		end
+
 	is_bulletin: BOOLEAN is
 		do
 			Result := True

@@ -61,6 +61,8 @@ feature
 
 	eiffel_type: STRING is "SCALE";
 
+	full_type_name: STRING is "Scale"
+
 	-- ***********************
 	-- * specific attributes *
 	-- ***********************

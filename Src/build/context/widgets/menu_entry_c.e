@@ -87,6 +87,8 @@ feature
 
 	eiffel_type: STRING is "PUSH_B";
 
+	full_type_name: STRING is "Menu entry (Push button)"
+
 	create_context (a_parent: COMPOSITE_C): like Current is
 		local
 			menu: MENU_C;

@@ -132,7 +132,7 @@ feature -- Element change
 
 				-- Set the new bitmap id.
 			cwel_tbaddbitmap_set_hinst (item,
-				main_args.current_instance.item)
+				main_args.resource_instance.item)
 			cwel_tbaddbitmap_set_nid (item, a_bitmap_id)
 		ensure
 			bitmap_id_set: bitmap_id = a_bitmap_id

@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 		do
 			structure_make
 			cwel_toolinfo_set_cbsize (item, structure_size)
-			set_instance (main_args.current_instance)
+			set_instance (main_args.resource_instance)
 		end
 
 feature -- Access

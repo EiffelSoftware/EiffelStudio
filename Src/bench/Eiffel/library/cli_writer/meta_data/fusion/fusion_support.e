@@ -78,7 +78,7 @@ feature {NONE} -- Implementation
 	c_get_gac_assemblies (p, ass: POINTER): INTEGER is
 			-- Call `IFusionSupport->GetGacAssemblies'.
 		external
-			"C++ IFusionSupport signature (IEnumAssemblies**): EIF_INTEGER use %"vs_support.h%""
+			"C++ IFusionSupport signature (IEnumAssemblies**): EIF_INTEGER use %"ise_vs_fusion_support.h%""
 		alias
 			"GetGacAssemblies"
 		end
@@ -86,7 +86,7 @@ feature {NONE} -- Implementation
 	c_signed (p, a_loc, sgned: POINTER): INTEGER is
 			-- Call `IFusionSupport->IsAssemblySigned'.
 		external
-			"C++ IFusionSupport signature (BSTR, VARIANT_BOOL *): EIF_INTEGER use %"vs_support.h%""
+			"C++ IFusionSupport signature (BSTR, VARIANT_BOOL *): EIF_INTEGER use %"ise_vs_fusion_support.h%""
 		alias
 			"IsAssemblySigned"
 		end
@@ -94,7 +94,7 @@ feature {NONE} -- Implementation
 	c_get_assembly_info_from_assembly (p, a_loc, ass_info: POINTER): INTEGER is
 			-- Call `IFusionSupport->GetAssemblyInfoFromAssembly'.
 		external
-			"C++ IFusionSupport signature (BSTR, IAssemblyInfo**): EIF_INTEGER use %"vs_support.h%""
+			"C++ IFusionSupport signature (BSTR, IAssemblyInfo**): EIF_INTEGER use %"ise_vs_fusion_support.h%""
 		alias
 			"GetAssemblyInfoFromAssembly"
 		end

@@ -85,11 +85,11 @@ extern "C" {
 /*
  * Generation scavenging parameters
  */
-#define GS_LIMIT		400		/* Max size for allocation in scavenge zone */
+#define GS_LIMIT		512		/* Max size for allocation in scavenge zone */
 #ifdef VXWORKS
 #define GS_ZONE_SZ_DEFAULT	2*PAGESIZE_VALUE
 #else
-#define GS_ZONE_SZ_DEFAULT	307200	/* Size of a scavenge zone (300 K) */
+#define GS_ZONE_SZ_DEFAULT	2097152	/* Size of a scavenge zone (2MB) */
 #endif
 #define GS_FLOATMARK (eif_scavenge_size >> 2 + \
 					  eif_scavenge_size >> 3 + \
@@ -104,6 +104,9 @@ extern "C" {
  */
 RT_LNK char *emalloc(uint32 type);				/* Allocate an Eiffel object */
 RT_LNK char *spmalloc(unsigned int nbytes);			/* Allocate an Eiffel special object */
+RT_LNK char *strmalloc(unsigned int nbytes);		/* Allocate a string. */
+extern char *eif_strset(char *object, unsigned int nbytes);
+						/* Set the string header. */
 RT_LNK char *cmalloc(unsigned int nbytes);				/* Allocate a C object */
 extern char *gmalloc(unsigned int nbytes);				/* Garbage collector's allocation */
 extern char *xmalloc(unsigned int nbytes, int type, int gc_flag);				/* Low level allocation routine */
@@ -112,7 +115,8 @@ extern void xfree(register char *ptr);				/* Free */
 extern void xfreechunk(char *ptr);					/* Free memory chunks */
 extern char *crealloc(char *ptr, unsigned int nbytes);			/* Reallocate a C object */
 extern char *xrealloc(register char *ptr, register unsigned int nbytes, int gc_flag);			/* Reallocate with GC turned on/off */
-extern char *sprealloc(char *ptr, long int nbitems);			/* Reallocate an Eiffel special object */
+RT_LNK char *sprealloc(char *ptr, long int nbitems);			/* Reallocate an Eiffel special object */
+RT_LNK char *strrealloc(char *ptr, long int nbitems);			/* Reallocate an Eiffel special object */
 extern struct emallinfo *meminfo(int type);	/* Memory statistics */
 
 /*

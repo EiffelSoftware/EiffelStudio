@@ -51,8 +51,11 @@ feature -- Status report
 			Result := text_metrics.ascent
 		end
 
-	average_width: INTEGER
+	average_width: INTEGER is
 			-- Width of all characters in the font in tenth of pixel
+		do
+			Result := text_metrics.average_character_width
+		end
 
 	character_set: STRING is
 			-- (iso8859-1, ...)

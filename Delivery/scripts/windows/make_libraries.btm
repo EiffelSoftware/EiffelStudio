@@ -34,6 +34,10 @@ remtrace wel
 exprt -r %DEFAULT_CVS_TAG -d wel "Src/library/wel"
 
 iff not defined NO_COMPILE then
+	REM "The makefiles for these libraries copy the .lib's to ISE_EIFFEL"
+	mkdir /s %INSTALL_DIR\library\vision2\spec\bcb\lib
+	mkdir /s %INSTALL_DIR\library\vision2\spec\msc\lib
+
 	remtrace Retrieve the header files
 	cdd %EIFFEL_SRC
 	exprt -l -r %DEFAULT_CVS_TAG -d headers Src/library/headers.tar.gz
@@ -52,9 +56,6 @@ iff not defined NO_COMPILE then
 	all_makes
 	cd %INSTALL_DIR\C_library\libpng
 	all_makes
-	REM "The makefiles for these libraries copy the .lib's to ISE_EIFFEL"
-	mkdir /s %INSTALL_DIR\library\vision2\spec\bcb\lib
-	mkdir /s %INSTALL_DIR\library\vision2\spec\msc\lib
 	quick_move library\vision2\spec\bcb\lib\zlib.lib
 	quick_move library\vision2\spec\msc\lib\zlib.lib
 	quick_move library\vision2\spec\bcb\lib\libpng.lib

@@ -101,12 +101,12 @@ feature -- Implementation
 			-- Gets the appropriate resource from `key_value'
 			-- if the type is unknown, it is assumed to be a string.
 		local
-			type: INTEGER
+			--type: INTEGER
 			ir: INTEGER_RESOURCE
-			br: BOOLEAN_RESOURCE
-			cr: COLOR_RESOURCE
-			fr: FONT_RESOURCE
-			sr: STRING_RESOURCE
+			--br: BOOLEAN_RESOURCE
+			--cr: COLOR_RESOURCE
+			--fr: FONT_RESOURCE
+			--sr: STRING_RESOURCE
 			ar: ARRAY_RESOURCE
 		do
 			create key_value.make

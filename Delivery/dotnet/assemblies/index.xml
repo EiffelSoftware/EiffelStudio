@@ -1,0 +1,17 @@
+<!DOCTYPE index SYSTEM "index.dtd">
+<assemblies>
+	<assembly_filename>$ISE_EIFFEL\dotnet\assemblies\mscorlib-1.0.2411.0-neutral-b77a5c561934e089</assembly_filename>
+	<assembly_filename>$ISE_EIFFEL\dotnet\assemblies\System.Windows.Forms-1.0.2411.0-neutral-b77a5c561934e089</assembly_filename>
+	<assembly_filename>$ISE_EIFFEL\dotnet\assemblies\System.Xml-1.0.2411.0-neutral-b77a5c561934e089</assembly_filename>
+	<assembly_filename>$ISE_EIFFEL\dotnet\assemblies\System-1.0.2411.0-neutral-b77a5c561934e089</assembly_filename>
+	<assembly_filename>$ISE_EIFFEL\dotnet\assemblies\Accessibility-1.0.2411.0-neutral-b03f5f7f11d50a3a</assembly_filename>
+	<assembly_filename>$ISE_EIFFEL\dotnet\assemblies\System.Drawing-1.0.2411.0-neutral-b03f5f7f11d50a3a</assembly_filename>
+	<assembly_filename>$ISE_EIFFEL\dotnet\assemblies\System.Web.RegularExpressions-1.0.2411.0-neutral-b03f5f7f11d50a3a</assembly_filename>
+	<assembly_filename>$ISE_EIFFEL\dotnet\assemblies\System.Web-1.0.2411.0-neutral-b03f5f7f11d50a3a</assembly_filename>
+	<assembly_filename>$ISE_EIFFEL\dotnet\assemblies\System.Runtime.Serialization.Formatters.Soap-1.0.2411.0-neutral-b03f5f7f11d50a3a</assembly_filename>
+	<assembly_filename>$ISE_EIFFEL\dotnet\assemblies\cscompmgd-7.0.0.0-neutral-b03f5f7f11d50a3a</assembly_filename>
+	<assembly_filename>$ISE_EIFFEL\dotnet\assemblies\System.Runtime.Remoting-1.0.2411.0-neutral-b77a5c561934e089</assembly_filename>
+	<assembly_filename>$ISE_EIFFEL\dotnet\assemblies\System.DirectoryServices-1.0.2411.0-neutral-b03f5f7f11d50a3a</assembly_filename>
+	<assembly_filename>$ISE_EIFFEL\dotnet\assemblies\System.EnterpriseServices-1.0.2411.0-neutral-b03f5f7f11d50a3a</assembly_filename>
+	<assembly_filename>$ISE_EIFFEL\dotnet\assemblies\System.Data-1.0.2411.0-neutral-b77a5c561934e089</assembly_filename>
+</assemblies>

@@ -1,5 +1,5 @@
 indexing
-	description: "Path to various EAC files"
+	description: "Path to various EAC files
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -25,6 +25,7 @@ feature {CACHE_READER} -- Access
 		local
 			key: STRING
 		do
+			--| FIXME IEK Refactor code so that both assembly_path functions call the same abstracted function.
 			key := encoded_key (name.get_public_key_token)
 			create Result.make (name.get_name.get_length + name.get_version.to_string.get_length + name.get_culture_info.get_name.get_length + key.count + 4)
 			Result.append (create {STRING}.make_from_cil (name.get_name))
@@ -39,7 +40,28 @@ feature {CACHE_READER} -- Access
 			non_void_path: Result /= Void
 			ends_with_directory_separator: Result.item (Result.count) = (create {OPERATING_ENVIRONMENT}).Directory_separator
 		end
-	
+		
+	relative_assembly_path_from_consumed_assembly (ca: CONSUMED_ASSEMBLY): STRING is
+			-- Path to folder containing `ca' types relative to `Eac_path'
+		require
+			non_void_assembly: ca /= Void
+			valid_assembly: ca.key /= Void
+		local
+			key, ca_culture, ca_version: STRING
+		do
+			ca_culture := ca.culture
+			if ca_culture.is_equal ("neutral") then
+				ca_culture := ""
+			end
+			create ca_version.make_from_cil (ca.version.to_cil.to_string.replace_character ('.', '_'))
+			create Result.make (ca.name.count + ca_version.count + ca_culture.count + ca.key.count + 4)
+			Result.append (ca.name + "-" + ca_version + "-" + ca_culture + "-" + ca.key)
+			Result.append_character ((create {OPERATING_ENVIRONMENT}).Directory_separator)
+		ensure
+			non_void_path: Result /= Void
+			ends_with_directory_separator: Result.item (Result.count) = (create {OPERATING_ENVIRONMENT}).Directory_separator
+		end
+
 	absolute_assembly_path (name: ASSEMBLY_NAME): STRING is
 			-- Absolute path to folder containing `name' types.
 			-- Always return a value even if `name' in not in EAC
@@ -50,6 +72,24 @@ feature {CACHE_READER} -- Access
 			relative_path: STRING
 		do
 			relative_path := relative_assembly_path (name)
+			create Result.make (Eiffel_path.count + Eac_path.count + relative_path.count)
+			Result.append (Eiffel_path)
+			Result.append (Eac_path)
+			Result.append (relative_path)
+		ensure
+			non_void_path: Result /= Void
+			ends_with_directory_separator: Result.item (Result.count) = (create {OPERATING_ENVIRONMENT}).Directory_separator
+		end
+		
+	absolute_assembly_path_from_consumed_assembly (ca: CONSUMED_ASSEMBLY): STRING is
+			-- Absolute path to folder containing `ca' types.
+		require
+			non_void_assembly: ca /= Void
+			valid_assembly: ca.key /= Void
+		local
+			relative_path: STRING
+		do
+			relative_path := relative_assembly_path_from_consumed_assembly (ca)
 			create Result.make (Eiffel_path.count + Eac_path.count + relative_path.count)
 			Result.append (Eiffel_path)
 			Result.append (Eac_path)
@@ -121,43 +161,16 @@ feature {NONE} -- Implementation
 
 	Eiffel_path: STRING is
 			-- Path to Eiffel installation
-		local
-			retried: BOOLEAN
-			l_str: SYSTEM_STRING
-			l_registry_key: REGISTRY_KEY
-			l_obj: SYSTEM_OBJECT
 		once
-			if not retried then
-				Result := (create {EXECUTION_ENVIRONMENT}).get (Ise_key)
-				if Result = Void then
-					l_registry_key := feature {REGISTRY}.local_machine
-					l_registry_key := l_registry_key.open_sub_key (("SOFTWARE").to_cil)
-					l_registry_key := l_registry_key.open_sub_key (("ISE").to_cil)
-					l_registry_key := l_registry_key.open_sub_key (("Eiffel52").to_cil)
-					l_registry_key := l_registry_key.open_sub_key (("emitter").to_cil)
-					l_obj := l_registry_key.get_value (Ise_key.to_cil)
-					l_str ?= l_obj
-					
-					if l_str /= Void then
-						create Result.make_from_cil (l_str)
-					end
-				end
-				check
-					Ise_eiffel_defined: Result /= Void
-				end
-				if Result.item (Result.count) /= (create {OPERATING_ENVIRONMENT}).Directory_separator then
-					Result.append_character ((create {OPERATING_ENVIRONMENT}).Directory_separator)
-				end
-			else
-					-- FIXME: Manu 05/14/2002: we should raise an error here.
-				io.error.put_string ("ISE_EIFFEL environment variable is not defined!%N")
+			Result := (create {EXECUTION_ENVIRONMENT}).get (Ise_key)
+			check
+				Ise_eiffel_defined: Result /= Void
+			end
+			if Result.item (Result.count) /= (create {OPERATING_ENVIRONMENT}).Directory_separator then
+				Result.append_character ((create {OPERATING_ENVIRONMENT}).Directory_separator)
 			end
 		ensure
 			exist: Result /= Void
 			ends_with_directory_separator: Result.item (Result.count) = (create {OPERATING_ENVIRONMENT}).Directory_separator
-		rescue
-			retried := True
-			retry
 		end
 
-end -- class CACHE_PATH

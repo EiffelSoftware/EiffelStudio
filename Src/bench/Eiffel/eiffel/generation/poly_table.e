@@ -18,37 +18,37 @@ inherit
 			id as rout_id,
 			set_id as set_rout_id
 		undefine
-			setup, consistent, copy, is_equal
+			copy, is_equal
 		end
 
 	SHARED_WORKBENCH
 		undefine
-			setup, consistent, copy, is_equal
+			copy, is_equal
 		end
 
 	SHARED_CODE_FILES
 		undefine
-			setup, consistent, copy, is_equal
+			copy, is_equal
 		end
 
 	SHARED_ARRAY_BYTE
 		undefine
-			setup, consistent, copy, is_equal
+			copy, is_equal
 		end
 
 	SHARED_SERVER
 		undefine
-			setup, consistent, copy, is_equal
+			copy, is_equal
 		end
 
 	SH_DEBUG
 		undefine
-			setup, consistent, copy, is_equal
+			copy, is_equal
 		end
 
 	COMPILER_EXPORTER
 		undefine
-			setup, consistent, copy, is_equal
+			copy, is_equal
 		end
 
 feature -- Initialization

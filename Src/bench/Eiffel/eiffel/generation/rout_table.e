@@ -14,17 +14,17 @@ inherit
 
 	SHARED_GENERATOR
 		undefine
-			setup, consistent, copy, is_equal
+			copy, is_equal
 		end
 
 	SHARED_BODY_ID
 		undefine
-			setup, consistent, copy, is_equal
+			copy, is_equal
 		end
 
 	SHARED_DECLARATIONS
 		undefine
-			setup, consistent, copy, is_equal
+			copy, is_equal
 		end
 
 creation

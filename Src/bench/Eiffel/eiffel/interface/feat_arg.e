@@ -5,12 +5,12 @@ class FEAT_ARG
 inherit
 	SHARED_WORKBENCH
 		undefine
-			copy, setup, consistent, is_equal
+			copy, is_equal
 		end
 
 	SHARED_EVALUATOR
 		undefine
-			copy, setup, consistent, is_equal
+			copy, is_equal
 		end
 
 	EIFFEL_LIST [TYPE]

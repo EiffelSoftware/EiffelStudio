@@ -11,7 +11,7 @@ inherit
 
 	SHARED_SERVER
 		undefine
-			copy, setup, consistent, is_equal
+			copy, is_equal
 		end
 
 creation

@@ -7,15 +7,15 @@ inherit
 	CENTRAL_TABLE [EXECUTION_UNIT]
 	SHARED_WORKBENCH
 		undefine
-			copy, setup, consistent, is_equal
+			copy, is_equal
 		end
 	SHARED_SERVER
 		undefine
-			copy, setup, consistent, is_equal
+			copy, is_equal
 		end
 	SHARED_BODY_ID
 		undefine
-			copy, setup, consistent, is_equal
+			copy, is_equal
 		end
 
 creation

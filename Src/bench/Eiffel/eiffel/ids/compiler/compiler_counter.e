@@ -11,12 +11,12 @@ inherit
 
 	SHARED_WORKBENCH
 		undefine
-			is_equal, copy, consistent, setup
+			is_equal, copy
 		end
 
 	COMPILER_EXPORTER
 		undefine
-			is_equal, copy, setup, consistent
+			is_equal, copy
 		end
 
 feature -- Initialization

@@ -12,19 +12,19 @@ inherit
 		end;
 	SHARED_CODE_FILES
 		undefine
-			copy, setup, consistent, is_equal
+			copy, is_equal
 		end;
 	SHARED_WORKBENCH
 		undefine
-			copy, setup, consistent, is_equal
+			copy, is_equal
 		end;
 	SHARED_GENERATION
 		undefine
-			copy, setup, consistent, is_equal
+			copy, is_equal
 		end
 	COMPILER_EXPORTER
         undefine
-            copy, setup, consistent, is_equal
+            copy, is_equal
         end;
 
 creation

@@ -12,12 +12,12 @@ inherit
 
 	SHARED_SERVER
 		undefine
-			is_equal, copy, setup
+			is_equal, copy
 		end
 
 	COMPILER_EXPORTER
 		undefine
-			is_equal, copy, setup
+			is_equal, copy
 		end
 
 creation

@@ -31,6 +31,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	window: WEL_WINDOW
+			-- Window associated with the dc
 
 feature -- Basic operations
 
@@ -59,13 +60,23 @@ feature -- Basic operations
 feature {NONE} -- Implementation
 
 	hwindow: POINTER
-			-- Window associated with the device context
+			-- Window handle associated with the device context
 
 	destroy_item is
 		do
 			unselect_all
 			cwin_release_dc (default_pointer, item)
 			item := default_pointer
+		end
+
+feature {NONE} -- Externals
+
+	cwin_get_window_dc (hwnd: POINTER): POINTER is
+			-- SDK GetWindowDC
+		external
+			"C [macro <wel.h>] (HWND): EIF_POINTER"
+		alias
+			"GetWindowDC"
 		end
 
 end -- class WEL_WINDOW_DC

@@ -878,6 +878,7 @@ feature {NONE} -- Sorting
 			l_filter: DOCUMENT_FILTER
 			l_string: FILE_NAME
 			l_library_names: ARRAYED_LIST [STRING]
+			l_lib_name: STRING
 		do
 			if l_filter /= Void then
 				l_filter := filter
@@ -900,7 +901,9 @@ feature {NONE} -- Sorting
 					create l_string.make_from_string (manager.shared_project.root_directory)
 					l_string.extend ("libraries")
 					l_string.extend (l_library_names.item)
-					Result := a_url.has_substring (l_string.string)
+					l_lib_name := l_string.string
+					l_lib_name.replace_substring_all ("\", "/")
+					Result := a_url.has_substring (l_lib_name)
 					l_library_names.forth
 				end
 			end

@@ -18,6 +18,11 @@ feature {NONE}
 			Result := pixmap_file_content ("breakpt.bm");
 		end;
 
+	bm_Clear_breakpoints: PIXMAP is
+		once
+			Result := pixmap_file_content ("clr_bp.bm");
+		end;
+
 	bm_graphical_Breakablepoint: PIXMAP is
 		once
 			Result := pixmap_file_content ("gbreakpt.bm");

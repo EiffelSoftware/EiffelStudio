@@ -15,6 +15,7 @@
 #include "rt_malloc.h"
 #include "rt_except.h"
 #include "eif_store.h"
+#include "rt_retrieve.h"
 #include "eif_traverse.h"
 #include "eif_cecil.h"
 #include <stdio.h>

@@ -56,7 +56,7 @@ feature -- Initialization
 			set_default_size_for_button (close_button)
 			horizontal_box.extend (close_button)
 			set_default_push_button (close_button)
-			close_button.select_actions.extend (agent show_history_command.execute)
+			close_button.select_actions.extend (agent show_hide_history_command.execute)
 			set_default_cancel_button (close_button)
 			set_minimum_size (250, 250)
 		end
@@ -112,7 +112,6 @@ feature {GB_GLOBAL_HISTORY} -- Implementation
 			(history_list @ position).enable_select
 			history_list.select_actions.resume
 			last_selected_item := position
-		--	command_handler.update
 		ensure
 			item_selected: (history_list @ position).is_selected
 		end	

@@ -266,7 +266,7 @@ feature {NONE} -- Externals
 	cwin_wait_message: BOOLEAN is
 			-- SDK WaitMessage
 		external
-			"C [macro <wel.h>]: EIF_BOOLEAN"
+			"C blocking macro use <wel.h>"
 		alias
 			"WaitMessage ()"
 		end

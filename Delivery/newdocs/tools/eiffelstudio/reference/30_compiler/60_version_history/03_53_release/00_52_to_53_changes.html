@@ -22,11 +22,20 @@
 
         <H2>What's new</H2>
         
+        <ul>
+          <li>Finalized executable with option `exception trace' enabled will 
+          now display the instruction number (usually equivalent to the line 
+          number in the routine) being executed when a failure occurred. It was 
+          already displaying this information in workbench/melted mode, we have 
+          just extended this feature to finalize mode.</li>
+</ul>
+        
         <H2>Improvements</H2>
         
         
         <ul>
           <li>Enabled support for Borland C compiler in .NET.</li>
+          <li>Removed too many warnings during C compilation on Tru64</li>
 </ul>
         
         
@@ -90,6 +99,52 @@
 		a ?= 12
 		o ?= 12
 	<span class="ekeyword">end</span>          </pre></li>
+          <li>Fixed incorrect code generation in .NET for assertions checking with following code where 
+          precondition of <span class="efeature">test</span> will not be checked although it should:<br>
+<pre>	<span class="efeature">make</span> <span class="ekeyword">is</span>
+		<span class="ekeyword">do</span>
+			<span class="efeature">test_which_fail_and_rescued</span>
+			<span class="efeature">test</span>
+		<span class="ekeyword">end</span>
+
+	<span class="efeature">test</span> <span class="ekeyword">is</span>
+		<span class="ekeyword">require</span>
+			should_be_checked: False
+		<span class="ekeyword">do</span>
+		<span class="ekeyword">end</span>
+	
+	<span class="efeature">test_which_fail_and_rescued</span> <span class="ekeyword">is</span>
+		<span class="ekeyword">local</span>
+			retried: <span class="eclass">BOOLEAN</span>
+		<span class="ekeyword">do</span>
+			<span class="ekeyword">if not</span> retried <span class="ekeyword">then</span>
+				<span class="efeature">failure</span>
+			<span class="ekeyword">end</span>
+		<span class="ekeyword">rescue</span>
+			retried := true;
+			retry
+		<span class="ekeyword">end</span>
+
+	<span class="efeature">failure</span> <span class="ekeyword">is</span>
+		<span class="ekeyword">require</span>
+			should_be_checked: False	
+		<span class="ekeyword">do</span>
+		<span class="ekeyword">end</span></pre></li>
+          <li>Fixed compilation crash at degree 3 with following code:
+          <pre>	<span class="ekeyword">local</span>
+		i: <span class="eclass">INTEGER</span>
+	<span class="ekeyword">do</span>
+		i := &lt;&lt; 1 &gt;&gt; <span class="efeature">@</span> 2
+	<span class="ekeyword">end</span></pre></li>
+          <li>Fixed a crash in finalized mode with invariant checking enabled 
+          with following code and when checking the invariant triggers a garbage 
+          collection cycle:<br>
+<pre>	<span class="efeature">value</span>: <span class="eclass">INTEGER</span>
+	<span class="efeature">is_value_required</span>: <span class="eclass">BOOLEAN</span> <span class="ekeyword">is</span>
+		<span class="ekeyword">do</span>
+			Result := <span class="efeature">value</span> = 1
+		<span class="ekeyword">end</span>
+</pre></li>
           <li>&nbsp;</li>
 </ul>
         

@@ -71,7 +71,7 @@ feature -- Status report
 			exists: exists
 			has_active_window: has_active_window
 		do
-			Result ?= windows.item (cwel_integer_to_pointer (
+			Result ?= window_of_item (cwel_integer_to_pointer (
 				cwin_send_message_result (item,
 				Wm_mdigetactive, 0, 0)))
 		ensure

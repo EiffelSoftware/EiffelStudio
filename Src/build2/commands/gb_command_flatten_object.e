@@ -89,7 +89,6 @@ feature -- Basic Operation
 			end
 			update_editors_for_change
 			command_handler.update
-			check_execute_while_debugging
 		end
 		
 		
@@ -240,7 +239,6 @@ feature -- Basic Operation
 
 			update_editors_for_change
 			command_handler.update
-			check_undo_while_debugging	
 		end
 		
 	textual_representation: STRING is
@@ -412,93 +410,6 @@ feature {NONE} -- Implementation
 	
 	original_referers: HASH_TABLE [INTEGER, INTEGER]
 		-- All original referers of flattened object
-	
-feature {NONE} -- Contract Support	
-
-	all_objects_before: HASH_TABLE [GB_OBJECT, INTEGER]
-	all_objects_after: HASH_TABLE [GB_OBJECT, INTEGER]
-	all_referers_before: HASH_TABLE [HASH_TABLE [INTEGER, INTEGER], INTEGER]
-	all_referers_after: HASH_TABLE [HASH_TABLE [INTEGER, INTEGER], INTEGER]
-	
-	check_execute_while_debugging is
-			-- Perform checking for debugging where calling `execute' and `undo' must leave the system in the same state.
-		local
-			bool: BOOLEAN
-		do
-			if system_status.is_in_debug_mode then
-				-- Handle checking that an `undo', `redo' step leaves the system in its original state.
-				-- This cannot be written as a postcondition as it must be guaranteed across two features
-				create all_objects_before.make (1000)
-				all_objects_before := object_handler.objects.twin
-				create all_referers_before.make (100)
-				from
-					all_objects_before.start
-				until
-					all_objects_before.off
-				loop
-					all_referers_before.extend (all_objects_before.item_for_iteration.instance_referers.twin, all_objects_before.item_for_iteration.id)
-					bool := all_objects_before.item_for_iteration.is_full
-					all_objects_before.forth
-				end
-			end
-		end
-	
-	check_undo_while_debugging is
-			-- Check that a call to `execute' immediately followed by a call to `undo' leaves the system
-			-- in the same state as it was in originally. At the moment, only the existing objects and
-			-- their instance referers are checked.
-		local
-			bool: BOOLEAN
-			keys: ARRAY [INTEGER]
-			counter: INTEGER
-			old_instance_referers, new_instance_referers: HASH_TABLE [INTEGER, INTEGER]
-		do
-			if system_status.is_in_debug_mode then
-				create all_objects_after.make (1000)
-				all_objects_after := object_handler.objects.twin
-				create all_referers_after.make (100)
-				keys := all_objects_after.current_keys.twin
-				from
-					counter := keys.lower
-				until
-					counter > keys.upper
-				loop
-					all_referers_after.extend (all_objects_after.item (counter).instance_referers.twin, all_objects_after.item (counter).id)
-						-- Force invariants to be checked for every object in existance.
-					bool := all_objects_after.item (counter).is_full
-					counter := counter + 1
-				end
-				check
-					counts_equal: all_objects_before.count = all_objects_after.count
-				end				
-				keys := all_objects_before.current_keys.twin
-				from
-					counter := keys.lower
-				until
-					counter > keys.upper
-				loop
-					check
-						same_ids_in_objects: all_objects_before.item (keys.item (counter)).id = all_objects_after.item (keys.item (counter)).id
-					end
-					old_instance_referers := all_objects_before.item (keys.item (counter)).instance_referers
-					new_instance_referers := all_objects_after.item (keys.item (counter)).instance_referers
-					check
-						referers_count_equal: old_instance_referers.count = new_instance_referers.count
-					end
-					from
-						old_instance_referers.start
-					until
-						old_instance_referers.off
-					loop
---						check
---							items_identical: new_instance_referers.item (old_instance_referers.item_for_iteration) /= Void
---						end
-						old_instance_referers.forth
-					end
-					counter := counter + 1
-				end
-			end
-		end
 		
 end -- class GB_COMMAND_ADD_OBJECT
 

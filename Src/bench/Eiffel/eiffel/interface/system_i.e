@@ -191,8 +191,9 @@ feature -- Properties
 	freeze: BOOLEAN is
 			-- Has the system to be frozen again ?
 		do
-			Result := private_freeze or else 
-				Compilation_modes.is_freezing
+			Result := not Lace.compile_all_classes and 
+				(private_freeze or else 
+				Compilation_modes.is_freezing)
 		end;
 
 	freezing_occurred: BOOLEAN;

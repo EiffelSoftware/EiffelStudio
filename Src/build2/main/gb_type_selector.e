@@ -126,64 +126,6 @@ feature -- Basic operation
 			end
 		end
 
-feature {GB_LAYOUT_NODE, GB_OBJECT, GB_TYPE_SELECTOR_ITEM, GB_EV_EDITOR_CONSTRUCTOR} -- Basic operations
-
-	update_drop_actions_for_all_children  (an_object: GB_OBJECT) is
-			-- Generate correct drop_actions for every child in `Current' when
-			-- `a_node' is the type to be transported. This sets up for a standard drop
-			-- which inserts into `Current'.
-		local
-			figure_picture: FIGURE_PICTURE_WITH_DATA
-		do
-			if is_in_classic_view_mode then
-				tree.recursive_do_all (agent set_up_drop_actions_tree_node_wrapper (an_object,  ?))
-			else
-				from
-					figure_world.start
-				until
-					figure_world.off
-				loop
-					figure_picture ?= figure_world.item
-					if figure_picture /= Void then
-						set_up_drop_actions (an_object, figure_picture.data)
-					end
-					figure_world.forth
-				end
-			end
-		end
-
-	set_up_drop_actions_tree_node_wrapper (an_object: GB_OBJECT; an_item: EV_TREE_NODE) is
-		do
-			set_up_drop_actions (an_object, an_item.data)
-		end
-
-	set_up_drop_actions (an_object: GB_OBJECT; an_item: ANY) is
-			-- Generate correct drop actions for `an_item' when `a_node'
-			-- is the type to be transported.
-			-- If `an_object' object is void, then we must have picked from
-			-- a GB_TYPE_SELECTOR_ITEM, so in this case we simply wipe
-			-- out the drop actions on `selector_item' as you cannot
-			-- drop a type on a type.
-			-- If `an_object' is Void, then we wipe out the drop actions.
-		local
-			selector_item: GB_TYPE_SELECTOR_ITEM
-		do
-			selector_item ?= an_item
-				-- We check that the selector item is not void, as not
-				-- all items in the selector tree are of type
-				-- GB_SELECTOR_ITEM. For example, "widgets" is just a basic
-				-- tree item, as you can do nothing with it.
-				-- The check for object.parent not Void, ensures that we do nothing
-				-- if a window has been picked.
-			if selector_item /= Void then
-				if an_object /= Void and then an_object.object /= Void and then an_object.parent_object /= Void then
-					selector_item.generate_drop_actions (an_object)	
-				else
-					selector_item.item.drop_actions.wipe_out
-				end
-			end
-		end		
-
 feature {NONE} -- Implementation
 
 	add_tree_items (list: ARRAY [STRING]; tree_item: EV_TREE_ITEM) is

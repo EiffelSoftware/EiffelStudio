@@ -13,8 +13,13 @@ inherit
 
 	EV_SPLIT_AREA_IMP
 		redefine
+			set_first_area_shrinkable,
+			set_second_area_shrinkable,
 			compute_minimum_height,
+			compute_minimum_width,
+			compute_minimum_size,
 			set_default_minimum_size,
+			move_and_resize,
 			on_set_cursor
 		end
 
@@ -22,16 +27,6 @@ creation
 	make
 
 feature {NONE} -- Access
-
-	position: INTEGER is
-			-- Position of the splitter in the window
-		do
-			if child1 /= Void and then child1.child_cell /= Void then
-				Result := child1.child_cell.width
-			else
-				Result := 0
-			end
-		end
 
 	splitter_region: WEL_REGION is
 			-- A region that recover the splitter
@@ -43,14 +38,40 @@ feature {NONE} -- Access
 			-- Minimum position that the splitter is allowed to go
 			-- Depends of the first child minimum size
 		do
-			Result := 0
+			if is_first_area_shrinkable then
+				Result := 0
+			else
+				Result := child1.minimum_width
+			end
 		end	
 
 	maximum_position: INTEGER is
 			-- Maximum position that the splitter is allowed to go
 			-- Depends of the second child minimum size
 		do
-			Result := width - size
+			if is_second_area_shrinkable then
+				Result := (width - size).max (0)
+			else
+				Result := (width - size - child2.minimum_width).max (0)
+			end
+		end
+
+feature -- Status settings
+
+	set_first_area_shrinkable (flag: BOOLEAN) is
+			-- Allow the split area to shrink the first area if `flag', forbid
+			-- it otherwise.
+		do
+			{EV_SPLIT_AREA_IMP} Precursor (flag)
+			notify_change (1)
+		end
+
+	set_second_area_shrinkable (flag: BOOLEAN) is
+			-- Allow the split area to shrink the second area if `flag', forbid
+			-- it otherwise.
+		do
+			{EV_SPLIT_AREA_IMP} Precursor (flag)
+			notify_change (1)
 		end
 
 feature -- Element change
@@ -59,9 +80,6 @@ feature -- Element change
 			-- Initialize the size of the widget.
 		do
 			internal_set_minimum_width (size)
-			if parent_imp /= Void then
-				notify_change (1)
-			end
 		end
 
 	set_position (value: INTEGER) is
@@ -70,49 +88,126 @@ feature -- Element change
 			-- Has an effect only if the split area has
 			-- already a child.
 		do
+			position := value
 			resize_children (value)
 		end
 
 feature {NONE} -- Basic operation
 
-	resize_children (a_position: INTEGER) is
+	resize_children (value: INTEGER) is
 			-- Resize the two children according to the new position of the 
 			-- splitter.
 		do
 			if child1 /= Void then
-				child1.parent_ask_resize (a_position, height)
+				child1.set_move_and_size (0, 0, value, height)
 			end
 			if child2 /= Void then
-				child2.set_move_and_size (a_position + size, 0, 
-					(width - a_position - size).max (0), height)
+				child2.set_move_and_size (value + size, 0, 
+					(width - value - size).max (0), height)
 			end
 			refresh
 		end
 
 feature {NONE} -- Implementation
 
+	compute_minimum_height is
+			-- Recompute the minimum_width of the object.
+		local
+			first, second: BOOLEAN
+		do
+			first := child1 /= Void
+			second := child2 /= Void
+			if first and second then
+				internal_set_minimum_height (child1.minimum_height.max (child2.minimum_height))
+			elseif first then
+				internal_set_minimum_height (child1.minimum_height)
+			elseif second then
+				internal_set_minimum_height (child2.minimum_height)
+			else
+				internal_set_minimum_height (0)
+			end
+		end
+
+	compute_minimum_width is
+			-- Recompute the minimum_width of the object.
+		local
+			first, second: BOOLEAN
+		do
+			first := not is_first_area_shrinkable
+			second := not is_second_area_shrinkable
+			if first and second then
+				internal_set_minimum_width (child1.minimum_width + size + child2.minimum_width)
+			elseif first then
+				internal_set_minimum_width (child1.minimum_width + size)
+			elseif second then
+				internal_set_minimum_width (child2.minimum_width + size)
+			else
+				internal_set_minimum_width (size)
+			end
+		end
+
+	compute_minimum_size is
+			-- Recompute the minimum size of the object.
+		local
+			first, second: BOOLEAN
+		do
+			first := not is_first_area_shrinkable
+			second := not is_second_area_shrinkable
+
+			if first and second then
+				internal_set_minimum_size (child1.minimum_width + size + child2.minimum_width,
+							child1.minimum_height.max (child2.minimum_height))
+			elseif first then
+				if child2 /= Void then
+					internal_set_minimum_size (child1.minimum_width + size,
+							child1.minimum_height.max (child2.minimum_height))
+				else
+					internal_set_minimum_size (child1.minimum_width + size, child1.minimum_height) 
+				end
+			elseif second then
+				if child1 /= Void then
+					internal_set_minimum_size (child2.minimum_width + size,
+							child1.minimum_height.max (child2.minimum_height))
+				else
+					internal_set_minimum_size (child2.minimum_width + size, child2.minimum_height)
+				end
+			else
+				first := child1 /= Void
+				second := child2 /= Void
+				if first and second then
+					internal_set_minimum_size (size, child1.minimum_height.max (child2.minimum_height))
+				elseif first then
+					internal_set_minimum_size (size, child1.minimum_height)
+				elseif second then
+					internal_set_minimum_size (size, child2.minimum_height)
+				else
+					internal_set_minimum_size (size, 0)
+				end
+			end
+		end
+
 	draw_split is
 			-- draw a vertical split at `position'.
 		local
 			ldc: WEL_CLIENT_DC
-			lposition: INTEGER
+			pos: INTEGER
 		do
 			-- Some local variable for speed
 			ldc := dc
-			lposition := position
+			pos := position
 			-- Drawing
 			ldc.get
 			ldc.select_pen (face_pen)
-			ldc.line (lposition, 0, lposition, height)
+			ldc.line (pos, 0, pos, height)
 			ldc.select_pen (highlight_pen)
-			ldc.line (lposition + 1, 0, lposition + 1, height)
+			ldc.line (pos + 1, 0, pos + 1, height)
 			ldc.select_pen (face_pen)
-			ldc.line (lposition + 2, 0, lposition + 2, height)
-			ldc.line (lposition + 3, 0, lposition + 3, height)
+			ldc.line (pos + 2, 0, pos + 2, height)
+			ldc.line (pos + 3, 0, pos + 3, height)
 			ldc.select_pen (shadow_pen)
-			ldc.line (lposition + 4, 0, lposition + 4, height)
+			ldc.line (pos + 4, 0, pos + 4, height)
 			ldc.select_pen (window_frame_pen)
-			ldc.line (lposition + 5, 0, lposition + 5, height)
+			ldc.line (pos + 5, 0, pos + 5, height)
 			ldc.release
 		end
 
@@ -130,27 +225,23 @@ feature {NONE} -- Implementation
 			old_rop2 := ldc.rop2
 			ldc.set_rop2 (R2_xorpen)
 			ldc.select_brush (splitter_brush)
-			ldc.rectangle (temp_position, -1, temp_position + size, height+1)
+			ldc.rectangle (position, -1, position + size, height+1)
 			ldc.set_rop2 (old_rop2)
 			ldc.release
 		end
 
-	compute_minimum_height is
-			-- Recompute the minimum_width of the object.
-			-- Should call only set_internal_minimum_height.
-		local
-			value: INTEGER
-		do
-			if child1 /= Void then
-				value := child1.minimum_height
-			end
-			if child2 /= Void and then child2.minimum_height > value then
-				value := child2.minimum_height
-			end
-			internal_set_minimum_height (value)		
-		end
-
 feature {NONE} -- WEL Implementation
+
+	move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is
+			-- We resize the children too.
+			-- No care about has_changes.
+		do
+			{EV_SPLIT_AREA_IMP} Precursor (a_x, a_y, a_width, a_height, repaint)
+			if position > (width - size).max (0) then
+				set_position ((width - size).max (0))
+			end
+			resize_children (position)
+		end
 
 	on_set_cursor (code: INTEGER) is
 			-- Respond to a cursor message.
@@ -182,7 +273,6 @@ feature {NONE} -- WEL Implementation
 			if on_split (a_x) then
 				set_capture
 				is_splitting := True
-				temp_position := position
 				invert_split
 			end
 		end
@@ -202,9 +292,9 @@ feature {NONE} -- WEL Implementation
 				else
 					acceptable_x := a_x
 				end
-				if acceptable_x /= temp_position then
+				if acceptable_x /= position then
 					invert_split
-					temp_position := acceptable_x
+					position := acceptable_x
 					invert_split
 				end
 			end
@@ -215,7 +305,7 @@ feature {NONE} -- WEL Implementation
 		do
 			if is_splitting then
 				is_splitting := False
-				resize_children (temp_position)
+				resize_children (position)
 				release_capture
 			end
 		end

@@ -17,7 +17,6 @@ inherit
 			on_left_button_up,
 			on_mouse_move
 		redefine
-			move_and_resize,
 			set_insensitive,
 			remove_child
 		end
@@ -30,7 +29,6 @@ inherit
 			on_paint,
 			on_wm_erase_background,
 			default_style,
-			move_and_resize,
 			top_level_window_imp
 		end
 
@@ -72,6 +70,8 @@ feature -- Initialize
 			{EV_WEL_CONTROL_CONTAINER_IMP} Precursor
 			!! dc.make (Current)
 			set_text ("Split Area")
+			set_first_area_shrinkable (True)
+			set_second_area_shrinkable (True)
 		end
 
 feature -- Access
@@ -82,10 +82,14 @@ feature -- Access
 	child2: EV_WIDGET_IMP
 				-- The second child of the split area
 
-	position: INTEGER is
-			-- Position of the splitter in the window
-		deferred
-		end
+	is_first_area_shrinkable: BOOLEAN
+			-- Is the first child allowed to be smaller than its minimum size.
+
+	is_second_area_shrinkable: BOOLEAN
+			-- Is the second child allowed to be smaller than its minimum size.
+
+	position: INTEGER
+			-- Actual position of the splitter
 
 	dc: WEL_CLIENT_DC
 			-- Client dc linked to the split window
@@ -96,9 +100,20 @@ feature -- Access
 	is_splitting: BOOLEAN
 			-- Is the user currently moving the split ?
 
-	temp_position: INTEGER
-			-- Position of the splitter during the action of
-			-- the user on the splitter.
+	top_level_window_imp: EV_UNTITLED_WINDOW_IMP
+			-- Top level window that contains the current widget.
+
+	minimum_position: INTEGER is
+			-- Minimum level that the splitter is allowed to go
+			-- Depends of the first child minimum size
+		deferred
+		end	
+
+	maximum_position: INTEGER is
+			-- Maximum level that the splitter is allowed to go
+			-- Depends of the second child minimum size
+		deferred
+		end
 
 	size: INTEGER is
 			-- width or height depending of the kind of split window
@@ -112,9 +127,6 @@ feature -- Access
 		deferred
 		end
 
-	top_level_window_imp: EV_UNTITLED_WINDOW_IMP
-			-- Top level window that contains the current widget.
-
 feature -- Status settings
 
 	set_insensitive (flag: BOOLEAN) is
@@ -127,6 +139,20 @@ feature -- Status settings
 			else
 				{EV_CONTAINER_IMP} Precursor (flag)
 			end
+		end
+
+	set_first_area_shrinkable (flag: BOOLEAN) is
+			-- Allow the split area to shrink the first area if `flag', forbid
+			-- it otherwise.
+		do
+			is_first_area_shrinkable := flag
+		end
+
+	set_second_area_shrinkable (flag: BOOLEAN) is
+			-- Allow the split area to shrink the second area if `flag', forbid
+			-- it otherwise.
+		do
+			is_second_area_shrinkable := flag
 		end
 
 feature -- Element change
@@ -149,8 +175,10 @@ feature -- Element change
 		do
 			if child_imp.is_equal (child1) then
 				child1 := Void
+				set_first_area_shrinkable (True)
 			else
 				child2 := Void
+				set_second_area_shrinkable (True)
 			end
 			notify_change (2 + 1)
 		end
@@ -209,16 +237,6 @@ feature -- Assertions
 		do
 			Result := (a_child = child1) or
 					(a_child = child2)
-		end
-
-feature {NONE} -- Implementation for automatic size compute
-
-	move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is
-			-- We resize the children too.
-			-- No care about has_changes.
-		do
-			{EV_WEL_CONTROL_CONTAINER_IMP} Precursor (a_x, a_y, a_width, a_height, repaint)
-			resize_children (position)
 		end
 
 feature {NONE} -- Implementation
@@ -328,13 +346,7 @@ feature {NONE} -- Deferred features
 		deferred
 		end
 
-	resize_children (a_position: INTEGER) is
-			-- Resize both children according to the new position
-			-- `position' of the splitter.
-		deferred
-		end
-
-Invariant
+invariant
 	positif_position: position >= 0
 	dc_not_void: dc /= Void
 

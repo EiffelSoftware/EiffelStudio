@@ -81,11 +81,11 @@ feature -- Basic Operations
 			end
 		end
 
-	is_assembly_modified (ass: ASSEMBLY; apath: STRING): BOOLEAN is
-			-- is the assembly 'ass' newer than the version in the specified path 'apath'.
+	does_consumed_assembly_require_reconsume (ass: ASSEMBLY; a_path: STRING): BOOLEAN is
+			-- does the assembly `ass' related to `a_path' require reconsuming?
 		require
 			non_void_assembly: ass /= Void
-			non_void_path: apath /= Void
+			non_void_path: a_path /= Void
 		local
 			assembly_file: RAW_FILE
 			path_to_assembly: STRING
@@ -93,17 +93,18 @@ feature -- Basic Operations
 			consumed_path_timestamp: INTEGER
 			assembly_file_timestamp: INTEGER
 			consumed_folder: DIRECTORY
+			l_consume_status: ASSEMBLY_CONSUMER_COMPLETION_STATUS
 		do
-			consumed_path := apath.twin
+			consumed_path := a_path.twin
 
 			-- Set the default value for all conditions where the assembly date cannot be compared
 			Result := False
 				
 			create path_to_assembly.make_from_cil (ass.code_base)
+			create consumed_folder.make (consumed_path)
 			if path_to_assembly.count > 8 and path_to_assembly.substring_index ("file:///", 1) = 1 then
 				path_to_assembly := path_to_assembly.substring (9, path_to_assembly.count)
 				create assembly_file.make (path_to_assembly)
-				create consumed_folder.make (consumed_path)
 				
 				if consumed_folder.exists and then assembly_file.exists then
 					consumed_path.prune_all_trailing ((create {OPERATING_ENVIRONMENT}).directory_separator)
@@ -115,6 +116,17 @@ feature -- Basic Operations
 				elseif not consumed_folder.exists and then assembly_file.exists then
 					Result := True
 				end
+			end
+			
+			-- Check to see if consumed folder is empty
+			if not Result then
+				Result := not (consumed_folder.exists implies not consumed_folder.linear_representation.is_empty)
+			end
+			
+			-- Check if assembly was only partially consumed
+			if not Result then
+				create l_consume_status.make_from_consumed_path (consumed_path)
+				Result := not l_consume_status.is_completed
 			end
 		ensure
 			non_void_result : Result /= Void
@@ -318,13 +330,13 @@ feature {NONE} -- Implementation
 			l_string_tuple: like string_tuple
 			l_empty_tuple: like empty_tuple
 			l_is_delegate, l_is_value_type: BOOLEAN
-			l_dir: DIRECTORY
+			l_completion_status: ASSEMBLY_CONSUMER_COMPLETION_STATUS
 		do
-			create l_dir.make (destination_path)
-			l_dir.create_dir
-			create l_dir.make (destination_path + Classes_path)
-			l_dir.create_dir
-
+			create_consumed_assembly_folders
+			
+			create l_completion_status.make (Current)
+			l_completion_status.started_consumption
+			
 			create serializer
 			create types.make (type_consumers.count)			
 			l_string_tuple := string_tuple
@@ -385,7 +397,24 @@ feature {NONE} -- Implementation
 			create mapping.make (assembly_ids)
 			serializer.serialize (types, destination_path + Assembly_types_file_name)
 			serializer.serialize (mapping, destination_path + Assembly_mapping_file_name)
+			
+			l_completion_status.finished_consumption (True)
 		end
+		
+	create_consumed_assembly_folders is
+			-- creates consumed assembly folders
+		require
+			non_void_destination_path: destination_path /= Void
+			valid_destination_path: not destination_path.is_empty
+			destination_path_not_exists: not (create {RAW_FILE}.make (destination_path)).exists
+		local
+			l_dir: DIRECTORY
+		do
+			create l_dir.make (destination_path)
+			l_dir.create_dir
+			create l_dir.make (destination_path + Classes_path)
+			l_dir.create_dir	
+		end		
 
 	type_consumers: HASH_TABLE [TYPE_CONSUMER, STRING]
 			-- Assembly type consumers

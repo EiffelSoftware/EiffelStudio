@@ -679,6 +679,12 @@ feature -- Window Properties
 
 	profile_tool_is_hidden: BOOLEAN
 			-- Is the profile tool hidden?
+			
+	has_argument_dialog: BOOLEAN is
+			-- Does Current have an associted arguments dialog?
+		do
+			Result := arguments_dialog /= Void
+		end
 
 feature -- Pulldown Menus
 
@@ -1596,6 +1602,13 @@ feature -- Menu Building
 				tools_menu.extend (command_menu_item)
 			end
 
+			if debugger_manager.display_dotnet_cmd then   
+			  		-- Import .Net Assembly   
+			  	command_menu_item := eac_browser_cmd.new_menu_item   
+				add_recyclable (command_menu_item)   
+				tools_menu.extend (command_menu_item)   
+            end 
+
 				-- Separator -------------------------------------------------
 			tools_menu.extend (create {EV_MENU_SEPARATOR})
 
@@ -2037,6 +2050,26 @@ feature -- Resource Update
 				an_action.call([])
 			end
 		end
+		
+	attach_argument_dialog  (a_dialog: EB_ARGUMENT_DIALOG) is
+			-- Attach newly created argument dialog to Current
+		require
+			not_void_dialog: a_dialog /= Void
+		do
+			if arguments_dialog = Void then
+				arguments_dialog := a_dialog
+			end		
+		end
+		
+	detach_argument_dialog is
+			-- Destroy the Current srguments dialog
+		require
+			has_arguments_dialog: arguments_dialog /= Void
+		do
+			arguments_dialog := Void
+		ensure
+			has_not_arguments_dialog: arguments_dialog = Void
+		end		
 
 feature -- Window management
 
@@ -2110,6 +2143,9 @@ feature -- Tools & Controls
 
 	unified_stone: BOOLEAN
 			-- Is the stone common with the context tool or not?
+			
+	arguments_dialog: EB_ARGUMENT_DIALOG
+			-- The arguments dialog for current, if any
 
 feature -- Multiple editor management
 

@@ -25,13 +25,13 @@ feature {NONE} -- Initialization
 		require
 			a_face_name_not_void: a_face_name /= Void
 		local
-			a: ANY
+			a_wel_string: WEL_STRING
 		do
-			a := a_face_name.to_c
+			!! a_wel_string.make (a_face_name)
 			item := cwin_create_font (height, width, escapement,
 				orientation, weight, italic, underline,
 				strike_out, charset, output_precision,
-				clip_precision, quality, pitch_and_family, $a)
+				clip_precision, quality, pitch_and_family, a_wel_string.item)
 		end
 
 	make_indirect (a_log_font: WEL_LOG_FONT) is

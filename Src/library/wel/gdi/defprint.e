@@ -21,14 +21,14 @@ feature {NONE} -- Initialization
 			-- If there is no default printer connected, `exists'
 			-- is equal to False.
 		local
-			loc_driver, loc_device, loc_output: ANY
+			loc_driver, loc_device, loc_output: WEL_STRING
 		do
 			retrieve_default_printer
-			loc_device := device.to_c
-			loc_driver := driver.to_c
-			loc_output := output.to_c
-			item := cwin_create_dc ($loc_driver, $loc_device,
-				$loc_output, default_pointer)
+			!! loc_device.make (device)
+			!! loc_driver.make (driver)
+			!! loc_output.make (output)
+			item := cwin_create_dc (loc_driver.item, loc_device.item,
+				loc_output.item, default_pointer)
 		end
 
 feature -- Basic operations
@@ -37,22 +37,25 @@ feature -- Basic operations
 			-- Retrieve the default printer installed and set
 			-- `device', `driver', `output'.
 		local
-			windows: ANY
-			a_device: ANY
-			a_printer: ANY
-			options: ANY
+			windows: WEL_STRING
+			a_device: WEL_STRING
+			a_printer: WEL_STRING
+			options: WEL_STRING
 			printer: STRING
 			device_count: INTEGER
+			nb: INTEGER
 		do
-			windows := Windows_const.to_c
-			a_device := Device_const.to_c
-			options := Options_const.to_c
+			!! windows.make (Windows_const)
+			!! a_device.make (Device_const)
+			!! options.make (Options_const)
 			!! printer.make (Max_printer_name)
 			printer.fill_blank
-			a_printer := printer.to_c
-			printer.head (cwin_get_profile_string ($windows,
-				$a_device, $options, $a_printer,
-				Max_printer_name))
+			!! a_printer.make (printer)
+			nb := cwin_get_profile_string (windows.item,
+				a_device.item, options.item, a_printer.item,
+				Max_printer_name)
+			printer := a_printer.string
+			printer.head (nb)
 			if printer.is_equal (Options_const) then
 				-- There is no default printer connected.
 				-- Let's create empty strings.

@@ -318,17 +318,17 @@ feature -- Status report
 	registered: BOOLEAN is
 			-- Is the class registered?
 		local
-			a: ANY
+			a_wel_string: WEL_STRING
 			p: POINTER
 		do
-			a := class_name.to_c
+			!! a_wel_string.make (class_name)
 			p := c_calloc (1, structure_size)
 			if p /= default_pointer then
 				Result := cwin_get_class_info (default_pointer,
-					$a, p) or else
+					a_wel_string.item, p) or else
 					cwin_get_class_info (
 						main_args.current_instance.item,
-						$a, p)
+						a_wel_string.item, p)
 				c_free (p)
 			end
 		end
@@ -393,10 +393,10 @@ feature -- Basic operations
 		require
 			registered: registered
 		local
-			a: ANY
+			a_wel_string: WEL_STRING
 		do
-			a := class_name.to_c
-			cwin_unregister_class ($a,
+			!! a_wel_string.make(class_name)
+			cwin_unregister_class (a_wel_string.item,
 				main_args.current_instance.item)
 		ensure
 			no_registered: not registered

@@ -50,12 +50,12 @@ feature {NONE} -- Implementation
 	internal_callback (a_buffer: POINTER; a_length: INTEGER): INTEGER is
 			-- Set to `a_buffer' a string of `a_length' characters.
 		local
-			a: ANY
+			a_wel_string: WEL_STRING
 		do
 			stream_result := 0
 			read_buffer (a_length)
-			a := buffer.to_c
-			cwel_set_editstream_buffer ($a)
+			!! a_wel_string.make (buffer)
+			cwel_set_editstream_buffer (a_wel_string.item)
 			cwel_set_editstream_buffer_size (buffer.count)
 			Result := stream_result
 		end

@@ -130,11 +130,11 @@ feature -- Element change
 			a_face_name_not_void: a_face_name /= Void
 			valid_count: a_face_name.count <= Max_face_name_length
 		local
-			a: ANY
+			a_wel_string: WEL_STRING
 		do
 			add_mask (Cfm_face)
-			a := a_face_name.to_c
-			cwel_charformat_set_szfacename (item, $a)
+			!! a_wel_string.make (a_face_name)
+			cwel_charformat_set_szfacename (item, a_wel_string.item)
 		ensure
 			face_name_set: face_name.is_equal (a_face_name)
 		end

@@ -36,7 +36,7 @@ feature {NONE} -- Recording information for eiffelcase
 			sup_class_id: CLASS_ID;
 			features: ARRAYED_LIST [S_FEATURE_DATA];
 		do
-			class_dep := Depend_server.disk_item (classc.id.id);
+			class_dep := Depend_server.disk_item (classc.id);
 			if not class_dep.empty and then class_dep.count > 1 then
 				-- count > 1 is required since the class itself is always
 				features := s_class_data.features;

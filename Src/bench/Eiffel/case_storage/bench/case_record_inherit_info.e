@@ -21,7 +21,7 @@ feature
 			parents: PARENT_LIST
 		do
 				-- Get class_info directly from disk
-			class_info := Class_info_server.disk_item (classc.id.id);
+			class_info := Class_info_server.disk_item (classc.id);
 			parents := class_info.parents;
 			record_parents (parents);
 			record_renamings (parents);
@@ -163,7 +163,7 @@ end;
 							feature_i := classc.feature_table.item 
 														(renaming.key_for_iteration);
 							if feature_i /= Void then
-								feature_ast := Body_server.item (feature_i.body_id.id);
+								feature_ast := Body_server.item (feature_i.body_id);
 								feature_ast.store_information (feature_data);
 								feature_i.store_case_information (feature_data);
 								s_class_data.add_feature (feature_data, 

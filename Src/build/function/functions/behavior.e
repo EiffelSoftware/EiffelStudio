@@ -59,6 +59,27 @@ feature -- Query
 			output_list.go_i_th (old_pos)
 		end;
 
+feature -- Copying
+
+    copy_contents (func: like Current) is
+        local
+            il: like input_list;
+            ol: like output_list;
+        do
+            il := func.input_list;
+            ol := func.output_list;
+            from
+                il.start;
+                ol.start;
+            until
+                ol.after
+            loop
+                add (il.item, ol.item);
+                il.forth;
+                ol.forth;
+            end
+        end;
+
 feature -- Command labels
 
 	labels: LINKED_LIST [CMD_LABEL] is
@@ -123,11 +144,6 @@ feature  -- Editing features
 			-- Set context to `c'.
 		do
 			context := c.data
-		end;
-
-	copy_lists (func: like Current) is
-		do
-			copy_contents (func)
 		end;
 
 	set_label (s: STRING) is

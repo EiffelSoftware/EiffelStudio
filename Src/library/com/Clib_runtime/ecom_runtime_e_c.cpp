@@ -301,7 +301,7 @@ CURRENCY ecom_runtime_ec::ccom_ec_currency (EIF_REFERENCE a_ref)
 
 char * ecom_runtime_ec::ccom_ec_pointed_character (EIF_REFERENCE a_ref, char * old)
 
-// Create char * from EIF_REFERENCE (CELL [CHARACTER])
+// Create char * from EIF_REFERENCE (CHARACTER_REF)
 {
 	EIF_OBJECT eif_object;
 	EIF_TYPE_ID type_id;
@@ -309,7 +309,7 @@ char * ecom_runtime_ec::ccom_ec_pointed_character (EIF_REFERENCE a_ref, char * o
 	char * result;
 
 	eif_object = eif_protect (a_ref);
-	type_id = eif_type_id ("CELL [CHARACTER]");
+	type_id = eif_type_id ("CHARACTER_REF");
 	item = eif_character_function ("item", type_id);
 
 	result = (char *) CoTaskMemAlloc (sizeof (char));
@@ -326,9 +326,35 @@ char * ecom_runtime_ec::ccom_ec_pointed_character (EIF_REFERENCE a_ref, char * o
 };
 //----------------------------------------------------------------------------
 
+DATE * ecom_runtime_ec::ccom_ec_pointed_date (EIF_REFERENCE a_ref, DATE * old)
+
+// Create char * from EIF_REFERENCE (CELL [DATE_TIME])
+{
+	EIF_OBJECT eif_object;
+	EIF_TYPE_ID type_id;
+	EIF_REFERENCE_FUNCTION item;
+	DATE * result;
+
+	eif_object = eif_protect (a_ref);
+	type_id = eif_type_id ("CELL [DATE_TIME]");
+	item = eif_reference_function ("item", type_id);
+
+	result = (DATE *) CoTaskMemAlloc (sizeof (DATE));
+	* result = (DATE) ccom_ec_date (item (eif_access (eif_object)));
+
+	eif_wean (eif_object);
+	if (old != NULL)
+	{
+		*old = *result;
+		return NULL;
+	}
+	else
+		return result;
+};
+//----------------------------------------------------------------------------
 short * ecom_runtime_ec::ccom_ec_pointed_short (EIF_REFERENCE a_ref, short * old)
 
-// Create short * from EIF_REFERENCE (CELL [INTEGER])
+// Create short * from EIF_REFERENCE (INTEGER_REF)
 {
 	EIF_OBJECT eif_object;
 	EIF_TYPE_ID type_id;
@@ -336,7 +362,7 @@ short * ecom_runtime_ec::ccom_ec_pointed_short (EIF_REFERENCE a_ref, short * old
 	short * result;
 
 	eif_object = eif_protect (a_ref);
-	type_id = eif_type_id ("CELL [INTEGER]");
+	type_id = eif_type_id ("INTEGER_REF");
 	item = eif_integer_function ("item", type_id);
 
 	result = (short *) CoTaskMemAlloc (sizeof (short));
@@ -355,7 +381,7 @@ short * ecom_runtime_ec::ccom_ec_pointed_short (EIF_REFERENCE a_ref, short * old
 
 long * ecom_runtime_ec::ccom_ec_pointed_long (EIF_REFERENCE a_ref, long * old)
 
-// Create long * from EIF_REFERENCE (CELL [INTEGER])
+// Create long * from EIF_REFERENCE (INTEGER_REF)
 {
 	EIF_OBJECT eif_object;
 	EIF_TYPE_ID type_id;
@@ -363,7 +389,7 @@ long * ecom_runtime_ec::ccom_ec_pointed_long (EIF_REFERENCE a_ref, long * old)
 	long * result;
 
 	eif_object = eif_protect (a_ref);
-	type_id = eif_type_id ("CELL [INTEGER]");
+	type_id = eif_type_id ("INTEGER_REF");
 	item = eif_integer_function ("item", type_id);
 
 	result = (long *) CoTaskMemAlloc (sizeof (long));
@@ -383,7 +409,7 @@ long * ecom_runtime_ec::ccom_ec_pointed_long (EIF_REFERENCE a_ref, long * old)
 
 float * ecom_runtime_ec::ccom_ec_pointed_real (EIF_REFERENCE a_ref, float * old)
 
-// Create float * from EIF_REFERENCE (CELL [REAL])
+// Create float * from EIF_REFERENCE (REAL_REF)
 {
 	EIF_OBJECT eif_object;
 	EIF_TYPE_ID type_id;
@@ -391,7 +417,7 @@ float * ecom_runtime_ec::ccom_ec_pointed_real (EIF_REFERENCE a_ref, float * old)
 	float * result;
 
 	eif_object = eif_protect (a_ref);
-	type_id = eif_type_id ("CELL [REAL]");
+	type_id = eif_type_id ("REAL_REF");
 	item = eif_real_function ("item", type_id);
 
 	result = (float *) CoTaskMemAlloc (sizeof (float));
@@ -411,7 +437,7 @@ float * ecom_runtime_ec::ccom_ec_pointed_real (EIF_REFERENCE a_ref, float * old)
 
 double * ecom_runtime_ec::ccom_ec_pointed_double (EIF_REFERENCE a_ref, double * old)
 
-// Create double * from EIF_REFERENCE (CELL [DOUBLE])
+// Create double * from EIF_REFERENCE (DOUBLE_REF)
 {
 	EIF_OBJECT eif_object;
 	EIF_TYPE_ID type_id;
@@ -419,7 +445,7 @@ double * ecom_runtime_ec::ccom_ec_pointed_double (EIF_REFERENCE a_ref, double * 
 	double * result;
 
 	eif_object = eif_protect (a_ref);
-	type_id = eif_type_id ("CELL [DOUBLE]");
+	type_id = eif_type_id ("DOUBLE_REF");
 	item = eif_double_function ("item", type_id);
 
 	result = (double *) CoTaskMemAlloc (sizeof (double));

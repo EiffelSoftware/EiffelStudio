@@ -17,7 +17,7 @@ feature -- IL generator object
 				-- We keep both `INTERFACE_xx' and `SINGLE_xx' in
 				-- our system for the moment in case we need to
 				-- switch back to either one or the other.
-			create {SINGLE_IL_CODE_GENERATOR} Result.make
+			create {INTERFACE_IL_CODE_GENERATOR} Result.make
 		end
 
 feature -- IL label factory

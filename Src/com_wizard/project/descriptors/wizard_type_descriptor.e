@@ -39,6 +39,9 @@ feature -- Access
 	c_type_name: STRING
 			-- Name of "C" type
 
+	guid: ECOM_GUID
+			-- GUID of type
+
 	type_kind: INTEGER 
 			-- Kind of descriptor
 			-- See class ECOM_TYPE_KIND for values
@@ -122,6 +125,17 @@ feature -- Basic Operations
 			type_kind := a_kind
 		ensure
 			valid_type_kind: is_valid_type_kind (type_kind) and type_kind = a_kind
+		end
+
+	set_guid (a_guid: ECOM_GUID) is
+			-- Set `guid' with `a_guid'.
+		require
+			non_void_guid: a_guid /= Void
+		do
+			guid := a_guid
+		ensure
+			non_void_guid: guid /= Void
+			valid_guid: guid = a_guid
 		end
 
 feature -- Visitor

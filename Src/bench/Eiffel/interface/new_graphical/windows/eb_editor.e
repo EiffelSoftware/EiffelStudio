@@ -11,7 +11,7 @@ deferred class
 inherit
 	EB_TOOL
 		redefine
-			make
+			make, close_cmd
 		end
 
 feature {NONE} -- Initialization
@@ -206,15 +206,16 @@ feature -- Status setting
 --			valid_stone_type: s /= Void implies s.stone_type = stone_type
 		do
 			stone := s
-			if s = Void then
-				set_icon_name (empty_tool_name)
-					-- a retoucher
-			else
-				set_icon_name (s.icon_name)
+				-- set_icon_name not implemented yet.
+--			if s = Void then
+--				set_icon_name (empty_tool_name)
+--					-- a retoucher
+--			else
+--				set_icon_name (s.icon_name)
 --				if hole_button /= Void then
 --					hole_button.set_full_symbol
 --				end
-			end
+--			end
 		ensure
 			set: s = stone
 		end
@@ -411,47 +412,69 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-feature {EB_TOOL_MANAGER} -- Implementation
+feature {EB_TOOL_MANAGER} -- Menus Implementation
 
-	build_edit_menu (search_button_parent: COMPOSITE) is
+	build_file_menu (a_menu: EV_MENU_ITEM_HOLDER) is
+		require
+			a_menu_exits: a_menu /= Void
+		local
+			i: EV_MENU_ITEM
+			print_cmd: EB_PRINT_CMD
+			save_as_cmd: EB_SAVE_FILE_AS_CMD
+		do
+			create save_as_cmd.make (Current)
+			create i.make_with_text (a_menu, Interface_names.m_Save_as)
+			i.add_select_command (save_as_cmd, Void)
+
+			create print_cmd.make (Current)
+			create i.make_with_text (a_menu, Interface_names.m_Print)
+			i.add_select_command (print_cmd, Void)
+
+			create i.make_with_text (a_menu, Interface_names.m_Exit)
+			i.add_select_command (close_cmd, Void)
+
+			create i.make_with_text (a_menu, Interface_names.m_Exit_project)
+			i.add_select_command (exit_app_cmd, Void)
+		end	
+
+	build_edit_menu (a_menu: EV_MENU_ITEM_HOLDER) is
 			-- Build a standard edit menu with `a_parent'
 		require
---			edit_menu_exits: edit_menu /= Void
---			parent_exists: search_button_parent /= Void
+			a_menu_exits: a_menu /= Void
 		local
---			cut_button: EB_MENU_ENTRY
+			i: EV_MENU_ITEM
 --			cut_cmd: EDIT_OPERATIONS
---			copy_button: EB_MENU_ENTRY
---			copy_com: EDIT_OPERATIONS
---			paste_button: EB_MENU_ENTRY
+--			copy_cmd: EDIT_OPERATIONS
 --			paste_cmd: EDIT_OPERATIONS
 --			sep: SEPARATOR
---			search_button: EB_BUTTON
 --			search_cmd: SEARCH_STRING
---			search_menu_entry: EB_MENU_ENTRY
 		do
---			!! cut_cmd.make_cut (Current)
---			!! cut_button.make (cut_cmd, edit_menu)
---			!! copy_com.make_copy (Current)
---			!! copy_button.make (copy_com, edit_menu)
---			!! paste_cmd.make_paste (Current)
---			!! paste_button.make (paste_cmd, edit_menu)
---
---			!! sep.make (Interface_names.t_Empty, edit_menu)
---
---			!! search_cmd.make (Current)
---			!! search_button.make (search_cmd, search_button_parent)
---			!! search_menu_entry.make (search_cmd, edit_menu)
---			!! search_cmd_holder.make (search_cmd, search_button, search_menu_entry)
+--			create cut_cmd.make_cut (Current)
+			create i.make_with_text (a_menu, "Couper")
+--			i.add_select_command (cut_cmd, Void)
+
+--			create copy_cmd.make_copy (Current)
+			create i.make_with_text (a_menu, "Copier")
+--			i.add_select_command (copy_cmd, Void)
+
+--			create paste_cmd.make_paste (Current)
+			create i.make_with_text (a_menu, "Coller")
+--			i.add_select_command (paste_cmd, Void)
+
+--			create sep.make (a_menu)
+
+--			create search_cmd.make (Current)
+			create i.make_with_text (a_menu, "Chercher")
+--			i.add_select_command (search_cmd, Void)
 		end
 
-	build_help_menu is
+	build_help_menu (a_menu: EV_MENU_ITEM_HOLDER) is
 			-- Create a print command to be inserted into a menu.
 		require
 --			valid_bar: menu_bar /= Void
 		local
 --			help_cmd: HELP_COMMAND
---			help_menu_entry: EB_MENU_ENTRY
+--			help_menu_entry: EV_MENU_ITEM
 		do
 --			!! help_menu.make (Interface_names.m_Help, menu_bar)
 --			!! help_cmd.make (Current)
@@ -459,16 +482,16 @@ feature {EB_TOOL_MANAGER} -- Implementation
 --			menu_bar.set_help_button (help_menu.menu_button)
 		end
 
-	build_print_menu_entry is
+	build_print_menu_entry (a_menu: EV_MENU_ITEM_HOLDER) is
 			-- Create a print command to be inserted into file menu.
 		require
 --			valid_file_menu: file_menu /= Void
 		local
 --			print_cmd: PRINT_COMMAND
---			print_menu_entry: EB_MENU_ENTRY
+--			print_menu_entry: EV_MENU_ITEM
 --			sep: SEPARATOR
 		do
---			!! sep.make (Interface_names.t_Empty, file_menu)
+--			!! sep.make (a_menu)
 --			!! print_cmd.make (Current)
 --			!! print_menu_entry.make (print_cmd, file_menu)
 --			!! print_cmd_holder.make_plain (print_cmd)
@@ -481,7 +504,7 @@ feature {EB_TOOL_MANAGER} -- Implementation
 --			valid_file_menu: file_menu /= Void
 		local
 --			save_as_cmd: SAVE_AS_FILE
---			save_as_menu_entry: EB_MENU_ENTRY
+--			save_as_menu_entry: EV_MENU_ITEM
 		do
 --			!! save_as_cmd.make (Current)
 --			!! save_as_menu_entry.make (save_as_cmd, file_menu)
@@ -519,19 +542,13 @@ feature {EV_FORMATTED_TEXT} -- Initialization
 		do
 		end
 
+feature {EB_TOOL_MANAGER} -- Commands
+
+	close_cmd: EB_CLOSE_EDITOR_CMD
+
 feature {NONE} -- Implementation
 
 	container: EV_VERTICAL_BOX
 			-- Form representing Current
-
-	edit_menu: EV_MENU
-			-- Edit menu
-			-- Only used during debugging
-
-	file_menu: EV_MENU
-			-- File menu
-
-	help_menu: EV_MENU
-			-- Help menu
 
 end -- class EB_TOOL

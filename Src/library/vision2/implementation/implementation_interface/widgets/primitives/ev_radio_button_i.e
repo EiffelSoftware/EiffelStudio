@@ -1,6 +1,5 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
-	description: "General radio button implementation."
+	description: "Eiffel Vision radio button. Implementation interface."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -10,8 +9,12 @@ deferred class
 	EV_RADIO_BUTTON_I
 
 inherit
-
 	EV_SELECT_BUTTON_I
+		redefine
+			interface
+		end
+
+	EV_RADIO_PEER_I
 		redefine
 			interface
 		end
@@ -43,6 +46,9 @@ end -- class EV_RADIO_BUTTON_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/02/25 01:48:12  brendel
+--| Revised.
+--|
 --| Revision 1.7  2000/02/24 18:11:44  oconnor
 --| New inheritance structure for buttons with state.
 --| New class EV_SELECT_BUTTON provides `is_selected' and `enable_select'.

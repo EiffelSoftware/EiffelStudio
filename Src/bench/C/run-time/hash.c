@@ -27,11 +27,6 @@ rt_shared char **hash_search(struct hash *hp, register char *object);	/* Search 
 rt_shared void hash_free(struct hash *hp);		/* Free the tables */
 rt_shared void hash_malloc(struct hash *hp, register long int size);	/* Hash table creation */
 /*rt_private void free_entries();*/	/* Free all the hector entries */ /* %%ss undefined not used in run-time */
-#ifndef lint
-rt_private char *rcsid =
-	"$Id$";
-#endif
-
 /* 
  * Function definitions
  */
@@ -63,11 +58,11 @@ rt_shared char **hash_search(struct hash *hp, register char *object)
 	 * Return a pointer to an entry of `hash_entry' and not the entry itself.
 	 */
 
-	register1 long pos;
-	register3 char *key;
-	register4 int inc;
-	register5 unsigned long code = ((unsigned long) object - 1);
-	register6 int hash_size = hp->h_size;
+	rt_uint_ptr pos;
+	char *key;
+	rt_uint_ptr inc;
+	rt_uint_ptr code = ((rt_uint_ptr) object - 1);
+	rt_uint_ptr hash_size = hp->h_size;
 
 	/* Initialization of the position */
 	pos = code % hash_size;

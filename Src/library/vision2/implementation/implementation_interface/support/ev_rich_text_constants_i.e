@@ -160,5 +160,7 @@ feature -- Access
 	rtf_new_line: STRING is "par"
 	
 	rtf_user_props: STRING is "*"
+	
+	rtf_info: STRING is "info"
 
 end -- class EV_RICH_TEXT_CONSTANTS_I

@@ -382,14 +382,15 @@ feature -- Update
 	show_read_only_text is
 			-- Show `read_only_text_window'.
 		require
-			is_readonly_text: text_window = read_only_text_window
+			is_readonly_text: text_window = read_only_text_window;
+			realized: realized
 		do
-			if realized and then not read_only_text_window.shown then
+			if not read_only_text_window.shown then
 				text_window.show;
 				editable_text_window.hide	
 			end
 		ensure
-			shown_if_realized: realized implies read_only_text_window.shown
+			read_only_shown: read_only_text_window.shown
 		end;
 
 	set_editable_text is
@@ -404,14 +405,15 @@ feature -- Update
 			-- Set `text_window' to `editable_text_window' and
 			-- show it if it is not shown.
 		require
-			is_editable_text: text_window = editable_text_window
+			is_editable_text: text_window = editable_text_window;
+			realized: realized
 		do
-			if realized and then not editable_text_window.shown then
+			if not editable_text_window.shown then
 				text_window.show;
 				read_only_text_window.hide	
 			end
 		ensure
-			shown_if_realized: realized implies editable_text_window.shown
+			editable_text_shown: editable_text_window.shown
 		end;
 
 	update_save_symbol is

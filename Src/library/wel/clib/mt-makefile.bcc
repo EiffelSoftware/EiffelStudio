@@ -8,11 +8,10 @@ CFLAGS = -c -O2 -tWM -DEIF_THREADS -I$(ISE_EIFFEL)\library\wel\spec\windows\incl
 	$(CFLAGS) $<
 |
 
-OBJ = disptchr.obj enumfont.obj choose_folder.obj estream.obj msgboxpa.obj registry.obj wel_thr_init.obj
+OBJ = disptchr.obj enumfont.obj choose_folder.obj estream.obj msgboxpa.obj wel_thr_init.obj
 
 mtwel.lib: $(OBJ)
 	if exist $@ del $@
-	tlib $@ +registry.obj
 	tlib $@ +disptchr.obj
 	tlib $@ +enumfont.obj
 	tlib $@ +estream.obj

@@ -11,68 +11,48 @@ class
 inherit
 	WEL_REGISTRY_KEY_VALUE_TYPE
 
-creation
-	make, make_from_pointer
+create
+	make
 	
 feature -- Initialization
 
-	make is
-			-- Create an empty structure
-		do
-			item := cwin_reg_value_alloc
-		ensure
-			item_initialized: item /= Default_pointer
-		end
-		
-	make_from_pointer (a_pointer: POINTER) is
-			-- Set `item' with `a_pointer'.
+	make (t: like type; v: like value) is
+			-- Create 
 		require
-			valid_pointer: a_pointer /= Default_pointer
+			v_not_void: v /= Void
 		do
-			item := a_pointer
+			set_type (t)
+			set_value (v)
 		ensure
-			item_set: item = a_pointer
+			type_set: type = t
+			value_set: value = v
 		end
 
 feature -- Access
 
-	type: INTEGER is
+	type: INTEGER
 			-- Type of value
 			-- See class WEL_REGISTRY_KEY_VALUE_TYPE for possible
 			-- values.
-		do
-			Result := cwin_reg_value_get_type (item)
-		end
 			
+	value: STRING
+			-- Data.
+
 	string_value: STRING is
-			-- Data of string value
+			-- 	Data converted as string.
 		require
-			allocated: item /= default_pointer
-			valid_type: type = Reg_sz or type = Reg_expand_sz
+			valid_type: type = Reg_sz
 		do
-			!! Result.make (0)
-			Result.from_c (cwin_reg_value_get_data (item))
+			Result := value
 		end
 		
 	dword_value: INTEGER is
-			-- Data of double word value
+			-- Data converted as integer.
 		require
-			allocated: item /= default_pointer
-			valid_type: type = Reg_dword or type = Reg_dword_little_endian
+			valid_type: type = Reg_dword
 		do
-			Result := cwin_reg_value_get_data_dword (item)
+			Result := value.to_integer
 		end
-		
-	value: POINTER is
-			-- Pointer on datas of any type
-		require
-			allocated: item /= default_pointer
-		do
-			Result := cwin_reg_value_get_data (item)
-		end
-		
-	item: POINTER
-			-- Pointer to C structure.
 
 feature -- Element Change
 
@@ -80,108 +60,22 @@ feature -- Element Change
 			-- Set type of value with `t'.
 			-- See class WEL_REGISTRY_KEY_VALUE_TYPE for possible
 			-- values for `t'.
-		require
-			allocated: item /= default_pointer
-			valid_type: t = Reg_binary or t = Reg_dword or t = Reg_dword_little_endian
-							or t = Reg_expand_sz or t = Reg_sz
 		do
-			cwin_reg_value_set_type (item, t)
+			type := t
+		ensure
+			type_set: type = t
 		end
 		
-	set_string_value (data: STRING) is
-			-- Set data of key value with `data'.
-			-- Value type must be set first.
+	set_value (v: like value) is
+			-- Set `value' with `v'.
 		require
-			allocated: item /= default_pointer
-			valid_type: type = Reg_sz or type = Reg_expand_sz
-		local
-			a: ANY
+			v_not_void: v /= Void
 		do
-			a := data.to_c
-			cwin_reg_value_set_data (item, $a)
-			cwin_reg_value_set_data_length (item, data.count)
+			value := v
+		ensure
+			value_set: value = v
 		end
 		
-	set_dword_value (data: INTEGER) is
-			-- Set data of key value with `data'.
-			-- Value type must be set first.
-		require
-			allocated: item /= default_pointer
-			valid_type: type = Reg_dword or type = Reg_dword_little_endian
-		do
-			cwin_reg_value_set_data_dword (item, data)
-		end
-
-	set_value (pointer_to_data: POINTER; length: INTEGER) is
-			-- Set data of key value to datas pointed by `pointer_to_data'
-			-- with `length' bytes.
-		require
-			allocated: item /= default_pointer
-		do
-			cwin_reg_value_set_data (item, pointer_to_data)
-			cwin_reg_value_set_data_length (item, length)
-		end
-		
-	destroy is
-			-- Free C structure
-		require
-			allocated: item /= default_pointer
-		do
-			cwin_reg_value_destroy (item)
-		end
-		
-feature {NONE} -- Externals
-
-	cwin_reg_value_alloc: POINTER is
-		external
-			"C [macro <wel_reg_value.h>]"
-		end
-	
-	cwin_reg_value_get_type (ptr: POINTER): INTEGER is
-		external
-			"C [macro <wel_reg_value.h>]"
-		end
-		
-	cwin_reg_value_get_data (ptr: POINTER): POINTER is
-		external
-			"C [macro <wel_reg_value.h>] (REG_VALUE *): EIF_POINTER"
-		end
-		
-	cwin_reg_value_get_data_dword (ptr: POINTER): INTEGER is
-		external
-			"C [macro <wel_reg_value.h>]"
-		end
-
-	cwin_reg_value_set_type (ptr: POINTER; t: INTEGER) is
-		external
-			"C [macro <wel_reg_value.h>]"
-		end
-
-	cwin_reg_value_set_data_dword (ptr: POINTER; data: INTEGER) is
-		external
-			"C [macro <wel_reg_value.h>]"
-		end
-
-	cwin_reg_value_set_data (ptr, data_ptr: POINTER) is
-		external
-			"C [macro <wel_reg_value.h>]"
-		end
-
-	cwin_reg_value_set_data_length (ptr: POINTER; length: INTEGER) is
-		external
-			"C [macro <wel_reg_value.h>]"
-		end
-		
-	cwin_reg_value_destroy (ptr: POINTER) is
-		external
---			"C [macro <wel_reg_value.h>]"
-			"C | %"registry.h%""
-		end
-		
-invariant
-	
-	valid_item: item /= Default_pointer
-
 end -- class WEL_REGISTRY_KEY_VALUE
 
 --|----------------------------------------------------------------

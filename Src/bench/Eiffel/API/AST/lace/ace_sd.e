@@ -504,6 +504,7 @@ feature {COMPILER_EXPORTER} -- DLE
 			dynamic_system: System.is_dynamic
 		do
 			if clusters /= Void then
+				Degree_output.put_start_degree_6 (clusters.count);
 				from
 					clusters.start
 				until

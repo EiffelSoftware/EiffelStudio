@@ -17,14 +17,20 @@ rt_public EIF_POINTER console_def (EIF_INTEGER file)
 	 *       1 : standard output file descriptor
 	 *       2 : standard error file descriptor
 	 */
-
+ 
 	switch (file) {
 	case 0:
 	  	return (EIF_POINTER) stdin;
 	case 1:
 			/* Output is set to only have line buffered. Meaning that
 			 * each displayed %N will flush the buffer. */
+#ifdef EIF_WIN32
+			/* Per Microsoft documentation, it has to be at least 2 for buffer size
+			 * in case of _IOLBF. */
+	  	setvbuf(stdout, NULL, _IOLBF, 2);
+#else
 	  	setvbuf(stdout, NULL, _IOLBF, 0);
+#endif
 		return (EIF_POINTER) stdout;
 	case 2:
 		setvbuf (stderr, NULL, _IONBF, 0);

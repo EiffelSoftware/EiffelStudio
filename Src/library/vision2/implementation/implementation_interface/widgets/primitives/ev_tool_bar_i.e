@@ -23,6 +23,31 @@ inherit
 			interface
 		end
 		
+feature -- Status report
+
+	has_vertical_button_style: BOOLEAN is
+			-- Is the `pixmap' displayed vertically above `text' for
+			-- all buttons contained in `Current'? If `False', then
+			-- the `pixmap' is displayed to left of `text'.
+		deferred
+		end
+		
+feature -- Status setting
+
+	enable_vertical_button_style is
+			-- Ensure `has_vertical_button_style' is `True'.
+		deferred
+		ensure
+			vertical_button_style_assigned: has_vertical_button_style
+		end
+		
+	disable_vertical_button_style is
+			-- Ensure `has_vertical_button_style' is `False'.
+		deferred
+		ensure
+			vertical_button_style_not_assigned: not has_vertical_button_style
+		end
+		
 feature {EV_DOCKABLE_SOURCE_I} -- Implementation
 
 	insertion_position: INTEGER is

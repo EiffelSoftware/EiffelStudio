@@ -48,7 +48,7 @@ feature -- Initialization
 			!! private_text.make (0)
 			managed := man
 			a_scrolled_text.set_font_imp (Current)
-			set_maximum_size (90000)
+			set_maximum_size (131072)	-- 131072 = 128 * 1024
 		end
 
 	realize is

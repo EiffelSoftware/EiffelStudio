@@ -50,7 +50,7 @@ feature -- Initialization
 				wc ?= parent
 				wel_make (wc, text, x, y, width, height, id_default)
 				set_control_options
-				set_text_limit (90000)
+				set_text_limit (131072)	-- 131072 = 128 * 1024
 				set_tab_length (tab_length)
 				if private_background_color /= Void then
 					set_background_color (private_background_color)

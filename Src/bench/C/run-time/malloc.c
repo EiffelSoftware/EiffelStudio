@@ -533,7 +533,11 @@ doc:		<thread_safety>Safe</thread_safety>
 doc:	</attribute>
 */
 rt_public EIF_LW_MUTEX_TYPE *eif_gc_gsz_mutex = NULL;
-#define EIF_GC_GSZ_LOCK EIF_LW_MUTEX_LOCK(eif_gc_gsz_mutex, "Could not lock GSZ mutex")
+#define EIF_GC_GSZ_LOCK \
+	GC_THREAD_PROTECT(gc_thread_status = EIF_THREAD_GC_GSZ); \
+	EIF_LW_MUTEX_LOCK(eif_gc_gsz_mutex, "Could not lock GSZ mutex"); \
+	RTGC; \
+	GC_THREAD_PROTECT(gc_thread_status = EIF_THREAD_RUNNING);
 #define EIF_GC_GSZ_UNLOCK EIF_LW_MUTEX_UNLOCK(eif_gc_gsz_mutex, "Could not lock GSZ mutex")
 #endif
 
@@ -1055,6 +1059,7 @@ rt_public EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, long int nbitems)
 
 		if (HEADER(ptr)->ov_flags & EO_NEW) {			/* Original was new, ie not allocated
 														 * in GSZ. */
+			RT_GET_CONTEXT
 			GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_LOCK);
 			if (-1 == epush(&moved_set, object)) {		/* Cannot record object */
 				GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_UNLOCK);
@@ -3212,7 +3217,6 @@ rt_private EIF_REFERENCE malloc_from_zone(unsigned int nbytes)
 	 * of occupation go below the watermark at the next collection. There is
 	 * enough room after the watermark to safely allocate the object, anyway.
 	 */
-	GC_THREAD_PROTECT(gc_thread_status = EIF_THREAD_GC_GSZ);
 	GC_THREAD_PROTECT(EIF_GC_GSZ_LOCK);
 	if (sc_from.sc_top >= sc_from.sc_mark) {
 		GC_THREAD_PROTECT(eif_synchronize_gc(rt_globals));
@@ -3221,13 +3225,11 @@ rt_private EIF_REFERENCE malloc_from_zone(unsigned int nbytes)
 				eiffel_usage = 0;		/* Reset amount of allocated data */
 			} else {
 				GC_THREAD_PROTECT(eif_unsynchronize_gc(rt_globals));
-				GC_THREAD_PROTECT(gc_thread_status = EIF_THREAD_RUNNING);
 				GC_THREAD_PROTECT(EIF_GC_GSZ_UNLOCK);
 				return (EIF_REFERENCE) 0;		/* Collection failed */
 			}
 		} else if (0 != collect()) {	/* Simple generation scavenging */
 			GC_THREAD_PROTECT(eif_unsynchronize_gc(rt_globals));
-			GC_THREAD_PROTECT(gc_thread_status = EIF_THREAD_RUNNING);
 			GC_THREAD_PROTECT(EIF_GC_GSZ_UNLOCK);
 			return (EIF_REFERENCE) 0;			/* Collection failed */
 		}
@@ -3248,7 +3250,6 @@ rt_private EIF_REFERENCE malloc_from_zone(unsigned int nbytes)
 		 */
 
 		if ((OVERHEAD+nbytes+sc_from.sc_top) > sc_from.sc_end) {
-			GC_THREAD_PROTECT(gc_thread_status = EIF_THREAD_RUNNING);
 			GC_THREAD_PROTECT(EIF_GC_GSZ_UNLOCK);
 			return NULL;
 		}
@@ -3271,7 +3272,6 @@ rt_private EIF_REFERENCE malloc_from_zone(unsigned int nbytes)
 	flush;
 #endif
 
-	GC_THREAD_PROTECT(gc_thread_status = EIF_THREAD_RUNNING);
 	GC_THREAD_PROTECT(EIF_GC_GSZ_UNLOCK);
 	return (EIF_REFERENCE) (((union overhead *) object ) + 1);	/* Free data space */
 }
@@ -3587,6 +3587,7 @@ rt_private EIF_REFERENCE eif_spset(EIF_REFERENCE object, EIF_BOOLEAN in_scavenge
 rt_private void set_memory_object (EIF_REFERENCE object)
 	/* Add `object' into `memory_set'. */
 {
+	RT_GET_CONTEXT
 	GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_LOCK);
 		/* Push it in the memory set.*/
 	if (-1 == epush (&memory_set, object)) {

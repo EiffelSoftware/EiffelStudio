@@ -89,8 +89,15 @@ fullrd old_com
 fullrd old_matisse
 fullrd vision
 fullrd build
-fullrd dotnet\registration
-fullrd dotnet\envision
+cd dotnet
+fullrd envision
+copy studio\convert_10_to_11.btm .
+copy studio\ace_10_to_11.btm .
+call convert_10_to_11.btm
+del convert_10_to_11.btm
+del ace_10_to_11.btm
+fullrd studio
+cd ..
 cd vision2
 fullrd Boxes
 fullrd drawing_area

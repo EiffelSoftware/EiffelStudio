@@ -29,6 +29,7 @@ feature {NONE} -- Initialization
 			set_buttons (<<"Modify", ev_cancel>>)
 			set_default_push_button(button ("Modify"))
 			set_default_cancel_button(button (ev_cancel))
+			set_icon_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_build_window @ 1)
 		end
 		
 end -- class GB_DUPLICATE_OBJECT_NAME_DIALOG

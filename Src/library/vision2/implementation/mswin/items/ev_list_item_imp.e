@@ -70,6 +70,25 @@ feature -- Status report
 			Result := not parent.ev_children.has (Current)
 		end
 
+	index: INTEGER is
+			-- Index of the current item.
+			-- `id' is a zero-based index
+		do
+			Result := id + 1
+		end
+
+	is_first: BOOLEAN is
+			-- Is the item first in the list ?
+		do
+			Result := (index = 1)
+		end
+
+	is_last: BOOLEAN is
+			-- Is the item last in the list ?
+		do
+			Result := (index = parent.count)
+		end
+	
 feature -- Status setting
 
 	destroy is

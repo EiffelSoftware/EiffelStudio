@@ -55,7 +55,7 @@ feature -- Status report
 	is_selected: BOOLEAN is
 			-- Is the item selected
 		do
-			Result := parent_imp.selected_item = id
+			Result := parent_imp.wel_selected_item = id
 		end
 
 	text: STRING is
@@ -84,6 +84,7 @@ feature -- Status setting
 			-- Destroy the actual item.
 		do
 			parent_imp.remove_item (id)
+			interface.remove_implementation
 		end
 
 	set_selected (flag: BOOLEAN) is
@@ -103,13 +104,6 @@ feature {NONE} -- Access for implementation
 	parent_imp: EV_COMBO_BOX_IMP
 		-- list that contains the current item.
 	
---feature -- Element change -- Implementation
-
---	set_parent (new_combo: EV_COMBO_BOX_IMP) is
-			-- Set `list' to `new_list'.
---		do
---		end
-
 end -- class EV_COMBO_BOX_ITEM_IMP
 
 --|----------------------------------------------------------------

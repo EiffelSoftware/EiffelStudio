@@ -136,8 +136,10 @@ feature -- Start output features
 			-- Put message indicating the start of dead code removal.
 		do
 			set_project_icon_name (removing_dead_code_message)
-			nbr_to_go_l.set_label_as_string (l_features_processed);
 			put_non_degree_message (removing_dead_code_message);
+				-- FIXME ***** to be in INTERFACE_W
+			entity_l.set_label_as_string (l_features_processed);
+			nbr_to_go_l.set_label_as_string ("Features to go: ");
 		end;
 
 	put_end_dead_code_removal_message  is
@@ -251,13 +253,13 @@ feature -- Output on per class
 			-- `features_done' in last cycle with `nbr_to_go'
 			-- features to go.
 		local
-			a_per: INTEGER
+			a_per: INTEGER;
+            a_per_out: STRING
 		do
 			processed := features_done + processed;
-			current_entity_l.set_label_as_string (processed.out);
 			a_per := (100 * features_done) // (nbr_to_go + features_done);
 			progress_bar.update_percentage (a_per);
-			update_interface (Empty_string, nbr_to_go, a_per);
+			update_interface (processed.out, nbr_to_go, a_per);
 		end;
 
 	put_case_cluster_message (a_name: STRING) is

@@ -67,7 +67,7 @@ feature {NONE}
 
 	Dot_xpp: STRING is ".xpp"
 
-	Dot_profile_information: STRING is ".pfi"
+	Dot_profile_information: STRING is "pfi"
 
 	Driver: STRING is
 		once
@@ -172,7 +172,7 @@ feature {NONE}
 feature {NONE} -- Versioning
 
 	Precompilation_id_tag: STRING is "precompilation_id"
-	Version_number: STRING is "4.1 c"
+	Version_number: STRING is "4.1 d"
 	Version_number_tag: STRING is "eiffelbench_version_number"
 	Storable_version_number: STRING is "4.1 c"
 	Storable_version_number_tag: STRING is "storable_version_number"

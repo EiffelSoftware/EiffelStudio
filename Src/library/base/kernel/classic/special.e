@@ -84,6 +84,15 @@ feature -- Access
 		
 feature -- Measurement
 
+	lower: INTEGER is 0
+			-- Minimum index of Current
+			
+	frozen upper: INTEGER is 
+			-- Maximum index of Current
+		do
+			Result := feature {ISE_RUNTIME}.sp_count ($Current) - 1
+		end
+
 	frozen count, frozen capacity: INTEGER is
 			-- Count of the special area
 		do
@@ -92,12 +101,12 @@ feature -- Measurement
 
 feature -- Status report
 
-	frozen all_default (upper: INTEGER): BOOLEAN is
-			-- Are all items between index `0' and `upper'
+	frozen all_default (upper_bound: INTEGER): BOOLEAN is
+			-- Are all items between index `0' and `upper_bound'
 			-- set to default values?
 		require
-			min_upper: upper >= -1
-			max_upper: upper < count
+			min_upper_bound: upper_bound >= -1
+			max_upper_bound: upper_bound < count
 		local
 			i: INTEGER
 			t: T
@@ -105,36 +114,36 @@ feature -- Status report
 			from
 				Result := True
 			until
-				i > upper or else not Result
+				i > upper_bound or else not Result
 			loop
 				Result := item (i) = t
 				i := i + 1
 			end
 		ensure
-			valid_on_empty_area: upper = -1 implies Result
+			valid_on_empty_area: upper_bound = -1 implies Result
 		end
 
-	frozen same_items (other: like Current; upper: INTEGER): BOOLEAN is
-			-- Do all items between index `0' and `upper' have
+	frozen same_items (other: like Current; upper_bound: INTEGER): BOOLEAN is
+			-- Do all items between index `0' and `upper_bound' have
 			-- same value?
 		require
-			min_upper: upper >= -1
-			max_upper: upper < count
+			min_upper_bound: upper_bound >= -1
+			max_upper_bound: upper_bound < count
 			other_not_void: other /= Void
-			other_has_enough_items: upper < other.count
+			other_has_enough_items: upper_bound < other.count
 		local
 			i: INTEGER
 		do
 			from
 				Result := True
 			until
-				i > upper or else not Result
+				i > upper_bound or else not Result
 			loop
 				Result := item (i) = other.item (i)
 				i := i + 1
 			end
 		ensure
-			valid_on_empty_area: upper = -1 implies Result
+			valid_on_empty_area: upper_bound = -1 implies Result
 		end
 	
 	frozen valid_index (i: INTEGER): BOOLEAN is

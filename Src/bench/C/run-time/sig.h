@@ -42,6 +42,7 @@ extern void esdpch();			/* Dispatch queued signals */
 extern char *signame();			/* Give English description of a signal */
 extern void initsig();			/* Initialize the Eiffel handling of signals */
 extern void trapsig();			/* Set a trap for most of the signals */
+extern Signal_t exfpe();		/* Routine trapped for floating point exception */
 
 /* The following two macros are used to protect critical sections against any
  * signal interruption. This is because signals may be turned into exceptions,
@@ -64,5 +65,7 @@ extern void esigcatch();	/* Catch signal */
 extern void esigignore();	/* Ignore signal */
 extern char esigiscaught();	/* Is signal caught? */
 extern char esigdefined();	/* Is signal defined? */
+extern void esigresall();	/* Reset all signal to their default handling */
+extern void esigresdef();	/* Reset a signal to its default handling */
 
 #endif

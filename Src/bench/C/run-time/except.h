@@ -90,6 +90,10 @@ struct except {
 	unsigned char ex_org;	/* Original exception at this level */
  	char *ex_tag;			/* Assertion tag */
 	char *ex_otag;			/* Tag associated with original exception */
+	char *ex_rt;			/* Routine associated with current exception */
+	char *ex_ort;			/* Routine associated with original exception */
+	int ex_class;			/* Class associated with current exception */
+	int ex_oclass;			/* Class associated with original exception */
 };
 
 /* Short names for easier access */
@@ -100,6 +104,10 @@ struct except {
 #define echlvl		exdata.ex_level
 #define echorg		exdata.ex_org
 #define echotag		exdata.ex_otag
+#define echrt		exdata.ex_rt
+#define echort		exdata.ex_ort
+#define echclass	exdata.ex_class
+#define echoclass	exdata.ex_oclass
 
 /* Structure used while printing the exception trace stack. It is built using
  * some look-ahead inside the stack.
@@ -214,8 +222,16 @@ extern struct ex_vect *extop();	/* Top of Eiffel stack */
 /* Eiffel interface with class EXCEPTIONS */
 extern long eeocode();			/* Original exception code */
 extern char *eeotag();			/* Original exception tag */
+extern char *eeoclass();		/* Original class where exception occurred */
+extern char *eeorout();			/* Original routine where exception occurred */
 extern long eelcode();			/* Last exception code */
 extern char *eeltag();			/* Last exception tag */
-extern void eetrace();
+extern char *eelclass();		/* Last class where exception occurred */
+extern char *eelrout();			/* Last routine where exception occurred */
+extern void eetrace();			/* Print/No Print of exception history table */
+extern void eecatch();			/* Catch exception */
+extern void eeignore();			/* Ignore exception */
+extern char *eename();			/* Exception description */
+
 
 #endif

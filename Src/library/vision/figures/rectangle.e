@@ -45,7 +45,7 @@ feature -- Initialization
 		local
 			w,h : INTEGER;
 		do
-			make ;
+			make;
 			if not cl.empty then
 				upper_left := deep_clone (cl.up_left);
 				w := cl.down_right.x - cl.up_left.x;
@@ -99,7 +99,6 @@ feature -- Access
 
 feature -- Modification & Insertion 
 
-	
 	set_height (new_height: like height) is
 			-- Set `height' to `new_height'.
 		require
@@ -200,7 +199,7 @@ feature -- Modification & Insertion
 
 feature -- Output
 
-		draw is
+	draw is
 			-- Draw the rectangle.
 		do
 			if drawing.is_drawable then

@@ -33,7 +33,7 @@ feature -- Status report
 			Result := implementation.peers
 		ensure
 			not_void: Result /= Void
-			bridge_ok: Result.is_equal (implementation.peers)
+			bridge_ok: Result.count = implementation.peers.count
 		end
 
 	selected_peer: like Current is
@@ -109,6 +109,9 @@ end -- class EV_RADIO_PEER
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.2  2000/02/25 01:47:39  brendel
+--| Improved postcondition.
+--|
 --| Revision 1.1  2000/02/24 20:29:09  brendel
 --| Initial revision. Needed for rearranged radio-item inheritance structure.
 --|

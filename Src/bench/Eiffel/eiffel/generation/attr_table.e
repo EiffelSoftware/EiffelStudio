@@ -8,7 +8,7 @@ inherit
 		rename
 			writer as Attr_generator
 		redefine
-			is_attribute_table, generable, final_table_size
+			is_attribute_table, final_table_size
 		end;
 
 	SHARED_CODE_FILES
@@ -21,14 +21,13 @@ inherit
 			setup, consistent, copy, is_equal
 		end
 
+creation
+	make
+
 feature
 
 	is_attribute_table: BOOLEAN is True;
 			-- Is the table an attribute offset table ?
-
-	generable: BOOLEAN is True
-			-- An offset table has to be always generated because of
-			-- the C main skeleton structure.
 
 	final_table_size: INTEGER is
 			-- Table size
@@ -41,67 +40,37 @@ feature
 			-- the maximum entry id ?
 		local
 			current_type_id: INTEGER;
-			entry, first_entry: ATTR_ENTRY;
+			entry: ATTR_ENTRY;
 			cl_type: CLASS_TYPE;
-			first_class: CLASS_C;
+			first_class_topo_id: INTEGER;
 			i, nb, old_position: INTEGER
 			local_copy: ATTR_TABLE
 			system_i: SYSTEM_I
+			offset: INTEGER
 		do
 			old_position := position
 			system_i := System
 
-				-- If it is not a poofter finalization
-				-- we have a quicker algorithm handy.
-			if not system_i.poofter_finalization then
-				goto_used (type_id);
-				i := position
-				if i <= max_position then
-					local_copy := Current
-					first_entry := local_copy.array_item (i)
-					if first_entry.is_set then
-						Result := first_entry.is_polymorphic
-					else
-						from
-							cl_type := system_i.class_type_of_id (type_id);
-							first_class := cl_type.associated_class;
-							i := i + 1
-							nb := max_position
-						until
-							Result or else i > nb
-						loop
-							entry := local_copy.array_item (i)
-							cl_type := system_i.class_type_of_id (entry.type_id);
-							if cl_type.associated_class.simple_conform_to (first_class) then
-								Result := entry.used;
-							end;
-							i := i + 1
-						end;
-						
-						first_entry.set_polymorphic (Result)
-					end
-				end;
-			else
+			goto_used (type_id);
+			i := position
+			if i <= max_position then
+				local_copy := Current
 				from
-					local_copy := Current
 					cl_type := system_i.class_type_of_id (type_id);
-					first_class := cl_type.associated_class;
-					i := lower
+					first_class_topo_id := cl_type.associated_class.topological_id
+					offset := cl_type.skeleton.offset (local_copy.array_item (i).feature_id)
+					i := i + 1
 					nb := max_position
 				until
 					Result or else i > nb
 				loop
 					entry := local_copy.array_item (i)
-					current_type_id := entry.type_id;
-					if current_type_id /= type_id then
-						cl_type := system_i.class_type_of_id (current_type_id);
-						if cl_type.associated_class.simple_conform_to (first_class) then
-							Result := entry.used
-						end;
-					end;
+					cl_type := system_i.class_type_of_id (entry.type_id);
+					Result := cl_type.associated_class.conformance_table.item (first_class_topo_id)
+							and then not (cl_type.skeleton.offset (entry.feature_id) = offset)
 					i := i + 1
 				end;
-			end;
+			end
 			position := old_position
 		end;
 

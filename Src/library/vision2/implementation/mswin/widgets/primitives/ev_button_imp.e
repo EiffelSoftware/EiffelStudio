@@ -1,15 +1,15 @@
 indexing
 	description: "EiffelVision push button.%
-				% Mswindows implementation."
+		% Mswindows implementation."
 	status: "See notice at end of class"
 	date: "$$"
 	revision: "$$"
         
 class
-    EV_BUTTON_IMP
+	EV_BUTTON_IMP
         
 inherit
-    EV_BUTTON_I
+	EV_BUTTON_I
 
 	EV_PRIMITIVE_IMP
 		redefine

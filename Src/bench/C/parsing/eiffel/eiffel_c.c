@@ -184,6 +184,16 @@ char *inspect_else(void)
 	return result;
 }
 
+char *inspect_no_else(void)
+{
+	/* Return an instruction list as default part of a
+	 * multi-branch instruction. This list can be empty. */
+ 
+	bool_arg[0] = EIF_FALSE;
+	return (char *) 0;
+}
+
+
 char *create_generic(char *gen_name, char *constrained, char *creation_routines)
 {
 	/* Return a formal generic parameter. */

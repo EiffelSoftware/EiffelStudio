@@ -20,7 +20,7 @@ feature -- Access
 	max_size: WEL_POINT is
 			-- Maximized width and height of the window
 		do
-			!! Result.make_by_pointer (cwel_minmaxinfo_get_maxsize (item))
+			create Result.make_by_pointer (cwel_minmaxinfo_get_maxsize (item))
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -29,7 +29,7 @@ feature -- Access
 			-- Position of the left side of the maximized window
 			-- and the position of the top of the maximized window
 		do
-			!! Result.make_by_pointer (cwel_minmaxinfo_get_maxposition (item))
+			create Result.make_by_pointer (cwel_minmaxinfo_get_maxposition (item))
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -38,7 +38,7 @@ feature -- Access
 			-- Minimum tracking width and the minimum tracking
 			-- height of the window
 		do
-			!! Result.make_by_pointer (cwel_minmaxinfo_get_mintracksize (item))
+			create Result.make_by_pointer (cwel_minmaxinfo_get_mintracksize (item))
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -47,7 +47,7 @@ feature -- Access
 			-- Maximum tracking width and the minimum tracking
 			-- height of the window
 		do
-			!! Result.make_by_pointer (cwel_minmaxinfo_get_maxtracksize (item))
+			create Result.make_by_pointer (cwel_minmaxinfo_get_maxtracksize (item))
 		ensure
 			result_not_void: Result /= Void
 		end

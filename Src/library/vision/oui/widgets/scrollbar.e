@@ -55,7 +55,7 @@ feature {NONE} -- Creation
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
 			identifier:= clone (a_name);
-			implementation:= toolkit.scrollbar (Current, man);
+			implementation:= toolkit.scrollbar (Current, man, a_parent);
 			implementation.set_widget_default;
 			set_default
 		end;

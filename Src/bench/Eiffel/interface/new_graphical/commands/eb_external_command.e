@@ -49,7 +49,18 @@ feature {NONE} -- Initialization
 		do
 			old_index := -1
 			create_dialog
+
+				-- Find first available index for new command.
+			from
+				index := 0
+			until
+				index > 9 or commands.item (index) = Void
+			loop
+				index := index + 1
+			end
+			index_field.set_value (index)
 			dialog.show_modal_to_window (w)
+			
 			if is_valid then
 					-- Automatically add `Current' to the list of commands.
 				commands.put (Current, index)
@@ -324,6 +335,9 @@ feature {NONE} -- Implementation
 				-- Set up events.
 			okb.select_actions.extend (agent on_ok)
 			cb.select_actions.extend (agent destroy_dialog)
+			
+				-- Ensure that `name_field' gets focus when dialog is displayed
+			dialog.show_actions.extend (agent name_field.set_focus)
 		end
 
 	on_ok is

@@ -245,6 +245,15 @@ feature -- Warning messages
 			Result.append (" is more recent than the system.%N");
 			Result.append ("Do you want to compile the generated C code?")
 		end;
+	w_Makefile_does_not_exist (make_file: STRING): STRING is
+		require
+			make_file_not_void: make_file /= Void
+		do
+			!!Result.make (30);
+			Result.append (make_file);
+			Result.append (" does not exist.%N");
+			Result.append ("Cannot invoke C compilation")
+		end;
 	w_MakefileSH_more_recent: STRING is "The Makefile.SH is more recent than the system.";
 	w_Melt_only: STRING is"%
 			%This feature is not available in the personal version.%N%

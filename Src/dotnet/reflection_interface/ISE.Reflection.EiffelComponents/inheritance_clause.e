@@ -12,21 +12,6 @@ inherit
 			is_equal
 		end
  
-feature {NONE} -- Initialization
- 
- 	make (a_source_name: like source_name) is 
- 		indexing
- 			description: "Set `source_name' with `a_source_name'."
- 			external_name: "Make"
- 		require
- 			non_void_source_name: a_source_name /= Void
- 			not_empty_source_name: a_source_name.get_length > 0		
- 		do
- 			set_source_name (a_source_name)
- 		ensure
- 			source_name_set: source_name.equals_string (a_source_name)
- 		end
- 
  feature -- Access
  
  	source_name: STRING
@@ -47,12 +32,17 @@ feature {NONE} -- Initialization
 
 feature -- Status Report
 
-	is_equal (obj: INHERITANCE_CLAUSE): BOOLEAN is
+	is_equal (obj: ANY): BOOLEAN is
 		indexing
 			description: "Is Current equals to `obj'?"
 			external_name: "Equals"
+		local
+			a_clause: INHERITANCE_CLAUSE
 		do
-			Result := source_name.to_lower.equals_string (obj.source_name.to_lower)
+			a_clause ?= obj
+			if a_clause /= Void then
+				Result := source_name.to_lower.equals_string (a_clause.source_name.to_lower)
+			end
 		end
 		
 feature -- Status Setting

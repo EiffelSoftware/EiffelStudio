@@ -19,7 +19,6 @@ inherit
 		end
 	SHARED_BENCH_LICENSES;
 	SHARED_CONFIGURE_RESOURCES;
-	SHARED_BATCH_COMPILER;
 	SHARED_EIFFEL_PROJECT
 
 feature -- Initialization
@@ -30,25 +29,23 @@ feature -- Initialization
 			screen: SCREEN;
 			temp: STRING;
 			new_resources: EB_RESOURCES
+			compiler: ES
 		do
 			if not retried then
 					-- Check that environment variables
 					-- are properly set.
 				temp := Execution_environment.get ("EIFFEL4");
 				if (temp = Void) or else temp.empty then
-					io.error.putstring 
-						("ISE Eiffel4: the environment variable $EIFFEL4 is not set%N");
+					io.error.putstring ("ISE Eiffel4: the environment variable $EIFFEL4 is not set%N");
 					die (-1)
 				end;
 				temp := Execution_environment.get ("PLATFORM");
 				if (temp = Void) or else temp.empty then
-					io.error.putstring 
-						("ISE Eiffel4: the environment variable $PLATFORM is not set%N");
+					io.error.putstring ("ISE Eiffel4: the environment variable $PLATFORM is not set%N");
 					die (-1)
 				end;
 
 					-- Read the resource files
-
 				if argument_count > 0 and then
 					(argument (1).is_equal ("-bench") or
 					else argument (1).is_equal ("-from_bench"))
@@ -64,7 +61,8 @@ feature -- Initialization
 					Eiffel_project.set_batch_mode (True);
 					if init_license then
 						!! new_resources.initialize;
-						start_batch_compiler;
+							-- Start the compilation in batch mode from the bench executable.
+						!!compiler.make_unlicensed
 						discard_licenses;
 					end;
 				end;
@@ -75,7 +73,7 @@ feature -- Initialization
 		rescue
 			discard_licenses;
 			if not Eiffel_project.batch_mode then
-					-- The rescue in BASIC_ES will display the tag
+					-- The rescue in ES will display the tag
 				io.error.putstring ("ISE Eiffel4: Session aborted%N");
 				io.error.putstring ("Exception tag: ");
 				temp := original_tag_name;

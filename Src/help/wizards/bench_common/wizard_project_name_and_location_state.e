@@ -14,18 +14,6 @@ inherit
 			proceed_with_current_info,
 			build
 		end
-
-		
-	DIRECTORY
-		rename
-			make as old_make
-		export
-			{NONE} all
-		end
---	ISE_DIRECTORY_UTILITIES
---		export
---			{NONE} all
---		end
 		
 	BENCH_WIZARD_CONSTANTS
 		export

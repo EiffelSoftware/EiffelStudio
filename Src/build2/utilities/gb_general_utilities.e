@@ -107,5 +107,18 @@ feature -- Basic operations
 			Result_not_void: Result /= Void
 		end
 		
-		
+	name_and_type_from_object (an_object: GB_OBJECT): STRING is
+			-- `Result' is name and type of object as STRING.
+		require
+			object_not_void: an_object /= Void
+		do
+			if an_object.output_name.is_empty then
+				Result := an_object.type.substring (4, an_object.type.count)
+			else		
+				Result := an_object.output_name + ": " + an_object.type.substring (4, an_object.type.count)
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+
 end -- class GB_GENERAL_UTILITIES

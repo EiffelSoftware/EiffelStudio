@@ -56,13 +56,13 @@ void c_ev_any_imp_set_eif_oid_in_c_object (
             g_object_set_data (
                 G_OBJECT (c_object),
                 "eif_oid",
-                (gpointer*) (rt_int_ptr) eif_oid
+                (gpointer) (rt_int_ptr) eif_oid
             );
             g_signal_connect (
                 G_OBJECT (c_object),
                 "destroy",
                 (GCallback) c_ev_any_imp_c_object_dispose,
-                (gpointer*) (rt_int_ptr) eif_oid
+                (gpointer) (rt_int_ptr) eif_oid
             );
 }
 
@@ -104,6 +104,9 @@ void set_debug_mode (int a_debug_mode)
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.7  2005/02/15 00:05:06  king
+// Removed asterisk from gpointer as it is not needed
+//
 // Revision 1.6  2005/02/12 01:23:42  manus
 // Removed C compiler warnings by adding cast to (rt_int_ptr) before convert to
 //   or from a pointer.

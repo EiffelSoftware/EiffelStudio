@@ -28,6 +28,21 @@ feature -- Access
 			Result := internal_minimum_height
 		end
 
+	Nc_minwidth: INTEGER is 1
+			-- Used only in the `notify_change' feature to
+			-- notify the parent that the minimum width of 
+			-- the current widget has changed.
+
+	Nc_minheight: INTEGER is 2
+			-- Used only in the `notify_change' feature to
+			-- notify the parent that the minimum height of 
+			-- the current widget has changed.
+
+	Nc_minsize: INTEGER is 3
+			-- Used only in the `notify_change' feature to
+			-- notify the parent that both the minimum width
+			-- and height of the current widget have changed.
+
 feature -- Status report
 
 	horizontal_resizable: BOOLEAN is
@@ -39,9 +54,37 @@ feature -- Status report
 
 	vertical_resizable: BOOLEAN is
 			-- Does the widget change its width when the parent
-			-- want to resize the widget
+			-- want to resize the widget?
 		do
 			Result := bit_set (internal_changes, 32)
+		end
+
+	is_minwidth_recomputation_needed: BOOLEAN is
+			-- Does the minimum width need to be recomputed?
+		do
+			Result := bit_set (internal_changes, 1)
+		end
+
+	is_minheight_recomputation_needed: BOOLEAN is
+			-- Does the minimum height need to be recomputed?
+		do
+			Result := bit_set (internal_changes, 2)
+		end
+
+	is_minwidth_locked: BOOLEAN is
+			-- Did the user set the minimum width?
+			-- In this case, the minimum width cannot be
+			-- changed by the system.
+		do
+			Result := bit_set (internal_changes, 4)
+		end
+
+	is_minheight_locked: BOOLEAN is
+			-- Did the user set the minimum height?
+			-- In this case, the minimum width cannot be
+			-- changed by the system.
+		do
+			Result := bit_set (internal_changes, 8)
 		end
 
 feature -- Status setting
@@ -62,6 +105,30 @@ feature -- Status setting
 			if displayed then
 				parent_ask_resize (child_cell.width, child_cell.height)
 			end
+		end
+
+	set_minwidth_recomputation_needed (flag: BOOLEAN) is
+			-- Make `flag' the new is_minwidth_recomputation_needed?
+		do
+			internal_changes := set_bit (internal_changes, 1, flag)
+		end
+
+	set_minheight_recomputation_needed (flag: BOOLEAN) is
+			-- Make `flag' the new is_minheight_recomputation_needed?
+		do
+			internal_changes := set_bit (internal_changes, 2, flag)
+		end
+
+	set_minwidth_locked (flag: BOOLEAN) is
+			-- Make `flag' the new is_minwidth_locked?
+		do
+			internal_changes := set_bit (internal_changes, 4, flag)
+		end
+
+	set_minheight_locked (flag: BOOLEAN) is
+			-- Make `flag' the new is_minwidth_locked?
+		do
+			internal_changes := set_bit (internal_changes, 8, flag)
 		end
 
 feature -- Resizing
@@ -90,35 +157,31 @@ feature -- Resizing
 			-- Make `value' the new `minimum_width'.
 			-- There is no need to grow the object if its size is
 			-- too small, the parent will do it if necessary.
-		local
-			wid: EV_WIDGET
 		do
-			internal_changes := set_bit (internal_changes, 4, False)
+			set_minwidth_locked (False)
 			internal_set_minimum_width (value)
-			internal_changes := set_bit (internal_changes, 4, True)
+			set_minwidth_locked (True)
 		end
 
 	set_minimum_height (value: INTEGER) is
 			-- Make `value' the new `minimum_height'.
 			-- There is no need to grow the object if its size is
 			-- too small, the parent will do it if necessary.
-		local
-			wid: EV_WIDGET
 		do
-			internal_changes := set_bit (internal_changes, 8, False)
+			set_minheight_locked (False)
 			internal_set_minimum_height (value)
-			internal_changes := set_bit (internal_changes, 8, True)
+			set_minheight_locked (True)
 		end
 
 	set_minimum_size (mw, mh: INTEGER) is
 			-- Make `mw' the new minimum_width and `mh' the new
 			-- minimum_height.
 		do
-			internal_changes := set_bit (internal_changes, 4, False)
-			internal_changes := set_bit (internal_changes, 8, False)
+			set_minwidth_locked (False)
+			set_minheight_locked (False)
 			internal_set_minimum_size (mw, mh)
-			internal_changes := set_bit (internal_changes, 4, True)
-			internal_changes := set_bit (internal_changes, 8, True)
+			set_minwidth_locked (True)
+			set_minheight_locked (True)
 		end
 
 feature -- Position
@@ -193,20 +256,20 @@ feature -- Basic operation
 		do
 			cc := child_cell
 			cc.resize (a_width, a_height)
-			wc := bit_set (internal_changes, 16)
-			hc := bit_set (internal_changes, 32)
+			wc := horizontal_resizable
+			hc := vertical_resizable
 			if wc and hc then
 				move_and_resize (cc.x, cc.y, a_width, a_height, True)
 			elseif hc then
 				w := minimum_width.min (a_width)
-				move_and_resize ((a_width - w)//2 + cc.x, cc.y, w, a_height, True)
+				move_and_resize ((a_width - w) // 2 + cc.x, cc.y, w, a_height, True)
 			elseif wc then
 				h := minimum_height.min (a_height)
-				move_and_resize (cc.x, (a_height - h)//2 + cc.y, a_width, h, True)
+				move_and_resize (cc.x, (a_height - h) // 2 + cc.y, a_width, h, True)
 			else
 				w := minimum_width.min (a_width)
 				h := minimum_height.min (a_height)
-				move_and_resize ((a_width - w)//2 + cc.x, (a_height - h)//2 + cc.y, w, h, True)
+				move_and_resize ((a_width - w) // 2 + cc.x, (a_height - h) // 2 + cc.y, w, h, True)
 			end
 		end
 
@@ -217,12 +280,12 @@ feature -- Basic operation
 		local
 			changed: BOOLEAN
 		do
-			if not bit_set (internal_changes, 4) then
+			if not is_minwidth_locked then
 				if internal_minimum_width /= value then
 					internal_minimum_width := value
 					if managed then 
 						if parent_imp /= Void then
-							parent_imp.notify_change (1)
+							parent_imp.notify_change (Nc_minwidth)
 						end
 					else
 						move_and_resize (x, y, width.max (value), height, True)
@@ -238,12 +301,12 @@ feature -- Basic operation
 		local
 			changed: BOOLEAN
 		do
-			if not bit_set (internal_changes, 8) then
+			if not is_minheight_locked then
 				if internal_minimum_height /= value then
 					internal_minimum_height := value
 					if managed then 
 						if parent_imp /= Void then
-							parent_imp.notify_change (2)
+							parent_imp.notify_change (Nc_minheight)
 						end
 					else
 						move_and_resize (x, y, value, height.max (value), True)
@@ -262,8 +325,8 @@ feature -- Basic operation
 			w_ok, h_ok: BOOLEAN
 			w_ns, h_ns: BOOLEAN
 		do
- 			w_ok := not bit_set (internal_changes, 4)
-			h_ok := not bit_set (internal_changes, 8)
+ 			w_ok := not is_minwidth_locked
+			h_ok := not is_minheight_locked
  
 			if w_ok and h_ok then
 				w_cd := internal_minimum_width /= mw
@@ -273,11 +336,11 @@ feature -- Basic operation
 				if managed then
 					if parent_imp /= Void then
 						if w_cd and h_cd then
-							parent_imp.notify_change (3)
+							parent_imp.notify_change (Nc_minsize)
 						elseif w_cd then
-							parent_imp.notify_change (1)
+							parent_imp.notify_change (Nc_minwidth)
 						elseif h_cd then
-							parent_imp.notify_change (2)
+							parent_imp.notify_change (Nc_minheight)
 						end
 					end
 				else
@@ -289,7 +352,7 @@ feature -- Basic operation
 					internal_minimum_width := mw
 					if managed then
 						if parent_imp /= Void then
-							parent_imp.notify_change (1)
+							parent_imp.notify_change (Nc_minwidth)
 						end
 					else
 						move_and_resize (x, y, width.max (mw), height, True)
@@ -301,7 +364,7 @@ feature -- Basic operation
 					internal_minimum_height := mh
 					if managed then
 						if parent_imp /= Void then
-							parent_imp.notify_change (2)
+							parent_imp.notify_change (Nc_minheight)
 						end
 					else
 						move_and_resize (x, y, width, height.max (mh), True)
@@ -310,11 +373,12 @@ feature -- Basic operation
 			end
 		end
 
-	internal_resize (a_x, a_y, a_width, a_height: INTEGER) is
-			-- A function sometimes used (notebook) that update
-			-- and resize the current widget.
+		integrate_changes is
+			-- A fonction that simply recompute the minimum size if
+			-- necessary. It do not resize the widget, only integrate
+			-- the changes.
 		do
-			move_and_resize (a_x, a_y, a_width, a_height, True)
+			-- Do nothing here.
 		end
 
 feature {EV_SIZEABLE_IMP} -- Implementation
@@ -334,9 +398,9 @@ feature {EV_SIZEABLE_IMP} -- Implementation
 			-- Binary integer whith the following meaning :
 			-- bit 1 -> the minimum width needs to be recomputed	(1)
 			-- bit 2 -> the minimum height needs to be recomputed	(2)
-			-- bit 3 -> the user has set the minimum width		(4)
-			-- bit 4 -> the user has set the minimum height		(8)
-			-- bit 5 -> the child only resize its width			(16)
+			-- bit 3 -> the user has set the minimum width			(4)
+			-- bit 4 -> the user has set the minimum height			(8)
+			-- bit 5 -> the child only resize its width				(16)
 			-- bit 6 -> the child only resize its height			(32)
 
 feature {EV_ANY_I} -- deferred feature

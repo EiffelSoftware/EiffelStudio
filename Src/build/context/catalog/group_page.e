@@ -31,7 +31,7 @@ feature {NONE}
 			!!group_hole.make (Current);
 			!!scrolled_w.make (Widget_names.scrolledwindow, Current);
 			!!icon_box.make (Widget_names.icon_box, scrolled_w);
-			icon_box.set_row_layout;
+			icon_box.set_column_layout;
 			icon_box.set_preferred_count (5);
 
 			!!group_name.make (Widget_names.group_name, Current);

@@ -971,7 +971,15 @@ public void ereturn()
 	SIGRESUME;						/* Dispatch queued signals */
 
 	if (rescue != (char *) 0)
+#ifdef __VMS
+ #ifndef __ALPHA
+		longjmp((int *)rescue, echval);/* Setjmp will return the exception code */
+ #else
+		longjmp((__int64 *)rescue, echval);/* Setjmp will return the exception code */
+ #endif
+#else
 		longjmp(rescue, echval);	/* Setjmp will return the exception code */
+#endif
 
 	panic(vanished);				/* main() should have created a vector */
 	/* NOTREACHED */
@@ -1455,6 +1463,7 @@ public void esfail()
 }
 
 #ifdef WORKBENCH
+extern shared void dbreak( int why);
 
 #ifndef NOHOOK
 extern int debug_mode;

@@ -239,9 +239,9 @@ feature -- Status setting
 	destroy is
 			-- Render `Current' unusable.
 		do
-			remove_menu_bar
-			lower_bar.destroy
-			upper_bar.destroy
+--			remove_menu_bar
+--			lower_bar.destroy
+--			upper_bar.destroy
 			Precursor
 		end
 
@@ -269,7 +269,6 @@ feature -- Element change
 				end
 				C.gtk_object_ref (w.c_object)
 				C.gtk_container_remove (hbox, w.c_object)
-				C.gtk_object_unref (w.c_object)
 			end
 			if v /= Void then
 				w ?= v.implementation
@@ -384,7 +383,6 @@ feature -- Element change
 				mb_imp.remove_parent_window
 				C.gtk_object_ref (mb_imp.list_widget)
 				C.gtk_container_remove (vbox, mb_imp.list_widget)
-				C.gtk_object_unref (mb_imp.list_widget)
 			end
 			menu_bar := Void
 		end

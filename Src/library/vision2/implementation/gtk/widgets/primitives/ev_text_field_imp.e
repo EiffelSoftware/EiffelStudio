@@ -15,7 +15,8 @@ inherit
 	
 	EV_TEXT_COMPONENT_IMP
 		redefine
-			interface
+			interface,
+			visual_widget
 		end
 
 	EV_TEXT_FIELD_ACTION_SEQUENCES_IMP
@@ -32,8 +33,10 @@ feature {NONE} -- Initialization
 			-- Create a gtk entry.
 		do
 			base_make (an_interface)
-			set_c_object (C.gtk_entry_new)
-			entry_widget := c_object
+			set_c_object (C.gtk_event_box_new)
+			entry_widget := C.gtk_entry_new
+			C.gtk_widget_show (entry_widget)
+			C.gtk_container_add (c_object, entry_widget)
 			set_text ("")
 		end
 
@@ -104,6 +107,12 @@ feature {NONE} -- Implementation
 
 	entry_widget: POINTER
 		-- A pointer on the text field
+		
+	visual_widget: POINTER is
+			-- 
+		do
+			Result := entry_widget
+		end
 
 feature {EV_ANY_I} -- Implementation
 

@@ -19,14 +19,6 @@ feature -- Implementation
 			"XmNdecimalPoints"
 		end;
 
-	XmNfontList: POINTER is
-			-- Motif resource
-		external
-			"C [macro <Xm/Scale.h>] : EIF_POINTER"
-		alias
-			"XmNfontList"
-		end;
-
 	XmNhighlightOnEnter: POINTER is
 			-- Motif resource
 		external

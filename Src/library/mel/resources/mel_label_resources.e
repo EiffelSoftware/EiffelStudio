@@ -35,14 +35,6 @@ feature -- Implementation
 			"XmNalignment"
 		end;
 
-	XmNfontList: POINTER is
-			-- Motif resource
-		external
-			"C [macro <Xm/Label.h>] : EIF_POINTER"
-		alias
-			"XmNfontList"
-		end;
-
 	XmNlabelInsensitivePixmap: POINTER is
 			-- Motif resource
 		external

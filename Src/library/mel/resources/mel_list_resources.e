@@ -27,14 +27,6 @@ feature  -- Implementation
 			"XmNdoubleClickInterval"
 		end;
 
-	XmNfontList: POINTER is
-			-- Motif resource
-		external
-			"C [macro <Xm/List.h>] : EIF_POINTER"
-		alias
-			"XmNfontList"
-		end;
-
 	XmNitemCount: POINTER is
 			-- Motif resource
 		external

@@ -102,9 +102,7 @@ feature -- Status report
 	caret_position: INTEGER is
 			-- Current position of the caret.
 		do
-			check
-				To_be_implemented: False
-			end
+			Result := C.gtk_text_get_point (c_object) + 1
 		end
 
 	line_count: INTEGER is
@@ -183,9 +181,7 @@ feature -- Status setting
 	set_caret_position (pos: INTEGER) is
 			-- Set the position of the caret to `pos'.
 		do
-			check
-				To_be_implemented: False
-			end
+			C.gtk_text_set_point (c_object, pos - 1)
 		end
 	
 	insert_text (txt: STRING) is
@@ -297,6 +293,9 @@ end -- class EV_TEXT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.3  2001/06/23 00:30:16  pichery
+--| Implemented "to be implemented" features.
+--|
 --| Revision 1.2  2001/06/07 23:08:07  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

@@ -135,21 +135,8 @@ feature -- Status report
 			valid_first: not first.is_empty
 			other_exists: other /= Void
 			valid_other: not other.is_empty
-		local
-			first_copy: STRING
-			other_copy: STRING
 		do
-			Result := false
-			first_copy := format_external(first)
-			other_copy := format_external(other)
-			
-			first_copy.to_lower
-			other_copy.to_lower
-			
-			if first_copy.is_equal(other_copy) then
-				Result := true
-			end
-			
+			Result := format_external (first).as_lower.is_equal (format_external (other).as_lower)
 		end
 		
 	format_external (external_item: STRING): STRING is
@@ -293,10 +280,8 @@ feature {NONE} -- Implementation
 			formatted_path := format_external (external_item)
 
 			-- replace path to Eiffel installation with $ISE_EIFFEL			
-			external_copy := clone (external_item)
-			eiffel_dir := ace_accesser.ise_eiffel.clone (ace_accesser.ise_eiffel)
-			external_copy.to_lower
-			eiffel_dir.to_lower
+			external_copy := external_item.as_lower
+			eiffel_dir := ace_accesser.ise_eiffel.as_lower
 			if external_copy.substring_index (eiffel_dir, 1) = 1 then
 				formatted_path := formatted_path.substring (eiffel_dir.count + 1,  formatted_path.count)
 				formatted_path.prepend (ace_accesser.Ise_eiffel_envvar)

@@ -90,6 +90,10 @@ feature -- IL Generation
 			if not is_single_class then
 					-- Define all features used by ISE runtime.
 				define_runtime_features (class_type)
+				
+					-- Define definition of SYSTEM_OBJECT features for
+					-- .NET types
+				define_system_object_features (class_type)
 
 					-- Generate default constructor.
 				define_default_constructor (class_type, False)

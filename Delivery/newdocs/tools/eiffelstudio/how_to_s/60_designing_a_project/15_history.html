@@ -1,0 +1,31 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+<HTML>
+	<HEAD>
+		<TITLE>Undoing and redoing</TITLE>
+		<LINK REL=StyleSheet HREF="../../../../default.css">
+		<META NAME="MS-HKWD" CONTENT="Undo">
+		<META NAME="MS-HKWD" CONTENT="Redo">
+		<META NAME="MS-HKWD" CONTENT="History tool">
+	</HEAD>
+
+	<BODY>
+		<H1>Undoing and redoing</H1>
+
+		<P>Almost all actions in the diagram tool are undoable. Every action that can be undone, can also be redone. For advanced undoing, open the history tool.</P>
+
+		<P CLASS="tip"><B>Tip</B>: undo actions cannot be undone. Use redo to undo an undo action.
+
+		<UL>
+			<LI>To undo the last action, click <B>Undo last action</B>. <IMG SRC="../../../../images/eiffelstudio/icon_undo_color.png">
+			<LI>To redo the last action, click <B>Redo last action</B>. <IMG SRC="../../../../images/eiffelstudio/icon_redo_color.png">
+			<LI>To undo all actions up until a specific action:
+			<OL>
+				<LI>Click the <B>History tool</B> button. <IMG SRC="../../../../images/eiffelstudio/icon_cmd_history_color.png">
+				<LI>The <B>History tool</B> dialog appears with a list of all undoable actions. By clicking on one of the actions, the diagram returns to the state it was in just after you performed this action.
+				<BR><IMG SRC="../../../../images/eiffelstudio/history-tool.png">
+			</OL>
+		</UL>
+
+		<P CLASS="note"><B>Note</B>: when an action is performed that cannot be undone, the history tool is emptied.
+	</BODY>
+</HTML>

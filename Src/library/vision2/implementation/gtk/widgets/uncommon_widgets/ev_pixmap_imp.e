@@ -126,6 +126,23 @@ feature -- Element change
 			end				
 		end
 
+	read_from_named_file (file_name: STRING) is
+			-- Attempt to load pixmap data from a file specified by `file_name'.
+			-- May raise `Ev_unknow_image_format' or `Ev_courpt_image_data'
+			-- exceptions.
+			--|FIXME do this!
+		require
+			file_name_not_void: file_name /= Void
+			file_name_not_empty: not file_name.empty
+		local
+			file: RAW_FILE
+		do
+			create file.make_open_read (file_name)
+			read_from_file (file)
+			file.close
+		end
+
+
 	set_with_buffer (a_buffer: STRING) is
 			-- Load pixmap data from `a_buffer' in memory.
 		local
@@ -274,6 +291,9 @@ end -- EV_PIXMAP_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.22  2000/03/21 00:08:30  pichery
+--| forgotten to implemented feature `read_from_named_file'.
+--|
 --| Revision 1.21  2000/03/20 23:53:06  pichery
 --| Renammed `copy' to `copy_pixmap'.
 --|

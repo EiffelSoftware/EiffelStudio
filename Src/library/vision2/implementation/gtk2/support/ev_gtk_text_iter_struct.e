@@ -15,9 +15,9 @@ inherit
 create
 	make
 
-feature {NONE} -- Externals
+feature -- Externals
 
-	structure_size: INTEGER is
+	frozen structure_size: INTEGER is
 		external
 			"C [macro <gtk/gtk.h>]"
 		alias

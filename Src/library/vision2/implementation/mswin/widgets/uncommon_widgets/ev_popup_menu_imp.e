@@ -12,34 +12,97 @@ class
 inherit
 	EV_POPUP_MENU_I
 
-	EV_MENU_CONTAINER_IMP
+	EV_MENU_ITEM_HOLDER_IMP
 	
-	EV_WIDGET_IMP
+	WEL_MENU
+		rename
+			make as wel_make
+		end
 
 creation
-	
 	make
 	
 feature {NONE} -- Initialization
 	
-	make (par: EV_CONTAINER) is         
-			-- Create a popup menu widget with `par' as
-			-- parent
-		local
-			par_imp: EV_CONTAINER_IMP
+	make is         
+			-- Create an empty popup menu.
 		do
-			par_imp ?= par.implementation
-			check
-				valid_container: par_imp /= Void
-			end
-			!! wel_window.make (par_imp.wel_window," ")
 			make_track
-			par_imp.wel_window.set_menu (Current)
 		end	
 
-feature -- Implementation
+feature -- Access
 
-	wel_window: WEL_CONTROL_WINDOW
+	parent: EV_CONTAINER is
+			-- Parent of the popup.
+		do
+			Result ?= parent_imp.interface
+		end
+
+	parent_imp: EV_CONTAINER_IMP
+			-- Implementation of the parent.
+
+	submenu: WEL_MENU is
+			-- Wel menu used when the item is a sub-menu.
+		do
+			Result := Current
+		end
+
+feature -- Status report
+
+	destroyed: BOOLEAN is
+			-- Is the current menu destroyed ?
+		do
+			Result := not exists
+		end
+
+feature -- Status setting
+
+	destroy is
+			-- Destroy the actual static menu-bar.
+		do
+			destroy_item
+		end
+
+	show_at_position (x, y: INTEGER) is
+			-- Show the popup menu at the given position relatively
+			-- to the parent position.
+		local
+			ww: WEL_COMPOSITE_WINDOW
+			point: WEL_POINT
+		do
+			ww ?= parent_imp
+			!! point.make (x, y)
+			point.client_to_screen (ww)
+			show_track (point.x, point.y, ww)
+		end
+
+feature -- Element change
+
+	set_parent (par: EV_CONTAINER) is
+			-- Make `par' the new parent of the popup.
+		do
+			parent_imp ?= par.implementation
+			ev_children := parent_imp.menu_items
+		end
+
+feature {NONE} -- Implementation
+
+	menu_container: WEL_MENU is
+			-- Actual WEL container
+		do
+			Result := Current
+		end
+
+feature {NONE} -- Inapplicable
+
+	on_selection_changed (sitem: EV_MENU_ITEM_IMP) is
+			-- `sitem' has been selected'
+			-- do nothing here
+		do
+			check
+				Inapplicable: True
+			end
+		end
 
 end -- class EV_POPUP_MENU_IMP
 

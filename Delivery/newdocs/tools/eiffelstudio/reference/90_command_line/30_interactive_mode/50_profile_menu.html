@@ -1,0 +1,226 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="MS-HKWD" content="interactive mode, profile menu">
+   <title>Profile menu</title>
+<link REL="stylesheet" HREF="/default.css" TYPE="text/css">
+</head>
+<body>
+
+<h1>Profile menu</h1>
+An execution of an instrumented system will generate a file that contains
+profiling information. This file (named profinfo) is located in the same
+directory as your compiled system. You must process it through a profile
+converter to produce the Execution Profile.
+<br>The profile menu will enable you to produce the Execution profile and
+to extract information from it.
+<p><CODE>
+The menu (obtained by selecting (P) Profile in the main menu) looks
+like this:
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (S) Switches : show the output switches.
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (U) Query : manipulate subqueries.
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (I) Input : specify input file (filename
+or last_output).
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (L) Language : specify language
+(eiffel, c, cycles)
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (R) Run : run the query.
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (G) Generate : generate profile
+information for latest run.
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (E) Defaults : reset all values
+to their defaults.
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (H) Help : show list of commands.
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (M) Main : go back to main menu.
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (Q) Quit : terminate session.
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (Y) Yank : yank (save) output of
+last command to a file.
+</CODE></P>
+<h2>
+Switches submenu</h2>
+The (S) Switches submenu enables you to set global options. It leads you
+to the following set of choices:
+<P><CODE>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (N) Calls : disable output of number
+of calls to a feature [enabled].
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (F) Featurename : disable output
+of featurenames [enabled].
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (T) Total : enable output of time
+spent in both the function and its descendants [disabled].
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (S) Self : enable output of time
+spent in a function itself [disabled].
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (D) Descendants : enable output
+of time spent in descendants of a function [disabled].
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (P) Percentage : enable output of
+percentage of time spent in a feature [disabled].
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (H) Help : show list of commands.
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (M) Main : go back to main menu.
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (U) Parent menu : go back to parent
+menu.
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (Q) Quit : terminate session.
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (Y) Yank : yank (save) output of
+last command to a file.
+</CODE></P>
+<p>Each one of these commands switches on or off the corresponding column
+output. The default is set on for the first two, off for the others. To
+enable or disable a column, type the name with a toggle effect.
+<h2>
+Query submenu</h2>
+The (U) Query submenu enables you to define a set of queries. The result
+will be a Total Query; by default it is the boolean and all the queries
+you have entered individually, but you may deactivate some of these and
+choose other boolean operators.
+
+<P><CODE>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (A) Add : add a subquery.
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (I) Inactivate : inactivate subquery.
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (R) Reactivate : reactivate subquery.
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (C) Operator : change the boolean
+operator.
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (S) Show : show the list of queries.
+<BR><BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (H) Help : show list of commands.
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (M) Main : go back to main menu.
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (U) Parent menu : go back to parent
+menu.
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (Q) Quit : terminate session.
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (Y) Yank : yank (save) output of
+last command to a file.
+</CODE></P>
+<p>To get useful information, you should add the appropriate queries through
+(A) Add. Each individual query has the following form: attribute operator
+value, where attribute is one of:
+<ul>
+<li>
+featurename</li>
+
+<li>
+calls</li>
+
+<li>
+total</li>
+
+<li>
+self</li>
+
+<li>
+descendants</li>
+
+<li>
+percentage</li>
+</ul>
+operator is one of: &lt;, >, &lt;=, >=, =, /=, in
+<p>and value is one of:
+<ul>
+<li>
+An integer (for calls)</li>
+
+<li>
+A string (for featurename). The string may contain wild card characters:\x11?,
+standing for arbitrary characters, and *, standing for arbitrary substrings.</li>
+
+<li>
+A real value (for other attributes)</li>
+
+<li>
+An interval, of the form a-b for two values a and b.</li>
+
+<li>
+max</li>
+
+<li>
+min</li>
+
+<li>
+avg</li>
+</ul>
+The (S) Show command will display the current queries, each with an associated
+number. The output includes the total query, explained next.
+<p>To inactivate a query, use (I) Inactivate. You will be prompted for
+a query index, which you may retrieve from (S) Show. This is useful if
+you make a change about a query, or want to set it aside for future use.
+<p>To reactivate a query, use (R) Reactivate. Again you will have to provide
+a query index.
+<p>The Total Query resulting from a succession of (A) Add commands, possibly
+with some (I) Inactivate and (R) Reactivate commands, is a boolean query
+resulting by default from adding all the currently active queries. For
+example after the following set of commands (note that command a outputs
+help lines, which have been skipped here):
+<pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Command => a
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; --> Subquery: featurename = put*
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Command => a
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; --> Subquery: calls = 3
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -- Here we change our mind and deactivate the second query
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -- to replace it by calls = 3:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Command => s
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; All subqueries:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [1] featurename = put* is active
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [2] calls = 3 is active
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The total active query:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; featurename = put* and
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; calls > 5
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Command => i
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; --> Subquery index: 2
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Command => a
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; --> Subquery: calls > 5</pre>
+The (S) Show command will show the following result:
+<pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Command => s
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; All subqueries:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [1] featurename = put* is active
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [2] calls = 3 is active
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3] calls > 5 is active
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The total active query:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; featurename = put* and
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; calls > 5</pre>
+To change the boolean operator to 'or' rather than 'and', use the (C) Operator
+command. It will prompt you for the index of the operator and the new value:
+<pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Command => c
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; --> Operator index followed by operator ('and' or 'or'): 1 or
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Command => s
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; All subqueries:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [1] featurename = put* is active
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [2] calls = 3 is active
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The total active query:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; featurename = put* or
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; calls > 5</pre>
+
+<h2>
+Input command</h2>
+The (I) Input command serves to load Execution Profiles. It is initially
+set to *.pfi meaning that it will load all files with extension pfi. By
+calling the command repeatedly with new arguments, you are able to load
+more Execution Profiles. If you use the command without any argument, and
+the set of input files contained just one file, then the queries will use
+the last generated output. This avoids explicitly loading a file.
+<h2>
+Language command</h2>
+The (L) Language command enables you to specify the languages to which
+profiling should be applied. You can specify Eiffel only, C only, or both.
+If you specify only one language, the query results will not contain any
+information about routines written in the other language.
+<p>The default is Eiffel only. To switch to both Eiffel and C, use Command
+=> l eiffel and c
+<p>To return to just Eiffel, simply type l.
+<h2>
+Run Command</h2>
+To run the current total query, use (R) Run.
+<h2>
+Generate command</h2>
+To run the profile converter under the command-line interface, use the
+(G) Generate command. This will generate an Execution Profile, stored in
+a file with the extension .pfi.
+<p>When running the Generate command with no arguments, you will be prompted
+for the following information:
+<p>&middot; Name of file to be converted (default: profinfo).
+<br>&middot; Compilation mode: workbench or finalized (default: workbench).
+<br>&middot; Name of profiler tool (default: eiffel).
+<p>You can also type in the arguments directly without waiting to be prompted,
+as in command => g profinfo freeze eiffel
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+
+<p CLASS="seealso"><b>See Also</b>
+<br>The graphical interface includes a <a href="../../70_wizards_and_dialogs/10_profiler_wizard/index.html">profiler
+wizard</a> which enables you to view profiling information very easily.
+<br>&nbsp;
+</body>
+</html>

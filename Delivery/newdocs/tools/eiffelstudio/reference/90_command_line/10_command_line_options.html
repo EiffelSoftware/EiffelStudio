@@ -1,0 +1,277 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="MS-HKWD" content="command line options">
+   <title>Command line options</title>
+<link REL="stylesheet" HREF="/default.css" TYPE="text/css">
+</head>
+<body>
+
+<h1>Command line compiler options</h1>
+
+You may start ec through a command of the following form:
+<P>
+<CODE>
+<B>ec</B> <I>option</I> ... [<I>class_name</I>] [<I>feature_name</I>]</CODE>
+</P>
+<P><I>class_name</I>, if present, must be the name of a class of the system
+to which ec is applied. This system is identified by its Ace file; by default
+this is the file called Ace.ace in the working directory, but you can select
+any other one through the -ace <I>file_name</I> option. Similarly, the default
+project directory is the working directory, but you can select another
+through the project -directory_name option. <I>feature_name</I>, if present,
+must be the final name of a feature of the class called <I>class_name</I>.
+<br>The table below lists the available options, the arguments they require,
+and their effect.</P>
+
+<center>
+<table>
+<tr>
+<td><B>OPTION</B></td>
+
+<td><B>ARGUMENTS</B></td>
+
+<td><B>EFFECT</B></td>
+</tr>
+
+<tr>
+<td colspan=3 align=center><I>- operation options -</I></td>
+</tr>
+
+<tr>
+<td>-freeze</td>
+
+<td><I>none</I></td>
+
+<td width=50%>Freeze system.</td>
+</tr>
+
+<tr>
+<td>-finalize</td>
+
+<td><I>none</I></td>
+
+<td>Produce a finalized system. See <A HREF="#finalize">below</A>.</td>
+</tr>
+
+<tr>
+<td>-precompile</td>
+
+<td><I>none</I></td>
+
+<td>Precompile a system, treating it as a library.</td>
+</tr>
+
+<tr>
+<td colspan=3 align=center><I>- browsing operations -</I></td>
+</tr>
+
+<tr>
+<td>-ancestors</td>
+
+<td><I>class_name</I></td>
+
+<td>Print the ancestors of the class.</td>
+</tr>
+
+<tr>
+<td>-aversions</td>
+
+<td><I>class_name, feature_name</I></td>
+
+<td>Print the ancestor versions of the feature.</td>
+</tr>
+
+<tr>
+<td>-callers</td>
+
+<td><I>class_name, feature_name</I></td>
+
+<td>Print all the routines that call the feature.</td>
+</tr>
+
+<tr>
+<td>-clients</td>
+
+<td><I>class_name</I></td>
+
+<td>Print the clients of the class</td>
+</tr>
+
+<tr>
+<td>-descendants</td>
+
+<td><I>class_name</I></td>
+
+<td>Print the descendants of the class.</td>
+</tr>
+
+<tr>
+<td>-dversions</td>
+
+<td><I>class_name, feature_name</I></td>
+
+<td>Print all the versions of the feature in the descendant versions of the class.</td>
+</tr>
+
+<tr>
+<td>-flat</td>
+
+<td><I>class_name</I></td>
+
+<td>Print the flat form of the class.</td>
+</tr>
+
+<tr>
+<td>-flatshort</td>
+
+<td><I>class_name</I></td>
+
+<td>Print the flat-short form (also called interface) of the class.</td>
+</tr>
+
+<tr>
+<td>-implementers</td>
+
+<td><I>class_name, feature_name</I></td>
+
+<td>Print all the classes that declare or redeclare the feature.</td>
+</tr>
+
+<tr>
+<td>-short</td>
+
+<td><I>class_name</I></td>
+
+<td>Print the flat-short form (also called contract form) of the class.</td>
+</tr>
+
+<tr>
+<td>-suppliers</td>
+
+<td><I>class_name, feature_name</I></td>
+
+<td>Print all the suppliers of the class.</td>
+</tr>
+
+<tr>
+<td colspan=3 align=center><I>- others options -</I></td>
+</tr>
+
+<tr>
+<td>-ace</td>
+
+<td><I>file_name</I></td>
+
+<td>Use the file as Ace.</td>
+</tr>
+
+<tr>
+<td>-batch</td>
+
+<td><I>none</I></td>
+
+<td>Launch the compilation without user request.</td>
+</tr>
+
+<tr>
+<td>-file</td>
+
+<td><I>file_name</I></td>
+
+<td>Save the output to the file.</td>
+</tr>
+
+<tr>
+<td>-filter</td>
+
+<td><I>filter_file_name</I></td>
+
+<td>Print text as processed by the filter.</td>
+</tr>
+
+<tr>
+<td>-help</td>
+
+<td><I>none</I></td>
+
+<td>Print the help.</td>
+</tr>
+
+<td>-keep</td>
+
+<td><I>none</I></td>
+
+<td>Keep assertions in final mode. Useful with -finalize only</td>
+</tr>
+
+<tr>
+<td>-loop</td>
+
+<td><I>none</I></td>
+
+<td>Enter interactive mode. See below.</td>
+</tr>
+
+<tr>
+<td>-project</td>
+
+<td><I>file_name</I></td>
+
+<td>Use the file as project file.</td>
+</tr>
+
+<tr>
+<td>-project_path</td>
+
+<td><I>directory_name</I></td>
+
+<td>Use this directory as compilation directory.</td>
+</tr>
+
+<tr>
+<td>-stop</td>
+
+<td><I>none</I></td>
+
+<td>Stop on errors.</td>
+</tr>
+
+<tr>
+<td>-version</td>
+
+<td><I>none</I></td>
+
+<td>Print compiler version number.</td>
+</tr>
+</table>
+		<P CLASS="figuretitle">command line compiler options</P>
+
+</center>
+		<P CLASS="Note">
+		<B>Note</B>: In the third column, to print means to produce the requested information
+on the default output of the <B>ec</B> command.<BR>
+		</P>
+
+<H2>Finalization</H2>
+<A name=finalize></A>To produce a finalized system, you may use the command <B>ec</B> -finalize. The effect is the same as when you press the Finalize button in the graphical environment, except for two differences:<BR>
+First, all assertion checking will by default be turned off in the resulting finalized system. In the graphical environment, an interactive panel asks you whether you want to keep or discard assertions. Command <B>ec</B>, however, was designed to be callable automatically from shell scripts or programs, and for that reason never asks for interactive user input (except under the loop option). To retain the assertion checking options specified in the Ace file, use the option -keep in connection with -finalize (the order of the two options is arbitrary).<BR>
+Second, at the end of the Eiffel part of the compilation you are presented with the message:</P>
+<P>
+<CODE>
+System recompiled.<BR>
+You must now run "finish_freezing" in:<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<i>your_project_path</i>|EIFGEN|F_code
+</CODE>
+</P>
+<P>
+with | replaced by \ if your platform is Windows, / if it is Unix. To execute the C compilation and linking part of the finalization, change directory to <i>your_project_path</i>|EIFGEN|F_code as indicated and execute <B>finish_freezing</B>.</P>
+
+<p CLASS="seealso"><b>See Also</b>
+<br><a href="20_batch_compilation.html">batch_compilation</a>.</P>
+
+<BR><BR><BR>
+
+</body>
+</html>

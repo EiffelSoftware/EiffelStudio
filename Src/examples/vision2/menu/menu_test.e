@@ -5,7 +5,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	SCROLL_TEST
+	MENU_TEST
 
 inherit
 	EV_APPLICATION
@@ -19,6 +19,8 @@ feature -- Initialization
 	file_menu, edit_menu, help_menu: EV_MENU
 	new_menu, save_menu, i1, i2, i3: EV_MENU
 	exit_menu, open_menu, i4: EV_MENU_ITEM
+
+	hsa: EV_HORIZONTAL_SPLIT_AREA
 
 	pix: EV_PIXMAP
 
@@ -59,9 +61,25 @@ feature -- Initialization
 
 			create help_menu.make_with_text ("Help")
 			bar.extend (help_menu)
+			help_menu.extend (create {EV_RADIO_MENU_ITEM}.make_with_text ("Radio 3"))
+			help_menu.extend (create {EV_RADIO_MENU_ITEM}.make_with_text ("Radio 5"))
+			help_menu.extend (create {EV_RADIO_MENU_ITEM}.make_with_text ("Radio 1"))
+			help_menu.extend (create {EV_RADIO_MENU_ITEM}.make_with_text ("Radio 2000"))
+			help_menu.extend (create {EV_MENU_SEPARATOR})
+			help_menu.extend (create {EV_RADIO_MENU_ITEM}.make_with_text ("NBC"))
+			help_menu.extend (create {EV_RADIO_MENU_ITEM}.make_with_text ("ABC"))
+			help_menu.extend (create {EV_RADIO_MENU_ITEM}.make_with_text ("TNT"))
+			help_menu.extend (create {EV_RADIO_MENU_ITEM}.make_with_text ("CNN"))
+			help_menu.extend (create {EV_RADIO_MENU_ITEM}.make_with_text ("FOX"))
+			help_menu.extend (create {EV_MENU_SEPARATOR})
+			help_menu.extend (create {EV_RADIO_MENU_ITEM}.make_with_text ("www.gtk.org"))
+			help_menu.extend (create {EV_RADIO_MENU_ITEM}.make_with_text ("eiffel.com"))
+			help_menu.extend (create {EV_CHECK_MENU_ITEM}.make_with_text ("Check this!"))
+			help_menu.extend (create {EV_MENU_SEPARATOR})
+			help_menu.extend (create {EV_MENU_SEPARATOR})
 
 			create i1.make_with_text ("i1")
-			help_menu.extend (i1)
+			edit_menu.extend (i1)
 			create i2.make_with_text ("i2")
 			i1.extend (i2)
 			create i3.make_with_text ("i3")
@@ -72,9 +90,10 @@ feature -- Initialization
 			i4.set_pixmap (pix)
 			i3.extend (i4)
 
-		--	save_menu.go_i_th (1)
-		--	save_menu.remove
-		--	save_menu.remove
+			create hsa
+			first_window.extend (hsa)
+			hsa.extend (create {EV_BUTTON}.make_with_text ("B1"))
+			hsa.extend (create {EV_BUTTON}.make_with_text ("B2"))
 		end
 
 	on_exit is

@@ -334,7 +334,7 @@ feature -- Status setting
 			l_text_length: INTEGER
 			l_text: STRING
 			counter: INTEGER
-			current_format: EV_CHARACTER_FORMAT
+			current_format: EV_CHARACTER_FORMAT_I
 			buffer: EV_RICH_TEXT_BUFFERING_STRUCTURES_I
 			last_counter: INTEGER
 			text_file: PLAIN_TEXT_FILE
@@ -484,7 +484,7 @@ feature -- Status setting
 		deferred
 		end
 		
-	internal_character_format (pos: INTEGER): EV_CHARACTER_FORMAT is
+	internal_character_format (pos: INTEGER): EV_CHARACTER_FORMAT_I is
 			-- `Result' is character format at position `pos'. On some platforms
 			-- this may be optimized to take the selected character format and therefore
 			-- should only be used by `next_change_of_character'.

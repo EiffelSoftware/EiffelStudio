@@ -49,7 +49,7 @@ cluster
 
 	all wel:			"$EIFFEL_SRC\library\wel"
 		exclude
-			"wel_dialog.e"; "wel_modeless_dialog.e"; 
+			"wel_modeless_dialog.e"; 
 		end
 
 	all vision2:		"$EIFFEL_SRC\library\vision2"

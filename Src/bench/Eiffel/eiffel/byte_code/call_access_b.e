@@ -176,7 +176,7 @@ feature -- Byte code generation
 						-- Process the feature id of `feature_name' in the
 						-- associated reference type
 					associated_class :=
-								basic_type.associated_reference.associated_class
+								basic_type.reference_type.base_class
 					feat_tbl := associated_class.feature_table
 debug ("BYTE_CODE")
 io.error.putstring ("Associated class: ")
@@ -200,18 +200,12 @@ end
 						make_end_precomp_byte_code (ba, flag, origin, offset)
 					else
 						real_feat_id := feat_tbl.item_id (feature_name_id).feature_id
-						static_type := basic_type.associated_reference.static_type_id - 1
+						static_type := basic_type.associated_reference_class_type.static_type_id - 1
 						make_end_byte_code (ba, flag, real_feat_id, static_type)
 					end
 				end
 			else
 				cl_type ?= inst_cont_type
-				if cl_type.is_true_expanded then
-						-- Feature `type_id' of CL_TYPE_I needs the
-						-- the attribute `expanded' to be False
-					cl_type := cl_type.twin
-					cl_type.set_is_true_expanded (False)
-				end
 				if is_first then 
 						--! Cannot melt basic calls hence is_first
 						--! is not used in the above if meta statement.
@@ -317,7 +311,7 @@ end
 				basic_type ?= instant_context_type
 					-- Process the feature id of `feature_name' in the
 					-- associated reference type
-				associated_class := basic_type.associated_reference.associated_class
+				associated_class := basic_type.reference_type.base_class
 				feat_tbl := associated_class.feature_table
 				Result := feat_tbl.item_id (feature_name_id).feature_id
 			else
@@ -431,7 +425,7 @@ end
 						-- keeps only the last expression, i.e. the function call.
 						-- That way, statements like "s := i.out" are correctly
 						-- generated with a minimum of temporaries.
-					class_type := basic_type.associated_reference.type
+					class_type := basic_type.reference_type
 						-- If an invariant is to be checked however, the
 						-- metamorphosis was already made by the invariant
 						-- checking routine.

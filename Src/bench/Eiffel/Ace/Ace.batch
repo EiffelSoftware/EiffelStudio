@@ -150,6 +150,8 @@ cluster
 
 external
 
+	include_path: "$(BENCH)/C/parsing/shared";
+
 	object:
 		"$(BENCH)/C/parsing/eiffel/libweiffel.a";
 		"$(BENCH)/C/parsing/lace/liblace.a";

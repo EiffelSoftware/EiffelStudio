@@ -101,11 +101,13 @@ feature -- Cleaning
 	clean is
 			-- Clean stored data
 		do
-			if icd_il_frame /= Void then
-					--| FIXME JFIAT: please check if it is safe ...
-				icd_il_frame.clean_on_dispose
-				icd_il_frame := Void
-			end
+-- FIXME jfiat 2004-07-07 : seems to cause issue regarding ref
+-- so for now we remove it, but please check deeper how to better handle ICorDebugFrame and so on
+--			if icd_il_frame /= Void then
+--					--| FIXME JFIAT: please check if it is safe ...
+--				icd_il_frame.clean_on_dispose
+--				icd_il_frame := Void
+--			end
 		end
 
 feature -- Dotnet Properties
@@ -416,6 +418,7 @@ feature {NONE} -- Implementation
 			l_enum_args: ICOR_DEBUG_VALUE_ENUM
 		do
 			l_il_frame := icd_il_frame
+			l_il_frame.add_ref
 			l_enum_args := l_il_frame.enumerate_arguments
 			if l_enum_args /= Void then
 --				l_enum_args.skip (1)  -- Ignore first element which is Current Object
@@ -438,6 +441,7 @@ feature {NONE} -- Implementation
 			l_enum_locals: ICOR_DEBUG_VALUE_ENUM
 		do
 			l_il_frame := icd_il_frame
+			l_il_frame.add_ref
 			l_enum_locals := l_il_frame.enumerate_local_variables
 			if l_enum_locals /= Void then
 				Result := debug_value_list_from_enum (l_enum_locals)

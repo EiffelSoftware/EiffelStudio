@@ -22,6 +22,11 @@ inherit
 			{NONE} all
 		end
 
+	WEL_WORD_OPERATIONS
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -68,7 +73,7 @@ feature {NONE} -- Implementation
 	authorized_messages: HASH_TABLE [INTEGER, INTEGER] is
 			-- Message always processed
 		once
-			create Result.make (15)
+			create Result.make (50)
 			Result.put (Wel_window_constants.Wm_paint,				Wel_window_constants.Wm_paint)
 			Result.put (Wel_window_constants.Wm_erasebkgnd,			Wel_window_constants.Wm_erasebkgnd)
 			Result.put (Wel_window_constants.Wm_initmenupopup,		Wel_window_constants.Wm_initmenupopup)
@@ -83,21 +88,24 @@ feature {NONE} -- Implementation
 			Result.put (Wel_window_constants.Wm_syncpaint,			Wel_window_constants.Wm_syncpaint)
 			Result.put (Wel_window_constants.Wm_nchittest,			Wel_window_constants.Wm_nchittest)
 			Result.put (Wel_window_constants.Wm_killfocus,			Wel_window_constants.Wm_killfocus)
-			Result.put (Wel_window_constants.Wm_windowposchanging,	Wel_window_constants.Wm_windowposchanging)
 			Result.put (Wel_window_constants.Wm_notify,				Wel_window_constants.Wm_notify)
 			Result.put (Wel_list_view_constants.Lvm_gettopindex,	Wel_list_view_constants.Lvm_gettopindex)
 			Result.put (Wel_list_view_constants.Lvm_getitemrect,	Wel_list_view_constants.Lvm_getitemrect)
 			Result.put (Wel_list_view_constants.Lvm_getcountperpage,Wel_list_view_constants.Lvm_getcountperpage)
+			Result.put (Wel_list_view_constants.Lvm_getbkcolor,		Wel_list_view_constants.Lvm_getbkcolor)
+			Result.put (Wel_window_constants.Wm_ncactivate,			Wel_window_constants.Wm_ncactivate)
 		end
 
-	activate_messages: HASH_TABLE [INTEGER, INTEGER] is
+	special_messages: HASH_TABLE [INTEGER, INTEGER] is
 			-- Message always processed but also sent to the blocking window.
 		once
-			create Result.make (5)
+			create Result.make (50)
 			Result.put (Wel_window_constants.Wm_activate,			Wel_window_constants.Wm_activate)
 			Result.put (Wel_window_constants.Wm_mouseactivate,		Wel_window_constants.Wm_mouseactivate)
-			Result.put (Wel_window_constants.Wm_ncactivate,			Wel_window_constants.Wm_ncactivate)
 			Result.put (Wel_window_constants.Wm_childactivate,		Wel_window_constants.Wm_childactivate)
+			Result.put (Wel_window_constants.Wm_activateapp,		Wel_window_constants.Wm_activateapp)
+			Result.put (Wel_window_constants.Wm_windowposchanging,	Wel_window_constants.Wm_windowposchanging)
+			Result.put (Wel_window_constants.Wm_windowposchanged,	Wel_window_constants.Wm_windowposchanged)
 		end
 
 	frozen window_blocking_procedure (hwnd: POINTER; msg, wparam,
@@ -106,7 +114,6 @@ feature {NONE} -- Implementation
 			-- window is present.
 		local
 			window: WEL_WINDOW
-			wel_window_pos: WEL_WINDOW_POS
 		do
 			window := window_of_item (hwnd)
 			if window /= Void then
@@ -121,9 +128,8 @@ feature {NONE} -- Implementation
 				-- For "activate" message, we activate the window that asks the activation but
 				-- then we activate the blocking window, so that the blocking window stays on
 				-- top of the window.
-				elseif (blocking_dispatcher_window /= Void) and then activate_messages.has(msg) then
-					Result := process_received_message (window, hwnd, msg, wparam, lparam)
-					Result := process_received_message (blocking_dispatcher_window, hwnd, msg, wparam, lparam)
+				elseif (blocking_dispatcher_window /= Void) and then special_messages.has(msg) then
+					Result := process_special_message (window, hwnd, msg, wparam, lparam)
 				else
 					if not unauthorized_messages.has (msg) then
 						io.putstring ("Message not handled (msg="+msg.out+"), please report it to pichery@eiffel.com%N")
@@ -135,6 +141,68 @@ feature {NONE} -- Implementation
 		end
 
 feature {NONE}
+
+	process_special_message (window: WEL_WINDOW; hwnd: POINTER; msg, wparam, lparam: INTEGER): INTEGER is
+		local
+			frame_window: WEL_FRAME_WINDOW
+			bres: BOOLEAN
+			window_pos: WEL_WINDOW_POS
+		do
+			frame_window ?= window
+
+			if msg = Wel_window_constants.Wm_windowposchanging then
+				debug ("WEL_BLOCKING_DISPATCHER") 
+					io.putstring ("Received WM_WINDOWPOSCHANGING message") 
+				end
+				create window_pos.make_by_pointer (cwel_integer_to_pointer(lparam))
+				window_pos.set_flags (
+					Wel_window_constants.Swp_nomove +
+					Wel_window_constants.Swp_nosize +
+					Wel_window_constants.Swp_noactivate
+					)
+					-- we activate the dialog
+				cwin_set_active_window (blocking_dispatcher_window.item)
+				Result := 0
+
+			elseif msg = Wel_window_constants.Wm_windowposchanged then
+				debug ("WEL_BLOCKING_DISPATCHER") io.putstring ("Received WM_WINDOWPOSCHANGED message") end
+					-- we activate the dialog
+				cwin_set_active_window (blocking_dispatcher_window.item)
+
+			elseif msg = Wel_window_constants.Wm_mouseactivate then
+				debug ("WEL_BLOCKING_DISPATCHER") io.putstring ("Received WM_MOUSEACTIVATE message") end
+				Result := Wel_input_constants.Ma_noactivateandeat
+					-- we activate the dialog
+				bres := cwin_set_foreground_window (blocking_dispatcher_window.item)
+
+			elseif msg = Wel_window_constants.Wm_childactivate then
+				io.putstring ("Received WM_CHILDACTIVATE message")
+
+			elseif msg = Wel_window_constants.Wm_activate then
+				debug ("WEL_BLOCKING_DISPATCHER") io.putstring ("Received WM_ACTIVATE message") end
+				
+				if cwin_lo_word (wparam) /= Wel_window_constants.Wa_inactive then
+						-- we activate the dialog
+					cwin_set_active_window (blocking_dispatcher_window.item)
+					Result := 0
+				end
+
+			elseif msg = Wel_window_constants.Wm_activateapp then
+				debug ("WEL_BLOCKING_DISPATCHER") 
+					io.putstring ("Received WM_ACTIVATEAPP message")
+					if wparam /= 0 then 
+						io.putstring (" [TRUE: "+wparam.out+"] ") 
+					else 
+						io.putstring (" [FALSE: "+wparam.out+"] ")
+					end
+				end
+				if wparam /= 0 then -- Window being activated then
+						-- we activate the dialog
+					bres := cwin_set_foreground_window (blocking_dispatcher_window.item)
+					Result := 0
+				end
+			end
+		end
 
 	process_received_message (window: WEL_WINDOW; hwnd: POINTER; msg, wparam, lparam: INTEGER): INTEGER is
 			-- Process the message.
@@ -208,7 +276,55 @@ feature {NONE} -- Debugging
 			Result.put (Wel_window_constants.Wm_mouseleave,			Wel_window_constants.Wm_mouseleave)
 			Result.put (Wel_window_constants.Wm_parentnotify,		Wel_window_constants.Wm_parentnotify)
 			Result.put (Wel_window_constants.Wm_setfocus,			Wel_window_constants.Wm_setfocus)
-			Result.put (Wel_window_constants.Wm_windowposchanged,	Wel_window_constants.Wm_windowposchanged)
+			Result.put (Wel_window_constants.Wm_devicechange,		Wel_window_constants.Wm_devicechange)
+		end
+
+feature {NONE} -- Externals
+
+	cwin_set_foreground_window (hwnd: POINTER): BOOLEAN is
+			-- SDK GetWindowLong
+		external
+			"C [macro <wel.h>] (HWND): BOOL"
+		alias
+			"SetForegroundWindow"
+		end
+
+	cwin_set_active_window (hwnd: POINTER) is
+			-- SDK GetWindowLong
+		external
+			"C [macro <wel.h>] (HWND)"
+		alias
+			"SetActiveWindow"
+		end
+
+	cwin_begin_defer_window_pos (number_of_windows: INTEGER): POINTER is
+			-- SDK BeginDeferWindowPos
+		external
+			"C [macro <wel.h>] (int) : HDWP"
+		alias
+			"BeginDeferWindowPos"
+		end
+
+	cwin_end_defer_window_pos (windowposinfo: POINTER): BOOLEAN is
+			-- SDK EndDeferWindowPos
+		external
+			"C [macro <wel.h>] (HDWP): BOOL"
+		alias
+			"EndDeferWindowPos"
+		end
+
+	cwin_defer_window_pos (
+		windowposinfo: POINTER
+		hwnd: POINTER
+		hwnd_insertafter: POINTER
+		x, y: INTEGER
+		cx, cy: INTEGER
+		flags: INTEGER
+	): POINTER is
+		external
+			"C [macro <wel.h>] (HDWP, HWND, HWND, int, int, int, int, UINT): HDWP"
+		alias
+			"DeferWindowPos"
 		end
 
 end -- class WEL_BLOCKING_DISPATCHER

@@ -1566,7 +1566,9 @@ feature {NONE} -- Implementation
 			wel_bitmap: WEL_BITMAP
 		do
 			wel_window ?= Current
-			if background_pixmap /= Void and then wel_window /= Void then
+			if background_pixmap /= Void
+			and then wel_window /= Void and then wel_window.exists
+			then
 				pixmap_color ?= background_pixmap.implementation
 				!! wel_client_dc.make (wel_window)
 				wel_client_dc.get

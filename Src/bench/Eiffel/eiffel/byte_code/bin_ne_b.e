@@ -55,7 +55,7 @@ feature
 					l_left_val.same_type (l_right_val) and then
 					l_left_val.is_equivalent (l_right_val)
 				then
-					create {CONSTANT_B} Result.make (create {BOOL_VALUE_I}.make (False))
+					create {BOOL_CONST_B} Result.make (False)
 				else
 						-- They are either not of the same type, or if they are they might
 						-- have different values. For the moment, we simply proceed to

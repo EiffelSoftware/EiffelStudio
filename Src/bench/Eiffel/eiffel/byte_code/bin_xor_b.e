@@ -23,8 +23,7 @@ feature -- Enlarging
 				l_left_val := left.evaluate
 				l_right_val := right.evaluate
 				if l_left_val.is_boolean and then l_left_val.same_type (l_right_val) then
-					create {CONSTANT_B} Result.make (
-						create {BOOL_VALUE_I}.make (not l_left_val.is_equivalent (l_right_val)))
+					create {BOOL_CONST_B} Result.make (not l_left_val.is_equivalent (l_right_val))
 				else
 					access := access.enlarged
 					Result := Current

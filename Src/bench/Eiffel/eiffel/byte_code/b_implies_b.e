@@ -25,13 +25,13 @@ feature
 				if l_bool_val.is_boolean then
 					if not l_bool_val.boolean_value then
 							-- Expression is always True as left-hand side is False.
-						create {CONSTANT_B} Result.make (create {BOOL_VALUE_I}.make (True))
+						create {BOOL_CONST_B} Result.make (True)
 					else
 						right := right.enlarged
 						l_bool_val := right.evaluate
 						if l_bool_val.is_boolean then
-								-- Expression is always True.
-							create {CONSTANT_B} Result.make (l_bool_val)
+								-- Expression value is the one from the right-hand side.
+							create {BOOL_CONST_B} Result.make (l_bool_val.boolean_value)
 						else
 							Result := right
 						end

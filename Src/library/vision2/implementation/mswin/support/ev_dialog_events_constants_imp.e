@@ -18,27 +18,23 @@ feature -- General events for dialogs
 	Cmd_cancel: INTEGER is 2
 			-- The `cancel' button of the dialog has been clicked
 
-	Cmd_help: INTEGER is 3
-			-- The `help' button of the dialog has been clicked
-
-feature -- Events for question dialogs
-
-	Cmd_yes: INTEGER is 4
+	Cmd_yes: INTEGER is 3
 			-- The `yes' button of the dialog has been clicked
 
-	Cmd_no: INTEGER is 5
+	Cmd_no: INTEGER is 4
 			-- The `no' button of dialog has been clicked
 
-feature -- Events for error dialogs
-
-	Cmd_abort: INTEGER is 6
+	Cmd_abort: INTEGER is 5
 			-- The `abort' button of the dialog has been clicked
 
-	Cmd_retry: INTEGER is 7
+	Cmd_retry: INTEGER is 6
 			-- The `retry' button of the dialog has been clicked
 
-	Cmd_ignore: INTEGER is 8
+	Cmd_ignore: INTEGER is 7
 			-- The `ignore' button of the dialog has been clicked
+
+	Cmd_help: INTEGER is 8
+			-- The `help' button of the dialog has been clicked
 
 feature -- Upper constants value
 

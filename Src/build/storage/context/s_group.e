@@ -85,9 +85,8 @@ feature
 			group_type := new_type
 		end;
 
-	
 feature {NONE}
-
+	
 	subtree: EB_TABLE [S_CONTEXT];
 
 	
@@ -201,6 +200,30 @@ feature -- Debugging
 				end
 			end
 		end;
+
+feature {GROUP, S_GROUP}
+
+	update_group_within_group_id (group_table: INT_H_TABLE [INTEGER]) is
+			-- Recursive call update_group_within_group_id for groups.
+		local
+			saved_group: S_GROUP;
+			i: INTEGER;
+		do
+			from
+				i := 1
+			until
+				i > subtree.count
+			loop
+				saved_group ?= subtree.item (i);
+				if (saved_group /= Void) then
+					saved_group.set_group_type (group_table.item 
+								(saved_group.group_type));
+					saved_group.update_group_within_group_id (group_table);
+				end;
+				i := i + 1;
+			end;
+		end;
+
 
 end
 

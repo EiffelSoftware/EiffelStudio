@@ -1989,7 +1989,6 @@ feature -- Information
 				root_class_name:= clone(eiffel_system.root_class_name)
 
 				!! st.make
-				st.add_new_line
 				st.add_comment_text(    "SYSTEM        : ")
 				st.add_string (eiffel_system.name)
 

@@ -152,15 +152,15 @@ feature -- "Shell and Common controls" Versions
 	 --|--------------------------------------------------------------------------|
 	 --| Version |     DLL      |        Distribution Platform                    |
 	 --|---------|--------------|-------------------------------------------------|
-	 --| 4.00    | All          | Microsoft® Windows® 95/Windows NT® 4.0          |
-	 --| 4.70    | All          | Microsoft® Internet Explorer 3.x                |
-	 --| 4.71    | All          | Microsoft® Internet Explorer 4.0                |
-	 --| 4.72    | All          | Microsoft® Internet Explorer 4.01 & Windows® 98 |
-	 --| 5.00    | Shlwapi.dll  | Microsoft® Internet Explorer 5                  |
-	 --| 5.00    | Shell32.dll  | Microsoft® Windows® 2000                        |
-	 --| 5.80    | Comctl32.dll | Microsoft® Internet Explorer 5                  |
-	 --| 5.81    | Comctl32.dll | Microsoft® Windows 2000, Millenium Edition      |
-	 --| 5.81    | Comctl32.dll | Microsoft® Internet Explorer 5.5                |
+	 --| 4.00    | All          | Microsoft Windows 95/Windows NT 4.0             |
+	 --| 4.70    | All          | Microsoft Internet Explorer 3.x                 |
+	 --| 4.71    | All          | Microsoft Internet Explorer 4.0                 |
+	 --| 4.72    | All          | Microsoft Internet Explorer 4.01 & Windows 98   |
+	 --| 5.00    | Shlwapi.dll  | Microsoft Internet Explorer 5                   |
+	 --| 5.00    | Shell32.dll  | Microsoft Windows 2000                          |
+	 --| 5.80    | Comctl32.dll | Microsoft Internet Explorer 5                   |
+	 --| 5.81    | Comctl32.dll | Microsoft Windows 2000, Millenium Edition       |
+	 --| 5.81    | Comctl32.dll | Microsoft Internet Explorer 5.5                 |
 	 --|--------------------------------------------------------------------------|
 
 	comctl32_version: INTEGER is
@@ -184,26 +184,26 @@ feature -- "Shell and Common controls" Versions
 feature -- Version Constants
 
 	version_400: INTEGER is 0x00040000
-			-- version_400 <=> Microsoft® Windows® 95/Windows NT® 4.0
+			-- version_400 <=> Microsoft Windows 95/Windows NT 4.0
 
 	version_470: INTEGER is 0x00040046
-			-- version_470 <=> Microsoft® Internet Explorer 3.x
+			-- version_470 <=> Microsoft Internet Explorer 3.x
 
 	version_471: INTEGER is 0x00040047
-			-- version_471 <=> Microsoft® Internet Explorer 4.0
+			-- version_471 <=> Microsoft Internet Explorer 4.0
 
 	version_472: INTEGER is 0x00040048
-			-- version_472 <=> Microsoft® Internet Explorer 4.01 & Windows® 98 
+			-- version_472 <=> Microsoft Internet Explorer 4.01 & Windows 98 
 
 	version_500: INTEGER is 0x00050000
-			-- version_500 (Shlwapi.dll) <=> Microsoft® Internet Explorer 5
-			-- version_500 (Shell32.dll) <=> Microsoft® Windows® 2000
+			-- version_500 (Shlwapi.dll) <=> Microsoft Internet Explorer 5
+			-- version_500 (Shell32.dll) <=> Microsoft Windows 2000
 
 	version_580: INTEGER is 0x00050050
-			-- version_580 (Comctl32.dll) <=> Microsoft® Internet Explorer 5
+			-- version_580 (Comctl32.dll) <=> Microsoft Internet Explorer 5
 
 	version_581: INTEGER is 0x00050051
-			-- version_581 (Comctl32.dll)<=> Microsoft® Windows 2000
+			-- version_581 (Comctl32.dll)<=> Microsoft Windows 2000
 
 feature {NONE} -- Implementation
 

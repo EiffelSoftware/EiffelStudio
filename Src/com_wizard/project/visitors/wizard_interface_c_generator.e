@@ -10,6 +10,11 @@ deferred class
 inherit
 	WIZARD_CPP_WRITER_GENERATOR
 
+	WIZARD_GUID_GENERATOR
+		export 
+			{NONE} all
+		end
+
 	ECOM_FUNC_KIND
 		export 
 			{NONE} all
@@ -104,30 +109,6 @@ feature -- Access
 		end
 
 feature {NONE} -- Implementation
-
-	iid_definition (a_name: STRING; a_guid: ECOM_GUID): STRING is
-			-- Definition of IID in source file.
-		require
-			non_void_name: a_name /= Void
-			valid_name: not a_name.is_empty
-		do
-			create Result.make (100)
-			Result.append (Const)
-			Result.append (Space)
-			Result.append (Iid_type)
-			Result.append (Space)
-			Result.append (Iid_type)
-			Result.append ("_")
-			Result.append (a_name)
-			Result.append (Space)
-			Result.append (Equal_sign)
-			Result.append (Space)
-			Result.append (a_guid.to_definition_string)
-			Result.append (Semicolon)
-		ensure
-			non_void_definition: Result /= Void
-			valid_definition: not Result.is_empty
-		end
 
 	add_type_definitions_and_include_files (func_generator: WIZARD_CPP_VIRTUAL_FUNCTION_GENERATOR) is
 			-- Add neccessary type definitions and include files.

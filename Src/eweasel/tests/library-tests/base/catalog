@@ -7,6 +7,7 @@ test	list-is-equal							list001 tcf list
 test	list-put-extend							list002 tcf list
 test	clone-list								list003 tcf list
 test	merge-arrayed-list						list004 tcf list +list
+test	remove-prune-arrayed-list				list005 tcf list +list
 
 test	disjoint-sets							set001 tcf set
 test	disjoint-sets-expanded					set001a tcf set
@@ -18,4 +19,4 @@ test	prune-tree-set							set003 tcf set +set
 test	tree-is-equal							tree001 tcf tree
 test	tree-clone								tree002 tcf tree
 
-test	insert-default-key						table001 tcf table
+test	insert-default-key						table001 tcf table +table

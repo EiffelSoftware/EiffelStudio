@@ -1,8 +1,8 @@
 indexing
-
 	description:
-		"EiffelVision dynamic table. Implementation interface";
-	date: "$Date$";
+		"EiffelVision dynamic table. Implementation interface."
+	status: "See notice at end of class."
+	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class
@@ -13,12 +13,8 @@ inherit
 
 feature -- Status report
 
-	is_row_layout: BOOLEAN is
+	is_row_layout: BOOLEAN
 			-- Are children laid out in rows?
-		require
-			exists: not destroyed
-		deferred
-		end
 
 feature -- Status setting
 
@@ -29,7 +25,8 @@ feature -- Status setting
 		require
 			exists: not destroyed
 			positive_number: a_number > 0
-		deferred
+		do
+			finite_dimension := a_number
 		end
 
 	set_row_layout (flag: BOOLEAN) is
@@ -37,10 +34,52 @@ feature -- Status setting
 			-- in colum otherwise.
 		require
 			exists: not destroyed
-		deferred
+		do
+			is_row_layout := flag
+			set_finite_dimension (finite_dimension.max (1))
 		ensure
 			layout_set: is_row_layout = flag
 		end
+
+feature {EV_DYNAMIC_TABLE} -- Implementation
+
+	add_child (child_imp: EV_WIDGET_IMP) is
+			-- Add child into composite. Several children
+			-- possible.
+		do
+			child := child_imp
+			set_child_position (child_imp.interface, row_index, column_index, row_index + 1, column_index + 1)
+			if is_row_layout then
+				if column_index + 1 >= finite_dimension then
+					row_index := row_index + 1
+					column_index := 0
+				else
+					column_index := column_index + 1
+				end
+			else
+				if row_index + 1 >= finite_dimension then
+					column_index := column_index + 1
+					row_index := 0
+				else
+					row_index := row_index + 1
+				end
+			end			
+		end
+
+feature {NONE} -- Implementation
+
+	row_index:  INTEGER
+		-- zero-based coordinate of the cell that will receive the next
+		-- child
+
+	column_index: INTEGER
+		-- zero-based coordinate of the cell that will receive the next
+		-- child
+
+	finite_dimension: INTEGER
+		-- The number of columns if is_row_layout,
+		-- the number of rows if not is_row_layout.
+		-- 1 by default, can be set by the user.
 
 end -- class EV_DYNAMIC_TABLE_I
 

@@ -12,7 +12,7 @@
 #include <gtk/gtk.h>
 #include "ev_any_imp.h"
 
-#define DEBUG
+//#define DEBUG
 
 void (*ev_any_imp_c_object_dispose) (EIF_REFERENCE);
 
@@ -326,6 +326,9 @@ gboolean c_ev_any_imp_invariant (GtkWidget* c_object)
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.6  2000/04/11 23:16:02  king
+// Commented out debug pp definition
+//
 // Revision 1.5  2000/04/11 16:23:28  oconnor
 // use #define DEBUG for logging
 //

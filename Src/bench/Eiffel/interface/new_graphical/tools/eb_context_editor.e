@@ -197,7 +197,6 @@ feature {NONE} -- Initialization
 			bar_bar.extend (customize_area)
 
 			create view_menu_button.make_with_text ("View")
-			view_menu_button.set_pixmap (pixmaps.Icon_nothing)
 			create view_menu_toolbar
 			view_menu_toolbar.extend (view_menu_button)
 

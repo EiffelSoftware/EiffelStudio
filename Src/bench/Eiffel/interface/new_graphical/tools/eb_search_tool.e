@@ -445,7 +445,6 @@ feature {NONE} -- Implementation
 			vbox.extend (search_backward_button)
 
 			create options_button.make_with_text (Interface_names.l_Search_options_hide)
-			options_button.set_pixmap (Pixmaps.Icon_nothing)
 			options_button.select_actions.extend (agent toggle_options)
 			create options_toolbar
 			options_toolbar.extend (options_button)

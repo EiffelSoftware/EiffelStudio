@@ -351,6 +351,7 @@ feature {NONE} -- Implementation
 			commands := other_imp.commands
 			conforming_pick_actions_internal := other_imp.conforming_pick_actions_internal
 			cursor_pixmap := other_imp.cursor_pixmap
+			set_icon_pixmap (other_imp.icon_pixmap)
 			deny_cursor := other_imp.deny_cursor
 			drop_actions_internal := other_imp.drop_actions_internal
 			focus_in_actions_internal := other_imp.focus_in_actions_internal

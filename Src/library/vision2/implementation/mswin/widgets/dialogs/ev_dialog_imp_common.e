@@ -324,6 +324,7 @@ feature {NONE} -- Implementation
 			commands := other_imp.commands
 			conforming_pick_actions_internal := other_imp.conforming_pick_actions_internal
 			cursor_pixmap := other_imp.cursor_pixmap
+			set_icon_pixmap (other_imp.icon_pixmap)
 			deny_cursor := other_imp.deny_cursor
 			drop_actions_internal := other_imp.drop_actions_internal
 			focus_in_actions_internal := other_imp.focus_in_actions_internal
@@ -579,6 +580,10 @@ feature {NONE} -- Implementation
 			paint_dc.set_background_color (wel_background_color)
 			paint_dc.set_text_color (wel_foreground_color)
 			set_message_return_value (background_brush.to_integer)
+			--| FIXME Julian should we really delete this brush here?
+			--| doesn't seem to make much difference to GDI count, is it necessary?
+			--| If it is determined that it is required, uncomment.
+			---background_brush.delete
 		end
 		
 	wel_move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is

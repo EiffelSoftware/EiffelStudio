@@ -110,15 +110,13 @@ feature -- Routines for externals
 				System.il_generation implies (f.is_external or f.is_attribute or f.is_deferred)
 		do
 			feature_name_id := f.feature_name_id
-			feature_id := f.feature_id
 			routine_id := f.rout_id_set.first
-			if System.il_generation then
-				written_in := f.implemented_in
-				if written_in = 0 then
---					print ("External not implemented!%N")
-				end
+			if System.il_generation and f.is_c_external then
+				feature_id := f.origin_feature_id
+				written_in := f.origin_class_id
 			else
-				written_in := f.written_in
+				feature_id := f.feature_id
+				written_in := f.written_in		
 			end
 		end;
 
@@ -302,8 +300,6 @@ feature -- IL code generation
 			local_number: INTEGER
 			real_metamorphose: BOOLEAN
 			basic_type: BASIC_I
-			feat_tbl: FEATURE_TABLE
-			feat: FEATURE_I
 			need_generation: BOOLEAN
 		do
 				-- Get type on which call will be performed.
@@ -385,24 +381,18 @@ feature -- IL code generation
 					-- FIXME: performance problem here since we are retrieving the
 					-- FEATURE_TABLE. This could be avoided if at creation of FEATURE_B
 					-- node we add the feature_id in the parent class.
-				if written_in > 0 then
-					feat_tbl := System.class_of_id (written_in).feature_table
-					feat := feat_tbl.item_id (feature_name_id)
-					if precursor_type /= Void then
-							-- In IL, if you can call Precursor, it means that parent is
-							-- not expanded and therefore we can safely generate a static
-							-- call to Precursor feature.
-						il_generator.generate_feature_access (
-							il_generator.implemented_type (written_in, cl_type),
-							feat.feature_id, False)
-					else
-						il_generator.generate_feature_access (
-							il_generator.implemented_type (written_in, cl_type),
-							feat.feature_id,
-							cl_type.is_reference or else real_metamorphose)
-					end
+				if precursor_type /= Void then
+						-- In IL, if you can call Precursor, it means that parent is
+						-- not expanded and therefore we can safely generate a static
+						-- call to Precursor feature.
+					il_generator.generate_feature_access (
+						il_generator.implemented_type (written_in, cl_type),
+						feature_id, False)
 				else
-					print ("")
+					il_generator.generate_feature_access (
+						il_generator.implemented_type (written_in, cl_type),
+						feature_id,
+						cl_type.is_reference or else real_metamorphose)
 				end
 				if System.il_verifiable then
 					if 

@@ -207,9 +207,9 @@ feature -- IL code generation
 				-- improved if more data were stored in Current.
 			feat_tbl := Context.class_type.associated_class.feature_table
 			feat := feat_tbl.item_id (feature_name_id)
-			feat_tbl := System.class_of_id (feat.implemented_in).feature_table
-			feat := feat_tbl.item_id (feat.original_name_id)
-			target_type := il_generator.implemented_type (feat.implemented_in,
+			feat_tbl := System.class_of_id (feat.written_in).feature_table
+			feat := feat_tbl.feature_of_rout_id_set (feat.rout_id_set)
+			target_type := il_generator.implemented_type (feat.written_in,
 				context.current_type)
 			il_generator.create_attribute_object (target_type, feat.feature_id)
 		end

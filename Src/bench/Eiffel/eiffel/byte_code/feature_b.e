@@ -82,18 +82,40 @@ feature -- Access
 			-- Initialization
 		require
 			good_argument: f /= Void
+		local
+			feat: FEATURE_I
+			feat_tbl: FEATURE_TABLE
 		do
 			feature_name_id := f.feature_name_id
-			feature_id := f.feature_id
 			body_index := f.body_index
 			routine_id := f.rout_id_set.first
 			is_once := f.is_once
 			if System.il_generation then
-				written_in := f.implemented_in
-				if written_in = 0 then
---					print ("Feature not implemented!%N")
+				if precursor_type = Void then
+						-- Normal feature call.
+					if f.origin_class_id /= 0 then
+						feature_id := f.origin_feature_id
+						written_in := f.origin_class_id
+					else
+							-- Case of a non-external Eiffel routine
+							-- written in an external class.
+						feature_id := f.feature_id
+						written_in := f.written_in
+					end
+				else
+						-- Precursor access, we need to find where body
+						-- is defined. It is slow since we have to do a lookup
+						-- in the parent feature table but we do not have
+						-- much choice at the moment. The good thing is that
+						-- since it is done at degree 3, we are most likely
+						-- to hit the feature table cache.
+					written_in := f.written_in
+					feat_tbl := System.class_of_id (written_in).feature_table
+					feat := feat_tbl.feature_of_rout_id_set (f.rout_id_set)
+					feature_id := feat.feature_id
 				end
 			else
+				feature_id := f.feature_id
 				written_in := f.written_in
 			end
 		end
@@ -155,8 +177,6 @@ feature -- IL code generation
 			class_c: CLASS_C
 			local_number: INTEGER
 			real_metamorphose: BOOLEAN
-			feat_tbl: FEATURE_TABLE
-			feat: FEATURE_I
 			need_generation: BOOLEAN
 			target_type: TYPE_I
 		do
@@ -175,20 +195,8 @@ feature -- IL code generation
 				end
 				il_special_routines.generate_il (cl_type, parameters)
 			else
-				if written_in > 0 then
 					-- Find location of feature.
-					if precursor_type /= Void then
-						feat_tbl := System.class_of_id (written_in).feature_table
-						feat := feat_tbl.item_id (feature_name_id)
-						feat_tbl := System.class_of_id (feat.written_in).feature_table
-						feat := feat_tbl.origin_table.item (feat.rout_id_set.first)
-						target_type := il_generator.implemented_type (feat.written_in, cl_type)
-					else
-						feat_tbl := System.class_of_id (written_in).feature_table
-						feat := feat_tbl.item_id (feature_name_id)
-						target_type := il_generator.implemented_type (written_in, cl_type)
-					end
-				end
+				target_type := il_generator.implemented_type (written_in, cl_type)
 
 				class_type := cl_type.associated_class_type
 				class_c := class_type.associated_class
@@ -258,20 +266,16 @@ feature -- IL code generation
 						-- FIXME: performance problem here since we are retrieving the
 						-- FEATURE_TABLE. This could be avoided if at creation of FEATURE_B
 						-- node we add the feature_id in the parent class.
-					if written_in > 0 then
-						if precursor_type /= Void then
-								-- In IL, if you can call Precursor, it means that parent is
-								-- not expanded and therefore we can safely generate a static
-								-- call to Precursor feature.
-							il_generator.generate_precursor_feature_access (
-								target_type, feat.feature_id)
-						else
-							il_generator.generate_feature_access (
-								target_type, feat.feature_id,
-								cl_type.is_reference or else real_metamorphose)
-						end
+					if precursor_type /= Void then
+							-- In IL, if you can call Precursor, it means that parent is
+							-- not expanded and therefore we can safely generate a static
+							-- call to Precursor feature.
+						il_generator.generate_precursor_feature_access (
+							target_type, feature_id)
 					else
-						print ("")
+						il_generator.generate_feature_access (
+							target_type, feature_id,
+							cl_type.is_reference or else real_metamorphose)
 					end
 					if System.il_verifiable then
 						if 

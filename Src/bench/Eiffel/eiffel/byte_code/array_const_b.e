@@ -78,6 +78,7 @@ feature -- IL generation
 			-- Generate IL code for manifest arrays.
 		local
 			real_ty: GEN_TYPE_I
+			l_decl_type: CL_TYPE_I
 			actual_type, target_type: CL_TYPE_I
 			expr: EXPR_B
 			base_class: CLASS_C
@@ -91,7 +92,7 @@ feature -- IL generation
 			base_class := real_ty.base_class
 			feat_tbl := base_class.feature_table
 			make_feat := feat_tbl.item_id (make_name_id)
-			put_feat := feat_tbl.item_id (put_name_id)
+			l_decl_type := il_generator.implemented_type (make_feat.origin_class_id, real_ty)
 			
 				-- Creation of Array
  			context.add_local (real_ty)
@@ -104,7 +105,11 @@ feature -- IL generation
 			il_generator.generate_local (local_array)
 			il_generator.put_integer_32_constant (1)
  			il_generator.put_integer_32_constant (expressions.count)
- 			il_generator.generate_feature_access (real_ty, make_feat.feature_id, True)
+ 			il_generator.generate_feature_access (l_decl_type, make_feat.origin_feature_id, True)
+
+				-- Find `put' from ARRAY
+			put_feat := feat_tbl.item_id (put_name_id)
+			l_decl_type := il_generator.implemented_type (put_feat.origin_class_id, real_ty)
 
  			from
  				expressions.start
@@ -130,7 +135,7 @@ feature -- IL generation
 
  				il_generator.put_integer_32_constant (i)
  
- 				il_generator.generate_feature_access (real_ty, put_feat.feature_id, True)
+ 				il_generator.generate_feature_access (l_decl_type, put_feat.origin_feature_id, True)
  				i := i + 1
  				expressions.forth
  			end

@@ -110,7 +110,7 @@ extern int fcount;
 
 #define RTADOFFSETS(x) long CAT2(x,_area_offset) = 0; long CAT2(x,_lower_offset) = 0
 
-#define RTAD(x) char CAT2(x,_freeze) = 0; char* CAT2(x,_area)
+#define RTAD(x) char CAT2(x,_freeze) = 0; char* CAT2(x,_area); char* CAT2(x,_area_minus_lower)
 
 #define RTAITYPE(x,y) CAT2(x,_dtype) = Dtype(y)
 
@@ -124,7 +124,23 @@ extern int fcount;
 #define RTAUA(cast,x,y,i) \
 	*(cast*)(*(char**)(y+CAT2(x,_area_offset))+(i-*(long*)(y+CAT2(x,_lower_offset)))*sizeof(cast))
 
-#define RTAUP(cast,x,y,val,i) \
+#define RTAUP(cast,x,y,val,i) CAT2(RTAUP_,cast)(cast,x,y,val,i)
+
+#define RTAUP_EIF_INTEGER(cast,x,y,val,i) RTAUP_BASIC(cast,x,y,val,i)
+#define RTAUP_EIF_CHARACTER(cast,x,y,val,i) RTAUP_BASIC(cast,x,y,val,i)
+#define RTAUP_EIF_REAL(cast,x,y,val,i) RTAUP_BASIC(cast,x,y,val,i)
+#define RTAUP_EIF_DOUBLE(cast,x,y,val,i) RTAUP_BASIC(cast,x,y,val,i)
+#define RTAUP_EIF_POINTER(cast,x,y,val,i) RTAUP_BASIC(cast,x,y,val,i)
+#define RTAUP_EIF_BOOLEAN(cast,x,y,val,i) RTAUP_BASIC(cast,x,y,val,i)
+
+#define RTAUP_EIF_REFERENCE(cast,x,y,val,i) \
+	{ \
+	register char *ptr_current = (*(char**)(y+CAT2(x,_area_offset))); \
+	RTAS (val, ptr_current); \
+	*(EIF_REFERENCE*)(ptr_current+(i-*(long*)(y+CAT2(x,_lower_offset)))*sizeof(EIF_REFERENCE)) = val; \
+	}
+
+#define RTAUP_BASIC(cast,x,y,val,i) \
 	*(cast*)(*(char**)(y+CAT2(x,_area_offset))+(i-*(long*)(y+CAT2(x,_lower_offset)))*sizeof(cast)) = val
 
 #define RTAI(cast,x,y) \
@@ -135,7 +151,7 @@ extern int fcount;
 			CAT2(x,_freeze) = 1; \
 			HEADER(CAT2(x,_area))->ov_size |= B_C; \
 			} \
-		CAT2(x,_area) -= (*(long*) ((y)+ (eif_lower_table) [CAT2(x,_dtype)]))*sizeof(cast); \
+		CAT2(x,_area_minus_lower) = CAT2(x,_area)-(*(long*) ((y)+ (eif_lower_table) [CAT2(x,_dtype)]))*sizeof(cast); \
 	}
 
 #define RTAIOFF(cast,x,y) \
@@ -146,20 +162,34 @@ extern int fcount;
 			CAT2(x,_freeze) = 1; \
 			HEADER(CAT2(x,_area))->ov_size |= B_C; \
 			} \
-		CAT2(x,_area) -= (*(long*) ((y)+CAT2(x,_lower_offset)))*sizeof(cast); \
+		CAT2(x,_area_minus_lower) = CAT2(x,_area)-(*(long*) ((y)+CAT2(x,_lower_offset)))*sizeof(cast); \
 	}
 
 #define RTAF(x, y) \
 	if (CAT2(x,_freeze)!=0) { \
-		CAT2(x,_area) = *(char**) ((y)+ (eif_area_table) [CAT2(x,_dtype)]); \
 		HEADER(CAT2(x,_area))->ov_size &= ~B_C; \
 		}
 
 #define RTAA(cast,x,i) \
-	*(cast*)(CAT2(x,_area)+i*sizeof(cast))
+	*(cast*)(CAT2(x,_area_minus_lower)+i*sizeof(cast))
 
-#define RTAP(cast,x,val,i) \
-	*(cast*)(CAT2(x,_area)+i*sizeof(cast)) = val;
+#define RTAP(cast,x,val,i) CAT2(RTAP_,cast)(cast,x,val,i)
+
+#define RTAP_EIF_INTEGER(cast,x,val,i) RTAP_BASIC(cast,x,val,i)
+#define RTAP_EIF_CHARACTER(cast,x,val,i) RTAP_BASIC(cast,x,val,i)
+#define RTAP_EIF_REAL(cast,x,val,i) RTAP_BASIC(cast,x,val,i)
+#define RTAP_EIF_DOUBLE(cast,x,val,i) RTAP_BASIC(cast,x,val,i)
+#define RTAP_EIF_POINTER(cast,x,val,i) RTAP_BASIC(cast,x,val,i)
+#define RTAP_EIF_BOOLEAN(cast,x,val,i) RTAP_BASIC(cast,x,val,i)
+
+#define RTAP_EIF_REFERENCE(cast,x,val,i) \
+		{ \
+		RTAS (val, CAT2(x,_area)); \
+		*(cast*)(CAT2(x,_area_minus_lower)+i*sizeof(cast)) = val; \
+		}
+
+#define RTAP_BASIC(cast,x,val,i) \
+	*(cast*)(CAT2(x,_area_minus_lower)+i*sizeof(cast)) = val;
 
 /* Macros used for local variable management:
  *  RTLI(x) makes room on the stack for 'x' addresses

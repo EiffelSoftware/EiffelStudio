@@ -30,7 +30,7 @@ feature
 	generate_boolean_constant is
 			-- Generate true constant
 		do
-			generated_file.putstring ("'\01'");
+			generated_file.putstring ("EIF_TRUE");
 		end;
 	
 	generate_equal is

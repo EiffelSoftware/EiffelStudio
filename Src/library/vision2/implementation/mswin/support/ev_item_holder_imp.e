@@ -1,10 +1,10 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
 			" EiffelVision item container. This class%
 			% has been created to centralise the%
 			% implementation of several features for%
-			% EV_LIST_IMP and EV_MENU_ITEM_HOLDER"
+			% EV_LIST_IMP and EV_MENU_ITEM_HOLDER%
+			% Mswindows implementation."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -37,6 +37,7 @@ inherit
 feature {NONE} -- Initialization
 
 	initialize is
+			-- Initialize `Current'.
 		do
 			create new_item_actions.make ("new item", <<"item">>)
 			create remove_item_actions.make ("remove item", <<"item">>)
@@ -80,7 +81,7 @@ feature {NONE} -- Implementation
 feature {EV_ANY_I} -- implementation
 
 	insert_item (v_imp: EV_ITEM_IMP; pos: INTEGER) is
-			-- Graphically insert `v_imp' on `pos'.
+			-- Graphically insert `v_imp' at `pos'.
 		require
 			v_imp_not_void: v_imp /= Void
 			pos_within_bounds: pos > 0 and pos <= count + 1
@@ -133,6 +134,9 @@ end -- class EV_ITEM_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.29  2000/05/02 22:56:23  rogers
+--| Removed FIXME NOT_REVIEWED. Comments. Formatting.
+--|
 --| Revision 1.28  2000/04/11 17:04:37  rogers
 --| Added inheritance from EV_PICK_AND_dROPABLE_ITEM_HOLDER_IMP.
 --|

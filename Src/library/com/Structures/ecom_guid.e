@@ -27,7 +27,7 @@ creation
 feature {NONE} -- Initialization
 
 	make_from_string (string: STRING) is
-			-- Create GUID from string
+			-- Create GUID from string `string'.
 		require
 			non_void_string: string /= Void
 			valid_guid_string: guid_routines.is_valid_guid_string (string)
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 		end
 
 	make_from_guid (other: ECOM_GUID) is
-			-- Create new structure with same GUID
+			-- Create new structure with same GUID as `other'.
 		require
 			valid_guid: other /= Void and then other.item /= default_pointer
 		do
@@ -71,7 +71,7 @@ feature -- Measurement
 feature -- Conversion
 
 	to_string: STRING is
-			-- Strring representation
+			-- String representation
 		require
 			valid_item: item /= default_pointer
 		local
@@ -81,7 +81,7 @@ feature -- Conversion
 			wide_string.set_unshared
 			Result := wide_string.to_string
 		ensure
-			non_void_result: Result /= Void
+			non_void_representation: Result /= Void
 		end
 					
 feature {NONE} -- Externals

@@ -1,7 +1,6 @@
 indexing
 	description: "COM FUNCDESC structure"
 	status: "See notice at end of class"
-	author: "Marina Nudelman"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -44,7 +43,7 @@ feature -- Access
 		local 
 			i, temp: INTEGER
 		do
-			!!Result.make (1, valid_scodes_count)
+			!! Result.make (1, valid_scodes_count)
 			from
 				i := 1
 			until
@@ -81,13 +80,13 @@ feature -- Access
 			i: INTEGER
 			elem: ECOM_ELEM_DESC
 		do
-			!!Result.make (1, total_param_count)
+			!! Result.make (1, total_param_count)
 			from
 				i := 1
 			until
 				i > total_param_count
 			loop
-				!!elem.make_by_pointer (ccom_funcdesc_parameter_i (item, i -1))
+				!! elem.make_by_pointer (ccom_funcdesc_parameter_i (item, i -1))
 				Result.put (elem, i)
 				i := i + 1
 			end
@@ -130,7 +129,7 @@ feature -- Access
 	return_type: ECOM_ELEM_DESC is
 			-- Return type
 		do
-			!!Result.make_by_pointer (ccom_funcdesc_return_type (item))
+			!! Result.make_by_pointer (ccom_funcdesc_return_type (item))
 		end
 
 	func_flags: INTEGER IS

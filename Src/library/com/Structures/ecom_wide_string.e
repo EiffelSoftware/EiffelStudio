@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 		local
 			wel_string: WEL_STRING
 		do
-			!!wel_string.make (string)
+			!! wel_string.make (string)
 			item := ccom_create_from_string (wel_string.item)	
 			shared := False
 		ensure

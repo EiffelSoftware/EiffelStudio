@@ -1,7 +1,6 @@
 indexing
 	description: "COM CUSTDATA structure"
 	status: "See notice at end of class"
-	author: "Marina Nudelman"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -55,7 +54,6 @@ feature {NONE} -- Externals
 		external
 			"C (EIF_POINTER): EIF_REFERENCE | %"E_custdata.h%""
 		end
-
 
 end -- class ECOM_CUST_DATA
 

@@ -25,7 +25,7 @@ feature -- Access
 	guid: ECOM_GUID is
 			-- GUID of type information
 		do
-			!!Result.make_by_pointer (ccom_typeattr_guid (item))
+			!! Result.make_by_pointer (ccom_typeattr_guid (item))
 		end
 
 	lcid: INTEGER is
@@ -121,13 +121,13 @@ feature -- Access
 		require
 			type_kind = Tkind_alias
 		do
-			!!Result.make_by_pointer (ccom_typeattr_alias_typedesc (item))
+			!! Result.make_by_pointer (ccom_typeattr_alias_typedesc (item))
 		end
 
 	idl_desc: ECOM_IDL_DESC is
 			-- IDL attribute
 		do
-			!!Result.make_by_pointer (ccom_typeattr_idl_attributes (item))
+			!! Result.make_by_pointer (ccom_typeattr_idl_attributes (item))
 		end
 
 feature -- Measurement

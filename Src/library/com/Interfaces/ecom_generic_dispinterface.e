@@ -7,10 +7,6 @@ indexing
 class
 	ECOM_GENERIC_DISPINTERFACE
 
-
---create
-	--make
-
 feature -- Initialization
 
 	make is

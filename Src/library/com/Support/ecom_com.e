@@ -9,7 +9,6 @@ class
 	ECOM_COM
 
 inherit
-	
 	MEMORY
 		redefine
 			dispose
@@ -18,14 +17,16 @@ inherit
 feature -- Basic operations
 
 	co_initialize is
-			-- initializes the Component Object Model(COM) library
+			-- Initialize Component Object Model(COM) runtime.
 		do
 			ccom_co_initialize (default_pointer)
 			initialize_counter := initialize_counter + 1
+		ensure
+			initialize_counter_incremented: initialize_counter = old initialize_counter + 1
 		end
 
 	co_uninitialize is
-			-- Closes the OLE Component Object Model (COM) library
+			-- Uninitialize Component Object Model (COM) runtime.
 		require
 			positive_counter: initialize_counter > 0
 		do
@@ -36,12 +37,13 @@ feature -- Basic operations
 feature -- Access
 
 	initialize_counter: INTEGER
-			-- Number of times `co_initialize' is called
-			-- and was not matched by `co_unonitialize'
+			-- Number of calls to `co_initialize' not matched by 
+			-- a call to `co_unonitialize'
 
 feature {NONE} -- Implementation
 
 	dispose is
+			-- Call `co_uninitialize' needed number of times.
 		do
 			from
 			variant

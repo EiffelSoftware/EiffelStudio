@@ -1,7 +1,6 @@
 indexing
 	description: "COM CUSTDATAITEM structure"
 	status: "See notice at end of class"
-	author: "Marina Nudelman"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -20,7 +19,7 @@ feature -- Access
 	guid: ECOM_GUID is
 			-- GUID
 		do
-			!!Result.make_by_pointer (ccom_custdataitem_guid (item))
+			!! Result.make_by_pointer (ccom_custdataitem_guid (item))
 		ensure
 			Result /= Void
 		end
@@ -28,7 +27,7 @@ feature -- Access
 	variant_structure: ECOM_VARIANT is
 			-- VARIANT structure
 		do
-			!!Result.make_by_pointer (ccom_custdataitem_variant (item))
+			!! Result.make_by_pointer (ccom_custdataitem_variant (item))
 		ensure
 			Result /= Void
 		end

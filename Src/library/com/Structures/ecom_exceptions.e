@@ -11,8 +11,6 @@ inherit
 	EXCEPTIONS
 		rename
 			eraise as ccom_raise
-		export
-			{NONE} all
 		redefine
 			ccom_raise
 		end

@@ -28,16 +28,15 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			set_c_object (C.gtk_menu_item_new)
-			connect_signal_to_actions ("activate", interface.press_actions)
 		end
 	
 	initialize is
 			-- Call to both precursors.
 		do
+			connect_signal_to_actions ("activate", interface.press_actions)
 			textable_imp_initialize
 			pixmapable_imp_initialize
 			initialize_menu_item_box
-			--set_pixmap (create {EV_PIXMAP}.make_with_size (16, 16))
 			{EV_SIMPLE_ITEM_IMP} Precursor
 		end
 
@@ -91,6 +90,10 @@ end -- class EV_MENU_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.39  2000/03/06 23:51:51  brendel
+--| Moved connection of action sequence to initialize, to make sure that it
+--| is called by descendants.
+--|
 --| Revision 1.38  2000/02/22 18:39:34  oconnor
 --| updated copyright date and formatting
 --|

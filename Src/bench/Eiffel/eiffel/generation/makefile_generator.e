@@ -6,14 +6,12 @@
 deferred class MAKEFILE_GENERATOR 
 
 inherit
-
 	SHARED_CODE_FILES
+
 	SHARED_COUNTER
+
 	SHARED_GENERATOR
-	SHARED_BYTE_CONTEXT
-		rename
-			context as byte_context
-		end
+
 	COMPILER_EXPORTER
 
 feature -- Attributes
@@ -478,14 +476,21 @@ feature -- Generation, Header
 			generate_specific_defines
 			make_file.putstring ("-I%H$(EIFFEL4)/bench/spec/%H$(PLATFORM)/include %H$(INCLUDE_PATH)%N")
 
-			if System.has_multithreaded then
-				make_file.putstring ("LDFLAGS = $mtldflags%N%
-									 %EIFLIB = ")
+			make_file.putstring ("LDFLAGS = ")
+
+			if System.is_console_application then
+				make_file.putstring (" $console_flags")
 			else
-				make_file.putstring ("LDFLAGS = $ldflags%N%
-									 %EIFLIB = ")
+				make_file.putstring (" $windows_flags")
 			end
 
+			if System.has_multithreaded then
+				make_file.putstring (" $mtldflags")
+			else
+				make_file.putstring (" $ldflags")
+			end
+
+			make_file.putstring ("%NEIFLIB = ")
 			make_file.putstring (run_time)
 
 			if System.has_multithreaded then

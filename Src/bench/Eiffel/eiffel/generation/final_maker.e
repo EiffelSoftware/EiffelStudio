@@ -37,15 +37,25 @@ feature
 			-- Generates the .c -> .o compilation rule
 		do
 			Make_file.putstring ("%
-				%.SUFFIXES: .x%N%N%
+				%.SUFFIXES: .x .xpp%N%N%
 				%.c.o:%N%
 				%%T$(CC) $(CFLAGS) -c $<%N%N%
+				%.cpp.o:%N%
+				%%T$(CC) $(CFLAGS) -c $<%N%N")
+			Make_file.putstring ("%
 				%.x.o:%N%
 				%%T$(EIFFEL4)/bench/spec/$(PLATFORM)/bin/x2c $< $*.c%N%
 				%%T$(CC) $(CFLAGS) -c $*.c%N%
 				%%T$(RM) $*.c%N%N%
+				%.xpp.o:%N%
+				%%T$(EIFFEL4)/bench/spec/$(PLATFORM)/bin/x2c $< $*.cpp%N%
+				%%T$(CC) $(CFLAGS) -c $*.cpp%N%
+				%%T$(RM) $*.cpp%N%N")
+			Make_file.putstring ("%
 				%.x.c:%N%
-				%%T$(EIFFEL4)/bench/spec/$(PLATFORM)/bin/x2c $< $*.c%N%N")
+				%%T$(EIFFEL4)/bench/spec/$(PLATFORM)/bin/x2c $< $*.c%N%N%
+				%.xpp.cpp:%N%
+				%%T$(EIFFEL4)/bench/spec/$(PLATFORM)/bin/x2c $< $*.cpp%N%N")
 		end;
 
 	add_specific_objects is
@@ -197,7 +207,13 @@ feature
 	run_time: STRING is
 			-- Run time with which the application must be linked
 		do
-			Result := "\$(EIFFEL4)/bench/spec/\$(PLATFORM)/lib/$prefix"
+			Result := "\$(EIFFEL4)/bench/spec/\$(PLATFORM)/lib/"
+
+			if System.has_dynamic_runtime then
+				Result.append ("$shared_prefix")
+			else
+				Result.append ("$prefix")
+			end
 
 			if System.has_multithreaded then
 				Result.append ("$mt_prefix")
@@ -207,7 +223,13 @@ feature
 				Result.append ("$concurrent_prefix")
 			end
 
-			Result.append ("$eiflib$suffix")
+			Result.append ("$eiflib")
+
+			if System.has_dynamic_runtime then
+				Result.append ("$shared_suffix")
+			else
+				Result.append ("$suffix")
+			end
 
 			if System.has_separate then
 				Result.append ("\$(EIFFEL4)/library/net/spec/\$(PLATFORM)/lib/libnet.a")

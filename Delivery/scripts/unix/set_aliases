@@ -2,21 +2,21 @@
 
 # Define some parameters
 # File in which the status of the installation generation is logged
-INSTALL_LOG=~/local/install.log
+INSTALL_LOG=~/DELIVERY/install.log
 # File in which the status of the installation compilation is logged
-COMPILE_LOG=~/local/compile.log
-# The following directory must contain finalizedbench.ace
-FINALIZATION_DIR=~/local/finalized
+COMPILE_LOG=~/DELIVERY/compile.log
+# The following directory is going to be used to compile the compiler
+FINALIZATION_DIR=~/DELIVERY/finalized
 # Where the new delivery is set up. Warning: this directory is erased!
-INSTALL_DIR=~/local/InstalledEiffel50
+INSTALL_DIR=~/DELIVERY/Eiffel51
 # Where the final delivery is set up (local machine). Warning: directory erased too!
-FINAL_INSTALL_DIR=~/local/InstalledEiffel50
+FINAL_INSTALL_DIR=~/DELIVERY/Eiffel51
 # Where all.tar.gz files should be stored
-EXPORT_DIR=~/local/tgzs
+EXPORT_DIR=~/DELIVERY/tgzs
 # What tag to use to CVS export everything
 DEFAULT_CVS_TAG=HEAD
 # Where to check out all source files
-NEW_EIFFEL_SRC=~/local/tmp50dev
+NEW_EIFFEL_SRC=~/DELIVERY/tmp50dev
 
 
 # OK, this is all for user-defined data. Leave me alone now, I'll do my magic :)

@@ -189,10 +189,8 @@ feature -- Commands
 			
 				-- Load project
 			l_project := Shared_project
-			print ("Loading project " + project_file + "...")
 			l_output_file.putstring ("Loading project " + project_file + "...")
 			l_project.load (project_file)
-			print ("success%N")
 			l_output_file.putstring ("success%N")			
 			create l_root_dir.make (l_project.root_directory)
 			if not Shared_document_manager.has_schema then
@@ -211,7 +209,6 @@ feature -- Commands
 			
 					-- Create HTML output directory
 			l_output_file.putstring ("Creating directory for storage of temporary HTML...")
-			print ("Creating directory for storage of temporary HTML...")
 			create l_html_directory.make (l_constants.temporary_html_directory)
 			if l_html_directory.exists then
 				l_html_directory.recursive_delete
@@ -220,15 +217,12 @@ feature -- Commands
 			l_output_file.putstring ("success%N")
 		
 					-- Conversion from XML to HTML
-			if file_generation_type.is_equal ("xml2html") or file_generation_type.is_equal ("xml2help") then
-				l_output_file.putstring ("%NConverting XML to HTML in " + l_constants.temporary_html_directory + ":-%N")				
-				print ("%NConverting XML to HTML in " + l_constants.temporary_html_directory + ":-%N")
+			if file_generation_type.is_equal ("xml2html") or file_generation_type.is_equal ("xml2help") then				
 				
 						-- Create TOC
-				print ("Creating TOC...")
-				l_output_file.putstring ("Creating TOC...")
+				l_output_file.putstring ("Creating TOC from directory " + l_root_dir.name + "...")
 				create l_toc.make_from_directory (l_root_dir)								
-				l_output_file.putstring ("success")
+				l_output_file.putstring ("success%N")
 
 						-- Filter TOC
 				if output_filter_type.is_equal (shared_constants.output_constants.studio_flag) then
@@ -244,7 +238,7 @@ feature -- Commands
 					l_toc.set_filter_skipped_sub_nodes (False)
 					l_toc.set_make_index_root (True)
 				end
-				print ("Sorting Table of Contents...")
+				l_output_file.putstring ("Sorting Table of Contents...")
 				l_toc.sort
 				l_output_file.putstring ("success%N")
 		
@@ -253,7 +247,6 @@ feature -- Commands
 				create l_html_generator.make (l_toc.files (True), create {DIRECTORY_NAME}.make_from_string (l_html_directory.name))
 				l_html_generator.generate
 				l_output_file.putstring ("success%N")
-
 				
 					-- Generate HTML for libraries
 				l_output_file.putstring ("Generating HTML libraries documentation...")
@@ -263,16 +256,17 @@ feature -- Commands
 			
 					-- Help generation
 			if help_generation then
-				create l_help_directory.make (l_constants.Temporary_help_directory)
-				l_output_file.open_append
-				l_output_file.putstring ("%N%NCreating help project in " + l_constants.Temporary_help_directory + ":-%N")
+				create l_help_directory.make (l_constants.Temporary_help_directory)	
+				l_output_file.putstring ("Creating directory for storage of temporary Help Project Files...")
 				l_output_file.close
 				if l_help_directory.exists then
 					l_help_directory.recursive_delete
 				end
 				l_help_directory.create_dir
+				l_output_file.put_string ("success%N")
 				
-						-- Generate Help project from TOC
+						-- Generate Help project from TOC						
+				l_output_file.putstring ("Creating help project in " + l_constants.Temporary_help_directory + "...")
 				if help_generation_type.is_equal ("mshtml") then
 					l_help_project := create {HTML_HELP_PROJECT}.make (l_help_directory, l_project.name, l_toc)
 				elseif help_generation_type.is_equal ("vsip") then
@@ -282,10 +276,10 @@ feature -- Commands
 				end
 				create l_help_generator.make (l_help_project)
 				l_help_generator.generate
+				l_output_file.put_string ("success%N")
 			end
 			
-			l_output_file.open_append
-			l_output_file.putstring ("%N%NGeneration completed.  Review information above in case of errors.")
+			l_output_file.putstring ("%NGeneration completed.  Review information above in case of errors.")
 			l_output_file.close
 		end
 

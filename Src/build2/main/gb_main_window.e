@@ -204,8 +204,9 @@ feature {NONE} -- Implementation
 	initialize_split_areas is
 			-- Set splitters to default positions.
 		do
+			--| FIXME when the vertical control is completed, add an appropriate setting.
 			horizontal_split_area.set_split_position (Default_width_of_type_selector)
-			vertical_split_area.set_split_position (Default_height_of_type_selector)
+		--	vertical_split_area.set_split_position (Default_height_of_type_selector)
 		end
 
 	initialize_menu is
@@ -297,6 +298,9 @@ feature {NONE} -- Implementation
 			horizontal_box: EV_HORIZONTAL_BOX
 			the_tool_holder: EV_VERTICAL_BOX
 			vertical_box: EV_VERTICAL_BOX
+			constructor_box: EV_HORIZONTAL_BOX
+			vertical_holder: GB_VERTICAL_SPLIT_AREA_THREE_PART_TOOL_HOLDER
+			temp_tool_bar: EV_TOOL_BAR
 		do
 				-- Now we perform a large hack. In Wizard, mode, the
 				-- fourth state may be re-built, if we go back and change a setting
@@ -337,8 +341,15 @@ feature {NONE} -- Implementation
 			the_tool_holder.disable_item_expand (separator)
 			create horizontal_box
 			the_tool_holder.extend (horizontal_box)
-			create vertical_split_area.make_with_tools (type_selector, component_selector, "Type selector", "Component selector")
-			create horizontal_split_area.make_with_tools (vertical_split_area, layout_constructor, "Layout constructor")
+			create vertical_holder.make_with_tools (type_selector, component_selector, Window_selector, "Type selector", "Component selector", "Window selector")
+				-- Now add a specific tool bar for `window_selector'.
+				
+			create temp_tool_bar
+			temp_tool_bar.extend (window_selector.new_directory_button)
+			vertical_holder.third_holder.add_command_tool_bar (temp_tool_bar)
+			
+			create constructor_box
+			create horizontal_split_area.make_with_tools (vertical_holder, layout_constructor, "Layout constructor")
 			horizontal_box.extend (horizontal_split_area)
 			horizontal_box.extend (docked_object_editor)
 			horizontal_box.disable_item_expand (docked_object_editor)

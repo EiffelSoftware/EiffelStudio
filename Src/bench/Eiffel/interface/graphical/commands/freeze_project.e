@@ -104,6 +104,7 @@ feature {NONE} -- Implementation
 			end
 
 			Error_window.put_string ("System recompiled")
+			Error_window.display
 	
 			if start_c_compilation then
 				error_window.put_string ("%NLaunching C compilation in background...%N")

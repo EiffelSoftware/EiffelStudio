@@ -13,7 +13,7 @@ inherit
 			fill_calls_list, replicate
 		end;
 
-	SHARED_INSTANTIATOR
+	SHARED_INSTANTIATOR;
 
 feature -- Attributes
 

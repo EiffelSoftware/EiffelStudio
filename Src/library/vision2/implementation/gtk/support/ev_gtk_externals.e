@@ -11889,21 +11889,21 @@ feature -- External C functions
 			"C (): GtkWidget* | <gtk/gtk.h>"
 		end
 
-	gtk_font_selection_set_filter (a_fontsel: POINTER; a_filter_type: INTEGER; a_font_type: INTEGER; a_foundries: POINTER; a_weights: POINTER; a_slants: POINTER; a_setwidths: POINTER; a_spacings: POINTER; a_charsets: POINTER) is
-			-- void	   gtk_font_selection_set_filter	(GtkFontSelection *fontsel,
-			-- 						 GtkFontFilterType filter_type,
-			-- 						 GtkFontType	   font_type,
-			-- 						 gchar		 **foundries,
-			-- 						 gchar		 **weights,
-			-- 						 gchar		 **slants,
-			-- 						 gchar		 **setwidths,
-			-- 						 gchar		 **spacings,
-			-- 						 gchar		 **charsets);
-			-- (from C_GTK_EXTERNALS)
-		external
-			"C (GtkFontSelection*, GtkFontFilterType, GtkFontType, gchar**, gchar**, gchar**, gchar**, gchar**, gchar**) | <gtk/gtk.h>"
-		end
-
+	--gtk_font_selection_set_filter (a_fontsel: POINTER; a_filter_type: INTEGER; a_font_type: INTEGER; a_foundries: POINTER; a_weights: POINTER; a_slants: POINTER; a_setwidths: POINTER; a_spacings: POINTER; a_charsets: POINTER) is
+	--		-- void	   gtk_font_selection_set_filter	(GtkFontSelection *fontsel,
+	--		-- 						 GtkFontFilterType filter_type,
+	--		-- 						 GtkFontType	   font_type,
+	--		-- 						 gchar		 **foundries,
+	--		-- 						 gchar		 **weights,
+	--		-- 						 gchar		 **slants,
+	--		-- 						 gchar		 **setwidths,
+	--		-- 						 gchar		 **spacings,
+	--		-- 						 gchar		 **charsets);
+	--		-- (from C_GTK_EXTERNALS)
+	--	external
+	--		"C (GtkFontSelection*, GtkFontFilterType, GtkFontType, gchar**, gchar**, gchar**, gchar**, gchar**, gchar**) | <gtk/gtk.h>"
+	--	end
+--
 	gtk_font_selection_set_font_name (a_fontsel: POINTER; a_fontname: POINTER): BOOLEAN is
 			-- gboolean   gtk_font_selection_set_font_name	(GtkFontSelection *fontsel,
 			-- 						 const gchar	  *fontname);
@@ -13366,12 +13366,12 @@ feature -- External C functions
 --			"C (GtkObject*) | <gtk/gtk.h>"
 --		end
 --
-	gtk_object_destroy (a_object: POINTER) is
-			-- void gtk_object_destroy	  (GtkObject *object);
-			-- (from C_GTK_OBJECT)
-		external
-			"C (GtkObject*) | <gtk/gtk.h>"
-		end
+--	gtk_object_destroy (a_object: POINTER) is
+--			-- void gtk_object_destroy	  (GtkObject *object);
+--			-- (from C_GTK_OBJECT)
+--		external
+--			"C (GtkObject*) | <gtk/gtk.h>"
+--		end
 
 	gtk_object_get_data (a_object: POINTER; a_key: POINTER): POINTER is
 			-- gpointer gtk_object_get_data	     (GtkObject	     *object,
@@ -13430,12 +13430,12 @@ feature -- External C functions
 --			"C (GtkType, guint32**, guint*): GtkArg* | <gtk/gtk.h>"
 --		end
 
-	gtk_object_ref (a_object: POINTER) is
-			-- void gtk_object_ref	  (GtkObject	    *object);
-			-- (from C_GTK_OBJECT)
-		external
-			"C (GtkObject*) | <gtk/gtk.h>"
-		end
+--	gtk_object_ref (a_object: POINTER) is
+--			-- void gtk_object_ref	  (GtkObject	    *object);
+--			-- (from C_GTK_OBJECT)
+--		external
+--			"C (GtkObject*) | <gtk/gtk.h>"
+--		end
 
 	gtk_object_remove_data (a_object: POINTER; a_key: POINTER) is
 			-- void	 gtk_object_remove_data	     (GtkObject	     *object,
@@ -13531,12 +13531,12 @@ feature -- External C functions
 			"C (GtkObject*) | <gtk/gtk.h>"
 		end
 
-	gtk_object_unref (a_object: POINTER) is
-			-- void gtk_object_unref	  (GtkObject	    *object);
-			-- (from C_GTK_OBJECT)
-		external
-			"C (GtkObject*) | <gtk/gtk.h>"
-		end
+--	gtk_object_unref (a_object: POINTER) is
+--			-- void gtk_object_unref	  (GtkObject	    *object);
+--			-- (from C_GTK_OBJECT)
+--		external
+--			"C (GtkObject*) | <gtk/gtk.h>"
+--		end
 
 	gtk_object_weakref (a_object: POINTER; a_notify: POINTER; a_data: POINTER) is
 			-- void gtk_object_weakref	  (GtkObject	    *object,
@@ -15071,13 +15071,13 @@ feature -- External C functions
 			"C (GtkSpinButton*, gboolean) | <gtk/gtk.h>"
 		end
 
-	gtk_spin_button_set_shadow_type (a_spin_button: POINTER; a_shadow_type: INTEGER) is
-			-- void		gtk_spin_button_set_shadow_type	   (GtkSpinButton  *spin_button,
-			-- 						    GtkShadowType   shadow_type);
-			-- (from C_GTK_SPIN_BUTTON)
-		external
-			"C (GtkSpinButton*, GtkShadowType) | <gtk/gtk.h>"
-		end
+--	gtk_spin_button_set_shadow_type (a_spin_button: POINTER; a_shadow_type: INTEGER) is
+--			-- void		gtk_spin_button_set_shadow_type	   (GtkSpinButton  *spin_button,
+--			-- 						    GtkShadowType   shadow_type);
+--			-- (from C_GTK_SPIN_BUTTON)
+--		external
+--			"C (GtkSpinButton*, GtkShadowType) | <gtk/gtk.h>"
+--		end
 
 	gtk_spin_button_set_snap_to_ticks (a_spin_button: POINTER; a_snap_to_ticks: BOOLEAN) is
 			-- void		gtk_spin_button_set_snap_to_ticks  (GtkSpinButton  *spin_button,
@@ -15347,27 +15347,27 @@ feature -- External C functions
 			"C (GtkTargetList*) | <gtk/gtk.h>"
 		end
 
-	gtk_theme_engine_get (a_name: POINTER): POINTER is
-			-- GtkThemeEngine *gtk_theme_engine_get   (const gchar    *name);
-			-- (from C_GTK_EXTERNALS)
-		external
-			"C (gchar*): GtkThemeEngine* | <gtk/gtk.h>"
-		end
+--	gtk_theme_engine_get (a_name: POINTER): POINTER is
+--			-- GtkThemeEngine *gtk_theme_engine_get   (const gchar    *name);
+--			-- (from C_GTK_EXTERNALS)
+--		external
+--			"C (gchar*): GtkThemeEngine* | <gtk/gtk.h>"
+--		end
 
-	gtk_theme_engine_ref (a_engine: POINTER) is
-			-- void            gtk_theme_engine_ref   (GtkThemeEngine *engine);
-			-- (from C_GTK_EXTERNALS)
-		external
-			"C (GtkThemeEngine*) | <gtk/gtk.h>"
-		end
+--	gtk_theme_engine_ref (a_engine: POINTER) is
+--			-- void            gtk_theme_engine_ref   (GtkThemeEngine *engine);
+--			-- (from C_GTK_EXTERNALS)
+--		external
+--			"C (GtkThemeEngine*) | <gtk/gtk.h>"
+--		end
 
-	gtk_theme_engine_unref (a_engine: POINTER) is
-			-- void            gtk_theme_engine_unref (GtkThemeEngine *engine);
-			-- (from C_GTK_EXTERNALS)
-		external
-			"C (GtkThemeEngine*) | <gtk/gtk.h>"
-		end
-
+--	gtk_theme_engine_unref (a_engine: POINTER) is
+--			-- void            gtk_theme_engine_unref (GtkThemeEngine *engine);
+--			-- (from C_GTK_EXTERNALS)
+--		external
+--			"C (GtkThemeEngine*) | <gtk/gtk.h>"
+--		end
+--
 	gtk_timeout_add (a_interval: INTEGER; a_function: POINTER; a_data: POINTER): INTEGER is
 			-- guint	   gtk_timeout_add	   (guint32	       interval,
 			-- 				    GtkFunction	       function,
@@ -15488,14 +15488,14 @@ feature -- External C functions
 			"C (): GtkTooltips* | <gtk/gtk.h>"
 		end
 
-	gtk_tooltips_set_colors (a_tooltips: POINTER; a_background: POINTER; a_foreground: POINTER) is
-			-- void		 gtk_tooltips_set_colors   (GtkTooltips   *tooltips,
-			-- 					    GdkColor	  *background,
-			-- 					    GdkColor	  *foreground);
-			-- (from C_GTK_TOOLTIPS)
-		external
-			"C (GtkTooltips*, GdkColor*, GdkColor*) | <gtk/gtk.h>"
-		end
+--	gtk_tooltips_set_colors (a_tooltips: POINTER; a_background: POINTER; a_foreground: POINTER) is
+--			-- void		 gtk_tooltips_set_colors   (GtkTooltips   *tooltips,
+--			-- 					    GdkColor	  *background,
+--			-- 					    GdkColor	  *foreground);
+--			-- (from C_GTK_TOOLTIPS)
+--		external
+--			"C (GtkTooltips*, GdkColor*, GdkColor*) | <gtk/gtk.h>"
+--		end
 
 	gtk_tooltips_set_delay (a_tooltips: POINTER; a_delay: INTEGER) is
 			-- void		 gtk_tooltips_set_delay	   (GtkTooltips   *tooltips,
@@ -15515,16 +15515,16 @@ feature -- External C functions
 			"C (GtkTooltips*, GtkWidget*, gchar*, gchar*) | <gtk/gtk.h>"
 		end
 
-	gtk_trace_referencing (a_object: POINTER; a_func: POINTER; a_dummy: INTEGER; a_line: INTEGER; a_do_ref: BOOLEAN) is
-			-- void	gtk_trace_referencing	(GtkObject   *object,
-			-- 				 const gchar *func,
-			-- 				 guint	      dummy,
-			-- 				 guint	      line,
-			-- 				 gboolean     do_ref);
-			-- (from C_GTK_EXTERNALS)
-		external
-			"C (GtkObject*, gchar*, guint, guint, gboolean) | <gtk/gtk.h>"
-		end
+--	gtk_trace_referencing (a_object: POINTER; a_func: POINTER; a_dummy: INTEGER; a_line: INTEGER; a_do_ref: BOOLEAN) is
+--			-- void	gtk_trace_referencing	(GtkObject   *object,
+--			-- 				 const gchar *func,
+--			-- 				 guint	      dummy,
+--			-- 				 guint	      line,
+--			-- 				 gboolean     do_ref);
+--			-- (from C_GTK_EXTERNALS)
+--		external
+--			"C (GtkObject*, gchar*, guint, guint, gboolean) | <gtk/gtk.h>"
+--		end
 
 	gtk_true: INTEGER is
 			-- gint	   gtk_true		   (void);
@@ -15657,22 +15657,22 @@ feature -- External C functions
 			"C (): GtkWidget* | <gtk/gtk.h>"
 		end
 
-	gtk_widget_accelerator_signal (a_widget: POINTER; a_accel_group: POINTER; a_accel_key: INTEGER; a_accel_mods: INTEGER): INTEGER is
-			-- guint	   gtk_widget_accelerator_signal  (GtkWidget           *widget,
-			-- 					   GtkAccelGroup       *accel_group,
-			-- 					   guint                accel_key,
-			-- 					   guint                accel_mods);
-			-- (from C_GTK_WIDGET)
-		external
-			"C (GtkWidget*, GtkAccelGroup*, guint, guint): guint | <gtk/gtk.h>"
-		end
+--	gtk_widget_accelerator_signal (a_widget: POINTER; a_accel_group: POINTER; a_accel_key: INTEGER; a_accel_mods: INTEGER): INTEGER is
+--			-- guint	   gtk_widget_accelerator_signal  (GtkWidget           *widget,
+--			-- 					   GtkAccelGroup       *accel_group,
+--			-- 					   guint                accel_key,
+--			-- 					   guint                accel_mods);
+--			-- (from C_GTK_WIDGET)
+--		external
+--			"C (GtkWidget*, GtkAccelGroup*, guint, guint): guint | <gtk/gtk.h>"
+--		end
 
-	gtk_widget_accelerators_locked (a_widget: POINTER): BOOLEAN is
-			-- gboolean   gtk_widget_accelerators_locked (GtkWidget	       *widget);
-			-- (from C_GTK_WIDGET)
-		external
-			"C (GtkWidget*): gboolean | <gtk/gtk.h>"
-		end
+--	gtk_widget_accelerators_locked (a_widget: POINTER): BOOLEAN is
+--			-- gboolean   gtk_widget_accelerators_locked (GtkWidget	       *widget);
+--			-- (from C_GTK_WIDGET)
+--		external
+--			"C (GtkWidget*): gboolean | <gtk/gtk.h>"
+--		end
 
 	gtk_widget_activate (a_widget: POINTER): BOOLEAN is
 			-- gboolean   gtk_widget_activate		     (GtkWidget	       *widget);
@@ -15734,19 +15734,19 @@ feature -- External C functions
 			"C (GtkWidget*, GdkRectangle*) | <gtk/gtk.h>"
 		end
 
-	gtk_widget_draw_default (a_widget: POINTER) is
-			-- void	   gtk_widget_draw_default	  (GtkWidget	       *widget);
-			-- (from C_GTK_WIDGET)
-		external
-			"C (GtkWidget*) | <gtk/gtk.h>"
-		end
+--	gtk_widget_draw_default (a_widget: POINTER) is
+--			-- void	   gtk_widget_draw_default	  (GtkWidget	       *widget);
+--			-- (from C_GTK_WIDGET)
+--		external
+--			"C (GtkWidget*) | <gtk/gtk.h>"
+--		end
 
-	gtk_widget_draw_focus (a_widget: POINTER) is
-			-- void	   gtk_widget_draw_focus	  (GtkWidget	       *widget);
-			-- (from C_GTK_WIDGET)
-		external
-			"C (GtkWidget*) | <gtk/gtk.h>"
-		end
+--	gtk_widget_draw_focus (a_widget: POINTER) is
+--			-- void	   gtk_widget_draw_focus	  (GtkWidget	       *widget);
+--			-- (from C_GTK_WIDGET)
+--		external
+--			"C (GtkWidget*) | <gtk/gtk.h>"
+--		end
 
 	gtk_widget_ensure_style (a_widget: POINTER) is
 			-- void	   gtk_widget_ensure_style	(GtkWidget	*widget);
@@ -15763,13 +15763,13 @@ feature -- External C functions
 			"C (GtkWidget*, GdkEvent*): gint | <gtk/gtk.h>"
 		end
 
-	gtk_widget_get (a_widget: POINTER; a_arg: POINTER) is
-			-- void	   gtk_widget_get		  (GtkWidget	       *widget,
-			-- 					   GtkArg	       *arg);
-			-- (from C_GTK_WIDGET)
-		external
-			"C (GtkWidget*, GtkArg*) | <gtk/gtk.h>"
-		end
+--	gtk_widget_get (a_widget: POINTER; a_arg: POINTER) is
+--			-- void	   gtk_widget_get		  (GtkWidget	       *widget,
+--			-- 					   GtkArg	       *arg);
+--			-- (from C_GTK_WIDGET)
+--		external
+--			"C (GtkWidget*, GtkArg*) | <gtk/gtk.h>"
+--		end
 
 	gtk_widget_get_ancestor (a_widget: POINTER; a_widget_type: INTEGER): POINTER is
 			-- GtkWidget*   gtk_widget_get_ancestor	(GtkWidget	*widget,
@@ -15887,14 +15887,14 @@ feature -- External C functions
 			"C (GtkWidget*): GdkVisual* | <gtk/gtk.h>"
 		end
 
-	gtk_widget_getv (a_widget: POINTER; a_nargs: INTEGER; a_args: POINTER) is
-			-- void	   gtk_widget_getv		  (GtkWidget	       *widget,
-			-- 					   guint		nargs,
-			-- 					   GtkArg	       *args);
-			-- (from C_GTK_WIDGET)
-		external
-			"C (GtkWidget*, guint, GtkArg*) | <gtk/gtk.h>"
-		end
+--	gtk_widget_getv (a_widget: POINTER; a_nargs: INTEGER; a_args: POINTER) is
+--			-- void	   gtk_widget_getv		  (GtkWidget	       *widget,
+--			-- 					   guint		nargs,
+--			-- 					   GtkArg	       *args);
+--			-- (from C_GTK_WIDGET)
+--		external
+--			"C (GtkWidget*, guint, GtkArg*) | <gtk/gtk.h>"
+--		end
 
 	gtk_widget_grab_default (a_widget: POINTER) is
 			-- void	   gtk_widget_grab_default	  (GtkWidget	       *widget);
@@ -15948,12 +15948,12 @@ feature -- External C functions
 			"C (GtkWidget*, GtkWidget*): gint | <gtk/gtk.h>"
 		end
 
-	gtk_widget_lock_accelerators (a_widget: POINTER) is
-			-- void	   gtk_widget_lock_accelerators   (GtkWidget	       *widget);
-			-- (from C_GTK_WIDGET)
-		external
-			"C (GtkWidget*) | <gtk/gtk.h>"
-		end
+--	gtk_widget_lock_accelerators (a_widget: POINTER) is
+--			-- void	   gtk_widget_lock_accelerators   (GtkWidget	       *widget);
+--			-- (from C_GTK_WIDGET)
+--		external
+--			"C (GtkWidget*) | <gtk/gtk.h>"
+--		end
 
 	gtk_widget_map (a_widget: POINTER) is
 			-- void	   gtk_widget_map		  (GtkWidget	       *widget);
@@ -15970,14 +15970,14 @@ feature -- External C functions
 			"C (GtkWidget*, GtkRcStyle*) | <gtk/gtk.h>"
 		end
 
-	gtk_widget_newv (a_type: INTEGER; a_nargs: INTEGER; a_args: POINTER): POINTER is
-			-- GtkWidget* gtk_widget_newv		  (GtkType		type,
-			-- 					   guint		nargs,
-			-- 					   GtkArg	       *args);
-			-- (from C_GTK_WIDGET)
-		external
-			"C (GtkType, guint, GtkArg*): GtkWidget* | <gtk/gtk.h>"
-		end
+--	gtk_widget_newv (a_type: INTEGER; a_nargs: INTEGER; a_args: POINTER): POINTER is
+--			-- GtkWidget* gtk_widget_newv		  (GtkType		type,
+--			-- 					   guint		nargs,
+--			-- 					   GtkArg	       *args);
+--			-- (from C_GTK_WIDGET)
+--		external
+--			"C (GtkType, guint, GtkArg*): GtkWidget* | <gtk/gtk.h>"
+--		end
 
 	gtk_widget_path (a_widget: POINTER; a_path_length: POINTER; a_path: POINTER; a_path_reversed: POINTER) is
 			-- void	     gtk_widget_path		   (GtkWidget *widget,
@@ -16003,28 +16003,28 @@ feature -- External C functions
 			"C () | <gtk/gtk.h>"
 		end
 
-	gtk_widget_pop_style is
-			-- void	     gtk_widget_pop_style	     (void);
-			-- (from C_GTK_WIDGET)
-		external
-			"C () | <gtk/gtk.h>"
-		end
+--	gtk_widget_pop_style is
+--			-- void	     gtk_widget_pop_style	     (void);
+--			-- (from C_GTK_WIDGET)
+--		external
+--			"C () | <gtk/gtk.h>"
+--		end
 
-	gtk_widget_pop_visual is
-			-- void	     gtk_widget_pop_visual	     (void);
-			-- (from C_GTK_WIDGET)
-		external
-			"C () | <gtk/gtk.h>"
-		end
-
-	gtk_widget_popup (a_widget: POINTER; a_x: INTEGER; a_y: INTEGER) is
-			-- void	   gtk_widget_popup		  (GtkWidget	       *widget,
-			-- 					   gint			x,
-			-- 					   gint			y);
-			-- (from C_GTK_WIDGET)
-		external
-			"C (GtkWidget*, gint, gint) | <gtk/gtk.h>"
-		end
+--	gtk_widget_pop_visual is
+--			-- void	     gtk_widget_pop_visual	     (void);
+--			-- (from C_GTK_WIDGET)
+--		external
+--			"C () | <gtk/gtk.h>"
+--		end
+--
+--	gtk_widget_popup (a_widget: POINTER; a_x: INTEGER; a_y: INTEGER) is
+--			-- void	   gtk_widget_popup		  (GtkWidget	       *widget,
+--			-- 					   gint			x,
+--			-- 					   gint			y);
+--			-- (from C_GTK_WIDGET)
+--		external
+--			"C (GtkWidget*, gint, gint) | <gtk/gtk.h>"
+--		end
 
 	gtk_widget_push_colormap (a_cmap: POINTER) is
 			-- void	     gtk_widget_push_colormap	     (GdkColormap *cmap);
@@ -16040,19 +16040,19 @@ feature -- External C functions
 			"C () | <gtk/gtk.h>"
 		end
 
-	gtk_widget_push_style (a_style: POINTER) is
-			-- void	     gtk_widget_push_style	     (GtkStyle	 *style);
-			-- (from C_GTK_WIDGET)
-		external
-			"C (GtkStyle*) | <gtk/gtk.h>"
-		end
+--	gtk_widget_push_style (a_style: POINTER) is
+--			-- void	     gtk_widget_push_style	     (GtkStyle	 *style);
+--			-- (from C_GTK_WIDGET)
+--		external
+--			"C (GtkStyle*) | <gtk/gtk.h>"
+--		end
 
-	gtk_widget_push_visual (a_visual: POINTER) is
-			-- void	     gtk_widget_push_visual	     (GdkVisual	 *visual);
-			-- (from C_GTK_WIDGET)
-		external
-			"C (GdkVisual*) | <gtk/gtk.h>"
-		end
+--	gtk_widget_push_visual (a_visual: POINTER) is
+--			-- void	     gtk_widget_push_visual	     (GdkVisual	 *visual);
+--			-- (from C_GTK_WIDGET)
+--		external
+--			"C (GdkVisual*) | <gtk/gtk.h>"
+--		end
 
 	gtk_widget_queue_clear (a_widget: POINTER) is
 			-- void	   gtk_widget_queue_clear	  (GtkWidget	       *widget);
@@ -16121,14 +16121,14 @@ feature -- External C functions
 			"C (GtkWidget*, GtkAccelGroup*, guint, guint) | <gtk/gtk.h>"
 		end
 
-	gtk_widget_remove_accelerators (a_widget: POINTER; a_accel_signal: POINTER; a_visible_only: BOOLEAN) is
-			-- void	   gtk_widget_remove_accelerators (GtkWidget           *widget,
-			-- 					   const gchar	       *accel_signal,
-			-- 					   gboolean		visible_only);
-			-- (from C_GTK_WIDGET)
-		external
-			"C (GtkWidget*, gchar*, gboolean) | <gtk/gtk.h>"
-		end
+--	gtk_widget_remove_accelerators (a_widget: POINTER; a_accel_signal: POINTER; a_visible_only: BOOLEAN) is
+--			-- void	   gtk_widget_remove_accelerators (GtkWidget           *widget,
+--			-- 					   const gchar	       *accel_signal,
+--			-- 					   gboolean		visible_only);
+--			-- (from C_GTK_WIDGET)
+--		external
+--			"C (GtkWidget*, gchar*, gboolean) | <gtk/gtk.h>"
+--		end
 
 	gtk_widget_reparent (a_widget: POINTER; a_new_parent: POINTER) is
 			-- void	   gtk_widget_reparent		  (GtkWidget	       *widget,
@@ -16152,12 +16152,12 @@ feature -- External C functions
 			"C (GtkWidget*) | <gtk/gtk.h>"
 		end
 
-	gtk_widget_restore_default_style (a_widget: POINTER) is
-			-- void	   gtk_widget_restore_default_style (GtkWidget	*widget);
-			-- (from C_GTK_WIDGET)
-		external
-			"C (GtkWidget*) | <gtk/gtk.h>"
-		end
+--	gtk_widget_restore_default_style (a_widget: POINTER) is
+--			-- void	   gtk_widget_restore_default_style (GtkWidget	*widget);
+--			-- (from C_GTK_WIDGET)
+--		external
+--			"C (GtkWidget*) | <gtk/gtk.h>"
+--		end
 
 	gtk_widget_set_app_paintable (a_widget: POINTER; a_app_paintable: BOOLEAN) is
 			-- void	   gtk_widget_set_app_paintable	  (GtkWidget	       *widget,
@@ -16190,19 +16190,19 @@ feature -- External C functions
 			"C (GdkColormap*) | <gtk/gtk.h>"
 		end
 
-	gtk_widget_set_default_style (a_style: POINTER) is
-			-- void	     gtk_widget_set_default_style    (GtkStyle	  *style);
-			-- (from C_GTK_WIDGET)
-		external
-			"C (GtkStyle*) | <gtk/gtk.h>"
-		end
+--	gtk_widget_set_default_style (a_style: POINTER) is
+--			-- void	     gtk_widget_set_default_style    (GtkStyle	  *style);
+--			-- (from C_GTK_WIDGET)
+--		external
+--			"C (GtkStyle*) | <gtk/gtk.h>"
+--		end
 
-	gtk_widget_set_default_visual (a_visual: POINTER) is
-			-- void	     gtk_widget_set_default_visual   (GdkVisual	  *visual);
-			-- (from C_GTK_WIDGET)
-		external
-			"C (GdkVisual*) | <gtk/gtk.h>"
-		end
+--	gtk_widget_set_default_visual (a_visual: POINTER) is
+--			-- void	     gtk_widget_set_default_visual   (GdkVisual	  *visual);
+--			-- (from C_GTK_WIDGET)
+--		external
+--			"C (GdkVisual*) | <gtk/gtk.h>"
+--		end
 
 	gtk_widget_set_events (a_widget: POINTER; a_events: INTEGER) is
 			-- void	   gtk_widget_set_events	  (GtkWidget	       *widget,
@@ -16244,12 +16244,12 @@ feature -- External C functions
 			"C (GtkWidget*, GdkWindow*) | <gtk/gtk.h>"
 		end
 
-	gtk_widget_set_rc_style (a_widget: POINTER) is
-			-- void	   gtk_widget_set_rc_style	(GtkWidget	*widget);
-			-- (from C_GTK_WIDGET)
-		external
-			"C (GtkWidget*) | <gtk/gtk.h>"
-		end
+--	gtk_widget_set_rc_style (a_widget: POINTER) is
+--			-- void	   gtk_widget_set_rc_style	(GtkWidget	*widget);
+--			-- (from C_GTK_WIDGET)
+--		external
+--			"C (GtkWidget*) | <gtk/gtk.h>"
+--		end
 
 	gtk_widget_set_scroll_adjustments (a_widget: POINTER; a_hadjustment: POINTER; a_vadjustment: POINTER): BOOLEAN is
 			-- gboolean   gtk_widget_set_scroll_adjustments (GtkWidget        *widget,
@@ -16302,22 +16302,22 @@ feature -- External C functions
 			"C (GtkWidget*, gint, gint) | <gtk/gtk.h>"
 		end
 
-	gtk_widget_set_visual (a_widget: POINTER; a_visual: POINTER) is
-			-- void         gtk_widget_set_visual      (GtkWidget      *widget,
-			-- 					 GdkVisual      *visual);
-			-- (from C_GTK_WIDGET)
-		external
-			"C (GtkWidget*, GdkVisual*) | <gtk/gtk.h>"
-		end
+--	gtk_widget_set_visual (a_widget: POINTER; a_visual: POINTER) is
+--			-- void         gtk_widget_set_visual      (GtkWidget      *widget,
+--			-- 					 GdkVisual      *visual);
+--			-- (from C_GTK_WIDGET)
+--		external
+--			"C (GtkWidget*, GdkVisual*) | <gtk/gtk.h>"
+--		end
 
-	gtk_widget_setv (a_widget: POINTER; a_nargs: INTEGER; a_args: POINTER) is
-			-- void	   gtk_widget_setv		  (GtkWidget	       *widget,
-			-- 					   guint		nargs,
-			-- 					   GtkArg	       *args);
-			-- (from C_GTK_WIDGET)
-		external
-			"C (GtkWidget*, guint, GtkArg*) | <gtk/gtk.h>"
-		end
+--	gtk_widget_setv (a_widget: POINTER; a_nargs: INTEGER; a_args: POINTER) is
+--			-- void	   gtk_widget_setv		  (GtkWidget	       *widget,
+--			-- 					   guint		nargs,
+--			-- 					   GtkArg	       *args);
+--			-- (from C_GTK_WIDGET)
+--		external
+--			"C (GtkWidget*, guint, GtkArg*) | <gtk/gtk.h>"
+--		end
 
 	gtk_widget_shape_combine_mask (a_widget: POINTER; a_shape_mask: POINTER; a_offset_x: INTEGER; a_offset_y: INTEGER) is
 			-- void	     gtk_widget_shape_combine_mask (GtkWidget *widget,
@@ -16366,12 +16366,12 @@ feature -- External C functions
 			"C (GtkWidget*, GtkRequisition*) | <gtk/gtk.h>"
 		end
 
-	gtk_widget_unlock_accelerators (a_widget: POINTER) is
-			-- void	   gtk_widget_unlock_accelerators (GtkWidget	       *widget);
-			-- (from C_GTK_WIDGET)
-		external
-			"C (GtkWidget*) | <gtk/gtk.h>"
-		end
+--	gtk_widget_unlock_accelerators (a_widget: POINTER) is
+--			-- void	   gtk_widget_unlock_accelerators (GtkWidget	       *widget);
+--			-- (from C_GTK_WIDGET)
+--		external
+--			"C (GtkWidget*) | <gtk/gtk.h>"
+--		end
 
 	gtk_widget_unmap (a_widget: POINTER) is
 			-- void	   gtk_widget_unmap		  (GtkWidget	       *widget);
@@ -16461,14 +16461,14 @@ feature -- External C functions
 			"C (GtkWindow*, guint) | <gtk/gtk.h>"
 		end
 
-	gtk_window_reposition (a_window: POINTER; a_x: INTEGER; a_y: INTEGER) is
-			-- void       gtk_window_reposition               (GtkWindow           *window,
-			-- 						gint                 x,
-			-- 						gint                 y);
-			-- (from C_GTK_WINDOW)
-		external
-			"C (GtkWindow*, gint, gint) | <gtk/gtk.h>"
-		end
+--	gtk_window_reposition (a_window: POINTER; a_x: INTEGER; a_y: INTEGER) is
+--			-- void       gtk_window_reposition               (GtkWindow           *window,
+--			-- 						gint                 x,
+--			-- 						gint                 y);
+--			-- (from C_GTK_WINDOW)
+--		external
+--			"C (GtkWindow*, gint, gint) | <gtk/gtk.h>"
+--		end
 
 	gtk_window_set_default (a_window: POINTER; a_defaultw: POINTER) is
 			-- void       gtk_window_set_default              (GtkWindow           *window,
@@ -18531,13 +18531,13 @@ feature -- External C structs
 --			"current_pos"
 --		end
 
-	gtk_editable_struct_editable (a_c_struct: POINTER): INTEGER is
-			-- (from C_GTK_EDITABLE_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkEditable): EIF_INTEGER"
-		alias
-			"editable"
-		end
+--	gtk_editable_struct_editable (a_c_struct: POINTER): INTEGER is
+--			-- (from C_GTK_EDITABLE_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkEditable): EIF_INTEGER"
+--		alias
+--			"editable"
+--		end
 
 --	gtk_editable_struct_has_selection (a_c_struct: POINTER): INTEGER is
 --			-- (from C_GTK_EDITABLE_STRUCT)
@@ -18886,14 +18886,14 @@ feature -- External C structs
 			"selection_text"
 		end
 
-	gtk_file_selection_struct_window (a_c_struct: POINTER): POINTER is
-			-- Pointer to GtkWindow.
-			-- (from C_GTK_FILE_SELECTION_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkFileSelection): EIF_POINTER"
-		alias
-			"&window"
-		end
+	--gtk_file_selection_struct_window (a_c_struct: POINTER): POINTER is
+	--		-- Pointer to GtkWindow.
+	--		-- (from C_GTK_FILE_SELECTION_STRUCT)
+	--	external
+	--		"C [struct <gtk/gtk.h>] (GtkFileSelection): EIF_POINTER"
+	--	alias
+	--		"&window"
+	--	end
 
 	gtk_fixed_struct_children (a_c_struct: POINTER): POINTER is
 			-- (from C_GTK_FIXED_STRUCT)
@@ -18968,14 +18968,14 @@ feature -- External C structs
 			"ok_button"
 		end
 
-	gtk_font_selection_dialog_struct_window (a_c_struct: POINTER): POINTER is
-			-- Pointer to GtkWindow.
-			-- (from C_GTK_FONT_SELECTION_DIALOG_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkFontSelectionDialog): EIF_POINTER"
-		alias
-			"&window"
-		end
+--	gtk_font_selection_dialog_struct_window (a_c_struct: POINTER): POINTER is
+--			-- Pointer to GtkWindow.
+--			-- (from C_GTK_FONT_SELECTION_DIALOG_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkFontSelectionDialog): EIF_POINTER"
+--		alias
+--			"&window"
+--		end
 
 --	gtk_frame_struct_bin (a_c_struct: POINTER): POINTER is
 --			-- Pointer to GtkBin.
@@ -18986,13 +18986,13 @@ feature -- External C structs
 --			"&bin"
 --		end
 
-	gtk_frame_struct_label (a_c_struct: POINTER): POINTER is
-			-- (from C_GTK_FRAME_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkFrame): EIF_POINTER"
-		alias
-			"label"
-		end
+--	gtk_frame_struct_label (a_c_struct: POINTER): POINTER is
+--			-- (from C_GTK_FRAME_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkFrame): EIF_POINTER"
+--		alias
+--			"label"
+--		end
 
 --	gtk_frame_struct_label_height (a_c_struct: POINTER): INTEGER is
 --			-- (from C_GTK_FRAME_STRUCT)
@@ -19373,13 +19373,13 @@ feature -- External C structs
 			"&menu_shell"
 		end
 
-	gtk_menu_bar_struct_shadow_type (a_c_struct: POINTER): INTEGER is
-			-- (from C_GTK_MENU_BAR_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkMenuBar): EIF_INTEGER"
-		alias
-			"shadow_type"
-		end
+--	gtk_menu_bar_struct_shadow_type (a_c_struct: POINTER): INTEGER is
+--			-- (from C_GTK_MENU_BAR_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkMenuBar): EIF_INTEGER"
+--		alias
+--			"shadow_type"
+--		end
 
 --	gtk_menu_item_struct_accelerator_signal (a_c_struct: POINTER): INTEGER is
 --			-- (from C_GTK_MENU_ITEM_STRUCT)
@@ -19681,87 +19681,87 @@ feature -- External C structs
 			"ypad"
 		end
 
-	gtk_notebook_page_struct_allocation (a_c_struct: POINTER): POINTER is
-			-- Pointer to GtkAllocation.
-			-- (from C_GTK_NOTEBOOK_PAGE_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkNotebookPage): EIF_POINTER"
-		alias
-			"&allocation"
-		end
+--	gtk_notebook_page_struct_allocation (a_c_struct: POINTER): POINTER is
+--			-- Pointer to GtkAllocation.
+--			-- (from C_GTK_NOTEBOOK_PAGE_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkNotebookPage): EIF_POINTER"
+--		alias
+--			"&allocation"
+--		end
+--
+--	gtk_notebook_page_struct_child (a_c_struct: POINTER): POINTER is
+--			-- (from C_GTK_NOTEBOOK_PAGE_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkNotebookPage): EIF_POINTER"
+--		alias
+--			"child"
+--		end
 
-	gtk_notebook_page_struct_child (a_c_struct: POINTER): POINTER is
-			-- (from C_GTK_NOTEBOOK_PAGE_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkNotebookPage): EIF_POINTER"
-		alias
-			"child"
-		end
+--	gtk_notebook_page_struct_default_menu (a_c_struct: POINTER): INTEGER is
+--			-- (from C_GTK_NOTEBOOK_PAGE_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkNotebookPage): EIF_INTEGER"
+--		alias
+--			"default_menu"
+--		end
+--
+--	gtk_notebook_page_struct_default_tab (a_c_struct: POINTER): INTEGER is
+--			-- (from C_GTK_NOTEBOOK_PAGE_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkNotebookPage): EIF_INTEGER"
+--		alias
+--			"default_tab"
+--		end
 
-	gtk_notebook_page_struct_default_menu (a_c_struct: POINTER): INTEGER is
-			-- (from C_GTK_NOTEBOOK_PAGE_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkNotebookPage): EIF_INTEGER"
-		alias
-			"default_menu"
-		end
+--	gtk_notebook_page_struct_expand (a_c_struct: POINTER): INTEGER is
+--			-- (from C_GTK_NOTEBOOK_PAGE_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkNotebookPage): EIF_INTEGER"
+--		alias
+--			"expand"
+--		end
 
-	gtk_notebook_page_struct_default_tab (a_c_struct: POINTER): INTEGER is
-			-- (from C_GTK_NOTEBOOK_PAGE_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkNotebookPage): EIF_INTEGER"
-		alias
-			"default_tab"
-		end
+--	gtk_notebook_page_struct_fill (a_c_struct: POINTER): INTEGER is
+--			-- (from C_GTK_NOTEBOOK_PAGE_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkNotebookPage): EIF_INTEGER"
+--		alias
+--			"fill"
+--		end
 
-	gtk_notebook_page_struct_expand (a_c_struct: POINTER): INTEGER is
-			-- (from C_GTK_NOTEBOOK_PAGE_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkNotebookPage): EIF_INTEGER"
-		alias
-			"expand"
-		end
+--	gtk_notebook_page_struct_menu_label (a_c_struct: POINTER): POINTER is
+--			-- (from C_GTK_NOTEBOOK_PAGE_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkNotebookPage): EIF_POINTER"
+--		alias
+--			"menu_label"
+--		end
 
-	gtk_notebook_page_struct_fill (a_c_struct: POINTER): INTEGER is
-			-- (from C_GTK_NOTEBOOK_PAGE_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkNotebookPage): EIF_INTEGER"
-		alias
-			"fill"
-		end
+--	gtk_notebook_page_struct_pack (a_c_struct: POINTER): INTEGER is
+--			-- (from C_GTK_NOTEBOOK_PAGE_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkNotebookPage): EIF_INTEGER"
+--		alias
+--			"pack"
+--		end
 
-	gtk_notebook_page_struct_menu_label (a_c_struct: POINTER): POINTER is
-			-- (from C_GTK_NOTEBOOK_PAGE_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkNotebookPage): EIF_POINTER"
-		alias
-			"menu_label"
-		end
+--	gtk_notebook_page_struct_requisition (a_c_struct: POINTER): POINTER is
+--			-- Pointer to GtkRequisition.
+--			-- (from C_GTK_NOTEBOOK_PAGE_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkNotebookPage): EIF_POINTER"
+--		alias
+--			"&requisition"
+--		end
 
-	gtk_notebook_page_struct_pack (a_c_struct: POINTER): INTEGER is
-			-- (from C_GTK_NOTEBOOK_PAGE_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkNotebookPage): EIF_INTEGER"
-		alias
-			"pack"
-		end
-
-	gtk_notebook_page_struct_requisition (a_c_struct: POINTER): POINTER is
-			-- Pointer to GtkRequisition.
-			-- (from C_GTK_NOTEBOOK_PAGE_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkNotebookPage): EIF_POINTER"
-		alias
-			"&requisition"
-		end
-
-	gtk_notebook_page_struct_tab_label (a_c_struct: POINTER): POINTER is
-			-- (from C_GTK_NOTEBOOK_PAGE_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkNotebookPage): EIF_POINTER"
-		alias
-			"tab_label"
-		end
+--	gtk_notebook_page_struct_tab_label (a_c_struct: POINTER): POINTER is
+--			-- (from C_GTK_NOTEBOOK_PAGE_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkNotebookPage): EIF_POINTER"
+--		alias
+--			"tab_label"
+--		end
 
 	gtk_notebook_struct_button (a_c_struct: POINTER): INTEGER is
 			-- (from C_GTK_NOTEBOOK_STRUCT)
@@ -19868,13 +19868,13 @@ feature -- External C structs
 			"need_timer"
 		end
 
-	gtk_notebook_struct_panel (a_c_struct: POINTER): POINTER is
-			-- (from C_GTK_NOTEBOOK_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkNotebook): EIF_POINTER"
-		alias
-			"panel"
-		end
+--	gtk_notebook_struct_panel (a_c_struct: POINTER): POINTER is
+--			-- (from C_GTK_NOTEBOOK_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkNotebook): EIF_POINTER"
+--		alias
+--			"panel"
+--		end
 
 	gtk_notebook_struct_scrollable (a_c_struct: POINTER): INTEGER is
 			-- (from C_GTK_NOTEBOOK_STRUCT)
@@ -20347,13 +20347,13 @@ feature -- External C structs
 			"adjustment"
 		end
 
-	gtk_range_struct_button (a_c_struct: POINTER): INTEGER is
-			-- (from C_GTK_RANGE_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkRange): EIF_INTEGER"
-		alias
-			"button"
-		end
+--	gtk_range_struct_button (a_c_struct: POINTER): INTEGER is
+--			-- (from C_GTK_RANGE_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkRange): EIF_INTEGER"
+--		alias
+--			"button"
+--		end
 
 --	gtk_range_struct_click_child (a_c_struct: POINTER): INTEGER is
 --			-- (from C_GTK_RANGE_STRUCT)
@@ -20713,13 +20713,13 @@ feature -- External C structs
 			"panel"
 		end
 
-	gtk_spin_button_struct_shadow_type (a_c_struct: POINTER): INTEGER is
-			-- (from C_GTK_SPIN_BUTTON_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkSpinButton): EIF_INTEGER"
-		alias
-			"shadow_type"
-		end
+--	gtk_spin_button_struct_shadow_type (a_c_struct: POINTER): INTEGER is
+--			-- (from C_GTK_SPIN_BUTTON_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkSpinButton): EIF_INTEGER"
+--		alias
+--			"shadow_type"
+--		end
 
 	gtk_spin_button_struct_snap_to_ticks (a_c_struct: POINTER): INTEGER is
 			-- (from C_GTK_SPIN_BUTTON_STRUCT)
@@ -20866,21 +20866,21 @@ feature -- External C structs
 			"depth"
 		end
 
-	gtk_style_struct_engine (a_c_struct: POINTER): POINTER is
-			-- (from C_GTK_STYLE_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkStyle): EIF_POINTER"
-		alias
-			"engine"
-		end
+	--gtk_style_struct_engine (a_c_struct: POINTER): POINTER is
+--			-- (from C_GTK_STYLE_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkStyle): EIF_POINTER"
+--		alias
+--			"engine"
+--		end
 
-	gtk_style_struct_engine_data (a_c_struct: POINTER): POINTER is
-			-- (from C_GTK_STYLE_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkStyle): EIF_POINTER"
-		alias
-			"engine_data"
-		end
+--	gtk_style_struct_engine_data (a_c_struct: POINTER): POINTER is
+--			-- (from C_GTK_STYLE_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkStyle): EIF_POINTER"
+--		alias
+--			"engine_data"
+--		end
 
 	gtk_style_struct_fg (a_c_struct: POINTER): POINTER is
 			-- (from C_GTK_STYLE_STRUCT)
@@ -21101,30 +21101,30 @@ feature -- External C structs
 			"draw_indicator"
 		end
 
-	gtk_tooltips_data_struct_font (a_c_struct: POINTER): POINTER is
-			-- (from C_GTK_TOOLTIPS_DATA_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkTooltipsData): EIF_POINTER"
-		alias
-			"font"
-		end
+--	gtk_tooltips_data_struct_font (a_c_struct: POINTER): POINTER is
+--			-- (from C_GTK_TOOLTIPS_DATA_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkTooltipsData): EIF_POINTER"
+--		alias
+--			"font"
+--		end
 
-	gtk_tooltips_data_struct_row (a_c_struct: POINTER): POINTER is
-			-- (from C_GTK_TOOLTIPS_DATA_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkTooltipsData): EIF_POINTER"
-		alias
-			"row"
-		end
+--	gtk_tooltips_data_struct_row (a_c_struct: POINTER): POINTER is
+--			-- (from C_GTK_TOOLTIPS_DATA_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkTooltipsData): EIF_POINTER"
+--		alias
+--			"row"
+--		end
 
-	gtk_tooltips_data_struct_tip_private (a_c_struct: POINTER): POINTER is
-			-- (from C_GTK_TOOLTIPS_DATA_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkTooltipsData): EIF_POINTER"
-		alias
-			"tip_private"
-		end
-
+--	gtk_tooltips_data_struct_tip_private (a_c_struct: POINTER): POINTER is
+--			-- (from C_GTK_TOOLTIPS_DATA_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkTooltipsData): EIF_POINTER"
+--		alias
+--			"tip_private"
+--		end
+--
 	gtk_tooltips_data_struct_tip_text (a_c_struct: POINTER): POINTER is
 			-- (from C_GTK_TOOLTIPS_DATA_STRUCT)
 		external
@@ -21149,13 +21149,13 @@ feature -- External C structs
 			"widget"
 		end
 
-	gtk_tooltips_data_struct_width (a_c_struct: POINTER): INTEGER is
-			-- (from C_GTK_TOOLTIPS_DATA_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkTooltipsData): EIF_INTEGER"
-		alias
-			"width"
-		end
+--	gtk_tooltips_data_struct_width (a_c_struct: POINTER): INTEGER is
+--			-- (from C_GTK_TOOLTIPS_DATA_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkTooltipsData): EIF_INTEGER"
+--		alias
+--			"width"
+--		end
 
 	gtk_tooltips_struct_active_tips_data (a_c_struct: POINTER): POINTER is
 			-- (from C_GTK_TOOLTIPS_STRUCT)
@@ -21165,22 +21165,22 @@ feature -- External C structs
 			"active_tips_data"
 		end
 
-	gtk_tooltips_struct_background (a_c_struct: POINTER): POINTER is
-			-- (from C_GTK_TOOLTIPS_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkTooltips): EIF_POINTER"
-		alias
-			"background"
-		end
+--	gtk_tooltips_struct_background (a_c_struct: POINTER): POINTER is
+--			-- (from C_GTK_TOOLTIPS_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkTooltips): EIF_POINTER"
+--		alias
+--			"background"
+--		end
 
-	gtk_tooltips_struct_data (a_c_struct: POINTER): POINTER is
-			-- Pointer to GtkData.
-			-- (from C_GTK_TOOLTIPS_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkTooltips): EIF_POINTER"
-		alias
-			"&data"
-		end
+--	gtk_tooltips_struct_data (a_c_struct: POINTER): POINTER is
+--			-- Pointer to GtkData.
+--			-- (from C_GTK_TOOLTIPS_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkTooltips): EIF_POINTER"
+--		alias
+--			"&data"
+--		end
 
 	gtk_tooltips_struct_delay (a_c_struct: POINTER): INTEGER is
 			-- (from C_GTK_TOOLTIPS_STRUCT)
@@ -21463,14 +21463,14 @@ feature -- External C structs
 			"allow_shrink"
 		end
 
-	gtk_window_struct_auto_shrink (a_c_struct: POINTER): INTEGER is
-			-- (from C_GTK_WINDOW_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkWindow): EIF_INTEGER"
-		alias
-			"auto_shrink"
-		end
-
+--	gtk_window_struct_auto_shrink (a_c_struct: POINTER): INTEGER is
+--			-- (from C_GTK_WINDOW_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkWindow): EIF_INTEGER"
+--		alias
+--			"auto_shrink"
+--		end
+--
 	gtk_window_struct_bin (a_c_struct: POINTER): POINTER is
 			-- Pointer to GtkBin.
 			-- (from C_GTK_WINDOW_STRUCT)
@@ -21656,13 +21656,13 @@ feature -- External C structs
 			"button"
 		end
 
-	set_gdk_event_button_struct_deviceid (a_c_struct: POINTER; a_deviceid: INTEGER) is
-			-- (from C_GDK_EVENT_BUTTON_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GdkEventButton, guint32)"
-		alias
-			"deviceid"
-		end
+--	set_gdk_event_button_struct_deviceid (a_c_struct: POINTER; a_deviceid: INTEGER) is
+--			-- (from C_GDK_EVENT_BUTTON_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GdkEventButton, guint32)"
+--		alias
+--			"deviceid"
+--		end
 
 --	set_gdk_event_button_struct_pressure (a_c_struct: POINTER; a_pressure: DOUBLE) is
 --			-- (from C_GDK_EVENT_BUTTON_STRUCT)
@@ -22835,13 +22835,13 @@ feature -- External C structs
 			"htimer"
 		end
 
-	set_gtk_clist_struct_row_center_offset (a_c_struct: POINTER; a_row_center_offset: INTEGER) is
-			-- (from C_GTK_CLIST_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkCList, gint)"
-		alias
-			"row_center_offset"
-		end
+--	set_gtk_clist_struct_row_center_offset (a_c_struct: POINTER; a_row_center_offset: INTEGER) is
+--			-- (from C_GTK_CLIST_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkCList, gint)"
+--		alias
+--			"row_center_offset"
+--		end
 
 	set_gtk_clist_struct_row_height (a_c_struct: POINTER; a_row_height: INTEGER) is
 			-- (from C_GTK_CLIST_STRUCT)
@@ -23035,13 +23035,13 @@ feature -- External C structs
 			"ok_button"
 		end
 
-	set_gtk_color_selection_dialog_struct_reset_button (a_c_struct: POINTER; a_reset_button: POINTER) is
-			-- (from C_GTK_COLOR_SELECTION_DIALOG_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkColorSelectionDialog, GtkWidget*)"
-		alias
-			"reset_button"
-		end
+--	set_gtk_color_selection_dialog_struct_reset_button (a_c_struct: POINTER; a_reset_button: POINTER) is
+--			-- (from C_GTK_COLOR_SELECTION_DIALOG_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkColorSelectionDialog, GtkWidget*)"
+--		alias
+--			"reset_button"
+--		end
 
 	set_gtk_combo_struct_activate_id (a_c_struct: POINTER; a_activate_id: INTEGER) is
 			-- (from C_GTK_COMBO_STRUCT)
@@ -23370,125 +23370,125 @@ feature -- External C structs
 			"draw_data"
 		end
 
-	set_gtk_editable_struct_clipboard_text (a_c_struct: POINTER; a_clipboard_text: POINTER) is
-			-- (from C_GTK_EDITABLE_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkEditable, gchar*)"
-		alias
-			"clipboard_text"
-		end
+--	set_gtk_editable_struct_clipboard_text (a_c_struct: POINTER; a_clipboard_text: POINTER) is
+--			-- (from C_GTK_EDITABLE_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkEditable, gchar*)"
+--		alias
+--			"clipboard_text"
+--		end
 
-	set_gtk_editable_struct_current_pos (a_c_struct: POINTER; a_current_pos: INTEGER) is
-			-- (from C_GTK_EDITABLE_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkEditable, guint)"
-		alias
-			"current_pos"
-		end
+--	set_gtk_editable_struct_current_pos (a_c_struct: POINTER; a_current_pos: INTEGER) is
+--			-- (from C_GTK_EDITABLE_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkEditable, guint)"
+--		alias
+--			"current_pos"
+--		end
 
-	set_gtk_editable_struct_editable (a_c_struct: POINTER; a_editable: INTEGER) is
-			-- (from C_GTK_EDITABLE_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkEditable, guint)"
-		alias
-			"editable"
-		end
+--	set_gtk_editable_struct_editable (a_c_struct: POINTER; a_editable: INTEGER) is
+--			-- (from C_GTK_EDITABLE_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkEditable, guint)"
+--		alias
+--			"editable"
+--		end
 
-	set_gtk_editable_struct_has_selection (a_c_struct: POINTER; a_has_selection: INTEGER) is
-			-- (from C_GTK_EDITABLE_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkEditable, guint)"
-		alias
-			"has_selection"
-		end
+--	set_gtk_editable_struct_has_selection (a_c_struct: POINTER; a_has_selection: INTEGER) is
+--			-- (from C_GTK_EDITABLE_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkEditable, guint)"
+--		alias
+--			"has_selection"
+--		end
 
-	set_gtk_editable_struct_ic (a_c_struct: POINTER; a_ic: POINTER) is
-			-- (from C_GTK_EDITABLE_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkEditable, GdkIC*)"
-		alias
-			"ic"
-		end
+--	set_gtk_editable_struct_ic (a_c_struct: POINTER; a_ic: POINTER) is
+--			-- (from C_GTK_EDITABLE_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkEditable, GdkIC*)"
+--		alias
+--			"ic"
+--		end
 
-	set_gtk_editable_struct_ic_attr (a_c_struct: POINTER; a_ic_attr: POINTER) is
-			-- (from C_GTK_EDITABLE_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkEditable, GdkICAttr*)"
-		alias
-			"ic_attr"
-		end
+--	set_gtk_editable_struct_ic_attr (a_c_struct: POINTER; a_ic_attr: POINTER) is
+--			-- (from C_GTK_EDITABLE_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkEditable, GdkICAttr*)"
+--		alias
+--			"ic_attr"
+--		end
 
-	set_gtk_editable_struct_selection_end_pos (a_c_struct: POINTER; a_selection_end_pos: INTEGER) is
-			-- (from C_GTK_EDITABLE_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkEditable, guint)"
-		alias
-			"selection_end_pos"
-		end
+--	set_gtk_editable_struct_selection_end_pos (a_c_struct: POINTER; a_selection_end_pos: INTEGER) is
+--			-- (from C_GTK_EDITABLE_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkEditable, guint)"
+--		alias
+--			"selection_end_pos"
+--		end
 
-	set_gtk_editable_struct_selection_start_pos (a_c_struct: POINTER; a_selection_start_pos: INTEGER) is
-			-- (from C_GTK_EDITABLE_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkEditable, guint)"
-		alias
-			"selection_start_pos"
-		end
+--	set_gtk_editable_struct_selection_start_pos (a_c_struct: POINTER; a_selection_start_pos: INTEGER) is
+--			-- (from C_GTK_EDITABLE_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkEditable, guint)"
+--		alias
+--			"selection_start_pos"
+--		end
 
-	set_gtk_editable_struct_visible (a_c_struct: POINTER; a_visible: INTEGER) is
-			-- (from C_GTK_EDITABLE_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkEditable, guint)"
-		alias
-			"visible"
-		end
+--	set_gtk_editable_struct_visible (a_c_struct: POINTER; a_visible: INTEGER) is
+--			-- (from C_GTK_EDITABLE_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkEditable, guint)"
+--		alias
+--			"visible"
+--		end
 
-	set_gtk_entry_struct_backing_pixmap (a_c_struct: POINTER; a_backing_pixmap: POINTER) is
-			-- (from C_GTK_ENTRY_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkEntry, GdkPixmap*)"
-		alias
-			"backing_pixmap"
-		end
+--	set_gtk_entry_struct_backing_pixmap (a_c_struct: POINTER; a_backing_pixmap: POINTER) is
+--			-- (from C_GTK_ENTRY_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkEntry, GdkPixmap*)"
+--		alias
+--			"backing_pixmap"
+--		end
 
-	set_gtk_entry_struct_button (a_c_struct: POINTER; a_button: INTEGER) is
-			-- (from C_GTK_ENTRY_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkEntry, guint)"
-		alias
-			"button"
-		end
+--	set_gtk_entry_struct_button (a_c_struct: POINTER; a_button: INTEGER) is
+--			-- (from C_GTK_ENTRY_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkEntry, guint)"
+--		alias
+--			"button"
+--		end
 
-	set_gtk_entry_struct_char_offset (a_c_struct: POINTER; a_char_offset: POINTER) is
-			-- (from C_GTK_ENTRY_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkEntry, gint*)"
-		alias
-			"char_offset"
-		end
+--	set_gtk_entry_struct_char_offset (a_c_struct: POINTER; a_char_offset: POINTER) is
+--			-- (from C_GTK_ENTRY_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkEntry, gint*)"
+--		alias
+--			"char_offset"
+--		end
 
-	set_gtk_entry_struct_cursor (a_c_struct: POINTER; a_cursor: POINTER) is
-			-- (from C_GTK_ENTRY_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkEntry, GdkCursor*)"
-		alias
-			"cursor"
-		end
+--	set_gtk_entry_struct_cursor (a_c_struct: POINTER; a_cursor: POINTER) is
+--			-- (from C_GTK_ENTRY_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkEntry, GdkCursor*)"
+--		alias
+--			"cursor"
+--		end
 
-	set_gtk_entry_struct_scroll_offset (a_c_struct: POINTER; a_scroll_offset: INTEGER) is
-			-- (from C_GTK_ENTRY_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkEntry, gint)"
-		alias
-			"scroll_offset"
-		end
+--	set_gtk_entry_struct_scroll_offset (a_c_struct: POINTER; a_scroll_offset: INTEGER) is
+--			-- (from C_GTK_ENTRY_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkEntry, gint)"
+--		alias
+--			"scroll_offset"
+--		end
 
-	set_gtk_entry_struct_text (a_c_struct: POINTER; a_text: POINTER) is
-			-- (from C_GTK_ENTRY_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkEntry, GdkWChar*)"
-		alias
-			"text"
-		end
+--	set_gtk_entry_struct_text (a_c_struct: POINTER; a_text: POINTER) is
+--			-- (from C_GTK_ENTRY_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkEntry, GdkWChar*)"
+--		alias
+--			"text"
+--		end
 
 --	set_gtk_entry_struct_text_area (a_c_struct: POINTER; a_text_area: POINTER) is
 --			-- (from C_GTK_ENTRY_STRUCT)
@@ -23506,13 +23506,13 @@ feature -- External C structs
 --			"text_length"
 --		end
 
-	set_gtk_entry_struct_text_max_length (a_c_struct: POINTER; a_text_max_length: INTEGER) is
-			-- (from C_GTK_ENTRY_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkEntry, guint16)"
-		alias
-			"text_max_length"
-		end
+--	set_gtk_entry_struct_text_max_length (a_c_struct: POINTER; a_text_max_length: INTEGER) is
+--			-- (from C_GTK_ENTRY_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkEntry, guint16)"
+--		alias
+--			"text_max_length"
+--		end
 
 --	set_gtk_entry_struct_text_mb (a_c_struct: POINTER; a_text_mb: POINTER) is
 --			-- (from C_GTK_ENTRY_STRUCT)
@@ -23530,13 +23530,13 @@ feature -- External C structs
 --			"text_mb_dirty"
 --		end
 --
-	set_gtk_entry_struct_text_size (a_c_struct: POINTER; a_text_size: INTEGER) is
-			-- (from C_GTK_ENTRY_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkEntry, guint16)"
-		alias
-			"text_size"
-		end
+--	set_gtk_entry_struct_text_size (a_c_struct: POINTER; a_text_size: INTEGER) is
+--			-- (from C_GTK_ENTRY_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkEntry, guint16)"
+--		alias
+--			"text_size"
+--		end
 
 --	set_gtk_entry_struct_timer (a_c_struct: POINTER; a_timer: INTEGER) is
 --			-- (from C_GTK_ENTRY_STRUCT)
@@ -23778,53 +23778,53 @@ feature -- External C structs
 			"ok_button"
 		end
 
-	set_gtk_frame_struct_label (a_c_struct: POINTER; a_label: POINTER) is
-			-- (from C_GTK_FRAME_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkFrame, gchar*)"
-		alias
-			"label"
-		end
+--	set_gtk_frame_struct_label (a_c_struct: POINTER; a_label: POINTER) is
+--			-- (from C_GTK_FRAME_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkFrame, gchar*)"
+--		alias
+--			"label"
+--		end
 
-	set_gtk_frame_struct_label_height (a_c_struct: POINTER; a_label_height: INTEGER) is
-			-- (from C_GTK_FRAME_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkFrame, gint16)"
-		alias
-			"label_height"
-		end
+--	set_gtk_frame_struct_label_height (a_c_struct: POINTER; a_label_height: INTEGER) is
+--			-- (from C_GTK_FRAME_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkFrame, gint16)"
+--		alias
+--			"label_height"
+--		end
 
-	set_gtk_frame_struct_label_width (a_c_struct: POINTER; a_label_width: INTEGER) is
-			-- (from C_GTK_FRAME_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkFrame, gint16)"
-		alias
-			"label_width"
-		end
+--	set_gtk_frame_struct_label_width (a_c_struct: POINTER; a_label_width: INTEGER) is
+--			-- (from C_GTK_FRAME_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkFrame, gint16)"
+--		alias
+--			"label_width"
+--		end
 
-	set_gtk_frame_struct_label_xalign (a_c_struct: POINTER; a_label_xalign: REAL) is
-			-- (from C_GTK_FRAME_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkFrame, gfloat)"
-		alias
-			"label_xalign"
-		end
+--	set_gtk_frame_struct_label_xalign (a_c_struct: POINTER; a_label_xalign: REAL) is
+--			-- (from C_GTK_FRAME_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkFrame, gfloat)"
+--		alias
+--			"label_xalign"
+--		end
 
-	set_gtk_frame_struct_label_yalign (a_c_struct: POINTER; a_label_yalign: REAL) is
-			-- (from C_GTK_FRAME_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkFrame, gfloat)"
-		alias
-			"label_yalign"
-		end
+--	set_gtk_frame_struct_label_yalign (a_c_struct: POINTER; a_label_yalign: REAL) is
+--			-- (from C_GTK_FRAME_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkFrame, gfloat)"
+--		alias
+--			"label_yalign"
+--		end
 
-	set_gtk_frame_struct_shadow_type (a_c_struct: POINTER; a_shadow_type: INTEGER) is
-			-- (from C_GTK_FRAME_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkFrame, gint16)"
-		alias
-			"shadow_type"
-		end
+--	set_gtk_frame_struct_shadow_type (a_c_struct: POINTER; a_shadow_type: INTEGER) is
+--			-- (from C_GTK_FRAME_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkFrame, gint16)"
+--		alias
+--			"shadow_type"
+--		end
 
 	set_gtk_input_dialog_struct_axis_list (a_c_struct: POINTER; a_axis_list: POINTER) is
 			-- (from C_GTK_INPUT_DIALOG_STRUCT)
@@ -23850,13 +23850,13 @@ feature -- External C structs
 			"close_button"
 		end
 
-	set_gtk_input_dialog_struct_current_device (a_c_struct: POINTER; a_current_device: INTEGER) is
-			-- (from C_GTK_INPUT_DIALOG_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkInputDialog, guint32)"
-		alias
-			"current_device"
-		end
+--	set_gtk_input_dialog_struct_current_device (a_c_struct: POINTER; a_current_device: INTEGER) is
+--			-- (from C_GTK_INPUT_DIALOG_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkInputDialog, guint32)"
+--		alias
+--			"current_device"
+--		end
 
 	set_gtk_input_dialog_struct_keys_list (a_c_struct: POINTER; a_keys_list: POINTER) is
 			-- (from C_GTK_INPUT_DIALOG_STRUCT)
@@ -23906,29 +23906,29 @@ feature -- External C structs
 			"label"
 		end
 
-	set_gtk_label_struct_label_wc (a_c_struct: POINTER; a_label_wc: POINTER) is
-			-- (from C_GTK_LABEL_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkLabel, GdkWChar*)"
-		alias
-			"label_wc"
-		end
+--	set_gtk_label_struct_label_wc (a_c_struct: POINTER; a_label_wc: POINTER) is
+--			-- (from C_GTK_LABEL_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkLabel, GdkWChar*)"
+--		alias
+--			"label_wc"
+--		end
 
-	set_gtk_label_struct_max_width (a_c_struct: POINTER; a_max_width: INTEGER) is
-			-- (from C_GTK_LABEL_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkLabel, guint)"
-		alias
-			"max_width"
-		end
+--	set_gtk_label_struct_max_width (a_c_struct: POINTER; a_max_width: INTEGER) is
+--			-- (from C_GTK_LABEL_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkLabel, guint)"
+--		alias
+--			"max_width"
+--		end
 
-	set_gtk_label_struct_pattern (a_c_struct: POINTER; a_pattern: POINTER) is
-			-- (from C_GTK_LABEL_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkLabel, gchar*)"
-		alias
-			"pattern"
-		end
+--	set_gtk_label_struct_pattern (a_c_struct: POINTER; a_pattern: POINTER) is
+--			-- (from C_GTK_LABEL_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkLabel, gchar*)"
+--		alias
+--			"pattern"
+--		end
 
 --	set_gtk_label_struct_words (a_c_struct: POINTER; a_words: POINTER) is
 --			-- (from C_GTK_LABEL_STRUCT)
@@ -24330,93 +24330,93 @@ feature -- External C structs
 			"ypad"
 		end
 
-	set_gtk_notebook_page_struct_child (a_c_struct: POINTER; a_child: POINTER) is
-			-- (from C_GTK_NOTEBOOK_PAGE_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkNotebookPage, GtkWidget*)"
-		alias
-			"child"
-		end
+--	set_gtk_notebook_page_struct_child (a_c_struct: POINTER; a_child: POINTER) is
+--			-- (from C_GTK_NOTEBOOK_PAGE_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkNotebookPage, GtkWidget*)"
+--		alias
+--			"child"
+--		end
 
-	set_gtk_notebook_page_struct_default_menu (a_c_struct: POINTER; a_default_menu: INTEGER) is
-			-- (from C_GTK_NOTEBOOK_PAGE_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkNotebookPage, guint)"
-		alias
-			"default_menu"
-		end
+--	set_gtk_notebook_page_struct_default_menu (a_c_struct: POINTER; a_default_menu: INTEGER) is
+--			-- (from C_GTK_NOTEBOOK_PAGE_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkNotebookPage, guint)"
+--		alias
+--			"default_menu"
+--		end
 
-	set_gtk_notebook_page_struct_default_tab (a_c_struct: POINTER; a_default_tab: INTEGER) is
-			-- (from C_GTK_NOTEBOOK_PAGE_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkNotebookPage, guint)"
-		alias
-			"default_tab"
-		end
+--	set_gtk_notebook_page_struct_default_tab (a_c_struct: POINTER; a_default_tab: INTEGER) is
+--			-- (from C_GTK_NOTEBOOK_PAGE_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkNotebookPage, guint)"
+--		alias
+--			"default_tab"
+--		end
 
-	set_gtk_notebook_page_struct_expand (a_c_struct: POINTER; a_expand: INTEGER) is
-			-- (from C_GTK_NOTEBOOK_PAGE_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkNotebookPage, guint)"
-		alias
-			"expand"
-		end
+--	set_gtk_notebook_page_struct_expand (a_c_struct: POINTER; a_expand: INTEGER) is
+--			-- (from C_GTK_NOTEBOOK_PAGE_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkNotebookPage, guint)"
+--		alias
+--			"expand"
+--		end
 
-	set_gtk_notebook_page_struct_fill (a_c_struct: POINTER; a_fill: INTEGER) is
-			-- (from C_GTK_NOTEBOOK_PAGE_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkNotebookPage, guint)"
-		alias
-			"fill"
-		end
+--	set_gtk_notebook_page_struct_fill (a_c_struct: POINTER; a_fill: INTEGER) is
+--			-- (from C_GTK_NOTEBOOK_PAGE_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkNotebookPage, guint)"
+--		alias
+--			"fill"
+--		end
 
-	set_gtk_notebook_page_struct_menu_label (a_c_struct: POINTER; a_menu_label: POINTER) is
-			-- (from C_GTK_NOTEBOOK_PAGE_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkNotebookPage, GtkWidget*)"
-		alias
-			"menu_label"
-		end
+--	set_gtk_notebook_page_struct_menu_label (a_c_struct: POINTER; a_menu_label: POINTER) is
+--			-- (from C_GTK_NOTEBOOK_PAGE_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkNotebookPage, GtkWidget*)"
+--		alias
+--			"menu_label"
+--		end
 
-	set_gtk_notebook_page_struct_pack (a_c_struct: POINTER; a_pack: INTEGER) is
-			-- (from C_GTK_NOTEBOOK_PAGE_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkNotebookPage, guint)"
-		alias
-			"pack"
-		end
+--	set_gtk_notebook_page_struct_pack (a_c_struct: POINTER; a_pack: INTEGER) is
+--			-- (from C_GTK_NOTEBOOK_PAGE_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkNotebookPage, guint)"
+--		alias
+--			"pack"
+--		end
 
-	set_gtk_notebook_page_struct_tab_label (a_c_struct: POINTER; a_tab_label: POINTER) is
-			-- (from C_GTK_NOTEBOOK_PAGE_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkNotebookPage, GtkWidget*)"
-		alias
-			"tab_label"
-		end
+--	set_gtk_notebook_page_struct_tab_label (a_c_struct: POINTER; a_tab_label: POINTER) is
+--			-- (from C_GTK_NOTEBOOK_PAGE_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkNotebookPage, GtkWidget*)"
+--		alias
+--			"tab_label"
+--		end
+--
+--	set_gtk_notebook_struct_button (a_c_struct: POINTER; a_button: INTEGER) is
+--			-- (from C_GTK_NOTEBOOK_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkNotebook, guint)"
+--		alias
+--			"button"
+--		end
 
-	set_gtk_notebook_struct_button (a_c_struct: POINTER; a_button: INTEGER) is
-			-- (from C_GTK_NOTEBOOK_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkNotebook, guint)"
-		alias
-			"button"
-		end
+--	set_gtk_notebook_struct_child_has_focus (a_c_struct: POINTER; a_child_has_focus: INTEGER) is
+--			-- (from C_GTK_NOTEBOOK_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkNotebook, guint)"
+--		alias
+--			"child_has_focus"
+--		end
 
-	set_gtk_notebook_struct_child_has_focus (a_c_struct: POINTER; a_child_has_focus: INTEGER) is
-			-- (from C_GTK_NOTEBOOK_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkNotebook, guint)"
-		alias
-			"child_has_focus"
-		end
-
-	set_gtk_notebook_struct_children (a_c_struct: POINTER; a_children: POINTER) is
-			-- (from C_GTK_NOTEBOOK_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkNotebook, GList*)"
-		alias
-			"children"
-		end
+--	set_gtk_notebook_struct_children (a_c_struct: POINTER; a_children: POINTER) is
+--			-- (from C_GTK_NOTEBOOK_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkNotebook, GList*)"
+--		alias
+--			"children"
+--		end
 
 --	set_gtk_notebook_struct_click_child (a_c_struct: POINTER; a_click_child: INTEGER) is
 --			-- (from C_GTK_NOTEBOOK_STRUCT)
@@ -24474,45 +24474,45 @@ feature -- External C structs
 --			"in_child"
 --		end
 
-	set_gtk_notebook_struct_menu (a_c_struct: POINTER; a_menu: POINTER) is
-			-- (from C_GTK_NOTEBOOK_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkNotebook, GtkWidget*)"
-		alias
-			"menu"
-		end
+--	set_gtk_notebook_struct_menu (a_c_struct: POINTER; a_menu: POINTER) is
+--			-- (from C_GTK_NOTEBOOK_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkNotebook, GtkWidget*)"
+--		alias
+--			"menu"
+--		end
 
-	set_gtk_notebook_struct_need_timer (a_c_struct: POINTER; a_need_timer: INTEGER) is
-			-- (from C_GTK_NOTEBOOK_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkNotebook, guint)"
-		alias
-			"need_timer"
-		end
+--	set_gtk_notebook_struct_need_timer (a_c_struct: POINTER; a_need_timer: INTEGER) is
+--			-- (from C_GTK_NOTEBOOK_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkNotebook, guint)"
+--		alias
+--			"need_timer"
+--		end
 
-	set_gtk_notebook_struct_panel (a_c_struct: POINTER; a_panel: POINTER) is
-			-- (from C_GTK_NOTEBOOK_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkNotebook, GdkWindow*)"
-		alias
-			"panel"
-		end
+--	set_gtk_notebook_struct_panel (a_c_struct: POINTER; a_panel: POINTER) is
+--			-- (from C_GTK_NOTEBOOK_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkNotebook, GdkWindow*)"
+--		alias
+--			"panel"
+--		end
+--
+--	set_gtk_notebook_struct_scrollable (a_c_struct: POINTER; a_scrollable: INTEGER) is
+--			-- (from C_GTK_NOTEBOOK_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkNotebook, guint)"
+--		alias
+--			"scrollable"
+--		end
 
-	set_gtk_notebook_struct_scrollable (a_c_struct: POINTER; a_scrollable: INTEGER) is
-			-- (from C_GTK_NOTEBOOK_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkNotebook, guint)"
-		alias
-			"scrollable"
-		end
-
-	set_gtk_notebook_struct_show_border (a_c_struct: POINTER; a_show_border: INTEGER) is
-			-- (from C_GTK_NOTEBOOK_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkNotebook, guint)"
-		alias
-			"show_border"
-		end
+----	set_gtk_notebook_struct_show_border (a_c_struct: POINTER; a_show_border: INTEGER) is
+--			-- (from C_GTK_NOTEBOOK_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkNotebook, guint)"
+--		alias
+--			"show_border"
+--		end
 
 	set_gtk_notebook_struct_show_tabs (a_c_struct: POINTER; a_show_tabs: INTEGER) is
 			-- (from C_GTK_NOTEBOOK_STRUCT)
@@ -24642,29 +24642,29 @@ feature -- External C structs
 			"child2_shrink"
 		end
 
-	set_gtk_paned_struct_gutter_size (a_c_struct: POINTER; a_gutter_size: INTEGER) is
-			-- (from C_GTK_PANED_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkPaned, guint16)"
-		alias
-			"gutter_size"
-		end
+--	set_gtk_paned_struct_gutter_size (a_c_struct: POINTER; a_gutter_size: INTEGER) is
+--			-- (from C_GTK_PANED_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkPaned, guint16)"
+--		alias
+--			"gutter_size"
+--		end
 
-	set_gtk_paned_struct_handle (a_c_struct: POINTER; a_handle: POINTER) is
-			-- (from C_GTK_PANED_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkPaned, GdkWindow*)"
-		alias
-			"handle"
-		end
+--	set_gtk_paned_struct_handle (a_c_struct: POINTER; a_handle: POINTER) is
+--			-- (from C_GTK_PANED_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkPaned, GdkWindow*)"
+--		alias
+--			"handle"
+--		end
 
-	set_gtk_paned_struct_handle_size (a_c_struct: POINTER; a_handle_size: INTEGER) is
-			-- (from C_GTK_PANED_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkPaned, guint16)"
-		alias
-			"handle_size"
-		end
+--	set_gtk_paned_struct_handle_size (a_c_struct: POINTER; a_handle_size: INTEGER) is
+--			-- (from C_GTK_PANED_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkPaned, guint16)"
+--		alias
+--			"handle_size"
+--		end
 
 --	set_gtk_paned_struct_handle_xpos (a_c_struct: POINTER; a_handle_xpos: INTEGER) is
 --			-- (from C_GTK_PANED_STRUCT)
@@ -24906,13 +24906,13 @@ feature -- External C structs
 			"adjustment"
 		end
 
-	set_gtk_range_struct_button (a_c_struct: POINTER; a_button: INTEGER) is
-			-- (from C_GTK_RANGE_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkRange, guint8)"
-		alias
-			"button"
-		end
+--	set_gtk_range_struct_button (a_c_struct: POINTER; a_button: INTEGER) is
+--			-- (from C_GTK_RANGE_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkRange, guint8)"
+--		alias
+--			"button"
+--		end
 
 --	set_gtk_range_struct_click_child (a_c_struct: POINTER; a_click_child: INTEGER) is
 --			-- (from C_GTK_RANGE_STRUCT)
@@ -25026,29 +25026,29 @@ feature -- External C structs
 --			"timer"
 --		end
 
-	set_gtk_range_struct_trough (a_c_struct: POINTER; a_trough: POINTER) is
-			-- (from C_GTK_RANGE_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkRange, GdkWindow*)"
-		alias
-			"trough"
-		end
+--	set_gtk_range_struct_trough (a_c_struct: POINTER; a_trough: POINTER) is
+--			-- (from C_GTK_RANGE_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkRange, GdkWindow*)"
+--		alias
+--			"trough"
+--		end
 
-	set_gtk_range_struct_x_click_point (a_c_struct: POINTER; a_x_click_point: INTEGER) is
-			-- (from C_GTK_RANGE_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkRange, gint16)"
-		alias
-			"x_click_point"
-		end
+--	set_gtk_range_struct_x_click_point (a_c_struct: POINTER; a_x_click_point: INTEGER) is
+--			-- (from C_GTK_RANGE_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkRange, gint16)"
+--		alias
+--			"x_click_point"
+--		end
 
-	set_gtk_range_struct_y_click_point (a_c_struct: POINTER; a_y_click_point: INTEGER) is
-			-- (from C_GTK_RANGE_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkRange, gint16)"
-		alias
-			"y_click_point"
-		end
+--	set_gtk_range_struct_y_click_point (a_c_struct: POINTER; a_y_click_point: INTEGER) is
+--			-- (from C_GTK_RANGE_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkRange, gint16)"
+--		alias
+--			"y_click_point"
+--		end
 
 	set_gtk_requisition_struct_height (a_c_struct: POINTER; a_height: INTEGER) is
 			-- (from C_GTK_REQUISITION_STRUCT)
@@ -25450,21 +25450,21 @@ feature -- External C structs
 			"draw_indicator"
 		end
 
-	set_gtk_tooltips_data_struct_font (a_c_struct: POINTER; a_font: POINTER) is
-			-- (from C_GTK_TOOLTIPS_DATA_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkTooltipsData, GdkFont*)"
-		alias
-			"font"
-		end
+--	set_gtk_tooltips_data_struct_font (a_c_struct: POINTER; a_font: POINTER) is
+--			-- (from C_GTK_TOOLTIPS_DATA_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkTooltipsData, GdkFont*)"
+--		alias
+--			"font"
+--		end
 
-	set_gtk_tooltips_data_struct_row (a_c_struct: POINTER; a_row: POINTER) is
-			-- (from C_GTK_TOOLTIPS_DATA_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkTooltipsData, GList*)"
-		alias
-			"row"
-		end
+--	set_gtk_tooltips_data_struct_row (a_c_struct: POINTER; a_row: POINTER) is
+--			-- (from C_GTK_TOOLTIPS_DATA_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkTooltipsData, GList*)"
+--		alias
+--			"row"
+--		end
 
 	set_gtk_tooltips_data_struct_tip_private (a_c_struct: POINTER; a_tip_private: POINTER) is
 			-- (from C_GTK_TOOLTIPS_DATA_STRUCT)
@@ -25498,13 +25498,13 @@ feature -- External C structs
 			"widget"
 		end
 
-	set_gtk_tooltips_data_struct_width (a_c_struct: POINTER; a_width: INTEGER) is
-			-- (from C_GTK_TOOLTIPS_DATA_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkTooltipsData, gint)"
-		alias
-			"width"
-		end
+--	set_gtk_tooltips_data_struct_width (a_c_struct: POINTER; a_width: INTEGER) is
+--			-- (from C_GTK_TOOLTIPS_DATA_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkTooltipsData, gint)"
+--		alias
+--			"width"
+--		end
 
 	set_gtk_tooltips_struct_active_tips_data (a_c_struct: POINTER; a_active_tips_data: POINTER) is
 			-- (from C_GTK_TOOLTIPS_STRUCT)
@@ -25514,13 +25514,13 @@ feature -- External C structs
 			"active_tips_data"
 		end
 
-	set_gtk_tooltips_struct_background (a_c_struct: POINTER; a_background: POINTER) is
-			-- (from C_GTK_TOOLTIPS_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkTooltips, GdkColor*)"
-		alias
-			"background"
-		end
+--	set_gtk_tooltips_struct_background (a_c_struct: POINTER; a_background: POINTER) is
+--			-- (from C_GTK_TOOLTIPS_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkTooltips, GdkColor*)"
+--		alias
+--			"background"
+--		end
 
 	set_gtk_tooltips_struct_delay (a_c_struct: POINTER; a_delay: INTEGER) is
 			-- (from C_GTK_TOOLTIPS_STRUCT)
@@ -25746,13 +25746,13 @@ feature -- External C structs
 			"focus_widget"
 		end
 
-	set_gtk_window_struct_handling_resize (a_c_struct: POINTER; a_handling_resize: INTEGER) is
-			-- (from C_GTK_WINDOW_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkWindow, guint)"
-		alias
-			"handling_resize"
-		end
+--	set_gtk_window_struct_handling_resize (a_c_struct: POINTER; a_handling_resize: INTEGER) is
+--			-- (from C_GTK_WINDOW_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkWindow, guint)"
+--		alias
+--			"handling_resize"
+--		end
 
 	set_gtk_window_struct_modal (a_c_struct: POINTER; a_modal: INTEGER) is
 			-- (from C_GTK_WINDOW_STRUCT)
@@ -25770,13 +25770,13 @@ feature -- External C structs
 			"position"
 		end
 
-	set_gtk_window_struct_resize_count (a_c_struct: POINTER; a_resize_count: INTEGER) is
-			-- (from C_GTK_WINDOW_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkWindow, gushort)"
-		alias
-			"resize_count"
-		end
+--	set_gtk_window_struct_resize_count (a_c_struct: POINTER; a_resize_count: INTEGER) is
+--			-- (from C_GTK_WINDOW_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkWindow, gushort)"
+--		alias
+--			"resize_count"
+--		end
 
 	set_gtk_window_struct_title (a_c_struct: POINTER; a_title: POINTER) is
 			-- (from C_GTK_WINDOW_STRUCT)
@@ -25802,13 +25802,13 @@ feature -- External C structs
 			"type"
 		end
 
-	set_gtk_window_struct_use_uposition (a_c_struct: POINTER; a_use_uposition: INTEGER) is
-			-- (from C_GTK_WINDOW_STRUCT)
-		external
-			"C [struct <gtk/gtk.h>] (GtkWindow, guint)"
-		alias
-			"use_uposition"
-		end
+--	set_gtk_window_struct_use_uposition (a_c_struct: POINTER; a_use_uposition: INTEGER) is
+--			-- (from C_GTK_WINDOW_STRUCT)
+--		external
+--			"C [struct <gtk/gtk.h>] (GtkWindow, guint)"
+--		alias
+--			"use_uposition"
+--		end
 
 	set_gtk_window_struct_wmclass_class (a_c_struct: POINTER; a_wmclass_class: POINTER) is
 			-- (from C_GTK_WINDOW_STRUCT)

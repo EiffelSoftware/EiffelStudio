@@ -35,7 +35,7 @@ feature {EV_ANY_IMP} -- Timeout intermediary agent routine
 
 feature {EV_ANY_IMP} -- Notebook intermediary agent routines
 
-	on_notebook_page_switch_intermediary (a_c_object: POINTER; a_tuple: TUPLE [POINTER]) is
+	on_notebook_page_switch_intermediary (a_c_object: POINTER; a_tuple: TUPLE [INTEGER]) is
 			-- Notebook page is switched
 		local
 			a_notebook_imp: EV_NOTEBOOK_IMP

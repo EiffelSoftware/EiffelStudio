@@ -54,8 +54,8 @@ feature {NONE} -- Implementation
 			imp ?= child_array.i_th (i).implementation
 
 			item_ptr := imp.c_object
-			C.gtk_object_ref (item_ptr)
-			C.gtk_container_remove (list_widget, item_ptr)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.object_ref (item_ptr)
+			feature {EV_GTK_EXTERNALS}.gtk_container_remove (list_widget, item_ptr)
 			child_array.remove
 			imp.set_item_parent_imp (Void)
 		end
@@ -73,7 +73,7 @@ feature {NONE} -- Obsolete
 	add_to_container (v: EV_ITEM; v_imp: EV_ITEM_IMP) is
 			-- Add `v' to end of list.
 		do
-			C.gtk_container_add (list_widget, v_imp.c_object)
+			feature {EV_GTK_EXTERNALS}.gtk_container_add (list_widget, v_imp.c_object)
 			v_imp.set_item_parent_imp (Current)
 		end
 

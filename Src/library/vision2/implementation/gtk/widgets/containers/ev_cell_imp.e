@@ -37,7 +37,7 @@ feature -- initialization
 			-- Connect interface and initialize `c_object'.
 		do
 			base_make (an_interface)
-			set_c_object (C.gtk_event_box_new)
+			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_event_box_new)
 		end
 
 feature -- Access
@@ -58,16 +58,16 @@ feature -- Element change
 			if i /= Void then
 				on_removed_item (i)
 				imp ?= i.implementation
-				C.gtk_object_ref (imp.c_object)
-				C.gtk_container_remove (container_widget, imp.c_object)
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.object_ref (imp.c_object)
+				feature {EV_GTK_EXTERNALS}.gtk_container_remove (container_widget, imp.c_object)
 			end
 			if v /= Void then
 				imp ?= v.implementation
-				C.gtk_container_add (container_widget, imp.c_object)
+				feature {EV_GTK_EXTERNALS}.gtk_container_add (container_widget, imp.c_object)
 				imp.update_request_size
 				on_new_item (imp)
 			end
-			C.gtk_widget_queue_resize (container_widget)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_queue_resize (container_widget)
 		end
 
 feature {EV_ANY_I} -- Implementation

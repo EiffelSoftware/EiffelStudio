@@ -102,7 +102,7 @@ feature -- Implementation
 		is
 			-- Filter out double click events.
 		do
-			if a_type = C.Gdk_button_press_enum then
+			if a_type = feature {EV_GTK_EXTERNALS}.Gdk_button_press_enum then
 				start_transport (
 					a_x,
 					a_y,
@@ -278,7 +278,7 @@ feature -- Implementation
 			a_gs: GEL_STRING
 		do
 			create a_gs.make (signal)
-			C.signal_emit_stop_by_name (a_c_object, a_gs.item)
+			feature {EV_GTK_EXTERNALS}.signal_emit_stop_by_name (a_c_object, a_gs.item)
 		end
 
 	end_transport_filter (a_type, a_x, a_y, a_button: INTEGER;
@@ -286,7 +286,7 @@ feature -- Implementation
 				a_screen_x, a_screen_y: INTEGER) is
 			-- Filter out double click events.
 		do
-			if a_type = C.Gdk_button_press_enum then
+			if a_type = feature {EV_GTK_EXTERNALS}.Gdk_button_press_enum then
 				end_transport (a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 			end
 		end
@@ -331,11 +331,11 @@ feature -- Implementation
 					internal_set_pointer_style (pointer_style)
 				else
 					-- Reset the cursors.
-					C.gdk_window_set_cursor (C.gtk_widget_struct_window (c_object), NULL)
-					C.gdk_window_set_cursor (C.gtk_widget_struct_window (visual_widget), NULL)
+					feature {EV_GTK_EXTERNALS}.gdk_window_set_cursor (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), NULL)
+					feature {EV_GTK_EXTERNALS}.gdk_window_set_cursor (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (visual_widget), NULL)
 				end
-				C.gtk_widget_draw (c_object, NULL)
-				C.gtk_widget_draw (visual_widget, NULL)				
+				feature {EV_GTK_EXTERNALS}.gtk_widget_draw (c_object, NULL)
+				feature {EV_GTK_EXTERNALS}.gtk_widget_draw (visual_widget, NULL)				
 			end
 			target := pointed_target
 			if
@@ -422,21 +422,19 @@ feature -- Implementation
 			-- Draw a segment between initial pick point and `destination'.
 		local
 			l_invert_gc, l_root_parent: POINTER
-			l_C: EV_GTK_EXTERNALS
 		do
 			if
-				C.gtk_events_pending = 0
+				feature {EV_GTK_EXTERNALS}.gtk_events_pending = 0
 			then
 				l_invert_gc := invert_gc
 				l_root_parent := root_parent
-				l_C := C
 				if rubber_band_is_drawn then
-					l_C.gdk_draw_line (l_root_parent, l_invert_gc, x_origin, y_origin, old_pointer_x, old_pointer_y)
+					feature {EV_GTK_EXTERNALS}.gdk_draw_line (l_root_parent, l_invert_gc, x_origin, y_origin, old_pointer_x, old_pointer_y)
 					rubber_band_is_drawn := False
 				end
 				old_pointer_x := pointer_x
 				old_pointer_y := pointer_y
-				l_C.gdk_draw_line (l_root_parent, l_invert_gc, x_origin, y_origin, old_pointer_x, old_pointer_y)
+				feature {EV_GTK_EXTERNALS}.gdk_draw_line (l_root_parent, l_invert_gc, x_origin, y_origin, old_pointer_x, old_pointer_y)
 				rubber_band_is_drawn := True
 			end
 		end
@@ -445,7 +443,7 @@ feature -- Implementation
 			-- Erase previously drawn rubber band.
 		do
 			if rubber_band_is_drawn then
-				C.gdk_draw_line (root_parent, invert_gc, x_origin, y_origin, old_pointer_x, old_pointer_y)
+				feature {EV_GTK_EXTERNALS}.gdk_draw_line (root_parent, invert_gc, x_origin, y_origin, old_pointer_x, old_pointer_y)
 				rubber_band_is_drawn := False
 			end
 		end
@@ -453,13 +451,13 @@ feature -- Implementation
 	root_parent: POINTER is
 			-- GdkWindow of X root window.
 		once
-			Result := C.gdk_root_parent
+			Result := feature {EV_GTK_EXTERNALS}.gdk_root_parent
 		end
 
 	real_draw_rubber_band is
 			-- Implementation of draw_rubber_band.
 		do
-			C.gdk_draw_line (root_parent, invert_gc, x_origin, y_origin, old_pointer_x, old_pointer_y)
+			feature {EV_GTK_EXTERNALS}.gdk_draw_line (root_parent, invert_gc, x_origin, y_origin, old_pointer_x, old_pointer_y)
 		end
 
 	invert_gc: POINTER is
@@ -468,15 +466,15 @@ feature -- Implementation
 			max_16_bit: INTEGER
 		once
 			max_16_bit := 65535
-			Result := C.gdk_gc_new (C.gdk_root_parent)
-			col := C.c_gdk_color_struct_allocate
-			C.set_gdk_color_struct_red (col, Max_16_bit)
-			C.set_gdk_color_struct_green (col, Max_16_bit)
-			C.set_gdk_color_struct_blue (col, Max_16_bit)
-			C.gdk_gc_set_foreground (Result, col)
-			C.gdk_gc_set_function (Result, C.Gdk_invert_enum)
-			C.gdk_gc_set_subwindow (Result, C.Gdk_include_inferiors_enum)
-			C.c_gdk_color_struct_free (col)
+			Result := feature {EV_GTK_EXTERNALS}.gdk_gc_new (feature {EV_GTK_EXTERNALS}.gdk_root_parent)
+			col := feature {EV_GTK_EXTERNALS}.c_gdk_color_struct_allocate
+			feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_red (col, Max_16_bit)
+			feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_green (col, Max_16_bit)
+			feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_blue (col, Max_16_bit)
+			feature {EV_GTK_EXTERNALS}.gdk_gc_set_foreground (Result, col)
+			feature {EV_GTK_EXTERNALS}.gdk_gc_set_function (Result, feature {EV_GTK_EXTERNALS}.Gdk_invert_enum)
+			feature {EV_GTK_EXTERNALS}.gdk_gc_set_subwindow (Result, feature {EV_GTK_EXTERNALS}.Gdk_include_inferiors_enum)
+			feature {EV_GTK_EXTERNALS}.c_gdk_color_struct_free (col)
 		end
 
 	real_pointed_target: EV_PICK_AND_DROPABLE is
@@ -487,7 +485,7 @@ feature -- Implementation
 			pnd_wid: EV_PICK_AND_DROPABLE
 			widget_target_imp: EV_PICK_AND_DROPABLE_IMP
 		do
-			gdkwin := C.gdk_window_at_pointer ($x, $y)
+			gdkwin := feature {EV_GTK_EXTERNALS}.gdk_window_at_pointer ($x, $y)
 			if gdkwin /= NULL then
 				pnd_wid ?= last_pointed_target
 				if pnd_wid /= Void then
@@ -523,7 +521,7 @@ feature {EV_APPLICATION_IMP, EV_PICK_AND_DROPABLE_IMP, EV_DOCKABLE_SOURCE_IMP} -
 			-- Comparison of gdk window and widget position to determine
 			-- if mouse pointer is over widget.
 		do
-			Result := a_gdkwin = C.gtk_widget_struct_window (visual_widget)
+			Result := a_gdkwin = feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (visual_widget)
 		end
 
 	is_displayed: BOOLEAN is
@@ -532,8 +530,8 @@ feature {EV_APPLICATION_IMP, EV_PICK_AND_DROPABLE_IMP, EV_DOCKABLE_SOURCE_IMP} -
 		do
 			--| Shift to put bit in least significant place then take mod 2.
 			Result := ((
-				(C.gtk_object_struct_flags (visual_widget)
-				// C.GTK_MAPPED_ENUM) \\ 2)
+				(feature {EV_GTK_EXTERNALS}.gtk_object_struct_flags (visual_widget)
+				// feature {EV_GTK_EXTERNALS}.GTK_MAPPED_ENUM) \\ 2)
 			) = 1
 		end
 	

@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			create foreground_color
 			set_foreground_color (create {EV_COLOR}.make_with_rgb (0, 0, 0))
 			set_background_color (create {EV_COLOR}.make_with_rgb (1, 1, 1))
-			line_style := C.Gdk_line_solid_enum
+			line_style := feature {EV_GTK_EXTERNALS}.Gdk_line_solid_enum
 			set_drawing_mode (drawing_mode_copy)
 			set_line_width (1)
 			create a_font
@@ -68,13 +68,13 @@ feature {EV_DRAWABLE_IMP} -- Implementation
 	cap_style: INTEGER is
 			-- Style used for drawing end of lines.
 		do
-			Result := C.Gdk_cap_butt_enum
+			Result := feature {EV_GTK_EXTERNALS}.Gdk_cap_butt_enum
 		end
 
 	join_style: INTEGER is
 			-- Way in which lines are joined together.				
 		do
-			Result := C.Gdk_join_bevel_enum
+			Result := feature {EV_GTK_EXTERNALS}.Gdk_join_bevel_enum
 		end
 
 	gc_clip_area: EV_RECTANGLE
@@ -108,9 +108,9 @@ feature -- Access
 	line_width: INTEGER is
 			-- Line thickness.
 		do
-			gcvalues := C.c_gdk_gcvalues_struct_allocate
-			C.gdk_gc_get_values (gc, gcvalues)
-			Result := C.gdk_gcvalues_struct_line_width (gcvalues)
+			gcvalues := feature {EV_GTK_EXTERNALS}.c_gdk_gcvalues_struct_allocate
+			feature {EV_GTK_EXTERNALS}.gdk_gc_get_values (gc, gcvalues)
+			Result := feature {EV_GTK_EXTERNALS}.gdk_gcvalues_struct_line_width (gcvalues)
 			c_free (gcvalues)
 		end
 
@@ -119,20 +119,20 @@ feature -- Access
 		local
 			gdk_drawing_mode: INTEGER
 		do
-			gcvalues := C.c_gdk_gcvalues_struct_allocate
-			C.gdk_gc_get_values (gc, gcvalues)
-			gdk_drawing_mode := C.gdk_gcvalues_struct_function (gcvalues)
+			gcvalues := feature {EV_GTK_EXTERNALS}.c_gdk_gcvalues_struct_allocate
+			feature {EV_GTK_EXTERNALS}.gdk_gc_get_values (gc, gcvalues)
+			gdk_drawing_mode := feature {EV_GTK_EXTERNALS}.gdk_gcvalues_struct_function (gcvalues)
 			c_free (gcvalues)
 
-			if gdk_drawing_mode = C.Gdk_copy_enum then
+			if gdk_drawing_mode = feature {EV_GTK_EXTERNALS}.Gdk_copy_enum then
 				Result := drawing_mode_copy
-			elseif gdk_drawing_mode = C.Gdk_xor_enum then
+			elseif gdk_drawing_mode = feature {EV_GTK_EXTERNALS}.Gdk_xor_enum then
 				Result := drawing_mode_xor
-			elseif gdk_drawing_mode = C.Gdk_invert_enum then
+			elseif gdk_drawing_mode = feature {EV_GTK_EXTERNALS}.Gdk_invert_enum then
 				Result := drawing_mode_invert
-			elseif gdk_drawing_mode = C.Gdk_and_enum then
+			elseif gdk_drawing_mode = feature {EV_GTK_EXTERNALS}.Gdk_and_enum then
 				Result := drawing_mode_and
-			elseif gdk_drawing_mode = C.Gdk_or_enum then
+			elseif gdk_drawing_mode = feature {EV_GTK_EXTERNALS}.Gdk_or_enum then
 				Result := drawing_mode_or
 			else
 				check
@@ -157,11 +157,11 @@ feature -- Access
 		local
 			style: INTEGER
 		do
-			gcvalues := C.c_gdk_gcvalues_struct_allocate
-			C.gdk_gc_get_values (gc, gcvalues)
-			style := C.gdk_gcvalues_struct_line_style (gcvalues)
+			gcvalues := feature {EV_GTK_EXTERNALS}.c_gdk_gcvalues_struct_allocate
+			feature {EV_GTK_EXTERNALS}.gdk_gc_get_values (gc, gcvalues)
+			style := feature {EV_GTK_EXTERNALS}.gdk_gcvalues_struct_line_style (gcvalues)
 			c_free (gcvalues)
-			Result := style = C.Gdk_line_on_off_dash_enum
+			Result := style = feature {EV_GTK_EXTERNALS}.Gdk_line_on_off_dash_enum
 		end
 
 feature -- Status report
@@ -194,22 +194,22 @@ feature -- Element change
 			tempbool: BOOLEAN
 		do
 			foreground_color.copy (a_color)
-			color_struct := C.c_gdk_color_struct_allocate
-			C.set_gdk_color_struct_red (color_struct, a_color.red_16_bit)
-			C.set_gdk_color_struct_green (color_struct, a_color.green_16_bit)
-			C.set_gdk_color_struct_blue (color_struct, a_color.blue_16_bit)
-			tempbool := C.gdk_colormap_alloc_color (system_colormap, color_struct, False, True)
+			color_struct := feature {EV_GTK_EXTERNALS}.c_gdk_color_struct_allocate
+			feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_red (color_struct, a_color.red_16_bit)
+			feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_green (color_struct, a_color.green_16_bit)
+			feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_blue (color_struct, a_color.blue_16_bit)
+			tempbool := feature {EV_GTK_EXTERNALS}.gdk_colormap_alloc_color (system_colormap, color_struct, False, True)
 			check
 				color_has_been_allocated: tempbool
 			end
-			C.gdk_gc_set_foreground (gc, color_struct)
+			feature {EV_GTK_EXTERNALS}.gdk_gc_set_foreground (gc, color_struct)
 			c_free (color_struct)
 		end
 
 	set_line_width (a_width: INTEGER) is
 			-- Assign `a_width' to `line_width'.
 		do
-			C.gdk_gc_set_line_attributes (gc, a_width,
+			feature {EV_GTK_EXTERNALS}.gdk_gc_set_line_attributes (gc, a_width,
 				line_style, cap_style, join_style)				
 		end
 
@@ -220,15 +220,15 @@ feature -- Element change
 			inspect
 				a_mode
 			when drawing_mode_copy then
-				C.gdk_gc_set_function (gc, C.Gdk_copy_enum)
+				feature {EV_GTK_EXTERNALS}.gdk_gc_set_function (gc, feature {EV_GTK_EXTERNALS}.Gdk_copy_enum)
 			when drawing_mode_xor then
-				C.gdk_gc_set_function (gc, C.Gdk_xor_enum)
+				feature {EV_GTK_EXTERNALS}.gdk_gc_set_function (gc, feature {EV_GTK_EXTERNALS}.Gdk_xor_enum)
 			when drawing_mode_invert then
-				C.gdk_gc_set_function (gc, C.Gdk_invert_enum)
+				feature {EV_GTK_EXTERNALS}.gdk_gc_set_function (gc, feature {EV_GTK_EXTERNALS}.Gdk_invert_enum)
 			when drawing_mode_and then
-				C.gdk_gc_set_function (gc, C.Gdk_and_enum)
+				feature {EV_GTK_EXTERNALS}.gdk_gc_set_function (gc, feature {EV_GTK_EXTERNALS}.Gdk_and_enum)
 			when drawing_mode_or then
-				C.gdk_gc_set_function (gc, C.Gdk_or_enum)
+				feature {EV_GTK_EXTERNALS}.gdk_gc_set_function (gc, feature {EV_GTK_EXTERNALS}.Gdk_or_enum)
 			else
 				check
 					drawing_mode_existent: False
@@ -242,20 +242,20 @@ feature -- Element change
 			rectangle_struct: POINTER
 		do
 			gc_clip_area := clone (an_area)
-			rectangle_struct := C.c_gdk_rectangle_struct_allocate
-			C.set_gdk_rectangle_struct_x (rectangle_struct, an_area.x)
-			C.set_gdk_rectangle_struct_y (rectangle_struct, an_area.y)
-			C.set_gdk_rectangle_struct_width (rectangle_struct, an_area.width)
-			C.set_gdk_rectangle_struct_height (rectangle_struct, an_area.height)
-			C.gdk_gc_set_clip_rectangle (gc, rectangle_struct)
-			C.c_gdk_rectangle_struct_free (rectangle_struct)
+			rectangle_struct := feature {EV_GTK_EXTERNALS}.c_gdk_rectangle_struct_allocate
+			feature {EV_GTK_EXTERNALS}.set_gdk_rectangle_struct_x (rectangle_struct, an_area.x)
+			feature {EV_GTK_EXTERNALS}.set_gdk_rectangle_struct_y (rectangle_struct, an_area.y)
+			feature {EV_GTK_EXTERNALS}.set_gdk_rectangle_struct_width (rectangle_struct, an_area.width)
+			feature {EV_GTK_EXTERNALS}.set_gdk_rectangle_struct_height (rectangle_struct, an_area.height)
+			feature {EV_GTK_EXTERNALS}.gdk_gc_set_clip_rectangle (gc, rectangle_struct)
+			feature {EV_GTK_EXTERNALS}.c_gdk_rectangle_struct_free (rectangle_struct)
 		end
 
 	remove_clip_area is
 			-- Do not apply any clipping.
 		do
 			gc_clip_area := Void
-			C.gdk_gc_set_clip_rectangle (gc, NULL)
+			feature {EV_GTK_EXTERNALS}.gdk_gc_set_clip_rectangle (gc, NULL)
 		end
 
 	set_tile (a_pixmap: EV_PIXMAP) is
@@ -267,7 +267,7 @@ feature -- Element change
 			create tile
 			tile.copy (a_pixmap)
 			tile_imp ?= tile.implementation
-			C.gdk_gc_set_tile (gc, tile_imp.drawable)
+			feature {EV_GTK_EXTERNALS}.gdk_gc_set_tile (gc, tile_imp.drawable)
 		end
 
 	remove_tile is
@@ -279,16 +279,16 @@ feature -- Element change
 	enable_dashed_line_style is
 			-- Draw lines dashed.
 		do
-			line_style := C.Gdk_line_on_off_dash_enum
-			C.gdk_gc_set_line_attributes (gc, line_width,
+			line_style := feature {EV_GTK_EXTERNALS}.Gdk_line_on_off_dash_enum
+			feature {EV_GTK_EXTERNALS}.gdk_gc_set_line_attributes (gc, line_width,
 				line_style, cap_style, join_style)
 		end
 
 	disable_dashed_line_style is
 			-- Draw lines solid.
 		do
-			line_style := C.Gdk_line_solid_enum
-			C.gdk_gc_set_line_attributes (gc, line_width,
+			line_style := feature {EV_GTK_EXTERNALS}.Gdk_line_solid_enum
+			feature {EV_GTK_EXTERNALS}.gdk_gc_set_line_attributes (gc, line_width,
 				line_style, cap_style, join_style)
 		end
 
@@ -309,7 +309,7 @@ feature -- Clearing operations
 				create tmp_fg_color
 				tmp_fg_color.copy (foreground_color)
 				set_foreground_color (background_color)
-				C.gdk_draw_rectangle (drawable, gc, 1,
+				feature {EV_GTK_EXTERNALS}.gdk_draw_rectangle (drawable, gc, 1,
 					x,
 					y,
 					a_width,
@@ -325,7 +325,7 @@ feature -- Drawing operations
 			-- Draw point at (`x', `y').
 		do
 			if drawable /= NULL then
-	 			C.gdk_draw_point (drawable, gc, x, y)
+	 			feature {EV_GTK_EXTERNALS}.gdk_draw_point (drawable, gc, x, y)
 	 			flush
 			end
 		end
@@ -337,7 +337,7 @@ feature -- Drawing operations
 		do
 			if drawable /= NULL then
 				create a_gs.make (a_text)
-				C.gdk_draw_string (
+				feature {EV_GTK_EXTERNALS}.gdk_draw_string (
 					drawable,
 					internal_font_imp.c_object,
 					gc,
@@ -356,7 +356,7 @@ feature -- Drawing operations
 		do
 			if drawable /= NULL then
 				create a_gs.make (a_text)
-				C.gdk_draw_string (
+				feature {EV_GTK_EXTERNALS}.gdk_draw_string (
 					drawable,
 					internal_font_imp.c_object,
 					gc,
@@ -372,7 +372,7 @@ feature -- Drawing operations
 			-- Draw line segment from (`x1', 'y1') to (`x2', 'y2').
 		do
 			if drawable /= NULL then
-				C.gdk_draw_line (drawable, gc, x1, y1, x2, y2)
+				feature {EV_GTK_EXTERNALS}.gdk_draw_line (drawable, gc, x1, y1, x2, y2)
 				flush
 			end
 		end
@@ -403,7 +403,7 @@ feature -- Drawing operations
 					corrected_aperture := corrected_aperture - corrected_start + pi_nb * Pi
 				end
 
-				C.gdk_draw_arc (drawable, gc, 0, x,
+				feature {EV_GTK_EXTERNALS}.gdk_draw_arc (drawable, gc, 0, x,
 					y, a_width,
 					a_height, (radians_to_gdk_angle * corrected_start).truncated_to_integer,
 					(radians_to_gdk_angle * corrected_aperture).truncated_to_integer)
@@ -424,16 +424,16 @@ feature -- Drawing operations
 			if drawable /= NULL then
 				pixmap_imp ?= a_pixmap.implementation
 				if pixmap_imp.mask /= NULL then
-					C.gdk_gc_set_clip_mask (gc, pixmap_imp.mask)
-					C.gdk_gc_set_clip_origin (gc, x, y)
+					feature {EV_GTK_EXTERNALS}.gdk_gc_set_clip_mask (gc, pixmap_imp.mask)
+					feature {EV_GTK_EXTERNALS}.gdk_gc_set_clip_origin (gc, x, y)
 				end
-				C.gdk_draw_pixmap (drawable, gc,
+				feature {EV_GTK_EXTERNALS}.gdk_draw_pixmap (drawable, gc,
 					pixmap_imp.drawable,
 					x_src, y_src, x, y, src_width, src_height)
 				flush
 				if pixmap_imp.mask /= NULL then
-					C.gdk_gc_set_clip_mask (gc, NULL)
-					C.gdk_gc_set_clip_origin (gc, 0, 0)
+					feature {EV_GTK_EXTERNALS}.gdk_gc_set_clip_mask (gc, NULL)
+					feature {EV_GTK_EXTERNALS}.gdk_gc_set_clip_origin (gc, 0, 0)
 				end
 			end
 		end
@@ -449,7 +449,7 @@ feature -- Drawing operations
 			-- with size `a_width' and `a_height'.
 		do
 			if drawable /= NULL then
-				C.gdk_draw_rectangle (drawable, gc, 0, x, y, a_width - 1, a_height - 1)
+				feature {EV_GTK_EXTERNALS}.gdk_draw_rectangle (drawable, gc, 0, x, y, a_width - 1, a_height - 1)
 				flush
 			end
 		end
@@ -460,7 +460,7 @@ feature -- Drawing operations
 		do
 			if drawable /= NULL then 
 				if (a_width > 0 and a_height > 0 ) then
-					C.gdk_draw_arc (drawable, gc, 0, x,
+					feature {EV_GTK_EXTERNALS}.gdk_draw_arc (drawable, gc, 0, x,
 						y, (a_width - 1),
 						(a_height - 1), 0, whole_circle)
 					flush
@@ -478,10 +478,10 @@ feature -- Drawing operations
 			if drawable /= NULL then
 				tmp := coord_array_to_gdkpoint_array (points).area
 				if is_closed then
-					C.gdk_draw_polygon (drawable, gc, 0, $tmp, points.count)
+					feature {EV_GTK_EXTERNALS}.gdk_draw_polygon (drawable, gc, 0, $tmp, points.count)
 					flush
 				else
-					C.gdk_draw_lines (drawable, gc, $tmp, points.count)
+					feature {EV_GTK_EXTERNALS}.gdk_draw_lines (drawable, gc, $tmp, points.count)
 					flush
 				end
 			end
@@ -545,10 +545,10 @@ feature -- filling operations
 		do
 			if drawable /= NULL then
 				if tile /= Void then
-					C.gdk_gc_set_fill (gc, C.Gdk_tiled_enum)
+					feature {EV_GTK_EXTERNALS}.gdk_gc_set_fill (gc, feature {EV_GTK_EXTERNALS}.Gdk_tiled_enum)
 				end
-				C.gdk_draw_rectangle (drawable, gc, 1, x, y, a_width, a_height)
-				C.gdk_gc_set_fill (gc, C.Gdk_solid_enum)
+				feature {EV_GTK_EXTERNALS}.gdk_draw_rectangle (drawable, gc, 1, x, y, a_width, a_height)
+				feature {EV_GTK_EXTERNALS}.gdk_gc_set_fill (gc, feature {EV_GTK_EXTERNALS}.Gdk_solid_enum)
 				flush
 			end
 		end
@@ -560,13 +560,13 @@ feature -- filling operations
 		do
 			if drawable /= NULL then
 				if tile /= Void then
-					C.gdk_gc_set_fill (gc, C.Gdk_tiled_enum)
+					feature {EV_GTK_EXTERNALS}.gdk_gc_set_fill (gc, feature {EV_GTK_EXTERNALS}.Gdk_tiled_enum)
 				end
-				C.gdk_draw_arc (drawable, gc, 1, x,
+				feature {EV_GTK_EXTERNALS}.gdk_draw_arc (drawable, gc, 1, x,
 					y, a_width,
 					a_height, 0, whole_circle)
 				flush
-				C.gdk_gc_set_fill (gc, C.Gdk_solid_enum)
+				feature {EV_GTK_EXTERNALS}.gdk_gc_set_fill (gc, feature {EV_GTK_EXTERNALS}.Gdk_solid_enum)
 			end
 		end
 
@@ -579,10 +579,10 @@ feature -- filling operations
 			if drawable /= NULL then
 				tmp := coord_array_to_gdkpoint_array (points).area
 				if tile /= Void then
-					C.gdk_gc_set_fill (gc, C.Gdk_tiled_enum)
+					feature {EV_GTK_EXTERNALS}.gdk_gc_set_fill (gc, feature {EV_GTK_EXTERNALS}.Gdk_tiled_enum)
 				end
-				C.gdk_draw_polygon (drawable, gc, 1, $tmp, points.count)
-				C.gdk_gc_set_fill (gc, C.Gdk_solid_enum)
+				feature {EV_GTK_EXTERNALS}.gdk_draw_polygon (drawable, gc, 1, $tmp, points.count)
+				feature {EV_GTK_EXTERNALS}.gdk_gc_set_fill (gc, feature {EV_GTK_EXTERNALS}.Gdk_solid_enum)
 				flush
 			end
 		end
@@ -614,13 +614,13 @@ feature -- filling operations
 					corrected_aperture := corrected_aperture - corrected_start + pi_nb * Pi
 				end
 				if tile /= Void then
-					C.gdk_gc_set_fill (gc, C.Gdk_tiled_enum)
+					feature {EV_GTK_EXTERNALS}.gdk_gc_set_fill (gc, feature {EV_GTK_EXTERNALS}.Gdk_tiled_enum)
 				end
-				C.gdk_draw_arc (drawable, gc, 1, x,
+				feature {EV_GTK_EXTERNALS}.gdk_draw_arc (drawable, gc, 1, x,
 					y, a_width,
 					a_height, (corrected_start * radians_to_gdk_angle).rounded,
 					(corrected_aperture * radians_to_gdk_angle).rounded)
-				C.gdk_gc_set_fill (gc, C.Gdk_solid_enum)
+				feature {EV_GTK_EXTERNALS}.gdk_gc_set_fill (gc, feature {EV_GTK_EXTERNALS}.Gdk_solid_enum)
 				flush
 			end
 		end
@@ -631,7 +631,7 @@ feature {NONE} -- Implemention
 			-- Low-level conversion.
 		require
 			pts_exists: pts /= Void
-			equal_size: C.c_gdk_point_struct_size = integer_bits // 8
+			equal_size: feature {EV_GTK_EXTERNALS}.c_gdk_point_struct_size = integer_bits // 8
 		local
 			i, array_count: INTEGER
 			a_pts: ARRAY [EV_COORDINATE]
@@ -688,7 +688,7 @@ feature {NONE} -- Implementation
 	system_colormap: POINTER is
 			-- Default system color map used for allocating colors.
 		once
-			Result := C.gdk_rgb_get_cmap
+			Result := feature {EV_GTK_EXTERNALS}.gdk_rgb_get_cmap
 		end
 		
 	gdk_gc_unref (a_gc: POINTER) is 

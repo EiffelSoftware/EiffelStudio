@@ -66,7 +66,7 @@ feature {NONE} -- Initialization
 			-- Connect interface and initialize `c_object'.
 		do
 			base_make (an_interface)
-			set_c_object (C.gtk_button_new)
+			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_button_new)
 		end
 
 	initialize is
@@ -76,8 +76,8 @@ feature {NONE} -- Initialization
 			dummy_focus_in_actions: EV_NOTIFY_ACTION_SEQUENCE
 		do
 			{EV_PRIMITIVE_IMP} Precursor
-			C.gtk_container_set_border_width (c_object, 0)
-			C.gtk_button_set_relief (visual_widget, C.gtk_relief_normal_enum)
+			feature {EV_GTK_EXTERNALS}.gtk_container_set_border_width (c_object, 0)
+			feature {EV_GTK_EXTERNALS}.gtk_button_set_relief (visual_widget, feature {EV_GTK_EXTERNALS}.gtk_relief_normal_enum)
 			pixmapable_imp_initialize
 			textable_imp_initialize
 			initialize_button_box
@@ -91,13 +91,13 @@ feature {NONE} -- Initialization
 		local
 			box: POINTER
 		do
-			box := C.gtk_hbox_new (False, 0)
-			C.gtk_container_add (visual_widget, box)
-			C.gtk_widget_show (box)
-			C.gtk_box_pack_start (box, pixmap_box, False, True, padding)
-			C.gtk_widget_hide (pixmap_box)
-			C.gtk_box_pack_end (box, text_label, True, True, padding)
-			C.gtk_widget_hide (text_label)
+			box := feature {EV_GTK_EXTERNALS}.gtk_hbox_new (False, 0)
+			feature {EV_GTK_EXTERNALS}.gtk_container_add (visual_widget, box)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_show (box)
+			feature {EV_GTK_EXTERNALS}.gtk_box_pack_start (box, pixmap_box, False, True, padding)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_hide (pixmap_box)
+			feature {EV_GTK_EXTERNALS}.gtk_box_pack_end (box, text_label, True, True, padding)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_hide (text_label)
 		ensure
 			button_box /= NULL
 		end
@@ -124,14 +124,14 @@ feature -- Status Setting
 		do
 			enable_can_default
 --			from
---				par_ptr := C.gtk_widget_struct_parent (visual_widget)
+--				par_ptr := feature {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (visual_widget)
 --			until
 --				GTK_IS_WINDOW (par_ptr) or else par_ptr = NULL
 --			loop
---				par_ptr := C.gtk_widget_struct_parent (par_ptr)
+--				par_ptr := feature {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (par_ptr)
 --			end
 --			if par_ptr /= NULL then
---				C.set_gtk_window_struct_default_widget (par_ptr, visual_widget)
+--				feature {EV_GTK_EXTERNALS}.set_gtk_window_struct_default_widget (par_ptr, visual_widget)
 --			end	
 		end
 
@@ -144,15 +144,15 @@ feature -- Status Setting
 			--| FIXME IEK Undraw default widget style.
 			is_default_push_button := False
 --			from
---				par_ptr := C.gtk_widget_struct_parent (visual_widget)
+--				par_ptr := feature {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (visual_widget)
 --			until
 --				GTK_IS_WINDOW (par_ptr) or else par_ptr = NULL
 --			loop
---				par_ptr := C.gtk_widget_struct_parent (par_ptr)
+--				par_ptr := feature {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (par_ptr)
 --			end
 --
 --			if par_ptr /= NULL then
---				C.set_gtk_window_struct_default_widget (par_ptr, NULL)
+--				feature {EV_GTK_EXTERNALS}.set_gtk_window_struct_default_widget (par_ptr, NULL)
 --			end			
 		end
 
@@ -177,13 +177,13 @@ feature -- Element change
 			--| 	- left-aligned if there is a pixmap
 		do
 			if text = Void then
-				C.gtk_box_set_child_packing (
+				feature {EV_GTK_EXTERNALS}.gtk_box_set_child_packing (
 					button_box,
 					pixmap_box,
 					False,      -- Don't expand box.
 					False,
 					padding,
-					C.Gtk_pack_end_enum
+					feature {EV_GTK_EXTERNALS}.Gtk_pack_end_enum
 				)
 			end
 			{EV_TEXTABLE_IMP} Precursor (a_text)
@@ -200,13 +200,13 @@ feature -- Element change
 			-- Assign `Void' to text.
 		do
 			{EV_TEXTABLE_IMP} Precursor
-			C.gtk_box_set_child_packing (
+			feature {EV_GTK_EXTERNALS}.gtk_box_set_child_packing (
 				button_box,
 				pixmap_box,
 				True,       -- Expand pixmap box.
 				False,
 				padding,
-				C.Gtk_pack_end_enum
+				feature {EV_GTK_EXTERNALS}.Gtk_pack_end_enum
 			)
 		end
 
@@ -214,7 +214,7 @@ feature -- Element change
 			-- Assign Void to `pixmap'.
 		do
 			{EV_PIXMAPABLE_IMP} Precursor
-			C.gtk_widget_hide (pixmap_box)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_hide (pixmap_box)
 			align_text_center
 		end
 
@@ -232,7 +232,7 @@ feature {EV_APPLICATION_IMP} -- Implementation
 					a_gtk_pix := gtk_pixmap
 					if a_gtk_pix /= NULL then
 						-- No struct member call if gtk_pix is a NULL pointer.
-						Result := a_gdkwin = C.gtk_widget_struct_window (a_gtk_pix)
+						Result := a_gdkwin = feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (a_gtk_pix)
 					end
 				end
 			end
@@ -261,8 +261,8 @@ feature {NONE} -- implementation
 
 	foreground_color_pointer: POINTER is
 		do
-			Result := C.gtk_style_struct_fg (
-				C.gtk_widget_struct_style (text_label)
+			Result := feature {EV_GTK_EXTERNALS}.gtk_style_struct_fg (
+				feature {EV_GTK_EXTERNALS}.gtk_widget_struct_style (text_label)
 			)
 		end
 
@@ -275,9 +275,9 @@ feature {NONE} -- implementation
 		local
 			a_child_list: POINTER
 		do
-			a_child_list := C.gtk_container_children (visual_widget)
-			Result := C.g_list_nth_data (a_child_list, 0)
-			C.g_list_free (a_child_list)
+			a_child_list := feature {EV_GTK_EXTERNALS}.gtk_container_children (visual_widget)
+			Result := feature {EV_GTK_EXTERNALS}.g_list_nth_data (a_child_list, 0)
+			feature {EV_GTK_EXTERNALS}.g_list_free (a_child_list)
 		end
 
 feature {NONE} -- Externals

@@ -37,11 +37,11 @@ feature {NONE} -- Implementation
                         -- parent.
 		do
 			base_make (an_interface)
-			set_c_object (C.gtk_event_box_new)
-			container_widget := C.gtk_table_new (Default_row_spacing, Default_column_spacing, Default_homogeneous)
+			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_event_box_new)
+			container_widget := feature {EV_GTK_EXTERNALS}.gtk_table_new (Default_row_spacing, Default_column_spacing, Default_homogeneous)
 				-- table created with 0 row and 0 column.
-			C.gtk_widget_show (container_widget)
-			C.gtk_container_add (c_object, container_widget)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_show (container_widget)
+			feature {EV_GTK_EXTERNALS}.gtk_container_add (c_object, container_widget)
 			
 			-- Initialize internal values
 			rows := 1
@@ -62,9 +62,9 @@ feature -- Status report
 		local
 			a_child_list: POINTER
 		do
-			a_child_list := C.gtk_container_children (container_widget)
-			Result := C.g_list_length (a_child_list)
-			C.g_list_free (a_child_list)
+			a_child_list := feature {EV_GTK_EXTERNALS}.gtk_container_children (container_widget)
+			Result := feature {EV_GTK_EXTERNALS}.g_list_length (a_child_list)
+			feature {EV_GTK_EXTERNALS}.g_list_free (a_child_list)
 		end
 
 	row_spacing: INTEGER is
@@ -80,15 +80,15 @@ feature -- Status report
 	border_width: INTEGER is
 			-- Width of border around container in pixels.
 		do
-			Result := C.gtk_container_struct_border_width (
-					C.gtk_box_struct_container (container_widget)
+			Result := feature {EV_GTK_EXTERNALS}.gtk_container_struct_border_width (
+					feature {EV_GTK_EXTERNALS}.gtk_box_struct_container (container_widget)
 				)
 		end
 
 	resize (a_column, a_row: INTEGER) is
 		do
 			Precursor {EV_TABLE_I} (a_column, a_row)
-			C.gtk_table_resize (container_widget, a_row, a_column)
+			feature {EV_GTK_EXTERNALS}.gtk_table_resize (container_widget, a_row, a_column)
 		end
 
 feature -- Status settings
@@ -97,7 +97,7 @@ feature -- Status settings
 			-- Homogenous controls whether each object in
 			-- the box has the same size.
 		do
-			C.gtk_table_set_homogeneous (container_widget, True)
+			feature {EV_GTK_EXTERNALS}.gtk_table_set_homogeneous (container_widget, True)
 			is_homogeneous := True
 		end
 
@@ -105,26 +105,26 @@ feature -- Status settings
 			-- Homogenous controls whether each object in
 			-- the box has the same size.
 		do
-			C.gtk_table_set_homogeneous (container_widget, False)
+			feature {EV_GTK_EXTERNALS}.gtk_table_set_homogeneous (container_widget, False)
 			is_homogeneous := False
 		end
 
 	set_border_width (a_value: INTEGER) is
 			-- Set the tables border width to `a_value' pixels.
 		do
-			C.gtk_container_set_border_width (container_widget, a_value)
+			feature {EV_GTK_EXTERNALS}.gtk_container_set_border_width (container_widget, a_value)
 		end
 
 	set_row_spacing (a_value: INTEGER) is
 			-- Spacing between two rows of the table.
 		do
-			C.gtk_table_set_row_spacings (container_widget, a_value)
+			feature {EV_GTK_EXTERNALS}.gtk_table_set_row_spacings (container_widget, a_value)
 		end
 
 	set_column_spacing (a_value: INTEGER) is
 			-- Spacing between two columns of the table.
 		do
-			C.gtk_table_set_col_spacings (container_widget, a_value)
+			feature {EV_GTK_EXTERNALS}.gtk_table_set_col_spacings (container_widget, a_value)
 		end
 
 	put (v: EV_WIDGET; a_column, a_row, column_span, row_span: INTEGER) is
@@ -135,7 +135,7 @@ feature -- Status settings
 			Precursor {EV_TABLE_I} (v, a_column, a_row, column_span, row_span)
 			item_imp ?= v.implementation
 			item_imp.set_parent_imp (Current)
-			C.gtk_table_attach_defaults (
+			feature {EV_GTK_EXTERNALS}.gtk_table_attach_defaults (
 					container_widget,
 					item_imp.c_object,
 					a_column - 1,
@@ -153,8 +153,8 @@ feature -- Status settings
 			Precursor {EV_TABLE_I} (v)
 			item_imp ?= v.implementation
 			item_imp.set_parent_imp (Void)
-			C.gtk_object_ref (item_imp.c_object)
-			C.gtk_container_remove (container_widget, item_imp.c_object)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.object_ref (item_imp.c_object)
+			feature {EV_GTK_EXTERNALS}.gtk_container_remove (container_widget, item_imp.c_object)
 		end
 		
 	set_item_span (v: EV_WIDGET; column_span, row_span: INTEGER) is

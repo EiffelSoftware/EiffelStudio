@@ -156,15 +156,11 @@ feature -- Access
 
 	text: STRING is
 			-- Text of the frame
-		local
-			p: POINTER
 		do
-			p := C.gtk_frame_struct_label (container_widget)
-			if p /= NULL then
-				create Result.make_from_c (p)
-			else
-				create Result.make (0)
+			if internal_text /= Void then
+				internal_text := ""
 			end
+			Result := internal_text
 		end
 
 feature -- Element change
@@ -174,6 +170,7 @@ feature -- Element change
 		local
 			a_gs: GEL_STRING
 		do
+			internal_text := clone (a_text)
 			create a_gs.make (a_text)
 			C.gtk_frame_set_label (container_widget, a_gs.item)
 		end
@@ -181,10 +178,14 @@ feature -- Element change
 	remove_text is
 			-- Make `text' `Void'.
 		do
+			internal_text := ""
 			C.gtk_frame_set_label (container_widget, NULL)
 		end
 
 feature {NONE} -- Implementation
+
+	internal_text: STRING
+		-- Text used to represent frame's label text
 
 	internal_alignment_code: INTEGER
 		-- Code used to represent label alignment

@@ -25,20 +25,6 @@ inherit
 			is_in_default_state,
 			implementation
 		end
-
-	EV_TREE_NODE_CONTAINER
-		undefine
-			off,
-			index_of,
-			has,
-			occurrences,
-			search,
-			changeable_comparison_criterion,
-			is_equal
-		redefine
-			implementation,
-			is_in_default_state
-		end
 		
 	EV_ITEM_PIXMAP_SCALER
 		undefine
@@ -104,8 +90,7 @@ feature {NONE} -- Contract support
 	is_in_default_state: BOOLEAN is
 			-- Is `Current' in its default state?
 		do
-			Result := Precursor {EV_PRIMITIVE} and Precursor {EV_TREE_NODE_LIST} and
-				Precursor {EV_TREE_NODE_CONTAINER}
+			Result := Precursor {EV_PRIMITIVE} and Precursor {EV_TREE_NODE_LIST}
 		end
 		
 feature {EV_ANY_I} -- Implementation

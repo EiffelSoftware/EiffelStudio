@@ -23,11 +23,31 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	nodes: ARRAYED_LIST [GB_BOOLEAN_TREE_ITEM]
+		-- All nodes of `Current'.
 	
 	state: BOOLEAN
 		-- BOOLEAN state represented by `Current'
+		
+	selected: BOOLEAN
+		-- An additional state representing selection.
 
 feature -- Status setting
+
+	enable_selected is
+			-- Ensure `selected' is True
+		do
+			selected := True
+		ensure
+			state_selected: selected = True
+		end
+		
+	disable_selected is
+			-- Ensure `selected' is False
+		do
+			selected := False
+		ensure
+			state_selected: selected = False
+		end
 
 	enable_state is
 			-- Ensure `state' = True.
@@ -81,7 +101,6 @@ feature -- Cursor movement
 		ensure
 			Result_consistent: Result = nodes.off
 		end
-		
 
 feature -- Element change
 

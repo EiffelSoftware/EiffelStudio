@@ -47,7 +47,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	thread_wait (term: like Current) is
+	thread_wait (term: THREAD_CONTROL) is
 			-- The calling C thread waits for the current Eiffel thread to
 			-- terminate.
 		external

@@ -99,7 +99,7 @@ feature {NONE} -- Initialisation
 --			Result := once_value_class_type
 --		end
 --	
---feature -- Queries on ICOR_DEBUG_OBJECT_VALUE
+feature -- Queries on ICOR_DEBUG_OBJECT_VALUE
 --
 --	value_class_token: INTEGER is
 --		require
@@ -108,12 +108,12 @@ feature {NONE} -- Initialisation
 --			Result := interface_debug_object_value.get_class.get_token
 --		end
 --
---	value_class_name: STRING is
+	value_class_name: STRING is
 --		require
 --			has_object_interface
---		do
+		do
 --			Result := Il_debug_info_recorder.class_name_for_class_token_and_module (value_class_token, value_module_file_name)
---		end		
+		end		
 --
 --	value_module_file_name: STRING is
 --		require

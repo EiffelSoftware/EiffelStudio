@@ -189,14 +189,25 @@ feature -- Queries on ICOR_DEBUG_OBJECT_VALUE
 		require
 			has_object_interface
 		do
-			Result := Il_debug_info_recorder.class_name_for_class_token_and_module (value_class_token, value_module_file_name)
+			if il_debug_info_recorder.has_class_info_about_module_class_token (value_module_file_name, value_class_token) then
+				Result := Il_debug_info_recorder.class_name_for_class_token_and_module (value_class_token, value_module_file_name)			
+			else
+				Result := value_icd_module.interface_md_import.get_typedef_props (value_class_token)
+			end
 		end		
 
 	value_module_file_name: STRING is
 		require
 			has_object_interface
 		do
-			Result := interface_debug_object_value.get_class.get_module.get_name			
+			Result := value_icd_module.get_name			
+		end
+		
+	value_icd_module: ICOR_DEBUG_MODULE is
+		require
+			has_object_interface
+		do
+			Result := interface_debug_object_value.get_class.get_module			
 		end
 
 feature -- Interface queries for feature

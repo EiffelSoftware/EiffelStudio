@@ -46,7 +46,7 @@ feature -- Basic Operations
 			if not a_working_directory.is_empty then
 				create a_wel_string2.make (a_working_directory)
 				last_launch_successful := cwin_create_process (default_pointer, a_wel_string1.item,
-							default_pointer, default_pointer, True, cwin_detached_process,
+							default_pointer, default_pointer, True, detached_process,
 							default_pointer, a_wel_string2.item,
 							startup_info.item, process_info.item)
 			else
@@ -246,14 +246,6 @@ feature {NONE} -- Externals
 			"C [macro <windows.h>]: EIF_INTEGER"
 		alias
 			"STILL_ACTIVE"
-		end
-
-	cwin_detached_process: INTEGER is
-			-- SDK DETACHED_PROCESS constant
-		external
-			"C [macro <winbase.h>]: EIF_INTEGER"
-		alias
-			"DETACHED_PROCESS"
 		end
 		
 end -- class PROCESS_LAUNCHER

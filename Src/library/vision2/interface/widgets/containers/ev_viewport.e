@@ -71,7 +71,7 @@ feature -- Element change
 			-- Assign `an_x' to `x_offset'.
 		require
 			an_x_within_bounds: an_x >= 0 and then
-				an_x <= (item.width - width)
+				an_x <= (item_width - client_width)
 		do
 			implementation.set_x_offset (an_x)
 		ensure
@@ -82,7 +82,7 @@ feature -- Element change
 			-- Assign `a_y' to `y_offset'.
 		require
 			a_y_within_bounds: a_y >= 0 and then
-				a_y <= (item.height - height)
+				a_y <= (item_height - client_height)
 		do
 			implementation.set_y_offset (a_y)
 		ensure
@@ -158,6 +158,9 @@ end -- class EV_VIEWPORT
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/04/21 22:04:17  brendel
+--| Corrected preconditions.
+--|
 --| Revision 1.8  2000/04/21 18:15:26  brendel
 --| Reworked invariant.
 --|

@@ -11,16 +11,14 @@ inherit
 			context_data_useful
 		end
 
-feature -- Properties
+feature -- Initialization
 
-	tool: TOOL_W;
-			-- Tool window to which Current belongs.
-
-	tab_length: INTEGER is
-			-- Length of tabs in spaces
-		do
-			Result := tool.tab_length
+	init_resource_values is
+			-- Initialize the resource values.
+		deferred
 		end
+
+feature -- Properties
 
 	focus: STONE is
 			-- The stone where the focus currently is
@@ -49,6 +47,11 @@ feature -- Properties
 	changed: BOOLEAN is
 			-- Has the text been edited since last display?
 		deferred
+		end;
+
+	update_symbol: BOOLEAN is
+			-- Update the symbol?
+		do
 		end;
 
 	cursor: CURSOR is
@@ -81,12 +84,35 @@ feature -- Access
 
 feature -- Text operations
 
+	copy_text is
+			-- Copy the highlighted text.
+		deferred
+		end;
+
+	cut_text is
+			-- Cut the highlighted text.
+		deferred
+		end;
+
+	paste_text is
+			-- Paste the highlighted text.
+		deferred
+		end;
+
 	deselect_all is
 		deferred
 		end;
 
 	set_cursor_position (a_position: INTEGER) is
-			-- Set `cursor_position' to `a_position' if the new position
+			-- Set cursor_position to `a_position' if the new position
+			-- is not out of bounds.
+		require
+			is_editable: is_editable
+		deferred	
+		end;
+
+	set_top_character_position (a_position: INTEGER) is
+			-- Set top_character_position to `a_position' if the new position
 			-- is not out of bounds.
 		require
 			is_editable: is_editable
@@ -107,6 +133,13 @@ feature -- Status setting
 		deferred
 		end;
 
+	reset_update_symbol is
+			-- Set `update_symbol' to False.
+		do
+		ensure
+			reset: not update_symbol
+		end;
+
 	set_text (an_image: STRING) is
 			-- Set `image' to `an_image'.
 		require	
@@ -118,7 +151,6 @@ feature -- Status setting
 			-- Disable the ability to drag and drop stones
 			-- and set `changed' to False.
 		do
-			set_changed (True)
 		end;
 
 	set_read_only is
@@ -160,12 +192,11 @@ feature -- Update
 		deferred
 		end
 
-	update_clickable_from_stone is
+	update_clickable_from_stone (a_stone: STONE) is
 			-- Update the clickable information from tool's stone.
 			-- click list if text uses character position.
 		require
-			stone_exists: tool.stone /= Void;
-			stone_is_clickable: tool.stone.clickable
+			valid_stone: a_stone /= Void
 		do
 		end;
 
@@ -209,25 +240,11 @@ feature {TOOL_W} -- Updating
 		deferred
 		end;
 
-	set_tab_length_to_default is
-			-- Set `tab_length' to the default tab length.
-		local
-			was_changed: BOOLEAN
-		do
-			if tab_length /= default_tab_length.item then
-				was_changed := changed;
-				set_tab_length (default_tab_length.item);
-				set_changed (changed)
-			end
-		end;
-
 	set_tab_length (new_length: INTEGER) is
 			-- Assign `new_length' to `tab_length'.
 		require
 			valid_length: new_length > 1
 		deferred
-		ensure
-			assigned: tab_length = new_length
 		end;
 
 feature {TOOL_W, OBJECT_W} -- Implementation

@@ -65,6 +65,14 @@ feature -- Implementation
 
 	implementation: EV_ITEM_I
 
+	remove_implementation is
+			-- Remove implementation of Current widget.
+		do
+			implementation := Void
+		ensure
+			void_implementation: implementation = Void
+		end
+
 end -- class EV_ITEM
 
 --|----------------------------------------------------------------

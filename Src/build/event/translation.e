@@ -122,4 +122,5 @@ feature -- Translation names
 			Result.append ("%", ");
 		end;
 
+
 end

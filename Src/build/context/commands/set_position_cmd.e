@@ -5,7 +5,8 @@ inherit
 
 	CONTEXT_CMD
 	
-feature {NONE}
+		
+feature {NONE} --Implementation
 
 	associated_form: INTEGER is
 		do

@@ -11,6 +11,9 @@ inherit
 	ANY
 	
 	GB_CONSTANTS
+		export {NONE}
+			all
+		end
 
 feature -- Access
 

@@ -337,24 +337,24 @@ feature -- Opcode insertion
 			add_integer_64 (i)
 		end
 
-	put_opcode_real (opcode: INTEGER_16; r: REAL) is
+	put_opcode_real_32 (opcode: INTEGER_16; r: REAL) is
 			-- Insert `opcode' manipulating a real.
 		require
 			not_yet_written: not is_written
 			has_opcodes: opcodes.has (opcode)
 		do
 			put_opcode (opcode)
-			add_real (r)
+			add_real_32 (r)
 		end
 
-	put_opcode_double (opcode: INTEGER_16; d: DOUBLE) is
+	put_opcode_real_64(opcode: INTEGER_16; d: DOUBLE) is
 			-- Insert `opcode' manipulating a double.
 		require
 			not_yet_written: not is_written
 			has_opcodes: opcodes.has (opcode)
 		do
 			put_opcode (opcode)
-			add_double (d)
+			add_real_64 (d)
 		end
 
 feature -- Labels manipulation
@@ -634,7 +634,7 @@ feature {NONE} -- Opcode insertion helpers
 			current_position := l_pos
 		end
 	
-	add_real (val: REAL) is
+	add_real_32 (val: REAL) is
 			-- Add `val' to current.
 		require
 			not_yet_written: not is_written
@@ -643,11 +643,11 @@ feature {NONE} -- Opcode insertion helpers
 		do
 			l_pos := current_position
 			allocate (l_pos + 4)
-			item.put_real (val, l_pos)
+			item.put_real_32 (val, l_pos)
 			current_position := l_pos + 4
 		end
 
-	add_double (val: DOUBLE) is
+	add_real_64 (val: DOUBLE) is
 			-- Add `val' to current.
 		require
 			not_yet_written: not is_written
@@ -656,7 +656,7 @@ feature {NONE} -- Opcode insertion helpers
 		do
 			l_pos := current_position
 			allocate (l_pos + 8)
-			item.put_double (val, l_pos)
+			item.put_real_64 (val, l_pos)
 			current_position := l_pos + 8
 		end
 

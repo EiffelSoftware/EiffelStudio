@@ -30,7 +30,7 @@ feature -- IL code generation
 		do
 				-- Generate value to be elevated to a given power.
 			left.generate_il
-			il_generator.convert_to_double
+			il_generator.convert_to_real_64
 
 			l_power_nb ?= right
 			if l_power_nb /= Void then
@@ -39,7 +39,7 @@ feature -- IL code generation
 				if l_power_value = 0.0 then
 						-- Removed value, since not needed.
 					il_generator.pop
-					il_generator.put_double_constant (1.0)
+					il_generator.put_real_64_constant (1.0)
 				elseif l_power_value = 1.0 then
 						-- Nothing to be done
 				elseif l_power_value = 2.0 then
@@ -52,12 +52,12 @@ feature -- IL code generation
 					il_generator.generate_binary_operator (il_star)
 				else
 					right.generate_il
-					il_generator.convert_to_double
+					il_generator.convert_to_real_64
 					il_generator.generate_binary_operator (il_operator_constant)
 				end
 			else
 				right.generate_il
-				il_generator.convert_to_double
+				il_generator.convert_to_real_64
 				il_generator.generate_binary_operator (il_operator_constant)
 			end
 		end

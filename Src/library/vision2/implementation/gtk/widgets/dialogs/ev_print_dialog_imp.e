@@ -55,6 +55,8 @@ feature {NONE} -- Initialization
 			printer_hbox, frame_container, range_hbox, copies_hbox1,
 			copies_hbox2, orientation_hbox, button_hbox, page_type_hbox: EV_HORIZONTAL_BOX
 			print_btn_imp, cancel_btn_imp: EV_BUTTON_IMP
+			hbox: POINTER
+			container_imp: EV_CONTAINER_IMP
 		do
 			Precursor {EV_STANDARD_DIALOG_IMP}
 			set_title ("Print")
@@ -178,7 +180,9 @@ feature {NONE} -- Initialization
 			button_hbox.disable_item_expand (print_btn)
 			button_hbox.disable_item_expand (cancel_btn)
 			main_dialog_container.extend (button_hbox)
-			extend (main_dialog_container)
+
+			container_imp ?= main_dialog_container.implementation
+			feature {EV_GTK_EXTERNALS}.gtk_container_add (hbox, container_imp.c_object)
 
 			cancel_btn.select_actions.extend (agent on_cancel)
 			print_btn.select_actions.extend (agent on_ok)
@@ -190,7 +194,7 @@ feature {NONE} -- Initialization
 			enable_closeable
 			minimum_from_page := 1
 			maximum_to_page := 1
-			disable_user_resize
+			forbid_resize
 			is_initialized := True
 		end
 

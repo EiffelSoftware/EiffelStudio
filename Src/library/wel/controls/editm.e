@@ -11,7 +11,8 @@ inherit
 	WEL_EDIT
 		redefine
 			scroll,
-			set_selection
+			set_selection,
+			set_caret_position
 		end
 
 	WEL_ES_CONSTANTS
@@ -24,6 +25,18 @@ creation
 	make_by_id
 
 feature -- Basic operations
+
+	scroll (horizontal, vertical: INTEGER) is
+			-- Scroll the text vertically and horizontally.
+			-- `horizontal' is the number of characters to
+			-- scroll horizontally, `vertical' is the number
+			-- of lines to scroll vertically.
+		do
+			cwin_send_message (item, Em_linescroll, horizontal,
+				vertical)
+		end
+
+feature -- Status setting
 
 	set_selection (start_position, end_position: INTEGER) is
 			-- Set the selection between `start_position'
@@ -38,24 +51,23 @@ feature -- Basic operations
 			end
 		end
 
-	scroll (horizontal, vertical: INTEGER) is
-			-- Scroll the text vertically and horizontally.
-			-- `horizontal' is the number of characters to
-			-- scroll horizontally, `vertical' is the number
-			-- of lines to scroll vertically.
+	set_caret_position (position: INTEGER) is
+			-- Set the caret position with `position'.
+			-- If `scroll_caret_at_selection' is True, the
+			-- caret will be scrolled to `position'.
 		do
-			cwin_send_message (item, Em_linescroll, horizontal,
-				vertical)
+			cwel_set_selection_edit (item, position, position,
+				scroll_caret_at_selection)
+			if scroll_caret_at_selection then
+				cwel_scroll_caret (item)
+			end
 		end
-
-feature -- Status setting
 
 	set_formatting_rect (rect: WEL_RECT) is
 			-- Set `formatting_rect' with `rect'.
 		require
 			exists: exists
 			rect_not_void: rect /= Void
-			rect_exists: rect.exists
 		do
 			cwin_send_message (item, Em_setrect, 0, rect.to_integer)
 		end

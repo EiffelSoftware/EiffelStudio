@@ -2,16 +2,26 @@ class NAMER_WINDOW
 
 inherit
 
-	TOP_SHELL
+	EB_TOP_SHELL
 		rename
 			make as shell_make
+		redefine
+			set_geometry
 		end
 	COMMAND;
 	CLOSEABLE;
-	CONSTANTS;
 
 creation
+
 	make
+
+feature -- Geometry
+
+	set_geometry is
+		do
+			set_size (Resources.namer_wnd_width,
+					Resources.namer_wnd_height)
+		end;
 
 feature
 	
@@ -62,6 +72,7 @@ feature {NONE}
 			!! del_com.make (Current);
 			set_delete_command (del_com);
 			set_action ("<Map>,<Prop>", Current, Void);
+			initialize_window_attributes
 		end 
 
 feature

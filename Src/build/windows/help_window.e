@@ -3,19 +3,12 @@ class HELP_WINDOW
 
 inherit
 
-	CONSTANTS;
-	TOP_SHELL
+	EB_TOP_SHELL
 		rename
 			make as top_shell_create,
 			destroy as old_destroy
-		end;
-	TOP_SHELL
-		rename
-			make as top_shell_create
 		redefine
-			destroy
-		select
-			destroy
+			set_geometry
 		end;
 	HOLE
 		redefine
@@ -26,6 +19,14 @@ inherit
 creation
 
 	make
+
+feature -- Geometry
+
+	set_geometry is
+		do
+			set_size (Resources.help_wnd_width,
+				Resources.help_wnd_height)
+		end;
 
 feature {NONE}
 
@@ -87,6 +88,7 @@ feature {NONE}
 
 			!!delete_com.make (Current);
 			set_delete_command (delete_com);
+			initialize_window_attributes
 		end;
 
 feature
@@ -106,9 +108,9 @@ feature
 		end;
 
 	stone_type: INTEGER is
-        do
-            Result := Stone_types.any_type
-        end;
+		do
+			Result := Stone_types.any_type
+		end;
 
 	process_any (dropped: STONE) is
 		do

@@ -24,21 +24,19 @@ feature {NONE}
 	context_editors_list: CON_EDITOR_MGR;
 		-- Context editors manager
 
-	Window_free_list_nbr: INTEGER is 0
-	
 	make (a_screen: SCREEN) is
 			-- Create a window manager. All editors will be create 
 			-- using `a_screen' as the parent. Allow `i' amount for
 			-- the free list.
 		do
 			!!state_editors_list.make (Widget_names.state_editor, 
-						a_screen, Window_free_list_nbr);
+						a_screen, Resources.window_free_list_number);
 			!!context_editors_list.make (Widget_names.context_editor, 
-						a_screen, Window_free_list_nbr);
+						a_screen, Resources.window_free_list_number);
 			!!cmd_editors_list.make (Widget_names.command_type_editor, 
-						a_screen, Window_free_list_nbr);
+						a_screen, Resources.window_free_list_number);
 			!!cmd_inst_editors_list.make (Widget_names.cmd_instance_editor, 
-						a_screen, Window_free_list_nbr);
+						a_screen, Resources.window_free_list_number);
 		end;
 
 feature 

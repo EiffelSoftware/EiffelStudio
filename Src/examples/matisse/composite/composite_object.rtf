@@ -1,0 +1,190 @@
+{\rtf1\mac \deff4\deflang1033{\fonttbl{\f4\froman\fcharset0\fprq2 Times New Roman;}{\f8\froman\fcharset0\fprq2 Times;}{\f13\fswiss\fcharset0\fprq2 Geneva{\*\falt Arial};}}{\colortbl;\red0\green0\blue0;\red0\green0\blue255;
+\red0\green255\blue255;\red0\green255\blue0;\red255\green0\blue255;\red255\green0\blue0;\red255\green255\blue0;\red255\green255\blue255;\red0\green0\blue128;\red0\green128\blue128;\red0\green128\blue0;\red128\green0\blue128;\red128\green0\blue0;
+\red128\green128\blue0;\red128\green128\blue128;\red192\green192\blue192;}{\stylesheet{\qj\fi360\sa140\widctlpar \f4\fs22 \snext0 Normal;}{\s3\qj\fi360\sb240\sa60\keepn\widctlpar \b\f8 \sbasedon0\snext0 heading 3;}{\*\cs10 \additive 
+Default Paragraph Font;}{\s15\qj\fi360\sa140\widctlpar\tqc\tx4320\tqr\tx8640 \f4\fs22 \sbasedon0\snext15 header;}{\s16\sb120\sa120\widctlpar \b\f8\fs36\cf1\lang1024 \snext16 section;}{\s17\sb120\sa120\widctlpar \b\f8\fs28\cf1\lang1024 \snext17 
+sub-section;}{\s18\fi-720\li720\widctlpar \f13\fs16\cf1\lang1024 \snext18 ODL;}{\s19\li360\widctlpar\tx900\tx1440\tx1980\tx2520\tx3060\tx3600 \i\f8\fs20\lang1024 \snext19 Eiffel code;}{\s20\qj\fi360\sa140\widctlpar \i\f4\fs22\cf1 \sbasedon0\snext20 
+Implement Issue;}{\s21\qj\fi360\sa140\widctlpar\tqc\tx4320\tqr\tx8640 \f4\fs22 \sbasedon0\snext21 footer;}{\*\cs22 \additive\sbasedon10 page number;}{\s24\li360\sl-160\slmult0\widctlpar\tx720\tx1152\tx1584\tx2016\tx2448\tx2880\tx3312\tx3744 
+\i\f8\fs18\lang1024 \sbasedon19\snext24 Eiffel code in Appendix;}{\s25\qj\fi720\widctlpar \b\f8\fs20\cf1 \sbasedon0\snext25 Table of contents;}{\s26\qj\fi-1350\li1710\sa140\widctlpar\tx1710 \f4\fs22 \sbasedon0\snext26 command;}{\s27\sb120\sa120\widctlpar 
+\b\f8\cf1\lang1024 \sbasedon17\snext27 sub-sub-section;}}{\info{\title Mechanism of storing and retrieving objects between MATISSE and Eiffel}{\author Microsoft}{\operator Jeri Edwards}{\creatim\yr1998\mo9\dy11\hr18\min21}
+{\revtim\yr1998\mo10\dy23\hr10\min33}{\version4}{\edmins3}{\nofpages5}{\nofwords1015}{\nofchars5791}{\*\company ADB, Inc.}{\vern57431}}\widowctrl\ftnbj\aenddoc\formshade \fet0\sectd \pgnrestart\linex0\headery709\footery709\colsx709\endnhere\titlepg 
+{\header \pard\plain \s15\qr\fi360\sa140\widctlpar\tqc\tx4320\tqr\tx8640 \f4\fs22 {\i\fs16\ul MATISSE-Eiffel Binding}
+\par }{\footer \pard\plain \s21\qj\fi360\sa140\widctlpar\tqc\tx4320\tqr\tx8640\pvpara\phmrg\posxc\posy0 \f4\fs22 {\field{\*\fldinst {\cs22 PAGE  }}{\fldrslt {\cs22\lang1024\cchs0 4}}}{\cs22 
+\par }\pard \s21\qc\fi360\ri360\sa140\widctlpar\tqc\tx4320\tqr\tx8640 
+\par }{\*\pnseclvl1\pnucrm\pnstart1\pnindent720\pnhang{\pntxta .}}{\*\pnseclvl2\pnucltr\pnstart1\pnindent720\pnhang{\pntxta .}}{\*\pnseclvl3\pndec\pnstart1\pnindent720\pnhang{\pntxta .}}{\*\pnseclvl4\pnlcltr\pnstart1\pnindent720\pnhang{\pntxta )}}{\*\pnseclvl5
+\pndec\pnstart1\pnindent720\pnhang{\pntxtb (}{\pntxta )}}{\*\pnseclvl6\pnlcltr\pnstart1\pnindent720\pnhang{\pntxtb (}{\pntxta )}}{\*\pnseclvl7\pnlcrm\pnstart1\pnindent720\pnhang{\pntxtb (}{\pntxta )}}{\*\pnseclvl8\pnlcltr\pnstart1\pnindent720\pnhang
+{\pntxtb (}{\pntxta )}}{\*\pnseclvl9\pnlcrm\pnstart1\pnindent720\pnhang{\pntxtb (}{\pntxta )}}\pard\plain \s16\sb120\sa120\widctlpar \b\f8\fs36\cf1\lang1024 {\f4 
+\par }\pard \s16\sb120\sa120\widctlpar {\f4\fs40 Composite Objects in MATISSE-Eiffel Binding}{\f13\fs20 
+\par }\pard\plain \qr\fi360\sa140\widctlpar \f4\fs22 {\f13\fs20\cf1 
+\par }\pard \fi360\sa140\widctlpar {\f13\fs20\cf1 
+\par }\pard\plain \s17\sb120\sa120\widctlpar \b\f8\fs28\cf1\lang1024 1st Edition - September 1998{\fs20 
+\par }\pard\plain \fi360\sa140\widctlpar \f4\fs22 {\f13\fs20\cf1 
+\par 
+\par 
+\par 
+\par 
+\par }\pard \qj\fi360\widctlpar {\fs18 Contact: nakao@matisse.com
+\par }\pard \fi360\sa140\widctlpar {\fs18 \'a9 1998 Tokyo Gas Co., Ltd.}{\f13\fs20\cf1 
+\par }\pard \fi360\sa140\widctlpar {\f13\fs20\cf1 \page 
+\par }\pard \qj\fi360\sa140\widctlpar This note shows how to use the composite objects in MATISSE-Eiffel Binding.
+\par 
+\par \pard\plain \s17\sb120\sa120\widctlpar \b\f8\fs28\cf1\lang1024 What is composite object?
+\par \pard\plain \qj\fi360\sa140\widctlpar \f4\fs22 Composition is a form of aggregation with strong ownership and coincident lifetime of part with the whole. The multiplicity of the aggregate end may not exceed one, {\cchs0 because}
+ part-objects in a composition are not shared.
+\par \pard \qj\fi360\sa140\widctlpar 
+\par \pard \qj\fi360\sa140\widctlpar Let\rquote 
+s take an example to show how to manipulate composite objects. The example program handles documents which consist of several chapters. Each document has a list of authors. Each chapter consists of several sections which consist of several paragraphs.
+ A paragraph may have a hyperlink to another chapter, section or paragraph. The following list is an ODL (Object Definition Language) definition of this example.
+\par \pard \qj\fi360\sa140\widctlpar 
+\par \pard\plain \s18\fi-720\li1440\widctlpar \f13\fs16\cf1\lang1024 interface DOCUMENT : persistent \{
+\par \tab relationship List<DOC_AUTHOR> authors inverse DOC_AUTHOR::documents;
+\par \tab relationship List<CHAPTER> chapters[0, -1] inverse CHAPTER::of_document;
+\par \tab attribute String title;
+\par \};
+\par 
+\par interface DOC_CONTENT : persistent \{
+\par \tab relationship List <DOC_CONTENT> linked_by inverse PARAGRAPH::hyperlinks;
+\par \};
+\par 
+\par interface CHAPTER : DOC_CONTENT : persistent \{
+\par \tab relationship List <SECTION> sections [0, -1]  inverse SECTION::of_chapter;
+\par \tab relationship DOCUMENT of_document inverse DOCUMENT::chapters;
+\par \tab attribute String title;
+\par \};
+\par 
+\par interface SECTION : DOC_CONTENT : persistent \{
+\par \tab relationship List <PARAGRAPH> paragraphs [0, -1] inverse PARAGRAPH::of_section;
+\par \tab relationship CHAPTER of_chapter inverse CHAPTER::sections;
+\par \tab attribute String title;
+\par \};
+\par 
+\par interface PARAGRAPH : DOC_CONTENT : persistent \{
+\par \tab attribute String text;
+\par \tab relationship SECTION of_section inverse SECTION::paragraphs;
+\par \tab relationship List <DOC_CONTENT> hyperlinks inverse DOC_CONTENT::linked_by;
+\par \};
+\par 
+\par interface DOC_AUTHOR : persistent \{
+\par \tab relationship List <DOCUMENT> documents inverse DOCUMENT::authors;
+\par \tab attribute String name;
+\par \};
+\par \pard\plain \qj\fi360\sa140\widctlpar \f4\fs22 
+\par \pard \qj\fi360\sa140\widctlpar When a document is not necessary any more, its all chapters, sections and paragraphs are not necessary either in most applications. That is, they have a coincident lifetime. The relationships \lquote chapters\rquote , 
+\lquote sections\rquote  and \lquote paragraphs\rquote  should be defined as composite one. These relationships are called composite relationships.
+\par \pard \qj\fi360\sa140\widctlpar On the other hands, the {\cchs0 relationship} \lquote authors\rquote 
+ does not have to be a composite one, because an author owns a document but the author and the document do not have a coincident lifetime. The relationship \lquote hyperlinks\rquote  does not have to be a composite one either for the same reason. 
+\par \pard \qj\fi360\sa140\widctlpar The following list is the revised ODL definition. The relationships \lquote chapters\rquote , \lquote sections\rquote  and \lquote paragraphs\rquote 
+ are defined as instances of the class CompositeRelationship which is a subclass of \lquote Mt Relationship\rquote . The ODL definition uses the keyword \lquote mt_instance_of\rquote 
+ to specify the class of relationship. The definition of the class CompositeRelationship is included in the file mt_eif.odl in the directory odl_include under the MATISSE-Eiffel Binding installation directory.
+\par \pard \qj\fi360\sa140\widctlpar 
+\par \pard\plain \s18\fi-720\li1440\widctlpar \f13\fs16\cf1\lang1024 interface DOCUMENT : persistent \{
+\par \tab relationship List<DOC_AUTHOR> authors inverse DOC_AUTHOR::documents;
+\par \tab relationship List<CHAPTER> chapters[0, -1] inverse CHAPTER::of_document
+\par \tab    mt_instance_of CompositeRelationship;
+\par \tab attribute String title;
+\par \};
+\par 
+\par interface DOC_CONTENT : persistent \{
+\par \tab relationship List <DOC_CONTENT> linked_by inverse PARAGRAPH::hyperlinks;
+\par \};
+\par 
+\par interface CHAPTER : DOC_CONTENT : persistent \{
+\par \tab relationship List <SECTION> sections [0, -1] inverse SECTION::of_chapter
+\par \tab    mt_instance_of CompositeRelationship;
+\par \tab relationship DOCUMENT of_document inverse DOCUMENT::chapters;
+\par \tab attribute String title;
+\par \};
+\par 
+\par interface SECTION : DOC_CONTENT : persistent \{
+\par \tab relationship List <PARAGRAPH> paragraphs [0, -1] inverse PARAGRAPH::of_section
+\par \tab    mt_instance_of CompositeRelationship;
+\par \tab relationship CHAPTER of_chapter inverse CHAPTER::sections;
+\par \tab attribute String title;
+\par \};
+\par 
+\par interface PARAGRAPH : DOC_CONTENT : persistent \{
+\par \tab attribute String text;
+\par \tab relationship SECTION of_section inverse SECTION::paragraphs;
+\par \tab relationship List <DOC_CONTENT> hyperlinks inverse DOC_CONTENT::linked_by;
+\par \};
+\par 
+\par interface DOC_AUTHOR : persistent \{
+\par \tab relationship List <DOCUMENT> documents inverse DOCUMENT::authors;
+\par \tab attribute String name;
+\par \};
+\par 
+\par \pard\plain \qj\fi360\sa140\widctlpar \f4\fs22 
+\par \pard\plain \s17\sb120\sa120\widctlpar \b\f8\fs28\cf1\lang1024 Creation of composite objects
+\par \pard\plain \qj\fi360\sa140\widctlpar \f4\fs22 You can create composite objects in the same way that you create other regular (non-composite) objects. The following list is an example program which creates a composite document object.
+\par \pard \qj\fi360\sa140\widctlpar 
+\par \pard\plain \s19\li360\widctlpar\tx900\tx1440\tx1980\tx2520\tx3060\tx3600 \i\f8\fs20\lang1024 create_a_document is
+\par \tab local
+\par \tab \tab doc: DOCUMENT
+\par \tab \tab author: DOC_AUTHOR
+\par \tab \tab chap: CHAPTER
+\par \tab \tab section: SECTION
+\par \tab \tab paragraph: PARAGRAPH
+\par \tab do
+\par \tab \tab !!doc
+\par \tab \tab current_db.persist(doc)
+\par \tab \tab doc.set_title("MATISSE-Eiffel Binding")
+\par \tab \tab !!author.make("Author Foo")
+\par \tab \tab doc.get_authors.extend(author)
+\par 
+\par \tab \tab !!chap.make("1. Introduction")
+\par \tab \tab doc.get_chapters.extend(chap)
+\par 
+\par \tab \tab !!section.make("1.1 Background")
+\par \tab \tab chap.get_sections.extend(section)
+\par \tab \tab !!paragraph.make("text here ....")
+\par \tab \tab section.get_paragraphs.extend(paragraph)
+\par 
+\par \tab \tab !!section.make("1.2 Language binding")
+\par \tab \tab chap.get_sections.extend(section)
+\par \tab \tab !!paragraph.make("text here ....")
+\par \tab \tab section.get_paragraphs.extend(paragraph)
+\par \tab \tab !!paragraph.make("another text here ....")
+\par \tab \tab section.get_paragraphs.extend(paragraph)
+\par 
+\par \tab \tab ....
+\par \tab end
+\par \pard\plain \qj\fi360\sa140\widctlpar \f4\fs22 
+\par \pard\plain \s17\sb120\sa120\widctlpar \b\f8\fs28\cf1\lang1024 Deletion of composite objects
+\par \pard\plain \qj\fi360\sa140\widctlpar \f4\fs22 Since part and the whole of composite object have coincident lifetime, part objects need to be deleted wh
+en the whole object is deleted from the database. In the above example, when a document object is deleted, its all chapters, sections and paragraphs are also deleted. When a chapter is deleted, its all sections and paragraphs are deleted while its documen
+t to which it belongs is not deleted.
+\par The MATISSE-Eiffel binding does not provide a special routine to delete composite object. You can use the routine \lquote mt_remove\rquote  to delete a composite object, which is used to delete a regular (non-composite) object. The routine \lquote 
+mt_remove\rquote  detects composite relationships automatically, and call the routine \lquote mt_remove\rquote  on all the successor objects through the detected composite relationships if there are any.
+\par \pard \qj\fi360\sa140\widctlpar The following list is an example using \lquote mt_remove\rquote  for a composite object.
+\par 
+\par \pard\plain \s19\li360\widctlpar\tx900\tx1440\tx1980\tx2520\tx3060\tx3600 \i\f8\fs20\lang1024 delete_a_document is
+\par \tab local
+\par \tab \tab entry: MT_ENTRYPOINT
+\par \tab \tab doc: DOCUMENT
+\par \tab do
+\par \tab \tab !!entry.make_from_name("title", "DOCUMENT")
+\par \tab \tab doc ?= entry.retrieve_first("MATISSE-Eiffel Binding")
+\par \tab \tab if doc /= Void then
+\par \tab \tab \tab doc.mt_remove
+\par \tab \tab \tab \tab {\i0 -- This removes entire document objects}
+\par \tab \tab end
+\par \tab end
+\par \pard\plain \qj\fi360\sa140\widctlpar \f4\fs22 
+\par \pard\plain \s17\sb120\sa120\widctlpar \b\f8\fs28\cf1\lang1024 Locking of composite objects
+\par \pard\plain \qj\fi360\sa140\widctlpar \f4\fs22 The binding provides a routine which locks entire composite objects including all part objects. The routine is \lquote lock_composite\rquote 
+ which takes an argument to specify the type of lock, read-lock or write-lock. The following list is an example program which write-locks a entire document objects
+\par \pard \qj\fi360\sa140\widctlpar 
+\par \pard\plain \s19\li360\widctlpar\tx900\tx1440\tx1980\tx2520\tx3060\tx3600 \i\f8\fs20\lang1024 lock_a_document is
+\par \tab local
+\par \tab \tab entry: MT_ENTRYPOINT
+\par \tab \tab doc: DOCUMENT
+\par \tab do
+\par \tab \tab !!entry.make_from_name("title", "DOCUMENT")
+\par \tab \tab doc ?= entry.retrieve_first("MATISSE-Eiffel Binding")
+\par \tab \tab if doc /= Void then
+\par \tab \tab \tab doc.lock_composite(Mtwrite)
+\par \tab \tab \tab \tab {\i0 -- This locks entire document objects}
+\par \tab \tab end
+\par \tab end
+\par \pard\plain \qj\fi360\sa140\widctlpar \f4\fs22 
+\par 
+\par }

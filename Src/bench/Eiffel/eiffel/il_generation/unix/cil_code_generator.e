@@ -122,6 +122,9 @@ feature -- Access
 	once_generation: BOOLEAN
 			-- Are we currently generating a once feature?
 
+	global_once_generation: BOOLEAN
+			-- Are we currently generating a per-process once feature?
+
 feature {IL_CODE_GENERATOR} -- Access
 
 	is_console_application: BOOLEAN
@@ -283,6 +286,14 @@ feature -- Settings
 			once_generation := v
 		ensure
 			once_generation_set: once_generation = v
+		end
+
+	set_global_once_generation (v: BOOLEAN) is
+			-- Set `global_once_generation' to `v'.
+		do
+			global_once_generation := v
+		ensure
+			global_once_generation_set: global_once_generation = v
 		end
 
 feature -- Cleanup

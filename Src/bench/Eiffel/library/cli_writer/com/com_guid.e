@@ -7,12 +7,16 @@ class
 	COM_GUID
 
 create
-	make
+	make,
+	make_empty
 	
 feature {NONE} -- Initialization
 
 	make (data1: INTEGER; data2, data3: INTEGER_16; data4: ARRAY [INTEGER_8]) is
 			-- Create Current using provided above information.
+		require
+			data4_not_void: data4 /= Void
+			data4_valid_count: data4.count = 8
 		do
 			create item.make (size)
 			item.put_integer_32 (data1, 0)
@@ -20,7 +24,13 @@ feature {NONE} -- Initialization
 			item.put_integer_16 (data3, 6)
 			item.put_array (data4, 8)
 		end
-		
+
+	make_empty is
+			-- Create a GUID with null data.
+		do
+			make (0, 0, 0, <<0,0,0,0,0,0,0,0>>)
+		end
+
 feature -- Access
 
 	item: MANAGED_POINTER
@@ -28,5 +38,8 @@ feature -- Access
 			
 	size: INTEGER is 16
 			-- Size of structure.
+
+invariant
+	item_not_void: item /= Void
 
 end -- class COM_GUID

@@ -628,7 +628,6 @@ feature -- Implementation
 			env: EV_ENVIRONMENT
 			app_imp: EV_APPLICATION_IMP
 			curs_code: EV_CURSOR_CODE
-			pnd_mode: BOOLEAN
 		do
 			create env
 			app_imp ?= env.application.implementation
@@ -658,18 +657,10 @@ feature -- Implementation
 
 			if pnd_row_imp /= Void then
 				pnd_row_imp.interface.pick_actions.call ([a_x, a_y])
-				pnd_mode := pnd_row_imp.mode_is_pick_and_drop
 				accept_cursor := pnd_row_imp.accept_cursor
 				deny_cursor := pnd_row_imp.deny_cursor
 			else
 				interface.pick_actions.call ([a_x, a_y])
-				pnd_mode := mode_is_pick_and_drop
-			end
-
-			if pnd_mode then
-				is_pnd_in_transport := True
-			else
-				is_dnd_in_transport := True
 			end
 
 			if accept_cursor = Void then
@@ -930,6 +921,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.67  2000/04/25 00:59:40  oconnor
+--| removed obsolete is_pnd_in_transport and is_dnd_in_transport
+--|
 --| Revision 1.66  2000/04/21 00:57:58  king
 --| Prevented setting alignment for first column
 --|

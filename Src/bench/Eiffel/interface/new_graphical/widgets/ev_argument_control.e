@@ -450,7 +450,6 @@ feature {NONE} -- GUI
 				-- Argument list box.
 			a_vbox.extend (argument_list)
 			argument_list.set_minimum_size (400, 50)
-			a_vbox.disable_item_expand (argument_list)
 			
 			create l_horizontal_box
 			l_horizontal_box.set_padding (Layout_constants.Default_padding_size)
@@ -852,7 +851,7 @@ feature {NONE} -- Actions
 	refresh is
 			-- Refresh control since it has been resized.
 		do
-			argument_list.set_column_width (argument_list.width - 15, 1)
+			argument_list.set_column_width (argument_list.width - 30, 1)
 			if not argument_list.is_empty then
 				if argument_list.selected_item /= Void then
 					current_argument.set_text (argument_list.selected_item.i_th (1))
@@ -861,7 +860,7 @@ feature {NONE} -- Actions
 				current_argument.set_text ("")
 			end	
 		ensure
-			column_is_full_width: argument_list.column_width (1) = argument_list.width - 15
+			column_is_full_width: argument_list.column_width (1) = argument_list.width - 30
 		end
 
 	select_combo_item (a_string: STRING) is

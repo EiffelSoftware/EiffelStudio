@@ -62,8 +62,8 @@ feature -- Access
 			check
 				cl_type_not_void: cl_type /= Void
 			end
-			create Result.make (cl_type.il_type_name.count + 2)
-			Result.append (cl_type.il_type_name)
+			create Result.make (cl_type.il_type_name (Void).count + 2)
+			Result.append (cl_type.il_type_name (Void))
 		end
 
 	deep_il_element_type: CL_TYPE_I is

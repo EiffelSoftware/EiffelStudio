@@ -127,8 +127,7 @@ feature -- Access
 			-- Root class name.
 		do
 			if root_ast.root /= Void then
-				Result := clone (root_ast.root.root_name)
-				Result.to_upper
+				Result := root_ast.root.root_name.twin
 			end
 		end
 

@@ -67,8 +67,7 @@ feature -- Access
 	name: STRING is
 			-- Class name.
 		do
-			Result := clone (compiler_class.name)
-			Result.to_upper
+			Result := compiler_class.name.twin
 		ensure then
 			result_exists: Result /= Void
 		end

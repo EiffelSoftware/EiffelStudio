@@ -52,10 +52,10 @@ feature -- Access
 	index: INTEGER is
 			-- Index of the current item.
 		do
-			Result := parent_imp.internal_get_index (Current) + 1
+			--Result := parent_imp.internal_get_index (Current) + 1
 		end
 
-	parent_imp: EV_LIST_ITEM_HOLDER_IMP
+	parent_imp: EV_LIST_IMP
 		-- Parent of `Current'
 	
 	set_parent (par: like parent) is
@@ -122,7 +122,7 @@ feature -- Status report
 	is_selected: BOOLEAN is
 			-- Is the item selected
 		do
-			Result := parent_imp.internal_is_selected (Current)
+			--Result := parent_imp.internal_is_selected (Current)
 		end
 
 	is_first: BOOLEAN is
@@ -143,9 +143,9 @@ feature -- Status setting
 			-- Select the item if `flag', unselect it otherwise.
 		do
 			if flag then
-				parent_imp.internal_select_item (Current)
+			--	parent_imp.internal_select_item (Current)
 			else
-				parent_imp.internal_deselect_item (Current)
+			--	parent_imp.internal_deselect_item (Current)
 			end
 		end
 
@@ -163,7 +163,7 @@ feature -- Element change
 		do
 			real_text := clone (txt)
 			if parent_imp /= Void then
-				parent_imp.internal_set_text (Current.interface, real_text)
+			--	parent_imp.internal_set_text (Current.interface, real_text)
 			end
 		end
 
@@ -258,6 +258,10 @@ end -- class EV_LIST_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.40  2000/03/29 02:17:16  brendel
+--| Commented out features that have no routine body anyway.
+--| To be implemented.
+--|
 --| Revision 1.39  2000/03/28 00:17:00  brendel
 --| Revised `text' related features as specified by new EV_TEXTABLE_IMP.
 --|

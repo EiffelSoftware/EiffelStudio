@@ -65,17 +65,13 @@ feature {NONE} -- initalization
 			set_prefix (a_prefix)
 		end
         
-	make_local (a_cluster_name, a_assembly_path, a_prefix, a_version, a_culture: STRING) is
+	make_local (a_cluster_name, a_assembly_path, a_prefix: STRING) is
 			-- create a new instance defining a local assembly
 		require
 			non_void_cluster_name: a_cluster_name /= VOid
 			valid_cluster_path: not a_cluster_name.is_empty
 			non_void_assembly_path: a_assembly_path /= Void
 			valid_assembly_path: not a_assembly_path.is_empty
-			non_void_version: a_version /= Void
-			valid_version: not a_version.is_empty
-			non_void_culture: a_culture /= Void
-			valid_culture: not a_culture.is_empty
 		local
 			l_cluster_name_sd: ID_SD
 			l_path_sd: ID_SD
@@ -84,11 +80,9 @@ feature {NONE} -- initalization
 		do
 			l_cluster_name_sd := new_id_sd(a_cluster_name, false)
 			l_path_sd := new_id_sd(a_assembly_path, true)
-			l_version_sd := new_id_sd (a_version, True)
-			l_culture_sd := new_id_sd (a_culture, True)  
 
 			is_local := True
-			create assembly_sd.initialize (l_cluster_name_sd, l_path_sd, Void, l_version_sd, l_culture_sd, Void)
+			create assembly_sd.initialize (l_cluster_name_sd, l_path_sd, Void, Void, Void, Void)
 			set_prefix (a_prefix)
 		end
         

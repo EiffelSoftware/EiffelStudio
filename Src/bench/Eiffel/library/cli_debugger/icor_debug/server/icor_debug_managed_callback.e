@@ -905,7 +905,9 @@ feature -- Basic Operations
 			if not retried then
 				begin_of_managed_callback (Cst_managed_cb_name_change)
 				set_last_controller_by_pointer (icd_controller_interface (p_app_domain))
-				set_last_thread_by_pointer (p_thread)
+				if p_thread /= Default_pointer then
+					set_last_thread_by_pointer (p_thread)					
+				end
 				end_of_managed_callback (Cst_managed_cb_name_change)
 			else
 				end_of_managed_callback_on_error (Cst_managed_cb_name_change)

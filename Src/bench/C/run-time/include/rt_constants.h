@@ -55,6 +55,12 @@ stats */
 #define BP_TABLE_SIZE 1024 /* size of the hash table used to store enabled breakpoints */
 #endif
 
+	/*--------*/
+	/* file.c */
+	/*--------*/
+#define FILE_TYPE_MAX 4		/* max size of fopen type string (like "a+b") */
+
+
 #ifdef __cplusplus
 }
 #endif

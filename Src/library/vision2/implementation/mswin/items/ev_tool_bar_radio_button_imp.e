@@ -50,42 +50,20 @@ feature -- Status report
 			Result := 3
 		end
 
-	checked: BOOLEAN
-		-- Is `Current' checked.?
-
-	disable_select is
-		do
-			checked := False
-			if parent_imp /= Void then
-				parent_imp.uncheck_button (id)
-			end
-		end
-
 	enable_select is
-			-- Select the current button.
+			-- Select `Current'.
 		local
 			cur: CURSOR
 		do
-			if radio_group /= Void then
-				cur := radio_group.cursor
-				from
-					radio_group.start
-				until
-					radio_group.off
-				loop
-					radio_group.item.disable_select	
-					radio_group.forth
-				end
-				radio_group.go_to (cur)
-			end
+			update_radio_states
 			if parent_imp /= Void then
 					parent_imp.check_button (id)
 			end
-			checked := True
 		end
 
-	internal_enable_select is
-			-- Select the current button.
+		update_radio_states is
+			-- Unselect all members of `radio_group'
+			-- and assign True to `checked'.
 		local
 			cur: CURSOR
 		do
@@ -101,7 +79,7 @@ feature -- Status report
 				end
 				radio_group.go_to (cur)
 			end
-			checked := True
+			is_selected := True
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -131,6 +109,10 @@ end -- class EV_TOOL_BAR_RADIO_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/04/05 18:18:44  rogers
+--| Removed disable_select, checked. Renamed internal_enable_select
+--| to update_radio_states/
+--|
 --| Revision 1.8  2000/04/05 17:33:58  rogers
 --| Inheritance changed from EV_TOOL_BAR_TOGGLE_BUTTON_IMP to
 --| EV_TOOL_BAR_SELECT_BUTTON_IMP. Added checked, disable_select,

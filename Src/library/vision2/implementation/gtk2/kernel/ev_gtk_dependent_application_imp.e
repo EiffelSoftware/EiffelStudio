@@ -150,7 +150,7 @@ feature -- Implementation
 			
 			split_values := font_desc.split (' ')
 			split_values.compare_objects
-			default_font_size_internal := pixel_value_from_point_value (split_values.last.to_integer)
+			default_font_point_height_internal := split_values.last.to_integer
 			
 			if split_values.has ("italic") or else split_values.has ("oblique") then
 				default_font_style_internal := feature {EV_FONT_CONSTANTS}.shape_italic
@@ -180,16 +180,16 @@ feature -- Implementation
 		
 	default_font_name_internal: STRING
 	
-	default_font_size: INTEGER is
+	default_font_point_height: INTEGER is
 			-- Size of the default font in points
 		do
 			if font_settings_changed then
 				initialize_default_font_values
 			end
-			Result := default_font_size_internal
+			Result := default_font_point_height_internal
 		end
 	
-	default_font_size_internal: INTEGER
+	default_font_point_height_internal: INTEGER
 
 	default_font_style: INTEGER is
 			-- Style of the default font

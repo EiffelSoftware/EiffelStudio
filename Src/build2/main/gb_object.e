@@ -1180,7 +1180,9 @@ feature {GB_OBJECT_HANDLER, GB_TITLED_WINDOW_OBJECT, GB_OBJECT} -- Implementatio
 				if is_instance_of (display_object, dynamic_type_from_string (current_type.substring (4, current_type.count))) then
 					gb_ev_any ?= new_instance_of (dynamic_type_from_string (current_type))
 					gb_ev_any.default_create
-					gb_ev_any.set_up_user_events (Current, a_display_object, an_object)
+					if gb_ev_any.has_user_events then
+						gb_ev_any.set_up_user_events (Current, a_display_object, an_object)
+					end
 				end
 				supported_types.forth
 			end

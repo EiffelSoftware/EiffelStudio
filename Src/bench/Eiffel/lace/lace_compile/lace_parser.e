@@ -4,7 +4,8 @@ inherit
 
 	SHARED_ERROR_HANDLER;
 	MEMORY;
-	SHARED_RESCUE_STATUS
+	SHARED_RESCUE_STATUS;
+	SHARED_WORKBENCH
 
 feature
 
@@ -33,7 +34,8 @@ feature
 			-- Parse file named `file_name' and make built ast node
 			-- (void if failure) available through `ast'.
 		local
-			file: RAW_FILE;
+			file, copy_file: RAW_FILE;
+			f_name: FILE_NAME;
 			vd21: VD21;
 			vd22: VD22;
 			ptr: POINTER;
@@ -52,6 +54,17 @@ feature
 					Error_handler.insert_error (vd22);
 					Error_handler.raise_error
 				else
+						-- Save the source in a Backup directory
+					if Workbench.automatic_backup then
+						!! f_name.make_from_string (Workbench.backup_subdirectory);
+						f_name.set_file_name ("Ace");
+						!! copy_file.make_open_write (f_name);
+						file.readstream (file.count);
+						file.start;
+						copy_file.putstring (file.laststring);
+						copy_file.close;
+					end
+
 						-- Disable garbage collector before parsing
 					collection_off;
 

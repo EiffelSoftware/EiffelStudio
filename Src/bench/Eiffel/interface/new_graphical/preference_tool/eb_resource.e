@@ -12,23 +12,22 @@ inherit
 feature {NONE} -- Initialization
 
 --	make (a_name: STRING; rt: RESOURCE_TABLE; def_value: like_actual_value) is
---
---	require
---		name_non_void: a_name /= void			
---		table_exists: rt /= void
---	deferred
---	end
+--		require
+--			name_non_void: a_name /= Void			
+--			table_exists: rt /= Void
+--		deferred
+--		end
 
 --	make_with_values (a_name: STRING; a_value: like actual_value) is
 --
 --	require
---		name_non_void: a_name /= void			
+--		name_non_void: a_name /= Void			
 --	deferred
 --	end
 
 --	make_from_string (a_name: STRING; a_string: STRING) is
 --	require
---		name_non_void: a_name /= void
+--		name_non_void: a_name /= Void
 --		string_is_valid: is_valid (a_string)
 --	deferred
 --	end
@@ -120,14 +119,6 @@ feature -- Basic operations
 			--| By default this is based on `name'.
 		do
 			Result := name < other.name
-		end
-
-feature {NONE} -- Obsolete
-
-	make_from_old (old_r: RESOURCE) is
-		obsolete
-			"Used only for system migration; to be deleted with `old_r' type"
-		deferred
 		end
 
 invariant

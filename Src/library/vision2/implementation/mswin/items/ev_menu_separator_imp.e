@@ -72,7 +72,7 @@ feature {EV_MENU_ITEM_LIST_IMP} -- Access
 		do
 			radio_group := Void
 		ensure
-			void: radio_group = Void
+			radio_group_void: radio_group = Void
 		end
 
 feature -- WEL Implementation

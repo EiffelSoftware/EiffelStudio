@@ -258,7 +258,7 @@ feature -- Status setting
 		do
 			implementation.remove_menu_bar
 		ensure
-			void: menu_bar = Void
+			menu_bar_void: menu_bar = Void
 		end
 
 	lock_update is

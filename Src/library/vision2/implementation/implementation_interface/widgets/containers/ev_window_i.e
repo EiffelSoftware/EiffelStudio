@@ -156,7 +156,7 @@ feature -- Status setting
 			-- Set `menu_bar' to `a_menu_bar'.
 		require
 			no_menu_bar_assigned: menu_bar = Void
-			a_menu_bar_not_void: a_menu_bar /= void
+			a_menu_bar_not_void: a_menu_bar /= Void
 		deferred
 		ensure
 			assigned: menu_bar = a_menu_bar
@@ -166,7 +166,7 @@ feature -- Status setting
 			-- Set `menu_bar' to `Void'.
 		deferred
 		ensure
-			void: menu_bar = Void
+			menu_bar_void: menu_bar = Void
 		end
 
 	lock_update is

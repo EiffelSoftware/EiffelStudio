@@ -38,7 +38,10 @@ feature
 	help_text: STRING is
 			-- Content of the file where the help is
 		do
-			Result := origin_text
+			Result := origin_text;
+			if (Result = Void) then
+				Result := l_No_help_available
+			end;
 		end;
 
 	file_name: STRING is

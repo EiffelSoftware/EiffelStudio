@@ -122,12 +122,7 @@ feature {NONE} -- Implementation
 			-- If the parent is an option button:
 			if ((parent_imp /= Void) and then (parent_is_option_button)) then
 
---				-- 1) We need to update the parent (the option button)
---				-- `menu_items_array' by adding the new menu_item:
---				option_button_par ?= parent_imp
---				option_button_par.menu_items_array.force (item_imp)
-
-				-- 2) We do the following to resize the option button when adding
+				-- 1) We do the following to resize the option button when adding
 				-- new menu items with a longer length: 
 
 				-- adding a reference to the menu before removing it from its parent:
@@ -141,7 +136,7 @@ feature {NONE} -- Implementation
 				-- setting the number of reference of the menu to 1:
 				gtk_object_unref (widget)
 
-				-- 3) Foreground and background Colors.
+				-- 2) Foreground and background Colors.
 				-- Set the menu colors to the same ones as the option button's.
 				option_button_par ?= parent_imp
 				c_gtk_widget_set_fg_color (item_imp.widget, option_button_par.foreground_color.red,
@@ -167,15 +162,6 @@ feature {NONE} -- Implementation
 				-- the default colors.
 		do
 			gtk_container_remove (GTK_CONTAINER (widget), item_imp.widget)
-
---			-- If the parent is an option button,
---			-- we also remove the item from its array of
---			-- items, `menu_items_array'.
---			if parent_is_option_button then
---				option_button_par ?= parent_imp
---				option_button_par.menu_items_array.search (item_imp)
---				option_button_par.menu_items_array.remove
---			end
 
 			-- Update the array `ev_children'.
 			ev_children.prune_all (item_imp)

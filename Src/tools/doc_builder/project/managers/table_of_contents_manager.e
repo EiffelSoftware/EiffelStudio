@@ -32,8 +32,8 @@ feature -- TOC Management
 			-- A new empty toc
 		do
 			create loaded_toc.make_empty
-			loaded_tocs.extend (loaded_toc, loaded_toc.filename)
-			load_toc (loaded_toc.filename)
+			loaded_tocs.extend (loaded_toc, loaded_toc.name)
+			load_toc (loaded_toc.name)
 		end		
 
 	open_toc is
@@ -57,25 +57,27 @@ feature -- TOC Management
 			report_status ("Saving", "Saving Table of Contents")			
 			l_persisted := loaded_toc.is_persisted
 			if displayed_toc.modified then
-				l_name := loaded_toc.filename
+				l_name := loaded_toc.name
 				create loaded_toc.make_from_tree (displayed_toc)
-				loaded_toc.set_file_name (l_name)				
+				loaded_toc.set_name (l_name)				
 				displayed_toc.set_modified (False)
 			end
 			loaded_toc.set_persisted (l_persisted)
 			loaded_toc.save			
-			loaded_tocs.replace_key (loaded_toc.filename, loaded_toc.old_name)
-			loaded_widgets.replace_key (loaded_toc.filename, loaded_toc.old_name)
+			loaded_tocs.replace_key (loaded_toc.name, loaded_toc.old_name)
+			loaded_widgets.replace_key (loaded_toc.name, loaded_toc.old_name)
 			Progress_generator.close
 		end		
 	
 	build_toc (a_dir: DIRECTORY) is
 			-- Build toc from contents of `a_dir'
+		local
+			l_loaded_toc: TABLE_OF_CONTENTS
 		do
 			report_status ("Building Table of Contents", "Building table of contents from directory")
-			create loaded_toc.make_from_directory (a_dir)
-			loaded_tocs.extend (loaded_toc, loaded_toc.filename)
-			load_toc (loaded_toc.filename)
+			create l_loaded_toc.make_from_directory (a_dir)
+			loaded_tocs.extend (l_loaded_toc, l_loaded_toc.name)
+			load_toc (l_loaded_toc.name)			
 			Progress_generator.close
 		end	
 		
@@ -96,13 +98,13 @@ feature -- TOC Management
 				if xml /= Void then
 					create xml_toc_converter.make
 					xml_toc_converter.process_document (xml)
-					loaded_toc := xml_toc_converter.toc_file
-					loaded_toc.set_file_name (a_name)
+					loaded_toc := xml_toc_converter.toc
+					loaded_toc.set_name (a_name)
 					loaded_tocs.extend (loaded_toc, a_name)
 				end
 			end
 			display_toc
-			Progress_generator.close
+--			Progress_generator.close
 		end		
 		
 	new_node (is_heading: BOOLEAN) is
@@ -110,7 +112,7 @@ feature -- TOC Management
 		local
 			l_new_node: TABLE_OF_CONTENTS_WIDGET_NODE
 		do
-			create l_new_node.make ("New Topic", Void, 10000, is_heading)
+			create l_new_node.make ("New Topic", Void, next_id, is_heading)
 			displayed_toc.add_node (l_new_node)
 		end		
 		
@@ -129,21 +131,21 @@ feature -- Commands
 		do				
 			report_status ("Sorting", "Sorting Table of Contents, please wait..")
 			loaded_toc := clone (loaded_toc)
-			loaded_toc.set_file_name (next_toc_name)
+			loaded_toc.set_name (next_toc_name)
 			loaded_toc.set_make_index_root (index_root)
-			loaded_toc.set_filter_empty_elements (not empty_elements)
-			loaded_toc.set_filter_elements_no_index (not no_index)
-			loaded_toc.set_filter_skipped_sub_elements (not sub_elements)			
+			loaded_toc.set_filter_empty_nodes (not empty_elements)
+			loaded_toc.set_filter_nodes_no_index (not no_index)
+			loaded_toc.set_filter_skipped_sub_nodes (not sub_elements)			
 			loaded_toc.set_filter_alphabetically (alpha)
 			loaded_toc.sort	
-			loaded_tocs.extend (loaded_toc, loaded_toc.filename)
-			load_toc (loaded_toc.filename)
+			loaded_tocs.extend (loaded_toc, loaded_toc.name)
+			load_toc (loaded_toc.name)
 			Progress_generator.close
 		end		
 
 feature -- Access
 
-	loaded_toc: XML_TABLE_OF_CONTENTS
+	loaded_toc: TABLE_OF_CONTENTS
 			-- Toc currently loaded (Void if none loaded)
 
 	displayed_tocs_list: ARRAY [STRING] is
@@ -152,7 +154,7 @@ feature -- Access
 			Result := loaded_widgets.current_keys
 		end		
 
-	toc_by_name (a_name: STRING): XML_TABLE_OF_CONTENTS is
+	toc_by_name (a_name: STRING): TABLE_OF_CONTENTS is
 			-- Return toc by name
 		do
 			if loaded_tocs.has (a_name) then
@@ -168,7 +170,7 @@ feature -- Query
 			Result := loaded_tocs.is_empty	
 		end	
 
-feature {XML_TABLE_OF_CONTENTS} -- Query
+feature {TABLE_OF_CONTENTS, TABLE_OF_CONTENTS} -- Query
 
 	next_toc_name: STRING is
 			-- Next generated unique toc name
@@ -179,8 +181,8 @@ feature {XML_TABLE_OF_CONTENTS} -- Query
 
 feature {NONE} -- Implementation
 						
-	loaded_tocs: HASH_TABLE [XML_TABLE_OF_CONTENTS, STRING]
-			-- Loaded tocs hashed by associated filename
+	loaded_tocs: HASH_TABLE [TABLE_OF_CONTENTS, STRING]
+			-- Loaded tocs hashed by associated name
 			
 	loaded_widgets: HASH_TABLE [TABLE_OF_CONTENTS_WIDGET, STRING]
 			-- Loaded TOC tree widgets
@@ -203,14 +205,14 @@ feature {NONE} -- Implementation
 			toc_widget_converter: TABLE_OF_CONTENTS_WIDGET_FORMATTER
 			l_name: STRING
 		do
-			l_name := loaded_toc.filename
+			l_name := loaded_toc.name
 			if loaded_widgets.has (l_name) then
 				displayed_toc := loaded_widgets.item (l_name)
 			else
 				Progress_generator.set_heading_text ("Building Table of Contents")
 				Progress_generator.set_update_timer (500)
 				create toc_widget_converter.make
-				toc_widget_converter.process_document (loaded_toc)
+				toc_widget_converter.process_toc (loaded_toc)
 				displayed_toc := toc_widget_converter.toc_widget
 				loaded_widgets.extend (displayed_toc, l_name)				
 			end
@@ -225,7 +227,6 @@ feature {NONE} -- Implementation
 			Progress_generator.set_title (a_title)
 			Progress_generator.set_heading_text (a_heading)
 			Progress_generator.set_update_timer (500)
-			Progress_generator.reset_timer
 			Progress_generator.suppress_progress_bar (True)
 			Progress_generator.display
 		end

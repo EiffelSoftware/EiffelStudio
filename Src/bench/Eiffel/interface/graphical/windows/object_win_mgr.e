@@ -76,7 +76,7 @@ feature {WINDOW_MGR}
 			if	not free_list.empty	then
 				free_list.start;
 				Result := free_list.item;
-				Result.set_x_y (screen.x, screen.y);
+				Result.set_default_position;
 				Result.text_window.set_tab_length_to_default;
 				Result.text_window.set_font_to_default;
 				Result.text_window.set_default_sp_bounds;

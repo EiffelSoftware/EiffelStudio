@@ -22,8 +22,8 @@ inherit
 			text_window, build_format_bar, hole,
 			tool_name, open_command, save_command,
 			save_as_command, quit_command, editable,
-			create_edit_buttons, set_default_position,
-			set_default_size, build_widgets, resize_action,
+			create_edit_buttons, set_default_size,
+			build_widgets, resize_action,
 			build_edit_bar
 		end;
 	BAR_AND_TEXT
@@ -32,8 +32,7 @@ inherit
 			tool_name, open_command, save_command,
 			save_as_command, quit_command, editable,
 			build_edit_bar, create_edit_buttons, reset,
-			set_default_position, make,
-			set_default_size, build_widgets, attach_all,
+			make, set_default_size, build_widgets, attach_all,
 			close_windows, resize_action
 		select
 			reset, make, attach_all, close_windows
@@ -312,12 +311,6 @@ feature {NONE}
 			valid_arg: (s /= Void) and then not s.empty
 		do
 			format_label.set_text (s);
-		end;
-
-	set_default_position is
-			-- Display the window at the cursor position.
-		do
-			set_x_y (screen.x, screen.y)
 		end;
 
 	shell_command: SHELL_COMMAND;

@@ -20,7 +20,7 @@ inherit
 			hole, build_format_bar, text_window,
 			build_bar, tool_name, close_windows,
 			build_widgets, set_default_size,
-			set_default_position, resize_action
+			resize_action
 		end
 
 	BAR_AND_TEXT
@@ -28,8 +28,7 @@ inherit
 			hole, build_format_bar, text_window,
 			build_bar, tool_name, close_windows,
 			build_widgets, attach_all, reset,
-			set_default_size, set_default_position,	
-			make, resize_action
+			set_default_size, make, resize_action
 		select
 			attach_all, reset, make
 		end
@@ -129,12 +128,6 @@ feature {NONE}
 	set_default_size is
 		do
 			set_size (650, 450)
-		end;
-
-	set_default_position is
-			-- Display the window at the cursor position.
-		do
-			set_x_y (screen.x, screen.y)
 		end;
 
 	close_windows is

@@ -17,8 +17,7 @@ inherit
 		redefine
 			hole, build_format_bar,
 			open_command, save_as_command, quit_command, save_command,
-			text_window, tool_name, editable, create_edit_buttons,
-			set_default_position
+			text_window, tool_name, editable, create_edit_buttons
 		end
 
 creation
@@ -31,12 +30,6 @@ feature {NONE}
 
 	editable:BOOLEAN is True;
 		-- System window is editable
-
-	set_default_position is
-			-- Display the window at the cursor position.
-		do
-			set_x_y (screen.x, screen.y)	
-		end
 
 feature 
 

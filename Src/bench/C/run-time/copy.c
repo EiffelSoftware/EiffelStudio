@@ -701,8 +701,8 @@ void spsubcopy (EIF_POINTER source, EIF_POINTER target, EIF_INTEGER start, EIF_I
 	 * memory has been properly allocated beforehand.
 	 */
 
-	EIF_INTEGER i, esize, count;
-	char *ref, *src_ref;
+	EIF_INTEGER esize, count; /* %%ss removed , i; */
+	char *ref; /* %%ss removed , *src_ref; */
 	uint32 flags;
 
 	count = end - start + 1;
@@ -749,7 +749,7 @@ void spclearall (EIF_POINTER spobj)
 		dtype = HEADER(ref)->ov_flags & EO_TYPE;
 		bzero(spobj, count * elem_size);
 			/* Initialize new expanded elements, if any */
-		init = Create(dtype);
+		init = (char *(*)(char *)) (Create(dtype)); /* %%ss cast? added */
 #ifdef MAY_PANIC
 		if ((char *(*)(char *)) 0 == init)		/* There MUST be a routine */
 			panic("init routine lost");

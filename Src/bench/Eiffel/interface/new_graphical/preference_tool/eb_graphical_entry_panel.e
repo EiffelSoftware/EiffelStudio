@@ -8,10 +8,12 @@ class
 
 inherit
 	NEW_EB_CONSTANTS
-		rename
-			Graphical_resources as parameters
 		export
 			{NONE} all
+		end
+	EB_GRAPHICAL_DATA
+		rename
+			Graphical_resources as parameters
 		end
 	EB_ENTRY_PANEL
 		redefine

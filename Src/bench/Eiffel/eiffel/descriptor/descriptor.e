@@ -9,7 +9,7 @@ indexing
 class DESCRIPTOR
 
 inherit
-	EXTEND_TABLE [DESC_UNIT, INTEGER]
+	HASH_TABLE [DESC_UNIT, INTEGER]
 		rename
 			put as table_put,
 			item as table_item,

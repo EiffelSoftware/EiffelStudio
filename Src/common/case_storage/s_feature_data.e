@@ -22,12 +22,7 @@ feature -- Properties
 	result_type: S_RESULT_DATA;
 			-- Result type if function of attribute
 
-	body: S_FREE_TEXT_DATA is
-			-- Body of the routine (if routine)
-			--| Do end to avoid a new attribute (compatibility)
-			--| Is redefined as an attribute in descendants
-		do
-		end
+	body: S_FEATURE_BODY
 
 	comments: S_FREE_TEXT_DATA;
 			-- Comment associated to the feature

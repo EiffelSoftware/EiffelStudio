@@ -113,7 +113,15 @@ feature -- Access
 		do
 			Result := default_screen.height
 		end;
-
+	
+	visible_height: INTEGER is
+			-- Visible height is the same as height on X. 
+		do
+			Result := height
+		end;
+	
+	
+	
 	screen: SCREEN_I is
 			-- Screen of widget
 		do
@@ -151,6 +159,12 @@ feature -- Access
 			Result := default_screen.width
 		end;
 
+	visible_width: INTEGER is
+			-- Visible width is the same as width on X. 
+		do
+			Result := width
+		end;
+	
 	x: INTEGER is
 			-- Current absolute horizontal coordinate of the mouse
 		do

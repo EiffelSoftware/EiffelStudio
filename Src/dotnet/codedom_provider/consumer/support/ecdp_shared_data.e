@@ -13,30 +13,12 @@ inherit
 
 feature -- Access
 	
-	Eiffel_types: ECDP_TYPE_CONVERTER is
-			-- [Generated types
-			--				Value: `EIFFEL_TYPE'
-			--				Key: ID corresponding to CodeDom type name]
-		once
-			create Result.default_create
-		ensure
-			types_table_created: Result /= Void
-		end
-
 	Ace_file: ECDP_ACE_FILE_WRITER is
 			-- Create instance of `ECDP_ACE_FILE_WRITER'.
 		once
 			create Result.make
 		ensure
 			non_void_Ace_file: Result /= Void
-		end
-
-	Members_mapping: ECDP_MEMBERS_MAPPING is
-			-- members mapping
-		once
-			create Result
-		ensure
-			non_void_members_mapping: Result /= Void
 		end
 
 	ace_file_path: SYSTEM_STRING is
@@ -66,7 +48,7 @@ feature -- Access
 	temporary_files: SYSTEM_DLL_TEMP_FILE_COLLECTION is
 			-- Temporary files used to generate code.
 		do
-			Result := internal_temporary_files.item (0)
+			Result := internal_temporary_files.item
 		end
 	
 feature -- Constants
@@ -86,22 +68,21 @@ feature -- Constants
 feature -- System Setting
 
 	set_temporary_files (temp_files: SYSTEM_DLL_TEMP_FILE_COLLECTION) is
-			-- Initialize `ace_file_path' and `{ECDP_CODE_DOM_PATH}.local_cache_path'
+			-- Initialize `temporary_files'
 		require
 			non_void_temp_files: temp_files /= Void
 		do
-			internal_temporary_files.put (0, temp_files)
-			(create {ECDP_CODE_DOM_PATH}).set_local_cache_path (temp_files.base_path)
+			internal_temporary_files.replace (temp_files)
 		ensure
 			temporary_files_set: temporary_files.equals (temp_files)
 		end
 
 feature {NONE} -- Implementation
 
-	internal_temporary_files: NATIVE_ARRAY [SYSTEM_DLL_TEMP_FILE_COLLECTION] is
+	internal_temporary_files: CLI_CELL [SYSTEM_DLL_TEMP_FILE_COLLECTION] is
 			-- Internal representation of `temporary_files'.
 		once
-			create Result.make (1)
+			create Result.put (Void)
 		ensure
 			non_void_internal_temporary_files: Result /= Void
 		end

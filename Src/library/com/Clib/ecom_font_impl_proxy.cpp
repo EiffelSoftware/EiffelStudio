@@ -168,7 +168,7 @@ void Font21_impl_proxy::ccom_set_name( EIF_OBJECT a_value )
   VARIANTARG arg;
 
   BSTR tmp_value;
-  tmp_value = rt_ec.ccom_ec_bstr (a_value);
+  tmp_value = rt_ec.ccom_ec_bstr (eif_access (a_value));
   arg.vt = 8;
   arg.bstrVal = tmp_value;
   args.cArgs = 1;

@@ -98,7 +98,7 @@ feature -- Basic Operations
 	next_line is
 		indexing
 			description: "Read next line and make Result available in `last_string'."
-			external_name: "ReadReal"
+			external_name: "NextLine"
 		do
 			last_string := io.read_line
 		end

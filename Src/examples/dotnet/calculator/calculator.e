@@ -29,16 +29,7 @@ feature {NONE} -- Initialization
 		local
 			a: HASH_TABLE [INTERFACE, STRING]
 			t: CONSOLE
-			b: BOOLEAN
-			tsd: POINTER
 		do 
-			tsd := $make
-			b := f and g and f and g
-			b := f or g or f or g
-
-			b := f and g or f and g
-			b := f or g and f or g
-
 			create t
 			io := t
 			io.put_string ("%N*********************************%N")

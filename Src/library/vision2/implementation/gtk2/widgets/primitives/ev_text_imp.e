@@ -397,20 +397,13 @@ feature -- Status setting
 			create a_cs.make (a_text)
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_set_text (text_buffer, a_cs.item, -1)
 		end
-	
+		
 	append_text (a_text: STRING) is
-			-- Append `txt' to `text'.
-		local
-			a_cs: C_STRING
-			a_iter: EV_GTK_TEXT_ITER_STRUCT
+			-- Append `a_text' to `text'.
 		do
-			create a_cs.make (a_text)
-			create a_iter.make
-			-- Initialize out iter with the current caret/insert position.
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_end_iter (text_buffer, a_iter.item)
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_insert (text_buffer, a_iter.item, a_cs.item, -1)
+			append_text_internal (text_buffer, a_text)
 		end
-	
+
 	prepend_text (a_text: STRING) is
 			-- Prepend 'txt' to `text'.
 		local
@@ -504,6 +497,19 @@ feature {NONE} -- Implementation
 			-- The text within the widget has changed.
 		do
 			change_actions_internal.call (App_implementation.gtk_marshal.Empty_tuple)
+		end
+
+	append_text_internal (a_text_buffer: POINTER; a_text: STRING) is
+			-- Append `txt' to `text'.
+		local
+			a_cs: C_STRING
+			a_iter: EV_GTK_TEXT_ITER_STRUCT
+		do
+			create a_cs.make (a_text)
+			create a_iter.make
+			-- Initialize out iter with the current caret/insert position.
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_end_iter (a_text_buffer, a_iter.item)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_insert (a_text_buffer, a_iter.item, a_cs.item, -1)
 		end
 
 	line_height: INTEGER is

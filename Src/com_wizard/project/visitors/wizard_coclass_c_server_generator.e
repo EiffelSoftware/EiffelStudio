@@ -77,13 +77,6 @@ feature -- Basic operations
 			member_writer.set_comment ("Eiffel type id")
 			cpp_class_writer.add_member (member_writer, Private)
 
-
-			-- constructor
-			add_constructor
-
-			-- destructor
-			add_destructor
-
 			-- Process functions
 			process_interfaces	(a_descriptor)			
 
@@ -105,6 +98,12 @@ feature -- Basic operations
 				add_get_ids_of_names_function (a_descriptor)
 				add_invoke_function (a_descriptor)
 			end
+
+			-- constructor
+			add_constructor
+
+			-- destructor
+			add_destructor
 
 			-- Implement IUnknown interface
 			add_release_function
@@ -186,6 +185,18 @@ feature {NONE} -- Implementation
 			tmp_body.append (Eiffel_object)
 			tmp_body.append (Close_parenthesis)
 			tmp_body.append (Semicolon)
+
+			if dispatch_interface then
+				tmp_body.append (New_line_tab)
+				tmp_body.append (If_keyword)
+				tmp_body.append (Space_open_parenthesis)
+				tmp_body.append (Type_info_variable_name)
+				tmp_body.append (Close_parenthesis)
+				tmp_body.append (New_line_tab_tab)
+				tmp_body.append (Type_info_variable_name)
+				tmp_body.append (Release_function)
+			end
+
 			if shared_wizard_environment.out_of_process_server then
 				tmp_body.append (New_line_tab)
 				tmp_body.append ("UnlockModule ();")
@@ -299,8 +310,7 @@ feature {NONE} -- Implementation
 		do
 			create func_writer.make
 
-			tmp_body := check_type_info (a_coclass_descriptor)
-			tmp_body.append (Assert)
+			tmp_body := clone (Assert)
 			tmp_body.append (Open_parenthesis)
 			tmp_body.append ("pctinfo != 0")
 			tmp_body.append (Close_parenthesis)
@@ -618,21 +628,6 @@ feature {NONE} -- Implementation
 			type_lib := a_coclass_descriptor.type_library_descriptor
 			Result := clone (Tab)
 
-			-- HRESULT tmp_hr = 0;
-			Result.append (Hresult)
-			Result.append (Space)
-			Result.append (Tmp_clause)
-			Result.append (Hresult_variable_name)
-			Result.append (Space_equal_space)
-			Result.append (Zero)
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
-			-- ITypeLib *pTypeLib
-			Result.append (Type_lib_type)
-			Result.append (Type_lib_variable_name)
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
-
 			-- if ( pTypeInfo == 0)
 			Result.append (If_keyword)
 			Result.append (Space_open_parenthesis)
@@ -643,6 +638,24 @@ feature {NONE} -- Implementation
 			Result.append (New_line_tab)
 			Result.append (Open_curly_brace)
 			Result.append (New_line_tab_tab)
+
+			-- HRESULT tmp_hr = 0;
+			Result.append (Hresult)
+			Result.append (Space)
+			Result.append (Tmp_clause)
+			Result.append (Hresult_variable_name)
+			Result.append (Space_equal_space)
+			Result.append (Zero)
+			Result.append (Semicolon)
+			Result.append (New_line_tab_tab)
+			-- ITypeLib *pTypeLib = 0
+			Result.append (Type_lib_type)
+			Result.append (Type_lib_variable_name)
+			Result.append (Space_equal_space)
+			Result.append (Zero)
+			Result.append (Semicolon)
+			Result.append (New_line_tab_tab)
+
 
 			--tmp_hr = LoadRegTypeLib ('guid','major_version_num', 'minor_version_num', 'locale_id', pTypeLib)
 
@@ -682,12 +695,7 @@ feature {NONE} -- Implementation
 			Result.append (Tmp_clause)
 			Result.append (Hresult_variable_name)
 			Result.append (semicolon)
-			Result.append (New_line_tab)
-
-			-- }
-
-			Result.append (Close_curly_brace)
-			Result.append (New_line_tab)
+			Result.append (New_line_tab_tab)
 
 			-- tmm_hr = pTypeLib->GetTypeInfoOfGuid (guid, pTypeInfo)
 			Result.append (Tmp_clause)
@@ -703,7 +711,7 @@ feature {NONE} -- Implementation
 			Result.append (Type_info_variable_name)
 			Result.append (Close_parenthesis)
 			Result.append (Semicolon)
-			Result.append (New_line_tab)
+			Result.append (New_line_tab_tab)
 
 			-- If (FAILED(tmp_hr))
 			Result.append (If_keyword)
@@ -714,13 +722,18 @@ feature {NONE} -- Implementation
 			Result.append (Hresult_variable_name)
 			Result.append (Close_parenthesis)
 			Result.append (Close_parenthesis)
-			Result.append (New_line_tab_tab)
+			Result.append (New_line_tab_tab_tab)
 			Result.append (Return)
 			Result.append (Space)
 			Result.append (Tmp_clause)
 			Result.append (Hresult_variable_name)
 			Result.append (semicolon)
-			Result.append (New_line_tab)			
+			Result.append (New_line_tab)
+			-- }
+
+			Result.append (Close_curly_brace)
+			Result.append (New_line_tab)
+		
 		end
 
 	add_release_function is

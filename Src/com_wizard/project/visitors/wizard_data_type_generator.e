@@ -161,6 +161,7 @@ feature -- Basic operations
 			end
 
 			a_visitor.set_array_basic_type (is_array_basic_type)
+			a_visitor.set_pointed_type (is_pointed)
 			a_visitor.set_basic_type (is_basic_type)
 			a_visitor.set_basic_type_ref (is_basic_type_ref)
 			a_visitor.set_interface (is_interface)

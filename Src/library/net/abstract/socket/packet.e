@@ -12,24 +12,15 @@ class
 	PACKET
 
 inherit
-
 	TO_SPECIAL [CHARACTER] 
 		rename
 			area as data,
 			make_area as make_data,
-			copy as old_copy
-		redefine
-			is_equal
-		end
-
-	TO_SPECIAL [CHARACTER] 
-		rename
-			area as data,
-			make_area as make_data
+			valid_index as valid_position,
+			item as element,
+			put as put_element
 		redefine
 			copy, is_equal
-		select
-			copy
 		end
 
 creation
@@ -44,16 +35,6 @@ feature -- Initialization
 			valid_size: size >= 0
 		do
 			make_data (size)
-		end
-
-feature -- Access
-
-	element (pos: INTEGER): CHARACTER is
-			-- Element at position `pos'
-		require
-			pos_valid: valid_position (pos)
-		do
-			Result := data.item (pos)
 		end
 
 feature -- Measurement
@@ -72,33 +53,14 @@ feature -- Comparison
 			Result := data.is_equal (other.data)
 		end
 
-feature -- Status report
-
-	valid_position (pos: INTEGER): BOOLEAN is
-			-- Is position `pos' valid for this packet?
-		do
-			Result := (pos >= 0 and pos < count)
-		end
-
-feature -- Element change
-
-	put_element (an_item: CHARACTER; pos: INTEGER) is
-			-- Put element `an_item' at position `pos'.
-			-- Fist element has position 0.
-		require
-			pos_valid: valid_position (pos)
-		do
-			data.put (an_item, pos)
-		end
-
 feature -- Duplication
 
 	copy (other: like Current) is
 			-- Reinitialize by copying characters of `other'.
 			-- (This is also used by `clone')
 		do
-			old_copy (other);
-			make (other.count);
+			Precursor {TO_SPECIAL} (other)
+			make (other.count)
 			data.copy (other.data)
 		ensure then
 			size_valid: count = other.count
@@ -109,9 +71,6 @@ invariant
 	data_not_equal_void: data /= Void
 
 end -- class PACKET
-
-
-
 
 --|----------------------------------------------------------------
 --| EiffelNet: library of reusable components for ISE Eiffel.
@@ -128,4 +87,3 @@ end -- class PACKET
 --| Customer support: http://support.eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
-

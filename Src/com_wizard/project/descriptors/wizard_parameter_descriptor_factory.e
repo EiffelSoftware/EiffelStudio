@@ -25,6 +25,11 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_SHARED_GENERATION_ENVIRONMENT
+		export
+			{NONE} all
+		end
+
 feature -- Basic operations
 
 	create_descriptor (a_name: STRING; a_type_info: ECOM_TYPE_INFO;
@@ -36,8 +41,16 @@ feature -- Basic operations
 			valid_type_info: a_type_info /= Void
 			valid_elem_desc: an_elem_desc /= Void
 			valid_system_descriptor: a_system_descriptor /= Void
+		local
+			tmp_string: STRING
 		do
 			name := clone (a_name)
+			tmp_string := clone (name)
+			tmp_string.to_lower
+			if eiffel_key_words.has (tmp_string) then
+				name.prepend ("a_")
+			end
+
 			type := data_type_descriptor_factory.create_data_type_descriptor (a_type_info, an_elem_desc.type_desc,
 					a_system_descriptor)
 			flags := an_elem_desc.param_desc.flags

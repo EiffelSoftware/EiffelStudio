@@ -499,6 +499,10 @@ feature -- Generator constants -- 8
 
 	Wcode_field: STRING is "wCode"
 
+	Default_iunknown_variable_comment: STRING is "Default IUnknown interface pointer"
+
+	Excepinfo_variable_comment: STRING is "Exception information"
+
 	Bstr_source_field: STRING is "bstrSource"
 
 	Bstr_description_field: STRING is "bstrDescription"

@@ -79,11 +79,34 @@ feature -- Basic operations
 
 			cpp_class_writer.add_member (data_member, Private)
 
+
+			create data_member.make
+			data_member.set_comment (Default_iunknown_variable_comment)
+
+			-- Variable name
+			data_member.set_name (Iunknown_variable_name)
+
+			-- Variable type
+			data_member.set_result_type (Iunknown_pointer)
+
+			cpp_class_writer.add_member (data_member, Private)
+
 			if 
 				a_descriptor.interface_descriptor.dispinterface or 
 				a_descriptor.interface_descriptor.dual 
 			then
 				dispatch_interface := True
+
+				-- Add memeber "EXCEPINFO * excepinfo"
+				create data_member.make
+				data_member.set_name (clone (Excepinfo_variable_name))
+				tmp_string := clone (Excepinfo)
+				tmp_string.append (Space)
+				tmp_string.append (Asterisk)
+				data_member.set_result_type (tmp_string)
+				data_member.set_comment (Excepinfo_variable_comment)
+				cpp_class_writer.add_member (data_member, Private)
+
 			end
 
 			generate_functions_and_properties (a_descriptor.interface_descriptor)

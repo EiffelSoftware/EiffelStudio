@@ -199,16 +199,24 @@ feature {NONE} -- Implementation
 						else
 							variables.append (visitor.c_type)
 							variables.append (Space)
+
+							if visitor.is_array_type then
+								variables.append (Asterisk)
+							end
+
 							variables.append (Tmp_clause)
 							variables.append (arguments.item.name)
-							variables.append (visitor.c_post_type)
+
+							if not visitor.is_array_type then
+								variables.append (visitor.c_post_type)
+							end
 							variables.append (Semicolon)
 							variables.append (New_line_tab)
 
 							signature.append (Tmp_clause)
 							signature.append (arguments.item.name)
 	
-							variables.append ( in_out_parameter_set_up (arguments.item.name, arguments.item.type.type, visitor))
+							variables.append ( in_out_parameter_set_up (arguments.item.name, arguments.item.type, visitor))
 							out_value.append ( out_set_up (arguments.item.name, arguments.item.type.type, visitor))
 						end
 						signature.append (Comma)
@@ -266,7 +274,7 @@ feature {NONE} -- Implementation
 			valid_feature_body: not Result.empty	
 		end  -- function
 
-	in_out_parameter_set_up (name: STRING; type: INTEGER; visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
+	in_out_parameter_set_up (name: STRING; data_type: WIZARD_DATA_TYPE_DESCRIPTOR; visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
 			-- Code to set up "in/out" parameter
 			--	Arguments
 			-- `name' - argument name.
@@ -274,9 +282,11 @@ feature {NONE} -- Implementation
 		require
 			non_void_name: name /= Void
 			valid_name: not name.empty
+			non_void_data_type: data_type /= Void
 			non_void_visitor: visitor /= Void
 		local
 			tmp_string: STRING
+			array_data_type: WIZARD_ARRAY_DATA_TYPE_DESCRIPTOR
 		do
 			create Result.make (0)
 			if visitor.is_basic_type then
@@ -305,9 +315,22 @@ feature {NONE} -- Implementation
 				Result.append (Eif_access)
 				Result.append (Space_open_parenthesis)
 				Result.append (name)
-				Result.append (Comma_space)
-				Result.append (Null)
 				Result.append (Close_parenthesis)
+
+				if visitor.is_array_type then
+					array_data_type ?= data_type
+					if array_data_type /= Void then
+						Result.append (Comma_space)
+						Result.append_integer (array_data_type.dimension_count)
+					else
+						add_warning (Current, "Warning!! Can not find array dimension")
+					end
+				end
+
+				if not visitor.writable then
+					Result.append (Comma_space)
+					Result.append (Null)
+				end
 
 				Result.append (Close_parenthesis)
 				Result.append (Semicolon)
@@ -333,7 +356,7 @@ feature {NONE} -- Implementation
 			end
 			Result.append (Open_parenthesis)
 			Result.append (visitor.c_type)
-			if visitor.is_structure_pointer then
+			if visitor.is_array_type or visitor.is_structure then
 				Result.append (Asterisk)
 			end
 			Result.append (Close_parenthesis)

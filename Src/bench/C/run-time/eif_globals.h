@@ -14,11 +14,10 @@
 #ifndef _eif_globals_h_
 #define _eif_globals_h_
 
-#include "eif_threads.h"
-
 #include "portable.h"
-#include "eif_types.h"
 #include "eif_constants.h"
+#include "eif_types.h"
+#include "eif_threads.h"
 
 
 #ifdef EIF_THREADS
@@ -29,6 +28,8 @@
  *                                      *
  ****************************************/
 
+
+extern EIF_TSD_TYPE eif_global_key;
 
 #define MTC_NOARG			/* eif_globals */
 #define MTC					/* MTC_NOARG, */
@@ -41,8 +42,6 @@
 	EIF_TSD_GET(eif_global_key,eif_globals,"Thread data not available"); \
 	{
 #define EIF_END_GET_CONTEXT }
-
-extern EIF_TSD_TYPE eif_global_key;
 
 typedef struct tag_eif_globals		/* Structure containing all global variables to the run-time */
 {
@@ -356,6 +355,6 @@ extern int r_fides;				/* moved here from retrieve.c */
 extern char r_fstoretype;		/* File storage type use for retrieve */
 
 
-#endif	/* EIF_REENTRANT */
+#endif	/* EIF_THREADS */
 
 #endif	/* _eif_globals_h_ */

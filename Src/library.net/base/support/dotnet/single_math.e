@@ -104,7 +104,7 @@ feature -- Access
 		local
 			l_a: MATH
 		do
-			Result := l_a.log10 (v).truncated_to_real
+			Result := l_a.log_10 (v).truncated_to_real
 		end
 
 	floor (v: REAL): REAL is

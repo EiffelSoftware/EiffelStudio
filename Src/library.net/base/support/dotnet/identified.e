@@ -21,7 +21,7 @@ feature -- Access
 		do
 			if internal_id = 0 then
 				reference_list.extend (
-					create {CLI_CELL [WEAK_REFERENCE]}.put (create {WEAK_REFERENCE}.make (Current)))
+					create {CLI_CELL [WEAK_REFERENCE]}.put (create {WEAK_REFERENCE}.make_from_target (Current)))
 				internal_id := reference_list.count
 			end
 			Result := internal_id

@@ -18,16 +18,15 @@ inherit
 			count as columns,
 			set_count as set_columns
 		redefine
-	--		parent,
 			implementation,
 			create_action_sequences
 		end
 
-	EV_PICK_AND_DROPABLE
-		redefine
-			implementation,
-			create_action_sequences
-		end
+	--EV_PICK_AND_DROPABLE
+	--	redefine
+	--		implementation,
+	--		create_action_sequences
+	--	end
 
 create
 	default_create,
@@ -172,6 +171,9 @@ end -- class EV_MULTI_COLUMN_LIST_ROW
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.20  2000/02/16 20:32:09  king
+--| Removed inheritence from pnd
+--|
 --| Revision 1.19  2000/02/14 11:40:47  oconnor
 --| merged changes from prerelease_20000214
 --|

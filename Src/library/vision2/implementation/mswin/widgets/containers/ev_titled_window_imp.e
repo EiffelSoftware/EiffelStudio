@@ -17,7 +17,15 @@ inherit
 			make,
 			make_with_owner,
 			default_style,
-			on_show
+			on_show,
+			on_size,
+			title,
+			set_title
+		end
+
+	WEL_SIZE_CONSTANTS
+		export
+			{NONE} all
 		end
 
 creation
@@ -31,6 +39,7 @@ feature {NONE} -- Initialization
 			-- Create a window. Window does not have any
 			-- parents
 		do
+			title := ""
 			make_top ("EV_WINDOW")
 		end
 
@@ -40,6 +49,7 @@ feature {NONE} -- Initialization
 		local
 			ww: WEL_FRAME_WINDOW
 		do
+			title := ""
 			ww ?= par.implementation
 			check
 				valid_owner: ww /= Void
@@ -49,14 +59,20 @@ feature {NONE} -- Initialization
 
 feature  -- Access
 
+	title: STRING
+			-- Application name to be displayed by
+			-- the window manager
+
 	icon_name: STRING is
 			-- Short form of application name to be
 			-- displayed by the window manager when
 			-- application is iconified
 		do
-			check
-       	    		not_yet_implemented: False
-	    		end
+			if internal_icon_name = Void then
+				Result := title
+			else
+				Result := internal_icon_name
+			end
 		end
 
 	icon_mask: EV_PIXMAP is
@@ -80,12 +96,16 @@ feature  -- Access
 
 feature -- Status report
 
-	is_iconic_state: BOOLEAN is
-			-- Does application start in iconic state?
+	is_minimized: BOOLEAN is
+			-- Is the window minimized (iconic state)?
 		do
-			check
-				not_yet_implemented: False
-			end
+			Result := flag_set (style, Ws_minimize)
+		end
+
+	is_maximized: BOOLEAN is
+			-- Is the window maximized (take the all screen).
+		do
+			Result := flag_set (style, Ws_maximize)
 		end
 
 feature -- Status setting
@@ -105,38 +125,23 @@ feature -- Status setting
 			set_z_order (hwnd_bottom)
 		end
 
-	set_iconic_state is
-			-- Set start state of the application to be iconic.
-		do
-			check
-				not_yet_implemented: False
-			end	
-		end
-
-	set_normal_state is
-			-- Set start state of the application to be normal.
-		do
-			check
-				not_yet_implemented: False
-			end
-		end
-
-	set_maximize_state is
-			-- Set start state of the application to be
-			-- maximized.
-		do
-			check
-				not_yet_implemented: False
-			end
-		end
-
 feature -- Element change
+
+	set_title (txt: STRING) is
+			-- Make `txt' the title of the window.            
+		do
+			title := txt
+			if not is_minimized then
+				set_text (txt)
+			end
+		end
 
 	set_icon_name (txt: STRING) is
 			-- Make `txt' the new icon name.
 		do
-			check
-				not_yet_implemented: False
+			internal_icon_name := txt
+			if is_minimized then
+				set_text (txt)
 			end
 		end	
 
@@ -155,6 +160,11 @@ feature -- Element change
 				not_yet_implemented: False
 			end
 		end
+
+feature {NONE} -- Implementation
+
+	internal_icon_name: STRING
+			-- Name given by the user.
 
 feature {NONE} -- WEL Implementation
 
@@ -182,6 +192,20 @@ feature {NONE} -- WEL Implementation
 			if has_menu then
 				draw_menu
 			end
+		end
+
+	on_size (size_type, a_width, a_height: INTEGER) is
+			-- Called when the window is resized.
+			-- Resize the child if it exists.
+		local
+			str: STRING
+		do
+			if size_type = size_minimized then
+				set_text (icon_name)
+			elseif size_type = size_restored or size_type = size_maximized then
+				set_text (title)
+			end
+			{EV_UNTITLED_WINDOW_IMP} Precursor (size_type, a_width, a_height)
 		end
 
 end -- class EV_WINDOW_IMP

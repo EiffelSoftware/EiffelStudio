@@ -223,7 +223,8 @@ feature {NONE} -- Implementation
 	valid_maximum_width (value: INTEGER): BOOLEAN is
 			-- Is `value' a valid maximum_width?
 		do
-			Result := value > 0 and value >= first.minimum_width
+			Result := value > 0 and value >= first.minimum_width and
+				value <= first.Maximum_dimension
 		end
 		
 	set_maximum_height (integer: INTEGER) is
@@ -237,7 +238,8 @@ feature {NONE} -- Implementation
 	valid_maximum_height (value: INTEGER): BOOLEAN is
 			-- Is `value' a valid maximum_height?
 		do
-			Result := value > 0 and value >= first.minimum_height
+			Result := value > 0 and value >= first.minimum_height and
+				value <= first.Maximum_dimension
 		end
 		
 	set_title is

@@ -211,52 +211,43 @@ feature -- Basic operation
 			child_object: GB_OBJECT
 			node: GB_LAYOUT_CONSTRUCTOR_ITEM
 			layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
+			children: ARRAYED_LIST [GB_OBJECT]
+			old_children: ARRAYED_LIST [GB_OBJECT]
 		do
 			cell_object ?= new_object
 			container_object ?= new_object
 			check
 				new_object_is_cell_or_container: cell_object /= Void or container_object /= Void
 			end
-			
-			layout_item := old_object.layout_item
-			from
-				layout_item.start
-			until
-				layout_item.off
-			loop			
-				node ?= layout_item.item
-				child_object ?= node.object
-				check
-					child_object_not_void: child_object /= Void
-				end
-				if in_type_change then
-					child_object.unparent_during_type_change
-				else
-					child_object.unparent
-				end
-				
-				if cell_object /= Void then
-					cell_object.add_child_object (child_object, 1)	
-				else
-					container_object.add_child_object (child_object, container_object.object.count + 1)
-				end
+			children := clone (old_object.children)
 
-				layout_item.forth
+			if new_object.id /= old_object.id then
+					-- Now remove all children from the old object, as if the
+					-- ID's are not identical, it means that we are not resetting an object
+				old_children := old_object.children
+				old_children.wipe_out	
 			end
-		end
-		
-	replace_object_type (an_object: GB_OBJECT; a_type: STRING) is
-			-- Replace `an_object' with a new object of type `selector_item'.
-			-- Note that as EV_TABLE has no theoretical limit to the number of children
-			-- it may contain, we enlarge the newly created table to hold the number of
-			-- children in `an_object'. Its default size is 1x1.
-		require
-			an_object_not_void: an_object /= Void
-			an_object_object_not_void: an_object.object /= Void
-			an_object_display_item_not_void: an_object.display_object /= Void
-			an_object_layout_item_not_void: an_object.layout_item /= Void
-		do
-			replace_object (an_object, build_object_from_string_and_assign_id (a_type))
+			
+			from
+				children.start
+			until
+				children.off
+			loop
+				child_object := children.item
+					if in_type_change then
+						child_object.unparent_during_type_change
+					else
+					--child_object.unparent
+						old_object.remove_child (child_object)
+					end
+				
+					if cell_object /= Void then
+						cell_object.add_child_object (child_object, 1)	
+					else
+						container_object.add_child_object (child_object, container_object.object.count + 1)
+					end
+				children.forth
+			end
 		end
 		
 	replace_object (an_object, new_object: GB_OBJECT) is
@@ -275,6 +266,7 @@ feature -- Basic operation
 			original_position: INTEGER
 			local_all_editors: ARRAYED_LIST [GB_OBJECT_EDITOR]
 			table_object: GB_TABLE_OBJECT
+			assertion_result: BOOLEAN
 		do
 				-- Retreive the parent of `an_object'
 				-- we must do this before calling `remove_object_from_parent'.
@@ -291,16 +283,18 @@ feature -- Basic operation
 			parent_object ?= layout_parent_item.object
 			check
 				parent_object_not_void: parent_object /= Void
-			end
-			
+			end	
+			assertion_result := (create {ISE_RUNTIME}).check_assert (False)
+						
 				-- Remove `an_object' from its parent.
 			an_object.unparent_during_type_change
 			
 			new_object.set_layout_item (old_layout_item)
 			new_object.layout_item.set_text (new_object.short_type)
-			
+
+			parent_object.remove_child_from_children (an_object)
 				-- Add new object to parent of old object.
-			add_object (parent_object, new_object, original_position)			
+			add_object (parent_object, new_object, original_position)
 			
 			 -- Now, if we are a table, we must resize the table to fit all
 			 -- the new contents.
@@ -322,6 +316,10 @@ feature -- Basic operation
 				move_object_contents (new_object, an_object, True)
 			end
 			
+			if assertion_result then
+				assertion_result := (create {ISE_RUNTIME}).check_assert (True)
+			end
+	
 				-- Now we must update all the object editors.
 				-- If `an_object' was in an editor then clear the editor, as
 				-- the objects type has changed.
@@ -540,7 +538,8 @@ feature -- Basic operation
 						check
 							window_child_not_void: window_child /= Void
 						end
-						window_child.unparent
+						window_object.remove_child (window_child)
+						--window_child.unparent
 					layout_item.forth
 				end
 			end
@@ -1124,7 +1123,7 @@ feature {GB_EV_WIDGET_EDITOR_CONSTRUCTOR} -- Implementation
 					height := widget.height
 				end
 				original_position := parent_object.layout_item.index_of (an_object.layout_item, 1)
-				an_object.unparent	
+				parent_object.remove_child (an_object)	
 				
 				create store
 				create load
@@ -1316,7 +1315,6 @@ feature {GB_COMMAND_DELETE_OBJECT, GB_COMMAND_DELETE_WINDOW_OBJECT} -- Implement
 					-- Note that we could check to see which attributes of which objects
 					-- really were affected, thus minimizing, rebuilding. Not done
 					-- and probably not necessary.
-				
 				if not editor.is_destroyed and then editor.object /= Void and then
 					type_conforms_to (dynamic_type_from_string (editor.object.type), dynamic_type_from_string (Ev_container_string)) then
 					editor.update_current_object

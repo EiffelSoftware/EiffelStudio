@@ -118,6 +118,8 @@ feature -- Copy
 			version := old_assembly.version
 			culture := old_assembly.culture
 			public_key_token := old_assembly.public_key_token
+			dotnet_classes := old_assembly.dotnet_classes
+			referenced_assemblies := old_assembly.referenced_assemblies
 		end
 		
 feature -- Initialization

@@ -18,6 +18,7 @@
 #include "eif_globals.h"
 #include "eif_project.h"
 #include "eif_malloc.h"
+#include "eif_lmalloc.h"
 #include "eif_garcol.h"
 #include "eif_except.h"
 #include "eif_local.h"
@@ -497,6 +498,10 @@ RT_LNK int fcount;
  *  RTMS(s) creates an Eiffel string from a C manifest string s.
  *  RTMS_EX(s,c) creates an Eiffel string from a C manifest string s of length c.
  *  RTMS_EX_H(s,c) creates an Eiffel string from a C manifest string s of length c and hash-code h.
+ *  RTAOMS(b,m) allocates memory to store at least `m' once manifest strings for routine body index `b'.
+ *  RTOMS(b,n) a value of a once manifest string object for routine body index `b' and number `n'.
+ *  RTPOMS(b,n,s,c) stores a once manifest string object of value `s' and length `c' for body index `b' and number `n'.
+ *  RTCOMS(r,b,n,s,c) checks if a once manifest string is already calculated and retrives it into `r' or registers a new object of value `s' and length `c' for body index `b' and number `n'.
  *  RTPOF(p,o) returns the C pointer of the address p + o where p represents a C pointer.
  *  RTST(c,d,i,n) creates an Eiffel ARRAY[ANY] (for strip).
  *  RTXA(x,y) copies 'x' into expanded 'y' with exception if 'x' is void.
@@ -508,6 +513,44 @@ RT_LNK int fcount;
 #define	RTMS(s)			makestr(s,strlen(s))
 #define	RTMS_EX(s,c)	makestr(s,c)
 #define	RTMS_EX_H(s,c,h)	makestr_with_hash(s,c,h)
+
+#define RTAOMS(b,m) \
+		{ \
+			EIF_REFERENCE ** p; \
+			p = &(EIF_oms[(b)]); \
+			if (!(*p)) { \
+				EIF_REFERENCE * pm; \
+				pm = eif_calloc (m, sizeof (EIF_REFERENCE *)); \
+				if (!pm) { \
+					enomem(); \
+				} \
+				*p = pm; \
+			} \
+		}
+#define RTOMS(b,n)		(EIF_oms[(b)][(n)])
+#define RTPOMS(b,n,s,c) \
+		{ \
+			EIF_REFERENCE * rsp; \
+			rsp = &RTOMS(b,n); \
+			if (!(*rsp)) { \
+				register_oms (rsp); \
+				*rsp = RTMS_EX(s,c); \
+			} \
+		}
+#define RTCOMS(r,b,n,s,c) \
+		{ \
+			EIF_REFERENCE * rsp; \
+			EIF_REFERENCE rs; \
+			rsp = &RTOMS(b,n); \
+			rs = *rsp; \
+			if (!rs) { \
+				register_oms (rsp); \
+				rs = RTMS_EX(s,c); \
+				*rsp = rs; \
+			} \
+			r = rs; \
+		}
+
 #define RTPOF(p,o)		(EIF_POINTER)((EIF_POINTER *)(((char *)(p))+(o)))
 #define	RTST(c,d,i,n)	striparr(c,d,i,n);
 #define RTXA(x,y)		xcopy(x, y)

@@ -20,6 +20,7 @@ doc:<file name="garcol.c" header="eif_garcol.h" version="$Id$" summary="Garbage 
 #include "eif_portable.h"
 #include "eif_project.h" /* for egc_prof_enabled */
 #include "eif_eiffel.h"		/* For bcopy/memcpy */
+#include "eif_struct.h"
 #include "rt_globals.h"
 #include "eif_misc.h"	
 #include "eif_size.h"
@@ -179,6 +180,20 @@ rt_public struct stack once_set = {			/* Once functions */
 	(EIF_REFERENCE *) 0,			/* st_top */
 	(EIF_REFERENCE *) 0,			/* st_end */
 };
+/*
+doc:	<attribute name="oms_set" return_type="struct stack" export="public">
+doc:		<summary>Keep safe references of once manifest strings which are computed per thread.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Per thread data.</synchronization>
+doc:	</attribute>
+*/
+rt_public struct stack oms_set = {			/* Once manifest strings */ 
+	(struct stchunk *) 0,	/* st_hd */
+	(struct stchunk *) 0,	/* st_tl */
+	(struct stchunk *) 0,	/* st_cur */
+	(EIF_REFERENCE *) 0,			/* st_top */
+	(EIF_REFERENCE *) 0,			/* st_end */
+};
 #else
 /*
 doc:	<attribute name="global_once_set" return_type="struct stack" export="public">
@@ -232,6 +247,18 @@ doc:		<synchronization>eif_gc_mutex</synchronization>
 doc:	</attribute>
 */
 rt_public struct stack_list once_set_list = {
+	(int) 0,	/* count */
+	(int) 0,	/* capacity */
+	{NULL}		/* threads_stack */
+};
+/*
+doc:	<attribute name="oms_set_list" return_type="struct stack_list" export="public">
+doc:		<summary>List of all `oms_set'. There is one per thread.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>eif_gc_mutex</synchronization>
+doc:	</attribute>
+*/
+rt_public struct stack_list oms_set_list = {
 	(int) 0,	/* count */
 	(int) 0,	/* capacity */
 	{NULL}		/* threads_stack */
@@ -1147,6 +1174,50 @@ rt_private void clean_up(void)
 }
 #endif /* ISE_GC */
 
+/*
+doc:	<routine name="alloc_oms" return_type="EIF_REFERENCE **" export="shared">
+doc:		<summary>Allocate array of once manifest strings.</summary>
+doc:		<return>Allocated array filled with 0s.</return>
+doc:		<exception>"No more memory" when allocation fails.</exception>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Per thread data.</synchronization>
+doc:	</routine>
+*/
+rt_shared EIF_REFERENCE ** alloc_oms ()
+{
+	EIF_REFERENCE ** result;
+	
+	result = (EIF_REFERENCE **) eif_calloc (eif_nb_org_routines, sizeof (EIF_REFERENCE *));
+	if (result == (EIF_REFERENCE **) 0) { /* Out of memory */
+		enomem ();
+	}
+	return result;
+}
+
+/*
+doc:	<routine name="free_oms" return_type="void" export="shared">
+doc:		<summary>Free array of once manifest strings.</summary>
+doc:		<param name="oms_array" type="EIF_REFERENCE **">Array to free.</param>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Per thread data.</synchronization>
+doc:	</routine>
+*/
+rt_shared void free_oms (EIF_REFERENCE **oms_array)
+{
+	uint32 i;
+
+	if (oms_array) {
+		i = eif_nb_org_routines;
+		while (i > 0) {
+			i --;
+			if (oms_array[i]) {
+				eif_free (oms_array[i]); /* have been allocated with eif_malloc */
+			}
+		}
+	}
+	eif_free (oms_array); /* have been allocated with eif_malloc */
+}
+
 rt_public void reclaim(void)
 {
 	/* At the end of the process's lifetime, all the objects need to be
@@ -1205,6 +1276,10 @@ rt_public void reclaim(void)
 #endif
 
 	eif_free (EIF_once_values); /* have been allocated with eif_malloc */
+
+	free_oms (EIF_oms); /* Free array of once manifest strings */
+	EIF_oms = NULL;
+
 	eif_free (starting_working_directory);
 	eif_gen_conf_cleanup ();
 #ifdef EIF_WIN32
@@ -1338,6 +1413,7 @@ rt_private void internal_marking(MARKER marking, int moving)
 #else
 	mark_stack(&once_set, marking, moving);
 #endif
+	mark_stack(&oms_set, marking, moving);
 
 	/* The hector stacks record the objects which has been given to C and may
 	 * have been kept by the C side. Those objects are alive, of course.
@@ -1377,6 +1453,8 @@ rt_private void internal_marking(MARKER marking, int moving)
 
 	for (i = 0; i < once_set_list.count; i++)
 		mark_simple_stack(once_set_list.threads.sstack[i], marking, moving);
+	for (i = 0; i < oms_set_list.count; i++)
+		mark_stack(oms_set_list.threads.sstack[i], marking, moving);
 
 	for (i = 0; i < hec_stack_list.count; i++)
 		mark_simple_stack(hec_stack_list.threads.sstack[i], marking, moving);
@@ -4592,6 +4670,25 @@ rt_public void new_onceset(EIF_REFERENCE address)
 	EIF_GET_CONTEXT
 	if (-1 == epush(&once_set, (EIF_REFERENCE) address))
 		eraise("once function recording", EN_MEM);
+}
+
+/*
+doc:	<routine name="register_oms" return_type="void" export="public">
+doc:		<summary>Register an address of a once manifest string in the
+doc:		`oms_set' so that the run-time may update the address should
+doc:		the string objec be moved around by the garbage collector.</summary>
+doc:		<param name="address" type="EIF_REFERENCE *">Address of a memory location
+doc:		that stores a string object.</param>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Uses only per thread data.</synchronization>
+doc:	</routine>
+*/
+rt_public void register_oms (EIF_REFERENCE *address)
+{
+	EIF_GET_CONTEXT
+	if (-1 == epush(&oms_set, address)) {
+		eraise("once manifest string recording", EN_MEM);
+	}
 }
 
 #ifdef EIF_THREADS

@@ -151,8 +151,8 @@ static  char    *names [] = {
 "BC_INT16" ,
 "BC_INT64" ,
 "BC_NOTUSED_143" ,
-"BC_NOTUSED_144" ,
-"BC_NOTUSED_145" ,
+"BC_ONCE_STRING" ,
+"BC_ALLOCATE_ONCE_STRINGS" ,
 "BC_NOTUSED_146" ,
 "BC_NOTUSED_147" ,
 "BC_NOTUSED_148" ,
@@ -1062,6 +1062,15 @@ static  void    print_instructions ()
 				break;
 			case BC_INT64:
 				fprintf (ofp, "%ld", (EIF_INTEGER_64) bdouble ());
+				break;
+			case BC_ONCE_STRING:
+				fprintf (ofp, "index %ld, ", blong ());
+				fprintf (ofp, "number %ld, ", blong ());
+				fprintf (ofp, "value \"%s\"", bstr (blong()));
+				break;
+			case BC_ALLOCATE_ONCE_STRINGS:
+				fprintf (ofp, "index %ld, ", blong ());
+				fprintf (ofp, "count %ld", blong ());
 				break;
 			case  BC_FLOAT :
 				fprintf (ofp,"%lf", bdouble ());

@@ -243,11 +243,15 @@ rt_public void eif_thr_register(void)
 
 	if (not_root_thread) {
 		EIF_GET_CONTEXT
-	  /*
-	   * Allocate room for once values for all threads but the initial 
-	   * because we do not have the number of onces yet
-	   * Also set value root thread id.
-	   */
+	
+		/* Allocate room for once manifest strings array. */
+		EIF_oms = alloc_oms ();
+
+		/*
+		 * Allocate room for once values for all threads but the initial 
+		 * because we do not have the number of onces yet
+		 * Also set value root thread id.
+		 */
 
 		EIF_once_values = (EIF_REFERENCE *) eif_realloc (EIF_once_values, EIF_once_count * REFSIZ);
 			/* needs malloc; crashes otherwise on some pure C-ansi compiler (SGI)*/
@@ -383,6 +387,10 @@ rt_private void eif_free_context (rt_global_context_t *rt_globals)
 		eif_free (rt_globals->eif_globals->wel_per_thread_data);
 	}
 #endif
+
+		/* Free array of once manifest strings */
+	free_oms (rt_globals->eif_globals->EIF_oms_cx);
+	rt_globals->eif_globals->EIF_oms_cx = NULL;
 
 		/* Context data if any */
 	if (eif_thr_context) {
@@ -692,6 +700,7 @@ rt_private void eif_init_gc_stacks(rt_global_context_t *rt_globals)
 	load_stack_in_gc (&loc_stack_list, &loc_stack);	
 	load_stack_in_gc (&loc_set_list, &loc_set);	
 	load_stack_in_gc (&once_set_list, &once_set);	
+	load_stack_in_gc (&oms_set_list, &oms_set);	
 	load_stack_in_gc (&hec_stack_list, &hec_stack);	
 	load_stack_in_gc (&hec_saved_list, &hec_saved);	
 	load_stack_in_gc (&eif_stack_list, &eif_stack);	
@@ -717,11 +726,12 @@ rt_private void eif_destroy_gc_stacks(rt_global_context_t *rt_globals)
 	eif_global_context_t *eif_globals = rt_globals->eif_globals;
 	remove_data_from_gc (&rt_globals_list, rt_globals);
 	remove_data_from_gc (&loc_stack_list, &loc_stack);
-	remove_data_from_gc (&loc_set_list, &loc_set);	
-	remove_data_from_gc (&once_set_list, &once_set);	
-	remove_data_from_gc (&hec_stack_list, &hec_stack);	
-	remove_data_from_gc (&hec_saved_list, &hec_saved);	
-	remove_data_from_gc (&eif_stack_list, &eif_stack);	
+	remove_data_from_gc (&loc_set_list, &loc_set);
+	remove_data_from_gc (&once_set_list, &once_set);
+	remove_data_from_gc (&oms_set_list, &oms_set);
+	remove_data_from_gc (&hec_stack_list, &hec_stack);
+	remove_data_from_gc (&hec_saved_list, &hec_saved);
+	remove_data_from_gc (&eif_stack_list, &eif_stack);
 	remove_data_from_gc (&eif_trace_list, &eif_trace);
 #ifdef WORKBENCH
 	remove_data_from_gc (&opstack_list, &op_stack);
@@ -729,6 +739,7 @@ rt_private void eif_destroy_gc_stacks(rt_global_context_t *rt_globals)
 	eif_stack_free (&loc_stack);
 	eif_stack_free (&loc_set);
 	eif_stack_free (&once_set);
+	eif_stack_free (&oms_set);
 	eif_stack_free (&hec_stack);
 	eif_stack_free (&hec_saved);
 		/* The two stacks below are not properly cleaned up with `eif_stack_free'

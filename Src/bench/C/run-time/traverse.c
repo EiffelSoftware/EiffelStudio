@@ -671,6 +671,7 @@ rt_private EIF_REFERENCE matching (void (*action_fnptr) (EIF_REFERENCE, EIF_REFE
 #else
 	match_stack (&once_set, action_fnptr);
 #endif
+	match_stack (&oms_set, action_fnptr);
 
 		/* Now `l_found' is properly populated so let's create
 		 * SPECIAL objects of type `result_type' that we will return.

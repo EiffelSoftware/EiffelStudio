@@ -245,6 +245,17 @@ doc:	</attribute>
 rt_shared long *nbref;						/* Gives # of references */
 #endif
 
+/*
+doc:	<attribute name="eif_nb_org_routines" return_type="uint32" export="public">
+doc:		<summary>Number of original routine bodies. Additional routine bodies generated for derivations with expanded parameters are not counted.</summary>
+doc:		<access>Read/Write once</access>
+doc:		<indexing>Body_id</indexing>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None since initialized in compiler generated `einit.c' and updated in `update.c'.</synchronization>
+doc:	</attribute>
+*/
+rt_public uint32 eif_nb_org_routines;
+
 #define exvec() exset(NULL, 0, NULL)	/* How to get an execution vector */
 
 rt_public void failure(void);					/* The Eiffel exectution failed */
@@ -292,6 +303,18 @@ doc:		<synchronization>Per thread data.</synchronization>
 doc:	</attribute>
 */
 rt_public EIF_REFERENCE *EIF_once_values = NULL;
+
+/*
+doc:	<attribute name="EIF_oms" return_type="EIF_REFERENCE **" export="public">
+doc:		<summary>Array of pointers to arrays to save once manifest strings
+doc:            for every routine. It is used to store once per thread values.</summary>
+doc:		<access>Read/Write</access>
+doc:		<indexing>By original routine body index.</indexing>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Per thread data.</synchronization>
+doc:	</attribute>
+*/
+rt_public EIF_REFERENCE **EIF_oms = NULL;
 
 #endif /* EIF_THREADS */
 
@@ -352,6 +375,9 @@ rt_public void once_init (void)
 
 	egc_system_mod_init ();
 
+	/* Allocate room for once manifest strings array. */
+	EIF_oms = alloc_oms ();
+
 	/* Allocate room for once values */
 
 	EIF_once_values = (EIF_REFERENCE *) eif_realloc (EIF_once_values, EIF_once_count * REFSIZ);
@@ -360,6 +386,7 @@ rt_public void once_init (void)
 		enomem();
 
 	memset (EIF_once_values, 0, EIF_once_count * sizeof (char *));
+
 }
 
 rt_public void eif_alloc_init(void)

@@ -98,6 +98,12 @@ feature -- status settings
 	set_caret_position (pos: INTEGER) is
 			-- Set the position of the caret to `pos'.
 		do
+			internal_set_caret_position (pos)
+		end
+		
+	internal_set_caret_position (pos: INTEGER) is
+			-- Set the position of the caret to `pos'.
+		do
 			C.gtk_editable_set_position (entry_widget, pos - 1)
 		end
 
@@ -131,13 +137,13 @@ feature -- Basic operation
 			-- Select (highlight) the text between 
 			-- 'start_pos' and 'end_pos'.
 		do
+			internal_set_caret_position (end_pos)
 			select_region_internal (start_pos, end_pos)
 		end	
 
 	select_region_internal (start_pos, end_pos: INTEGER) is
 			-- Select region
 		do
-			C.gtk_editable_set_position (entry_widget, end_pos)
 			C.gtk_editable_select_region (entry_widget, start_pos - 1, end_pos)
 		end
 
@@ -198,7 +204,6 @@ feature {NONE} -- Implementation
 		end
 
 feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
-
 
 	create_change_actions: EV_NOTIFY_ACTION_SEQUENCE is
 		do

@@ -68,7 +68,7 @@ feature {NONE} -- Implementation
 	c_name (p, a_name: POINTER): INTEGER is
 			-- Call `IAssemblyInfo->assembly_name'.
 		external
-			C++ IAssemblyInfo signature (LPWSTR *): EIF_INTEGER use %"vs_support.h%""
+			"C++ IAssemblyInfo signature (LPWSTR *): EIF_INTEGER use %"vs_support.h%""
 		alias
 			"AssemblyName"
 		end

@@ -64,7 +64,7 @@ feature
 			loop
 				app_circle ?= app_figures.figure;
 				if (app_circle = Void) then
-					io.putstring ("Does not know how to store black boxes yet%N");
+					io.error.putstring ("Does not know how to store black boxes yet%N");
 				end;
 				!!s_circle.make (app_circle);
 				stored_circles.extend (s_circle);

@@ -8,12 +8,10 @@ indexing
 class SPLIT_WINDOW_CHILD
 
 inherit
-	FORM
-		rename
-			make as form_make,
-			make_unmanaged as form_make_unmanaged
+	SPLIT_WINDOW_CHILD_IMP
+		rename 
+			make as make_imp
 		redefine
-			implementation, parent,
 			manage, unmanage
 		end
 
@@ -21,30 +19,20 @@ creation
 	make,
 	make_unmanaged
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
 	make (a_name: STRING; a_parent: SPLIT_WINDOW) is
 			-- Initialize Current.
 		do
-			parent := a_parent
-			form_make (a_name, a_parent);
-			a_parent.add_child (Current);
-		end;
+			make_imp (a_name, a_parent)
+			parent.add_child (Current)
+		end
 
 	make_unmanaged (a_name: STRING; a_parent: SPLIT_WINDOW) is
 			-- Initialize Current.
 		do
-			parent := a_parent
-			form_make_unmanaged (a_name, a_parent);
-			a_parent.add_child (Current);
-		end
-
-feature -- Access
-
-	exists: BOOLEAN is
-			-- Does Current exist?
-		do
-			Result := implementation.exists
+			make_imp (a_name, a_parent)
+			parent.remove_child (Current)
 		end
 
 feature -- Widget Management
@@ -53,7 +41,7 @@ feature -- Widget Management
 			-- Manage Current.
 			--| Ie. Make it visible on the screen.
 		do
-			implementation.set_managed (True);
+			set_child_managed
 			parent.add_managed_child (Current)
 		end;
 
@@ -61,18 +49,10 @@ feature -- Widget Management
 			-- Unmanage Current.
 			--| Ie. Make ir invisible on the screen.
 		do
-			implementation.set_managed (False);
+			set_child_unmanaged
 			parent.remove_managed_child (Current)
 		end
 
-feature {SPLIT_WINDOW_I} -- Implementation
-
-	implementation: FORM_IMP;
-			-- Implementation Window
-
-feature {NONE} -- Implementation
-
-	parent: SPLIT_WINDOW
-			-- Parent of Current
 
 end -- class SPLIT_WINDOW_CHILD
+

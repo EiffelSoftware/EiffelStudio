@@ -72,8 +72,10 @@ feature {NONE} -- Callback actions
 			if is_stopped then
 				s := eifnet_debugger_info.application.status
 				s.set_is_stopped (is_stopped)
-				s.set_current_thread_id (eifnet_debugger_info.last_icd_thread_id)
-				s.set_thread_ids (eifnet_debugger_info.loaded_managed_threads.current_keys)
+				if not eifnet_debugger_info.last_managed_callback_is_exit_process then
+					s.set_current_thread_id (eifnet_debugger_info.last_icd_thread_id)
+					s.set_thread_ids (eifnet_debugger_info.loaded_managed_threads.current_keys)
+				end
 			end
 			
 			debug ("DEBUGGER_TRACE_CALLBACK")

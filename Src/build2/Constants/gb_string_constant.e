@@ -68,6 +68,59 @@ feature -- Status setting
 		ensure
 			value_set: a_value = value
 		end
+		
+feature {GB_CONSTANTS_DIALOG} -- Implementation
+
+	can_modify_to_value (new_value: STRING): BOOLEAN is
+			-- May `Current' be changed to `new_value' or are certain
+			-- referers not permitted to use `new_value'?
+		local
+			constant_context: GB_CONSTANT_CONTEXT
+			gb_ev_any: GB_EV_ANY
+			validate_agent: FUNCTION [ANY, TUPLE [STRING], BOOLEAN]
+		do
+			Result := True
+			from
+				referers.start
+			until
+				referers.off or not Result
+			loop
+				constant_context := referers.item
+					
+					validate_agent ?= new_gb_ev_any (constant_context).validate_agents.item (constant_context.attribute)
+					check
+						validate_agent_not_void: validate_agent /= Void
+					end
+					validate_agent.call ([new_value])
+					Result := validate_agent.last_result
+				referers.forth
+			end
+		end
+		
+	modify_value (new_value: STRING) is
+			-- Modify `value' to `new_value' and update all referers.
+		local
+			constant_context: GB_CONSTANT_CONTEXT
+			gb_ev_any: GB_EV_ANY
+			execution_agent: PROCEDURE [ANY, TUPLE [STRING]]
+		do
+			from
+				referers.start
+			until
+				referers.off
+			loop
+				constant_context := referers.item
+				execution_agent ?= new_gb_ev_any (constant_context).execution_agents.item (constant_context.attribute)
+				check
+					execution_agent_not_void: execution_agent /= Void
+				end
+				execution_agent.call ([new_value])
+				referers.forth
+			end
+			value := new_value
+		ensure
+			value_set: value.is_equal (new_value)
+		end
 
 invariant
 	value_not_void: value /= Void

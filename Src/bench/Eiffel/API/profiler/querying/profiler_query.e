@@ -25,6 +25,23 @@ feature -- Status setting
 			end;
 		end;
 
+	append_subqueries (new_subqueries: LINKED_LIST [SUBQUERY]) is
+			-- Append `new_subqueries' to `subqueries'.
+		require
+			subquires_not_void: subqueries /= Void
+		do
+			from
+				new_subqueries.start
+			until
+				new_subqueries.after
+			loop
+				if new_subqueries.item.is_active then
+					subqueries.extend (new_subqueries.item)
+				end;
+				new_subqueries.forth
+			end
+		end;
+
 	set_subquery_operators (new_operators: LINKED_LIST [SUBQUERY_OPERATOR]) is
 			-- Set `subquery_operators' to `new_operators'.
 		do
@@ -41,7 +58,63 @@ feature -- Status setting
 			end;
 		end;
 
+	append_subquery_operators (new_operators: LINKED_LIST [SUBQUERY_OPERATOR]) is
+			-- Add `new_operators' to `subquery_operators'.
+		do
+			from
+				new_operators.start
+			until
+				new_operators.after
+			loop
+				if new_operators.item.is_active then
+					subquery_operators.extend (new_operators.item)
+				end;
+				new_operators.forth
+			end
+		end;
+
+	merge (other: like Current) is
+			-- Merge contents of `other' into Current.
+		do
+			if subqueries = Void then
+				!! subqueries.make
+			end;
+			if subquery_operators = Void then
+				!! subquery_operators.make
+			end;
+			append_subqueries (other.subqueries);
+			append_subquery_operators (other.subquery_operators)
+		end
+
 feature -- Status report
+
+	image: STRING is
+			-- Image of all subqueries and operators.
+		local
+			sq: SUBQUERY;
+			i: INTEGER
+		do
+			from
+				i := 1;
+				!! Result.make (0)
+			until
+				i > subqueries.count
+			loop
+				sq := subquery_at (i);
+				Result.append (sq.column);
+				Result.extend (' ');
+				Result.append (sq.operator);
+				Result.extend (' ');
+				Result.append (sq.value);
+				if i < subquery_operators.count then
+					Result.extend (' ');
+					so := operator_at (i);
+					Result.append (so.actual_operator);
+					Result.append ("%R%N")
+				end
+				i := i + 1
+			end
+		end;
 
 	subquery_at (index: INTEGER): SUBQUERY is
 			-- Result is the subquery at position `index'.

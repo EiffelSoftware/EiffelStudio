@@ -6,8 +6,6 @@ root
 
 default
 	assertion (no)
---	assertion (ensure)
---	assertion (check)
 	multithreaded (no)
 	console_application (yes)
 	dynamic_runtime (no)
@@ -58,6 +56,7 @@ cluster
 	all lex: "$EIFFEL_SRC/library/lex"
 	all parse: "$EIFFEL_SRC/library/parse"
 	all helpers (root_cluster): "$/linux_helpers"
+	ise_utils:	"$EIFFEL_SRC/Eiffel/interface/new_graphical/to_be_moved"
 
 external
 	include_path:

@@ -34,12 +34,7 @@ inherit
 			on_position_changed
 		end
 
-	SHARED_RESOURCES
-		export
-			{NONE} all
-		end
-
-	EB_SHARED_EDITOR_DATA
+	EB_SHARED_PREFERENCES
 		
 	EV_UTILITIES
 		export
@@ -456,9 +451,9 @@ feature -- Updating
 			-- Update the colors for the address manager labels
 		do
 			if mode then
-				cluster_label.set_foreground_color (editor_preferences.cluster_text_color)
-				class_label.set_foreground_color (editor_preferences.class_text_color)
-				feature_label.set_foreground_color (editor_preferences.feature_text_color)		
+				cluster_label.set_foreground_color (preferences.editor_data.cluster_text_color)
+				class_label.set_foreground_color (preferences.editor_data.class_text_color)
+				feature_label.set_foreground_color (preferences.editor_data.feature_text_color)		
 			end
 		end
 		
@@ -2070,7 +2065,7 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 			address_dialog.set_height (header_info.height)
 			address_dialog.show
 			if output_line /= Void then
-				output_line.set_foreground_color (editor_preferences.error_text_color)
+				output_line.set_foreground_color (preferences.editor_data.error_text_color)
 				output_line.remove_text
 			end
 		end
@@ -2147,19 +2142,19 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 	enable_complete: BOOLEAN is
 			-- Does the user want class names to be completed?
 		do
-			Result := boolean_resource_value ("class_completion", True)
+			Result := preferences.browsing_data.class_completion --, True
 		end
 
 	enable_feature_complete: BOOLEAN is
 			-- Does the user want feature names to be completed?
 		do
-			Result := boolean_resource_value ("class_completion", True)
+			Result := preferences.browsing_data.class_completion --, True
 		end
 
 	enable_cluster_complete: BOOLEAN is
 			-- Does the user want cluster names to be completed?
 		do
-			Result := boolean_resource_value ("class_completion", True)
+			Result := preferences.browsing_data.class_completion --, True
 		end
 
 	default_class_name: STRING is "(no_class)"

@@ -15,14 +15,14 @@ inherit
 feature {NONE} -- Initialization
 
 	make is
-			-- Create the widget with `par' as parent.
+			-- Create the widget.
 		deferred
 		end
 
 feature {EV_WIDGET} -- Initialization
 
 	widget_make (an_interface: EV_WIDGET) is
-			-- Creation of the widget.
+			-- Initialization of the widget.
 		require
 			valid_interface: an_interface /= Void
 		deferred
@@ -31,8 +31,7 @@ feature {EV_WIDGET} -- Initialization
  feature -- Access
 
 	parent_imp: EV_CONTAINER_IMP is
-			-- Parent container of this widget. The same than
-			-- parent but with a different type.
+			-- Parent container implementation of this widget.
 		require
 			exists: not destroyed
 		deferred

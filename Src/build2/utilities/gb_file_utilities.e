@@ -9,6 +9,9 @@ indexing
 class
 	GB_FILE_UTILITIES
 
+inherit
+	operating_environment
+
 feature -- Basic operations
 
 	rename_file_if_exists (directory_path: DIRECTORY; old_name, new_name: STRING) is
@@ -120,5 +123,20 @@ feature -- Basic operations
 				directory.delete
 			end
 		end
+		
+	directory_with_separator (a_directory: STRING): STRING is
+			-- `Result' is directory `a_directory' with directory seperator
+			-- appended if necessary.
+		require
+			a_directory_not_void: a_directory /= Void and then not a_directory.is_empty
+		do
+			if a_directory.item (a_directory.count).is_equal (Directory_separator) then
+				Result := a_directory
+			else
+				Result := a_directory + Directory_separator.out
+			end
+		ensure
+			Result_consistent: Result.count = a_directory.count or Result.count = a_directory.count + 1
+		end		
 
 end -- class GB_FILE_UTILITIES

@@ -1,9 +1,7 @@
 indexing
-
-	description: 
-		"EiffelVision container. Allows only one children.%
-		 % Deferred class, parent of all the containers.  %
-		 % Mswindows implementation."
+	description: "EiffelVision container. Allows only one children.%
+				 % Deferred class, parent of all the containers.   %
+				 % Mswindows implementation."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
@@ -16,7 +14,6 @@ deferred class
 inherit
 	EV_CONTAINER_I	
 		
-
 	EV_WIDGET_IMP
 		redefine
 			parent_ask_resize,
@@ -72,11 +69,16 @@ feature {EV_WIDGET_IMP, EV_WEL_FRAME_WINDOW} -- Implementation
 			end
 		end
 	
-	child_has_resized (new_width, new_height: INTEGER; the_child: EV_WIDGET_IMP) is
-			-- Resize the container according to the 
-			-- resize of the child
+	child_width_changed (new_child_width: INTEGER; the_child: EV_WIDGET_IMP) is
+			-- Change the size of the container because of the child.
 		do
-			set_size (new_width, new_height)
+			set_width (new_child_width)
+		end
+
+	child_height_changed (new_child_height: INTEGER; the_child: EV_WIDGET_IMP) is
+			-- Change the size of the container because of the child.
+		do
+			set_height (new_child_height)
 		end
 
 	child_minwidth_changed (new_child_minimum: INTEGER) is

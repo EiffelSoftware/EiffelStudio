@@ -65,22 +65,24 @@ feature -- Access
 		require
 			exists: not destroyed
 		local
-			list_item: EV_LIST_ITEM
+			litem: EV_LIST_ITEM
+			list: ARRAYED_LIST [EV_LIST_ITEM_IMP]
 		do
 			!! Result.make
 			if is_multiple_selection then
 				from
-					ev_children.start
+					list := ev_children
+					list.start
 				until
-					ev_children.after
+					list.after
 				loop
-					if ev_children.item.is_selected then
-						list_item ?= (ev_children.item.interface)
-						if list_item /= Void then 
-							Result.extend (list_item)
+					if list.item.is_selected then
+						litem ?= (list.item.interface)
+						if litem /= Void then 
+							Result.extend (litem)
 						end
 					end
-					ev_children.forth
+					list.forth
 				end
 			else
 				Result.extend (selected_item)
@@ -169,7 +171,7 @@ feature -- Basic operation
 			exists: not destroyed
 			valid_data: data /= Void
 		local
-			list: LINKED_LIST [EV_LIST_ITEM_IMP]
+			list: ARRAYED_LIST [EV_LIST_ITEM_IMP]
 		do
 			from
 				list := ev_children
@@ -207,7 +209,7 @@ feature -- Event -- removing command association
 
 feature {EV_LIST_ITEM_IMP} -- Implementation
 
-	ev_children: LINKED_LIST [EV_LIST_ITEM_IMP]
+	ev_children: ARRAYED_LIST [EV_LIST_ITEM_IMP]
 			-- List of the children
 
 	clear_ev_children is

@@ -64,6 +64,8 @@ feature -- Initialization
 		require
 			valid_number_of_items: n >= 0
 		do
+			index := 0
+			count := 0
 			array_make (1, n)
 		ensure
 			correct_position: before
@@ -76,8 +78,9 @@ feature -- Initialization
 		require
 			valid_number_of_items: n >= 0
 		do
-			array_make (1, n)
+			index := 0
 			count := n
+			array_make (1, n)
 		ensure
 			correct_position: before
 			filled: full

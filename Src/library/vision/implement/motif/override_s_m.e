@@ -13,17 +13,20 @@ inherit
 
 	OVERRIDE_S_I;
 
-	POPUP_S_M;
+	POPUP_S_M
+		undefine
+			make_from_existing, mel_destroy
+		end;
 
-    MEL_OVERRIDE_SHELL
-        rename
-            make as mel_override_make,
-            background_color as mel_background_color,
-            background_pixmap as mel_background_pixmap,
-            set_background_color as mel_set_background_color,
-            set_background_pixmap as mel_set_background_pixmap,
-            destroy as mel_destroy,
-            screen as mel_screen,
+	MEL_OVERRIDE_SHELL
+		rename
+			make as mel_override_make,
+			background_color as mel_background_color,
+			background_pixmap as mel_background_pixmap,
+			set_background_color as mel_set_background_color,
+			set_background_pixmap as mel_set_background_pixmap,
+			destroy as mel_destroy,
+			screen as mel_screen,
 			is_shown as shown
 		undefine
 			popdown, shown
@@ -37,10 +40,12 @@ feature {NONE} -- Initialization
 
 	make (an_override_shell: OVERRIDE_S; oui_parent: COMPOSITE) is
 			-- Create an override shell.
+		local
+			mc: MEL_COMPOSITE
 		do
+			mc ?= oui_parent.implementation;
 			widget_index := widget_manager.last_inserted_position;
-            mel_override_make (an_override_shell.identifier,
-                    mel_parent (an_override_shell, widget_index));
+			mel_override_make (an_override_shell.identifier, mc);
 			initialize (Current)
 		end;
 

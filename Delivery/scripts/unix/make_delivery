@@ -184,6 +184,8 @@ if [ ! "$NO_INSTALL" ]; then
 	
 	cd $INIT_DIR
 	copy compile* $EXPORT_DIR
+	copy make_images $EXPORT_DIR
+	copy make_cd_image $EXPORT_DIR
 	copy set_aliases $EXPORT_DIR
 	give_time_to compile the delivery
 fi

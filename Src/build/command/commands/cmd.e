@@ -20,7 +20,6 @@ feature -- Editable
 			else
 				ed := command_editor.command_tool
 			end
---			window_mgr.display (ed)
 			ed.display
 		end
 
@@ -346,10 +345,6 @@ feature -- Code Generation
 		do
 			!! Result.make (0)
 			Result.append ("%Texecute is%N%T%Tdo%N%T%T%TPrecursor%N%T%Tend")
--- 				temp := clone (eiffel_type)
--- 				temp.to_lower
--- 			Result.append (temp)
--- 			Result.append ("_execute%N%T%Tend%N%N")
 		end
 
 	eiffel_creation_text (l: LINKED_LIST [STRING]): STRING is
@@ -358,8 +353,6 @@ feature -- Code Generation
 		do
 			!! Result.make (0)
 			Result.append ("%T%T%T")
--- 			Result.append (eiffel_type_to_lower)
--- 			Result.append ("_make")
 			Result.append ("Precursor")
 			if not l.empty then
 				Result.append (" (")

@@ -311,7 +311,7 @@ feature {NONE} -- Implementation
 				--| Then real Local variables |--
 				local_decl_grps := rout.locals
 				if local_decl_grps /= Void then
-					l_count := local_decl_grps.count
+					l_count := l_list.count
 					create locals_list.make (l_count)
 					from
 						l_index := 0
@@ -319,13 +319,12 @@ feature {NONE} -- Implementation
 						l_names_heap := Names_heap
 						l_list.start
 					until
-						local_decl_grps.after or
-						l_index > l_count
+						local_decl_grps.after 
+						or l_index > l_count
 					loop 
 						from
 							id_list := local_decl_grps.item.id_list
 							id_list.start
-
 						until
 							id_list.after or
 							l_index > l_count

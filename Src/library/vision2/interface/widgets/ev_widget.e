@@ -10,9 +10,11 @@ deferred class
 	EV_WIDGET
 
 feature {NONE} -- Initialization
-	
+
 	make (par: EV_CONTAINER) is
 			-- Create the widget with `par' as parent.
+		require
+			parent_not_void: par /= Void
 		deferred
 		end
 		
@@ -115,7 +117,7 @@ feature -- Status report
 		do
 			Result := implementation.background_color.interface
 		ensure
-			result_not_void: Result /= Void
+--			result_not_void: Result /= Void
 		end
 
 	foreground_color: EV_COLOR is
@@ -126,7 +128,7 @@ feature -- Status report
 		do
 			Result := implementation.foreground_color.interface
 		ensure
-			result_not_void: Result /= Void
+--			result_not_void: Result /= Void
 		end
 
 feature -- Status setting
@@ -353,8 +355,10 @@ feature -- Resizing
 	set_size (new_width: INTEGER; new_height: INTEGER) is
 			-- Make `new_width' the new `width'
 			-- and `new_height' the new `height'.
+			-- widget must be unmanaged.
 		require
 			exists: not destroyed
+			Unmanaged: not managed
 			Positive_width: new_width >= 0
 			Positive_height: new_height >= 0
 		do
@@ -365,8 +369,10 @@ feature -- Resizing
 
 	set_width (value :INTEGER) is
 			-- Make `value' the new `width'.
+			-- widget must be unmanaged.
 		require
 			exists: not destroyed
+			Unmanaged: not managed
 			Positive_width: value >= 0
 		do
 			implementation.set_width (value)
@@ -376,8 +382,10 @@ feature -- Resizing
 
 	set_height (value: INTEGER) is
 			-- Make `value' the new `height'.
+			-- widget must be unmanaged.
 		require
 			exists: not destroyed
+			Unmanaged: not managed
 			Positive_height: value >= 0
 		do
 			implementation.set_height (value)
@@ -395,8 +403,7 @@ feature -- Resizing
 		do
 			implementation.set_minimum_size (min_width, min_height)
 		ensure
-			 min_width = min_width
-			 min_height = min_height
+			minimum_dimension_set: implementation.minimum_dimensions_set (min_width, min_height)
 		end
 		
 	set_minimum_width (value: INTEGER) is
@@ -407,7 +414,7 @@ feature -- Resizing
 		do
 			implementation.set_minimum_width (value)
 		ensure
-			minimum_width_set: minimum_width = value
+			minimum_width_set: implementation.minimum_width_set (value)
 		end
         
 	set_minimum_height (value: INTEGER) is
@@ -418,7 +425,7 @@ feature -- Resizing
 		do
 			implementation.set_minimum_height (value)
 		ensure
-			minimum_height_set: minimum_height = value
+			minimum_height_set: implementation.minimum_height_set (value)
 		end
 
 	set_x (value: INTEGER) is
@@ -430,7 +437,7 @@ feature -- Resizing
 		do
 			implementation.set_x (value)
 		ensure
-			x_set: x = value
+			x_set: implementation.x_set (value)
 		end
 
 	set_x_y (new_x: INTEGER; new_y: INTEGER) is
@@ -442,8 +449,7 @@ feature -- Resizing
 		do
 			implementation.set_x_y (new_x, new_y)
 		ensure
-			x_set: x = new_x	
-			y_set: y = new_y	
+			x_y_set: implementation.position_set (new_x, new_y)
 		end
 
 	set_y (value: INTEGER) is
@@ -455,7 +461,7 @@ feature -- Resizing
 		do
 			implementation.set_y (value)
 		ensure
-			y_set: y = value		
+			y_set: implementation.y_set (x)		
 		end
 
 feature -- Comparison
@@ -598,12 +604,10 @@ feature -- Event - command association
 			Result := implementation.last_command_id
 		end
 	
-feature -- Implementation
+feature {EV_WIDGET_I, EV_WIDGET} -- Implementation
 
 	implementation: EV_WIDGET_I
 			-- Implementation of Current widget
-
-feature {EV_WINDOW_I} -- Implementation
 	
 	remove_implementation is
 			-- Remove implementation of Current widget.

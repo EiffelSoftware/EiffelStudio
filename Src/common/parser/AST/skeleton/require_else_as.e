@@ -4,7 +4,7 @@ inherit
 
 	REQUIRE_AS
 		redefine
-			is_else
+			is_else, clause_name, put_clause_keywords
 		end
 
 feature
@@ -15,4 +15,20 @@ feature
 			Result := true;
 		end;
 
-end
+feature {}
+	
+	clause_name (ctxt: FORMAT_CONTEXT): STRING is
+			-- require or require else
+		do
+			Result := "require else"
+		end;
+			
+	put_clause_keywords (ctxt: FORMAT_CONTEXT) is
+			-- Append keywords "require else".
+		do
+			ctxt.put_text_item (ti_Require_keyword);
+			ctxt.put_space;
+			ctxt.put_text_item (ti_Else_keyword)
+		end;
+
+end -- class REQUIRE_ELSE_AS

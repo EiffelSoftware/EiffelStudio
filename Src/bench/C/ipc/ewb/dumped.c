@@ -20,6 +20,7 @@
 #include "request.h"
 #include "stack.h"
 #include "eif_io.h"
+#include "eif_in.h"
 
 typedef void (*EIF_PROC_REF_REAL) (EIF_REFERENCE, EIF_REAL); /* No conversion into DOUBLE */
 EIF_PROC set_rout;
@@ -123,7 +124,6 @@ rt_public void c_recv_value (EIF_OBJ target)
 #ifndef EIF_WIN32
 	STREAM *sp = stream_by_fd [EWBOUT];
 #endif
-	Dump dump;
 	struct item item;
 	uint32 type_flag;
 

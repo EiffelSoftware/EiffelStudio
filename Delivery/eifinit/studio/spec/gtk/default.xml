@@ -75,36 +75,46 @@
 						<HEAD>indexing</HEAD>
 						<TEXT DESCRIPTION="Autocomplete indexing">autocomplete_indexing<BOOLEAN>True</BOOLEAN></TEXT>
 						<TEXT DESCRIPTION="Use default autocomplete">use_default_indexing<BOOLEAN>True</BOOLEAN></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Return)">custom_indexing_space<STRING> $cursor$</STRING></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Space)">custom_indexing_return<STRING>%N$indent$%T$cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return after keyword was typed)">custom_indexing_space<STRING> $cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space after keyword was typed)">custom_indexing_return<STRING>%N$indent$%T$cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return, other cases)">custom_indexing_space_later<STRING> $cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space, other cases)">custom_indexing_return_later<STRING>%N$indent$$cursor$</STRING></TEXT>
 					</TOPIC>
 					<TOPIC TOPIC_ID="class" ICON="icon_preferences_folder">
 						<HEAD>class</HEAD>
 						<TEXT DESCRIPTION="Autocomplete class">autocomplete_class<BOOLEAN>True</BOOLEAN></TEXT>
 						<TEXT DESCRIPTION="Use default autocomplete">use_default_class<BOOLEAN>True</BOOLEAN></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Return)">custom_class_space<STRING> $cursor$</STRING></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Space)">custom_class_return<STRING>%N$indent$%T$cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return after keyword was typed)">custom_class_space<STRING> $cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space after keyword was typed)">custom_class_return<STRING>%N$indent$%T$cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return, other cases)">custom_class_space_later<STRING> $cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space, other cases)">custom_class_return_later<STRING>%N$indent$$cursor$</STRING></TEXT>
 					</TOPIC>
 					<TOPIC TOPIC_ID="inherit" ICON="icon_preferences_folder">
 						<HEAD>inherit</HEAD>
 						<TEXT DESCRIPTION="Autocomplete inherit">autocomplete_inherit<BOOLEAN>True</BOOLEAN></TEXT>
 						<TEXT DESCRIPTION="Use default autocomplete">use_default_inherit<BOOLEAN>True</BOOLEAN></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Return)">custom_inherit_space<STRING> $cursor$</STRING></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Space)">custom_inherit_return<STRING>%N$indent$%T$cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return after keyword was typed)">custom_inherit_space<STRING> $cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space after keyword was typed)">custom_inherit_return<STRING>%N$indent$%T$cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return, other cases)">custom_inherit_space_later<STRING> $cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space, other cases)">custom_inherit_return_later<STRING>%N$indent$$cursor$</STRING></TEXT>
 					</TOPIC>
 					<TOPIC TOPIC_ID="creation" ICON="icon_preferences_folder">
 						<HEAD>creation</HEAD>
 						<TEXT DESCRIPTION="Autocomplete creation">autocomplete_creation<BOOLEAN>True</BOOLEAN></TEXT>
 						<TEXT DESCRIPTION="Use default autocomplete">use_default_creation<BOOLEAN>True</BOOLEAN></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Return)">custom_creation_space<STRING> $cursor$</STRING></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Space)">custom_creation_return<STRING>%N$indent$%T$cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return after keyword was typed)">custom_creation_space<STRING> $cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space after keyword was typed)">custom_creation_return<STRING>%N$indent$%T$cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return, other cases)">custom_creation_space_later<STRING> $cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space, other cases)">custom_creation_return_later<STRING>%N$indent$$cursor$</STRING></TEXT>
 					</TOPIC>
 					<TOPIC TOPIC_ID="feature" ICON="icon_preferences_folder">
 						<HEAD>feature</HEAD>
 						<TEXT DESCRIPTION="Autocomplete feature">autocomplete_feature<BOOLEAN>True</BOOLEAN></TEXT>
 						<TEXT DESCRIPTION="Use default autocomplete">use_default_feature<BOOLEAN>True</BOOLEAN></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Return)">custom_feature_space<STRING> $cursor$</STRING></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Space)">custom_feature_return<STRING>%N$indent$%T$cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return after keyword was typed)">custom_feature_space<STRING> $cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space after keyword was typed)">custom_feature_return<STRING>%N$indent$%T$cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return, other cases)">custom_feature_space_later<STRING> $cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space, other cases)">custom_feature_return_later<STRING>%N$indent$$cursor$</STRING></TEXT>
 					</TOPIC>
 				</TOPIC>
 				<TOPIC TOPIC_ID="feature_structure_completion" ICON="icon_preferences_folder">
@@ -113,64 +123,100 @@
 						<HEAD>is</HEAD>
 						<TEXT DESCRIPTION="Autocomplete is">autocomplete_is<BOOLEAN>True</BOOLEAN></TEXT>
 						<TEXT DESCRIPTION="Use default autocomplete">use_default_is<BOOLEAN>True</BOOLEAN></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Return)">custom_is_space<STRING> $cursor$</STRING></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Space)">custom_is_return<STRING>%N$indent$%T%T-- $cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return after keyword was typed)">custom_is_space<STRING> $cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space after keyword was typed)">custom_is_return<STRING>%N$indent$%T%T-- $cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return, other cases)">custom_is_space_later<STRING> $cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space, other cases)">custom_is_return_later<STRING>%N$indent$$cursor$</STRING></TEXT>
 					</TOPIC>
 					<TOPIC TOPIC_ID="require" ICON="icon_preferences_folder">
 						<HEAD>require</HEAD>
 						<TEXT DESCRIPTION="Autocomplete require">autocomplete_require<BOOLEAN>True</BOOLEAN></TEXT>
 						<TEXT DESCRIPTION="Use default autocomplete">use_default_require<BOOLEAN>True</BOOLEAN></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Return)">custom_require_space<STRING> $cursor$</STRING></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Space)">custom_require_return<STRING>%N$indent$%T$cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return after keyword was typed)">custom_require_space<STRING> $cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space after keyword was typed)">custom_require_return<STRING>%N$indent$%T$cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return, other cases)">custom_require_space_later<STRING> $cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space, other cases)">custom_require_return_later<STRING>%N$indent$$cursor$</STRING></TEXT>
+					</TOPIC>
+					<TOPIC TOPIC_ID="require else" ICON="icon_preferences_folder">
+						<HEAD>require else</HEAD>
+						<TEXT DESCRIPTION="Autocomplete require else">autocomplete_require_else<BOOLEAN>True</BOOLEAN></TEXT>
+						<TEXT DESCRIPTION="Use default autocomplete">use_default_require_else<BOOLEAN>True</BOOLEAN></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return after keyword was typed)">custom_require_else_space<STRING> $cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space after keyword was typed)">custom_require_else_return<STRING>%N$indent$%T$cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return, other cases)">custom_require_else_space_later<STRING> $cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space, other cases)">custom_require_else_return_later<STRING>%N$indent$$cursor$</STRING></TEXT>
 					</TOPIC>
 					<TOPIC TOPIC_ID="local" ICON="icon_preferences_folder">
 						<HEAD>local</HEAD>
 						<TEXT DESCRIPTION="Autocomplete local">autocomplete_local<BOOLEAN>True</BOOLEAN></TEXT>
-							<TEXT DESCRIPTION="Use default autocomplete">use_default_local<BOOLEAN>True</BOOLEAN></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Return)">custom_local_space<STRING> $cursor$</STRING></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Space)">custom_local_return<STRING>%N$indent$%T$cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Use default autocomplete">use_default_local<BOOLEAN>True</BOOLEAN></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return after keyword was typed)">custom_local_space<STRING> $cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space after keyword was typed)">custom_local_return<STRING>%N$indent$%T$cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return, other cases)">custom_local_space_later<STRING> $cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space, other cases)">custom_local_return_later<STRING>%N$indent$$cursor$</STRING></TEXT>
 					</TOPIC>
 					<TOPIC TOPIC_ID="do" ICON="icon_preferences_folder">
 						<HEAD>do</HEAD>
 						<TEXT DESCRIPTION="Autocomplete do">autocomplete_do<BOOLEAN>True</BOOLEAN></TEXT>
 						<TEXT DESCRIPTION="Use default autocomplete">use_default_do<BOOLEAN>True</BOOLEAN></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Return)">custom_do_space<STRING> $cursor$ end</STRING></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Space)">custom_do_return<STRING>%N$indent$%T$cursor$%N$indent$end</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return after keyword was typed)">custom_do_space<STRING> $cursor$ end</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space after keyword was typed)">custom_do_return<STRING>%N$indent$%T$cursor$%N$indent$end</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return, other cases)">custom_do_space_later<STRING> $cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space, other cases)">custom_do_return_later<STRING>%N$indent$$cursor$</STRING></TEXT>
 					</TOPIC>
 					<TOPIC TOPIC_ID="once" ICON="icon_preferences_folder">
 						<HEAD>once</HEAD>
 						<TEXT DESCRIPTION="Autocomplete once">autocomplete_once<BOOLEAN>True</BOOLEAN></TEXT>
 						<TEXT DESCRIPTION="Use default autocomplete">use_default_once<BOOLEAN>True</BOOLEAN></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Return)">custom_once_space<STRING> $cursor$ end</STRING></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Space)">custom_once_return<STRING>%N$indent$%T$cursor$%N$indent$end</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return after keyword was typed)">custom_once_space<STRING> $cursor$ end</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space after keyword was typed)">custom_once_return<STRING>%N$indent$%T$cursor$%N$indent$end</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return, other cases)">custom_once_space_later<STRING> $cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space, other cases)">custom_once_return_later<STRING>%N$indent$$cursor$</STRING></TEXT>
 					</TOPIC>
 					<TOPIC TOPIC_ID="deferred" ICON="icon_preferences_folder">
 						<HEAD>deferred</HEAD>
 						<TEXT DESCRIPTION="Autocomplete deferred">autocomplete_deferred<BOOLEAN>True</BOOLEAN></TEXT>
 						<TEXT DESCRIPTION="Use default autocomplete">use_default_deferred<BOOLEAN>True</BOOLEAN></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Return)">custom_deferred_space<STRING> end$cursor$</STRING></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Space)">custom_deferred_return<STRING>%N$indent$end$cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return after keyword was typed)">custom_deferred_space<STRING> end$cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space after keyword was typed)">custom_deferred_return<STRING>%N$indent$end$cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return, other cases)">custom_deferred_space_later<STRING> $cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space, other cases)">custom_deferred_return_later<STRING>%N$indent$$cursor$</STRING></TEXT>
 					</TOPIC>
 					<TOPIC TOPIC_ID="external" ICON="icon_preferences_folder">
 						<HEAD>external</HEAD>
 						<TEXT DESCRIPTION="Autocomplete external">autocomplete_external<BOOLEAN>True</BOOLEAN></TEXT>
 						<TEXT DESCRIPTION="Use default autocomplete">use_default_external<BOOLEAN>True</BOOLEAN></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Return)">custom_external_space<STRING> "$cursor$" end</STRING></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Space)">custom_external_return<STRING>%N$indent$%T"$cursor$"%N$indent$end</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return after keyword was typed)">custom_external_space<STRING> "$cursor$" end</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space after keyword was typed)">custom_external_return<STRING>%N$indent$%T"$cursor$"%N$indent$end</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return, other cases)">custom_external_space_later<STRING> $cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space, other cases)">custom_external_return_later<STRING>%N$indent$$cursor$</STRING></TEXT>
 					</TOPIC>
 					<TOPIC TOPIC_ID="rescue" ICON="icon_preferences_folder">
 					<HEAD>rescue</HEAD>
 						<TEXT DESCRIPTION="Autocomplete rescue">autocomplete_rescue<BOOLEAN>True</BOOLEAN></TEXT>
 						<TEXT DESCRIPTION="Use default autocomplete">use_default_rescue<BOOLEAN>True</BOOLEAN></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Return)">custom_rescue_space<STRING> $cursor$</STRING></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Space)">custom_rescue_return<STRING>%N$indent$%T$cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return after keyword was typed)">custom_rescue_space<STRING> $cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space after keyword was typed)">custom_rescue_return<STRING>%N$indent$%T$cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return, other cases)">custom_rescue_space_later<STRING> $cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space, other cases)">custom_rescue_return_later<STRING>%N$indent$$cursor$</STRING></TEXT>
 					</TOPIC>
 					<TOPIC TOPIC_ID="ensure" ICON="icon_preferences_folder">
 						<HEAD>ensure</HEAD>
 						<TEXT DESCRIPTION="Autocomplete ensure">autocomplete_ensure<BOOLEAN>True</BOOLEAN></TEXT>
 						<TEXT DESCRIPTION="Use default autocomplete">use_default_ensure<BOOLEAN>True</BOOLEAN></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Return)">custom_ensure_space<STRING> $cursor$</STRING></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Space)">custom_ensure_return<STRING>%N$indent$%T$cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return after keyword was typed)">custom_ensure_space<STRING> $cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space after keyword was typed)">custom_ensure_return<STRING>%N$indent$%T$cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return, other cases)">custom_ensure_space_later<STRING> $cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space, other cases)">custom_ensure_return_later<STRING>%N$indent$$cursor$</STRING></TEXT>
+					</TOPIC>
+					<TOPIC TOPIC_ID="ensure then" ICON="icon_preferences_folder">
+						<HEAD>ensure then</HEAD>
+						<TEXT DESCRIPTION="Autocomplete ensure then">autocomplete_ensure_then<BOOLEAN>True</BOOLEAN></TEXT>
+						<TEXT DESCRIPTION="Use default autocomplete">use_default_ensure_then<BOOLEAN>True</BOOLEAN></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return after keyword was typed)">custom_ensure_then_space<STRING> $cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space after keyword was typed)">custom_ensure_then_return<STRING>%N$indent$%T$cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return, other cases)">custom_ensure_then_space_later<STRING> $cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space, other cases)">custom_ensure_then_return_later<STRING>%N$indent$$cursor$</STRING></TEXT>
 					</TOPIC>
 				</TOPIC>
 				<TOPIC TOPIC_ID="control_structures_completion" ICON="icon_preferences_folder">
@@ -179,71 +225,109 @@
 						<HEAD>if</HEAD>
 						<TEXT DESCRIPTION="Autocomplete if">autocomplete_if<BOOLEAN>True</BOOLEAN></TEXT>
 						<TEXT DESCRIPTION="Use default autocomplete">use_default_if<BOOLEAN>True</BOOLEAN></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Return)">custom_if_space<STRING> $cursor$ then%N$indent$%T%N$indent$end</STRING></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Space)">custom_if_return<STRING>%N$indent$%T$cursor$%N$indent$then%N$indent$%T%N$indent$end</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return after keyword was typed)">custom_if_space<STRING> $cursor$ then%N$indent$%T%N$indent$end</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space after keyword was typed)">custom_if_return<STRING>%N$indent$%T$cursor$%N$indent$then%N$indent$%T%N$indent$end</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return, other cases)">custom_if_space_later<STRING> $cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space, other cases)">custom_if_return_later<STRING>%N$indent$$cursor$</STRING></TEXT>
 					</TOPIC>
 					<TOPIC TOPIC_ID="then" ICON="icon_preferences_folder">
 						<HEAD>then</HEAD>
 						<TEXT DESCRIPTION="Autocomplete then">autocomplete_then<BOOLEAN>True</BOOLEAN></TEXT>
 						<TEXT DESCRIPTION="Use default autocomplete">use_default_then<BOOLEAN>True</BOOLEAN></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Return)">custom_then_space<STRING> $cursor$</STRING></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Space)">custom_then_return<STRING>%N$indent$%T$cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return after keyword was typed)">custom_then_space<STRING> $cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space after keyword was typed)">custom_then_return<STRING>%N$indent$%T$cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return, other cases)">custom_then_space_later<STRING> $cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space, other cases)">custom_then_return_later<STRING>%N$indent$$cursor$</STRING></TEXT>
 					</TOPIC>
 					<TOPIC TOPIC_ID="elseif" ICON="icon_preferences_folder">
 						<HEAD>elseif</HEAD>
 						<TEXT DESCRIPTION="Autocomplete else if">autocomplete_elseif<BOOLEAN>True</BOOLEAN></TEXT>
 						<TEXT DESCRIPTION="Use default autocomplete">use_default_elseif<BOOLEAN>True</BOOLEAN></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Return)">custom_elseif_space<STRING> $cursor$ then%N$indent$%T</STRING></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Space)">custom_elseif_return<STRING>%N$indent$%T$cursor$%N$indent$then%N$indent$%T</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return after keyword was typed)">custom_elseif_space<STRING> $cursor$ then%N$indent$%T</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space after keyword was typed)">custom_elseif_return<STRING>%N$indent$%T$cursor$%N$indent$then%N$indent$%T</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return, other cases)">custom_elseif_space_later<STRING> $cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space, other cases)">custom_elseif_return_later<STRING>%N$indent$$cursor$</STRING></TEXT>
 					</TOPIC>
 					<TOPIC TOPIC_ID="else" ICON="icon_preferences_folder">
 						<HEAD>else</HEAD>
 						<TEXT DESCRIPTION="Autocomplete else">autocomplete_else<BOOLEAN>True</BOOLEAN></TEXT>
 						<TEXT DESCRIPTION="Use default autocomplete">use_default_else<BOOLEAN>True</BOOLEAN></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Return)">custom_else_space<STRING> $cursor$</STRING></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Space)">custom_else_return<STRING>%N$indent$%T$cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return after keyword was typed)">custom_else_space<STRING> $cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space after keyword was typed)">custom_else_return<STRING>%N$indent$%T$cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return, other cases)">custom_elseif_space_later<STRING> $cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space, other cases)">custom_elseif_return_later<STRING>%N$indent$$cursor$</STRING></TEXT>
 					</TOPIC>
 					<TOPIC TOPIC_ID="inspect" ICON="icon_preferences_folder">
 						<HEAD>inspect</HEAD>
 						<TEXT DESCRIPTION="Autocomplete inspect">autocomplete_inspect<BOOLEAN>True</BOOLEAN></TEXT>
 						<TEXT DESCRIPTION="Use default autocomplete">use_default_inspect<BOOLEAN>True</BOOLEAN></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Return)">custom_inspect_space<STRING> $cursor$%N$indent$when  then%N$indent$%T%N$indent$else%N$indent$%T%N$indent$end</STRING></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Space)">custom_inspect_return<STRING>%N$indent$%T$cursor$%N$indent$when  then%N$indent$%T%N$indent$else%N$indent$%T%N$indent$end</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return after keyword was typed)">custom_inspect_space<STRING> $cursor$%N$indent$when  then%N$indent$%T%N$indent$else%N$indent$%T%N$indent$end</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space after keyword was typed)">custom_inspect_return<STRING>%N$indent$%T$cursor$%N$indent$when  then%N$indent$%T%N$indent$else%N$indent$%T%N$indent$end</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return, other cases)">custom_inspect_space_later<STRING> $cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space, other cases)">custom_inspect_return_later<STRING>%N$indent$$cursor$</STRING></TEXT>
 					</TOPIC>
 					<TOPIC TOPIC_ID="when" ICON="icon_preferences_folder">
 						<HEAD>when</HEAD>
 						<TEXT DESCRIPTION="Autocomplete when">autocomplete_when<BOOLEAN>True</BOOLEAN></TEXT>
 						<TEXT DESCRIPTION="Use default autocomplete">use_default_when<BOOLEAN>True</BOOLEAN></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Return)">custom_when_space<STRING> $cursor$ then%N$indent$%T</STRING></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Space)">custom_when_return<STRING>%N$indent$%T$cursor$%N$indent$then%N$indent$%T</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return after keyword was typed)">custom_when_space<STRING> $cursor$ then%N$indent$%T</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space after keyword was typed)">custom_when_return<STRING>%N$indent$%T$cursor$%N$indent$then%N$indent$%T</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return, other cases)">custom_when_space_later<STRING> $cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space, other cases)">custom_when_return_later<STRING>%N$indent$$cursor$</STRING></TEXT>
 					</TOPIC>
 					<TOPIC TOPIC_ID="from" ICON="icon_preferences_folder">
 						<HEAD>from</HEAD>
 						<TEXT DESCRIPTION="Autocomplete from">autocomplete_from<BOOLEAN>True</BOOLEAN></TEXT>
 						<TEXT DESCRIPTION="Use default autocomplete">use_default_from<BOOLEAN>True</BOOLEAN></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Return)">custom_from_space<STRING> $cursor$%N$indent$until%N$indent$loop%N$indent$end</STRING></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Space)">custom_from_return<STRING>%N$indent$%T$cursor$%N$indent$until%N$indent$%T%N$indent$loop%N$indent$%T%N$indent$end</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return after keyword was typed)">custom_from_space<STRING> $cursor$%N$indent$until%N$indent$loop%N$indent$end</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space after keyword was typed)">custom_from_return<STRING>%N$indent$%T$cursor$%N$indent$until%N$indent$%T%N$indent$loop%N$indent$%T%N$indent$end</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return, other cases)">custom__space_later<STRING> $cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space, other cases)">custom__return_later<STRING>%N$indent$$cursor$</STRING></TEXT>
 					</TOPIC>
 					<TOPIC TOPIC_ID="variant" ICON="icon_preferences_folder">
 						<HEAD>variant</HEAD>
 						<TEXT DESCRIPTION="Autocomplete variant">autocomplete_variant<BOOLEAN>True</BOOLEAN></TEXT>
 						<TEXT DESCRIPTION="Use default autocomplete">use_default_variant<BOOLEAN>True</BOOLEAN></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Return)">custom_variant_space<STRING> $cursor$</STRING></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Space)">custom_variant_return<STRING>%N$indent$%T$cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return after keyword was typed)">custom_variant_space<STRING> $cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space after keyword was typed)">custom_variant_return<STRING>%N$indent$%T$cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return, other cases)">custom_from_space_later<STRING> $cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space, other cases)">custom_from_return_later<STRING>%N$indent$$cursor$</STRING></TEXT>
+					</TOPIC>
+					<TOPIC TOPIC_ID="until" ICON="icon_preferences_folder">
+						<HEAD>until</HEAD>
+						<TEXT DESCRIPTION="Autocomplete then">autocomplete_until<BOOLEAN>True</BOOLEAN></TEXT>
+						<TEXT DESCRIPTION="Use default autocomplete">use_default_until<BOOLEAN>True</BOOLEAN></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return after keyword was typed)">custom_until_space<STRING> $cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space after keyword was typed)">custom_until_return<STRING>%N$indent$%T$cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return, other cases)">custom_until_space_later<STRING> $cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space, other cases)">custom_until_return_later<STRING>%N$indent$$cursor$</STRING></TEXT>
+					</TOPIC>
+					<TOPIC TOPIC_ID="loop" ICON="icon_preferences_folder">
+						<HEAD>loop</HEAD>
+						<TEXT DESCRIPTION="Autocomplete then">autocomplete_loop<BOOLEAN>True</BOOLEAN></TEXT>
+						<TEXT DESCRIPTION="Use default autocomplete">use_default_loop<BOOLEAN>True</BOOLEAN></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return after keyword was typed)">custom_loop_space<STRING> $cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space after keyword was typed)">custom_loop_return<STRING>%N$indent$%T$cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return, other cases)">custom_loop_space_later<STRING> $cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space, other cases)">custom_loop_return_later<STRING>%N$indent$$cursor$</STRING></TEXT>
 					</TOPIC>
 					<TOPIC TOPIC_ID="debug" ICON="icon_preferences_folder">
 						<HEAD>debug</HEAD>
 						<TEXT DESCRIPTION="Autocomplete debug">autocomplete_debug<BOOLEAN>True</BOOLEAN></TEXT>
 						<TEXT DESCRIPTION="Use default autocomplete">use_default_debug<BOOLEAN>True</BOOLEAN></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Return)">custom_debug_space<STRING> $cursor$ end</STRING></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Space)">custom_debug_return<STRING>%N$indent$%T$cursor$%N$indent$end</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return after keyword was typed)">custom_debug_space<STRING> $cursor$ end</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space after keyword was typed)">custom_debug_return<STRING>%N$indent$%T$cursor$%N$indent$end</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return, other cases)">custom_debug_space_later<STRING> $cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space, other cases)">custom_debug_return_later<STRING>%N$indent$$cursor$</STRING></TEXT>
 					</TOPIC>
 					<TOPIC TOPIC_ID="check" ICON="icon_preferences_folder">
 						<HEAD>check</HEAD>
 						<TEXT DESCRIPTION="Autocomplete check">autocomplete_check<BOOLEAN>True</BOOLEAN></TEXT>
 						<TEXT DESCRIPTION="Use default autocomplete">use_default_check<BOOLEAN>True</BOOLEAN></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Return)">custom_check_space<STRING> $cursor$ end</STRING></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Space)">custom_check_return<STRING>%N$indent$%T$cursor$%N$indent$end</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return after keyword was typed)">custom_check_space<STRING> $cursor$ end</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space after keyword was typed)">custom_check_return<STRING>%N$indent$%T$cursor$%N$indent$end</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return, other cases)">custom_check_space_later<STRING> $cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space, other cases)">custom_check_return_later<STRING>%N$indent$$cursor$</STRING></TEXT>
 					</TOPIC>
 				</TOPIC>
 				<TOPIC TOPIC_ID="inherit_clause_completion" ICON="icon_preferences_folder">
@@ -252,74 +336,94 @@
 						<HEAD>rename</HEAD>
 						<TEXT DESCRIPTION="Autocomplete rename">autocomplete_rename<BOOLEAN>True</BOOLEAN></TEXT>
 						<TEXT DESCRIPTION="Use default autocomplete">use_default_rename<BOOLEAN>True</BOOLEAN></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Return)">custom_rename_space<STRING> $cursor$</STRING></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Space)">custom_rename_return<STRING>%N$indent$%T$cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return after keyword was typed)">custom_rename_space<STRING> $cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space after keyword was typed)">custom_rename_return<STRING>%N$indent$%T$cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return, other cases)">custom_rename_space_later<STRING> $cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space, other cases)">custom_rename_return_later<STRING>%N$indent$$cursor$</STRING></TEXT>
 					</TOPIC>
 					<TOPIC TOPIC_ID="redefine" ICON="icon_preferences_folder">
 						<HEAD>redefine</HEAD>
 						<TEXT DESCRIPTION="Autocomplete redefine">autocomplete_redefine<BOOLEAN>True</BOOLEAN></TEXT>
 						<TEXT DESCRIPTION="Use default autocomplete">use_default_redefine<BOOLEAN>True</BOOLEAN></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Return)">custom_redefine_space<STRING> $cursor$</STRING></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Space)">custom_redefine_return<STRING>%N$indent$%T$cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return after keyword was typed)">custom_redefine_space<STRING> $cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space after keyword was typed)">custom_redefine_return<STRING>%N$indent$%T$cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return, other cases)">custom_rename_space_later<STRING> $cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space, other cases)">custom_rename_return_later<STRING>%N$indent$$cursor$</STRING></TEXT>
 					</TOPIC>
 					<TOPIC TOPIC_ID="undefine" ICON="icon_preferences_folder">
 						<HEAD>undefine</HEAD>
 						<TEXT DESCRIPTION="Autocomplete undefine">autocomplete_undefine<BOOLEAN>True</BOOLEAN></TEXT>
 						<TEXT DESCRIPTION="Use default autocomplete">use_default_undefine<BOOLEAN>True</BOOLEAN></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Return)">custom_undefine_space<STRING> $cursor$</STRING></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Space)">custom_undefine_return<STRING>%N$indent$%T$cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return after keyword was typed)">custom_undefine_space<STRING> $cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space after keyword was typed)">custom_undefine_return<STRING>%N$indent$%T$cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return, other cases)">custom_undefine_space_later<STRING> $cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space, other cases)">custom_undefine_return_later<STRING>%N$indent$$cursor$</STRING></TEXT>
 					</TOPIC>
 					<TOPIC TOPIC_ID="select" ICON="icon_preferences_folder">
 						<HEAD>select</HEAD>
 						<TEXT DESCRIPTION="Autocomplete select">autocomplete_select<BOOLEAN>True</BOOLEAN></TEXT>
 						<TEXT DESCRIPTION="Use default autocomplete">use_default_select<BOOLEAN>True</BOOLEAN></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Return)">custom_select_space<STRING> $cursor$</STRING></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Space)">custom_select_return<STRING>%N$indent$%T$cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return after keyword was typed)">custom_select_space<STRING> $cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space after keyword was typed)">custom_select_return<STRING>%N$indent$%T$cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return, other cases)">custom_select_space_later<STRING> $cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space, other cases)">custom_select_return_later<STRING>%N$indent$$cursor$</STRING></TEXT>
 					</TOPIC>
 					<TOPIC TOPIC_ID="export" ICON="icon_preferences_folder">
 						<HEAD>export</HEAD>
 						<TEXT DESCRIPTION="Autocomplete export">autocomplete_export<BOOLEAN>True</BOOLEAN></TEXT>
 						<TEXT DESCRIPTION="Use default autocomplete">use_default_export<BOOLEAN>True</BOOLEAN></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Return)">custom_export_space<STRING> $cursor$</STRING></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Space)">custom_export_return<STRING>%N$indent$%T$cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return after keyword was typed)">custom_export_space<STRING> $cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space after keyword was typed)">custom_export_return<STRING>%N$indent$%T$cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return, other cases)">custom_export_space_later<STRING> $cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space, other cases)">custom_export_return_later<STRING>%N$indent$$cursor$</STRING></TEXT>
 					</TOPIC>
 				</TOPIC>
 				<TOPIC TOPIC_ID="misc_completion" ICON="icon_preferences_folder">
 					<HEAD>Other keywords</HEAD>
-					<TOPIC TOPIC_ID="precursor" ICON="icon_preferences_folder">
-						<HEAD>precusor</HEAD>
-						<TEXT DESCRIPTION="Autocomplete precursor">autocomplete_precursor<BOOLEAN>True</BOOLEAN></TEXT>
+					<TOPIC TOPIC_ID="Precursor" ICON="icon_preferences_folder">
+						<HEAD>Precusor</HEAD>
+						<TEXT DESCRIPTION="Autocomplete Precursor">autocomplete_precursor<BOOLEAN>True</BOOLEAN></TEXT>
 						<TEXT DESCRIPTION="Use default autocomplete">use_default_precursor<BOOLEAN>True</BOOLEAN></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Return)">custom_precursor_space<STRING> {$cursor$}</STRING></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Space)">custom_precursor_return<STRING>%N$indent$%T$cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return after keyword was typed)">custom_precursor_space<STRING> {$cursor$}</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space after keyword was typed)">custom_precursor_return<STRING>%N$indent$%T$cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return, other cases)">custom_precursor_space_later<STRING> $cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space, other cases)">custom_precursor_return_later<STRING>%N$indent$$cursor$</STRING></TEXT>
 					</TOPIC>
 					<TOPIC TOPIC_ID="create" ICON="icon_preferences_folder">
 						<HEAD>create</HEAD>
 						<TEXT DESCRIPTION="Autocomplete create">autocomplete_create<BOOLEAN>True</BOOLEAN></TEXT>
 						<TEXT DESCRIPTION="Use default autocomplete">use_default_create<BOOLEAN>True</BOOLEAN></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Return)">custom_create_space<STRING> $cursor$</STRING></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Space)">custom_create_return<STRING>%N$indent$%T$cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return after keyword was typed)">custom_create_space<STRING> $cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space after keyword was typed)">custom_create_return<STRING>%N$indent$%T$cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return, other cases)">custom_create_space_later<STRING> $cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space, other cases)">custom_create_return_later<STRING>%N$indent$$cursor$</STRING></TEXT>
 					</TOPIC>
 					<TOPIC TOPIC_ID="obsolete" ICON="icon_preferences_folder">
 						<HEAD>obsolete</HEAD>
 						<TEXT DESCRIPTION="Autocomplete variant">autocomplete_obsolete<BOOLEAN>True</BOOLEAN></TEXT>
 						<TEXT DESCRIPTION="Use default autocomplete">use_default_obsolete<BOOLEAN>True</BOOLEAN></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Return)">custom_obsolete_space<STRING> "$cursor$"</STRING></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Space)">custom_obsolete_return<STRING>%N$indent$%T"$cursor$"</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return after keyword was typed)">custom_obsolete_space<STRING> "$cursor$"</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space after keyword was typed)">custom_obsolete_return<STRING>%N$indent$%T"$cursor$"</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return, other cases)">custom_obsolete_space_later<STRING> $cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space, other cases)">custom_obsolete_return_later<STRING>%N$indent$$cursor$</STRING></TEXT>
 					</TOPIC>
 					<TOPIC TOPIC_ID="invariant" ICON="icon_preferences_folder">
 						<HEAD>invariant</HEAD>
 						<TEXT DESCRIPTION="Autocomplete invariant">autocomplete_invariant<BOOLEAN>True</BOOLEAN></TEXT>
 						<TEXT DESCRIPTION="Use default autocomplete">use_default_invariant<BOOLEAN>True</BOOLEAN></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Return)">custom_invariant_space<STRING> $cursor$</STRING></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Space)">custom_invariant_return<STRING>%N$indent$%T$cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return after keyword was typed)">custom_invariant_space<STRING> $cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space after keyword was typed)">custom_invariant_return<STRING>%N$indent$%T$cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return, other cases)">custom_invariant_space_later<STRING> $cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space, other cases)">custom_invariant_return_later<STRING>%N$indent$$cursor$</STRING></TEXT>
 					</TOPIC>
 					<TOPIC TOPIC_ID="end" ICON="icon_preferences_folder">
 						<HEAD>end</HEAD>
 						<TEXT DESCRIPTION="Autocomplete end">autocomplete_end<BOOLEAN>False</BOOLEAN></TEXT>
 						<TEXT DESCRIPTION="Use default autocomplete">use_default_end<BOOLEAN>True</BOOLEAN></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Return)">custom_end_space<STRING> $cursor$</STRING></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Space)">custom_end_return<STRING>%N$indent$$cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return after keyword was typed)">custom_end_space<STRING> $cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space after keyword was typed)">custom_end_return<STRING>%N$indent$$cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return, other cases)">custom_end_space_later<STRING> $cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space, other cases)">custom_end_return_later<STRING>%N$indent$$cursor$</STRING></TEXT>
 					</TOPIC>
 				</TOPIC>
 			</TOPIC>

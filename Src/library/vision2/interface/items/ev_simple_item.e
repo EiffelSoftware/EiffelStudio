@@ -53,20 +53,6 @@ feature -- Element change
 			text_set: text.is_equal (txt)
 		end
 
-feature -- Status settings
-
--- XX to implement
---	set_parent (par: EV_CONTAINER) is
-			-- Make `par' the new parent of the widget.
-			-- `par' can be Void.
---		require
---			exists: not destroyed
---		do
---			implementation.set_parent (par)
---		ensure
---			parent_set: parent = par
---		end
-
 feature -- Event : command association
 
 	add_activate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is

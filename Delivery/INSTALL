@@ -45,7 +45,7 @@ Most of the examples requires that you have a precompiled version of EiffelBase.
 Gtk+
 ----
 
-ISE Eiffel 5 requires Gtk+ 1.2.6 or above to function correctly.  You can check that you have this installed correctly by typing `gtk-config --version'.  If the reply is not `1.2.*' then gtk+ is not installed correctly. If the reply is 1.2.* you can skip the rest of this section.
+ISE Eiffel 5 requires Gtk+ 1.2.8 or above to function correctly.  You can check that you have this installed correctly by typing `gtk-config --version'.  If the reply is not `1.2.*' then gtk+ is not installed correctly. If the reply is 1.2.* you can skip the rest of this section.
 
 Included with the ISE Eiffel delivery is the source code for Gtk+, to install Gtk+ on your system look in the $ISE_EIFFEL/library/gel directory.  There you can conveniently type `Make' and then Gtk+ will be compiled, you will then need to type 'Make install' (you may need to be Root to do this) to copy over the gtk+ configuration files required for C compilation.
 

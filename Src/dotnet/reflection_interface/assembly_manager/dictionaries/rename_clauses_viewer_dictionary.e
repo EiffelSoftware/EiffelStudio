@@ -16,11 +16,11 @@ feature -- Access
 			external_name: "AddButtonLabel"
 		end
 
---	Alignment: INTEGER is 5
---			-- Alignment in list view
---		indexing
---			external_name: "Alignment"
---		end
+	Alignment: INTEGER is 5
+			-- Alignment in list view
+		indexing
+			external_name: "Alignment"
+		end
 
 	As_keyword: STRING is "as"
 			-- As keyword
@@ -64,19 +64,19 @@ feature -- Access
 			external_name: "ExternalName"
 		end
 
---	List_height: INTEGER is 
---			-- Rename list height
---		indexing
---			external_name: "ListHeight"
---		once
---			Result := Window_height - 14 * Margin - 6 * Label_height - 2 * Button_height
---		end
+	List_height: INTEGER is 
+			-- Rename list height
+		indexing
+			external_name: "ListHeight"
+		once
+			Result := Window_height - 14 * Margin - 6 * Label_height - 2 * Button_height
+		end
 
---	List_view_border_style: INTEGER is 1
---			-- List view border style
---		indexing
---			external_name: "ListViewBorderStyle"
---		end
+	List_view_border_style: INTEGER is 1
+			-- List view border style
+		indexing
+			external_name: "ListViewBorderStyle"
+		end
 
 	New_clause: STRING is "-- New clause"
 			-- New clause
@@ -96,11 +96,11 @@ feature -- Access
 			external_name: "OpeningBracket"
 		end
 		
---	Panel_border_style: INTEGER is 0
---			-- Panel border style: none
---		indexing
---			external_name: "PanelBorderStyle"
---		end
+	Panel_border_style: INTEGER is 0
+			-- Panel border style: none
+		indexing
+			external_name: "PanelBorderStyle"
+		end
 		
 	Parent_label_text: STRING is "Parent: " 
 			-- Text of parent label
@@ -140,10 +140,16 @@ feature -- Access
 			external_name: "Title"
 		end
 
---	View: INTEGER is 3
---			-- View property for list view
---		indexing
---			external_name: "View"
---		end
+	View: INTEGER is 3
+			-- View property for list view
+		indexing
+			external_name: "View"
+		end
+
+	Window_height: INTEGER is 600
+			-- Window height
+		indexing
+			external_name: "WindowHeight"
+		end
 
 end -- class RENAME_CLAUSES_VIEWER_DICTIONARY

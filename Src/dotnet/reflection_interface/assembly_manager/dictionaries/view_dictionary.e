@@ -41,10 +41,10 @@ feature -- Access
 			external_name: "Space"
 		end
 		
---	Window_height: INTEGER is 600
---			-- Window height
---		indexing
---			external_name: "WindowHeight"
---		end
+	Window_height: INTEGER is 600
+			-- Window height
+		indexing
+			external_name: "WindowHeight"
+		end
 	
 end -- class VIEW_DICTIONARY

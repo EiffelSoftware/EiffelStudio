@@ -100,13 +100,6 @@ feature -- Execution
 
 feature {NONE} -- Implementation
 
-	Wizards_path: DIRECTORY_NAME is
-			-- Path where are located the wizards descriptions.
-		once
-			create Result.make_from_string (Eiffel_installation_dir_name)
-			Result.extend_from_array (<<"bench", "wizards">>)
-		end
-
 	launch_wizard (callback_filename: STRING) is
 			-- Launch the wizard using the file `callback_filename' as callback.
 		local

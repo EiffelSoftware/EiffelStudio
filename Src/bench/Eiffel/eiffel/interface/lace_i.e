@@ -357,6 +357,7 @@ feature -- Status setting
 			Parser.parse_file (file_name, False)
 			Result ?= Parser.ast
 			if Result /= Void then
+				update_ace_for_dotnet (Result)
 				update_ace_for_eweasel_on_dotnet (Result)
 				Result.set_comment_list (Parser.comment_list)
 			end
@@ -597,6 +598,61 @@ feature {NONE} -- Implementation
 		rescue
 			retried := True
 			retry
+		end
+
+	update_ace_for_dotnet (a_root: ACE_SD) is
+			-- Update `a_root' with data required to compile a .NET system.
+			-- At the moment it only adds a reference to the Eiffel .NET runtime.
+		require
+			a_root_not_void: a_root /= Void
+		local
+			l_assemblies: LACE_LIST [ASSEMBLY_SD]
+			l_assembly: ASSEMBLY_SD
+			l_factory: LACE_AST_FACTORY
+			l_found: BOOLEAN
+			l_runtime_path: ID_SD
+			l_runtime, l_other: STRING
+		do
+			if a_root.is_dotnet_project then
+					-- Let's add a reference to EiffelSoftware.Runtime.dll
+					-- needed to compile our kernel classes when IL code
+					-- generation is enabled
+				l_assemblies := a_root.assemblies
+				create l_factory
+				l_runtime := (create {EIFFEL_ENV}).eiffelsoftware_runtime_path.twin
+				l_runtime_path := l_factory.new_id_sd (l_runtime, True)
+				if l_assemblies = Void then
+					create l_assemblies.make (3)
+					a_root.set_assemblies (l_assemblies)
+					create l_assembly.initialize (
+						l_factory.new_id_sd ("eiffelsoftware_runtime", True),
+						l_runtime_path, Void, Void, Void, Void)
+					l_assemblies.extend (l_assembly)
+				else
+						-- Let's find if we already have a matching cluster, i.e.
+						-- with the same `assembly_name'.
+					from
+						l_assemblies.start
+						l_runtime.to_lower
+					until
+						l_assemblies.after or l_found
+					loop
+						l_other := l_assemblies.item.assembly_name.string
+						l_other.replace_substring_all ("/", "\")
+						l_other.to_lower
+						l_found := l_other.is_equal (l_runtime)
+						l_assemblies.forth
+					end
+						-- Assembly was not found, let's add it to the Ace file.
+					if not l_found then
+						create l_factory
+						create l_assembly.initialize (
+							l_factory.new_id_sd ("eiffelsoftware_runtime", True),
+							l_runtime_path, Void, Void, Void, Void)
+						l_assemblies.extend (l_assembly)
+					end
+				end
+			end
 		end
 
 	update_ace_for_eweasel_on_dotnet (a_root: ACE_SD) is

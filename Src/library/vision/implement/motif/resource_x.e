@@ -1,6 +1,7 @@
 indexing
 
-	description: "A resource X";
+	description: 
+		"A manager for X resource.";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
@@ -9,54 +10,101 @@ deferred class RESOURCE_X
 
 inherit
 
-	MEMORY
-		undefine
-			dispose
+	SHARED_MEL_DISPLAY;
+
+	W_MAN_GEN
+		export
+			{NONE} all
 		end
 
-feature 
+feature -- Access
 
-	make (a_screen: SCREEN_I; an_identifier: POINTER; is_allocated_r: BOOLEAN) is
-			-- Create a resource on `a_screen'
-			-- with `an_identifier' as X identifier
-		do
-			screen := a_screen;
-			identifier := an_identifier;
-			is_allocated := is_allocated_r;
-			screen_object := screen.screen_object;
-		ensure
-			screen = a_screen;
-			identifier = an_identifier;
-			is_allocated = is_allocated_r
-		end; 
-
-	screen: SCREEN_I;
-			-- Pointer on the display used
-
-	screen_object: POINTER;
-			-- Screen's screen object.
-			--| The reason for a separate attribute (instead of 
-			--| using screen.screen_object) so that the Current objects
-			--| does not reference the `screen' in the dispose
-			--| routine. It is very important that no references
-			--| are used in the dispose routine because they maybe
-			--| garbage collected first. However, we can use expanded types
-			--| in the dispose routine.
-
-	is_allocated: BOOLEAN;
-			-- Is resource allocated by the program ?
-
-	identifier: POINTER
-			-- X identifier of the resource
-
-
-	set_allocated (b: BOOLEAN) is
-		do
-			is_allocated := b;
+	display: MEL_DISPLAY is
+			-- Display where resource is allocated
+		deferred
 		end;
 
-end 
+	is_allocated: BOOLEAN
+			-- Has the resource been allocated yet?
 
+	has_valid_display: BOOLEAN is
+			-- Does the Current resource have a display?
+		do
+			Result := display /= Void and then display.is_valid
+		end;
+
+feature -- Element change
+
+	increment_users is
+			-- Increment the `number_of_users' by one.
+		do
+			number_of_users := number_of_users + 1
+		ensure
+			incremented: number_of_users = old number_of_users + 1
+		end;
+
+	decrement_users is
+			-- Decrement the `number_of_users' by one.
+		do
+			number_of_users := number_of_users - 1
+		ensure
+			decremented: number_of_users = old number_of_users - 1
+		end;
+
+feature {NONE} -- Update
+
+	update_widgets is
+			-- Update widgets.
+		local
+			area: SPECIAL [WIDGET];
+			w: WIDGET_M;
+			real_users, saved_nbr_of_users, i, ct: INTEGER;
+		do
+			if number_of_users /= 0 then
+debug ("VISION")
+	io.error.putstring ("Calling `update_widgets'%N");
+end
+				from
+					saved_nbr_of_users := number_of_users;
+						-- Reset `number_of_users' since
+						-- this will be updated in `update_widget_resource'.
+						-- `number_of_users' may not be accurate if the
+						-- widgets using the resource were destroyed.
+					number_of_users := 0;
+					area := widget_manager.area;
+					ct := widget_manager.count;
+					i := 0
+				until
+					i >= ct or else number_of_users = saved_nbr_of_users
+				loop
+					w ?= area.item (i);
+					update_widget_resource (w);
+					i := i + 1
+				end
+				check
+					valid_number_of_users: saved_nbr_of_users >= number_of_users
+				end;
+			end
+		end;
+
+	update_widget_resource (widget_m: WIDGET_M) is
+			-- Update resource for `widget_m'.
+		require
+			widget_m_not_null: widget_m /= Void;
+			has_users: number_of_users > 0
+		deferred
+		end;
+
+feature {NONE} -- Implementation
+
+	number_of_users: INTEGER;
+			-- Number of widgets who use this resource
+
+invariant
+
+	has_valid_display: display /= Void
+
+end -- class RESOURCE_X
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.

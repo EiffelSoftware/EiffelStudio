@@ -1,4 +1,3 @@
---| FIXME Not for release
 indexing 
 	description:
 		"Eiffel Vision file open dialog. Mswindows implementation."
@@ -52,6 +51,9 @@ end -- class EV_FILE_OPEN_DIALOG_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2000/03/07 01:53:25  brendel
+--| Released
+--|
 --| Revision 1.4  2000/02/14 11:40:42  oconnor
 --| merged changes from prerelease_20000214
 --|

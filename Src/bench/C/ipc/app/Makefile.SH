@@ -91,35 +91,14 @@ MT_OBJ = \
     MTproto.o \
     MTserver.o
 
-MTlisten.c: listen.c
-	$(RM) $@
-	$(LN) listen.c $@
-remove::
-	$(RM) MTlisten.c
+MTlisten.o: listen.c
+	$(CC) -c $(JMTCFLAGS)  $< -o $@
 
-MTproto.c: proto.c
-	$(RM) $@
-	$(LN) proto.c $@
-remove::
-	$(RM) MTproto.c
+MTproto.o: proto.c
+	$(CC) -c $(JMTCFLAGS)  $< -o $@
 
-MTserver.c: server.c
-	$(RM) $@
-	$(LN) server.c $@
-remove::
-	$(RM) MTserver.c
-
-MTlisten.o: MTlisten.c
-	$(CC) -c $(JMTCFLAGS)  $*.c
-	$(RM) $*.c
-
-MTproto.o: MTproto.c
-	$(CC) -c $(JMTCFLAGS)  $*.c
-	$(RM) $*.c
-
-MTserver.o: MTserver.c
-	$(CC) -c $(JMTCFLAGS)  $*.c
-	$(RM) $*.c
+MTserver.o: server.c
+	$(CC) -c $(JMTCFLAGS)  $< -o $@
 
 # Derived library object file names
 LOBJ = \

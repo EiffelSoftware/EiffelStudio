@@ -76,6 +76,8 @@ inherit
 			text_length as wel_text_length,
 			select_item as select_item_at
 		undefine
+			on_show,
+			on_hide,
 			on_move,
 			on_size,
 			on_right_button_up,
@@ -140,7 +142,6 @@ feature -- Initialization
 					has_height := false
 				end
 				private_scroll_width := wel_width
-				--resize_for_shell
 				show
 			end
 		end
@@ -827,10 +828,6 @@ feature {NONE} -- Implementation
 			Result := window_border_height
 		end
 
-	default_style: INTEGER
-			-- Default style of the listbox
-			--|Related to the selection mode.
-
 	create_list_box is
 			-- Create the list
 		local
@@ -838,28 +835,23 @@ feature {NONE} -- Implementation
 		do
 			if multiple_selection then
 				!! private_selected_positions.make
-				default_style := Multiple_select_style
-			else
-				default_style := Single_select_style
 			end
 			wc ?= parent
 			wel_make (wc, x, y, width, height, id_default)
 		end
 
-	Single_select_style: INTEGER is
-			-- Single selection style
-		once
-			Result := Ws_visible + Ws_child + Ws_group +
-				Ws_tabstop + Ws_border + Ws_vscroll +
-				Lbs_notify
-		end
-
-	Multiple_select_style: INTEGER is
-			-- Multiple selection style
-		once
-			Result := Ws_visible + Ws_child + Ws_group +
-				Ws_tabstop + Ws_border + Ws_vscroll +
-				Lbs_notify + Lbs_multiplesel
+	default_style: INTEGER is
+			-- Style for creation
+		do
+			if multiple_selection then
+				Result := Ws_visible + Ws_child + Ws_group +
+					Ws_tabstop + Ws_border + Ws_vscroll +
+					Lbs_notify + Lbs_multiplesel
+			else
+				Result := Ws_visible + Ws_child + Ws_group +
+					Ws_tabstop + Ws_border + Ws_vscroll +
+					Lbs_notify
+			end
 		end
 
 	fill_list_box is

@@ -142,7 +142,7 @@ feature -- Control
 				l_parents.after
 			loop
 				parent_type := l_parents.item
-				id := parent_type.base_class_id
+				id := parent_type.class_id
 				if not l_list.has (id) then
 						-- Do not recheck twice the same parent.
 					l_list.force (id)
@@ -164,7 +164,9 @@ feature -- Control
 					-- we might be able to make sure the feature is
 					-- part of the Current class interface.
 				if
-					not (feat.is_external and then not feat.is_c_external) and then
+-- FIXME: Manu 1/21/2001: following code has been commented out to enable basic
+-- inheritance to external classes.
+--					not (feat.is_external and then not feat.is_c_external) and then
 					(feat.feature_name_id /= feature {PREDEFINED_NAMES}.Void_name_id)
 				then
 					compare_with_parent (feat, par_feats)
@@ -304,7 +306,7 @@ feature {NONE} -- Implementation
 								inspect
 									feature_insertion_type
 								when insert_origin_only_type then
-									
+
 								when insert_renaming_type then
 									if feat.feature_name_id /= l_old_feat.feature_name_id then
 										add_feature (feat)

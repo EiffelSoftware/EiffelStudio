@@ -1,0 +1,37 @@
+#!/bin/sh
+
+MINUS_O=0
+MINUS_C=0
+dummy_c_file="XWYZ.c"
+
+for arg in $*; do
+  if [ $MINUS_O = 1 ]; then
+    OBJ=$arg
+    MINUS_O=2
+  else
+    if [ $arg = "-o" ]; then
+      MINUS_O=1
+    else
+      if echo $arg | grep "\.c" > /dev/null 2>&1; then
+        SRC=$arg
+        MINUS_C=1
+	args="$args $dummy_c_file"
+      else
+        args="$args $arg"
+      fi
+    fi
+  fi
+done
+
+if [ $MINUS_O = 2 ] ; then
+  if [ $MINUS_C = 1 ] ; then
+    cp $SRC $dummy_c_file
+    cc $args
+    mv `echo $dummy_c_file | sed 's/\.c/\.o/'` $OBJ
+    rm $dummy_c_file
+  else
+    cc $*
+  fi
+else
+  cc $*
+fi

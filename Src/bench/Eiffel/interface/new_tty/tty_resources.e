@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 						Eiffel_project.set_tmp_directory (general_tmp_path)
 					else
 						error_occurred := True
-						error_msg := clone(system_general)
+						error_msg := system_general.twin
 						error_msg.append (Warning_messages.w_file_does_not_exist_execution_impossible)
 					end
 				else

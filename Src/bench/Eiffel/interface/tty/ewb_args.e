@@ -37,7 +37,7 @@ feature {NONE} -- Execution
 				-- Get the arguments
 			io.putstring ("--> Arguments: ");
 			command_line_io.wait_for_return;
-			new_args := clone (io.laststring);
+			new_args := io.laststring.twin
 			if new_args.is_empty then
 				if not args.is_empty then
 					io.putstring ("No value entered. Do you want to: %N%

@@ -34,7 +34,7 @@ feature {NONE} -- Help message
 		local
 			i: INTEGER
 		do
-			Result := clone (language_help);
+			Result := language_help.twin
 			Result.append ("%N%T%T%T%T");
 			from
 				i := 1;

@@ -35,7 +35,7 @@ feature {NONE} -- Help message
 		local
 			i: INTEGER
 		do
-			Result := clone (input_help);
+			Result := input_help.twin
 			Result.append ("%N%T%T%T%T");
 			if filenames.count = 0 then
 				Result.append ("[last_output]");

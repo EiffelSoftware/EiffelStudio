@@ -148,7 +148,8 @@ rt_public void evpush(va_alist)
 	 * pre-allocated for that purpose (we can't really call the GC before all
 	 * the locals have been pushed).
 	 */
-	
+
+	EIF_GET_CONTEXT
 	register1 int n;				/* Number of elements to be pushed */
 	register2 char **top;			/* The current top of the stack */
 #ifdef EIF_WINDOWS
@@ -232,6 +233,7 @@ rt_public void evpush(va_alist)
 	va_end(ap);				/* End processing of argument list */
 
 	SIGRESUME;				/* Leaving critical section */
+	EIF_END_GET_CONTEXT
 }
 
 rt_public char **eget(register int num)

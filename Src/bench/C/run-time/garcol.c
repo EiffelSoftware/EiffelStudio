@@ -42,13 +42,6 @@
 extern void eif_cleanup(void); /* %%ss added. In extra/win32/console/argcargv.c */
 #endif
 
-/* Algorithm used by the GC to mark the objects. Select one of the following.
- * By default, recursive marking is selected.
- */
-/*#define RECURSIVE_MARKING		/* Select recursive marking, default */
-#define HYBRID_MARKING		/* Select combined marking */
-/*#define ITERATIVE_MARKING		/* Select iterative marking */
-
 /* Select recursive marking is none is choosen */
 #ifndef HYBRID_MARKING
 #ifndef ITERATIVE_MARKING
@@ -108,7 +101,7 @@ rt_private struct stack parent_expanded_stack = {	/* Records expanded parents */
  * collection process and help the auto-adaptative algorithm in its
  * decisions (heuristics).
  */
-rt_shared struct gacinfo g_data = {			/* Global status */
+rt_shared struct gacinfo g_data = {			/* Global status */	/* %%zmt */
 	0L,			/* nb_full */
 	0L,			/* nb_partial */
 	0L,			/* mem_used */
@@ -142,7 +135,7 @@ rt_shared struct gacstat g_stat[GST_NBR] = {	/* Run-time statistics */
  * the garbage collector or the memory management routines.
  */
 
-rt_shared struct stack loc_stack = {			/* Local indirection stack */
+rt_shared struct stack loc_stack = {			/* Local indirection stack */ /* %%zmt */
 	(struct stchunk *) 0,	/* st_hd */
 	(struct stchunk *) 0,	/* st_tl */
 	(struct stchunk *) 0,	/* st_cur */
@@ -473,6 +466,7 @@ rt_public int scollect(int (*gc_func) (void), int i)
 	 * if any, as well as time between two collections...
 	 * Return the status given by the collection function.
 	 */
+
 	EIF_GET_CONTEXT
 	static uint32 nb_stats[GST_NBR];	/* For average computation */
 	static Timeval lastreal[GST_NBR];	/* Last real time of invocation */
@@ -663,8 +657,10 @@ rt_public void gc_stop(void)
 	 * signal handler).
 	 */
 
+	EIF_GET_CONTEXT
 	if (!(g_data.status & GC_SIG))		/* If not in signal handler */
 		g_data.status |= GC_STOP;		/* Stop GC */
+	EIF_END_GET_CONTEXT
 }
 
 rt_public void gc_run(void)
@@ -678,8 +674,10 @@ rt_public void gc_run(void)
 	 * reference problem--RAM.
 	 */
 
+	EIF_GET_CONTEXT
 	if (!(g_data.status & GC_SIG))		/* If not in signal handler */
 		g_data.status &= ~GC_STOP;		/* Restart GC */
+	EIF_END_GET_CONTEXT
 }
 
 /*
@@ -692,6 +690,7 @@ rt_public void mksp(void)
 	 * maintain statistics on every call.
 	 */
 
+	EIF_GET_CONTEXT
 	int started_here = 0;
 
 	if (prof_recording)
@@ -718,6 +717,7 @@ rt_public void mksp(void)
 			last_gc_time = (utime + stime) - last_gc_time;
 			gc_running = 0;
 		}
+	EIF_END_GET_CONTEXT
 }
 
 rt_private int mark_and_sweep(void)
@@ -729,6 +729,7 @@ rt_private int mark_and_sweep(void)
 	 * all the local reference variables. I suppose no object is already
 	 * marked at the beginning of the processing.
 	 */
+
 	EIF_GET_CONTEXT
 	SIGBLOCK;			/* Block all signals during garbage collection */
 
@@ -767,6 +768,7 @@ rt_public void reclaim(void)
 	 * are known not to have any dispose routine (cf emalloc).
 	 */
 
+	EIF_GET_CONTEXT
 #ifdef EIF_WINDOWS
 	/* struct chunk *c, *cn;*/ /* %%ss removed  since lines below are commented */
 #endif
@@ -804,6 +806,7 @@ rt_public void reclaim(void)
 #ifdef DEBUG
 	dprintf(1)("reclaim: ready to die!\n");
 #endif
+	EIF_END_GET_CONTEXT
 }
 
 rt_private void run_collector(void)
@@ -812,8 +815,8 @@ rt_private void run_collector(void)
 	 * Provision is made for generation scavenging, as this zone cannot be
 	 * collected excepted by using a scavenging algorithm (with no aging).
 	 */
-	EIF_GET_CONTEXT
 
+	EIF_GET_CONTEXT
 	g_data.nb_full++;	/* One more full collection */
 
 #ifdef DEBUG
@@ -1870,6 +1873,7 @@ rt_private char *iterative_mark(char *root)
 	 * For a detailed description of the algorithm, refer to ...
 	 */
 
+	EIF_GET_CONTEXT
 	register1 union overhead *zone;	/* Malloc info zone fields */
 	register2 uint32 flags;			/* Eiffel flags */
 	long offset;					/* Reference's offset */
@@ -2191,6 +2195,7 @@ not_explorable:
 		return zone->ov_fwd;
 	else
 		return root;
+	EIF_END_GET_CONTEXT
 }
 
 char *nget(register1 struct stack *stk)
@@ -2421,6 +2426,7 @@ rt_public void plsc(void)
 	 * updating (available to the user via MEMORY).
 	 */
 
+	EIF_GET_CONTEXT
 	int started_here = 0;
 
 	if (prof_recording)
@@ -2447,6 +2453,7 @@ rt_public void plsc(void)
 			last_gc_time = (utime + stime) - last_gc_time;
 			gc_running = 0;
 		}
+	EIF_END_GET_CONTEXT
 }
 
 rt_private int partial_scavenging(void)
@@ -2486,6 +2493,7 @@ rt_shared void urgent_plsc(char **object)
 	 * which must be part of the local roots for the collector.
 	 */
 
+	EIF_GET_CONTEXT
 	int started_here = 0;
 
 	if (prof_recording)
@@ -2521,6 +2529,7 @@ rt_shared void urgent_plsc(char **object)
 			last_gc_time = (utime + stime) - last_gc_time;
 			gc_running = 0;
 		}
+	EIF_END_GET_CONTEXT
 }
 
 rt_private void clean_zones(void)
@@ -2533,6 +2542,7 @@ rt_private void clean_zones(void)
 	 * time, but some C blocks may pollute the zones if we are low in memory).
 	 */
 
+	EIF_GET_CONTEXT
 	if (!(g_data.status & GC_PART))
 		return;				/* A simple mark and sweep was done */
 
@@ -2628,6 +2638,7 @@ rt_private void clean_zones(void)
 		return;
 
 	ps_to.sc_arena = (char *) 0;		/* Signals: no valid 'to' space */
+	EIF_END_GET_CONTEXT
 }
 
 rt_private void init_plsc(void)
@@ -3396,6 +3407,7 @@ rt_private int generational_collect(void)
 	 * The routine returns 0 if collection performed normally, -1 if GC is
 	 * stopped or generation scavenging was stopped for some reason.
 	 */
+
 	EIF_GET_CONTEXT
 	register1 int age;			/* Computed tenure age */
 	register2 int overused;		/* Amount of data over watermark */
@@ -3955,6 +3967,7 @@ done:
 #ifdef ITERATIVE_MARKING
 rt_private char *it_gen_mark(char *root)
 {
+	EIF_GET_CONTEXT
 	register1 union overhead *zone;	/* Malloc info zone fields */
 	register2 uint32 flags;			/* Eiffel flags */
 	long offset;					/* Reference's offset */
@@ -4251,6 +4264,7 @@ not_explorable:
 		return zone->ov_fwd;
 	else
 		return root;
+	EIF_END_GET_CONTEXT
 }
 #endif /* ITERATIVE_MARKING */
 
@@ -4425,6 +4439,7 @@ rt_private void update_moved_set(void)
 	 * outside the scavenge zone (those in the moved set, precisely).
 	 */
 
+	EIF_GET_CONTEXT
 	register1 char **obj;			/* Pointer to objects held in a stack */
 	register2 int i;				/* Number of items in stack chunk */
 	register3 union overhead *zone;	/* Referenced object's header */
@@ -4534,6 +4549,7 @@ rt_private void update_moved_set(void)
 	 */
 
 	st_truncate(&moved_set);
+	EIF_END_GET_CONTEXT
 }
 
 rt_private void update_rem_set(void)
@@ -4547,6 +4563,7 @@ rt_private void update_rem_set(void)
 	 * which means they are not affected by generation collections.
 	 */
 
+	EIF_GET_CONTEXT
 	char **object;					/* Current inspected object */
 	int n;							/* Number of objects to be dealt with */
 	struct stack new_stack;			/* The new stack built from the old one */
@@ -4676,6 +4693,7 @@ rt_private void update_rem_set(void)
 	 */
 	
 	st_truncate(&rem_set);
+	EIF_END_GET_CONTEXT
 }
 
 rt_shared int refers_new_object(register char *object)
@@ -4739,6 +4757,7 @@ rt_private void swap_gen_zones(void)
 	 * no need to loop over the old 'from' and dispose dead objects: no objects
 	 * with a dispose procedure are allowed to be allocated there.
 	 */
+
 	EIF_GET_CONTEXT
 	struct sc_zone temp;				/* For swapping */
 
@@ -4826,6 +4845,7 @@ rt_shared void gfree(register union overhead *zone)
 	 * freed AFTER dispose has been called...
 	 */
 
+	EIF_GET_CONTEXT
 	char gc_status;					/* Saved GC status */
 	char saved_in_assertion;		/* Saved in_assertion value */
 	register2 uint32 dtype;			/* Dynamic type of object */
@@ -4870,6 +4890,7 @@ rt_shared void gfree(register union overhead *zone)
 #endif
 
 	xfree((char *) (zone + 1));		/* Put object back to free-list */
+	EIF_END_GET_CONTEXT
 }
 
 /* Once functions need to be kept in a dedicated stack, so that they are

@@ -466,11 +466,6 @@ void display_splash()
     RECT sr;
     HPALETTE palette;
 
-	int i,lines,random;
-	size_t j;
-	CHAR st[100];
-	SIZE size;
-
     dc = CreateDC ("DISPLAY", NULL, NULL, NULL);
     Bitmap = LoadResourceBitmap (hInst, MAKEINTRESOURCE (1024),  &palette);
 

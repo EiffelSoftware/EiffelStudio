@@ -59,7 +59,22 @@ feature {ICOR_EXPORTER} -- Access
 				Result := Result.substring (l_pos + 1, Result.count)			
 			end
 		end
-	
+
+feature {ICOR_DEBUG_MODULE} -- Restricted Access	
+
+	get_md_import_interface: MD_IMPORT is
+			-- Return a meta data interface pointer that can be used to examine the
+			-- meta data for this module
+		local
+			p: POINTER
+		do
+			last_call_success := cpp_get_MetaDataImport_interface (item, $p)
+			if p /= default_pointer then
+				create Result.make_by_pointer (p)
+				Result.add_ref
+			end			
+		end
+		
 feature {ICOR_EXPORTER} -- Access
 
 	get_process: ICOR_DEBUG_PROCESS is
@@ -174,18 +189,6 @@ feature {ICOR_EXPORTER} -- Access
 			end
 		ensure
 			success: last_call_success = 0
-		end
-
-	get_md_import_interface: MD_IMPORT is
-			-- Return a meta data interface pointer that can be used to examine the
-			-- meta data for this module
-		local
-			p: POINTER
-		do
-			last_call_success := cpp_get_MetaDataImport_interface (item, $p)
-			if p /= default_pointer then
-				create Result.make_by_pointer (p)
-			end			
 		end
 		
 	get_token: INTEGER is

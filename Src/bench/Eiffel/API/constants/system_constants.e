@@ -137,6 +137,8 @@ feature {NONE}
 			Result := Platform_constants.Preobj
 		end;
 
+	Project_txt: STRING is "project.txt"
+
 	Removed_log_file_name: STRING is "REMOVED";
 
 	Static_log_file_name: STRING is "STATIC";
@@ -146,8 +148,6 @@ feature {NONE}
 	Translation_log_file_name: STRING is "TRANSLAT";
 
 	Updt: STRING is "melted.eif"
-
-	Version_number: STRING is "4.0 Beta j"
 
 	W_code: STRING is "W_code"
 
@@ -160,6 +160,14 @@ feature {NONE}
 				Result := "xpm"
 			end
 		end
+
+feature {NONE} -- Versioning
+
+	Precompilation_id_tag: STRING is "precompilation_id"
+	Version_number: STRING is "4.0 Beta i-j"
+	Version_number_tag: STRING is "eiffelbench_version_number"
+	Storable_version_number: STRING is "4.0 Beta i-j"
+	Storable_version_number_tag: STRING is "storable_version_number"
 
 feature {NONE}
 

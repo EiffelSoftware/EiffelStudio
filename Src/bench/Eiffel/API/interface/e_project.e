@@ -17,7 +17,6 @@ inherit
 		rename
 			system as comp_system
 		end;
-	STORABLE;
 	C_COMPILE_ACTIONS
 		rename
 			system as comp_system
@@ -26,6 +25,7 @@ inherit
 	SHARED_RESCUE_STATUS;
 	SHARED_ERROR_HANDLER;
 	SHARED_APPLICATION_EXECUTION;
+	STORABLE
 
 feature -- Initialization
 
@@ -79,25 +79,25 @@ feature -- Initialization
 			temp: STRING;
 			e_project: like Current;
 			retried: BOOLEAN;
-			p_eif: RAW_FILE;
+			p_eif: PROJECT_EIFFEL_FILE;
 			precomp_dirs: EXTEND_TABLE [REMOTE_PROJECT_DIRECTORY, INTEGER];
 			remote_dir: REMOTE_PROJECT_DIRECTORY
 		do
-			if not retried then
-				p_eif := project_dir.project_eif_file;
-				set_error_status (Ok_status);
-				p_eif.open_read;
-				e_project ?= retrieved (p_eif);
-				if e_project = Void then
-					retried := True;
-				end;
-			end;
---!! FIXME: check Concurrent_Eiffel license
-			if not retried then
-				Project_directory.make_from_string (project_dir.name);
-				if not p_eif.is_closed then
-					p_eif.close
+			p_eif := project_dir.project_eif_file;
+			set_error_status (Ok_status);
+			e_project := p_eif.retrieved_project;
+			if p_eif.error then
+				if p_eif.is_corrupted then
+					set_error_status (Retrieve_corrupt_error_status);
+				elseif p_eif.is_interrupted then
+					set_error_status (Retrieve_interrupt_error_status);
+				else
+					set_error_status (Retrieve_incompatible_error_status);
+					incompatible_version_number.append (p_eif.project_version_number)
 				end
+			else
+--!! FIXME: check Concurrent_Eiffel license
+				Project_directory.make_from_string (project_dir.name);
 				system := e_project.system;
 				!! init_work.make (e_project.saved_workbench);
 				Workbench.init;
@@ -138,21 +138,12 @@ feature -- Initialization
 						Execution_environment.change_working_directory (project_dir.name)
 					end;
 				end
-			else
-				set_error_status (Retrieve_error_status);
-				retried := False;
 			end
 		ensure
 			initialized_if_no_error: not error_occurred implies initialized;
 			error_implies_ret_or_rw: error_occurred implies 
 								retrieval_error or else
 								read_write_error
-		rescue
-			if (p_eif /= Void) and then not p_eif.is_closed then
-				p_eif.close
-			end;
-			retried := True;
-			retry
 		end;
 
 feature -- Properties
@@ -321,12 +312,60 @@ feature -- Error status
 		end;
 
 	retrieval_error: BOOLEAN is
-			-- Was the to retr the project successful?
+			-- Was the project retrieved successful?
 		do
-			Result := error_status = retrieve_error_status 
+			Result := 
+				error_status = retrieve_corrupt_error_status or else
+				error_status = retrieve_interrupt_error_status or else
+				error_status = retrieve_incompatible_error_status
+			
 		ensure
 			correct_error: Result implies 
-						error_status = retrieve_error_status 
+						error_status = retrieve_corrupt_error_status or else
+						error_status = retrieve_interrupt_error_status or else
+						error_status = retrieve_incompatible_error_status 
+		end;
+
+	retrieval_interrupted: BOOLEAN is
+			-- Was the retrieval of the project interrupted?
+		require
+			retrieval_error: retrieval_error
+		do
+			Result := error_status = retrieve_interrupt_error_status 
+		ensure
+			correct_error: Result implies 
+						error_status = retrieve_interrupt_error_status 
+		end;
+
+	is_corrupted: BOOLEAN is
+			-- Is the retrieved project corrupted?
+		require
+			retrieval_error: retrieval_error
+		do
+			Result := error_status = retrieve_corrupt_error_status 
+		ensure
+			correct_error: Result implies 
+						error_status = retrieve_corrupt_error_status 
+		end;
+
+	incompatible_version_number: STRING is
+			-- Incompatible version number of project
+		require	
+			is_project_incompatible: is_incompatible
+		once
+			!! Result.make (0)
+		end
+
+	is_incompatible: BOOLEAN is
+			-- Is the retrieved project incompatible with current version
+			-- of the compiler?
+		require
+			retrieval_error: retrieval_error
+		do
+			Result := error_status = retrieve_incompatible_error_status 
+		ensure
+			correct_error: Result implies 
+						error_status = retrieve_corrupt_error_status 
 		end;
 
 feature -- Status report
@@ -571,14 +610,39 @@ feature -- Output
 			compilation_successful: successful;
 		local
 			retried: BOOLEAN;
-			file: RAW_FILE
+			file: RAW_FILE;
+			tfile: PLAIN_TEXT_FILE
 		do
 			if not retried then
 				error_status_mode.put (Ok_status);
+				!! tfile.make (Project_txt_name);
+				tfile.open_write;
+				tfile.putstring ("-- System name is ");
+				tfile.putstring (System.name);
+				tfile.new_line;
+				tfile.putstring (version_number_tag);
+				tfile.putstring (": %"");
+				tfile.putstring (version_number);
+				tfile.putchar ('"');
+				tfile.new_line;
+				tfile.putstring (storable_version_number_tag);
+				tfile.putstring (": %"");
+				tfile.putstring (storable_version_number);
+				tfile.putchar ('"');
+				tfile.new_line;
+				tfile.putstring (precompilation_id_tag);
+				tfile.putstring (": %"");
+				tfile.putint (Comp_system.compilation_id);
+				tfile.putchar ('"');
+				tfile.new_line;
+				tfile.close;
 				!! file.make (Project_file_name);
 				Comp_system.server_controler.wipe_out;
 				file.open_write;
 				saved_workbench := workbench;
+					-- ******** FIXME remove inheritance to STORABLE
+					-- use Project_directory.project_eif.store
+					-- with new version of base
 				basic_store (file);
 				file.close;
 			else
@@ -680,7 +744,9 @@ feature {NONE} -- Implementation
 
 	Corrupt_status: INTEGER is UNIQUE;
 	Dle_error_status: INTEGER is UNIQUE;
-	Retrieve_error_status: INTEGER is UNIQUE;
+	Retrieve_corrupt_error_status: INTEGER is UNIQUE;
+	Retrieve_incompatible_error_status: INTEGER is UNIQUE;
+	Retrieve_interrupt_error_status: INTEGER is UNIQUE;
 	Save_error_status: INTEGER is UNIQUE;
 	Precomp_save_error_status: INTEGER is UNIQUE;
 	

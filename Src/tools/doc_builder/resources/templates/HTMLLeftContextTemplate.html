@@ -97,10 +97,6 @@ function loadCookie()
 function documentLoaded (aUrl)
 //A new document was loaded in the content frame, so filter it based on filter, and sync the toc.
 {
-
-	//Synchronize the TOC
-	synchronize (aUrl);
-
 	//Extract filter words from filter string
 	var widget = top.filter_frame.document.theForm.filterMenu;
 	var filterString =  widget [widget.selectedIndex].name;
@@ -179,10 +175,13 @@ function documentLoaded (aUrl)
 			</table>
 	  </div>
 		<form name="theForm">
-		<table class="toc_outer_table" border="0" cellpadding="0" cellspacing="0" height="100%">
-				<tr>
-					<td height="15"><a href="javascript:synchronize(parent.content_frame.location.href);"><img src="sync_button.gif" alt="Synchronize Contents"></a></td>
-				</tr>
+			<table border="1" width="100%">
+					<tr>
+						<td height="15" align="right"><a href="javascript:synchronize(parent.content_frame.location.href);"><img src="sync_button.gif" alt="Synchronize Contents"></a></td>
+					</tr>
+			</table>
+			<table class="toc_outer_table" border="0" cellpadding="0" cellspacing="0" height="100%">				
+				<tr><td>&nbsp;</td></tr>
 				<tr>
 					<td valign="top" height="100%">[!TOCHTML!]</td>
 				</tr>

@@ -23,25 +23,38 @@ inherit
 
 	TERMINAL_M
 		rename 
+			xt_parent as t_xt_parent,
+			clean_up as terminal_clean_up
+		undefine
+			make
+		end
+
+	TERMINAL_M
+		rename 
 			xt_parent as t_xt_parent
 		undefine
 			make
+		redefine
+			clean_up
+		select
+			clean_up
 		end
 
 creation
 
 	make
 
-feature -- Creation
+feature {NONE} -- Creation
 
 	make (a_message: MESSAGE) is
 			-- Create a motif message box.
 		local
 			ext_name: ANY
 		do
+			widget_index := widget_manager.last_inserted_position;
 			ext_name := a_message.identifier.to_c;
 			screen_object := create_message ($ext_name,
-				a_message.parent.implementation.screen_object);
+				parent_screen_object (a_message, widget_index));
 		end
 
 feature {NONE}
@@ -71,6 +84,21 @@ feature {NONE}
 			xt_manage_child (xm_message_box_get_child
 				(screen_object, MDIALOG_HELP_BUTTON))
 		end;
+
+	clean_up is
+		do
+			terminal_clean_up;
+			if cancel_actions /= Void then
+				cancel_actions.free_cdfd
+			end;
+			if help_actions /= Void then
+				help_actions.free_cdfd
+			end;
+			if ok_actions /= Void then
+				ok_actions.free_cdfd
+			end
+		end;
+
 
 feature 
 

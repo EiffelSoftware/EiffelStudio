@@ -12,10 +12,23 @@ inherit
 	PROMPT_I;
 
 	TERMINAL_M
+		rename
+			clean_up as terminal_clean_up
 		export
 			{NONE} all
 		undefine
 			make
+		end;
+
+	TERMINAL_M
+		export
+			{NONE} all
+		undefine
+			make
+		redefine
+			clean_up
+		select
+			clean_up
 		end;
 
 	PROMPT_R_M
@@ -34,9 +47,10 @@ feature
 		local
 			ext_name: ANY
 		do
+			widget_index := widget_manager.last_inserted_position;
 			ext_name := a_prompt.identifier.to_c;
 			screen_object := create_prompt ($ext_name,
-				a_prompt.parent.implementation.screen_object)
+				parent_screen_object (a_prompt, widget_index));
 		end;
 
 feature 
@@ -103,6 +117,27 @@ feature {NONE}
 			-- An event handler to manage call-backs when help button
 			-- is activated
 
+	ok_actions: EVENT_HAND_M;
+			-- An event handler to manage call-backs when ok button
+			-- is activated
+
+	clean_up is
+		do
+			terminal_clean_up;
+			if apply_actions /= Void then
+				apply_actions.free_cdfd
+			end;
+			if cancel_actions /= Void then
+				cancel_actions.free_cdfd
+			end;
+			if help_actions /= Void then
+				help_actions.free_cdfd
+			end;
+			if ok_actions /= Void then
+				ok_actions.free_cdfd
+			end;
+		end;
+
 feature 
 
 	hide_apply_button is
@@ -129,11 +164,6 @@ feature
 			xt_unmanage_child (xm_selection_box_get_child (screen_object, MDIALOG_OK_BUTTON))
 		end;
 
-feature {NONE}
-
-	ok_actions: EVENT_HAND_M;
-			-- An event handler to manage call-backs when ok button
-			-- is activated
 
 feature 
 

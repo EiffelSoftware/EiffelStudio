@@ -285,13 +285,6 @@ feature {NONE} -- Externals
 			"bLineSpacingRule"
 		end
 		
-	cwel_paraformat_set_boutlinelevel (ptr: POINTER; value: INTEGER) is
-		external
-			"C [struct %"redit.h%"] (PARAFORMAT2, BYTE)"
-		alias
-			"bOutlineLevel"
-		end
-		
 	cwel_paraformat_set_wshadingweight (ptr: POINTER; value: INTEGER) is
 		external
 			"C [struct %"redit.h%"] (PARAFORMAT2, WORD)"
@@ -402,13 +395,6 @@ feature {NONE} -- Externals
 			"C [struct %"redit.h%"] (PARAFORMAT2): WORD"
 		alias
 			"wShadingWeight"
-		end
-
-	cwel_paraformat_get_boutlinelevel (ptr: POINTER): INTEGER is
-		external
-			"C [struct %"redit.h%"] (PARAFORMAT2): BYTE"
-		alias
-			"bOutlineLevel"
 		end
 
 	cwel_paraformat_get_blinespacingrule (ptr: POINTER): INTEGER is

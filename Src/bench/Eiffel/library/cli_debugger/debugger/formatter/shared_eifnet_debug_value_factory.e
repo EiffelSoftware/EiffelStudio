@@ -20,7 +20,9 @@ feature {SHARED_EIFNET_DEBUG_VALUE_FACTORY} -- Initialization
 feature {SHARED_EIFNET_DEBUG_VALUE_FACTORY} -- Bridge
 
 	debug_value_from_icdv (a_icd: ICOR_DEBUG_VALUE): EIFNET_ABSTRACT_DEBUG_VALUE is
-			-- Bridge to EIFNET_DEBUG_VALUE_FACTORY.debug_value_from 
+			-- Bridge to EIFNET_DEBUG_VALUE_FACTORY.debug_value_from
+		require
+			a_icd_not_void: a_icd /= Void
 		do
 			Result := Edv_factory.debug_value_from (a_icd, a_icd.associated_frame)
 		ensure

@@ -16,6 +16,9 @@
 		</paragraph>
 		<list ordered="false">
 			<item>
+				<bold>EV_CLIPBOARD</bold> - Added 'has_text' so that the clipboard can be queried without retrieving the entire contents
+			</item>
+			<item>
 				<bold>EV_CHECKABLE_TREE</bold> - A new widget that inherits EV_TREE, providing similar functionality but for each item contained a check box is displayed.
 			</item>
 			<item>
@@ -197,6 +200,13 @@
 					</item>
 					<item>
 						<bold>EV_PIXMAP</bold> - Improved pixmap 'stretch' for smaller images
+					</item>
+					<item>
+						<bold>EV_WIDGET</bold>
+								<list ordered="false">
+							<item>Optimized motion event handling so that current motion events only get requested when the previous one has been processed</item>
+							<item>Fixed theme managed handling in all widgets so that fonts when changed outside of the application by the theme manager get reflected in the Vision2 application</item>
+						</list>
 					</item>
 				</list>
 			</item>

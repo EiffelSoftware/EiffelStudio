@@ -18,14 +18,6 @@ DLLFLAGS = $dllflags
 CFLAGS = -I. -I$(TOP) -I$(TOP)/idrs -I$(TOP)/console -I$(TOP)/ipc/app
 NETWORK = $(TOP)\ipc\app\network.$lib
 
-all:: $(INDIR) $(OUTDIR)
-
-$(INDIR) :
-    if not exist $(INDIR)/$(NULL) mkdir $(INDIR)
-
-$(OUTDIR) :
-    if not exist $(OUTDIR)/$(NULL) mkdir $(OUTDIR)
-
 LIBDIR=$(OUTDIR)
 DLLDIR=$(OUTDIR)
 

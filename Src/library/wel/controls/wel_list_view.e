@@ -181,8 +181,8 @@ feature -- Status report
 			exists: exists
 			i_large_enough: i >= 0
 			j_large_enough: j >= 0
-			i_small_enough: i < column_count
-			j_small_enough: j < count
+			i_small_enough: i < count
+			j_small_enough: j < column_count
 		local
 			an_item: WEL_LIST_VIEW_ITEM
 			buffer: STRING
@@ -273,8 +273,8 @@ feature -- Status setting
 			exists: exists
 			i_large_enough: i >= 0
 			j_large_enough: j >= 0
-			i_small_enough: i < column_count
-			j_small_enough: j < count
+			i_small_enough: i < count
+			j_small_enough: j < column_count
 		local
 			an_item: WEL_LIST_VIEW_ITEM
 		do

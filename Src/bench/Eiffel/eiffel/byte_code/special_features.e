@@ -175,7 +175,7 @@ feature -- C special code generation
 				generate_zero (buffer, type_of (basic_type))
 			when one_type then
 				generate_one (buffer, type_of (basic_type))
-			when memory_move, memory_copy, memory_set, memory_alloc, memory_free then
+			when memory_move, memory_copy, memory_set, memory_alloc, memory_free, memory_calloc then
 				check pointer_type: type_of (basic_type) = pointer_type end
 				generate_memory_routine (buffer, function_type, target, parameters)
 			end
@@ -224,6 +224,7 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (memory_copy, feature {PREDEFINED_NAMES}.memory_copy_name_id)
 			Result.put (memory_move, feature {PREDEFINED_NAMES}.memory_move_name_id)
 			Result.put (memory_set, feature {PREDEFINED_NAMES}.memory_set_name_id)
+			Result.put (memory_calloc, feature {PREDEFINED_NAMES}.memory_calloc_name_id)
 			Result.put (memory_alloc, feature {PREDEFINED_NAMES}.memory_alloc_name_id)
 			Result.put (memory_free, feature {PREDEFINED_NAMES}.memory_free_name_id)
 			Result.put (set_bit_with_mask_type, feature {PREDEFINED_NAMES}.set_bit_with_mask_name_id)
@@ -309,7 +310,8 @@ feature {NONE} -- Fast access to feature name
 	upper_type: INTEGER is 31
 	lower_type: INTEGER is 32
 	is_digit_type: INTEGER is 33
-	max_type_id: INTEGER is 33
+	memory_calloc: INTEGER is 34
+	max_type_id: INTEGER is 34
 
 feature {NONE} -- Byte code generation
 
@@ -631,7 +633,7 @@ feature {NONE} -- C code generation
 
 	generate_memory_routine (buffer: GENERATION_BUFFER; f_type: INTEGER; target: REGISTRABLE; parameters: BYTE_LIST [EXPR_B]) is
 			-- Generate fast wrapper for call on `memory_copy',
-			-- `memory_move' and `memory_set' from POINTER.
+			-- `memory_move', `memory_set' and `memory_calloc' from POINTER.
 		require
 			buffer_not_void: buffer /= Void
 			target_not_void: target /= Void
@@ -639,7 +641,7 @@ feature {NONE} -- C code generation
 			valid_function_type:
 				f_type = memory_move or f_type = memory_copy or
 				f_type = memory_set or f_type = memory_free or
-				f_type = memory_alloc
+				f_type = memory_alloc or f_type = memory_calloc
 		do
 			shared_include_queue.put (feature {PREDEFINED_NAMES}.string_header_name_id)
 
@@ -653,17 +655,19 @@ feature {NONE} -- C code generation
 				buffer.putstring ("memset((void *)")
 			when memory_alloc then
 				buffer.putstring ("malloc((size_t)")
+			when memory_calloc then
+				buffer.putstring ("calloc((size_t)")
 			when memory_free then
 				buffer.putstring ("free(")
 			end
 			
-			if f_type /= memory_alloc then
+			if f_type /= memory_alloc and f_type /= memory_calloc then
 				target.print_register
 			end
 			
 			inspect
 				f_type
-			when memory_free, memory_alloc then
+			when memory_free, memory_alloc, memory_calloc then
 			when memory_set then
 				buffer.putstring (", (int) ")
 			else
@@ -672,7 +676,7 @@ feature {NONE} -- C code generation
 
 			inspect
 				f_type
-			when memory_move, memory_set, memory_copy then
+			when memory_move, memory_set, memory_copy, memory_calloc then
 				check
 					valid_parameters: parameters.count = 2
 				end

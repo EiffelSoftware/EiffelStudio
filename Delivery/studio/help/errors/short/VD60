@@ -1,0 +1,4 @@
+Lace error: Missing referred assembly in Ace file.
+What to do: add missing referred assembly in Ace file or remove
+   assembly that refers to it if not needed.
+

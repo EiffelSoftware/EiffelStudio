@@ -9,6 +9,8 @@ class
 
 inherit
 	EV_TREE_NODE_I
+		undefine
+			copy, is_equal
 		redefine
 			parent_imp,
 			interface
@@ -20,7 +22,8 @@ inherit
 		undefine
 			set_pnd_original_parent,
 			pixmap_equal_to,
-			parent
+			parent,
+			copy, is_equal
 		redefine
 			parent_imp,
 			destroy,
@@ -33,11 +36,15 @@ inherit
 		end
 
 	EV_TEXTABLE_IMP
+		undefine
+			copy, is_equal
 		redefine
 			interface
 		end
 
 	EV_TOOLTIPABLE_IMP
+		undefine
+			copy, is_equal
 		redefine
 			interface,
 			set_tooltip
@@ -46,6 +53,8 @@ inherit
 	EV_ITEM_LIST_IMP [EV_TREE_NODE]
 		rename
 			interface as il_interface
+		undefine
+			copy, is_equal
 		redefine
 			initialize
 		end
@@ -65,24 +74,35 @@ inherit
 	WEL_TVIS_CONSTANTS
 		export
 			{NONE} all
+		undefine
+			copy, is_equal
 		end
 
 	WEL_TVI_CONSTANTS
 		export
 			{NONE} all
+		undefine
+			copy, is_equal
 		end
 
 	WEL_TVM_CONSTANTS
 		export
 			{NONE} all
+		undefine
+			copy, is_equal
 		end
 
 	WEL_ILC_CONSTANTS
 		export {NONE}
 			all
+		undefine
+			copy, is_equal
 		end
 
 	EV_TREE_NODE_ACTION_SEQUENCES_IMP
+		undefine
+			copy, is_equal
+		end
 
 create
 	make

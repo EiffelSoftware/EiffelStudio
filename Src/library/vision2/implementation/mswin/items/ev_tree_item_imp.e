@@ -9,6 +9,8 @@ class
 
 inherit
 	EV_TREE_ITEM_I
+		undefine
+			copy, is_equal
 		redefine
 			interface
 		end

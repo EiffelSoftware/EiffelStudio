@@ -68,17 +68,16 @@ feature -- Basic Operations
 			non_void_path: a_path /= Void
 			valid_path: not a_path.is_empty
 		local
-			l_assembly: ASSEMBLY
-			l_new_domain: APP_DOMAIN
+			l_assembly, l_gac_assembly: ASSEMBLY
 		do
 			l_assembly := load_assembly_from_path (a_path)
 			if l_assembly /= Void then
-				l_new_domain := feature {APP_DOMAIN}.create_domain ("gac_loader")
-				Result := l_new_domain.load (l_assembly.get_name)
-				if Result = Void or not Result.global_assembly_cache then
-					Result := l_assembly
-				end
-				feature {APP_DOMAIN}.unload (l_new_domain)
+				l_gac_assembly := load_from_gac (l_assembly.get_name)
+			end
+			if l_gac_assembly = Void or not l_gac_assembly.global_assembly_cache then
+				Result := l_assembly
+			else
+				Result := l_gac_assembly
 			end
 		end
 		
@@ -99,6 +98,28 @@ feature -- Query
 					Result := encoded_key (l_pkt).as_lower.is_equal ("b77a5c561934e089")
 				end				
 			end
+		end
+
+feature {NONE} -- Implementation
+
+	load_from_gac (a_name: ASSEMBLY_NAME): ASSEMBLY is
+			-- Load `a_name' from GAC if possible
+		require
+			a_name_not_void: a_name /= Void
+		local
+			retried: BOOLEAN
+			l_new_domain: APP_DOMAIN
+		do
+			if not retried then
+				l_new_domain := feature {APP_DOMAIN}.create_domain ("gac_loader")
+				Result := l_new_domain.load (a_name)
+			end
+			if l_new_domain /= Void then
+				feature {APP_DOMAIN}.unload (l_new_domain)
+			end
+		rescue
+			retried := True
+			retry
 		end
 
 end -- class SAFE_ASSEMBLY_LOADER

@@ -28,15 +28,13 @@ feature -- Basic operations
 			-- Generate c client for coclass.
 		local
 			default_member: WIZARD_WRITER_C_MEMBER
-			default_function: WIZARD_WRITER_C_FUNCTION
-			function_body, tmp_string: STRING
-			generated_file, generated_header_file: PLAIN_TEXT_FILE
-			tmp_ce_mapper, tmp_ec_mapper: WIZARD_WRITER_C_MEMBER
+			tmp_string: STRING
 		do
 			create cpp_class_writer.make
 			create interface_names.make
 
 			cpp_class_writer.set_name (a_descriptor.c_type_name)
+			cpp_class_writer.set_namespace (a_descriptor.namespace)
 			cpp_class_writer.set_header (a_descriptor.description)
 			cpp_class_writer.set_header_file_name (a_descriptor.c_header_file_name)
 			cpp_class_writer.add_other_source (clsid_definition (a_descriptor.name, a_descriptor.guid))

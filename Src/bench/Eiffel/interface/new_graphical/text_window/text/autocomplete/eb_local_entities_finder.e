@@ -304,7 +304,6 @@ feature {NONE} -- Implementation
 			-- Results will be of form `local ...locals..'
 		local
 			stop: BOOLEAN
-			count: INTEGER
 		do
 			create Result.make_from_string (local_word + "%N")
 			from
@@ -343,7 +342,6 @@ feature {NONE} -- Implementation
 			-- Results will be of form `local ...locals..'
 		local
 			stop: BOOLEAN
-			count: INTEGER
 		do
 			create Result.make_from_string (local_word + "%N")
 			from

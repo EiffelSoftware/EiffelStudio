@@ -74,6 +74,7 @@ EXPORTS
 	exinv
 	exasrt
 	exfail
+	exft
 	eif_panic
 	fatal_error
 	exok

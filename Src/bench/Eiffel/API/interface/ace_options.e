@@ -13,6 +13,7 @@ feature -- Properties
 	has_debug: BOOLEAN
 	has_hide: BOOLEAN
 	has_profile: BOOLEAN
+	has_external_profile: BOOLEAN
 	has_trace: BOOLEAN
 	has_multithreaded: BOOLEAN
 
@@ -50,6 +51,11 @@ feature -- Setting
 			has_profile := b
 		end
 
+	set_has_external_profile (b: BOOLEAN) is
+		do
+			has_external_profile := b
+		end
+
 	set_has_trace (b: BOOLEAN) is
 			-- Set `has_trace' to `b'.
 		do
@@ -60,6 +66,28 @@ feature -- Setting
 			-- Set `has_multithreaded' to `b'
 		do
 			has_multithreaded := b
+		end
+
+feature -- Default value
+
+	reset is
+			-- Reset all the boolean values to `False'.
+		do
+			has_assertion := False
+			has_debug := False
+			has_hide := False
+			has_profile := False
+			has_external_profile := False
+			has_trace := False
+			has_multithreaded := False
+
+			has_dead_code_removal := False
+			array_optimization := False
+			inlining := False
+			collect := False
+			exception_trace := False
+			precompiled := False
+			override_cluster := False
 		end
 
 end -- class ACE_OPTIONS

@@ -119,7 +119,7 @@ feature -- Access
 	Bc_goto_body:		CHARACTER is '%/106/';
 	Bc_not_rec:			CHARACTER is '%/107/';
 	Bc_end_pre:			CHARACTER is '%/108/';
-	Bc_cast_long:		CHARACTER is '%/110/';
+	Bc_cast_integer:	CHARACTER is '%/110/';
 	Bc_cast_real32:		CHARACTER is '%/111/';
 	Bc_cast_real64:		CHARACTER is '%/112/';
 	Bc_inv_null:		CHARACTER is '%/113/';
@@ -180,49 +180,25 @@ feature -- Access
 	Bc_once_string:		CHARACTER is '%/144/'
 	Bc_allocate_once_strings:	CHARACTER is '%/145/'
 
-		-- Instructions for Concurrent Eiffel
-
-	Bc_sep_set:			CHARACTER is '%/150/'; 
-		-- the precondition clause contains separate feature call.
-	Bc_sep_unset:		CHARACTER is '%/151/'; 
-		-- clear the variable indicating if separate feature call has been met
-	Bc_sep_reserve:		CHARACTER is '%/152/'; 
-		-- reserve separate parameters of a feature.
-	Bc_sep_free:		CHARACTER is '%/153/'; 
-		-- free separate parameters of a feature.
-	Bc_sep_to_sep:		CHARACTER is '%/154/'; 
-		-- convert a local reference object into separate object.
-	Bc_sep_raise_prec:	CHARACTER is '%/155/'; 
-		-- process the failure of precondition checking with separate feature call(s)
-	Bc_sep_create:			CHARACTER is '%/156/';
-		-- create a separate object.
-	Bc_sep_create_end: 		CHARACTER is '%/157/';
-		-- end of creating a separate object.
-
-	Bc_sep_attribute_inv:	CHARACTER is '%/158/'; 
-		-- a separate attribute call which is not precompiled.
-	Bc_sep_extern_inv:		CHARACTER is '%/159/';
-		-- a separate external feature call which is not precompiled.
-	Bc_sep_feature_inv:		CHARACTER is '%/160/'; 
-		-- a separate feature call which is not precompiled.
-
-	Bc_sep_pattribute_inv:	CHARACTER is '%/161/'; 
-		-- a separate attribute call which is precompiled.
-	Bc_sep_pextern_inv:		CHARACTER is '%/162/';
-		-- a separate external feature call which is  precompiled.
-	Bc_sep_pfeature_inv:	CHARACTER is '%/163/'; 
-		-- a separate feature call which is precompiled.
-
-		-- The following 4 instructions are only used for creating separate 
-		-- object, and actually they can be got rid of if necessary.
-	Bc_sep_extern:			CHARACTER is '%/164/';
-		-- a separate external feature call which is not precompiled.
-	Bc_sep_feature:			CHARACTER is '%/165/'; 
-		-- a separate feature call which is not precompiled.
-	Bc_sep_pextern:			CHARACTER is '%/166/';
-		-- a separate external feature call which is precompiled.
-	Bc_sep_pfeature:		CHARACTER is '%/167/'; 
-		-- a separate feature call which is precompiled.
+		-- Unused opcode
+	Bc_notused_150:		CHARACTER is '%/150/'; 
+	Bc_notused_151:		CHARACTER is '%/151/'; 
+	Bc_notused_152:		CHARACTER is '%/152/'; 
+	Bc_notused_153:		CHARACTER is '%/153/'; 
+	Bc_notused_154:		CHARACTER is '%/154/'; 
+	Bc_notused_155:		CHARACTER is '%/155/'; 
+	Bc_notused_156:		CHARACTER is '%/156/';
+	Bc_notused_157: 	CHARACTER is '%/157/';
+	Bc_notused_158:		CHARACTER is '%/158/'; 
+	Bc_notused_159:		CHARACTER is '%/159/';
+	Bc_notused_160:		CHARACTER is '%/160/'; 
+	Bc_notused_161:		CHARACTER is '%/161/'; 
+	Bc_notused_162:		CHARACTER is '%/162/';
+	Bc_notused_163:		CHARACTER is '%/163/'; 
+	Bc_notused_164:		CHARACTER is '%/164/';
+	Bc_notused_165:		CHARACTER is '%/165/'; 
+	Bc_notused_166:		CHARACTER is '%/166/';
+	Bc_notused_167:		CHARACTER is '%/167/'; 
 
 		-- Manifest tuple
 	Bc_tuple:				CHARACTER is '%/168/'

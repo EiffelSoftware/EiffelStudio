@@ -21,10 +21,9 @@ class LINKED_LIST [G] inherit
 		end
 
 create
-
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make is
 			-- Create an empty list.

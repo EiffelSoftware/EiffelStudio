@@ -20,13 +20,12 @@ inherit
 			resize_action, stone, stone_type,
 			set_stone, synchronize, process_feature,
 			process_class, process_breakable, compatible,
-			close, set_font, editable_text_window,
+			close, editable_text_window,
 			set_editable_text_window, has_editable_text, 
 			read_only_text_window, set_read_only_text_window,
 			update_boolean_resource,
 			update_integer_resource,
-			set_title, set_mode_for_editing, parse_file,
-			save_cmd_holder
+			set_title, set_mode_for_editing, parse_file, resources
 		end
 
 	BAR_AND_TEXT
@@ -37,13 +36,12 @@ inherit
 			set_default_size, resize_action,
 			stone, stone_type, set_stone, synchronize, process_feature,
 			process_class, process_breakable, compatible,
-			make_shell, close, set_font, editable_text_window,
+			make_shell, close, editable_text_window,
 			set_editable_text_window, has_editable_text,
 			read_only_text_window, set_read_only_text_window,
 			update_boolean_resource,
 			update_integer_resource,
-			set_title, set_mode_for_editing, parse_file,
-			save_cmd_holder
+			set_title, set_mode_for_editing, parse_file, resources
 		select
 			reset, make_shell
 		end;
@@ -89,9 +87,9 @@ feature -- Update Resources
 		local
 			rout_cli_cmd: SHOW_ROUTCLIENTS;
 			stop_cmd: SHOW_BREAKPOINTS;
-			fr: like Feature_tool_resources
+			fr: like Feature_resources
 		do
-			fr := Feature_tool_resources
+			fr := Feature_resources
 			if old_res = fr.command_bar then
 				if new_res.actual_value then
 					edit_bar.add
@@ -121,9 +119,9 @@ feature -- Update Resources
 			-- if the value of `new_res' is applicable.
 			-- Also update the interface.
 		local
-			fr: like Feature_tool_resources
+			fr: like Feature_resources
 		do
-			fr := Feature_tool_resources;
+			fr := Feature_resources;
 			if new_res.actual_value > 0 then
 				if old_res = fr.tool_height then
 					if old_res.actual_value /= new_res.actual_value then
@@ -154,6 +152,12 @@ feature -- Window Properties
 
 	read_only_text_window: TEXT_WINDOW
 			-- Text window that only reads text
+
+	resources: like Feature_resources is 
+			-- Resource page for current tool
+		do
+			Result := Feature_resources
+		end
 
 feature -- Resetting
 
@@ -353,14 +357,7 @@ feature -- Status setting
 				hole_button.set_full_symbol;
 				class_hole_button.set_full_symbol
 			end
-		end;
-
-	set_font (a_font: FONT) is
-			-- Set new font `a_font' to window
-		do
-			class_text_field.set_font (a_font);
-			routine_text_field.set_font (a_font)
-		end;
+		end
 
 feature -- Stone updating
 
@@ -372,7 +369,9 @@ feature -- Stone updating
 			else
 				last_format.execute (a_stone);
 				history.extend (a_stone);
-				highlight_routine;
+				if last_format = default_format then
+					highlight_routine;
+				end;
 				update_edit_bar
 			end
 		end;
@@ -500,10 +499,10 @@ feature -- Graphical Interface
 
 			create_toolbar_parent (global_form);
 
-			!! edit_bar.make (Interface_names.t_Empty, toolbar_parent);
+			!! edit_bar.make (Interface_names.n_Command_bar_name, toolbar_parent);
 			build_bar;
 			!! sep.make (Interface_names.t_Empty, toolbar_parent);
-			!! format_bar.make (Interface_names.t_Empty, toolbar_parent);
+			!! format_bar.make (Interface_names.n_Format_bar_name, toolbar_parent);
 			build_format_bar;
 			build_command_bar;
 			if create_menus then
@@ -512,10 +511,10 @@ feature -- Graphical Interface
 			build_toolbar_menu;
 			set_last_format (default_format);
 
-			if Feature_tool_resources.command_bar.actual_value = False then
+			if Feature_resources.command_bar.actual_value = False then
 				edit_bar.remove
 			end;
-			if Feature_tool_resources.format_bar.actual_value = False then
+			if Feature_resources.format_bar.actual_value = False then
 				format_bar.remove
 			end;
 
@@ -586,8 +585,6 @@ feature -- Commands
 
 	showstop_frmt_holder: FORMAT_HOLDER;
 
-	save_cmd_holder: TWO_STATE_CMD_HOLDER;
-
 	shell: COMMAND_HOLDER;
 
 	current_target_cmd_holder: COMMAND_HOLDER;
@@ -621,8 +618,8 @@ feature {NONE} -- Implementation; Window Settings
 		do
 			if eb_shell /= Void then
 				eb_shell.set_size 
-					(Feature_tool_resources.tool_width.actual_value, 
-					Feature_tool_resources.tool_height.actual_value)
+					(Feature_resources.tool_width.actual_value, 
+					Feature_resources.tool_height.actual_value)
 			end
 		end;
 
@@ -648,12 +645,17 @@ feature {NONE} -- Implementation; Graphical Interface
 			history_list_cmd: LIST_HISTORY;
 			new_class_button: EB_BUTTON_HOLE
 		do
-			!! shell_cmd.make (Current);
-			!! shell_button.make (shell_cmd, edit_bar);
-			shell_button.add_third_button_action;
+			if create_menus then
+				!! shell_cmd.make (Current);
+				!! shell_button.make (shell_cmd, edit_bar);
+				shell_button.add_third_button_action;
 
-			!! shell_menu_entry.make (shell_cmd, special_menu);
-			!! shell.make (shell_cmd, shell_button, shell_menu_entry);
+				!! shell_menu_entry.make (shell_cmd, special_menu);
+				!! shell.make (shell_cmd, shell_button, shell_menu_entry);
+				!! new_class_button.make
+					(Project_tool.class_hole_holder.associated_command, 
+					edit_bar);
+			end;
 			!! super_melt_cmd.make (Current);
 			!! super_melt_menu_entry.make (super_melt_cmd, special_menu);
 			!! current_target_cmd.make (Current);
@@ -673,13 +675,12 @@ feature {NONE} -- Implementation; Graphical Interface
 			next_target_button.add_button_press_action (3, history_list_cmd, next_target_button);
 			previous_target_button.add_button_press_action (3, history_list_cmd, previous_target_button);
 
-			!! new_class_button.make
-					(Project_tool.class_hole_holder.associated_command, 
-					edit_bar);
-			edit_bar.attach_left_widget (stop_hole_button, shell_button, 0);
-			edit_bar.attach_left_widget (shell_button, new_class_button, 0);
-			edit_bar.attach_top (shell_button, 0);
-			edit_bar.attach_top (new_class_button, 0);
+			if create_menus then
+				edit_bar.attach_left_widget (stop_hole_button, shell_button, 0);
+				edit_bar.attach_left_widget (shell_button, new_class_button, 0);
+				edit_bar.attach_top (shell_button, 0);
+				edit_bar.attach_top (new_class_button, 0);
+			end;
 			previous_target_button.unmanage;
 			next_target_button.unmanage;
 			edit_bar.attach_top (next_target_button, 0);
@@ -687,7 +688,7 @@ feature {NONE} -- Implementation; Graphical Interface
 			edit_bar.detach_left (previous_target_button);
 			edit_bar.detach_left (next_target_button);
 			edit_bar.attach_right_widget (next_target_button, previous_target_button, 0);
-			edit_bar.attach_right_position (next_target_button, 10);
+			edit_bar.attach_right_widget (routine_text_Field, next_target_button, 0);  
 			next_target_button.manage;
 			previous_target_button.manage;
 		end;
@@ -786,11 +787,10 @@ feature {NONE} -- Implementation; Graphical Interface
 			quit_button: EB_BUTTON;
 			quit_menu_entry: EB_MENU_ENTRY;
 			exit_menu_entry: EB_MENU_ENTRY;
-			save_cmd: SAVE_FILE;
-			save_button: EB_BUTTON;
-			save_menu_entry: EB_MENU_ENTRY;
 			class_hole_holder: HOLE_HOLDER;
 			stop_hole_holder: HOLE_HOLDER;
+			rc: ROW_COLUMN;
+			search_button: EB_BUTTON
 		do
 			edit_bar.set_fraction_base (31);
 
@@ -803,13 +803,19 @@ feature {NONE} -- Implementation; Graphical Interface
 			!! class_hole_button.make (class_hole, edit_bar);
 			!! class_hole_holder.make_plain (class_hole);
 			class_hole_holder.set_button (class_hole_button);
-			!! stop_hole.make (Current);
-			!! stop_hole_button.make (stop_hole, edit_bar);
-			!! stop_hole_holder.make_plain (stop_hole);
-			stop_hole_holder.set_button (stop_hole_button);
+			if create_menus then
+				!! stop_hole.make (Current);
+				!! stop_hole_button.make (stop_hole, edit_bar);
+				!! stop_hole_holder.make_plain (stop_hole);
+				stop_hole_holder.set_button (stop_hole_button);
+			end;
 			!! routine_text_field.make (edit_bar, Current);
 			!! label.make (Interface_names.t_Empty, edit_bar);
 			!! class_text_field.make (edit_bar, Current);
+
+			build_edit_menu (edit_bar);
+			search_button := search_cmd_holder.associated_button;
+
 			!! quit_cmd.make (Current);
 			!! quit_button.make (quit_cmd, edit_bar);
 			if create_menus then
@@ -824,22 +830,20 @@ feature {NONE} -- Implementation; Graphical Interface
 				!! exit_menu_entry.make (Project_tool.quit_cmd_holder.associated_command, file_menu);
 				exit_cmd_holder.set_menu_entry (exit_menu_entry)
 			end;
-			!! save_cmd.make (Current);
-			!! save_button.make (save_cmd, edit_bar);
-			!! save_menu_entry.make (save_cmd, file_menu);
-			!! save_cmd_holder.make (save_cmd, save_button, save_menu_entry);
-
-			build_edit_menu (edit_bar);
+			label.set_text ("from: ");
+			label.forbid_recompute_size;
 
 				-- Now we do all the attachments. This is done here for speed.
 			edit_bar.attach_left (hole_button, 0);
 			edit_bar.attach_top (hole_button, 0);
 			edit_bar.attach_left_widget (hole_button, class_hole_button, 0);
 			edit_bar.attach_top (class_hole_button, 0);
-			edit_bar.attach_left_widget (class_hole_button, stop_hole_button, 0);
-			edit_bar.attach_top (stop_hole_button, 0);
+			if create_menus then
+				edit_bar.attach_left_widget (class_hole_button, stop_hole_button, 0);
+				edit_bar.attach_top (stop_hole_button, 0);
+			end;
 			routine_text_field.unmanage;
-			edit_bar.attach_left_position (routine_text_field, 11);
+			edit_bar.attach_left_position (routine_text_field, routine_text_field_position);
 			edit_bar.attach_top (routine_text_field, 0);
 			edit_bar.attach_bottom (routine_text_field, 0);
 			edit_bar.attach_right_position (routine_text_field, 17);
@@ -860,18 +864,31 @@ feature {NONE} -- Implementation; Graphical Interface
 			edit_bar.attach_top (quit_button, 0);
 			edit_bar.attach_right (quit_button, 0);
 			edit_bar.detach_left (quit_button);
-			edit_bar.attach_right_widget (quit_button, search_cmd_holder.associated_button, 10);
-			edit_bar.attach_top (search_cmd_holder.associated_button, 0);
-			edit_bar.attach_top (save_button, 0);
-			edit_bar.detach_left (save_button);
-			edit_bar.attach_right_widget (search_cmd_holder.associated_button, save_button, 2)
-			edit_bar.attach_right_widget (save_button, class_text_field, 2)
+			edit_bar.attach_right_widget (quit_button, search_button, 10);
+			edit_bar.attach_top (search_button, 0);
+			edit_bar.detach_left (search_button);
+			edit_bar.attach_right_widget (search_button, class_text_field, 2)
+			if create_menus then
+				class_text_field.set_width (110);
+			else
+				class_text_field.set_width (100);
+			end;
 		end;
 
 feature {NONE} -- Properties
 
 	create_menus: BOOLEAN;
 			-- Did the menus be created for current tool?
+
+	routine_text_field_position: INTEGER is
+			-- Position for the routine text field
+		do
+			if create_menus then
+				Result := 11
+			else
+				Result := 8 
+			end
+		end
 
 feature {TEXT_WINDOW} -- Properties
 

@@ -114,7 +114,7 @@ feature -- Element change
 		do
 			implementation.set_title (a_title)
 		ensure
-			title_set: title = a_title
+			title_set: title.is_equal (a_title)
 		end
 
 	set_background_color (a_color: EV_COLOR) is

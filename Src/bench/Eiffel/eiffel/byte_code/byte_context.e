@@ -984,8 +984,12 @@ feature -- Debugger
 		do
 			if debug_mode then
 				ba.mark_breakable;
-				ast_node := instruction_line.item;
+					-- NB. The way lines are implemented
+					-- the ast_nodes are stored starting from
+					-- the second position of the line, hence
+					-- the `forth' instruction before `item'.
 				instruction_line.forth;
+				ast_node := instruction_line.item;
 					-- N.B. The way byte array is implemented
 					-- the position in the byte array is incremented after 
 					-- insertion of a new byte code.

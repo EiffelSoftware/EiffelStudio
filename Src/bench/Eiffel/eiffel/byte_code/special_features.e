@@ -14,6 +14,8 @@ inherit
 	SHARED_INCLUDE
 
 	SHARED_WORKBENCH
+	
+	SHARED_HASH_CODE
 
 feature -- Access
 
@@ -815,38 +817,35 @@ feature {NONE} -- Type information
 			b_not_void: b /= Void
 			b_not_bit: not b.is_bit
 		local
-			bool: BOOLEAN_I
-			char: CHAR_I
 			long: LONG_I
-			ptr: POINTER_I
-			real: FLOAT_I
+			t: TYPED_POINTER_I
 		do
-			bool ?= b
-			if bool /= Void then
-				Result := boolean_type
+			inspect b.hash_code
+			when Boolean_code then Result := boolean_type
+			when Character_code then
+				Result := character_type
+				is_wide := False
+
+			when Wide_char_code then
+				Result := character_type
+				is_wide := True
+
+			when
+				Integer8_code, Integer16_code,
+				Integer32_code, Integer64_code
+			then
+				Result := integer_type
+				long ?= b
+				integer_size := long.size
+
+			when Pointer_code then Result := pointer_type
+			when Real_code then Result := real_type
+			when Double_code then Result := double_type
+			
 			else
-				char ?= b
-				if char /= Void then
-					Result := character_type
-					is_wide := char.is_wide
-				else
-					long ?= b
-					if long /= Void then
-						Result := integer_type
-						integer_size := long.size
-					else
-						ptr ?= b
-						if ptr /= Void then
-							Result := pointer_type
-						else
-							real ?= b
-							if real /= Void then
-								Result := real_type
-							else
-								Result := double_type	
-							end
-						end
-					end
+				t ?= b
+				if t /= Void then
+					Result := pointer_type
 				end
 			end
 		ensure

@@ -32,6 +32,8 @@ feature {NONE} -- Initialization
 	make_with_text (par: EV_CONTAINER; txt: STRING) is
 			-- Create a frame with `par' as parent ant `txt'
 			-- as label.
+		require
+			valid_parent: parent_needed implies par /= Void
 		do
 			!EV_FRAME_IMP! implementation.make_with_text (txt)
 			widget_make (par)

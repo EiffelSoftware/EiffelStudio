@@ -204,11 +204,10 @@ rt_public EIF_INTEGER eif_putenv (EIF_OBJ v, EIF_OBJ k)
 	if ((key = (char *) calloc (appl_len + 46+key_len, 1)) == NULL)
 		return (EIF_INTEGER) -1;
 
-	if ((lower_k = (char *) calloc (key_len+1, 1)) == NULL)
-		{
+	if ((lower_k = (char *) calloc (key_len+1, 1)) == NULL) {
 		free (key);
 		return (EIF_INTEGER) -1;
-		}
+	}
 
 	strcpy (lower_k, eif_access(k));
 	CharLowerBuff (lower_k, key_len);
@@ -216,19 +215,17 @@ rt_public EIF_INTEGER eif_putenv (EIF_OBJ v, EIF_OBJ k)
 	strcpy (key, "Software\\ISE Inc\\Eiffel\\");
 	strncat (key, rindex(modulename, '\\')+1, appl_len);
 
-	if (RegCreateKeyEx (HKEY_CURRENT_USER, key, 0, "REG_SZ", REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hkey, &disp) != ERROR_SUCCESS)
-		{
+	if (RegCreateKeyEx (HKEY_CURRENT_USER, key, 0, "REG_SZ", REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hkey, &disp) != ERROR_SUCCESS) {
 		free (key);
 		free (lower_k);
 		return (EIF_INTEGER) -1;
-		}
-	if (RegSetValueEx (hkey, lower_k, 0, REG_SZ, eif_access(v), strlen(eif_access(v))+1) != ERROR_SUCCESS)
-		{
+	}
+	if (RegSetValueEx (hkey, lower_k, 0, REG_SZ, eif_access(v), strlen(eif_access(v))+1) != ERROR_SUCCESS) {
 		free (key);
 		free (lower_k);
 		RegCloseKey (hkey);
 		return (EIF_INTEGER) -1;
-		}
+	}
 
 	free (key);
 	free (lower_k);
@@ -238,18 +235,6 @@ rt_public EIF_INTEGER eif_putenv (EIF_OBJ v, EIF_OBJ k)
 		return 0;;
 	return (EIF_INTEGER) 0;
 
-#elif defined EIF_WIN_31
-	EIF_INTEGER result;
-	char *ini;
-
-	if ((ini = (char *) calloc (strlen(_argv[0])+1,1)) == (char *)0)
-		return (EIF_INTEGER) -1;
-
-	strncpy (ini,_argv[0], rindex(_argv[0],'.')-_argv[0]);
-	strcat (ini, ".INI");
-	result = WritePrivateProfileString("Environment", eif_access (k), eif_access (v), ini);
-	free (ini);
-	return (result ? 0 : -1);  /* Non zero indicate ok - yuk */
 #else
 	char *new_string; /* %%ss moved from above */
 	int l1, l2; /* %%ss moved from above */
@@ -285,51 +270,35 @@ rt_public EIF_OBJ eif_getenv (EIF_OBJ k)
 	if ((key = (char *) calloc (appl_len + 46 +key_len, 1)) == NULL)
 		return (EIF_OBJ) 0;
 
-	if ((lower_k = (char *) calloc (key_len+1, 1)) == NULL)
-		{
+	if ((lower_k = (char *) calloc (key_len+1, 1)) == NULL) {
 		free (key);
 		return (EIF_OBJ) 0;
-		}
+	}
 
 	strcpy (lower_k, k);
 	CharLowerBuff (lower_k, key_len);
 
-	strcpy (key, "Software\\ISE Inc\\Eiffel\\");
+	strcpy (key, "Software\\ISE Inc\\Eiffel4\\");
 	strncat (key, rindex(modulename, '\\')+1, appl_len);
 
-	if (RegOpenKeyEx (HKEY_CURRENT_USER, key, 0, KEY_READ, &hkey) != ERROR_SUCCESS)
-		{
+	if (RegOpenKeyEx (HKEY_CURRENT_USER, key, 0, KEY_READ, &hkey) != ERROR_SUCCESS) {
 		free (key);
 		free (lower_k);
 		return (EIF_OBJ) 0;
-		}
+	}
 
 	bsize = 1024;
-	if (RegQueryValueEx (hkey, lower_k, NULL, NULL, buf, &bsize) != ERROR_SUCCESS)
-		{
+	if (RegQueryValueEx (hkey, lower_k, NULL, NULL, buf, &bsize) != ERROR_SUCCESS) {
 		free (key);
 		free (lower_k);
 		RegCloseKey (hkey);
 		return (EIF_OBJ) getenv (k);
-		}
+	}
 
 	free (key);
 	free (lower_k);
 	RegCloseKey (hkey);
 	return (EIF_OBJ) buf;
-
-#elif defined EIF_WIN_31
-	char *ini;
-	static char buf[128];
-
-	if ((ini = (char *) calloc (strlen(_argv[0])+1,1)) == (char *)0)
-		return (EIF_INTEGER) 0;
-
-	strncpy (ini, _argv[0], rindex(_argv[0],'.')-_argv[0]);
-	strcat (ini, ".INI");
-	GetPrivateProfileString ("Environment", k, "", buf, 128, ini);
-	free (ini);
-	return buf;
 #else
 	return (EIF_OBJ) getenv (k);
 #endif

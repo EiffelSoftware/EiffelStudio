@@ -83,7 +83,9 @@
 			`has_selection' must be True for you to call `selected_text'.
 			<LI>
 				<B>EV_FILE_DIALOG</B> - Added `valid_file_title' for validation of a file name
-				excluding the path.</LI></ul>
+				excluding the path.</LI>
+			<LI>
+				<B>EV_STANDARD_DIALOG</B> - Corrected postcondition of `make_with_text' which was checking that `text' was the same object as the STRING pased as an argument. This was incorrect, as `text' is cloned during the creation.</LI></ul>
 		<P><b>Breaking changes</b></P>
 		<UL>
 			<LI>

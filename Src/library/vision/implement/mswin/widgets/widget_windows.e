@@ -338,7 +338,7 @@ feature -- Status setting
 				ww ?= Current
 				!! client_dc.make (ww)
 				client_dc.get
-				client_dc.set_bk_color (cw)
+				client_dc.set_background_color (cw)
 				client_dc.release
 				invalidate
 			end
@@ -616,14 +616,6 @@ feature -- Element change
 			-- Add `a_command' to the list of actions to execute when the
 			-- `number'-th mouse button is clicked.
 		do
-			inspect number
-			when 1 then 
-				left_button_click_actions.add (Current, a_command, argument)
-			when 2 then 
-				middle_button_click_actions.add (Current, a_command, argument)
-			when 3 then 
-				right_button_click_actions.add (Current, a_command, argument)
-			end
 		end;
 
 	add_resize_action (a_command: COMMAND; argument: ANY) is
@@ -841,14 +833,6 @@ feature -- Removal
 			-- Remove a_command to the list of actions to execute when the
 			-- `number'-th mouse button is clicked.
 		do
-			inspect number
-			when 1 then 
-				left_button_click_actions.remove (Current, a_command, argument)
-			when 2 then 
-				middle_button_click_actions.remove (Current, a_command, argument)
-			when 3 then 
-				right_button_click_actions.remove (Current, a_command, argument)
-			end
 		end;
 
 	remove_destroy_action (a_command: COMMAND; argument: ANY) is
@@ -1373,7 +1357,6 @@ feature {NONE} -- Implementation
 			left_button_down_widget_implementation.replace (void);
 			!! k.make_from_mouse_state (keys)
 			!! cd.make (owner, a_x, a_y, e_x, e_y, 1, buttons_state, k);
-			--left_button_release_actions.execute (w, cd)
 			left_button_release_actions.execute (Current, cd)
 		end;
 
@@ -1419,12 +1402,8 @@ feature {NONE} -- Implementation
 			right_button_down_implementation.replace (true);
 			!! k.make_from_mouse_state (keys)
 			!! cd.make (owner, a_x, a_y, e_x, e_y, 3, buttons_state, k);
-			if right_button_down_widget_implementation.item = Current then
-				right_button_click_actions.execute (Current, cd)
-			end
 			right_button_down_widget_implementation.replace (void);
 			right_button_release_actions.execute (Current, cd)
-			--right_button_release_actions.execute (w, cd)
 		end;
 
 	on_key_down (code, flags: INTEGER) is

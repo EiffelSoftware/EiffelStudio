@@ -332,7 +332,7 @@ feature {EV_ANY_I} -- Event handling
 			)
 		end
 
-	kamikaze_agent (an_action_sequence: LINKED_LIST [PROCEDURE [ANY, TUPLE]];
+	kamikaze_agent (an_action_sequence: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]];
 		target: PROCEDURE [ANY, TUPLE]):
 		PROCEDURE [ANY, TUPLE []] is
 			-- Agent to remove `target' and itself form `an_action_sequence'.
@@ -348,7 +348,7 @@ feature {EV_ANY_I} -- Event handling
 			kamikaze_cell.put (Result)
 		end
 	
-	do_kamikaze (an_action_sequence: LINKED_LIST [PROCEDURE [ANY, TUPLE]];
+	do_kamikaze (an_action_sequence: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]];
 		target: PROCEDURE [ANY, TUPLE];
 		kamikaze_cell: CELL [PROCEDURE [ANY, TUPLE]]) is
 			-- Remove `target' and agent for self (from `kamikaze_cell') from
@@ -707,8 +707,6 @@ invariant
 		eif_object_from_c (c_object) = Current
 	c_externals_object_not_void: C /= Void
 
-end -- class EV_ANY_IMP
-
 indexing
 	description: "[
 	 Scheme for Eiffel GC / GTK RC cooperation (with a twist).
@@ -792,6 +790,8 @@ indexing
 	     (join that mess onto one line or just search deja.com)
 	]"
 	
+end -- class EV_ANY_IMP
+
 --|----------------------------------------------------------------
 --| EiffelVision2: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-2001 Interactive Software Engineering Inc.

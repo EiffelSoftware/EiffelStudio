@@ -1072,6 +1072,17 @@ feature -- Basic operations
 			cwin_fill_rect (item, a_rect.item, a_brush.item)
 		end
 
+	fill_region (a_region: WEL_REGION; a_brush: WEL_BRUSH) is
+			-- Fill `a_region' by using `a_brush' to fill it
+		require
+			exists: exists
+			a_region_not_void: a_region /= Void
+			a_brush_not_void: a_brush /= Void
+			a_brush_exists: a_brush.exists
+		do
+			cwin_fill_region (item, a_region.item, a_brush.item)
+		end
+
 	invert_rect (a_rect: WEL_RECT) is
 			-- Invert `a_rect' in a window by performing a logical
 			-- NOT operation on the color values for each pixel.
@@ -1595,6 +1606,16 @@ feature {NONE} -- Externals
 			"C [macro <windows.h>] (HDC, RECT *, HBRUSH)"
 		alias
 			"FillRect"
+		end
+
+	-- Fill region to implement in order to avoid the falshing of the windows
+
+	cwin_fill_region (hdc, hrgn, hbrush: POINTER) is
+			-- SDK fillRgn
+		external
+			"C [macro <windows.h>] (HDC, HRGN, HBRUSH)"
+		alias
+			"FillRgn"
 		end
 
 	cwin_ext_flood_fill (hdc: POINTER; x, y: INTEGER; color: INTEGER; type: INTEGER) is

@@ -48,10 +48,14 @@ feature {NONE} -- Initialization
 			-- Create `Current' and assign `an_object' to `object'.
 		require
 			an_object_not_void: an_object /= Void
+		local
+			pixmaps: GB_SHARED_PIXMAPS
 		do
 			default_create
 			set_object (an_object)
-			set_text (object.type.substring (4, object.type.count))
+			set_text (object.short_type)
+			create pixmaps
+			set_pixmap (pixmaps.pixmap_by_name (object.type))
 		ensure
 			object_assigned: object = an_object
 			text_assigned: text.is_equal (object.type.substring (4, object.type.count))

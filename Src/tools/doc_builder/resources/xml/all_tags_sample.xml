@@ -1,127 +1,274 @@
-<document title="11 Polymorphism and Dynamic Binding">
-<meta_data ><help ><toc ><envision_location >Moved Node Test\Managing Projects</envision_location><envision_title >Moved Node Test File</envision_title></toc></help></meta_data>
+<document title="Tester document containing every document tag available">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_location>Moved Node Test\Managing Projects</envision_location>
+				<envision_title>Moved Node Test File</envision_title>
+			</toc>
+		</help>
+	</meta_data>
+	<paragraph>
+		<paragraph>A paragraph</paragraph>
 
-<paragraph >
+		<image_link><url>http://www.eiffel.com</url><image><url>my_image.png</url></image></image_link>
 
-	<paragraph >
-		A paragraph
-	</paragraph>
+		<code_block>
+			Some
+			random
+			text.
+		</code_block>
 
-	Headings
-
-	<heading ><size >1</size><content >A heading 1</content></heading>
-	<heading ><size >2</size><content >A heading 2</content></heading>
-	<heading ><size >3</size><content >A heading 3</content></heading>
-	<heading ><size >4</size><content >A heading 4</content></heading>
-	<heading ><size >5</size><content >A heading 5</content></heading>
-	<heading ><size >6</size><content >A heading 6</content></heading>
-
-	Headings with content (in this case links)
-
-	<heading ><size >1</size><content ><link ><url >www.eiffel.com</url><label >Heading 1</label></link></content></heading>
-	<heading ><size >2</size><content ><link ><url >www.eiffel.com</url><label >Heading 2</label></link></content></heading>
-	<heading ><size >3</size><content ><link ><url >www.eiffel.com</url><label >Heading 3</label></link></content></heading>
-	<heading ><size >4</size><content ><link ><url >www.eiffel.com</url><label >Heading 4</label></link></content></heading>
-	<heading ><size >5</size><content ><link ><url >www.eiffel.com</url><label >Heading 5</label></link></content></heading>
-	<heading ><size >6</size><content ><link ><url >www.eiffel.com</url><label >Heading 6</label></link></content></heading>
-
-	Links
-	<line_break />
-
-	<link ><url >www.eiffel.com</url><label >Link Same Window</label></link>
-	<line_break />
-	<link ><url >www.eiffel.com</url><label >Link New Window</label><target >new</target></link>
-	<line_break />	
-
-	Images
-
-	Image
-	<image ><url >a_image.gif</url></image>
-	<line_break />
-
-	Image with attributes
-	<image ><url >a_image.gif</url><alt_text >Hello Everybody</alt_text><border >1</border></image>
-	<line_break />
-
-	Image 50 x 50 pixels
-	<image ><url >a_image.gif</url><width >50</width><height >50</height></image>
-
-	<line_break />
-	<line_break />
-	Ordered List
-	<list ordered="true">
-		<item >Item 1</item>
-		<item >Item 2</item>
-		<item >Item 3</item>
-	</list>
-
-	Unordered List
-	<list ordered="false">
-		<item >Item 1</item>
-		<item >Item 2</item>
-		<item >Item 3</item>
-	</list>
-
-	Special Formatting Tags:
-
-	<seealso >Seealso</seealso>
-	<sample >Sample</sample>
-	<note >Note</note>
-	<tip >Tip</tip>
-	<warning >Warning!</warning>
-
-	Text Formatting:
-	<line_break />
-	<line_break />
-
-	Regular Text<line_break />
-	Text with <span >span text</span> inside<line_break />
-	Text with <div >div text</div> inside<line_break />
-	<italic >Italic text </italic><line_break />
-	<bold >Bold Text </bold><line_break />
-
-	<line_break />
-	<line_break />
-	Two Row Two Cell Table
-
-	<table >
-		<row >
-			<cell >1,1</cell>
-			<cell >1,2</cell>
-		</row>
-		<row >
-			<cell >2,1</cell>
-			<cell >2,2</cell>
-		</row>
-	</table>
-
-	<line_break />
-	<line_break />
-	Code Formatting
-	<line_break />
-	A list of regular text code references: 
-
-	<list ordered="false">
-		<item ><code >A character: <character >.</character></code></item>
-		<item ><code >A class name: <class_name >STRING</class_name></code></item>
-		<item ><code >A cluster name: <cluster_name >my_cluster</cluster_name></code></item>
-		<item ><code >A comment: <comment >my comment</comment></code></item>
-		<item ><code >A contract tag: <contract_tag >is_true:</contract_tag> x = True</code></item>
-		<item ><code >A feature name: <feature_name >my_feature</feature_name></code></item>
-		<item ><code >Generics: LIST [<generics >G</generics>]</code></item>
-		<item ><code >Indexing tag: <indexing_tag >author: mr frog</indexing_tag></code></item>
-		<item ><code >Keywords: <keyword >is, do, end</keyword>...</code></item>
-		<item ><code >Local variable: <local_variable >my_local</local_variable></code></item>
-		<item ><code >Quoted local variable: <local_variable_quoted >my_local</local_variable_quoted></code></item>
-		<item ><code >Number: <number >23</number></code></item>
-		<item ><code >Reserved words: <reserved_word >ensure, create</reserved_word></code></item>
-		<item ><code >String: <string >my string</string></code></item>
-		<item ><code >Symbols: <symbol >:=, &gt;, &lt;</symbol></code></item>
-		<item ><code >Syntax: </code></item>
-		<item ><code >A class link: <class_name ><label >STRING</label><url >/librarires/base/string.xml</url></class_name></code></item>
-		<item ><code >A cluster link: <class_name ><label >my_cluster</label><url >/librarires/base/index.xml</url></class_name></code></item>
-		<item ><code >A feature link: <class_name ><label >my_feature</label><url >/librarires/base/string.xml#my_feature</url></class_name></code></item>
-	</list>
-
-</paragraph>
-</document>
+		Headings
+		<heading>
+			<size>1</size>
+			<content>A heading 1</content>
+		</heading>
+		<heading>
+			<size>2</size>
+			<content>A heading 2</content>
+		</heading>
+		<heading>
+			<size>3</size>
+			<content>A heading 3</content>
+		</heading>
+		<heading>
+			<size>4</size>
+			<content>A heading 4</content>
+		</heading>
+		<heading>
+			<size>5</size>
+			<content>A heading 5</content>
+		</heading>
+		<heading>
+			<size>6</size>
+			<content>A heading 6</content>
+		</heading>Headings with content (in this case links)
+		<heading>
+			<size>1</size>
+			<content>
+				<link>
+					<url>www.eiffel.com</url>
+					<label>Heading 1</label>
+				</link>
+			</content>
+		</heading>
+		<heading>
+			<size>2</size>
+			<content>
+				<link>
+					<url>www.eiffel.com</url>
+					<label>Heading 2</label>
+				</link>
+			</content>
+		</heading>
+		<heading>
+			<size>3</size>
+			<content>
+				<link>
+					<url>www.eiffel.com</url>
+					<label>Heading 3</label>
+				</link>
+			</content>
+		</heading>
+		<heading>
+			<size>4</size>
+			<content>
+				<link>
+					<url>www.eiffel.com</url>
+					<label>Heading 4</label>
+				</link>
+			</content>
+		</heading>
+		<heading>
+			<size>5</size>
+			<content>
+				<link>
+					<url>www.eiffel.com</url>
+					<label>Heading 5</label>
+				</link>
+			</content>
+		</heading>
+		<heading>
+			<size>6</size>
+			<content>
+				<link>
+					<url>www.eiffel.com</url>
+					<label>Heading 6</label>
+				</link>
+			</content>
+		</heading>Links
+		<line_break></line_break>
+		<link>
+			<url>www.eiffel.com</url>
+			<label>Link Same Window</label>
+		</link>
+		<line_break></line_break>
+		<link>
+			<url>www.eiffel.com</url>
+			<label>Link New Window</label>
+			<target>new</target>
+		</link>
+		<line_break></line_break>ImagesImage
+		<image>
+			<url>a_image.gif</url>
+		</image>
+		<line_break></line_break>Image with attributes
+		<image>
+			<url>a_image.gif</url>
+			<alt_text>Hello Everybody</alt_text>
+			<border>1</border>
+		</image>
+		<line_break></line_break>Image 50 x 50 pixels
+		<image>
+			<url>a_image.gif</url>
+			<width>50</width>
+			<height>50</height>
+		</image>
+		<line_break></line_break>
+		<line_break></line_break>Ordered List
+		<list ordered="true">
+			<item>Item 1</item>
+			<item>Item 2</item>
+			<item>Item 3</item>
+		</list>Unordered List
+		<list ordered="false">
+			<item>Item 1</item>
+			<item>Item 2</item>
+			<item>Item 3</item>
+		</list>Special Formatting Tags:
+		<seealso>Seealso</seealso>
+		<sample>Sample</sample>
+		<note>Note</note>
+		<tip>Tip</tip>
+		<warning>Warning!</warning>Text Formatting:
+		<line_break></line_break>
+		<line_break></line_break>Regular Text
+		<line_break></line_break>Text with
+		<span>span text</span> inside
+		<line_break></line_break>Text with
+		<div>div text</div> inside
+		<line_break></line_break>
+		<italic>Italic text </italic>
+		<line_break></line_break>
+		<bold>Bold Text </bold>
+		<line_break></line_break>
+		<line_break></line_break>
+		<line_break></line_break>Two Row Two Cell Table
+		<table>
+			<row>
+				<cell>1,1</cell>
+				<cell>1,2</cell>
+			</row>
+			<row>
+				<cell>2,1</cell>
+				<cell>2,2</cell>
+			</row>
+		</table>
+		<line_break></line_break>
+		<line_break></line_break>Code Formatting
+		<line_break></line_break>A list of regular text code references:
+		<list ordered="false">
+			<item>
+				<code>A character:
+					<character>.</character>
+				</code>
+			</item>
+			<item>
+				<code>A class name:
+					<class_name>STRING</class_name>
+				</code>
+			</item>
+			<item>
+				<code>A cluster name:
+					<cluster_name>my_cluster</cluster_name>
+				</code>
+			</item>
+			<item>
+				<code>A comment:
+					<comment>my comment</comment>
+				</code>
+			</item>
+			<item>
+				<code>A contract tag:
+					<contract_tag>is_true:</contract_tag> x = True
+				</code>
+			</item>
+			<item>
+				<code>A feature name:
+					<feature_name>my_feature</feature_name>
+				</code>
+			</item>
+			<item>
+				<code>Generics: LIST [
+					<generics>G</generics>]
+				</code>
+			</item>
+			<item>
+				<code>Indexing tag:
+					<indexing_tag>author: mr frog</indexing_tag>
+				</code>
+			</item>
+			<item>
+				<code>Keywords:
+					<keyword>is, do, end</keyword>...
+				</code>
+			</item>
+			<item>
+				<code>Local variable:
+					<local_variable>my_local</local_variable>
+				</code>
+			</item>
+			<item>
+				<code>Quoted local variable:
+					<local_variable_quoted>my_local</local_variable_quoted>
+				</code>
+			</item>
+			<item>
+				<code>Number:
+					<number>23</number>
+				</code>
+			</item>
+			<item>
+				<code>Reserved words:
+					<reserved_word>ensure, create</reserved_word>
+				</code>
+			</item>
+			<item>
+				<code>String:
+					<string>my string</string>
+				</code>
+			</item>
+			<item>
+				<code>Symbols:
+					<symbol>:=, &gt;, &lt;</symbol>
+				</code>
+			</item>
+			<item>
+				<code>Syntax: </code>
+			</item>
+			<item>
+				<code>A class link:
+					<class_name>
+						<label>STRING</label>
+						<url>/librarires/base/string.xml</url>
+					</class_name>
+				</code>
+			</item>
+			<item>
+				<code>A cluster link:
+					<class_name>
+						<label>my_cluster</label>
+						<url>/librarires/base/index.xml</url>
+					</class_name>
+				</code>
+			</item>
+			<item>
+				<code>A feature link:
+					<class_name>
+						<label>my_feature</label>
+						<url>/librarires/base/string.xml#my_feature</url>
+					</class_name>
+				</code>
+			</item>
+		</list>
+	</paragraph></document>

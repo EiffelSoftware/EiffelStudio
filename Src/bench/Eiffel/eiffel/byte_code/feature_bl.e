@@ -139,7 +139,7 @@ end;
 			generated_file.putchar (' ');
 			generated_file.putstring (special_routines.c_operation);
 			generated_file.putchar (' ');
-			expr ?= parameters.first; -- Cannot fail
+			expr := parameters.first; -- Cannot fail
 			expr.print_register;
 		end;
 
@@ -211,12 +211,13 @@ end;
 			internal_name, table_name: STRING;
 			entry: POLY_TABLE [ENTRY];
 			rout_table: ROUT_TABLE;
+			type_c: TYPE_C;
 		do
 			entry := Eiffel_table.poly_table (rout_id);
 			if entry = Void then
 					-- Call to a deferred feature without implementation
 				generated_file.putchar ('(');
-				real_type (type).c_type.generate_function_cast (generated_file);
+				real_type (type).c_type.generate_function_cast (generated_file, <<>>);
 				generated_file.putstring (" RTNR)");
 			elseif entry.is_polymorphic (typ.type_id) then
 					-- The call is polymorphic, so generate access to the
@@ -224,7 +225,7 @@ end;
 					-- to be enclosed in parenthesis.
 				table_name := rout_id.table_name;
 				generated_file.putchar ('(');
-				real_type (type).c_type.generate_function_cast (generated_file);
+				real_type (type).c_type.generate_function_cast (generated_file, argument_types);
 				generated_file.putchar ('(');
 				generated_file.putstring (table_name);
 				generated_file.putchar ('-');
@@ -253,14 +254,19 @@ end;
 
 				if rout_table.is_implemented (typ.type_id) then
 					internal_name := clone (rout_table.feature_name (typ.type_id));
-					generated_file.putstring (internal_name);
+					type_c := real_type (type).c_type;
 						-- Remember extern routine declaration
 					Extern_declarations.add_routine
-								(real_type (type).c_type, internal_name);
+								(type_c, internal_name);
+
+					generated_file.putchar ('(');
+					type_c.generate_function_cast (generated_file, argument_types);
+					generated_file.putstring (internal_name);
+					generated_file.putchar (')');
 				else
 						-- Call to a deferred feature without implementation
 					generated_file.putchar ('(');
-					real_type (type).c_type.generate_function_cast (generated_file);
+					real_type (type).c_type.generate_function_cast (generated_file, <<>>);
 					generated_file.putstring (" RTNR)");
 				end
 			end;
@@ -281,7 +287,7 @@ end;
 					until
 						parameters.after
 					loop
-						expr ?= parameters.item;	-- Cannot fail
+						expr := parameters.item;	-- Cannot fail
 						para ?= expr;
 						generated_file.putstring (gc_comma);
 						if para /= void and then para.stored_register.register_name /= Void then
@@ -305,7 +311,7 @@ end;
 					until
 						parameters.after
 					loop
-						expr ?= parameters.item;	-- Cannot fail
+						expr := parameters.item;	-- Cannot fail
 						generated_file.putstring (gc_comma);
 						expr.print_register;
 						parameters.forth;

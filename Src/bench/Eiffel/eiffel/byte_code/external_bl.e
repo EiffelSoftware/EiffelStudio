@@ -151,13 +151,17 @@ feature
 			entry: POLY_TABLE [ENTRY];
 			table_name: STRING;
 			i: INTEGER;
-			is_boolean: BOOLEAN
+			is_boolean: BOOLEAN;
+			type_c: TYPE_C
 		do
 			check
 				final_mode: context.final_mode
 			end;
 			is_boolean :=  type.is_boolean;
 			entry := Eiffel_table.poly_table (rout_id);
+
+			type_c := real_type (type).c_type;
+
 			if entry.is_polymorphic (typ.type_id) then
 					-- The call is polymorphic, so generate access to the
 					-- routine table. The dereferenced function pointer has
@@ -168,8 +172,8 @@ feature
 					generated_file.putstring ("EIF_TEST((");
 				else
 					generated_file.putchar ('(');
-					real_type (type).c_type.generate_function_cast (generated_file);
 				end;
+				type_c.generate_function_cast (generated_file, argument_types);
 				generated_file.putchar ('(');
 				generated_file.putstring (table_name);
 				generated_file.putchar ('-');
@@ -190,33 +194,41 @@ feature
 					-- Remember external routine table declaration
 				Extern_declarations.add_routine_table (table_name);
 			else
-				if is_boolean then
-					generated_file.putstring ("EIF_TEST(");
-				else
-					context.real_type (type).c_type.generate_cast (generated_file);
-				end;
 					-- The call is not polymorphic in the given context,
 					-- so the name can be hardwired.
 				if encapsulated then
+					if is_boolean then
+						generated_file.putstring ("EIF_TEST(");
+					else
+						type_c.generate_cast (generated_file);
+					end;
 					extension.generate_header_files
 
 						-- Now generate the right name to call the external
 						-- In the case of a signature or a macro, the call will be direct
 						-- In the case of a dll, the encapsulation will be called (encoded name)
 					extension.generate_external_name (generated_file, external_name,
-						entry, typ, real_type (type).c_type);
+						entry, typ, type_c);
 				else
-					generated_file.putstring (external_name);
+					if is_boolean then
+						generated_file.putstring ("EIF_TEST((");
+					else
+						generated_file.putchar ('(');
+					end;
 					if
 						extension /= Void and then
 						extension.has_include_list
 					then
 						extension.generate_header_files
+						generated_file.putstring (external_name);
 					else
+						type_c.generate_function_cast
+							(generated_file, argument_types);
+						generated_file.putstring (external_name);
 							-- Remember external routine declaration
-						Extern_declarations.add_routine
-							(real_type (type).c_type, external_name);
+						Extern_declarations.add_routine (type_c, external_name);
 					end;
+					generated_file.putchar (')');
 				end;
 			end;
 		end;
@@ -287,7 +299,7 @@ feature
 				until
 					parameters.after
 				loop
-					expr ?= parameters.item;	-- Cannot fail
+					expr := parameters.item;	-- Cannot fail
 						-- add cast before parameter
 					if generate_cast then
 						generated_file.putchar ('(');
@@ -341,7 +353,7 @@ feature
 	fill_from (e: EXTERNAL_B) is
 			-- Fill current from `e'
 		local
-			expr_b: EXPR_B;
+			expr_b: PARAMETER_B;
 			protect_b: PROTECT_B;
 		do
 			external_name := e.external_name;

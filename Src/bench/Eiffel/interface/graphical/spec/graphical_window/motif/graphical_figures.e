@@ -34,7 +34,8 @@ inherit
 		   	process_breakpoint, process_padded, put_class_syntax,
 			put_quoted_comment, put_operator, put_symbol, put_ace_syntax,
 			put_keyword, put_indent, process_quoted_text, put_comment,
-			process_basic_text, process_column_text, process_call_stack_item
+			process_basic_text, process_column_text, process_call_stack_item,
+			process_indentation
 		end;
 	SHARED_APPLICATION_EXECUTION
 		undefine
@@ -205,17 +206,6 @@ feature -- Input
 			fig.set_stone (stone);
 			add_text_figure (fig, str)
 		end;
-
-	put_breakpoint_stone (a_stone: BREAKABLE_STONE; stone_string: STRING) is
-			-- Add breakpoint stone `a_stone' with image `stone_string'.
-		local
-			fig: BREAKABLE_FIGURE
-		do
-			!! fig;
-			fig.set_stone (a_stone);
-			fig.set_foreground_color (stop_color);
-			add_text_figure (fig, stone_string)
-		end
 
 	put_string (s: STRING) is
 			-- Add text `s'.
@@ -407,11 +397,23 @@ end
 			add_text_figure (fig, s);
 		end;
 
-	put_indent (depth: INTEGER; str: STRING) is
-			-- Put indent of depth `d' with string `str'.
-		local
-			s: STRING
+    process_indentation (text: INDENT_TEXT) is
+            -- Process indentation `t'.
 		do
+			current_x := (tab_pixel_length * text.depth) + current_x
+			text.append (text.str);
+			text_position := text_position + str.count
+        end;
+
+	put_indent (depth: INTEGER) is
+			-- Put indent of depth `d'.
+		local
+			str: STRING
+		do
+			str := "%T";
+			if depth > 1 then	
+				str.multiple (depth)
+			end;
 			current_x := (tab_pixel_length * depth) + current_x
 			text.append (str);
 			text_position := text_position + str.count
@@ -452,10 +454,17 @@ feature -- Text formatting
 			!! breakable_stone.make (a_bp.e_feature, a_bp.index);
 			!! fig;
 			fig.set_stone (breakable_stone);
-			fig.set_base_left (0, current_y);
-			current_line.extend (fig);
-			current_x := padded_width
-			update_breakable_figure (fig);
+			if a_bp.display_number then
+				fig.set_foreground_color (stop_color);
+				add_text_figure (fig, stone_string)
+			else
+				!! fig;
+				fig.set_stone (breakable_stone);
+				fig.set_base_left (0, current_y);
+				current_line.extend (fig);
+				current_x := padded_width
+				update_breakable_figure (fig);
+			end
 		end;
 
 	process_quoted_text (t: QUOTED_TEXT) is

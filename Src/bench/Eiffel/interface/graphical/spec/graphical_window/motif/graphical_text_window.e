@@ -347,12 +347,12 @@ feature -- Update
 			end
 		end;
 
-	search (s: STRING) is
+	search_text (s: STRING; is_case_sensitive: BOOLEAN) is
 			-- Highlight and show next occurence of `s'.
 		do
 		end;
 
-	replace_text (s, r: STRING; replace_all: BOOLEAN) is
+	replace_text (s, r: STRING; replace_all, is_case_sensitive: BOOLEAN) is
 			-- Replace next occurence of `s' with `r'.
 		do
 		end;

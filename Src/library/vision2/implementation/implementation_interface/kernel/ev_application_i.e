@@ -38,7 +38,7 @@ feature {EV_APPLICATION} -- Initialization
 			set_help_accelerator (create {EV_ACCELERATOR}.make_with_key_combination (f1_key, False, False, False))
 			set_contextual_help_accelerator (create {EV_ACCELERATOR}.make_with_key_combination (f1_key, False, False, True))
 			create {EV_SIMPLE_HELP_ENGINE} help_engine
-			create pnd_targets.make
+			create pnd_targets.make (8)
 			create internal_idle_actions
 			create once_idle_actions
 			do_once_idle_actions_agent := ~do_once_idle_actions
@@ -52,7 +52,7 @@ feature {EV_APPLICATION} -- Initialization
 
 feature -- Access
 
-	pnd_targets: LINKED_LIST [INTEGER] 
+	pnd_targets: ARRAYED_LIST [INTEGER] 
 			-- Global list of pick and drop target object ids.
 
 	windows: LINEAR [EV_WINDOW] is

@@ -520,7 +520,6 @@ feature -- Implementation
 			a_pnd_deferred_item_parent_not_void: a_pnd_deferred_item_parent /= Void
 		local
 			cur: CURSOR
-			imp: EV_PICK_AND_DROPABLE_IMP
 			row_imp: EV_PND_DEFERRED_ITEM
 			trg: EV_PICK_AND_DROPABLE
 			pnd_targets: ARRAYED_LIST [INTEGER] 

@@ -284,38 +284,6 @@ feature -- Access
 	popup_menu: EV_MENU
 			-- Menu popped up when button 3 is pressed on widget.
 
---	screen_x: INTEGER is
---			-- Horizontal offset relative to screen.
---		local
---			wind: EV_WINDOW_IMP
---		do 
---			if parent_imp /= Void then
---				wind ?= parent_imp
---				if wind /= Void then
---					Result := wind.inner_screen_x
---				else
---					Result := parent_imp.screen_x
---				end
---				Result := Result + x_position
---			end
---		end
---
---	screen_y: INTEGER is
---			-- Vertical offset relative to screen. 
---		local 
---			wind: EV_WINDOW_IMP 
---		do 
---			if parent_imp /= Void then
---				wind ?= parent_imp
---				if wind /= Void then
---					Result := wind.inner_screen_y
---				else
---					Result := parent_imp.screen_y
---				end
---				Result := Result + y_position
---			end
---		end
-
 	screen_x: INTEGER is
 			-- Horizontal offset relative to screen.
 		local

@@ -1026,17 +1026,29 @@ feature -- Font
 		end
 
 	font_name_modified: BOOLEAN
+	
+feature -- Possible commands to instanciate
 
+	default_commands_list: LINKED_LIST [CMD] is
+			-- List of possible command instances.
+--		local
+--			predefined_cmds: SHARED_PREDEF_COMS
+		do
+--			!! predefined_cmds
+			!! Result.make
+--			Result.extend (predefined_cmds.command_cmd)
+--			Result.extend (predefined_cmds.undoable_cmd)
+		end
 	
 feature {NONE} 
 
 	default_event: EVENT is
 			-- Default event.
 		deferred
-		end	
+		end
 
 	copy_attributes (other_context: like Current) is
-			-- Copy the attributes of Current to `other_context'
+			-- Copy the attributes of Current to `other_context'.
 		do
 			if size_modified then
 				other_context.set_size (width, height)

@@ -93,11 +93,12 @@ feature {NONE} -- Initialization
 				vbox.disable_item_expand (run_button)
 				run_button.select_actions.extend (agent execute (apply_and_run_it))
 				
-				create run_and_close_button.make_with_text ("Run and Close")
+				create run_and_close_button.make_with_text ("Run & Close")
 				vbox.extend (run_and_close_button)
 				run_button.set_minimum_size (Layout_constants.Default_button_width, Layout_constants.Default_button_height)
 				vbox.disable_item_expand (run_and_close_button)
 				run_and_close_button.select_actions.extend (agent execute_and_close (apply_and_run_it))
+				run_and_close_button.key_press_actions.extend (agent on_run_button_key_press)
 			end
 
 			create cell
@@ -164,8 +165,16 @@ feature {NONE} -- Implementation
 				run_button.disable_sensitive
 				run_and_close_button.disable_sensitive
 			end
+			arguments_control.current_argument.set_focus
 		end
 		
+	on_run_button_key_press (key: EV_KEY) is
+			-- Key was pressed whilst button had focus.
+		do
+			if key.code = feature {EV_KEY_CONSTANTS}.key_enter then
+				execute (apply_and_run_it)
+			end
+		end
 
 	escape_check (key: EV_KEY) is
 			-- Check for keyboard escape character.

@@ -121,11 +121,11 @@ feature -- Initialization
 			Layout_constants.set_default_size_for_button (down_button)
 			down_button.select_actions.extend (agent move_down)
 			down_button.disable_sensitive
-			create ok_button.make_with_text (Interface_names.b_Ok_text)
+			create ok_button.make_with_text (Interface_names.b_ok)
 			Layout_constants.set_default_size_for_button (ok_button)
 			ok_button.select_actions.extend (agent generate_toolbar)
 			ok_button.select_actions.extend (agent exit)
-			create cancel_button.make_with_text (Interface_names.b_Cancel_text)
+			create cancel_button.make_with_text (Interface_names.b_cancel)
 			cancel_button.select_actions.extend (agent exit)
 			Layout_constants.set_default_size_for_button (cancel_button)
 

@@ -252,7 +252,7 @@ feature {NONE} -- Implementation
 			main_box.extend (choice_box) -- Expandable item.
 			display_state_text
 
-			create tuple.make
+			create tuple
 			choice_box.set_help_context (~create_help_context (tuple))
 		ensure then
 			main_box_has_at_least_one_element: main_box.count > 0

@@ -68,6 +68,14 @@ feature -- Access
 			widget_exists: Result /= Void
 		end;
 
+	message (a_message: MESSAGE; managed: BOOLEAN;
+		oui_parent: COMPOSITE): MESSAGE_I is
+			-- Toolkit implementation of `a_message'
+		deferred
+		ensure
+			widget_exists: Result /= Void
+		end;
+ 
 end -- class OBSOLETE_TOOLKIT
 
 --|----------------------------------------------------------------

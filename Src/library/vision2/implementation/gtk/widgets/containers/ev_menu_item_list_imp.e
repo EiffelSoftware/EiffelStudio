@@ -236,6 +236,8 @@ feature -- Access
 
 	radio_group_ref: POINTER_REF is
 		do
+			--| FIXME IEK Use opo syntax when available in compiler.
+			--| Same applies to access of action sequences.
 			if radio_group_ref_internal = Void then
 				create radio_group_ref_internal
 			end

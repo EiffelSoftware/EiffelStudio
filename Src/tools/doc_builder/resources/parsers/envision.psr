@@ -1,3 +1,5 @@
+-- Regular expressions to perform complete parsing of HTML document to valid XML document
+-- for Eiffel ENViSioN! output
 \n || 
 \t\t ||  
 \t || 
@@ -8,7 +10,7 @@
 <link [^>]*> || 
 <meta[^>]*> || 
 <style[^>]*> || 
-<html[^>]*> || <document>
+<html[^>]*> || <document output="envision">
 <head> || <help/>
 </head> || 
 <body[^>]*> || <paragraph>
@@ -36,9 +38,7 @@
 </ol> || </list>
 </ul> || </list>
 <li> || <item>
-</li> || 
-<item> || </item><itemtemp>
-</list> || </item></list>
+</li> || </item>
 <list ordered="false"></item> || <list ordered="false">
 <list ordered="true"></item> || <list ordered="true">
 <item[^>]*>([^<][^/][^i][^t][^e][^m][^>]*)<item> || <item>\1\</item><item>
@@ -47,6 +47,8 @@
 </b> || </bold>
 <i> || <italic>
 </i> || </italic>
+<em> || <italic>
+</em> || </italic>
 <br[^>]*> || <line_break/>
 </br> || <line_break/>
 ### || &
@@ -79,3 +81,14 @@ src="([^"]*)" || <url>\1\</url>
 <help/>[^<]*</style> || 
 <strong> || <bold>
 </strong> || </bold>
+(<document output="envision")><meta_data/><TITLE>([^>]*)</TITLE> || \1\ title="\2\"><meta_data/>
+</url>> || </url></image>
+<meta_data/></LINK> || <meta_data/>
+<table><row><cell>Eiffel ENViSioN!</cell></row><row><cell>[^<]*</cell></row></TABLE> ||
+<table><row><cell>© 2003-2004 Eiffel Software. All rights reserved.</cell></row></TABLE> ||
+</LINK></LINK></LINK> ||
+<item><paragraph> || <item>
+<item> || </item><item>
+</item></item> || </item>
+<list([^>]*)></item> || <list\1\>
+

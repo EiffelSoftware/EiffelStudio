@@ -68,7 +68,7 @@ feature -- Default cursors
 		end
 
 	Ibeam_cursor: EV_CURSOR is
-			-- I-beam
+			-- I-beam displayed in editable widgets.
 		once
 			Result := Implementation.Ibeam_cursor
 		end

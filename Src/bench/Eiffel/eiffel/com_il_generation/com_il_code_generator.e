@@ -41,6 +41,7 @@ feature -- Basic Operations
 			-- Generate key pair for corresponding assembly.
 		local
 			key_path: STRING
+			il_env: IL_ENVIRONMENT
 		do
 			if final_mode then
 				create key_path.make_from_string ((create {PROJECT_CONTEXT}).Final_generation_path)
@@ -49,8 +50,10 @@ feature -- Basic Operations
 			end
 			key_path := key_path + (create {OPERATING_ENVIRONMENT}).Directory_separator.out
 				+ Key_filename
+
 			if not (create {RAW_FILE}.make (key_path)).exists then
-				(create {WEL_PROCESS_LAUNCHER}).launch (Sn_command + Double_quote + key_path +
+				create il_env
+				(create {WEL_PROCESS_LAUNCHER}).launch (il_env.Dotnet_framework_sdk_bin_path + Sn_command + Double_quote + key_path +
 					Double_quote, (create {EXECUTION_ENVIRONMENT}).current_working_directory, Void)
 			end
 		end
@@ -256,7 +259,7 @@ feature {NONE} -- Implementation
 	Key_filename_extension: STRING is ".snk"
 			-- Key filename extension
 
-	Sn_command: STRING is "sn -k "
+	Sn_command: STRING is "sn.exe -k "
 			-- Sn utility command line
 
 	Zero_array: ARRAY [INTEGER] is

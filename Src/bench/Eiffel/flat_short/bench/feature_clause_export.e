@@ -47,25 +47,12 @@ feature -- Properties
 			-- Features sorted on name within 
 			-- Current feature clause
 	
-	comments: EIFFEL_COMMENTS;
-			-- Comment for feature clause
-
 feature -- Access
 
 	empty: BOOLEAN is
 			-- Are there any features?
 		do
 			Result := features.empty;
-		end;
-
-feature -- Setting
-
-	set_comments (c: like comments) is
-			-- Set comment to `c'.
-		do
-			comments := c;
-		ensure
-			comments = c
 		end;
 
 feature -- Comparison
@@ -111,7 +98,7 @@ feature -- Element change
 
 feature -- Context output
 
-	format (ctxt: FORMAT_CONTEXT_B) is
+	format (ctxt: FORMAT_CONTEXT_B; comments: EIFFEL_COMMENTS) is
 			-- Reconstitute text.
 		local
 			not_first: BOOLEAN

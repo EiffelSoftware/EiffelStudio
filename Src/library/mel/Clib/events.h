@@ -130,7 +130,11 @@
 	/* XColormapEvent */
 
 #define c_event_colormap(_ptr_) (_ptr_)->colormap
+#if defined(__cplusplus) || defined(c_plusplus)
+#define c_event_new(_ptr_) (_ptr_)->c_new
+#else
 #define c_event_new(_ptr_) (_ptr_)->new
+#endif
 
 	/* XConfigureEvent */
 	/* XConfigureRequestEvent */

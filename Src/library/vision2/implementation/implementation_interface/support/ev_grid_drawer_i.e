@@ -251,17 +251,59 @@ feature -- Basic operations
 			rectangle_width, rectangle_height: INTEGER
 			grid_item_exists: BOOLEAN
 			current_item_y_position, current_item_x_position: INTEGER
+			current_tree_adjusted_item_x_position, current_tree_adjusted_column_width: INTEGER
 			dynamic_content_function: FUNCTION [ANY, TUPLE [INTEGER, INTEGER], EV_GRID_ITEM]
 			internal_client_width, internal_client_height: INTEGER
-			current_tree_indent: INTEGER
+			current_subrow_indent: INTEGER
 			skipped_rows: INTEGER
 			visible_column_indexes: ARRAYED_LIST [INTEGER]
 			visible_row_indexes: ARRAYED_LIST [INTEGER]
+			subrow_indent: INTEGER
+			drawing_subrow, drawing_parentrow: BOOLEAN
+			node_index, parent_node_index: INTEGER
+			counter: INTEGER
+			parent_row_list: SPECIAL [EV_GRID_ITEM_I]
+			parent_subrow_indent: INTEGER
+			parent_x_indent_position: INTEGER
+			tree_node_spacing: INTEGER
+			total_tree_node_width: INTEGER
+			collapse_pixmap, expand_pixmap: EV_PIXMAP
+			tree_node_indent: INTEGER
+			first_tree_node_indent: INTEGER
+			node_pixmap_width, node_pixmap_height: INTEGER
+			parent_row_i: EV_GRID_ROW_I
+			
+			row_vertical_center: INTEGER
+			row_vertical_bottom: INTEGER
+			vertical_node_pixmap_top_offset: INTEGER
+			vertical_node_pixmap_bottom_offset: INTEGER
+			horizontal_node_pixmap_left_offset: INTEGER
+			node_pixmap_vertical_center: INTEGER
+			
 		do
 			dynamic_content_function := grid.dynamic_content_function
 			
 			create column_widths.make (8)
 			column_widths.extend (0)
+			
+			expand_pixmap := grid.expand_pixmap
+			collapse_pixmap := grid.collapse_pixmap
+
+			
+			tree_node_spacing := grid.tree_node_spacing
+				-- Retrieve the spacing around each node.
+				
+			node_pixmap_width := expand_pixmap.width
+			node_pixmap_height := expand_pixmap.height
+			
+			subrow_indent := (tree_node_spacing * 2) + node_pixmap_width + grid.subrow_indent
+				
+			total_tree_node_width := node_pixmap_width + 2 * tree_node_spacing
+			
+			tree_node_indent := total_tree_node_width + tree_node_spacing
+			
+			first_tree_node_indent := total_tree_node_width + 2 * tree_node_spacing
+	
 			
 			visible_physical_column_indexes := grid.visible_physical_column_indexes
 			
@@ -291,7 +333,7 @@ feature -- Basic operations
 						visible_row_indexes.start
 					until
 						visible_row_indexes.off
-					loop
+					loop						
 						current_row_index := visible_row_indexes.item
 							-- Retrieve information regarding the rows that we must draw.
 						current_row_list := grid.row_list @ (current_row_index - 1)
@@ -309,9 +351,75 @@ feature -- Basic operations
 								current_row_height := current_row.height
 							end
 						end
+						
+						parent_row_i := current_row.parent_row_i
+						
+						drawing_subrow := parent_row_i /= Void
+							-- Are we drawing a subrow of the tree?
+							
+						drawing_parentrow := current_row.subrow_count > 0
+							-- Are we drawing a row that is a parent of other rows?
+						
+						if drawing_subrow or drawing_parentrow then
+							-- We are now about to draw a row that is a subrow of another row, so
+							-- perform any calculations required.
+							from
+								counter := 0
+								node_index := 0
+							until
+								node_index > 0
+							loop
+								if current_row_list @ counter /= Void then
+									node_index := counter + 1
+								end
+								counter := counter + 1
+							end
+							if drawing_subrow then
+								parent_row_list := grid.row_list @ (current_row.parent_row_i.index - 1)
+								
+								from
+									counter := 0
+									parent_node_index := 0
+								until
+									parent_node_index > 0
+								loop
+									if parent_row_list @ counter /= Void then
+										parent_node_index := counter + 1
+									end
+									counter := counter + 1
+								end
+								
+									
+									-- Now calculate information regarding the parent of the current subrow
+									-- which is required for the drawing. We must know where the parent is positioned
+									-- in order to connect the lines correctly.
+								parent_subrow_indent := subrow_indent * (current_row.parent_row_i.indent_depth_in_tree - 1) + first_tree_node_indent - (tree_node_spacing * 2) - ((node_pixmap_width + 1) // 2)
+								parent_x_indent_position := (column_offsets @ (parent_node_index)) - (internal_client_x - horizontal_buffer_offset)
+								parent_x_indent_position := parent_x_indent_position + parent_subrow_indent
+							end
+						else
+							node_index := 1
+						end
+						
+							-- Now compute variables required for drawing tree structures.
+							-- Note that here we only compute the vertical variables because as each row
+							-- has a fixed height, they can be computed outside of the inner row iteration.
+							-- The horizontal offsets must be computed within the inner loop.
+						row_vertical_center := current_item_y_position + (current_row_height // 2)
+						row_vertical_bottom := current_item_y_position + current_row_height
+						vertical_node_pixmap_top_offset := current_item_y_position + ((current_row_height - node_pixmap_height + 1)// 2)
+						vertical_node_pixmap_bottom_offset := vertical_node_pixmap_top_offset + node_pixmap_height
+						
+						if drawing_parentrow or current_column_index = 1 then
+							current_subrow_indent := subrow_indent * (current_row.indent_depth_in_tree - 1) + first_tree_node_indent
+						else
+							current_subrow_indent := 0
+						end
+						
 						from
 							visible_column_indexes.start
 							current_item_x_position := 0
+							
 						until
 							visible_column_indexes.off
 						loop
@@ -355,37 +463,92 @@ feature -- Basic operations
 							
 							if grid_item_exists then
 									-- An item has been retrieved for the current drawing position so draw it.
-								if current_column_index = 1 and grid.is_tree_enabled then
-										-- Now draw tree node for root tree items if any.
-									current_tree_indent := tree_indent * current_row.depth_in_tree
 									
-										-- The background area for the tree node must always be refreshed, even if the node is not visible.
-										-- We draw no wider than `current_column_width' to ensure this.
-									grid.drawable.set_foreground_color (grid.background_color)
-									grid.drawable.fill_rectangle (current_item_x_position, current_item_y_position, current_tree_indent.max (current_column_width), current_row_height)
-									
-									if current_tree_indent < current_column_width then
-											-- If the indent of the tree is less than `current_column_width', it must be visible so draw it.
-										if current_row.subrow_count > 0 then
-											if current_row.is_expanded then
-												grid.drawable.draw_pixmap (current_tree_indent - tree_node_button_dimension - (tree_indent - tree_node_button_dimension) // 2, current_item_y_position + (current_row_height - tree_node_button_dimension) // 2, collapse_pixmap)
-											else
-												grid.drawable.draw_pixmap (current_tree_indent - tree_node_button_dimension - (tree_indent - tree_node_button_dimension) // 2, current_item_y_position + (current_row_height - tree_node_button_dimension) // 2, expand_pixmap)
+									-- Now compute horizontal variables for tree drawing.
+								horizontal_node_pixmap_left_offset := current_item_x_position + current_subrow_indent - (tree_node_spacing * 2) - node_pixmap_width
+								node_pixmap_vertical_center := current_item_x_position + current_subrow_indent - (tree_node_spacing * 2) - (node_pixmap_width + 1) // 2
+								
+								current_tree_adjusted_item_x_position := current_item_x_position
+								current_tree_adjusted_column_width := current_column_width
+
+								if grid.is_tree_enabled then
+									if current_column_index = node_index then
+										
+										current_tree_adjusted_item_x_position := current_tree_adjusted_item_x_position + current_subrow_indent
+										current_tree_adjusted_column_width := current_tree_adjusted_column_width - current_subrow_indent
+											-- We adjust the horizontal position and width of the current item by the space required
+											-- for the tree node.
+										
+										grid.drawable.set_foreground_color (grid.background_color)
+										grid.drawable.fill_rectangle (current_item_x_position, current_item_y_position, current_subrow_indent.max (current_column_width), current_row_height)
+											-- The background area for the tree node must always be refreshed, even if the node is not visible.
+											-- We draw no wider than `current_column_width' to ensure this.
+										
+										if current_subrow_indent < current_column_width then
+												-- If the indent of the tree is less than `current_column_width', it must be visible so draw it.
+											if current_row.subrow_count > 0 then
+													-- Note we add 1 to account for rounding errors when odd values.
+												if current_row.is_expanded then
+													grid.drawable.draw_pixmap (horizontal_node_pixmap_left_offset, vertical_node_pixmap_top_offset, collapse_pixmap)
+													grid.drawable.set_foreground_color (black)
+													
+													grid.drawable.draw_segment (node_pixmap_vertical_center, vertical_node_pixmap_bottom_offset, node_pixmap_vertical_center, row_vertical_bottom)
+														-- This draws the vertical segment beneath the expand icon which reaches down to the bottom of the row.
+												else
+													grid.drawable.draw_pixmap (horizontal_node_pixmap_left_offset, vertical_node_pixmap_top_offset, expand_pixmap)
+												end	
+											end
+												-- We must now draw the lines for the tree structure.
+											
+											if current_subrow_indent > 0 then
+												grid.drawable.set_foreground_color (black)
+												 grid.drawable.draw_segment (current_item_x_position.max (parent_x_indent_position), row_vertical_center, horizontal_node_pixmap_left_offset, row_vertical_center)
+												 	-- Draw a line from the edge of the item to the either the node or the edge of the actual item position.
+												 
+												if drawing_subrow and then parent_node_index = current_column_index then
+													grid.drawable.draw_segment (current_item_x_position.max (parent_x_indent_position), row_vertical_center, current_item_x_position.max (parent_x_indent_position), current_item_y_position)
+												end
 											end
 										end
+										fixme ("Must handle tree nodes that are not only in the first column")
 									end
-									if current_item_x_position + current_tree_indent < current_column_width then
-										grid_item.redraw (current_item_x_position + current_tree_indent, current_item_y_position, current_column_width - current_tree_indent, current_row_height, grid.drawable)
-									end
-									fixme ("Must handle tree nodes that are not only in the first column")
-								else
-									grid_item.redraw (current_item_x_position, current_item_y_position, current_column_width, current_row_height, grid.drawable)
+								end
+								if current_tree_adjusted_item_x_position - current_item_x_position < current_column_width then
+									grid_item.redraw (current_tree_adjusted_item_x_position, current_item_y_position, current_tree_adjusted_column_width, current_row_height, grid.drawable)
 								end
 							else
 									-- As there is no current item, we must now fill the background with the
 									-- parent background color.
 								grid.drawable.set_foreground_color (grid.background_color)
 								grid.drawable.fill_rectangle (current_item_x_position, current_item_y_position, current_column_width, current_row_height)
+								if (drawing_subrow or drawing_parentrow) and current_column_index < node_index and current_column_index >= parent_node_index then
+									
+										-- We must now draw the lines for the tree structure, as although there is no item
+										-- at this location in the grid, a tree line may cross it horizontally.
+										
+									grid.drawable.set_foreground_color (black)
+									grid.drawable.draw_segment (current_item_x_position.max (parent_x_indent_position), row_vertical_center, current_item_x_position + current_column_width, row_vertical_center)
+										-- The background area for the tree node must always be refreshed, even if the node is not visible.
+										-- We draw no wider than `current_column_width' to ensure this.
+									
+									
+									if parent_node_index = current_column_index then
+											-- If the grid column being drawn matches that in which the
+											-- node of `parent_row_i' is contained, then vertical lines must be drawn
+											-- to connect the lines.
+											
+										if parent_row_i.subrow_count > (current_row.index - parent_row_i.index) then
+												-- In this case, there are more subrows of `parent_row_i' to be drawn,
+												-- so the vetical line is drawn to span the complete height of the current row.
+											grid.drawable.draw_segment (current_item_x_position.max (parent_x_indent_position), row_vertical_bottom, current_item_x_position.max (parent_x_indent_position), current_item_y_position)
+										else
+												-- There are no subsequent rows for `parent_row_i' so we must draw the vertical line
+												-- from the start of the current row to the center only.
+											grid.drawable.draw_segment (current_item_x_position.max (parent_x_indent_position), row_vertical_center, current_item_x_position.max (parent_x_indent_position), current_item_y_position)
+										end
+										
+									end
+								end
 							end							
 							
 							visible_column_indexes.forth
@@ -438,51 +601,12 @@ feature -- Basic operations
 			Result := (create {EV_STOCK_COLORS}).black
 		end
 		
-	expand_pixmap: EV_PIXMAP is
-			-- A pixmap representing the image used for the expand pixmap.
-		local
-			start_offset, end_offset, middle_offset: INTEGER
-		once
-			start_offset := 2
-			end_offset := tree_node_button_dimension - start_offset - 1
-			middle_offset := tree_node_button_dimension // 2
-			create Result
-			Result.set_size (tree_node_button_dimension, tree_node_button_dimension)
-			Result.set_foreground_color (white)
-			Result.clear
-			Result.set_foreground_color (black)
-			Result.draw_rectangle (0, 0, tree_node_button_dimension, tree_node_button_dimension)
-			Result.draw_segment (start_offset, middle_offset, end_offset, middle_offset)
-			Result.draw_segment (middle_offset, start_offset, middle_offset, end_offset)
-		ensure
-			result_not_void: Result /= Void
-		end
-		
-	collapse_pixmap: EV_PIXMAP is
-			-- A pixmap representing the image used for the collapse pixmap.
-		local
-			start_offset, end_offset, middle_offset: INTEGER
-		once
-			start_offset := 2
-			end_offset := tree_node_button_dimension - start_offset - 1
-			middle_offset := tree_node_button_dimension // 2
-			create Result
-			Result.set_size (tree_node_button_dimension, tree_node_button_dimension)
-			Result.set_foreground_color (white)
-			Result.clear
-			Result.set_foreground_color (black)
-			Result.draw_rectangle (0, 0, tree_node_button_dimension, tree_node_button_dimension)
-			Result.draw_segment (start_offset, middle_offset, end_offset, middle_offset)
-		end
-	
 	tree_node_button_dimension: INTEGER is 9	
 		-- Dimension of the expand/collapse node used in the tree.
+		--fixme ("Remove")
 		
 	horizontal_border_width: INTEGER is 3
 		-- Border from edge of text to edge of grid items.
-		
-	tree_indent: INTEGER is 16
-		-- The indent used for each subsequent depth in the tree.
 
 feature {NONE} -- Implementation
 

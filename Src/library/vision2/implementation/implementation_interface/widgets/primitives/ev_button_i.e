@@ -6,11 +6,9 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-
 	EV_BUTTON_I 
 
 inherit
-
 	EV_PRIMITIVE_I
 
 	EV_BAR_ITEM_I
@@ -18,13 +16,20 @@ inherit
 	EV_TEXT_CONTAINER_I
 
 	EV_PIXMAP_CONTAINER_I
+		redefine
+			pixmap_size_ok
+		end
 
 	EV_FONTABLE_I
 
 feature {NONE} -- Initialization
 
 	make_with_text (par: EV_CONTAINER; txt: STRING) is
-			-- Create a push button implementation.
+			-- Create a widget with `par' as parent and `txt'
+			-- as text.
+		require
+			valid_parent: par.is_valid
+			valid_string: txt /= Void
 		deferred
         end	
 
@@ -38,9 +43,17 @@ feature -- Event - command association
 			valid_command: cmd /= Void
 		deferred
 		end
-	
-end -- class EV_BUTTON_I
 
+feature {EV_PIXMAP} -- Implementation
+
+	pixmap_size_ok (pixmap: EV_PIXMAP): BOOLEAN is
+			-- Check if the size of the pixmap is ok for
+			-- the container.
+		do
+			Result := True
+		end
+
+end -- class EV_BUTTON_I
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

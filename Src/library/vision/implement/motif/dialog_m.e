@@ -242,9 +242,9 @@ feature -- Status setting
 	set_parent_action (action: STRING; cmd: COMMAND; arg: ANY) is
 			-- Set the dialog shell action to `cmd' with `arg'
 		local
-		list: VISION_COMMAND_LIST
+			list: VISION_COMMAND_LIST
         do
-		!! list.make;
+			!! list.make;
 			parent.set_translation (action, list, arg);
 			list.add_command (cmd, arg)
 		end

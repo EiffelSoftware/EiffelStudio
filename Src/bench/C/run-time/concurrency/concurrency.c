@@ -179,14 +179,15 @@ char *conf_file;
 	}
 
 	post_process();
-/*print_config();*/
+#ifdef DISP_MSG
+print_config();/**/
+#endif
 }
 
 post_process() {
 	int idx, ind;
 
-	_concur_resource_index = 0;
-	_concur_resource_count = 0;
+	_concur_resource_index = -1;
 	for(idx=0; idx<_concur_host_count; idx++) {
 		if (!strlen(_concur_hosts[idx].host) || !strlen(_concur_hosts[idx].directory)) {
 			sprintf(_concur_crash_info, CURAPPERR21, _concur_hosts[idx].host, _concur_hosts[idx].directory);	
@@ -207,7 +208,10 @@ post_process() {
 				c_raise_concur_exception(exception_configure_syntax_error);
 			}
 		}
+		if (_concur_hosts[idx].capability > 0 && _concur_resource_index < 0)
+			_concur_resource_index = idx;
 	}
+	_concur_resource_count = 0;
 
 }
 
@@ -693,9 +697,8 @@ char *dispatch_to() {
 /* return the host(its name or IP address) to which the next separate 
  * object will be dispatched.
 */
-	char *ret;
 
-	ret = _concur_hosts[_concur_resource_index].host;
+	_concur_dispatched_host = _concur_hosts[_concur_resource_index].host;
 	_concur_dispatched_directory = _concur_hosts[_concur_resource_index].directory;
 	_concur_dispatched_executable = _concur_hosts[_concur_resource_index].executable;
 	_concur_resource_count++;
@@ -703,7 +706,7 @@ char *dispatch_to() {
 		_concur_resource_count = 0;
 		_concur_resource_index = (_concur_resource_index+1) % _concur_host_count;
 	}
-	return ret;
+	return _concur_dispatched_host;
 }
 
 

@@ -157,10 +157,10 @@ void separate_call() {
 #endif
 			if (_concur_command < 0) {
 				add_nl;
-				sprintf(crash_info, "    Error in separate_call. Got %s.", command_text(_concur_command));
+				sprintf(crash_info, CURERR13, command_text(_concur_command));
 				c_raise_concur_exception(exception_implementation_error);
 			}
-			sprintf(_concur_crash_info, "    Error happened when execute separate feature/attribute `%s'\nof `%s'.", _concur_command_feature, _concur_command_class);
+			sprintf(_concur_crash_info, CURERR14, _concur_command_feature, _concur_command_class);
 			dyn_type = Dtype(CUROBJ);
 			static_type = eif_type_id(_concur_command_class); 	/* Can be removed */
 #ifdef DEBUG
@@ -179,7 +179,7 @@ printf("%d(%s) ptr_table=%x of feature <%s> on class <%s>\n", _concur_pid, _conc
 				if (is_extern == -1) {				/* Attribute is not found */
 				/* the check is not necessary, because Eiffel Compiler should guarantee it */
 					add_nl;
-					sprintf(crash_info, "	Attribute %s is not found in class %s.", _concur_command_feature, _concur_command_class);	
+					sprintf(crash_info, CURERR15, _concur_command_feature, _concur_command_class);	
 					c_raise_concur_exception(exception_invalid_parameter);
 				}
 #ifndef WORKBENCH
@@ -218,7 +218,7 @@ dprintf(1)("%d(%s) Got Attrib type 0x%x with rout_id %d\n", _concur_pid, _concur
 					case SK_EXP:
 					default:
 						add_nl;
-						sprintf(crash_info, "    Not implemented type(0x%x) of separate attribute.", type);
+						sprintf(crash_info, CURERR16, type);
 						c_raise_concur_exception(exception_implementation_error);
 				}
 			} /* End of "ATTRIBUTE" */
@@ -340,8 +340,6 @@ dprintf(2)("%d(%s) Got feature's DLEMPatId = %d(in dle)\n", _concur_pid, _concur
 dprintf(2)("%d(%s) Got feature's sep_call 0x%x, fptr 0x%x\n", _concur_pid, _concur_class_name_of_root_obj, sep_call, fptr);
 #endif
 				if (!fptr || !sep_call) {
-					add_nl;
-					sprintf(crash_info, "    Error happened when tried to perform feature <%s> on \nobject from class <%s>", _concur_command_feature, _concur_command_class);
 					c_raise_concur_exception(exception_implementation_error);
 				}
 				(sep_call) (fptr, is_extern);

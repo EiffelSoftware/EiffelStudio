@@ -229,7 +229,7 @@ typedef unsigned char   EIF_BOOLEAN;
 #define	constant_remote_server					-1000
 #define	constant_remote_client					-1001
 #define	constant_normal_client					0
-#define	constant_scoop_dog_port					8000
+#define constant_scoop_dog_port                 8000
 #define	constant_parent_type					-1
 #define	constant_root_oid						0 /* any object's OID can't be 0 */ 		
 #define	constant_scoop_dog_data_type			-1
@@ -249,6 +249,7 @@ typedef unsigned char   EIF_BOOLEAN;
 #define	constant_period							constant_absolute_period		
 #endif
 #define constant_waiting_time_in_precondition	80000
+#define constant_waiting_time_in_reservation	((_concur_pid % 2) * 10000 + (_concur_pid % 10) * 4000)
 /* unit: Micro second (0.000001 second) */
 #define	constant_client							0 /* Not Used anymore */
 #define	constant_parent							1 /* Not Used anymore */
@@ -512,6 +513,18 @@ int up;  /* the biggest socket identifier in the corresponding `fd_set' */
 			_concur_mask_limit.up = fd - 1; \
 	}
 
+#define init_options \
+	_concur_options = 0x80
+/* Initially, "with rejection" is set */
+
+#define set_with_rejection \
+	_concur_options = _concur_options | 0x80
+
+#define unset_with_rejection \
+	_concur_options = _concur_options & 0x7f
+
+#define is_with_rejection \
+	_concur_options & 0x80
 
 /*----------------------------------------------------------*/
 /* The following MACROs are defined for Concurrent Compiler */
@@ -649,8 +662,8 @@ int up;  /* the biggest socket identifier in the corresponding `fd_set' */
 	
 #define CURCCI(class,feature) \
 		_concur_is_creating_sep_child = 1; \
-		sprintf(_concur_crash_info, CURERR9, _concur_hosts[_concur_resource_index].host); \
-		_concur_scoop_dog = setup_connection(c_get_addr_from_name(dispatch_to()), constant_scoop_dog_port); \
+		sprintf(_concur_crash_info, CURERR9, _concur_hosts[_concur_resource_index].host, _concur_scoop_dog_port); \
+		_concur_scoop_dog = setup_connection(c_get_addr_from_name(dispatch_to()), _concur_scoop_dog_port); \
 		_concur_crash_info[0] = '\0'; \
         _concur_command = constant_create_sep_obj; \
         _concur_para_num = 7; \
@@ -682,9 +695,9 @@ int up;  /* the biggest socket identifier in the corresponding `fd_set' */
 		_concur_alt_paras_size = adjust_array(&_concur_alt_paras, _concur_alt_paras_size, _concur_alt_para_num)
 
 #define CURCC(child) \
-	sprintf(_concur_crash_info, CURERR11, _concur_hosts[_concur_resource_index].host); \
+	sprintf(_concur_crash_info, CURERR11, _concur_dispatched_host); \
 	send_command(_concur_scoop_dog->sock);\
-	sprintf(_concur_crash_info, CURERR12, _concur_hosts[_concur_resource_index].host); \
+	sprintf(_concur_crash_info, CURERR12, _concur_dispatched_host); \
 	wait_scoop_daemon(); \
 	_concur_crash_info[0] = '\0'; \
 	child = create_child(); \
@@ -890,16 +903,13 @@ int up;  /* the biggest socket identifier in the corresponding `fd_set' */
 
 #define CURPROXY_OBJ(x)	eif_separate_id_object(oid_of_sep_obj(x))
 
-#define CURCSPF	\
-		if (constant_waiting_time_in_precondition) \
-			cur_usleep(constant_waiting_time_in_precondition); \
-		goto check_sep_pre
+#define CURCSPF	goto check_sep_pre
+#define CURCSPFW	cur_usleep(_concur_waiting_time_of_cspf)
 /* Sleep some time when the precondition involving separate object(s) is evaluated 
  * to be False if user defined so.
  */
 
-#define CURRSFW \
-		 c_concur_select(_concur_para_num, 1, NULL, NULL, NULL, 0, (_concur_pid % 2) * 10000 + (_concur_pid % 10) * 4000);
+#define CURRSFW	cur_usleep(_concur_waiting_time_of_rspf)
 
 		
 

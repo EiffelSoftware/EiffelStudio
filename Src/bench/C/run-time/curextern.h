@@ -24,9 +24,11 @@ extern PARAMETER *_concur_paras;
 extern int _concur_paras_size;
 /* the total number of cells in parameter array */
 
+#ifdef COMBINE_CREATION_WITH_INIT
 extern PARAMETER *_concur_alt_paras;
 extern int _concur_alt_paras_size;
 extern EIF_INTEGER _concur_alt_para_num;
+#endif
 
 /*---------------------------------------------------------------------------*/
 /* The following variables are used to keep the information of the PROCESSOR */
@@ -90,6 +92,9 @@ extern EIF_INTEGER _concur_obj_type;
 
 extern char _concur_user_name[constant_max_user_name_len+1];
 extern char _concur_command_text[constant_max_command_text+1];
+extern char _concur_options;
+extern EIF_INTEGER _concur_waiting_time_of_rspf;
+extern EIF_INTEGER _concur_waiting_time_of_cspf;
 
 
 /*---------------------------------------------------------*/
@@ -101,6 +106,7 @@ extern EIF_BOOLEAN _concur_terminatable;
 extern EIF_BOOLEAN _concur_exception_has_happened;
 extern EIF_OBJ _concur_temp_sep_obj;
 extern DAEMON  *_concur_scoop_dog;
+extern EIF_INTEGER _concur_scoop_dog_port;
 
 
 
@@ -123,6 +129,7 @@ extern EIF_INTEGER _concur_host_level_size;
 extern EIF_INTEGER _concur_resource_index;
 extern EIF_INTEGER _concur_resource_count;
 
+extern char *_concur_dispatched_host;
 extern char *_concur_dispatched_directory;
 extern char *_concur_dispatched_executable;
 extern char _concur_executable[constant_max_directory_len+1];
@@ -330,6 +337,10 @@ extern EIF_BOOLEAN c_wait_long_enough();
 extern void c_process_ser_list_from_sep_obj();
 extern void c_raise_concur_exception();
 extern void cur_usleep();
+extern void cur_set_with_rejection();
+extern void cur_unset_with_rejection();
+extern void cur_set_daemon_port();
+
 
 
 
@@ -339,5 +350,9 @@ extern void print_ref_table_and_exported_object();
 
 extern void get_call_stack();
 
+#ifdef EIF_WIN32
+/* For debuging */
+extern void disp_info(char *, char *, long);
+#endif
 
 #endif

@@ -1,10 +1,9 @@
 #include "net.h"
 #include "curextern.h"
 
-#define WITH_REJECT
 /* if we want that a processor can release all resources(separate objects)
  * currently held by itself when it can't get another resource, we should
- * define `WITH_REJECT', otherwise, we just undefine it.
+ * define `with_rejection' option, otherwise, we just unset it.
 */
 
 void idle_usage(check_nb, read_mask, assign_current) 
@@ -195,26 +194,26 @@ printf("%d/%d[%s,%d] Got Command(in idle_usage) %s  para#: %d\n", _concur_pid, c
 				 * RESERVE_SEP_OBJ request, and let the requestor to 
 				 * try again. 
 				*/
-#ifdef WITH_REJECT
+					if (is_with_rejection) {
 #ifdef DISP_MSG
 printf("%d In IDLE_USAGE got command %s, para_num=%d and return REJECT_TO_RESERVE_SEP_OBJ\n", _concur_pid, command_text(_concur_command), _concur_para_num);
 #endif
-					_concur_command = constant_reserve_fail;
-					_concur_para_num = 0;
-					send_command(cur_client->sock);	
-					cur_client_bak = cur_client;
-					cur_client = cur_client->next;
-					i++;
-					continue;
-#endif
+						_concur_command = constant_reserve_fail;
+						_concur_para_num = 0;
+						send_command(cur_client->sock);	
+						cur_client_bak = cur_client;
+						cur_client = cur_client->next;
+						i++;
+						continue;
+					}
 				}
 			}
 
-#ifdef WITH_REJECTION
-			add_nl;
-			sprintf(crash_info, CURIMPERR2, "Nothing", command_text(_concur_command), "idle_usage");
-			c_raise_concur_exception(exception_unexpected_request);
-#endif
+			if (is_with_rejection) {
+				add_nl;
+				sprintf(crash_info, CURIMPERR2, "Nothing", command_text(_concur_command), "idle_usage");
+				c_raise_concur_exception(exception_unexpected_request);
+			}
 
 			/* Now, we store the request's CODE part(no data) into the 
 			 * client's node. Then we remove the socket from the

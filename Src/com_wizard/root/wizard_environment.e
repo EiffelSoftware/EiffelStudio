@@ -12,6 +12,11 @@ inherit
 			{NONE} all
 		end
 
+	OPERATING_ENVIRONMENT
+		export
+			{NONE} all
+		end
+
 create
 	make
 

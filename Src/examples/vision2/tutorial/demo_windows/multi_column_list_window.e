@@ -20,6 +20,8 @@ feature {NONE} -- Initialization
 
 	make (par: EV_CONTAINER) is
 			-- Create the demo window in `par'.
+		local
+			type: EV_PND_TYPE
 		do
 			make_with_text (par, <<"Part 1", "Part 2", "Part 3", "Part 4", "Part 5">>)
 			set_multiple_selection
@@ -28,19 +30,27 @@ feature {NONE} -- Initialization
 			set_center_alignment (3)
 			set_left_alignment (4)
 
-			!! row.make_with_text (Current, <<"Ceci","est","un","objet","row">>)
-			row.set_selected (True)
-			!! row.make (Current)
-			row.set_text (<<"This","is","an","objet","row">>)
-			!! row.make_with_text (Current, <<"This","is","an","objet","row">>)
-			row.set_selected (True)
-			!! row.make (Current)
-			row.set_text (<<"This","is","an","objet","row">>)
+			!! row1.make_with_text (Current, <<"Ceci","est","un","objet","row">>)
+			row1.set_selected (True)
+			row1.set_data (1)
+			row1.activate_pick_and_drop (Void, Void)
+			create type.make
+			row1.set_data_type (type)
+			row1.set_transported_data ("Bonjour")
+
+			!! row2.make (Current)
+			row2.set_text (<<"This","is","an","objet","row">>)
+			row2.set_data (2)
+			!! row3.make_with_text (Current, <<"This","is","an","objet","row">>)
+			row3.set_data (3)
+			!! row4.make_with_all (Current, <<"This","is","an","objet","row4">>, 2)
+			row4.set_selected (True)
+			row4.set_data (4)
 		end
 
 feature -- Access
 
-	row: EV_MULTI_COLUMN_LIST_ROW
+	row1, row2, row3, row4: EV_MULTI_COLUMN_LIST_ROW
 		-- Row
 
 end -- class MULTI_COLUMN_LIST_WINDOW

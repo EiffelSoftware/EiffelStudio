@@ -16,8 +16,6 @@ inherit
 		end
 
 	EV_DRAWABLE_IMP
-		undefine
-			dispose
 		redefine
 			interface,
 			make,

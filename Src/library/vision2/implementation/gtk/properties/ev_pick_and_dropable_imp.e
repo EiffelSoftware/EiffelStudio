@@ -370,8 +370,10 @@ feature -- Implementation
 				wid_imp ?= wid.implementation
 				if wid_imp /= Void then
 					if wid_imp.pointer_button_press_actions_internal /= Void then
-						tup := [a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y]
-						wid_imp.pointer_button_press_actions_internal.call (tup)
+						if (a_x >= 0 and a_x <= wid_imp.width) and (a_y >= 0 and a_y <= wid_imp.height) then
+							tup := [a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y]
+							wid_imp.pointer_button_press_actions_internal.call (tup)							
+						end
 					end
 				end
 			end
@@ -411,7 +413,7 @@ feature -- Implementation
 			l_C: EV_C_EXTERNALS
 		do
 			if
-				True--C.gtk_events_pending = 0
+				C.gtk_events_pending = 0
 			then
 				l_invert_gc := invert_gc
 				l_root_parent := root_parent

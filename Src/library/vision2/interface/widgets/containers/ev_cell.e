@@ -83,7 +83,9 @@ feature -- Conversion
 			l: LINKED_LIST [like item]
 		do
 			create l.make
-			l.extend (implementation.item)
+			if implementation.item /= Void then
+				l.extend (implementation.item)
+			end
 			Result := l
 		end
 
@@ -121,6 +123,9 @@ end -- class EV_CELL
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/03/20 18:34:11  king
+--| Fixed linear representation bug
+--|
 --| Revision 1.9  2000/03/17 23:47:55  oconnor
 --| comments
 --|

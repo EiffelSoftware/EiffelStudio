@@ -126,6 +126,8 @@ debug ("ACTIVITY")
 	io.error.putbool (expanded_modified);
 	io.error.putstring ("%Ndeferred_modified: ");
 	io.error.putbool (deferred_modified);
+	io.error.putstring ("%Nseparate_modified: ");
+	io.error.putbool (separate_modified);
 	if assert_prop_list /= Void then
 		if assert_prop_list.empty then
 			io.error.putstring ("%Nassert_prop_list: empty");

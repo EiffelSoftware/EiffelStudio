@@ -85,7 +85,8 @@ typedef enum EIF_COMPILATION_MODE
 	EIF_COMPILATION_MODE_Workbench = 0,
 	EIF_COMPILATION_MODE_Freeze = 1,
 	EIF_COMPILATION_MODE_Finalize = 2,
-	EIF_COMPILATION_MODE_Precompile = 3
+	EIF_COMPILATION_MODE_Precompile = 3,
+	EIF_COMPILATION_MODE_FinalizedPrecompile = 4
 } EIF_COMPILATION_MODE;
 
 //---------------------------------------------------------------------

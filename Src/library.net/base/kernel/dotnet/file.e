@@ -265,7 +265,7 @@ feature -- Access
 		require
 			file_exists: exists
 		do
-			Result := eiffel_file_date_time (internal_file.last_write_time)
+			Result := eiffel_file_date_time (internal_file.last_write_time.to_universal_time)
 		end
 
 	access_date: INTEGER is
@@ -273,7 +273,7 @@ feature -- Access
 		require
 			file_exists: exists
 		do
-			Result := eiffel_file_date_time (internal_file.last_access_time)
+			Result := eiffel_file_date_time (internal_file.last_access_time.to_universal_time)
 		end
 
 	retrieved: ANY is
@@ -331,8 +331,6 @@ feature -- Status report
 	exists: BOOLEAN is
 			-- Does physical file exist?
 			-- (Uses effective UID.)
-		local
-			external_name: ANY
 		do
 			Result := internal_file.exists
 		ensure then
@@ -342,8 +340,6 @@ feature -- Status report
 	access_exists: BOOLEAN is
 			-- Does physical file exist?
 			-- (Uses real UID.)
-		local
-			external_name: ANY
 		do
 			Result := internal_file.exists
 		end
@@ -356,7 +352,7 @@ feature -- Status report
 			retried: BOOLEAN
 		do
 			if not retried then
-				create perm.make_from_access_and_path (feature {FILE_IOPERMISSION_ACCESS}.read, name.to_cil)
+				create perm.make_from_access_and_path (feature {FILE_IOPERMISSION_ACCESS}.read, internal_file.full_name)
 				perm.demand
 			end
 			Result := not retried
@@ -415,7 +411,8 @@ feature -- Status report
 		require
 			file_exists: exists
 		do
-			Result := internal_file.attributes = feature {FILE_ATTRIBUTES}.normal
+			Result := (internal_file.attributes.to_integer & feature {FILE_ATTRIBUTES}.normal.to_integer) = 
+				feature {FILE_ATTRIBUTES}.normal.to_integer
 		end
 
 	is_device: BOOLEAN is
@@ -423,7 +420,8 @@ feature -- Status report
 		require
 			file_exists: exists
 		do
-			Result := False
+			Result := (internal_file.attributes.to_integer & feature {FILE_ATTRIBUTES}.device.to_integer) = 
+				feature {FILE_ATTRIBUTES}.device.to_integer
 		end
 
 	is_directory: BOOLEAN is
@@ -431,7 +429,8 @@ feature -- Status report
 		require
 			file_exists: exists
 		do
-			Result := (create {DIRECTORY}.make (name)).exists
+			Result := (internal_file.attributes.to_integer & feature {FILE_ATTRIBUTES}.directory.to_integer) = 
+				feature {FILE_ATTRIBUTES}.directory.to_integer
 		end
 
 	is_symlink: BOOLEAN is
@@ -1281,10 +1280,16 @@ feature -- Input
 			-- Read a new character.
 			-- Make result available in `last_character'.
 		require else
-			is_readable: file_readable
-		do
-			last_character := reader.read.to_character
-			internal_end_of_file := reader.peek = -1
+			is_readable: file_readable			
+		local 
+		  	a_code: INTEGER 
+		do 
+		  	a_code := reader.read 
+		  	if a_code = - 1 then 
+				internal_end_of_file := True 
+		  	else 
+				last_character := a_code.to_character 
+		  	end 
 		end
 
 	read_integer, readint is
@@ -1601,7 +1606,6 @@ feature {FILE} -- Implementation
 			i64 := ((dot_net_date.ticks - eiffel_base_file_time) / 10000000).floor
 			Result := i64.to_integer
 		end
-		
 
 	mode: INTEGER
 			-- Input-output mode

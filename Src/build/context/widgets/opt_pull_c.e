@@ -40,14 +40,14 @@ feature
 		local
 			ms_win: STRING
 		do
-			ms_win := "MS_WINDOWS";
-			if not ms_win.is_equal (toolkit.name) then
+			--ms_win := "MS_WINDOWS";
+			--if not ms_win.is_equal (toolkit.name) then
 				add_common_callbacks (widget.button);
 				initialize_transport;
 				if (parent = Void) or else not parent.is_group_composite then
 					widget.button.add_enter_action (eb_selection_mgr, Current);
 				end
-			end;
+			--end;
 		end;
 
 	remove_widget_callbacks is

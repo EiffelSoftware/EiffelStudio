@@ -833,14 +833,16 @@ feature {NONE} -- EiffelVision implementation
    	on_first_display is
 		local
 			i: INTEGER
+			list: ARRAYED_LIST [EV_TABLE_CHILD_IMP]
   		do
 			if not ev_children.empty then
+				list := ev_children
 				from
 					i := 1
 				until
-					i = ev_children.count + 1
+					i = list.count + 1
 				loop
-					(ev_children @ i).widget.on_first_display
+					(list @ i).widget.on_first_display
 					i := i + 1
 				end
 			end

@@ -27,7 +27,7 @@
 #include "sig.h"
 #include "bits.h"
 
-/*#define DEBUG 6	/**/
+#define DEBUG 6	/**/
 #define TEST
 #ifdef TEST
 #include <stdio.h>
@@ -516,14 +516,14 @@ int where;			/* Are we checking invariant before or after compound? */
 					stagval = tagval;
 					last->type = SK_POINTER;	/* GC: wait for malloc */
 					last->it_ref = RTLN(type & SK_DTYPE);
-					last->type = SK_REF;
+					last->type = SK_REF;	
 					if (tagval != stagval)
 						sync_registers(scur, stop);
 					break;
 				case SK_BIT:
 					last->type = SK_POINTER;	/* GC: wait for malloc */
 					last->it_bit = RTLB(type & SK_BMASK);
-					last->type = type;
+					last->type = SK_BIT;
 					break;
 				default:
 					break;
@@ -698,6 +698,24 @@ end:
 		break;
 
 	/*
+	 * Assignment to a bit local variable.
+	 */
+	case BC_LBIT_ASSIGN:
+#ifdef DEBUG
+		dprintf(2)("BC_LBIT_ASSIGN\n");
+#endif
+		code = get_short();		/* Get the local number (from 1 to locnum) */
+		last = opop();
+		if ((last->type & SK_HEAD) != SK_BIT)
+			/*
+			 * This was necessary because the resulting type of operations
+			 * on bits was SK_REF. 
+			 */
+			last->type = SK_BIT;
+		b_copy(last->it_bit, loc(code)->it_bit);
+		break;
+
+	/*
 	 * Assignment to an expanded local
 	 */
 	case BC_LEXP_ASSIGN:
@@ -706,7 +724,6 @@ end:
 #endif
 		{	char *ref = opop()->it_ref;
 
-			code = get_short();	/* Get the local number (from 1 to locnum) */
 			if (ref == (char *) 0)
 				xraise(EN_VEXP);	/* Void assigned to expanded */
 			code = get_short();		/* Get the local # (from 1 to locnum) */
@@ -747,8 +764,9 @@ end:
 				xraise(EN_VEXP);		/* Void assigned to expanded */
 			offset = get_long();		/* Get the feature id */
 			code = get_short();			/* Get the static type */
+			type = get_uint32();		/* Get attribute meta-type */
 			offset = RTWA(code, offset, icur_dtype);
-			ecopy(ref, icurrent->it_ref + offset);
+			ecopy (ref, icurrent->it_ref + offset);
 		}
 		break;
 
@@ -1092,6 +1110,9 @@ end:
 			if (head_type != SK_BIT) {
 				switch (last->type) {
 				case SK_BOOL:
+					new_obj = RTLN(bool_ref_dtype);
+					*new_obj = last->it_char;
+					break;
 				case SK_CHAR:	
 					new_obj = RTLN(char_ref_dtype);
 					*new_obj = last->it_char;
@@ -1457,17 +1478,18 @@ end:
 		break;
 
 	/*
-	 * Expanded comparison
+	/*
+	 * Bit comparison
  	 */
-	case BC_NOT_STD_EQUAL:
+	case BC_BIT_STD_EQUAL:
 #ifdef DEBUG
-	dprintf(2)("BC_NOT_STD_EQUAL\n");
+	dprintf(2)("BC_STD_EQUAL\n");
 #endif
-		{	char *ref;
+		{	char *bit;
 
-			ref = opop()->it_ref;
+			bit = opop()->it_bit;
 			last = otop();
-			last->it_char = (char) (!RTEQ(ref, last->it_ref));
+			last->it_char = (char) RTEB(bit, last->it_bit);
 			last->type = SK_BOOL;
 		}
 		break;
@@ -1523,15 +1545,14 @@ end:
 			short stype, dtype, feat_id;
  
 			stype = get_short();			/* Get the static type */
-			dtype = get_short();			/* Get the dynamic type */
 			feat_id = get_short();		  	/* Get the feature id */
 			nbr_of_items = get_long();	  	/* Number of items in array */
  
-			new_obj = RTLN(dtype);		  	/* Create new object */
+			new_obj = RTLN(RTUD(stype));	/* Create new object */
 			epush (&loc_stack, &new_obj);   /* Protect new_obj */
-			((void (*)())RTWF(stype, feat_id, dtype))(new_obj, 1L, nbr_of_items);
+			((void (*)()) RTWF(stype, feat_id, Dtype(new_obj)))
+									(new_obj, 1L, nbr_of_items);
 			epop (&loc_stack, 1);
- 
 			last = iget();
 			last->type = SK_REF;
 			last->it_ref = new_obj;
@@ -1550,23 +1571,29 @@ end:
 #endif
 		{
 			struct item *it;
+			char *ref;
+			long elem_size, curr_pos;
  
 			it = opop();					/* Pop the last expression */
-			last = otop();					/* Get the manifest array */
+			last = otop();					/* Get special area of manifest array */
 			/* Fill the special area with the expressions
-			 * for the manifest array and type them
-			 * accordingly.
+			 * for the manifest array.
 			 */
 			switch (it->type & SK_HEAD) {
 				case SK_BOOL:
 				case SK_CHAR:
-					*((char *) last->it_ref)++ = it->it_char;
+					*(char *) last->it_ref = it->it_char;
+					last->it_ref += sizeof(char);
 					break;
 				case SK_BIT:
 					*(char **) last->it_ref = it->it_bit;
-					last->it_ref += sizeof(char *);
+					last->it_ref += LENGTH(it->it_bit); 
 					break;
 				case SK_EXP:
+					curr_pos = get_long(); 	/* Get current position of item */
+					elem_size = *(long *) (last->it_ref + (HEADER(last->it_ref)->ov_size & B_SIZE) - LNGPAD(2) + sizeof(long));
+					ecopy(it->it_ref, last->it_ref + OVERHEAD + elem_size * curr_pos);
+					break;
 				case SK_REF:
 					*(char **) last->it_ref = it->it_ref;
 					last->it_ref += sizeof(char *);
@@ -1655,7 +1682,6 @@ end:
 #endif
 		{	long nbr_of_items, temp;
 			char **stripped;
-			struct item *current;
 			char *array;
 			short s_type, d_type;
 
@@ -1669,8 +1695,7 @@ end:
 				last = opop();
 				stripped[nbr_of_items] = last->it_ref; 
 			}
-			current = opop(); 				/* Get current object */
-			array = RTMA(current->it_ref, d_type, stripped, temp);
+			array = RTST(icurrent->it_ref, d_type, stripped, temp);
 			xfree (stripped);
 			last = iget();
 			last->type = SK_REF;
@@ -2526,10 +2551,10 @@ uint32 type;			/* Get attribute meta-type */
 	case SK_INT: last->it_long = *(long *) (current + offset); break;
 	case SK_FLOAT: last->it_float = *(float *) (current + offset); break;
 	case SK_DOUBLE: last->it_double = *(double *) (current + offset); break;
-	case SK_BIT: last->it_bit = (char *) (current + offset); break;
+	case SK_BIT: last->it_bit = (current + offset); break;
 	case SK_POINTER: last->it_ptr = *(fnptr *) (current + offset); break;
 	case SK_REF: last->it_ref = *(char **) (current + offset); break;
-	case SK_EXP: last->it_ref = (char *) (current + offset); break;
+	case SK_EXP: last->it_ref = (current + offset); break;
 	default:
 		panic("unknown attribute type");
 		/* NOTREACHED */
@@ -3804,8 +3829,8 @@ char *start;
 	 */
 	case BC_LASSIGN:
 		code = get_short();		/* Get the local number (from 1 to locnum) */
-		fprintf(fd, "0x%X %s #%d\n", IC - sizeof(short) - 1,
-			"BC_LASSIGN", code);
+		fprintf(fd, "0x%X %s #%d meta-type=%d\n", 
+			IC - sizeof(short) - 1, "BC_LASSIGN", code, type);
 		break;
 
 	/*
@@ -3814,7 +3839,7 @@ char *start;
 	case BC_LEXP_ASSIGN:
 		code = get_short();		/* Get the local number (from 1 to locnum) */
 		fprintf(fd, "0x%X %s #%d\n", IC - sizeof(short) - 1,
-			"BC_LASSIGN", code);
+			"BC_LEXP_ASSIGN", code);
 		break;
 
 	/*
@@ -3839,8 +3864,9 @@ char *start;
 	case BC_EXP_ASSIGN:
 		offset = get_long();		/* Get the feature id */
 		code = get_short();			/* Get the static type */
+		type = get_short();			/* Get attribute meta-type */
 		fprintf(fd, "0x%X %s fid=%d, st=%d\n",
-			IC - sizeof(short) - sizeof(long) - 1,
+			IC - sizeof(short) - sizeof(long) - sizeof(uint32) - 1,
 			"BC_EXP_ASSIGN", offset, code);
 		break;
 
@@ -3874,12 +3900,16 @@ char *start;
 	 * Reverse assignment to an attribute.
 	 */
 	case BC_REVERSE:
-		offset = get_long();		/* Get the feature id */
-		code = get_short();			/* Get the static type */
-		type = get_short();			/* Get the reverse type */
-		fprintf(fd, "0x%X %s fid=%d, st=%d, rt=%d\n",
-			IC - 2 * sizeof(short) - sizeof(long) - 1,
-			"BC_REVERSE", offset, code, type);
+		{
+			uint32 meta;
+			offset = get_long();		/* Get the feature id */
+			code = get_short();			/* Get the static type */
+			meta = get_uint32();		/* Get the attribute meta-type */
+			type = get_short();			/* Get the reverse type */
+			fprintf(fd, "0x%X %s fid=%d, st=%d, rt=%d\n",
+				IC - 2 * sizeof(short) - sizeof(long) - 1,
+				"BC_REVERSE", offset, code, type);
+		}
 		break;
 
 	/*
@@ -4066,7 +4096,7 @@ char *start;
 	 * Call on a simple type.
 	 */
 	case BC_METAMORPHOSE:
-		fprintf(fd, "0x%X %s\n", IC - sizeof(short) - 1,
+		fprintf(fd, "0x%X %s\n", IC - 1,
 			"BC_METAMORPHOSE");
 		break;
 
@@ -4075,15 +4105,14 @@ char *start;
 	 */
 	case BC_ARRAY:
 		{
-			short stype, dtype, feat_id;
+			short stype, feat_id;
 			long nbr_of_items;
 			stype = get_short();		/* Get the static type*/
-			dtype = get_short();		/* Get the dynamic type*/
 			feat_id = get_short();		/* Get the feature id*/
 			nbr_of_items = get_long();	/* Get the nbr of items in array*/
 			fprintf(fd, "0x%X %s, st=%d dt=%d fid=%d nbr=%d\n",
-				 	IC - (3*sizeof(short)) - sizeof(long) - 1, 
-					"BC_ARRAY", stype, dtype, feat_id, nbr_of_items);
+				 	IC - (2*sizeof(short)) - sizeof(long) - 1, 
+					"BC_ARRAY", stype, feat_id, nbr_of_items);
 		}
 		break;
 
@@ -4199,11 +4228,13 @@ char *start;
 	 * Accessing an attribute in a nested expression (need invariant check).
 	 */
 	case BC_ATTRIBUTE_INV:
-		string = IC;					/* Get the attribute name */
+		string = IC;						/* Get the attribute name */
 		IC += strlen(IC) + 1;			
-		offset = get_long();			/* Get feature id */
-		code = get_short();				/* Get static type */
-		fprintf(fd, "0x%X %s fid=%d, st=%d, \"%s\"\n", string - 1,
+		offset = get_long();				/* Get feature id */
+		code = get_short();					/* Get static type */
+		type = get_uint32();				/* Get attribute meta-type */
+		fprintf(fd, "0x%X %s fid=%d, st=%d, \"%s\"\n", 
+			string - sizeof(long) - sizeof(short) - sizeof(uint32) - 1,
 			"BC_ATTRIBUTE_INV", offset, code, string);
 		break;
 			
@@ -4380,15 +4411,16 @@ char *start;
 	/*
 	 * Expanded equality
  	 */
-	case BC_STANDARD_EQUAL:
-		fprintf(fd, "0x%X BC_STANDARD_EQUAL\n", IC - 1);
+	case BC_BIT_STD_EQUAL:
+		fprintf(fd, "0x%X BC_BIT_STD_EQUAL\n", IC - 1);
 		break;
 
 	/*
-	 * Expanded unequality
-	 */
-	case BC_NOT_STD_EQUAL:
-		fprintf(fd, "0x%X BC_NOT_STD_EQUAL\n", IC - 1);
+	/*
+	 * Expanded equality
+ 	 */
+	case BC_STANDARD_EQUAL:
+		fprintf(fd, "0x%X BC_STANDARD_EQUAL\n", IC - 1);
 		break;
 
 	/*
@@ -4432,13 +4464,13 @@ char *start;
 		{
 			extern char *b_out();
 			char *str;
-			int nb_uint32 = (*(uint32 *) IC) + 1;
+			int nb_uint32;
 
-			str = b_out(IC);
-			fprintf(fd, "BIT %s\n", str);
-			xfree(str);
-			while (nb_uint32--)
-				IC += sizeof(uint32);
+			nb_uint32 = get_uint32() + 1;          /* Read bit count */
+			/*str = b_out(IC) - bug here*/
+			fprintf(fd, "BIT %d\n", nb_uint32 - 1);
+			/*xfree(str);*/
+			IC += nb_uint32*sizeof(uint32);
 		}
 		break;
 			

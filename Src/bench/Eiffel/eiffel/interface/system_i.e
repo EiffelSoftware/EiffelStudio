@@ -461,12 +461,12 @@ end;
 			depend_server.remove (id);
 			m_rout_id_server.remove (id);
 
---			Tmp_ast_server.remove (id);
---			Tmp_feat_tbl_server.remove (id);
---			Tmp_class_info_server.remove (id);
---			Tmp_inv_ast_server.remove (id);
---			Tmp_depend_server.remove (id);
---			Tmp_m_rout_id_server.remove (id);
+			Tmp_ast_server.remove (id);
+			Tmp_feat_tbl_server.remove (id);
+			Tmp_class_info_server.remove (id);
+			Tmp_inv_ast_server.remove (id);
+			Tmp_depend_server.remove (id);
+			Tmp_m_rout_id_server.remove (id);
 
 			freeze_set1.remove_item (id);
 			freeze_set2.remove_item (id);
@@ -613,9 +613,7 @@ end;
 			update_sort := update_sort or else moved;
 			if update_sort then
 					-- Sort
-io.error.putstring ("%NBefore topological_sort%N");
 				sorter.sort;
-io.error.putstring ("%NAfter topological_sort%N");
 					-- Check sum error
 				Error_handler.checksum;
 					-- Re-sort the list `changed_classes', because the
@@ -1080,9 +1078,9 @@ io.error.putstring ("%NAfter topological_sort%N");
 			feature_id: INTEGER;
 			has_argument: INTEGER;
 		do
---debug ("ACTIVITY")
+debug ("ACTIVITY")
 	io.error.putstring ("Updating .UPDT%N");
---end;
+end;
 			Update_file.open_write;
 			file_pointer := Update_file.file_pointer;
 
@@ -1386,9 +1384,9 @@ feature  -- Freeezing
 				id_cursor := id_cursor.right
 			end;
 
---debug ("ACTIVITY")
+debug ("ACTIVITY")
 io.error.putstring ("Generating tables...%N");
---end;
+end;
 
 			freeze_set1.wipe_out;
 			freeze_set2.wipe_out;
@@ -2208,7 +2206,7 @@ end;
 					rout_entry.set_type_id (i);
 					rout_entry.set_written_type_id (i);
 					rout_entry.set_kind (Initialization_id);
-					rout_table.put (rout_entry);
+					rout_table.add (rout_entry);
 				end;
 				i := i + 1;
 			end;
@@ -2222,22 +2220,28 @@ end;
 			rout_entry: SPECIAL_ENTRY;
 			i, nb: INTEGER;
 			class_type: CLASS_TYPE;
+			feature_i: FEATURE_I;
+			written_type: CL_TYPE_I;
+			written_class: CLASS_C
 		do
 			from
-				!!rout_table;
+				!!rout_table.make;
 				rout_table.set_rout_id (Dispose_id);
 				i := 1;
 				nb := Type_id_counter.value;
 			until
-				i > nb
+				i > nb 
 			loop
 				class_type := class_types.item (i);
-				if class_type.has_dispose then
+				feature_i := class_type.dispose_feature;
+				if feature_i /= Void then
 					!!rout_entry;
 					rout_entry.set_type_id (i);
-					rout_entry.set_written_type_id (i);
-					rout_entry.set_kind (Dispose_id);
-					rout_table.put (rout_entry);
+					written_class := class_of_id (feature_i.written_in);
+					written_type := written_class.meta_type (class_type.type);
+					rout_entry.set_written_type_id (written_type.type_id);
+					rout_entry.set_kind (feature_i.body_id);
+					rout_table.add (rout_entry);
 				end;
 				i := i + 1;
 			end;

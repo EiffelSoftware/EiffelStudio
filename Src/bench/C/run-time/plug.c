@@ -38,10 +38,10 @@ public int nstcall = 0;					/* Is current call a nested one? */
 private void recursive_chkinv();		/* Internal invariant control loop */
 
 /*
- * Manifest string creation
+ * Manifest array creation for strip
  */
 
-public char *createarr(curr, dtype, items, nbr)
+public char *striparr(curr, dtype, items, nbr)
 register1 char *curr;
 register2 int dtype;
 register3 char **items;
@@ -142,8 +142,7 @@ printf ("bug in metamorphosis for double in final mode\n");
 				panic("unknown attribute type");
 				/* NOTREACHED */
 			}
-		*(char **) sp  = new_obj;
-		sp += sizeof (char *);
+		*((char **) sp) ++ = new_obj;
 		}
 	}
 	epop(&loc_stack, 1);		/* Remove protection for area */
@@ -362,21 +361,22 @@ char *parent;	/* Parent (enclosing object) */
 		case SK_EXP:						/* Found an expanded attribute */
 			{
 			long offset;					/* Attribute offset */
+			int exp_dtype;					/* Expanded dynamic type */
 			int32 feature_id;				/* Creation procedure feature id */		
 
-			dtype = (int) (type & SK_DTYPE);
 			offset = ((long *) Table(cn_attr[i]))[dtype];
+			exp_dtype = (int) (type & SK_DTYPE);
 			/* Set the expanded reference */
 			*(char **) (l[0] + REFACS(nb_ref - ++nb_exp)) = l[0] + offset;
-
+			
 			/* Set the flags of the expanded object */
 			zone = HEADER(l[0] + offset);
-			zone->ov_flags = dtype;
+			zone->ov_flags = exp_dtype;
 			zone->ov_flags |= EO_EXP;
 			zone->ov_size = offset + (l[0] - l[1]);
 
 			/* If expanded object is composite also, initialize it. */
-			if (System(dtype).cn_composite)
+			if (System(exp_dtype).cn_composite)
 				wstdinit(l[0] + offset, l[1]);
 			}
 			break;

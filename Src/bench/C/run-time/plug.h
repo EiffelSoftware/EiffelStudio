@@ -33,9 +33,12 @@ struct bit {
  * Run time functions used by generated C code.
  */
 
+extern char *b_clone();				/* Clones bit */
+extern void b_copy();				/* Copies bit */
+extern char *bmalloc();				/* Bit object creation */
 extern char *makestr();				/* Build an Eiffel string object */
 extern char *makebit();				/* Build an Eiffel bit object */
-extern char *createarr();			/* Build an Eiffel ARRAY[ANY] object */
+extern char *striparr();			/* Build an Eiffel ARRAY[ANY] object for strip*/
 extern int str_dtype;				/* Dynamic type for string */
 extern int bit_dtype;				/* Dynamic type for bit */
 extern int arr_dtype;				/* Dynamic type for ARRAY[ANY] */
@@ -82,7 +85,8 @@ extern int sp_bool;			/* Dynamic type of SPECIAL[BOOLEAN] */
 extern int sp_char;			/* Dynamic type of SPECIAL[CHARACTER] */
 extern int sp_int;			/* Dynamic type of SPECIAL[INTEGER] */
 extern int sp_real;			/* Dynamic type of SPECIAL[REAL] */
-extern int sp_double;			/* Dynamic type of SPECIAL[DOUBLE] */
+extern int sp_double;		/* Dynamic type of SPECIAL[DOUBLE] */
+extern int sp_pointer;		/* Dynamic type of SPECIAL[POINTER] */
 
 extern int int_ref_dtype;	/* Dynamic type of INTEGER_REF */
 extern int bool_ref_dtype;	/* Dynamic type of BOOLEAN_REF */

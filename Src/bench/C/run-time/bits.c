@@ -119,7 +119,7 @@ char *bit;
 {
 	/* Returns a new bit object with value `s' */
 	uint32 val;
-	int i, j, nb_packs;
+	int i, j, nb_packs, temp;
 	char *result;
 	uint32 *arena;
 	long blength = strlen(bit);
@@ -138,13 +138,15 @@ char *bit;
 	if (blength == 0)
 		blength = BIT_UNIT;
 	for (j=BIT_UNIT-1; j>= (int)(BIT_UNIT-blength); j--)
+	{
 		val += (1 << j) * ((*bit++ == '1') ? 1 : 0);
+	}
 	*arena = val;
 
 	return result;
 }
 
-public char b_equal(a, b)
+public int b_equal(a, b)
 char *a;
 char *b;
 {
@@ -157,13 +159,13 @@ char *b;
 	register5 uint32 *last;		/* Last bit unit in 'a' */
 
 	if (a == b)					/* Pointer to the same object */
-		return true;			/* Means objects are identical */
+		return TRUE;			/* Means objects are identical */
 
 	len_a = LENGTH(a);
 	len_b = LENGTH(b);
 
 	if (len_a != len_b)			/* Bits do not have the same size */
-		return false;			/* They can't be equal */
+		return FALSE;			/* They can't be equal */
 
 	addr_a = ARENA(a);
 	addr_b = ARENA(b);
@@ -171,7 +173,7 @@ char *b;
 
 	for (; addr_a < last; addr_a++, addr_b++)	/* In the main part */
 		if (*addr_a != *addr_b)					/* Return as soon as the */
-			return false;						/* two bit units differ */
+			return FALSE;						/* two bit units differ */
 
 	/* For the last bit unit, we have to compare only the significant part
 	 * of the bit field. The number of significant bits at the rightmost part
@@ -181,11 +183,11 @@ char *b;
 
 	len_b = len_a % BIT_UNIT;
 	if (len_b == 0)
-		return (*addr_a == *addr_b) ? true : false;
+		return (*addr_a == *addr_b) ? TRUE : FALSE;
 	else
 		len_b = ((1 << len_b) - 1) << (BIT_UNIT - len_b);
 
-	return ((*addr_a & len_b) == (*addr_b & len_b)) ? true : false;
+	return ((*addr_a & len_b) == (*addr_b & len_b)) ? TRUE : FALSE;
 }
 
 public void b_copy(a, b)
@@ -196,12 +198,20 @@ char *b;
 	 * correct and 'b' must be a valid pointer (i.e. not void).
 	 */
 
-	register1 int len1 = LENGTH(a);	/* Macro evaluates its argument twice */
-	register2 int len2 = LENGTH(b);
+
+	register1 int len1;				/* Macro evaluates its argument twice */
+	register2 int len2;
 	register3 uint32 *arena1;
 	register4 uint32 *arena2;
 	int nb_pack1, nb_pack2, gap, idx;
 	uint32 mask, val;
+	if ((char *) 0 == a)
+		panic ("bit copy panic (void source)");
+	if ((char *) 0 == b)
+		panic ("bit copy panic (void target)");
+
+	len1 = LENGTH(a);
+	len2 = LENGTH(b);
 
 #ifdef MAY_PANIC
 	if (len1 > len2)

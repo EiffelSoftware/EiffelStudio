@@ -59,7 +59,7 @@ feature {NONE} -- Implementation
 			"Finalize"
 		end
 		
-	memberwise_clone is
+	memberwise_clone: like Current is
 		external
 			"IL signature (): System.Object use System.Object"
 		alias

@@ -10,9 +10,6 @@ deferred class
 
 inherit
 	EV_STANDARD_DIALOG_IMP
-		redefine
-			show
-		end
 
 feature -- Access
 
@@ -71,15 +68,6 @@ feature -- Status report
 		end
 
 feature -- Status setting
-
-	show is
-			-- Show the window.
-			-- As the window is modal, nothing can be done
-			-- until the user closed the window.
-		do
-			{EV_STANDARD_DIALOG_IMP} Precursor
-			dispatch_events
-		end
 
 	select_filter (filter: STRING) is
 			-- Select `filter' in the list of filter.
@@ -201,10 +189,8 @@ feature {NONE} -- Implementation for events handling
 		do
 			if selected then
 				execute_command (Cmd_ok, Void)
---				selected_button := "OK"
 			else
 				execute_command (Cmd_cancel, Void)
---				selected_button := "Cancel"
 			end
 		end
 

@@ -86,33 +86,10 @@ feature {NONE}
 								modifiers_state)
 		end;
 
-	set_click_threshold (time: INTEGER) is
-			-- time is in millisecond, default is 200 ms
-		do
-			click_threshold.set_item (time)
-		end;
-
 	get_time: INTEGER is
 			-- time the event occured
 		do
 			Result :=  c_event_time
-		end;
-
-	get_multi_click_time: INTEGER is
-		do
-			Result := click_threshold.item
-		end;
-
-	click_threshold: INTEGER_REF is
-			-- time granted for clicking
-		once
-			!! Result;
-			Result.set_item (200)
-		end;
-
-	set_multi_click_time (time: INTEGER) is
-		do
-			set_click_threshold (time)
 		end;
 
 	button_click_data (widget_oui: WIDGET): BUTCLICK_DATA is
@@ -154,7 +131,6 @@ feature {NONE}
 
 	configure_notify_data (widget_oui: WIDGET): CONFNOT_DATA is
 			-- Create a context for `ConfigureNotify' event.
-			
 		do
 			!!Result.make (widget_oui, 
 							c_event_x, 
@@ -166,7 +142,6 @@ feature {NONE}
 
 	configure_request_data (widget_oui: WIDGET): CONFREQ_DATA is
 			-- Create a context for `ConfigureRequest' event.
-			
 		do
 			!!Result.make (widget_oui, 
 							c_event_x, 
@@ -259,19 +234,16 @@ feature
 feature {NONE}
 
 	create_notify_data (widget_oui: WIDGET): CREATE_DATA is
-			--
 		do
-			!!Result.make (widget_oui)
+			!! Result.make (widget_oui)
 		end;
 
 	destroy_notify_data (widget_oui: WIDGET): DESTROY_DATA is
-			--
 		do
-			!!Result.make (widget_oui)
+			!! Result.make (widget_oui)
 		end;
 
 	enter_notify_data (widget_oui: WIDGET): ENTER_DATA is
-			--
 		do
 		end; 
 
@@ -291,22 +263,20 @@ feature {NONE}
 		end;
 
 	focus_in_data (widget_oui: WIDGET): FOCUSIN_DATA is
-			--
 		do
+			!! Result.make (widget_oui)
 		end;
 
 	focus_out_data (widget_oui: WIDGET): FOCSOUT_DATA is
-			--
 		do
+			!! Result.make (widget_oui)
 		end;
 
 	graphics_expose_data (widget_oui: WIDGET): GRAPEXP_DATA is
-			--
 		do
 		end; 
 
 	gravity_notify_data (widget_oui: WIDGET): GRAVNOT_DATA is
-			--
 		do
 		end;
 
@@ -320,7 +290,6 @@ feature {NONE}
 		end;
 
 	key_release_data (widget_oui: WIDGET): KEYREL_DATA is
-			--
 		do
 			!! Result.make (widget_oui, 
 					c_event_keypress_code, 
@@ -329,32 +298,26 @@ feature {NONE}
 		end; 
 
 	keymap_notify_data (widget_oui: WIDGET): KEYMAP_DATA is
-			--
 		do
 		end;
 
 	leave_notify_data (widget_oui: WIDGET): LEAVE_DATA is
-			--
 		do
 		end;
 
 	map_notify_data (widget_oui: WIDGET): MAPNOT_DATA is
-			--
 		do
 		end;
 
 	map_request_data (widget_oui: WIDGET): MAPREQ_DATA is
-			--
 		do
 		end;
 
 	mapping_notify_data (widget_oui: WIDGET): MAPPING_DATA is
-			--
 		do
 		end;
 
 	motion_notify_data (widget_oui: WIDGET): MOTNOT_DATA is
-			--
 		do
 			!! Result.make (widget_oui,
 					c_event_x_relative,
@@ -365,47 +328,38 @@ feature {NONE}
 		end;
 
 	no_expose_data (widget_oui: WIDGET): NOEXP_DATA is
-			--
 		do
 		end;
 
 	property_notify_data (widget_oui: WIDGET): PROPERT_DATA is
-			--
 		do
 		end;
 
 	reparent_notify_data (widget_oui: WIDGET): REPAREN_DATA is
-			--
 		do
 		end;
 
 	resize_request_data (widget_oui: WIDGET): RESIZE_DATA is
-			--
 		do
 		end;
 
 	selection_clear_data (widget_oui: WIDGET): SELCLR_DATA is
-			--
 		do
 		end;
 
 	selection_notify_data (widget_oui: WIDGET): SELNOT_DATA is
-			--
 		do
 		end;
 
 	selection_request_data (widget_oui: WIDGET): SELREQ_DATA is
-			--
 		do
 		end;
 
 	unmap_notify_data (widget_oui: WIDGET): UNMAP_DATA is
-			--
 		do
 		end; 
 
 	visible_notify_data (widget_oui: WIDGET): VISIBLE_DATA is
-			--
 		do
 		end
 

@@ -23,11 +23,7 @@
 
 #include <oratypes.h>
 #include <ocidfn.h>
-#ifdef __STDC__
 #include <ociapr.h>
-#else
-#include <ocikpr.h>
-#endif
 
 #include "oracle.h"
 

@@ -9,21 +9,7 @@ class
 	WEL_WINDOW_MANAGER
 
 inherit
-	WEL_GWL_CONSTANTS
-		export
-			{NONE} all
-		end
-
-feature -- Access
-
-	window_of_item (hwnd: POINTER): WEL_WINDOW is
-			-- Retrieve Eiffel object associated with `hwnd' pointer.
-		local
-			object_id: INTEGER
-		do
-			object_id := cwin_get_window_long (hwnd, Gwl_userdata)
-			Result := eif_id_object (object_id)
-		end
+	WEL_WINDOWS_ROUTINES
 
 feature -- Basic operations
 
@@ -64,32 +50,12 @@ feature {NONE} -- Implementation
 			create Result.put (Void)
 		end
 
-	cwin_get_window_long (hwnd: POINTER; offset: INTEGER): INTEGER is
-			-- SDK GetWindowLong
-		external
-			"C [macro %"wel.h%"] (HWND, int): EIF_INTEGER"
-		alias
-			"GetWindowLong"
-		end
-
 	cwin_set_window_long (hwnd: POINTER; offset, value: INTEGER) is
 			-- SDK SetWindowLong
 		external
 			"C [macro %"wel.h%"] (HWND, int, LONG)"
 		alias
 			"SetWindowLong"
-		end
-
-	eif_id_object (an_id: INTEGER): WEL_WINDOW is
-			-- Object associated with `an_id'
-		external
-			"C | %"eif_object_id.h%""
-		end
-
-	eif_object_id (an_object: ANY): INTEGER is
-			-- New identifier for `an_object'
-		external
-			"C | %"eif_object_id.h%""
 		end
 
 	eif_object_id_free (an_id: INTEGER) is

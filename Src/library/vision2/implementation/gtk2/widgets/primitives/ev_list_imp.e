@@ -335,7 +335,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			loop
 				an_item ?= previous_selection.item.implementation
 				if an_item.deselect_actions_internal /= Void then
-					an_item.deselect_actions_internal.call ((App_implementation.gtk_marshal).empty_tuple)
+					an_item.deselect_actions_internal.call (Void)
 				end
 				if deselect_actions_internal /= Void then
 					deselect_actions_internal.call ([an_item.interface])

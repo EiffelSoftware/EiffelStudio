@@ -484,8 +484,62 @@ feature -- Status report
 
 	is_integer: BOOLEAN is
 			-- Does `Current' represent an INTEGER?
+		local
+			l_c: CHARACTER
+			l_area: like area
+			i, nb, l_state: INTEGER
 		do
-			Result := str_isi ($area, count)
+				-- l_state = 0 : waiting sign or first digit.
+				-- l_state = 1 : sign read, waiting first digit.
+				-- l_state = 2 : in the number.
+				-- l_state = 3 : error state.
+			from
+				l_area := area
+				i := 0
+				nb := count - 1
+			until
+				i > nb or l_state > 2
+			loop
+				l_c := l_area.item (i)
+				i := i + 1
+				inspect l_state
+				when 0 then
+					if l_c.is_digit then
+						l_state := 2
+					elseif l_c = '-' or l_c = '+' then
+						l_state := 1
+					else
+						l_state := 3
+					end
+				when 1 then
+					if l_c.is_digit then
+						l_state := 2
+					else
+						l_state := 3
+					end
+				else
+					if not l_c.is_digit then
+						l_state := 3
+					end
+				end
+			end
+			Result := l_state = 2
+		ensure
+			syntax_and_range:
+				-- Result is true if and only if the following two
+				-- conditions are satisfied:
+				--
+				-- 1. In the following BNF grammar, the value of
+				--	Current can be produced by "Integer_literal":
+				--
+				-- Integer_literal = [Sign] Integer
+				-- Sign		= "+" | "-"
+				-- Integer	= Digit | Digit Integer
+				-- Digit	= "0"|"1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9"
+				--
+				-- 2. The integer value represented by Current
+				--	is within the range that can be represented
+				--	by an instance of type INTEGER.
 		end
 
 	is_real: BOOLEAN is
@@ -1650,12 +1704,6 @@ feature {STRING} -- Implementation
 			-- Value of double in `c_string'
 		external
 			"C signature (EIF_CHARACTER *, EIF_INTEGER): EIF_DOUBLE use %"eif_str.h%""
-		end
-
-	str_isi (c_string: POINTER; length: INTEGER): BOOLEAN is
-			-- Is is an integer?
-		external
-			"C signature (EIF_CHARACTER *, EIF_INTEGER): EIF_BOOLEAN use %"eif_str.h%""
 		end
 
 	str_isr (c_string: POINTER; length: INTEGER): BOOLEAN is

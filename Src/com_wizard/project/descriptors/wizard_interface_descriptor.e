@@ -133,7 +133,7 @@ feature -- Access
 				Result.append (Space)
 				Result.append (inherited_interface.name)
 			end
-			if not description.empty then
+			if not description.is_empty then
 				Result.append (New_line_tab)
 				Result.append (Double_dash)
 				Result.append (Space)
@@ -430,10 +430,10 @@ feature -- Status Report
 		end
 		
 	functions_empty: BOOLEAN is
-			-- Are functions empty?
+			-- Are functions is_empty?
 		do
-			Result := (vtable_functions = Void or else vtable_functions.empty) and 
-					(dispatch_functions = Void or else dispatch_functions.empty)
+			Result := (vtable_functions = Void or else vtable_functions.is_empty) and 
+					(dispatch_functions = Void or else dispatch_functions.is_empty)
 		end
 	
 feature -- Cursor movement
@@ -443,7 +443,7 @@ feature -- Cursor movement
 		require
 			non_void_functions: vtable_functions /= Void and dispatch_functions /= Void
 		do
-			if not vtable_functions.empty then
+			if not vtable_functions.is_empty then
 				vtable_functions.start
 				in_vtable := True
 			else
@@ -531,7 +531,7 @@ feature -- Miscellaneous
 				
 				vtable_functions.forth
 			end
-			if not dispinterface_descriptor.function_table.empty then
+			if not dispinterface_descriptor.function_table.is_empty then
 				from
 					dispinterface_descriptor.function_table.start
 				until
@@ -582,7 +582,7 @@ feature -- Basic operations
 	disambiguate_eiffel_names is
 			-- Disambiguate feature names.
 		do
-			if feature_eiffel_names.empty then
+			if feature_eiffel_names.is_empty then
 				if 
 					inherited_interface /= Void and
 					not inherited_interface.guid.is_equal (Iunknown_guid) and
@@ -634,8 +634,8 @@ feature -- Basic operations
 
 			end
 		ensure
-			not_empty_feature_names: not functions_empty and not properties.empty implies 
-									not feature_eiffel_names.empty
+			not_empty_feature_names: not functions_empty and not properties.is_empty implies 
+									not feature_eiffel_names.is_empty
 		end
 
 	disambiguate_c_names (a_coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR) is
@@ -670,8 +670,8 @@ feature -- Basic operations
 				properties.forth
 			end
 		ensure
-			not_empty_feature_names: not functions_empty and not properties.empty implies 
-									not feature_c_names.empty
+			not_empty_feature_names: not functions_empty and not properties.is_empty implies 
+									not feature_c_names.is_empty
 		end
 
 

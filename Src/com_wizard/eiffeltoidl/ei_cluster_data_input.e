@@ -53,14 +53,14 @@ feature -- Basic operations
 			loop
 				input_file.read_line
 
-				if not input_file.last_string.empty then
+				if not input_file.last_string.is_empty then
 					if input_file.last_string.substring_index ("cluster", 1) = 1 then
 						from
 						until
 							input_file.end_of_file
 						loop
 							input_file.read_line
-							if not input_file.last_string.empty then
+							if not input_file.last_string.is_empty then
 								raw_data.extend (clone (input_file.last_string))
 							end
 						end
@@ -70,7 +70,7 @@ feature -- Basic operations
 
 			input_file.close
 
-			if not raw_data.empty then
+			if not raw_data.is_empty then
 				process_raw_data (raw_data)
 			end
 		end
@@ -81,7 +81,7 @@ feature {NONE} -- Implementation
 			-- Process 'raw_data' into information.
 		require
 			non_void_list: raw_data /= Void
-			valid_data: not raw_data.empty
+			valid_data: not raw_data.is_empty
 		local
 			str_buffer: STRING
 			is_object, is_include_path: BOOLEAN
@@ -96,7 +96,7 @@ feature {NONE} -- Implementation
 							raw_data.item.index_of ('%"', 1) > raw_data.item.index_of (':', 1) then
 					str_buffer.left_adjust
 					str_buffer.right_adjust
-					if not str_buffer.empty and not is_common_path (str_buffer) then
+					if not str_buffer.is_empty and not is_common_path (str_buffer) then
 						clusters.extend (str_buffer)
 					end
 					str_buffer := clone (raw_data.item)
@@ -154,7 +154,7 @@ feature {NONE} -- Implementation
 			-- Is 'a_path' common for all program?
 		require
 			non_void_string: a_path /= Void
-			valid_path: not a_path.empty
+			valid_path: not a_path.is_empty
 		do
 			if a_path.substring_index ("library\base", 1) > 0 or
 					a_path.substring_index ("library\com", 1) > 0 or

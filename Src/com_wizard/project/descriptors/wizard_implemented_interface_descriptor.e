@@ -100,37 +100,37 @@ feature -- Basic operations
 			-- Implementation C type name.
 		require
 			non_void_name: name /= Void
-			valid_name: not name.empty
+			valid_name: not name.is_empty
 		do
 			Result := impl_name (is_client)
 		ensure
 			non_void_c_type_name: Result /= Void
-			valid_c_type_name: not Result.empty
+			valid_c_type_name: not Result.is_empty
 		end
 
 	impl_eiffel_class_name (is_client: BOOLEAN): STRING is
 			-- Implementation Eiffel class name.
 		require
 			non_void_name: name /= Void
-			valid_name: not name.empty
+			valid_name: not name.is_empty
 		do
 			Result := to_eiffel_name (impl_name (is_client))
 			Result.to_upper
 		ensure
 			non_void_class_name: Result /= Void
-			valid_class_name: not Result.empty
+			valid_class_name: not Result.is_empty
 		end
 
 	impl_c_header_file_name (is_client: BOOLEAN): STRING is
 			-- Implementation header file name.
 		require
 			non_void_name: name /= Void
-			valid_name: not name.empty
+			valid_name: not name.is_empty
 		do
 			Result := header_name (namespace, impl_name (is_client))
 		ensure
 			non_void_header: Result /= Void
-			valid_header: not Result.empty
+			valid_header: not Result.is_empty
 		end
 
 feature {NONE} -- implementation
@@ -139,7 +139,7 @@ feature {NONE} -- implementation
 			-- Implementation name.
 		require
 			non_void_name: name /= Void
-			valid_name: not name.empty
+			valid_name: not name.is_empty
 		do
 			Result := clone (name)
 			if is_client then
@@ -149,7 +149,7 @@ feature {NONE} -- implementation
 			end
 		ensure
 			non_void_name: Result /= Void
-			valid_name: not Result.empty
+			valid_name: not Result.is_empty
 		end
 
 invariant

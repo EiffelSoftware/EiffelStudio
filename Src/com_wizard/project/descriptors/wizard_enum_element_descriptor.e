@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			a_creator.initialize_descriptor (Current)
 		ensure
 			non_void_name: name /= Void
-			valid_name: not name.empty
+			valid_name: not name.is_empty
 		end
 	
 feature -- Access
@@ -47,11 +47,11 @@ feature -- Basic operations
 	set_name (a_name: STRING) is
 			-- Set `name' with `a_name'.
 		require
-			valid_name: a_name /= Void and then not a_name.empty
+			valid_name: a_name /= Void and then not a_name.is_empty
 		do
 			name := clone (a_name)
 		ensure
-			valid_name: name /= Void and then not name.empty and name.is_equal (a_name)
+			valid_name: name /= Void and then not name.is_empty and name.is_equal (a_name)
 		end
 
 	set_value (a_value: INTEGER) is
@@ -67,15 +67,15 @@ feature -- Basic operations
 		require
 			non_void_description: a_description /= Void
 		do
-			if a_description.empty then
+			if a_description.is_empty then
 				description := clone (No_description_available)
 			else
 				description := clone (a_description)
 			end
 		ensure
 			non_void_description: description /= Void
-			valid_description: not description.empty
-					and (not a_description.empty implies description.is_equal (a_description))
+			valid_description: not description.is_empty
+					and (not a_description.is_empty implies description.is_equal (a_description))
 		end
 
 end -- WIZARD_ENUM_ELEMENT_DESCRIPTOR

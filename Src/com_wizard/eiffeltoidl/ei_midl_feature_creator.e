@@ -69,7 +69,7 @@ feature -- Basic operations
 			create type_mapper.make
 			midl_feature.set_comment (l_feature.comment)
 
-			if not l_feature.result_type.empty then
+			if not l_feature.result_type.is_empty then
 				if type_mapper.support_eiffel_type (l_feature.result_type) then
 					midl_feature.set_result_type (type_mapper.com_type (l_feature.result_type))
 				else
@@ -77,7 +77,7 @@ feature -- Basic operations
 				end
 			end
 
-			if not l_feature.parameters.empty then
+			if not l_feature.parameters.is_empty then
 				from
 					l_feature.parameters.start
 				until

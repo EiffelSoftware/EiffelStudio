@@ -15,7 +15,7 @@ feature {NONE} -- Initialization
 			-- Initialize object.  Set 'name' to 'c_name'.
 		require
 			non_void_name: c_name /= Void
-			valid_name: not c_name.empty
+			valid_name: not c_name.is_empty
 		do
 			name := clone (c_name)
 			create guid.make
@@ -45,7 +45,7 @@ feature -- Element change
 			-- Set 'name' to 'c_name'.
 		require
 			non_void_name: c_name /= Void
-			valid_name: not c_name.empty
+			valid_name: not c_name.is_empty
 		do
 			name := clone (c_name)
 		ensure
@@ -67,7 +67,7 @@ feature -- Element change
 			-- Set 'description' to 'desc'.
 		require
 			non_void_description: desc /= Void
-			valid_description: not desc.empty
+			valid_description: not desc.is_empty
 		do
 			description := clone (desc)
 		ensure
@@ -85,7 +85,7 @@ feature -- Element change
 		end
 
 invariant
-	valid_name: name /= Void and then not name.empty
+	valid_name: name /= Void and then not name.is_empty
 	valid_guid: guid /= Void and then guid.exists
 	valid_version: version > 0.0
 

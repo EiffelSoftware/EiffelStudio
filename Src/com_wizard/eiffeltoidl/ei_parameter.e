@@ -16,8 +16,8 @@ feature {NONE} -- Initialization
 		require
 			non_void_name: new_name /= Void
 			non_void_type: new_type /= Void
-			valid_name: not new_name.empty
-			valid_type: not new_type.empty
+			valid_name: not new_name.is_empty
+			valid_type: not new_type.is_empty
 		do
 			set_name (new_name)
 			set_type (new_type)
@@ -37,7 +37,7 @@ feature -- Element change
 			-- Set 'name' to 'new_name'
 		require
 			non_void_name: new_name /= Void
-			valid_name: not new_name.empty
+			valid_name: not new_name.is_empty
 		do
 			name := clone (new_name)
 		ensure
@@ -48,7 +48,7 @@ feature -- Element change
 			-- Set 'type' to 'new_type'
 		require
 			non_void_type: new_type /= Void
-			valid_type: not new_type.empty
+			valid_type: not new_type.is_empty
 		do
 			type:= clone (new_type)
 		ensure
@@ -65,7 +65,7 @@ feature -- Output
 invariant
 	non_void_name: name /= Void
 	non_void_type: type /= Void
-	valid_name: not name.empty
-	valid_type: not type.empty
+	valid_name: not name.is_empty
+	valid_type: not type.is_empty
 
 end -- class EI_ATTRIBUTE

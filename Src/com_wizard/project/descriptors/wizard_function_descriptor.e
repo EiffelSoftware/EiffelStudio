@@ -129,7 +129,7 @@ feature -- Access
 				Result.append (arguments.item.type.name)
 				arguments.forth
 			end
-			if not arguments.empty then
+			if not arguments.is_empty then
 				Result.append (Close_parenthesis)
 			end
 			Result.append (Colon)
@@ -170,7 +170,7 @@ feature {WIZARD_FUNCTION_DESCRIPTOR_FACTORY} -- Basic operations
 		require
 			non_void_description: a_description /= Void
 		do
-			if not a_description.empty then
+			if not a_description.is_empty then
 				description := clone (a_description)
 			else
 				description := No_description_available

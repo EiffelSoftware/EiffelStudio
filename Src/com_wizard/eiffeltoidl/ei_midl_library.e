@@ -56,7 +56,7 @@ feature -- Output
 			Result.append ("%N//%N%Nimport %"oaidl.idl%";%N%N")
 			
 
-			if not coclass.interfaces.empty then
+			if not coclass.interfaces.is_empty then
 				from
 					coclass.interfaces.start
 				until

@@ -52,7 +52,7 @@ feature -- Basic operations
 
 			add_type_lib_description (type_library_descriptor)
 
-			if name = Void or else name.empty then
+			if name = Void or else name.is_empty then
 				create name.make (100)
 				name.append ("coclass_")
 				name.append (type_library_descriptor.name)
@@ -212,16 +212,16 @@ feature -- Basic operations
 				a_descriptor.set_interface_descriptors (interface_descriptors)
 				a_descriptor.set_lcid (lcid)
 				a_descriptor.set_type_library (type_library_descriptor)
-				if default_dispinterface_name /= Void and then not default_dispinterface_name.empty then
+				if default_dispinterface_name /= Void and then not default_dispinterface_name.is_empty then
 					a_descriptor.set_default_dispinterface (default_dispinterface_name)
 				end
-				if default_source_dispinterface_name /= Void and then not default_source_dispinterface_name.empty then
+				if default_source_dispinterface_name /= Void and then not default_source_dispinterface_name.is_empty then
 					a_descriptor.set_default_source_dispinterface_name (default_source_dispinterface_name)
 				end
 				a_descriptor.set_default_interface (default_interface_descriptor)
 				if 
 					source_interface_descriptors /= Void and then 
-					not source_interface_descriptors.empty
+					not source_interface_descriptors.is_empty
 				then
 					a_descriptor.set_source_interface_descriptors (source_interface_descriptors)
 				end
@@ -235,7 +235,7 @@ feature {NONE} -- Implementation
 
 	source_interface_descriptors: LIST [WIZARD_INTERFACE_DESCRIPTOR]
 			-- Interfaces to call back on client implementations,
-			-- not empty implies that coclass supports IConnectionPointConteiner.
+			-- not is_empty implies that coclass supports IConnectionPointConteiner.
 
 	lcid: INTEGER
 			-- Locale of member names and doc strings.

@@ -49,7 +49,7 @@ feature  -- Basic operations
 			if midl_coclass_creator.succeed then
 				midl_coclass := midl_coclass_creator.midl_coclass
 
-				if midl_coclass.interfaces.empty then
+				if midl_coclass.interfaces.is_empty then
 					succeed := False
 				else
 					from

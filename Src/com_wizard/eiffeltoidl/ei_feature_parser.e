@@ -24,7 +24,7 @@ feature -- Basic operations
 	parse_routine (inputs: LINKED_LIST[STRING]) is
 		require
 			non_void_input: inputs /= Void
-			valid_input: not inputs.empty
+			valid_input: not inputs.is_empty
 			valid_feature_input: inputs.first.substring_index (Feature_indicator, 1) /= 0
 		local
 			l_comment: STRING
@@ -57,7 +57,7 @@ feature -- Basic operations
 					inputs.forth
 				end
 
-				if succeed and not l_comment.empty then
+				if succeed and not l_comment.is_empty then
 					parsed_feature.set_comment (l_comment)
 				end
 			end
@@ -69,7 +69,7 @@ feature {NONE} -- Implementation
 			-- Parse 'input'.
 		require
 			non_void_input: input /= Void
-			valid_input: not input.empty
+			valid_input: not input.is_empty
 		local
 			l_name, l_parameter, l_result_type: STRING
 			index, colon_index, space_index: INTEGER
@@ -86,7 +86,7 @@ feature {NONE} -- Implementation
 				l_name := input.substring (1, input.count)
 			end
 
-			if not l_name.empty then
+			if not l_name.is_empty then
 				create parsed_feature.make (l_name)
 				succeed := True
 	
@@ -114,7 +114,7 @@ feature {NONE} -- Implementation
 			-- Parse list of parameters in 'input'.
 		require
 			valid_feature: parsed_feature /= Void
-			valid_input: input /= Void and then not input.empty
+			valid_input: input /= Void and then not input.is_empty
 		local
 			l_buffer: STRING
 			index: INTEGER
@@ -142,14 +142,14 @@ feature {NONE} -- Implementation
 				end
 			end
 		ensure
-			parse_succeed: not parsed_feature.parameters.empty
+			parse_succeed: not parsed_feature.parameters.is_empty
 		end
 
 	parse_parameter (input: STRING) is
 			-- Parse a parameter set from 'input'.
 		require
 			valid_feature: parsed_feature /= Void
-			valid_input: input /= Void and then not input.empty
+			valid_input: input /= Void and then not input.is_empty
 		local
 			l_type: STRING
 			para: EI_PARAMETER

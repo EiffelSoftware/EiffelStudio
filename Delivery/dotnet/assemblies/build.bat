@@ -1,7 +1,5 @@
 call emitter.exe /init /nooutput
-call emitter.exe /add /nooutput %WINDIR%\Microsoft.NET\Framework\v1.0.3705\System.Drawing.dll 
 call emitter.exe /add /nooutput %WINDIR%\Microsoft.NET\Framework\v1.0.3705\System.Windows.Forms.dll
-call emitter.exe /add /nooutput %WINDIR%\Microsoft.NET\Framework\v1.0.3705\System.Data.dll
 call emitter.exe /add /nooutput %WINDIR%\Microsoft.NET\Framework\v1.0.3705\System.Web.Services.dll
 
 copy System.Object.xml mscorlib-1_0_3300_0--b77a5c561934e089\classes

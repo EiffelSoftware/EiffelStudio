@@ -186,6 +186,14 @@ feature {EV_LIST_ITEM_IMP} -- Implementation
 			-- Gtk combo struct
 
 feature {NONE} -- Implementation
+
+	pixmaps_size_changed is
+			-- The size of the displayed pixmaps has just
+			-- changed.
+		do
+			--| FIXME IEK Add pixmap scaling code with gtk+ 2
+			--| For now, do nothing.
+		end
 			
 	on_key_pressed_intermediary_agent: PROCEDURE [EV_GTK_CALLBACK_MARSHAL, TUPLE [EV_KEY, STRING, BOOLEAN]]
 			-- Intermediary key agent that is reused for list items in `add_to_container'.

@@ -89,7 +89,7 @@ feature -- Status report
 		end
 
 	get_column_width (column: INTEGER): INTEGER is
-			-- `Result' is column `column' width.
+			-- Width of column `column' in pixel.
 		require
 			exists: not destroyed
 			column_exists: column >= 1 and column <= columns

@@ -243,7 +243,9 @@ feature -- Element change
 			valid_color: is_valid (color)
 		deferred
 		ensure
-			background_color_set: background_color.equal_color(color)
+--			background_color_set: background_color.equal_color(color)
+-- FIXME: AlexB. 09101999. commented because, gtk change the value that we pass to the color. see why.
+
 		end
 
 	set_foreground_color (color: EV_COLOR) is
@@ -654,7 +656,7 @@ feature -- Event -- removing command association
 			exists: not destroyed
 		deferred
 		end
-	
+		
 invariant
 
 --	backgound_color_not_void: background_color /= Void

@@ -879,7 +879,7 @@ int odbc_support_create_proc() {
 /*                                                               */
 /*****************************************************************/
 
-char odbc_driver_name() {
+char * odbc_driver_name() {
 		return dbmsName;
 	}
 

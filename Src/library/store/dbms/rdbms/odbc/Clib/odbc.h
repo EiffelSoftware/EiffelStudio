@@ -30,6 +30,42 @@
 #define SQL_HANDLE_SMTM		3
 #endif
 
+#ifndef SQL_HANDLE_STMT
+#define SQL_HANDLE_STMT		3
+#endif
+
+#ifndef SQL_TYPE_DATE
+#define SQL_TYPE_DATE		91
+#endif
+
+#ifndef SQL_TYPE_TIME
+#define SQL_TYPE_TIME		92
+#endif
+
+#ifndef SQL_TYPE_TIMESTAMP
+#define SQL_TYPE_TIMESTAMP	93
+#endif
+
+#ifndef SQL_QUALIFIER_NAME_SEPARATOR
+#define SQL_QUALIFIER_NAME_SEPARATOR	41
+#endif
+
+#ifndef SQL_C_TYPE_DATE
+#define SQL_C_TYPE_DATE		SQL_TYPE_DATE
+#endif
+
+#ifndef SQL_C_TYPE_TIME
+#define SQL_C_TYPE_TIME		SQL_TYPE_TIME
+#endif
+
+#ifndef SQL_C_TYPE_TIMESTAMP
+#define SQL_C_TYPE_TIMESTAMP	SQL_TYPE_TIMESTAMP
+#endif
+
+#ifndef SQL_CATALOG_NAME_SEPARATOR
+#define SQL_CATALOG_NAME_SEPARATOR	SQL_QUALIFIER_NAME_SEPARATOR
+#endif
+
 #ifndef SQL_NULL_HANDLE
 #define SQL_NULL_HANDLE     0L
 #endif

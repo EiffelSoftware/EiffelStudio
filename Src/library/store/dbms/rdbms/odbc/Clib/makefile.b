@@ -1,5 +1,6 @@
 CC = bcc32
-CFLAGS = -O2 -c -WC -g0 -w- -DEIF_BORLAND
+CFLAGS = -O2 -c -WC -g0 -w- -DEIF_BORLAND -Ie:\bc5\include\mfc
+
 OBJ = odbc.obj
 
 all:: clean odbc_store.lib 

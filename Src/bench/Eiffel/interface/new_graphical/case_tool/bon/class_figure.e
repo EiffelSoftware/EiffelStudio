@@ -760,7 +760,7 @@ feature {NONE} -- Implementation
 				if new_child.compiled and class_i.compiled then
 					Result := not class_i.compiled_class.conform_to (new_child.compiled_class)
 				else
-					Result := not class_i.name.is_equal ("any")
+					Result := not class_i.name.is_equal ("ANY")
 				end
 			else
 				Result := True
@@ -778,7 +778,8 @@ feature {NONE} -- Implementation
 		local
 			cl: LIST [CLASS_I]
 		do
-			cl := (create {SHARED_EIFFEL_PROJECT}).Eiffel_system.Universe.compiled_classes_with_name ("storable")
+			cl := (create {SHARED_EIFFEL_PROJECT}).Eiffel_system.
+				Universe.compiled_classes_with_name ("STORABLE")
 			if cl /= Void and then not cl.is_empty then
 				Result := cl.i_th (1).compiled_class
 			end

@@ -80,6 +80,16 @@ feature -- Access
 		ensure
 			item_not_void: Result /= Void
 		end
+
+	selected_columns: ARRAYED_LIST [EV_GRID_COLUMN] is
+			-- All columns selected in `Current'.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.selected_columns
+		ensure
+			result_not_void: Result /= Void
+		end
 		
 	selected_rows: ARRAYED_LIST [EV_GRID_ROW] is
 			-- All rows selected in `Current'.
@@ -781,6 +791,7 @@ invariant
 	row_count_non_negative: row_count >= 0
 	column_count_non_negative: column_count >= 0
 	dynamic_modes_mutually_exclusive: not (is_content_completely_dynamic and is_content_partially_dynamic)
+	selected_columns_not_void: selected_columns /= Void
 	selected_rows_not_void: selected_rows /= Void
 	selected_items_not_void: selected_items /= Void
 	single_row_selection_enabled_implies_selected_count_no_more_than_one: single_row_selection_enabled implies selected_rows.count <= 1

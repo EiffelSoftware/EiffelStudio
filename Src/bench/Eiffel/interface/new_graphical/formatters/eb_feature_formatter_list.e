@@ -24,22 +24,22 @@ feature {NONE} -- Initialization
 		do
 			Precursor (a_tool)
 			
-			Create {EB_TEXT_FORMATTER} f.make (tool)
+			create {EB_TEXT_FORMATTER} f.make (tool)
 			add_formatter (f)
-			Create {EB_FEATURE_FLAT_FORMATTER} f.make (tool)
+			create {EB_FEATURE_FLAT_FORMATTER} f.make (tool)
 			add_formatter (f)
-			Create {EB_BREAKPOINTS_FORMATTER} stop_points_format.make (tool)
+			create {EB_BREAKPOINTS_FORMATTER} stop_points_format.make (tool)
 			add_formatter (stop_points_format)
 
-			Create {EB_FEATURE_CALLERS_FORMATTER} f.make (tool)
+			create {EB_FEATURE_CALLERS_FORMATTER} show_callers_format.make (tool)
 			add_formatter (f)
-			Create {EB_FEATURE_HISTORY_FORMATTER} f.make (tool)
+			create {EB_FEATURE_HISTORY_FORMATTER} f.make (tool)
 			add_formatter (f)
-			Create {EB_PAST_FORMATTER} f.make (tool)
+			create {EB_PAST_FORMATTER} f.make (tool)
 			add_formatter (f)
-			Create {EB_FUTURE_FORMATTER} f.make (tool)
+			create {EB_FUTURE_FORMATTER} f.make (tool)
 			add_formatter (f)
-			Create {EB_HOMONYMS_FORMATTER} f.make (tool)
+			create {EB_HOMONYMS_FORMATTER} f.make (tool)
 			add_formatter (f)
 
 		end
@@ -57,7 +57,10 @@ feature -- Constants
 		end
 
 	stop_points_format: EB_FORMATTER
-			-- format used for debugging
+			-- Format used for debugging
+
+	show_callers_format: EB_FEATURE_CALLERS_FORMATTER
+			-- Format used for displaying callers
 
 feature -- Constants
 

@@ -44,6 +44,7 @@ feature -- Type check, byte code and dead code removal
 			-- Type check an adress access on Current
 		local
 			vrle3: VRLE3
+			veen2a: VEEN2A
 		do
 			if context.level2 then
 					-- It means that we are in a location where `Result' is not
@@ -53,6 +54,11 @@ feature -- Type check, byte code and dead code removal
 				Error_handler.insert_error (vrle3)
 					-- Cannot go on here
 				Error_handler.raise_error
+			elseif context.level4 then
+					-- Result entity in precondition
+				create veen2a
+				context.init_error (veen2a)
+				Error_handler.insert_error (veen2a)
 			end
 			context.put (create {TYPED_POINTER_A}.make_typed (Context.feature_type))
 		end

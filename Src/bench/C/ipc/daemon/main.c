@@ -163,6 +163,7 @@ rt_public void init_bench(int argc, char **argv)
 	if ((eiffel4 == (char *) 0) || (strlen (eiffel4) == 0)) {	/* Environment variable not set */
 		MessageBox (NULL, "The ISE EIFFEL4 registry key is not set.\nYou should probably reinstall the software.",
 						  "Execution terminated", MB_OK + MB_ICONERROR + MB_TASKMODAL + MB_TOPMOST);
+		InvalidateRect (NULL, NULL, FALSE);
 		exit (1);
 	}
 #else
@@ -191,6 +192,7 @@ rt_public void init_bench(int argc, char **argv)
 	if ((platform == (char *) 0) || (strlen(platform) == 0)){		/* Environment variable not set */
 		MessageBox (NULL, "The ISE PLATFORM registry key is not set.\nYou should probably reinstall the software.",
 						  "Execution terminated", MB_OK + MB_ICONERROR + MB_TASKMODAL + MB_TOPMOST);
+		InvalidateRect (NULL, NULL, FALSE);
 		exit (1);
 	}
 #else
@@ -209,8 +211,9 @@ rt_public void init_bench(int argc, char **argv)
 	sp = spawn_child(ewb_path, &pid);	/* Bring workbench to life */
 	if (sp == (STREAM *) 0)	{			/* Could not do it */
 #ifdef EIF_WIN32
-		MessageBox (NULL, "The es4.exe cannot be launched",
+		MessageBox (NULL, "The program es4.exe cannot be launched",
 						  "Execution terminated", MB_OK + MB_ICONERROR + MB_TASKMODAL + MB_TOPMOST);
+		InvalidateRect (NULL, NULL, FALSE);
 #else
 		print_err_msg(stderr, "%s: could not launch %s\n", progname, ewb_path);
 #endif

@@ -85,7 +85,7 @@ feature {NONE} -- Initialization
 			initialize_temp_directory
 			Shared_constants.Application_constants.set_output_filter (feature {APPLICATION_CONSTANTS}.All_filter)
 			
-			close_request_actions.extend (agent destroy)
+			close_request_actions.extend (agent (create {EV_APPLICATION}).destroy)
 		end
 
 	initialize_path_constants is

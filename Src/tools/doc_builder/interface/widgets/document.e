@@ -90,7 +90,7 @@ feature -- Initialization
 				drop_actions.extend (agent insert_xml (?))
 				drop_actions.set_veto_pebble_function (agent can_insert_xml (?))
 	--			disable_word_wrapping
-			end
+			end			
 		end
 
 	initialize_accelerators is
@@ -127,13 +127,13 @@ feature -- Initialization
 				-- Ctrl-B
 			create key.make_with_code (key_constants.Key_b)
 			create accelerator.make_with_key_combination (key, True, False, False)
-			accelerator.actions.extend (agent tag_selection ("<bold>"))
+			accelerator.actions.extend (agent tag_selection ("bold"))
 			Application_window.accelerators.extend (accelerator)
 			
 				-- Ctrl-I
 			create key.make_with_code (key_constants.Key_i)
 			create accelerator.make_with_key_combination (key, True, False, False)
-			accelerator.actions.extend (agent tag_selection ("<italic>"))
+			accelerator.actions.extend (agent tag_selection ("italic"))
 			Application_window.accelerators.extend (accelerator)
 		end	
 
@@ -156,9 +156,8 @@ feature -- Access
 			l_att: XM_ATTRIBUTE
 			l_title, l_toc_location: STRING
 		do
-			if is_valid_xml and then is_valid_to_schema then
-				l_xm_doc := deserialize_text (text)
-				l_element ?= l_xm_doc.root_element.element_by_name ("help")
+			if is_valid_to_schema then
+				l_element ?= xml.root_element.element_by_name ("help")
 				if l_element /= Void  then
 					l_toc_element := l_element.element_by_name ("toc")
 				end
@@ -167,7 +166,7 @@ feature -- Access
 				if Shared_constants.Application_constants.is_studio then
 					if l_toc_element /= Void then
 						l_element := l_toc_element.element_by_name ("studio_title")
-						if l_element /= Void then							
+						if l_element /= Void then
 							l_title := l_element.text
 						end
 						l_element := l_toc_element.element_by_name ("studio_location")
@@ -209,7 +208,7 @@ feature -- Access
 			Result.set_document (Current)
 		ensure
 			has_result: Result /= Void
-		end		
+		end
 
 	properties: DOCUMENT_PROPERTIES_DIALOG is
 			-- Properties dialog for Current
@@ -309,6 +308,16 @@ feature -- XML Access
 			end
 		end
 
+	xml: XM_DOCUMENT is
+			-- 
+		do
+			Result := internal_xml
+			if Result = Void or is_modified then				
+				Result := deserialize_text (text)
+			end
+		end
+		
+
 feature -- Validation
 			
 	is_valid_xml: BOOLEAN is
@@ -342,7 +351,7 @@ feature -- Validation
 			end
 		end
 	
-feature -- Statu sSetting
+feature -- Status Setting
 
 	add_link (a_url: DOCUMENT_LINK) is
 			-- Add `a_url' to list of links
@@ -486,29 +495,29 @@ feature -- Commands
 			Shared_document_manager.add_modified_document (Current)
 		end		
 		
-	insert_xml (xml: STRING) is
+	insert_xml (a_xml: STRING) is
 			-- Insert 'xml' into Current text
 		require
-			Xml_validator.is_valid_xml_text (xml)
+			Xml_validator.is_valid_xml_text (a_xml)
 		do
-			insert_text (xml)
+			insert_text (a_xml)
 			select_region (caret_position, caret_position + xml.count - 1)
 		end
 		
-	insert_xml_formatted (xml: STRING) is
+	insert_xml_formatted (a_xml: STRING) is
 			-- Insert 'xml' into Current text, formatted
 		require
-			Xml_validator.is_valid_xml_text (xml)
+			Xml_validator.is_valid_xml_text (a_xml)
 		local
 			new_xml, tag: STRING
 			char_cursor, tab_count, init_caret: INTEGER
 			curr_char: CHARACTER
 			start: BOOLEAN
 		do
-			if can_insert (xml) then
+			if can_insert (a_xml) then
 				create new_xml.make_empty
-				xml.prune_all ('%N')
-				xml.prune_all ('%T')
+				a_xml.prune_all ('%N')
+				a_xml.prune_all ('%T')
 				from
 					init_caret := caret_position
 					char_cursor := 1
@@ -516,9 +525,9 @@ feature -- Commands
 				until
 					char_cursor > xml.count
 				loop
-					curr_char := xml.item (char_cursor)
+					curr_char := a_xml.item (char_cursor)
 					if curr_char = '<' and then not start then
-						if xml.substring (char_cursor, char_cursor + 1).is_equal ("</") then
+						if a_xml.substring (char_cursor, char_cursor + 1).is_equal ("</") then
 							new_xml.extend ('%N')
 							new_xml := add_tabs_to_text (new_xml, tab_count)
 							tab_count := tab_count - 1
@@ -620,6 +629,7 @@ feature -- Commands
 			if l_doc /= Void then
 				create l_formatter.make_with_document (Current)
 				l_formatter.process_document (l_doc)
+--				save_xml_document (l_doc, create {FILE_NAME}.make_from_string (name))
 			end
 			if not links.is_empty then
 				create invalid_links.make_empty ("Invalid Links")
@@ -702,18 +712,18 @@ feature -- Query
 			end
 		end
 
-	can_insert (xml: STRING): BOOLEAN is
+	can_insert (a_xml: STRING): BOOLEAN is
 			-- Can `xml' be inserted into Current?
 		local
 			l_constants: EV_DIALOG_CONSTANTS
 			l_message_dialog: EV_MESSAGE_DIALOG
 		do
-			if not xml_validator.is_valid_xml_text (xml) then
+			if not xml_validator.is_valid_xml_text (a_xml) then
 				create l_message_dialog.make_with_text ((create {MESSAGE_CONSTANTS}).invalid_xml_dialog_title)
 				l_message_dialog.set_text ((create {MESSAGE_CONSTANTS}).invalid_xml_file_warning)
 				l_message_dialog.set_buttons (<<(create {EV_DIALOG_CONSTANTS}).ev_ok>>)
 				l_message_dialog.show_modal_to_window (Application_window)
-			elseif xml.has_substring ("code_block") then
+			elseif a_xml.has_substring ("code_block") then
 				create l_constants
 				create l_message_dialog.make_with_text ((create {MESSAGE_CONSTANTS}).html_pre_tag_warning)
 				l_message_dialog.set_title (l_constants.ev_warning_dialog_title)
@@ -741,6 +751,14 @@ feature -- Query
 		end		
 
 feature {NONE} -- Implementation
+
+	parse is
+			-- 
+		do
+			internal_xml := deserialize_text (text)
+		end
+		
+	internal_xml: like xml
 
 	editor: DOCUMENT_EDITOR
 			-- The parent editor 

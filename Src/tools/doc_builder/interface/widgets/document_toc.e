@@ -31,7 +31,8 @@ inherit
 		end
 
 create
-	make
+	default_create,
+	make	
 
 feature -- Creation
 
@@ -42,8 +43,12 @@ feature -- Creation
 		local
 			l_question_dialog: EV_MESSAGE_DIALOG
 			l_constants: EV_DIALOG_CONSTANTS
+			
+			ltoc: XML_TABLE_OF_CONTENTS
+			ltocfile: PLAIN_TEXT_FILE
 		do
 			default_create
+			
 			create index_nodes.make (10)
 			create toc_move_nodes.make (10)
 			create parent_nodes.make (5)
@@ -59,6 +64,9 @@ feature -- Creation
 					l_question_dialog.destroy
 				end
 			end
+			
+			create ltoc.make_from_tree (Current)
+			ltocfile := ltoc.contents_file
 		end
 		
 feature -- Commands
@@ -139,7 +147,7 @@ feature -- Commands
 	build_toc_flat (root_dir: DIRECTORY; a_parent: EV_TREE_ITEM) is
 			-- Starting from `root_dir' build a TOC that contains nodes for
 			-- files recursively in `root_dir'. Resulting TOC is identical in structure to
-			-- `root_dir' and does apply any filtering or sorting.
+			-- `root_dir' and does not apply any filtering or sorting.
 		require
 			dir_not_void: root_dir /= Void
 			parent_not_void: a_parent /= Void

@@ -88,7 +88,7 @@ feature -- Commands
 	apply is
 			-- Apply
 		do
-			set_options
+			set_options			
 		end
 		
 	okay is

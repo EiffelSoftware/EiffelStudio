@@ -51,7 +51,8 @@ feature {NONE} -- Initialization
 				set_public_key_token (a.public_key_token)
 				create l_emitter.make (system.clr_runtime_version)
 				if l_emitter.exists then
-					consumed_folder_name := l_emitter.relative_folder_name (assembly_name, version, culture, public_key_token)
+					consumed_folder_name := l_emitter.
+						relative_folder_name (assembly_name, version, culture, public_key_token)
 				else
 						-- IL_EMITTER component could not be loaded.
 					create l_vd64
@@ -75,10 +76,15 @@ feature {NONE} -- Initialization
 				-- of current assembly.
 			create l_env
 		
-			l_assembly_location := l_env.Assemblies_path (System.clr_runtime_version).twin
-			l_assembly_location.extend (consumed_folder_name)
-			create dollar_path.make_from_string (l_assembly_location)
-			update_path
+				-- If either `initialize_from_local_assembly' or if we failed to initialize
+				-- the emitter we do not initialize the assembly as we cannot do it, it is
+				-- ok because an error has been inserted.
+			if consumed_folder_name /= Void then
+				l_assembly_location := l_env.Assemblies_path (System.clr_runtime_version).twin
+				l_assembly_location.extend (consumed_folder_name)
+				create dollar_path.make_from_string (l_assembly_location)
+				update_path
+			end
 
 				-- Necessary initialization to preserve inherited invariants.
 			create sub_clusters.make (0)

@@ -48,7 +48,7 @@ feature -- Status report
 	is_item_checked (tree_item: EV_TREE_NODE): BOOLEAN is
 			-- is `tree_item' checked?
 		local
-			item_imp: EV_TREE_ITEM_IMP
+			item_imp: EV_TREE_NODE_IMP
 			original_mask: INTEGER
 			original_state_mask: INTEGER
 		do
@@ -161,7 +161,7 @@ feature {NONE} -- Implementation
 	process_message (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER is
 			-- Process all message plus `WM_GETDLGCODE'.
 		local
-			tree_node: EV_TREE_ITEM_IMP
+			tree_node: EV_TREE_NODE_IMP
 		do
 				-- Check to see if we are receiving the user defined message that
 				-- we sent within `on_wm_click'. If so, process the state change.

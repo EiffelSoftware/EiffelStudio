@@ -1,0 +1,31 @@
+system
+	rt-converter
+
+root
+	converter: "make"
+
+default
+
+	assertion (require);
+	--debug (all)
+
+cluster
+
+	converter:   ".";
+	kernel:			"$EIFFEL3\library\base\kernel";
+	support:		"$EIFFEL3\library\base\support";
+	access:			"$EIFFEL3\library\base\structures\access";
+	cursors:		"$EIFFEL3\library\base\structures\cursors";
+	cursor_trees:		"$EIFFEL3\library\base\structures\cursor_tree";
+	dispenser:		"$EIFFEL3\library\base\structures\dispenser";
+	iteration:		"$EIFFEL3\library\base\structures\iteration";
+	list:			"$EIFFEL3\library\base\structures\list";
+	obsolete:		"$EIFFEL3\library\base\structures\obsolete";
+	set:			"$EIFFEL3\library\base\structures\set";
+	sort:			"$EIFFEL3\library\base\structures\sort";
+	storage:		"$EIFFEL3\library\base\structures\storage";
+	table:			"$EIFFEL3\library\base\structures\table";
+	traversing:		"$EIFFEL3\library\base\structures\traversing";
+	tree:			"$EIFFEL3\library\base\structures\tree";
+
+end

@@ -66,14 +66,6 @@ RT_LNK int is_debug(int st_type, char *key);		/* Debug level query */
 #define PROF_RECORDING	1	/* Mask for checking whethter profiler is currently recording */
 #define IN_ACE_FILE	2	/* Mask for checking whether profile(yes) is in the Ace file */
 
-#ifdef HAS_GETRUSAGE	/* Variable to get the total execution time */
-extern struct prof_rusage *init_date;
-#elif defined(HAS_TIMES)
-extern double init_date;
-#elif defined(EIF_WIN32)
-extern SYSTEMTIME *init_date;
-#endif /* HAS_GERUSAGE */
-
 /* #define prof_enabled    EIF_TEST(egc_prof_enabled & IN_ACE_FILE) */      /* Has the profiler been enabled in the ACE file? */
 #define prof_recording	EIF_TEST(egc_prof_enabled & PROF_RECORDING)   /* Is the profile currently recording? */
 

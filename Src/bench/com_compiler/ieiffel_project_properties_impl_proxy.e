@@ -144,12 +144,6 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	apply is
-			-- Apply changes
-		do
-			ccom_apply (initializer)
-		end
-
 	set_system_name (return_value: STRING) is
 			-- System name.
 			-- `return_value' [in].  
@@ -278,6 +272,26 @@ feature -- Basic Operations
 			ccom_remove_assembly (initializer, assembly_path)
 		end
 
+	update_project_ace_file (project_ace_file_name: STRING) is
+			-- Update the project Ace file according to the current settings.
+			-- `project_ace_file_name' [in].  
+		do
+			ccom_update_project_ace_file (initializer, project_ace_file_name)
+		end
+
+	synchronize_with_project_ace_file (project_ace_file_name: STRING) is
+			-- Synchronize the current settings with the project Ace file.
+			-- `project_ace_file_name' [in].  
+		do
+			ccom_synchronize_with_project_ace_file (initializer, project_ace_file_name)
+		end
+
+	apply is
+			-- Apply changes
+		do
+			ccom_apply (initializer)
+		end
+
 feature {NONE}  -- Implementation
 
 	delete_wrapper is
@@ -287,12 +301,6 @@ feature {NONE}  -- Implementation
 		end
 
 feature {NONE}  -- Externals
-
-	ccom_apply (cpp_obj: POINTER) is
-			-- Apply changes
-		external
-			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"]()"
-		end
 
 	ccom_system_name (cpp_obj: POINTER): STRING is
 			-- System name.
@@ -490,6 +498,24 @@ feature {NONE}  -- Externals
 			-- Remove an assembly from the project.
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](EIF_OBJECT)"
+		end
+
+	ccom_update_project_ace_file (cpp_obj: POINTER; project_ace_file_name: STRING) is
+			-- Update the project Ace file according to the current settings.
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](EIF_OBJECT)"
+		end
+
+	ccom_synchronize_with_project_ace_file (cpp_obj: POINTER; project_ace_file_name: STRING) is
+			-- Synchronize the current settings with the project Ace file.
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](EIF_OBJECT)"
+		end
+
+	ccom_apply (cpp_obj: POINTER) is
+			-- Apply changes
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"]()"
 		end
 
 	ccom_delete_ieiffel_project_properties_impl_proxy (a_pointer: POINTER) is

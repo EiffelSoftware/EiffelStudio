@@ -47,9 +47,10 @@ feature
 			else
 					-- Look for a valid selection
 				Result := parent_selection (parents);
-				selected_rout_id_set := Result.rout_id_set.twin;
 
 				if Result /= Void then
+					selected_rout_id_set := Result.rout_id_set.twin;
+
 						-- Keep track of the selection
 					Selected.add_front (Result.feature_name);
 					from

@@ -44,7 +44,7 @@ feature -- Access
 		require
 			valid_var_kind: var_kind = Var_const
 		do
-			!! Result.make_by_pointer (ccom_vardesc_const_variant (item))
+			!! Result.make_from_pointer (ccom_vardesc_const_variant (item))
 		end
 
 	elem_desc: ECOM_ELEM_DESC is

@@ -21,24 +21,28 @@
 class ecom_variant
 {
 	public:
+		ecom_variant ();
 		ecom_variant(VARIANT *);
 		~ecom_variant();
-		
+
+		// `item'
+		EIF_POINTER ccom_variant_item ();
+
 		// variable type
 		EIF_INTEGER ccom_variable_type ();
 		void ccom_set_variable_type (VARTYPE a_value);
-		
+
 		// character type
 		EIF_CHARACTER ccom_character ();
 		EIF_REFERENCE ccom_character_reference ();
 		EIF_CHARACTER ccom_unsigned_character ();
 		EIF_REFERENCE ccom_unsigned_character_reference();
-		
+
 		void ccom_set_character_reference (EIF_OBJECT char_ref);
 		void ccom_set_character (EIF_CHARACTER char_value);
 		void ccom_set_unsigned_character (EIF_CHARACTER a_value);
 		void ccom_set_unsigned_character_reference (EIF_OBJECT a_value);
-		
+
 		// short
 		EIF_INTEGER ccom_integer2 ();
 		EIF_REFERENCE ccom_integer2_reference ();
@@ -230,7 +234,7 @@ class ecom_variant
 		void ccom_set_safearray_variant_reference (EIF_OBJECT a_value);
 		void ccom_set_safearray_unknown_interface_reference (EIF_OBJECT a_value);
 		void ccom_set_safearray_decimal_reference (EIF_OBJECT a_value);
-		
+
 	private:
 		VARIANT * variant;
 };

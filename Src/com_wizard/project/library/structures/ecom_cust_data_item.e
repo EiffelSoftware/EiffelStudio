@@ -27,7 +27,7 @@ feature -- Access
 	variant_structure: ECOM_VARIANT is
 			-- VARIANT structure
 		do
-			!! Result.make_by_pointer (ccom_custdataitem_variant (item))
+			!! Result.make_from_pointer (ccom_custdataitem_variant (item))
 		ensure
 			Result /= Void
 		end

@@ -31,11 +31,10 @@ inherit
 		end
 		
 creation
-	
-	make, make_with_text
+	make,
+	make_with_text
 
 feature {NONE} -- Initialization
-
 		
 	make_with_text (par: EV_CONTAINER; txt: STRING) is
 			-- Label with 'par' as parent and 'txt' as 

@@ -178,30 +178,6 @@ feature {NONE} -- Implementation, pick and drop
 			Result := parent_imp
 		end
 
-	set_capture is
-			-- Grab user input.
-		do
-			parent_imp.set_capture
-		end
-
-	release_capture is
-			-- Release user input.
-		do
-			parent_imp.release_capture
-		end
-
-	set_heavy_capture is
-			-- Grab user input.
-		do
-			parent_imp.set_heavy_capture
-		end
-
-	release_heavy_capture is
-			-- Release user input.
-		do
-			parent_imp.release_heavy_capture
-		end
-
 feature {EV_ANY_I} -- Interface
 
 	interface: EV_TOOL_BAR_BUTTON
@@ -229,6 +205,10 @@ end -- class EV_TOOL_BAR_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.24  2000/04/21 21:56:19  rogers
+--| Removed set_capture, release_capture, set_heavy_capture and
+--| release_heavy_capture.
+--|
 --| Revision 1.23  2000/04/11 19:12:18  rogers
 --| Removed repeated inheritance from EV_PICK_AND_DROPABLE_ITEM_IMP.
 --|

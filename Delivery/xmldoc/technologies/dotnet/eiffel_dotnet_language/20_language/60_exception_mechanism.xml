@@ -53,7 +53,7 @@
 			<link>
 				<url>../../eiffel_dotnet_language/20_language/20_adding_class_features.xml</url>
 				<label>Adding Class Features</label>
-			</link>. The rescue clause is a sequence of instructions introduced by the keyword " 
+			</link>. The rescue clause is a sequence of instructions introduced by the keyword "
 			<code>
 				<keyword>rescue</keyword>
 			</code>". At the point that an exception occurs, the processing of the normal instructions in the routine body will cease, and the instructions in the rescue clause will be executed instead.
@@ -73,23 +73,23 @@
 		</paragraph>
 		<paragraph>It should be noted that rescue clauses and retry instructions are not something that are used commonly. Out of the approximately 2000 class in the delivered Eiffel libraries, there are only 16 occurrences. Many of these are oriented toward network and database operations for which some reasonable recovery might be possible. </paragraph>
 		<code_block>
-transmit: (p: PACKET)
-            -- Transmit packet `p'
-        require
-                packet_not_void: p /= Void
-        local
-            current_retries: INTEGER
-            r: RANDOM_NUMBER_GENERATOR
-        do
-            line.send (p)
-        rescue
-            if current_retries &lt; max_retries then
-                r.next
-                wait_millisecs (r.value_between (20, 500))
-                current_retries := current_retries + 1
-                retry
-            end
-        end
+	<feature_name>transmit</feature_name><symbol>:</symbol> <symbol>(</symbol>p<symbol>:</symbol> <class_name>PACKET</class_name><symbol>)</symbol>
+			<comment>-- Transmit packet `p'</comment>
+		<keyword>require</keyword>
+			packet_not_void<symbol>:</symbol> p <symbol>/<symbol>=</symbol></symbol> Void
+		<keyword>local</keyword>
+			current_retries<symbol>:</symbol> <class_name>INTEGER</class_name>
+			r<symbol>:</symbol> <class_name>RANDOM_NUMBER_GENERATOR</class_name>
+		<keyword>do</keyword>
+			<feature_name>line</feature_name>.<feature_name>send</feature_name> <symbol>(</symbol>p<symbol>)</symbol>
+		<keyword>rescue</keyword>
+			<keyword>if</keyword> current_retries <symbol>&lt;</symbol> <feature_name>max_retries</feature_name> <keyword>then</keyword>
+				<feature_name>r</feature_name>.<feature_name>next</feature_name>
+				wait_millisecs <symbol>(</symbol><feature_name>r</feature_name>.<feature_name>value_between</feature_name> <symbol>(</symbol>20, 500<symbol>)</symbol><symbol>)</symbol>
+				current_retries <symbol>:</symbol><symbol>=</symbol> current_retries <symbol>+</symbol> 1
+				<keyword>retry</keyword>
+			<keyword>end</keyword>
+		<keyword>end</keyword>
 </code_block>
 		<paragraph>In the example above, 
 			<code>

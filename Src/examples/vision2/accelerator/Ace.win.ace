@@ -1,57 +1,58 @@
 --!----------------------------------------------------------------
---! EiffelVision2-application Ace-file for the Mswindows platform.
---!
---! See notice at end of file.
---! date: "$Date$
+--! Project Ace-file for Windows platforms.
 --!----------------------------------------------------------------
 
 system
-	fig -- Your executable.
+	accelerator_test
 
-root
-	FIGURE_TEST (root_cluster): "make_and_launch"
+root 
+	ACCELERATOR_TEST (root_cluster): "make_and_launch"
 
 default
-	assertion (all)
+	assertion			(all)
+	multithreaded		(no)
+	console_application	(no)
+	dynamic_runtime		(no)
+	dead_code_removal		(yes)
+	profile			(no)
+	line_generation		(no)
+	debug				(no)
+	array_optimization	(no)
+	inlining			(no)
+	inlining_size		("4")
 
-cluster
+cluster 
+		-- Root cluster
+	root_cluster:		"$ISE_EIFFEL\examples\vision2\accelerator"
 
-	root_cluster:			"."
-	devel:					"c:\work"
-	all base (devel):		"$\base"
+		-- EiffelBase
+	all base: 			"$ISE_EIFFEL\library\base"
 		exclude
 			"table_eiffel3"
 		end
 
-	all wel (devel):		"$\wel"
-	event (devel):			"$\event"
+		-- WEL
+	all wel:			"$ISE_EIFFEL\library\wel"
 
-	all vision2 (devel):	"$\vision2"
+		-- Vision2
+	all vision2:		"$ISE_EIFFEL\library\vision2"
 		exclude 
 			"gtk"
 			"EIFGEN"
+			"tmp"
+			"temp"
+			"release"
+			"obsolete"
+			"bench_used"
 		end
 
 external
-        include_path:
-			"c:\work\wel\spec\windows\include"
-        object:
-			"c:\work\wel\spec\$(ISE_COMPILER)\lib\wel.lib"
+	include_path:		"$(ISE_EIFFEL)\library\vision2\spec\include",
+					"$(ISE_EIFFEL)\library\wel\spec\windows\include"
 
-end
+	object: 			"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\vision2.lib",
+			 		"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\libpng.lib",
+			 		"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\zlib.lib",
+					"$(ISE_EIFFEL)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib"
 
---!----------------------------------------------------------------
---! EiffelVision2: library of reusable components for ISE Eiffel.
---! Copyright (C) 1986-1999 Interactive Software Engineering Inc.
---! All rights reserved. Duplication and distribution prohibited.
---! May be used only with ISE Eiffel, under terms of user license. 
---! Contact ISE for any other use.
---!
---! Interactive Software Engineering Inc.
---! ISE Building, 2nd floor
---! 270 Storke Road, Goleta, CA 93117 USA
---! Telephone 805-685-1006, Fax 805-685-6869
---! Electronic mail <info@eiffel.com>
---! Customer support e-mail <support@eiffel.com>
---! For latest info see award-winning pages: http://www.eiffel.com
---!----------------------------------------------------------------
+end -- accelerator example

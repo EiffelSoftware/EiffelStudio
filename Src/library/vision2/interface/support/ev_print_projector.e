@@ -31,6 +31,7 @@ feature {NONE} -- Initialization
 			-- Create with `a_world' and `a_context'.
 		require
 			a_world_not_void: a_world /= Void
+			has_printer: (create {EV_ENVIRONMENT}).has_printer
 			a_context_not_void: a_context /= Void
 			output_file_unique: a_context.output_to_file implies
 						not (create {RAW_FILE}.make (a_context.file_name)).exists
@@ -45,6 +46,7 @@ feature -- Basic operations
 	project is
 			-- Make a standard projection of the world on the device.
 		require
+			has_printer: (create {EV_ENVIRONMENT}).has_printer
 			not_destroyed: not is_destroyed
 		do
 			implementation.project

@@ -31,25 +31,35 @@
 an Eiffel project.</p>
 <p>This library provides a consistent set of classes for writing object oriented Eiffel applications that need&nbsp;<br>
 to handle persistent objects.</p>
-<p>We suggest you to read at least all this documentation before beginning using
-EiffelStore.</p>
+<p>Before using EiffelStore, we suggest that you read this documentation.</p>
 <ul>
   <li><a href="#tech_info">Technical Information</a></li>
   <li><a href="#GetStart">Getting started</a></li>
   <li><a href="#Ace">How to configure your Ace file.</a></li>
   <li><a href="#connectData">How connect your Database</a></li>
   <li><a href="#query">How to realize a Basic query</a></li>
-  <li><a href="#Examples">Some working examples</a></li>
+  <li><a href="#Examples">Some working examples</a>
+    <ol>
+      <li><a href="#Esql">esql</a></li>
+      <li><a href="#Select">select</a></li>
+      <li><a href="#Insert">insert</a></li>
+      <li><a href="#Nesting">nesting</a></li>
+      <li><a href="#Rm2oom">rm2oom</a></li>
+      <li><a href="#Oo2rm">oom2rm</a></li>
+      <li><a href="#Convert">convert</a></li>
+    </ol>
+  </li>
 </ul>
 <p>&nbsp;</p>
 <h1><a name="tech_info">Technical Information</a></h1>
-<p>The library interface consists of two sets:<br>
-<br>
-1) A set of general purpose classes designed regardless of any data management system used, to be found in directory
-: $EIFFEL4/library/store/interface, and that you always need in your universe<br>
-<br>
-2) Specific classes, referred to by the interface classes, bridging the application to selected data management systems called
-&quot;handles''.</p>
+<p>The library interface consists of two sets:</p>
+<ol>
+  <li>A set of general purpose classes designed regardless of any data management system used,
+    found in directory
+: $EIFFEL4/library/store/interface, and that you always need in your universe</li>
+  <li>Specific classes, referred to by the interface classes, bridging the application to selected data management systems called
+&quot;handles''.</li>
+</ol>
 <p>&nbsp;<br>
   The set of handles may be found:</p>
 <ul>
@@ -58,8 +68,7 @@ EiffelStore.</p>
     where {server_name} correspond to a selected relational database&nbsp;<br>
    management system.</li>
 </ul>
-<p>   Additional support classes are also needed in your universe<br>
-   regardless of the selected handle. They are located in:</p>
+<p>   Additional support classes are also needed in your universe regardless of the selected handle. They are located in:</p>
 <ul>
   <li>directory $EIFFEL4/library/store/support and $EIFFEL4/library/store/dbms/support</li>
 </ul>
@@ -312,7 +321,7 @@ the <a href="#Select"> Select example</a>.</p>
 in this example).<br>
 Then you can follow all the steps of this example.</p>
 <h1><a name="Examples">Some Working Examples</a></h1>
-<p>We developed 8 Examples that you can try to understand EiffelStore.</p>
+<p>We developed 7 Examples that you can try to understand EiffelStore.</p>
 <p>They are in the directory : &quot;$EIFFEL4\examples\store&quot;</p>
 <p>You should test these examples in the following Order:</p>
 <ul>
@@ -427,8 +436,6 @@ compilation.</p>
 &nbsp;&nbsp;&nbsp; </p>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
-&nbsp;
-
-<!--msnavigation--></td></tr><!--msnavigation--></table></body>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table></body>
 
 </html>

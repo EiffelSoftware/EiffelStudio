@@ -280,7 +280,7 @@ feature -- Basic operation
 		end
 
 	deselect_all is
-			-- Unselect the current selection.
+			-- Unselect current selection.
 		require
 			not_destroyed: not is_destroyed
 		do

@@ -11,6 +11,11 @@ inherit
 	EV_DRAWABLE_I
 	
 	EV_POSTSCRIPT_PAGE_CONSTANTS
+
+	REFACTORING_HELPER
+		export
+			{NONE} all
+		end
 	
 create
 	make
@@ -444,6 +449,22 @@ feature -- Drawing operations
 			end
 			
 			add_ps ("grestore")
+		end
+
+	draw_ellipsed_text (x, y: INTEGER; a_text: STRING; clipping_width: INTEGER) is
+			-- Draw `a_text' with left of baseline at (`x', `y') using `font'.
+			-- Text is clipped to `clipping_width' in pixels and ellipses are displayed
+			-- to show truncated characters if any.
+		do
+			fixme ("draw_ellipsed_text: To be implemented")
+		end
+
+	draw_ellipsed_text_top_left (x, y: INTEGER; a_text: STRING; clipping_width: INTEGER) is
+			-- Draw `a_text' with top left corner at (`x', `y') using `font'.
+			-- Text is clipped to `clipping_width' in pixels and ellipses are displayed
+			-- to show truncated characters if any.
+		do
+			fixme ("draw_ellipsed_text_top_left: To be implemented")
 		end
 
 	draw_segment (x1, y1, x2, y2: INTEGER) is

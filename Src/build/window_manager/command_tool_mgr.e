@@ -29,3 +29,4 @@ feature {NONE} -- Implementation
 		end
 
 end -- class COMMAND_TOOL_MGR
+

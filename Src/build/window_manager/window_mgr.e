@@ -1,16 +1,21 @@
+indexing
+	description: "Windows manager."
+	Id: "$Id$" 
+	Date: "$Date$"
+	Revision: "$Revision$"
 
 class WINDOW_MGR 
 
 inherit
+--useless	EDITOR_NAMES
 	
-	EDITOR_NAMES
 	CONSTANTS
 
 creation
 
 	make
 	
-feature {NONE}
+feature {NONE} -- Initialization
 
 	command_tools_list: COMMAND_TOOL_MGR
 		-- Command tools manager
@@ -21,17 +26,14 @@ feature {NONE}
 	context_editors_list: CON_EDITOR_MGR
 		-- Context editors manager
 
-	make (a_screen: SCREEN) is
-			-- Create a window manager. All editors will be create 
-			-- using `a_screen' as the parent. Allow `i' amount for
+	make (par: MAIN_WINDOW) is
+			-- Create a window manager. All editors will be created 
+			-- using `par' as the parent. Allow `i' amount for
 			-- the free list.
 		do
-			!!state_editors_list.make (Widget_names.state_editor, 
-						a_screen, Resources.window_free_list_number)
-			!!context_editors_list.make (Widget_names.context_editor, 
-						a_screen, Resources.window_free_list_number)
-			!!command_tools_list.make (Widget_names.command_tool, 
-						a_screen, Resources.window_free_list_number)
+			create state_editors_list.make (par.app_editor, Resources.window_free_list_number)
+			create context_editors_list.make (par, Resources.window_free_list_number)
+			create command_tools_list.make (par, Resources.window_free_list_number)
 		end
 
 feature 
@@ -72,22 +74,18 @@ feature
 			Result := context_editors_list.editor
 		end
 
-	display (ed: EB_TOP_SHELL) is
+	display (ed: EB_WINDOW) is
 			-- Display `ed' (or raise `ed' if already
 			-- displayed).
 		do
-			if ed.realized then
-				if not ed.shown then
-					ed.show
-				else
-					ed.raise
-				end
-			else
-				ed.realize
-			end		
+			if not ed.shown then
+				ed.show
+--			else
+--				ed.raise
+			end
 		end
 
-	close (ed: EB_TOP_SHELL) is
+	close (ed: EB_WINDOW) is
 			-- Close `ed'. 
 		local
 		 	s_ed: STATE_EDITOR
@@ -135,3 +133,4 @@ feature
 		end
 
 end -- class WINDOW_MGR 
+

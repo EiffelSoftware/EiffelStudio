@@ -12,7 +12,8 @@ inherit
 		redefine
 			update_state_information,
 			proceed_with_current_info,
-			build
+			build,
+			is_final_state
 		end
 		
 	EB_PROFILER_WIZARD_SHARED_INFORMATION
@@ -184,6 +185,9 @@ feature {NONE} -- Implementation
 			message_box.hide
 		end
 		
+	is_final_state: BOOLEAN is True
+			-- This is the last state of this wizard.
+
 feature {NONE} -- Vision2 controls
 		
 	name_switch: EV_CHECK_BUTTON

@@ -178,8 +178,6 @@ feature {NONE} -- Compilation implementation
 
 	launch_c_compilation is
 			-- Launch the C compilation.
-		require
-			not_il_generation: not System.il_generation
 		local
 			output_text: STRUCTURED_TEXT
 		do

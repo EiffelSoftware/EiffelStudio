@@ -26,8 +26,8 @@ feature -- Initialization
 
 	do_tests is
 		local
-			hbox_test, vbox_test, nb_test : EV_LIST_TEST [EV_WIDGET]
-			list_test, tb_test, sb_test, mcl_test: EV_LIST_TEST [EV_ITEM]
+			hbox_test, vbox_test, sb_test, nb_test : EV_LIST_TEST [EV_WIDGET]
+			list_test, tb_test, mcl_test: EV_LIST_TEST [EV_ITEM]
 			tree_test, ti_test, menu_test, mb_test: EV_LIST_TEST [EV_ITEM]
 			cb_test: EV_LIST_TEST [EV_ITEM]
 		do

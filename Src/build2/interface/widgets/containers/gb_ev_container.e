@@ -93,8 +93,8 @@ feature {GB_CODE_GENERATOR} -- Output
 			element_info: ELEMENT_INFORMATION
 			linked_groups: ARRAYED_LIST [INTEGER]
 			temp_output: STRING
-			titled_window_object: GB_TITLED_WINDOW_OBJECT
 			window_access_string: STRING
+			other_info: GB_GENERATED_INFO
 		do
 			create Result.make (2)
 			full_information := get_unique_full_info (element)
@@ -111,10 +111,14 @@ feature {GB_CODE_GENERATOR} -- Output
 				until
 					linked_groups.off
 				loop
-					titled_window_object ?= object_handler.object_from_id (linked_groups.item)
-					if titled_window_object /= Void then
-						if system_status.current_project_settings.client_of_window then
-							window_access_string := Client_window_string
+					if object_handler.object_from_id (linked_groups.item).is_top_level_object then
+						other_info := info.generated_info_by_id.item (linked_groups.item)
+						if other_info.generate_as_client then
+							if other_info.type.is_equal (ev_titled_window_string) or other_info.type.is_equal (ev_dialog_string) then
+								window_access_string.append (client_window_string)
+							else
+								window_access_string.append (client_widget_string)
+							end
 						else
 							window_access_String := "Current"
 						end

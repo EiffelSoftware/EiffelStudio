@@ -2307,7 +2307,7 @@ rt_private void print_object_location_reason_effect (
 			sprintf(buffer, "%*.182s", 73 + l_effect_count, a_effect);
 			append_trace(buffer);
 		} else {
-			sprintf(buffer,"%-22.22s %-29.29s %*.182s\n", a_location, a_reason, l_effect_count,
+			sprintf(buffer,"%-22.22s %-29.29s %*.182s", a_location, a_reason, l_effect_count,
 				a_effect);
 			append_trace(buffer);
 		}

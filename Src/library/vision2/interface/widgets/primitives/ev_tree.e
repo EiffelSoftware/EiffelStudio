@@ -44,6 +44,16 @@ feature -- Access
 			Result := implementation.selected_item
 		end
 
+	total_count: INTEGER is
+			-- Total number of items in the tree.
+		require
+			exists: not destroyed
+		do
+			Result := implementation.total_count
+		ensure
+			positive_result: Result >= 0
+		end
+
 feature -- Status report
 
 	selected: BOOLEAN is
@@ -76,7 +86,7 @@ feature -- Event -- removing command association
 			implementation.remove_selection_commands
 		end
 
-feature {EV_TREE_ITEM} -- Implementation
+feature -- Implementation
 	
 	implementation: EV_TREE_I	
 

@@ -1,0 +1,648 @@
+indexing
+
+	description:
+			"Widget for selecting one of a list of alternatives.";
+	status: "See notice at end of class.";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class
+	MEL_SELECTION_BOX
+
+inherit
+
+	MEL_SELECTION_BOX_RESOURCES
+		export
+			{NONE} all
+		end;
+
+	MEL_BULLETIN_BOARD
+		redefine
+			create_callback_struct, cancel_button,
+			default_button, create_widget
+		end
+
+creation
+	make,
+	make_no_auto_unmanage
+
+feature {NONE} -- Initialization
+
+	create_widget (p_so: POINTER; w_name: ANY; auto_manage_flag: BOOLEAN) is
+			-- Create motif selection box with `auto_manage_flag'.
+		do
+			if auto_manage_flag then
+				screen_object := xm_create_selection_box (p_so, $w_name, default_pointer, 0)
+			else
+				screen_object := xm_create_selection_box (p_so, $w_name, auto_unmanage_arg, 1)
+			end;
+			Mel_widgets.put (Current, screen_object);
+			create_selection_children
+		end;
+
+	create_selection_children is
+			-- Create corresponding mel children.
+		local
+			ptr: POINTER;
+			so: POINTER;
+			null: POINTER
+		do
+			so := screen_object;
+			ptr := xm_selection_box_get_child (so, XmDIALOG_APPLY_BUTTON);
+			if ptr /= null then
+				!! apply_button.make_from_existing (ptr)
+			end;
+			ptr := xm_selection_box_get_child (so, XmDIALOG_CANCEL_BUTTON);
+			if ptr /= null then
+				!! cancel_button.make_from_existing (ptr)
+			end;
+			ptr := xm_selection_box_get_child (so, XmDIALOG_DEFAULT_BUTTON);
+			if ptr /= null then
+				!! default_button.make_from_existing (ptr)
+			end;
+			ptr := xm_selection_box_get_child (so, XmDIALOG_HELP_BUTTON);
+			if ptr /= null then
+				!! help_button.make_from_existing (ptr)
+			end;
+			ptr := xm_selection_box_get_child (so, XmDIALOG_LIST);
+			if ptr /= null then
+				!! list.make_from_existing (ptr)
+			end;
+			ptr := xm_selection_box_get_child (so, XmDIALOG_LIST_LABEL);
+			if ptr /= null then
+				!! list_label.make_from_existing (ptr)
+			end;
+			ptr := xm_selection_box_get_child (so, XmDIALOG_OK_BUTTON);
+			if ptr /= null then
+				!! ok_button.make_from_existing (ptr)
+			end;
+			ptr := xm_selection_box_get_child (so, XmDIALOG_SELECTION_LABEL);
+			if ptr /= null then
+				!! selection_label.make_from_existing (ptr)
+			end;
+			ptr := xm_selection_box_get_child (so, XmDIALOG_SEPARATOR);
+			if ptr /= null then
+				!! separator.make_from_existing (ptr)
+			end;
+			ptr := xm_selection_box_get_child (so, XmDIALOG_TEXT);
+			if ptr /= null then
+				!! text.make_from_existing (ptr)
+			end;
+			ptr := xm_selection_box_get_child (so, XmDIALOG_WORK_AREA);
+			if ptr /= null then
+				!! work_area.make_from_existing (ptr)
+			end
+		end;
+
+feature -- Access
+
+	apply_button,
+			-- Apply button
+
+	cancel_button, 
+			-- Cancel button
+
+	default_button,
+			-- Default button
+
+	help_button,
+			-- Help button
+
+	ok_button: MEL_PUSH_BUTTON_GADGET;
+			-- Ok button
+
+	list: MEL_SCROLLED_LIST;
+			-- List in box
+
+	list_label,
+			-- Label of `list'
+
+	selection_label: MEL_LABEL_GADGET;
+			-- Label to show selection
+
+	separator: MEL_SEPARATOR_GADGET;
+			-- Separator used
+
+	text: MEL_TEXT_FIELD;
+			-- Text
+
+	work_area: MEL_WIDGET;
+			-- Work area of box
+
+feature -- Status report
+
+	apply_label_string: MEL_STRING is
+			-- Label of `apply_button'
+		require
+			exists: not is_destroyed
+		do
+			Result := get_xm_string (screen_object, XmNapplyLabelString)
+		ensure
+			apply_label_string_exists: Result /= Void and then not Result.is_destroyed
+		end;
+
+	cancel_label_string: MEL_STRING is
+			-- Label of `cancel_button'
+		require
+			exists: not is_destroyed
+		do
+			Result := get_xm_string (screen_object, XmNcancelLabelString)
+		ensure
+			cancel_label_string_exists: Result /= Void and then not Result.is_destroyed
+		end;
+
+	help_label_string: MEL_STRING is
+			-- Label of `help_button'
+		require
+			exists: not is_destroyed
+		do
+			Result := get_xm_string (screen_object, XmNhelpLabelString)
+		ensure
+			help_label_string_exists: Result /= Void and then not Result.is_destroyed
+		end;
+
+	ok_label_string: MEL_STRING is
+			-- Label of `ok_button'
+		require
+			exists: not is_destroyed
+		do
+			Result := get_xm_string (screen_object, XmNokLabelString)
+		ensure
+			ok_label_string_exists: Result /= Void and then not Result.is_destroyed
+		end;
+
+	is_work_area_above_selection: BOOLEAN is
+			-- Is `work_area' displayed above `text'?
+		require
+			exists: not is_destroyed
+		do
+			Result := get_xt_unsigned_char (screen_object, XmNchildPlacement) = XmPLACE_ABOVE_SELECTION
+		end;
+
+	 is_work_area_below_selection: BOOLEAN is
+			-- Is `work_area' displayed below `text'?
+		require
+			exists: not is_destroyed
+		do
+			Result := get_xt_unsigned_char (screen_object, XmNchildPlacement) = XmPLACE_BELOW_SELECTION
+		end;
+
+	is_work_area_on_top: BOOLEAN is
+			-- Is `work_area' displayed above `list'?
+		require
+			exists: not is_destroyed
+		do
+			Result := get_xt_unsigned_char (screen_object, XmNchildPlacement) = XmPLACE_TOP
+		end;
+
+	is_prompt_dialog: BOOLEAN is
+			-- Is the dialog type "prompt dialog"?
+		require
+			exists: not is_destroyed
+		do
+			Result := get_xt_unsigned_char (screen_object, XmNdialogType) = XmDIALOG_PROMPT
+		end;
+
+	is_selection_dialog: BOOLEAN is
+			-- Is the dialog type "selection dialog"?
+		require
+			exists: not is_destroyed
+		do
+			Result := get_xt_unsigned_char (screen_object, XmNdialogType) = XmDIALOG_SELECTION
+		end;
+
+	is_command_dialog: BOOLEAN is
+			-- Is the dialog type "command dialog"?
+		require
+			exists: not is_destroyed
+		do
+			Result := get_xt_unsigned_char (screen_object, XmNdialogType) = XmDIALOG_COMMAND
+		end;
+
+	is_file_selection_dialog: BOOLEAN is
+			-- Is the dialog type "file selection dialog"?
+		require
+			exists: not is_destroyed
+		do
+			Result := get_xt_unsigned_char (screen_object, XmNdialogType) = XmDIALOG_FILE_SELECTION
+		end;
+
+	list_item_count: INTEGER is
+			-- Number of items in `list_items'
+		require
+			exists: not is_destroyed
+		do
+			Result := get_xt_int (screen_object, XmNlistItemCount)
+		ensure
+			list_item_count_large_enough: Result >= 0
+		end;
+
+	list_items: MEL_STRING_TABLE is
+			-- Items in `list'
+		require
+			exists: not is_destroyed
+		do
+			!! Result.make_from_existing (get_xm_string_table (screen_object, XmNlistItems), list_item_count)
+		ensure
+			Result_not_void: Result /= Void
+		end;
+
+	list_label_string: MEL_STRING is
+			-- Label of `list'
+		require
+			exists: not is_destroyed
+		do
+			Result := get_xm_string (screen_object, XmNlistLabelString)
+		ensure
+			Result_not_void: Result /= Void and then Result.is_destroyed
+		end;
+
+	list_visible_item_count: INTEGER is
+			-- Number of visible items in `list'
+		require
+			exists: not is_destroyed
+		do
+			Result := get_xt_int (screen_object, XmNlistVisibleItemCount)
+		ensure
+			Result_large_enough: Result >= 0
+		end;
+
+	are_buttons_minimized: BOOLEAN is
+			-- Keep the buttons their preferred size?
+		require
+			exists: not is_destroyed
+		do
+			Result := get_xt_boolean (screen_object, XmNminimizeButtons)
+		end;
+
+	must_match: BOOLEAN is
+			-- Must the typed selection match an item in `list'?
+		require
+			exists: not is_destroyed
+		do
+			Result := get_xt_boolean (screen_object, XmNmustMatch)
+		end;
+
+	text_accelerators is
+			-- The translations to add to `text'.
+		require
+			exists: not is_destroyed
+		do
+		ensure
+		end;
+
+	text_columns: INTEGER is
+			-- Number of columns in `text'
+		require
+			exists: not is_destroyed
+		do
+			Result := get_xt_short (screen_object, XmNtextColumns)
+		ensure
+			text_columns_large_enough: Result >= 0
+		end;
+
+	text_string: MEL_STRING is
+			-- String in `text'
+		require
+			exists: not is_destroyed
+		do
+			Result := get_xm_string (screen_object, XmNtextString)
+		ensure
+			text_string_not_void: Result /= Void
+		end;
+
+feature -- Status setting
+
+	set_apply_label_string (a_compound_string: MEL_STRING) is
+			-- Set `apply_label_string' to `a_compound_string'.
+		require
+			exists: not is_destroyed;
+			valid_a_compound_string: a_compound_string /= Void and then not a_compound_string.is_destroyed
+		do
+			set_xm_string (screen_object, XmNApplyLabelString, a_compound_string)
+		ensure
+			apply_label_string_set: apply_label_string.is_equal (a_compound_string)
+		end;
+
+	set_cancel_label_string (a_compound_string: MEL_STRING) is
+			-- Set `cancel_label_string' to `a_compound_string'.
+		require
+			exists: not is_destroyed;
+			valid_a_compound_string: a_compound_string /= Void and then not a_compound_string.is_destroyed
+		do
+			set_xm_string (screen_object, XmNcancelLabelString, a_compound_string)
+		ensure
+			cancel_label_string_set: cancel_label_string.is_equal (a_compound_string)
+		end;
+
+	set_help_label_string (a_compound_string: MEL_STRING) is
+			-- Set `help_label_string' to `a_compound_string'.
+		require
+			exists: not is_destroyed;
+			valid_a_compound_string: a_compound_string /= Void and then not a_compound_string.is_destroyed
+		do
+			set_xm_string (screen_object, XmNhelpLabelString, a_compound_string)
+		ensure
+			help_label_string_set: help_label_string.is_equal (a_compound_string)
+		end;
+
+	set_ok_label_string (a_compound_string: MEL_STRING) is
+			-- Set `ok_label_string' to `a_compound_string'.
+		require
+			exists: not is_destroyed;
+			valid_a_compound_string: a_compound_string /= Void and then not a_compound_string.is_destroyed
+		do
+			set_xm_string (screen_object, XmNokLabelString, a_compound_string)
+		ensure
+			ok_label_string_set: ok_label_string.is_equal (a_compound_string)
+		end;
+
+	place_work_area_above_selection is
+			-- Set `is_work_area_above_selection'.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_unsigned_char (screen_object, XmNchildPlacement, XmPLACE_ABOVE_SELECTION)
+		ensure
+			work_area_is_placed_above_selection: is_work_area_above_selection
+		end;
+
+	 place_work_area_below_selection is
+			-- Set `is_work_area_below_selection'.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_unsigned_char (screen_object, XmNchildPlacement, XmPLACE_BELOW_SELECTION)
+		ensure
+			work_area_is_placed_below_selection: is_work_area_below_selection
+		end;
+
+	place_work_area_on_top is
+			-- Set `is_work_area_on_top'.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_unsigned_char (screen_object, XmNchildPlacement, XmPLACE_TOP)
+		ensure
+			work_area_is_placed_on_top: is_work_area_on_top
+		end;
+
+	set_prompt_dialog is
+			-- Set `is_prompt_dialog'.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_unsigned_char (screen_object, XmNdialogType, XmDIALOG_PROMPT)
+		ensure
+			dialog_prompt_set: is_prompt_dialog
+		end;
+
+	set_selection_dialog is
+			-- Set `is_selection_dialog'.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_unsigned_char (screen_object, XmNdialogType, XmDIALOG_SELECTION)
+		ensure
+			dialog_selection_set: is_selection_dialog
+		end;
+
+	set_command_dialog is
+			-- Set `is_command_dialog'.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_unsigned_char (screen_object, XmNdialogType, XmDIALOG_COMMAND)
+		ensure
+			dialog_command_set: is_command_dialog
+		end;
+
+	set_file_selection_dialog is
+			-- Set `is_file_selection_dialog'
+		require
+			exists: not is_destroyed
+		do
+			set_xt_unsigned_char (screen_object, XmNdialogType, XmDIALOG_FILE_SELECTION)
+		ensure
+			dialog_file_selection_set: is_file_selection_dialog
+		end;
+
+	set_list_item_count (a_count: INTEGER) is
+			-- Set `list_item_count' to `a_count'.
+		require
+			exists: not is_destroyed;
+			a_count_large_enough: a_count >= 0
+		do
+			set_xt_int (screen_object, XmNlistItemCount, a_count)
+		ensure
+			list_item_count_set: list_item_count = a_count
+		end;
+
+	set_list_items (a_list: MEL_STRING_TABLE) is
+			-- Set `list_items' to `a_list'.
+		require
+			exists: not is_destroyed;
+			a_list_exists: not a_list.is_destroyed
+		do
+			set_xm_string_table (screen_object, XmNlistItems, a_list.handle)
+		ensure
+			a_list_set: list_items.is_equal (a_list)
+		end;
+
+	set_list_label_string (a_compound_string: MEL_STRING) is
+			-- Set `list_label_string' to `a_compound_string'.
+		require
+			exists: not is_destroyed;
+			a_compound_string_exists: not a_compound_string.is_destroyed
+		do
+			set_xm_string (screen_object, XmNlistLabelString, a_compound_string)
+		ensure
+			list_label_string_set: list_label_string.is_equal (a_compound_string)
+		end;
+
+	set_list_visible_item_count (a_count: INTEGER) is
+			-- Set `list_visible_item_count' to `a_count'.
+		require
+			exists: not is_destroyed;
+			a_count_large_enough: a_count >= 0
+		do
+			set_xt_int (screen_object, XmNlistVisibleItemCount, a_count)
+		ensure
+			list_visible_item_count_set: list_visible_item_count = a_count
+		end;
+
+	set_buttons_minimized (b: BOOLEAN) is
+			-- Set `are_buttons_minimized' to `b'.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_boolean (screen_object, XmNminimizeButtons, b)
+		ensure
+			buttons_are_minimized: are_buttons_minimized = b
+		end;
+
+	set_must_match (b: BOOLEAN) is
+			-- Set `must_match' to `b'.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_boolean (screen_object, XmNmustMatch, b)
+		ensure
+			must_match_enabled: must_match = b
+		end;
+
+	set_text_accelerators is
+			-- Set `text_accelerators'.
+		require
+			exists: not is_destroyed
+		do
+		ensure
+		end;
+
+	set_text_columns (a_number: INTEGER) is
+			-- Set `text_columns' to `a_number'.
+		require
+			exists: not is_destroyed;
+			a_number_large_enough: a_number >= 0
+		do
+			set_xt_short (screen_object, XmNtextColumns, a_number)
+		ensure
+			text_columns_set: text_columns = a_number
+		end;
+
+	set_text_string (a_compound_string: MEL_STRING) is
+			-- Set `text_string' to `a_compound_string'.
+		require
+			exists: not is_destroyed;
+			valid_a_compound_string_exists: a_compound_string /= Void and then not a_compound_string.is_destroyed
+		do
+			set_xm_string (screen_object, XmNtextString, a_compound_string)
+		ensure
+			text_string_set: text_string.is_equal (a_compound_string)
+		end;
+
+feature -- Element change
+
+	add_apply_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
+			-- Add the callback `a_callback' with argument `an_argument'
+			-- to the callbacks called when the users selects the applyl button.
+		require
+			a_callback_not_void: a_callback /= Void
+		do
+			add_callback (XmNapplyCallback, a_callback, an_argument)
+		end;
+
+	add_cancel_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
+			-- Add the callback `a_callback' with argument `an_argument'
+			-- to the callbacks called when the users selects the cancel button.
+		require
+			a_callback_not_void: a_callback /= Void
+		do
+			add_callback (XmNcancelCallback, a_callback, an_argument)
+		end;
+
+	add_ok_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
+			-- Add the callback `a_callback' with argument `an_argument'
+			-- to the callbacks called when the users selects the OK button.
+		require
+			a_callback_not_void: a_callback /= Void
+		do
+			add_callback (XmNokCallback, a_callback, an_argument)
+		end;
+
+	add_no_match_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
+			-- Add the callback `a_callback' with argument `an_argument'
+			-- to the callbacks called when the users types a selection in the
+			-- text area that does not match an item in the list.
+		require
+			a_callback_not_void: a_callback /= Void
+		do
+			add_callback (XmNnoMatchCallback, a_callback, an_argument)
+		end;
+
+feature -- Removal
+
+	remove_apply_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
+			-- Remove the callback `a_callback' with argument `an_argument'
+			-- from the callbacks called when the users selects the apply button.
+		require
+			a_callback_not_void: a_callback /= Void
+		do
+			remove_callback (XmNapplyCallback, a_callback, an_argument)
+		end;
+
+	remove_cancel_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
+			-- Remove the callback `a_callback' with argument `an_argument'
+			-- from the callbacks called when the users selects the cancel button.
+		require
+			a_callback_not_void: a_callback /= Void
+		do
+			remove_callback (XmNcancelCallback, a_callback, an_argument)
+		end;
+
+	remove_ok_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
+			-- Remove the callback `a_callback' with argument `an_argument'
+			-- from the callbacks called when the users selects the OK button.
+		require
+			a_callback_not_void: a_callback /= Void
+		do
+			remove_callback (XmNokCallback, a_callback, an_argument)
+		end;
+
+	remove_no_match_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
+			-- Remove the callback `a_callback' with argument `an_argument'
+			-- from the callbacks called when the users types a selection in the
+			-- text area that does not match an item in the list.
+		require
+			a_callback_not_void: a_callback /= Void
+		do
+			remove_callback (XmNnoMatchCallback, a_callback, an_argument)
+		end;
+
+feature {MEL_DISPATCHER} -- Basic operations
+
+	create_callback_struct (a_callback_struct_ptr, 
+				resource_name: POINTER): MEL_ANY_CALLBACK_STRUCT is
+			-- Create the callback structure specific to this widget
+			-- according to `a_callback_struct_ptr'.
+		do
+			if resource_name = XmNokCallback or else
+				resource_name = XmNcancelCallback or else
+				resource_name = XmNnoMatchCallback or else
+				resource_name = XmNapplyCallback
+			then
+				!MEL_SELECTION_BOX_CALLBACK_STRUCT! Result.make (Current, a_callback_struct_ptr)
+			else
+				!! Result.make (Current, a_callback_struct_ptr)
+			end
+		end;
+
+feature {NONE} -- External Features
+
+	xm_create_selection_box (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER is
+		external
+			"C [macro <Xm/SelectioB.h>] (Widget, String, ArgList, Cardinal): EIF_POINTER"
+		alias
+			"XmCreateSelectionBox"
+		end;
+
+	xm_selection_box_get_child (scr_obj: POINTER; value: INTEGER): POINTER is
+		external
+			"C [macro <Xm/SelectioB.h>] (Widget, unsigned char): EIF_POINTER"
+		alias
+			"XmSelectionBoxGetChild"
+		end;
+
+end -- class MEL_SELECTION_BOX
+
+--|-----------------------------------------------------------------------
+--| Motif Eiffel Library: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1996, Interactive Software Engineering, Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Information e-mail <info@eiffel.com>
+--| Customer support e-mail <support@eiffel.com>
+--|-----------------------------------------------------------------------

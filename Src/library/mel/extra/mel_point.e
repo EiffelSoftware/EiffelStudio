@@ -1,0 +1,63 @@
+indexing
+
+	description: 
+		"Two dimensional point.";
+	status: "See notice at end of class.";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class
+	MEL_POINT
+
+creation
+	make
+
+feature {NONE} -- Initialization
+
+	make (a_x, a_y: INTEGER) is
+			-- Create a two dimensions point.
+		do
+			x := a_x;
+			y := a_y
+		ensure
+			x_set: x = a_x;
+			y_set: y = a_y
+		end;
+
+feature -- Access
+
+	x: INTEGER;
+
+	y: INTEGER
+
+feature -- Element change
+
+	set_x (a_x: INTEGER) is
+			-- Change the x coordinate of the point.
+		do
+			x := a_x
+		ensure
+			x_set: x = a_x
+		end;
+
+	set_y (a_y: INTEGER) is
+			-- Change the y coordinate of the point.
+		do
+			y := a_y
+		ensure
+			y_set: y = a_y
+		end;
+
+end -- class MEL_POINT
+
+--|-----------------------------------------------------------------------
+--| Motif Eiffel Library: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1996, Interactive Software Engineering, Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Information e-mail <info@eiffel.com>
+--| Customer support e-mail <support@eiffel.com>
+--|-----------------------------------------------------------------------

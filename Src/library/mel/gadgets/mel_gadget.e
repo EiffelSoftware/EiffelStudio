@@ -1,0 +1,410 @@
+indexing
+
+	description: 
+		"Abstract notion of a Motif Gadget.";
+	status: "See notice at end of class.";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class
+	MEL_GADGET
+
+inherit
+
+	MEL_GADGET_RESOURCES
+		export
+			{NONE} all
+		end;
+
+	MEL_RECT_OBJ
+		redefine
+			clean_up_callbacks
+		end
+
+feature -- Status Report
+
+	bottom_shadow_color: MEL_PIXEL is
+			-- Color used in drawing the border shadow's bottom
+			-- and right sides
+		require
+			exists: not is_destroyed
+		do
+			Result := get_xt_pixel (screen_object, XmNbottomShadowColor)
+		ensure
+			bottom_shadow_color_created: Result /= Void and then Result.is_valid
+		end;
+
+	top_shadow_color: MEL_PIXEL is
+			-- Color used in drawing the border shadow's top
+			-- and left sides
+		require
+			exists: not is_destroyed
+		do
+			Result := get_xt_pixel (screen_object, XmNtopShadowColor)
+		ensure
+			top_shadow_color_created: Result /= Void and then Result.is_valid
+		end;
+
+	highlight_color: MEL_PIXEL is
+			-- Color used in drawing the highlighting rectangle
+		require
+			exists: not is_destroyed
+		do
+			Result := get_xt_pixel (screen_object, XmNhighlightColor)
+		ensure
+			highlight_color_created: Result /= Void and then Result.is_valid
+		end;
+
+	is_highlighted_on_entry: BOOLEAN is
+			-- Will the rectangle around the widget's be highlighted
+			-- when the cursor moves over it?
+		require
+			exists: not is_destroyed
+		do
+			Result := get_xt_boolean (screen_object, XmNhighlightOnEnter)
+		end;
+
+	highlight_thickness: INTEGER is
+			-- Thickness of the highlighting rectangle.
+		require
+			exists: not is_destroyed
+		do
+			Result := get_xt_dimension (screen_object, XmNhighlightThickness)
+		ensure
+			highlight_thickness_large_enough: Result >= 0
+		end;
+
+	shadow_thickness: INTEGER is
+			-- Thickness of the shadow border
+		require
+			exists: not is_destroyed
+		do
+			Result := get_xt_dimension (screen_object, XmNshadowThickness)
+		ensure
+			shadow_thickness_large_enough: Result >= 0
+		end;
+
+	is_traversable: BOOLEAN is
+			-- Is it possible to traverse the widget?
+		require
+			exists: not is_destroyed
+		do
+			Result := get_xt_boolean (screen_object, XmNtraversalOn)
+		end;
+
+	is_unit_pixel: BOOLEAN is
+			-- Is the measurement unit of the widget in pixel?
+		require
+			exists: not is_destroyed
+		do
+			Result := get_xt_unsigned_char (screen_object, XmNunitType) = XmPIXELS
+		end;
+
+	is_unit_100th_millimeter: BOOLEAN is
+			-- Is the measurement unit of the widget the 100th of millimeter ?
+		require
+			exists: not is_destroyed
+		do
+			Result := get_xt_unsigned_char (screen_object, XmNunitType) = Xm100TH_MILLIMETERS
+		end;
+
+	 is_unit_1000th_inch: BOOLEAN is
+			-- Is the measurement unit of the widget the 1000th of inch ?
+		require
+			exists: not is_destroyed
+		do
+			Result := get_xt_unsigned_char (screen_object, XmNunitType) = Xm1000TH_INCHES
+		end;
+
+	is_unit_100th_point: BOOLEAN is
+			-- Is the measurement unit of the widget the 100th of point ?
+		require
+			exists: not is_destroyed
+		do
+			Result := get_xt_unsigned_char (screen_object, XmNunitType) = Xm100TH_POINTS
+		end;
+
+	is_unit_100th_font_unit: BOOLEAN is
+			-- Is the measurement unit of the widget the 100th of font unit ?
+		require
+			exists: not is_destroyed
+		do
+			Result := get_xt_unsigned_char (screen_object, XmNunitType) = Xm100TH_FONT_UNITS
+		end;
+
+	is_navigation_none: BOOLEAN is
+			-- Is traversal excluding keyboard navigation?
+		require
+			exists: not is_destroyed
+		do
+			Result := navigation_type = XmNONE
+		end;
+
+	is_navigation_tab_group: BOOLEAN is
+			-- Is traversal including keyboard navigation?
+		require
+			exists: not is_destroyed
+		do
+			Result := navigation_type = XmTAB_GROUP
+		end;
+
+	is_navigation_sticky_tab_group: BOOLEAN is
+			-- Is traversal including keyboard navigation
+			-- even if `XmAddTabGroup()' was called?
+		require
+			exists: not is_destroyed
+		do
+			Result := navigation_type = XmSTICKY_TAB_GROUP
+		end;
+
+	is_navigation_exclusive_tab_gourp: BOOLEAN is
+			-- Is traversal defined by the application?
+		require
+			exists: not is_destroyed
+		do
+			Result := navigation_type = XmEXCLUSIVE_TAB_GROUP
+		end;
+
+feature  -- Status setting
+
+	set_bottom_shadow_color (a_color: MEL_PIXEL) is
+			-- Set `bottom_shadow_color' to a `a_color'.
+		require
+			exists: not is_destroyed;
+			a_color_is_valid: a_color /= Void and then a_color.is_valid
+		do
+			set_xt_pixel (screen_object, XmNbottomShadowColor, a_color)
+		ensure
+			bottom_shadow_color_set: bottom_shadow_color.is_equal (a_color)
+		end;
+
+	set_top_shadow_color (a_color: MEL_PIXEL) is
+			-- Set `top_shadow_color' to a `a_color'.
+		require
+			exists: not is_destroyed;
+			a_color_is_valid: a_color /= Void and then a_color.is_valid
+		do
+			set_xt_pixel (screen_object, XmNtopShadowColor, a_color)
+		ensure
+			top_shadow_color_set: top_shadow_color.is_equal (a_color)
+		end;
+
+	set_highlight_color (a_color: MEL_PIXEL) is
+			-- Set `highlight_color' to a `a_color'.
+		require
+			exists: not is_destroyed;
+			a_color_is_valid: a_color /= Void and then a_color.is_valid
+		do
+			set_xt_pixel (screen_object, XmNhighlightColor, a_color)
+		ensure
+			highlight_color_set: highlight_color.is_equal (a_color)
+		end;
+
+	set_highlight_on_entry is
+			-- Highlight widget on entry.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_boolean (screen_object, XmNhighlightOnEnter, True)
+		ensure
+			is_highlighted_on_entry: is_highlighted_on_entry 
+		end;
+
+	set_no_highlight_on_entry is
+			-- Do not highlight widget on entry.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_boolean (screen_object, XmNhighlightOnEnter, False)
+		ensure
+			is_not_highlighted_on_enter: not is_highlighted_on_entry
+		end;
+
+	set_highlight_thickness (a_thickness: INTEGER) is
+			-- Set `highlight_thickness' to `a_thickness'.
+		require
+			exists: not is_destroyed;
+			a_thickness_large_enough: a_thickness >= 0
+		do
+			set_xt_dimension (screen_object, XmNhighlightThickness, a_thickness)
+		ensure
+			highlight_thickness_set: highlight_thickness = a_thickness
+		end;
+
+	set_shadow_thickness (a_thickness: INTEGER) is
+			-- Set `shadow_thickness' to `a_thickness'.
+		require
+			exists: not is_destroyed;
+			a_thickness_large_enough: a_thickness >= 0
+		do
+			set_xt_dimension (screen_object, XmNshadowThickness, a_thickness)
+		ensure
+			shadow_thickness_set: shadow_thickness = a_thickness
+		end;
+
+	enable_traversal is
+			-- Enable the traversal of this widget.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_boolean (screen_object, XmNtraversalOn, True)
+		ensure
+			traversal_enabled: is_traversable
+		end;
+
+	disable_traversal is
+			-- Disable the traversal of this widget.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_boolean (screen_object, XmNtraversalOn, False)
+		ensure
+			traversal_disbled: not is_traversable
+		end;
+
+	set_unit_pixel is
+			-- Set the measurement unit of the widget to pixel.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_unsigned_char (screen_object, XmNunitType, XmPIXELS)
+		ensure
+			unit_pixel_set: is_unit_pixel
+		end;
+
+	set_unit_100th_millimeter is
+			-- Set the measurement unit of the widget to 100th of millimeter.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_unsigned_char (screen_object, XmNunitType, Xm100TH_MILLIMETERS)
+		ensure
+			unit_100th_millimeter_set: is_unit_100th_millimeter
+		end;
+
+	set_unit_1000th_inch is
+			-- Set the measurement unit of the widget to the 1000th of inch.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_unsigned_char (screen_object, XmNunitType, Xm1000TH_INCHES)
+		ensure
+			unit_1000th_inch_set: is_unit_1000th_inch
+		end;
+
+	set_unit_100th_point is
+			-- Set the measurement unit of the widget to the 100th of point.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_unsigned_char (screen_object, XmNunitType, Xm100TH_POINTS)
+		ensure
+			unit_100th_point_set: is_unit_100th_point
+		end;
+
+	set_unit_100th_font_unit is
+			-- Set the measurement unit of the widget to the 100th of font unit.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_unsigned_char (screen_object, XmNunitType, Xm100TH_FONT_UNITS)
+		ensure
+			unit_100th_font_unit_set: is_unit_100th_font_unit
+		end;
+
+	set_navigation_to_none is
+			-- Set the navigation type to `XmNONE'.
+		do
+			set_xt_unsigned_char (screen_object, XmNnavigationType, XmNONE)
+		ensure
+			is_navigation_none: is_navigation_none
+		end;
+
+	set_navigation_to_tab_group is
+			-- Set the navigation type to `XmTAB_GROUP'.
+		do
+			set_xt_unsigned_char (screen_object, XmNnavigationType, XmTAB_GROUP)
+		ensure
+			is_navigation_tab_group: is_navigation_tab_group
+		end;
+
+	set_navigation_to_sticky_tab_group is
+			-- Set the navigation type to `XmSTICKY_TAB_GROUP'.
+		do
+			set_xt_unsigned_char (screen_object, XmNnavigationType, XmSTICKY_TAB_GROUP)
+		ensure
+			is_navigation_sticky_tab_group: is_navigation_sticky_tab_group
+		end;
+
+	set_navigation_to_exclusive_tab_group is
+			-- Set the navigation type to `XmEXCLUSIVE_TAB_GROUP'.
+		do
+			set_xt_unsigned_char (screen_object, XmNnavigationType, XmEXCLUSIVE_TAB_GROUP)
+		ensure
+			is_navigation_exclusive_tab_gourp: is_navigation_exclusive_tab_gourp
+		end;
+
+feature -- Element change
+
+	add_help_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
+			-- Add the callback `a_callback' with the argument `an_argument'
+			-- to the callbacks called when help is requested.
+		require
+			a_callback_not_void: a_callback /= Void;
+		do
+			add_callback (XmNhelpCallback, a_callback, an_argument);
+		end;
+
+feature -- Removal
+
+	remove_help_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
+			-- Remove the callback `a_callback' with the argument `an_argument'
+			-- to the callbacks called when help is requested.
+		require
+			a_callback_not_void: a_callback /= Void;
+		do
+			remove_callback (XmNhelpCallback, a_callback, an_argument);
+		end;
+
+feature -- Miscellaneous
+
+	update_colors_from (a_color: MEL_PIXEL) is
+			-- Update the colors (top_shadow, bottom_shadow,
+			-- select_color ...) if necessary using `a_color'.
+		require
+			exists: not is_destroyed;
+			non_void_a_color: a_color /= Void
+		do
+			xm_change_color (screen_object, a_color.id);
+		end;
+
+feature {NONE} -- Implementation
+
+	navigation_type: INTEGER is
+			-- Determines the way in widget are to be
+			-- traversed during keyboard navigation
+		require
+			exists: not is_destroyed
+		do
+			Result := get_xt_unsigned_char (screen_object, XmNnavigationType)
+		end;
+
+	clean_up_callbacks is
+			-- Remove callback structures associated with Current.
+		do
+			Mel_dispatcher.clean_up_gadget (Current)
+		end;
+
+end -- class MEL_GADGET
+
+--|-----------------------------------------------------------------------
+--| Motif Eiffel Library: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1996, Interactive Software Engineering, Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Information e-mail <info@eiffel.com>
+--| Customer support e-mail <support@eiffel.com>
+--|-----------------------------------------------------------------------

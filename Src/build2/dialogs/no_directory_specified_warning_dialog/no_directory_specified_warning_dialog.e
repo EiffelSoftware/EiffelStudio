@@ -93,17 +93,17 @@ feature {NONE} -- Implementation
 				ok_button.disable_sensitive
 			end
 		end
-
---	current_text := name_field.text.as_lower
---			if valid_class_name (current_text) or current_text.is_empty  then
---				object.set_edited_name (current_text)
---				if object_handler.name_in_use (current_text, object) or 
---					(reserved_words.has (current_text)) or
---					(build_reserved_words.has (name_field.text.as_lower)) then
---					name_field.set_foreground_color (red)
---				else
---					name_field.set_foreground_color (black)
---				end
+		
+	return_pressed is
+			-- Called by `return_actions' of `directory_name_field'.
+		do
+				-- Check the sensitivity of `ok_button' as it
+				-- is automatically disabled when entered text is not
+				-- valid.
+			if ok_button.is_sensitive then
+				ok_button_pressed
+			end
+		end
 
 	ok_button_pressed is
 			-- Called by `select_actions' of `ok_button'.
@@ -119,8 +119,6 @@ feature {NONE} -- Implementation
 			hide
 			cancelled := True
 		end
-
-	
 
 end -- class NO_DIRECTORY_SPECIFIED_WARNING_DIALOG
 

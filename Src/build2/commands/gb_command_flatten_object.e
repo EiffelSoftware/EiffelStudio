@@ -390,7 +390,7 @@ feature {NONE} -- Contract Support
 	all_referers_after: HASH_TABLE [HASH_TABLE [INTEGER, INTEGER], INTEGER]
 	
 	check_execute_while_debugging is
-			-- Perform checking for debuggin where calling `execute' and `undo' must leave the system in the same state.
+			-- Perform checking for debugging where calling `execute' and `undo' must leave the system in the same state.
 		local
 			bool: BOOLEAN
 		do

@@ -33,6 +33,8 @@ inherit
 	GB_CONSTANTS
 		export
 			{NONE} all
+		undefine
+			default_create, copy
 		end
 	
 	GB_SHARED_SYSTEM_STATUS

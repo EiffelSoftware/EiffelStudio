@@ -87,7 +87,10 @@ feature
 	destroy is
 			-- Destroy Current.
 		do
-			implementation.destroy
+			implementation.destroy;
+			implementation := Void;
+		ensure
+			destroyed: implementation = Void
 		end
 
 end

@@ -152,7 +152,13 @@ save_path
 # What should we do??? Compile for all platforms???
 cd $TMP_PATH
 }
- 
+#On MacOS X you need to run `ranlib' each time you move a library.
+mac_ranlib ()
+{
+if [ ! -d $1 ]; then
+if [ "$ISE_PLATFORM" = "macosx" ]; then ranlib $1; fi
+fi
+}
 # Eiffel Compilation
 # Remove a project from the current directory, if any
 clean_project ()

@@ -6,6 +6,7 @@ remtrace Compile the C libraries C code
 remtrace expat
 cd C_library/expat
 make
+mac_ranlib $INITIAL_DIR/C_library/expat/xmlparse/libexpat.a
 remtrace libpng
 cd $INITIAL_DIR/C_library/libpng
 if echo "$ISE_PLATFORM" | grep "linux" >/dev/null 2>&1; then
@@ -20,6 +21,9 @@ elif [ "$ISE_PLATFORM" = "hpux-11" ]; then
 elif [ "$ISE_PLATFORM" = "alpha" ]; then
 	cp scripts/makefile.dec .
 	make -f makefile.dec
+elif [ "$ISE_PLATFORM" = "macosx" ]; then
+	cp scripts/makefile.gcc .
+	make -f makefile.gcc
 else
 	rep=$ISE_PLATFORM
 	if [ ! -f "scripts/makefile.$rep" ]; then
@@ -52,6 +56,7 @@ fi
 remtrace net
 cd $INITIAL_DIR/library/net/Clib
 default_make
+mac_ranlib $INITIAL_DIR/library/net/spec/$ISE_PLATFORM/lib/libnet.a
 remtrace vision2
 cd $INITIAL_DIR/library/vision2/Clib
 default_make

@@ -63,6 +63,7 @@ inherit
 			interface,
 			initialize,
 			on_set_focus,
+			on_kill_focus,
 			set_foreground_color,
 			tooltip_window
 		end
@@ -111,9 +112,7 @@ inherit
 			on_right_button_double_click,
 			on_mouse_move,
 			on_mouse_wheel,
-			on_set_focus,
 			on_desactivate,
-			on_kill_focus,
 			on_key_down,
 			on_key_up,
 			on_char,
@@ -134,7 +133,9 @@ inherit
 			on_cben_insert_item,
 			on_erase_background,
 			default_style,
-			has_focus
+			has_focus,
+			on_set_focus,
+			on_kill_focus
 		end
 
 	WEL_EM_CONSTANTS
@@ -271,12 +272,9 @@ feature -- Status report
 	has_focus: BOOLEAN is
 			-- Does `Current' have focus?
 		do
-			if text_field /= Void then
+			Result := combo.has_focus
+			if not Result and then is_editable then
 				Result := text_field.has_focus
-			else
-					--| If `Current' is non editable, then there will be no
-					--| text field. This is the correct result in this case.
-				Result := combo.has_focus
 			end
 		end
 
@@ -521,6 +519,14 @@ feature {EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP}
 			focus_on_widget.put (Current)
 		end
 
+	on_kill_focus is
+			-- Called when a `Wm_killfocus' message is received.
+		do
+			if not has_focus then
+				Precursor {EV_TEXT_COMPONENT_IMP}
+			end
+		end
+		
 feature {NONE} -- Implementation
 
 	internal_propagate_pointer_press (keys, x_pos, y_pos, button: INTEGER) is
@@ -617,6 +623,9 @@ feature {NONE} -- Implementation
 				if s_item /= Void then
 					s_item.enable_select
 				end
+				if foreground_color_imp /= Void then
+					set_foreground_color (foreground_color)
+				end
 			end
 		end
 
@@ -639,6 +648,9 @@ feature {NONE} -- Implementation
 				end
 				if s_item /= Void then
 					s_item.enable_select
+				end
+				if foreground_color_imp /= Void then
+					set_foreground_color (foreground_color)
 				end
 			end
 		end
@@ -716,7 +728,9 @@ feature {NONE} -- Implementation
 		do
 			Precursor {EV_TEXT_COMPONENT_IMP} (color)
 			if is_displayed then
-				text_field.invalidate
+				if is_editable then
+					text_field.invalidate
+				end
 				combo.invalidate
 			end
 		end

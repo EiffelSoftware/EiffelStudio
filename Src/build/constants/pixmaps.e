@@ -306,6 +306,11 @@ feature -- General Pixmaps
 			Result := symbol_file_content ("primitvs")
 		end;
 
+	Presentation_pixmap: PIXMAP is
+		once
+			Result := symbol_file_content ("present")
+		end
+
 	Quit_pixmap: PIXMAP is
 		once
 			Result := symbol_file_content ("quit")

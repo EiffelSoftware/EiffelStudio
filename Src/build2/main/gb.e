@@ -65,11 +65,6 @@ inherit
 			copy, default_create
 		end
 		
-	MEMORY
-		undefine
-			copy, default_create
-		end
-
 create
 	execute
 
@@ -86,7 +81,6 @@ feature {NONE} -- Initialization
 			file_handler: GB_SIMPLE_XML_FILE_HANDLER
 			shared_preferences: GB_SHARED_PREFERENCES
 		do
-			collection_off
 			create shared_preferences
 			shared_preferences.preferences.initialize_preferences
 			if command_line.argument_array.count = 1 then

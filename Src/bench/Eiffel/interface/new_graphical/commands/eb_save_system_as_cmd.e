@@ -10,7 +10,7 @@ inherit
 	SHARED_EIFFEL_PROJECT
 	EB_SAVE_FILE_AS_CMD
 		redefine
-			set_tool_new_name
+			tool, set_tool_new_name
 		end
 
 creation
@@ -27,7 +27,12 @@ feature -- Updating
 			show_text ?= tool.last_format
 			if show_text /= Void then
 				Eiffel_ace.set_file_name (new_name)
-			end;
+			end
 		end
+
+feature -- Implementation
+
+	tool: EB_SYSTEM_TOOL
+		-- the system tool
 
 end -- class EB_SAVE_SYSTEM_AS_CMD

@@ -27,8 +27,7 @@ inherit
 		export
 			{NONE} all
 		redefine
-			set_foreground_color,
-			update_foreground_color, action_target, set_background_color,
+			action_target, set_background_color,
 			update_background_color
 		end;
 
@@ -37,7 +36,7 @@ inherit
 			{NONE} all
 		redefine
 			set_size, set_width, set_height, action_target,
-			set_foreground_color, update_foreground_color, set_background_color,
+			set_background_color,
 			update_background_color, width, height,
 			clean_up
 		select
@@ -468,7 +467,6 @@ feature
 		local
 			pixmap_implementation: PIXMAP_X;
 			color_implementation: COLOR_X;
-			ext_name: ANY
 		do
 			if bg_pixmap /= Void then
 				pixmap_implementation ?= bg_pixmap.implementation;
@@ -482,33 +480,13 @@ feature
 			bg_color := a_color;
 			color_implementation ?= background_color.implementation;
 			color_implementation.put_object (Current);
-			ext_name := Mbackground.to_c;
-			c_set_color (screen_object, 
-						color_implementation.pixel (screen), $ext_name);
-			c_set_color (slide_widget, 
-						color_implementation.pixel (screen), $ext_name);
-		end;
-
-	set_foreground_color (a_color: COLOR) is
-			-- Set `foreground_color' to `a_color'.
-		require else
-			a_color_exists: not (a_color = Void)
-		
-		local
-			color_implementation: COLOR_X;
-			ext_name: ANY
-		do
-			if not (foreground_color = Void) then
-				color_implementation ?= foreground_color.implementation;
-				color_implementation.remove_object (Current)
-			end;
-			color_implementation ?= a_color.implementation;
-			color_implementation.put_object (Current);
-			ext_name := Mforeground_color.to_c;
-			c_set_color (slide_widget, color_implementation.pixel (screen), $ext_name);
-			c_set_color (screen_object, color_implementation.pixel (screen), $ext_name);
-		ensure then
-			foreground_color = a_color
+			xm_change_bg_color (screen_object, 
+						color_implementation.pixel (screen));
+			xm_change_bg_color (slide_widget, 
+						color_implementation.pixel (screen));
+			if fg_color /= Void then
+				update_foreground_color
+			end
 		end;
 
 feature {COLOR_X}
@@ -516,44 +494,25 @@ feature {COLOR_X}
 	update_background_color is
 			-- Update the X color after a change inside the Eiffel color.
 		local
-			ext_name: ANY;
 			color_implementation: COLOR_X;
 		do
-			ext_name := Mbackground.to_c;
 			color_implementation ?= background_color.implementation;
-			c_set_color (screen_object, color_implementation.pixel (screen), $ext_name);
-			c_set_color (slide_widget, color_implementation.pixel (screen), $ext_name);
+			xm_change_bg_color (screen_object, 
+						color_implementation.pixel (screen));
+			xm_change_bg_color (slide_widget, 
+						color_implementation.pixel (screen));
 		end;
 
-	update_foreground_color is
-			-- Update the X color after a change inside the Eiffel color.
-		local
-			ext_name: ANY;
-			color_implementation: COLOR_X
-		do
-			ext_name := Mforeground_color.to_c;
-			color_implementation ?= foreground_color.implementation;
-			c_set_color (screen_object, color_implementation.pixel (screen), $ext_name);
-			c_set_color (slide_widget, color_implementation.pixel (screen), $ext_name);
-		end
-
-feature {NONE} --features for manipulating scale children
-
+feature {NONE} -- Features for manipulating scale children
 
 	slide_widget: POINTER is
-		local
-			cn: INTEGER;
 		do
-			cn := 1;
-			Result := get_ith_child (cn);
+			Result := get_ith_child (1);
 		end;
 
 	text_widget: POINTER is
-		local
-			cn: INTEGER;
 		do
-			cn := 0;
-			Result := get_ith_child (cn);
+			Result := get_ith_child (0);
 		end;
 
 	text_height: INTEGER is
@@ -603,44 +562,17 @@ feature {NONE} --features for manipulating scale children
 			set_dimension (screen_object, new_width, $ext_name_Mw);
 		end;
 
-
 feature {NONE}
 
-	children_count: INTEGER is
-			-- Count of managed children
-		local
-			ext_name_child: ANY
-		do
-			ext_name_child := MnumChildren.to_c;
-			Result := get_cardinal (screen_object, $ext_name_child)
-		end;
-
-	child_list: POINTER;
-	MnumChildren: STRING is "numChildren";
-	Mchildren: STRING is "children";
-
-	set_child_list is
+	get_ith_child (pos: INTEGER): POINTER is
 		local
 			ext_name: ANY;
 		do
-			ext_name := Mchildren.to_c;
-			child_list := get_widget_children (screen_object, $ext_name);
-		ensure
-			child_list_not_null: child_list /= null_pointer;
+			ext_name := ("children").to_c;
+			Result := get_i_widget_child (
+					get_widget_children (screen_object, $ext_name), 
+					pos);
 		end;
-
-	get_ith_child (pos: INTEGER): POINTER is
-		do
-			if child_list = null_pointer then
-				set_child_list;
-			end;
-			Result := get_i_widget_child (child_list, pos);
-
-		end;
-
-feature {NONE}
-	
-	null_pointer: POINTER;
 
 feature {NONE} -- External features
 

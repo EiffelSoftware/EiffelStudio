@@ -26,6 +26,6 @@ feature
 			!!Result.make ((3 * csize) // 2);
 		end;
 
-	Size_limit: INTEGER is 100000;
+	Size_limit: INTEGER is 2;
 
 end

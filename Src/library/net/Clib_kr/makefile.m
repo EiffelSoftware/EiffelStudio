@@ -1,6 +1,6 @@
 AR = lib 
 CC = cl
-CFLAGS = -Ogityb1 -I$(EIFFEL3)\bench\spec\$(PLATFORM)\include
+CFLAGS = -Ogityb1 -I$(EIFFEL4)\bench\spec\$(PLATFORM)\include
 LN = copy
 MAKE = make
 RANLIB = echo

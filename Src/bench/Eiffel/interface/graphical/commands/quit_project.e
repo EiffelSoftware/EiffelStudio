@@ -15,7 +15,12 @@ inherit
 		redefine
 			licence_checked
 		end;
-	SHARED_DEBUG
+	SHARED_DEBUG;
+	WARNER_CALLBACKS
+		rename
+			execute_warner_help as exit_anyway,
+			execute_warner_ok as do_not_exit
+		end
 
 creation
 
@@ -27,6 +32,25 @@ feature -- Initialization
 			-- Initialize the command.
 		do
 			init (c, a_text_window)
+		end;
+
+feature -- Callbacks
+
+	exit_anyway is
+		do
+			set_global_cursor (watch_cursor);
+			project_tool.set_changed (false);
+			restore_cursors;
+			if Application.is_running then
+				Application.kill;
+			end;
+			discard_licence;
+			exit
+		end;
+
+	do_not_exit (argument: ANY) is
+		do
+			do_exit := false
 		end;
 
 feature -- Licence managment
@@ -49,20 +73,11 @@ feature {NONE} -- Implementation
 		do
 			if project_tool.initialized then
 				-- Project_file is not void
-				if last_warner /= Void and argument = last_warner then
-					do_exit := false
-				elseif 
+				if 
 					do_exit or else
 					(last_confirmer /= Void and argument = last_confirmer)
 				then
-					set_global_cursor (watch_cursor);
-					project_tool.set_changed (false);
-					restore_cursors;
-					if Application.is_running then
-						Application.kill;
-					end;
-					discard_licence;
-					exit
+					exit_anyway
 				elseif
 					(window_manager.class_win_mgr.changed or
 					system_tool.text_window.changed)

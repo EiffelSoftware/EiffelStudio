@@ -16,6 +16,10 @@ inherit
 			execute
 		end;
 	SHARED_BENCH_RESOURCES;
+	WARNER_CALLBACKS
+		rename
+			execute_warner_ok as loose_changes
+		end
 
 feature -- Properties
 
@@ -27,12 +31,37 @@ feature -- Properties
 			-- really necessary (i.e. the format and the stone
 			-- haven't changed since last call)?
 
+feature -- Callbacks
+
+	execute_warner_help is
+		do
+		end;
+
+	loose_changes (argument: ANY) is
+			-- If it comes here this means ok has
+			-- been pressed in the warner window
+			-- for file modification (only showtext
+			-- command can modify text)
+		local
+			old_do_format: BOOLEAN
+		do
+			set_global_cursor (watch_cursor);
+			text_window.set_changed (false);
+				-- Because the text in the window has been changed,
+				-- we have to force the new format in order to update
+				-- the window as it was before the modifications.
+			old_do_format := do_format;
+			do_format := true;
+			execute_licenced (formatted);
+			do_format := old_do_format;
+			text_window.history.extend (text_window.root_stone);
+			restore_cursors
+		end;
+
 feature -- Execution
 
 	execute (argument: ANY) is
 			-- Execute current command but don't change the cursor into watch shape.
-		local
-			old_do_format: BOOLEAN
 		do
 			if 
 				(argument /= get_in) and
@@ -47,22 +76,6 @@ feature -- Execution
 				text_window.tool.tell_type (command_name)
 			elseif argument = get_out then
 				text_window.tool.clean_type
-			elseif last_warner /= Void and argument = last_warner then
-					--| If it comes here this means ok has
-					--| been pressed in the warner window
-					--| for file modification (only showtext
-					--| command can modify text)
-				set_global_cursor (watch_cursor);
-				text_window.set_changed (false);
-					-- Because the text in the window has been changed,
-					-- we have to force the new format in order to update
-					-- the window as it was before the modifications.
-				old_do_format := do_format;
-				do_format := true;
-				execute_licenced (formatted);
-				do_format := old_do_format;
-				text_window.history.extend (text_window.root_stone);
-				restore_cursors
 			else
 				if argument = text_window then
 					formatted ?= text_window.root_stone

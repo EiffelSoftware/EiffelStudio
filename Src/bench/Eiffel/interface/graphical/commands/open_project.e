@@ -11,7 +11,12 @@ inherit
 
 	SHARED_EIFFEL_PROJECT;
 	PROJECT_CONTEXT;
-	ICONED_COMMAND
+	ICONED_COMMAND;
+	WARNER_CALLBACKS
+		rename
+			execute_warner_help as exit_bench,
+			execute_warner_ok as open_project
+		end
 
 creation
 
@@ -23,6 +28,19 @@ feature -- Initialization
 			-- Initialize the command.
 		do
 			text_window := a_text_window
+		end;
+feature -- Callbacks
+
+	exit_bench is
+		do
+			discard_licence;
+			exit
+		end;
+
+	open_project (argument: ANY) is
+		do
+			name_chooser.set_window (text_window);
+			name_chooser.call (Current)
 		end;
 
 feature {NONE} -- Implementation
@@ -60,15 +78,9 @@ feature {NONE} -- Implementation
 						name_chooser.show_file_selection_list;
 						name_chooser.show_file_selection_label;
 					end
-				elseif argument = void then
-					-- No Help
 				else
-					name_chooser.set_window (text_window);
-					name_chooser.call (Current)
+					open_project (argument);
 				end
-			elseif argument = Void then
-				discard_licence;
-				exit
 			end
 		end;
 

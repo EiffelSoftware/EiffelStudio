@@ -12,6 +12,10 @@ inherit
 	ICONED_COMMAND
 		redefine
 			execute
+		end;
+	WARNER_CALLBACKS
+		rename
+			execute_warner_ok as loose_changes
 		end
 
 creation
@@ -26,7 +30,23 @@ feature -- Initialization
 			init (c, a_text_window)
 		end;
 
-feature -- execution
+feature -- Callbacks
+
+	execute_warner_help is
+			-- Useless here
+		do
+			-- Do Nothing
+		end;
+
+	loose_changes (argument: ANY) is
+			-- The changes will be lost.
+		do
+			text_window.clear_clickable;
+			text_window.set_changed (false);
+			execute_licenced (Void)
+		end;
+
+feature -- Execution
 
 	execute (argument: ANY) is
 			-- Execute the command.
@@ -35,11 +55,6 @@ feature -- execution
 				text_window.tool.tell_type (command_name)
 			elseif argument = get_out then
 				text_window.tool.clean_type
-			elseif last_warner /= Void and argument = last_warner then
-					-- The changes will be lost.
-				text_window.clear_clickable;
-				text_window.set_changed (false);
-				execute_licenced (Void)
 			else
 				if last_warner /= Void then
 					last_warner.popdown

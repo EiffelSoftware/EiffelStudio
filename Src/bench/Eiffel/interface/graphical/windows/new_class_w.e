@@ -14,6 +14,11 @@ inherit
 			make as form_d_make
 		end;
 	COMMAND_W;
+	WARNER_CALLBACKS
+		rename
+			execute_warner_help as choose_different_name,
+			execute_warner_ok as keep_name
+		end;
 	SHARED_EIFFEL_PROJECT
 
 creation
@@ -72,6 +77,23 @@ feature -- Initialization
 			cancel_b.add_activate_action (Current, cancel);
 			create_b.add_activate_action (Current, create);
 			set_exclusive_grab
+		end;
+
+feature -- Callbacks
+
+	choose_different_name is
+			-- The file name of the new class already exists.
+			-- The user wants to choose another file name.
+		do
+			popup
+		end;
+
+	keep_name (argument: ANY) is
+			-- The file name of the new class already exists.
+			-- The user wants to keep it.
+		do
+			cluster.classes.put (class_i, class_name);
+			class_text.receive (stone)
 		end;
 
 feature -- Properties
@@ -175,9 +197,8 @@ feature -- Execution
 					f_name.set_file_name (file_name);
 					base_name := file_name;
 					!! file.make (f_name);
-					!! class_i.make;
-					class_i.set_class_name (class_name);
-					class_i.set_base_name (base_name);
+					!! class_i.make_with_cluster (cluster);
+					class_i.set_file_details (class_name, base_name);
 					if cluster.has_base_name (base_name) then
 						warner (class_text).gotcha_call 
 							(w_Class_already_in_cluster (base_name));
@@ -216,15 +237,9 @@ feature -- Execution
 				end;
 			elseif argument = cancel then
 				popdown
-			elseif argument = Void then 
-					-- The file name of the new class already exists.
-					-- The user wants to choose another file name.
-				popup
-			elseif argument = last_warner then
-					-- The file name of the new class already exists.
-					-- The user wants to keep it.
-				cluster.classes.put (class_i, class_name);
-				class_text.receive (stone)
+				if last_warner /= Void then
+					last_warner.popdown
+				end
 			end;
 		end;
 

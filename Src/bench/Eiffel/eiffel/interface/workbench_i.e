@@ -137,6 +137,7 @@ feature -- Commands
 			Error_handler_has_no_errors: Error_handler.error_list.empty
 		local
 			retried: BOOLEAN
+			vd54: VD54
 		do
 			if not retried then
 				if automatic_backup then
@@ -156,6 +157,10 @@ feature -- Commands
 				if System /= Void and then Lace.successful then
 					System.recompile
 				else
+					if Error_handler.error_list.empty then
+						!! vd54
+						Error_handler.insert_error (vd54)
+					end
 					Error_handler.raise_error
 				end
 
@@ -182,7 +187,9 @@ feature -- Commands
 			increment_compilation_counter: compilation_counter = old compilation_counter + 1
 		rescue
 			if Rescue_status.is_error_exception then
-				Compilation_modes.reset_modes
+				if not Compilation_modes.is_precompiling then
+					Compilation_modes.reset_modes
+				end
 				Rescue_status.set_is_error_exception (False)
 				retried := True
 				Error_handler.trace

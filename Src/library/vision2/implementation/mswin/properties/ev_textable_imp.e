@@ -49,22 +49,6 @@ feature -- Inapplicable
 		do
 		end
 
-feature -- Element change	
-	
-	set_text (str: STRING) is
-		do
-	--		{WEL_WINDOW} Precursor (t)
-			wel_set_text (str)
-			set_default_minimum_size
-		end
-
-feature {NONE} -- Implementation : the wel values, are deferred here, but
-		  -- they need to be define by the heir
-
-	wel_set_text (str: STRING) is
-		deferred
-		end
-
 end -- class EV_TEXTABLE_IMP
 
 --|----------------------------------------------------------------

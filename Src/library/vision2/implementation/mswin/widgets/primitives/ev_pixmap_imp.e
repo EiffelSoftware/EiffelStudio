@@ -1001,7 +1001,7 @@ feature {EV_ANY_I} -- Delegated features
 			-- Set `tooltip' to `a_text'.
 		do
 			promote_to_widget
-			interface.implementation.set_tooltip(a_text)
+			interface.implementation.set_tooltip (a_text)
 		end
 
 	show is
@@ -1014,6 +1014,9 @@ feature {EV_ANY_I} -- Delegated features
 	tooltip: STRING is
 			-- Text displayed when user moves mouse over widget.
 		do
+			check
+				not_destroyed: not is_destroyed
+			end
 			promote_to_widget
 			Result := interface.implementation.tooltip
 		end
@@ -1315,11 +1318,10 @@ feature {NONE} -- Implementation
 		local
 			drawable_pixmap: EV_PIXMAP_IMP_DRAWABLE
 		do
-			create drawable_pixmap.make_with_simple (Current)
-			interface.replace_implementation (drawable_pixmap)
-			
 				-- Discard current implementation
 			if not is_destroyed then
+				create drawable_pixmap.make_with_simple (Current)
+				interface.replace_implementation (drawable_pixmap)	
 				destroy	
 			end
 		end
@@ -1332,11 +1334,11 @@ feature {NONE} -- Implementation
 		local
 			widget_pixmap: EV_PIXMAP_IMP_WIDGET
 		do
-			create widget_pixmap.make_with_simple (Current)
-			interface.replace_implementation (widget_pixmap)
-
-				-- Discard current implementation
 			if not is_destroyed then
+				create widget_pixmap.make_with_simple (Current)
+				interface.replace_implementation (widget_pixmap)
+
+					-- Discard current implementation
 				destroy
 			end
 		end

@@ -9,9 +9,20 @@ class
 
 inherit
 	EV_MESSAGE_DIALOG_I
+		redefine
+			set_default
+		end
 
 
 feature -- status settings
+
+	set_default (msg, dtitle: STRING) is
+			-- Set default settings
+		do
+			set_message (msg)
+			set_title (dtitle)
+			add_yesno_buttons
+		end
 
 	add_yes_button is
 			-- Add a `Yes' button in the dialog

@@ -44,10 +44,16 @@ feature -- Status settings
 
 	add_ok_button is
 			-- Add an OK button in the dialog.
+		local
+			cmd: EV_MESSAGE_DIALOG_CLOSE_COMMAND
+			arg: EV_ARGUMENT1 [EV_MESSAGE_DIALOG_I]
 		do
 			if ok_button = Void then
 				!!ok_button.make_with_text (action_area, "OK")
 				ok_button.set_expand(True)
+				!!cmd
+				!!arg.make (Current)
+				ok_button.add_click_command(cmd, arg)
 			end
 		end
 
@@ -62,10 +68,16 @@ feature -- Status settings
 	
 	add_cancel_button is
 			-- Add a cancel button in the dialog
+		local
+			cmd: EV_MESSAGE_DIALOG_CLOSE_COMMAND
+			arg: EV_ARGUMENT1 [EV_MESSAGE_DIALOG_I]
 		do
 			if cancel_button = Void then
 				!!cancel_button.make_with_text (action_area, "Cancel")
 				cancel_button.set_expand(True)
+				!!cmd
+				!!arg.make (Current)
+				cancel_button.add_click_command(cmd, arg)
 			end
 		end
 

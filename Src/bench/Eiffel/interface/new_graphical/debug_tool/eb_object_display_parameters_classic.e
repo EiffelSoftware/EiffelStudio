@@ -10,6 +10,8 @@ class
 inherit
 
 	EB_OBJECT_DISPLAY_PARAMETERS
+	
+	REFACTORING_HELPER
 
 create {SHARED_DEBUG}
 	make, make_from_debug_value, make_from_stack_element
@@ -98,8 +100,9 @@ feature {NONE} -- Specific Implementation
 			-- Fill `parent' with the once functions `a_once_list'.
 		local
 			once_r: ONCE_REQUEST
-			item: EV_TREE_ITEM
+			l_item: EV_TREE_ITEM
 			flist: LIST [E_FEATURE]
+			odv: ABSTRACT_DEBUG_VALUE
 		do
 			once_r := Application.debug_info.Once_request
 			flist := a_once_list
@@ -109,13 +112,34 @@ feature {NONE} -- Specific Implementation
 				flist.after
 			loop
 				if once_r.already_called (flist.item) then
-					item := debug_value_to_item (once_r.once_result (flist.item))
+					fixme ("JFIAT: update the runtime to avoid evaluate the once")
+--					odv := once_r.once_result (flist.item)
+--					item := debug_value_to_item (odv)
+
+					if flist.item.argument_count > 0 then
+						create l_item.default_create
+						l_item.set_pixmap (pixmaps.icon_dbg_error)
+						l_item.set_text (flist.item.name + " could not evaluate once with arguments...")
+					else
+						if dv /= Void then
+							odv := once_r.once_eval_result (dv.address, flist.item, dv.dynamic_class)
+						else
+							odv := once_r.once_eval_result (address, flist.item, dtype)
+						end
+						if odv /= Void then
+							l_item := debug_value_to_item (odv)
+						else
+							create l_item.default_create
+							l_item.set_pixmap (pixmaps.icon_dbg_error)
+							l_item.set_text (flist.item.name + " : unable to get value !")
+						end
+					end	
 				else
-					create item
-					item.set_pixmap (Pixmaps.Icon_void_object)
-					item.set_text (flist.item.name + Interface_names.l_Not_yet_called)
+					create l_item
+					l_item.set_pixmap (Pixmaps.Icon_void_object)
+					l_item.set_text (flist.item.name + Interface_names.l_Not_yet_called)
 				end
-				parent.extend (item)
+				parent.extend (l_item)
 				flist.forth
 			end
 				-- We remove the dummy item.

@@ -9,6 +9,11 @@ class
 
 inherit
 	EB_OBJECT_TREE_ITEM
+	
+	REFACTORING_HELPER
+		undefine
+			default_create, copy, is_equal
+		end
 
 create
 	make_with_value
@@ -21,6 +26,7 @@ feature {NONE} -- Initialization
 			once_r: ONCE_REQUEST
 			l_item: EV_TREE_ITEM
 			flist: LIST [E_FEATURE]
+			odv: ABSTRACT_DEBUG_VALUE
 		do
 			once_r := Application.debug_info.Once_request
 			flist := a_once_list
@@ -30,7 +36,27 @@ feature {NONE} -- Initialization
 				flist.after
 			loop
 				if once_r.already_called (flist.item) then
-					l_item := debug_value_to_tree_item (once_r.once_result (flist.item))
+--					odv := once_r.once_result (flist.item)
+--					l_item := debug_value_to_tree_item (odv)
+
+					fixme ("JFIAT: update the runtime to avoid evaluate the once")
+					
+					if flist.item.argument_count > 0 then
+						create l_item.default_create
+						l_item.set_pixmap (pixmaps.icon_dbg_error)
+						l_item.set_text (flist.item.name + " could not evaluate once with arguments...")
+					else
+						if dv /= Void then
+							odv := once_r.once_eval_result (dv.address, flist.item, dv.dynamic_class)
+						end
+						if odv /= Void then
+							l_item := debug_value_to_tree_item (odv)
+						else
+							create l_item.default_create
+							l_item.set_pixmap (pixmaps.icon_dbg_error)
+							l_item.set_text (flist.item.name + " : unable to get value !")
+						end
+					end						
 				else
 					create l_item
 					l_item.set_pixmap (Pixmaps.Icon_void_object)

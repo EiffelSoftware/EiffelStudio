@@ -12,7 +12,14 @@ inherit
 		export
 			{NONE} all
 		end
-
+	BEURK_HEXER
+	EWB_REQUEST
+		rename
+			make as old_make
+		end
+	SHARED_WORKBENCH
+	REFACTORING_HELPER
+	
 create
 	make
 
@@ -20,8 +27,11 @@ feature
 
 	make is
 		do
+			old_make (Rqst_inspect)
 			init_recv_c
 		end
+		
+	address: STRING
 
 	already_called (once_routine: E_FEATURE): BOOLEAN is
 			-- Has `once_routine' already been called?
@@ -80,6 +90,85 @@ end
 		ensure
 			result_exists: Result /= Void
 		end
+		
+	once_eval_result (a_addr: STRING; f: E_FEATURE; dclass: CLASS_C): ABSTRACT_DEBUG_VALUE is
+		local
+			par: INTEGER
+			rout_info: ROUT_INFO
+			l_dynclass: CLASS_C
+			l_dyntype: CLASS_TYPE
+ 			dobj: DEBUGGED_OBJECT
+
+		do
+			fixme ("JFIAT: update the runtime to avoid evaluate the once")
+			debug ("debugger_trace_eval")
+				print (generator + ".once_eval_result (" + a_addr.out + ", " + f.name + ", " + dclass.name_in_upper + ")%N")
+			end
+			l_dynclass := dclass
+			if l_dynclass /= Void and then l_dynclass.is_basic then
+				l_dyntype := associated_reference_class_type (l_dynclass)
+			elseif l_dynclass = Void or else l_dynclass.types.count > 1 then
+				if a_addr /= Void then
+						-- The type has generic derivations: we need to find the precise type.
+					create {DEBUGGED_OBJECT_CLASSIC} dobj.make (a_addr, 0, 1)
+					l_dyntype := dobj.class_type
+					if l_dyntype = Void then
+					elseif l_dynclass = Void then
+						l_dynclass := l_dyntype.associated_class						
+					end
+				else
+					--| Shouldn't happen: basic types are not generic.
+				end
+			else
+				l_dyntype := l_dynclass.types.first
+			end
+			
+			send_ref_value (hex_to_pointer (a_addr))
+
+			if f.is_external then
+				par := par + 1
+			end
+			if f.written_class.is_precompiled then
+				par := par + 2
+				rout_info := System.rout_info_table.item (f.rout_id_set.first)
+				send_rqst_3_integer (Rqst_dynamic_eval, rout_info.offset, rout_info.origin, par)
+			else
+				send_rqst_3_integer (Rqst_dynamic_eval, f.feature_id, l_dyntype.static_type_id - 1, par)
+			end
+			c_recv_value (Current)
+			Result := item
+			if Result /= Void then
+				Result.set_name (f.name)
+					-- Convert the physical addresses received from 
+					-- the application to hector addresses.
+				Result.set_hector_addr
+			else
+					--| FIXME XR: This shouldn't happen, but happens anyway.
+					--| It's better to display a dummy once instead of crashing...
+				create {REFERENCE_VALUE} Result.make (default_pointer, 1)
+			end
+			
+		end
+
+feature -- Impl
+
+	associated_reference_class_type (cl: CLASS_C): CLASS_TYPE is
+			-- Associated _REF classtype for type `cl'
+			--| for instance return INTEGER_REF for INTEGER
+		require
+			cl_not_void: cl /= Void
+			cl_is_basic: cl.is_basic
+		local
+			l_basic: BASIC_I
+		do
+			l_basic ?= cl.actual_type.type_i
+			check
+				l_basic_not_void: l_basic /= Void
+			end
+			Result := l_basic.associated_class_type
+		ensure
+			associated_reference_class_type_not_void: Result /= Void
+		end		
 
 feature -- Contract support
 

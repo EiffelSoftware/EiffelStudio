@@ -10,6 +10,9 @@ class PROFILE_SD
 inherit
 
 	OPTION_SD
+		redefine
+			is_profile
+		end;
 	SHARED_OPTION_LEVEL
 
 feature -- Properties
@@ -18,6 +21,12 @@ feature -- Properties
 		once
 			Result := "profile"
 		end;
+
+	is_profile: BOOLEAN is
+			-- Is Current a profile option?
+		do
+			Result := True
+		end
 
 feature {COMPILER_EXPORTER} -- Update
 

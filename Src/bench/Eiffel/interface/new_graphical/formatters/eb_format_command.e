@@ -9,21 +9,34 @@ class
 inherit
 	EV_COMMAND
 
+	EB_COMMAND_FEEDBACK
+		redefine
+			set_menu_item
+		end
+
 create
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (xxx: EB_FORMATTER) is
 		do
 			f := xxx
 		end
 
-feature
+feature -- Access
 
 	f: EB_FORMATTER
 
 feature
+
+	set_menu_item (m: like menu_item) is
+		do
+			precursor (m)
+			m.add_select_command (Current, Void)
+		end
+
+feature -- Execution
 
 	execute (argument: EV_ARGUMENT1 [ANY]; data: EV_EVENT_DATA) is
 			-- Execute current command but don't change the cursor into watch shape.
@@ -31,7 +44,7 @@ feature
 --			mp: MOUSE_PTR
 			s: STONE
 		do
-			if argument.first = f.tool then
+			if argument = Void then
 				s ?= f.tool.stone
 			else
 				s ?= argument.first

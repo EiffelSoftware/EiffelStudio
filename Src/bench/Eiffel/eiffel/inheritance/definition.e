@@ -39,7 +39,7 @@ feature
 				-- The signature of the new feature in the context of
 				-- `feat_tbl' has been already evaluated by feature
 				-- `check_types' of FEATURE_TABLE (See class INHERIT_TABLE).
-			new_feat := feat_tbl.item (new_feature.feature_name);
+			new_feat := feat_tbl.item_id (new_feature.feature_name_id);
 			check
 				new_feat /= Void
 			end;
@@ -121,7 +121,7 @@ feature
 							-- We have to give a new routine id to the
 							-- attribute. If possible, take the same given
 							-- during a previous compilation
-						old_attribute ?= old_tbl.item (attribute.feature_name);
+						old_attribute ?= old_tbl.item_id (attribute.feature_name_id);
 						if 	old_attribute /= Void
 							and then
 							old_attribute.has_function_origin

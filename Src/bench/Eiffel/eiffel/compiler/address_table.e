@@ -157,7 +157,7 @@ end
 
 				gen_file.open_write
 
-				gen_file.putstring ("#include %"eiffel%".h%N");
+				gen_file.putstring ("#include %"eiffel.h%"%N");
 
 				gen_file.close
 

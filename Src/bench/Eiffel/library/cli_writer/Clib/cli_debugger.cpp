@@ -205,6 +205,7 @@ rt_private UINT once_enter_ec_cb;
 //////////////////////////////////////////////////
 */
 
+rt_private UINT dbg_keep_synchro;
 rt_private UINT dbg_timer;
 rt_private EIF_OBJECT estudio_callback_object;
 rt_private EIF_POINTER estudio_callback_event;
@@ -231,6 +232,13 @@ rt_public void dbg_init_estudio_thread_handle () {
 	CHECK(fSuccess == 0, "Ensure: DuplicateHandle failed !!")
 }
 
+rt_public void dbg_close_estudio_thread_handle () {
+ 	HANDLE thread_hdl;
+	thread_hdl = estudio_thread_handle;
+	DBGTRACE_HR("[eStudio] CloseHandle of thread : handle = ", (HRESULT)thread_hdl);	/*D*/
+	CloseHandle (thread_hdl);
+}
+
 rt_public void dbg_suspend_estudio_thread () {
 	DWORD result;
  	HANDLE thread_hdl;
@@ -253,6 +261,7 @@ rt_public void dbg_resume_estudio_thread () {
 }
 
 #define DBG_INIT_ESTUDIO_THREAD_HANDLE dbg_init_estudio_thread_handle ()
+#define DBG_CLOSE_ESTUDIO_THREAD_HANDLE dbg_close_estudio_thread_handle ()
 #define DBG_SUSPEND_ESTUDIO_THREAD dbg_suspend_estudio_thread ()
 #define DBG_RESUME_ESTUDIO_THREAD  dbg_resume_estudio_thread ()
 /*
@@ -268,6 +277,12 @@ rt_public void dbg_resume_estudio_thread () {
 rt_public void dbg_init_synchro () {
 	/* Initialize synchronisation */
 	DBG_INIT_ESTUDIO_THREAD_HANDLE;
+	dbg_keep_synchro = 1;
+}
+rt_public void dbg_terminate_synchro () {
+	/* Terminate synchronisation */
+	dbg_keep_synchro = 0;
+	DBG_CLOSE_ESTUDIO_THREAD_HANDLE;
 }
 
 rt_public void dbg_enable_estudio_callback (EIF_OBJECT estudio_cb_obj, EIF_POINTER estudio_cb_event) {
@@ -358,7 +373,14 @@ rt_public void CALLBACK dbg_timer_callback (HWND hwnd, UINT uMsg, UINT idEvent, 
 		if (InterlockedExchangeAdd (&dbg_state, 0) == 3) {
 			DBGTRACE("8 - [eStudio] exit timer callback and unlock dbg ");	/*D*/
 			InterlockedIncrement (&dbg_state);
-			dbg_start_timer (); // dbg_state := 0
+			if (dbg_keep_synchro == 1) {
+				dbg_start_timer (); // dbg_state := 0
+			}
+#ifdef DBGTRACE_ENABLED														/*D*/
+			else {															/*D*/
+				DBGTRACE("8'- [eStudio] exit timer callback WITHOUT continue synchro !!");			/*D*/
+			}																/*D*/
+#endif																		/*D*/
 		} // Otherwise, this means an eval forced the priority
 #ifdef DBGTRACE_ENABLED														/*D*/
 		else {																/*D*/

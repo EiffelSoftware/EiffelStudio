@@ -24,6 +24,15 @@ feature -- Synchro Initialization
 			c_init_dbg_synchronisation
 		end
 		
+	terminate_dbg_synchronisation is
+			-- Initialize eStudio/.NET debugger synchronisation
+		do
+			debug ("DBG_SYNCHRO")
+				print (">>Terminate eStudio/.NET debugger synchronisation%N")
+			end
+			c_terminate_dbg_synchronisation
+		end
+		
 feature -- eStudio callback
 
 	estudio_callback_event is
@@ -96,6 +105,13 @@ feature {NONE} -- External DBG Timer
 			"dbg_init_synchro"
 		end
 
+	c_terminate_dbg_synchronisation  is
+		external
+			"C use %"cli_debugger.h%" "
+		alias
+			"dbg_terminate_synchro"
+		end
+		
 	c_dbg_enable_estudio_callback (obj: EIFNET_DEBUGGER_SYNCHRO; p_cb: POINTER) is
 		external
 			"C signature () use %"cli_debugger.h%" "

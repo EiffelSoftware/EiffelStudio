@@ -84,17 +84,16 @@ feature -- Il code generation
 	generate_il_eiffel_metamorphose (a_type: TYPE_I) is
 			-- Generate a metamorphose of `a_type' into a _REF type.
 		require
-			a_type_is_expanded: a_type.is_expanded
+			a_type_is_basic: a_type.is_basic
 		local
 			local_number: INTEGER
-			l_cl_type: CL_TYPE_I
+			l_cl_type: BASIC_I
 			feat: FEATURE_I
 			ref_class: CLASS_C
 			l_decl_type: CL_TYPE_I
 			l_is_basic: BOOLEAN
 		do
-				-- FIXME: For expanded type we don't do it correctly. We need to copy
-				-- the whole object. We only half support metamorphose of basic types
+				-- FIXME: We only half support metamorphose of basic types
 				-- through the `set_item' routine.
 
 			l_cl_type ?= a_type

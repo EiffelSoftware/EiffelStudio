@@ -1,8 +1,12 @@
+indexing
+	description: "Behavior: associates a command instance to an event."
+	Id: "$Id $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class BEHAVIOR 
 
 inherit
-
 	BUILD_FUNCTION
 		export 
 			{CONTEXT, CONTEXT_TREE} drop_pair
@@ -14,20 +18,19 @@ inherit
 	WINDOWS
 
 creation
-
 	make
 
-feature {NONE}
+feature {NONE} -- Initialization
 
 	make is
 		do
-			!!input_list.make
-			!!output_list.make
+			create input_list.make
+			create output_list.make
 			int_generator.next
 			identifier := int_generator.value
 		end
 
-	symbol: PIXMAP is
+	symbol: EV_PIXMAP is
 		do
 			Result := Pixmaps.behavior_pixmap
 		end
@@ -37,7 +40,7 @@ feature {NONE}
 			Result := Help_const.behavior_help_fn
 		end
 	
-feature 
+feature -- Attributes
 
 	input_data: EVENT
 
@@ -65,24 +68,24 @@ feature -- Query
 
 feature -- Copying
 
-    copy_contents (func: like Current) is
-        local
-            il: like input_list
-            ol: like output_list
-        do
-            il := func.input_list
-            ol := func.output_list
-            from
-                il.start
-                ol.start
-            until
-                ol.after
-            loop
-                add (il.item, ol.item)
-                il.forth
-                ol.forth
-            end
-        end
+	copy_contents (func: like Current) is
+		local
+			il: like input_list
+			ol: like output_list
+		do
+			il := func.input_list
+			ol := func.output_list
+			from
+				il.start
+				ol.start
+			until
+				ol.after
+			loop
+				add (il.item, ol.item)
+				il.forth
+				ol.forth
+			end
+		end
 
 feature -- Command labels
 
@@ -144,10 +147,10 @@ feature  -- Editing features
 	context: CONTEXT
 			-- Context associated with the behavior
 
-	set_context (c: CONTEXT_STONE) is
+	set_context (c: CONTEXT) is
 			-- Set context to `c'.
 		do
-			context := c.data
+			context := c
 		end
 
 	set_label (s: STRING) is
@@ -164,4 +167,5 @@ feature -- Datum features
 			Result := Current
 		end
 
-end
+end -- class BEHAVIOR
+

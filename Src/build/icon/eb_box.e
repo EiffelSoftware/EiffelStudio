@@ -1,5 +1,5 @@
 
-deferred class EB_BOX [T->DATA] 
+deferred class EB_BOX [T->HELPABLE] 
 
 inherit
 

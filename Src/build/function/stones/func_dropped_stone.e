@@ -64,7 +64,7 @@ feature {NONE}
 		deferred
 		end;
 
-	data: DATA is
+	data: HELPABLE is
 		deferred
 		end;
 

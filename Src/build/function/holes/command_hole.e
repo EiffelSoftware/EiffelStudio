@@ -5,67 +5,59 @@ indexing
 	Date: "$Date$"
 	Revision: "$Revision$"
 
-class 
-
-	COMMAND_HOLE 
+class
+	COMMAND_HOLE
 
 inherit
-
-	COMMAND
-
 	ELMT_HOLE
 		redefine
-			make, associated_function,
-			associated_symbol, associated_label,
-			stone_type, process_instance
+			make_with_editor,
+			symbol
 		end
 
+	EV_COMMAND
 
 creation
+	make_with_editor
 
-	make
-	
-feature 
+feature {NONE} -- Initialization
 
-	make (a_parent: COMPOSITE; func: BEHAVIOR_EDITOR) is
+	make_with_editor (par: EV_TOOL_BAR; func: BEHAVIOR_EDITOR) is
+		local
+			cmd: EV_ROUTINE_COMMAND
+			arg: EV_ARGUMENT1 [BEHAVIOR_EDITOR]
 		do
-			Precursor (a_parent, func)
-			!! instances_list_wnd.make_with_hole (a_parent, Current)
-			add_button_press_action (3, Current, Void) 
+			Precursor (par, func)
+			create cmd.make (func~update_output_hole)
+			add_pnd_command (Pnd_types.command_type, cmd, Void)
+
+--			create instances_list_wnd.make_with_hole (par, Current)
+			create arg.make (func)
+			add_button_press_command (3, Current, arg)
 		end
 
-	stone_type: INTEGER is
-		do
-			Result := Stone_types.command_type	
-		end
+feature {NONE} -- Implementation
 
-feature {NONE}
-
-	associated_function: BEHAVIOR_EDITOR
-
-	associated_symbol: PIXMAP is
+	symbol: EV_PIXMAP is
 		do
 			Result := Pixmaps.command_instance_pixmap
 		end
 
-	associated_label: STRING is
-		do
-			Result := Widget_names.command_label
-		end
+--	associated_label: STRING is
+--		do
+--			Result := Widget_names.command_label
+--		end
 
-	process_instance (cmd_instance: CMD_INST_STONE) is
-        do
-			associated_function.update_output_hole (cmd_instance)
-        end
+--	instances_list_wnd: CMD_INSTANCE_CHOICE_WND
 
-	instances_list_wnd: CMD_INSTANCE_CHOICE_WND
-
-	execute (argument: ANY) is
+	execute (arg: EV_ARGUMENT1 [BEHAVIOR_EDITOR]; ev_data: EV_EVENT_DATA) is
 			-- Display a list of possible command instances.
 		local
-			a_context: CONTEXT
+			ctxt: CONTEXT
 		do
-			a_context := associated_function.edited_context
-			instances_list_wnd.popup_with_list (a_context.default_commands_list)
+			ctxt := arg.first.edited_context
+--			instances_list_wnd.popup_with_list (ctxt.default_commands_list)
 		end
-end
+
+end -- class COMMAND_HOLE
+

@@ -1,23 +1,28 @@
--- Eiffelbuild button that has a callback when
--- activated.
+indexing
+	description: "Eiffelbuild button that has a callback when activated."
+	date: "$Date$"
+	id: "$Id$"
+	revision: "$Revision$"
+
 deferred class EB_BUTTON_COM
 
 inherit
-
 	EB_BUTTON
-		rename
-			make_visible as button_make_visible
-		end;
-	COMMAND;
+		redefine
+			make
+		end
+
+	EV_COMMAND
 
 feature {NONE}
 
-	make_visible (a_parent: COMPOSITE) is	
-		require
-			valid_a_parent: a_parent /= Void
+	make (par: EV_TOOL_BAR) is	
+		require else
+			valid_parent: par /= Void
 		do
-			button_make_visible (a_parent);
-			add_activate_action (Current, Void)
-		end;
+			Precursor (par)
+			add_select_command (Current, Void)
+		end
 
-end
+end -- class EB_BUTTON_COM
+

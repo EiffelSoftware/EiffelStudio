@@ -1,49 +1,82 @@
+indexing
+	description: "State editor window."
+	Id: "$Id $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class STATE_EDITOR 
 
 inherit
+	EB_WINDOW
+		redefine
+			make, set_geometry
+		end
 
-	EB_TOP_SHELL
-		rename
-			realize as shell_realize,
-			make as eb_top_shell_make,
-			destroy as shell_destroy
-		redefine
-			set_geometry
-		end
-	EB_TOP_SHELL
-		redefine
-			realize, make, set_geometry,
-			destroy
-		select
-			realize, make, destroy
-		end
-	FUNC_EDITOR
-		rename
-			clear as old_clear,
-			set_edited_function as old_set_edited_function
-		redefine
-			edited_function, menu_bar, output_stone, 
-			input_stone, output_hole, input_hole, output_list, input_list
-		end
 	FUNC_EDITOR
 		redefine
-			clear, edited_function, menu_bar, output_stone, 
-			input_stone, output_hole, input_hole, output_list, input_list,
-			set_edited_function
-		select
-			clear,
+			clear, edited_function,
+			output_hole, input_hole,
+			edit_hole,
 			set_edited_function
 		end
+
 	WINDOWS
-		select
-			init_toolkit
-		end
+
 	CLOSEABLE
 
 creation
-
 	make
+
+feature {NONE} -- Initialization
+
+	make (par: EV_WINDOW) is
+		do
+			{EB_WINDOW} Precursor (par)
+			initialize (Current)
+			set_values
+			set_callbacks
+		end
+
+	edit_hole: S_EDIT_HOLE
+
+	create_menu (par: EV_CONTAINER) is
+		local
+			vbox: EV_VERTICAL_BOX
+			tbar: EV_TOOL_BAR
+			sep: EV_HORIZONTAL_SEPARATOR
+			merge_hole: S_MERGE_HOLE
+			cut_hole: CUT_HOLE
+		do
+			create vbox.make (par)
+			create tbar.make (vbox)
+			create sep.make (vbox)
+
+			create edit_hole.make_with_editor (tbar, Current)
+			create merge_hole.make_with_editor (tbar, Current)
+			create cut_hole.make (tbar)
+
+			vbox.set_spacing (2)
+			vbox.set_expand (False)
+		end
+
+	clear_menu is
+		do
+			edit_hole.set_empty_symbol
+		end
+
+	set_values is
+		do
+--			initialize_window_attributes
+			set_title (Widget_names.state_editor)
+			set_icon_pixmap (Pixmaps.state_pixmap)
+			input_list.set_column_title (Widget_names.context_label, 1)
+			output_list.set_column_title (Widget_names.behaviour_label, 1)
+		end
+
+	set_callbacks is
+		do
+			set_close_callback (Void)
+		end
 
 feature -- Geometry
 
@@ -56,13 +89,8 @@ feature -- Geometry
 feature -- Input/output
 
 	input_hole: CONTEXT_HOLE 
-	input_stone: FUNC_CON_STONE 
 
 	output_hole: BEHAVIOR_HOLE
-	output_stone: FUNC_BEH_STONE
-
-	input_list: CON_BOX
-	output_list: B_BOX
 
 feature -- Edited features
 
@@ -70,7 +98,7 @@ feature -- Edited features
 
 	set_edited_function (f: like edited_function) is
 		do
-			old_set_edited_function (f)
+			Precursor (f)
 			update_title
 		end
 
@@ -81,19 +109,7 @@ feature
 			Result := (edited_function = Void)
 		end
 
-	destroy is
-		do
-			unregister_holes
-			shell_destroy
-		end
-	
-	reset_stones is
-		do
-			input_stone.reset
-			output_stone.reset
-		end
-
-	close is
+	close (arg: EV_ARGUMENT; ev_data: EV_EVENT_DATA) is
 		do
 			clear
 			window_mgr.close (Current)
@@ -101,16 +117,9 @@ feature
 
 	clear is
 		do
-			old_clear
+			Precursor
 			set_title (Widget_names.state_editor)
 			set_icon_name (Widget_names.state_editor)
-		end
-
-
-	realize is
-		do
-			shell_realize
-			hide_stones
 		end
 
 	update_title is
@@ -131,68 +140,23 @@ feature
 		local
 			finished: BOOLEAN
 			old_cur: CURSOR
-			icons: LINKED_LIST [FUNC_CON_IS]
+--			icons: LINKED_LIST [FUNC_CON_IS]
 		do
-			icons := input_list.icons
-			old_cur := icons.cursor
-			from
-				icons.start
-			until
-				icons.after or else finished
-			loop
-				if icons.item.data = c then
-					finished := True
-					icons.item.update_label_text
-				end
-				icons.forth
-			end
-			icons.go_to (old_cur)
+--			icons := input_list.icons
+--			old_cur := icons.cursor
+--			from
+--				icons.start
+--			until
+--				icons.after or else finished
+--			loop
+--				if icons.item.data = c then
+--					finished := True
+--					icons.item.update_label_text
+--				end
+--				icons.forth
+--			end
+--			icons.go_to (old_cur)
 		end
 
-feature {NONE}
+end -- class STATE_EDITOR
 
-	create_output_stone (a_parent: COMPOSITE) is
-		do
-			!!output_stone.make (Current)
-			output_stone.make_visible (a_parent)
-			button_form.attach_left_widget (page_label, row_label, 5)
-		end
-
-	create_input_stone (a_parent: COMPOSITE) is
-		do
-			!!input_stone.make (Current)
-			input_stone.make_visible (a_parent)
-		end
-
-feature {NONE} -- Interface
-
-	menu_bar: STATE_BAR
-
-	window_menu_bar: BAR
-	file_category: MENU_PULL
-	exit_tool_entry: PUSH_B
-	exit_entry: PUSH_B
-	
-	make (a_name: STRING; a_screen: SCREEN) is
-		local		
-			exit_cmd: EXIT_EIFFEL_BUILD_CMD
-			del_com: DELETE_WINDOW
-		do
-			eb_top_shell_make (a_name, a_screen)
-			set_title (a_name)
-			set_icon_name (a_name)
-			set_icon_pixmap (Pixmaps.state_pixmap)
-			!! window_menu_bar.make (menu_names.menu_bar, Current)
-			!! file_category.make (menu_names.file, window_menu_bar)
-			!! exit_tool_entry.make (menu_names.exit_tool, file_category)
-			!! exit_entry.make (menu_names.exit, file_category)
-			initialize (Widget_names.form, Current)
-			!! del_com.make (Current)
-			set_delete_command (del_com)
-			exit_tool_entry.add_activate_action (del_com, Void) 
-			!! exit_cmd
-			exit_entry.add_activate_action (exit_cmd, Void)
-			initialize_window_attributes
-		end
-
-end

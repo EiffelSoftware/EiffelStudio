@@ -12,7 +12,7 @@ inherit
 		select
 			init_toolkit
 		end
-	SHARED_APPLICATION;
+--	SHARED_APPLICATION;
 	COMMAND
 
 creation

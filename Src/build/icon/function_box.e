@@ -1,29 +1,47 @@
+indexing
+	description: "Abstract list of elements of a function."
+	Id: "$Id $"
+	date: "$Date$"
+	revision: "$Revision$"
 
-class FUNCTION_BOX [T -> DATA] 
+class FUNCTION_BOX
 
 inherit
-
-	PAGE_BOX [T]
-		rename
-			make as page_box_make
+	EB_ICON_LIST
+		redefine
+			make
 		end
 
 creation
-
 	make
 
-feature {NONE}
+feature {NONE} -- Initialization
 
-	associated_editor: FUNC_EDITOR;
-
-feature 
-
-	make  (a_name: STRING; a_parent: COMPOSITE; ed: like associated_editor) is
-		require
-			Valid_editor: ed /= Void
+	make (par: EV_CONTAINER) is
+			-- Create the list of icons.
 		do
-			associated_editor := ed;
-			page_box_make (a_name, a_parent)
-		end;
+			make_with_size (par, 1)
+			set_single_selection
+		end
 
-end 
+feature -- Access
+
+--	set (other: EB_LINKED_LIST [PND_DATA]) is
+--		local
+--			elmt: EB_ICON_LIST_ITEM [PND_DATA]
+--		do
+--			clear_items
+--			from
+--				other.start
+--			until
+--				other.after
+--			loop
+--				create elmt.make_with_text (Current, <<other.item.label>>)
+----				elm.set_pixmap (other.item.symbol)
+--				elmt.set_data (other.item)
+--				other.forth
+--			end
+--		end
+
+end -- class FUNCTION_BOX
+

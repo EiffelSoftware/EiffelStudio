@@ -1,60 +1,38 @@
-
---=========================== class BEHAVIOR_HOLE ===================
---
--- Author: Deramat
--- Last revision: 03/30/92
---
--- Hole which can receive behavior stones.
--- Output of state function.
---
---===================================================================
+indexing
+	description: "Hole which can receive behavior data. Output of state function."
+	Id: "$Id $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class BEHAVIOR_HOLE 
 
 inherit
-
 	ELMT_HOLE
-		rename
-			make as elmt_hole_make
 		redefine
-			associated_function,
-			associated_symbol, associated_label,
-			process_behavior, stone_type
+			make_with_editor,
+			symbol
 		end
 
 creation
-
-	make
+	make_with_editor
 	
-feature 
+feature {NONE} -- Initialization
 
-	make (a_parent: COMPOSITE; func: STATE_EDITOR) is
+	make_with_editor (par: EV_TOOL_BAR; func: STATE_EDITOR) is
+		local
+			cmd: EV_ROUTINE_COMMAND
 		do
-			elmt_hole_make (a_parent, func)
-		end;
+			Precursor (par, func)
+			create cmd.make (func~update_output_hole)
+			add_pnd_command (Pnd_types.behavior_type, cmd, Void)
+		end
 
-	stone_type: INTEGER is
-		do
-			Result := Stone_types.behavior_type
-		end;
+feature {NONE} -- Implementation
 
-feature {NONE}
-
-	associated_function: STATE_EDITOR;
-
-	associated_symbol: PIXMAP is
+	symbol: EV_PIXMAP is
 		do
 			Result := Pixmaps.behavior_pixmap
-		end;
+		end
 
-	associated_label: STRING is
-		do
-			Result := Widget_names.behaviour_label
-		end;
+end -- class BEHAVIOR_HOLE
 
-	process_behavior (b_stone: BEHAVIOR_STONE) is
-		do
-			associated_function.update_output_hole (b_stone)
-		end;
-
-end

@@ -1,35 +1,44 @@
+indexing
+	description: "State merge hole."
+	Id: "$Id $"
+	date: "$Date$"
+	revision: "$Revision$"
 
-class S_MERGE_HOLE 
+class S_MERGE_HOLE
 
 inherit
-
-	MERGE_HOLE
-		redefine
-			associated_function,
-			process_state
-		end
+	EB_BUTTON
 
 creation
-
-	make
+	make_with_editor
 		
-feature {NONE}
+feature {NONE} -- Initialization
 
-	function: BUILD_STATE;
-
-	associated_function: STATE_EDITOR;
-			-- Function associated with current hole
-
-	stone_type: INTEGER is
+	make_with_editor (par: EV_TOOL_BAR; ed: STATE_EDITOR) is
+		local
+			rout_cmd: EV_ROUTINE_COMMAND
+			arg: EV_ARGUMENT1 [STATE_EDITOR]
 		do
-			Result := Stone_types.state_type
-		end;
+			make (par)
+			create rout_cmd.make (~process_state)
+			create arg.make (ed)
+			add_pnd_command (Pnd_types.state_type, rout_cmd, arg)
+		end
 
-	process_state (dropped: STATE_STONE) is
+	process_state (arg: EV_ARGUMENT1 [STATE_EDITOR]; ev_data: EV_PND_EVENT_DATA) is
+		local
+			st: BUILD_STATE
 		do
-			if associated_function.edited_function /= dropped.data then
-				associated_function.edited_function.merge (dropped.data)
+			st ?= ev_data.data
+			if arg.first.edited_function /= st then
+				arg.first.edited_function.merge (st)
 			end
-		end;
+		end
 
-end
+	symbol: EV_PIXMAP is
+		do
+			Result := Pixmaps.merge_pixmap
+		end
+
+end -- class S_MERGE_HOLE
+

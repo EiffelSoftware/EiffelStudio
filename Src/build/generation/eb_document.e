@@ -161,15 +161,10 @@ feature
 				file.putstring (txt);
 				file.close
 			else
-				Error_box.popup (Current,
+				Error_dialog.popup (Current,
 						  Messages.write_file_er,
 						  file.name)
 			end;
 		end;
-
-	popuper_parent: COMPOSITE is
-		do
-			Result := main_panel.base
-		end
 
 end	

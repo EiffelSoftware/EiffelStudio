@@ -33,7 +33,7 @@ feature -- Generation
 			--|to find a better representation (without affecting the
 			--|incrementality).
 			--|Note2: The offset of an attribute is coded on 16 bits
-			--|whixh might noy be enough.
+			--|which might not be enough.
 		local
 			i: INTEGER;
 			re: ROUT_ENTRY;

@@ -156,7 +156,7 @@ feature {NONE} -- Implementation
 	create_action_sequences is
 			-- See `{EV_ANY}.create_action_sequences'.
 		do
-			{EV_SIMPLE_ITEM} Precursor
+			{EV_ITEM} Precursor
 			create select_actions
 			create deselect_actions
 			create expand_actions
@@ -186,6 +186,9 @@ end -- class EV_TREE_ITEM
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.43  2000/04/07 22:28:19  brendel
+--| EV_SIMPLE_ITEM -> EV_ITEM.
+--|
 --| Revision 1.42  2000/04/07 22:15:41  brendel
 --| Removed EV_SIMPLE_ITEM from inheritance hierarchy.
 --|

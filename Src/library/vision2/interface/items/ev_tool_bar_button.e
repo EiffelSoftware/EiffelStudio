@@ -43,7 +43,7 @@ feature -- Access
 	parent: EV_TOOL_BAR is
 			-- Parent of the current item.
 		do
-			Result ?= {EV_SIMPLE_ITEM} Precursor
+			Result ?= {EV_ITEM} Precursor
 		end
 
 	gray_pixmap: EV_PIXMAP is
@@ -127,7 +127,7 @@ feature {NONE} -- Implementation
 	create_action_sequences is
 			-- See `{EV_ANY}.create_action_sequences'.
 		do
-			{EV_SIMPLE_ITEM} Precursor
+			{EV_ITEM} Precursor
 			{EV_PICK_AND_DROPABLE} Precursor
 			create press_actions
 		end
@@ -158,6 +158,9 @@ end -- class EV_TOOL_BAR_BUTTON
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2000/04/07 22:28:19  brendel
+--| EV_SIMPLE_ITEM -> EV_ITEM.
+--|
 --| Revision 1.13  2000/04/07 22:15:41  brendel
 --| Removed EV_SIMPLE_ITEM from inheritance hierarchy.
 --|

@@ -1786,7 +1786,7 @@ feature -- Class initialization
 			dummy_list: LINKED_LIST [INTEGER]
 			a_client: CLASS_C
 			class_i: CLASS_I
-			changed_status: BOOLEAN
+			changed_status, changed_frozen: BOOLEAN
 			is_exp, changed_generics, changed_expanded, changed_separate: BOOLEAN
 			pars: like parents
 			gens: like generics
@@ -1882,11 +1882,12 @@ feature -- Class initialization
 			old_is_frozen := is_frozen
 			is_frozen := ast_b.is_frozen
 
-			if System.il_generation and then old_is_frozen /= is_frozen then
-					-- Class has its `frozen' status changed. We have to
-					-- reset its `types' so that it is recomputed.
-				remove_types
+			if
+				System.il_generation and then
+				(old_parents /= Void and then old_is_frozen /= is_frozen)
+			then
 				changed_status := True
+				changed_frozen := True
 			end
 
 			if (is_separate /= old_is_separate and then old_parents /= Void) then
@@ -2075,6 +2076,8 @@ feature -- Class initialization
 				end
 			end
 			if changed_generics then
+					-- Here we check `syntactical_clients' because we only need
+					-- to check that declarations are valid.
 				from
 					syntactical_clients.start
 				until
@@ -2085,12 +2088,26 @@ feature -- Class initialization
 					a_client.set_changed (True)
 					syntactical_clients.forth
 				end
-					-- The syntactical client/supplier relation must be consistent before
-					-- the removal
-				update_syntactical_relations (old_suppliers)
-				class_i := lace_class
-				System.remove_class (Current)
-				Workbench.change_class (class_i)
+					-- We need to reset its `types' so that they are recomputed.
+				remove_types
+			end
+
+			if changed_frozen then
+					-- Here we do not check the `syntactical_clients' because we
+					-- need to recompile all classes that are using current indirectly
+					-- through a feature call where the type is not mentioned.
+				from
+					clients.start
+				until
+					clients.after
+				loop
+					a_client := clients.item
+					Workbench.add_class_to_recompile (a_client.lace_class)
+					a_client.set_changed (True)
+					clients.forth
+				end
+					-- We need to reset its `types' so that they are recomputed.
+				remove_types
 			end
 
 			if old_parents /= Void then

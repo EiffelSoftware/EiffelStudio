@@ -69,7 +69,7 @@ feature {EV_ANY} -- Initialization
 			default_create_called_set: default_create_called
 			is_in_default_state: is_in_default_state
 		end
-
+		
 feature -- Command
 
 	destroy is
@@ -175,13 +175,14 @@ feature --
 			-- The following Vision2 classes may be copied :-
 				-- EV_FONT
 				-- EV_COLOR
+				-- EV_CURSOR
 				-- EV_PIXMAP
 		end
 
 feature {NONE} -- Contract support
 
 	is_in_default_state: BOOLEAN is
-			-- Is `Current' in its default sate.
+			-- Is `Current' in its default state.
 			--| Checked by the postcondition of default create.
 			--| Should be redefined and precursed in decendants to check new
 			--| objects for propper default state initialization.

@@ -21,6 +21,8 @@ inherit
 	GB_ACCESSIBLE_SYSTEM_STATUS
 	
 	GB_ACCESSIBLE_OBJECT_EDITOR
+	
+	GB_CONSTANTS
 
 create
 	make
@@ -46,6 +48,7 @@ feature -- Basic operations
 				Result := Precursor {EB_STANDARD_CMD} (display_text, use_gray_icons)
 				Result.drop_actions.extend (agent update_object_editor (?, Result))
 				Result.drop_actions.set_veto_pebble_function (agent do_not_allow_object_type (?))
+				Result.select_actions.extend (agent show_usage_dialog)
 			end
 			
 feature {NONE} -- Implementation
@@ -95,5 +98,17 @@ feature {NONE} -- Implementation
 					new_object_editor (an_object)
 				end
 			end
+			
+		show_usage_dialog is
+				-- Show an information dialog explaining usagre
+				-- of the button.
+			local
+				dialog: EV_INFORMATION_DIALOG
+			do
+				create dialog.make_with_text (Object_editor_button_warning)
+				dialog.show_modal_to_window (system_status.main_window)
+			end
+			
+			
 
 end -- class GB_OBJECT_EDITOR_COMMAND

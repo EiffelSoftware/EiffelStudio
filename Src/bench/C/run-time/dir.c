@@ -12,6 +12,7 @@
 */
 
 #include <stdio.h>
+#include <malloc.h>
 #include "eif_config.h"
 #include "eif_portable.h"
 #include "eif_lmalloc.h"	/* for eif_malloc, eif_free */

@@ -415,12 +415,10 @@ feature {NONE} -- Implementation
 		local
 			l_color: INTEGER
 			hashed_color, hashed_back_color: STRING
-			color_value: INTEGER
 			red, green, blue: INTEGER
 		do
 			l_color := a_format.fcolor
 			hashed_color := rtf_red.twin
-			
 			red := l_color & 0x000000ff
 			l_color := l_color |>> 8
 			green := l_color & 0x000000ff
@@ -449,13 +447,16 @@ feature {NONE} -- Implementation
 			
 			l_color := a_format.bcolor
 			hashed_back_color := rtf_red.twin
-			color_value := l_color |>> 16
-			hashed_back_color.append (color_value.to_integer_8.out)
-			color_value := l_color |>> 8
+			red := l_color & 0x000000ff
+			l_color := l_color |>> 8
+			green := l_color & 0x000000ff
+			l_color := l_color |>> 8
+			blue := l_color & 0x000000ff
+			hashed_back_color.append (red.out)
 			hashed_back_color.append (rtf_green.twin)
-			hashed_back_color.append (color_value.to_integer_8.out)
+			hashed_back_color.append (green.out)
 			hashed_back_color.append (rtf_blue.twin)
-			hashed_back_color.append (l_color.to_integer_8.out)
+			hashed_back_color.append (blue.out)
 			hashed_back_color.append_character (';')
 
 			hashed_colors.search (hashed_back_color)

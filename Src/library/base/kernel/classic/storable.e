@@ -79,6 +79,15 @@ feature -- Setting
 			"eif_set_new_independent_format"
 		end
 
+	set_new_recoverable_format (v: BOOLEAN) is
+			-- If `v' it will use ISE Eiffel 5.3 storable format for
+			-- storing with ability to recover when there is a type mismatch.
+		external
+			"C macro signature (EIF_BOOLEAN) use %"eif_store.h%""
+		alias
+			"eif_set_new_recoverable_format"
+		end
+
 feature -- Element change
 
 	basic_store (medium: IO_MEDIUM) is

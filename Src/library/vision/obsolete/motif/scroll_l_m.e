@@ -39,6 +39,7 @@ inherit
 
 	MEL_SCROLLED_LIST
 		rename
+			make as mel_make,
 			foreground_color as mel_foreground_color,
 			set_foreground_color as mel_set_foreground_color,
 			background_color as mel_background_color,
@@ -61,7 +62,7 @@ inherit
 		redefine	
 			set_height, set_width, set_size, parent
 		select
-			list_make_from_existing, make_variable
+			list_make_from_existing, mel_make
 		end
 		
 creation

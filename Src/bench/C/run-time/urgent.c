@@ -60,11 +60,6 @@ rt_shared char *uchunk(void);			/* Urgent allocation of a stack chunk */
 #endif
 #endif
 
-#ifndef lint
-rt_private char *rcsid =
-	"$Id$";
-#endif
-
 rt_shared void ufill(void)
 {
 	/* Fill in the urgent chunk array as far as possible. At the time this
@@ -72,8 +67,8 @@ rt_shared void ufill(void)
 	 * hence we may call cmalloc directly.
 	 */
 
-	register1 int i;					/* Location to be filled in */
-	register2 char *chunk;				/* Allocated chunk */
+	int i;					/* Location to be filled in */
+	char *chunk;				/* Allocated chunk */
 
 	for (i = urgent_index + 1; i < URGENT_NBR; i++) {
 		chunk = cmalloc(URGENT_CHUNK);	/* Attempt allocation */

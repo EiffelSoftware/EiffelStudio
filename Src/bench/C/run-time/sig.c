@@ -120,11 +120,6 @@ rt_private int spop(void);					/* Extract signals from queued stack */
 #endif
 #endif
 
-#ifndef lint
-rt_private char *rcsid =
-	"$Id$";
-#endif
-
 /*
  * Signal handler routines.
  */
@@ -526,8 +521,8 @@ rt_shared void initsig(void)
 	 * and was made as short as possible--RAM.
 	 */
 	RT_GET_CONTEXT
-	register1 int sig;				/* To loop over the signals */
-	register2 Signal_t (*old)();	/* Old signal handler */
+	int sig;				/* To loop over the signals */
+	Signal_t (*old)();	/* Old signal handler */
 
 	/* Initialize the signal stack (circular buffer). The last read location is
 	 * set to SIGSTACK - 1 (i.e. at the end of the array) while the first free
@@ -769,7 +764,7 @@ rt_private int spop(void)
 	 * stack is empty, return 0.
 	 */
 	RT_GET_CONTEXT
-	register1 int newpos;		/* Position we'll go to if we read something */
+	int newpos;		/* Position we'll go to if we read something */
 	int cursig;					/* Current signal to be sent */
 
 #ifdef HAS_SIGSETMASK

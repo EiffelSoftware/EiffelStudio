@@ -14,13 +14,10 @@ inherit
 
 feature -- Status
 
-	is_built_in: BOOLEAN is
+	is_built_in: BOOLEAN is True
 			-- Is the current binary operator a built-in one ?
-		do
-			Result := True;
-		end;
 
-	is_commutative: BOOLEAN is true;
+	is_commutative: BOOLEAN is True
 			-- Operation is commutative.
 
 feature 
@@ -229,7 +226,7 @@ feature -- IL code generation
 					-- Simple type can never be Void
 				generate_il_boolean_constant
 			else
-				Precursor {BINARY_B}
+				generate_converted_standard_il
 			end
 		end
 

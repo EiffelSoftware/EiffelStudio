@@ -244,6 +244,11 @@ feature -- Basic operations
 				insert_mode := not insert_mode
 				invalidate
 				update
+			elseif virtual_key = Vk_Return and then cursor /= Void then
+				io.put_string ("insert new line%N")
+				cursor.insert_eol (insert_mode)
+				invalidate
+				update
 			else
 				-- Key not handled, do nothing
 			end
@@ -255,7 +260,8 @@ feature -- Basic operations
 		local
 			c: CHARACTER
    		do
-			if character_code /= Vk_Back then
+			if (character_code /= Vk_Back) and then
+					(character_code /= Vk_return) and then (cursor /= Void) then
 				c := character_code.ascii_char
 				if insert_mode then
 					cursor.replace_char (c)

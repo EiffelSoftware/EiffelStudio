@@ -152,7 +152,7 @@ feature -- Byte code generation
 				-- Check first if there are no #include to generate
 				-- required by the feature
 			if is_special or has_include_list then
-				if is_special and then not shared_include_set.has (special_file_name) then
+				if special_id = macro_id and then not shared_include_set.has (special_file_name) then
 					if not context.final_mode then
 						generated_file.putstring ("#include ");
 						generated_file.putstring (special_file_name);
@@ -253,7 +253,15 @@ feature -- Byte code generation
 			when dll32_id then
 				generate_dll32_body;
 			else
+				generate_basic_body;
 			end
+		end;
+
+	generate_basic_body is
+		do
+			if has_signature then
+				generate_macro_body;
+			end;
 		end;
 
 	generate_macro_body is
@@ -261,7 +269,20 @@ feature -- Byte code generation
 		local
 			i, count: INTEGER;
 		do
-			generate_half_call;
+			if not result_type.is_void or has_return_type then
+				generated_file.putstring ("return ");
+			end;
+			if has_return_type then
+				generated_file.putchar ('(');
+				generated_file.putstring (return_type);
+				generated_file.putchar (')');
+				generated_file.putchar (' ');
+			elseif result_type /= Void then
+				result_type.c_type.generate_cast (generated_file);
+			else
+					-- I'm not sure this is really needed
+				generated_file.putstring ("(void) ");
+			end;
 			generated_file.putstring (external_name);
 			if arguments /= Void then
 				generated_file.putchar ('(');
@@ -276,27 +297,50 @@ feature -- Byte code generation
 			-- Generate body for dll16 (Windows)
 		do
 				-- Declare local variables required by the call
-			generated_file.putstring ("HANDLE a_result;%N");
-			generated_file.putstring ("FARPROC fp;%N");
-			generated_file.putstring ("HINDIR handle;%N");
-			if result_type /= Void then
+			generated_file.putstring ("HANDLE a_result;");
+			generated_file.new_line;
+			generated_file.putstring ("FARPROC fp;");
+			generated_file.new_line;
+			generated_file.putstring ("HINDIR handle;");
+			generated_file.new_line;
+			if not result_type.is_void then
 				result_type.c_type.generate (generated_file);
-				generated_file.putstring (" Result;%N");
+				generated_file.putstring (" Result;");
+			generated_file.new_line;
 			end;
 			generated_file.new_line;
 				-- Now comes the body
 			generated_file.putstring ("a_result = LoadLibrary (");
 			generated_file.putstring (special_file_name);
-			generated_file.putstring (");%N");
+			generated_file.putstring (");");
+			generated_file.new_line;
+			generated_file.putstring ("if (a_result < 32) eraise (%"Can not load library%",EN_PROG);");
+			generated_file.new_line;
 			generated_file.putstring ("fp = GetProcAddress (a_result, ");
 			generated_file.putstring (dll_arg);
-			generated_file.putstring (");%N");
-			generated_file.putstring ("handle = GetIndirectFunctionHandle (fp,");
-			generate_arguments_with_cast;
-			generated_file.putstring (",INDIR_ENDLIST);%N");
-			if result_type /= Void then
-				generated_file.putstring ("Result = InvokeIndirectFunction (handle, ???);%N");
-				generated_file.putstring ("FreeLibrary (a_result);%N");
+			generated_file.putstring (");");
+			generated_file.new_line;
+			generated_file.putstring ("if (fp == NULL) eraise (%"Can not find function%",EN_PROG);");
+			generated_file.new_line;
+			generated_file.putstring ("handle = GetIndirectFunctionHandle (fp");
+			if arguments /= Void then
+				generated_file.putchar (',');
+				generate_type_list;
+			end;
+			generated_file.putstring (", INDIR_ENDLIST);");
+			generated_file.new_line;
+			generated_file.putstring ("if (handle == NULL) eraise (%"Can not allocate function handle%",EN_PROG);");
+			generated_file.new_line;
+			if not result_type.is_void then
+				generated_file.putstring ("Result = InvokeIndirectFunction (handle");
+				if arguments /= Void then
+					generated_file.putchar (',');
+					generate_arguments_with_cast;
+				end;
+				generated_file.putstring (");");
+				generated_file.new_line;
+				generated_file.putstring ("FreeLibrary (a_result);");
+				generated_file.new_line;
 				generated_file.putstring ("return ");
 				if has_return_type then
 					generated_file.putchar ('(');
@@ -304,10 +348,18 @@ feature -- Byte code generation
 					generated_file.putchar (')');
 					generated_file.putchar (' ');
 				end;
-				generated_file.putstring ("Result;%N");
+				generated_file.putstring ("Result;");
+				generated_file.new_line;
 			else
-				generated_file.putstring ("InvokeIndirectFunction (handle, ???);%N");
-				generated_file.putstring ("FreeLibrary (a_result);%N");
+				generated_file.putstring ("InvokeIndirectFunction (handle");
+				if arguments /= Void then
+					generated_file.putchar (',');
+					generate_arguments_with_cast;
+				end;
+				generated_file.putstring (");");
+				generated_file.new_line;
+				generated_file.putstring ("FreeLibrary (a_result);");
+				generated_file.new_line;
 			end;
 		end;
 
@@ -315,27 +367,53 @@ feature -- Byte code generation
 			-- Generate body for an external of type dll32
 		do
 				-- Declare local variables required by the call
-			generated_file.putstring ("HANDLE a_result;%N");
-			if result_type /= Void then
+			generated_file.putstring ("HANDLE a_result;");
+			generated_file.new_line;
+			generated_file.putstring ("FARPROC fp;");
+			generated_file.new_line;
+			generated_file.putstring ("HINDIR hindir1;");
+			generated_file.new_line;
+			if not result_type.is_void then
 				result_type.c_type.generate (generated_file);
-				generated_file.putstring (" Result;%N");
+				generated_file.putstring (" Result;");
+				generated_file.new_line;
 			end;
 			generated_file.new_line;
 				-- Now comes the body
 			generated_file.putstring ("a_result = LoadLibrary (");
 			generated_file.putstring (special_file_name);
-			generated_file.putstring (");%N");
-			generated_file.putstring ("fp = GetProcAddress (a_result, ");
-			generated_file.putstring (dll_arg);
-			generated_file.putstring (");%N");
-			if result_type /= Void then
+			generated_file.putstring (");");
+			generated_file.new_line;
+			generated_file.putstring ("if (a_result < 32) eraise (%"Can not load library%",EN_PROG);");
+			generated_file.new_line;
+			generated_file.putstring ("fp = GetProcAddress (a_result,%"Win386LibEntry%");");
+			generated_file.new_line;
+			generated_file.putstring ("if (fp == NULL) eraise (%"Can not find entry point%",EN_PROG);");
+			generated_file.new_line;
+			generated_file.putstring ("hindir1 = GetIndirectFunctionHandle (fp");
+			if arguments /= Void then
+				generated_file.putchar (',');
+				generate_type_list;
+			end;
+			generated_file.putstring (", INDIR_WORD, INDIR_ENDLIST);");
+			generated_file.new_line;
+			generated_file.putstring ("if (hindir1 == NULL) eraise (%"Can not allocate function handle%",EN_PROG);");
+			generated_file.new_line;
+			if not result_type.is_void then
 				generated_file.putstring ("Result = ");
 			end;
-			generated_file.putstring ("fp (");
-			generate_arguments_with_cast;
-			generated_file.putstring (");%N");
-			generated_file.putstring ("FreeLibrary (a_result);%N");
-			if result_type /= Void then
+			generated_file.putstring ("InvokeIndirectFunction (hindir1");
+			if arguments /= Void then
+				generated_file.putchar (',');
+				generate_arguments_with_cast;
+			end;
+			generated_file.putchar (',');
+			generated_file.putstring (dll_arg);
+			generated_file.putstring (");");
+			generated_file.new_line;
+			generated_file.putstring ("FreeLibrary (a_result);");
+			generated_file.new_line;
+			if not result_type.is_void then
 				generated_file.putstring ("return ");
 				if has_return_type then
 					generated_file.putchar ('(');
@@ -343,7 +421,8 @@ feature -- Byte code generation
 					generated_file.putchar (')');
 					generated_file.putchar (' ');
 				end;
-				generated_file.putstring ("Result;%N");
+				generated_file.putstring ("Result;");
+				generated_file.new_line;
 			end;
 		end;
 
@@ -353,25 +432,6 @@ feature -- Byte code generation
 			if context.result_used or postcondition /= Void or context.has_invariant then
 				generated_file.putstring ("return Result;");
 				generated_file.new_line;
-			end;
-		end;
-
-	generate_half_call is
-			-- Generate half call for macro
-		do
-			if result_type /= Void or has_return_type then
-				generated_file.putstring ("return ");
-			end;
-			if has_return_type then
-				generated_file.putchar ('(');
-				generated_file.putstring (return_type);
-				generated_file.putchar (')');
-				generated_file.putchar (' ');
-			elseif result_type /= Void then
-				result_type.c_type.generate_cast (generated_file);
-			else
-					-- I'm not sure this is really needed
-				generated_file.putstring ("(void) ");
 			end;
 		end;
 
@@ -389,6 +449,28 @@ feature -- Byte code generation
 				loop
 					generated_file.putstring ("arg");
 					generated_file.putint (i);
+					i := i + 1;
+					if i <= count then
+						generated_file.putstring (", ");
+					end;
+				end;
+			end;
+		end;
+
+	generate_type_list is
+			-- Generate a list of the types held in the signature, for the dll
+		local
+			i, count: INTEGER;
+		do
+			if arguments /= Void then
+				from
+					i := arguments.lower;
+					count := arguments.count;
+				until
+					i > count
+				loop
+					generated_file.putstring ("INDIR_");
+					generated_file.putstring (arg_list.item (i));
 					i := i + 1;
 					if i <= count then
 						generated_file.putstring (", ");

@@ -24,12 +24,13 @@ inherit
 		redefine
 			interface,
 			make,
-			initialize
+			initialize,
+			visual_widget
 		end
 
 	EV_RADIO_PEER_IMP
 		redefine
-			interface, widget_object
+			interface, widget_object, visual_widget
 		end
 
 create
@@ -41,7 +42,10 @@ feature {NONE} -- Initialization
 			-- Create radio button.
 		do
 			base_make (an_interface)
-			set_c_object (C.gtk_radio_button_new (NULL))
+			visual_widget := C.gtk_radio_button_new (NULL)
+			set_c_object (C.gtk_event_box_new)
+			C.gtk_widget_show (visual_widget)
+			C.gtk_container_add (c_object, visual_widget)
 			enable_select
 		end
 
@@ -72,20 +76,19 @@ feature -- Status setting
 feature {EV_ANY_I} -- Implementation
 
 	widget_object (a_list: POINTER): POINTER is
-			-- Returns the c_object of the radio item in `a_list'.
---		local
---			item_ptr: POINTER
+			-- Returns c_object relative to a_list data.
 		do
-			--item_ptr := C.gslist_struct_data (a_list)
-			--Result := C.gtk_widget_struct_parent (item_ptr)
-			-- Above is the implementation should an event box need to be introduced.
 			Result := C.gslist_struct_data (a_list)
+			Result := C.gtk_widget_struct_parent (Result)
 		end
 
 	radio_group: POINTER is
 		do
 			Result := C.gtk_radio_button_group (visual_widget)
 		end
+		
+	visual_widget: POINTER
+			-- Pointer to the gtk widget shown on screen.
 
 feature {EV_ANY_I} -- Implementation
 

@@ -6,7 +6,7 @@
 			<Directory Id="Application" Name="." >
 				<Directory Id="studio" Name="studio">
 					<Directory Id="spec" Name="spec">
-						<Directory Id="windows" Name="windows">
+						<Directory Id="windows_dir" Name="$(var.ISE_PLATFORM)">
 							<Directory Id="bin" Name="bin">
 								<Component Id="ec.exe" Guid="D1A60484-59B5-4A63-A296-3542CC6D4493">
 									<File Id="ec.exe" Name="ec.exe" KeyPath="yes" src="$(env.INSTALL_DIR)\releases\$(var.ISE_RELEASE)\ec.exe" />

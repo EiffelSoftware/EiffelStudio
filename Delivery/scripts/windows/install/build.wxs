@@ -5,7 +5,7 @@
 	<IgnoreModularization Name="PROJECTDIR" Type="Property" />
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Component Id="Registry" Guid="AE44C028-98E2-41B0-A2B5-5B359D6C13A0">
-        <Registry Root="HKLM" Key="Software\ISE\Eiffel56\build" Name="ISE_PLATFORM" Value="windows" Id="registry6" />
+        <Registry Root="HKLM" Key="Software\ISE\Eiffel56\build" Name="ISE_PLATFORM" Value="$(var.ISE_PLATFORM)" Id="registry6" />
         <Registry Root="HKLM" Key="Software\ISE\Eiffel56\build" Name="ISE_PROJECTS" Value="[PROJECTDIR]" Id="registry7" />
         <Registry Root="HKLM" Key="Software\ISE\Eiffel56\build" Name="ISE_EIFFEL" Value="[Application]" KeyPath="yes" Id="registry" />
       </Component>
@@ -146,7 +146,7 @@
             <Directory Id="ico" Name="ico" />
           </Directory>
           <Directory Id="spec" Name="spec">
-            <Directory Id="windows" Name="windows">
+            <Directory Id="windows_dir" Name="$(var.ISE_PLATFORM)">
               <Directory Id="bin" Name="bin">
 				  <Component Id="build.exe" Guid="B3A0FDED-6F1D-4C86-A3E5-F9F145373FED">
 					<File Id="build.exe" Name="build.exe" KeyPath="yes" src="$(env.INSTALL_DIR)\releases\$(var.ISE_RELEASE)\build.exe" />

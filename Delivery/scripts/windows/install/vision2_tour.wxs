@@ -4,7 +4,7 @@
 	<Package Id="85FA3E69-7DD6-4B30-9EBD-994B605EC147" Keywords="MergeModule, MSI, Database" Description="Vision2Tour" Manufacturer="ISE Inc." InstallerVersion="200" Languages="1033" Compressed="yes" SummaryCodepage="0" />
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Component Id="Registry" Guid="232839E5-2B6C-4AAA-866A-899685E51D46">
-        <Registry Root="HKLM" Key="Software\ISE\Eiffel56\vision2_tour" Name="ISE_PLATFORM" Value="windows" Id="registry1" />
+        <Registry Root="HKLM" Key="Software\ISE\Eiffel56\vision2_tour" Name="ISE_PLATFORM" Value="$(var.ISE_PLATFORM)" Id="registry1" />
         <Registry Root="HKLM" Key="Software\ISE\Eiffel56\vision2_tour" Name="ISE_EIFFEL" Value="[Application]" KeyPath="yes" Id="registry" />
       </Component>
       <Directory Id="ProgramMenuFolder" Name="Redist">
@@ -449,7 +449,7 @@
             </Directory>
           </Directory>
           <Directory Id="spec" Name="spec">
-            <Directory Id="windows" Name="windows">
+            <Directory Id="windows_dir" Name="$(var.ISE_PLATFORM)">
               <Directory Id="bin" Name="bin">
                 <Component Id="wel_hook.dll" Guid="E734C5C6-261A-435A-ADC3-625B85E44881">
                   <File Id="wel_hook.dll" Name="wel_hook.dll" KeyPath="yes" />

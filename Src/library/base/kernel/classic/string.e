@@ -636,7 +636,7 @@ feature -- Element change
 			if other /= Current then
 				old_area := area
 				standard_copy (other)
-				if old_area = Void or else old_area.count < area.count then
+				if old_area = Void or else old_area.count < count then
 					area := standard_clone (area)
 				else
 					($old_area).memory_copy ($area, count)

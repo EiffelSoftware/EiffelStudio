@@ -47,12 +47,16 @@ feature
 	multi_line: LINE [MULTI_TYPE_A];
 			-- Line of manifest array types
 
+	tuple_line: LINE [TUPLE_TYPE_A];
+			-- Line of manifest tuple types
+
 	interval_line: LINE [INTERVAL_B];
 			-- Line of intervals
 
 	creation_types: LINE [CREATE_INFO];
 			-- Creation information types
 
+	
 	parameters: LINE [TYPE_A];
 			-- Features with arguments encountered during type check
 
@@ -88,6 +92,7 @@ feature
 			!! locals.make (10);
 			!! access_line.make;
 			!! multi_line.make;
+			!! tuple_line.make;
 			!! interval_line.make;
 			!! creation_types.make;
 			!! parameters.make;
@@ -330,6 +335,7 @@ feature -- Managing the type stack
 		do
 			access_line.start;
 			multi_line.start;	
+			tuple_line.start;	
 			interval_line.start;
 			creation_types.start;
 			parameters.start;
@@ -354,6 +360,7 @@ feature -- Managing the type stack
 			locals.clear_all;
 			access_line.wipe_out;
 			multi_line.wipe_out;
+			tuple_line.wipe_out;
 			interval_line.wipe_out;
 			creation_types.wipe_out;
 			parameters.wipe_out;

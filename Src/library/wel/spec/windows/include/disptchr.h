@@ -2,12 +2,17 @@
  * DISPATCH.H
  */
 
+#ifndef __WEL_GLOBALS__
+#	include "wel_globals.h"
+#endif
+
 #ifndef __WEL_DISPATCHER__
 #define __WEL_DISPATCHER__
 
 #ifndef __WEL__
-#	include <wel.h>
+#	include "wel.h"
 #endif
+
 
 typedef EIF_INTEGER (* EIF_WNDPROC)
 	(EIF_OBJ,     /* WEL_DISPATCHER Eiffel object */
@@ -30,32 +35,33 @@ typedef EIF_BOOLEAN (* EIF_DLGPROC)
 LRESULT CALLBACK cwel_window_procedure (HWND, UINT, WPARAM, LPARAM);
 BOOL CALLBACK cwel_dialog_procedure (HWND, UINT, WPARAM, LPARAM);
 
-extern EIF_WNDPROC wel_wndproc;
-/* Address of the Eiffel routine `window_procedure' (class WEL_DISPATCHER) */
-
-extern EIF_DLGPROC wel_dlgproc;
-/* Address of the Eiffel routine `dialog_procedure' (class WEL_DISPATCHER) */
-
-extern EIF_OBJ dispatcher;
-/* Address of the Eiffel object WEL_DISPATCHER created for each application */
-
 #define cwel_window_procedure_address ((EIF_POINTER) cwel_window_procedure)
 /* Address of `cwel_window_procedure' */
 
 #define cwel_dialog_procedure_address ((EIF_POINTER) cwel_dialog_procedure)
 /* Address of `cwel_dialog_procedure' */
 
-#define cwel_set_window_procedure_address(_addr_) (wel_wndproc = (EIF_WNDPROC) _addr_)
-/* Set `wel_wndproc' with `addr' */
+#ifdef EIF_THREADS
+	extern void cwel_set_window_procedure_address( EIF_POINTER );
+		/* Set `wel_wndproc' with `addr' */
+	extern void cwel_set_dialog_procedure_address( EIF_POINTER );
+		/* Set `wel_dlgproc' with `addr' */
+	extern void cwel_set_dispatcher_object(EIF_OBJ _addr_);
+		/* Set `dispather' with `addr' */
+	extern void cwel_release_dispatcher_object();
+		/* Set `dispather' with `addr' */
+#else
 
-#define cwel_set_dialog_procedure_address(_addr_) (wel_dlgproc = (EIF_DLGPROC) _addr_)
-/* Set `wel_dlgproc' with `addr' */
+#	define cwel_set_window_procedure_address(_addr_) (wel_wndproc = (EIF_WNDPROC) _addr_) 
+		/* Set `wel_wndproc' with `addr' */
+#	define cwel_set_dialog_procedure_address(_addr_) (wel_dlgproc = (EIF_DLGPROC) _addr_)
+		/* Set `wel_dlgproc' with `addr' */
+#	define cwel_set_dispatcher_object(_addr_) (dispatcher = (EIF_OBJ) eif_adopt (_addr_))
+		/* Set `dispather' with `addr' */
+#	define cwel_release_dispatcher_object (eif_wean (dispatcher)) 
+		/* Set `dispather' with `addr' */
 
-#define cwel_set_dispatcher_object(_addr_) (dispatcher = (EIF_OBJ) eif_adopt (_addr_))
-/* Set `dispather' with `addr' */
-
-#define cwel_release_dispatcher_object (eif_wean (dispatcher))
-/* Set `dispather' with `addr' */
+#endif
 
 #endif /* __WEL_DISPATCHER__ */
 

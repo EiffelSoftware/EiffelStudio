@@ -16,11 +16,11 @@
 #endif
 
 #ifndef _eif_eiffel_h_
-#	include <eif_eiffel.h>
+#	include "eif_eiffel.h"
 #endif
 
 #ifndef _lang_h_
-#	include <wel_lang.h>
+#	include "wel_lang.h"
 #endif
 
 #define cwel_pointer_to_integer(_ptr_) ((EIF_INTEGER) _ptr_)

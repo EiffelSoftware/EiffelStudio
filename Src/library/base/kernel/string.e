@@ -462,6 +462,8 @@ feature -- Element change
 
 	append (s: STRING) is
 			-- Append a copy of `s' at end.
+		require
+			argument_not_void: s /= Void
 		local
 			new_size: INTEGER;
 			s_area: like area

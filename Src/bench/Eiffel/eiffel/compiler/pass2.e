@@ -59,10 +59,12 @@ feature
 			deg_output: DEGREE_OUTPUT
 			local_changed_classes: PART_SORTED_TWO_WAY_LIST [PASS2_C];
 			local_extra_check_list: PART_SORTED_TWO_WAY_LIST [CLASS_C];
+			generic_classes: LINKED_LIST [CLASS_C]
 		do
 			local_changed_classes := changed_classes
 			deg_output := Degree_output;
 			deg_output.put_start_degree (Degree_number, local_changed_classes.count)
+			!! generic_classes.make
 
 			from
 				local_changed_classes.start
@@ -70,7 +72,7 @@ feature
 				local_changed_classes.after
 			loop
 				current_class := local_changed_classes.item.associated_class;
-				if current_class.changed and then current_class.generics /= Void	then
+				if current_class.changed and then current_class.generics /= Void then
 					System.set_current_class (current_class);
 					current_class.check_constraint_genericity;
 				end;
@@ -88,6 +90,7 @@ feature
 				pass2_c := local_changed_classes.first;
 				current_class := pass2_c.associated_class;
 				System.set_current_class (current_class)
+				generic_classes.extend (current_class)
 
 				pass2_c.execute (deg_output, local_changed_classes.count)
 
@@ -106,17 +109,18 @@ feature
 				-- Check now the validity on creation constraint, this need to be done
 				-- at the end of Degree 4 because we need some feature tables.
 			from
-				local_changed_classes.start
+				generic_classes.start
 			until
-				local_changed_classes.after
+				generic_classes.after
 			loop
-				current_class := local_changed_classes.item.associated_class;
-				if current_class.changed and then current_class.generics /= Void	then
-					System.set_current_class (current_class);
-					current_class.check_creation_constraint_genericity;
-				end;
-				local_changed_classes.forth
-			end;
+				current_class := generic_classes.item
+				if current_class.changed and then current_class.generics /= Void then
+					System.set_current_class (current_class)
+					current_class.check_creation_constraint_genericity
+				end
+				generic_classes.forth
+			end
+			generic_classes := Void
 
 			if System.has_expanded and then not local_extra_check_list.empty then
 				System.check_vtec;

@@ -26,9 +26,7 @@ feature {NONE} -- Initialization
 			valid_class_id: a_class_id > 0
 		do
 			class_id := a_class_id
-			if is_basic then
-				is_expanded := True
-			end
+			is_expanded := is_basic
 		ensure
 			class_id_set: class_id = a_class_id
 			is_expanded_set: is_basic implies is_expanded

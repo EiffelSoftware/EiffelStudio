@@ -25,9 +25,33 @@ inherit
 		end;
 	COMPILER_EXPORTER
 
-creation
+creation {COMPILER_EXPORTER}
 
 	make
+
+creation 
+
+	make_with_cluster
+
+feature {NONE} -- Initialization
+
+	make is
+			-- initialization
+		do
+			reset_options;
+			if not System.first_compilation then
+					-- Time check and genericity (a generic parameter cannot
+					-- have the same name as a class)
+				System.record_new_class_i (Current)
+			end;
+		end;
+
+	make_with_cluster (cluster_i: CLUSTER_I) is
+			-- Set `cluster' to `cluster_i'.
+		do
+			make;
+			set_cluster (cluster_i);
+		end;
 
 feature -- Properties
 
@@ -88,19 +112,8 @@ feature -- Properties
 	visible_level: VISIBLE_I;
 			-- Visible level
 
-	make is
-			-- initialization
-		do
-			reset_options;
-			if not System.first_compilation then
-					-- Time check and genericity (a generic parameter cannot
-					-- have the same name as a class)
-				System.record_new_class_i (Current)
-			end;
-		end;
-
 	set_base_name (s: STRING) is
-			-- Assign `s' to `file_name'.
+			-- Assign `s' to `base_name'.
 		do
 			base_name := s;	
 		end;
@@ -150,6 +163,15 @@ feature -- Setting
 			class_name := s;
 		ensure
 			set: class_name = s
+		end;
+
+	set_file_details (s: like class_name; b: STRING) is 
+			-- Assign `s' to class_name, `b' to base_name, and
+			-- set date of insertion.
+		do
+			set_class_name (s);
+			set_base_name (b);
+			set_date;
 		end;
 
 feature -- Comparison

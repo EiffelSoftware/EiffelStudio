@@ -100,7 +100,7 @@ Here is the full text of <I>MAIN_WINDOW</I>:
 <I>			</I>-- Make the main window.
 		<B>do</B> 
 <I>			make_top </I>(&quot;<I>My application</I>&quot;)
-<I>			</I>!!<I> dc<B>.</B>make </I>(<I>Current</I>)
+<I>			</I><b>create</b><I> dc<B>.</B>make </I>(<I>Current</I>)
 		<B>end</B>
 <I>	</I>
 <B>feature</B>   -- Access
@@ -152,7 +152,7 @@ Here is the full text of <I>MAIN_WINDOW</I>:
 		<B>local</B>
 			msgBox: WEL_MSG_BOX
 		<B>do</B>
-<I>			!! msgBox.make
+<I>			<b>create</b> msgBox.make
 			msgBox.question_message_box </I>(Current, &quot;<I>Do you want to quit?</I>&quot;,<I> </I>&quot;<I>Quit</I>&quot;)	
 <I>			Result </I>:=<I> msgBox.message_box_result = Mb_ok
 		<B>end

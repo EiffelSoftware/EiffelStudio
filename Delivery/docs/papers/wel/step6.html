@@ -70,7 +70,7 @@ Let's say that the window's contents is a set of lines, and each line is a set o
 		<B>local</B> 
 <I>			p</I>:<I> POINT</I>
 		<B>do</B> 
-<I>			</I>!!<I> p<B>.</B>make </I>(<I>x</I>,<I> y</I>)
+<I>			</I><b>create</b><I> p<B>.</B>make </I>(<I>x</I>,<I> y</I>)
 <I>			extend </I>(<I>p</I>)
 		<B>end</B>
 <I>	</I>
@@ -121,9 +121,9 @@ Attribute <I>lines</I> needs to be created in the <I>make</I> routine as follows
 <I>			</I>-- Make the main window.
 		<B>do</B> 
 <I>			make_top </I>(&quot;<I>My application</I>&quot;)
-<I>			</I>!!<I> dc<B>.</B>make </I>(<I>Current</I>)
+<I>			</I><b>create</b><I> dc<B>.</B>make </I>(<I>Current</I>)
 <I>			set_pen_width </I>(<I>1</I>)
-<I>			</I>!!<I> lines<B>.</B>make</I>
+<I>			</I><b>create</b><I> lines<B>.</B>make</I>
 		<B>end</B>
 </PRE>
 <P>
@@ -136,7 +136,7 @@ And finally, you have to change <I>on_left_button_down</I> and <I>on_mouse_move<
 <I>				dc<B>.</B>get</I>
 <I>				dc<B>.</B>move_to </I>(<I>x_pos</I>,<I> y_pos</I>)
 <I>				dc<B>.</B>select_pen </I>(<I>pen</I>)
-<I>				</I>!!<I> current_line<B>.</B>make</I>
+<I>				</I><b>create</b><I> current_line<B>.</B>make</I>
 <I>				current_line<B>.</B>set_width </I>(<I>pen<B>.</B>width</I>)
 <I>				lines<B>.</B>extend </I>(<I>current_line</I>)
 <I>				current_line<B>.</B>add </I>(<I>x_pos</I>,<I> y_pos</I>)
@@ -170,7 +170,7 @@ At this point, <I>lines</I> has all the information needed to redraw the window'
 <I>					first_point </I>:= <B>true</B>
 <I>					a_line </I>:=<I> lines<B>.</B>item</I>
 <I>					a_line<B>.</B>start</I>
-<I>					</I>!!<I> a_pen<B>.</B>make_solid </I>(<I>a_line<B>.</B>width</I>,<I> black</I>)
+<I>					</I><b>create</b><I> a_pen<B>.</B>make_solid </I>(<I>a_line<B>.</B>width</I>,<I> black</I>)
 <I>					paint_dc<B>.</B>select_pen </I>(<I>a_pen</I>)
 				<B>until</B> 
 <I>					a_line<B>.</B>off</I>
@@ -215,9 +215,9 @@ Here is the full text of <I>MAIN_WINDOW</I> (Professional version):
 <I>			</I>-- Make the main window.
 		<B>do</B> 
 <I>			make_top </I>(&quot;<I>My application</I>&quot;)
-<I>			</I>!!<I> dc<B>.</B>make </I>(<I>Current</I>)
+<I>			</I><b>create</b><I> dc<B>.</B>make </I>(<I>Current</I>)
 <I>			set_pen_width </I>(<I>1</I>)
-<I>			</I>!!<I> lines<B>.</B>make</I>
+<I>			</I><b>create</b><I> lines<B>.</B>make</I>
 		<B>end</B>
 <I>	</I>
 <B>feature</B>   -- Access
@@ -246,7 +246,7 @@ Here is the full text of <I>MAIN_WINDOW</I> (Professional version):
 <I>	set_pen_width </I>(<I>new_width</I>:<I> INTEGER</I>)<I> <B>is</B> </I>
 <I>			</I>-- Set pen width with <I>new_width</I>.
 		<B>do</B> 
-<I>			</I>!!<I> pen<B>.</B>make_solid </I>(<I>new_width</I>,<I> black</I>)
+<I>			</I><b>create</b><I> pen<B>.</B>make_solid </I>(<I>new_width</I>,<I> black</I>)
 		<B>end</B>
 <I>	</I>
 <B>feature</B>  {<I>NONE</I>}<I> </I>-- Implementation
@@ -258,7 +258,7 @@ Here is the full text of <I>MAIN_WINDOW</I> (Professional version):
 <I>				button_down </I>:= <B>true</B>
 <I>				dc<B>.</B>get</I>
 <I>				dc<B>.</B>move_to </I>(<I>x_pos</I>,<I> y_pos</I>)
-<I>				dc<B>.</B>select_pen </I>(<I>pen</I>) !!<I> current_line<B>.</B>make</I>
+<I>				dc<B>.</B>select_pen </I>(<I>pen</I>) <b>create</b><I> current_line<B>.</B>make</I>
 <I>				current_line<B>.</B>set_width </I>(<I>pen<B>.</B>width</I>)
 <I>				lines<B>.</B>extend </I>(<I>current_line</I>)
 <I>				current_line<B>.</B>add </I>(<I>x_pos</I>,<I> y_pos</I>)
@@ -287,7 +287,7 @@ Here is the full text of <I>MAIN_WINDOW</I> (Professional version):
 			-- Bring up <I>line_thickness_dialog</I> and set the -- new pen width.
 		<B>do</B> 
 			<B>if</B>  <I>line_thickness_dialog </I>=<I> void </I><B>then</B> 
-				!!<I> line_thickness_dialog<B>.</B>make </I>(<I>Current</I>)
+				<b>create</b><I> line_thickness_dialog<B>.</B>make </I>(<I>Current</I>)
 			<B>end</B>
 <I>			line_thickness_dialog<B>.</B>activate</I>
 			<B>if</B>  <I>line_thickness_dialog<B>.</B>ok_pushed </I><B>then</B> 
@@ -311,7 +311,7 @@ Here is the full text of <I>MAIN_WINDOW</I> (Professional version):
 <I>					first_point </I>:= <B>true</B>
 <I>					a_line </I>:=<I> lines<B>.</B>item</I>
 <I>					a_line<B>.</B>start</I>
-					!!<I> a_pen<B>.</B>make_solid </I>(<I>a_line<B>.</B>width</I>,<I> black</I>)
+					<b>create</b><I> a_pen<B>.</B>make_solid </I>(<I>a_line<B>.</B>width</I>,<I> black</I>)
 <I>					paint_dc<B>.</B>select_pen </I>(<I>a_pen</I>)
 				<B>until</B> 
 <I>					a_line<B>.</B>off</I>
@@ -333,7 +333,7 @@ Here is the full text of <I>MAIN_WINDOW</I> (Professional version):
 		<B>local</B>
 			msgBox: WEL_MSG_BOX
 		<B>do</B>
-<I>			!! msgBox.make
+<I>			<b>create</b> msgBox.make
 			msgBox.question_message_box </I>(Current, &quot;<I>Do you want to quit?</I>&quot;,<I> </I>&quot;<I>Quit</I>&quot;)	
 <I>			Result </I>:=<I> msgBox.message_box_result = Mb_ok
 		<B>end
@@ -365,9 +365,9 @@ Here is the full text of MAIN_WINDOW (Personal version):
 			-- Make the main window.
 		<B>do</B> 
 			make_top (&quot;My application&quot;)
-			!! dc<B>.</B>make (Current)
+			<b>create</b> dc<B>.</B>make (Current)
 			set_pen_width (1)
-			!! lines<B>.</B>make
+			<b>create</b> lines<B>.</B>make
 		<B>end</B>
 	
 <B>feature</B>   -- Access
@@ -396,7 +396,7 @@ Here is the full text of MAIN_WINDOW (Personal version):
 	set_pen_width (new_width: INTEGER) <B>is</B> 
 			-- Set pen width with new_width.
 		<B>do</B> 
-			!! pen<B>.</B>make_solid (new_width, black)
+			<b>create</b> pen<B>.</B>make_solid (new_width, black)
 		<B>end</B>
 	
 <B>feature</B>  {NONE} -- Implementation
@@ -409,7 +409,7 @@ Here is the full text of MAIN_WINDOW (Personal version):
 				dc<B>.</B>get
 				dc<B>.</B>move_to (x_pos, y_pos)
 				dc<B>.</B>select_pen (pen)
-				!! current_line<B>.</B>make
+				<b>create</b> current_line<B>.</B>make
 				current_line<B>.</B>set_width (pen<B>.</B>width)
 				lines<B>.</B>extend (current_line)
 				current_line<B>.</B>add (x_pos, y_pos)
@@ -439,7 +439,7 @@ Here is the full text of MAIN_WINDOW (Personal version):
 			-- new pen width.
 		<B>do</B> 
 			<B>if</B>  line_thickness_window = void <B>then</B> 
-				!! line_thickness_window<B>.</B>make (Current)
+				<b>create</b> line_thickness_window<B>.</B>make (Current)
 			<B>end</B>
 			line_thickness_window<B>.</B>activate
 		<B>end</B>
@@ -460,7 +460,7 @@ Here is the full text of MAIN_WINDOW (Personal version):
 					first_point := <B>true</B> 
 					a_line := lines<B>.</B>item
 					a_line<B>.</B>start
-					!! a_pen<B>.</B>make_solid (a_line<B>.</B>width, black)
+					<b>create</b> a_pen<B>.</B>make_solid (a_line<B>.</B>width, black)
 					paint_dc<B>.</B>select_pen (a_pen)
 				<B>until</B> 
 					a_line<B>.</B>off
@@ -482,7 +482,7 @@ Here is the full text of MAIN_WINDOW (Personal version):
 		<B>local</B>
 			msgBox: WEL_MSG_BOX
 		<B>do</B>
-			!! msgBox.make
+			<b>create</b> msgBox.make
 			msgBox.question_message_box (Current, &quot;Do you want to quit?&quot;, &quot;Quit&quot;)	
 			Result := msgBox.message_box_result = Mb_ok
 		<B>end</B>

@@ -51,7 +51,7 @@ Windows messages. For instance, <I>WEL_WINDOW</I> has a procedure named <I>on_le
 		<B>local</B>
 <I>			msgBox: WEL_MSG_BOX</I>
 		<B>do</B>
-<I>			!! msgBox.make
+<I>			<b>create</b> msgBox.make
 			msgBox.information_message_box (Current, &quot;You have pressed the left mouse button.&quot;,
 				&quot;Message received&quot;)
 		<B>end</B>
@@ -70,7 +70,7 @@ order to return an instance of MAIN_WINDOW.  Class APPLICATION must be defined a
 	main_window: MAIN_WINDOW <B>is</B> 
 			-- Create the application's main window.
 		<B>once</B> 
-			!! Result<B>.</B>make
+			<b>create</b> Result<B>.</B>make
 		<B>end</B>
 	
 <B>end</B>  -- class APPLICATION
@@ -87,7 +87,7 @@ The program created here closes when the user clicks on the system close box. Bu
 		<B>local</B>
 			msgBox: WEL_MSG_BOX
 		<B>do</B>
-			!! msgBox.make
+			<b>create</b> msgBox.make
 			msgBox.question_message_box (Current, &quot;Do you want to quit?&quot;, &quot;Quit&quot;)
 			Result := msgBox.message_box_result = Mb_ok
 		<B>end</B>
@@ -121,7 +121,7 @@ Here is the full source code of <I>MAIN_WINDOW</I>:
 		<B>local</B>
 			msgBox: WEL_MSG_BOX
 		<B>do</B> 
-			!! msgBox.make
+			<b>create</b> msgBox.make
 			msgBox.information_message_box (Current, &quot;You have pressed the left mouse button.&quot;,
 				&quot;Message received&quot;)
 		<B>end</B>
@@ -131,7 +131,7 @@ Here is the full source code of <I>MAIN_WINDOW</I>:
 		<B>local</B>
 			msgBox: WEL_MSG_BOX
 		<B>do</B>
-			!! msgBox.make
+			<b>create</b> msgBox.make
 			msgBox.question_message_box (Current, &quot;Do you want to quit?&quot;, &quot;Quit&quot;)	
 			Result := msgBox.message_box_result = Mb_ok
 		<B>end</B>

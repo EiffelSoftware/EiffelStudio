@@ -77,7 +77,7 @@ Now, you need to add the following once function to load the menu:
 <PRE><I>	main_menu</I>:<I> WEL_MENU </I><B>is</B> 
 <I>			</I>-- Window's menu
 		<B>once</B> 
-<I>			</I>!!<I> Result<B>.</B>make_by_id </I>(<I>Main_menu_id</I>)
+<I>			</I><b>create</b><I> Result<B>.</B>make_by_id </I>(<I>Main_menu_id</I>)
 		<B>end</B>
 </PRE>
 <P>
@@ -91,15 +91,15 @@ If you can't use a resource editor, you have to create the menu using WEL_MENU's
 		<B>local</B> 
 <I>			file</I>,<I> line</I>:<I> WEL_MENU</I>
 		<B>once</B> 
-<I>			</I>!!<I> file<B>.</B>make</I>
+<I>			</I><b>create</b><I> file<B>.</B>make</I>
 <I>			file<B>.</B>append_string </I>(&quot;<I>&amp;New</I>&quot;,<I> Cmd_new</I>)
 <I>			file<B>.</B>append_string </I>(&quot;<I>&amp;Open...</I>&quot;,<I> Cmd_open</I>)
 <I>			file<B>.</B>append_string </I>(&quot;<I>&amp;Save...</I>&quot;,<I> Cmd_save</I>)
 <I>			file<B>.</B>append_separator</I>
 <I>			file<B>.</B>append_string </I>(&quot;<I>E&amp;xit</I>&quot;,<I> Cmd_exit</I>)
-<I>			</I>!!<I> line<B>.</B>make</I>
+<I>			</I><b>create</b><I> line<B>.</B>make</I>
 <I>			line<B>.</B>append_string </I>(&quot;<I>Line &amp;thickness...</I>&quot;,<I> Cmd_line_thickness</I>)
-<I>			</I>!!<I> Result<B>.</B>make</I>
+<I>			</I><b>create</b><I> Result<B>.</B>make</I>
 <I>			Result<B>.</B>append_popup </I>(<I>file</I>,<I> </I>&quot;<I>&amp;File</I>&quot;)
 <I>			Result<B>.</B>append_popup </I>(<I>line</I>,<I> </I>&quot;<I>&amp;Line</I>&quot;)
 		<B>end</B>
@@ -131,7 +131,7 @@ A very basic implementation of <I>on_menu_command</I> could be the following:
 		<B>local</B>
 <I>				msgBox: WEL_MSG_BOX</I>
 		<B>do</B>
-			<I>!! msgBox.make</I>
+			<I><b>create</b> msgBox.make</I>
 			<B>inspect</B>  
 <I>				menu_id</I>
 			<B>when</B>  <I>Cmd_new </I><B>then</B>  

@@ -983,7 +983,7 @@ object from being disposed by a thread, which is not its creator thread.
 		object_per_thread: OBJECT is
 				-- once per thread
 			once
-				!! Result.make
+				<b>create</b> Result.make
 			end
 
 		object_per_process: OBJECT is
@@ -1104,7 +1104,7 @@ object from being disposed by a thread, which is not its creator thread.
 
 	my oppt: A_TYPE is
 		once&nbsp;
-			!! Result.make (my_opp2)&nbsp;&nbsp;
+			<b>create</b> Result.make (my_opp2)&nbsp;&nbsp;
 		end
 
 
@@ -1117,7 +1117,7 @@ object from being disposed by a thread, which is not its creator thread.
 
 	my_opt2: A_TYPE2 is
 		once
-			!! Result.make
+			<b>create</b> Result.make
 		end&nbsp;</pre>
 
 <p>

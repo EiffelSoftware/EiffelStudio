@@ -392,7 +392,7 @@ Here is the second class:
 				button: BUTTON
 			do
 				frame_make_top (&quot;Test&quot;);
-				!! button.make (Current, &quot;Clear&quot;,
+				<b>create</b> button.make (Current, &quot;Clear&quot;,
 					1, 1, 70, 40, Id_button_clear)
 			end
 	
@@ -425,7 +425,7 @@ Here is the second class:
 		position: STRING is
 				-- The string that will contain the position indication
 			once
-				!! Result.make (20)
+				<b>create</b> Result.make (20)
 			ensure
 				result_not_void: Result /= Void
 			end
@@ -433,7 +433,7 @@ Here is the second class:
 		dc: DC is
 				-- Device context used to write the position
 			once
-				!! Result.make_by_window (Current)
+				<b>create</b> Result.make_by_window (Current)
 			ensure
 				result_not_void: Result /= Void
 			end

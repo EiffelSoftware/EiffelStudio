@@ -26,6 +26,25 @@ feature -- Access
 			end
 		end;
 
+	get_pos_integer (name: STRING; default_value: INTEGER): INTEGER is
+			-- Positive value of the resource `name'; 
+			-- `default_value' if this value is not known
+		require
+			name_not_void: name /= Void;
+			valid_default_value: default_value >= 0
+		do
+			if has (name) then
+				Result := item (name).to_integer.abs;
+				if free_resource then
+					remove (name)
+				end
+			else
+				Result := default_value
+			end
+		ensure
+			result_is_positive: Result >= 0
+		end;
+
 	get_boolean (name: STRING; default_value: BOOLEAN): BOOLEAN is
 			-- Value of the resource `name';
 			-- `default_value' if this value is not known

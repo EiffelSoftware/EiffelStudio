@@ -73,15 +73,6 @@ doc:<file name="malloc.c" header="eif_malloc.h" version="$Id$" summary="Memory a
 #define mempanic	fflush(stdout);
 #endif
 
-/* ALIGNMAX is the maximum between MEM_ALIGNBYTES and OVERHEAD. This is important
- * because eif_malloc always allocates a multiple of MEM_ALIGNBYTES but we are sure
- * there will always be room to split a block, even if we have to create a
- * null size one (i.e. only an header). Although eif_malloc used to work without
- * this feature, it appears to be essential for the scavenging process. The
- * reason is too long to be explained here, though--RAM.
- */
-#define ALIGNMAX	((MEM_ALIGNBYTES < OVERHEAD) ? OVERHEAD : MEM_ALIGNBYTES)
-
 #ifdef ISE_GC
 /* Give the type of an hlist, by doing pointer comparaison (classic).
  * Also give the address of the hlist of a given type and the address of
@@ -309,7 +300,7 @@ rt_shared int eif_gs_limit;
 
 /*
 doc:	<attribute name="eif_scavenge_size" return_type="int" export="shared">
-doc:		<summary>Size of scavenge zones.</summary>
+doc:		<summary>Size of scavenge zones. Should be a multiple of ALIGNMAX.</summary>
 doc:		<access>Read/Write once</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>None since initialized in `eif_alloc_init' (main.c)</synchronization>
@@ -320,7 +311,7 @@ rt_shared int eif_scavenge_size;
 
 /*
 doc:	<attribute name="eif_stack_chunk" return_type="int" export="shared">
-doc:		<summary>Size of local stack chunk.</summary>
+doc:		<summary>Size of local stack chunk. Should be a multiple of ALIGNMAX.</summary>
 doc:		<access>Read/Write once</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>None since initialized in `eif_alloc_init' (main.c)</synchronization>
@@ -330,7 +321,7 @@ rt_shared int eif_stack_chunk;
 
 /*
 doc:	<attribute name="eif_chunk_size" return_type="int" export="shared">
-doc:		<summary>Size of memory chunks.</summary>
+doc:		<summary>Size of memory chunks. Should be a multiple of ALIGNMAX.</summary>
 doc:		<access>Read/Write once</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>None since initialized in `eif_alloc_init' (main.c)</synchronization>

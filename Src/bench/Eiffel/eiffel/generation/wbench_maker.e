@@ -81,7 +81,7 @@ feature
 			cecil_rt_basket.extend ("wmain.o");
 			cecil_rt_basket.extend ("debug.o");
 			cecil_rt_basket.extend ("interp.o");
-			cecil_rt_basket.extend ("option.o");
+			cecil_rt_basket.extend ("woption.o");
 			cecil_rt_basket.extend ("update.o");
 			cecil_rt_basket.extend ("wbench.o");
 			cecil_rt_basket.extend ("wrun_idr.o");

@@ -15,9 +15,7 @@ class ARRAYED_TREE [G] inherit
 
 	CELL [G]
 		undefine
-			is_equal
-		redefine
-			copy
+			copy, is_equal
 		end
 
 	DYNAMIC_TREE [G]
@@ -30,7 +28,7 @@ class ARRAYED_TREE [G] inherit
 			writable_child, child_off, child_before
 		redefine
 			parent, attach_to_parent, duplicate, extend,
-			duplicate_all, fill_subtree, copy
+			duplicate_all, fill_subtree
 		select
 			object_comparison, linear_representation,
 			has
@@ -93,9 +91,7 @@ class ARRAYED_TREE [G] inherit
 			child_islast, valid_cursor_index,
 			changeable_comparison_criterion,
 			compare_objects, compare_references,
-			al_empty
-		redefine
-			copy
+			al_empty, copy
 		select
 			is_leaf
 		end
@@ -299,6 +295,47 @@ feature -- Removal
 			child_back
 		end
 
+	forget_left is
+			-- Forget all left siblings.
+		local
+			i: INTEGER
+			old_idx: INTEGER
+		do
+			if not is_root and then position_in_parent < parent.arity then
+				old_idx := parent.child_index
+				from
+					i := 1
+				until
+					i = position_in_parent
+				loop
+					parent.child_go_i_th (i)
+					parent.remove_child
+					i := i + 1
+				end
+				parent.child_go_i_th (old_idx)
+			end
+		end
+
+	forget_right is
+			-- Forget all right siblings.
+		local
+			i: INTEGER
+			old_idx: INTEGER
+		do
+			if not is_root and then position_in_parent < parent.arity then
+				old_idx := parent.child_index
+				from
+					i := position_in_parent + 1
+				until
+					i > parent.arity
+				loop
+					parent.child_go_i_th (i)
+					parent.remove_child
+					i := i + 1
+				end
+				parent.child_go_i_th (old_idx)
+			end
+		end
 
 feature -- Duplication
 
@@ -325,16 +362,6 @@ feature -- Duplication
 				counter := counter + 1
 			end
 			child_go_to (pos)
-		end
-
-	copy (other: like Current) is
-			-- Copy contents from `other'.
-		local
-			tmp_tree: like Current
-		do
-			create tmp_tree.make (other.child_capacity, other.item)
-			if not other.is_leaf then tree_copy (other, tmp_tree) end
-			standard_copy (tmp_tree)
 		end
 
 feature {NONE} -- Inapplicable
@@ -407,6 +434,12 @@ feature {ARRAYED_TREE} -- Implementation
 			-- Make `n' parent of current node;
 		do
 			parent := n
+		end
+
+	cut_off_node is
+			-- Cut off all links from current node.
+		do
+			make (arity, item)
 		end
 
 feature {NONE} -- Implementation

@@ -1,3 +1,4 @@
+rm -rf %TEMP%\vision2_precompile
 mkdir %TEMP%\vision2_precompile
 XCOPY /Y win32_root_none.ace %TEMP%\Vision2_precompile
 XCOPY /Y flatshort_instructions.txt %TEMP%\Vision2_precompile
@@ -52,4 +53,4 @@ XCOPY /Y %TEMP%\Vision2_precompile\ev_vertical_scroll_bar_flatshort.txt .\flatsh
 XCOPY /Y %TEMP%\Vision2_precompile\ev_vertical_separator_flatshort.txt .\flatshort
 
 REM remove vision2_precompile directory.
-del %TEMP%\vision2_precompile
+rm -rf %TEMP%\vision2_precompile

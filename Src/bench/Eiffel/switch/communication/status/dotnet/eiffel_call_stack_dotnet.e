@@ -188,7 +188,7 @@ feature {NONE} -- Initialization
 									l_module_name := l_func.get_module.get_name
 
 									l_class_type := Il_debug_info_recorder.class_type_for_module_class_token (l_module_name, l_class_token)
-									l_feature_i := Il_debug_info_recorder.feature_i_by_module_class_token (l_module_name, l_class_token, l_feature_token)
+									l_feature_i := Il_debug_info_recorder.feature_i_by_module_feature_token (l_module_name, l_feature_token)
 
 									if l_feature_i = Void then
 										if l_feature_token = Il_debug_info_recorder.entry_point_token then

@@ -13,6 +13,8 @@ inherit
 	
 	GB_XML_UTILITIES
 	
+	GB_EVENT_UTILITIES
+	
 	GB_SHARED_TOOLS
 	
 	INTERNAL
@@ -166,10 +168,14 @@ feature {NONE} -- Implementation
 				if current_element /= Void then
 					current_name := current_element.name.to_utf8
 					if current_name.is_equal (Item_string) then
-						-- The element represents an item, so we must add new objects.
+							-- The element represents an item, so we must add new objects.
 						build_new_object (current_element, new_object)
+					elseif current_name.is_equal (Events_string) then
+							-- We now add the event information from `current_element'
+							-- into `new_object'.
+						extract_event_information (current_element, new_object)
 					else
-						-- We must check for internal properties, else set the properties of the component
+							-- We must check for internal properties, else set the properties of the component
 						if current_name.is_equal (Internal_properties_string) then
 							new_object.modify_from_xml (current_element)
 						else
@@ -197,6 +203,43 @@ feature {NONE} -- Implementation
 							-- Call `modify_from_xml' which should modify the objects.
 						gb_ev_any.modify_from_xml (current_element)
 						end
+					end
+				end
+				element.forth
+			end
+		end
+		
+	extract_event_information (element: XML_ELEMENT; object: GB_OBJECT) is
+			-- Generate event information into `object', from `element'.
+		require
+			element_not_void: element /= Void
+			element_type_is_events: element.name.to_utf8.is_equal (Events_string)
+		local
+			current_element: XML_ELEMENT
+			current_name: STRING
+			current_data_element: XML_CHARACTER_DATA
+			data: STRING
+		do
+			from
+				element.start
+			until
+				element.off
+			loop
+				current_element ?= element.item_for_iteration
+				current_name := current_element.name.to_utf8
+				if current_name.is_equal (Event_string) then
+					from
+						current_element.start
+					until
+						current_element.off
+					loop
+						current_data_element ?= current_element.item_for_iteration
+						if current_data_element /= Void then
+							data := current_data_element.content.to_utf8
+								-- Add data into `object'.
+							object.events.extend (string_to_action_sequence_info (data))
+						end
+						current_element.forth
 					end
 				end
 				element.forth

@@ -57,6 +57,30 @@ feature -- Access
 			-- Port used by service
 		do
 			Result := address.port
+		ensure
+			result_non_negative: Result >= 0
+		end
+
+	proxy_host: STRING is
+			-- Name or address of proxy host
+		require
+			proxy_supported: is_proxy_supported
+			proxy_used: is_proxy_used
+		do
+			Result := address.proxy_host
+		ensure
+			result_not_empty: Result /= Void and then not Result.is_empty
+		end
+
+	proxy_port: INTEGER is
+			-- Port of proxy
+		require
+			proxy_supported: is_proxy_supported
+			proxy_used: is_proxy_used
+		do
+			Result := address.proxy_port
+		ensure
+			result_non_negative: Result >= 0
 		end
 
 	hash_code: INTEGER is
@@ -160,6 +184,11 @@ feature -- Status report
 			Result := address.is_proxy_supported
 		end
 		
+	is_proxy_used: BOOLEAN is
+			-- Does resource use a proxy?
+		deferred
+		end
+
 	is_count_valid: BOOLEAN is
 			-- Is value in `count' valid?
 		deferred

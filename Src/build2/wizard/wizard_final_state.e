@@ -120,31 +120,32 @@ feature {NONE} -- Implementation
 				eiffel_files := eifp_document.files_node.eiffel_source_files_node
 				build_files := eifp_document.files_node.other_source_files_node
 
-				from 
-					window_selector.start
-				until
-					window_selector.off
-				loop
-					window_selector_item ?= window_selector.item
-					 if window_selector_item /= Void then
-					 	eiffel_files.add_file ((window_selector_item.object.name).as_lower + ".e", True)
-					end
-					window_selector_layout ?= window_selector.item
-					if window_selector_layout /= Void then
-						from
-							window_selector_layout.start
-						until
-							window_selector_layout.off
-						loop
-							window_selector_item ?= window_selector_layout.item
-							if window_selector_item /= Void then
-								eiffel_files.add_file ((window_selector_layout.text + "\" + window_selector_item.object.name).as_lower + ".e", True)								
-							end
-							window_selector_layout.forth
-						end
-					end
-					window_selector.forth
-				end
+-- FIXMEd
+--				from 
+--					window_selector.start
+--				until
+--					window_selector.off
+--				loop
+--					window_selector_item ?= window_selector.item
+--					 if window_selector_item /= Void then
+--					 	eiffel_files.add_file ((window_selector_item.object.name).as_lower + ".e", True)
+--					end
+--					window_selector_layout ?= window_selector.item
+--					if window_selector_layout /= Void then
+--						from
+--							window_selector_layout.start
+--						until
+--							window_selector_layout.off
+--						loop
+--							window_selector_item ?= window_selector_layout.item
+--							if window_selector_item /= Void then
+--								eiffel_files.add_file ((window_selector_layout.text + "\" + window_selector_item.object.name).as_lower + ".e", True)								
+--							end
+--							window_selector_layout.forth
+--						end
+--					end
+--					window_selector.forth
+--				end
 				eiffel_files.add_file (system_status.current_project_settings.constants_class_name.as_lower + ".e", True)
 				eiffel_files.add_file (system_status.current_project_settings.constants_class_name.as_lower +  Class_implementation_extension.as_lower + ".e", True)
 			end

@@ -687,6 +687,12 @@ feature {NONE} -- Symbol names
 			!!Result.make (";")
 		end
 
+	ti_Tilda: SYMBOL_TEXT is
+			-- "~" character
+		once
+			!!Result.make ("~")
+		end
+
 feature {NONE} -- Basic text
 
 	ti_Padded_debug_mark: PADDED_ITEM is

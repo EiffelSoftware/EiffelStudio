@@ -193,12 +193,9 @@ feature
 	check_local_names is
 			-- Check the conflicts between local names and feature names
 			-- for an unchanged feature
-		local
-			body: FEATURE_AS;
 		do
 			if not is_replicated then	
-				body := Body_server.item (body_Id);
-				body.check_local_names;
+				Body_server.item (body_Id).check_local_names;
 			end;
 		end;
 

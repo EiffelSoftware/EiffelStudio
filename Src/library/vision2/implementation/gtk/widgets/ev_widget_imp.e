@@ -76,9 +76,6 @@ feature {NONE} -- Initialization
 			connect_button_press_switch_agent: PROCEDURE [EV_GTK_CALLBACK_MARSHAL, TUPLE[]]
 			on_key_event_intermediary_agent: PROCEDURE [EV_GTK_CALLBACK_MARSHAL, TUPLE [EV_KEY, STRING, BOOLEAN]]
 		do
-			if not C.gtk_is_widget (c_object) then
-				print ("not widget!! " + generating_type)
-			end
 			if C.gtk_is_widget (c_object) and not C.gtk_is_window (c_object) then
 				C.gtk_widget_show (c_object)
 			end
@@ -344,9 +341,9 @@ feature -- Status setting
 		local
 			i: INTEGER
 		do
-			C.gtk_grab_add (c_object)
+			C.gtk_grab_add (visual_widget)
 			i := C.gdk_pointer_grab (
-				C.gtk_widget_struct_window (c_object),
+				C.gtk_widget_struct_window (visual_widget),
 				1, -- gint owner_events
 				C.GDK_BUTTON_RELEASE_MASK_ENUM +
 				C.GDK_BUTTON_PRESS_MASK_ENUM +
@@ -362,7 +359,7 @@ feature -- Status setting
 			-- Ungrab all the mouse and keyboard events.
 			--| Used by pick and drop.
 		do
-			C.gtk_grab_remove (c_object)
+			C.gtk_grab_remove (visual_widget)
 			C.gdk_pointer_ungrab (
 				0 -- guint32 time
 			) 

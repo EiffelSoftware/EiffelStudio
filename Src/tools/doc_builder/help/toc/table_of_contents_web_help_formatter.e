@@ -37,7 +37,9 @@ feature -- Processing
 			create l_util
 			l_has_child := a_node.has_child
 			
-			Result := ("<table border=0><tr><td width=10></td><td>")
+			Result := ("<table border=0><tr><td><img src=%"")
+			Result.append ("10x10spacer.png")
+			Result.append ("%"></td><td>")
 
 				-- This is the toggle image
 			if a_node.icon /= Void then				
@@ -51,7 +53,10 @@ feature -- Processing
 			if l_has_child then
 				Result.append ("<a onClick=%"Toggle(this)%">")
 			end
-			Result.append ("<img src=%"" + l_icon + "%"></a>")			
+			Result.append ("<img src=%"" + l_icon + "%">")			
+			if l_has_child then
+				Result.append ("</a>")
+			end
 
 				-- Append title (and link)
 			l_url := a_node.url

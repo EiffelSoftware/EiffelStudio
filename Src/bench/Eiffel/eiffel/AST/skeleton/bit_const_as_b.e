@@ -14,10 +14,8 @@ inherit
 		end;
 
 	ATOMIC_AS_B
-		undefine
-			simple_format, string_value
 		redefine
-			byte_node, type_check, value_i, format
+			byte_node, type_check, value_i
 		end
 
 feature -- Attributes
@@ -52,16 +50,6 @@ feature
 		do
 			!!Result;
 			Result.set_bit_val (value)
-		end;
-
-
-feature -- formatter
-
-	format (ctxt: FORMAT_CONTEXT_B) is
-		do
-			ctxt.always_succeed;
-			ctxt.put_string (value)
-			ctxt.put_string ("B");
 		end;
 
 end -- class BIT_CONST_AS_B

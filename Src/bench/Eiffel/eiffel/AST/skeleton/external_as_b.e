@@ -9,10 +9,9 @@ inherit
 
 	ROUT_BODY_AS_B
 		undefine
-			is_external, simple_format,
-			has_instruction, index_of_instruction
+			is_external, has_instruction, index_of_instruction
 		redefine
-			byte_node, format, type_check
+			byte_node, type_check
 		end;
 
 	SHARED_STATUS;
@@ -150,27 +149,6 @@ feature -- Byte code
 			end;
 		ensure then
 			Result.external_name /= Void;
-		end;
-
-feature -- Formatter
-
-	format (ctxt: FORMAT_CONTEXT_B) is
-			-- Reconstitute text
-		do
-			ctxt.always_succeed;
-			ctxt.put_text_item (ti_External_keyword);
-			ctxt.indent_one_more;
-			ctxt.next_line;
-			ctxt.indent_one_less;
-			language_name.language_name.format (ctxt);
-			if external_name /= void then
-				ctxt.next_line;
-				ctxt.put_text_item (ti_Alias_keyword);
-				ctxt.indent_one_more;
-				ctxt.next_line;
-				ctxt.indent_one_less;
-				alias_name.format (ctxt);
-			end;
 		end;
 
 end -- class EXTERNAL_AS_B

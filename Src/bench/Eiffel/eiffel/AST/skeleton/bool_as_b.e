@@ -11,10 +11,8 @@ inherit
 	BOOL_AS;
 
 	ATOMIC_AS_B
-		undefine
-			simple_format, string_value
 		redefine
-			type_check, byte_node, value_i, format
+			type_check, byte_node, value_i
 		end
 
 feature -- Type check
@@ -36,18 +34,6 @@ feature -- Type check
 		do
 			!!Result;
 			Result.set_value (value);
-		end;
-
-feature -- formatter
-
-	format (ctxt: FORMAT_CONTEXT_B) is
-		do
-			ctxt.always_succeed;
-			if value then
-				ctxt.put_text_item (ti_True_keyword)
-			else
-				ctxt.put_text_item (ti_False_keyword)
-			end
 		end;
 
 end -- class BOOL_AS_B

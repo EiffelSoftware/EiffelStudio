@@ -8,10 +8,8 @@ inherit
 		end;
 
 	INSTRUCTION_AS_B
-		undefine
-			simple_format
 		redefine
-			type_check, byte_node, format,
+			type_check, byte_node, 
 			fill_calls_list, replicate
 		end;
 
@@ -312,28 +310,6 @@ feature -- Type check, byte code and dead code removal
 				call_access.set_parent (nested);
 				Result.set_call (nested);
 			end;
-		end;
-
-	format (ctxt: FORMAT_CONTEXT_B) is
-			-- Reconstitute text.
-		do
-			ctxt.put_breakable;
-			if type /= Void then
-				ctxt.put_text_item (ti_Exclamation);
-				type.format (ctxt);
-				ctxt.put_text_item (ti_Exclamation);
-				ctxt.put_space
-			else
-				ctxt.put_text_item (ti_Creation_mark);
-				ctxt.put_space
-			end;
-			target.format (ctxt);
-			if  call /= void then
-				ctxt.need_dot;
-				ctxt.keep_types;
-				call.format (ctxt);
-			end;
-			ctxt.always_succeed;
 		end;
 
 feature -- Replication

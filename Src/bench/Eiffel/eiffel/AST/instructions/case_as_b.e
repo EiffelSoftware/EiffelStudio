@@ -16,11 +16,9 @@ inherit
 		end;
 
 	AST_EIFFEL_B
-		undefine
-			simple_format
 		redefine
 			type_check, byte_node,
-			find_breakable, format,
+			find_breakable, 
 			fill_calls_list, replicate
 		end
 
@@ -72,31 +70,6 @@ feature -- Debugging
 			end;
 			record_break_node
 		end
-
-feature -- Formatter
-
-	format (ctxt: FORMAT_CONTEXT_B) is
-			-- Reconstitute text.
-		do
-			ctxt.begin;
-			ctxt.put_text_item (ti_When_keyword);
-			ctxt.put_space;
-			ctxt.set_separator (ti_Comma);
-			ctxt.no_new_line_between_tokens;
-			interval.format (ctxt);
-			ctxt.put_space;
-			ctxt.put_text_item (ti_Then_keyword);
-			ctxt.put_space;
-			if compound /= void then
-				ctxt.indent_one_more;
-				ctxt.next_line;
-				ctxt.set_separator (ti_Semi_colon);
-				ctxt.new_line_between_tokens;
-				compound.format(ctxt)
-			end;	
-			ctxt.put_breakable;
-			ctxt.commit
-		end;			
 
 feature -- Replication
 

@@ -11,9 +11,9 @@ inherit
 
 	BASIC_TYPE_B
 		undefine
-			simple_format, is_deep_equal, set
+			set, is_deep_equal
 		redefine
-			append_clickable_signature, format
+			append_clickable_signature
 		end
 
 feature -- Attributes
@@ -96,15 +96,5 @@ feature
 			a_clickable.put_string ("BIT ");
 			a_clickable.put_string (bits_symbol);
 		end;
-
-	format (ctxt: FORMAT_CONTEXT_B) is
-			-- Reconstitute text.
-		do
-			ctxt.begin;
-			ctxt.put_string ("BIT ");
-			ctxt.prepare_for_feature (bits_symbol, Void);
-			ctxt.put_current_feature;
-			ctxt.commit;
-		end
 
 end -- class BITS_SYMBOL_AS_B

@@ -16,10 +16,8 @@ inherit
 		end;
 
 	AST_EIFFEL_B
-		undefine
-			simple_format
 		redefine
-			byte_node, type_check, format,
+			byte_node, type_check, 
 			fill_calls_list, replicate
 		end;
 
@@ -117,18 +115,6 @@ feature -- Type check and byte code
 			-- by `byte_node'.
 		once
 			Result := context.interval_line;
-		end;
-
-
-	format (ctxt: FORMAT_CONTEXT_B) is
-			-- Reconstitute text.
-		do
-			lower.format (ctxt);
-			if upper /= void then
-				ctxt.put_text_item (ti_Dotdot);
-				upper.format (ctxt);
-			end;
-			ctxt.always_succeed;
 		end;
 
 feature -- Replication

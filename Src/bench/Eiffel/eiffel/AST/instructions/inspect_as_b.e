@@ -16,11 +16,9 @@ inherit
 		end;
 
 	INSTRUCTION_AS_B
-		undefine
-			simple_format
 		redefine
 			type_check, byte_node,
-			find_breakable, format,
+			find_breakable, 
 			fill_calls_list, replicate
 		end;
 
@@ -122,44 +120,6 @@ feature -- Debugger
 				else_part.find_breakable;
 				record_break_node;
 			end;
-		end;
-
-feature -- Formatter
-
-	format (ctxt: FORMAT_CONTEXT_B) is
-			-- Reconstitute text.
-		do
-			ctxt.begin;
-			ctxt.put_breakable;	
-			ctxt.put_text_item (ti_Inspect_keyword);
-			ctxt.put_space;
-			ctxt.indent_one_more;
-			switch.format (ctxt);
-			ctxt.indent_one_less;
-			ctxt.next_line;
-			if case_list /= void then
-				ctxt.set_separator (Void);
-				ctxt.new_line_between_tokens;
-					-- The AST stores the inspect cases in reverse order
-					-- compared to the way the user wrote them. So we
-					-- put them back in the correct order in the structured
-					-- text being built.
-				case_list.reversed_format (ctxt);
-				ctxt.next_line;
-			end;
-			if else_part /= void then
-				ctxt.put_text_item (ti_Else_keyword);
-				ctxt.indent_one_more;
-				ctxt.next_line;
-				ctxt.set_separator (ti_Semi_colon);
-				ctxt.new_line_between_tokens;
-				else_part.format(ctxt);
-				ctxt.indent_one_less;
-				ctxt.next_line;
-				ctxt.put_breakable;	
-			end;
-			ctxt.put_text_item (ti_End_keyword);
-			ctxt.commit;
 		end;
 
 feature -- Replication

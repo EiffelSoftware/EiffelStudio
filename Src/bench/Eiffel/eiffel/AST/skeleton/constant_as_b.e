@@ -17,9 +17,9 @@ inherit
 
 	CONTENT_AS_B
 		undefine
-			is_constant, simple_format, is_unique
+			is_constant, is_unique
 		redefine
-			byte_node, type_check, format
+			byte_node, type_check
 		end
 
 feature -- Attributes
@@ -51,17 +51,6 @@ feature -- Conveniences
 		do
 		ensure then
 			False
-		end;
-
-	format (ctxt: FORMAT_CONTEXT_B) is
-			-- Reconstitute text.
-		do
-			ctxt.begin;
-			ctxt.put_space;
-			ctxt.put_text_item (ti_Is_keyword);
-			ctxt.put_space;
-			value.format(ctxt);
-			ctxt.commit;
 		end;
 
 end -- class CONSTANT_AS_B

@@ -14,7 +14,7 @@ inherit
 		undefine
 			byte_node
 		redefine
-			find_breakable
+			find_breakable, format
 		end
 
 feature
@@ -32,6 +32,14 @@ feature -- Debugger
 			-- or inspect statements to actually propagate the message.
 		do
 			record_break_node;		-- Most node are atomic instructions
+		end;
+
+feature -- Output
+
+	format (ctxt: FORMAT_CONTEXT_B) is
+			-- Format Current instruction.
+		do
+			simple_format (ctxt)
 		end;
  
 end -- class INSTRUCTION_AS_B

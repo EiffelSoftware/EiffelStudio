@@ -17,11 +17,9 @@ inherit
 		end;
 
 	INSTRUCTION_AS_B
-		undefine
-			simple_format
 		redefine
 			type_check, byte_node,
-			find_breakable, format,
+			find_breakable, 
 			fill_calls_list, replicate
 		end;
 	
@@ -136,60 +134,6 @@ feature -- Debugger
 				compound.find_breakable;
 			end;
 			record_break_node;
-		end;
-
-
-feature -- Formatter
-
-	format (ctxt: FORMAT_CONTEXT_B) is
-			-- Reconstitute text.
-		do
-			ctxt.begin;
-			ctxt.put_breakable;
-			ctxt.put_text_item (ti_From_keyword);
-			ctxt.set_separator (ti_Semi_colon);
-			ctxt.new_line_between_tokens;
-			if from_part /= void then
-				ctxt.indent_one_more;
-				ctxt.next_line;
-				from_part.format (ctxt);
-				ctxt.indent_one_less;
-			end;
-			ctxt.put_breakable;
-			if invariant_part /= void then
-				ctxt.next_line;
-				ctxt.put_text_item (ti_Invariant_keyword);
-				ctxt.indent_one_more;
-				ctxt.next_line;
-				invariant_part.format (ctxt);
-				ctxt.indent_one_less;
-			end;
-			if variant_part /= void then
-				ctxt.next_line;
-				ctxt.put_text_item (ti_Variant_keyword);
-				ctxt.indent_one_more;
-				ctxt.next_line;
-				variant_part.format(ctxt);
-				ctxt.indent_one_less;
-			end;
-			ctxt.next_line;
-			ctxt.put_text_item (ti_Until_keyword);
-			ctxt.indent_one_more;
-			ctxt.next_line;
-			stop.format (ctxt);
-			ctxt.indent_one_less;
-			ctxt.next_line;
-			ctxt.put_text_item (ti_Loop_keyword);
-			if compound /= void then
-				ctxt.indent_one_more;
-				ctxt.next_line;
-				compound.format (ctxt);
-				ctxt.indent_one_less;
-			end;
-			ctxt.next_line;
-			ctxt.put_breakable;
-			ctxt.put_text_item (ti_End_keyword);
-			ctxt.commit
 		end;
 
 feature -- Replication

@@ -127,7 +127,7 @@ feature {EIFNET_DEBUGGER, EIFNET_EXPORTER} -- Trigger eStudio done
 			end
 		end
 
-feature {EIFNET_EXPORTER, EB_EXPRESSION_EVALUATOR_TOOL}  -- Trigger eStudio status
+feature {EIFNET_EXPORTER, EB_EXPRESSION_EVALUATOR_TOOL, EV_SHARED_APPLICATION}  -- Trigger eStudio status
 
 	callback_notification_processing: BOOLEAN is
 			-- Is inside callback notification processing ?
@@ -398,7 +398,7 @@ feature -- Execution
 					--| In case the stored current Thread id is obsolete
 					--| we refresh the thread id's value
 				status.refresh_current_thread_id
-				eifnet_debugger.do_step_next
+				eifnet_debugger.do_global_step_into
 			end
 		end		
 
@@ -1023,6 +1023,11 @@ feature {NONE} -- Events on notification
 			if need_to_continue then
 				l_status.set_is_stopped (False)
 				reset_data_changed
+				debug ("debugger_trace_callstack")
+					print ("Nota: Continue on stopped status (need_to_continue = True)%N")				
+					print ("Nota: last managed callback = " + Eifnet_debugger_info.last_managed_callback_name + "%N")
+				end
+				
 				eifnet_debugger.do_continue
 			else
 				Application_notification_controller.notify_on_after_stopped				

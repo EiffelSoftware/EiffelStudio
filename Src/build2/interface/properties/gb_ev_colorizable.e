@@ -99,7 +99,7 @@ feature {GB_CODE_GENERATOR} -- Output
 			element_info := full_information @ (foreground_color_string)
 			if element_info /= Void then
 				temp_color := build_color_from_string (element_info.data)
-				Result.extend (info.name + "set_foreground_color (create {EV_COLOR}.make_with_8_bit_rgb (" + temp_color.red_8_bit.out + ", " + temp_color.green_8_bit.out + ", " + temp_color.blue_8_bit.out + "))")
+				Result.extend (info.name + ".set_foreground_color (create {EV_COLOR}.make_with_8_bit_rgb (" + temp_color.red_8_bit.out + ", " + temp_color.green_8_bit.out + ", " + temp_color.blue_8_bit.out + "))")
 			end
 		end
 

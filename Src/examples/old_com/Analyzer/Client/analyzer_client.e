@@ -101,8 +101,8 @@ feature -- Element change
 			Result := function_result.integer2
 		end
 	
-	occurences (txt: STRING): INTEGER is
-			-- Number of occurences of `txt' in server text
+	occurrences (txt: STRING): INTEGER is
+			-- Number of occurrences of `txt' in server text
 		local
 			arg: EOLE_VARIANT
 			bstr: EOLE_BSTR
@@ -115,7 +115,7 @@ feature -- Element change
 			arg.init
 			arg.set_bstr (bstr)
 			dispparams.add_argument (arg)
-			dispatch.invoke (Dispid_occurences, dispatch_method, dispparams, function_result, function_exception)
+			dispatch.invoke (Dispid_occurrences, dispatch_method, dispparams, function_result, function_exception)
 			check_result
 			Result := function_result.integer2
 		end

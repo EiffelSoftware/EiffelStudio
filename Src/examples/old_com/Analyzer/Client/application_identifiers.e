@@ -30,7 +30,7 @@ feature -- Access
 	Cmd_word_count: INTEGER is 2000
 	Cmd_line_count: INTEGER is 2001
 	Cmd_sentence_count: INTEGER is 2002
-	Cmd_occurences: INTEGER is 2003
+	Cmd_occurrences: INTEGER is 2003
 	Text_dialog_constant: INTEGER is 102
 	Text_edit_constant: INTEGER is 103
 	

@@ -47,7 +47,7 @@ dispinterface disp_analyzer { // the name of your dispinterface
 		[id(2)] int word_count ();
 		[id(3)] int line_count ();
 		[id(4)] int sentence_count ();
-		[id(5)] int occurences (BSTR  txt);
+		[id(5)] int occurrences (BSTR  txt);
 		[id(6)] void terminate ();
 		[id(7)] void show ();
 		[id(8)] void hide ();		

@@ -190,7 +190,7 @@ feature
 		end; -- duplicate
 
 	search_child (sought: like first_child; i: INTEGER) is
-			-- Move cursor under `i'-th occurence of `sought' if
+			-- Move cursor under `i'-th occurrence of `sought' if
 			-- exists among children; go child_offright if none.
 		require
 			arguments_not_void: not sought.Void

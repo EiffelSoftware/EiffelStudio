@@ -353,17 +353,17 @@ feature {NONE} -- Implementation
 				txt.append ("Sentence count: ")
 				txt.append_integer (analyzer.sentence_count)
 				msg.information_message_box (Current, txt, "Analyzer")
-			when Cmd_occurences then
+			when Cmd_occurrences then
 				if rich_edit.modified then
 					analyzer.set_text (rich_edit.text)
 				end
 				!! txt.make (100)
 				!! msg.make
 				entered_text := enter_text
-				txt.append ("Number of occurences of ")
+				txt.append ("Number of occurrences of ")
 				txt.append (entered_text)
 				txt.append (": ")
-				txt.append_integer (analyzer.occurences (entered_text))
+				txt.append_integer (analyzer.occurrences (entered_text))
 				msg.information_message_box (Current, txt, "Analyzer")				
 			else
 			end

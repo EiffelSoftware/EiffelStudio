@@ -44,6 +44,9 @@ cluster
 		end
 
 	project (root_cluster):		"$\project"
+		exclude
+			"document.e"
+		end
 
 	managers (project):		"$\managers"
 

@@ -32,7 +32,7 @@ feature -- Access
 			-- Visual name of the resource as it appears to the left
 			-- of the colon in the preference tool
 		do
-			Result := clone (name);
+			Result := name.twin
 			Result.replace_substring_all ("_", " ");
 			Result.put (Result.item (1).upper, 1)
 		end;
@@ -45,6 +45,8 @@ feature -- Access
 
 	is_valid (a_value: STRING): BOOLEAN is
 			-- Is `a_value' valid for use in Current?
+		require
+			a_value_not_void: a_value /= Void
 		deferred
 		end;
 

@@ -19,6 +19,7 @@ extern "C" {
 
 #include "eif_globals.h"
 #include "eif_portable.h"
+#include "eif_err_msg.h"
 
 #ifdef EIF_WIN32
 #include <windows.h>

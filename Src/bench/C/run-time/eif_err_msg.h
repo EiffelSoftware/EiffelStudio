@@ -14,11 +14,14 @@ extern "C" {
 #include <stdio.h>
 
 #ifdef EIF_WIN32
-#include <windows.h>
 extern int print_err_msg(FILE *err, char *StrFmt, ...);
 extern char *exception_trace_string;
 #else
 #define print_err_msg fprintf
+#endif
+
+#ifndef MAX_PATH
+#define MAX_PATH	260
 #endif
 
 extern char starting_working_directory [MAX_PATH];

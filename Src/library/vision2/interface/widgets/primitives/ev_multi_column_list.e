@@ -42,7 +42,7 @@ feature -- Access
 	selected_item: EV_MULTI_COLUMN_LIST_ROW is
 			-- Currently selected item.
 			-- Topmost selected item if multiple items are selected.
-			-- (For multiple selections see `selected_items')
+			-- (For multiple selections see `selected_items').
 		do
 			Result := implementation.selected_item
 		ensure
@@ -371,8 +371,8 @@ end -- class EV_MULTI_COLUMN_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.52  2000/04/20 18:40:50  rogers
---| Made set_column_widths obsolete.
+--| Revision 1.53  2000/04/20 18:44:14  rogers
+--| Previous comment should read - made set_row_height odsolete.
 --|
 --| Revision 1.51  2000/04/05 21:16:23  brendel
 --| Merged changes from LIST_REFACTOR_BRANCH.

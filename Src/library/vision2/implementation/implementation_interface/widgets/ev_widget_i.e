@@ -203,9 +203,10 @@ feature -- Resizing
 		-- Check if the dimensions of the widget are set to 
 		-- the values given or the minimum values possible 
 		-- for that widget
-		deferred
-		end
-			
+		do
+			Result := (width = new_width or else width = minimum_width) and then (height = new_height or else height = minimum_height)
+		end		
+		
 feature -- Event - command association
 
 	add_command (event: EV_EVENT; command: EV_COMMAND; 

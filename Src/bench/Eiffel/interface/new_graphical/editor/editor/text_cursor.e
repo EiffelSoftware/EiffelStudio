@@ -356,6 +356,72 @@ feature -- Transformation
 			end
 		end
 
+	insert_string (s: STRING) is
+			-- Insert `s' in text, at Current position.
+		require
+			s_valid: s /= Void and then not s.empty
+		local
+			first_image, last_image, aux: STRING
+			t: EDITOR_TOKEN
+			cline, new_line: EDITOR_LINE
+			i,j : INTEGER
+		do
+			update_x_in_pixels
+			aux := clone (s)
+			aux.prune_all ('%R')
+			if token = line.eol_token then
+				first_image := line.image
+				last_image := ""
+			else
+					--| Building `first_image', i.e. line part before Current.
+				first_image := token.image.substring (1, pos_in_token - 1)
+				from
+					t := token.previous
+				until
+					t = Void
+				loop
+					first_image.prepend (t.image)
+					t := t.previous
+				end
+
+					--| Building `last_image', i.e. line part after Current.
+				last_image := token.image.substring (pos_in_token, token.length)
+				from
+					t := token.next
+				until
+					t = line.eol_token
+				loop
+					s.append (t.image)
+					t := t.next
+				end
+			end
+			i := aux.index_of ('%N', 1)
+			if i = 0 then
+						-- No eol insertion.
+					whole_text.lexer.execute (first_image + aux + last_image)
+					line.make_from_lexer (whole_text.lexer)
+			else
+				whole_text.lexer.execute (first_image + aux.substring (1, i-1))
+				line.make_from_lexer (whole_text.lexer)
+				from
+					cline := line
+					j := aux.index_of ('%N', i+1)
+				until
+					j = 0
+				loop
+					whole_text.lexer.execute (aux.substring (i+1, j-1))
+					create new_line.make_from_lexer (whole_text.lexer)
+					cline.add_right (new_line)
+					cline := new_line
+					i := j
+				end
+				whole_text.lexer.execute (aux.substring (i+1, aux.count) + last_image)
+				create new_line.make_from_lexer (whole_text.lexer)
+				cline.add_right (new_line)	
+			end
+			update_current_char
+		end
+
 	delete_char is
 		local
 			t_before, t_after: EDITOR_TOKEN

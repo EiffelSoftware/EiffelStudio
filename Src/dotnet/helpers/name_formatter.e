@@ -106,10 +106,25 @@ feature -- Basic Operations
 			non_void_result: Result /= Void
 		end	
 
+	formatted_argument_name (name: STRING; pos: INTEGER): STRING is
+			-- Format argument at position `pos'.
+		require
+			name_not_void: name /= Void
+		do
+			if name.is_empty then
+				Result := "arg_" + pos.out
+			else
+				Result := formatted_variable_name (name)
+			end
+		ensure
+			formatted_argument_name_not_void: Result /= Void
+		end
+		
 	formatted_variable_name (name: STRING): STRING is
 			-- Format `name' to Eiffel conventions
 		require
 			non_void_name: name /= Void
+			name_not_empty: not name.is_empty
 		local
 			i: INTEGER
 			l_name: STRING

@@ -9,7 +9,16 @@ inherit
 		end;
 	PICT_COLOR_B
 		rename 
+			make as pict_color_make,
+			set_background_color as pict_set_background_color
+		end;
+	PICT_COLOR_B
+		rename 
 			make as pict_color_make
+		redefine
+			set_background_color
+		select
+			set_background_color
 		end;
 	STONE;
 	DRAG_SOURCE
@@ -68,8 +77,12 @@ feature
 			a_color.set_name (color_name);
 			pict_color_make (color_name, a_parent);
 			set_size (20, 20);
-			set_background_color (a_color);
+			pict_set_background_color (a_color);
 			initialize_transport;
+		end;
+
+	set_background_color (color: COLOR) is
+		do
 		end;
 
 end

@@ -314,6 +314,7 @@ feature {NONE}
 			loop
 				create_new_icon;	
 				new_icon.make_unmanaged (Current);
+				new_icon.update_attributes;
 				icons.extend (new_icon);
 				i := i + 1
 			end;

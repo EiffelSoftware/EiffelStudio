@@ -197,6 +197,7 @@ feature {NONE}
 			loop
 				create_new_icon;
 				new_icon.make_unmanaged (Current);
+				new_icon.update_attributes;
 				icons.extend (new_icon);
 				icons.finish;
 				i := i + 1

@@ -3,15 +3,17 @@ class STATE_EDITOR
 
 inherit
 
-	TOP_SHELL
+	EB_TOP_SHELL
 		rename
 			realize as shell_realize,
 			make as top_shell_make,
 			destroy as shell_destroy
-		end;
-	TOP_SHELL
 		redefine
-			realize, make,
+			set_geometry
+		end;
+	EB_TOP_SHELL
+		redefine
+			realize, make, set_geometry,
 			destroy
 		select
 			realize, make, destroy
@@ -39,6 +41,14 @@ inherit
 creation
 
 	make
+
+feature -- Geometry
+
+	set_geometry is
+		do
+			set_size (Resources.state_ed_width,
+					Resources.state_ed_height)
+		end;
 
 feature -- Input/output
 
@@ -147,6 +157,7 @@ feature {NONE} -- Interface
 			initialize (Widget_names.form, Current);
 			!! del_com.make (Current);
 			set_delete_command (del_com);
+			initialize_window_attributes;
 		end;
 
 end

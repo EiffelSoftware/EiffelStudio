@@ -71,7 +71,7 @@ feature
 			temp_int: INTERIOR
 		do
 			temp_int := inner_figure.interior;
-			temp_int.set_foreground_color (App_const.white);
+			temp_int.set_foreground_color (Resources.background_figure_color);
 			draw;
 		end; -- deselect
 
@@ -121,7 +121,7 @@ feature
 			temp_int: INTERIOR
 		do
 			temp_int := inner_figure.interior;
-			temp_int.set_foreground_color (App_const.black);
+			temp_int.set_foreground_color (Resources.foreground_figure_color);
 			draw
 		end;
 
@@ -224,9 +224,9 @@ feature {NONE}
 			!!int.make;
 			int.set_stipple (Pixmaps.app_interior_stipple);
 			int.set_stippled_fill;
-			int.set_foreground_color (App_const.white);
+			int.set_foreground_color (Resources.background_figure_color);
 			!!a_path.make;
-			a_path.set_foreground_color (App_const.black);
+			a_path.set_foreground_color (Resources.foreground_figure_color);
 			a_path.set_line_width (App_const.standard_thickness);
 			inner_figure.set_interior (int);
 			inner_figure.set_path (a_path);
@@ -240,9 +240,9 @@ feature {NONE}
 		do	
 			!!a_path.make;
 			a_path.set_line_width (App_const.standard_thickness);
-			a_path.set_foreground_color (App_const.black);
+			a_path.set_foreground_color (Resources.foreground_figure_color);
 			!!interior.make;
-			interior.set_foreground_color (App_const.white);
+			interior.set_foreground_color (Resources.background_figure_color);
 			outer_figure.set_interior (interior);
 			outer_figure.set_path (a_path);
 		end;
@@ -254,8 +254,8 @@ feature {NONE}
 	text_image_init is
 			-- Initialize the text (Secret)
 		do
-			text_image.set_background_color (App_const.white);
-			text_image.set_foreground_color (App_const.black);
+			text_image.set_background_color (Resources.background_figure_color);
+			text_image.set_foreground_color (Resources.foreground_figure_color);
 		end; -- text_image_init
 	
 	xyrotate (f: REAL; px, py: INTEGER) is

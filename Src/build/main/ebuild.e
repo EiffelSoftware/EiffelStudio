@@ -22,6 +22,8 @@ feature
 				io.error.putstring ("EiffelBuild stopped%N");
 				exit
 			elseif init_licence then
+					-- Initialize the resources;
+				if resources = Void then end;
 				init_project;
 				read_command_line;
 				iterate;

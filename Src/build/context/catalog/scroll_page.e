@@ -37,9 +37,9 @@ feature {NONE}
 			circle.set_center (circle_coord);
 
 			!!interior.make;
-			interior.set_foreground_color (App_const.white);
+			interior.set_foreground_color (Resources.background_figure_color);
 			!!path.make;
-			path.set_foreground_color (App_const.black);
+			path.set_foreground_color (Resources.foreground_figure_color);
 			path.set_line_width(2);
 
 			rectangle.set_path (path);

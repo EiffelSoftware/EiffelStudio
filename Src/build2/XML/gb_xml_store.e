@@ -119,7 +119,7 @@ feature {GB_XML_HANDLER} -- Implementation
 			elseif add_names then
 				new_type_element := new_child_element (element, Internal_properties_string, "")
 				element.force_last (new_type_element)
-				new_name := unique_name (generated_names, an_object.short_type)
+				new_name := unique_name (generated_names, Local_object_name_prepend_string + an_object.short_type)
 				generated_names.force (new_name)
 				add_element_containing_string (new_type_element, name_string, new_name)--generate_new_name (an_object.short_type))
 			end

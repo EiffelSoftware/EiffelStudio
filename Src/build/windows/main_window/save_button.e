@@ -1,69 +1,65 @@
-class SAVE_BUTTON 
-inherit
+indexing
+	description: "Button to save a project."
+	Id: "$Id$"
+	Date: "$Date$"
+	Revision: "$Revision$"
 
-	EB_BUTTON_COM
+class SAVE_BUTTON
+
+inherit
+	EB_BUTTON
+		redefine
+			make
+		end
 
 	WINDOWS
-		select
-			init_toolkit
-		end
-
-	COMMAND_ARGS
 
 creation
-
 	make
 
-feature {NONE}
+feature {NONE} -- Initialization
 
-    make (a_parent: COMPOSITE) is
-        do
-            make_visible (a_parent)
-        end
-    
-	create_focus_label is 
-		do
-			set_focus_string (Focus_labels.save_project_label)
-		end;
-
-	symbol: PIXMAP is
-		do
-			Result := Pixmaps.save_pixmap
-		end;
-
-	unsaved_symbol: PIXMAP is
-		do
-			Result := Pixmaps.unsave_pixmap
-		end;
-
-	execute (arg: ANY) is
+	make (par: EV_CONTAINER) is
 		local
-			save_proj: SAVE_PROJECT
-			generate: GENERATE
+			cmd: SAVE_PROJECT
 		do
-			if arg = First then
-				!! generate
-				generate.execute (arg)
-			elseif main_panel.project_initialized then
-				!!save_proj;
-				save_proj.execute (Void);
-			end
+			{EB_BUTTON} Precursor (par)
+			create cmd
+			add_click_command (cmd, Void)
 		end
 
-feature
+feature {NONE} -- Button
+
+--	create_focus_label is 
+--		do
+--			set_focus_string (Focus_labels.save_project_label)
+--		end
+
+	symbol: EV_PIXMAP is
+		do
+			Result := Pixmaps.save_pixmap
+		end
+
+	unsaved_symbol: EV_PIXMAP is
+		do
+			Result := Pixmaps.unsave_pixmap
+		end
+
+feature -- Status setting
 
 	set_saved_symbol is
 		do
 			if pixmap /= symbol then
-				set_symbol (symbol)
+				set_pixmap (symbol)
 			end
-		end;
+		end
 
 	set_unsaved_symbol is
 		do
 			if pixmap /= unsaved_symbol then
-				set_symbol (unsaved_symbol)
+				set_pixmap (unsaved_symbol)
 			end
-		end;
+		end
 
-end
+end -- class SAVE_BUTTON
+

@@ -14,10 +14,6 @@ inherit
 			ignore as sig_ignore,
 			catch as sig_catch
 		end;
-	QUEST_POPUPER
-		redefine
-			continue_after_question_popdown
-		end
 
 feature 
 
@@ -62,15 +58,6 @@ feature
 	popuper_parent: COMPOSITE is	
 		do
 			Result := main_panel.base
-		end;
-
-	continue_after_question_popdown (yes: BOOLEAN) is
-		do
-			if yes then
-				update_all_windows;
-			else
-				exit
-			end
 		end;
 
 feature {NONE} -- Initialize toolkit

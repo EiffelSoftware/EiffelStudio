@@ -226,11 +226,15 @@ feature -- Transformation
 			end;
 		end;
 
-	adapt_nested_feature (feature_name: STRING): like Current is
+	adapt_nested_feature (feature_name: STRING; 
+				global_type: GLOBAL_FEAT_ADAPTATION): like Current is
 			-- Feature adaptation within nested calls with
 			-- feature `feature_name'
+		require
+			valid_feature_name: feature_name /= Void;
+			valid_global_type: global_type /= Void
 		do
-			Result := new_adapt_from_current;
+			Result := new_adapt_from_current (global_type);
 			Result.set_is_normal;
 			Result.set_feature_name (feature_name);
 			Result.set_source_feature (Result.compute_feature 
@@ -238,32 +242,35 @@ feature -- Transformation
 			Result.adapt 
 		end;
 
-	adapt_infix (int_name: STRING): like Current is
+	adapt_infix (int_name: STRING;
+				global_type: GLOBAL_FEAT_ADAPTATION): like Current is
 			-- Feature adaptation for infix feature `int_name'
 		require
-			valid_int_name: int_name /= Void
+			valid_int_name: int_name /= Void;
+			valid_global_type: global_type /= Void
 		local
 			name: STRING;	
 		do
 			name := clone (int_name);
 			name.tail (name.count - 7);
-			Result := new_adapt_from_current;
+			Result := new_adapt_from_current (global_type);
 			Result.set_is_infix;
 			Result.set_feature_name (operator_table.name (name));
 			Result.set_source_feature (Result.compute_feature (int_name));
 			Result.adapt 
 		end;
 
-	adapt_prefix (int_name: STRING): like Current is
+	adapt_prefix (int_name: STRING; global_type: GLOBAL_FEAT_ADAPTATION): like Current is
 			-- Feature adaptation for prefix feature `int_name'
 		require
 			valid_int_name: int_name /= Void
+			valid_global_type: global_type /= Void
 		local
 			name: STRING; 
 		do
 			name := clone (int_name)
 			name.tail (name.count - 8);
-			Result := new_adapt_from_current;
+			Result := new_adapt_from_current (global_type);
 			Result.set_feature_name (operator_table.name (name));
 			Result.set_source_feature (Result.compute_feature (int_name));
 			Result.adapt 
@@ -386,15 +393,16 @@ feature {NONE} -- Implementation
 					target_type = Void
 		end;
 
-
-	new_adapt_from_current: like Current is
+	new_adapt_from_current (global_type: GLOBAL_FEAT_ADAPTATION): like Current is
 			-- Update the adaptation `adapt' source and target
 			-- types with result types information from previous
 			-- analyzed features (which is Current).
 			--| eg a.b  a->A then A becomes source_type for b
 		local
 			type: TYPE_A;
-			f: FEATURE_I
+			f: FEATURE_I;
+			enclosing_class: CLASS_C;
+			formal_type: FORMAL_A
 		do
 			!! Result;
 			if already_evaluated_type then
@@ -405,17 +413,37 @@ feature {NONE} -- Implementation
 				f := source_feature;
 				if type /= Void and then f /= Void then
 					type := evaluate_type (type, f.type);
+					if type.is_formal then
+							-- If result is format then get the
+							-- the constraint type from last_class.
+						formal_type ?= type;
+						enclosing_class := global_type.source_enclosing_class;
+						type := enclosing_class.constraint (formal_type.position)
+					end;
+					check
+						is_not_formal: not type.is_formal
+					end;
 					Result.set_source_type (type);
 					type := evaluate_type (target_type, target_feature.type);
+					if type.is_formal then
+							-- If result is format then get the
+							-- the constraint type from last_class.
+						formal_type ?= type;
+						enclosing_class :=  global_type.target_enclosing_class;
+						type := enclosing_class.constraint (formal_type.position)
+					end;
+					check
+						is_not_formal: not type.is_formal
+					end;
 					Result.set_target_type (type);
 				end
 			end;
 		end;
 
-feature {NONE, GLOBAL_FEAT_ADAPTATION}
+feature {NONE} -- Implementation
 
 	evaluate_type (last_type: TYPE_A; type: TYPE): TYPE_A is
-			-- Evaluate type `type' in relation to `last_type'
+			-- Evaluate type `type' in relation to `last_type'.
 		local
 			last_constrained: TYPE_A;
 			last_id: INTEGER;
@@ -444,12 +472,6 @@ feature {NONE, GLOBAL_FEAT_ADAPTATION}
 			Result := Result.conformance_type;
 			Result := Result.instantiation_in 
 						(last_type, last_class.id).actual_type;
-			if Result.is_formal then
-					-- If result is format then get the
-					-- the constraint type from last_class.
-				formal_type ?= Result;
-				Result := last_class.constraint (formal_type.position)
-			end;
 		end
 
 feature -- Debug

@@ -59,6 +59,9 @@ feature {NONE} -- Implementation
 			loc_font_height: INTEGER
 			loc_line_height: INTEGER
 		once
+				-- FIXME: Manu 07/01/2002: what is the signification of this?
+				-- Is this empiric or is that we way we should compute the height
+				-- of a line?
 			loc_font_height := font.height
 			loc_line_height := loc_font_height + (loc_font_height // 4) + 1
 			create Result.put (loc_line_height)

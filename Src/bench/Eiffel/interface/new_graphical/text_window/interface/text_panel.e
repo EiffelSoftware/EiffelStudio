@@ -304,7 +304,10 @@ feature {NONE} -- Graphical interface
 	line_height: INTEGER is
 			-- Height of lines in pixels.
 		once
+				-- Check code of `line_height_cell' in EB_SHARED_EDITOR_FONT
+				-- for compuation explanation.
 			Result := font.height
+			Result := Result + (Result // 4) + 1
 		end
 
 	normal_background_color: EV_COLOR is
@@ -312,7 +315,6 @@ feature {NONE} -- Graphical interface
 		once
 			create Result.make_with_rgb (1, 1, 1)
 		end
-
 
 feature {NONE} -- Private properties of the text window
 

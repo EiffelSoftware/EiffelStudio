@@ -97,9 +97,9 @@ feature {GB_XML_STORE} -- Output
 				for_all_objects (agent {EV_BOX}.set_padding_width (retrieve_and_set_integer_value (Padding_string)))
 			end
 			
-			if attribute_set (Border_string) /= Void then
+--			if attribute_set (Border_string) /= Void then
 				for_all_objects (agent {EV_BOX}.set_border_width (retrieve_and_set_integer_value (Border_string)))
-			end
+--			end
 		
 		
 				-- We set up some deferred building now.

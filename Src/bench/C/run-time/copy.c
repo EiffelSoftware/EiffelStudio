@@ -173,6 +173,9 @@ rt_public EIF_REFERENCE edclone(EIF_CONTEXT EIF_REFERENCE source)
 	int xobjs;
 #endif
 
+	if (0 == source)
+		return (EIF_REFERENCE) 0;			/* Void source */
+
 	/* The deep clone of the source will be attached in the 'boot' entry from
 	 * the anchor structure. It all happens as if we were in fact deep cloning
 	 * the anchor pseudo-object.
@@ -180,9 +183,6 @@ rt_public EIF_REFERENCE edclone(EIF_CONTEXT EIF_REFERENCE source)
 
 	memset (&anchor, 0, sizeof(anchor));	/* Reset header */
 	anchor.boot = (EIF_REFERENCE)  &root;	/* To boostrap cloning process */
-
-	if (0 == source)
-		return (EIF_REFERENCE) 0;			/* Void source */
 
 	RT_GC_PROTECT(source);	/* Protect source: allocation will occur */
 
@@ -198,10 +198,14 @@ rt_public EIF_REFERENCE edclone(EIF_CONTEXT EIF_REFERENCE source)
 
 	{
 	RTXD;							/* Save stack contexts */
+	EIF_EO_STORE_LOCK;				/* Because we perform a traversal that marks
+									   objects, we need to be sure we are the
+									   only one doing it. */
 	excatch(&exenv);		/* Record pseudo-execution vector */
 	if (setjmp(exenv)) {
 		RTXSC;						/* Restore stack contexts */
 		map_reset(1);				/* Reset in emergency situation */
+		EIF_EO_STORE_UNLOCK;		/* Free marking mutex */
 		ereturn(MTC_NOARG);					/* And propagate the exception */
 	}
 
@@ -246,6 +250,8 @@ rt_public EIF_REFERENCE edclone(EIF_CONTEXT EIF_REFERENCE source)
 	RT_GC_WEAN(source);			/* Release GC protection */
 	expop(&eif_stack);			/* Remove pseudo execution vector */
 	}
+
+	EIF_EO_STORE_UNLOCK;		/* Free marking mutex */
 
 	return anchor.boot;			/* The cloned object tree */
 }

@@ -7,6 +7,8 @@ inherit
 			{NONE} all
 		end
 
+	STRING_HANDLER
+
 creation
 	make
 	
@@ -89,14 +91,12 @@ feature -- Output
 			new_count: INTEGER
 			str_area: ANY
 			a_boolean: BOOLEAN
-			a_buffer: WIZARD_BUFFER
 			debugg, debugg2: INTEGER
 		do
-			create a_buffer.make (count)
-			str_area := a_buffer.area
+			create last_string.make (count)
+			str_area := last_string.area
 			last_read_successful := cwin_read_file (output_handle, $str_area, count, $new_count, default_pointer)
-			a_buffer.set_count (new_count)
-			last_string := a_buffer.to_string
+			last_string.set_count (new_count)
 		end
 
 feature {NONE} -- Implementation

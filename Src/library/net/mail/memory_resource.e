@@ -12,7 +12,7 @@ inherit
 
 feature -- Access
 
-	header (h: STRING): STRING is
+	header (h: STRING): HEADER is
 			-- Retrieve the content of the header 'h'.
 		do
 			Result:= headers.item (h)
@@ -31,9 +31,16 @@ feature -- Basic operations
 		deferred
 		end
 
-	has_header: BOOLEAN is
+	is_header_valid: BOOLEAN is
 		-- Is the memory resource's header valid.
 		do
+		end
+
+	add_header (head: HEADER; value: STRING) is
+		require
+			header_exists: valid_header (value)
+		do
+			headers.put (head, value)
 		end
 
 feature -- Implementation (EMAIL_RESOURCE)
@@ -44,15 +51,41 @@ feature -- Implementation (EMAIL_RESOURCE)
 	can_receive: BOOLEAN is False
 		-- Memory resource can not receive.
 
+	valid_header (head: STRING): BOOLEAN is
+		do
+			Result:= (head.is_equal (H_to) or else head.is_equal (H_from) or else
+						head.is_equal (H_cc) or else head.is_equal (H_bcc))
+		end
+
 feature -- Access
 
-	headers: HASH_TABLE [STRING, STRING]
+	headers: HASH_TABLE [HEADER, STRING]
 		-- All information concerning each headers.
+
+	mail_subject: STRING
+		-- Email subject.
 
 	mail_message: STRING
 		-- Email message.
 
 	mail_signature: STRING
 		-- Email signature.
+
+feature -- Settings
+
+	set_message (s: STRING) is
+		do
+			mail_message:= s
+		end
+
+	set_subject (s: STRING) is
+		do
+			mail_subject:= s
+		end
+
+	set_signature (s: STRING) is
+		do
+			mail_signature:= s
+		end
 
 end -- class MEMORY_RESOURCE

@@ -23,7 +23,7 @@ feature -- Constants for SMTP Protocol
 
 	Mail_bcc: STRING is "RCPT BCC:"
 
-	Mail_subject: STRING is "SUBJECT:"
+	Subject: STRING is "SUBJECT:"
 
 	Quit: STRING is "QUIT "
 
@@ -36,6 +36,12 @@ feature -- Constants for SMTP Protocol
 	Remote_error: INTEGER is 550
 
 	Data_code: INTEGER is 354
+
+	Struct_error: INTEGER is 552
+
+	Size_Error: INTEGER is 500
+
+	No_valid_recipient: INTEGER is 554
 
 feature -- Constants for email headers (Authorized keys for the Hashtables)
 

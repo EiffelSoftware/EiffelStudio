@@ -109,7 +109,8 @@ feature {NONE} -- Externals
 		end
 
 invariant
-	singleton: mismatch_information /= Void implies Current = mismatch_information
+	singleton: (create {MISMATCH_CORRECTOR}).mismatch_information /= Void implies
+		Current = (create {MISMATCH_CORRECTOR}).mismatch_information
 
 indexing
 

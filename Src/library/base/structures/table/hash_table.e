@@ -85,7 +85,7 @@ class HASH_TABLE [G, H -> HASHABLE] inherit
 		rename
 			has as has_item
 		redefine
-			has_item, copy, is_equal, correct_mismatch
+			has_item, copy, is_equal
 		end
 
 	TABLE [G, H]
@@ -96,7 +96,14 @@ class HASH_TABLE [G, H -> HASHABLE] inherit
 		export
 			{NONE} prune_all
 		redefine
-			copy, is_equal, clear_all, has_item, correct_mismatch
+			copy, is_equal, clear_all, has_item
+		end
+
+	MISMATCH_CORRECTOR
+		export
+			{NONE} all
+		redefine
+			correct_mismatch
 		end
 
 create

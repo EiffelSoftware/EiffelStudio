@@ -36,21 +36,12 @@ feature -- Access
 
 	file_alignment: INTEGER is
 			-- Current chosen file alignment.
-		do
-			Result := file_alignment_cell.item
+		once
+			Result := small_file_alignment
 		ensure
 			valid_result: Result > 0
 		end
 
-feature {NONE} -- Implementation
-
-	file_alignment_cell: INTEGER_REF is
-			-- 
-		once
-			create Result
-			Result.set_item (Small_file_alignment)
-		end
-		
 feature -- Constants
 
 	section_alignment: INTEGER is 0x2000

@@ -35,7 +35,7 @@ public struct profile_stack *prof_stack;
 /* INTERNAL TRACE VARIABLES */
 
 int last_dtype;			/* These three variables are needed because we */
-int last_origin;		/* want to print "...---..." in stat of "...>>>... _nextline_ ...<<<..." */
+int last_origin;		/* want to print "...---..." instead of "...>>>... _nextline_ ...<<<..." */
 char *last_name;		/* when we deal with a so called terminal feature (a feature without calls to other features) */
 
 /* INTERNAL PROFILE STRUCTURES */
@@ -388,32 +388,34 @@ void prof_stack_pop()
 		old_it = prof_stack->top->link;		/* Get old item */
 		prof_stack->top->link = prof_stack->top->link->link;	/* Unchain old item */
 
-		xfree(old_it);			/* Free memory used by the stack emtry */
+		xfree(old_it);			/* Free memory used by the stack entry */
 	}
 }
 
 struct profile_information* prof_stack_top()
 {
 	/* Returns a NULL pointer if the stack is empty, otherwise the information structure.
-	 * The stack is empty if and only if the previous item of the top is the bottom item, i.e. top->link == 0.
+	 * The stack is empty if and only if the next item from the top is the bottom item, i.e. top->link->link == NULL.
 	 */
 
 	if(eif_profiler_on)
 		return (prof_stack->top->link->link == (struct prof_item *) 0 ? (struct profile_information *) 0 : prof_stack->top->link->info);
+	else
+		return (struct profile_information *) 0;
 }
 
 void prof_stack_init()
 {
 	/* Initializes the 'prof_stack' by allocating memory for the stack-structure and the top-item
-	 * of the stack. The bottom item of the stack is simply a NULL pointer.
-	 * Thus we know top->link == 0 implies stack is empty.
+	 * of the stack. The bottom item of the stack is a stack item with only NULL pointers.
+	 * Thus we know: `(top->link->link == NULL) implies stack.empty'.
 	 *
 	 * We do not use the more intelligent way of using chunks in an arena, because that will be way
 	 * to slow for profiling. The code which manipulates the 'prof_stack' MUST remain highly optimized
 	 * for speed, because we don't want a slow execution when E-PROFILE is working.
 	 * For this simple reason, we use here dynamic (i.e. pointers) rather than static structures, for we
 	 * can copy a pointer in a simple way, and thus fast.
-	 * Another reason for this simple stack structure is that it will be used only when we it (i.e. for
+	 * Another reason for this simple stack structure is that it will be used only when we use it (i.e. for
 	 * those features of a class where the user specified E-PROFILE). This means the stack will
 	 * hopefully, not grow out of bounds and therefore we can just allocate blocks here and there and
 	 * take the risk that a part of the stack will be swapped out by the OS. This, though, will not create
@@ -445,6 +447,7 @@ void prof_stack_free()
 
 	if(eif_profiler_on) {
 		xfree(prof_stack->top);		/* Free the memory used by the top item */
+		xfree(prof_stack->bot):		/* Free the memory used by the bottom item */
 		xfree(prof_stack);		/* Free the memory used by the stack structure */
 	}
 }

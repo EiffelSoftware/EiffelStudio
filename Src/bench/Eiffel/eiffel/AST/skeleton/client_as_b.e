@@ -39,6 +39,7 @@ feature -- Initialization
 					-- Current class in second pass...
 				client_i.set_written_in (System.current_class.id);
 				!!export_set.make;
+				export_set.compare_objects;
 				export_set.put (client_i);
 				Result := export_set;
 			end;

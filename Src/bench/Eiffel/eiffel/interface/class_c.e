@@ -185,6 +185,7 @@ feature
 			!!types.make;
 				-- Filter list creation
 			!!filters.make;
+			filters.compare_objects;
 				-- Feature id counter creation
 			!!feature_id_counter;
 				-- Changed features list creation

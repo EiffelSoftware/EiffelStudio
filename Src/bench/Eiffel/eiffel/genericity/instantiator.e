@@ -67,7 +67,6 @@ end;
 
 				-- Look for the item in the insertion list
 			insertion_list.start;
-			insertion_list.compare_objects
 			insertion_list.search (type_i);
 			if insertion_list.after then
 					-- New data or item

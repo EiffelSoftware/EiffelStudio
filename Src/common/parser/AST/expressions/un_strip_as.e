@@ -22,6 +22,7 @@ feature -- Initialization
 				-- Empty list
 				!!id_list.make (0)
 			end;
+			id_list.compare_objects;
 		ensure then
 			id_list /= Void;
 		end;
@@ -48,7 +49,6 @@ feature -- Type check, byte code and dead code removal
 				an_id := id_list.item;
 				pos := id_list.index;
 				id_list.forth;
-				id_list.compare_objects
 				id_list.search (an_id);
 				if not id_list.after then
 						-- Id appears more than once in attribute list

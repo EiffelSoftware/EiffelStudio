@@ -1,0 +1,36 @@
+#define ID_MAIN_FRAME                    1
+#define CMD_FLAT_TOOL_BAR               101
+#define CMD_EXIT                        1007
+#define CMD_TEST								 102
+
+ID_MAIN_FRAME      ICON    DISCARDABLE     "APP.ICO"
+
+ID_MAIN_FRAME            BITMAP  MOVEABLE PURE   "TOOLBAR.BMP"
+
+
+ID_MAIN_FRAME MENU DISCARDABLE 
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "&Flat Toolbar",               CMD_FLAT_TOOL_BAR
+        MENUITEM "&Test",               CMD_TEST
+        MENUITEM SEPARATOR
+        MENUITEM "E&xit",                       CMD_EXIT
+    END
+END
+
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    CMD_FLAT_TOOL_BAR                "Set or unset flat toolbar mode\nFlat mode\nFlat"
+    CMD_TEST								 "This is a test command\nTest command\nTest"
+    CMD_EXIT 				             "Quits the application\nQuit"
+END
+
+ID_MAIN_FRAME TOOLBAR DISCARDABLE  16, 15
+BEGIN
+    BUTTON      CMD_FLAT_TOOL_BAR
+    BUTTON 		 CMD_TEST
+    SEPARATOR
+    BUTTON      CMD_EXIT
+END

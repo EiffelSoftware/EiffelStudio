@@ -1,0 +1,16 @@
+
+Things we plan to do ouselves (soon!):
+-------------------------------------
+- eifird  (the interface repository daemon)
+- eifnsd  (the Naming Service daemon)
+- debugging
+- We will strive to implement the POA as soon
+  as we have some free capacity. In the process
+  the BOA will be completed, since both use the
+  same daemon.
+
+Things for which we'd like to find volunteers:
+-----------------------------------------------
+- DynAny
+- other CORBAservices (trader, event, ...)
+- porting to other platforms

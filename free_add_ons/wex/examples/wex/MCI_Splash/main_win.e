@@ -1,0 +1,225 @@
+class
+	MAIN_WINDOW
+
+inherit
+	WEL_FRAME_WINDOW
+		redefine
+			on_control_id_command,
+			default_ex_style,
+			class_background,
+			class_name
+		end
+
+creation
+	make
+
+feature {NONE} -- Initialization
+
+	make is
+			-- Create main window.
+		do
+			make_top ("WEX - Windows Eiffel library eXtension")
+			move_and_resize(0, 0, 370, 385, False)
+			!! popupbitmap.make (Current, "Popup bitmap",      0  ,  0 , 150, 30, 101)
+			!! popdownbitmap.make (Current, "Popdown bitmap",  0  ,  40, 150, 30, 102)
+			!! selbitmap.make (Current, "Select bitmap",       0  ,  80, 150, 30, 103)
+			!! avisplash.make (Current, "Select AVI", 	     0  , 120, 150, 30, 104)
+			!! playwave.make (Current, "Play wave", 			0  , 160, 150, 30, 107)
+			!! playmidi.make (Current, "Play midi", 			0  , 200, 150, 30, 108)
+			!! stopmidi.make (Current, "Stop midi", 			0  , 240, 150, 30, 109)
+			!! playcd.make (Current, "Play cd", 			0  , 280, 150, 30, 110)
+			!! stopcd.make (Current, "stop cd", 			0  , 320, 150, 30, 111)
+			!! bitmap_region_check.make (Current, "Funny region", 160,   0, 150, 30, 105)
+			!! video_region_check.make (Current, "Elliptic region",  160, 120, 150, 30, 106)
+		end
+
+feature {NONE} -- Behavior
+
+	on_control_id_command (control_id: INTEGER) is
+			-- A command has been received from `control_id'.
+		local
+			a_region: WEL_REGION
+			sw: INTEGER
+			sh: INTEGER
+			old_p: POINTER
+		do
+			if control_id = 101 then
+				if not splash.popped_up then
+					if bitmap_region_check.checked then
+						sw := splash.width // 2
+						sh := splash.height // 2
+						!!a_region.make_polygon_alternate (<<sw, 0, splash.width, 0,
+							sw, sh, splash.width, splash.height, 0, splash.height, sw, sh, 0, sh, sw, 0>>)
+					else
+						!! a_region.make_rect (0, 0, splash.width, splash.height)
+					end
+					splash.set_window_region (a_region, False)
+					if splash.valid then
+						splash.pop_up
+					else
+						information_message_box ("Select valid bitmap first!", "Splash")
+					end
+				end
+			elseif control_id = 111 then
+				stop_any_playing_cd
+			elseif control_id = 110 then
+				stop_any_playing_cd
+				cd_device.open
+				if cd_device.opened then
+					if cd_device.media_present then
+						cd_device.play
+						if not cd_device.playing and then not cd_device.is_audio_track(1) then
+							information_message_box ("Cannot play first track?", "WEX CD Audio")
+							-- TODO Check next track
+						end
+					end
+				else
+					information_message_box ("Could not open CD", "WEX CD Audio")
+				end
+			elseif control_id = 102 then
+				if splash.popped_up then
+					splash.pop_down
+				end
+			elseif control_id = 103 then
+				file_dialog.activate (current)
+				if file_dialog.selected then
+					splash.set_bitmap (file_dialog.file_name)
+ 				end
+			elseif control_id = 104 then
+				file_dialog.activate (Current)
+				if file_dialog.selected then
+					splash_video.set_video(file_dialog.file_name)
+					if splash_video.valid then
+						if video_region_check.checked then
+							!! a_region.make_elliptic (0, 0, splash_video.width, splash_video.height)
+						else
+							!! a_region.make_rect (0, 0, splash_video.width, splash_video.height)
+						end
+						splash_video.set_window_region (a_region, False)
+						splash_video.pop_up
+					else
+						information_message_box ("Select valid video please!", "Video")
+					end
+				end
+			elseif control_id = 108 then
+				file_dialog.activate (Current)
+				if file_dialog.selected then
+					stop_any_playing_midi
+					midi_device.open (file_dialog.file_name)
+					if midi_device.opened then
+						midi_device.play
+					end
+				end
+			elseif control_id = 109 then
+				stop_any_playing_midi
+			elseif control_id = 107 then
+				file_dialog.activate (Current)
+				if file_dialog.selected then
+					if wave_device.opened then
+						if wave_device.playing then
+							wave_device.stop
+						end
+						wave_device.close
+					end
+					wave_device.open (file_dialog.file_name)
+					if wave_device.opened then
+						wave_device.play
+					end
+				end
+			end
+		end
+
+	stop_any_playing_cd is
+		do
+			if cd_device.opened then
+				if cd_device.playing then
+					cd_device.stop
+				end
+				cd_device.close
+			end
+		end
+
+	stop_any_playing_midi is
+		do
+			if midi_device.opened then
+				if midi_device.playing then
+					midi_device.stop
+				end
+				midi_device.close
+			end
+		end
+
+	popupbitmap,
+	selbitmap,
+	avisplash,
+	playmidi,
+	stopmidi,
+	playcd, 
+	stopcd,
+	playwave,
+	popdownbitmap: WEL_PUSH_BUTTON
+
+	video_region_check,
+	bitmap_region_check: WEL_CHECK_BOX
+
+	splash: WEX_SPLASH_BITMAP_WINDOW is
+		once
+			!! Result.make
+		end
+
+	splash_video: WEX_SPLASH_VIDEO is
+		once
+			!! Result.make
+		end
+
+	file_dialog: WEL_OPEN_FILE_DIALOG is
+		once
+			!! Result.make
+		end
+
+	class_name: STRING is
+		once
+			Result := "MainWindowRWC"
+		end
+
+	class_background: WEL_BRUSH is
+		once
+			!! Result.make_by_sys_color (Color_btnface + 1)
+		end
+
+	default_ex_Style: INTEGER is
+		once
+			Result := 768
+		end
+
+	cd_device: WEX_MCI_CD_AUDIO is
+		once
+			!! Result.make (Current)
+		end
+
+	midi_device: WEX_MCI_SEQUENCER is
+		once
+			!! Result.make (Current)
+		end
+
+	wave_device: WEX_MCI_WAVE_AUDIO is
+		once
+			!! Result.make (Current)
+		end
+
+end -- class MAIN_WINDOW
+
+--|-------------------------------------------------------------------------
+--| WEX, Windows Eiffel library eXtension
+--| Copyright (C) 1998  Robin van Ommeren, Andreas Leitner
+--| See the file forum.txt included in this package for licensing info.
+--|
+--| Comments, Questions, Additions to this library? please contact:
+--|
+--| Robin van Ommeren						Andreas Leitner
+--| Eikenlaan 54M								Arndtgasse 1/3/5
+--| 7151 WT Eibergen							8010 Graz
+--| The Netherlands							Austria
+--| email: robin.van.ommeren@wxs.nl		email: andreas.leitner@teleweb.at
+--| web: http://home.wxs.nl/~rommeren	web: about:blank
+--|-------------------------------------------------------------------------

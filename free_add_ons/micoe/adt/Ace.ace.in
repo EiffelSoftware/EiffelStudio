@@ -1,0 +1,35 @@
+system
+	precomp
+
+root
+
+	ANY
+
+default
+
+	assertion (all);
+	
+cluster
+	
+        minimal_support:  "../tmp/minimal_support";
+	kernel:           "$EIFFEL4/library/base/kernel";
+        support:          "$EIFFEL4/library/base/support";
+	container:        "../adt/contain"
+            adapt
+                minimal_support:
+                  rename
+                    collection  as ise_collection,
+                    list        as ise_list,
+                    table       as ise_table,
+                    traversable as ise_traversable;
+            end;
+        graph:            "../adt/graph";
+        matcher:          "../adt/matcher";
+        sorter:           "../adt/sorter";
+        basic:            "../adt/basic";
+
+external
+
+    Object: "@ABSSRCDIR@/adt/c/eifadt.a"
+
+end

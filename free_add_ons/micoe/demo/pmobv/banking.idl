@@ -1,0 +1,27 @@
+struct AmountStruct
+{
+    long basicUnits;
+    long smallUnits;
+    short sign;
+    string currency;
+};
+
+interface Amount
+{
+    void fromAmountStruct (in AmountStruct amnt);
+    AmountStruct toAmountStruct ();
+    void fromString (in string amnt);
+    string toString ();
+    Amount plus (in Amount amount);
+    Amount minus (in Amount amount);
+    Amount times (in double factor);
+    Amount convertToCurrency (in string targetCurrency);
+};
+
+interface Account
+{
+    oneway void setDesiredCurrency (in string currency);
+    oneway void deposit (in AmountStruct amount);
+    oneway void withdraw (in AmountStruct amount);
+    AmountStruct balance ();
+};

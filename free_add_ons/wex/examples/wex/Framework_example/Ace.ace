@@ -1,0 +1,37 @@
+system
+	app
+
+root
+	APPLICATION (root_cluster): "make"
+
+
+
+default
+	assertion (all);
+	precompiled ("$EIFFEL4\precomp\spec\$PLATFORM\base");
+	precompiled ("$EIFFEL4\precomp\spec\windows\wel");
+  	precompiled ("$EIFFEL4\library\wex\ace");	
+
+
+cluster 
+	root_cluster:		"$EIFFEL4\examples\wex\Framework_example";
+
+	wex_framework:		"$EIFFEL4\\library\wex\framework";
+	wex_mci_devices:	"$EIFFEL4\\library\wex\Mci_devices";
+	wex_mci_consants:	"$EIFFEL4\library\wex\Mci_constants";
+	wex_mci_support:	"$EIFFEL4\library\wex\Mci_support";
+	wex_mci_structures:	"$EIFFEL4\library\wex\Mci_structures";
+	wex_splash:		"$EIFFEL4\library\wex\splash";
+	wex_windows:		"$EIFFEL4\library\wex\windows";
+	wex_window_extras:	"$EIFFEL4\library\wex\window_extras";
+
+
+external
+
+	include_path:		"$(EIFFEL4)\library\Wex\spec\windows\include",
+					"$(EIFFEL4)\library\Wex\clib",
+					"$(EIFFEL4)\library\Wel\spec\windows\include";
+	object:				"$(wex_vc_lib)\winmm.lib",
+					"$(EIFFEL4)\library\Wex\clib\cwex.lib",
+					"$(EIFFEL4)\library\wel\spec\$(COMPILER)\lib\wel.lib";
+end

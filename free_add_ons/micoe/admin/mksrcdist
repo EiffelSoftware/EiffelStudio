@@ -1,0 +1,24 @@
+#!/bin/sh
+
+VERSION=`cat VERSION`
+MANIFEST=`pwd`/MANIFEST
+TAR=tar
+
+for i in `echo $PATH | tr : ' '`; do
+  if test -f $i/gtar; then
+    TAR=gtar
+  fi
+done
+
+mktarfiles () {
+    for i in `cut -f1 -d\  < ${MANIFEST}`; do
+	echo micoe/$i
+    done
+}
+
+(
+    cd ..
+    mktarfiles > /tmp/mksrcdist.$$
+    $TAR cfT - /tmp/mksrcdist.$$ | gzip > micoe.tgz
+    rm -f /tmp/mksrcdist.$$
+)

@@ -1,0 +1,15 @@
+# cwex.lib - Makefile for Microsoft C
+
+CC = cl
+CFLAGS = -c -Ox -I$(EIFFEL4)\bench\spec\windows\include
+
+.cpp.obj:
+	$(CC) $(CFLAGS) $<
+
+
+OBJ = cwex.obj
+
+cwex.lib: $(OBJ)
+	if exist $@ del $@
+	lib /OUT:$@ $(OBJ)
+	del *.obj

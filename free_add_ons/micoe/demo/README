@@ -1,0 +1,67 @@
+Here are some demos to illustrate the use of mico/E.
+
+
+The contents of the directories:
+
+1. banking
+These are the classes described in the chapter
+"Tutorial" in the manual. You may want to read
+that chapter before trying these out.
+
+2. codesets
+This is an an example to illustrate the use and functioning
+of code sets under mico/E. Even if (maybe especially if) you
+don't understand German, it's fairly impressive.
+
+The client writes its HTML text to standard output; then it
+writes what it gets back from the server (which should look
+exactly the same, having been converted back to HTML on the
+return trip). The servant writes what it receives from the client
+(which should have been converted from HTML to Latin-1). The clue
+to this magic is to be found in the commandline arguments used in
+the scripts "startclient" and "startserver".
+
+3. pmobv (Poor Man's Object By Value)
+Object By Value (or OBV for short) will be specified in CORBA 3.0.
+MICO already supports OBV but mico/E does not yet. This demo is
+supposed to show how you can achieve essentially the same effect
+by working a little harder. The demo repeats the idea of the
+demo `banking/step3' but with a fancier notion of an amount of money
+(taking various currencies and conversion rates into account ...
+pardon the pun).
+
+4. user_exceptions
+Illustrates the use of user defined exceptions in mico/E.
+**************************************************************
+
+1. First copy the entire contents of the directory containing
+   the demos into your own directory: e.g.
+
+cp -r $MICOE/demo .
+
+   where MICOE points to the directory where mico/E was installed.
+
+2. Then change to the demo you're interested in in the local copy: e.g.
+
+   cd demo/codesets.
+
+3. Build the demo with either "make" or "make finalized".
+
+4. run the demo with the command "runit".
+
+**********************************************************************
+
+NOTE: The shell scripts `runit' start the server and then wait a certain
+empirically chosen time (3s) for it to get up and running before starting
+the client. It may happen that on your machine this default time is
+too short. If the client exits with an exception in the routine
+`connect' this means the client tried to reach the server before it was
+ready. In this case simply rerun `runit' with a value > 3, e.g.
+
+runit 5
+
+
+
+
+
+

@@ -1,0 +1,68 @@
+version 2.2.0.4 (1999/10/12)
+- The class CORBA_TYPECODE is now an abstract class with concrete
+  descendants STRUCT_TYPECODE, etc. This leads to a clearer structure
+  that supports polymorphism better.
+- Fixed bugs in the scheduler. This improves performance somewhat.
+- Fixed bugs in the giop and the boa to achieve better interoperability.
+- Default debug level changed to Log_warning (4).
+- Added some more debugging facilities.
+version 2.2.0.3 (1999/08/12)
+- reorganisation of configure parameters (s. chapter 2 in the manual).
+- Major reworking of the Eiffel mapping and adaptation of mico/E to
+  conform to the reworked mapping.
+- Numerous bug fixes. In particular: the General Inter-ORB Protocol
+  (GIOP) requires the accessor methods for an attribute `attr' in an
+  interface to be called `_get_attr' and `_set_attr' "on the wire".
+  In previous releases this was not the case; it has been fixed.
+- idl2eif has two new options: --no-stubs and --no-servants.
+- A new demo pmobv (Poor Man's Object-By-Value) that illustrates how
+  to achieve something like object-by-value with mico/E and a little
+  extra work.
+- A new demo user_exceptions that illustrates the use of user-defined
+  exceptions under mico/E.
+- all classes adapted to the new creation syntax: create x instead of !!x.
+- further convergence of our IDL/Eiffel mapping toward that of
+  Howard/Meyer/Nash.
+- The logging facility "MICO_DEBUGGER" has been replaced by the
+  more efficient class "LOGGER".
+version 2.2.0.2 (1999/06/12)
+- bug fixed in admin/Makefile
+- micorc bug fixed
+- build_ace tool added (s. admin/README_build_ace)
+- idl2eif modified to use the inheritance model rather
+  than the delegation model (s. section 4.14 in the manual).
+- idl2eif now generates prototype classes for each interface
+  declared in an IDL specification. The application programmer
+  only needs to fill in the bodies of the routines in these
+  prototypes to get the required implementation classes.
+- In all classes in "orb/type" the routine `create' was renamed
+  `create_object' to avoid conflict with a new keyword "create"
+  in ISE Eiffel 4.3. (Thanks to Greg Lee for pointing this out)
+- idl2eif now generates a class FOO_HELPER for each project,
+  where "foo.idl" is the file containing the IDL specification.
+  This class has a function
+  Bar_narrow (o : OBJECT) : BAR_STUB
+  for each interface Bar declared in "foo.idl". This function can
+  be used for converting an object reference into a stub of the
+  appropriate type (see the demos for examples of its use). A class
+  NARROW_HELPER is no longer generated.
+- In addtion the constants class of global scope is now called
+  FOO_CONSTANTS if the IDL specification is "foo.idl".
+  This is to avoid name conflicts in applications
+  that use definitions taken from more than one IDL specification.
+- The helper classes for sequences have two new features:
+  declared_length : INTEGER
+  current_length  : INTEGER
+  For bounded sequences these return the same value; for unbounded
+  sequences the first returns 0 while the second returns the highest
+  index at which a value has been stored (this is the highest index
+  that can be accessed without incurring an exception).
+- The helper classes for structs have two creation procedures:
+  make (...)
+  make_default
+  The first of these accepts as arguments initialization values for
+  each member of the struct. The second takes no arguments and does
+  nothing; this means that the members of a newly created struct are
+  initialized with default values.
+version 2.2.0.1 (1999/04/12)
+- initial release

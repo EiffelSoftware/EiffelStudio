@@ -31,6 +31,16 @@ feature -- Access
 	is_attribute: BOOLEAN is False
 			-- is the feature_i associated an attribute ?	
 
+feature -- Comparison
+
+	same_as (other: ROUT_ENTRY): BOOLEAN is
+			-- Is `Current' similar to `other'?
+		require
+			other_not_void: other /= Void
+		do
+			Result := written_type_id = other.written_type_id and body_index = other.body_index
+		end
+
 feature -- Settings
 
 	set_body_index (i: INTEGER) is

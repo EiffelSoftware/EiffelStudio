@@ -1,0 +1,27 @@
+<!-- assembly_description.dtd - Assembly description Document Type Definition for XML -->
+
+
+<!ELEMENT assembly (assembly_name, assembly_version*, assembly_culture*, assembly_public_key*, eiffel_cluster_path*, emitter_version_number*)>
+
+<!-- Assembly name-->
+<!ELEMENT assembly_name (#PCDATA)>
+
+<!-- Assembly version -->
+<!ELEMENT assembly_version (#PCDATA)>
+
+<!-- Assembly culture-->
+<!ELEMENT assembly_culture (#PCDATA)>
+
+<!-- Assembly public key token -->
+<!ELEMENT assembly_public_key (#PCDATA)>
+
+<!-- Path to cluster where Eiffel classes corresponding to assembly types are stored-->
+<!ELEMENT eiffel_cluster_path (#PCDATA)>
+
+<!-- Emitter version number -->
+<!ELEMENT emitter_version_number (#PCDATA)>
+
+
+<!-- 
+End of Document Type Definition
+-->

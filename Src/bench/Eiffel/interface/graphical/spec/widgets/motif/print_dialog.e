@@ -100,7 +100,8 @@ feature -- Update
 			-- Popup the dialog for command `a_cmd'.
 		local
 			mb: MEL_PUSH_BUTTON;
-			mf: MEL_FORM_DIALOG
+			mf: MEL_FORM_DIALOG;
+			filterable_format: FILTERABLE
 			shell_command: STRING
 		do
 			if destroyed then
@@ -112,6 +113,12 @@ feature -- Update
 			set_title (a_cmd.tool.title);
 			mb ?= ok_b.implementation;
 			mb.set_show_as_default (1);
+			filterable_format ?= a_cmd.tool.last_format.associated_command;
+			if filterable_format = Void then
+				postscript_t.set_insensitive
+			else
+				postscript_t.set_sensitive
+			end;
 			display
 		end;
 
@@ -164,7 +171,7 @@ feature {NONE} -- Implementation
 				cmd_string.replace_substring_all ("$target", file_name);
 			end;
 			filterable_format ?= last_command.tool.last_format.associated_command;
-			if not postscript_t.state or else filterable_format = Void then
+			if filterable_format = Void or else not postscript_t.state then
 				new_text := last_command.text_window.text;
 			else
 				new_text := filterable_format.filtered_text 

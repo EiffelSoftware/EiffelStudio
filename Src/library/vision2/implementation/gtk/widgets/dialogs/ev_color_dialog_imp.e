@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 			gtk_window_set_modal (widget, True)
 
 			-- Make it appear where the mouse is.
-			gtk_window_set_position (GTK_WINDOW (widget), 0)
+			gtk_window_set_position (GTK_WINDOW (widget), WINDOW_POSITION_MOUSE)
 
 			-- Connect destroy command to `OK' and `Cancel' buttons.
 			add_dialog_close_command (cancel_widget)		

@@ -369,9 +369,13 @@ feature -- Execution
 				-- Execute the flat or flat_short.
 		local
 			name: STRING;
-			simple_ctxt: FORMAT_CONTEXT
+			simple_ctxt: FORMAT_CONTEXT;
+			prev_class: CLASS_C;
+			prev_cluster: CLUSTER_I
 		do
 			if not rescued then
+				prev_class := System.current_class;
+				prev_cluster := Inst_context.cluster;
 				execution_error := false;
 				Error_handler.wipe_out;
 				class_name := clone (class_c.name)
@@ -392,7 +396,6 @@ feature -- Execution
 				else
 					execution_error := true
 				end;
-				System.set_current_class (Void);
 debug ("FLAT_SHORT")
 	!! simple_ctxt.make (format_registration.target_ast, class_c.file_name)
 	format_registration.target_ast.simple_format (simple_ctxt);
@@ -402,6 +405,8 @@ end
 				execution_error := True;
 				rescued := False
 			end;
+			System.set_current_class (prev_class);
+			Inst_context.set_cluster (prev_cluster);
 		rescue
 			if Rescue_status.is_error_exception then
 				Rescue_status.set_is_error_exception (False);

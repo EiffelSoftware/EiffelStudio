@@ -1,0 +1,295 @@
+indexing
+	description: "C type for integers."
+	date: "$Date$"
+	revision: "$Revision$"
+	
+class NATURAL_I
+
+inherit
+	BASIC_I
+		rename
+			make as base_make
+		redefine
+			is_natural,
+			is_numeric,
+			same_as, element_type,
+			description, sk_value, hash_code,
+			heaviest, tuple_code,
+			maximum_interval_value,
+			minimum_interval_value,
+			generate_conversion_to_real_64,
+			generate_conversion_to_real_32
+		end
+
+	BYTE_CONST
+		export
+			{NONE} all
+		end
+		
+	SHARED_IL_CODE_GENERATOR
+		export
+			{NONE} all
+		end
+		
+	SHARED_INCLUDE
+		export
+			{NONE} all
+		end
+
+create
+	make
+
+feature -- Initialization
+
+	make (n: INTEGER) is
+			-- Create instance of LONG_I represented by `n' bits.
+		require
+			valid_n: n = 8 or n = 16 or n = 32 or n = 64
+		do
+			size := n.to_integer_8
+			inspect
+				n
+			when 8 then base_make (system.natural_8_class.compiled_class.class_id)
+			when 16 then base_make (system.natural_16_class.compiled_class.class_id)
+			when 32 then base_make (system.natural_32_class.compiled_class.class_id)
+			when 64 then base_make (system.natural_64_class.compiled_class.class_id)
+			end
+		ensure
+			size_set: size = n
+		end
+
+feature -- Status report
+
+	element_type: INTEGER_8 is
+			-- Pointer element type
+		do
+			inspect size
+			when 8 then Result := feature {MD_SIGNATURE_CONSTANTS}.Element_type_u1
+			when 16 then Result := feature {MD_SIGNATURE_CONSTANTS}.Element_type_u2
+			when 32 then Result := feature {MD_SIGNATURE_CONSTANTS}.Element_type_u4
+			when 64 then Result := feature {MD_SIGNATURE_CONSTANTS}.Element_type_u8
+			end
+		end
+
+	tuple_code: INTEGER_8 is
+			-- Tuple code for class type
+		do
+			inspect
+				size
+			when 8 then Result := feature {SHARED_GEN_CONF_LEVEL}.natural_8_tuple_code
+			when 16 then Result := feature {SHARED_GEN_CONF_LEVEL}.natural_16_tuple_code
+			when 32 then Result := feature {SHARED_GEN_CONF_LEVEL}.natural_32_tuple_code
+			when 64 then Result := feature {SHARED_GEN_CONF_LEVEL}.natural_64_tuple_code
+			end
+		end
+
+	reference_type: CL_TYPE_I is
+			-- Assocated reference type of Current.
+		do
+			inspect
+				size
+			when 8 then create Result.make (system.natural_8_ref_class.compiled_class.class_id)
+			when 16 then create Result.make (system.natural_16_ref_class.compiled_class.class_id)
+			when 32 then create Result.make (system.natural_32_ref_class.compiled_class.class_id)
+			when 64 then create Result.make (system.natural_64_ref_class.compiled_class.class_id)
+			end
+		end
+
+feature -- Access
+
+	size: INTEGER_8
+			-- Current is stored on `size' bits.
+	
+	level: INTEGER is
+			-- Internal code for generation
+		do
+			inspect size
+			when 8 then Result := C_uint8
+			when 16 then Result := C_uint16
+			when 32 then Result := C_uint32
+			when 64 then Result := C_uint64
+			end
+		end
+
+	is_natural: BOOLEAN is True
+			-- Is the type a natural type ?
+
+	is_numeric: BOOLEAN is True
+			-- Is the type a numeric one ?
+
+	heaviest (other : TYPE_I) : TYPE_I is
+		local
+			l_long: like Current
+		do
+			if other.is_real_64 or other.is_real_32 then
+				Result := other
+			else
+				if other.is_natural then
+					l_long ?= other
+					if size >= l_long.size then
+						Result := Current
+					else
+						Result := other
+					end
+				else
+					Result := Current
+				end
+			end
+		end
+
+	same_as (other: TYPE_I): BOOLEAN is
+			-- Is `other' the equal to Current ?
+		local
+			o: like Current
+		do
+			if other.is_natural then
+				o ?= other
+				Result := size = o.size
+			end
+		end
+
+	description: NATURAL_DESC is
+			-- Type description for skeleton
+		do
+			create Result.make (size)
+		end
+
+	c_string: STRING is
+			-- String generated for the type.
+		do
+			inspect size
+			when 8 then Result := String_natural_8
+			when 16 then Result := String_natural_16
+			when 32 then Result := String_natural_32
+			when 64 then Result := String_natural_64
+			end
+		end
+
+	union_tag: STRING is
+			-- Union name to specify type for Agents
+		do
+			inspect size
+			when 8 then Result := Union_tag_8
+			when 16 then Result := Union_tag_16
+			when 32 then Result := Union_tag_32
+			when 64 then Result := Union_tag_64
+			end
+		end
+
+	hash_code: INTEGER is
+			-- Hash code for current type
+		do
+			inspect size
+			when 8 then Result := natural_8_code
+			when 16 then Result := natural_16_code
+			when 32 then Result := natural_32_code
+			when 64 then Result := natural_64_code
+			end
+		end
+
+	sk_value: INTEGER is
+			-- Generate SK value associated to the current type.
+		do
+			inspect size
+			when 8 then Result := Sk_uint8
+			when 16 then Result := Sk_uint16
+			when 32 then Result := Sk_uint32
+			when 64 then Result := Sk_uint64
+			end
+		end
+
+	generate_union (buffer: GENERATION_BUFFER) is
+			-- Generate discriminant of C structure "item" associated
+			-- to the current C type in `buffer'.
+		do
+			buffer.put_string ("it_uint")
+			buffer.put_integer (size)
+		end
+
+	generate_sk_value (buffer: GENERATION_BUFFER) is
+			-- Generate SK value associated to current C type in `buffer'.
+		do
+			buffer.put_string ("SK_UINT")
+			buffer.put_integer (size)
+		end
+
+	type_a: NATURAL_A is
+		do
+			create Result.make (size)
+		end
+
+feature -- Code generation
+
+	minimum_interval_value: INT_VAL_B is
+			-- Minimum value in inspect interval for current type
+		do
+			create Result.make ((-1) |<< (size - 1))
+		end
+
+	maximum_interval_value: INT_VAL_B is
+			-- Maximum value in inspect interval for current type
+		do
+			create Result.make ((1 |<< (size - 1)) - 1)
+		end
+
+	generate_conversion_to_real_64 (buffer: GENERATION_BUFFER) is
+			-- Generate conversion to `REAL_64', needed because
+			-- for some descendants, it is not enough to just to a cast to EIF_REAL_64.
+		do
+			if size = 64 then
+				shared_include_queue.put (feature {PREDEFINED_NAMES}.eif_helpers_header_name_id)
+				buffer.put_string ("eif_uint64_to_real64 (")
+			else
+				buffer.put_string ("(EIF_REAL_64) (")
+			end
+		end
+
+	generate_conversion_to_real_32 (buffer: GENERATION_BUFFER) is
+			-- Generate conversion to `REAL_32', needed because
+			-- for some descendants, it is not enough to just to a cast to EIF_REAL_32.
+		do
+			if size = 64 then
+				shared_include_queue.put (feature {PREDEFINED_NAMES}.eif_helpers_header_name_id)
+				buffer.put_string ("eif_uint64_to_real32 (")
+			else
+				buffer.put_string ("(EIF_REAL_32) (")
+			end
+		end
+
+feature -- Byte code generation
+
+	make_default_byte_code (ba: BYTE_ARRAY) is
+			-- Generate default value of basic type on stack.
+		do
+			inspect size
+			when 8 then
+				ba.append (Bc_uint8)
+				ba.append_natural_8 (0)
+			when 16 then
+				ba.append (Bc_uint16)
+				ba.append_natural_16 (0)
+			when 32 then
+				ba.append (Bc_uint32)
+				ba.append_natural_32 (0)
+			when 64 then
+				ba.append (Bc_uint64)
+				ba.append_natural_64 (0)
+			end
+		end 
+
+feature {NONE} -- Constants for generation
+
+	String_natural_8: STRING is "EIF_NATURAL_8"
+	String_natural_16: STRING is "EIF_NATURAL_16"
+	String_natural_32: STRING is "EIF_NATURAL_32"
+	String_natural_64: STRING is "EIF_NATURAL_64"
+
+	Union_tag_8: STRING is "u8arg"
+	Union_tag_16: STRING is "u16arg"
+	Union_tag_32: STRING is "u32arg"
+	Union_tag_64: STRING is "u64arg"
+
+invariant
+	correct_size: size = 8 or size = 16 or size = 32 or size = 64
+
+end

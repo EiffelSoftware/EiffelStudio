@@ -17,6 +17,9 @@ inherit
 	TYPE_C
 		undefine
 			is_bit, is_void
+		redefine
+			generate_conversion_to_real_64,
+			generate_conversion_to_real_32
 		end
 
 	SHARED_C_LEVEL
@@ -120,6 +123,20 @@ feature -- C code generation
 		deferred
 		end 
 		
+	generate_conversion_to_real_64 (buffer: GENERATION_BUFFER) is
+			-- Generate conversion to `REAL_64', needed because
+			-- for some descendants, it is not enough to just to a cast to EIF_REAL_64.
+		do
+			buffer.put_string ("(EIF_REAL_64) (")
+		end
+
+	generate_conversion_to_real_32 (buffer: GENERATION_BUFFER) is
+			-- Generate conversion to `REAL_32', needed because
+			-- for some descendants, it is not enough to just to a cast to EIF_REAL_32.
+		do
+			buffer.put_string ("(EIF_REAL_32) (")
+		end
+	
 invariant
 	is_basic: is_basic
 	is_expanded: is_expanded

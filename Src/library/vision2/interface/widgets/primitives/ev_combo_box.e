@@ -1,3 +1,15 @@
+indexing 
+	description: "EiffelVision Combo-box. A combo-box contains a %
+				% text field and a button. When the button is    %
+				% pressed, a list of possible choices is opened."
+	note: "The `height' of a combo-box is the one of the text  %
+		% field. To have the height of the text field plus the %
+		% list, use extended_height."
+	status: "See notice at end of class"
+	names: widget
+	date: "$Date$"
+	revision: "$Revision$"
+
 class EV_COMBO_BOX
 
 inherit
@@ -30,6 +42,17 @@ feature -- Access
 			index_small_enough: index < count
 		do
 			implementation.read_element (index)
+		end
+
+feature -- Measurement
+
+	extended_height: INTEGER is
+			-- height of the combo-box when the children are
+			-- visible.
+		require
+			exists: not destroyed
+		do
+			Result := implementation.
 		end
 
 feature -- Element change

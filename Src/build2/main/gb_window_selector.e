@@ -1284,6 +1284,10 @@ feature {GB_WINDOW_SELECTOR_TOOL_BAR} -- Implementation
 			l_directory_names: ARRAYED_LIST [STRING]
 		do
 			if retried then
+					-- Ensure that the tmeporary directory is deleted. It was not deleted
+					-- in this case as an exception was raised before the deleting code
+					-- was executed, so we perform it here in this case.
+				command_add_directory.test_directory.delete
 					-- We do not rebuild the dialog, as using the previous one
 					-- retains its position on screen.
 				dialog.show_actions.wipe_out

@@ -12,7 +12,7 @@ inherit
 
 	WEL_MODELESS_DIALOG
 		redefine
-			setup_dialog
+			setup_dialog, on_cancel
 		end;
 	WINDOWS;
 	INTERFACE_W;
@@ -24,7 +24,13 @@ inherit
 			put_degree_1, put_degree_minus_1, put_degree_minus_2,
 			put_degree_minus_3, put_degree_minus_4,
 			put_degree_minus_5, put_melting_changes_message,
-			put_freezing_message, finish_degree_output
+			put_freezing_message, finish_degree_output,
+			put_start_dead_code_removal_message,
+			put_end_dead_code_removal_message,
+			put_dead_code_removal_message,
+			put_start_reverse_engineering, put_case_cluster_message,
+			put_case_class_message, put_case_message, put_string,
+			put_resynchronizing_breakpoints_message
 		end
 
 feature -- Start output
@@ -109,6 +115,61 @@ feature -- Start output
 			put_non_degree_message (freezing_system_message);
 
 			process_messages
+		end;
+
+	put_start_dead_code_removal_message is
+			-- Put message indicating the start of dead code removal.
+		do
+			set_project_icon_name (removing_dead_code_message);
+			put_non_degree_message (removing_dead_code_message);
+			nbr_to_go_text.set_text (l_features_processed);
+
+			process_messages
+		end
+
+	put_start_reverse_engineering (total_num: INTEGER) is
+			-- Initialize the reverse engineering part.
+		do
+			set_text (l_Reverse_engineering);
+			icon_name := Project_tool.icon_name;
+			total_number := total_num;
+			processed := 0;
+
+			degree_text.set_text (l_Compilation_cluster);
+			entity_text.set_text (l_Compilation_class);
+			nbr_to_go_text.set_text (l_Classes_to_go);
+			current_nbr_to_go_text.set_text (total_num.out);
+			current_entity_text.set_text (Empty_string)
+
+			progress_bar.set_position (0);
+
+			process_messages
+		end;
+
+	put_case_message (a_message: STRING) is
+			-- Put `a_message' in the output window.
+		do
+			if not exists then
+				create_window;
+				degree_text.set_text (Empty_string);
+				entity_text.set_text (Empty_string);
+				nbr_to_go_text.set_text (Empty_string);
+				current_degree_text.set_text (Empty_string);
+				current_entity_text.set_text (Empty_string);
+				current_nbr_to_go_text.set_text (Empty_string);
+				percentage_text.set_text (Zero_percent)
+			end;
+
+			put_non_degree_message (a_message);
+
+			process_messages
+		end
+
+	put_resynchronizing_breakpoints_message is
+			-- Put a message to indicate that the
+			-- breakpoints are being resynchronized.
+		do
+			put_non_degree_message (l_Resynchronizing_breakpoints)
 		end
 
 feature -- End output
@@ -134,12 +195,25 @@ feature -- End output
 			total_number := 0;
 
 			process_messages
-		end
+		end;
 
 	finish_degree_output is
 			-- Process end degree output.
 		do
-			Project_tool.set_icon_name (icon_name);
+			if icon_name /= Void then
+				Project_tool.set_icon_name (icon_name)
+			end;
+
+			hide;
+			destroy;
+
+			process_messages
+		end;
+
+	put_end_dead_code_removal_message is
+			-- Put message indicating the end of dead code removal.
+		do
+			set_project_icon_name (finished_removing_dead_code_message);
 
 			process_messages
 		end
@@ -196,6 +270,49 @@ feature -- Per entity output
 			progress_bar.set_position (a_per);
 
 			process_messages
+		end;
+
+	put_dead_code_removal_message (features_done, nbr_to_go: INTEGER) is
+			-- Put message progress of dead code removal with
+			-- `features_done' in last cycle with `nbr_to_go'
+			-- features to go.
+		local
+			a_per: INTEGER
+		do
+			processed := processed + features_done;
+			current_entity_text.set_text (processed.out);
+			a_per := 100 - ((features_done * 100) // (nbr_to_go + features_done));
+			update_interface (Empty_string, nbr_to_go, a_per);
+			progress_bar.set_position (a_per);
+
+			process_messages
+		end;
+
+	put_case_cluster_message (a_name: STRING) is
+			-- Put message to indicate that `a_name' is being
+			-- analyzed.
+		local
+			str: STRING
+		do
+			str := clone (a_name);
+			str.to_lower;
+			current_degree_text.set_text (str);
+
+			process_messages
+		end;
+
+	put_case_class_message (a_class: E_CLASS) is
+			-- Put message to indicate that `a_class' is being
+			-- analyzed for ECase.
+		local
+			a_per: INTEGER
+		do
+			a_per := ((100 * processed) // total_number);
+			processed := processed + 1;
+			progress_bar.set_position (a_per);
+			update_interface (a_class.name_in_upper, total_number - processed, a_per);
+
+			process_messages
 		end
 
 feature {NONE} -- Implementation
@@ -217,9 +334,8 @@ feature {NONE} -- Implementation
 			!! percentage_text.make_by_id (Current, Txt_percentage);
 
 			activate
-		end
+		end;
 
-	
 	update_interface (a_name: STRING; nbr_to_go: INTEGER; a_per: INTEGER) is
 			-- Update the interface for entity `a_name' with `nbr_to_go'
 			-- and `a_per' done.
@@ -233,6 +349,12 @@ feature {NONE} -- Implementation
 			percentage_text.set_text (a_per_out);
 		end;
 
+	put_string (a_message: STRING) is
+			-- Put `a_message' in the output window.
+		do
+			put_non_degree_message (a_message)
+		end;
+
 	put_non_degree_message (a_msg: STRING) is
 			-- Put `a_msg' in Current.
 		require
@@ -241,13 +363,13 @@ feature {NONE} -- Implementation
 			progress_bar.set_position (0);
 			saved_width := degree_text.width;
 			degree_text.resize (width, degree_text.height);
-			degree_text.set_text (a_msg);
 			current_degree_text.set_text (Empty_string);
 			nbr_to_go_text.set_text (Empty_string);
 			current_nbr_to_go_text.set_text (Empty_string);
 			entity_text.set_text (Empty_string);
 			current_entity_text.set_text (Empty_string);
 			percentage_text.set_text (Empty_string)
+			degree_text.set_text (a_msg);
 		end;
 
 	set_project_icon_name (msg: STRING) is
@@ -301,6 +423,9 @@ feature {NONE} -- Dialog IDs
 
 feature {NONE} -- Properties
 
+	finished_removing_dead_code_message: STRING is
+				"Removing dead code completed"
+
 	Zero_percent: STRING is "0%%   ";
 
 	Empty_string: STRING is "    ";
@@ -316,6 +441,14 @@ feature {NONE} -- Properties
 			-- Used by `process_messages'
 		once
 			!! Result.make
+		end
+
+feature {NONE} -- Windows Message Handlers
+
+	on_cancel is
+			-- Button Cancel has been pressed.
+		do
+			process_messages
 		end
 
 feature {NONE} -- User Interface Objects

@@ -358,11 +358,11 @@ internal class CLASS
 		Type[] LocalInterfaces;
 		Type ParentType;
 		int i;
-		if (IsImplementation) {
-			LocalInterfaces = new Type [Interfaces.Count + 1];
-			LocalInterfaces [Interfaces.Count] = COMPILER.ISE_EiffelInterface;
-		} else {
+		if (IsImplementation || InterfaceID != COMPILER.Any_id) {
 			LocalInterfaces = new Type [Interfaces.Count];
+		} else {
+			LocalInterfaces = new Type [Interfaces.Count + 1];
+			LocalInterfaces [Interfaces.Count] = COMPILER.Ise_eiffel_type_info_type;
 		}
 		for( i = 0; i < Interfaces.Count; i++ )
 			LocalInterfaces [i] = COMPILER.Classes [( int )Interfaces [i]].Builder;
@@ -372,23 +372,26 @@ internal class CLASS
 			ParentType = COMPILER.ObjectType;
 		if( IsDeferred && !IsInterface )
 		{
-			Builder = module.DefineType( name, TypeAttributes.Public | TypeAttributes.Abstract, ParentType, LocalInterfaces );
+			Builder = module.DefineType (name, TypeAttributes.Public | TypeAttributes.Abstract,
+				ParentType, LocalInterfaces );
 			DefineDefaultConstructor();
 		}
 		else
 		{
-			if( IsInterface )
-					Builder = module.DefineType( name, TypeAttributes.Public | TypeAttributes.Interface | TypeAttributes.Abstract, null,  LocalInterfaces );
-			else
-				{
-					if( IsExpanded )
-						Builder = module.DefineType( name, TypeAttributes.Public, ParentType, LocalInterfaces );
-					else
-					{
-						Builder = module.DefineType( name, TypeAttributes.Public | TypeAttributes.Class, ParentType, LocalInterfaces );
-						DefineDefaultConstructor();
-					}
+			if (IsInterface) {
+				Builder = module.DefineType (name,
+					TypeAttributes.Public | TypeAttributes.Interface | TypeAttributes.Abstract,
+					null,  LocalInterfaces );
+			} else {
+				if (IsExpanded) {
+					Builder = module.DefineType( name, TypeAttributes.Public, ParentType,
+						LocalInterfaces );
+				} else {
+					Builder = module.DefineType( name, TypeAttributes.Public | TypeAttributes.Class,
+						ParentType, LocalInterfaces );
+					DefineDefaultConstructor();
 				}
+			}
 		}
 
 		if (IsImplementation) {

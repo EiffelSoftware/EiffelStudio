@@ -1,17 +1,14 @@
 indexing
-	description: "Class which is launching the application."
-	author: "pascalf"
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "Class which is launching the application."
+	author		: "pascalf"
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 class
 	WIZARD_PROJECT_MANAGER
 
 inherit
 	EV_APPLICATION
---		redefine
---			make_and_launch
---		end
 
 	WIZARD_SHARED
 		undefine
@@ -23,18 +20,16 @@ Creation
 
 feature -- Initialization
 
-
 	make_and_launch is
 			-- Initialize and launch application
 		do
-			if argument_count<1 then
+			if argument_count < 1 then
 				io.put_string("wizard.exe -arg1 [resource_path]%N")
 			else
 				default_create
 				set_application (Current)
 				prepare
 				launch
---				precursor
 			end
 		end
 
@@ -43,9 +38,23 @@ feature -- Initialization
 			-- Perform one call to first window in order to
 			-- avoid to violate the invariant of class EV_APPLICATION.
 		do
-			first_window.set_title("Wizard Version 1.1")
+			first_window.set_title (Wizard_title)
+			first_window.close_actions.extend (~end_application)
 			first_window.show
-		end 
+		end
 
+	end_application is
+			-- End the current application.
+		do
+			(create {EV_ENVIRONMENT}).application.destroy
+		end
+
+	Wizard_title: STRING is 
+			-- Window title for this wizard.
+		once
+			Result := "Wizard Version 1.1"
+		ensure
+			Valid_result: Result /= Void and then not Result.is_empty
+		end
 	
 end -- class WIZARD_PROJECT_MANAGER

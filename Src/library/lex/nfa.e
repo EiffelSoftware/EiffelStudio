@@ -156,7 +156,7 @@ feature {NONE}
 	new_number: INTEGER;
 			-- Used to search a set in sets_list
 
-	set_tree: ARRAYED_TREE [INTEGER];
+	set_tree: FIXED_TREE [INTEGER];
 			-- Used to search a set in sets_list:
 			-- This tree is built by "search_in_tree" and
 			-- contains the same informations as sets_list,
@@ -218,7 +218,7 @@ feature {NONE}
 			set_no_empty: not set.empty
 		local
 			index, last_index: INTEGER;
-			current_tree, new_tree: ARRAYED_TREE [INTEGER]
+			current_tree, new_tree: FIXED_TREE [INTEGER]
 		do
 			debug
 				set.print;
@@ -230,6 +230,14 @@ feature {NONE}
 			until
 				index > last_index
 			loop
+				debug
+					io.putstring ("Arity: ")
+					io.putint (current_tree.arity)
+					io.new_line
+					io.putstring ("Index: ")
+					io.putint (index)
+					io.new_line
+				end
 				current_tree.child_go_i_th (index);
 				if current_tree.child = Void then
 					!!new_tree.make (nb_states, 0);

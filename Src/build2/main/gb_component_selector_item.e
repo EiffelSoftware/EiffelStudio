@@ -32,7 +32,6 @@ feature {NONE} -- Initialization
 		do
 			xml_handler.add_new_component (an_object, a_name)
 			make_with_text (a_name)
-			--create list_item.make_with_text (a_name)
 			set_pebble_function (agent generate_pebble)
 		end
 		
@@ -41,23 +40,15 @@ feature {NONE} -- Initialization
 		do
 			make_with_text (a_name)
 			set_pebble_function (agent generate_pebble)
-			--create list_item.make_with_text (a_name)
-			--list_item.set_pebble_function (agent generate_pebble)
 		end
 
 feature {NONE} -- Implementation
 
 	generate_pebble: GB_OBJECT is
-			--
+			-- `Result' is used for a pick and drop.
 		do
 			Result := new_object (xml_handler.xml_element_representing_named_component (text))
 			object_handler.for_all_objects_build_drop_actions_for_new_object
 		end
-		
---		
---feature {GB_COMPONENT_SELECTOR} -- Implementation
---		
---	list_item: EV_LIST_ITEM
---		-- Representation as a list item.
 
 end -- class GB_COMPONENT

@@ -286,7 +286,7 @@ feature -- Type check, byte code and dead code removal
 			if parameters /= Void then
 				from
 					nb := parameters.count;
-					!!params.make (nb);
+					!!params.make_filled (nb);
 					i := 1;
 				until
 					i > nb

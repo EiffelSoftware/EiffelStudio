@@ -9,18 +9,17 @@ indexing
 deferred class FEATURE_NAME_B
 
 inherit
-
 	FEATURE_NAME
 		redefine
 			internal_name, temp_name, associated_feature_name
-		end;
+		end
 
 	AST_EIFFEL_B
 		undefine
 			is_equal
 		redefine
 			format
-		end;
+		end
 
 feature -- Stoning
 

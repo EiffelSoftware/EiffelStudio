@@ -9,12 +9,11 @@ indexing
 class FEATURE_AS_B
 		
 inherit
-
 	FEATURE_AS
 		redefine
 			feature_names, body, set,
 			associated_feature_name
-		end;
+		end
 
 	AST_EIFFEL_B
 		undefine
@@ -22,11 +21,13 @@ inherit
 		redefine
 			type_check, byte_node, find_breakable, 
 			format, fill_calls_list, replicate
-		end;
+		end
+
 	COMPARABLE
 		undefine
 			is_equal
-		end;
+		end
+
 	IDABLE
 		rename
 			id as body_id,
@@ -239,9 +240,8 @@ feature -- Replication
 		do
 			Result := clone (Current);
 			Result.set_id (System.feature_as_counter.next_id);
-			!! new_feature_names.make_filled (1);
-			new_feature_names.go_i_th (1);
-			new_feature_names.replace (ctxt.replicated_name);
+			!! new_feature_names.make (1);
+			new_feature_names.extend (ctxt.replicated_name);
 			Result.set_feature_names (new_feature_names);
 			Result.set_body (body.replicate (ctxt));
 		end;

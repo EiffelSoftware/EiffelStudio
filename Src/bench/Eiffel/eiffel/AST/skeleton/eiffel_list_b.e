@@ -49,7 +49,7 @@ feature -- Type check, byte code and dead code removal
 		do
 			from
 				nb := count;
-				!!Result.make (nb);
+				!! Result.make_filled (nb);
 				i := 1;
 			until
 				i > nb
@@ -66,7 +66,7 @@ feature -- Type check, byte code and dead code removal
 		do
 			from
 				nb := count;
-				!!Result.make (nb);
+				!! Result.make_filled (nb);
 				i := 1;
 			until
 				i > nb
@@ -185,7 +185,7 @@ feature -- Replication
 			i, l_count: INTEGER;
 		do
 			from
-				!!new_list.make;
+				!! new_list.make;
 				i := 1;
 				l_count := count;
 			until

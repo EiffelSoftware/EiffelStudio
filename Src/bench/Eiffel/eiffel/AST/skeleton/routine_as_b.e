@@ -78,8 +78,8 @@ feature -- default rescue
 				def_resc_call.set_feature_name (def_resc_id)
 				!! def_resc_instr
 				def_resc_instr.set_call (def_resc_call)
-				!! rescue_clause.make_filled (1)
-				rescue_clause.put_i_th (def_resc_instr, 1)
+				!! rescue_clause.make (1)
+				rescue_clause.extend (def_resc_instr)
 			end
 		end
 

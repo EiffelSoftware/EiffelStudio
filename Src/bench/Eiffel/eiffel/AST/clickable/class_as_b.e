@@ -107,9 +107,9 @@ feature {CLASS_C, COMPILED_CLASS_INFO} -- Class information
 		do
 			!!Result;
 			if parents /= Void then
-				!!parent_list.make (parents.count);
+				!!parent_list.make_filled (parents.count);
 			elseif not ("general").is_equal (class_name) then
-				!!parent_list.make (1);
+				!!parent_list.make_filled (1);
 			else
 				!!parent_list.make (0);
 			end;

@@ -15,12 +15,6 @@ inherit
 		redefine
 			interface
 		end
-
-feature -- Status report
-
-	platform: INTEGER is
-		deferred
-		end
 		
 feature {EV_ENVIRONMENT} -- Status report
 		
@@ -97,6 +91,9 @@ end -- class EV_ENVIRONMENT_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2001/06/13 19:24:24  rogers
+--| Removed platform.
+--|
 --| Revision 1.5  2001/06/13 19:08:43  rogers
 --| Added `set_application', `Application_cell' and `application'. These
 --| were in the interface, but as they are only used for implementatation,

@@ -28,7 +28,7 @@ feature -- Basic operations
 		local
 			r: RESOURCE
 		do
-			r := resources.table.item (s)
+			r := resources.item (s)
 			if r /= Void then
 				observer_manager.add_observer (r, w)
 			end
@@ -41,7 +41,7 @@ feature -- Basic operations
 		local
 			r: RESOURCE
 		do
-			r := resources.table.item (s)
+			r := resources.item (s)
 			if r /= Void then
 				observer_manager.remove_observer (r, w)
 			end

@@ -359,9 +359,9 @@ rt_public void eif_thr_exit(void)
 #endif
 	EIF_MUTEX_UNLOCK(eif_thr_context->children_mutex, "Unlock parent mutex");
 
+	reclaim ();						/* Free all allocated memory chunks */
 	free (eif_thr_context->tid);	/* Thread id of the current thread */
 	free (eif_thr_context);			/* Thread context passed by parent */
-	reclaim ();						/* Free all allocated memory chunks */
 
 	EIF_THR_EXIT(0);
 	EIF_END_GET_CONTEXT
@@ -568,9 +568,9 @@ rt_public EIF_INTEGER eif_thr_max_priority(void) {
 
 rt_public EIF_POINTER eif_thr_thread_id(void) {
 	EIF_GET_CONTEXT
-	if (eif_thr_context)
+	if (eif_thr_context) {
 		return (EIF_POINTER) eif_thr_context->tid;
-	else
+	} else
 		return (EIF_POINTER) 0; /* Root thread's id is 0 */
 	EIF_END_GET_CONTEXT
 }
@@ -779,7 +779,7 @@ rt_public EIF_POINTER eif_thr_freeze (EIF_OBJ object)
 
  	char *frozen = efreeze (object);
 
-	if (!object) {
+	if (!frozen) {
 		/* efreeze() refused to freeze the object (probably because it is
 		 * a special object) so we freeze it on location with spfreeze()
 		 */
@@ -790,6 +790,7 @@ rt_public EIF_POINTER eif_thr_freeze (EIF_OBJ object)
 		/* efreeze() successfully froze the object and created an entry in
 		 * the hector saved table.
 		 */
+
 		return frozen;
 	}
 }
@@ -814,7 +815,9 @@ rt_public EIF_POINTER eif_thr_proxy_set(EIF_REFERENCE object)
 	/* 
 	 * Returns a hec_saved entry pointing to the object given as argument
 	 */
-
+#ifdef DEBUG
+	printf ("eif_thr_proxy_set(%x) returns %x\n", object, hector_addr(object));
+#endif
 	return hector_addr (object);
 }
 
@@ -833,7 +836,10 @@ rt_public void eif_thr_proxy_dispose(EIF_POINTER proxy)
 	 * Unfreezes the proxy item.
 	 */
 
-	eufreeze (proxy);
+#ifdef DEBUG
+	printf("eif_thr_proxy_dispose(%x)\n", proxy);
+#endif
+	eufreeze (eif_access (proxy));
 }
 
 #endif /* EIF_THREADS */

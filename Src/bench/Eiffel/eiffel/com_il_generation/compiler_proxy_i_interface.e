@@ -45,6 +45,13 @@ feature -- Status Report
 			Result := True
 		end
 
+	set_cls_compliant_user_precondition (v: BOOLEAN): BOOLEAN is
+			-- User-defined preconditions for `set_cls_compliant'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
 	start_assembly_generation_user_precondition (name: STRING; fname: STRING; location: STRING): BOOLEAN is
 			-- User-defined preconditions for `start_assembly_generation'.
 			-- Redefine in descendants if needed.
@@ -1208,6 +1215,15 @@ feature -- Basic Operations
 			-- `v' [in].  
 		require
 			set_verifiability_user_precondition: set_verifiability_user_precondition (v)
+		deferred
+
+		end
+
+	set_cls_compliant (v: BOOLEAN) is
+			-- No description available.
+			-- `v' [in].  
+		require
+			set_cls_compliant_user_precondition: set_cls_compliant_user_precondition (v)
 		deferred
 
 		end

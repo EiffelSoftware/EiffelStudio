@@ -310,7 +310,9 @@ internal class FEATURE
 				Attributes | MethodAttributes.Family, COMPILER.VoidType,
 				new Type [1] {return_type} );
 			setter_builder.DefineParameter (1, ParameterAttributes.In, name ());
-			setter_builder.SetCustomAttribute (CA.not_cls_compliant_attr);
+			if (COMPILER.is_cls_compliant) {
+				setter_builder.SetCustomAttribute (CA.not_cls_compliant_attr);
+			}
 		}
 
 		if (is_c_external && is_static) {
@@ -324,7 +326,10 @@ internal class FEATURE
 			((MethodBuilder) method_builder).SetCustomAttribute (CA.debugger_step_through_attr);
 			((MethodBuilder) method_builder).SetCustomAttribute (CA.debugger_hidden_attr);
 		}
-		if (!info.is_interface_routine && !is_attribute && info.is_static) {
+		if
+			(COMPILER.is_cls_compliant && !info.is_interface_routine
+			&& !is_attribute && info.is_static)
+		{
 			((MethodBuilder) method_builder).SetCustomAttribute (CA.not_cls_compliant_attr);
 		}
 

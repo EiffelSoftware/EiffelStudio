@@ -35,6 +35,10 @@ feature -- Settings
 		// Set verifiability of code generation. If `v' is True, generate
 		// verifiable code, otherwise code is not verifiable.
 
+	void set_cls_compliant (bool v);
+		// Set cls compliance of code generation. If `v' is True, generate
+		// cls compliant code, otherwise code is not cls compliant.
+
 /*
 feature -- Generation structure
 */

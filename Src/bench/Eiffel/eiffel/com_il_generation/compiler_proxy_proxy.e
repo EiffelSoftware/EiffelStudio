@@ -82,6 +82,13 @@ feature -- Basic Operations
 			ccom_set_verifiability (initializer, v)
 		end
 
+	set_cls_compliant (v: BOOLEAN) is
+			-- No description available.
+			-- `v' [in].  
+		do
+			ccom_set_cls_compliant (initializer, v)
+		end
+
 	start_assembly_generation (name: STRING; fname: STRING; location: STRING) is
 			-- No description available.
 			-- `name' [in].  
@@ -1221,6 +1228,12 @@ feature {NONE}  -- Externals
 		end
 
 	ccom_set_verifiability (cpp_obj: POINTER; v: BOOLEAN) is
+			-- No description available.
+		external
+			"C++ [ecom_EiffelCompiler::COMPILER_PROXY %"ecom_EiffelCompiler_COMPILER_PROXY.h%"](EIF_BOOLEAN)"
+		end
+
+	ccom_set_cls_compliant (cpp_obj: POINTER; v: BOOLEAN) is
 			-- No description available.
 		external
 			"C++ [ecom_EiffelCompiler::COMPILER_PROXY %"ecom_EiffelCompiler_COMPILER_PROXY.h%"](EIF_BOOLEAN)"

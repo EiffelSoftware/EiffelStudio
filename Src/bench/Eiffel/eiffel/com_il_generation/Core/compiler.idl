@@ -16,7 +16,7 @@ library EiffelCompiler
 
     [
       odl,
-      uuid(0137A789-12A5-3504-9B31-B3233D27D4E7),
+      uuid(413BA215-207B-36A4-896D-AD84DABB95E0),
       version(1.0),
       oleautomation
     ]
@@ -30,6 +30,7 @@ library EiffelCompiler
                         [in] long minor, 
                         [in] long revision);
         HRESULT _stdcall set_verifiability([in] VARIANT_BOOL v);
+        HRESULT _stdcall set_cls_compliant([in] VARIANT_BOOL v);
         HRESULT _stdcall StartAssemblyGeneration(
                         [in] BSTR Name, 
                         [in] BSTR FName, 
@@ -289,3 +290,4 @@ library EiffelCompiler
         [default] interface COMPILER_PROXY_I;
     };
 };
+

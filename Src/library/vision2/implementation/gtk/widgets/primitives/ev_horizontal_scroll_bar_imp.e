@@ -26,10 +26,15 @@ feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
 			-- Create the horizontal scroll bar.
+		local
+			hs: POINTER
 		do
 			base_make (an_interface)
 			adjustment := C.gtk_adjustment_new (0, 0, 100 + 10, 1, 10, 10)
-			set_c_object (C.gtk_hscrollbar_new (adjustment))
+			set_c_object (C.gtk_event_box_new)		
+			hs := C.gtk_hscrollbar_new (adjustment)
+			C.gtk_widget_show (hs)
+			C.gtk_container_add (c_object, hs)	
 		end
 
 feature {EV_ANY_I} -- Implementation

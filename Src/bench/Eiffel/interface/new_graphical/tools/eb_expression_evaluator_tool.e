@@ -23,7 +23,6 @@ inherit
 		export
 			{NONE} all
 		end
-
 	EV_SHARED_APPLICATION
 		export
 			{NONE} all
@@ -35,6 +34,11 @@ inherit
 		end
 
 	EB_SHARED_DEBUG_TOOLS
+		export
+			{NONE} all
+		end
+
+	EB_SHARED_PIXMAPS
 		export
 			{NONE} all
 		end
@@ -519,6 +523,7 @@ feature {NONE} -- Implementation
 				l_tooltip.append_string ("--< TYPE >--%N  " + typ + "%N")
 				l_tooltip.append_string ("--< VALUE >--%N  " + res + "%N")
 				
+				Result.set_pixmap (Icon_green_tick)
 				Result.extend (res)
 				Result.extend (typ)
 				
@@ -529,10 +534,11 @@ feature {NONE} -- Implementation
 					Result.set_deny_cursor (ost.X_stone_cursor)
 				end
 			else
-				l_tooltip.prepend_string ("[!] Error occurred : " + expr.error_message + "%N%N")
+				l_tooltip.prepend_string ("[!] Error occurred : %N" + expr.error_message + "%N%N")
 				
-				Result.extend (expr.error_message)
+				Result.extend ("Error occured (double click to see details)" ) --| Removed for better display: expr.error_message)
 				Result.pointer_double_press_actions.extend (agent show_text_in_popup (expr.error_message, ?,?,?,?,?,?,?,?))			
+				Result.set_pixmap (Icon_exception)
 			end
 			Result.set_tooltip (l_tooltip)			
 			Result.set_data (expr)
@@ -558,6 +564,7 @@ feature {NONE} -- Implementation
 			Result.extend (expr.expression)
 			Result.extend (Unevaluated)
 			Result.extend (Unevaluated)
+			Result.remove_pixmap
 			Result.set_tooltip (
 				"UnEvaluated expression%N%N"
 				+ "--< CONTEXT >--%N  " + expr.context + "%N"
@@ -585,6 +592,7 @@ feature {NONE} -- Implementation
 				+ "--< EXPRESSION >--%N  " + expr.expression
 			)
 			
+			Result.set_pixmap (Icon_expression_disabled)
 			Result.set_data (expr)
 		end
 

@@ -9,6 +9,7 @@ inherit
 	SYSTEM_OBJECT
 		export
 			{NONE} all
+			{SYSTEM_OBJECT} get_type
 		redefine
 			finalize, equals, get_hash_code, to_string
 		end
@@ -48,12 +49,9 @@ feature -- Status report
 			-- Is type of current object identical to type of `other'?
 		require
 			other_not_void: other /= Void
-		local
-			l_other: SYSTEM_OBJECT
 		do
-			l_other := other
 			Result := get_type.is_instance_of_type (other) and then
-				l_other.get_type.is_instance_of_type (Current)
+				other.get_type.is_instance_of_type (Current)
 		ensure
 			definition: Result = (conforms_to (other) and
 										other.conforms_to (Current))
@@ -87,7 +85,7 @@ feature -- Comparison
 		require
 			other_not_void: other /= Void
 		do
-			Result := equals_object_object (Current, other)
+			Result := feature {SYSTEM_OBJECT}.equals_object_object (Current, other)
 		ensure
 			same_type: Result implies same_type (other)
 			symmetric: Result implies other.standard_is_equal (Current)
@@ -341,10 +339,7 @@ feature {NONE} -- Implement .NET feature
 		local
 			l_other: ANY
 		do
-			l_other ?= obj
-			if l_other /= Void then
-				Result := is_equal (l_other)
-			end
+			Result := Precursor {SYSTEM_OBJECT} (obj)
 		end
 
 	frozen to_string: SYSTEM_STRING is

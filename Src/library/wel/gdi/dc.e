@@ -20,6 +20,12 @@ inherit
 			{NONE} all
 		end
 
+	WEL_DIB_COLORS_CONSTANTS
+		export
+			{NONE} all
+			{ANY} valid_dib_colors_constant
+		end
+
 	WEL_WORD_OPERATIONS
 		export
 			{NONE} all
@@ -584,15 +590,14 @@ feature -- Status setting
 			-- Deselect the pen and restore the old one
 		require
 			exists: exists
+			pen_selected: pen_selected
 		do
-			if pen_selected then
-				check
-					old_hpen_not_null:
-						old_hpen /= default_pointer
-				end
-				cwin_select_object (item, old_hpen)
-				pen := Void
+			check
+				old_hpen_not_null:
+					old_hpen /= default_pointer
 			end
+			cwin_select_object (item, old_hpen)
+			pen := Void
 		ensure
 			pen_not_selected: not pen_selected
 		end
@@ -601,15 +606,14 @@ feature -- Status setting
 			-- Deselect the brush and restore the old one
 		require
 			exists: exists
+			brush_selected: brush_selected
 		do
-			if brush_selected then
-				check
-					old_hbrush_not_null:
-						old_hbrush /= default_pointer
-				end
-				cwin_select_object (item, old_hbrush)
-				brush := Void
+			check
+				old_hbrush_not_null:
+					old_hbrush /= default_pointer
 			end
+			cwin_select_object (item, old_hbrush)
+			brush := Void
 		ensure
 			brush_not_selected: not brush_selected
 		end
@@ -618,15 +622,14 @@ feature -- Status setting
 			-- Deselect the region and restore the old one
 		require
 			exists: exists
+			region_selected: region_selected
 		do
-			if region_selected then
-				check
-					old_hregion_not_null:
-						old_hregion /= default_pointer
-				end
-				cwin_select_object (item, old_hregion)
-				region := Void
+			check
+				old_hregion_not_null:
+					old_hregion /= default_pointer
 			end
+			cwin_select_object (item, old_hregion)
+			region := Void
 		ensure
 			region_not_selected: not region_selected
 		end
@@ -635,15 +638,14 @@ feature -- Status setting
 			-- Deselect the palette and restore the old one
 		require
 			exists: exists
+			palette_selected: palette_selected
 		do
-			if palette_selected then
-				check
-					old_hpalette_not_null:
-						old_hpalette /= default_pointer
-				end
-				cwin_select_palette (item, old_hpalette, false)
-				palette := Void
+			check
+				old_hpalette_not_null:
+					old_hpalette /= default_pointer
 			end
+			cwin_select_palette (item, old_hpalette, false)
+			palette := Void
 		ensure
 			palette_not_selected: not palette_selected
 		end
@@ -652,15 +654,14 @@ feature -- Status setting
 			-- Deselect the font and restore the old one
 		require
 			exists: exists
+			font_selected: font_selected
 		do
-			if font_selected then
-				check
-					old_hfont_not_null:
-						old_hfont /= default_pointer
-				end
-				cwin_select_object (item, old_hfont)
-				font := Void
+			check
+				old_hfont_not_null:
+					old_hfont /= default_pointer
 			end
+			cwin_select_object (item, old_hfont)
+			font := Void
 		ensure
 			font_not_selected: not font_selected
 		end
@@ -669,15 +670,14 @@ feature -- Status setting
 			-- Deselect the bitmap and restore the old one
 		require
 			exists: exists
+			bitmap_selected: bitmap_selected
 		do
-			if bitmap_selected then
-				check
-					old_hbitmap_not_null:
-						old_hbitmap /= default_pointer
-				end
-				cwin_select_object (item, old_hbitmap)
-				bitmap := Void
+			check
+				old_hbitmap_not_null:
+					old_hbitmap /= default_pointer
 			end
+			cwin_select_object (item, old_hbitmap)
+			bitmap := Void
 		ensure
 			bitmap_not_selected: not bitmap_selected
 		end
@@ -687,12 +687,24 @@ feature -- Status setting
 		require
 			exists: exists
 		do
-			unselect_pen
-			unselect_brush
-			unselect_region
-			unselect_palette
-			unselect_font
-			unselect_bitmap
+			if pen_selected then
+				unselect_pen
+			end
+			if brush_selected then
+				unselect_brush
+			end
+			if region_selected then
+				unselect_region
+			end
+			if palette_selected then
+				unselect_palette
+			end
+			if font_selected then
+				unselect_font
+			end
+			if bitmap_selected then
+				unselect_bitmap
+			end
 		ensure
 			pen_not_selected: not pen_selected
 			brush_not_selected: not brush_selected
@@ -774,9 +786,9 @@ feature -- Basic operations
 			a_bitmap_not_void: a_bitmap /= Void
 			a_bitmap_exists: a_bitmap.exists
 		local
-			bitmap_dc: WEL_COMPATIBLE_DC
+			bitmap_dc: WEL_MEMORY_DC
 		do
-			!! bitmap_dc.make (Current)
+			!! bitmap_dc.make_by_dc (Current)
 			if palette_selected then
 				bitmap_dc.select_palette (palette)
 				bitmap_dc.realize_palette
@@ -784,7 +796,9 @@ feature -- Basic operations
 			bitmap_dc.select_bitmap (a_bitmap)
 			bit_blt (x, y, width, height, bitmap_dc, 0, 0, Srccopy)
 			bitmap_dc.unselect_bitmap
-			bitmap_dc.unselect_palette
+			if bitmap_dc.palette_selected then
+				bitmap_dc.unselect_palette
+			end
 			bitmap_dc.delete
 		end
 
@@ -1053,6 +1067,94 @@ feature -- Basic operations
 		do
 			cwin_pat_blt (item, x_destination, y_destination,
 				width, height, raster_operation)
+		end
+
+	save (a_bitmap: WEL_BITMAP; file: FILE_NAME) is
+			-- Save `a_bitmap' in `file'.
+		require
+			exists: exists
+			a_bitmap_not_void: a_bitmap /= Void
+			a_bitmap_exists: a_bitmap.exists
+			file_not_void: file /= Void
+			file_is_valid: file.is_valid
+		local
+			bmi, bmi2: WEL_BITMAP_INFO
+			bfh: WEL_BITMAP_FILE_HEADER
+			bits: ARRAY [CHARACTER]
+			size: INTEGER
+			rgb_quad: WEL_RGB_QUAD
+			rf: RAW_FILE
+			a: ANY
+		do
+			!! rgb_quad.make
+			!! bmi.make_by_dc (Current, a_bitmap, Dib_rgb_colors)
+			inspect
+				bmi.header.bit_count
+			when 24 then
+				size := bmi.header.structure_size
+				!! bmi2.make (bmi.header, 0)
+			when 16, 32 then
+				size := bmi.header.structure_size +
+					rgb_quad.structure_size * 3
+				!! bmi2.make (bmi.header, 3)
+			else
+				size := (bmi.header.structure_size +
+					rgb_quad.structure_size *
+					(2 ^ bmi.header.bit_count)).truncated_to_integer
+				!! bmi2.make (bmi.header, (2 ^ bmi.header.bit_count).truncated_to_integer)
+			end
+			!! bfh.make
+			bfh.set_type (19778) -- 'BM'
+			bfh.set_size (bfh.structure_size +
+				bmi2.header.structure_size + size +
+				bmi2.header.size_image)
+			bfh.set_off_bits (bfh.structure_size + size)
+
+			-- Create the file
+			!! rf.make_create_read_write (file)
+
+			-- Write the file header
+			c_file_ps (rf.file_pointer, bfh.item, bfh.structure_size)
+
+			bits := di_bits (a_bitmap, 0, bmi2.header.height, bmi2,
+				Dib_rgb_colors)
+
+			-- Write the bitmap info header
+			c_file_ps (rf.file_pointer, bmi2.item, size)
+
+			-- Write the DIB and close the file
+			a := bits.to_c
+			c_file_ps (rf.file_pointer, $a, bmi2.header.size_image)
+			rf.close
+		end
+
+	di_bits (a_bitmap: WEL_BITMAP; start_scan, scan_lines: INTEGER;
+			bitmap_info: WEL_BITMAP_INFO;
+			usage: INTEGER): ARRAY [CHARACTER] is
+			-- Device-independent bits of `a_bitmap'.
+			-- `start_scan' specifies the first scan line to
+			-- retrieve and `scan_lines' specifies the number of
+			-- scan lines to retrieve. `bitmap_info' specifies the
+			-- desired format for the dib data.
+		require
+			exists: exists
+			a_bitmap_not_void: a_bitmap /= Void
+			a_bitmap_exists: a_bitmap.exists
+			positive_start_scan: start_scan >= 0
+			positive_scan_lines: scan_lines >= 0
+			bitmap_info_not_void: bitmap_info /= Void
+			valid_usage: valid_dib_colors_constant (usage)
+		local
+			a: ANY
+		do
+			!! Result.make (1,
+				bitmap_info.header.size_image)
+			a := Result.to_c
+			cwin_get_di_bits (item, a_bitmap.item, start_scan,
+				scan_lines, $a, bitmap_info.item, usage)
+		ensure
+			result_not_void: Result /= Void
+			consistent_count: Result.count = bitmap_info.header.size_image
 		end
 
 feature -- Removal
@@ -1544,6 +1646,24 @@ feature {NONE} -- Externals
 			"C [macro <wel.h>] (HDC, int, LPSTR): EIF_INTEGER"
 		alias
 			"GetTextFace"
+		end
+
+	cwin_get_di_bits (hdc, hbmp: POINTER; start_scan, scan_lines: INTEGER;
+			bits, bi: POINTER; usage: INTEGER) is
+			-- SDK GetDIBits
+		external
+			"C [macro <wel.h>] (HDC, HBITMAP, UINT, UINT, %
+				%VOID *, BITMAPINFO *, UINT)"
+		alias
+			"GetDIBits"
+		end
+
+	c_file_ps (file: POINTER; a_string: POINTER; length: INTEGER) is
+			-- Run-time function to print `a_string' to `file'.
+		external
+			"C"
+		alias
+			"file_ps"
 		end
 
 	Opaque: INTEGER is

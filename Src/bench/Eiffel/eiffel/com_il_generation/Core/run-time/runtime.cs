@@ -229,7 +229,7 @@ feature -- Status report
 				ASSERTIONS.REQUIRE ("Object not void", l_obj != null);
 				ASSERTIONS.REQUIRE ("There should be some generic info", l_obj.____type() != null);
 				ASSERTIONS.REQUIRE ("Valid position `pos'",
-					(pos > 0) && (pos < l_obj.____type().nb_generics));
+					(pos > 0) && (pos <= l_obj.____type().nb_generics));
 			#endif
 
 			EIFFEL_DERIVATION der;

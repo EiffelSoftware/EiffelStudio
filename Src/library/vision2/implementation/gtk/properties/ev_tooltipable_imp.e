@@ -42,7 +42,7 @@ feature -- Element change
 		local
 			tempstr: ANY
 		do
-			tempstr := tooltip.to_c
+			tempstr := a_text.to_c
 			C.gtk_tooltips_set_tip (
 				app_implementation.tooltips,
 				c_object,

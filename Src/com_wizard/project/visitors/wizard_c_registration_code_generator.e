@@ -153,7 +153,7 @@ feature -- Basic operations
 				c_writer.add_other (dll_register_server_macro)
 				c_writer.add_other (dll_unregister_server_macro)
 				c_writer.add_other (dll_can_unload_now_macro)
-				c_writer.add_other ("RT_LNK HINSTANCE eif_hInstance;")
+				c_writer.add_other (hInstance_set_up)
 
 
 				c_writer.add_function (dll_unlock_module_feature)
@@ -1780,6 +1780,24 @@ feature {NONE} -- Implementation
 			Result.append (New_line)
 			Result.append (Close_curly_brace)
 			Result.append (Semicolon)
+		end
+
+	hInstance_set_up: STRING is
+			-- Set up hInstance
+		do
+			Result := "#ifdef __cplusplus"
+			Result.append (New_line)
+			Result.append ("extern %"C%" {")
+			Result.append (New_line)
+			Result.append ("#endif")
+			Result.append (New_line)
+			Result.append ("RT_LNK HINSTANCE eif_hInstance;")
+			Result.append (New_line)
+			Result.append ("#ifdef __cplusplus")
+			Result.append (New_line)
+			Result.append ("}")
+			Result.append (New_line)
+			Result.append ("#endif")
 		end
 
 end -- class WIZARD_C_REGISTRATION_CODE_GENERATOR

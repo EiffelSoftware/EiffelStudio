@@ -242,6 +242,7 @@ feature {NONE} -- Implementation
 				Result.append (Ce_mapper)
 				Result.append (Dot)
 				Result.append (visitor.ce_function_name)
+				Result.append (Space_open_parenthesis)
 				Result.append (arg_name)
 				Result.append (Close_parenthesis)
 			else
@@ -309,6 +310,22 @@ feature {NONE} -- Implementation
 			Result.append (Dot)
 			Result.append (visitor.ce_function_name)
 			Result.append (Space_open_parenthesis)
+
+			if is_unsigned_int (visitor.vt_type) or is_unsigned_long (visitor.vt_type) or is_int (visitor.vt_type) then
+				Result.append (Open_parenthesis)
+				Result.append ("long *")
+				Result.append (Close_parenthesis)
+			elseif is_unsigned_short (visitor.vt_type) then
+				Result.append (Open_parenthesis)
+				Result.append ("short *")
+				Result.append (Close_parenthesis)	
+			elseif is_character (visitor.vt_type) then
+				Result.append (Open_parenthesis)
+				Result.append (Eif_character)
+				Result.append (Asterisk)
+				Result.append (Close_parenthesis)
+			end
+
 			Result.append (arg_name)
 
 			if visitor.writable then
@@ -341,6 +358,21 @@ feature {NONE} -- Implementation
 				Result.append (Tmp_clause)
 				Result.append (arg_name)
 				Result.append (Comma_space)
+
+				if is_unsigned_int (visitor.vt_type) or is_unsigned_long (visitor.vt_type) or is_int (visitor.vt_type) then
+					Result.append (Open_parenthesis)
+					Result.append ("long *")
+					Result.append (Close_parenthesis)
+				elseif is_unsigned_short (visitor.vt_type) then
+					Result.append (Open_parenthesis)
+					Result.append ("short *")
+					Result.append (Close_parenthesis)	
+				elseif is_unsigned_char (visitor.vt_type) then
+					Result.append (Open_parenthesis)
+					Result.append ("char *")
+					Result.append (Close_parenthesis)
+				end
+
 				Result.append (arg_name)
 				Result.append (Close_parenthesis)
 				Result.append (Semicolon)

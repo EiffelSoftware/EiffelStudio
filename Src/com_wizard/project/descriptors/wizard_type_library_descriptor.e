@@ -92,6 +92,7 @@ feature -- Initialization
 			create guid.make_from_guid (a_type_lib.library_attributes.guid)
 			major_version_number := a_type_lib.library_attributes.major_version_number
 			minor_version_number := a_type_lib.library_attributes.minor_version_number
+			lcid := a_type_lib.library_attributes.lcid
 			name := a_type_lib.documentation (-1).name
 			type_lib := a_type_lib
 		ensure
@@ -120,6 +121,9 @@ feature -- Access
 
 	minor_version_number: INTEGER 
 			-- Minor version number
+
+	lcid: INTEGER
+			-- Library locale
 
 	type_lib: ECOM_TYPE_LIB
 			-- Type Library

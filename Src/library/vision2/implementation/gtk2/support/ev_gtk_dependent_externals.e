@@ -8,6 +8,73 @@ class
 
 feature -- Externals
 
+	frozen gtk_value_pointer (arg: POINTER): POINTER is
+			-- Pointer to the value of a GtkArg.
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"g_value_peek_pointer ((GValue*) $arg)"
+		end
+		
+	frozen gtk_value_int (arg: POINTER): POINTER is
+			-- Integer value from a GtkArg.
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"g_value_get_uint ((GValue*) $arg)"
+		end
+
+	frozen gtk_widget_get_pango_context (a_widget: POINTER): POINTER is
+		external
+			"C signature (GtkWidget*): PangoContext* use <gtk/gtk.h>"
+		end
+		
+	frozen pango_layout_set_font_description (a_layout, a_font_desc: POINTER) is
+		external
+			"C signature (PangoLayout*, PangoFontDescription*) use <gtk/gtk.h>"
+		end
+
+	frozen pango_layout_get_pixel_size (a_layout: POINTER; a_width, a_height: TYPED_POINTER [INTEGER]) is
+		external
+			"C signature (PangoLayout*, gint*, gint*) use <gtk/gtk.h>"
+		end
+		
+	frozen pango_layout_get_iter (a_layout: POINTER): POINTER is
+		external
+			"C signature (PangoLayout*): PangoLayoutIter* use <gtk/gtk.h>"
+		end
+		
+	frozen pango_layout_iter_get_baseline (a_iter: POINTER): INTEGER is
+		external
+			"C signature (PangoLayoutIter*): gint use <gtk/gtk.h>"
+		end
+
+	frozen gdk_draw_layout (a_drawable, a_gc: POINTER; a_x, a_y: INTEGER; a_layout: POINTER) is
+		external
+			"C signature (GdkDrawable*, GdkGC*, gint, gint, PangoLayout*) use <gtk/gtk.h>"
+		end
+
+	frozen gtk_widget_create_pango_layout (a_widget: POINTER; a_text: POINTER): POINTER is
+		external
+			"C signature (GtkWidget*, gchar*): PangoLayout* use <gtk/gtk.h>"
+		end
+
+	frozen gtk_widget_modify_fg (a_widget: POINTER; a_state_type: INTEGER; a_color: POINTER) is
+		external
+			"C signature (GtkWidget*, GtkStateType, GdkColor*) use <gtk/gtk.h>"
+		end
+
+	frozen gtk_widget_modify_bg (a_widget: POINTER; a_state_type: INTEGER; a_color: POINTER) is
+		external
+			"C signature (GtkWidget*, GtkStateType, GdkColor*) use <gtk/gtk.h>"
+		end
+
+	frozen gtk_widget_get_modifier_style (a_widget: POINTER): POINTER is
+		external
+			"C signature (GtkWidget*): GtkRcStyle* use <gtk/gtk.h>"
+		end
+		
+
 	frozen pango_scale: INTEGER is
 		external
 			"C Macro use <gtk/gtk.h>"

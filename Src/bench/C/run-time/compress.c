@@ -137,6 +137,7 @@ void eif_compress (unsigned char *in_buf, long unsigned int in_size, unsigned ch
 
  for (i = 0; i < (long)in_size; i ++)
      {
+		/* UMR from Purify on the compiler!!!! */
       in_octet = *in_ptr;
 	  if (in_octet == 0x00) 
          {

@@ -32,13 +32,11 @@ ecom_eiffelcomcompiler_ieiffelsystemclusters_impl_stub_s.obj \
 ecom_eiffelcomcompiler_ieiffelclusterproperties_impl_stub_s.obj \
 ecom_eiffelcomcompiler_ienumcluster_impl_stub_s.obj \
 ecom_eiffelcomcompiler_ieiffelclusterproperties_impl_proxy_s.obj \
-ecom_eiffelcomcompiler_ienumclusterexcludes_impl_stub_s.obj \
 ecom_eiffelcomcompiler_ieiffelsystemassemblies_impl_stub_s.obj \
 ecom_eiffelcomcompiler_ienumassembly_impl_stub_s.obj \
 ecom_eiffelcomcompiler_ieiffelassemblyproperties_impl_stub_s.obj \
 ecom_eiffelcomcompiler_ieiffelsystemexternals_impl_stub_s.obj \
-ecom_eiffelcomcompiler_ienumincludepaths_impl_stub_s.obj \
-ecom_eiffelcomcompiler_ienumobjectfiles_impl_stub_s.obj \
+ecom_eiffelcomcompiler_ieiffelenumstring_impl_stub_s.obj \
 ecom_eiffelcomcompiler_ieiffelfeaturedescriptor_impl_stub_s.obj \
 ecom_eiffelcomcompiler_ieiffelfeaturedescriptor_impl_proxy_s.obj \
 ecom_eiffelcomcompiler_ieiffelprojectproperties_impl_stub_s.obj \
@@ -81,13 +79,11 @@ wecom_eiffelcomcompiler_ieiffelsystemclusters_impl_stub_s.obj \
 wecom_eiffelcomcompiler_ienumcluster_impl_stub_s.obj \
 wecom_eiffelcomcompiler_ieiffelclusterproperties_impl_stub_s.obj \
 wecom_eiffelcomcompiler_ieiffelclusterproperties_impl_proxy_s.obj \
-wecom_eiffelcomcompiler_ienumclusterexcludes_impl_stub_s.obj \
 wecom_eiffelcomcompiler_ieiffelsystemassemblies_impl_stub_s.obj \
 wecom_eiffelcomcompiler_ienumassembly_impl_stub_s.obj \
 wecom_eiffelcomcompiler_ieiffelassemblyproperties_impl_stub_s.obj \
 wecom_eiffelcomcompiler_ieiffelsystemexternals_impl_stub_s.obj \
-wecom_eiffelcomcompiler_ienumincludepaths_impl_stub_s.obj \
-wecom_eiffelcomcompiler_ienumobjectfiles_impl_stub_s.obj \
+wecom_eiffelcomcompiler_ieiffelenumstring_impl_stub_s.obj \
 wecom_eiffelcomcompiler_ieiffelfeaturedescriptor_impl_stub_s.obj \
 wecom_eiffelcomcompiler_ieiffelfeaturedescriptor_impl_proxy_s.obj \
 wecom_eiffelcomcompiler_ieiffelprojectproperties_impl_stub_s.obj \
@@ -264,15 +260,9 @@ wecom_eiffelcomcompiler_ienumclusterprop_impl_stub_s.obj: ecom_eiffelcomcompiler
   
 wecom_eiffelcomcompiler_ienumassembly_impl_stub_s.obj: ecom_eiffelcomcompiler_ienumassembly_impl_stub_s.cpp
   $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
-  
-wecom_eiffelcomcompiler_ienumclusterexcludes_impl_stub_s.obj: ecom_eiffelcomcompiler_ienumclusterexcludes_impl_stub_s.cpp
+   
+wecom_eiffelcomcompiler_ieiffelenumstring_impl_stub_s.obj: ecom_eiffelcomcompiler_ieiffelenumstring_impl_stub_s.cpp
   $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
-  
-wecom_eiffelcomcompiler_ienumincludepaths_impl_stub_s.obj: ecom_eiffelcomcompiler_ienumincludepaths_impl_stub_s.cpp
-  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
-  
-wecom_eiffelcomcompiler_ienumobjectfiles_impl_stub_s.obj: ecom_eiffelcomcompiler_ienumobjectfiles_impl_stub_s.cpp
-  $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
-  
+   
 wecom_eiffelcomcompiler_ieiffelexception_impl_stub_s.obj: ecom_eiffelcomcompiler_ieiffelexception_impl_stub_s.cpp
   $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?

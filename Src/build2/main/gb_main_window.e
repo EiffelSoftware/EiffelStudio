@@ -13,7 +13,7 @@ inherit
 		export
 			{NONE} all
 			{ANY} is_empty, is_show_requested, show, hide, accelerators,
-				item
+				item, lock_update, unlock_update
 		redefine
 			initialize
 		end
@@ -214,16 +214,29 @@ feature -- Basic operation
 			not_in_wizard_mode: not system_status.is_wizard_system
 		local
 			vertical_box: EV_VERTICAL_BOX
+			linear_rep: ARRAYED_LIST [EV_WIDGET]
 		do
 				-- Now store to preferences
 			Preferences.set_integer_resource (Preferences.main_split__position, horizontal_split_area.split_position)
 			store_tool_positions
+			
+				-- Now unparent tools from `multiple_split_area'.
+			linear_rep := multiple_split_area.linear_representation.twin
+			from
+				linear_rep.start
+			until
+				linear_rep.off
+			loop
+				multiple_split_area.customizeable_area_of_widget (linear_rep.item).wipe_out
+				multiple_split_area.remove (linear_rep.item)
+				linear_rep.forth
+			end
 
 					-- Actually save the preferences.
 			Preferences.save_resources;
 
 			lock_update
-				-- Remove the tools
+				-- Remove the tools from `Current'.
 			vertical_box ?= item
 			check
 				item_is_vertical_box: vertical_box /= Void

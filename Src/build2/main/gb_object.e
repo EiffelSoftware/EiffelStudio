@@ -75,6 +75,7 @@ feature {GB_OBJECT_HANDLER} -- Initialization
 				-- The names should never be `Void'.
 			create name.make (0)
 			create events.make (0)
+			create constants.make (0)
 			create edited_name.make (0)
 		ensure
 			type_assigned: type = a_type
@@ -92,6 +93,7 @@ feature {GB_OBJECT_HANDLER} -- Initialization
 			build_display_object
 			create name.make (0)
 			create events.make (0)
+			create constants.make (0)
 			create edited_name.make (0)
 			id := new_id
 		ensure
@@ -119,6 +121,9 @@ feature -- Access
 		
 	events: ARRAYED_LIST [GB_ACTION_SEQUENCE_INFO]
 		-- All events connected to `Current'.
+		
+	constants: HASH_TABLE [GB_CONSTANT_CONTEXT, STRING]
+		-- All constants connected to `Current'.
 		
 	type: STRING
 		-- A type corresponding to the current vision2 object.
@@ -435,6 +440,19 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_TYPE_SELECTOR_ITEM} -- Access
 			-- of correct type to be added.
 		do
 			Result := False
+		end
+		
+feature {GB_INTEGER_INPUT_FIELD, GB_EV_ANY} -- Basic operations
+
+	add_constant_context (context: GB_CONSTANT_CONTEXT) is
+			-- Add `context' to `constants'.
+		require
+			context_not_void: context /= Void
+			context_object_is_current: context.object = Current
+		do
+			constants.extend (context, context.property + context.attribute)
+		ensure
+			constants.has (context.property + context.constant.name)
 		end
 
 feature -- Basic operations

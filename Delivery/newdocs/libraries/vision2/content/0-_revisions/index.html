@@ -110,6 +110,7 @@
 					<li>
 						<b>EV_TEXT</b> - If not `is_editable' and a `background_color' had been set, it was only used on lines containing text. The `background_color' is now correctly displayed throughout the whole control when not `is_editable'.</li>
 					<li><b>EV_PRINT_DIALOG</b> - Fixed `set_from_page' and `set_to_page' which were previously not implemented.</li>
+					<li><b>EV_LIST</b> - Fixed a graphical glitch when using `wipe_out' when items were contained that required the horizontal scroll bar to be visible. The scroll bar was not hidden, even though there were no longer any items in the list.</li>
 				</ul>
 			<li>
 				<b>Gtk</b></li>

@@ -370,6 +370,25 @@ feature {NONE}
 
 feature -- Context_editor list
 
+	update_state_name_in_behavior_page (state: STATE) is
+			-- Update the state name in behavior page
+			-- that displays `state'.
+		local
+			editor_list: LINKED_LIST [CONTEXT_EDITOR];
+			an_editor: CONTEXT_EDITOR;
+		do
+			editor_list := window_mgr.context_editors;
+			from
+				editor_list.start
+			until
+				editor_list.after
+			loop
+				an_editor := editor_list.item;
+				an_editor.update_state_name_in_behavior_page (state);
+				editor_list.forth;
+			end;
+		end;
+
 	update_name_in_editors (a_context: CONTEXT) is
 			-- Update the icon name of `a_context' that
 			-- is being edited.
@@ -384,7 +403,7 @@ feature -- Context_editor list
 				editor_list.after
 			loop
 				an_editor := editor_list.item;
-				if an_editor.edited_context =  a_context then
+				if an_editor.edited_context = a_context then
 					an_editor.update_title;
 				end;
 				editor_list.forth;

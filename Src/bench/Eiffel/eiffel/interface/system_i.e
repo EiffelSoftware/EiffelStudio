@@ -571,7 +571,7 @@ end;
 				pass4_controler.remove_class (a_class);
 
 					-- Mark the class to remove uncompiled
-				a_class.lace_class.set_compiled_class (Void);
+				a_class.lace_class.reset_compiled_class;
 
 					-- Remove its types
 				from
@@ -3581,7 +3581,6 @@ feature -- Conveniences
 			inlining_size := 4;
 			code_replication_off := True;
 			exception_stack_managed := False; 
-			Rescue_status.set_fail_on_rescue (False)
 			server_controler.set_chunk_size (10000)
 		end;
 

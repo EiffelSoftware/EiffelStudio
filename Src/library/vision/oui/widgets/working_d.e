@@ -20,13 +20,11 @@ inherit
 			implementation
 		end
 
-
 creation
 
 	make
-
 	
-feature 
+feature {NONE} -- Creation
 
 	make (a_name: STRING; a_parent: COMPOSITE) is
 			-- Create a working dialog with `a_name' as identifier,

@@ -19,13 +19,11 @@ inherit
 			implementation
 		end
 
-
 creation
 
 	make
-
 	
-feature 
+feature {NONE}
 
 	make (a_name: STRING; a_parent: COMPOSITE) is
 			-- Create a warning dialog with `a_name' as identifier,

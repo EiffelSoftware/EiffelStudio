@@ -80,7 +80,7 @@ feature
 			base_class := typ.base_class;
 
 			if 
-				Compilation_modes.is_precompiling or
+				Compilation_modes.is_precompiling or else
 				base_class.is_precompiled
 			then
 				if is_nested and need_invariant then

@@ -92,6 +92,17 @@ feature -- Basic operations
 			Adjusted_size_correct: Result.count = string.count + string.occurrences ('%%') + string.occurrences ('"')
 		end
 		
+	directory_of_file (file_name: STRING): STRING is
+			-- `Result' is directory path of `file_name'.
+			-- `file_name' must include full path to file.
+			-- This will work on Linx and Windows, but not VMS.
+		require
+			is_path: file_name.out.occurrences (operating_environment.directory_separator) > 0
+		do
+			Result := file_name.substring (1, (file_name.out.last_index_of (operating_environment.directory_separator, file_name.out.count)) - 1)
+		ensure
+			Result_not_void: Result /= Void
+		end
 		
 		
 end -- class GB_GENERAL_UTILITIES

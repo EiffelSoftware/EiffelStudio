@@ -3,7 +3,7 @@ indexing
 		%a FEATURE_I object in a CLASS_INTERFACE."
 	date: "$Date$"
 	revision: "$Revision$"
-	FIXME: "Make this class expanded when expanded are correctly expanded"
+	FIXME: "Make this class expanded when expanded are correctly done"
 
 class
 	FEATURE_INFO

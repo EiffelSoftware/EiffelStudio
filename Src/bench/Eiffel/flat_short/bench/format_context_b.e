@@ -619,6 +619,13 @@ feature -- Output
 			list.reversed_format (Current)
 		end;
 
+	register_ancestors_invariants is
+			-- Register the invariants for target class.
+		do
+			!! format_registration.make (class_c, client);
+			format_registration.register_ancestors_invariants
+		end;
+
 	format_ast (ast: AST_EIFFEL_B) is
 			-- Call simple_for on `ast'.
 		do
@@ -693,8 +700,7 @@ feature {NONE} -- Implementation
 				f_name := adapt.final_name;
 				if feature_i /= void and then in_bench_mode then
 					c := adapt.target_class.e_class;
-					!FEATURE_TEXT! item.make (f_name, 
-						feature_i.api_feature (c.id));
+					!FEATURE_TEXT! item.make (feature_i.api_feature (c.id), f_name);
 				else			
 					!! item.make (f_name)
 				end;
@@ -748,7 +754,7 @@ feature {NONE} -- Implementation
 			last_was_printed := True;
 			if feature_i /= Void and then in_bench_mode then
 				c := adapt.target_class.e_class;
-				!! ot.make (f_name, feature_i.api_feature (c.id))
+				!! ot.make (feature_i.api_feature (c.id), f_name)
 				if is_key then
 					ot.set_is_keyword
 				end;
@@ -807,7 +813,7 @@ feature {NONE} -- Implementation
 			feature_i := adapt.target_feature;
 			if feature_i /= Void and then in_bench_mode then
 				c := adapt.target_class.e_class;
-				!! ot.make (f_name, feature_i.api_feature (c.id))
+				!! ot.make (feature_i.api_feature (c.id), f_name)
 				if is_key then
 					ot.set_is_keyword
 				end;

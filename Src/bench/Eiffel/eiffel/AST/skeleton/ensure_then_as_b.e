@@ -3,20 +3,19 @@ class ENSURE_THEN_AS_B
 inherit
 
 	ENSURE_THEN_AS
-		rename
-			assertions as old_then_assertions
-		undefine
-			clause_name, put_clause_keywords,
-			format_assertions
+		redefine
+			assertions
 		end;
 
 	ENSURE_AS_B
 		undefine
 			is_then
-		select
+		redefine
 			assertions
 		end
 
 feature
+
+	assertions: EIFFEL_LIST_B [TAGGED_AS_B]
 
 end -- class ENSURE_THEN_AS_B

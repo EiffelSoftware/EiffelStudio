@@ -267,6 +267,16 @@ feature -- Obsolete
 			Result := last_double
 		end;
 
+feature -- Implementation 
+
+	storage_type: CHARACTER is
+			-- Type for storage mechanism
+			-- F for File, S for Socket
+		deferred
+		ensure
+			valid_result: Result /= '%U'
+		end
+
 end -- class IO_MEDIUM
 
 --|----------------------------------------------------------------

@@ -732,7 +732,13 @@ feature -- socket options
 			Result := c_fcntl (descriptor, c_fgetown, 0)
 		end
 
-feature {NONE}
+feature -- Implementation
+
+	storage_type: CHARACTER is 'S'
+			-- Type for storage mechanism
+			-- F for File, S for Socket
+
+feature {NONE} -- Externals
 
 	c_socket (add_family, a_type, protoc: INTEGER): INTEGER is
 			-- external c routine to create the socket descriptor

@@ -63,6 +63,44 @@
 			<TEXT DESCRIPTION="Automatic update when the file has not been modified">automatic_update<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT DESCRIPTION="Underscore %'_%' is a word separator">underscore_is_separator<BOOLEAN>False</BOOLEAN></TEXT>
 			<TEXT DESCRIPTION="Quadruple click selects all">quadruple_click<BOOLEAN>True</BOOLEAN></TEXT>
+			<TOPIC TOPIC_ID="Keyboard_shortcuts" ICON="icon_preferences_folder">
+				<HEAD>Keyboard Shortcuts</HEAD>
+				<TOPIC TOPIC_ID="Autocomplete" ICON="icon_preferences_folder">
+					<HEAD>Autocomplete</HEAD>
+					<TEXT DESCRIPTION="Key">autocomplete_shortcut_key<STRING>Space</STRING></TEXT>
+					<TEXT DESCRIPTION="+ Ctrl">autocomplete_shortcut_ctrl<BOOLEAN>True</BOOLEAN></TEXT>
+					<TEXT DESCRIPTION="+ Alt">autocomplete_shortcut_alt<BOOLEAN>False</BOOLEAN></TEXT>
+					<TEXT DESCRIPTION="+ Shift">autocomplete_shortcut_shift<BOOLEAN>False</BOOLEAN></TEXT>
+				</TOPIC>
+				<TOPIC TOPIC_ID="Search selection" ICON="icon_preferences_folder">
+					<HEAD>Search selection</HEAD>
+					<TEXT DESCRIPTION="Key">search_selection_shortcut_key<STRING>F3</STRING></TEXT>
+					<TEXT DESCRIPTION="+ Ctrl">search_selection_shortcut_ctrl<BOOLEAN>False</BOOLEAN></TEXT>
+					<TEXT DESCRIPTION="+ Alt">search_selection_shortcut_alt<BOOLEAN>False</BOOLEAN></TEXT>
+					<TEXT DESCRIPTION="+ Shift">search_selection_shortcut_shift<BOOLEAN>False</BOOLEAN></TEXT>
+				</TOPIC>
+				<TOPIC TOPIC_ID="Search again" ICON="icon_preferences_folder">
+					<HEAD>Search again</HEAD>
+					<TEXT DESCRIPTION="Key">search_last_shortcut_key<STRING>F3</STRING></TEXT>
+					<TEXT DESCRIPTION="+ Ctrl">search_last_shortcut_ctrl<BOOLEAN>False</BOOLEAN></TEXT>
+					<TEXT DESCRIPTION="+ Alt">search_last_shortcut_alt<BOOLEAN>False</BOOLEAN></TEXT>
+					<TEXT DESCRIPTION="+ Shift">search_last_shortcut_shift<BOOLEAN>False</BOOLEAN></TEXT>
+				</TOPIC>
+				<TOPIC TOPIC_ID="Search backward" ICON="icon_preferences_folder">
+					<HEAD>Search backward</HEAD>
+					<TEXT DESCRIPTION="Key">search_backward_shortcut_key<STRING>F3</STRING></TEXT>
+					<TEXT DESCRIPTION="+ Ctrl">search_backward_shortcut_ctrl<BOOLEAN>False</BOOLEAN></TEXT>
+					<TEXT DESCRIPTION="+ Alt">search_backward_shortcut_alt<BOOLEAN>False</BOOLEAN></TEXT>
+					<TEXT DESCRIPTION="+ Shift">search_backward_shortcut_shift<BOOLEAN>True</BOOLEAN></TEXT>
+				</TOPIC>
+				<TOPIC TOPIC_ID="Show search panel" ICON="icon_preferences_folder">
+					<HEAD>Show search panel</HEAD>
+					<TEXT DESCRIPTION="Key">show_search_panel_shortcut_key<STRING>Space</STRING></TEXT>
+					<TEXT DESCRIPTION="+ Ctrl">show_search_panel_shortcut_ctrl<BOOLEAN>True</BOOLEAN></TEXT>
+					<TEXT DESCRIPTION="+ Alt">show_search_panel_shortcut_alt<BOOLEAN>False</BOOLEAN></TEXT>
+					<TEXT DESCRIPTION="+ Shift">show_search_panel_shortcut_shift<BOOLEAN>False</BOOLEAN></TEXT>
+				</TOPIC>
+			</TOPIC>
 			<TOPIC TOPIC_ID="Automatic completion" ICON="icon_preferences_folder">
 				<HEAD>Autocomplete preferences</HEAD>
 				<TEXT DESCRIPTION="Brackets and parenthesis are closed automatically">autocomplete_brackets_and_parenthesis<BOOLEAN>False</BOOLEAN></TEXT>
@@ -381,7 +419,7 @@
 				<TOPIC TOPIC_ID="misc_completion" ICON="icon_preferences_folder">
 					<HEAD>Other keywords</HEAD>
 					<TOPIC TOPIC_ID="Precursor" ICON="icon_preferences_folder">
-						<HEAD>Precusor</HEAD>
+						<HEAD>Precursor</HEAD>
 						<TEXT DESCRIPTION="Autocomplete Precursor">autocomplete_precursor<BOOLEAN>True</BOOLEAN></TEXT>
 						<TEXT DESCRIPTION="Use default autocomplete">use_default_precursor<BOOLEAN>True</BOOLEAN></TEXT>
 						<TEXT DESCRIPTION="Customized autocomplete (Return after keyword was typed)">custom_precursor_space<STRING> {$cursor$}</STRING></TEXT>
@@ -472,7 +510,6 @@
 			<HEAD>Diagram tool preferences</HEAD>
 			<TEXT>excluded_class_figures<LIST_STRING>INTEGER;BOOLEAN;STRING;CHARACTER;REAL;DOUBLE</LIST_STRING></TEXT>
 			<TEXT>ignore_excluded_class_figures<BOOLEAN>False</BOOLEAN></TEXT>
-			<TEXT>use_diagram_double_buffer<BOOLEAN>False</BOOLEAN></TEXT>
 		</TOPIC>
 	</TOPIC>
 	<TOPIC TOPIC_ID="Graphics" ICON="icon_preferences_folder">

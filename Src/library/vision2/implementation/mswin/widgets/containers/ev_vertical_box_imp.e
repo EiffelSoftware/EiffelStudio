@@ -15,7 +15,6 @@ inherit
 	EV_BOX_IMP
 		redefine
 			move_and_resize,
-			internal_resize,
 			set_child_expandable
 		end
 
@@ -34,21 +33,21 @@ feature -- Status setting
 			-- Need to be resized
 		do
 			is_homogeneous := flag
-			notify_change (2)
+			notify_change (Nc_minheight)
 		end
 
 	set_spacing (value: INTEGER) is
 			-- Make `value' the new spacing of the box.
 		do
 			spacing := value
-			notify_change (2)
+			notify_change (Nc_minheight)
 		end
 
 	set_border_width (value: INTEGER) is
 			-- Make `value' the new border width.
 		do
 			border_width := value
-			notify_change (1 + 2)
+			notify_change (Nc_minsize)
 		end
 
 	set_child_expandable (child: EV_WIDGET; flag: BOOLEAN) is
@@ -56,36 +55,37 @@ feature -- Status setting
 			-- not expandable otherwise.
 		do
 			{EV_BOX_IMP} Precursor (child, flag)
-			notify_change (2)
+			notify_change (Nc_minheight)
 		end
 
 feature {NONE} -- Basic operation 
 
-	set_local_width (new_width: INTEGER) is
+	set_children_width is
 			-- Make `new_width' the `width' of the box and all the children.
 		local
 			lchild: ARRAYED_LIST [EV_WIDGET_IMP]
-			temp_width: INTEGER
+			litem: EV_WIDGET_IMP
+			temp: INTEGER
 			cur: CURSOR
 		do
 			lchild := ev_children
-			resize (new_width, height)
 			if childvisible_nb /= 0 then
-				temp_width := new_width - 2 * border_width
 				from
 					cur := lchild.cursor
 					lchild.start
 				until
 					lchild.after
 				loop
-					lchild.item.parent_ask_resize(temp_width, lchild.item.child_cell.height)
+					litem := lchild.item
+					litem.integrate_changes
+					litem.parent_ask_resize (client_width, litem.child_cell.height)
 					lchild.forth
 				end
 				lchild.go_to (cur)
 			end
 		end
 
-	set_local_height (value: INTEGER) is
+	set_children_height is
 			-- Make 'new_height' the `height' of the box and adapt 
 			-- the children height.
 		local
@@ -99,16 +99,14 @@ feature {NONE} -- Basic operation
 			int1, int2: INTEGER
 			next_non_expandable: INTEGER
 		do
-			if childvisible_nb = 0 then
-				mark := value
-			else
+			if childvisible_nb /= 0 then
 				lchild := ev_children
 				expandable := children_expandable 
 				cur := lchild.cursor
 				cwidth := client_width
 				bwidth := border_width
 				space := spacing
-				children_size := value - 2 * bwidth - total_spacing
+				children_size := height - 2 * bwidth - total_spacing
 
 				-- Homogeneous state : only the visible children are
 				-- importante.
@@ -177,36 +175,12 @@ feature {NONE} -- Basic operation
 						end
 						lchild.forth
 					end -- loop
-
-				mark := mark - space
 				end -- is_homogeneous
-
-			mark := mark + bwidth
 			lchild.go_to (cur)
 			end -- ev_children.empty
-
-		resize (width, mark)
 	end
 
 feature {NONE} -- Implementation for automatic size compute
-
-	internal_resize (a_x, a_y, a_width, a_height: INTEGER) is
-			-- A function sometimes used (notebook) that update
-			-- and resize the current widget.
-		do
-			inspect internal_changes
-			when 1 then
-				compute_minimum_width
-			when 2 then
-				compute_minimum_height
-			when 3 then
-				compute_minimum_size
-			else
-			end
-			move (a_x, a_y)
-			resize (a_width, height)
-			set_local_height (a_height)
-		end
 
 	compute_minimum_width is
 			-- Recompute the minimum_width of the object.
@@ -220,7 +194,7 @@ feature {NONE} -- Implementation for automatic size compute
 				lchild := ev_children
 				from
 					cur := lchild.cursor
-					childvisible_nb := 0; value := 0; --childexpand_nb := 0; 
+					childvisible_nb := 0; value := 0;
 					lchild.start
 				until
 					lchild.after
@@ -250,7 +224,7 @@ feature {NONE} -- Implementation for automatic size compute
 			if not ev_children.empty then
 				lchild := ev_children
 				cur := lchild.cursor
-				childvisible_nb := 0;  value := 0; --childexpand_nb := 0;
+				childvisible_nb := 0;  value := 0;
 				if is_homogeneous then
 					from
 						lchild.start
@@ -298,7 +272,7 @@ feature {NONE} -- Implementation for automatic size compute
 			if not ev_children.empty then
 				lchild := ev_children
 				cur := lchild.cursor
-				childvisible_nb := 0; hvalue := 0; wvalue := 0 -- childexpand_nb := 0; 
+				childvisible_nb := 0; hvalue := 0; wvalue := 0 
 				if is_homogeneous then
 					from
 						lchild.start
@@ -349,8 +323,8 @@ feature {NONE} -- WEL Implementation
 			-- This feature must be redefine by the containers to readjust its
 			-- children too.
 		do
-			{EV_BOX_IMP} Precursor (a_x, a_y, a_width, height, repaint)
-			set_local_height (a_height)
+			{EV_BOX_IMP} Precursor (a_x, a_y, a_width, a_height, repaint)
+			set_children_height
 		end
 
 end -- class EV_VERTICAL_BOX_IMP

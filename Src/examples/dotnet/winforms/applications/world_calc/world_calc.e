@@ -285,9 +285,9 @@ feature -- Implementation
 					l_args := my_parse.parse (txt_formula.text)
 					create l_int_math.make
 					txt_formula.set_text (l_int_math.get_result 
-						(feature {CONVERT}.to_int_32_string (l_args.arg_1),
+						(feature {SYSTEM_CONVERT}.to_int_32_string (l_args.arg_1),
 						l_args.op, 
-						feature {CONVERT}.to_int_32_string (l_args.arg_2)))
+						feature {SYSTEM_CONVERT}.to_int_32_string (l_args.arg_2)))
 				end
 			else
 				res := feature {WINFORMS_MESSAGE_BOX}.show (("Invalid calculation entered.%N%N  Enter 'num1' 'op' 'num2'%N%N").to_cil)

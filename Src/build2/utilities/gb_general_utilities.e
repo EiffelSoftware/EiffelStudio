@@ -148,7 +148,7 @@ feature -- Basic operations
 			index_of_old_name := class_text.substring_index (old_name, class_text.count - sub_index)
 			class_text.replace_substring (new_name, index_of_old_name, index_of_old_name + old_name.count - 1)
 		ensure
-			count_changed_accordingly: old class_text.count = class_text.count + new_name.count - old_name.count
+			count_changed_accordingly: old class_text.count = class_text.count + old_name.count - new_name.count
 		end
 
 end -- class GB_GENERAL_UTILITIES

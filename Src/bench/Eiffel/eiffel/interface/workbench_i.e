@@ -17,7 +17,11 @@ inherit
 		redefine
 			lace, system, universe
 		end;
-	COMPILER_EXPORTER
+	COMPILER_EXPORTER;
+	SHARED_EIFFEL_PROJECT
+		rename
+			system_defined as eiffel_system_defined
+		end
 
 feature -- Attributes
 
@@ -411,9 +415,9 @@ feature -- Automatic backup
 			!! file.make_open_write (backup_info_file_name)
 			file.putstring ("Compiler version: ")
 			file.putstring (Version_number)
-			--file.new_line
-			--file.putstring ("batch mode: ")
-			--file.putbool (batch_mode)
+			file.new_line
+			file.putstring ("batch mode: ")
+			file.putbool (Eiffel_project.batch_mode)
 			file.new_line
 			file.putstring ("new session: ")
 			file.putbool (new_session)

@@ -615,12 +615,12 @@ feature {NONE} -- Rebuilding
 			loop
 				if tree_item.item.text.is_equal (item_key) or tree_item.item.text.is_equal (key) then
 					if dot_index /= 0 then
-						if not tree_item.item.is_expanded then
+						if tree_item.item.is_expandable and then not tree_item.item.is_expanded then
 							tree_item.item.expand
 						end
 						expand_tree_item (full_path.substring (dot_index + 1, full_path.count), tree_item.item)
 					else
-						if not tree_item.item.is_expanded then
+						if tree_item.item.is_expandable and then not tree_item.item.is_expanded then
 							tree_item.item.expand
 						end
 					end

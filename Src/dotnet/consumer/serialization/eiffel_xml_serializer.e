@@ -56,7 +56,7 @@ feature -- Basic Operations
 			last_error := Generic_error
 			last_error_context := ""
 			if f /= Void then
-				f.close				
+				f.close		
 			end
 			retry
 		end
@@ -91,7 +91,7 @@ feature {NONE} -- Implementation
 			else
 				int ?= obj
 				if int /= Void then
-					write (parent_field, int.item, open_integer_field, close_integer_field, tab_count, f)					
+					write (parent_field, int.item, open_integer_field, close_integer_field, tab_count, f)		
 				else
 					real ?= obj
 					if real /= Void then
@@ -99,19 +99,19 @@ feature {NONE} -- Implementation
 					else
 						doub ?= obj
 						if doub /= Void then
-							write (parent_field, doub.item, open_double_field, close_double_field, tab_count, f)							
+							write (parent_field, doub.item, open_double_field, close_double_field, tab_count, f)
 						else
 							char ?= obj
 							if char /= Void then
-								write (parent_field, char.item, open_character_field, close_character_field, tab_count, f)					
+								write (parent_field, char.item, open_character_field, close_character_field, tab_count, f)
 							else
 								bool ?= obj
 								if bool /= Void then
-									write (parent_field, bool.item, open_boolean_field, close_boolean_field, tab_count, f)									
+									write (parent_field, bool.item, open_boolean_field, close_boolean_field, tab_count, f)
 								else
 									pointer ?= obj
 									if pointer /= Void then
-										write (parent_field, pointer.item, open_pointer_field, close_pointer_field, tab_count, f)										
+										write (parent_field, pointer.item, open_pointer_field, close_pointer_field, tab_count, f)
 									else
 										s ?= obj
 										if s /= Void then
@@ -139,7 +139,7 @@ feature {NONE} -- Implementation
 															else
 																double_ar ?= obj
 																if double_ar /= Void then
-																	process_array (parent_field, double_ar, tab_count, f)																
+																	process_array (parent_field, double_ar, tab_count, f)												
 																else
 																	process_reference (parent_field, obj, tab_count, f)
 																end
@@ -157,7 +157,7 @@ feature {NONE} -- Implementation
 				end
 			end	
 		end
-	
+
 	process_array (name: STRING; obj: ANY; tab_count: INTEGER; f: TEXT_WRITER) is
 			-- 	Write array field `ar' named `name' in `f' tabulated with `tab_count' tabs.
 		require

@@ -1,0 +1,156 @@
+system
+	"EiffelSoftware.CodeDom"
+
+root
+	CODE_DOM_PROVIDER: default_create
+
+default
+	assertion (all)
+	msil_generation (yes)
+	msil_clr_version ("v1.1.4322")
+	il_verifiable (yes)
+	cls_compliant (yes)
+	line_generation (yes)
+	dotnet_naming_convention (yes)
+	msil_generation_type ("dll")
+	msil_key_file_name ("$EIFFEL_SRC\dotnet\helpers\isekey.snk")
+	use_all_cluster_name_as_namespace (no)
+	use_cluster_name_as_namespace (no)
+	precompiled ("$EIFFEL_SRC\dotnet\codedom_provider\build_studio_debug\EiffelSoftware.CacheBrowser")
+	msil_use_optimized_precompile (yes)
+	version ("2.0.0.0")
+
+
+cluster
+	all interface:		"$EIFFEL_SRC\dotnet\codedom_provider\interface"
+		exclude
+			"CVS"; 
+		default
+			namespace ("EiffelSoftware.CodeDom")
+		end
+
+	all compiler:		"$EIFFEL_SRC\dotnet\codedom_provider\compiler"
+		exclude
+			"CVS"; "interface"; 
+		default
+			namespace ("EiffelSoftware.CodeDom.Compiler")
+		end
+
+	compiler_interface:		"$EIFFEL_SRC\dotnet\codedom_provider\compiler\interface"
+		default
+			namespace ("EiffelSoftware.CodeDom")
+		end
+
+	all code_generator:		"$EIFFEL_SRC\dotnet\codedom_provider\code_generator"
+		exclude
+			"CVS"; "interface"; 
+		default
+			namespace ("EiffelSoftware.CodeDom.CodeGenerator")
+		end
+
+	code_generator_interface:		"$EIFFEL_SRC\dotnet\codedom_provider\code_generator\interface"
+		default
+			namespace ("EiffelSoftware.CodeDom")
+		end
+
+	all parser:		"$EIFFEL_SRC\dotnet\codedom_provider\parser"
+		exclude
+			"CVS"; "interface";
+		default
+			namespace ("EiffelSoftware.CodeDom.Parser")
+		end
+
+	eiffel_parser:		"$EIFFEL_SRC\Eiffel\common\parser\parser"
+		exclude
+			"CVS"; "cluster_indexing_parser.e"; "external_parser.e"; "external_scanner.e"; "external_tokens.e"
+		default
+			namespace ("EiffelSoftware.CodeDom.Parser")
+		end
+
+	eiffel_parser_addons:	"$EIFFEL_SRC\Eiffel\API\error\common"
+		exclude
+			"CVS"; "error_handler.e"; "syntax_error.e";
+		default
+			namespace ("EiffelSoftware.CodeDom.Parser")
+		end
+
+	parser_interface:		"$EIFFEL_SRC\dotnet\codedom_provider\parser\interface"
+		default
+			namespace ("EiffelSoftware.CodeDom")
+		end
+
+	all common:		"$EIFFEL_SRC\dotnet\codedom_provider\common"
+		exclude
+			"CVS"; 
+		default
+			namespace ("EiffelSoftware.CodeDom.Support")
+		end
+
+	support:		"$EIFFEL_SRC\library"
+		default
+			namespace ("EiffelSoftware.CodeDom.Support")
+		end
+
+	library gobo:		"$GOBO\library"
+		exclude
+			"hact"; "other"; "se"; "ve"; "expat"; "CVS"; 
+		default
+			namespace ("EiffelSoftware.Library.Gobo")
+		end
+
+	all ast:		"$EIFFEL_SRC\eiffel\common\parser\ast"
+		exclude
+			"CVS"; "il_extension_as.e"; 
+		default
+			namespace ("EiffelSoftware.Library.AST")
+		end
+
+	yacc (ast):		"$EIFFEL_SRC\eiffel\yacc"
+
+	structures (ast):		"$EIFFEL_SRC\eiffel\eiffel\structures"
+
+	const (ast):		"$EIFFEL_SRC\eiffel\eiffel\const"
+
+	eiffel_helpers (ast):		"$EIFFEL_SRC\library\helpers\eiffel"
+
+assembly
+	"EiffelSoftware.EiffelCompiler":	"$EIFFEL_SRC\dotnet\codedom_provider\assemblies\EiffelSoftware.Compiler.dll"
+
+	"System.Configuration.Install":	"System.Configuration.Install","1.0.5000.0","neutral","b03f5f7f11d50a3a"
+		prefix
+			"CONFIG_INSTALL_"
+		end
+
+	"System.Runtime.Serialization.Formatters.Soap, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a":	"System.Runtime.Serialization.Formatters.Soap","1.0.5000.0","neutral","b03f5f7f11d50a3a"
+		prefix
+			"SYSTEM_RUNTIME_SERIALIZATION_FORMATTERS_SOAP_"
+		end
+
+	"Accessibility, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a":	"Accessibility","1.0.5000.0","neutral","b03f5f7f11d50a3a"
+		prefix
+			"ACCESSIBILITY_"
+		end
+
+	"System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a":	"System.Drawing","1.0.5000.0","neutral","b03f5f7f11d50a3a"
+		prefix
+			"SYSTEM_DRAWING_"
+		end
+
+	"System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089":	"System.Windows.Forms","1.0.5000.0","neutral","b77a5c561934e089"
+		prefix
+			"SYSTEM_WINDOWS_FORMS_"
+		end
+
+
+end -- system EiffelSoftware.CodeDom
+
+--+--------------------------------------------------------------------
+--| Eiffel CodeDOM Provider
+--| Copyright (C) 2001-2004 Eiffel Software
+--| Eiffel Software Confidential
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| Eiffel Software
+--| 356 Storke Road, Goleta, CA 93117 USA
+--| http://www.eiffel.com
+--+--------------------------------------------------------------------

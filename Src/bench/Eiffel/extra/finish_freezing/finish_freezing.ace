@@ -1,9 +1,8 @@
 system
-	es4sh
+	FINISH_FREEZING
 
 root
-
-	es4sh (es4sh): "make"
+	FINISH_FREEZING (es4sh): "make"
 
 default
 

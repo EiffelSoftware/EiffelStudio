@@ -1,3 +1,9 @@
+/*  strsave.c  */
+/*  $Id$  */
+
+#include "eif_config.h"
+#include "eif_portable.h"
+
 #include <stdio.h>
 
 char *str_save(char *s)

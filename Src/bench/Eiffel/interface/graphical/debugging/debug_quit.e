@@ -63,11 +63,9 @@ feature -- Output
 			debug_window.new_line;
 			debug_window.display;
 			window_manager.object_win_mgr.reset
+			Project_tool.clear_object_tool;
 			if Application.status.e_feature /= Void then
 				Application.status.set_is_stopped (False);
-				-- *** FIXME
-				-- To be fixed: remove above instruction
-				-- and have extra routine named `remove_stoppoint'
 				Window_manager.routine_win_mgr.show_stoppoint
 						(Application.status.e_feature, Application.status.break_index)
 				Project_tool.show_stoppoint

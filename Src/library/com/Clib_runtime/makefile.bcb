@@ -1,7 +1,7 @@
 # ecom_runtime.lib - Makefile for Microsoft C
 CC = $(ISE_EIFFEL)\BCC55\bin\bcc32.exe
 AR = $(ISE_EIFFEL)\BCC55\bin\tlib.exe
-CFLAGS = -w- -P -c -I..\spec\windows\include -I$(ISE_EIFFEL)\bench\spec\windows\include -I$(ISE_EIFFEL)\BCC55\include -L$(ISE_EIFFEL)\BCC55\lib
+CFLAGS = -w- -P -c -I..\spec\windows\include -I$(ISE_EIFFEL)\studio\spec\windows\include -I$(ISE_EIFFEL)\BCC55\include -L$(ISE_EIFFEL)\BCC55\lib
 
 OBJ = ecom_runtime_c_e.obj ecom_runtime_ce_arrays.obj ecom_runtime_e_c.obj
 

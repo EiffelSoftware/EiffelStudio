@@ -84,11 +84,13 @@ feature -- Removal
 		do
 			!! command_info.make (a_command, argument);
 			list := item (number);
-if list.has (command_info) then
-	print (" found%N");
-else
-	print (" not found%N");
-end;
+			debug
+				if list.has (command_info) then
+					print (" found%N");
+				else
+					print (" not found%N");
+				end;
+			end
 			list.start;
 			list.search (command_info);
 			if not list.after then

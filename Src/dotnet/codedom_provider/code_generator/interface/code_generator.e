@@ -57,6 +57,13 @@ inherit
 			default_rescue
 		end
 
+	CODE_SHARED_NAME_FORMATTER
+		export
+			{NONE} all
+		undefine
+			default_rescue
+		end
+
 create
 	default_create,
 	make_with_filename,
@@ -95,7 +102,7 @@ feature -- Interface
 			-- | Create `code_dom_source' and call `generate_code' on it, which calls appropriate code_generator.
 			-- | Call `compile_unit' on current `CODE_COMPILE_UNIT' and write code in `a_text_writer'.
 		do
-			Resolver.reset_generated_types
+			reset
 			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeGenerator.GenerateCodeFromCompileUnit"])
 			if a_compile_unit = Void then
 				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_input, ["GenerateCodeFromCompileUnit"])
@@ -115,9 +122,8 @@ feature -- Interface
 			-- | Call `generate_namespace_from_dom'.
 			-- | Call `namespace' on `CODE_NAMESPACE' and write code in `a_text_writer'.
 		do
-			Resolver.reset_generated_types
+			reset
 			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeGenerator.GenerateCodeFromNamespace"])
-			Resolver.reset_generated_types
 			Type_reference_factory.reset_cache
 			if a_namespace = Void then
 				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_input, ["GenerateCodeFromNamespace"])
@@ -137,7 +143,7 @@ feature -- Interface
 			-- | Call `generate_type_from_dom'.
 			-- | Call `type' on `CODE_GENERATED_TYPE' and write code in `a_text_writer'.
 		do
-			Resolver.reset_generated_types
+			reset
 			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeGenerator.GenerateCodeFromType"])
 			if a_type = Void then
 				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_input, ["GenerateCodeFromType"])
@@ -157,7 +163,7 @@ feature -- Interface
 			-- | Call `generate_statement_from_dom'.
 			-- | Call `statement' on `CODE_STATEMENT' and write code in `a_text_writer'.
 		do
-			Resolver.reset_generated_types
+			reset
 			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeGenerator.GenerateCodeFromStatement"])
 			if a_statement = Void then
 				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_input, ["GenerateCodeFromStatement"])
@@ -177,7 +183,7 @@ feature -- Interface
 			-- | Call `generate_expression_from_dom'
 			-- | Call `expression' on `CODE_EXPRESSION' and write code in `a_text_writer'.
 		do
-			Resolver.reset_generated_types
+			reset
 			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeGenerator.GenerateCodeFromExpression"])
 			if a_expression = Void then
 				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_input, ["GenerateCodeFromExpression"])
@@ -331,6 +337,13 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
+	reset is
+			-- Reset all global variables.
+		do
+			Resolver.reset
+			Name_formatter.reset
+		end
+		
 	initialize (a_text_writer: TEXT_WRITER; a_options: SYSTEM_DLL_CODE_GENERATOR_OPTIONS) is
 			-- Initialize `output' with `a_text_writer'.
 		do

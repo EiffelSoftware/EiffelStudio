@@ -747,6 +747,7 @@ feature -- Generation (Linking rules)
 
 	generate_il_dll is
 			-- Generate rules to produce DLL for IL code generation.
+			--| So far this is a Windows specific code generation.
 		do
 			make_file.putstring ("all: $(IL_SYSTEM)")
 			make_file.new_line
@@ -762,7 +763,11 @@ feature -- Generation (Linking rules)
 			make_file.putstring ("$(IL_SYSTEM): $(IL_SYSTEM_OBJ) %N")
 			make_file.putstring ("%T$(FILE_EXIST) $(IL_SYSTEM) $(RM) $(IL_SYSTEM) %N")
 			make_file.putstring ("%T$(SHAREDLINK) $(DYNLIBSHAREDFLAGS) $(IL_SYSTEM_OBJ) $(SHAREDLIBS) %N")
+			make_file.putstring ("%T$(RM) $(IL_SYSTEM_OBJ)%N")
 			make_file.putstring ("%Techo Success > completed.eif")
+			make_file.new_line
+			make_file.new_line
+
 			make_file.new_line
 		end
 

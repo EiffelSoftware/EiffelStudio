@@ -6,12 +6,13 @@ indexing
 
 deferred class
 
-	EV_RADIO_BUTTON_I 
+	EV_RADIO_BUTTON_I
 
 inherit
 
 	EV_CHECK_BUTTON_I
-	
+
+
 end -- class EV_RADIO_BUTTON_I
 
 --|----------------------------------------------------------------

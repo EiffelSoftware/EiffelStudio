@@ -148,7 +148,7 @@ feature -- Update
 			if is_valid then
 				hole.process_classi (Current)
 			else
-				warner (hole.target).gotcha_call (invalid_stone_message)
+				warner (hole.target.top).gotcha_call (invalid_stone_message)
 			end
 		end;
 

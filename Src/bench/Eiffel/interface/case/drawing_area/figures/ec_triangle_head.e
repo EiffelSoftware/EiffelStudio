@@ -11,10 +11,7 @@ inherit
 
 	ONCES 
 		undefine
-			is_equal,
-			setup,
-			copy,
-			consistent
+			is_equal, copy
 		end
 
 	EC_TRIANGLE
@@ -25,12 +22,11 @@ inherit
 		end;
 	EC_ARROW_HEAD
 		undefine
-			consistent, copy, setup, is_equal,
-			set_color
+			copy, is_equal, set_color
 		end;
 	SINGLE_MATH
 		undefine
-			consistent, copy, setup, is_equal
+			copy, is_equal
 		end
 
 creation

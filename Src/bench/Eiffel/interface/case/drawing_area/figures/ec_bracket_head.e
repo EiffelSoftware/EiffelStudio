@@ -14,9 +14,7 @@ inherit
 	ONCES
 		undefine
 			is_equal,
-			setup,
-			copy,
-			consistent
+			copy
 		end
 
 creation

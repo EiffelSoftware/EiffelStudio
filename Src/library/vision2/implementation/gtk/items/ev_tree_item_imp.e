@@ -42,7 +42,6 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 			set_c_object (C.gtk_tree_item_new)
 			list_widget := C.gtk_tree_new
-			C.gtk_widget_ref (list_widget)
 		end
 
 	initialize is
@@ -119,15 +118,17 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
+	subtree_set: BOOLEAN
+
 	add_to_container (v: like item) is
 			-- Add `v' to tree items tree.
 		local
 			item_imp: EV_TREE_ITEM_IMP
 		do
-			if count = 0 then	
+			if not subtree_set then
 				C.gtk_tree_item_set_subtree (c_object, list_widget)
+				subtree_set := True
 			end
-
 			item_imp ?= v.implementation
 			item_imp.set_tree_widget_imp (tree_widget_imp)
 			C.gtk_widget_show (item_imp.c_object)
@@ -168,7 +169,11 @@ feature {NONE} -- Implementation
 			check dont_call: False end
 		end
 
+
+feature {EV_TREE_IMP} -- Implementation
+
 	list_widget: POINTER
+		-- Pointer to the items own gtktree.
 
 feature {EV_ANY_I} -- Implementation
 
@@ -205,6 +210,9 @@ end -- class EV_TREE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.32  2000/02/22 23:57:11  king
+--| Added subtree_set boolean
+--|
 --| Revision 1.31  2000/02/22 21:36:42  king
 --| Initial implementation to fit with new structure
 --|

@@ -11,7 +11,7 @@ deferred class
 
 inherit
 
-	EV_CHECK_BUTTON_I
+	EV_SELECT_BUTTON_I
 		redefine
 			interface
 		end
@@ -43,6 +43,12 @@ end -- class EV_RADIO_BUTTON_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/02/24 18:11:44  oconnor
+--| New inheritance structure for buttons with state.
+--| New class EV_SELECT_BUTTON provides `is_selected' and `enable_select'.
+--| RADIO_BUTTON inherits this, as does TOGGLE_BUTTON which adds
+--| `disable_select' and `toggle'.
+--|
 --| Revision 1.6  2000/02/22 18:39:44  oconnor
 --| updated copyright date and formatting
 --|

@@ -13,6 +13,11 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_VARIABLE_NAME_MAPPER
+		export
+			{NONE} all
+		end
+
 feature -- Basic operations
 
 	create_descriptor (a_documentation: ECOM_DOCUMENTATION; 
@@ -22,10 +27,7 @@ feature -- Basic operations
 			valid_documentaion: a_documentation /= Void and then
 				a_documentation.name /= Void
 		do
-			name := a_documentation.name
-			if eiffel_key_words.has (name) then
-				name.append (One)
-			end
+			name := name_for_feature_with_keyword_check (a_documentation.name)
 			value := a_value
 			description := a_documentation.doc_string
 

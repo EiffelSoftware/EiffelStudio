@@ -91,12 +91,7 @@ feature -- Basic operations
 			elseif is_propertyputref (invoke_kind) then
 				name.prepend ("set_ref_")
 			end
-			tmp_string := clone (name)
-			tmp_string.to_lower
-			if eiffel_key_words.has (tmp_string) and not shared_wizard_environment.new_eiffel_project then
-				name.append (One)
-			end
-			eiffel_name := name_for_feature (name)
+			eiffel_name := name_for_feature_with_keyword_check (name)
 			if is_forbidden_c_word (name) then
 				name.prepend ("a_")
 			end
@@ -140,7 +135,7 @@ feature -- Basic operations
 					arg_name.append ("arg_")
 					arg_name.append_integer (i - 1)
 				end
-				arg_name := name_for_feature (arg_name)
+				arg_name := name_for_feature_with_keyword_check (arg_name)
 				a_param_descriptor := parameter_descriptor_factory.create_descriptor (arg_name, a_type_info,
 						parameters.item (i - 1), system_descriptor)
 				Result.force (a_param_descriptor)

@@ -53,11 +53,11 @@ feature -- Generation
 			re: ROUT_ENTRY
 			ae: ATTR_ENTRY
 			entry_item: ENTRY
-			uint16, int16, gen_type, separator, null_init: STRING
+			body_index_type, int16, gen_type, separator, null_init: STRING
 			invalid_entry: STRING
 		do
 			from
-				uint16 := "%N%T{(uint16) "
+				body_index_type := "%N%T{(BODY_INDEX) "
 				int16 := ", (int16) "
 				gen_type := ", gen_type"
 				separator := "}, "
@@ -75,7 +75,7 @@ feature -- Generation
 							-- Write the body index of the routine (index
 							-- into the run-time dispatch table) and the type
 							-- of the feature.
-						buffer.putstring (uint16)
+						buffer.putstring (body_index_type)
 						buffer.putint (re.real_body_index - 1)
 						buffer.putstring (int16)
 						buffer.putint (re.static_feature_type_id - 1)
@@ -88,7 +88,7 @@ feature -- Generation
 							-- Write the offset of the attribute in the 
 							-- run-time structure (object) and the type of
 							-- the feature.
-						buffer.putstring (uint16)
+						buffer.putstring (body_index_type)
 						buffer.putint (ae.workbench_offset)
 						buffer.putstring (int16)
 						buffer.putint (ae.static_feature_type_id - 1)
@@ -108,7 +108,7 @@ feature -- Generation
 				else
 						-- The entry corresponds to a routine that
 						-- is not polymorphic.
-					buffer.putstring (uint16)
+					buffer.putstring (body_index_type)
 					buffer.putint (Invalid_index)
 					buffer.putstring (invalid_entry)
 				end
@@ -139,7 +139,7 @@ feature -- Generation
 		do
 			from
 					-- Initialize all the constant string used during this generation
-				info := "].info = (uint16) ("
+				info := "].info = (BODY_INDEX) ("
 				desc1 := "%Tdesc" + id_string + "["
 				desc2 := ");%N%Tdesc" + id_string + "["
 				type := "].type = (int16) ("
@@ -295,7 +295,7 @@ feature -- Melting
 							-- Write the body index of the routine (index
 							-- into the run-time dispatch table) and the type
 							-- of the feature.
-						ba.append_short_integer (re.real_body_index- 1)
+						ba.append_uint32_integer (re.real_body_index- 1)
 						ba.append_short_integer (re.static_feature_type_id -1)
 					else
 						ae ?= entry_item
@@ -306,7 +306,7 @@ feature -- Melting
 							-- Write the offset of the attribute in the 
 							-- run-time structure (object) and the type of
 							-- the feature.
-						ba.append_short_integer (ae.workbench_offset)
+						ba.append_uint32_integer (ae.workbench_offset)
 						ba.append_short_integer (ae.static_feature_type_id - 1)
 					end
 
@@ -319,7 +319,7 @@ feature -- Melting
 				else
 						-- The entry corresponds to a routine that
 						-- is not polymorphic.
-					ba.append_short_integer (-1)
+					ba.append_uint32_integer (-1)
 					ba.append_short_integer (-1)
 					ba.append_short_integer (-1)
 				end

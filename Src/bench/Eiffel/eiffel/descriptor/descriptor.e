@@ -117,11 +117,11 @@ feature -- Generation
 			buffer.putstring ("[] = {%N");
 
 			if (invariant_entry = Void) then
-				buffer.putstring ("%T{(uint16) ");
+				buffer.putstring ("%T{(BODY_INDEX) ");
 				buffer.putint (Invalid_index);
 				buffer.putstring (", (int16) -1, (int16 *) 0},%N")
 			else
-				buffer.putstring ("%T{(uint16) ");
+				buffer.putstring ("%T{(BODY_INDEX) ");
 				buffer.putint (invariant_entry.real_body_index - 1);
 				buffer.putstring (", (int16) -1, (int16 *) 0},%N")
 			end;
@@ -179,7 +179,7 @@ feature -- Generation
 
 			if (invariant_entry = Void) then
 				buffer.putstring (entry_name)
-				buffer.putstring ("[0].info = (uint16) ")
+				buffer.putstring ("[0].info = (BODY_INDEX) ")
 				buffer.putint (Invalid_index)
 				buffer.putstring (";%N%T")
 				buffer.putstring (entry_name)
@@ -188,7 +188,7 @@ feature -- Generation
 				buffer.putstring ("[0].gen_type = (int16 *) 0;%N")
 			else
 				buffer.putstring (entry_name)
-				buffer.putstring ("[0].info = (uint16) (")
+				buffer.putstring ("[0].info = (BODY_INDEX) (")
 				buffer.generate_real_body_index (invariant_entry.real_body_index)
 				buffer.putstring (");%N%T")
 				buffer.putstring (entry_name)
@@ -301,9 +301,9 @@ feature -- Melting
 			ba.append_short_integer (1);
 				-- body index
 			if (invariant_entry = Void) then
-				ba.append_short_integer (-1)
+				ba.append_uint32_integer (-1)
 			else
-				ba.append_short_integer	(invariant_entry.real_body_index - 1)
+				ba.append_uint32_integer (invariant_entry.real_body_index - 1)
 			end;
 
 			-- No type

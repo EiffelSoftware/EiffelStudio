@@ -41,8 +41,8 @@ feature -- Counters
 			Result := System.execution_table.counter
 		end
 
-	Invalid_index: INTEGER is 65535
+	Invalid_index: INTEGER is 0xFFFFFFFF
 			-- Invalid real body index used to mark
-			-- empty invariants (max uint16)
+			-- empty invariants (max BODY_INDEX)
 
 end -- class SHARED_COUNTER

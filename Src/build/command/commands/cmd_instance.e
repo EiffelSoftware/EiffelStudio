@@ -145,14 +145,14 @@ feature {CMD_CUT_ARGUMENT}
 		do
 			if i = 1 and then arguments.empty then
 				arguments.extend (arg)
-				if inst_editor /= Void then
-					inst_editor.add_argument (arg)
+				if command_tool /= Void then
+					command_tool.add_argument (arg)
 				end
 			else
 				arguments.go_i_th (i - 1)
 				arguments.put_right (arg)
-				if inst_editor /= Void then
-					inst_editor.add_argument_at (arg, i)
+				if command_tool /= Void then
+					command_tool.add_argument_at (arg, i)
 				end
 			end
 		ensure
@@ -175,8 +175,8 @@ feature {CMD_ADD_ARGUMENT, CMD_CUT_ARGUMENT, CMD_UPDATE_PARENT}
 			al := associated_command.arguments
 			!! a.session_init (al.last)
 			arguments.extend (a)
-			if inst_editor /= Void then
-				inst_editor.add_argument (a)
+			if command_tool /= Void then
+				command_tool.add_argument (a)
 			end
 		ensure
 			valid_count: associated_command.arguments.count 
@@ -193,8 +193,8 @@ feature {CMD_ADD_ARGUMENT, CMD_CUT_ARGUMENT, CMD_UPDATE_PARENT}
 		do
 			arguments.go_i_th (i)
 			arguments.remove
-			if inst_editor /= Void then
-				inst_editor.remove_argument_icon (i)
+			if command_tool /= Void then
+				command_tool.remove_argument_icon (i)
 			end
 		ensure
 			valid_count: associated_command.arguments.count 
@@ -210,9 +210,16 @@ feature -- Editable
 			if not edited then
 				ed := window_mgr.command_tool
 				ed.set_instance (Current)
+				command_tool := ed
+				window_mgr.display (ed)
+			else
+				ed ?= command_tool
+				if ed = Void then
+					main_panel.raise
+				else
+					window_mgr.display (ed)
+				end
 			end
---			window_mgr.display (inst_editor)
-			inst_editor.raise
 		end
 
 	help_file_name: STRING is
@@ -222,17 +229,17 @@ feature -- Editable
 
 feature -- Editing
 
-	inst_editor, command_tool: COMMAND_TOOL
+	command_tool: COMMAND_TOOL
 		-- Command instance editor in which `Current' is being edited.
 
 	reset is
 		do
-			inst_editor := Void
+			command_tool := Void
 		end
 
 	set_editor (ed: COMMAND_TOOL) is
 		do
-			inst_editor := ed
+			command_tool := ed
 			from
 				observers.start
 			until
@@ -245,7 +252,7 @@ feature -- Editing
 
 	edited: BOOLEAN is False
 --		do
---			Result := (inst_editor /= Void)
+--			Result := (command_tool /= Void)
 --		end
 
 	save_arguments is
@@ -412,8 +419,8 @@ feature -- Observers
 				instance.add_observer (observer_inst)
 				instantiated_observers.extend (observer_inst)
 			end
-			if inst_editor /= Void and then inst_editor.realized then
-				inst_editor.add_observer (inst)
+			if command_tool /= Void and then command_tool.realized then
+				command_tool.add_observer (inst)
 			end
 		end
 
@@ -449,8 +456,8 @@ feature -- Observers
 				end
 				observers.remove
 			end
-			if inst_editor /= Void and then inst_editor.realized then
-				inst_editor.remove_observer (inst)
+			if command_tool /= Void and then command_tool.realized then
+				command_tool.remove_observer (inst)
 			end
 		ensure
 			observer_count_decreased: found implies (old (instance.observer_count) = instance.observer_count + 1)

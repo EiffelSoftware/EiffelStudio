@@ -76,11 +76,13 @@ end;
 			-- Generate cecil table
 		local
 			types: TYPE_LIST;
+			buffer: GENERATION_BUFFER
 		do
+			buffer := generation_buffer
 			prepare_table (a_class.feature_table);
 
 				-- Generation
-			Cecil1.generate_name_table (Cecil_file, a_class.id);
+			Cecil1.generate_name_table (buffer, a_class.id);
 			if byte_context.final_mode then
 				from
 					types := a_class.types;
@@ -88,16 +90,16 @@ end;
 				until
 					types.after
 				loop
-					Cecil1.generate_final (Cecil_file, types.item.type_id);
+					Cecil1.generate_final (buffer, types.item.type_id);
 					if System.has_separate then
-						Cecil1.generate_separate_pattern_id_table (Cecil_file, types.item.type_id);
+						Cecil1.generate_separate_pattern_id_table (buffer, types.item.type_id);
 					end;
 					types.forth
 				end;
 			elseif a_class.is_precompiled then
-				Cecil1.generate_precomp_workbench (Cecil_file, a_class.id);
+				Cecil1.generate_precomp_workbench (buffer, a_class.id);
 			else
-				Cecil1.generate_workbench (Cecil_file, a_class.id);
+				Cecil1.generate_workbench (buffer, a_class.id);
 			end;
 		end;
 

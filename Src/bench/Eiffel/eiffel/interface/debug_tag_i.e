@@ -66,39 +66,38 @@ feature
 			l.go_to (old_cursor);
 		end;
 
-	generate (file: INDENT_FILE; id: CLASS_ID) is
-			-- Generate assertion value in `file'.
+	generate (buffer: GENERATION_BUFFER; id: CLASS_ID) is
+			-- Generate assertion value in `buffer'.
 		do
-			file.putstring ("{OPT_ALL, (int16) ");
-			file.putint (tags.count);
-			file.putstring (", keys");
-			file.putint (id.id);
-			file.putstring ("}");
+			buffer.putstring ("{OPT_ALL, (int16) ");
+			buffer.putint (tags.count);
+			buffer.putstring (", keys");
+			buffer.putint (id.id);
+			buffer.putstring ("}");
 		end;
 
-	generate_keys (file: INDENT_FILE; id: CLASS_ID) is
+	generate_keys (buffer: GENERATION_BUFFER; id: CLASS_ID) is
 			-- Generate keys C array
 		require
-			good_argument: file /= Void;
-			is_open: file.is_open_write;
+			good_argument: buffer /= Void;
 		local
 			l: SORTED_TWO_WAY_LIST [STRING];
 		do
-			file.putstring ("static char *keys");
-			file.putint (id.id);
-			file.putstring ("[] = {");
+			buffer.putstring ("static char *keys");
+			buffer.putint (id.id);
+			buffer.putstring ("[] = {");
 			from
 				l := tags;
 				l.start
 			until
 				l.after
 			loop
-				file.putchar ('"');
-				file.putstring (l.item);
-				file.putstring ("%", ");
+				buffer.putchar ('"');
+				buffer.putstring (l.item);
+				buffer.putstring ("%", ");
 				l.forth;		
 			end;
-			file.putstring ("};%N%N");
+			buffer.putstring ("};%N%N");
 		end;
 
 	make_byte_code (ba: BYTE_ARRAY) is

@@ -36,6 +36,8 @@ inherit
 
 	COMPILER_EXPORTER
 
+	SHARED_GENERATION
+
 creation
 
 	make
@@ -1369,15 +1371,20 @@ feature -- Workbench feature and descriptor table generation
 		local
 			table_file_name: STRING
 			file: INDENT_FILE
+			buffer: GENERATION_BUFFER
 		do
+				-- Clear buffer for Current generation
+			buffer := generation_buffer
+			buffer.clear_all
+			buffer.putstring ("#include %"eif_macros.h%"%N#include %"eif_struct.h%"%N%N")
+			feature_table.generate (buffer)
+
 			table_file_name := full_file_name
 			table_file_name.append_integer (id.id)
 			table_file_name.append_character (feature_table_file_suffix)
 			table_file_name.append (Dot_c)
-			!!file.make (table_file_name)
-			file.open_write
-			file.putstring ("#include %"eif_macros.h%"%N#include %"eif_struct.h%"%N%N")
-			feature_table.generate (file)
+			!! file.make_open_write (table_file_name)
+			file.put_string (buffer)
 			file.close
 		end
 
@@ -1389,14 +1396,24 @@ feature -- Workbench feature and descriptor table generation
 		local
 			table_file_name: STRING
 			file: INDENT_FILE
+			buffer: GENERATION_BUFFER
+			feat_tbl: FEATURE_TABLE
 		do
+			feat_tbl := feature_table
+
 				-- Generation of workbench mode descriptor tables
 				-- of associated class types.
 				--|Note: when precompiling a system a class might
 				--|have no generic derivations
 			if has_types then
-				feature_table.origin_table.generate (Current)
+				feat_tbl.origin_table.generate (Current)
 			end
+
+				-- Clear buffer for Current generation
+			buffer := generation_buffer
+			buffer.clear_all
+			buffer.putstring ("#include %"eif_macros.h%"%N#include %"eif_struct.h%"%N%N")
+			feat_tbl.generate (buffer)
 
 				-- Generation of workbench mode feature table for
 				-- the current class
@@ -1404,10 +1421,8 @@ feature -- Workbench feature and descriptor table generation
 			table_file_name.append_integer (id.id)
 			table_file_name.append_character (feature_table_file_suffix)
 			table_file_name.append (Dot_c)
-			!!file.make (table_file_name)
-			file.open_write
-			file.putstring ("#include %"eif_macros.h%"%N#include %"eif_struct.h%"%N%N")
-			feature_table.generate (file)
+			!! file.make_open_write (table_file_name)
+			file.put_string (buffer)
 			file.close
 
 				-- Generation of C files for each type associated to the current
@@ -2797,7 +2812,7 @@ end
 debug ("GENERICITY")
 	io.error.putstring ("Update_types%N")
 	io.error.putstring (name)
-	data.dump (io.error)
+	data.trace
 end
 				if not types.has_type (data) then
 					-- Found a new type for the class
@@ -2845,7 +2860,7 @@ end
 					filter := filters.item.instantiation_in (data)
 debug ("GENERICITY")
 	io.error.putstring ("Propagation of ")
-	filter.dump (io.error)
+	filter.trace
 	io.error.putstring ("propagation to ")
 	io.error.putstring (filter.base_class.name)
 	io.error.new_line
@@ -3052,16 +3067,15 @@ feature -- Cecil
 			-- Generate Cecil type value for a non generic class
 		require
 			no_generics: generics = Void
-			System.Cecil_file.is_open_write
 		local
-			cecil_file: INDENT_FILE
+			buffer: GENERATION_BUFFER
 		do
-			cecil_file := System.cecil_file
+			buffer := generation_buffer
 			if is_expanded then
-				Cecil_file.putstring ("SK_EXP + ")
+				buffer.putstring ("SK_EXP + ")
 			end
-			Cecil_file.putstring ("(uint32) ")
-			Cecil_file.putint (types.first.type_id - 1)
+			buffer.putstring ("(uint32) ")
+			buffer.putint (types.first.type_id - 1)
 		end
 
 	cecil_value: INTEGER is

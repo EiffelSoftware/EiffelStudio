@@ -91,7 +91,7 @@ feature
 	is_special: BOOLEAN is True
 			-- Is the class special ?
 	
-	generate_dynamic_types (plug_file: INDENT_FILE) is
+	generate_dynamic_types (buffer: GENERATION_BUFFER) is
 			-- Generate dynamic types of type classes available in the system
 		local
 			class_type: CLASS_TYPE
@@ -131,19 +131,19 @@ feature
 				end
 				types.forth
 			end
-			Plug_file.putstring ("%N%Tegc_sp_char = ")
-			Plug_file.putint (char_dtype)
-			Plug_file.putstring (";%N%Tegc_sp_bool = ")
-			Plug_file.putint (boolean_dtype)
-			Plug_file.putstring (";%N%Tegc_sp_int = ")
-			Plug_file.putint (long_dtype)
-			Plug_file.putstring (";%N%Tegc_sp_real = ")
-			Plug_file.putint (float_dtype)
-			Plug_file.putstring (";%N%Tegc_sp_double = ")
-			Plug_file.putint (double_dtype)
-			Plug_file.putstring (";%N%Tegc_sp_pointer = ")
-			Plug_file.putint (pointer_dtype)
-			Plug_file.putstring (";%N")
+			buffer.putstring ("%N%Tegc_sp_char = ")
+			buffer.putint (char_dtype)
+			buffer.putstring (";%N%Tegc_sp_bool = ")
+			buffer.putint (boolean_dtype)
+			buffer.putstring (";%N%Tegc_sp_int = ")
+			buffer.putint (long_dtype)
+			buffer.putstring (";%N%Tegc_sp_real = ")
+			buffer.putint (float_dtype)
+			buffer.putstring (";%N%Tegc_sp_double = ")
+			buffer.putint (double_dtype)
+			buffer.putstring (";%N%Tegc_sp_pointer = ")
+			buffer.putint (pointer_dtype)
+			buffer.putstring (";%N")
 		end
 
 end

@@ -22,6 +22,7 @@ inherit
 	SHARED_TABLE
 	SHARED_CODE_FILES
 	SHARED_GENERATOR
+	SHARED_GENERATION
 
 	SHARED_ERROR_HANDLER
 		export
@@ -252,10 +253,6 @@ feature -- Properties
 
 	makefile_generator: MAKEFILE_GENERATOR
 			-- Makefile generator.
-
-	cecil_file: INDENT_FILE
-
-	skeleton_file: INDENT_FILE
 
 	array_make_name: STRING
 			-- Name of the C routine corresponding to the
@@ -1433,7 +1430,7 @@ end
 						has_argument := 1
 					end
 					rout_id := root_feat.rout_id_set.first
-					rout_info := System.rout_info_table.item (rout_id)
+					rout_info := rout_info_table.item (rout_id)
 					rcorigin := rout_info.origin.id
 					rcoffset := rout_info.offset
 				else
@@ -2586,8 +2583,8 @@ end
 			rout_id: ROUTINE_ID
 			table: POLY_TABLE [ENTRY]
 		do
-			Attr_generator.init
-			Rout_generator.init
+			Attr_generator.init (generation_buffer)
+			Rout_generator.init (header_generation_buffer)
 
 			from
 				Tmp_poly_server.start
@@ -2615,14 +2612,17 @@ end
 		local
 			i, nb: INTEGER
 			class_type: CLASS_TYPE
-			file: INDENT_FILE
+			size_file: INDENT_FILE
+			buffer: GENERATION_BUFFER
 		do
 			from
-				file := Size_file (byte_context.final_mode)
+					-- Clear buffer for current generation
+				buffer := generation_buffer
+				buffer.clear_all
+
 				i := 1
 				nb := type_id_counter.value
-				file.open_write
-				file.putstring ("#include %"eif_macros.h%"%N%N%
+				buffer.putstring ("#include %"eif_macros.h%"%N%N%
 								%long egc_fsize_init[] = {%N")
 			until
 				i > nb
@@ -2630,18 +2630,21 @@ end
 				class_type := class_types.item (i)
 
 				if class_type /= Void then
-					class_type.skeleton.generate_size (file)
+					class_type.skeleton.generate_size (buffer)
 				else
 					-- FIXME
 					-- Process_dynamic_types has been TEMPORARILY removed
-					file.putstring ("0")
+					buffer.putstring ("0")
 				end
 
-				file.putstring (",%N")
+				buffer.putstring (",%N")
 				i := i + 1
 			end
-			file.putstring ("};%N")
-			file.close
+			buffer.putstring ("};%N")
+
+			!! size_file.make_open_write (x_gen_file_name (byte_context.final_mode, Esize))
+			size_file.put_string (buffer)
+			size_file.close
 		end
 
 	generate_reference_table is
@@ -2650,12 +2653,17 @@ end
 			i, nb, nb_ref, nb_exp: INTEGER
 			class_type: CLASS_TYPE
 			skeleton: SKELETON
+			reference_file: INDENT_FILE
+			buffer: GENERATION_BUFFER
 		do
 			from
+					-- Clear buffer for current generation
+				buffer := generation_buffer
+				buffer.clear_all
+
 				i := 1
 				nb := type_id_counter.value
-				Reference_file.open_write
-				Reference_file.putstring ("long egc_fnbref_init[] = {%N")
+				buffer.putstring ("%Nlong egc_fnbref_init[] = {%N")
 			until
 				i > nb
 			loop
@@ -2665,37 +2673,43 @@ end
 					skeleton := class_type.skeleton
 					nb_ref := skeleton.nb_reference
 					nb_exp := skeleton.nb_expanded
-					Reference_file.putint (nb_ref + nb_exp)
+					buffer.putint (nb_ref + nb_exp)
 				else
 					-- FIXME process_dynamic_types TEMPORARILY removed
-					Reference_file.putint (0)
+					buffer.putint (0)
 				end
 
-				Reference_file.putstring (",%N")
+				buffer.putstring (",%N")
 				i := i + 1
 			end
 			if has_separate then
-				Reference_file.putint (0)
+				buffer.putint (0)
 			end
-			Reference_file.putstring ("%N};%N")
-			Reference_file.close
+			buffer.putstring ("%N};%N")
+
+			!! reference_file.make_open_write (final_file_name (Eref, Dot_c));
+			reference_file.put_string (buffer)
+			reference_file.close
 		end
 
 	generate_parent_tables is
 			-- Generates parent tables.
 		local
-			i, nb, cid   : INTEGER;
-			cl_type      : CLASS_TYPE;
-			parents_file : INDENT_FILE;
-			final_mode   : BOOLEAN;
-			max_id       : INTEGER;
-			used_ids     : ARRAY [BOOLEAN]
+			i, nb, cid: INTEGER;
+			cl_type: CLASS_TYPE;
+			parents_file: INDENT_FILE;
+			final_mode: BOOLEAN;
+			max_id: INTEGER;
+			used_ids: ARRAY [BOOLEAN]
+			buffer: GENERATION_BUFFER
 		do
+				-- Clear buffer for current generation
+			buffer := generation_buffer
+			buffer.clear_all
+
 			final_mode := byte_context.final_mode;
 
-			parents_file := parent_f (final_mode);
-			parents_file.open_write;
-			parents_file.putstring ("#include %"eif_struct.h%"%N%N");
+			buffer.putstring ("#include %"eif_struct.h%"%N%N");
 
 			max_id := 0;
 
@@ -2707,7 +2721,7 @@ end
 			loop
 				cl_type := class_types.item (i);
 				if cl_type /= Void then
-					cl_type.generate_parent_table (parents_file, final_mode);
+					cl_type.generate_parent_table (buffer, final_mode);
 					cid := cl_type.type.generated_id (final_mode);
 
 					if cid > max_id then
@@ -2735,10 +2749,10 @@ end
 				i := i + 1;
 			end;
 
-			parents_file.putstring ("int    egc_partab_size_init = ")
-			parents_file.putint (max_id);
-			parents_file.putstring (";%N");
-			parents_file.putstring ("struct eif_par_types *egc_partab_init[] = {%N");
+			buffer.putstring ("int    egc_partab_size_init = ")
+			buffer.putint (max_id);
+			buffer.putstring (";%N");
+			buffer.putstring ("struct eif_par_types *egc_partab_init[] = {%N");
 
 			from
 				i := 0
@@ -2746,17 +2760,19 @@ end
 				i > max_id
 			loop
 				if used_ids.item (i) then
-					parents_file.putstring ("&par");
-					parents_file.putint (i);
+					buffer.putstring ("&par");
+					buffer.putint (i);
 				else
-					parents_file.putstring ("(struct eif_par_types *)0");
+					buffer.putstring ("(struct eif_par_types *)0");
 				end;
-				parents_file.putstring (",%N");
+				buffer.putstring (",%N");
 				i := i + 1;
 			end;
-			parents_file.putstring ("(struct eif_par_types *)0};%N");
+			buffer.putstring ("(struct eif_par_types *)0};%N");
+
+			!! parents_file.make_open_write (gen_file_name (final_mode, Eparents));
+			parents_file.put_string (buffer)
 			parents_file.close;
-			parents_file := Void;
 		end;
 
 	generate_skeletons is
@@ -2773,10 +2789,16 @@ end
 				-- as `class_types'
 			cltype_array: ARRAY [CLASS_TYPE]
 			local_classes: CLASS_C_SERVER
-			header_file: INDENT_FILE
+			skeleton_file, header_file: INDENT_FILE
+			buffer, header_buffer: GENERATION_BUFFER
 		do
 			nb := Type_id_counter.value
 			final_mode := byte_context.final_mode
+
+			buffer := generation_buffer
+			buffer.clear_all
+			header_buffer := header_generation_buffer
+			header_buffer.clear_all
 
 			if final_mode then
 				from
@@ -2791,29 +2813,28 @@ end
 					i := i + 1
 				end
 
-				!! header_file.make_open_write (final_file_name (Eskelet, Dot_h))
-				Extern_declarations.generate_header (header_file)
-				Extern_declarations.generate (header_file)
-				header_file.close
+				Extern_declarations.generate_header (header_buffer)
+				Extern_declarations.generate (header_buffer)
 				Extern_declarations.wipe_out
+
+				!! header_file.make_open_write (final_file_name (Eskelet, Dot_h))
+				header_file.put_string (header_buffer)
+				header_file.close
 			end
 
-				-- Open skeleton file
-			Skeleton_file := Skeleton_f (final_mode)
-			Skeleton_file.open_write
 
-			Skeleton_file.putstring ("#include %"eif_project.h%"%N%
+			buffer.putstring ("#include %"eif_project.h%"%N%
 									 %#include %"eif_struct.h%"%N")
 
 			if final_mode then
-				Skeleton_file.putstring ("#include %"")
-				Skeleton_file.putstring (Eskelet)
-				Skeleton_file.putstring (Dot_h)
-				Skeleton_file.putstring ("%"%N%N")
+				buffer.putstring ("#include %"")
+				buffer.putstring (Eskelet)
+				buffer.putstring (Dot_h)
+				buffer.putstring ("%"%N%N")
 			else
 					-- Hash table extern declaration in workbench mode
-				Skeleton_file.putstring ("#include %"eif_macros.h%"%N")
-				Skeleton_file.new_line
+				buffer.putstring ("#include %"eif_macros.h%"%N")
+				buffer.new_line
 				from
 					local_classes := classes
 					local_classes.start
@@ -2830,17 +2851,17 @@ end
 								not Compilation_modes.is_precompiling and
 								not a_class.is_precompiled
 							then
-								Skeleton_file.putstring ("extern int32 ra")
-								Skeleton_file.putint (j)
-								Skeleton_file.putstring ("[];%N")
+								buffer.putstring ("extern int32 ra")
+								buffer.putint (j)
+								buffer.putstring ("[];%N")
 							end
 							if a_class.has_visible then
-								Skeleton_file.putstring ("extern char *cl")
-								Skeleton_file.putint (j)
-								Skeleton_file.putstring ("[];%N")
-								Skeleton_file.putstring ("extern uint32 cr")
-								Skeleton_file.putint (j)
-								Skeleton_file.putstring ("[];%N")
+								buffer.putstring ("extern char *cl")
+								buffer.putint (j)
+								buffer.putstring ("[];%N")
+								buffer.putstring ("extern uint32 cr")
+								buffer.putint (j)
+								buffer.putstring ("[];%N")
 							end
 							if not a_class.skeleton.empty then
 								from
@@ -2849,9 +2870,9 @@ end
 								until
 									types.off
 								loop
-									Skeleton_file.putstring ("extern uint32 types")
-									Skeleton_file.putint (types.item.type_id)
-									Skeleton_file.putstring ("[];%N")
+									buffer.putstring ("extern uint32 types")
+									buffer.putint (types.item.type_id)
+									buffer.putstring ("[];%N")
 									types.forth
 								end
 							end
@@ -2860,7 +2881,7 @@ end
 					end
 					local_classes.forth
 				end
-				Skeleton_file.new_line
+				buffer.new_line
 
 				!!cltype_array.make (1, static_type_id_counter.total_count)
 			end
@@ -2874,7 +2895,7 @@ end
 				cl_type := class_types.item (i)
 					-- Classes could be removed
 if cl_type /= Void then
-				cl_type.generate_skeleton1 (skeleton_file)
+				cl_type.generate_skeleton1 (buffer)
 				if not final_mode then
 						-- Doesn't use `cl_type' as first argument:
 						-- LINKED_LIST [INTEGER] introduced in two precompiled projects
@@ -2891,7 +2912,7 @@ end
 				i := i + 1
 			end
 
-			Skeleton_file.putstring ("struct cnode egc_fsystem_init[] = {%N")
+			buffer.putstring ("struct cnode egc_fsystem_init[] = {%N")
 			from
 				i := 1
 			until
@@ -2899,36 +2920,36 @@ end
 			loop
 				cl_type := class_types.item (i)
 if cl_type /= Void then
-				cl_type.generate_skeleton2 (skeleton_file)
+				cl_type.generate_skeleton2 (buffer)
 else
 		-- FIXME
 	if final_mode then
-		Skeleton_file.putstring ("{ 0, %"INVALID_TYPE%", (char**)0, 0,0,0,0}")
+		buffer.putstring ("{ 0, %"INVALID_TYPE%", (char**)0, 0,0,0,0}")
 	else
-		Skeleton_file.putstring 
+		buffer.putstring 
 			("{%N0L,%N%"INVALID_TYPE%",%N(char**) 0,%N(int*) 0,%N%
 			%(uint32*) 0,%N(int32*) 0,%N0L,%N0L,%N'\0',%N'\0',%N%
 			%(int32) 0,(int32) 0,'\0',%N(int32*) 0,%N%
 			%{(int32) 0, (int) 0, (char**) 0, (char*) 0}}")
 	end
 end
-				Skeleton_file.putstring (",%N")
+				buffer.putstring (",%N")
 				i := i + 1
 			end
 			if has_separate then
 				if not final_mode then
-					Skeleton_file.putstring 
+					buffer.putstring 
 						("{%N0L,%N%"SEP_OBJ%",%N(char**) 0,%N(int*) 0,%N%
 						%(uint32*) 0,%N(int32*) 0,%N0L,%N0L,%N'\0',%N'\0',%N%
 						%(int32) 0,(int32) 0, %N1,%N(int32*) 0,%N%
 						%{(int32) 0, (int) 0, (char**) 0, (char*) 0}}%N")
 				end
 			end
-			Skeleton_file.putstring ("};%N%N")
+			buffer.putstring ("};%N%N")
 
 			if not final_mode then
 					-- Generate the array of routine id arrays
-				Skeleton_file.putstring ("int32 *egc_fcall_init[] = {%N")
+				buffer.putstring ("int32 *egc_fcall_init[] = {%N")
 				from
 					i := 1
 					nb := cltype_array.upper
@@ -2941,38 +2962,40 @@ end
 						cl_type /= Void and then
 						not cl_type.associated_class.is_precompiled
 					then
-						Skeleton_file.putstring ("ra")
-						Skeleton_file.putint (cl_type.associated_class.id.id)
+						buffer.putstring ("ra")
+						buffer.putint (cl_type.associated_class.id.id)
 					else
-						Skeleton_file.putstring ("(int32 *) 0")
+						buffer.putstring ("(int32 *) 0")
 					end
-					Skeleton_file.putstring (",%N")
+					buffer.putstring (",%N")
 					i := i + 1
 				end
-				Skeleton_file.putstring ("};%N%N")
+				buffer.putstring ("};%N%N")
 					-- Generate the correspondances stable between original
 					-- dynamic types and new dynamic types
-				Skeleton_file.putstring ("int16 egc_fdtypes_init[] = {%N")
+				buffer.putstring ("int16 egc_fdtypes_init[] = {%N")
 				from
 					i := 1
 				until
 					i > nb
 				loop
 					cl_type := cltype_array.item (i)
-					Skeleton_file.putstring ("(int16) ")
+					buffer.putstring ("(int16) ")
 					if cl_type /= Void then
-						Skeleton_file.putint (cl_type.type_id - 1)
+						buffer.putint (cl_type.type_id - 1)
 					else
-						Skeleton_file.putint (0)
+						buffer.putint (0)
 					end
-					Skeleton_file.putstring (",%N")
+					buffer.putstring (",%N")
 					i := i + 1
 				end
-				Skeleton_file.putstring ("};%N")
+				buffer.putstring ("};%N")
 			end
-				-- Close skeleton file
-			Skeleton_file.close
-			Skeleton_file := Void
+
+				-- Generate skeleton
+			!! skeleton_file.make_open_write (gen_file_name (final_mode, Eskelet));
+			skeleton_file.put_string (buffer)
+			skeleton_file.close
 		end
 
 	generate_cecil is
@@ -2988,18 +3011,23 @@ end
 			f_name: FILE_NAME
 			dir_name: DIRECTORY_NAME
 			local_classes: CLASS_C_SERVER
-			header_file: INDENT_FILE
+			cecil_file, header_file: INDENT_FILE
+			buffer, header_buffer: GENERATION_BUFFER
 		do
+				-- Clear buffers for current generation
+			buffer := generation_buffer
+			buffer.clear_all
+			header_buffer := header_generation_buffer
+			header_buffer.clear_all
+
 			final_mode := byte_context.final_mode
 
-			Cecil_file := cecil_f (final_mode)
-			Cecil_file.open_write
-			Cecil_file.putstring ("#include %"eif_project.h%"%N")
-			Cecil_file.putstring ("#include %"eif_cecil.h%"%N")
+			buffer.putstring ("#include %"eif_project.h%"%N")
+			buffer.putstring ("#include %"eif_cecil.h%"%N")
 			if final_mode then
-				Cecil_file.putstring ("#include %"ececil.h%"%N")
+				buffer.putstring ("#include %"ececil.h%"%N")
 			end
-			Cecil_file.putstring ("#include %"eif_struct.h%"%N%N")
+			buffer.putstring ("#include %"eif_struct.h%"%N%N")
 
 			from
 				local_classes := classes
@@ -3023,6 +3051,11 @@ end
 
 			if final_mode then
 					-- Extern declarations for previous file
+				Extern_declarations.generate_header (header_buffer)
+				Extern_declarations.generate (header_buffer)
+				Extern_declarations.wipe_out
+
+					-- Generation in file (we need to create the subdirectory
 				temp := clone (System_object_prefix)
 				temp.append_integer (1)
 				!!dir_name.make_from_string (Final_generation_path)
@@ -3034,47 +3067,48 @@ end
 				!!f_name.make_from_string (dir_name)
 				f_name.set_file_name ("ececil.h")
 				!! header_file.make_open_write (f_name)
-				Extern_declarations.generate_header (header_file)
-				Extern_declarations.generate (header_file)
+				header_file.put_string (header_buffer)
 				header_file.close
-				Extern_declarations.wipe_out
-				Cecil_file.putstring ("%Nstruct ctable egc_ce_rname_init[] = {%N")
+
+				buffer.putstring ("%Nstruct ctable egc_ce_rname_init[] = {%N")
 				from
 					i := 1
 					nb := Type_id_counter.value
 				until
 					i > nb
 				loop
-if class_types.item (i) /= Void then
-					class_types.item (i).generate_cecil (Cecil_file)
-else
-		-- FIXME
-		Cecil_file.putstring ("{(int32) 0, (int) 0, (char **) 0, (char *) 0}")
-end
-					Cecil_file.putstring (",%N")
+					cl_type := class_types.item (i)
+					if cl_type /= Void then
+						cl_type.generate_cecil (buffer)
+					else
+							-- FIXME
+						buffer.putstring ("{(int32) 0, (int) 0, (char **) 0, (char *) 0}")
+					end
+					buffer.putstring (",%N")
 					i := i + 1
 				end
-				Cecil_file.putstring ("};%N")
+				buffer.putstring ("};%N")
 
 				if System.has_separate then
 						-- Now, generate for Concurrent Eiffel
-					Cecil_file.putstring ("%Nstruct ctable fce_sep_pat[] = {%N")
+					buffer.putstring ("%Nstruct ctable fce_sep_pat[] = {%N")
 					from
 						i := 1
 						nb := Type_id_counter.value
 					until
 						i > nb
 					loop
-if class_types.item (i) /= Void then
-					class_types.item (i).generate_separate_pattern (Cecil_file)
-else
-		-- FIXME
-		Cecil_file.putstring ("{(int32) 0, (int) 0, (char **) 0, (char *) 0}")
-end
-						Cecil_file.putstring (",%N")
+						cl_type := class_types.item (i)
+						if cl_type /= Void then
+							cl_type.generate_separate_pattern (buffer)
+						else
+								-- FIXME
+							buffer.putstring ("{(int32) 0, (int) 0, (char **) 0, (char *) 0}")
+						end
+						buffer.putstring (",%N")
 						i := i + 1
 					end
-					Cecil_file.putstring ("};%N%Nstruct ctable *ce_sep_pat = fce_sep_pat;%N%N")
+					buffer.putstring ("};%N%Nstruct ctable *ce_sep_pat = fce_sep_pat;%N%N")
 				end
 			end
 
@@ -3082,8 +3116,9 @@ end
 			Cecil2.generate
 			Cecil3.generate
 
-			Cecil_file.close
-			Cecil_file := Void
+			!! cecil_file.make_open_write (gen_file_name (final_mode, Evisib));
+			cecil_file.put_string (buffer)
+			cecil_file.close
 		end
 
 	make_cecil_tables is
@@ -3143,7 +3178,6 @@ end
 				local_classes.forth
 			end
 		end
-
 
 	generate_initialization_table is
 			-- Generate table of initialization routines
@@ -3287,24 +3321,44 @@ feature -- Dispatch and execution tables generation
 
 	generate_dispatch_table is
 			-- Generate `dispatch_table'.
+		local
+			buffer: GENERATION_BUFFER
+			dispatch_file: INDENT_FILE
 		do
-			Dispatch_file.open_write
-			dispatch_table.generate (Dispatch_file)
+				-- Clear buffer for current generation
+			buffer := generation_buffer
+			buffer.clear_all
+
+			dispatch_table.generate (buffer)
 			dispatch_table.freeze
-			Dispatch_file.close
 				-- The melted list of the dispatch table
 				-- is now empty
+
+			!! dispatch_file.make_open_write (workbench_file_name (Edispatch));
+			dispatch_file.put_string (buffer)
+			dispatch_file.close
 		end
 
 	generate_exec_table is
 			-- Generate `execution_table'.
+		local
+			buffer: GENERATION_BUFFER
+			frozen_file: INDENT_FILE
 		do
-			Frozen_file.open_write_c
-			execution_table.generate (Frozen_file)
+				-- Clear buffer for current generation
+			buffer := generation_buffer
+			buffer.clear_all
+
+			buffer.open_write_c
+			execution_table.generate (buffer)
 			execution_table.freeze
-			Frozen_file.close_c
+			buffer.close_c
 				-- The melted list of the execution table
 				-- is now empty
+
+			!! frozen_file.make_open_write (workbench_file_name (Efrozen));
+			frozen_file.put_string (buffer)
+			frozen_file.close
 		end
 
 feature -- Pattern table generation
@@ -3336,7 +3390,8 @@ feature -- Pattern table generation
 
 			has_argument: BOOLEAN
 			i, nb: INTEGER
-			Initialization_file: INDENT_FILE
+			initialization_file: INDENT_FILE
+			buffer: GENERATION_BUFFER
 
 			rout_id: ROUTINE_ID
 			rout_table: ROUT_TABLE
@@ -3348,9 +3403,11 @@ feature -- Pattern table generation
 			a_class: CLASS_C
 			class_array: ARRAY [CLASS_C]
 		do
+				-- Clear buffer for current generation
+			buffer := generation_buffer
+			buffer.clear_all
 
 			final_mode := byte_context.final_mode
-			Initialization_file := Init_f (final_mode)
 
 			root_cl := root_class.compiled_class
 			cl_type := root_cl.types.first
@@ -3362,42 +3419,42 @@ feature -- Pattern table generation
 					has_argument := True
 				end
 				rout_id := root_feat.rout_id_set.first
-				rout_info := System.rout_info_table.item (rout_id)
+				rout_info := rout_info_table.item (rout_id)
 				rcorigin := rout_info.origin.id
 				rcoffset := rout_info.offset
 			else
 				rcorigin := -1
 			end
 
-			Initialization_file.open_write_c
+			buffer.open_write_c
 
-			Initialization_file.putstring ("%
+			buffer.putstring ("%
 				%#include %"eif_project.h%"%N%
 				%#include %"eif_macros.h%"%N%
 				%#include %"eif_struct.h%"%N%N")
 
 			if not final_mode then
-				class_counter.generate_offsets (Initialization_file)
-				static_type_id_counter.generate_offsets (Initialization_file)
-				execution_table.counter.generate_offsets (Initialization_file)
-				dispatch_table.counter.generate_offsets (Initialization_file)
-				Initialization_file.putstring ("int32 egc_rcorigin = ")
-				Initialization_file.putint (rcorigin)
-				Initialization_file.putstring (";%Nint32 egc_rcdt = ")
-				Initialization_file.putint (dtype)
-				Initialization_file.putstring (";%Nint32 egc_rcoffset = ")
-				Initialization_file.putint (rcoffset)
-				Initialization_file.putstring (";%Nint32 egc_rcarg = ")
+				class_counter.generate_offsets (buffer)
+				static_type_id_counter.generate_offsets (buffer)
+				execution_table.counter.generate_offsets (buffer)
+				dispatch_table.counter.generate_offsets (buffer)
+				buffer.putstring ("int32 egc_rcorigin = ")
+				buffer.putint (rcorigin)
+				buffer.putstring (";%Nint32 egc_rcdt = ")
+				buffer.putint (dtype)
+				buffer.putstring (";%Nint32 egc_rcoffset = ")
+				buffer.putint (rcoffset)
+				buffer.putstring (";%Nint32 egc_rcarg = ")
 				if has_argument then
-					Initialization_file.putstring ("1")
+					buffer.putstring ("1")
 				else
-					Initialization_file.putstring ("0")
+					buffer.putstring ("0")
 				end
-				Initialization_file.putstring (";%N%N")
+				buffer.putstring (";%N%N")
 			end
 
 			if has_separate then
-				Initialization_file.putstring ("#include %"eif_curextern.h%"%N%N")
+				buffer.putstring ("#include %"eif_curextern.h%"%N%N")
 			end
 
 			if creation_name /= Void then
@@ -3405,46 +3462,46 @@ feature -- Pattern table generation
 					rout_table ?= Eiffel_table.poly_table (rout_id)
 					c_name := rout_table.feature_name (cl_type.id.id)
 					if root_feat.has_arguments then
-						Initialization_file.generate_extern_declaration
+						buffer.generate_extern_declaration
 							("void", c_name, <<"EIF_REFERENCE", "EIF_REFERENCE">>)
 					else
-						Initialization_file.generate_extern_declaration
+						buffer.generate_extern_declaration
 							("void", c_name, <<"EIF_REFERENCE">>)
 					end
 				end
 			end
 
-			Initialization_file.generate_function_signature ("void", "emain", True, Initialization_file,
+			buffer.generate_function_signature ("void", "emain", True, buffer,
 						<<"argc", "argv">>, <<"int", "char **">>)
 
-			Initialization_file.putstring ("#ifndef EIF_THREADS%N%
+			buffer.putstring ("#ifndef EIF_THREADS%N%
 											%%Textern char *root_obj;%N%
 											%#endif%N")
 
 			if final_mode then
 					-- Set C variable `scount'.
-				Initialization_file.putstring ("%Tscount = ")
-				Initialization_file.putint (type_id_counter.value)
-				Initialization_file.putstring (";%N")
+				buffer.putstring ("%Tscount = ")
+				buffer.putint (type_id_counter.value)
+				buffer.putstring (";%N")
 			end
 
 			if has_separate then
-				Initialization_file.putstring ("%Tif (argc < 2) {%N%
+				buffer.putstring ("%Tif (argc < 2) {%N%
 					%%T%Tsprintf(crash_info, CURERR7, 1);%N%
 					%%T%Tdefault_rescue();%N%
 					%%T}%N")
-				Initialization_file.putstring ("%
+				buffer.putstring ("%
 					%%Tif (strcmp(argv[1], constant_init_flag) && strcmp(argv[1], constant_creation_flag)) {%N%
 					%%T%Tsprintf(crash_info, CURERR8);%N%
 					%%T%Tdefault_rescue();%N%
 					%%T}%N")
-				Initialization_file.putstring ("%
+				buffer.putstring ("%
 					%%Tif (!memcmp(argv[1], constant_init_flag, strlen(argv[1]))) {%N%
 					%%T%Tchar **root_argv;%N%
 					%%T%Tint i;%N%
 					%%T%Troot_argv = (char **) cmalloc(argc*sizeof(char *));%N%
 					%%T%Tvalid_memory(root_argv);%N")
-				Initialization_file.putstring ("%
+				buffer.putstring ("%
 					%%T%Troot_argv[0] = argv[0];%N%
 					%%T%Tfor(i=2; i<argc; i++)%N%
 					%%T%T%Troot_argv[i-1] = argv[i];%N%
@@ -3454,41 +3511,41 @@ feature -- Pattern table generation
 					-- The last line Only for Workbench Mode
 			end
 
-			Initialization_file.putstring ("%T%Troot_obj = RTLN(")
+			buffer.putstring ("%T%Troot_obj = RTLN(")
 			if final_mode then
-				Initialization_file.putint (dtype)
+				buffer.putint (dtype)
 			else
-				Initialization_file.putstring ("egc_rcdt")
+				buffer.putstring ("egc_rcdt")
 			end
-			Initialization_file.putstring (");%N")
+			buffer.putstring (");%N")
 
 			if has_separate then
-				Initialization_file.putstring ("%T%TCURIS;%N")
+				buffer.putstring ("%T%TCURIS;%N")
 			end
 
 			if final_mode then
 				if creation_name /= Void then
-					Initialization_file.putstring ("%T%T")
-					Initialization_file.putstring (c_name)
-					Initialization_file.putstring ("(root_obj")
+					buffer.putstring ("%T%T")
+					buffer.putstring (c_name)
+					buffer.putstring ("(root_obj")
 					if root_feat.has_arguments then
 						if has_separate then
-							Initialization_file.putstring (", argarr(argc-1, root_argv)")
+							buffer.putstring (", argarr(argc-1, root_argv)")
 						else
-							Initialization_file.putstring (", argarr(argc, argv)")
+							buffer.putstring (", argarr(argc, argv)")
 						end
 					end
-					Initialization_file.putstring (");%N")
+					buffer.putstring (");%N")
 				end
 			else
 				if has_separate then
-					Initialization_file.putstring ("%T%Tif (egc_rcorigin != -1)%N%
+					buffer.putstring ("%T%Tif (egc_rcorigin != -1)%N%
 						%%T%T%Tif (egc_rcarg)%N%
 						%%T%T%T%T(FUNCTION_CAST(void, (char *, char *)) RTWPF(egc_rcorigin, egc_rcoffset, egc_rcdt))(root_obj, argarr(argc-1, root_argv));%N%
 						%%T%T%Telse%N%
 						%%T%T%T%T(FUNCTION_CAST(void, (char *)) RTWPF(egc_rcorigin, egc_rcoffset, egc_rcdt))(root_obj);%N")
 				else
-					Initialization_file.putstring ("%Tif (egc_rcorigin != -1)%N%
+					buffer.putstring ("%Tif (egc_rcorigin != -1)%N%
 						%%T%Tif (egc_rcarg)%N%
 						%%T%T%T(FUNCTION_CAST(void, (char *, char *)) RTWPF(egc_rcorigin, egc_rcoffset, egc_rcdt))(root_obj, argarr(argc, argv));%N%
 						%%T%Telse%N%
@@ -3497,33 +3554,33 @@ feature -- Pattern table generation
 			end
 
 			if has_separate then
-				Initialization_file.putstring ("%T}%N")
+				buffer.putstring ("%T}%N")
 
-				Initialization_file.putstring ("%Telse {%N%
+				buffer.putstring ("%Telse {%N%
 					%%T%T_concur_root_of_the_application = 0;%N%
 					%%T%Troot_obj = RTLN(eif_type_id(argv[4]));%N")
-				Initialization_file.putstring ("%T%TCURIS;%N")
+				buffer.putstring ("%T%TCURIS;%N")
 
 					-- Only for Workbench Mode
-				Initialization_file.putstring ("%T%Tif (!strcmp(argv[5], %"_no_cf%")) {%N%
+				buffer.putstring ("%T%Tif (!strcmp(argv[5], %"_no_cf%")) {%N%
 					%%T%T%TRTCI(root_obj);%N%
 					%%T%T%T_concur_invariant_checked = 1;%N%
 					%%T%T}%N%
 					%%T%Telse%N%
 					%%T%T%T_concur_invariant_checked = 0;%N")
 
-				Initialization_file.putstring ("%T}%N")
-				Initialization_file.putstring ("%Tserver_execute();%N")
+				buffer.putstring ("%T}%N")
+				buffer.putstring ("%Tserver_execute();%N")
 			end
 
-			Initialization_file.putstring ("%N}%N")
+			buffer.putstring ("%N}%N")
 
 			-- Generation of egc_einit_init() and egc_tabinit_init(). Only for workbench
 			-- mode.
 
 			if not final_mode then
 					-- Prototypes
-				Initialization_file.generate_extern_declaration ("void", "egc_tabinit_init", <<>>)
+				buffer.generate_extern_declaration ("void", "egc_tabinit_init", <<>>)
 				from
 					i := 1
 					nb := type_id_counter.value
@@ -3532,13 +3589,13 @@ feature -- Pattern table generation
 				loop
 					cl_type := class_types.item (i)
 					if cl_type /= Void then
-						Initialization_file.generate_extern_declaration ("void", cl_type.id.init_name, <<"void">>)
+						buffer.generate_extern_declaration ("void", cl_type.id.init_name, <<"void">>)
 					end
 					i := i + 1
 				end
 
 
-				Initialization_file.putstring ("%Nvoid egc_tabinit_init(void)%N{%N")
+				buffer.putstring ("%Nvoid egc_tabinit_init(void)%N{%N")
 				from
 					i := 1
 					nb := type_id_counter.value
@@ -3551,29 +3608,29 @@ feature -- Pattern table generation
 -- cl_type cannot be Void if process_dynamic_types has been done in
 -- freeze_system.
 					if cl_type /= Void then
-						Initialization_file.putchar ('%T')
-						Initialization_file.putstring (cl_type.id.init_name)
-						Initialization_file.putstring ("();%N")
+						buffer.putchar ('%T')
+						buffer.putstring (cl_type.id.init_name)
+						buffer.putstring ("();%N")
 					end
 					i := i + 1
 				end
-				Initialization_file.putstring ("}%N%N")
+				buffer.putstring ("}%N%N")
 
-				Initialization_file.generate_function_signature ("void", "egc_einit_init", True, Initialization_file, <<"">>, <<"void">>)
+				buffer.generate_function_signature ("void", "egc_einit_init", True, buffer, <<"">>, <<"void">>)
 
 					-- Set C variable `scount'.
-				Initialization_file.putstring ("%Tscount = ")
-				Initialization_file.putint (type_id_counter.value)
+				buffer.putstring ("%Tscount = ")
+				buffer.putint (type_id_counter.value)
 					-- Set C variable `ccount'.
-				Initialization_file.putstring (";%N%Tccount = ")
-				Initialization_file.putint (class_counter.total_count)
+				buffer.putstring (";%N%Tccount = ")
+				buffer.putint (class_counter.total_count)
 					-- Set C variable `dcount'.
-				Initialization_file.putstring (";%N%Tdcount = ")
-				Initialization_file.putint (dispatch_table.counter.total_count)
+				buffer.putstring (";%N%Tdcount = ")
+				buffer.putint (dispatch_table.counter.total_count)
 					-- Set the frozen level
-				Initialization_file.putstring (";%N%Tzeroc = ")
-				Initialization_file.putint (frozen_level)
-				Initialization_file.putstring (";%N}%N")
+				buffer.putstring (";%N%Tzeroc = ")
+				buffer.putint (frozen_level)
+				buffer.putstring (";%N}%N")
 			end
 
 			-- Module initialization routine 'egc_system_mod_init_init'
@@ -3591,7 +3648,7 @@ feature -- Pattern table generation
 				cl_type := class_types.item (i)
 
 				if cl_type /= Void and then not makefile_generator.empty_class_types.has (cl_type.id) then
-					Initialization_file.generate_extern_declaration (
+					buffer.generate_extern_declaration (
 									"void", cl_type.id.module_init_name, <<"void">>
 																	)
 				end
@@ -3601,8 +3658,8 @@ feature -- Pattern table generation
 
 
 			-- Module initialization
-			Initialization_file.generate_function_signature (
-				"void", "egc_system_mod_init_init", True, Initialization_file, <<"">>, <<"void">>
+			buffer.generate_function_signature (
+				"void", "egc_system_mod_init_init", True, buffer, <<"">>, <<"void">>
 															)
 			from
 				i := 1
@@ -3613,29 +3670,38 @@ feature -- Pattern table generation
 				cl_type := class_types.item (i)
 
 				if cl_type /= Void and then not makefile_generator.empty_class_types.has (cl_type.id) then
-					Initialization_file.putstring ("%T")
-					Initialization_file.putstring (cl_type.id.module_init_name)
-					Initialization_file.putstring ("();%N")
+					buffer.putstring ("%T")
+					buffer.putstring (cl_type.id.module_init_name)
+					buffer.putstring ("();%N")
 				end
 				i := i + 1
 			end
 
-			Initialization_file.putstring ("%N}%N%N")
+			buffer.putstring ("%N}%N%N")
 
-			Initialization_file.close_c
+			buffer.close_c
+
+			!! initialization_file.make_open_write (gen_file_name (final_mode, Einit));
+			initialization_file.put_string (buffer)
+			initialization_file.close
 		end
 
 feature -- Workbench routine info table file generation
 
 	generate_rout_info_table is
 		local
-			f: INDENT_FILE
+			buffer: GENERATION_BUFFER
+			rout_info_file: INDENT_FILE
 		do
 			if not byte_context.final_mode then
-				f := Rout_info_file
-				f.open_write
-				Rout_info_table.generate (f)
-				f.close
+					-- Clear buffer for current generation
+				buffer := generation_buffer
+				buffer.clear_all
+				rout_info_table.generate (buffer)
+
+				!! rout_info_file.make_open_write (workbench_file_name (Ecall));
+				rout_info_file.put_string (buffer)
+				rout_info_file.close
 			end
 		end
 
@@ -3650,10 +3716,14 @@ feature --Workbench option file generation
 			partial_debug: DEBUG_TAG_I
 			class_type: CLASS_TYPE
 			local_classes: CLASS_C_SERVER
+			option_file: INDENT_FILE
+			buffer: GENERATION_BUFFER
 		do
-			Option_file.open_write
+				-- Clear buffer for Current generation
+			buffer := generation_buffer
+			buffer.clear_all
 
-			Option_file.putstring ("#include %"eif_project.h%"%N%
+			buffer.putstring ("#include %"eif_project.h%"%N%
 								   %#include %"eif_struct.h%"%N%N")
 
 				-- First debug keys
@@ -3670,7 +3740,7 @@ feature --Workbench option file generation
 					if a_class /= Void then
 						partial_debug ?= a_class.debug_level
 						if partial_debug /= Void then
-							partial_debug.generate_keys (Option_file, a_class.id)
+							partial_debug.generate_keys (buffer, a_class.id)
 						end
 					end
 					i := i + 1
@@ -3679,7 +3749,7 @@ feature --Workbench option file generation
 			end
 
 				-- Then option C array
-			Option_file.putstring ("struct eif_opt egc_foption_init[] = {%N")
+			buffer.putstring ("struct eif_opt egc_foption_init[] = {%N")
 			from
 				i := 1
 				nb := Type_id_counter.value
@@ -3687,28 +3757,29 @@ feature --Workbench option file generation
 				i > nb
 			loop
 				class_type := class_types.item (i)
-				Option_file.putchar ('{')
+				buffer.putchar ('{')
 				if class_type /= Void then
 						-- Classes could be removed
 					a_class := class_type.associated_class
-					a_class.assertion_level.generate (Option_file)
-					Option_file.putstring (", ")
-					a_class.trace_level.generate (Option_file)
-					Option_file.putstring (", ")
-					a_class.profile_level.generate (Option_file)
-					Option_file.putstring (", ")
-					a_class.debug_level.generate (Option_file, a_class.id)
+					a_class.assertion_level.generate (buffer)
+					buffer.putstring (", ")
+					a_class.trace_level.generate (buffer)
+					buffer.putstring (", ")
+					a_class.profile_level.generate (buffer)
+					buffer.putstring (", ")
+					a_class.debug_level.generate (buffer, a_class.id)
 				else
-					Option_file.putstring ("%
-						%(int16) 0, (int16) 0, (int16) 0,%
+					buffer.putstring ("(int16) 0, (int16) 0, (int16) 0,%
 						%{(int16) 0, (int16) 0, (char **) 0}")
 				end
-				Option_file.putstring ("},%N")
+				buffer.putstring ("},%N")
 				i := i + 1
 			end
-			Option_file.putstring ("};%N")
+			buffer.putstring ("};%N")
 
-			Option_file.close
+			!! option_file.make_open_write (workbench_file_name (Eoption));
+			option_file.put_string (buffer)
+			option_file.close
 		end
 
 feature 

@@ -46,14 +46,14 @@ feature
 			Result := same_type (other) and then int_val = other.int_val
 		end
 
-	generate (file: INDENT_FILE) is
-			-- Generate value in `file'.
+	generate (buffer: GENERATION_BUFFER) is
+			-- Generate value in `buffer'.
 			-- The '()' are present for the case where int_val=INT32_MIN,
 			-- ie: if we printed -INT32_MIN in Eiffel, we would get --INT32_MIN in C.
 		do
-			file.putchar('(')
-			file.putint (int_val)
-			file.putstring ("L)")
+			buffer.putchar('(')
+			buffer.putint (int_val)
+			buffer.putstring ("L)")
 		end
 
 	make_byte_code (ba: BYTE_ARRAY) is

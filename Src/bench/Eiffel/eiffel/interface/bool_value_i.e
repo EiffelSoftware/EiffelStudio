@@ -35,13 +35,13 @@ feature
 			Result := t.is_boolean;
 		end;
 
-	generate (file: INDENT_FILE) is
+	generate (buffer: GENERATION_BUFFER) is
 			-- Generate value in `file'.
 		do
 			if bool_val then
-				file.putstring ("'\01'");
+				buffer.putstring ("'\01'");
 			else
-				file.putstring ("'\0'");
+				buffer.putstring ("'\0'");
 			end;
 		end;
 

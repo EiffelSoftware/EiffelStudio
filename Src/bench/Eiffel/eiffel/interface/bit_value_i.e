@@ -46,15 +46,15 @@ feature
 	is_bit: BOOLEAN is True
 			-- Is the current constant a bit one ?
 
-	generate (file: INDENT_FILE) is
-			-- Generate value in `file'.
+	generate (buffer: GENERATION_BUFFER) is
+			-- Generate value in `buffer'.
 		do
-			file.putstring ("RTMB(%"");
-			file.escape_string (bit_val);
-			file.putchar ('"')
-			file.putstring (", ")
-			file.put_integer (bit_count)
-			file.putchar (')');
+			buffer.putstring ("RTMB(%"");
+			buffer.escape_string (bit_val);
+			buffer.putchar ('"')
+			buffer.putstring (", ")
+			buffer.putint (bit_count)
+			buffer.putchar (')');
 		end;
 
 	valid_type (t: TYPE_A): BOOLEAN is

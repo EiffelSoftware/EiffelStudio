@@ -36,13 +36,12 @@ feature
 			-- Do nothing
 		end
 
-	generate (file: INDENT_FILE) is
+	generate (buffer: GENERATION_BUFFER) is
 			-- Generate assertion value in `file'.
 		require
-			good_argument: file /= Void
-			is_open: file.is_open_write
+			good_argument: buffer /= Void
 		do
-			file.putstring (generation_value)
+			buffer.putstring (generation_value)
 		end
 
 	make_byte_code (ba: BYTE_ARRAY) is

@@ -26,10 +26,10 @@ feature
 			io.error.putstring ("no debug");
 		end;
 
-	generate (file: INDENT_FILE; id: CLASS_ID) is
-			-- Generate assertion value in `file'.
+	generate (buffer: GENERATION_BUFFER; id: CLASS_ID) is
+			-- Generate assertion value in `buffer'.
 		do
-			file.putstring ("{OPT_NO, (int16) 0, (char **) 0}");
+			buffer.putstring ("{OPT_NO, (int16) 0, (char **) 0}");
 		end;
 
 	make_byte_code (ba: BYTE_ARRAY) is

@@ -19,8 +19,8 @@ creation
 
 feature
 
-	generate_feature (feat: FEATURE_I; file: INDENT_FILE) is
-			-- Generate feature `feat' in `file'.
+	generate_feature (feat: FEATURE_I; buffer: GENERATION_BUFFER) is
+			-- Generate feature `feat' in `buffer'.
 		local
 			feature_name: STRING;
 		do
@@ -28,17 +28,17 @@ feature
 
 			if feature_name.is_equal ("make_area") then
 					-- Generate built-in feature `put' of class SPECIAL
-				generate_make_area (feat, file);
+				generate_make_area (feat, buffer);
 			else
 					-- Basic generation
-				{CLASS_TYPE} Precursor (feat, file);
+				{CLASS_TYPE} Precursor (feat, buffer);
 			end;
 		end;
 
-	generate_make_area (feat: FEATURE_I; file: INDENT_FILE) is
+	generate_make_area (feat: FEATURE_I; buffer: GENERATION_BUFFER) is
 			-- Generates built-in feature `make_area' of class TO_SPECIAL
 		require
-			good_argument: file /= Void;
+			good_argument: buffer /= Void;
 			feat_exists: feat /= Void;
 		local
 			gen_param: TYPE_I;
@@ -64,21 +64,21 @@ feature
 				--		{
 				--			char *ref;
 				--			struct union overhead *zone;
-			file.putstring ("/* make_area */%N");
+			buffer.putstring ("/* make_area */%N");
 			encoded_name := feat.body_id.feature_name (id);
 
 			System.used_features_log_file.add (Current, "make_area", encoded_name);
 
-			file.generate_function_signature ("void", encoded_name, True, file,
+			buffer.generate_function_signature ("void", encoded_name, True, buffer,
 				<<"Current", "arg1">>, <<"EIF_REFERENCE", "EIF_INTEGER">>)
 
-			file.putstring ("%
+			buffer.putstring ("%
 				%%Tchar *ref;%N%
 				%%Tunion overhead *zone;%N%
 				%%TRTLD;%N%N");
 
 				-- Garbage collector hooks
-			file.putstring ("%TRTLI(2);%N%
+			buffer.putstring ("%TRTLI(2);%N%
 				%%Tl[0] = Current;%N%
 				%%Tl[1] = (char *) 0;%N%N");
 
@@ -88,9 +88,9 @@ feature
 				associated_class.assertion_level.check_precond
 			then
 				if not final_mode then
-					file.putstring ("%Tif (~in_assertion & WASC(Dtype(Current)) & CK_REQUIRE) {%N");
+					buffer.putstring ("%Tif (~in_assertion & WASC(Dtype(Current)) & CK_REQUIRE) {%N");
 				else
-					file.putstring ("%Tif (~in_assertion) {%N");
+					buffer.putstring ("%Tif (~in_assertion) {%N");
 				end;
 					-- Precondition
 					--		RTCT("positive_argument", EX_PRE);
@@ -98,66 +98,66 @@ feature
 					--			RTCK;
 					--		else
 					--			RTCF;
-				file.putstring ("%
+				buffer.putstring ("%
 					%%TRTCT(%"positive_argument%", EX_PRE);%N%
 					%%Tif (arg1 >= 0) {%N%
 					%%T%TRTCK;%N%
 					%%T} else {%N%
 					%%T%TRTCF;%N%T}%N");
 
-				file.putstring ("%T}%N");
+				buffer.putstring ("%T}%N");
 			end;
 
 				-- Allocation of a special object
 				--		l[1] = spmalloc(arg1 * sizeof(char *) + LNGPAD(2));
-			file.putstring ("%Tl[1] = spmalloc(CHRPAD(arg1 * ");
+			buffer.putstring ("%Tl[1] = spmalloc(CHRPAD(arg1 * ");
 		
 			if is_expanded then
-				file.putstring ("(Size(");
+				buffer.putstring ("(Size(");
 				expanded_type ?= gen_param;
 				non_expanded_type := clone (expanded_type);
 				non_expanded_type.set_is_expanded (False);
 				dtype := non_expanded_type.type_id - 1;
-				file.putint (dtype);
-				file.putstring (")+OVERHEAD)");
+				buffer.putint (dtype);
+				buffer.putstring (")+OVERHEAD)");
 			else
-				type_c.generate_size (file);
+				type_c.generate_size (buffer);
 			end;
-			file.putstring (") + LNGPAD(2));%N");
+			buffer.putstring (") + LNGPAD(2));%N");
 
 				-- Header evaluation
 				--		zone = HEADER(l[1]);
-			file.putstring ("%Tzone = HEADER(l[1]);%N");
-			file.putstring ("%Tref = l[1] + (zone->ov_size & B_SIZE) - LNGPAD(2);%N");
+			buffer.putstring ("%Tzone = HEADER(l[1]);%N");
+			buffer.putstring ("%Tref = l[1] + (zone->ov_size & B_SIZE) - LNGPAD(2);%N");
 
 				-- Set dynamic type
 			!!gen_type;
 			gen_type.set_base_id (System.special_id);
 			gen_type.set_meta_generic (clone (type.meta_generic));
 			gen_type.set_true_generics (clone (type.true_generics));
-			file.putstring ("%Tzone->ov_flags |= ");
+			buffer.putstring ("%Tzone->ov_flags |= ");
 			if final_mode then
-				file.putint (gen_type.type_id - 1);
+				buffer.putint (gen_type.type_id - 1);
 			else
-				file.putstring ("RTUD(");
-				gen_type.associated_class_type.id.generated_id (file)
-				file.putchar (')');
+				buffer.putstring ("RTUD(");
+				gen_type.associated_class_type.id.generated_id (buffer)
+				buffer.putchar (')');
 			end;
 			if gen_param.is_reference or else gen_param.is_bit then
-				file.putstring (" | EO_REF");
+				buffer.putstring (" | EO_REF");
 			end;
 
 				-- Set count
-			file.putstring (";%N%T*(long *) ref = arg1;%N");
+			buffer.putstring (";%N%T*(long *) ref = arg1;%N");
 
 				-- Set element size
-			file.putstring ("%T*(long *) (ref + sizeof(long)) = ");
+			buffer.putstring ("%T*(long *) (ref + sizeof(long)) = ");
 			if is_expanded then
 				if final_mode then
-					file.putstring ("Size(");
-					file.putint (dtype);
-					file.putstring (") + OVERHEAD;%N");
-					file.putstring ("%Tzone->ov_flags |= EO_COMP;%N");
+					buffer.putstring ("Size(");
+					buffer.putint (dtype);
+					buffer.putstring (") + OVERHEAD;%N");
+					buffer.putstring ("%Tzone->ov_flags |= EO_COMP;%N");
 
 					exp_class_type := expanded_type.associated_class_type
 
@@ -165,73 +165,73 @@ feature
 					has_creation :=
 						exp_class_type.associated_class.creation_feature /= Void
 
-					file.putstring ("%
+					buffer.putstring ("%
 						%%T{%N%
 						%%T%Tchar *ref;%N%
 						%%T%Tlong i;%N");
 
 					if has_init then
 							-- Call initialization routines
-						file.putstring ("%T%Tinit = XCreate(")
-						file.putint (dtype)
-						file.putstring (");%N")
+						buffer.putstring ("%T%Tinit = XCreate(")
+						buffer.putint (dtype)
+						buffer.putstring (");%N")
 					end
 
-					file.putstring ("%
+					buffer.putstring ("%
 						%%T%Tfor (ref = l[1]+OVERHEAD, i = 0; i < arg1; i++,%
 								%ref += Size(");
-					file.putint (dtype);
-					file.putstring (")+OVERHEAD){%N%
+					buffer.putint (dtype);
+					buffer.putstring (")+OVERHEAD){%N%
 						%%T%T%THEADER(ref)->ov_size = ref - l[1];%N%
 						%%T%T%THEADER(ref)->ov_flags = ");
-					file.putint (dtype);
-					file.putstring (" + EO_EXP;%N")
+					buffer.putint (dtype);
+					buffer.putstring (" + EO_EXP;%N")
 
 						-- FIXME: call to creation routine?????
 
 					if has_init then
-						file.putstring ("%T%T%T(init)(ref, l[1]);%N")
+						buffer.putstring ("%T%T%T(init)(ref, l[1]);%N")
 					end
 
-					file.putstring ("%T%T};%N%T};%N")
+					buffer.putstring ("%T%T};%N%T};%N")
 				else
 
 						-- FIXME: call to creation routine?????
 
-					file.putstring ("Size(");
-					file.putint (dtype);
-					file.putstring (") + OVERHEAD;%N%
+					buffer.putstring ("Size(");
+					buffer.putint (dtype);
+					buffer.putstring (") + OVERHEAD;%N%
 									%%Tzone->ov_flags |= EO_COMP;%N");
 				
 						-- Call initialization routines
-					file.putstring ("%
+					buffer.putstring ("%
 									%%T{%N%
 									%%T%Tchar *ref;%N%
 									%%T%Tlong i;%N%
 									%%T%Tfnptr init;%N%
 									%%T%Tinit = XCreate(");
-					file.putint (dtype);
-					file.putstring (");%N%
+					buffer.putint (dtype);
+					buffer.putstring (");%N%
 									%%T%Tfor (ref = l[1]+OVERHEAD, i = 0; i < arg1; i++,%
 									%ref += Size(");
-					file.putint (dtype);
-					file.putstring (")+OVERHEAD){%N%
+					buffer.putint (dtype);
+					buffer.putstring (")+OVERHEAD){%N%
 									%%T%T%THEADER(ref)->ov_size = ref - l[1];%N%
 				   					%%T%T%THEADER(ref)->ov_flags = ");
-					file.putint (dtype);
-					file.putstring (" + EO_EXP;%N%
+					buffer.putint (dtype);
+					buffer.putstring (" + EO_EXP;%N%
 									%%T%T%Tif ((char *(*)()) 0 != init)%N%
 									%%T%T%T%T(init)(ref, l[1]);%N%
 									%%T%T};%N%T};%N");
 				end
 			else
-				type_c.generate_size (file);
-				file.putstring (";%N");
+				type_c.generate_size (buffer);
+				buffer.putstring (";%N");
 			end;
 				-- Assignment of result to `area'.
-			file.putstring ("%TRTAR(l[1], l[0]);%N%T");
-			generate_area_access (file);
-			file.putstring (" = l[1];%N%
+			buffer.putstring ("%TRTAR(l[1], l[0]);%N%T");
+			generate_area_access (buffer);
+			buffer.putstring (" = l[1];%N%
 							%%TRTLE;%N}%N%N");
 		end;
 
@@ -244,10 +244,10 @@ feature
 			Result := type.meta_generic.item (1);
 		end;
 
-	generate_area_access (file: INDENT_FILE) is
+	generate_area_access (buffer: GENERATION_BUFFER) is
 			-- Generate access to area.
 		require
-			good_argument: file /= Void;
+			good_argument: buffer /= Void;
 		local
 			area_feature: FEATURE_I;
 			rout_id: ROUTINE_ID;
@@ -255,7 +255,7 @@ feature
 			table_name: STRING;
 			rout_info: ROUT_INFO
 		do
-			file.putstring ("*(char **) (l[0]");
+			buffer.putstring ("*(char **) (l[0]");
 
 			area_feature := associated_class.feature_table.item ("area");
 
@@ -266,12 +266,12 @@ feature
 				if table.is_polymorphic (type_id) then
 						-- Access to area is polymorphic
 					table_name := rout_id.table_name;
-					file.putstring (" + (");
-					file.putstring (table_name);
-					file.putchar ('-');
-					file.putint (table.min_type_id - 1);
-					file.putchar (')');
-					file.putstring ("[Dtype(l[0])]");
+					buffer.putstring (" + (");
+					buffer.putstring (table_name);
+					buffer.putchar ('-');
+					buffer.putint (table.min_type_id - 1);
+					buffer.putchar (')');
+					buffer.putstring ("[Dtype(l[0])]");
 						-- Remember extern declaration
 					Extern_declarations.add_attribute_table (clone (table_name));
 					   -- Mark attribute table used
@@ -281,25 +281,25 @@ feature
 						--| arguments. This means we won't generate anything if there is nothing
 						--| to generate. Remember that `True' is used in the generation of attributes
 						--| table in Final mode.
-					skeleton.generate_offset (file, area_feature.feature_id, False);
+					skeleton.generate_offset (buffer, area_feature.feature_id, False);
 				end;
-				file.putchar (')');
+				buffer.putchar (')');
 			elseif
 				Compilation_modes.is_precompiling or
 				associated_class.is_precompiled
 			then
 				rout_info := System.rout_info_table.item (rout_id);
-				file.putstring ("+ RTWPA(");
-				rout_info.origin.generated_id (file);
-				file.putstring (", ");
-				file.putint (rout_info.offset);
-				file.putstring (", Dtype(l[0])))");
+				buffer.putstring ("+ RTWPA(");
+				rout_info.origin.generated_id (buffer);
+				buffer.putstring (", ");
+				buffer.putint (rout_info.offset);
+				buffer.putstring (", Dtype(l[0])))");
 			else
-				file.putstring ("+ RTWA(");
-				file.putint (id.id - 1);
-				file.putstring (", ");
-				file.putint (area_feature.feature_id);
-				file.putstring (", Dtype(l[0])))");
+				buffer.putstring ("+ RTWA(");
+				buffer.putint (id.id - 1);
+				buffer.putstring (", ");
+				buffer.putint (area_feature.feature_id);
+				buffer.putstring (", Dtype(l[0])))");
 			end;				
 		end;
 

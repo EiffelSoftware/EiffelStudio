@@ -18,8 +18,8 @@ creation
 	
 feature
 
-	generate_feature (feat: FEATURE_I; file: INDENT_FILE) is
-			-- Generate feature `feat' in `file'.
+	generate_feature (feat: FEATURE_I; buffer: GENERATION_BUFFER) is
+			-- Generate feature `feat' in `buffer'.
 		local
 			feature_name: STRING;
 		do
@@ -27,20 +27,20 @@ feature
 
 			if feature_name.is_equal ("put") then
 					-- Generate built-in feature `put' of class SPECIAL
-				generate_put (feat, file);
+				generate_put (feat, buffer);
 			elseif feature_name.is_equal ("item") then
 					-- Generate built-in feature `item' of class SPECIAL
-				generate_item (feat, file);
+				generate_item (feat, buffer);
 			else
 					-- Basic generation
-				{CLASS_TYPE} Precursor (feat, file);
+				{CLASS_TYPE} Precursor (feat, buffer);
 			end;
 		end;
 
-	generate_put (feat: FEATURE_I; file: INDENT_FILE) is
+	generate_put (feat: FEATURE_I; buffer: GENERATION_BUFFER) is
 			-- Generates built-in feature `put' of class SPECIAL
 		require
-			good_argument: file /= Void;
+			good_argument: buffer /= Void;
 			feat_exists: feat /= Void;
 			consistency: feat.feature_name.is_equal ("put");
 		local
@@ -57,40 +57,40 @@ feature
 			type_c := gen_param.c_type;
 			assertion_level := associated_class.assertion_level;
 
-			file.putstring ("/* put */%N");
+			buffer.putstring ("/* put */%N");
 			encoded_name := feat.body_id.feature_name (id);
 
 			System.used_features_log_file.add (Current, "put", encoded_name);
 
-			file.generate_function_signature ("void", encoded_name, True,
-				Byte_context.extern_declaration_file, <<"Current", "arg1", "arg2">>,
+			buffer.generate_function_signature ("void", encoded_name, True,
+				Byte_context.header_buffer, <<"Current", "arg1", "arg2">>,
 				<<"EIF_REFERENCE", type_c.c_string, "EIF_INTEGER">>);
 
 			final_mode := byte_context.final_mode;
 
 			if is_expanded then
 				if not final_mode then
-					file.putstring ("%Tlong elem_size;%N")
+					buffer.putstring ("%Tlong elem_size;%N")
 				end
-				file.putstring ("%
+				buffer.putstring ("%
 					%%Tif (arg1 == (char *) 0)%N%
 					%%T%TRTEC(EN_VEXP);%N");
 			end;
 
 			if (not final_mode) or else assertion_level.check_precond then
 				if not final_mode then
-					file.putstring ("%Tif (~in_assertion & WASC(Dtype(Current)) & CK_REQUIRE) {%N");
+					buffer.putstring ("%Tif (~in_assertion & WASC(Dtype(Current)) & CK_REQUIRE) {%N");
 				else
-					file.putstring ("%Tif (~in_assertion) {%N");
+					buffer.putstring ("%Tif (~in_assertion) {%N");
 				end;
-				file.putstring ("%
+				buffer.putstring ("%
 					%%TRTCT(%"index_large_enough%", EX_PRE);%N%
 					%%Tif (arg2 >= 0) {%N%
 					%%T%TRTCK;%N%
 					%%T} else {%N%
 					%%T%TRTCF;%N%T}%N");
 
-				file.putstring ("%
+				buffer.putstring ("%
 					%%TRTCT(%"index_small_enough%", EX_PRE);%N%
 					%%Tif (arg2 < *(long *) %
 						%(Current + (HEADER(Current)->ov_size & B_SIZE)%
@@ -99,21 +99,21 @@ feature
 					%%T} else {%N%
 					%%T%TRTCF;%N%T}%N");
 
-				file.putstring ("%T}%N");
+				buffer.putstring ("%T}%N");
 			end;
 
 			if is_expanded then
 				if final_mode then
 						-- Optimization: size is know at compile time
 
-					file.putstring ("%Tecopy(arg1, Current + OVERHEAD + arg2 * (Size(");
+					buffer.putstring ("%Tecopy(arg1, Current + OVERHEAD + arg2 * (Size(");
 					non_expanded_type ?= gen_param;
 					non_expanded_type := clone (non_expanded_type);
 					non_expanded_type.set_is_expanded (False);
-					file.putint (non_expanded_type.type_id - 1);
-					file.putstring (") + OVERHEAD));%N")
+					buffer.putint (non_expanded_type.type_id - 1);
+					buffer.putstring (") + OVERHEAD));%N")
 				else
-					file.putstring ("%
+					buffer.putstring ("%
 						%%Telem_size = *(long *) %
 							%(Current + (HEADER(Current)->ov_size & B_SIZE)%
 							% - LNGPAD(2) + sizeof(long));%N%
@@ -123,32 +123,32 @@ feature
 				inspect
 					type_c.level
 				when C_char then
-					file.putstring ("%T*(Current + arg2 * sizeof(char)) = arg1;");
+					buffer.putstring ("%T*(Current + arg2 * sizeof(char)) = arg1;");
 				when C_long then
-					file.putstring ("%T*(long *)(Current + arg2 * sizeof(long)) = arg1;");
+					buffer.putstring ("%T*(long *)(Current + arg2 * sizeof(long)) = arg1;");
 				when C_float then
-					file.putstring ("%T*(float *)(Current + arg2 * sizeof(float)) = arg1;");
+					buffer.putstring ("%T*(float *)(Current + arg2 * sizeof(float)) = arg1;");
 				when C_double then
-					file.putstring ("%T*(double *)(Current + arg2 * sizeof(double)) = arg1;");
+					buffer.putstring ("%T*(double *)(Current + arg2 * sizeof(double)) = arg1;");
 				when C_ref then
 					--! Could be bit or ref
-					file.putstring ("%TRTAS(arg1, Current);%N");
-					file.putstring ("%T*(char **)(Current + arg2 * "); 
-					type_c.generate_size (file);
-					file.putstring (") = arg1;");
+					buffer.putstring ("%TRTAS(arg1, Current);%N");
+					buffer.putstring ("%T*(char **)(Current + arg2 * "); 
+					type_c.generate_size (buffer);
+					buffer.putstring (") = arg1;");
 				when C_pointer then
-					file.putstring ("%T*(char **)(Current + arg2 * sizeof(char *)) = arg1;");
+					buffer.putstring ("%T*(char **)(Current + arg2 * sizeof(char *)) = arg1;");
 				end;
 			end;
 
-			file.putstring ("%N}%N%N");
+			buffer.putstring ("%N}%N%N");
 
 		end;
 
-	generate_item (feat: FEATURE_I; file: INDENT_FILE) is
+	generate_item (feat: FEATURE_I; buffer: GENERATION_BUFFER) is
 			-- Generates built-in feature `item' of class SPECIAL
 		require
-			good_argument: file /= Void;
+			good_argument: buffer /= Void;
 			feat_exists: feat /= Void;
 			consistency: feat.feature_name.is_equal ("item");
 		local
@@ -165,36 +165,36 @@ feature
 			type_c := gen_param.c_type;
 			assertion_level := associated_class.assertion_level;
 
-			file.putstring ("/* item */%N");
+			buffer.putstring ("/* item */%N");
 
 			encoded_name := feat.body_id.feature_name (id);
 
 			System.used_features_log_file.add (Current, "item", encoded_name);
 
-			file.generate_function_signature (type_c.c_string, encoded_name, True,
-				Byte_context.extern_declaration_file,
+			buffer.generate_function_signature (type_c.c_string, encoded_name, True,
+				header_generation_buffer,
 				<<"Current", "arg1">>, <<"EIF_REFERENCE", "EIF_INTEGER">>);
 
 			final_mode := byte_context.final_mode;
 
 			if is_expanded and not final_mode then
-				file.putstring ("long elem_size;%N");
+				buffer.putstring ("long elem_size;%N");
 			end;
 
 			if (not final_mode) or else assertion_level.check_precond then
 				if not final_mode then
-					file.putstring ("%Tif (~in_assertion & WASC(Dtype(Current)) & CK_REQUIRE) {%N");
+					buffer.putstring ("%Tif (~in_assertion & WASC(Dtype(Current)) & CK_REQUIRE) {%N");
 				else
-					file.putstring ("%Tif (~in_assertion) {%N");
+					buffer.putstring ("%Tif (~in_assertion) {%N");
 				end;
-				file.putstring ("%
+				buffer.putstring ("%
 					%%TRTCT(%"index_large_enough%", EX_PRE);%N%
 					%%Tif (arg1 >= 0) {%N%
 					%%T%TRTCK;%N%
 					%%T } else {%N%
 					%%T%TRTCF;%N%T}%N");
 	
-				file.putstring ("%
+				buffer.putstring ("%
 					%%TRTCT(%"index_small_enough%", EX_PRE);%N%
 					%%Tif (arg1 < *(long *) %
 						%(Current + (HEADER(Current)->ov_size & B_SIZE) %
@@ -203,21 +203,21 @@ feature
 					%%T } else {%N%
 					%%T%TRTCF;%N%T}%N");
 
-				file.putstring ("%T}%N");
+				buffer.putstring ("%T}%N");
 			end;
 
 			if is_expanded then
 				if final_mode then
 						-- Optimization: size of expanded is known at compile time
 
-					file.putstring ("%Treturn Current + OVERHEAD + arg1 * (Size(");
+					buffer.putstring ("%Treturn Current + OVERHEAD + arg1 * (Size(");
 					non_expanded_type ?= gen_param;
 					non_expanded_type := clone (non_expanded_type);
 					non_expanded_type.set_is_expanded (False);
-					file.putint (non_expanded_type.type_id - 1);
-					file.putstring (") + OVERHEAD);%N")
+					buffer.putint (non_expanded_type.type_id - 1);
+					buffer.putstring (") + OVERHEAD);%N")
 				else
-					file.putstring ("%
+					buffer.putstring ("%
 						%%Telem_size = *(long *) %
 							%(Current + (HEADER(Current)->ov_size & B_SIZE) %
 							%- LNGPAD(2) + sizeof(long));%N%
@@ -227,24 +227,24 @@ feature
 				inspect
 					type_c.level
 				when C_char then
-					file.putstring ("%Treturn *(Current + arg1 * sizeof(char));");
+					buffer.putstring ("%Treturn *(Current + arg1 * sizeof(char));");
 				when C_long then
-					file.putstring ("%Treturn *(long *)(Current + arg1 * sizeof(long));");
+					buffer.putstring ("%Treturn *(long *)(Current + arg1 * sizeof(long));");
 				when C_float then
-					file.putstring ("%Treturn *(float *)(Current + arg1 * sizeof(float));");
+					buffer.putstring ("%Treturn *(float *)(Current + arg1 * sizeof(float));");
 				when C_double then
-					file.putstring ("%Treturn *(double *)(Current + arg1 * sizeof(double));");
+					buffer.putstring ("%Treturn *(double *)(Current + arg1 * sizeof(double));");
 				when C_ref then
 					--! Could be bit or ref
-					file.putstring ("%Treturn *(char **)(Current + arg1 * ");
-					type_c.generate_size (file);
-					file.putstring (");");
+					buffer.putstring ("%Treturn *(char **)(Current + arg1 * ");
+					type_c.generate_size (buffer);
+					buffer.putstring (");");
 				when C_pointer then
-					file.putstring ("%Treturn *(char **)(Current + arg1 * sizeof(char *));");
+					buffer.putstring ("%Treturn *(char **)(Current + arg1 * sizeof(char *));");
 				end;
 			end;
 
-			file.putstring ("%N}%N%N");
+			buffer.putstring ("%N}%N%N");
 
 		end;
 

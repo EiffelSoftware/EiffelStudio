@@ -145,19 +145,18 @@ feature
 			end
 		end
 
-	generate (class_type: CLASS_TYPE; file: INDENT_FILE) is
-			-- Generate feature written in `class_type' in `file'.
+	generate (class_type: CLASS_TYPE; buffer: GENERATION_BUFFER) is
+			-- Generate feature written in `class_type' in `buffer'.
 		require else
-			valid_file: file /= Void
-			file_open_for_writing: file.is_open_write or file.is_open_append
+			valid_file: buffer /= Void
 		do
 			if (not is_none_attribute) and then used then
 				-- Generation of a routine to access the attribute
-				generate_attribute_access (class_type, file)
+				generate_attribute_access (class_type, buffer)
 			end
 		end
 
-	generate_attribute_access (class_type: CLASS_TYPE; file: INDENT_FILE) is
+	generate_attribute_access (class_type: CLASS_TYPE; buffer: GENERATION_BUFFER) is
 			-- Generates attribute access function.
 			-- [Redecalaration of a function into an attribute]
 		local
@@ -169,7 +168,7 @@ feature
 			rout_id: ROUTINE_ID
 			rout_info: ROUT_INFO
 		do
-			generate_header (file)
+			generate_header (buffer)
 			skeleton := class_type.skeleton
 			result_type := type.actual_type.type_i
 			if result_type.has_formal then
@@ -179,23 +178,23 @@ feature
 			internal_name := body_id.feature_name (class_type.id)
 			add_in_log (class_type, internal_name)
 
-			file.generate_function_signature (result_type.c_type.c_string,
-				internal_name, True, Byte_context.extern_declaration_file,
+			buffer.generate_function_signature (result_type.c_type.c_string,
+				internal_name, True, Byte_context.header_buffer,
 				<<"Current">>, <<"EIF_REFERENCE">>)
-			file.indent
-			file.putstring ("return *")
-			result_type.c_type.generate_access_cast (file)
-			file.putstring ("(Current")
+			buffer.indent
+			buffer.putstring ("return *")
+			result_type.c_type.generate_access_cast (buffer)
+			buffer.putstring ("(Current")
 			rout_id := rout_id_set.first
 			if byte_context.final_mode then
 				table := Eiffel_table.poly_table (rout_id)
 				if table.is_polymorphic (class_type.type_id) then
 					table_name := rout_id.table_name
-					file.putstring ("+ (")
-					file.putstring (table_name)
-					file.putchar ('-')
-					file.putint (table.min_type_id - 1)
-					file.putstring (")[Dtype(Current)]")
+					buffer.putstring ("+ (")
+					buffer.putstring (table_name)
+					buffer.putchar ('-')
+					buffer.putint (table.min_type_id - 1)
+					buffer.putstring (")[Dtype(Current)]")
 						-- Mark attribute offset table used.
 					Eiffel_table.mark_used (rout_id)
 						-- Remember external attribute offset declaration
@@ -205,26 +204,26 @@ feature
 						--| arguments. This means we won't generate anything if there is nothing
 						--| to generate. Remember that `True' is used in the generation of attributes
 						--| table in Final mode.
-					skeleton.generate_offset (file, feature_id, False)
+					skeleton.generate_offset (buffer, feature_id, False)
 				end
 			elseif
 				Compilation_modes.is_precompiling or
 				class_type.associated_class.is_precompiled
 			then
 				rout_info := System.rout_info_table.item (rout_id)
-				file.putstring (" + RTWPA(")
-				rout_info.origin.generated_id (file)
-				file.putchar (',')
-				file.putint (rout_info.offset)
-				file.putstring (", Dtype(Current))")
+				buffer.putstring (" + RTWPA(")
+				rout_info.origin.generated_id (buffer)
+				buffer.putchar (',')
+				buffer.putint (rout_info.offset)
+				buffer.putstring (", Dtype(Current))")
 			else
-				file.putstring (" + RTWA(")
-				file.putint (class_type.id.id - 1)
-				file.putchar (',')
-				file.putint (feature_id)
-				file.putstring (", Dtype(Current))")
+				buffer.putstring (" + RTWA(")
+				buffer.putint (class_type.id.id - 1)
+				buffer.putchar (',')
+				buffer.putint (feature_id)
+				buffer.putstring (", Dtype(Current))")
 			end;		
-			file.putstring(");%N}%N%N")
+			buffer.putstring(");%N}%N%N")
 		end
 
 	replicated: FEATURE_I is

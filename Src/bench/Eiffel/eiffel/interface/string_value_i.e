@@ -32,12 +32,12 @@ feature
 	is_string: BOOLEAN is True
 			-- Is the current constant a string one ?
 
-	generate (file: INDENT_FILE) is
-			-- Generate value in `file'.
+	generate (buffer: GENERATION_BUFFER) is
+			-- Generate value in `buffer'.
 		do
-			file.putstring ("RTMS(%"");
-			file.escape_string (str_val);
-			file.putstring ("%")");
+			buffer.putstring ("RTMS(%"");
+			buffer.escape_string (str_val);
+			buffer.putstring ("%")");
 		end;
 
 	valid_type (t: TYPE_A): BOOLEAN is

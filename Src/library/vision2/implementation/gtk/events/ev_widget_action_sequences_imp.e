@@ -103,7 +103,6 @@ feature -- Event handling
 			-- Attach to GTK "focus-in-event" signal.
 		do
 			create Result
-			real_signal_connect (visual_widget, "focus-in-event", agent (App_implementation.gtk_marshal).widget_focus_in_intermediary (c_object), Void)
 		end
 
 	create_focus_out_actions: EV_NOTIFY_ACTION_SEQUENCE is
@@ -111,7 +110,6 @@ feature -- Event handling
 			-- Attach to GTK "focus-out-event" signal.
 		do
 			create Result
-			real_signal_connect (visual_widget, "focus-out-event", agent (App_implementation.gtk_marshal).widget_focus_out_intermediary (c_object), Void)
 		end
 
 	create_resize_actions: EV_GEOMETRY_ACTION_SEQUENCE is

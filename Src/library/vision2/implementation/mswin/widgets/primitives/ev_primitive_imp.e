@@ -43,7 +43,6 @@ feature -- Element change
 		do
 			if par /= Void then
 				par_imp ?= par.implementation
-				par_imp.add_child (Current)
 				ww ?= par.implementation
 				wel_set_parent (ww)
 				check
@@ -180,6 +179,9 @@ end -- class EV_PRIMITIVE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.26  2000/04/26 22:11:49  rogers
+--| Removed par_imp.add_child (Current) from set_parent as redundent now.
+--|
 --| Revision 1.25  2000/04/05 22:47:46  rogers
 --| removed FIXME NOT_REVIEWED. Fixed description, made whole
 --| class fit within 80 columns. Formatting.

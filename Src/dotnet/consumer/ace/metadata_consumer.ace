@@ -82,6 +82,4 @@ assembly
 			"XML_"
 		end
 
-	"eiffelsoftware_runtime":	"${ISE_EIFFEL}\studio\spec\$ISE_PLATFORM\bin\EiffelSoftware.Runtime.dll"
-
 end

@@ -9,14 +9,19 @@ class
 
 inherit
 	EV_MULTI_COLUMN_LIST_ROW_I
+		select
+			parent_imp
+		end
 
 	EV_COMPOSED_ITEM_IMP
 		rename
 			count as columns,
-			set_count as set_columns
+			set_count as set_columns,
+			parent_imp as old_parent_imp
+		undefine
+			parent
 		redefine
 			destroy,
-			parent_imp,
 			set_cell_text
 		end
 
@@ -27,9 +32,6 @@ creation
 	make_with_text
 
 feature -- Access
-
-	parent_imp: EV_MULTI_COLUMN_LIST_IMP
-			-- List implementation that contain this row
 
 	index: INTEGER is
 			-- Index of the current item.

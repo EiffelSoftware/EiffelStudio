@@ -93,6 +93,16 @@ feature -- Status Report
 		do
 			Result := False
 		end
+		
+	blocking_window: EV_WINDOW is
+			-- `Result' is window `Current' is shown to if
+			-- `is_modal' or `is_relative'.
+		
+		do
+			Result := Void
+			-- `Result' is Void as `Current' cannot be shown modally or
+			-- relative, otherwise its implementation would not be EV_DIALOG_IMP.
+		end
 
 feature -- Status Setting
 	

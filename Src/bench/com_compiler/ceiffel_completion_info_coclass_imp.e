@@ -96,7 +96,7 @@ feature {NONE}  -- Externals
 	ccom_create_item (eif_object: like Current): POINTER is
 			-- Initialize `item'
 		external
-			"C++ [new ecom_eiffel_compiler::CEiffelCompletionInfo %"ecom_eiffel_compiler_CEiffelCompletionInfo_s.h%"](EIF_OBJECT)"
+			"C++ [new ecom_EiffelComCompiler::CEiffelCompletionInfo %"ecom_EiffelComCompiler_CEiffelCompletionInfo_s.h%"](EIF_OBJECT)"
 		end
 
 end -- CEIFFEL_COMPLETION_INFO_COCLASS_IMP

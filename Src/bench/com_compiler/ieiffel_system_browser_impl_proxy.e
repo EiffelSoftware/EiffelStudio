@@ -137,103 +137,103 @@ feature {NONE}  -- Externals
 	ccom_system_classes (cpp_obj: POINTER): IENUM_EIFFEL_CLASS_INTERFACE is
 			-- List of classes in system.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemBrowser_impl_proxy_s.h%"](): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_proxy %"ecom_EiffelComCompiler_IEiffelSystemBrowser_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
 	ccom_class_count (cpp_obj: POINTER): INTEGER is
 			-- Number of classes in system.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemBrowser_impl_proxy_s.h%"](): EIF_INTEGER"
+			"C++ [ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_proxy %"ecom_EiffelComCompiler_IEiffelSystemBrowser_impl_proxy_s.h%"](): EIF_INTEGER"
 		end
 
 	ccom_system_clusters (cpp_obj: POINTER): IENUM_CLUSTER_INTERFACE is
 			-- List of system's clusters.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemBrowser_impl_proxy_s.h%"](): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_proxy %"ecom_EiffelComCompiler_IEiffelSystemBrowser_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
 	ccom_external_clusters (cpp_obj: POINTER): IENUM_CLUSTER_INTERFACE is
 			-- List of system's external clusters.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemBrowser_impl_proxy_s.h%"](): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_proxy %"ecom_EiffelComCompiler_IEiffelSystemBrowser_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
 	ccom_assemblies (cpp_obj: POINTER): IENUM_ASSEMBLY_INTERFACE is
 			-- Returns all of the assemblies in an enumerator
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemBrowser_impl_proxy_s.h%"](): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_proxy %"ecom_EiffelComCompiler_IEiffelSystemBrowser_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
 	ccom_cluster_count (cpp_obj: POINTER): INTEGER is
 			-- Number of top-level clusters in system.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemBrowser_impl_proxy_s.h%"](): EIF_INTEGER"
+			"C++ [ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_proxy %"ecom_EiffelComCompiler_IEiffelSystemBrowser_impl_proxy_s.h%"](): EIF_INTEGER"
 		end
 
 	ccom_root_cluster (cpp_obj: POINTER): IEIFFEL_CLUSTER_DESCRIPTOR_INTERFACE is
 			-- Number of top-level clusters in system.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemBrowser_impl_proxy_s.h%"](): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_proxy %"ecom_EiffelComCompiler_IEiffelSystemBrowser_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
 	ccom_cluster_descriptor (cpp_obj: POINTER; cluster_name: STRING): IEIFFEL_CLUSTER_DESCRIPTOR_INTERFACE is
 			-- Cluster descriptor.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemBrowser_impl_proxy_s.h%"](EIF_OBJECT): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_proxy %"ecom_EiffelComCompiler_IEiffelSystemBrowser_impl_proxy_s.h%"](EIF_OBJECT): EIF_REFERENCE"
 		end
 
 	ccom_class_descriptor (cpp_obj: POINTER; class_name1: STRING): IEIFFEL_CLASS_DESCRIPTOR_INTERFACE is
 			-- Class descriptor.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemBrowser_impl_proxy_s.h%"](EIF_OBJECT): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_proxy %"ecom_EiffelComCompiler_IEiffelSystemBrowser_impl_proxy_s.h%"](EIF_OBJECT): EIF_REFERENCE"
 		end
 
 	ccom_feature_descriptor (cpp_obj: POINTER; class_name1: STRING; feature_name: STRING): IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE is
 			-- Feature descriptor.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemBrowser_impl_proxy_s.h%"](EIF_OBJECT,EIF_OBJECT): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_proxy %"ecom_EiffelComCompiler_IEiffelSystemBrowser_impl_proxy_s.h%"](EIF_OBJECT,EIF_OBJECT): EIF_REFERENCE"
 		end
 
 	ccom_search_classes (cpp_obj: POINTER; a_string: STRING; is_substring: BOOLEAN): IENUM_EIFFEL_CLASS_INTERFACE is
 			-- Search classes with names matching `a_string'.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemBrowser_impl_proxy_s.h%"](EIF_OBJECT,EIF_BOOLEAN): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_proxy %"ecom_EiffelComCompiler_IEiffelSystemBrowser_impl_proxy_s.h%"](EIF_OBJECT,EIF_BOOLEAN): EIF_REFERENCE"
 		end
 
 	ccom_search_features (cpp_obj: POINTER; a_string: STRING; is_substring: BOOLEAN): IENUM_FEATURE_INTERFACE is
 			-- Search feature with names matching `a_string'.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemBrowser_impl_proxy_s.h%"](EIF_OBJECT,EIF_BOOLEAN): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_proxy %"ecom_EiffelComCompiler_IEiffelSystemBrowser_impl_proxy_s.h%"](EIF_OBJECT,EIF_BOOLEAN): EIF_REFERENCE"
 		end
 
 	ccom_description_from_dotnet_type (cpp_obj: POINTER; a_assembly_name: STRING; a_full_dotnet_type: STRING): STRING is
 			-- Retrieve description from dotnet type
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemBrowser_impl_proxy_s.h%"](EIF_OBJECT,EIF_OBJECT): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_proxy %"ecom_EiffelComCompiler_IEiffelSystemBrowser_impl_proxy_s.h%"](EIF_OBJECT,EIF_OBJECT): EIF_REFERENCE"
 		end
 
 	ccom_description_from_dotnet_feature (cpp_obj: POINTER; a_assembly_name: STRING; a_full_dotnet_type: STRING; a_feature_signature: STRING): STRING is
 			-- Retrieve description from dotnet feature
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemBrowser_impl_proxy_s.h%"](EIF_OBJECT,EIF_OBJECT,EIF_OBJECT): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_proxy %"ecom_EiffelComCompiler_IEiffelSystemBrowser_impl_proxy_s.h%"](EIF_OBJECT,EIF_OBJECT,EIF_OBJECT): EIF_REFERENCE"
 		end
 
 	ccom_delete_ieiffel_system_browser_impl_proxy (a_pointer: POINTER) is
 			-- Release resource
 		external
-			"C++ [delete ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemBrowser_impl_proxy_s.h%"]()"
+			"C++ [delete ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_proxy %"ecom_EiffelComCompiler_IEiffelSystemBrowser_impl_proxy_s.h%"]()"
 		end
 
 	ccom_create_ieiffel_system_browser_impl_proxy_from_pointer (a_pointer: POINTER): POINTER is
 			-- Create from pointer
 		external
-			"C++ [new ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemBrowser_impl_proxy_s.h%"](IUnknown *)"
+			"C++ [new ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_proxy %"ecom_EiffelComCompiler_IEiffelSystemBrowser_impl_proxy_s.h%"](IUnknown *)"
 		end
 
 	ccom_item (cpp_obj: POINTER): POINTER is
 			-- Item
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemBrowser_impl_proxy_s.h%"]():EIF_POINTER"
+			"C++ [ecom_EiffelComCompiler::IEiffelSystemBrowser_impl_proxy %"ecom_EiffelComCompiler_IEiffelSystemBrowser_impl_proxy_s.h%"]():EIF_POINTER"
 		end
 
 end -- IEIFFEL_SYSTEM_BROWSER_IMPL_PROXY

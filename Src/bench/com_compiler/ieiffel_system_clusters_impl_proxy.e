@@ -25,16 +25,16 @@ feature {NONE}  -- Initialization
 
 feature -- Access
 
-	cluster_tree: IENUM_CLUSTER_PROP_INTERFACE is
-			-- Cluster tree.
+	get_cluster_tree: IENUM_CLUSTER_PROP_INTERFACE is
+			-- Retrieve enumerator of clusters in tree form.
 		do
-			Result := ccom_cluster_tree (initializer)
+			Result := ccom_get_cluster_tree (initializer)
 		end
 
-	flat_clusters: IENUM_CLUSTER_PROP_INTERFACE is
-			-- Cluster in a flat form.
+	get_all_clusters: IENUM_CLUSTER_PROP_INTERFACE is
+			-- Retrieve enumerator of all defined clusters.
 		do
-			Result := ccom_flat_clusters (initializer)
+			Result := ccom_get_all_clusters (initializer)
 		end
 
 feature -- Status Report
@@ -65,62 +65,69 @@ feature -- Status Report
 
 feature -- Basic Operations
 
+	get_cluster_full_name (bstr_name: STRING): STRING is
+			-- Get a clusters full name from its name.
+			-- `bstr_name' [in].  
+		do
+			Result := ccom_get_cluster_full_name (initializer, bstr_name)
+		end
+
+	get_cluster_properties (bstr_name: STRING): IEIFFEL_CLUSTER_PROPERTIES_INTERFACE is
+			-- Retrieve a clusters properties by its name.
+			-- `bstr_name' [in].  
+		do
+			Result := ccom_get_cluster_properties (initializer, bstr_name)
+		end
+
+	get_cluster_properties_by_id (n_cluster_id: INTEGER): IEIFFEL_CLUSTER_PROPERTIES_INTERFACE is
+			-- Retrieve a clusters properties by its ID.
+			-- `n_cluster_id' [in].  
+		do
+			Result := ccom_get_cluster_properties_by_id (initializer, n_cluster_id)
+		end
+
+	change_cluster_name (bstr_name: STRING; bstr_new_name: STRING) is
+			-- Change a clusters name.
+			-- `bstr_name' [in].  
+			-- `bstr_new_name' [in].  
+		do
+			ccom_change_cluster_name (initializer, bstr_name, bstr_new_name)
+		end
+
+	add_cluster (bstr_name: STRING; bstr_parent_name: STRING; bstr_path: STRING) is
+			-- Add a cluster to system clusters.
+			-- `bstr_name' [in].  
+			-- `bstr_parent_name' [in].  
+			-- `bstr_path' [in].  
+		do
+			ccom_add_cluster (initializer, bstr_name, bstr_parent_name, bstr_path)
+		end
+
+	remove_cluster (bstr_name: STRING) is
+			-- Remove a cluster from system clusters.
+			-- `bstr_name' [in].  
+		do
+			ccom_remove_cluster (initializer, bstr_name)
+		end
+
 	store is
-			-- Save changes.
+			-- Persist current changes to disk
 		do
 			ccom_store (initializer)
 		end
 
-	add_cluster (cluster_name: STRING; parent_name: STRING; cluster_path: STRING) is
-			-- Add a cluster to the project.
-			-- `cluster_name' [in].  
-			-- `parent_name' [in].  
-			-- `cluster_path' [in].  
+	is_cluster_name_available (bstr_name: STRING): BOOLEAN is
+			-- Determins if 'bstrName' is available as a cluster name
+			-- `bstr_name' [in].  
 		do
-			ccom_add_cluster (initializer, cluster_name, parent_name, cluster_path)
+			Result := ccom_is_cluster_name_available (initializer, bstr_name)
 		end
 
-	remove_cluster (cluster_name: STRING) is
-			-- Remove a cluster from the project.
-			-- `cluster_name' [in].  
+	is_valid_cluster_name (bstr_name: STRING): BOOLEAN is
+			-- Validates a cluster name
+			-- `bstr_name' [in].  
 		do
-			ccom_remove_cluster (initializer, cluster_name)
-		end
-
-	cluster_properties (cluster_name: STRING): IEIFFEL_CLUSTER_PROPERTIES_INTERFACE is
-			-- Cluster properties.
-			-- `cluster_name' [in].  
-		do
-			Result := ccom_cluster_properties (initializer, cluster_name)
-		end
-
-	cluster_properties_by_id (cluster_id: INTEGER): IEIFFEL_CLUSTER_PROPERTIES_INTERFACE is
-			-- Cluster properties.
-			-- `cluster_id' [in].  
-		do
-			Result := ccom_cluster_properties_by_id (initializer, cluster_id)
-		end
-
-	change_cluster_name (a_name: STRING; a_new_name: STRING) is
-			-- Change cluster name.
-			-- `a_name' [in].  
-			-- `a_new_name' [in].  
-		do
-			ccom_change_cluster_name (initializer, a_name, a_new_name)
-		end
-
-	is_valid_name (cluster_name: STRING): BOOLEAN is
-			-- Checks to see if a cluster name is valid
-			-- `cluster_name' [in].  
-		do
-			Result := ccom_is_valid_name (initializer, cluster_name)
-		end
-
-	get_cluster_fullname (cluster_name: STRING): STRING is
-			-- Retrieves a clusters full name from its name
-			-- `cluster_name' [in].  
-		do
-			Result := ccom_get_cluster_fullname (initializer, cluster_name)
+			Result := ccom_is_valid_cluster_name (initializer, bstr_name)
 		end
 
 feature {NONE}  -- Implementation
@@ -133,106 +140,112 @@ feature {NONE}  -- Implementation
 
 feature {NONE}  -- Externals
 
-	ccom_cluster_tree (cpp_obj: POINTER): IENUM_CLUSTER_PROP_INTERFACE is
-			-- Cluster tree.
+	ccom_get_cluster_tree (cpp_obj: POINTER): IENUM_CLUSTER_PROP_INTERFACE is
+			-- Retrieve enumerator of clusters in tree form.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelSystemClusters_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemClusters_impl_proxy_s.h%"](): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelSystemClusters_impl_proxy %"ecom_EiffelComCompiler_IEiffelSystemClusters_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
-	ccom_flat_clusters (cpp_obj: POINTER): IENUM_CLUSTER_PROP_INTERFACE is
-			-- Cluster in a flat form.
+	ccom_get_all_clusters (cpp_obj: POINTER): IENUM_CLUSTER_PROP_INTERFACE is
+			-- Retrieve enumerator of all defined clusters.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelSystemClusters_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemClusters_impl_proxy_s.h%"](): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelSystemClusters_impl_proxy %"ecom_EiffelComCompiler_IEiffelSystemClusters_impl_proxy_s.h%"](): EIF_REFERENCE"
+		end
+
+	ccom_get_cluster_full_name (cpp_obj: POINTER; bstr_name: STRING): STRING is
+			-- Get a clusters full name from its name.
+		external
+			"C++ [ecom_EiffelComCompiler::IEiffelSystemClusters_impl_proxy %"ecom_EiffelComCompiler_IEiffelSystemClusters_impl_proxy_s.h%"](EIF_OBJECT): EIF_REFERENCE"
+		end
+
+	ccom_get_cluster_properties (cpp_obj: POINTER; bstr_name: STRING): IEIFFEL_CLUSTER_PROPERTIES_INTERFACE is
+			-- Retrieve a clusters properties by its name.
+		external
+			"C++ [ecom_EiffelComCompiler::IEiffelSystemClusters_impl_proxy %"ecom_EiffelComCompiler_IEiffelSystemClusters_impl_proxy_s.h%"](EIF_OBJECT): EIF_REFERENCE"
+		end
+
+	ccom_get_cluster_properties_by_id (cpp_obj: POINTER; n_cluster_id: INTEGER): IEIFFEL_CLUSTER_PROPERTIES_INTERFACE is
+			-- Retrieve a clusters properties by its ID.
+		external
+			"C++ [ecom_EiffelComCompiler::IEiffelSystemClusters_impl_proxy %"ecom_EiffelComCompiler_IEiffelSystemClusters_impl_proxy_s.h%"](EIF_INTEGER): EIF_REFERENCE"
+		end
+
+	ccom_change_cluster_name (cpp_obj: POINTER; bstr_name: STRING; bstr_new_name: STRING) is
+			-- Change a clusters name.
+		external
+			"C++ [ecom_EiffelComCompiler::IEiffelSystemClusters_impl_proxy %"ecom_EiffelComCompiler_IEiffelSystemClusters_impl_proxy_s.h%"](EIF_OBJECT,EIF_OBJECT)"
+		end
+
+	ccom_add_cluster (cpp_obj: POINTER; bstr_name: STRING; bstr_parent_name: STRING; bstr_path: STRING) is
+			-- Add a cluster to system clusters.
+		external
+			"C++ [ecom_EiffelComCompiler::IEiffelSystemClusters_impl_proxy %"ecom_EiffelComCompiler_IEiffelSystemClusters_impl_proxy_s.h%"](EIF_OBJECT,EIF_OBJECT,EIF_OBJECT)"
+		end
+
+	ccom_remove_cluster (cpp_obj: POINTER; bstr_name: STRING) is
+			-- Remove a cluster from system clusters.
+		external
+			"C++ [ecom_EiffelComCompiler::IEiffelSystemClusters_impl_proxy %"ecom_EiffelComCompiler_IEiffelSystemClusters_impl_proxy_s.h%"](EIF_OBJECT)"
 		end
 
 	ccom_store (cpp_obj: POINTER) is
-			-- Save changes.
+			-- Persist current changes to disk
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelSystemClusters_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemClusters_impl_proxy_s.h%"]()"
+			"C++ [ecom_EiffelComCompiler::IEiffelSystemClusters_impl_proxy %"ecom_EiffelComCompiler_IEiffelSystemClusters_impl_proxy_s.h%"]()"
 		end
 
-	ccom_add_cluster (cpp_obj: POINTER; cluster_name: STRING; parent_name: STRING; cluster_path: STRING) is
-			-- Add a cluster to the project.
+	ccom_is_cluster_name_available (cpp_obj: POINTER; bstr_name: STRING): BOOLEAN is
+			-- Determins if 'bstrName' is available as a cluster name
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelSystemClusters_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemClusters_impl_proxy_s.h%"](EIF_OBJECT,EIF_OBJECT,EIF_OBJECT)"
+			"C++ [ecom_EiffelComCompiler::IEiffelSystemClusters_impl_proxy %"ecom_EiffelComCompiler_IEiffelSystemClusters_impl_proxy_s.h%"](EIF_OBJECT): EIF_BOOLEAN"
 		end
 
-	ccom_remove_cluster (cpp_obj: POINTER; cluster_name: STRING) is
-			-- Remove a cluster from the project.
+	ccom_is_valid_cluster_name (cpp_obj: POINTER; bstr_name: STRING): BOOLEAN is
+			-- Validates a cluster name
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelSystemClusters_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemClusters_impl_proxy_s.h%"](EIF_OBJECT)"
-		end
-
-	ccom_cluster_properties (cpp_obj: POINTER; cluster_name: STRING): IEIFFEL_CLUSTER_PROPERTIES_INTERFACE is
-			-- Cluster properties.
-		external
-			"C++ [ecom_eiffel_compiler::IEiffelSystemClusters_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemClusters_impl_proxy_s.h%"](EIF_OBJECT): EIF_REFERENCE"
-		end
-
-	ccom_cluster_properties_by_id (cpp_obj: POINTER; cluster_id: INTEGER): IEIFFEL_CLUSTER_PROPERTIES_INTERFACE is
-			-- Cluster properties.
-		external
-			"C++ [ecom_eiffel_compiler::IEiffelSystemClusters_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemClusters_impl_proxy_s.h%"](EIF_INTEGER): EIF_REFERENCE"
-		end
-
-	ccom_change_cluster_name (cpp_obj: POINTER; a_name: STRING; a_new_name: STRING) is
-			-- Change cluster name.
-		external
-			"C++ [ecom_eiffel_compiler::IEiffelSystemClusters_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemClusters_impl_proxy_s.h%"](EIF_OBJECT,EIF_OBJECT)"
-		end
-
-	ccom_is_valid_name (cpp_obj: POINTER; cluster_name: STRING): BOOLEAN is
-			-- Checks to see if a cluster name is valid
-		external
-			"C++ [ecom_eiffel_compiler::IEiffelSystemClusters_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemClusters_impl_proxy_s.h%"](EIF_OBJECT): EIF_BOOLEAN"
-		end
-
-	ccom_get_cluster_fullname (cpp_obj: POINTER; cluster_name: STRING): STRING is
-			-- Retrieves a clusters full name from its name
-		external
-			"C++ [ecom_eiffel_compiler::IEiffelSystemClusters_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemClusters_impl_proxy_s.h%"](EIF_OBJECT): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelSystemClusters_impl_proxy %"ecom_EiffelComCompiler_IEiffelSystemClusters_impl_proxy_s.h%"](EIF_OBJECT): EIF_BOOLEAN"
 		end
 
 	ccom_delete_ieiffel_system_clusters_impl_proxy (a_pointer: POINTER) is
 			-- Release resource
 		external
-			"C++ [delete ecom_eiffel_compiler::IEiffelSystemClusters_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemClusters_impl_proxy_s.h%"]()"
+			"C++ [delete ecom_EiffelComCompiler::IEiffelSystemClusters_impl_proxy %"ecom_EiffelComCompiler_IEiffelSystemClusters_impl_proxy_s.h%"]()"
 		end
 
 	ccom_create_ieiffel_system_clusters_impl_proxy_from_pointer (a_pointer: POINTER): POINTER is
 			-- Create from pointer
 		external
-			"C++ [new ecom_eiffel_compiler::IEiffelSystemClusters_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemClusters_impl_proxy_s.h%"](IUnknown *)"
+			"C++ [new ecom_EiffelComCompiler::IEiffelSystemClusters_impl_proxy %"ecom_EiffelComCompiler_IEiffelSystemClusters_impl_proxy_s.h%"](IUnknown *)"
 		end
 
 	ccom_item (cpp_obj: POINTER): POINTER is
 			-- Item
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelSystemClusters_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemClusters_impl_proxy_s.h%"]():EIF_POINTER"
+			"C++ [ecom_EiffelComCompiler::IEiffelSystemClusters_impl_proxy %"ecom_EiffelComCompiler_IEiffelSystemClusters_impl_proxy_s.h%"]():EIF_POINTER"
 		end
 
 	ccom_last_error_code (cpp_obj: POINTER): INTEGER is
 			-- Last error code
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelSystemClusters_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemClusters_impl_proxy_s.h%"]():EIF_INTEGER"
+			"C++ [ecom_EiffelComCompiler::IEiffelSystemClusters_impl_proxy %"ecom_EiffelComCompiler_IEiffelSystemClusters_impl_proxy_s.h%"]():EIF_INTEGER"
 		end
 
 	ccom_last_error_description (cpp_obj: POINTER): STRING is
 			-- Last error description
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelSystemClusters_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemClusters_impl_proxy_s.h%"]():EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelSystemClusters_impl_proxy %"ecom_EiffelComCompiler_IEiffelSystemClusters_impl_proxy_s.h%"]():EIF_REFERENCE"
 		end
 
 	ccom_last_error_help_file (cpp_obj: POINTER): STRING is
 			-- Last error help file
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelSystemClusters_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemClusters_impl_proxy_s.h%"]():EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelSystemClusters_impl_proxy %"ecom_EiffelComCompiler_IEiffelSystemClusters_impl_proxy_s.h%"]():EIF_REFERENCE"
 		end
 
 	ccom_last_source_of_exception (cpp_obj: POINTER): STRING is
 			-- Last source of exception
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelSystemClusters_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemClusters_impl_proxy_s.h%"]():EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelSystemClusters_impl_proxy %"ecom_EiffelComCompiler_IEiffelSystemClusters_impl_proxy_s.h%"]():EIF_REFERENCE"
 		end
 
 end -- IEIFFEL_SYSTEM_CLUSTERS_IMPL_PROXY

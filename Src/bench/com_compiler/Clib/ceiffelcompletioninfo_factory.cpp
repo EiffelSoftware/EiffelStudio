@@ -61,7 +61,7 @@ STDMETHODIMP CEiffelCompletionInfo_factory::CreateInstance( IUnknown *pIunknown,
 	*ppv = 0;
 	if (pIunknown)
 		return CLASS_E_NOAGGREGATION;
-	ecom_eiffel_compiler::CEiffelCompletionInfo *pUnknown = new ecom_eiffel_compiler::CEiffelCompletionInfo (type_id);
+	ecom_EiffelComCompiler::CEiffelCompletionInfo *pUnknown = new ecom_EiffelComCompiler::CEiffelCompletionInfo (type_id);
 	if (!pUnknown)
 		return E_OUTOFMEMORY;
 	pUnknown->AddRef ();

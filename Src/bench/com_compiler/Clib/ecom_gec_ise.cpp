@@ -99,10 +99,10 @@ BSTR * ecom_gec_ISE::ccom_ec_pointed_cell_3( EIF_REFERENCE eif_ref, BSTR * old )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-ecom_eiffel_compiler::IEiffelException * ecom_gec_ISE::ccom_ec_pointed_interface_6( EIF_REFERENCE eif_ref )
+ecom_EiffelComCompiler::IEiffelException * ecom_gec_ISE::ccom_ec_pointed_interface_6( EIF_REFERENCE eif_ref )
 
 /*-----------------------------------------------------------
-	Convert IEIFFEL_EXCEPTION_INTERFACE to ecom_eiffel_compiler::IEiffelException *.
+	Convert IEIFFEL_EXCEPTION_INTERFACE to ecom_EiffelComCompiler::IEiffelException *.
 -----------------------------------------------------------*/
 {
 	EIF_OBJECT eif_object = 0;
@@ -120,28 +120,28 @@ ecom_eiffel_compiler::IEiffelException * ecom_gec_ISE::ccom_ec_pointed_interface
 			(FUNCTION_CAST (void, (EIF_REFERENCE)) create_item) (eif_access (eif_object));
 		a_pointer = (EIF_POINTER) eif_field (eif_access (eif_object), "item", EIF_POINTER);
 		}
-		((ecom_eiffel_compiler::IEiffelException *) a_pointer)->AddRef ();
+		((ecom_EiffelComCompiler::IEiffelException *) a_pointer)->AddRef ();
 		eif_wean (eif_object);
 	}
-	return  (ecom_eiffel_compiler::IEiffelException * ) a_pointer;
+	return  (ecom_EiffelComCompiler::IEiffelException * ) a_pointer;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-ecom_eiffel_compiler::IEiffelException * * ecom_gec_ISE::ccom_ec_pointed_cell_7( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEiffelException * * old )
+ecom_EiffelComCompiler::IEiffelException * * ecom_gec_ISE::ccom_ec_pointed_cell_7( EIF_REFERENCE eif_ref, ecom_EiffelComCompiler::IEiffelException * * old )
 
 /*-----------------------------------------------------------
-	Convert CELL [IEIFFEL_EXCEPTION_INTERFACE] to ecom_eiffel_compiler::IEiffelException * *.
+	Convert CELL [IEIFFEL_EXCEPTION_INTERFACE] to ecom_EiffelComCompiler::IEiffelException * *.
 -----------------------------------------------------------*/
 {
 	EIF_OBJECT eif_object = 0;
-	ecom_eiffel_compiler::IEiffelException * * result = 0;
+	ecom_EiffelComCompiler::IEiffelException * * result = 0;
 	EIF_REFERENCE cell_item = 0;
 
 	eif_object = eif_protect (eif_ref);
 	if (old != NULL)
 		result = old;
 	else
-		result = (ecom_eiffel_compiler::IEiffelException * *) CoTaskMemAlloc (sizeof (ecom_eiffel_compiler::IEiffelException *));
+		result = (ecom_EiffelComCompiler::IEiffelException * *) CoTaskMemAlloc (sizeof (ecom_EiffelComCompiler::IEiffelException *));
 	cell_item = eif_field (eif_access (eif_object), "item", EIF_REFERENCE);
 	if (cell_item != NULL)
 		*result = ccom_ec_pointed_interface_6 (cell_item);
@@ -150,10 +150,10 @@ ecom_eiffel_compiler::IEiffelException * * ecom_gec_ISE::ccom_ec_pointed_cell_7(
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-ecom_eiffel_compiler::IEiffelCompiler * ecom_gec_ISE::ccom_ec_pointed_interface_9( EIF_REFERENCE eif_ref )
+ecom_EiffelComCompiler::IEiffelCompiler * ecom_gec_ISE::ccom_ec_pointed_interface_9( EIF_REFERENCE eif_ref )
 
 /*-----------------------------------------------------------
-	Convert IEIFFEL_COMPILER_INTERFACE to ecom_eiffel_compiler::IEiffelCompiler *.
+	Convert IEIFFEL_COMPILER_INTERFACE to ecom_EiffelComCompiler::IEiffelCompiler *.
 -----------------------------------------------------------*/
 {
 	EIF_OBJECT eif_object = 0;
@@ -171,28 +171,28 @@ ecom_eiffel_compiler::IEiffelCompiler * ecom_gec_ISE::ccom_ec_pointed_interface_
 			(FUNCTION_CAST (void, (EIF_REFERENCE)) create_item) (eif_access (eif_object));
 		a_pointer = (EIF_POINTER) eif_field (eif_access (eif_object), "item", EIF_POINTER);
 		}
-		((ecom_eiffel_compiler::IEiffelCompiler *) a_pointer)->AddRef ();
+		((ecom_EiffelComCompiler::IEiffelCompiler *) a_pointer)->AddRef ();
 		eif_wean (eif_object);
 	}
-	return  (ecom_eiffel_compiler::IEiffelCompiler * ) a_pointer;
+	return  (ecom_EiffelComCompiler::IEiffelCompiler * ) a_pointer;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-ecom_eiffel_compiler::IEiffelCompiler * * ecom_gec_ISE::ccom_ec_pointed_cell_10( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEiffelCompiler * * old )
+ecom_EiffelComCompiler::IEiffelCompiler * * ecom_gec_ISE::ccom_ec_pointed_cell_10( EIF_REFERENCE eif_ref, ecom_EiffelComCompiler::IEiffelCompiler * * old )
 
 /*-----------------------------------------------------------
-	Convert CELL [IEIFFEL_COMPILER_INTERFACE] to ecom_eiffel_compiler::IEiffelCompiler * *.
+	Convert CELL [IEIFFEL_COMPILER_INTERFACE] to ecom_EiffelComCompiler::IEiffelCompiler * *.
 -----------------------------------------------------------*/
 {
 	EIF_OBJECT eif_object = 0;
-	ecom_eiffel_compiler::IEiffelCompiler * * result = 0;
+	ecom_EiffelComCompiler::IEiffelCompiler * * result = 0;
 	EIF_REFERENCE cell_item = 0;
 
 	eif_object = eif_protect (eif_ref);
 	if (old != NULL)
 		result = old;
 	else
-		result = (ecom_eiffel_compiler::IEiffelCompiler * *) CoTaskMemAlloc (sizeof (ecom_eiffel_compiler::IEiffelCompiler *));
+		result = (ecom_EiffelComCompiler::IEiffelCompiler * *) CoTaskMemAlloc (sizeof (ecom_EiffelComCompiler::IEiffelCompiler *));
 	cell_item = eif_field (eif_access (eif_object), "item", EIF_REFERENCE);
 	if (cell_item != NULL)
 		*result = ccom_ec_pointed_interface_9 (cell_item);
@@ -201,10 +201,10 @@ ecom_eiffel_compiler::IEiffelCompiler * * ecom_gec_ISE::ccom_ec_pointed_cell_10(
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-ecom_eiffel_compiler::IEiffelSystemBrowser * ecom_gec_ISE::ccom_ec_pointed_interface_14( EIF_REFERENCE eif_ref )
+ecom_EiffelComCompiler::IEiffelSystemBrowser * ecom_gec_ISE::ccom_ec_pointed_interface_14( EIF_REFERENCE eif_ref )
 
 /*-----------------------------------------------------------
-	Convert IEIFFEL_SYSTEM_BROWSER_INTERFACE to ecom_eiffel_compiler::IEiffelSystemBrowser *.
+	Convert IEIFFEL_SYSTEM_BROWSER_INTERFACE to ecom_EiffelComCompiler::IEiffelSystemBrowser *.
 -----------------------------------------------------------*/
 {
 	EIF_OBJECT eif_object = 0;
@@ -222,28 +222,28 @@ ecom_eiffel_compiler::IEiffelSystemBrowser * ecom_gec_ISE::ccom_ec_pointed_inter
 			(FUNCTION_CAST (void, (EIF_REFERENCE)) create_item) (eif_access (eif_object));
 		a_pointer = (EIF_POINTER) eif_field (eif_access (eif_object), "item", EIF_POINTER);
 		}
-		((ecom_eiffel_compiler::IEiffelSystemBrowser *) a_pointer)->AddRef ();
+		((ecom_EiffelComCompiler::IEiffelSystemBrowser *) a_pointer)->AddRef ();
 		eif_wean (eif_object);
 	}
-	return  (ecom_eiffel_compiler::IEiffelSystemBrowser * ) a_pointer;
+	return  (ecom_EiffelComCompiler::IEiffelSystemBrowser * ) a_pointer;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-ecom_eiffel_compiler::IEiffelSystemBrowser * * ecom_gec_ISE::ccom_ec_pointed_cell_15( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEiffelSystemBrowser * * old )
+ecom_EiffelComCompiler::IEiffelSystemBrowser * * ecom_gec_ISE::ccom_ec_pointed_cell_15( EIF_REFERENCE eif_ref, ecom_EiffelComCompiler::IEiffelSystemBrowser * * old )
 
 /*-----------------------------------------------------------
-	Convert CELL [IEIFFEL_SYSTEM_BROWSER_INTERFACE] to ecom_eiffel_compiler::IEiffelSystemBrowser * *.
+	Convert CELL [IEIFFEL_SYSTEM_BROWSER_INTERFACE] to ecom_EiffelComCompiler::IEiffelSystemBrowser * *.
 -----------------------------------------------------------*/
 {
 	EIF_OBJECT eif_object = 0;
-	ecom_eiffel_compiler::IEiffelSystemBrowser * * result = 0;
+	ecom_EiffelComCompiler::IEiffelSystemBrowser * * result = 0;
 	EIF_REFERENCE cell_item = 0;
 
 	eif_object = eif_protect (eif_ref);
 	if (old != NULL)
 		result = old;
 	else
-		result = (ecom_eiffel_compiler::IEiffelSystemBrowser * *) CoTaskMemAlloc (sizeof (ecom_eiffel_compiler::IEiffelSystemBrowser *));
+		result = (ecom_EiffelComCompiler::IEiffelSystemBrowser * *) CoTaskMemAlloc (sizeof (ecom_EiffelComCompiler::IEiffelSystemBrowser *));
 	cell_item = eif_field (eif_access (eif_object), "item", EIF_REFERENCE);
 	if (cell_item != NULL)
 		*result = ccom_ec_pointed_interface_14 (cell_item);
@@ -252,10 +252,10 @@ ecom_eiffel_compiler::IEiffelSystemBrowser * * ecom_gec_ISE::ccom_ec_pointed_cel
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-ecom_eiffel_compiler::IEiffelProjectProperties * ecom_gec_ISE::ccom_ec_pointed_interface_17( EIF_REFERENCE eif_ref )
+ecom_EiffelComCompiler::IEiffelProjectProperties * ecom_gec_ISE::ccom_ec_pointed_interface_17( EIF_REFERENCE eif_ref )
 
 /*-----------------------------------------------------------
-	Convert IEIFFEL_PROJECT_PROPERTIES_INTERFACE to ecom_eiffel_compiler::IEiffelProjectProperties *.
+	Convert IEIFFEL_PROJECT_PROPERTIES_INTERFACE to ecom_EiffelComCompiler::IEiffelProjectProperties *.
 -----------------------------------------------------------*/
 {
 	EIF_OBJECT eif_object = 0;
@@ -273,28 +273,28 @@ ecom_eiffel_compiler::IEiffelProjectProperties * ecom_gec_ISE::ccom_ec_pointed_i
 			(FUNCTION_CAST (void, (EIF_REFERENCE)) create_item) (eif_access (eif_object));
 		a_pointer = (EIF_POINTER) eif_field (eif_access (eif_object), "item", EIF_POINTER);
 		}
-		((ecom_eiffel_compiler::IEiffelProjectProperties *) a_pointer)->AddRef ();
+		((ecom_EiffelComCompiler::IEiffelProjectProperties *) a_pointer)->AddRef ();
 		eif_wean (eif_object);
 	}
-	return  (ecom_eiffel_compiler::IEiffelProjectProperties * ) a_pointer;
+	return  (ecom_EiffelComCompiler::IEiffelProjectProperties * ) a_pointer;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-ecom_eiffel_compiler::IEiffelProjectProperties * * ecom_gec_ISE::ccom_ec_pointed_cell_18( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEiffelProjectProperties * * old )
+ecom_EiffelComCompiler::IEiffelProjectProperties * * ecom_gec_ISE::ccom_ec_pointed_cell_18( EIF_REFERENCE eif_ref, ecom_EiffelComCompiler::IEiffelProjectProperties * * old )
 
 /*-----------------------------------------------------------
-	Convert CELL [IEIFFEL_PROJECT_PROPERTIES_INTERFACE] to ecom_eiffel_compiler::IEiffelProjectProperties * *.
+	Convert CELL [IEIFFEL_PROJECT_PROPERTIES_INTERFACE] to ecom_EiffelComCompiler::IEiffelProjectProperties * *.
 -----------------------------------------------------------*/
 {
 	EIF_OBJECT eif_object = 0;
-	ecom_eiffel_compiler::IEiffelProjectProperties * * result = 0;
+	ecom_EiffelComCompiler::IEiffelProjectProperties * * result = 0;
 	EIF_REFERENCE cell_item = 0;
 
 	eif_object = eif_protect (eif_ref);
 	if (old != NULL)
 		result = old;
 	else
-		result = (ecom_eiffel_compiler::IEiffelProjectProperties * *) CoTaskMemAlloc (sizeof (ecom_eiffel_compiler::IEiffelProjectProperties *));
+		result = (ecom_EiffelComCompiler::IEiffelProjectProperties * *) CoTaskMemAlloc (sizeof (ecom_EiffelComCompiler::IEiffelProjectProperties *));
 	cell_item = eif_field (eif_access (eif_object), "item", EIF_REFERENCE);
 	if (cell_item != NULL)
 		*result = ccom_ec_pointed_interface_17 (cell_item);
@@ -303,10 +303,10 @@ ecom_eiffel_compiler::IEiffelProjectProperties * * ecom_gec_ISE::ccom_ec_pointed
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-ecom_eiffel_compiler::IEiffelCompletionInfo * ecom_gec_ISE::ccom_ec_pointed_interface_20( EIF_REFERENCE eif_ref )
+ecom_EiffelComCompiler::IEiffelCompletionInfo * ecom_gec_ISE::ccom_ec_pointed_interface_20( EIF_REFERENCE eif_ref )
 
 /*-----------------------------------------------------------
-	Convert IEIFFEL_COMPLETION_INFO_INTERFACE to ecom_eiffel_compiler::IEiffelCompletionInfo *.
+	Convert IEIFFEL_COMPLETION_INFO_INTERFACE to ecom_EiffelComCompiler::IEiffelCompletionInfo *.
 -----------------------------------------------------------*/
 {
 	EIF_OBJECT eif_object = 0;
@@ -324,28 +324,28 @@ ecom_eiffel_compiler::IEiffelCompletionInfo * ecom_gec_ISE::ccom_ec_pointed_inte
 			(FUNCTION_CAST (void, (EIF_REFERENCE)) create_item) (eif_access (eif_object));
 		a_pointer = (EIF_POINTER) eif_field (eif_access (eif_object), "item", EIF_POINTER);
 		}
-		((ecom_eiffel_compiler::IEiffelCompletionInfo *) a_pointer)->AddRef ();
+		((ecom_EiffelComCompiler::IEiffelCompletionInfo *) a_pointer)->AddRef ();
 		eif_wean (eif_object);
 	}
-	return  (ecom_eiffel_compiler::IEiffelCompletionInfo * ) a_pointer;
+	return  (ecom_EiffelComCompiler::IEiffelCompletionInfo * ) a_pointer;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-ecom_eiffel_compiler::IEiffelCompletionInfo * * ecom_gec_ISE::ccom_ec_pointed_cell_21( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEiffelCompletionInfo * * old )
+ecom_EiffelComCompiler::IEiffelCompletionInfo * * ecom_gec_ISE::ccom_ec_pointed_cell_21( EIF_REFERENCE eif_ref, ecom_EiffelComCompiler::IEiffelCompletionInfo * * old )
 
 /*-----------------------------------------------------------
-	Convert CELL [IEIFFEL_COMPLETION_INFO_INTERFACE] to ecom_eiffel_compiler::IEiffelCompletionInfo * *.
+	Convert CELL [IEIFFEL_COMPLETION_INFO_INTERFACE] to ecom_EiffelComCompiler::IEiffelCompletionInfo * *.
 -----------------------------------------------------------*/
 {
 	EIF_OBJECT eif_object = 0;
-	ecom_eiffel_compiler::IEiffelCompletionInfo * * result = 0;
+	ecom_EiffelComCompiler::IEiffelCompletionInfo * * result = 0;
 	EIF_REFERENCE cell_item = 0;
 
 	eif_object = eif_protect (eif_ref);
 	if (old != NULL)
 		result = old;
 	else
-		result = (ecom_eiffel_compiler::IEiffelCompletionInfo * *) CoTaskMemAlloc (sizeof (ecom_eiffel_compiler::IEiffelCompletionInfo *));
+		result = (ecom_EiffelComCompiler::IEiffelCompletionInfo * *) CoTaskMemAlloc (sizeof (ecom_EiffelComCompiler::IEiffelCompletionInfo *));
 	cell_item = eif_field (eif_access (eif_object), "item", EIF_REFERENCE);
 	if (cell_item != NULL)
 		*result = ccom_ec_pointed_interface_20 (cell_item);
@@ -354,10 +354,10 @@ ecom_eiffel_compiler::IEiffelCompletionInfo * * ecom_gec_ISE::ccom_ec_pointed_ce
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-ecom_eiffel_compiler::IEiffelHTMLDocGenerator * ecom_gec_ISE::ccom_ec_pointed_interface_23( EIF_REFERENCE eif_ref )
+ecom_EiffelComCompiler::IEiffelHTMLDocGenerator * ecom_gec_ISE::ccom_ec_pointed_interface_23( EIF_REFERENCE eif_ref )
 
 /*-----------------------------------------------------------
-	Convert IEIFFEL_HTMLDOC_GENERATOR_INTERFACE to ecom_eiffel_compiler::IEiffelHTMLDocGenerator *.
+	Convert IEIFFEL_HTMLDOC_GENERATOR_INTERFACE to ecom_EiffelComCompiler::IEiffelHTMLDocGenerator *.
 -----------------------------------------------------------*/
 {
 	EIF_OBJECT eif_object = 0;
@@ -375,28 +375,28 @@ ecom_eiffel_compiler::IEiffelHTMLDocGenerator * ecom_gec_ISE::ccom_ec_pointed_in
 			(FUNCTION_CAST (void, (EIF_REFERENCE)) create_item) (eif_access (eif_object));
 		a_pointer = (EIF_POINTER) eif_field (eif_access (eif_object), "item", EIF_POINTER);
 		}
-		((ecom_eiffel_compiler::IEiffelHTMLDocGenerator *) a_pointer)->AddRef ();
+		((ecom_EiffelComCompiler::IEiffelHTMLDocGenerator *) a_pointer)->AddRef ();
 		eif_wean (eif_object);
 	}
-	return  (ecom_eiffel_compiler::IEiffelHTMLDocGenerator * ) a_pointer;
+	return  (ecom_EiffelComCompiler::IEiffelHTMLDocGenerator * ) a_pointer;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-ecom_eiffel_compiler::IEiffelHTMLDocGenerator * * ecom_gec_ISE::ccom_ec_pointed_cell_24( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEiffelHTMLDocGenerator * * old )
+ecom_EiffelComCompiler::IEiffelHTMLDocGenerator * * ecom_gec_ISE::ccom_ec_pointed_cell_24( EIF_REFERENCE eif_ref, ecom_EiffelComCompiler::IEiffelHTMLDocGenerator * * old )
 
 /*-----------------------------------------------------------
-	Convert CELL [IEIFFEL_HTMLDOC_GENERATOR_INTERFACE] to ecom_eiffel_compiler::IEiffelHTMLDocGenerator * *.
+	Convert CELL [IEIFFEL_HTMLDOC_GENERATOR_INTERFACE] to ecom_EiffelComCompiler::IEiffelHTMLDocGenerator * *.
 -----------------------------------------------------------*/
 {
 	EIF_OBJECT eif_object = 0;
-	ecom_eiffel_compiler::IEiffelHTMLDocGenerator * * result = 0;
+	ecom_EiffelComCompiler::IEiffelHTMLDocGenerator * * result = 0;
 	EIF_REFERENCE cell_item = 0;
 
 	eif_object = eif_protect (eif_ref);
 	if (old != NULL)
 		result = old;
 	else
-		result = (ecom_eiffel_compiler::IEiffelHTMLDocGenerator * *) CoTaskMemAlloc (sizeof (ecom_eiffel_compiler::IEiffelHTMLDocGenerator *));
+		result = (ecom_EiffelComCompiler::IEiffelHTMLDocGenerator * *) CoTaskMemAlloc (sizeof (ecom_EiffelComCompiler::IEiffelHTMLDocGenerator *));
 	cell_item = eif_field (eif_access (eif_object), "item", EIF_REFERENCE);
 	if (cell_item != NULL)
 		*result = ccom_ec_pointed_interface_23 (cell_item);
@@ -573,10 +573,10 @@ BSTR * ecom_gec_ISE::ccom_ec_pointed_cell_35( EIF_REFERENCE eif_ref, BSTR * old 
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-ecom_eiffel_compiler::IEnumEiffelClass * ecom_gec_ISE::ccom_ec_pointed_interface_39( EIF_REFERENCE eif_ref )
+ecom_EiffelComCompiler::IEnumEiffelClass * ecom_gec_ISE::ccom_ec_pointed_interface_39( EIF_REFERENCE eif_ref )
 
 /*-----------------------------------------------------------
-	Convert IENUM_EIFFEL_CLASS_INTERFACE to ecom_eiffel_compiler::IEnumEiffelClass *.
+	Convert IENUM_EIFFEL_CLASS_INTERFACE to ecom_EiffelComCompiler::IEnumEiffelClass *.
 -----------------------------------------------------------*/
 {
 	EIF_OBJECT eif_object = 0;
@@ -594,28 +594,28 @@ ecom_eiffel_compiler::IEnumEiffelClass * ecom_gec_ISE::ccom_ec_pointed_interface
 			(FUNCTION_CAST (void, (EIF_REFERENCE)) create_item) (eif_access (eif_object));
 		a_pointer = (EIF_POINTER) eif_field (eif_access (eif_object), "item", EIF_POINTER);
 		}
-		((ecom_eiffel_compiler::IEnumEiffelClass *) a_pointer)->AddRef ();
+		((ecom_EiffelComCompiler::IEnumEiffelClass *) a_pointer)->AddRef ();
 		eif_wean (eif_object);
 	}
-	return  (ecom_eiffel_compiler::IEnumEiffelClass * ) a_pointer;
+	return  (ecom_EiffelComCompiler::IEnumEiffelClass * ) a_pointer;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-ecom_eiffel_compiler::IEnumEiffelClass * * ecom_gec_ISE::ccom_ec_pointed_cell_40( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEnumEiffelClass * * old )
+ecom_EiffelComCompiler::IEnumEiffelClass * * ecom_gec_ISE::ccom_ec_pointed_cell_40( EIF_REFERENCE eif_ref, ecom_EiffelComCompiler::IEnumEiffelClass * * old )
 
 /*-----------------------------------------------------------
-	Convert CELL [IENUM_EIFFEL_CLASS_INTERFACE] to ecom_eiffel_compiler::IEnumEiffelClass * *.
+	Convert CELL [IENUM_EIFFEL_CLASS_INTERFACE] to ecom_EiffelComCompiler::IEnumEiffelClass * *.
 -----------------------------------------------------------*/
 {
 	EIF_OBJECT eif_object = 0;
-	ecom_eiffel_compiler::IEnumEiffelClass * * result = 0;
+	ecom_EiffelComCompiler::IEnumEiffelClass * * result = 0;
 	EIF_REFERENCE cell_item = 0;
 
 	eif_object = eif_protect (eif_ref);
 	if (old != NULL)
 		result = old;
 	else
-		result = (ecom_eiffel_compiler::IEnumEiffelClass * *) CoTaskMemAlloc (sizeof (ecom_eiffel_compiler::IEnumEiffelClass *));
+		result = (ecom_EiffelComCompiler::IEnumEiffelClass * *) CoTaskMemAlloc (sizeof (ecom_EiffelComCompiler::IEnumEiffelClass *));
 	cell_item = eif_field (eif_access (eif_object), "item", EIF_REFERENCE);
 	if (cell_item != NULL)
 		*result = ccom_ec_pointed_interface_39 (cell_item);
@@ -624,10 +624,10 @@ ecom_eiffel_compiler::IEnumEiffelClass * * ecom_gec_ISE::ccom_ec_pointed_cell_40
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-ecom_eiffel_compiler::IEnumCluster * ecom_gec_ISE::ccom_ec_pointed_interface_43( EIF_REFERENCE eif_ref )
+ecom_EiffelComCompiler::IEnumCluster * ecom_gec_ISE::ccom_ec_pointed_interface_43( EIF_REFERENCE eif_ref )
 
 /*-----------------------------------------------------------
-	Convert IENUM_CLUSTER_INTERFACE to ecom_eiffel_compiler::IEnumCluster *.
+	Convert IENUM_CLUSTER_INTERFACE to ecom_EiffelComCompiler::IEnumCluster *.
 -----------------------------------------------------------*/
 {
 	EIF_OBJECT eif_object = 0;
@@ -645,28 +645,28 @@ ecom_eiffel_compiler::IEnumCluster * ecom_gec_ISE::ccom_ec_pointed_interface_43(
 			(FUNCTION_CAST (void, (EIF_REFERENCE)) create_item) (eif_access (eif_object));
 		a_pointer = (EIF_POINTER) eif_field (eif_access (eif_object), "item", EIF_POINTER);
 		}
-		((ecom_eiffel_compiler::IEnumCluster *) a_pointer)->AddRef ();
+		((ecom_EiffelComCompiler::IEnumCluster *) a_pointer)->AddRef ();
 		eif_wean (eif_object);
 	}
-	return  (ecom_eiffel_compiler::IEnumCluster * ) a_pointer;
+	return  (ecom_EiffelComCompiler::IEnumCluster * ) a_pointer;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-ecom_eiffel_compiler::IEnumCluster * * ecom_gec_ISE::ccom_ec_pointed_cell_44( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEnumCluster * * old )
+ecom_EiffelComCompiler::IEnumCluster * * ecom_gec_ISE::ccom_ec_pointed_cell_44( EIF_REFERENCE eif_ref, ecom_EiffelComCompiler::IEnumCluster * * old )
 
 /*-----------------------------------------------------------
-	Convert CELL [IENUM_CLUSTER_INTERFACE] to ecom_eiffel_compiler::IEnumCluster * *.
+	Convert CELL [IENUM_CLUSTER_INTERFACE] to ecom_EiffelComCompiler::IEnumCluster * *.
 -----------------------------------------------------------*/
 {
 	EIF_OBJECT eif_object = 0;
-	ecom_eiffel_compiler::IEnumCluster * * result = 0;
+	ecom_EiffelComCompiler::IEnumCluster * * result = 0;
 	EIF_REFERENCE cell_item = 0;
 
 	eif_object = eif_protect (eif_ref);
 	if (old != NULL)
 		result = old;
 	else
-		result = (ecom_eiffel_compiler::IEnumCluster * *) CoTaskMemAlloc (sizeof (ecom_eiffel_compiler::IEnumCluster *));
+		result = (ecom_EiffelComCompiler::IEnumCluster * *) CoTaskMemAlloc (sizeof (ecom_EiffelComCompiler::IEnumCluster *));
 	cell_item = eif_field (eif_access (eif_object), "item", EIF_REFERENCE);
 	if (cell_item != NULL)
 		*result = ccom_ec_pointed_interface_43 (cell_item);
@@ -675,10 +675,10 @@ ecom_eiffel_compiler::IEnumCluster * * ecom_gec_ISE::ccom_ec_pointed_cell_44( EI
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-ecom_eiffel_compiler::IEnumAssembly * ecom_gec_ISE::ccom_ec_pointed_interface_46( EIF_REFERENCE eif_ref )
+ecom_EiffelComCompiler::IEnumAssembly * ecom_gec_ISE::ccom_ec_pointed_interface_46( EIF_REFERENCE eif_ref )
 
 /*-----------------------------------------------------------
-	Convert IENUM_ASSEMBLY_INTERFACE to ecom_eiffel_compiler::IEnumAssembly *.
+	Convert IENUM_ASSEMBLY_INTERFACE to ecom_EiffelComCompiler::IEnumAssembly *.
 -----------------------------------------------------------*/
 {
 	EIF_OBJECT eif_object = 0;
@@ -696,28 +696,28 @@ ecom_eiffel_compiler::IEnumAssembly * ecom_gec_ISE::ccom_ec_pointed_interface_46
 			(FUNCTION_CAST (void, (EIF_REFERENCE)) create_item) (eif_access (eif_object));
 		a_pointer = (EIF_POINTER) eif_field (eif_access (eif_object), "item", EIF_POINTER);
 		}
-		((ecom_eiffel_compiler::IEnumAssembly *) a_pointer)->AddRef ();
+		((ecom_EiffelComCompiler::IEnumAssembly *) a_pointer)->AddRef ();
 		eif_wean (eif_object);
 	}
-	return  (ecom_eiffel_compiler::IEnumAssembly * ) a_pointer;
+	return  (ecom_EiffelComCompiler::IEnumAssembly * ) a_pointer;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-ecom_eiffel_compiler::IEnumAssembly * * ecom_gec_ISE::ccom_ec_pointed_cell_47( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEnumAssembly * * old )
+ecom_EiffelComCompiler::IEnumAssembly * * ecom_gec_ISE::ccom_ec_pointed_cell_47( EIF_REFERENCE eif_ref, ecom_EiffelComCompiler::IEnumAssembly * * old )
 
 /*-----------------------------------------------------------
-	Convert CELL [IENUM_ASSEMBLY_INTERFACE] to ecom_eiffel_compiler::IEnumAssembly * *.
+	Convert CELL [IENUM_ASSEMBLY_INTERFACE] to ecom_EiffelComCompiler::IEnumAssembly * *.
 -----------------------------------------------------------*/
 {
 	EIF_OBJECT eif_object = 0;
-	ecom_eiffel_compiler::IEnumAssembly * * result = 0;
+	ecom_EiffelComCompiler::IEnumAssembly * * result = 0;
 	EIF_REFERENCE cell_item = 0;
 
 	eif_object = eif_protect (eif_ref);
 	if (old != NULL)
 		result = old;
 	else
-		result = (ecom_eiffel_compiler::IEnumAssembly * *) CoTaskMemAlloc (sizeof (ecom_eiffel_compiler::IEnumAssembly *));
+		result = (ecom_EiffelComCompiler::IEnumAssembly * *) CoTaskMemAlloc (sizeof (ecom_EiffelComCompiler::IEnumAssembly *));
 	cell_item = eif_field (eif_access (eif_object), "item", EIF_REFERENCE);
 	if (cell_item != NULL)
 		*result = ccom_ec_pointed_interface_46 (cell_item);
@@ -726,10 +726,10 @@ ecom_eiffel_compiler::IEnumAssembly * * ecom_gec_ISE::ccom_ec_pointed_cell_47( E
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-ecom_eiffel_compiler::IEiffelClusterDescriptor * ecom_gec_ISE::ccom_ec_pointed_interface_50( EIF_REFERENCE eif_ref )
+ecom_EiffelComCompiler::IEiffelClusterDescriptor * ecom_gec_ISE::ccom_ec_pointed_interface_50( EIF_REFERENCE eif_ref )
 
 /*-----------------------------------------------------------
-	Convert IEIFFEL_CLUSTER_DESCRIPTOR_INTERFACE to ecom_eiffel_compiler::IEiffelClusterDescriptor *.
+	Convert IEIFFEL_CLUSTER_DESCRIPTOR_INTERFACE to ecom_EiffelComCompiler::IEiffelClusterDescriptor *.
 -----------------------------------------------------------*/
 {
 	EIF_OBJECT eif_object = 0;
@@ -747,28 +747,28 @@ ecom_eiffel_compiler::IEiffelClusterDescriptor * ecom_gec_ISE::ccom_ec_pointed_i
 			(FUNCTION_CAST (void, (EIF_REFERENCE)) create_item) (eif_access (eif_object));
 		a_pointer = (EIF_POINTER) eif_field (eif_access (eif_object), "item", EIF_POINTER);
 		}
-		((ecom_eiffel_compiler::IEiffelClusterDescriptor *) a_pointer)->AddRef ();
+		((ecom_EiffelComCompiler::IEiffelClusterDescriptor *) a_pointer)->AddRef ();
 		eif_wean (eif_object);
 	}
-	return  (ecom_eiffel_compiler::IEiffelClusterDescriptor * ) a_pointer;
+	return  (ecom_EiffelComCompiler::IEiffelClusterDescriptor * ) a_pointer;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-ecom_eiffel_compiler::IEiffelClusterDescriptor * * ecom_gec_ISE::ccom_ec_pointed_cell_51( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEiffelClusterDescriptor * * old )
+ecom_EiffelComCompiler::IEiffelClusterDescriptor * * ecom_gec_ISE::ccom_ec_pointed_cell_51( EIF_REFERENCE eif_ref, ecom_EiffelComCompiler::IEiffelClusterDescriptor * * old )
 
 /*-----------------------------------------------------------
-	Convert CELL [IEIFFEL_CLUSTER_DESCRIPTOR_INTERFACE] to ecom_eiffel_compiler::IEiffelClusterDescriptor * *.
+	Convert CELL [IEIFFEL_CLUSTER_DESCRIPTOR_INTERFACE] to ecom_EiffelComCompiler::IEiffelClusterDescriptor * *.
 -----------------------------------------------------------*/
 {
 	EIF_OBJECT eif_object = 0;
-	ecom_eiffel_compiler::IEiffelClusterDescriptor * * result = 0;
+	ecom_EiffelComCompiler::IEiffelClusterDescriptor * * result = 0;
 	EIF_REFERENCE cell_item = 0;
 
 	eif_object = eif_protect (eif_ref);
 	if (old != NULL)
 		result = old;
 	else
-		result = (ecom_eiffel_compiler::IEiffelClusterDescriptor * *) CoTaskMemAlloc (sizeof (ecom_eiffel_compiler::IEiffelClusterDescriptor *));
+		result = (ecom_EiffelComCompiler::IEiffelClusterDescriptor * *) CoTaskMemAlloc (sizeof (ecom_EiffelComCompiler::IEiffelClusterDescriptor *));
 	cell_item = eif_field (eif_access (eif_object), "item", EIF_REFERENCE);
 	if (cell_item != NULL)
 		*result = ccom_ec_pointed_interface_50 (cell_item);
@@ -777,10 +777,10 @@ ecom_eiffel_compiler::IEiffelClusterDescriptor * * ecom_gec_ISE::ccom_ec_pointed
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-ecom_eiffel_compiler::IEiffelClassDescriptor * ecom_gec_ISE::ccom_ec_pointed_interface_53( EIF_REFERENCE eif_ref )
+ecom_EiffelComCompiler::IEiffelClassDescriptor * ecom_gec_ISE::ccom_ec_pointed_interface_53( EIF_REFERENCE eif_ref )
 
 /*-----------------------------------------------------------
-	Convert IEIFFEL_CLASS_DESCRIPTOR_INTERFACE to ecom_eiffel_compiler::IEiffelClassDescriptor *.
+	Convert IEIFFEL_CLASS_DESCRIPTOR_INTERFACE to ecom_EiffelComCompiler::IEiffelClassDescriptor *.
 -----------------------------------------------------------*/
 {
 	EIF_OBJECT eif_object = 0;
@@ -798,28 +798,28 @@ ecom_eiffel_compiler::IEiffelClassDescriptor * ecom_gec_ISE::ccom_ec_pointed_int
 			(FUNCTION_CAST (void, (EIF_REFERENCE)) create_item) (eif_access (eif_object));
 		a_pointer = (EIF_POINTER) eif_field (eif_access (eif_object), "item", EIF_POINTER);
 		}
-		((ecom_eiffel_compiler::IEiffelClassDescriptor *) a_pointer)->AddRef ();
+		((ecom_EiffelComCompiler::IEiffelClassDescriptor *) a_pointer)->AddRef ();
 		eif_wean (eif_object);
 	}
-	return  (ecom_eiffel_compiler::IEiffelClassDescriptor * ) a_pointer;
+	return  (ecom_EiffelComCompiler::IEiffelClassDescriptor * ) a_pointer;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-ecom_eiffel_compiler::IEiffelClassDescriptor * * ecom_gec_ISE::ccom_ec_pointed_cell_54( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEiffelClassDescriptor * * old )
+ecom_EiffelComCompiler::IEiffelClassDescriptor * * ecom_gec_ISE::ccom_ec_pointed_cell_54( EIF_REFERENCE eif_ref, ecom_EiffelComCompiler::IEiffelClassDescriptor * * old )
 
 /*-----------------------------------------------------------
-	Convert CELL [IEIFFEL_CLASS_DESCRIPTOR_INTERFACE] to ecom_eiffel_compiler::IEiffelClassDescriptor * *.
+	Convert CELL [IEIFFEL_CLASS_DESCRIPTOR_INTERFACE] to ecom_EiffelComCompiler::IEiffelClassDescriptor * *.
 -----------------------------------------------------------*/
 {
 	EIF_OBJECT eif_object = 0;
-	ecom_eiffel_compiler::IEiffelClassDescriptor * * result = 0;
+	ecom_EiffelComCompiler::IEiffelClassDescriptor * * result = 0;
 	EIF_REFERENCE cell_item = 0;
 
 	eif_object = eif_protect (eif_ref);
 	if (old != NULL)
 		result = old;
 	else
-		result = (ecom_eiffel_compiler::IEiffelClassDescriptor * *) CoTaskMemAlloc (sizeof (ecom_eiffel_compiler::IEiffelClassDescriptor *));
+		result = (ecom_EiffelComCompiler::IEiffelClassDescriptor * *) CoTaskMemAlloc (sizeof (ecom_EiffelComCompiler::IEiffelClassDescriptor *));
 	cell_item = eif_field (eif_access (eif_object), "item", EIF_REFERENCE);
 	if (cell_item != NULL)
 		*result = ccom_ec_pointed_interface_53 (cell_item);
@@ -828,10 +828,10 @@ ecom_eiffel_compiler::IEiffelClassDescriptor * * ecom_gec_ISE::ccom_ec_pointed_c
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-ecom_eiffel_compiler::IEiffelFeatureDescriptor * ecom_gec_ISE::ccom_ec_pointed_interface_56( EIF_REFERENCE eif_ref )
+ecom_EiffelComCompiler::IEiffelFeatureDescriptor * ecom_gec_ISE::ccom_ec_pointed_interface_56( EIF_REFERENCE eif_ref )
 
 /*-----------------------------------------------------------
-	Convert IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE to ecom_eiffel_compiler::IEiffelFeatureDescriptor *.
+	Convert IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE to ecom_EiffelComCompiler::IEiffelFeatureDescriptor *.
 -----------------------------------------------------------*/
 {
 	EIF_OBJECT eif_object = 0;
@@ -849,28 +849,28 @@ ecom_eiffel_compiler::IEiffelFeatureDescriptor * ecom_gec_ISE::ccom_ec_pointed_i
 			(FUNCTION_CAST (void, (EIF_REFERENCE)) create_item) (eif_access (eif_object));
 		a_pointer = (EIF_POINTER) eif_field (eif_access (eif_object), "item", EIF_POINTER);
 		}
-		((ecom_eiffel_compiler::IEiffelFeatureDescriptor *) a_pointer)->AddRef ();
+		((ecom_EiffelComCompiler::IEiffelFeatureDescriptor *) a_pointer)->AddRef ();
 		eif_wean (eif_object);
 	}
-	return  (ecom_eiffel_compiler::IEiffelFeatureDescriptor * ) a_pointer;
+	return  (ecom_EiffelComCompiler::IEiffelFeatureDescriptor * ) a_pointer;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-ecom_eiffel_compiler::IEiffelFeatureDescriptor * * ecom_gec_ISE::ccom_ec_pointed_cell_57( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEiffelFeatureDescriptor * * old )
+ecom_EiffelComCompiler::IEiffelFeatureDescriptor * * ecom_gec_ISE::ccom_ec_pointed_cell_57( EIF_REFERENCE eif_ref, ecom_EiffelComCompiler::IEiffelFeatureDescriptor * * old )
 
 /*-----------------------------------------------------------
-	Convert CELL [IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE] to ecom_eiffel_compiler::IEiffelFeatureDescriptor * *.
+	Convert CELL [IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE] to ecom_EiffelComCompiler::IEiffelFeatureDescriptor * *.
 -----------------------------------------------------------*/
 {
 	EIF_OBJECT eif_object = 0;
-	ecom_eiffel_compiler::IEiffelFeatureDescriptor * * result = 0;
+	ecom_EiffelComCompiler::IEiffelFeatureDescriptor * * result = 0;
 	EIF_REFERENCE cell_item = 0;
 
 	eif_object = eif_protect (eif_ref);
 	if (old != NULL)
 		result = old;
 	else
-		result = (ecom_eiffel_compiler::IEiffelFeatureDescriptor * *) CoTaskMemAlloc (sizeof (ecom_eiffel_compiler::IEiffelFeatureDescriptor *));
+		result = (ecom_EiffelComCompiler::IEiffelFeatureDescriptor * *) CoTaskMemAlloc (sizeof (ecom_EiffelComCompiler::IEiffelFeatureDescriptor *));
 	cell_item = eif_field (eif_access (eif_object), "item", EIF_REFERENCE);
 	if (cell_item != NULL)
 		*result = ccom_ec_pointed_interface_56 (cell_item);
@@ -879,10 +879,10 @@ ecom_eiffel_compiler::IEiffelFeatureDescriptor * * ecom_gec_ISE::ccom_ec_pointed
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-ecom_eiffel_compiler::IEnumFeature * ecom_gec_ISE::ccom_ec_pointed_interface_59( EIF_REFERENCE eif_ref )
+ecom_EiffelComCompiler::IEnumFeature * ecom_gec_ISE::ccom_ec_pointed_interface_59( EIF_REFERENCE eif_ref )
 
 /*-----------------------------------------------------------
-	Convert IENUM_FEATURE_INTERFACE to ecom_eiffel_compiler::IEnumFeature *.
+	Convert IENUM_FEATURE_INTERFACE to ecom_EiffelComCompiler::IEnumFeature *.
 -----------------------------------------------------------*/
 {
 	EIF_OBJECT eif_object = 0;
@@ -900,28 +900,28 @@ ecom_eiffel_compiler::IEnumFeature * ecom_gec_ISE::ccom_ec_pointed_interface_59(
 			(FUNCTION_CAST (void, (EIF_REFERENCE)) create_item) (eif_access (eif_object));
 		a_pointer = (EIF_POINTER) eif_field (eif_access (eif_object), "item", EIF_POINTER);
 		}
-		((ecom_eiffel_compiler::IEnumFeature *) a_pointer)->AddRef ();
+		((ecom_EiffelComCompiler::IEnumFeature *) a_pointer)->AddRef ();
 		eif_wean (eif_object);
 	}
-	return  (ecom_eiffel_compiler::IEnumFeature * ) a_pointer;
+	return  (ecom_EiffelComCompiler::IEnumFeature * ) a_pointer;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-ecom_eiffel_compiler::IEnumFeature * * ecom_gec_ISE::ccom_ec_pointed_cell_60( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEnumFeature * * old )
+ecom_EiffelComCompiler::IEnumFeature * * ecom_gec_ISE::ccom_ec_pointed_cell_60( EIF_REFERENCE eif_ref, ecom_EiffelComCompiler::IEnumFeature * * old )
 
 /*-----------------------------------------------------------
-	Convert CELL [IENUM_FEATURE_INTERFACE] to ecom_eiffel_compiler::IEnumFeature * *.
+	Convert CELL [IENUM_FEATURE_INTERFACE] to ecom_EiffelComCompiler::IEnumFeature * *.
 -----------------------------------------------------------*/
 {
 	EIF_OBJECT eif_object = 0;
-	ecom_eiffel_compiler::IEnumFeature * * result = 0;
+	ecom_EiffelComCompiler::IEnumFeature * * result = 0;
 	EIF_REFERENCE cell_item = 0;
 
 	eif_object = eif_protect (eif_ref);
 	if (old != NULL)
 		result = old;
 	else
-		result = (ecom_eiffel_compiler::IEnumFeature * *) CoTaskMemAlloc (sizeof (ecom_eiffel_compiler::IEnumFeature *));
+		result = (ecom_EiffelComCompiler::IEnumFeature * *) CoTaskMemAlloc (sizeof (ecom_EiffelComCompiler::IEnumFeature *));
 	cell_item = eif_field (eif_access (eif_object), "item", EIF_REFERENCE);
 	if (cell_item != NULL)
 		*result = ccom_ec_pointed_interface_59 (cell_item);
@@ -1322,10 +1322,10 @@ BSTR * ecom_gec_ISE::ccom_ec_pointed_cell_92( EIF_REFERENCE eif_ref, BSTR * old 
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-ecom_eiffel_compiler::IEnumParameter * ecom_gec_ISE::ccom_ec_pointed_interface_94( EIF_REFERENCE eif_ref )
+ecom_EiffelComCompiler::IEnumParameter * ecom_gec_ISE::ccom_ec_pointed_interface_94( EIF_REFERENCE eif_ref )
 
 /*-----------------------------------------------------------
-	Convert IENUM_PARAMETER_INTERFACE to ecom_eiffel_compiler::IEnumParameter *.
+	Convert IENUM_PARAMETER_INTERFACE to ecom_EiffelComCompiler::IEnumParameter *.
 -----------------------------------------------------------*/
 {
 	EIF_OBJECT eif_object = 0;
@@ -1343,28 +1343,28 @@ ecom_eiffel_compiler::IEnumParameter * ecom_gec_ISE::ccom_ec_pointed_interface_9
 			(FUNCTION_CAST (void, (EIF_REFERENCE)) create_item) (eif_access (eif_object));
 		a_pointer = (EIF_POINTER) eif_field (eif_access (eif_object), "item", EIF_POINTER);
 		}
-		((ecom_eiffel_compiler::IEnumParameter *) a_pointer)->AddRef ();
+		((ecom_EiffelComCompiler::IEnumParameter *) a_pointer)->AddRef ();
 		eif_wean (eif_object);
 	}
-	return  (ecom_eiffel_compiler::IEnumParameter * ) a_pointer;
+	return  (ecom_EiffelComCompiler::IEnumParameter * ) a_pointer;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-ecom_eiffel_compiler::IEnumParameter * * ecom_gec_ISE::ccom_ec_pointed_cell_95( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEnumParameter * * old )
+ecom_EiffelComCompiler::IEnumParameter * * ecom_gec_ISE::ccom_ec_pointed_cell_95( EIF_REFERENCE eif_ref, ecom_EiffelComCompiler::IEnumParameter * * old )
 
 /*-----------------------------------------------------------
-	Convert CELL [IENUM_PARAMETER_INTERFACE] to ecom_eiffel_compiler::IEnumParameter * *.
+	Convert CELL [IENUM_PARAMETER_INTERFACE] to ecom_EiffelComCompiler::IEnumParameter * *.
 -----------------------------------------------------------*/
 {
 	EIF_OBJECT eif_object = 0;
-	ecom_eiffel_compiler::IEnumParameter * * result = 0;
+	ecom_EiffelComCompiler::IEnumParameter * * result = 0;
 	EIF_REFERENCE cell_item = 0;
 
 	eif_object = eif_protect (eif_ref);
 	if (old != NULL)
 		result = old;
 	else
-		result = (ecom_eiffel_compiler::IEnumParameter * *) CoTaskMemAlloc (sizeof (ecom_eiffel_compiler::IEnumParameter *));
+		result = (ecom_EiffelComCompiler::IEnumParameter * *) CoTaskMemAlloc (sizeof (ecom_EiffelComCompiler::IEnumParameter *));
 	cell_item = eif_field (eif_access (eif_object), "item", EIF_REFERENCE);
 	if (cell_item != NULL)
 		*result = ccom_ec_pointed_interface_94 (cell_item);
@@ -1429,10 +1429,10 @@ BSTR * ecom_gec_ISE::ccom_ec_pointed_cell_97( EIF_REFERENCE eif_ref, BSTR * old 
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-ecom_eiffel_compiler::IEiffelParameterDescriptor * ecom_gec_ISE::ccom_ec_pointed_interface_121( EIF_REFERENCE eif_ref )
+ecom_EiffelComCompiler::IEiffelParameterDescriptor * ecom_gec_ISE::ccom_ec_pointed_interface_121( EIF_REFERENCE eif_ref )
 
 /*-----------------------------------------------------------
-	Convert IEIFFEL_PARAMETER_DESCRIPTOR_INTERFACE to ecom_eiffel_compiler::IEiffelParameterDescriptor *.
+	Convert IEIFFEL_PARAMETER_DESCRIPTOR_INTERFACE to ecom_EiffelComCompiler::IEiffelParameterDescriptor *.
 -----------------------------------------------------------*/
 {
 	EIF_OBJECT eif_object = 0;
@@ -1450,28 +1450,28 @@ ecom_eiffel_compiler::IEiffelParameterDescriptor * ecom_gec_ISE::ccom_ec_pointed
 			(FUNCTION_CAST (void, (EIF_REFERENCE)) create_item) (eif_access (eif_object));
 		a_pointer = (EIF_POINTER) eif_field (eif_access (eif_object), "item", EIF_POINTER);
 		}
-		((ecom_eiffel_compiler::IEiffelParameterDescriptor *) a_pointer)->AddRef ();
+		((ecom_EiffelComCompiler::IEiffelParameterDescriptor *) a_pointer)->AddRef ();
 		eif_wean (eif_object);
 	}
-	return  (ecom_eiffel_compiler::IEiffelParameterDescriptor * ) a_pointer;
+	return  (ecom_EiffelComCompiler::IEiffelParameterDescriptor * ) a_pointer;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-ecom_eiffel_compiler::IEiffelParameterDescriptor * * ecom_gec_ISE::ccom_ec_pointed_cell_122( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEiffelParameterDescriptor * * old )
+ecom_EiffelComCompiler::IEiffelParameterDescriptor * * ecom_gec_ISE::ccom_ec_pointed_cell_122( EIF_REFERENCE eif_ref, ecom_EiffelComCompiler::IEiffelParameterDescriptor * * old )
 
 /*-----------------------------------------------------------
-	Convert CELL [IEIFFEL_PARAMETER_DESCRIPTOR_INTERFACE] to ecom_eiffel_compiler::IEiffelParameterDescriptor * *.
+	Convert CELL [IEIFFEL_PARAMETER_DESCRIPTOR_INTERFACE] to ecom_EiffelComCompiler::IEiffelParameterDescriptor * *.
 -----------------------------------------------------------*/
 {
 	EIF_OBJECT eif_object = 0;
-	ecom_eiffel_compiler::IEiffelParameterDescriptor * * result = 0;
+	ecom_EiffelComCompiler::IEiffelParameterDescriptor * * result = 0;
 	EIF_REFERENCE cell_item = 0;
 
 	eif_object = eif_protect (eif_ref);
 	if (old != NULL)
 		result = old;
 	else
-		result = (ecom_eiffel_compiler::IEiffelParameterDescriptor * *) CoTaskMemAlloc (sizeof (ecom_eiffel_compiler::IEiffelParameterDescriptor *));
+		result = (ecom_EiffelComCompiler::IEiffelParameterDescriptor * *) CoTaskMemAlloc (sizeof (ecom_EiffelComCompiler::IEiffelParameterDescriptor *));
 	cell_item = eif_field (eif_access (eif_object), "item", EIF_REFERENCE);
 	if (cell_item != NULL)
 		*result = ccom_ec_pointed_interface_121 (cell_item);
@@ -1676,10 +1676,10 @@ BSTR * ecom_gec_ISE::ccom_ec_pointed_cell_135( EIF_REFERENCE eif_ref, BSTR * old
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-ecom_eiffel_compiler::IEiffelAssemblyProperties * ecom_gec_ISE::ccom_ec_pointed_interface_139( EIF_REFERENCE eif_ref )
+ecom_EiffelComCompiler::IEiffelAssemblyProperties * ecom_gec_ISE::ccom_ec_pointed_interface_139( EIF_REFERENCE eif_ref )
 
 /*-----------------------------------------------------------
-	Convert IEIFFEL_ASSEMBLY_PROPERTIES_INTERFACE to ecom_eiffel_compiler::IEiffelAssemblyProperties *.
+	Convert IEIFFEL_ASSEMBLY_PROPERTIES_INTERFACE to ecom_EiffelComCompiler::IEiffelAssemblyProperties *.
 -----------------------------------------------------------*/
 {
 	EIF_OBJECT eif_object = 0;
@@ -1697,28 +1697,28 @@ ecom_eiffel_compiler::IEiffelAssemblyProperties * ecom_gec_ISE::ccom_ec_pointed_
 			(FUNCTION_CAST (void, (EIF_REFERENCE)) create_item) (eif_access (eif_object));
 		a_pointer = (EIF_POINTER) eif_field (eif_access (eif_object), "item", EIF_POINTER);
 		}
-		((ecom_eiffel_compiler::IEiffelAssemblyProperties *) a_pointer)->AddRef ();
+		((ecom_EiffelComCompiler::IEiffelAssemblyProperties *) a_pointer)->AddRef ();
 		eif_wean (eif_object);
 	}
-	return  (ecom_eiffel_compiler::IEiffelAssemblyProperties * ) a_pointer;
+	return  (ecom_EiffelComCompiler::IEiffelAssemblyProperties * ) a_pointer;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-ecom_eiffel_compiler::IEiffelAssemblyProperties * * ecom_gec_ISE::ccom_ec_pointed_cell_140( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEiffelAssemblyProperties * * old )
+ecom_EiffelComCompiler::IEiffelAssemblyProperties * * ecom_gec_ISE::ccom_ec_pointed_cell_140( EIF_REFERENCE eif_ref, ecom_EiffelComCompiler::IEiffelAssemblyProperties * * old )
 
 /*-----------------------------------------------------------
-	Convert CELL [IEIFFEL_ASSEMBLY_PROPERTIES_INTERFACE] to ecom_eiffel_compiler::IEiffelAssemblyProperties * *.
+	Convert CELL [IEIFFEL_ASSEMBLY_PROPERTIES_INTERFACE] to ecom_EiffelComCompiler::IEiffelAssemblyProperties * *.
 -----------------------------------------------------------*/
 {
 	EIF_OBJECT eif_object = 0;
-	ecom_eiffel_compiler::IEiffelAssemblyProperties * * result = 0;
+	ecom_EiffelComCompiler::IEiffelAssemblyProperties * * result = 0;
 	EIF_REFERENCE cell_item = 0;
 
 	eif_object = eif_protect (eif_ref);
 	if (old != NULL)
 		result = old;
 	else
-		result = (ecom_eiffel_compiler::IEiffelAssemblyProperties * *) CoTaskMemAlloc (sizeof (ecom_eiffel_compiler::IEiffelAssemblyProperties *));
+		result = (ecom_EiffelComCompiler::IEiffelAssemblyProperties * *) CoTaskMemAlloc (sizeof (ecom_EiffelComCompiler::IEiffelAssemblyProperties *));
 	cell_item = eif_field (eif_access (eif_object), "item", EIF_REFERENCE);
 	if (cell_item != NULL)
 		*result = ccom_ec_pointed_interface_139 (cell_item);
@@ -2035,10 +2035,10 @@ BSTR * ecom_gec_ISE::ccom_ec_pointed_cell_161( EIF_REFERENCE eif_ref, BSTR * old
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-ecom_eiffel_compiler::IEiffelSystemClusters * ecom_gec_ISE::ccom_ec_pointed_interface_164( EIF_REFERENCE eif_ref )
+ecom_EiffelComCompiler::IEiffelSystemClusters * ecom_gec_ISE::ccom_ec_pointed_interface_164( EIF_REFERENCE eif_ref )
 
 /*-----------------------------------------------------------
-	Convert IEIFFEL_SYSTEM_CLUSTERS_INTERFACE to ecom_eiffel_compiler::IEiffelSystemClusters *.
+	Convert IEIFFEL_SYSTEM_CLUSTERS_INTERFACE to ecom_EiffelComCompiler::IEiffelSystemClusters *.
 -----------------------------------------------------------*/
 {
 	EIF_OBJECT eif_object = 0;
@@ -2056,28 +2056,28 @@ ecom_eiffel_compiler::IEiffelSystemClusters * ecom_gec_ISE::ccom_ec_pointed_inte
 			(FUNCTION_CAST (void, (EIF_REFERENCE)) create_item) (eif_access (eif_object));
 		a_pointer = (EIF_POINTER) eif_field (eif_access (eif_object), "item", EIF_POINTER);
 		}
-		((ecom_eiffel_compiler::IEiffelSystemClusters *) a_pointer)->AddRef ();
+		((ecom_EiffelComCompiler::IEiffelSystemClusters *) a_pointer)->AddRef ();
 		eif_wean (eif_object);
 	}
-	return  (ecom_eiffel_compiler::IEiffelSystemClusters * ) a_pointer;
+	return  (ecom_EiffelComCompiler::IEiffelSystemClusters * ) a_pointer;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-ecom_eiffel_compiler::IEiffelSystemClusters * * ecom_gec_ISE::ccom_ec_pointed_cell_165( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEiffelSystemClusters * * old )
+ecom_EiffelComCompiler::IEiffelSystemClusters * * ecom_gec_ISE::ccom_ec_pointed_cell_165( EIF_REFERENCE eif_ref, ecom_EiffelComCompiler::IEiffelSystemClusters * * old )
 
 /*-----------------------------------------------------------
-	Convert CELL [IEIFFEL_SYSTEM_CLUSTERS_INTERFACE] to ecom_eiffel_compiler::IEiffelSystemClusters * *.
+	Convert CELL [IEIFFEL_SYSTEM_CLUSTERS_INTERFACE] to ecom_EiffelComCompiler::IEiffelSystemClusters * *.
 -----------------------------------------------------------*/
 {
 	EIF_OBJECT eif_object = 0;
-	ecom_eiffel_compiler::IEiffelSystemClusters * * result = 0;
+	ecom_EiffelComCompiler::IEiffelSystemClusters * * result = 0;
 	EIF_REFERENCE cell_item = 0;
 
 	eif_object = eif_protect (eif_ref);
 	if (old != NULL)
 		result = old;
 	else
-		result = (ecom_eiffel_compiler::IEiffelSystemClusters * *) CoTaskMemAlloc (sizeof (ecom_eiffel_compiler::IEiffelSystemClusters *));
+		result = (ecom_EiffelComCompiler::IEiffelSystemClusters * *) CoTaskMemAlloc (sizeof (ecom_EiffelComCompiler::IEiffelSystemClusters *));
 	cell_item = eif_field (eif_access (eif_object), "item", EIF_REFERENCE);
 	if (cell_item != NULL)
 		*result = ccom_ec_pointed_interface_164 (cell_item);
@@ -2086,10 +2086,10 @@ ecom_eiffel_compiler::IEiffelSystemClusters * * ecom_gec_ISE::ccom_ec_pointed_ce
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-ecom_eiffel_compiler::IEiffelSystemExternals * ecom_gec_ISE::ccom_ec_pointed_interface_167( EIF_REFERENCE eif_ref )
+ecom_EiffelComCompiler::IEiffelSystemExternals * ecom_gec_ISE::ccom_ec_pointed_interface_167( EIF_REFERENCE eif_ref )
 
 /*-----------------------------------------------------------
-	Convert IEIFFEL_SYSTEM_EXTERNALS_INTERFACE to ecom_eiffel_compiler::IEiffelSystemExternals *.
+	Convert IEIFFEL_SYSTEM_EXTERNALS_INTERFACE to ecom_EiffelComCompiler::IEiffelSystemExternals *.
 -----------------------------------------------------------*/
 {
 	EIF_OBJECT eif_object = 0;
@@ -2107,28 +2107,28 @@ ecom_eiffel_compiler::IEiffelSystemExternals * ecom_gec_ISE::ccom_ec_pointed_int
 			(FUNCTION_CAST (void, (EIF_REFERENCE)) create_item) (eif_access (eif_object));
 		a_pointer = (EIF_POINTER) eif_field (eif_access (eif_object), "item", EIF_POINTER);
 		}
-		((ecom_eiffel_compiler::IEiffelSystemExternals *) a_pointer)->AddRef ();
+		((ecom_EiffelComCompiler::IEiffelSystemExternals *) a_pointer)->AddRef ();
 		eif_wean (eif_object);
 	}
-	return  (ecom_eiffel_compiler::IEiffelSystemExternals * ) a_pointer;
+	return  (ecom_EiffelComCompiler::IEiffelSystemExternals * ) a_pointer;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-ecom_eiffel_compiler::IEiffelSystemExternals * * ecom_gec_ISE::ccom_ec_pointed_cell_168( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEiffelSystemExternals * * old )
+ecom_EiffelComCompiler::IEiffelSystemExternals * * ecom_gec_ISE::ccom_ec_pointed_cell_168( EIF_REFERENCE eif_ref, ecom_EiffelComCompiler::IEiffelSystemExternals * * old )
 
 /*-----------------------------------------------------------
-	Convert CELL [IEIFFEL_SYSTEM_EXTERNALS_INTERFACE] to ecom_eiffel_compiler::IEiffelSystemExternals * *.
+	Convert CELL [IEIFFEL_SYSTEM_EXTERNALS_INTERFACE] to ecom_EiffelComCompiler::IEiffelSystemExternals * *.
 -----------------------------------------------------------*/
 {
 	EIF_OBJECT eif_object = 0;
-	ecom_eiffel_compiler::IEiffelSystemExternals * * result = 0;
+	ecom_EiffelComCompiler::IEiffelSystemExternals * * result = 0;
 	EIF_REFERENCE cell_item = 0;
 
 	eif_object = eif_protect (eif_ref);
 	if (old != NULL)
 		result = old;
 	else
-		result = (ecom_eiffel_compiler::IEiffelSystemExternals * *) CoTaskMemAlloc (sizeof (ecom_eiffel_compiler::IEiffelSystemExternals *));
+		result = (ecom_EiffelComCompiler::IEiffelSystemExternals * *) CoTaskMemAlloc (sizeof (ecom_EiffelComCompiler::IEiffelSystemExternals *));
 	cell_item = eif_field (eif_access (eif_object), "item", EIF_REFERENCE);
 	if (cell_item != NULL)
 		*result = ccom_ec_pointed_interface_167 (cell_item);
@@ -2137,10 +2137,10 @@ ecom_eiffel_compiler::IEiffelSystemExternals * * ecom_gec_ISE::ccom_ec_pointed_c
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-ecom_eiffel_compiler::IEiffelSystemAssemblies * ecom_gec_ISE::ccom_ec_pointed_interface_170( EIF_REFERENCE eif_ref )
+ecom_EiffelComCompiler::IEiffelSystemAssemblies * ecom_gec_ISE::ccom_ec_pointed_interface_170( EIF_REFERENCE eif_ref )
 
 /*-----------------------------------------------------------
-	Convert IEIFFEL_SYSTEM_ASSEMBLIES_INTERFACE to ecom_eiffel_compiler::IEiffelSystemAssemblies *.
+	Convert IEIFFEL_SYSTEM_ASSEMBLIES_INTERFACE to ecom_EiffelComCompiler::IEiffelSystemAssemblies *.
 -----------------------------------------------------------*/
 {
 	EIF_OBJECT eif_object = 0;
@@ -2158,28 +2158,28 @@ ecom_eiffel_compiler::IEiffelSystemAssemblies * ecom_gec_ISE::ccom_ec_pointed_in
 			(FUNCTION_CAST (void, (EIF_REFERENCE)) create_item) (eif_access (eif_object));
 		a_pointer = (EIF_POINTER) eif_field (eif_access (eif_object), "item", EIF_POINTER);
 		}
-		((ecom_eiffel_compiler::IEiffelSystemAssemblies *) a_pointer)->AddRef ();
+		((ecom_EiffelComCompiler::IEiffelSystemAssemblies *) a_pointer)->AddRef ();
 		eif_wean (eif_object);
 	}
-	return  (ecom_eiffel_compiler::IEiffelSystemAssemblies * ) a_pointer;
+	return  (ecom_EiffelComCompiler::IEiffelSystemAssemblies * ) a_pointer;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-ecom_eiffel_compiler::IEiffelSystemAssemblies * * ecom_gec_ISE::ccom_ec_pointed_cell_171( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEiffelSystemAssemblies * * old )
+ecom_EiffelComCompiler::IEiffelSystemAssemblies * * ecom_gec_ISE::ccom_ec_pointed_cell_171( EIF_REFERENCE eif_ref, ecom_EiffelComCompiler::IEiffelSystemAssemblies * * old )
 
 /*-----------------------------------------------------------
-	Convert CELL [IEIFFEL_SYSTEM_ASSEMBLIES_INTERFACE] to ecom_eiffel_compiler::IEiffelSystemAssemblies * *.
+	Convert CELL [IEIFFEL_SYSTEM_ASSEMBLIES_INTERFACE] to ecom_EiffelComCompiler::IEiffelSystemAssemblies * *.
 -----------------------------------------------------------*/
 {
 	EIF_OBJECT eif_object = 0;
-	ecom_eiffel_compiler::IEiffelSystemAssemblies * * result = 0;
+	ecom_EiffelComCompiler::IEiffelSystemAssemblies * * result = 0;
 	EIF_REFERENCE cell_item = 0;
 
 	eif_object = eif_protect (eif_ref);
 	if (old != NULL)
 		result = old;
 	else
-		result = (ecom_eiffel_compiler::IEiffelSystemAssemblies * *) CoTaskMemAlloc (sizeof (ecom_eiffel_compiler::IEiffelSystemAssemblies *));
+		result = (ecom_EiffelComCompiler::IEiffelSystemAssemblies * *) CoTaskMemAlloc (sizeof (ecom_EiffelComCompiler::IEiffelSystemAssemblies *));
 	cell_item = eif_field (eif_access (eif_object), "item", EIF_REFERENCE);
 	if (cell_item != NULL)
 		*result = ccom_ec_pointed_interface_170 (cell_item);
@@ -2468,10 +2468,10 @@ BSTR * ecom_gec_ISE::ccom_ec_pointed_cell_181( EIF_REFERENCE eif_ref, BSTR * old
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-ecom_eiffel_compiler::IEnumClusterProp * ecom_gec_ISE::ccom_ec_pointed_interface_183( EIF_REFERENCE eif_ref )
+ecom_EiffelComCompiler::IEnumClusterProp * ecom_gec_ISE::ccom_ec_pointed_interface_183( EIF_REFERENCE eif_ref )
 
 /*-----------------------------------------------------------
-	Convert IENUM_CLUSTER_PROP_INTERFACE to ecom_eiffel_compiler::IEnumClusterProp *.
+	Convert IENUM_CLUSTER_PROP_INTERFACE to ecom_EiffelComCompiler::IEnumClusterProp *.
 -----------------------------------------------------------*/
 {
 	EIF_OBJECT eif_object = 0;
@@ -2489,28 +2489,28 @@ ecom_eiffel_compiler::IEnumClusterProp * ecom_gec_ISE::ccom_ec_pointed_interface
 			(FUNCTION_CAST (void, (EIF_REFERENCE)) create_item) (eif_access (eif_object));
 		a_pointer = (EIF_POINTER) eif_field (eif_access (eif_object), "item", EIF_POINTER);
 		}
-		((ecom_eiffel_compiler::IEnumClusterProp *) a_pointer)->AddRef ();
+		((ecom_EiffelComCompiler::IEnumClusterProp *) a_pointer)->AddRef ();
 		eif_wean (eif_object);
 	}
-	return  (ecom_eiffel_compiler::IEnumClusterProp * ) a_pointer;
+	return  (ecom_EiffelComCompiler::IEnumClusterProp * ) a_pointer;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-ecom_eiffel_compiler::IEnumClusterProp * * ecom_gec_ISE::ccom_ec_pointed_cell_184( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEnumClusterProp * * old )
+ecom_EiffelComCompiler::IEnumClusterProp * * ecom_gec_ISE::ccom_ec_pointed_cell_184( EIF_REFERENCE eif_ref, ecom_EiffelComCompiler::IEnumClusterProp * * old )
 
 /*-----------------------------------------------------------
-	Convert CELL [IENUM_CLUSTER_PROP_INTERFACE] to ecom_eiffel_compiler::IEnumClusterProp * *.
+	Convert CELL [IENUM_CLUSTER_PROP_INTERFACE] to ecom_EiffelComCompiler::IEnumClusterProp * *.
 -----------------------------------------------------------*/
 {
 	EIF_OBJECT eif_object = 0;
-	ecom_eiffel_compiler::IEnumClusterProp * * result = 0;
+	ecom_EiffelComCompiler::IEnumClusterProp * * result = 0;
 	EIF_REFERENCE cell_item = 0;
 
 	eif_object = eif_protect (eif_ref);
 	if (old != NULL)
 		result = old;
 	else
-		result = (ecom_eiffel_compiler::IEnumClusterProp * *) CoTaskMemAlloc (sizeof (ecom_eiffel_compiler::IEnumClusterProp *));
+		result = (ecom_EiffelComCompiler::IEnumClusterProp * *) CoTaskMemAlloc (sizeof (ecom_EiffelComCompiler::IEnumClusterProp *));
 	cell_item = eif_field (eif_access (eif_object), "item", EIF_REFERENCE);
 	if (cell_item != NULL)
 		*result = ccom_ec_pointed_interface_183 (cell_item);
@@ -2519,10 +2519,38 @@ ecom_eiffel_compiler::IEnumClusterProp * * ecom_gec_ISE::ccom_ec_pointed_cell_18
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-ecom_eiffel_compiler::IEiffelClusterProperties * ecom_gec_ISE::ccom_ec_pointed_interface_186( EIF_REFERENCE eif_ref )
+BSTR * ecom_gec_ISE::ccom_ec_pointed_cell_185( EIF_REFERENCE eif_ref, BSTR * old )
 
 /*-----------------------------------------------------------
-	Convert IEIFFEL_CLUSTER_PROPERTIES_INTERFACE to ecom_eiffel_compiler::IEiffelClusterProperties *.
+	Convert CELL [STRING] to BSTR *.
+-----------------------------------------------------------*/
+{
+	EIF_OBJECT eif_object = 0;
+	BSTR * result = 0;
+	EIF_REFERENCE cell_item = 0;
+
+	eif_object = eif_protect (eif_ref);
+	if (old != NULL)
+		result = old;
+	else
+		result = (BSTR *) CoTaskMemAlloc (sizeof (BSTR));
+	cell_item = eif_field (eif_access (eif_object), "item", EIF_REFERENCE);
+	if (*result != NULL)
+	{
+		rt_ce.free_memory_bstr(*result);
+		*result = NULL;
+	}
+	if (cell_item != NULL)
+		*result = rt_ec.ccom_ec_bstr (cell_item);
+	eif_wean (eif_object);
+	return result;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+ecom_EiffelComCompiler::IEiffelClusterProperties * ecom_gec_ISE::ccom_ec_pointed_interface_187( EIF_REFERENCE eif_ref )
+
+/*-----------------------------------------------------------
+	Convert IEIFFEL_CLUSTER_PROPERTIES_INTERFACE to ecom_EiffelComCompiler::IEiffelClusterProperties *.
 -----------------------------------------------------------*/
 {
 	EIF_OBJECT eif_object = 0;
@@ -2540,87 +2568,31 @@ ecom_eiffel_compiler::IEiffelClusterProperties * ecom_gec_ISE::ccom_ec_pointed_i
 			(FUNCTION_CAST (void, (EIF_REFERENCE)) create_item) (eif_access (eif_object));
 		a_pointer = (EIF_POINTER) eif_field (eif_access (eif_object), "item", EIF_POINTER);
 		}
-		((ecom_eiffel_compiler::IEiffelClusterProperties *) a_pointer)->AddRef ();
+		((ecom_EiffelComCompiler::IEiffelClusterProperties *) a_pointer)->AddRef ();
 		eif_wean (eif_object);
 	}
-	return  (ecom_eiffel_compiler::IEiffelClusterProperties * ) a_pointer;
+	return  (ecom_EiffelComCompiler::IEiffelClusterProperties * ) a_pointer;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-ecom_eiffel_compiler::IEiffelClusterProperties * * ecom_gec_ISE::ccom_ec_pointed_cell_187( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEiffelClusterProperties * * old )
+ecom_EiffelComCompiler::IEiffelClusterProperties * * ecom_gec_ISE::ccom_ec_pointed_cell_188( EIF_REFERENCE eif_ref, ecom_EiffelComCompiler::IEiffelClusterProperties * * old )
 
 /*-----------------------------------------------------------
-	Convert CELL [IEIFFEL_CLUSTER_PROPERTIES_INTERFACE] to ecom_eiffel_compiler::IEiffelClusterProperties * *.
+	Convert CELL [IEIFFEL_CLUSTER_PROPERTIES_INTERFACE] to ecom_EiffelComCompiler::IEiffelClusterProperties * *.
 -----------------------------------------------------------*/
 {
 	EIF_OBJECT eif_object = 0;
-	ecom_eiffel_compiler::IEiffelClusterProperties * * result = 0;
+	ecom_EiffelComCompiler::IEiffelClusterProperties * * result = 0;
 	EIF_REFERENCE cell_item = 0;
 
 	eif_object = eif_protect (eif_ref);
 	if (old != NULL)
 		result = old;
 	else
-		result = (ecom_eiffel_compiler::IEiffelClusterProperties * *) CoTaskMemAlloc (sizeof (ecom_eiffel_compiler::IEiffelClusterProperties *));
+		result = (ecom_EiffelComCompiler::IEiffelClusterProperties * *) CoTaskMemAlloc (sizeof (ecom_EiffelComCompiler::IEiffelClusterProperties *));
 	cell_item = eif_field (eif_access (eif_object), "item", EIF_REFERENCE);
 	if (cell_item != NULL)
-		*result = ccom_ec_pointed_interface_186 (cell_item);
-	eif_wean (eif_object);
-	return result;
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-BSTR * ecom_gec_ISE::ccom_ec_pointed_cell_189( EIF_REFERENCE eif_ref, BSTR * old )
-
-/*-----------------------------------------------------------
-	Convert CELL [STRING] to BSTR *.
------------------------------------------------------------*/
-{
-	EIF_OBJECT eif_object = 0;
-	BSTR * result = 0;
-	EIF_REFERENCE cell_item = 0;
-
-	eif_object = eif_protect (eif_ref);
-	if (old != NULL)
-		result = old;
-	else
-		result = (BSTR *) CoTaskMemAlloc (sizeof (BSTR));
-	cell_item = eif_field (eif_access (eif_object), "item", EIF_REFERENCE);
-	if (*result != NULL)
-	{
-		rt_ce.free_memory_bstr(*result);
-		*result = NULL;
-	}
-	if (cell_item != NULL)
-		*result = rt_ec.ccom_ec_bstr (cell_item);
-	eif_wean (eif_object);
-	return result;
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-BSTR * ecom_gec_ISE::ccom_ec_pointed_cell_192( EIF_REFERENCE eif_ref, BSTR * old )
-
-/*-----------------------------------------------------------
-	Convert CELL [STRING] to BSTR *.
------------------------------------------------------------*/
-{
-	EIF_OBJECT eif_object = 0;
-	BSTR * result = 0;
-	EIF_REFERENCE cell_item = 0;
-
-	eif_object = eif_protect (eif_ref);
-	if (old != NULL)
-		result = old;
-	else
-		result = (BSTR *) CoTaskMemAlloc (sizeof (BSTR));
-	cell_item = eif_field (eif_access (eif_object), "item", EIF_REFERENCE);
-	if (*result != NULL)
-	{
-		rt_ce.free_memory_bstr(*result);
-		*result = NULL;
-	}
-	if (cell_item != NULL)
-		*result = rt_ec.ccom_ec_bstr (cell_item);
+		*result = ccom_ec_pointed_interface_187 (cell_item);
 	eif_wean (eif_object);
 	return result;
 };
@@ -2654,58 +2626,7 @@ BSTR * ecom_gec_ISE::ccom_ec_pointed_cell_193( EIF_REFERENCE eif_ref, BSTR * old
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-ecom_eiffel_compiler::IEnumClusterExcludes * ecom_gec_ISE::ccom_ec_pointed_interface_204( EIF_REFERENCE eif_ref )
-
-/*-----------------------------------------------------------
-	Convert IENUM_CLUSTER_EXCLUDES_INTERFACE to ecom_eiffel_compiler::IEnumClusterExcludes *.
------------------------------------------------------------*/
-{
-	EIF_OBJECT eif_object = 0;
-	EIF_POINTER a_pointer = 0;
-
-	if (eif_ref != NULL)
-	{
-		eif_object = eif_protect (eif_ref);
-		a_pointer = (EIF_POINTER) eif_field (eif_access (eif_object), "item", EIF_POINTER);
-		if (a_pointer  == NULL)
-		{
-		EIF_PROCEDURE create_item = 0;
-			EIF_TYPE_ID type_id = eif_type (eif_object);
-			create_item = eif_procedure ("create_item", type_id);
-			(FUNCTION_CAST (void, (EIF_REFERENCE)) create_item) (eif_access (eif_object));
-		a_pointer = (EIF_POINTER) eif_field (eif_access (eif_object), "item", EIF_POINTER);
-		}
-		((ecom_eiffel_compiler::IEnumClusterExcludes *) a_pointer)->AddRef ();
-		eif_wean (eif_object);
-	}
-	return  (ecom_eiffel_compiler::IEnumClusterExcludes * ) a_pointer;
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-ecom_eiffel_compiler::IEnumClusterExcludes * * ecom_gec_ISE::ccom_ec_pointed_cell_205( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEnumClusterExcludes * * old )
-
-/*-----------------------------------------------------------
-	Convert CELL [IENUM_CLUSTER_EXCLUDES_INTERFACE] to ecom_eiffel_compiler::IEnumClusterExcludes * *.
------------------------------------------------------------*/
-{
-	EIF_OBJECT eif_object = 0;
-	ecom_eiffel_compiler::IEnumClusterExcludes * * result = 0;
-	EIF_REFERENCE cell_item = 0;
-
-	eif_object = eif_protect (eif_ref);
-	if (old != NULL)
-		result = old;
-	else
-		result = (ecom_eiffel_compiler::IEnumClusterExcludes * *) CoTaskMemAlloc (sizeof (ecom_eiffel_compiler::IEnumClusterExcludes *));
-	cell_item = eif_field (eif_access (eif_object), "item", EIF_REFERENCE);
-	if (cell_item != NULL)
-		*result = ccom_ec_pointed_interface_204 (cell_item);
-	eif_wean (eif_object);
-	return result;
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-BSTR * ecom_gec_ISE::ccom_ec_pointed_cell_206( EIF_REFERENCE eif_ref, BSTR * old )
+BSTR * ecom_gec_ISE::ccom_ec_pointed_cell_194( EIF_REFERENCE eif_ref, BSTR * old )
 
 /*-----------------------------------------------------------
 	Convert CELL [STRING] to BSTR *.
@@ -2733,7 +2654,58 @@ BSTR * ecom_gec_ISE::ccom_ec_pointed_cell_206( EIF_REFERENCE eif_ref, BSTR * old
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-BSTR * ecom_gec_ISE::ccom_ec_pointed_cell_211( EIF_REFERENCE eif_ref, BSTR * old )
+ecom_EiffelComCompiler::IEnumClusterExcludes * ecom_gec_ISE::ccom_ec_pointed_interface_205( EIF_REFERENCE eif_ref )
+
+/*-----------------------------------------------------------
+	Convert IENUM_CLUSTER_EXCLUDES_INTERFACE to ecom_EiffelComCompiler::IEnumClusterExcludes *.
+-----------------------------------------------------------*/
+{
+	EIF_OBJECT eif_object = 0;
+	EIF_POINTER a_pointer = 0;
+
+	if (eif_ref != NULL)
+	{
+		eif_object = eif_protect (eif_ref);
+		a_pointer = (EIF_POINTER) eif_field (eif_access (eif_object), "item", EIF_POINTER);
+		if (a_pointer  == NULL)
+		{
+		EIF_PROCEDURE create_item = 0;
+			EIF_TYPE_ID type_id = eif_type (eif_object);
+			create_item = eif_procedure ("create_item", type_id);
+			(FUNCTION_CAST (void, (EIF_REFERENCE)) create_item) (eif_access (eif_object));
+		a_pointer = (EIF_POINTER) eif_field (eif_access (eif_object), "item", EIF_POINTER);
+		}
+		((ecom_EiffelComCompiler::IEnumClusterExcludes *) a_pointer)->AddRef ();
+		eif_wean (eif_object);
+	}
+	return  (ecom_EiffelComCompiler::IEnumClusterExcludes * ) a_pointer;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+ecom_EiffelComCompiler::IEnumClusterExcludes * * ecom_gec_ISE::ccom_ec_pointed_cell_206( EIF_REFERENCE eif_ref, ecom_EiffelComCompiler::IEnumClusterExcludes * * old )
+
+/*-----------------------------------------------------------
+	Convert CELL [IENUM_CLUSTER_EXCLUDES_INTERFACE] to ecom_EiffelComCompiler::IEnumClusterExcludes * *.
+-----------------------------------------------------------*/
+{
+	EIF_OBJECT eif_object = 0;
+	ecom_EiffelComCompiler::IEnumClusterExcludes * * result = 0;
+	EIF_REFERENCE cell_item = 0;
+
+	eif_object = eif_protect (eif_ref);
+	if (old != NULL)
+		result = old;
+	else
+		result = (ecom_EiffelComCompiler::IEnumClusterExcludes * *) CoTaskMemAlloc (sizeof (ecom_EiffelComCompiler::IEnumClusterExcludes *));
+	cell_item = eif_field (eif_access (eif_object), "item", EIF_REFERENCE);
+	if (cell_item != NULL)
+		*result = ccom_ec_pointed_interface_205 (cell_item);
+	eif_wean (eif_object);
+	return result;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+BSTR * ecom_gec_ISE::ccom_ec_pointed_cell_207( EIF_REFERENCE eif_ref, BSTR * old )
 
 /*-----------------------------------------------------------
 	Convert CELL [STRING] to BSTR *.
@@ -2817,7 +2789,7 @@ BSTR * ecom_gec_ISE::ccom_ec_pointed_cell_213( EIF_REFERENCE eif_ref, BSTR * old
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-BSTR * ecom_gec_ISE::ccom_ec_pointed_cell_215( EIF_REFERENCE eif_ref, BSTR * old )
+BSTR * ecom_gec_ISE::ccom_ec_pointed_cell_214( EIF_REFERENCE eif_ref, BSTR * old )
 
 /*-----------------------------------------------------------
 	Convert CELL [STRING] to BSTR *.
@@ -2845,10 +2817,38 @@ BSTR * ecom_gec_ISE::ccom_ec_pointed_cell_215( EIF_REFERENCE eif_ref, BSTR * old
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-ecom_eiffel_compiler::IEnumIncludePaths * ecom_gec_ISE::ccom_ec_pointed_interface_218( EIF_REFERENCE eif_ref )
+BSTR * ecom_gec_ISE::ccom_ec_pointed_cell_216( EIF_REFERENCE eif_ref, BSTR * old )
 
 /*-----------------------------------------------------------
-	Convert IENUM_INCLUDE_PATHS_INTERFACE to ecom_eiffel_compiler::IEnumIncludePaths *.
+	Convert CELL [STRING] to BSTR *.
+-----------------------------------------------------------*/
+{
+	EIF_OBJECT eif_object = 0;
+	BSTR * result = 0;
+	EIF_REFERENCE cell_item = 0;
+
+	eif_object = eif_protect (eif_ref);
+	if (old != NULL)
+		result = old;
+	else
+		result = (BSTR *) CoTaskMemAlloc (sizeof (BSTR));
+	cell_item = eif_field (eif_access (eif_object), "item", EIF_REFERENCE);
+	if (*result != NULL)
+	{
+		rt_ce.free_memory_bstr(*result);
+		*result = NULL;
+	}
+	if (cell_item != NULL)
+		*result = rt_ec.ccom_ec_bstr (cell_item);
+	eif_wean (eif_object);
+	return result;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+ecom_EiffelComCompiler::IEnumIncludePaths * ecom_gec_ISE::ccom_ec_pointed_interface_219( EIF_REFERENCE eif_ref )
+
+/*-----------------------------------------------------------
+	Convert IENUM_INCLUDE_PATHS_INTERFACE to ecom_EiffelComCompiler::IEnumIncludePaths *.
 -----------------------------------------------------------*/
 {
 	EIF_OBJECT eif_object = 0;
@@ -2866,40 +2866,40 @@ ecom_eiffel_compiler::IEnumIncludePaths * ecom_gec_ISE::ccom_ec_pointed_interfac
 			(FUNCTION_CAST (void, (EIF_REFERENCE)) create_item) (eif_access (eif_object));
 		a_pointer = (EIF_POINTER) eif_field (eif_access (eif_object), "item", EIF_POINTER);
 		}
-		((ecom_eiffel_compiler::IEnumIncludePaths *) a_pointer)->AddRef ();
+		((ecom_EiffelComCompiler::IEnumIncludePaths *) a_pointer)->AddRef ();
 		eif_wean (eif_object);
 	}
-	return  (ecom_eiffel_compiler::IEnumIncludePaths * ) a_pointer;
+	return  (ecom_EiffelComCompiler::IEnumIncludePaths * ) a_pointer;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-ecom_eiffel_compiler::IEnumIncludePaths * * ecom_gec_ISE::ccom_ec_pointed_cell_219( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEnumIncludePaths * * old )
+ecom_EiffelComCompiler::IEnumIncludePaths * * ecom_gec_ISE::ccom_ec_pointed_cell_220( EIF_REFERENCE eif_ref, ecom_EiffelComCompiler::IEnumIncludePaths * * old )
 
 /*-----------------------------------------------------------
-	Convert CELL [IENUM_INCLUDE_PATHS_INTERFACE] to ecom_eiffel_compiler::IEnumIncludePaths * *.
+	Convert CELL [IENUM_INCLUDE_PATHS_INTERFACE] to ecom_EiffelComCompiler::IEnumIncludePaths * *.
 -----------------------------------------------------------*/
 {
 	EIF_OBJECT eif_object = 0;
-	ecom_eiffel_compiler::IEnumIncludePaths * * result = 0;
+	ecom_EiffelComCompiler::IEnumIncludePaths * * result = 0;
 	EIF_REFERENCE cell_item = 0;
 
 	eif_object = eif_protect (eif_ref);
 	if (old != NULL)
 		result = old;
 	else
-		result = (ecom_eiffel_compiler::IEnumIncludePaths * *) CoTaskMemAlloc (sizeof (ecom_eiffel_compiler::IEnumIncludePaths *));
+		result = (ecom_EiffelComCompiler::IEnumIncludePaths * *) CoTaskMemAlloc (sizeof (ecom_EiffelComCompiler::IEnumIncludePaths *));
 	cell_item = eif_field (eif_access (eif_object), "item", EIF_REFERENCE);
 	if (cell_item != NULL)
-		*result = ccom_ec_pointed_interface_218 (cell_item);
+		*result = ccom_ec_pointed_interface_219 (cell_item);
 	eif_wean (eif_object);
 	return result;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-ecom_eiffel_compiler::IEnumObjectFiles * ecom_gec_ISE::ccom_ec_pointed_interface_221( EIF_REFERENCE eif_ref )
+ecom_EiffelComCompiler::IEnumObjectFiles * ecom_gec_ISE::ccom_ec_pointed_interface_222( EIF_REFERENCE eif_ref )
 
 /*-----------------------------------------------------------
-	Convert IENUM_OBJECT_FILES_INTERFACE to ecom_eiffel_compiler::IEnumObjectFiles *.
+	Convert IENUM_OBJECT_FILES_INTERFACE to ecom_EiffelComCompiler::IEnumObjectFiles *.
 -----------------------------------------------------------*/
 {
 	EIF_OBJECT eif_object = 0;
@@ -2917,37 +2917,37 @@ ecom_eiffel_compiler::IEnumObjectFiles * ecom_gec_ISE::ccom_ec_pointed_interface
 			(FUNCTION_CAST (void, (EIF_REFERENCE)) create_item) (eif_access (eif_object));
 		a_pointer = (EIF_POINTER) eif_field (eif_access (eif_object), "item", EIF_POINTER);
 		}
-		((ecom_eiffel_compiler::IEnumObjectFiles *) a_pointer)->AddRef ();
+		((ecom_EiffelComCompiler::IEnumObjectFiles *) a_pointer)->AddRef ();
 		eif_wean (eif_object);
 	}
-	return  (ecom_eiffel_compiler::IEnumObjectFiles * ) a_pointer;
+	return  (ecom_EiffelComCompiler::IEnumObjectFiles * ) a_pointer;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-ecom_eiffel_compiler::IEnumObjectFiles * * ecom_gec_ISE::ccom_ec_pointed_cell_222( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEnumObjectFiles * * old )
+ecom_EiffelComCompiler::IEnumObjectFiles * * ecom_gec_ISE::ccom_ec_pointed_cell_223( EIF_REFERENCE eif_ref, ecom_EiffelComCompiler::IEnumObjectFiles * * old )
 
 /*-----------------------------------------------------------
-	Convert CELL [IENUM_OBJECT_FILES_INTERFACE] to ecom_eiffel_compiler::IEnumObjectFiles * *.
+	Convert CELL [IENUM_OBJECT_FILES_INTERFACE] to ecom_EiffelComCompiler::IEnumObjectFiles * *.
 -----------------------------------------------------------*/
 {
 	EIF_OBJECT eif_object = 0;
-	ecom_eiffel_compiler::IEnumObjectFiles * * result = 0;
+	ecom_EiffelComCompiler::IEnumObjectFiles * * result = 0;
 	EIF_REFERENCE cell_item = 0;
 
 	eif_object = eif_protect (eif_ref);
 	if (old != NULL)
 		result = old;
 	else
-		result = (ecom_eiffel_compiler::IEnumObjectFiles * *) CoTaskMemAlloc (sizeof (ecom_eiffel_compiler::IEnumObjectFiles *));
+		result = (ecom_EiffelComCompiler::IEnumObjectFiles * *) CoTaskMemAlloc (sizeof (ecom_EiffelComCompiler::IEnumObjectFiles *));
 	cell_item = eif_field (eif_access (eif_object), "item", EIF_REFERENCE);
 	if (cell_item != NULL)
-		*result = ccom_ec_pointed_interface_221 (cell_item);
+		*result = ccom_ec_pointed_interface_222 (cell_item);
 	eif_wean (eif_object);
 	return result;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-BSTR * ecom_gec_ISE::ccom_ec_pointed_cell_223( EIF_REFERENCE eif_ref, BSTR * old )
+BSTR * ecom_gec_ISE::ccom_ec_pointed_cell_224( EIF_REFERENCE eif_ref, BSTR * old )
 
 /*-----------------------------------------------------------
 	Convert CELL [STRING] to BSTR *.
@@ -2975,7 +2975,7 @@ BSTR * ecom_gec_ISE::ccom_ec_pointed_cell_223( EIF_REFERENCE eif_ref, BSTR * old
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-BSTR * ecom_gec_ISE::ccom_ec_pointed_cell_225( EIF_REFERENCE eif_ref, BSTR * old )
+BSTR * ecom_gec_ISE::ccom_ec_pointed_cell_226( EIF_REFERENCE eif_ref, BSTR * old )
 
 /*-----------------------------------------------------------
 	Convert CELL [STRING] to BSTR *.
@@ -3003,7 +3003,7 @@ BSTR * ecom_gec_ISE::ccom_ec_pointed_cell_225( EIF_REFERENCE eif_ref, BSTR * old
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-BSTR * ecom_gec_ISE::ccom_ec_pointed_cell_227( EIF_REFERENCE eif_ref, BSTR * old )
+BSTR * ecom_gec_ISE::ccom_ec_pointed_cell_228( EIF_REFERENCE eif_ref, BSTR * old )
 
 /*-----------------------------------------------------------
 	Convert CELL [STRING] to BSTR *.
@@ -3031,7 +3031,7 @@ BSTR * ecom_gec_ISE::ccom_ec_pointed_cell_227( EIF_REFERENCE eif_ref, BSTR * old
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-BSTR * ecom_gec_ISE::ccom_ec_pointed_cell_229( EIF_REFERENCE eif_ref, BSTR * old )
+BSTR * ecom_gec_ISE::ccom_ec_pointed_cell_230( EIF_REFERENCE eif_ref, BSTR * old )
 
 /*-----------------------------------------------------------
 	Convert CELL [STRING] to BSTR *.
@@ -3056,29 +3056,6 @@ BSTR * ecom_gec_ISE::ccom_ec_pointed_cell_229( EIF_REFERENCE eif_ref, BSTR * old
 		*result = rt_ec.ccom_ec_bstr (cell_item);
 	eif_wean (eif_object);
 	return result;
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-VARIANT * ecom_gec_ISE::ccom_ec_pointed_record_231( EIF_REFERENCE eif_ref )
-
-/*-----------------------------------------------------------
-	Convert ECOM_VARIANT to VARIANT *.
------------------------------------------------------------*/
-{
-	EIF_OBJECT eif_object = 0;
-	EIF_POINTER a_pointer = 0;
-
-	if (eif_ref != NULL)
-	{
-		eif_object = eif_protect (eif_ref);
-		a_pointer = (EIF_POINTER) eif_field (eif_access (eif_object), "item", EIF_POINTER);
-		
-		EIF_TYPE_ID type_id = eif_type_id ("ECOM_VARIANT");
-		EIF_PROCEDURE set_shared =  eif_procedure ("set_shared", type_id);
-		(FUNCTION_CAST (void, (EIF_REFERENCE))set_shared) (eif_access (eif_object));
-		eif_wean (eif_object);
-	}
-	return  (VARIANT * ) a_pointer;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -3128,10 +3105,33 @@ VARIANT * ecom_gec_ISE::ccom_ec_pointed_record_233( EIF_REFERENCE eif_ref )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-ecom_eiffel_compiler::IEiffelHTMLDocEvents * ecom_gec_ISE::ccom_ec_pointed_interface_238( EIF_REFERENCE eif_ref )
+VARIANT * ecom_gec_ISE::ccom_ec_pointed_record_234( EIF_REFERENCE eif_ref )
 
 /*-----------------------------------------------------------
-	Convert IEIFFEL_HTMLDOC_EVENTS_INTERFACE to ecom_eiffel_compiler::IEiffelHTMLDocEvents *.
+	Convert ECOM_VARIANT to VARIANT *.
+-----------------------------------------------------------*/
+{
+	EIF_OBJECT eif_object = 0;
+	EIF_POINTER a_pointer = 0;
+
+	if (eif_ref != NULL)
+	{
+		eif_object = eif_protect (eif_ref);
+		a_pointer = (EIF_POINTER) eif_field (eif_access (eif_object), "item", EIF_POINTER);
+		
+		EIF_TYPE_ID type_id = eif_type_id ("ECOM_VARIANT");
+		EIF_PROCEDURE set_shared =  eif_procedure ("set_shared", type_id);
+		(FUNCTION_CAST (void, (EIF_REFERENCE))set_shared) (eif_access (eif_object));
+		eif_wean (eif_object);
+	}
+	return  (VARIANT * ) a_pointer;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+ecom_EiffelComCompiler::IEiffelHTMLDocEvents * ecom_gec_ISE::ccom_ec_pointed_interface_239( EIF_REFERENCE eif_ref )
+
+/*-----------------------------------------------------------
+	Convert IEIFFEL_HTMLDOC_EVENTS_INTERFACE to ecom_EiffelComCompiler::IEiffelHTMLDocEvents *.
 -----------------------------------------------------------*/
 {
 	EIF_OBJECT eif_object = 0;
@@ -3149,10 +3149,10 @@ ecom_eiffel_compiler::IEiffelHTMLDocEvents * ecom_gec_ISE::ccom_ec_pointed_inter
 			(FUNCTION_CAST (void, (EIF_REFERENCE)) create_item) (eif_access (eif_object));
 		a_pointer = (EIF_POINTER) eif_field (eif_access (eif_object), "item", EIF_POINTER);
 		}
-		((ecom_eiffel_compiler::IEiffelHTMLDocEvents *) a_pointer)->AddRef ();
+		((ecom_EiffelComCompiler::IEiffelHTMLDocEvents *) a_pointer)->AddRef ();
 		eif_wean (eif_object);
 	}
-	return  (ecom_eiffel_compiler::IEiffelHTMLDocEvents * ) a_pointer;
+	return  (ecom_EiffelComCompiler::IEiffelHTMLDocEvents * ) a_pointer;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 

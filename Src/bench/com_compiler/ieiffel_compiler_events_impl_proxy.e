@@ -25,27 +25,62 @@ feature {NONE}  -- Initialization
 
 feature -- Basic Operations
 
-	should_continue (a_boolean: BOOLEAN_REF) is
+	begin_compile is
+			-- Beginning compilation.
+		do
+			ccom_begin_compile (initializer)
+		end
+
+	begin_degree (ul_degree: INTEGER) is
+			-- Start of new degree phase in compilation.
+			-- `ul_degree' [in].  
+		do
+			ccom_begin_degree (initializer, ul_degree)
+		end
+
+	end_compile (vb_sucessful: BOOLEAN) is
+			-- Finished compilation.
+			-- `vb_sucessful' [in].  
+		do
+			ccom_end_compile (initializer, vb_sucessful)
+		end
+
+	should_continue (pvb_continue: BOOLEAN_REF) is
 			-- Should compilation continue.
-			-- `a_boolean' [in, out].  
+			-- `pvb_continue' [in, out].  
 		do
-			ccom_should_continue (initializer, a_boolean)
+			ccom_should_continue (initializer, pvb_continue)
 		end
 
-	output_string (a_string: STRING) is
+	output_string (bstr_output: STRING) is
 			-- Output string.
-			-- `a_string' [in].  
+			-- `bstr_output' [in].  
 		do
-			ccom_output_string (initializer, a_string)
+			ccom_output_string (initializer, bstr_output)
 		end
 
-	last_error (error_message: STRING; file_name: STRING; line_number: INTEGER) is
+	output_error (bstr_full_error: STRING; bstr_short_error: STRING; bstr_code: STRING; bstr_file_name: STRING; ul_line: INTEGER; ul_col: INTEGER) is
 			-- Last error.
-			-- `error_message' [in].  
-			-- `file_name' [in].  
-			-- `line_number' [in].  
+			-- `bstr_full_error' [in].  
+			-- `bstr_short_error' [in].  
+			-- `bstr_code' [in].  
+			-- `bstr_file_name' [in].  
+			-- `ul_line' [in].  
+			-- `ul_col' [in].  
 		do
-			ccom_last_error (initializer, error_message, file_name, line_number)
+			ccom_output_error (initializer, bstr_full_error, bstr_short_error, bstr_code, bstr_file_name, ul_line, ul_col)
+		end
+
+	output_warning (bstr_full_warning: STRING; bstr_short_warning: STRING; bstr_code: STRING; bstr_file_name: STRING; ul_line: INTEGER; ul_col: INTEGER) is
+			-- Last warning.
+			-- `bstr_full_warning' [in].  
+			-- `bstr_short_warning' [in].  
+			-- `bstr_code' [in].  
+			-- `bstr_file_name' [in].  
+			-- `ul_line' [in].  
+			-- `ul_col' [in].  
+		do
+			ccom_output_warning (initializer, bstr_full_warning, bstr_short_warning, bstr_code, bstr_file_name, ul_line, ul_col)
 		end
 
 feature {NONE}  -- Implementation
@@ -58,40 +93,64 @@ feature {NONE}  -- Implementation
 
 feature {NONE}  -- Externals
 
-	ccom_should_continue (cpp_obj: POINTER; a_boolean: BOOLEAN_REF) is
+	ccom_begin_compile (cpp_obj: POINTER) is
+			-- Beginning compilation.
+		external
+			"C++ [ecom_EiffelComCompiler::IEiffelCompilerEvents_impl_proxy %"ecom_EiffelComCompiler_IEiffelCompilerEvents_impl_proxy_s.h%"]()"
+		end
+
+	ccom_begin_degree (cpp_obj: POINTER; ul_degree: INTEGER) is
+			-- Start of new degree phase in compilation.
+		external
+			"C++ [ecom_EiffelComCompiler::IEiffelCompilerEvents_impl_proxy %"ecom_EiffelComCompiler_IEiffelCompilerEvents_impl_proxy_s.h%"](EIF_INTEGER)"
+		end
+
+	ccom_end_compile (cpp_obj: POINTER; vb_sucessful: BOOLEAN) is
+			-- Finished compilation.
+		external
+			"C++ [ecom_EiffelComCompiler::IEiffelCompilerEvents_impl_proxy %"ecom_EiffelComCompiler_IEiffelCompilerEvents_impl_proxy_s.h%"](EIF_BOOLEAN)"
+		end
+
+	ccom_should_continue (cpp_obj: POINTER; pvb_continue: BOOLEAN_REF) is
 			-- Should compilation continue.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelCompilerEvents_impl_proxy %"ecom_eiffel_compiler_IEiffelCompilerEvents_impl_proxy_s.h%"](EIF_OBJECT)"
+			"C++ [ecom_EiffelComCompiler::IEiffelCompilerEvents_impl_proxy %"ecom_EiffelComCompiler_IEiffelCompilerEvents_impl_proxy_s.h%"](EIF_OBJECT)"
 		end
 
-	ccom_output_string (cpp_obj: POINTER; a_string: STRING) is
+	ccom_output_string (cpp_obj: POINTER; bstr_output: STRING) is
 			-- Output string.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelCompilerEvents_impl_proxy %"ecom_eiffel_compiler_IEiffelCompilerEvents_impl_proxy_s.h%"](EIF_OBJECT)"
+			"C++ [ecom_EiffelComCompiler::IEiffelCompilerEvents_impl_proxy %"ecom_EiffelComCompiler_IEiffelCompilerEvents_impl_proxy_s.h%"](EIF_OBJECT)"
 		end
 
-	ccom_last_error (cpp_obj: POINTER; error_message: STRING; file_name: STRING; line_number: INTEGER) is
+	ccom_output_error (cpp_obj: POINTER; bstr_full_error: STRING; bstr_short_error: STRING; bstr_code: STRING; bstr_file_name: STRING; ul_line: INTEGER; ul_col: INTEGER) is
 			-- Last error.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelCompilerEvents_impl_proxy %"ecom_eiffel_compiler_IEiffelCompilerEvents_impl_proxy_s.h%"](EIF_OBJECT,EIF_OBJECT,EIF_INTEGER)"
+			"C++ [ecom_EiffelComCompiler::IEiffelCompilerEvents_impl_proxy %"ecom_EiffelComCompiler_IEiffelCompilerEvents_impl_proxy_s.h%"](EIF_OBJECT,EIF_OBJECT,EIF_OBJECT,EIF_OBJECT,EIF_INTEGER,EIF_INTEGER)"
+		end
+
+	ccom_output_warning (cpp_obj: POINTER; bstr_full_warning: STRING; bstr_short_warning: STRING; bstr_code: STRING; bstr_file_name: STRING; ul_line: INTEGER; ul_col: INTEGER) is
+			-- Last warning.
+		external
+			"C++ [ecom_EiffelComCompiler::IEiffelCompilerEvents_impl_proxy %"ecom_EiffelComCompiler_IEiffelCompilerEvents_impl_proxy_s.h%"](EIF_OBJECT,EIF_OBJECT,EIF_OBJECT,EIF_OBJECT,EIF_INTEGER,EIF_INTEGER)"
 		end
 
 	ccom_delete_ieiffel_compiler_events_impl_proxy (a_pointer: POINTER) is
 			-- Release resource
 		external
-			"C++ [delete ecom_eiffel_compiler::IEiffelCompilerEvents_impl_proxy %"ecom_eiffel_compiler_IEiffelCompilerEvents_impl_proxy_s.h%"]()"
+			"C++ [delete ecom_EiffelComCompiler::IEiffelCompilerEvents_impl_proxy %"ecom_EiffelComCompiler_IEiffelCompilerEvents_impl_proxy_s.h%"]()"
 		end
 
 	ccom_create_ieiffel_compiler_events_impl_proxy_from_pointer (a_pointer: POINTER): POINTER is
 			-- Create from pointer
 		external
-			"C++ [new ecom_eiffel_compiler::IEiffelCompilerEvents_impl_proxy %"ecom_eiffel_compiler_IEiffelCompilerEvents_impl_proxy_s.h%"](IUnknown *)"
+			"C++ [new ecom_EiffelComCompiler::IEiffelCompilerEvents_impl_proxy %"ecom_EiffelComCompiler_IEiffelCompilerEvents_impl_proxy_s.h%"](IUnknown *)"
 		end
 
 	ccom_item (cpp_obj: POINTER): POINTER is
 			-- Item
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelCompilerEvents_impl_proxy %"ecom_eiffel_compiler_IEiffelCompilerEvents_impl_proxy_s.h%"]():EIF_POINTER"
+			"C++ [ecom_EiffelComCompiler::IEiffelCompilerEvents_impl_proxy %"ecom_EiffelComCompiler_IEiffelCompilerEvents_impl_proxy_s.h%"]():EIF_POINTER"
 		end
 
 end -- IEIFFEL_COMPILER_EVENTS_IMPL_PROXY

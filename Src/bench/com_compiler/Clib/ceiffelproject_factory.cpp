@@ -61,7 +61,7 @@ STDMETHODIMP CEiffelProject_factory::CreateInstance( IUnknown *pIunknown, REFIID
 	*ppv = 0;
 	if (pIunknown)
 		return CLASS_E_NOAGGREGATION;
-	ecom_eiffel_compiler::CEiffelProject *pUnknown = new ecom_eiffel_compiler::CEiffelProject (type_id);
+	ecom_EiffelComCompiler::CEiffelProject *pUnknown = new ecom_EiffelComCompiler::CEiffelProject (type_id);
 	if (!pUnknown)
 		return E_OUTOFMEMORY;
 	pUnknown->AddRef ();

@@ -57,37 +57,37 @@ feature {NONE}  -- Externals
 	ccom_inner_exception (cpp_obj: POINTER): IEIFFEL_EXCEPTION_INTERFACE is
 			-- Get inner exception
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelException_impl_proxy %"ecom_eiffel_compiler_IEiffelException_impl_proxy_s.h%"](): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelException_impl_proxy %"ecom_EiffelComCompiler_IEiffelException_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
 	ccom_message (cpp_obj: POINTER): STRING is
 			-- Get exception message
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelException_impl_proxy %"ecom_eiffel_compiler_IEiffelException_impl_proxy_s.h%"](): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelException_impl_proxy %"ecom_EiffelComCompiler_IEiffelException_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
 	ccom_exception_code (cpp_obj: POINTER): INTEGER is
 			-- Retrieve exception type
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelException_impl_proxy %"ecom_eiffel_compiler_IEiffelException_impl_proxy_s.h%"](): EIF_INTEGER"
+			"C++ [ecom_EiffelComCompiler::IEiffelException_impl_proxy %"ecom_EiffelComCompiler_IEiffelException_impl_proxy_s.h%"](): EIF_INTEGER"
 		end
 
 	ccom_delete_ieiffel_exception_impl_proxy (a_pointer: POINTER) is
 			-- Release resource
 		external
-			"C++ [delete ecom_eiffel_compiler::IEiffelException_impl_proxy %"ecom_eiffel_compiler_IEiffelException_impl_proxy_s.h%"]()"
+			"C++ [delete ecom_EiffelComCompiler::IEiffelException_impl_proxy %"ecom_EiffelComCompiler_IEiffelException_impl_proxy_s.h%"]()"
 		end
 
 	ccom_create_ieiffel_exception_impl_proxy_from_pointer (a_pointer: POINTER): POINTER is
 			-- Create from pointer
 		external
-			"C++ [new ecom_eiffel_compiler::IEiffelException_impl_proxy %"ecom_eiffel_compiler_IEiffelException_impl_proxy_s.h%"](IUnknown *)"
+			"C++ [new ecom_EiffelComCompiler::IEiffelException_impl_proxy %"ecom_EiffelComCompiler_IEiffelException_impl_proxy_s.h%"](IUnknown *)"
 		end
 
 	ccom_item (cpp_obj: POINTER): POINTER is
 			-- Item
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelException_impl_proxy %"ecom_eiffel_compiler_IEiffelException_impl_proxy_s.h%"]():EIF_POINTER"
+			"C++ [ecom_EiffelComCompiler::IEiffelException_impl_proxy %"ecom_EiffelComCompiler_IEiffelException_impl_proxy_s.h%"]():EIF_POINTER"
 		end
 
 end -- IEIFFEL_EXCEPTION_IMPL_PROXY

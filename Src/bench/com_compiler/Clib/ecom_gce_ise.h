@@ -19,55 +19,55 @@ class ecom_gce_ISE;
 
 #include "ecom_rt_globals.h"
 
-#include "ecom_eiffel_compiler_IEiffelException_s.h"
+#include "ecom_EiffelComCompiler_IEiffelException_s.h"
 
-#include "ecom_eiffel_compiler_IEiffelCompiler_s.h"
+#include "ecom_EiffelComCompiler_IEiffelCompiler_s.h"
 
-#include "ecom_eiffel_compiler_IEiffelSystemBrowser_s.h"
+#include "ecom_EiffelComCompiler_IEiffelSystemBrowser_s.h"
 
-#include "ecom_eiffel_compiler_IEiffelProjectProperties_s.h"
+#include "ecom_EiffelComCompiler_IEiffelProjectProperties_s.h"
 
-#include "ecom_eiffel_compiler_IEiffelCompletionInfo_s.h"
+#include "ecom_EiffelComCompiler_IEiffelCompletionInfo_s.h"
 
-#include "ecom_eiffel_compiler_IEiffelHTMLDocGenerator_s.h"
+#include "ecom_EiffelComCompiler_IEiffelHTMLDocGenerator_s.h"
 
-#include "ecom_eiffel_compiler_IEnumEiffelClass_s.h"
+#include "ecom_EiffelComCompiler_IEnumEiffelClass_s.h"
 
-#include "ecom_eiffel_compiler_IEnumCluster_s.h"
+#include "ecom_EiffelComCompiler_IEnumCluster_s.h"
 
-#include "ecom_eiffel_compiler_IEnumAssembly_s.h"
+#include "ecom_EiffelComCompiler_IEnumAssembly_s.h"
 
-#include "ecom_eiffel_compiler_IEiffelClusterDescriptor_s.h"
+#include "ecom_EiffelComCompiler_IEiffelClusterDescriptor_s.h"
 
-#include "ecom_eiffel_compiler_IEiffelClassDescriptor_s.h"
+#include "ecom_EiffelComCompiler_IEiffelClassDescriptor_s.h"
 
-#include "ecom_eiffel_compiler_IEiffelFeatureDescriptor_s.h"
+#include "ecom_EiffelComCompiler_IEiffelFeatureDescriptor_s.h"
 
-#include "ecom_eiffel_compiler_IEnumFeature_s.h"
+#include "ecom_EiffelComCompiler_IEnumFeature_s.h"
 
-#include "ecom_eiffel_compiler_IEnumParameter_s.h"
+#include "ecom_EiffelComCompiler_IEnumParameter_s.h"
 
-#include "ecom_eiffel_compiler_IEiffelParameterDescriptor_s.h"
+#include "ecom_EiffelComCompiler_IEiffelParameterDescriptor_s.h"
 
-#include "ecom_eiffel_compiler_IEiffelAssemblyProperties_s.h"
+#include "ecom_EiffelComCompiler_IEiffelAssemblyProperties_s.h"
 
-#include "ecom_eiffel_compiler_IEiffelSystemClusters_s.h"
+#include "ecom_EiffelComCompiler_IEiffelSystemClusters_s.h"
 
-#include "ecom_eiffel_compiler_IEiffelSystemExternals_s.h"
+#include "ecom_EiffelComCompiler_IEiffelSystemExternals_s.h"
 
-#include "ecom_eiffel_compiler_IEiffelSystemAssemblies_s.h"
+#include "ecom_EiffelComCompiler_IEiffelSystemAssemblies_s.h"
 
-#include "ecom_eiffel_compiler_IEnumClusterProp_s.h"
+#include "ecom_EiffelComCompiler_IEnumClusterProp_s.h"
 
-#include "ecom_eiffel_compiler_IEiffelClusterProperties_s.h"
+#include "ecom_EiffelComCompiler_IEiffelClusterProperties_s.h"
 
-#include "ecom_eiffel_compiler_IEnumClusterExcludes_s.h"
+#include "ecom_EiffelComCompiler_IEnumClusterExcludes_s.h"
 
-#include "ecom_eiffel_compiler_IEnumIncludePaths_s.h"
+#include "ecom_EiffelComCompiler_IEnumIncludePaths_s.h"
 
-#include "ecom_eiffel_compiler_IEnumObjectFiles_s.h"
+#include "ecom_EiffelComCompiler_IEnumObjectFiles_s.h"
 
-#include "ecom_eiffel_compiler_IEiffelHTMLDocEvents_s.h"
+#include "ecom_EiffelComCompiler_IEiffelHTMLDocEvents_s.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -124,39 +124,39 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Convert ecom_eiffel_compiler::IEiffelException *  to IEIFFEL_EXCEPTION_INTERFACE.
+	Convert ecom_EiffelComCompiler::IEiffelException *  to IEIFFEL_EXCEPTION_INTERFACE.
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_interface_6( ecom_eiffel_compiler::IEiffelException * a_interface_pointer );
+	EIF_REFERENCE ccom_ce_pointed_interface_6( ecom_EiffelComCompiler::IEiffelException * a_interface_pointer );
 
 
 	/*-----------------------------------------------------------
-	Convert ecom_eiffel_compiler::IEiffelException * *  to CELL [IEIFFEL_EXCEPTION_INTERFACE].
+	Convert ecom_EiffelComCompiler::IEiffelException * *  to CELL [IEIFFEL_EXCEPTION_INTERFACE].
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_cell_7( ecom_eiffel_compiler::IEiffelException * * a_pointer, EIF_OBJECT an_object );
+	EIF_REFERENCE ccom_ce_pointed_cell_7( ecom_EiffelComCompiler::IEiffelException * * a_pointer, EIF_OBJECT an_object );
 
 
 	/*-----------------------------------------------------------
-	Free memory of ecom_eiffel_compiler::IEiffelException * *.
+	Free memory of ecom_EiffelComCompiler::IEiffelException * *.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_7( ecom_eiffel_compiler::IEiffelException * * a_pointer );
+	void ccom_free_memory_pointed_7( ecom_EiffelComCompiler::IEiffelException * * a_pointer );
 
 
 	/*-----------------------------------------------------------
-	Convert ecom_eiffel_compiler::IEiffelCompiler *  to IEIFFEL_COMPILER_INTERFACE.
+	Convert ecom_EiffelComCompiler::IEiffelCompiler *  to IEIFFEL_COMPILER_INTERFACE.
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_interface_9( ecom_eiffel_compiler::IEiffelCompiler * a_interface_pointer );
+	EIF_REFERENCE ccom_ce_pointed_interface_9( ecom_EiffelComCompiler::IEiffelCompiler * a_interface_pointer );
 
 
 	/*-----------------------------------------------------------
-	Convert ecom_eiffel_compiler::IEiffelCompiler * *  to CELL [IEIFFEL_COMPILER_INTERFACE].
+	Convert ecom_EiffelComCompiler::IEiffelCompiler * *  to CELL [IEIFFEL_COMPILER_INTERFACE].
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_cell_10( ecom_eiffel_compiler::IEiffelCompiler * * a_pointer, EIF_OBJECT an_object );
+	EIF_REFERENCE ccom_ce_pointed_cell_10( ecom_EiffelComCompiler::IEiffelCompiler * * a_pointer, EIF_OBJECT an_object );
 
 
 	/*-----------------------------------------------------------
-	Free memory of ecom_eiffel_compiler::IEiffelCompiler * *.
+	Free memory of ecom_EiffelComCompiler::IEiffelCompiler * *.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_10( ecom_eiffel_compiler::IEiffelCompiler * * a_pointer );
+	void ccom_free_memory_pointed_10( ecom_EiffelComCompiler::IEiffelCompiler * * a_pointer );
 
 
 	/*-----------------------------------------------------------
@@ -172,75 +172,75 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Convert ecom_eiffel_compiler::IEiffelSystemBrowser *  to IEIFFEL_SYSTEM_BROWSER_INTERFACE.
+	Convert ecom_EiffelComCompiler::IEiffelSystemBrowser *  to IEIFFEL_SYSTEM_BROWSER_INTERFACE.
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_interface_14( ecom_eiffel_compiler::IEiffelSystemBrowser * a_interface_pointer );
+	EIF_REFERENCE ccom_ce_pointed_interface_14( ecom_EiffelComCompiler::IEiffelSystemBrowser * a_interface_pointer );
 
 
 	/*-----------------------------------------------------------
-	Convert ecom_eiffel_compiler::IEiffelSystemBrowser * *  to CELL [IEIFFEL_SYSTEM_BROWSER_INTERFACE].
+	Convert ecom_EiffelComCompiler::IEiffelSystemBrowser * *  to CELL [IEIFFEL_SYSTEM_BROWSER_INTERFACE].
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_cell_15( ecom_eiffel_compiler::IEiffelSystemBrowser * * a_pointer, EIF_OBJECT an_object );
+	EIF_REFERENCE ccom_ce_pointed_cell_15( ecom_EiffelComCompiler::IEiffelSystemBrowser * * a_pointer, EIF_OBJECT an_object );
 
 
 	/*-----------------------------------------------------------
-	Free memory of ecom_eiffel_compiler::IEiffelSystemBrowser * *.
+	Free memory of ecom_EiffelComCompiler::IEiffelSystemBrowser * *.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_15( ecom_eiffel_compiler::IEiffelSystemBrowser * * a_pointer );
+	void ccom_free_memory_pointed_15( ecom_EiffelComCompiler::IEiffelSystemBrowser * * a_pointer );
 
 
 	/*-----------------------------------------------------------
-	Convert ecom_eiffel_compiler::IEiffelProjectProperties *  to IEIFFEL_PROJECT_PROPERTIES_INTERFACE.
+	Convert ecom_EiffelComCompiler::IEiffelProjectProperties *  to IEIFFEL_PROJECT_PROPERTIES_INTERFACE.
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_interface_17( ecom_eiffel_compiler::IEiffelProjectProperties * a_interface_pointer );
+	EIF_REFERENCE ccom_ce_pointed_interface_17( ecom_EiffelComCompiler::IEiffelProjectProperties * a_interface_pointer );
 
 
 	/*-----------------------------------------------------------
-	Convert ecom_eiffel_compiler::IEiffelProjectProperties * *  to CELL [IEIFFEL_PROJECT_PROPERTIES_INTERFACE].
+	Convert ecom_EiffelComCompiler::IEiffelProjectProperties * *  to CELL [IEIFFEL_PROJECT_PROPERTIES_INTERFACE].
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_cell_18( ecom_eiffel_compiler::IEiffelProjectProperties * * a_pointer, EIF_OBJECT an_object );
+	EIF_REFERENCE ccom_ce_pointed_cell_18( ecom_EiffelComCompiler::IEiffelProjectProperties * * a_pointer, EIF_OBJECT an_object );
 
 
 	/*-----------------------------------------------------------
-	Free memory of ecom_eiffel_compiler::IEiffelProjectProperties * *.
+	Free memory of ecom_EiffelComCompiler::IEiffelProjectProperties * *.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_18( ecom_eiffel_compiler::IEiffelProjectProperties * * a_pointer );
+	void ccom_free_memory_pointed_18( ecom_EiffelComCompiler::IEiffelProjectProperties * * a_pointer );
 
 
 	/*-----------------------------------------------------------
-	Convert ecom_eiffel_compiler::IEiffelCompletionInfo *  to IEIFFEL_COMPLETION_INFO_INTERFACE.
+	Convert ecom_EiffelComCompiler::IEiffelCompletionInfo *  to IEIFFEL_COMPLETION_INFO_INTERFACE.
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_interface_20( ecom_eiffel_compiler::IEiffelCompletionInfo * a_interface_pointer );
+	EIF_REFERENCE ccom_ce_pointed_interface_20( ecom_EiffelComCompiler::IEiffelCompletionInfo * a_interface_pointer );
 
 
 	/*-----------------------------------------------------------
-	Convert ecom_eiffel_compiler::IEiffelCompletionInfo * *  to CELL [IEIFFEL_COMPLETION_INFO_INTERFACE].
+	Convert ecom_EiffelComCompiler::IEiffelCompletionInfo * *  to CELL [IEIFFEL_COMPLETION_INFO_INTERFACE].
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_cell_21( ecom_eiffel_compiler::IEiffelCompletionInfo * * a_pointer, EIF_OBJECT an_object );
+	EIF_REFERENCE ccom_ce_pointed_cell_21( ecom_EiffelComCompiler::IEiffelCompletionInfo * * a_pointer, EIF_OBJECT an_object );
 
 
 	/*-----------------------------------------------------------
-	Free memory of ecom_eiffel_compiler::IEiffelCompletionInfo * *.
+	Free memory of ecom_EiffelComCompiler::IEiffelCompletionInfo * *.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_21( ecom_eiffel_compiler::IEiffelCompletionInfo * * a_pointer );
+	void ccom_free_memory_pointed_21( ecom_EiffelComCompiler::IEiffelCompletionInfo * * a_pointer );
 
 
 	/*-----------------------------------------------------------
-	Convert ecom_eiffel_compiler::IEiffelHTMLDocGenerator *  to IEIFFEL_HTMLDOC_GENERATOR_INTERFACE.
+	Convert ecom_EiffelComCompiler::IEiffelHTMLDocGenerator *  to IEIFFEL_HTMLDOC_GENERATOR_INTERFACE.
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_interface_23( ecom_eiffel_compiler::IEiffelHTMLDocGenerator * a_interface_pointer );
+	EIF_REFERENCE ccom_ce_pointed_interface_23( ecom_EiffelComCompiler::IEiffelHTMLDocGenerator * a_interface_pointer );
 
 
 	/*-----------------------------------------------------------
-	Convert ecom_eiffel_compiler::IEiffelHTMLDocGenerator * *  to CELL [IEIFFEL_HTMLDOC_GENERATOR_INTERFACE].
+	Convert ecom_EiffelComCompiler::IEiffelHTMLDocGenerator * *  to CELL [IEIFFEL_HTMLDOC_GENERATOR_INTERFACE].
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_cell_24( ecom_eiffel_compiler::IEiffelHTMLDocGenerator * * a_pointer, EIF_OBJECT an_object );
+	EIF_REFERENCE ccom_ce_pointed_cell_24( ecom_EiffelComCompiler::IEiffelHTMLDocGenerator * * a_pointer, EIF_OBJECT an_object );
 
 
 	/*-----------------------------------------------------------
-	Free memory of ecom_eiffel_compiler::IEiffelHTMLDocGenerator * *.
+	Free memory of ecom_EiffelComCompiler::IEiffelHTMLDocGenerator * *.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_24( ecom_eiffel_compiler::IEiffelHTMLDocGenerator * * a_pointer );
+	void ccom_free_memory_pointed_24( ecom_EiffelComCompiler::IEiffelHTMLDocGenerator * * a_pointer );
 
 
 	/*-----------------------------------------------------------
@@ -352,21 +352,21 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Convert ecom_eiffel_compiler::IEnumEiffelClass *  to IENUM_EIFFEL_CLASS_INTERFACE.
+	Convert ecom_EiffelComCompiler::IEnumEiffelClass *  to IENUM_EIFFEL_CLASS_INTERFACE.
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_interface_39( ecom_eiffel_compiler::IEnumEiffelClass * a_interface_pointer );
+	EIF_REFERENCE ccom_ce_pointed_interface_39( ecom_EiffelComCompiler::IEnumEiffelClass * a_interface_pointer );
 
 
 	/*-----------------------------------------------------------
-	Convert ecom_eiffel_compiler::IEnumEiffelClass * *  to CELL [IENUM_EIFFEL_CLASS_INTERFACE].
+	Convert ecom_EiffelComCompiler::IEnumEiffelClass * *  to CELL [IENUM_EIFFEL_CLASS_INTERFACE].
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_cell_40( ecom_eiffel_compiler::IEnumEiffelClass * * a_pointer, EIF_OBJECT an_object );
+	EIF_REFERENCE ccom_ce_pointed_cell_40( ecom_EiffelComCompiler::IEnumEiffelClass * * a_pointer, EIF_OBJECT an_object );
 
 
 	/*-----------------------------------------------------------
-	Free memory of ecom_eiffel_compiler::IEnumEiffelClass * *.
+	Free memory of ecom_EiffelComCompiler::IEnumEiffelClass * *.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_40( ecom_eiffel_compiler::IEnumEiffelClass * * a_pointer );
+	void ccom_free_memory_pointed_40( ecom_EiffelComCompiler::IEnumEiffelClass * * a_pointer );
 
 
 	/*-----------------------------------------------------------
@@ -376,39 +376,39 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Convert ecom_eiffel_compiler::IEnumCluster *  to IENUM_CLUSTER_INTERFACE.
+	Convert ecom_EiffelComCompiler::IEnumCluster *  to IENUM_CLUSTER_INTERFACE.
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_interface_43( ecom_eiffel_compiler::IEnumCluster * a_interface_pointer );
+	EIF_REFERENCE ccom_ce_pointed_interface_43( ecom_EiffelComCompiler::IEnumCluster * a_interface_pointer );
 
 
 	/*-----------------------------------------------------------
-	Convert ecom_eiffel_compiler::IEnumCluster * *  to CELL [IENUM_CLUSTER_INTERFACE].
+	Convert ecom_EiffelComCompiler::IEnumCluster * *  to CELL [IENUM_CLUSTER_INTERFACE].
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_cell_44( ecom_eiffel_compiler::IEnumCluster * * a_pointer, EIF_OBJECT an_object );
+	EIF_REFERENCE ccom_ce_pointed_cell_44( ecom_EiffelComCompiler::IEnumCluster * * a_pointer, EIF_OBJECT an_object );
 
 
 	/*-----------------------------------------------------------
-	Free memory of ecom_eiffel_compiler::IEnumCluster * *.
+	Free memory of ecom_EiffelComCompiler::IEnumCluster * *.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_44( ecom_eiffel_compiler::IEnumCluster * * a_pointer );
+	void ccom_free_memory_pointed_44( ecom_EiffelComCompiler::IEnumCluster * * a_pointer );
 
 
 	/*-----------------------------------------------------------
-	Convert ecom_eiffel_compiler::IEnumAssembly *  to IENUM_ASSEMBLY_INTERFACE.
+	Convert ecom_EiffelComCompiler::IEnumAssembly *  to IENUM_ASSEMBLY_INTERFACE.
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_interface_46( ecom_eiffel_compiler::IEnumAssembly * a_interface_pointer );
+	EIF_REFERENCE ccom_ce_pointed_interface_46( ecom_EiffelComCompiler::IEnumAssembly * a_interface_pointer );
 
 
 	/*-----------------------------------------------------------
-	Convert ecom_eiffel_compiler::IEnumAssembly * *  to CELL [IENUM_ASSEMBLY_INTERFACE].
+	Convert ecom_EiffelComCompiler::IEnumAssembly * *  to CELL [IENUM_ASSEMBLY_INTERFACE].
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_cell_47( ecom_eiffel_compiler::IEnumAssembly * * a_pointer, EIF_OBJECT an_object );
+	EIF_REFERENCE ccom_ce_pointed_cell_47( ecom_EiffelComCompiler::IEnumAssembly * * a_pointer, EIF_OBJECT an_object );
 
 
 	/*-----------------------------------------------------------
-	Free memory of ecom_eiffel_compiler::IEnumAssembly * *.
+	Free memory of ecom_EiffelComCompiler::IEnumAssembly * *.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_47( ecom_eiffel_compiler::IEnumAssembly * * a_pointer );
+	void ccom_free_memory_pointed_47( ecom_EiffelComCompiler::IEnumAssembly * * a_pointer );
 
 
 	/*-----------------------------------------------------------
@@ -418,75 +418,75 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Convert ecom_eiffel_compiler::IEiffelClusterDescriptor *  to IEIFFEL_CLUSTER_DESCRIPTOR_INTERFACE.
+	Convert ecom_EiffelComCompiler::IEiffelClusterDescriptor *  to IEIFFEL_CLUSTER_DESCRIPTOR_INTERFACE.
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_interface_50( ecom_eiffel_compiler::IEiffelClusterDescriptor * a_interface_pointer );
+	EIF_REFERENCE ccom_ce_pointed_interface_50( ecom_EiffelComCompiler::IEiffelClusterDescriptor * a_interface_pointer );
 
 
 	/*-----------------------------------------------------------
-	Convert ecom_eiffel_compiler::IEiffelClusterDescriptor * *  to CELL [IEIFFEL_CLUSTER_DESCRIPTOR_INTERFACE].
+	Convert ecom_EiffelComCompiler::IEiffelClusterDescriptor * *  to CELL [IEIFFEL_CLUSTER_DESCRIPTOR_INTERFACE].
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_cell_51( ecom_eiffel_compiler::IEiffelClusterDescriptor * * a_pointer, EIF_OBJECT an_object );
+	EIF_REFERENCE ccom_ce_pointed_cell_51( ecom_EiffelComCompiler::IEiffelClusterDescriptor * * a_pointer, EIF_OBJECT an_object );
 
 
 	/*-----------------------------------------------------------
-	Free memory of ecom_eiffel_compiler::IEiffelClusterDescriptor * *.
+	Free memory of ecom_EiffelComCompiler::IEiffelClusterDescriptor * *.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_51( ecom_eiffel_compiler::IEiffelClusterDescriptor * * a_pointer );
+	void ccom_free_memory_pointed_51( ecom_EiffelComCompiler::IEiffelClusterDescriptor * * a_pointer );
 
 
 	/*-----------------------------------------------------------
-	Convert ecom_eiffel_compiler::IEiffelClassDescriptor *  to IEIFFEL_CLASS_DESCRIPTOR_INTERFACE.
+	Convert ecom_EiffelComCompiler::IEiffelClassDescriptor *  to IEIFFEL_CLASS_DESCRIPTOR_INTERFACE.
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_interface_53( ecom_eiffel_compiler::IEiffelClassDescriptor * a_interface_pointer );
+	EIF_REFERENCE ccom_ce_pointed_interface_53( ecom_EiffelComCompiler::IEiffelClassDescriptor * a_interface_pointer );
 
 
 	/*-----------------------------------------------------------
-	Convert ecom_eiffel_compiler::IEiffelClassDescriptor * *  to CELL [IEIFFEL_CLASS_DESCRIPTOR_INTERFACE].
+	Convert ecom_EiffelComCompiler::IEiffelClassDescriptor * *  to CELL [IEIFFEL_CLASS_DESCRIPTOR_INTERFACE].
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_cell_54( ecom_eiffel_compiler::IEiffelClassDescriptor * * a_pointer, EIF_OBJECT an_object );
+	EIF_REFERENCE ccom_ce_pointed_cell_54( ecom_EiffelComCompiler::IEiffelClassDescriptor * * a_pointer, EIF_OBJECT an_object );
 
 
 	/*-----------------------------------------------------------
-	Free memory of ecom_eiffel_compiler::IEiffelClassDescriptor * *.
+	Free memory of ecom_EiffelComCompiler::IEiffelClassDescriptor * *.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_54( ecom_eiffel_compiler::IEiffelClassDescriptor * * a_pointer );
+	void ccom_free_memory_pointed_54( ecom_EiffelComCompiler::IEiffelClassDescriptor * * a_pointer );
 
 
 	/*-----------------------------------------------------------
-	Convert ecom_eiffel_compiler::IEiffelFeatureDescriptor *  to IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE.
+	Convert ecom_EiffelComCompiler::IEiffelFeatureDescriptor *  to IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE.
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_interface_56( ecom_eiffel_compiler::IEiffelFeatureDescriptor * a_interface_pointer );
+	EIF_REFERENCE ccom_ce_pointed_interface_56( ecom_EiffelComCompiler::IEiffelFeatureDescriptor * a_interface_pointer );
 
 
 	/*-----------------------------------------------------------
-	Convert ecom_eiffel_compiler::IEiffelFeatureDescriptor * *  to CELL [IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE].
+	Convert ecom_EiffelComCompiler::IEiffelFeatureDescriptor * *  to CELL [IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE].
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_cell_57( ecom_eiffel_compiler::IEiffelFeatureDescriptor * * a_pointer, EIF_OBJECT an_object );
+	EIF_REFERENCE ccom_ce_pointed_cell_57( ecom_EiffelComCompiler::IEiffelFeatureDescriptor * * a_pointer, EIF_OBJECT an_object );
 
 
 	/*-----------------------------------------------------------
-	Free memory of ecom_eiffel_compiler::IEiffelFeatureDescriptor * *.
+	Free memory of ecom_EiffelComCompiler::IEiffelFeatureDescriptor * *.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_57( ecom_eiffel_compiler::IEiffelFeatureDescriptor * * a_pointer );
+	void ccom_free_memory_pointed_57( ecom_EiffelComCompiler::IEiffelFeatureDescriptor * * a_pointer );
 
 
 	/*-----------------------------------------------------------
-	Convert ecom_eiffel_compiler::IEnumFeature *  to IENUM_FEATURE_INTERFACE.
+	Convert ecom_EiffelComCompiler::IEnumFeature *  to IENUM_FEATURE_INTERFACE.
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_interface_59( ecom_eiffel_compiler::IEnumFeature * a_interface_pointer );
+	EIF_REFERENCE ccom_ce_pointed_interface_59( ecom_EiffelComCompiler::IEnumFeature * a_interface_pointer );
 
 
 	/*-----------------------------------------------------------
-	Convert ecom_eiffel_compiler::IEnumFeature * *  to CELL [IENUM_FEATURE_INTERFACE].
+	Convert ecom_EiffelComCompiler::IEnumFeature * *  to CELL [IENUM_FEATURE_INTERFACE].
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_cell_60( ecom_eiffel_compiler::IEnumFeature * * a_pointer, EIF_OBJECT an_object );
+	EIF_REFERENCE ccom_ce_pointed_cell_60( ecom_EiffelComCompiler::IEnumFeature * * a_pointer, EIF_OBJECT an_object );
 
 
 	/*-----------------------------------------------------------
-	Free memory of ecom_eiffel_compiler::IEnumFeature * *.
+	Free memory of ecom_EiffelComCompiler::IEnumFeature * *.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_60( ecom_eiffel_compiler::IEnumFeature * * a_pointer );
+	void ccom_free_memory_pointed_60( ecom_EiffelComCompiler::IEnumFeature * * a_pointer );
 
 
 	/*-----------------------------------------------------------
@@ -760,21 +760,21 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Convert ecom_eiffel_compiler::IEnumParameter *  to IENUM_PARAMETER_INTERFACE.
+	Convert ecom_EiffelComCompiler::IEnumParameter *  to IENUM_PARAMETER_INTERFACE.
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_interface_94( ecom_eiffel_compiler::IEnumParameter * a_interface_pointer );
+	EIF_REFERENCE ccom_ce_pointed_interface_94( ecom_EiffelComCompiler::IEnumParameter * a_interface_pointer );
 
 
 	/*-----------------------------------------------------------
-	Convert ecom_eiffel_compiler::IEnumParameter * *  to CELL [IENUM_PARAMETER_INTERFACE].
+	Convert ecom_EiffelComCompiler::IEnumParameter * *  to CELL [IENUM_PARAMETER_INTERFACE].
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_cell_95( ecom_eiffel_compiler::IEnumParameter * * a_pointer, EIF_OBJECT an_object );
+	EIF_REFERENCE ccom_ce_pointed_cell_95( ecom_EiffelComCompiler::IEnumParameter * * a_pointer, EIF_OBJECT an_object );
 
 
 	/*-----------------------------------------------------------
-	Free memory of ecom_eiffel_compiler::IEnumParameter * *.
+	Free memory of ecom_EiffelComCompiler::IEnumParameter * *.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_95( ecom_eiffel_compiler::IEnumParameter * * a_pointer );
+	void ccom_free_memory_pointed_95( ecom_EiffelComCompiler::IEnumParameter * * a_pointer );
 
 
 	/*-----------------------------------------------------------
@@ -934,21 +934,21 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Convert ecom_eiffel_compiler::IEiffelParameterDescriptor *  to IEIFFEL_PARAMETER_DESCRIPTOR_INTERFACE.
+	Convert ecom_EiffelComCompiler::IEiffelParameterDescriptor *  to IEIFFEL_PARAMETER_DESCRIPTOR_INTERFACE.
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_interface_121( ecom_eiffel_compiler::IEiffelParameterDescriptor * a_interface_pointer );
+	EIF_REFERENCE ccom_ce_pointed_interface_121( ecom_EiffelComCompiler::IEiffelParameterDescriptor * a_interface_pointer );
 
 
 	/*-----------------------------------------------------------
-	Convert ecom_eiffel_compiler::IEiffelParameterDescriptor * *  to CELL [IEIFFEL_PARAMETER_DESCRIPTOR_INTERFACE].
+	Convert ecom_EiffelComCompiler::IEiffelParameterDescriptor * *  to CELL [IEIFFEL_PARAMETER_DESCRIPTOR_INTERFACE].
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_cell_122( ecom_eiffel_compiler::IEiffelParameterDescriptor * * a_pointer, EIF_OBJECT an_object );
+	EIF_REFERENCE ccom_ce_pointed_cell_122( ecom_EiffelComCompiler::IEiffelParameterDescriptor * * a_pointer, EIF_OBJECT an_object );
 
 
 	/*-----------------------------------------------------------
-	Free memory of ecom_eiffel_compiler::IEiffelParameterDescriptor * *.
+	Free memory of ecom_EiffelComCompiler::IEiffelParameterDescriptor * *.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_122( ecom_eiffel_compiler::IEiffelParameterDescriptor * * a_pointer );
+	void ccom_free_memory_pointed_122( ecom_EiffelComCompiler::IEiffelParameterDescriptor * * a_pointer );
 
 
 	/*-----------------------------------------------------------
@@ -1084,21 +1084,21 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Convert ecom_eiffel_compiler::IEiffelAssemblyProperties *  to IEIFFEL_ASSEMBLY_PROPERTIES_INTERFACE.
+	Convert ecom_EiffelComCompiler::IEiffelAssemblyProperties *  to IEIFFEL_ASSEMBLY_PROPERTIES_INTERFACE.
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_interface_139( ecom_eiffel_compiler::IEiffelAssemblyProperties * a_interface_pointer );
+	EIF_REFERENCE ccom_ce_pointed_interface_139( ecom_EiffelComCompiler::IEiffelAssemblyProperties * a_interface_pointer );
 
 
 	/*-----------------------------------------------------------
-	Convert ecom_eiffel_compiler::IEiffelAssemblyProperties * *  to CELL [IEIFFEL_ASSEMBLY_PROPERTIES_INTERFACE].
+	Convert ecom_EiffelComCompiler::IEiffelAssemblyProperties * *  to CELL [IEIFFEL_ASSEMBLY_PROPERTIES_INTERFACE].
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_cell_140( ecom_eiffel_compiler::IEiffelAssemblyProperties * * a_pointer, EIF_OBJECT an_object );
+	EIF_REFERENCE ccom_ce_pointed_cell_140( ecom_EiffelComCompiler::IEiffelAssemblyProperties * * a_pointer, EIF_OBJECT an_object );
 
 
 	/*-----------------------------------------------------------
-	Free memory of ecom_eiffel_compiler::IEiffelAssemblyProperties * *.
+	Free memory of ecom_EiffelComCompiler::IEiffelAssemblyProperties * *.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_140( ecom_eiffel_compiler::IEiffelAssemblyProperties * * a_pointer );
+	void ccom_free_memory_pointed_140( ecom_EiffelComCompiler::IEiffelAssemblyProperties * * a_pointer );
 
 
 	/*-----------------------------------------------------------
@@ -1288,57 +1288,57 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Convert ecom_eiffel_compiler::IEiffelSystemClusters *  to IEIFFEL_SYSTEM_CLUSTERS_INTERFACE.
+	Convert ecom_EiffelComCompiler::IEiffelSystemClusters *  to IEIFFEL_SYSTEM_CLUSTERS_INTERFACE.
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_interface_164( ecom_eiffel_compiler::IEiffelSystemClusters * a_interface_pointer );
+	EIF_REFERENCE ccom_ce_pointed_interface_164( ecom_EiffelComCompiler::IEiffelSystemClusters * a_interface_pointer );
 
 
 	/*-----------------------------------------------------------
-	Convert ecom_eiffel_compiler::IEiffelSystemClusters * *  to CELL [IEIFFEL_SYSTEM_CLUSTERS_INTERFACE].
+	Convert ecom_EiffelComCompiler::IEiffelSystemClusters * *  to CELL [IEIFFEL_SYSTEM_CLUSTERS_INTERFACE].
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_cell_165( ecom_eiffel_compiler::IEiffelSystemClusters * * a_pointer, EIF_OBJECT an_object );
+	EIF_REFERENCE ccom_ce_pointed_cell_165( ecom_EiffelComCompiler::IEiffelSystemClusters * * a_pointer, EIF_OBJECT an_object );
 
 
 	/*-----------------------------------------------------------
-	Free memory of ecom_eiffel_compiler::IEiffelSystemClusters * *.
+	Free memory of ecom_EiffelComCompiler::IEiffelSystemClusters * *.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_165( ecom_eiffel_compiler::IEiffelSystemClusters * * a_pointer );
+	void ccom_free_memory_pointed_165( ecom_EiffelComCompiler::IEiffelSystemClusters * * a_pointer );
 
 
 	/*-----------------------------------------------------------
-	Convert ecom_eiffel_compiler::IEiffelSystemExternals *  to IEIFFEL_SYSTEM_EXTERNALS_INTERFACE.
+	Convert ecom_EiffelComCompiler::IEiffelSystemExternals *  to IEIFFEL_SYSTEM_EXTERNALS_INTERFACE.
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_interface_167( ecom_eiffel_compiler::IEiffelSystemExternals * a_interface_pointer );
+	EIF_REFERENCE ccom_ce_pointed_interface_167( ecom_EiffelComCompiler::IEiffelSystemExternals * a_interface_pointer );
 
 
 	/*-----------------------------------------------------------
-	Convert ecom_eiffel_compiler::IEiffelSystemExternals * *  to CELL [IEIFFEL_SYSTEM_EXTERNALS_INTERFACE].
+	Convert ecom_EiffelComCompiler::IEiffelSystemExternals * *  to CELL [IEIFFEL_SYSTEM_EXTERNALS_INTERFACE].
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_cell_168( ecom_eiffel_compiler::IEiffelSystemExternals * * a_pointer, EIF_OBJECT an_object );
+	EIF_REFERENCE ccom_ce_pointed_cell_168( ecom_EiffelComCompiler::IEiffelSystemExternals * * a_pointer, EIF_OBJECT an_object );
 
 
 	/*-----------------------------------------------------------
-	Free memory of ecom_eiffel_compiler::IEiffelSystemExternals * *.
+	Free memory of ecom_EiffelComCompiler::IEiffelSystemExternals * *.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_168( ecom_eiffel_compiler::IEiffelSystemExternals * * a_pointer );
+	void ccom_free_memory_pointed_168( ecom_EiffelComCompiler::IEiffelSystemExternals * * a_pointer );
 
 
 	/*-----------------------------------------------------------
-	Convert ecom_eiffel_compiler::IEiffelSystemAssemblies *  to IEIFFEL_SYSTEM_ASSEMBLIES_INTERFACE.
+	Convert ecom_EiffelComCompiler::IEiffelSystemAssemblies *  to IEIFFEL_SYSTEM_ASSEMBLIES_INTERFACE.
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_interface_170( ecom_eiffel_compiler::IEiffelSystemAssemblies * a_interface_pointer );
+	EIF_REFERENCE ccom_ce_pointed_interface_170( ecom_EiffelComCompiler::IEiffelSystemAssemblies * a_interface_pointer );
 
 
 	/*-----------------------------------------------------------
-	Convert ecom_eiffel_compiler::IEiffelSystemAssemblies * *  to CELL [IEIFFEL_SYSTEM_ASSEMBLIES_INTERFACE].
+	Convert ecom_EiffelComCompiler::IEiffelSystemAssemblies * *  to CELL [IEIFFEL_SYSTEM_ASSEMBLIES_INTERFACE].
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_cell_171( ecom_eiffel_compiler::IEiffelSystemAssemblies * * a_pointer, EIF_OBJECT an_object );
+	EIF_REFERENCE ccom_ce_pointed_cell_171( ecom_EiffelComCompiler::IEiffelSystemAssemblies * * a_pointer, EIF_OBJECT an_object );
 
 
 	/*-----------------------------------------------------------
-	Free memory of ecom_eiffel_compiler::IEiffelSystemAssemblies * *.
+	Free memory of ecom_EiffelComCompiler::IEiffelSystemAssemblies * *.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_171( ecom_eiffel_compiler::IEiffelSystemAssemblies * * a_pointer );
+	void ccom_free_memory_pointed_171( ecom_EiffelComCompiler::IEiffelSystemAssemblies * * a_pointer );
 
 
 	/*-----------------------------------------------------------
@@ -1462,63 +1462,63 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Convert ecom_eiffel_compiler::IEnumClusterProp *  to IENUM_CLUSTER_PROP_INTERFACE.
+	Convert ecom_EiffelComCompiler::IEnumClusterProp *  to IENUM_CLUSTER_PROP_INTERFACE.
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_interface_183( ecom_eiffel_compiler::IEnumClusterProp * a_interface_pointer );
+	EIF_REFERENCE ccom_ce_pointed_interface_183( ecom_EiffelComCompiler::IEnumClusterProp * a_interface_pointer );
 
 
 	/*-----------------------------------------------------------
-	Convert ecom_eiffel_compiler::IEnumClusterProp * *  to CELL [IENUM_CLUSTER_PROP_INTERFACE].
+	Convert ecom_EiffelComCompiler::IEnumClusterProp * *  to CELL [IENUM_CLUSTER_PROP_INTERFACE].
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_cell_184( ecom_eiffel_compiler::IEnumClusterProp * * a_pointer, EIF_OBJECT an_object );
+	EIF_REFERENCE ccom_ce_pointed_cell_184( ecom_EiffelComCompiler::IEnumClusterProp * * a_pointer, EIF_OBJECT an_object );
 
 
 	/*-----------------------------------------------------------
-	Free memory of ecom_eiffel_compiler::IEnumClusterProp * *.
+	Free memory of ecom_EiffelComCompiler::IEnumClusterProp * *.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_184( ecom_eiffel_compiler::IEnumClusterProp * * a_pointer );
-
-
-	/*-----------------------------------------------------------
-	Convert ecom_eiffel_compiler::IEiffelClusterProperties *  to IEIFFEL_CLUSTER_PROPERTIES_INTERFACE.
-	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_interface_186( ecom_eiffel_compiler::IEiffelClusterProperties * a_interface_pointer );
-
-
-	/*-----------------------------------------------------------
-	Convert ecom_eiffel_compiler::IEiffelClusterProperties * *  to CELL [IEIFFEL_CLUSTER_PROPERTIES_INTERFACE].
-	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_cell_187( ecom_eiffel_compiler::IEiffelClusterProperties * * a_pointer, EIF_OBJECT an_object );
-
-
-	/*-----------------------------------------------------------
-	Free memory of ecom_eiffel_compiler::IEiffelClusterProperties * *.
-	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_187( ecom_eiffel_compiler::IEiffelClusterProperties * * a_pointer );
-
-
-	/*-----------------------------------------------------------
-	Free memory of VARIANT_BOOL *.
-	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_188( VARIANT_BOOL * a_pointer );
+	void ccom_free_memory_pointed_184( ecom_EiffelComCompiler::IEnumClusterProp * * a_pointer );
 
 
 	/*-----------------------------------------------------------
 	Convert BSTR *  to CELL [STRING].
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_cell_189( BSTR * a_pointer, EIF_OBJECT an_object );
+	EIF_REFERENCE ccom_ce_pointed_cell_185( BSTR * a_pointer, EIF_OBJECT an_object );
 
 
 	/*-----------------------------------------------------------
 	Free memory of BSTR *.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_189( BSTR * a_pointer );
+	void ccom_free_memory_pointed_185( BSTR * a_pointer );
 
 
 	/*-----------------------------------------------------------
-	Free memory of ULONG *.
+	Convert ecom_EiffelComCompiler::IEiffelClusterProperties *  to IEIFFEL_CLUSTER_PROPERTIES_INTERFACE.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_190( ULONG * a_pointer );
+	EIF_REFERENCE ccom_ce_pointed_interface_187( ecom_EiffelComCompiler::IEiffelClusterProperties * a_interface_pointer );
+
+
+	/*-----------------------------------------------------------
+	Convert ecom_EiffelComCompiler::IEiffelClusterProperties * *  to CELL [IEIFFEL_CLUSTER_PROPERTIES_INTERFACE].
+	-----------------------------------------------------------*/
+	EIF_REFERENCE ccom_ce_pointed_cell_188( ecom_EiffelComCompiler::IEiffelClusterProperties * * a_pointer, EIF_OBJECT an_object );
+
+
+	/*-----------------------------------------------------------
+	Free memory of ecom_EiffelComCompiler::IEiffelClusterProperties * *.
+	-----------------------------------------------------------*/
+	void ccom_free_memory_pointed_188( ecom_EiffelComCompiler::IEiffelClusterProperties * * a_pointer );
+
+
+	/*-----------------------------------------------------------
+	Free memory of VARIANT_BOOL *.
+	-----------------------------------------------------------*/
+	void ccom_free_memory_pointed_189( VARIANT_BOOL * a_pointer );
+
+
+	/*-----------------------------------------------------------
+	Free memory of VARIANT_BOOL *.
+	-----------------------------------------------------------*/
+	void ccom_free_memory_pointed_190( VARIANT_BOOL * a_pointer );
 
 
 	/*-----------------------------------------------------------
@@ -1528,15 +1528,9 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Convert BSTR *  to CELL [STRING].
+	Free memory of ULONG *.
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_cell_192( BSTR * a_pointer, EIF_OBJECT an_object );
-
-
-	/*-----------------------------------------------------------
-	Free memory of BSTR *.
-	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_192( BSTR * a_pointer );
+	void ccom_free_memory_pointed_192( ULONG * a_pointer );
 
 
 	/*-----------------------------------------------------------
@@ -1552,9 +1546,15 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Free memory of VARIANT_BOOL *.
+	Convert BSTR *  to CELL [STRING].
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_194( VARIANT_BOOL * a_pointer );
+	EIF_REFERENCE ccom_ce_pointed_cell_194( BSTR * a_pointer, EIF_OBJECT an_object );
+
+
+	/*-----------------------------------------------------------
+	Free memory of BSTR *.
+	-----------------------------------------------------------*/
+	void ccom_free_memory_pointed_194( BSTR * a_pointer );
 
 
 	/*-----------------------------------------------------------
@@ -1606,39 +1606,39 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Convert ecom_eiffel_compiler::IEnumClusterExcludes *  to IENUM_CLUSTER_EXCLUDES_INTERFACE.
+	Free memory of VARIANT_BOOL *.
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_interface_204( ecom_eiffel_compiler::IEnumClusterExcludes * a_interface_pointer );
+	void ccom_free_memory_pointed_203( VARIANT_BOOL * a_pointer );
 
 
 	/*-----------------------------------------------------------
-	Convert ecom_eiffel_compiler::IEnumClusterExcludes * *  to CELL [IENUM_CLUSTER_EXCLUDES_INTERFACE].
+	Convert ecom_EiffelComCompiler::IEnumClusterExcludes *  to IENUM_CLUSTER_EXCLUDES_INTERFACE.
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_cell_205( ecom_eiffel_compiler::IEnumClusterExcludes * * a_pointer, EIF_OBJECT an_object );
+	EIF_REFERENCE ccom_ce_pointed_interface_205( ecom_EiffelComCompiler::IEnumClusterExcludes * a_interface_pointer );
 
 
 	/*-----------------------------------------------------------
-	Free memory of ecom_eiffel_compiler::IEnumClusterExcludes * *.
+	Convert ecom_EiffelComCompiler::IEnumClusterExcludes * *  to CELL [IENUM_CLUSTER_EXCLUDES_INTERFACE].
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_205( ecom_eiffel_compiler::IEnumClusterExcludes * * a_pointer );
+	EIF_REFERENCE ccom_ce_pointed_cell_206( ecom_EiffelComCompiler::IEnumClusterExcludes * * a_pointer, EIF_OBJECT an_object );
+
+
+	/*-----------------------------------------------------------
+	Free memory of ecom_EiffelComCompiler::IEnumClusterExcludes * *.
+	-----------------------------------------------------------*/
+	void ccom_free_memory_pointed_206( ecom_EiffelComCompiler::IEnumClusterExcludes * * a_pointer );
 
 
 	/*-----------------------------------------------------------
 	Convert BSTR *  to CELL [STRING].
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_cell_206( BSTR * a_pointer, EIF_OBJECT an_object );
+	EIF_REFERENCE ccom_ce_pointed_cell_207( BSTR * a_pointer, EIF_OBJECT an_object );
 
 
 	/*-----------------------------------------------------------
 	Free memory of BSTR *.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_206( BSTR * a_pointer );
-
-
-	/*-----------------------------------------------------------
-	Free memory of VARIANT_BOOL *.
-	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_207( VARIANT_BOOL * a_pointer );
+	void ccom_free_memory_pointed_207( BSTR * a_pointer );
 
 
 	/*-----------------------------------------------------------
@@ -1648,27 +1648,21 @@ public:
 
 
 	/*-----------------------------------------------------------
+	Free memory of VARIANT_BOOL *.
+	-----------------------------------------------------------*/
+	void ccom_free_memory_pointed_209( VARIANT_BOOL * a_pointer );
+
+
+	/*-----------------------------------------------------------
 	Free memory of ULONG *.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_209( ULONG * a_pointer );
+	void ccom_free_memory_pointed_210( ULONG * a_pointer );
 
 
 	/*-----------------------------------------------------------
 	Free memory of VARIANT_BOOL *.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_210( VARIANT_BOOL * a_pointer );
-
-
-	/*-----------------------------------------------------------
-	Convert BSTR *  to CELL [STRING].
-	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_cell_211( BSTR * a_pointer, EIF_OBJECT an_object );
-
-
-	/*-----------------------------------------------------------
-	Free memory of BSTR *.
-	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_211( BSTR * a_pointer );
+	void ccom_free_memory_pointed_211( VARIANT_BOOL * a_pointer );
 
 
 	/*-----------------------------------------------------------
@@ -1696,141 +1690,147 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Free memory of ULONG *.
-	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_214( ULONG * a_pointer );
-
-
-	/*-----------------------------------------------------------
 	Convert BSTR *  to CELL [STRING].
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_cell_215( BSTR * a_pointer, EIF_OBJECT an_object );
+	EIF_REFERENCE ccom_ce_pointed_cell_214( BSTR * a_pointer, EIF_OBJECT an_object );
 
 
 	/*-----------------------------------------------------------
 	Free memory of BSTR *.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_215( BSTR * a_pointer );
+	void ccom_free_memory_pointed_214( BSTR * a_pointer );
 
 
 	/*-----------------------------------------------------------
 	Free memory of ULONG *.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_216( ULONG * a_pointer );
-
-
-	/*-----------------------------------------------------------
-	Convert ecom_eiffel_compiler::IEnumIncludePaths *  to IENUM_INCLUDE_PATHS_INTERFACE.
-	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_interface_218( ecom_eiffel_compiler::IEnumIncludePaths * a_interface_pointer );
-
-
-	/*-----------------------------------------------------------
-	Convert ecom_eiffel_compiler::IEnumIncludePaths * *  to CELL [IENUM_INCLUDE_PATHS_INTERFACE].
-	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_cell_219( ecom_eiffel_compiler::IEnumIncludePaths * * a_pointer, EIF_OBJECT an_object );
-
-
-	/*-----------------------------------------------------------
-	Free memory of ecom_eiffel_compiler::IEnumIncludePaths * *.
-	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_219( ecom_eiffel_compiler::IEnumIncludePaths * * a_pointer );
-
-
-	/*-----------------------------------------------------------
-	Convert ecom_eiffel_compiler::IEnumObjectFiles *  to IENUM_OBJECT_FILES_INTERFACE.
-	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_interface_221( ecom_eiffel_compiler::IEnumObjectFiles * a_interface_pointer );
-
-
-	/*-----------------------------------------------------------
-	Convert ecom_eiffel_compiler::IEnumObjectFiles * *  to CELL [IENUM_OBJECT_FILES_INTERFACE].
-	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_cell_222( ecom_eiffel_compiler::IEnumObjectFiles * * a_pointer, EIF_OBJECT an_object );
-
-
-	/*-----------------------------------------------------------
-	Free memory of ecom_eiffel_compiler::IEnumObjectFiles * *.
-	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_222( ecom_eiffel_compiler::IEnumObjectFiles * * a_pointer );
+	void ccom_free_memory_pointed_215( ULONG * a_pointer );
 
 
 	/*-----------------------------------------------------------
 	Convert BSTR *  to CELL [STRING].
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_cell_223( BSTR * a_pointer, EIF_OBJECT an_object );
+	EIF_REFERENCE ccom_ce_pointed_cell_216( BSTR * a_pointer, EIF_OBJECT an_object );
 
 
 	/*-----------------------------------------------------------
 	Free memory of BSTR *.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_223( BSTR * a_pointer );
+	void ccom_free_memory_pointed_216( BSTR * a_pointer );
 
 
 	/*-----------------------------------------------------------
 	Free memory of ULONG *.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_224( ULONG * a_pointer );
+	void ccom_free_memory_pointed_217( ULONG * a_pointer );
+
+
+	/*-----------------------------------------------------------
+	Convert ecom_EiffelComCompiler::IEnumIncludePaths *  to IENUM_INCLUDE_PATHS_INTERFACE.
+	-----------------------------------------------------------*/
+	EIF_REFERENCE ccom_ce_pointed_interface_219( ecom_EiffelComCompiler::IEnumIncludePaths * a_interface_pointer );
+
+
+	/*-----------------------------------------------------------
+	Convert ecom_EiffelComCompiler::IEnumIncludePaths * *  to CELL [IENUM_INCLUDE_PATHS_INTERFACE].
+	-----------------------------------------------------------*/
+	EIF_REFERENCE ccom_ce_pointed_cell_220( ecom_EiffelComCompiler::IEnumIncludePaths * * a_pointer, EIF_OBJECT an_object );
+
+
+	/*-----------------------------------------------------------
+	Free memory of ecom_EiffelComCompiler::IEnumIncludePaths * *.
+	-----------------------------------------------------------*/
+	void ccom_free_memory_pointed_220( ecom_EiffelComCompiler::IEnumIncludePaths * * a_pointer );
+
+
+	/*-----------------------------------------------------------
+	Convert ecom_EiffelComCompiler::IEnumObjectFiles *  to IENUM_OBJECT_FILES_INTERFACE.
+	-----------------------------------------------------------*/
+	EIF_REFERENCE ccom_ce_pointed_interface_222( ecom_EiffelComCompiler::IEnumObjectFiles * a_interface_pointer );
+
+
+	/*-----------------------------------------------------------
+	Convert ecom_EiffelComCompiler::IEnumObjectFiles * *  to CELL [IENUM_OBJECT_FILES_INTERFACE].
+	-----------------------------------------------------------*/
+	EIF_REFERENCE ccom_ce_pointed_cell_223( ecom_EiffelComCompiler::IEnumObjectFiles * * a_pointer, EIF_OBJECT an_object );
+
+
+	/*-----------------------------------------------------------
+	Free memory of ecom_EiffelComCompiler::IEnumObjectFiles * *.
+	-----------------------------------------------------------*/
+	void ccom_free_memory_pointed_223( ecom_EiffelComCompiler::IEnumObjectFiles * * a_pointer );
 
 
 	/*-----------------------------------------------------------
 	Convert BSTR *  to CELL [STRING].
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_cell_225( BSTR * a_pointer, EIF_OBJECT an_object );
+	EIF_REFERENCE ccom_ce_pointed_cell_224( BSTR * a_pointer, EIF_OBJECT an_object );
 
 
 	/*-----------------------------------------------------------
 	Free memory of BSTR *.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_225( BSTR * a_pointer );
+	void ccom_free_memory_pointed_224( BSTR * a_pointer );
 
 
 	/*-----------------------------------------------------------
 	Free memory of ULONG *.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_226( ULONG * a_pointer );
+	void ccom_free_memory_pointed_225( ULONG * a_pointer );
 
 
 	/*-----------------------------------------------------------
 	Convert BSTR *  to CELL [STRING].
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_cell_227( BSTR * a_pointer, EIF_OBJECT an_object );
+	EIF_REFERENCE ccom_ce_pointed_cell_226( BSTR * a_pointer, EIF_OBJECT an_object );
 
 
 	/*-----------------------------------------------------------
 	Free memory of BSTR *.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_227( BSTR * a_pointer );
+	void ccom_free_memory_pointed_226( BSTR * a_pointer );
 
 
 	/*-----------------------------------------------------------
 	Free memory of ULONG *.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_228( ULONG * a_pointer );
+	void ccom_free_memory_pointed_227( ULONG * a_pointer );
 
 
 	/*-----------------------------------------------------------
 	Convert BSTR *  to CELL [STRING].
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_cell_229( BSTR * a_pointer, EIF_OBJECT an_object );
+	EIF_REFERENCE ccom_ce_pointed_cell_228( BSTR * a_pointer, EIF_OBJECT an_object );
 
 
 	/*-----------------------------------------------------------
 	Free memory of BSTR *.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_229( BSTR * a_pointer );
+	void ccom_free_memory_pointed_228( BSTR * a_pointer );
 
 
 	/*-----------------------------------------------------------
 	Free memory of ULONG *.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_230( ULONG * a_pointer );
+	void ccom_free_memory_pointed_229( ULONG * a_pointer );
 
 
 	/*-----------------------------------------------------------
-	Convert VARIANT *  to ECOM_VARIANT.
+	Convert BSTR *  to CELL [STRING].
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_record_231( VARIANT * a_record_pointer );
+	EIF_REFERENCE ccom_ce_pointed_cell_230( BSTR * a_pointer, EIF_OBJECT an_object );
+
+
+	/*-----------------------------------------------------------
+	Free memory of BSTR *.
+	-----------------------------------------------------------*/
+	void ccom_free_memory_pointed_230( BSTR * a_pointer );
+
+
+	/*-----------------------------------------------------------
+	Free memory of ULONG *.
+	-----------------------------------------------------------*/
+	void ccom_free_memory_pointed_231( ULONG * a_pointer );
 
 
 	/*-----------------------------------------------------------
@@ -1846,9 +1846,9 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Free memory of VARIANT_BOOL *.
+	Convert VARIANT *  to ECOM_VARIANT.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_234( VARIANT_BOOL * a_pointer );
+	EIF_REFERENCE ccom_ce_pointed_record_234( VARIANT * a_record_pointer );
 
 
 	/*-----------------------------------------------------------
@@ -1864,15 +1864,21 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Convert ecom_eiffel_compiler::IEiffelHTMLDocEvents *  to IEIFFEL_HTMLDOC_EVENTS_INTERFACE.
+	Free memory of VARIANT_BOOL *.
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_ce_pointed_interface_238( ecom_eiffel_compiler::IEiffelHTMLDocEvents * a_interface_pointer );
+	void ccom_free_memory_pointed_237( VARIANT_BOOL * a_pointer );
+
+
+	/*-----------------------------------------------------------
+	Convert ecom_EiffelComCompiler::IEiffelHTMLDocEvents *  to IEIFFEL_HTMLDOC_EVENTS_INTERFACE.
+	-----------------------------------------------------------*/
+	EIF_REFERENCE ccom_ce_pointed_interface_239( ecom_EiffelComCompiler::IEiffelHTMLDocEvents * a_interface_pointer );
 
 
 	/*-----------------------------------------------------------
 	Free memory of VARIANT_BOOL *.
 	-----------------------------------------------------------*/
-	void ccom_free_memory_pointed_239( VARIANT_BOOL * a_pointer );
+	void ccom_free_memory_pointed_240( VARIANT_BOOL * a_pointer );
 
 
 

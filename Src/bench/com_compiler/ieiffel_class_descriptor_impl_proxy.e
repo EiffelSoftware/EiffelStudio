@@ -200,181 +200,181 @@ feature {NONE}  -- Externals
 	ccom_name (cpp_obj: POINTER): STRING is
 			-- Class name.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClassDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelClassDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelClassDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
 	ccom_description (cpp_obj: POINTER): STRING is
 			-- Class description.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClassDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelClassDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelClassDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
 	ccom_external_name (cpp_obj: POINTER): STRING is
 			-- Class external name.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClassDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelClassDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelClassDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
 	ccom_tool_tip (cpp_obj: POINTER): STRING is
 			-- Class Tool Tip.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClassDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelClassDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelClassDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
 	ccom_is_in_system (cpp_obj: POINTER): BOOLEAN is
 			-- Is class in system?
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClassDescriptor_impl_proxy_s.h%"](): EIF_BOOLEAN"
+			"C++ [ecom_EiffelComCompiler::IEiffelClassDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelClassDescriptor_impl_proxy_s.h%"](): EIF_BOOLEAN"
 		end
 
 	ccom_feature_names (cpp_obj: POINTER): ECOM_ARRAY [STRING] is
 			-- List of names of class features.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClassDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelClassDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelClassDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
 	ccom_features (cpp_obj: POINTER): IENUM_FEATURE_INTERFACE is
 			-- List of class features.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClassDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelClassDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelClassDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
 	ccom_feature_count (cpp_obj: POINTER): INTEGER is
 			-- Number of class features.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClassDescriptor_impl_proxy_s.h%"](): EIF_INTEGER"
+			"C++ [ecom_EiffelComCompiler::IEiffelClassDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelClassDescriptor_impl_proxy_s.h%"](): EIF_INTEGER"
 		end
 
 	ccom_flat_features (cpp_obj: POINTER): IENUM_FEATURE_INTERFACE is
 			-- List of class features including ancestor features.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClassDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelClassDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelClassDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
 	ccom_flat_feature_count (cpp_obj: POINTER): INTEGER is
 			-- Number of flat class features.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClassDescriptor_impl_proxy_s.h%"](): EIF_INTEGER"
+			"C++ [ecom_EiffelComCompiler::IEiffelClassDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelClassDescriptor_impl_proxy_s.h%"](): EIF_INTEGER"
 		end
 
 	ccom_inherited_features (cpp_obj: POINTER): IENUM_FEATURE_INTERFACE is
 			-- List of class inherited features.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClassDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelClassDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelClassDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
 	ccom_inherited_feature_count (cpp_obj: POINTER): INTEGER is
 			-- Number of inherited features.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClassDescriptor_impl_proxy_s.h%"](): EIF_INTEGER"
+			"C++ [ecom_EiffelComCompiler::IEiffelClassDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelClassDescriptor_impl_proxy_s.h%"](): EIF_INTEGER"
 		end
 
 	ccom_creation_routines (cpp_obj: POINTER): IENUM_FEATURE_INTERFACE is
 			-- List of class creation routines.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClassDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelClassDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelClassDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
 	ccom_creation_routine_count (cpp_obj: POINTER): INTEGER is
 			-- Number of creation routines.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClassDescriptor_impl_proxy_s.h%"](): EIF_INTEGER"
+			"C++ [ecom_EiffelComCompiler::IEiffelClassDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelClassDescriptor_impl_proxy_s.h%"](): EIF_INTEGER"
 		end
 
 	ccom_clients (cpp_obj: POINTER): IENUM_EIFFEL_CLASS_INTERFACE is
 			-- List of class clients.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClassDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelClassDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelClassDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
 	ccom_client_count (cpp_obj: POINTER): INTEGER is
 			-- Number of class clients.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClassDescriptor_impl_proxy_s.h%"](): EIF_INTEGER"
+			"C++ [ecom_EiffelComCompiler::IEiffelClassDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelClassDescriptor_impl_proxy_s.h%"](): EIF_INTEGER"
 		end
 
 	ccom_suppliers (cpp_obj: POINTER): IENUM_EIFFEL_CLASS_INTERFACE is
 			-- List of class suppliers.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClassDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelClassDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelClassDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
 	ccom_supplier_count (cpp_obj: POINTER): INTEGER is
 			-- Number of class suppliers.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClassDescriptor_impl_proxy_s.h%"](): EIF_INTEGER"
+			"C++ [ecom_EiffelComCompiler::IEiffelClassDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelClassDescriptor_impl_proxy_s.h%"](): EIF_INTEGER"
 		end
 
 	ccom_ancestors (cpp_obj: POINTER): IENUM_EIFFEL_CLASS_INTERFACE is
 			-- List of direct ancestors of class.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClassDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelClassDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelClassDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
 	ccom_ancestor_count (cpp_obj: POINTER): INTEGER is
 			-- Number of direct ancestors.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClassDescriptor_impl_proxy_s.h%"](): EIF_INTEGER"
+			"C++ [ecom_EiffelComCompiler::IEiffelClassDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelClassDescriptor_impl_proxy_s.h%"](): EIF_INTEGER"
 		end
 
 	ccom_descendants (cpp_obj: POINTER): IENUM_EIFFEL_CLASS_INTERFACE is
 			-- List of direct descendants of class.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClassDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelClassDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelClassDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
 	ccom_descendant_count (cpp_obj: POINTER): INTEGER is
 			-- Number of direct descendants.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClassDescriptor_impl_proxy_s.h%"](): EIF_INTEGER"
+			"C++ [ecom_EiffelComCompiler::IEiffelClassDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelClassDescriptor_impl_proxy_s.h%"](): EIF_INTEGER"
 		end
 
 	ccom_class_path (cpp_obj: POINTER): STRING is
 			-- Full path to file.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClassDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelClassDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelClassDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
 	ccom_is_deferred (cpp_obj: POINTER): BOOLEAN is
 			-- Is class deferred?
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClassDescriptor_impl_proxy_s.h%"](): EIF_BOOLEAN"
+			"C++ [ecom_EiffelComCompiler::IEiffelClassDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelClassDescriptor_impl_proxy_s.h%"](): EIF_BOOLEAN"
 		end
 
 	ccom_is_external (cpp_obj: POINTER): BOOLEAN is
 			-- Is class external?
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClassDescriptor_impl_proxy_s.h%"](): EIF_BOOLEAN"
+			"C++ [ecom_EiffelComCompiler::IEiffelClassDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelClassDescriptor_impl_proxy_s.h%"](): EIF_BOOLEAN"
 		end
 
 	ccom_is_generic (cpp_obj: POINTER): BOOLEAN is
 			-- Is class generic?
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClassDescriptor_impl_proxy_s.h%"](): EIF_BOOLEAN"
+			"C++ [ecom_EiffelComCompiler::IEiffelClassDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelClassDescriptor_impl_proxy_s.h%"](): EIF_BOOLEAN"
 		end
 
 	ccom_is_library (cpp_obj: POINTER): BOOLEAN is
 			-- Is class part of a library?
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClassDescriptor_impl_proxy_s.h%"](): EIF_BOOLEAN"
+			"C++ [ecom_EiffelComCompiler::IEiffelClassDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelClassDescriptor_impl_proxy_s.h%"](): EIF_BOOLEAN"
 		end
 
 	ccom_delete_ieiffel_class_descriptor_impl_proxy (a_pointer: POINTER) is
 			-- Release resource
 		external
-			"C++ [delete ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClassDescriptor_impl_proxy_s.h%"]()"
+			"C++ [delete ecom_EiffelComCompiler::IEiffelClassDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelClassDescriptor_impl_proxy_s.h%"]()"
 		end
 
 	ccom_create_ieiffel_class_descriptor_impl_proxy_from_pointer (a_pointer: POINTER): POINTER is
 			-- Create from pointer
 		external
-			"C++ [new ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClassDescriptor_impl_proxy_s.h%"](IUnknown *)"
+			"C++ [new ecom_EiffelComCompiler::IEiffelClassDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelClassDescriptor_impl_proxy_s.h%"](IUnknown *)"
 		end
 
 	ccom_item (cpp_obj: POINTER): POINTER is
 			-- Item
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelClassDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelClassDescriptor_impl_proxy_s.h%"]():EIF_POINTER"
+			"C++ [ecom_EiffelComCompiler::IEiffelClassDescriptor_impl_proxy %"ecom_EiffelComCompiler_IEiffelClassDescriptor_impl_proxy_s.h%"]():EIF_POINTER"
 		end
 
 end -- IEIFFEL_CLASS_DESCRIPTOR_IMPL_PROXY

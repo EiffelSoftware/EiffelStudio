@@ -43,7 +43,7 @@ feature {NONE}  -- Externals
 	ccom_create_item (eif_object: IEIFFEL_EXCEPTION_IMPL_STUB): POINTER is
 			-- Initialize `item'
 		external
-			"C++ [new ecom_eiffel_compiler::IEiffelException_impl_stub %"ecom_eiffel_compiler_IEiffelException_impl_stub_s.h%"](EIF_OBJECT)"
+			"C++ [new ecom_EiffelComCompiler::IEiffelException_impl_stub %"ecom_EiffelComCompiler_IEiffelException_impl_stub_s.h%"](EIF_OBJECT)"
 		end
 
 end -- IEIFFEL_EXCEPTION_IMPL_STUB

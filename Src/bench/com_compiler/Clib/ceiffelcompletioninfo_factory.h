@@ -17,7 +17,7 @@ class CEiffelCompletionInfo_factory;
 
 #include "eif_eiffel.h"
 
-#include "ecom_eiffel_compiler_CEiffelCompletionInfo_s.h"
+#include "ecom_EiffelComCompiler_CEiffelCompletionInfo_s.h"
 
 #ifdef __cplusplus
 extern "C" {

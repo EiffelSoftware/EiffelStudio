@@ -18,13 +18,13 @@ class ecom_XCP_IEiffelCompilerEvents_CEiffelCompiler;
 
 #include "eif_eiffel.h"
 
-#include "ecom_eiffel_compiler_IEiffelCompilerEvents_s.h"
+#include "ecom_EiffelComCompiler_IEiffelCompilerEvents_s.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-namespace ecom_eiffel_compiler
+namespace ecom_EiffelComCompiler
 {
 class CEiffelCompiler;
 }
@@ -36,12 +36,12 @@ extern "C" {
 class ecom_XCP_IEiffelCompilerEvents_CEiffelCompiler : public IConnectionPoint
 {
 public:
-	ecom_XCP_IEiffelCompilerEvents_CEiffelCompiler (ecom_eiffel_compiler::CEiffelCompiler * an_outer, EIF_OBJECT an_object, EIF_TYPE_ID a_type_id);
+	ecom_XCP_IEiffelCompilerEvents_CEiffelCompiler (ecom_EiffelComCompiler::CEiffelCompiler * an_outer, EIF_OBJECT an_object, EIF_TYPE_ID a_type_id);
 	virtual ~ecom_XCP_IEiffelCompilerEvents_CEiffelCompiler () {};
 	/*-----------------------------------------------------------
 	Pointer to coclass.
 	-----------------------------------------------------------*/
-	ecom_eiffel_compiler::CEiffelCompiler * outer;
+	ecom_EiffelComCompiler::CEiffelCompiler * outer;
 
 
 
@@ -119,7 +119,7 @@ private:
 #ifdef __cplusplus
 }
 #endif
-#include "ecom_eiffel_compiler_CEiffelCompiler_s.h"
+#include "ecom_EiffelComCompiler_CEiffelCompiler_s.h"
 
 #include "ecom_grt_globals_ISE.h"
 

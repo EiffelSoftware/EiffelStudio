@@ -72,49 +72,49 @@ feature {NONE}  -- Externals
 	ccom_put_header (cpp_obj: POINTER; new_value: STRING) is
 			-- Put a header message to the output
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelHTMLDocEvents_impl_proxy %"ecom_eiffel_compiler_IEiffelHTMLDocEvents_impl_proxy_s.h%"](EIF_OBJECT)"
+			"C++ [ecom_EiffelComCompiler::IEiffelHTMLDocEvents_impl_proxy %"ecom_EiffelComCompiler_IEiffelHTMLDocEvents_impl_proxy_s.h%"](EIF_OBJECT)"
 		end
 
 	ccom_put_string (cpp_obj: POINTER; new_value: STRING) is
 			-- Put a string to the output
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelHTMLDocEvents_impl_proxy %"ecom_eiffel_compiler_IEiffelHTMLDocEvents_impl_proxy_s.h%"](EIF_OBJECT)"
+			"C++ [ecom_EiffelComCompiler::IEiffelHTMLDocEvents_impl_proxy %"ecom_EiffelComCompiler_IEiffelHTMLDocEvents_impl_proxy_s.h%"](EIF_OBJECT)"
 		end
 
 	ccom_put_class_document_message (cpp_obj: POINTER; new_value: STRING) is
 			-- Put a class name to the output
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelHTMLDocEvents_impl_proxy %"ecom_eiffel_compiler_IEiffelHTMLDocEvents_impl_proxy_s.h%"](EIF_OBJECT)"
+			"C++ [ecom_EiffelComCompiler::IEiffelHTMLDocEvents_impl_proxy %"ecom_EiffelComCompiler_IEiffelHTMLDocEvents_impl_proxy_s.h%"](EIF_OBJECT)"
 		end
 
 	ccom_put_initializing_documentation (cpp_obj: POINTER) is
 			-- Notify that documentation generating is initializing
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelHTMLDocEvents_impl_proxy %"ecom_eiffel_compiler_IEiffelHTMLDocEvents_impl_proxy_s.h%"]()"
+			"C++ [ecom_EiffelComCompiler::IEiffelHTMLDocEvents_impl_proxy %"ecom_EiffelComCompiler_IEiffelHTMLDocEvents_impl_proxy_s.h%"]()"
 		end
 
 	ccom_put_percentage_completed (cpp_obj: POINTER; new_value: INTEGER) is
 			-- Notify that the percentage completed has changed
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelHTMLDocEvents_impl_proxy %"ecom_eiffel_compiler_IEiffelHTMLDocEvents_impl_proxy_s.h%"](EIF_INTEGER)"
+			"C++ [ecom_EiffelComCompiler::IEiffelHTMLDocEvents_impl_proxy %"ecom_EiffelComCompiler_IEiffelHTMLDocEvents_impl_proxy_s.h%"](EIF_INTEGER)"
 		end
 
 	ccom_delete_ieiffel_htmldoc_events_impl_proxy (a_pointer: POINTER) is
 			-- Release resource
 		external
-			"C++ [delete ecom_eiffel_compiler::IEiffelHTMLDocEvents_impl_proxy %"ecom_eiffel_compiler_IEiffelHTMLDocEvents_impl_proxy_s.h%"]()"
+			"C++ [delete ecom_EiffelComCompiler::IEiffelHTMLDocEvents_impl_proxy %"ecom_EiffelComCompiler_IEiffelHTMLDocEvents_impl_proxy_s.h%"]()"
 		end
 
 	ccom_create_ieiffel_htmldoc_events_impl_proxy_from_pointer (a_pointer: POINTER): POINTER is
 			-- Create from pointer
 		external
-			"C++ [new ecom_eiffel_compiler::IEiffelHTMLDocEvents_impl_proxy %"ecom_eiffel_compiler_IEiffelHTMLDocEvents_impl_proxy_s.h%"](IUnknown *)"
+			"C++ [new ecom_EiffelComCompiler::IEiffelHTMLDocEvents_impl_proxy %"ecom_EiffelComCompiler_IEiffelHTMLDocEvents_impl_proxy_s.h%"](IUnknown *)"
 		end
 
 	ccom_item (cpp_obj: POINTER): POINTER is
 			-- Item
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelHTMLDocEvents_impl_proxy %"ecom_eiffel_compiler_IEiffelHTMLDocEvents_impl_proxy_s.h%"]():EIF_POINTER"
+			"C++ [ecom_EiffelComCompiler::IEiffelHTMLDocEvents_impl_proxy %"ecom_EiffelComCompiler_IEiffelHTMLDocEvents_impl_proxy_s.h%"]():EIF_POINTER"
 		end
 
 end -- IEIFFEL_HTMLDOC_EVENTS_IMPL_PROXY

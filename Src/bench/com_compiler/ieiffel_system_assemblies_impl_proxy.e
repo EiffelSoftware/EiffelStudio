@@ -94,67 +94,67 @@ feature {NONE}  -- Externals
 	ccom_wipe_out (cpp_obj: POINTER) is
 			-- Wipe out current list of assemblies
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemAssemblies_impl_proxy_s.h%"]()"
+			"C++ [ecom_EiffelComCompiler::IEiffelSystemAssemblies_impl_proxy %"ecom_EiffelComCompiler_IEiffelSystemAssemblies_impl_proxy_s.h%"]()"
 		end
 
 	ccom_add_assembly (cpp_obj: POINTER; a_prefix: STRING; a_cluster_name: STRING; a_path: STRING; a_copy: BOOLEAN) is
 			-- Add an assembly to the project.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemAssemblies_impl_proxy_s.h%"](EIF_OBJECT,EIF_OBJECT,EIF_OBJECT,EIF_BOOLEAN)"
+			"C++ [ecom_EiffelComCompiler::IEiffelSystemAssemblies_impl_proxy %"ecom_EiffelComCompiler_IEiffelSystemAssemblies_impl_proxy_s.h%"](EIF_OBJECT,EIF_OBJECT,EIF_OBJECT,EIF_BOOLEAN)"
 		end
 
 	ccom_last_exception (cpp_obj: POINTER): IEIFFEL_EXCEPTION_INTERFACE is
 			-- Last execption to occur
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemAssemblies_impl_proxy_s.h%"](): EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelSystemAssemblies_impl_proxy %"ecom_EiffelComCompiler_IEiffelSystemAssemblies_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
 	ccom_store (cpp_obj: POINTER) is
 			-- Save changes.
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemAssemblies_impl_proxy_s.h%"]()"
+			"C++ [ecom_EiffelComCompiler::IEiffelSystemAssemblies_impl_proxy %"ecom_EiffelComCompiler_IEiffelSystemAssemblies_impl_proxy_s.h%"]()"
 		end
 
 	ccom_delete_ieiffel_system_assemblies_impl_proxy (a_pointer: POINTER) is
 			-- Release resource
 		external
-			"C++ [delete ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemAssemblies_impl_proxy_s.h%"]()"
+			"C++ [delete ecom_EiffelComCompiler::IEiffelSystemAssemblies_impl_proxy %"ecom_EiffelComCompiler_IEiffelSystemAssemblies_impl_proxy_s.h%"]()"
 		end
 
 	ccom_create_ieiffel_system_assemblies_impl_proxy_from_pointer (a_pointer: POINTER): POINTER is
 			-- Create from pointer
 		external
-			"C++ [new ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemAssemblies_impl_proxy_s.h%"](IUnknown *)"
+			"C++ [new ecom_EiffelComCompiler::IEiffelSystemAssemblies_impl_proxy %"ecom_EiffelComCompiler_IEiffelSystemAssemblies_impl_proxy_s.h%"](IUnknown *)"
 		end
 
 	ccom_item (cpp_obj: POINTER): POINTER is
 			-- Item
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemAssemblies_impl_proxy_s.h%"]():EIF_POINTER"
+			"C++ [ecom_EiffelComCompiler::IEiffelSystemAssemblies_impl_proxy %"ecom_EiffelComCompiler_IEiffelSystemAssemblies_impl_proxy_s.h%"]():EIF_POINTER"
 		end
 
 	ccom_last_error_code (cpp_obj: POINTER): INTEGER is
 			-- Last error code
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemAssemblies_impl_proxy_s.h%"]():EIF_INTEGER"
+			"C++ [ecom_EiffelComCompiler::IEiffelSystemAssemblies_impl_proxy %"ecom_EiffelComCompiler_IEiffelSystemAssemblies_impl_proxy_s.h%"]():EIF_INTEGER"
 		end
 
 	ccom_last_error_description (cpp_obj: POINTER): STRING is
 			-- Last error description
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemAssemblies_impl_proxy_s.h%"]():EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelSystemAssemblies_impl_proxy %"ecom_EiffelComCompiler_IEiffelSystemAssemblies_impl_proxy_s.h%"]():EIF_REFERENCE"
 		end
 
 	ccom_last_error_help_file (cpp_obj: POINTER): STRING is
 			-- Last error help file
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemAssemblies_impl_proxy_s.h%"]():EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelSystemAssemblies_impl_proxy %"ecom_EiffelComCompiler_IEiffelSystemAssemblies_impl_proxy_s.h%"]():EIF_REFERENCE"
 		end
 
 	ccom_last_source_of_exception (cpp_obj: POINTER): STRING is
 			-- Last source of exception
 		external
-			"C++ [ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemAssemblies_impl_proxy_s.h%"]():EIF_REFERENCE"
+			"C++ [ecom_EiffelComCompiler::IEiffelSystemAssemblies_impl_proxy %"ecom_EiffelComCompiler_IEiffelSystemAssemblies_impl_proxy_s.h%"]():EIF_REFERENCE"
 		end
 
 end -- IEIFFEL_SYSTEM_ASSEMBLIES_IMPL_PROXY

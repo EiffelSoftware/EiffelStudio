@@ -2082,8 +2082,6 @@ Please enter the name of a DIRECTORYconstant which will be used.]]></Text>
 	</EV_WINDOW>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
-<Events><Event>show_actions EV_WINDOW_ACTION_SEQUENCES window_shown</Event>
-	</Events>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
 	<id>138</id>
 	<Expanded>1</Expanded>

@@ -1,5 +1,4 @@
 indexing
-
 	description: 
 		"EiffelVision text field. Mswindows implementation."
 	status: "See notice at end of class"
@@ -12,6 +11,9 @@ class
 	
 inherit
 	EV_TEXT_FIELD_I
+		undefine
+			build
+		end
 	
 	EV_TEXT_COMPONENT_IMP
 	
@@ -22,14 +24,14 @@ inherit
 			make as wel_make,
 			parent as wel_parent,
 			font as wel_font,
-			set_font as wel_set_font
+			set_font as wel_set_font,
+			destroy as wel_destroy
 		undefine
 				-- We undefine the features redefined by EV_WIDGET_IMP,
 				-- and EV_PRIMITIVE_IMP
 			remove_command,
 			set_width,
 			set_height,
-			destroy,
 			on_left_button_down,
 			on_right_button_down,
 			on_left_button_up,
@@ -38,7 +40,11 @@ inherit
 			on_right_button_double_click,
 			on_mouse_move,
 			on_char,
-			on_key_up
+			on_key_up,
+			background_color,
+			foreground_color
+		redefine
+			on_key_down
 		end
 	              
 creation
@@ -55,7 +61,7 @@ feature -- Initialization
 	make_with_text (par: EV_CONTAINER; txt: STRING) is
 			-- Create the label with `txt' as label.
 		local
-			par_imp: EV_CONTAINER_IMP
+			par_imp: WEL_WINDOW
 		do
 			par_imp ?= par.implementation
 			check
@@ -68,7 +74,20 @@ feature -- Event - command association
 	
 	add_activate_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is	
 		do
+			add_command (Cmd_activate, a_command, arguments)
 		end
+
+feature {NONE} -- Implementation
+
+	on_key_down (virtual_key, key_data: INTEGER) is
+			-- We check if the enter key is pressed)
+			-- 13 is the number of the return key.
+		do
+			if virtual_key = 13 then
+				execute_command (Cmd_activate, Void)
+				set_caret_position (0)
+			end
+		end	
 
 end -- class EV_TEXT_FIELD_IMP
 

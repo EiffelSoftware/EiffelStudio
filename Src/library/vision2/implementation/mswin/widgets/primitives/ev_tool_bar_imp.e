@@ -383,7 +383,11 @@ feature -- Basic operation
 				end
 			if it /= Void then
 				radio_button ?= it
-				if radio_button /= Void then
+				if radio_button /= Void and button = 1 then
+					-- We check `button' as the radio button is only selected
+					-- if the button is equal to 1. If another button is
+					-- pressed, we do not need to unselect the selected
+					-- button from the group.
 					radio_button.update_radio_states
 				end
 				it.interface.pointer_button_press_actions.call
@@ -731,6 +735,10 @@ end -- class EV_TOOL_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.43  2000/04/05 19:32:47  rogers
+--| In internal_propagate_event, we now check the left button was
+--| pressed before calling update_radio_states on the radio_button.
+--|
 --| Revision 1.42  2000/04/05 18:13:15  rogers
 --| Internal_propagate_pointer_press now calls update_radio_states
 --| on the radio_button.

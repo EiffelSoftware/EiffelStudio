@@ -218,11 +218,6 @@ feature -- Debugging
 
 feature -- DLE
 
-	debug_level, dle_debug_level: INTEGER;
-			-- Supermelted routines in the static (resp. dynamic) system
-			-- are assigned body_ids between `debug_level' and `dle_level'
-			-- (resp. greater then `dle_debug_level')
-
 	dle_level: INTEGER is
 			-- Limit between static and dynamic system
 		do

@@ -54,7 +54,7 @@ feature -- Access
 		local
 			saved: INTEGER
 		do
-			saved := features.index;
+			saved := features.index
 			from
 				features.start
 			until
@@ -63,9 +63,7 @@ feature -- Access
 				Result := features.item.feature_with_name (n);
 				features.forth
 			end
-			if features.valid_cursor_index (saved) then
-				features.go_i_th (saved)
-			end
+			features.go_i_th (saved)
 		end;
 
 	has_feature (f: FEATURE_AS): BOOLEAN is
@@ -76,7 +74,7 @@ feature -- Access
 			saved: INTEGER
 			name: STRING
 		do
-			saved := features.index;
+			saved := features.index
 			name := f.feature_name
 			from
 				features.start
@@ -89,18 +87,15 @@ feature -- Access
 				end
 				features.forth
 			end
-			if features.valid_cursor_index (saved) then
-				features.go_i_th (saved)
-			end
+			features.go_i_th (saved)
 		end
 
 	has_feature_name (n: FEATURE_NAME): BOOLEAN is
 			-- Does `n' appear in current feature clause?
 		local
-			cur: CURSOR
+			saved: INTEGER
 		do
-			cur := features.cursor
-
+			saved := features.index
 			from
 				features.start
 			until
@@ -109,8 +104,7 @@ feature -- Access
 				Result := features.item.has_feature_name (n)
 				features.forth
 			end
-	
-			features.go_to (cur)	
+			features.go_i_th (saved)
 		end;
 
 	has_same_clients (other: like Current): BOOLEAN is
@@ -191,9 +185,7 @@ feature {COMPILER_EXPORTER, CLASS_AS} -- Element change
 			new_ep := new_f.end_position - new_f.start_position + new_sp
 			new_f.update_positions (new_sp, new_ep)
 			features.put_i_th (new_f, i)
-			if features.valid_cursor_index (saved) then
-				features.go_i_th (saved)
-			end
+			features.go_i_th (saved)
 	end
 
 	remove_feature (f: FEATURE_AS) is

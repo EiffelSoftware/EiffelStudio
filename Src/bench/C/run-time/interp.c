@@ -5206,7 +5206,7 @@ rt_private void assign(long offset, uint32 type)
 
 	last = opop();					/* Value to be assigned */
 
-	CHECK("Target same type as source", last->type == type);
+	CHECK("Target same type as source", last->type == (type & SK_HEAD));
 
 #define l last
 #define i icurrent

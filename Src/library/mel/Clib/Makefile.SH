@@ -28,8 +28,9 @@ $spitshell >>Makefile <<'!NO!SUBS!'
 .c.o:
 	$(CC) $(CFLAGS) $(DEFINES) -c $<
 
-OBJECTS= xt_support.o callback.o creation.o \
-		mel_string.o pixel.o pointer.o xm_support.o c_support.o
+OBJECTS= xt_support.o callback.o creation.o pixmap.o font.o \
+		mel_string.o pixel.o pointer.o xm_support.o \
+		c_support.o g_context.o
 
 libMel.a: $(OBJECTS)
 	$(RM) libMel.a

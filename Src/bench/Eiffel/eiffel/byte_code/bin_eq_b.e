@@ -18,7 +18,7 @@ feature
 	generate_boolean_constant is
 			-- Generate false constant
 		do
-			generated_file.putstring ("'\0'");
+			generated_file.putstring ("EIF_FALSE");
 		end;
 
 	enlarged: BIN_EQ_BL is
@@ -30,7 +30,6 @@ feature
 
 feature -- Byte code generation
 
-	
 	operator_constant: CHARACTER is
 			-- Byte code constant associated to current binary
 			-- operation

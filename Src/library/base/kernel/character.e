@@ -25,7 +25,6 @@ feature -- Access
 			-- Built-in
 		end;
 
-
 feature -- Comparison
 
 	infix "<" (other: like Current): BOOLEAN is

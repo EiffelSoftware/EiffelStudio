@@ -316,6 +316,12 @@ feature {NONE} -- Externals
 			"C | %"eif_object_id.h%""
 		end
 
+	eif_object_id_free (an_id: INTEGER) is
+			-- Free the entry `an_id'
+		external
+			"C | %"eif_object_id.h%""
+		end
+
 end -- class WEL_WINDOWS_ROUTINES
 
 --|----------------------------------------------------------------

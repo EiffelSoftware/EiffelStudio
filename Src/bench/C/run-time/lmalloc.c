@@ -26,10 +26,6 @@ doc:<file name="lmalloc.c" header="rt_lmalloc.h" version="$Id$" summary="Malloc 
 #endif	/* LMALLOC_CHECK or LMALLOC_DEBUG */
 #include "rt_assert.h"
 
-#if !defined EIF_VMS && !defined VXWORKS
-#include <malloc.h>
-#endif	/* !defined EIF_VMS && !defined VXWORKS */
-
 #include <string.h>		/* For memset(), bzero() */
 
 #ifndef lint

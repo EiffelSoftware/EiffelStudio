@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <malloc.h>
 #include "rt_interp.h"
 #include "eif_size.h"
 #include <string.h>

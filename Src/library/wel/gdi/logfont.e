@@ -11,6 +11,8 @@ inherit
 	WEL_STRUCTURE
 		rename
 			make as structure_make
+		redefine
+			make_by_pointer
 		end
 
 	WEL_FONT_QUALITY_CONSTANTS
@@ -104,6 +106,14 @@ feature {NONE} -- Initialization
 			cwin_get_object (font.item, structure_size, item)
 		end
 
+	make_by_pointer (a_pointer: POINTER) is
+			-- Copy structure pointed by `a_pointer' in
+			-- `item'.
+		do
+			structure_make
+			memory_copy (a_pointer, structure_size)
+		end
+
 feature -- Access
 
 	height: INTEGER is
@@ -195,9 +205,8 @@ feature -- Access
 
 	clip_precision: INTEGER is
 			-- Clipping precision.
-			-- The clipping precision defines how to clip
-			-- characters that are partially outside
-			-- the clipping region.
+			-- Define how to clip characters that are 
+			-- partially outside clipping region.
 		do
 			Result := cwel_log_font_get_clipprecision (item)
 		end

@@ -10,9 +10,23 @@ class
 
 inherit
 	WEL_STRUCTURE
+		redefine
+			make_by_pointer
+		end
 
 creation
 	make_by_pointer
+
+feature -- Creation
+
+	make_by_pointer (a_pointer: POINTER) is
+			-- Copy structure pointed by `a_pointer' into `item'.
+			-- Caution: `a_pointer' must be a pointer
+			-- coming from Windows.
+		do
+			make
+			memory_copy (a_pointer, structure_size)
+		end
 
 feature -- Access
 

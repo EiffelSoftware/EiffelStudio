@@ -87,9 +87,8 @@ feature
 feature {NONE}
 
 	dead_code, exception_stack_managed, collect, precompilation,
-	code_replication, fail_on_rescue, check_vape,
-	array_optimization, inlining, inlining_size,
-	server_file_size, extendible, extending,
+	code_replication, check_vape, array_optimization, inlining, 
+	inlining_size, server_file_size, extendible, extending,
 	dynamic, hide, profile: INTEGER is UNIQUE;
 
 	valid_options: HASH_TABLE [INTEGER, STRING] is
@@ -105,7 +104,6 @@ feature {NONE}
 			Result.force (exception_stack_managed, "exception_trace");
 			Result.force (precompilation, "precompiled");
 			Result.force (code_replication, "code_replication");
-			Result.force (fail_on_rescue, "fail_on_rescue");
 			Result.force (server_file_size, "server_file_size");
 			Result.force (extendible, "extendible");
 			Result.force (extending, "extending");
@@ -242,16 +240,6 @@ feature
 				else
 					error_found := True;
 				end;
-			when fail_on_rescue then
-				if value = Void then
-					error_found := True
-				elseif value.is_no then
-					Rescue_status.set_fail_on_rescue (False);
-				elseif value.is_yes then
-					Rescue_status.set_fail_on_rescue (True);
-				else
-					error_found := True;
-				end;
 			when code_replication then
 				if value = Void then
 					error_found := True
@@ -283,11 +271,7 @@ feature
 				else
 					-- Do nothing: the normal case has already been solved
 				end
-			when dynamic then
-					-- This has been taken care of in `adapt'.
-			when hide then
-					-- This has been taken care of in `adapt'.
-			when profile then
+			when dynamic, hide, profile then
 					-- This has been taken care of in `adapt'.
 			else
 				error_found := True

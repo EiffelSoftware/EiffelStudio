@@ -31,6 +31,9 @@ feature -- Status report
 	emitted: BOOLEAN
 			-- Have leading tabs already been emitted?
 
+	is_il_generation: BOOLEAN
+			-- Are we in IL code generation?
+
 feature -- Open, close buffer operations
 
 	clear_all is
@@ -67,6 +70,16 @@ feature -- Open, close buffer operations
 				file.putstring (Current)
 				clear_all
 			end
+		end
+
+feature -- Settings
+
+	set_is_il_generation (v: BOOLEAN) is
+			-- Set `is_il_generation' with `v'.
+		do
+			is_il_generation := v
+		ensure
+			is_il_generation_set: is_il_generation = v
 		end
 
 feature -- Ids generation
@@ -274,7 +287,11 @@ feature {GENERATION_BUFFER} -- prototype code generation
 			i, nb: INTEGER
 		do
 			if extern then
-				append ("extern ")
+				if is_il_generation then
+					append ("RT_IL ")
+				else
+					append ("extern ")
+				end
 			else
 				append ("static ")
 			end
@@ -336,6 +353,9 @@ feature -- prototype code generation
 			extern_header.generate_function_declaration (type, f_name, extern, arg_types)
 			if not extern then
 				append ("static ")
+			end
+			if is_il_generation then
+				append ("RT_IL ")
 			end
 			append (type)
 			append_character (' ')

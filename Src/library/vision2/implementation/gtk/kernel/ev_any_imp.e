@@ -85,6 +85,7 @@ feature {EV_ANY, EV_ANY_IMP} -- Command
 				end
 				is_destroyed := True
 				if feature {EV_GTK_EXTERNALS}.gtk_is_window (c_object) then
+					-- Windows are explicitly reffed on initialization as they are toplevel widgets.
 					feature {EV_GTK_DEPENDENT_EXTERNALS}.object_unref (c_object)
 				end
 				feature {EV_GTK_DEPENDENT_EXTERNALS}.object_destroy (c_object)
@@ -243,89 +244,6 @@ invariant
 	c_object_coupled: c_object /= NULL implies
 		eif_object_from_c (c_object) = Current
 
-indexing
-	description: "[
-	 Scheme for Eiffel GC / GTK RC cooperation (with a twist).
-	
-	 See diagram: ev_any_imp.fig
-	 
-	 This describes the interaction between the ISE garbage collector[1] (GC) and
-	 the GTK+ reference counter[3] (RC). Eiffel objects get collected some time
-	 after they are no longer reachable from the root Eiffel object. GTK objects
-	 are destroyed right after their reference count drops to zero.
-	
-	 Eiffel objects have a `dispose' feature that is called when they are reaped.
-	 GTK objects have a "destroy" signal that is emitted when they are destroyed.
-	
-	 A "widget" in Vision is actual a pair of objects one Eiffel, one GTK.
-	 Henceforth:
-	     EIF object: refers to an Eiffel object that corresponds to a GTK object.
-	     GTK object: refers to a GtkWidget that corresponds to an EIF object.
-	
-	 The principle is that a GTK object and the corresponding EIF object are
-	 tightly coupled and that such couples are handled by both memory management
-	 systems. Thats is, if the couple is reachable from either Eiffel or C it
-	 is considered alive, only if it is reachable from neither is it reaped.
-	 (Note that due to the mark & sweep GC in ISE Eiffel reachable /= referenced)
-	 If one member of the couple is explicitly destroyed the other must also die.
-	 At any point in time the couple must be under the control of only one memory
-	 management system (Eiffel GC or GTK RC). To put it under the control of one,
-	 we simply make an extra reference to it from the other.
-	 
-	 The execution goes something like this:
-	 
-	 When the widget is parented, it's destiny is controlled by GTK.
-	     The GTK object makes an Eiffel reference on the EIF object to save it
-	     from the Eiffel GC. An EIF_OBJECT[5] is stored in the GTK object data
-	     payload with eif_wean as the destroy notify function.
-	     (gtk_object_set_data_full[4] allows arbitrary data to be stored.)
-	     If we previously incremented the GTK object reference count we decrement
-	     it (see below) so that it is destroyed if all other references are lost.
-	
-	 When the widget is unparented, it's destiny is controlled by the EIFFEL GC.
-	     The EIF object increments the GTK object reference count to save it
-	     from the GTK RC. An entry is made in the GTK object data payload to note
-	     that we made an extra reference.
-	     The EIF_OBJECT in the GTK object data payload is removed, this causes
-	     eif_wean to release it's reference so that if there are no other Eiffel
-	     references to it, it is destroyed.
-	
-	 Toplevel widgets like Windows are considered to be not parentable, that is,
-	 they are always at the mercy of the Eiffel GC.
-	 
-	 `c_object_dispose' is connected to the GTK object "destroy" signal and marks
-	  the Eiffel object as `is_destroyed'.
-	 
-	 `dispose' destroys the GTK object if the Eiffel object is collected.
-	 
-	 The user may also explicitly call `destroy', this destroys the GTK object
-	 and marks the Eiffel object as `is_destroyed'.
-	 
-	 The twist:
-	 In order to create EIF_OBJECTs and have C signal handlers call Eiffel
-	 functions the GTK object must have a reference to the EIF object.
-	 But if it has a reference the Eiffel object will never be collected by the
-	 GC and we'll run out of memory. So, we use the eif_object_id function from
-	 eif_object_id.h (and its partner in crime eif_id_object) to create a weak
-	 reference from the GTK object to the EIF object, it can be used to get a
-	 normal strong reference when needed but doesn't deter the GC from reaping
-	 the object the rest of the time. 
-	 See the July 1998 "Weak references in Eiffel?"[6] thread on comp.lang.eiffel
-	 for some heated debate on this topic.
-	 
-	 Note: much of what is described here is implemented in C, see ev_any_imp.c
-	 
-	 [1] http://www.eiffel.com/doc/manuals/technology/internal/gc/page.html
-	 [2] http://www/runtime/doc/gc.html
-	 [3] http://cvs.gnome.org/lxr/source/gtk+/docs/refcounting.txt
-	 [4] http://cvs.gnome.org/lxr/source/gtk+/gtk/gtkobject.c
-	 [5] http://www.eiffel.com/doc/manuals/technology/library/cecil/page.html
-	 [6] http://x41.deja.com/viewthread.xp?AN=374238517&ST=PS&
-	     CONTEXT=942256350.2001338403&HIT_CONTEXT=942256350.2001338403&HIT_NUM=0&
-	     recnum=%3cEwK3tD.5D8@ecf.toronto.edu%3e%231/1&group=comp.lang.eiffel
-	     (join that mess onto one line or just search deja.com)
-	]"
-	
 end -- class EV_ANY_IMP
 
 --|----------------------------------------------------------------

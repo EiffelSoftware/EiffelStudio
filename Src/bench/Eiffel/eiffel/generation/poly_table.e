@@ -208,9 +208,7 @@ feature
 				after or else stop
 			loop
 				entry := item;
-				stop := 	entry.type_id >= type_id
-							and then
-							entry.used;
+				stop := entry.type_id >= type_id and then entry.used;
 				forth
 			end;
 			if stop then

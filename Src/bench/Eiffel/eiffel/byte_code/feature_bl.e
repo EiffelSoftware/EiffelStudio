@@ -255,9 +255,14 @@ end;
 				if rout_table.is_implemented (typ.type_id) then
 					internal_name := clone (rout_table.feature_name (typ.type_id));
 					type_c := real_type (type).c_type;
-						-- Remember extern routine declaration
-					Extern_declarations.add_routine
+
+					rout_table.goto_used (typ.type_id);
+
+					if not rout_table.item.written_type_id.is_equal (Context.class_type.type_id) then
+							-- Remember extern routine declaration
+						Extern_declarations.add_routine
 								(type_c, internal_name);
+					end
 
 					generated_file.putchar ('(');
 					type_c.generate_function_cast (generated_file, argument_types);

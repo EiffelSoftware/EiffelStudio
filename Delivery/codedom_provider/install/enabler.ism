@@ -52,13 +52,13 @@
 	<summary>
 		<codepage>1252</codepage>
 		<title>Installation Database</title>
-		<subject>##ID_STRING4##</subject>
-		<author>##COMPANY_NAME##</author>
+		<subject>##ID_STRING1##</subject>
+		<author>InstallShield Software Corporation</author>
 		<keywords>Installer,MSI,Database</keywords>
 		<comments>Contact:  Your local administrator</comments>
 		<template>Intel;1033</template>
 		<lastauthor>Administrator</lastauthor>
-		<revnumber>{48329FBC-0B24-435C-B1F7-B7DC5DC0724B}</revnumber>
+		<revnumber>{D07EFF8C-D1FB-4F52-BF4E-6C73A0353B01}</revnumber>
 		<lastprinted/>
 		<createdtm>06/21/1999 01:00</createdtm>
 		<lastsavedtm>07/14/2000 04:50</lastsavedtm>
@@ -252,8 +252,6 @@
 		<col key="yes" def="s72">Name</col>
 		<col def="V0">Data</col>
 		<col def="S255">ISBuildSourcePath</col>
-		<row><td>ISSELFREG.DLL</td><td/><td>&lt;ISProductFolder&gt;\redist\language independent\i386\isregsvr.dll</td></row>
-		<row><td>Installer</td><td/><td>&lt;PATH_TO_DELIVERY_FILES&gt;\installer.exe</td></row>
 		<row><td>NewBinary1</td><td/><td>&lt;ISProductFolder&gt;\Redist\Language Independent\OS Independent\IsDialogBanner.ibd</td></row>
 		<row><td>NewBinary10</td><td/><td>&lt;ISProductFolder&gt;\Redist\Language Independent\OS Independent\CompleteSetupIco.ibd</td></row>
 		<row><td>NewBinary11</td><td/><td>&lt;ISProductFolder&gt;\Redist\Language Independent\OS Independent\CustomSetupIco.ibd</td></row>
@@ -264,7 +262,9 @@
 		<row><td>NewBinary16</td><td/><td>&lt;ISProductFolder&gt;\Redist\Language Independent\OS Independent\InstallFirstUse.ico</td></row>
 		<row><td>NewBinary17</td><td/><td>&lt;ISProductFolder&gt;\Redist\Language Independent\OS Independent\InstallPartial.ico</td></row>
 		<row><td>NewBinary18</td><td/><td>&lt;ISProductFolder&gt;\Redist\Language Independent\OS Independent\InstallStateMenu.ico</td></row>
+		<row><td>NewBinary19</td><td/><td>&lt;PATH_TO_DELIVERY_FILES&gt;\installer.exe</td></row>
 		<row><td>NewBinary2</td><td/><td>&lt;ISProductFolder&gt;\Redist\Language Independent\OS Independent\New.ibd</td></row>
+		<row><td>NewBinary20</td><td/><td>&lt;PATH_TO_DELIVERY_FILES&gt;\browser_launcher.exe</td></row>
 		<row><td>NewBinary3</td><td/><td>&lt;ISProductFolder&gt;\Redist\Language Independent\OS Independent\Up.ibd</td></row>
 		<row><td>NewBinary4</td><td/><td>&lt;ISProductFolder&gt;\Redist\Language Independent\OS Independent\WarningIcon.ibd</td></row>
 		<row><td>NewBinary5</td><td/><td>&lt;ISProductFolder&gt;\Redist\Language Independent\OS Independent\IsDialogBitmap.ibd</td></row>
@@ -290,6 +290,7 @@
 		<col def="S64">Value</col>
 		<row><td>ISCHECKFORPRODUCTUPDATES</td><td>1</td></row>
 		<row><td>LAUNCHPROGRAM</td><td>1</td></row>
+		<row><td>LAUNCHREADME</td><td/></row>
 	</table>
 
 	<table name="Class">
@@ -341,31 +342,27 @@
 		<col def="S0">ISDotNetInstallerArgsCommit</col>
 		<col def="S0">ISDotNetInstallerArgsUninstall</col>
 		<col def="S0">ISDotNetInstallerArgsRollback</col>
-		<row><td>ConfigFiles</td><td>{2ED01BD1-6839-4710-897F-1B10A9186D5F}</td><td>MSC</td><td>8</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>DummyComponent</td><td>{6B8C8ED1-F847-4CCC-A0B6-325621BA1028}</td><td>ASSEMBLIES1</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>EiffelSoftware.CacheBrowser.dll</td><td>{89475541-DA56-46E9-9FE5-96A7B238985A}</td><td>BIN1</td><td>8</td><td/><td>eiffelsoftware.cachebrowser.</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>EiffelSoftware.CodeDom.dll</td><td>{BF9CFB91-7B6E-4534-A568-E4CC867B2F98}</td><td>BIN1</td><td>8</td><td/><td>eiffelsoftware.codedom.dll</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>EiffelSoftware.CodeDomBase.dll</td><td>{915427C4-92D6-4FF4-89FE-D2AAF2C0F81E}</td><td>BIN1</td><td>8</td><td/><td>eiffelsoftware.codedombase.d</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>EiffelSoftware.CodeDomVision2.dll</td><td>{60DB2ED1-0CDA-4BDA-B26F-D308AF77B9C2}</td><td>BIN1</td><td>8</td><td/><td>eiffelsoftware.codedomvision</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>EiffelSoftware.MetadataConsumer.dll</td><td>{CC300B60-F96F-4AEE-BE69-FA2CBEFE6C2D}</td><td>BIN</td><td>8</td><td/><td>eiffelsoftware.metadataconsu</td><td>49</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>EiffelSoftware.Runtime.dll</td><td>{1CD0F554-593E-4D52-9876-F400E9DECADE}</td><td>BIN</td><td>8</td><td/><td>eiffelsoftware.runtime.dll</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>EiffelSoftware.Runtime.dll2</td><td>{9014F087-9095-425A-8030-EE195C9E05B9}</td><td>BIN1</td><td>8</td><td/><td>eiffelsoftware.runtime.dll2</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>ErrorsFiles</td><td>{0544EEE8-5304-42A2-BA27-1FE2C3CFF31D}</td><td>ERRORS</td><td>8</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>ISRegistryComponent</td><td>{8A20532F-1042-4189-8B27-EDE5A6C4F7BB}</td><td>INSTALLDIR</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>Library</td><td>{2FF83337-CFBB-42AD-A02B-4EB5F9ADAF82}</td><td>LIBRARY</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>Library.net</td><td>{57ADB5FB-4DEA-4930-874C-F5F9B0527840}</td><td>LIBRARY.NET</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>ManagerIcons</td><td>{EC8CD219-472B-46A1-AE55-85501EDEAF1A}</td><td>ICONS</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>SampleFiles</td><td>{47F190D1-FEBF-4AC5-9D39-7A3C5FE878F0}</td><td>SAMPLES</td><td>8</td><td/><td>default.aspx</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>SetupFiles</td><td>{AC557193-8CBA-4E68-89CB-5EB957A8CF73}</td><td>BIN</td><td>8</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>ShortErrorsFiles</td><td>{2CEA6C37-BAF4-4075-B575-27D52BD0B13F}</td><td>SHORT</td><td>8</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>TemplatesFiles</td><td>{42D015D3-2E1E-4692-AF37-18B691E4EDD1}</td><td>TEMPLATES</td><td>8</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>VirtualDirComponent</td><td>{22F69C02-49EC-4DEB-A84E-BDC3BD72B5DD}</td><td>INSTALLDIR</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>XCACLS.vbs</td><td>{D2F55519-4FB0-4938-AC86-18A687878309}</td><td>INSTALLDIR</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>default.ecd</td><td>{3A2B6E74-0779-4285-9872-A12B0CDD1320}</td><td>CONFIGS</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>ecdpc.exe</td><td>{F3059586-0CEC-4F2C-87B8-3C454D8FF1BA}</td><td>BIN</td><td>8</td><td/><td>ecdpc.exe</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>ecdpman.exe</td><td>{EB06874D-5035-4268-8D9D-BA444A431128}</td><td>BIN1</td><td>8</td><td/><td>ecdpman.exe</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>libEiffelSoftware.CodeDomBase.dll</td><td>{43CBC6C3-B5C4-48F1-A226-046F81FBC49A}</td><td>SystemFolder</td><td>8</td><td/><td>libeiffelsoftware.codedombas</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>libEiffelSoftware.CodeDomVision2.dll</td><td>{99C56C2A-8044-4BD0-B2D8-D11B9020F465}</td><td>SystemFolder</td><td>8</td><td/><td>libeiffelsoftware.codedomvis</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>ConfigFiles</td><td>{F67B780E-84C1-445C-B6D9-7AA14B5EA7F5}</td><td>WINDOWS</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>DefaultConfigFile</td><td>{2907EBE8-0EB4-4919-99A3-EAB9F4B98B69}</td><td>CONFIGS</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>EiffelSoftware.CacheBrowser.dll</td><td>{FA613F29-2860-4AB8-8058-A96110500E0F}</td><td>BIN</td><td>8</td><td/><td>eiffelsoftware.cachebrowser.</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>EiffelSoftware.CodeDom.dll</td><td>{A75D2F75-AB17-4D29-AF73-0770CA95D0AE}</td><td>BIN</td><td>8</td><td/><td>eiffelsoftware.codedom.dll</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>EiffelSoftware.CodeDomBase.dll</td><td>{CC72BC24-B220-422B-8E3F-2278DF3CB464}</td><td>BIN</td><td>8</td><td/><td>eiffelsoftware.codedombase.d</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>EiffelSoftware.CodeDomVision2.dll</td><td>{8F9AB00D-6CB8-402A-B5A6-2625676B9074}</td><td>BIN</td><td>8</td><td/><td>eiffelsoftware.codedomvision</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>EiffelSoftware.MetadataConsumer.dll</td><td>{24000EF0-0A7A-4C7F-8612-25EF2D45B7AD}</td><td>BIN1</td><td>8</td><td/><td>eiffelsoftware.metadataconsu</td><td>33</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>EiffelSoftware.Runtime.dll</td><td>{33127FF4-7555-4BA8-A071-89DD373F8D3E}</td><td>BIN</td><td>8</td><td/><td>eiffelsoftware.runtime.dll</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>EiffelSoftware.Runtime.dll1</td><td>{75636316-149F-4143-814A-47128E265769}</td><td>BIN1</td><td>8</td><td/><td>eiffelsoftware.runtime.dll1</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>Empty</td><td>{A35E73D1-2614-4A37-8819-FA14C434E6F8}</td><td>ASSEMBLIES</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>ErrorFiles</td><td>{160B4CBE-AFEE-476C-817A-E462A987F12F}</td><td>ERRORS</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>Library</td><td>{0FEA0AF1-E705-4712-8744-33CF25097FF2}</td><td>LIBRARY</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>LibraryDotNet</td><td>{E05D8E65-9CEB-4E1D-8353-72E4663A9DA1}</td><td>LIBRARY.NET</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>SamplesFiles</td><td>{07FB8B42-EAB9-458C-8FC4-1E9844F0ECD8}</td><td>SAMPLES</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>SetupFiles</td><td>{2160BD6D-A744-4F95-AA7F-5B9B9AF9CC9A}</td><td>BIN1</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>VirtualDirComponent</td><td>{70E9460C-4F29-4900-A0DD-A32B0052696C}</td><td>INSTALLDIR</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>XCACLS</td><td>{8D0F564F-1893-493C-A036-0A18BE7210E1}</td><td>INSTALLDIR</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>ecdpc.exe</td><td>{A1290663-9EDB-4E4C-9BA3-2D19F4370EF4}</td><td>BIN1</td><td>8</td><td/><td>ecdpc.exe</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>ecdpman.exe</td><td>{AFD93E19-EFAA-430F-BB6C-C3B9E5DFFBF9}</td><td>BIN</td><td>8</td><td/><td>ecdpman.exe</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>libEiffelSoftware.CodeDomBase.dll</td><td>{5C1FFEE0-5F09-4169-B5C2-FF01130A587B}</td><td>SystemFolder</td><td>8</td><td/><td>libeiffelsoftware.codedombas</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>libEiffelSoftware.CodeDomVision2.dll</td><td>{36996C79-A74D-4222-91F2-44F6D88C1910}</td><td>SystemFolder</td><td>8</td><td/><td>libeiffelsoftware.codedomvis</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 	</table>
 
 	<table name="Condition">
@@ -990,7 +987,8 @@
 		<row><td>SetupCompleteError</td><td>Finish</td><td>EndDialog</td><td>Exit</td><td>1</td><td>2</td></row>
 		<row><td>SetupCompleteSuccess</td><td>OK</td><td>DoAction</td><td>CheckForProductUpdates</td><td>ISCHECKFORPRODUCTUPDATES="1" And ISENABLEDWUSFINISHDIALOG And NOT ISREBOOTREQUIRED And NOT Installed And ACTION="INSTALL"</td><td>4</td></row>
 		<row><td>SetupCompleteSuccess</td><td>OK</td><td>DoAction</td><td>CheckForProductUpdatesOnReboot</td><td>ISCHECKFORPRODUCTUPDATES="1" And ISENABLEDWUSFINISHDIALOG And ISREBOOTREQUIRED And NOT Installed And ACTION="INSTALL"</td><td>5</td></row>
-		<row><td>SetupCompleteSuccess</td><td>OK</td><td>DoAction</td><td>IS_LAUNCH_MY_PROGRAM_PLEASE</td><td>LAUNCHPROGRAM</td><td/></row>
+		<row><td>SetupCompleteSuccess</td><td>OK</td><td>DoAction</td><td>IS_LAUNCH_MY_PROGRAM_PLEASE</td><td>LAUNCHPROGRAM</td><td>6</td></row>
+		<row><td>SetupCompleteSuccess</td><td>OK</td><td>DoAction</td><td>StartIE</td><td>1</td><td>7</td></row>
 		<row><td>SetupCompleteSuccess</td><td>OK</td><td>EndDialog</td><td>Exit</td><td>1</td><td>2</td></row>
 		<row><td>SetupError</td><td>A</td><td>EndDialog</td><td>ErrorAbort</td><td>1</td><td>0</td></row>
 		<row><td>SetupError</td><td>C</td><td>EndDialog</td><td>ErrorCancel</td><td>1</td><td>0</td></row>
@@ -1021,9 +1019,7 @@
 	<table name="CreateFolder">
 		<col key="yes" def="s72">Directory_</col>
 		<col key="yes" def="s72">Component_</col>
-		<row><td>ASSEMBLIES1</td><td>DummyComponent</td></row>
-		<row><td>BIN</td><td>SetupFiles</td></row>
-		<row><td>INSTALLDIR</td><td>ISRegistryComponent</td></row>
+		<row><td>ASSEMBLIES</td><td>Empty</td></row>
 		<row><td>INSTALLDIR</td><td>VirtualDirComponent</td></row>
 	</table>
 
@@ -1036,14 +1032,11 @@
 		<row><td>CheckForProductUpdates</td><td>226</td><td>ISUpdateServiceFolder</td><td>[ISUpdateServiceFolder]agent.exe "/au[ProductCode] /EndOfInstall"</td><td>Checks for product updates</td></row>
 		<row><td>CheckForProductUpdatesOnReboot</td><td>226</td><td>ISUpdateServiceFolder</td><td>[ISUpdateServiceFolder]agent.exe "/au[ProductCode] /EndOfInstall /Reboot"</td><td>Checks for product updates on reboot</td></row>
 		<row><td>ISPrint</td><td>1</td><td>SetAllUsers.dll</td><td>PrintScrollableText</td><td>Prints the contents of a ScrollableText control on a dialog.</td></row>
-		<row><td>ISSelfRegisterCosting</td><td>1</td><td>ISSELFREG.DLL</td><td>ISSelfRegisterCosting</td><td/></row>
-		<row><td>ISSelfRegisterFiles</td><td>1025</td><td>ISSELFREG.DLL</td><td>ISSelfRegisterFiles</td><td/></row>
-		<row><td>ISSelfRegisterFinalize</td><td>1</td><td>ISSELFREG.DLL</td><td>ISSelfRegisterFinalize</td><td/></row>
-		<row><td>ISUnSelfRegisterFiles</td><td>1025</td><td>ISSELFREG.DLL</td><td>ISUnSelfRegisterFiles</td><td/></row>
-		<row><td>Install</td><td>1090</td><td>Installer</td><td>"[INSTALLDIR]</td><td/></row>
+		<row><td>Install</td><td>1090</td><td>NewBinary19</td><td>"[INSTALLDIR]</td><td/></row>
 		<row><td>SetARPINSTALLLOCATION</td><td>51</td><td>ARPINSTALLLOCATION</td><td>[INSTALLDIR]</td><td/></row>
 		<row><td>SetAllUsersProfileNT</td><td>51</td><td>ALLUSERSPROFILE</td><td>[%SystemRoot]\Profiles\All Users</td><td/></row>
-		<row><td>Uninstall</td><td>1090</td><td>Installer</td><td>-u "[INSTALLDIR]</td><td/></row>
+		<row><td>StartIE</td><td>194</td><td>NewBinary20</td><td>C:\</td><td/></row>
+		<row><td>Uninstall</td><td>1090</td><td>NewBinary19</td><td>-u "[INSTALLDIR]</td><td/></row>
 		<row><td>caCreateVRoots</td><td>1025</td><td>binIISHelper</td><td>CreateIISVRoots</td><td/></row>
 		<row><td>caExtractIISSuppFiles</td><td>1</td><td>binIISHelper</td><td>ExtractIISTables</td><td/></row>
 		<row><td>caIISCleanup</td><td>1</td><td>binIISHelper</td><td>CleanupVRoots</td><td/></row>
@@ -1111,11 +1104,10 @@
 		<row><td>ALLUSERSPROFILE</td><td>TARGETDIR</td><td>.:ALLUSE~1|All Users</td><td/><td>0</td><td/></row>
 		<row><td>ASP.NET_ENABLER_2.0</td><td>ProgramFilesFolder</td><td>ASP_NE~1|ASP.NET Enabler 2.0</td><td/><td>0</td><td/></row>
 		<row><td>ASSEMBLIES</td><td>INSTALLDIR</td><td>ASSEMB~1|Assemblies</td><td/><td>0</td><td/></row>
-		<row><td>ASSEMBLIES1</td><td>INSTALLDIR</td><td>ASSEMB~1|Assemblies</td><td/><td>0</td><td/></row>
 		<row><td>AdminToolsFolder</td><td>TARGETDIR</td><td>.:Admint~1|AdminTools</td><td/><td>0</td><td/></row>
 		<row><td>AppDataFolder</td><td>TARGETDIR</td><td>.:APPLIC~1|Application Data</td><td/><td>0</td><td/></row>
-		<row><td>BIN</td><td>WINDOWS1</td><td>bin</td><td/><td>0</td><td/></row>
-		<row><td>BIN1</td><td>CODEDOM</td><td>bin</td><td/><td>0</td><td/></row>
+		<row><td>BIN</td><td>CODEDOM</td><td>bin</td><td/><td>0</td><td/></row>
+		<row><td>BIN1</td><td>WINDOWS1</td><td>bin</td><td/><td>0</td><td/></row>
 		<row><td>CODEDOM</td><td>INSTALLDIR</td><td>CodeDom</td><td/><td>0</td><td/></row>
 		<row><td>COMPILER</td><td>INSTALLDIR</td><td>Compiler</td><td/><td>0</td><td/></row>
 		<row><td>CONFIG</td><td>STUDIO</td><td>config</td><td/><td>0</td><td/></row>
@@ -1129,25 +1121,22 @@
 		<row><td>FontsFolder</td><td>TARGETDIR</td><td>.:Fonts</td><td/><td>0</td><td/></row>
 		<row><td>GlobalAssemblyCache</td><td>TARGETDIR</td><td>.:Global~1|GlobalAssemblyCache</td><td/><td>0</td><td/></row>
 		<row><td>HELP</td><td>STUDIO</td><td>help</td><td/><td>0</td><td/></row>
-		<row><td>ICONS</td><td>BIN1</td><td>icons</td><td/><td>0</td><td/></row>
 		<row><td>IISROOTFOLDER</td><td>TARGETDIR</td><td>.:IISRoo~1|IISRootFolder</td><td/><td>0</td><td/></row>
 		<row><td>INSTALLDIR</td><td>ASP.NET_ENABLER_2.0</td><td>.</td><td/><td>0</td><td/></row>
 		<row><td>ISCommonFilesFolder</td><td>CommonFilesFolder</td><td>Instal~1|InstallShield</td><td/><td>0</td><td/></row>
+		<row><td>ISMyCompanyDir</td><td>ProgramFilesFolder</td><td>MYCOMP~1|My Company Name</td><td/><td>0</td><td/></row>
+		<row><td>ISMyProductDir</td><td>ISMyCompanyDir</td><td>MYPROD~1|My Product Name</td><td/><td>0</td><td/></row>
 		<row><td>ISUpdateServiceFolder</td><td>ISCommonFilesFolder</td><td>UPDATE~1|UpdateService</td><td/><td>0</td><td/></row>
 		<row><td>LIBRARY</td><td>COMPILER</td><td>library</td><td/><td>0</td><td/></row>
 		<row><td>LIBRARY.NET</td><td>COMPILER</td><td>LIBRAR~1|library.net</td><td/><td>0</td><td/></row>
 		<row><td>LocalAppDataFolder</td><td>TARGETDIR</td><td>.:LocalA~1|LocalAppData</td><td/><td>0</td><td/></row>
-		<row><td>MSC</td><td>WINDOWS</td><td>msc</td><td/><td>0</td><td/></row>
 		<row><td>MyPicturesFolder</td><td>TARGETDIR</td><td>.:MyPict~1|MyPictures</td><td/><td>0</td><td/></row>
-		<row><td>NEW_DIRECTORY1</td><td>TARGETDIR</td><td>NEW_DIRECTORY1</td><td/><td>0</td><td/></row>
 		<row><td>PersonalFolder</td><td>TARGETDIR</td><td>.:Personal</td><td/><td>0</td><td/></row>
 		<row><td>PrimaryVolumePath</td><td>TARGETDIR</td><td>.:Primar~1|PrimaryVolumePath</td><td/><td>0</td><td/></row>
 		<row><td>ProgramFiles64Folder</td><td>TARGETDIR</td><td>.:Prog64~1|Program Files 64</td><td/><td>0</td><td/></row>
 		<row><td>ProgramFilesFolder</td><td>TARGETDIR</td><td>.:PROGRA~1|program files</td><td/><td>0</td><td/></row>
 		<row><td>ProgramMenuFolder</td><td>TARGETDIR</td><td>.:Programs</td><td/><td>3</td><td/></row>
-		<row><td>SAMPLE</td><td>INSTALLDIR</td><td>Sample</td><td/><td>0</td><td/></row>
 		<row><td>SAMPLES</td><td>INSTALLDIR</td><td>Samples</td><td/><td>0</td><td/></row>
-		<row><td>SHORT</td><td>ERRORS</td><td>short</td><td/><td>0</td><td/></row>
 		<row><td>SPEC</td><td>STUDIO</td><td>spec</td><td/><td>0</td><td/></row>
 		<row><td>STUDIO</td><td>COMPILER</td><td>studio</td><td/><td>0</td><td/></row>
 		<row><td>SendToFolder</td><td>TARGETDIR</td><td>.:SendTo</td><td/><td>3</td><td/></row>
@@ -1157,7 +1146,6 @@
 		<row><td>System64Folder</td><td>TARGETDIR</td><td>.:System64</td><td/><td>0</td><td/></row>
 		<row><td>SystemFolder</td><td>TARGETDIR</td><td>.:System32</td><td/><td>0</td><td/></row>
 		<row><td>TARGETDIR</td><td/><td>SourceDir</td><td/><td>0</td><td/></row>
-		<row><td>TEMPLATES</td><td>WINDOWS</td><td>TEMPLA~1|templates</td><td/><td>0</td><td/></row>
 		<row><td>TempFolder</td><td>TARGETDIR</td><td>.:Temp</td><td/><td>0</td><td/></row>
 		<row><td>TemplateFolder</td><td>TARGETDIR</td><td>.:ShellNew</td><td/><td>0</td><td/></row>
 		<row><td>USERPROFILE</td><td>TARGETDIR</td><td>.:USERPR~1|UserProfile</td><td/><td>0</td><td/></row>
@@ -1165,8 +1153,7 @@
 		<row><td>WINDOWS1</td><td>SPEC</td><td>windows</td><td/><td>0</td><td/></row>
 		<row><td>WindowsFolder</td><td>TARGETDIR</td><td>.:Windows</td><td/><td>0</td><td/></row>
 		<row><td>WindowsVolume</td><td>TARGETDIR</td><td>.:WinRoot</td><td/><td>0</td><td/></row>
-		<row><td>_INSTALLDIR_</td><td>TARGETDIR</td><td>_INSTALLDIR_</td><td/><td>0</td><td/></row>
-		<row><td>_ProgramFilesFolder_</td><td>TARGETDIR</td><td>_ProgramFilesFolder_</td><td/><td>0</td><td/></row>
+		<row><td>newfolder1</td><td>ProgramMenuFolder</td><td>##ID_STRING9##</td><td/><td>1</td><td/></row>
 	</table>
 
 	<table name="DrLocator">
@@ -1389,37 +1376,33 @@
 		<col def="S255">ISComments</col>
 		<col def="S255">ISFeatureCabName</col>
 		<col def="S255">ISProFeatureName</col>
-		<row><td>NewFeature1</td><td/><td>NewFeature1</td><td/><td>2</td><td>1</td><td>INSTALLDIR</td><td>0</td><td/><td/><td/><td/></row>
+		<row><td>Feature</td><td/><td>##ID_STRING6##</td><td/><td>2</td><td>1</td><td>INSTALLDIR</td><td>0</td><td/><td/><td/><td/></row>
 	</table>
 
 	<table name="FeatureComponents">
 		<col key="yes" def="s38">Feature_</col>
 		<col key="yes" def="s72">Component_</col>
-		<row><td>NewFeature1</td><td>ConfigFiles</td></row>
-		<row><td>NewFeature1</td><td>DummyComponent</td></row>
-		<row><td>NewFeature1</td><td>EiffelSoftware.CacheBrowser.dll</td></row>
-		<row><td>NewFeature1</td><td>EiffelSoftware.CodeDom.dll</td></row>
-		<row><td>NewFeature1</td><td>EiffelSoftware.CodeDomBase.dll</td></row>
-		<row><td>NewFeature1</td><td>EiffelSoftware.CodeDomVision2.dll</td></row>
-		<row><td>NewFeature1</td><td>EiffelSoftware.MetadataConsumer.dll</td></row>
-		<row><td>NewFeature1</td><td>EiffelSoftware.Runtime.dll</td></row>
-		<row><td>NewFeature1</td><td>EiffelSoftware.Runtime.dll2</td></row>
-		<row><td>NewFeature1</td><td>ErrorsFiles</td></row>
-		<row><td>NewFeature1</td><td>ISRegistryComponent</td></row>
-		<row><td>NewFeature1</td><td>Library</td></row>
-		<row><td>NewFeature1</td><td>Library.net</td></row>
-		<row><td>NewFeature1</td><td>ManagerIcons</td></row>
-		<row><td>NewFeature1</td><td>SampleFiles</td></row>
-		<row><td>NewFeature1</td><td>SetupFiles</td></row>
-		<row><td>NewFeature1</td><td>ShortErrorsFiles</td></row>
-		<row><td>NewFeature1</td><td>TemplatesFiles</td></row>
-		<row><td>NewFeature1</td><td>VirtualDirComponent</td></row>
-		<row><td>NewFeature1</td><td>XCACLS.vbs</td></row>
-		<row><td>NewFeature1</td><td>default.ecd</td></row>
-		<row><td>NewFeature1</td><td>ecdpc.exe</td></row>
-		<row><td>NewFeature1</td><td>ecdpman.exe</td></row>
-		<row><td>NewFeature1</td><td>libEiffelSoftware.CodeDomBase.dll</td></row>
-		<row><td>NewFeature1</td><td>libEiffelSoftware.CodeDomVision2.dll</td></row>
+		<row><td>Feature</td><td>ConfigFiles</td></row>
+		<row><td>Feature</td><td>DefaultConfigFile</td></row>
+		<row><td>Feature</td><td>EiffelSoftware.CacheBrowser.dll</td></row>
+		<row><td>Feature</td><td>EiffelSoftware.CodeDom.dll</td></row>
+		<row><td>Feature</td><td>EiffelSoftware.CodeDomBase.dll</td></row>
+		<row><td>Feature</td><td>EiffelSoftware.CodeDomVision2.dll</td></row>
+		<row><td>Feature</td><td>EiffelSoftware.MetadataConsumer.dll</td></row>
+		<row><td>Feature</td><td>EiffelSoftware.Runtime.dll</td></row>
+		<row><td>Feature</td><td>EiffelSoftware.Runtime.dll1</td></row>
+		<row><td>Feature</td><td>Empty</td></row>
+		<row><td>Feature</td><td>ErrorFiles</td></row>
+		<row><td>Feature</td><td>Library</td></row>
+		<row><td>Feature</td><td>LibraryDotNet</td></row>
+		<row><td>Feature</td><td>SamplesFiles</td></row>
+		<row><td>Feature</td><td>SetupFiles</td></row>
+		<row><td>Feature</td><td>VirtualDirComponent</td></row>
+		<row><td>Feature</td><td>XCACLS</td></row>
+		<row><td>Feature</td><td>ecdpc.exe</td></row>
+		<row><td>Feature</td><td>ecdpman.exe</td></row>
+		<row><td>Feature</td><td>libEiffelSoftware.CodeDomBase.dll</td></row>
+		<row><td>Feature</td><td>libEiffelSoftware.CodeDomVision2.dll</td></row>
 	</table>
 
 	<table name="File">
@@ -1434,360 +1417,23 @@
 		<col def="S255">ISBuildSourcePath</col>
 		<col def="I4">ISAttributes</col>
 		<col def="S72">ISComponentSubFolder_</col>
-		<row><td>appl.ico</td><td>ConfigFiles</td><td>appl.ico</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\config\windows\msc\appl.ico</td><td>1</td><td/></row>
-		<row><td>assembly_config.xml</td><td>TemplatesFiles</td><td>ASSEMB~1.XML|assembly_config.xml</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\config\windows\templates\assembly_config.xml</td><td>1</td><td/></row>
-		<row><td>cecil.def</td><td>TemplatesFiles</td><td>cecil.def</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\config\windows\templates\cecil.def</td><td>1</td><td/></row>
-		<row><td>comp_int</td><td>ErrorsFiles</td><td>COMP_INT</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\COMP_INT</td><td>1</td><td/></row>
-		<row><td>comp_int1</td><td>ShortErrorsFiles</td><td>COMP_INT</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\COMP_INT</td><td>1</td><td/></row>
-		<row><td>config.eif</td><td>ConfigFiles</td><td>config.eif</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\config\windows\msc\config.eif</td><td>1</td><td/></row>
-		<row><td>default.aspx</td><td>SampleFiles</td><td>DEFAUL~1.ASP|default.aspx</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_CODEDOM_PROVIDE_FILES&gt;\default.aspx</td><td>1</td><td/></row>
-		<row><td>default.css1</td><td>SampleFiles</td><td>default.css</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_CODEDOM_PROVIDE_FILES&gt;\default.css</td><td>1</td><td/></row>
-		<row><td>default.ecd</td><td>default.ecd</td><td>default.ecd</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_CONFIGS_FILES&gt;\default.ecd</td><td>1</td><td/></row>
-		<row><td>ecdpc.exe</td><td>ecdpc.exe</td><td>ecdpc.exe</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\spec\windows\bin\ecdpc.exe</td><td>1</td><td/></row>
+		<row><td>default.aspx</td><td>SamplesFiles</td><td>DEFAUL~1.ASP|default.aspx</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_SAMPLES_FILES&gt;\default.aspx</td><td>1</td><td/></row>
+		<row><td>default.css</td><td>SamplesFiles</td><td>default.css</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_SAMPLES_FILES&gt;\default.css</td><td>1</td><td/></row>
+		<row><td>default.ecd</td><td>DefaultConfigFile</td><td>default.ecd</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_CONFIGS_FILES&gt;\default.ecd</td><td>1</td><td/></row>
+		<row><td>ecdpc.exe</td><td>ecdpc.exe</td><td>ecdpc.exe</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BIN_FILES1&gt;\ecdpc.exe</td><td>1</td><td/></row>
 		<row><td>ecdpman.exe</td><td>ecdpman.exe</td><td>ecdpman.exe</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BIN_FILES&gt;\ecdpman.exe</td><td>1</td><td/></row>
-		<row><td>egc_dynlib.template</td><td>TemplatesFiles</td><td>EGC_DY~1.TEM|egc_dynlib.template</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\config\windows\templates\egc_dynlib.template</td><td>1</td><td/></row>
-		<row><td>eiffel.rc</td><td>ConfigFiles</td><td>eiffel.rc</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\config\windows\msc\eiffel.rc</td><td>1</td><td/></row>
 		<row><td>eiffelsoftware.cachebrowser.</td><td>EiffelSoftware.CacheBrowser.dll</td><td>EIFFEL~1.DLL|EiffelSoftware.CacheBrowser.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BIN_FILES&gt;\EiffelSoftware.CacheBrowser.dll</td><td>1</td><td/></row>
 		<row><td>eiffelsoftware.codedom.dll</td><td>EiffelSoftware.CodeDom.dll</td><td>EIFFEL~1.DLL|EiffelSoftware.CodeDom.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BIN_FILES&gt;\EiffelSoftware.CodeDom.dll</td><td>1</td><td/></row>
 		<row><td>eiffelsoftware.codedombase.d</td><td>EiffelSoftware.CodeDomBase.dll</td><td>EIFFEL~1.DLL|EiffelSoftware.CodeDomBase.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BIN_FILES&gt;\EiffelSoftware.CodeDomBase.dll</td><td>1</td><td/></row>
 		<row><td>eiffelsoftware.codedomvision</td><td>EiffelSoftware.CodeDomVision2.dll</td><td>EIFFEL~1.DLL|EiffelSoftware.CodeDomVision2.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BIN_FILES&gt;\EiffelSoftware.CodeDomVision2.dll</td><td>1</td><td/></row>
-		<row><td>eiffelsoftware.metadataconsu</td><td>EiffelSoftware.MetadataConsumer.dll</td><td>EIFFEL~1.DLL|EiffelSoftware.MetadataConsumer.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\spec\windows\bin\EiffelSoftware.MetadataConsumer.dll</td><td>1</td><td/></row>
-		<row><td>eiffelsoftware.runtime.dll</td><td>EiffelSoftware.Runtime.dll</td><td>EIFFEL~1.DLL|EiffelSoftware.Runtime.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\spec\windows\bin\EiffelSoftware.Runtime.dll</td><td>1</td><td/></row>
-		<row><td>eiffelsoftware.runtime.dll2</td><td>EiffelSoftware.Runtime.dll2</td><td>EIFFEL~1.DLL|EiffelSoftware.Runtime.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\spec\windows\bin\EiffelSoftware.Runtime.dll</td><td>1</td><td/></row>
-		<row><td>emain.separate_template</td><td>TemplatesFiles</td><td>EMAIN~1.SEP|emain.separate_template</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\config\windows\templates\emain.separate_template</td><td>1</td><td/></row>
-		<row><td>emain.template</td><td>TemplatesFiles</td><td>EMAIN~1.TEM|emain.template</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\config\windows\templates\emain.template</td><td>1</td><td/></row>
-		<row><td>emain.template_gnu</td><td>TemplatesFiles</td><td>EMAIN~1.TEM|emain.template-gnu</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\config\windows\templates\emain.template-gnu</td><td>1</td><td/></row>
-		<row><td>ext_cpp</td><td>ShortErrorsFiles</td><td>EXT_CPP</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\EXT_CPP</td><td>1</td><td/></row>
-		<row><td>ext_dll_alias</td><td>ShortErrorsFiles</td><td>EXT_DL~1|EXT_DLL_ALIAS</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\EXT_DLL_ALIAS</td><td>1</td><td/></row>
-		<row><td>ext_dll_sign</td><td>ShortErrorsFiles</td><td>EXT_DL~1|EXT_DLL_SIGN</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\EXT_DLL_SIGN</td><td>1</td><td/></row>
-		<row><td>ext_same_sign</td><td>ShortErrorsFiles</td><td>EXT_SA~1|EXT_SAME_SIGN</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\EXT_SAME_SIGN</td><td>1</td><td/></row>
-		<row><td>ext_struct</td><td>ShortErrorsFiles</td><td>EXT_ST~1|EXT_STRUCT</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\EXT_STRUCT</td><td>1</td><td/></row>
+		<row><td>eiffelsoftware.metadataconsu</td><td>EiffelSoftware.MetadataConsumer.dll</td><td>EIFFEL~1.DLL|EiffelSoftware.MetadataConsumer.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BIN_FILES1&gt;\EiffelSoftware.MetadataConsumer.dll</td><td>1</td><td/></row>
+		<row><td>eiffelsoftware.runtime.dll</td><td>EiffelSoftware.Runtime.dll</td><td>EIFFEL~1.DLL|EiffelSoftware.Runtime.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BIN_FILES&gt;\EiffelSoftware.Runtime.dll</td><td>1</td><td/></row>
+		<row><td>eiffelsoftware.runtime.dll1</td><td>EiffelSoftware.Runtime.dll1</td><td>EIFFEL~1.DLL|EiffelSoftware.Runtime.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BIN_FILES1&gt;\EiffelSoftware.Runtime.dll</td><td>1</td><td/></row>
 		<row><td>libeiffelsoftware.codedombas</td><td>libEiffelSoftware.CodeDomBase.dll</td><td>LIBEIF~1.DLL|libEiffelSoftware.CodeDomBase.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BIN_FILES&gt;\libEiffelSoftware.CodeDomBase.dll</td><td>1</td><td/></row>
 		<row><td>libeiffelsoftware.codedomvis</td><td>libEiffelSoftware.CodeDomVision2.dll</td><td>LIBEIF~1.DLL|libEiffelSoftware.CodeDomVision2.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BIN_FILES&gt;\libEiffelSoftware.CodeDomVision2.dll</td><td>1</td><td/></row>
-		<row><td>library_error</td><td>ShortErrorsFiles</td><td>LIBRAR~1|Library_error</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\Library_error</td><td>1</td><td/></row>
-		<row><td>melt_exp</td><td>ShortErrorsFiles</td><td>MELT_EXP</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\MELT_EXP</td><td>1</td><td/></row>
-		<row><td>melt_only</td><td>ShortErrorsFiles</td><td>MELT_O~1|MELT_ONLY</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\MELT_ONLY</td><td>1</td><td/></row>
-		<row><td>no_license</td><td>ErrorsFiles</td><td>NO_LIC~1|NO_LICENSE</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\NO_LICENSE</td><td>1</td><td/></row>
-		<row><td>no_license1</td><td>ShortErrorsFiles</td><td>NO_LIC~1|NO_LICENSE</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\NO_LICENSE</td><td>1</td><td/></row>
-		<row><td>not_supported</td><td>ShortErrorsFiles</td><td>NOT_SU~1|NOT_SUPPORTED</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\NOT_SUPPORTED</td><td>1</td><td/></row>
-		<row><td>obs_call</td><td>ShortErrorsFiles</td><td>OBS_CALL</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\OBS_CALL</td><td>1</td><td/></row>
-		<row><td>obs_class</td><td>ShortErrorsFiles</td><td>OBS_CL~1|OBS_CLASS</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\OBS_CLASS</td><td>1</td><td/></row>
-		<row><td>obsolete</td><td>ShortErrorsFiles</td><td>Obsolete</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\Obsolete</td><td>1</td><td/></row>
-		<row><td>obsolete_call</td><td>ShortErrorsFiles</td><td>OBSOLE~1|Obsolete_call</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\Obsolete_call</td><td>1</td><td/></row>
-		<row><td>re_int</td><td>ErrorsFiles</td><td>RE_INT</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\RE_INT</td><td>1</td><td/></row>
-		<row><td>re_int1</td><td>ShortErrorsFiles</td><td>RE_INT</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\RE_INT</td><td>1</td><td/></row>
-		<row><td>tuple_warning</td><td>ShortErrorsFiles</td><td>TUPLE_~1|TUPLE_WARNING</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\TUPLE_WARNING</td><td>1</td><td/></row>
-		<row><td>unused_local_warning</td><td>ShortErrorsFiles</td><td>UNUSED~1|Unused_local_warning</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\Unused_local_warning</td><td>1</td><td/></row>
-		<row><td>v9cd</td><td>ShortErrorsFiles</td><td>V9CD</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\V9CD</td><td>1</td><td/></row>
-		<row><td>v9cp</td><td>ShortErrorsFiles</td><td>V9CP</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\V9CP</td><td>1</td><td/></row>
-		<row><td>v9cx</td><td>ShortErrorsFiles</td><td>V9CX</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\V9CX</td><td>1</td><td/></row>
-		<row><td>v9dp</td><td>ShortErrorsFiles</td><td>V9DP</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\V9DP</td><td>1</td><td/></row>
-		<row><td>v9ds</td><td>ShortErrorsFiles</td><td>V9DS</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\V9DS</td><td>1</td><td/></row>
-		<row><td>v9fm</td><td>ShortErrorsFiles</td><td>V9FM</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\V9FM</td><td>1</td><td/></row>
-		<row><td>v9gc</td><td>ShortErrorsFiles</td><td>V9GC</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\V9GC</td><td>1</td><td/></row>
-		<row><td>v9rd</td><td>ShortErrorsFiles</td><td>V9RD</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\V9RD</td><td>1</td><td/></row>
-		<row><td>v9sc</td><td>ShortErrorsFiles</td><td>V9SC</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\V9SC</td><td>1</td><td/></row>
-		<row><td>v9xc</td><td>ShortErrorsFiles</td><td>V9XC</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\V9XC</td><td>1</td><td/></row>
-		<row><td>v9xd</td><td>ShortErrorsFiles</td><td>V9XD</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\V9XD</td><td>1</td><td/></row>
-		<row><td>v9xp</td><td>ShortErrorsFiles</td><td>V9XP</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\V9XP</td><td>1</td><td/></row>
-		<row><td>v9xq</td><td>ShortErrorsFiles</td><td>V9XQ</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\V9XQ</td><td>1</td><td/></row>
-		<row><td>vaol</td><td>ErrorsFiles</td><td>VAOL</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VAOL</td><td>1</td><td/></row>
-		<row><td>vaol1</td><td>ShortErrorsFiles</td><td>VAOL1</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VAOL1</td><td>1</td><td/></row>
-		<row><td>vaol2</td><td>ShortErrorsFiles</td><td>VAOL2</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VAOL2</td><td>1</td><td/></row>
-		<row><td>vape</td><td>ShortErrorsFiles</td><td>VAPE</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VAPE</td><td>1</td><td/></row>
-		<row><td>vape1</td><td>ErrorsFiles</td><td>VAPE</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VAPE</td><td>1</td><td/></row>
-		<row><td>vave</td><td>ShortErrorsFiles</td><td>VAVE</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VAVE</td><td>1</td><td/></row>
-		<row><td>vave1</td><td>ErrorsFiles</td><td>VAVE</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VAVE</td><td>1</td><td/></row>
-		<row><td>vbar</td><td>ShortErrorsFiles</td><td>VBAR</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VBAR</td><td>1</td><td/></row>
-		<row><td>vbar1</td><td>ErrorsFiles</td><td>VBAR</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VBAR</td><td>1</td><td/></row>
-		<row><td>vbgv</td><td>ShortErrorsFiles</td><td>VBGV</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VBGV</td><td>1</td><td/></row>
-		<row><td>vbgv1</td><td>ErrorsFiles</td><td>VBGV</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VBGV</td><td>1</td><td/></row>
-		<row><td>vcch</td><td>ErrorsFiles</td><td>VCCH</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VCCH</td><td>1</td><td/></row>
-		<row><td>vcch1</td><td>ShortErrorsFiles</td><td>VCCH1</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VCCH1</td><td>1</td><td/></row>
-		<row><td>vcch2</td><td>ShortErrorsFiles</td><td>VCCH2</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VCCH2</td><td>1</td><td/></row>
-		<row><td>vcfg</td><td>ErrorsFiles</td><td>VCFG</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VCFG</td><td>1</td><td/></row>
-		<row><td>vcfg1</td><td>ShortErrorsFiles</td><td>VCFG1</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VCFG1</td><td>1</td><td/></row>
-		<row><td>vcfg2</td><td>ShortErrorsFiles</td><td>VCFG2</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VCFG2</td><td>1</td><td/></row>
-		<row><td>vcfg3</td><td>ShortErrorsFiles</td><td>VCFG3</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VCFG3</td><td>1</td><td/></row>
-		<row><td>vcrn</td><td>ShortErrorsFiles</td><td>VCRN</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VCRN</td><td>1</td><td/></row>
-		<row><td>vcrn1</td><td>ErrorsFiles</td><td>VCRN</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VCRN</td><td>1</td><td/></row>
-		<row><td>vd01</td><td>ShortErrorsFiles</td><td>VD01</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VD01</td><td>1</td><td/></row>
-		<row><td>vd02</td><td>ShortErrorsFiles</td><td>VD02</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VD02</td><td>1</td><td/></row>
-		<row><td>vd03</td><td>ShortErrorsFiles</td><td>VD03</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VD03</td><td>1</td><td/></row>
-		<row><td>vd04</td><td>ShortErrorsFiles</td><td>VD04</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VD04</td><td>1</td><td/></row>
-		<row><td>vd05</td><td>ShortErrorsFiles</td><td>VD05</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VD05</td><td>1</td><td/></row>
-		<row><td>vd07</td><td>ShortErrorsFiles</td><td>VD07</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VD07</td><td>1</td><td/></row>
-		<row><td>vd08</td><td>ShortErrorsFiles</td><td>VD08</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VD08</td><td>1</td><td/></row>
-		<row><td>vd09</td><td>ShortErrorsFiles</td><td>VD09</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VD09</td><td>1</td><td/></row>
-		<row><td>vd10</td><td>ShortErrorsFiles</td><td>VD10</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VD10</td><td>1</td><td/></row>
-		<row><td>vd12</td><td>ShortErrorsFiles</td><td>VD12</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VD12</td><td>1</td><td/></row>
-		<row><td>vd13</td><td>ShortErrorsFiles</td><td>VD13</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VD13</td><td>1</td><td/></row>
-		<row><td>vd14</td><td>ShortErrorsFiles</td><td>VD14</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VD14</td><td>1</td><td/></row>
-		<row><td>vd15</td><td>ShortErrorsFiles</td><td>VD15</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VD15</td><td>1</td><td/></row>
-		<row><td>vd16</td><td>ShortErrorsFiles</td><td>VD16</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VD16</td><td>1</td><td/></row>
-		<row><td>vd17</td><td>ShortErrorsFiles</td><td>VD17</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VD17</td><td>1</td><td/></row>
-		<row><td>vd18</td><td>ShortErrorsFiles</td><td>VD18</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VD18</td><td>1</td><td/></row>
-		<row><td>vd19</td><td>ShortErrorsFiles</td><td>VD19</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VD19</td><td>1</td><td/></row>
-		<row><td>vd20</td><td>ShortErrorsFiles</td><td>VD20</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VD20</td><td>1</td><td/></row>
-		<row><td>vd21</td><td>ShortErrorsFiles</td><td>VD21</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VD21</td><td>1</td><td/></row>
-		<row><td>vd23</td><td>ShortErrorsFiles</td><td>VD23</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VD23</td><td>1</td><td/></row>
-		<row><td>vd24</td><td>ShortErrorsFiles</td><td>VD24</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VD24</td><td>1</td><td/></row>
-		<row><td>vd25</td><td>ShortErrorsFiles</td><td>VD25</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VD25</td><td>1</td><td/></row>
-		<row><td>vd26</td><td>ShortErrorsFiles</td><td>VD26</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VD26</td><td>1</td><td/></row>
-		<row><td>vd27</td><td>ShortErrorsFiles</td><td>VD27</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VD27</td><td>1</td><td/></row>
-		<row><td>vd28</td><td>ShortErrorsFiles</td><td>VD28</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VD28</td><td>1</td><td/></row>
-		<row><td>vd29</td><td>ShortErrorsFiles</td><td>VD29</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VD29</td><td>1</td><td/></row>
-		<row><td>vd30</td><td>ShortErrorsFiles</td><td>VD30</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VD30</td><td>1</td><td/></row>
-		<row><td>vd31</td><td>ShortErrorsFiles</td><td>VD31</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VD31</td><td>1</td><td/></row>
-		<row><td>vd32</td><td>ShortErrorsFiles</td><td>VD32</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VD32</td><td>1</td><td/></row>
-		<row><td>vd33</td><td>ShortErrorsFiles</td><td>VD33</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VD33</td><td>1</td><td/></row>
-		<row><td>vd34</td><td>ShortErrorsFiles</td><td>VD34</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VD34</td><td>1</td><td/></row>
-		<row><td>vd35</td><td>ShortErrorsFiles</td><td>VD35</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VD35</td><td>1</td><td/></row>
-		<row><td>vd36</td><td>ShortErrorsFiles</td><td>VD36</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VD36</td><td>1</td><td/></row>
-		<row><td>vd38</td><td>ShortErrorsFiles</td><td>VD38</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VD38</td><td>1</td><td/></row>
-		<row><td>vd39</td><td>ShortErrorsFiles</td><td>VD39</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VD39</td><td>1</td><td/></row>
-		<row><td>vd40</td><td>ShortErrorsFiles</td><td>VD40</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VD40</td><td>1</td><td/></row>
-		<row><td>vd41</td><td>ShortErrorsFiles</td><td>VD41</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VD41</td><td>1</td><td/></row>
-		<row><td>vd42</td><td>ShortErrorsFiles</td><td>VD42</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VD42</td><td>1</td><td/></row>
-		<row><td>vd43</td><td>ShortErrorsFiles</td><td>VD43</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VD43</td><td>1</td><td/></row>
-		<row><td>vd44</td><td>ShortErrorsFiles</td><td>VD44</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VD44</td><td>1</td><td/></row>
-		<row><td>vd46</td><td>ShortErrorsFiles</td><td>VD46</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VD46</td><td>1</td><td/></row>
-		<row><td>vd47</td><td>ShortErrorsFiles</td><td>VD47</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VD47</td><td>1</td><td/></row>
-		<row><td>vd51</td><td>ShortErrorsFiles</td><td>VD51</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VD51</td><td>1</td><td/></row>
-		<row><td>vd52</td><td>ShortErrorsFiles</td><td>VD52</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VD52</td><td>1</td><td/></row>
-		<row><td>vd53</td><td>ShortErrorsFiles</td><td>VD53</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VD53</td><td>1</td><td/></row>
-		<row><td>vd54</td><td>ShortErrorsFiles</td><td>VD54</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VD54</td><td>1</td><td/></row>
-		<row><td>vd60</td><td>ShortErrorsFiles</td><td>VD60</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VD60</td><td>1</td><td/></row>
-		<row><td>vd61</td><td>ShortErrorsFiles</td><td>VD61</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VD61</td><td>1</td><td/></row>
-		<row><td>vd62</td><td>ShortErrorsFiles</td><td>VD62</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VD62</td><td>1</td><td/></row>
-		<row><td>vd63</td><td>ShortErrorsFiles</td><td>VD63</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VD63</td><td>1</td><td/></row>
-		<row><td>vd64</td><td>ShortErrorsFiles</td><td>VD64</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VD64</td><td>1</td><td/></row>
-		<row><td>vd65</td><td>ShortErrorsFiles</td><td>VD65</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VD65</td><td>1</td><td/></row>
-		<row><td>vd66</td><td>ShortErrorsFiles</td><td>VD66</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VD66</td><td>1</td><td/></row>
-		<row><td>vd67</td><td>ShortErrorsFiles</td><td>VD67</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VD67</td><td>1</td><td/></row>
-		<row><td>vdcn</td><td>ShortErrorsFiles</td><td>VDCN</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VDCN</td><td>1</td><td/></row>
-		<row><td>vdcn1</td><td>ErrorsFiles</td><td>VDCN</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VDCN</td><td>1</td><td/></row>
-		<row><td>vdjr</td><td>ShortErrorsFiles</td><td>VDJR</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VDJR</td><td>1</td><td/></row>
-		<row><td>vdjr1</td><td>ErrorsFiles</td><td>VDJR</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VDJR</td><td>1</td><td/></row>
-		<row><td>vdoc</td><td>ShortErrorsFiles</td><td>VDOC</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VDOC</td><td>1</td><td/></row>
-		<row><td>vdoc1</td><td>ErrorsFiles</td><td>VDOC</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VDOC</td><td>1</td><td/></row>
-		<row><td>vdrd</td><td>ErrorsFiles</td><td>VDRD</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VDRD</td><td>1</td><td/></row>
-		<row><td>vdrd1</td><td>ShortErrorsFiles</td><td>VDRD1</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VDRD1</td><td>1</td><td/></row>
-		<row><td>vdrd2</td><td>ShortErrorsFiles</td><td>VDRD2</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VDRD2</td><td>1</td><td/></row>
-		<row><td>vdrd3</td><td>ShortErrorsFiles</td><td>VDRD3</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VDRD3</td><td>1</td><td/></row>
-		<row><td>vdrd4</td><td>ShortErrorsFiles</td><td>VDRD4</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VDRD4</td><td>1</td><td/></row>
-		<row><td>vdrd5</td><td>ShortErrorsFiles</td><td>VDRD5</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VDRD5</td><td>1</td><td/></row>
-		<row><td>vdrd6</td><td>ShortErrorsFiles</td><td>VDRD6</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VDRD6</td><td>1</td><td/></row>
-		<row><td>vdrd8</td><td>ShortErrorsFiles</td><td>VDRD8</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VDRD8</td><td>1</td><td/></row>
-		<row><td>vdrs</td><td>ErrorsFiles</td><td>VDRS</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VDRS</td><td>1</td><td/></row>
-		<row><td>vdrs1</td><td>ShortErrorsFiles</td><td>VDRS1</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VDRS1</td><td>1</td><td/></row>
-		<row><td>vdrs2</td><td>ShortErrorsFiles</td><td>VDRS2</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VDRS2</td><td>1</td><td/></row>
-		<row><td>vdrs3</td><td>ShortErrorsFiles</td><td>VDRS3</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VDRS3</td><td>1</td><td/></row>
-		<row><td>vdrs4</td><td>ShortErrorsFiles</td><td>VDRS4</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VDRS4</td><td>1</td><td/></row>
-		<row><td>vduc</td><td>ShortErrorsFiles</td><td>VDUC</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VDUC</td><td>1</td><td/></row>
-		<row><td>vduc1</td><td>ErrorsFiles</td><td>VDUC</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VDUC</td><td>1</td><td/></row>
-		<row><td>vdus</td><td>ErrorsFiles</td><td>VDUS</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VDUS</td><td>1</td><td/></row>
-		<row><td>vdus1</td><td>ShortErrorsFiles</td><td>VDUS1</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VDUS1</td><td>1</td><td/></row>
-		<row><td>vdus2</td><td>ShortErrorsFiles</td><td>VDUS2</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VDUS2</td><td>1</td><td/></row>
-		<row><td>vdus3</td><td>ShortErrorsFiles</td><td>VDUS3</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VDUS3</td><td>1</td><td/></row>
-		<row><td>vdus4</td><td>ShortErrorsFiles</td><td>VDUS4</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VDUS4</td><td>1</td><td/></row>
-		<row><td>veen</td><td>ShortErrorsFiles</td><td>VEEN</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VEEN</td><td>1</td><td/></row>
-		<row><td>veen1</td><td>ErrorsFiles</td><td>VEEN</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VEEN</td><td>1</td><td/></row>
-		<row><td>veen2</td><td>ShortErrorsFiles</td><td>VEEN2</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VEEN2</td><td>1</td><td/></row>
-		<row><td>veen21</td><td>ShortErrorsFiles</td><td>VEEN21</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VEEN21</td><td>1</td><td/></row>
-		<row><td>veen22</td><td>ShortErrorsFiles</td><td>VEEN22</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VEEN22</td><td>1</td><td/></row>
-		<row><td>version.eif</td><td>ConfigFiles</td><td>version.eif</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\config\windows\msc\version.eif</td><td>1</td><td/></row>
-		<row><td>vffd</td><td>ErrorsFiles</td><td>VFFD</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VFFD</td><td>1</td><td/></row>
-		<row><td>vffd1</td><td>ShortErrorsFiles</td><td>VFFD1</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VFFD1</td><td>1</td><td/></row>
-		<row><td>vffd2</td><td>ShortErrorsFiles</td><td>VFFD2</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VFFD2</td><td>1</td><td/></row>
-		<row><td>vffd3</td><td>ShortErrorsFiles</td><td>VFFD3</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VFFD3</td><td>1</td><td/></row>
-		<row><td>vffd4</td><td>ShortErrorsFiles</td><td>VFFD4</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VFFD4</td><td>1</td><td/></row>
-		<row><td>vffd5</td><td>ShortErrorsFiles</td><td>VFFD5</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VFFD5</td><td>1</td><td/></row>
-		<row><td>vffd6</td><td>ShortErrorsFiles</td><td>VFFD6</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VFFD6</td><td>1</td><td/></row>
-		<row><td>vffd7</td><td>ShortErrorsFiles</td><td>VFFD7</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VFFD7</td><td>1</td><td/></row>
-		<row><td>vgcc</td><td>ErrorsFiles</td><td>VGCC</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VGCC</td><td>1</td><td/></row>
-		<row><td>vgcc1</td><td>ShortErrorsFiles</td><td>VGCC1</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VGCC1</td><td>1</td><td/></row>
-		<row><td>vgcc2</td><td>ShortErrorsFiles</td><td>VGCC2</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VGCC2</td><td>1</td><td/></row>
-		<row><td>vgcc3</td><td>ShortErrorsFiles</td><td>VGCC3</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VGCC3</td><td>1</td><td/></row>
-		<row><td>vgcc4</td><td>ShortErrorsFiles</td><td>VGCC4</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VGCC4</td><td>1</td><td/></row>
-		<row><td>vgcc5</td><td>ShortErrorsFiles</td><td>VGCC5</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VGCC5</td><td>1</td><td/></row>
-		<row><td>vgcc6</td><td>ShortErrorsFiles</td><td>VGCC6</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VGCC6</td><td>1</td><td/></row>
-		<row><td>vgcc7</td><td>ShortErrorsFiles</td><td>VGCC7</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VGCC7</td><td>1</td><td/></row>
-		<row><td>vgcc8</td><td>ShortErrorsFiles</td><td>VGCC8</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VGCC8</td><td>1</td><td/></row>
-		<row><td>vgci</td><td>ShortErrorsFiles</td><td>VGCI</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VGCI</td><td>1</td><td/></row>
-		<row><td>vgci1</td><td>ErrorsFiles</td><td>VGCI</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VGCI</td><td>1</td><td/></row>
-		<row><td>vgcp</td><td>ErrorsFiles</td><td>VGCP</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VGCP</td><td>1</td><td/></row>
-		<row><td>vgcp1</td><td>ShortErrorsFiles</td><td>VGCP1</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VGCP1</td><td>1</td><td/></row>
-		<row><td>vgcp2</td><td>ShortErrorsFiles</td><td>VGCP2</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VGCP2</td><td>1</td><td/></row>
-		<row><td>vgcp3</td><td>ShortErrorsFiles</td><td>VGCP3</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VGCP3</td><td>1</td><td/></row>
-		<row><td>vgcp4</td><td>ShortErrorsFiles</td><td>VGCP4</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VGCP4</td><td>1</td><td/></row>
-		<row><td>vgcs</td><td>ShortErrorsFiles</td><td>VGCS</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VGCS</td><td>1</td><td/></row>
-		<row><td>vgcs1</td><td>ErrorsFiles</td><td>VGCS</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VGCS</td><td>1</td><td/></row>
-		<row><td>vhay</td><td>ShortErrorsFiles</td><td>VHAY</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VHAY</td><td>1</td><td/></row>
-		<row><td>vhay1</td><td>ErrorsFiles</td><td>VHAY</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VHAY</td><td>1</td><td/></row>
-		<row><td>vhpr</td><td>ErrorsFiles</td><td>VHPR</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VHPR</td><td>1</td><td/></row>
-		<row><td>vhpr1</td><td>ShortErrorsFiles</td><td>VHPR1</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VHPR1</td><td>1</td><td/></row>
-		<row><td>vhpr2</td><td>ShortErrorsFiles</td><td>VHPR2</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VHPR2</td><td>1</td><td/></row>
-		<row><td>vhpr3</td><td>ShortErrorsFiles</td><td>VHPR3</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VHPR3</td><td>1</td><td/></row>
-		<row><td>vhrc</td><td>ErrorsFiles</td><td>VHRC</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VHRC</td><td>1</td><td/></row>
-		<row><td>vhrc1</td><td>ShortErrorsFiles</td><td>VHRC1</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VHRC1</td><td>1</td><td/></row>
-		<row><td>vhrc2</td><td>ShortErrorsFiles</td><td>VHRC2</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VHRC2</td><td>1</td><td/></row>
-		<row><td>vhrc3</td><td>ShortErrorsFiles</td><td>VHRC3</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VHRC3</td><td>1</td><td/></row>
-		<row><td>vhrc4</td><td>ShortErrorsFiles</td><td>VHRC4</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VHRC4</td><td>1</td><td/></row>
-		<row><td>vhrc5</td><td>ShortErrorsFiles</td><td>VHRC5</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VHRC5</td><td>1</td><td/></row>
-		<row><td>viac</td><td>ShortErrorsFiles</td><td>VIAC</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VIAC</td><td>1</td><td/></row>
-		<row><td>vica</td><td>ShortErrorsFiles</td><td>VICA</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VICA</td><td>1</td><td/></row>
-		<row><td>vicf</td><td>ShortErrorsFiles</td><td>VICF</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VICF</td><td>1</td><td/></row>
-		<row><td>vifc</td><td>ShortErrorsFiles</td><td>VIFC</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VIFC</td><td>1</td><td/></row>
-		<row><td>vifi1</td><td>ShortErrorsFiles</td><td>VIFI1</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VIFI1</td><td>1</td><td/></row>
-		<row><td>vifi2</td><td>ShortErrorsFiles</td><td>VIFI2</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VIFI2</td><td>1</td><td/></row>
-		<row><td>viic</td><td>ShortErrorsFiles</td><td>VIIC</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VIIC</td><td>1</td><td/></row>
-		<row><td>viik</td><td>ShortErrorsFiles</td><td>VIIK</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VIIK</td><td>1</td><td/></row>
-		<row><td>viof</td><td>ShortErrorsFiles</td><td>VIOF</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VIOF</td><td>1</td><td/></row>
-		<row><td>viop</td><td>ShortErrorsFiles</td><td>VIOP</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VIOP</td><td>1</td><td/></row>
-		<row><td>virc</td><td>ShortErrorsFiles</td><td>VIRC</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VIRC</td><td>1</td><td/></row>
-		<row><td>virw</td><td>ShortErrorsFiles</td><td>VIRW</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VIRW</td><td>1</td><td/></row>
-		<row><td>virw1</td><td>ErrorsFiles</td><td>VIRW</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VIRW</td><td>1</td><td/></row>
-		<row><td>vism</td><td>ShortErrorsFiles</td><td>VISM</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VISM</td><td>1</td><td/></row>
-		<row><td>vjar</td><td>ShortErrorsFiles</td><td>VJAR</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VJAR</td><td>1</td><td/></row>
-		<row><td>vjar1</td><td>ErrorsFiles</td><td>VJAR</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VJAR</td><td>1</td><td/></row>
-		<row><td>vjaw</td><td>ShortErrorsFiles</td><td>VJAW</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VJAW</td><td>1</td><td/></row>
-		<row><td>vjaw1</td><td>ErrorsFiles</td><td>VJAW</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VJAW</td><td>1</td><td/></row>
-		<row><td>vjrv</td><td>ErrorsFiles</td><td>VJRV</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VJRV</td><td>1</td><td/></row>
-		<row><td>vjrv1</td><td>ShortErrorsFiles</td><td>VJRV1</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VJRV1</td><td>1</td><td/></row>
-		<row><td>vjrv2</td><td>ShortErrorsFiles</td><td>VJRV2</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VJRV2</td><td>1</td><td/></row>
-		<row><td>vkcn</td><td>ErrorsFiles</td><td>VKCN</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VKCN</td><td>1</td><td/></row>
-		<row><td>vkcn1</td><td>ShortErrorsFiles</td><td>VKCN1</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VKCN1</td><td>1</td><td/></row>
-		<row><td>vkcn2</td><td>ShortErrorsFiles</td><td>VKCN2</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VKCN2</td><td>1</td><td/></row>
-		<row><td>vkcn3</td><td>ShortErrorsFiles</td><td>VKCN3</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VKCN3</td><td>1</td><td/></row>
-		<row><td>vlcp</td><td>ShortErrorsFiles</td><td>VLCP</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VLCP</td><td>1</td><td/></row>
-		<row><td>vlcp1</td><td>ErrorsFiles</td><td>VLCP</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VLCP</td><td>1</td><td/></row>
-		<row><td>vlec</td><td>ShortErrorsFiles</td><td>VLEC</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VLEC</td><td>1</td><td/></row>
-		<row><td>vlec1</td><td>ErrorsFiles</td><td>VLEC</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VLEC</td><td>1</td><td/></row>
-		<row><td>vlel</td><td>ErrorsFiles</td><td>VLEL</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VLEL</td><td>1</td><td/></row>
-		<row><td>vlel1</td><td>ShortErrorsFiles</td><td>VLEL1</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VLEL1</td><td>1</td><td/></row>
-		<row><td>vlel2</td><td>ShortErrorsFiles</td><td>VLEL2</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VLEL2</td><td>1</td><td/></row>
-		<row><td>vlel3</td><td>ShortErrorsFiles</td><td>VLEL3</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VLEL3</td><td>1</td><td/></row>
-		<row><td>vmcn</td><td>ErrorsFiles</td><td>VMCN</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VMCN</td><td>1</td><td/></row>
-		<row><td>vmcn1</td><td>ShortErrorsFiles</td><td>VMCN1</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VMCN1</td><td>1</td><td/></row>
-		<row><td>vmcn2</td><td>ShortErrorsFiles</td><td>VMCN2</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VMCN2</td><td>1</td><td/></row>
-		<row><td>vmcn3</td><td>ShortErrorsFiles</td><td>VMCN3</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VMCN3</td><td>1</td><td/></row>
-		<row><td>vmfn</td><td>ShortErrorsFiles</td><td>VMFN</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VMFN</td><td>1</td><td/></row>
-		<row><td>vmfn1</td><td>ErrorsFiles</td><td>VMFN</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VMFN</td><td>1</td><td/></row>
-		<row><td>vmrc</td><td>ErrorsFiles</td><td>VMRC</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VMRC</td><td>1</td><td/></row>
-		<row><td>vmrc1</td><td>ShortErrorsFiles</td><td>VMRC1</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VMRC1</td><td>1</td><td/></row>
-		<row><td>vmrc2</td><td>ShortErrorsFiles</td><td>VMRC2</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VMRC2</td><td>1</td><td/></row>
-		<row><td>vmss</td><td>ErrorsFiles</td><td>VMSS</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VMSS</td><td>1</td><td/></row>
-		<row><td>vmss1</td><td>ShortErrorsFiles</td><td>VMSS1</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VMSS1</td><td>1</td><td/></row>
-		<row><td>vmss2</td><td>ShortErrorsFiles</td><td>VMSS2</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VMSS2</td><td>1</td><td/></row>
-		<row><td>vmss3</td><td>ShortErrorsFiles</td><td>VMSS3</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VMSS3</td><td>1</td><td/></row>
-		<row><td>vncb</td><td>ShortErrorsFiles</td><td>VNCB</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VNCB</td><td>1</td><td/></row>
-		<row><td>vncb1</td><td>ErrorsFiles</td><td>VNCB</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VNCB</td><td>1</td><td/></row>
-		<row><td>vncc</td><td>ShortErrorsFiles</td><td>VNCC</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VNCC</td><td>1</td><td/></row>
-		<row><td>vncc1</td><td>ErrorsFiles</td><td>VNCC</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VNCC</td><td>1</td><td/></row>
-		<row><td>vnce</td><td>ShortErrorsFiles</td><td>VNCE</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VNCE</td><td>1</td><td/></row>
-		<row><td>vnce1</td><td>ErrorsFiles</td><td>VNCE</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VNCE</td><td>1</td><td/></row>
-		<row><td>vncf</td><td>ShortErrorsFiles</td><td>VNCF</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VNCF</td><td>1</td><td/></row>
-		<row><td>vncf1</td><td>ErrorsFiles</td><td>VNCF</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VNCF</td><td>1</td><td/></row>
-		<row><td>vncg</td><td>ShortErrorsFiles</td><td>VNCG</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VNCG</td><td>1</td><td/></row>
-		<row><td>vncg1</td><td>ErrorsFiles</td><td>VNCG</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VNCG</td><td>1</td><td/></row>
-		<row><td>vnch</td><td>ShortErrorsFiles</td><td>VNCH</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VNCH</td><td>1</td><td/></row>
-		<row><td>vnch1</td><td>ErrorsFiles</td><td>VNCH</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VNCH</td><td>1</td><td/></row>
-		<row><td>vncn</td><td>ShortErrorsFiles</td><td>VNCN</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VNCN</td><td>1</td><td/></row>
-		<row><td>vncn1</td><td>ErrorsFiles</td><td>VNCN</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VNCN</td><td>1</td><td/></row>
-		<row><td>vncp</td><td>ShortErrorsFiles</td><td>VNCP</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VNCP</td><td>1</td><td/></row>
-		<row><td>vncp1</td><td>ErrorsFiles</td><td>VNCP</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VNCP</td><td>1</td><td/></row>
-		<row><td>vncs</td><td>ErrorsFiles</td><td>VNCS</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VNCS</td><td>1</td><td/></row>
-		<row><td>vncs1</td><td>ShortErrorsFiles</td><td>VNCS1</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VNCS1</td><td>1</td><td/></row>
-		<row><td>vncs2</td><td>ShortErrorsFiles</td><td>VNCS2</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VNCS2</td><td>1</td><td/></row>
-		<row><td>vomb</td><td>ErrorsFiles</td><td>VOMB</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VOMB</td><td>1</td><td/></row>
-		<row><td>vomb1</td><td>ShortErrorsFiles</td><td>VOMB1</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VOMB1</td><td>1</td><td/></row>
-		<row><td>vomb2</td><td>ShortErrorsFiles</td><td>VOMB2</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VOMB2</td><td>1</td><td/></row>
-		<row><td>vomb3</td><td>ShortErrorsFiles</td><td>VOMB3</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VOMB3</td><td>1</td><td/></row>
-		<row><td>vomb4</td><td>ShortErrorsFiles</td><td>VOMB4</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VOMB4</td><td>1</td><td/></row>
-		<row><td>vomb5</td><td>ShortErrorsFiles</td><td>VOMB5</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VOMB5</td><td>1</td><td/></row>
-		<row><td>vomb6</td><td>ShortErrorsFiles</td><td>VOMB6</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VOMB6</td><td>1</td><td/></row>
-		<row><td>vqmc</td><td>ShortErrorsFiles</td><td>VQMC</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VQMC</td><td>1</td><td/></row>
-		<row><td>vqmc1</td><td>ErrorsFiles</td><td>VQMC</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VQMC</td><td>1</td><td/></row>
-		<row><td>vqui</td><td>ShortErrorsFiles</td><td>VQUI</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VQUI</td><td>1</td><td/></row>
-		<row><td>vqui1</td><td>ErrorsFiles</td><td>VQUI</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VQUI</td><td>1</td><td/></row>
-		<row><td>vreg</td><td>ShortErrorsFiles</td><td>VREG</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VREG</td><td>1</td><td/></row>
-		<row><td>vreg1</td><td>ErrorsFiles</td><td>VREG</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VREG</td><td>1</td><td/></row>
-		<row><td>vrfa</td><td>ShortErrorsFiles</td><td>VRFA</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VRFA</td><td>1</td><td/></row>
-		<row><td>vrfa1</td><td>ErrorsFiles</td><td>VRFA</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VRFA</td><td>1</td><td/></row>
-		<row><td>vrle</td><td>ErrorsFiles</td><td>VRLE</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VRLE</td><td>1</td><td/></row>
-		<row><td>vrle1</td><td>ShortErrorsFiles</td><td>VRLE1</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VRLE1</td><td>1</td><td/></row>
-		<row><td>vrle2</td><td>ShortErrorsFiles</td><td>VRLE2</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VRLE2</td><td>1</td><td/></row>
-		<row><td>vrrr</td><td>ErrorsFiles</td><td>VRRR</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VRRR</td><td>1</td><td/></row>
-		<row><td>vrrr1</td><td>ShortErrorsFiles</td><td>VRRR1</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VRRR1</td><td>1</td><td/></row>
-		<row><td>vrrr2</td><td>ShortErrorsFiles</td><td>VRRR2</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VRRR2</td><td>1</td><td/></row>
-		<row><td>vscn</td><td>ShortErrorsFiles</td><td>VSCN</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VSCN</td><td>1</td><td/></row>
-		<row><td>vscn1</td><td>ErrorsFiles</td><td>VSCN</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VSCN</td><td>1</td><td/></row>
-		<row><td>vsrc</td><td>ErrorsFiles</td><td>VSRC</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VSRC</td><td>1</td><td/></row>
-		<row><td>vsrc1</td><td>ShortErrorsFiles</td><td>VSRC1</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VSRC1</td><td>1</td><td/></row>
-		<row><td>vsrc2</td><td>ShortErrorsFiles</td><td>VSRC2</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VSRC2</td><td>1</td><td/></row>
-		<row><td>vsrc3</td><td>ShortErrorsFiles</td><td>VSRC3</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VSRC3</td><td>1</td><td/></row>
-		<row><td>vsta</td><td>ErrorsFiles</td><td>VSTA</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VSTA</td><td>1</td><td/></row>
-		<row><td>vsta1</td><td>ShortErrorsFiles</td><td>VSTA1</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VSTA1</td><td>1</td><td/></row>
-		<row><td>vsta2</td><td>ShortErrorsFiles</td><td>VSTA2</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VSTA2</td><td>1</td><td/></row>
-		<row><td>vtat</td><td>ErrorsFiles</td><td>VTAT</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VTAT</td><td>1</td><td/></row>
-		<row><td>vtat1</td><td>ShortErrorsFiles</td><td>VTAT1</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VTAT1</td><td>1</td><td/></row>
-		<row><td>vtat2</td><td>ShortErrorsFiles</td><td>VTAT2</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VTAT2</td><td>1</td><td/></row>
-		<row><td>vtbt</td><td>ShortErrorsFiles</td><td>VTBT</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VTBT</td><td>1</td><td/></row>
-		<row><td>vtbt1</td><td>ErrorsFiles</td><td>VTBT</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VTBT</td><td>1</td><td/></row>
-		<row><td>vtcg</td><td>ShortErrorsFiles</td><td>VTCG</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VTCG</td><td>1</td><td/></row>
-		<row><td>vtcg1</td><td>ErrorsFiles</td><td>VTCG</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VTCG</td><td>1</td><td/></row>
-		<row><td>vtct</td><td>ShortErrorsFiles</td><td>VTCT</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VTCT</td><td>1</td><td/></row>
-		<row><td>vtct1</td><td>ErrorsFiles</td><td>VTCT</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VTCT</td><td>1</td><td/></row>
-		<row><td>vtec</td><td>ErrorsFiles</td><td>VTEC</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VTEC</td><td>1</td><td/></row>
-		<row><td>vtec1</td><td>ShortErrorsFiles</td><td>VTEC1</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VTEC1</td><td>1</td><td/></row>
-		<row><td>vtec2</td><td>ShortErrorsFiles</td><td>VTEC2</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VTEC2</td><td>1</td><td/></row>
-		<row><td>vtug</td><td>ErrorsFiles</td><td>VTUG</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VTUG</td><td>1</td><td/></row>
-		<row><td>vtug1</td><td>ShortErrorsFiles</td><td>VTUG1</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VTUG1</td><td>1</td><td/></row>
-		<row><td>vtug2</td><td>ShortErrorsFiles</td><td>VTUG2</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VTUG2</td><td>1</td><td/></row>
-		<row><td>vuar</td><td>ErrorsFiles</td><td>VUAR</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VUAR</td><td>1</td><td/></row>
-		<row><td>vuar1</td><td>ShortErrorsFiles</td><td>VUAR1</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VUAR1</td><td>1</td><td/></row>
-		<row><td>vuar2</td><td>ShortErrorsFiles</td><td>VUAR2</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VUAR2</td><td>1</td><td/></row>
-		<row><td>vuar3</td><td>ShortErrorsFiles</td><td>VUAR3</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VUAR3</td><td>1</td><td/></row>
-		<row><td>vuar4</td><td>ShortErrorsFiles</td><td>VUAR4</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VUAR4</td><td>1</td><td/></row>
-		<row><td>vucs</td><td>ShortErrorsFiles</td><td>VUCS</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VUCS</td><td>1</td><td/></row>
-		<row><td>vucs1</td><td>ErrorsFiles</td><td>VUCS</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VUCS</td><td>1</td><td/></row>
-		<row><td>vuex</td><td>ErrorsFiles</td><td>VUEX</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VUEX</td><td>1</td><td/></row>
-		<row><td>vuex1</td><td>ShortErrorsFiles</td><td>VUEX1</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VUEX1</td><td>1</td><td/></row>
-		<row><td>vuex2</td><td>ShortErrorsFiles</td><td>VUEX2</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VUEX2</td><td>1</td><td/></row>
-		<row><td>vugv</td><td>ShortErrorsFiles</td><td>VUGV</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VUGV</td><td>1</td><td/></row>
-		<row><td>vugv1</td><td>ErrorsFiles</td><td>VUGV</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VUGV</td><td>1</td><td/></row>
-		<row><td>vupr</td><td>ErrorsFiles</td><td>VUPR</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VUPR</td><td>1</td><td/></row>
-		<row><td>vupr1</td><td>ShortErrorsFiles</td><td>VUPR1</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VUPR1</td><td>1</td><td/></row>
-		<row><td>vupr2</td><td>ShortErrorsFiles</td><td>VUPR2</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VUPR2</td><td>1</td><td/></row>
-		<row><td>vupr3</td><td>ShortErrorsFiles</td><td>VUPR3</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VUPR3</td><td>1</td><td/></row>
-		<row><td>vupr4</td><td>ShortErrorsFiles</td><td>VUPR4</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VUPR4</td><td>1</td><td/></row>
-		<row><td>vupr5</td><td>ShortErrorsFiles</td><td>VUPR5</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VUPR5</td><td>1</td><td/></row>
-		<row><td>vwbe</td><td>ShortErrorsFiles</td><td>VWBE</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VWBE</td><td>1</td><td/></row>
-		<row><td>vwbe1</td><td>ErrorsFiles</td><td>VWBE</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VWBE</td><td>1</td><td/></row>
-		<row><td>vwca</td><td>ShortErrorsFiles</td><td>VWCA</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VWCA</td><td>1</td><td/></row>
-		<row><td>vwca1</td><td>ErrorsFiles</td><td>VWCA</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VWCA</td><td>1</td><td/></row>
-		<row><td>vweq</td><td>ShortErrorsFiles</td><td>VWEQ</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VWEQ</td><td>1</td><td/></row>
-		<row><td>vweq1</td><td>ErrorsFiles</td><td>VWEQ</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VWEQ</td><td>1</td><td/></row>
-		<row><td>vwid</td><td>ShortErrorsFiles</td><td>VWID</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VWID</td><td>1</td><td/></row>
-		<row><td>vwid1</td><td>ErrorsFiles</td><td>VWID</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VWID</td><td>1</td><td/></row>
-		<row><td>vwma</td><td>ShortErrorsFiles</td><td>VWMA</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VWMA</td><td>1</td><td/></row>
-		<row><td>vwma1</td><td>ErrorsFiles</td><td>VWMA</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VWMA</td><td>1</td><td/></row>
-		<row><td>vwms</td><td>ErrorsFiles</td><td>VWMS</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VWMS</td><td>1</td><td/></row>
-		<row><td>vwms1</td><td>ShortErrorsFiles</td><td>VWMS1</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VWMS1</td><td>1</td><td/></row>
-		<row><td>vwms2</td><td>ShortErrorsFiles</td><td>VWMS2</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VWMS2</td><td>1</td><td/></row>
-		<row><td>vwoe</td><td>ShortErrorsFiles</td><td>VWOE</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VWOE</td><td>1</td><td/></row>
-		<row><td>vwoe1</td><td>ErrorsFiles</td><td>VWOE</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VWOE</td><td>1</td><td/></row>
-		<row><td>vwst</td><td>ErrorsFiles</td><td>VWST</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VWST</td><td>1</td><td/></row>
-		<row><td>vwst1</td><td>ShortErrorsFiles</td><td>VWST1</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VWST1</td><td>1</td><td/></row>
-		<row><td>vwst2</td><td>ShortErrorsFiles</td><td>VWST2</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VWST2</td><td>1</td><td/></row>
-		<row><td>vxrc</td><td>ShortErrorsFiles</td><td>VXRC</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VXRC</td><td>1</td><td/></row>
-		<row><td>vxrc1</td><td>ErrorsFiles</td><td>VXRC</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VXRC</td><td>1</td><td/></row>
-		<row><td>vxrt</td><td>ShortErrorsFiles</td><td>VXRT</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VXRT</td><td>1</td><td/></row>
-		<row><td>vxrt1</td><td>ErrorsFiles</td><td>VXRT</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VXRT</td><td>1</td><td/></row>
-		<row><td>vzaa</td><td>ShortErrorsFiles</td><td>VZAA</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\short\VZAA</td><td>1</td><td/></row>
-		<row><td>vzaa1</td><td>ErrorsFiles</td><td>VZAA</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_STUDIO_FILES&gt;\help\errors\VZAA</td><td>1</td><td/></row>
-		<row><td>xcacls.vbs</td><td>XCACLS.vbs</td><td>XCACLS.vbs</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_CODEDOM_PROVIDE_FILES&gt;\XCACLS.vbs</td><td>1</td><td/></row>
+		<row><td>setup.ace</td><td>SetupFiles</td><td>setup.ace</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_CODEDOM_PROVIDE_FILES&gt;\setup.ace</td><td>1</td><td/></row>
+		<row><td>setup.e</td><td>SetupFiles</td><td>setup.e</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_CODEDOM_PROVIDE_FILES&gt;\setup.e</td><td>1</td><td/></row>
+		<row><td>xcacls.vbs</td><td>XCACLS</td><td>XCACLS.vbs</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_CODEDOM_PROVIDE_FILES&gt;\XCACLS.vbs</td><td>1</td><td/></row>
 	</table>
 
 	<table name="FileSFPCatalog">
@@ -1805,11 +1451,7 @@
 		<col def="S255">Data</col>
 		<row><td>BiildCDROMEnabled</td><td/></row>
 		<row><td>BiildInternetEnabled</td><td/></row>
-		<row><td>BiildSingleExeEnabled</td><td>Yes</td></row>
-		<row><td>PROJECT_ASSISTANT_DEFAULT_FEATURE</td><td>NewFeature1</td></row>
-		<row><td>PROJECT_ASSISTANT_FEATURES</td><td>NonSelectable</td></row>
-		<row><td>RegistryPageEnabled</td><td>Yes</td></row>
-		<row><td>ecdpman.exe</td><td/></row>
+		<row><td>BiildSingleExeEnabled</td><td/></row>
 	</table>
 
 	<table name="ISCEApp">
@@ -1960,31 +1602,27 @@
 		<col def="S0">FTPLocation</col>
 		<col def="S0">HTTPLocation</col>
 		<col def="S0">Miscellaneous</col>
-		<row><td>ConfigFiles</td><td/><td/><td>_CBB31C0A_8842_4216_A91A_52081B052465_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>DummyComponent</td><td/><td/><td>_B23E1747_042E_4A49_B1C0_7D305B41CDD3_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>EiffelSoftware.CacheBrowser.dll</td><td/><td/><td>_593C42B2_0C3C_428F_8ADD_FF1CF472A4A4_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>EiffelSoftware.CodeDom.dll</td><td/><td/><td>_37E40E34_1BB8_401A_A005_A6EBD9E3D36C_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>EiffelSoftware.CodeDomBase.dll</td><td/><td/><td>_A99CDE54_573B_4691_9C5C_EC20A45C1120_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>EiffelSoftware.CodeDomVision2.dll</td><td/><td/><td>_3F0102D3_8DF0_416D_9D2A_EADE4C95FC4B_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>EiffelSoftware.MetadataConsumer.dll</td><td/><td/><td>_6DE26FFF_ECB1_453D_9F5A_4487B159CD62_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>EiffelSoftware.Runtime.dll</td><td/><td/><td>_373BA514_E0C1_420A_8B2B_059EFB2A0E28_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>EiffelSoftware.Runtime.dll2</td><td/><td/><td>_56841C77_E732_4D02_8A10_CB010D1FB6D0_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>ErrorsFiles</td><td/><td/><td>_5B89FD1D_4327_4452_BC52_D6B67DF31AF2_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>ISRegistryComponent</td><td/><td/><td>_6A2F246E_A0FE_4DAA_8C6F_5F73D3BE7814_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>Library</td><td/><td/><td>_48605897_74D3_427B_A56C_853F29E3ED8D_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>Library.net</td><td/><td/><td>_987910B4_2155_4C29_BF0C_A9F860C8429A_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>ManagerIcons</td><td/><td/><td>_79901BC4_ECAD_4566_AB5D_09B4BF87DDC6_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>SampleFiles</td><td/><td/><td>_84F17BC6_3FB8_43AF_971A_B4429CAD54EC_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>SetupFiles</td><td/><td/><td>_3487A26F_1278_4DC3_8A5B_97DB297443FE_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>ShortErrorsFiles</td><td/><td/><td>_70F0C68F_6781_405F_AC32_5AF134637CC4_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>TemplatesFiles</td><td/><td/><td>_E62DDDB2_D7B5_496B_B0D0_84391E575532_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>VirtualDirComponent</td><td/><td/><td>_65646C1D_7DB6_4ABE_9F78_79CC8445FA24_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>XCACLS.vbs</td><td/><td/><td>_CB6E6C16_ACC9_4CB6_A039_470F713624C9_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>default.ecd</td><td/><td/><td>_399F27E3_BA6C_4588_9E4F_F09FCC1B7889_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>ecdpc.exe</td><td/><td/><td>_B8BF0CC0_F203_4990_B27D_2557A6ADCBFA_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>ecdpman.exe</td><td/><td/><td>_E1C8A6AE_4246_4705_A09F_C2E204A91C9F_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>libEiffelSoftware.CodeDomBase.dll</td><td/><td/><td>_B641AF3E_543C_4F0D_AB76_97D604C281CB_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>libEiffelSoftware.CodeDomVision2.dll</td><td/><td/><td>_C6D55D8A_1F42_45AB_817C_B0557C2EED67_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>ConfigFiles</td><td/><td/><td>_CBFC5493_DC52_4C45_9228_A47A6ADB7277_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>DefaultConfigFile</td><td/><td/><td>_B0CA0388_18F2_4405_8233_28F07493D93B_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>EiffelSoftware.CacheBrowser.dll</td><td/><td/><td>_28E1E2D6_F570_4435_B47D_08F84705E2F5_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>EiffelSoftware.CodeDom.dll</td><td/><td/><td>_A3D406D2_9260_4340_8DFB_0277EC984B4E_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>EiffelSoftware.CodeDomBase.dll</td><td/><td/><td>_4F8B46EE_03B0_4942_BF1F_0DD0FBEE34E4_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>EiffelSoftware.CodeDomVision2.dll</td><td/><td/><td>_14B7153B_F386_4009_90A7_26A98BDBA339_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>EiffelSoftware.MetadataConsumer.dll</td><td/><td/><td>_708C68A8_3F1D_43E3_9323_20FC9B3D6D16_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>EiffelSoftware.Runtime.dll</td><td/><td/><td>_85C2255F_9D58_4532_9404_13B2E76B01E4_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>EiffelSoftware.Runtime.dll1</td><td/><td/><td>_09E3568D_D040_4AF7_B977_CB2F2AE00C76_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>Empty</td><td/><td/><td>_39C2145D_C592_42C1_A809_53CC7DBE45E8_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>ErrorFiles</td><td/><td/><td>_9426D662_3307_4ED0_A6F4_BE503BDA051E_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>Library</td><td/><td/><td>_90E8817E_BF3D_4872_93B7_5DFC046A13B3_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>LibraryDotNet</td><td/><td/><td>_664E0909_D1D9_447D_9BC1_224D5B752C79_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>SamplesFiles</td><td/><td/><td>_CE202EBA_3F2C_4DA0_91D9_B5BD7B0CC407_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>SetupFiles</td><td/><td/><td>_FEFEF12B_2AD1_45E2_82BC_9EB0CE3501F8_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>VirtualDirComponent</td><td/><td/><td>_2186BDB6_DC0C_4E01_A286_C99E24D4AD50_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>XCACLS</td><td/><td/><td>_96C105CC_743D_435E_967F_7F073187F62F_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>ecdpc.exe</td><td/><td/><td>_382F364B_6535_423A_A204_2CF8E6919AF0_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>ecdpman.exe</td><td/><td/><td>_4CA602A0_97DB_48E1_B7C1_B210D3FBE797_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>libEiffelSoftware.CodeDomBase.dll</td><td/><td/><td>_0F062288_E8B5_472D_9365_15CD5D0294E6_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>libEiffelSoftware.CodeDomVision2.dll</td><td/><td/><td>_6222F6EE_07BF_432C_B6F8_EBD2F9120613_FILTER</td><td/><td/><td/><td/></row>
 	</table>
 
 	<table name="ISDLLWrapper">
@@ -2012,9 +1650,10 @@
 		<col def="S255">IncludeFiles</col>
 		<col def="S255">ExcludeFiles</col>
 		<col def="I4">ISAttributes</col>
+		<row><td>ConfigFiles</td><td>&lt;PATH_TO_WINDOWS_FILES&gt;</td><td>4</td><td/><td/><td>2</td></row>
+		<row><td>ErrorFiles</td><td>&lt;PATH_TO_ERRORS_FILES&gt;</td><td>4</td><td/><td/><td>2</td></row>
 		<row><td>Library</td><td>&lt;PATH_TO_LIBRARY_FILES&gt;</td><td>4</td><td/><td/><td>2</td></row>
-		<row><td>Library.net</td><td>&lt;PATH_TO_LIBRARY.NET_FILES&gt;</td><td>4</td><td/><td/><td>2</td></row>
-		<row><td>ManagerIcons</td><td>&lt;PATH_TO_BIN_FILES&gt;\icons</td><td>4</td><td/><td/><td>2</td></row>
+		<row><td>LibraryDotNet</td><td>&lt;PATH_TO_LIBRARY.NET_FILES&gt;</td><td>4</td><td/><td/><td>2</td></row>
 	</table>
 
 	<table name="ISFeatureMergeModuleExcludes">
@@ -2027,7 +1666,8 @@
 		<col key="yes" def="s38">Feature_</col>
 		<col key="yes" def="s255">ISMergeModule_</col>
 		<col key="yes" def="i2">Language_</col>
-		<row><td>NewFeature1</td><td>dotnet.298AA83F_2BD4_43D0_9EDB_25F84FE39367</td><td>0</td></row>
+		<row><td>Feature</td><td>OLEAUT32.8C0C59A0_7DC8_11D2_B95D_006097C4DE24</td><td>0</td></row>
+		<row><td>Feature</td><td>dotnet.298AA83F_2BD4_43D0_9EDB_25F84FE39367</td><td>0</td></row>
 	</table>
 
 	<table name="ISIISCommon">
@@ -2044,7 +1684,7 @@
 		<col def="S0">CustomErrors</col>
 		<col def="L255">AppName</col>
 		<col def="S50">SSLCert</col>
-		<row><td>ISIISCommonVRoot</td><td>ISIISCommonWebsite1</td><td>##ID_STRING12##</td><td>SAMPLES</td><td>28113</td><td>##ID_STRING13##</td><td>20</td><td>90</td><td/><td/><td/><td>##ID_STRING14##</td><td/></row>
+		<row><td>ISIISCommonVRoot</td><td>ISIISCommonWebsite1</td><td>##ID_STRING8##</td><td>SAMPLES</td><td>28113</td><td>Default.asp</td><td>20</td><td>90</td><td/><td/><td/><td/><td/></row>
 		<row><td>ISIISCommonWebsite1</td><td/><td>DefaultWebSite</td><td>IISROOTFOLDER</td><td>28113</td><td/><td>20</td><td>90</td><td/><td/><td/><td/><td/></row>
 	</table>
 
@@ -2120,8 +1760,6 @@
 		<col def="S255">Cabinet</col>
 		<col def="S32">VolumeLabel</col>
 		<col def="S32">Source</col>
-		<row><td>1</td><td>Configuration</td><td>Release</td><td>0</td><td/><td/><td/><td/></row>
-		<row><td>1</td><td>Configuration</td><td>Test Release</td><td>0</td><td/><td/><td/><td/></row>
 	</table>
 
 	<table name="ISLogicalDiskFeatures">
@@ -2139,7 +1777,8 @@
 		<col def="s255">Name</col>
 		<col def="S255">Destination</col>
 		<col def="I4">ISAttributes</col>
-		<row><td>dotnet.298AA83F_2BD4_43D0_9EDB_25F84FE39367</td><td>0</td><td>ASP.NET Enabler 2.0</td><td>[BIN]</td><td/></row>
+		<row><td>OLEAUT32.8C0C59A0_7DC8_11D2_B95D_006097C4DE24</td><td>0</td><td>Microsoft OLE 2.40  for Windows NT(TM) and Windows 95(TM) Operating Systems</td><td/><td/></row>
+		<row><td>dotnet.298AA83F_2BD4_43D0_9EDB_25F84FE39367</td><td>0</td><td>ASP.NET Enabler 2.0</td><td/><td/></row>
 	</table>
 
 	<table name="ISMergeModuleCfgValues">
@@ -2234,13 +1873,16 @@
 		<row><td>ISProjectDataFolder</td><td/><td/><td>1</td></row>
 		<row><td>ISProjectFolder</td><td/><td/><td>1</td></row>
 		<row><td>PATH_TO_BIN_FILES</td><td>E:\Delivery\codedom_provider\delivery\codedom\bin</td><td/><td>2</td></row>
+		<row><td>PATH_TO_BIN_FILES1</td><td>E:\Delivery\codedom_provider\delivery\compiler\studio\spec\windows\bin</td><td/><td>2</td></row>
 		<row><td>PATH_TO_CODEDOM_PROVIDE_FILES</td><td>E:\Delivery\codedom_provider</td><td/><td>2</td></row>
 		<row><td>PATH_TO_CONFIGS_FILES</td><td>E:\Delivery\codedom_provider\delivery\codedom\configs</td><td/><td>2</td></row>
 		<row><td>PATH_TO_DELIVERY_FILES</td><td>E:\Delivery\codedom_provider\delivery</td><td/><td>2</td></row>
+		<row><td>PATH_TO_ERRORS_FILES</td><td>E:\Delivery\codedom_provider\delivery\compiler\studio\help\errors</td><td/><td>2</td></row>
 		<row><td>PATH_TO_LIBRARY.NET_FILES</td><td>E:\Delivery\codedom_provider\delivery\compiler\library.net</td><td/><td>2</td></row>
 		<row><td>PATH_TO_LIBRARY_FILES</td><td>E:\Delivery\codedom_provider\delivery\compiler\library</td><td/><td>2</td></row>
-		<row><td>PATH_TO_MANAGER_FILES</td><td>E:\Delivery\codedom_provider\delivery\codedom\manager</td><td/><td>2</td></row>
-		<row><td>PATH_TO_STUDIO_FILES</td><td>E:\Delivery\codedom_provider\delivery\compiler\studio</td><td/><td>2</td></row>
+		<row><td>PATH_TO_MANAGER_FILES</td><td>E:\Delivery\codedom_provider\checkout\dotnet\codedom_provider\manager</td><td/><td>2</td></row>
+		<row><td>PATH_TO_SAMPLES_FILES</td><td>E:\Delivery\codedom_provider\samples</td><td/><td>2</td></row>
+		<row><td>PATH_TO_WINDOWS_FILES</td><td>E:\Delivery\codedom_provider\delivery\compiler\studio\config\windows</td><td/><td>2</td></row>
 		<row><td>ProgramFilesFolder</td><td/><td/><td>1</td></row>
 		<row><td>SystemFolder</td><td/><td/><td>1</td></row>
 		<row><td>WindowsFolder</td><td/><td/><td>1</td></row>
@@ -2250,7 +1892,7 @@
 		<col key="yes" def="s72">ISProductConfiguration</col>
 		<col def="S255">ProductConfigurationFlags</col>
 		<col def="I4">GeneratePackageCode</col>
-		<row><td>Configuration</td><td/><td>1</td></row>
+		<row><td>Product Configuration</td><td/><td>1</td></row>
 	</table>
 
 	<table name="ISProductConfigurationInstance">
@@ -2264,12 +1906,7 @@
 		<col key="yes" def="s72">ISProductConfiguration_</col>
 		<col key="yes" def="s72">Property</col>
 		<col def="L255">Value</col>
-		<row><td>Configuration</td><td>MSIPackageFileName</td><td>enabler</td></row>
-		<row><td>Configuration</td><td>ProductName</td><td>ASP.NET Enabler</td></row>
-		<row><td>Configuration</td><td>ProductVersion</td><td>2.00.1313</td></row>
-		<row><td>Configuration</td><td>SetupFileName</td><td>setup</td></row>
-		<row><td>Configuration</td><td>Subject</td><td>##ID_STRING5##</td></row>
-		<row><td>Configuration</td><td>Title</td><td>##ID_STRING6##</td></row>
+		<row><td>Product Configuration</td><td>SetupFileName</td><td>setup</td></row>
 	</table>
 
 	<table name="ISRelease">
@@ -2303,8 +1940,7 @@
 		<col def="S255">DotNetBuildConfiguration</col>
 		<col def="S255">MsiCommandLine</col>
 		<col def="I4">ISSetupPrerequisiteLocation</col>
-		<row><td>Release</td><td>Configuration</td><td>&lt;ISProjectDataFolder&gt;</td><td>PackageName</td><td>1</td><td>1033</td><td>2</td><td>1</td><td>Intel</td><td/><td>1033</td><td>2</td><td>0</td><td>1</td><td>0</td><td/><td>0</td><td/><td>MediaLocation</td><td/><td>http://</td><td/><td/><td/><td/><td>9152525</td><td/><td/><td/><td/></row>
-		<row><td>Test Release</td><td>Configuration</td><td>&lt;ISProjectDataFolder&gt;</td><td>PackageName</td><td>0</td><td>1033</td><td>0</td><td>2</td><td>Intel</td><td/><td>1033</td><td>0</td><td>650</td><td>0</td><td>2048</td><td/><td>0</td><td/><td>MediaLocation</td><td/><td>http://</td><td/><td/><td/><td/><td>8396812</td><td/><td/><td/><td/></row>
+		<row><td>Test Release</td><td>Product Configuration</td><td>&lt;ISProjectDataFolder&gt;</td><td>PackageName</td><td>1</td><td>1033</td><td>2</td><td>2</td><td>Intel</td><td/><td>1033</td><td>3</td><td>0</td><td>0</td><td>0</td><td/><td>0</td><td/><td>MediaLocation</td><td/><td>http://</td><td/><td/><td/><td/><td>8456205</td><td/><td/><td/><td/></row>
 	</table>
 
 	<table name="ISReleaseExtended">
@@ -2338,8 +1974,8 @@
 		<col def="I4">MsiEngineVersion</col>
 		<col def="S255">WinMsi30Url</col>
 		<col def="S255">CertPassword</col>
-		<row><td>Release</td><td>Configuration</td><td>0</td><td>http://</td><td>0</td><td>install</td><td>install</td><td>[WindowsFolder]Downloaded Installations</td><td>2</td><td>http://www.installengine.com/Msiengine20</td><td>http://www.installengine.com/Msiengine20</td><td>0</td><td>http://www.installengine.com/cert03/isengine</td><td/><td/><td/><td/><td>3</td><td>http://www.installengine.com/cert03/dotnetfx</td><td>0</td><td>1033</td><td/><td/><td/><td/><td>16</td><td>3</td><td>4</td><td>http://www.installengine.com/Msiengine30</td><td/></row>
-		<row><td>Test Release</td><td>Configuration</td><td>0</td><td>http://</td><td>0</td><td>install</td><td>install</td><td>[WindowsFolder]Downloaded Installations</td><td>0</td><td>http://www.installengine.com/Msiengine20</td><td>http://www.installengine.com/Msiengine20</td><td>0</td><td>http://www.installengine.com/cert03/isengine</td><td/><td/><td/><td/><td>3</td><td>http://www.installengine.com/cert03/dotnetfx</td><td>0</td><td>1033</td><td/><td/><td/><td/><td>16</td><td>3</td><td>4</td><td>http://www.installengine.com/Msiengine30</td><td/></row>
+		<row><td>Release 1</td><td>Product Configuration</td><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/></row>
+		<row><td>Test Release</td><td>Product Configuration</td><td>0</td><td>http://</td><td>0</td><td>install</td><td>install</td><td>[WindowsFolder]Downloaded Installations</td><td>0</td><td>http://www.installengine.com/Msiengine20</td><td>http://www.installengine.com/Msiengine20</td><td>0</td><td>http://www.installengine.com/cert03/isengine</td><td/><td/><td/><td/><td>3</td><td>http://www.installengine.com/cert03/dotnetfx</td><td>0</td><td>1033</td><td/><td/><td/><td/><td>16</td><td>3</td><td>4</td><td>http://www.installengine.com/Msiengine30</td><td/></row>
 	</table>
 
 	<table name="ISSQLConnection">
@@ -2447,10 +2083,10 @@
 		<col def="I2">Encoded</col>
 		<col def="S0">Comment</col>
 		<col def="I4">TimeStamp</col>
-		<row><td>COMPANY_NAME</td><td>1033</td><td>Eiffel Software</td><td>0</td><td/><td>1830350283</td></row>
+		<row><td>COMPANY_NAME</td><td>1033</td><td>Eiffel Software</td><td>0</td><td/><td>-1659349173</td></row>
 		<row><td>DN_AlwaysInstall</td><td>1033</td><td>Always Install</td><td>0</td><td/><td>-2087162399</td></row>
 		<row><td>IDPROP_EXPRESS_LAUNCH_CONDITION_COLOR</td><td>1033</td><td>The color settings of your system are not adequate for running [ProductName].</td><td>0</td><td/><td>-2087162399</td></row>
-		<row><td>IDPROP_EXPRESS_LAUNCH_CONDITION_OS</td><td>1033</td><td>[ProductName] requires that your computer is running Windows 2000 or Windows XP or Windows 2003 Server</td><td>0</td><td/><td>1830290955</td></row>
+		<row><td>IDPROP_EXPRESS_LAUNCH_CONDITION_OS</td><td>1033</td><td>The operating system is not adequate for running [ProductName].</td><td>0</td><td/><td>-2087162399</td></row>
 		<row><td>IDPROP_EXPRESS_LAUNCH_CONDITION_PROCESSOR</td><td>1033</td><td>The processor is not adequate for running [ProductName].</td><td>0</td><td/><td>-2087162399</td></row>
 		<row><td>IDPROP_EXPRESS_LAUNCH_CONDITION_RAM</td><td>1033</td><td>The amount of RAM is not adequate for running [ProductName].</td><td>0</td><td/><td>-2087162399</td></row>
 		<row><td>IDPROP_EXPRESS_LAUNCH_CONDITION_SCREEN</td><td>1033</td><td>The screen resolution is not adequate for running [ProductName].</td><td>0</td><td/><td>-2087162399</td></row>
@@ -2762,10 +2398,6 @@
 		<row><td>IDS_PROGMSG_IIS_REMOVEVROOT</td><td>1033</td><td>Removing IIS virtual directory %s</td><td>0</td><td/><td>-2087162399</td></row>
 		<row><td>IDS_PROGMSG_IIS_REMOVEVROOTS</td><td>1033</td><td>Removing IIS virtual directories...</td><td>0</td><td/><td>-2087162399</td></row>
 		<row><td>IDS_PROGMSG_IIS_ROLLBACKVROOTS</td><td>1033</td><td>Rolling back virtual directory and web site changes...</td><td>0</td><td/><td>-2087162399</td></row>
-		<row><td>IDS_SHORTCUT_DISPLAY_NAME2</td><td>1033</td><td>LAUNCH~1.EXE|Launch ecdpc.exe</td><td>0</td><td/><td>1830346283</td></row>
-		<row><td>IDS_SHORTCUT_DISPLAY_NAME3</td><td>1033</td><td>LAUNCH~1.EXE|Launch silent_launcher.exe</td><td>0</td><td/><td>1830305483</td></row>
-		<row><td>IDS_SHORTCUT_DISPLAY_NAME4</td><td>1033</td><td>LAUNCH~1.EXE|Launch installer_launcher.exe</td><td>0</td><td/><td>1830313675</td></row>
-		<row><td>IDS_SHORTCUT_DISPLAY_NAME5</td><td>1033</td><td>Eiffel CodeDom Provider Manager</td><td>0</td><td/><td>1830305579</td></row>
 		<row><td>IDS_SQLBROWSE_INTRO</td><td>1033</td><td>From the list of servers below, select the SQL Server you would like to target.</td><td>0</td><td/><td>-2087162399</td></row>
 		<row><td>IDS_SQLLOGIN_BROWSE</td><td>1033</td><td>B&amp;rowse...</td><td>0</td><td/><td>-2087162399</td></row>
 		<row><td>IDS_SQLLOGIN_CONNECT</td><td>1033</td><td>Connect using:</td><td>0</td><td/><td>-2087162399</td></row>
@@ -3029,20 +2661,17 @@
 		<row><td>IDS__TargetReq_DESC_PROCESSOR</td><td>1033</td><td>The processor is not adequate for running [ProductName].</td><td>0</td><td/><td>-2087162399</td></row>
 		<row><td>IDS__TargetReq_DESC_RAM</td><td>1033</td><td>The amount of RAM is not adequate for running [ProductName].</td><td>0</td><td/><td>-2087162399</td></row>
 		<row><td>IDS__TargetReq_DESC_RESOLUTION</td><td>1033</td><td>The screen resolution is not adequate for running [ProductName].</td><td>0</td><td/><td>-2087162399</td></row>
-		<row><td>ID_STRING1</td><td>1033</td><td>http://www.eiffel.com</td><td>0</td><td/><td>1830329835</td></row>
-		<row><td>ID_STRING10</td><td>1033</td><td>DisplayName1</td><td>0</td><td/><td>2098731886</td></row>
-		<row><td>ID_STRING11</td><td>1033</td><td>DisplayName2</td><td>0</td><td/><td>2098781038</td></row>
-		<row><td>ID_STRING12</td><td>1033</td><td>EiffelSample</td><td>0</td><td/><td>2098748398</td></row>
-		<row><td>ID_STRING13</td><td>1033</td><td>Default.aspx</td><td>0</td><td/><td>2098777070</td></row>
-		<row><td>ID_STRING14</td><td>1033</td><td>EiffelSample</td><td>0</td><td/><td>2098779118</td></row>
-		<row><td>ID_STRING2</td><td>1033</td><td>ASP.NET Enabler</td><td>0</td><td/><td>1830310476</td></row>
-		<row><td>ID_STRING3</td><td>1033</td><td>ASP.NET Enabler</td><td>0</td><td/><td>1830322764</td></row>
-		<row><td>ID_STRING4</td><td>1033</td><td>ASP.NET Enabler 2.0</td><td>0</td><td/><td>1830319567</td></row>
-		<row><td>ID_STRING5</td><td>1033</td><td>Installation Database</td><td>0</td><td/><td>1830326448</td></row>
-		<row><td>ID_STRING6</td><td>1033</td><td>ASP.NET Enabler 2.0</td><td>0</td><td/><td>1830332592</td></row>
-		<row><td>ID_STRING7</td><td>1033</td><td>http://support.eiffel.com</td><td>0</td><td/><td>1830324592</td></row>
-		<row><td>ID_STRING8</td><td>1033</td><td>1-800-685-1006</td><td>0</td><td/><td>1830336880</td></row>
-		<row><td>ID_STRING9</td><td>1033</td><td>info@eiffel.com</td><td>0</td><td/><td>1830289808</td></row>
+		<row><td>ID_STRING1</td><td>1033</td><td>ASP.NET Enabler 2.0</td><td>0</td><td/><td>-1659361461</td></row>
+		<row><td>ID_STRING10</td><td>1033</td><td>EIFFEL~2|Eiffel CodeDom Provider Manager</td><td>0</td><td/><td>-1659339732</td></row>
+		<row><td>ID_STRING11</td><td>1033</td><td>Eiffel CodeDom Provider Manager</td><td>0</td><td/><td>-1659370068</td></row>
+		<row><td>ID_STRING2</td><td>1033</td><td>http://www.eiffel.com</td><td>0</td><td/><td>-1659345077</td></row>
+		<row><td>ID_STRING3</td><td>1033</td><td>info@eiffel.com</td><td>0</td><td/><td>-1659328693</td></row>
+		<row><td>ID_STRING4</td><td>1033</td><td>http://support.eiffel.com</td><td>0</td><td/><td>-1659326645</td></row>
+		<row><td>ID_STRING5</td><td>1033</td><td>1-805-685-1006</td><td>0</td><td/><td>-1659320501</td></row>
+		<row><td>ID_STRING6</td><td>1033</td><td>Feature</td><td>0</td><td/><td>-1659324565</td></row>
+		<row><td>ID_STRING7</td><td>1033</td><td>DisplayName1</td><td>0</td><td/><td>-1659340404</td></row>
+		<row><td>ID_STRING8</td><td>1033</td><td>EiffelSample</td><td>0</td><td/><td>-1659367700</td></row>
+		<row><td>ID_STRING9</td><td>1033</td><td>ASPNET~1.0|ASP.NET Enabler 2.0</td><td>0</td><td/><td>-1659358164</td></row>
 		<row><td>IIDS_UITEXT_FeatureUninstalled</td><td>1033</td><td>This feature will remain uninstalled.</td><td>0</td><td/><td>-2087162399</td></row>
 	</table>
 
@@ -3107,8 +2736,8 @@
 		<col def="V0">Data</col>
 		<col def="S255">ISBuildSourcePath</col>
 		<col def="I2">ISIconIndex</col>
-		<row><td>ARPPRODUCTICON.exe</td><td/><td>&lt;PATH_TO_CODEDOM_PROVIDE_FILES&gt;\checkout\dotnet\codedom_provider\manager\ecdpman.ico</td><td>0</td></row>
-		<row><td>ecdpman.exe_F315C2B46BAC4733BB6119B67242E163.exe</td><td/><td>&lt;PATH_TO_CODEDOM_PROVIDE_FILES&gt;\checkout\dotnet\codedom_provider\manager\ecdpman.ico</td><td>0</td></row>
+		<row><td>ARPPRODUCTICON.exe</td><td/><td>&lt;PATH_TO_MANAGER_FILES&gt;\ecdpman.ico</td><td>0</td></row>
+		<row><td>NewShortcut1_9A6FB091D3454C2B9B8BEB345DB1F04D.exe</td><td/><td>&lt;PATH_TO_MANAGER_FILES&gt;\ecdpman.ico</td><td>0</td></row>
 	</table>
 
 	<table name="IniFile">
@@ -3149,11 +2778,7 @@
 		<row><td>DuplicateFiles</td><td/><td>4210</td><td>DuplicateFiles</td><td/></row>
 		<row><td>FileCost</td><td/><td>900</td><td>FileCost</td><td/></row>
 		<row><td>FindRelatedProducts</td><td>NOT ISSETUPDRIVEN</td><td>420</td><td>FindRelatedProducts</td><td/></row>
-		<row><td>ISSelfRegisterCosting</td><td/><td>2201</td><td/><td/></row>
-		<row><td>ISSelfRegisterFiles</td><td/><td>5601</td><td/><td/></row>
-		<row><td>ISSelfRegisterFinalize</td><td/><td>6602</td><td/><td/></row>
-		<row><td>ISUnSelfRegisterFiles</td><td/><td>2202</td><td/><td/></row>
-		<row><td>Install</td><td>Not Installed</td><td>5950</td><td/><td/></row>
+		<row><td>Install</td><td>NOT Installed</td><td>5950</td><td/><td/></row>
 		<row><td>InstallFiles</td><td/><td>4000</td><td>InstallFiles</td><td/></row>
 		<row><td>InstallFinalize</td><td/><td>6600</td><td>InstallFinalize</td><td/></row>
 		<row><td>InstallInitialize</td><td/><td>1501</td><td>InstallInitialize</td><td/></row>
@@ -3180,7 +2805,7 @@
 		<row><td>RegisterProduct</td><td/><td>6100</td><td>RegisterProduct</td><td/></row>
 		<row><td>RegisterProgIdInfo</td><td/><td>4800</td><td>RegisterProgIdInfo</td><td/></row>
 		<row><td>RegisterTypeLibraries</td><td/><td>5500</td><td>RegisterTypeLibraries</td><td/></row>
-		<row><td>RegisterUser</td><td/><td>6001</td><td>RegisterUser</td><td/></row>
+		<row><td>RegisterUser</td><td/><td>6000</td><td>RegisterUser</td><td/></row>
 		<row><td>RemoveDuplicateFiles</td><td/><td>3400</td><td>RemoveDuplicateFiles</td><td/></row>
 		<row><td>RemoveEnvironmentStrings</td><td/><td>3300</td><td>RemoveEnvironmentStrings</td><td/></row>
 		<row><td>RemoveExistingProducts</td><td/><td>1410</td><td>RemoveExistingProducts</td><td/></row>
@@ -3213,7 +2838,7 @@
 		<row><td>WriteRegistryValues</td><td/><td>5000</td><td>WriteRegistryValues</td><td/></row>
 		<row><td>caCreateVRoots</td><td/><td>4001</td><td/><td/></row>
 		<row><td>caExtractIISSuppFiles</td><td/><td>1500</td><td/><td/></row>
-		<row><td>caIISCleanup</td><td/><td>6603</td><td/><td/></row>
+		<row><td>caIISCleanup</td><td/><td>6602</td><td/><td/></row>
 		<row><td>caRemoveVRoots</td><td/><td>3502</td><td/><td/></row>
 		<row><td>caRlbackVRoots</td><td/><td>3501</td><td/><td/></row>
 	</table>
@@ -3223,8 +2848,8 @@
 		<col def="S0">Value</col>
 		<row><td>ActiveLanguage</td><td>1033</td></row>
 		<row><td>Comments</td><td/></row>
-		<row><td>CurrentMedia</td><td dt:dt="bin.base64" md5="5a77fc62c1c14eea6c18749ba87b2073">
-VABlAHMAdAAgAFIAZQBsAGUAYQBzAGUAAQBDAG8AbgBmAGkAZwB1AHIAYQB0AGkAbwBuAA==
+		<row><td>CurrentMedia</td><td dt:dt="bin.base64" md5="2a7ef4f4d9fd177c97b1d3a1126c37b2">
+VABlAHMAdAAgAFIAZQBsAGUAYQBzAGUAAQBQAHIAbwBkAHUAYwB0ACAAQwBvAG4AZgBpAGcAdQByAGEAdABpAG8AbgA=
 			</td></row>
 		<row><td>ISCompilerOption_CompileBeforeBuild</td><td>1</td></row>
 		<row><td>ISCompilerOption_Debug</td><td>0</td></row>
@@ -3236,8 +2861,8 @@ VABlAHMAdAAgAFIAZQBsAGUAYQBzAGUAAQBDAG8AbgBmAGkAZwB1AHIAYQB0AGkAbwBuAA==
 		<row><td>ISCompilerOption_WarningLevel</td><td>3</td></row>
 		<row><td>ISCompilerOption_WarningsAsErrors</td><td>1</td></row>
 		<row><td>ISDialogLangID</td><td/></row>
-		<row><td>ISUSLock</td><td>{3332919B-B3B1-44BC-BCE4-7307E6122867}</td></row>
-		<row><td>ISUSSignature</td><td>{0E227152-456D-404F-BA32-3CC68C18D9B3}</td></row>
+		<row><td>ISUSLock</td><td>{ED6AD54A-A96F-47A6-ACD1-9C301F44A403}</td></row>
+		<row><td>ISUSSignature</td><td>{41FA9CD5-BD63-4DAA-84EB-438141CA4B9E}</td></row>
 		<row><td>IsProjectFileText</td><td>1</td></row>
 		<row><td>MsiExecCmdLineOptions</td><td/></row>
 		<row><td>MsiLogFile</td><td/></row>
@@ -3293,7 +2918,6 @@ VABlAHMAdAAgAFIAZQBsAGUAYQBzAGUAAQBDAG8AbgBmAGkAZwB1AHIAYQB0AGkAbwBuAA==
 	<table name="LaunchCondition">
 		<col key="yes" def="s255">Condition</col>
 		<col def="l255">Description</col>
-		<row><td>(Not Version9X=400) And (Not Version9X=410) And (Not Version9X=490) And (Not VersionNT=400)</td><td>##IDPROP_EXPRESS_LAUNCH_CONDITION_OS##</td></row>
 	</table>
 
 	<table name="ListBox">
@@ -3350,12 +2974,49 @@ VABlAHMAdAAgAFIAZQBsAGUAYQBzAGUAAQBDAG8AbgBmAGkAZwB1AHIAYQB0AGkAbwBuAA==
 		<col def="S72">File_Manifest</col>
 		<col def="S72">File_Application</col>
 		<col def="I2">Attributes</col>
+		<row><td>EiffelSoftware.CacheBrowser.dll</td><td>Feature</td><td>eiffelsoftware.cachebrowser.</td><td>eiffelsoftware.cachebrowser.</td><td>0</td></row>
+		<row><td>EiffelSoftware.CodeDom.dll</td><td>Feature</td><td>eiffelsoftware.codedom.dll</td><td>eiffelsoftware.codedom.dll</td><td>0</td></row>
+		<row><td>EiffelSoftware.CodeDomBase.dll</td><td>Feature</td><td>eiffelsoftware.codedombase.d</td><td>eiffelsoftware.codedombase.d</td><td>0</td></row>
+		<row><td>EiffelSoftware.CodeDomVision2.dll</td><td>Feature</td><td>eiffelsoftware.codedomvision</td><td>eiffelsoftware.codedomvision</td><td>0</td></row>
+		<row><td>EiffelSoftware.Runtime.dll</td><td>Feature</td><td>eiffelsoftware.runtime.dll</td><td>eiffelsoftware.runtime.dll</td><td>0</td></row>
+		<row><td>EiffelSoftware.Runtime.dll1</td><td>Feature</td><td>eiffelsoftware.runtime.dll1</td><td>eiffelsoftware.runtime.dll1</td><td>0</td></row>
+		<row><td>ecdpman.exe</td><td>Feature</td><td>ecdpman.exe</td><td>ecdpman.exe</td><td>0</td></row>
 	</table>
 
 	<table name="MsiAssemblyName">
 		<col key="yes" def="s72">Component_</col>
 		<col key="yes" def="s255">Name</col>
 		<col def="s255">Value</col>
+		<row><td>EiffelSoftware.CacheBrowser.dll</td><td>Culture</td><td>neutral</td></row>
+		<row><td>EiffelSoftware.CacheBrowser.dll</td><td>Name</td><td>EiffelSoftware.CacheBrowser</td></row>
+		<row><td>EiffelSoftware.CacheBrowser.dll</td><td>PublicKeyToken</td><td>DEF26F296EFEF469</td></row>
+		<row><td>EiffelSoftware.CacheBrowser.dll</td><td>Version</td><td>2.0.1.1313</td></row>
+		<row><td>EiffelSoftware.CodeDom.dll</td><td>Culture</td><td>neutral</td></row>
+		<row><td>EiffelSoftware.CodeDom.dll</td><td>Name</td><td>EiffelSoftware.CodeDom</td></row>
+		<row><td>EiffelSoftware.CodeDom.dll</td><td>PublicKeyToken</td><td>DEF26F296EFEF469</td></row>
+		<row><td>EiffelSoftware.CodeDom.dll</td><td>Version</td><td>2.0.1.1313</td></row>
+		<row><td>EiffelSoftware.CodeDomBase.dll</td><td>Culture</td><td>neutral</td></row>
+		<row><td>EiffelSoftware.CodeDomBase.dll</td><td>Name</td><td>EiffelSoftware.CodeDomBase</td></row>
+		<row><td>EiffelSoftware.CodeDomBase.dll</td><td>PublicKeyToken</td><td>DEF26F296EFEF469</td></row>
+		<row><td>EiffelSoftware.CodeDomBase.dll</td><td>Version</td><td>2.0.1.1313</td></row>
+		<row><td>EiffelSoftware.CodeDomVision2.dll</td><td>Culture</td><td>neutral</td></row>
+		<row><td>EiffelSoftware.CodeDomVision2.dll</td><td>Name</td><td>EiffelSoftware.CodeDomVision2</td></row>
+		<row><td>EiffelSoftware.CodeDomVision2.dll</td><td>PublicKeyToken</td><td>DEF26F296EFEF469</td></row>
+		<row><td>EiffelSoftware.CodeDomVision2.dll</td><td>Version</td><td>2.0.1.1313</td></row>
+		<row><td>EiffelSoftware.Runtime.dll</td><td>Culture</td><td>neutral</td></row>
+		<row><td>EiffelSoftware.Runtime.dll</td><td>FileVersion</td><td>5.5.820.0</td></row>
+		<row><td>EiffelSoftware.Runtime.dll</td><td>Name</td><td>EiffelSoftware.Runtime</td></row>
+		<row><td>EiffelSoftware.Runtime.dll</td><td>PublicKeyToken</td><td>DEF26F296EFEF469</td></row>
+		<row><td>EiffelSoftware.Runtime.dll</td><td>Version</td><td>5.5.820.0</td></row>
+		<row><td>EiffelSoftware.Runtime.dll1</td><td>Culture</td><td>neutral</td></row>
+		<row><td>EiffelSoftware.Runtime.dll1</td><td>FileVersion</td><td>5.5.820.0</td></row>
+		<row><td>EiffelSoftware.Runtime.dll1</td><td>Name</td><td>EiffelSoftware.Runtime</td></row>
+		<row><td>EiffelSoftware.Runtime.dll1</td><td>PublicKeyToken</td><td>DEF26F296EFEF469</td></row>
+		<row><td>EiffelSoftware.Runtime.dll1</td><td>Version</td><td>5.5.820.0</td></row>
+		<row><td>ecdpman.exe</td><td>Culture</td><td>neutral</td></row>
+		<row><td>ecdpman.exe</td><td>Name</td><td>ecdpman</td></row>
+		<row><td>ecdpman.exe</td><td>PublicKeyToken</td><td>DEF26F296EFEF469</td></row>
+		<row><td>ecdpman.exe</td><td>Version</td><td>2.0.1.1313</td></row>
 	</table>
 
 	<table name="MsiDigitalCertificate">
@@ -3461,16 +3122,16 @@ VABlAHMAdAAgAFIAZQBsAGUAYQBzAGUAAQBDAG8AbgBmAGkAZwB1AHIAYQB0AGkAbwBuAA==
 		<col key="yes" def="s72">Property</col>
 		<col def="L0">Value</col>
 		<col def="S255">ISComments</col>
-		<row><td>ARPCONTACT</td><td>##ID_STRING9##</td><td/></row>
-		<row><td>ARPHELPLINK</td><td>##ID_STRING7##</td><td/></row>
-		<row><td>ARPHELPTELEPHONE</td><td>##ID_STRING8##</td><td/></row>
+		<row><td>ARPCONTACT</td><td>##ID_STRING3##</td><td/></row>
+		<row><td>ARPHELPLINK</td><td>##ID_STRING4##</td><td/></row>
+		<row><td>ARPHELPTELEPHONE</td><td>##ID_STRING5##</td><td/></row>
 		<row><td>ARPNOMODIFY</td><td>1</td><td/></row>
 		<row><td>ARPPRODUCTICON</td><td>ARPPRODUCTICON.exe</td><td/></row>
-		<row><td>ARPURLINFOABOUT</td><td>##ID_STRING1##</td><td/></row>
+		<row><td>ARPURLINFOABOUT</td><td>##ID_STRING2##</td><td/></row>
 		<row><td>AgreeToLicense</td><td>No</td><td/></row>
 		<row><td>ApplicationUsers</td><td>AllUsers</td><td/></row>
 		<row><td>DWUSINTERVAL</td><td>30</td><td/></row>
-		<row><td>DWUSLINK</td><td>CE9CF09FCE4C974FC9ACF0EF89FB978F8ECBC78FCE8CF0EFCEEC90B8DE7BC08F6ECB87C88EAC</td><td/></row>
+		<row><td>DWUSLINK</td><td>CEBBC088CE7BF08889ACA758CEFB978FF9ACE08F59DB87B8CE7C903FDEFCE0F899FBF01FA9AC</td><td/></row>
 		<row><td>DefaultUIFont</td><td>Tahoma8</td><td/></row>
 		<row><td>DialogCaption</td><td>InstallShield for Windows Installer</td><td/></row>
 		<row><td>DiskPrompt</td><td>[1]</td><td/></row>
@@ -3504,11 +3165,11 @@ VABlAHMAdAAgAFIAZQBsAGUAYQBzAGUAAQBDAG8AbgBmAGkAZwB1AHIAYQB0AGkAbwBuAA==
 		<row><td>PROGMSG_IIS_REMOVEVROOT</td><td>##IDS_PROGMSG_IIS_REMOVEVROOT##</td><td/></row>
 		<row><td>PROGMSG_IIS_REMOVEVROOTS</td><td>##IDS_PROGMSG_IIS_REMOVEVROOTS##</td><td/></row>
 		<row><td>PROGMSG_IIS_ROLLBACKVROOTS</td><td>##IDS_PROGMSG_IIS_ROLLBACKVROOTS##</td><td/></row>
-		<row><td>ProductCode</td><td>{DA853AC8-C165-46A5-91AB-F41E52944A05}</td><td/></row>
+		<row><td>ProductCode</td><td>{9A6FB091-D345-4C2B-9B8B-EB345DB1F04D}</td><td/></row>
 		<row><td>ProductID</td><td>none</td><td/></row>
 		<row><td>ProductLanguage</td><td>1033</td><td/></row>
-		<row><td>ProductName</td><td>enabler</td><td/></row>
-		<row><td>ProductVersion</td><td>2.00.1313</td><td/></row>
+		<row><td>ProductName</td><td>ASP.NET Enabler 2.0</td><td/></row>
+		<row><td>ProductVersion</td><td>2.02.1319</td><td/></row>
 		<row><td>ProgressType0</td><td>install</td><td/></row>
 		<row><td>ProgressType1</td><td>Installing</td><td/></row>
 		<row><td>ProgressType2</td><td>installed</td><td/></row>
@@ -3517,7 +3178,7 @@ VABlAHMAdAAgAFIAZQBsAGUAYQBzAGUAAQBDAG8AbgBmAGkAZwB1AHIAYQB0AGkAbwBuAA==
 		<row><td>ReinstallModeText</td><td>omus</td><td/></row>
 		<row><td>SHOWLAUNCHPROGRAM</td><td>0</td><td/></row>
 		<row><td>SetupType</td><td>Typical</td><td/></row>
-		<row><td>UpgradeCode</td><td>{B4E159BB-950B-4DED-99F9-072655CC45D1}</td><td/></row>
+		<row><td>UpgradeCode</td><td>{18216039-BEA4-4E4D-A655-A28BE5359F78}</td><td/></row>
 		<row><td>_IsMaintenance</td><td>Change</td><td/></row>
 		<row><td>_IsSetupTypeMin</td><td>Typical</td><td/></row>
 	</table>
@@ -3572,11 +3233,14 @@ VABlAHMAdAAgAFIAZQBsAGUAYQBzAGUAAQBDAG8AbgBmAGkAZwB1AHIAYQB0AGkAbwBuAA==
 		<col def="S0">Value</col>
 		<col def="s72">Component_</col>
 		<col def="I4">ISAttributes</col>
-		<row><td>Registry1</td><td>2</td><td>Software\ISE\Eiffel55\ecdpc</td><td>ISE_EIFFEL</td><td>[INSTALLDIR]Compiler</td><td>ISRegistryComponent</td><td>0</td></row>
-		<row><td>Registry2</td><td>2</td><td>Software\ISE\Eiffel55\ecdpc</td><td>ISE_C_COMPILER</td><td>msc</td><td>ISRegistryComponent</td><td>0</td></row>
-		<row><td>Registry3</td><td>2</td><td>Software\ISE\Eiffel55\ecdpc</td><td>ISE_PLATFORM</td><td>windows</td><td>ISRegistryComponent</td><td>0</td></row>
-		<row><td>Registry5</td><td>2</td><td>Software\ISE\Eiffel CodeDom Provider\Setup</td><td>InstallDir</td><td>[INSTALLDIR]</td><td>ISRegistryComponent</td><td>0</td></row>
-		<row><td>Registry7</td><td>2</td><td>Software\ISE\Eiffel CodeDom Provider\Configurations</td><td/><td>[INSTALLDIR]CodeDom\configs\default.ecd</td><td>ISRegistryComponent</td><td>0</td></row>
+		<row><td>Registry1</td><td>2</td><td>SOFTWARE\ISE\Eiffel55\ecdpc</td><td/><td/><td>ecdpc.exe</td><td>0</td></row>
+		<row><td>Registry1529</td><td>2</td><td>SOFTWARE\ISE\Eiffel Codedom Provider</td><td/><td/><td>EiffelSoftware.CodeDom.dll</td><td>0</td></row>
+		<row><td>Registry1531</td><td>2</td><td>SOFTWARE\ISE\Eiffel Codedom Provider\Configurations</td><td/><td>[INSTALLDIR]CodeDom\configs\default.ecd</td><td>EiffelSoftware.CodeDom.dll</td><td>0</td></row>
+		<row><td>Registry1532</td><td>2</td><td>SOFTWARE\ISE\Eiffel Codedom Provider\Setup</td><td/><td/><td>EiffelSoftware.CodeDom.dll</td><td>0</td></row>
+		<row><td>Registry1533</td><td>2</td><td>SOFTWARE\ISE\Eiffel Codedom Provider\Setup</td><td>InstallDir</td><td>[INSTALLDIR]</td><td>EiffelSoftware.CodeDom.dll</td><td>0</td></row>
+		<row><td>Registry2</td><td>2</td><td>SOFTWARE\ISE\Eiffel55\ecdpc</td><td>ISE_EIFFEL</td><td>[INSTALLDIR]Compiler</td><td>ecdpc.exe</td><td>0</td></row>
+		<row><td>Registry3</td><td>2</td><td>SOFTWARE\ISE\Eiffel55\ecdpc</td><td>ISE_C_COMPILER</td><td>msc</td><td>ecdpc.exe</td><td>0</td></row>
+		<row><td>Registry4</td><td>2</td><td>SOFTWARE\ISE\Eiffel55\ecdpc</td><td>ISE_PLATFORM</td><td>windows</td><td>ecdpc.exe</td><td>0</td></row>
 	</table>
 
 	<table name="RemoveFile">
@@ -3585,6 +3249,7 @@ VABlAHMAdAAgAFIAZQBsAGUAYQBzAGUAAQBDAG8AbgBmAGkAZwB1AHIAYQB0AGkAbwBuAA==
 		<col def="L255">FileName</col>
 		<col def="s72">DirProperty</col>
 		<col def="i2">InstallMode</col>
+		<row><td>NewShortcut1</td><td>ecdpman.exe</td><td/><td>newfolder1</td><td>2</td></row>
 	</table>
 
 	<table name="RemoveIniFile">
@@ -3666,6 +3331,7 @@ VABlAHMAdAAgAFIAZQBsAGUAYQBzAGUAAQBDAG8AbgBmAGkAZwB1AHIAYQB0AGkAbwBuAA==
 		<col def="S255">ISComments</col>
 		<col def="S255">ISShortcutName</col>
 		<col def="I4">ISAttributes</col>
+		<row><td>EcdpmanShortcut</td><td>newfolder1</td><td>##ID_STRING10##</td><td>ecdpman.exe</td><td>[INSTALLDIR]CodeDom\bin\ecdpman.exe</td><td/><td>##ID_STRING11##</td><td/><td>NewShortcut1_9A6FB091D3454C2B9B8BEB345DB1F04D.exe</td><td/><td>1</td><td>BIN</td><td/><td/><td/></row>
 	</table>
 
 	<table name="Signature">

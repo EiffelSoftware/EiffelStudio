@@ -12,19 +12,26 @@ inherit
 			type_check, byte_node, value_i, is_equivalent
 		end
 
-feature {AST_FACTORY} -- Initialization
+	REFACTORING_HELPER
 
-	initialize (r: STRING) is
-			-- Create a new REAL AST node with `r'
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make (a_type: like constant_type; r: STRING) is
+			-- Create a new REAL_AS node of type `a_type' with `r'
 			-- containing the textual representation
 			-- of the real value.
 		require
 			r_not_void: r /= Void
 		do
-			value := r
+			value := r.string
 			value.replace_substring_all ("_","")
+			constant_type := a_type
 		ensure
 			value_set: value = r
+			constant_type_set: constant_type = a_type
 		end
 
 feature -- Visitor
@@ -35,17 +42,20 @@ feature -- Visitor
 			v.process_real_as (Current)
 		end
 
-feature -- Properties
+feature -- Access
 
 	value: STRING
 			-- Real value
+			
+	constant_type: TYPE_A
+			-- Actual type of real constant if specified.
 
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is
 			-- Is `other' equivalent to the current object ?
 		do
-			Result := value.is_equal (other.value)
+			Result := value.is_equal (other.value) and then equal (constant_type, other.constant_type)
 		end
 
 feature -- Type check and byte code
@@ -59,7 +69,12 @@ feature -- Type check and byte code
 	type_check is
 			-- Type check a real type
 		do
-			context.put (Real_64_type)
+			if constant_type = Void then
+				context.put (Real_64_type)
+			else
+				fixme ("We should check the `constant_type' matches the real `value'.")
+				context.put (constant_type)
+			end
 		end
 
 	byte_node: REAL_CONST_B is
@@ -74,9 +89,13 @@ feature {AST_EIFFEL} -- Output
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
-			ctxt.put_text_item (
-				create {NUMBER_TEXT}.make (string_value)
-			)
+			if constant_type /= Void then
+				ctxt.put_text_item (ti_l_curly)
+				constant_type.format (ctxt)
+				ctxt.put_text_item (ti_r_curly)
+				ctxt.put_space
+			end
+			ctxt.put_text_item (create {NUMBER_TEXT}.make (string_value))
 		end
 
 	string_value: STRING is

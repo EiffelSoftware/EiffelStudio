@@ -191,7 +191,7 @@ feature -- Status setting
 				-- but has implementation renamed.
 				-- If this is the case, on `a_container' this feature
 				-- had to be redefined.
-				a_tool_bar.merge_radio_button_groups (interface)
+--				a_tool_bar.merge_radio_button_groups (interface)
 			else
 				l := peer.radio_group
 				if l /= radio_group then
@@ -431,18 +431,21 @@ feature {NONE} -- Implementation
 	add_pixmap(a_pixmap_imp: EV_PIXMAP_IMP) is
 			-- Add a pixmap to the "toolbar" list of bitmaps.
 		local
-			mask_bitmap: WEL_BITMAP
 			pixmap_icon: WEL_ICON
 		do
 			pixmap_icon := a_pixmap_imp.icon
 			if pixmap_icon /= Void then
 				add_icon(pixmap_icon)
 			else
-				mask_bitmap := a_pixmap_imp.mask_bitmap
-					-- The bitmap should be selected in the device
-					-- context, otherwise it is invalide.
-				if mask_bitmap /= Void then
-					add_masked_bitmap(a_pixmap_imp.bitmap, mask_bitmap)
+				if a_pixmap_imp.width /= bitmaps_width or
+				   a_pixmap_imp.height /= bitmaps_height then
+					a_pixmap_imp.stretch(bitmaps_width, bitmaps_height)
+				end
+				if a_pixmap_imp.has_mask then
+					add_masked_bitmap(
+						a_pixmap_imp.bitmap, 
+						a_pixmap_imp.mask_bitmap
+						)
 				else
 					add_bitmap(a_pixmap_imp.bitmap)
 				end
@@ -452,16 +455,21 @@ feature {NONE} -- Implementation
 	add_hot_pixmap(a_pixmap_imp: EV_PIXMAP_IMP) is
 			-- Add a pixmap to the "toolbar" list of hot bitmaps.
 		local
-			mask_bitmap: WEL_BITMAP
 			pixmap_icon: WEL_ICON
 		do
 			pixmap_icon := a_pixmap_imp.icon
 			if pixmap_icon /= Void then
-				add_icon(pixmap_icon)
+				add_hot_icon(pixmap_icon)
 			else
-				mask_bitmap := a_pixmap_imp.mask_bitmap
-				if mask_bitmap /= Void then
-					add_hot_masked_bitmap(a_pixmap_imp.bitmap, mask_bitmap)
+				if a_pixmap_imp.width /= bitmaps_width or
+				   a_pixmap_imp.height /= bitmaps_height then
+					a_pixmap_imp.stretch(bitmaps_width, bitmaps_height)
+				end
+				if a_pixmap_imp.has_mask then
+					add_hot_masked_bitmap(
+						a_pixmap_imp.bitmap, 
+						a_pixmap_imp.mask_bitmap
+						)
 				else
 					add_hot_bitmap(a_pixmap_imp.bitmap)
 				end
@@ -728,9 +736,12 @@ end -- class EV_TOOL_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.51  2000/04/11 22:20:03  pichery
---| changed back to previous version. Waiting for sam to commit the new
---| pixmap implementation.
+--| Revision 1.52  2000/04/12 01:32:16  pichery
+--| - new pixmap handling
+--|
+--| Revision 1.50  2000/04/11 21:33:40  pichery
+--| cosmetics changes and changes dues to the new pixmap
+--| implementation
 --|
 --| Revision 1.49  2000/04/11 16:58:05  rogers
 --| Removed direct inheritance from EV_PICK_AND_DROPABLE_ITEM_HOLDER_IMP.

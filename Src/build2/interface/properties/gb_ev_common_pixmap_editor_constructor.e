@@ -55,6 +55,8 @@ feature -- Access
 			if not (object.type.is_equal ("EV_TOOL_BAR_SEPARATOR") or object.type.is_equal ("EV_MENU_SEPARATOR")) then
 				initialize_attribute_editor (Result)
 				create horizontal_box
+				horizontal_box.set_padding_width (object_editor_padding_width)
+				horizontal_box.set_border_width (Object_editor_padding_width)
 				create frame_box
 				create modify_button.make_with_text (Set_with_named_file_text)
 				modify_button.select_actions.extend (agent modify_pixmap)

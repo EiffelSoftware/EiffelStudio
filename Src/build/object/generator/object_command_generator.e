@@ -109,6 +109,7 @@ feature -- Closeable
 				realize
 			else
 				show
+				raise
 			end
 			edited_class ?= application_class
 			check
@@ -132,6 +133,7 @@ feature {NONE} -- Implementation
 			temp_title.append ("Object command generator: ")
 			temp_title.append (edited_class.class_name)
 			set_title (temp_title)
+			routine_list.wipe_out
 			rout_list := edited_class.routine_list
 			from
 				rout_list.start

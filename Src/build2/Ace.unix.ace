@@ -87,7 +87,12 @@ cluster
 
 	eiffel_helper (ast):		"$EIFFEL_SRC/library/helpers/eiffel"
 
-	eiffel_parser (ast):		"$EIFFEL_SRC/dotnet/VisualStudio/codedom/producer/eiffel_parser"
+	eiffel_parser (ast):		"$EIFFEL_SRC/Eiffel/common/parser/parser"
+
+	eiffel_parser_errors (ast):		"$EIFFEL_SRC/Eiffel/API/error/common"
+		exclude
+			"error_handler.e"; "syntax_error.e"; 
+		end
 
 external
 

@@ -52,13 +52,13 @@ feature -- Generation
 					buf.putstring ("RTAS(")
 					argument_regs.item(1).print_register
 					buf.putstring (", ")
-					current_reg.print_register
+					gen_reg.print_register
 					buf.putstring (");")
 					buf.new_line
 					buf.putstring ("*((EIF_REFERENCE *)")
 				end
 
-				current_reg.print_register
+				gen_reg.print_register
 				buf.putstring (" + (")
 				parameters.i_th (2).print_register
 				buf.putstring (")) = ")
@@ -101,7 +101,7 @@ feature -- Generation
 					buf.putstring ("*((EIF_REFERENCE *)")
 				end
 				
-				current_reg.print_register
+				gen_reg.print_register
 				buf.putstring (" + (")
 				parameters.i_th (1).print_register
 				buf.putstring ("));")

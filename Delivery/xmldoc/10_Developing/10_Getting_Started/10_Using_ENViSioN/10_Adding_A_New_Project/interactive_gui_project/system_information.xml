@@ -7,9 +7,6 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<heading>
-			<size>1</size>System Information Page
-		</heading>
 		<paragraph>This page allows you to enter the class names used in the generated system.</paragraph>
 		<paragraph>
 			<image>

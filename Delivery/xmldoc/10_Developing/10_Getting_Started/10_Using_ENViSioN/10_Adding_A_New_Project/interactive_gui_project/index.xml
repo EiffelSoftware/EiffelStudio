@@ -7,9 +7,9 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<paragraph>Availability: Enterprise version only.</paragraph>
+		<paragraph><bold>Availability</bold>: Enterprise version only.</paragraph>
 		<paragraph>
-			<line_break/> This wizard enables you to create a Vision2 application with an advanced GUI. During the execution of the wizard, you will be able to design the interface for your Vision2 application.
+			<line_break/> This wizard enables you to create a EiffelVision 2 application with an advanced GUI. During the execution of the wizard, you will be able to design the interface for your EiffelVision 2 application.
 		</paragraph>
 		<heading>
 			<size>2</size>Navigation
@@ -69,19 +69,20 @@
 				<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/10_Adding_A_New_Project/interactive_gui_project/completion.xml#modify</url>
 				<label>  Here</label>
 			</link>
-			<seealso>
-				<bold>See Also</bold>
-				<line_break/>
-				<link>
-					<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/10_Adding_A_New_Project/index.xml</url>
-					<label>  Adding a New Project</label>
-				</link>
-				<line_break/>
-				<link>
-					<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/10_Adding_A_New_Project/advanced_graphics_project.xml</url>
-					<label>  GUI Project Wizard</label>
-				</link>
-				<line_break/>
-			</seealso>
 		</paragraph>
+		<line_break/>
+		<seealso>
+			<bold>See Also</bold>
+			<line_break/>
+			<link>
+				<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/10_Adding_A_New_Project/index.xml</url>
+				<label>  Adding a New Project</label>
+			</link>
+			<line_break/>
+			<link>
+				<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/10_Adding_A_New_Project/advanced_graphics_project.xml</url>
+				<label>  GUI Project Wizard</label>
+			</link>
+			<line_break/>
+		</seealso>
 	</paragraph></document>

@@ -9,14 +9,15 @@ class
 inherit
 	EB_MULTIFORMAT_EDIT_TOOL
 		rename
-			edit_bar as object_toolbar
+			edit_bar as object_toolbar,
+			build_edit_bar as build_object_toolbar
 --			Object_type as stone_type
 		redefine
-			make,
--- hole,
- close_windows, -- build_toolbar_menu,
+			make, init_commands,
+--			hole,
+ close_windows,
 			empty_tool_name, build_interface,
- set_default_format,
+			set_default_format,
 			stone, synchronize, -- process_object,
 			destroy, reset, format_list,
 -- create_toolbar,
@@ -90,6 +91,16 @@ feature {NONE} -- Initialization
 			set_last_format (format_list.default_format)
 		end
 
+	init_commands is
+		do
+			Precursor
+			create slice_cmd.make (Current)
+			create current_target_cmd.make (Current)
+			create previous_target_cmd.make (Current)
+			create next_target_cmd.make (Current)
+--			!! history_list_cmd.make (Current)
+		end
+
 feature -- Window Properties
 
 	empty_tool_name: STRING is
@@ -113,7 +124,9 @@ feature -- Window Properties
 		do
 			Result := Interface_names.i_Object_id
 		end
- 
+
+	format_bar_is_used: BOOLEAN is False
+
 feature -- Access
  
 	kept_objects: LINKED_SET [STRING] is
@@ -268,17 +281,13 @@ feature -- Settings
 
 feature -- Commands
 
-	showattr_frmt_holder: FORMAT_HOLDER
+	current_target_cmd: EB_CURRENT_OBJECT_CMD
 
-	showonce_frmt_holder: FORMAT_HOLDER
+	previous_target_cmd: EB_PREVIOUS_OBJECT_CMD
 
-	current_target_cmd_holder: COMMAND_HOLDER
+	next_target_cmd: EB_NEXT_OBJECT_CMD
 
-	previous_target_cmd_holder: COMMAND_HOLDER
-
-	next_target_cmd_holder: COMMAND_HOLDER
-
-	slice_cmd_holder: COMMAND_HOLDER
+	slice_cmd: EB_SLICE_COMMAND
 
 feature {NONE} -- Properties; Forms And Holes
 
@@ -290,11 +299,11 @@ feature {NONE} -- Properties; Forms And Holes
 
 feature {NONE} -- Implementation; Graphical Interface
 
-	create_toolbar (a_parent: COMPOSITE) is
-			-- Create a toolbar_parent with parent `a_parent'.
-		local
+--	create_toolbar (a_parent: COMPOSITE) is
+--			-- Create a toolbar_parent with parent `a_parent'.
+--		local
 --			sep: THREE_D_SEPARATOR
-		do
+--		do
 --			!! toolbar_parent.make (new_name, a_parent)
 --			if not is_in_project_tool then
 --				!! sep.make (interface_names.t_empty, toolbar_parent)
@@ -309,11 +318,11 @@ feature {NONE} -- Implementation; Graphical Interface
 --			else
 --				object_toolbar.set_height (22)
 --			end
-		end
+--		end
 
-	build_object_toolbar is
+	build_object_toolbar (a_toolbar: EV_BOX) is
 			-- Build top bar.
---		local
+		local
 --			search_button: EB_BUTTON
 --			quit_button: EB_BUTTON
 --			quit_cmd: QUIT_FILE
@@ -321,20 +330,15 @@ feature {NONE} -- Implementation; Graphical Interface
 --
 --			history_list_cmd: LIST_HISTORY
 --			previous_target_cmd: PREVIOUS_OBJECT
---			previous_target_button: EB_BUTTON
 --			next_target_cmd: NEXT_OBJECT
---			next_target_button: EB_BUTTON
 --			current_target_cmd: CURRENT_OBJECT
 --			slice_cmd: SLICE_COMMAND
---			slice_button: EB_BUTTON
---			sep: SEPARATOR
---			sep1, sep2, sep3: THREE_D_SEPARATOR
---			once_cmd: SHOW_ONCE_RESULTS
---			once_button: FORMAT_BUTTON
---			attr_cmd: SHOW_ATTR_VALUES
---			attr_button: FORMAT_BUTTON
+			b: EV_BUTTON
+			sep: EV_VERTICAL_SEPARATOR
 --			do_nothing_cmd: DO_NOTHING_CMD
 		do
+			create format_bar.make (a_toolbar)
+
 --				-- Creation of all the commands, holes, buttons, and menu entries
 --			!! hole.make (Current)
 --
@@ -353,54 +357,59 @@ feature {NONE} -- Implementation; Graphical Interface
 --			end
 --
 --				-- First we create all objects.
---			!! once_cmd.make (Current)
---			!! once_button.make (once_cmd, object_toolbar)
---			!! showonce_frmt_holder.make (once_cmd, once_button, once_menu_entry)
---			!! attr_cmd.make (Current)
---			!! attr_button.make (attr_cmd, object_toolbar)
---			!! showattr_frmt_holder.make (attr_cmd, attr_button, attr_menu_entry)
---
---				-- Here we create all objects needed for the attachments.
---			!! slice_cmd.make (Current)
---			!! slice_button.make (slice_cmd, object_toolbar)
+
+			create sep.make (a_toolbar)
+
+			create b.make (a_toolbar)
+			b.set_pixmap (Pixmaps.bm_Slice)
+			b.add_click_command (slice_cmd, Void)
 --			slice_button.add_third_button_action
---			!! slice_menu_entry.make_button_only (slice_cmd, special_menu)
---			slice_menu_entry.add_activate_action (slice_cmd, slice_cmd.button_three_action)
---			!! slice_cmd_holder.make (slice_cmd, slice_button, slice_menu_entry)
---			!! current_target_cmd.make (Current)
---			!! sep.make (new_name, special_menu)
---			!! current_target_cmd_holder.make_plain (current_target_cmd)
---			current_target_cmd_holder.set_menu_entry (current_target_menu_entry)
---			!! next_target_cmd.make (Current)
---			!! next_target_button.make (next_target_cmd, object_toolbar)
---			!! next_target_cmd_holder.make (next_target_cmd, next_target_button, next_target_menu_entry)
---			!! previous_target_cmd.make (Current)
---			!! previous_target_button.make (previous_target_cmd, object_toolbar)
---			!! previous_target_cmd_holder.make (previous_target_cmd, previous_target_button, previous_target_menu_entry)
---
---			!! history_list_cmd.make (Current)
+
+			create sep.make (a_toolbar)
+
+			create b.make (a_toolbar)
+			b.set_pixmap (Pixmaps.bm_Previous_target)
+			b.add_click_command (previous_target_cmd, Void)
+
+			create b.make (a_toolbar)
+			b.set_pixmap (Pixmaps.bm_Next_target)
+			b.add_click_command (next_target_cmd, Void)
+
 --			next_target_button.add_button_press_action (3, history_list_cmd, next_target_button)
 --			previous_target_button.add_button_press_action (3, history_list_cmd, previous_target_button)
---
---			!! sep1.make (interface_names.t_empty, object_toolbar)
---			sep1.set_horizontal (False)
---			sep1.set_height (20)
---
---			!! sep2.make (interface_names.t_empty, object_toolbar)
---			sep2.set_horizontal (False)
---			sep2.set_height (20)
---
---			!! sep3.make (interface_names.t_empty, object_toolbar)
---			sep3.set_horizontal (False)
---			sep3.set_height (20)
---
+
 --			search_button := search_cmd_holder.associated_button
---
+
 		end
 
 feature {NONE} -- Properties
 
 	format_list: EB_OBJECT_FORMATTER_LIST
 
-build_edit_bar is do end
+feature {EB_SLICE_COMMAND} -- Format report
+
+	format_is_show_attibutes: BOOLEAN is
+		do
+			Result := (last_format = format_list.first)
+		end
+
+feature {EB_TOOL_MANAGER} -- Menus Implementation
+
+	build_special_menu (a_menu: EV_MENU_ITEM_HOLDER) is
+		local
+			i: EV_MENU_ITEM
+		do
+			create i.make_with_text (a_menu, Interface_names.m_Slice)
+			i.add_select_command (slice_cmd, Void)
+
+			create i.make_with_text (a_menu, Interface_names.m_Current)
+			i.add_select_command (current_target_cmd, Void)
+
+			create i.make_with_text (a_menu, Interface_names.m_Next_target)
+			i.add_select_command (next_target_cmd, Void)
+
+			create i.make_with_text (a_menu, Interface_names.m_Previous_target)
+			i.add_select_command (previous_target_cmd, Void)
+		end
+
 end -- class EB_OBJECT_TOOL

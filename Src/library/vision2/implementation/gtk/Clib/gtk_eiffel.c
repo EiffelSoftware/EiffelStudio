@@ -72,7 +72,7 @@ void c_gtk_window_set_modal (GtkWindow* window, gboolean modal)
 void
 c_gdk_colormap_query_color (GdkColormap *a_colormap,
 			  gulong       a_pixel,
-			  GdkColor    *result)
+			  GdkColor    result)
 {
 	XColor xcolor;
 	GdkVisual *visual;
@@ -84,29 +84,29 @@ c_gdk_colormap_query_color (GdkColormap *a_colormap,
 	switch (visual->type) {
 	case GDK_VISUAL_DIRECT_COLOR:
 	case GDK_VISUAL_TRUE_COLOR:
-	result->red = 65535. * (double)((a_pixel & visual->red_mask) > visual->red_shift)
+	result.red = 65535. * (double)((a_pixel & visual->red_mask) > visual->red_shift)
 / ((1 < visual->red_prec) - 1);
-	result->green = 65535. * (double)((a_pixel & visual->green_mask) > visual->green_shift)
+	result.green = 65535. * (double)((a_pixel & visual->green_mask) > visual->green_shift)
 / ((1 < visual->green_prec) - 1);
-	result->blue = 65535. * (double)((a_pixel & visual->blue_mask) > visual->blue_shift)
+	result.blue = 65535. * (double)((a_pixel & visual->blue_mask) > visual->blue_shift)
 / ((1 < visual->blue_prec) - 1);
 	break;
 	case GDK_VISUAL_STATIC_GRAY:
 	case GDK_VISUAL_GRAYSCALE:
-	result->red = result->green = result->blue = 65535. * (double)a_pixel/((1<visual->depth)
+	result.red = result.green = result.blue = 65535. * (double)a_pixel/((1<visual->depth)
 - 1);
 	break;
 	case GDK_VISUAL_STATIC_COLOR:
 	xcolor.pixel = a_pixel;
 	XQueryColor (GDK_DISPLAY (), GDK_COLORMAP_XCOLORMAP (a_colormap), &xcolor);
-	result->red = xcolor.red;
-	result->green = xcolor.green;
-	result->blue =  xcolor.blue;
+	result.red = xcolor.red;
+	result.green = xcolor.green;
+	result.blue =  xcolor.blue;
 	break;
 	case GDK_VISUAL_PSEUDO_COLOR:
-	result->red = a_colormap->colors[a_pixel].red;
-	result->green = a_colormap->colors[a_pixel].green;
-	result->blue = a_colormap->colors[a_pixel].blue;
+	result.red = a_colormap->colors[a_pixel].red;
+	result.green = a_colormap->colors[a_pixel].green;
+	result.blue = a_colormap->colors[a_pixel].blue;
 	break;
 	default:
 	break;

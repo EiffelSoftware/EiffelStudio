@@ -32,6 +32,6 @@ void c_gtk_window_set_modal(GtkWindow* window, gboolean modal);
 void
 c_gdk_colormap_query_color (GdkColormap *colormap,
 			  gulong       pixel,
-			  GdkColor    *result);
+			  GdkColor    result);
 
 #endif

@@ -677,8 +677,17 @@ feature {NONE} -- Implementation
 
 feature {EV_TREE_NODE_IMP} -- Implementation
 
+	get_text_from_position (a_tree_node_imp: EV_TREE_NODE_IMP): STRING is
+			-- Retrieve cell text from `a_tree_node_imp`
+		local
+			str_value: POINTER
+		do
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_model_get_value (tree_store, a_tree_node_imp.list_iter.item, 1, $str_value)
+			create Result.make_from_c (str_value)
+		end
+
 	set_text_on_position (a_tree_node_imp: EV_TREE_NODE_IMP; a_text: STRING) is
-			-- Set cell text at (a_column, a_row) to `a_text'.
+			-- Set cell text at to `a_text'.
 		local
 			a_cs: EV_GTK_C_STRING
 			str_value: POINTER

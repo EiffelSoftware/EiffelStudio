@@ -36,7 +36,7 @@ inherit
 	THREAD_CONTROL
 	EXIT_CONTROL
 
-creation
+create
 
 	make
 

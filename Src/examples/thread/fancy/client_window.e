@@ -16,7 +16,7 @@ inherit
 
 	OBJECT_CONTROL
 
-creation
+create
 	make, make_by_pointer
 
 feature -- Initialization

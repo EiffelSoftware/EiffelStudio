@@ -5,7 +5,7 @@ inherit
 
 	DEMO_CMD
 
-creation
+create
 	make_in
 
 feature -- Basic operations

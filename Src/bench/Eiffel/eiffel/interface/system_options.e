@@ -416,17 +416,25 @@ feature -- Update
 	set_old_verbatim_strings (b: BOOLEAN) is
 			-- Set `has_old_verbatim_strings' to `b'.
 		do
-			has_old_verbatim_strings := b
+			if not (create {SHARED_WORKBENCH}).Workbench.has_compilation_started then
+				has_old_verbatim_strings := b
+			end
 		ensure
-			has_old_verbatim_strings_set: has_old_verbatim_strings = b
+			has_old_verbatim_strings_set:
+				(create {SHARED_WORKBENCH}).Workbench.has_compilation_started or else
+				has_old_verbatim_strings = b
 		end
 	
 	set_old_verbatim_strings_warning (b: BOOLEAN) is
 			-- Set `has_old_verbatim_strings_warning' to `b'.
 		do
-			has_old_verbatim_strings_warning := b
+			if not (create {SHARED_WORKBENCH}).Workbench.has_compilation_started then
+				has_old_verbatim_strings_warning := b
+			end
 		ensure
-			has_old_verbatim_strings_warning_set: has_old_verbatim_strings_warning = b
+			has_old_verbatim_strings_warning_set:
+				(create {SHARED_WORKBENCH}).Workbench.has_compilation_started or else
+				has_old_verbatim_strings_warning = b
 		end
 	
 	set_console_application (b: BOOLEAN) is

@@ -28,63 +28,54 @@ feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
 
 feature 
 
-	is_font_defined (font_name: STRING): BOOLEAN is
-			-- Is `font_name' defined for current terminal?
+	set_label_font (a_font: FONT) is
+			-- Set font of every labels to `a_font'.
 		require
 			exists: not destroyed;
-			font_name_not_void: font_name /= Void
+			font_name_not_void: a_font /= Void;
+			a_font_specified: a_font.is_specified
 		do
-			Result := implementation.is_font_defined (font_name)
-		end;
-
-	set_label_font (a_font_name: STRING) is
-			-- Set font of every labels to `a_font_name'.
-		require
-			exists: not destroyed;
-			font_name_not_void: a_font_name /= Void;
-			font_name_defined: is_font_defined (a_font_name)
-		do
-			implementation.set_label_font (a_font_name);
+			implementation.set_label_font (a_font);
 		end; 
 
-	set_button_font (a_font_name: STRING) is
-			-- Set font of every buttons to `a_font_name'.
+	set_button_font (a_font: FONT) is
+			-- Set font of every buttons to `a_font'.
 		require
 			exists: not destroyed;
-			font_name_not_void: a_font_name /= Void;
-			font_name_defined: is_font_defined (a_font_name)
+			font_name_not_void: a_font /= Void;
+			a_font_specified: a_font.is_specified
 		do
-			implementation.set_button_font (a_font_name);
+			implementation.set_button_font (a_font);
 		end;
 
-	set_text_font (a_font_name: STRING) is
-			-- Set font of every text to `a_font_name'.
+	set_text_font (a_font: FONT) is
+			-- Set font of every text to `a_font'.
 		require
 			exists: not destroyed;
-			font_name_not_void: a_font_name /= Void;
-			font_name_defined: is_font_defined (a_font_name)
+			font_name_not_void: a_font /= Void;
+			a_font_specified: a_font.is_specified
 		do
-			implementation.set_text_font (a_font_name);
+			implementation.set_text_font (a_font);
 		end;
 
-	label_font: STRING is
-			-- Font name specified for labels
+	label_font: FONT is
+			-- Font specified for labels
 		require
 			exists: not destroyed
 		do
 			Result := implementation.label_font
 		end;
 
-	button_font: STRING is
-			-- Font name specified for buttons
+	button_font: FONT is
+			-- Font specified for buttons
 		require
 			exists: not destroyed
 		do
 			Result := implementation.button_font
 		end;
 
-	text_font: STRING is
-			-- Font name specified for text
+	text_font: FONT is
+			-- Font specified for text
 		require
 			exists: not destroyed
 		do

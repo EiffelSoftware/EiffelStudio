@@ -52,6 +52,17 @@ inherit
 			c_name
 		end
 
+creation
+
+	make
+
+feature -- Creation
+
+	make (a_command_tool: COMMAND_TOOL) is
+		do
+			associated_command_tool := a_command_tool
+		end
+
 feature -- Feature from CAT_ADD_COMMAND
 
 	catalog_work is
@@ -248,7 +259,7 @@ feature {NONE} -- Features of QUEST_POPUPER
 
 	popuper_parent: COMPOSITE is
 		do
-			Result := edited_command.command_editor
+			Result := associated_command_tool
 		end 
 
 feature {NONE} -- QUEST_POPUPER
@@ -263,7 +274,7 @@ feature {NONE} -- QUEST_POPUPER
 			-- Page of the command catalog where the newly created
 			-- commands are added.
 		do
-			Result := command_catalog.user_defined_commands1
+			Result := command_catalog.current_page
 		end
 
 	new_instance: CMD_INSTANCE

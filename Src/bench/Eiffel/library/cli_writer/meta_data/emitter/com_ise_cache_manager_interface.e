@@ -26,6 +26,15 @@ feature -- Initialization
 			success: last_call_success = 0
 		end
 		
+	initialize_with_path (a_path: UNI_STRING) is
+			-- Initialize current with `a_path' as ISE_EIFFEL var.
+		do
+			last_call_success := c_initialize_with_path (item, a_path)
+			is_initialized := True
+		ensure
+			success: last_call_success = 0
+		end
+		
 feature -- Access
 
 	is_initialized: BOOLEAN
@@ -173,11 +182,19 @@ feature -- Basic Oprtations
 feature {NONE} -- Implementation
 		
 	c_initialize (ap:POINTER): INTEGER is
-			-- was the last operation successful?
+			-- initialize COM object 
 		external
 			"C++ ISE_Cache_COM_ISE_CACHE_MANAGER signature ():EIF_INTEGER use %"ise_cache_manager.h%""
 		alias
 			"initialize"
+		end
+		
+	c_initialize_with_path (ap:POINTER; ap2: POINTER): INTEGER is
+			-- initialize COM object with alternative ISE_EIFFEL path ?
+		external
+			"C++ ISE_Cache_COM_ISE_CACHE_MANAGER signature (LPWSTR):EIF_INTEGER use %"ise_cache_manager.h%""
+		alias
+			"initialize_with_path"
 		end
 
 	c_is_successful (ap:POINTER; aret_val: POINTER): INTEGER is

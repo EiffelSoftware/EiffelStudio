@@ -10,6 +10,11 @@ deferred class
 inherit
 	WIZARD_CPP_WRITER_GENERATOR
 
+	ECOM_FUNC_KIND
+		export 
+			{NONE} all
+		end
+
 feature -- Access
 
 	generate (a_descriptor: WIZARD_INTERFACE_DESCRIPTOR) is
@@ -36,22 +41,22 @@ feature -- Access
 				end
 			end
 
-			a_descriptor.functions.sort
+			a_descriptor.vtable_functions.sort
 
-			if a_descriptor.functions /= Void and then not a_descriptor.functions.empty then
+			if a_descriptor.vtable_functions /= Void and then not a_descriptor.vtable_functions.empty then
 				from
-					a_descriptor.functions.start
+					a_descriptor.vtable_functions.start
 				until
-					a_descriptor.functions.off
+					a_descriptor.vtable_functions.off
 				loop
-					if a_descriptor.dispinterface then
-						func_generator.generate_dual (a_descriptor.functions.item)
+					if a_descriptor.vtable_functions.item.func_kind = func_dispatch then
+						func_generator.generate_dual (a_descriptor.vtable_functions.item)
 					else
-						func_generator.generate (a_descriptor.functions.item)
+						func_generator.generate (a_descriptor.vtable_functions.item)
 					end
-					if not a_descriptor.dispinterface or a_descriptor.dual then
-						cpp_class_writer.add_function (func_generator.ccom_feature_writer, Public)
-					end
+					
+					cpp_class_writer.add_function (func_generator.ccom_feature_writer, Public)
+					
 					if 
 						func_generator.c_header_files /= Void and then 
 						not func_generator.c_header_files.empty
@@ -69,7 +74,7 @@ feature -- Access
 							func_generator.c_header_files.forth
 						end
 					end
-					a_descriptor.functions.forth
+					a_descriptor.vtable_functions.forth
 				end
 			end
 

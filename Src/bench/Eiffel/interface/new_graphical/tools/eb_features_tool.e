@@ -184,6 +184,21 @@ feature {EB_FEATURES_TREE} -- Status setting
 			end
 		end
 
+	go_to_clause (a_clause: FEATURE_CLAUSE_AS) is
+			-- `a_clause' has been selected, the associated class
+			-- window should display the corresponding feature clause.
+		local
+			s: STRING
+		do
+			if a_clause.position > 0 then
+				s := current_compiled_class.text
+				if s = Void then
+					s := development_window.editor_tool.text_area.text
+				end
+				development_window.editor_tool.text_area.display_line_at_top_when_ready (character_line (a_clause.position, s))
+			end
+		end
+
 feature {EB_FEATURES_TREE} -- Implementation
 
 	current_class: CLASS_AS
@@ -199,5 +214,21 @@ feature {NONE} -- Implementation
 
 	development_window: EB_DEVELOPMENT_WINDOW
 			-- Associated development window.
+
+	character_line (pos: INTEGER; s: STRING): INTEGER is
+			-- Line number of character number `pos' in `s'.
+		require
+			valid_pos: pos > 0
+			valid_string: s /= Void
+		local
+			s2: STRING
+		do
+			if pos <= s.count then
+				s2 := s.substring (1, pos)
+			else
+				s2 := s
+			end
+			Result := s2.occurrences ('%N')
+		end
 
 end -- class EB_FEATURES_TOOL

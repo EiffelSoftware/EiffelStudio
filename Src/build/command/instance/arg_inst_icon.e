@@ -7,17 +7,8 @@ inherit
 		redefine
 			transportable
 		end;
-
-	COMMAND
-		export
-			{NONE} all
-		end;
-
-	COMMAND_ARGS
-		export
-			{NONE} all
-		end;
-
+	COMMAND;
+	COMMAND_ARGS;
 	ICON_STONE
 		rename
 			set_original_stone as old_set_original_stone,
@@ -25,37 +16,28 @@ inherit
 			identifier as oui_identifier,
 			make as icon_stone_make
 		undefine
-			init_toolkit, stone_cursor
+			stone_cursor
 		redefine
 			original_stone
 		end;
-
 	ICON_STONE
 		rename
 			identifier as oui_identifier,
 			make as icon_stone_make
 		undefine
-			init_toolkit, stone_cursor
+			stone_cursor
 		redefine
 			make_visible, set_original_stone, original_stone
 		select
 			make_visible, set_original_stone
 		end;
-
 	HOLE
 		rename
 			target as source
-		export
-			{NONE} all
 		redefine
 			stone, compatible
 		end;
-
 	ERROR_POPUPER
-		export
-			{NONE} all
-		end
-
 
 feature 
 
@@ -67,7 +49,7 @@ feature
 			source.add_button_press_action (2, Current, Second);
 			initialize_transport;
 			source.add_button_press_action (2, show_command, Current);
-			source.add_button_release_action (2, show_command, Nothing);
+			source.add_button_release_action (2, show_command, Void);
 		end;
 
 -- **************
@@ -147,7 +129,7 @@ feature {NONE}
 				!!instantiate_cmd.make (original_stone);
 				instantiate_cmd.execute (stone.original_stone);
 			else
-				error_box.popup (Current, "Incompatible types")
+				error_box.popup (Current, Messages.incomp_er, Void)
 			end;
 		end;
 

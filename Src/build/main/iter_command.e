@@ -16,7 +16,6 @@ feature
 
 	execute (argument: ANY) is
 		do
-			iterate;
 		end;
 
 end

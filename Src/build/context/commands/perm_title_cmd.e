@@ -17,7 +17,7 @@ feature {NONE}
 
 	c_name: STRING is
 		do
-			Result := Context_const.perm_title_cmd_name
+			Result := Command_names.cont_perm_title_cmd_name
 		end;
 
 	context: PERM_WIND_C;

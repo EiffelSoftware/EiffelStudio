@@ -10,8 +10,6 @@ inherit
 		export
 			{NONE} all;
 			{ANY} show, hide, shown
-		undefine
-			init_toolkit
 		redefine
 			delete_window_action
 		end;
@@ -19,7 +17,6 @@ inherit
 	COMMAND;
 	COMMAND_ARGS;
 	SHARED_TRANSLATIONS;
-	PIXMAPS;
 	CONSTANTS;
 	SHARED_CONTEXT
 
@@ -40,9 +37,8 @@ feature
 	set_page: SET_PAGE;
 	scroll_page: SCROLL_PAGE;
 
-	focus_label: LABEL;
+	focus_label: FOCUS_LABEL;
 
-	
 feature {NONE}
 
 	page_label: LABEL;
@@ -74,19 +70,19 @@ feature
 
 			!!edit_hole.make (Widget_names.PCbutton, top_form);
 
-			!!window_page.make (Context_const.windows_name, Windows_pixmap);
-			!!primitive_page.make (Context_const.primitives_name, Primitives_pixmap);
-			!!menu_page.make (Context_const.menus_name, Menus_pixmap);
-			!!group_page.make (Context_const.groups_name, Groups_pixmap);
-			!!set_page.make (Context_const.sets_name, Sets_pixmap);
-			!!scroll_page.make (Context_const.scrolled_items_name, Scrolled_w_pixmap);
+			!!window_page.make (Widget_names.windows_name, Pixmaps.windows_pixmap);
+			!!primitive_page.make (Widget_names.primitives_name, Pixmaps.primitives_pixmap);
+			!!menu_page.make (Widget_names.menus_name, Pixmaps.menus_pixmap);
+			!!group_page.make (Widget_names.groups_name, Pixmaps.groups_pixmap);
+			!!set_page.make (Widget_names.sets_name, Pixmaps.sets_pixmap);
+			!!scroll_page.make (Widget_names.scrolled_items_name, Pixmaps.scrolled_w_pixmap);
 
 			!!page_label.make (Widget_names.label, top_form);
 
 			page_label.set_left_alignment;
 		
 		
-			!!focus_label.make (Widget_names.label, top_form);
+			!!focus_label.make (top_form);
 			page_label.set_text (primitive_page.page_name);
 
 			top_form.attach_top (window_page.button, 10);
@@ -128,7 +124,6 @@ feature
 
 	delete_window_action is
 		do
-			iterate;
 		end;
 	
 feature {NONE}

@@ -13,15 +13,15 @@ feature -- Interface
 
 	make_visible (a_parent: COMPOSITE) is
 		do
-			initialize (Context_const.bulletin_form_name, a_parent);
+			initialize (Widget_names.bulletin_form_name, a_parent);
 
-			!! follow_x.make (Context_const.follow_y_name, Current, 
+			!! follow_x.make (Widget_names.follow_y_name, Current, 
 						Resize_policy_cmd, editor);
-			!! follow_y.make (Context_const.follow_x_name, Current, 
+			!! follow_y.make (Widget_names.follow_x_name, Current, 
 						Resize_policy_cmd, editor);
-			!! width_resizeable.make (Context_const.width_resizable_name,
+			!! width_resizeable.make (Widget_names.width_resizable_name,
 						Current, Resize_policy_cmd, editor);
-			!! height_resizeable.make (Context_const.height_resizable_name,
+			!! height_resizeable.make (Widget_names.height_resizable_name,
 						Current, Resize_policy_cmd, editor);
 	
 			attach_left (follow_x, 10);

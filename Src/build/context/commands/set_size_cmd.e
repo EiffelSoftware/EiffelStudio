@@ -14,7 +14,7 @@ feature {NONE}
 
 	c_name: STRING is
 		do
-			Result := Context_const.set_size_cmd_name
+			Result := Command_names.cont_set_size_cmd_name
 		end;
 
 	old_width: INTEGER;

@@ -11,7 +11,6 @@ inherit
 		redefine
 			stone, compatible
 		end;
-
 	ICON_HOLE
 		rename
 			identifier as hole_identifier,
@@ -21,17 +20,8 @@ inherit
 		select
 			make_visible
 		end;
-
-
-	PIXMAPS
-		export
-			{NONE} all
-		end;
-
 	CMD_INST_STONE;
-
 	COMMAND;
-
 
 creation
 
@@ -49,7 +39,7 @@ feature
 	reset is 
 		do
 			set_label ("");
-			set_symbol (Command_instance_pixmap);
+			set_symbol (Pixmaps.command_instance_pixmap);
 			original_stone := Void;
 		end;
 
@@ -66,11 +56,9 @@ feature
 		end;
 
 	make_visible (a_parent: COMPOSITE) is
-		local
-			Nothing: ANY
 		do
 			icon_make_visible (a_parent);
-			add_activate_action (Current, Nothing);
+			add_activate_action (Current, Void);
 			initialize_transport;
 		end;
 
@@ -89,7 +77,7 @@ feature
 			not_void_ed: not (ed = Void)
 		do
 			instance_editor := ed;
-			set_symbol (Command_instance_pixmap);
+			set_symbol (Pixmaps.command_instance_pixmap);
 		end; -- Create
 
 

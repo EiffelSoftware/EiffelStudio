@@ -4,13 +4,6 @@ class MENU_PULL_C
 
 inherit
 
-	PIXMAPS
-		rename
-			Menu_pull_pixmap as symbol
-		export
-			{NONE} all
-		end;
-
 	PULLDOWN_C
 		rename
 			create_context as old_create_context,
@@ -38,6 +31,10 @@ feature
 			Result := context_catalog.submenu_type
 		end;
 
+	symbol: PIXMAP is
+		do
+			Result := Pixmaps.menu_pull_pixmap
+		end;
 	
 feature {NONE}
 
@@ -53,14 +50,14 @@ feature {NONE}
 	initialize_transport is
 		do
 			widget.button.add_button_press_action (2, show_command, Current);
-			widget.button.add_button_release_action (2, show_command, Nothing);
+			widget.button.add_button_release_action (2, show_command, Void);
 			widget.button.add_button_press_action (3, transport_command, Current);
 		end;
 
 	remove_widget_callbacks is 
 		do 
 			widget.button.remove_button_press_action (2, show_command, Current);
-			widget.button.remove_button_release_action (2, show_command, Nothing);
+			widget.button.remove_button_release_action (2, show_command, Void);
 			widget.button.remove_button_press_action (3, transport_command, Current);
 		end;
 

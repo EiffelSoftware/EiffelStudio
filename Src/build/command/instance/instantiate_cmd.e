@@ -3,14 +3,10 @@ class INSTANTIATE_CMD
 
 inherit
 
-	UNDOABLE
+	EB_UNDOABLE
 		redefine
 			is_template, execute
 		end;
-	WINDOWS
-		export
-			{NONE} all
-		end
 		
 creation
 
@@ -20,7 +16,6 @@ creation
 feature {NONE}
 
 	previous_context, current_context: CONTEXT;
-
 	
 feature 
 
@@ -29,14 +24,12 @@ feature
 			current_argument := argument
 		end;
 
-	
 feature {NONE}
 
 	work (argument: ANY) is
 		do
 		end;
 
-	
 feature 
 
 	execute (argument: CONTEXT) is
@@ -63,10 +56,10 @@ feature
 			end
 		end;
 
-	n_ame: STRING is
+	name: STRING is
 		do
 			!!Result.make (0);
-			Result.append ("Instantiated");
+			Result.append (Command_names.cmd_instantiated_cmd_name);
 			Result.append (" (");
 			Result.append (current_argument.type.label);
 			Result.append (" - ");
@@ -88,13 +81,5 @@ feature
 feature {NONE}
 
 	current_argument: ARG_INSTANCE;
-
-	
-feature 
-
-	history: HISTORY_WND is
-        once
-            Result := history_window;
-        end;
 
 end

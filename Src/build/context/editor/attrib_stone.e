@@ -9,13 +9,12 @@ inherit
 			identifier as oui_identifier,
 			make as old_make
 		undefine
-			init_toolkit, stone_cursor
+			stone_cursor
 		redefine
 			original_stone
 		end;
 	TYPE_STONE;
 	WINDOWS;
-	PIXMAPS
 	CONSTANTS
 	
 feature 

@@ -13,7 +13,7 @@ feature {NONE}
 
 	c_name: STRING is
 		do
-			Result := Context_const.font_cmd_name
+			Result := Command_names.cont_font_cmd_name
 		end;
 
 	old_font_name: STRING;

@@ -24,23 +24,22 @@ feature -- Interface
 			fg_color_stone: FG_COLOR_STONE;
 			colors_stone: COLORS_STONE;
 			bg_pixmap_stone: BG_PIXMAP_STONE;
-			Nothing: ANY
 		do
-			initialize (Context_const.color_form_name, a_parent);
+			initialize (Widget_names.color_form_name, a_parent);
 
-			!!label_fg_color.make (Context_const.foreground_color_name, 
+			!!label_fg_color.make (Widget_names.foreground_color_name, 
 						Current);
 			!!fgr_color.make (Widget_names.textfield, Current, 
 					Fg_color_cmd, editor);
-			!!label_bg_color.make (Context_const.background_color_name, Current);
-			!!label_colors.make (Context_const.colors_name, Current);
+			!!label_bg_color.make (Widget_names.background_color_name, Current);
+			!!label_colors.make (Widget_names.colors_name, Current);
 			!!backgr_color.make (Widget_names.textfield, Current, 
 					Bg_color_cmd, editor);
-			!!label_pixmap.make (Context_const.background_pixmap_name, Current);
+			!!label_pixmap.make (Widget_names.background_pixmap_name, Current);
 			!!backgr_pixmap.make (Widget_names.textfield, Current, 
 					Bg_pixmap_cmd, editor);
-			!!pixmap_open_b.make (Context_const.open_pixmap_name, Current);
-			!!color_set.make (Context_const.color_form_name, Current);
+			!!pixmap_open_b.make (Widget_names.open_pixmap_name, Current);
+			!!color_set.make (Widget_names.color_form_name, Current);
 
 			!!bg_color_stone;
 			!!fg_color_stone;
@@ -80,7 +79,7 @@ feature -- Interface
 			attach_bottom (color_set, 2);
 			attach_left (color_set, 2);
 			attach_right (color_set, 2);
-			pixmap_open_b.add_activate_action (Current, Nothing);
+			pixmap_open_b.add_activate_action (Current, Void);
 			show_current
 		end;
 

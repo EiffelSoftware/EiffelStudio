@@ -14,8 +14,6 @@ inherit
 			make as dr_area_create,
 			identifier as dr_area_identifier,
 			cursor as drawing_cursor
-		undefine
-			init_toolkit
 		redefine
 			show, hide, shown, realize
 		end;
@@ -146,7 +144,7 @@ feature
 		do
 			!!top_shell.make (Widget_names.context_tree, a_screen);
 			!!scrolled_w.make (Widget_names.scrolledwindow, top_shell);
-			dr_area_create (D_rawingarea, scrolled_w);
+			dr_area_create (Widget_names.drawingarea, scrolled_w);
 			!!current_position;
 			drawing_box_create (Current);
 
@@ -183,7 +181,6 @@ feature {NONE}
 	positions: LINKED_LIST [COORD_XY_FIG];
 			-- Position of the last element of each top window
 
-	
 feature 
 
 	display (modified_context: CONTEXT) is
@@ -392,17 +389,15 @@ feature {NONE}
 			context_stone ?= stone;
 			context_type ?= stone;
 			attrib_stone ?= stone;
-			if not (context_stone = Void) then
+			if context_stone /= Void then
 				window_c ?= context_stone.original_stone;
 			end;
-			if  
-				not (context_type = Void) and then
+			if context_type /= Void and then
 				context_type.equivalent (context_catalog.perm_wind_type) then
 					new_context := context_type.create_context (a_composite_c);
-					-- arm the interface button
-					main_panel.t7.arm
-			elseif  
-				not (context_type = Void) and then
+						-- arm the interface button
+					main_panel.interface_t.arm
+			elseif context_type /= Void and then
 				context_type.equivalent (context_catalog.temp_wind_type) then
 					find;
 					if found then

@@ -8,12 +8,8 @@ inherit
 			popup as old_popup,
 			make as error_d_create
 		end;
-
-	COMMAND
-		export
-			{NONE} all
-		end
-
+	COMMAND;
+	CONSTANTS
 
 creation
 
@@ -26,22 +22,32 @@ feature {NONE}
 	
 feature 
 
-	popup (c: ERROR_POPUPER; s: STRING) is
+	popup (c: ERROR_POPUPER; s: STRING; extra_message: STRING) is
+		require
+			valid_c: c /= Void;
+			valid_s: s /= Void;
+			valid_extra_message: extra_message /= Void implies
+				not extra_message.empty
+		local
+			tmp: STRING
 		do
 			caller := c;
-			set_message (s);
+		   	tmp := s;
+			if extra_message /= Void then
+				tmp.replace_substring_all ("%%X", extra_message)
+			end;
+			set_message (tmp);
 			old_popup
 		end;
 
-	make (a_name: STRING; a_parent: COMPOSITE) is
-		local
-			Nothing: ANY
+	make (a_parent: COMPOSITE) is
 		do
-			error_d_create (a_name, a_parent);
+			error_d_create (Widget_names.error_window, a_parent);
+			set_title (Widget_names.error_window);
 			hide_help_button;
 			hide_cancel_button;
 			set_exclusive_grab;
-			add_ok_action (Current, Nothing)
+			add_ok_action (Current, Void)
 		end;
 
 	

@@ -60,59 +60,59 @@ feature {NONE}
 		do
 			!!push_b_c;
 			!!push_b.make (push_b_c.eiffel_type, Current);
-			!!push_b_type.make (Context_const.push_b_name, push_b_c);
+			!!push_b_type.make (Widget_names.push_b_name, push_b_c);
 			push_b_type.initialize_callbacks (push_b);
 
 			!!label_c;
 			!!label.make (label_c.eiffel_type, Current);
 			label.set_left_alignment;
 			label.set_text (label_c.eiffel_type);
-			!!label_type.make (Context_const.label_name, label_c);
+			!!label_type.make (Widget_names.label_name, label_c);
 			label_type.initialize_callbacks (label);
 
 			!!text_field_c;
 			!!text_field.make (text_field_c.eiffel_type, Current);
 			text_field.set_text (text_field_c.eiffel_type);
-			!!text_field_type.make (Context_const.text_field_name, text_field_c);
+			!!text_field_type.make (Widget_names.text_field_name, text_field_c);
 			text_field_type.initialize_callbacks (text_field);
 
 			!!toggle_b_c;
 			!!toggle_b.make (toggle_b_c.eiffel_type, Current);
-			!!toggle_b_type.make (Context_const.toggle_b_name, toggle_b_c);
+			!!toggle_b_type.make (Widget_names.toggle_b_name, toggle_b_c);
 			toggle_b_type.initialize_callbacks (toggle_b);
 
 			!!pict_color_c;
 			!!pict_color_b.make (pict_color_c.eiffel_type, Current);
-			pict_color_b.set_pixmap (Pict_color_b_pixmap);
-			!!pict_color_b_type.make (Context_const.pict_color_name, pict_color_c);
+			pict_color_b.set_pixmap (Pixmaps.pict_color_b_pixmap);
+			!!pict_color_b_type.make (Widget_names.pict_color_name, pict_color_c);
 			pict_color_b_type.initialize_callbacks (pict_color_b);
 
 			!!arrow_b_c;
 			!!arrow_up.make (arrow_b_c.eiffel_type, Current);
 			arrow_up.set_up;
 			arrow_b_c.set_direction (Context_const.up_arrow_direction);
-			!!arrow_b_type.make (Context_const.arrow_b_name, arrow_b_c);
+			!!arrow_b_type.make (Widget_names.arrow_b_name, arrow_b_c);
 			arrow_b_type.initialize_callbacks (arrow_up);
 
 			!!arrow_b_c;
 			!!arrow_down.make (arrow_b_c.eiffel_type, Current);
 			arrow_down.set_down;
 			arrow_b_c.set_direction (Context_const.down_arrow_direction);
-			!!arrow_b_type.make (Context_const.arrow_b_name, arrow_b_c);
+			!!arrow_b_type.make (Widget_names.arrow_b_name, arrow_b_c);
 			arrow_b_type.initialize_callbacks (arrow_down);
 
 			!!arrow_b_c;
 			!!arrow_left.make (arrow_b_c.eiffel_type, Current);
 			arrow_left.set_left;
 			arrow_b_c.set_direction (Context_const.left_arrow_direction);
-			!!arrow_b_type.make (Context_const.arrow_b_name, arrow_b_c);
+			!!arrow_b_type.make (Widget_names.arrow_b_name, arrow_b_c);
 			arrow_b_type.initialize_callbacks (arrow_left);
 
 			!!arrow_b_c;
 			!!arrow_right.make (arrow_b_c.eiffel_type, Current);
 			arrow_right.set_right;
 			arrow_b_c.set_direction (Context_const.right_arrow_direction);
-			!!arrow_b_type.make (Context_const.arrow_b_name, arrow_b_c);
+			!!arrow_b_type.make (Widget_names.arrow_b_name, arrow_b_c);
 			arrow_b_type.initialize_callbacks (arrow_right);
 
 			sep_single := create_separator (False, single_line);
@@ -128,7 +128,7 @@ feature {NONE}
 			!!scale.make (scale_c.eiffel_type, Current);
 			scale.show_value (true);
 			scale.set_size (15, 80);
-			!!scale_type.make (Context_const.scale_name, scale_c);
+			!!scale_type.make (Widget_names.scale_name, scale_c);
 			scale_type.initialize_callbacks (scale);
 
 			-- ***************
@@ -205,7 +205,7 @@ feature {NONE}
 				Result.set_double_dashed_line;	
 				separator_c.set_line (Context_const.double_dashed_line);
 			end;
-			!!separator_type.make (Context_const.separator_name, separator_c);
+			!!separator_type.make (Widget_names.separator_name, separator_c);
 			separator_type.initialize_callbacks (Result);
 		end;
 

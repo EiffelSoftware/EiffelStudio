@@ -17,7 +17,7 @@ feature {NONE}
 
 	c_name: STRING is
 		do
-			Result := Context_const.pulldown_resize_cmd_name
+			Result := Command_names.cont_pulldown_resize_cmd_name
 		end;
 
 	context: PULLDOWN_C;

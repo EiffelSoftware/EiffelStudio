@@ -1,29 +1,32 @@
-class APP_EDITOR_CONSTANTS
+class APPLICATION_CONSTANTS
 
-feature
+feature -- Colors
 
-	arrow_head_w: INTEGER is 10;
+	Black: COLOR is
+		once
+			!!Result.make;
+			Result.set_name ("black");
+		end;
 
-	aarrow_head_h: INTEGER is 20;
+	White: COLOR is
+		once
+			!!Result.make;
+			Result.set_name ("white");
+		end;
 
-	arrow_head_line_w: INTEGER is 1;
+feature -- Integer constants
 
-	sub_square_radius: INTEGER is 45;
-
-	state_circle_radius: INTEGER is 27;
-
-	initial_state_line_thickness: INTEGER is 3;
-
-	rect_thickness: INTEGER is 1;
-
-	rect_width: INTEGER is 60;
-
-	rect_height: INTEGER is 100;
-
-	selection_square_thickness_sl: INTEGER is 1;
-
-	selection_square_side_length: INTEGER is 15;
-
-	standard_thickness: INTEGER is 1;
+	Arrow_head_w: INTEGER is 10;
+	Arrow_head_h: INTEGER is 20;
+	Arrow_head_line_w: INTEGER is 1;
+	Sub_square_radius: INTEGER is 45;
+	State_circle_radius: INTEGER is 27;
+	Initial_state_line_thickness: INTEGER is 3;
+	Rect_thickness: INTEGER is 1;
+	Rect_width: INTEGER is 60;
+	Rect_height: INTEGER is 100;
+	Selection_square_thickness_sl: INTEGER is 1;
+	Selection_square_side_length: INTEGER is 15;
+	Standard_thickness: INTEGER is 1;
 
 end

@@ -3,21 +3,8 @@ deferred class FORMAT_BUTTON
 inherit
 
 	EB_PICT_B
-		undefine
-			init_toolkit, symbol
-		end;
-	PIXMAPS
-	COMMAND
-	FOCUSABLE
-	WINDOWS
-	CONSTANTS
 
 feature {NONE} -- focus
-
-	focus_source: WIDGET is
-		do
-			Result := Current
-		end
 
 	focus_string: STRING is
 		deferred
@@ -47,9 +34,6 @@ feature
 		do
 			editor := ed;
 			make_visible (a_parent);
-			set_symbol (symbol);
-			add_activate_action (Current, Void);
-			initialize_focus
 		end;
 
 	valid_form_nbr (nbr: INTEGER): BOOLEAN is
@@ -61,9 +45,7 @@ feature {NONE} -- command
 
 	execute (argument: ANY) is
 		do
-			if form_number /= editor.current_form_number then
-				editor.set_form (form_number)
-			end
+			editor.update_form (form_number)
 		end
 
 end

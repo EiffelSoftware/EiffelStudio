@@ -17,7 +17,7 @@ feature {NONE}
 
 	c_name: STRING is
 		do
-			Result := Context_const.text_field_cmd_name
+			Result := Command_names.cont_text_field_cmd_name
 		end;
 
 	context: TEXT_FIELD_C;

@@ -14,7 +14,7 @@ feature {NONE}
 	
 	c_name: STRING is
 		do
-			Result := Context_const.resize_cmd_name
+			Result := Command_names.cont_resize_cmd_name
 		end;
 
 	old_resize_policy: RESIZE_POLICY;

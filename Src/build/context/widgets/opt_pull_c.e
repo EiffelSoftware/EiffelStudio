@@ -4,13 +4,6 @@ class OPT_PULL_C
 
 inherit
 
-	PIXMAPS
-		rename
-			Opt_pull_pixmap as symbol
-		export
-			{NONE} all
-		end;
-
 	PULLDOWN_C
 		rename
 			context_initialization as pull_context_initialization
@@ -38,7 +31,11 @@ feature
 			Result := context_catalog.menu_page.option_btn_type
 		end;
 
-	
+    symbol: PIXMAP is
+        do
+            Result := Pixmaps.opt_pull_pixmap
+        end;
+
 feature {NONE}
 
 	add_widget_callbacks is
@@ -53,14 +50,14 @@ feature {NONE}
 	initialize_transport is
 		do
 			widget.button.add_button_press_action (2, show_command, Current);
-			widget.button.add_button_release_action (2, show_command, Nothing);
+			widget.button.add_button_release_action (2, show_command,Void);
 			widget.button.add_button_press_action (3, transport_command, Current);
 		end;
 
 	remove_widget_callbacks is
 		do
 			widget.button.remove_button_press_action (2, show_command, Current);
-			widget.button.remove_button_release_action (2, show_command, Nothing);
+			widget.button.remove_button_release_action (2, show_command, Void);
 			widget.button.remove_button_press_action (3, transport_command, Current);
 		end;
 

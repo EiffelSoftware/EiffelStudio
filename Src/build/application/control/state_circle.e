@@ -4,21 +4,10 @@ class STATE_CIRCLE
 inherit
 
 	APP_FIGURE
-		export
-			{ANY} all
 		redefine
 			inner_figure, outer_figure, text
-		
 		end;
 	STATE_STONE
-		
-		export
-			{NONE} all
-		end;
-	PIXMAPS
-		export
-			{NONE} all
-		end
 
 creation
 
@@ -38,12 +27,12 @@ feature
 
 	set_standard_thickness is
 		do
-			path.set_line_width (Standard_thickness)
+			path.set_line_width (App_const.standard_thickness)
 		end;
 
 	set_double_thickness is
 		do
-			path.set_line_width (Standard_thickness * 2)
+			path.set_line_width (App_const.standard_thickness * 2)
 		end;
 
  	set_stone (state: STATE) is
@@ -87,12 +76,12 @@ feature
 			Result.set_radius (radius); 
 			Result.set_center (a_center); 
 			!!a_path.make; 
-			a_path.set_line_width (standard_thickness); 
-			a_path.set_foreground_color (black); 
+			a_path.set_line_width (App_const.standard_thickness); 
+			a_path.set_foreground_color (App_const.black); 
 			Result.set_path (a_path); 
 			Result.path.set_xor_mode; 
 			!!temp_int.make; 
-			temp_int.set_foreground_color (white); 
+			temp_int.set_foreground_color (App_const.white); 
 		 	Result.set_interior (temp_int); 
 			Result.interior.set_xor_mode; 
 		end; -- moving_fig
@@ -162,7 +151,7 @@ feature {NONE}
 
 	init_radius: INTEGER is 
 		do
-			Result :=  state_circle_radius
+			Result :=  App_const.state_circle_radius
 		end;
 
 end -- class STATE_CIRCLE

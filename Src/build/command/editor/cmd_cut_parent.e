@@ -3,16 +3,14 @@ class CMD_CUT_PARENT
 
 inherit
 
-	CMD_CMD_NAMES
-		rename
-			Cmd_cut_parent_cmd_name as c_name
-		export
-			{NONE} all
-		end;
-
 	CMD_UPDATE_PARENT
 	
 feature {NONE}
+
+	c_name: STRING is
+		do
+			Result := Command_names.cmd_cut_parent_cmd_name
+		end;
 
 	undo is
 		do

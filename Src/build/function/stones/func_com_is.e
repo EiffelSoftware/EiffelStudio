@@ -6,29 +6,13 @@ inherit
 	COM_INST_IS
 		rename
 			make as com_inst_is_make
-		undefine
-			init_toolkit
 		end;
-
 	FUNCTION_ELEMENT
 		rename
 			target as source
-		export
-			{NONE} all
 		redefine
 			associated_editor
 		end;
-
-	WINDOWS
-		export
-			{NONE} all
-		end;
-
-	PIXMAPS
-		export
-			{NONE} all
-		end
-
 
 creation
 
@@ -46,8 +30,5 @@ feature
 			initialize (ed);	
 			register
 		end; -- Create
-
-	
-feature {NONE}
 
 end

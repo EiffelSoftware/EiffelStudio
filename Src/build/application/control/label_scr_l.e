@@ -3,20 +3,14 @@ class LABEL_SCR_L
 
 inherit
 
-	COMMAND
-		export
-			{NONE} all
-		end;
+	COMMAND;
 	COMMAND_ARGS
-		rename First as unused,
-		Second as set_show_action,
-		Third as set_label_action
-		export
-			{NONE} all
-		end;
+		rename 
+			First as unused,
+			Second as set_show_action,
+			Third as set_label_action
+		end
 	LABEL_STONE
-		export
-			{NONE} all
 		redefine
 			transportable
 		end;
@@ -38,9 +32,6 @@ inherit
 			merge_right
 		end;
 	REMOVABLE
-		export
-			{NONE} all
-		end
 
 creation
 

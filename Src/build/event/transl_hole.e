@@ -9,24 +9,19 @@ inherit
 		redefine
 			stone, compatible
 		end;
-
 	ICON_HOLE
 		redefine
 			stone, compatible, make_visible
 		select
 			make_visible, button, identifier, same
 		end;
-
-	PIXMAPS;
-
 	EV_ICON_STONE
 		rename
 			make as unused_make,
 			make_visible as ev_make_visible,
 			identifier as stone_identifier
 		undefine
-			same,
-			init_toolkit
+			same
 		redefine
 			original_stone, transportable
 		end;
@@ -48,7 +43,7 @@ feature
 		do
 			if original_stone /= Void then
 				original_stone := Void;
-				set_symbol (Event_pixmap);
+				set_symbol (Pixmaps.event_pixmap);
 				set_label ("");
 			end;
 		end;
@@ -68,7 +63,7 @@ feature
 	make (ed: TRANSL_EDITOR) is
 		do
 			editor := ed;
-			set_symbol (Event_pixmap);
+			set_symbol (Pixmaps.event_pixmap);
 			make_visible (editor);
 		end;
 

@@ -15,10 +15,6 @@ inherit
 		undefine
 			is_equal, copy, consistent, setup
 		end;
-	SHARED_APPLICATION
-		undefine
-			is_equal, copy, consistent, setup
-		end;
 	SHARED_STORAGE_INFO
 		rename
 			clear_all as storage_clear_all

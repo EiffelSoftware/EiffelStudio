@@ -1,6 +1,7 @@
 class FONT_BUTTON
 
 inherit
+
 	FORMAT_BUTTON
 
 creation
@@ -11,8 +12,8 @@ feature
 
 	symbol: PIXMAP is
 		once
-			Result := symbol_file_content ("font_format.symb")
-		end
+			Result := Pixmaps.font_pixmap
+		end;
 
 	form_number: INTEGER is
 		do

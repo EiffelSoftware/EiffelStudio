@@ -6,14 +6,8 @@ inherit
 	WINDOWS;
 	COMMAND;
 	COMMAND_ARGS;
-	CONTEXT_CURSORS;
-	CURSOR_TYPE;
-	BASIC_ROUTINES;
 	CONSTANTS;
 	PAINTER
-		undefine
-			init_toolkit
-		end
 
 creation
 
@@ -85,7 +79,8 @@ feature {NONE}
 	begin_mvt is
 		local
 			parent: CONTEXT;
-			new_x, new_y: INTEGER
+			new_x, new_y: INTEGER;
+			ct: INTEGER
 		do
 			x := context.real_x;
 			y := context.real_y;
@@ -96,25 +91,24 @@ feature {NONE}
 			delta_w := new_x - x;
 			delta_h := new_y - y;
 			if cursor_shape /= Void and then
-				cursor_shape /= cursor_move
+				cursor_shape /= Cursors.move_cursor
 			then
 					-- For resize cursor (for accuracy)
-				inspect
-					cursor_shape.type
-				when Top_left_corner then
+				ct := cursor_shape.type;
+				if ct = Cursors.top_left_corner then
 					width := width - new_x + x;
 					height := height - new_y + y;
 					x := new_x;
 					y := new_y;
-				when Top_right_corner then
+				elseif ct = Cursors.top_right_corner then
 					width := new_x - x;
 					height := height - new_y + y;
 					y := new_y;
-				when Bottom_left_corner then
+				elseif ct = Cursors.bottom_left_corner then
 					width := width - new_x + x;
 					height := new_y - y;
 					x := new_x;
-				when Bottom_right_corner then
+				elseif ct = Cursors.bottom_right_corner then
 					width := new_x - x;
 					height := new_y - y;
 				end;
@@ -147,7 +141,7 @@ feature {NONE}
 				if width >= 0 and height >= 0 then
 					!!cmd;
 					cmd.execute (context);
-					if cursor_shape /= cursor_move then
+					if cursor_shape /= Cursors.move_cursor then
 							-- Resize
 						if width > context.width or else
 							height > context.height then
@@ -188,8 +182,9 @@ feature {NONE}
 				context_height := context.first_child.height+3;
 				new_number := height // context_height - arity;
 				delta := new_number * context_height;
-				if cursor_shape = cursor_top_right_corner or
-						cursor_shape = cursor_top_left_corner then
+				if cursor_shape = Cursors.top_right_corner_cursor or
+					cursor_shape = Cursors.top_left_corner_cursor 
+				then
 						-- move y pos
 					context.set_real_x_y (context.x, context.y - delta);
 				end;
@@ -320,6 +315,7 @@ feature {NONE}
 	resize_rectangle is
 		local
 			new_x, new_y: INTEGER;
+			ct: INTEGER
 		do
 			if context.is_group_composite then
 				draw_grouped_items
@@ -330,22 +326,21 @@ feature {NONE}
 			end;
 			new_x := eb_screen.x;
 			new_y := eb_screen.y;
-			inspect
-				cursor_shape.type
-			when Top_left_corner then
+			ct := cursor_shape.type;
+			if ct = Cursors.top_left_corner then
 				width := width - new_x + x;
 				height := height - new_y + y;
 				x := new_x;
 				y := new_y;
-			when Top_right_corner then
+			elseif ct = Cursors.top_right_corner then
 				width := new_x - x;
 				height := height - new_y + y;
 				y := new_y;
-			when Bottom_left_corner then
+			elseif ct = Cursors.bottom_left_corner then
 				width := width - new_x + x;
 				height := new_y - y;
 				x := new_x;
-			when Bottom_right_corner then
+			elseif ct = Cursors.bottom_right_corner then
 				width := new_x - x;
 				height := new_y - y;
 			end;
@@ -374,7 +369,7 @@ feature {NONE}
 				new_x := x - parent.real_x; 
 				new_y := y - parent.real_y;
 			end;
-			if context.grouped and then cursor_shape = cursor_move then
+			if context.grouped and then cursor_shape = Cursors.move_cursor then
 				d_x := new_x - context.x;
 				d_y := new_y - context.y;
 				from
@@ -408,12 +403,12 @@ feature {NONE}
 			y_inc := context.height + 10;
 			x_nb := (width + 10) // x_inc;
 			y_nb := (height + 10)  // y_inc;
-			if cursor_shape = cursor_bottom_left_corner then
+			if cursor_shape = Cursors.bottom_left_corner_cursor then
 				x_inc := x_inc * (-1)
-			elseif cursor_shape = cursor_top_left_corner then
+			elseif cursor_shape = Cursors.top_left_corner_cursor then
 				x_inc := x_inc * (-1);
 				y_inc := y_inc * (-1)
-			elseif cursor_shape = cursor_top_right_corner then
+			elseif cursor_shape = Cursors.top_right_corner_cursor then
 				y_inc := y_inc * (-1)
 			end;
 			if not real_mode then
@@ -469,7 +464,9 @@ feature {NONE}
 			a_context: CONTEXT;
 			d_x, d_y: INTEGER;
 		do
-			if context.grouped and then cursor_shape = cursor_move then
+			if context.grouped and then 
+				cursor_shape = Cursors.move_cursor 
+			then
 				d_x := x - context.real_x;
 				d_y := y - context.real_y;
 				from
@@ -519,8 +516,8 @@ feature {NONE}
 					-- Draw rectangles for the children	
 					from
 						d_x := a_child.real_x+(a_child.width // 2);
-						if cursor_shape = cursor_bottom_left_corner or
-							cursor_shape = cursor_bottom_right_corner then
+						if cursor_shape = Cursors.bottom_left_corner_cursor or
+							cursor_shape = Cursors.bottom_right_corner_cursor then
 							d_y := a_child.real_y+(a_child.height // 2) + number * (a_child.height+3);
 							down := 1;
 						else
@@ -555,7 +552,7 @@ feature {NONE}
 			x_pos, y_pos: INTEGER;
 			real_x, real_y: INTEGER
 		do
-			cursor_shape := cursor_move;
+			cursor_shape := Cursors.move_cursor;
 			x_pos := eb_screen.x;
 			y_pos := eb_screen.y;
 
@@ -563,15 +560,15 @@ feature {NONE}
 			real_y := context.real_y;
 			if x_pos < real_x + corner_side then
 				if y_pos < real_y + corner_side then
-					cursor_shape := cursor_top_left_corner
+					cursor_shape := Cursors.top_left_corner_cursor
 				elseif y_pos > real_y + context.height - corner_side then
-					cursor_shape := cursor_bottom_left_corner
+					cursor_shape := Cursors.bottom_left_corner_cursor
 				end
 			elseif x_pos > real_x + context.width - corner_side then
 				if y_pos < real_y + corner_side then
-					cursor_shape := cursor_top_right_corner
+					cursor_shape := Cursors.top_right_corner_cursor
 				elseif y_pos > real_y + context.height - corner_side then
-					cursor_shape := cursor_bottom_right_corner
+					cursor_shape := Cursors.bottom_right_corner_cursor
 				end
 			end;
 			widget.set_cursor (cursor_shape)
@@ -595,15 +592,17 @@ feature {PERM_WIND_C}
 						-- First call
 						-- Keep track of old values
 					begin_mvt
-				elseif cursor_shape = cursor_move then
+				elseif cursor_shape = Cursors.move_cursor then
 					move_rectangle
-				elseif not (cursor_shape = Void) then
+				elseif cursor_shape /= Void then
 					resize_rectangle
 				end;
 			elseif (argument = Second) then
 					-- Button release
 				selected := false;
-				if context.is_group_composite and then cursor_shape /= cursor_move then
+				if context.is_group_composite and then 
+					cursor_shape = Cursors.move_cursor 
+				then
 					end_group_composite
 				elseif shift_selected then
 					end_shift_action
@@ -619,7 +618,7 @@ feature {PERM_WIND_C}
 				end;
 			elseif (argument = Fourth) then
 				-- Shift press
-				if cursor_shape /= cursor_move then
+				if cursor_shape /= Cursors.move_cursor then
 					selected := true;
 					shift_selected := true;
 				end;
@@ -635,7 +634,7 @@ feature {PERM_WIND_C}
 				delta_w := eb_screen.x;
 				delta_h := eb_screen.y;
 				display_rectangle;
-				widget.grab (cursor_cross);
+				widget.grab (Cursors.cross_cursor);
 			elseif argument = Sixth then
 					-- Left arrow
 				!! arrow_cmd;

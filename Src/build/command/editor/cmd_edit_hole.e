@@ -10,7 +10,6 @@ inherit
 		export 
 			{CMD_EDITOR} main_panel
 		end
-
 	ICON_HOLE
 		rename
 			button as source,
@@ -19,22 +18,12 @@ inherit
 			make_visible
 		select
 			make_visible
-		end
-
-	PIXMAPS
-		export
-			{NONE} all
-		end
-
+		end;
 	CMD_STONE
 		redefine
 			transportable
 		end
-
 	REMOVABLE
-		export
-			{NONE} all
-		end
 
 creation
 
@@ -60,14 +49,14 @@ feature
 			not_void_cmd_editor: not (cmd_editor = Void)
 		do
 			command_editor := cmd_editor
-			set_symbol (Command_pixmap)
+			set_symbol (Pixmaps.command_pixmap)
 		end -- Create
 
 
 	reset is 
 		do
 			set_label ("")
-  			set_symbol (Command_pixmap)
+  			set_symbol (Pixmaps.command_pixmap)
 			original_stone := Void
 		end
 

@@ -3,15 +3,10 @@ deferred class FUNC_COMMAND
 
 inherit
 
-	UNDOABLE
+	EB_UNDOABLE
 		redefine
 			is_template, update_history, execute
 		end;
-
-	WINDOWS
-		export
-			{NONE} all
-		end
 
 feature 
 
@@ -21,15 +16,13 @@ feature
 			function_work;
 		end;
 
-	n_ame: STRING is
+	name: STRING is
 		do
 			!!Result.make (0);
 			Result.append (c_name);
 			Result.append (" (");
 			Result.append (edited_function.label);
-			if	
-				not (worked_on = Void)
-			then
+			if	worked_on /= Void then
 				Result.append ("-");
 				Result.append (worked_on);
 			end;
@@ -92,11 +85,6 @@ feature {NONE}
 	edited_function: FUNCTION;
 			-- function being edited 
 
-	history: HISTORY_WND is
-		once
-			Result := history_window
-		end; -- history
-	
 	update_history is
 		do
 			history.record (Current);

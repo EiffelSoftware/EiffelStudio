@@ -14,7 +14,7 @@ feature {NONE}
 
 	pixmap: PIXMAP is
 		do
-			Result := Font_pixmap
+			Result := Pixmaps.font_pixmap
 		end;
 
 feature 

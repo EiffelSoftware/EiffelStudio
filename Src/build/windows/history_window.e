@@ -10,10 +10,7 @@ inherit
 		export
 			{NONE} all;
 			{ANY} is_popped_up, popup, popdown
-		undefine
-			init_toolkit
 		end;
-	WIDGET_NAMES;
 	COMMAND;
 	CONSTANTS;
 	COMMAND_ARGS
@@ -148,7 +145,7 @@ feature {NONE}
 	
 feature 
 
-	history_count: INTEGER is 5;
+	History_count: INTEGER is 10;
 
 	record (cmd: like item) is
 			-- Put `cmd' in history list
@@ -159,7 +156,7 @@ feature
 			grp_cmd: GROUP_CMD
 		do
 			remove_tail;
-			if history_list.count = history_count then
+			if history_list.count = History_count then
 				history_list.start;
 					-- Special case (destroy widgets)
 				cut_cmd ?= history_list.item;
@@ -177,11 +174,7 @@ feature
 			end;
 			history_list.put_right (cmd);
 			history_list.forth;
-			if cmd.n_ame /= Void then
-				list.put_right (cmd.n_ame);
-			else
-				list.put_right ("Unknown command");
-			end;
+			list.put_right (cmd.n_ame);
 			list.forth;
 			saved_application := False;
 			select_item
@@ -238,19 +231,17 @@ feature
 			list.scroll_to_current
 		end;
 
---************
--- EGL section
---************
+feature -- Interface
 
-	make (a_name: STRING; a_parent: COMPOSITE) is
+	make (a_parent: COMPOSITE) is
 			-- Create history window.
 		do
 				-----------------
 				-- Create widgets
 				-----------------
-			form_d_make (a_name, a_parent);
-			!!list.make (L_ist, Current);
-			!!row_column.make (R_ow_column, Current);
+			form_d_make (Widget_names.history_window, a_parent);
+			!!list.make (Widget_names.list, Current);
+			!!row_column.make (Widget_names.row_column, Current);
 			!!undo_button.make ("Undo", row_column);
 			!!redo_button.make ("Redo", row_column);
 
@@ -278,7 +269,7 @@ feature
 			saved_application := True;
 
 			list.set_visible_item_count (10);
-			set_title (a_name);
+			set_title (Widget_names.history_window);
 		end;
 
 	

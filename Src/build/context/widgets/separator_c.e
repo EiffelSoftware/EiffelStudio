@@ -4,13 +4,6 @@ class SEPARATOR_C
 
 inherit
 
-	PIXMAPS
-		rename
-			Separator_pixmap as symbol
-		export
-			{NONE} all
-		end;
-
 	PRIMITIVE_C
 		rename
 			create_context as old_create_context,
@@ -30,6 +23,11 @@ inherit
 		end;
 	
 feature 
+
+	symbol: PIXMAP is
+		do
+			Result := Pixmaps.separator_pixmap
+		end;
 
 	context_type: CONTEXT_TYPE is
 		do

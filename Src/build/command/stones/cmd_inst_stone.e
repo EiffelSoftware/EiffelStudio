@@ -3,27 +3,18 @@ deferred class CMD_INST_STONE
 
 inherit
 
-	CURSORS
-		rename
-			Command_instance_cursor as stone_cursor
-		export
-			{NONE} all
-		end;
-
 	STONE
 		redefine
 			original_stone, transportable
 		
 		end
-
-
-
--- *********************
--- Command type features
--- *********************
-
 	
-feature 
+feature  -- Command type features
+
+	stone_cursor: SCREEN_CURSOR is
+		do
+			Result := Cursors.command_instance_cursor
+		end;
 
 	eiffel_type: STRING is
 		do
@@ -50,9 +41,7 @@ feature
 			Result := associated_command.labels
 		end;
 
--- *************************
--- Command instance features
--- *************************
+feature -- Command instance features
 
 	original_stone:	CMD_INSTANCE is
 		deferred
@@ -61,7 +50,7 @@ feature
 	transportable: BOOLEAN is
 		do
 			Result := original_stone /= Void;
-	end;
+		end;
 
 	arguments: LINKED_LIST [ARG_INSTANCE] is
 			-- Arguments of command

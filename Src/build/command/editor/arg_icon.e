@@ -37,12 +37,10 @@ inherit
 creation
 
 	make
-
 	
 feature {NONE}
 
 	cmd_editor: CMD_EDITOR;
-
 	
 feature 
 

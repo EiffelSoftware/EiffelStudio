@@ -5,7 +5,6 @@ inherit
 	EDITOR_FORM;
 	COMMAND;
 	COMMAND_ARGS;
-	PIXMAPS
 
 creation
 	make
@@ -30,14 +29,14 @@ feature -- Interface
 			grid_title: LABEL_G
 			grids: RADIO_BOX
 		do	
-			initialize (Context_const.grid_form_name, a_parent)
-			!!grid_title.make (Context_const.grid_options_name, Current)
+			initialize (Widget_names.grid_form_name, a_parent)
+			!!grid_title.make (Widget_names.grid_options_name, Current)
 			!!grids.make (Widget_names.radio_box, Current)
-			!!no_grid.make (Context_const.no_grid_name, grids)
-			!!grid5.make (Context_const.grid5_name, grids)
-			!!grid10.make (Context_const.grid10_name, grids)
-			!!grid15.make (Context_const.grid15_name, grids)
-			!!grid20.make (Context_const.grid20_name, grids)
+			!!no_grid.make (Widget_names.no_grid_name, grids)
+			!!grid5.make (Widget_names.grid5_name, grids)
+			!!grid10.make (Widget_names.grid10_name, grids)
+			!!grid15.make (Widget_names.grid15_name, grids)
+			!!grid20.make (Widget_names.grid20_name, grids)
 
 			attach_top (grid_title, 10)
 			attach_left (grid_title, 10)
@@ -65,13 +64,13 @@ feature {NONE}
 			bg_pixmap: PIXMAP
 		do
 			bg_pixmap := context.widget.background_pixmap;
-			if (bg_pixmap = grid5_pixmap) then
+			if (bg_pixmap = Pixmaps.grid5_pixmap) then
 				grid5.set_toggle_on
-			elseif (bg_pixmap = grid10_pixmap) then
+			elseif (bg_pixmap = Pixmaps.grid10_pixmap) then
 				grid10.set_toggle_on
-			elseif (bg_pixmap = grid15_pixmap) then
+			elseif (bg_pixmap = Pixmaps.grid15_pixmap) then
 				grid15.set_toggle_on
-			elseif (bg_pixmap = grid20_pixmap) then
+			elseif (bg_pixmap = Pixmaps.grid20_pixmap) then
 				grid20.set_toggle_on
 			end
 		end
@@ -81,13 +80,13 @@ feature {NONE}
 			if (argument = First) then
 				context.set_grid (Void)
 			elseif (argument = Second) then
-				context.set_grid (grid5_pixmap)
+				context.set_grid (Pixmaps.grid5_pixmap)
 			elseif (argument = Third) then
-				context.set_grid (grid10_pixmap)
+				context.set_grid (Pixmaps.grid10_pixmap)
 			elseif (argument = Fourth) then
-				context.set_grid (grid15_pixmap)
+				context.set_grid (Pixmaps.grid15_pixmap)
 			elseif (argument = Fifth) then
-				context.set_grid (grid20_pixmap)
+				context.set_grid (Pixmaps.grid20_pixmap)
 			end
 		end
 

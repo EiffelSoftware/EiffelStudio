@@ -3,16 +3,10 @@ class MERGE_HOLE
 
 inherit
 
-	PIXMAPS
-		export
-			{NONE} all
-		end;
-
 	ICON_HOLE
 		redefine
 			stone
 		end
-
 
 creation
 

@@ -13,7 +13,7 @@ feature {NONE}
 
 	c_name: STRING is
 		do
-			Result := Context_const.bg_pixmap_cmd_name
+			Result := Command_names.cont_bg_pixmap_cmd_name
 		end;
 
 	old_bg_pixmap_name: STRING;

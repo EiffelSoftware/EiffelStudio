@@ -126,7 +126,7 @@ feature
 	get_new_text (fn: STRING): STRING is
 		local
 			cmd_file_name: FILE_NAME;
-			cfile: UNIX_FILE;
+			cfile: PLAIN_TEXT_FILE;
 			s: STRING;
 		do
 			!!cmd_file_name.make (0);

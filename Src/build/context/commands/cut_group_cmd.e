@@ -25,7 +25,7 @@ feature {NONE}
 
 	c_name: STRING is
 		do
-			Result := Context_const.cut_group_type_cmd_name
+			Result := Command_names.cont_cut_group_type_cmd_name
 		end;
 
 	associated_form: INTEGER is

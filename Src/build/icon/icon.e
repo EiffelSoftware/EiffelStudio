@@ -38,12 +38,12 @@ feature
 	set_symbol (s: PIXMAP) is
 			-- Set icon symbol.
 		require
-			valid_argument: s /= Void and s.is_valid;
+			valid_argument: s /= Void;
 		local
 			was_managed: BOOLEAN;
 		do
 			symbol := s;
-			if widget_created then
+			if s.is_valid and then widget_created then
 				button.unmanage;
 				button.set_pixmap (s);
 				button.manage;

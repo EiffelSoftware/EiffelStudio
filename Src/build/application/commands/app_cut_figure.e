@@ -13,16 +13,7 @@ inherit
 		select
 			redo
 		end;
-	APP_CMD_NAMES
-		rename
-			App_cut_state_cmd_name as c_name
-		export
-			{NONE} all
-		end;
-	ERROR_POPUPER
-		export
-			{NONE} all
-		end
+	ERROR_POPUPER;
 
 feature {NONE}
 
@@ -35,6 +26,11 @@ feature {NONE}
 
 	circle: STATE_CIRCLE;
 			-- circle removed
+
+	c_name: STRING is
+		do
+			Result :=Command_names.app_cut_state_cmd_name
+		end;
 	
 feature 
 
@@ -95,15 +91,10 @@ feature {NONE}
 			temp_lines: LINKED_LIST [STATE_LINE];
 			sel_figure: STATE_CIRCLE;
 			cut_line_command: APP_CUT_LINE;
-			msg: STRING
 		do 
 			circle := a_circle;
-			if
-				(app_editor.initial_state_circle = circle) 
-			then
-				!!msg.make (0);
-				msg.append ("Cannot remove initial state !!");	
-				error_box.popup (Current, msg);
+			if (app_editor.initial_state_circle = circle) then
+				error_box.popup (Current, Messages.remove_init_state_er, Void);
 			else
 				transitions := app_editor.transitions;
 				lines := app_editor.lines;
@@ -113,8 +104,7 @@ feature {NONE}
 				until
 					lines.after
 				loop
-					if
-						(lines.line.source = circle)
+					if  (lines.line.source = circle)
 						or (lines.line.destination = circle)
 					then
 						temp_lines.put_right (lines.line)

@@ -8,11 +8,8 @@ inherit
 			popup as old_popup
 		export
 			{NONE} all;
-			{ANY} popdown, is_poped_up
-		undefine
-			init_toolkit
+			{ANY} popdown, is_popped_up
 		end;
-	WIDGET_NAMES;
 	WINDOWS;
 	COMMAND;
 	CONSTANTS
@@ -73,13 +70,11 @@ feature -- EiffelVision
 
 	make (a_parent: COMPOSITE) is
 			-- Create choice window.
-		local
-			Nothing: ANY
 		do
-			dialog_create ("Popup", a_parent);
-			!!list.make (L_ist, Current);
+			dialog_create (Widget_names.base, a_parent);
+			!!list.make (Widget_names.list, Current);
 			allow_resize;
-			list.add_selection_action (Current, Nothing);
+			list.add_selection_action (Current, Void);
 		end;
 
 feature {NONE}

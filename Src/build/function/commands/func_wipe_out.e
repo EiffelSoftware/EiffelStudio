@@ -3,18 +3,16 @@ class FUNC_WIPE_OUT
 
 inherit
 
-	FUNC_CMD_NAMES
-		rename
-			Func_wipe_out_cmd_name as c_name
-		export
-			{NONE} all
-		end;
-
 	FUNC_COMMAND
 		
 feature {NONE}
 
 	input_list, output_list: EB_LINKED_LIST [STONE];
+
+    c_name: STRING is
+        do
+            Result := Command_names.func_wipe_out_cmd_name
+        end;
 	
 	redo_work is
 		do

@@ -6,7 +6,8 @@ inherit
 	CONSTANTS;
 	ARGUMENTS;
 	WINDOWS;
-	SHARED_LICENSE
+	SHARED_LICENSE;
+	GRAPHICS
 
 feature 
 
@@ -30,7 +31,15 @@ feature
 			discard_licence;
 			rescue_project
 		end;
-	
+
+feature {NONE} -- Initialize toolkit
+
+	init_windowing is
+			-- Initialize toolkit
+		do
+            if (toolkit = Void) then end
+		end
+
 feature {NONE}
 
 	Application_name: STRING is "eiffelbuild";

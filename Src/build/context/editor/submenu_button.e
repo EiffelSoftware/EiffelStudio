@@ -18,7 +18,7 @@ feature
 
 	symbol: PIXMAP is
 		once
-			Result := symbol_file_content ("submenu.symb")
+			Result := Pixmaps.submenu_pixmap
 		end
 
 	focus_string: STRING is "";

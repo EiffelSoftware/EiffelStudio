@@ -6,18 +6,13 @@ inherit
 	EDITOR_FORM
 		rename
 			show as form_show
-		undefine
-			init_toolkit
 		end;
 	EDITOR_FORM
-		undefine
-			init_toolkit
 		redefine
 			show
 		select
 			show
 		end;
-	SHARED_APPLICATION;
 	WINDOWS
 
 creation
@@ -28,9 +23,9 @@ feature -- Interface
 
 	make_visible (a_parent: COMPOSITE) is
 		do
-			initialize (Context_const.behavior_form_name, a_parent);
-			!!event_catalog.make (Context_const.event_catalog_name, Current);
-			!!behavior_editor.make (Context_const.behaviour_editor_name, Current);
+			initialize (Widget_names.behavior_form_name, a_parent);
+			!!event_catalog.make (Widget_names.event_catalog_name, Current);
+			!!behavior_editor.make (Widget_names.behaviour_editor_name, Current);
 
 			set_fraction_base(5);
 			attach_top (event_catalog, 0);

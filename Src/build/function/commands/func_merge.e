@@ -3,16 +3,14 @@ class FUNC_MERGE
 
 inherit
 
-	FUNC_CMD_NAMES
-		rename
-			Func_merge_cmd_name as c_name
-		export
-			{NONE} all
-		end;
-
 	FUNC_COMMAND
 
 feature
+
+	c_name: STRING is
+		do
+			Result := Command_names.func_merge_cmd_name
+		end;
 
 	set_old_lists (input_l, output_l: like input_list) is
 		do

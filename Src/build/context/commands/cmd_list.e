@@ -5,9 +5,6 @@ inherit
 
 	CONTEXT_CMD
 
-
-
-	
 feature {NONE}
 
 	cmd_list: LINKED_LIST [CONTEXT_CMD];

@@ -35,9 +35,9 @@ feature
 			template_file_name: STRING;
 			class_file_name: STRING;	
 			new_template_file_name: STRING;
-			file: UNIX_FILE;
+			file: PLAIN_TEXT_FILE;
 			unix_command: STRING;
-			msg: STRING;
+			mp: MOUSE_PTR;
 		do
 			template_file_name := clone (Environment.templates_directory);
 			template_file_name.extend (Environment.directory_separator);
@@ -65,21 +65,19 @@ feature
 			unix_command.extend (' ');
 			unix_command.append (new_template_file_name);
 
+			!! mp;
+			mp.set_watch_shape;
 			Environment.system (unix_command);
+			mp.restore;
 			if Environment.return_code < 0 then
-				!!msg.make (0);
-				msg.append ("System call failed%N");
-				msg.append ("%NCould not update ");
-				msg.append (document_name);
-				msg.append (" text");
-				error_box.popup (Current, msg);
+				error_box.popup (Current, Messages.update_text_er, document_name);
 			end;
 		end;
 
 	updated_text: STRING is
 		local
 			class_file_name: STRING;
-			file: UNIX_FILE;	
+			file: PLAIN_TEXT_FILE;	
 		do
 
 			class_file_name := clone (directory_name);

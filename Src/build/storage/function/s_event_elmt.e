@@ -9,7 +9,6 @@ creation
 
 	make
 
-	
 feature 
 
 	make (other: EVENT) is
@@ -24,12 +23,8 @@ feature
 			else
 				Result := translation_table.item (identifier);
 			end;
-			--	io.putstring ("event retrieved on id ");
-			--	io.putint (identifier);
-			--	io.new_line;
 		end;
 
-	
 feature {NONE}
 
 	identifier: INTEGER;

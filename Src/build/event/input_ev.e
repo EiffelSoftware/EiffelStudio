@@ -3,44 +3,26 @@ class INPUT_EV
 
 inherit
 
-	EV_IDENTIFIERS
-		export
-			{NONE} all
-		end;
-
 	EVENT
 		redefine
 			is_valid_for_context
-		
-		end;
-
-	EV_PIXMAPS
-		export
-			{NONE} all
-		end;
-
-	EVENT_LABELS
-		export
-			{NONE} all
 		end
-
 
 creation
 
 	make
-
 	
 feature 
 
 	identifier: INTEGER is
 		do
-			Result := - input_ev_id
+			Result := - Event_const.input_ev_id
 		end;
 
 	make is
 		do
-			set_symbol (Input_pixmap);
-			set_label (Input_label);
+			set_symbol (Pixmaps.input_pixmap);
+			set_label (Event_const.input_label);
 			event_table.put (Current, - identifier);
 		end;
 

@@ -12,20 +12,11 @@ deferred class TYPE_STONE
 
 inherit
 
-	CURSORS
-		export
-			{NONE} all
-		end;
-
 	STONE
 		redefine
 			original_stone
 		end;
-
 	HELPABLE
-		export
-			{NONE} all
-		end
 	
 feature {NONE}
 
@@ -46,7 +37,7 @@ feature
 
 	stone_cursor: SCREEN_CURSOR is
 		do
-			Result := Type_cursor
+			Result := Cursors.type_cursor
 		end;
 
 	eiffel_type: STRING is

@@ -13,7 +13,6 @@ inherit
 		redefine
 			original_stone
 		end;
-
 	ICON_STONE
 		rename
 			identifier as oui_identifier
@@ -24,16 +23,8 @@ inherit
 		select
 			make_visible
 		end;
-
-	EVENT_STONE
-		export
-			{NONE} all
-		end;
-
+	EVENT_STONE;
 	EB_HASHABLE
-		export
-			{NONE} all
-		end;
 	
 feature {NONE}
 

@@ -5,7 +5,6 @@ inherit
 
 	COMMAND;
 	WINDOWS;
-	PIXMAPS;
 	SHARED_CONTEXT;
 	ICON_HOLE
 		redefine
@@ -22,7 +21,7 @@ feature
 	make (a_parent: COMPOSITE) is
 		do
 			make_visible (a_parent);
-			set_symbol (Context_pixmap);
+			set_symbol (Pixmaps.context_pixmap);
 		end;
 
 	stone: CONTEXT_STONE;
@@ -95,7 +94,7 @@ feature {NONE}
 					a_group_c ?= a_context;
 					if a_group_c = Void or else context_group.count /= 1 then
 						!!new_group.make (a_name, context_group);
-						set_symbol (Context_pixmap);
+						set_symbol (Pixmaps.context_pixmap);
 					end;
 					argument.set_text ("");
 					stone := Void;

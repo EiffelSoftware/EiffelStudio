@@ -8,8 +8,6 @@ inherit
 			realize as shell_realize,
 			show as shell_show,
 			hide as shell_hide
-		undefine
-			init_toolkit
 		redefine
 			delete_window_action
 		end
@@ -17,8 +15,6 @@ inherit
 		export
 			{NONE} all
 			{ANY} hide, raise
-		undefine
-			init_toolkit
 		redefine
 			realize, make, show, hide, 
 			delete_window_action
@@ -49,7 +45,6 @@ feature
 	delete_window_action is
 		do
 			close
-			iterate
 		end
 
 	top_form: FORM
@@ -117,7 +112,6 @@ feature
 			!!second_separator.make (Widget_names.separator1, top_form)
 			second_separator.set_horizontal (True)
 			!!close_button.make (Current, Current)
-			close_button.make_visible (top_form)
 			!!formats_rc.make (Widget_names.row_column, top_form) 
 			formats_rc.set_row_layout
 			formats_rc.set_preferred_count (1)
@@ -172,8 +166,6 @@ feature
 			!! format_list.make (formats_rc, Current)
 
 			current_form_number := 1;
-			-- set the editor toggle on as an editor is active
-			context_hole.main_panel.t4.set_toggle_on
 		end
 
 	realize is
@@ -298,6 +290,29 @@ feature
 			Result := (current_form_number = Context_const.behavior_form_nbr)
 		end
 
+feature {FORMAT_BUTTON}
+
+	update_form (form_nbr: INTEGER) is
+			-- Update current form number to	
+			-- `form_nbr' and display the 
+			-- corresponding form page if
+			-- necessary
+		local
+			other_editor: like Current	
+		do
+			if edited_context /= Void and then
+				form_nbr /= current_form_number 
+			then
+				other_editor := context_catalog.editor 
+					(edited_context, form_nbr)
+				if other_editor = Void then
+					set_form (form_nbr)
+				else
+					other_editor.raise
+				end
+			end
+		end;
+
 feature -- Reseting
 
 	close is
@@ -309,8 +324,7 @@ feature -- Reseting
 
 	reset_behavior_editor is
 		do
-			if	 
-				(not (behavior_form = Void)) and then
+			if behavior_form /= Void and then
 				behavior_form.is_initialized 
 			then
 				behavior_form.reset_editor

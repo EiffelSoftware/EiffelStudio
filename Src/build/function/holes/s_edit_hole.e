@@ -27,10 +27,6 @@ inherit
 		select
 			make_visible
 		end;
-	PIXMAPS
-		export
-			{NONE} all
-		end;
 	STATE_STONE
 		redefine
 			transportable
@@ -50,7 +46,7 @@ feature
 	make (ed: STATE_EDITOR) is
 		do
 			func_edit_make (ed);
-			set_symbol (State_pixmap)
+			set_symbol (Pixmaps.state_pixmap)
 		end;
 
 	make_visible (a_parent: COMPOSITE) is
@@ -91,12 +87,12 @@ feature
 		do
 			original_stone := state_stone.original_stone;
 			set_label (state_label);
-			set_symbol (state_d_pixmap);
+			set_symbol (Pixmaps.state_d_pixmap);
 		end;
 
 	reset is
 		do
-			set_symbol (State_pixmap);
+			set_symbol (Pixmaps.state_pixmap);
 			set_label ("");
 			original_stone := Void;
 		end;

@@ -15,7 +15,6 @@ inherit
 		select
 			make_visible
 		end;
-	PIXMAPS;
 	WINDOWS;
 	SHARED_APPLICATION;
 	COMMAND
@@ -30,22 +29,20 @@ feature
 	make (ed: BEHAVIOR_EDITOR) is
 		do
 			associated_editor := ed;
-			set_symbol (State_pixmap);
+			set_symbol (Pixmaps.state_pixmap);
 		end;
 
 	make_visible (a_parent: COMPOSITE) is
-		local
-			Nothing: ANY
 		do
 			make_icon_visible (a_parent);
-			button.add_button_press_action (2, Current, Nothing);
+			button.add_button_press_action (2, Current, Void);
 		end;
 
 	set_state (s: STRING) is
 		local
 			state: STATE
 		do
-			state := graph.state (s);		
+			state := Shared_app_graph.state (s);		
 			if state /= Void then
 				update_behavior_editor (state)
 			end
@@ -107,7 +104,7 @@ feature {NONE}
 			Nothing: ANY;
 		do
 			button.remove_button_press_action (2, Current, Nothing);
-			states_wnd.popup (graph.state_names);
+			states_wnd.popup (Shared_app_graph.state_names);
 		end;
 
 end

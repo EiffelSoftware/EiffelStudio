@@ -16,7 +16,7 @@ feature
 
 	build is
 		do
-			pcb.add_key_press_action (Current, Nothing)
+			pcb.add_key_press_action (Current, Void)
 		end;
 
 	context_data_useful: BOOLEAN is True;

@@ -11,13 +11,6 @@ deferred class BEHAVIOR_STONE
 
 inherit
 
-	CURSORS
-		rename
-			Behavior_cursor as stone_cursor
-		export
-			{NONE} all
-		end;
-
 	STONE
 		redefine
 			original_stone
@@ -40,4 +33,10 @@ feature
 	labels: LINKED_LIST [CMD_LABEL] is
 		deferred
 		end;
+
+	stone_cursor: SCREEN_CURSOR is
+		do
+			Result := Cursors.behavior_cursor
+		end
+
 end

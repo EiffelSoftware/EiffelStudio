@@ -59,7 +59,7 @@ feature {NONE}
 
 	init_radius: INTEGER is
 		do
-			Result := sub_square_radius 
+			Result := App_const.sub_square_radius 
 		end; -- radius
 
 	top_middle: COORD_XY_FIG is
@@ -137,12 +137,12 @@ feature
 			!!Result.make; 
 			Result.set_radius (radius); 
 			!!a_path.make; 
-			a_path.set_line_width (standard_thickness); 
-			a_path.set_foreground_color (black); 
+			a_path.set_line_width (App_const.standard_thickness); 
+			a_path.set_foreground_color (App_const.black); 
 			Result.set_path (a_path); 
 			Result.path.set_xor_mode; 
 			!!temp_int.make; 
-			temp_int.set_foreground_color (white); 
+			temp_int.set_foreground_color (App_const.white); 
 		 	Result.set_interior (temp_int); 
 			Result.interior.set_xor_mode; 
 			Result.set_center (a_center); 

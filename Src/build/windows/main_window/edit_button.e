@@ -1,22 +1,30 @@
-
+-- Edit button hole for editable stones.
 deferred class EDIT_BUTTON 
 
 inherit
 
-	PIXMAPS;
-	ICON_HOLE;
-	FOCUSABLE;
+	EB_PICT_B;
+	HOLE;
 	WINDOWS
 
-feature 
+feature {NONE}
 
-	focus_source: PICT_COLOR_B is
+	focus_label: FOCUS_LABEL;
+
+	make (a_parent: COMPOSITE; label: FOCUS_LABEL) is
+		require
+			valid_a_parent: a_parent /= Void;
+			valid_label: label /= Void
 		do
-			Result := button;
+			focus_label := label;
+			make_visible (a_parent);
+			register
 		end;
 
-	
-feature {NONE}
+	target: WIDGET is
+		do
+			Result := Current;
+		end;
 
 	process_stone is
 		local
@@ -26,6 +34,17 @@ feature {NONE}
 			if (editable /= Void) then
 				editable.create_editor
 			end			
+		end;
+
+	execute (arg: ANY) is
+		do
+			if main_panel.project_initialized then
+				create_empty_editor
+			end
+		end;	
+
+	create_empty_editor is
+		deferred
 		end;
 
 end

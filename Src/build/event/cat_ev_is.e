@@ -4,8 +4,6 @@ class CAT_EV_IS
 inherit
 
 	EV_ICON_STONE
-		undefine
-			init_toolkit
 		redefine
 			make
 		end;

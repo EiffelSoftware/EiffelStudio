@@ -3,10 +3,6 @@ class ALIGNMENT_HOLE
 
 inherit
 
-	PIXMAPS
-		export
-			{NONE} all
-		end;
 	ICON_HOLE
 		redefine
 			stone, compatible
@@ -30,7 +26,7 @@ feature
 			alignment_form := a_parent;
 			make_visible (a_parent);
 			set_label (a_name);
-			set_symbol (Context_pixmap);
+			set_symbol (Pixmaps.context_pixmap);
 		end;
 
 	stone: CONTEXT_STONE;

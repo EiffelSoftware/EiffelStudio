@@ -4,19 +4,17 @@ class BAR_C
 
 inherit
 
-	PIXMAPS
-		rename
-			Bar_pixmap as symbol
-		export
-			{NONE} all
-		end;
-
 	MENU_C
 		redefine
 			widget, stored_node, add_to_option_list
 		end
 
 feature 
+
+	symbol: PIXMAP is
+		do
+			Result := Pixmaps.bar_pixmap
+		end;
 
 	context_type: CONTEXT_TYPE is
 		do

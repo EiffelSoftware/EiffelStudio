@@ -3,15 +3,10 @@ class REFERENCE_HOLE
 
 inherit
 
-	PIXMAPS
-		export
-			{NONE} all
-		end;
 	ICON_HOLE
 		redefine
 			stone, compatible
 		end
-
 
 creation
 
@@ -56,7 +51,7 @@ feature
 			-- values
 		do
 			set_label (associated_label);
-			set_symbol (Context_pixmap);
+			set_symbol (Pixmaps.context_pixmap);
 			stone := Void
 		end;
 

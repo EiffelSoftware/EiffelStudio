@@ -36,11 +36,11 @@ feature
 		local
 			size_l: LABEL_G;
 		do
-			initialize (Context_const.text_field_form_name, a_parent);
+			initialize (Widget_names.text_field_form_name, a_parent);
 
-			!!maximum_size.make (Context_const.maximum_size_name, 
+			!!maximum_size.make (Widget_names.maximum_size_name, 
 					Current, Text_field_cmd, editor);
-			!!size_l.make (Context_const.maximum_size_name, Current);
+			!!size_l.make (Widget_names.maximum_size_name, Current);
 			maximum_size.set_width (50);
 
 			attach_left (size_l, 10);

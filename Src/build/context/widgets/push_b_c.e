@@ -3,13 +3,6 @@ class PUSH_B_C
 
 inherit
 
-	PIXMAPS
-		rename
-			Push_b_pixmap as symbol
-		export
-			{NONE} all
-		end;
-
 	BUTTON_C
 		redefine
 			stored_node, widget,
@@ -31,6 +24,10 @@ feature
 
 	widget: PUSH_B;
 
+	symbol: PIXMAP is
+		do
+			Result := Pixmaps.push_b_pixmap
+		end;
 	
 feature {NONE}
 

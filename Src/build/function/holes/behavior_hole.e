@@ -13,16 +13,7 @@ class BEHAVIOR_HOLE
 
 inherit
 
-	PIXMAPS
-		export
-			{NONE} all
-		end;
-
-	LABELS
-		export
-			{NONE} all
-		end;
-
+	LABELS;
 	ELMT_HOLE
 		rename
 			make as elmt_hole_make
@@ -63,7 +54,7 @@ feature {NONE}
 
 	associated_symbol: PIXMAP is
 		do
-			Result := Behavior_pixmap
+			Result := Pixmaps.behavior_pixmap
 		end;
 
 	associated_label: STRING is

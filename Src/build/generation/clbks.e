@@ -68,7 +68,7 @@ feature
 			state_list: LINKED_LIST [STATE]
 		do
 			from
-				state_list := graph.states;
+				state_list := Shared_app_graph.states;
 				state_list.start
 			until
 				state_list.after

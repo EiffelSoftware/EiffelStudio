@@ -12,7 +12,7 @@ feature
 
 	symbol: PIXMAP is
 		once
-			Result := symbol_file_content ("align.symb")
+			Result := Pixmaps.alignment_pixmap
 		end
 
 	form_number: INTEGER is

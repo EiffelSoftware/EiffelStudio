@@ -3,21 +3,14 @@ class CMD_SET_PARENT
 
 inherit
 
-	CMD_CMD_NAMES
-		rename
-			Cmd_set_parent_cmd_name as c_name
-		export
-			{NONE} all
-		end;
-
 	CMD_UPDATE_PARENT
 	
 feature
 
-    set_previous_parent (c: CMD) is
-        do
-            previous_parent := c
-        end;
+	set_previous_parent (c: CMD) is
+		do
+			previous_parent := c
+		end;
  
 	set_parent_type (c: CMD) is
 		do	
@@ -25,6 +18,11 @@ feature
 		end;
 
 feature {NONE}
+
+	c_name: STRING is
+		do
+			Result := Command_names.cmd_set_parent_cmd_name
+		end;
 
 	parent: CMD;
 

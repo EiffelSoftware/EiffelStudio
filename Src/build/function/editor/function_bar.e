@@ -7,9 +7,7 @@ inherit
 		rename
 			make as form_create
 		end;
-	WIDGET_NAMES;
 	LABELS;
-	PIXMAPS;
 	CONSTANTS
 
 creation

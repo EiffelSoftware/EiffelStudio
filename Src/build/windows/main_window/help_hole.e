@@ -7,19 +7,8 @@ inherit
 		redefine
 			stone
 		end;
-	PIXMAPS
-		export
-			{NONE} all
-		end;
-	COMMAND
-		export
-			{NONE} all
-		end;
+	COMMAND;
 	FOCUSABLE
-		export
-			{NONE} all
-		end
-
 
 creation
 
@@ -44,14 +33,12 @@ feature {NONE}
 feature 
 
 	make (hw: HELP_WINDOW; a_parent: COMPOSITE) is
-		local
-			Nothing: ANY
 		do
 			associated_window := hw;
-			set_symbol (help_pixmap);
+			set_symbol (Pixmaps.help_pixmap);
 			make_visible (a_parent);
 			initialize_focus;
-			add_activate_action (Current, Nothing);
+			add_activate_action (Current, Void);
 		end;
 
 	
@@ -79,7 +66,7 @@ feature {NONE}
 				not (helpable = Void)
 			then
 				if (associated_window = Void) then
-					!!hw.make ("Help", eb_screen);
+					!!hw.make (eb_screen);
 					hw.text.set_text (helpable.help_text);
 					hw.realize
 				else
@@ -92,7 +79,7 @@ feature {NONE}
 		local
 			hw: HELP_WINDOW
 		do
-			!!hw.make ("Help", eb_screen);
+			!!hw.make (eb_screen);
 			hw.realize;
 		end;	
 

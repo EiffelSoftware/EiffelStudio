@@ -5,19 +5,15 @@ inherit
 
 	APP_ADD_FIGURE; 
 	APP_FIND_FIGURE
-		export
-			{NONE} all
-		end;
-	APP_CMD_NAMES
-		rename
-			App_add_state_cmd_name as c_name
-		export
-			{NONE} all
-		end
 
 feature {NONE}
 
 	figures: APP_FIGURES;
+
+	c_name: STRING is
+		do
+			Result := Command_names.app_add_state_cmd_name
+		end;
 
 	work (added_state: STATE) is
 			-- Add a state to the application if the state_stone

@@ -3,7 +3,7 @@ class ARROW_LINE
 
 inherit
 
-	SHARED_APPLICATION;
+	CONSTANTS;
 	SEGMENT
 		rename 
 			draw as segment_draw,
@@ -83,8 +83,8 @@ feature {NONE}
 				arrow_head.after
 			loop
 				!!a_segment.make;
-				a_segment.set_line_width (arrow_head_line_w);	
-				a_segment.set_foreground_color (black);
+				a_segment.set_line_width (App_const.arrow_head_line_w);	
+				a_segment.set_foreground_color (App_const.black);
 				arrow_head.replace (a_segment);
 				arrow_head.forth
 			end;
@@ -105,7 +105,7 @@ feature {NONE}
 			then
 				Result.set (0, 0)
 			else
-							coeff := (dist / temp);
+				coeff := (dist / temp);
 				Result.set (pt2.x - pt1.x, pt2.y - pt1.y);
 				Result.set (real_to_integer (Result.x * coeff),
 					real_to_integer (Result.y * coeff));

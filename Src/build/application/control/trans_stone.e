@@ -4,12 +4,6 @@ deferred class TRANS_STONE
 
 inherit
 
-	CURSORS
-		rename
-			transition_cursor as stone_cursor
-		export
-			{NONE} all
-		end;
 	STONE
 		redefine
 			original_stone
@@ -17,6 +11,11 @@ inherit
 		end
 
 feature 
+
+	stone_cursor: SCREEN_CURSOR is
+		do
+			Result := Cursors.transition_cursor
+		end;
 
 	original_stone: TRANS_STONE is
 		deferred

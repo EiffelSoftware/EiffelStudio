@@ -9,20 +9,11 @@ inherit
 			execute as catalog_execute
 		export
 			{ANY} all
-		undefine
-			init_toolkit
 		redefine
 			realize, add_first_button, add_other_buttons,
 			hide, show, shown, current_page
 		end;
-	PIXMAPS
-		export
-			{NONE} all
-		end;
 	WINDOWS
-		export
-			{NONE} all
-		end
 
 creation
 
@@ -142,9 +133,7 @@ feature
 		local
 			add_command: CAT_ADD_COMMAND
 		do
-			page_sw.unmanage;
 			p.extend (c);
-			page_sw.manage;
 			!!add_command;
 			add_command.execute (p);
 		end;
@@ -175,11 +164,11 @@ feature {NONE}
 	
 feature 
 
-	make (a_name: STRING; a_screen: SCREEN) is
+	make (a_screen: SCREEN) is
 		local
 			continue_command: ITER_COMMAND;
 		do
-			!!shell.make (a_name, a_screen);
+			!!shell.make (Widget_names.command_catalog, a_screen);
 			!!continue_command;
 			shell.set_delete_command (continue_command);
 			catalog_make ("Command Catalog", shell);
@@ -193,13 +182,12 @@ feature
 			--inst_button: CMD_INST_CAT_ED_H;
 			separator, separator1: SEPARATOR;
 		do
-			!!button_form.make (F_orm1, Current);
-			!!separator.make (S_eparator, Current);
-			!!separator1.make (S_eparator1, Current);
-			!!type_label.make (L_abel, Current);
-			!!focus_label.make (L_abel1, Current);
-			!!page_sw.make (S_croll, Current);
-			!!page_form.make (F_orm2, page_sw);
+			!!button_form.make (Widget_names.form1, Current);
+			!!separator.make (Widget_names.separator, Current);
+			!!separator1.make (Widget_names.separator1, Current);
+			!!type_label.make (Widget_names.label, Current);
+			!!focus_label.make (Current);
+			!!page_sw.make (Widget_names.scroll, Current);
 			!!type_button.make ("Create/edit type"); 
 			!!create_inst_b.make ("Create instance");
 			type_button.make_visible (button_form);
@@ -225,7 +213,6 @@ feature
 			attach_right (page_sw, 10);
 			attach_top_widget (separator1, page_sw, 10);
 			attach_bottom (page_sw, 10);
-			focus_label.set_text ("");
 			!!pages.make;
 			define_command_pages;
 			update_interface;
@@ -267,12 +254,12 @@ feature {NONE}
 			window_commands: WINDOW_CMDS;
 			command_templates: TEMPL_CMDS
 		do
-			!!user_defined_commands1.make ("User1", User_defined_pixmap, Current);
-			!!user_defined_commands2.make ("User2", User_defined_pixmap, Current);
-			!!user_defined_commands3.make ("User3", User_defined_pixmap, Current);
-			!!command_templates.make ("Templates", Command_o_pixmap, Current);
-			!!window_commands.make ("Window", Windows_pixmap, Current);
-			!!file_commands.make ("File", File_pixmap, Current);
+			!!user_defined_commands1.make ("User1", Pixmaps.user_defined_pixmap, Current);
+			!!user_defined_commands2.make ("User2", Pixmaps.user_defined_pixmap, Current);
+			!!user_defined_commands3.make ("User3", Pixmaps.user_defined_pixmap, Current);
+			!!command_templates.make ("Templates", Pixmaps.command_o_pixmap, Current);
+			!!window_commands.make ("Window", Pixmaps.windows_pixmap, Current);
+			!!file_commands.make ("File", Pixmaps.file_pixmap, Current);
 			add_page (command_templates);
 			add_page (window_commands);
 			add_page (file_commands);
@@ -331,9 +318,7 @@ feature {NONE}
 				p.start;
 				p.search (c);
 				if not p.after then	
-					page_sw.unmanage;
 					p.redisplay_current;
-					page_sw.manage;
 					finished := True
 				else
 					pages.forth

@@ -3,24 +3,17 @@ class APP_SET_RETURN
 
 inherit 
 
+	SHARED_APPLICATION;
 	APP_COMMAND;
-	APP_CMD_NAMES
-		rename
-			App_set_return_cmd_name as c_name
-		export
-			{NONE} all
-		end
 	
 feature 
 
 	undo is 
 		local
-			graph: APP_GRAPH;
 			temp_trans: HASH_TABLE [GRAPH_ELEMENT, STRING];
 			sel_figure: APP_FIGURE
 		do 
-			graph := application_editor.transitions.graph;
-			temp_trans := graph.item (source_element);
+			temp_trans := Shared_app_graph.item (source_element);
 			temp_trans.remove (cmd_label);
 			if
 				not (old_dest_element = Void)
@@ -35,12 +28,16 @@ feature {NONE}
 	cmd_label: STRING;
 
 	old_dest_element, source_element: GRAPH_ELEMENT;
+
+	c_name: STRING is
+		do
+			Result := Command_names.app_set_return_cmd_name
+		end;
 	
 	work (l: STRING) is
 			-- Set cmd_label to `l'.
 		local
 			transitions: TRANSITION;
-			graph: APP_GRAPH;
 			temp_trans: HASH_TABLE [GRAPH_ELEMENT, STRING];
 			dest_element: GRAPH_ELEMENT
 		do
@@ -48,8 +45,7 @@ feature {NONE}
 			source_element := application_editor.selected_figure.original_stone;
 			transitions := application_editor.transitions;
 			old_dest_element := transitions.destination_element (source_element, cmd_label);
-			graph := transitions.graph;
-			temp_trans := graph.item (source_element);
+			temp_trans := Shared_app_graph.item (source_element);
 			if
 				temp_trans.has (cmd_label)
 			then

@@ -46,21 +46,21 @@ feature
 			line_style: LABEL_G;
 			radio_b: RADIO_BOX
 		do
-			initialize (Context_const.separator_form_name, a_parent);
+			initialize (Widget_names.separator_form_name, a_parent);
 
-			!!is_vertical.make (Context_const.vertical_name, 
+			!!is_vertical.make (Widget_names.vertical_name, 
 					Current, Sep_dir_cmd, editor);
-			!!line_style.make (Context_const.line_style_name, Current);
+			!!line_style.make (Widget_names.line_style_name, Current);
 			!!radio_b.make (Widget_names.row_column, Current);
-			!!b_single_line.make (Context_const.single_name, 
+			!!b_single_line.make (Widget_names.single_name, 
 					radio_b, Sep_line_cmd, editor);
-			!!b_single_dashed_line.make (Context_const.single_dashed_name, 
+			!!b_single_dashed_line.make (Widget_names.single_dashed_name, 
 					radio_b, Sep_line_cmd, editor);
-			!!b_double_line.make (Context_const.double_name, radio_b, 
+			!!b_double_line.make (Widget_names.double_name, radio_b, 
 					Sep_line_cmd, editor);
-			!!b_double_dashed_line.make (Context_const.double_dashed_name, 
+			!!b_double_dashed_line.make (Widget_names.double_dashed_name, 
 					radio_b, Sep_line_cmd, editor);
-			!!b_no_line.make (Context_const.no_line_name, radio_b, 
+			!!b_no_line.make (Widget_names.no_line_name, radio_b, 
 					Sep_line_cmd, editor);
 
 			attach_left (is_vertical, 10);

@@ -64,12 +64,12 @@ feature
 			label_y: LABEL_G;
 			label_width: LABEL_G;
 		do
-			initialize (Context_const.geometry_form_name, a_parent);
+			initialize (Widget_names.geometry_form_name, a_parent);
 
-			!!label_x.make (Context_const.X_string_name, Current);
-			!!label_y.make (Context_const.Y_string_name, Current);
-			!!label_width.make (Context_const.width_name, Current);
-			!!label_height.make (Context_const.height_name, Current);
+			!!label_x.make (Widget_names.X_string_name, Current);
+			!!label_y.make (Widget_names.Y_string_name, Current);
+			!!label_width.make (Widget_names.width_name, Current);
+			!!label_height.make (Widget_names.height_name, Current);
 
 			!!text_field_x.make (Widget_names.textfield, 
 					Current, Set_position_cmd, editor);

@@ -12,6 +12,10 @@ inherit
 	SHARED_CONTEXT;
 	SHARED_STORAGE_INFO
 	
+feature {CONTEXT_STORER}
+
+	stored_contexts: LINKED_LIST [EB_TABLE [S_CONTEXT]];
+	
 feature 
 
 	retrieved_data: LINKED_LIST [CONTEXT];
@@ -25,10 +29,6 @@ feature
 			stored_contexts := Void;
 		end;
 
-feature {CONTEXT_STORER}
-
-	stored_contexts: LINKED_LIST [EB_TABLE [S_CONTEXT]];
-	
 feature {NONE}
 
 	current_table: EB_TABLE [S_CONTEXT];

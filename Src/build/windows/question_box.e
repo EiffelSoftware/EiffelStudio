@@ -8,17 +8,9 @@ inherit
 			popup as old_popup,
 			make as question_d_create
 		end;
-
-	COMMAND_ARGS
-		export
-			{NONE} all
-		end;
-
-	COMMAND
-		export
-			{NONE} all
-		end
-
+	COMMAND_ARGS;
+	COMMAND;
+	CONSTANTS
 
 creation
 
@@ -31,16 +23,28 @@ feature {NONE}
 
 feature 
 
-	popup (c: QUEST_POPUPER; s: STRING) is
+	popup (c: QUEST_POPUPER; s: STRING; extra_message: STRING) is
+		require
+			valid_c: c /= Void;
+			valid_s: s /= Void;
+			valid_extra_message: extra_message /= Void implies
+				not extra_message.empty
+		local
+			tmp: STRING
 		do
 			caller := c;
+			tmp := s
+			if extra_message /= Void then
+				tmp.replace_substring_all ("%%X", extra_message)
+			end;
 			set_message (s);
 			old_popup
 		end;
 
-	make (a_name: STRING; a_parent: COMPOSITE) is
+	make (a_parent: COMPOSITE) is
 		do
-			question_d_create (a_name, a_parent);
+			question_d_create (Widget_names.question_window, a_parent);
+			set_title (Widget_names.question_window);
 			hide_help_button;
 			set_exclusive_grab;
 			add_ok_action (Current, First);
@@ -48,7 +52,6 @@ feature
 			set_ok_label ("Yes");
 			set_cancel_label ("No");
 		end;
-
 	
 feature {NONE}
 

@@ -17,7 +17,7 @@ feature {NONE}
 
 	c_name: STRING is
 		do
-			Result := Context_const.label_alignment_cmd_name
+			Result := Command_names.cont_label_alignment_cmd_name
 		end;
 
 	context: LABEL_TEXT_C;

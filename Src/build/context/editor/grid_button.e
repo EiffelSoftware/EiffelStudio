@@ -12,7 +12,7 @@ feature
 
 	symbol: PIXMAP is
 		once
-			Result := symbol_file_content ("grid.symb")
+			Result := Pixmaps.grid_pixmap
 		end
 
 	form_number: INTEGER is

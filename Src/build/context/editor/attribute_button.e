@@ -16,8 +16,8 @@ feature
 
 	symbol: PIXMAP is
 		once
-			Result := symbol_file_content ("attrib.symb")
-		end
+			Result := Pixmaps.attribute_pixmap
+		end;
 
 	form_number: INTEGER;
 

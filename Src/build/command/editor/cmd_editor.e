@@ -8,43 +8,33 @@ inherit
 			realize as shell_realize
 		export
 			{NONE} all
-		undefine
-			init_toolkit
 		redefine
 			delete_window_action
 		end
-
 	TOP_SHELL
-		undefine
-			init_toolkit
 		redefine
 			realize, make,
 			delete_window_action
 		select
 			realize, make
 		end
-	WIDGET_NAMES
-	COMMAND
+	COMMAND;
 	WINDOWS;
 	CONSTANTS;
 	ERROR_POPUPER
-		undefine
+		redefine
 			continue_after_popdown
 		end
-	WARN_POPUPER
-		undefine
+	QUEST_POPUPER
+		redefine
 			continue_after_popdown
-		end
+		end;
+	CLOSEABLE
 
 creation
 
 	make
 
--- ******************
--- Editing attributes
--- ******************
-
-	
 feature {NONE}
 
 	-- Currently edited command.
@@ -57,7 +47,6 @@ feature {TOP_I}
 	delete_window_action is
 		do
 			close
-			iterate
 		end
 
 feature 
@@ -85,7 +74,7 @@ feature -- Editing
 			if edited_command /= Void then
 				edited_command.save
 			end
-			clear
+			clear;
 			window_mgr.close (Current)
 		end
 
@@ -222,7 +211,7 @@ feature -- Argument
 		do
 			if not (edited_command = Void) then
 				if edited_command.has_instances then
-					popup_error_box ("Command has instances: Cannot add argument !!")
+					popup_error_box (Messages.instance_add_arg_er)
 				else
 					edited_command.add_argument (ts)
 				end
@@ -237,7 +226,7 @@ feature -- Argument
 		do
 			if not (edited_command = Void) then
 				if edited_command.has_instances then
-					popup_error_box ("Command has instances: Cannot remove argument !!")
+					popup_error_box (Messages.instance_rem_arg_er)
 				else
 					edited_command.remove_argument (a)
 				end
@@ -255,7 +244,7 @@ feature -- Labels
 			then
 				edited_command.add_label (label_name.text)
 			else
-				popup_error_box ("Cannot add labels to predefined commands%N")
+				popup_error_box (Messages.add_label_er)
 			end
 		end
  
@@ -263,9 +252,7 @@ feature -- Labels
 			-- Remove `l' from the list of labels
 			-- of currently edited command.
 		do
-			if
-				not (edited_command = Void)
-			then
+			if edited_command /= Void then
 				edited_command.remove_label (l)
 			end
 		end
@@ -284,13 +271,13 @@ feature -- Parent
 						edited_command.has_instances
 						and not c.arguments.empty
 					then
-						popup_error_box ("Command has instances: Cannot inherit command with arguments!")
+						popup_error_box (Messages.instance_add_inh_er)
 					else
 						edited_command.set_parent (c)
 					end
 				end
 			else
-				popup_error_box ("Cannot add parent for predefined command !")
+				popup_error_box (Messages.add_parent_er)
 			end
 		end
  
@@ -303,21 +290,16 @@ feature -- Parent
 					edited_command.has_instances and
 					not edited_command.parent_type.arguments.empty
 				then
-					popup_error_box ("Command has instances: Cannot remove parent with a rguments!")
+					popup_error_box (Messages.instance_rem_inh_er)
 				else
 					edited_command.remove_parent 
 				end
 			else
-				popup_error_box ("Cannot remove parent for predefined command !")
+				popup_error_box (Messages.remove_parent_er)
 			end
 		end
 	
--- ********************
--- EiffelVision Section
--- ********************
-
-	
-feature {NONE}
+feature {NONE} -- Interface
 
 	argument_hole: ARG_HOLE
 			-- Hole associated with command
@@ -358,7 +340,7 @@ feature {NONE}
 
 	instance_hole: CMD_ED_INST_ED_H
 
-	close_b: CMD_EDIT_CLOSE_B
+	close_b: CLOSE_WINDOW_BUTTON
 			-- Close button associated with
 			-- Current window
 
@@ -376,31 +358,30 @@ feature {NONE}
 		-- create the editor's widget set
 		do
 			top_shell_create (a_name, a_screen)
-			!!form.make (F_orm, Current)
-			!!text_editor.make (T_ext, form)
-			!!form1.make (F_orm1, form)
-			!!form2.make (F_orm2, form)
-			!!form3.make (F_orm3, form)
+			!!form.make (Widget_names.form, Current)
+			!!text_editor.make (Widget_names.text, form)
+			!!form1.make (Widget_names.form1, form)
+			!!form2.make (Widget_names.form2, form)
+			!!form3.make (Widget_names.form3, form)
 			!!edit_hole.make (Current)
-			!!separator.make (S_eparator, form)
-			!!undoable_t.make (T_oggle, form1)
-			!!separator1.make (S_eparator1, form)
+			!!separator.make (Widget_names.separator, form)
+			!!undoable_t.make (Widget_names.toggle, form1)
+			!!separator1.make (Widget_names.separator1, form)
 			edit_hole.make_visible (form1)
 			!!inherit_hole.make (Current)
 			inherit_hole.make_visible (form1)
 			!!instance_hole.make (Current)
 			instance_hole.make_visible (form1)
-			!!close_b.make (Current)
-			close_b.make_visible (form1)
+			!!close_b.make (Current, form1, Void)
 			!!argument_hole.make (Current)
 			argument_hole.make_visible (form2)
-			!!argument_sw.make (S_croll1, form2)
-			!!arguments.make (I_con_box1, argument_sw, Current)
-			!!label_name.make (L_abel, form3)
-			!!label1.make (L_abel1, form3)
-			!!label_sw.make (S_croll2, form3)
-			!!labels.make (I_con_box3, label_sw, Current)
-			!!save_b.make("cmd_save", form1)
+			!!argument_sw.make (Widget_names.scroll1, form2)
+			!!arguments.make (Widget_names.icon_box1, argument_sw, Current)
+			!!label_name.make (Widget_names.label, form3)
+			!!label1.make (Widget_names.label1, form3)
+			!!label_sw.make (Widget_names.scroll2, form3)
+			!!labels.make (Widget_names.icon_box3, label_sw, Current)
+			!!save_b.make(form1)
 		end
 
 	perform_attachments is
@@ -490,9 +471,6 @@ feature
 			perform_attachments
 			set_values
 			set_callbacks
-
-			-- set the `editor' toggle on to indicate an editor is active
-			edit_hole.main_panel.t4.set_toggle_on
 		end
 
 	
@@ -510,7 +488,6 @@ feature {NONE}
 		local
 			non_undo_cmd: CMD_NON_UNDOABLE
 			undo_cmd: CMD_UNDOABLE
-			msg: STRING
 		do
 			if (argument = raise_arg) then
 				main_panel.base.raise
@@ -530,19 +507,16 @@ feature {NONE}
 				end
 			elseif (argument = edit_hole and then
 						(edited_command /= Void)) then
-				!!msg.make (0)
-				msg.append ("Do you wish to reset%N")
-				msg.append ("command text")
-				warning_box.popup (Current, msg)
+				question_box.popup (Current, Messages.reset_text_qu, Void)
 			end
 		end 
 
 	popup_error_box (s: STRING) is
 			-- Popup error box with message `s'.
 		require
-			not_void_s: not (s = Void)
+			not_void_s: s /= Void
 		do
-			error_box.popup (Current, s)
+			error_box.popup (Current, s, Void)
 		end
 
 feature {USER_CMD}
@@ -569,7 +543,7 @@ feature -- Top shell features
 
 	continue_after_popdown (box: MESSAGE_D ok: BOOLEAN) is
 		do
-			if (box = warning_box) then
+			if (box = question_box) then
 				if ok then
 					text_editor.set_text (edited_command.template)
 				end

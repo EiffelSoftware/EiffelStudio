@@ -6,9 +6,6 @@ inherit
 	WINDOWS;
 	COMMAND;
 	EDITOR_OK_FORM
-		undefine
-			init_toolkit
-		end
 
 creation
 
@@ -22,28 +19,28 @@ feature -- Interface
 			radio_box_point: RADIO_BOX;
 			a_separator: SEPARATOR_G;
 		do	
-			initialize (Context_const.alignment_form_name, a_parent);
+			initialize (Widget_names.alignment_form_name, a_parent);
 			create_ok_button;
 			detach_top (separator);
-			!!context_list.make (Context_const.widget_list_name, Current);
-			!!reference.make (Context_const.reference_name, Current);
-			!!align_hole.make (Context_const.context_name, Current);
+			!!context_list.make (Widget_names.widget_list_name, Current);
+			!!reference.make (Widget_names.reference_name, Current);
+			!!align_hole.make (Widget_names.context_name, Current);
 			!!radio_box_direction.make (Widget_names.radio_box, Current);
 			!!radio_box_point.make (Widget_names.radio_box1, Current);
 			!!a_separator.make (Widget_names.separator, Current);
 
-			!!vertical.make (Context_const.vertically_name, 
+			!!vertical.make (Widget_names.vertically_name, 
 					radio_box_direction);
-			!!horizontal.make (Context_const.horizontally_name, 
+			!!horizontal.make (Widget_names.horizontally_name, 
 					radio_box_direction);
 			horizontal.arm;
 
-			!!top_left.make (Context_const.top_left_name, radio_box_point);
-			!!center.make (Context_const.center_name, radio_box_point);
-			!!bottom_right.make (Context_const.bottom_right_name, radio_box_point);
+			!!top_left.make (Widget_names.top_left_name, radio_box_point);
+			!!center.make (Widget_names.center_name, radio_box_point);
+			!!bottom_right.make (Widget_names.bottom_right_name, radio_box_point);
 			top_left.arm;
 
-			!!offset.make (Context_const.offset_name, Current);
+			!!offset.make (Widget_names.offset_name, Current);
 			!!offset_value.make (Widget_names.scale, Current);
 			offset_value.set_maximum_right_bottom (true);
 			offset_value.set_horizontal (true);

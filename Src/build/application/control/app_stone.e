@@ -3,12 +3,6 @@ deferred class APP_STONE
 
 inherit
 
-	CURSORS
-		rename
-			application_cursor as stone_cursor
-		export
-			{NONE} all
-		end;
 	STONE
 		redefine
 			original_stone
@@ -16,6 +10,11 @@ inherit
 		end
 	
 feature 
+
+    stone_cursor: SCREEN_CURSOR is
+        do
+            Result := Cursors.application_cursor
+        end
 
 	original_stone: APP_STONE is
 		deferred

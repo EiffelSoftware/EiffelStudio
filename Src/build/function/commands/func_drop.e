@@ -3,23 +3,20 @@ class FUNC_DROP
 
 inherit
 
-	FUNC_CMD_NAMES
-		rename
-			Func_drop_cmd_name as c_name
-		export
-			{NONE} all
-		end;
-
 	FUNC_COMMAND
 	
 feature {NONE}
 
 	input_stone, output_stone: STONE;
 
+	c_name: STRING is
+		do
+			Result := Command_names.func_drop_cmd_name
+		end;
 
 	redo_work is
 		do
-            if not edited_function.has_input (input_stone) then
+			if not edited_function.has_input (input_stone) then
 				edited_function.add (input_stone, output_stone)
 			end;
 		end; -- redo

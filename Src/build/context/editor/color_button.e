@@ -1,6 +1,7 @@
 class COLOR_BUTTON
 
 inherit
+
 	FORMAT_BUTTON
 
 creation
@@ -11,7 +12,7 @@ feature
 
 	symbol: PIXMAP is
 		once
-			Result := symbol_file_content ("color.symb")
+			Result := Pixmaps.color_pixmap
 		end
 
 	form_number: INTEGER is

@@ -10,14 +10,10 @@ inherit
 		export
 			{NONE} all;
 			{ANY} raise, set_x_y, x, y, width, height, set_size
-		undefine
-			init_toolkit
 		redefine
 			delete_window_action
 		end;
 	TOP_SHELL
-		undefine
-			init_toolkit
 		redefine
 			realize, make,
 			delete_window_action
@@ -38,7 +34,8 @@ inherit
 		select
 			clear
 		end;
-	WINDOWS
+	WINDOWS;
+	CLOSEABLE
 
 creation
 
@@ -55,7 +52,6 @@ feature
 	delete_window_action is
 		do
 			close;
-			iterate;
 		end;
 
 	
@@ -118,7 +114,7 @@ feature
 	make (a_name: STRING; a_screen: SCREEN) is
 		do
 			top_shell_make (a_name, a_screen);
-			initialize ("Editor Form", Current);
+			initialize (Widget_names.form, Current);
 		end;
 
 	

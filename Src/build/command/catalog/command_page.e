@@ -8,8 +8,6 @@ inherit
 		rename
 			make as old_create, 
 			make_visible as cat_page_make_visible
-		undefine
-			init_toolkit
 		redefine
 			associated_catalog, 
 			new_icon, create_new_icon, 
@@ -18,8 +16,6 @@ inherit
 	CAT_PAGE [CMD]
 		rename
 			make as old_create
-		undefine
-			init_toolkit
 		redefine
 			associated_catalog, 
 			new_icon, create_new_icon, 
@@ -27,20 +23,12 @@ inherit
 		select
 			make_visible
 		end;
-	WINDOWS
-		export
-			{NONE} all
-		end;
+	WINDOWS;
 	ERROR_POPUPER
-		export
-			{NONE} all
-		end
-
 
 creation
 
 	make
-
 	
 feature {CAT_COM_IS}
 
@@ -92,14 +80,12 @@ feature
 
 	remove_command (c: USER_CMD) is
 		local
-			msg: STRING;
 			inst_editors: LINKED_LIST [CMD_INST_EDITOR];
 			remove_cmd: CAT_CUT_COMMAND
 		do
 			if c.has_instances then
-				!!msg.make (0);
-				msg.append ("Command has instances. Cannot remove command%N");
-				error_box.popup (Current, msg);
+				error_box.popup (Current, 
+					Messages.instance_rem_com_er, Void);
 			else
 				if not (c.command_editor = Void) then
 					c.command_editor.clear

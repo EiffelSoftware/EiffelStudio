@@ -12,13 +12,6 @@ deferred class LABEL_STONE
 
 inherit
 
-	CURSORS
-		rename
-			label_cursor as stone_cursor
-		export
-			{NONE} all
-		end;
-
 	STONE
 		redefine
 			original_stone
@@ -29,5 +22,10 @@ feature
 	original_stone: CMD_LABEL is
 		deferred
 		end;
+
+	stone_cursor: SCREEN_CURSOR is
+		do
+			Result := Cursors.label_cursor
+		end
 
 end -- class LABEL_STONE

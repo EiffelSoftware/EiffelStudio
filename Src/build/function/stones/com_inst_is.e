@@ -13,7 +13,6 @@ inherit
 		redefine
 			original_stone
 		end;
-
 	ICON_STONE
 		rename
 			identifier as oui_identifier
@@ -24,12 +23,8 @@ inherit
 		select
 			make_visible
 		end;
-
 	CMD_INST_STONE;
 
-
-
-	
 feature 
 
 	make_visible (a_parent: COMPOSITE) is

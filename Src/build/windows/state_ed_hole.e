@@ -3,41 +3,29 @@ class STATE_ED_HOLE
 inherit
 
 	EDIT_BUTTON
-		redefine
-			process_stone
-		end;
 
 creation
+
 	make
-
-feature
-
-	make (a_name: STRING; a_parent: COMPOSITE) is
-		do
-			make_visible (a_parent);
-			set_symbol (State_pixmap);
-			initialize_focus;
-		end;
-
-	process_stone is
-		local
-			st: STATE;
-		do
-			st ?= stone.original_stone;
-			if st /= Void then
-				st.create_editor;
-				
-			end;
-		end;
 
 feature {NONE}
 
-	focus_label: LABEL is
+	symbol: PIXMAP is
 		do
-			Result := main_panel.focus_label;
+			Result := Pixmaps.state_pixmap
 		end;
 
-	focus_string: STRING is "State hole";
-	
+	focus_string: STRING is 
+		do
+			Result := Focus_labels.state_label
+		end;
 
+	create_empty_editor is
+		local
+			editor: STATE_EDITOR
+		do
+			editor := Window_mgr.state_editor;
+			window_mgr.display (editor)
+		end;
+	
 end

@@ -2,13 +2,6 @@ class BULLETIN_C
 
 inherit
 
-	PIXMAPS
-		rename
-			Bulletin_pixmap as symbol
-		export
-			{NONE} all
-		end
-
 	COMPOSITE_C
 		redefine
 			widget, stored_node, is_bulletin,
@@ -16,6 +9,11 @@ inherit
 		end
 	
 feature 
+
+	symbol: PIXMAP is
+		do
+			Result := Pixmaps.bulletin_pixmap
+		end;
 
 	context_type: CONTEXT_TYPE is
 		do

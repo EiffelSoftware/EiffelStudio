@@ -41,11 +41,11 @@ feature
 			label: LABEL_G;
 			pixmap_open_b: PUSH_BG;
 		do
-			initialize (Context_const.pict_color_form_name, a_parent);
-			!!label.make (Context_const.pixmap_name, Current);
+			initialize (Widget_names.pict_color_form_name, a_parent);
+			!!label.make (Widget_names.pixmap_name, Current);
 			!!pixmap_name.make (Widget_names.textfield, 
 					Current, Pict_clr_cmd, editor);
-			!!pixmap_open_b.make (Context_const.open_pixmap_name, Current);
+			!!pixmap_open_b.make (Widget_names.open_pixmap_name, Current);
 			attach_top (label, 10);
 			attach_left (label, 10);
 			attach_left (pixmap_name, 10);

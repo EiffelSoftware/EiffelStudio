@@ -79,10 +79,10 @@ feature
 			size_l: LABEL_G;
 			width_l, height_l: LABEL_G;
 		do
-			initialize (Context_const.text_form_name, a_parent);
+			initialize (Widget_names.text_form_name, a_parent);
 
-			!!width_l.make (Context_const.margin_width_name, Current);
-			!!height_l.make (Context_const.margin_height_name, Current);
+			!!width_l.make (Widget_names.margin_width_name, Current);
+			!!height_l.make (Widget_names.margin_height_name, Current);
 			!!width_text_field.make (Widget_names.textfield, Current, 
 				Text_width_cmd, editor);
 			!!height_text_field.make (Widget_names.textfield, Current, 
@@ -91,15 +91,15 @@ feature
 			width_text_field.set_width (50);
 			height_text_field.set_width (50);
 
-			!!maximum_size.make (Context_const.maximum_size_name, 
+			!!maximum_size.make (Widget_names.maximum_size_name, 
 					Current, Text_max_cmd, editor);
-			!!size_l.make (Context_const.maximum_size_name, Current);
+			!!size_l.make (Widget_names.maximum_size_name, Current);
 			maximum_size.set_width (50);
 
-			!!read_only.make (Context_const.read_only_name, 
+			!!read_only.make (Widget_names.read_only_name, 
 					Current, Text_read_cmd, editor);
 
-			!!enable_word_wrap.make (Context_const.enable_word_wrap_name, 
+			!!enable_word_wrap.make (Widget_names.enable_word_wrap_name, 
 					Current, Text_wrap_cmd, editor);
 			attach_left (size_l, 10);
 			attach_left (maximum_size, 200);

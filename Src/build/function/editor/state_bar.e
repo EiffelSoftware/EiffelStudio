@@ -5,41 +5,34 @@ class STATE_BAR
 inherit
 
 	FUNCTION_BAR
-		export
-			{NONE} all
 		redefine
 			edit_hole,
 			set_function,
 			make
 		end
 
-
 creation
 
 	make
-
 	
 feature {NONE}
 
 	edit_hole: S_EDIT_HOLE;
-
-
 	
 feature 
 
 	make (a_name: STRING; a_parent: COMPOSITE; ed: STATE_EDITOR) is
 		local
 			merge_hole: S_MERGE_HOLE;
-			close_button: ST_EDIT_CLOSE_B;
-			Nothing: ANY
+			close_button: CLOSE_WINDOW_BUTTON;
 		do
 			form_create (a_name, a_parent);
 			!!edit_hole.make (ed);
 			edit_hole.make_visible (Current);
 			!!merge_hole.make (ed);
 			merge_hole.make_visible (Current);
-			!!close_button.make (ed);
-			close_button.make_visible (Current);
+			!!close_button.make (ed, Current, Void);
+			io.error.putstring ("fixme STATEBAR%N");
 
 			attach_top (edit_hole, 0);
 			attach_top (close_button, 0);

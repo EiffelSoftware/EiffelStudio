@@ -17,7 +17,7 @@ feature {NONE}
 
 	c_name: STRING is
 		do
-			Result := Context_const.menu_cmd_name
+			Result := Command_names.cont_menu_cmd_name
 		end;
 
 	context: MENU_C;

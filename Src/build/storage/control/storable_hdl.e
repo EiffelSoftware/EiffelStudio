@@ -10,25 +10,24 @@ inherit
 			store_by_name as storable_store_by_name
 		end
 
-	
 feature 
 
 	retrieved: like Current;
 
 	retrieve_by_name (file_name: STRING) is
 		local
-			f: UNIX_FILE;
+			f: RAW_FILE;
 		do
-			!!f.make_open_binary_read (file_name);
+			!!f.make_open_read (file_name);
 			retrieved ?= storable_retrieved (f);
 			f.close
 		end;
 
 	store_by_name (file_name: STRING) is
 		local
-			f: UNIX_FILE;
+			f: RAW_FILE;
 		do
-			!!f.make_open_binary_write (file_name);
+			!!f.make_open_write (file_name);
 			general_store (f);
 			f.close
 		end; 

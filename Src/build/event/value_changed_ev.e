@@ -3,44 +3,26 @@ class VALUE_CHANGED_EV
 
 inherit
 
-	EV_IDENTIFIERS
-		export
-			{NONE} all
-		end;
-
 	EVENT
 		redefine
 			is_valid_for_context
-		
-		end;
-
-	EV_PIXMAPS
-		export
-			{NONE} all
-		end;
-
-	EVENT_LABELS
-		export
-			{NONE} all
 		end
-
 
 creation
 
 	make
-
 	
 feature 
 
 	identifier: INTEGER is
 		do
-			Result := - value_changed_ev_id
+			Result := - Event_const.value_changed_ev_id
 		end;
 
 	make is
 		do
-			set_symbol (Value_changed_pixmap);
-			set_label (Value_changed_label);
+			set_symbol (Pixmaps.value_changed_pixmap);
+			set_label (Event_const.value_changed_label);
 			event_table.put (Current, - identifier);
 		end;
 

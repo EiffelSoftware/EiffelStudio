@@ -17,7 +17,7 @@ feature {NONE}
 
 	c_name: STRING is
 		do
-			Result := Context_const.drawing_box_cmd_name
+			Result := Command_names.cont_drawing_box_cmd_name
 		end;
 
 	context: DR_AREA_C;

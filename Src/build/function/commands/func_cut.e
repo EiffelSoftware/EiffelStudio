@@ -3,13 +3,6 @@ class FUNC_CUT
 
 inherit
 
-	FUNC_CMD_NAMES
-		rename
-			Func_cut_elements_cmd_name as c_name
-		export
-			{NONE} all
-		end;
-
 	FUNC_COMMAND
 	
 feature {NONE}
@@ -19,6 +12,11 @@ feature {NONE}
 
 	input_stone, output_stone: STONE;
 			-- Input and output stones removed from box
+
+	c_name: STRING is
+		do
+			Result := Command_names.func_cut_elements_cmd_name
+		end;
 
 	redo_work is
 		do

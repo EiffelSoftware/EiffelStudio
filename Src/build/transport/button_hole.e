@@ -7,10 +7,7 @@ inherit
 	PICT_COLOR_B
 		rename
 			make as pict_color_make
-		undefine
-			init_toolkit
 		end;
-
 	HOLE
 	
 feature {NONE}

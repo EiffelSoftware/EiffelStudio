@@ -5,8 +5,6 @@ class BEHAVIOR_BAR
 inherit
 
 	FUNCTION_BAR
-		export
-			{NONE} all
 		redefine
 			edit_hole,
 			set_function,
@@ -17,12 +15,10 @@ creation
 
 	make
 
-	
 feature {NONE}
 
 	edit_hole: B_EDIT_HOLE;
 
-	
 feature 
 
 	label1: LABEL_G;
@@ -37,8 +33,8 @@ feature
 			edit_hole.make_visible (Current);
 			!!state_hole.make (ed);
 			state_hole.make_visible (Current);
-			!!label.make (L_abel, Current);
-			!!label1.make (L_abel1, Current);
+			!!label.make (Widget_names.label, Current);
+			!!label1.make (Widget_names.label1, Current);
 			label.set_text (Behaviour_state_label);
 
 			set_fraction_base (2);
@@ -55,7 +51,6 @@ feature
 			attach_left_widget (edit_hole, label, 1);
 			attach_left_position (state_hole, 1);
 			attach_left_widget (state_hole, label1, 1);
-			--detach_right (label1);
 		end;
 
 	set_function (b: BEHAVIOR) is

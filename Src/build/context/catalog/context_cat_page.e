@@ -6,13 +6,10 @@ inherit
 	FORM
 		rename
 			make as form_create
-		undefine
-			init_toolkit
 		end;
 	CONSTANTS;
 	WINDOWS;
 	COMMAND_ARGS;
-	PIXMAPS;
 	FOCUSABLE
 		rename
 			focus_string as page_name,

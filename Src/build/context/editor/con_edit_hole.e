@@ -11,7 +11,6 @@ inherit
 		redefine
 			stone, compatible
 		end
-
 	ICON_HOLE
 		rename
 			identifier as oui_identifier
@@ -20,15 +19,7 @@ inherit
 		select
 			make_visible
 		end
-
-	PIXMAPS
-		export
-			{NONE} all
-		end
-
 	CONTEXT_STONE
-		export
-			{NONE} all
 		redefine
 			transportable
 		end
@@ -80,7 +71,7 @@ feature
 		do
 			original_stone := Void
 			set_label ("")
-			set_symbol (Context_pixmap)
+			set_symbol (Pixmaps.context_pixmap)
 		end
 
 	set_context (con: CONTEXT) is
@@ -94,8 +85,7 @@ feature
 			if not parent.managed then
 				parent.manage
 			end
-		end
-
+		end;
 
 	context_label: STRING is
 		do
@@ -124,7 +114,7 @@ feature
 
 	make (ed: CONTEXT_EDITOR) is
 		do
-			set_symbol (Context_pixmap)
+			set_symbol (Pixmaps.context_pixmap)
 			associated_editor := ed
 		end
 

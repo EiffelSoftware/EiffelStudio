@@ -10,7 +10,6 @@ inherit
 		redefine
 			process_stone
 		end;
-
 	CMD_CAT_BUTTON
 		rename
 			make as old_create
@@ -19,18 +18,7 @@ inherit
 		select
 			make_visible
 		end;
-
-
-	PIXMAPS
-		export
-			{NONE} all
-		end;
-
 	COMMAND
-		export
-			{NONE} all
-		end;
-
 
 creation
 
@@ -42,17 +30,15 @@ feature
 	make (s: STRING) is
 		do
 			focus_string := s;
-            set_symbol (Create_command_instance_pixmap);
+            set_symbol (Pixmaps.create_command_instance_pixmap);
 			register
 		end; -- Create
 
 	
     make_visible (a_parent: COMPOSITE) is
-		local
-			Nothing: ANY
 		do
 			make_button_visible (a_parent);
-			add_activate_action (Current, Nothing)
+			add_activate_action (Current, Void)
 		end;
  
 feature {NONE}

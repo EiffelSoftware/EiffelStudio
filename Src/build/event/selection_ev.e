@@ -3,44 +3,26 @@ class SELECTION_EV
 
 inherit
 
-	EV_IDENTIFIERS
-		export
-			{NONE} all
-		end;
-
 	EVENT
 		redefine
 			is_valid_for_context
-		
-		end;
-
-	EV_PIXMAPS
-		export
-			{NONE} all
-		end;
-
-	EVENT_LABELS
-		export
-			{NONE} all
 		end
-
 
 creation
 
 	make
-
 	
 feature 
 
 	identifier: INTEGER is
 		do
-			Result := - selection_ev_id
+			Result := - Event_const.selection_ev_id
 		end;
 
 	make is
 		do
-			set_symbol (Selection_pixmap);
-			set_label (Selection_label);
+			set_symbol (Pixmaps.selection_pixmap);
+			set_label (Event_const.selection_label);
 			event_table.put (Current, - identifier);
 		end;
 

@@ -17,7 +17,7 @@ feature {NONE}
 
 	c_name: STRING is
 		do
-			Result := Context_const.temp_shown_cmd_name
+			Result := Command_names.cont_temp_shown_cmd_name
 		end;
 
 	context: TEMP_WIND_C;

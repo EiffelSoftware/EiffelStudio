@@ -398,7 +398,7 @@ feature {NONE}
 	remove_widget_callbacks is
 		do
 			widget.remove_button_press_action (2, show_command, Current);
-			widget.remove_button_release_action (2, show_command, Nothing);
+			widget.remove_button_release_action (2, show_command, Void);
 			widget.remove_button_press_action (3, transport_command, Current);
 		end;
 	

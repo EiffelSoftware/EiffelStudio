@@ -3,12 +3,7 @@ class TREE_ELEMENT
 
 inherit
 
-	WINDOWS
-		rename
-			init_toolkit as unused
-		export
-			{NONE} all
-		end;
+	WINDOWS;
 	CONTEXT_STONE;
 	EB_TEXT_IMAGE
 		rename
@@ -17,10 +12,6 @@ inherit
 			contains, draw, select_figure, deselect
 		end;
 	COLORS
-		export
-			{NONE} all
-		end
-
 
 creation
 

@@ -7,8 +7,6 @@ inherit
 		rename
 			button as source,
 			same as oui_same
-		export
-			{ANY} managed
 		end;
 
 feature 
@@ -20,22 +18,10 @@ feature
 			-- purposes.
 
 	set_original_stone (s: like original_stone) is
-		local
-			p: WIDGET
 		do
-			p := parent;
 			original_stone := s.original_stone;
-			if label = Void or else 
-				label.empty or else 
-				s.label.count >= label.count 
-			then
-				p.set_managed (False);
-			end;
 			set_label (s.label);
 			set_symbol (s.symbol);
-			if not p.managed then
-				p.set_managed (True);
-			end;
 		end;
 
 	stone_cursor: SCREEN_CURSOR is

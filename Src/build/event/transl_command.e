@@ -3,12 +3,11 @@ deferred class TRANSL_COMMAND
 
 inherit
 
-	WINDOWS;
-	UNDOABLE;
+	EB_UNDOABLE;
 	
 feature 
 
-	n_ame: STRING is
+	name: STRING is
 		do		
 			!!Result.make (0);
 			Result.append (c_name);
@@ -41,10 +40,5 @@ feature {NONE}
 		end;
 
 	failed: BOOLEAN;
-
-	history: HISTORY_WND is
-		once
-			Result := history_window;
-		end;
 
 end

@@ -21,7 +21,7 @@ feature
 	make (func: STATE_EDITOR) is
 		do
 			merge_make (func);
-			set_symbol (State_pixmap)
+			set_symbol (Pixmaps.state_pixmap)
 		end;
 
 	

@@ -2,8 +2,7 @@ class WIN_CONFIG_CMD
 
 inherit 
 
-	UNDOABLE;
-	WINDOWS;
+	EB_UNDOABLE;
 	CONSTANTS
 
 creation
@@ -75,10 +74,10 @@ feature
 			undo 
 		end;
 
- 	n_ame: STRING is
+ 	name: STRING is
   		do
    			!!Result.make (0);
-   			Result.append (Context_const.geometry_cmd_name);
+   			Result.append (Command_names.cont_geometry_cmd_name);
    			Result.append (" (");
    			if context.label /= Void then
 				Result.append (context.label);
@@ -87,10 +86,5 @@ feature
    			end;
    			Result.append (")");
  	 	end;
-
-	history: HISTORY_WND is
-		do
-			Result := History_window
-		end
 
 end

@@ -42,7 +42,7 @@ feature {NONE}
 
 	c_name: STRING is
 		do
-			Result := Context_const.cut_cmd_name
+			Result := Command_names.cont_cut_cmd_name
 		end;
 
 	parent: COMPOSITE_C;

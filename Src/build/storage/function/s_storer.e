@@ -11,7 +11,6 @@ inherit
 feature {S_STORER}
 
 	stored_data: LINKED_LIST [S_STATE];
-
 	
 feature 
 
@@ -35,7 +34,7 @@ feature {NONE}
 		do
 			!!stored_data.make;
 			from
-				state_list := graph.states;
+				state_list := Shared_app_graph.states;
 				state_list.start
 			until
 				state_list.after

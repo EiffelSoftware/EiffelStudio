@@ -14,26 +14,22 @@ class MOUSE_PTR
 
 inherit
 	
-	WINDOWS
-		export
-			{NONE} all
-		end
+	GRAPHICS;
+	CONSTANTS
 
-
-
-	
 feature {NONE}
 
 	Watch_cursor: SCREEN_CURSOR is
 			-- Watch cursor
-		once
-			!!Result.make;
-			Result.set_type (Result.Watch)
+		do
+			Result := Cursors.watch_cursor
 		end; 
 
-	watch_shaped: BOOLEAN;
+	watch_shaped: BOOLEAN_REF is
+		once
+			!! Result
+		end;
 			-- Has the mouse pointer a watch shape?
-
 	
 feature 
 
@@ -41,10 +37,9 @@ feature
 			-- Display the mouse pointer 
 			-- shaped as a watch.
 		do
-			if not watch_shaped then
-				check (global_cursor = Void) end;
+			if not watch_shaped.item then
 				set_global_cursor (Watch_cursor);
-				watch_shaped := True
+				watch_shaped.set_item (True)
 			end
 		end;
 
@@ -52,10 +47,9 @@ feature
 			-- Restore the mouse pointer back to
 			-- its arrow shape.
 		do
-			if watch_shaped then
-				check not (global_cursor = Void) end;
+			if watch_shaped.item then
 				restore_cursors;
-				watch_shaped := False
+				watch_shaped.set_item (False)
 			end
 		end
 

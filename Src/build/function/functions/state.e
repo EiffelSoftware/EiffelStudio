@@ -9,7 +9,6 @@ inherit
 			func_editor, input_stone, output_stone,
 			drop_pair
 		end;
-	PIXMAPS;
 	GRAPH_ELEMENT;
 	WINDOWS;
 	NAMABLE;
@@ -23,7 +22,7 @@ feature -- Creation
 
 	make is
 		do
-			set_symbol (State_pixmap_small);
+			set_symbol (Pixmaps.state_pixmap_small);
 			!!input_list.make;
 			!!output_list.make;
 			int_generator.next;

@@ -4,7 +4,6 @@ class FONT_FORM
 inherit
 
 	EDITOR_OK_FORM;
-	PIXMAPS
 
 creation
 
@@ -30,9 +29,9 @@ feature -- Interface
 		local
 			font_stone: FONT_STONE;
 		do
-			initialize (Context_const.font_form_name, a_parent);
+			initialize (Widget_names.font_form_name, a_parent);
 			create_ok_button;
-			!!font_b.make (Context_const.font_box_name, Current);
+			!!font_b.make (Widget_names.font_box_name, Current);
 			font_b.hide_ok_button;
 			font_b.hide_cancel_button;
 			font_b.hide_apply_button;

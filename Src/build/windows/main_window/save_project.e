@@ -27,7 +27,6 @@ feature
 		local
 			storer: STORER;	
 			mp: MOUSE_PTR;
-			msg: STRING
 		do
 			if not rescued then
 				if main_panel.project_initialized then
@@ -42,10 +41,8 @@ feature
 				end
 			else
 				rescued := False;
-				!!msg.make (0);
-				msg.append ("Cannot save project to directory%N");
-				msg.append (Environment.storage_directory);
-				error_box.popup (Current, msg)
+				error_box.popup (Current, Messages.cannot_save_er,
+					Environment.storage_directory)
 			end
 		rescue
 				-- Check for no more memory

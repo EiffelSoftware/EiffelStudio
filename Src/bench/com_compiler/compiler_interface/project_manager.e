@@ -74,7 +74,10 @@ feature -- Access
 				until
 					Result or else i > count
 				loop
-					Result := classes.item (i).lace_class.date_has_changed
+					if not classes.item (i).is_external then
+						-- We don't need to query external classes.
+						Result := classes.item (i).lace_class.date_has_changed
+					end
 					i := i + 1
 				end
 			end	

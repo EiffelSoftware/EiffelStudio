@@ -471,7 +471,6 @@ feature {NONE} -- Implementation
 			-- Replace width of `a_column' with `a_width' if column present.
 		local
 			system_info: WEL_SYSTEM_PARAMETERS_INFO
-			initial_width: INTEGER
 		do
 				-- Do nothing if the new value is equal to the
 				-- existing width.

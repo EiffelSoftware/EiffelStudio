@@ -384,11 +384,13 @@ feature {NONE} -- Implementation
 							text_field_imp.return_actions.call ([])
 						end
 				end
-				button := interface.default_push_button
-				if button /= Void and button.has_focus then
-					button_actions := button.select_actions
-					if button_actions /= Void then
-						button_actions.call ([])
+				if not interface.is_destroyed then
+					button := interface.default_push_button
+					if button /= Void and button.has_focus then
+						button_actions := button.select_actions
+						if button_actions /= Void then
+							button_actions.call ([])
+						end
 					end
 				end
 			else

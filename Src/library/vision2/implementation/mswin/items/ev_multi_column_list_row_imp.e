@@ -25,8 +25,7 @@ inherit
 		undefine
 			parent,
 			set_pixmap,
-			remove_pixmap--,
-			--set_pointer_style
+			remove_pixmap
 		redefine
 			parent_imp,
 			interface,
@@ -52,10 +51,6 @@ feature {NONE} -- Initialization
 		do
 			wel_make
 			base_make (an_interface)
-		--	create internal_text.make (1)
-		--	internal_text.extend ("")
-		--	create internal_pixmap.make (1)
-		--	internal_pixmap.extend (Void)
 		end
 
 	initialize is
@@ -121,7 +116,7 @@ feature {EV_ANY_I} -- Implementation
 
 end -- class EV_MULTI_COLUMN_LIST_ROW_IMP
 
---|----------------------------------------------------------------
+--|-----------------------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
@@ -135,13 +130,16 @@ end -- class EV_MULTI_COLUMN_LIST_ROW_IMP
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
+--|-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.42  2000/04/22 00:22:46  rogers
+--| Formatting.
+--|
 --| Revision 1.41  2000/04/21 21:59:17  rogers
 --| Various comments improved. Removed set_capture, release_capture,
 --| set_heavy_capture, release_heavy_capture and set_pointer_style.

@@ -550,7 +550,7 @@ feature {SHOW_HTML_TEXT} -- Parsing checking
 			class_as_b: CLASS_AS_B
 		do
 			class_as_b ?= e_class.click_list.area.item (0).node
-			if class_as_b /= void then
+			if class_as_b /= Void then
 					--| Should not be void.
 				Result := clone (class_as_b.class_name)
 			end

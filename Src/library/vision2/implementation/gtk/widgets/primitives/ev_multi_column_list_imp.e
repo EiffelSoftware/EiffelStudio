@@ -756,18 +756,20 @@ feature {NONE} -- Implementation
 					a_column - 1,
 					eiffel_to_c (a_text),
 					0,
-					C.gtk_pixmap_struct_pixmap (pixmap_imp.gtk_pixmap),
-					C.gtk_cell_pixmap_struct_mask (
-						pointer_array_i_th (
-							C.gtk_clist_row_struct_cell (
-								C.g_list_nth_data (
-									C.gtk_clist_struct_row_list (list_widget),
-									a_row - 1
-								)
-							),
-							a_column - 1
-						)
-					)
+					C.gtk_pixmap_struct_pixmap (pixmap_imp.c_object),
+					Default_pointer
+					--C.gtk_cell_pixmap_struct_mask (
+					--	pointer_array_i_th (
+					--		C.gtk_clist_row_struct_cell (
+					--			C.g_list_nth_data (
+					--				C.gtk_clist_struct_row_list (list_widget),
+					--				a_row - 1
+					--			)
+					--		),
+					--		a_column - 1
+					--	)
+					--)
+					--| FIXME IEK Mask retrieval causes seg fault.
 				)
 			else 
 				C.gtk_clist_set_text (
@@ -921,6 +923,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.69  2000/04/26 20:14:30  king
+--| Pixmap setting cause sig seg on mask retrieval
+--|
 --| Revision 1.68  2000/04/26 17:04:51  oconnor
 --| put GtkPixmap in an event box
 --|

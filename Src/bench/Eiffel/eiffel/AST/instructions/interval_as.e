@@ -154,8 +154,8 @@ feature -- Access
 			type: TYPE_A
 		do
 			type := inspect_control.type
-			Result := lower.is_inspect_value (type)
-						and then (upper = Void or else upper.is_inspect_value (type))
+			Result := lower.is_valid_inspect_value (type)
+						and then (upper = Void or else upper.is_valid_inspect_value (type))
 		end
 
 feature {AST_EIFFEL} -- Output

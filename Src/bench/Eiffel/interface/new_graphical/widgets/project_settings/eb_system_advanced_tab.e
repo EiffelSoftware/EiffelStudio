@@ -381,18 +381,18 @@ feature {NONE} -- Initialization
 
 				-- Create Load Ace button
 			create button.make_with_text_and_action (Interface_names.b_load_ace,
-				system_window~load_ace)
+				agent system_window.load_ace)
 			hbox.extend (button)
 			hbox.disable_item_expand (button)
 
 			create button.make_with_text_and_action (Interface_names.b_edit_ace,
-				system_window~edit_ace)
+				agent system_window.edit_ace)
 			hbox.extend (button)
 			hbox.disable_item_expand (button)
 
 
 			create button.make_with_text_and_action (Interface_names.b_new_ace,
-				system_window~reset_content)
+				agent system_window.reset_content)
 			hbox.extend (button)
 			hbox.disable_item_expand (button)
 
@@ -432,7 +432,7 @@ feature {NONE} -- Initialization
 			
 			create list.make (2)
 			list.extend (shared_library_field)
-			shared_library_check.select_actions.extend (~list_desactivation_action
+			shared_library_check.select_actions.extend (agent list_desactivation_action
 					(shared_library_check, list))
 
 			Result.extend (vbox)
@@ -458,7 +458,7 @@ feature {NONE} -- Initialization
 			create inlining_size_field
 			inlining_size_field.value_range.resize_exactly (0, 100)
 			inlining_check := new_check_button (hbox, "Inlining ", False)
-			inlining_check.select_actions.extend (~desactivation_action
+			inlining_check.select_actions.extend (agent desactivation_action
 					(inlining_check, inlining_size_field))
 			inlining_size_field.disable_sensitive
 			hbox.extend (inlining_size_field)

@@ -7,7 +7,7 @@
 
 ID_ICO_APPLICATION ICON "treeview_demo.ico"
 
-IDB_FOLDER_NORMAL		BITMAP folder_n.bmp
-IDB_FOLDER_SELECTED		BITMAP folder_s.bmp
-IDB_DOCUMENT_NORMAL		BITMAP doc_n.bmp
-IDB_DOCUMENT_SELECTED	BITMAP doc_s.bmp
+IDB_FOLDER_NORMAL		BITMAP folder_normal.bmp
+IDB_FOLDER_SELECTED		BITMAP folder_selected.bmp
+IDB_DOCUMENT_NORMAL		BITMAP document_normal.bmp
+IDB_DOCUMENT_SELECTED	BITMAP document_selected.bmp

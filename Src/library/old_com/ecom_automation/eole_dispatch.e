@@ -6,7 +6,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	EOLE_DISPATCH
+	EOLE_DISPATCH 
 
 inherit
 	EOLE_UNKNOWN
@@ -210,6 +210,7 @@ feature {NONE} -- Externals
 		alias
 			"eole2_dispatch_get_type_info_count"
 		end
+
 	
 end -- class EOLE_DISPATCH
 

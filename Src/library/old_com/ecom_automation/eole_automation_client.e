@@ -39,12 +39,15 @@ feature -- Access
 		
 feature -- Element change
 
-	create is
+	initialize (server_type: INTEGER) is
 			-- Initialize Automation by creating new dispatcher.
+		require
+			valid_server_type: is_valid_clsctx (server_type)
 		local
 			exception: EXCEPTIONS
-			dispatch_ptr, class_factory_ptr: POINTER
+			dispatch_ptr, class_factory_ptr, unknown_ptr: POINTER
 			class_factory: EOLE_CLASS_FACTORY
+			unknown: EOLE_UNKNOWN
 			msg_box: WEL_MSG_BOX
 		do
 			make
@@ -53,13 +56,24 @@ feature -- Element change
 				com_init_error_process
 			end
 			class_factory_ptr := co_get_class_object (class_id, 
-					Clsctx_local_server, Iid_class_factory)
+					server_type, Iid_class_factory)
 			if status.succeeded then
-				class_factory.attach_ole_interface_ptr (class_factory_ptr)
-				dispatch_ptr := class_factory.create_instance (default_pointer, Iid_dispatch)
+				print("co_get_class_object succeeded %N")
+				class_factory.link_ole_interface_ptr (class_factory_ptr)
+				print("calling class_factory.create_instance %N")
+				unknown_ptr := class_factory.create_instance (default_pointer, Iid_unknown)
 				if class_factory.status.succeeded then
+					!! unknown.make
+					unknown.link_ole_interface_ptr (unknown_ptr)
+				else
+					!! exception
+					exception.raise ("Could not retrieve IUnknown")
+				end
+
+				dispatch_ptr := unknown.query_interface (Iid_dispatch)
+				if unknown.status.succeeded then
 					!! dispatch.make
-					dispatch.attach_ole_interface_ptr (dispatch_ptr)
+					dispatch.link_ole_interface_ptr (dispatch_ptr)
 				else
 					!! exception
 					exception.raise ("Could not retrieve IDispatch")
@@ -79,7 +93,7 @@ feature -- Element change
 	attach (dispsrc: EOLE_DISPATCH) is
 			-- Initialize Automation by retrieving existing dispatcher `dispsrc'.
 		require
-			valid_dispatch: dispsrc /= void and then dispsrc.is_valid_interface
+			valid_dispatch: dispsrc /= Void and then dispsrc.is_valid_interface
 		do
 			dispatch := dispsrc
 		end

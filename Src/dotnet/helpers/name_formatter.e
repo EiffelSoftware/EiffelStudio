@@ -91,7 +91,9 @@ feature -- Basic Operations
 							Result.replace_substring_all (double_underscore_string,
 								single_underscore_string)
 							if Result.item (1) = '_' then
-								Result.prepend_character ('X')
+								Result.prepend_character ('C')
+							elseif Result.item (1).is_digit then
+								Result.prepend ("C_")
 							end
 							Result := eiffel_format (Result, True)
 							Result.to_upper
@@ -107,12 +109,21 @@ feature -- Basic Operations
 			-- Format `name' to Eiffel conventions
 		require
 			non_void_name: name /= Void
+			not_name_is_empty: not name.is_empty
+		local
+			l_name: STRING
 		do
 			operators.search (name)
 			if operators.found then
 				Result := operators.found_item
 			else
-				Result := formatted_variable_name (name)
+				l_name := name.twin
+				if name.item (1) = '_'  then
+					l_name.prepend_character ('m')
+				elseif name.item (1).is_digit then
+					l_name.prepend ("m_")
+				end
+				Result := formatted_variable_name (l_name)
 			end
 			Result := Result.twin
 		ensure
@@ -123,11 +134,19 @@ feature -- Basic Operations
 			-- Format argument at position `pos'.
 		require
 			name_not_void: name /= Void
+		local
+			l_name: STRING
 		do
 			if name.is_empty then
 				Result := "arg_" + pos.out
 			else
-				Result := formatted_variable_name (name)
+				l_name := name.twin
+				if name.item (1) = '_'  then
+					l_name.prepend_character ('a')
+				elseif name.item (1).is_digit then
+					l_name.prepend ("a_")
+				end
+				Result := formatted_variable_name (l_name)
 			end
 		ensure
 			formatted_argument_name_not_void: Result /= Void
@@ -138,6 +157,7 @@ feature -- Basic Operations
 		require
 			non_void_name: name /= Void
 			name_not_empty: not name.is_empty
+			valid_first_char: name.item (1) /= '_' and not name.item (1).is_digit
 		local
 			l_name: STRING
 			l_var: like variable_mapping_table
@@ -157,9 +177,6 @@ feature -- Basic Operations
 				Result.replace_substring_all (Single_dot_string, Single_underscore_string)
 				Result.replace_substring_all (Triple_underscore_string, Single_underscore_string)
 				Result.replace_substring_all (Double_underscore_string, Single_underscore_string)
-				if Result.item (1) = '_' then
-					Result.prepend_character ('a')
-				end
 				Result := eiffel_format (Result, False)
 			end
 		ensure
@@ -219,6 +236,8 @@ feature -- Basic Operations
 
 	valid_variable_name (name: STRING): STRING is
 			-- Format `name' to Eiffel valid variable name.
+		obsolete
+			"Marked for removal for no detectable clients found"
 		require
 			non_void_name: name /= Void
 			name_not_empty: not name.is_empty
@@ -239,6 +258,10 @@ feature -- Basic Operations
 				if name.item (1) = '_' then
 					create Result.make (name.count + 1)
 					Result.append_character ('a')
+					Result.append (name)
+				elseif name.item (1).is_digit then
+					create Result.make (name.count + 2)
+					Result.append ("a_")
 					Result.append (name)
 				else
 					create Result.make_from_string (name)
@@ -278,6 +301,8 @@ feature -- Basic Operations
 
 	is_valid_variable_name (a_name: STRING): BOOLEAN is
 			-- Is `a_name' a valid variable name?
+		obsolete
+			"Marked for removal for no detectable clients found"
 		require
 			non_void_a_name: a_name /= Void
 		local
@@ -340,7 +365,7 @@ feature {NONE} -- Implementation
 		require
 			non_void_value: s /= Void
 			valid_value: not s.is_empty
-			first_char: s.item (1) /= '_'
+			valid_first_char: s.item (1) /= '_' and not s.item (1).is_digit
 		local
 			p, c, n: CHARACTER
 			nb, i: INTEGER

@@ -6,30 +6,21 @@ root
 
 default
 	namespace ("ISE.Cache")
---	msil_version ("5.2.0.0")
-	msil_full_name ("ISE.Cache.Manager")
 	assertion (no)
 	msil_generation (yes)
 	arguments (" ")
 	disabled_debug (yes)
 	debug (no)
-	line_generation (yes)
+	line_generation (no)
 	il_verifiable (yes)
 	cls_compliant (yes)
 	dotnet_naming_convention (no)
 	msil_generation_type ("dll")
 	check_vape (yes)
 	console_application (yes)
-
-
--- EiffelBase
+	msil_key_file_name ("$EIFFEL_SRC\dotnet\helpers\isekey.snk")
 
 cluster
-	all root_cluster:		"$EIFFEL_SRC\dotnet\consumer\emitter"
-		exclude
-			"EIFGEN"; "CVS"; 
-		end
-
 	all base:		"$EIFFEL_SRC\library\base"
 		exclude
 			"table_eiffel3"; "desc"; "classic"; "CVS"; 
@@ -37,40 +28,15 @@ cluster
 
 	all base_net:		"$EIFFEL_SRC\library.net\base"
 		exclude
-			"CVS"; "support.net"; "system_object.e"
+			"CVS";
 		end
 
-	helpers:		"$EIFFEL_SRC\dotnet\helpers"
+	all emitter:		"$EIFFEL_SRC\dotnet\consumer"
 		exclude
-			"CVS"; 
+			"CVS"; "EIFGEN"
 		end
 
-	components:		"$EIFFEL_SRC\dotnet\consumer\components"
-		exclude
-			"CVS"; 
-		end
-
-	xml_serializer:		"$EIFFEL_SRC\dotnet\consumer\serialization"
-		exclude
-			"CVS"; 
-		end
-
-	all support:		"$EIFFEL_SRC\dotnet\consumer\support"
-		exclude
-			"CVS"; 
-		end
-
-	library xml:		"$ISE_EIFFEL\library.net\xml"
-		exclude
-			"CVS"; 
-		end
-
-	library system_:		"$ISE_EIFFEL\library.net\system"
-		exclude
-			"CVS"; 
-		end
-
-	cache:		"$EIFFEL_SRC\dotnet\consumer\cache"
+	all helpers:		"$EIFFEL_SRC\dotnet\helpers"
 		exclude
 			"CVS"; 
 		end

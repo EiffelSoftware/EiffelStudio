@@ -323,13 +323,13 @@ feature -- Status setting
 	select_item (an_index: INTEGER) is
 			-- Select an item at the one-based `index' of the list.
 		do
-			(ev_children @ an_index).set_selected (True)
+			(ev_children @ an_index).enable_select
 		end
 
 	deselect_item (an_index: INTEGER) is
 			-- Unselect the item at the one-based `index'.
 		do
-			(ev_children @ an_index).set_selected (False)
+			(ev_children @ an_index).disable_select
 		end
 
 	clear_selection is
@@ -535,6 +535,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.33  2000/03/03 00:14:20  king
+--| Changed references to set_selected to enable_select
+--|
 --| Revision 1.32  2000/03/02 21:41:26  king
 --| Renamed selection features to account for interface name change
 --|

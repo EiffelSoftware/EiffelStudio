@@ -353,8 +353,7 @@ feature {NONE} -- Inspection and Processing
 		local
 			lwr_word: STRING
 		do
-			lwr_word := clone (word)
-			lwr_word.to_lower
+			lwr_word := word.as_lower
 			
 			if lwr_word.is_equal ("create") then
 				can_stop := True

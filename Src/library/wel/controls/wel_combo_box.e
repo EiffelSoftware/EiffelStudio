@@ -53,9 +53,9 @@ feature -- Access
 		local
 			a_wel_string: WEL_STRING
 		do
-			!! Result.make (i_th_text_length (i))
+			create Result.make (i_th_text_length (i))
 			Result.fill_blank
-			!! a_wel_string.make (Result)
+			create a_wel_string.make (Result)
 			cwin_send_message (item, Cb_getlbtext, i,
 				cwel_pointer_to_integer (a_wel_string.item))
 			Result := a_wel_string.string
@@ -72,16 +72,8 @@ feature -- Access
 		do
 			Result := cwin_send_message_result (item,
 				Cb_getlbtextlen, i, 0)
-				
 		ensure
 			positive_result: Result >= 0
-		end
-
-feature -- Status report
-
-	get_text_limit: INTEGER is
-			-- Return the maximum text length.
-		do
 		end
 
 feature -- Basic operations
@@ -100,7 +92,7 @@ feature -- Basic operations
 		local
 			a_wel_string: WEL_STRING
 		do
-			!! a_wel_string.make (a_string)
+			create a_wel_string.make (a_string)
 			Result := cwin_send_message_result (item,
 				Cb_findstring, index,
 				cwel_pointer_to_integer (a_wel_string.item))
@@ -119,7 +111,7 @@ feature -- Basic operations
 		local
 			a_wel_string: WEL_STRING
 		do
-			!! a_wel_string.make (a_string)
+			create a_wel_string.make (a_string)
 			Result := cwin_send_message_result (item,
 				Cb_findstringexact, index,
 				cwel_pointer_to_integer (a_wel_string.item))
@@ -135,7 +127,7 @@ feature -- Element change
 		local
 			a_wel_string: WEL_STRING
 		do
-			!! a_wel_string.make (a_string)
+			create a_wel_string.make (a_string)
 			cwin_send_message (item, Cb_addstring, 0,
 				cwel_pointer_to_integer (a_wel_string.item))
 		ensure
@@ -152,7 +144,7 @@ feature -- Element change
 		local
 			a_wel_string: WEL_STRING
 		do
-			!! a_wel_string.make (a_string)
+			create a_wel_string.make (a_string)
 			cwin_send_message (item, Cb_insertstring, index,
 				cwel_pointer_to_integer (a_wel_string.item))
 		ensure
@@ -181,7 +173,7 @@ feature -- Element change
 		local
 			a_wel_string: WEL_STRING
 		do
-			!! a_wel_string.make (files)
+			create a_wel_string.make (files)
 			cwin_send_message (item, Cb_dir, attribut,
 				cwel_pointer_to_integer (a_wel_string.item))
 		end
@@ -222,6 +214,11 @@ feature -- Status setting
 
 feature -- Status report
 
+	get_text_limit: INTEGER is
+			-- Return the maximum text length.
+		do
+		end
+
 	selected: BOOLEAN is
 			-- Is an item selected?
 		require
@@ -260,7 +257,7 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			!! Result.make (0, 0, 0, 0)
+			create Result.make (0, 0, 0, 0)
 			cwin_send_message (item,
 				Cb_getdroppedcontrolrect,
 				0, cwel_pointer_to_integer (Result.item))
@@ -272,11 +269,34 @@ feature -- Status report
 			-- Text length
 		do
 			Result := cwin_get_window_text_length (item)
-			--| Windows 3.1x fix: Windows returns -1
-			--| when 0 is expected.
-			if Result = -1 then
-				Result := 0
-			end
+		end
+
+	top_index: INTEGER is
+			-- Zero-based index of the first visible item in the list 
+			-- box portion of a combo box. 
+			-- Initially, the item with index 0 is at the top of the 
+			-- list box, but if the list box contents have been scrolled, 
+			-- another item may be at the top. 
+		do
+			Result := cwin_send_message_result (item, Cb_gettopindex, 0, 0)
+		ensure
+			operation_successful: Result /= Cb_err
+		end
+
+	list_item_height: INTEGER is
+			-- height of list items in a combo box
+		do
+			Result := cwin_send_message_result (item, Cb_getitemheight, 0, 0)
+		ensure
+			operation_successful: Result /= Cb_err
+		end
+
+	selection_field_height: INTEGER is
+			-- height of the selection field in a combo box
+		do
+			Result := cwin_send_message_result (item, Cb_getitemheight, -1, 0)
+		ensure
+			operation_successful: Result /= Cb_err
 		end
 
 feature -- Measurement

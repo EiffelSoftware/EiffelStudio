@@ -42,7 +42,7 @@ feature -- Basic Operations
 		do
 			visited := a_descriptor.visited
 			{WIZARD_DATA_VISITOR} Precursor (a_descriptor)
-			if not is_interface then
+			if not is_interface and not is_coclass then
 				if need_generate_ce and not visited then
 					Generated_ce_mapper_writer.add_function (ce_function_writer, Public)
 					if c_header_file /= Void and then not c_header_file.empty then

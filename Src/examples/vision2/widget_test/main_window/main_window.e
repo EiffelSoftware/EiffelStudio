@@ -19,7 +19,12 @@ inherit
 	SHARED_TEST_CONTROLLER
 		undefine
 			copy, default_create, is_equal
-		end	
+		end
+		
+	GENERATION_CONSTANTS
+		undefine
+			copy, default_create, is_equal
+		end
 
 feature {NONE} -- Initialization
 
@@ -32,7 +37,6 @@ feature {NONE} -- Initialization
 		local
 			type_selector: GB_TYPE_SELECTOR
 			editor: GB_OBJECT_EDITOR
-			--controller: TEST_CONTROLLER
 			event_selector: EVENT_SELECTOR
 			documentation_display: DOCUMENTATION_DISPLAY
 		do
@@ -203,7 +207,8 @@ feature {NONE} -- Implementation
 		end
 		
 	update_tool_bar_radio_buttons (selected_button: EV_TOOL_BAR_TOGGLE_BUTTON) is
-			--
+			-- Simulate radio button behaviour on the three buttons in
+			-- the seperate tool bars.
 		do
 			if selected_button /= properties_button then
 				properties_button.select_actions.block
@@ -212,6 +217,7 @@ feature {NONE} -- Implementation
 			else
 				main_notebook.select_item (main_notebook_properties_item)
 				generate_button.disable_sensitive
+				file_generate.disable_sensitive
 			end
 			if selected_button /= tests_button then
 				tests_button.select_actions.block
@@ -220,6 +226,7 @@ feature {NONE} -- Implementation
 			else
 				main_notebook.select_item (main_notebook_tests)
 				generate_button.enable_sensitive
+				file_generate.enable_sensitive
 			end
 			if selected_button /= documentation_button then
 				documentation_button.select_actions.block
@@ -228,10 +235,12 @@ feature {NONE} -- Implementation
 			else
 				main_notebook.select_item (flat_short_display)
 				generate_button.disable_sensitive
+				file_generate.disable_sensitive
 			end
 		end
 		
 	update_buttons is
+			-- Update tool bar buttons to track notebook selections.
 		do
 			if main_notebook.selected_item = main_notebook_properties_item then
 				properties_button.enable_select
@@ -260,18 +269,29 @@ feature {NONE} -- Implementation
 			create pixmap
 			pixmap.set_with_named_file ("D:\work\widget_test\bitmaps\ico\documentation.ico")
 			documentation_button.set_pixmap (pixmap)
---			tests_button.enable_sensitive
---			documentation_button.enable_sensitive
+			
+			create pixmap
+			pixmap.set_with_named_file ("D:\work\widget_test\bitmaps\ico\icon_code_generation_color.ico")
+			generate_button.set_pixmap (pixmap)
 		end
 		
 	perform_generation is
-			--
+			-- User has requested to generate a test, so
+			-- display a GENERATION_DIALOG.
 		local
 			generation_dialog: GENERATION_DIALOG
 		do
 			create generation_dialog
-			generation_dialog.set_message ("You have selected to generate the " + Test_controller.selected_test_name + "%NThe following files will be generated:%Ntest_application.e%Nace.Windows.ace%N" + Test_controller.selected_test_name + ".e%N%NPlease specify a directory and then click %"Ok%" to generate the project:")	
+			generation_dialog.set_message ("You have selected to generate the " + Test_controller.selected_test_name +
+			"%N%NThe following files will be generated:%N" + application_file_name + "%N" + ace_file_name + "%N" +
+			Test_controller.selected_test_name + ".e%N%NPlease specify a directory and then click %"Ok%" to generate the project:")	
 			generation_dialog.show_modal_to_window (Current)
+		end
+		
+	close_test is
+			-- Close `Current' and destroy application.
+		do
+			(create {EV_ENVIRONMENT}).application.destroy
 		end
 		
 	

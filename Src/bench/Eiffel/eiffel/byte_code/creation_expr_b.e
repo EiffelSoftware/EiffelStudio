@@ -154,7 +154,6 @@ feature -- IL code generation
 			cl_type: CL_TYPE_I
 			ext_call: EXTERNAL_B
 		do
-			generate_il_line_info
 			cl_type ?= type
 			is_external_class := cl_type /= Void and then cl_type.base_class.is_external
 

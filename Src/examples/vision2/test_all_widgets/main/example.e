@@ -22,7 +22,7 @@ feature
 	main_window: MAIN_WINDOW is
 			-- Main window of the example
 		once
-			!!Result.make 
+			!!Result.make_top_level 
 			Result.show
 		end
 	

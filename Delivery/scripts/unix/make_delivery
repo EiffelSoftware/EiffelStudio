@@ -13,7 +13,7 @@ echo $* > tmpin$$.tmp
 awk 'index($0, "h") != 0 { exit 54 }' tmpin$$.tmp
 if [ $? -eq 54 ] ;  then
 echo Installation for ISE Eiffel 5 generation.
-echo "Parameters are no_compile, no_wizards, no_new_ec and no_install (or nothing to fully regenerate the installation)."
+echo "Parameters are all (to generate all deliveries), no_compile, no_wizards, no_new_ec and no_install (or nothing to fully regenerate the enterprise installation)."
 fullrf tmpin$$.tmp
 CANCEL
 fi
@@ -40,6 +40,12 @@ if [ $? -eq 54 ] ;  then
 NO_NEW_EC="True"
 else
 NO_NEW_EC=""
+fi
+awk 'index($0, "all") != 0 { exit 54 }' tmpin$$.tmp
+if [ $? -eq 54 ] ;  then
+MULTIPLE_EDITIONS="True"
+else
+MULTIPLE_EDITIONS=""
 fi
 rm -f tmpin$$.tmp
 
@@ -191,5 +197,5 @@ newtime=`date +%s`
 remtrace $(($newtime - $LASTTIME_TOT))
 
 # Error handling and normal ending
-echo You should now run \'compile_exes\' in $EXPORT_DIR
+echo You should now run \'compile_exes\' in $EXPORT_DIR, after modifying set_aliases to update the EXPORT_DIR, if necessary.
 CANCEL

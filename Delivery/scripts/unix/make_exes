@@ -9,10 +9,14 @@ exprt -r $DEFAULT_CVS_TAG -d C_library Src/C_library
 
 # These directories should already have been created by make_delivery. Whatever...
 safe_md $INSTALL_DIR/studio/spec
-safe_md $INSTALL_DIR/studio/spec/$ISE_PLATFORM
-safe_md $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin
+safe_md $INSTALL_DIR/studio/spec/unix
+safe_md $INSTALL_DIR/studio/spec/unix/bin
+safe_md $INSTALL_DIR/studio/spec/unix/include
+safe_md $INSTALL_DIR/studio/spec/unix/lib
+
 if [ ! "$NO_NEW_EC" ]; then
 	remtrace Recompile EiffelStudio
+	remtrace Enterprise edition
 	if [ ! -d $FINALIZATION_DIR ]; then
 		md $FINALIZATION_DIR
 	fi
@@ -26,7 +30,65 @@ if [ ! "$NO_NEW_EC" ]; then
 	fi
 	clean_project
 	move ec.tar.gz $EXPORT_DIR
+
+	if [ "$MULTIPLE_EDITIONS" ]; then
+   remtrace Student edition
+	cd $EIFFEL_SRC/Eiffel/API/constants
+   sed -e "s/has_metrics:\ BOOLEAN\ is\ True/has_metrics:\ BOOLEAN\ is\ False/g" eiffel_env.e >> new_eiffel_env.e
+   move new_eiffel_env.e eiffel_env.e
+   sed -e "s/has_documentation_generation:\ BOOLEAN\ is\ True/has_documentation_generation:\ BOOLEAN\ is\ False/g" eiffel_env.e >> new_eiffel_env.e
+   move new_eiffel_env.e eiffel_env.e
+   sed -e "s/has_profiler:\ BOOLEAN\ is\ True/has_profiler:\ BOOLEAN\ is\ False/g" eiffel_env.e >> new_eiffel_env.e
+   move new_eiffel_env.e eiffel_env.e
+   sed -e "s/has_xmi_generation:\ BOOLEAN\ is\ True/has_xmi_generation:\ BOOLEAN\ is\ False/g" eiffel_env.e >> new_eiffel_env.e
+   move new_eiffel_env.e eiffel_env.e
+   sed -e "s/has_dll_generation:\ BOOLEAN\ is\ True/has_dll_generation:\ BOOLEAN\ is\ False/g" eiffel_env.e >> new_eiffel_env.e
+   move new_eiffel_env.e eiffel_env.e                                               
+   cd $FINALIZATION_DIR
+   clean_project
+   finalize $NEW_EIFFEL_SRC/Eiffel/Ace/newbench.linux.ace
+   tgz_ccode ec
+   if [ ! -e ec.tar.gz ]; then
+      echo Could not finalize a new EiffelStudio
+      CANCEL
+   fi
+   clean_project
+   move ec.tar.gz $EXPORT_DIR/ecstudent.tar.gz
+
+	remtrace Home edition
+	cd $EIFFEL_SRC/Eiffel/API/constants
+   sed -e "s/has_case:\ BOOLEAN\ is\ True/has_case:\ BOOLEAN\ is\ False/g" eiffel_env.e >> new_eiffel_env.e
+   move new_eiffel_env.e eiffel_env.e
+	cd $FINALIZATION_DIR
+   clean_project
+   finalize $NEW_EIFFEL_SRC/Eiffel/Ace/newbench.linux.ace
+   tgz_ccode ec
+   if [ ! -e ec.tar.gz ]; then
+      echo Could not finalize a new EiffelStudio
+      CANCEL
+   fi
+   clean_project
+   move ec.tar.gz $EXPORT_DIR/echome.tar.gz
+
+   remtrace Professional edition
+   cd $EIFFEL_SRC/Eiffel/API/constants
+   sed -e "s/has_documentation_generation:\ BOOLEAN\ is\ False/has_documentation_generation:\ BOOLEAN\ is\ True/g" eiffel_env.e >> new_eiffel_env.e
+   move new_eiffel_env.e eiffel_env.e
+   sed -e "s/has_dll_generation:\ BOOLEAN\ is\ False/has_dll_generation:\ BOOLEAN\ is\ True/g" eiffel_env.e >> new_eiffel_env.e
+   move new_eiffel_env.e eiffel_env.e
+   cd $FINALIZATION_DIR
+   clean_project
+   finalize $NEW_EIFFEL_SRC/Eiffel/Ace/newbench.linux.ace
+   tgz_ccode ec
+   if [ ! -e ec.tar.gz ]; then
+      echo Could not finalize a new EiffelStudio
+      CANCEL
+   fi
+   clean_project
+   move ec.tar.gz $EXPORT_DIR/ecpro.tar.gz
+	fi
 else
+	# FIXME doesn't work.
 	quick_move studio/spec/$ISE_PLATFORM/bin/ec
 fi
 

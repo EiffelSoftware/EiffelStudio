@@ -76,8 +76,8 @@ feature -- Format independant
 		local
 			l_sp: SPECIAL [INTEGER_8]
 		do
-			l_sp := data.area
-			item.memory_copy ($l_sp, count)
+			l_sp := data.area;
+			(item + pos).memory_copy ($l_sp, data.count)
 		end
 
 feature -- Platform specific, here x86

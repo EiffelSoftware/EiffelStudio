@@ -467,7 +467,7 @@ feature -- Basic operations
 								lists_valid_lengths: physical_column_indexes.count >= visible_column_indexes.count
 							end
 							current_column_index := visible_column_indexes.item
-							current_physical_column_index := physical_column_indexes.item (visible_column_indexes.index - 1)
+							current_physical_column_index := physical_column_indexes.item (visible_column_indexes.item - 1)
 							
 							
 								-- Assume that there is no grid item at the current position.

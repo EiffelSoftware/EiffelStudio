@@ -1516,6 +1516,8 @@ debug ("OPTIONS")
 end;
 					a_class.assertion_level.make_byte_code (Byte_array);
 					a_class.debug_level.make_byte_code (Byte_array);
+					a_class.trace_level.make_byte_code (Byte_array);
+					a_class.profile_level.make_byte_code (Byte_array);
 				end;
 				i := i + 1;
 			end;
@@ -3121,6 +3123,7 @@ feature -- Main file generation
 				%extern void failure();%N%
 				%extern void initsig();%N%
 				%extern void initstk();%N%
+				%extern void initprf();%N%
 				%extern void eif_rtinit();%N%N%
 				%void main(argc, argv, envp)%N%
 				%int argc;%N%
@@ -3136,6 +3139,7 @@ feature -- Main file generation
 				%%Tif (echval = setjmp(exenv))%N%
 				%%T%Tfailure();%N%N%
 				%%Teif_rtinit(argc, argv, envp);%N%
+				%%Tinitprf();%N%
 				%%Temain(argc, argv);%N%
 				%%Treclaim();%N%
 				%%Texit(0);%N}%N");
@@ -3369,11 +3373,13 @@ feature --Workbench option file generation
 					Option_file.putstring (", ");
 					a_class.trace_level.generate (Option_file);
 					Option_file.putstring (", ");
+					a_class.profile_level.generate (Option_file);
+					Option_file.putstring (", ");
 					a_class.debug_level.generate (Option_file, a_class.id);
 				else
 					Option_file.putstring ("%
-						%(int16) 0, (int16) 0,%
-							%{(int16) 0, (int16) 0, (char **) 0}");
+						%(int16) 0, (int16) 0, (int16) 0,%
+						%{(int16) 0, (int16) 0, (char **) 0}");
 				end;
 				Option_file.putstring ("},%N");
 				i := i + 1;

@@ -2504,10 +2504,16 @@ feature -- Convenience features
 			hide_only_when_precompiled: Result implies is_precompiled
 		end;
 
-	trace_level: TRACE_I is
+	trace_level: OPTION_I is
 			-- Trace level of the class
 		do
 			Result := lace_class.trace_level
+		end;
+
+	profile_level: OPTION_I is
+			-- Profile level of the class
+		do
+			Result := lace_class.profile_level
 		end;
 
 	optimize_level: OPTIMIZE_I is

@@ -35,6 +35,11 @@ void xxerror(s)
 		 * of class ERROR_HANDLER.
 		 */
 		((void (*)()) syntax4)(Error_handler);
+	case LAC_ERROR6:
+		/* Empty string: call feature `make_string_empty'
+		 * of class ERROR_HANDLER.
+		 */
+		((void (*)()) syntax6)(Error_handler);
 	default:
 		/* Common syntax error */
 		((void (*)()) syntax1)(Error_handler);

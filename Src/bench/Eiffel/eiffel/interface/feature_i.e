@@ -185,11 +185,16 @@ feature -- Comparison
 
 	infix "<" (other: FEATURE_I): BOOLEAN is
 			-- Comparison of FEATURE_I based on their name.
+		local
+			l_name, l_other_name: like feature_name
 		do
-			check
-				feature_names_not_void: feature_name /= Void and other.feature_name /= Void
+			l_name := feature_name
+			l_other_name := other.feature_name
+			if l_name = Void then
+				Result := other.feature_name /= Void
+			else
+				Result := l_other_name /= Void and l_name < l_other_name
 			end
-			Result := feature_name < other.feature_name
 		end
 
 feature -- Debugger access

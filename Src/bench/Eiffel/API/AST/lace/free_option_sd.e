@@ -90,6 +90,7 @@ feature -- Properties
 	force_recompile,
 	full_type_checking,
 	msil_assembly_compatibility,
+	msil_classes_per_module,
 	msil_clr_version,
 	msil_culture,
 	msil_full_name,
@@ -197,6 +198,7 @@ feature {NONE} -- Codes and names.
 			Result.force (java_generation, "java_generation")
 			Result.force (line_generation, "line_generation")
 			Result.force (msil_assembly_compatibility, "msil_assembly_compatibility")
+			Result.force (msil_classes_per_module, "msil_classes_per_module")
 			Result.force (msil_clr_version, "msil_clr_version")
 			Result.force (msil_culture, "msil_culture")
 			Result.force (msil_full_name, "msil_full_name")
@@ -435,6 +437,23 @@ feature {COMPILER_EXPORTER}
 						error_found := True
 					end
 
+				when msil_classes_per_module then
+					if value.is_name then
+						string_value := value.value
+						if string_value.is_integer then
+							i := string_value.to_integer
+							if (i <= 0) then
+								error_found := True
+							else
+								System.set_msil_classes_per_module (i)
+							end
+						else
+							error_found := True
+						end
+					else
+						error_found := True
+					end
+					
 				when msil_clr_version then
 						-- Do not perform any processing as it was done in `build_universe'
 						-- from ACE_SD through call to `set_clr_runtime_version'. We only

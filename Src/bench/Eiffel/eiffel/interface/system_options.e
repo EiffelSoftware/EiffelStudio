@@ -90,6 +90,17 @@ feature -- Access: IL code generation
 
 	msil_culture: STRING
 			-- Culture of current assembly.
+			
+	msil_classes_per_module: INTEGER is
+			-- Number of classes per generated module in IL code generation
+		do
+			Result := internal_msil_classes_per_module
+			if Result = 0 then
+				Result := 5
+			end
+		ensure
+			msil_classes_per_module_nonnegative: Result > 0
+		end
 
 	msil_version: STRING
 			-- Version of current assembly.
@@ -202,6 +213,20 @@ feature -- Update
 			il_generation_set:
 				(create {SHARED_WORKBENCH}).Workbench.has_compilation_started or else
 				il_generation = v
+		end
+
+	set_msil_classes_per_module (nb: like msil_classes_per_module) is
+			-- Set `msil_classes_per_module' to `nb'.
+		require
+			nb_nonngegative: nb > 0
+		do
+			if not (create {SHARED_WORKBENCH}).Workbench.has_compilation_started then
+				internal_msil_classes_per_module := nb
+			end
+		ensure
+			msil_classes_per_module_set:
+				(create {SHARED_WORKBENCH}).Workbench.has_compilation_started or else
+				msil_classes_per_module = nb
 		end
 
 	set_msil_culture (cult: STRING) is
@@ -439,6 +464,9 @@ feature -- Update
 		end
 
 feature {SYSTEM_I} -- Implementation
+
+	internal_msil_classes_per_module: INTEGER
+			-- Number of classes per generated module in IL code generation
 
 	private_freeze: BOOLEAN
 			-- Freeze set if externals or new derivation

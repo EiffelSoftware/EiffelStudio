@@ -7,6 +7,9 @@ indexing
 class
 	MAILER
 
+--inherit
+--	TRANSFER_ERROR
+
 create
 	default_create
 
@@ -20,10 +23,15 @@ feature -- Access
 
 feature -- Status report
 
-	transfer_error: BOOLEAN
+	transfer_error: TRANSFER_ERROR
 		-- Has the transfer failed?
 
-	transfer_error_message: STRING
+	error: BOOLEAN is
+		do
+			Result:= transfer_error.transfer_error
+		end
+
+--	transfer_error_message: STRING
 		-- Error message.
 
 feature -- Settings
@@ -34,7 +42,9 @@ feature -- Settings
 			resource_exists: resource /= Void
 			valid_from_resource: resource.can_be_sent or resource.can_receive
 		do
+			disable_transfer_error
 			from_resource:= resource
+			set_transfer_error
 		end
 
 	set_to_resource (resource: EMAIL_RESOURCE) is
@@ -43,7 +53,9 @@ feature -- Settings
 			resource_exists: resource /= Void
 			valid_to_resource: resource.can_send or resource.can_be_received
 		do
+			disable_transfer_error
 			to_resource:= resource
+			set_Transfer_error
 		end
 
 feature -- Basic operations
@@ -56,40 +68,51 @@ feature -- Basic operations
 							(from_resource.can_receive and then to_resource.can_be_received)
 		do
 			to_resource.transfer (from_resource)
-			check_errors
+--			check_errors
 		end
 
 feature {NONE} -- Implementation
 
+--	set_transfer_error is
+--			-- Set error.
+--		do
+--			transfer_error:= True
+--		end
+
 	set_transfer_error is
-			-- Set error.
 		do
-			transfer_error:= True
+			if from_resource = Void then
+				transfer_error:= to_resource.transfer_error
+			else
+				transfer_error:= from_resource.transfer_error
+			end
 		end
 
-	unset_transfer_error is
+	disable_transfer_error is
 			-- Unset error.
 		do
-			transfer_error:= False
-		end
-
-	set_transfer_error_message (message: STRING) is
-			-- Set transfer_error_message with 'message'.
-		do
-			transfer_error_message:= message
-		end
-
-	check_errors is
-			-- Check for errors.
-		do
-			if from_resource.transfer_error then
-				set_transfer_error
-				set_transfer_error_message (from_resource.transfer_error_message)
+			if 	transfer_error /= Void then
+				transfer_error.disable_transfer_error
 			end
-			if to_resource.transfer_error then
-				set_transfer_error
-				set_transfer_error_message (to_resource.transfer_error_message)
-			end	
 		end
+
+--	set_transfer_error_message (message: STRING) is
+--			-- Set transfer_error_message with 'message'.
+--		do
+--			transfer_error_message:= message
+--		end
+
+--	check_errors is
+--			-- Check for errors.
+--		do
+--			if from_resource.transfer_error then
+--				set_transfer_error
+--				set_transfer_error_message (from_resource.transfer_error_message)
+--			end
+--			if to_resource.transfer_error then
+--				set_transfer_error
+--				set_transfer_error_message (to_resource.transfer_error_message)
+--			end	
+--		end
 
 end -- class MAILER

@@ -56,10 +56,21 @@ feature -- Status report
 		deferred
 		end
 
-	transfer_error: BOOLEAN
+	transfer_error: TRANSFER_ERROR is
+			-- Transfer error handling
+		once
+			create Result
+		end
+
+	error: BOOLEAN is
+			-- Is there an error?
+		do
+			Result:= transfer_error.transfer_error
+		end
+
 			-- Error during the transfer?
 
-	transfer_error_message: STRING
+--	transfer_error_message: STRING
 			-- Error message.
 
 	is_header_valid: BOOLEAN is
@@ -75,19 +86,19 @@ feature -- Status setting
 	enable_transfer_error is
 			-- Enable transfer error.
 		do
-			transfer_error:= True
+			transfer_error.enable_transfer_error
 		end
 
 	disable_transfer_error is
 			-- Disable transfer error.	
 		do
-			transfer_error:= False
+			transfer_error.disable_transfer_error
 		end
 
 	set_transfer_error_message (s: STRING) is
 			-- Set transfer error message to 's'.
 		do
-			transfer_error_message:= s
+			transfer_error.set_transfer_error_message (s)
 		end
 
 	enable_initiated is

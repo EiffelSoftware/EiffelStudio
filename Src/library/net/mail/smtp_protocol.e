@@ -58,12 +58,12 @@ feature -- Implementation (EMAIL_RESOURCE).
 	transfer (resource: MEMORY_RESOURCE) is
 			-- Send the email and add a %N. at the end of the message.
 		do
-			if not transfer_error then
+			if not error then
 				memory_resource := resource
 				recipients:= Void
 				send_mail
 			end
-			disable_transfer_error
+--			disable_transfer_error
 		end
 
 feature -- Basic operations.
@@ -78,7 +78,7 @@ feature -- Basic operations.
 			else
 				send_command (helo + username, Ok)
 			end
-			if not transfer_error then
+			if not error then
 				enable_initiated
 			end
 		end
@@ -89,11 +89,13 @@ feature -- Basic operations.
 			connection_exists: is_connected
 		do
 			send_command (Quit, Ack_end_connection)
-			if not transfer_error then
+--			if not error then
 				socket.cleanup
 				disable_initiated
 				disable_connected
-			end
+				disable_transfer_error
+				set_transfer_error_message ("")
+--			end
 		end
 
 feature -- Implementation (EMAIL_RESOURCE)
@@ -238,24 +240,31 @@ feature {NONE} -- Basic operations
 			mail_signature:= memory_resource.mail_signature
 
 			send_command (Mail_from + header_from, Ok)
-			from 
-				recipients.start
-			until
-				recipients.after
-			loop
-				send_command (Mail_to + recipients.item, Ok)
-				recipients.forth
-			end
+			if not error then
+				from 
+					recipients.start
+				until
+					recipients.after
+				loop
+					if not error then
+						send_command (Mail_to + recipients.item, Ok)
+					end
+					recipients.forth
+				end
 
-			send_command (Data, Data_code)
-			mail_message.prepend (sub_header)
-			if mail_signature /= Void then
-				mail_message.append ("%N" + mail_signature)
+				if not error then
+					send_command (Data, Data_code)
+					mail_message.prepend (sub_header)
+					if mail_signature /= Void then
+						mail_message.append ("%N" + mail_signature)
+					end
+					mail_message.replace_substring_all ("%N.", ".%N")
+					mail_message.append ("%N.")
+					if not error then
+						send_command (mail_message, Ok)
+					end
+				end
 			end
-			mail_message.replace_substring_all ("%N.", ".%N")
-			mail_message.append ("%N.")
-
-			send_command (mail_message, Ok)
 		end
 
 

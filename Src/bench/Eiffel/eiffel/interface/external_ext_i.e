@@ -8,16 +8,22 @@ class EXTERNAL_EXT_I
 
 inherit
 	SHARED_INCLUDE
+		export
+			{NONE} Shared_include_queue
 		redefine
 			is_equal
 		end
 
 	SHARED_DECLARATIONS
+		export
+			{NONE} all
 		redefine
 			is_equal
 		end
 
 	SHARED_BYTE_CONTEXT
+		export
+			{NONE} all
 		redefine
 			is_equal
 		end

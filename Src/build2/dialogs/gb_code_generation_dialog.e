@@ -45,7 +45,8 @@ inherit
 		end
 
 create
-	make_default
+	make_default,
+	make_for_single_generation
 
 feature {NONE} -- Initialization
 
@@ -85,6 +86,15 @@ feature {NONE} -- Initialization
 			show_actions.extend (agent start_generation)
 		end
 		
+	make_for_single_generation (an_object_name: STRING) is
+			-- Create `Current' for generation of the single window named `an_object_name'.
+		require
+			an_object_name_not_void: an_object_name /= Void
+		do
+			object_name := an_object_name
+			make_default
+		end
+
 feature {GB_GENERATION_COMMAND} -- Basic operation
 		
 	show_completion is
@@ -105,7 +115,11 @@ feature {GB_GENERATION_COMMAND} -- Basic operation
 		do
 			create code_generator
 			code_generator.set_progress_bar (generation_progress)
-			code_generator.generate
+			if object_name /= Void then
+				code_generator.generate_single_window (object_name)
+			else
+				code_generator.generate
+			end
 			show_completion
 		end
 		
@@ -118,6 +132,8 @@ feature {NONE} -- Implementation
 	l_label_1: EV_LABEL
 	generation_progress: EV_HORIZONTAL_PROGRESS_BAR
 
+	object_name: STRING
+		-- Name of single object to generate, or None if Void.
 
 end -- class GB_CODE_GENERATION_DIALOG
 

@@ -1756,6 +1756,11 @@ feature -- Externals
 			"C signature (PangoLayoutIter*): gint use <gtk/gtk.h>"
 		end
 
+	frozen pango_layout_iter_free (a_iter: POINTER) is
+		external
+			"C signature (PangoLayoutIter*) use <gtk/gtk.h>"
+		end
+
 	frozen gdk_draw_layout (a_drawable, a_gc: POINTER; a_x, a_y: INTEGER; a_layout: POINTER) is
 		external
 			"C signature (GdkDrawable*, GdkGC*, gint, gint, PangoLayout*) use <gtk/gtk.h>"

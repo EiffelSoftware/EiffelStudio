@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 	
 	make_with_text_and_action
 		(a_text: STRING; an_action: PROCEDURE [ANY, TUPLE []]) is
-			-- Create with 'a_text' and `an_action' in `select_actions'.
+			-- Create with 'a_text' as `text' and `an_action' in `select_actions'.
 		require
 			text_not_void: a_text /= Void
 			an_action_not_void: an_action /= Void
@@ -63,17 +63,18 @@ feature {NONE} -- Initialization
 feature {EV_DIALOG_I, EV_WINDOW} -- Default push button handling
 
 	is_default_push_button: BOOLEAN is
-			-- Is this button currently a default push button 
-			-- for a particular container?
+			-- Is `Current' a default push button for a container?
 		require
 			not_destroyed: not is_destroyed
 		do
 			Result := implementation.is_default_push_button
+		ensure
+			bridge_ok: Result = implementation.is_default_push_button
 		end
 
 	enable_default_push_button is
-			-- Set the style of the button corresponding
-			-- to the default push button.
+			-- Enable style of `Current' corresponding
+			-- to a default push button.
 		require
 			not_destroyed: not is_destroyed
 			is_not_default_push_button: not is_default_push_button
@@ -84,8 +85,8 @@ feature {EV_DIALOG_I, EV_WINDOW} -- Default push button handling
 		end
 
 	disable_default_push_button is
-			-- Remove the style of the button corresponding
-			-- to the default push button.
+			-- Remove style of `Current' corresponding
+			-- to a default push button.
 		require
 			not_destroyed: not is_destroyed
 			is_default_push_button: is_default_push_button

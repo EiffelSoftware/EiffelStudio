@@ -62,8 +62,8 @@
 			<item>
 				<bold>Windows</bold>
 				<list ordered="false">
-					<item>Fixed resizing issue: when a widget is inserted in a hidden window and that the minimum size of the window does not change, the widget would not appear on the window when shown. One had to manually resize the window to make it appear. Now it will appear properly.</item>
-					<item>Fixed a crash which could occur when using the tab or arrows keys to navigate between the primitive of a window. It would happen when trying to set the focus on a widget which was previously parented but is not anymore.</item>
+					<item>Fixed resizing issue: when a widget is inserted in a hidden window and then the minimum size of the window does not change, the widget would not appear on the window when shown. One had to manually resize the window to make it appear. Now it will appear properly.</item>
+					<item>Fixed a crash which could occur when using the tab or arrows keys to navigate between the primitives of a window. It would happen when trying to set the focus on a widget which was previously parented but is not anymore.</item>
 					<item>Improved appearance of applications running on Windows XP with manifest files.</item>
 					<item>
 						<bold>EV_RADIO_BUTTON</bold> - Enabled better navigation between radio buttons of a group using the arrow keys.
@@ -71,21 +71,21 @@
 					<item>
 						<bold>EV_SPIN_BUTTON</bold>
 						<list ordered="false">
-						 <item>When it gets the focus, we set the focus to the associated text field. Before one would loose the focus until one use the mouse to set it to the text field part.</item>
+						 <item>When it gets the focus, we set the focus to the associated text field. Before one would lose the focus until one used the mouse to set it to the text field part.</item>
 						<item>Fixed bug which restricted the maximum values permitted to approx. 16,000. Attempting to manipulate the spin button with values greater than this caused precondition violations internally.</item>
 						</list>
 					</item>
 					<item>
 						<bold>EV_SCREEN</bold>
 						<list ordered="false">
-						<item>`widget_at_position' returns an instance of EV_COMBO_BOX when cursor is on top of the text part of the combo box, before it would return Void.</item>
+						<item>`widget_at_position' returns an instance of EV_COMBO_BOX when cursor is on top of the text part of the combo box. Previously it would return Void.</item>
 						<item>`set_pointer_position' was not setting the position accurately and it may have actually been set to one of the adjacent positions.</item>						
 </list>
 					</item>
 					<item>
 						<bold>EV_COMBO_BOX</bold>
 						<list ordered="false">
-							<item>`focus_out_actions' are only called once when loosing focus. Before they would be called twice and even called when the combo box was getting the focus.</item>
+							<item>`focus_out_actions' are only called once when losing focus. Before they would be called twice and even called when the combo box was getting the focus.</item>
 							<item>Fixed `has_focus' to return True when either the combo or the text field when it exists has the focus.</item>
 							<item>Fixed call on Void target when calling `set_foreground_color' on a displayed combo box which is not editable.</item>
 							<item>Fixed invariant violation with a non editable combo box.</item>
@@ -111,7 +111,7 @@
 						</list>
 					</item>
 					<item>
-						<bold>EV_TREE_NODE</bold> - Fixed bug which caused a crash if you performed the following: pruned a node from it's parent, pruned an empty node from this just pruned node and then attempted to insert a node within the empty node.
+						<bold>EV_TREE_NODE</bold> - Fixed bug which caused a crash if you performed the following: pruned a node from its parent, pruned an empty node from this just pruned node and then attempted to insert a node within the empty node.
 					</item>
 					<item>
 						<bold>EV_DIRECTORY_DIALOG</bold> - Fixed bug in which the dialog always reported that "ok" has been selected even if the "cancel" button had been selected. This occurred if the dialog  had been shown more than once with "ok" already selected.
@@ -121,7 +121,7 @@
 						<list ordered="false">
 							<item>Fixed color displayed around a pixmap while parented in a container. Previously, gray was always displayed but now we use the `background_color' of the `parent'.</item>
 							<item>Fixed masking blitting in draw_sub_pixmap.  Previously the mask wasn't being blitted correctly discoloring the source image</item>
-							<item>Fixed mask handling with PNG loading.  Previously if the source image pixels under the mask were not black then masking for icons and cursors didnt work correctly, now any color can be used underneath the mask and it will still be masked correctly</item>
+							<item>Fixed mask handling with PNG loading.  Previously if the source image pixels under the mask were not black then masking for icons and cursors didn't work correctly. Now any color can be used underneath the mask and it will still be masked correctly.</item>
 						</list>
 					</item>
 					<item>
@@ -150,7 +150,10 @@
 						<bold>EV_PRIMITIVE</bold> - Fixed bug which affected all primitives that hold items. Calling `destroy' on the primitive and then calling `destroy' on one of the items caused precondition violations internally. The bug was that the call to `destroy' on the primitive did not call `wipe_out' to remove all of the contents and the item was still attempting to access its `parent' which should have been `Void'.
 					</item>
 					<item>
-						<bold>EV_WIDGET</bold> - Fixed two bugs with `key_press_string_actions'. The first was that the action sequence was fired when Escape or Backspace was pressed. As these are not displayable characters, the `key_press_string_actions' are no longer fired for these keys. The second is that pressing Enter was passing the the string "%R" which is the Windows specific newline character. We now pass "%N" when the Enter key is pressed.
+						<bold>EV_WIDGET</bold> - Fixed two bugs with `key_press_string_actions'. The first was that the action sequence was fired when Escape or Backspace was pressed. As these are not displayable characters, the `key_press_string_actions' are no longer fired for these keys. The second is that pressing Enter was passing the string "%R" which is the Windows specific newline character. We now pass "%N" when the Enter key is pressed.
+					</item>
+					<item>
+						<bold>EV_CHECK_ABLE_TREE</bold> - Fixed a bug which caused the tree to crash if you checked the check box of an item of type EV_DYNAMIC_TREE_ITEM.
 					</item>
 				</list>
 			</item>

@@ -7,7 +7,7 @@ indexing
 deferred class
 	EV_MENU_CONTAINER_I
 
-feature {EV_MENU_CONTAINER} -- Implementation
+feature {EV_MENU} -- Implementation
 	
 	add_menu (menu: EV_MENU) is
 			-- Add `a_menu' into container.

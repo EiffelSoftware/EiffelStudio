@@ -16,33 +16,29 @@ inherit
 feature -- Initialize
 
 	initialize is
-			-- Initialize project from `preferences'
+			-- Initialize project
 		require
 			has_preferences: preferences /= Void
-		local
-			l_constants: APPLICATION_CONSTANTS
-		do
-			if preferences.is_valid then	
-				is_valid := True			
-				create filter_manager.make
-				create invalid_files.make (5)
-				invalid_files.compare_objects
-				l_constants := Shared_constants.Application_constants
-				has_been_validated := False				
-				
-						-- Copy stylesheet file
-				if Shared_document_manager.has_stylesheet then
-					copy_stylesheet (Shared_constants.Application_constants.Temporary_html_directory)
-				end
-				
-						-- Initialize tree widget if in gui mode
-				if l_constants.is_gui_mode then
-					initialize_document_selector
-				end
-						-- Retrieve documents
-				all_documents_read := False
-				files_changed := False
+		do		
+			is_valid := True
+			create filter_manager.make
+			create invalid_files.make (5)
+			invalid_files.compare_objects
+			has_been_validated := False				
+			
+					-- Copy stylesheet file
+			if Shared_document_manager.has_stylesheet then
+				copy_stylesheet (Shared_constants.Application_constants.Temporary_html_directory)
 			end
+			
+					-- Perform gui initialization if in GUI mode
+			if Shared_constants.Application_constants.is_gui_mode then
+				initialize_document_selector
+			end
+			
+					-- Retrieve documents
+			all_documents_read := False
+			files_changed := False
 			update
 		end		
 
@@ -55,7 +51,7 @@ feature -- Initialize
 				document_map.clear
 			end
 			create document_map.make (root_directory, Application_window.document_selector)
-		end		
+		end	
 
 feature -- Access
 
@@ -87,15 +83,11 @@ feature -- Commands
 
 	create_new is
 			-- Create a new project
-		local
-			l_file_name: FILE_NAME
-			l_file: PLAIN_TEXT_FILE
 		do
 			Shared_dialogs.project_dialog.show_modal_to_window (Shared_dialogs.template_dialog)			
-			create l_file_name.make_from_string (full_name)
-			create l_file.make_create_read_write (l_file_name)
-			l_file.close
-			create preferences.make_from_file (l_file)
+			create file.make_create_read_write (create {FILE_NAME}.make_from_string (full_name))
+			file.close
+			create preferences.make (Current)
 			preferences.write
 			initialize
 		end
@@ -126,6 +118,12 @@ feature -- Commands
 			end
 		end
 
+	load_documents is
+			-- Load all document under root
+		do
+			retrieve_documents (create {DIRECTORY}.make (root_directory))	
+		end		
+
 feature {VALIDATOR_TOOL_DIALOG} -- Validation
 
 	validate_files_xml is
@@ -135,9 +133,9 @@ feature {VALIDATOR_TOOL_DIALOG} -- Validation
 				has_been_validated := True
 				invalid_files.wipe_out
 				progress_generator.set_title ("File Validation")
-				progress_generator.set_procedure (agent validate_against_xml)
-				progress_generator.set_heading_text ("Validating project files...")
 				progress_generator.set_upper_range (documents.count)
+				progress_generator.set_procedure (agent validate_against_xml)
+				progress_generator.set_heading_text ("Validating project files...")				
 				progress_generator.generate	
 			end
 			build_error_report
@@ -170,10 +168,10 @@ feature {VALIDATOR_TOOL_DIALOG} -- Validation
 			l_link_manager: LINK_MANAGER
 		do
 			create l_link_manager.make_with_documents (documents)
+			Progress_generator.set_upper_range (documents.count)
 			Progress_generator.set_title ("Link Validation")
 			Progress_generator.set_procedure (agent l_link_manager.check_links)
-			Progress_generator.set_heading_text ("Validating Links in file...")
-			Progress_generator.set_upper_range (documents.count)
+			Progress_generator.set_heading_text ("Validating Links in file...")			
 			Progress_generator.generate
 		end	
 
@@ -246,7 +244,7 @@ feature -- Access
 			
 	filter_manager: FILTER_MANAGER				
 			
-	preferences: DOCUMENT_PROJECT_FILE
+	preferences: DOCUMENT_PROJECT_PREFERENCES
 			-- Preferences file
 
 	document_map: DOCUMENT_SELECTOR
@@ -261,19 +259,12 @@ feature -- Access
 			Result := invalid_files.count > 0			
 		end		
 
-feature {DOCUMENT_SELECTOR, XML_TABLE_OF_CONTENTS} -- Access 
+feature {DOCUMENT_PROJECT_PREFERENCES}
 
-	allowed_file_types: ARRAYED_LIST [STRING] is
-			-- List of allowed file types
-		once
-			create Result.make (3)
-			Result.compare_objects
-			Result.extend ("xml")
-			Result.extend ("htm")
-			Result.extend ("html")
-		end	
+	file: PLAIN_TEXT_FILE
+			-- Project file	
 
-feature {NONE} -- Implementation
+feature {NONE} -- Implementation		
 		
 	documents: ARRAYED_LIST [DOCUMENT] is
 			-- Get all project documents from disk		
@@ -288,7 +279,7 @@ feature {NONE} -- Implementation
 				all_documents_read := True
 			end
 			Result := Shared_document_manager.documents.linear_representation
-		end			
+		end				
 		
 	has_been_validated: BOOLEAN
 			-- Has Current been validated?
@@ -347,24 +338,24 @@ feature {NONE} -- Implementation
 	build_error_report is
 			-- Build a new error report
 		local
-			l_actions: ERROR_ACTIONS
+			l_error: ERROR
 		do
 			if error_report = Void or files_changed then
 				if error_report = Void then					
-					create error_report.make_empty ((create {MESSAGE_CONSTANTS}).invalid_files_title)
+					create error_report.make ((create {MESSAGE_CONSTANTS}).invalid_files_title)
 				else
 					error_report.clear
 				end
-				create l_actions
 				from
 					invalid_files.start				
 				until
 					invalid_files.after
 				loop
-					error_report.append_error (invalid_files.item, 0, 0)
+					create l_error.make (invalid_files.item)
+					l_error.set_action (agent (error_report.actions).load_file_in_editor (invalid_files.item))
+					error_report.append_error (l_error)
 					invalid_files.forth
 				end
-				error_report.set_error_action (agent l_actions.load_file (?))
 			end
 		ensure
 			has_report: error_report /= Void
@@ -468,11 +459,9 @@ feature {ARGUMENTS_PARSER} -- Retrieval
 
 	load (a_filename: STRING) is
 			-- Load from `a_filename'
-		local
-			l_file: PLAIN_TEXT_FILE
 		do
-			create l_file.make (a_filename)
-			create preferences.make_from_file (l_file)
+			create file.make (a_filename)
+			create preferences.make (Current)
 			preferences.read
 			initialize
 		end

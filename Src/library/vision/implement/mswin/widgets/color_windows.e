@@ -20,8 +20,6 @@ inherit
 			red as wel_red,
 			green as wel_green,
 			blue as wel_blue
-		undefine
-			is_equal
 		end
 
 	COLOR_NAMES_WINDOWS
@@ -97,7 +95,7 @@ feature  -- Access
 	rgb: INTEGER is
 			-- Return a RGB for Windows
 		do
-			Result := cwel_pointer_to_integer (item)
+			Result := item
 		end
 
 feature -- Settings
@@ -138,7 +136,7 @@ feature -- Settings
 	set_colorref (colorref_value: INTEGER) is
 			-- Set the colorref 
 		do
-			item := cwel_integer_to_pointer (colorref_value)
+			item := colorref_value
 		end
 
 	set_name (a_name: STRING) is

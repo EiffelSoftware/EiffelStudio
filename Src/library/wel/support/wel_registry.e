@@ -247,7 +247,8 @@ feature -- Access
 			end
 			last_call_successful := res = Error_success
 			if last_call_successful then
-				create Result.make (0, ext.string)
+				ext.set_count (size)
+				create Result.make_with_value (0, ext)
 			end
 		end
 
@@ -262,16 +263,16 @@ feature -- Settings
 			valid_value_name: value_name /= Void
 			key_possible:valid_value_for_hkey(key)
 		local
-			a, b: WEL_STRING
+			a: WEL_STRING
 			res: INTEGER
 		do
-			create b.make (value.value)
 			if value_name /= Void then
 				create a.make (value_name)
-				res := cwin_reg_set_key_value (key, a.item, 0, value.type, b.item, b.capacity)
+				res := cwin_reg_set_key_value (key, a.item, 0, value.type,
+					value.internal_value.item, value.internal_value.capacity)
 			else
-				res := cwin_reg_set_key_value (key, default_pointer, 0, value.type, b.item,
-					b.capacity)
+				res := cwin_reg_set_key_value (key, default_pointer, 0, value.type,
+					value.internal_value.item, value.internal_value.capacity)
 			end
 			last_call_successful := res = Error_success
 		end
@@ -457,7 +458,8 @@ feature -- Access
 			create ext.make_empty (size)
 			res := cwin_reg_query_value_ex (key, a.item, default_pointer, $type, ext.item, $size)
 			if res = Error_success then
-				create Result.make (type, ext.string)
+				ext.set_count (size)
+				create Result.make_with_value (type, ext)
 			else
 				if res = Error_more_data then
 						-- Size was given by first call to RegQueryValueEx, we create
@@ -465,7 +467,8 @@ feature -- Access
 					create ext.make_empty (size)
 					res := cwin_reg_query_value_ex (key, a.item, default_pointer, $type, ext.item, $size)
 					if res = Error_success then
-						create Result.make (type, ext.string)
+						ext.set_count (size)
+						create Result.make_with_value (type, ext)
 					end
 				end
 			end

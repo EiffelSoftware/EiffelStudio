@@ -1,5 +1,4 @@
 indexing
-
 	description: "Structure describing a registry key value"
 	status: "See notice at end of class";
 	date: "$Date$";
@@ -12,20 +11,34 @@ inherit
 	WEL_REGISTRY_KEY_VALUE_TYPE
 
 create
-	make
+	make,
+	make_with_value
 	
 feature -- Initialization
 
-	make (t: like type; v: like value) is
+	make (t: like type; v: STRING) is
+			-- Create 
+		require
+			v_not_void: v /= Void
+			t_valid: t = Reg_sz
+		do
+			set_type (t)
+			create internal_value.make (v)
+		ensure
+			type_set: type = t
+			value_set: value.is_equal (v)
+		end
+		
+	make_with_value (t: like type; v: like internal_value) is
 			-- Create 
 		require
 			v_not_void: v /= Void
 		do
 			set_type (t)
-			set_value (v)
+			internal_value := v
 		ensure
 			type_set: type = t
-			value_set: value = v
+			internal_value_set: internal_value = v
 		end
 
 feature -- Access
@@ -35,23 +48,23 @@ feature -- Access
 			-- See class WEL_REGISTRY_KEY_VALUE_TYPE for possible
 			-- values.
 			
-	value: STRING
-			-- Data.
+	internal_value: WEL_STRING
+			-- Storage for Current.
 
-	string_value: STRING is
-			-- 	Data converted as string.
+	value, string_value: STRING is
+			-- String data.
 		require
 			valid_type: type = Reg_sz
 		do
-			Result := value
+			Result := internal_value.string
 		end
-		
+
 	dword_value: INTEGER is
 			-- Data converted as integer.
 		require
 			valid_type: type = Reg_dword
 		do
-			Result := value.to_integer
+			($Result).memory_copy (internal_value.item, feature {PLATFORM}.Integer_32_bytes)
 		end
 
 feature -- Element Change
@@ -71,11 +84,11 @@ feature -- Element Change
 		require
 			v_not_void: v /= Void
 		do
-			value := v
+			create internal_value.make (v)
 		ensure
-			value_set: value = v
+			value_set: value.is_equal (v)
 		end
-		
+
 end -- class WEL_REGISTRY_KEY_VALUE
 
 

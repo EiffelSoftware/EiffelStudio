@@ -92,7 +92,11 @@ feature -- Filling
 			else
 				origin_class := dynamic_class
 			end
-			break_index := a_line_number
+			if a_line_number = 0 then
+				break_index := 1
+			else
+				break_index := a_line_number
+			end
 
 			object_address := a_address
 			display_object_address := object_address
@@ -150,8 +154,8 @@ feature -- Current object
 			-- Current object value
 		do
 			Result := private_current_object
-			if Result = Void and then not initialized then
-				initialize_stack
+			if Result = Void and then not initialized_current_object then
+				initialize_stack_for_current_object
 				Result := private_current_object				
 			end
 		end
@@ -204,7 +208,11 @@ feature -- Dotnet Properties
 feature {NONE} -- Implementation Dotnet Properties
 
 	dotnet_initialized: BOOLEAN
-			-- Is the stack initialized
+			-- Is the dotnet stack initialized
+
+	initialized_current_object,
+	initialized_arguments,
+	initialized_locals: BOOLEAN
 			
 	private_dotnet_class_token: INTEGER
 	
@@ -229,91 +237,98 @@ feature {NONE} -- Implementation
 			l_function: ICOR_DEBUG_FUNCTION
 			l_class: ICOR_DEBUG_CLASS
 			l_module: ICOR_DEBUG_MODULE
-			l_icd: ICOR_DEBUG_THREAD
+			l_icd_th: ICOR_DEBUG_THREAD
 		do
 -- FIXME jfiat 2004-07-08: maybe optimize by calling directly external on pointer
 --			l_function := icd_il_frame.get_function
 			
 			icd_il_frame := icd_frame.query_interface_icor_debug_il_frame
 			if icd_il_frame /= Void then
+				icd_il_frame.add_ref
 				l_function := icd_il_frame.get_function
 				icd_il_frame.clean_on_dispose
 			end
 
 			if l_function = Void then
 					--| FIXME jfiat: Nasty fix, since we use the top level stack frame
-				l_icd := application.imp_dotnet.eifnet_debugger.icor_debug_thread
-				icd_frame := l_icd.get_active_frame
+				l_icd_th := application.imp_dotnet.eifnet_debugger.icor_debug_thread
+				icd_frame := l_icd_th.get_active_frame
 				icd_il_frame := icd_frame.query_interface_icor_debug_il_frame
 				l_function := icd_il_frame.get_function
+				icd_il_frame.clean_on_dispose
+				icd_frame.clean_on_dispose
 			end
 
-			private_dotnet_feature_token := l_function.get_token		
-			l_class := l_function.get_class
-			l_module := l_function.get_module
-			
-			private_dotnet_class_token := l_class.get_token
-			private_dotnet_module_name := l_module.module_name
-			private_dotnet_module_filename := l_module.get_name
+			if l_function /= Void then
+				private_dotnet_feature_token := l_function.get_token		
+				l_class := l_function.get_class
+				l_module := l_function.get_module
+				
+				private_dotnet_class_token := l_class.get_token
+				private_dotnet_module_name := l_module.module_name
+				private_dotnet_module_filename := l_module.get_name
 
-			l_function.clean_on_dispose
-			l_class.clean_on_dispose
-			l_module.clean_on_dispose
-
+				l_function.clean_on_dispose
+				l_class.clean_on_dispose
+				l_module.clean_on_dispose
+			end
 			dotnet_initialized := True
 		ensure
 			dotnet_initialized
 		end
-		
-	initialize_stack is
+
+	initialize_stack_for_current_object is
+		do
+			if application.imp_dotnet.exit_process_occurred then
+				debug ("debugger_trace_callstack_data") 
+					print ("EXIT_PROCESS OCCURRED !!!%N")
+				end
+				initialized_current_object := True
+			else
+				debug ("debugger_trace_callstack_data") 
+					io.put_string ("<start> " + generator + ".initialize_stack_for_current_object %N")
+				end
+				--| Current and Arguments |--
+				set_private_current_object (internal_current_object)
+				private_current_object.set_name ("Current")
+				object_address := private_current_object.address
+				display_object_address := object_address
+				initialized_current_object := True
+
+				debug ("debugger_trace_callstack_data") 
+					io.put_string ("<stop> " + generator + ".initialize_stack_for_current_object %N")
+				end
+			end
+		end
+
+	initialize_stack_for_arguments is
 		local
-			local_decl_grps	: EIFFEL_LIST [TYPE_DEC_AS]
-			id_list			: ARRAYED_LIST [INTEGER]
-			l_index			: INTEGER
 			l_count			: INTEGER
 			value			: ABSTRACT_DEBUG_VALUE
-			locals_list		: like private_locals
 			args_list		: like private_arguments
 			arg_names		: LIST [STRING]
 			rout			: like routine
 			counter			: INTEGER
-			l_names_heap: like Names_heap
-
-			l_list: LIST [EIFNET_ABSTRACT_DEBUG_VALUE]
-			l_dotnet_ref_value: EIFNET_DEBUG_REFERENCE_VALUE
-			
+			l_list: LIST [EIFNET_ABSTRACT_DEBUG_VALUE]			
 		do
 			if application.imp_dotnet.exit_process_occurred then
-				debug ("DEBUGGER_TRACE_CALLSTACK_DATA") 
+				debug ("debugger_trace_callstack_data") 
 					print ("EXIT_PROCESS OCCURRED !!!%N")
 				end
-				initialized := True
+				initialized_arguments := True
 			else
-				debug ("DEBUGGER_TRACE_CALLSTACK_DATA") 
-					io.put_string ("  @-> Initializing stack (CALL_STACK_ELEMENT_DOTNET): " + routine_name
-									+ " from: " + dynamic_class.name + "%N")
+				debug ("debugger_trace_callstack_data") 
+					io.put_string ("<start> " + generator + ".initialize_stack_for_arguments"
+						+ " {" + dynamic_class.name_in_upper + "}." + routine_name	+ "%N")
 				end
 				rout := routine
 				if rout /= Void then
 	
-					--| ARGUMENTS |--
+					--| Current and Arguments |--
 					l_list := internal_arg_list
 					if l_list /= Void and then not l_list.is_empty then
-						--| Get Current Object
-						l_list.start
-						
-						set_private_current_object (l_list.first)
-						private_current_object.set_name ("Current")
-		
-						object_address := private_current_object.address
-						display_object_address := object_address
-		
-						l_list.remove
-		
+						--| Get Arguments
 						l_count := rout.argument_count
---						check
---							l_list.count = l_count
---						end
 						if l_count > 0 and not l_list.is_empty then
 --| FIXME jfiat [2004/08/24] : check why l_list could be empty at this point 
 							create args_list.make_filled (l_count)	
@@ -332,116 +347,187 @@ feature {NONE} -- Implementation
 								arg_names.forth
 								l_list.forth
 							end
-						end
-					end
-					--| LOCAL |--
-	
-					-- First Local is the Result value, so we take it first
-					l_list := internal_local_list
-					if l_list /= Void and then not l_list.is_empty then
-							if 
-								rout.is_function 
-							then
-								if not rout.is_once then
-									--| In IL generated code .. for once function 
-									--| no local variable to store the Result
-									--| using directly  "ret value"
-									l_list.start
-									private_result := l_list.first
-									l_list.remove
-									private_result.set_name ("Result")
-								else
-									--| at this stæge, the private_current_object is known
-									l_dotnet_ref_value ?= private_current_object
-									if l_dotnet_ref_value /= Void then
-										l_dotnet_ref_value.get_object_value
-										private_result := l_dotnet_ref_value.once_function_value (rout)
-										l_dotnet_ref_value.release_object_value
-										if private_result /= Void then
-											private_result.set_name ("Result")
-										end
-									else
-										private_result := Void
-									end
-								end
-							end
-		
-							--| Then real Local variables |--
-							local_decl_grps := rout.locals
-							if local_decl_grps /= Void then
-								l_count := l_list.count
-								create locals_list.make (l_count)
+
+								--| initialize item numbers for arguments
+							if args_list /= Void then
 								from
-									l_index := 0
-									local_decl_grps.start
-									l_names_heap := Names_heap
-									l_list.start
+									args_list.start
+									counter := 1
 								until
-									local_decl_grps.after 
-									or l_index > l_count
-								loop 
-									from
-										id_list := local_decl_grps.item.id_list
-										id_list.start
-									until
-										id_list.after or
-										l_index > l_count
-									loop
-										value := l_list.item
-										value.set_name (l_names_heap.item (id_list.item))
-										locals_list.extend (value)
-										id_list.forth
-										l_list.forth
-										l_index := l_index + 1
-									end
-									local_decl_grps.forth
+									args_list.after
+								loop
+									args_list.item.set_item_number(counter)
+									args_list.forth
+									counter := counter + 1
 								end
 							end
 						end
-					end				
-					--| initialize item numbers for arguments
-				if args_list /= Void then
-					from
-						args_list.start
-						counter := 1
-					until
-						args_list.after
-					loop
-						args_list.item.set_item_number(counter)
-						args_list.forth
-						counter := counter + 1
-					end
-				end
-	
-					--| initialize item numbers for locals
-				if locals_list /= Void then
-					from
-						locals_list.start
-						counter := 1
-					until
-						locals_list.after
-					loop
-						locals_list.item.set_item_number(counter)
-						locals_list.forth
-						counter := counter + 1
 					end
 				end
 	
 					--| Associate to private list |--
 				private_arguments := args_list
-				private_locals := locals_list
-				initialized := True
+				initialized_arguments := True
 				
-				debug ("DEBUGGER_TRACE_CALLSTACK_DATA"); 
-					io.put_string ("  @-> Finished initializating stack: "+routine_name+"%N"); 
-					io.put_string ("%N-------------------------------------------------%N"); 
+				debug ("debugger_trace_callstack_data") 
+					io.put_string ("<stop> " + generator + ".initialize_stack_for_arguments"
+						+ " {" + dynamic_class.name_in_upper + "}." + routine_name	+ "%N")
 				end
---			else
---				debug ("DEBUGGER_TRACE_CALLSTACK_DATA") 
---					io.put_string ("  Error occurred during CALL_STACK_ELEMENT_DOTNET Initialisation : "+routine_name+" from: "+dynamic_class.name+"%N")
---				end
---				initialized := True
 			end
+		end
+		
+	initialize_stack_for_locals is
+		require
+			initialized_current_object
+		local
+			local_decl_grps	: EIFFEL_LIST [TYPE_DEC_AS]
+			id_list			: ARRAYED_LIST [INTEGER]
+			l_index			: INTEGER
+			l_count			: INTEGER
+			value			: ABSTRACT_DEBUG_VALUE
+			locals_list		: like private_locals
+			rout			: like routine
+			counter			: INTEGER
+			l_names_heap: like Names_heap
+			l_list: LIST [EIFNET_ABSTRACT_DEBUG_VALUE]
+			l_dotnet_ref_value: EIFNET_DEBUG_REFERENCE_VALUE
+		do
+			if application.imp_dotnet.exit_process_occurred then
+				debug ("debugger_trace_callstack_data") 
+					print ("EXIT_PROCESS OCCURRED !!!%N")
+				end
+				initialized_locals := True
+			else
+				debug ("debugger_trace_callstack_data") 
+					io.put_string ("<start> " + generator + ".initialize_stack_for_locals"
+						+ " {" + dynamic_class.name_in_upper + "}." + routine_name	+ "%N")
+				end
+				rout := routine
+				if rout /= Void then
+					l_list := internal_local_list
+
+					--| Result |--
+					private_result := Void
+					if rout.is_function then
+						if rout.is_once then
+								--| In IL generated code .. for once function 
+								--| no local variable to store the Result
+								--| using directly  "return value"
+
+								--| at this point, the private_current_object is known
+							l_dotnet_ref_value ?= private_current_object
+							if l_dotnet_ref_value /= Void then
+								l_dotnet_ref_value.get_object_value
+								private_result := l_dotnet_ref_value.once_function_value (rout)
+								l_dotnet_ref_value.release_object_value
+								if private_result /= Void then
+									private_result.set_name ("Result")
+								end
+							end
+						else -- not once
+							-- First Local is the Result value, so we take it first
+							if l_list /= Void and then not l_list.is_empty then
+								l_list.start
+								private_result := l_list.first
+								l_list.remove
+								private_result.set_name ("Result")
+							end
+						end
+					end
+					
+					--| LOCAL |--
+					if l_list /= Void and then not l_list.is_empty then
+						--| now the result value has been removed
+						--| let's get the real Local variables 
+						local_decl_grps := rout.locals
+						if local_decl_grps /= Void then
+							l_count := l_list.count
+							create locals_list.make (l_count)
+							from
+								l_index := 0
+								local_decl_grps.start
+								l_names_heap := Names_heap
+								l_list.start
+							until
+								local_decl_grps.after 
+								or l_index > l_count
+							loop 
+								from
+									id_list := local_decl_grps.item.id_list
+									id_list.start
+								until
+									id_list.after or
+									l_index > l_count
+								loop
+									value := l_list.item
+									value.set_name (l_names_heap.item (id_list.item))
+									locals_list.extend (value)
+									id_list.forth
+									l_list.forth
+									l_index := l_index + 1
+								end
+								local_decl_grps.forth
+							end
+
+								--| initialize item numbers for locals
+							from
+								locals_list.start
+								counter := 1
+							until
+								locals_list.after
+							loop
+								locals_list.item.set_item_number(counter)
+								locals_list.forth
+								counter := counter + 1
+							end
+						end
+					end
+				end
+	
+					--| Associate to private list |--
+				private_locals := locals_list
+				initialized_locals := True
+				
+				debug ("debugger_trace_callstack_data") 
+					io.put_string ("<stop> " + generator + ".initialize_stack_for_locals"
+						+ " {" + dynamic_class.name_in_upper + "}." + routine_name	+ "%N")
+				end
+			end
+		end
+
+	initialize_stack is
+		do
+			initialize_stack_for_current_object
+			initialize_stack_for_arguments
+			initialize_stack_for_locals
+			initialized := initialized_current_object 
+						and initialized_arguments
+						and initialized_locals
+		end
+
+	internal_current_object: EIFNET_ABSTRACT_DEBUG_VALUE  is
+		require
+			icd_frame /= Void
+		local
+			l_il_frame: ICOR_DEBUG_IL_FRAME
+			l_enum_args: ICOR_DEBUG_VALUE_ENUM
+			l_array_objects: ARRAY [ICOR_DEBUG_VALUE]
+		do
+			l_il_frame := icd_frame.query_interface_icor_debug_il_frame
+			if l_il_frame /= Void then
+				l_il_frame.add_ref
+				l_enum_args := l_il_frame.enumerate_arguments
+				if l_enum_args /= Void then
+					if l_enum_args.get_count > 0 then
+						l_array_objects := l_enum_args.next (1)
+						Result := debug_value_from_icdv (l_array_objects @ (l_array_objects.lower))
+					end
+					l_enum_args.clean_on_dispose
+				end
+				l_il_frame.clean_on_dispose
+			end
+		ensure
+			current_object_not_void: Result /= Void
 		end
 
 	internal_arg_list: LIST [EIFNET_ABSTRACT_DEBUG_VALUE]  is
@@ -449,22 +535,24 @@ feature {NONE} -- Implementation
 			icd_frame /= Void
 		local
 			l_il_frame: ICOR_DEBUG_IL_FRAME
-			l_enum_args: ICOR_DEBUG_VALUE_ENUM
+			l_enum: ICOR_DEBUG_VALUE_ENUM
 		do
 			l_il_frame := icd_frame.query_interface_icor_debug_il_frame
 			if l_il_frame /= Void then
 				l_il_frame.add_ref
-				l_enum_args := l_il_frame.enumerate_arguments
-				if l_enum_args /= Void then
---					l_enum_args.skip (1)  -- Ignore first element which is Current Object
-					Result := debug_value_list_from_enum (l_enum_args)
-					l_enum_args.clean_on_dispose
+				l_enum := l_il_frame.enumerate_arguments
+				if l_enum /= Void then
+					l_enum.reset
+						-- Ignore first element which is Current Object
+					if l_enum.get_count > 0 then
+						l_enum.skip (1)						
+							-- Then process the following values (arguments)
+						Result := debug_value_list_from_enum (l_enum)
+					end
+					l_enum.clean_on_dispose
 				end
 				l_il_frame.clean_on_dispose
 			end
-		ensure
-			arg_list_not_void: Result /= Void
-			arg_list_not_empty: not Result.is_empty -- At list the current object -- FIXME: check this !
 		end
 
 	internal_local_list: LIST [EIFNET_ABSTRACT_DEBUG_VALUE]  is
@@ -475,22 +563,21 @@ feature {NONE} -- Implementation
 			icd_frame /= Void
 		local
 			l_il_frame: ICOR_DEBUG_IL_FRAME
-			l_enum_locals: ICOR_DEBUG_VALUE_ENUM
+			l_enum: ICOR_DEBUG_VALUE_ENUM
 		do
 			l_il_frame := icd_frame.query_interface_icor_debug_il_frame
 			if l_il_frame /= Void then
 				l_il_frame.add_ref
-				l_enum_locals := l_il_frame.enumerate_local_variables
-				if l_enum_locals /= Void then
-					Result := debug_value_list_from_enum (l_enum_locals)
-					l_enum_locals.clean_on_dispose
+				l_enum := l_il_frame.enumerate_local_variables
+				if l_enum /= Void then
+					l_enum.reset
+					Result := debug_value_list_from_enum (l_enum)
+					l_enum.clean_on_dispose
 				else
 					create {LINKED_LIST[EIFNET_ABSTRACT_DEBUG_VALUE]} Result.make
 				end
 				l_il_frame.clean_on_dispose
 			end
---		ensure
---			local_list_not_void: Result /= Void
 		end
 
 	debug_value_list_from_enum (a_enum: ICOR_DEBUG_VALUE_ENUM): LIST [EIFNET_ABSTRACT_DEBUG_VALUE] is

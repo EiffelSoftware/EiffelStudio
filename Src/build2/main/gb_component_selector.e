@@ -25,9 +25,9 @@ inherit
 			default_create, is_equal, copy
 		end
 		
-	GB_SHARED_SYSTEM_STATUS
+	GB_SHARED_TOOLS
 		undefine
-			default_create, copy, is_equal
+			default_create, is_equal, copy
 		end
 		
 	GB_SHARED_XML_HANDLER
@@ -76,7 +76,7 @@ feature -- Basic operation
 			found: BOOLEAN
 		do
 			create dialog.make_with_text (Delete_component_warning)
-			dialog.show_modal_to_window (system_status.main_window)
+			dialog.show_modal_to_window (main_window)
 			if dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_ok) then
 				xml_handler.remove_component (component_name)
 					-- We must now remove the child of `Current' representing

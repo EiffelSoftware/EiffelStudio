@@ -16,7 +16,7 @@ inherit
 	
 	TOE_TREE_FACTORY
 	
-	GB_SHARED_SYSTEM_STATUS
+	GB_SHARED_TOOLS
 	
 feature -- Basic operations
 
@@ -172,7 +172,7 @@ feature {NONE} -- Implementation
 		do
 			last_load_successful := False
 			create dialog.make_with_text (Invalid_project_warning)
-			dialog.show_modal_to_window (system_status.main_window)
+			dialog.show_modal_to_window (main_window)
 		end
 		
 

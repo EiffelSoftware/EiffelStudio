@@ -24,6 +24,7 @@
 #include "eif_file.h"	/* for PATH_MAX */
 #include "eif_error.h"
 #include "eif_path_name.h"  /* for eifrt_vms_filespec() */
+#include "eif_commands.h"
 
 #ifdef EIF_WIN32
 #include <windows.h>
@@ -303,26 +304,6 @@ void eif_gr_link_driver (EIF_OBJ request, EIF_OBJ c_code_dir, EIF_OBJ system_nam
 	(*send_proc)(eif_access(request));
 
 	free(cmd);
-#endif
-}
-
-/* Platform definition */
-
-EIF_BOOLEAN eif_is_vms (void)
-{
-#ifdef EIF_VMS
-	return EIF_TRUE;
-#else
-	return EIF_FALSE;
-#endif
-}
-
-EIF_BOOLEAN eif_is_windows(void)
-{
-#ifdef EIF_WINDOWS
-	return EIF_TRUE;
-#else
-	return EIF_FALSE;
 #endif
 }
 

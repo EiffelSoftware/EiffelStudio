@@ -276,12 +276,12 @@ EIF_INTEGER length;
 {
 		/* Test to see if `s' and `t' represent the same path name */
 #if defined EIF_WINDOWS || defined EIF_OS2
-	return EIF_TEST(strnicmp(s, t, length));
+	return EIF_TEST(!strnicmp(s, t, length));
 #elif defined (__VMS)
 	implement this routine
 	return EIF_TEST(blah blah blah);
 #else
-	return EIF_TEST(strncmp(s, t, length));
+	return EIF_TEST(!strncmp(s, t, length));
 #endif
 }
 

@@ -92,7 +92,7 @@ end;
 	item (i: G): G is
 		do
 			if has (i) then
-				Result := tbl_item (i)
+				Result := found_item
 			else
 				Result := i
 			end;

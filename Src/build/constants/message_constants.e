@@ -14,7 +14,7 @@ feature -- Error messages
 			"Directory %%X %Nalready exists. Cannot save!";
 	Cannot_save_file_er: STRING is 
 			"File %%X %Nalready exists. Cannot save!";
-	Dir_not_exist_er: STRING is "Directory %%X import_directory does not e!xist";
+	Dir_not_exist_er: STRING is "Import directory %%X%N does not exist!";
 	Dir_not_chosen_er: STRING is "No Directory chosen!";
 	Generate_er: STRING is "Cannot generate files to directory%N%%X";
 	Incomp_er: STRING is "Incompatible types!";

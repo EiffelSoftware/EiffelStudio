@@ -11,13 +11,29 @@ deferred class
 
 inherit
 	EV_TEXT_COMPONENT_I
+		redefine
+			build
+		end
 
 	EV_PRIMITIVE_IMP
 		undefine
 			initialize_colors
+		redefine
+			build
 		end
 
 	EV_DEFAULT_COLORS
+
+feature {NONE} -- Initialization
+
+	build is
+			-- Called after creation. Set the current size and
+			-- notify the parent.
+		do
+			{EV_PRIMITIVE_IMP} Precursor
+			set_minimum_height (wel_font.log_font.height + 6)
+			set_minimum_width (20)
+		end
 
 feature -- Access
 
@@ -170,6 +186,11 @@ feature -- Implementation : deferred features of WEL_EDIT that
 
 	set_read_write is
 			-- Set the read-write state.
+		deferred
+		end
+
+	wel_font: WEL_FONT is
+			-- Current font of the control
 		deferred
 		end
 

@@ -75,7 +75,7 @@ rt_public char *c_tagged_out(EIF_CONTEXT EIF_OBJ object)
 	/* Write a tagged out printing in an string.
 	 * Return a pointer on an Eiffel string object.
 	 */
-
+	EIF_GET_CONTEXT
 	char *result;		/* The Eiffel string returned */
 
 	build_out(object);	/* Build tagged out string for object */
@@ -88,7 +88,7 @@ rt_public char *c_tagged_out(EIF_CONTEXT EIF_OBJ object)
 rt_public char *build_out(EIF_CONTEXT EIF_OBJ object)
 {
 	/* Build up tagged out representation in a private global buffer */
-
+	EIF_GET_CONTEXT
 	uint32 flags;		/* Object flags */
 
 	buffer_allocate();	/* Allocation of `tagged_out' */
@@ -118,6 +118,7 @@ rt_public char *build_out(EIF_CONTEXT EIF_OBJ object)
 
 rt_private void buffer_allocate(EIF_CONTEXT_NOARG)
 {
+	EIF_GET_CONTEXT
 	/* Allocates initial tagged out buffer */
 
 	tagged_out = (char *) xcalloc(TAG_SIZE, sizeof(char));
@@ -130,7 +131,7 @@ rt_private void buffer_allocate(EIF_CONTEXT_NOARG)
 rt_private void rec_write(EIF_CONTEXT register char *object, int tab)
 {
 	/* Print recursively `object' in `tagged_out' */
-
+	EIF_GET_CONTEXT
 	register2 struct cnode *obj_desc;	   /* Object type description */
 	register3 long nb_attr;				 /* Attribute number */
 	register4 uint32 *types;                /* Attribute types */
@@ -144,9 +145,7 @@ rt_private void rec_write(EIF_CONTEXT register char *object, int tab)
 	char *o_ref;
 	register7 char **names;				 /* Attribute names */
 	char *reference;						/* Reference attribute */
-	/* char *refptr;*/ /* %%ss removed */
-	/* union overhead *zone;*/ /* %%ss removed */
-	long i; /* %%ss removed , nb_old, nb_reference; */
+	long i;
 	uint32 type, ref_flags;
 
 	dyn_type = Dtype(object);
@@ -277,13 +276,13 @@ rt_private void rec_write(EIF_CONTEXT register char *object, int tab)
 rt_private void rec_swrite(EIF_CONTEXT register char *object, int tab)
 {
 	/* Print special object */
-
+	EIF_GET_CONTEXT
 	union overhead *zone;		/* Object header */
 	register5 uint32 flags;		/* Object flags */
 	register3 long count;		/* Element count */
 	register4 long elem_size;	/* Element size */
 	char *o_ref;
-	char *reference; /* %%ss removed , *bit; */
+	char *reference;
 	long old_count;
 	int dt_type;
 
@@ -370,6 +369,7 @@ rt_private void rec_swrite(EIF_CONTEXT register char *object, int tab)
 
 rt_private void write_tab(EIF_CONTEXT register int tab)
 {
+	EIF_GET_CONTEXT
 	register1 int i = 0;
 
 	for (; i < tab; i++) {
@@ -398,15 +398,15 @@ rt_private void write_char (EIF_CHARACTER c, char *buf)
 
 rt_private void write_out(EIF_CONTEXT_NOARG)
 {
+	EIF_GET_CONTEXT
 	/* Print private string `buffer' in `tagged_out'. */
-
 	write_string(buffero);
 }
 
 rt_private void write_string(EIF_CONTEXT char *str)
 {
 	/* Print `str' in `tagged_out'. */
-
+	EIF_GET_CONTEXT
 	int buffer_len = strlen(str);	/* Length of `str' */
 
 	tagged_len += buffer_len;
@@ -437,24 +437,28 @@ rt_public char *c_outb(EIF_BOOLEAN b)
 
 rt_public char *c_outi(EIF_CONTEXT EIF_INTEGER i)
 {
+	EIF_GET_CONTEXT
 	sprintf(buffero, "%ld", i);
 	return makestr(buffero, strlen(buffero));
 }
 
 rt_public char *c_outr(EIF_CONTEXT EIF_REAL f)
 {
+	EIF_GET_CONTEXT
 	sprintf(buffero, "%g", f);
 	return makestr(buffero, strlen(buffero));
 }
 
 rt_public char *c_outd(EIF_CONTEXT EIF_DOUBLE d)
 {
+	EIF_GET_CONTEXT
 	sprintf(buffero, "%.17g", d);
 	return makestr(buffero, strlen(buffero));
 }
 
 rt_public char *c_outc(EIF_CONTEXT EIF_CHARACTER c)
 {
+	EIF_GET_CONTEXT
 	buffero[0] = c;
 	buffero[1] = '\0';
 	return makestr(buffero, 1);
@@ -462,6 +466,7 @@ rt_public char *c_outc(EIF_CONTEXT EIF_CHARACTER c)
 
 rt_public char *c_outp(EIF_CONTEXT EIF_POINTER p)
 {
+	EIF_GET_CONTEXT
 	sprintf(buffero, "0x%lX", p);
 	return makestr(buffero, strlen(buffero));
 }
@@ -477,20 +482,20 @@ rt_public char *c_outp(EIF_CONTEXT EIF_POINTER p)
  */
 
 rt_shared char *simple_out(EIF_CONTEXT struct item *val) 
-                 			/* Interpreter value cell */
+    /* Interpreter value cell */
 {
 	/* Hand build a tagged out representation for simple types. The
 	 * representation should be kept in sync with those defined above.
 	 * NB: this whole file needs a clean rewriting--RAM.
 	 */
-
+	EIF_GET_CONTEXT
 	buffer_allocate();		/* Allocate initial `tagged_out' buffer */
 
 	switch (val->type & SK_HEAD) {
 	case SK_EXP:
 	case SK_REF:
-		xfree(tagged_out);					/* What a waste of CPU cycles */
-		return build_out((EIF_OBJ)(&val->it_ref));		/* Only for the beauty of it */
+		xfree(tagged_out);							/* What a waste of CPU cycles */
+		return build_out((EIF_OBJ)(&val->it_ref));	/* Only for the beauty of it */
 	case SK_VOID:
 		sprintf(tagged_out, "Not an object!");
 		break;

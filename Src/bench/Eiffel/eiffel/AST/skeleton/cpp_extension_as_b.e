@@ -29,9 +29,8 @@ feature -- Type check
 			a_feat: EXTERNAL_I
 			arg_type: TYPE_A
 			error: BOOLEAN
-			ext_same_sign: EXT_SAME_SIGN
+			cpp_error: EXT_CPP
 		do
-io.putstring ("Improve error messages%N")
 			a_feat ?= context.a_feature
 
 				-- Check first argument if necessary
@@ -46,9 +45,10 @@ io.putstring ("Improve error messages%N")
 					error := not arg_type.is_pointer
 				end
 				if error then
-					!! ext_same_sign
-					context.init_error (ext_same_sign)
-					Error_handler.insert_error (ext_same_sign)
+					!! cpp_error
+					cpp_error.set_error_message ("First argument must be of type POINTER")
+					context.init_error (cpp_error)
+					Error_handler.insert_error (cpp_error)
 					Error_handler.raise_error
 				end
 			when new, static, static_data_member then
@@ -60,55 +60,64 @@ io.putstring ("Improve error messages%N")
 			when data_member, static_data_member then
 					-- Must be a function
 				if not a_feat.is_function then
-					!! ext_same_sign
-					context.init_error (ext_same_sign)
-					Error_handler.insert_error (ext_same_sign)
+					!! cpp_error
+					cpp_error.set_error_message ("This external must be a function")
+					context.init_error (cpp_error)
+					Error_handler.insert_error (cpp_error)
 					Error_handler.raise_error
 				end
 				if type = data_member then
 					error := a_feat.argument_count /= 1
+					!! cpp_error
+					cpp_error.set_error_message ("First argument must be of type POINTER")
 				else
 					error := a_feat.argument_count /= 0
+					!! cpp_error
+					cpp_error.set_error_message ("No argument allowed")
 				end
 				if error then
-					!! ext_same_sign
-					context.init_error (ext_same_sign)
-					Error_handler.insert_error (ext_same_sign)
+					context.init_error (cpp_error)
+					Error_handler.insert_error (cpp_error)
 					Error_handler.raise_error
 				end
 			when new then
 					-- Must return a pointer
 				arg_type ?= a_feat.type
 				if not arg_type.is_pointer then
-					!! ext_same_sign
-					context.init_error (ext_same_sign)
-					Error_handler.insert_error (ext_same_sign)
+					!! cpp_error
+					cpp_error.set_error_message ("The return type must be POINTER")
+					context.init_error (cpp_error)
+					Error_handler.insert_error (cpp_error)
 					Error_handler.raise_error
 				end
 				if a_feat.alias_name /= Void then
-					!! ext_same_sign
-					context.init_error (ext_same_sign)
-					Error_handler.insert_error (ext_same_sign)
+					!! cpp_error
+					cpp_error.set_error_message ("The alias clause is not allowed")
+					context.init_error (cpp_error)
+					Error_handler.insert_error (cpp_error)
 					Error_handler.raise_error
 				end
 			when delete then
 					-- Must be a procedure
 				if a_feat.is_function then
-					!! ext_same_sign
-					context.init_error (ext_same_sign)
-					Error_handler.insert_error (ext_same_sign)
+					!! cpp_error
+					cpp_error.set_error_message ("This external must be a procedure")
+					context.init_error (cpp_error)
+					Error_handler.insert_error (cpp_error)
 					Error_handler.raise_error
 				end
 				if a_feat.argument_count /= 1 then
-					!! ext_same_sign
-					context.init_error (ext_same_sign)
-					Error_handler.insert_error (ext_same_sign)
+					!! cpp_error
+					cpp_error.set_error_message ("The only argument must be of type POINTER")
+					context.init_error (cpp_error)
+					Error_handler.insert_error (cpp_error)
 					Error_handler.raise_error
 				end
 				if a_feat.alias_name /= Void then
-					!! ext_same_sign
-					context.init_error (ext_same_sign)
-					Error_handler.insert_error (ext_same_sign)
+					!! cpp_error
+					cpp_error.set_error_message ("The alias clause is not allowed")
+					context.init_error (cpp_error)
+					Error_handler.insert_error (cpp_error)
 					Error_handler.raise_error
 				end
 			when standard, static then
@@ -120,10 +129,11 @@ io.putstring ("Improve error messages%N")
 	type_check_signature is
 			-- Perform type check on the signature.
 		local
-			ext_same_sign: EXT_SAME_SIGN
+			cpp_error: EXT_CPP
 			error: BOOLEAN
 			arg_count, feature_count: INTEGER
 			a_feat: FEATURE_I
+			error_msg: STRING
 		do
 			if has_signature then
 				a_feat := context.a_feature
@@ -136,8 +146,10 @@ io.putstring ("Improve error messages%N")
 						type
 					when standard, delete, data_member then
 						error := arg_count /= feature_count - 1
+						error_msg := "number of arguments in the signature must be number of arguments in the Eiffel definition - 1"
 					when new, static, static_data_member then
 						error := arg_count /= feature_count
+						error_msg := "number of arguments in the signature must match number of arguments in the Eiffel definition"
 					end
 				else
 						-- No argument specified
@@ -145,8 +157,11 @@ io.putstring ("Improve error messages%N")
 						type
 					when standard, delete, data_member then
 						error := feature_count /= 1
+						error_msg := "number of arguments in the signature must be number of arguments in the Eiffel definition - 1"
+
 					when new, static, static_data_member then
 						error := feature_count /= 0
+						error_msg := "number of arguments in the signature must match number of arguments in the Eiffel definition"
 					end
 				end
 
@@ -158,16 +173,19 @@ io.putstring ("Improve error messages%N")
 						when new then
 						else
 							error := a_feat.is_function
+							error_msg := "Missing return type in signature"
 						end
 					else
 						error := not a_feat.is_function or else type = new
+						error_msg := "Invalid return type in signature"
 					end
 				end
 
 				if error then
-					!! ext_same_sign
-					context.init_error (ext_same_sign)
-					Error_handler.insert_error (ext_same_sign)
+					!! cpp_error
+					cpp_error.set_error_message (error_msg)
+					context.init_error (cpp_error)
+					Error_handler.insert_error (cpp_error)
 					Error_handler.raise_error
 				end
 			end

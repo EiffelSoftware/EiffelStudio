@@ -83,14 +83,15 @@ feature {NONE} -- Initialization
 			-- Create the tool bar button.
 		do
 			base_make (an_interface)
-			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_button_new)
-			feature {EV_GTK_EXTERNALS}.gtk_button_set_relief (c_object, feature {EV_GTK_EXTERNALS}.gtk_relief_none_enum)
+			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_button_new)		
 		end
 
 	initialize is
 			-- Initialization of button box and events.
 		do
 			Precursor {EV_ITEM_IMP}
+				-- We want tool bar buttons to be flat in appearance and not focusable.
+			feature {EV_GTK_EXTERNALS}.gtk_button_set_relief (c_object, feature {EV_GTK_EXTERNALS}.gtk_relief_none_enum)
 			feature {EV_GTK_EXTERNALS}.GTK_WIDGET_UNSET_FLAGS (c_object, feature {EV_GTK_EXTERNALS}.gTK_CAN_FOCUS_ENUM)
 			pixmapable_imp_initialize
 			textable_imp_initialize

@@ -206,57 +206,59 @@ feature -- Access
 		end;
 
 	cluster_of_name (cluster_name: STRING): CLUSTER_I is
-			-- Cluster which name is `cluster_name' (Void if none)
+			-- Cluster whose name is `cluster_name' (Void if none)
 		require
-			good_argument: cluster_name /= Void;
+			good_argument: cluster_name /= Void
 		local
-			stop: BOOLEAN;
+			cluster_list: like clusters
 		do
 			from
-				clusters.start
+				cluster_list := clusters;
+				cluster_list.start
 			until
-				clusters.after or else stop
+				cluster_list.after or else
+				cluster_name.is_equal (cluster_list.item.cluster_name)
 			loop
-				stop := cluster_name.is_equal (clusters.item.cluster_name);
-				if not stop then
-					clusters.forth
-				end;
+				cluster_list.forth
 			end;
-			if stop then
-				Result := clusters.item
+			if not cluster_list.after then
+				Result := cluster_list.item
 			end;
 		end;
 
 	has_cluster_of_name (cluster_name: STRING): BOOLEAN is
-			-- Does `clusters' have a cluster which name is `cluster_name' ?
+			-- Does `clusters' have a cluster whose name is `cluster_name' ?
+		require
+			good_argument: cluster_name /= Void
 		do
 			Result := cluster_of_name (cluster_name) /= Void;
 		end;
 
 	cluster_of_path (cluster_path: STRING): CLUSTER_I is
-			-- Cluster which path is `cluster_path' (Void if none)
+			-- Cluster whose path is `cluster_path' (Void if none)
 		require
-			good_argument: cluster_path /= Void;
+			good_argument: cluster_path /= Void
 		local
-			stop: BOOLEAN;
+			cluster_list: like clusters
 		do
 			from
-				clusters.start
+				cluster_list := clusters;
+				cluster_list.start
 			until
-				clusters.after or else stop
+				cluster_list.after or else
+				cluster_list.item.path.is_equal (cluster_path)
 			loop
-				stop := clusters.item.path.is_equal (cluster_path);
-				if not stop then
-					clusters.forth
-				end;
+				cluster_list.forth
 			end;
-			if stop then
-				Result := clusters.item
-			end;
+			if not cluster_list.after then
+				Result := cluster_list.item
+			end
 		end;
 
 	has_cluster_of_path (cluster_path: STRING): BOOLEAN is
-			-- Does `clusters' have a cluster which path is `cluster_path' ?
+			-- Does `clusters' have a cluster whose path is `cluster_path' ?
+		require
+			good_argument: cluster_path /= Void
 		do
 			Result := cluster_of_path (cluster_path) /= Void;
 		end;
@@ -589,14 +591,33 @@ feature {COMPILER_EXPORTER} -- Merging
 		require
 			other_not_void: other /= Void
 		local
-			other_clusters: LINKED_LIST [CLUSTER_I]
-			c: CLUSTER_I
+			other_clusters: LINKED_LIST [CLUSTER_I];
+			c_of_name, c_of_path: CLUSTER_I;
+			c: CLUSTER_I;
+			vd28: VD28;
+			vdcn: VDCN
 		do
 			other_clusters := other.clusters;
 			from other_clusters.start until other_clusters.after loop
--- TO DO: Check cluster tags.
 				c := other_clusters.item;
-				if not has_cluster_of_path (c.path) then
+				c_of_name := Universe.cluster_of_name (c.cluster_name);
+				c_of_path := Universe.cluster_of_path (c.path);
+				if c_of_name /= Void then
+					if c_of_path /= c_of_name then
+							-- Two clusters with the same name.
+						!! vdcn;
+						vdcn.set_cluster (c);
+						Error_handler.insert_error (vdcn);
+						Error_handler.raise_error
+					end
+				elseif c_of_path /= Void then
+						-- Two clusters with same path.
+					!!vd28;
+					vd28.set_cluster (c_of_path);
+					vd28.set_second_cluster_name (c.cluster_name);
+					Error_handler.insert_error (vd28);
+					Error_handler.raise_error
+				else
 					insert_cluster (c)
 				end;
 				other_clusters.forth

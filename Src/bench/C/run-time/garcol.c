@@ -1098,7 +1098,7 @@ rt_private void mark_stack(register5 struct stack *stk, register4 char *(*marker
 {
 	/* Loop over the specified stack, using the supplied marker to recursively
 	 * mark the objects. The 'move' flag is a flag which tells us whether the
-	 * objects are expected to more or not (to avoid useless writing
+	 * objects are expected to move or not (to avoid useless writing
 	 * indirections). Stack holds indirect references to objects.
 	 */
 
@@ -4924,7 +4924,7 @@ rt_shared void gfree(register union overhead *zone)
  * following to properly record itself.
  */
 
-rt_public void onceset(register char **ptr)
+rt_public char *onceset(register char **ptr)
 {
 	/* Record result of once functions onto the once_set stack, so that the
 	 * run-time may update the address should the result be moved around by
@@ -4937,8 +4937,10 @@ rt_public void onceset(register char **ptr)
 	flush;
 #endif
 	
-	if (-1 == epush(&once_set, (char *)ptr))
+	if (-1 == epush(&once_set, (char *) ptr))
 		eraise("once function recording", EN_MEM);
+
+	return (char *) (once_set.st_top - 1);
 	EIF_END_GET_CONTEXT
 }
 

@@ -1,5 +1,4 @@
 indexing
-
 	description: 
 		"EiffelVision window, implementation interface."
 	status: "See notice at end of class"
@@ -262,58 +261,6 @@ feature -- Event - command association
 			valid_command: cmd /= Void
 		deferred
 		end
-
-feature {EV_WINDOW, EV_APPLICATION} -- Implementation
-	
-	application: EV_APPLICATION
-			-- EiffelVision application associated to the
-			-- window.
-	
-	set_application (app: EV_APPLICATION) is
-			-- Associate the window with 'app'. Is this 
-			-- is done, exiting the window will exit the 
-			-- application, unless delete_command is set.
-		do
-			application := app
-		end	
-
-feature {NONE} -- Implementation
-
---	close_command: EV_COMMAND	
---
---	window_closed is
---			-- Called when the window is deleted (closed).
---			-- If window is the main window of the
---			-- application, this feature will exit
---			-- application if `close_command' is not set).
---		local
---			a: EV_ARGUMENT1[EV_WINDOW]
---			window_interface: EV_WINDOW
---		do
---			if close_command = Void then
---				if application /= Void then
---					application.exit
---				end
---				plateform_closed
---				interface.remove_implementation
---			else
---				window_interface ?= interface
---				check
---					window_interface /= Void
---				end
---				!!a.make (window_interface)
---				close_command.execute (a)
---			end
---		end
-       
---	plateform_closed is
---			-- A specific function for each plateform to definitely
---			-- destroy the informations after the manager destroyed
---			-- the widget.
---		deferred
---		ensure
---			destroyed: destroyed
---		end 
 
 end -- clas EV_WINDOW_I
 

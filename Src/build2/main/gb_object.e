@@ -50,12 +50,19 @@ inherit
 		end
 	
 	EV_ANY_HANDLER
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_ID
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_STATUS_BAR
-	
-	GB_POST_LOAD_OBJECT_EXPANDER
+		export
+			{NONE} all
+		end
 
 feature {GB_OBJECT_HANDLER} -- Initialization
 	
@@ -115,6 +122,11 @@ feature -- Access
 	type: STRING
 		-- A type corresponding to the current vision2 object.
 		-- Contains "EV_" at start.
+		
+	is_expanded: BOOLEAN
+		-- Is representation of `Current' currently expanded?
+		-- Used to expand and collapse `layout_constructor_item' as required
+		-- when displaying or hiding `Current'. 
 		
 	short_type: STRING is
 			-- Result is a short version of type with "EV_" removed from start.
@@ -187,7 +199,7 @@ feature {GB_XML_STORE, GB_XML_LOAD, GB_XML_OBJECT_BUILDER}
 			if not name.is_empty then
 				add_element_containing_string (element, name_string, name)
 			end
-			add_element_containing_integer (element, "Expanded", layout_item.is_expanded.to_integer)
+			add_element_containing_integer (element, "Expanded", is_expanded.to_integer)
 		end
 		
 	modify_from_xml (element: XML_ELEMENT) is
@@ -212,7 +224,7 @@ feature {GB_XML_STORE, GB_XML_LOAD, GB_XML_OBJECT_BUILDER}
 			element_info := full_information @ ("Expanded")
 			if element_info /= Void then
 				if element_info.data.to_integer = 1 then
-					register_object_as_expanded (Current)	
+					is_expanded := True
 				end
 			end
 		end
@@ -701,6 +713,20 @@ feature {GB_BUILDER_WINDOW} -- Implementation
 			else
 				add_new_component_in_parent (a_component)
 			end
+		end
+		
+feature {GB_LAYOUT_CONSTRUCTOR_ITEM} -- Implementation
+
+	register_expand is
+			-- Assign `True' to `is_expanded'.
+		do
+			is_expanded := True
+		end
+		
+	register_collapse is
+			-- Assign `False' to `is_expanded'.
+		do
+			is_expanded := False
 		end
 		
 feature {NONE} -- Implementation

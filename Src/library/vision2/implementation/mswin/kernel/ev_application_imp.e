@@ -293,7 +293,7 @@ feature {EV_ANY_I, EV_PICK_AND_DROPABLE_IMP, EV_INTERNAL_COMBO_FIELD_IMP} -- Sta
 		--| This allows us to globally check whether a pick and drop
 		--| is executing, and if so, the source.
 
-feature {EV_PICK_AND_DROPABLE_IMP} -- Status Report
+feature {EV_PICK_AND_DROPABLE_IMP, EV_DOCKABLE_SOURCE_IMP} -- Status Report
 
 	transport_started (widget: EV_PICK_AND_DROPABLE_IMP) is
 			-- Assign `widget' to `pick_and_drop_source'.

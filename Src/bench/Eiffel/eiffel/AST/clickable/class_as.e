@@ -40,6 +40,7 @@ feature {AST_FACTORY, EXTERNAL_CLASS_C} -- Initialization
 		g: like generics;
 		p: like parents;
 		c: like creators;
+		co: like convertors;
 		f: like features;
 		inv: like invariant_part;
 		s: like suppliers;
@@ -63,6 +64,7 @@ feature {AST_FACTORY, EXTERNAL_CLASS_C} -- Initialization
 			generics := g
 			parents := p
 			creators := c
+			convertors := co
 			features := f
 			invariant_part := inv
 			if
@@ -97,6 +99,7 @@ feature {AST_FACTORY, EXTERNAL_CLASS_C} -- Initialization
 			generics_set: generics = g
 			parents_set: parents = p
 			creators_set: creators = c
+			convertors_set: convertors = co
 			features_set: features = f
 			empty_invariant_part: invariant_part = Void implies inv = Void or else inv.assertion_list = Void
 			invariant_part_set: invariant_part /= Void implies invariant_part = inv
@@ -131,6 +134,9 @@ feature -- Attributes
 
 	creators: EIFFEL_LIST [CREATE_AS]
 			-- Creators
+
+	convertors: EIFFEL_LIST [CONVERT_FEAT_AS]
+			-- Convertors
 
 	features: EIFFEL_LIST [FEATURE_CLAUSE_AS]
 			-- Feature list
@@ -371,9 +377,7 @@ feature -- Stoning
  
 	associated_eiffel_class (reference_class: CLASS_C): CLASS_C is
 		do
-			Result := Universe.class_named 
-						(class_name, 
-						reference_class.cluster).compiled_class
+			Result := Universe.class_named (class_name, reference_class.cluster).compiled_class
 		end
 
 feature -- Formatting
@@ -423,7 +427,10 @@ feature -- Formatting
 				ctxt.new_line
 					-- We reset `ctxt' so that we can print again.
 				ctxt.set_last_was_printed (True)
-			end;		
+			end;
+
+			format_convert_clause (ctxt)
+			
 			ctxt.format_categories
 			ctxt.format_invariants
 			format_indexes (ctxt, bottom_indexes)
@@ -437,6 +444,8 @@ feature -- Formatting
 
 	format_indexes (ctxt: FORMAT_CONTEXT; i: EIFFEL_LIST [INDEX_AS]) is
 			-- Format `i'.
+		require
+			ctxt_not_void: ctxt /= Void
 		do
 			if i /= Void and not i.is_empty then
 				ctxt.put_text_item (ti_Before_indexing)
@@ -455,6 +464,8 @@ feature -- Formatting
 
 	format_header (ctxt: FORMAT_CONTEXT) is
 			-- Format header, ie classname and generics.
+		require
+			ctxt_not_void: ctxt /= Void
 		do
 			ctxt.put_text_item (ti_Before_class_header)
 			if is_expanded then
@@ -480,6 +491,8 @@ feature -- Formatting
 
 	format_generics (ctxt: FORMAT_CONTEXT) is
 			-- Format formal generics.
+		require
+			ctxt_not_void: ctxt /= Void
 		do
 			if generics /= Void then
 				ctxt.put_space
@@ -493,6 +506,26 @@ feature -- Formatting
 			end
 		end
 
+	format_convert_clause (ctxt: FORMAT_CONTEXT) is
+			-- Format convert clause.
+		require
+			ctxt_not_void: ctxt /= Void
+		do
+			if convertors /= Void then
+				ctxt.put_text_item (Ti_convert_keyword)
+				ctxt.indent
+				ctxt.new_line
+				ctxt.set_new_line_between_tokens
+				ctxt.set_classes (ctxt.class_c, ctxt.class_c)
+				ctxt.set_separator (Ti_comma)
+				convertors.simple_format (ctxt)
+				ctxt.set_separator (Ti_empty)
+				ctxt.exdent
+				ctxt.new_line
+				ctxt.new_line
+			end
+		end
+		
 feature {AST_REGISTRATION} -- Implementation
 
 	register (ast_reg: AST_REGISTRATION) is
@@ -645,6 +678,8 @@ feature {COMPILER_EXPORTER} -- Output
 				creators.simple_format (ctxt)
 				ctxt.new_line
 			end
+
+			format_convert_clause (ctxt)
 
 			if features /= Void then
 				ctxt.set_new_line_between_tokens

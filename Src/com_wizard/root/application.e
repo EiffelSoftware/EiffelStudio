@@ -1,5 +1,8 @@
 indexing
 	description: "Root class of EiffelCOM Wizard"
+	status: "See notice at end of class";
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	APPLICATION

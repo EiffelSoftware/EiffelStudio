@@ -586,16 +586,8 @@ feature -- Basic Operations
 			body_code.append (Semicolon)
 			body_code.append (New_line_tab)
 
-			body_code.append ("VARIANTARG * ")
+			body_code.append ("VARIANTARG ** ")
 			body_code.append (Tmp_variable_name)
-			body_code.append (Space_equal_space)
-			body_code.append ("NULL")
-			body_code.append (Semicolon)
-			body_code.append (New_line)
-			body_code.append (New_line_tab)
-
-			body_code.append ("VARIANTARG * ")
-			body_code.append ("tmp2_value")
 			body_code.append (Space_equal_space)
 			body_code.append ("NULL")
 			body_code.append (Semicolon)

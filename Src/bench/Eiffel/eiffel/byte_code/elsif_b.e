@@ -8,7 +8,7 @@ inherit
 		redefine
 			analyze, generate, enlarge_tree,
 			find_assign_result, last_all_in_result,
-			has_loop, assigns_to, is_unsafe,
+			assigns_to, is_unsafe,
 			optimized_byte_node, calls_special_features,
 			size, pre_inlined_code, inlined_byte_code,
 			line_number, set_line_number
@@ -117,11 +117,6 @@ feature
 		end;
 
 feature -- Array optimization
-
-	has_loop: BOOLEAN is
-		do
-			Result := compound /= Void and then compound.has_loop
-		end
 
 	assigns_to (i: INTEGER): BOOLEAN is
 		do

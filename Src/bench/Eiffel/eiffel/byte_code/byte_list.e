@@ -9,7 +9,7 @@ inherit
 			copy, setup, is_equal, consistent
 		redefine
 			enlarge_tree, analyze, generate, make_byte_code,
-			has_loop, assigns_to, is_unsafe, optimized_byte_node,
+			assigns_to, is_unsafe, optimized_byte_node,
 			calls_special_features, size, pre_inlined_code,
 			inlined_byte_code, has_separate_call
 		end
@@ -99,22 +99,6 @@ feature
 		end
 
 feature -- Array optimization
-
-	has_loop: BOOLEAN is
-		local
-			l_area: SPECIAL [T]
-			i, nb: INTEGER
-		do
-			from
-				l_area := area
-				nb := count
-			until
-				Result or else i = nb
-			loop
-				Result := l_area.item (i).has_loop
-				i := i + 1
-			end
-		end
 
 	assigns_to (n: INTEGER): BOOLEAN is
 		local

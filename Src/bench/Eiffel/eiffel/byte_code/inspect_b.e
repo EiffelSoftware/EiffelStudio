@@ -7,7 +7,7 @@ inherit
 	INSTR_B
 		redefine
 			analyze, generate, enlarge_tree, make_byte_code,
-			has_loop, assigns_to, is_unsafe,
+			assigns_to, is_unsafe,
 			optimized_byte_node, calls_special_features,
 			size, inlined_byte_code, pre_inlined_code
 		end;
@@ -154,12 +154,6 @@ feature -- Byte code generation
 		end;
 
 feature -- Array optimization
-
-	has_loop: BOOLEAN is
-		do
-			Result := (case_list /= Void and then case_list.has_loop) or else
-				(else_part /= Void and then else_part.has_loop)
-		end
 
 	assigns_to (i: INTEGER): BOOLEAN is
 		do

@@ -138,11 +138,6 @@ feature -- Array optimization
 		do
 		end;
 
-	has_loop: BOOLEAN is
-			-- Does this byte node use loops?
-		do
-		end;
-
 	assigns_to (i: INTEGER): BOOLEAN is
 			-- i > 0:	Does this byte node assign something to the attribute
 			--			of `feature_id' `i'?

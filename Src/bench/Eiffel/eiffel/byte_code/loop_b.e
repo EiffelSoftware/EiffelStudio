@@ -7,7 +7,7 @@ inherit
 	INSTR_B
 		redefine
 			need_enlarging, enlarged, make_byte_code,
-			has_loop, assigns_to, is_unsafe, optimized_byte_node,
+			assigns_to, is_unsafe, optimized_byte_node,
 			calls_special_features, size, inlined_byte_code,
 			pre_inlined_code
 		end;
@@ -148,8 +148,6 @@ feature -- Byte code generation
 		end;
 
 feature -- Array optimization
-
-	has_loop: BOOLEAN is True
 
 	assigns_to (i: INTEGER): BOOLEAN is
 		do

@@ -8,7 +8,7 @@ inherit
 		redefine
 			analyze, generate, enlarge_tree,
 			find_assign_result, last_all_in_result, make_byte_code,
-			has_loop, assigns_to, is_unsafe,
+			assigns_to, is_unsafe,
 			optimized_byte_node, calls_special_features,
 			size, inlined_byte_code, pre_inlined_code
 		end;
@@ -274,14 +274,6 @@ feature -- Byte code generation
 		end;
 
 feature -- Array optimization
-
-	has_loop: BOOLEAN is
-		do
-			Result :=
-				(compound /= Void and then compound.has_loop) or else
-				(else_part /= Void and then else_part.has_loop) or else
-				(elsif_list /= Void and then elsif_list.has_loop)
-		end;
 
 	assigns_to (i: INTEGER): BOOLEAN is
 		do

@@ -157,15 +157,11 @@ feature {NONE}
 
 				elseif is_error (visitor.vt_type) or is_hresult (visitor.vt_type) then
 
-				elseif not visitor.is_basic_type_ref  then
+				elseif not visitor.is_basic_type_ref and in_param then
 					tmp_tag := "valid_"
 					tmp_tag.append (a_name)
 					tmp_body := clone (a_name)
-					if in_param then
-						tmp_body.append (".item /= Void")
-					else
-						tmp_body.append (".item = Void")
-					end
+					tmp_body.append (".item /= Void")
 					create Result.make (tmp_tag, tmp_body)
 				end
 			elseif visitor.is_structure then

@@ -112,19 +112,6 @@ feature {NONE} -- Implementation
 
 						cecil_call.append (cecil_function_set_up (visitor))
 
-						if not visitor.is_basic_type and not (not visitor.is_pointed and is_boolean (visitor.vt_type)) then
-							protect_object := clone (Eif_object)
-							protect_object.append (Space)
-							protect_object.append (Tmp_clause)
-							protect_object.append (func_desc.arguments.item.name)
-							protect_object.append (Space_equal_space)
-							protect_object.append (Eif_protect)
-							protect_object.append (Space_open_parenthesis)
-							protect_object.append (Return_value_name)
-							protect_object.append (Close_parenthesis)
-							protect_object.append (Semicolon)
-							protect_object.append (New_line_tab)
-						end
 					else
 						visitor.visit (func_desc.arguments.item.type)
 
@@ -429,14 +416,7 @@ feature {NONE} -- Implementation
 				Result.append (visitor.ec_function_name)
 				Result.append (Space_open_parenthesis)
 
-				if is_boolean (visitor.vt_type) and not visitor.is_pointed then
-					Result.append (Return_value_name)
-				else
-					Result.append (Eif_wean)
-					Result.append (Space_open_parenthesis)
-					Result.append (Return_value_name)
-					Result.append (Close_parenthesis)
-				end
+				Result.append (Return_value_name)
 				if visitor.writable then
 					Result.append (Comma_space)
 					Result.append (Null)

@@ -1114,7 +1114,7 @@ feature {NONE} -- Translation
 	translate_cecil_and_dll is
 			-- Translate cecil.
 		local
-			lastline: STRING
+			lastline, previous_line: STRING
 			precompile_libs: STRING -- the precompiled libraries to use
 		do
 			debug ("progress")
@@ -1324,9 +1324,10 @@ feature {NONE} -- Translation
 
 			from
 			until
-				lastline.count > 12 and then lastline.substring (3,12).is_equal ("$(OBJECTS)")
+				lastline.count > 17 and then lastline.substring (1,17).is_equal ("DYNLIBSHAREDFLAGS")
 			loop
 				read_next
+				previous_line := lastline
 				lastline := makefile_sh.last_string.twin
 			end
 				
@@ -1337,13 +1338,12 @@ feature {NONE} -- Translation
 				makefile.put_new_line
 			end
 
-			lastline.replace_substring_all (".o", object_extension)
-			subst_dir_sep (lastline)
-			makefile.put_string (lastline)
+			previous_line.replace_substring_all (".o", object_extension)
+			subst_dir_sep (previous_line)
+			makefile.put_string (previous_line)
 			makefile.put_new_line
 
 				-- DYNLIBSHAREDFLAGS
-			read_next
 			makefile.put_string ("DYNLIBSHAREDFLAGS = $(LDSHAREDFLAGS)")
 			if options.has ("system_dynlib") then 
 				makefile.put_string (" \%N")

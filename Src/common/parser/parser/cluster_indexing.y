@@ -48,9 +48,7 @@ create
 %token		TE_PREFIX TE_REDEFINE TE_RENAME TE_REQUIRE TE_RESCUE
 %token		TE_RESULT TE_RETRY TE_SELECT TE_SEPARATE TE_THEN TE_UNDEFINE
 %token		TE_UNIQUE TE_UNTIL TE_VARIANT TE_WHEN TE_QUESTION TE_CURLYTILDE
-%token		TE_BOOLEAN_ID TE_CHARACTER_ID TE_DOUBLE_ID TE_INTEGER_ID
-%token		TE_INTEGER_8_ID TE_INTEGER_16_ID TE_INTEGER_64_ID TE_WIDE_CHAR_ID
-%token		TE_NONE_ID TE_POINTER_ID TE_REAL_ID TE_EMPTY_STRING
+%token		TE_EMPTY_STRING
 %token		TE_VERBATIM_STRING TE_EMPTY_VERBATIM_STRING
 
 %token		TE_STR_LT TE_STR_LE TE_STR_GT TE_STR_GE TE_STR_MINUS
@@ -72,7 +70,7 @@ create
 %type <EIFFEL_LIST [ATOMIC_AS]>			Index_terms
 %type <INDEXING_CLAUSE_AS>			Indexing Index_list
 
-%expect 25
+%expect 3
 
 %%
 
@@ -151,28 +149,6 @@ ASemi: -- Empty
 
 Identifier: TE_ID
 			{ create $$.initialize (token_buffer) }
-	|	TE_BOOLEAN_ID
-			{ $$ := new_boolean_id_as }
-	|	TE_CHARACTER_ID
-			{ $$ := new_character_id_as (False) }
-	|	TE_WIDE_CHAR_ID
-			{ $$ := new_character_id_as (True) }
-	|	TE_DOUBLE_ID
-			{ $$ := new_double_id_as }
-	|	TE_INTEGER_8_ID
-			{ $$ := new_integer_id_as (8) }
-	|	TE_INTEGER_16_ID
-			{ $$ := new_integer_id_as (16) }
-	|	TE_INTEGER_ID
-			{ $$ := new_integer_id_as (32) }
-	|	TE_INTEGER_64_ID
-			{ $$ := new_integer_id_as (64) }
-	|	TE_NONE_ID
-			{ $$ := new_none_id_as }
-	|	TE_POINTER_ID
-			{ $$ := new_pointer_id_as }
-	|	TE_REAL_ID
-			{ $$ := new_real_id_as }
 	;
 
 Manifest_constant: Boolean_constant

@@ -36,9 +36,7 @@
 
 #include <sys/types.h>
 #include <sys/stat.h>
-#if defined EIF_OS2
-	/* <unistd.h> doesn't exist */
-#elif defined EIF_WIN32
+#ifdef EIF_WIN32
 #include <io.h>			/* %%ss added for access */
 #include <direct.h>		/* %%ss added for (ch|rm)dir */
 #else
@@ -58,21 +56,6 @@
 #endif
 
 /* %%zs moved EIF_WIN_DIRENT definition block to dir.h from here */
-
-#ifdef EIF_OS2
-#define INCL_DOSFILEMGR   /* File Manager values */
-#define INCL_DOSERRORS	  /* DOS error values */
-#include <os2.h>
-#ifndef MAX_PATH
-#define MAX_PATH 255
-#endif
-
-typedef struct tagEIF_OS2_DIRENT {
-	char	name [MAX_PATH];
-	int 	first;
-	HDIR	handle;
-} EIF_OS2_DIRENT;
-#endif
 
 #ifndef HAS_READDIR
 	Sorry! You have to find a PD implementation of readdir()...
@@ -97,19 +80,6 @@ rt_public EIF_POINTER dir_open(char *name)
 	strcpy (c->name, name);
 	c->handle = NULL;
 	return (EIF_POINTER) c;
-
-#elif defined EIF_OS2
-	EIF_OS2_DIRENT *c;
-
-	c = eif_malloc (sizeof(EIF_OS2_DIRENT));
-	if (c == (EIF_OS2_DIRENT *) 0)
-		enomem();
-
-	strcpy (c->name, name);
-	c->first = 1;
-	c->handle = HDIR_SYSTEM;
-	return (EIF_POINTER) c;
-
 #else
 	DIR *dirp;
 
@@ -123,66 +93,48 @@ rt_public EIF_POINTER dir_open(char *name)
 #endif
 }
 
-#ifdef EIF_WIN32
-rt_public void dir_close(EIF_WIN_DIRENT *dirp)
+rt_public void dir_close(EIF_POINTER d)
 {
+#ifdef EIF_WIN32
+	EIF_WIN_DIRENT *dirp = (EIF_WIN_DIRENT *) d;
 	if (dirp->handle != NULL)
 		FindClose (dirp->handle);
 	eif_free(dirp);
-}
-
-#elif defined EIF_OS2
-rt_public void dir_close(EIF_OS2_DIRENT *dirp)
-{
-	APIRET rc = NO_ERROR;
-	if (dirp->first != 1)
-		rc = DosFindClose(dirp->handle);
-}
-
 #else
-rt_public void dir_close(DIR *dirp)
-{
+	DIR *dirp = (DIR *) d;
 	(void) closedir(dirp);
-}
 #endif
+}
 
 /*
  * Rewinding directory (may be a macro).
  */
 
-#ifdef EIF_WIN32
-rt_public void dir_rewind(EIF_WIN_DIRENT *dirp)
+rt_public void dir_rewind(EIF_POINTER d)
 {
+#ifdef EIF_WIN32
+	EIF_WIN_DIRENT *dirp = (EIF_WIN_DIRENT *) d;
 	if (dirp->handle != NULL)
 		FindClose(dirp->handle);
 	dirp->handle = NULL;
-}
-
-#elif defined EIF_OS2
-rt_public void dir_rewind(EIF_OS2_DIRENT *dirp)
-{
-	APIRET rc = NO_ERROR;
-	if (dirp->first != 1)
-		rc = DosFindClose(dirp->handle);
-	dirp->first = 1;
-}
-
 #else
-rt_public void dir_rewind(DIR *dirp)
-{
+	DIR *dirp = (DIR *) d;
 #ifdef HAS_REWINDDIR
 	rewinddir(dirp);
 #endif
-}
 #endif
+}
 
 /*
  * Looking for a specific entry.
  */
 
-#ifdef EIF_WIN32
-rt_public char *dir_search(EIF_WIN_DIRENT *dirp, char *name)
+rt_public char *dir_search(EIF_POINTER d, char *name)
+          		/* Directory where search is made */
+           		/* Entry we are looking for */
 {
+#ifdef EIF_WIN32
+	EIF_WIN_DIRENT *dirp = (EIF_WIN_DIRENT *) d;
 	HANDLE h;
 	WIN32_FIND_DATA wfd;
 	char *filename;
@@ -203,52 +155,15 @@ rt_public char *dir_search(EIF_WIN_DIRENT *dirp, char *name)
 	}
 
 	return (char *) 0;		/* Not found */
-}
-
-#elif defined EIF_OS2
-rt_public char *dir_search(EIF_OS2_DIRENT *dirp, char *name)
-{
-	HDIR h;
-	char *filename;
-	FILEFINDBUF3  FindBuffer	 = {0}; 	 /* Returned from FindFirst/Next */
-	ULONG		  ulResultBufLen = sizeof(FILEFINDBUF3);
-	ULONG		  ulFindCount	 = 1;		 /* Look for 1 file at a time	 */
-	APIRET		  rc			 = NO_ERROR; /* Return code 				 */
-
-	filename = eif_malloc (strlen(name) + strlen (dirp->name) + 2);
-	if (filename == (char *) 0)
-		enomem();
-
-	strcpy (filename, dirp->name);
-	if (filename[strlen(filename)-1] != '\\')
-		strcat (filename, "\\");
-	strcat (filename, name);
-	rc = DosFindFirst(filename, 	/* File pattern 				*/
-				&dirp->handle,		/* Directory search handle		*/
-				FILE_DIRECTORY, 	/* Search attribute 			*/
-				&FindBuffer,		/* Result buffer				*/
-				ulResultBufLen, 	/* Result buffer length 		*/
-				&ulFindCount,		/* Number of entries to find	*/
-				FIL_STANDARD);		/* Return level 1 file info 	*/
-
-	if (rc != NO_ERROR) {
-		return (char *)0;
-	} else {
-		return (char *)1;
-	} /* endif */
-}
 
 #else /* UNIX, VMS */
-rt_public char *dir_search(DIR *dirp, char *name)
-          		/* Directory where search is made */
-           		/* Entry we are looking for */
-{
 	/* Look for a given entry throughout the directory and return a pointer
 	 * to a descriptor if found, a null pointer otherwise.
 	 * Note that no rewinddir() is performed, as the Eiffel side provides
 	 * us with a freshly opened directory pointer.
 	 */
 
+	DIR *dirp = (DIR *) d;
 #ifdef DIRNAMLEN
 	int len = strlen(name);		/* Avoid unncessary calls to strcmp() */
 #endif
@@ -268,12 +183,16 @@ rt_public char *dir_search(DIR *dirp, char *name)
 #endif
 
 	return (char *) 0;		/* Not found */
-}
 #endif
+}
 
-#ifdef EIF_WIN32
-rt_public char *dir_next(EIF_WIN_DIRENT *dirp)
+rt_public char *dir_next(EIF_POINTER d)
+	/* Return the Eiffel string corresponding to the next entry name, or a
+	 * null pointer if we reached the end of the directory.
+	 */
 {
+#ifdef EIF_WIN32
+	EIF_WIN_DIRENT *dirp = (EIF_WIN_DIRENT *) d;
 	HANDLE h;
 	WIN32_FIND_DATA wfd;
 	BOOL r;
@@ -308,66 +227,8 @@ rt_public char *dir_next(EIF_WIN_DIRENT *dirp)
 		else
 			return (char *) 0;
 		}
-}
-
-#elif defined EIF_OS2
-rt_public char *dir_next(EIF_OS2_DIRENT *dirp)
-{
-	HDIR h;
-	char *name;
-	FILEFINDBUF3  FindBuffer	 = {0}; 	 /* Returned from FindFirst/Next */
-	ULONG		  ulResultBufLen = sizeof(FILEFINDBUF3);
-	ULONG		  ulFindCount	 = 1;		 /* Look for 1 file at a time	 */
-    APIRET        rc             = NO_ERROR; /* Return code                  */
-
-
-	if (dirp->first != 1) {
-
-		rc = DosFindNext(dirp->handle,			/* Directory handle 			*/
-						&FindBuffer,			/* Result buffer				*/
-						ulResultBufLen, 		/* Result buffer length 		*/
-						&ulFindCount);			/* Number of entries to find	*/
-
-		if (rc != NO_ERROR && rc == ERROR_NO_MORE_FILES) {
-				return (char *) 0;
-		} else {
-				return makestr (FindBuffer.achName, strlen (FindBuffer.achName));
-		}
-	}
-	else {
-		name = eif_malloc (strlen (dirp->name) + 5);
-		if (name == (char *) 0)
-			enomem ();
-
-		strcpy (name, dirp->name);
-		if (name[strlen(name)-1] == '\\')
-			strcat (name, "*.*");
-		else
-			strcat (name, "\\*.*");
-
-		rc = DosFindFirst(name, 	/* File pattern 				*/
-					&dirp->handle,		/* Directory search handle		*/
-					FILE_DIRECTORY, /* Search attribute 			*/
-					&FindBuffer,		/* Result buffer				*/
-					ulResultBufLen, 	/* Result buffer length 		*/
-					&ulFindCount,		/* Number of entries to find	*/
-					FIL_STANDARD);		/* Return level 1 file info 	*/
-
-		dirp->first = 0;
-		if (rc != NO_ERROR) {
-			return (char *)0;
-		} else {
-			return makestr (FindBuffer.achName, strlen (FindBuffer.achName));
-		} /* endif */
-	}
-}
-
 #else  /* UNIX, VMS */
-rt_public char *dir_next(DIR *dirp)
-{
-	/* Return the Eiffel string corresponding to the next entry name, or a
-	 * null pointer if we reached the end of the directory.
-	 */
+	DIR *dirp = (DIR *) d;
 
 	DIRENTRY *dp = readdir(dirp);
 
@@ -387,8 +248,8 @@ rt_public char *dir_next(DIR *dirp)
 #else
 	return makestr(dp->d_name, strlen(dp->d_name));
 #endif
-}
 #endif
+}
 
 rt_public EIF_OBJECT dir_current(void)
 {
@@ -407,7 +268,7 @@ rt_public EIF_OBJECT dir_current(void)
 
 rt_public EIF_CHARACTER eif_dir_separator (void)
 {
-#if defined EIF_WIN32 || defined EIF_OS2
+#if defined EIF_WIN32
 	return '\\';
 #elif defined EIF_VMS
 	/* This is a gross oversimplification! */
@@ -554,16 +415,6 @@ rt_public EIF_BOOLEAN eif_dir_is_readable(char *name)
 
 	return (EIF_BOOLEAN) (access (name, 04) != -1);
 
-#elif defined EIF_OS2
-
-	int mode;					/* Current mode */
-	struct stat buf;            /* Buffer to get file statistics */
-
-	stat(name, &buf);			/* Cannot fail (precondition) */
-	mode = buf.st_mode;
-
-	return (EIF_BOOLEAN) ((mode & S_IREAD) ? '\01' : '\0');
-
 #else
 #ifdef HAS_GETEUID
 	int uid, gid;				/* File owner and group */
@@ -622,15 +473,6 @@ rt_public EIF_BOOLEAN eif_dir_is_writable(char *name)
 #elif defined EIF_WIN32
 
 	return (EIF_BOOLEAN) (access (name, 02) != -1);
-
-#elif defined EIF_OS2
-	int mode;																				/* Current mode */
-	struct stat buf;            /* Buffer to get file statistics */
-
-	stat(name, &buf);			/* Cannot fail (precondition) */
-	mode = buf.st_mode;
-
-	return (EIF_BOOLEAN) ((mode & S_IWRITE) ? '\01' : '\0');
 
 #else
 
@@ -691,16 +533,6 @@ rt_public EIF_BOOLEAN eif_dir_is_executable(char *name)
 
 #elif defined EIF_WIN32
 	return (EIF_BOOLEAN) (access (name, 0) != -1);
-
-#elif defined EIF_OS2
-	int mode;																				/* Current mode */
-	struct stat buf;            /* Buffer to get file statistics */
-
-	stat(name, &buf);			/* Cannot fail (precondition) */
-	mode = buf.st_mode;
-
-	return (EIF_BOOLEAN) ((mode & S_IEXEC) ? '\01' : '\0');
-
 #else
 #ifdef HAS_GETEUID
 	int uid, gid;				/* File owner and group */

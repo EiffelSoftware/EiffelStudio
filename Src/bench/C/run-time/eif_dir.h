@@ -67,26 +67,10 @@ RT_LNK EIF_BOOLEAN eif_dir_is_writable (char *name);
 RT_LNK EIF_BOOLEAN eif_dir_is_executable (char *name);
 RT_LNK EIF_BOOLEAN eif_dir_is_deletable (char *name);
 RT_LNK void eif_dir_delete (char *name);
-
-#ifdef EIF_WIN32					/* %%zs added if..elif..else -> DIR definition... */
-RT_LNK void dir_rewind(EIF_WIN_DIRENT *dirp);
-RT_LNK char *dir_search(EIF_WIN_DIRENT *dirp, char *name);
-RT_LNK char *dir_next(EIF_WIN_DIRENT *dirp);
-RT_LNK void dir_close(EIF_WIN_DIRENT *dirp);
-
-#elif defined EIF_OS2
-RT_LNK void dir_rewind(EIF_OS2_DIRENT *dirp);
-RT_LNK char *dir_search(EIF_OS2_DIRENT *dirp, char *name);
-RT_LNK char *dir_next(EIF_OS2_DIRENT *dirp);
-RT_LNK void dir_close(EIF_OS2_DIRENT *dirp);
-
-#else
-RT_LNK void dir_rewind(DIR *dirp);
-RT_LNK char *dir_search(DIR *dirp, char *name);
-RT_LNK char *dir_next(DIR *dirp);
-RT_LNK void dir_close(DIR *dirp);
-
-#endif
+RT_LNK void dir_rewind(EIF_POINTER dirp);
+RT_LNK char *dir_search(EIF_POINTER dirp, char *name);
+RT_LNK char *dir_next(EIF_POINTER dirp);
+RT_LNK void dir_close(EIF_POINTER dirp);
 
 #ifdef __cplusplus
 }

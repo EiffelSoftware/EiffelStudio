@@ -1771,6 +1771,8 @@ rt_private int16 eif_id_of (int16 stype, int16 **intab,
 
 	if (dftype >= 0) {
 		is_expanded = EIF_IS_EXPANDED_TYPE(System (eif_cid_map[RTUD(dftype)]));
+	} else {
+		is_expanded = (char) 0;
 	}
 
 	/* Check whether it's a TUPLE Type */

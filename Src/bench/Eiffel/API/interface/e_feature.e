@@ -188,6 +188,8 @@ feature -- Properties
 		do
 		end;
 
+feature -- Access
+
 	precursors: ARRAYED_LIST [E_CLASS] is
 			-- Precursor definition of written in classes
 			-- of current feature defined in `from_c'
@@ -247,8 +249,6 @@ feature -- Properties
 				(not is_unique) and then
 				written_class.is_debuggable
 		end;
-
-feature -- Access
 
 	text: STRING is
 			-- Text of the Current lace file.
@@ -470,6 +470,19 @@ feature -- Output
 				or else
 					(is_constant and is_once);
 		end;
+
+    number_of_stop_points: INTEGER is
+            -- Number of stop points for eiffel feature
+		require
+			is_debuggable: is_debuggable
+		local
+			feature_as: like ast
+        do
+			feature_as := ast;
+			if feature_as /= Void then
+				Result := feature_as.number_of_stop_points
+			end 
+        end
 
 feature {DEBUG_INFO} -- Implementation
 

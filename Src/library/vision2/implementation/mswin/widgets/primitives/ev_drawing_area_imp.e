@@ -16,7 +16,7 @@ inherit
 
 	EV_DRAWABLE_IMP
 		
-	EV_PIXMAP_CONTAINER_IMP
+	EV_PIXMAPABLE_IMP
 		redefine
 			pixmap_size_changed
 		end

@@ -30,7 +30,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (par: EV_PIXMAP_CONTAINER) is
+	make (par: EV_PIXMAPABLE) is
 		do
 			parent_imp ?= par.implementation
 			check
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	parent_imp: EV_PIXMAP_CONTAINER_IMP
+	parent_imp: EV_PIXMAPABLE_IMP
 
 	compatible_dc: WEL_PAINT_DC
 

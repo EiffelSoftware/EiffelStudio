@@ -87,7 +87,7 @@ feature {NONE}
 	code_replication, check_vape, array_optimization, inlining, 
 	inlining_size, server_file_size, extendible, extending,
 	dynamic, hide, override_cluster, address_expression, profile,
-	document, hide_implementation, java_generation: INTEGER is UNIQUE;
+	document, hide_implementation, java_generation, line_generation: INTEGER is UNIQUE;
 
 	valid_options: HASH_TABLE [INTEGER, STRING] is
 			-- Possible values for free operators
@@ -112,6 +112,7 @@ feature {NONE}
 			Result.force (document, "document");
 			Result.force (hide_implementation, "hide_implementation");
 			Result.force (java_generation, "java_generation")
+			Result.force (line_generation, "line_generation")
 		end;
 
 feature {COMPILER_EXPORTER}
@@ -321,6 +322,17 @@ feature {COMPILER_EXPORTER}
 					System.set_java_generation (False)
 				elseif value.is_yes then
 					System.set_java_generation (True)
+				else
+					error_found := True;
+				end;
+
+			when line_generation then
+				if value = Void then
+					error_found := True
+				elseif value.is_no then
+					System.set_line_generation (False)
+				elseif value.is_yes then
+					System.set_line_generation (True)
 				else
 					error_found := True;
 				end;

@@ -77,22 +77,6 @@ feature
 			ba.append_short_integer (pattern_id.id);
 		end;
 
-	generate_workbench_info (file: INDENT_FILE) is
-			-- Generate call info
-		do
-			file.putstring ("{(int16) ");
-			file.putint (real_body_index.id - 1);
-			file.putstring (", (int16) ");
-			file.putint (pattern_id.id);
-			file.putchar ('}');
-		end;
-
-	generate_empty_info (file: INDENT_FILE) is
-			-- Generate empty workbench info
-		do
-			file.putstring ("{(int16) 0, (int16) 0}");
-		end;
-
 	written_class_type: CLASS_TYPE is
 		do
 			Result := System.class_type_of_id (written_type_id)

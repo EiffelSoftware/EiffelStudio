@@ -93,16 +93,6 @@ feature
 			end;
 		end;
 
-	generate_workbench_info (file: INDENT_FILE) is
-			-- Generate workbench info
-		deferred
-		end;
-
-	generate_empty_info (file: INDENT_FILE) is
-			-- Generate empty workbench info
-		deferred
-		end;
-
 	make_byte_code (ba: BYTE_ARRAY) is
 			-- Make byte code for current entry.
 		deferred

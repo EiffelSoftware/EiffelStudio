@@ -176,18 +176,28 @@ rt_public EIF_TYPE_ID eifcid(char *class)
 	 * the associated type is generic, then EIF_NO_TYPE is returned.
 	 */
 	
-	EIF_TYPE_ID *value;			/* Pointer to value stored in H table */
+	struct cecil_info *value;			/* Pointer to value stored in H table */
 
 	/* If the name is a null pointer, return an error condition */
 	if ((char *) 0 == class)
 		return EIF_NO_TYPE;
 
 	/* Look-up in hash table, error if item not found */
-	value = (EIF_TYPE_ID *) ct_value(&egc_ce_type, class);
-	if ((EIF_TYPE_ID *) 0 == value)
-		return EIF_NO_TYPE;		/* Not found (maybe type is generic?) */
-	
-	return *value;				/* The associated type ID */
+	value = (struct cecil_info *) ct_value(&egc_ce_type, class);
+	if (!value) {
+		value = (struct cecil_info *) ct_value (&egc_ce_exp_type, class);
+		if (!value) {
+			return EIF_NO_TYPE;		/* Not found */
+		}
+	}
+
+	if (value->nb_param > 0) {
+			/* Generic type. */
+		return EIF_NO_TYPE;
+	} else {
+			/* The associated type ID */
+		return value->dynamic_types[0];
+	}
 }
 
 rt_public EIF_TYPE_ID eifexp(EIF_TYPE_ID id)

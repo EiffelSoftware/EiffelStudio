@@ -54,8 +54,6 @@ feature -- Initialization
 			-- Create a new execution table.
 		do
 			create melted_list.make (10)
-			create useless_ids.make
-			useless_ids.compare_objects
 			search_table_make (Chunk)
 			create counter.make
 		end
@@ -375,25 +373,6 @@ feature -- C code generation
 feature {EXT_INCL_EXEC_UNIT} -- Include set
 
 	include_set: LINKED_SET [INTEGER]
-
-feature {NONE} -- Keep track of the holes in the table
-
-	useless_ids: TWO_WAY_SORTED_SET [INTEGER]
-			-- Id corresponding to unvalid units
-
-	display_useless_ids is
-		do
-			io.error.putstring ("Useless ids: %N")
-			from
-				useless_ids.start
-			until
-				useless_ids.after
-			loop
-				io.error.putint (useless_ids.item)
-				io.error.new_line
-				useless_ids.forth
-			end
-		end
 
 feature {NONE} -- Constants
 

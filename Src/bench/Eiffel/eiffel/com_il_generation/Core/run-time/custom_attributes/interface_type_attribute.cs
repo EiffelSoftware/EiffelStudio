@@ -11,7 +11,7 @@ using EiffelSoftware.Runtime.Enums;
 namespace EiffelSoftware.Runtime.CA
 {
 
-[CLSCompliant(false)]
+[CLSCompliantAttribute (false)]
 [AttributeUsage (AttributeTargets.Class | AttributeTargets.Enum |
 	AttributeTargets.Struct, AllowMultiple = false, Inherited = false)]
 [Serializable]

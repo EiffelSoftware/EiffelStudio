@@ -13,6 +13,7 @@ using EiffelSoftware.Runtime.CA;
 namespace EiffelSoftware.Runtime.Types {
 
 [Serializable]
+[CLSCompliantAttribute (false)]
 public class CLASS_TYPE: TYPE {
 
 /*

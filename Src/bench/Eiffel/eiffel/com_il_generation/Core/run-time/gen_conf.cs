@@ -13,6 +13,7 @@ using EiffelSoftware.Runtime.Types;
 namespace EiffelSoftware.Runtime {
 
 [Serializable]
+[CLSCompliantAttribute (false)]
 public class GENERIC_CONFORMANCE {
 
 	public static void compute_type (

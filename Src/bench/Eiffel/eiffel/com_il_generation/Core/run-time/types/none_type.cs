@@ -9,6 +9,7 @@ using System;
 
 namespace EiffelSoftware.Runtime.Types {
 
+[CLSCompliantAttribute (false)]
 [Serializable]
 sealed public class NONE_TYPE: CLASS_TYPE {
 

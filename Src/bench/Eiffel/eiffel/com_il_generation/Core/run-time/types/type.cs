@@ -9,6 +9,7 @@ using System;
 
 namespace EiffelSoftware.Runtime.Types {
 
+[CLSCompliantAttribute (false)]
 [Serializable]
 public abstract class TYPE {
 

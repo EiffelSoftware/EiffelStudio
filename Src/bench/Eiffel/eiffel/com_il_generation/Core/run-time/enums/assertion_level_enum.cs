@@ -11,7 +11,6 @@ using System;
 namespace EiffelSoftware.Runtime.Enums
 {
 
-[CLSCompliant(false)]
 [FlagsAttribute]
 [Serializable]
 public enum ASSERTION_LEVEL_ENUM

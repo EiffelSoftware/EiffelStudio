@@ -10,6 +10,7 @@ using System;
 namespace EiffelSoftware.Runtime
 {
 
+[CLSCompliantAttribute (false)]
 [Serializable]
 public class ASSERTIONS	{
 

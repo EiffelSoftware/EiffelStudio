@@ -7,7 +7,7 @@ index_column: 0
 function_time_column: 2
 -- Column where the function_time is printed.
 
-descendent_time_column: 4
+descendant_time_column: 4
 -- Column where the descendent_time is printed.
 -- IMPORTANT: win32_ms does not generate descendent_time, but total_time.
 --	      By the means of the converter, this is taken into account.

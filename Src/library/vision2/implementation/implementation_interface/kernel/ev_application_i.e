@@ -23,6 +23,8 @@ feature {EV_APPLICATION} -- Initialization
 		do
 			create pnd_targets.make
 			create internal_idle_actions
+			create once_idle_actions
+			do_once_idle_actions_agent := ~do_once_idle_actions
 			is_initialized := True
 		end
 
@@ -55,7 +57,32 @@ feature -- Basic operation
 feature -- Events
 
 	internal_idle_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Actions performed when no events are in queue.
+			-- Actions to be performed when no events are in queue.
+
+	once_idle_actions: EV_NOTIFY_ACTION_SEQUENCE
+			-- Actions to be preformed once when no events are in queue.
+			-- Wiped out after being called.
+
+	do_once_on_idle (an_action: PROCEDURE [ANY, TUPLE []]) is
+			-- Perform `an_action' one time only on idle.
+		do
+			once_idle_actions.extend (an_action)
+			if not internal_idle_actions.has (do_once_idle_actions_agent) then
+					internal_idle_actions.extend (do_once_idle_actions_agent)
+			end
+		end
+
+	do_once_idle_actions is
+			-- Call `once_idle_actions' then wipe it out.
+			-- Remove `do_once_idle_actions_agent' from `internal_idle_actions'.
+		do
+			once_idle_actions.call
+			once_idle_actions.wipeout
+			internal_idle_actions.prune_all (do_once_idle_actions_agent)
+		end
+
+	do_once_idle_actions_agent: PROCEDURE [EV_APPLICATION_I, TUPLE []]
+			-- Agent for `do_once_idle_actions'.
 
 feature -- Event handling
 
@@ -127,6 +154,10 @@ invariant
 	root_windows_not_void: root_windows /= void
 	internal_idle_actions_not_void: is_useable implies
 		internal_idle_actions /= Void
+	once_idle_actions_not_void: is_useable implies
+		once_idle_actions /= Void
+	do_once_idle_actions_agent: is_useable implies
+		do_once_idle_actions_agent /= Void
 
 end -- class EV_APPLICATION_I
 
@@ -151,6 +182,9 @@ end -- class EV_APPLICATION_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/03/23 18:54:26  oconnor
+--| added once idle actions implementation
+--|
 --| Revision 1.12  2000/02/22 18:39:40  oconnor
 --| updated copyright date and formatting
 --|

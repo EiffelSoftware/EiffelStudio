@@ -93,6 +93,9 @@ feature -- Access
 				Result.append ("_ENUM")
 			elseif (a_type = Tkind_record) then
 				Result.append ("_RECORD")
+				if standard_structures.has (a_name) then
+					Result := clone (standard_structures.item (a_name))
+				end
 			elseif (a_type = Tkind_interface) then
 				Result.append ("_INTERFACE")
 			elseif (a_type = Tkind_dispatch) then
@@ -139,6 +142,19 @@ feature -- Access
 		ensure
 			non_void_feature_name: Result /= Void
 			valid_feature_name: not Result.empty
+		end
+
+	standard_structures: HASH_TABLE [STRING, STRING] is
+			-- Names of standard structures.
+			-- Where item is Eiffel name, and key is C name
+		once
+			create Result.make (5)
+			Result.compare_objects
+
+			Result.put ("ECOM_GUID", "GUID")
+			Result.put ("ECOM_STATSTG", "STATSTG")
+			Result.put ("ECOM_EXCEP_INFO", "EXCEPINFO")
+			Result.put ("ECOM_DISP_PARAMS", "DISPPARAMS")
 		end
 
 feature {NONE} -- Implementation

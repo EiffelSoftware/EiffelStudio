@@ -316,7 +316,7 @@ rt_public void sstore (EIF_INTEGER file_desc, char *object)
 		INDEPEND_ACCOUNT,
 		EIF_BUFFER_SIZE);
 
-	run_idr_init (buffer_size, 0);
+	run_idr_init (buffer_size);
 	idr_temp_buf = (char *) xmalloc (48, C_T, GC_OFF);
 
 	internal_store(object);
@@ -344,7 +344,7 @@ rt_public long stream_sstore (char **buffer, long size, char *object, EIF_INTEGE
 	stream_buffer_size = size;
 	stream_buffer_position = 0;
 
-	run_idr_init (buffer_size, 0);
+	run_idr_init (buffer_size);
 	idr_temp_buf = (char *) xmalloc (48, C_T, GC_OFF);
 	
 	internal_store(object);
@@ -361,7 +361,7 @@ rt_public long stream_sstore (char **buffer, long size, char *object, EIF_INTEGE
 
 rt_public void independent_free_store (char *object)
 {
-	run_idr_init (buffer_size, 0);
+	run_idr_init (buffer_size);
 	idr_temp_buf = (char *) xmalloc (48, C_T, GC_OFF);
 
 	internal_store(object);

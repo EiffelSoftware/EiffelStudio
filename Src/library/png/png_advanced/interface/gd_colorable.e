@@ -24,6 +24,23 @@ feature -- Settings
 			possible: color_index>=0
 		end
 
+	set_color_transparent(red,green,blue: INTEGER) is
+			-- Set color transparent to the one defined by the rgb 3-tuple 
+			-- (red,green,blue).	
+		require
+			red_possible: red >=0 and red <256
+			green_possible: green >=0 and green <256
+			blue_possible: blue >=0 and blue < 256
+			background_color_allocated: image.background_color_allocated
+		local
+			col: INTEGER
+		do
+			col := color(red,green,blue)
+			if col>0 then
+				gdImageColorTransparent(image.image, col)
+			end
+		end
+
 feature -- Access
 
 	color(red,green,blue: INTEGER):INTEGER is
@@ -75,6 +92,13 @@ feature {NONE} -- Externals
 			"c"
 		alias
 			"gdImageColorAllocate"
+		end
+
+   gdImageColorTransparent(im:POINTER; col: INTEGER)  is
+		external
+			"C"
+		alias
+			"gdImageColorTransparent"
 		end
 
 invariant

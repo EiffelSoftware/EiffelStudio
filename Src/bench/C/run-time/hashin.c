@@ -23,11 +23,6 @@ doc:<file name="hashin.c" header="rt_hashin.h" version="$Id$" summary="Hash tabl
 
 #include <string.h>		/* For memset(), bzero() */
 
-#ifndef lint
-rt_private char *rcsid =
-	"$Id$";
-#endif
-
 /* These routines use malloc and free and not eif_rt_xcalloc, eif_rt_xfree because we
  * want to release the memory taken by the hash table after retrieving
  * the precompiled project (~400k) so that it will be reused by Eiffel
@@ -41,7 +36,7 @@ rt_private char *rcsid =
  * Manuelt.
  */
 
-rt_public int ht_create(struct htable *ht, int32 n, int sval)
+rt_public int ht_create(struct htable *ht, size_t n, size_t sval)
 {
 	/* Creates an H table to hold 'n' items with descriptor held in 'ht'. The
 	 * size of the table is optimized to avoid conflicts and is of course a
@@ -50,22 +45,22 @@ rt_public int ht_create(struct htable *ht, int32 n, int sval)
 	 * The function returns 0 if everything was ok, -1 otherwise.
 	 */
 
-	int32 hsize;		/* Size of created table */
+	size_t hsize;		/* Size of created table */
 	char *array;		/* For array creation (keys/values) */
 	
 	hsize = nprime((5 * n) / 4);	/* Table's size */
 
-	array = (char *) eif_calloc(hsize, sizeof(long));	/* Mallocs array of keys */
+	array = (char *) eif_calloc(hsize, sizeof(rt_uint_ptr));	/* Mallocs array of keys */
 	if (array == (char *) 0)
 		return -1;					/* Malloc failed */
-	ht->h_keys = (unsigned long *) array;		/* Where array of keys is stored */
+	ht->h_keys = (rt_uint_ptr *) array;		/* Where array of keys is stored */
 
 	array = (char *) eif_malloc(hsize * sval);			/* Mallocs array of values */
 	if (array == (char *) 0) {
 		eif_free(ht->h_keys);			/* Free keys array */
 		return -1;					/* Malloc failed */
 	}
-	ht->h_values = array;			/* Where array of keys is stored */
+	ht->h_values = (EIF_POINTER) array;			/* Where array of keys is stored */
 
 	ht->h_size = hsize;				/* Size of hash table */
 	ht->h_sval = sval;				/* Size of each stored item */
@@ -77,23 +72,23 @@ rt_public void ht_zero(struct htable *ht)
 {
 	/* Initialize the hash table with zeros */
 
-	int32 hsize = ht->h_size;
+	size_t hsize = ht->h_size;
 
-	memset (ht->h_keys, 0, hsize * sizeof(long));
+	memset (ht->h_keys, 0, hsize * sizeof(rt_uint_ptr));
 	memset (ht->h_values, 0, hsize * ht->h_sval);
 }
  
-rt_public char *ht_value(struct htable *ht, register long unsigned int key)
+rt_public EIF_POINTER ht_value(struct htable *ht, rt_uint_ptr key)
 {
 	/* Look for item associated with given key and returns a pointer to its
 	 * location in the value array. Return a null pointer if item is not found.
 	 */
 	
-	register2 long pos;		/* Position in H table */
-	register3 int32 hsize;		/* Size of H table */
-	register4 unsigned long *hkeys;		/* Array of keys */
-	register5 int32 tmp_try = 0;	/* Count number of attempts */
-	register6 long inc;		/* Loop increment */
+	size_t pos;		/* Position in H table */
+	size_t hsize;		/* Size of H table */
+	rt_uint_ptr *hkeys;		/* Array of keys */
+	size_t tmp_try = 0;	/* Count number of attempts */
+	size_t inc;		/* Loop increment */
 
 	/* Initializations */
 	hsize = ht->h_size;
@@ -105,7 +100,7 @@ rt_public char *ht_value(struct htable *ht, register long unsigned int key)
 	inc = 1 + (key % (hsize - 1));
 	for (pos = key % hsize; tmp_try < hsize; tmp_try++, pos = (pos + inc) % hsize) {
 		if (hkeys[pos] == key)
-			return ht->h_values + (pos * ht->h_sval);
+			return ((char *) ht->h_values) + (pos * ht->h_sval);
 		else if (hkeys[pos] == 0L)
 			break;
 	}
@@ -113,18 +108,18 @@ rt_public char *ht_value(struct htable *ht, register long unsigned int key)
 	return (char *) 0;			/* Item was not found */
 }
 
-rt_public char *ht_first(struct htable *ht, register long unsigned int key)
+rt_public EIF_POINTER ht_first(struct htable *ht, rt_uint_ptr key)
 {
 	/* Retrun first available item address where key is present or should
 	 * be. In case there is no more room, return a null pointer.
 	 */
 
-	register2 long pos;		/* Position in H table */
-	register3 int32 hsize;	  	/* Size of H table */
-	register4 unsigned long *hkeys;	 	/* Array of keys */
-	register5 int32 tmp_try = 0;	/* Count number of attempts */
-	register6 long inc;		/* Loop increment */
-	register7 unsigned long other_key;
+	size_t pos;		/* Position in H table */
+	size_t hsize;	  	/* Size of H table */
+	rt_uint_ptr *hkeys;	 	/* Array of keys */
+	size_t tmp_try = 0;	/* Count number of attempts */
+	size_t inc;		/* Loop increment */
+	rt_uint_ptr other_key;
 
 	/* Initializations */
 	hsize = ht->h_size;
@@ -138,10 +133,10 @@ rt_public char *ht_first(struct htable *ht, register long unsigned int key)
 		other_key = hkeys[pos];
 		
 		if (other_key == key)
-			return ht->h_values + (pos * ht->h_sval);
+			return ((char *) ht->h_values) + (pos * ht->h_sval);
 		else if (other_key == 0) {
 			hkeys[pos] = key;
-			return ht->h_values + (pos * ht->h_sval);
+			return ((char *)ht->h_values) + (pos * ht->h_sval);
 		}
 
 	}
@@ -166,18 +161,19 @@ void ht_force(struct htable *ht, register long unsigned int key, char *val)
 	}
 }
 
-rt_public char *ht_put(struct htable *ht, register long unsigned int key, char *val)
+rt_public EIF_POINTER ht_put(struct htable *ht, rt_uint_ptr key, EIF_POINTER val)
 {
 	/* Puts value held at 'val' tagged with key 'key' in H table 'ht'. If
 	 * insertion was successful, the address of the value is returned and the
 	 * value is copied in the array. Otherwise, return a null pointer.
 	 */
 
-	register2 long pos;		/* Position in H table */
-	register3 int32 hsize;		/* Size of H table */
-	register4 unsigned long *hkeys;		/* Array of keys */
-	register5 int32 tmp_try = 0;	/* Records number of attempts */
-	register6 long inc;		/* Loop increment */
+	size_t pos;		/* Position in H table */
+	size_t hsize;		/* Size of H table */
+	rt_uint_ptr *hkeys;		/* Array of keys */
+	size_t tmp_try = 0;	/* Records number of attempts */
+	size_t inc;		/* Loop increment */
+	EIF_POINTER l_val;	/* copied version of `val' when inserted. */
 
 	/* Initializations */
 	hsize = ht->h_size;
@@ -195,9 +191,9 @@ rt_public char *ht_put(struct htable *ht, register long unsigned int key, char *
 #endif
 		if (hkeys[pos] == 0) {			/* Found a free location */
 			hkeys[pos] = key;			/* Record item */
-			hkeys = (unsigned long *) (ht->h_values + (pos * ht->h_sval));
-			memcpy ((char *) hkeys, val, ht->h_sval);
-			return (char *) hkeys;
+			l_val = (((char *) ht->h_values) + (pos * ht->h_sval));
+			memcpy (l_val, val, ht->h_sval);
+			return hkeys;
 		}
 	}
 
@@ -216,11 +212,11 @@ rt_public void ht_remove(struct htable *ht, register long unsigned int key)
 	 *	 -- GLJ
 	 */
 
-	register2 long pos;		/* Position in H table */
-	register3 int32 hsize;		/* Size of H table */
-	register4 unsigned long *hkeys;		/* Array of keys */
-	register5 int32 tmp_try = 0;	/* Records number of attempts */
-	register6 long inc;		/* Loop increment */
+	size_t pos;		/* Position in H table */
+	size_t hsize;		/* Size of H table */
+	rt_uint_ptr *hkeys;		/* Array of keys */
+	size_t tmp_try = 0;	/* Records number of attempts */
+	size_t inc;		/* Loop increment */
 
 	/* Initializations */
 	hsize = ht->h_size;
@@ -233,7 +229,7 @@ rt_public void ht_remove(struct htable *ht, register long unsigned int key)
 	for (pos = key % hsize; tmp_try < hsize; tmp_try++, pos = (pos + inc) % hsize) {
 		if (hkeys[pos] == key) {
 			hkeys[pos] = 0L;
-			memset (ht->h_values + (pos * ht->h_sval), 0, ht->h_sval);
+			memset (((char *) ht->h_values) + (pos * ht->h_sval), 0, ht->h_sval);
 		} else
 			if (hkeys[pos] == 0L)
 				break;
@@ -250,10 +246,10 @@ rt_public int ht_xtend(struct htable *ht)
 	 * Return 0 if extension was ok, -1 otherwise.
 	 */
 
-	register1 int size;				/* Size of old H table */
-	register2 int sval;				/* Size of an H table item */
-	register3 unsigned long *key;			/* To loop over keys */
-	register4 char *val;			/* To loop over values */
+	size_t size;				/* Size of old H table */
+	size_t sval;				/* Size of an H table item */
+	rt_uint_ptr *key;			/* To loop over keys */
+	EIF_POINTER val;			/* To loop over values */
 	struct htable new_ht;
 
 	size = ht->h_size;
@@ -266,7 +262,7 @@ rt_public int ht_xtend(struct htable *ht)
 
 	/* Now loop over the whole table, inserting each item in the new one */
 
-	for (; size > 0; size--, key++, val += sval)
+	for (; size > 0; size--, key++, val = (char *) val + sval)
 #ifdef MAY_PANIC
 		if ((char *) 0 == ht_put(&new_ht, *key, val)) {	/* Failed */
 			eif_free(new_ht.h_values);	/* Free new H table */

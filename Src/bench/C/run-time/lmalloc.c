@@ -28,11 +28,6 @@ doc:<file name="lmalloc.c" header="rt_lmalloc.h" version="$Id$" summary="Malloc 
 
 #include <string.h>		/* For memset(), bzero() */
 
-#ifndef lint
-rt_private char *rcsid =
-	"$Id$";
-#endif
-
 #ifdef LMALLOC_CHECK
 
 
@@ -279,9 +274,9 @@ rt_shared int eif_lm_free () {
 #endif	/* LMALLOC_CHECK */
 
 #if defined LMALLOC_DEBUG || defined LMALLOC_CHECK
-rt_public Malloc_t eiffel_malloc (register unsigned int nbytes, char *file, int line)
+rt_public Malloc_t eiffel_malloc (size_t nbytes, char *file, int line)
 #else
-rt_public Malloc_t eiffel_malloc (register unsigned int nbytes)
+rt_public Malloc_t eiffel_malloc (size_t nbytes)
 #endif
 {
 #ifdef LMALLOC_CHECK
@@ -304,9 +299,9 @@ rt_public Malloc_t eiffel_malloc (register unsigned int nbytes)
 }
 
 #if defined LMALLOC_CHECK || defined LMALLOC_DEBUG
-rt_public Malloc_t eiffel_calloc (unsigned int nelem, unsigned int elsize, char *file, int line)
+rt_public Malloc_t eiffel_calloc (size_t nelem, size_t elsize, char *file, int line)
 #else
-rt_public Malloc_t eiffel_calloc (unsigned int nelem, unsigned int elsize)
+rt_public Malloc_t eiffel_calloc (size_t nelem, size_t elsize)
 #endif
 {
 #ifdef LMALLOC_CHECK
@@ -328,9 +323,9 @@ rt_public Malloc_t eiffel_calloc (unsigned int nelem, unsigned int elsize)
 }
 
 #if defined LMALLOC_DEBUG || LMALLOC_CHECK
-rt_public Malloc_t eiffel_realloc (register void *ptr, register unsigned int nbytes, char *file, int line)
+rt_public Malloc_t eiffel_realloc (void *ptr, size_t nbytes, char *file, int line)
 #else
-rt_public Malloc_t eiffel_realloc (register void *ptr, register unsigned int nbytes)
+rt_public Malloc_t eiffel_realloc (void *ptr, size_t nbytes)
 #endif
 {
 #ifdef LMALLOC_CHECK
@@ -357,9 +352,9 @@ rt_public Malloc_t eiffel_realloc (register void *ptr, register unsigned int nby
 }
 
 #if defined LMALLOC_CHECK || defined LMALLOC_DEBUG
-void eiffel_free(register void *ptr, char *file, int line)
+void eiffel_free(void *ptr, char *file, int line)
 #else
-void eiffel_free(register void *ptr)
+void eiffel_free(void *ptr)
 #endif
 {
 #ifdef LMALLOC_CHECK

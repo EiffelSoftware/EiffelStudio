@@ -65,28 +65,36 @@ feature {NONE} -- Internal
 		
 feature {NONE} -- Implementation
 
-	c_name (an_item, a_name: POINTER): INTEGER is
+	c_name (p, a_name: POINTER): INTEGER is
 			-- Call `IAssemblyInfo->assembly_name'.
 		external
-			"C use %"cli_writer.h%""
+			C++ IAssemblyInfo signature (LPWSTR *): EIF_INTEGER use %"vs_support.h%""
+		alias
+			"AssemblyName"
 		end
 		
-	c_version (an_item, a_version: POINTER): INTEGER is
+	c_version (p, a_version: POINTER): INTEGER is
 			-- Call `IAssemblyInfo->assembly_version ((IUnknown **) &iai)'.
 		external
-			"C use %"cli_writer.h%""
+			"C++ IAssemblyInfo signature (LPWSTR *): EIF_INTEGER use %"vs_support.h%""
+		alias
+			"Version"
 		end
 		
-	c_culture (an_item, a_culture: POINTER): INTEGER is
+	c_culture (p, a_culture: POINTER): INTEGER is
 			-- Call `IAssemblyInfo->assembly_culture'.
 		external
-			"C use %"cli_writer.h%""
+			"C++ IAssemblyInfo signature (LPWSTR *): EIF_INTEGER use %"vs_support.h%""
+		alias
+			"Culture"
 		end
 		
-	c_public_key_token (an_item, a_public_key_token: POINTER): INTEGER is
+	c_public_key_token (p, a_public_key_token: POINTER): INTEGER is
 			-- Call `IAssemblyInfo->assembly_public_key_token'.
 		external
-			"C use %"cli_writer.h%""
+			"C++ IAssemblyInfo signature (LPWSTR *): EIF_INTEGER use %"vs_support.h%""
+		alias
+			"PublicKeyToken"
 		end
 
 end -- class FUSION_SUPPORT_ASSEMBLY_INFO

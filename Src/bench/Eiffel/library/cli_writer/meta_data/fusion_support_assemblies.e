@@ -10,34 +10,46 @@ inherit
 	COM_OBJECT
 		
 create
-	make_by_pointer
+	make_by_pointer	
 	
 feature -- Access
 
 	count: INTEGER is
 		-- Number of assemblies in Current
 		do
-			Result :=  (c_count (item))
+			last_call_success := c_count (item, $Result)
+		ensure
+			no_error: last_call_success = 0
 		end
 		
-	ith_assembly_info (a_index: INTEGER): FUSION_SUPPORT_ASSEMBLY_INFO is
+	i_th (i: INTEGER): FUSION_SUPPORT_ASSEMBLY_INFO is
 		-- COM interface to assembly information at index 'a_index'
+		local
+			p: POINTER
 		do
-			create Result.make_by_pointer (c_ith (item, a_index))
+			last_call_success := c_ith (item, i, $p)
+			create Result.make_by_pointer (p)
+		ensure
+			no_error: last_call_success = 0	
 		end
 		
 feature {NONE} -- Implementation
 
-	c_count (an_item: POINTER): INTEGER is
+	c_count (p, cnt: POINTER): INTEGER is
 			-- Call `IEnumAssemblies->Count'.
 		external
-			"C use %"cli_writer.h%""
+			"C++ IEnumAssemblies signature (long *): EIF_INTEGER use %"vs_support.h%""
+		alias
+			"get_Count"
 		end
-		
-	c_ith (an_item: POINTER; a_index: INTEGER): POINTER is
+
+	c_ith (p: POINTER; i: INTEGER; ass_info: POINTER): INTEGER
+		is
 			-- Call `IEnumAssemblies->IthItem'.
 		external
-			"C use %"cli_writer.h%""
+			"C++ IEnumAssemblies signature (long, IAssemblyInfo**): EIF_INTEGER use %"vs_support.h%""
+		alias
+			"IthItem"
 		end
 
 end -- class FUSION_SUPPORT_ASSEMBLIES

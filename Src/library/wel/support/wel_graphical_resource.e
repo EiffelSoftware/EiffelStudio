@@ -31,7 +31,7 @@ inherit
 		
 feature {NONE} -- Initialization
 
-	make_by_file (file_name: FILE_NAME) is
+	make_by_file (file_name: STRING) is
 			-- Load an icon file named `file_name'.
 		require
 			file_name_not_void: file_name /= Void
@@ -62,21 +62,21 @@ feature {NONE} -- Initialization
 	make_by_id (id: INTEGER) is
 			-- Load the resource by an `id'
 		do
-			Precursor (id)
+			Precursor {WEL_RESOURCE} (id)
 			gdi_make
 		end
 
 	make_by_name (name: STRING) is
 			-- Load the resource by a `name'
 		do
-			Precursor (name)
+			Precursor {WEL_RESOURCE} (name)
 			gdi_make
 		end
 
 	make_by_predefined_id (id: POINTER) is
 			-- Load the resource by an `id', predefined by Windows
 		do
-			Precursor (id)
+			Precursor {WEL_RESOURCE} (id)
 			gdi_make
 		end
 

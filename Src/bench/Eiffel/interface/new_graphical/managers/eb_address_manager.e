@@ -429,10 +429,6 @@ feature -- Updating
 
 	refresh is
 			-- Update the text in the widgets according to parent's stone.
-		local
-			class_stone: CLASSI_STONE
-			clu_stone: CLUSTER_STONE
-			fst: FEATURE_STONE
 		do
 			update_combos
 		end

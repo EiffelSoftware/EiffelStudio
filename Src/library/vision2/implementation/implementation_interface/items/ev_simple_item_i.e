@@ -62,6 +62,13 @@ feature -- Access
 		deferred
 		end
 
+	parent_imp: EV_ANY_I is
+			-- Parent of the current item
+		require
+			exists: not destroyed
+		deferred
+		end
+
 feature -- Element change
 
 	set_text (txt: STRING) is
@@ -72,6 +79,24 @@ feature -- Element change
 		deferred
 		ensure
 			text_set: text.is_equal (txt)
+		end
+
+	set_parent (par: EV_ANY) is
+			-- Make `par' the new parent of the widget.
+			-- `par' can be Void then the parent is the screen.
+		require
+			exists: not destroyed
+		deferred
+		ensure
+			parent_set: parent_set (par)
+		end
+
+feature -- Assertion
+
+	parent_set (par: EV_ANY): BOOLEAN is
+			-- Is the parent set
+		do
+			Result := parent_imp.interface = par
 		end
 
 feature -- Event : command association
@@ -110,21 +135,6 @@ feature -- Event -- removing command association
 		require
 			exists: not destroyed
 		deferred	
-		end
-
-feature -- Implementation
-
-	interface: EV_ITEM
-			-- Interface of the current item
-
-	set_interface (an_interface: EV_ITEM) is
-			-- Make `an_interface' the new interface of the item.
-		require
-			an_interface /= Void
-		do
-			interface := an_interface
-		ensure
-			interface = an_interface
 		end
 
 end -- class EV_ITEM_I

@@ -11,6 +11,7 @@ inherit
 		redefine
 			add_assembly,
 			add_fusion_assembly,
+			assemblies,
 			last_exception,
 			store,
 			flush_assemblies,
@@ -131,9 +132,6 @@ feature -- Access
 				--create last_exception
 			end
 		end
-		
-	last_exception: EXCEPTION
-			-- last exception to be raised
 
 	store is
 			-- save the assemblies to the ace file
@@ -162,8 +160,11 @@ feature -- Access
 					if not copy_assemblies.exhausted then
 						copy_assemblies.remove
 					end
+					l_assemblies.forth
+				else
+					l_assemblies.remove
 				end
-				l_assemblies.forth
+
 			end
 
 			-- Insert at the end new clusters.
@@ -180,6 +181,41 @@ feature -- Access
 
 			ace_accesser.apply
 		end
+		
+feature -- Access
+		
+	assemblies: IENUM_ASSEMBLY_INTERFACE is
+			-- retrieve enum of assemblies
+		local
+			assem_enum: ASSEMBLY_ENUMERATOR
+			assems_array_list: ARRAYED_LIST [ASSEMBLY_PROPERTIES]
+			ass_sd: ASSEMBLY_SD
+			assembly: ASSEMBLY_PROPERTIES
+		do
+			create assems_array_list.make (0)
+			from
+				assemblies_impl.start
+			until
+				assemblies_impl.after
+			loop
+				ass_sd := assemblies_impl.item
+				if ass_sd.public_key_token /= Void and then not ass_sd.public_key_token.is_empty then
+					-- assembly is declared using full assembly name
+					create assembly.make (ass_sd.cluster_name, ass_sd.assembly_name, ass_sd.prefix_name, ass_sd.version, ass_sd.culture, ass_sd.public_key_token)	
+				else
+					-- assembly is declated using path
+					create assembly.make_local (ass_sd.cluster_name, ass_sd.assembly_name, ass_sd.prefix_name)
+				end
+				assems_array_list.extend (assembly)
+				assemblies_impl.forth
+			end
+			create assem_enum.make (assems_array_list)
+			Result := assem_enum
+		end
+		
+		
+	last_exception: EXCEPTION
+			-- last exception to be raised
 		
 feature -- User Preconditions
 

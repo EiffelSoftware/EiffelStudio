@@ -44,6 +44,19 @@
 #include <strings.h>
 #endif
 
+#ifdef EIF_WIN32
+#define WIN32
+#include <windows.h>
+#ifndef MAX_PATH
+#define MAX_PATH 255
+#endif
+
+typedef struct tagEIF_WIN_DIRENT {
+	char	name [MAX_PATH];
+	HANDLE	handle;
+} EIF_WIN_DIRENT;
+#endif
+
 #ifndef HAS_READDIR
 	Sorry! You have to find a PD implementation of readdir()...
 #endif
@@ -63,7 +76,17 @@ public EIF_POINTER dir_open(name)
 char *name;
 {
 	/* Open directory `name' for reading (can't do much else on UNIX) */
+#ifdef EIF_WIN32
+	EIF_WIN_DIRENT *c;
 
+	c = malloc (sizeof(EIF_WIN_DIRENT));
+	if (c == (EIF_WIN_DIRENT *) 0)
+		enomem();
+
+	strcpy (c->name, name);
+	c->handle = NULL;
+	return (EIF_POINTER) c;
+#else
 	DIR *dirp;
 
 	errno = 0;
@@ -72,18 +95,38 @@ char *name;
 		esys();
 
 	return (EIF_POINTER) dirp;
+#endif
 }
 
+#ifdef EIF_WIN32
+public void dir_close(dirp)
+EIF_WIN_DIRENT *dirp;
+{
+	if (dirp->handle != NULL)
+		FindClose (dirp->handle);
+	free(dirp);
+}
+#else
 public void dir_close(dirp)
 DIR *dirp;
 {
 	(void) closedir(dirp);
 }
+#endif
 
 /*
  * Rewinding directory (may be a macro).
  */
 
+#ifdef EIF_WIN32
+public void dir_rewind(dirp)
+EIF_WIN_DIRENT *dirp;
+{
+	if (dirp->handle != NULL)
+		FindClose(dirp->handle);
+	dirp->handle = NULL;
+}
+#else
 public void dir_rewind(dirp)
 DIR *dirp;
 {
@@ -91,11 +134,40 @@ DIR *dirp;
 	rewinddir(dirp);
 #endif
 }
+#endif
 
 /*
  * Looking for a specific entry.
  */
 
+#ifdef EIF_WIN32
+public char *dir_search(dirp, name)
+EIF_WIN_DIRENT *dirp;
+char *name;
+{
+	HANDLE h;
+	WIN32_FIND_DATA wfd;
+	char *filename;
+
+	filename = malloc (strlen(name) + strlen (dirp->name) + 2);
+	if (filename == (char *) 0)
+		enomem();
+
+	strcpy (filename, dirp->name);
+	if (filename[strlen(filename)-1] != '\\')
+		strcat (filename, "\\");
+	strcat (filename, name);
+	h = FindFirstFile (filename, &wfd);
+	free (filename);
+	if (h != INVALID_HANDLE_VALUE)
+		{
+		FindClose (h);
+		return (char *) 1;
+		}
+ 
+	return (char *) 0;		/* Not found */
+}
+#else
 public char *dir_search(dirp, name)
 DIR *dirp;		/* Directory where search is made */
 char *name;		/* Entry we are looking for */
@@ -109,7 +181,7 @@ char *name;		/* Entry we are looking for */
 #ifdef DIRNAMLEN
 	int len = strlen(name);		/* Avoid unncessary calls to strcmp() */
 #endif
-#ifdef __WINDOWS_386__
+#ifdef EIF_WIN_31
 	DIR *dp;
 #else
 	DIRENTRY *dp;
@@ -126,7 +198,48 @@ char *name;		/* Entry we are looking for */
 		
 	return (char *) 0;		/* Not found */
 }
+#endif
 
+#ifdef EIF_WIN32
+public char *dir_next(dirp)
+EIF_WIN_DIRENT *dirp;
+{
+	HANDLE h;
+	WIN32_FIND_DATA wfd;
+	BOOL r;
+	char *name;
+
+	if (dirp->handle != NULL)
+		{
+		r = FindNextFile (dirp->handle, &wfd);
+		if (r)
+			return makestr (wfd.cFileName, strlen (wfd.cFileName));
+		else
+			return (char *) 0;
+		}
+	else
+		{
+		name = malloc (strlen(dirp->name) + 5);
+		if (name == (char *) 0)
+			enomem();
+
+		strcpy (name,dirp->name);
+		if (name[strlen(name)-1] == '\\')
+			strcat (name, "*.*");
+		else
+			strcat (name , "\\*.*");
+		h = FindFirstFile (name, &wfd);
+		free (name);
+		if (h != INVALID_HANDLE_VALUE)
+			{
+			dirp->handle = h;
+			return makestr (wfd.cFileName, strlen (wfd.cFileName));
+			}
+		else
+			return (char *) 0;
+		}
+}
+#else
 public char *dir_next(dirp)
 DIR *dirp;
 {
@@ -145,6 +258,7 @@ DIR *dirp;
 	return makestr(dp->d_name, strlen(dp->d_name));
 #endif
 }
+#endif
 
 public EIF_OBJ dir_current()
 {
@@ -163,7 +277,7 @@ public EIF_OBJ dir_current()
 
 public EIF_CHARACTER eif_dir_separator ()
 {
-#ifdef __WINDOWS_386__
+#ifdef EIF_WINDOWS
 	return '\\';
 #else
 #ifdef __VMS
@@ -267,13 +381,17 @@ char *name;
 	return(	( (status==RMS$_FNF) && (name[strlen(name)-1]==']') )
 		||(status==RMS$_NORMAL) /* incase subdir.dir */ );
 
-#else		/* ifdef VMS */
+#elif defined EIF_WIN32		/* ifdef VMS */
+
+	return (EIF_BOOLEAN) (access(name,0) == 0);
+
+#else
 
     /* Test whether file exists or not by checking the return from the stat()
      * system call, hence letting the kernel run all the tests. Return true
      * if the file exists.
      * Stat is called directly, because failure is allowed here obviously.
-	* Test to see if it is really a directory and not a plain text file.
+	 * Test to see if it is really a directory and not a plain text file.
      */
 
     struct stat buf;            /* Buffer to get file statistics */
@@ -297,8 +415,12 @@ char *name;
 		return (EIF_BOOLEAN) FALSE;
 	else
 		return (EIF_BOOLEAN) TRUE;
-#else
 
+#elif defined EIF_WIN32
+
+	return (EIF_BOOLEAN) (access (name, 0) == 0);
+
+#else
 #ifdef HAS_GETEUID
 	int uid, gid;				/* File owner and group */
 #endif
@@ -337,6 +459,10 @@ char *name;
 		return (EIF_BOOLEAN) FALSE;
 	else
 		return (EIF_BOOLEAN) TRUE;
+#elif defined EIF_WIN32
+
+	return (EIF_BOOLEAN) (access (name, 0) == 0);
+
 #else
 
 #ifdef HAS_GETEUID
@@ -375,8 +501,9 @@ char *name;
 		return (EIF_BOOLEAN) FALSE;
 	else
 		return (EIF_BOOLEAN) TRUE;
+#elif defined EIF_WIN32
+	return (EIF_BOOLEAN) (access (name, 0) == 0);
 #else
-
 #ifdef HAS_GETEUID
 	int uid, gid;				/* File owner and group */
 #endif

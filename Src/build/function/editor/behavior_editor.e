@@ -93,14 +93,14 @@ feature {NONE} -- Interface
 
 	state_label: EV_LABEL
 
-	create_menu (par: EV_CONTAINER) is
+	create_menu (par: EV_BOX) is
 		local
 			hbox: EV_HORIZONTAL_BOX
 			tbar: EV_TOOL_BAR
 			state_h: STATE_HOLE
 		do
 			create hbox.make (par)
-			hbox.set_expand (False)
+			par.set_child_expandable (hbox, False)
 			create tbar.make (hbox)
 			create edit_hole.make_with_editor (tbar, Current)
 			create state_label.make_with_text (hbox, Widget_names.behaviour_state_label)

@@ -900,8 +900,7 @@ feature {NONE} -- Sort
 					loop
 						l_class_c := l_classes.item (i)
 						if
-							l_class_c /= Void and then 
-							(not l_class_c.is_external and then not is_class_generated (l_class_c))
+							l_class_c /= Void and not is_class_generated (l_class_c)
 						then
 							System.degree_minus_1.insert_class (l_class_c)
 						end
@@ -1029,8 +1028,10 @@ feature {NONE} -- Progression
 	is_class_generated (a_class: CLASS_C): BOOLEAN is
 			-- Is `a_class' to be generated?
 		do
-			Result := (a_class /= Void and then not a_class.is_external) and then
-				(is_finalizing or else a_class.degree_minus_1_needed)
+				-- We force generation of basic classes even if only the reference version
+				-- will be generated.
+			Result := (a_class /= Void and then (a_class.is_basic or not a_class.is_external))
+				and then (is_finalizing or else a_class.degree_minus_1_needed)
 		end
 		
 invariant

@@ -445,17 +445,18 @@ feature -- Update
 	search_text (s: STRING; is_case_sensitive: BOOLEAN) is
 			-- Highlight and show next occurence of `s'.
 		local
-			l_t, l_s: STRING;
-			local_text: like text;
-			c_pos: INTEGER;
+			l_t, l_s: STRING
+			local_text: like text
+			c_pos: INTEGER
 			start_position, end_position: INTEGER
+			found: BOOLEAN
 		do
-			local_text := text;
+			local_text := text
 
 			if is_case_sensitive then
-				l_t := local_text;
+				l_t := local_text
 			else
-				l_t := clone (local_text);
+				l_t := clone (local_text)
 				l_t.to_lower
 			end;
 			matcher.set_text (l_t)
@@ -463,35 +464,34 @@ feature -- Update
 				if is_case_sensitive then
 					l_s := s
 				else
-					l_s := clone (s);
+					l_s := clone (s)
 					l_s.to_lower
 				end;
 				matcher.set_pattern (l_s)
 			end;
 
-			c_pos := cursor_position;
+			c_pos := cursor_position
 			if
 				c_pos >= 0 and then
 				c_pos + 1 < local_text.count
 			then
-				matcher.start_at (c_pos);
-				matcher.search_for_pattern;
-				if not matcher.found then
+				matcher.start_at (c_pos)
+				if not matcher.search_for_pattern then
 					if (c_pos > 0) then
-						matcher.start_at (0);
-						matcher.search_for_pattern;
+						matcher.start_at (0)
+						found := matcher.search_for_pattern
 					end
 				end
-				if matcher.found then
-					start_position := matcher.found_at - 1;
-					end_position := start_position + s.count;
-					highlight_selected (start_position, end_position);
+				if found or else matcher.found then
+					start_position := matcher.found_at - 1
+					end_position := start_position + s.count
+					highlight_selected (start_position, end_position)
 					set_cursor_position (end_position)
 				end
 			end;
 			matcher.set_text ("")
 		end;
-
+	
 	replace_text (s, r: STRING; replace_all, is_case_sensitive: BOOLEAN) is
 			-- Replace next occurence of `s' with `r'.
 		do

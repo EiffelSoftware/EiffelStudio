@@ -45,6 +45,7 @@ feature -- Behavior
 			id_back.disable
 			open_project_radio.set_checked
 			welcome_static.set_font (welcome_font)
+			id_ok.set_focus
 		end
 
 	on_ok is

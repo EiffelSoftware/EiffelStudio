@@ -1147,6 +1147,18 @@ feature -- Access
 
 			inspect
 				ctype
+			when c_uint8 then
+				buf.put_string ("EIF_NATURAL_8 tu8_")
+				buf.put_integer (num)
+			when c_uint16 then
+				buf.put_string ("EIF_NATURAL_16 tu16_")
+				buf.put_integer (num)
+			when c_uint32 then
+				buf.put_string ("EIF_NATURAL_32 tu32_")
+				buf.put_integer (num)
+			when c_uint64 then
+				buf.put_string ("EIF_NATURAL_64 tu64_")
+				buf.put_integer (num)
 			when C_int8 then
 				buf.put_string ("EIF_INTEGER_8 ti8_")
 				buf.put_integer (num)

@@ -68,6 +68,14 @@ feature
 			create Result.make (10)
 			inspect
 				c_type.level
+			when c_uint8 then
+				Result.append ("tu8_");
+			when c_uint16 then
+				Result.append ("tu16_");
+			when c_uint32 then
+				Result.append ("tu32_");
+			when c_uint64 then
+				Result.append ("tu64_");
 			when C_int8 then
 				Result.append ("ti8_");
 			when C_int16 then

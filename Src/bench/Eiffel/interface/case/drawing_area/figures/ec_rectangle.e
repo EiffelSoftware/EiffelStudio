@@ -93,7 +93,7 @@ feature -- Drawing management
 				path.set_drawing_attributes (drawing);
 				drawing.draw_rectangle (center, width, height, 0.0)
 			end
-		end; -- draw
+		end
 
 	erase is
 			-- Erase the rectangle

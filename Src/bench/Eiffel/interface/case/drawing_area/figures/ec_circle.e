@@ -9,7 +9,8 @@ class EC_CIRCLE
 
 inherit
 
-	CONSTANTS;
+	CONSTANTS
+
 	EC_CLOSED_FIG
 
 creation
@@ -20,16 +21,19 @@ feature -- Initialization
 
 	make (a_radius: like radius) is
 			-- Make a circle with 'a_radius' as radius
+		local
+			colo: EV_COLOR
 		do
-			!!closure.make;
-			!!path.make;
-			!!interior.make;
-		--	interior.set_foreground_color (Resources.drawing_bg_color);
-			!!center;
+			!!closure.make
+			!!path.make
+			!!interior.make
+			!! colo.make_rgb(0,255,255)
+			interior.set_foreground_color(colo)
+			!!center
 			radius := a_radius
 		ensure
-			has_path: path /= Void;
-			has_center: center /= Void;
+			has_path: path /= Void
+			has_center: center /= Void
 			radius_correctly_set: radius = a_radius
 		end;
 
@@ -51,8 +55,8 @@ feature -- Setting
 		require
 			valid_a_color: a_color /= Void
 		do
-	--		path.set_foreground_color (a_color);
-		end;
+			path.set_foreground_color (a_color)
+		end
 
 	set_center (a_point: like center) is
 			-- set 'center' to 'a_point'
@@ -81,8 +85,8 @@ feature -- Access
 		local
 			dx, dy: INTEGER
 		do
-			dx := a_point.x - center.x;
-			dy := a_point.y - center.y;
+			dx := a_point.x - center.x
+			dy := a_point.y - center.y
 			Result := (dx * dx + dy * dy) <= radius * radius
 		end 
 
@@ -92,11 +96,11 @@ feature -- Output
 			-- Draw current circle in drawing area
 		do
 			if drawing.is_drawable then
-				interior.set_drawing_attributes (drawing);
-				drawing.fill_arc (center, radius, radius, 0, 360, 0, 0);
-							path.set_drawing_attributes (drawing);
-				drawing.set_line_width (1);
-							drawing.draw_arc (center, radius, radius, 0, 360, 0, -1)
+				interior.set_drawing_attributes (drawing)
+				drawing.fill_arc (center, radius, radius, 0, 360, 0, 0)
+							path.set_drawing_attributes (drawing)
+				drawing.set_line_width (1)
+				drawing.draw_arc (center, radius, radius, 0, 360, 0, -1)
 			end
 		end; 
 
@@ -104,12 +108,12 @@ feature -- Output
 			-- Erase current circle from drawing area
 		do
 			if drawing.is_drawable then
-				path.set_drawing_attributes (drawing);
+				path.set_drawing_attributes (drawing)
 				interior.set_drawing_attributes (drawing);
-				drawing.set_line_width (1);
+				drawing.set_line_width (1)
 				drawing.set_foreground_color
-							(Resources.drawing_bg_color);
-				drawing.fill_arc (center, radius, radius, 0, 360, 0, 0);
+							(Resources.drawing_bg_color)
+				drawing.fill_arc (center, radius, radius, 0, 360, 0, 0)
 							drawing.draw_arc (center, radius, radius, 0, 360, 0, -1)
 			end
 		end;
@@ -119,10 +123,10 @@ feature -- Update
 	recompute_closure is
 			-- Recalculate circle's closure.
 		do
-		--	closure.set (center.x - radius - path.line_width,
-		--			center.y - radius - path.line_width,
-		--			2 * (radius + path.line_width),
-		--			2 * (radius + path.line_width))
+			closure.set (center.x - radius - path.line_width,
+					center.y - radius - path.line_width,
+					2 * (radius + path.line_width),
+					2 * (radius + path.line_width))
 		end 
 
 invariant

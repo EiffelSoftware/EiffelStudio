@@ -148,8 +148,11 @@ feature -- Set/Unset commands depending on the context.
 			command_exists: com /= Void
 		local
 			rout: EV_ROUTINE_COMMAND
+			arg: EV_ARGUMENT1[INTEGER]
 		do
 			workarea.drawing_area.remove_motion_notify_commands
+			create arg.make(0)
+			workarea.drawing_area.add_motion_notify_command(Current,arg)
 			workarea.drawing_area.remove_button_release_commands(1)
 			current_motion_command := com
 			!! rout.make(com~execute_button_motion)

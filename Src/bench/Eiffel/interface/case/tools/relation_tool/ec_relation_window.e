@@ -9,10 +9,8 @@ class
 
 inherit
 	EC_EDITOR_WINDOW [RELATION_DATA]
-		rename
-			toolbar as class_toolbar
 		redefine
-			make,class_toolbar,
+			make,
 			entity
 		end
 
@@ -29,11 +27,12 @@ feature -- Initialization
 			class_data: CLASS_DATA
 		do
 			precursor(par)
+			
 			set_title(widget_names.relation_tool)
 
-			!! relation_label_page.make(notebook, entity)
-			!! relation_handles_page.make(notebook, entity)
-			!! relation_link_page.make(notebook, entity)
+			!! relation_label_page.make(notebook, entity,Current)
+			!! relation_handles_page.make(notebook, entity,Current)
+			!! relation_link_page.make(notebook, entity,Current)
 
 			fill_menu
 
@@ -51,14 +50,16 @@ feature -- Properties
 
 feature -- Implementation
 
-	class_toolbar: RELATION_WINDOW_TOOLBAR
-
 	relation_label_page: EC_RELATION_LABEL_PAGE
+
 	relation_handles_page: RELATION_HANDLES_PAGE
+	
 	relation_link_page: RELATION_LINK_PAGE
 
 	label_i: EV_RADIO_MENU_ITEM
+		
 	handles_i: EV_RADIO_MENU_ITEM
+	
 	link_i: EV_RADIO_MENU_ITEM
 
 	fill_menu is

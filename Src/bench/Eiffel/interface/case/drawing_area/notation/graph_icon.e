@@ -10,18 +10,8 @@ class GRAPH_ICON
 inherit
 
 	GRAPH_LINKABLE
-		rename
-			select_it as old_select,
-			unselect as old_unselect
 		redefine
-			data
-		end;
-
-	GRAPH_LINKABLE
-		redefine
-			unselect, select_it, data
-		select
-			unselect, select_it
+			unselect, select_it, data 
 		end
 
 creation
@@ -40,7 +30,8 @@ feature {NONE} -- Initialization
 			iconized_interior: EC_INTERIOR;
 			path: EC_PATH
 		do
-			data := a_cluster;
+			data := a_cluster
+			observer_management.add_observer(data,Current)
 			parent_group := graph_group;
 			!!center;
 			parent_group.icon_list.add_form (Current);
@@ -184,18 +175,18 @@ feature -- Output
 			-- Add this figure in `workarea.selected_figures'.
 			-- Draw this figure.
 		do
-			set_selected_style;
-			old_select
-		end; -- select_it
+			set_selected_style
+			precursor
+		end
 
 	unselect is
 			-- Set `selected' to false.
 			-- Remove this figure in `workarea.selected_figures'.
 			-- Draw this figure.
 		do
-			set_unselected_style;
-			old_unselect
-		end; -- unselect
+			set_unselected_style
+			precursor
+		end
 
 	invert_skeleton (painter: PATCH_PAINTER; relative_x, relative_y: INTEGER) is
 			-- Invert the cluster's skeleton.

@@ -14,25 +14,6 @@ inherit
 		undefine
 			is_equal
 		end
-	GRAPH_RELATION
-		rename
-			set_color as standard_set_color,
-			from_form as client,
-			to_form as supplier,
-			attach_attributes_drawing as attach_standard_attributes_drawing,
-			build_attributes as build_standard_attributes,
-			recompute_attributes_closure as
-						recompute_standard_attributes_closure,
-			attributes_closure as standard_attributes_closure,
-			draw_attributes as draw_standard_attributes,
-			erase_attributes as erase_standard_attributes,
-			make_attributes as make_standard_attributes,
-			build_link_body as build_standard_link_body,
-			update_form as update_standard_form,
-			figure_at as standard_figure_at
-		redefine
-			data, link_body, draw_in_and_update_list
-		end;
 
 	GRAPH_RELATION
 		rename
@@ -45,11 +26,6 @@ inherit
 			attributes_closure, build_link_body, update_form,
 			draw_in_and_update_list, set_color, 
 			figure_at
-		select
-			attach_attributes_drawing, build_attributes,
-			draw_attributes, erase_attributes, make_attributes,
-			recompute_attributes_closure, attributes_closure,
-			build_link_body, update_form, set_color, figure_at
 		end
 
 feature -- Abstraction
@@ -67,25 +43,25 @@ feature -- Properties
 
 feature -- Graphical properties
 
-	link_body: EC_DOUBLE_LINE;
+	link_body: EC_DOUBLE_LINE
 			-- Arrow line figure
 
-	reverse_link_head: EC_ARROW_HEAD;
+	reverse_link_head: EC_ARROW_HEAD
 			-- Head of reverse link
 
-	reverse_label: EC_TEXT_FIG;
+	reverse_label: EC_TEXT_FIG
 			-- Label for reverse link
 
-	label: EC_TEXT_FIG;
+	label: EC_TEXT_FIG
 			-- Label of current relation
 
-	multiple_rhomb: EC_RHOMB;
+	multiple_rhomb: EC_RHOMB
 			-- a Multiplicity capability of current clientele link
 
-	multiple_text: EC_TEXT_FIG;
+	multiple_text: EC_TEXT_FIG
 			-- Multiplicity of current clientele link
 
-	reverse_multiple_text: EC_TEXT_FIG;
+	reverse_multiple_text: EC_TEXT_FIG
 			-- Multiplicity of reverse link
 
 	multiple_bar: EC_SEGMENT
@@ -149,7 +125,7 @@ feature -- Access
 			if System.show_all_relations or else
 				not data.is_implementation
 			then
-				Result := standard_figure_at (x_coord, y_coord);
+				Result := precursor (x_coord, y_coord);
 				if Result = Void then
 					if label_at (x_coord, y_coord) /= Void then
 						Result := Current
@@ -206,24 +182,21 @@ feature -- Output
 					not data.is_implementation) --and then clip_closure.intersects (closure)
 			then
 				if data.has_shared_break_points then
-					list.put_front (link_body);
-				end;
-debug ("DRAWING");
-	io.error.putstring (data.focus);
-	io.error.new_line;
-end;
+					list.put_front (link_body)
+				end
 				draw
 			end
 		end;
 
 	draw_attributes is
+			-- Draw the attributes
 		do
-			draw_standard_attributes;
+			precursor
 			if not label.text.empty and then
 				not System.is_label_hidden
 			then
 				label.draw
-			end;
+			end
 			if has_reverse then
 				reverse_link_head.draw;
 				if not reverse_label.text.empty and then
@@ -231,7 +204,7 @@ end;
 				then
 					reverse_label.draw
 				end
-			end;
+			end
 			if is_multiple then
 				multiple_rhomb.draw;
 				if has_multiplicity then
@@ -248,16 +221,16 @@ end;
 
 	erase_label is
 		do
-			erase_label_rectangle.set_upper_left (label.closure.up_left);
-			erase_label_rectangle.set_width (label_width);
+			erase_label_rectangle.set_upper_left (label.closure.up_left)
+			erase_label_rectangle.set_width (label_width)
 			if label.vertical then
 				erase_label_rectangle.set_height
-							((label.words_count) * label.line_space);
+							((label.words_count) * label.line_space)
 			else
-				erase_label_rectangle.set_height (label_height);
-			end;
-			erase_label_rectangle.draw;
-		end;
+				erase_label_rectangle.set_height (label_height)
+			end
+			erase_label_rectangle.draw
+		end
 
 	erase_reverse_label is
 		do
@@ -275,7 +248,7 @@ end;
 
 	erase_attributes is
 		do
-			erase_standard_attributes;
+			precursor
 			if not label.text.empty and then
 				not System.is_label_hidden
 			then
@@ -516,7 +489,7 @@ feature
 
 	attach_attributes_drawing (a_drawing: EV_DRAWABLE) is
 		do
-			attach_standard_attributes_drawing (a_drawing);
+			precursor (a_drawing);
 			label.attach_drawing (a_drawing);
 			if has_reverse then
 				reverse_link_head.attach_drawing (a_drawing);
@@ -538,7 +511,7 @@ feature
 
 	recompute_attributes_closure is
 		do
-			recompute_standard_attributes_closure;
+			precursor
 			if not label.text.empty then
 				recompute_label_closure
 			end;
@@ -553,7 +526,7 @@ feature
 
 	attributes_closure: EC_CLOSURE is
 		do
-			Result := standard_attributes_closure;
+			Result := precursor
 			if not label.text.empty then
 				Result.merge (label.closure);
 			end;
@@ -568,7 +541,7 @@ feature
 
 	make_attributes is
 		do
-			make_standard_attributes;
+			precursor
 			make_label;
 			if data.is_reverse_aggregation then
 				!EC_BRACKET_HEAD!reverse_link_head.make (from_point,2);
@@ -587,7 +560,7 @@ feature
 
 	build_attributes is
 		do
-			build_standard_attributes;
+			precursor
 			if not label.text.empty then
 				build_label
 			end;
@@ -616,7 +589,7 @@ feature
 		local
 			new_point: EC_COORD_XY
 		do
-			build_standard_link_body;
+			precursor
 			if has_reverse then
 				new_point := reverse_link_head.base
 						(link_body.points.i_th (2), start);
@@ -630,8 +603,8 @@ feature
 				reverse_label.set_text (data.reverse_label.output_value)
 			end;
 			label.set_text (data.label.output_value);
-			update_standard_form;
-		end -- update_form
+			precursor
+		end
 
 feature
 
@@ -896,7 +869,7 @@ feature {NONE}
 			a_color: EV_COLOR
 		do
 			a_color := data.color;
-			standard_set_color;
+			precursor
 		--	label.set_foreground_color (a_color);
 			if has_reverse then
 				reverse_link_head.set_color (a_color);
@@ -935,19 +908,19 @@ feature {NONE}
 			interior: EC_INTERIOR
 		do
 			if erase_label_rectangle = Void then
-				!! interior.make;
-			--	interior.set_foreground_color (Resources.drawing_bg_color);
-				!! erase_label_rectangle.make;
-			--	erase_label_rectangle.path.set_foreground_color
-			--		(Resources.drawing_bg_color);
-				erase_label_rectangle.set_interior (interior);
-				erase_label_rectangle.attach_drawing (workarea);
-			end;
+				!! interior.make
+				interior.set_foreground_color (Resources.drawing_bg_color)
+				!! erase_label_rectangle.make
+				erase_label_rectangle.path.set_foreground_color
+					(Resources.drawing_bg_color)
+				erase_label_rectangle.set_interior (interior)
+				erase_label_rectangle.attach_drawing (workarea)
+			end
 			if data.is_vertical_text then
 				height := (label.words_count) * label.line_space;
 			else
 				height := label_height;
-			end;
+			end
 			label.closure.set (label.base_left.x - 2 , label.base_left.y
 							- ascent,
 							label_width + 4, height);
@@ -1019,15 +992,16 @@ feature {NONE, WORKAREA_MOVE_LABEL_COM} -- Implementation
 	make_label is
 			-- Make the label of current relation
 		do
-			ascent := Resources.link_label_font.ascent;
+			ascent := Resources.link_label_font.ascent
 			label_height := ascent +
-					Resources.link_label_font.descent;
-			!! label.make;
-			label.set_text (data.label.output_value);
-			label.set_font (Resources.link_label_font);
+					Resources.link_label_font.descent
+			!! label.make
+			label.set_text (data.label.output_value)
+			label.set_font (Resources.link_label_font)
 			label.set_line_space (Resources.link_label_space *
-						(label_height // 2));
-			label.set_separator (',');
+						(label_height // 2))
+			label.set_separator (',')
+			observer_management.add_observer(data.label,Current)
 		end; -- make_label
 
 	build_label is

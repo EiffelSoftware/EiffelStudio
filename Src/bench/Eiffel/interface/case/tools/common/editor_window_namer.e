@@ -18,6 +18,8 @@ inherit
 
 	CONSTANTS
 
+	ONCES
+
 creation
 	make
 
@@ -29,10 +31,9 @@ feature -- Initialization
 			f: EV_FRAME
 			v1: EV_VERTICAL_BOX
 
-			init_editor: INIT_EDITOR_COMMAND
-
 			text_field: EV_TEXT_FIELD
-
+			init_editor: INIT_EDITOR_COMMAND
+			com: EV_ROUTINE_COMMAND
 		do
 			precursor ( cont, win )
 			!! f.make_with_text(cont, widget_names.editor)
@@ -51,18 +52,81 @@ feature -- Initialization
 			
 			if text_field /= Void then
 				!! init_editor.make (Current)
-
 				text_field.set_editable (false)
-				text_field.add_default_pnd_command (init_editor, Void)
+				!! com.make(~initialize)
+				text_field.add_default_pnd_command (com, Void)
+				!! com.make(~rename_real_time_data)
+				text_field.add_change_command(com, Void)
+				!! com.make(~rename_data)
+				text_field.add_activate_command (com, Void)
 			end
 
 			f.set_expand(FALSE)
 		end
 
+feature -- Executions
+
+	rename_real_time_data (args: EV_ARGUMENT; dat: EV_EVENT_DATA) is
+			-- Rename the data 'data' thanks to what the user has entered so far.
+		do
+			if data /= Void and then not entered_text.empty then
+				data.set_name (entered_text)
+				observer_management.update_observer (data)
+			end
+		end
+
+	rename_data (args: EV_ARGUMENT; dat: EV_EVENT_DATA) is
+			-- Commit what the user entered.
+		do
+			if name /= Void then
+				name.text_field.set_editable(FALSE)
+			end
+			workareas.set_insensitive(FALSE)
+		end
+
+	initialize_data (namable_data: NAME_DATA) is
+			-- Initialize the context
+		local
+			text_field: EV_TEXT_FIELD
+		do
+			set_entity (namable_data)
+			text_field := name.text_field
+			if text_field /= Void then
+				text_field.set_editable (true)
+				text_field.set_text (namable_data.name)
+				text_field.set_focus
+				initial_text := namable_data.name
+				workareas.set_insensitive(TRUE)
+			end
+		end
+
+	initialize (args: EV_ARGUMENT; dat: EV_EVENT_DATA) is
+			-- Capture the transported data, then initialize.
+		local
+			pnd_data: EV_PND_EVENT_DATA
+			stone: STONE
+			namable_data: NAME_DATA
+		do
+			pnd_data ?= dat
+			if pnd_data /= Void then
+				stone ?= pnd_data.data
+
+				if stone /= Void then
+					namable_data ?= stone.data
+					if namable_data /= Void then
+						initialize_data(namable_data)
+					end
+				end
+			end
+		end
+
 feature -- Properties
 
-	data: NAME_DATA
+	initial_text: STRING
+		-- Initial name of data.
 
+	data: NAME_DATA
+		-- Data.
 
 feature --{NONE}
 
@@ -78,20 +142,6 @@ feature -- Updates
 	update is 
 		do
 		end
-
--- 	update_from(ent: DATA) is
--- 		local
--- 			elem: ELEMENT_DATA
--- 			namable: NAME_DATA
--- 		do
--- 			data := ent
--- 			elem ?= ent
--- 			if elem /= Void then
--- 				
--- 			elseif namable /= Void then
--- 
--- 			end
---		end
 
 feature -- Access
 

@@ -8,10 +8,10 @@ class
 	RELATION_WINDOW_TOOLBAR
 
 inherit
-	EDITOR_WINDOW_TOOLBAR
-		redefine
-			make,fill_with_buttons
-		end
+		ECASE_TOOLBAR
+			redefine
+					make -- ,fill_with_buttons
+			end
 
 creation
 	make

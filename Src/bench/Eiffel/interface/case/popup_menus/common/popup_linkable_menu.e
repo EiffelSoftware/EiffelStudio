@@ -29,28 +29,13 @@ feature -- Operations
 		end
 
 	rename_data (args: EV_ARGUMENT; event_data: EV_EVENT_DATA) is
-			-- Delete 'data'
+			-- Rename 'data'
 		local
-			att: EV_TEXT_FIELD
-			com: EV_ROUTINE_COMMAND
-			cl: GRAPH_LINKABLE
+			namer: EDITOR_WINDOW_NAMER
 		do
-			!! at.make(workarea.analysis_window)
-			!! att.make_with_text(at,data.name)
 
-			cl := workarea.find_linkable(data)
-
-			att.set_minimum_width_in_characters(data.name.count+2)
-			at.set_minimum_height(5)
-			att.set_vertical_resize(TRUE)
-			att.set_horizontal_resize(TRUE)
-
-			at.set_x_y(cl.upper_left.x,	cl.upper_left.y)
-
-			!! rename_command.make(data, att)
-			!! com.make(~update_data)
-			att.add_activate_command(com,Void)
-			at.show
+			namer := workarea.analysis_window.namer
+			namer.initialize_data(data)
 		end
 
 	update_data  (args: EV_ARGUMENT; event_data: EV_EVENT_DATA) is

@@ -12,7 +12,8 @@ inherit
 	COMPARABLE
 		rename
 			min as comp_min, max as comp_max
-		end;
+		end
+
 	ONCES
 		undefine
 			is_equal

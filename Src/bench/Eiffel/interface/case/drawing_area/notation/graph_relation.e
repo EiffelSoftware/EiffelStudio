@@ -13,20 +13,29 @@ inherit
 	SINGLE_MATH
 		undefine
 			is_equal
-		end;
-	GRAPH_FORM
-		rename
-			unselect as standard_unselect,
-			select_it as standard_select_it
-		redefine
-			data
-		end;
+		end
+
 	GRAPH_FORM
 		redefine
 			data, unselect, select_it
-		select
-			unselect, select_it
-		end;
+		end
+
+	OBSERVER
+		rename
+			update as observer_update
+		undefine
+			is_equal
+		end
+
+feature -- Updates
+
+	observer_update is
+			-- Update the drawing, according to data.
+		do
+			workareas.change_data(data)
+			set_color
+			draw
+		end
 
 feature --  Properties
 
@@ -522,14 +531,15 @@ feature {NONE} -- Implementation
 		require
 			has_workarea: a_workarea /= Void
 		do
-			!! from_point;
-			!! to_point;
-			make_link_head;
-			make_attributes;
+			!! from_point
+			!! to_point
+			make_link_head
+			make_attributes
 			attach_workarea (a_workarea);
-			selected := False;
-			build;
-			set_color;
+			selected := False
+			build
+			set_color
+			observer_management.add_observer(data, Current)
 		end; -- make_relation
 
 	make_link_head is
@@ -739,19 +749,22 @@ feature {NONE} -- Implementation
 			a_color: EV_COLOR;
 			colorable: COLORABLE
 		do
-			a_color := data.color;
-			link_body.set_color (a_color);
-			link_head.set_color (a_color);
+			a_color := data.color
+			if a_color = Void then
+				!! a_color.make_rgb(255,255,0)
+			end
+			link_body.set_color (a_color)
+			link_head.set_color (a_color)
 			from
 				handles.start
 			until
 				handles.after
 			loop
-				handles.item.set_color (a_color);
+				handles.item.set_color (a_color)
 				handles.forth
 			end;
-			active_triangles.item (1).set_color (a_color);
-			active_triangles.item (2).set_color (a_color);
+			active_triangles.item (1).set_color (a_color)
+			active_triangles.item (2).set_color (a_color)
 		end;
 
 invariant

@@ -61,10 +61,10 @@ feature -- Setting
 	set_color (a_color: EV_COLOR) is
 			-- Set color of Current line to `a_color'.
 		require
-		--	valid_color_name: a_color /= Void
+			valid_color_name: a_color /= Void
 		do
-		--	path.set_foreground_color (a_color);
-		--	interior.set_foreground_color (a_color);
+			path.set_foreground_color (a_color);
+			interior.set_foreground_color (a_color);
 		end;
 
 feature -- Update

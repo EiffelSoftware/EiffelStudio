@@ -90,6 +90,7 @@ feature -- Execution
 			if colorable/=Void and then not all_selected_with_entity then
 				colorable.set_color(color)
 				li.extend(colorable)
+				observer_management.update_observer(colorable)
 			else
 				from
 					list.start
@@ -100,12 +101,13 @@ feature -- Execution
 					if colorabl /= Void then
 						colorabl.set_color(color)
 					end
+					observer_management.update_observer(colorabl)
 					li.extend(colorabl)
 					list.forth
 				end
 			end	
-			workareas.unselect_all
-			workareas.group_to_refresh(li)
+			--workareas.unselect_all
+			--workareas.group_to_refresh(li)
 		end
 
 feature -- Implementation

@@ -208,7 +208,7 @@ feature
 			-- Print register or generate if there are no register.
 		do
 			if register /= No_register then
-				{CALL_B} precursor
+				{CALL_B} Precursor
 			else
 				generate_access
 			end
@@ -219,7 +219,7 @@ feature
 			-- propagated, also frees the registers used by target and
 			-- last message.
 		do
-			{CALL_B} precursor
+			{CALL_B} Precursor
 				-- Free those registers which where kept because No_register
 				-- was propagated, hence call was meant to be expanded in-line.
 			if perused then

@@ -568,7 +568,6 @@ feature {NONE} -- Implementation Graphical Interface
 --			if Tool_resources.close_button.actual_value then
 --				!! b.make (close_cmd)
 --			end
-
 		end
 
 	build_edit_bar (a_toolbar: EV_BOX) is

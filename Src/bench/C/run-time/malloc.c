@@ -53,9 +53,9 @@
 #define dprintf(n)		if (DEBUG & (n)) printf
 #define flush			fflush(stdout)
 
-/*#undef HAS_SMART_MMAP	/* Undefine to use Purify */
-/*#undef HAS_SMART_SBRK	/* Undefine to use Purify */
-/*#undef HAS_SBRK			/* Undefine to use Purify */
+/*#undef HAS_SMART_MMAP	*//* Undefine to use Purify */
+/*#undef HAS_SMART_SBRK	*//* Undefine to use Purify */
+/*#undef HAS_SBRK		*/	/* Undefine to use Purify */
 
 #ifdef EIF_THREADS
 #undef HAS_SMART_MMAP

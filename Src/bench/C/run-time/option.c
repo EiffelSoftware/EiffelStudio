@@ -533,8 +533,9 @@ void exitprf(void)
 		}
 		else
 		{
-			chdir (starting_working_directory);	/* change the current directory to EIFGEN/W_code or
-						/* EIFGEN/F_code before to crete the profile_output_file */
+			chdir (starting_working_directory);	
+				/* change the current directory to EIFGEN/W_code or
+			 	 * EIFGEN/F_code before to crete the profile_output_file */
 		}
 
 #ifdef HAS_GETRUSAGE

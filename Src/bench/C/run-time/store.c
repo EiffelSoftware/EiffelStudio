@@ -1345,7 +1345,7 @@ rt_public void imake_header(EIF_CONTEXT_NOARG)
 
 	for (i=0; i<scount; i++) {
 		if (!account[i])
-			continue;				/* No object of dyn. type `i'.
+			continue;				/* No object of dyn. type `i'.	*/
 		/* vis_name = Visible(i) */;/* Visible name of the dyn. type */
 		vis_name = System(i).cn_generator;
 

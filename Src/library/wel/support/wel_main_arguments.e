@@ -9,7 +9,7 @@ class
 
 feature -- Access
 
-	current_instance: WEL_INSTANCE is
+	current_instance, resource_instance: WEL_INSTANCE is
 			-- Current instance argument received in WinMain
 		once
 			create Result.make (cwel_hinstance)

@@ -377,6 +377,12 @@ feature {NONE} -- Implementation
 				editor.select_region (pos_in_file , search_results.item.length + pos_in_file)
 				if show then 
 					editor.show_selection (False)
+						-- FIXME: Manu 10/10/2003:
+						-- On GTK, there is a refresh problem due to the ordering of events:
+						-- first we draw and then we scroll, or the contrary. In order to
+						-- prevent this incorrect behavior, we force a refresh.
+						-- Note: it might slow down the display.
+					editor.refresh_now
 				end
 				search_again := s_a
 			end

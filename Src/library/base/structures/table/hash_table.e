@@ -196,7 +196,7 @@ feature -- Status report
 		do
 			Result := (k /= dead_key)
 		ensure then
-			Result = (k /= Void) and then k.is_hashable
+			Result = ((k /= Void) and then k.is_hashable)
 		end;
 
  

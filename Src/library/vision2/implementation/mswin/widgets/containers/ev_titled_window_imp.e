@@ -13,27 +13,37 @@ class
 inherit
 
 	EV_WINDOW_I
+		rename
+			expandable as never_displayed
+		redefine
+			build
+		end
 					
 	EV_CONTAINER_IMP
+		rename
+			expandable as never_displayed
 		undefine
 			set_width,
-			set_height
+			set_height,
+			initialize_colors
 		redefine
 				-- We redefine the following features because a window
 				-- don't have to notify its parent in the following cases.
+			build,
 			set_size,
 			set_minimum_width,
 			set_minimum_height,
 			child_width_changed,
-			child_height_changed
+			child_height_changed,
+			on_show
 		end
 
 	WEL_FRAME_WINDOW
 		rename
-			parent as wel_parent
+			parent as wel_parent,
+			destroy as wel_destroy
 		undefine
 				-- We undefine the features refined by EV_CONTAINER_IMP
-			destroy,
 			remove_command,
 			on_left_button_down,
 			on_right_button_down,
@@ -45,10 +55,9 @@ inherit
 			on_char,
 			on_key_up
 		redefine
---			set_width,
-	--		set_height,
 			set_menu,
 			default_style,
+			background_brush,
 			on_size,
 			on_get_min_max_info,
 			on_destroy,
@@ -60,17 +69,13 @@ creation
 	make, make_top_level
 
 feature {NONE} -- Initialization
-	
-	old_make (par: EV_WINDOW) is
-			-- do nothing
-		do
-		end
 
 	make_top_level is
 			-- Create a window. Window does not have any
 			-- parents
 		do
 			make_top ("EV_WINDOW")
+			!! child_cell
 		end
 
 	make (par: EV_WINDOW) is
@@ -83,6 +88,12 @@ feature {NONE} -- Initialization
 				parent_not_void: par_imp /= Void
 			end
 			make_child (par_imp, "EV_WINDOW")
+		end
+
+	build is
+			-- Initialize few variables
+		do
+			never_displayed := True
 		end
 		
 feature  -- Access
@@ -234,6 +245,12 @@ feature -- Element change
 			end
 		end	
 
+	plateform_closed is
+			-- Nothing to do here, because WEL take care of 
+			-- everything.
+		do
+		end 
+
 feature -- Resizing
 
 	child_width_changed (new_width: INTEGER; the_child: EV_WIDGET_IMP) is
@@ -256,31 +273,7 @@ feature -- Resizing
 			-- Resize the widget and don't notify the parent.
 		do
 			resize (minimum_width.max(new_width), minimum_height.max (new_height))
---			if child /= Void then
---				child.parent_ask_resize (width, height)
---			end
 		end
-
-	
---	set_width (new_width :INTEGER) is
-			-- Make `new_width' the width of the window.
---		do
---			{WEL_FRAME_WINDOW} Precursor (minimum_width.max(new_width))
---			if child /= Void then
---				child.parent_ask_resize (width, height)
---			end
---		end
-
-		
---	set_height (new_height: INTEGER) is
---			-- Make `new_height' the height of the window.
---		do
---			{WEL_FRAME_WINDOW} Precursor (minimum_height.max(new_height))
---			if child /= Void then
---				child.parent_ask_resize (width, height)
---			end
---		end
-
 
 	set_minimum_width (min_width: INTEGER) is
 			-- Minimum width of window
@@ -319,12 +312,28 @@ feature -- Implementation : WEL redefinition
 			Result := Ws_overlappedwindow + Ws_clipchildren
 		end
 
+	background_brush: WEL_BRUSH is
+			-- Current window background color used to refresh the window when
+			-- requested by the WM_ERASEBKGND windows message.
+			-- By default there is no background
+		do
+			if background_color /= Void then
+				!! Result.make_solid (background_color)
+				disable_default_processing
+			end
+		end
+
 	on_show is
 			-- When the window receive the on_show message,
 			-- it resizes the window at the size of the child.
+			-- And it send the message to the child because wel
+			-- don't
 		do
-			if child /= Void then
-				parent_ask_resize (child.width, child.height)
+			if child /= Void and never_displayed then
+				child.on_first_display
+				child_width_changed (child.child_cell.width, child)
+				child_height_changed (child.child_cell.height, child)
+				never_displayed := False
 			end
 		end
 

@@ -10,8 +10,7 @@ class EIFFEL_ENV
 inherit
 
 	SYSTEM_CONSTANTS;
-	ENV_INTERP;
-	SHARED_RESOURCES
+	ENV_INTERP
 	
 feature {NONE}
 
@@ -107,13 +106,7 @@ feature {NONE}
 		once
 			!!dir_name.make_from_string (Eiffel3_dir_name);
 			dir_name.extend_from_array (<<"bench", "filters">>);
-			Result := resources.get_string (r_Filter_path, dir_name);
-			if Result.empty then
-				Result := dir_name
-			else
-					-- Interpretation of the environment variables
-				Result := interpreted_string (Result)
-			end
+			Result := dir_name
 		end;
 
 	profile_path: STRING is
@@ -123,13 +116,7 @@ feature {NONE}
 		once
 			!! dir_name.make_from_string (Eiffel3_dir_name);
 			dir_name.extend_from_array(<<"bench", "profiler">>);
-			Result := resources.get_string (r_Profiler_path, dir_name);
-			if Result.empty then
-				Result := dir_name
-			else
-					-- Interpretation of the environment variables
-				Result := interpreted_string (Result)
-			end
+			Result := dir_name
 		end;
 
 	tmp_directory: STRING is
@@ -139,13 +126,7 @@ feature {NONE}
 		once
 			!!dir_name.make;
 			dir_name.set_directory ("tmp");
-			Result := resources.get_string (r_Tmp_directory, dir_name);
-			if Result.empty then
-				Result := dir_name
-			else
-					-- Interpretation of the environment variables
-				Result := interpreted_string (Result)
-			end
+			Result := dir_name
 		end;
 
 	date_string (a_date: INTEGER): STRING is

@@ -29,8 +29,6 @@ feature {NONE} -- Initialization
 			non_void_dotnet_name: dn /= Void
 			valid_dotnet_name: not dn.is_empty
 			non_void_declaring_type: decl_type /= Void
-		local
-			args: ARRAY [CONSUMED_ARGUMENT]
 		do
 			dotnet_name := dn
 			is_public := pub

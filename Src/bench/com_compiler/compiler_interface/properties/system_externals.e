@@ -272,13 +272,13 @@ feature {NONE} -- Implementation
 			valid_external: not external_item.is_empty
 			non_void_external_list: external_list /= Void
 		local
---			formatted_path: STRING
---			external_copy: STRING
---			eiffel_dir: STRING
+			formatted_path: STRING
+			external_copy: STRING
+			eiffel_dir: STRING
 			can_add: BOOLEAN
 		do
---			formatted_path := format_external (external_item)
---
+			formatted_path := format_external (external_item)
+
 --			-- replace path to Eiffel installation with $ISE_EIFFEL			
 --			external_copy := external_item.as_lower
 --			eiffel_dir := ace_accesser.ise_eiffel.as_lower

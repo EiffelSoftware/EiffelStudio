@@ -246,6 +246,8 @@ feature -- Access
 			-- Pixmap displayed within tree structures when a row with one or more
 			-- subrows is collapsed. Clicking the area occupied by this pixmap in `Current'
 			-- expands the row.
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.expand_node_pixmap
 		ensure
@@ -256,10 +258,20 @@ feature -- Access
 			-- Pixmap displayed within tree structures when a row with one or more
 			-- subrows is expanded. Clicking the area occupied by this pixmap in `Current'
 			-- collapses the row.
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.collapse_node_pixmap
 		ensure
 			result_not_void: Result /= Void
+		end
+		
+	are_tree_node_connectors_shown: BOOLEAN is
+			-- Are connectors between tree nodes shown in `Current'?
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.are_tree_node_connectors_shown
 		end
 
 feature -- Status setting
@@ -616,6 +628,26 @@ feature -- Status setting
 		ensure
 			pixmaps_set: expand_node_pixmap = an_expand_node_pixmap and collapse_node_pixmap = a_collapse_node_pixmap
 		end
+		
+	show_tree_node_connectors is
+			-- Ensure connectors are displayed between nodes of tree structure in `Current'.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.show_tree_node_connectors
+		ensure
+			tree_node_connectors_shown: are_tree_node_connectors_shown
+		end
+		
+	hide_tree_node_connectors is
+			-- Ensure no connectors are displayed between nodes of tree structure in `Current'.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.hide_tree_node_connectors
+		ensure
+			tree_node_connectors_hidden: not are_tree_node_connectors_shown
+		end
 
 feature -- Status report
 
@@ -865,7 +897,7 @@ feature {NONE} -- Contract support
 		do
 			Result := not is_horizontal_scrolling_per_item and
 				is_vertical_scrolling_per_item and is_header_displayed and
-				is_row_height_fixed and subrow_indent = 0
+				is_row_height_fixed and subrow_indent = 0 and are_tree_node_connectors_shown
 		end
 			
 feature {EV_ANY, EV_ANY_I} -- Implementation

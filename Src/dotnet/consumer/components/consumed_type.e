@@ -78,6 +78,16 @@ feature -- Access
 
 	interfaces: ARRAY [CONSUMED_REFERENCED_TYPE]
 			-- Implemented interfaces
+			
+	entities: ARRAYED_LIST [CONSUMED_ENTITY] is
+			-- All constructors, fields, procedures and functions implemented by type.
+		do
+			create Result.make (0)
+			Result.fill (constructors)
+			Result.fill (fields)
+			Result.fill (functions)
+			Result.fill (procedures)
+		end		
 
 	is_interface: BOOLEAN is
 			-- Is .NET type an interface?

@@ -1,96 +1,73 @@
 indexing
-	description: "List view next item (LVNI) constants."
-	note: "Used to find items in a list view with the given%
-		% properties."
-	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "List view next item (LVNI) constants."
+	status		: "See notice at end of class."
+	date		: "$Date$"
+	revision	: "$Revision$"
+	author		: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
+	note		: "Used to find items in a list view with the given%
+				  % properties."
 
 class
 	WEL_LVNI_CONSTANTS
 
+obsolete
+	"use WEL_LIST_VIEW_CONSTANTS instead"
+
 feature -- Geometric relation of the requested item to the 
 		-- specified item.
 
-	Lvni_above: INTEGER is
+	Lvni_above: INTEGER is 256
 			-- Searches for an item that is above the specified item.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVNI_ABOVE"
-		end
+			--
+			-- Declared in Windows as LVNI_ABOVE
 
-	Lvni_all: INTEGER is
+	Lvni_all: INTEGER is 0
 			-- Searches for a subsequent item by index.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVNI_ALL"
-		end
+			--
+			-- Declared in Windows as LVNI_ALL
 
-	Lvni_below: INTEGER is
+	Lvni_below: INTEGER is 512
 			-- Searches for an item that is below the specified item.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVNI_BELOW"
-		end
+			--
+			-- Declared in Windows as LVNI_BELOW
 
-	Lvni_toleft: INTEGER is
+	Lvni_toleft: INTEGER is 1024
 			-- Searches for an item to the left of the specified item.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVNI_TOLEFT"
-		end
+			--
+			-- Declared in Windows as LVNI_TOLEFT
 
-	Lvni_toright: INTEGER is
+	Lvni_toright: INTEGER is 2048
 			-- Searches for an item to the right of the specified item.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVNI_TORIGHT"
-		end
+			--
+			-- Declared in Windows as LVNI_TORIGHT
 
 feature -- State of the item
 
-	Lvni_cut: INTEGER is
+	Lvni_cut: INTEGER is 4
 			-- The item has the LVIS_CUT state flag set.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVNI_CUT"
-		end
-	
-	Lvni_drophilited: INTEGER is
+			--
+			-- Declared in Windows as LVNI_CUT
+
+	Lvni_drophilited: INTEGER is 8
 			-- The item has the LVIS_DROPHILITED state flag set.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVNI_DROPHILITED"
-		end
+			--
+			-- Declared in Windows as LVNI_DROPHILITED
 
-	Lvni_focused: INTEGER is
+	Lvni_focused: INTEGER is 1
 			-- The item has the LVIS_FOCUSED state flag set.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVNI_FOCUSED"
-		end
+			--
+			-- Declared in Windows as LVNI_FOCUSED
 
-	Lvni_selected: INTEGER is
+	Lvni_selected: INTEGER is 2
 			-- The item has the LVIS_SELECTED state flag set.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVNI_SELECTED"
-		end
+			--
+			-- Declared in Windows as LVNI_SELECTED
 
 end -- class WEL_LVNI_CONSTANTS
 
 --|----------------------------------------------------------------
 --| Windows Eiffel Library: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
+--| Copyright (C) 1986-2000 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --| May be used only with ISE Eiffel, under terms of user license. 
 --| Contact ISE for any other use.

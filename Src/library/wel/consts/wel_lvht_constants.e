@@ -1,84 +1,64 @@
 indexing
-	description: "List View HitTest info (LVHT) constants."
-	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "List View HitTest info (LVHT) constants."
+	status		: "See notice at end of class."
+	date		: "$Date$"
+	revision	: "$Revision$"
+	author		: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
 
 class
 	WEL_LVHT_CONSTANTS
 
+obsolete
+	"use WEL_LIST_VIEW_CONSTANTS instead"
+
 feature -- Access
 
-	Lvht_above: INTEGER is
+	Lvht_above: INTEGER is 8
 			-- Above the client area.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVHT_ABOVE"
-		end
+			--
+			-- Declared in Windows as LVHT_ABOVE
 
-	Lvht_below: INTEGER is
+	Lvht_below: INTEGER is 16
 			-- Below the client area.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVHT_BELOW"
-		end
+			--
+			-- Declared in Windows as LVHT_BELOW
 
-	Lvht_nowhere: INTEGER is
+	Lvht_nowhere: INTEGER is 1
 			-- In the client area, but below the last item.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVHT_NOWHERE"
-		end
+			--
+			-- Declared in Windows as LVHT_NOWHERE
 
-	Lvht_onitemicon: INTEGER is
+	Lvht_onitemicon: INTEGER is 2
 			-- On the button associated with an item.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVHT_ONITEMICON"
-		end
+			--
+			-- Declared in Windows as LVHT_ONITEMICON
 
-	Lvht_onitemlabel: INTEGER is
+	Lvht_onitemlabel: INTEGER is 4
 			-- On the label (string) associated with an item.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVHT_ONITEMLABEL"
-		end
+			--
+			-- Declared in Windows as LVHT_ONITEMLABEL
 
-	Lvht_onitemstateicon: INTEGER is
+	Lvht_onitemstateicon: INTEGER is 8
 			-- On the state icon for a tree view item that is in
 			-- a user-defines state.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVHT_ONITEMSTATEICON"
-		end
+			--
+			-- Declared in Windows as LVHT_ONITEMSTATEICON
 
-	Lvht_toleft: INTEGER is
+	Lvht_toleft: INTEGER is 64
 			-- To the left of the client area.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVHT_TOLEFT"
-		end
+			--
+			-- Declared in Windows as LVHT_TOLEFT
 
-	Lvht_toright: INTEGER is
+	Lvht_toright: INTEGER is 32
 			-- To the right of the client area.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVHT_TORIGHT"
-		end
+			--
+			-- Declared in Windows as LVHT_TORIGHT
 
-end -- class WEL_BIF_CONSTANTS
+end -- class WEL_LVHT_CONSTANTS
 
 --|----------------------------------------------------------------
 --| Windows Eiffel Library: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1999 Interactive Software Engineering Inc.
+--| Copyright (C) 1986-2000 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --| May be used only with ISE Eiffel, under terms of user license. 
 --| Contact ISE for any other use.

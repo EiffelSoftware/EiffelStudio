@@ -1,47 +1,41 @@
 indexing
 	description	: "List View State Image List (TVSIL) constants."
-	author		: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
 	status		: "See notice at end of class."
 	date		: "$Date$"
 	revision	: "$Revision$"
+	author		: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
 
 class
 	WEL_LVSIL_CONSTANTS
 
+obsolete
+	"use WEL_LIST_VIEW_CONSTANTS instead"
+
 feature -- Access
 
-	Lvsil_normal: INTEGER is
+	Lvsil_normal: INTEGER is 0
 			-- Indicates the normal image list, which contains 
 			-- selected, nonselected, and overlay images for the
 			-- items of a list view control.
 			-- This image list represents the large icons.
-		external
-			"C [macro %"commctrl.h%"]"
-		alias
-			"LVSIL_NORMAL"
-		end
+			--
+			-- Declared in Windows as LVSIL_NORMAL
 
-	Lvsil_small: INTEGER is
+	Lvsil_small: INTEGER is 1
 			-- Indicates the normal image list, which contains 
 			-- selected, nonselected, and overlay images for the
 			-- items of a list view control.
 			-- This image list represents the small icons.
-		external
-			"C [macro %"commctrl.h%"]"
-		alias
-			"LVSIL_SMALL"
-		end
+			--
+			-- Declared in Windows as LVSIL_SMALL
 
-	Lvsil_state: INTEGER is
+	Lvsil_state: INTEGER is 2
 			-- Indicates the state image list. You can use state 
 			-- images to indicate application-defined item states. 
 			-- A state image is displayed to the left of an item's
 			-- selected or nonselected image.
-		external
-			"C [macro %"commctrl.h%"]"
-		alias
-			"LVSIL_STATE"
-		end
+			--
+			-- Declared in Windows as LVSIL_STATE
 
 end -- class WEL_LVSIL_CONSTANTS
 

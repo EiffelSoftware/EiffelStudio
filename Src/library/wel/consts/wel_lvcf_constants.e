@@ -1,96 +1,74 @@
 indexing
-	description: "List view column flag (LVCF) constants"
-	status: "See notice at end of class"
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "List view column flag (LVCF) constants"
+	status		: "See notice at end of class"
+	date		: "$Date$"
+	revision	: "$Revision$"
+	author		: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
+
 class
 	WEL_LVCF_CONSTANTS
 
-feature -- Access
+obsolete
+	"use WEL_LIST_VIEW_CONSTANTS instead"
 
-	Lvcf_fmt: INTEGER is
+feature -- Column Flags (General)
+
+	Lvcf_fmt: INTEGER is 1
 			-- The fmt member is valid.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVCF_FMT"
-		end
+			--
+			-- Declared in Windows as LVCF_FMT
 
-	Lvcf_subitem: INTEGER is
+	Lvcf_subitem: INTEGER is 8
 			-- The iSubItem member is valid.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVCF_SUBITEM"
-		end
+			--
+			-- Declared in Windows as LVCF_SUBITEM
 
-	Lvcf_text: INTEGER is
+	Lvcf_text: INTEGER is 4
 			-- The pszText member is valid.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVCF_TEXT"
-		end
+			--
+			-- Declared in Windows as LVCF_TEXT
 
-	Lvcf_width: INTEGER is
+	Lvcf_width: INTEGER is 2
 			-- The cx member is valid.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVCF_WIDTH"
-		end
+			--
+			-- Declared in Windows as LVCF_WIDTH
 
-	Lvcf_image: INTEGER is
+	Lvcf_image: INTEGER is 16
 			-- The ilmage member is valid
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVCF_IMAGE"
-		end
+			--
+			-- Declared in Windows as LVCF_IMAGE
 
-feature -- Format
+feature -- Column Flags (Format)
 
-	Lvcfmt_right: INTEGER is
+	Lvcfmt_right: INTEGER is 1
 			-- alignment of the column : right.
 			-- Do not use for the first column of the list view
 			-- that must always be left-aligned.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVCFMT_RIGHT"
-		end
+			--
+			-- Declared in Windows as LVCFMT_RIGHT
 
-	Lvcfmt_center: INTEGER is
+	Lvcfmt_center: INTEGER is 2
 			-- alignment of the column : center.
 			-- Do not use for the first column of the list view
 			-- that must always be left-aligned.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVCFMT_CENTER"
-		end
+			--
+			-- Declared in Windows as LVCFMT_CENTER
 
-	Lvcfmt_left: INTEGER is
+	Lvcfmt_left: INTEGER is 0
 			-- alignment of the column : left.
 			-- Do not use for the first column of the list view
 			-- that must always be left-aligned.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVCFMT_LEFT"
-		end
+			--
+			-- Declared in Windows as LVCFMT_LEFT
 
-	Lvcfmt_justifymask: INTEGER is
+	Lvcfmt_justifymask: INTEGER is 3
 			-- alignment of the column : justify.
 			-- Do not use for the first column of the list view
 			-- that must always be left-aligned.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVCFMT_JUSTIFYMASK"
-		end
+			--
+			-- Declared in Windows as LVCFMT_JUSTIFYMASK
 
-feature -- Status report
+feature -- Validation
 
 	valid_lvcfmt_constant (value: INTEGER): BOOLEAN is
 			-- Is `value' a valid lvcfmt constant?

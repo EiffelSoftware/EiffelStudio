@@ -1,45 +1,37 @@
 indexing
-	description: "List view item styles (LVIS) constants."
-	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "List view item styles (LVIS) constants."
+	status		: "See notice at end of class."
+	date		: "$Date$"
+	revision	: "$Revision$"
+	author		: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
 
 class
 	WEL_LVIS_CONSTANTS
 
+obsolete
+	"use WEL_LIST_VIEW_CONSTANTS instead"
+
 feature -- Access
 
-	Lvis_cut: INTEGER is
-		-- The item is marked for a cut and paste operation.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVIS_CUT"
-		end
+	Lvis_cut: INTEGER is 4
+			-- The item is marked for a cut and paste operation.
+			--
+			-- Declared in Windows as LVIS_CUT
 
-	Lvis_drophilited: INTEGER is
-		-- The item is highlighted as a drag-and-dop target.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVIS_DROPHILITED"
-		end
+	Lvis_drophilited: INTEGER is 8
+			-- The item is highlighted as a drag-and-dop target.
+			--
+			-- Declared in Windows as LVIS_DROPHILITED
 
-	Lvis_focused: INTEGER is
-		-- The item has the focus.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVIS_FOCUSED"
-		end
+	Lvis_focused: INTEGER is 1
+			-- The item has the focus.
+			--
+			-- Declared in Windows as LVIS_FOCUSED
 
-	Lvis_selected: INTEGER is
-		-- The item is selected.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVIS_SELECTED"
-		end
+	Lvis_selected: INTEGER is 2
+			-- The item is selected.
+			--
+			-- Declared in Windows as LVIS_SELECTED
 
 feature -- Status report
 
@@ -56,7 +48,7 @@ end -- class WEL_LVIS_CONSTANTS
 
 --|----------------------------------------------------------------
 --| Windows Eiffel Library: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
+--| Copyright (C) 1986-2000 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --| May be used only with ISE Eiffel, under terms of user license. 
 --| Contact ISE for any other use.

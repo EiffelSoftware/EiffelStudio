@@ -11,37 +11,45 @@ class
 feature {NONE} -- general GTK C functions 
 
 	gtk_set_locale is
-		external "C | <gtk/gtk.h>"
+		external
+			"C | <gtk/gtk.h>"
 		end
 
 	gtk_rc_parse (f: POINTER) is
-		external "C | <gtk/gtk.h>"
+		external
+			"C | <gtk/gtk.h>"
 		end
 
 	gtk_main is
-		external "C | <gtk/gtk.h>"
+		external
+			"C | <gtk/gtk.h>"
 		end
 
 	gtk_main_quit is
-		external "C | <gtk/gtk.h>"
+		external
+			"C | <gtk/gtk.h>"
 		end
 	
 	gtk_exit (n: INTEGER) is
-		external "C | <gtk/gtk.h>"
+		external
+			"C | <gtk/gtk.h>"
 		end
 
 	gtk_signal_handlers_destroy (widget: POINTER) is
-		external "C | <gtk/gtk.h>"
+		external
+			"C | <gtk/gtk.h>"
 		end
 
 	gtk_signal_disconnect (widget: POINTER; id: INTEGER) is
-		external "C | <gtk/gtk.h>"
+		external
+			"C | <gtk/gtk.h>"
 		end
 
 feature {NONE} -- code in the glue library
 
 	c_gtk_init_toolkit is
-		external "C | %"gtk_eiffel.h%""
+		external
+			"C | %"gtk_eiffel.h%""
 		end
 	
 	c_gtk_signal_connect (widget: POINTER; event: POINTER; 
@@ -51,7 +59,8 @@ feature {NONE} -- code in the glue library
 			      mouse_button: INTEGER; 
 			      double_click: BOOLEAN;
 			      extra_data: POINTER): INTEGER is
-		external "C ( GtkObject *, gchar *, EIF_PROC, EIF_POINTER, EIF_POINTER, EIF_POINTER, EIF_POINTER, EIF_PROC, char, char, gpointer): EIF_INTEGER | %"gtk_eiffel.h%""
+		external
+			"C ( GtkObject *, gchar *, EIF_PROC, EIF_POINTER, EIF_POINTER, EIF_POINTER, EIF_POINTER, EIF_PROC, char, char, gpointer): EIF_INTEGER | %"gtk_eiffel.h%""
 		end
 
 	c_gtk_signal_connect_after (widget: POINTER; event: POINTER; 
@@ -60,11 +69,25 @@ feature {NONE} -- code in the glue library
 			      set_event_data_rtn: POINTER;
 			      mouse_button: INTEGER; 
 			      double_click: BOOLEAN): INTEGER is
-		external "C | %"gtk_eiffel.h%""
+		external
+			"C | %"gtk_eiffel.h%""
+		end
+
+	gtk_signal_emit_stop_by_name (widget: POINTER; signal_name: POINTER) is
+		external
+			"C (GtkObject *, const gchar *) | <gtk/gtk.h>"
 		end
 
 	c_free_call_back_block (p: POINTER) is
-		external "C | %"gtk_eiffel.h%""
+		external
+			"C | %"gtk_eiffel.h%""
+		end
+
+feature {NONE} -- Cast features
+
+	c_integer_to_pointer (i: INTEGER): POINTER is
+		external
+			"C [macro %"gtk_eiffel.h%"]"
 		end
 
 end -- class EV_GTK_GENERAL_EXTERNALS

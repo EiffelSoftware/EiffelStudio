@@ -8,63 +8,36 @@
 
 	Also the cleanup processing is held in this file.
 */
-#include <dos.h>
-#include <stdio.h>
 #include <windows.h>
 
 #include "eif_argcargv.h"
 #include "eif_except.h"		/* For `eraise' */
 
-extern int main();		/* Main entry point */
-extern int eif_wmain (int, char**, char **);
-
 #define EIF_CLEANUP_TABLE_SIZE 20		/* Clean up table size */
 
 EIF_CLEANUP eif_fn_table [EIF_CLEANUP_TABLE_SIZE];
 int eif_fn_count = 0;
+static char **local_argv = NULL, *temp = NULL;
 
-HANDLE ghInstance;
-HINSTANCE eif_hInstance;
-HINSTANCE eif_hPrevInstance;
-LPSTR     eif_lpCmdLine;
-int       eif_nCmdShow;
-
-static char **argv = NULL, *temp = NULL;
-
-APIENTRY WinMain(HANDLE hInstance, HANDLE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
+void get_argcargv (int *argc, char ***argv)
 {
-	int ret = 0;
-
-	int argc, tl;
-	char **eif_environ;
-
-	ghInstance = hInstance;
-	eif_hInstance = hInstance;
-	eif_hPrevInstance = hPrevInstance;
-	eif_lpCmdLine = lpCmdLine;
-	eif_nCmdShow = nCmdShow;
+	int tl;
 
 	temp = strdup (GetCommandLine());
-
 	tl = strlen (temp);
 	if ((tl > 16) && (temp[tl-1] == '"') && (temp[tl-2] == '?') &&
 		(temp[tl-16] == '"') && (temp[tl-15] == '?') && (temp[tl-17] == ' '))
 		{
 		temp[tl-17] = '\0';
-		eif_lpCmdLine = temp;
-		}
+	}
 
-	argv = shword (temp);
-	for (argc = 0; argv[argc] != (char *) 0; argc++)
+	local_argv = shword (temp);
+	*argv = local_argv;
+
+	for (*argc = 0; local_argv[*argc] != (char *) 0; (*argc)++)
 		;
-	eif_environ = (char **) GetEnvironmentStrings();
-
-	main(argc, argv, eif_environ);
-
-	FreeEnvironmentStrings ((LPTSTR) eif_environ);
-
-	return ret;
 }
+
 
 void eif_cleanup()
 /*
@@ -73,8 +46,8 @@ void eif_cleanup()
 {
 	int i;
 
-	if (argv != NULL)
-		shfree ();	/* %%manu removed `argv' as argument, shfree needs no argument */
+	if (local_argv != NULL)
+		shfree ();	/* %%manu removed `local_argv' as argument, shfree needs no argument */
 	if (temp != NULL){
 #ifdef EIF_THREADS
 		if (eif_thr_is_root ())

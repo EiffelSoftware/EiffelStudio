@@ -60,21 +60,6 @@ cluster
 			end
 		end
 
-	all comon:		"$EIFFEL_SRC\dotnet\codedom_provider\compiler\support"
-		exclude
-			"CVS"; 
-		default
-			namespace ("EiffelSoftware.CodeDom.Common")
-		end
-
-	codedom_provider:		"$EIFFEL_SRC\dotnet\codedom_provider\common"
-		default
-			namespace ("EiffelSoftware.CodeDom.Common")
-		visible
-			CODE_SHARED_CLASS_SEPARATOR
-			end
-		end
-
 	all ast:		"$EIFFEL_SRC\Eiffel\common\parser\AST"
 		default
 			namespace ("EiffelSoftware.Compiler.Parser")
@@ -85,24 +70,7 @@ cluster
 			namespace ("EiffelSoftware.Compiler.Parser")
 		end
 
-	structure (ast):		"$EIFFEL_SRC\Eiffel\eiffel\structures"
-		default
-			namespace ("EiffelSoftware.Compiler.Parser")
-		end
-
-	eiffel_helper (ast):		"$EIFFEL_SRC\library\helpers\eiffel"
-		default
-			namespace ("EiffelSoftware.Compiler.Parser")
-		end
-
 	eiffel_parser (ast):		"$EIFFEL_SRC\Eiffel\common\parser\parser"
-		default
-			namespace ("EiffelSoftware.Compiler.Parser")
-		end
-
-	eiffel_parser_errors (ast):		"$EIFFEL_SRC\Eiffel\API\error\common"
-		exclude
-			"error_handler.e"; "syntax_error.e"; 
 		default
 			namespace ("EiffelSoftware.Compiler.Parser")
 		end

@@ -19,12 +19,20 @@ default
   	version ("2.0.1.1402")
 
 cluster
-	root_cluster:		"$EIFFEL_SRC\dotnet\codedom_provider\manager"
-
-	codedom_provider:		"$EIFFEL_SRC\dotnet\codedom_provider\common"
+	root_cluster:		"$EIFFEL_SRC\dotnet\codedom_provider\tools\manager"
+		default
+			namespace ("EiffelSoftware.CodeDom.Manager")
+		end
 
 	all eclop:		"$ECLOP\eclop"
-
+		default
+			namespace ("Eclop")
+		end
+	
+	tools_common: "$EIFFEL_SRC\dotnet\codedom_provider\tools\common"
+		default
+			namespace ("EiffelSoftware.Library.Tools")
+		end
 
 end
 

@@ -16,14 +16,20 @@ default
 	msil_generation_type ("exe")
 	msil_key_file_name ("$EIFFEL_SRC\dotnet\helpers\isekey.snk")
 	console_application (no)
-	precompiled ("$EIFFEL_SRC\dotnet\codedom_provider\build_studio_debug\EiffelSoftware.CodeDom.Splitter")
 	msil_use_optimized_precompile (yes)
   	version ("2.0.1.1402")
+	precompiled ("$EIFFEL_SRC\dotnet\codedom_provider\build_studio_debug\EiffelSoftware.CodeDom.Splitter")
 
 cluster
-	all root_cluster:		"$EIFFEL_SRC\dotnet\codedom_provider\splitter"
+	all root_cluster:		"$EIFFEL_SRC\dotnet\codedom_provider\tools\splitter"
 		exclude
 			"CVS"; "bin"; "text";
+		default
+			namespace ("EiffelSoftware.Esplitter")
 		end
 
+	tools_common: "$EIFFEL_SRC\dotnet\codedom_provider\tools\common"
+		default
+			namespace ("EiffelSoftware.Library.Tools")
+		end
 end

@@ -93,13 +93,6 @@ feature {NONE} -- Status Setting
 			-- Window Container
 		once
 			create Result.put (Void)
-		end
-		
-
-	location_string_titles: ARRAYED_LIST [STRING] is
-			-- Location string title in current hierarchy of files
-		once
-			create Result.make (5)
-		end			
+		end		
 
 end -- class SHARED_OBJECTS

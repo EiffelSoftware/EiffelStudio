@@ -130,14 +130,12 @@ feature {NONE} -- Implementation
 	build_interface is
 			-- Build the interface for the save command.
 		do
-			Create dialog.make (tool.parent)
+			Create dialog.make (tool.parent_window)
 			dialog.set_title ("Save Shell")
 
 			build_radio_boxes (dialog.display_area)
 
 			build_buttons (dialog.action_area)
-
---			dialog.set_exclusive_grab
 
 			dialog.show
 		end
@@ -226,4 +224,5 @@ feature {NONE} -- Implementation
 			-- after saving?
 			-- Ie.: is Current called from the menu entry
 			-- or from the OK button in the preference tool?
+
 end -- class EV_SAVE_PREFERENCE_COMMAND

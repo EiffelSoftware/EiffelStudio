@@ -536,7 +536,7 @@ feature -- Explorer bar handling.
 				end
 				if panel.full then
 					update_expanded_state_of_panel
-					panel.set_split_position (splitter_position.max (panel.minimum_split_position))
+					panel.set_split_position ((splitter_position.max (panel.minimum_split_position)).min (panel.maximum_split_position))
 				end
 			end
 		end

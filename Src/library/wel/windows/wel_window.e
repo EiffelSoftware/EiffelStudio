@@ -630,8 +630,14 @@ feature -- Status setting
 			-- Set `style' with `a_style'.
 		require
 			exists: exists
+		local
+			cur_ex_style: INTEGER
 		do
 			cwin_set_window_long (item, Gwl_style, a_style)
+
+				-- Update changes
+			cur_ex_style := ex_style
+			update_cached_style (cur_ex_style, cur_ex_style)
 		ensure
 			style_set: style >= a_style
 				-- we cannot be sure that the two styles are
@@ -646,8 +652,6 @@ feature -- Status setting
 		require
 			exists: exists
 		local
-			Hwnd_const: POINTER
-			Swp_const: INTEGER
 			old_ex_style: INTEGER
 		do
 				-- Remember the current Extended style
@@ -655,16 +659,33 @@ feature -- Status setting
 
 				-- Change the Extended style
 			cwin_set_window_long (item, Gwl_exstyle, an_ex_style)
-				
-				-- Update Window cache buffer
-				--|
-				--| Certain window data is cached, so changes you make using 
-				--| SetWindowLong will not take effect until you call the 
-				--| SetWindowPos function. Specifically, if you change any 
-				--| of the frame styles, you must call SetWindowPos with 
-				--| the SWP_FRAMECHANGED flag for the cache to be updated 
-				--| properly. 
-			if flag_set (an_ex_style, Ws_ex_topmost) then
+
+				-- Update changes
+			update_cached_style (old_ex_style, an_ex_style)
+		ensure
+			ex_style_set: ex_style >= an_ex_style
+				-- we cannot be sure that the two styles are
+				-- exactly the same. Windows may have added a
+				-- flag (for example, when a_style=Ws_popup,
+				-- Windows automatically adds Ws_clipsiblings)
+		end
+
+	update_cached_style(new_ex_style, old_ex_style: INTEGER) is
+			-- Update Window cache buffer for Window style.
+			--|
+			--| Certain window data is cached, so changes you make using 
+			--| SetWindowLong will not take effect until you call the 
+			--| SetWindowPos function. Specifically, if you change any 
+			--| of the frame styles, you must call SetWindowPos with 
+			--| the SWP_FRAMECHANGED flag for the cache to be updated 
+			--| properly. 
+		local
+			Hwnd_const: POINTER
+			Swp_const: INTEGER
+		do
+			if flag_set (new_ex_style, Ws_ex_topmost) then
+				-- The new style specify "Top most", 
+				-- so we change the current Z order to "Top most".
 				Hwnd_const := Hwnd_topmost
 			else
 				if flag_set (old_ex_style, Ws_ex_topmost) then
@@ -681,12 +702,6 @@ feature -- Status setting
 			Swp_const := set_flag (Swp_const, Swp_nosize)
 			Swp_const := set_flag (Swp_const, Swp_framechanged)
 			cwin_set_window_pos (item, Hwnd_const, 0, 0, 0, 0, Swp_const)
-		ensure
-			ex_style_set: ex_style >= an_ex_style
-				-- we cannot be sure that the two styles are
-				-- exactly the same. Windows may have added a
-				-- flag (for example, when a_style=Ws_popup,
-				-- Windows automatically adds Ws_clipsiblings)
 		end
 
 feature -- Element change

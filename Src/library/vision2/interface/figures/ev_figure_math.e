@@ -18,15 +18,14 @@ inherit
 feature -- Implementation
 
 	distance (x1, y1, x2, y2: INTEGER): INTEGER is
-			-- Calculate the distance between (`x1', `y1') and (`x2', `y2').
+			-- Calculate distance between (`x1', `y1') and (`x2', `y2').
 		do
 			Result := sqrt ((x1 - x2) ^ 2 + (y1 - y2) ^ 2).truncated_to_integer
 		end
 
 	distance_from_line (x, y, x1, y1, x2, y2: INTEGER): INTEGER is
-			-- Calculate the distance between (`x', `y') and (`x1', `y1')-(`x2', `y2').
+			-- Calculate distance between (`x', `y') and (`x1', `y1')-(`x2', `y2').
 			-- The line is considered to be infinite.
-			--| FIXME Look at it. Doesn't work 100% yet.
 		local
 			dx, dy: INTEGER
 			alpha, beta: DOUBLE
@@ -44,7 +43,7 @@ feature -- Implementation
 		end
 
 	line_angle (x1, y1, x2, y2: INTEGER): DOUBLE is
-			-- Return the angle of the line.
+			-- Return angle of line from (`x2', `y2') to (`x1', `y1').
 		do
 			if x2 = x1 then
 				if y1 > y2 then
@@ -57,23 +56,24 @@ feature -- Implementation
 				if x1 < x2 then
 					Result := Result - Pi
 				end
+				Result := modulo (Result, 2 * Pi)
 			end
 		end
 
 	delta_x (angle: DOUBLE; length: INTEGER): INTEGER is
-			-- Get the dx component of line segment with `length' and `angle'.
+			-- Get dx component of line segment with `length' and `angle'.
 		do
 			Result := (cosine (angle) * length).rounded
 		end
 
 	delta_y (angle: DOUBLE; length: INTEGER): INTEGER is
-			-- Get the dy component of line segment with `length' and `angle'.
+			-- Get dy component of line segment with `length' and `angle'.
 		do
 			Result := (sine (angle) * length).rounded
 		end
 
 	point_on_line (x, y, x1, y1, x2, y2, width: INTEGER): BOOLEAN is
-			-- Is the point on the line with `width'?
+			-- Is (`x', `y') on line from (`x2', `y2') to (`x1', `y1') with `width'?
 		local
 			t, rsq, dx, dy, dpx, dpy: DOUBLE
 		do
@@ -97,8 +97,7 @@ feature -- Implementation
 		end
 
 	point_on_segment (x, y, x1, y1, x2, y2, width: INTEGER): BOOLEAN is
-			-- Is the point on the line segment with `width'?
-			--| FIXME The line is not cut off correctly at the ends.
+			-- Is (`x', `y') on segment [(`x2', `y2'), (`x1', `y1')] with `width'?
 		local
 			half_dx, half_dy, dpx, dpy: INTEGER
 		do
@@ -120,21 +119,21 @@ feature -- Implementation
 		end
 
 	point_on_ellipse (x, y, xc, yc, r1, r2: INTEGER): BOOLEAN  is
-			-- Determine whether (`x', `y') is inside the specified ellipse.
+			-- Is (`x', `y') inside specified ellipse?
 			--| With orientation 0.0.
 		do
 			Result := ((x - xc) / r1) ^ 2 + ((y - yc) / r2) ^ 2 <= 1
 		end
 
 	point_on_rectangle (x, y, x1, y1, x2, y2: INTEGER): BOOLEAN is
-			-- Determine whether (`x', `y') is inside the specified box.
+			-- Is (`x', `y') inside specified box?
 			--| With orientation 0.0.
 		do
 			Result := between (x, x1, x2) and then between (y, y1, y2)
 		end
 
 	point_on_polygon (x, y: INTEGER; points: ARRAY [EV_COORDINATE]): BOOLEAN is
-			-- Is the point (`x', `y') contained in the polygon with `points'?
+			-- Is (`x', `y') contained in polygon with `points'?
 			-- Based on code by Hanpeter van Vliet.
 		local
 			hits, y_save, n, i, j, dx, dy, rx, ry, base: INTEGER
@@ -151,7 +150,7 @@ feature -- Implementation
 				i := i + 1
 			end
 
-				-- Walk the edges of the polygon.
+				-- Walk edges of the polygon.
 			from
 				n := 0
 			until
@@ -191,6 +190,23 @@ feature -- Implementation
 
 				-- Inside if number of intersections odd.
 			Result := (hits \\ 2) /= 0
+		end
+
+	modulo (a, b: DOUBLE): DOUBLE is
+			-- `a' modulo `b'.
+			--| Should be in DOUBLE_REF.
+		require
+			divisible: b /= 0.0
+		do
+			if a >= 0.0 and a < b then
+				Result := a
+			elseif a >= 0.0 then
+				Result := modulo (a - b, b)
+			else
+				Result := modulo (a + b, b)
+			end
+		ensure
+			in_interval: Result >= 0.0 and Result < b
 		end
 
 	between (n, a, b: INTEGER): BOOLEAN is

@@ -45,7 +45,7 @@ feature -- Graphical User Interface
 			option_form, check_form, radio_form: FORM
 			default_option_box: CHECK_BOX;
 			assertion_radio: RADIO_BOX;
-		once
+		do
 			!! system_edit.make ("system_edit", dialog.action_form);
 			!! root_class_edit.make ("root_class_edit", dialog.action_form);
 			!! creation_procedure_edit.make ("creation_procedure_edit", dialog.action_form);

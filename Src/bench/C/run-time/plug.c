@@ -173,7 +173,7 @@ rt_public char *striparr(register char *curr, register int dtype, register char 
 				new_obj = b_clone(o_ref);
 				break;
 			default:
-				panic("unknown attribute type");
+				panic(MTC "unknown attribute type");
 				/* NOTREACHED */
 			}
 	/* It might seem heavy to add the offset each time instead
@@ -303,7 +303,7 @@ rt_public void chkinv (char *obj, int where)
 
 	if (inv_mark_table == (char *) 0)
 		if ((inv_mark_table = (char *) cmalloc (scount * sizeof(char))) == (char *) 0)
-			enomem();
+			enomem(MTC_NOARG);
 
 	bzero (inv_mark_table, scount);
 
@@ -378,7 +378,7 @@ rt_private void recursive_chkinv(int dtype, char *obj, int where)
 				last->type = SK_REF;
 				last->it_ref = obj;
 				IC = melt[body_id];
-				xiinv(IC, where);
+				xiinv(MTC IC, where);
 			}
 #else
 			if (body_id < dle_level) {

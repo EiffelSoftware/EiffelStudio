@@ -164,7 +164,7 @@ struct prof_info {
 #define check_existance(x)	{\
 								if(!x) {\
 										/* Bad Luck! */\
-									enomem();\
+									enomem(MTC_NOARG);\
 								}\
 							}
 #endif /* HAS_GETRUSAGE */
@@ -234,7 +234,7 @@ rt_public int is_debug(int st_type, char *key)
 	}
 }
 
-void check_options(struct eif_opt *opt, int dtype)
+void check_options(EIF_CONTEXT struct eif_opt *opt, int dtype)
                     	/* Options for the Eiffel feature*/
           				/* Dtype of the Eiffel class */
 {
@@ -276,7 +276,7 @@ void check_options(struct eif_opt *opt, int dtype)
 	}
 }
 
-void check_options_stop(void)
+void check_options_stop(EIF_CONTEXT_NOARG)
 {
 	/* Checks whether the feature on top of the 'eif_stack' is E-TRACEd
 	 * and E-PROFILEd and dispatches to the functions `stop_trace()' and
@@ -317,7 +317,7 @@ void initprf(void)
 			/* Allocate table */
 		class_table = (struct htable *) cmalloc(sizeof(struct htable));
 		if (class_table == (struct htable *) 0)
-			enomem();
+			enomem(MTC_NOARG);
 
 			/* Create H table */
 		if (!ht_create(class_table, 10, sizeof(struct feat_table)))
@@ -459,7 +459,7 @@ void stop_profile(void)
 			update_class_table(item);		/* Record times */
 		} else {
 				/* Bad Luck! (Profile stack corrupted) */
-			panic("Profile stack corrupted");
+			panic(MTC "Profile stack corrupted");
 		}
 	}
 }
@@ -602,11 +602,11 @@ void prof_stack_init(void)
 			/* Allocate profile stack */
 		prof_stack = (struct stack *) cmalloc(sizeof(struct stack));
 		if(!prof_stack)
-			enomem();	/* Bad Luck! */
+			enomem(MTC_NOARG);	/* Bad Luck! */
 
 			/* Allocate arena and chunk for memory problem */
 		if(!st_alloc(prof_stack, STACK_CHUNK))
-			enomem();	/* Bad Luck! */
+			enomem(MTC_NOARG);	/* Bad Luck! */
 	}
 }
 
@@ -629,7 +629,7 @@ void prof_stack_push(struct prof_info *new_item)
 	if(prof_recording) {
 		if(epush(prof_stack, (char *) new_item) == -1) {
 				/* Bad Luck! */
-			panic("Push profile info failed.");
+			panic(MTC "Push profile info failed.");
 		}
 	}
 }
@@ -665,13 +665,13 @@ void update_class_table(struct prof_info *item)
 				/* Create a new Hash table */
 			f_t = (struct feat_table *) cmalloc(sizeof(struct feat_table));
 			if(!f_t)
-				enomem();	/* Bad Luck */
+				enomem(MTC_NOARG);	/* Bad Luck */
 
 				/* Initialize new feature table for dtype */
 			f_t->dtype = item->dtype;
 			f_t->htab = (struct htable *) cmalloc(sizeof(struct htable));
 			if(!f_t->htab)
-				enomem();	/* Bad Luck */
+				enomem(MTC_NOARG);	/* Bad Luck */
 
 				/* Create H table internal structures */
 			if(!ht_create(f_t->htab, 10, sizeof(struct prof_info)))

@@ -33,10 +33,10 @@ rt_public struct s_table *s_create(uint32 size)
 	real_size = nprime(4 * size / 3);
 	keys = (char **) xcalloc(real_size, sizeof(char *));
 	if (keys == (char **) 0)
-		enomem();
+		enomem(MTC_NOARG);
 	result = (struct s_table *) cmalloc(sizeof(struct s_table));
 	if (result == (struct s_table *) 0)
-		enomem();
+		enomem(MTC_NOARG);
 	result->s_size = real_size;
 	result->s_keys = keys;
 	result->s_count = 0;

@@ -393,8 +393,8 @@ feature -- Update
 
 			c_pos := implementation.actual_cursor_position;
 			if
-				(c_pos >= 0)	and then
-				(c_pos + 1 < local_text.count)
+				c_pos >= 0 and then
+				c_pos + 1 < local_text.count
 			then
 				matcher.start_at (c_pos);
 				matcher.search_for_pattern;
@@ -413,7 +413,31 @@ feature -- Update
 					set_cursor_position (end_position)
 				end
 			end;
-			matcher.set_text (Void)
+			matcher.set_text ("")
+		end;
+
+	replace_text (s, r: STRING; replace_all: BOOLEAN) is
+			-- Replace next occurence of `s' with `r'.
+		local
+			s_pos, e_pos: INTEGER
+		do
+			if not replace_all then
+					--| User wants to replace only the next occurence.
+				search (s);
+				if matcher.found then
+					replace (begin_of_selection, end_of_selection, r)
+				end
+			else
+					--| Replace all.
+				from
+					search (s)
+				until
+					not matcher.found
+				loop
+					replace (begin_of_selection, end_of_selection, r);
+					search (s)
+				end
+			end
 		end;
 
 feature -- Focus Access

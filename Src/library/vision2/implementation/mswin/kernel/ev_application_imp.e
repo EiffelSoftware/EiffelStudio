@@ -279,10 +279,29 @@ feature {EV_ANY_I, EV_PICK_AND_DROPABLE_IMP, EV_INTERNAL_COMBO_FIELD_IMP} -- Sta
 		--| This allows us to globally check whether a pick and drop
 		--| is executing, and if so, the source.
 		
+	drop_actions_executing: BOOLEAN
+		-- Are the `drop_actions' for a pick and dropable object currently executing?
+		
 	dockable_source: EV_DOCKABLE_SOURCE_IMP
 		-- The current dockable source if a dock is executing.
 
 feature {EV_PICK_AND_DROPABLE_IMP, EV_DOCKABLE_SOURCE_IMP} -- Status Report
+
+	enable_drop_actions_executing is
+			-- Assign `True' to `drop_actions_executing'.
+		do
+			drop_actions_executing := True
+		ensure
+			drop_actions_executing: drop_actions_executing
+		end
+		
+	disable_drop_actions_executing is
+			-- Assign `False' to `drop_actions_executing'.
+		do
+			drop_actions_executing := False
+		ensure
+			drop_actions_not_executing: not drop_actions_executing
+		end
 
 	dock_started (source: EV_DOCKABLE_SOURCE_IMP) is
 			-- Assign `source' to `dockable_source'.

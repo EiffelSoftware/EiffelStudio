@@ -41,7 +41,7 @@ feature
 		do
 			create deferred_features.make
 			create features.make
-			create rout_id_set.make (5)
+			create rout_id_set.make
 		end
 
 	has_assertion: BOOLEAN is

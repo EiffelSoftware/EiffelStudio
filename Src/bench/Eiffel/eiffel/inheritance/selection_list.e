@@ -231,7 +231,7 @@ end;
 			r_id_set := a_feature.rout_id_set;
 			a_feature := a_feature.unselected (id);
 				-- Process new routine id set
-			!!rout_id_set.make (1);
+			!!rout_id_set.make
 			feature_name_id := a_feature.feature_name_id;	
 debug ("REPLICATION", "ACTUAL_REPLICATION")
 	io.error.putstring ("unselecting :");

@@ -4647,7 +4647,7 @@ feature -- Genericity
 						l_formal.set_written_in (class_id)
 						l_formal.set_origin_class_id (class_id)
 					
-						create l_rout_id_set.make (1)
+						create l_rout_id_set.make
 						l_rout_id_set.put (l_formal.new_rout_id)
 						l_formal.set_rout_id_set (l_rout_id_set)
 						l_formal.set_is_origin (True)
@@ -4773,7 +4773,7 @@ feature -- Anchored types
 					l_anchor.set_type (l_feat.type.actual_type)
 					l_anchor.set_written_in (class_id)
 				
-					create l_rout_id_set.make (1)
+					create l_rout_id_set.make
 					l_rout_id_set.put (l_rout_id)
 					l_anchor.set_rout_id_set (l_rout_id_set)
 

@@ -771,7 +771,7 @@ end;
 					compute_new_rout_id := True;
 				end;
 				if compute_new_rout_id then
-					!!new_rout_id_set.make (1);
+					!!new_rout_id_set.make
 					new_rout_id := feature_i.new_rout_id;
 					new_rout_id_set.put (new_rout_id);
 					feature_i.set_rout_id_set (new_rout_id_set);

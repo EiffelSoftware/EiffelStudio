@@ -11,6 +11,7 @@ inherit
 		rename
 			make as entity_make
 		redefine
+			eiffelized_consumed_entities,
 			dotnet_name
 		end
 
@@ -63,6 +64,21 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
+
+	eiffelized_consumed_entities: ARRAYED_LIST [CONSUMED_ENTITY] is
+			-- List of eiffelized Consumed Entities relative to `Current'.
+		do
+			create Result.make (0)
+			if adder /= Void then
+				Result.extend (adder)
+			end
+			if remover /= Void then
+				Result.extend (remover)
+			end
+			if raiser /= Void then
+				Result.extend (raiser)
+			end
+		end
 
 	dotnet_name: STRING
 			-- .NET event name

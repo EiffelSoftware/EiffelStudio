@@ -31,6 +31,7 @@ inherit
 				-- Then, we undefine what is redefine later
 			set_width,
 			set_height,
+			set_menu,
 			minimal_width,
 			minimal_height,
 			maximal_width,
@@ -109,7 +110,7 @@ feature -- Element change
 			child ?= child_imp
 		end
 
-feature {EV_WIDGET_IMP, EV_WEL_FRAME_WINDOW} -- Implementation
+feature {EV_WIDGET_IMP} -- Implementation
 
 	parent_ask_resize (new_width, new_height: INTEGER) is
 			-- When the parent asks the resize, it's not 

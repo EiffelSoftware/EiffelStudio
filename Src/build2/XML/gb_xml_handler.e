@@ -34,6 +34,11 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	EV_DIALOG_CONSTANTS
+		export
+			{NONE} all
+		end
 	
 feature -- Access
 
@@ -132,12 +137,36 @@ feature -- Basic operations
 		require
 			component_doc_not_void: component_document /= Void
 		local
-			formater: XML_FORMATER
 			file: RAW_FILE
+			error_dialog: GB_TWO_BUTTON_ERROR_DIALOG
+			cancelled: BOOLEAN
+		do
+			
+			create file.make (component_filename)
+			from
+			until
+				file.is_writable OR cancelled
+			loop
+				create error_dialog.make_with_text ("Unable to write to file : " + component_filename + ".%NPlease check file permissions and try again.")
+				error_dialog.show_modal_to_window (main_window)
+				if error_dialog.selected_button.is_equal (ev_abort) then
+					cancelled := True
+				end
+			end
+			if not cancelled then
+				actual_save_components	
+			end
+		end
+		
+	actual_save_components is
+			-- Actually perform saving of components.
+		local
+			file: RAW_FILE
+			formater: XML_FORMATER
 		do
 			create formater.make
 			formater.process_document (component_document)
-			create file.make_open_write (component_filename)
+			create file.make_open_write (component_filename)			
 			file.start
 			file.putstring (xml_format)
 			file.putstring (formater.last_string.to_utf8)

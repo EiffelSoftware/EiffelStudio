@@ -132,14 +132,12 @@ feature {NONE}
 			Result.append ("%Nand please try again")
 		end;
 
-	w_Class_already_in_cluster (class_name: STRING): STRING is
+	w_Class_already_in_cluster (base_name: STRING): STRING is
 		require
-			class_name_not_void: class_name /= Void
+			base_name_not_void: base_name /= Void
 		local
-			base_name, upper_name: STRING
+			upper_name: STRING
 		do	
-				-- ****** FIXME arg name to be changed to base_name
-			base_name := class_name;
 			!!Result.make (30);
 			Result.append ("Class with file name ");
 			upper_name := clone (base_name);

@@ -317,21 +317,19 @@ feature {NONE} -- Implementation
 			valid_event_data: ev_data /= Void
 		local
 			a: ANY
-			arg: EV_ARGUMENTS
+			cmd: EV_COMMAND
 			ev_d_imp: EV_EVENT_DATA_IMP
                 do
-			-- To avoid sharing argument for different
-			-- commands. (We should share everything else 
-			-- though, FIX THIS!)
-			
-			if arguments /= Void then
-				if arguments.data /= Void then
-					arg := deep_clone (arguments)
-				else
-					arg := arguments
-				end
-				arg.set_data (ev_data)
+			-- To avoid sharing event data if the command 
+			-- object is the same
+			-- commands.
+			if command.event_data /= Void then
+				cmd := deep_clone (command)
+			else
+				cmd := command
 			end
+			
+			cmd.set_event_data (ev_data)
 				
 			ev_d_imp ?= ev_data.implementation
 			check
@@ -342,9 +340,9 @@ feature {NONE} -- Implementation
 			last_command_id := 
 				c_gtk_signal_connect (widget,
 						      $a,
-						      command.execute_address,
-						      $command,
-						      $arg,
+						      cmd.execute_address,
+						      $cmd,
+						      $arguments,
 						      $ev_d_imp,
 						      ev_d_imp.initialize_address)
 		end

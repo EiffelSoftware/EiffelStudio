@@ -28,7 +28,7 @@ doc:<file name="traverse.c" header="eif_traverse.h" version="$Id$" summary="Trav
 #include "eif_hashin.h"
 #endif
 
-#include "eif_hector.h"
+#include "rt_hector.h"
 #include "eif_traverse.h"
 #include "eif_memory.h"
 #include "rt_gen_types.h"

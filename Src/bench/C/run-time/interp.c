@@ -26,8 +26,8 @@ doc:<file name="interp.c" header="eif_interp.h" version="$Id$" summary="Byte cod
 #include "rt_except.h"
 #include "eif_local.h"
 #include "eif_copy.h"
-#include "eif_debug.h"
-#include "eif_sig.h"
+#include "rt_debug.h"
+#include "rt_sig.h"
 #include "eif_bits.h"
 #include "eif_equal.h"	/* for xequal() */
 #include <math.h>

@@ -34,64 +34,15 @@ extern "C" {
 #ifndef EIF_THREADS
 
 /******************************************
- *                                        *
  *    Traditional run-time definitions    *
- *                                        *
  ******************************************/
 
 #define EIF_GET_CONTEXT
 
-#ifdef WORKBENCH
-	/* debug.c - Debugging data structures */
-extern struct dbstack db_stack;	/* Calling context stack */
-extern struct id_list once_list;	/* Calling context once_list */
-RT_LNK struct dbinfo d_data;	/* Global debugger information */
-extern struct pgcontext d_cxt;	/* Program context */
-#endif
-
-	/* except.h - Exported data structures (used by the generated C code) */
-RT_LNK struct xstack eif_stack;	/* Stack of all the Eiffel calls */
-extern struct xstack eif_trace;	/* Unsolved exception trace */
-RT_LNK struct eif_exception exdata;	/* Exception handling global flags */
-
-#ifdef WORKBENCH
-	/* interp.h - debug.h */
-extern struct opstack op_stack;		/* Operational stack */
-RT_LNK struct opstack cop_stack;	/* Operational stack */
-RT_LNK unsigned char *IC;				/* Interpreter Counter (like PC on a CPU) */
-#endif
-
-	/* plug.c */
-RT_LNK int nstcall;	/* Nested call global variable: signals a nested call and
-					 * trigger an invariant check in generated C routines  */
-
-	/* sig.h */
-extern int esigblk;				/* Are signals blocked for later delivery? */
-extern struct s_stack sig_stk;	/* The signal stack */
-
-	/* main.c */
-RT_LNK EIF_REFERENCE *EIF_once_values;	/* Once values for a thread */
-RT_LNK int in_assertion;	/* Value of the assertion level */
-
-	/* garcol.c */
-#ifdef ISE_GC
-RT_LNK struct stack loc_stack;	/* Local indirection stack */
-RT_LNK struct stack loc_set;	/* Local variable stack */
-#endif
-RT_LNK struct stack once_set;	/* Once functions */
-
-#ifdef ISE_GC
-	/* hector.c */
-RT_LNK struct stack hec_stack;	/* Indirection table "hector" */
-extern struct stack hec_saved;	/* Saved indirection pointers */
-#endif
-
 #else
 
 /****************************************
- *                                      *
  *    Reentrant run-time definitions    *
- *                                      *
  ****************************************/
 
 

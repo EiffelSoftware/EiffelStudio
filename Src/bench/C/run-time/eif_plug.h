@@ -19,6 +19,11 @@
 extern "C" {
 #endif
 
+#ifndef EIF_THREADS
+RT_LNK int nstcall;	/* Nested call global variable: signals a nested call and
+					 * trigger an invariant check in generated C routines  */
+#endif
+
 /* Structure used to represent bits in the object. The first long integer
  * is the length of the bit field. It is then followed by enough long integers
  * to store the value of the bits.

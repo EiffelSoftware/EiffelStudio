@@ -33,7 +33,7 @@ doc:<file name="garcol.c" header="eif_garcol.h" version="$Id$" summary="Garbage 
 #include "eif_timer.h"
 #endif
 #include "rt_macros.h"
-#include "eif_sig.h"
+#include "rt_sig.h"
 #include "eif_urgent.h"
 #include "eif_search.h"
 #include "eif_gen_conf.h"	/* For eif_gen_conf_cleanup () */
@@ -53,11 +53,12 @@ doc:<file name="garcol.c" header="eif_garcol.h" version="$Id$" summary="Garbage 
 #if ! defined CUSTOM || defined NEED_OBJECT_ID_H
 #include "rt_object_id.h"	/* For the object id and separate stacks */
 #endif
-#include "eif_hector.h"
+#include "rt_hector.h"
+#include "rt_except.h"
 #include "rt_main.h"
 
 #ifdef WORKBENCH
-#include "eif_interp.h"
+#include "rt_interp.h"
 #endif
 
 

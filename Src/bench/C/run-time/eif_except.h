@@ -24,6 +24,13 @@
 extern "C" {
 #endif
 
+	
+#ifndef EIF_THREADS
+	/* Exported data structures (used by the generated C code) */
+RT_LNK struct xstack eif_stack;	/* Stack of all the Eiffel calls */
+RT_LNK struct eif_exception exdata;	/* Exception handling global flags */
+#endif
+
 /* Macros for easy access */
 #define ex_jbuf		exu.exur.exur_jbuf
 #define ex_id		exu.exur.exur_id

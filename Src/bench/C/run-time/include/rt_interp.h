@@ -19,6 +19,10 @@
 extern "C" {
 #endif
 
+#ifndef EIF_THREADS
+extern struct opstack op_stack;               /* Operational stack */
+#endif
+
 /* Requesting values via ivalue() */
 #define IV_LOCAL	0				/* Nth local wanted */
 #define IV_ARG		1				/* Nth argument wanted */

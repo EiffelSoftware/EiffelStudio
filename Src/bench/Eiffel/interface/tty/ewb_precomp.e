@@ -52,7 +52,7 @@ feature {NONE} -- Execution
 	execute is
 		do
 			print_header;
-			if Eiffel_project.is_new then
+			if Eiffel_project.is_new and then Eiffel_project.able_to_compile then
 				compile;
 				if Eiffel_project.successful then
 					print_tail;

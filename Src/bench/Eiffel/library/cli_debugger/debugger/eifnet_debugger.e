@@ -671,11 +671,14 @@ feature -- Function Evaluation
 			else
 					--| Get STRING info from compilo
 				l_string_class := Eiffel_system.String_class.compiled_class
+				
 					--| Get token to access `internal_string_builder'
 				l_feat_internal_string_builder := l_string_class.feature_named ("internal_string_builder")
 				l_feat_internal_string_builder_token := Il_debug_info_recorder.feature_token_for_non_generic (l_feat_internal_string_builder)
+				
 					--| Get `internal_string_builder' from `STRING' instance Value
 				l_icd_value := icd_string_instance.get_field_value (icd_string_instance.get_class, l_feat_internal_string_builder_token)
+				
 					--| l_icd_value represents the `internal_string_builder' value
 				if l_icd_value /= Void then
 					Result := Edv_external_formatter.string_from_string_builder (l_icd_value)
@@ -809,8 +812,8 @@ feature -- Function Evaluation
 			l_module_name := l_icd_module.get_name
 
 			l_icd_module := icor_debug_module_for_mscorlib
-
 			l_feature_token := Edv_external_formatter.token_Exception_get_Message
+
 			l_func := l_icd_module.get_function_from_token (l_feature_token)
 
 			if l_func /= Void then

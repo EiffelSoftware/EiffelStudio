@@ -44,6 +44,8 @@ feature {NONE} -- Initialization
 	make_by_dc (dc: WEL_DC; bitmap: WEL_BITMAP; usage: INTEGER) is
 			-- Make a bitmap info structure using `dc' and
 			-- `bitmap'.
+			-- See class WEL_DIB_COLORS_CONSTANTS for `usage'
+			-- values.
 		require
 			dc_not_void: dc /= Void
 			dc_exists: dc.exists

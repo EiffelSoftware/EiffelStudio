@@ -17,13 +17,14 @@ creation
 
 feature -- Initialization
 
-	make_and_load (profiler: STRING) is
+	make_and_load (prof: STRING) is
 			-- Load the specific profiler-configuration file.
 		do
 			!! shared_prof_config;
-			profiler.to_lower;
-			read_config_file (profiler);
-			shared_prof_config.set_config_name (profiler)
+			profiler := prof;
+			prof.to_lower;
+			read_config_file (prof);
+			shared_prof_config.set_config_name (prof)
 		end
 
 feature {NONE} -- Implementation
@@ -34,30 +35,7 @@ feature {NONE} -- Implementation
 			file_name: FILE_NAME;
 			retried: BOOLEAN
 		do
-			if not retried then
-				!! file_name.make_from_string (profile_path);
-				file_name.extend (prof);
 
-				if not file_name.is_valid then
-					error_occured := true;
-					error_code := Invalid_profiler_type
-				else
-					!! config_file.make_open_read (file_name);
-					config_file.read_stream (config_file.count);
-					file_contents := config_file.last_string;
-					config_file.close;
-					get_number_of_columns;
-					get_index_column;
-					get_function_time_column;
-					get_descendent_time_column;
-					get_number_of_calls_column;
-					get_function_name_column;
-					get_percentage_column;
-					get_leading_underscore;
-				end;
-			else
-				error_occured := true;
-			end;
 		rescue
 			retried := true;
 			retry;

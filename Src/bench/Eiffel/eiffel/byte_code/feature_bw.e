@@ -43,26 +43,26 @@ feature
 		local
 			class_type: CL_TYPE_I;
 			type_i: TYPE_I;
-			cond: BOOLEAN;
 			access: ACCESS_B;
 			void_register: REGISTER;
 		do
 			type_i := context_type;
 			class_type ?= type_i;
-			cond := not (type_i.is_basic or else class_type = Void);
-			if reg.is_current and cond then
-				context.add_dt_current;
-			end;
-			if not reg.is_predefined and cond then
-					-- BEWARE!! The function call is polymorphic hence we'll
-					-- need to evaluate `reg' twice: once to get its dynamic
-					-- type and once as a parameter for Current. Hence we
-					-- must make sure it is not held in a No_register--RAM.
-			 	access ?= reg;	  -- Cannot fail
-				if access.register = No_register then
-					access.set_register (void_register);
-					access.get_register;
+			if not (type_i.is_basic or else class_type = Void) then
+				if reg.is_current then
+					context.add_dt_current;
 				end;
+				if not reg.is_predefined then
+						-- BEWARE!! The function call is polymorphic hence we'll
+						-- need to evaluate `reg' twice: once to get its dynamic
+						-- type and once as a parameter for Current. Hence we
+						-- must make sure it is not held in a No_register--RAM.
+				 	access ?= reg;	  -- Cannot fail
+					if access.register = No_register then
+						access.set_register (void_register);
+						access.get_register;
+					end;
+				end
 			end;
 		end;
 

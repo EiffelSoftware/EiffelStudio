@@ -126,7 +126,7 @@ int how;
 {
 	/* Open file `name' with the corresponding type 'how'. */
 
-#ifdef __WATCOMC__
+#ifdef __WINDOWS_386__
 	if (how < 10)
 		return (EIF_POINTER) file_fopen(name, file_open_mode(how,'t'));
 	else
@@ -142,7 +142,7 @@ int how;
 {
 	/* Open file `fd' with the corresponding type 'how'. */
 
-#ifdef __WATCOMC__
+#ifdef __WINDOWS_386__
 	if (how < 10)
 		return (EIF_POINTER) file_fdopen(fd, file_open_mode(how,'t'));
 	else
@@ -162,7 +162,7 @@ FILE *old;
 	 * to another place, for instance.
 	 */
 
-#ifdef __WATCOMC__
+#ifdef __WINDOWS_386__
 	if (how < 10)
 		return (EIF_POINTER) file_freopen(name, file_open_mode(how,'t'), old);
 	else
@@ -178,7 +178,7 @@ int how;
 {
 	/* Open file `name' with the corresponding type 'how'. */
 
-#ifdef __WATCOMC__
+#ifdef __WINDOWS_386__
 	return (EIF_POINTER) file_fopen(name, file_open_mode(how,'b'));
 #else
 	return (EIF_POINTER) file_fopen(name, file_open_mode(how,'\0'));
@@ -191,7 +191,7 @@ int how;
 {
 	/* Open file `fd' with the corresponding type 'how'. */
 
-#ifdef __WATCOMC__
+#ifdef __WINDOWS_386__
 	return (EIF_POINTER) file_fdopen(fd, file_open_mode(how,'b'));
 #else
 	return (EIF_POINTER) file_fdopen(fd, file_open_mode(how,'\0'));
@@ -208,7 +208,7 @@ FILE *old;
 	 * to another place, for instance.
 	 */
 
-#ifdef __WATCOMC__
+#ifdef __WINDOWS_386__
 	return (EIF_POINTER) file_freopen(name, file_open_mode(how,'b'), old);
 #else
 	return (EIF_POINTER) file_freopen(name, file_open_mode(how,'\0'), old);
@@ -375,6 +375,40 @@ EIF_INTEGER len;
 	errno = 0;
 	if (1 != fwrite(str, len, 1, f))
 		eio();
+}
+
+public void file_pt_ps(f, str, len)
+FILE *f;
+char *str;
+EIF_INTEGER len;
+{
+#ifdef __WINDOWS_386__
+	/* Write string `str' on `f' */
+
+	char *s;
+	int i;
+
+	if (len == 0)		/* Empty string */
+		return;			/* Nothing to be done */
+
+	errno = 0;
+	for (s = str, i = 0; i < len; i++, s++)
+		if ((*s != '\r') && (*s != '\n'))
+			if (fputc (*s, f) == EOF)
+				eio();
+			else
+				;
+		else
+			{
+			if (*s == '\n')
+				if (fputs ("\n", f) == EOF)
+					eio();
+		/* 	else
+				skip the \r 's */
+			}
+#else
+	file_ps (f, str, len);
+#endif	
 }
 
 public void file_pc(f, c)
@@ -991,6 +1025,10 @@ char *to;
 	int status;			/* System call status */
 	
 	for (;;) {
+#ifdef __WINDOWS_386__
+		if (file_exists (to))			/* To have the same behavior as Unix */
+			remove (to);
+#endif
 		errno = 0;						/* Reset error condition */
 		status = rename(from, to);		/* Rename file or directory */
 		if (status == -1) {				/* An error occurred */

@@ -22,6 +22,9 @@ feature -- Initialization
 			database_manager_not_void: dbm /= Void
 		do
 			database_manager := dbm
+			create repository_table.make (1, tables.Table_number)
+			create update_parameters_table.make (1, tables.Table_number)
+			create updater_table.make (1, tables.Table_number)
 		end
 
 feature -- Connection
@@ -310,18 +313,6 @@ feature -- Basic operations
 			order_by := ""
 		end
 
-feature {NONE} -- Implementation
-
-	select_table_descr: DB_TABLE_DESCRIPTION
-			-- Table description of select query to execute. Execute with `load_result_list'.
-
-	select_columns: STRING
-
-	order_by: STRING
-
-	result_list: ARRAYED_LIST [DB_TABLE]
-			-- Last executed query result list.
-
 feature -- Queries
 
 	load_data_with_select (s: STRING): ANY is
@@ -354,12 +345,18 @@ feature -- Queries
 			end
 		end
 
-feature -- Commitment
+feature -- General command
 
-	commit is
-			-- Commit changes in the database.
+	execute_query (query: STRING) is
+			-- Execute SQL `query' and commit changes.
+		require
+			not_void: query /= Void
 		do
-			database_manager.commit
+			database_manager.execute_query (query)
+			if database_manager.has_error then
+				has_error := True
+				error_message := Command_failed + database_manager.error_message
+			end
 		end
 
 feature -- Update
@@ -367,61 +364,23 @@ feature -- Update
 	update_tablerow (tablerow: DB_TABLE) is
 			-- Update item with `description' in database.
 		local
-			description: DB_TABLE_DESCRIPTION
-			rescued: BOOLEAN
-			pr: DB_PROC
-			expr: DB_CHANGE
-			proc_name: STRING
-		do
-			if not rescued then
-				has_error := False
-				session_control.reset
-				description := tablerow.table_description
-				proc_name := "UPDATE_" + description.Table_name
-				create pr.make (proc_name)
-				pr.load
-				expr := parameters_from_tablerow (description)
-				pr.set_arguments (description.new_parameter_list,
-						description.attribute_list)
-				pr.execute (expr)
-				expr.clear_all
-				commit
-				if database_manager.has_error then
-					has_error := True
-					error_message := Update_failed + database_manager.error_message
-				end
-			else
-				has_error := True
-				error_message := "An error occured while executing the following procedure in the database: " + proc_name
-						+ ".%NPlease keep this dialog open and contact your DBA."
-			end
-		rescue
-			rescued := TRUE
-			retry		
-		end
-
-	update_item (an_obj: DB_TABLE; proc_name: STRING) is
-			-- Update item 'an_obj', thanks to loaded procedure
-			-- whose name is 'proc_name'.
-		require
-			not_void: an_obj /= Void and proc_name /= Void
-		local
-			rescued: BOOLEAN
-			pr: DB_PROC
-			expr: DB_CHANGE
 			table_descr: DB_TABLE_DESCRIPTION
+			rescued: BOOLEAN
+			updater: DB_CHANGE
 		do
 			if not rescued then
 				has_error := False
 				session_control.reset
-				create pr.make (proc_name)
-				pr.load
-				table_descr := an_obj.table_description
-				expr := parameters_from_tablerow (table_descr)
-				pr.set_arguments (table_descr.new_parameter_list,
-						table_descr.attribute_list)
-				pr.execute (expr)
-				expr.clear_all
+				table_descr := tablerow.table_description
+				if updater_table.item (table_descr.Table_code) /= Void then
+					updater := updater_table.item (table_descr.Table_code)
+				else
+					create updater.make
+					updater.set_query (update_sql_query (table_descr))
+				end
+				map_parameters (updater, table_descr)
+				updater.execute_query
+				updater.clear_all
 				commit
 				if database_manager.has_error then
 					has_error := True
@@ -429,31 +388,11 @@ feature -- Update
 				end
 			else
 				has_error := True
-				error_message := "Database procedure execution failure: " + proc_name
+				error_message := Update_failed + Unexpected_error
 			end
 		rescue
 			rescued := TRUE
 			retry		
-		end
-
-feature {NONE} -- Update implementation
-
-	parameters_from_tablerow (table_descr: DB_TABLE_DESCRIPTION): DB_CHANGE is
-			-- Parameters of the procedure call.
-		local
-			name_list: ARRAYED_LIST [STRING]
-			i: INTEGER
-		do
-			create Result.make
-			name_list := table_descr.new_parameter_list
-			from
-				i := 1
-			until
-				i > name_list.count
-			loop
-				Result.set_map_name (table_descr.attribute (i), name_list.i_th (i))
-				i := i + 1
-			end
 		end
 
 feature -- Creation
@@ -511,7 +450,7 @@ feature -- Creation
 			create_item_with_tablecode (an_obj, an_obj.table_description.table_code)
 		end
 
-feature -- Deletions
+feature -- Deletion
 
 	delete_item (an_obj: DB_TABLE) is
 			-- Delete `an_obj' in the database, i.e.
@@ -545,17 +484,156 @@ feature -- Deletions
 			loop
 				item := to_delete_tables.item (ind)
 				fkey := del_fkey_from_table.item (item)
---				deletion_fkey_value := tables.description (item).attribute (fkey)
---				check
---					deletion_fkey_value /= Void
---				end
 				load_and_delete_tablerows (to_delete_tables.item (ind), fkey, deletion_fkey_value)
 				ind := ind + 1
 			end
 			delete_item_with_description (table_descr)
 		end 
 
-feature {NONE}-- Deletions
+feature -- Commitment
+
+	commit is
+			-- Commit changes in the database.
+		do
+			database_manager.commit
+		end
+
+feature {NONE} -- Update implementation
+
+	map_parameters (updater: DB_CHANGE; table_descr: DB_TABLE_DESCRIPTION) is
+			-- Parameters of the procedure call.
+		require
+			updater_not_void: updater /= Void
+			table_description_not_void: table_descr /= Void
+		local
+			name_list: ARRAYED_LIST [STRING]
+			i: INTEGER
+		do
+			name_list := update_parameters (table_descr.Table_code)
+			from
+				i := 1
+			until
+				i > name_list.count
+			loop
+				updater.set_map_name (table_descr.attribute (i), name_list.i_th (i))
+				i := i + 1
+			end
+		end
+
+	update_sql_query (td: DB_TABLE_DESCRIPTION): STRING is
+			-- SQL query corresponding to a database update.
+		require
+			not_void: td /= Void
+		local
+			code: INTEGER
+			parameter_list: ARRAYED_LIST [STRING]
+			attribute_list: ARRAYED_LIST [STRING]
+		do
+			code := td.Table_code
+			Result := "update " + tables.name_list.i_th (code) + " set "
+			parameter_list := update_parameters (code)
+			attribute_list := td.description_list
+			check
+				count_matches: parameter_list.count = attribute_list.count
+			end
+			from
+				parameter_list.start
+				attribute_list.start
+			until
+				parameter_list.after
+			loop
+				Result.append (attribute_list.item + " = :" + parameter_list.item)
+				parameter_list.forth
+				attribute_list.forth
+				if not parameter_list.after then
+					Result.append (Values_separator)
+				end
+			end
+			Result.append (" where " + td.id_name + " = :" + parameter (td.id_name))
+		end
+
+	update_parameters (code: INTEGER): ARRAYED_LIST [STRING] is
+			-- Parameters names for an update on table with `code'.
+			-- Parameters contain the required ':' prefix to tell
+			-- EiffelCommerce it is a parameter.
+		require
+			is_valid_code: is_valid_code (code)
+		do
+			if update_parameters_table.item (code) /= Void then
+				Result := update_parameters_table.item (code)
+			else
+				Result := tables.description (code).mapped_list (~parameter)
+				update_parameters_table.put (Result, code)
+			end
+		end
+
+	parameter (s: STRING): STRING is
+			-- Prepend "N_" to `s'.
+		do
+			Result := "N_" + s
+		end
+
+feature {NONE} -- Creation implementation
+
+	create_item_with_tablecode (an_obj: DB_TABLE; tablecode: INTEGER) is
+			--Store in the DB object `an_obj'.
+		local
+			rep: DB_REPOSITORY
+		do
+			has_error := False
+			rep := repository (tablecode)
+			if database_manager.has_error or else not rep.exists then
+				has_error := True
+				error_message := Creation_failed + repository_failed (tables.name_list.i_th (tablecode))
+				if database_manager.has_error then
+					error_message.append (database_manager.error_message)
+				else
+					error_message.append (No_repository)
+				end
+			else
+				database_manager.insert_with_repository (an_obj, rep)
+				if database_manager.has_error then
+					has_error := True
+					error_message := Creation_failed + database_manager.error_message
+				end
+			end
+		end
+
+	max_id_query (table_descr: DB_TABLE_DESCRIPTION): STRING is
+			-- Query to find maximum ID for table described by `table_descr'.
+		require
+			not_void: table_descr /= Void
+		do
+			Result := "select max(" + table_descr.id_name
+					+ ") from " + table_descr.table_name
+		end
+
+	repository (code: INTEGER): DB_REPOSITORY is
+			-- Repository corresponding to the database table with `code'.
+			-- Note: loaded repository are cached in `repository_table'.
+		require
+			is_valid_code: is_valid_code (code)
+		local
+			s_tmp: STRING
+		do
+			check
+				valid_index: repository_table.valid_index (code)
+				-- `code' should be within bounds of the `repository_table'.
+			end
+			if repository_table.item (code) /= Void then
+				Result := repository_table.item (code)
+			else
+				s_tmp := clone (tables.name_list.i_th (code))
+				s_tmp.to_upper
+				create Result.make (s_tmp)
+				Result.load
+				if not database_manager.has_error then
+					repository_table.put (Result, code)
+				end
+			end
+		end
+
+feature {NONE} -- Deletion implementation
 
 	delete_item_with_description (description: DB_TABLE_DESCRIPTION) is
 			-- Delete `an_obj' in the database, i.e.
@@ -593,11 +671,6 @@ feature {NONE}-- Deletions
 			end
 		end
 
-feature -- Status report
-
-	updater_build: BOOLEAN
-		-- Is an update query prepared?
-
 feature {NONE} -- Implementation
 
 	session_control: DB_CONTROL is
@@ -634,50 +707,28 @@ feature {NONE} -- Implementation
 			-- Database manager: manage every interaction
 			-- with database.
 
-	create_item_with_tablecode (an_obj: DB_TABLE; tablecode: INTEGER) is
-			--	Store in the DB object `an_obj'.
-		do
-			has_error := False
-			database_manager.insert_with_repository (an_obj, repository_list.i_th (tablecode))
-			if database_manager.has_error then
-				has_error := True
-				error_message := Creation_failed + database_manager.error_message
-			end
-		end
+feature {NONE} -- Implementation
 
-	max_id_query (table_descr: DB_TABLE_DESCRIPTION): STRING is
-			-- Query to find maximum ID for table described by `table_descr'.
-		require
-			not_void: table_descr /= Void
-		do
-			Result := "select max(" + table_descr.id_name
-					+ ") from " + table_descr.table_name
-		end
+	select_table_descr: DB_TABLE_DESCRIPTION
+			-- Table description of select query to execute. Execute with `load_result_list'.
 
-	repository_list: ARRAYED_LIST [DB_REPOSITORY] is
-			-- List of repositories corresponding to the database
-			-- tables. Can be interpreted as a list
-			-- or a hash-table.
-		local
-			rep: DB_REPOSITORY
-			name_list: ARRAYED_LIST [STRING]
-			s_tmp: STRING
-		once
-			create Result.make (tables.Table_number)
-			name_list := tables.name_list
-			from
-				name_list.start
-			until
-				name_list.after
-			loop
-				s_tmp := clone (name_list.item)
-				s_tmp.to_upper
-				create rep.make (s_tmp)
-				rep.load
-				Result.extend (rep)
-				name_list.forth
-			end
-		end
+	select_columns: STRING
+			-- Columns to select from a selection statement.
+
+	order_by: STRING
+			-- SQL order by clause.
+
+	result_list: ARRAYED_LIST [DB_TABLE]
+			-- Last executed query result list.
+
+	repository_table: ARRAY [DB_REPOSITORY]
+			-- Table that stores loaded repository.
+
+	update_parameters_table: ARRAY [ARRAYED_LIST [STRING]]
+			-- Table that stores parameters/map names for a database update.
+
+	updater_table: ARRAY [DB_CHANGE]
+			-- Table that stores database table updaters.
 
 feature {NONE} -- SQL query construction
 
@@ -721,6 +772,12 @@ feature {NONE} -- Error messages
 					+ query + "%NDatabase message is: "
 		end
 
+	Command_failed: STRING is
+			-- Database command failed.
+		do
+			Result := "Database command failed:%N"
+		end
+
 	Update_failed: STRING is
 			-- Database update failed.
 		do
@@ -739,13 +796,34 @@ feature {NONE} -- Error messages
 			Result := "Table row deletion failed:%N"
 		end
 
-	Id_creation_failed (name: STRING): STRING is
+	id_creation_failed (name: STRING): STRING is
 			-- ID creation failed on table with `name'.
 		require
 			not_void: name /= Void
 		do
 			Result := "Cannot find a valid ID for the table: "
 				+ name + "%N"
+		end
+
+	repository_failed (name: STRING): STRING is
+			-- Description on table with `name' cannot be retrieved.
+		require
+			not_void: name /= Void
+		do
+			Result := "Cannot retrieve description of table "
+				+ name + " :%N"
+		end
+
+	No_repository: STRING is
+			-- Reposioty does not exist.
+		do
+			Result := "Repository does not exist.%N"
+		end
+
+	Unexpected_error: STRING is
+			-- Unexpected error.
+		do
+			Result := "Unexpected error."
 		end
 
 end -- class DATABASE_MANAGER

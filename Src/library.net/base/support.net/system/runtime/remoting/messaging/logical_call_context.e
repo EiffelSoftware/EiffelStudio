@@ -3,7 +3,7 @@ indexing
 	external_name: "System.Runtime.Remoting.Messaging.LogicalCallContext"
 	assembly: "mscorlib", "1.0.3300.0", "neutral", "b77a5c561934e089"
 
-external class
+frozen external class
 	LOGICAL_CALL_CONTEXT
 
 inherit

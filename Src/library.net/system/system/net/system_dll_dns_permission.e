@@ -3,7 +3,7 @@ indexing
 	external_name: "System.Net.DnsPermission"
 	assembly: "System", "1.0.3300.0", "neutral", "b77a5c561934e089"
 
-external class
+frozen external class
 	SYSTEM_DLL_DNS_PERMISSION
 
 inherit

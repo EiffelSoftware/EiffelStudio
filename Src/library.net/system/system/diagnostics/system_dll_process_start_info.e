@@ -3,7 +3,7 @@ indexing
 	external_name: "System.Diagnostics.ProcessStartInfo"
 	assembly: "System", "1.0.3300.0", "neutral", "b77a5c561934e089"
 
-external class
+frozen external class
 	SYSTEM_DLL_PROCESS_START_INFO
 
 inherit

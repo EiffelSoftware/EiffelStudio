@@ -185,7 +185,9 @@ typedef char			EIF_INTEGER_8;
 typedef int16			EIF_INTEGER_16;
 typedef int32			EIF_INTEGER;
 typedef int32			EIF_INTEGER_32;
-#if defined(EIF_WIN32) || defined(EIF_VMS)      /* or whatever they actually are */
+#ifdef CYGWIN
+typedef long long		EIF_INTEGER_64;
+#elif defined(EIF_WIN32) || defined(EIF_VMS)      /* or whatever they actually are */
 typedef __int64			EIF_INTEGER_64;
 #else
 typedef long long		EIF_INTEGER_64;

@@ -16,8 +16,8 @@ lib='a'
 #
 #-- Standard runtime
 #-------------------
-ccflags='-mno-cygwin'
-mtccflags='-mno-cygwin -DEIF_THREADS'
+ccflags='-mno-cygwin -DCYGWIN'
+mtccflags='-mno-cygwin -DCYGWIN -DEIF_THREADS'
 output_libraries='standard mtstandard'
 #
 #

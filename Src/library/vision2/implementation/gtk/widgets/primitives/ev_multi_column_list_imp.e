@@ -267,6 +267,7 @@ feature {NONE} -- Initialization
 			Precursor {EV_ITEM_LIST_IMP}
 			Precursor {EV_PRIMITIVE_IMP}
 			Precursor {EV_MULTI_COLUMN_LIST_I}
+			initialize_pixmaps
 			connect_button_press_switch
 			disable_multiple_selection
 		end

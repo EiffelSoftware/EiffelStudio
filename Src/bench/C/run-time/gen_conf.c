@@ -349,20 +349,6 @@ rt_public char eif_gen_is_uniform (char *obj, char code)
 }
 /*------------------------------------------------------------------*/
 
-rt_public char *eif_gen_typecode_str (char *obj)
-{
-	char    *result;
-
-	EIFMTX_LOCK;
-
-	result = eifthd_gen_typecode_str (obj);
-
-	EIFMTX_UNLOCK;
-	
-	return result;
-}
-/*------------------------------------------------------------------*/
-
 rt_public int16 eif_gen_param_id (int16 stype, char *obj, int pos)
 {
 	int16   result;
@@ -412,20 +398,6 @@ rt_public int16 eif_typeof_array_of (int16 dtype)
 	EIFMTX_LOCK;
 
 	result = eifthd_typeof_array_of (dtype);
-
-	EIFMTX_UNLOCK;
-
-	return result;
-}
-/*------------------------------------------------------------------*/
-
-rt_public char *eif_gen_typename (char *obj)
-{
-	char    *result;
-
-	EIFMTX_LOCK;
-
-	result = eifthd_gen_typename (obj);
 
 	EIFMTX_UNLOCK;
 
@@ -497,12 +469,10 @@ rt_public int eif_gen_conf (int16 source_type, int16 target_type)
 #define eif_gen_count             eifthd_gen_count
 #define eif_gen_typecode          eifthd_gen_typecode
 #define eif_gen_is_uniform        eifthd_gen_is_uniform
-#define eif_gen_typecode_str      eifthd_gen_typecode_str
 #define eif_gen_param_id          eifthd_gen_param_id
 #define eif_gen_create            eifthd_gen_create
 #define eif_register_bit_type     eifthd_register_bit_type
 #define eif_typeof_array_of       eifthd_typeof_array_of
-#define eif_gen_typename          eifthd_gen_typename
 #define eif_gen_cid               eifthd_gen_cid
 #define eif_gen_id_from_cid       eifthd_gen_id_from_cid
 #define eif_gen_create_from_cid   eifthd_gen_create_from_cid
@@ -1043,6 +1013,10 @@ rt_public char *eif_gen_typecode_str (char *obj)
 	char tstr [256];
 	char *strp;
 
+#ifdef EIF_THREADS
+	EIFMTX_LOCK;
+#endif
+
 	if (obj == (char *)0)
 		eif_panic ("Invalid object");
 
@@ -1175,6 +1149,10 @@ rt_public char *eif_gen_typecode_str (char *obj)
 		enomem();
 
 	strcpy (strp, tstr);
+
+#ifdef EIF_THREADS
+	EIFMTX_UNLOCK;
+#endif
 
 	return makestr(strp, strlen(strp));
 }
@@ -1311,7 +1289,15 @@ rt_public char *eif_gen_typename (char *obj)
 	if (obj == (char *) 0)
 		return makestr("NONE", 4);
 
+#ifdef EIF_THREADS
+	EIFMTX_LOCK;
+#endif
+
 	name = eif_typename ((int16)Dftype(obj));
+
+#ifdef EIF_THREADS
+	EIFMTX_UNLOCK;
+#endif
 
 	return makestr(name, strlen(name));
 }

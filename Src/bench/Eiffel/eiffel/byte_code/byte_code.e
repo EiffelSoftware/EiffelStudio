@@ -566,6 +566,7 @@ feature -- IL code generation
 			class_c: CLASS_C
 			end_of_assertion: IL_LABEL
 			end_of_routine: IL_LABEL
+			l_saved_in_assertion: INTEGER
 		do
 			class_c := context.class_type.associated_class
 			local_list := context.local_list
@@ -604,6 +605,14 @@ feature -- IL code generation
 			Il_generator.flush_sequence_points (context.class_type)
 
 			if rescue_clause /= Void then
+					-- Generate local variable to save assertions level.
+				context.add_local (Boolean_c_type)
+				l_saved_in_assertion := context.local_list.count
+				il_generator.put_dummy_local_info (Boolean_c_type, l_saved_in_assertion)
+				il_generator.generate_in_assertion_status
+				il_generator.generate_local_assignment (l_saved_in_assertion)
+				
+					-- Create retry label.
 				il_label_factory.create_retry_label
 				il_generator.mark_label (il_label_factory.retry_label)
 				il_generator.generate_start_exception_block
@@ -623,7 +632,9 @@ feature -- IL code generation
 				(old_expressions /= Void or inh_assert.has_postcondition)
 			then
 				end_of_assertion := il_label_factory.new_label
-				il_generator.generate_in_assertion_test (end_of_assertion)
+				il_generator.generate_in_assertion_status
+				il_generator.branch_on_true (end_of_assertion)
+				il_generator.put_boolean_constant (True)
 				il_generator.generate_set_assertion_status
 				if old_expressions /= Void then
 					from
@@ -638,7 +649,8 @@ feature -- IL code generation
 				if inh_assert.has_postcondition then
 					inh_assert.generate_il_old_exp_init
 				end
-				il_generator.generate_restore_assertion_status
+				il_generator.put_boolean_constant (False)
+				il_generator.generate_set_assertion_status
 				il_generator.mark_label (end_of_assertion)
 			end
 
@@ -652,7 +664,9 @@ feature -- IL code generation
 				(postcondition /= Void or inh_assert.has_postcondition)
 			then
 				end_of_assertion := il_label_factory.new_label
-				il_generator.generate_in_assertion_test (end_of_assertion)
+				il_generator.generate_in_assertion_status
+				il_generator.branch_on_true (end_of_assertion)
+				il_generator.put_boolean_constant (True)
 				il_generator.generate_set_assertion_status
 				context.set_assertion_type (In_postcondition)
 				if postcondition /= Void then
@@ -662,12 +676,18 @@ feature -- IL code generation
 				if inh_assert.has_postcondition then
 					inh_assert.generate_il_postcondition
 				end
-				il_generator.generate_restore_assertion_status
+				il_generator.put_boolean_constant (False)
+				il_generator.generate_set_assertion_status
 				il_generator.mark_label (end_of_assertion)
 			end
 			
 			if rescue_clause /= Void then
 				il_generator.generate_start_rescue
+					-- Restore assertion level.
+				il_generator.generate_local (l_saved_in_assertion)
+				il_generator.generate_set_assertion_status
+
+					-- Generate code of rescue.
 				rescue_clause.generate_il
 				il_generator.generate_end_exception_block
 				il_generator.mark_label (end_of_routine)
@@ -700,7 +720,9 @@ feature -- IL code generation
 			inh_assert := Context.inherited_assertion
 
 			end_of_assertion := il_label_factory.new_label
-			il_generator.generate_in_assertion_test (end_of_assertion)
+			il_generator.generate_in_assertion_status
+			il_generator.branch_on_true (end_of_assertion)
+			il_generator.put_boolean_constant (True)
 			il_generator.generate_set_assertion_status
 			if precondition /= Void then
 				from
@@ -734,7 +756,8 @@ feature -- IL code generation
 					il_generator.mark_label (success_block)
 				end
 			end
-			il_generator.generate_restore_assertion_status
+			il_generator.put_boolean_constant (False)
+			il_generator.generate_set_assertion_status
 			il_generator.mark_label (end_of_assertion)
 		end
 

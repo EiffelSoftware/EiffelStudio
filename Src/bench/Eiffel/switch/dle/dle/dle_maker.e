@@ -56,6 +56,8 @@ feature -- Add objects in baskets
 			add_in_system_basket (Eskelet);
 			add_in_system_basket (Evisib)
 			add_in_system_basket (Edle)
+			add_in_system_basket (Eplug)
+			add_in_system_basket (Ececil)
 		end;
 
 	add_cecil_objects is

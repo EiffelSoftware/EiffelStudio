@@ -51,7 +51,7 @@ feature -- Initialization
 
 				-- Create controls.
 			eiffel_image := clone ((create {GB_SHARED_PIXMAPS}).Help_about_pixmap)
-			eiffel_image.set_minimum_size (eiffel_image.width, dialog_unit_to_pixels(200))
+			eiffel_image.set_minimum_size (eiffel_image.width, eiffel_image.height)
 			eiffel_image.set_background_color (White)
 			create info_label.make_with_text (t_info)
 			info_label.align_text_left

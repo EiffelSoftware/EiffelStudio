@@ -374,6 +374,30 @@ feature -- Element change
 			-- same_characters: For every `i' in 1..`count', `item' (`i') = `other'.`item' (`i')
 		end;
 
+	subcopy (other: like Current; start_pos, end_pos, index_pos: INTEGER) is
+			-- Copy characters of `other' within bounds `start_pos' and
+			-- `end_pos' to current string starting at index `index_pos'.
+		require
+			other_not_void: other /= Void;
+			valid_start_pos: other.valid_index (start_pos)
+			valid_end_pos: other.valid_index (end_pos)
+			valid_bounds: (start_pos <= end_pos) or (start_pos = end_pos + 1)
+			valid_index_pos: valid_index (index_pos)
+			enough_space: (count - index_pos) >= (end_pos - start_pos)
+		local
+			other_area: like area
+			start0, end0, index0: INTEGER
+		do
+			other_area := other.area;
+			start0 := start_pos - 1;
+			end0 := end_pos - 1;
+			index0 := index_pos - 1;
+			spsubcopy ($other_area, $area, start0, end0, index0)
+		ensure
+			-- copied: forall `i' in 0 .. (`end_pos'-`start_pos'),
+			--     item (index_pos + i) = other.item (start_pos + i)
+		end
+
 	replace_substring (s: like Current; start_pos, end_pos: INTEGER) is
 			-- Copy the characters of `s' to positions
 			-- `start_pos' .. `end_pos'.
@@ -1268,6 +1292,13 @@ feature {STRING} -- Implementation
 		alias
 			"sprealloc"
 		end;
+
+	spsubcopy (source, target: POINTER; s, e, i: INTEGER) is
+			-- Copy characters of `source' within bounds `s'
+			-- and `e' to `target' starting at index `i'.
+		external
+			"C"
+		end
 
 invariant
 

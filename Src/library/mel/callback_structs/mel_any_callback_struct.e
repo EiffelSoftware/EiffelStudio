@@ -34,10 +34,15 @@ feature {NONE} -- Initialization
 			a_widget_exists: a_widget /= Void and then not a_widget.is_destroyed;
 			valid_a_callback_struct_ptr: a_callback_struct_ptr /= default_pointer;
 			valid_reason: reasons_list.has (reason_from (a_callback_struct_ptr));
+		local
+			an_event_ptr: POINTER
 		do
 			widget := a_widget;
 			handle := a_callback_struct_ptr;
-			create_event (c_event (a_callback_struct_ptr))
+			an_event_ptr := c_event (a_callback_struct_ptr);
+			if an_event_ptr /= default_pointer then 
+				create_event (an_event_ptr)
+			end
 		end;
 
 feature -- Access

@@ -88,18 +88,10 @@ feature -- IL Generation
 			generate_il_implementation_parents (class_interface)
 
 			if not is_single_class then
-					-- Define all features used by ISE runtime.
-				define_runtime_features (class_type)
-				
-					-- Define definition of SYSTEM_OBJECT features for
-					-- .NET types
-				define_system_object_features (class_type)
-
-					-- Generate default constructor.
+					-- Generate class invariant and internal run-time features
+				generate_class_features (class_c, class_type)
+					-- Generate default constructor
 				define_default_constructor (class_type, False)
-
-					-- Generate invariant routine.
-				generate_invariant_feature (class_c.invariant_feature)
 			end
 
 				-- Reset global variable for collection.

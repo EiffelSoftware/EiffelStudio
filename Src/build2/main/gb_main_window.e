@@ -264,6 +264,9 @@ feature -- Basic operation
 				recent_projects_menu.extend (recent_project_item)
 				counter := counter + 1
 			end
+			if recent_projects_menu.is_empty then
+				recent_projects_menu.disable_sensitive
+			end
 		end
 
 feature {NONE} -- Implementation

@@ -67,7 +67,10 @@ feature -- Initialize
 					agent (App_implementation.gtk_marshal).widget_focus_out_intermediary (c_object),
 					size_allocate_translate_agent
 			)
-			disable_multiple_selection
+				-- Set to single selection
+			multiple_selection_enabled := False
+			selection_mode_is_single := True
+			c.gtk_list_set_selection_mode (list_widget, c.gtk_selection_single_enum)
 		end
 		
 feature -- Status Report

@@ -425,12 +425,18 @@ feature -- Document
 	is_code_document (a_doc: DOCUMENT): BOOLEAN is
 			-- Is `a_doc' a code document
 		local
+			l_name,
+			l_lib_name: STRING
 			l_code_dir: FILE_NAME
 		do
 			create l_code_dir.make_from_string (a_doc.shared_project.root_directory)
 			l_code_dir.extend ("libraries")
-			if a_doc.name.has_substring (l_code_dir.string) then
-				Result := a_doc.name.has_substring ("reference")
+			l_lib_name := l_code_dir.string
+			l_lib_name.replace_substring_all ("\", "/")
+			l_name := a_doc.name
+			l_name.replace_substring_all ("\", "/")
+			if l_name.has_substring (l_lib_name) then
+				Result := l_name.has_substring ("reference")
 			end
 		end
 

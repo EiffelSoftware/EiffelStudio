@@ -432,10 +432,10 @@ feature -- Access
 				-- Set the text for `layout_item'.
 			Result.represent_as_locked_instance
 			
-				-- We must check that we are actually a top level object, as otherwise if
+				-- We must check that we are actually an instance of a top level object, as otherwise if
 				-- we have nested representations, it does not need to be done.
-			if is_top_level_object then
-				Result.set_associated_top_level_object (Current)
+			if is_instance_of_top_level_object then
+				Result.set_associated_top_level_object (object_handler.deep_object_from_id (associated_top_level_object))
 					-- Ensure that all representations of `Result' reflect this change.
 				Result.update_representations_for_name_or_type_change
 			end

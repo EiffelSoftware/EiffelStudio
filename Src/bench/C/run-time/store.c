@@ -707,6 +707,7 @@ private void make_header()
 	}
 	xfree (bufer);
 	bufer = (char *) 0;
+	expop(&eif_stack);
 }
 
 
@@ -828,6 +829,7 @@ private void imake_header()
 	}
 	xfree (bufer);
 	bufer = (char *) 0;
+	expop(&eif_stack);
 }
 
 

@@ -34,9 +34,15 @@ feature -- Element Change
 			shared_memory_handle: POINTER
 		do
 			shared_memory_handle := cwel_get_clipboard_data (feature {WEL_CLIPBOARD_CONSTANTS}.Cf_text)
-			create shared_string.make_from_handle (shared_memory_handle)
-			shared_string.retrieve_string
-			last_string := shared_string.last_string
+			if shared_memory_handle /= default_pointer then
+				create shared_string.make_from_handle (shared_memory_handle)
+				shared_string.retrieve_string
+				last_string := shared_string.last_string
+			else
+				last_string := ""
+			end
+		ensure
+			last_string_not_void: last_string /= Void
 		end
 
 	set_clipboard_text (a_text: STRING) is

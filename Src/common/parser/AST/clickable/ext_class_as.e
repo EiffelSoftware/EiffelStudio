@@ -14,7 +14,8 @@ inherit
 	CLASS_AS
 		redefine
 			features, features_simple_format
-		end
+		end;
+	COMPILER_EXPORTER
 
 feature -- Properties
 

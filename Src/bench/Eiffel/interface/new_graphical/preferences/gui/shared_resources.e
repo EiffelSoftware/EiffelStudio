@@ -23,7 +23,7 @@ feature -- Access
 			else
 				create environment
 				create file_name.make_from_string (environment.home_directory_name)
-				file_name.set_file_name (".es4rc")
+				file_name.set_file_name (".es5rc")
 				create Result.make_from_location (System_general, file_name)
 			end
 		end

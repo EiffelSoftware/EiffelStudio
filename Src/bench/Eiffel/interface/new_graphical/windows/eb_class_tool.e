@@ -10,21 +10,27 @@ inherit
 		rename
 --			class_type as stone_type
 		redefine
-empty_tool_name,build_interface, reset,synchronize, close_windows,
-set_mode_for_editing, able_to_edit, has_editable_text, icon_id,
 
 --			build_format_bar, hole,
---			empty_tool_name, open_cmd_holder, save_cmd_holder,
---			editable, reset, build_interface,
---			close_windows, resize_action,
---			synchronize, set_stone, process_class_syntax,
+			empty_tool_name,
+--open_cmd, save_cmd,
+--			editable,
+reset, build_interface,
+			close_windows,
+--resize_action,
+			synchronize, set_stone,
+--process_class_syntax,
 --			process_feature, process_class, process_classi,
---			compatible, set_mode_for_editing,
---			has_editable_text, process_feature_error,
---			able_to_edit, display,
---			help_index, icon_id,
+--			compatible,
+set_mode_for_editing,
+			has_editable_text,
+--process_feature_error,
+			able_to_edit,
+--			help_index,
+icon_id,
 			parse_file, history_window_title,
-			format_list, set_default_format
+			format_list, set_default_format,
+			build_file_menu
 		end
 
 	EB_CLASS_TOOL_DATA
@@ -138,26 +144,28 @@ feature -- Status setting
 
 	display is
 			-- Show Current
+		obsolete
+			"Use raise instead"
 		do
 --			{EB_EDITOR} Precursor
 --			save_cmd_holder.change_state (True)
 --			class_text_field.set_focus
 		end
  
---	set_stone (s: like stone) is
---		local
---			c: CLASSC_STONE
---			ci: CLASSI_STONE
---		do
---			{EB_EDITOR} Precursor (s)
---			c ?= stone
---			ci ?= stone
---			if c /= Void then
---				update_class_name (clone (c.e_class.name))
---			elseif ci /= Void then
---				update_class_name (clone (ci.class_i.name))
---			end
---		end
+	set_stone (s: like stone) is
+		local
+			c: CLASSC_STONE
+			ci: CLASSI_STONE
+		do
+			Precursor (s)
+			c ?= stone
+			ci ?= stone
+			if c /= Void then
+				update_class_name (clone (c.e_class.name))
+			elseif ci /= Void then
+				update_class_name (clone (ci.class_i.name))
+			end
+		end
 
 	set_mode_for_editing is
 			-- Set the text mode to be editable.
@@ -302,7 +310,7 @@ feature -- Stone process
 		do
 --			synchronise_stone
 --			if stone = Void then
---				class_text_field.clear
+--				class_text_field.set_text("")
 --			end
 		end
 
@@ -422,7 +430,6 @@ feature -- Window Settings
 			-- Close sub-windows.
 		do
 --			Precursor {EB_EDITOR}
-			class_text_field.destroy_choice_window
 --			version_cmd.close_choice_window
 		end
 
@@ -762,5 +769,40 @@ feature {NONE} -- Implementation Graphical Interface
 --			sep2.set_height (20)
 --
 -- 		end
+
+feature {EB_TOOL_MANAGER} -- Menus Implementation
+
+	build_file_menu (a_menu: EV_MENU_ITEM_HOLDER) is
+		local
+			i: EV_MENU_ITEM
+			open_cmd: EB_OPEN_FILE_CMD
+			save_cmd: EB_SAVE_FILE_CMD
+			save_as_cmd: EB_SAVE_FILE_AS_CMD
+		do
+			create open_cmd.make (Current)
+			create i.make_with_text (a_menu, Interface_names.m_Open)
+			i.add_select_command (open_cmd, Void)
+
+			create save_cmd.make (Current)
+			create i.make_with_text (a_menu, Interface_names.m_Save)
+			i.add_select_command (save_cmd, Void)
+
+			Precursor (a_menu)
+		end	
+
+	build_special_menu (a_menu: EV_MENU_ITEM_HOLDER) is
+		local
+			i: EV_MENU_ITEM
+			shell_cmd: EB_OPEN_SHELL_CMD
+			filter_cmd: EB_FILTER_CMD
+		do
+			create shell_cmd.make (Current)
+			create i.make_with_text (a_menu, Interface_names.m_Shell)
+			i.add_select_command (shell_cmd, Void)
+
+			create filter_cmd.make (Current)
+			create i.make_with_text (a_menu, Interface_names.m_Filter)
+			i.add_select_command (filter_cmd, Void)
+		end
 
 end -- class EB_CLASS_TOOL

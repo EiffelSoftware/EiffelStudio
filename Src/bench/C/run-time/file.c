@@ -713,7 +713,14 @@ EIF_INTEGER start;		/* Amount of characters already held in buffer */
 	 */
 
 	if (c == EOF || c == '\n')
+#ifdef EIF_WINDOWS
+		if ((read > 0) && (*(s-1) == '\r'))
+			return read -1;
+		else
+			return read;
+#else
 		return read;
+#endif
 	if (amount == -1)
 		return (read + 1);
 
@@ -1515,8 +1522,14 @@ char *path;
 #else
 	ptr = rindex(temp, '/');
 #endif
-	if (ptr != (char *) 0)
+	if (ptr != (char *) 0) {
 		*ptr = '\0';
+#if defined EIF_WINDOWS || defined EIF_OS2
+		if ((ptr == temp) || (*(ptr -1) == ':'))
+				/* path is of the form a:\bbb or \bbb, parent is a:\ or \ */
+			strcat (ptr, "\\");
+#endif
+		}
 	else
 		strcpy (temp, ".");
 

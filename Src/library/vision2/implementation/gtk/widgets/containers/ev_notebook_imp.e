@@ -134,15 +134,20 @@ feature -- Access
 			-- 
 		local
 			item_imp: EV_WIDGET_IMP
-			a_tab_label, a_hbox, a_list: POINTER
+			a_tab_label, a_hbox, a_list, a_pixmap: POINTER
+			pix_imp: EV_PIXMAP_IMP
 		do
 			item_imp ?= an_item.implementation
 			a_tab_label := feature {EV_GTK_EXTERNALS}.gtk_notebook_get_tab_label (visual_widget, item_imp.c_object)
 			a_hbox := feature {EV_GTK_EXTERNALS}.gtk_bin_struct_child (a_tab_label)
-			a_list := feature {EV_GTK_EXTERNALS}.gtk_container_children (a_tab_label)
+			a_list := feature {EV_GTK_EXTERNALS}.gtk_container_children (a_hbox)
 			if feature {EV_GTK_EXTERNALS}.g_list_length (a_list) = 2 then
 				-- Our pixmap is set
 				create Result
+				pix_imp ?= Result.implementation
+				a_pixmap := feature {EV_GTK_EXTERNALS}.g_list_nth_data (a_list, 0)
+				a_pixmap := feature {EV_GTK_EXTERNALS}.gtk_image_get_pixbuf (a_pixmap)
+				pix_imp.set_pixmap_from_pixbuf (a_pixmap)
 			end
 			feature {EV_GTK_EXTERNALS}.g_list_free (a_list)
 		end
@@ -305,7 +310,6 @@ feature -- Element change
 			feature {EV_GTK_EXTERNALS}.gtk_box_pack_start (a_hbox, a_pix, False, False, 0)
 			feature {EV_GTK_EXTERNALS}.gtk_box_reorder_child (a_hbox, a_pix, 0)
 		end
-		
 
 feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 

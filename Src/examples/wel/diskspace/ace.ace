@@ -9,7 +9,7 @@ default
 	console_application (yes)
 
 cluster 
-	root_cluster:	"."
+	root_cluster:	"$ISE_EIFFEL\examples\wel\diskspace"
 
 		-- EiffelBase
 	all base: 		"$ISE_EIFFEL\library\base"

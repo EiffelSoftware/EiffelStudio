@@ -9,7 +9,7 @@ default
 	precompiled ("$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\wel")
 
 cluster 
-	root_cluster:	"."
+	root_cluster:	"$ISE_EIFFEL\examples\wel\fontenum"
 
 		-- EiffelBase
 	all base: 		"$ISE_EIFFEL\library\base"

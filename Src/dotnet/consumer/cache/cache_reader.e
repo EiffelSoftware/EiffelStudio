@@ -18,7 +18,7 @@ inherit
 		end
 
 create
-	make
+	default_create
 
 feature -- Access
 
@@ -261,7 +261,7 @@ feature {CACHE_WRITER} -- Implementation
 				end
 				if internal_info.item = Void then
 						-- cache info is not initalized or is outdated
-					internal_info.put (create {CACHE_INFO}.make (clr_version))
+					internal_info.put (create {CACHE_INFO}.make)
 					(create {EIFFEL_XML_SERIALIZER}).serialize (internal_info.item, absolute_info_path)
 				end
 			end

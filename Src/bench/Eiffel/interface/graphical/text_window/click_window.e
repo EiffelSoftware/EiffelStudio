@@ -333,8 +333,7 @@ feature {NONE} -- Implementation
 				cb ?= local_copy.item (i)
 				if cb /= Void then
 					b := cb.breakable
-					found := (bid.is_equal (b.routine.body_id) and then
-						b.index = index)
+					found := (bid.is_equal (b.routine.body_id) and then b.index = index)
 				end
 				i := i + 1
 			end

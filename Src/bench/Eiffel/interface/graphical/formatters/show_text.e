@@ -127,8 +127,7 @@ feature -- Formatting
 						class_tool ?= tool;
 						if 
 							class_tool /= Void and then (
-							(same_stone and tool.last_format = 
-										class_tool.showclick_frmt_holder) or
+							(same_stone and tool.last_format = class_tool.showclick_frmt_holder) or
 							(do_format and tool.last_format.associated_command = Current))
 						then
 							cur := text_window.cursor;
@@ -150,8 +149,8 @@ feature -- Formatting
 							st := rout_flat_context_text (routine_w.stone);
 							text_window.process_text (st);
 							text_window.display
-						else
-							text_window.set_text (stone_text);
+						else	
+							text_window.set_text (stone_text)
 						end;
 						tool.update_save_symbol;
 						tool.set_mode_for_editing;

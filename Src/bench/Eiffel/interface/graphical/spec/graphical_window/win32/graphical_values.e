@@ -17,48 +17,37 @@ feature {NONE} -- Initialization
 			-- Initialize all graphical values from 
 			-- `Graphical_resources'.
 		do
-			comment_format :=
-				format_creation (
+			comment_format :=	format_creation (
 					Graphical_resources.comment_color.valid_actual_value,
 					Graphical_resources.comment_font.valid_actual_value)
-			string_text_format :=
-				format_creation (
+			string_text_format := format_creation (
 					Graphical_resources.string_text_color.valid_actual_value,
 					Graphical_resources.string_text_font.valid_actual_value)
-			default_text_format :=
-				format_creation (
+			default_text_format := format_creation (
 					Graphical_resources.default_text_color.valid_actual_value,
 					Graphical_resources.default_text_font.valid_actual_value)
-			class_format :=
-				format_creation (
+			class_format := format_creation (
 					Graphical_resources.class_color.valid_actual_value,
 					Graphical_resources.class_font.valid_actual_value)
-			cluster_format :=
-				format_creation (
+			cluster_format := format_creation (
 					Graphical_resources.cluster_color.valid_actual_value,
 					Graphical_resources.cluster_font.valid_actual_value)
-			feature_format :=
-				format_creation (
+			feature_format := format_creation (
 					Graphical_resources.feature_color.valid_actual_value,
 					Graphical_resources.feature_font.valid_actual_value)
-			object_format :=
-				format_creation (
+			object_format := format_creation (
 					Graphical_resources.object_color.valid_actual_value,
 					Graphical_resources.object_font.valid_actual_value)
-			error_format :=
-				format_creation (
+			error_format := format_creation (
 					Graphical_resources.error_color.valid_actual_value,
 					Graphical_resources.error_font.valid_actual_value)
-			breakable_format :=
-				format_creation (
+			breakable_format := format_creation (
 					Graphical_resources.breakable_color.valid_actual_value,
 					Graphical_resources.breakable_font.valid_actual_value)
-			keyword_format :=
-				format_creation (
+			keyword_format := format_creation (
 					Graphical_resources.keyword_color.valid_actual_value,
 					Graphical_resources.keyword_font.valid_actual_value)
-			symbol_format :=
-				format_creation (
+			symbol_format := format_creation (
 					Graphical_resources.symbol_color.valid_actual_value,
 					Graphical_resources.symbol_font.valid_actual_value)
 		end

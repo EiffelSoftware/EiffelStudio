@@ -108,12 +108,10 @@ feature -- Update Resources
 					format_bar.remove
 				end
 			elseif old_res = fr.show_all_callers then
-				rout_cli_cmd ?= 
-					showroutclients_frmt_holder.associated_command;
+				rout_cli_cmd ?= showroutclients_frmt_holder.associated_command;
 				rout_cli_cmd.set_show_all_callers (new_res.actual_value)
 			elseif old_res = fr.do_flat_in_breakpoints then
-				stop_cmd ?= 
-					showstop_frmt_holder.associated_command;
+				stop_cmd ?= showstop_frmt_holder.associated_command;
 				stop_cmd.set_format_mode (new_res.actual_value)
 			end;
 			old_res.update_with (new_res)

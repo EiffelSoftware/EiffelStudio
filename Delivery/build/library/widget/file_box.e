@@ -2,10 +2,9 @@ indexing
 
 	description:
 		"Widget: File Selection Dialog. %
-		%Able to select file names.";
-
-	status: "See notice at end of class";
-	date: "$Date$";
+		%Able to select file names."
+	status: "See notice at end of class"
+	date: "$Date$"
 	revision: "$Revision$"
 
 class FILE_BOX
@@ -16,9 +15,11 @@ inherit
 		rename
 			make as file_sel_d_make,
 			popup as old_popup
-		end;
-	COMMAND;
-	COMMAND_ARGS
+		end
+		
+	COMMAND
+
+	BUILD_COMMAND_ARGS
 
 creation
 
@@ -29,39 +30,39 @@ feature
 	make (a_name: STRING; a_parent: COMPOSITE) is
 			-- Create file selection box.
 		do
-			file_sel_d_make (a_name, a_parent);
-			hide_help_button;
-			add_ok_action (Current, First);
-			add_cancel_action (Current, Second);
+			file_sel_d_make (a_name, a_parent)
+			hide_help_button
+			add_ok_action (Current, First)
+			add_cancel_action (Current, Second)
 			set_exclusive_grab
-		end;
+		end
 
 	popup (com: BUILD_CMD) is
 			-- Set caller to `com' and popup Current
 			-- file box.
 		do
-			caller := com;
+			caller := com
 			old_popup
-		end;
+		end
 
-	caller: BUILD_CMD;
+	caller: BUILD_CMD
 			-- Command calling Curren file_box
 
-	canceled: BOOLEAN;
+	canceled: BOOLEAN
 			-- Action canceled
 
 	execute (argument: ANY) is
 		do
 			if (argument = First) then
-				popdown;
-				canceled := False;
+				popdown
+				canceled := False
 				caller.work
 			elseif (argument = Second) then
-				popdown;
-				canceled := True;
+				popdown
+				canceled := True
 				caller.work
 			end
-		end;
+		end
 		
 end
 

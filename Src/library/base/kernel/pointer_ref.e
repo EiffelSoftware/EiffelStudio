@@ -43,6 +43,16 @@ feature -- Status report
 			Result := item /= default_pointer
 		end;
 
+feature -- Operations
+
+	offset_pointer (i: INTEGER; s: INTEGER): POINTER is
+			-- Pointer to `i'-th item considering that
+			-- `Current' is a pointer to an array of items
+ 			-- of size `s'
+		do
+			Result := c_offset_pointer (item, i, s)
+		end
+ 
 feature -- Output
 
 	out: STRING is
@@ -67,6 +77,16 @@ feature {NONE} -- Implementation
 			"conv_pi"
 		end;
 
+	c_offset_pointer (p: POINTER; i: INTEGER; s: INTEGER): POINTER is
+			-- Pointer to `i'-th item of `p' considering that
+			-- `Current' is a pointer to an array of items
+ 			-- of size `s'
+		external
+			"C [macro %"eif_macros%"]"
+		alias
+			"RTSOFN"
+		end
+	
 end -- class POINTER_REF
 
 

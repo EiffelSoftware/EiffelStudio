@@ -43,19 +43,19 @@ feature -- Access
 			Result := implementation.is_visible
 		end
 
-	resource_list: LINKED_LIST [RESOURCE] is
+	resource_list: LIST [RESOURCE] is
 			-- List of resources.
 		do
 			Result := implementation.resource_list
 		end
 
-	child_list: LINKED_LIST [RESOURCE_FOLDER] is
+	child_list: LIST [RESOURCE_FOLDER] is
 			-- List of Categories.
 		local
-			child_list_i: LINKED_LIST [RESOURCE_FOLDER_I]
+			child_list_i: LIST [RESOURCE_FOLDER_I]
 		do
 			child_list_i := implementation.child_list
-			create Result.make
+			create {ARRAYED_LIST [RESOURCE_FOLDER]} Result.make (10)
 			from
 				child_list_i.start
 			until

@@ -71,7 +71,7 @@ feature -- Access
 			Result := f.interface
 		end
 
-	child_list (path: STRING): LINKED_LIST [like folder] is
+	child_list (path: STRING): LIST [like folder] is
 			-- List of child folder of folder located at `path'.
 		local
 			f: like folder
@@ -80,7 +80,7 @@ feature -- Access
 			Result := f.child_list
 		end
 
-	resource_list (path: STRING): LINKED_LIST [RESOURCE] is
+	resource_list (path: STRING): LIST [RESOURCE] is
 			-- List of resources of folder located at `path'.
 		local
 			f: like folder
@@ -132,7 +132,7 @@ feature {NONE} -- Implementation
 			-- Child of `par' with name `child_name'
 			-- Void if `par' has no child called `child_name'.
 		local
-			l: LINKED_LIST [RESOURCE_FOLDER_I]
+			l: LIST [RESOURCE_FOLDER_I]
 			f: RESOURCE_FOLDER_I
 		do
 			l := par.child_list

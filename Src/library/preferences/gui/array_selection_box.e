@@ -10,7 +10,7 @@ class
 inherit
 	TEXT_SELECTION_BOX
 		redefine
-			commit, resource
+			resource
 		end
 
 creation
@@ -22,7 +22,7 @@ feature -- Implementation
 
 feature -- Command
 
-	commit is
+	obsolete_feature is
 			-- Commit the new value and update the
 			-- environment.
 		require
@@ -32,7 +32,7 @@ feature -- Command
 		do
 			arr.set_value(text_f.text)
 			update_resource
-			caller.update
+			caller.update_selected (resource)
 		end
 
 end -- class ARRAY_SELECTION_BOX

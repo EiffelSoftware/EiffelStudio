@@ -102,7 +102,6 @@ feature -- Initialization
 	load_default_attributes (xml_elem: XML_ELEMENT) is
 			-- effective load of data from `xml_elem'.
 		local
-			res_xml: XML_RESOURCE
 			resource: RESOURCE
 			child: RESOURCE_FOLDER_IMP
 			cursor,des_cursor: DS_BILINKED_LIST_CURSOR[XML_NODE]
@@ -110,8 +109,8 @@ feature -- Initialization
 			txt: XML_TEXT
 		do
 			create description.make (20)
-			create child_list.make
-			create resource_list.make
+			create {ARRAYED_LIST [RESOURCE_FOLDER_I]} child_list.make (10)
+			create {ARRAYED_LIST [RESOURCE]} resource_list.make (20)
 			cursor := xml_elem.new_cursor
 			from
 				cursor.start
@@ -134,8 +133,7 @@ feature -- Initialization
 							des_cursor.forth
 						end
 					elseif node.name.is_equal ("TEXT") then
-						create res_xml.make (node)
-						resource := res_xml.value
+						resource := load_xml_resource (node)
 						resource_list.extend (resource)
 						structure.put_resource (resource)
 					elseif node.name.is_equal ("TOPIC") then
@@ -212,13 +210,13 @@ feature -- Access
 			-- Description of Current.
 			-- Meant for providing a help message.
 
-	resource_list: LINKED_LIST [RESOURCE]
+	resource_list: LIST [RESOURCE]
 			-- List of resources.
 
 	structure: RESOURCE_STRUCTURE
 			-- Structure Current is part of.
 
-	child_list: LINKED_LIST [like Current]
+	child_list: LIST [like Current]
 			-- List of child folders.
 
 feature -- Save
@@ -248,6 +246,111 @@ feature -- Implementation
 feature {NONE} -- Implementation
 
 	xml_data: XML_ELEMENT
+
+	load_xml_resource (el: XML_ELEMENT): RESOURCE is
+			-- Create a resource associated to an XML representation.
+		require
+			not_void: el /= Void
+		local
+			cursor: DS_BILINKED_LIST_CURSOR [XML_NODE]
+			node: XML_ELEMENT
+			txt: XML_TEXT
+			att: XML_ATTRIBUTE
+			att_table: XML_ATTRIBUTE_TABLE
+			val: STRING
+		do
+			create resource_name.make (20)
+			att_table := el.attributes
+			if att_table.has ("DESCRIPTION") then
+				att := att_table.item ("DESCRIPTION")
+				if att /= Void then
+					resource_description := att.value
+				end
+			end
+			if att_table.has ("IMMEDIATE_EFFECT") then
+				att := att_table.item ("IMMEDIATE_EFFECT")
+				if att /= Void then
+					val := clone (att.value)
+					val.to_lower
+					effect_is_delayed := val.is_equal ("no")
+				end
+			end
+			cursor := el.new_cursor
+			from
+				cursor.start
+			until
+				cursor.after
+			loop
+				txt ?= cursor.item
+				if txt /= Void then
+					resource_name.append (txt.string)
+				else
+					node ?= cursor.item
+					if node /= Void then
+						Result := process_unit_specific (node)
+					end
+				end
+				cursor.forth
+			end
+		end
+
+	process_unit_specific (node: XML_ELEMENT): RESOURCE is
+			-- Gets the appropriate resource from `node'
+			-- if the type is unknown, it is assumed to be a string.
+		require
+			not_void: node /= Void
+		local
+			s: STRING
+			type: INTEGER
+			b: BOOLEAN
+			txt: XML_TEXT
+			n: STRING
+			types: LINEAR [RESOURCE_TYPE]
+		do
+			n := node.name
+			if n /= Void and then not n.is_empty then
+				if not node.is_empty then
+					txt ?= node.first
+				end
+				if txt /= Void then
+					s := txt.string
+					s.prune_all ('%R')
+					s.prune_all ('%N')
+					s.prune_all ('%T')
+				end
+				from
+					types := structure.registered_types
+					types.start
+				until
+					types.after or Result /= Void
+				loop
+					if types.item.xml_name.is_equal (n) then
+						if resource_name = Void or else resource_name.is_empty then
+							raise ("Empty resource name")
+						end
+						Result := types.item.load_resource (resource_name, s)
+						if Result = Void then
+							raise ("Not a valid resource")
+						end
+					end
+					types.forth
+				end
+				if resource_description /= Void then
+					Result.set_description (resource_description)
+				end
+				Result.set_effect_is_delayed (effect_is_delayed)
+			end
+		end
+
+	resource_name: STRING
+			-- Name of the resource currently being loaded.
+
+	resource_description: STRING
+			-- Description of the variable.
+
+	effect_is_delayed: BOOLEAN
+			-- Is a change in the resource reflected in the application
+			-- immediately ?
 
 invariant
 	structure_exists: structure /= Void

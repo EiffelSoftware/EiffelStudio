@@ -14,12 +14,13 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; a_value: STRING) is
+	make (a_name: STRING; a_value: STRING; a_type: RESOURCE_TYPE) is
 			-- Initialize Current
 		require
 			valid_name: a_name /= Void
 			valid_value: a_value /= Void
 		do
+			type := a_type
 			name := a_name
 			value := a_value
 			default_value := a_value
@@ -47,30 +48,6 @@ feature -- Setting
 	mark_saved is
 		do
 			default_value := value
-		end
-
-feature -- Output
-
-	xml_trace: STRING is
-			-- XML representation of current
-		local
-			xml_name, xml_value: STRING
-		do
-			xml_name := name
-			xml_value := value
-
-			create Result.make (31 + xml_name.count + xml_value.count)
-			Result.append ("<TEXT>")
-			Result.append (xml_name)
-			Result.append ("<STRING>")
-			Result.append (xml_value)
-			Result.append ("</STRING></TEXT>")
-		end
-
-	registry_name: STRING is
-			-- name of Current in the registry
-		do
-			Result := "EIFSTR_" + name
 		end
 
 end -- class STRING_RESOURCE

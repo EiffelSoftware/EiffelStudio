@@ -14,12 +14,13 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; a_value: BOOLEAN) is
+	make (a_name: STRING; a_value: BOOLEAN; a_type: RESOURCE_TYPE) is
 			-- Initialize Current.
 		do
 			name := a_name
 			actual_value := a_value
 			default_value := a_value
+			type := a_type
 		end
 
 feature -- Access
@@ -63,24 +64,5 @@ feature -- Setting
 		do
 			default_value := actual_value
 		end
-
-feature -- Output
-
-	xml_trace: STRING is
-			-- XML representation of Current
-		do
-			Result := "<TEXT>"
-			Result.append (name)
-			Result.append ("<BOOLEAN>")
-			Result.append (value)
-			Result.append ("</BOOLEAN></TEXT>")
-		end
-
-	registry_name: STRING is
-			-- name of Current in the registry
-		do
-			Result := "EIFBOL_" + name
-		end
-
 
 end -- class BOOLEAN_RESOURCE

@@ -45,11 +45,10 @@ feature -- Initialization
 			key: WEL_REGISTRY_KEY
 			child_handle: POINTER
 			s: STRING
-			reg_resource: REGISTRY_RESOURCE
 			resource: RESOURCE
 		do
 				--| We fill `child_list'
-			create child_list.make
+			create {ARRAYED_LIST [RESOURCE_FOLDER_IMP]} child_list.make (20)
 			from
 				i := 0
 				key := enumerate_key (handle, i)
@@ -68,15 +67,14 @@ feature -- Initialization
 				key := enumerate_key (handle, i)
 			end
 				--| We fill `resource_list'
-			create resource_list.make
+			create {ARRAYED_LIST [RESOURCE]} resource_list.make (20)
 			from
 				i := 0
 				s := enumerate_value (handle, i)
 			until
 				s = Void
 			loop
-				create reg_resource.make (s, key_value (handle, s))
-				resource := reg_resource.value
+				resource := load_resource (s, key_value (handle, s))
 				resource_list.extend (resource)
 				structure.put_resource (resource)
 				i := i + 1
@@ -109,7 +107,6 @@ feature -- Update
 			key: WEL_REGISTRY_KEY
 			child_handle: POINTER
 			s: STRING
-			reg_resource: REGISTRY_RESOURCE
 			resource: RESOURCE
 			act_resource: RESOURCE
 		do
@@ -139,8 +136,7 @@ feature -- Update
 			until
 				s = Void
 			loop
-				create reg_resource.make (s, key_value (p_handle, s))
-				act_resource := reg_resource.value
+				act_resource := load_resource (s, key_value (p_handle, s))
 				
 				resource ?= structure.item (act_resource.name)
 				if resource /= Void then
@@ -163,7 +159,6 @@ feature -- Save
 
 	root_save (location: STRING) is
 		local
-			reg_resource: REGISTRY_RESOURCE
 			resource: RESOURCE
 			child: like Current
 		do
@@ -188,9 +183,9 @@ feature -- Save
 			loop
 				resource := resource_list.item
 --				if resource.has_changed then
-					create reg_resource.make_from_resource (resource)
-					set_key_value (handle, resource.registry_name, reg_resource.key_value)
-					resource.mark_saved
+					set_key_value (handle, resource.registry_name,
+						create {WEL_REGISTRY_KEY_VALUE}.make (feature {WEL_REGISTRY_KEY_VALUE_TYPE}.Reg_sz, resource.value)
+					)
 --				end
 				resource_list.forth
 			end
@@ -202,7 +197,6 @@ feature -- Save
 
 	save (father_handle: POINTER) is
 		local
-			reg_resource: REGISTRY_RESOURCE
 			resource: RESOURCE
 			child: like Current
 		do
@@ -226,15 +220,47 @@ feature -- Save
 			loop
 				resource := resource_list.item
 --				if resource.has_changed then
-					create reg_resource.make_from_resource (resource)
-					set_key_value (handle, resource.registry_name, reg_resource.key_value)
-					resource.mark_saved
+					set_key_value (handle, resource.registry_name,
+						create {WEL_REGISTRY_KEY_VALUE}.make (feature {WEL_REGISTRY_KEY_VALUE_TYPE}.Reg_sz, resource.value)
+					)
 --				end
 				resource_list.forth
 			end
 			close_key (handle)
 			check
 				success: last_call_successful
+			end
+		end
+
+feature {NONE} -- Implementation
+
+	load_resource (k_name: STRING; reg_k: WEL_REGISTRY_KEY_VALUE): RESOURCE is
+			-- Gets the appropriate resource from `reg_k' whose name is `k_name'
+			-- if the type is unknown, it is assumed to be a string.
+		local
+			sprefix: STRING
+			types: LINEAR [RESOURCE_TYPE]
+		do
+			if reg_k.type = reg_k.Reg_dword then
+				Result := (structure.registered_types @ structure.Integer_type_index).load_resource (k_name, reg_k.value)
+			else
+				if k_name.count > 7 then
+					sprefix := k_name.substring (1, 6)
+					from
+						types := structure.registered_types
+						types.start
+					until
+						types.after or Result /= Void
+					loop
+						if types.item.registry_name.is_equal (sprefix) then
+							Result := types.item.load_resource (k_name.substring (8, k_name.count), reg_k.value)
+							if Result = Void then
+								raise (types.item.error_message)
+							end
+						end
+						types.forth
+					end
+				end
 			end
 		end
 

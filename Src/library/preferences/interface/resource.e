@@ -9,7 +9,7 @@ deferred class
 inherit
 	COMPARABLE
 
-feature -- Setting
+feature -- Status setting
 
 	set_description (new_description: STRING) is
 			-- Set `description' to `new_description'.
@@ -30,12 +30,6 @@ feature -- Setting
 			value_set: value.is_equal (new_value)
 		end
 
-	mark_saved is
-			-- Update curent do that `has_changed' becomes false,
-			-- and `value' does not change.
-		deferred
-		end
-
 	set_effect_is_delayed (new_value: BOOLEAN) is
 			-- Set `immediate_change' to `new_value'.
 		do
@@ -45,12 +39,11 @@ feature -- Setting
 feature -- Access
 
 	name: STRING
-			-- Name of the resource as it appears to the left
-			-- of the colona in the resource file
+			-- Name of the resource as it appears in the resource file.
 
 	visual_name: STRING is
-			-- Visual name of the resource as it appears to the left
-			-- of the colon in the preference tool
+			-- Visual name of the resource as it appears in the left
+			-- list in the preference tool.
 		do
 			Result := clone (name);
 			Result.replace_substring_all ("_", " ")
@@ -62,18 +55,22 @@ feature -- Access
 
 	effect_is_delayed: BOOLEAN
 			-- Will a change in the resource not be immediately taken into
-			-- account by the application ?
+			-- account by the application?
 
 	value: STRING is
-			-- Value of the resource as it appears to the right
-			-- of the colon
+			-- Value of the resource as it appears in the preference file.
 		deferred
+		ensure
+			not_void: Result /= Void
 		end
 
 	has_changed: BOOLEAN is
-			-- Has the resource changed from the default value?
+			-- Has `Current' changed?
 		deferred
 		end
+
+	type: RESOURCE_TYPE
+			-- Type of `Current'.
 
 feature -- Comparison
 
@@ -84,31 +81,51 @@ feature -- Comparison
 			Result := name < other.name
 		end
 
-feature -- Update
-
-	update_with (other: like Current) is
-			-- Update Current with the value of `other'
-		require
-			same_name: name.is_equal (other.name)
-		do
-			set_value (other.value)
-		end
-
 feature -- Output
 
 	xml_trace: STRING is
 			-- XML representation of current
-		deferred
+		do
+			create Result.make (100)
+			Result.append (text_string)
+			Result.append (name)
+			Result.append_character ('<')
+			Result.append (type.xml_name)
+			Result.append_character ('>')
+			Result.append (value)
+			Result.append_character ('<')
+			Result.append_character ('/')
+			Result.append (type.xml_name)
+			Result.append_character ('>')
+			Result.append (end_text_string)
 		end
 
 	registry_name: STRING is
 			-- name of Current in the registry
+		do
+			create Result.make (name.count + 7)
+			Result.append (type.registry_name)
+			Result.append_character ('_')
+			Result.append (name)
+		end
+
+feature {RESOURCE_FOLDER_I} -- Status setting
+
+	mark_saved is
+			-- Update curent so that `has_changed' becomes false,
+			-- and `value' does not change.
 		deferred
 		end
+
+feature {NONE} -- Implementation
+
+	text_string: STRING is "<TEXT>"
+	end_text_string: STRING is "</TEXT>"
 
 invariant
 
 	valid_name: name /= Void and then not name.is_empty
 	value_not_void: value /= Void
+	type_not_void: type /= Void
 
 end -- class RESOURCE

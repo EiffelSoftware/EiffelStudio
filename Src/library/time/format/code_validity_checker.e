@@ -233,6 +233,16 @@ feature -- Preconditions
 			Result := s.is_equal (".")
 		end
 
+	is_separator (s: STRING): BOOLEAN is
+			-- Is the code a seperator?
+		require
+			s_exists: s /= Void
+		do
+			Result := is_slash (s) or else is_colon (s) or else
+				is_minus (s) or else is_comma (s) or else is_space (s) or else
+				is_dot (s)
+		end
+
 	is_meridiem (s: STRING): BOOLEAN is
 			-- Is the code a meridiem notation?
 		require

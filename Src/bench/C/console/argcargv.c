@@ -11,7 +11,6 @@
 #include <windows.h>
 
 #include "eif_argcargv.h"
-#include "shword.h"
 #include "eif_except.h"		/* For `eraise' */
 
 #define EIF_CLEANUP_TABLE_SIZE 20		/* Clean up table size */
@@ -25,33 +24,113 @@ HINSTANCE eif_hPrevInstance;
 LPSTR eif_lpCmdLine;
 int eif_nCmdShow;
 
-static char **local_argv = NULL, *temp = NULL;
+static char *temp = NULL;
+rt_private void shword(char *cmd, int *argc, char ***argvp);
 
 void get_argcargv (int *argc, char ***argv)
 {
 	int tl;
-
 	temp = strdup (GetCommandLine());
 
 		/* Only for Application that are launched from EiffelBench:
-		 * Add a `\0' just before the string which contains the "pipes" that
-		 * have been uuencoded, so that we are only giving the command line arguments
-		 * that the program needs.
-		 */
+		* Add a `\0' just before the string which contains the "pipes" that
+		* have been uuencoded, so that we are only giving the command line arguments
+		* that the program needs.
+		*/
 	tl = strlen (temp);
 	if ((tl > 16) && (temp[tl-1] == '"') && (temp[tl-2] == '?') &&
 			(temp[tl-16] == '"') && (temp[tl-15] == '?') && (temp[tl-17] == ' ')) {
 		temp[tl-17] = '\0';
 	}
-
-	local_argv = shword (temp);
-	*argv = local_argv;
-
-	for (*argc = 0; local_argv[*argc] != (char *) 0; (*argc)++)
-		;
+	
+	shword (temp, argc, argv);
 }
 
+rt_private void shword(char *cmd, int *argc, char ***argvp)
+{
+	/* Break the shell command held in 'cmd', putting each shell word
+	 * in a separate array entry, hence building an argument
+	 * suitable for the execvp() system call.
+	 */
 
+	int quoted = 0;	/* parsing inside a quoted string? */
+	int nbs;		/* number of backspaces */
+	char *p, *pe;	/* pointers in `cmd' */
+	char *qb, *q;	/* pointers in arguments */
+	int i;
+
+	/* Remove leading and trailing white spaces */
+	for (p = cmd; *p == ' ' || *p == '\t'; p++)
+		; /* empty */
+	for (pe = p + strlen(p) - 1; pe >= p && (*pe == ' ' || *pe == '\t'); pe--)
+		; /* empty */
+
+	if (p <= pe) {
+
+		*argc++;	/* at least one argument */
+
+		if (!(qb = q = malloc(pe - p + 2)))
+			return;
+
+		do {
+			switch(*p) {
+				case ' ':
+				case '\t':
+					if (quoted)
+						do {
+							*q++ = *p++; 
+						} while(*p == ' ' || *p == '\t');
+					else {
+						do {
+							p++;
+						} while(*p == ' ' || *p == '\t');
+						*q++ = '\0';
+						*argc++;
+					}
+					break;
+				case '\"':
+					quoted = ! quoted;
+					p++;
+					break;
+				case '\\':
+					for (nbs = 0; *p == '\\'; nbs++)
+						*q++ = *p++;
+					if (*p == '\"') {
+						if (nbs % 2) {	/* odd number of backslashes */
+							q -= (nbs + 1) / 2;
+							*q++ = *p++;
+						}
+						else {			/* even number of backslashes */
+							quoted = ! quoted;
+							q -= nbs / 2;
+							p++;
+						}
+					}
+					break;
+				default:
+					*q++ = *p++;
+			}
+		} while (p <= pe);
+		*q++ = '\0';
+	}
+
+	if (!argvp) {
+		free(qb);
+		return;
+	}
+
+	if (!(*argvp = (char **) malloc ((*argc + 1) * sizeof(char *)))) {
+		free(qb);
+		return;
+	}
+
+	for (i = 0; i < *argc; i++) {
+		(*argvp)[i] = qb;
+		qb += strlen(qb) + 1;
+	}
+	(*argvp)[i] = (char *)0;
+
+}
 void eif_cleanup(void)
 /*
 	Call each cleanup function that has been registered
@@ -59,8 +138,6 @@ void eif_cleanup(void)
 {
 	int i;
 
-	if (local_argv != NULL)
-		shfree ();	/* %%manu removed `local_argv' as argument, shfree needs no argument */
 	if (temp != NULL){
 #ifdef EIF_THREADS
 		if (eif_thr_is_root ())

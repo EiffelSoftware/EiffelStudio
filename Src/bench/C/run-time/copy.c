@@ -356,7 +356,7 @@ rt_private void rdeepclone (EIF_REFERENCE source, EIF_REFERENCE enclosing, int o
 		*(EIF_REFERENCE *) (enclosing + offset) = clone;
 		assert (!(HEADER (enclosing)->ov_size & B_FWD));/* Not forwarded. */
 #ifdef EIF_REM_SET_OPTIMIZATION
-		if (HEADER (enclosing)->ov_flags & (EO_REF | EO_SPEC) == (EO_REF | EO_SPEC))
+		if ((HEADER (enclosing)->ov_flags & (EO_REF | EO_SPEC)) == (EO_REF | EO_SPEC))
 		{
 			RTAS_OPT (clone, offset >> EIF_REFERENCE_BITS, enclosing);
 		}	

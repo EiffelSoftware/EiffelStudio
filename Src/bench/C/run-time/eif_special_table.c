@@ -322,9 +322,9 @@ rt_public int spt_put 	(struct special_table *spt, register long key,
 		{
 		EIF_REFERENCE itm =  *(EIF_REFERENCE *) (val + ofst * REFSIZ);
 		union overhead *iz = HEADER (itm);
-		union overhead *zone = HEADER (val);
 
 #ifdef SPT_PUT_DEBUG
+		union overhead *zone = HEADER (val);
 		printf("spt_put: at 0x%x (type %d, %d bytes) %s %s %s %s, \n\t\t\twith item %x, offset %ld (type %d, %d bytes) %s age %ld, %s %s %s %s %s %s %s\n",
 			val,
 			HEADER(

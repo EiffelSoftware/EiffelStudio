@@ -1,0 +1,50 @@
+#!/bin/sh
+
+INITIAL_DIR=`pwd`
+
+remtrace Compile the C libraries C code
+remtrace expat
+cd C_library/expat
+make
+remtrace libpng
+cd $INITIAL_DIR/C_library/libpng
+if [ "$ISE_PLATFORM" = "linux-glibc" -o "$ISE_PLATFORM" = "linux-glibc2.1" ]; then
+	cp scripts/makefile.linux .
+	make -f makefile.linux
+else
+	echo "Wake up and give the extension for the makefile that should be used!"
+	read rep
+	while [ ! -f "scripts/makefile.$rep" ]; do
+		echo "scripts/makefile.$rep doesn't exist... Try again!"
+		read rep
+	done
+	cp scripts/makefile.$rep .
+	make -f makefile.$rep
+fi
+
+remtrace zlib
+cd $INITIAL_DIR/C_library/zlib
+make                                                                        
+
+
+remtrace Compile the Eiffel libraries C code
+remtrace exml
+cd $INITIAL_DIR/library/exml/compiler_specific/ise/clib
+default_make
+remtrace net
+cd $INITIAL_DIR/library/net/Clib
+default_make
+remtrace time
+cd $INITIAL_DIR/library/time/Clib
+default_make
+remtrace vision2
+cd $INITIAL_DIR/library/vision2/Clib
+default_make
+cd $INITIAL_DIR/library/vision2/implementation/gtk/Clib
+default_make
+remtrace wel
+cd $INITIAL_DIR/library/gel/glib
+configure
+cd $INITIAL_DIR
+
+

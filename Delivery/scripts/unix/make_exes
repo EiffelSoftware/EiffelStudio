@@ -1,0 +1,46 @@
+#!/bin/sh
+
+# Clean up the files
+remtrace Update all source files.
+cd $EIFFEL_SRC
+exprt -r $DEFAULT_CVS_TAG -d Eiffel Eiffel
+exprt -r $DEFAULT_CVS_TAG -d C Src/bench/C
+exprt -r $DEFAULT_CVS_TAG -d C_library Src/C_library
+
+# These directories should already have been created by make_delivery. Whatever...
+safe_md $INSTALL_DIR/studio/spec
+safe_md $INSTALL_DIR/studio/spec/$ISE_PLATFORM
+safe_md $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin
+if [ ! "$NO_NEW_EC" ]; then
+	remtrace Recompile EiffelStudio
+	cd $FINALIZATION_DIR
+	if [ ! -f finalizedbench.ace ]; then
+		echo Cannot find the finalization Ace for EiffelStudio
+		CANCEL
+	fi
+	clean_project
+	finalize finalizedbench.ace
+	tgz_ccode ec
+	if [ ! -e ec.tar.gz ]; then
+		echo Could not finalize a new EiffelStudio
+		CANCEL
+	fi
+	clean_project
+	move ec.tar.gz $EXPORT_DIR
+else
+	quick_move studio/spec/$ISE_PLATFORM/bin/ec
+fi
+
+remtrace Recompile quick_finalize
+cd $EIFFEL_SRC/Eiffel/extra/quick_c_compilation
+clean_project
+finalize Ace.unix
+tgz_ccode quick_finalize
+if [ ! -f quick_finalize.tar.gz ]; then
+	echo Could not finalize a new quick_finalize
+	CANCEL
+fi
+clean_project
+move quick_finalize.tar.gz $EXPORT_DIR
+
+

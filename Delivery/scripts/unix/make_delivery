@@ -1,0 +1,184 @@
+#!/bin/sh
+
+# Set up the environment
+LASTTIME=`date +%s`
+LASTTIME_TOT=`date +%s`
+OLD_PATH=$PATH
+INIT_DIR=`pwd`
+TMP_EIFFEL_SRC=""
+source set_aliases
+echo > $INSTALL_LOG
+
+echo $* > tmpin$$.tmp
+awk 'index($0, "h") != 0 { exit 54 }' tmpin$$.tmp
+if [ $? -eq 54 ] ;  then
+echo Installation for ISE Eiffel 5 generation.
+echo "Parameters are no_compile, no_wizards, no_new_ec and no_install (or nothing to fully regenerate the installation)."
+fullrf tmpin$$.tmp
+CANCEL
+fi
+awk 'index($0, "no_comp") != 0 { exit 54 }' tmpin$$.tmp
+if [ $? -eq 54 ] ;  then
+NO_COMPILE="True"
+else
+NO_COMPILE=""
+fi
+awk 'index($0, "no_ins") != 0 { exit 54 }' tmpin$$.tmp
+if [ $? -eq 54 ] ;  then
+NO_INSTALL="True"
+else
+NO_INSTALL=""
+fi
+awk 'index($0, "no_wiz") != 0 { exit 54 }' tmpin$$.tmp
+if [ $? -eq 54 ] ;  then
+NO_WIZARDS="True"
+else
+NO_WIZARDS=""
+fi
+awk 'index($0, "no_new_ec") != 0 { exit 54 }' tmpin$$.tmp
+if [ $? -eq 54 ] ;  then
+NO_NEW_EC="True"
+else
+NO_NEW_EC=""
+fi
+rm -f tmpin$$.tmp
+
+cd $INIT_DIR
+remtrace Approximative starting time:
+remtrace `date +%c`
+
+source check_environment
+cd $INIT_DIR
+safe_md $EXPORT_DIR
+
+give_time_to warm up
+remtrace Retrieve and organize the delivery
+remtrace Remove $INSTALL_DIR
+if [ -d $INSTALL_DIR ]; then fullrd $INSTALL_DIR >> $INSTALL_LOG; fi
+if [ -e $INSTALL_DIR ]; then fullrf $INSTALL_DIR >> $INSTALL_LOG; fi
+if [ -e $INSTALL_DIR ]; then
+	echo "Cannot delete $INSTALL_DIR!"
+	CANCEL
+fi
+md $INSTALL_DIR
+cd $INSTALL_DIR
+remtrace studio
+exprt -r $DEFAULT_CVS_TAG -d studio Delivery/studio
+remtrace eifinit
+exprt -r $DEFAULT_CVS_TAG -d eifinit Delivery/eifinit
+remtrace precomp
+safe_md $INSTALL_DIR/precomp
+safe_md $INSTALL_DIR/precomp/spec
+cd $INSTALL_DIR/precomp/spec
+exprt -r $DEFAULT_CVS_TAG -d windows Delivery/precomp/spec/windows
+cd $INSTALL_DIR
+remtrace wizards
+exprt -r $DEFAULT_CVS_TAG -d wizards Delivery/wizards
+remtrace C_library
+exprt -r $DEFAULT_CVS_TAG -d C_library Src/C_library
+remtrace root
+exprt -l -r $DEFAULT_CVS_TAG Delivery/
+move Delivery/*.* . >> $INSTALL_LOG
+fullrd Delivery >> $INSTALL_LOG
+
+remtrace Borland files
+fullrf bcc55.tar.gz
+fullrf *.bat
+
+md docs
+
+remtrace Create directories
+safe_md $INSTALL_DIR/studio/spec
+safe_md $INSTALL_DIR/studio/spec/$ISE_PLATFORM
+safe_md $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin
+safe_md $INSTALL_DIR/studio/spec/$ISE_PLATFORM/include
+safe_md $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib
+cd $INSTALL_DIR/studio/spec
+mv unix/* $ISE_PLATFORM/bin
+fullrd unix
+
+cd $INIT_DIR
+give_time_to organize the delivery and to start filling it
+
+# Fill directories
+if [ ! "$NO_COMPILE" ]; then
+	TMP_EIFFEL_SRC=$EIFFEL_SRC
+	EIFFEL_SRC=$NEW_EIFFEL_SRC
+	remtrace Update all libraries
+	source update_libraries
+	cd $INIT_DIR
+	give_time_to update libraries
+
+	remtrace Generate needed executables of the bin directory
+	source make_exes
+	cd $INIT_DIR
+	give_time_to compile exes
+
+	if [ ! "$NO_WIZARDS" ]; then
+		remtrace Generate the precompilation and the \"new project\" wizards
+		source make_wizards
+		cd $INIT_DIR
+		give_time_to compile basic wizards
+	else
+		quick_move -r studio/wizards
+	fi
+
+else
+	remtrace Copy executable files from the old delivery
+	quick_move -r studio/spec
+	quick_move -r studio/wizards
+	give_time_to copy executables from the old delivery
+fi
+
+exprt -r $DEFAULT_CVS_TAG -d $INSTALL_DIR/docs Delivery/newdocs
+
+cd $INIT_DIR
+
+remtrace "Putting the Eiffel libraries in the delivery"
+source make_libraries
+give_time_to "export the Eiffel libraries"
+cd $INIT_DIR
+
+if [ ! "$NO_INSTALL" ]; then
+	remtrace Compress everything
+	if [ ! "$NO_COMPILE" ]; then
+		remtrace C directory
+		cd $EIFFEL_SRC
+		tar -cf c.tar C
+		gzip c.tar
+		mv c.tar.gz $EXPORT_DIR
+
+		remtrace C_library
+		tar -cf c_libs.tar C_library
+		gzip c_libs.tar
+		mv c_libs.tar.gz $EXPORT_DIR
+
+		remtrace Eiffel libraries
+		tar -cf libs.tar library
+		gzip libs.tar
+		mv libs.tar.gz $EXPORT_DIR
+		EIFFEL_SRC=$TMP_EIFFEL_SRC
+		TMP_EIFFEL_SRC=""
+	fi
+	remtrace The delivery itself
+	cd $INSTALL_DIR
+	tar -cf delivery.tar *
+	gzip delivery.tar
+	mv delivery.tar.gz $EXPORT_DIR
+	
+	cd $INIT_DIR
+	cp compile* $EXPORT_DIR
+	cp set_aliases $EXPORT_DIR
+	give_time_to compile the delivery
+fi
+
+# Finish
+remtrace final time:
+remtrace `date +%c`
+remtrace "total time used (seconds):"
+newtime=`date +%s`
+remtrace $(($newtime - $LASTTIME_TOT))
+
+# Error handling and normal ending
+echo You should now run \'compile_exes\' in $EXPORT_DIR
+CANCEL

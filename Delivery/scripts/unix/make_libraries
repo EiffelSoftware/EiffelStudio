@@ -1,0 +1,36 @@
+#!/bin/sh
+
+remtrace Retrieve libraries
+cd $INSTALL_DIR
+md library
+cd library
+remtrace base
+exprt -r $DEFAULT_CVS_TAG -d base Src/library/base
+remtrace Eiffel2Java
+exprt -r $DEFAULT_CVS_TAG -d Eiffel2Java Src/library/Eiffel2Java
+remtrace event
+exprt -r $DEFAULT_CVS_TAG -d event Src/library/event
+remtrace gel
+exprt -r $DEFAULT_CVS_TAG -d gel Src/library/gel
+remtrace lex
+exprt -r $DEFAULT_CVS_TAG -d lex Src/library/lex
+remtrace mel
+exprt -r $DEFAULT_CVS_TAG -d mel Src/library/mel
+remtrace net
+exprt -r $DEFAULT_CVS_TAG -d net Src/library/net
+remtrace parse
+exprt -r $DEFAULT_CVS_TAG -d parse Src/library/parse
+remtrace store
+exprt -r $DEFAULT_CVS_TAG -d store Src/library/store
+remtrace thread
+exprt -r $DEFAULT_CVS_TAG -d thread Src/library/thread
+remtrace time
+exprt -r $DEFAULT_CVS_TAG -d time Src/library/time
+remtrace vision
+exprt -r $DEFAULT_CVS_TAG -d vision Src/library/vision
+remtrace vision2
+exprt -r $DEFAULT_CVS_TAG -d vision2 Src/library/vision2
+remtrace web
+exprt -r $DEFAULT_CVS_TAG -d web Src/library/web
+
+cd ../..

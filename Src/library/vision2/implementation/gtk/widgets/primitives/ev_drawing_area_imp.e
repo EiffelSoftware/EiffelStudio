@@ -29,8 +29,6 @@ inherit
 			interface,
 			disconnect_all_signals,
 			default_key_processing_blocked,
---			screen_x,
---			screen_y,
 			set_focus,
 			dispose,
 			destroy
@@ -57,44 +55,6 @@ feature {NONE} -- Initialization
 			gc := C.gdk_gc_new (default_gdk_window)
 			init_default_values
 		end
-
-feature -- Access
-
---	screen_x: INTEGER is
---			-- Horizontal offset relative to screen.
---		local
---			useless_y: INTEGER 
---			success: BOOLEAN
---			gdk_window: POINTER
---		do
---				--|FIXME: redefined to quickly solve a problem that appeared in EiffelStudio (screen_x wrong after resizing)			
---			gdk_window := C.gtk_widget_struct_window (c_object)
---			if gdk_window /= NULL then
---				success := C.gdk_window_get_deskrelative_origin (
---					gdk_window,
---					$Result,
---					$useless_y
---					)
---			end
---		end
---
---	screen_y: INTEGER is
---			-- Vertical offset relative to screen. 
---		local
---			useless_x: INTEGER
---			success: BOOLEAN
---			gdk_window: POINTER
---		do
---				--|FIXME: redefined to quickly solve a problem that appeared in EiffelStudio (screen_y wrong after resizing)			
---			gdk_window := C.gtk_widget_struct_window (c_object)
---			if gdk_window /= NULL then
---				success := C.gdk_window_get_deskrelative_origin (
---					gdk_window,
---					$useless_x,
---					$Result
---					)				
---			end
---		end
 
 feature {NONE} -- Implementation
 
@@ -138,7 +98,6 @@ feature {NONE} -- Implementation
 		
 	full_redraw_needed: BOOLEAN
 		-- Is a full redraw needed
-
 
 feature {EV_DRAWABLE_IMP} -- Implementation
 

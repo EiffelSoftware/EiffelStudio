@@ -14,7 +14,7 @@ inherit
 		rename
 			index as position
 		redefine
-			is_plain_text
+			is_plain_text, put_string, putstring
 		end
 
 create
@@ -35,6 +35,14 @@ feature -- Status report
 			-- Can medium be used to store an Eiffel structure?
 
 feature -- Output
+
+	put_string, putstring (s: STRING) is
+			-- Write `s' at current position.
+		do
+			if s.count /= 0 then
+				writer.write_string (s.to_cil.replace_string_string (eiffel_newline, writer.get_new_line))
+			end
+		end
 
 	put_integer, putint (i: INTEGER) is
 			-- Write ASCII value of `i' at current position.
@@ -250,6 +258,14 @@ feature {NONE} -- Implementation
 
 	c_open_modifier: INTEGER is 16384
 			-- File should be opened in plain text mode.
+
+	eiffel_newline: SYSTEM_STRING is
+			-- Representation of Eiffel `%N' character as a SYSTEM_STRING.
+		once
+			Result := ("%N").to_cil
+		ensure
+			eiffel_newline_not_void: Result /= Void
+		end
 
 invariant
 

@@ -13,6 +13,10 @@
 	executable.
 */
 
+/*
+doc:<file name="malloc.c" header="eif_malloc.h" version="$Id$" summary="Memory allocation management routines">
+*/
+
 /*#define MEMCHK */
 /*#define MEM_STAT */
 
@@ -115,9 +119,16 @@
  * necessary. (Except in MT mode --ZS)
  */
 
-/* This structure records some general information about the memory, the number
- * of chunck, etc... These informations are available via the meminfo() routine.
- */
+/*
+doc:	<attribute name="m_data" return_type="struct emallinfo" export="shared">
+doc:		<summary>This structure records some general information about the memory, the number of chunck, etc... These informations are available via the meminfo() routine.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<eiffel_classes>MEM_INFO</eiffel_classes>
+doc:		<fixme>I'm not sure all updates are protected by `eif_gc_mutex'. This needs to be carrefully checked.</fixme>
+doc:	</attribute>
+*/
 rt_shared struct emallinfo m_data = {
 	0,		/* ml_chunk */
 	0,		/* ml_total */
@@ -125,17 +136,33 @@ rt_shared struct emallinfo m_data = {
 	0,		/* ml_over */
 };	
 
-/* For each C and Eiffel memory, we keep track of general informations too. This
- * enables us to pilot the garbage collector correctly or to call coalescing
- * over the memory only if it is has a chance to succeed.
- */
+/*
+doc:	<attribute name="c_data" return_type="struct emallinfo" export="shared">
+doc:		<summary>For C memory, we keep track of general informations too. This enables us to pilot the garbage collector correctly or to call coalescing over the memory only if it is has a chance to succeed.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<eiffel_classes>MEM_INFO</eiffel_classes>
+doc:		<fixme>I'm not sure all updates are protected by `eif_gc_mutex'. This needs to be carrefully checked.</fixme>
+doc:	</attribute>
+*/
 rt_shared struct emallinfo c_data = { /* Informations on C memory */
 	0,		/* ml_chunk */
 	0,		/* ml_total */
 	0,		/* ml_used */
 	0,		/* ml_over */
 };
-	
+
+/*
+doc:	<attribute name="e_data" return_type="struct emallinfo" export="shared">
+doc:		<summary>For Eiffel memory, we keep track of general informations too. This enables us to pilot the garbage collector correctly or to call coalescing over the memory only if it is has a chance to succeed.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<eiffel_classes>MEM_INFO</eiffel_classes>
+doc:		<fixme>I'm not sure all updates are protected by `eif_gc_mutex'. This needs to be carrefully checked.</fixme>
+doc:	</attribute>
+*/
 rt_shared struct emallinfo e_data = { /* Informations on Eiffel memory */
 	0,		/* ml_chunk */
 	0,		/* ml_total */
@@ -143,7 +170,16 @@ rt_shared struct emallinfo e_data = { /* Informations on Eiffel memory */
 	0,		/* ml_over */
 };	
 
-/* Record head and tail of the chunk list */
+/*  */
+/*
+doc:	<attribute name="cklst" return_type="struct ck_list" export="shared">
+doc:		<summary>Record head and tail of the chunk list</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>Should be through eif_gc_mutex</synchronization>
+doc:		<fixme>Some calls are using `cklst' without a synchronization (eg full_coalesc)</fixme>
+doc:	</attribute>
+*/
 rt_shared struct ck_list cklst = {
 	(struct chunk *) 0,			/* ck_head */
 	(struct chunk *) 0,			/* ck_tail */
@@ -153,61 +189,158 @@ rt_shared struct ck_list cklst = {
 	(struct chunk *) 0,			/* eck_tail */
 };
 
-/* These arrays record all the block with roughly the same size. The
- * entry at index 'i' is a block whose size is at least 2^i. All the
- * blocks with same size are chained, and the head of each list is
- * kept in the array.
- * As an exception, index 0 holds block with a size of zero, and as
- * there cannot be blocks of size 1 (OVERHEAD > 1 anyway), it's ok--RAM.
- */
-rt_private union overhead *c_hlist[NBLOCKS];	/* H list for C blocks */
-rt_private union overhead *e_hlist[NBLOCKS];	/* H list for Eiffel blocks */
+/*
+doc:	<attribute name="c_hlist" return_type="union overhead * [NBLOCKS]" export="private">
+doc:		<summary>Records all C blocks with roughly the same size. The entry at index 'i' is a block whose size is at least 2^i. All the blocks with same size are chained, and the head of each list is kept in the array. As an exception, index 0 holds block with a size of zero, and as there cannot be blocks of size 1 (OVERHEAD > 1 anyway), it's ok--RAM.</summary>
+doc:		<access>Read/Write</access>
+doc:		<indexing>i for access to block of size 2^i</indexing>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>eif_gc_mutex</synchronization>
+doc:	</attribute>
+*/
 
-/* The following arrays act as a buffer cache for every operation in the
- * free list. They simply record the address of the last access. Whenever we
- * wish to insert/find an element in the list, we first look at the buffer
- * cache value to see if we can start the traversing from that point.
- */
-rt_private union overhead *c_buffer[NBLOCKS];	/* Buffer cache for C list */
-rt_private union overhead *e_buffer[NBLOCKS];	/* Buffer cache for Eiffel list */
+rt_private union overhead *c_hlist[NBLOCKS];
 
-/* The sc_from and sc_to zone are the scavenge zone used by the generation
- * scavenging garbage collector. They are shared with the garbage collector.
- * These zones may be put back into the free list in case we are low in RAM.
- */
-rt_shared struct sc_zone sc_from;		/* Scavenging 'from' zone */
-rt_shared struct sc_zone sc_to;		/* Scavenging 'to' zone */
+/*
+doc:	<attribute name="e_hlist" return_type="union overhead * [NBLOCKS]" export="private">
+doc:		<summary>Records all Eiffel blocks with roughly the same size. The entry at index 'i' is a block whose size is at least 2^i. All the blocks with same size are chained, and the head of each list is kept in the array.  As an exception, index 0 holds block with a size of zero, and as there cannot be blocks of size 1 (OVERHEAD > 1 anyway), it's ok--RAM.</summary>
+doc:		<access>Read/Write</access>
+doc:		<indexing>i for access to block of size 2^i</indexing>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>eif_gc_mutex</synchronization>
+doc:	</attribute>
+*/
+rt_private union overhead *e_hlist[NBLOCKS];
 
-/* General malloc/GC flag */
-rt_shared uint32 gen_scavenge = GS_SET;	/* Generation scavenging to be set */
+/*
+doc:	<attribute name="c_buffer" return_type="union overhead * [NBLOCKS]" export="private">
+doc:		<summary>The following arrays act as a buffer cache for every operation in the C free list. They simply record the address of the last access. Whenever we wish to insert/find an element in the list, we first look at the buffer cache value to see if we can start the traversing from that point.</summary>
+doc:		<access>Read/Write</access>
+doc:		<indexing>i for access to block of size 2^i</indexing>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>eif_gc_mutex</synchronization>
+doc:	</attribute>
+*/
+rt_private union overhead *c_buffer[NBLOCKS];
 
-/* Each time an Eiffel object is created in the free-list (via emalloc or
- * tenuring), we record its size in eiffel_usage variable. Then, once the amount
- * of allocated data goes beyond th_alloc, a cycle of acollect() is run.
- */
-rt_public long eiffel_usage = 0;		/* Monitor Eiffel memory usage */
+/*
+doc:	<attribute name="e_buffer" return_type="union overhead * [NBLOCKS]" export="private">
+doc:		<summary>The following arrays act as a buffer cache for every operation in the Eiffel free list. They simply record the address of the last access. Whenever we wish to insert/find an element in the list, we first look at the buffer cache value to see if we can start the traversing from that point.</summary>
+doc:		<access>Read/Write</access>
+doc:		<indexing>i for access to block of size 2^i</indexing>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>eif_gc_mutex</synchronization>
+doc:	</attribute>
+*/
+rt_private union overhead *e_buffer[NBLOCKS];
 
-/* This variable is the maximum amount of memory the run-time can allocate.
- * If it is null or negative, there is no limit.
- */
+/*
+doc:	<attribute name="sc_from" return_type="struct sc_zone" export="shared">
+doc:		<summary>The sc_from zone is the `from' zone used by the generation scavenging garbage collector. They are shared with the garbage collector. This zone may be put back into the free list in case we are low in RAM.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>eif_gc_gsz_mutex</synchronization>
+doc:	</attribute>
+*/
+rt_shared struct sc_zone sc_from;
+
+/*
+doc:	<attribute name="sc_to" return_type="struct sc_zone" export="shared">
+doc:		<summary>The sc_to zone is the `to' zone used by the generation scavenging garbage collector. They are shared with the garbage collector. This zone may be put back into the free list in case we are low in RAM.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>eif_gc_gsz_mutex</synchronization>
+doc:	</attribute>
+*/
+rt_shared struct sc_zone sc_to;
+
+/*
+doc:	<attribute name="gen_scavenge" return_type="uint32" export="shared">
+doc:		<summary>Generation scavenging status which can be either GS_STOP (disabled), GS_SET (not yet set), GS_ON (enabled) or GS_OFF</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>Mostly through `eif_gc_mutex' or `eif_gc_gsz_mutex'</synchronization>
+doc:		<fixme>Some updates are not protected, nor the visibility of the change is not guaranteed among all threads.</fixme>
+doc:	</attribute>
+*/
+rt_shared uint32 gen_scavenge = GS_SET;
+
+/*
+doc:	<attribute name="eiffel_usage" return_type="long" export="public">
+doc:		<summary>Monitor Eiffel memory usage. Each time an Eiffel object is created in the free-list (via emalloc or tenuring), we record its size in eiffel_usage variable. Then, once the amount of allocated data goes beyond th_alloc, a cycle of acollect() is run.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<fixme>Updates are not done properly outside synchronization points. We need a special mutex for it.</fixme>
+doc:	</attribute>
+*/
+rt_public long eiffel_usage = 0;
+
+/*
+doc:	<attribute name="eif_max_mem" return_type="int" export="shared">
+doc:		<summary>This variable is the maximum amount of memory the run-time can allocate. If it is null or negative, there is no limit.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<fixme>Updates made in `memory.c' are not protected through a mutex.</fixme>
+doc:	</attribute>
+*/
 rt_shared int eif_max_mem = 0;
 
-/* Not in a per thread basis. */
+/*
+doc:	<attribute name="eif_tenure_max" return_type="int" export="shared">
+doc:		<summary>Maximum age of tenuring.</summary>
+doc:		<access>Read/Write once</access>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None since initialized in `eif_alloc_init' (main.c)</synchronization>
+doc:	</attribute>
+*/
+rt_shared int eif_tenure_max;
 
-	/* These variables are used to know the size of chunks and scavenge zones
-	 * to allocate. They are initialized in eif_alloc_init (main.c) */
+/*
+doc:	<attribute name="eif_gs_limit" return_type="int" export="shared">
+doc:		<summary>Maximum size of object in GSZ.</summary>
+doc:		<access>Read/Write once</access>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None since initialized in `eif_alloc_init' (main.c)</synchronization>
+doc:	</attribute>
+*/
+rt_shared int eif_gs_limit;
 
-int eif_tenure_max;			/* Maximum age of tenuring. */
-int eif_gs_limit;			/* Maximum size of object in GSZ. */
-int eif_scavenge_size;		/* Size of scavenge zones */
+/*
+doc:	<attribute name="eif_scavenge_size" return_type="int" export="shared">
+doc:		<summary>Size of scavenge zones.</summary>
+doc:		<access>Read/Write once</access>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None since initialized in `eif_alloc_init' (main.c)</synchronization>
+doc:	</attribute>
+*/
+rt_shared int eif_scavenge_size;
 #endif
 
-int eif_stack_chunk;		/* Size of local stack chunk. */
-int eif_chunk_size;			/* Size of memory chunks */
+/*
+doc:	<attribute name="eif_stack_chunk" return_type="int" export="shared">
+doc:		<summary>Size of local stack chunk.</summary>
+doc:		<access>Read/Write once</access>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None since initialized in `eif_alloc_init' (main.c)</synchronization>
+doc:	</attribute>
+*/
+rt_shared int eif_stack_chunk;
+
+/*
+doc:	<attribute name="eif_chunk_size" return_type="int" export="shared">
+doc:		<summary>Size of memory chunks.</summary>
+doc:		<access>Read/Write once</access>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None since initialized in `eif_alloc_init' (main.c)</synchronization>
+doc:	</attribute>
+*/
+rt_shared int eif_chunk_size;
 
 #ifdef ISE_GC
 /* Error message commonly used */
-rt_private char *inconsistency = "free-list inconsistency";
+rt_private char *RT_INCONSISTENCY_MSG = "free-list inconsistency";
 
 /* Functions handling free list */
 rt_private int32 compute_hlist_index (int32 size);
@@ -392,7 +525,13 @@ rt_private EIF_REFERENCE external_reallocation (EIF_REFERENCE obj, uint32 nbytes
 #endif
 
 #if defined(ISE_GC) && defined(EIF_THREADS)
-rt_public EIF_LW_MUTEX_TYPE *eif_gc_gsz_mutex = NULL;	/* Mutex used to protect GC allocation in scavenge zone*/
+/*
+doc:	<attribute name="eif_gc_gsz_mutex" return_type="EIF_LW_MUTEX_TYPE *" export="public">
+doc:		<summary>Mutex used to protect GC allocation in scavenge zone.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:	</attribute>
+*/
+rt_public EIF_LW_MUTEX_TYPE *eif_gc_gsz_mutex = NULL;
 #define EIF_GC_GSZ_LOCK EIF_LW_MUTEX_LOCK(eif_gc_gsz_mutex, "Could not lock GSZ mutex")
 #define EIF_GC_GSZ_UNLOCK EIF_LW_MUTEX_UNLOCK(eif_gc_gsz_mutex, "Could not lock GSZ mutex")
 #endif
@@ -1210,7 +1349,7 @@ rt_private EIF_REFERENCE malloc_free_list(unsigned int nbytes, union overhead **
 		if ((EIF_REFERENCE) 0 != result)
 			return result;				/* We must have it */
 
-		eif_panic(MTC inconsistency);
+		eif_panic(MTC RT_INCONSISTENCY_MSG);
 	} /* end if cc_for_speed */
 
 	/* Call garbage collector if it is not turned off and restart our
@@ -1240,7 +1379,7 @@ rt_private EIF_REFERENCE malloc_free_list(unsigned int nbytes, union overhead **
 				if ((EIF_REFERENCE) 0 != result)
 					return result;					/* We must have it */
 				if (nbytes)
-					eif_panic(MTC inconsistency);
+					eif_panic(MTC RT_INCONSISTENCY_MSG);
 			}
 #ifdef HAS_SMART_MMAP
 			else {
@@ -1255,7 +1394,7 @@ rt_private EIF_REFERENCE malloc_free_list(unsigned int nbytes, union overhead **
 				if ((EIF_REFERENCE) 0 != result)
 					return result;					/* We must have it */
 				if (nbytes)
-					eif_panic(MTC inconsistency);
+					eif_panic(MTC RT_INCONSISTENCY_MSG);
 			}
 #ifdef HAS_SMART_MMAP
 			else {
@@ -3466,3 +3605,6 @@ rt_private int32 compute_hlist_index (int32 size) {
 }
 
 #endif
+/*
+doc:</file>
+*/

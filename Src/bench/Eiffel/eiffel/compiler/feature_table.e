@@ -17,7 +17,7 @@ inherit
 	EXTEND_TABLE [FEATURE_I, STRING]
 		rename
 			same_type as general_same_type
-		export {CLASS_C}
+		export {CLASS_C, COMPILED_CLASS_INFO}
 			pos_for_iter
 		end
 	SHARED_WORKBENCH
@@ -776,6 +776,38 @@ feature -- Case stuff
 					feat.written_in = feat_tbl_id
 				forth
 			end
+		end;
+
+feature -- API
+
+	api_table: E_FEATURE_TABLE is
+			-- API table of features
+		local
+			cont: like content;
+			i, c: INTEGER;
+			feat: FEATURE_I;
+			other_content: ARRAY [E_FEATURE];
+		do
+			!! Result;
+			Result.basic_copy_from (Current);
+			Result.set_class_id (feat_tbl_id);
+			from
+				cont := content;
+				c := cont.count;
+				!! other_content.make (0, c);
+				i := 0
+			until
+				i >= c	
+			loop
+				feat := cont.item (i);
+				if feat /= Void then
+					other_content.put (feat.api_feature, i);
+				end;
+				i := i + 1
+			end;
+			Result.set_content (other_content);
+			Result.set_deleted_marks (clone (deleted_marks));
+			Result.set_keys (clone (keys));
 		end;
 
 feature -- Debugging

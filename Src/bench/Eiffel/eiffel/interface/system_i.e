@@ -245,6 +245,10 @@ feature -- Properties
 			-- List of removed classes from system. Filled during degree 6, processed
 			-- after degree 5
 
+	missing_classes: HASH_TABLE [SEARCH_TABLE [CLASS_C], STRING]
+			-- Table indexed by missing classnames where elements are
+			-- classes referencing the missing classname.
+
 	moved: BOOLEAN
 			-- Has the system potentially moved in terms of classes ?
 			-- [Each time a new class is inserted/removed in/from the system
@@ -588,7 +592,85 @@ end
 			end
 			removed_classes.put (a_class)
 		end
-
+		
+	record_potential_vtct_error (a_class: CLASS_C; a_name: STRING) is
+			-- Record missing class name `a_name' in `a_class'.
+		require
+			a_class_not_void: a_class /= Void
+			a_name_not_void: a_name /= Void
+		local
+			l_table: SEARCH_TABLE [CLASS_C]
+		do
+			if missing_classes = Void then
+				create missing_classes.make (5)
+			end
+			missing_classes.search (a_name)
+			if missing_classes.found then
+				l_table := missing_classes.found_item
+			else
+				create l_table.make (1)
+				missing_classes.put (l_table, a_name)
+			end
+			l_table.put (a_class)
+		end
+		
+	report_vtct_errors is
+			-- Report any remaining VTCT errors at the end of degree 5
+		local
+			l_vtct: VTCT
+			l_name: STRING
+			l_class: CLASS_C
+			l_table: SEARCH_TABLE [CLASS_C]
+			l_has_error: BOOLEAN
+		do
+			if missing_classes /= Void then
+				from
+					missing_classes.start
+				until
+					missing_classes.after
+				loop
+					l_table := missing_classes.item_for_iteration
+					l_name := missing_classes.key_for_iteration
+					from
+						l_table.start
+					until
+						l_table.after
+					loop
+						l_class := l_table.item_for_iteration
+							-- At this stage classes have not yet been removed, so we simply
+							-- look into `removed_classes'.
+						if
+							l_class.lace_class.is_compiled and
+							not (removed_classes /= Void and then removed_classes.has (l_class))
+						then
+							check
+								same_compiled_class: l_class.lace_class.compiled_class = l_class
+							end
+								-- If class is still compiled then we should report the error.
+							create l_vtct
+							l_vtct.set_class (l_class)
+							l_vtct.set_class_name (l_name)
+							Error_handler.insert_error (l_vtct)
+							
+								-- But since it is an invalid class, then we need to force
+								-- a compilation again to check for the VTCT error again.
+							workbench.add_class_to_recompile (l_class.lace_class)
+							l_has_error := True
+						end
+						l_table.forth
+					end
+					missing_classes.forth
+				end
+	
+				missing_classes := Void
+			
+				if l_has_error then
+						-- Cannot go on here
+					Error_handler.raise_error
+				end
+			end
+		end
+		
 	class_of_id (id: INTEGER): CLASS_C is
 			-- Class of id `id'
 		require
@@ -912,6 +994,13 @@ end
 					remove_useless_classes
 				end
 
+					-- Let's report VTCT errors for classes not found at degree 5
+					-- It cannot be done at degree 5 (see eweasel test incr233 for why).
+				report_vtct_errors
+				
+					-- Fill parents.
+				process_post_degree_5
+
 					-- Let's get rid of the classes that have been really removed.
 				process_removed_classes
 
@@ -1078,6 +1167,14 @@ end
 				
 				-- Launch syntax analyzis of modified/added classes to system.
 			Degree_5.execute
+		end
+
+	process_post_degree_5 is
+			-- Processing done after main degree 5.
+			-- Check and updates parent structure. It has to be done after
+			-- reporting all VTCT errors.
+		do
+			degree_5.post_degree_5_execute
 		end
 
 	process_degree_4 is

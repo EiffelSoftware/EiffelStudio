@@ -60,6 +60,14 @@ feature -- Settings
 			base_class_set: base_class = name
 		end
 
+feature -- Generation access
+
+	token: INTEGER is
+		do
+			Result := il_generator.external_token (base_class, names_heap.item (alias_name_id),
+				type, argument_types, return_type)
+		end
+
 feature -- Call generation
 
 	generate_call (is_polymorphic: BOOLEAN) is

@@ -166,6 +166,7 @@ feature -- Status setting
 				else
 					wel_file_dialog.set_initial_directory (directory)
 				end
+				realized := True
 				wel_file_dialog.activate (wc)
 				if wel_file_dialog.selected then
 					ok_actions.execute (Current, Void)
@@ -174,6 +175,7 @@ feature -- Status setting
 				else
 					cancel_actions.execute (Current, Void)
 				end
+				realized := False
 			end
 		end
 

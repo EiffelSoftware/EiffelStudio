@@ -76,7 +76,7 @@ feature
 	format (stone: STONE) is
 			-- Show text of `stone' in `text_window'
 		local
-			stone_text, temp, class_name: STRING;
+			stone_text, class_name: STRING;
 			filed_stone: FILED_STONE;
 			classc_stone: CLASSC_STONE;
 			class_text: CLASS_TEXT;
@@ -91,28 +91,23 @@ feature
 				modified_class := true
 			end;
 			if
-				do_format or modified_class or else
+				do_format or filtered or modified_class or else
 				(text_window.last_format /= Current or
 				not equal (stone, text_window.root_stone))
 			then
-				if
-					stone /= Void and then stone.is_valid
-				then
+				set_global_cursor (watch_cursor);
+				if stone /= Void and then stone.is_valid then
 					stone_text := stone.origin_text;
 					if stone_text = Void then
 						stone_text := "";
 						filed_stone ?= stone;
 						if filed_stone /= Void then
-							!! temp.make (0);
-							if filed_stone.file_name /= Void then
-								temp.append ("File: ");
-								temp.append (filed_stone.file_name);	
-								temp.append (" cannot be read");
-							else
-								temp.append ("There is no associated file for pebble dropped");
-							end;
 							warner.set_window (text_window);
-							warner.gotcha_call (temp);
+							if filed_stone.file_name /= Void then
+								warner.gotcha_call (w_Cannot_read_file (filed_stone.file_name))
+							else
+								warner.gotcha_call (w_No_associated_file)
+							end;
 						end			
 					end;
 					text_window.clean;
@@ -121,14 +116,9 @@ feature
 					text_window.put_string (stone_text);
 					if stone.clickable then
 						if modified_class then
-							!!temp.make (50);
-							temp.append ("Class ");
-							class_name := clone (classc_stone.class_c.class_name);
-							class_name.to_upper;
-							temp.append (class_name);
-							temp.append (" has been modified since last compilation.%NThe text will not be clickable.");
+							class_name := classc_stone.class_c.class_name;
 							warner.set_window (text_window);
-							warner.gotcha_call (temp)
+							warner.gotcha_call (w_Class_modified (class_name))
 						else
 							click_list := stone.click_list;
 							if (click_list /= Void) then
@@ -152,7 +142,9 @@ feature
 						text_window.set_cursor_position (text_window.size)
 					end;
 					text_window.set_last_format (Current)
-				end
+				end;
+				filtered := false;
+				restore_cursors
 			end
 		end;
 

@@ -67,7 +67,11 @@
 						<bold>EV_SPIN_BUTTON</bold> - When it gets the focus, we set the focus to the associated text field. Before one would loose the focus until one use the mouse to set it to the text field part.
 					</item>
 					<item>
-						<bold>EV_SCREEN</bold> - `widget_at_position' returns an instance of EV_COMBO_BOX when cursor is on top of the text part of the combo box, before it would return Void.
+						<bold>EV_SCREEN</bold>
+						<list ordered="false">
+						<item>`widget_at_position' returns an instance of EV_COMBO_BOX when cursor is on top of the text part of the combo box, before it would return Void.</item>
+						<item>`set_pointer_position' was not setting the position accurately and it may have actually been set to one of the adjacent positions.</item>						
+</list>
 					</item>
 					<item>
 						<bold>EV_COMBO_BOX</bold>

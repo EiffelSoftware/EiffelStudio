@@ -58,7 +58,7 @@ feature -- Access
 	cmb_format: WINFORMS_COMBO_BOX
 			-- System.Windows.Forms.ComboBox
 
-	btn_change_font, btn_change_color: WINFORMS_BUTTON
+	btn_change_font: WINFORMS_BUTTON
 			-- System.Windows.Forms.Button 
 
 	font_dialog: WINFORMS_FONT_DIALOG
@@ -104,7 +104,6 @@ feature -- Implementation
 			create tool_tip.make
 			create btn_change_font.make
 			create date_time_picker.make
-			create btn_change_color.make
 			create error_max.make
 			create dtp_max_date.make
 			create chk_show_up_down.make
@@ -240,20 +239,6 @@ feature -- Implementation
 											feature {WINFORMS_ANCHOR_STYLES}.Bottom |
 											feature {WINFORMS_ANCHOR_STYLES}.Left |
 											feature {WINFORMS_ANCHOR_STYLES}.Right )
-
-				-- Init `btn_change_color'.
-			btn_change_color.set_flat_style (feature {WINFORMS_FLAT_STYLE}.Flat)
---			btn_change_color.set_location (create {DRAWING_POINT}.make_from_x_and_y (128, 216))
-			l_point.make_from_x_and_y (128, 216)
-			btn_change_color.set_location (l_point)
-			btn_change_color.set_text (("Change &Color").to_cil)
---			btn_change_color.set_size (create {DRAWING_SIZE}.make_from_width_and_height (104, 32))
-			l_size.make_from_width_and_height (104, 32)
-			btn_change_color.set_size (l_size)
-			btn_change_color.set_tab_index (2)
-			btn_change_color.set_anchor (feature {WINFORMS_ANCHOR_STYLES}.Bottom |
-										feature {WINFORMS_ANCHOR_STYLES}.Right )
-			btn_change_color.add_click (create {EVENT_HANDLER}.make (Current, $btn_change_color_click))
 			
 			error_max.set_data_member (("").to_cil)
 --			error_max.set_data_source (null)
@@ -293,7 +278,6 @@ feature -- Implementation
 			
 			my_group_box.controls.add (chk_show_up_down)
 			my_group_box.controls.add (btn_change_font)
-			my_group_box.controls.add (btn_change_color)
 			my_group_box.controls.add (dtp_max_date)
 			my_group_box.controls.add (dtp_min_date)
 			my_group_box.controls.add (label_3)
@@ -334,16 +318,6 @@ feature {NONE} -- Implementation
 			dummy := font_dialog.show_dialog
 			new_font := font_dialog.font
 			date_time_picker.set_font (new_font)
-		end
-
-	btn_change_color_click (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
-			-- feature performed when `btn_change_color' is clicked.
-		local
---			dlg: CHANGE_COLOR_DLG
---			dummy: SYSTEM_OBJECT
-		do
---			create dlg.make
---			dummy := dlg.show_dialog
 		end
 
 	dtp_min_date_value_changed (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is

@@ -9,6 +9,8 @@ class
 	EV_CURSOR_CODE_IMP
 
 inherit
+	EV_C_ROUTINE_IMP
+
 	WEL_IDC_CONSTANTS
 		export
 			{NONE} all
@@ -19,79 +21,79 @@ feature -- Access
 	busy: INTEGER is
 			-- Standard arrow and small hourglass
 		do
-			Result := Idc_appstarting
+			Result := cwel_pointer_to_integer (Idc_appstarting)
 		end
 
 	standard: INTEGER is
 			-- Standard arrow
 		do
-			Result := Idc_arrow
+			Result := cwel_pointer_to_integer (Idc_arrow)
 		end
 
 	crosshair: INTEGER is
 			-- Crosshair
 		do
-			Result := Idc_cross
+			Result := cwel_pointer_to_integer (Idc_cross)
 		end
 
 	help: INTEGER is
 			-- Arrow and question mark
 		do
-			Result := Idc_help
+			Result := cwel_pointer_to_integer (Idc_help)
 		end
 
 	ibeam: INTEGER is
 			-- I-beam
 		do
-			Result := Idc_ibeam
+			Result := cwel_pointer_to_integer (Idc_ibeam)
 		end
 
 	no: INTEGER is
 			-- Slashed_circle
 		do
-			Result := Idc_no
+			Result := cwel_pointer_to_integer (Idc_no)
 		end
 
 	sizeall: INTEGER is
 			-- Four-pointed arrow pointing north, south, east and west
 		do
-			Result := Idc_sizeall
+			Result := cwel_pointer_to_integer (Idc_sizeall)
 		end
 
 	sizenesw: INTEGER is
 			-- Double-pointed arrow pointing northeast and southwest
 		do
-			Result := Idc_sizenesw
+			Result := cwel_pointer_to_integer (Idc_sizenesw)
 		end
 
 	sizens: INTEGER is
 			-- Double-pointed arrow pointing north and south
 		do
-			Result := Idc_sizens
+			Result := cwel_pointer_to_integer (Idc_sizens)
 		end
 
 	sizenwse: INTEGER is
 			-- Double-pointed arrow pointing west and east
 		do
-			Result := Idc_sizenwse
+			Result := cwel_pointer_to_integer (Idc_sizenwse)
 		end
 
 	sizewe: INTEGER is
 			-- Double-pointed arrow pointing west and east
 		do
-			Result := Idc_sizewe
+			Result := cwel_pointer_to_integer (Idc_sizewe)
 		end
 
 	uparrow: INTEGER is
 			-- Vertical arrow
 		do
-			Result := Idc_uparrow
+			Result := cwel_pointer_to_integer (Idc_uparrow)
 		end
 
 	wait: INTEGER is
 			-- Hourglass
 		do
-			Result := Idc_wait
+			Result := cwel_pointer_to_integer (Idc_wait)
 		end
 
 end -- class EV_CURSOR_CODE_IMP

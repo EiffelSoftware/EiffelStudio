@@ -12,7 +12,7 @@ inherit
 	EV_TITLED_WINDOW
 		export
 			{NONE} all
-			{ANY} is_empty, is_show_requested, show, hide
+			{ANY} is_empty, is_show_requested, show, hide, accelerators
 		undefine
 			is_in_default_state
 		redefine

@@ -104,10 +104,13 @@ feature -- Updating
 			l_pos: INTEGER
 			l_integer32_value: INTEGER
 			l_integer64_value: INTEGER_64
+			l_natural32_value: NATURAL_32
+			l_natural64_value: NATURAL_64			
 		do
 			l_dmp := last_dump_value
 			if l_dmp /= Void then
 				inspect l_dmp.type 
+						-- NOTA: we should factorize this .. maybe having to_hex_string, in NUMERIC would help
 					when {DUMP_VALUE_CONSTANTS}.Type_integer_32 then
 						l_text := text
 						l_pos := l_text.index_of ('=', 1) + 1
@@ -134,6 +137,34 @@ feature -- Updating
 							l_text.append_string ("0x" + l_integer64_value.to_hex_string)
 						else
 							l_text.append_string (l_integer64_value.out)
+						end
+						set_text (l_text)				
+					when {DUMP_VALUE_CONSTANTS}.Type_natural_32 then
+						l_text := text
+						l_pos := l_text.index_of ('=', 1) + 1
+						check
+							has_space: l_text.item (l_pos) = ' '
+						end
+						l_natural32_value := l_dmp.value_natural_32
+						l_text :=  l_text.substring (1, l_pos)
+						if hexa_mode_enabled then
+							l_text.append_string ("0x" + l_natural32_value.to_hex_string)
+						else
+							l_text.append_string (l_natural32_value.out)
+						end
+						set_text (l_text)
+					when {DUMP_VALUE_CONSTANTS}.Type_natural_64 then
+						l_text := text
+						l_pos := l_text.index_of ('=', 1) + 1
+						check
+							has_space: l_text.item (l_pos) = ' '
+						end
+						l_natural64_value := l_dmp.value_natural_64
+						l_text :=  l_text.substring (1, l_pos)
+						if hexa_mode_enabled then
+							l_text.append_string ("0x" + l_natural64_value.to_hex_string)
+						else
+							l_text.append_string (l_natural64_value.out)
 						end
 						set_text (l_text)
 					else

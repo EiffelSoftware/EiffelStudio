@@ -13,7 +13,7 @@ inherit
 			cursor as widget_cursor,
 			lower as lower_window
 		undefine
-			is_equal, copy, consistent, setup
+			is_equal, copy
 		redefine
 			make,
 			set_cursor_position,
@@ -39,17 +39,17 @@ inherit
 
 	SHARED_APPLICATION_EXECUTION
 		undefine
-			is_equal, copy, consistent, setup
+			is_equal, copy
 		end
 
 	WIDGET_ROUTINES
 		undefine
-			is_equal, copy, consistent, setup
+			is_equal, copy
 		end
 
 	EB_CONSTANTS
 		undefine
-			is_equal, copy, consistent, setup
+			is_equal, copy
 		end
 
 creation

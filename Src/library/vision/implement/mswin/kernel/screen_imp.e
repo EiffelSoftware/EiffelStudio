@@ -86,8 +86,6 @@ feature -- Initialization
 
 	make (a_screen: SCREEN) is
 			-- Create this screen
-		local
-			color: WEL_COLOR_REF
 		do
 			!! drawing_dc
 			set_line_width (1);

@@ -350,7 +350,6 @@ feature -- Status report
 	width_of_string (a_text: STRING): INTEGER is
 		local
 			screen_dc: WEL_SCREEN_DC
-			ww: WEL_WINDOW
 			number_of_lines: INTEGER
 		do
 			if not a_text.empty then

@@ -16,13 +16,15 @@ inherit
 	EV_WINDOW_I
 		select
 			interface,
+			parent,
 			parent_imp
 		end
 					
 	EV_CONTAINER_IMP
 		rename
 			interface as wrong_interface,
-			parent_imp as wrong_parent_imp
+			parent_imp as wrong_parent_imp,
+			parent as wrong_parent
 		redefine
 			wel_window,	
 			set_width,
@@ -30,7 +32,8 @@ inherit
 			set_size,
 			set_minimum_width,
 			set_minimum_height,
-			child_has_resized,
+			child_width_changed,
+			child_height_changed,
 			on_show
 		end
 
@@ -111,39 +114,25 @@ feature  -- Access
 	        end
 		end 
 
+feature -- Measurement
 
-feature -- Element change
+	maximum_height: INTEGER is
+                        -- Maximum height that application wishes widget
+                        -- instance to have
+ 		do
+                        check
+                                not_yet_implemented: False
+                        end
+		end	
 
-	set_icon_mask (mask: EV_PIXMAP) is
-			-- Set `icon_mask' to `mask'.
-		do
-			check
-                not_yet_implemented: False
-            end
-		end
-
-	set_icon_pixmap (pixmap: EV_PIXMAP) is
-			-- Set `icon_pixmap' to `pixmap'.
-		do
-			check
-                not_yet_implemented: False
-            end
-		end
-
-	set_title (new_title: STRING) is
-			-- Set `title' to `new_title'.            
-		do
-			wel_window.set_text (new_title)
-        end
-
-	set_widget_group (group_widget: EV_WIDGET) is
-			-- Set `widget_group' to `group_widget'.
-		do
-			check
-                not_yet_implemented: False
-            end
-		end
-
+	maximum_width: INTEGER is
+                        -- Maximum width that application wishes widget
+                        -- instance to have
+ 		do
+                        check
+                                not_yet_implemented: False
+                        end
+		end	
 
 feature -- Status report
 
@@ -155,48 +144,90 @@ feature -- Status report
             end
 		end
 
-
 feature -- Status setting
 
 	set_iconic_state is
 			-- Set start state of the application to be iconic.
 		do
 			check
-                not_yet_implemented: False
-            end	
+				not_yet_implemented: False
+			end	
 		end
 
 	set_normal_state is
 			-- Set start state of the application to be normal.
 		do
 			check
-                not_yet_implemented: False
-            end
+				not_yet_implemented: False
+			end
+		end
+
+	set_maximize_state is
+			-- Set start state of the application to be
+			-- maximized.
+		do
+			check
+				not_yet_implemented: False
+			end
 		end
 
 
 feature -- Element change
 
-	set_icon_name (a_name: STRING) is
-			-- Set `icon_name' to `a_name'.
+	set_icon_mask (mask: EV_PIXMAP) is
+			-- Set `icon_mask' to `mask'.
+		do
+			check
+				not_yet_implemented: False
+			end
+		end
+
+	set_icon_pixmap (pixmap: EV_PIXMAP) is
+			-- Set `icon_pixmap' to `pixmap'.
+		do
+			check
+				not_yet_implemented: False
+			end
+		end
+
+	set_title (new_title: STRING) is
+			-- Set `title' to `new_title'.            
+		do
+			wel_window.set_text (new_title)
+		end
+
+	set_widget_group (group_widget: EV_WIDGET) is
+			-- Set `widget_group' to `group_widget'.
 		do
 			check
                 not_yet_implemented: False
             end
-		end	
+		end
 
+	set_icon_name (a_name: STRING) is
+			-- Set `icon_name' to `a_name'.
+		do
+			check
+				not_yet_implemented: False
+			end
+		end	
 
 feature -- Resizing
 
-	child_has_resized (new_width, new_height: INTEGER; the_child: EV_WIDGET_IMP) is
+	child_width_changed (new_width: INTEGER; the_child: EV_WIDGET_IMP) is
 			-- Resize the container according to the 
 			-- resize of the child
 		do
-			-- XX Have to take into account the borders 
-			-- (new_width and new_height are the 
-			-- dimensions of the client area)
-			set_size (new_width + 2*system_metrics.window_frame_width, 
-				  new_height + system_metrics.title_bar_height + system_metrics.window_border_height + 2 * system_metrics.window_frame_height)
+			set_width (new_width + 2*system_metrics.window_frame_width)
+		end
+
+	child_height_changed (new_height: INTEGER; the_child: EV_WIDGET_IMP) is
+			-- Resize the container according to the 
+			-- resize of the child
+		do
+			set_height (new_height + system_metrics.title_bar_height
+					+ system_metrics.window_border_height 
+					+ 2 * system_metrics.window_frame_height)
 		end
 
 	set_size (new_width:INTEGER; new_height: INTEGER) is
@@ -233,6 +264,22 @@ feature -- Resizing
 			minimum_height := min_height --.max (system_metrics.window_minimum_height)
 		end
 
+	set_maximum_height (max_height: INTEGER) is
+                        -- Set `maximum_height' to `max_height'.
+		do
+                        check
+                                not_yet_implemented: False
+                        end		
+		end
+
+    set_maximum_width (max_width: INTEGER) is
+                        -- Set `maximum_width' to `max_width'.
+		do
+                        check
+                                not_yet_implemented: False
+                        end		
+		end
+
 feature {EV_WEL_FRAME_WINDOW} -- Event handling
 
 	on_show is
@@ -240,7 +287,7 @@ feature {EV_WEL_FRAME_WINDOW} -- Event handling
 			-- it resizes the wel_window at the minimum_size.
 		do
 			if child /= Void then
-				parent_ask_resize (child.minimum_width, child.minimum_height)
+				parent_ask_resize (child.width, child.height)
 			end
 		end
 

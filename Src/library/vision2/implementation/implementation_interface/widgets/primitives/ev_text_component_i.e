@@ -13,7 +13,7 @@ deferred class
 inherit
 	EV_PRIMITIVE_I
 		redefine
-			initialize_colors
+			build
 		end
 	
 feature {NONE} -- Initialization
@@ -24,15 +24,14 @@ feature {NONE} -- Initialization
 	
 feature {EV_WIDGET} -- Initialization
 
-	initialize_colors is
-			-- Called after the creation of the widget and after
-			-- having stored the parent. It define the default
-			-- colors of a widget which are the same than the
-			-- parent. This feature is redefined by several
-			-- children.
+	build is
+			-- Common initializations for Gtk and Windows.
 		local
 			color: EV_COLOR
 		do
+			set_expand (True)
+			set_vertical_resize (True)
+			set_horizontal_resize (True)
 			!! color.make_rgb (255, 255, 255)
 			set_background_color (color)
 			!! color.make_rgb (0, 0, 0)

@@ -467,10 +467,24 @@ feature {EB_COMPLETION_CHOICE_WINDOW} -- automatic completion
 			completion_mode := (completion_mode - 1).max (0)
 		end
 
-	complete_feature_from_window (completed: STRING; is_feature_signature: BOOLEAN) is
-			-- Insert `completed' in the editor and switch to completion mode.
+	complete_feature_from_window (cmp: STRING; is_feature_signature: BOOLEAN) is
+			-- Insert `cmp' in the editor and switch to completion mode.
+		local
+			completed: STRING
+			ind: INTEGER
+			lp: INTEGER
 		do
 			auto_point := False
+			if is_feature_signature then
+				completed := clone (cmp)
+				ind := completed.last_index_of (':', completed.count)
+				lp := completed.last_index_of (')', completed.count)
+				if ind > 0 and ind > lp then
+					completed.keep_head (ind - 1)
+				end
+			else
+				completed := cmp
+			end
 			if completed.is_empty then
 				completion_mode := (completion_mode - 1).max (0)
 				--history.unbind_current_item_to_next

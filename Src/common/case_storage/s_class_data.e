@@ -26,6 +26,21 @@ creation
 
 	make
 
+feature
+
+	remove_file (storage_path: STRING) is
+			-- Remove file associated with Current.
+		require
+			valid_storage_path: storage_path /= Void
+		local
+			internal_file: RAW_FILE;
+		do
+			!! internal_file.make (file_path (storage_path, view_id, False));
+			if internal_file.exists then
+				internal_file.delete
+			end
+		end;
+
 feature {NONE} -- Specification
 
 	make (a_name: STRING) is

@@ -32,12 +32,10 @@ feature
 
 	analyze is
 			-- Analyze variant
-		local
-			void_reg: REGISTER;
 		do
 			get_register;			-- Assignment in register
 			new_register := register;
-			register := void_reg;
+			register := Void;
 			context.init_propagation;
 			get_register;
 			expr.propagate (No_register);
@@ -62,12 +60,12 @@ feature
 				generated_file.putchar ('"');
 				generated_file.putstring (tag);
 				generated_file.putchar ('"');
-				generated_file.putstring(", ");
+				generated_file.putstring (gc_comma);
 			else
 				generated_file.putstring ("RTCS(");
 			end;
 			generate_assertion_code (In_loop_variant);
-			generated_file.putstring(");");
+			generated_file.putstring (gc_rparan_comma);
 			generated_file.new_line;
 			expr.generate;
 			new_register.print_register;
@@ -116,11 +114,9 @@ feature
 
 	unanalyze is
 			-- Undo the analysis
-		local
-			void_reg: REGISTER;
 		do
 			expr.unanalyze;
-			set_register (void_reg);
+			set_register (Void);
 		end;
 
 	fill_from (v: VARIANT_B) is

@@ -16,8 +16,8 @@ feature
 			inlining_on := System.inlining_on
 
 			nb := System.body_id_counter.total_count
-			!!processed_features.make (1, nb)
-			!!to_be_inlined.make (1, nb)
+			!! processed_features.make (1, nb)
+			!! to_be_inlined.make (1, nb)
 
 			min_inlining_threshold := System.inlining_size
 		end
@@ -60,10 +60,12 @@ feature
 
 feature
 
-	inline (f: FEATURE_I): BOOLEAN is
+	inline (body_id: BODY_ID): BOOLEAN is
 			-- Can we inline `f' ?
+		local
+			body_id_id: INTEGER
 		do
-			Result := to_be_inlined.item (f.body_id.id)
+			Result := to_be_inlined.item (body_id.id)
 		end
 
 	process (f: FEATURE_I) is
@@ -73,17 +75,18 @@ feature
 		local
 			byte_code: BYTE_CODE;
 			body_id: BODY_ID;
-			size: INTEGER
+			body_id_id, size: INTEGER
 		do
 			if inlining_on then
 				body_id := f.body_id;
-				if not processed_features.item (body_id.id) then
-					processed_features.put (True, body_id.id)
+				body_id_id := body_id.id
+				if not processed_features.item (body_id_id) then
+					processed_features.put (True, body_id_id)
 					if f.can_be_inlined then
 						byte_code := Byte_server.item (body_id)
 						size := byte_code.size
 						if size < min_inlining_threshold then
-							to_be_inlined.put (True, body_id.id);
+							to_be_inlined.put (True, body_id_id);
 debug ("RECORD")
 	io.error.new_line;
 	io.error.putstring (f.written_class.name);

@@ -34,25 +34,23 @@ feature
 			pass_c: PASS_C;
 			deg_output: DEGREE_OUTPUT
 		do
-			deg_output := Degree_output;
-			deg_output.put_start_degree (Degree_number, changed_classes.count);
 			from
+				deg_output := Degree_output;
+				deg_output.put_start_degree (Degree_number, changed_classes.count);
 			until
 				changed_classes.empty
 			loop
-debug ("COUNT")
-	io.error.putstring ("[");
-	io.error.putint (changed_classes.count);
-	io.error.putstring ("] ");
-end;
 				pass_c := changed_classes.first;
 				System.set_current_class (pass_c.associated_class);
+
 				pass_c.execute (deg_output, changed_classes.count);
+
 				changed_classes.start;
 				changed_classes.search (pass_c);
 				if not changed_classes.after then
 					changed_classes.remove;
 				end;
+
 			end;
 			deg_output.put_end_degree;
 			System.set_current_class (Void);

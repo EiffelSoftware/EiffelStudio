@@ -59,25 +59,22 @@ feature
 			-- we re-sort the list `changed_class' after the topological
 			-- sort in order to take advantage of it.
 		local
-			pass_c: PASS2_C;
+			pass2_c: PASS2_C;
 			current_class: CLASS_C;
 			id: CLASS_ID;
 			deg_output: DEGREE_OUTPUT
 		do
 			deg_output := Degree_output;
 			deg_output.put_start_degree (Degree_number, changed_classes.count)
+
 			from
 				changed_classes.start
 			until
 				changed_classes.after
 			loop
-				pass_c := changed_classes.item;
-				current_class := pass_c.associated_class;
-				if
-					current_class.changed
-				and then
-					current_class.generics /= Void
-				then
+				pass2_c := changed_classes.item;
+				current_class := pass2_c.associated_class;
+				if current_class.changed and then current_class.generics /= Void	then
 					System.set_current_class (current_class);
 					current_class.check_constraint_genericity;
 				end;
@@ -86,6 +83,7 @@ feature
 				-- Cannot continue if there is an error in the
 				-- constraint genericity clause of a class
 			Error_handler.checksum;
+
 			from
 			until
 				changed_classes.empty
@@ -95,28 +93,29 @@ debug ("COUNT")
 	io.error.putint (changed_classes.count);
 	io.error.putstring ("] ");
 end;
-				pass_c := changed_classes.first;
-				current_class := pass_c.associated_class;
-				System.set_current_class (current_class);
-				pass_c.execute (deg_output, changed_classes.count);
+				pass2_c := changed_classes.first;
+				current_class := pass2_c.associated_class;
+				System.set_current_class (current_class)
+
+				pass2_c.execute (deg_output, changed_classes.count)
+
 				if not extra_check_list.has (current_class) then
 					extra_check_list.extend (current_class)
-				end;
+				end
+
 				changed_classes.start;
-				changed_classes.search (pass_c);
+				changed_classes.search (pass2_c);
 				if not changed_classes.after then
 					changed_classes.remove;
-				end;
-			end;
+				end
+			end
 			deg_output.put_end_degree;
 
 			if System.has_expanded and then not extra_check_list.empty then
 				System.check_vtec;
 			end;
 
-			if
-				not System.code_replication_off
-			then
+			if not System.code_replication_off then
 				from
 					extra_check_list.start;
 				until
@@ -163,10 +162,10 @@ end;
 		require
 			good_argument: a_class /= Void
 		local
-			pass_c: PASS2_C;
+			pass2_c: PASS2_C;
 		do
-			pass_c ?= controler_of (a_class);
-			pass_c.set_expanded_modified
+			pass2_c ?= controler_of (a_class);
+			pass2_c.set_expanded_modified
 		end;
 
 	set_deferred_modified (a_class: CLASS_C) is
@@ -174,10 +173,10 @@ end;
 		require
 			good_argument: a_class /= Void
 		local
-			pass_c: PASS2_C;
+			pass2_c: PASS2_C;
 		do
-			pass_c ?= controler_of (a_class);
-			pass_c.set_deferred_modified
+			pass2_c ?= controler_of (a_class);
+			pass2_c.set_deferred_modified
 		end;
 
 	set_separate_modified (a_class: CLASS_C) is
@@ -185,10 +184,10 @@ end;
 		require
 			good_argument: a_class /= Void
 		local
-			pass_c: PASS2_C;
+			pass2_c: PASS2_C;
 		do
-			pass_c ?= controler_of (a_class);
-			pass_c.set_separate_modified
+			pass2_c ?= controler_of (a_class);
+			pass2_c.set_separate_modified
 		end;
 
 	set_supplier_status_modified (a_class: CLASS_C) is
@@ -196,11 +195,11 @@ end;
 		require
 			good_argument: a_class /= Void
 		local
-			pass_c: PASS2_C
+			pass2_c: PASS2_C
 		do
-			pass_c ?= controler_of (a_class);
-			pass_c.set_supplier_status_modified;
-			pass_c.set_new_compilation;
+			pass2_c ?= controler_of (a_class);
+			pass2_c.set_supplier_status_modified;
+			pass2_c.set_new_compilation;
 		end;
 
 	add_changed_status (a_class: CLASS_C) is
@@ -216,10 +215,10 @@ feature -- Dino stuff
 
 	set_assertion_prop_list (a_class: CLASS_C; l: LINKED_LIST [ROUTINE_ID]) is
 		local
-			pass_c: PASS2_C
+			pass2_c: PASS2_C
 		do
-			pass_c ?= controler_of (a_class);
-			pass_c.set_assertion_prop_list (l);
+			pass2_c ?= controler_of (a_class);
+			pass2_c.set_assertion_prop_list (l);
 		end;
 
 end

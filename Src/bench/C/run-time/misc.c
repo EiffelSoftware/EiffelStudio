@@ -29,7 +29,7 @@ doc:<file name="misc.c" header="eif_misc.h" version="$Id$" summary="Miscellenaou
 #include <stdlib.h>
 #include <string.h>
 #ifdef EIF_SGI
-#include <strings.h>
+#include <strings.h>	/* for index and rindex. */
 #endif
 #include "rt_assert.h"
 #include "eif_misc.h"

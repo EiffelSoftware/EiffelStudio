@@ -53,11 +53,14 @@ feature -- Initialization
 					False,
 					c_gtk_integer_to_pointer (delay)
 				)
+
+			destroyed := False
 		end
 
 feature -- Implementation
 
 	timeout_tag: INTEGER
+		-- Value returned by GTk used as a reference to destroy the timeout
 
 	ev_timeout_callback (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
 			-- Callback used as an intermediate to update callback count
@@ -79,7 +82,7 @@ feature -- Access
 			-- Argument associated with the timeout.
 
 	count: INTEGER
-			-- Number of times the command was already called.
+			-- Number of times the callback has been called.
 
 feature -- Status report
 

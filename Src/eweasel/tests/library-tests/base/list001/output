@@ -1,3 +1,6 @@
+Comparing empty lists
+l1 = l2 (comparing references): True
+
 LINKED_LIST
 l1 = l1 (comparing references): True
 l1 = l2 (comparing references): True

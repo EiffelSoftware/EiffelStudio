@@ -232,10 +232,6 @@ feature
 
 	generate (class_type: CLASS_TYPE; buffer: GENERATION_BUFFER) is
 				-- Generate feature written in `class_type' in `buffer'.
-		require else
-			valid_buffer: buffer /= Void;
-			written_in_type: class_type.associated_class.class_id = generation_class_id
-			not_deferred: not is_deferred;
 		local
 			byte_code: BYTE_CODE;
 		do
@@ -260,6 +256,33 @@ feature
 			end;
 		end;
 
+	generate_c_il (buffer: GENERATION_BUFFER) is
+				-- Generate current feature in `buffer'.
+		require
+			is_c_external: is_c_external
+		local
+			byte_code: EXT_BYTE_CODE;
+		do
+			if used then
+					-- if the external declaration has a macro or a signature
+					-- then encapsulated is True; otherwise do nothing
+				generate_header (buffer);
+				byte_code ?= Byte_server.disk_item (body_index);
+				check
+					byte_code_not_void: byte_code /= Void
+				end
+					-- Generation of C code for an Eiffel feature written in
+					-- the associated class of the current type.
+				byte_context.set_byte_code (byte_code);
+					-- Generation of the C routine
+				byte_context.set_current_feature (Current)
+				byte_code.analyze;
+				byte_code.set_real_body_id (real_body_id);
+				byte_code.generate_c_il;
+				byte_context.clear_all;
+			end;
+		end;		
+		
 	valid_body_id: BOOLEAN is
 				-- if the external is encapsulated then an EXECUTION_UNIT
 				-- has been defined instead of an EXT_EXECUTION_UNIT

@@ -7,7 +7,7 @@
 			<heading><size>3</size>Improvements</heading>
 			<list ordered="false">
 				<item>Added full configuration of colors used in editor</item>
-				<item>Added docking facilities for various tools. It permits the re-ordering of tools within the interface, including making them "float" externally.</item>
+				<item>Added docking facilities for various tools. It permits the re-ordering of tools within the interface, including making them "float" externally <link><url>../../../eiffelbuild/reference/10_general_interface_description/50_docking.xml</url><label>(See EiffelBuild documentation on docking mechanism for more details)</label></link>.</item>
 				<item>Ability to see when a class is deferred in the context tool formatters. It is shown by adding the `*' character at the end of the class name.</item>
 			</list>
 			<heading><size>3</size>Changes</heading>

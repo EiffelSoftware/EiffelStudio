@@ -31,6 +31,7 @@ inherit
 	SK_CONST;
 	SHARED_RESCUE_STATUS;
 	SHARED_STATUS;
+	SHARED_MELT_ONLY;
 	SHARED_ASSERTION_LEVEL
 
 creation
@@ -1336,21 +1337,25 @@ feature
 		local
 			subdirectory: STRING;
 			dir: DIRECTORY
+			f_name: FILE_NAME;
+			d_name: DIRECTORY_NAME
 		do
 			if System.in_final_mode then
-				Result := Final_generation_path
+				!!d_name.make_from_string (Final_generation_path)
 			else
-				Result := Workbench_generation_path
+				!!d_name.make_from_string (Workbench_generation_path)
 			end;
 			!!subdirectory.make (5);
 			subdirectory.append (Feature_table_suffix);
 			subdirectory.append_integer (packet_number);
-			Result := build_path (Result, subdirectory)
-			!!dir.make (Result);
+			d_name.extend (subdirectory);
+			!!dir.make (d_name.path);
 			if not dir.exists then	
 				dir.create
 			end;
-			Result := build_path (Result, base_file_name)
+			!!f_name.make_from_string (d_name.path);
+			f_name.set_file_name (base_file_name);
+			Result := f_name.path
 		end;
 
 	base_file_name: STRING is

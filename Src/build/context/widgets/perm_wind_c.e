@@ -50,10 +50,10 @@ feature
 		local
 			contin_command: WINDOW_ITERATOR_COMMAND;
 		do
-			!!widget.make (entity_name, eb_screen);
-			title := entity_name;
+			!! widget.make (entity_name, eb_screen);
+			widget_set_title (entity_name);
 			set_default_bg_pixmap;
-			!!contin_command.make (Current);
+			!! contin_command.make (Current);
 			widget.top_shell.set_delete_command (contin_command);
 				-- For x_offset and y_offset initialization
 			if retrieved_node = Void then

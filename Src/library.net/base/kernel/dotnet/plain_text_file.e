@@ -291,13 +291,8 @@ feature -- Input
 					-- If we read `%R', i.e. value 13, then let's
 					-- check if next character is `%N'. If it is '%N'
 					-- then we return '%N', else we return '%R'.
-				if a_code = 13 then
-					a_code := reader.peek
-					if a_code = 10 then
-						a_code := reader.read
-					else
-						a_code := 13
-					end
+				if a_code = 13 and then reader.peek = 10 then
+					a_code := reader.read
 				end
 				last_character := a_code.to_character
 			end

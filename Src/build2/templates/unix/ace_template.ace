@@ -1,0 +1,54 @@
+-------------------------------------------------
+-- This ace file has been generated for you by --
+-- The New Vision2 Application Wizard.         --
+-------------------------------------------------
+system
+	my_vision2_application
+
+root 
+	BUILD_APPLICATION (root_cluster): "make_and_launch"
+
+default
+	assertion (require)
+	assertion (ensure)
+	assertion (check)
+	multithreaded (no)
+	console_application (no)
+	dynamic_runtime (no)
+	dead_code_removal (yes)
+	profile (no)
+	line_generation (no)
+	debug  (no)
+	array_optimization (no)
+	inlining (no)
+	inlining_size ("4")
+
+cluster 
+		-- The application
+	root_cluster: "<PROJECT_LOCATION>"
+
+		-- EiffelBase
+	all base: "$ISE_EIFFEL/library/base"
+		exclude
+			"table_eiffel3"; "desc"
+		end
+
+		-- GEL
+	all gel: "$ISE_EIFFEL/library/gel"
+
+		-- EiffelVision2
+	all vision2: "$ISE_EIFFEL/library/vision2"
+		exclude
+			"mswin"; "EIFGEN"; "tmp"; "temp"; "release"; "obsolete"
+		end
+
+external
+	include_path:
+			"\$(ISE_EIFFEL)/library/event/Clib",
+			"\$(ISE_EIFFEL)/library/vision2/spec/include",
+			"\$(ISE_EIFFEL)/library/vision2/implementation/gtk/Clib `gtk-config --cflags`"
+	object:
+			"$(ISE_EIFFEL)/library/vision2/spec/$(ISE_PLATFORM)/lib/gtk_eiffel.o",
+			"$(ISE_EIFFEL)/library/vision2/spec/$(ISE_PLATFORM)/lib/load_pixmap.o `gtk-config --libs`",
+			"-L/usr/X11R6/lib -lXt -lX11 -lpng -lz -lXext -lXp -lSM -lICE -lXtst"
+end

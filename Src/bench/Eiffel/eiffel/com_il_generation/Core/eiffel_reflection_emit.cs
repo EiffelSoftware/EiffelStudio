@@ -160,7 +160,9 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 				Classes [TypeID].SetArrayElementName (ElementTypeName);
 			if (DebugMode && !is_array)
 				Classes [TypeID].SetDocument (module.DefineDocument
-					(SourceFileName, System.Guid.Empty, System.Guid.Empty, System.Guid.Empty));
+					(SourceFileName, new Guid ("6805C61E-8195-490c-87EE-A713301A670C"),
+					new Guid ("B68AF30E-9424-485f-8264-D4A726C162E7"),
+					System.Guid.Empty));
 		}
 		catch (Exception error) {
 			LogError (error, "For class " + ClassName + " with TypeID "

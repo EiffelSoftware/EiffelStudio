@@ -7,12 +7,17 @@ CLASS EC_FACADE
 inherit
 	WINDOWS_MANAGER
 
+	EB_SHARED_INTERFACE_TOOLS
+
 feature -- Operations on Ebench Side
 
 	display_class_tool(class_name: STRING) is
 		-- Popup the Ebench Class Tool, with class "Class_name".
+		local
+			class_tool: EB_CLASS_TOOL
 		do
-
+			class_tool := tool_supervisor.new_class_tool
+			class_tool.show
 		end
 
 	Update_bench is
@@ -31,6 +36,7 @@ feature -- Operations on Ebench Side
 			kernel_loader.initialize(cluster_name)
 			if kernel_loader.has_cluster then
 				kernel_loader.build_case_kernel
+				update_kernel.work
 			else
 				internal_error := "No Cluster found with this name."
 			end
@@ -68,11 +74,25 @@ feature -- Implementation
 		-- Module responsible for loading the clusters within 
 		-- Ecase structure
 		once
-			create result
+			create result.make
+		end
+
+	update_kernel: EC_UPDATE_KERNEL is
+		-- Module responsible for updating the kernel according to
+		-- the view. The result may be directly exploited by Ecase.
+		once
+			create result.make
+		end
+
+	view_loader: EC_VIEW_LOADER is
+		-- Module responsible for loading the view information.
+		once
+			create result.make
 		end
 
 	internal_error: STRING
 		-- Error that we may have encountered.
+
 invariant
 	EC_FACADE_not_void: kernel_loader /= Void 
 end -- EC_FACADE

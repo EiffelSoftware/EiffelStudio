@@ -54,9 +54,12 @@ H1, H2, H3, H4 {
 H2 {
 	MARGIN-TOP: 1.6em;
 }
+H4 {
+	FONT-SIZE:80%;
+}
 H3 {
 	COLOR:#990000;
-	FONT-SIZE:110%; 
+	FONT-SIZE:100%; 
 	TEXT-DECORATION:none
 }
 H2 {

@@ -113,6 +113,9 @@ feature {EV_DRAWABLE_IMP} -- Implementation
 		do
 			Result := feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (visual_widget)
 		end
+
+	mask: POINTER
+			-- Mask of Current, which is always NULL
 		
 feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 

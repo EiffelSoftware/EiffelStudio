@@ -60,7 +60,7 @@ inherit
 feature -- Access
 
 	parent: EV_TREE_NODE_CONTAINER is
-			-- Parent of the tree item
+			-- Parent of `Current'.
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -124,14 +124,16 @@ feature -- Status setting
 feature -- Contract support
 
 	is_expandable: BOOLEAN is
-			-- Is the node capable of expanding and collapsing.
+			-- Can `Current' be expanded and collapsed?
 		require
 			not_destroyed: not is_destroyed
 		deferred
 		end
+		
+feature {EV_TREE_NODE}
 
 	is_parent_recursive (a_list: EV_TREE_NODE): BOOLEAN is
-			-- Is `a_list' `parent' or recursively `parent' of `parent'.
+			-- Is `a_list' `parent' or recursively `parent' of `parent'?
 		require
 			not_destroyed: not is_destroyed
 		local

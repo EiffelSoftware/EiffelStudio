@@ -26,8 +26,8 @@ feature {NONE} -- Initialization
 		do
 			!! open_tools.make 
 			command := a_command;
-			top_shell_make (l_X_resourse_name, Project_tool.screen);
-			set_title ("Profile Tool");
+			top_shell_make (Interface_names.n_X_resource_name, Project_tool.screen);
+			set_title (INterface_names.t_Profile_tool);
 			!! quit_cmd.make (Current);
 			!! run_prof_query_cmd.make (Current);
 			set_delete_command (quit_cmd);
@@ -105,50 +105,50 @@ feature {NONE} -- Graphical User Interface
 			language_label: LABEL;
 		do
 				-- User Interface Components
-			!! global_form.make ("", Current);
+			!! global_form.make (Interface_names.t_Empty, Current);
 
-			!! switch_label.make ("Output switches", global_form);
-			!! switch_form.make ("", global_form);
-			!! language_label.make ("Language type", global_form);
-			!! language_form.make ("", global_form);
-			!! horizontal_sep.make ("", global_form);
-			!! text_form.make ("", global_form);
-			!! text_sep.make ("", global_form);
-			!! button_form.make ("", global_form);
+			!! switch_label.make (Interface_names.l_Output_switches, global_form);
+			!! switch_form.make (Interface_names.t_Empty, global_form);
+			!! language_label.make (Interface_names.l_Language_type, global_form);
+			!! language_form.make (Interface_names.t_Empty, global_form);
+			!! horizontal_sep.make (Interface_names.t_Empty, global_form);
+			!! text_form.make (Interface_names.t_Empty, global_form);
+			!! text_sep.make (Interface_names.t_Empty, global_form);
+			!! button_form.make (Interface_names.t_Empty, global_form);
 			button_form.set_fraction_base (2);
 
-			!! menu_bar.make ("", global_form);
-			!! file_menu.make ("File", menu_bar);
-			!! command_menu.make ("Commands", menu_bar);
-			!! help_menu.make ("Help", menu_bar);
+			!! menu_bar.make (Interface_names.t_Empty, global_form);
+			!! file_menu.make (Interface_names.m_File, menu_bar);
+			!! command_menu.make (Interface_names.m_Commands, menu_bar);
+			!! help_menu.make (Interface_names.m_Help, menu_bar);
 			menu_bar.set_help_button (help_menu.menu_button);
 
 				-- Put entries in the menus.
 			fill_menus;
 
-			!! exit_button.make ("Exit", button_form);
-			!! run_button.make ("Run Query", button_form);
+			!! exit_button.make (Interface_names.b_Exit, button_form);
+			!! run_button.make (Interface_names.b_Run_query, button_form);
 
-			!! name_switch.make ("Feature name", switch_form);
+			!! name_switch.make (Interface_names.b_Feature_name, switch_form);
 			name_switch.set_toggle_on;
-			!! number_of_calls_switch.make ("Number of calls", switch_form);
+			!! number_of_calls_switch.make (Interface_names.b_Number_of_calls, switch_form);
 			number_of_calls_switch.set_toggle_on;
-			!! time_switch.make ("Function time", switch_form);
-			!! descendent_switch.make ("Descendent time", switch_form);
-			!! total_time_switch.make ("Total time", switch_form);
-			!! percentage_switch.make ("Percentage", switch_form);
+			!! time_switch.make (Interface_names.b_Function_time, switch_form);
+			!! descendent_switch.make (Interface_names.b_Descendent_time, switch_form);
+			!! total_time_switch.make (Interface_names.b_Total_time, switch_form);
+			!! percentage_switch.make (Interface_names.b_Percentage, switch_form);
 
-			!! eiffel_switch.make ("Eiffel features", language_form);
+			!! eiffel_switch.make (Interface_names.b_Eiffel_features, language_form);
 			eiffel_switch.set_toggle_on;
-			!! c_switch.make ("C functions", language_form);
-			!! recursive_switch.make ("Recursive functions", language_form);
+			!! c_switch.make (Interface_names.b_C_functions, language_form);
+			!! recursive_switch.make (Interface_names.b_Recursive_functions, language_form);
 
-			!! input_label.make ("Input file", text_form);
-			!! input_text.make ("", text_form);
+			!! input_label.make (Interface_names.l_Input_file, text_form);
+			!! input_text.make (Interface_names.t_Empty, text_form);
 			input_text.set_text ("profinfo.profile_information");
-			!! query_label.make ("Query", text_form);
-			!! query_text.make ("", text_form);
-			!! browse_button.make ("Browse", text_form);
+			!! query_label.make (Interface_names.l_Query, text_form);
+			!! query_text.make (Interface_names.t_Empty, text_form);
+			!! browse_button.make (Interface_names.b_Browse, text_form);
 			browse_button.add_activate_action (Current, browse_it);
 
 				-- Commands
@@ -378,7 +378,7 @@ feature {NONE} -- Implementation
 			new_name_chooser: NAME_CHOOSER_W
 		do
 			new_name_chooser := name_chooser (Current)
-			new_name_chooser.set_title ("Browse...");
+			new_name_chooser.set_title (Interface_names.t_Browse);
 			new_name_chooser.hide_help_button;
 			new_name_chooser.hide_filter_button;
 			new_name_chooser.set_open_file;

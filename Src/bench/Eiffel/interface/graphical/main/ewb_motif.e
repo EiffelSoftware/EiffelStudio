@@ -13,6 +13,7 @@ inherit
 			init_toolkit
 		end;
 	MEL_COMMAND;
+	EB_CONSTANTS;
 	INTERFACE_W
 	
 creation
@@ -20,7 +21,10 @@ creation
 
 feature {NONE} -- Initialization
 
-	init_toolkit: MOTIF is once !!Result.make (l_X_resourse_name) end;
+	init_toolkit: MOTIF is
+		once
+			!!Result.make (Interface_names.n_X_resource_name)
+		end;
 
 feature -- Communications
 

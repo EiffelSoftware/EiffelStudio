@@ -9,11 +9,9 @@ indexing
 class LIST_HISTORY
 
 inherit
-	PIXMAP_COMMAND
+	TOOL_COMMAND
 		rename
 			init as make
-		redefine
-			execute
 		end
 
 creation
@@ -21,29 +19,22 @@ creation
 
 feature -- Properties
 
-	symbol: PIXMAP is
-			-- Symbol for the button
-		do
-			Result := Void
-		ensure then
-			Void_result: Result = Void
-		end;
-
 	name: STRING is
 			-- Name of the command
 		do
-			Result := l_List_targets
+			Result := Interface_names.f_List_targets
 		end;
 
-feature -- Execution
-
-	execute (argument: ANY) is
-			-- Execute Current command.
+	menu_name: STRING is
+			-- Name used in menu entry
 		do
-			if last_warner /= Void then
-				last_warner.popdown
-			end;
-			execute_licenced (argument)
+			Result := Interface_names.m_List_targets
+		end;
+
+	accelerator: STRING is
+			-- Accelerator action for menu entry
+		do
+			Result := Interface_names.a_List_targets
 		end;
 
 feature {NONE} -- Execution
@@ -74,8 +65,10 @@ feature {NONE} -- Implementation
 		local
 			a_list: TWO_WAY_LIST [STRING]
 		do
-			!! choices.make_with_widget (a_button.parent, a_button);
-			!! a_list.make;
+			if choices /= Void then
+				!! choices.make_with_widget (a_button.parent, a_button);
+				!! a_list.make;
+			end;
 			fill_list (a_list);
 			choices.popup (Current, a_list);
 			choices.select_i_th (tool.history.index + 1)
@@ -110,8 +103,9 @@ feature {NONE} -- Implementation
 			pos: INTEGER
 		do
 			pos := choices.position;
-			if pos > 1 then
-					--| Position 1 is the "--cancel--" entry.
+			if pos = 0 then
+				choices.popdown
+			else
 				pos := pos - 1;
 				history := tool.history;
 				from

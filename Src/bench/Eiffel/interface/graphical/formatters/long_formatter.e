@@ -61,7 +61,7 @@ feature -- Execution
 					if not text_window.changed then
 						execute_licenced (formatted);
 					else
-						warner (popup_parent).call (Current, w_File_changed)
+						warner (popup_parent).call (Current, Warning_messages.w_File_changed)
 					end
 				elseif argument = control_click then
 						-- No confirmation required.
@@ -71,7 +71,7 @@ feature -- Execution
 						execute_licenced (formatted);
 						mp.restore
 					else
-						warner (popup_parent).call (Current, l_File_changed)
+						warner (popup_parent).call (Current, Warning_messages.w_File_changed)
 					end
 				else
 					if argument = tool then

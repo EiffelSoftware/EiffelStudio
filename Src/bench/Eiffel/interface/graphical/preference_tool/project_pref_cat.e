@@ -14,10 +14,6 @@ inherit
 		export
 			{NONE} all
 		end;
-	SHARED_PIXMAPS
-		rename
-			resources as parsed_resources
-		end;
 	PREFERENCE_CATEGORY
 		rename
 			make as rc_make
@@ -95,12 +91,12 @@ feature -- Properties
 
 	symbol: PIXMAP is
 		once
-			Result := bm_Case_storage
+			Result := Pixmaps.bm_Case_storage
 		end;
 
 	dark_symbol: PIXMAP is
 		once
-			Result := bm_Case_storage
+			Result := Pixmaps.bm_Case_storage
 		end
 
 feature {NONE} -- Resources

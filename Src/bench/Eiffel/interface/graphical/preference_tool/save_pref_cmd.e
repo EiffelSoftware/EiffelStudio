@@ -89,9 +89,11 @@ feature {PREFERENCE_COMMAND} -- Execution
 				else
 					!! fn.make_from_string (file_names.user_specific)
 				end
-			elseif project_button.state then
+			elseif defaults_button.state then
 				if general_button.state then
+					!! fn.make_from_string (file_names.defaults_general)
 				else
+					!! fn.make_from_string (file_names.defaults_specific)
 				end
 			end
 			if fn /= Void then
@@ -225,10 +227,7 @@ feature {NONE} -- Implementation
 			!! install_button.make ("Install Directory", box_1);
 			install_button.set_toggle_on;
 			!! home_dir_button.make ("Home Directory", box_1);
-			if get ("EIF_DEFAULTS") /= Void then
-				home_dir_button.set_text ("$EIF_DEFAULTS Directory")
-			end;
-			!! project_button.make ("Project Directory", box_1);
+			!! defaults_button.make ("$EIF_DEFAULTS Directory", box_1);
 
 			form.attach_left (label, 1);
 			form.attach_top (label, 1);
@@ -258,7 +257,7 @@ feature {NONE} -- User Interface
 
 	install_button,
 	home_dir_button,
-	project_button,
+	defaults_button,
 			-- Buttons that specify a directory
 
 	general_button,

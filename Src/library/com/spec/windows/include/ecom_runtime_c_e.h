@@ -157,6 +157,11 @@ public:
 	// Record
 
 	// Interface
+	
+	EIF_REFERENCE ccom_ce_pointed_enum_variant ( IEnumVARIANT * a_interface_pointer );
+	EIF_REFERENCE ccom_ce_pointed_pointed_enum_variant( IEnumVARIANT * * a_pointer, EIF_OBJECT an_object );
+	EIF_REFERENCE ccom_ce_pointed_ifont( IFont * a_interface_pointer );
+	EIF_REFERENCE ccom_ce_pointed_pointed_ifont(IFont * * a_pointer, EIF_OBJECT an_object);
 };
 #include "ecom_rt_globals.h"
 

@@ -43,6 +43,8 @@ class ecom_runtime_ec
 		LPSTR ccom_ec_lpstr (EIF_REFERENCE a_ref, LPSTR old);
 		LPWSTR ccom_ec_lpwstr (EIF_REFERENCE a_ref);
 		VARIANT ccom_ec_variant (EIF_REFERENCE a_ref);
+		IEnumVARIANT * ccom_ec_pointed_enum_variant( EIF_REFERENCE eif_ref );
+		IFont * ccom_ec_pointed_ifont( EIF_REFERENCE eif_ref );
 
 		//Pointed
 		DATE * ccom_ec_pointed_date (EIF_REFERENCE a_ref, DATE * old);
@@ -66,6 +68,8 @@ class ecom_runtime_ec
 		ULARGE_INTEGER * ccom_ec_pointed_ulong_long (EIF_REFERENCE a_ref, ULARGE_INTEGER * old);
 		void ** ccom_ec_pointed_pointer (EIF_REFERENCE a_pointer, void ** old);
 		void ** ccom_ec_pointed_c_pointer (void * a_pointer);
+		IEnumVARIANT * * ccom_ec_pointed_pointed_enum_variant( EIF_REFERENCE eif_ref, IEnumVARIANT * * old );
+		IFont * * ccom_ec_pointed_pointed_ifont( EIF_REFERENCE eif_ref, IFont * * old );
 
 		// ARRAY
 		char * ccom_ec_array_character (EIF_REFERENCE a_ref, int dimension, char * old);

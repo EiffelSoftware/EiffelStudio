@@ -69,10 +69,17 @@ feature -- Status report
 		deferred
 		end
 
-	get_column_width (column: INTEGER): INTEGER is
-			-- Width of column `column' in pixel.
+	column_title (a_column: INTEGER): STRING is
+			-- Title of column `a_column'.
 		require
-			column_exists: column >= 1 and column <= columns
+			column_exists: a_column >= 1 and a_column <= columns
+		deferred
+		end
+
+	column_width (a_column: INTEGER): INTEGER is
+			-- Width of column `a_column' in pixels.
+		require
+			column_exists: a_column >= 1 and a_column <= columns
 		deferred
 		end
 
@@ -242,6 +249,9 @@ end -- class EV_MULTI_COLUMN_LIST_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.31  2000/03/03 18:21:47  king
+--| Renamed get_column_width -> column_width, added column_title
+--|
 --| Revision 1.30  2000/03/03 17:08:09  rogers
 --| Added set_columns.
 --|

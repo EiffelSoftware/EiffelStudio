@@ -116,39 +116,6 @@ rt_ce.free_memory_bstr (tmp_project_directory_path);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_eiffel_compiler::IEiffelProject_impl_proxy::ccom_load_ace_file_only(  /* [in] */ EIF_OBJECT a_ace_file_name )
-
-/*-----------------------------------------------------------
-	Load only the ace file for a project.
------------------------------------------------------------*/
-{
-	HRESULT hr;
-	if (p_IEiffelProject == NULL)
-	{
-		hr = p_unknown->QueryInterface (IID_IEiffelProject_, (void **)&p_IEiffelProject);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	};
-	BSTR tmp_a_ace_file_name = 0;
-	tmp_a_ace_file_name = (BSTR)rt_ec.ccom_ec_bstr (eif_access (a_ace_file_name));
-	
-	hr = p_IEiffelProject->load_ace_file_only(tmp_a_ace_file_name);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	
-	rt_ce.free_memory_bstr (tmp_a_ace_file_name);
-
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
 EIF_REFERENCE ecom_eiffel_compiler::IEiffelProject_impl_proxy::ccom_project_file_name(  )
 
 /*-----------------------------------------------------------

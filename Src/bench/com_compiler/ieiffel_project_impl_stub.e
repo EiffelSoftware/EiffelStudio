@@ -101,13 +101,6 @@ feature -- Basic Operations
 			-- Put Implementation here.
 		end
 
-	load_ace_file_only (a_ace_file_name: STRING) is
-			-- Load only the ace file for a project.
-			-- `a_ace_file_name' [in].  
-		do
-			-- Put Implementation here.
-		end
-
 	create_item is
 			-- Initialize `item'
 		do

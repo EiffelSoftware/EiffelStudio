@@ -367,4 +367,8 @@ feature {NONE}
 
 	w_Unknown_object: STRING is "Unknown object";
 
+	w_File_changed: STRING is			"File has changed since last save!%
+										%%NLose changes?";
+	w_Specify_ace: STRING is			"Unspecified ace file%NChoose one?";
+
 end -- class WARNING_MESSAGES

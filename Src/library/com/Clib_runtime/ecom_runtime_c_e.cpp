@@ -16,6 +16,20 @@ ecom_runtime_ce rt_ce;
 static EIF_TYPE_ID int_array_id = -1;
 
 //-------------------------------------------------------------------------
+void ecom_runtime_ce::free_memory_bstr (BSTR a_bstr)
+{
+	if (a_bstr != NULL)
+		SysFreeString (a_bstr);
+};
+
+//-------------------------------------------------------------------------
+void ecom_runtime_ce::free_memory_safearray (SAFEARRAY * a_safearray)
+{
+	if (a_safearray != NULL)
+		SafeArrayDestroy (a_safearray);
+};
+
+//-------------------------------------------------------------------------
 EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_enum_variant ( IEnumVARIANT * a_interface_pointer )
 
 /*-----------------------------------------------------------
@@ -59,10 +73,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_pointed_enum_variant( IEnumVARIAN
 	
 	if (tmp_object != NULL)
 		eif_wean (tmp_object);
-	
-	if (a_pointer != NULL)
-		CoTaskMemFree (a_pointer);
-	
+		
 	if ((an_object  ==  NULL) || (eif_access (an_object)  ==  NULL))
 		return eif_wean (result);
 	else
@@ -113,10 +124,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_pointed_ifont( IFont * * a_pointe
 	
 	if (tmp_object != NULL)
 		eif_wean (tmp_object);
-	
-	if (a_pointer != NULL)
-		CoTaskMemFree (a_pointer);
-	
+		
 	if ((an_object  ==  NULL) || (eif_access (an_object)  ==  NULL))
 		return eif_wean (result);
 	else
@@ -2739,11 +2747,11 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_short (SAFEARRAY * a_safearray)
 
 		// free memory
 
-		hr = SafeArrayDestroy (a_safearray);
-		if (hr != S_OK)
-		{
-			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
-		}
+//		hr = SafeArrayDestroy (a_safearray);
+//		if (hr != S_OK)
+//		{
+//			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+//		}
 		free (lower_indices);
 		free (element_counts);
 		free (upper_indices);
@@ -2871,11 +2879,11 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_long (SAFEARRAY * a_safearray)
 
 		// free memory
 
-		hr = SafeArrayDestroy (a_safearray);
-		if (hr != S_OK)
-		{
-			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
-		}
+//		hr = SafeArrayDestroy (a_safearray);
+//		if (hr != S_OK)
+//		{
+//			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+//		}
 		free (lower_indices);
 		free (element_counts);
 		free (upper_indices);
@@ -3439,11 +3447,11 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_float (SAFEARRAY * a_safearray)
 
 		// free memory
 
-		hr = SafeArrayDestroy (a_safearray);
-		if (hr != S_OK)
-		{
-			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
-		}
+//		hr = SafeArrayDestroy (a_safearray);
+//		if (hr != S_OK)
+//		{
+//			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+//		}
 		free (lower_indices);
 		free (element_counts);
 		free (upper_indices);
@@ -3574,11 +3582,11 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_double (SAFEARRAY * a_safearray
 
 		// free memory
 
-		hr = SafeArrayDestroy (a_safearray);
-		if (hr != S_OK)
-		{
-			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
-		}
+//		hr = SafeArrayDestroy (a_safearray);
+//		if (hr != S_OK)
+//		{
+//			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+//		}
 		free (lower_indices);
 		free (element_counts);
 		free (upper_indices);
@@ -3712,11 +3720,11 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_char (SAFEARRAY * a_safearray)
 
 		// free memory
 
-		hr = SafeArrayDestroy (a_safearray);
-		if (hr != S_OK)
-		{
-			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
-		}
+//		hr = SafeArrayDestroy (a_safearray);
+//		if (hr != S_OK)
+//		{
+//			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+//		}
 		free (lower_indices);
 		free (element_counts);
 		free (upper_indices);
@@ -3848,11 +3856,11 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_boolean (SAFEARRAY * a_safearra
 
 		// free memory
 
-		hr = SafeArrayDestroy (a_safearray);
-		if (hr != S_OK)
-		{
-			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
-		}
+//		hr = SafeArrayDestroy (a_safearray);
+//		if (hr != S_OK)
+//		{
+//			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+//		}
 		free (lower_indices);
 		free (element_counts);
 		free (upper_indices);
@@ -3998,11 +4006,11 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_currency (SAFEARRAY * a_safearr
 
 		// free memory
 
-		hr = SafeArrayDestroy (a_safearray);
-		if (hr != S_OK)
-		{
-			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
-		}
+//		hr = SafeArrayDestroy (a_safearray);
+//		if (hr != S_OK)
+//		{
+//			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+//		}
 		free (lower_indices);
 		free (element_counts);
 		free (upper_indices);
@@ -4138,11 +4146,11 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_date (SAFEARRAY * a_safearray)
 
 		// free memory
 
-		hr = SafeArrayDestroy (a_safearray);
-		if (hr != S_OK)
-		{
-			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
-		}
+//		hr = SafeArrayDestroy (a_safearray);
+//		if (hr != S_OK)
+//		{
+//			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+//		}
 		free (lower_indices);
 		free (element_counts);
 		free (upper_indices);
@@ -4289,11 +4297,11 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_decimal (SAFEARRAY * a_safearra
 
 		// free memory
 
-		hr = SafeArrayDestroy (a_safearray);
-		if (hr != S_OK)
-		{
-			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
-		}
+//		hr = SafeArrayDestroy (a_safearray);
+//		if (hr != S_OK)
+//		{
+//			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+//		}
 		free (lower_indices);
 		free (element_counts);
 		free (upper_indices);
@@ -4431,11 +4439,11 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_bstr (SAFEARRAY * a_safearray)
 
 		// free memory
 
-		hr = SafeArrayDestroy (a_safearray);
-		if (hr != S_OK)
-		{
-			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
-		}
+//		hr = SafeArrayDestroy (a_safearray);
+//		if (hr != S_OK)
+//		{
+//			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+//		}
 		free (lower_indices);
 		free (element_counts);
 		free (upper_indices);
@@ -4581,11 +4589,11 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_variant (SAFEARRAY * a_safearra
 
 		// free memory
 
-		hr = SafeArrayDestroy (a_safearray);
-		if (hr != S_OK)
-		{
-			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
-		}
+//		hr = SafeArrayDestroy (a_safearray);
+//		if (hr != S_OK)
+//		{
+//			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+//		}
 		free (lower_indices);
 		free (element_counts);
 		free (upper_indices);
@@ -4721,11 +4729,11 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_hresult (SAFEARRAY * a_safearra
 
 		// free memory
 
-		hr = SafeArrayDestroy (a_safearray);
-		if (hr != S_OK)
-		{
-			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
-		}
+//		hr = SafeArrayDestroy (a_safearray);
+//		if (hr != S_OK)
+//		{
+//			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+//		}
 		free (lower_indices);
 		free (element_counts);
 		free (upper_indices);
@@ -4863,11 +4871,6 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_unknown (SAFEARRAY * a_safearra
 
 		// free memory
 
-		hr = SafeArrayDestroy (a_safearray);
-		if (hr != S_OK)
-		{
-			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
-		}
 		free (lower_indices);
 		free (element_counts);
 		free (upper_indices);
@@ -5002,11 +5005,11 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_dispatch (SAFEARRAY * a_safearr
 
 		// free memory
 
-		hr = SafeArrayDestroy (a_safearray);
-		if (hr != S_OK)
-		{
-			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
-		}
+//		hr = SafeArrayDestroy (a_safearray);
+//		if (hr != S_OK)
+//		{
+//			com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+//		}
 		free (lower_indices);
 		free (element_counts);
 		free (upper_indices);
@@ -5044,7 +5047,6 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_pointer (void ** a_pointer, EIF_O
 	nstcall = 0;
 	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_POINTER))set_item)(eif_access (result), (((a_pointer != NULL) && (*a_pointer != NULL)) ? (EIF_POINTER)*a_pointer : NULL));
 
-	CoTaskMemFree (a_pointer);
 	if ((an_object == NULL) || (eif_access (an_object) == NULL))
 		return eif_wean (result);
 	else

@@ -1,0 +1,2 @@
+Lace error: A class name appears more than once on the right of a `rename' clause, which creates a conflict.
+What to do: Remove one of the `rename' clauses, or rename one of the classes to another name.

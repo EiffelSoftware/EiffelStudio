@@ -1612,7 +1612,7 @@ rt_private int free_last_chunk(void)
 		SIGRESUME;
 		return -1;
 	}
-#else
+#else	/* HAS_SMART_SBRK */
 #ifdef HAS_SBRK
 	/* Shrink process's data segment */
 	if (((int) sbrk(-nbytes)) == -1) {	/* System call failed */
@@ -1621,18 +1621,18 @@ rt_private int free_last_chunk(void)
 		SIGRESUME;						/* End of critical section */
 		return -1;						/* Propagate failure */
 	}
-#else
+#else	/* HAS_SBRK */
 	eif_free (last_chk);
-#endif
-#endif
+#endif	/* HAS_SBRK */
+#endif /* HAS_SMART_SBRK */
 
 #ifdef DEBUG
 #if (!defined HAS_SMART_MMAP) && defined HAS_SBRK
 	dprintf(1+2)("free_last_chunk: shrinking succeeded, new break at 0x%lx\n",
 		sbrk(0));
 	flush;
-#endif
-#endif
+#endif	/* !HAS_SMART_MMAP && HAS_SBRK */
+#endif	/* DEBUG */
 
 	/* The break value was sucessfully lowered. It's now time to update the
 	 * internal data structure which keep track of the memory status.
@@ -1706,6 +1706,7 @@ rt_private int free_last_chunk(void)
 		memset (&ps_from, 0, sizeof(struct sc_zone));
 #else
 		bzero(&ps_from, sizeof(struct sc_zone));
+#endif
 	} else if ((EIF_REFERENCE) arena == ps_to.sc_arena) {
 #ifdef VXWORKS
 		memset (&ps_to, 0, sizeof(struct sc_zone));
@@ -1717,7 +1718,7 @@ rt_private int free_last_chunk(void)
 	SIGRESUME;							/* Critical section ends */
 
 	return 0;			/* Signals no error */
-#endif
+#endif	/* !HAS_SMART_MMAP && HAS_SBRK && !HAS_SMART_SBRK */
 
 	EIF_END_GET_CONTEXT
 }
@@ -2008,7 +2009,8 @@ rt_public EIF_REFERENCE xcalloc(unsigned int nelem, unsigned int elsize)
 		memset (allocated, 0, nbytes);		/* Fill arena with zeros */
 #else
 		bzero(allocated, nbytes);		/* Fill arena with zeros */
-#endif
+#endif	/* VXWORKS */
+	}
 
 	return allocated;		/* Pointer to new zero-filled zone */
 }

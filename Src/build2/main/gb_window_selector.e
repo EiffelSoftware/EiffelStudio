@@ -191,38 +191,6 @@ feature -- Access
 			end
 		end
 	
-	new_directory_button: EV_TOOL_BAR_BUTTON is
-			-- `Result' is a tool bar button that
-			-- calls `add_new_directory'.
-		local
-			pixmaps: GB_SHARED_PIXMAPS
-		do
-			create Result
-			Result.select_actions.extend (agent add_new_directory)
-				-- Assign the appropriate pixmap.
-			create pixmaps
-			Result.set_pixmap (pixmaps.pixmap_by_name ("icon_new_cluster_small_color"))
-			Result.set_tooltip ("New directory")
-		ensure
-			result_not_void: Result /= Void
-		end
-		
-	expand_all_button: EV_TOOL_BAR_BUTTON is
-			-- `Result' is a tool bar button that
-			-- calls `add_new_directory'.
-		local
-			pixmaps: GB_SHARED_PIXMAPS
-		do
-			create Result
-			Result.select_actions.extend (agent expand_tree_recursive (widget))
-				-- Assign the appropriate pixmap.
-			create pixmaps
-			Result.set_pixmap (pixmaps.pixmap_by_name ("icon_expand_all_small_color"))
-			Result.set_tooltip ("Expand all")
-		ensure
-			result_not_void: Result /= Void
-		end
-		
 	objects: ARRAYED_LIST [GB_OBJECT] is
 			-- `Result' is all objects represented in `Current'.
 			-- No paticular order is guaranteed.
@@ -1124,8 +1092,45 @@ feature {GB_SET_ROOT_WINDOW_COMMAND}
 
 feature {NONE} -- Implementation
 
-	all_deleted_directories: HASH_TABLE [STRING, STRING]
-		-- All directory names that have been deleted. A user may not enter 
+	new_directory_button: EV_TOOL_BAR_BUTTON is
+			-- `Result' is a tool bar button that
+			-- calls `add_new_directory'.
+		local
+			pixmaps: GB_SHARED_PIXMAPS
+		do
+			create Result
+			Result.select_actions.extend (agent add_new_directory)
+				-- Assign the appropriate pixmap.
+			create pixmaps
+			Result.set_pixmap (pixmaps.pixmap_by_name ("icon_new_cluster_small_color"))
+			Result.set_tooltip ("New directory")
+		ensure
+			result_not_void: Result /= Void
+		end
+		
+	expand_all_button: EV_TOOL_BAR_BUTTON is
+			-- `Result' is a tool bar button that expands contents of `Current'
+		local
+			pixmaps: GB_SHARED_PIXMAPS
+		do
+			create Result
+			Result.select_actions.extend (agent expand_tree_recursive (widget))
+				-- Assign the appropriate pixmap.
+			create pixmaps
+			Result.set_pixmap (pixmaps.pixmap_by_name ("icon_expand_all_small_color"))
+			Result.set_tooltip ("Expand all")
+			Result.drop_actions.extend (agent expand_subtree)
+		ensure
+			result_not_void: Result /= Void
+		end
+		
+	expand_subtree (window_selector_common_item: GB_WINDOW_SELECTOR_COMMON_ITEM) is
+			--
+		do
+			window_selector_common_item.tree_item.expand
+			expand_tree_recursive (window_selector_common_item.tree_item)
+		end
+		
 
 	add_new_directory is
 			-- Display a dialog for inputting a new name, that is only valid if
@@ -1239,68 +1244,70 @@ feature {NONE} -- Implementation
 			
 			if (titled_window_object /= Void and then a_widget /= display_window) or (a_widget.parent /= display_window) then
 
-				-- Firstly hide the existing windows if shown
-			if builder_window.is_displayed then
-				command_handler.show_hide_builder_window_command.execute
-				builder_shown := True
-			end
-			if display_window.is_displayed then
-				command_handler.Show_hide_display_window_command.execute
-				display_shown := True
-			end
-
-				-- Then set the new windows.
-			if titled_window_object /= Void then
-				display_win ?= a_widget
-			else
-				display_win ?= a_widget.parent
-			end
-			check
-				display_win_not_void: display_win /= Void
-			end
-			set_display_window (display_win)
-			if titled_window_object /= Void then
-				if titled_window_object.display_object /= Void then
-					builder_win ?= titled_window_object.display_object.child
-					check
-						display_object_item_is_window: builder_win /= Void
-					end
-					set_builder_window (builder_win)
+					-- Firstly hide the existing windows if shown
+				if builder_window.is_displayed then
+					command_handler.show_hide_builder_window_command.execute
+					builder_shown := True
 				end
-			else
-				if an_object.display_object /= Void then
-					display_object ?= an_object.display_object
-						-- `display_object' may be Void when the type of widget is a primitive
-						-- as it is simply an instance of EV_WIDGET instead of GB_DISPLAY_OBJECT.
-					if display_object /= Void then
-						builder_win ?= display_object.parent
+				if display_window.is_displayed then
+					command_handler.Show_hide_display_window_command.execute
+					display_shown := True
+				end
+		
+					-- Then set the new windows.
+				if titled_window_object /= Void then
+					display_win ?= a_widget
+				else
+					display_win ?= a_widget.parent
+				end
+				check
+					display_win_not_void: display_win /= Void
+				end
+				set_display_window (display_win)
+				if titled_window_object /= Void then
+					if titled_window_object.display_object /= Void then
+						builder_win ?= titled_window_object.display_object.child
 						check
-							builder_win_found: builder_win /= Void
-						end
-						set_builder_window (builder_win)
-					else
-						a_widget ?= an_object.display_object
-						check
-							display_object_was_widget: a_widget /= Void
-							widget_has_parent: a_widget.parent /= Void
-						end
-						builder_win ?= a_widget.parent
-						check
-							parent_was_builder_window: builder_win /= Void
+							display_object_item_is_window: builder_win /= Void
 						end
 						set_builder_window (builder_win)
 					end
+				else
+					if an_object.display_object /= Void then
+						display_object ?= an_object.display_object
+							-- `display_object' may be Void when the type of widget is a primitive
+							-- as it is simply an instance of EV_WIDGET instead of GB_DISPLAY_OBJECT.
+						if display_object /= Void then
+							builder_win ?= display_object.parent
+							check
+								builder_win_found: builder_win /= Void
+							end
+							set_builder_window (builder_win)
+						else
+							a_widget ?= an_object.display_object
+							check
+								display_object_was_widget: a_widget /= Void
+								widget_has_parent: a_widget.parent /= Void
+							end
+							builder_win ?= a_widget.parent
+							check
+								parent_was_builder_window: builder_win /= Void
+							end
+							set_builder_window (builder_win)
+						end
+					end
 				end
-			end
-
-			if builder_shown then
-				command_handler.Show_hide_builder_window_command.execute
-			end
-			if display_shown then
-				Command_handler.Show_hide_display_window_command.execute
-			end
-					-- Force the newly displayed window to redraw immediately.
-				((create {EV_ENVIRONMENT}).application).process_events
+		
+				if builder_shown then
+					command_handler.Show_hide_builder_window_command.execute
+				end
+				if display_shown then
+					Command_handler.Show_hide_display_window_command.execute
+				end
+				if application.is_launched then
+						-- Force the newly displayed window to redraw immediately.
+					application.process_events
+				end
 			end
 		end
 

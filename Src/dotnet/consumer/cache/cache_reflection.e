@@ -8,7 +8,7 @@ class
 
 inherit
 	CACHE_READER
-	
+
 feature -- Access
 
 	feature_name (t: TYPE; dotnet_name: STRING; args: NATIVE_ARRAY [TYPE]): STRING is
@@ -185,12 +185,12 @@ feature -- Access
 				end
 			end
 		end
- 
+
  	assembly_mapping_array (aname: ASSEMBLY_NAME): ARRAY [CONSUMED_ASSEMBLY] is
  			-- Assembly mapping for assembly `aname'.
  		require
  			non_void_name: aname /= Void
- 			assembly_in_cache: is_assembly_in_cache (aname)
+			assembly_in_cache: is_assembly_in_cache (aname)
  		local
   			name: STRING
  		do
@@ -203,7 +203,7 @@ feature -- Access
 				assemblies_mappings_cache.put (Result, name)
 			end
   		end
- 		
+
 feature {NONE} -- Implementation
 
 	Constructor_name: STRING is ".ctor"
@@ -219,7 +219,7 @@ feature {NONE} -- Implementation
 		once
 			create Result.make (Max_cache_items)
 		end
-		
+
 	Max_cache_items: INTEGER is 20
 			-- Maximum number of types stored in local cache
 

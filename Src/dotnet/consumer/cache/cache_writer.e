@@ -43,7 +43,7 @@ feature -- Basic Operations
 				create cr
 				create dir.make (cr.absolute_assembly_path (aname))
 
-				create consumer				
+				create consumer
 				-- only consume the assembly if it has been modified
 				if consumer.is_assembly_modified (assembly, dir.name) then
 					if dir.exists then

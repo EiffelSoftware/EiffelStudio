@@ -28,7 +28,7 @@ inherit
 			popdown
 		end
 
-	MEL_CALLBACK
+	MEL_COMMAND
 
 feature -- Status report
 
@@ -112,8 +112,8 @@ feature {NONE} -- Implementation
 			-- Initialize the current dialog
 		do
 			shell.forbid_shell_resize;
-			shell.add_popup_callback (Current, True);
-			shell.add_popdown_callback (Current, False);
+			shell.set_popup_callback (Current, True);
+			shell.set_popdown_callback (Current, False);
 		end;
 
 feature {NONE} -- Execution

@@ -411,16 +411,24 @@ feature -- Status setting
 			peer: EV_CONTAINER_IMP
 		do
 			peer ?= a_container.implementation
-			l := peer.radio_group
-			if l /= radio_group then
-				from
-					l.start
-				until
-					l.empty
-				loop
-					add_radio_button (l.item.interface)
+			if peer = Void then
+				-- It's a widget that inherits from EV_CONTAINER,
+				-- but has implementation renamed.
+				-- If this is the case, on `a_container' this feature
+				-- had to be redefined.
+				a_container.merge_radio_button_groups (interface)
+			else
+				l := peer.radio_group
+				if l /= radio_group then
+					from
+						l.start
+					until
+						l.empty
+					loop
+						add_radio_button (l.item.interface)
+					end
+					peer.set_radio_group (radio_group)
 				end
-				peer.set_radio_group (radio_group)
 			end
 		end
 
@@ -459,6 +467,10 @@ end -- class EV_CONTAINER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.41  2000/03/06 21:21:53  brendel
+--| Added functionality to connect_radio_grouping that reverses the target
+--| and argument of the call when implementation of argument is Void.
+--|
 --| Revision 1.40  2000/02/29 20:02:45  brendel
 --| Improved implementation of radio group merging.
 --|

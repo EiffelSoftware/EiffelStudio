@@ -488,9 +488,11 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 					l_cluster_of_name := lace.Universe.cluster_of_name (
 						l_compiled_assembly.cluster_name)
 					
-					l_cluster_of_path := lace.Universe.cluster_of_path (
-						l_compiled_assembly.assembly_path)
-	
+					if l_compiled_assembly.path /= Void then
+						l_cluster_of_path := lace.Universe.cluster_of_path (
+							l_compiled_assembly.path)
+					end	
+					
 					if l_cluster_of_name /= Void then
 						if l_cluster_of_name.is_precompiled then
 							if 

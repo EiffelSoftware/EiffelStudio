@@ -26,8 +26,8 @@ feature --Access
 	tree: EV_TREE
 			-- Tree of the current window
 
---	sbar: EV_STATUS_BAR
---			-- A status bar
+	sbar: EV_STATUS_BAR
+			-- A status bar
 
 feature -- Initialization
 	
@@ -48,28 +48,24 @@ feature -- Initialization
 			set_minimum_width (300)
 			!! split.make (Current)
 
---			-- We set the menu
---			!! mbar.make (Current)
---			fill_menu
+			-- We set the menu
+			!! mbar.make (Current)
+			fill_menu
 
---			-- We set the status bar
---			!! sbar.make (Current)
+			-- We set the status bar
+			!! sbar.make (Current)
 
 			-- We set the tree
-			!! tree.make (split)
+			!! vbox.make (split)
+			!! label.make_with_text (vbox, "Vision hierarchy")
+			label.set_expand (False)
+			!! tree.make (vbox)
 			tree.set_minimum_size (200, 250)
 			fill_tree
 
 			-- We set the notebook
 			!! item.make (Void)
-			!! vbox.make (split)
-			!! hbox.make (vbox)
-			!! notebook.make (vbox)
-			hbox.set_expand (False)
-			!! label.make_with_text (hbox, "Events : ")
-			label.set_expand (False)
-			label.set_center_alignment
-			item.event_box.set_parent (hbox)
+			!! notebook.make (split)
 			item.demo_page.set_parent (notebook)
 			notebook.append_page (item.demo_page, "Demo")
 			item.text_page.set_parent (notebook)
@@ -78,7 +74,6 @@ feature -- Initialization
 			notebook.append_page (item.class_page, "Class text")
 			item.destroy
 			notebook.set_minimum_size (250, 250)
-
 			set_minimum_size (600, 400)
 		end
 
@@ -137,7 +132,8 @@ feature -- Tree features
 			!TREE_ITEM! demo.make (primitive)
 			!COMBO_ITEM! demo.make (primitive)
 --	This example does not work on gtk yet
---			!DRAWING_ITEM! demo.make (primitive)
+			!DRAWING_ITEM! demo.make (primitive)
+			!RICH_ITEM! demo.make (primitive)
 
 			!WINDOW_ITEM! demo.make (container)
 			!DIALOG_ITEM! demo.make (container)
@@ -151,12 +147,15 @@ feature -- Tree features
 			!DYNTABLE_ITEM! demo.make (container)
 
 --	This example does not work on gtk yet
---			!POPUP_ITEM! demo.make (uncommon)
+			!POPUP_ITEM! demo.make (uncommon)
 
 			!ERROR_ITEM! demo.make (dialog)
 			!QUESTION_ITEM! demo.make (dialog)
 			!INFORMATION_ITEM! demo.make (dialog)
 			!WARNING_ITEM! demo.make (dialog)
+--	This example does not work on gtk yet
+			!OPEN_FILE_ITEM! demo.make (dialog)
+			!SAVE_FILE_ITEM! demo.make (dialog)
 		end
 
 end -- class MAIN_WINDOW

@@ -664,8 +664,71 @@ feature {NONE} -- Implementation
 				sorted_by_value := True
 			else
 			end
+			perform_sort (a_column)
 		end
 		
+	perform_sort (a_column: INTEGER) is
+			-- Perform sort of information displayed in `constants_list',
+			-- sorted by column index `a_column', 
+		local
+			sorter: DS_ARRAY_QUICK_SORTER [EV_MULTI_COLUMN_LIST_ROW]
+			comparator: MULTI_COLUMN_LIST_ROW_STRING_COMPARATOR
+			lconstants: ARRAYED_LIST [EV_MULTI_COLUMN_LIST_ROW]
+		do
+			if last_selected_column = a_column then
+					-- Reverse the sort if this column has already been clicked.
+				reverse_sort := not reverse_sort
+			else
+				reverse_sort := False
+			end
+			last_selected_column := a_column
+
+				-- Lock window updates, and display a wait cursor.
+			constants_list.set_pointer_style ((create {EV_STOCK_PIXMAPS}).busy_cursor)
+			parent_window (constants_list).lock_update
+			
+			create lconstants.make (constants_list.count)
+				-- Place all items in `lconstants' ready for sorting.
+			from
+				constants_list.start
+			until
+				constants_list.count = lconstants.count
+			loop
+				lconstants.force (constants_list.i_th (lconstants.count + 1))
+			end
+			
+				-- Initialize `sorter' and `comparator'
+			create comparator
+			comparator.set_sort_column (a_column)
+			create sorter.make (comparator)
+			if reverse_sort then
+				sorter.reverse_sort (lconstants)	
+			else
+				sorter.sort (lconstants)
+			end
+	
+				-- Clear `constants_list' and rebuild rows in sorted order.		
+			constants_list.wipe_out
+			from
+				lconstants.start
+			until
+				lconstants.off
+			loop
+				constants_list.extend (lconstants.item)
+				lconstants.forth
+			end
+			
+				-- Unlock window, and restore cursor.
+			parent_window (constants_list).unlock_update
+			constants_list.set_pointer_style ((create {EV_STOCK_PIXMAPS}).standard_cursor)
+		end
+		
+	last_selected_column: INTEGER
+		-- Last column selected by user.
+	
+	reverse_sort: BOOLEAN
+		-- Should sort opertion be reversed?
+
 	select_pixmap is
 			-- Display a pixmap dialog permitting addition of pixmap constants.
 		local

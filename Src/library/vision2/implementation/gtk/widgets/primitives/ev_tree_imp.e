@@ -22,8 +22,14 @@ feature {NONE} -- Initialization
 	make is
 			-- Create an empty Tree.
 		do
-			widget := gtk_tree_new
+			widget := gtk_scrolled_window_new (Default_pointer, Default_pointer)
 			gtk_object_ref (widget)
+			gtk_scrolled_window_set_policy (gtk_scrolled_window (widget), gtk_policy_automatic, gtk_policy_automatic)
+
+			tree_widget := gtk_tree_new
+			c_gtk_tree_set_single_selection_mode (tree_widget)
+			gtk_widget_show (tree_widget)
+			gtk_scrolled_window_add_with_viewport (widget, tree_widget)
 		end
 
 feature -- Access
@@ -39,6 +45,7 @@ feature -- Access
 feature -- Status report
 
 	selected: BOOLEAN is
+			-- Is at least one item selected ?
 		do
 			check
 				not_yet_implemented: False
@@ -68,19 +75,25 @@ feature {NONE} -- Implementation
 	add_item (item_imp: EV_TREE_ITEM_IMP) is
 			-- Add `item' to the list
 		do
-			gtk_tree_append (widget, item_imp.widget)
+			gtk_tree_append (tree_widget, item_imp.widget)
 		end
 
 	remove_item (item_imp: EV_TREE_ITEM_IMP) is
 			-- Remove `item' to the list
 		do
-			gtk_tree_remove_item (widget, item_imp.widget)
+			gtk_tree_remove_item (tree_widget, item_imp.widget)
 		end
 
 feature {NONE} -- Implementation
 
 	ev_children: ARRAYED_LIST [EV_TREE_ITEM]
 			-- We need to store the children.
+
+feature {EV_TREE_ITEM_IMP} -- Implementation
+
+	tree_widget: POINTER
+			-- Pointer to the gtk_tree.
+			-- Exported to EV_TREE_ITEM_IMP. 
 
 end -- class EV_TREE_IMP
 

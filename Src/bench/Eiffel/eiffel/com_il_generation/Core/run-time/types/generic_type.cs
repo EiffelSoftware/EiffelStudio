@@ -84,6 +84,28 @@ feature -- Settings
 	{
 		nb_generics = nb;
 	}
+
+/*
+feature -- Comparison
+*/
+	public override bool Equals (Object other)
+		// Is `other' similar to Current?
+	{
+		bool Result = false;
+		GENERIC_TYPE l_other = other as GENERIC_TYPE;
+		int i, nb;
+
+		if (l_other != null) {
+			if ((type.Value == l_other.type.Value) && (nb_generics == l_other.nb_generics)) {
+				Result = true;
+				for (i = 0, nb = nb_generics - 1; (i < nb) && Result; i++) {
+					Result = (type_array [i]).Equals (l_other.type_array [i]);
+				}
+			}
+		}
+		return Result;
+	}
+
 }
 
 }

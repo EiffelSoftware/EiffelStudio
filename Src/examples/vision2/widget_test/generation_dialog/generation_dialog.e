@@ -20,6 +20,11 @@ inherit
 		undefine
 			default_create, copy, is_equal
 		end
+		
+	INSTALLATION_LOCATOR
+		undefine
+			default_create, copy, is_equal
+		end
 
 feature {NONE} -- Initialization
 
@@ -69,6 +74,7 @@ feature {NONE} -- Implementation
 			clashing_files: STRING
 			warning_dialog: WARNING_DIALOG
 			supress_generation: BOOLEAN
+			error_dialog: EV_ERROR_DIALOG
 		do
 			create directory.make (directory_display.text)
 			contents := directory.linear_representation
@@ -96,6 +102,11 @@ feature {NONE} -- Implementation
 				if not warning_dialog.selected_button.is_equal ("OK") then
 					supress_generation := True
 				end
+			end
+			if installation_location = Void then
+				supress_generation := True
+				create error_dialog.make_with_text ("Unable to generate test as required files cannot be located.%NIf this tour was installed as part of the EiffelStudio installation, please ensure that ISE_EIFFEL is correctly set.%NIf this tour was installed separately, please ensure ISE_VISION2_TOUR is correctly set to the installation directory.")
+				error_dialog.show_modal_to_window (Current)
 			end
 			if not supress_generation then
 				test_controller.generate_current_test (directory)

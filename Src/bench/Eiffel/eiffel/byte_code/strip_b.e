@@ -51,19 +51,19 @@ feature
 			attr: ATTR_DESC;
 		do
 			skeleton := Context.class_type.skeleton;
-           	from
+			from
 				!!Result.make;
-            	feature_ids.start
-            until
-            	feature_ids.after
-            loop
-              	skeleton.search_feature_id (feature_ids.item);
-               	attr := skeleton.item;
-               	--! Should always be found
+				feature_ids.start
+			until
+				feature_ids.after
+			loop
+				skeleton.search_feature_id (feature_ids.item);
+				attr := skeleton.item;
+					--! Should always be found
 				Result.put_right (attr.attribute_name);
 				Result.forth;
-               	feature_ids.forth;
-            end;
+				feature_ids.forth;
+			end;
 		end;
 
 	make_byte_code (ba: BYTE_ARRAY) is

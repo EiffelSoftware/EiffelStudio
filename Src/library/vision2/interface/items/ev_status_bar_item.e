@@ -48,6 +48,7 @@ feature {NONE} -- Initialization
 			vb.extend (pixmap_cell)
 			create label
 			vb.extend (label)
+			set_minimum_height (18)
 		end
 
 feature -- Access
@@ -138,6 +139,9 @@ end -- class EV_STATUS_BAR_ITEM
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.21  2000/05/01 17:18:46  brendel
+--| Added minimum height of 18 (same as normal windows status bars).
+--|
 --| Revision 1.20  2000/04/28 21:47:06  brendel
 --| Made platform independent.
 --|

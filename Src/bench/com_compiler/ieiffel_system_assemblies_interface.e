@@ -17,15 +17,8 @@ feature -- Status Report
 			Result := True
 		end
 
-	add_signed_assembly_user_precondition (assembly_prefix: STRING; assembly_identifier: STRING; a_name: STRING; a_version: STRING; a_culture: STRING; a_publickey: STRING): BOOLEAN is
-			-- User-defined preconditions for `add_signed_assembly'.
-			-- Redefine in descendants if needed.
-		do
-			Result := True
-		end
-
-	add_unsigned_assembly_user_precondition (assembly_prefix: STRING; assembly_identifier: STRING; a_path: STRING): BOOLEAN is
-			-- User-defined preconditions for `add_unsigned_assembly'.
+	add_assembly_user_precondition (assembly_prefix: STRING; cluster_name: STRING; a_name: STRING; a_version: STRING; a_culture: STRING; a_publickey: STRING): BOOLEAN is
+			-- User-defined preconditions for `add_assembly'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -38,21 +31,21 @@ feature -- Status Report
 			Result := True
 		end
 
-	assembly_properties_user_precondition (assembly_identifier: STRING): BOOLEAN is
+	assembly_properties_user_precondition (cluster_name: STRING): BOOLEAN is
 			-- User-defined preconditions for `assembly_properties'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	is_valid_identifier_user_precondition (assembly_identifier: STRING): BOOLEAN is
-			-- User-defined preconditions for `is_valid_identifier'.
+	is_valid_cluster_name_user_precondition (cluster_name: STRING): BOOLEAN is
+			-- User-defined preconditions for `is_valid_cluster_name'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	contains_assembly_user_precondition (assembly_identifier: STRING): BOOLEAN is
+	contains_assembly_user_precondition (cluster_name: STRING): BOOLEAN is
 			-- User-defined preconditions for `contains_assembly'.
 			-- Redefine in descendants if needed.
 		do
@@ -73,15 +66,15 @@ feature -- Status Report
 			Result := True
 		end
 
-	identifier_from_signed_assembly_user_precondition (a_name: STRING; a_version: STRING; a_culture: STRING; a_publickey: STRING): BOOLEAN is
-			-- User-defined preconditions for `identifier_from_signed_assembly'.
+	cluster_name_from_signed_assembly_user_precondition (a_name: STRING; a_version: STRING; a_culture: STRING; a_publickey: STRING): BOOLEAN is
+			-- User-defined preconditions for `cluster_name_from_signed_assembly'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	identifier_from_unsigned_assembly_user_precondition (a_path: STRING): BOOLEAN is
-			-- User-defined preconditions for `identifier_from_unsigned_assembly'.
+	cluster_name_from_unsigned_assembly_user_precondition (a_path: STRING): BOOLEAN is
+			-- User-defined preconditions for `cluster_name_from_unsigned_assembly'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -96,13 +89,6 @@ feature -- Status Report
 
 	is_prefix_allocated_user_precondition (assembly_prefix: STRING): BOOLEAN is
 			-- User-defined preconditions for `is_prefix_allocated'.
-			-- Redefine in descendants if needed.
-		do
-			Result := True
-		end
-
-	rename_assembly_user_precondition (assembly_new_identifier: STRING; assembly_old_identifier: STRING): BOOLEAN is
-			-- User-defined preconditions for `rename_assembly'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -125,27 +111,16 @@ feature -- Basic Operations
 
 		end
 
-	add_signed_assembly (assembly_prefix: STRING; assembly_identifier: STRING; a_name: STRING; a_version: STRING; a_culture: STRING; a_publickey: STRING) is
+	add_assembly (assembly_prefix: STRING; cluster_name: STRING; a_name: STRING; a_version: STRING; a_culture: STRING; a_publickey: STRING) is
 			-- Add a signed assembly to the project.
 			-- `assembly_prefix' [in].  
-			-- `assembly_identifier' [in].  
+			-- `cluster_name' [in].  
 			-- `a_name' [in].  
 			-- `a_version' [in].  
 			-- `a_culture' [in].  
 			-- `a_publickey' [in].  
 		require
-			add_signed_assembly_user_precondition: add_signed_assembly_user_precondition (assembly_prefix, assembly_identifier, a_name, a_version, a_culture, a_publickey)
-		deferred
-
-		end
-
-	add_unsigned_assembly (assembly_prefix: STRING; assembly_identifier: STRING; a_path: STRING) is
-			-- Add a unsigned (local) assembly to the project.
-			-- `assembly_prefix' [in].  
-			-- `assembly_identifier' [in].  
-			-- `a_path' [in].  
-		require
-			add_unsigned_assembly_user_precondition: add_unsigned_assembly_user_precondition (assembly_prefix, assembly_identifier, a_path)
+			add_assembly_user_precondition: add_assembly_user_precondition (assembly_prefix, cluster_name, a_name, a_version, a_culture, a_publickey)
 		deferred
 
 		end
@@ -159,29 +134,29 @@ feature -- Basic Operations
 
 		end
 
-	assembly_properties (assembly_identifier: STRING): IEIFFEL_ASSEMBLY_PROPERTIES_INTERFACE is
-			-- Cluster properties.
-			-- `assembly_identifier' [in].  
+	assembly_properties (cluster_name: STRING): IEIFFEL_ASSEMBLY_PROPERTIES_INTERFACE is
+			-- Assembly properties.
+			-- `cluster_name' [in].  
 		require
-			assembly_properties_user_precondition: assembly_properties_user_precondition (assembly_identifier)
+			assembly_properties_user_precondition: assembly_properties_user_precondition (cluster_name)
 		deferred
 
 		end
 
-	is_valid_identifier (assembly_identifier: STRING): BOOLEAN is
-			-- Checks to see if a assembly identifier is valid
-			-- `assembly_identifier' [in].  
+	is_valid_cluster_name (cluster_name: STRING): BOOLEAN is
+			-- Checks to see if a assembly cluster name is valid
+			-- `cluster_name' [in].  
 		require
-			is_valid_identifier_user_precondition: is_valid_identifier_user_precondition (assembly_identifier)
+			is_valid_cluster_name_user_precondition: is_valid_cluster_name_user_precondition (cluster_name)
 		deferred
 
 		end
 
-	contains_assembly (assembly_identifier: STRING): BOOLEAN is
-			-- Checks to see if a assembly identifier has already been added to the project
-			-- `assembly_identifier' [in].  
+	contains_assembly (cluster_name: STRING): BOOLEAN is
+			-- Checks to see if a assembly cluster name has already been added to the project
+			-- `cluster_name' [in].  
 		require
-			contains_assembly_user_precondition: contains_assembly_user_precondition (assembly_identifier)
+			contains_assembly_user_precondition: contains_assembly_user_precondition (cluster_name)
 		deferred
 
 		end
@@ -207,23 +182,23 @@ feature -- Basic Operations
 
 		end
 
-	identifier_from_signed_assembly (a_name: STRING; a_version: STRING; a_culture: STRING; a_publickey: STRING): STRING is
-			-- Retrieves the identifier for a signed assembly in the project
+	cluster_name_from_signed_assembly (a_name: STRING; a_version: STRING; a_culture: STRING; a_publickey: STRING): STRING is
+			-- Retrieves the cluster name for a signed assembly in the project
 			-- `a_name' [in].  
 			-- `a_version' [in].  
 			-- `a_culture' [in].  
 			-- `a_publickey' [in].  
 		require
-			identifier_from_signed_assembly_user_precondition: identifier_from_signed_assembly_user_precondition (a_name, a_version, a_culture, a_publickey)
+			cluster_name_from_signed_assembly_user_precondition: cluster_name_from_signed_assembly_user_precondition (a_name, a_version, a_culture, a_publickey)
 		deferred
 
 		end
 
-	identifier_from_unsigned_assembly (a_path: STRING): STRING is
-			-- Retrieves the identifier for a unsigned assembly in the project
+	cluster_name_from_unsigned_assembly (a_path: STRING): STRING is
+			-- Retrieves the cluster name for a unsigned assembly in the project
 			-- `a_path' [in].  
 		require
-			identifier_from_unsigned_assembly_user_precondition: identifier_from_unsigned_assembly_user_precondition (a_path)
+			cluster_name_from_unsigned_assembly_user_precondition: cluster_name_from_unsigned_assembly_user_precondition (a_path)
 		deferred
 
 		end
@@ -242,16 +217,6 @@ feature -- Basic Operations
 			-- `assembly_prefix' [in].  
 		require
 			is_prefix_allocated_user_precondition: is_prefix_allocated_user_precondition (assembly_prefix)
-		deferred
-
-		end
-
-	rename_assembly (assembly_new_identifier: STRING; assembly_old_identifier: STRING) is
-			-- Rename the assembly identifier
-			-- `assembly_new_identifier' [in].  
-			-- `assembly_old_identifier' [in].  
-		require
-			rename_assembly_user_precondition: rename_assembly_user_precondition (assembly_new_identifier, assembly_old_identifier)
 		deferred
 
 		end

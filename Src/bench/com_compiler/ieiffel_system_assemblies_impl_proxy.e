@@ -65,25 +65,16 @@ feature -- Basic Operations
 			ccom_store (initializer)
 		end
 
-	add_signed_assembly (assembly_prefix: STRING; assembly_identifier: STRING; a_name: STRING; a_version: STRING; a_culture: STRING; a_publickey: STRING) is
+	add_assembly (assembly_prefix: STRING; cluster_name: STRING; a_name: STRING; a_version: STRING; a_culture: STRING; a_publickey: STRING) is
 			-- Add a signed assembly to the project.
 			-- `assembly_prefix' [in].  
-			-- `assembly_identifier' [in].  
+			-- `cluster_name' [in].  
 			-- `a_name' [in].  
 			-- `a_version' [in].  
 			-- `a_culture' [in].  
 			-- `a_publickey' [in].  
 		do
-			ccom_add_signed_assembly (initializer, assembly_prefix, assembly_identifier, a_name, a_version, a_culture, a_publickey)
-		end
-
-	add_unsigned_assembly (assembly_prefix: STRING; assembly_identifier: STRING; a_path: STRING) is
-			-- Add a unsigned (local) assembly to the project.
-			-- `assembly_prefix' [in].  
-			-- `assembly_identifier' [in].  
-			-- `a_path' [in].  
-		do
-			ccom_add_unsigned_assembly (initializer, assembly_prefix, assembly_identifier, a_path)
+			ccom_add_assembly (initializer, assembly_prefix, cluster_name, a_name, a_version, a_culture, a_publickey)
 		end
 
 	remove_assembly (assembly_identifier: STRING) is
@@ -93,25 +84,25 @@ feature -- Basic Operations
 			ccom_remove_assembly (initializer, assembly_identifier)
 		end
 
-	assembly_properties (assembly_identifier: STRING): IEIFFEL_ASSEMBLY_PROPERTIES_INTERFACE is
-			-- Cluster properties.
-			-- `assembly_identifier' [in].  
+	assembly_properties (cluster_name: STRING): IEIFFEL_ASSEMBLY_PROPERTIES_INTERFACE is
+			-- Assembly properties.
+			-- `cluster_name' [in].  
 		do
-			Result := ccom_assembly_properties (initializer, assembly_identifier)
+			Result := ccom_assembly_properties (initializer, cluster_name)
 		end
 
-	is_valid_identifier (assembly_identifier: STRING): BOOLEAN is
-			-- Checks to see if a assembly identifier is valid
-			-- `assembly_identifier' [in].  
+	is_valid_cluster_name (cluster_name: STRING): BOOLEAN is
+			-- Checks to see if a assembly cluster name is valid
+			-- `cluster_name' [in].  
 		do
-			Result := ccom_is_valid_identifier (initializer, assembly_identifier)
+			Result := ccom_is_valid_cluster_name (initializer, cluster_name)
 		end
 
-	contains_assembly (assembly_identifier: STRING): BOOLEAN is
-			-- Checks to see if a assembly identifier has already been added to the project
-			-- `assembly_identifier' [in].  
+	contains_assembly (cluster_name: STRING): BOOLEAN is
+			-- Checks to see if a assembly cluster name has already been added to the project
+			-- `cluster_name' [in].  
 		do
-			Result := ccom_contains_assembly (initializer, assembly_identifier)
+			Result := ccom_contains_assembly (initializer, cluster_name)
 		end
 
 	contains_signed_assembly (a_name: STRING; a_version: STRING; a_culture: STRING; a_publickey: STRING): BOOLEAN is
@@ -131,21 +122,21 @@ feature -- Basic Operations
 			Result := ccom_contains_unsigned_assembly (initializer, a_path)
 		end
 
-	identifier_from_signed_assembly (a_name: STRING; a_version: STRING; a_culture: STRING; a_publickey: STRING): STRING is
-			-- Retrieves the identifier for a signed assembly in the project
+	cluster_name_from_signed_assembly (a_name: STRING; a_version: STRING; a_culture: STRING; a_publickey: STRING): STRING is
+			-- Retrieves the cluster name for a signed assembly in the project
 			-- `a_name' [in].  
 			-- `a_version' [in].  
 			-- `a_culture' [in].  
 			-- `a_publickey' [in].  
 		do
-			Result := ccom_identifier_from_signed_assembly (initializer, a_name, a_version, a_culture, a_publickey)
+			Result := ccom_cluster_name_from_signed_assembly (initializer, a_name, a_version, a_culture, a_publickey)
 		end
 
-	identifier_from_unsigned_assembly (a_path: STRING): STRING is
-			-- Retrieves the identifier for a unsigned assembly in the project
+	cluster_name_from_unsigned_assembly (a_path: STRING): STRING is
+			-- Retrieves the cluster name for a unsigned assembly in the project
 			-- `a_path' [in].  
 		do
-			Result := ccom_identifier_from_unsigned_assembly (initializer, a_path)
+			Result := ccom_cluster_name_from_unsigned_assembly (initializer, a_path)
 		end
 
 	is_valid_prefix (assembly_prefix: STRING): BOOLEAN is
@@ -160,14 +151,6 @@ feature -- Basic Operations
 			-- `assembly_prefix' [in].  
 		do
 			Result := ccom_is_prefix_allocated (initializer, assembly_prefix)
-		end
-
-	rename_assembly (assembly_new_identifier: STRING; assembly_old_identifier: STRING) is
-			-- Rename the assembly identifier
-			-- `assembly_new_identifier' [in].  
-			-- `assembly_old_identifier' [in].  
-		do
-			ccom_rename_assembly (initializer, assembly_new_identifier, assembly_old_identifier)
 		end
 
 feature {NONE}  -- Implementation
@@ -186,16 +169,10 @@ feature {NONE}  -- Externals
 			"C++ [ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemAssemblies_impl_proxy_s.h%"]()"
 		end
 
-	ccom_add_signed_assembly (cpp_obj: POINTER; assembly_prefix: STRING; assembly_identifier: STRING; a_name: STRING; a_version: STRING; a_culture: STRING; a_publickey: STRING) is
+	ccom_add_assembly (cpp_obj: POINTER; assembly_prefix: STRING; cluster_name: STRING; a_name: STRING; a_version: STRING; a_culture: STRING; a_publickey: STRING) is
 			-- Add a signed assembly to the project.
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemAssemblies_impl_proxy_s.h%"](EIF_OBJECT,EIF_OBJECT,EIF_OBJECT,EIF_OBJECT,EIF_OBJECT,EIF_OBJECT)"
-		end
-
-	ccom_add_unsigned_assembly (cpp_obj: POINTER; assembly_prefix: STRING; assembly_identifier: STRING; a_path: STRING) is
-			-- Add a unsigned (local) assembly to the project.
-		external
-			"C++ [ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemAssemblies_impl_proxy_s.h%"](EIF_OBJECT,EIF_OBJECT,EIF_OBJECT)"
 		end
 
 	ccom_remove_assembly (cpp_obj: POINTER; assembly_identifier: STRING) is
@@ -204,20 +181,20 @@ feature {NONE}  -- Externals
 			"C++ [ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemAssemblies_impl_proxy_s.h%"](EIF_OBJECT)"
 		end
 
-	ccom_assembly_properties (cpp_obj: POINTER; assembly_identifier: STRING): IEIFFEL_ASSEMBLY_PROPERTIES_INTERFACE is
-			-- Cluster properties.
+	ccom_assembly_properties (cpp_obj: POINTER; cluster_name: STRING): IEIFFEL_ASSEMBLY_PROPERTIES_INTERFACE is
+			-- Assembly properties.
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemAssemblies_impl_proxy_s.h%"](EIF_OBJECT): EIF_REFERENCE"
 		end
 
-	ccom_is_valid_identifier (cpp_obj: POINTER; assembly_identifier: STRING): BOOLEAN is
-			-- Checks to see if a assembly identifier is valid
+	ccom_is_valid_cluster_name (cpp_obj: POINTER; cluster_name: STRING): BOOLEAN is
+			-- Checks to see if a assembly cluster name is valid
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemAssemblies_impl_proxy_s.h%"](EIF_OBJECT): EIF_BOOLEAN"
 		end
 
-	ccom_contains_assembly (cpp_obj: POINTER; assembly_identifier: STRING): BOOLEAN is
-			-- Checks to see if a assembly identifier has already been added to the project
+	ccom_contains_assembly (cpp_obj: POINTER; cluster_name: STRING): BOOLEAN is
+			-- Checks to see if a assembly cluster name has already been added to the project
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemAssemblies_impl_proxy_s.h%"](EIF_OBJECT): EIF_BOOLEAN"
 		end
@@ -234,14 +211,14 @@ feature {NONE}  -- Externals
 			"C++ [ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemAssemblies_impl_proxy_s.h%"](EIF_OBJECT): EIF_BOOLEAN"
 		end
 
-	ccom_identifier_from_signed_assembly (cpp_obj: POINTER; a_name: STRING; a_version: STRING; a_culture: STRING; a_publickey: STRING): STRING is
-			-- Retrieves the identifier for a signed assembly in the project
+	ccom_cluster_name_from_signed_assembly (cpp_obj: POINTER; a_name: STRING; a_version: STRING; a_culture: STRING; a_publickey: STRING): STRING is
+			-- Retrieves the cluster name for a signed assembly in the project
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemAssemblies_impl_proxy_s.h%"](EIF_OBJECT,EIF_OBJECT,EIF_OBJECT,EIF_OBJECT): EIF_REFERENCE"
 		end
 
-	ccom_identifier_from_unsigned_assembly (cpp_obj: POINTER; a_path: STRING): STRING is
-			-- Retrieves the identifier for a unsigned assembly in the project
+	ccom_cluster_name_from_unsigned_assembly (cpp_obj: POINTER; a_path: STRING): STRING is
+			-- Retrieves the cluster name for a unsigned assembly in the project
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemAssemblies_impl_proxy_s.h%"](EIF_OBJECT): EIF_REFERENCE"
 		end
@@ -256,12 +233,6 @@ feature {NONE}  -- Externals
 			-- Has the 'prefix' already been allocated to another assembly
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemAssemblies_impl_proxy_s.h%"](EIF_OBJECT): EIF_BOOLEAN"
-		end
-
-	ccom_rename_assembly (cpp_obj: POINTER; assembly_new_identifier: STRING; assembly_old_identifier: STRING) is
-			-- Rename the assembly identifier
-		external
-			"C++ [ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemAssemblies_impl_proxy_s.h%"](EIF_OBJECT,EIF_OBJECT)"
 		end
 
 	ccom_assemblies (cpp_obj: POINTER): IENUM_ASSEMBLY_INTERFACE is

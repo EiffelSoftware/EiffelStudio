@@ -5,7 +5,7 @@ REM *********************************************
 
 CD checkout\compiler
 REM in "checkout\compiler"
-SET ISE_EIFFEL="%1"
+SET ISE_EIFFEL=%1
 SET PATH=%INIT_PATH%;"%1\studio\spec\windows\bin"
 
 ECHO Compiling Compiler

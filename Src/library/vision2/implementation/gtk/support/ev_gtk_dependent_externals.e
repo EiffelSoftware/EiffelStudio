@@ -18,6 +18,8 @@ feature -- Externals
 	signal_disconnect_by_data (a_c_object: POINTER; data: INTEGER) is
 		external
 			"C (GtkObject*, gpointer) | <gtk/gtk.h>"
+		alias
+			"gtk_signal_disconnect_by_data"
 		end
 
 	signal_handler_block (a_object: POINTER; a_handler_id: INTEGER) is

@@ -565,7 +565,7 @@ feature -- Element change
 			tool_list.put_right (a_prefix);
 			tool_names.go_i_th (c);
 			!! c_name.make (0);
-			c_name.append (n.out);
+			c_name.append_integer (n);
 			c_name.extend ('(');
 			c_name.append (tool_names.item);
 			c_name.extend (')');

@@ -51,7 +51,8 @@ feature {NONE} -- Implementation
 				include_empty_dirs_check.is_selected,
 				include_no_index_check.is_selected,
 				include_skipped_sub_dirs_check.is_selected,
-				order_alphabetical_check.is_selected)
+				order_alphabetical_check.is_selected,
+				description_text.text)
 		end
 
 end -- class TOC_DIALOG

@@ -117,16 +117,6 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	icon_info_ico: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		Once
-			create Result
-			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.set_file_name ("icon_info.ico")
-			set_with_named_file (Result, a_file_name)
-		end
-
 	icon_search_ico_1: EV_PIXMAP is
 		local
 			a_file_name: FILE_NAME
@@ -147,16 +137,20 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
+	icon_studio_ico: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		Once
+			create Result
+			create a_file_name.make_from_string (pixmap_directory)
+			a_file_name.set_file_name ("icon_studio.ico")
+			set_with_named_file (Result, a_file_name)
+		end
+
 	button_cancel_text: STRING is
 			-- `Result' is STRING constant named `button_cancel_text'.
 		once
 			Result := "Cancel"
-		end
-
-	dialog_short_height: INTEGER is 
-			-- `Result' is INTEGER constant named dialog_short_height.
-		once
-			Result := 175
 		end
 
 	empty_cell_width: INTEGER is 
@@ -239,6 +233,16 @@ feature -- Access
 			-- `Result' is INTEGER constant named radio_button_width.
 		once
 			Result := 20
+		end
+
+	icon_sorter_ico: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		Once
+			create Result
+			create a_file_name.make_from_string (pixmap_directory)
+			a_file_name.set_file_name ("icon_sorter.ico")
+			set_with_named_file (Result, a_file_name)
 		end
 
 	button_find_text: STRING is
@@ -381,6 +385,16 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
+	icon_format_text_color_ico: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		Once
+			create Result
+			create a_file_name.make_from_string (pixmap_directory)
+			a_file_name.set_file_name ("icon_format_text_color.ico")
+			set_with_named_file (Result, a_file_name)
+		end
+
 	button_back_text: STRING is
 			-- `Result' is STRING constant named `button_back_text'.
 		once
@@ -465,13 +479,13 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	icon_format_text_color_ico: EV_PIXMAP is
+	icon_info_ico: EV_PIXMAP is
 		local
 			a_file_name: FILE_NAME
 		Once
 			create Result
 			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.set_file_name ("icon_format_text_color.ico")
+			a_file_name.set_file_name ("icon_info.ico")
 			set_with_named_file (Result, a_file_name)
 		end
 
@@ -523,14 +537,10 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	icon_studio_ico: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		Once
-			create Result
-			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.set_file_name ("icon_studio.ico")
-			set_with_named_file (Result, a_file_name)
+	dialog_short_height: INTEGER is 
+			-- `Result' is INTEGER constant named dialog_short_height.
+		once
+			Result := 175
 		end
 
 	unfiltered_text: STRING is
@@ -555,6 +565,16 @@ feature -- Access
 			Result := "Next"
 		end
 
+	icon_merge_ico: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		Once
+			create Result
+			create a_file_name.make_from_string (pixmap_directory)
+			a_file_name.set_file_name ("icon_merge.ico")
+			set_with_named_file (Result, a_file_name)
+		end
+
 	studio_filtered_text: STRING is
 			-- `Result' is STRING constant named `studio_filtered_text'.
 		once
@@ -565,6 +585,16 @@ feature -- Access
 			-- `Result' is STRING constant named `button_finish_text'.
 		once
 			Result := "Finish"
+		end
+
+	icon_down_triangle_ico: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		Once
+			create Result
+			create a_file_name.make_from_string (pixmap_directory)
+			a_file_name.set_file_name ("icon_down_triangle.ico")
+			set_with_named_file (Result, a_file_name)
 		end
 
 	icon_new_ico: EV_PIXMAP is

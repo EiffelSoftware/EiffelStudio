@@ -50,7 +50,7 @@ external
 
 	object: 			"$EIFFEL4\library\store\spec\$(COMPILER)\lib\support.lib",
 						"$EIFFEL4\library\store\spec\$(COMPILER)\lib\odbc32.lib",
-						"..\..\odbc_store.lib",
+						"$EIFFEL4\library\\store\spec\msc\lib\odbc_store.lib",
 						"$EIFFEL4\library\time\spec\$(COMPILER)\lib\datetime.lib"
 end
 

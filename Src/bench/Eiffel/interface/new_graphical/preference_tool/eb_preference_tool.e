@@ -65,7 +65,7 @@ feature {NONE} -- Initialization
 
 			create tree.make (panels_box)
 			tree.set_minimum_size (150, 300)
-			tree.set_expand (False)
+			panels_box.set_child_expandable (tree, False)
 			create leaves.make (1, panel_list.number_of_tree_items)
 			from
 				ijk := 1
@@ -91,7 +91,7 @@ feature {NONE} -- Initialization
 
 				-- buttons addition
 			create button_bar.make (container)
-			button_bar.set_expand (False)
+			container.set_child_expandable (button_bar, False)
 
 			create ok_button.make_with_text (button_bar, "OK")
 			ok_button.set_minimum_width (100)

@@ -437,7 +437,7 @@ feature -- Status setting
 			is_row_height_fixed := False
 			recompute_row_offsets (0)
 			recompute_vertical_scroll_bar
-			dredraw_client_area
+			redraw_client_area
 		end
 		
 	set_column_count_to (a_column_count: INTEGER) is

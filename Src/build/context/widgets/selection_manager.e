@@ -4,11 +4,9 @@ class SELECTION_MANAGER
 inherit
 
 	WINDOWS
-	INTERNAL_META_COMMAND
+	COMMAND
 		redefine
-			context_data_useful,
-			execute,
-			make
+			context_data_useful
 		end
 	COMMAND_ARGS
 	CONSTANTS
@@ -28,7 +26,6 @@ feature {NONE} -- Creation
 			set_drawing (eb_screen)
 			set_logical_mode (10) -- GXinvert
 			!! group.make
-			Precursor
 		end
 	
 	wipe_out_group is
@@ -381,7 +378,7 @@ feature {NONE}
 				new_x := x - parent.real_x 
 				new_y := y - parent.real_y
 			end
-			context.set_insensitive
+			context.widget.set_insensitive
 			if context.grouped and then cursor_shape = Cursors.move_cursor then
 				d_x := new_x - context.x
 				d_y := new_y - context.y
@@ -401,7 +398,7 @@ feature {NONE}
 				context_catalog.update_editors (context, 
 					Context_const.geometry_form_nbr)
 			end
-			context.set_sensitive
+			context.widget.set_sensitive
 		end
 
 	create_new_contexts (real_mode: BOOLEAN) is
@@ -615,19 +612,7 @@ feature {NONE} -- Cursor shape
 
 feature {PERM_WIND_C}
 
-	execute (arg: ANY) is
-			-- Execute `associated_meta_command' if current mode is
-			-- `Executing_mode'. Execute `editing_command' if current
-			-- mode is `Editing_mode'.
-		do
-			if editing_or_executing_mode = Executing_mode then
-				associated_meta_command.execute (arg)
-			else
-				execute_current (arg)
-			end
-		end
-
-	execute_current (argument: ANY) is
+	execute (argument: ANY) is
 		local
 			bull: BULLETIN_C
 			a_context: CONTEXT

@@ -340,7 +340,12 @@ rt_private char *RT_INCONSISTENCY_MSG = "free-list inconsistency";
 
 /* Functions handling free list */
 rt_private int32 compute_hlist_index (int32 size);
-rt_shared EIF_REFERENCE xmalloc(unsigned int nbytes, int type, int gc_flag);					/* General free-list allocation */
+rt_shared EIF_REFERENCE eif_rt_xmalloc(unsigned int nbytes, int type, int gc_flag);					/* General free-list allocation */
+#ifdef EIF_THREADS
+rt_private EIF_REFERENCE eif_rt_internal_xmalloc(unsigned int nbytes, int type, int gc_flag);					/* General free-list allocation */
+#else
+#define eif_rt_internal_xmalloc eif_rt_xmalloc
+#endif
 rt_shared void rel_core(void);					/* Release core to kernel */
 rt_private union overhead *add_core(register unsigned int nbytes, int type);		/* Get more core from kernel */
 rt_private void connect_free_list(register union overhead *zone, register uint32 i);		/* Insert a block in free list */
@@ -371,9 +376,9 @@ rt_private EIF_REFERENCE eif_spset(EIF_REFERENCE object, EIF_BOOLEAN in_scavenge
 rt_private void set_memory_object (EIF_REFERENCE object);
 
 /* Also used by the garbage collector */
-rt_shared int split_block(register union overhead *selected, register uint32 nbytes);				/* Split a block (return length) */
+rt_shared int eif_rt_split_block(register union overhead *selected, register uint32 nbytes);				/* Split a block (return length) */
 rt_shared void lxtract(union overhead *next);					/* Extract a block from free list */
-rt_shared EIF_REFERENCE gmalloc(unsigned int nbytes);					/* Wrapper to xmalloc */
+rt_shared EIF_REFERENCE gmalloc(unsigned int nbytes);			/* Wrapper to eif_rt_xmalloc */
 rt_shared EIF_REFERENCE get_to_from_core(unsigned int nbytes);		/* Get a free eiffel chunk from kernel */
 #endif
 
@@ -627,9 +632,7 @@ rt_public EIF_REFERENCE emalloc_size(uint32 ftype, uint32 type, uint32 nbytes)
 	 * scavenge zones are freed. A last attempt is then made before raising
 	 * an exception if it also failed.
 	 */
-	GC_THREAD_PROTECT(eif_synchronize_gc(rt_globals));
-	object = xmalloc(nbytes, EIFFEL_T, GC_ON);
-	GC_THREAD_PROTECT(eif_unsynchronize_gc(rt_globals));
+	object = eif_rt_xmalloc(nbytes, EIFFEL_T, GC_ON);
 
 	if (object != (EIF_REFERENCE) 0) {
 		UNDISCARD_BREAKPOINTS
@@ -640,7 +643,7 @@ rt_public EIF_REFERENCE emalloc_size(uint32 ftype, uint32 type, uint32 nbytes)
 		rt_public EIF_REFERENCE ret_val;
 
 		ret_val = eif_set(object, ftype | EO_NEW, type);	/* Set for Eiffel use */
-		printf("--- End of emalloc (xmalloc) ---\n");
+		printf("--- End of emalloc (eif_rt_xmalloc) ---\n");
 		memck(0);
 		printf("--- ------------------------ ---\n\n");
 		return ret_val;
@@ -653,7 +656,7 @@ rt_public EIF_REFERENCE emalloc_size(uint32 ftype, uint32 type, uint32 nbytes)
 	if (gen_scavenge & GS_ON)		/* If generation scaveging was on */
 		sc_stop();					/* Free 'to' and explode 'from' space */
 
-	object = xmalloc(nbytes, EIFFEL_T, GC_OFF);		/* Retry */
+	object = eif_rt_internal_xmalloc(nbytes, EIFFEL_T, GC_OFF);		/* Retry */
 	GC_THREAD_PROTECT(eif_unsynchronize_gc(rt_globals));
 
 	if (object != (EIF_REFERENCE) 0) {
@@ -665,7 +668,7 @@ rt_public EIF_REFERENCE emalloc_size(uint32 ftype, uint32 type, uint32 nbytes)
 		rt_public EIF_REFERENCE ret_val;
 
 		ret_val = eif_set(object, ftype | EO_NEW, type);	/* Set for Eiffel use */
-		printf("--- End of emalloc (xmalloc after gen_scav) ---\n");
+		printf("--- End of emalloc (eif_rt_xmalloc after gen_scav) ---\n");
 		memck(0);
 		printf("--- --------------------------------------- ---\n\n");
 		return ret_val;
@@ -785,7 +788,6 @@ rt_public EIF_REFERENCE spmalloc(unsigned int nbytes, EIF_BOOLEAN atomic)
 	 * `atomic' means that it is a special object without references.
 	 */
 
-	RT_GET_CONTEXT
 	EIF_REFERENCE object;		/* Pointer to the freshly created special object */
 	
 	DISCARD_BREAKPOINTS
@@ -811,9 +813,7 @@ rt_public EIF_REFERENCE spmalloc(unsigned int nbytes, EIF_BOOLEAN atomic)
 #endif
 		/* New special object is too big to be created in generational scavenge zone.
 		 * So we allocate it in free list. */
-		GC_THREAD_PROTECT(eif_synchronize_gc(rt_globals));
-		object = xmalloc(nbytes, EIFFEL_T, GC_ON);
-		GC_THREAD_PROTECT(eif_unsynchronize_gc(rt_globals));
+		object = eif_rt_xmalloc(nbytes, EIFFEL_T, GC_ON);
 		UNDISCARD_BREAKPOINTS
 		if (object == (EIF_REFERENCE) 0)
 			eraise("Special allocation", EN_MEM);	/* No more memory */
@@ -831,9 +831,7 @@ rt_public EIF_REFERENCE spmalloc(unsigned int nbytes, EIF_BOOLEAN atomic)
 	}
 	
 		 /* No more space in scavenge zone: allocation in free list. */
-	GC_THREAD_PROTECT(eif_synchronize_gc(rt_globals));
-	object = xmalloc(nbytes, EIFFEL_T, GC_ON);
-	GC_THREAD_PROTECT(eif_unsynchronize_gc(rt_globals));
+	object = eif_rt_xmalloc(nbytes, EIFFEL_T, GC_ON);
 	if (object == (EIF_REFERENCE) 0) {
 		UNDISCARD_BREAKPOINTS
 		eraise("Special allocation", EN_MEM);	/* No more memory */
@@ -1108,7 +1106,7 @@ rt_public EIF_REFERENCE bmalloc(long int size)
 	 */
 	nbytes = BIT_NBPACK(size) * BIT_PACKSIZE + sizeof(uint32);
 #ifdef ISE_GC
-	object = xmalloc (nbytes, EIFFEL_T, GC_ON);		/* Allocate Eiffel object */
+	object = eif_rt_xmalloc (nbytes, EIFFEL_T, GC_ON);		/* Allocate Eiffel object */
 #endif
 
 #if defined(BOEHM_GC) || defined(NO_GC)
@@ -1153,7 +1151,7 @@ rt_public EIF_REFERENCE cmalloc(unsigned int nbytes)
 #ifdef ISE_GC
 	EIF_REFERENCE arena;		/* C arena allocated */
 
-	arena = xmalloc(nbytes, C_T, GC_OFF);
+	arena = eif_rt_xmalloc(nbytes, C_T, GC_OFF);
 
 	/* The C object does not use its Eiffel flags field in the header. However,
 	 * we set the EO_C bit. This will help the GC because it won't need
@@ -1179,11 +1177,30 @@ rt_shared EIF_REFERENCE gmalloc(unsigned int nbytes)
 	 * need to make it a critical section with SIGBLOCK / SIGRESUME.
 	 */
 	
-	return xmalloc(nbytes, EIFFEL_T, GC_OFF);
+	return eif_rt_internal_xmalloc (nbytes, EIFFEL_T, GC_OFF);
 }
 #endif
 
-rt_shared EIF_REFERENCE xmalloc(unsigned int nbytes, int type, int gc_flag)
+#ifdef EIF_THREADS
+rt_shared EIF_REFERENCE eif_rt_xmalloc(unsigned int nbytes, int type, int gc_flag)
+{
+	RT_GET_CONTEXT
+	if (gc_thread_status == EIF_THREAD_GC_RUNNING) {
+			/* Allocation is done from the thread that is collecting,
+			 * therefore we do not need to perform a synchronization again
+			 */
+		return eif_rt_internal_xmalloc (nbytes, type, gc_flag);
+	} else {
+		EIF_REFERENCE result = NULL;
+		GC_THREAD_PROTECT(eif_synchronize_gc(rt_globals));
+		result = eif_rt_internal_xmalloc(nbytes, type, gc_flag);	
+		GC_THREAD_PROTECT(eif_unsynchronize_gc(rt_globals));
+		return result;
+	}
+}
+#endif
+
+rt_private EIF_REFERENCE eif_rt_internal_xmalloc(unsigned int nbytes, int type, int gc_flag)
 						/* Number of bytes requested */
 		 				/* Type of block */
 						/* Garbage collector on/off */
@@ -1211,7 +1228,7 @@ rt_shared EIF_REFERENCE xmalloc(unsigned int nbytes, int type, int gc_flag)
 		return (EIF_REFERENCE) 0;		/* I guess we can't malloc more than 2^27 */
 
 #ifdef DEBUG
-	dprintf(1)("xmalloc: requesting %d bytes from %s list (GC %s)\n", nbytes,
+	dprintf(1)("eif_rt_xmalloc: requesting %d bytes from %s list (GC %s)\n", nbytes,
 		type == C_T ? "C" : "Eiffel", gc_flag == GC_ON ? "on" : "off");
 	flush;
 #endif
@@ -2111,7 +2128,7 @@ rt_private EIF_REFERENCE set_up(register union overhead *selected, unsigned int 
 
 	SIGBLOCK;				/* Critical section, cannot be interrupted */
 
-	(void) split_block(selected, nbytes);	/* Eventually split the area */
+	(void) eif_rt_split_block(selected, nbytes);	/* Eventually split the area */
 
 	/* The 'selected' block is now in use and the real size is in
 	 * the ov_size area. To mark the block as used, we have to set
@@ -2178,7 +2195,7 @@ rt_private EIF_REFERENCE set_up_chunk(register union overhead *selected, unsigne
 
 	SIGBLOCK;				/* Critical section, cannot be interrupted */
 
-	(void) split_block(selected, nbytes);	/* Eventually split the area */
+	(void) eif_rt_split_block(selected, nbytes);	/* Eventually split the area */
 
 	/* The 'selected' block is now in use and the real size is in
 	 * the ov_size area. To mark the block as used, we have to set
@@ -2220,7 +2237,7 @@ rt_private EIF_REFERENCE set_up_chunk(register union overhead *selected, unsigne
 }
 #endif /* ISE_GC */
 
-rt_public void xfree(register EIF_REFERENCE ptr)
+rt_public void eif_rt_xfree(register EIF_REFERENCE ptr)
 {
 	/* Frees the memory block which starts at 'ptr'. This has
 	 * to be a pointer returned by malloc, otherwise impredictable
@@ -2235,7 +2252,7 @@ rt_public void xfree(register EIF_REFERENCE ptr)
 
 #ifdef LMALLOC_CHECK
 	if (is_in_lm (ptr))
-		fprintf (stderr, "Warning: try to xfree a malloc'ed ptr\n");
+		fprintf (stderr, "Warning: try to eif_rt_xfree a malloc'ed ptr\n");
 #endif	/* LMALLOC_CHECK */
 	zone = ((union overhead *) ptr) - 1;	/* Walk backward to header */
 	r = zone->ov_size;						/* Size of block */
@@ -2256,13 +2273,13 @@ rt_public void xfree(register EIF_REFERENCE ptr)
 	else {
 		e_data.ml_used -= i;
 #ifdef MEM_STAT
-	printf ("Eiffel: %ld used (-%ld), %ld total (xfree)\n",
+	printf ("Eiffel: %ld used (-%ld), %ld total (eif_rt_xfree)\n",
 		e_data.ml_used, i, e_data.ml_total);
 #endif
 	}
 
 #ifdef DEBUG
-	dprintf(1)("xfree: on a %s %s block starting at 0x%lx (%d bytes)\n",
+	dprintf(1)("eif_rt_xfree: on a %s %s block starting at 0x%lx (%d bytes)\n",
 		(zone->ov_size & B_LAST) ? "last" : "normal",
 		(zone->ov_size & B_CTYPE) ? "C" : "Eiffel",
 		ptr, zone->ov_size & B_SIZE);
@@ -2272,7 +2289,7 @@ rt_public void xfree(register EIF_REFERENCE ptr)
 		if (zone->ov_size & B_FWD)		/* Object was forwarded */
 			obj = zone->ov_fwd;
 		if (!(HEADER(obj)->ov_flags & EO_C))
-			printf("xfree: %s object [%d]\n",
+			printf("eif_rt_xfree: %s object [%d]\n",
 				System(Dtype(obj)).cn_generator, Dtype(obj));
 	}
 	flush;
@@ -2284,7 +2301,7 @@ rt_public void xfree(register EIF_REFERENCE ptr)
 	xfreeblock(zone, r);
 
 #ifdef DEBUG
-	dprintf(8)("xfree: %s %s block starting at 0x%lx holds %d bytes free\n",
+	dprintf(8)("eif_rt_xfree: %s %s block starting at 0x%lx holds %d bytes free\n",
 		(zone->ov_size & B_LAST) ? "last" : "normal",
 		(zone->ov_size & B_CTYPE) ? "C" : "Eiffel",
 		ptr, zone->ov_size & B_SIZE);
@@ -2302,7 +2319,7 @@ rt_public void xfreechunk(EIF_REFERENCE ptr)
 	 * results will follow...
 	 * The contents of the block are preserved, though one should not
 	 * rely on this as it may change without notice.
-	 * The only difference with the xfree() routine is that the Eiffel 
+	 * The only difference with the eif_rt_xfree() routine is that the Eiffel 
 	 * memory used is updated if the block is not a block freed by partial
 	 * scavenging (as the objects it was holding have already been counted).
 	 */
@@ -2360,7 +2377,7 @@ rt_public void xfreechunk(EIF_REFERENCE ptr)
 }
 #endif
 
-rt_public EIF_REFERENCE xcalloc(unsigned int nelem, unsigned int elsize)
+rt_public EIF_REFERENCE eif_rt_xcalloc(unsigned int nelem, unsigned int elsize)
 {
 	/* Allocate space for 'nelem' elements of 'elsize' bytes and set the new
 	 * space with zeros. This is NEVER used by the Eiffel run time but it is
@@ -2372,7 +2389,7 @@ rt_public EIF_REFERENCE xcalloc(unsigned int nelem, unsigned int elsize)
 	register2 EIF_REFERENCE allocated;		/* Address of new arena */
 
 	nbytes = nelem * elsize;
-	allocated = xmalloc(nbytes, C_T, GC_ON);	/* Ask for C space */
+	allocated = eif_rt_xmalloc(nbytes, C_T, GC_ON);	/* Ask for C space */
 
 	if (allocated != (EIF_REFERENCE) 0) {
 		memset (allocated, 0, nbytes);		/* Fill arena with zeros */
@@ -2508,7 +2525,7 @@ rt_public EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, register unsigned i
 #endif
 
 		r = (uint32)
-			split_block(zone, nbytes);	/* Split block, r holds size */
+			eif_rt_split_block(zone, nbytes);	/* Split block, r holds size */
 		if (r == (uint32) -1) {			/* If we did not split it */
 			SIGRESUME;					/* Exiting from critical section */
 			return ptr;					/* Leave block unchanged */
@@ -2587,7 +2604,7 @@ rt_public EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, register unsigned i
 
 		r = i - r;						/* Amount of memory over-used */
 		i = (uint32)
-			split_block(zone, nbytes);	/* Split block, i holds size */
+			eif_rt_split_block(zone, nbytes);	/* Split block, i holds size */
 		if (i == (uint32) -1) {			/* If we did not split it */
 			m_data.ml_used += r;		/* Update memory used */
 			if (zone->ov_size & B_CTYPE)
@@ -2649,7 +2666,7 @@ rt_public EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, register unsigned i
 		}
 	}
 
-	zone = (union overhead *) xmalloc(nbytes, (int) i, gc_flag);
+	zone = (union overhead *) eif_rt_xmalloc(nbytes, (int) i, gc_flag);
 
 	if (gc_flag & GC_ON) {
 		ptr = safeptr;
@@ -2667,7 +2684,7 @@ rt_public EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, register unsigned i
 		HEADER(zone)->ov_flags =				/* Keep Eiffel flags */
 			HEADER(ptr)->ov_flags;
 		if (!(gc_flag & GC_FREE))		/* Will GC take care of free? */
-			xfree(ptr);					/* Free old location */
+			eif_rt_xfree(ptr);					/* Free old location */
 	} else if (i == EIFFEL_T)			/* Could not reallocate object */
 		eraise("object reallocation", EN_MEM);	/* No more memory */
 		
@@ -2707,7 +2724,7 @@ rt_public struct emallinfo *meminfo(int type)
 	return &m_data;		/* Pointer to static data */
 }
 
-rt_shared int split_block(register union overhead *selected, register uint32 nbytes)
+rt_shared int eif_rt_split_block(register union overhead *selected, register uint32 nbytes)
 {
 	/* The block 'selected' may be too big to hold only 'nbytes',
 	 * so it is split and the new block is put in the free list.
@@ -2767,7 +2784,7 @@ rt_shared int split_block(register union overhead *selected, register uint32 nby
 	connect_free_list(selected, i);	/* Insert block in free list */
 
 #ifdef DEBUG
-	dprintf(32)("split_block: split %s %s block starts at 0x%lx (%d bytes)\n",
+	dprintf(32)("eif_rt_split_block: split %s %s block starts at 0x%lx (%d bytes)\n",
 		(selected->ov_size & B_LAST) ? "last" : "normal",
 		(selected->ov_size & B_CTYPE) ? "C" : "Eiffel",
 		selected, selected->ov_size & B_SIZE);
@@ -3179,7 +3196,7 @@ rt_private EIF_REFERENCE malloc_from_zone(unsigned int nbytes)
 		GC_THREAD_PROTECT(eif_unsynchronize_gc(rt_globals));
 	}
 	
-	/* Pad to correct size -- see xmalloc() for a detailed explaination of
+	/* Pad to correct size -- see eif_rt_xmalloc() for a detailed explaination of
 	 * why this is desirable.
 	 */
 	mod = nbytes % ALIGNMAX;
@@ -3193,7 +3210,7 @@ rt_private EIF_REFERENCE malloc_from_zone(unsigned int nbytes)
 	 * of occupation go below the watermark at the next collection. There is
 	 * enough room after the watermark to safely allocate the object, anyway.
 	 */
-	GC_THREAD_PROTECT(rt_globals->gc_thread_status = EIF_THREAD_GC_GSZ);
+	GC_THREAD_PROTECT(gc_thread_status = EIF_THREAD_GC_GSZ);
 	GC_THREAD_PROTECT(EIF_GC_GSZ_LOCK);
 	if (sc_from.sc_top >= sc_from.sc_mark) {
 		GC_THREAD_PROTECT(eif_synchronize_gc(rt_globals));
@@ -3202,13 +3219,13 @@ rt_private EIF_REFERENCE malloc_from_zone(unsigned int nbytes)
 				eiffel_usage = 0;		/* Reset amount of allocated data */
 			} else {
 				GC_THREAD_PROTECT(eif_unsynchronize_gc(rt_globals));
-				GC_THREAD_PROTECT(rt_globals->gc_thread_status = EIF_THREAD_RUNNING);
+				GC_THREAD_PROTECT(gc_thread_status = EIF_THREAD_RUNNING);
 				GC_THREAD_PROTECT(EIF_GC_GSZ_UNLOCK);
 				return (EIF_REFERENCE) 0;		/* Collection failed */
 			}
 		} else if (0 != collect()) {	/* Simple generation scavenging */
 			GC_THREAD_PROTECT(eif_unsynchronize_gc(rt_globals));
-			GC_THREAD_PROTECT(rt_globals->gc_thread_status = EIF_THREAD_RUNNING);
+			GC_THREAD_PROTECT(gc_thread_status = EIF_THREAD_RUNNING);
 			GC_THREAD_PROTECT(EIF_GC_GSZ_UNLOCK);
 			return (EIF_REFERENCE) 0;			/* Collection failed */
 		}
@@ -3229,7 +3246,7 @@ rt_private EIF_REFERENCE malloc_from_zone(unsigned int nbytes)
 		 */
 
 		if ((OVERHEAD+nbytes+sc_from.sc_top) > sc_from.sc_end) {
-			GC_THREAD_PROTECT(rt_globals->gc_thread_status = EIF_THREAD_RUNNING);
+			GC_THREAD_PROTECT(gc_thread_status = EIF_THREAD_RUNNING);
 			GC_THREAD_PROTECT(EIF_GC_GSZ_UNLOCK);
 			return NULL;
 		}
@@ -3252,7 +3269,7 @@ rt_private EIF_REFERENCE malloc_from_zone(unsigned int nbytes)
 	flush;
 #endif
 
-	GC_THREAD_PROTECT(rt_globals->gc_thread_status = EIF_THREAD_RUNNING);
+	GC_THREAD_PROTECT(gc_thread_status = EIF_THREAD_RUNNING);
 	GC_THREAD_PROTECT(EIF_GC_GSZ_UNLOCK);
 	return (EIF_REFERENCE) (((union overhead *) object ) + 1);	/* Free data space */
 }
@@ -3274,10 +3291,12 @@ rt_private int create_scavenge_zones(void)
 	 * Lastly, the garbage collector will simply ignore the block, which is
 	 * just fine--RAM.
 	 */
-	if ((EIF_REFERENCE) 0 == (from = xmalloc(eif_scavenge_size, C_T, GC_OFF)))
+	from = eif_rt_xmalloc(eif_scavenge_size, C_T, GC_OFF);
+	if (!from)
 		return -1;
-	if ((EIF_REFERENCE) 0 == (to = xmalloc(eif_scavenge_size, C_T, GC_OFF))) {
-		xfree(from);
+	to = eif_rt_xmalloc(eif_scavenge_size, C_T, GC_OFF);
+	if (!to) {
+		eif_rt_xfree(from);
 		return -1;
 	}
 
@@ -3364,13 +3383,13 @@ rt_private void explode_scavenge_zone(struct sc_zone *sc)
 
 	/* If we did not reach the end of the scavenge zone, then there is at
 	 * least some room for one header. We're going to fake a malloc block and
-	 * call xfree() to release it.
+	 * call eif_rt_xfree() to release it.
 	 */
 
 	if ((EIF_REFERENCE) zone != sc->sc_end) {
 
 		/* Everything from 'zone' to the end of the scavenge space is now free.
-		 * Set up a normal busy block before calling xfree. If the scavenge zone
+		 * Set up a normal busy block before calling eif_rt_xfree. If the scavenge zone
 		 * was the last block in the chunk, then this remaining space is the
 		 * last in the chunk too, so set the flags accordingly.
 		 */
@@ -3386,7 +3405,7 @@ rt_private void explode_scavenge_zone(struct sc_zone *sc)
 		flush;
 #endif
 
-		xfree((EIF_REFERENCE) (zone + 1));			/* Put remainder back to free-list */
+		eif_rt_xfree((EIF_REFERENCE) (zone + 1));			/* Put remainder back to free-list */
 		object++;							/* One more released block */
 	} else
 		next = HEADER(sc->sc_arena);	/* Point to the header of the arena */
@@ -3398,7 +3417,7 @@ rt_private void explode_scavenge_zone(struct sc_zone *sc)
 	 */
 
 	next->ov_size = size;				/* A zero length bloc */
-	xfree((EIF_REFERENCE) (next + 1));			/* Free header of scavenge zone */
+	eif_rt_xfree((EIF_REFERENCE) (next + 1));			/* Free header of scavenge zone */
 
 	/* Update the statistics: we released 'object' blocks, so we created that
 	 * amount of overhead. Note that we do not have to change the amount of
@@ -3420,7 +3439,7 @@ rt_public void sc_stop(void)
 	/* Stop the scavenging process by freeing the zones */
 
 	gen_scavenge = GS_OFF;				/* Generation scavenging is off */
-	xfree(sc_to.sc_arena);				/* This one is completely eif_free */
+	eif_rt_xfree(sc_to.sc_arena);				/* This one is completely eif_free */
 	explode_scavenge_zone(&sc_from);	/* While this one has to be exploded */
 	st_reset (&memory_set);
 }

@@ -72,19 +72,19 @@ cluster
 			"xml_implementation"; 
 		end
 
-	all ast:		"$EIFFEL_SRC\Eiffel\common\parser\AST"
+	all ast:		"$EIFFEL_SRC/Eiffel/common/parser/AST"
 
-	yacc (ast):		"$EIFFEL_SRC\Eiffel\yacc"
+	yacc (ast):		"$EIFFEL_SRC/Eiffel/yacc"
 
-	structure (ast):		"$EIFFEL_SRC\Eiffel\eiffel\structures"
+	structure (ast):		"$EIFFEL_SRC/Eiffel/eiffel/structures"
 
-	const (ast):		"$EIFFEL_SRC\Eiffel\const"
+	const (ast):		"$EIFFEL_SRC/Eiffel/const"
 
-	eiffel_helper (ast):		"$EIFFEL_SRC\library\helpers\eiffel"
+	eiffel_helper (ast):		"$EIFFEL_SRC/library/helpers/eiffel"
 
-	eiffel_parser (ast):		"$EIFFEL_SRC\dotnet\VisualStudio\codedom\producer\eiffel_parser"
+	eiffel_parser (ast):		"$EIFFEL_SRC/dotnet/VisualStudio/codedom/producer/eiffel_parser"
 
-	eiffel_lexer (ast):		"$EIFFEL_SRC\dotnet\VisualStudio\codedom\producer\eiffel_lexer"
+	eiffel_lexer (ast):		"$EIFFEL_SRC/dotnet/VisualStudio/codedom/producer/eiffel_lexer"
 
 external
 

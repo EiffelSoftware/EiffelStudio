@@ -280,7 +280,7 @@ feature -- Status report
 								-- arguments of current TUPLE, this time we use simple .NET type conformance.
 							l_child := v.get_type
 							l_parent := feature {ISE_RUNTIME}.type_of_generic_parameter (Current, index)
-							Result := l_child.equals (l_parent) or l_child.is_subclass_of (l_parent)
+							Result := l_parent.is_assignable_from (l_child)
 						end
 					end
 				end

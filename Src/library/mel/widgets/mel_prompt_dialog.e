@@ -36,7 +36,6 @@ feature {NONE} -- Initialization
 			else
 				screen_object := xm_create_prompt_dialog (p_so, $w_name, auto_unmanage_arg, 1)
 			end
-			Mel_widgets.put (Current, screen_object)
 		end;
 
 feature {NONE} -- Implementation

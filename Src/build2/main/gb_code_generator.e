@@ -341,17 +341,18 @@ feature {NONE} -- Implementation
 					integer_constant ?= constant
 					if integer_constant /= Void then
 						generated_constants_string := generated_constants_string + Indent_less_two + integer_constant.name + ": INTEGER is " +
-							integer_constant.value_as_string + Indent_less_one + "-- `Result' is INTEGER constant named " + integer_constant.name + ".%N"
+							indent +  "-- `Result' is INTEGER constant named " + integer_constant.name + "." + 
+							indent_less_one + "once" + indent + "Result := " + integer_constant.value_as_string + Indent_less_one + "end" + "%N"
 					end
 					string_constant ?= constant
 					if string_constant /= Void then
-						generated_constants_string := generated_constants_string + Indent_less_two + string_constant.name + ": STRING is %"" +
-							string_constant.value_as_string + "%"" + Indent_less_one + "-- `Result' is STRING constant named " + string_constant.name + ".%N"
+						generated_constants_string := generated_constants_string + Indent_less_two + string_constant.name + ": STRING is" +
+							indent + "-- `Result' is STRING constant named `" + string_constant.name + "'." + 
+							indent_less_one + "once" + indent + "Result := %"" + string_constant.value_as_string + "%"" + Indent_less_one + "end" + "%N"
 					end
 					pixmap_constant ?= constant
 					if pixmap_constant /= Void then
 						if pixmap_constant.is_absolute then
-							--generated_constants_string := generated_constants_string + Indent_less_two + pixmap_constant.name +: EV_PIXMAP is 
 							generated_constants_string := generated_constants_string + Indent_less_two + pixmap_constant.name + ": EV_PIXMAP is" + Indent_less_one +
 							"Once" + Indent + "create Result" + Indent + "Result.set_with_named_file (%"" + pixmap_constant.value + "%")" + Indent_less_one + "end" + "%N"
 						else
@@ -363,8 +364,9 @@ feature {NONE} -- Implementation
 					end
 					directory_constant ?= constant
 					if directory_constant/= Void then
-						generated_constants_string := generated_constants_string + Indent_less_two + directory_constant.name + ": STRING is %"" +
-							directory_constant.value_as_string + "%"" + Indent_less_one + "-- `Result' is DIRECTORY constant named " + directory_constant.name + ".%N"
+						generated_constants_string := generated_constants_string + Indent_less_two + directory_constant.name + ": STRING is" +
+							indent + "-- `Result' is DIRECTORY constant named `" + directory_constant.name + "'." + 
+							indent_less_one + "once" + indent + "Result := %"" + directory_constant.value_as_string + "%"" + Indent_less_one + "end" + "%N"
 					end
 					all_constants.forth
 				end
@@ -976,11 +978,12 @@ feature {NONE} -- Implementation
 				-- Now we must connect the close event of the window:
 			add_event_connection ("%T-- Close the application when an interface close")
 			add_event_connection ("%T-- request is recieved on `Current'. i.e. the cross is clicked.")
-			if System_status.current_project_settings.client_of_window then
-				add_event_connection (Client_window_string + ".close_request_actions.extend (agent ((create {EV_ENVIRONMENT}).application).destroy)")
-			else
-				add_event_connection ("close_request_actions.extend (agent ((create {EV_ENVIRONMENT}).application).destroy)")
-			end
+--			if System_status.current_project_settings.client_of_window then
+--				add_event_connection (Client_window_string + ".close_request_actions.extend (agent ((create {EV_ENVIRONMENT}).application).destroy)")
+--			else
+--				add_event_connection ("close_request_actions.extend (agent ((create {EV_ENVIRONMENT}).application).destroy)")
+--			end
+			--| FIXME only generate for main window.
 		end
 
 	add_local_on_single_line (generated_info: GB_GENERATED_INFO) is

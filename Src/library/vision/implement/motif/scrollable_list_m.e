@@ -98,6 +98,7 @@ feature -- Initialization
 			if sb /= Void then
 				sb.set_navigation_to_exclusive_tab_group;
 			end;
+			set_single_select
 		end
 
 	set_widget_default is
@@ -333,7 +334,7 @@ feature  -- Removal
 feature  -- Status report
 
 	selected_item: SCROLLABLE_LIST_ELEMENT is
-			-- Selected item if single or browse selection mode is selected
+			-- Selected item if single or extended selection mode is selected
 			-- Void if nothing is selected
 		do
 			Result := selected_items.first
@@ -351,12 +352,13 @@ feature  -- Status report
 			until
 				loc_selected_positions.after
 			loop
-				Result.extend (i_th (loc_selected_positions.item))
+				Result.extend (i_th (loc_selected_positions.item));
+				loc_selected_positions.forth
 			end
 		end;
 
 	selected_position: INTEGER is
-			-- Position of selected item if single or browse selection mode is
+			-- Position of selected item if single or extended selection mode is
 			-- selected
 			-- Null if nothing is selected
 		do
@@ -368,19 +370,60 @@ feature  -- Status setting
 	add_click_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of actions to execute when items are
 			-- selected with click selection mode in current scroll list.
+		local
+			list: VISION_COMMAND_LIST
 		do
+			if is_single_select then
+				list := vision_command_list (single_selection_command)
+			else
+				list := vision_command_list (extended_selection_command)
+			end;
+			if list = Void then
+				!! list.make;
+				if is_single_select then
+					set_single_selection_callback (list, Void)
+				else
+					set_extended_selection_callback (list, Void)
+				end
+			end;
+			list.add_command (a_command, argument)
 		end;
 
 	remove_click_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' to the list of action to execute when items are
 			-- selected with click selection mode in current scroll list.
 		do
+			if is_single_select then
+				remove_command (single_selection_command, a_command, argument)
+			else
+				remove_command (extended_selection_command, a_command, argument)
+			end
 		end;
 
 	select_item is
 			-- Select item at current position.
 		do
 			select_i_th (index)
+		end;
+
+	scroll_to_current is
+			-- Make `item' the first visible item in the list if
+			-- `index' < `first_visible_item_index'.
+			-- Make `item' the last visible item in the list if
+			-- `index' >= `first_visible_item_position'+`visible_item_count'.
+			-- Do nothing if `item' is visible.
+		local
+			first_visible: INTEGER
+		do
+			first_visible := top_item_position;
+			if first_visible = 0 then
+				first_visible := count
+			end;
+			if index < first_visible then
+				set_pos (index)
+			elseif index >= first_visible+visible_item_count then
+				set_bottom_pos (index)
+			end
 		end;
 
 	deselect_item is
@@ -403,14 +446,32 @@ feature  -- Status setting
 
 	set_multiple_selection is
 			-- Set the selction to multiple items
+		local
+			list: VISION_COMMAND_LIST
 		do
-			set_multiple_select
-		end
+			if is_single_select then
+				set_extended_select;
+				list := vision_command_list (single_selection_command);
+				if list /= Void then
+					remove_single_selection_callback;
+					set_extended_selection_callback (list, Void)
+				end;
+			end
+		end;
 
 	set_single_selection is
 			-- Set the selction to multiple items
+		local
+			list: VISION_COMMAND_LIST
 		do
-			set_single_select
+			if is_extended_select then
+				list := vision_command_list (extended_selection_command);
+				set_single_select;
+				if list /= Void then
+					remove_extended_selection_callback;
+					set_single_selection_callback (list, Void)
+				end
+			end
 		end
 
 feature -- Status setting
@@ -500,24 +561,24 @@ feature -- Status setting
 
 feature -- Update
 
-    update is
-            -- Update the content of the scrollable list from
-            -- `list'.
+	update is
+			-- Update the content of the scrollable list from
+			-- `list'.
 		local
 			list: MEL_STRING_TABLE;
 			pos: INTEGER
-        do
+		do
 			pos := index;
 			list := make_merge_list (Current);
 			delete_all_items;
-            add_items (list, 0);
+			add_items (list, 0);
 			if pos > count then
 				finish
 			else
 				go_i_th (pos);
 			end;
-            list.destroy;
-        end;
+			list.destroy;
+		end;
 
 feature {NONE} -- Implementation
 	

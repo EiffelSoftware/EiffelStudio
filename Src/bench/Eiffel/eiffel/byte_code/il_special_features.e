@@ -80,15 +80,6 @@ feature -- Access code
 			-- Is current call based on an operator instead of a function
 			-- call?
 
-	not_need_target: SEARCH_TABLE [INTEGER] is
-			-- List of feature that does not need a target,
-			-- and therefore in our code generation we should
-			-- pop target from the stack.
-		once
-			create Result.make (10)
-			Result.put (equal_type)
-		end
-
 feature -- Status
 
 	valid_function_type (type: INTEGER): BOOLEAN is
@@ -134,10 +125,16 @@ feature -- IL code generation
 				parameters.generate_il
 				il_generator.generate_binary_operator (il_eq)
 
-			when zero_type then
+			when zero_type, default_type then
+					-- No need to keep pushed value as we are going
+					-- to put something else.
+				il_generator.pop
 				il_generator.put_default_value (type)
 
 			when one_type then
+					-- No need to keep pushed value as we are going
+					-- to put something else.
+				il_generator.pop
 				inspect type_of (type)
 				when integer_type then
 					il_generator.put_integer_constant (type, 1)
@@ -245,11 +242,11 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (to_character_type, to_character_name_id)
 			Result.put (to_character_type, ascii_char_name_id)
  			Result.put (abs_type, abs_name_id)
+			Result.put (default_type, default_name_id)
 
 -- FIXME: Manu 10/24/2001. Not yet implemented.
 -- 			Result.put (generator_type, generator_name_id)
 -- 			Result.put (generator_type, generating_type_name_id)
--- 			Result.put (default_type, default_name_id)
 -- 			Result.put (memory_copy, memory_copy_name_id)
 -- 			Result.put (memory_move, memory_move_name_id)
 -- 			Result.put (memory_set, memory_set_name_id)

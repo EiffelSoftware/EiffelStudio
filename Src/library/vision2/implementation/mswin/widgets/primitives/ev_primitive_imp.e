@@ -134,7 +134,10 @@ feature -- Basic operations
 		end
 
 	tooltip_window: WEL_WINDOW is
-			-- `Result' is WEL_WINDOW of `Current'.
+			-- `Result' is WEL_WINDOW of `Current' used
+			-- to trigger tooltip events. May be redefined in
+			-- descendents that are composed of more than one window
+			-- such as combo boxes.
 		do
 			Result := window_of_item (wel_item)
 		end

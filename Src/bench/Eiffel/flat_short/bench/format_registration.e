@@ -18,8 +18,7 @@ inherit
 			class_ast as current_ast
 		end;
 	MEMORY;
-	COMPILER_EXPORTER;
-	SHARED_BENCH_RESOURCES
+	COMPILER_EXPORTER
 
 creation
 
@@ -342,14 +341,10 @@ feature -- Output
 		require
 			valid_ctxt: ctxt /= Void
 		local
-			cat: like current_category;
-			array: ARRAY [STRING]
+			cat: like current_category
 		do
 			if not order_same_as_text then
-				array := feature_clause_order;
-				if array /= Void then
-					update_feature_clause_order (array);
-				end;
+				update_feature_clause_order (feature_clause_order);
 				categories.sort
 			end;
 			from

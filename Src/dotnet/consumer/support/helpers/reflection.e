@@ -151,7 +151,7 @@ feature -- Status Report
 		local
 			ca: CLS_COMPLIANT_ATTRIBUTE
 		do
-			ca ?= feature {ATTRIBUTE}.get_custom_attribute_member_info_type (member, cls_compliant_attribute_type)
+			ca ?= feature {ATTRIBUTE_}.get_custom_attribute_member_info_type (member, cls_compliant_attribute_type)
 			Result := ca = Void or else ca.is_compliant
 		end
 

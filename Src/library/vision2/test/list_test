@@ -17,14 +17,15 @@ cd $tmpdir
 # By default set up for GEL.
 platform_lib=gel
 platform_sep='/'
-if [ uname | grep CYGWIN > /dev/null 2>&1 ]
+if  uname | grep CYGWIN > /dev/null 2>&1
 then
 	platform_lib=wel
 	platform_sep='\\'
 fi
 
 # Check out base, event, the platform library and vision2.
-cvs -d :pserver:$USER@cvs:/home/cvs co -r dev46_manu_new_base base > /dev/null 2>&1
+#cvs -d :pserver:$USER@cvs:/home/cvs co -r dev46_manu_new_base base > /dev/null 2>&1
+cvs -d :pserver:$USER@cvs:/home/cvs co base > /dev/null 2>&1
 cvs -d :pserver:$USER@cvs:/home/cvs co event > /dev/null 2>&1
 cvs -d :pserver:$USER@cvs:/home/cvs co $platform_lib > /dev/null 2>&1
 cvs -d :pserver:$USER@cvs:/home/cvs co vision2 > /dev/null 2>&1
@@ -77,7 +78,12 @@ then
 	cd EIFGEN/W_code
 	if finish_freezing >> ../../out 2>&1
 	then
-		if ./dynamic_list_test > ../../out 2>&1
+		echo "Test report format:" > ../../out 2>&1
+		echo "feature_tested result" >> ../../out 2>&1
+		echo "For a passed test result is :)" >> ../../out 2>&1
+		echo "On failure failed_in_state(errror_detected) is displayed" >> ../../out 2>&1
+		echo >> ../../out 2>&1
+		if ./dynamic_list_test >> ../../out 2>&1
 		then
 			exit_status=0
 		fi
@@ -86,7 +92,7 @@ then
 fi
 
 cat out
-cp out /tmp/out$$
+#cp out /tmp/out$$
 cd /tmp
 rm -rf $tmpdir
 exit $exit_status
@@ -96,6 +102,9 @@ exit $exit_status
 #===============================================================================
 #
 # $Log$
+# Revision 1.2  2000/03/17 17:12:17  oconnor
+# added explanation of output
+#
 # Revision 1.1  2000/03/10 19:12:13  oconnor
 # list test script
 #

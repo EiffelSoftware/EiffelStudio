@@ -38,7 +38,11 @@ feature -- Access
 	text: STRING is
 			-- Text displayed in textable.
 		do
-			to_implement ("EV_GRID_LABEL_ITEM_I.text")
+			if internal_text /= Void then
+				Result := internal_text.twin
+			else
+				Result := ""
+			end
 		end
 		
 	background_color: EV_COLOR is
@@ -56,7 +60,11 @@ feature -- Access
 	font: EV_FONT is
 			-- Font used in `Current'.
 		do
-			to_implement ("EV_GRID_LABEL_ITEM_I.font")
+			if internal_font /= Void then
+				Result := internal_font.twin
+			else
+				create Result
+			end
 		end
 
 feature -- Element change
@@ -64,7 +72,7 @@ feature -- Element change
 	set_text (a_text: STRING) is
 			-- Assign `a_text' to `text'.
 		do
-			to_implement ("EV_GRID_LABEL_ITEM_I.set_text")
+			internal_text := a_text.twin
 		end
 		
 	set_background_color (color: EV_COLOR) is
@@ -82,8 +90,16 @@ feature -- Element change
 	set_font (ft: EV_FONT) is
 			-- Make `ft' new font of `Current'.
 		do
-			to_implement ("EV_GRID_LABEL_ITEM_I.set_font")
+			internal_font := ft.twin
 		end
+
+feature {EV_GRID_DRAWER_I} -- Implementation
+
+	internal_text: STRING
+		-- Text displayed
+
+	internal_font: EV_FONT
+		-- Font used to display `text' on screen
 		
 feature {NONE} -- Implementation
 

@@ -472,6 +472,7 @@ feature {NONE} -- Implementation
 			table_content: ARRAYED_LIST [EV_WIDGET]
 			list_item: EV_LIST_ITEM
 			layout_rows_entry, layout_columns_entry: GB_INTEGER_INPUT_FIELD
+			object: GB_OBJECT
 		do
 				-- Reset the selected item.
 			selected_item := Void
@@ -539,7 +540,17 @@ feature {NONE} -- Implementation
 			until
 				table_content.off
 			loop
-				create list_item.make_with_text (class_name (table_content.item))
+				-- Note that this is slow, as we have to loop through objects
+					-- to get a match, while inside this loop.
+				object := object_handler.object_from_display_widget (table_content.item)
+				check
+					object_not_void: object /= Void
+				end
+				if object.name.is_empty then
+					create list_item.make_with_text (class_name (table_content.item))
+				else
+					create list_item.make_with_text (object.name + " : " + class_name (table_content.item))
+				end
 				list_item.set_data (table_content.item)
 				list_item.select_actions.extend (agent item_selected (table_content.item))
 				list_item.deselect_actions.extend (agent check_unselect)

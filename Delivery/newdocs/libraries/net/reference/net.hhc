@@ -1,4 +1,4 @@
-	<LI><OBJECT type="text/sitemap"><param name="Name" value="Reference"><param name="Local" value="libraries\net\reference\index.html"></OBJECT>
+	<LI><OBJECT type="text/sitemap"><param name="Name" value="EiffelNet Reference"><param name="Local" value="libraries\net\reference\index.html"></OBJECT>
 	<UL>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="abstract"><param name="Local" value="libraries\net\reference\abstract\index.html"></OBJECT>
 		<UL>

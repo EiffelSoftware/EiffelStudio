@@ -192,6 +192,7 @@ if [ ! -f $1 ]; then
 	remtrace Couldnt generate $1
 	CANCEL
 fi
+strip $1
 mv $1 ..
 cd ..
 fullrf $1.tar

@@ -21,24 +21,6 @@ inherit
 		redefine
 			initialize,
 			make,
-			text,
-			set_editable,
-			set_text,
-			append_text,
-			prepend_text,
-			position,
-			set_position,
-			select_region,
-			cut_selection,
-			copy_selection,
-			paste,
-			selection_start,
-			selection_end,
-			has_selection,
-			delete_selection,
-			select_all,
-			deselect_all,
-			is_editable,
 			interface
 		end
 
@@ -49,6 +31,8 @@ inherit
 			disable_multiple_selection,
 			enable_multiple_selection
 		redefine
+			select_callback,
+			remove_item_from_position,
 			gtk_reorder_child,
 			initialize,
 			make,
@@ -103,54 +87,27 @@ feature {NONE} -- Initialization
 			)
 		end
 
-feature -- Access
+	avoid_callback: BOOLEAN
+		-- Flag used to avoid repeated emission of select signal from combo box.
 
-	text: STRING is
-		local
-			p: POINTER
+	select_callback (an_item: POINTER) is
+			-- Redefined to counter repeated select signal of combo box. 
 		do
-			p := C.gtk_entry_get_text (entry_widget)
-			create Result.make (0)
-			Result.from_c (p)
+			if not avoid_callback then
+				Precursor (an_item)
+				avoid_callback := True
+			else
+				avoid_callback := False
+			end
 		end
+
+feature -- Access
 
 	select_item (an_index: INTEGER) is
 			-- Give the item of the list at the one-base
 			-- index. (Gtk uses 0 based indexs, I think)
 		do
 			C.gtk_list_select_item (list_widget, an_index - 1)
-		end
-
-feature -- Status report
-
-	is_editable: BOOLEAN is
-			-- Is the text editable
-		do
-			Result := C.c_gtk_editable_editable (entry_widget) /= 0
-		end
-
-	has_selection: BOOLEAN is
-			-- Is something selected?
-		do
-			Result := C.c_gtk_editable_has_selection (entry_widget) /= 0
-		end
-
-	position: INTEGER is
-			-- Current position of the caret.
-		do
-			Result := C.gtk_text_get_point (entry_widget) + 1
-		end
-
-	selection_start: INTEGER is
-			-- Index of the first character selected
-		do
-			Result := C.c_gtk_editable_selection_start (entry_widget) + 1
-		end
-
-	selection_end: INTEGER is
-			-- Index of the last character selected
-		do
-			Result := C.c_gtk_editable_selection_end (entry_widget)
 		end
 
 feature -- Measurement
@@ -178,119 +135,17 @@ feature -- Status report
 		end
 
 feature -- Status setting
-
-	set_editable (flag: BOOLEAN) is
-			-- `flag' true make the component read-write and
-			-- `flag' false make the component read-only.
-		do
-			C.gtk_entry_set_editable (entry_widget, flag)
-		end
-
-	set_text (txt: STRING) is
-		local
-			a: ANY
-		do
-			a := txt.to_c
-			C.gtk_entry_set_text (entry_widget, $a)
-		end
-	
-	append_text (txt: STRING) is
-		local
-			a: ANY
-		do
-			a := txt.to_c
-			C.gtk_entry_append_text (entry_widget, $a)
-		end
-	
-	prepend_text (txt: STRING) is
-		local
-			a: ANY
-		do
-			a := txt.to_c
-			C.gtk_entry_prepend_text (entry_widget, $a)
-		end
-	
-	set_position (pos: INTEGER) is
-		do
-			C.gtk_text_set_point (entry_widget, pos - 1)
-		end
 	
 	set_maximum_text_length (len: INTEGER) is
 		do
 			C.gtk_entry_set_max_length (entry_widget, len)
 		end
 	
-	select_region (start_pos, end_pos: INTEGER) is
-		do
-			C.gtk_entry_select_region (
-				entry_widget,
-				start_pos - 1,
-				end_pos
-			)
-		end	
-
 	set_extended_height (value: INTEGER) is
 			-- Make `value' the new extended-height of the box.
 		do
 			--| FIXME IEK Not yet implemented.
 			check to_be_implemented: False end
-		end
-
-feature -- Basic operation
-
-	select_all is
-			-- Select all the text.
-		do
-			C.gtk_editable_select_region (
-				entry_widget,
-				0,
-				text_length
-			)
-		end
-
-	deselect_all is
-			-- Unselect the current selection.
-		do
-			C.gtk_editable_select_region (entry_widget, 0, 0)
-		end
-
-	delete_selection is
-			-- Delete the current selection.
-		do
-			C.gtk_editable_delete_selection (entry_widget)
-		end
-
-	cut_selection is
-			-- Cut the `selected_region' by erasing it from
-			-- the text and putting it in the Clipboard 
-			-- to paste it later.
-			-- If the `selectd_region' is empty, it does
-			-- nothing.
-		do
-			C.gtk_editable_cut_clipboard (entry_widget)
-		end
-
-	copy_selection is
-			-- Copy the `selected_region' in the Clipboard
-			-- to paste it later.
-			-- If the `selected_region' is empty, it does
-			-- nothing.
-		do
-			C.gtk_editable_copy_clipboard (entry_widget)
-		end
-
-	paste (an_index: INTEGER) is
-			-- Insert the string which is in the 
-			-- Clipboard at the `index' postion in the
-			-- text.
-			-- If the Clipboard is empty, it does nothing. 
-		local
-			pos: INTEGER
-		do
-			pos := position
-			set_position (an_index)
-			C.gtk_editable_paste_clipboard (entry_widget)
-			set_position (pos)
 		end
 
 feature {NONE} -- Implementation
@@ -305,9 +160,23 @@ feature {NONE} -- Implementation
 			s := imp.text.to_c
 			C.gtk_combo_set_item_string (c_object,
 				imp.c_object,
-				$S
+				$s
 			)
 			C.gtk_container_add (list_widget, imp.c_object)
+			imp.set_combo_parent_imp (Current)
+		end
+
+	remove_item_from_position (a_position: INTEGER) is
+			-- Remove item at position `a_position'.
+		local
+			imp: EV_LIST_ITEM_IMP
+		do
+			imp ?= interface.i_th (a_position).implementation
+			Precursor (a_position)
+			imp.set_combo_parent_imp (Void)
+			if count = 0 then
+				set_text ("")
+			end
 		end
 
 	gtk_reorder_child (a_container, a_child: POINTER; an_index: INTEGER) is
@@ -319,7 +188,6 @@ feature {NONE} -- Implementation
 				an_index - 1
 			)
 		end
-
 
 feature {EV_ANY_I} -- Implementation
 
@@ -348,6 +216,9 @@ end -- class EV_COMBO_BOX_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.25  2000/03/08 21:37:53  king
+--| Removed useless redefinition of entry widget functions
+--|
 --| Revision 1.24  2000/03/02 23:58:05  king
 --| Indented external function calls
 --|

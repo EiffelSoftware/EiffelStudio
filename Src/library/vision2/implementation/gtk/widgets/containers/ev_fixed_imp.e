@@ -43,8 +43,10 @@ feature -- Status setting
 		local
 			w_imp: EV_WIDGET_IMP
 		do
+			update_request_size
 			w_imp ?= a_widget.implementation
 			C.gtk_widget_set_uposition (w_imp.c_object, an_x, a_y)
+			set_minimum_size (minimum_width.max (w_imp.width + an_x), minimum_height.max (w_imp.height + a_y))
 		end
 
 	set_item_size (a_widget: EV_WIDGET; a_width, a_height: INTEGER) is
@@ -54,7 +56,8 @@ feature -- Status setting
 			w_imp: EV_WIDGET_IMP
 		do
 			w_imp ?= a_widget.implementation
-			w_imp.set_fixed_size (a_width, a_height)		
+			w_imp.set_fixed_size (a_width, a_height)
+			update_request_size
 		end
 
 feature {EV_ANY_I} -- Implementation

@@ -193,14 +193,16 @@ feature -- Status Settings
 			-- Append `txt' to end of `text'.
 		local
 			previous_caret_position: INTEGER
+			a_string: STRING
 		do
+			a_string := clone (txt)
 			previous_caret_position := caret_position
 			if interface.text /= Void then
 				set_caret_position (text_length + 1)
 			end
 				-- Replace "%N" with "%R%N" for Windows.
-			convert_string (txt)
-			replace_selection (txt)
+			convert_string (a_string)
+			replace_selection (a_string)
 			set_caret_position (previous_caret_position)
 		end
 
@@ -349,7 +351,7 @@ feature {NONE} -- Implementation
 				-- Doing the convertion this way will stop us from walking down a string
 				-- twice when there is no %N nor %R%N in the string.
 			if index > 0 and then (index = 1 or else a_string @ index - 1 /= '%R') then
-				clone (a_string).replace_substring_all ("%N", "%R%N")
+				a_string.replace_substring_all ("%N", "%R%N")
 			end
 		end
 
@@ -476,6 +478,11 @@ end -- class EV_TEXT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.41  2001/06/30 00:24:47  rogers
+--| Further bug fix with `convert_string' problems. We were cloning the
+--| string, but not returning anything so elsewhere, we still used the old
+--| string reference.
+--|
 --| Revision 1.40  2001/06/29 17:21:15  rogers
 --| `convert_string' now clones the string before modifying it. Fixes a bug
 --| where appending a text with a %N twice from within an agent would cause

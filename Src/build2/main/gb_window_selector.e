@@ -676,7 +676,7 @@ feature {GB_COMMAND_NAME_CHANGE} -- Implementation
 			end
 		end
 
-feature {GB_XML_LOAD} -- Implementation
+feature {GB_XML_LOAD, GB_XML_IMPORT} -- Implementation
 
 	update_displayed_names is
 			-- Update names of all selector items (excluding directories)
@@ -888,6 +888,12 @@ feature {NONE} -- Implementation
 			builder_win: GB_BUILDER_WINDOW
 			builder_shown, display_shown: BOOLEAN
 		do
+				-- There should be no need to check that the window has not already changed,
+				-- but it appears when selecting windows in the window selector, this
+				-- feature is called twice. This check reduces the flicker of hiding and showing
+				-- the same window twice.
+			if titled_window_object.object /= display_window then
+
 				-- Firstly hide the existing windows if shown
 			if builder_window.is_displayed then
 				command_handler.show_hide_builder_window_command.execute
@@ -917,6 +923,9 @@ feature {NONE} -- Implementation
 			end
 			if display_shown then
 				Command_handler.Show_hide_display_window_command.execute
+			end
+				-- Force the newly displayed window to redraw immediately.
+			((create {EV_ENVIRONMENT}).application).process_events
 			end
 		end
 

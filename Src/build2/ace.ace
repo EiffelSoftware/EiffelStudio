@@ -13,18 +13,22 @@ default
 	assertion (no)
 	disabled_debug (yes)
 	disabled_debug ("dlg_dispatcher")
+	disabled_debug ("gelex")
+	disabled_debug ("geyacc")
 	disabled_debug ("vision2_windows")
 	disabled_debug ("vision2_windows_gdi")
 	disabled_debug ("wel")
 	disabled_debug ("wel_gdi_count")
 	disabled_debug ("wel_gdi_references")
 	disabled_debug ("win_dispatcher")
+	disabled_debug ("xml_parser")
 	debug (no)
 	line_generation (yes)
 	profile (no)
 	trace (no)
 	check_vape (no)
 	console_application (no)
+	syntax_warning (no)
 	array_optimization (yes)
 	dead_code_removal (yes)
 	exception_trace (yes)
@@ -38,7 +42,16 @@ default
 cluster
 	all build2:		"$EIFFEL_SRC\build2"
 		exclude
-			"object_editor"; "eifgen"; "EIFGEN"; "templates"; "Gtk"; "hact"; "se"; "ve"; "base"; "test"; "CVS"; "demo_version";
+			"object_editor"; "eifgen"; "EIFGEN"; "templates"; "Gtk"; "hact"; "se"; "ve"; "base"; "test"; "CVS"; "demo_version"; "gobo_16"; "exml"; 
+		default
+			assertion (no)
+		end
+
+	all gobo:		"$EIFFEL_SRC\library\gobo"
+		exclude
+			"hact"; "se"; "ve"; "base"; "CVS"; "other"; "gelint"; "test"; 
+		default
+			assertion (no)
 		end
 
 	all wel:		"$EIFFEL_SRC\library\wel"
@@ -56,6 +69,8 @@ cluster
 	all base:		"$EIFFEL_SRC\library\base"
 		exclude
 			"table_eiffel3"; "desc"; 
+		default
+			assertion (no)
 		end
 
 	all wizard_library:		"$EIFFEL_SRC\library\wizard"
@@ -63,14 +78,16 @@ cluster
 			"unix"; "wizard_window.e"; "wizard_project_manager.e"; "wizard_shared.e"; "wizard_initial_state_window.e"; 
 		end
 
+	all preferences: "$EIFFEL_SRC\library\preferences"
+		exclude
+			"xml_implementation";
+		end
+
 external
 
 	include_path:
-		"$(EIFFEL_SRC)\C_library\expat\xmlparse",
 		"$(EIFFEL_SRC)\library\wel\spec\windows\include",
 		"$(EIFFEL_SRC)\library\vision2\spec\include",
-		"$(EIFFEL_SRC)\build2\modified_libraries\gobo_16\library\kernel\include",
-		"$(EIFFEL_SRC)\build2\modified_libraries\exml\lib\implementation\expat\compiler_specific\ise\clib",
 		"$(EIFFEL_SRC)\library\wizard\help\clib"
 
 	object:
@@ -78,8 +95,6 @@ external
 		"$(EIFFEL_SRC)\library\vision2\spec\$(ISE_C_COMPILER)\lib\vision2.lib",
 		"$(EIFFEL_SRC)\library\vision2\spec\$(ISE_C_COMPILER)\lib\zlib.lib",
 		"$(EIFFEL_SRC)\library\vision2\spec\$(ISE_C_COMPILER)\lib\libpng.lib",
-		"$(EIFFEL_SRC)\build2\modified_libraries\exml\lib\implementation\expat\compiler_specific\ise\clib\msc\exml.lib",
-		"$(EIFFEL_SRC)\C_library\expat\lib\xmlparse.lib",
 		"$(EIFFEL_SRC)\library\wizard\help\clib\htmlhelp.lib"
 
 end

@@ -102,6 +102,14 @@ feature -- String representations of class names.
 	Ev_tool_bar_item_string: STRING is "EV_TOOL_BAR_ITEM"
 	
 	Ev_list_item_string: STRING is "EV_LIST_ITEM"
+	
+feature -- GB_EV_FIXED
+
+	select_widget_prompt: STRING is "Please select desired widget."
+	
+	resize_widget_prompt: STRING is "Highlighted widget is positionable"
+	
+	widget_size_prompt: STRING is "Widget is 0x0 pixels, click HERE to enlarge."
 
 feature -- Miscellaneous
 

@@ -59,6 +59,7 @@ feature -- Resizing
 			-- There is no need to grow `Current' if its size is
 			-- too small, the parent will do it if necessary.
 		do
+			child_cell.disable_user_min_width_set
 			ev_set_minimum_width (value)
 			child_cell.set_user_minimum_width (value)
 		end
@@ -68,6 +69,7 @@ feature -- Resizing
 			-- There is no need to grow `Current' if its size is
 			-- too small, the parent will do it if necessary.
 		do
+			child_cell.disable_user_min_height_set
 			ev_set_minimum_height (value)
 			child_cell.set_user_minimum_height (value)
 		end
@@ -76,6 +78,8 @@ feature -- Resizing
 			-- Make `mw' the new minimum_width and `mh' the new
 			-- minimum_height of `Current'.
 		do
+			child_cell.disable_user_min_width_set
+			child_cell.disable_user_min_height_set
 			ev_set_minimum_size (mw, mh)
 			child_cell.set_user_minimum_width (mw)
 			child_cell.set_user_minimum_height (mh)

@@ -41,6 +41,7 @@ feature -- Access
 			-- Local declaration
 		do
 			create Result.make (200)
+			Result.append (Indent_string)
 			Result.append (eiffel_name)
 			Result.append (": ")
 			Result.append (eiffel_type_name)

@@ -6,18 +6,33 @@ indexing
 class
 	MD_STRONG_NAME
 
+inherit
+	IL_ENVIRONMENT
+
 feature -- Status report
 
 	present: BOOLEAN is
 			-- True if `mscorsn.dll' is available, False otherwise.
+			-- Append path to `mscorsn.dll' to PATH environment variable.
 		local
 			l_val: INTEGER
-			retried: BOOLEAN
+			retried, success: BOOLEAN
+			path, path_name: WEL_STRING
+			s: STRING
 		once
 			if not retried then
 					-- We try to call `get_error'. If the DLL exists, it 
 					-- will work, if it does not exist it will not reach
 					-- `Result := True', thus `Result' will be False.
+				create path.make_empty (32767) -- Max size of env. var is 32767 characters
+				create path_name.make ("PATH")
+				l_val := get_environment_variable (path_name.item, path.item, 32767)
+				if l_val > 0 then
+					s := path.string
+					s.append (";" + dotnet_framework_path)
+					create path.make (s)
+					success := set_environment_variable (path_name.item, path.item)
+				end
 				l_val := get_error
 				Result := True
 			end
@@ -162,5 +177,23 @@ feature -- C externals
 		alias
 			"GetHashFromBlob"
 		end
-			
+	
+	get_environment_variable (name, buffer: POINTER; size: INTEGER): INTEGER is
+			-- Get environment variable `name' and put result in `buffer' with size `size'.
+			-- Return size of variable or 0 if not found.
+		external
+			"C macro signature (LPCTSTR, LPTSTR, DWORD): EIF_INTEGER use <windows.h>"
+		alias
+			"GetEnvironmentVariable"
+		end
+
+	set_environment_variable (name, value: POINTER): BOOLEAN is
+			-- Set environment variable `name' with value `value'.
+			-- Return True if successful.
+		external
+			"C macro signature (LPCTSTR, LPCTSTR): EIF_BOOLEAN use <windows.h>"
+		alias
+			"SetEnvironmentVariable"
+		end
+
 end -- class MD_STRONG_NAME

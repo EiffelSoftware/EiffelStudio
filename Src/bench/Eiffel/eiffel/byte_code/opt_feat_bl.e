@@ -31,7 +31,7 @@ feature
 		do
 			type := f.type;
 			parameters := f.parameters;
-			array_desc := f.array_desc;
+			array_desc := f.array_desc.enlarged;
 			is_item := f.is_item
 			access_area := f.access_area;
 			enlarge_parameters

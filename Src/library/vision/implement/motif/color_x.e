@@ -22,6 +22,16 @@ creation
 
 	make
 
+feature {NONE} -- Creation
+
+	make (a_color: COLOR) is
+			-- Create a color
+		require
+			valid_color: a_color /= Void
+		do
+			resources_x_make
+		end; 
+
 feature {NONE}
 
 	allocate (a_screen: SCREEN_I): POINTER is
@@ -30,7 +40,7 @@ feature {NONE}
 			ext_name: ANY;
 		do
 			is_real_allocated := false;
-			if (n_ame = Void) then
+			if (name = Void) then
 				if not pixel_set then  -- rgb color
 					if c_allocate_color (a_screen.screen_object, red, green, blue) then
 						Result := c_pixel_allocated_color;
@@ -41,7 +51,7 @@ feature {NONE}
 					is_real_allocated := true
 				end;
 			else  -- name color
-				ext_name := n_ame.to_c;
+				ext_name := name.to_c;
 				if c_parse_name_color (a_screen.screen_object, $ext_name) then
 					if c_allocate_wanted_color (a_screen.screen_object) then
 						Result := c_pixel_allocated_color;
@@ -109,21 +119,6 @@ feature {NONE}
 			Result := c_black_pixel (a_display_pointer)
 		end; 
 	
-feature 
-
-	blue: INTEGER;
-			-- Blue saturation level
-
-	make (a_color: COLOR) is
-			-- Create a color
-		require
-			a_color_exists: not (a_color = Void)
-		do
-			resources_x_make
-		end; 
-
-	pixel_set: BOOLEAN;
-	
 feature {NONE}
 
 	free_resources is
@@ -143,11 +138,6 @@ feature {NONE}
 			wipe_out
 		end; 
 
-feature 
-
-	green: INTEGER;
-			-- Green saturation level
-
 feature {NONE}
 
 	is_real_allocated: BOOLEAN;
@@ -166,12 +156,12 @@ feature {NONE}
 			if not Result then
 				primitive ?= a_widget;
 				if not (primitive = Void) then
-					Result := (primitive.foreground /= Void) and then 
-								(primitive.foreground.implementation = Current)
+					Result := (primitive.foreground_color /= Void) and then 
+								(primitive.foreground_color.implementation = Current)
 				else
 					manager ?= a_widget;
-					Result := (manager /= Void) and then ((manager.foreground /= Void) and then 
-								(manager.foreground.implementation = Current))
+					Result := (manager /= Void) and then ((manager.foreground_color /= Void) and then 
+								(manager.foreground_color.implementation = Current))
 				end
 			end
 		ensure then
@@ -180,11 +170,19 @@ feature {NONE}
 	
 feature 
 
+	pixel_set: BOOLEAN;
+	
+	blue: INTEGER;
+			-- Blue saturation level
+
+	green: INTEGER;
+			-- Green saturation level
+
 	is_white_by_default: BOOLEAN;
 			-- Default color used in case of failure
 			-- to allocate desire color
 
-	n_ame: STRING;
+	name: STRING;
 			-- name of desired color for current
 
 	pixel (a_screen: SCREEN_I): POINTER is
@@ -223,12 +221,12 @@ feature
 			blue_value_not_negative: blue_value >= 0
 		do
 			blue := blue_value;
-			n_ame := Void;
+			name := Void;
 			pixel_set := False;
 			free_resources;
 			update_widgets
 		ensure then
-			n_ame = Void;
+			name = Void;
 			blue = blue_value
 		end; 
 
@@ -239,12 +237,12 @@ feature
 			green_value_not_negative: green_value >= 0
 		do
 			green := green_value;
-			n_ame := Void;
+			name := Void;
 			pixel_set := False;
 			free_resources;
 			update_widgets
 		ensure then
-			n_ame = Void;
+			name = Void;
 			green = green_value
 		end; 
 
@@ -253,25 +251,23 @@ feature
 		require else
 			a_name_not_void: not (a_name = Void)
 		do
-			n_ame := clone (a_name);
+			name := clone (a_name);
 			pixel_set := False;
 			free_resources;
 			update_widgets
 		ensure then
-			not (n_ame = Void);
-			n_ame.is_equal (a_name)
+			not (name = Void);
+			name.is_equal (a_name)
 		end; 
 
 	set_pixel (pixel_value: POINTER) is
 			-- Set the Pixel color to `pixel_value'
 		do
 			the_pixel := pixel_value;
-			n_ame := Void;
-			--free_resources;
-			--update_widgets;
+			name := Void;
 			pixel_set := True
 		ensure then
-			n_ame = Void;
+			name = Void;
 			the_pixel = pixel_value
 		end;
 			
@@ -282,12 +278,12 @@ feature
 			red_value_not_negative: red_value >= 0
 		do
 			red := red_value;
-			n_ame := Void;
+			name := Void;
 			pixel_set := False;
 			free_resources;
 			update_widgets
 		ensure then
-			n_ame = Void;
+			name = Void;
 			red = red_value
 		end; 
 
@@ -305,12 +301,12 @@ feature
 			red := red_value;
 			green := green_value;
 			blue := blue_value;
-			n_ame := Void;
+			name := Void;
 			pixel_set := False;
 			free_resources;
 			update_widgets
 		ensure then
-			n_ame = Void;
+			name = Void;
 			red = red_value;
 			green = green_value;
 			blue = blue_value
@@ -354,15 +350,15 @@ feature {NONE}
 				end;
 				primitive ?= widgets_to_update.item;
 				if not (primitive = Void) then
-					if (not (primitive.foreground = Void)) and then (primitive.foreground.implementation = Current) then
-						primitive.update_foreground;
+					if (not (primitive.foreground_color = Void)) and then (primitive.foreground_color.implementation = Current) then
+						primitive.update_foreground_color;
 					end
 				else
 					manager ?= widgets_to_update.item;
-					if (not (manager = Void)) and then ((not (manager.foreground = Void)) 
-					and then (manager.foreground.implementation = Current)) 
+					if (not (manager = Void)) and then ((not (manager.foreground_color = Void)) 
+					and then (manager.foreground_color.implementation = Current)) 
 				then
-						manager.update_foreground;
+						manager.update_foreground_color;
 					end
 				end;
 				widgets_to_update.forth;

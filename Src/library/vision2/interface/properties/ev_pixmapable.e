@@ -17,6 +17,37 @@ inherit
 			implementation
 		end
 	
+feature -- Access
+
+	pixmap: EV_PIXMAP is
+			-- Implementation of the pixmap contained 
+		require
+			exists: not destroyed
+		do
+			Result := implementation.pixmap
+		end
+
+feature -- Element change
+
+	set_pixmap (pix: EV_PIXMAP) is
+			-- Make `pix' the new pixmap of the widget.
+		require
+			exists: not destroyed
+			valid_pixmap: is_valid (pix)
+		do
+			implementation.set_pixmap (pix)
+		ensure then
+			pixmap_set: pixmap = pix
+		end
+
+	unset_pixmap is
+			-- Remove the pixmap from the container
+		do
+			implementation.unset_pixmap
+		ensure then
+			pixmap_removed: pixmap = Void
+		end
+
 feature -- Implementation
 	
 	implementation: EV_PIXMAPABLE_I

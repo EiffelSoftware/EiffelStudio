@@ -30,7 +30,6 @@ feature -- Initialization
 			n_positive: n > 0
 		do
 			boolean_set_make (n);
-			all_false
 		ensure
 			set_empty: empty
 		end;
@@ -48,32 +47,83 @@ feature -- Access
 
 	empty: BOOLEAN is
 			-- Is current set empty?
+		local
+			i, nb: INTEGER
 		do
-			Result := bempty ($area, count)
-		end;
+			from
+				i := 1
+				nb := count
+				Result := True
+			until
+				not Result or i > nb
+			loop
+				Result := not item (i);
+				i := i + 1
+			end
+		end
 
 	smallest: INTEGER is
 			-- Smallest integer in set;
 			-- `count' + 1 if set empty
+		local
+			nb: INTEGER;
+			found: BOOLEAN
 		do
-			Result := sma ($area, count)
-		end;
+			from
+				Result := 1
+				nb := count
+			until
+				found or Result > nb
+			loop
+				if item (Result) then
+					found := True
+				else
+					Result := Result + 1
+				end
+			end	
+		end
 
 	largest: INTEGER is
 			-- Largest integer in set;
-			-- 0 if empty
+			-- 0 if set empty
+		local
+			found: BOOLEAN
 		do
-			Result := lar ($area, count)
-		end;
+			from
+				Result := count
+			until
+				found or Result < 1
+			loop
+				if item (Result) then
+					found := True
+				else
+					Result := Result - 1
+				end
+			end
+		end
 
 	next (p: INTEGER): INTEGER is
-			-- Next integer in Current following `p';
-			-- `count' + 1 if `p' equals largest.
+			-- Next integer in set following `p';
+			-- `count' + 1 if `p' equals `largest'
 		require
 			p_in_set: p >= 1 and p <= count
+		local
+			nb: INTEGER
+			found: BOOLEAN
 		do
-			Result := nex ($area, count, p)
-		end;
+			from
+				Result := p + 1;
+				nb := count
+			until
+				found or Result > nb
+			loop
+				if item (Result) then
+					found := True
+				else
+					Result := Result + 1
+				end
+			end
+		end
 
 feature -- Element change
 
@@ -130,28 +180,6 @@ feature -- Output
 				i := i +1
 			end;
 			io.new_line
-		end;
-
-feature {NONE} -- Implementation
-
-	nex (a1: POINTER; size, pos: INTEGER): INTEGER is
-		external
-			"C"
-		end;
-
-	lar (a1: POINTER; size: INTEGER): INTEGER is
-		external
-			"C"
-		end;
-
-	sma (a1: POINTER; size: INTEGER): INTEGER is
-		external
-			"C"
-		end;
-
-	bempty (a1: POINTER; size: INTEGER): BOOLEAN is
-		external
-			"C"
 		end;
 
 invariant

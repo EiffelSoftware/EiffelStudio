@@ -75,10 +75,9 @@ feature -- Status setting
 			l_buffer_created: line_nb_array /= Void;
 			b_not_too_large: b <= buffer_size;
 			b_positive: b >= 0
-			local
+		local
 			previous_buffer_size: INTEGER;
 			previous_buffer: STRING;
-			c_temp1, c_temp2, c_temp3, c_temp4, c_temp5: ANY
 		do
 			if buf >= buffer_size then
 				previous_buffer_size := buffer_size;
@@ -88,38 +87,16 @@ feature -- Status setting
 				buffer.append (previous_buffer);
 				line_nb_array.resize (1, buffer_size);
 				column_nb_array.resize (1, buffer_size);
-				c_temp2 := buffer.to_c;
-				c_temp3 := line_nb_array.to_c;
-				c_temp4 := column_nb_array.to_c;
-				c_temp5 := mask.to_c;
 				if source_is_file then
-					char_buffered_number := char_buffered_number
-					+ fill_buf (file.file_pointer, $c_temp2,
-					$c_temp3, $c_temp4,
-					$c_temp5, b, previous_buffer_size, buffer_size)
+					fill_from_file (b, previous_buffer_size, buffer_size)
 				else
-					c_temp1 := string.to_c;
-					char_buffered_number := char_buffered_number
-					+ fill_f_s ($c_temp1, $c_temp2,
-					$c_temp3, $c_temp4,
-					$c_temp5, b, previous_buffer_size, buffer_size)
+					fill_from_string (b, previous_buffer_size, buffer_size)
 				end
 			else
-				c_temp2 := buffer.to_c;
-				c_temp3 := line_nb_array.to_c;
-				c_temp4 := column_nb_array.to_c;
-				c_temp5 := mask.to_c;
 				if source_is_file then
-					char_buffered_number := char_buffered_number
-					+ fill_buf (file.file_pointer, $c_temp2,
-					$c_temp3, $c_temp4,
-					$c_temp5, b, buffer_size, buf)
+					fill_from_file (b, buffer_size, buf)
 				else
-					c_temp1 := string.to_c;
-					char_buffered_number := char_buffered_number
-					+ fill_f_s ($c_temp1, $c_temp2,
-					$c_temp3, $c_temp4,
-					$c_temp5, b, buffer_size, buf)
+					fill_from_string (b, buffer_size, buf)
 				end;
 				buffer_size := buf;
 				buffer.resize (buffer_size);
@@ -160,6 +137,7 @@ feature -- Status setting
 		require
 			file_name_not_void: f_name /= Void
 		do
+			close_file;
 			!! file.make_open_read (f_name);
 			reset;
 			char_buffered_number := 0;
@@ -174,6 +152,7 @@ feature -- Status setting
 		require
 			string_not_void: s /= Void
 		do
+			close_file;
 			string := s;
 			reset;
 			char_buffered_number := 0;
@@ -196,24 +175,11 @@ feature -- Status setting
 			l_buffer_created: line_nb_array /= Void;
 			b_not_too_large: b <= buffer_size;
 			b_positive: b >= 0
-		local
-			c_temp1, c_temp2, c_temp3, c_temp4, c_temp5: ANY
 		do
-			c_temp2 := buffer.to_c;
-			c_temp3 := line_nb_array.to_c;
-			c_temp4 := column_nb_array.to_c;
-			c_temp5 := mask.to_c;
 			if source_is_file then
-				char_buffered_number := char_buffered_number
-				+ fill_buf (file.file_pointer, $c_temp2,
-				$c_temp3, $c_temp4,
-				$c_temp5, b, buffer_size, buffer_size);
+				fill_from_file (b, buffer_size, buffer_size)
 			else
-				c_temp1 := string.to_c;
-				char_buffered_number := char_buffered_number
-				+ fill_f_s ($c_temp1, $c_temp2,
-				$c_temp3, $c_temp4,
-				$c_temp5, b, buffer_size, buffer_size)
+				fill_from_string (b, buffer_size, buffer_size)
 			end
 		end; 
 
@@ -222,6 +188,17 @@ feature -- Status setting
 		do
 			fill_buffer (buffer_size)
 		end 
+
+	close_file is
+			-- Close input file if any.
+		do
+			if file /= Void and then not file.is_closed then
+				file.close
+			end
+			file := Void
+		ensure
+			file_is_void: file = Void
+		end
 
 feature -- Implementation
 
@@ -248,6 +225,13 @@ feature {NONE} -- Implementation
 	source_is_file: BOOLEAN;
 			-- Is the source a file? (If not it is a string)
 
+	line_number: INTEGER;
+	column_number: INTEGER
+			-- Character position in document
+
+	position_in_string: INTEGER
+			-- Position of last character read in `string'
+
 	initialize is
 			-- Set buffers
 		deferred
@@ -259,22 +243,161 @@ feature {NONE} -- Implementation
 		end 
 
 	reset is
-		external
-			"C"
-		end; 
+			-- Initialize character position in document.
+		do
+			line_number := 1
+			column_number := 1
+			position_in_string := 0
+		end
 
-	fill_f_s (str: POINTER; buf, line_nb_ar, col_nb_ar, mk: POINTER;
-				b, buf_sz, buf_end: INTEGER): INTEGER is
-		external
-			"C"
-		end; 
+	fill_from_file (position, old_size, new_size: INTEGER) is
+			-- Copy the characters from `position'+1-th to `old_size'-th
+			-- in beginning of `buffer', and fill other part of `buffer'
+			-- with characters from `file'.
+		require
+			buffer_created: buffer /= Void;
+			c_buffer_created: column_nb_array /= Void;
+			l_buffer_created: line_nb_array /= Void;
+			position_not_too_large: position <= buffer_size;
+			position_positive: position >= 0;
+			valid_old_size: old_size >= 0 and old_size <= buffer_size;
+			valid_new_size: new_size >= 0 and new_size <= buffer_size;
+			file_not_void: file /= Void
+		local
+			c: CHARACTER;
+			i, nb: INTEGER;
+			eof: BOOLEAN;
+			lines, columns: LEX_ARRAY [INTEGER];
+			cmask: FIXED_INTEGER_SET
+		do
+			lines := line_nb_array;
+			columns := column_nb_array;
+			cmask := mask;
+			if position /= 0 then
+				from
+					i := 1;
+					nb := old_size - position;
+				until
+					i > nb
+				loop
+					buffer.put (buffer.item (position + i), i);
+					lines.put (lines.item (position + i), i)
+					columns.put (columns.item (position + i), i)
+					i := i + 1
+				end
+			else
+				i := old_size
+			end
+			from
+			until
+				eof or i > new_size
+			loop
+				if file.end_of_file then
+					buffer.put ('%/255/', i);
+					lines.put (-1, i);
+					columns.put (-1, i);
+					close_file;
+					eof := True
+				else
+					file.read_character;
+					c := file.last_character;
+					if c = '%N' then
+						buffer.put (c, i);
+						lines.put (line_number, i);
+						columns.put (column_number, i);
+						line_number := line_number + 1;
+						column_number := 1;
+						i := i + 1
+					else
+						if
+							column_number <= cmask.count and then
+							cmask.item (column_number)
+						then
+							buffer.put (c, i);
+							lines.put (line_number, i);
+							columns.put (column_number, i);
+							i := i + 1
+						end;
+						column_number := column_number + 1
+					end
+				end	
+			end
+			char_buffered_number := char_buffered_number + i - nb
+		end
 
-	fill_buf (fp: POINTER; buf, line_nb_ar, col_nb_ar, mk: POINTER;
-				b, buf_sz, buf_end: INTEGER): INTEGER is
-		external
-			"C"
-		end 
-
+	fill_from_string (position, old_size, new_size: INTEGER) is
+			-- Copy the characters from `position'+1-th to `old_size'-th
+			-- in beginning of `buffer', and fill other part of `buffer'
+			-- with characters from `string'.
+		require
+			buffer_created: buffer /= Void;
+			c_buffer_created: column_nb_array /= Void;
+			l_buffer_created: line_nb_array /= Void;
+			position_not_too_large: position <= buffer_size;
+			position_positive: position >= 0;
+			valid_old_size: old_size >= 0 and old_size <= buffer_size;
+			valid_new_size: new_size >= 0 and new_size <= buffer_size;
+			string_not_void: string /= Void
+		local
+			c: CHARACTER;
+			i, nb: INTEGER;
+			eof: BOOLEAN;
+			lines, columns: LEX_ARRAY [INTEGER];
+			cmask: FIXED_INTEGER_SET
+		do
+			lines := line_nb_array;
+			columns := column_nb_array;
+			cmask := mask;
+			if position /= 0 then
+				from
+					i := 1;
+					nb := old_size - position;
+				until
+					i > nb
+				loop
+					buffer.put (buffer.item (position + i), i);
+					lines.put (lines.item (position + i), i)
+					columns.put (columns.item (position + i), i)
+					i := i + 1
+				end
+			else
+				i := old_size
+			end
+			from
+			until
+				eof or i > new_size
+			loop
+				position_in_string := position_in_string + 1
+				if position_in_string > string.count then
+					buffer.put ('%/255/', i);
+					lines.put (-1, i);
+					columns.put (-1, i);
+					eof := True
+				else
+					c := string.item (position_in_string);
+					if c = '%N' then
+						buffer.put (c, i);
+						lines.put (line_number, i);
+						columns.put (column_number, i);
+						line_number := line_number + 1;
+						column_number := 1;
+						i := i + 1
+					else
+						if
+							column_number <= cmask.count and then
+							cmask.item (column_number)
+						then
+							buffer.put (c, i);
+							lines.put (line_number, i);
+							columns.put (column_number, i);
+							i := i + 1
+						end;
+						column_number := column_number + 1
+					end
+				end	
+			end
+			char_buffered_number := char_buffered_number + i - nb
+		end
 
 -- Buffered files or strings
 -- When the buffer is filled, the columns forbidden by exclude

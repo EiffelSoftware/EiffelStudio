@@ -1,7 +1,7 @@
 indexing
 	description: 
-		"Eiffel Vision box.%N%
-		%Invisible container with unlimited number of children."
+		"Linear container of widgets.%N%
+		%Base class for EV_HORIZONTAL_BOX and EV_VERTICAL_BOX"
 	status: "See notice at end of class"
 	keywords: "box, container, child"
 	date: "$Date$"
@@ -208,6 +208,9 @@ end -- class EV_BOX
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.23  2000/03/17 18:41:28  oconnor
+--| formatting comments
+--|
 --| Revision 1.22  2000/03/09 01:28:31  oconnor
 --| Renamed *_child_expand* to *_item_expand*
 --|

@@ -15,7 +15,7 @@ feature
 		do
 			!! full_path.make_from_string (Environment.help_directory);
 			temp := clone (help_file_name);
-			temp.to_lower;
+			temp.to_upper;
 			full_path.extend (temp);
 			!! help_file.make (full_path);
 			if help_file.exists and then help_file.is_readable then

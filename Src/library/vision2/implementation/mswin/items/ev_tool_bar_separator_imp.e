@@ -1,7 +1,7 @@
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
-		"EiffelVision tool-bar separator, mswindows implemenatation."
+		"Eiffel Vision tool bar separator. Mswindows implemenatation."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,27 +15,13 @@ inherit
 			parent_imp as tb_parent_imp
 		undefine
 			parent
-		redefine
-			interface
-		end
-
-	EV_SEPARATOR_ITEM_IMP
-		rename
-			parent_imp as old_item_parent_imp
-		undefine
-			parent,
-			set_pixmap,
-			set_pointer_style,
-			pnd_press
-		redefine
-			interface
 		select
 			interface
 		end
 
 	EV_TOOL_BAR_BUTTON_IMP
 		rename
-			interface as ev_tool_bar_button_imp_interface
+			interface as ev_tool_bar_button_interface
 		redefine
 			type
 		select
@@ -67,33 +53,32 @@ feature -- Status report
 			do
 			end
 
-feature {EV_ANY_I} -- Implementation
-
-	interface: EV_TOOL_BAR_SEPARATOR
-
 end -- class EV_TOOL_BAR_SEPARATOR_IMP
 
---|----------------------------------------------------------------
---| EiffelVision: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
+--! EiffelVision2: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2000/04/11 17:31:51  brendel
+--| Removed inh. of EV_SEPARATOR_ITEM_IMP again.
+--|
 --| Revision 1.10  2000/04/11 17:11:20  rogers
 --| Now inherits EV_SEPARATOR_ITEM_IMP. Redefined interface.
 --|

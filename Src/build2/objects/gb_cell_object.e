@@ -100,7 +100,7 @@ feature {NONE} -- Implementation
 			container: EV_CONTAINER
 		do
 			--|FIXME for now, actually use a cell
-			if type.is_equal ("EV_TITLED_WINDOW") then
+			if type.is_equal (Ev_titled_window_string) then
 				create display_object.make_as_root_window (builder_window)
 			else
 				container ?= vision2_object_from_type (type)

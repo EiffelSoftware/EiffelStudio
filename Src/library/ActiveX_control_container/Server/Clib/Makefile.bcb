@@ -3,7 +3,7 @@
 MV = copy
 CC = $(ISE_EIFFEL)\Bcc55\Bin\bcc32.exe
 OUTPUT_CMD = -o
-CFLAGS = -w- -I$(ISE_EIFFEL)\BCC55\include -L$(ISE_EIFFEL)\BCC55\lib -D_WIN32_DCOM -c -I..\..\client\include -I..\..\server\include -I..\..\common\include -I$(ISE_EIFFEL)\bench\spec\windows\include -I$(ISE_EIFFEL)\library\com\spec\windows\include 
+CFLAGS = -w- -I$(ISE_EIFFEL)\BCC55\include -L$(ISE_EIFFEL)\BCC55\lib -D_WIN32_DCOM -c -I..\..\client\include -I..\..\server\include -I..\..\common\include -I$(ISE_EIFFEL)\studio\spec\windows\include -I$(ISE_EIFFEL)\library\com\spec\windows\include 
 
 OBJ = ecom_control_library_control_site_s.obj \
 ecom_control_library_frame_window_s.obj \

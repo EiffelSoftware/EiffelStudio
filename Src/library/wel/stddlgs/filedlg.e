@@ -56,8 +56,6 @@ feature -- Access
 			-- Dialog box creation flags.
 			-- Can be a combination of the values defined in 
 			-- class WEL_OFN_CONSTANTS.
-		require
-			exists: exists
 		do
 			Result := cwel_open_file_name_get_flags (item)
 		end
@@ -65,7 +63,6 @@ feature -- Access
 	file_name: STRING is
 			-- File name selected (including path).
 		require
-			exists: exists
 			selected: selected
 		do
 			Result := str_file_name.string
@@ -76,7 +73,6 @@ feature -- Access
 	file_title: STRING is
 			-- Title of the selected file (without path).
 		require
-			exists: exists
 			selected: selected
 		do
 			Result := str_file_title.string
@@ -86,8 +82,6 @@ feature -- Access
 
 	title: STRING is
 			-- Title of the current dialog
-		require
-			exists: exists
 		do
 			Result := str_title.string
 		ensure
@@ -98,7 +92,6 @@ feature -- Access
 			-- Specifies the offset from the beginning of the path
 			-- to the file name in the string `file_name'.
 		require
-			exists: exists
 			selected: selected
 		do
 			Result := cwel_open_file_name_get_nfileoffset (item) + 1
@@ -110,7 +103,6 @@ feature -- Access
 			-- Specifies the offset from the beginning of the path
 			-- to the file name extension in the string `file_name'.
 		require
-			exists: exists
 			selected: selected
 		do
 			Result := cwel_open_file_name_get_nfileextension (item) + 1
@@ -126,8 +118,6 @@ feature -- Element change
 	set_flags (a_flags: INTEGER) is
 			-- Set `flags' with `a_flags'.
 			-- See class WEL_OFN_CONSTANTS for `a_flags' values.
-		require
-			exists: exists
 		do
 			cwel_open_file_name_set_flags (item, a_flags)
 		ensure
@@ -137,8 +127,6 @@ feature -- Element change
 	add_flag (a_flags: INTEGER) is
 			-- Add `a_flags' to `flags'.
 			-- See class WEL_OFN_CONSTANTS for `a_flags' values.
-		require
-			exists: exists
 		do
 			set_flags (set_flag (flags, a_flags))
 		ensure
@@ -148,8 +136,6 @@ feature -- Element change
 	remove_flag (a_flags: INTEGER) is
 			-- Remove `a_flags' from `flags'.
 			-- See class WEL_OFN_CONSTANTS for `a_flags' values.
-		require
-			exists: exists
 		do
 			set_flags (clear_flag (flags, a_flags))
 		ensure
@@ -160,7 +146,6 @@ feature -- Element change
 			-- Set `file_name' with `a_file' and initialize
 			-- the file name edit control.
 		require
-			exists: exists
 			a_file_name_not_void: a_file_name /= Void
 			a_file_name_count_ok: a_file_name.count <= Max_file_name_length
 		do
@@ -175,7 +160,6 @@ feature -- Element change
 			-- Set `title' with `a_title' and use this string to
 			-- display the title.
 		require
-			exists: exists
 			a_title_not_void: a_title /= Void
 		do
 			str_title.set_string (a_title)
@@ -188,8 +172,6 @@ feature -- Element change
 	set_default_title is
 			-- Set the title bar with the default value ("Save As"
 			-- or "Open")
-		require
-			exists: exists
 		do
 			str_title.set_string ("")
 			cwel_open_file_name_set_lpstrtitle (item,
@@ -207,7 +189,6 @@ feature -- Element change
 			--	filter_names = <<"Text file", "All file">>
 			--	filter_patterns = <<"*.txt", "*.*">>
 		require
-			exists: exists
 			filter_names_not_void: filter_names /= Void
 			filter_patterns_not_void: filter_patterns /= Void
 			same_count: filter_names.count = filter_patterns.count
@@ -242,7 +223,6 @@ feature -- Element change
 	set_initial_directory (directory: STRING) is
 			-- Set the initial directory with `directory'.
 		require
-			exists: exists
 			directory_not_void: directory /= Void
 		do
 			!! str_intial_directory.make (directory)
@@ -252,8 +232,6 @@ feature -- Element change
 
 	set_initial_directory_as_current is
 			-- Set the initial directory as the current one.
-		require
-			exists: exists
 		do
 			cwel_open_file_name_set_lpstrinitialdir (item,
 				default_pointer)
@@ -264,7 +242,6 @@ feature -- Element change
 			-- This extension will be automatically added to the
 			-- file name if the user fails to type an extension.
 		require
-			exists: exists
 			extension_not_void: extension/= Void
 		do
 			!! str_default_extension.make (extension)
@@ -277,8 +254,6 @@ feature -- Status report
 	has_flag (a_flags: INTEGER): BOOLEAN is
 			-- Is `a_flags' set in `flags'?
 			-- See class WEL_OFN_CONSTANTS for `a_flags' values.
-		require
-			exists: exists
 		do
 			Result := flag_set (flags, a_flags)
 		end
@@ -288,7 +263,6 @@ feature {NONE} -- Implementation
 	set_parent (a_parent: WEL_COMPOSITE_WINDOW) is
 			-- Set the parent window with `a_parent'.
 		require
-			exists: exists
 			a_parent_not_void: a_parent /= Void
 			a_parent_exists: a_parent.exists
 		do

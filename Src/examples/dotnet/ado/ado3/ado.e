@@ -20,6 +20,9 @@ indexing
 
 class
 	ADO
+	
+inherit
+	EXCEPTIONS
 
 create
 	make
@@ -66,7 +69,7 @@ feature -- Initialization
 		rescue
 				-- Rescue any exception and display corresponding error message
 			io.put_string ("%NThe following error occured: ")
-			io.put_string (feature {EXCEPTION_MANAGER}.last_exception.message)
+			io.put_string (tag_name)
 			io.read_line
 			retried := True
 			retry

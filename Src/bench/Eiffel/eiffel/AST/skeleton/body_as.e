@@ -253,11 +253,6 @@ feature -- New feature description
 					if not is_deferred_external then
 						create extern_proc.make (extension)
 
-	-- Assertions and Rescue compound are not supported in
-	-- externals.
-	--					extern_proc.set_encapsulated
-	--						(content.has_assertion or else content.has_rescue)
-
 							-- if there's a macro or a signature then encapsulate
 						extern_proc.set_encapsulated (extension.need_encapsulation)
 						proc := extern_proc
@@ -314,11 +309,6 @@ feature -- New feature description
 					end
 					if not is_deferred_external and not is_attribute_external then
 						create extern_func.make (extension)
-
-	-- Assertions and Rescue compound are not supported in
-	-- externals.
-	--					extern_func.set_encapsulated
-	--						(content.has_assertion or else content.has_rescue)
 
 							-- if there's a macro or a signature then encapsulate
 						extern_func.set_encapsulated (extension.need_encapsulation)

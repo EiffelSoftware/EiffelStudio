@@ -393,7 +393,7 @@ feature -- Basic operations
 			end
 		end
 
-feature -- Messages
+feature {NONE}-- Messages
 
 	notify (control: WEL_CONTROL; notify_code: INTEGER) is
 			-- A `notify_code' is received for `control'.

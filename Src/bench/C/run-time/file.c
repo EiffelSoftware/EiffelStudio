@@ -1607,11 +1607,8 @@ int gid;
 
 	for (i=0; i< NGROUPS_MAX; i++)
 		if (group_list[i] == gid)
-			{fprintf (stderr, "eif_group_in_list: True\n");
 			return (EIF_BOOLEAN) '\01';
-			}
 
-	fprintf (stderr, "eif_group_in_list: False\n");
 	return (EIF_BOOLEAN) '\0';
 }
 

@@ -4,7 +4,7 @@ class BODY_SERVER
 
 inherit
 
-	READ_SERVER [FEATURE_AS_B]
+	READ_SERVER [FEATURE_AS_B, BODY_ID]
 		rename
 			item as server_item,
 			change_id as server_change_id
@@ -13,7 +13,7 @@ inherit
 		redefine
 			ontable, updated_id, trace
 		end;
-	READ_SERVER [FEATURE_AS_B]
+	READ_SERVER [FEATURE_AS_B, BODY_ID]
 		redefine
 			item, ontable, updated_id, change_id, trace
 		select
@@ -26,7 +26,7 @@ creation
 	
 feature 
 
-	ontable: O_N_TABLE is
+	ontable: O_N_TABLE [BODY_ID] is
 			-- Mapping table between old ids and new ids.
 			-- Used by `change_id'
 		require else
@@ -35,15 +35,15 @@ feature
 			Result := System.onbidt
 		end;
 
-	updated_id (i: INTEGER): INTEGER is
+	updated_id (i: BODY_ID): BODY_ID is
 		do
 			Result := ontable.item (i)
 debug
-if result /= i then
+if not equal (Result, i) then
 	io.error.putstring ("updated_id: ");
-	io.error.putint (i);
+	i.trace;
 	io.error.putstring (" to ");
-	io.error.putint (Result);
+	Result.trace;
 	io.error.new_line;
 end;
 end;
@@ -55,13 +55,13 @@ end;
 			!!Result.make;
 		end;
 
-	offsets: EXTEND_TABLE [SERVER_INFO, INTEGER] is
+	offsets: EXTEND_TABLE [SERVER_INFO, CLASS_ID] is
 			-- Class offsets
 		do
 			Result := Ast_server;
 		end;
 
-	item (an_id: INTEGER): FEATURE_AS_B is
+	item (an_id: BODY_ID): FEATURE_AS_B is
 			-- Body of id `an_id'. Look first in the temporary
 			-- body server. It not present, look in itself.
 		require else
@@ -69,7 +69,7 @@ end;
 	   do
 debug
 io.error.putstring ("item ");
-io.error.putint (an_id);
+an_id.trace
 end;
 			if Tmp_body_server.has (an_id) then
 debug
@@ -84,7 +84,7 @@ end;
 			end;
 		end;
 
-	info (an_id: INTEGER): READ_INFO is
+	info (an_id: BODY_ID): READ_INFO is
 			-- Info for item of id `an_id'.
 		require
 			has_an_id: Tmp_body_server.has (an_id) or else has (an_id);
@@ -96,15 +96,15 @@ end;
 			end;
 		end;
 
-	change_id (new_value, old_value: INTEGER) is
+	change_id (new_value, old_value: BODY_ID) is
 		require else
 			Tmp_body_server.has (old_value)
 		do
 debug
 io.error.putstring ("change_id ");
-io.error.putint (old_value);
+old_value.trace;
 io.error.putstring (" to ");
-io.error.putint (new_value);
+new_value.trace;
 io.error.new_line;
 end;
 			if has (old_value) then
@@ -136,7 +136,7 @@ end;
 				after
 			loop
 				io.error.putstring ("%T");
-				io.error.putint (key_for_iteration);
+				key_for_iteration.trace;
 				if item_for_iteration = Void then
 					io.error.putstring (" VOID ELEMENT");
 				end;

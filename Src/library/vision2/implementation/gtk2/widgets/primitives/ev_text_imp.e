@@ -239,21 +239,74 @@ feature -- Access
 			feature {EV_GTK_EXTERNALS}.g_free (temp_text)
 		end
 
-	line (i: INTEGER): STRING is
-			-- Returns the content of the `i'th line.
+	line (a_line: INTEGER): STRING is
+			-- Returns the content of line `a_line'.
 		local
-			a_start_iter, a_end_iter: EV_GTK_TEXT_ITER_STRUCT
+			a_start_iter: EV_GTK_TEXT_ITER_STRUCT
+			a_end_iter: POINTER
 			temp_text: POINTER
 			a_success: BOOLEAN
+			i: INTEGER
 		do
 			create a_start_iter.make
-			create a_end_iter.make
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_line (text_buffer, a_start_iter.item, i - 1)
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_line (text_buffer, a_end_iter.item, i - 1)
-			a_success := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_forward_display_line_end (text_view, a_end_iter.item)
-			temp_text := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_text (text_buffer, a_start_iter.item, a_end_iter.item, False)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_start_iter (text_buffer, a_start_iter.item)
+			from
+				i := 1
+			until
+				i = a_line
+			loop
+				a_success := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_forward_display_line (text_view, a_start_iter.item)
+				i := i + 1
+			end
+			
+			a_end_iter := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_iter_copy (a_start_iter.item)
+			a_success := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_forward_display_line_end (text_view, a_end_iter)
+			temp_text := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_text (text_buffer, a_start_iter.item, a_end_iter, False)
 			create Result.make_from_c (temp_text)
+			
 			feature {EV_GTK_EXTERNALS}.g_free (temp_text)
+			feature {EV_GTK_EXTERNALS}.g_free (a_end_iter)
+		end
+		
+	first_position_from_line_number (a_line: INTEGER): INTEGER is
+			-- Position of the first character on line `a_line'.
+		local
+			a_iter: EV_GTK_TEXT_ITER_STRUCT
+			a_success: BOOLEAN
+			i: INTEGER
+		do
+			create a_iter.make
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_start_iter (text_buffer, a_iter.item)
+			from
+				i := 1
+			until
+				i = a_line
+			loop
+				a_success := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_forward_display_line (text_view, a_iter.item)
+				i := i + 1
+			end
+			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_iter_get_offset (a_iter.item) + 1
+		end
+
+	last_position_from_line_number (a_line: INTEGER): INTEGER is
+			-- Position of the last character on line `a_line'.
+		local
+			a_iter: EV_GTK_TEXT_ITER_STRUCT
+			a_success: BOOLEAN
+			i: INTEGER
+		do
+			create a_iter.make
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_start_iter (text_buffer, a_iter.item)
+			from
+				i := 1
+			until
+				i = a_line
+			loop
+				a_success := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_forward_display_line (text_view, a_iter.item)
+				i := i + 1
+			end
+			a_success := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_forward_display_line_end (text_view, a_iter.item)
+			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_iter_get_offset (a_iter.item) - a_line
 		end
 
 feature -- Status report
@@ -261,40 +314,56 @@ feature -- Status report
 	line_count: INTEGER is
 			-- Number of display lines present in widget.
 		local
+			a_iter: EV_GTK_TEXT_ITER_STRUCT
+			
 		do
+			from
+				Result := 1
+				create a_iter.make
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_start_iter (text_buffer, a_iter.item)
+			until
+				not feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_forward_display_line (text_view, a_iter.item)
+			loop
+				Result := Result + 1
+			end
 		end
 
 	current_line_number: INTEGER is
 			-- Returns the number of the display line the cursor currently
 			-- is on.
+		local
+			a_iter: EV_GTK_TEXT_ITER_STRUCT
 		do
+			-- Count the number of iterations from insert marker to end of text.
+			from
+				create a_iter.make
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_mark (
+									text_buffer,
+									a_iter.item,
+									feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_insert (text_buffer)
+				)
+			until
+				not feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_forward_display_line (text_view, a_iter.item)
+			loop
+				Result := Result + 1
+			end
+				-- Take this result from the total number of display lines to work out current line.
+			Result := line_count - Result
 		end
 
 	caret_position: INTEGER is
 			-- Current position of the caret.
 		local
-			a_start_iter: EV_GTK_TEXT_ITER_STRUCT
+			a_iter: EV_GTK_TEXT_ITER_STRUCT
 		do
-			create a_start_iter.make
+			create a_iter.make
 			-- Initialize out iter with the current caret/insert position.
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_mark (
 								text_buffer,
-								a_start_iter.item,
+								a_iter.item,
 								feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_insert (text_buffer)
 			)
-			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_iter_get_offset (a_start_iter.item) + 1
-		end
-
-	first_position_from_line_number (i: INTEGER): INTEGER is
-			-- Position of the first character on the `i'-th line.
-		local
-		do
-		end
-
-	last_position_from_line_number (i: INTEGER): INTEGER is
-			-- Position of the last character on the `i'-th line.
-		local
-		do
+			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_iter_get_offset (a_iter.item) + 1
 		end
 		
 	has_word_wrapping: BOOLEAN

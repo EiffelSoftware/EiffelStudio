@@ -17,11 +17,12 @@ feature -- Access
 	Serialization_error: INTEGER is 0x04000001
 			-- Error occured during serialization
 
-	Ref_assembly_not_found_error: INTEGER is 0x04000002
+	Assembly_not_found_error: INTEGER is 0x04000002
 			-- Assembly not found
 
 	Type_initialization_error: INTEGER is 0x04000003
 			-- Type initialization error
+
 
 feature {NONE} -- Implementation
 
@@ -30,7 +31,7 @@ feature {NONE} -- Implementation
 		once
 			create Result.make (3)
 			Result.put ("Could not serialize assembly", Serialization_error)
-			Result.put ("Could not find referenced assembly", Ref_assembly_not_found_error)
+			Result.put ("Could not find assembly", Assembly_not_found_error)
 			Result.put ("Could not serialize type.%NThis is usually due to an implementation problem in one of its features, or a missing resource.", Type_initialization_error)
 		end
 		

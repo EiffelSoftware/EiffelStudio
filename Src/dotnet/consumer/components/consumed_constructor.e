@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 		require
 			non_void_eiffel_name: en /= Void
 			valid_eiffel_name: not en.is_empty
-			non_void_arguments: args /= Void
+			non_void_arguments: arguments /= Void
 			a_type_not_void: a_type /= Void
 		do
 			entity_make (en, pub, a_type)

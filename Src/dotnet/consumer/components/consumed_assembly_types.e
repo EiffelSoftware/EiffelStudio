@@ -146,8 +146,8 @@ feature -- Element Settings
 			end
 			flags.put (flag, index)
 		ensure
-			eiffel_name_inserted: eiffel_names.item (index) = en
-			dotnet_name_inserted: dotnet_names.item (index) = dn
+			eiffel_name_inserted: eiffel_names.item (eiffel_names.count) = en
+			dotnet_name_inserted: dotnet_names.item (dotnet_names.count) = dn
 		end
 
 end -- class CONSUMED_ASSEMBLY_TYPES

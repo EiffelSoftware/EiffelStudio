@@ -69,6 +69,7 @@ feature {NONE} -- Implementation
 			-- Serialize object field `parent_field' with value `obj' into file `f'.
 			-- XML is written after `tab_count' tabs.
 		require
+			non_void_object: obj /= Void
 			valid_tab_count: tab_count >= 0
 			non_void_file: f /= Void
 			non_void_parent_field: parent_field /= Void
@@ -449,7 +450,7 @@ feature {NONE} -- Implementation
 				i := 1
 				nb := s.count
 			variant
-				nb - i + 1
+				i
 			until
 				i > nb
 			loop

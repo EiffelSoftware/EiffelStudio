@@ -163,6 +163,7 @@ feature -- Basic Operation
 		require
 			not_initialized: not initialized
 		local
+			rescued: BOOLEAN
 			i, nb, arg_count, index: INTEGER
 			l_fields: ARRAYED_LIST [CONSUMED_FIELD]
 			l_functions, l_other_functions: ARRAYED_LIST [CONSUMED_FUNCTION]
@@ -183,126 +184,130 @@ feature -- Basic Operation
 			cp_property: CONSUMED_PROPERTY
 			cp_event: CONSUMED_EVENT
 		do
-			check
-				non_void_internal_constructors: internal_constructors /= Void
-				non_void_internal_member: internal_members /= Void
---				non_void_internal_fields: internal_fields /= Void
---				non_void_internal_methods: internal_methods /= Void
-				non_void_internal_properties: internal_properties /= Void
-				non_void_internal_events: internal_events /= Void
-			end
-			create tc.make
-			create l_fields.make (0)
-			create l_functions.make (0)
-			create l_procedures.make (0)
-			create l_properties.make (0)
-			create l_events.make (0)
-			create reserved_names.make (100)
-
-				-- Add constructors.
-			from
-				i := 0
-				nb := internal_constructors.count
-			until
-				i = nb
-			loop
-				cons := internal_constructors.item (i)
-				if is_consumed_method (cons) then
-					tc.extend (create {CONSTRUCTOR_SOLVER}.make (cons))					
+			if not rescued then
+				check
+					non_void_internal_constructors: internal_constructors /= Void
+					non_void_internal_member: internal_members /= Void
+--					non_void_internal_fields: internal_fields /= Void
+--					non_void_internal_methods: internal_methods /= Void
+					non_void_internal_properties: internal_properties /= Void
+					non_void_internal_events: internal_events /= Void
 				end
-				i := i + 1
-			end
-			
-				-- Initialize overload solver.
-			initialize_overload_solver
-				-- Resolve oveload conflicts.
-			overload_solver.set_reserved_names (reserved_names)
-			overload_solver.solve
-			
-				-- Add methods and fields.
-			from
-				i := 0
-				nb := internal_members.count
-			until
-				i = nb
-			loop
-				l_member := internal_members.item (i)
-				if l_member.member_type = feature {MEMBER_TYPES}.method then
-					l_meth ?= l_member
-					check
-						is_method: l_meth /= Void
+				create tc.make
+				create l_fields.make (0)
+				create l_functions.make (0)
+				create l_procedures.make (0)
+				create l_properties.make (0)
+				create l_events.make (0)
+				create reserved_names.make (100)
+	
+					-- Add constructors.
+				from
+					i := 0
+					nb := internal_constructors.count
+				until
+					i = nb
+				loop
+					cons := internal_constructors.item (i)
+					if is_consumed_method (cons) then
+						tc.extend (create {CONSTRUCTOR_SOLVER}.make (cons))					
 					end
-					if not is_property_or_event (l_meth) then
-						if is_function (l_meth) then
-							cp_function := consumed_function (l_meth, False)
-							if cp_function /= Void then
-								l_functions.extend (cp_function)
+					i := i + 1
+				end
+				
+					-- Initialize overload solver.
+				initialize_overload_solver
+					-- Resolve oveload conflicts.
+				overload_solver.set_reserved_names (reserved_names)
+				overload_solver.solve
+				
+					-- Add methods and fields.
+				from
+					i := 0
+					nb := internal_members.count
+				until
+					i = nb
+				loop
+					l_member := internal_members.item (i)
+					if l_member.member_type = feature {MEMBER_TYPES}.method then
+						l_meth ?= l_member
+						check
+							is_method: l_meth /= Void
+						end
+						if not is_property_or_event (l_meth) then
+							if is_function (l_meth) then
+								cp_function := consumed_function (l_meth, False)
+								if cp_function /= Void then
+									l_functions.extend (cp_function)
+								end
+							else
+								cp_procedure := consumed_procedure (l_meth, False)
+								if cp_procedure /= Void then
+									l_procedures.extend (cp_procedure)
+								end
 							end
 						else
-							cp_procedure := consumed_procedure (l_meth, False)
-							if cp_procedure /= Void then
-								l_procedures.extend (cp_procedure)
+							-- The method will be added at the same time than the property or the event.
+						end
+					elseif l_member.member_type = feature {MEMBER_TYPES}.field then
+						l_field ?= l_member
+						check
+							is_field: l_field /= Void
+						end
+						if is_consumed_field (l_field) then
+							l_fields.extend (consumed_field (l_field))
+							if is_public_static_field (l_field) then
+								l_procedures.extend (attribute_setter_feature (l_field, l_fields.last.eiffel_name))
 							end
 						end
-					else
-						-- The method will be added at the same time than the property or the event.
-					end
-				elseif l_member.member_type = feature {MEMBER_TYPES}.field then
-					l_field ?= l_member
-					check
-						is_field: l_field /= Void
-					end
-					if is_consumed_field (l_field) then
-						l_fields.extend (consumed_field (l_field))
-						if is_public_static_field (l_field) then
-							l_procedures.extend (attribute_setter_feature (l_field, l_fields.last.eiffel_name))
+					elseif l_member.member_type = feature {MEMBER_TYPES}.property then
+						l_property ?= l_member
+						check
+							is_property: l_property /= Void
+						end
+						cp_property := consumed_property (l_property)
+						if cp_property /= Void then
+							l_properties.extend (cp_property)	
+						end
+					elseif l_member.member_type = feature {MEMBER_TYPES}.event then
+						l_event ?= l_member
+						check
+							is_event: l_event /= Void
+						end
+						cp_event := consumed_event (l_event)
+						if cp_event /= Void then
+							l_events.extend (cp_event)	
 						end
 					end
-				elseif l_member.member_type = feature {MEMBER_TYPES}.property then
-					l_property ?= l_member
-					check
-						is_property: l_property /= Void
-					end
-					cp_property := consumed_property (l_property)
-					if cp_property /= Void then
-						l_properties.extend (cp_property)	
-					end
-				elseif l_member.member_type = feature {MEMBER_TYPES}.event then
-					l_event ?= l_member
-					check
-						is_event: l_event /= Void
-					end
-					cp_event := consumed_event (l_event)
-					if cp_event /= Void then
-						l_events.extend (cp_event)	
-					end
+					i := i + 1
 				end
-				i := i + 1
-			end
 
-			consumed_type.set_properties (l_properties)
-			consumed_type.set_events (l_events)
-			consumed_type.set_constructors (solved_constructors (tc))
-			consumed_type.set_fields (l_fields)
-			consumed_type.set_procedures (l_procedures)
-			if consumed_type.is_enum then
-				from
-					l_other_functions := l_functions
-					l_other_functions.start
-					create l_functions.make (l_other_functions.count + Additional_enum_features)
-				until
-					l_other_functions.after
-				loop
-					l_functions.extend (l_other_functions.item)
-					l_other_functions.forth
+				consumed_type.set_properties (l_properties)
+				consumed_type.set_events (l_events)
+				consumed_type.set_constructors (solved_constructors (tc))
+				consumed_type.set_fields (l_fields)
+				consumed_type.set_procedures (l_procedures)
+				if consumed_type.is_enum then
+					from
+						l_other_functions := l_functions
+						l_other_functions.start
+						create l_functions.make (l_other_functions.count + Additional_enum_features)
+					until
+						l_other_functions.after
+					loop
+						l_functions.extend (l_other_functions.item)
+						l_other_functions.forth
+					end
+					l_functions.extend (infix_and_feature (internal_referenced_type))
+					l_functions.extend (infix_or_feature (internal_referenced_type))
+					l_functions.extend (from_integer_feature (internal_referenced_type))
+					l_functions.extend (to_integer_feature (internal_referenced_type))
 				end
-				l_functions.extend (infix_and_feature (internal_referenced_type))
-				l_functions.extend (infix_or_feature (internal_referenced_type))
-				l_functions.extend (from_integer_feature (internal_referenced_type))
-				l_functions.extend (to_integer_feature (internal_referenced_type))
+				consumed_type.set_functions (l_functions)			
+				initialized := True
+			else
+				initialized := False
 			end
-			consumed_type.set_functions (l_functions)			
-			initialized := True
 		ensure
 			non_void_constructors: consumed_type.constructors /= Void
 			non_void_fields: consumed_type.fields /= Void
@@ -310,6 +315,9 @@ feature -- Basic Operation
 			non_void_functions: consumed_type.functions /= Void
 			non_void_properties: consumed_type.properties /= Void
 			non_void_events: consumed_type.events /= Void
+		rescue
+			rescued := True
+			retry
 		end
 
 

@@ -104,7 +104,6 @@ feature -- Evaluation
 				set_context_data (Void, context_class)
 			end
 
-
 				--| Compute and get `expression_byte_node'
 			get_expression_byte_node
 
@@ -115,9 +114,7 @@ feature -- Evaluation
 				end
 
 					--| Initializing
-				tmp_result_static_type := Void
-				tmp_result_value := Void
-				tmp_target := Void
+				clean_temp_data
 				
 					--| concrete evaluation
 				process_expression_evaluation (expression_byte_node)
@@ -135,11 +132,21 @@ feature -- Evaluation
 						error_message /= Void
 					end
 				end
+					--| Clean temporary data
+				clean_temp_data				
 			else
 				final_result_value := Void
 				final_result_type := Void
 				final_result_static_type := Void				
 			end
+		end
+		
+	clean_temp_data is
+			-- Clean temporary data used for evaluation
+		do
+			tmp_result_static_type := Void
+			tmp_result_value := Void
+			tmp_target := Void
 		end
 		
 feature -- EXPR_B evaluation

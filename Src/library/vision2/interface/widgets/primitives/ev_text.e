@@ -13,14 +13,16 @@ class
 inherit
 	EV_TEXT_COMPONENT
 		redefine
-			implementation
+			implementation,
+			is_in_default_state
 		end
 		
 	EV_FONTABLE
 		undefine
 			is_in_default_state
 		redefine
-			implementation
+			implementation,
+			is_in_default_state
 		end
 	
 create
@@ -42,7 +44,21 @@ feature -- Access
 		end
 
 feature -- Status report
-	
+
+	has_word_wrapping: BOOLEAN is
+			-- Is word wrapping enabled?
+			-- If enabled, lines that are too long to be displayed
+			-- in `Current' will be wrapped onto new lines.
+			-- If disabled, a horizontal scroll bar will be displayed
+			-- and lines will not be wrapped.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.has_word_wrapping
+		ensure
+			bridge_ok: Result = implementation.has_word_wrapping
+		end
+		
 	current_line_number: INTEGER is
 			-- Line currently containing cursor.
 		require
@@ -88,6 +104,26 @@ feature -- Status report
 		end
 
 feature -- Basic operation
+
+	enable_word_wrapping is
+			-- Ensure `has_word_wrapping' is True.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.enable_word_wrapping
+		ensure
+			word_wrapping_enabled: has_word_wrapping
+		end
+		
+	disable_word_wrapping is
+			-- Ensure `has_word_wrapping' is False.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.disable_word_wrapping
+		ensure
+			word_wrapping_disabled: not has_word_wrapping
+		end
 
 	scroll_to_line (i: INTEGER) is
 			-- Ensure that line `i' is visible in `Current'.
@@ -145,6 +181,14 @@ feature -- Contract support
 			-- Has last line at least one character?
 		do
 			Result := implementation.last_line_not_empty
+		end
+		
+feature {NONE} -- Contract support
+
+	is_in_default_state: BOOLEAN is
+			-- Is `Current' in its default state?
+		do
+			Result := Precursor {EV_TEXT_COMPONENT} and Precursor {EV_FONTABLE} and has_word_wrapping
 		end
 
 feature {EV_ANY_I} -- Implementation

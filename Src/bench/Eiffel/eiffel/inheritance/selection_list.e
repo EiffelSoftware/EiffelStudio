@@ -480,13 +480,13 @@ if item.a_feature.written_class > System.any_class.compiled_class and
 				--io.error.putchar (' ');
 				item.a_feature.rout_id_set.trace;
 				io.error.putstring (" {body_id = ");
-				io.error.putint (item.a_feature.body_id.id);
+				item.a_feature.body_id.trace;
 				io.error.putstring ("} written class: ");
 				io.error.putstring (item.a_feature.written_class.class_name);
 				io.error.new_line;
 				io.error.putstring ("Written in feature name: ");
 
-	if System.Feat_tbl_server.has (item.a_feature.written_in.id) then
+	if System.Feat_tbl_server.has (item.a_feature.written_in) then
 				io.error.putstring
 (item.a_feature.written_class.feature_table.feature_of_body_id
 (item.a_feature.body_id).feature_name);

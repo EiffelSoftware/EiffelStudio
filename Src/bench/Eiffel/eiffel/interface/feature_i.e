@@ -699,15 +699,15 @@ feature -- Export checking
 	suppliers: TWO_WAY_SORTED_SET [CLASS_ID] is
 			-- Class ids of all the suppliers of the feature
 		require
-			Tmp_depend_server.has (written_in.id) or else
-			Depend_server.has (written_in.id)
+			Tmp_depend_server.has (written_in) or else
+			Depend_server.has (written_in)
 		local
 			class_dependance: CLASS_DEPENDANCE
 		do
-			if Tmp_depend_server.has (written_in.id) then
-				class_dependance := Tmp_depend_server.item (written_in.id)
+			if Tmp_depend_server.has (written_in) then
+				class_dependance := Tmp_depend_server.item (written_in)
 			else
-				class_dependance := Depend_server.item (written_in.id)
+				class_dependance := Depend_server.item (written_in)
 			end;
 			Result := class_dependance.item (feature_name).suppliers
 		end;
@@ -734,19 +734,19 @@ feature -- Check
 			if body_index /= Void then
 				bid := Body_index_table.item (body_index);
 				if is_code_replicated then
-					Result := Rep_feat_server.item (bid.id);
+					Result := Rep_feat_server.item (bid);
 				elseif
-					Tmp_body_server.has (bid.id) or Body_server.has (bid.id)
+					Tmp_body_server.has (bid) or Body_server.has (bid)
 				then
-					Result := Body_server.item (bid.id);
+					Result := Body_server.item (bid);
 				end
 			end;
 			if Result = Void then
-				if Tmp_ast_server.has (written_in.id) then
+				if Tmp_ast_server.has (written_in) then
 					-- Means a degree 4 error has occurred so the
 					-- best we can do is to search through the
 					-- class ast and find the feature as
-					class_ast := Tmp_ast_server.item (written_in.id)
+					class_ast := Tmp_ast_server.item (written_in)
 					Result ?= class_ast.feature_with_name (feature_name)
 				end
 			end;
@@ -766,7 +766,7 @@ debug ("SERVER", "TYPE_CHECK");
 	io.error.putstring (feature_name);
 	io.error.new_line;
 	io.error.putstring ("body id: ");
-	io.error.putint (body_id.id);
+	body_id.trace;
 	io.error.new_line;
 end;
 				-- make the type check
@@ -815,7 +815,7 @@ feature -- Byte code computation
 			byte_code: BYTE_CODE;
 			melted_feature: MELT_FEATURE;
 		do
-			byte_code := Byte_server.item (body_id.id);
+			byte_code := Byte_server.item (body_id);
 
 			byte_context.set_byte_code (byte_code);
 
@@ -878,20 +878,20 @@ debug ("SERVER")
 	io.putstring (" of class ");
 	io.putstring (written_class.class_name);
 	io.putstring (" old: ");
-	io.putint (old_body_id.id);
+	io.putstring (old_body_id.dump);
 	io.putstring (" new: ");
-	io.putint (new_body_id.id);
+	io.putstring (new_body_id.dump);
 	io.new_line;
 end;
 			if not is_code_replicated then
-				Body_server.change_id (new_body_id.id, old_body_id.id);
+				Body_server.change_id (new_body_id, old_body_id);
 			else
-				Rep_feat_server.change_id (new_body_id.id, old_body_id.id);
+				Rep_feat_server.change_id (new_body_id, old_body_id);
 			end;
-			Byte_server.change_id (new_body_id.id, old_body_id.id);
+			Byte_server.change_id (new_body_id, old_body_id);
 				-- Update the body index table
 			Body_index_table.force (new_body_id, body_index);
-			System.onbidt.put (new_body_id.id, old_body_id.id);
+			System.onbidt.put (new_body_id, old_body_id);
 			!!changed_body_id_info.make (is_code_replicated, body_index, new_body_id);
 			System.changed_body_ids.force (changed_body_id_info, old_body_id)
 		end;
@@ -1690,10 +1690,10 @@ feature -- C code generation
 					-- and encoded name in `used_features_log_file' from SYSTEM_I
 				generate_header (file);
 
-				if Tmp_opt_byte_server.has (body_id.id) then
-					byte_code := Tmp_opt_byte_server.disk_item (body_id.id);
+				if Tmp_opt_byte_server.has (body_id) then
+					byte_code := Tmp_opt_byte_server.disk_item (body_id);
 				else
-					byte_code := Byte_server.disk_item (body_id.id);
+					byte_code := Byte_server.disk_item (body_id);
 				end
 
 					-- Generation of C code for an Eiffel feature written in
@@ -1743,7 +1743,7 @@ feature -- Debug purpose
 			io.error.putstring ("}");;
 			io.error.putstring (" {");
 			io.error.putstring ("body_index = ");
-			io.error.putint (body_index.id);
+			body_index.trace;
 			io.error.putstring ("}");;
 			io.error.putstring (" {");
 			io.error.putstring ("written in = ");
@@ -1752,7 +1752,7 @@ feature -- Debug purpose
 			io.error.putstring (" {");
 			io.error.putstring ("body_id = ");
 			if body_index /= Void and then Body_index_table.has (body_index) then
-				io.error.putint (body_id.id);
+				body_id.trace
 			else
 				io.error.putint (0)
 			end;
@@ -1846,7 +1846,7 @@ feature -- Debugging
 			-- Compute the list of breakable AST nodes
 			-- (will be used when generating the byte
 			-- code array). Specific to debug mode.
-			fa := Body_server.disk_item (body_id.id)
+			fa := Body_server.disk_item (body_id)
 				-- `disk_item' does not keep the object in the cache
 				-- => if `find_breakable' has some side effect, it won't
 				-- have any effect on the next compilation
@@ -1862,7 +1862,7 @@ feature -- Debugging
 			-- Specific to debug mode.
 			Byte_context.set_instruction_line (context.instruction_line);
 
-			bc := Byte_server.disk_item (body_id.id);
+			bc := Byte_server.disk_item (body_id);
 				-- See above for the reason why we use `disk_item' and not `item'
 
 			Byte_context.set_debug_mode (True);
@@ -2000,7 +2000,7 @@ feature -- Inlining
 			args: FEAT_ARG
 			wc: CLASS_C
 		do
-			byte_code := Byte_server.item (body_id.id);
+			byte_code := Byte_server.item (body_id);
 
 			type_a ?= type;
 			Result := (type_a = Void or else not (type_a.is_expanded or else type_a.is_bits))

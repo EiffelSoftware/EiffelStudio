@@ -113,7 +113,7 @@ feature {NONE} -- Initialization
 						five_arguments: command_line.argument_array.count = 6
 					end
 						-- For Visual Studio launches, the arguments are as follows:
-						-- 1. The location to the png files for the wizard
+						-- 1. The location to the installation directory of Build. This points to the root directory of Build.
 						-- 2. "visualstudio_project" which informs Build it has been launched from VS.
 						-- 3. Path to where the project will be created.
 						-- 4. Project name.

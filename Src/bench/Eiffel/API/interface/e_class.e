@@ -155,8 +155,7 @@ feature -- Access
 			-- Are there any generic instantiations of Current
 			-- in the system or is Current a non generic class?
 		do
-			Result :=
-					(types /= Void) and then (not types.empty)
+			Result := (types /= Void) and then (not types.empty)
 		end
 
 	is_obsolete: BOOLEAN is
@@ -169,7 +168,7 @@ feature -- Access
 			-- Feature whose internal name is `n'
 		require
 			valid_n: n /= Void
-			has_feature_table: has_feature_table
+			has_feature_table: Feat_tbl_server.has (id)
 		local
 			f: FEATURE_I
 		do
@@ -183,7 +182,7 @@ feature -- Access
 			-- Feature whose body id `bid'.
 		require
 			valid_body_id: bid /= Void
-			has_feature_table: has_feature_table
+			has_feature_table: Feat_tbl_server.has (id)
 		local
 			feat: FEATURE_I
 		do
@@ -197,7 +196,7 @@ feature -- Access
 			-- Feature whose routine id `rout_id'.
 		require
 			valid_rout_id: rout_id /= Void
-			has_feature_table: has_feature_table
+			has_feature_table: Feat_tbl_server.has (id)
 		local
 			feat: FEATURE_I
 		do
@@ -210,7 +209,7 @@ feature -- Access
 	feature_table: E_FEATURE_TABLE is	
 			-- Feature table for current class
 		require
-			has_feature_table: has_feature_table
+			has_feature_table: Feat_tbl_server.has (id)
 		do
 			Result := comp_feature_table.api_table
 		ensure
@@ -256,7 +255,7 @@ feature -- Access
 	written_in_features: LIST [E_FEATURE] is
 			-- List of features defined in current class
 		require
-			has_feature_table: has_feature_table
+			has_feature_table: Feat_tbl_server.has (id)
 		do
 			Result := comp_feature_table.written_in_features
 		ensure
@@ -276,14 +275,7 @@ feature -- Server Access
 	has_ast: BOOLEAN is
 			-- Does Current class have an AST structure?
 		do
-			Result := Ast_server.has (id) or else
-				Tmp_ast_server.has (id)
-		end
-
-	has_feature_table: BOOLEAN is
-			-- Does Current class have a feature table?
-		do
-			Result := Feat_tbl_server.has (id)
+			Result := Ast_server.has (id) or else Tmp_ast_server.has (id)
 		end
 
 	click_list: CLICK_LIST is
@@ -587,8 +579,8 @@ feature {COMPILER_EXPORTER} -- Implementation
 		do
 			if Tmp_feat_tbl_server.has (id) then
 				Result := Tmp_feat_tbl_server.item (id).item (n)
-			elseif Feat_tbl_server.has (id) then
-				Result := Feat_tbl_server.item (id).item (n)
+			elseif Feat_tbl_server.server_has (id) then
+				Result := Feat_tbl_server.server_item (id).item (n)
 			end
 		end
 

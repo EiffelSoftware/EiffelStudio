@@ -27,7 +27,6 @@ feature
 			-- added by samik			
 			set_focus_string (Focus_labels.group_label)
 			-- end of samik	
-			initialize_focus
 		end;
 
 	focus_source: WIDGET is

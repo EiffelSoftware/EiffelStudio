@@ -176,7 +176,7 @@ public class EiffelClassGenerator: Globals
 		Type [] types;
 		int  i, j, typesLength;
 		EiffelClass GeneratedEiffelClass;
-		EiffelAssemblyFactory AssemblyFactory = null;
+		EiffelAssembly AssemblyFactory = null;
 		XmlCodeGenerator XmlGenerator = null;
 		EiffelClassFactory ClassFactory;
 		bool EiffelAssemblyGenerated = false;
@@ -199,16 +199,14 @@ public class EiffelClassGenerator: Globals
 				{	
 					if( !EiffelAssemblyGenerated )
 					{
-						AssemblyFactory = GeneratedAssemblyFactory( types [j] );
-						AssemblyFactory.SetEiffelClusterPath( EiffelPath( assembly, PathName ) );
-						Descriptor.Make( AssemblyFactory.AssemblyName, AssemblyFactory.AssemblyVersion, AssemblyFactory.AssemblyCulture, AssemblyFactory.AssemblyPublicKey );
+						AssemblyFactory = GeneratedAssemblyFactory( types [j], EiffelPath( assembly, PathName ) );
+						Descriptor = AssemblyFactory.AssemblyDescriptor;
 						XmlGenerator.StartAssemblyGeneration( AssemblyFactory );
 						EiffelAssemblyGenerated = true;
 					}
 					ClassFactory = ( EiffelClassFactory )ClassTable [( int )ClassIDTable [types [j]]];
 					GeneratedEiffelClass = GeneratedClass( ClassFactory );
 					GeneratedEiffelClass.SetAssemblyDescriptor( Descriptor );
-					AssemblyFactory.AddType( GeneratedEiffelClass );
 					XmlGenerator.GenerateType( GeneratedEiffelClass );	
 				}						
 			}
@@ -225,7 +223,7 @@ public class EiffelClassGenerator: Globals
 		Type [] types;
 		int  i, j, typesLength;
 		EiffelClass GeneratedEiffelClass;
-		EiffelAssemblyFactory AssemblyFactory = null;
+		EiffelAssembly AssemblyFactory = null;
 		EiffelAssembly GeneratedAssembly = null;
 		EiffelCodeGenerator EiffelGenerator = null;
 		EiffelClassFactory ClassFactory;
@@ -249,9 +247,8 @@ public class EiffelClassGenerator: Globals
 				{	
 					if( !EiffelAssemblyGenerated )
 					{
-						AssemblyFactory = GeneratedAssemblyFactory( types [j] );
-						AssemblyFactory.SetEiffelClusterPath( EiffelPath( assembly, PathName ) );
-						Descriptor.Make( AssemblyFactory.AssemblyName, AssemblyFactory.AssemblyVersion, AssemblyFactory.AssemblyCulture, AssemblyFactory.AssemblyPublicKey );
+						AssemblyFactory = GeneratedAssemblyFactory( types [j], EiffelPath( assembly, PathName ) );
+						Descriptor = AssemblyFactory.AssemblyDescriptor;
 						GeneratedAssembly = new EiffelAssembly();
 						GeneratedAssembly.Make( Descriptor, AssemblyFactory.EiffelClusterPath, AssemblyFactory.EmitterVersionNumber );
 						EiffelGenerator.MakeFromInfo( GeneratedAssembly );
@@ -394,6 +391,7 @@ public class EiffelClassGenerator: Globals
 		SelectClause Select;
 		System.Collections.ArrayList NewRenameClauses, NewUndefineClauses, NewRedefineClauses, NewSelectClauses;
 		int i, j, ClauseAdded;
+		ISE.Reflection.Parent ClassParent;
 				
 		GeneratedEiffelClass = new EiffelClass();
 		GeneratedEiffelClass.Make();
@@ -485,7 +483,16 @@ public class EiffelClassGenerator: Globals
 					NewSelectClauses = new System.Collections.ArrayList();
 
 				if( !Parent.Equals( "ANY" ) || ClassFactory.Renames.HasClause( "ANY" ) || ClassFactory.Redefines.HasClause( "ANY" ) || ClassFactory.Undefines.HasClause( "ANY"))
-					GeneratedEiffelClass.AddParent( Parent, NewRenameClauses, NewUndefineClauses, NewRedefineClauses, NewSelectClauses, new System.Collections.ArrayList() );
+				{
+					ClassParent = new ISE.Reflection.Parent();
+					ClassParent.Make( Parent );
+					ClassParent.SetRenameClauses( NewRenameClauses );
+					ClassParent.SetUndefineClauses( NewUndefineClauses );
+					ClassParent.SetRedefineClauses( NewRedefineClauses );
+					ClassParent.SetSelectClauses( NewSelectClauses );
+					ClassParent.SetExportClauses( new System.Collections.ArrayList() );
+					GeneratedEiffelClass.AddParent( ClassParent );
+				}
 			}
 		}
 
@@ -861,14 +868,13 @@ public class EiffelClassGenerator: Globals
 
 	// Generate EiffelAssembly. 
 	// Does not set `EiffelClusterPath'.
-	virtual protected EiffelAssemblyFactory GeneratedAssemblyFactory( Type AssemblyType )
+	virtual protected EiffelAssembly GeneratedAssemblyFactory( Type AssemblyType, String EiffelClusterPath )
 	{
-		EiffelAssemblyFactory AssemblyFactory;
+		EiffelAssembly AssemblyFactory;
+		AssemblyDescriptor Descriptor;
 		String DotNetStrongName, Version, Culture;
+		String assemblyName, assemblyVersion, assemblyCulture, assemblyPublicKey;
 		int CommaIndex, EqualsIndex;
-		
-		AssemblyFactory = new EiffelAssemblyFactory();
-		AssemblyFactory.Make();
 		
 		DotNetStrongName = AssemblyType.AssemblyQualifiedName.Trim();
 		
@@ -876,29 +882,33 @@ public class EiffelClassGenerator: Globals
 		CommaIndex = DotNetStrongName.IndexOf( ',' );
 		DotNetStrongName = DotNetStrongName.Substring( CommaIndex + 1 ).Trim();
 		CommaIndex = DotNetStrongName.IndexOf( ',' );
-		AssemblyFactory.SetAssemblyName( DotNetStrongName.Substring( 0, CommaIndex ) );
+		assemblyName = DotNetStrongName.Substring( 0, CommaIndex );
 		
 		// Set `assembly_version'.
 		DotNetStrongName = DotNetStrongName.Substring( CommaIndex + 1 ).Trim();
 		CommaIndex = DotNetStrongName.IndexOf( ',' );
 		Version = DotNetStrongName.Substring( 0, CommaIndex );
 		EqualsIndex = Version.IndexOf( '=' );
-		AssemblyFactory.SetAssemblyVersion( Version.Substring( EqualsIndex + 1 ) );
+		assemblyVersion = Version.Substring( EqualsIndex + 1 );
 
 		// Set `assembly_culture'.
 		DotNetStrongName = DotNetStrongName.Substring( CommaIndex + 1 ).Trim();
 		CommaIndex = DotNetStrongName.IndexOf( ',' );
 		Culture = DotNetStrongName.Substring( 0, CommaIndex );
 		EqualsIndex = Culture.IndexOf( '=' );
-		AssemblyFactory.SetAssemblyCulture( Culture.Substring( EqualsIndex + 1) );
+		assemblyCulture = Culture.Substring( EqualsIndex + 1);
 
 		// Set `assembly_public_key'.
 		DotNetStrongName = DotNetStrongName.Substring( CommaIndex + 1 ).Trim();
 		EqualsIndex = DotNetStrongName.IndexOf( '=' );
-		AssemblyFactory.SetAssemblyPublicKey( DotNetStrongName.Substring( EqualsIndex + 1 ) );
+		assemblyPublicKey = DotNetStrongName.Substring( EqualsIndex + 1 );
 		
-		// Set `emitter_version_number'.
-		AssemblyFactory.SetEmitterVersionNumber( VersionNumber );
+		// Set `assembly_descriptor'.
+		Descriptor = new AssemblyDescriptor();
+		Descriptor.Make( assemblyName, assemblyVersion, assemblyCulture, assemblyPublicKey );
+
+		AssemblyFactory = new EiffelAssembly();
+		AssemblyFactory.Make( Descriptor, EiffelClusterPath, VersionNumber );
 		
 		return AssemblyFactory;
 	}

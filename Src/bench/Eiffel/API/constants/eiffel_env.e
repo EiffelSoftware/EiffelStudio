@@ -148,13 +148,11 @@ feature -- Access: file name
 			generation_templates_path_not_void: Result /= Void and not Result.is_empty
 		end
 		
-	Assemblies_path (clr_version: STRING): FILE_NAME is
+	Assemblies_path: FILE_NAME is
 			-- Location of Eiffel Assembly Cache.
-		require
-			clr_version_not_void: clr_version /= Void
 		once
 			create Result.make_from_string ("$ISE_EIFFEL")
-			Result.extend_from_array (<<"dotnet", "assemblies", clr_version>>)
+			Result.extend_from_array (<<"dotnet", "assemblies">>)
 		end
 		
 	Default_class_file: FILE_NAME is

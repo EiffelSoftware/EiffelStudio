@@ -61,8 +61,13 @@ feature {NONE} -- Implementation
 					parent_item,
 					cwel_dialog_procedure_address)
 			end
-			if not shown then
-				show
+			if item /= default_pointer then
+				exists := True
+				if not shown then
+					show
+				end
+			else
+				exists := False
 			end
 		end
 

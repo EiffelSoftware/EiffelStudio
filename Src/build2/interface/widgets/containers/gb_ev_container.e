@@ -97,8 +97,10 @@ feature -- Access
 				-- and replace with the new buttons.
 			hbox1.prune (hbox1.i_th (hbox1.count))
 			hbox1.extend (propagate_background_color)
+			hbox1.disable_item_expand (propagate_background_color)
 			hbox2.prune (hbox2.i_th (hbox2.count))
 			hbox2.extend (propagate_foreground_color)
+			hbox2.disable_item_expand (propagate_foreground_color)
 			
 			update_attribute_editor
 			disable_all_items (Result)

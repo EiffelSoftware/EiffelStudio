@@ -18,7 +18,9 @@ inherit
 			hole, build_format_bar, text_window,
 			build_bar, tool_name, close_windows,
 			build_widgets, set_default_size,
-			resize_action
+			resize_action, stone, stone_type,
+			set_stone, synchronize, process_feature,
+			process_class, process_breakable, compatible
 		end
 
 	BAR_AND_TEXT
@@ -26,7 +28,9 @@ inherit
 			hole, build_format_bar, text_window,
 			build_bar, tool_name, close_windows,
 			build_widgets, attach_all, reset,
-			set_default_size, make, resize_action
+			set_default_size, make, resize_action,
+			stone, stone_type, set_stone, synchronize, process_feature,
+			process_class, process_breakable, compatible
 		select
 			attach_all, reset, make
 		end
@@ -48,6 +52,15 @@ feature -- Window Properties
 
 	text_window: ROUTINE_TEXT;
 
+	stone: FEATURE_STONE
+			-- Stone in tool
+
+	stone_type: INTEGER is
+			-- Accept feature type stone
+		do
+			Result := Routine_type
+		end
+
 feature -- Resetting
 
 	reset is
@@ -58,19 +71,117 @@ feature -- Resetting
 			change_class_command.clear;
 			change_routine_command.clear;
 		end;
+
+feature -- Access
+
+	compatible (a_stone: STONE): BOOLEAN is
+			-- Is Current hole compatible with `a_stone'?
+		do
+			Result :=
+				a_stone.stone_type = Routine_type or else
+				a_stone.stone_type = Breakable_type or else
+				a_stone.stone_type = Class_type
+		end;
+
+feature {TEXT_WINDOW} -- Update
+
+	set_stone (s: like stone) is
+			-- Update stone from `s'.
+		do
+			stone := s;
+			if s = Void then
+				set_icon_name (tool_name)
+			else
+				update_edit_bar;
+				set_icon_name (s.icon_name);
+				hole.set_full_symbol;
+				class_hole.set_full_symbol
+			end
+		end;
+
+feature -- Stone updating
+
+	process_feature (a_stone: FEATURE_STONE) is
+		do
+			last_format.execute (a_stone);
+			history.extend (a_stone);
+			update_edit_bar
+		end;
+
+	process_breakable (a_stone: BREAKABLE_STONE) is
+		do
+			stop_hole.receive (a_stone)
+		end;
+
+	process_class (a_stone: CLASSC_STONE) is
+		local
+			c: E_CLASS;
+			ris: ROUT_ID_SET;
+			i: INTEGER;
+			rout_id: INTEGER;
+			fi: E_FEATURE;
+			fs: FEATURE_STONE;
+			temp: STRING
+		do
+			ris := stone.e_feature.rout_id_set;
+			c := a_stone.e_class;
+			from
+				i := 1
+			until
+				i > ris.count
+			loop
+				rout_id := ris.item (i);
+				if rout_id < 0 then
+					rout_id := - rout_id
+				end;
+				fi := c.feature_with_rout_id (rout_id);
+				if (fi /= Void) then
+					i := ris.count
+				end
+				i := i + 1
+			end
+			if (fi /= Void) then
+				!! fs.make (fi, a_stone.e_class);
+				process_feature (fs);
+			else
+				temp := a_stone.e_class.name_in_upper;
+				temp.prepend ("No version of current feature for class ");
+				error_window.clear_window;
+				error_window.put_string ("No version of feature ")
+				stone.e_feature.append_name
+							(error_window,
+							stone.e_feature.written_class);
+				error_window.put_string ("%N   for class ");
+				a_stone.e_class.append_name (error_window);
+				error_window.new_line;
+				error_window.display;
+				project_tool.raise;
+			end;
+		end;
 	
 feature -- Graphical Interface
+
+	synchronize is
+			-- Synchronize clickable elements with text, if possible.
+		do
+			synchronise_stone;
+			if stone = Void then
+				class_hole.set_empty_symbol;
+				change_class_command.clear;
+				change_routine_command.clear
+			else
+				update_edit_bar
+			end
+		end;
 
 	update_edit_bar is
 			-- Updates the edit bar.
 		local
-			root_stone: FEATURE_STONE;
 			f_name: STRING
 		do
-			root_stone := text_window.root_stone;
-			if root_stone /= Void then
-				change_class_command.update_class_name (root_stone.e_class.name);
-				change_routine_command.set_text (root_stone.e_feature.name);
+			if stone /= Void then
+				change_class_command.update_class_name (stone.e_class.name);
+				change_routine_command.set_text (stone.e_feature.name);
 			end
 		end; 
 	

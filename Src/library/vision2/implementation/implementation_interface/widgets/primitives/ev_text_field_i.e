@@ -20,9 +20,9 @@ inherit
 feature -- Event - command association
 
 	add_activate_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
-			-- Make 'cmd' the executed commands when the text
-			-- field is activated, ie when the user press the
-			-- enter key.
+			-- Add 'cmd' to the list of commands to be executed 
+			-- when the text field is activated, ie when the user
+			-- press the enter key.
 		require
 			exists: not destroyed
 			valid_command: cmd /= Void

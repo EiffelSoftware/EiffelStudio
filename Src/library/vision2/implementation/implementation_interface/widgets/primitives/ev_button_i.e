@@ -36,8 +36,8 @@ feature {NONE} -- Initialization
 feature -- Event - command association
 	
 	add_click_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is	
-			-- Make 'cmd' the executed command when the button
-			-- is pressed.
+			-- Add 'cmd' to the list of commands to be executed
+			-- the button is pressed.
 		require
 			exists: not destroyed
 			valid_command: cmd /= Void

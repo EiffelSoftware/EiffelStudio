@@ -11,14 +11,17 @@ class
 	EV_LABEL_IMP
 	
 inherit
-	LABEL_I
+	EV_LABEL_I
 	
 	EV_BAR_ITEM_IMP
 
-	EV_TEXT_CONTAINER
+	EV_TEXT_CONTAINER_IMP
                 rename
                         label_widget as widget
                 end
+creation
+
+	make
 
 feature {NONE} -- Initialization
 
@@ -26,17 +29,15 @@ feature {NONE} -- Initialization
                         -- Create a gtk label.
                 local
                         a: ANY
+			s: STRING
                 do
-                        a := "".to_c
+			!!s.make (0)
+			s := ""
+                        a ?= s.to_c
                         widget := gtk_label_new ($a)
                 end
 
-feature {NONE} -- Implementation
-	
-	label_widget: POINTER is
 
-		deferred
-		end
 
 end --class LABEL_I
 

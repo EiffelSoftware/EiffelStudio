@@ -390,7 +390,7 @@ feature {NONE} -- Implementation
 		end
 
 	add_initialize_feature is
-			-- Add creation routines.
+			-- Add creation routine.
 		local
 			inherit_clause_writer: WIZARD_WRITER_INHERIT_CLAUSE
 		do

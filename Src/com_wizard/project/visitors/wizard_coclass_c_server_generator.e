@@ -109,10 +109,10 @@ feature -- Basic operations
 			a_class_object.initialize
 			a_class_object.generate (a_descriptor)
 
-			-- Generate server registration code
-			create a_registration_code_gen
-			a_registration_code_gen.initialize
-			a_registration_code_gen.generate (a_descriptor)
+--			-- Generate server registration code
+--			create a_registration_code_gen
+--			a_registration_code_gen.initialize
+--			a_registration_code_gen.generate (a_descriptor)
 		end
 
 	create_file_name (a_factory: WIZARD_FILE_NAME_FACTORY) is

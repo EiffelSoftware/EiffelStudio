@@ -4,43 +4,43 @@
 class SYSTEM_I 
 
 inherit
+	BASIC_SYSTEM_I
 
-	BASIC_SYSTEM_I;
-	SHARED_TMP_SERVER;
-	SHARED_EXPANDED_CHECKER;
-	SHARED_TYPEID_TABLE;
-	SHARED_TABLE;
-	SHARED_FILES;
-	SHARED_CODE_FILES;
-	SHARED_GENERATOR;
+	SHARED_TMP_SERVER
+	SHARED_EXPANDED_CHECKER
+	SHARED_TYPEID_TABLE
+	SHARED_TABLE
+	SHARED_FILES
+	SHARED_CODE_FILES
+	SHARED_GENERATOR
 	SHARED_ERROR_HANDLER
 		export
 			{ANY} Error_handler
-		end;
-	SHARED_TIME;
-	SHARED_CECIL;
-	SHARED_ROUT_ID;
-	SHARED_BODY_ID;
-	SHARED_USED_TABLE;
+		end
+	SHARED_TIME
+	SHARED_CECIL
+	SHARED_ROUT_ID
+	SHARED_BODY_ID
+	SHARED_USED_TABLE
 	SHARED_BYTE_CONTEXT
 		rename
 			context as byte_context
 		export
 			{ANY} byte_context
 		end;
-	SHARED_ARRAY_BYTE;
-	SHARED_DECLARATIONS;
-	SHARED_PASS;
-	SHARED_RESCUE_STATUS;
+	SHARED_ARRAY_BYTE
+	SHARED_DECLARATIONS
+	SHARED_PASS
+	SHARED_RESCUE_STATUS
 	C_COMPILE_ACTIONS
 		rename
 			freeze_system as c_comp_actions_freeze_system
-		end;
-	SHARED_DLE;
-	COMPILER_EXPORTER;
-	SHARED_ID;
-	SHARED_EIFFEL_PROJECT;
-	SHARED_CONFIGURE_RESOURCES;
+		end
+	SHARED_DLE
+	COMPILER_EXPORTER
+	SHARED_ID
+	SHARED_EIFFEL_PROJECT
+	SHARED_CONFIGURE_RESOURCES
 	SHARED_BENCH_LICENSES
 
 feature -- Counters
@@ -608,16 +608,14 @@ end;
 					-- Remove one occurrence for each external written
 					-- in the class
 				if Feat_tbl_server.has (id) then
-					ftable := Feat_tbl_server.item (id)
 					from
+						ftable := Feat_tbl_server.item (id)
 						ftable.start
 					until
 						ftable.after
 					loop
 						f := ftable.item_for_iteration;
-						if
-							f.is_external and then
-							f.written_in.is_equal (id)
+						if f.is_external and then f.written_in.is_equal (id)
 						then
 							ext ?= f;
 								-- If the external is encapsulated then it was not added to
@@ -2321,7 +2319,11 @@ feature -- Final mode generation
 			loop
 				class_array := classes.item_for_iteration;
 				nb := class_counter.item (classes.key_for_iteration).count
-				from j := 1 until j > nb loop
+				from
+					j := 1
+				until
+					j > nb
+				loop
 					a_class := class_array.item (j)
 					if a_class /= Void then
 						deg_output.put_degree_minus_4 (a_class, i);
@@ -2538,56 +2540,57 @@ feature -- Generation
 			deg_output: DEGREE_OUTPUT;
 			degree_message: STRING
 		do
-				-- Address table
-			address_table.generate (True)
-
 			degree_message := "Generation of auxiliary files"
 			deg_output := Degree_output
 
+				-- Address table
+			deg_output.display_degree_output (degree_message, 11, 12)
+			address_table.generate (True)
+
 				-- Generation of type size table
-			deg_output.display_degree_output (degree_message, 10, 11)
+			deg_output.display_degree_output (degree_message, 10, 12)
 			generate_size_table;
 
 				-- Generation of the reference number table
-			deg_output.display_degree_output (degree_message, 9, 11)
+			deg_output.display_degree_output (degree_message, 9, 12)
 			generate_reference_table;
 
 				-- Generation of the skeletons
-			deg_output.display_degree_output (degree_message, 8, 11)
+			deg_output.display_degree_output (degree_message, 8, 12)
 			generate_skeletons;
 
 				-- Cecil structures generation
-			deg_output.display_degree_output (degree_message, 7, 11)
+			deg_output.display_degree_output (degree_message, 7, 12)
 			generate_cecil;
 
 				-- Generation of the conformance table
-			deg_output.display_degree_output (degree_message, 6, 11)
+			deg_output.display_degree_output (degree_message, 6, 12)
 			generate_conformance_table;
 
 				-- Routine table generation
-			deg_output.display_degree_output (degree_message, 5, 11)
+			deg_output.display_degree_output (degree_message, 5, 12)
 			generate_routine_table;
 
 				-- Generate plug with run-time.
 				-- The plug file has to be generated after the routine
 				-- table for `dle_max_min_used' to be initialized when
 				-- using DLE stuff.
-			deg_output.display_degree_output (degree_message, 4, 11)
+			deg_output.display_degree_output (degree_message, 4, 12)
 			generate_plug
 
 			-- Generate DLE file
-			deg_output.display_degree_output (degree_message, 3, 11)
+			deg_output.display_degree_output (degree_message, 3, 12)
 			generate_dle_file;
 
 				-- Generate main file
-			deg_output.display_degree_output (degree_message, 2, 11)
+			deg_output.display_degree_output (degree_message, 2, 12)
 			generate_main_file;
 
-			deg_output.display_degree_output (degree_message, 1, 11)
+			deg_output.display_degree_output (degree_message, 1, 12)
 			generate_init_file;
 
 				-- Generate makefile
-			deg_output.display_degree_output (degree_message, 0, 11)
+			deg_output.display_degree_output (degree_message, 0, 12)
 			generate_make_file;
 
 			if System.has_separate then
@@ -2716,13 +2719,13 @@ end;
 			class_type: CLASS_TYPE;
 			file: INDENT_FILE
 		do
-			file := Size_file (byte_context.final_mode);
 			from
+				file := Size_file (byte_context.final_mode);
 				i := 1;
 				nb := type_id_counter.value;
 				file.open_write;
-				file.putstring ("#include %"macros.h%"%N%N");
-				file.putstring ("long fsize[] = {%N");
+				file.putstring ("#include %"eif_macros.h%"%N%N%
+								%long fsize[] = {%N");
 			until
 				i > nb
 			loop
@@ -2736,8 +2739,7 @@ end;
 					file.putstring ("0");
 				end;
 
-				file.putstring (",");
-				file.new_line;
+				file.putstring (",%N");
 				i := i + 1;
 			end;
 			file.putstring ("};%N");
@@ -2771,15 +2773,13 @@ end;
 					Reference_file.putint (0);
 				end;
 
-				Reference_file.putchar (',');
-				Reference_file.new_line;
+				Reference_file.putstring (",%N");
 				i := i + 1;
 			end;
 			if has_separate then
 				Reference_file.putint (0);
-				Reference_file.new_line;
 			end;
-			Reference_file.putstring ("};%N");
+			Reference_file.putstring ("%N};%N");
 			Reference_file.close;
 		end;
 
@@ -2804,7 +2804,7 @@ end;
 			Skeleton_file := Skeleton_f (final_mode);
 			Skeleton_file.open_write;
 
-			Skeleton_file.putstring ("#include %"struct.h%"%N");
+			Skeleton_file.putstring ("#include %"eif_struct.h%"%N");
 			if final_mode then
 				Skeleton_file.putstring ("#include %"");
 				Skeleton_file.putstring (Eskelet);
@@ -2828,7 +2828,7 @@ end;
 				Extern_declarations.wipe_out;
 			else
 					-- Hash table extern declaration in workbench mode
-				Skeleton_file.putstring ("#include %"macros.h%"%N");
+				Skeleton_file.putstring ("#include %"eif_macros.h%"%N");
 				Skeleton_file.new_line;
 				from
 					classes.start
@@ -2906,8 +2906,7 @@ end;
 				i := i + 1;
 			end;
 
-			Skeleton_file.putstring ("struct cnode fsystem[] = {");
-			Skeleton_file.new_line;
+			Skeleton_file.putstring ("struct cnode fsystem[] = {%N");
 			from
 				i := 1;
 			until
@@ -2962,8 +2961,7 @@ end;
 					else
 						Skeleton_file.putstring ("(int32 *) 0");
 					end;
-					Skeleton_file.putchar (',');
-					Skeleton_file.new_line;
+					Skeleton_file.putstring (",%N");
 					i := i + 1
 				end;
 				Skeleton_file.putstring ("};%N%N");
@@ -2982,8 +2980,7 @@ end;
 					else
 						Skeleton_file.putint (0);
 					end;
-					Skeleton_file.putchar (',');
-					Skeleton_file.new_line;
+					Skeleton_file.putstring (",%N");
 					i := i + 1
 				end;
 				Skeleton_file.putstring ("};%N");
@@ -3010,11 +3007,11 @@ end;
 
 			Cecil_file := cecil_f (final_mode);
 			Cecil_file.open_write;
-			Cecil_file.putstring ("#include %"cecil.h%"%N");
+			Cecil_file.putstring ("#include %"eif_cecil.h%"%N");
 			if final_mode then
-				Cecil_file.putstring ("#include %"ececil.h%"%N");
+				Cecil_file.putstring ("#include %"eif_ececil.h%"%N");
 			end;
-			Cecil_file.putstring ("#include %"struct.h%"%N%N");
+			Cecil_file.putstring ("#include %"eif_struct.h%"%N%N");
 
 			from
 				classes.start
@@ -3067,9 +3064,7 @@ end;
 					i := i + 1;
 				end;
 				Cecil_file.putstring ("};%N");
-				Cecil_file.putstring ("struct ctable *ce_rname = fce_rname;");
-				Cecil_file.new_line;
-				Cecil_file.new_line
+				Cecil_file.putstring ("struct ctable *ce_rname = fce_rname;%N%N");
 
 				if System.has_separate then
 						-- Now, generate for Concurrent Eiffel
@@ -3089,10 +3084,7 @@ end;
 						Cecil_file.putstring (",%N");
 						i := i + 1;
 					end;
-					Cecil_file.putstring ("};%N");
-					Cecil_file.putstring ("%Nstruct ctable *ce_sep_pat = fce_sep_pat;");
-					Cecil_file.new_line;
-					Cecil_file.new_line
+					Cecil_file.putstring ("};%N%Nstruct ctable *ce_sep_pat = fce_sep_pat;%N%N");
 				end;
 			end;
 
@@ -3169,7 +3161,7 @@ end;
 			Conformance_file := conformance_f (byte_context.final_mode);
 			Conformance_file.open_write;
 
-			Conformance_file.putstring ("#include %"struct.h%"%N%N");
+			Conformance_file.putstring ("#include %"eif_struct.h%"%N%N");
 
 			from
 				i := 1;
@@ -3377,7 +3369,7 @@ feature -- Plug and Makefile file
 			Plug_file := plug_f (final_mode);
 			Plug_file.open_write_c;
 
-			Plug_file.putstring ("#include %"macros.h%"%N%N");
+			Plug_file.putstring ("#include %"eif_macros.h%"%N%N");
 
 				-- Extern declarations
 			string_cl := class_of_id (string_id);
@@ -3452,8 +3444,7 @@ feature -- Plug and Makefile file
 				else
 					Plug_file.putint (0)
 				end
-				Plug_file.putchar (';');
-				Plug_file.new_line
+				Plug_file.putstring (";%N");
 
 				init_name := Initialization_rout_id.table_name
 				dispose_name := Dispose_rout_id.table_name
@@ -3461,8 +3452,8 @@ feature -- Plug and Makefile file
 				Plug_file.putstring ("extern char *(*");
 				Plug_file.putstring (Table_prefix);
 				Plug_file.putstring (init_name);
-				Plug_file.putstring ("[])();%N");
-				Plug_file.putstring ("extern char *(*");
+				Plug_file.putstring ("[])();%N%
+									%extern char *(*");
 				Plug_file.putstring (Table_prefix);
 				Plug_file.putstring (dispose_name);
 				Plug_file.putstring ("[])();%N%N");
@@ -3605,14 +3596,14 @@ feature -- Main file generation
 			Main_file.open_write_c;
 
 			Main_file.putstring ("%N%
-				%#include %"macros.h%"%N%
-				%#include %"sig.h%"%N%N");
+				%#include %"eif_macros.h%"%N%
+				%#include %"eif_sig.h%"%N%N");
 
 			Main_file.generate_extern_declaration
 				("void", "emain", <<"int", "char **">>);
 
 			if has_separate then
-				Main_file.putstring ("#include %"curextern.h%"%N");
+				Main_file.putstring ("#include %"eif_curextern.h%"%N");
 			end
 
 			Main_file.generate_function_signature
@@ -3643,7 +3634,6 @@ feature -- Main file generation
 				%%Temain(argc, argv);%N%
 				%%Treclaim();%N%
 				%%Texit(0);%N%
-				%%TEDCX%N%
 				%}%N}%N");
 
 			Main_file.close_c;
@@ -3698,8 +3688,8 @@ feature -- Main file generation
 			Initialization_file.open_write_c;
 
 			Initialization_file.putstring ("%
-				%#include %"macros.h%"%N%
-				%#include %"struct.h%"%N%N");
+				%#include %"eif_macros.h%"%N%
+				%#include %"eif_struct.h%"%N%N");
 
 			if not final_mode then
 				class_counter.generate_offsets (Initialization_file);
@@ -3722,7 +3712,7 @@ feature -- Main file generation
 			end;
 
 			if has_separate then
-				Initialization_file.putstring ("#include %"curextern.h%"%N%N")
+				Initialization_file.putstring ("#include %"eif_curextern.h%"%N%N")
 			end
 
 			if creation_name /= Void then
@@ -3742,11 +3732,9 @@ feature -- Main file generation
 			Initialization_file.generate_function_signature ("void", "emain", True, Initialization_file,
 						<<"argc", "argv">>, <<"int", "char **">>);
 
-			Initialization_file.putstring ("#ifndef EIF_THREADS%N") -- ss MT
-
-			Initialization_file.putstring ("%
-				%%Textern char *root_obj;%N");
-			Initialization_file.putstring ("#endif%N") -- ss MT
+			Initialization_file.putstring ("#ifndef EIF_THREADS%N%
+											%%Textern char *root_obj;%N%
+											%#endif%N")
 
 			if final_mode then
 					-- Set C variable `scount'.
@@ -3769,7 +3757,7 @@ feature -- Main file generation
 					%%Tif (!memcmp(argv[1], constant_init_flag, strlen(argv[1]))) {%N%
 					%%T%Tchar **root_argv;%N%
 					%%T%Tint i;%N%
-					%%T%Troot_argv = (char **)malloc(argc*sizeof(char *));%N%
+					%%T%Troot_argv = (char **) cmalloc(argc*sizeof(char *));%N%
 					%%T%Tvalid_memory(root_argv);%N");
 				Initialization_file.putstring ("%
 					%%T%Troot_argv[0] = argv[0];%N%
@@ -3843,7 +3831,7 @@ feature -- Main file generation
 				Initialization_file.putstring ("%Tserver_execute();%N");
 			end
 
-			Initialization_file.putstring ("%TEDCX%N}%N");
+			Initialization_file.putstring ("%N}%N");
 
 			-- Generation of einit() and tabinit(). Only for workbench
 			-- mode.
@@ -3906,7 +3894,7 @@ feature -- Main file generation
 					-- Set the dle zeroc
 				Initialization_file.putstring (";%N%Tdle_zeroc = ");
 				Initialization_file.putint (dle_frozen_level);
-				Initialization_file.putstring (";%N%TEDCX%N}%N"); -- MT
+				Initialization_file.putstring (";%N}%N"); -- MT
 			end;
 
 			-- Module initialization routine 'system_mod_init'
@@ -3953,7 +3941,7 @@ feature -- Main file generation
 				i := i + 1
 			end;
 
-			Initialization_file.putstring ("%TEDCX%N}%N%N");
+			Initialization_file.putstring ("%N}%N%N");
 
 			Initialization_file.close_c;
 		end;
@@ -3985,7 +3973,7 @@ feature --Workbench option file generation
 		do
 			Option_file.open_write;
 
-			Option_file.putstring ("#include %"struct.h%"%N%N");
+			Option_file.putstring ("#include %"eif_struct.h%"%N%N");
 
 				-- First debug keys
 			from

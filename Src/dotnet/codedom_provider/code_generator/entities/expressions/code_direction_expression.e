@@ -12,8 +12,6 @@ inherit
 	CODE_SHARED_EVENT_MANAGER
 		export
 			{NONE} all
-		undefine
-			is_equal
 		end
 
 create

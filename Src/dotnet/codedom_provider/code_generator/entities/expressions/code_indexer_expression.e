@@ -12,8 +12,6 @@ inherit
 	CODE_SHARED_TYPE_REFERENCE_FACTORY
 		export
 			{NONE} all
-		undefine
-			is_equal
 		end
 
 create

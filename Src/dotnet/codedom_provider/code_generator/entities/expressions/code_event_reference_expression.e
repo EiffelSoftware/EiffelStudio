@@ -12,8 +12,6 @@ inherit
 	CODE_STOCK_TYPE_REFERENCES
 		export
 			{NONE} all
-		undefine
-			is_equal
 		end
 
 create

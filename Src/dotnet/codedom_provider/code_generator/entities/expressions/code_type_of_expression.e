@@ -12,15 +12,11 @@ inherit
 	CODE_SHARED_EVENT_MANAGER
 		export
 			{NONE} all
-		undefine
-			is_equal
 		end
 
 	CODE_STOCK_TYPE_REFERENCES
 		export
 			{NONE} all
-		undefine
-			is_equal
 		end
 
 create

@@ -97,97 +97,7 @@ feature -- Element Change
 			end
 		end
 
-feature -- Event : command association
-
---|FIXME	add_select_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
---|FIXME			-- Add `cmd' to the list of commands to be executed
---|FIXME			-- when the item is selected.
---|FIXME		do
---|FIXME--			add_command (Cmd_item_activate, cmd, arg)			
---|FIXME		end	
-
---|FIXME	add_unselect_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
---|FIXME			-- Add `cmd' to the list of commands to be executed
---|FIXME			-- when the item is unselected.
---|FIXME		do
---|FIXME--			add_command (Cmd_item_deactivate, cmd, arg)		
---|FIXME		end
-
---|FIXME	add_button_press_command (mouse_button: INTEGER; 
---|FIXME		 cmd: EV_COMMAND; arg: EV_ARGUMENT) is
---|FIXME			-- Add `cmd' to the list of commands to be executed
---|FIXME			-- when button number 'mouse_button' is pressed.
---|FIXME		do
---			inspect mouse_button 
---			when 1 then
---				add_command (Cmd_button_one_press, cmd, arg)
---			when 2 then
---				add_command (Cmd_button_two_press, cmd, arg)
---			when 3 then
---				add_command (Cmd_button_three_press, cmd, arg)
---			end
---|FIXME		end
-
---|FIXME	add_button_release_command (mouse_button: INTEGER;
---|FIXME		    cmd: EV_COMMAND; arg: EV_ARGUMENT) is
---|FIXME			-- Add `cmd' to the list of commands to be executed
---|FIXME			-- when button number 'mouse_button' is released.
---|FIXME		do
---			inspect mouse_button
---			when 1 then
---				add_command (Cmd_button_one_release, cmd, arg)
---			when 2 then
---				add_command (Cmd_button_two_release, cmd, arg)
---			when 3 then
---				add_command (Cmd_button_three_release, cmd, arg)
---			end
---|FIXME		end
-
-feature -- Event -- removing command association
-
---|FIXME	remove_select_commands is
---|FIXME			-- Empty the list of commands to be executed
---|FIXME			-- when the item is selected.
---|FIXME		do
---			remove_command (Cmd_item_activate)
---|FIXME		end	
-
---|FIXME	remove_unselect_commands is
---|FIXME			-- Empty the list of commands to be executed
---|FIXME			-- when the item is unselected.
---|FIXME		do
---			remove_command (Cmd_item_deactivate)		
---|FIXME		end
-
---|FIXME	remove_button_press_commands (mouse_button: INTEGER) is
---|FIXME			-- Empty the list of commands to be executed when
---|FIXME			-- button number 'mouse_button' is pressed.
---|FIXME		do
---			inspect mouse_button 
---			when 1 then
---				remove_command (Cmd_button_one_press)
---			when 2 then
---				remove_command (Cmd_button_two_press)
---			when 3 then
---				remove_command (Cmd_button_three_press)
---			end
---|FIXME		end
-
---|FIXME	remove_button_release_commands (mouse_button: INTEGER) is
---|FIXME			-- Empty the list of commands to be executed when
---|FIXME			-- button number 'mouse_button' is released.
---|FIXME		do
---			inspect mouse_button 
---			when 1 then
---				remove_command (Cmd_button_one_release)
---			when 2 then
---				remove_command (Cmd_button_two_release)
---			when 3 then
---				remove_command (Cmd_button_three_release)
---			end
---|FIXME		end
-
-feature {NONE} -- Implementation
+feature {EV_MULTI_COLUMN_LIST_IMP} -- Implementation
 
 	set_capture is
 			-- Grab user input.
@@ -199,6 +109,18 @@ feature {NONE} -- Implementation
 			-- Release user input.
 		do
 			parent_imp.release_capture
+		end
+
+	relative_position: TUPLE [INTEGER, INTEGER] is
+			-- Position relative to `Parent'.
+		local
+			row_imp: EV_MULTI_COLUMN_LIST_ROW_IMP	
+			list_imp: EV_MULTI_COLUMN_LIST_IMP
+		do
+			list_imp ?= parent_imp
+			create Result.make
+			Result.put (list_imp.child_x, 1)
+			Result.put (- list_imp.child_y (row_imp), 2)
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -228,6 +150,9 @@ end -- class EV_MULTI_COLUMN_LIST_ROW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.23  2000/03/13 23:17:49  rogers
+--| Removed redundent command associations. Added relative_position. Changed the export status of implementation features to {EV_MULTI_COLUMN_LIST_IMP}.
+--|
 --| Revision 1.22  2000/03/09 16:13:52  brendel
 --| Added inheritance of EV_PICK_AND_DROPABLE_IMP.
 --|

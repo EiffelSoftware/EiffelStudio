@@ -3,7 +3,7 @@ indexing
 	external_name: "System.Runtime.Remoting.Lifetime.LifetimeServices"
 	assembly: "mscorlib", "1.0.3300.0", "neutral", "b77a5c561934e089"
 
-external class
+frozen external class
 	LIFETIME_SERVICES
 
 inherit

@@ -9,6 +9,7 @@ frozen external class
 inherit
 	DATA_DBDATA_PERMISSION
 		redefine
+			create_instance,
 			from_xml,
 			to_xml,
 			is_subset_of,
@@ -103,6 +104,15 @@ feature -- Basic Operations
 			"IL signature (System.Security.IPermission): System.Security.IPermission use System.Data.OleDb.OleDbPermission"
 		alias
 			"Union"
+		end
+
+feature {NONE} -- Implementation
+
+	create_instance: DATA_DBDATA_PERMISSION is
+		external
+			"IL signature (): System.Data.Common.DBDataPermission use System.Data.OleDb.OleDbPermission"
+		alias
+			"CreateInstance"
 		end
 
 end -- class DATA_OLE_DB_PERMISSION

@@ -3,7 +3,7 @@ indexing
 	external_name: "System.Xml.Xsl.XslTransform"
 	assembly: "System.Xml", "1.0.3300.0", "neutral", "b77a5c561934e089"
 
-external class
+frozen external class
 	SYSTEM_XML_XSL_TRANSFORM
 
 inherit

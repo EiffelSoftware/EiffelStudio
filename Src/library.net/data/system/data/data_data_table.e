@@ -492,6 +492,13 @@ feature {NONE} -- Implementation
 			"OnColumnChanged"
 		end
 
+	create_instance: DATA_DATA_TABLE is
+		external
+			"IL signature (): System.Data.DataTable use System.Data.DataTable"
+		alias
+			"CreateInstance"
+		end
+
 	new_row_from_builder (builder: DATA_DATA_ROW_BUILDER): DATA_DATA_ROW is
 		external
 			"IL signature (System.Data.DataRowBuilder): System.Data.DataRow use System.Data.DataTable"

@@ -3,7 +3,7 @@ indexing
 	external_name: "System.DirectoryServices.DirectoryServicesPermission"
 	assembly: "System.DirectoryServices", "1.0.3300.0", "neutral", "b03f5f7f11d5a3a"
 
-external class
+frozen external class
 	DIR_SERV_DIRECTORY_SERVICES_PERMISSION
 
 inherit

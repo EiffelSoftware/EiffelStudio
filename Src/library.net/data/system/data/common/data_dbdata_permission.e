@@ -85,4 +85,13 @@ feature -- Basic Operations
 			"Union"
 		end
 
+feature {NONE} -- Implementation
+
+	create_instance: DATA_DBDATA_PERMISSION is
+		external
+			"IL signature (): System.Data.Common.DBDataPermission use System.Data.Common.DBDataPermission"
+		alias
+			"CreateInstance"
+		end
+
 end -- class DATA_DBDATA_PERMISSION

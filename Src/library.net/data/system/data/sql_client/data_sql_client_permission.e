@@ -8,6 +8,9 @@ frozen external class
 
 inherit
 	DATA_DBDATA_PERMISSION
+		redefine
+			create_instance
+		end
 	IPERMISSION
 	ISECURITY_ENCODABLE
 	ISTACK_WALK
@@ -33,6 +36,15 @@ feature {NONE} -- Initialization
 	frozen make_data_sql_client_permission is
 		external
 			"IL creator use System.Data.SqlClient.SqlClientPermission"
+		end
+
+feature {NONE} -- Implementation
+
+	create_instance: DATA_DBDATA_PERMISSION is
+		external
+			"IL signature (): System.Data.Common.DBDataPermission use System.Data.SqlClient.SqlClientPermission"
+		alias
+			"CreateInstance"
 		end
 
 end -- class DATA_SQL_CLIENT_PERMISSION

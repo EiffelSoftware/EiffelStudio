@@ -35,6 +35,8 @@ feature -- Eiffel types
 
 	Ecom_decimal: STRING is "ECOM_DECIMAL"
 
+	Ecom_interface: STRING  is "ECOM_INTERFACE"
+
 	Ecom_unknown_interface: STRING  is "ECOM_UNKNOWN_INTERFACE"
 
 	Ecom_automation_interface: STRING is "ECOM_AUTOMATION_INTERFACE"

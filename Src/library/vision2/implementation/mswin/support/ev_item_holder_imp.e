@@ -18,7 +18,7 @@ inherit
 			command_count as item_command_count
 		end
 
-feature {NONE} -- Implementation
+feature -- Access
 
 --	ev_children: LINKED_LIST [EV_ITEM_IMP] is
 --			-- List of all the children of the container
@@ -26,7 +26,10 @@ feature {NONE} -- Implementation
 --		deferred
 --		end
 
-feature {EV_ITEM_IMP} -- Implementation
+	interface: EV_ANY is
+			-- Interface of the current implementation
+		deferred
+		end
 
 	current_widget: EV_WIDGET is
 			-- Current widget related to the container

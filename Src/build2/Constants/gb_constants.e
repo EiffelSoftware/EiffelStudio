@@ -608,6 +608,8 @@ feature -- Object editor properties
 	
 	gb_ev_window_user_can_resize: STRING is "User can resize?"
 	gb_ev_window_user_can_Resize_tooltip: STRING is "feature `user_can_resize' from EV_WINDOW"
+	gb_ev_window_title: STRING is "Title"
+	gb_ev_window_title_tooltip: STRING is "feature `title' from EV_WINDOW"
 	gb_ev_window_maximum_width: STRING is "Maximum Width"
 	gb_ev_window_maximum_width_tooltip: STRING is "feature `maximum_width' from EV_WINDOW"
 	gb_ev_window_maximum_height: STRING is "Maximum Height"

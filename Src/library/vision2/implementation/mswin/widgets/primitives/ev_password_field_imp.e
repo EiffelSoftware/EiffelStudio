@@ -15,8 +15,8 @@ inherit
 
 	EV_TEXT_FIELD_IMP
 		redefine
-			initialize,
-			interface
+			interface,
+			default_style
 		end
 
 create
@@ -55,6 +55,9 @@ end -- class EV_PASSWORD_FIELD_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2000/04/07 22:16:33  brendel
+--| Corrected redefintion clause.
+--|
 --| Revision 1.4  2000/04/07 01:30:13  brendel
 --| Revised.
 --|

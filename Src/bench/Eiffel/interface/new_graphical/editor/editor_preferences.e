@@ -36,8 +36,11 @@ feature -- Access
 		-- Name of the font used to display
 		-- characters in the editor
 
-feature -- Element Change
+	view_invisible_symbols: BOOLEAN
+		-- Are the spaces, the tabulations and the end_of_line
+		-- character visible?
 
+feature -- Element Change
 
 	set_font_size(a_font_size: INTEGER) is
 			-- Set `font_size' to `a_font_size'
@@ -68,6 +71,22 @@ feature -- Element Change
 			tabulation_spaces := number_of_spaces
 		ensure
 			tabulation_spaces_set : tabulation_spaces = number_of_spaces
+		end
+
+	show_invisible_symbols is
+			-- Set `view_invisible_symbols' to True
+		do
+			view_invisible_symbols := True
+		ensure
+			view_invisible_symbols_set: view_invisible_symbols
+		end
+
+	hide_invisible_symbols is
+			-- Set `view_invisible_symbols' to True
+		do
+			view_invisible_symbols := False
+		ensure
+			view_invisible_symbols_set: not view_invisible_symbols
 		end
 
 end -- class SHARED_EDITOR_PREFERENCES

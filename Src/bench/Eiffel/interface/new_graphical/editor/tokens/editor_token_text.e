@@ -14,10 +14,6 @@ inherit
 			display_half_selected
 		end
 
-	SHARED_EDITOR_PREFERENCES
-		export
-			{NONE} all
-		end
 create
 	make
 
@@ -197,15 +193,6 @@ feature {NONE} -- Implementation
 		end
 
 feature {NONE} -- Properties used to display the token
-
-	font: WEL_FONT is
-		local
-			log_font: WEL_LOG_FONT
-		once
-				-- create the font
-			create log_font.make(editor_preferences.font_size, editor_preferences.font_name)
-			create Result.make_indirect(log_font)
-		end
 
 	dc: WEL_MEMORY_DC is
 		once

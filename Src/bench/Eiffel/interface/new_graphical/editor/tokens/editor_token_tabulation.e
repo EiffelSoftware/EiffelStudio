@@ -25,78 +25,51 @@ create
 feature -- Initialisation
 
 	make(number: INTEGER) is
-		local
-			i: INTEGER
 		do
-			number_of_tabs := number
+			length := number
 			create image.make(number)
-			from i := 1 until i > number loop
-				image.append_character('%T')
-				i := i + 1
-			end
-			length := number_of_tabs
+			image.fill_character('%T')
 		end
 
-feature -- Miscellaneous
+feature -- Display
 
-	display(d_y: INTEGER; dc: WEL_DC) is
+	display(d_y: INTEGER; a_dc: WEL_DC) is
+		local
+			local_position: INTEGER
 		do
-			-- Display nothing
+			local_position := display_tabulations(position, d_y, a_dc, False, 1, length)
 		end
 
 	display_selected(d_y: INTEGER; a_dc: WEL_DC) is
 		local
-			old_text_color: WEL_COLOR_REF
-			old_background_color: WEL_COLOR_REF
-			displayed_string: STRING
+			local_position: INTEGER
 		do
-				-- Change drawing style here.
-			old_text_color := a_dc.text_color
-			old_background_color := a_dc.background_color
-			a_dc.set_text_color(selected_text_color)
-			a_dc.set_background_color(selected_background_color)
-			a_dc.select_font(font)
-
-				-- Display the text.
-			create displayed_string.make(editor_preferences.tabulation_spaces * number_of_tabs)
-			displayed_string.fill_character(' ')
-			a_dc.text_out (position, d_y, displayed_string)
-
-				-- Restore drawing style here.
-			a_dc.set_text_color(old_text_color)
-			a_dc.set_background_color(old_background_color)
-			a_dc.unselect_font
+			local_position := display_tabulations(position, d_y, a_dc, True, 1, length)
 		end
 
 	display_half_selected(d_y: INTEGER; start_selection, end_selection: INTEGER; a_dc: WEL_DC) is
 		local
-			old_text_color: WEL_COLOR_REF
-			old_background_color: WEL_COLOR_REF
-			displayed_string: STRING
 			local_position: INTEGER
 		do
-				-- Backup current drawing style.
-			old_text_color := a_dc.text_color
-			old_background_color := a_dc.background_color
 			local_position := position
 
-				-- Change drawing style here.
-			a_dc.set_text_color(selected_text_color)
-			a_dc.set_background_color(selected_background_color)
-			a_dc.select_font(font)
+				-- if the selection do not start at the beginning of the token,
+				-- display the first 'non selected' area
+			if start_selection /= 1 then
+				local_position := display_tabulations(local_position, d_y, a_dc, False, 1, start_selection-1)
+			end
 
-			local_position := local_position + get_substring_width(start_selection-1)
+				-- Display the 'selected' area
+			local_position := display_tabulations(local_position, d_y, a_dc, True, start_selection, end_selection-1)
 
-				-- Display the text.
-			create displayed_string.make(editor_preferences.tabulation_spaces * (end_selection-start_selection))
-			displayed_string.fill_character(' ')
-			a_dc.text_out (local_position, d_y, displayed_string)
-
-				-- Restore drawing style here.
-			a_dc.set_text_color(old_text_color)
-			a_dc.set_background_color(old_background_color)
-			a_dc.unselect_font
+				-- if the selection do not end at the end of the token,
+				-- Display the last 'non selected' area
+			if end_selection <= length then
+				local_position := display_tabulations(local_position, d_y, a_dc, False, end_selection,length)
+			end
 		end
+
+feature -- Width & Height
 
 	width: INTEGER is
 		do
@@ -104,7 +77,7 @@ feature -- Miscellaneous
 			Result := ((position // tabulation_width) + 1 ) * tabulation_width - position
 
 				-- Handle next tabulations.
-			Result := Result + tabulation_width * (number_of_tabs - 1)
+			Result := Result + tabulation_width * (length - 1)
 		end
 
 	get_substring_width(n: INTEGER): INTEGER is
@@ -139,13 +112,75 @@ feature -- Miscellaneous
 
 feature {NONE} -- Implementation
 
-	number_of_tabs: INTEGER
+	display_tabulations(d_x, d_y: INTEGER; a_dc: WEL_DC; selected: BOOLEAN; start_tab, end_tab: INTEGER): INTEGER is
+		local
+			old_text_color		: WEL_COLOR_REF
+			old_background_color: WEL_COLOR_REF
+			the_text_color		: WEL_COLOR_REF
+			the_background_brush: WEL_BRUSH
+			the_text			: STRING
+			local_width			: INTEGER
+			symbol_position		: INTEGER
+			wel_rect			: WEL_RECT
+			view_tabulation_symbol: BOOLEAN
+			i					: INTEGER
+			local_position		: INTEGER
+		do
+				-- Initialisations
+			view_tabulation_symbol := editor_preferences.view_invisible_symbols
+			local_position := d_x
+
+				-- Select the drawing style we will use.
+			if selected then
+				the_text_color := selected_text_color
+				the_background_brush := selected_background_brush
+			else
+				the_text_color := text_color
+				the_background_brush := normal_background_brush
+			end
+
+				-- Display the first tabulation
+			from
+				i := start_tab
+			until
+				i > end_tab
+			loop
+					-- Compute the width of the tabulation
+				if start_tab = 1 then
+					local_width := get_substring_width(1)
+				else
+					local_width := tabulation_width
+				end
+			
+					-- Compute the position of the tabulation symbol
+				if view_tabulation_symbol then
+					symbol_position := local_position + ( local_width - tabulation_symbol_width ) // 2
+				end
+
+					-- Fill the rectangle occupied by the tabulation
+				create wel_rect.make(local_position, d_y, local_position + local_width, d_y + height)
+				a_dc.fill_rect(wel_rect, the_background_brush)
+
+					-- Display the tabulation symbol
+				if view_tabulation_symbol then
+					a_dc.set_background_transparent
+					a_dc.text_out(symbol_position, d_y, tabulation_symbol)
+					a_dc.set_background_opaque
+				end
+
+					-- update the local position & prepare next iteration
+				local_position := local_position + local_width
+				i := i + 1
+			end
+		end
+
+feature {NONE} -- Private characteristics & constants
 
 	tabulation_width: INTEGER is
 		local
 			dc: WEL_MEMORY_DC
 		once
-				-- Compute the number of pixel represented by a tabulation based on
+				-- Compute the number of pixels represented by a tabulation based on
 				-- user preferences.
 			create dc.make
 			dc.select_font(font)
@@ -153,24 +188,20 @@ feature {NONE} -- Implementation
 			dc.unselect_font
 		end
 
-	font_height: INTEGER is
+	tabulation_symbol_width: INTEGER is
 		local
 			dc: WEL_MEMORY_DC
 		once
+				-- Compute the number of pixels represented by the tabulation symbol
 			create dc.make
 			dc.select_font(font)
-			Result := dc.string_height(" ")
+			Result := dc.string_width(tabulation_symbol)
 			dc.unselect_font
 		end
 
-	font: WEL_FONT is
-			-- Font used to draw the text
-		local
-			log_font: WEL_LOG_FONT
+	tabulation_symbol: STRING is
 		once
-				-- create the font
-			create log_font.make(editor_preferences.font_size, editor_preferences.font_name)
-			create Result.make_indirect(log_font)
+			Result := "»"
 		end
 
 end -- class EDITOR_TOKEN_TABULATION

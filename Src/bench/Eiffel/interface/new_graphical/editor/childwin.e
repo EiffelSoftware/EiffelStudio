@@ -8,7 +8,8 @@ inherit
 		redefine
 			on_paint, on_size, class_icon, default_style,
 			on_vertical_scroll, on_key_down, on_key_up,
-			on_char, on_left_button_down
+			on_char, on_left_button_down, on_left_button_up,
+			on_mouse_move, on_erase_background, class_background
 		end
 
 	APPLICATION_IDS
@@ -44,7 +45,7 @@ creation
 feature -- Initialization
 
 	initialize is
-			-- Perform all initialization.
+			-- Perform all static initialisations.
 		local
 			dc			: WEL_MEMORY_DC
 			space_size	: WEL_SIZE
@@ -58,12 +59,20 @@ feature -- Initialization
 				dc.select_font (font)
 				space_size := dc.string_size (" ")
 				line_height := space_size.height
---				line_increment := line_height + 1
 				line_increment := line_height
 				dc.unselect_font
+
 					-- First display the first line...
 				first_line_displayed := 1
 			end
+		end
+
+	class_background: WEL_BRUSH is
+			-- Set the class background to NULL in order
+			-- to have full control on the WM_ERASEBKG event
+			-- (on_erase_background)
+		once
+			create Result.make_by_pointer(Default_pointer)
 		end
 
 	make (a_parent: WEL_MDI_FRAME_WINDOW; a_name: STRING) is
@@ -72,7 +81,8 @@ feature -- Initialization
 			mdi_child_window_make (a_parent, a_name)
 
 				-- Retrieve user preferences (syntax highligting, tabulation width, ...).
-			editor_preferences.set_tabulation_spaces (4)
+			editor_preferences.set_tabulation_spaces(4)
+			editor_preferences.show_invisible_symbols
 
 				-- Read and parse the file.
 			read_and_analyse_file (a_name)
@@ -92,6 +102,7 @@ feature -- Initialization
 		end
 
 	read_and_analyse_file (a_name: STRING) is
+			-- Read the file named `a_name' and perform a lexical analysis
 		local
 			file: PLAIN_TEXT_FILE
 			line_item: EDITOR_LINE
@@ -119,27 +130,48 @@ feature -- Initialization
 feature -- Access
 
 	insert_mode: BOOLEAN
+			-- Are we in insert mode?
 
 	first_line_displayed: INTEGER
-		-- First line currently displayed on the screen.
+			-- First line currently displayed on the screen.
 
 	number_of_lines_displayed: INTEGER
-		-- Number of lines currently displayed on the screen.
+			-- Number of lines currently displayed on the screen.
 
 	text_displayed: STRUCTURED_TEXT
 			-- text currently displayed on the screen.
 
+	cursor: TEXT_CURSOR
+			-- current cursor
+
+	selection_start: TEXT_CURSOR
+			-- Position where the user has started to select
+			-- the text. This position can be below the current
+			-- cursor (and therefore represent the end of the
+			-- selection)
+
 feature -- Basic operations
 
 	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
-			-- Paint the bitmap
+			-- Redraw the screen.
 		do
 			update_buffered_screen (paint_dc, invalid_rect.top, invalid_rect.bottom)
 		end
 
+   	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
+   			-- Process Wm_erasebkgnd message.
+   			-- `invalid_rect' defines the invalid rectangle of the client area that
+   			-- needs to be repainted.
+   		do
+   			-- do nothing.
+			disable_default_processing
+ 			set_message_return_value (1)
+   		end
+
+
 	on_size (size_type: INTEGER; a_width: INTEGER; a_height: INTEGER) is
-		local
-			dc: WEL_CLIENT_DC
+			-- The size of the screen has changed (this feature can be
+			-- called before the creation of the window)
 		do
 			Initialize
 
@@ -215,131 +247,68 @@ feature -- Basic operations
 			end
 		end
 
+	basic_cursor_move(action: PROCEDURE[TEXT_CURSOR,TUPLE]) is
+			-- Perform a basic cursor move such as go_left,
+			-- go_right, ... an example of agent `action' is
+			-- cursor~go_left_char
+		do
+			if not has_selection then
+					-- There is no selected text.
+				if shifted_key then
+						-- ... So start a new selection.
+					has_selection := True
+					selection_start := clone (cursor)
+				end
+				invalidate_cursor_rect (False)
+				action.call([])
+				invalidate_cursor_rect (True)
+			elseif shifted_key then
+					-- There was a selection and we go on selecting text.
+				invalidate_cursor_rect (False)
+				action.call([])
+				invalidate_cursor_rect (True)
+			else
+					-- There was a selection, but we destroy it.
+				action.call([])
+				has_selection := False
+
+					-- we have to redraw the entire screen
+					--| FIXME ARNAUD: we only need to redraw the old selected part.
+				invalidate
+				update
+			end
+		end
+
 	on_key_down (virtual_key: INTEGER; key_data: INTEGER) is
 			-- Process Wm_keydown message corresponding to the
 			-- key `virtual_key' and the associated data `key_data'.
 		do
-			if virtual_key = Vk_left then 
-				if not has_selection then
-					if shifted_key then
-						has_selection := True
-						selection_start := clone (cursor)
-					end
-					invalidate_cursor_rect (False)
-					cursor.go_left_char
-					invalidate_cursor_rect (True)
-				elseif shifted_key then
-					invalidate_cursor_rect (False)
-					cursor.go_left_char
-					invalidate_cursor_rect (True)
-				else
-					cursor.go_left_char
-					has_selection := False
-					invalidate
-					update
-				end
+			if virtual_key = Vk_left then
+					-- Left arrow action
+				basic_cursor_move(cursor~go_left_char)
 
 			elseif  virtual_key = Vk_right then
-				if not has_selection then
-					if shifted_key then
-						has_selection := True
-						selection_start := clone (cursor)
-					end
-					invalidate_cursor_rect (False)
-					cursor.go_right_char
-					invalidate_cursor_rect (True)
-				elseif shifted_key then
-					invalidate_cursor_rect (False)
-					cursor.go_right_char
-					invalidate_cursor_rect (True)
-				else
-					cursor.go_right_char
-					has_selection := False
-					invalidate
-					update
-				end
+					-- Right arrow action
+				basic_cursor_move(cursor~go_right_char)
 
 			elseif  virtual_key = Vk_up then
-				if not has_selection then
-					if shifted_key then
-						has_selection := True
-						selection_start := clone (cursor)
-					end
-					invalidate_cursor_rect (False)
-					cursor.go_up_line
-					invalidate_cursor_rect (True)
-				elseif shifted_key then
-					invalidate_cursor_rect (False)
-					cursor.go_up_line
-					invalidate_cursor_rect (True)
-				else
-					cursor.go_up_line
-					has_selection := False
-					invalidate
-					update
-				end
+					-- Up arrow action
+				basic_cursor_move(cursor~go_up_line)
 
 			elseif  virtual_key = Vk_down then
-				if not has_selection then
-					if shifted_key then
-						has_selection := True
-						selection_start := clone (cursor)
-					end
-					invalidate_cursor_rect (False)
-					cursor.go_down_line
-					invalidate_cursor_rect (True)
-				elseif shifted_key then
-					invalidate_cursor_rect (False)
-					cursor.go_down_line
-					invalidate_cursor_rect (True)
-				else
-					cursor.go_down_line
-					has_selection := False
-					invalidate
-					update
-				end
+					-- Down arrow action
+				basic_cursor_move(cursor~go_down_line)
 
 			elseif  virtual_key = Vk_home then
-				if not has_selection then
-					if shifted_key then
-						has_selection := True
-						selection_start := clone (cursor)
-					end
-					invalidate_cursor_rect (False)
-					cursor.go_start_line
-					invalidate_cursor_rect (True)
-				elseif shifted_key then
-					invalidate_cursor_rect (False)
-					cursor.go_start_line
-					invalidate_cursor_rect (True)
-				else
-					cursor.go_start_line
-					has_selection := False
-					invalidate
-					update
-				end
+					-- Home key action
+				basic_cursor_move(cursor~go_start_line)
 
 			elseif  virtual_key = Vk_end then
-				if not has_selection then
-					if shifted_key then
-						has_selection := True
-						selection_start := clone (cursor)
-					end
-					invalidate_cursor_rect (False)
-					cursor.go_end_line
-					invalidate_cursor_rect(True)
-				elseif shifted_key then
-					invalidate_cursor_rect (False)
-					cursor.go_end_line
-					invalidate_cursor_rect(True)
-				else
-					cursor.go_end_line
-					has_selection := False
-					invalidate
-					update
-				end
+					-- End key action
+				basic_cursor_move(cursor~go_end_line)
 
 			elseif  virtual_key = Vk_delete then
+					-- Delete key action
 				if has_selection then
 					delete_selection
 				else
@@ -349,6 +318,7 @@ feature -- Basic operations
 				update
 
 			elseif  virtual_key = Vk_Back then
+					-- Backspace key action
 				if has_selection then
 					delete_selection
 				else
@@ -358,11 +328,13 @@ feature -- Basic operations
 				update
 
 			elseif  virtual_key = Vk_Insert then
+					-- Insert key action
 				insert_mode := not insert_mode
 				invalidate
 				update
 
 			elseif virtual_key = Vk_Return then
+					-- Return/Enter key action
 				if has_selection then
 					delete_selection
 				end
@@ -371,6 +343,7 @@ feature -- Basic operations
 				update
 
 			elseif virtual_key = Vk_Shift then
+					-- Shift key action
 				shifted_key := True
 
 			else
@@ -379,16 +352,17 @@ feature -- Basic operations
 		end
 
 	on_key_up (virtual_key: INTEGER; key_data: INTEGER) is
-			-- Process Wm_keydown message corresponding to the
+			-- Process Wm_keyup message corresponding to the
 			-- key `virtual_key' and the associated data `key_data'.
 		do
 			if virtual_key = Vk_Shift then
+					-- Notice that all shift key are released.
 				shifted_key := False
 			end
 		end
 
  	on_char (character_code, key_data: INTEGER) is
-   			-- Wm_char message
+   			-- Process Wm_char message
    			-- See class WEL_VK_CONSTANTS for `character_code' value.
 		local
 			c		: CHARACTER
@@ -417,13 +391,17 @@ feature -- Basic operations
  		end
 
 	on_left_button_down (mouse_key, x_pos, y_pos: INTEGER) is
+			-- Process the left button of the mouse (when pushed)
 		local
 			l_number: INTEGER
 			new_cursor: TEXT_CURSOR
 			xline : EDITOR_LINE
 		do
---			l_number := ((y_pos - Top_margin_width)// line_increment) + first_line_displayed
---			create cursor.make_from_absolute_pos (x_pos - Left_margin_width, l_number, text_displayed)
+				-- Change the state of our flag
+			mouse_left_button_down := True
+			
+				-- Compute the line number pointed by the mouse cursor
+				-- and asdjust it if its over the number of lines in the text.
 			l_number := (y_pos // line_increment) + first_line_displayed
 			if l_number > number_of_lines then
 				xline := text_displayed.last_line
@@ -431,20 +409,69 @@ feature -- Basic operations
 			else
 				create new_cursor.make_from_absolute_pos (x_pos, l_number, Current)
 			end
+
+
 			if not has_selection then
+					-- There is no selection
 				if shifted_key then
+						-- We press on the left button + Shift, so
+						-- we start a new selection.
 					has_selection := True
 					selection_start := clone (cursor)
 				end
-				cursor := new_cursor
 			elseif shifted_key then
-				cursor := new_cursor
+				-- There is a selection, and we press on the
+				-- left button + Shift, so we go on selecting text.
 			else
-				cursor := new_cursor
+				-- There is a selection, and we press on the
+				-- left button without Shift, so we destroy the selection.
 				has_selection := False
 			end
+
+				-- Setup the new cursor.
+			cursor := new_cursor
 			invalidate
 			update
+		end
+
+	on_mouse_move (mouse_key, x_pos, y_pos: INTEGER) is
+			-- Wm_mousemove message
+			-- See class WEL_MK_CONSTANTS for `keys' value
+		local
+			l_number	: INTEGER
+			new_cursor	: TEXT_CURSOR
+			xline		: EDITOR_LINE
+		do
+			if mouse_left_button_down then
+
+					-- Compute the line number pointed by the mouse cursor
+					-- and asdjust it if its over the number of lines in the text.
+				l_number := (y_pos // line_increment) + first_line_displayed
+				if l_number > number_of_lines then
+					xline := text_displayed.last_line
+					create new_cursor.make_from_relative_pos (xline, xline.end_token, 1, Current)
+				else
+					create new_cursor.make_from_absolute_pos (x_pos, l_number, Current)
+				end
+
+				if not has_selection then
+						-- There is no selection, so we start a selection
+						has_selection := True
+						selection_start := clone (cursor)
+				end
+
+					-- Setup the new cursor.
+				cursor := new_cursor
+				invalidate
+				update
+			end
+		end
+
+	on_left_button_up (mouse_key, x_pos, y_pos: INTEGER) is
+			-- Process the left button of the mouse (when released).
+		do
+				-- Change the state of our flag
+			mouse_left_button_down := False
 		end
 
 feature -- Selection Handling
@@ -547,11 +574,10 @@ feature {NONE} -- Display functions
 
 			from
 				line.start
-			until
-				line.after
-			loop
 				curr_token := line.item
-
+			until
+				line.after or else curr_token = line.end_token
+			loop
 				if has_selection then
 					-- The text contains a selection, we may have to display this token
 					-- in its selected state.
@@ -641,6 +667,26 @@ feature {NONE} -- Display functions
 
 					-- prepare next iteration
 				line.forth
+				curr_token := line.item
+			end
+
+				-- Display the end token
+			curr_token := line.end_token
+			if has_selection and then (begin_selection.y_in_lines /= end_selection.y_in_lines) and then (selected_line or else (a_line = begin_selection.y_in_lines)) then 
+				line.end_token.display_end_token_selected(curr_y, dc, width)
+			else
+				line.end_token.display_end_token_normal(curr_y, dc, width)
+			end
+
+				-- Display the cursor (if its on the current end of line).
+			if cursor_line and then cursor.token = curr_token then
+					-- Compute the start pixel of the cursor.
+				start_cursor := curr_token.position + curr_token.get_substring_width(cursor.pos_in_token - 1)
+				width_cursor := 2
+					-- Draw the cursor
+				dc.select_brush(black_brush)
+				dc.pat_blt(start_cursor, curr_y, width_cursor, line_height, Blackness)
+				dc.unselect_brush
 			end
 		end
 
@@ -713,18 +759,16 @@ feature {NONE} -- Implementation
 			create Result.make_indirect (log_font)
 		end
 
-	cursor: TEXT_CURSOR
-
-	selection_start: TEXT_CURSOR
-			-- Position where the user has started to select
-			-- the text. This position can be below the current
-			-- cursor (and therefore represent the end of the
-			-- selection)
+feature {NONE} -- Private Characteristics of the window
 
 	has_selection: BOOLEAN
 			-- Is there a selection?
 
 	shifted_key: BOOLEAN
+			-- Is any of the shift key pushed?
+
+	mouse_left_button_down: BOOLEAN
+			-- Is the left button of the mouse down?
 
 feature {NONE} -- Private Constants
 

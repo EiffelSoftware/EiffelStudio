@@ -58,7 +58,7 @@ feature -- Status setting
 			end
 		end
 
-	set_checked is
+	enable_select is
 			-- Select the current button.
 		do
 			checked := True
@@ -114,6 +114,9 @@ end -- class EV_TOOL_BAR_TOGGLE_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2000/04/05 17:26:43  rogers
+--| renamed set_checked -> enable_select.
+--|
 --| Revision 1.11  2000/04/04 22:47:57  rogers
 --| Removed old command association. Fixed disable_select to work
 --| when there is no current parent.

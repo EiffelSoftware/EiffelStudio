@@ -33,6 +33,8 @@ inherit
 	GB_SHARED_DEFERRED_BUILDER
 	
 	GB_SHARED_STATUS_BAR
+	
+	GB_POST_LOAD_OBJECT_EXPANDER
 
 feature -- Basic operation
 
@@ -58,6 +60,8 @@ feature -- Basic operation
 			
 				-- Build deferred parts.
 			deferred_builder.build
+			
+			expand_all_registered_objects
 
 				-- As we have just loaded the project, the
 				-- system should know that it has not been modifified

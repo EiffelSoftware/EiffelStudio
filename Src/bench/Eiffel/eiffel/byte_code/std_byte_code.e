@@ -1147,6 +1147,7 @@ end
 								inh_assert.has_precondition) and then
 					(workbench_mode or else context.assertion_level.check_precond)
 			end
+			generate_invariant_before
 			if have_assert then
 				buf := buffer
 				if workbench_mode then
@@ -1158,7 +1159,6 @@ end
 					buf.new_line
 					buf.indent
 				end
-				generate_invariant_before
 				if has_separate_call_in_precondition then
 					buf.exdent
 					buf.putstring ("check_sep_pre:")
@@ -1212,8 +1212,6 @@ end
 				buf.exdent
 				buf.putchar ('}')
 				buf.new_line
-			else
-				generate_invariant_before
 			end
 		end
 
@@ -1247,7 +1245,6 @@ end
 				if postcondition /= Void then
 					postcondition.generate
 				end
-				generate_invariant_after
 				if workbench_mode then
 					buf.exdent
 					buf.putchar ('}')
@@ -1257,9 +1254,8 @@ end
 					buf.putchar ('}')
 					buf.new_line
 				end
-			else
-				generate_invariant_after
 			end
+			generate_invariant_after
 		end
 
 	generate_save_assertion_level is

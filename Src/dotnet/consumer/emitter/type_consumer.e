@@ -28,11 +28,13 @@ feature {NONE} -- Initialization
 			valid_eiffel_name: not en.is_empty
 		local
 			dotnet_name: STRING
+			parent_name: SYSTEM_STRING
 			inter: NATIVE_ARRAY [TYPE]
 			interfaces: ARRAY [CONSUMED_REFERENCED_TYPE]
 			parent: CONSUMED_REFERENCED_TYPE
 			i, nb, count: INTEGER
 			parent_type: TYPE
+			l_is_nested: BOOLEAN
 		do
 			create dotnet_name.make_from_cil (t.get_full_name)
 			parent_type := t.get_base_type
@@ -60,8 +62,27 @@ feature {NONE} -- Initialization
 				interfaces := interfaces.subarray (1, count)
 			end
 
-			create consumed_type.make (dotnet_name, en, t.get_is_interface, t.get_is_abstract,
-				t.get_is_sealed, t.get_is_value_type, t.get_is_enum, parent, interfaces)
+			if t.get_is_nested_public or t.get_is_nested_family or t.get_is_nested_fam_orassem then
+					-- Let's initialize `l_is_nested' correctly and if it is set to
+					-- true, update `parent_type' so that it contains the nested type
+					-- enclosing type.
+				parent_name := t.get_full_name
+				parent_name := parent_name.substring_integer_32_integer_32 (0,
+					parent_name.index_of_character ('+'))
+				parent_type := t.get_assembly.get_type_string (parent_name)
+				l_is_nested := parent_type /= Void and then parent_type.get_is_public
+			end
+			
+			if l_is_nested then
+					-- `parent_type' contains enclosing type of current nested type.
+				create {CONSUMED_NESTED_TYPE} consumed_type.make (
+					dotnet_name, en, t.get_is_interface, t.get_is_abstract,
+					t.get_is_sealed, t.get_is_value_type, t.get_is_enum, parent, interfaces,
+					referenced_type_from_type (parent_type))
+			else	
+				create consumed_type.make (dotnet_name, en, t.get_is_interface, t.get_is_abstract,
+					t.get_is_sealed, t.get_is_value_type, t.get_is_enum, parent, interfaces)
+			end
 
 			if t.get_is_interface then
 					-- Lookup members of current interface `t' but also add members coming

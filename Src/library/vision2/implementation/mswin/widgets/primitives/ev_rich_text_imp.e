@@ -234,7 +234,7 @@ feature -- Status report
 			a_wel_font: WEL_FONT
 			character_effects: EV_CHARACTER_FORMAT_EFFECTS
 		do
-			select_region (character_index, character_index)
+			set_selection (character_index, character_index)
 			wel_character_format := current_selection_character_format
 			effects := wel_character_format.effects
 			color_ref := wel_character_format.text_color
@@ -364,6 +364,8 @@ feature -- Status setting
 			font_text: STRING
 			counter: INTEGER
 			character: CHARACTER
+			format_underlined: BOOLEAN
+			format_striked: BOOLEAN
 		do
 			if not buffer_locked_in_append_mode then
 				start_formats.clear_all
@@ -376,6 +378,8 @@ feature -- Status setting
 				internal_text.resize (default_string_size)
 				hashed_formats.clear_all
 				format_offsets.clear_all
+				is_current_format_underlined := False
+				is_current_format_striked_through := False
 			end
 			hashed_character_format := format.hash_value
 			if not hashed_formats.has (hashed_character_format) then
@@ -387,6 +391,22 @@ feature -- Status setting
 			format_index := format_offsets.item (hashed_character_format) 
 			temp_string := "\cf"
 			temp_string.append (format_index.out)
+			format_underlined := formats.i_th (format_index).effects.is_underlined
+			if not is_current_format_underlined and format_underlined then
+				temp_string.append ("\ul")
+				is_current_format_underlined := True
+			elseif is_current_format_underlined and not format_underlined then
+				temp_string.append ("\ulnone")
+				is_current_format_underlined := False
+			end
+			format_striked := formats.i_th (format_index).effects.is_striked_out
+			if not is_current_format_striked_through and format_striked then
+				temp_string.append ("\strike")
+				is_current_format_striked_through := True
+			elseif is_current_format_striked_through and not format_striked then
+				temp_string.append ("\strikenone")
+				is_current_format_striked_through := False
+			end
 			temp_string.append ("\f")
 			temp_string.append (format_index.out)
 			temp_string.append ("\fs")
@@ -459,6 +479,7 @@ feature -- Status setting
 			family: STRING
 			current_family: INTEGER
 			default_font_format: STRING
+			format_underlined, format_striked: BOOLEAN
 		do
 				-- Do nothing if buffer is not is format mode or append mode,
 				-- as there is nothing to flush. A user may call them however, as there
@@ -534,6 +555,22 @@ feature -- Status setting
 						format_index := formats_index.item (counter)
 						temp_string := "\cf"
 						temp_string.append ((format_index + 1).out)
+						format_underlined := formats.i_th (format_index).effects.is_underlined
+						if not is_current_format_underlined and format_underlined then
+							temp_string.append ("\ul")
+							is_current_format_underlined := True
+						elseif is_current_format_underlined and not format_underlined then
+							temp_string.append ("\ulnone")
+							is_current_format_underlined := False
+						end
+						format_striked := formats.i_th (format_index).effects.is_striked_out
+						if not is_current_format_striked_through and format_striked then
+							temp_string.append ("\strike")
+							is_current_format_striked_through := True
+						elseif is_current_format_striked_through and not format_striked then
+							temp_string.append ("\strikenone")
+							is_current_format_striked_through := False
+						end
 						temp_string.append ("\f")
 						temp_string.append (format_index.out)
 						temp_string.append ("\fs")
@@ -761,6 +798,9 @@ feature -- Status setting
 		end
 		
 feature {NONE} -- Implementation
+
+	is_current_format_underlined: BOOLEAN
+	is_current_format_striked_through: BOOLEAN
 
 	default_string_size: INTEGER is 50000
 		-- Default size used for all internal strings for buffering.

@@ -261,9 +261,9 @@ feature -- Element change
 			-- Assign `a_height' to ??.
 			--| FIXME to what???
 		require
-			height_valid: value > 0
+			height_valid: a_height > 0
 		do
-			implementation.set_rows_height (value)
+			implementation.set_rows_height (a_height)
 		end
 		--|FIXME This nees a postcondition!
 
@@ -341,6 +341,9 @@ end -- class EV_MULTI_COLUMN_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.41  2000/03/21 02:42:34  oconnor
+--| naming problem fixed
+--|
 --| Revision 1.40  2000/03/21 02:13:32  oconnor
 --| Added contracts to most features.
 --| Added FIXMES where contracts were not imediately implementable.

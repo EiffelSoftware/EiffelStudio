@@ -167,7 +167,8 @@ feature -- Generation
 			rout_infos := renumbered_table
 			nb_elements := rout_infos.count
 
-			f.putstring ("#include %"eif_macros.h%"%N%N")
+			f.putstring ("#include %"eif_project.h%"%N%
+						 %#include %"eif_macros.h%"%N%N")
 			f.putstring ("struct rout_info egc_forg_table[] = {%N")
 				-- C tables start at 0, we want to start at 1, to
 				-- that effect we insert a dummy entry.

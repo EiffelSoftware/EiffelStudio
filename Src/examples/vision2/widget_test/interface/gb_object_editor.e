@@ -118,7 +118,6 @@ feature {NONE} -- Implementation
 			-- to represent `object'.
 		local
 			current_type: STRING
-			label: EV_LABEL
 			current_window_parent: EV_WINDOW
 			locked_in_here: BOOLEAN
 			common_editor: GB_COMMON_EDITOR
@@ -136,8 +135,6 @@ feature {NONE} -- Implementation
 			tool_bar_extendible_controls: TOOL_BAR_EXTENDIBLE_CONTROLS
 			container_extendible_controls: CONTAINER_EXTENDIBLE_CONTROLS
 			drawing_controls: DRAWABLE_CONTROLS
-			current_parent: EV_CONTAINER
-			was_locked_on_entry: BOOLEAN
 		do
 			current_window_parent := parent_window (Current)
 			if current_window_parent /= Void and ((create {EV_ENVIRONMENT}).application.locked_window = Void) then

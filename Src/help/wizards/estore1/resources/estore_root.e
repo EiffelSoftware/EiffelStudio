@@ -15,8 +15,8 @@ feature -- Initialization
 			li: LINKED_LIST[<FL1>]
 			s1,s2: STRING
 		do
-			io.put_string("%NConnecting with username <FL4> and password <FL5>...")
-			Create estore_example.initialize("<FL4>","<FL5>")
+			io.put_string("%NConnecting with username '<FL4>', password '<FL5>' and data source '<FL6>'...")
+			Create estore_example.initialize("<FL4>","<FL5>","<FL6>")
 			io.put_string("%NProcessing Request ...")
 			io.put_string("%NQuery:<FL3>")
 			li := estore_example.<FL2>

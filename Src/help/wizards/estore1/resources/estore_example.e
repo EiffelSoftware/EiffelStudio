@@ -17,18 +17,18 @@ Creation
 
 feature -- Initialization
 
-	initialize(username,password: STRING) is
+	initialize(username,password,data_source: STRING) is
 			-- Run the example
+		require
+			not_void: username /= Void and password /= Void and data_source /= Void
 		local
 			b: BOOLEAN
 		do
 			if not b then
-				b := db_manager.try_to_connect(username,password)
-				if b then 
-					b := db_manager.establish_connection
-					if b then
-						initialized := TRUE
-					end
+				db_manager.log_and_connect(username,password,data_source)
+				b:= db_manager.session_control.is_connected 
+				if b then
+					initialized := TRUE
 				end
 			end
 			if not b then

@@ -55,3 +55,12 @@ WHO:	king
 font
 clear_items
 find_item_by_data
+==========================================================================
+CLASS: ev_menu_separator_imp
+DATE:	19990908
+WHO:	king
+make
+index
+set_parent
+set_index
+

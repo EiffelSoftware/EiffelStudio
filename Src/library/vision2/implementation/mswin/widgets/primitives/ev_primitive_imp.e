@@ -48,7 +48,7 @@ feature -- Element change
 				par_imp.add_child (Current)
 			elseif parent_imp /= Void then
 				parent_imp.remove_child (Current)
-				wel_set_parent (default_parent.item)
+				wel_set_parent (default_parent)
 			end
 		end
 

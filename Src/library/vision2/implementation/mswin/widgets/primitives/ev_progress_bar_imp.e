@@ -10,7 +10,7 @@ deferred class
 inherit
 	EV_PROGRESS_BAR_I
 
-	EV_PRIMITIVE_IMP
+	EV_GAUGE_IMP
 		redefine
 			on_key_down
 		end
@@ -20,7 +20,9 @@ inherit
 			make as wel_make,
 			parent as wel_parent,
 			set_parent as wel_set_parent,
-			destroy as wel_destroy
+			destroy as wel_destroy,
+			position as value,
+			set_position as set_value
 		undefine
 			window_process_message,
 			remove_command,
@@ -39,7 +41,8 @@ inherit
 			on_set_cursor,
 			default_style
 		redefine
-			on_key_down
+			on_key_down,
+			set_step
 		end
 
 	WEL_PBS_CONSTANTS
@@ -52,9 +55,24 @@ feature {NONE} -- Initialization
 	make is
 			-- Create a progress bar with `par' as parent.
 		do
-			wel_make (default_parent.item, 0, 0, 0, 0, -1)
+			wel_make (default_parent, 0, 0, 0, 0, -1)
+			step := 10
 			set_range (0, 100)
 		end
+
+	make_with_range (min: INTEGER; max: INTEGER) is
+			-- Create a spin-button with `min' as minimum, `max' as maximum
+			-- and `par' as parent.
+		do
+			wel_make (default_parent, 0, 0, 0, 0, -1)
+			step := 10
+			set_range (min, max)
+		end
+
+feature -- Access
+
+	step: INTEGER
+			-- Current step of the progress bar.
 
 feature -- Status report
 
@@ -89,14 +107,28 @@ feature -- Status setting
 				new_style, tx, ty, tw, th, -1, default_pointer)
 		end
 
-	set_percentage (value: INTEGER) is
-			-- Make `value' the new percentage filled by the
+	set_percentage (val: INTEGER) is
+			-- Make `val' the new percentage filled by the
 			-- progress bar.
 		do
-			set_position (value)
+			set_value (minimum + val * (maximum - minimum) // 100)
+		end
+
+feature -- Element change
+
+	set_step (val: INTEGER) is
+			-- Set the step increment with `step'.
+		do
+			step := val
+			cwin_send_message (item, Pbm_setstep, val, 0)
 		end
 
 feature {NONE} -- WEL implementation
+
+	on_scroll (scroll_code, pos: INTEGER) is
+			-- Do nothing here.
+		do
+		end
 
 	on_key_down (virtual_key, key_data: INTEGER) is
 			-- Executed when a key is pressed.

@@ -91,7 +91,7 @@ feature {NONE} -- Initialization
 		local
 			ctrl: EV_INTERNAL_TOOL_BAR_IMP
 		do
-			create ctrl.make (default_parent.item, "EV_INTERNAL_TOOL_BAR_IMP")
+			create ctrl.make (default_parent, "EV_INTERNAL_TOOL_BAR_IMP")
 			wel_make (ctrl, 0)
 			create ev_children.make (1)
 		end
@@ -117,7 +117,7 @@ feature -- Access
 	parent_imp: EV_CONTAINER_IMP is
 			-- Parent container of this tool-bar.
 		do
-			if bar.parent = default_parent.item then
+			if bar.parent = default_parent then
 				Result := Void
 			else
 				Result ?= bar.parent

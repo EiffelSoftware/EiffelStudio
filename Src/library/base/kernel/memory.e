@@ -71,6 +71,23 @@ feature -- Status report
 			"mem_largest"
 		end;
 
+	max_mem: INTEGER is
+			-- Maximum amount of bytes the run-time can allocate.
+		external
+			"C | %"eif_memory.h%""
+		alias
+			"eif_get_max_mem"
+		end;
+
+	chunk_size: INTEGER is
+			-- Minimal size of a memory chunk. The run-time always
+			-- allocates a multiple of this size.
+		external
+			"C | %"eif_memory.h%""
+		alias
+			"eif_get_chunk_size"
+		end;
+
 feature -- Status setting
 
 	collection_off is
@@ -146,6 +163,26 @@ feature -- Status setting
 			"C | %"eif_memory.h%""
 		alias
 			"mem_pset"
+		end;
+
+	set_max_mem (value: INTEGER) is
+			-- Set the maximum amount of memory the run-time can allocate.
+		require
+			positive_value: value > 0;
+		external
+			"C | %"eif_memory.h%""
+		alias
+			"eif_set_max_mem"
+		end;
+
+	set_chunk_size (value: INTEGER) is
+			-- Set the minimal size of a memory chunk.
+		require
+			positive_value: value > 0;
+		external
+			"C | <memory.h>"
+		alias
+			"eif_set_chunk_size"
 		end;
 
 feature -- Removal

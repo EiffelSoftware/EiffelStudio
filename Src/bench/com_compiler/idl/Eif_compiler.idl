@@ -331,7 +331,7 @@ interface IEiffelFeatureDescriptor: IUnknown
 
   [helpstring ("Feature location, full path to file and line number")]
   HRESULT feature_location (  [in, out] BSTR * file_path, 
-                [in, out] LONG * line_number);
+                [in, out] ULONG * line_number);
   
   [helpstring ("Feature signature.")]
   HRESULT signature ([out, retval] BSTR * return_value);

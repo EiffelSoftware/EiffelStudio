@@ -210,14 +210,14 @@ external
 		"$(EIFFEL_SRC)/C/liman/shared/libshared.a",
 		"$(EIFFEL_SRC)/C/minilzo/minilzo.o",
 		"$(EIFFEL_SRC)/C/idrs/libidr.a",
-		"$(EIFFEL_SRC)/C_library/libpng/libpng.a",
-		"$(EIFFEL_SRC)/C_library/zlib/libz.a",
 		"$(EIFFEL_SRC)/C_library/expat/xmlparse/libexpat.a",
 		"$(EIFFEL_SRC)/library/event/spec/$(ISE_PLATFORM)/lib/io_watcher.o",
 		"$(EIFFEL_SRC)/library/exml/compiler_specific/ise/spec/$(ISE_PLATFORM)/lib/exml_parser.o",
 		"$(EIFFEL_SRC)/library/net/spec/$(ISE_PLATFORM)/lib/libnet.a",
 		"$(EIFFEL_SRC)/library/vision2/spec/$(ISE_PLATFORM)/lib/gtk_eiffel.o",
 		"$(EIFFEL_SRC)/library/vision2/spec/$(ISE_PLATFORM)/lib/load_pixmap.o `gtk-config --libs`",
+		"$(EIFFEL_SRC)/C_library/libpng/libpng.a",
+		"$(EIFFEL_SRC)/C_library/zlib/libz.a",
 		"-L/usr/X11R6/lib/ -lXtst"
 
 end

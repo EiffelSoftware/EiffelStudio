@@ -91,8 +91,6 @@ rt_public char **melt;						/* Byte code array */
 rt_public int *mpatidtab;					/* Table of pattern id's indexed by body id's */
 rt_public struct eif_opt *eoption;			/* Option table */
 rt_public struct p_interface *pattern;		/* Pattern table */
-rt_public struct eif_par_types **eif_par_table;	/*Parent table */
-rt_public int eif_par_table_size;			/* size of parent table */
 
 #define exvec() exset(null, 0, null)	/* How to get an execution vector */
 #else
@@ -100,12 +98,13 @@ rt_public struct cnode *esystem;			/* Eiffel system (updated by DLE) */
 rt_public struct conform **co_table;		/* Eiffel conformance table (updated DLE) */
 rt_public long *esize;						/* Size of objects (updated by DLE) */
 rt_public long *nbref;						/* Gives # of references (updated by DLE) */
-rt_public struct eif_par_types **eif_par_table;	/*Parent table */
-rt_public int eif_par_table_size;			/* size of parent table */
 
 /*#define exvec() exft()		*/			/* No stack dump in final mode */
 #define exvec() exset(null, 0, null)	/* How to get an execution vector */
 #endif
+
+rt_public struct eif_par_types **eif_par_table;	/*Parent table */
+rt_public int eif_par_table_size;			/* size of parent table */
 
 rt_public void failure(void);					/* The Eiffel exectution failed */
 rt_private Signal_t emergency(int sig);			/* Emergency exit */

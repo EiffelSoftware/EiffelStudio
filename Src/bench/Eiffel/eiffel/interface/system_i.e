@@ -2282,7 +2282,7 @@ feature -- Final mode generation
 			i := local_classes.count
 			from
 				deg_output := Degree_output
-				deg_output.put_start_degree (-4, i)
+				deg_output.put_start_degree (-2, i)
 				local_classes.start
 			until
 				local_classes.after
@@ -2298,7 +2298,7 @@ feature -- Final mode generation
 						-- Since a class can be removed, test if `a_class'
 						-- is not Void.
 					if a_class /= Void then
-						deg_output.put_degree_minus_4 (a_class, i)
+						deg_output.put_degree_minus_2 (a_class, i)
 						i := i - 1
 						a_class.process_polymorphism
 						History_control.check_overload
@@ -2331,7 +2331,7 @@ feature -- Final mode generation
 				open_log_files
 				j := local_classes.count
 				deg_output := Degree_output
-				deg_output.put_start_degree (-5, j)
+				deg_output.put_start_degree (-3, j)
 				local_classes.start
 			until
 				local_classes.after
@@ -2347,7 +2347,7 @@ feature -- Final mode generation
 						-- Since a class can be removed, test if `a_class´
 						-- is not Void.
 					if a_class /= Void then
-						deg_output.put_degree_minus_5 (a_class, j)
+						deg_output.put_degree_minus_3 (a_class, j)
 						current_class := a_class
 						a_class.pass4
 						j := j - 1

@@ -616,11 +616,10 @@ feature {NONE} -- Implementation Graphical Interface
 			search_button := search_cmd_holder.associated_button
 
 			!! quit_cmd.make (Current)
-			!! quit_button.make (quit_cmd, routine_toolbar)
 
 			if not is_in_project_tool then
 				!! quit_menu_entry.make (quit_cmd, file_menu)
-				!! quit_cmd_holder.make (quit_cmd, quit_button, quit_menu_entry)
+				!! quit_cmd_holder.make (quit_cmd, Void, quit_menu_entry)
 
 				!! exit_cmd_holder.make_plain (Project_tool.quit_cmd_holder.associated_command)
 				!! exit_menu_entry.make (Project_tool.quit_cmd_holder.associated_command, file_menu)
@@ -788,10 +787,6 @@ feature {NONE} -- Implementation Graphical Interface
 			routine_toolbar.attach_left_widget (routine_text_field, label, 7)
 			routine_toolbar.attach_top (class_text_field, 0)
 			routine_toolbar.attach_left_widget (label, class_text_field, 0)
-
-			routine_toolbar.attach_top (quit_button, 0)
-			routine_toolbar.attach_right (quit_button, 0)
-			routine_toolbar.detach_left (quit_button)
 		end
 
 feature {NONE} -- Properties

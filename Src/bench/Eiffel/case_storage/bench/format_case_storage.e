@@ -58,10 +58,10 @@ feature
 			clear_shared_case_information;
 			if Rescue_status.is_error_exception then
 				Rescue_status.set_is_error_exception (False);
-				rescued := True;
 			else
 				error_window.put_string ("Internal error: Cannot generate EiffelCase project.%N")
-			end
+			end;
+			rescued := True;
 			retry
 		end
 
@@ -92,12 +92,12 @@ feature {NONE}
 			s_system_data.set_class_id_number (System.class_counter.value);
 			s_system_data.set_cluster_view_number (View_id_info.cluster_view_number);
 			Case_file_server.tmp_save_system (s_system_data);
-			io.error.putstring ("Saving EiffelCase project to disk.%N");
+			io.error.putstring ("Saving EiffelCase project to CASEGEN directory.%N");
 			Case_file_server.save_eiffelcase_format;
 		rescue
 			if Case_file_server.had_io_problems then
 				Rescue_status.set_is_error_exception (True);
-				error_window.put_string ("Cannot store EiffelCase format to disk.%N");
+				error_window.put_string ("Cannot store EiffelCase format to CASEGEN directory.%N");
 			elseif Case_file_server.is_saving then
 				Rescue_status.set_is_error_exception (True);
 				error_window.put_string ("EiffelCase format maybe corrupted.%N");
@@ -111,7 +111,7 @@ feature {NONE}
 			View_id_info.remove_old_classes;
 		rescue
 			Rescue_status.set_is_error_exception (True);
-			error_window.put_string ("Error: Could not remove old classes from disk.%N");
+			error_window.put_string ("Error: Could not remove old classes from CASEGEN directory.%N");
 		end;
 
 	initialize_view_ids is

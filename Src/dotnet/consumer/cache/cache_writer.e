@@ -73,7 +73,7 @@ feature -- Basic Operations
 					-- only consume `assembly' if assembly has not already been consumed,
 					-- corresponding assembly has been modified or if consumer tool has been 
 					-- modified.
-				if not dir.exists or else consumer.is_assembly_modified (assembly, dir.name) or else consumer.is_newer_tool (dir.name) then
+				if not dir.exists or else consumer.does_consumed_assembly_require_reconsume (assembly, dir.name) or else consumer.is_newer_tool (dir.name) then
 					if dir.exists then
 						dir.recursive_delete
 					else

@@ -447,7 +447,7 @@ feature {NONE} -- Implementation
 				-- only consume `assembly' if assembly has not already been consumed,
 				-- corresponding assembly has been modified or if consumer tool has been 
 				-- modified.
-			if not consume_folder.exists or else assembly_consumer.is_assembly_modified (ass, output_destination_path) or else assembly_consumer.is_newer_tool (output_destination_path) then
+			if not consume_folder.exists or else assembly_consumer.does_consumed_assembly_require_reconsume (ass, output_destination_path) or else assembly_consumer.is_newer_tool (output_destination_path) then
 				create des
 				des.deserialize (local_info_path)
 				if des.successful then

@@ -26,43 +26,6 @@ feature {NONE}-- initialisation
 		do		
 		end
 		
-feature {NONE} -- notification status
-
-	inside_callback_process: BOOLEAN
-			-- Is it inside a callback processing ?
-
-	callback_is_waiting: BOOLEAN
-
-	data_access_enabled: BOOLEAN
-
-feature -- notification
-
-	notify_start_of_callback (cb_id: INTEGER) is
-			-- 
-		do
-			inside_callback_process := True
-		end
-
-	notify_end_of_callback (cb_id: INTEGER) is
-			-- 
-		do
-			inside_callback_process := False
-		end
-
---feature {NONE} -- notification "waiting"
---
---	notify_start_of_callback_waiting (cb_id: INTEGER) is
---			-- 
---		do
---			callback_is_waiting := True
---		end
---
---	notify_end_of_callback_waiting (cb_id: INTEGER) is
---			-- 
---		do
---			callback_is_waiting := False
---		end
-
 feature {NONE} -- callbacks initialisation
 
 	initialize_managed_callback_status is

@@ -587,7 +587,6 @@ feature {NONE} -- Implementation
 						create exception_item
 						exception_item.set_text ("Exception raised")
 						exception_item.set_pixmap (Pixmaps.Icon_green_tick)
---						Icon_red_cross)
 						local_tree.extend (exception_item)
 						
 						

@@ -25,7 +25,12 @@ inherit
 		export
 			{NONE} all
 		end
-
+		
+	EIFNET_EXPORTER
+		export
+			{NONE} all
+		end
+		
 	ICOR_EXPORTER
 		export
 			{NONE} all

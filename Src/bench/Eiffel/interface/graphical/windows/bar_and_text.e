@@ -56,7 +56,7 @@ feature
 
 	realize is
 		do
-			--set_default_position;
+			set_default_position;
 			shell_realize
 		end;
 

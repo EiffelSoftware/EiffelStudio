@@ -37,7 +37,7 @@ WOBJECTS = wpstore.o pretrieve.o date.o encode.o offset.o byte.o
 	$(RM) $@
 	$(CC) -c $(JCFLAGS) $<
 
-all:: libcompiler.a libwcompiler.a
+all:: libcompiler.a libwcompiler.a bytedump meltdump
 
 libcompiler.a: $(OBJECTS)
 	$(RM) $@

@@ -29,6 +29,8 @@ feature {NONE} -- Constants
 	
 	Transmission_error: INTEGER is 9
 	
+	Connection_timeout: INTEGER is 10
+	
 feature -- Status report
 
 	error_text (code: INTEGER): STRING is
@@ -56,6 +58,8 @@ feature -- Status report
 				Result := "Transfer failed"
 			when Transmission_error then
 				Result := "Transmission error"
+			when Connection_timeout then
+				Result := "Connection timeout"
 			end
 		end
 

@@ -5,7 +5,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	UNAVAILABLE_DEBUG_VALUE
+	DUMMY_MESSAGE_DEBUG_VALUE
 
 inherit
 	ABSTRACT_DEBUG_VALUE
@@ -83,6 +83,9 @@ feature {NONE} -- Output
 		end
 		
 feature -- Output
+
+	is_dummy_value: BOOLEAN is True
+			-- Does `Current' represent a object value or for instance an error message
 		
 	expandable: BOOLEAN is False
 			-- Does `Current' have sub-items? (Is it a non void reference, a special object, ...)
@@ -100,7 +103,7 @@ feature -- Output
 			-- Actual type of `Current'. cf possible codes underneath.
 			-- Used to display the corresponding icon.
 		do
-			Result := Immediate_value
+			Result := Error_message_value
 		end
 
 end

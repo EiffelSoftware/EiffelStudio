@@ -37,7 +37,7 @@ upx wizard.exe
 echo -----------------------------------------------------------------
 echo ------- Copying generated executable file into Delivery ---------
 echo -----------------------------------------------------------------
-copy wizard.exe %DELIVERY%\bench\new_projects\wizards\dotnet\spec\windows\bin
+copy wizard.exe %DELIVERY%\bench\wizards\new_projects\dotnet\spec\windows
 cd %TEMP%
 popd
 echo -----------------------------------------------------------------

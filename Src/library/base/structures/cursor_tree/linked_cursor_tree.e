@@ -15,13 +15,13 @@ class LINKED_CURSOR_TREE [G] inherit
 
 	RECURSIVE_CURSOR_TREE [G]
 		redefine
-			put_right,
+			extend, put_right,
 			active, cursor_anchor
 		end
 
 creation
 
-	make
+	make, make_root
 
 feature -- Initialization
 
@@ -37,6 +37,13 @@ feature -- Initialization
 			is_empty: empty
 		end;
 
+	make_root (v: G) is
+			-- Create a tree with `v' as root.
+		do
+			make;
+			put_root (v)
+		end;
+
 feature -- Status report
 
 	full: BOOLEAN is false;
@@ -45,6 +52,22 @@ feature -- Status report
 	prunable: BOOLEAN is true
 
 feature -- Element change
+
+	extend (v: G) is
+		-- Add node of value `v' at extreme right of level of current node if
+		-- it exists and is not root.
+	local
+		pos: CURSOR;
+	do
+		pos := cursor;
+		go_last_child;
+		put_right (v);
+		go_to (pos);
+		if below then
+			below := false;
+			down (0);
+		end;
+	end;
 
 	put_right (v: G) is
 			-- Add `v' to the right of cursor position.
@@ -63,6 +86,19 @@ feature -- Element change
 				active_parent.child_put_right (v)
 			end
 		end;
+
+	put_root (v: G) is
+			-- Make `v' the root of an empty tree; set cursor to root.
+		require
+			is_empty: empty
+		do
+			above_node.child_put_right (v);
+			active := above_node.first_child
+		ensure
+			is_root: is_root;
+			count = 1
+		end;
+
 
 feature {LINKED_CURSOR_TREE} -- Implementation
 

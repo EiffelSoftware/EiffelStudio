@@ -185,14 +185,26 @@ feature {NONE} -- WEL Implementation
 			-- selection has changed from one item to another.
 		local
 			clist: HASH_TABLE [EV_TREE_ITEM_IMP, POINTER]
+			p: POINTER
+			elem: EV_TREE_ITEM_IMP
 		do
 			clist := ev_children
-			if clist @ info.old_item.h_item /= Void then
-				(clist @ info.old_item.h_item).execute_command (Cmd_item_deactivate, Void)
+			p := info.old_item.h_item
+			if p /= default_pointer then
+				elem := clist.item (p)
+				if elem /= Void then
+					elem.execute_command (Cmd_item_deactivate, Void)
+				end
 			end
-			if clist @ info.new_item.h_item /= Void then
-				(clist @ info.new_item.h_item).execute_command (Cmd_item_activate, Void)
+
+			p := info.new_item.h_item
+			if p /= default_pointer then
+				elem := clist.item (p)
+				if elem /= Void then
+					elem.execute_command (Cmd_item_activate, Void)
+				end
 			end
+
 			execute_command (Cmd_selection, Void)
 		end
 

@@ -60,13 +60,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-feature -- Access		
-		
-	overwrite_documents: BOOLEAN is
-			-- Should we overwrite documents
-		do
-			Result := overwrite_documents_radio.is_selected
-		end
+feature -- Access	
 		
 	all_documents: BOOLEAN is
 			-- Should parsing be done on all open documents?
@@ -258,6 +252,7 @@ feature {NONE} -- Expressions Implementation
 			l_file.open_read_write
 			l_file.readstream (l_file.count)
 			l_file_string := l_file.laststring
+			l_file.close
 			l_subject := clone (l_file_string)
 			l_final_string := clone (l_file_string)
 			from
@@ -302,20 +297,9 @@ feature {NONE} -- Expressions Implementation
 				end
 				
 				Ordered_expressions.forth
-			end			
-			if overwrite_documents then				
-				a_doc.set_text (l_final_string)
-				a_doc.save
-			else
-				l_file.close
-				create l_filename.make_from_string (directory_no_file_name (a_doc.name))
-				l_filename.extend (short_name (file_no_extension (a_doc.name)))
-				l_filename.add_extension ("xml")
-				create l_file.make_create_read_write (l_filename.string)
-				l_file.put_string (l_final_string)
-				l_file.close
-				new_files.extend (l_filename.string)
 			end						
+			a_doc.set_text (l_final_string)	
+			a_doc.save
 		end
 	
 	expressions: HASH_TABLE [STRING, STRING] is
@@ -395,17 +379,8 @@ feature {NONE} -- XML Implementation
 				if xml_name_check.is_selected then
 					set_element_renamed (False)
 					set_element_name (a_doc.xml, element_name_array, xml_name_text.text, 1)
-					if element_renamed and then overwrite_documents then
+					if element_renamed then
 						a_doc.set_text (a_doc.xml.text)
-						a_doc.save
-					else
-						create l_filename.make_from_string (directory_no_file_name (a_doc.name))
-						l_filename.extend (short_name (file_no_extension (a_doc.name)))
-						l_filename.add_extension ("psd")
-						create l_file.make_create_read_write (l_filename.string)
-						l_file.put_string (a_doc.xml.text)
-						l_file.close
-						new_files.extend (l_filename.string)
 					end
 				end		
 			end
@@ -450,10 +425,12 @@ feature {NONE} -- Implementation
 			end
 			if all_project then
 				run_on_directory (create {DIRECTORY}.make (Shared_project.root_directory))
-			elseif all_documents then
-				run_on_documents (Shared_document_editor.documents)
-			else
-				run_on_document (Shared_document_editor.current_document)
+			elseif shared_document_editor.has_open_document then
+				if all_documents then
+					run_on_documents (Shared_document_editor.documents)
+				else
+					run_on_document (Shared_document_editor.current_document)
+				end
 			end
 		end		
 		

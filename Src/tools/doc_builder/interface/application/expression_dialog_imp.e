@@ -76,9 +76,6 @@ feature {NONE}-- Initialization
 			create l_ev_label_8
 			create l_ev_horizontal_separator_5
 			create l_ev_vertical_box_3
-			create overwrite_documents_radio
-			create new_document_radio
-			create l_ev_vertical_box_4
 			create all_open_radio
 			create all_project_radio
 			create l_ev_cell_4
@@ -134,11 +131,8 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_13.extend (l_ev_label_8)
 			l_ev_horizontal_box_13.extend (l_ev_horizontal_separator_5)
 			l_ev_vertical_box_1.extend (l_ev_vertical_box_3)
-			l_ev_vertical_box_3.extend (overwrite_documents_radio)
-			l_ev_vertical_box_3.extend (new_document_radio)
-			l_ev_vertical_box_1.extend (l_ev_vertical_box_4)
-			l_ev_vertical_box_4.extend (all_open_radio)
-			l_ev_vertical_box_4.extend (all_project_radio)
+			l_ev_vertical_box_3.extend (all_open_radio)
+			l_ev_vertical_box_3.extend (all_project_radio)
 			l_ev_vertical_box_1.extend (l_ev_cell_4)
 			l_ev_vertical_box_1.extend (l_ev_horizontal_box_14)
 			l_ev_horizontal_box_14.extend (l_ev_cell_5)
@@ -154,11 +148,11 @@ feature {NONE}-- Initialization
 			l_ev_vertical_box_1.set_border_width (border_width)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_13)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_vertical_box_3)
-			l_ev_vertical_box_1.disable_item_expand (l_ev_vertical_box_4)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_cell_4)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_14)
 			notebook.set_item_text (l_ev_vertical_box_2, "Regular Expressions")
 			notebook.set_item_text (xml_widget_box, "XML Parsing")
+			l_ev_vertical_box_2.hide
 			l_ev_vertical_box_2.set_padding_width (padding_width)
 			l_ev_vertical_box_2.set_border_width (border_width)
 			l_ev_vertical_box_2.disable_item_expand (l_ev_horizontal_box_1)
@@ -237,16 +231,12 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_13.set_padding_width (padding_width)
 			l_ev_horizontal_box_13.set_border_width (border_width)
 			l_ev_horizontal_box_13.disable_item_expand (l_ev_label_8)
-			l_ev_label_8.set_text ("Options")
+			l_ev_label_8.set_text ("Advanced")
 			l_ev_label_8.align_text_left
 			l_ev_vertical_box_3.set_padding_width (padding_width)
 			l_ev_vertical_box_3.set_border_width (border_width)
-			overwrite_documents_radio.set_text ("Overwrite documents")
-			new_document_radio.set_text ("Create new document (will have .psd extension)")
-			l_ev_vertical_box_4.set_padding_width (padding_width)
-			l_ev_vertical_box_4.set_border_width (border_width)
-			l_ev_vertical_box_4.disable_item_expand (all_open_radio)
-			all_open_radio.set_text ("Apply to open documents")
+			l_ev_vertical_box_3.disable_item_expand (all_open_radio)
+			all_open_radio.set_text ("Apply to all open documents")
 			all_project_radio.set_text ("Apply to all project documents")
 			l_ev_horizontal_box_14.set_padding_width (padding_width)
 			l_ev_horizontal_box_14.set_border_width (border_width)
@@ -270,8 +260,7 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	l_ev_vertical_box_1, l_ev_vertical_box_2, xml_widget_box, l_ev_vertical_box_3, 
-	l_ev_vertical_box_4: EV_VERTICAL_BOX
+	l_ev_vertical_box_1, l_ev_vertical_box_2, xml_widget_box, l_ev_vertical_box_3: EV_VERTICAL_BOX
 	notebook: EV_NOTEBOOK
 	l_ev_horizontal_box_1, l_ev_horizontal_box_2, l_ev_horizontal_box_3, l_ev_horizontal_box_4, 
 	l_ev_horizontal_box_5, l_ev_horizontal_box_6, l_ev_horizontal_box_7, l_ev_horizontal_box_8, 
@@ -287,8 +276,7 @@ feature -- Access
 	okay_button, cancel_button: EV_BUTTON
 	expression_text, replacement_text, xml_name_text, xml_expr_text: EV_TEXT_FIELD
 	xml_structure_list: EV_TREE
-	xml_name_check, xml_expr_check: EV_CHECK_BUTTON
-	overwrite_documents_radio, new_document_radio, all_open_radio, all_project_radio: EV_RADIO_BUTTON
+	xml_name_check, xml_expr_check, all_open_radio, all_project_radio: EV_CHECK_BUTTON
 
 feature {NONE} -- Implementation
 

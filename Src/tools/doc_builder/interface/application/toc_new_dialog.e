@@ -9,6 +9,9 @@ class
 
 inherit
 	TOC_NEW_DIALOG_IMP
+		redefine
+			show_modal_to_window
+		end
 	
 	SHARED_OBJECTS
 		undefine
@@ -29,6 +32,19 @@ feature {NONE} -- Initialization
 			okay_button.select_actions.extend (agent okay)
 			cancel_button.select_actions.extend (agent hide)
 		end
+		
+feature -- Display
+
+	show_modal_to_window (a_window: EV_WINDOW) is
+			-- Show
+		do
+			if shared_project.is_valid then
+				project_radio.enable_sensitive
+			else	
+				project_radio.disable_sensitive
+			end
+			precursor (a_window)
+		end		
 
 feature {NONE} -- Implementation
 

@@ -47,8 +47,9 @@ feature {NONE} -- Initialization
 			new_menu_item.select_actions.extend 			(agent open_template_dialog)
 			open_menu_item.select_actions.extend 			(agent Shared_document_manager.open_document)
 			open_project_menu_item.select_actions.extend 	(agent Shared_project.open)
+			close_file_menu_item.select_actions.extend 		(agent Shared_document_editor.close_document)
 			save_menu_item.select_actions.extend 			(agent Shared_document_editor.save_document)
-			close_menu_item.select_actions.extend 			(agent Shared_document_editor.close_document)
+			exit_menu_item.select_actions.extend 			(agent close_application)
 			
 					-- Edit Menu
 			menu_uppercase_tags.select_actions.extend 		(agent toggle_format_options)
@@ -95,6 +96,7 @@ feature {NONE} -- Initialization
 			toolbar_open.select_actions.extend 				(agent Shared_document_manager.open_document)
 			toolbar_save.select_actions.extend 				(agent Shared_document_editor.save_document)
 			toolbar_validate.select_actions.extend 			(agent Shared_document_editor.validate_document)
+			toolbar_link_check.select_actions.extend		(agent shared_document_editor.validate_document_links)
 			toolbar_properties.select_actions.extend 		(agent open_document_properties_dialog)
 			output_combo.select_actions.extend 				(agent update_output_filter)
 											
@@ -121,46 +123,12 @@ feature {NONE} -- Initialization
 
 				-- Initial setup			
 			output_combo.disable_edit
-			update_status_report (True, "No document loaded")			
-			initialize_temp_directory
+			output_combo.change_actions.extend (agent update_output_filter)
+			update_status_report (True, "No document loaded")
 			should_update := True
 			update			
 			close_request_actions.extend (agent close_application)
 		end
-		
-	initialize_temp_directory is
-			-- Initialize directory for storage of temporary information.  Currently this is a directory
-			-- on the root drive because help compilation for Microsoft Help 1.x fails in directories
-			-- with absolute path names of a certain size.  By placing in the root this reduces the overall
-			-- size of path names.
-		local
-			l_dir: DIRECTORY
-		once
-					-- Main temporary directory
-			create l_dir.make (Shared_constants.Application_constants.Temporary_directory)
-			if l_dir.exists then
-				l_dir.recursive_delete
-			end
-			l_dir.create_dir
-			
-					-- Temporary directory for Help projects
-			create l_dir.make (Shared_constants.Application_constants.Temporary_help_directory)
-			if not l_dir.exists then
-				l_dir.create_dir
-			end		
-			
-					-- 	Temporary directory for HTML
-			create l_dir.make (Shared_constants.Application_constants.Temporary_html_directory)
-			if not l_dir.exists then
-				l_dir.create_dir
-			end
-			
-					-- Temporary directory for XML
-			create l_dir.make (Shared_constants.Application_constants.Temporary_xml_directory)
-			if not l_dir.exists then
-				l_dir.create_dir
-			end
-		end	
 
 feature -- Commands
 
@@ -231,6 +199,13 @@ feature -- Interface Events
 			l_curr_doc: DOCUMENT
 			l_curr_widget: EV_TEXT
 		do
+			if shared_project.is_valid then
+				toggle_sensitivity (toolbar_new, True)
+				toggle_sensitivity (toolbar_open, True)
+			else
+				toggle_sensitivity (toolbar_new, False)
+				toggle_sensitivity (toolbar_open, False)
+			end
 			if Shared_document_editor.has_open_document then
 				l_curr_doc := Shared_document_editor.current_document
 				l_curr_widget := Shared_document_editor.current_widget.internal_edit_widget
@@ -245,6 +220,7 @@ feature -- Interface Events
 				toggle_sensitivity (toolbar_xml_format, True)
 				toggle_sensitivity (toolbar_code_format, l_curr_widget.has_selection)
 				toggle_sensitivity (editor_close, True)
+				toggle_sensitivity (toolbar_link_check, True)
 				
 						-- Validation and properties
 				if Shared_document_manager.has_schema then
@@ -265,6 +241,7 @@ feature -- Interface Events
 				toggle_sensitivity (toolbar_xml_format, False)
 				toggle_sensitivity (toolbar_code_format, False)
 				toggle_sensitivity (editor_close, False)
+				toggle_sensitivity (toolbar_link_check, False)
 				
 						-- Validation
 				toggle_sensitivity (toolbar_validate, False)
@@ -286,11 +263,14 @@ feature -- Interface Events
 			if Shared_project.is_valid then
 				toggle_sensitivity (document_menu, True)
 				toggle_sensitivity (project_menu, True)
-				toggle_sensitivity (tool_menu, True)
-			else
+				toggle_sensitivity (tool_menu, True)				
+				toggle_sensitivity (new_menu_item, True)
+				toggle_sensitivity (open_menu_item, True)
+			else			
 				toggle_sensitivity (document_menu, False)
 				toggle_sensitivity (project_menu, False)
 				toggle_sensitivity (tool_menu, False)
+				toggle_sensitivity (open_menu_item, False)
 			end
 			if Shared_document_editor.has_open_document then
 				l_curr_doc := Shared_document_editor.current_document
@@ -305,7 +285,7 @@ feature -- Interface Events
 				
 						-- File Menu
 				toggle_sensitivity (save_menu_item, l_curr_doc.is_modified)
-				toggle_sensitivity (close_menu_item, True)
+				toggle_sensitivity (close_file_menu_item, True)
 				
 						-- Edit Menu
 				toggle_sensitivity (document_menu, True)
@@ -315,7 +295,7 @@ feature -- Interface Events
 			else
 						-- File menu
 				toggle_sensitivity (save_menu_item , False)
-				toggle_sensitivity (close_menu_item, False)
+				toggle_sensitivity (close_file_menu_item, False)
 				
 						-- Edit Menu
 				toggle_sensitivity (document_menu, False)
@@ -402,6 +382,7 @@ feature -- GUI Updating
 						list.after
 					loop					
 						create l_row.make_with_text (list.item)
+						l_row.pointer_double_press_actions.force_extend (agent ((shared_document_editor.current_widget).internal_edit_widget).tag_selection_as_xml (list.item))
 						sub_elements_list.extend (l_row)
 						list.forth
 					end
@@ -438,9 +419,14 @@ feature -- GUI Updating
 			-- Update the output filter type
 		local
 			l_filter: DOCUMENT_FILTER
+			l_curr_doc: DOCUMENT
 		do
 			l_filter := Shared_project.filter_manager.filter_by_description (output_combo.selected_item.text)			
-			Shared_project.filter_manager.set_filter (l_filter)
+			shared_project.filter_manager.set_filter (l_filter)
+			l_curr_doc := shared_document_editor.current_document
+			if l_curr_doc /= Void then				
+				shared_web_browser.set_document (l_curr_doc)
+			end
 		end
 
 	update_output_combo is
@@ -639,8 +625,7 @@ feature {NONE} -- Dialog
 			if not shared_help_manager.last_show_successful then
 				create l_error.make ("Could not load help.")
 				l_error.append_error (create {ERROR}.make ("Unable to initialize help"))
-				shared_dialogs.error_dialog.set_error_list (l_error.errors)
-				shared_dialogs.error_dialog.show_modal_to_window (Current)
+				l_error.show
 			end	
 		end		
 
@@ -649,8 +634,10 @@ feature {NONE} -- Dialog
 		local
 			l_env: EV_ENVIRONMENT
 		do
-			l_env := (create {EV_ENVIRONMENT})			
-			shared_project.preferences.write
+			l_env := (create {EV_ENVIRONMENT})
+			if shared_project.is_valid then				
+				shared_project.preferences.write	
+			end
 			l_env.application.destroy
 		end		
 

@@ -64,7 +64,7 @@ feature {NONE} -- Commands
 				footer_loc_text.set_text (project_preferences.footer_name)
 			end
 			
-			-- Conversion Options
+				-- Conversion Options
 			set_check_button_value (header_override_check, project_preferences.override_file_header_declarations)
 			set_check_button_value (footer_override_check, project_preferences.override_file_footer_declarations)
 			set_check_button_value (use_include_tags, project_preferences.process_includes)
@@ -99,7 +99,8 @@ feature {NONE} -- Commands
 				shared_document_manager.remove_schema
 			else
 				shared_document_manager.initialize_schema (schema_loc_text.text)			
-			end			
+			end		
+			
 				-- Stylesheet
 			if css_loc_text.text.is_empty then
 				shared_document_manager.remove_stylesheet
@@ -131,6 +132,10 @@ feature {NONE} -- Commands
 			project_preferences.set_generate_feature_nodes (generate_feature_nodes_check.is_selected)
 				
 			project_preferences.write
+			
+			if shared_project.is_valid then			
+				shared_project.update		
+			end
 		end		
 
 	show_error (error: STRING) is
@@ -197,8 +202,7 @@ feature {NONE} -- Initialization
 				if Shared_document_manager.has_schema then
 					schema_loc_text.set_text (l_schema_file)
 							-- Update project
-					Shared_project.preferences.write
-					Shared_project.update				
+					Shared_project.preferences.write			
 				end	
 			end
 		end
@@ -212,7 +216,8 @@ feature {NONE} -- Initialization
 			if l_stylesheet_file /= Void then			
 				Shared_document_manager.initialize_stylesheet (l_stylesheet_file)
 				css_loc_text.set_text (l_stylesheet_file)		
-				Shared_project.preferences.write	
+				Shared_project.preferences.write
+				copy_stylesheet (Shared_constants.Application_constants.Temporary_html_directory)
 			end
 		end
 		
@@ -222,8 +227,10 @@ feature {NONE} -- Initialization
 			l_header_file: STRING
 		do
 			l_header_file := browse_file (Void)
-			header_loc_text.set_text (l_header_file)	
-			project_preferences.set_header (l_header_file)
+			if l_header_file /= Void then
+				header_loc_text.set_text (l_header_file)	
+				project_preferences.set_header (l_header_file)
+			end
 		end
 		
 	initialize_footer is
@@ -232,8 +239,10 @@ feature {NONE} -- Initialization
 			l_footer_file: STRING
 		do
 			l_footer_file := browse_file (Void)
-			footer_loc_text.set_text (l_footer_file)	
-			project_preferences.set_footer (l_footer_file)
+			if l_footer_file /= Void then
+				footer_loc_text.set_text (l_footer_file)	
+				project_preferences.set_footer (l_footer_file)
+			end
 		end
 	
 feature {NONE} -- Query
@@ -262,6 +271,22 @@ feature {NONE} -- Query
 				create l_file.make (css_loc_text.text)
 				if not l_file.exists then
 					show_error ("Stylesheet file does not exist.")
+					Result := False
+				end
+			end
+			
+			if Result = True and then not header_loc_text.text.is_empty then
+				create l_file.make (header_loc_text.text)
+				if not l_file.exists then
+					show_error ("Header file does not exist.")
+					Result := False
+				end
+			end
+			
+			if Result = True and then not footer_loc_text.text.is_empty then
+				create l_file.make (footer_loc_text.text)
+				if not l_file.exists then
+					show_error ("Footer file does not exist.")
 					Result := False
 				end
 			end

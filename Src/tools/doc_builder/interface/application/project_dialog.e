@@ -74,7 +74,7 @@ feature {NONE} -- Implementation
 feature {DOCUMENT_PROJECT} -- Implementation
 		
 	valid: BOOLEAN
-			-- Were optins valid?
+			-- Were options valid?
 
 end -- class PROJECT_DIALOG
 

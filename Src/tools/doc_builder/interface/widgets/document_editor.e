@@ -33,7 +33,6 @@ feature -- Initialization
 			key_constants: EV_KEY_CONSTANTS
 			accelerator: EV_ACCELERATOR
 		once
-			initialize_tag_accelerators
 			create key_constants			
 			
 				-- Ctrl-A
@@ -77,27 +76,7 @@ feature -- Initialization
 			create accelerator.make_with_key_combination (key, True, False, True)
 			accelerator.actions.extend (agent indent_selection (False))
 			Application_window.accelerators.extend (accelerator)
-		end
-		
-	initialize_tag_accelerators is
-			-- Initialize default accelerators which add XML tags into the editor
-		local
-			key: EV_KEY
-			key_constants: EV_KEY_CONSTANTS
-			accelerator: EV_ACCELERATOR
-		do
-			create key_constants
-			
-				-- Ctrl-B
-			create key.make_with_code (key_constants.Key_b)
-			create accelerator.make_with_key_combination (key, True, False, False)
-			add_tag_accelerator (accelerator, "bold")	
-			
-				-- Ctrl-I
-			create key.make_with_code (key_constants.Key_i)
-			create accelerator.make_with_key_combination (key, True, False, False)
-			add_tag_accelerator (accelerator, "italic")		
-		end		
+		end	
 		
 feature -- Editing		
 		
@@ -143,12 +122,19 @@ feature -- Editing
 			l_widget: DOCUMENT_TEXT_WIDGET
 		do
 			l_widget := current_widget.internal_edit_widget
-			if l_widget /= Void then							
-				l_widget.select_all
-				l_text := l_widget.selected_text
+			if l_widget /= Void then
+				if l_widget.has_selection then
+					l_text := l_widget.selected_text
+				else
+					l_widget.select_all
+					l_text := l_widget.selected_text	
+				end				
+				
 				if l_widget.can_insert (l_text) then
+					l_widget.cut_selection
 					l_text := l_widget.pretty_xml (l_text)
-					current_document.set_text (l_text)
+					l_widget.insert_text (l_text)
+					current_document.set_text (l_widget.text)
 				else
 					l_widget.deselect_all
 				end
@@ -185,7 +171,9 @@ feature -- Editing
 			else
 				current_widget.internal_edit_widget.disable_word_wrapping
 			end
-			current_widget.internal_edit_widget.set_font (preferences.font)
+			if preferences.font /= Void then				
+				current_widget.internal_edit_widget.set_font (preferences.font)	
+			end
 		end		
 
 	indent_selection (is_shift: BOOLEAN) is
@@ -228,8 +216,7 @@ feature -- Commands
 			add_document (a_doc)
 			set_current_document (a_doc)
 			display_document
-			Application_window.update
---			refresh
+			refresh
 		end
 		
 	close_documents is
@@ -256,21 +243,24 @@ feature -- Commands
 				create l_constants
 				create l_question_dialog.make_with_text ((create {MESSAGE_CONSTANTS}).file_save_prompt)
 				l_question_dialog.set_title (l_constants.ev_save)
-				l_question_dialog.set_buttons (<<l_constants.ev_yes, l_constants.ev_no>>)
+				l_question_dialog.set_buttons (<<l_constants.ev_yes, l_constants.ev_no, l_constants.ev_cancel>>)
 				l_question_dialog.show_modal_to_window (parent_window)
 				if l_question_dialog.selected_button.is_equal (l_constants.ev_yes) then
 					save_document
-				end
-			end								
-			shared_document_manager.remove_document (current_document)
-			documents.prune (current_document)
-			close_widget
-			refresh
+				end				
+			end
+			if l_question_dialog = Void or not l_question_dialog.selected_button.is_equal (l_constants.ev_cancel) then
+				shared_document_manager.remove_document (current_document)
+				documents.prune (current_document)
+				close_widget
+				refresh
+			end	
 		end	
 
 	save_document is
 			-- Called by `select_actions' of `save_xml_menu_item'.
 		do
+			current_document.set_text (current_widget.internal_edit_widget.text)
 			current_document.save
 		end			
 		
@@ -309,7 +299,51 @@ feature -- Commands
 					end
 				end
 			end
-		end	
+		end
+		
+	validate_document_links is
+			-- Validate current document links/hrefs
+		local
+			l_widget: DOCUMENT_TEXT_WIDGET
+			l_has_error: BOOLEAN
+			l_manager: LINK_MANAGER
+			l_links: ARRAYED_LIST [DOCUMENT_LINK]
+			l_error: ERROR
+			l_error_report: ERROR_REPORT
+		do			
+			if current_widget /= Void then
+				l_widget := current_widget.internal_edit_widget
+				if not l_widget.is_valid_xml then
+					l_has_error := True
+					parent_window.update_status_report (True, ("Invalid XML"))
+				else								
+					create l_manager
+					l_manager.add_document (current_document)
+					l_manager.check_links
+					if l_manager.invalid_links.is_empty then
+						parent_window.update_status_report (True, ("All links valid"))
+					else	
+						from
+							l_links := l_manager.invalid_links
+							create l_error_report.make ("Invalid Links")
+							l_links.start
+						until
+							l_links.after
+						loop
+							create l_error.make (l_links.item.url)	
+							l_error.set_action (agent (l_error_report.actions).search_for_error_text (l_links.item.url))
+							l_error_report.append_error (l_error)
+							l_links.forth
+						end
+						l_error_report.show
+					end
+				end
+				if l_has_error and then Shared_constants.Application_constants.is_gui_mode then
+					l_widget.error_report.show
+					l_widget.highlight_error
+				end			
+			end
+		end		
 		
 	open_search_dialog is
 			-- Open the search dialog for text searching
@@ -425,22 +459,24 @@ feature -- Access
 feature -- Events				
 		
 	refresh is
-			-- User selected another open document in notebook
+			-- Refresh
 		local
 			l_widget: like current_widget
 		do
-			l_widget ?= notebook.selected_item
-			if l_widget /= Void then
-				shared_dialogs.search_dialog.set_widget (l_widget.internal_edit_widget)
-				set_current_document (l_widget.document)
-				if preferences.font /= Void then					
-					l_widget.internal_edit_widget.set_font (preferences.font)	
-				end
-				l_widget.update
-			else
-				set_current_document (Void)
-			end			
-			parent_window.update
+			if not notebook.is_empty then
+				l_widget ?= notebook.selected_item
+				if l_widget /= Void then
+					shared_dialogs.search_dialog.set_widget (l_widget.internal_edit_widget)
+					set_current_document (l_widget.document)
+					if preferences.font /= Void then					
+						l_widget.internal_edit_widget.set_font (preferences.font)	
+					end
+					l_widget.update
+				else
+					set_current_document (Void)
+				end			
+				parent_window.update
+			end
 		end					
 		
 feature -- Access

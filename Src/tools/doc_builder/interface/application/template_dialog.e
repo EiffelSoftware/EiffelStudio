@@ -8,6 +8,9 @@ class
 
 inherit
 	TEMPLATE_DIALOG_IMP
+		redefine
+			show_modal_to_window
+		end
 	
 	SHARED_OBJECTS
 		undefine
@@ -31,6 +34,25 @@ feature {NONE} -- Initialization
 			cancel_button.select_actions.extend (agent hide)
 			label_selected := empty_label
 		end
+
+feature -- Display
+
+	show_modal_to_window (a_window: EV_WINDOW) is
+			-- Show
+		do
+			if shared_project.is_valid then
+				empty_label.enable_sensitive
+				empty_file.enable_sensitive
+				sample_label.enable_sensitive
+				sample.enable_sensitive
+			else
+				empty_label.disable_sensitive
+				empty_file.disable_sensitive
+				sample_label.disable_sensitive
+				sample.disable_sensitive
+			end	
+			precursor (a_window)
+		end		
 
 feature {NONE} -- Implementation
 

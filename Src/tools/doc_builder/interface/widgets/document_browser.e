@@ -18,15 +18,14 @@ inherit
 
 create
 	make
-
+	
 feature -- Creation
 
 	make is 
-			-- Create 
+			-- Make
 		do
 			default_create
-			should_update := True
-		end		
+		end
 
 feature -- Access
 
@@ -42,6 +41,8 @@ feature {NONE} -- Initialization
 			-- (due to regeneration of implementation class)
 			-- can be added here.	
 		do
+			should_update := True
+			
 				-- Browser
 			setup_browser
 			
@@ -87,6 +88,8 @@ feature -- Commands
 			-- document then simply refresh the loaded url.
 		do
 			if document /= Void then
+				document.set_text (document.widget.internal_edit_widget.text)
+				document.save
 				load_url (generated_document)
 			else
 				Internal_browser.refresh
@@ -224,7 +227,7 @@ feature {NONE} -- Implementation
 			if l_doc /= Void then
 				set_document (l_doc)
 			end
-		end				
+		end
 	
 --	events: DOCUMENT_BROWSER_EVENTS
 

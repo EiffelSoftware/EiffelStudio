@@ -45,6 +45,16 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
+	icon_png_file_ico: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		Once
+			create Result
+			create a_file_name.make_from_string (pixmap_directory)
+			a_file_name.set_file_name ("icon_png_file.ico")
+			set_with_named_file (Result, a_file_name)
+		end
+
 	icon_html_file_ico: EV_PIXMAP is
 		local
 			a_file_name: FILE_NAME
@@ -169,14 +179,20 @@ feature -- Access
 			Result := 175
 		end
 
-	icon_search_ico: EV_PIXMAP is
+	icon_link_check_ico: EV_PIXMAP is
 		local
 			a_file_name: FILE_NAME
 		Once
 			create Result
 			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.set_file_name ("icon_search.ico")
+			a_file_name.set_file_name ("icon_link_check.ico")
 			set_with_named_file (Result, a_file_name)
+		end
+
+	empty_cell_width: INTEGER is 
+			-- `Result' is INTEGER constant named empty_cell_width.
+		once
+			Result := 15
 		end
 
 	icon_validate_ico: EV_PIXMAP is
@@ -449,10 +465,24 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	empty_cell_width: INTEGER is 
-			-- `Result' is INTEGER constant named empty_cell_width.
-		once
-			Result := 15
+	icon_search_ico: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		Once
+			create Result
+			create a_file_name.make_from_string (pixmap_directory)
+			a_file_name.set_file_name ("icon_search.ico")
+			set_with_named_file (Result, a_file_name)
+		end
+
+	icon_jpeg_file_ico: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		Once
+			create Result
+			create a_file_name.make_from_string (pixmap_directory)
+			a_file_name.set_file_name ("icon_jpeg_file.ico")
+			set_with_named_file (Result, a_file_name)
 		end
 
 	icon_close_color_ico: EV_PIXMAP is
@@ -589,6 +619,16 @@ feature -- Access
 			-- `Result' is STRING constant named `studio_filtered_text'.
 		once
 			Result := "EiffelStudio Filtered"
+		end
+
+	icon_gif_file_ico: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		Once
+			create Result
+			create a_file_name.make_from_string (pixmap_directory)
+			a_file_name.set_file_name ("icon_gif_file.ico")
+			set_with_named_file (Result, a_file_name)
 		end
 
 	button_finish_text: STRING is

@@ -73,7 +73,7 @@ feature -- Query
 			loop
 				root_dir.readentry
 				l_last_entry := root_dir.lastentry
-				if l_last_entry /= Void and then not l_last_entry.is_equal (".") and then not l_last_entry.is_equal ("..") then
+				if l_last_entry /= Void and then not l_last_entry.is_equal (".") and then not l_last_entry.is_equal ("..") and not l_last_entry.is_equal ("CVS") then
 					create l_filename.make_from_string (root_dir.name)
 					l_filename.extend (root_dir.lastentry)
 					create file.make (l_filename.string)

@@ -37,10 +37,11 @@ feature {NONE}-- Initialization
 			create l_ev_menu_separator_1
 			create open_menu_item
 			create open_project_menu_item
+			create close_file_menu_item
 			create l_ev_menu_separator_2
 			create save_menu_item
 			create l_ev_menu_separator_3
-			create close_menu_item
+			create exit_menu_item
 			create document_menu
 			create cut_menu_item
 			create copy_menu_item
@@ -70,8 +71,6 @@ feature {NONE}-- Initialization
 			create shortcuts_menu_item
 			create help_menu
 			create help_menu_item
-			create l_ev_menu_separator_7
-			create about_menu_item
 			create l_ev_vertical_box_1
 			create l_ev_frame_1
 			create l_ev_horizontal_box_1
@@ -89,6 +88,7 @@ feature {NONE}-- Initialization
 			create l_ev_tool_bar_separator_3
 			create toolbar_validate
 			create toolbar_properties
+			create toolbar_link_check
 			create l_ev_tool_bar_separator_4
 			create l_ev_label_1
 			create output_combo
@@ -189,10 +189,11 @@ feature {NONE}-- Initialization
 			file_menu.extend (l_ev_menu_separator_1)
 			file_menu.extend (open_menu_item)
 			file_menu.extend (open_project_menu_item)
+			file_menu.extend (close_file_menu_item)
 			file_menu.extend (l_ev_menu_separator_2)
 			file_menu.extend (save_menu_item)
 			file_menu.extend (l_ev_menu_separator_3)
-			file_menu.extend (close_menu_item)
+			file_menu.extend (exit_menu_item)
 			l_ev_menu_bar_1.extend (document_menu)
 			document_menu.extend (cut_menu_item)
 			document_menu.extend (copy_menu_item)
@@ -222,8 +223,6 @@ feature {NONE}-- Initialization
 			tool_menu.extend (shortcuts_menu_item)
 			l_ev_menu_bar_1.extend (help_menu)
 			help_menu.extend (help_menu_item)
-			help_menu.extend (l_ev_menu_separator_7)
-			help_menu.extend (about_menu_item)
 			extend (l_ev_vertical_box_1)
 			l_ev_vertical_box_1.extend (l_ev_frame_1)
 			l_ev_frame_1.extend (l_ev_horizontal_box_1)
@@ -241,6 +240,7 @@ feature {NONE}-- Initialization
 			main_toolbar.extend (l_ev_tool_bar_separator_3)
 			main_toolbar.extend (toolbar_validate)
 			main_toolbar.extend (toolbar_properties)
+			main_toolbar.extend (toolbar_link_check)
 			main_toolbar.extend (l_ev_tool_bar_separator_4)
 			l_ev_horizontal_box_1.extend (l_ev_label_1)
 			l_ev_horizontal_box_1.extend (output_combo)
@@ -339,14 +339,17 @@ feature {NONE}-- Initialization
 			set_title ("Document Builder")
 			file_menu.set_text ("File")
 			new_menu_item.set_text ("New..")
-			open_menu_item.set_text ("Open..")
+			open_menu_item.disable_sensitive
+			open_menu_item.set_text ("Open File..")
 			open_menu_item.set_pixmap (icon_open_file_ico)
 			open_project_menu_item.set_text ("Open Project..")
+			close_file_menu_item.disable_sensitive
+			close_file_menu_item.set_text ("Close")
 			save_menu_item.disable_sensitive
 			save_menu_item.set_text ("Save")
 			save_menu_item.set_pixmap (icon_save_ico)
-			close_menu_item.set_text ("Close")
-			close_menu_item.set_pixmap (icon_close_color_ico)
+			exit_menu_item.set_text ("Exit")
+			exit_menu_item.set_pixmap (icon_close_color_ico)
 			document_menu.set_text ("Edit")
 			cut_menu_item.disable_sensitive
 			cut_menu_item.set_text ("Cut")
@@ -382,7 +385,6 @@ feature {NONE}-- Initialization
 			shortcuts_menu_item.set_text ("Shortcuts..")
 			help_menu.set_text ("Help")
 			help_menu_item.set_text ("Contents")
-			about_menu_item.set_text ("About..")
 			l_ev_vertical_box_1.set_padding_width (2)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_frame_1)
 			l_ev_frame_1.set_minimum_height (30)
@@ -390,9 +392,11 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_1.disable_item_expand (l_ev_label_1)
 			l_ev_horizontal_box_1.disable_item_expand (output_combo)
 			main_toolbar.set_minimum_height (22)
-			toolbar_new.set_tooltip ("New")
+			toolbar_new.disable_sensitive
+			toolbar_new.set_tooltip ("New File")
 			toolbar_new.set_pixmap (icon_new_doc_ico)
-			toolbar_open.set_tooltip ("Open")
+			toolbar_open.disable_sensitive
+			toolbar_open.set_tooltip ("Open File")
 			toolbar_open.set_pixmap (icon_open_file_ico)
 			toolbar_save.disable_sensitive
 			toolbar_save.set_tooltip ("Save")
@@ -418,6 +422,9 @@ feature {NONE}-- Initialization
 			toolbar_properties.disable_sensitive
 			toolbar_properties.set_tooltip ("Document Properties")
 			toolbar_properties.set_pixmap (icon_info_ico)
+			toolbar_link_check.disable_sensitive
+			toolbar_link_check.set_tooltip ("Validate Document Links")
+			toolbar_link_check.set_pixmap (icon_link_check_ico)
 			l_ev_label_1.set_text ("Filter ")
 			l_ev_label_1.align_text_left
 			output_combo.set_tooltip ("Output filter transformation")
@@ -437,6 +444,7 @@ feature {NONE}-- Initialization
 			selector.set_item_text (toc_container, "TOC View")
 			selector.set_item_text (element_area, "Schema Elements")
 			selector.set_item_text (type_area, "Types")
+			documentation_area.hide
 			documentation_area.set_padding_width (padding_width)
 			documentation_area.set_border_width (border_width)
 			toc_container.hide
@@ -567,12 +575,12 @@ feature -- Access
 
 	l_ev_menu_bar_1: EV_MENU_BAR
 	file_menu, document_menu, doc_format, view_menu, project_menu, tool_menu, help_menu: EV_MENU
-	new_menu_item, open_menu_item, open_project_menu_item, save_menu_item, close_menu_item, 
-	cut_menu_item, copy_menu_item, paste_menu_item, font_menu_item, parser_menu_item, 
-	search_menu_item, settings_menu_item, validator_menu_item, gen_menu_item, expression_menu_item, 
-	character_menu_item, shortcuts_menu_item, help_menu_item, about_menu_item: EV_MENU_ITEM
+	new_menu_item, open_menu_item, open_project_menu_item, close_file_menu_item, save_menu_item, 
+	exit_menu_item, cut_menu_item, copy_menu_item, paste_menu_item, font_menu_item, 
+	parser_menu_item, search_menu_item, settings_menu_item, validator_menu_item, gen_menu_item, 
+	expression_menu_item, character_menu_item, shortcuts_menu_item, help_menu_item: EV_MENU_ITEM
 	l_ev_menu_separator_1, l_ev_menu_separator_2, l_ev_menu_separator_3, l_ev_menu_separator_4, 
-	l_ev_menu_separator_5, l_ev_menu_separator_6, l_ev_menu_separator_7: EV_MENU_SEPARATOR
+	l_ev_menu_separator_5, l_ev_menu_separator_6: EV_MENU_SEPARATOR
 	wrap_menu_item, menu_uppercase_tags, element_selector_menu, types_selector_menu, 
 	doc_selector_menu, attribute_selector_menu, sub_element_menu: EV_CHECK_MENU_ITEM
 	l_ev_vertical_box_1, l_ev_vertical_box_2, documentation_area, toc_container, l_ev_vertical_box_3, 
@@ -588,7 +596,8 @@ feature -- Access
 	l_ev_tool_bar_9: EV_TOOL_BAR
 	toolbar_new, toolbar_open, toolbar_save, toolbar_cut, toolbar_copy, toolbar_paste, 
 	toolbar_xml_format, toolbar_code_format, toolbar_validate, toolbar_properties, 
-	main_close, node_properties_close, attribute_list_close, sub_element_close, editor_close: EV_TOOL_BAR_BUTTON
+	toolbar_link_check, main_close, node_properties_close, attribute_list_close, sub_element_close, 
+	editor_close: EV_TOOL_BAR_BUTTON
 	l_ev_tool_bar_separator_1, l_ev_tool_bar_separator_2, l_ev_tool_bar_separator_3, 
 	l_ev_tool_bar_separator_4: EV_TOOL_BAR_SEPARATOR
 	l_ev_label_1, l_ev_label_2, toc_status_report_label, l_ev_label_3, l_ev_label_4, 

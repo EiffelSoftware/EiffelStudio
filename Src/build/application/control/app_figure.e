@@ -10,6 +10,7 @@ inherit
 	EB_FIGURE
 		redefine
 			data,
+			drawing,
 			attach_drawing,
 			deselect, select_figure,
 			contains, is_superimposable
@@ -45,13 +46,16 @@ feature -- Access
 		deferred
 		end
 
-	attach_drawing (a_drawing: EV_DRAWABLE) is
+	drawing: APP_DR_AREA
+
+	attach_drawing (a_drawing: like drawing) is
 			-- Attach a drawing to the figure
 		do
 			inner_figure.attach_drawing_with_parent (Current, a_drawing)
 			outer_figure.attach_drawing_with_parent (Current, a_drawing)
 			text_image.attach_drawing_with_parent (Current, a_drawing)
 			update_text
+			Precursor (a_drawing)
 		end
 
 	center: EV_POINT is
@@ -152,6 +156,7 @@ feature -- Access
 			inner_figure.path.set_xor_mode
 			outer_figure.interior.set_xor_mode
 			outer_figure.path.set_xor_mode
+			text_image.set_xor_mode
 		end
 
 	text: STRING is

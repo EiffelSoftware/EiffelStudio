@@ -1381,7 +1381,7 @@ register4 char *ptr;
 	register2 uint32 i;					/* Index in hlist */
 	register3 union overhead *zone;		/* The to-be-freed zone */
 	register5 uint32 size;				/* Size of the coalesced block */
-	
+
 	zone = ((union overhead *) ptr) - 1;	/* Walk backward to header */
 	r = zone->ov_size;						/* Size of block */
 

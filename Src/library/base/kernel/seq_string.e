@@ -1,5 +1,7 @@
 indexing
 	status: "See notice at end of class"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class SEQ_STRING inherit
 
@@ -211,8 +213,6 @@ feature -- Cursor movement
 			index := index + 1;
 		end;
 
-
-
 feature -- Element change
 
 	replace (c: CHARACTER) is
@@ -237,8 +237,8 @@ feature -- Element change
 		do
 			string_precede (c);
 			index := index + 1;
- 		ensure
- 			new_index: index = old index + 1;
+		ensure
+			new_index: index = old index + 1;
 		end;
 
 	prepend (s: STRING) is
@@ -249,7 +249,7 @@ feature -- Element change
 			string_prepend (s);
 			index := index + s.count;
 		ensure
- 			new_index: index = old index + s.count;
+			new_index: index = old index + s.count;
 		end;
 
 feature -- Removal
@@ -328,7 +328,6 @@ feature {NONE} -- Inapplicable
 		end;
 
 end -- class SEQ_STRING
-
 
 --|----------------------------------------------------------------
 --| EiffelBase: library of reusable components for ISE Eiffel 3.

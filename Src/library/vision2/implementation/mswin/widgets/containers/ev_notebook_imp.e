@@ -17,7 +17,6 @@ inherit
 			set_insensitive,
 			set_default_minimum_size,
 			child_added,
-			on_key_down,
 			compute_minimum_width,
 			compute_minimum_height
 		end
@@ -485,9 +484,14 @@ feature {NONE} -- WEL Implementation
  	default_style: INTEGER is
  			-- Default style used to create the control
 		do
-			Result := Ws_child + Ws_group + Ws_visible 
-				+ Ws_tabstop + Ws_clipchildren + Ws_clipsiblings
-				+ Tcs_singleline
+			Result := Ws_child + Ws_group + Ws_tabstop 
+				+ Ws_visible + Ws_clipchildren + Ws_clipsiblings
+				+ Tcs_singleline + Tcs_focusonbuttondown
+		end
+
+	default_ex_style: INTEGER is
+		do
+			Result := Ws_ex_controlparent
 		end
 
  	basic_style: INTEGER is
@@ -508,11 +512,6 @@ feature {NONE} -- WEL Implementation
 					+ Tcs_fixedwidth + Tcs_multiline
  			end
  		end
-
-	default_ex_style: INTEGER is
-		do
-			Result := Ws_ex_controlparent
-		end
 
 	tab_height: INTEGER is
 			-- The height of the tabs in `Pos_top' ot `Pos_bottom' status,
@@ -540,29 +539,6 @@ feature {NONE} -- WEL Implementation
 			execute_command (Cmd_switch, Void)			
 		end
 
-	on_key_down (virtual_key, key_data: INTEGER) is
-			-- Use the tab key to jump from one control
-			-- to another. Use also the arrows.
-		local
-			hwnd: POINTER
-			window: WEL_WINDOW
-		do
-			{EV_CONTAINER_IMP} Precursor (virtual_key, key_data)
-			if virtual_key = Vk_tab then
-				hwnd := next_dlgtabitem (top_level_window_imp.item, item, True)
-				window := windows.item (hwnd)
-				window.set_focus
-			elseif virtual_key = Vk_down then
-				hwnd := next_dlggroupitem (top_level_window_imp.item, item, True)
-				window := windows.item (hwnd)
-				window.set_focus
-			elseif virtual_key = Vk_up then
-				hwnd := next_dlggroupitem (top_level_window_imp.item, item, False)
-				window := windows.item (hwnd)
-				window.set_focus
-			end
-		end
- 
 feature {NONE} -- Feature that should be directly implemented by externals
 
 	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is

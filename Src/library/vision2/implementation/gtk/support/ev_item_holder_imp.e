@@ -194,18 +194,22 @@ feature -- Implementation
 			-- Remove item at `a_position'.
 		require
 			a_position_valid: a_position > 0
+		local
+			item_pointer: POINTER
 		do	
-			C.gtk_container_remove (
-				list_widget,
-				C.g_list_nth_data (
-					C.gtk_container_children (list_widget),
-					a_position - 1
-				)
-			)
+			item_pointer := C.g_list_nth_data (
+						C.gtk_container_children (list_widget),
+						a_position - 1
+					)
+			C.gtk_widget_ref (item_pointer)
+			C.gtk_container_remove (list_widget, item_pointer)
+			C.gtk_widget_unref (item_pointer)
 		end
 
 	reorder_child (v: like item; a_position: INTEGER) is
-			-- Move `v' to `a_position' in container.
+			-- Move `v' to one-based `a_position' in container.
+		require
+			valid_position: a_position >= 1
 		local
 			imp: EV_WIDGET_IMP
 		do
@@ -214,7 +218,9 @@ feature -- Implementation
 		end
 
 	gtk_reorder_child (a_container, a_child: POINTER; a_position: INTEGER) is
-			-- Move `a_child' to `a_position' in `a_container'.
+			-- Move `a_child' to zero-based `a_position' in `a_container'.
+		require
+			valid_position: a_position >= 0
 		deferred
 		end
 
@@ -262,6 +268,9 @@ end -- class EV_ITEM_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2000/03/13 22:06:55  king
+--| Added position preconditions, reference handling on item reordering
+--|
 --| Revision 1.15  2000/03/13 19:04:22  king
 --| Added valid_position precondition to remove_item_at_position
 --|

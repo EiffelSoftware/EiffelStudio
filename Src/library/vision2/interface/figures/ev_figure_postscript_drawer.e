@@ -149,7 +149,7 @@ feature -- Figure drawing
 				until
 					i + 255 > hex_string.count
 				loop
-					hex_string.insert ("%N", i + 1)
+					hex_string.insert_string ("%N", i + 1)
 					i := i + 256
 				end
 				add_ps (hex_string)

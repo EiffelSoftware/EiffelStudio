@@ -566,6 +566,23 @@ feature {EV_TEXTABLE_IMP} -- Implementation
 			Result := [cur_width, cur_height]
 		end
 
+	string_width_and_height_ignore_new_line (a_string: STRING): TUPLE [INTEGER, INTEGER] is
+			-- Calculate extent of `a_string', treating `%N' as a normal char.
+		require
+			a_string_not_void: a_string /= Void
+		local
+			screen_dc: WEL_SCREEN_DC
+			extent: WEL_SIZE
+		do
+			create screen_dc
+			screen_dc.get
+			screen_dc.select_font (wel_font)
+			extent := screen_dc.string_size (a_string)
+			screen_dc.unselect_font
+			screen_dc.quick_release
+			Result := [extent.width, extent.height]
+		end
+
 feature {NONE} -- Not used
 
 	set_charset (a_charset: STRING) is
@@ -719,6 +736,9 @@ end -- class EV_FONT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.30  2000/03/03 17:03:46  brendel
+--| Added `string_width_and_height_ignore_new_line'. Used in EV_BUTTON_IMP.
+--|
 --| Revision 1.29  2000/03/03 02:37:48  pichery
 --| - Optimizated feature `name'.
 --| - Implemented feature `is_proportional'

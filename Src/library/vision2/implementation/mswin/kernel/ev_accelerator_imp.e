@@ -11,6 +11,13 @@ class
 inherit
 	EV_ACCELERATOR_I
 
+	WEL_ACCELERATOR
+		rename
+			make as wel_make,
+			key as wel_key,
+			set_key as wel_set_key
+		end
+
 create
 	make
 
@@ -19,17 +26,23 @@ feature {NONE} -- Initialization
 	make (an_interface: like interface) is
 			-- Connect interface.
 		do
+			base_make (an_interface)
 		end
 
 	initialize is
 		do
+			is_initialized := True
 		end
 
 feature -- Access
 
-	key_code: INTEGER
-			-- Representation of the character that must be entered
-			-- by the user. See class EV_KEY_CODE
+	key: EV_KEY is
+			-- Key that has to pressed to trigger actions.
+		do
+			check
+				to_be_implemented: False
+			end
+		end
 
 	shift_key: BOOLEAN
 			-- Must the shift key be pressed?
@@ -42,10 +55,12 @@ feature -- Access
 
 feature -- Element change
 
-	set_key_code (a_key_code: INTEGER) is
+	set_key (a_key: EV_KEY) is
 			-- Set `a_key_code' as new key that has to be pressed.
 		do
-			key_code := a_key_code
+			check
+				to_be_implemented: False
+			end
 		end
 
 	enable_shift_key is
@@ -86,6 +101,21 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
+	id: INTEGER is
+			-- Integer representation of key combination.
+		do
+			Result := key.code
+			if control_key then
+				Result := Result + 2048
+			end
+			if alt_key then
+				Result := Result + 1024
+			end
+			if shift_key then
+				Result := Result + 512
+			end
+		end
+
 	destroy is do end
 
 end -- class EV_ACCELERATOR_IMP
@@ -111,6 +141,9 @@ end -- class EV_ACCELERATOR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2000/03/15 21:16:17  brendel
+--| Changed key_code to key.
+--|
 --| Revision 1.4  2000/02/22 18:39:45  oconnor
 --| updated copyright date and formatting
 --|

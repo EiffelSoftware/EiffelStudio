@@ -2,7 +2,7 @@
 	<meta_data/>
 	<paragraph>
 		<paragraph>In the directory 
-			<bold>$ISE_EIFFEL/examples/lex</bold> you will find a system that scans Eiffel classes. It consists of the class EIFFEL_SCAN. It uses the file 
+			<bold>$ISE_EIFFEL/examples/lex</bold> you will find a system that scans Eiffel classes. It consists of the class <link><url>eiffel_scan.xml</url><label>EIFFEL_SCAN</label></link>. It uses the file 
 			<link>
 				<url>eiffel_regular.html</url>
 				<label>eiffel_regular</label>

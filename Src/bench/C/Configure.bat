@@ -238,57 +238,6 @@ del make.bat
 del eif_size.h
 del *.$$$
 
-del run-time\bexcept.c
-del run-time\bmain.c
-
-del run-time\wargv.c
-del run-time\wbits.c
-del run-time\wboolstr.c
-del run-time\wcecil.c
-del run-time\wconsole.c
-del run-time\wcopy.c
-del run-time\wdir.c
-del run-time\wdle.c
-del run-time\weif_threads.c
-del run-time\weif_cond_var.c
-del run-time\weif_once.c
-del run-time\weif_project.c
-del run-time\wequal.c
-del run-time\werror.c
-del run-time\wexcept.c
-del run-time\wfile.c
-del run-time\wgarcol.c
-del run-time\whash.c
-del run-time\whashin.c
-del run-time\whector.c
-del run-time\winterna.c
-del run-time\wlocal.c
-del run-time\wmain.c
-del run-time\wmalloc.c
-del run-time\wlmalloc.c
-del run-time\wmath.c
-del run-time\wmemory.c
-del run-time\wmisc.c
-del run-time\wobject_id.c
-del run-time\woption.c
-del run-time\wout.c
-del run-time\wpath_name.c
-del run-time\wpattern.c
-del run-time\wplug.c
-del run-time\wretrieve.c
-del run-time\wrun_idr.c
-del run-time\wsearch.c
-del run-time\wsig.c
-del run-time\wstore.c
-del run-time\wstring.c
-del run-time\wtimer.c
-del run-time\wtools.c
-del run-time\wtravers.c
-del run-time\wumain.c
-del run-time\wurgent.c
-del run-time\wurgent.c
-del run-time\wgen_conf.c
-del run-time\wrout_obj.c
 del cleanup.bat
 
 :end

@@ -1,11 +1,7 @@
 indexing
 	description: "Eiffel components"
 	external_name: "ISE.Reflection.EiffelComponents"
---	attribute: 	create {SYSTEM_RUNTIME_INTEROPSERVICES_CLASSINTERFACEATTRIBUTE}.make_classinterfaceattribute (2) end--,
---			create {SYSTEM_REFLECTION_ASSEMBLYDELAYSIGNATTRIBUTE}.make_assemblydelaysignattribute (False) end,
---			create {SYSTEM_REFLECTION_ASSEMBLYKEYFILEATTRIBUTE}.make_assemblykeyfileattribute ("Key") end,
---			create {SYSTEM_REFLECTION_ASSEMBLYKEYNAMEATTRIBUTE}.make_assemblykeynameattribute ("") end,
---			create {SYSTEM_OBSOLETEATTRIBUTE}.make_obsoleteattribute end
+	attribute: create {SYSTEM_RUNTIME_INTEROPSERVICES_CLASSINTERFACEATTRIBUTE}.make_classinterfaceattribute ((create {SYSTEM_RUNTIME_INTEROPSERVICES_CLASSINTERFACETYPE}).auto_dual) end
 		
 class
 	EIFFEL_COMPONENTS

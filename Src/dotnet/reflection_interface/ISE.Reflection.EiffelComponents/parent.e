@@ -1,6 +1,7 @@
 indexing
 	description: "Class parent"
 	external_name: "ISE.Reflection.Parent"
+	attribute: create {SYSTEM_RUNTIME_INTEROPSERVICES_CLASSINTERFACEATTRIBUTE}.make_classinterfaceattribute ((create {SYSTEM_RUNTIME_INTEROPSERVICES_CLASSINTERFACETYPE}).auto_dual) end
 
 class
 	PARENT

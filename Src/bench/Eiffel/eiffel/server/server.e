@@ -126,4 +126,21 @@ feature -- Implementation
 		deferred
 		end
 
+feature {NONE} -- External features
+
+	store_append (f_desc: INTEGER; o, r, need_index_ptr, s: POINTER): INTEGER is
+		external
+			"C"
+		end
+
+	retrieve_all (f_desc: INTEGER; size: INTEGER pos: INTEGER): T is
+		external
+			"C"
+		end
+
+	partial_retrieve (file_desc: INTEGER; size: INTEGER; pos, nb_obj: INTEGER): T is
+		external
+			"C"
+		end
+
 end -- class SERVER

@@ -1,3 +1,5 @@
+<script src="../../../../technologies/dotnet/samples/instal.js"></script>
+
 <!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
 
 <HTML>
@@ -9,19 +11,26 @@
 
 	<BODY>
 		<H1>Widgets Sample</H1>
-		<CENTER><IMG SRC="widgets.png" ALT="widgets" /></CENTER><BR><BR>
+		<CENTER><IMG SRC="widgets.png" ALT="widgets" width="578" height="296" /></CENTER><BR><BR>
 		<H2>Compiling</H2>
-		<P>
-			To compile the example:
-		</P>
-		<UL>
-			<LI>Launch EiffelStudio.
-			<LI>Select <B>Use existing Ace (control file)</B> and click <B>OK</B>.
-			<LI>Browse to <I>Eiffel52\examples\vision2\widgets\</I>.
-			<LI>Choose <I>Ace.ace</I>
-			<LI>Choose the directory where the project will be compiled, by default the same directory containing the Ace file.
-			<LI>Click <B>OK</B>.
-		</UL>
+<script language="JavaScript">
+<!--
+var path_to_ace_file = Eiffel_version + "\\examples\\vision2\\widgets\\";
+var ace_file_name = "Ace";
+var path_eifp_file = "..\\..\\samples\\vision2\\widgets\\"
+var eifp_name = "widgets.eifp";
+
+if (eiffel_studio) {
+	write_eiffel_studio_compiling_instruction (path_to_ace_file, ace_file_name)
+}
+else {
+	write_envision_compiling_instruction (path_eifp_file, eifp_name)
+}
+-->
+        </script>
+<noscript>
+        <p>To see compiling instructions, you have to enable javascript.</p></noscript>
+
 		<H2>Running</H2>
 		<P>After launching the application, you will see a window displayed with a similar appearance to the one above. You may exit the application at any time, by clicking
 		on the close icon, or you may select "exit" from the "File" menu. Selected "Help", "about" displays a dialog with details about the application.

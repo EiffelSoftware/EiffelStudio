@@ -62,8 +62,8 @@ feature -- Access
 	same_comment (c: like comments): BOOLEAN is
 			-- Is the comment same as `c'?
 		do
-			Result := comments = void and c = void
-				or else comments /= void and c /= Void and comments.is_equal (c);
+			Result := comments = Void and c = Void
+				or else comments /= Void and c /= Void and comments.is_equal (c);
 		end;
 
 feature -- Setting
@@ -91,7 +91,7 @@ feature -- Comparison
 			if not Result and then order = other.order then
 				Result := 
 					((comments = Void and then other.comments /= Void)
-					or else (other.comments /= void
+					or else (other.comments /= Void
 						and then comments < other.comments))
 			end
 		end;
@@ -102,7 +102,7 @@ feature -- Element change
 			-- Import other category clauses. Merge them with
 			-- previous clauses when appropriate
 		require
-			good_argument: other /= void
+			good_argument: other /= Void
 		local
 			other_clauses: like clauses;
 			clauses_count, other_count: INTEGER;
@@ -168,7 +168,7 @@ feature -- Element change
 	add_at_end (feat_adapter: FEATURE_ADAPTER) is
 			-- Add `feat_adapter' to the end of feature_clause.
 		require
-			good_argument: feat_adapter /= void
+			good_argument: feat_adapter /= Void
 		local
 			new_clause: FEATURE_CLAUSE_EXPORT;
 		do

@@ -28,6 +28,9 @@ feature
 
 	type: TYPE_I;
 			-- Type of the call
+	
+	body_id: BODY_ID
+			-- Body Id of the feature.
 
 	parameters: BYTE_LIST [EXPR_B];
 			-- Feature parameters: can be Void
@@ -77,6 +80,8 @@ feature
 		do
 			feature_name := f.feature_name;
 			feature_id := f.feature_id;
+			body_id := f.body_id
+			routine_id := f.rout_id_set.first
 		end;
 
 	is_feature: BOOLEAN is True;
@@ -282,24 +287,16 @@ feature -- Inlining
 			inliner: INLINER
 			type_i: TYPE_I;
 			cl_type: CL_TYPE_I
-			base_class: CLASS_C
-			entry: POLY_TABLE [ENTRY];
-			f: FEATURE_I
 			bc: STD_BYTE_CODE
 			old_c_t: CL_TYPE_I
 		do
 			type_i := context_type;
 			if not type_i.is_basic then
 				cl_type ?= type_i; -- Cannot fail
-				base_class := cl_type.base_class;
-				if not (base_class.is_basic or else (base_class.is_special and feature_name.is_equal ("make_area"))) then
-					f := base_class.feature_table.item (feature_name);
-
-						-- Is it a polymorphic call ?
-					if Eiffel_table.is_polymorphic (rout_id, cl_type.type_id, True) = -1 then
-						inliner := System.remover.inliner;
-						inline := inliner.inline (f)
-					end;
+					-- Inline only if it is not polymorphic and if it can be inlined.
+				if Eiffel_table.is_polymorphic (routine_id, cl_type.type_id, True) = -1 then
+					inliner := System.remover.inliner;
+					inline := inliner.inline (body_id)
 				end;
 			end
 
@@ -307,13 +304,13 @@ feature -- Inlining
 					-- Creation of a special node for the entire
 					-- feature (descendant of STD_BYTE_CODE)
 				inliner.set_current_feature_inlined;
-				if base_class.is_special then
+				if cl_type.base_class.is_special then
 					!SPECIAL_INLINED_FEAT_B! inlined_feat_b
 				else
 					!! inlined_feat_b;
 				end
 				inlined_feat_b.fill_from (Current)
-				bc ?= Byte_server.disk_item (f.body_id);
+				bc ?= Byte_server.disk_item (body_id);
 
 				old_c_t := Context.current_type;
 				Context.set_current_type (current_type);
@@ -346,7 +343,7 @@ feature -- Inlining
 			t_i: TYPE_I
 		do
 			original_feature := context_type.type_a.associated_class.
-									feature_table.origin_table.item (rout_id);
+									feature_table.origin_table.item (routine_id);
 			written_class := original_feature.written_class;
 			if written_class.generics = Void then
 				Result := written_class.types.first.type

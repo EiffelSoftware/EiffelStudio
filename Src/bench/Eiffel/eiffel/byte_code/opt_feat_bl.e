@@ -30,6 +30,7 @@ feature
 	fill_from (f: OPT_FEAT_B) is
 		do
 			type := f.type;
+			routine_id := f.routine_id
 			parameters := f.parameters;
 			array_desc := f.array_desc.enlarged;
 			is_item := f.is_item

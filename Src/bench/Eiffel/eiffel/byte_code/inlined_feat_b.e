@@ -29,6 +29,7 @@ feature
 			feature_name := f.feature_name;
 			feature_id := f.feature_id;
 			type := f.type;
+			routine_id := f.routine_id
 			parameters := f.parameters;
 			if parameters /= Void then
 				parameters := parameters.inlined_byte_code
@@ -175,11 +176,14 @@ feature -- Generation
 
 	generate_parameters (gen_reg: REGISTRABLE) is
 		local
-			i, count: INTEGER
 			expr: EXPR_B;
 			current_t: CL_TYPE_I
 			buf: GENERATION_BUFFER
 			local_inliner: INLINER
+			p: like parameters
+			l_area: SPECIAL [EXPR_B]
+			b_area: SPECIAL [BOOLEAN]
+			i, count: INTEGER
 		do
 			{FEATURE_BL} Precursor (gen_reg)
 
@@ -198,20 +202,22 @@ feature -- Generation
 			if parameters /= Void then
 					-- Assign the parameter values to the registers
 				from
-					parameters.start
-					i := 1
+					b_area := temporary_parameters.area
+					p := parameters
+					l_area := p.area
+					count := p.count
+					p := Void
 				until
-					parameters.after
+					i = count
 				loop
-					if (not temporary_parameters.item (i)) then
-						expr := parameters.item;
-						argument_regs.item (i).print_register;
+					if (not b_area.item (i)) then
+						expr := l_area.item (i)
+						argument_regs.item (i + 1).print_register;
 						buf.putstring (" = ");
 						expr.print_register;
 						buf.putchar (';');
 						buf.new_line
 					end;
-					parameters.forth;
 					i := i + 1
 				end
 			end;

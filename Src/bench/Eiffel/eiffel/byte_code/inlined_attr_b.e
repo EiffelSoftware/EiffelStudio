@@ -13,6 +13,7 @@ feature
 			parent := a.parent
 			attribute_name := a.attribute_name;
 			attribute_id := a.attribute_id;
+			routine_id := a.routine_id
 			type := a.type;
 		end
 

@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 			name_not_empty: not a_name.is_empty
 		do
 			parent := Void
-			resource_name := clone (a_name)
+			resource_name := a_name.twin
 			create dialog_children.make
 		ensure
 			no_parent: parent = Void

@@ -687,6 +687,12 @@ feature -- JIT Thread
 
 	loaded_managed_threads: HASH_TABLE [EIFNET_DEBUGGER_THREAD_INFO, INTEGER]
 			-- Managed thread, indexed by Thread ID
+			
+	is_valid_managed_thread_id (thid: INTEGER): BOOLEAN is
+			-- Is `thid' a valid Thread id for a managed thread ?
+		do
+			Result := loaded_managed_threads.has (thid)
+		end
 
 	managed_thread (id: INTEGER): EIFNET_DEBUGGER_THREAD_INFO is
 			-- Managed Thread info related to `id'.

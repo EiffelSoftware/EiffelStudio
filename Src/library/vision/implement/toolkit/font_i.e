@@ -176,7 +176,7 @@ feature -- Status report
 		end;
 
 	is_proportional: BOOLEAN is
-			-- Is the font proportional ?
+			-- Is the font proportional?
 		require
 			font_specified: is_specified;
 			font_standard: is_standard
@@ -184,12 +184,12 @@ feature -- Status report
 		end;
 
 	is_specified: BOOLEAN is
-			-- Is the font specified ?
+			-- Is the font specified?
 		deferred
 		end;
 
 	is_standard: BOOLEAN is
-			-- Is the font standard and informations available (except for name) ?
+			-- Is the font standard and informations available (except for name)?
 		require
 			font_specified: is_specified
 		deferred

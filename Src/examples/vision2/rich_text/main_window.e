@@ -419,13 +419,14 @@ feature {NONE} -- Event handling
 			caret_position := rich_text.caret_position
 			paragraph := rich_text.paragraph_format (caret_position)
 			paragraph.enable_left_alignment
+			
 			if rich_text.has_selection then
 				create paragraph_info.make_with_flags (feature {EV_PARAGRAPH_CONSTANTS}.alignment)
 				rich_text.modify_paragraph (rich_text.selection_start, rich_text.selection_end,
 					paragraph,
 					paragraph_info)
 			else
-				rich_text.format_paragraph (caret_position, caret_position + 1, paragraph)
+				rich_text.format_paragraph (caret_position, caret_position, paragraph)
 			end
 		end
 	
@@ -446,13 +447,14 @@ feature {NONE} -- Event handling
 			caret_position := rich_text.caret_position
 			paragraph := rich_text.paragraph_format (caret_position)
 			paragraph.enable_center_alignment
+			
 			if rich_text.has_selection then
 				create paragraph_info.make_with_flags (feature {EV_PARAGRAPH_CONSTANTS}.alignment)
 				rich_text.modify_paragraph (rich_text.selection_start, rich_text.selection_end,
 					paragraph,
 					paragraph_info)
 			else
-				rich_text.format_paragraph (caret_position, caret_position + 1, paragraph)
+				rich_text.format_paragraph (caret_position, caret_position, paragraph)
 			end
 		end
 	
@@ -473,13 +475,14 @@ feature {NONE} -- Event handling
 			caret_position := rich_text.caret_position
 			paragraph := rich_text.paragraph_format (caret_position)
 			paragraph.enable_right_alignment
+			
 			if rich_text.has_selection then
 				create paragraph_info.make_with_flags (feature {EV_PARAGRAPH_CONSTANTS}.alignment)
 				rich_text.modify_paragraph (rich_text.selection_start, rich_text.selection_end,
 					paragraph,
 					paragraph_info)
 			else
-				rich_text.format_paragraph (caret_position, caret_position + 1, paragraph)
+				rich_text.format_paragraph (caret_position, caret_position, paragraph)
 			end
 		end
 		
@@ -500,13 +503,14 @@ feature {NONE} -- Event handling
 			caret_position := rich_text.caret_position
 			paragraph := rich_text.paragraph_format (caret_position)
 			paragraph.enable_justification
+			
 			if rich_text.has_selection then
 				create paragraph_info.make_with_flags (feature {EV_PARAGRAPH_CONSTANTS}.alignment)
 				rich_text.modify_paragraph (rich_text.selection_start, rich_text.selection_end,
 					paragraph,
 					paragraph_info)
 			else
-				rich_text.format_paragraph (caret_position, caret_position + 1, paragraph)
+				rich_text.format_paragraph (caret_position, caret_position, paragraph)
 			end
 		end
 
@@ -978,6 +982,7 @@ feature {NONE} -- Implementation
 		local
 			paragraph: EV_PARAGRAPH_FORMAT
 			paragraph_info: EV_PARAGRAPH_FORMAT_RANGE_INFORMATION
+			caret_position: INTEGER
 		do
 			if rich_text.has_selection then
 				create paragraph
@@ -989,9 +994,10 @@ feature {NONE} -- Implementation
 						paragraph_info)
 						
 			else
-				paragraph := rich_text.paragraph_format (rich_text.caret_position)
+				caret_position := rich_text.caret_position
+				paragraph := rich_text.paragraph_format (caret_position)
 				paragraph.set_left_margin (a_value)
-				rich_text.format_paragraph (rich_text.caret_position, rich_text.caret_position, paragraph)
+				rich_text.format_paragraph (caret_position, caret_position, paragraph)
 			end
 		end
 	
@@ -1000,6 +1006,7 @@ feature {NONE} -- Implementation
 		local
 			paragraph: EV_PARAGRAPH_FORMAT
 			paragraph_info: EV_PARAGRAPH_FORMAT_RANGE_INFORMATION
+			caret_position: INTEGER
 		do
 			if rich_text.has_selection then
 				create paragraph
@@ -1009,9 +1016,10 @@ feature {NONE} -- Implementation
 						paragraph,
 						paragraph_info)
 			else
-				paragraph := rich_text.paragraph_format (rich_text.caret_position)
+				caret_position := rich_text.caret_position
+				paragraph := rich_text.paragraph_format (caret_position)
 				paragraph.set_right_margin (a_value)
-				rich_text.format_paragraph (rich_text.caret_position, rich_text.caret_position, paragraph)
+				rich_text.format_paragraph (caret_position, caret_position, paragraph)
 			end
 		end
 	
@@ -1020,6 +1028,7 @@ feature {NONE} -- Implementation
 		local
 			paragraph: EV_PARAGRAPH_FORMAT
 			paragraph_info: EV_PARAGRAPH_FORMAT_RANGE_INFORMATION
+			caret_position: INTEGER
 		do
 			if rich_text.has_selection then
 				create paragraph
@@ -1030,9 +1039,10 @@ feature {NONE} -- Implementation
 						paragraph,
 						paragraph_info)
 			else
-				paragraph := rich_text.paragraph_format (rich_text.caret_position)
+				caret_position := rich_text.caret_position
+				paragraph := rich_text.paragraph_format (caret_position)
 				paragraph.set_top_spacing (a_value)
-				rich_text.format_paragraph (rich_text.caret_position, rich_text.caret_position, paragraph)
+				rich_text.format_paragraph (caret_position, caret_position, paragraph)
 			end
 		end
 	
@@ -1041,6 +1051,7 @@ feature {NONE} -- Implementation
 		local
 			paragraph: EV_PARAGRAPH_FORMAT
 			paragraph_info: EV_PARAGRAPH_FORMAT_RANGE_INFORMATION
+			caret_position: INTEGER
 		do
 			if rich_text.has_selection then
 				create paragraph
@@ -1050,9 +1061,10 @@ feature {NONE} -- Implementation
 						paragraph,
 						paragraph_info)
 			else
-				paragraph := rich_text.paragraph_format (rich_text.caret_position)
+				caret_position := rich_text.caret_position
+				paragraph := rich_text.paragraph_format (caret_position)
 				paragraph.set_bottom_spacing (a_value)
-				rich_text.format_paragraph (rich_text.caret_position, rich_text.caret_position, paragraph)
+				rich_text.format_paragraph (caret_position, caret_position, paragraph)
 			end
 		end
 		

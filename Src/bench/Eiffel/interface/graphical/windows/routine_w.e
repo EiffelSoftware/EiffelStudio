@@ -147,8 +147,7 @@ feature -- Stone updating
 				text.add_string ("No version of feature ");
 				text.add_feature (stone.e_feature, stone.e_feature.written_class, stone.e_feature.name);
 				text.add_string ("%N   for class ");
-				s := stone.e_feature.written_class.name;
-				s.to_upper;
+				s := c.name_in_upper;
 				text.add_classi (stone.e_feature.written_class.lace_class, s);
 				error_window.process_text (text);
 				error_window.display;

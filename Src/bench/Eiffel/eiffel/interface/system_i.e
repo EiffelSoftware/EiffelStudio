@@ -899,10 +899,10 @@ end
 					-- Process the skeleton of classes
 				process_skeleton
 
-					-- Reset `Memory_descendants' since they can have changed
+					-- Reset `disposable_descendants' since they can have changed
 					--| Note: That is important to recompute it, especially if
-					--| someone removed an inheritance link to MEMORY.
-				reset_memory_descendants
+					--| someone removed an inheritance link to DISPOSABLE.
+				reset_disposable_descendants
 
 					-- Melt the changed features
 				melt
@@ -3284,10 +3284,10 @@ end
 
 feature -- Dispose routine
 
-	memory_dispose_id: INTEGER is
-			-- Memory dispose routine id from class MEMORY. 
-			-- Return 0 if the MEMORY class has not been compiled.
-			--! (Assumed memory must have a dispose routine
+	disposable_dispose_id: INTEGER is
+			-- Dispose routine id from class DISPOSABLE. 
+			-- Return 0 if the DISPOSABLE class has not been compiled.
+			--! (Assumed DISPOSABLE must have a dispose routine
 			--! called "dispose" - DINOV).
 		local
 			feature_i: FEATURE_I
@@ -3300,27 +3300,40 @@ feature -- Dispose routine
 			end
 		end
 
-	memory_descendants: SEARCH_TABLE [CLASS_C] is
-			-- Memory descendants.
+	object_finalize_id: INTEGER is
+			-- System.Object `Finalize routine id from class SYSTEM_OBJECT.
+		local
+			feature_i: FEATURE_I
+		once
+			if system_object_class /= Void and system_object_class.is_compiled then
+				feature_i := system_object_class.compiled_class.feature_table.item_id (names.finalize_name_id)
+				if feature_i /= Void then
+					Result := feature_i.rout_id_set.first
+				end
+			end
+		end
+
+	disposable_descendants: SEARCH_TABLE [CLASS_C] is
+			-- DISPOSABLE descendants.
 		once
 			create Result.make (50)
 		end
 	
-	reset_memory_descendants is
-			-- Recompute `memory_descendants' since some classes
-			-- may not inherit from MEMORY anymore.
+	reset_disposable_descendants is
+			-- Recompute `disposable_descendants' since some classes
+			-- may not inherit from DISPOSABLE anymore.
 		do
 				-- Delete previous information
-			memory_descendants.clear_all
+			disposable_descendants.clear_all
 
-				-- Recompute it if MEMORY is in system.
+				-- Recompute it if DISPOSABLE is in system.
 			if disposable_class /= Void and disposable_class.is_compiled then
-				formulate_mem_descendants (disposable_class.compiled_class, memory_descendants)
+				formulate_mem_descendants (disposable_class.compiled_class, disposable_descendants)
 			end
 		end
  
 	formulate_mem_descendants (c: CLASS_C; desc: SEARCH_TABLE [CLASS_C]) is
-			-- Formulate descendants of class MEMORY. 
+			-- Formulate descendants of class DISPOSABLE. 
 		local
 			descendants: ARRAYED_LIST [CLASS_C]
 			d: CLASS_C
@@ -3345,15 +3358,15 @@ feature -- Dispose routine
 		do
 			if disposable_class /= Void and then disposable_class.is_compiled then
 					-- Get the polymorphic table corresponding to the `dispose' routine
-					-- from MEMORY.
-				entry ?= Eiffel_table.poly_table (memory_dispose_id)
+					-- from DISPOSABLE.
+				entry ?= Eiffel_table.poly_table (disposable_dispose_id)
 
 				if entry /= Void then
 						-- We are using `header_generation_buffer' for the generation
 						-- because this is used for routine tables (look at
 						-- `generate_routine_table').
 						-- We are using `routine_id_counter.dispose_rout_id' and not
-						-- `memory_dispose_id' to generate the table, because we are not
+						-- `disposable_dispose_id' to generate the table, because we are not
 						-- generating a standard polymorphic table and so, we cannot reuse the
 						-- one which could have been generated if there was any polymorphic
 						-- call on `dispose'.

@@ -84,6 +84,7 @@ rt_private char * r_buffer = (char *) 0;		/*buffer for make_header*/
 #if defined __VMS || defined EIF_OS2 || defined SYMANTEC_CPP		/* r_fides declared in garcol.c for vms */
 #else
 rt_public int r_fides;			/* File descriptor use for retrieve */ /* %%zmt */
+rt_public char r_fstoretype;	/* File storage type used for retrieve */ /* %%zmt */
 #endif
 
 #endif /* EIF_THREADS */

@@ -9,6 +9,14 @@ deferred class
 
 inherit
 	EV_RADIO_PEER_I
+		redefine
+			interface
+		end
+
+	EV_ANY_IMP
+		redefine
+			interface
+		end
 	
 feature -- Status report
 
@@ -34,6 +42,10 @@ feature -- Status setting
 		do
 		end
 
+feature {EV_ANY_I} -- Implementation
+
+	interface: EV_RADIO_PEER
+
 end -- class EV_RADIO_PEER
 
 --!-----------------------------------------------------------------------------
@@ -57,6 +69,9 @@ end -- class EV_RADIO_PEER
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.2  2000/02/24 20:48:54  brendel
+--| Changed in compliance with interface.
+--|
 --| Revision 1.1  2000/02/24 20:27:21  brendel
 --| Initial revision. Needed for rearranged radio-item inheritance structure.
 --|

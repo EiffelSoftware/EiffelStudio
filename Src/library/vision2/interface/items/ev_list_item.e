@@ -21,7 +21,10 @@ inherit
 			initialize
 		redefine
 			is_in_default_state,
-			implementation
+			implementation,
+			align_text_left,
+			align_text_center,
+			align_text_right
 		end
 
 	EV_DESELECTABLE
@@ -50,6 +53,32 @@ inherit
 create
 	default_create,
 	make_with_text
+	
+feature -- Status Setting
+
+	align_text_center is
+			-- Display `text' centered.
+		do
+			check
+				Not_supported: False
+			end
+		end
+
+	align_text_right is
+			-- Display `text' right aligned.
+		do
+			check
+				Not_supported: False
+			end
+		end
+        
+	align_text_left is
+			-- Display `text' left aligned.
+		do
+			check
+				Not_supported: False
+			end
+		end
 
 feature {NONE} -- Contract support
 

@@ -82,7 +82,7 @@ feature {NONE} -- Implementation
 			-- `Current' is a pointer to an array of items
  			-- of size `s'
 		external
-			"C [macro %"eif_macros%"]"
+			"C [macro %"eif_macros.h%"]"
 		alias
 			"RTSOFN"
 		end

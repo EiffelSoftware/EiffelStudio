@@ -545,6 +545,7 @@ feature -- Basic operation
 		local
 			parent_object: GB_OBJECT
 			window_objects: ARRAYED_LIST [GB_OBJECT]
+			current_window_object: GB_OBJECT
 		do
 			if not object_name.is_empty then
 				string_is_object_name_result := False
@@ -560,8 +561,13 @@ feature -- Basic operation
 					until
 						window_objects.off
 					loop
-						if window_objects.item.name.as_lower.is_equal (object_name.as_lower) then
-							Result := True
+						current_window_object := window_objects.item
+							-- We ensure that if the object is a window, we do not compare
+							-- it with itself.
+						if current_window_object.name.as_lower.is_equal (object_name.as_lower) then
+							if (not compare_original_object and then current_window_object /= an_object) or compare_original_object then
+								Result := True
+							end
 						end
 						window_objects.forth
 					end

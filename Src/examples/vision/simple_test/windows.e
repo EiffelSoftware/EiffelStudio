@@ -41,7 +41,8 @@ feature
 	main_window: WINDOW1 is
 			-- Main window of the example
 		once
-			create Result.make ("Main", a_screen)
+			create Result
+			Result.make ("Main", a_screen)
 		end;
 
 	other_window: WINDOW2 is

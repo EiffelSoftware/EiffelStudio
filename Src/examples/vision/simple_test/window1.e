@@ -11,8 +11,7 @@ inherit
 	WINDOWS
 
 create
-
-	make
+	default_create, make
 
 feature
 

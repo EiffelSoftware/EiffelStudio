@@ -20,25 +20,12 @@ inherit
 	EV_VIEWPORT 
 		redefine
 			implementation,
-			create_implementation,
-			make_for_test
+			create_implementation
 		end
 
 create
 	default_create,
 	make_for_test
-
-feature {NONE} -- Initialization
-
-	make_for_test is
-			-- Create and perform tests.
-		local
-			pixmap: EV_PIXMAP
-		do
-			default_create
-			create pixmap.make_for_test
-			extend (pixmap)
-		end
 
 feature -- Access
 
@@ -168,6 +155,9 @@ end -- class EV_SCROLLABLE_AREA
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2000/04/21 00:38:35  brendel
+--| removed make_for_test.
+--|
 --| Revision 1.15  2000/04/20 22:22:38  brendel
 --| Now creates pixmap with make_for_test.
 --|

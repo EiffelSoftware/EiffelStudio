@@ -35,6 +35,7 @@ feature -- Basic Operations
 			-- DllRegisterServer
 			create entry.make
 			entry.set_root_class_name (registration_class_name)
+			entry.set_class_creation_feature_name (Registration_class_creation_routine)
 			entry.set_export_feature_name (Register_dll_server_function_name)
 			entry.set_feature_index (Dll_register_ordinal)
 			entry.set_feature_alias (Dll_register_server)
@@ -44,6 +45,7 @@ feature -- Basic Operations
 			-- DllUnregisterServer
 			create entry.make
 			entry.set_root_class_name (registration_class_name)
+			entry.set_class_creation_feature_name (Registration_class_creation_routine)
 			entry.set_export_feature_name (Unregister_dll_server_function_name)
 			entry.set_feature_index (Dll_unregister_ordinal)
 			entry.set_feature_alias (Dll_unregister_server)
@@ -53,6 +55,7 @@ feature -- Basic Operations
 			-- DllGetClassObject
 			create entry.make
 			entry.set_root_class_name (registration_class_name)
+			entry.set_class_creation_feature_name (Registration_class_creation_routine)
 			entry.set_export_feature_name (Get_class_object_function_name)
 			entry.set_feature_index (Dll_get_class_object_ordinal)
 			entry.set_feature_alias (Dll_get_class_object)
@@ -62,6 +65,7 @@ feature -- Basic Operations
 			-- DllCanUnloadNow
 			create entry.make
 			entry.set_root_class_name (registration_class_name)
+			entry.set_class_creation_feature_name (Registration_class_creation_routine)
 			entry.set_export_feature_name (Can_unload_dll_now_function_name)
 			entry.set_feature_index (Dll_can_unload_now_ordinal)
 			entry.set_feature_alias (Dll_can_unload_now)

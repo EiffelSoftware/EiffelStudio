@@ -157,7 +157,7 @@ feature -- Basic Operations
 			-- Display usage information
 		do
 			io.put_string ("EiffelStudio to ENViSioN! Ace Files Converter Utility 1.0%NCopyright (C) Eiffel Software 2002. All right reserved.%N")
-			io.put_string ("%NSyntax: es_to_envision ace_file_path envision_cluster_path true/false")
+			io.put_string ("%NSyntax: es_to_envision ace_file_path envision_cluster_path debug/release")
 		end
 		
 feature {NONE} -- Implementation

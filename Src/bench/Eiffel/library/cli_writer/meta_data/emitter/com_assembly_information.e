@@ -72,10 +72,10 @@ feature -- Access
 	is_in_gac: BOOLEAN is
 			-- Was assembly consumed in GAC
 		local
-			l_res: BOOLEAN
+			l_res: INTEGER
 		do
 			last_call_success := c_is_in_gac (item, $l_res)
-			Result := l_res
+			Result := l_res /= 0
 		ensure
 			success: last_call_success = 0
 		end
@@ -83,10 +83,10 @@ feature -- Access
 	is_consumed: BOOLEAN is
 			-- has assembly been consumed?
 		local
-			l_res: BOOLEAN
+			l_res: INTEGER
 		do
 			last_call_success := c_is_consumed (item, $l_res)
-			Result := l_res
+			Result := l_res /= 0
 		ensure
 			success: last_call_success = 0
 		end	

@@ -721,6 +721,12 @@ feature {NONE} -- Implementation
 						other_stack.is_empty or else i <= p1.child_capacity
 					loop
 						p1.child_go_i_th (orgidx_stack.item)
+						p2.child_go_i_th (orgidx_stack.item)
+						check
+							child_indices_equal: 
+								p1.child_index = p2.child_index
+									-- Because we have set them equal before.
+						end
 						p1 := other_stack.item
 						p2 := tmp_stack.item
 						check
@@ -745,8 +751,7 @@ feature {NONE} -- Implementation
 				copy_correct: equal (other, tmp_tree)
 					-- Because `other' has been copied to `tmp_tree'.
 			end
-			standard_copy (tmp_tree)
-			child_go_i_th (orgidx_stack.item)
+			tmp_tree.child_go_i_th (orgidx_stack.item)
 			orgidx_stack.remove
 			check
 				index_stack_empty: orgidx_stack.is_empty

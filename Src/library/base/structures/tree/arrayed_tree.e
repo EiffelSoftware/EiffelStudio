@@ -331,16 +331,10 @@ feature -- Duplication
 			-- Copy contents from `other'.
 		local
 			tmp_tree: like Current
-			obj_comparison: BOOLEAN
 		do
-			obj_comparison := other.object_comparison
 			create tmp_tree.make (other.child_capacity, other.item)
 			if not other.is_leaf then tree_copy (other, tmp_tree) end
-			object_comparison := obj_comparison
-			check
-				equal_capacity: arity = other.arity
-					-- Because `other' has just been copied
-			end
+			standard_copy (tmp_tree)
 		end
 
 feature {NONE} -- Inapplicable

@@ -276,6 +276,7 @@ feature -- Duplication
 		do
 			create tmp_tree.make (other.arity, other.item)
 			if not other.is_leaf then tree_copy (other, tmp_tree) end
+			standard_copy (tmp_tree)
 		end
 
 feature {FIXED_TREE} -- Implementation

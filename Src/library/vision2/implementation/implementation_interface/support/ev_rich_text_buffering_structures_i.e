@@ -518,7 +518,7 @@ feature {NONE} -- Implementation
 	highest_read_char: INTEGER
 		-- Highest character index already read. This prevents us from increasing or
 		-- decreasing the "depth" of the document if a "{" or "}" character is read twice.
-		
+
 	process_keyword  (rtf_text: STRING; index: INTEGER) is
 			-- Process RTF string `rtf_text' for a keyword starting at position `index'
 			-- until a rtf character is received signifying the end of the keyword.
@@ -548,25 +548,19 @@ feature {NONE} -- Implementation
 			loop
 				current_character := get_character (rtf_text, l_index + index)
 				
-				if (current_character = ' ' or
-					current_character = '\' or
-					current_character = '}' or
-					current_character = '{') or
-					current_character = '%N' or
-					current_character = '%R' or 
-					current_character = ';' then
-					
-						-- Note that newline characters are not permitted in the middle of tags.
-						-- We must perform at least one iteration, ensuring that we enter the loop.
-					if performed_one_iteration = True then
+				inspect current_character
+				when ' ', '\', '}', '{', '%N', '%R', ';'  then
+					if performed_one_iteration then
 							-- Flag the tag as completed so the loop is exited.
 							-- This is only set once the tag value has also been read.
 						tag_completed := True
 					end
-				elseif current_character.is_digit then
-						-- We have found a digit which signifies the end of the tag, but
-						-- the start of the tag value. Not all tags have an INTEGER value.
+				when '0' .. '9' then
 					reading_tag_value := True
+							-- We have found a digit which signifies the end of the tag, but
+							-- the start of the tag value. Not all tags have an INTEGER value.
+				else
+						-- Do nothing
 				end
 				if not tag_completed then
 					if current_character /= '%N' then
@@ -582,9 +576,15 @@ feature {NONE} -- Implementation
 					l_index := l_index + 1
 				end
 			end
-			
+
 				-- Now process the found keyword.
-			if tag.is_equal (rtf_fonttable) then
+			if tag.is_equal (tab_tag_string) then
+				buffer_formatting (tab_string)
+			elseif tag.is_equal (rtf_color_string) then
+				current_format.set_text_color (tag_value.to_integer)
+			elseif tag.is_equal (line_string) then
+				buffer_formatting (new_line_string)
+			elseif tag.is_equal (rtf_fonttable) then
 				process_fonttable (rtf_text)
 				processing_moved_iterator := True
 			elseif tag.is_equal (rtf_colortbl) then
@@ -635,8 +635,6 @@ feature {NONE} -- Implementation
 				current_format.set_vertical_offset (tag_value.to_integer)
 			elseif tag.is_equal (rtf_highlight_string) then
 				current_format.set_highlight_color (tag_value.to_integer)
-			elseif tag.is_equal (rtf_color_string) then
-				current_format.set_text_color (tag_value.to_integer)
 			elseif tag.is_equal (rtf_red) then
 				last_colorred := tag_value.to_integer
 			elseif tag.is_equal (rtf_green) then
@@ -664,11 +662,7 @@ feature {NONE} -- Implementation
 				last_fontfamily := rtf_family_tech_int
 			elseif tag.is_equal (rtf_font_size_string) then
 			elseif tag.is_equal (rtf_newline) then
-				buffer_formatting ("%N")
-			elseif tag.is_equal ("line") then
-				buffer_formatting ("%N")
-			elseif tag.is_equal ("tab") then
-				buffer_formatting ("%T")
+				buffer_formatting (new_line_string)
 			elseif tag.is_equal (rtf_user_props) then
 				check
 					is_start_of_group: rtf_text.substring (tag_start_position - 1, tag_start_position + 1).is_equal ("{\*")
@@ -711,6 +705,12 @@ feature {NONE} -- Implementation
 				move_main_iterator (tag.count + tag_value.count + 1)
 			end
 		end
+
+	new_line_string: STRING is "%N"
+	tab_string: STRING is "%T"
+	tab_tag_string: STRING is "tab"
+	line_string: STRING is "line"
+			-- String constants
 		
 		
 	move_to_end_of_tag (rtf_text: STRING; start_index: INTEGER) is

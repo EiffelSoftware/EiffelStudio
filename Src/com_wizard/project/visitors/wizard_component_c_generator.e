@@ -8,7 +8,11 @@ deferred class
 	WIZARD_COMPONENT_C_GENERATOR
 
 inherit
-	ANY
+	WIZARD_SHARED_DATA
+		export
+			{NONE} all
+			{ANY} default_pointer
+		end
 
 	WIZARD_WRITER_DICTIONARY
 		export

@@ -72,18 +72,13 @@ feature -- Status Report
 			l_name: STRING
 			l_is_array: BOOLEAN
 			l_array_type: CONSUMED_ARRAY_TYPE
---			l_gen_type: GEN_TYPE_I
+			l_generics: ARRAY [CLASS_I]
 		do
 			l_assembly := assembly.referenced_assemblies.item (c.assembly_id)
 			l_array_type ?= c
 			l_is_array := l_array_type /= Void
 			if l_is_array then
 				Result := System.native_array_class
-				--TO DO
---				create l_generics.make (1, 1)
---				l_generics.put (type_from_consumed_type (l_array_type.element_type), 1)
---				create {GEN_TYPE_I} Result.make (
---					System.native_array_class.compiled_class.class_id) --, l_generics)
 			else
 				l_name := c.name
 				l_result := l_assembly.dotnet_classes.item (l_name)

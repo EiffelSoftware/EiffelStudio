@@ -26,7 +26,7 @@ feature {EV_LIST_ITEM_IMP} -- Access
 		require
 			exitst: not destroyed
 		do
-			!! Result.make_solid (background_color)
+			!! Result.make_solid (background_color_imp)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -102,11 +102,11 @@ feature {EV_LIST_ITEM_IMP} -- Deferred features
 		deferred
 		end
 
-	background_color: EV_COLOR_IMP is
+	background_color_imp: EV_COLOR_IMP is
 		deferred
 		end
 
-	foreground_color: EV_COLOR_IMP is
+	foreground_color_imp: EV_COLOR_IMP is
 		deferred
 		end
 

@@ -84,13 +84,35 @@ feature -- Basic Operations
 			-- Draw pixmap
 		local
 			fi: FILE_NAME
+			retried: BOOLEAN
+			info_dialog: EV_INFORMATION_DIALOG
+			info_message: STRING
 		do
-			Precursor {WIZARD_STATE_WINDOW}
+			if not retried then
+				Precursor {WIZARD_STATE_WINDOW}
 
-			create fi.make_from_string (wizard_pixmaps_path)
-			fi.extend (pixmap_icon_location)
-			pixmap_icon.set_with_named_file (fi)
+				create fi.make_from_string (wizard_pixmaps_path)
+				fi.extend (pixmap_icon_location)
+				pixmap_icon.set_with_named_file (fi)
+			end
+		rescue
+			if not retried then
+				create info_message.make (30)
+				info_message.append ("Unable to open the pixmap named%N%"")
+				if fi /= Void then
+					info_message.append (fi)
+				else
+					info_message.append ("UNKNOWN FILE")
+				end
+				info_message.append ("%"")
+				create info_dialog.make_with_text (info_message)
+				info_dialog.show_modal_to_window (first_window)
+				retried := True
+				retry
+			end
 		end
+
+
 
 	choice_box: EV_VERTICAL_BOX
 

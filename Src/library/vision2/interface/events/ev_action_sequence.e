@@ -2,8 +2,8 @@ indexing
 	description: "Base Eiffel Vision action sequence."
 	status: "See notice at end of file."
 	keywords: "event, action, sequence"
-	date: "$Date$
-	revision: "$Revision$
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class
 	EV_ACTION_SEQUENCE [EVENT_DATA -> TUPLE create make end]
@@ -40,6 +40,9 @@ end
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2000/02/15 19:11:35  oconnor
+--| added missing quotes
+--|
 --| Revision 1.4  2000/02/15 18:44:06  oconnor
 --| added force_extend
 --|

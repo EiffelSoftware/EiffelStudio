@@ -143,6 +143,13 @@ feature -- Conversion
 			Result := c_truncated_to_integer (item)
 		end
 
+	truncated_to_integer_64: INTEGER_64 is
+			-- Integer part (Same sign, largest absolute
+			-- value no greater than current object's)
+		do
+			Result := c_truncated_to_integer_64 (item)
+		end
+
 	truncated_to_real: REAL is
 			-- Real part (Same sign, largest absolute
 			-- value no greater than current object's)
@@ -284,6 +291,15 @@ feature {NONE} -- Implementation
 			"C [macro %"eif_misc.h%"]"
 		alias
 			"conv_di"
+		end
+
+	c_truncated_to_integer_64 (d: DOUBLE): INTEGER_64 is
+			-- Integer part of `d' (same sign, largest absolute
+			-- value no greater than `d''s)
+		external
+			"C macro use %"eif_misc.h%""
+		alias
+			"conv_di64"
 		end
 
 	c_truncated_to_real (d: DOUBLE): REAL is

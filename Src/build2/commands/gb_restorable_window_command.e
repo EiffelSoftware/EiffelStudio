@@ -20,6 +20,8 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	GB_SHARED_TOOLS
 
 feature -- Access
 
@@ -63,6 +65,8 @@ feature -- Status setting
 					-- become very annoying.				
 				if system_status.is_wizard_system then
 					window.show_relative_to_window (first_window)
+				elseif system_status.tools_always_on_top then
+					window.show_relative_to_window (main_window)
 				else
 					window.show
 				end

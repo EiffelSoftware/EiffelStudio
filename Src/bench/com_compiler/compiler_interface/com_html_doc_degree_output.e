@@ -30,14 +30,14 @@ feature {NONE} -- Initialization
 
 feature
 
-	add_callback (interface: IEIFFEL_HTMLDOC_EVENTS_INTERFACE) is
+	add_callback (interface: IEIFFEL_HTML_DOCUMENTATION_EVENTS_INTERFACE) is
 			-- add a interface to the list of callback interfaces
 		do
 			callbacks.extend (interface)
 		end
 		
 	
-	remove_callback (interface: IEIFFEL_HTMLDOC_EVENTS_INTERFACE) is
+	remove_callback (interface: IEIFFEL_HTML_DOCUMENTATION_EVENTS_INTERFACE) is
 			-- remove an interface from the list of callback interfaces
 			-- removes only the last occurance (FILO) of 'interface'
 		local
@@ -68,7 +68,7 @@ feature -- Start output features
 			until
 				callbacks.after
 			loop
-				callbacks.item.put_header (displayed_version_number)
+				callbacks.item.output_header (displayed_version_number)
 				callbacks.forth
 			end
 		end
@@ -81,7 +81,7 @@ feature -- Start output features
 			until
 				callbacks.after
 			loop
-				callbacks.item.put_string (s)
+				callbacks.item.output_string (s)
 				callbacks.forth
 			end
 		end
@@ -102,7 +102,7 @@ feature -- Start output features
 			until
 				callbacks.after
 			loop
-				callbacks.item.put_initializing_documentation
+				callbacks.item.notify_initalizing_documentation
 				callbacks.forth
 			end
 		end
@@ -115,10 +115,10 @@ feature -- Start output features
 			until
 				callbacks.after
 			loop
-				callbacks.item.put_class_document_message (c.name_in_upper)
+				callbacks.item.output_class_document_message (c.name_in_upper)
 				processed := processed + 1
 				if total_number >0 then
-					callbacks.item.put_percentage_completed (((processed * 100) / (total_number)).floor)	
+					callbacks.item.notify_percentage_complete (((processed * 100) / (total_number)).floor)	
 				end
 				callbacks.forth
 			end
@@ -133,7 +133,7 @@ feature -- Start output features
 		
 feature {NONE} -- Implementation
 
-	callbacks: LINKED_LIST [IEIFFEL_HTMLDOC_EVENTS_INTERFACE]
+	callbacks: LINKED_LIST [IEIFFEL_HTML_DOCUMENTATION_EVENTS_INTERFACE]
 		-- list of clients to notify
 			
 	

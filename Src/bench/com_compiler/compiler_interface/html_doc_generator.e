@@ -7,16 +7,13 @@ class
 	HTML_DOC_GENERATOR
 	
 inherit
-	IEIFFEL_HTMLDOC_GENERATOR_IMPL_STUB
+	IEIFFEL_HTML_DOCUMENTATION_GENERATOR_IMPL_STUB
 		redefine
-			is_corrupted,
-			is_loaded,
-			is_incompatible,
 			add_excluded_cluster,
 			remove_excluded_cluster,
-			generate,
-			add_status_callback,
-			remove_status_callback
+			start_generation,
+			advise_status_callback,
+			unadvise_status_callback
 		end
 		
 	SHARED_EIFFEL_PROJECT
@@ -45,7 +42,6 @@ feature {NONE} -- Implementation
 			create output.make	
 			Eiffel_project.set_degree_output (output)
 			create excluded_clusters.make
-			add_default_excluded_clusters
 		end
 
 
@@ -132,7 +128,7 @@ feature -- Basic operations
 		ensure then	
 		end
 		
-	generate (generation_path: STRING) is
+	start_generation (generation_path: STRING) is
 			-- generate the HTML documentation into 'generation_path'
 		local
 			du: DOCUMENTATION_UNIVERSE
@@ -176,44 +172,19 @@ feature -- Basic operations
 			-- generate the output
 			doc_generator.generate (output)	
 		end
-		
-		
-	add_status_callback (interface: IEIFFEL_HTMLDOC_EVENTS_INTERFACE) is
+
+feature -- Advise/Unadvise callback functions
+
+	advise_status_callback (interface: IEIFFEL_HTML_DOCUMENTATION_EVENTS_INTERFACE) is
 			-- add an interface to the list of call backs
 		do
 			output.add_callback (interface)			
 		end
 		
-	remove_status_callback (interface: IEIFFEL_HTMLDOC_EVENTS_INTERFACE) is
+	unadvise_status_callback (interface: IEIFFEL_HTML_DOCUMENTATION_EVENTS_INTERFACE) is
 			-- remove an interface from the list of call backs
 		do
 			output.remove_callback (interface)
-		end
-		
-		
-		
-feature {NONE} -- Basic Operations 
-
-	add_default_excluded_clusters is
-			-- remove the default set of clusters - these include those that are external (precompiled or assemblies)
-		local
---			clusters: ARRAYED_LIST [CLUSTER_I]
---			cluster: CLUSTER_I
---			assembly: ASSEMBLY_I
-		do
---			clusters := Eiffel_universe.clusters
---			from 
---				clusters.start
---			until
---				clusters.after
---			loop
---				cluster := clusters.item
---				assembly ?= cluster
---				if assembly /= Void then
---					add_excluded_cluster (cluster.cluster_name)	
---				end
---				clusters.forth
---			end
 		end
 
 feature {NONE} -- Implementation

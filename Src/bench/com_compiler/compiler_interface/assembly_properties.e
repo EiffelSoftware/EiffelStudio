@@ -15,15 +15,14 @@ inherit
 	IEIFFEL_ASSEMBLY_PROPERTIES_IMPL_STUB
 		redefine
  			is_local,
-			assembly_prefix,
-			assembly_name,
-			assembly_version,
-			assembly_culture,
-			assembly_cluster_name,
-			assembly_public_key_token,
-			set_assembly_prefix,
-			is_prefix_read_only,
-			set_assembly_prefix_user_precondition
+			prefix1,
+			name,
+			version,
+			culture,
+			cluster_name,
+			public_key_token,
+			set_prefix,
+			set_prefix_user_precondition
 		end
 			
 	
@@ -64,12 +63,7 @@ feature {NONE} -- initalization
 			create assembly_sd.initialize (l_cluster_name_sd, l_name_sd, Void, l_version_sd, l_culture_sd, l_public_key_token_sd)
 			is_local := False
 			
-			if not is_prefix_read_only then
-				set_assembly_prefix (a_prefix)
-			else
-				-- force setting of known prefix
-				assembly_sd.set_prefix_name (new_id_sd (assembly_prefix, True))
-			end
+			set_prefix (a_prefix)
 		end
 		
 	make_local (a_cluster_name, a_assembly_path, a_prefix: STRING) is
@@ -88,12 +82,7 @@ feature {NONE} -- initalization
 			
 			is_local := True
 			create assembly_sd.initialize (l_cluster_name_sd, l_path_sd, Void, Void, Void, Void)
-			if not is_prefix_read_only then
-				set_assembly_prefix (a_prefix)
-			else
-				-- force setting of known prefix
-				assembly_sd.set_prefix_name (new_id_sd (assembly_prefix, True))
-			end
+			set_prefix (a_prefix)
 		end
 		
 	make_with_assembly_sd (a_assembly: ASSEMBLY_SD) is
@@ -102,7 +91,7 @@ feature {NONE} -- initalization
 			non_void_assembly: a_assembly /= Void
 		do
 			assembly_sd := a_assembly
-			if assembly_public_key_token.count > 0 then
+			if public_key_token.count > 0 then
 				is_local := False
 			else
 				is_local := True
@@ -111,7 +100,7 @@ feature {NONE} -- initalization
 
 feature -- Status setting
 
-	set_assembly_prefix (a_prefix: STRING) is
+	set_prefix (a_prefix: STRING) is
 			-- set 'assembly_prefix' with 'a_prefix'
 		require else
 			editable_prefix: not is_prefix_read_only
@@ -127,7 +116,7 @@ feature -- Status setting
 			end
 		end
 		
-	set_assembly_prefix_user_precondition (a_prefix: STRING): BOOLEAN is
+	set_prefix_user_precondition (a_prefix: STRING): BOOLEAN is
 			-- `set_assembly_prefix' precondition
 		do
 			Result := False
@@ -135,33 +124,23 @@ feature -- Status setting
 
 feature -- Access
 
-	is_prefix_read_only: BOOLEAN is
-			-- can assembly's prefix be changed?
-		do
-			Result := False
-		end
-
-	assembly_prefix: STRING is
+	prefix1: STRING is
 			-- the prefix assigned to all classes in the system
 		local
 			a_prefix: ID_SD
 		do
-			if not is_prefix_read_only then
-				a_prefix := assembly_sd.prefix_name
-				if a_prefix = Void then
-					Result := ""
-				else
-					Result := a_prefix
-					Result.to_upper
-				end
+			a_prefix := assembly_sd.prefix_name
+			if a_prefix = Void then
+				Result := ""
 			else
-				Result := known_prefixes.item (format_hash_assembly_name (assembly_name, assembly_public_key_token))
+				Result := a_prefix
+				Result.to_upper
 			end
 		ensure then
 			non_void_Result: Result /= Void
 		end
 		
-	assembly_cluster_name: STRING is
+	cluster_name: STRING is
 			-- the cluster name for the assembly
 		do
 			Result := assembly_sd.cluster_name
@@ -169,7 +148,7 @@ feature -- Access
 			non_void_Result: Result /= Void
 		end
 		
-	assembly_name: STRING is
+	name: STRING is
 				-- the name/path for the assembly
 		do
 			Result := assembly_sd.assembly_name
@@ -177,7 +156,7 @@ feature -- Access
 			non_void_Result: Result /= Void
 		end
 		
-	assembly_version: STRING is
+	version: STRING is
 				-- the version for the assembly
 		do
 			Result := assembly_sd.version
@@ -188,7 +167,7 @@ feature -- Access
 			non_void_Result: Result /= Void
 		end
 		
-	assembly_culture: STRING is
+	culture: STRING is
 			-- the culture for the assembly
 		do
 			Result := assembly_sd.culture
@@ -199,7 +178,7 @@ feature -- Access
 			non_void_Result: Result /= Void
 		end
 		
-	assembly_public_key_token: STRING is
+	public_key_token: STRING is
 				-- the public key token of the assembly
 		do
 			Result := assembly_sd.public_key_token
@@ -251,11 +230,11 @@ feature {NONE} -- Implementation
 		
 			
 invariant
-	non_void_cluster_name: assembly_cluster_name /= Void
-	non_void_name: assembly_name /= Void
-	non_void_version: not is_local implies (assembly_version /= Void and not assembly_version.is_empty)
-	non_void_culture: not is_local implies (assembly_culture /= Void and not assembly_culture.is_empty)
-	non_void_public_key: not is_local implies (assembly_public_key_token /= Void and not assembly_public_key_token.is_empty)
+	non_void_cluster_name: cluster_name /= Void
+	non_void_name: name /= Void
+	non_void_version: not is_local implies (version /= Void and not version.is_empty)
+	non_void_culture: not is_local implies (culture /= Void and not culture.is_empty)
+	non_void_public_key: not is_local implies (public_key_token /= Void and not public_key_token.is_empty)
 	non_void_sd: assembly_sd /= Void
 	
 end -- class ASSEMBLY_PROPERTIES

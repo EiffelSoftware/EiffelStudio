@@ -12,7 +12,7 @@ inherit
 			add_assembly,
 			last_exception,
 			store,
-			wipe_out,
+			flush_assemblies,
 			add_assembly_user_precondition
 		end
 	LACE_AST_FACTORY
@@ -55,7 +55,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	wipe_out is
+	flush_assemblies is
 			-- clear currently held assemblies
 		do
 			assemblies_table.wipe_out

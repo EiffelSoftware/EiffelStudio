@@ -13,15 +13,18 @@ inherit
 		rename
 			attach_all as default_attach_all,
 			make as normal_create,
+			default_format as old_default_format,
 			close_windows as old_close_windows
 		redefine
 			text_window, build_format_bar, hole, build_widgets,
-			tool_name, default_format
+			tool_name, set_default_format
 		end
 	BAR_AND_TEXT
+		rename
+			default_format as old_default_format
 		redefine
-			text_window, build_format_bar, hole, default_format, close_windows,
-			tool_name, make, build_widgets, attach_all
+			text_window, build_format_bar, hole, close_windows,
+			tool_name, make, build_widgets, attach_all, set_default_format
 		select
 			make, attach_all, close_windows
 		end
@@ -49,24 +52,32 @@ feature -- Window Properties
 			Result := l_Object
 		end;
 
+feature -- Settings
+
+	set_default_format is
+			-- Set the format to its default.
+		do
+			text_window.set_last_format_2 (default_format);
+		end;
+
 feature -- Commands
 
-	showattr_command: SHOW_ATTR_VALUES;
+	showattr_frmt_holder: FORMAT_HOLDER;
 
-	showonce_command: SHOW_ONCE_RESULTS;
+	showonce_frmt_holder: FORMAT_HOLDER;
 
-	current_target: CURRENT_OBJECT;
+	current_target_cmd_holder: COMMAND_HOLDER;
 
-	previous_target: PREVIOUS_OBJECT;
+	previous_target_cmd_holder: COMMAND_HOLDER;
 
-	next_target: NEXT_OBJECT;
+	next_target_cmd_holder: COMMAND_HOLDER;
 
-	slice_command: SLICE_COMMAND;
+	slice_cmd_holder: COMMAND_HOLDER;
 
 feature {NONE} -- Properties; Forms And Holes
 
 	hole: OBJECT_HOLE;
-			-- Hole charaterizing current
+			-- Hole charaterizing Current.
 
 	command_bar: FORM;
 			-- Bar with the command buttons
@@ -75,10 +86,15 @@ feature {NONE} -- Implementation; Window Settings
 
 	close_windows is
 			-- Close sub-windows.
+		local
+			sc: SLICE_COMMAND;
+			sw: SLICE_W
 		do
 			old_close_windows;
-			if slice_command.slice_window.is_popped_up then
-				slice_command.slice_window.popdown
+			sc ?= slice_cmd_holder.associated_command;
+			sw ?= sc.slice_window
+			if sw.is_popped_up then
+				sw.popdown
 			end
 		end;
 
@@ -86,13 +102,22 @@ feature {NONE} -- Implementation; Graphical Interface
 
 	build_format_bar is
 			-- Build formatting buttons in `format_bar'.
+		local
+			once_cmd: SHOW_ONCE_RESULTS;
+			once_button: EB_BUTTON;
+			attr_cmd: SHOW_ATTR_VALUES;
+			attr_button: EB_BUTTON
 		do
-			!! showonce_command.make (format_bar, text_window);
-			!! showattr_command.make (format_bar, text_window);
-			format_bar.attach_top (showattr_command, 0);
-			format_bar.attach_left (showattr_command, 0);
-			format_bar.attach_top (showonce_command, 0);
-			format_bar.attach_left_widget (showattr_command, showonce_command,0)
+			!! once_cmd.make (text_window);
+			!! once_button.make (once_cmd, format_bar);
+			!! showonce_frmt_holder.make (once_cmd, once_button);
+			!! attr_cmd.make (text_window);
+			!! attr_button.make (attr_cmd, format_bar);
+			!! showattr_frmt_holder.make (attr_cmd, attr_button);
+			format_bar.attach_top (attr_button, 0);
+			format_bar.attach_left (attr_button, 0);
+			format_bar.attach_top (once_button, 0);
+			format_bar.attach_left_widget (attr_button, once_button,0)
 		end;
 
 	build_widgets is
@@ -109,7 +134,7 @@ feature {NONE} -- Implementation; Graphical Interface
 			build_format_bar;
 				!! command_bar.make (new_name, global_form);
 			build_command_bar;
-			text_window.set_last_format (default_format);
+			text_window.set_last_format_2 (default_format);
 			attach_all
 		end;
 
@@ -125,29 +150,47 @@ feature {NONE} -- Implementation; Graphical Interface
 		end;
 
 	build_command_bar is
+		local
+			previous_target_cmd: PREVIOUS_OBJECT;
+			previous_target_button: EB_BUTTON;
+			next_target_cmd: NEXT_OBJECT;
+			next_target_button: EB_BUTTON;
+			current_target_cmd: CURRENT_OBJECT;
+			current_target_button: EB_BUTTON;
+			slice_cmd: SLICE_COMMAND;
+			slice_button: EB_BUTTON
 		do
-			!! slice_command.make (command_bar, text_window);
-			command_bar.attach_left (slice_command, 0);
-			command_bar.attach_right (slice_command, 0);
-			command_bar.attach_bottom (slice_command, 0)
-			!! current_target.make (command_bar, text_window);
-			command_bar.attach_left (current_target, 0);
-			command_bar.attach_right (current_target, 0);
-			command_bar.attach_bottom_widget (slice_command, current_target, 10)
-			!! next_target.make (command_bar, text_window);
-			command_bar.attach_left (next_target, 0);
-			command_bar.attach_right (next_target, 0);
-			command_bar.attach_bottom_widget (current_target, next_target, 0);
-			!! previous_target.make (command_bar, text_window);
-			command_bar.attach_left (previous_target, 0);
-			command_bar.attach_right (previous_target, 0);
-			command_bar.attach_bottom_widget (next_target, previous_target, 0);
+			!! slice_cmd.make (command_bar, text_window);
+			!! slice_button.make (slice_cmd, command_bar);
+			slice_button.add_button_click_action (3, slice_cmd, Void);
+			!! slice_cmd_holder.make (slice_cmd, slice_button);
+			command_bar.attach_left (slice_button, 0);
+			command_bar.attach_right (slice_button, 0);
+			command_bar.attach_bottom (slice_button, 0)
+			!! current_target_cmd.make (text_window);
+			!! current_target_button.make (current_target_cmd, command_bar);
+			!! current_target_cmd_holder.make (current_target_cmd, current_target_button);
+			command_bar.attach_left (current_target_button, 0);
+			command_bar.attach_right (current_target_button, 0);
+			command_bar.attach_bottom_widget (slice_button, current_target_button, 10)
+			!! next_target_cmd.make (text_window);
+			!! next_target_button.make (next_target_cmd, command_bar);
+			!! next_target_cmd_holder.make (next_target_cmd, next_target_button);
+			command_bar.attach_left (next_target_button, 0);
+			command_bar.attach_right (next_target_button, 0);
+			command_bar.attach_bottom_widget (current_target_button, next_target_button, 0);
+			!! previous_target_cmd.make (text_window);
+			!! previous_target_button.make (previous_target_cmd, command_bar);
+			!! previous_target_cmd_holder.make (previous_target_cmd, previous_target_button);
+			command_bar.attach_left (previous_target_button, 0);
+			command_bar.attach_right (previous_target_button, 0);
+			command_bar.attach_bottom_widget (next_target_button, previous_target_button, 0);
 		end;
 
-	default_format: FORMATTER is
+	default_format: FORMAT_HOLDER is
 			-- Default format shows attributes' values
 		do
-			Result := showattr_command
+			Result := showattr_frmt_holder
 		end;
 
 end -- class OBJECT_W

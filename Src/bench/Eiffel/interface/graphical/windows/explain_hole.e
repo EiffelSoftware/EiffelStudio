@@ -11,7 +11,7 @@ inherit
 
 	HOLE
 		redefine
-			compatible, symbol, stone_type, command_name,
+			compatible, symbol, stone_type, name,
 			icon_symbol, full_symbol
 		end
 
@@ -48,7 +48,7 @@ feature  -- Properties
 			true_if_not_void: Result = (dropped /= Void)
 		end;
 
-	command_name: STRING is
+	name: STRING is
 		do
 			Result := l_Explain
 		end;

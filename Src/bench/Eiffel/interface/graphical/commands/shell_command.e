@@ -9,7 +9,7 @@ class SHELL_COMMAND
 
 inherit
 
-	ICONED_COMMAND;
+	ICONED_COMMAND_2;
 	SHARED_BENCH_RESOURCES
 
 creation
@@ -23,14 +23,13 @@ feature -- Initialization
 			-- on button three, and create the shell window.
 		do
 			!!shell_window.make (c, Current);
-			init (c, a_text_window);
-			add_button_click_action (3, Current, Void);
+			init (a_text_window);
 		end;
 
 feature -- Properties
 
 	shell_window: SHELL_W;
-			-- The sheel window.
+			-- The shell window.
 
 	command_shell_name: STRING is
 			-- Name of the command to execute in the shell window.
@@ -119,7 +118,7 @@ feature {NONE} -- Implementation
 	
 feature {NONE} -- Attributes
 
-	command_name: STRING is
+	name: STRING is
 			-- Name of the command.
 		do
 			Result := l_Shell

@@ -9,7 +9,7 @@ class SLICE_COMMAND
 
 inherit
 
-	ICONED_COMMAND
+	ICONED_COMMAND_2
 		redefine
 			text_window
 		end;
@@ -25,8 +25,7 @@ feature -- Initialization
 			-- the slice window.
 		do
 			!!slice_window.make (c, Current);
-			init (c, a_text_window);
-			add_button_click_action (3, Current, Void)
+			init (a_text_window);
 		end;
 
 feature -- Properties
@@ -70,7 +69,7 @@ feature {NONE} -- Implementation
 			-- If left mouse button was pressed -> truncate special objects
 			-- If right mouse button was pressed -> bring up slice window. 
 		local
-			current_format: FORMATTER;
+			current_format: FORMATTER_2;
 			old_do_format: BOOLEAN
 		do
 			set_global_cursor (watch_cursor);
@@ -78,8 +77,8 @@ feature {NONE} -- Implementation
 					-- 3rd button pressed
 				slice_window.call 
 			elseif argument = slice_window then
-				current_format := text_window.last_format;
-				if current_format = text_window.tool.showattr_command then
+				current_format := text_window.last_format_2.associated_formatter;
+				if current_format = text_window.tool.showattr_frmt_holder.associated_formatter then
 					old_do_format := current_format.do_format;
 					current_format.set_do_format (true);
 					current_format.execute (text_window.root_stone);
@@ -97,7 +96,7 @@ feature {NONE} -- Attributes
 			Result := bm_Slice 
 		end;
  
-	command_name: STRING is
+	name: STRING is
 			-- Name of the command.
 		do
 			Result := l_Slice

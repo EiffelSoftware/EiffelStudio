@@ -9,13 +9,13 @@ class SHOW_BREAKPOINTS
 
 inherit
 
-	FORMATTER
+	FORMATTER_2
 		rename
 			format as old_format
 		redefine
 			dark_symbol, display_temp_header
 		end;
-	FORMATTER
+	FORMATTER_2
 		redefine
 			dark_symbol, format, display_temp_header
 		select
@@ -31,10 +31,10 @@ creation
 
 feature -- Initialization
 
-	make (c: COMPOSITE; a_text_window: TEXT_WINDOW) is
+	make (a_text_window: TEXT_WINDOW) is
 			-- Initialize the command.
 		do
-			init (c, a_text_window);
+			init (a_text_window);
 		end; -- make
 
 feature -- Formatting
@@ -111,7 +111,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Attributes
 
-	command_name: STRING is
+	name: STRING is
 			-- Name for he command.
 		do
 			Result := l_Showstops

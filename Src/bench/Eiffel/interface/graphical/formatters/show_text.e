@@ -221,7 +221,7 @@ feature {NONE} -- Properties
 			Result := s.file_name
 		end;
 
-	command_name: STRING is
+	name: STRING is
 		do
 			Result := l_Showtext
 		end;

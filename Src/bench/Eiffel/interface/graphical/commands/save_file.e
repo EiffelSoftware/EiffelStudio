@@ -9,7 +9,7 @@ class SAVE_FILE
 
 inherit
 
-	ICONED_COMMAND
+	ICONED_COMMAND_2
 		redefine
 			dark_symbol, licence_checked
 		end
@@ -20,10 +20,10 @@ creation
 	
 feature -- Initialization
 
-	make (c: COMPOSITE; a_text_window: TEXT_WINDOW) is
+	make (a_text_window: TEXT_WINDOW) is
 			-- Initialize the command.
 		do
-			init (c, a_text_window)
+			init (a_text_window)
 		end;
 
 feature -- Properties
@@ -96,7 +96,7 @@ feature {NONE} -- Attributes
 			Result := bm_Dark_save
 		end;
 
-	command_name: STRING is
+	name: STRING is
 			-- Name of the command.
 		do
 			Result := l_Save

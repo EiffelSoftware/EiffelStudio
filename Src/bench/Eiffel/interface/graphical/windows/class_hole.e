@@ -12,7 +12,7 @@ inherit
 
 	HOLE
 		redefine
-			compatible, symbol, stone_type, command_name, icon_symbol,
+			compatible, symbol, stone_type, name, icon_symbol,
 			full_symbol
 		end
 
@@ -54,7 +54,7 @@ feature {NONE} -- Properties
 				((dropped.stone_type = Class_type) or else (dropped.stone_type = Routine_type))
 		end;
 
-	command_name: STRING is
+	name: STRING is
 		do
 			Result := l_Class
 		end;

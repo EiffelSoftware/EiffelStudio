@@ -9,7 +9,7 @@ class SHOW_CLIENTS
 
 inherit
 
-	FORMATTER
+	FORMATTER_2
 		redefine
 			dark_symbol, display_temp_header, post_fix
 		end
@@ -20,9 +20,9 @@ creation
 
 feature -- Initialization
 
-	make (c: COMPOSITE; a_text_window: CLASS_TEXT) is
+	make (a_text_window: CLASS_TEXT) is
 		do
-			init (c, a_text_window);
+			init (a_text_window);
 			indent := 4
 		end;
 
@@ -41,7 +41,7 @@ feature -- Properties
 	
 feature {NONE} -- Properties
 
-	command_name: STRING is
+	name: STRING is
 		do
 			Result := l_Showclients
 		end;

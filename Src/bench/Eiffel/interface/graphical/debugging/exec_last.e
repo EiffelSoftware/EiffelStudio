@@ -44,7 +44,7 @@ feature {NONE} -- Attributes
 			Result := Out_of_routine
 		end;
 
-	command_name: STRING is
+	name: STRING is
 			-- Name of the command.
 		do
 			Result := l_Exec_last

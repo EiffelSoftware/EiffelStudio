@@ -15,7 +15,7 @@ inherit
 		redefine
 			launch_c_compilation, 
 			confirm_and_compile,
-			command_name, symbol,
+			name, symbol,
 			compilation_allowed, perform_compilation
 		end;
 	UPDATE_PROJECT
@@ -24,7 +24,7 @@ inherit
 		redefine
 			launch_c_compilation,
 			confirm_and_compile,
-			command_name, symbol,
+			name, symbol,
 			compilation_allowed, perform_compilation,
 			freeze_now
 		select
@@ -107,7 +107,7 @@ feature {NONE} -- Attributes
 			Result := not melt_only
 		end
 
-	command_name: STRING is
+	name: STRING is
 			-- Name of the command.
 		do
 			Result := l_Freeze

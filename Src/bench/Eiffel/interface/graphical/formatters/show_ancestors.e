@@ -9,7 +9,7 @@ class SHOW_ANCESTORS
 
 inherit
 
-	FORMATTER
+	FORMATTER_2
 		redefine
 			dark_symbol, display_temp_header, post_fix
 		end
@@ -20,10 +20,10 @@ creation
 	
 feature -- Initialization
 
-	make (c: COMPOSITE; a_text_window: CLASS_TEXT) is
+	make (a_text_window: CLASS_TEXT) is
 			-- Initialize the command. Default indentation is 4.
 		do
-			init (c, a_text_window);
+			init (a_text_window);
 			indent := 4
 		ensure
 			default_indent: indent = 4
@@ -45,7 +45,7 @@ feature -- Properties
  
 feature {NONE} -- Properties
 
-	command_name: STRING is
+	name: STRING is
 			-- Name of the command.
 		do
 			Result := l_Showancestors

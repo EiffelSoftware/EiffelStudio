@@ -90,6 +90,9 @@ feature -- Formats
 	last_format: FORMATTER;
 			-- Last format used.
 
+	last_format_2: FORMAT_HOLDER;
+			-- Last format used.
+
 	history: STONE_HISTORY;
 			-- History list for Current.
 
@@ -116,6 +119,25 @@ feature -- Formats
 			end
 		ensure
 			last_format = f
+		end;
+
+	set_last_format_2 (f: like last_format_2) is
+			-- Assign `f' to `last_format_2'.
+		require	
+			format_exists: f /= Void
+		do
+			if last_format_2 /= f then
+				if not history.islast then
+					history.extend (root_stone)
+				end;
+				if last_format_2 /= Void then
+					last_format_2.associated_button.darken (False)
+				end;
+				last_format_2 := f;
+				last_format_2.associated_button.darken (True)
+			end
+		ensure
+			last_format_2 = f
 		end;
 
 feature -- Properties
@@ -145,9 +167,9 @@ feature -- Changing
 		do
 			changed := b;
 			if b then
-				tool.save_command.darken (true)
+				tool.save_cmd_holder.associated_button.darken (true)
 			else
-				tool.save_command.darken (false)
+				tool.save_cmd_holder.associated_button.darken (false)
 			end
 		ensure
 			changed = b

@@ -69,7 +69,7 @@ feature {NONE} -- Execution
 
 feature {NONE} -- Attributes
 
-	command_name: STRING is
+	name: STRING is
 			-- Name of the command.
 		do
 			Result := "Compress"

@@ -60,7 +60,7 @@ feature -- Initialization
 			set_action ("<Unmap>,<Prop>", Current, popdown);
 			set_action ("<Configure>", Current, remapped);
 			set_action ("<Visible>", Current, remapped);
-			set_delete_command (quit_command);
+			set_delete_command (quit_cmd_holder.associated_command);
 			set_composite_attributes (Current);
 			text_window.set_font_to_default;
 			!! app_stopped_cmd;
@@ -128,8 +128,11 @@ feature -- Window Settings
 feature -- Window Implementation
 
 	close_windows is 
+		local
+			cf: CHANGE_FONT
 		do 
-			change_font_command.close
+			cf ?= change_font_cmd_holder.associated_command;
+			cf.close
 		end;
 
 	popup_file_selection is
@@ -200,23 +203,6 @@ feature -- Window Forms
 
 	format_bar: FORM;
 			-- Format menu bar
-
-feature -- Focus Label
-
-	type_teller: LABEL_G;
-			-- To tell what type of element we are dealing with
-
-	tell_type (a_type_name: STRING) is
-			-- Display `a_type_name' in type teller.
-		do
-			type_teller.set_text (a_type_name)
-		end;
-
-	clean_type is
-			-- Clean what's said in the type teller window.
-		do
-			type_teller.set_text (" ")
-		end;
 
 feature -- Execution Implementation
 
@@ -298,14 +284,24 @@ feature -- Graphical Interface
 
 	build_top is
 			-- Build top bar
+		local
+			quit_cmd: QUIT_PROJECT;
+			quit_button: EB_BUTTON
+			change_font_cmd: CHANGE_FONT;
+			change_font_button: EB_BUTTON
 		do
 			!! open_command.make (text_window);
 			!! classic_bar.make (new_name, form_manager);
 
-			!! quit_command.make (classic_bar, text_window);
-			!! change_font_command.make (classic_bar, text_window);
-			!! type_teller.make (new_name, classic_bar);
-			type_teller.set_center_alignment;
+			!! quit_cmd.make (text_window);
+			!! quit_button.make (quit_cmd, classic_bar);
+			!! quit_cmd_holder.make (quit_cmd, quit_button);
+			!! change_font_cmd.make (text_window);
+			!! change_font_button.make (change_font_cmd, classic_bar);
+			if not change_font_cmd.tabs_disabled then
+				change_font_button.add_button_click_action (3, change_font_cmd, change_font_cmd.tab_setting)
+			end;
+			!! change_font_cmd_holder.make (change_font_cmd, change_font_button);
 			!! explain_hole.make (classic_bar, Current);
 			!! system_hole.make (classic_bar, Current);
 			!! class_hole.make (classic_bar, Current);
@@ -331,18 +327,13 @@ feature -- Graphical Interface
 			classic_bar.attach_left_widget (object_hole, stop_points_hole, 0);
 			classic_bar.attach_top (stop_points_hole, 0);
 			classic_bar.attach_bottom (stop_points_hole, 0);
-			classic_bar.attach_left_widget (stop_points_hole, type_teller, 0);
-			classic_bar.attach_top (type_teller, 0);
-			classic_bar.attach_bottom (type_teller, 0);
-			classic_bar.attach_right_widget (change_font_command, type_teller, 0);
-			classic_bar.attach_top (change_font_command, 0);
-			classic_bar.attach_bottom (change_font_command, 0);
-			classic_bar.attach_right_widget (quit_command, change_font_command, 0);
-			classic_bar.attach_top (quit_command, 0);
-			classic_bar.attach_bottom (quit_command, 0);
-			classic_bar.attach_right (quit_command, 23);
+			classic_bar.attach_top (change_font_button, 0);
+			classic_bar.attach_bottom (change_font_button, 0);
+			classic_bar.attach_right_widget (quit_button, change_font_button, 0);
+			classic_bar.attach_top (quit_button, 0);
+			classic_bar.attach_bottom (quit_button, 0);
+			classic_bar.attach_right (quit_button, 23);
 
-			clean_type;
 		end;
 
 	build_text is
@@ -381,37 +372,72 @@ feature -- Graphical Interface
 
 	build_icing is
 			-- Build icing area
+		local
+			update_cmd: UPDATE_PROJECT;
+			update_button: EB_BUTTON;
+			freeze_cmd: FREEZE_PROJECT;
+			freeze_button: EB_BUTTON;
+			finalize_cmd: FINALIZE_PROJECT;
+			finalize_button: EB_BUTTON;
+			special_cmd: SPECIAL_COMMAND;
+			special_button: EB_BUTTON;
+			debug_quit_cmd: DEBUG_QUIT;
+			debug_quit_button: EB_BUTTON;
+			debug_run_cmd: DEBUG_RUN;
+			debug_run_button: EB_BUTTON;
+			debug_status_cmd: DEBUG_STATUS;
+			debug_status_button: EB_BUTTON
 		do
 			!! icing.make (new_name, form_manager);
-			!! update_command.make (icing, text_window);
-			!! debug_run_command.make (icing, text_window);
-			!! debug_status_command.make (icing, text_window);
-			!! debug_quit_command.make (icing, text_window);
-			!! special_command.make (icing, text_window);
-			!! freeze_command.make (icing, text_window);
-			!! finalize_command.make (icing, text_window);
-			icing.attach_top (update_command, 0);
-			icing.attach_left (update_command, 0);
-			icing.attach_right (update_command, 0);
-			icing.attach_top_widget (update_command, debug_run_command, 0);
-			icing.attach_left (debug_run_command, 0);
-			icing.attach_right (debug_run_command, 0);
-			icing.attach_top_widget (debug_run_command, debug_status_command, 0);
-			icing.attach_left (debug_status_command, 0);
-			icing.attach_right (debug_status_command, 0);
-			icing.attach_top_widget (debug_status_command, debug_quit_command, 0);
-			icing.attach_left (debug_quit_command, 0);
-			icing.attach_right (debug_quit_command, 0);
-			icing.attach_top_widget (debug_quit_command, special_command, 0);
-			icing.attach_left (special_command, 0);
-			icing.attach_right (special_command, 0);
-			icing.attach_bottom_widget (freeze_command, special_command, 0);
-			icing.attach_left (freeze_command, 0);
-			icing.attach_right (freeze_command, 0);
-			icing.attach_bottom_widget (finalize_command, freeze_command, 0);
-			icing.attach_bottom (finalize_command, 0);
-			icing.attach_left (finalize_command, 0);
-			icing.attach_right (finalize_command, 0);
+			!! update_cmd.make (text_window);
+			!! update_button.make (update_cmd, icing);
+			update_button.set_action ("!c<Btn1Down>", update_cmd, update_cmd.generate_code_only);
+			!! update_cmd_holder.make (update_cmd, update_button);
+			!! debug_run_cmd.make (icing, text_window);
+			!! debug_run_button.make (debug_run_cmd, icing);
+			debug_run_button.add_button_click_action (3, debug_run_cmd, debug_run_cmd.specify_args);
+			debug_run_button.set_action ("!c<Btn1Down>", debug_run_cmd, debug_run_cmd.melt_and_run);
+			!! debug_run_cmd_holder.make (debug_run_cmd, debug_run_button);
+			!! debug_status_cmd.make (text_window);
+			!! debug_status_button.make (debug_status_cmd, icing);
+			!! debug_status_cmd_holder.make (debug_status_cmd, debug_status_button);
+			!! debug_quit_cmd.make (text_window);
+			!! debug_quit_button.make (debug_quit_cmd, icing);
+			debug_quit_button.set_action ("!c<Btn1Down>", debug_quit_cmd, debug_quit_cmd.kill_it);
+			!! debug_quit_cmd_holder.make (debug_quit_cmd, debug_quit_button);
+			!! special_cmd.make (text_window);
+			!! special_button.make (special_cmd, icing);
+			!! special_cmd_holder.make (special_cmd, special_button);
+			!! freeze_cmd.make (text_window);
+			!! freeze_button.make (freeze_cmd, icing);
+			freeze_button.set_action ("!c<Btn1Down>", freeze_cmd, freeze_cmd.generate_code_only);
+			!! freeze_cmd_holder.make (freeze_cmd, freeze_button);
+			!! finalize_cmd.make (text_window);
+			!! finalize_button.make (finalize_cmd, icing);
+			finalize_button.set_action ("!c<Btn1Down>", finalize_cmd, finalize_cmd.generate_code_only);
+			!! finalize_cmd_holder.make (finalize_cmd, finalize_button);
+			icing.attach_top (update_button, 0);
+			icing.attach_left (update_button, 0);
+			icing.attach_right (update_button, 0);
+			icing.attach_top_widget (update_button, debug_run_button, 0);
+			icing.attach_left (debug_run_button, 0);
+			icing.attach_right (debug_run_button, 0);
+			icing.attach_top_widget (debug_run_button, debug_status_button, 0);
+			icing.attach_left (debug_status_button, 0);
+			icing.attach_right (debug_status_button, 0);
+			icing.attach_top_widget (debug_status_button, debug_quit_button, 0);
+			icing.attach_left (debug_quit_button, 0);
+			icing.attach_right (debug_quit_button, 0);
+			icing.attach_top_widget (debug_quit_button, special_button, 0);
+			icing.attach_left (special_button, 0);
+			icing.attach_right (special_button, 0);
+			icing.attach_bottom_widget (freeze_button, special_button, 0);
+			icing.attach_left (freeze_button, 0);
+			icing.attach_right (freeze_button, 0);
+			icing.attach_bottom_widget (finalize_button, freeze_button, 0);
+			icing.attach_bottom (finalize_button, 0);
+			icing.attach_left (finalize_button, 0);
+			icing.attach_right (finalize_button, 0);
 		end;
 
 	attach_all is
@@ -445,42 +471,43 @@ feature -- Graphical Interface
 
 feature -- System Execution Modes
 
-	exec_nostop: EXEC_NOSTOP;
-			-- Set execution format so that no stop points will
-			-- be taken into account
-
 	exec_stop: EXEC_STOP;
 			-- Set execution format so that user-defined stop
 			-- points will be taken into account
+
+	exec_nostop: EXEC_NOSTOP;
+			-- Set execution format so that no stop points will
+			-- be taken into account
 
 	exec_step: EXEC_STEP;
 			-- Set execution format so that each breakable points
 			-- of the current routine will be taken into account
 
 	exec_last: EXEC_LAST;
-			-- Set execution format so that only the last					-- breakable point of the current routine will be
+			-- Set execution format so that only the last
+			-- breakable point of the current routine will be
 			-- taken into account
 
 feature -- Commands
 
 	open_command: OPEN_PROJECT;
 
-	quit_command: QUIT_PROJECT;
+	quit_cmd_holder: COMMAND_HOLDER;
 
-	update_command: UPDATE_PROJECT;
+	update_cmd_holder: COMMAND_HOLDER;
 
-	debug_run_command: DEBUG_RUN;
+	debug_run_cmd_holder: COMMAND_HOLDER;
 
-	debug_status_command: DEBUG_STATUS;
+	debug_status_cmd_holder: COMMAND_HOLDER;
 
-	debug_quit_command: DEBUG_QUIT;
+	debug_quit_cmd_holder: COMMAND_HOLDER;
 
-	special_command: SPECIAL_COMMAND;
+	special_cmd_holder: COMMAND_HOLDER;
 
-	freeze_command: FREEZE_PROJECT;
+	freeze_cmd_holder: COMMAND_HOLDER;
 
-	finalize_command: FINALIZE_PROJECT;
+	finalize_cmd_holder: COMMAND_HOLDER;
 
-	change_font_command: CHANGE_FONT;
+	change_font_cmd_holder: COMMAND_HOLDER;
 
 end -- class PROJECT_W

@@ -13,12 +13,12 @@ inherit
 		rename
 			execute as tool_w_execute
 		redefine
-			save_command, set_default_format,
+			save_cmd_holder, set_default_format,
 			hole
 		end;
 	TOOL_W
 		redefine
-			save_command, set_default_format,
+			save_cmd_holder, set_default_format,
 			hole, execute
 		select
 			execute
@@ -57,7 +57,7 @@ feature -- Initialization
 			set_action ("<Unmap>,<Prop>", Current, popdown);
 			set_action ("<Configure>", Current, remapped);
 			set_action ("<Visible>", Current, remapped);
-			set_delete_command (quit_command);
+			set_delete_command (quit.associated_command);
 			transporter_init;
 			set_composite_attributes (Current);
 			text_window.set_font_to_default
@@ -97,58 +97,57 @@ feature -- Standard Interface
 
 	build_basic_bar is
 			-- Build top bar (only the basics).
+		local
+			quit_cmd: QUIT_FILE;
+			quit_button: EB_BUTTON;
+			change_font_cmd: CHANGE_FONT;
+			change_font_button: EB_BUTTON;
+			search_cmd: SEARCH_STRING;
+			search_button: EB_BUTTON;
 		do
-			!!hole.make (edit_bar, Current);
-			!!type_teller.make (new_name, edit_bar);
-			type_teller.set_center_alignment;
-			!!search_command.make (edit_bar, text_window);
-			!!change_font_command.make (edit_bar, text_window);
-			!!quit_command.make (edit_bar, text_window);
+			!! hole.make (edit_bar, Current);
+			!! search_cmd.make (edit_bar, text_window);
+			!! search_button.make (search_cmd, edit_bar);
+			!! search_cmd_holder.make (search_cmd, search_button);
+			!! change_font_cmd.make (text_window);
+			!! change_font_button.make (change_font_cmd, edit_bar);
+			if not change_font_cmd.tabs_disabled then
+				change_font_button.add_button_click_action (3, change_font_cmd, change_font_cmd.tab_setting)
+			end;
+			!! change_font_cmd_holder.make (change_font_cmd, change_font_button);
+			!! quit_cmd.make (text_window);
+			!! quit_button.make (quit_cmd, edit_bar);
+			!! quit.make (quit_cmd, quit_button);
 			edit_bar.attach_left (hole, 0);
 			edit_bar.attach_top (hole, 0);
-			edit_bar.attach_top (type_teller, 0);
-			edit_bar.attach_top (search_command, 0);
-			edit_bar.attach_top (change_font_command, 0);
-			edit_bar.attach_top (quit_command, 0);
-			clean_type;
-			edit_bar.attach_left_widget (hole, type_teller, 0);
-			edit_bar.attach_right_widget (search_command, type_teller, 0);
-			edit_bar.attach_bottom (type_teller, 0);
-			edit_bar.attach_right_widget (change_font_command, search_command, 0);
-			edit_bar.attach_right_widget (quit_command, change_font_command, 5);
-			edit_bar.attach_right (quit_command, 0);
+			edit_bar.attach_top (search_button, 0);
+			edit_bar.attach_top (change_font_button, 0);
+			edit_bar.attach_top (quit_button, 0);
+			edit_bar.attach_right_widget (change_font_button, search_button, 0);
+			edit_bar.attach_right_widget (quit_button, change_font_button, 5);
+			edit_bar.attach_right (quit_button, 0);
 		end;
 
 	build_edit_bar is
 			-- Build top bar (with editing commands).
 		do
-			!!hole.make (edit_bar, Current);
+			!! hole.make (edit_bar, Current);
 			create_edit_buttons;
-			!!type_teller.make (new_name, edit_bar);
-			type_teller.set_center_alignment;
-			!!search_command.make (edit_bar, text_window);
-			!!quit_command.make (edit_bar, text_window);
-			!!change_font_command.make (edit_bar, text_window);
 			edit_bar.attach_left (hole, 0);
 			edit_bar.attach_top (hole, 0);
-			edit_bar.attach_top (open_command, 0);
-			edit_bar.attach_top (save_command, 0);
-			edit_bar.attach_top (save_as_command, 0);
-			edit_bar.attach_top (type_teller, 0);
-			edit_bar.attach_top (search_command, 0);
-			edit_bar.attach_top (change_font_command, 0);
-			edit_bar.attach_top (quit_command, 0);
+			edit_bar.attach_top (open_cmd_holder.associated_button, 0);
+			edit_bar.attach_top (save_cmd_holder.associated_button, 0);
+			edit_bar.attach_top (save_as_cmd_holder.associated_button, 0);
+			edit_bar.attach_top (search_cmd_holder.associated_button, 0);
+			edit_bar.attach_top (change_font_cmd_holder.associated_button, 0);
+			edit_bar.attach_top (quit.associated_button, 0);
 			edit_bar.attach_left (hole, 0);
-			edit_bar.attach_left_widget (hole, type_teller, 0);
-			edit_bar.attach_right_widget (open_command, type_teller, 0);
-			edit_bar.attach_right_widget (save_command, open_command, 0);
-			edit_bar.attach_right_widget (save_as_command, save_command, 0);
-			edit_bar.attach_right_widget (search_command, save_as_command, 0);
-			edit_bar.attach_bottom (type_teller, 0);
-			edit_bar.attach_right_widget (change_font_command, search_command, 0);
-			edit_bar.attach_right_widget (quit_command, change_font_command, 5);
-			edit_bar.attach_right (quit_command, 0);
-			clean_type;
+			edit_bar.attach_right_widget (save_cmd_holder.associated_button, open_cmd_holder.associated_button, 0);
+			edit_bar.attach_right_widget (save_as_cmd_holder.associated_button, save_cmd_holder.associated_button, 0);
+			edit_bar.attach_right_widget (search_cmd_holder.associated_button, save_as_cmd_holder.associated_button, 0);
+			edit_bar.attach_right_widget (change_font_cmd_holder.associated_button, search_cmd_holder.associated_button, 0);
+			edit_bar.attach_right_widget (quit.associated_button, change_font_cmd_holder.associated_button, 5);
+			edit_bar.attach_right (quit.associated_button, 0);
 		end;
 
 	build_format_bar is
@@ -184,14 +183,38 @@ feature -- Window Implementation
 
 	create_edit_buttons is
 			-- Create the edit buttons needed for the edit bar.
+		local
+			quit_cmd: QUIT_FILE
+			quit_button: EB_BUTTON
+			change_font_cmd: CHANGE_FONT
+			change_font_button: EB_BUTTON
+			search_cmd: SEARCH_STRING
+			search_button: EB_BUTTON
 		do
+			!! quit_cmd.make (text_window);
+			!! quit_button.make (quit_cmd, edit_bar);
+			!! quit.make (quit_cmd, quit_button);
+			!! change_font_cmd.make (text_window);
+			!! change_font_button.make (change_font_cmd, edit_bar);
+			if not change_font_cmd.tabs_disabled then
+				change_font_button.add_button_click_action (3, change_font_cmd, change_font_cmd.tab_setting)
+			end;
+			!! change_font_cmd_holder.make (change_font_cmd, change_font_button);
+			!! search_cmd.make (edit_bar, text_window);
+			!! search_button.make (search_cmd, edit_bar);
+			!! search_cmd_holder.make (search_cmd, search_button);
 		end;
 
 	close_windows is
 			-- Close sub-windows.
+		local
+			cf: CHANGE_FONT
+			ss: SEARCH_STRING
 		do
-			search_command.close;
-			change_font_command.close
+			ss ?= search_cmd_holder.associated_command;
+			ss.close;
+			cf ?= change_font_cmd_holder.associated_command;
+			cf.close
 		end;
 
 	resize_action is
@@ -206,7 +229,7 @@ feature -- Window Settings
 	set_default_format is
 			-- Default format of windows.
 		do
-			text_window.set_last_format (default_format);		
+			text_window.set_last_format (default_format);
 		end;
 
 	set_default_size is
@@ -257,54 +280,37 @@ feature -- Window Properties
 			Result := showtext_command
 		end;
 
-	type_teller: LABEL_G;
-			-- To tell what type of element we are dealing with.
-
 	editable: BOOLEAN is
 			-- Is Current window editable (default is false)?
 		do
 		end;
 
-	search_command: SEARCH_STRING;
+	search_cmd_holder: COMMAND_HOLDER;
 			-- Command to search for a text.
 
-	change_font_command: CHANGE_FONT;
+	change_font_cmd_holder: COMMAND_HOLDER
 			-- Command to change the font.
 
-	open_command: OPEN_FILE is
+	open_cmd_holder: COMMAND_HOLDER is
 			-- Command to open a file.
 		do
 		end;
 
-	save_command: SAVE_FILE is
+	save_cmd_holder: COMMAND_HOLDER is
 			-- Command to save a file.
 			-- (Only used when the file already is known, i.e.
 			--  there is a filename.)
 		do
 		end;
 
-	save_as_command: SAVE_AS_FILE is
+	save_as_cmd_holder: COMMAND_HOLDER is
 			-- Command to save a file under a certain,
 			-- to be specified name.
 		do
 		end;
 
-	quit_command: QUIT_FILE;
+	quit: COMMAND_HOLDER;
 			-- Command used to from Current.
-
-feature -- Focus Label
-
-	clean_type is
-			-- Clean what's said in the type teller window.
-		do
-			type_teller.set_text (" ")
-		end;
-
-	tell_type (a_type_name: STRING) is
-			-- Display `a_type_name' in type teller.
-		do
-			type_teller.set_text (a_type_name)
-		end;
 
 feature -- Execution Implementation
 

@@ -63,32 +63,21 @@ feature -- Execution
 	execute (argument: ANY) is
 			-- Execute current command but don't change the cursor into watch shape.
 		do
-			if 
-				(argument /= get_in) and
-				(argument /= get_out)
-			then
-				if last_warner /= Void then
-					last_warner.popdown
-				end
-			end;
+			if last_warner /= Void then
+				last_warner.popdown
+			end
 
-			if argument = get_in then
-				text_window.tool.tell_type (command_name)
-			elseif argument = get_out then
-				text_window.tool.clean_type
+			if argument = text_window then
+				formatted ?= text_window.root_stone
 			else
-				if argument = text_window then
-					formatted ?= text_window.root_stone
-				else
-					formatted ?= argument
-				end;
-				if not text_window.changed then
-					set_global_cursor (watch_cursor);
-					execute_licenced (formatted);
-					restore_cursors;
-				else
-					warner (text_window).call (Current, l_File_changed)
-				end
+				formatted ?= argument
+			end;
+			if not text_window.changed then
+				set_global_cursor (watch_cursor);
+				execute_licenced (formatted);
+				restore_cursors;
+			else
+				warner (text_window).call (Current, l_File_changed)
 			end
 		end;
 

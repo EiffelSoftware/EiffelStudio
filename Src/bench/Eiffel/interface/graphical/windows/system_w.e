@@ -15,13 +15,13 @@ inherit
 			attach_all as default_attach_all
 		redefine
 			hole, build_format_bar, build_widgets,
-			open_command, save_as_command, quit_command, save_command,
+			open_cmd_holder, save_as_cmd_holder, save_cmd_holder,
 			text_window, tool_name, editable, create_edit_buttons
 		end;
 	BAR_AND_TEXT
 		redefine
 			hole, build_format_bar, attach_all, build_widgets,
-			open_command, save_as_command, quit_command, save_command,
+			open_cmd_holder, save_as_cmd_holder, save_cmd_holder,
 			text_window, tool_name, editable, create_edit_buttons
 		select
 			attach_all
@@ -53,10 +53,41 @@ feature -- Graphical Interface
 feature {NONE} -- Implementation; Graphical Interface
 
 	create_edit_buttons is
+		local
+			quit_cmd: QUIT_SYSTEM;
+			quit_button: EB_BUTTON;
+			change_font_cmd: CHANGE_FONT;
+			change_font_button: EB_BUTTON;
+			search_cmd: SEARCH_STRING;
+			search_button: EB_BUTTON;
+			open_cmd: OPEN_SYSTEM;
+			open_button: EB_BUTTON
+			save_cmd: SAVE_SYSTEM;
+			save_button: EB_BUTTON
+			save_as_cmd: SAVE_AS_SYSTEM;
+			save_as_button: EB_BUTTON
 		do
-			!! open_command.make (edit_bar, text_window);
-			!! save_command.make (edit_bar, text_window);
-			!! save_as_command.make (edit_bar, text_window);
+			!! open_cmd.make (text_window);
+			!! open_button.make (open_cmd, edit_bar);
+			!! open_cmd_holder.make (open_cmd, open_button);
+			!! save_cmd.make (text_window);
+			!! save_button.make (save_cmd, edit_bar);
+			!! save_cmd_holder.make (save_cmd, save_button);
+			!! save_as_cmd.make (text_window);
+			!! save_as_button.make (save_as_cmd, edit_bar);
+			!! save_as_cmd_holder.make (save_as_cmd, save_as_button);
+			!! quit_cmd.make (text_window);
+			!! quit_button.make (quit_cmd, edit_bar);
+			!! quit.make (quit_cmd, quit_button);
+			!! change_font_cmd.make (text_window);
+			!! change_font_button.make (change_font_cmd, edit_bar);
+			if not change_font_cmd.tabs_disabled then
+				change_font_button.add_button_click_action (3, change_font_cmd, change_font_cmd.tab_setting)
+			end;
+			!! change_font_cmd_holder.make (change_font_cmd, change_font_button);
+			!! search_cmd.make (edit_bar, text_window);
+			!! search_button.make (search_cmd, edit_bar);
+			!! search_cmd_holder.make (search_cmd, search_button);
 		end;
 
 	build_widgets is
@@ -90,42 +121,67 @@ feature {NONE} -- Implementation; Graphical Interface
 
 	build_format_bar is
 			-- Build formatting buttons in `format_bar'.
+		local
+			stat_cmd: SHOW_STATISTICS;
+			stat_button: EB_BUTTON;
+			mod_cmd: SHOW_MODIFIED;
+			mod_button: EB_BUTTON;
+			list_cmd: SHOW_CLUSTERS;
+			list_button: EB_BUTTON
 		do
 			!! showtext_command.make (format_bar, text_window);
 			format_bar.attach_top (showtext_command, 0);
 			format_bar.attach_left (showtext_command, 0);
 
-			!! showlist_command.make (format_bar, text_window);
-			format_bar.attach_top (showlist_command, 0);
-			format_bar.attach_left_widget (showtext_command, showlist_command, 0);
+			!! list_cmd.make (text_window);
+			!! list_button.make (list_cmd, format_bar);
+			!! showlist_frmt_holder.make (list_cmd, list_button);
+			format_bar.attach_top (list_button, 0);
+			format_bar.attach_left_widget (showtext_command, list_button, 0);
 
 			!! showclasses_command.make (format_bar, text_window);
 			format_bar.attach_top (showclasses_command, 0);
-			format_bar.attach_left_widget (showlist_command, showclasses_command, 0);
+			format_bar.attach_left_widget (list_button, showclasses_command, 0);
 
-			!! showstatistics_command.make (format_bar, text_window);
-			format_bar.attach_top (showstatistics_command, 0);
-			format_bar.attach_left_widget (showclasses_command, showstatistics_command, 0);
+			!! stat_cmd.make (text_window);
+			!! stat_button.make (stat_cmd, format_bar);
+			!! showstatistics_frmt_holder.make (stat_cmd, stat_button);
+			format_bar.attach_top (stat_button, 0);
+			format_bar.attach_left_widget (showclasses_command, stat_button, 0);
 
-			!! showmodified_command.make (format_bar, text_window);
-			format_bar.attach_top (showmodified_command, 0);
-			format_bar.attach_left_widget (showstatistics_command, showmodified_command, 0);
+			!! mod_cmd.make (text_window);
+			!! mod_button.make (mod_cmd, format_bar);
+			!! showmodified_frmt_holder.make (mod_cmd, mod_button);
+			format_bar.attach_top (mod_button, 0);
+			format_bar.attach_left_widget (stat_button, mod_button, 0);
 
 			!! showindexing_command.make (format_bar, text_window);
 			format_bar.attach_top (showindexing_command, 0);
-			format_bar.attach_left_widget (showmodified_command, showindexing_command, 0);
+			format_bar.attach_left_widget (mod_button, showindexing_command, 0);
 		end;
 
 	build_command_bar is
+		local
+			shell_cmd: SHELL_COMMAND;
+			shell_button: EB_BUTTON;
+			case_storage_cmd: CASE_STORAGE;
+			case_storage_button: EB_BUTTON
 		do
-			!! shell_command.make (command_bar, text_window);
-			command_bar.attach_right (shell_command, 0);
-			command_bar.attach_left (shell_command, 0);
-			command_bar.attach_bottom (shell_command, 0);
+			!! shell_cmd.make (command_bar, text_window);
+			!! shell_button.make (shell_cmd, command_bar);
+			shell_button.add_button_click_action (3, shell_cmd, Void);
+			!! shell.make (shell_cmd, shell_button);
+			command_bar.attach_right (shell_button, 0);
+			command_bar.attach_left (shell_button, 0);
+			command_bar.attach_bottom (shell_button, 0);
 
-			!! case_storage_cmd.make (command_bar, text_window);
-			command_bar.attach_left (case_storage_cmd, 0);
-			command_bar.attach_bottom_widget (shell_command, case_storage_cmd, 10)
+			!! case_storage_cmd.make (text_window);
+			!! case_storage_button.make (case_storage_cmd, command_bar);
+			case_storage_button.set_action ("!c<Btn1Down>", case_storage_cmd, case_storage_cmd.control_click);
+			!! case_storage_cmd_holder.make (case_storage_cmd, case_storage_button);
+
+			command_bar.attach_left (case_storage_button, 0);
+			command_bar.attach_bottom_widget (shell_button, case_storage_button, 10)
 		end;
 
 feature {NONE} -- Attributes
@@ -149,28 +205,26 @@ feature {NONE} -- Attributes; Forms And Holes
 
 feature {NONE} -- Attributes; Commands
 
-	open_command: OPEN_SYSTEM;
+	open_cmd_holder: COMMAND_HOLDER;
 
-	save_command: SAVE_SYSTEM;
+	save_cmd_holder: COMMAND_HOLDER;
 
-	save_as_command: SAVE_AS_SYSTEM;
+	save_as_cmd_holder: COMMAND_HOLDER;
 
 	-- check_command: CHECK_SYSTEM;
 
-	quit_command: QUIT_SYSTEM;
-
-	showlist_command: SHOW_CLUSTERS;
+	showlist_frmt_holder: FORMAT_HOLDER;
 
 	showclasses_command: SHOW_CLASS_LIST;
 
-	showmodified_command: SHOW_MODIFIED;
+	showmodified_frmt_holder: FORMAT_HOLDER;
 
 	showindexing_command: SHOW_INDEXING;
 
-	showstatistics_command: SHOW_STATISTICS;
+	showstatistics_frmt_holder: FORMAT_HOLDER;
 
-	shell_command: SHELL_COMMAND;
+	shell: COMMAND_HOLDER;
 
-	case_storage_cmd: CASE_STORAGE
+	case_storage_cmd_holder: COMMAND_HOLDER;
 
 end -- class SYSTEM_W

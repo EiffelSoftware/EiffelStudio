@@ -9,7 +9,7 @@ class SEARCH_STRING
 
 inherit
 
-	ICONED_COMMAND
+	ICONED_COMMAND_2
 
 creation
 
@@ -21,7 +21,7 @@ feature -- Initialization
 			-- Initialize the command. And create the window.
 		do
 			!!search_window.make (c, a_text_window);
-			init (c, a_text_window);
+			init (a_text_window);
 		end;
 
 feature -- Close window
@@ -53,7 +53,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Attributes
 
-	command_name: STRING is
+	name: STRING is
 			-- Name of the command.
 		do
 			Result := l_Search

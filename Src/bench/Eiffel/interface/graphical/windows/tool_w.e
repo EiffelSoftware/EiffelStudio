@@ -46,7 +46,7 @@ feature -- Window Properties
 		do
 		end;
 
-	save_command: ICONED_COMMAND is
+	save_cmd_holder: COMMAND_HOLDER is
 			-- The command to save the contents of Current.
 		do
 		end;
@@ -155,7 +155,6 @@ feature -- Pick and Throw Implementation
 				x0 := start_x; y0 := start_y;
 				x1 := start_x; y1 := start_y;
 				draw_point (start_x, start_y);
-				tell_type (element.stone_name);
 				grab (cursor_table.item (element.stone_type))
 			end;
 		ensure
@@ -230,7 +229,6 @@ feature {NONE} -- Execution Implementation
 					origin_text.deselect_all
 				end;
 				ungrab;
-				clean_type;
 				transporting := False;
 			elseif argument /= Void then
 				-- Finally, the user really threw the pebble
@@ -239,7 +237,6 @@ feature {NONE} -- Execution Implementation
 				if origin_text /= Void then
 					origin_text.deselect_all
 				end;
-				clean_type;
 				transporting := False;
 				ungrab;
 				pointed_widget := screen.widget_pointed;
@@ -315,18 +312,6 @@ feature {NONE} -- Properties
  
 	x0, y0, x1, y1: INTEGER;
 			-- Initial and current pointer coordinates
-
-feature -- Focus Label
-
-	tell_type (a_type_name: STRING) is
-			-- Display `a_type_name' in type teller.
-		deferred
-		end;
- 
-	clean_type is
-			-- Clean what's said in the type teller window.
-		deferred
-		end;
 
 feature {NONE} -- Action Adding
 

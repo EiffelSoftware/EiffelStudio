@@ -58,7 +58,7 @@ feature -- For redefinition in the descendants.
 			Result := symbol
 		end;
 
-	command_name: STRING is
+	name: STRING is
 		do
 		end;
 
@@ -68,7 +68,7 @@ feature -- For redefinition in the descendants.
 
 	stone_name: STRING is
 		do
-			Result := command_name
+			Result := name
 		end;
 
 	set_empty_symbol is

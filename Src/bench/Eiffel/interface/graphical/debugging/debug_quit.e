@@ -9,7 +9,7 @@ class DEBUG_QUIT
 
 inherit
 
-	ICONED_COMMAND;
+	ICONED_COMMAND_2;
 	IPC_SHARED;
 	SHARED_APPLICATION_EXECUTION;
 	E_CMD
@@ -23,12 +23,11 @@ creation
 
 feature -- Initialization
 
-	make (c: COMPOSITE; a_text_window: TEXT_WINDOW) is
+	make (a_text_window: TEXT_WINDOW) is
 			-- Initialize the command.
 		do
-			init (c, a_text_window);
+			init (a_text_window);
 			!!request.make (Rqst_quit);
-			set_action ("!c<Btn1Down>", Current, kill_it);
 			Application.set_termination_command (Current)
 		end;
 
@@ -106,7 +105,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Attributes
 
-	command_name: STRING is
+	name: STRING is
 			-- Name of the command.
 		do
 			Result := l_Debug_quit

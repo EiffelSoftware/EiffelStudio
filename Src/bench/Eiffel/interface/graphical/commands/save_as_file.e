@@ -9,7 +9,7 @@ class SAVE_AS_FILE
 
 inherit
 
-	ICONED_COMMAND
+	ICONED_COMMAND_2
 		redefine
 			licence_checked
 		end;
@@ -24,10 +24,10 @@ creation
 	
 feature -- Initialization
 
-	make (c: COMPOSITE; a_text_window: TEXT_WINDOW) is
+	make (a_text_window: TEXT_WINDOW) is
 			-- Initialize the command.
 		do
-			init (c, a_text_window)
+			init (a_text_window)
 		end;
 
 feature -- Callbacks
@@ -141,7 +141,7 @@ feature {NONE}
 	licence_checked: BOOLEAN is True;
 			-- Is the licence checked?
 
-	command_name: STRING is
+	name: STRING is
 			-- Name of the command.
 		do
 			Result := l_Save_as

@@ -9,7 +9,7 @@ class CASE_STORAGE
 
 inherit
 
-	ICONED_COMMAND
+	ICONED_COMMAND_2
 		redefine
 			text_window
 		end;
@@ -20,13 +20,12 @@ creation
 	
 feature -- Initialization
 
-	make (c: COMPOSITE; a_text_window: SYSTEM_TEXT) is
+	make (a_text_window: SYSTEM_TEXT) is
 			-- Initialize the format button  with its bitmap.
 			-- Set up the mouse click and control-click actions
 			-- (click requires a confirmation, control-click doesn't).
 		do
-			init (c, a_text_window);
-			set_action ("!c<Btn1Down>", Current, control_click)
+			init (a_text_window);
 		end;
 
 feature -- Properties
@@ -34,13 +33,13 @@ feature -- Properties
 	text_window: SYSTEM_TEXT;
 			-- Text window associated with Current.
 
-feature {NONE} -- Attributes
-
 	control_click: ANY is
 			-- No confirmation required, used in work
 		once
 			!!Result
 		end;
+
+feature {NONE} -- Attributes
 
 	symbol: PIXMAP is 
 			-- Symbol on the button.
@@ -48,7 +47,7 @@ feature {NONE} -- Attributes
 			Result := bm_Case_storage 
 		end;
  
-	command_name: STRING is
+	name: STRING is
 			-- Internal command name.
 		do
 			Result := l_Case_storage

@@ -10,7 +10,7 @@ class OPEN_FILE
 
 inherit
 
-	ICONED_COMMAND;
+	ICONED_COMMAND_2;
 	WARNER_CALLBACKS
 		rename
 			execute_warner_ok as loose_changes
@@ -22,10 +22,10 @@ creation
 	
 feature -- Initialization
 
-	make (c: COMPOSITE; a_text_window: TEXT_WINDOW) is
+	make (a_text_window: TEXT_WINDOW) is
 			-- Initialization of the command.
 		do
-			init (c, a_text_window)
+			init (a_text_window)
 		end;
 
 feature -- Callbacks
@@ -93,7 +93,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Attributes
 
-	command_name: STRING is
+	name: STRING is
 			-- Name of the command.
 		do
 			Result := l_Open

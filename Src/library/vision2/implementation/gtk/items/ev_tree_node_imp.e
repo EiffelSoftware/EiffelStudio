@@ -495,6 +495,9 @@ feature {EV_TREE_IMP} -- Implementation
 			end
 			child_array.go_i_th (i)
 			child_array.put_left (v)
+			if count = 1 then
+				set_expand (expanded_on_last_item_removal)
+			end
 		end
 
 	remove_i_th (a_position: INTEGER) is
@@ -503,6 +506,9 @@ feature {EV_TREE_IMP} -- Implementation
 			item_imp: EV_TREE_NODE_IMP
 			par_tree_imp: EV_TREE_IMP
 		do
+			if count = 1 then
+				expanded_on_last_item_removal := is_expanded
+			end
 			item_imp := (ev_children @ (a_position))
 
 			-- Remove from tree if present
@@ -533,6 +539,8 @@ feature {EV_TREE_IMP} -- Implementation
 				par_tree_imp.update_pnd_status
 			end
 		end
+		
+	expanded_on_last_item_removal: BOOLEAN
 		
 	a_timeout_imp: EV_TIMEOUT_IMP
 			-- Timeout used for expand node removal hack.

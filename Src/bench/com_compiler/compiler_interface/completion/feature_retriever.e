@@ -86,33 +86,36 @@ feature {NONE} -- Implementation
 			l_overloaded_ids: LIST [INTEGER]
 			l_params: PARAMETER_ENUMERATOR
 			l_feature_i: FEATURE_I
-			l_id, l_overloaded_id: INTEGER
+			l_id, l_resolved_id: INTEGER
 		do
 			create Result.make_with_return_type (a_feature_i.feature_name, parameter_descriptors (a_feature_i), a_feature_i.type.dump, feature_type (a_feature_i), a_class_i.file_name)
-			l_overloaded_id := a_feature_i.feature_name_id
+			l_resolved_id := a_feature_i.feature_name_id
 			l_overloaded_names := feature_table.overloaded_names
-			from
-				l_overloaded_names.start
-			until
-				l_overloaded_names.after
-			loop
-				l_overloaded_ids := l_overloaded_names.item_for_iteration
-				if l_overloaded_ids.has (l_overloaded_id) then
-					from
-						l_overloaded_ids.start
-					until
-						l_overloaded_ids.after
-					loop
-						l_id := l_overloaded_ids.item
-						if l_id /= l_overloaded_id then
-							l_feature_i := feature_table.item_id (l_id)		
-							create l_params.make (parameter_descriptors (l_feature_i))
-							Result.add_overload (l_params, l_feature_i.type.dump)
+			if l_overloaded_names /= Void then
+				from
+					l_overloaded_names.start
+				until
+					l_overloaded_names.after
+				loop
+					l_overloaded_ids := l_overloaded_names.item_for_iteration
+					if l_overloaded_ids.has (l_resolved_id) then
+						Result.set_name (Names_heap.item (l_overloaded_names.key_for_iteration))
+						from
+							l_overloaded_ids.start
+						until
+							l_overloaded_ids.after
+						loop
+							l_id := l_overloaded_ids.item
+							if l_id /= l_resolved_id then
+								l_feature_i := feature_table.item_id (l_id)		
+								create l_params.make (parameter_descriptors (l_feature_i))
+								Result.add_overload (l_params, l_feature_i.type.dump)
+							end
+							l_overloaded_ids.forth
 						end
-						l_overloaded_ids.forth
 					end
+					l_overloaded_names.forth
 				end
-				l_overloaded_names.forth
 			end
 		end
 

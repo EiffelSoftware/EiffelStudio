@@ -183,11 +183,15 @@ feature -- Access
 	rows: INTEGER is
 			-- Height of Current widget measured in character heights.
 		local
-			fw: FONT_WINDOWS
+			f: FONT
 		do
 			if height /= 0 then
-				fw ?= font.implementation
-				Result := height // fw.string_height (Current, "I")
+				if private_font /= Void then
+					f := private_font
+				else
+					f := font
+				end
+				Result := height // (f.font_ascent + f.font_descent)
 			end
 		end
 
@@ -641,7 +645,11 @@ feature -- Status setting
 		local
 			f: FONT
 		do
-			f := font
+			if private_font /= Void then
+				f := private_font
+			else
+				f := font
+			end
 			set_height (i * (f.font_ascent + f.font_descent))
 		end
 

@@ -76,7 +76,7 @@ feature -- Access
 			res: POINTER
 		do
 			last_call_success := c_last_error_message (item, $res)
-			if res /= Void then
+			if res /= default_pointer then
 				create Result.make_by_pointer (res)
 			end
 		ensure
@@ -151,7 +151,7 @@ feature -- Basic Oprtations
 			bstr_culture: BSTR_STRING
 			bstr_key: BSTR_STRING
 			res: POINTER
-			void_pointer: POINTER
+			null_pointer: POINTER
 		do	
 			create bstr_name.make_by_uni_string (aname)
 			create bstr_version.make_by_uni_string (aversion)
@@ -162,10 +162,10 @@ feature -- Basic Oprtations
 					bstr_version.item, bstr_culture.item, bstr_key.item, $res)
 			else
 				last_call_success := c_relative_folder_name (item, bstr_name.item,
-					bstr_version.item, bstr_culture.item, void_pointer, $res)
+					bstr_version.item, bstr_culture.item, null_pointer, $res)
 			end
 
-			if res /= Void then
+			if res /= default_pointer then
 				create Result.make_by_pointer (res)
 			end
 			
@@ -186,7 +186,7 @@ feature -- Basic Oprtations
 			create bstr_path.make_by_uni_string (apath)
 			last_call_success := c_assembly_info_from_assembly (item, bstr_path.item, $res)
 			
-			if res /= Void then
+			if res /= default_pointer then
 				create Result.make_by_pointer (res)
 			end
 		ensure

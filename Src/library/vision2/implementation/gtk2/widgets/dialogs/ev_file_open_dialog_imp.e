@@ -32,6 +32,15 @@ feature {NONE} -- Initialization
 			set_title ("Open")
 		end
 
+
+	multiple_selection_enabled: BOOLEAN
+
+	file_names: ARRAYED_LIST [STRING]
+
+	enable_multiple_selection is do end
+
+	disable_multiple_selection is do end
+
 feature {NONE} -- Implementation
 
 	file_chooser_action: INTEGER is

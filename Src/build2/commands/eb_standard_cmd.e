@@ -84,7 +84,7 @@ feature -- Status setting
 		do
 			accelerator := acc
 			if accelerator.actions.is_empty then
-				accelerator.actions.extend (~execute_if_executable)
+				accelerator.actions.extend (agent execute_if_executable)
 			end
 		end
 

@@ -10,6 +10,11 @@ class
 inherit
 	WIZARD_EIFFEL_EFFECTIVE_FUNCTION_GENERATOR
 
+	WIZARD_DISPATCH_FUNCTION_HELPER
+		export
+			{NONE} all
+		end
+
 create 
 	generate,
 	generate_source,
@@ -61,6 +66,9 @@ feature -- Basic operations
 			
 			create body.make (100)
 			body.append ("%T%T%T") 
+			if does_routine_have_result (a_descriptor) then
+				body.append ("Result := ")
+			end
 			body.append (on_hook_feature_name (a_descriptor.interface_eiffel_name))
 			body.append (on_hook_feature_arguments)
 			feature_writer.set_body (body)

@@ -123,7 +123,8 @@ feature -- Basic operations
 				check
 					non_void_pointed_descriptor: pointed_descriptor /= Void
 				end
-				Result := pointed_descriptor.interface_descriptor.c_type_name
+				Result := pointed_descriptor.interface_descriptor.namespace +
+					"::" + pointed_descriptor.interface_descriptor.c_type_name
 			end
 		ensure
 			non_void_name: Result /= Void
@@ -430,11 +431,11 @@ feature -- Basic operations
 				Result.append (New_line_tab_tab_tab)
 				Result.append (Tab)
 
-				Result.append ("if (" + a_variant_name + ".vt = (VT_UNKNOWN |VT_BYREF)")
+				Result.append ("if (" + a_variant_name + ".vt = (VT_UNKNOWN |VT_BYREF))")
 				Result.append (get_interface_pointer_pointer 
 					(Iunknown, a_variable_name, a_variant_name, Variant_ppunkval, counter))
 				
-				Result.append ("else if (" + a_variant_name + ".vt = (VT_DISPATCH |VT_BYREF)")
+				Result.append ("else if (" + a_variant_name + ".vt = (VT_DISPATCH |VT_BYREF))")
 				Result.append (get_interface_pointer_pointer 
 					(Idispatch, a_variable_name, a_variant_name, Variant_ppdispval, counter))
 				

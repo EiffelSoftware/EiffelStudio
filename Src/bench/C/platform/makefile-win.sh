@@ -8,9 +8,9 @@ MAKE = $make
 MV = ren
 RM = del
 
-OBJECTS = names.obj sizes.obj commands.obj
+OBJECTS = names.$obj sizes.$obj commands.$obj
 
-.c.obj:
+.c.$obj:
 	$(CC) -c $(JCFLAGS) $<
 
 all:: platform.lib

@@ -19,13 +19,13 @@ LDFLAGS =
 
 # Derived object file names
 OBJECTS = \
-	child.obj \
-	listen.obj \
-	main.obj \
-	proto.obj \
-	env.obj
+	child.$obj \
+	listen.$obj \
+	main.$obj \
+	proto.$obj \
+	env.$obj
 
-.c.obj:
+.c.$obj:
 	$(CC) -c $(JCFLAGS) $<
 
 all:: ebench.exe
@@ -45,7 +45,7 @@ $borland-ebench.exe: $(LIBS) ebench.lbk
 	tlink32 @ebench.lbk
 
 ebench.lbk: $(OBJECTS)
-	echo -m -n c:\bc45\lib\c0x32.obj + > ebench.lbk
+	echo -m -n c:\bc45\lib\c0x32.$obj + > ebench.lbk
 	&echo $** + >> ebench.lbk
 	echo , ebench.exb,, IMPORT32.LIB+CW32.LIB+>> ebench.lbk
 	echo ..\shared\ipc.lbb + >> ebench.lbk
@@ -63,4 +63,4 @@ ebench.lwk: $(OBJECTS)
 	echo LIB ..\shared\ipc.lwb >> ebench.lwk
 	echo LIB $(TOP)\idrs\idr.lwb >> ebench.lwk
 
-listen.obj: ..\shared\select.h
+listen.$obj: ..\shared\select.h

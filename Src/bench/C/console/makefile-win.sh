@@ -8,9 +8,9 @@ JCFLAGS = $(CFLAGS) $ccflags $optimize
 LN = copy
 MV = \bin\mv
 RM = del
-OBJECTS = argcargv.obj econsole.obj
+OBJECTS = argcargv.$obj econsole.$obj
 
-.c.obj:
+.c.$obj:
 	$(CC) -c $(JCFLAGS) $<
 
 all:: econsole.lib

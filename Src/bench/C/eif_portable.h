@@ -197,6 +197,9 @@ typedef double			EIF_DOUBLE;
 typedef char *			EIF_REFERENCE;
 typedef void *			EIF_POINTER;
 
+/* For workbench mode only. */
+typedef uint32		BODY_INDEX;
+
 	/* previously in eif_globals.h */
 #define MTC_NOARG           
 #define MTC                 /* MTC_NOARG, */

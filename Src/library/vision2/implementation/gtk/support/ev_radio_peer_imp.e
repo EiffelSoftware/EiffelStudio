@@ -27,11 +27,11 @@ feature -- Status report
 			peer_imp: like Current
 		do
 			create Result.make
-			if gslist = Default_pointer then
+			if radio_group = Default_pointer then
 				Result.extend (interface)
 			else
 				from
-					cur := gslist
+					cur := radio_group
 				until
 					cur = Default_pointer
 				loop
@@ -48,11 +48,11 @@ feature -- Status report
 			cur: POINTER
 			peer_imp: like Current
 		do
-			if gslist = Default_pointer then
+			if radio_group = Default_pointer then
 				Result := interface
 			else
 				from
-					cur := gslist
+					cur := radio_group
 				until
 					cur = Default_pointer or else Result /= void
 				loop
@@ -67,7 +67,7 @@ feature -- Status report
 
 feature {EV_ANY_I} -- Implementation
 
-	gslist: POINTER is
+	radio_group: POINTER is
 			-- Reference to front of radio group. *GSList.
 		deferred
 		end
@@ -97,6 +97,9 @@ end -- class EV_RADIO_PEER
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/04/25 18:46:40  king
+--| Accounted for gslist name change
+--|
 --| Revision 1.5  2000/04/13 22:05:54  king
 --| Corrected gslist equality statements from Void to Default_pointer
 --|

@@ -8,11 +8,8 @@
 //   external_name: "$RCSfile$";
 //---------------------------------------------------------------------------
 //-- $Log$
-//-- Revision 1.2  1998/01/20 00:25:57  raphaels
-//-- Modified sources to be compatible with Borland compiler.
-//--
-//-- Revision 1.1.1.1  1998/01/15 23:32:14  raphaels
-//-- First version of EiffelCOM
+//-- Revision 1.3  1998/01/20 23:47:58  raphaels
+//-- Removed obsolete files.
 //--
 //---------------------------------------------------------------------------
 
@@ -68,17 +65,17 @@ STDMETHODIMP E_IEnumConnectionPoints::Reset
 }
 //---------------------------------------------------------------------------
 
-//STDMETHODIMP E_IEnumConnectionPoints::Clone
-//                         (
-//                           IEnumConnectionPoints ** ppEnum
-//                         )
-//{
-//     return E_IEnumConnectionPoints_Clone
-//                         ( GetEiffelCurrentPointer(),
-//                           TRUE,
-//                           ( IEnumConnectionPoints ** )  ppEnum
-//                         );
-//}
+STDMETHODIMP E_IEnumConnectionPoints::Clone
+                         (
+                           IEnumConnectionPoints ** ppEnum
+                         )
+{
+     return E_IEnumConnectionPoints_Clone
+                         ( GetEiffelCurrentPointer(),
+                           TRUE,
+                          ( IEnumConnectionPoints ** )  ppEnum
+                         );
+}
 //---------------------------------------------------------------------------
 
 
@@ -143,6 +140,22 @@ extern "C" HRESULT E_IEnumConnectionPoints_Reset
 }
 
 //------------------------------------------------------------------------
+
+extern "C" HRESULT E_IEnumConnectionPoints_Clone
+                         ( void * ptr,
+                           BOOL incomingCall,
+						   IEnumConnectionPoints **  ppEnum
+                         )
+{
+     if( incomingCall )
+       {
+        *ppEnum = (IEnumConnectionPoints*)Ocxdisp_EnumConnPointClone(eif_access (eoleOcxDisp), eif_access (ptr));
+        return (Ocxdisp_UnknownGetStatusCode (eif_access (eoleOcxDisp), eif_access (ptr)));
+       }
+     return ((E_IEnumConnectionPoints*) ptr)->Clone (ppEnum);
+}
+
+//------------------------------------------------------------------------
 //------------------------------------------------------------------------
 
 extern "C" EIF_OBJ eole2_enum_connection_points_next (EIF_POINTER ptr, EIF_INTEGER count) 
@@ -196,4 +209,11 @@ extern "C" void eole2_enum_connection_points_skip (EIF_POINTER ptr, EIF_INTEGER 
 	
 extern "C" void eole2_enum_connection_points_reset (EIF_POINTER ptr) {
 	g_hrStatusCode = E_IEnumConnectionPoints_Reset ((void *)ptr, FALSE);
+	}
+
+extern "C" EIF_POINTER eole2_enum_connection_points_clone (EIF_POINTER ptr) {
+	LPENUMCONNECTIONPOINTS FAR* ppecnpt;
+
+	g_hrStatusCode = E_IEnumConnectionPoints_Clone ((void *)ptr, FALSE, ppecnpt);
+	return (EIF_POINTER)*ppecnpt;
 	}

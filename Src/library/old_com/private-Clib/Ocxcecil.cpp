@@ -385,7 +385,8 @@ extern "C" void eole2_setup_ocx_dispatcher (EIF_REFERENCE oleCallDispatcher)
             eif_proc( "on_enum_unknown_skip", eocdTypeId );
 	Ocxdisp_EnumUnknownReset =
             eif_proc( "on_enum_unknown_reset", eocdTypeId );
-
+	Ocxdisp_EnumUnknownClone =
+            eif_fn_pointer( "on_enum_unknown_clone", eocdTypeId );
 
 	// EOLE_ENUM_CONNECTION_POINTS dispatching functions
 
@@ -395,7 +396,8 @@ extern "C" void eole2_setup_ocx_dispatcher (EIF_REFERENCE oleCallDispatcher)
             eif_proc( "on_enum_connection_points_skip", eocdTypeId );
 	Ocxdisp_EnumConnPointReset =
             eif_proc( "on_enum_connection_points_reset", eocdTypeId );
-
+	Ocxdisp_EnumConnPointClone =
+            eif_fn_pointer( "on_enum_connection_points_clone", eocdTypeId );
 
 	// EOLE_ENUM_CONNECTIONS dispatching functions
 
@@ -405,7 +407,8 @@ extern "C" void eole2_setup_ocx_dispatcher (EIF_REFERENCE oleCallDispatcher)
             eif_proc( "on_enum_connections_skip", eocdTypeId );
 	Ocxdisp_EnumConnectionsReset =
             eif_proc( "on_enum_connections_reset", eocdTypeId );
-
+	Ocxdisp_EnumConnectionsClone =
+            eif_fn_pointer( "on_enum_connections_clone", eocdTypeId );
 
     // EOLE_CLASS_FACTORY dispatching functions
 

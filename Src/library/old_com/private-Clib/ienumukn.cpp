@@ -8,11 +8,8 @@
 //   external_name: "$RCSfile$";
 //---------------------------------------------------------------------------
 //-- $Log$
-//-- Revision 1.2  1998/01/20 00:25:58  raphaels
-//-- Modified sources to be compatible with Borland compiler.
-//--
-//-- Revision 1.1.1.1  1998/01/15 23:32:14  raphaels
-//-- First version of EiffelCOM
+//-- Revision 1.3  1998/01/20 23:48:00  raphaels
+//-- Removed obsolete files.
 //--
 //---------------------------------------------------------------------------
 
@@ -62,6 +59,16 @@ STDMETHODIMP E_IEnumUnknown::Reset ( void )
                          );
 }
 
+//---------------------------------------------------------------------------
+
+STDMETHODIMP E_IEnumUnknown::Clone ( IEnumUnknown __RPC_FAR *__RPC_FAR *ppenum )
+{
+     return E_IEnumUnknown_Clone
+                         ( GetEiffelCurrentPointer(),
+                           TRUE,
+						   ppenum
+                         );
+}
 
 //---------------------------------------------------------------------------
 
@@ -131,6 +138,25 @@ extern "C" HRESULT E_IEnumUnknown_Reset
 
 //---------------------------------------------------------------------------
 
+extern "C" HRESULT E_IEnumUnknown_Clone
+                         ( void * ptr,
+                           BOOL incomingCall,
+						   IEnumUnknown __RPC_FAR *__RPC_FAR *ppenum
+                         )
+{
+	 HRESULT res;
+     if( incomingCall )
+       {
+        *ppenum = (IEnumUnknown __RPC_FAR *) Ocxdisp_EnumUnknownClone(eif_access (eoleOcxDisp), eif_access (ptr));
+        res = Ocxdisp_UnknownGetStatusCode (eif_access (eoleOcxDisp), eif_access (ptr));
+        return res;
+       }
+     return ((E_IEnumUnknown*) ptr)->Clone (ppenum);
+
+}
+
+//----------------------------------------------------------------------------
+
 extern "C" EIF_OBJ eole2_enum_unknown_next (EIF_POINTER ptr, EIF_INTEGER count) {
 	IUnknown ** rgelt;
 	ULONG *pcFetched;
@@ -179,4 +205,11 @@ extern "C" void eole2_enum_unknown_skip (EIF_POINTER ptr, EIF_INTEGER count) {
 	
 extern "C" void eole2_enum_unknown_reset (EIF_POINTER ptr) {
 	g_hrStatusCode = E_IEnumUnknown_Reset ((void *)ptr, FALSE);
+	}
+
+extern "C" EIF_POINTER eole2_enum_unknown_clone (EIF_POINTER ptr) {
+	IEnumUnknown __RPC_FAR *__RPC_FAR *ppenum;
+
+	g_hrStatusCode = E_IEnumUnknown_Clone ((void *)ptr, FALSE, ppenum);
+	return (EIF_POINTER)*ppenum;
 	}

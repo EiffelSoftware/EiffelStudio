@@ -8,11 +8,8 @@
 //   external_name: "$RCSfile$";
 //---------------------------------------------------------------------------
 //-- $Log$
-//-- Revision 1.2  1998/01/20 00:25:58  raphaels
-//-- Modified sources to be compatible with Borland compiler.
-//--
-//-- Revision 1.1.1.1  1998/01/15 23:32:14  raphaels
-//-- First version of EiffelCOM
+//-- Revision 1.3  1998/01/20 23:47:59  raphaels
+//-- Removed obsolete files.
 //--
 //---------------------------------------------------------------------------
 
@@ -64,6 +61,19 @@ STDMETHODIMP E_IEnumConnections::Reset
      return E_IEnumConnections_Reset
                          ( GetEiffelCurrentPointer(),
                            TRUE
+                         );
+}
+
+//---------------------------------------------------------------------------
+
+STDMETHODIMP E_IEnumConnections::Clone
+                         (  LPENUMCONNECTIONS FAR* ppecn
+                         )
+{
+     return E_IEnumConnections_Clone
+                         ( GetEiffelCurrentPointer(),
+                           TRUE,
+							ppecn
                          );
 }
 
@@ -121,6 +131,22 @@ extern "C" HRESULT E_IEnumConnections_Reset
 
 //---------------------------------------------------------------------------
 
+extern "C" HRESULT E_IEnumConnections_Clone
+                         ( void * ptr,
+                           BOOL incomingCall,
+						   LPENUMCONNECTIONS FAR* ppecn
+                         )
+{
+     if( incomingCall )
+       {
+        *ppecn = (LPENUMCONNECTIONS FAR)Ocxdisp_EnumConnectionsClone(eif_access (eoleOcxDisp), eif_access (ptr));
+        return (HRESULT)Ocxdisp_UnknownGetStatusCode (eif_access (eoleOcxDisp), eif_access (ptr));
+       }
+     return ((E_IEnumConnections*) ptr)->Reset();
+}
+
+//---------------------------------------------------------------------------
+
 extern "C" EIF_OBJ eole2_enum_connections_next (EIF_POINTER ptr, EIF_INTEGER count) {
 	CONNECTDATA **rgpcd;
 	ULONG *pcFetched;
@@ -171,4 +197,10 @@ extern "C" void eole2_enum_connections_reset (EIF_POINTER ptr) {
 	g_hrStatusCode = E_IEnumConnections_Reset ((void *)ptr, FALSE);
 	}
 
+extern "C" EIF_POINTER eole2_enum_connections_clone (EIF_POINTER ptr) {
+	LPENUMCONNECTIONS FAR* ppecn;
+
+	g_hrStatusCode = E_IEnumConnections_Clone ((void *)ptr, FALSE, ppecn);
+	return (EIF_POINTER)*ppecn;
+	}
 //------------------------------------------------------------------------------

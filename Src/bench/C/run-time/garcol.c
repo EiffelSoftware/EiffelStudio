@@ -1035,9 +1035,10 @@ rt_shared int scollect(int (*gc_func) (void), int i)
 		if (e_mem_used > 0 ) {
 				// Some memory of free list was freed, so we should update `eiffel_usage'
 				// accordingly.
-			eiffel_usage -= e_mem_used;
-			if (eiffel_usage < 0) {
+			if (eiffel_usage < e_mem_used) {
 				eiffel_usage = 0;
+			} else {
+				eiffel_usage -= e_mem_used;
 			}
 		}
 	}

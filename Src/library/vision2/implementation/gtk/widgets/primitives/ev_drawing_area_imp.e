@@ -39,8 +39,7 @@ inherit
 	EV_DRAWING_AREA_ACTION_SEQUENCES_IMP
 		redefine
 			interface,
-			visual_widget,
-			disconnect_all_signals
+			visual_widget
 		end
 
 create
@@ -182,12 +181,6 @@ feature {NONE} -- Implementation
 			-- Redraw the screen immediately (useless with GTK)
 		do
 			-- do nothing
-		end
-
-	disconnect_all_signals is
-			-- Disconnect all gtk signals.
-		do
-			--| FIXME
 		end
 
 feature {EV_DRAWABLE_IMP} -- Implementation

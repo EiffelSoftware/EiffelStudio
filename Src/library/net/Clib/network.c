@@ -198,11 +198,8 @@ rt_shared void do_init(void)
 }
 #endif
 
-/* The following macros and functions are added by Yuanchang(Terry) Tang to
- * process REAL/DOUBLE between different platforms. We change all formats
- * into UNIX format. Because Eiffel run-time does not distinguish Linux
- * from Unix, we have to use "ntohl" to distinguish them in the
- * functions instead of defining different macros.
+/* The following macros and functions are there to process REAL/DOUBLE
+ * between different platforms. We change all formats into network format.
  */
 
 #define ise_ntohf(x)		change_float_order(x)
@@ -210,55 +207,38 @@ rt_shared void do_init(void)
 #define ise_ntohd(x)		change_double_order(x)
 #define ise_htond(x)		change_double_order(x)
 
-static char ise_order_flag=0; /* value 1: No order reversing is necessary;
-							   *       2: Order reversing is necessary;
-							   *       0: Test if order reversing is necessary
-							   */
-
-float change_float_order(float f) 
+rt_private float change_float_order(float f) 
 {
+#if BYTEORDER == 0x4321
+	return f;
+#else
 	float x, y;
 	unsigned char *px=(unsigned char *)(&x);
 	unsigned char *py=(unsigned char *)(&y);
 	int i;
 
-	if (ise_order_flag==0) {
-		if (0x1122 == ntohl(0x1122)) 
-			ise_order_flag = 1;
-		else
-			ise_order_flag = 2;
-	}
-	if (ise_order_flag == 1)
-		return f;
-	else {
-		x = f; /* It's necessary in Windows */
-		for (i=0; i<sizeof(float); i++) 
-			py[i] = px[sizeof(float)-1-i];
-		return y;
-	}
+	x = f; /* It's necessary in Windows */
+	for (i=0; i<sizeof(float); i++) 
+		py[i] = px[sizeof(float)-1-i];
+	return y;
+#endif
 }
 
-double change_double_order(double d) 
+rt_private double change_double_order(double d) 
 {
+#if BYTEORDER == 0x4321
+	return d;
+#else
 	double x, y;
 	unsigned char *px=(unsigned char *)(&x);
 	unsigned char *py=(unsigned char *)(&y);
 	int i;
 
-	if (ise_order_flag==0) {
-		if (0x1122 == ntohl(0x1122)) 
-			ise_order_flag = 1;
-		else
-			ise_order_flag = 2;
-	}
-	if (ise_order_flag == 1)
-		return d;
-	else {
-		x = d; /* It's necessary in Windows. */
-		for (i=0; i<sizeof(double); i++) 
-			py[i] = px[sizeof(double)-i-1];
-		return y;
-	}
+	x = d; /* It's necessary in Windows. */
+	for (i=0; i<sizeof(double); i++) 
+		py[i] = px[sizeof(double)-i-1];
+	return y;
+#endif	
 }
 
 

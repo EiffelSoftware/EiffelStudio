@@ -1,8 +1,8 @@
 <EIFFEL_DOCUMENT>
 <TOPIC TOPIC_ID="Bench_preferences" ICON="icon_preferences_root">
 	<HEAD>EiffelBench Resources, version 4.8</HEAD>
-	<TOPIC TOPIC_ID="Applications_and_directories" ICON="icon_preferences_folder">
-		<HEAD>Applications and Directories</HEAD>
+	<TOPIC TOPIC_ID="Global_preferences" ICON="icon_preferences_folder">
+		<HEAD>Global preferences</HEAD>
 		<TEXT DESCRIPTION="Text files format: True = Windows / False = UNIX">text_mode_is_windows<BOOLEAN>False</BOOLEAN></TEXT>
 		<TEXT>editor<STRING>vi</STRING></TEXT>
 		<TEXT>temporary_directory<STRING>/tmp</STRING></TEXT>
@@ -12,6 +12,7 @@
 		<TEXT DESCRIPTION="Use an external command to print?">use_external_editor<BOOLEAN>False</BOOLEAN></TEXT>
 		<TEXT DESCRIPTION="Command invoked to print a text">print_shell_command<STRING>lpr $target</STRING></TEXT>
 		<TEXT DESCRIPTION="Send a postscript file to this command?">use_postscript<BOOLEAN>False</BOOLEAN></TEXT>
+		<TEXT DESCRIPTION="Number of projects kept in the recent projects">recent_projects_number<INTEGER>10</INTEGER></TEXT>
 	</TOPIC>
 	<TOPIC TOPIC_ID="Tools" ICON="icon_preferences_folder">
 		<HEAD>Tools</HEAD>
@@ -24,7 +25,7 @@
 		<TOPIC TOPIC_ID="Context_tool" ICON="icon_preferences_folder">
 			<HEAD>Context tools</HEAD>
 			<TEXT DESCRIPTION="Share addresses between the editor and the context tool?">unified_stone<BOOLEAN>True</BOOLEAN></TEXT>
-			<TEXT DESCRIPTION="Ignore the following classes in the diagram?">ignore_excluded_class_figures<BOOLEAN>False</BOOLEAN></TEXT>
+			<TEXT DESCRIPTION="Show ALL classes in the diagram (ignore the following list)?">ignore_excluded_class_figures<BOOLEAN>False</BOOLEAN></TEXT>
 			<TEXT DESCRIPTION="Names of classes that should not appear in generated diagrams">excluded_class_figures<LIST_STRING>INTEGER;BOOLEAN;STRING;CHARACTER;REAL;DOUBLE</LIST_STRING></TEXT>
 			<TEXT DESCRIPTION="Order used to sort feature clauses in formatted texts">feature_clause_order<LIST_STRING>Initialization;Access;Measurement;Comparison;Status report;Status setting;Cursor movement;Element change;Removal;Resizing;Transformation;Conversion;Duplication;Miscellaneous;Basic operations;Obsolete;Inapplicable;Implementation;*</LIST_STRING></TEXT>
 			<TEXT DESCRIPTION="Show all callers (as opposed to local callers) in `callers' form">show_all_callers<BOOLEAN>True</BOOLEAN></TEXT>
@@ -518,6 +519,8 @@
 			<TEXT>last_saved_stack_path<STRING>/</STRING></TEXT>
 			<TEXT>max_slice<INTEGER>50</INTEGER></TEXT>
 			<TEXT>min_slice<INTEGER>0</INTEGER></TEXT>
+			<TEXT>dyn_lib_window_height<INTEGER>300</INTEGER></TEXT>
+			<TEXT>dyn_lib_window_width<INTEGER>450</INTEGER></TEXT>
 			<TEXT>development_window__height<INTEGER>480</INTEGER></TEXT>
 			<TEXT>development_window__width<INTEGER>640</INTEGER></TEXT>
 			<TEXT>development_window__is_maximized<BOOLEAN>False</BOOLEAN></TEXT>
@@ -527,7 +530,7 @@
 			<TEXT>right_debug_layout<LIST_STRING>minimized;visible;visible;171;449</LIST_STRING></TEXT>
 			<TEXT>left_debug_layout<LIST_STRING>closed;closed;closed;closed;closed;visible;38;286</LIST_STRING></TEXT>
 
-			<TEXT>development_window__general_toolbar_layout<LIST_STRING>New_window__visible;New_editor__hidden;New_context_window__hidden;Open_file__visible;New_class__visible;New_feature__visible;Save_file__visible;Open_shell__visible;System_info__visible;Separator;Undo__visible;Redo__visible;Separator;Editor_cut__visible;Editor_copy__visible;Editor_paste__visible;Separator;Clusters__visible;Features__visible;Search__visible;Context__visible;Separator;Send_to_context__visible;New_cluster__hidden;Remove_class_cluster__hidden;Favorites__hidden;Windows__hidden;Toggle_stone__hidden;Raise_all__hidden;Minimize_all__hidden</LIST_STRING></TEXT>
+			<TEXT>development_window__general_toolbar_layout<LIST_STRING>New_window__visible;New_editor__hidden;New_context_window__hidden;Open_file__visible;New_class__visible;New_feature__visible;Save_file__visible;Open_shell__visible;System_info__visible;Separator;Undo__visible;Redo__visible;Separator;Editor_cut__visible;Editor_copy__visible;Editor_paste__visible;Separator;Clusters__visible;Features__visible;Search__visible;Context__visible;Separator;Send_to_context__visible;New_cluster__hidden;Remove_class_cluster__hidden;Favorites__hidden;Windows__hidden;Toggle_stone__hidden;Raise_all__hidden;Minimize_all__hidden;Print__hidden</LIST_STRING></TEXT>
 			<TEXT>debugger__project_toolbar_layout<LIST_STRING>System_tool__visible;Melt_project__visible;System_info__visible;Separator;Enable_bkpt__visible;Disable_bkpt__visible;Clear_bkpt__visible;Bkpt_info__visible;Separator;Exec_step__visible;Exec_into__visible;Exec_out__visible;Exec_no_stop__visible;Exec_debug__visible;Separator;Exec_stop__visible;Exec_quit__visible;Run_final__hidden;Freeze_project__hidden;Finalize_project__hidden</LIST_STRING></TEXT>
 	</TOPIC>
 </TOPIC>

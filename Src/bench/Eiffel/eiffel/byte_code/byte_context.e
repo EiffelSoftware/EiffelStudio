@@ -672,7 +672,7 @@ feature -- Setting
 			-- If `has_pre_post', `need_gc_hook' is set to True.
 		local
 			assign: ASSIGN_BL
-			reverse_assign: REVERSE_BL
+			reverse_b: REVERSE_BL
 			call: CALL_B
 			expr_b: EXPR_B
 			instruction_call: INSTR_CALL_B
@@ -702,17 +702,17 @@ feature -- Setting
 				if compound /= Void and then compound.count = 1 then
 					byte_node := compound.first
 					assign ?= byte_node
-					reverse_assign ?= assign
-						-- FIXME: Manu 05/31/2002: we should try to optimize
-						-- so that not all reverse assignment prevent the optimization
-						-- to be made.
-					if assign /= Void and reverse_assign = Void then
+					if assign /= Void then
 						if assign.expand_return then
 								-- Assignment in Result is expanded in a return instruction
 							tmp := False
 						else
+							reverse_b ?= assign
+								-- FIXME: Manu 05/31/2002: we should try to optimize
+								-- so that not all reverse assignment prevent the optimization
+								-- to be made.
 							call ?= assign.source
-							if call /= Void and then call.is_single then
+							if call /= Void and then call.is_single and reverse_b = Void then
 									-- Simple assignment of a single call
 								if has_invariant then
 									tmp := True

@@ -155,24 +155,24 @@ feature -- Basic operations
 				interface_descriptors.after
 			loop
 				from
-					interface_descriptors.item.functions.start
+					interface_descriptors.item.functions_start
 				until
-					interface_descriptors.item.functions.after
+					interface_descriptors.item.functions_after
 				loop
 
-					if interface_descriptors.item.functions.item.argument_count > 0 then
+					if interface_descriptors.item.functions_item.argument_count > 0 then
 						from
-							interface_descriptors.item.functions.item.arguments.start
+							interface_descriptors.item.functions_item.arguments.start
 						until
-							interface_descriptors.item.functions.item.arguments.after
+							interface_descriptors.item.functions_item.arguments.after
 						loop
-							if feature_eiffel_names.has (interface_descriptors.item.functions.item.arguments.item.name) then
-								interface_descriptors.item.functions.item.arguments.item.name.prepend ("a_")
+							if feature_eiffel_names.has (interface_descriptors.item.functions_item.arguments.item.name) then
+								interface_descriptors.item.functions_item.arguments.item.name.prepend ("a_")
 							end
-							interface_descriptors.item.functions.item.arguments.forth
+							interface_descriptors.item.functions_item.arguments.forth
 						end
 					end
-					interface_descriptors.item.functions.forth
+					interface_descriptors.item.functions_forth
 				end
 
 				interface_descriptors.forth

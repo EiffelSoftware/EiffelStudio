@@ -44,6 +44,12 @@ feature {COMPILER_EXPORTER} -- Access
 			generated_id_not_void: Result /= Void
 		end
 
+	associated_class: CLASS_C is
+			-- Class associated with current id
+		do
+			Result := class_array.item (internal_id)
+		end
+
 feature {COMPILER_EXPORTER} -- Status report
 
 	protected: BOOLEAN is
@@ -57,8 +63,14 @@ feature {NONE} -- Implementation
 
 	counter: CLASS_SUBCOUNTER is
 			-- Counter associated with the id
-		do
-			Result := System.class_counter.item (compilation_id)
+		once
+			Result := Class_counter.item (Normal_compilation)
+		end
+
+	class_array: ARRAY [CLASS_C] is
+			-- Classes compiled during compilation `compilation_id'
+		once
+			Result := System.classes.item (Normal_compilation)
 		end
 
 end -- class CLASS_ID

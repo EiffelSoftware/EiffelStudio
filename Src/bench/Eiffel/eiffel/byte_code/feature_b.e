@@ -17,6 +17,7 @@ inherit
 		end;
 	SHARED_TABLE;
 	SHARED_SERVER
+	SHARED_ID_TABLES
 
 feature 
 
@@ -29,8 +30,24 @@ feature
 	type: TYPE_I;
 			-- Type of the call
 
-	body_id: BODY_ID
+	body_index: BODY_INDEX
+			-- Body Index of the feature
+
+	body_id: BODY_ID is
 			-- Body Id of the feature.
+		require
+			has_body_id: has_body_id (body_index)
+		do
+			Result := Body_index_table.item (body_index)
+		ensure
+			non_void_body_id: Result /= Void
+		end
+
+	has_body_id (v: BODY_INDEX): BOOLEAN is
+			-- Does the system have `v' as BODY_INDEX?
+		do
+			Result := Body_index_table.has (body_index)
+		end
 
 	is_once: BOOLEAN
 			-- Is the current feature a once function
@@ -85,7 +102,7 @@ feature
 		do
 			feature_name := f.feature_name;
 			feature_id := f.feature_id;
-			body_id := f.body_id
+			body_index := f.body_index
 			routine_id := f.rout_id_set.first
 			is_once := f.is_once
 		end;

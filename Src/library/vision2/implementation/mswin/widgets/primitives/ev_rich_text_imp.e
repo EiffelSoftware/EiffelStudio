@@ -929,7 +929,9 @@ feature -- Status setting
 			if has_selection then
 				unselect
 			end
-			set_caret_position (original_position)
+				-- Protect the restoration of the caret position as the old position
+				-- may no longer be valid.
+			set_caret_position (original_position.min (text_length + 1))
 		end
 
 	flush_buffer is

@@ -34,8 +34,11 @@ feature
 		local
 			ext_name_bull: ANY
 		do
+			widget_index := widget_manager.last_inserted_position;
 			ext_name_bull := a_bulletin.identifier.to_c;
-			screen_object := create_bulletin ($ext_name_bull, a_bulletin.parent.implementation.screen_object);
+			screen_object := create_bulletin 
+					($ext_name_bull, 
+					parent_screen_object (a_bulletin, widget_index));
 		end;
 
 

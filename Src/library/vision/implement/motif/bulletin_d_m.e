@@ -36,9 +36,11 @@ feature -- Creation
 		local
 			ext_name_bull: ANY
 		do
+			widget_index := widget_manager.last_inserted_position;
 			ext_name_bull := a_bulletin_d.identifier.to_c;
 			screen_object := create_bulletin_d
-			($ext_name_bull, a_bulletin_d.parent.implementation.screen_object);
+					($ext_name_bull, 
+					parent_screen_object (a_bulletin_d, widget_index));
 			a_bulletin_d.set_dialog_imp (Current);
 			forbid_resize
 			action_target := screen_object;

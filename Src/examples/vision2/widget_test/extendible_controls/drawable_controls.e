@@ -65,6 +65,8 @@ feature {NONE} -- Initialization
 			set_text ("Drawing operations")
 			create main_vertical_box
 			extend (main_vertical_box)
+			main_vertical_box.set_padding_width (5)
+			main_vertical_box.set_border_width (5)
 			
 				-- Add basic controls.
 			create clear_button.make_with_text ("Clear")
@@ -100,6 +102,7 @@ feature {NONE} -- Initialization
 			create operation_frame.make_with_text ("Drawing operation")
 			main_vertical_box.extend (operation_frame)
 			create radio_parent
+			radio_parent.set_border_width (5)
 			operation_frame.extend (radio_parent)
 			create argument_holder
 			create point_radio_button.make_with_text ("Draw point")
@@ -183,11 +186,12 @@ feature {NONE} -- Implementation
 		
 	parent_argument_holder (a_radio_button: EV_RADIO_BUTTON) is
 			-- Ensure `argument_holder' is parented in the same parent as `a_radio_button',
-			-- at the following position.
+			-- at the following position. Also perform adjustment of all labels, so they have the same width:
 		local
 			a_parent: EV_VERTICAL_BOX
 			original_index: INTEGER
 		do
+			update_labels_minimum_width
 			a_parent ?= a_radio_button.parent
 			check
 				parent_is_vertical_box: a_parent /= Void
@@ -196,6 +200,44 @@ feature {NONE} -- Implementation
 			a_parent.go_i_th (original_index)
 			a_parent.put_right (argument_holder)
 			parent_window (Current).unlock_update
+		end
+		
+	update_labels_minimum_width is
+			-- Update all labels parented at the second level in `argument_holder'.
+		local
+			label_width: INTEGER
+			box: EV_HORIZONTAL_BOX
+			label: EV_LABEL
+		do
+				-- Update widths of all labels
+			from
+				argument_holder.start
+			until
+				argument_holder.off
+			loop
+				box ?= argument_holder.item
+				if box /= Void then
+					label ?= box.first
+					if label /= Void and then label.minimum_width > label_width then
+						label_width := label.minimum_width
+					end
+				end
+				argument_holder.forth
+			end
+				from
+				argument_holder.start
+			until
+				argument_holder.off
+			loop
+				box ?= argument_holder.item
+				if box /= Void then
+					label ?= box.first
+					if label /= Void then
+						label.set_minimum_width (label_width)
+					end
+				end
+				argument_holder.forth
+			end	
 		end
 		
 	unparent_argument_holder is
@@ -338,9 +380,18 @@ feature {NONE} -- Implementation
 		end
 
 	filled_check_button: EV_CHECK_BUTTON is
-			--
+			-- Once access to a check button control filled status.
 		once
 			create Result.make_with_text ("filled?")
+			Result.select_actions.extend (agent update_tiled_button)
+		end
+		
+	tiled_check_button: EV_CHECK_BUTTON is
+			-- Once access to a check button control filled status
+			-- for drawing operations.
+		once
+			create Result.make_with_text ("tiled?")
+			Result.select_actions.extend (agent update_tiled_status)
 		end
 		
 	fields_valid: BOOLEAN is
@@ -429,6 +480,30 @@ feature {NONE} -- Contract support
 
 feature {NONE} -- Implementation
 
+	update_tiled_status is
+			-- Update `drawable' to use tiling dependent on state
+			-- of `tiled_check_button'.
+		do
+			if tiled_check_button.is_selected then
+				drawable.set_tile (test_pixmap)
+			else
+				drawable.remove_tile
+			end
+		end
+		
+	update_tiled_button is
+			-- Update status of `tiled_check_button' to reflect usability, dependent
+			-- on state of `filled_check_button'.
+		do
+			if filled_check_button.is_selected then
+				tiled_check_button.enable_sensitive
+			else
+				tiled_check_button.disable_sensitive
+			end
+		end
+		
+		
+
 	add_text_entry_with_label (a_text: STRING) is
 			-- Add `text_entry' and label marked `a_text'
 			-- to `argument_holder'.
@@ -511,13 +586,29 @@ feature {NONE} -- Implementation
 			-- at first position.
 		local
 			a_parent: EV_VERTICAL_BOX
+			horizontal_box: EV_HORIZONTAL_BOX
 		do
 			if filled_check_button.parent /= Void then
 				filled_check_button.parent.prune (filled_check_button)
 			end
 			filled_check_button.disable_select
 			argument_holder.go_i_th (1)
-			argument_holder.put_left (filled_check_button)
+			create horizontal_box
+			horizontal_box.extend (create {EV_LABEL})
+			horizontal_box.disable_item_expand (horizontal_box.first)
+			horizontal_box.extend (filled_check_button)
+			argument_holder.put_left (horizontal_box)
+			
+			if tiled_check_button.parent /= Void then
+				tiled_check_button.parent.prune (tiled_check_button)
+			end
+			tiled_check_button.disable_select
+			argument_holder.go_i_th (1)
+			create horizontal_box
+			horizontal_box.extend (create {EV_LABEL})
+			horizontal_box.disable_item_expand (horizontal_box.first)
+			horizontal_box.extend (tiled_check_button)
+			argument_holder.put_right (horizontal_box)
 		end	
 
 	point_radio_button, text_radio_button, text_top_left_radio_button,

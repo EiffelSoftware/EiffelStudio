@@ -54,26 +54,44 @@ feature {ICOR_EXPORTER} -- Access
 		local
 			icordebug_process: POINTER
 			l_hr: INTEGER
+			create_flags: INTEGER
 		do
 			create process_info.make
+			create_flags := create_flags | cwin_create_new_console
+--			create_flags := create_flags | cwin_debug_only_this_process
 			last_call_success := cpp_createprocess (item, 
 										Default_pointer,
 										(create {UNI_STRING}.make (a_command_line)).item,
 										Default_pointer,
 										Default_pointer,
 										(True).to_integer,
-										cwin_create_new_console,
---										cwin_debug_only_this_process,
+										create_flags,
 										Default_pointer,
 										(create {UNI_STRING}.make (a_working_directory)).item,
-										startup_info.item, 
+										startup_info.item,
 										process_info.item,
 										cwin_debug_no_specials_options,
 										$icordebug_process
 									)
 			if last_call_succeed then
+				last_icor_debug_process_id := process_info.process_id
+
 				Result := icordebug_process
 				l_hr := {ICOR_DEBUG_PROCESS}.cpp_get_handle (icordebug_process, $last_icor_debug_process_handle)
+			else
+				last_icor_debug_process_id     := 0
+				last_icor_debug_process_handle := 0
+			end
+		end
+
+	debug_active_process (p_id: INTEGER; win32_attach: BOOLEAN): ICOR_DEBUG_PROCESS is
+			-- Debug process indentified by `p_id' and return the Process object.
+		local
+			icordebug_process: POINTER
+		do
+			last_call_success := cpp_debug_active_process (item, p_id, win32_attach.to_integer, $icordebug_process)
+			if last_call_succeed then
+				create Result.make_by_pointer (icordebug_process)
 			end
 		end
 
@@ -126,7 +144,6 @@ feature {ICOR_EXPORTER} -- Access
 				process_info := Void
 			end
 		end
-		
 
 feature {NONE} -- Implementation
 
@@ -167,7 +184,7 @@ feature {NONE} -- Implementation
 			-- Call `ICorDebug->Terminate'.
 		external
 			"[
-				C++ ICorDebug signature(): EIF_INTEGER 
+				C++ ICorDebug signature(): EIF_INTEGER
 				use "cli_headers.h"
 			]"
 		alias
@@ -204,10 +221,26 @@ feature {NONE} -- Implementation
 			"GetProcess"
 		end		
 
+feature { EIFNET_DEBUGGER} -- Implementation exported to EIFNET_DEBUGGER
+
+	cpp_debug_active_process (obj: POINTER; p_id: INTEGER; win32_attach: INTEGER; icordebugprocess: POINTER): INTEGER is
+			-- Call `ICorDebug->DebugActiveProcess'.
+		external
+			"[
+				C++ ICorDebug signature(DWORD, BOOL, ICorDebugProcess**): EIF_INTEGER
+				use "cli_headers.h"
+			]"
+		alias
+			"DebugActiveProcess"
+		end
+
 feature -- ICorDebugProcess handle
 
 	last_icor_debug_process_handle: INTEGER
 			-- Handle on the process debugged
+
+	last_icor_debug_process_id: INTEGER
+			-- Process ID of the created process
 
 feature {NONE} -- Implementation routines
 

@@ -1165,11 +1165,13 @@ feature -- Basic Operations
 			ccom_generate_bitwise_not (initializer)
 		end
 
-	put_line_info (n: INTEGER) is
+	put_line_info (line_number: INTEGER; start_column: INTEGER; end_column: INTEGER) is
 			-- No description available.
-			-- `n' [in].  
+			-- `line_number' [in].  
+			-- `start_column' [in].  
+			-- `end_column' [in].  
 		do
-			ccom_put_line_info (initializer, n)
+			ccom_put_line_info (initializer, line_number, start_column, end_column)
 		end
 
 	set_for_interfaces is
@@ -2160,10 +2162,10 @@ feature {NONE}  -- Externals
 			"C++ [ecom_EiffelCompiler::COMPILER_PROXY %"ecom_EiffelCompiler_COMPILER_PROXY.h%"]()"
 		end
 
-	ccom_put_line_info (cpp_obj: POINTER; n: INTEGER) is
+	ccom_put_line_info (cpp_obj: POINTER; line_number: INTEGER; start_column: INTEGER; end_column: INTEGER) is
 			-- No description available.
 		external
-			"C++ [ecom_EiffelCompiler::COMPILER_PROXY %"ecom_EiffelCompiler_COMPILER_PROXY.h%"](EIF_INTEGER)"
+			"C++ [ecom_EiffelCompiler::COMPILER_PROXY %"ecom_EiffelCompiler_COMPILER_PROXY.h%"](EIF_INTEGER,EIF_INTEGER,EIF_INTEGER)"
 		end
 
 	ccom_create_label (cpp_obj: POINTER): INTEGER is

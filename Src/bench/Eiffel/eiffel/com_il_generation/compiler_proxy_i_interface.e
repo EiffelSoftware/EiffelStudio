@@ -1137,7 +1137,7 @@ feature -- Status Report
 			Result := True
 		end
 
-	put_line_info_user_precondition (n: INTEGER): BOOLEAN is
+	put_line_info_user_precondition (line_number: INTEGER; start_column: INTEGER; end_column: INTEGER): BOOLEAN is
 			-- User-defined preconditions for `put_line_info'.
 			-- Redefine in descendants if needed.
 		do
@@ -2621,11 +2621,13 @@ feature -- Basic Operations
 
 		end
 
-	put_line_info (n: INTEGER) is
+	put_line_info (line_number: INTEGER; start_column: INTEGER; end_column: INTEGER) is
 			-- No description available.
-			-- `n' [in].  
+			-- `line_number' [in].  
+			-- `start_column' [in].  
+			-- `end_column' [in].  
 		require
-			put_line_info_user_precondition: put_line_info_user_precondition (n)
+			put_line_info_user_precondition: put_line_info_user_precondition (line_number, start_column, end_column)
 		deferred
 
 		end

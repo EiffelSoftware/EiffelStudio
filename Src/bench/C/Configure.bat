@@ -58,7 +58,7 @@ echo @echo off > make.w32
 echo set INCLUDE=$include_path>> make.w32
 echo set LIB=$lib_path>> make.w32
 echo $make>> make.w32
-rt-converter make.w32 make.w32
+rt-converter.exe make.w32 make.w32
 del run-time\config.h
 rem
 rem Copy the config 
@@ -95,34 +95,34 @@ rem
 rem Call the converter tranforming the makefile-win.sh to makefile
 rem
 cd extra\win32\ipc\shared
-..\..\..\..\rt-converter makefile-win.sh makefile
+..\..\..\..\rt-converter.exe makefile-win.sh makefile
 cd ..\..\..\..\run-time
-..\rt-converter makefile-win.sh makefile
+..\rt-converter.exe makefile-win.sh makefile
 cd ..\parsing\shared
-..\..\rt-converter makefile-win.sh makefile
+..\..\rt-converter.exe makefile-win.sh makefile
 cd ..\eiffel
-..\..\rt-converter makefile-win.sh makefile
+..\..\rt-converter.exe makefile-win.sh makefile
 cd ..\lace
-..\..\rt-converter makefile-win.sh makefile
+..\..\rt-converter.exe makefile-win.sh makefile
 cd ..\..
 cd platform
-..\rt-converter makefile-win.sh makefile
+..\rt-converter.exe makefile-win.sh makefile
 cd ..
 cd idrs
-..\rt-converter makefile-win.sh makefile
+..\rt-converter.exe makefile-win.sh makefile
 cd ..
 cd extra\win32\console
-..\..\..\rt-converter makefile-win.sh makefile
+..\..\..\rt-converter.exe makefile-win.sh makefile
 cd ..\networku
-..\..\..\rt-converter makefile-win.sh makefile
+..\..\..\rt-converter.exe makefile-win.sh makefile
 cd ..\ipc\daemon
-..\..\..\..\rt-converter makefile-win.sh makefile
+..\..\..\..\rt-converter.exe makefile-win.sh makefile
 cd ..\ewb
-..\..\..\..\rt-converter makefile-win.sh makefile
+..\..\..\..\rt-converter.exe makefile-win.sh makefile
 cd ..\app
-..\..\..\..\rt-converter makefile-win.sh makefile
+..\..\..\..\rt-converter.exe makefile-win.sh makefile
 cd ..\shared
-..\..\..\..\rt-converter makefile-win.sh makefile
+..\..\..\..\rt-converter.exe makefile-win.sh makefile
 cd ..\..\..\..
 rem
 rem Call make

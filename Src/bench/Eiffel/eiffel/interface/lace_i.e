@@ -60,7 +60,7 @@ end;
 				Error_handler.raise_error
 			end
 			new_date := eif_date ($ptr);
-			if new_date /= date then
+			if root_ast = Void or else new_date /= date then
 				do_recompilation;
 				date := new_date;
 			else

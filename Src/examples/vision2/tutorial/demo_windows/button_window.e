@@ -24,12 +24,13 @@ feature {NONE} -- Initialization
 
 	make (par: EV_CONTAINER) is
 			-- Create the demo in `par'.
-			-- We create the box first without parent because it
+			-- We create the box first hidden because it
 			-- is faster.
 		local
 			pixmap: EV_PIXMAP
 		do
-			{EV_VERTICAL_BOX} Precursor (Void)
+			{EV_VERTICAL_BOX} Precursor (par)
+			hide
 
 			set_homogeneous (False)
 			!! b1.make_with_text (Current, "Button")
@@ -43,6 +44,7 @@ feature {NONE} -- Initialization
 			check_b.set_pixmap (pixmap)
 			!! frame.make_with_text (Current, "Frame")
 			!! box.make (frame)
+
 			!! radio1_b.make_with_text (box, "Radio 1")
 			!! radio2_b.make_with_text (box, "Radio 2")
 			radio2_b.set_pixmap (pixmap)
@@ -51,7 +53,7 @@ feature {NONE} -- Initialization
 			-- Each descendant has a seperate action window.
 			--Sets the tabs for the action window
 
-			set_parent (par)
+			show
 		end
 
 	set_tabs is

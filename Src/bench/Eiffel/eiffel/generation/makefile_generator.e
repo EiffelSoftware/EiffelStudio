@@ -138,7 +138,11 @@ feature -- Object basket managment
 	add_common_objects is
 			-- Add common objects file
 		do
-			add_in_system_basket (Econform)
+			if not system.in_final_mode then
+					-- FIXME: we need to remove this line when we will remove
+					-- the old conformance stuff.
+				add_in_system_basket (Econform)
+			end
 			add_in_system_basket (Eplug)
 			add_in_system_basket (Eskelet)
 			add_in_system_basket (Evisib)

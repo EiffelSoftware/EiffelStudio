@@ -217,7 +217,7 @@ feature -- Basic operations
 			an_x_positive: an_x >= 0
 			a_y_positive: a_y >= 0
 		do
-			Result := grid.item (items_spanning_vertical_span (a_y, 0).first, items_spanning_horizontal_span (an_x, 0).first)
+			Result := grid.item (items_spanning_horizontal_span (an_x, 0).first, items_spanning_vertical_span (a_y, 0).first)
 		end
 
 	partial_redraw (an_x, a_y, a_width, a_height: INTEGER) is

@@ -28,9 +28,9 @@ feature
 			-- Print boolean constant
 		do
 			if value then
-				buffer.putstring ("(char) 1");
+				buffer.putstring ("(EIF_BOOLEAN) 1");
 			else
-				buffer.putstring ("(char) 0");
+				buffer.putstring ("(EIF_BOOLEAN) 0");
 			end;
 		end;
 

@@ -40,7 +40,20 @@ feature {NONE} -- Initialization
 		do
 			make_top (Title)
 			set_menu (main_menu)
-			resize (320, 150)
+			main_menu.disable_item (Cmd_save)
+			main_menu.disable_item (Cmd_insert_text)
+			main_menu.disable_item (Cmd_left)
+			main_menu.disable_item (Cmd_center)
+			main_menu.disable_item (Cmd_right)
+			main_menu.disable_item (Cmd_line_up)
+			main_menu.disable_item (Cmd_line_down)
+			main_menu.disable_item (Cmd_bold)
+			main_menu.disable_item (Cmd_italic)
+			main_menu.disable_item (Cmd_underline)
+			main_menu.disable_item (Cmd_border_top)
+			main_menu.disable_item (Cmd_spelling)
+			main_menu.disable_item (Cmd_grammar)	
+			resize (350, 150)
 			!! wordbasic
 			wordbasic.create
 			if not wordbasic.is_valid then
@@ -69,79 +82,42 @@ feature {NONE} -- Implementation
 				menu_id
 			when Cmd_new then
 				wordbasic.file_new_default
-			when Cmd_save then
-				if exist_active_doc then				
-					wordbasic.file_save
-				else
-					!! mess_box.make
-					mess_box.error_message_box (Current, "Sorry, no active document ...", "Save Error")
-				end
+				main_menu.enable_item (Cmd_save)
+				main_menu.enable_item (Cmd_insert_text)
+				main_menu.enable_item (Cmd_left)
+				main_menu.enable_item (Cmd_center)
+				main_menu.enable_item (Cmd_right)
+				main_menu.enable_item (Cmd_line_up)
+				main_menu.enable_item (Cmd_line_down)
+				main_menu.enable_item (Cmd_bold)
+				main_menu.enable_item (Cmd_italic)
+				main_menu.enable_item (Cmd_underline)
+				main_menu.enable_item (Cmd_border_top)
+				main_menu.enable_item (Cmd_spelling)
+				main_menu.enable_item (Cmd_grammar)	
+			when Cmd_save then				
+				wordbasic.file_save
 			when Cmd_exit then
 				on_destroy
 				destroy
 			when Cmd_insert_text then
-				if exist_active_doc then
-					wordbasic.insert (enter_text)
-				else
-					!! mess_box.make
-					mess_box.error_message_box (Current, "Sorry, no active document ...", "Insert Text Error")
-				end
+				wordbasic.insert (enter_text)
 			when Cmd_left then
-				if exist_active_doc then
-					wordbasic.left_para
-				else
-					!! mess_box.make
-					mess_box.error_message_box (Current, "Sorry, no active document ...", "Left Paragraph Error")
-				end
+				wordbasic.left_para
 			when Cmd_center then
-				if exist_active_doc then
-					wordbasic.center_para
-				else
-					!! mess_box.make
-					mess_box.error_message_box (Current, "Sorry, no active document ...", "Center Paragraph Error")
-				end
+				wordbasic.center_para
 			when Cmd_right then
-				if exist_active_doc then
-					wordbasic.right_para
-				else
-					!! mess_box.make
-					mess_box.error_message_box (Current, "Sorry, no active document ...", "Right Paragraph Error")
-				end
+				wordbasic.right_para
 			when Cmd_line_up then
-				if exist_active_doc then
-					wordbasic.line_up (enter_number)
-				else
-					!! mess_box.make
-					mess_box.error_message_box (Current, "Sorry, no active document ...", "Line Up Error")
-				end
+				wordbasic.line_up (enter_number)
 			when Cmd_line_down then
-				if exist_active_doc then
-					wordbasic.line_down (enter_number)
-				else
-					!! mess_box.make
-					mess_box.error_message_box (Current, "Sorry, no active document ...", "Line Down Error")
-				end
+				wordbasic.line_down (enter_number)
 			when Cmd_bold then
-				if exist_active_doc then
-					wordbasic.bold
-				else
-					!! mess_box.make
-					mess_box.error_message_box (Current, "Sorry, no active document ...", "Bold Error")
-				end
+				wordbasic.bold
 			when Cmd_italic then
-				if exist_active_doc then
-					wordbasic.italic
-				else
-					!! mess_box.make
-					mess_box.error_message_box (Current, "Sorry, no active document ...", "Italic Error")
-				end
+				wordbasic.italic
 			when Cmd_underline then
-				if exist_active_doc then
-					wordbasic.underline
-				else
-					!! mess_box.make
-					mess_box.error_message_box (Current, "Sorry, no active document ...", "Underline Error")
-				end
+				wordbasic.underline
 			when Cmd_border_line_style then
 				loc := enter_number
 				if loc < 0 or loc > 11 then
@@ -152,26 +128,11 @@ feature {NONE} -- Implementation
 				end
 				wordbasic.border_line_style (loc)
 			when Cmd_border_top then
-				if exist_active_doc then
-					wordbasic.border_top
-				else
-					!! mess_box.make
-					mess_box.error_message_box (Current, "Sorry, no active document ...", "BorderTop Error")
-				end
+				wordbasic.border_top
 			when Cmd_spelling then
-				if exist_active_doc then
-					wordbasic.tools_spelling
-				else
-					!! mess_box.make
-					mess_box.error_message_box (Current, "Sorry, no active document ...", "Spelling Error")
-				end
+				wordbasic.tools_spelling
 			when Cmd_grammar then
-				if exist_active_doc then
-					wordbasic.tools_grammar
-				else
-					!! mess_box.make
-					mess_box.error_message_box (Current, "Sorry, no active document ...", "Grammar Error")
-				end
+				wordbasic.tools_grammar
 			when Cmd_count_windows then
 				!! message.make (0)
 				message.make_from_string ("Number of open document and macro-editing windows: ")
@@ -201,12 +162,6 @@ feature {NONE} -- Implementation
 				wordbasic.app_hide
 			else
 			end
-		end
-		
-	exist_active_doc: BOOLEAN is
-			-- Does an active document exist?
-		do
-			Result := wordbasic.count_windows > 0
 		end
 		
 	on_destroy is

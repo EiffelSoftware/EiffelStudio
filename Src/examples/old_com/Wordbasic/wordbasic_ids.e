@@ -23,7 +23,6 @@ feature -- Access
 	Cmd_line_down: INTEGER is 3005
 	Cmd_line_up: INTEGER is 3004
 	Cmd_new: INTEGER is 1001
-	Cmd_open: INTEGER is 1005
 	Cmd_right: INTEGER is 3002
 	Cmd_save: INTEGER is 1003
 	Cmd_show: INTEGER is 7002

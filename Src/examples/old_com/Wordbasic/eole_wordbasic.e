@@ -297,7 +297,7 @@ feature -- Element change
 	error_description: STRING is
 			-- Last error description
 		do
-			if function_exception.is_ole_ptr_attached and function_exception.error_code /= S_ok then
+			if function_exception.is_attached and function_exception.error_code /= S_ok then
 				Result := function_exception.error_description
 			else
 				Result := "No error happened !"

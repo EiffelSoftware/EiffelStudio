@@ -14,6 +14,11 @@ feature {NONE}
 			Result := pixmap_file_content ("breakpoint.bm");
 		end;
 
+	bm_Case_storage: PIXMAP is
+		do
+			Result := pixmap_file_content ("case_storage.bm");
+		end;
+
 	bm_Check: PIXMAP is
 		do
 			Result := pixmap_file_content ("check.bm");
@@ -104,6 +109,11 @@ feature {NONE}
 			Result := pixmap_file_content ("dshowcallers.bm");
 		end;
 
+	bm_Dark_showclass_list: PIXMAP is
+		do
+			Result := pixmap_file_content ("dshowclasses.bm");
+		end;
+
 	bm_Dark_showclients: PIXMAP is
 		do
 			Result := pixmap_file_content ("dshowclients.bm");
@@ -177,6 +187,11 @@ feature {NONE}
 	bm_Dark_showshort: PIXMAP is
 		do
 			Result := pixmap_file_content ("dshowshort.bm");
+		end;
+
+	bm_Dark_showstatistics: PIXMAP is
+		do
+			Result := pixmap_file_content ("dshowstatistics.bm");
 		end;
 
 	bm_Dark_showsuppliers: PIXMAP is
@@ -424,6 +439,11 @@ feature {NONE}
 			Result := pixmap_file_content ("showcallers.bm");
 		end;
 
+	bm_Showclass_list: PIXMAP is
+		do
+			Result := pixmap_file_content ("showclasses.bm");
+		end;
+
 	bm_Showclients: PIXMAP is
 		do
 			Result := pixmap_file_content ("showclients.bm");
@@ -492,6 +512,11 @@ feature {NONE}
 	bm_Showshort: PIXMAP is
 		do
 			Result := pixmap_file_content ("showshort.bm");
+		end;
+
+	bm_Showstatistics: PIXMAP is
+		do
+			Result := pixmap_file_content ("showstatistics.bm");
 		end;
 
 	bm_Showstops: PIXMAP is

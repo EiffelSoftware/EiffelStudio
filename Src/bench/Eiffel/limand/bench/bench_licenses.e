@@ -8,11 +8,15 @@ inherit
 	SHARED_WORKBENCH
 	SHARED_ERROR_HANDLER
 	COMPILER_EXPORTER
+	SHARED_LICENSE
+		redefine
+			new_license, lic_die
+		end
 
 feature {NONE}
 
-	license: LICENSE is
-		once
+	new_license: LICENSE is
+		do
 			!BENCH_LICENSE! Result.make
 			Result.set_version (4.0);
 			Result.set_application_name ("eiffelbench")

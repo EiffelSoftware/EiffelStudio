@@ -11,7 +11,8 @@ inherit
 			is_feature_special, make_special_byte_code,
 			is_unsafe, optimized_byte_node,
 			calls_special_features, is_special_feature,
-			size, pre_inlined_code, inlined_byte_code
+			size, pre_inlined_code, inlined_byte_code,
+			has_separate_call
 		end;
 	SHARED_TABLE;
 	SHARED_SERVER
@@ -340,6 +341,93 @@ feature -- Inlining
 				gen_type_i.set_meta_generic (m)
 				Result := gen_type_i
 			end
+		end
+
+feature -- Concurrent Eiffel
+
+	attach_loc_to_sep: BOOLEAN is
+		-- Does the feature call attach a local object to separate formal
+		-- parameter?
+		local
+			p: PARAMETER_B;
+		do
+			Result := false;
+			if parameters /= Void then
+				from
+					parameters.start
+				until
+					Result or parameters.after
+				loop
+					p ?= parameters.item;
+					-- can't fail
+					if real_type(p.attachment_type).is_separate and
+						not real_type(p.expression.type).is_separate then
+						Result := True;
+					end;
+					parameters.forth;
+				end;
+			end;
+		end
+
+	has_separate_call: BOOLEAN is
+		-- Is there separate feature call in the assertion?
+		local
+			p: PARAMETER_B;
+			class_type: CL_TYPE_I;
+		do
+			class_type ?= context_type;
+			if class_type /= Void then
+				Result := class_type.is_separate;
+			end;
+			if not Result and parameters /= Void  then
+				from
+					parameters.start
+				until
+					Result or parameters.after
+				loop
+					p ?= parameters.item;
+					-- can't fail
+					Result := p.expression.has_separate_call;
+					parameters.forth;
+				end;
+			end;
+		end
+
+	restore_current is
+		local
+			reg: REGISTRABLE;
+			changed: BOOLEAN;
+			para: PARAMETER_B;
+			tmp: INTEGER;
+		do
+			reg := context.associated_register_table.item("Current");
+			if reg = Void then
+			else
+				if parameters /= Void then
+					changed := False;
+					from
+						parameters.start;
+						tmp := 0;
+					until
+						changed or parameters.after
+					loop
+						tmp := tmp + 1;
+						para ?= parameters.item; 
+						if para /= Void then
+							changed := para.current_has_been_changed;
+						end;
+						parameters.forth;
+					end;
+					if changed then
+						reg.print_register_by_name;
+						generated_file.putstring (" = ");
+						generated_file.putstring ("l[");
+						generated_file.putint (context.ref_var_used);
+						generated_file.putstring ("];");
+						generated_file.new_line;
+					end;
+				end
+			end;
 		end
 
 end

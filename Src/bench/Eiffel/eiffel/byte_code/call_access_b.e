@@ -329,6 +329,8 @@ end;
 		do
 			generate_access_on_type (gen_reg, class_type);
 				-- Now generate the parameters of the call, if needed.
+			if class_type.is_separate then
+			else
 			if not is_attribute then
 				generated_file.putchar ('(');
 			end;
@@ -344,6 +346,7 @@ end;
 			if meta then
 					-- Close parenthesis opened by metamorphosis code
 				generated_file.putchar (')');
+			end;
 			end;
 			release_hector_protection;
 		end;

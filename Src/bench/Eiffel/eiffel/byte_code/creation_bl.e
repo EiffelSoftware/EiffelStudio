@@ -116,15 +116,28 @@ feature
 		local
 			target_type: TYPE_I;
 			is_expanded: BOOLEAN;
+			feat: FEATURE_B;
 		do
 			target_type := Context.real_type (target.type);
+
 			if target.is_result and last_in_result then
 					-- This is the generation of a last !!Result with a
 					-- possible creation routine attached to it.
 					-- NB: there is no need to call `generate_assignment' as
 					-- the assignment is implicitely done by the "return".
 				if call /= Void then
-					if target_type.is_basic then
+					if target_type.is_separate then
+						generate_creation_for_separate_object(target_type);
+						generated_file.putstring ("reserve_sep_obj(");
+						print_register;
+						generated_file.putstring (");");
+						generated_file.new_line;
+						call.generate;
+						generated_file.putstring ("free_sep_obj(");
+						print_register;
+						generated_file.putstring (");");
+						generated_file.new_line;
+					elseif target_type.is_basic then
 						generate_register_assignment;
 						target_type.c_type.generate_cast (generated_file);
 						generated_file.putstring ("0;");
@@ -166,7 +179,33 @@ feature
 					generate_creation;
 				end;
 			else
-				if not target_type.is_basic then
+				if target_type.is_separate then
+					generate_creation_for_separate_object(target_type);
+					if call /= Void then
+						generated_file.putstring ("reserve_sep_obj(");
+						print_register;
+						generated_file.putstring (");");
+						generated_file.new_line;
+						call.generate_creation_call;
+						generated_file.putstring ("free_sep_obj(");
+						print_register;
+						generated_file.putstring (");");
+						generated_file.new_line;
+					end;
+						-- We had to get a regiser because RTAR evaluates its
+						-- arguments more than once.
+					if not target.is_predefined then
+							-- Target is an attribute then
+						generated_file.putstring ("RTAR(");
+						print_register;
+						generated_file.putstring (gc_comma);
+						context.Current_register.print_register_by_name;
+						generated_file.putchar (')');
+						generated_file.putchar (';');
+						generated_file.new_line;
+					end;
+					generate_assignment (is_expanded);
+				elseif not target_type.is_basic then
 					is_expanded := target_type.is_expanded;
 					if not is_expanded then
 						generate_register_assignment;
@@ -265,5 +304,32 @@ feature
 				generated_file.new_line;
 			end;
 		end;
+
+feature -- Concurrent Eiffel
+
+	generate_creation_for_separate_object(target_type: TYPE_I) is
+		-- generate codes for creating separate object
+		local 
+			cl_type: CL_TYPE_I;
+			feat: FEATURE_B
+		do
+			generated_file.putstring ("CURCCI(%"");
+			cl_type ?= target_type -- can't be failed 
+			check
+				is_cl_type_i: cl_type /= Void
+			end;
+			generated_file.putstring (cl_type.associated_class_type.associated_class.e_class.name_in_upper);
+			generated_file.putstring ("%", %"");
+			if call /= Void then
+				feat ?= call.message;
+				generated_file.putstring (feat.feature_name);
+			end;
+			generated_file.putstring ("%");");
+			generated_file.new_line;
+			generated_file.putstring ("CURCC(");
+			print_register;
+			generated_file.putstring (");");
+			generated_file.new_line
+	end
 
 end

@@ -193,8 +193,10 @@ feature {GB_DEFERRED_BUILDER} -- Status setting
 					else
 						box_parent1.disable_item_expand (first.item)
 						box_parent2.disable_item_expand (second.item)
-						child_object := Object_handler.object_from_display_widget (first.item)
-						child_object.disable_expanded_in_box
+
+--| FIXME temporarily commented out to enable the Vision2 tour to compile.
+--						child_object := Object_handler.object_from_display_widget (first.item)
+--						child_object.disable_expanded_in_box
 					end
 					first.forth
 					second.forth

@@ -116,13 +116,11 @@ feature
 			end;
 		end;
 
--- ************************
--- Code generation features
--- ************************
+feature -- Code generation
 
 	context_name: STRING is
 		do
-			if not (context = Void) then
+			if context /= Void then
 				Result := context.full_name
 			else
 				Result := ""

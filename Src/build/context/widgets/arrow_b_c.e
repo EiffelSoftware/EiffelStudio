@@ -77,9 +77,7 @@ feature
 			end;
 		end;
 
-	-- ***********************
-	-- * Specific attributes *
-	-- ***********************
+feature -- Context attributes
 
 	is_fontable: BOOLEAN is
 			-- Is current context fontable

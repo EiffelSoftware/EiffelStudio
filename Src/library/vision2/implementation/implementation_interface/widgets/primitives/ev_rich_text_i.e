@@ -349,12 +349,12 @@ feature -- Status setting
 			l_text := text
 			l_text_length := l_text.count
 			
+			initialize_for_saving
+			
 				-- Now retreive paragraph information for `l_text'.
 			buffer.generate_paragraph_information (l_text)
 			paragraph_indexes := buffer.paragraph_start_indexes
 			paragraph_formats := buffer.paragraph_formats
-			
-			initialize_for_saving
 
 			current_lower_line_index := 1
 			last_paragraph_change := 1
@@ -488,6 +488,16 @@ feature -- Status setting
 			-- `Result' is character format at position `pos'. On some platforms
 			-- this may be optimized to take the selected character format and therefore
 			-- should only be used by `next_change_of_character'.
+		deferred
+		end
+		
+	internal_paragraph_format_contiguous (start_position, end_position: INTEGER): BOOLEAN is
+			-- Is paragraph formatting from caret_position `start_position' to `end_position' contiguous?
+		deferred
+		end
+		
+	internal_paragraph_format (caret_index: INTEGER): EV_PARAGRAPH_FORMAT is
+			-- `Result' is paragraph_format at caret position `caret_index'.
 		deferred
 		end
 

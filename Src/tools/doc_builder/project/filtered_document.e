@@ -23,28 +23,35 @@ feature {FILTER_MANAGER} -- Creation
 		require
 			filter_not_void: a_filter /= Void
 			document_valid_xml: a_doc.is_valid_xml
+		local
+			retried: BOOLEAN
 		do
-			if a_doc.is_persisted then
-				make_from_file (a_doc.file)
-			else
-				make_new (a_doc.name)
+			if not retried then
+				if a_doc.is_persisted then
+					make_from_file (a_doc.file)
+				else
+					make_new (a_doc.name)
+				end			
+				filter := a_filter
+				
+				if True then
+						-- TODO: put options here for custom xml formatting
+					xml.add_custom_elements
+					text := xml.text
+					xml.remove_custom_elements
+				else
+					text := xml.text
+				end
+				
+				if not filter.description.is_equal ("Unfiltered") then
+					filter_document
+				end
 			end			
-			filter := a_filter
-			
-			if True then
-					-- TODO: put options here for custom xml formatting
-				xml.add_custom_elements
-				text := xml.text
-				xml.remove_custom_elements
-			else
-				text := xml.text
-			end
-			
-			if not filter.description.is_equal ("Unfiltered") then
-				filter_document
-			end
 		ensure
 			has_filter: filter /= Void
+		rescue
+			retried := True
+			retry
 		end
 
 feature -- Access
@@ -55,9 +62,9 @@ feature -- Access
 	title: STRING is
 			-- Title	
 		do		
-			if filter.description.is_equal ("EiffelStudio") then
+			if filter.description.is_equal (Output_constants.Studio_desc) then
 				Result := filter_tag_value ("studio_title")
-			elseif filter.description.is_equal ("ENViSioN!") then
+			elseif filter.description.is_equal (Output_constants.Envision_desc) then
 				Result := filter_tag_value ("envision_title")				
 			end
 			if Result = Void or else Result.is_empty then
@@ -70,9 +77,9 @@ feature -- Access
 	toc_location: STRING is
 			-- TOC location
 		do
-			if filter.description.is_equal ("EiffelStudio") then
+			if filter.description.is_equal (Output_constants.Studio_desc) then
 				Result := filter_tag_value ("studio_location")
-			elseif filter.description.is_equal ("ENViSioN!") then
+			elseif filter.description.is_equal (Output_constants.Envision_desc) then
 				Result := filter_tag_value ("envision_location")				
 			end
 		end	
@@ -80,9 +87,9 @@ feature -- Access
 	pseudo_name: STRING is
 			-- Pseudo name used for alphabetical ordering
 		do
-			if filter.description.is_equal ("EiffelStudio") then
+			if filter.description.is_equal (Output_constants.Studio_desc) then
 				Result := filter_tag_value ("studio_pseudo_name")
-			elseif filter.description.is_equal ("ENViSioN!") then
+			elseif filter.description.is_equal (Output_constants.Envision_desc) then
 				Result := filter_tag_value ("envision_pseudo_name")				
 			end
 		end		
@@ -146,6 +153,12 @@ feature {NONE} -- Implementation
 				Result.prune_all ('%T')
 			end
 		end
+
+	output_constants: OUTPUT_CONSTANTS is
+			-- Output constants
+		once
+			Result := Shared_constants.Output_constants	
+		end		
 
 invariant
 	has_filter: filter /= Void

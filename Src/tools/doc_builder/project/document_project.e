@@ -74,10 +74,12 @@ feature -- Commands
 	update is
 			-- Update
 		do
-			Application_window.update
-			if Shared_document_manager.has_schema then
-				Application_window.render_schema	
-			end
+			if Shared_constants.Application_constants.is_gui_mode then
+				Application_window.update
+				if Shared_document_manager.has_schema then
+					Application_window.render_schema	
+				end
+			end						
 		end
 
 	create_new is
@@ -122,6 +124,22 @@ feature -- Commands
 		end
 
 feature {VALIDATOR_TOOL_DIALOG} -- Validation
+
+	validate_files_xml is
+			-- Validate files in Current to XML.
+		do			
+			if not has_been_validated then
+				has_been_validated := True
+				invalid_files.wipe_out
+				progress_generator.set_title ("File Validation")
+				progress_generator.set_procedure (agent validate_against_xml)
+				progress_generator.set_heading_text ("Validating project files...")
+				progress_generator.set_upper_range (documents.count)
+				progress_generator.generate	
+			end
+			build_error_report
+			show_error_report
+		end
 
 	validate_files is
 			-- Validate files in Current to loaded schema.  Put invalid files
@@ -296,6 +314,30 @@ feature {NONE} -- Implementation
 			end
 		end	
 
+	validate_against_xml is
+			-- Validate all files for XML validity
+		local
+			l_documents: ARRAYED_LIST [DOCUMENT]
+			l_document: DOCUMENT
+		do		
+			from
+				l_documents := documents
+				l_documents.start
+			until
+				l_documents.after
+			loop
+				l_document := l_documents.item
+				progress_generator.set_status_text (l_document.name)
+				if not l_document.is_valid_xml then
+					if not invalid_files.has (l_document.name) then
+						add_invalid_file (l_document.name)
+					end
+				end
+				l_documents.forth
+				progress_generator.update_progress_report
+			end
+		end	
+
 	build_error_report is
 			-- Build a new error report
 		local
@@ -377,6 +419,7 @@ feature {NONE} -- Document Retrieval
 			path: STRING
 			doc: DOCUMENT
 			l_filename: FILE_NAME
+			l_cnt: INTEGER
 		do
 			path := a_dir.name
 			create l_dir.make (path)
@@ -384,8 +427,9 @@ feature {NONE} -- Document Retrieval
 				cnt := 0
 				l_dir.open_read
 				l_dir.start
+				l_cnt := l_dir.count
 			until
-				cnt = l_dir.count
+				cnt = l_cnt
 			loop
 				l_dir.readentry
 				if not (l_dir.lastentry.is_equal (".") or l_dir.lastentry.is_equal ("..")) then

@@ -154,7 +154,6 @@ feature {NONE} -- Implementation
 			e_not_void: e /= Void
 		local
 			l_elements: DS_LIST [XM_ELEMENT]
-			l_schema: STRING
 		do
 			if e.name.is_equal ("project_name") then
 				Shared_project.set_name (e.text)

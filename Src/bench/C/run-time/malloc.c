@@ -3540,7 +3540,7 @@ rt_public void eif_trace_types(FILE *f)
 
 #ifndef lint
 rt_private char *e_what =
-	"@(#) ISE Eiffel 3 by:";
+	"@(#) ISE Eiffel by:";
 rt_private char *e_what2 =
 	"@(#)      Frederic Deramat, Frederic Dernbach";
 rt_private char *e_what3 =

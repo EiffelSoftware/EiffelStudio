@@ -1,16 +1,16 @@
 /*-----------------------------------------------------------
-Implemented `IEiffelHTMLDocEvents' Interface.
+Implemented `IEiffelHtmlDocumentationEvents' Interface.
 -----------------------------------------------------------*/
 
-#ifndef __ECOM_EIFFELCOMCOMPILER_IEIFFELHTMLDOCEVENTS_IMPL_STUB_S_H__
-#define __ECOM_EIFFELCOMCOMPILER_IEIFFELHTMLDOCEVENTS_IMPL_STUB_S_H__
+#ifndef __ECOM_EIFFELCOMCOMPILER_IEIFFELHTMLDOCUMENTATIONEVENTS_IMPL_STUB_S_H__
+#define __ECOM_EIFFELCOMCOMPILER_IEIFFELHTMLDOCUMENTATIONEVENTS_IMPL_STUB_S_H__
 #ifdef __cplusplus
 extern "C" {
 
 
 namespace ecom_EiffelComCompiler
 {
-class IEiffelHTMLDocEvents_impl_stub;
+class IEiffelHtmlDocumentationEvents_impl_stub;
 }
 
 }
@@ -24,7 +24,7 @@ class IEiffelHTMLDocEvents_impl_stub;
 
 #include "server_registration.h"
 
-#include "ecom_EiffelComCompiler_IEiffelHTMLDocEvents_s.h"
+#include "ecom_EiffelComCompiler_IEiffelHtmlDocumentationEvents_s.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -34,40 +34,46 @@ extern "C" {
 extern "C" {
 namespace ecom_EiffelComCompiler
 {
-class IEiffelHTMLDocEvents_impl_stub : public ecom_EiffelComCompiler::IEiffelHTMLDocEvents
+class IEiffelHtmlDocumentationEvents_impl_stub : public ecom_EiffelComCompiler::IEiffelHtmlDocumentationEvents
 {
 public:
-	IEiffelHTMLDocEvents_impl_stub (EIF_OBJECT eif_obj);
-	virtual ~IEiffelHTMLDocEvents_impl_stub ();
-
-	/*-----------------------------------------------------------
-	Put a header message to the output
-	-----------------------------------------------------------*/
-	STDMETHODIMP put_header(  /* [in] */ BSTR new_value );
-
-
-	/*-----------------------------------------------------------
-	Put a string to the output
-	-----------------------------------------------------------*/
-	STDMETHODIMP put_string(  /* [in] */ BSTR new_value );
-
-
-	/*-----------------------------------------------------------
-	Put a class name to the output
-	-----------------------------------------------------------*/
-	STDMETHODIMP put_class_document_message(  /* [in] */ BSTR new_value );
-
+	IEiffelHtmlDocumentationEvents_impl_stub (EIF_OBJECT eif_obj);
+	virtual ~IEiffelHtmlDocumentationEvents_impl_stub ();
 
 	/*-----------------------------------------------------------
 	Notify that documentation generating is initializing
 	-----------------------------------------------------------*/
-	STDMETHODIMP put_initializing_documentation( void );
+	STDMETHODIMP NotifyInitalizingDocumentation( void );
 
 
 	/*-----------------------------------------------------------
 	Notify that the percentage completed has changed
 	-----------------------------------------------------------*/
-	STDMETHODIMP put_percentage_completed(  /* [in] */ ULONG new_value );
+	STDMETHODIMP NotifyPercentageComplete(  /* [in] */ ULONG ul_percent );
+
+
+	/*-----------------------------------------------------------
+	Put a header message to the output
+	-----------------------------------------------------------*/
+	STDMETHODIMP OutputHeader(  /* [in] */ BSTR bstr_msg );
+
+
+	/*-----------------------------------------------------------
+	Put a string to the output
+	-----------------------------------------------------------*/
+	STDMETHODIMP OutputString(  /* [in] */ BSTR bstr_msg );
+
+
+	/*-----------------------------------------------------------
+	Put a class name to the output
+	-----------------------------------------------------------*/
+	STDMETHODIMP OutputClassDocumentMessage(  /* [in] */ BSTR bstr_msg );
+
+
+	/*-----------------------------------------------------------
+	Should compilation continue.
+	-----------------------------------------------------------*/
+	STDMETHODIMP ShouldContinue(  /* [in, out] */ VARIANT_BOOL * pvb_continue );
 
 
 	/*-----------------------------------------------------------

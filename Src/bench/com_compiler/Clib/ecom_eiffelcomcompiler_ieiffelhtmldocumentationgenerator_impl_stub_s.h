@@ -1,16 +1,16 @@
 /*-----------------------------------------------------------
-Implemented `IEiffelHTMLDocGenerator' Interface.
+Implemented `IEiffelHtmlDocumentationGenerator' Interface.
 -----------------------------------------------------------*/
 
-#ifndef __ECOM_EIFFELCOMCOMPILER_IEIFFELHTMLDOCGENERATOR_IMPL_STUB_S_H__
-#define __ECOM_EIFFELCOMCOMPILER_IEIFFELHTMLDOCGENERATOR_IMPL_STUB_S_H__
+#ifndef __ECOM_EIFFELCOMCOMPILER_IEIFFELHTMLDOCUMENTATIONGENERATOR_IMPL_STUB_S_H__
+#define __ECOM_EIFFELCOMCOMPILER_IEIFFELHTMLDOCUMENTATIONGENERATOR_IMPL_STUB_S_H__
 #ifdef __cplusplus
 extern "C" {
 
 
 namespace ecom_EiffelComCompiler
 {
-class IEiffelHTMLDocGenerator_impl_stub;
+class IEiffelHtmlDocumentationGenerator_impl_stub;
 }
 
 }
@@ -24,7 +24,7 @@ class IEiffelHTMLDocGenerator_impl_stub;
 
 #include "server_registration.h"
 
-#include "ecom_EiffelComCompiler_IEiffelHTMLDocGenerator_s.h"
+#include "ecom_EiffelComCompiler_IEiffelHtmlDocumentationGenerator_s.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -34,58 +34,40 @@ extern "C" {
 extern "C" {
 namespace ecom_EiffelComCompiler
 {
-class IEiffelHTMLDocGenerator_impl_stub : public ecom_EiffelComCompiler::IEiffelHTMLDocGenerator
+class IEiffelHtmlDocumentationGenerator_impl_stub : public ecom_EiffelComCompiler::IEiffelHtmlDocumentationGenerator
 {
 public:
-	IEiffelHTMLDocGenerator_impl_stub (EIF_OBJECT eif_obj);
-	virtual ~IEiffelHTMLDocGenerator_impl_stub ();
-
-	/*-----------------------------------------------------------
-	Is the project loaded?
-	-----------------------------------------------------------*/
-	STDMETHODIMP is_loaded(  /* [out, retval] */ VARIANT_BOOL * return_value );
-
-
-	/*-----------------------------------------------------------
-	Is the project oorrupted?
-	-----------------------------------------------------------*/
-	STDMETHODIMP is_corrupted(  /* [out, retval] */ VARIANT_BOOL * return_value );
-
-
-	/*-----------------------------------------------------------
-	Is the project incompatible with the current version of the compiled?
-	-----------------------------------------------------------*/
-	STDMETHODIMP is_incompatible(  /* [out, retval] */ VARIANT_BOOL * return_value );
-
-
-	/*-----------------------------------------------------------
-	Add a callback interface.
-	-----------------------------------------------------------*/
-	STDMETHODIMP add_status_callback(  /* [in] */ ecom_EiffelComCompiler::IEiffelHTMLDocEvents * new_callback );
-
-
-	/*-----------------------------------------------------------
-	Remove a callback interface.
-	-----------------------------------------------------------*/
-	STDMETHODIMP remove_status_callback(  /* [in] */ ecom_EiffelComCompiler::IEiffelHTMLDocEvents * old_callback );
-
+	IEiffelHtmlDocumentationGenerator_impl_stub (EIF_OBJECT eif_obj);
+	virtual ~IEiffelHtmlDocumentationGenerator_impl_stub ();
 
 	/*-----------------------------------------------------------
 	Exclude a cluster from being generated.
 	-----------------------------------------------------------*/
-	STDMETHODIMP add_excluded_cluster(  /* [in] */ BSTR cluster_full_name );
+	STDMETHODIMP AddExcludedCluster(  /* [in] */ BSTR bstr_full_cluster_name );
 
 
 	/*-----------------------------------------------------------
 	Include a cluster to be generated.
 	-----------------------------------------------------------*/
-	STDMETHODIMP remove_excluded_cluster(  /* [in] */ BSTR cluster_full_name );
+	STDMETHODIMP RemoveExcludedCluster(  /* [in] */ BSTR bstr_full_cluster_name );
 
 
 	/*-----------------------------------------------------------
 	Generate the HTML documents into path.
 	-----------------------------------------------------------*/
-	STDMETHODIMP generate(  /* [in] */ BSTR path );
+	STDMETHODIMP StartGeneration(  /* [in] */ BSTR bstr_generation_path );
+
+
+	/*-----------------------------------------------------------
+	Add a callback interface.
+	-----------------------------------------------------------*/
+	STDMETHODIMP AdviseStatusCallback(  /* [in] */ ecom_EiffelComCompiler::IEiffelHtmlDocumentationEvents * p_ieiffel_html_documentation_events );
+
+
+	/*-----------------------------------------------------------
+	Remove a callback interface.
+	-----------------------------------------------------------*/
+	STDMETHODIMP UnadviseStatusCallback(  /* [in] */ ecom_EiffelComCompiler::IEiffelHtmlDocumentationEvents * p_ieiffel_html_documentation_events );
 
 
 	/*-----------------------------------------------------------

@@ -1,11 +1,11 @@
 /*-----------------------------------------------------------
-Implemented `IEiffelHTMLDocEvents' Interface.
+Implemented `IEiffelHtmlDocumentationEvents' Interface.
 -----------------------------------------------------------*/
 
-#include "ecom_EiffelComCompiler_IEiffelHTMLDocEvents_impl_stub_s.h"
+#include "ecom_EiffelComCompiler_IEiffelHtmlDocumentationEvents_impl_stub_s.h"
 static int return_hr_value;
 
-static const IID IID_IEiffelHTMLDocEvents_ = {0xb120763e,0xed26,0x4ded,{0xaa,0xfb,0x21,0xfa,0x8b,0x28,0xe8,0x79}};
+static const IID IID_IEiffelHtmlDocumentationEvents_ = {0xb120763e,0xed26,0x4ded,{0xaa,0xfb,0x21,0xfa,0x8b,0x28,0xe8,0x79}};
 
 static const IID LIBID_EiffelComCompiler_ = {0x06b5d7c0,0x2c7d,0x4d1c,{0xa9,0x8b,0x45,0x99,0xbd,0xcd,0xfa,0x58}};
 
@@ -13,7 +13,7 @@ static const IID LIBID_EiffelComCompiler_ = {0x06b5d7c0,0x2c7d,0x4d1c,{0xa9,0x8b
 extern "C" {
 #endif
 
-ecom_EiffelComCompiler::IEiffelHTMLDocEvents_impl_stub::IEiffelHTMLDocEvents_impl_stub( EIF_OBJECT eif_obj )
+ecom_EiffelComCompiler::IEiffelHtmlDocumentationEvents_impl_stub::IEiffelHtmlDocumentationEvents_impl_stub( EIF_OBJECT eif_obj )
 {
 	ref_count = 0;
 	eiffel_object = eif_adopt (eif_obj);
@@ -23,7 +23,7 @@ ecom_EiffelComCompiler::IEiffelHTMLDocEvents_impl_stub::IEiffelHTMLDocEvents_imp
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-ecom_EiffelComCompiler::IEiffelHTMLDocEvents_impl_stub::~IEiffelHTMLDocEvents_impl_stub()
+ecom_EiffelComCompiler::IEiffelHtmlDocumentationEvents_impl_stub::~IEiffelHtmlDocumentationEvents_impl_stub()
 {
 	EIF_PROCEDURE eiffel_procedure;
 	eiffel_procedure = eif_procedure ("set_item", type_id);
@@ -35,85 +35,7 @@ ecom_EiffelComCompiler::IEiffelHTMLDocEvents_impl_stub::~IEiffelHTMLDocEvents_im
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelHTMLDocEvents_impl_stub::put_header(  /* [in] */ BSTR new_value )
-
-/*-----------------------------------------------------------
-	Put a header message to the output
------------------------------------------------------------*/
-{
-	ECATCH;
-
-	EIF_OBJECT tmp_new_value = NULL;
-	if (new_value != NULL)
-	{
-		tmp_new_value = eif_protect (rt_ce.ccom_ce_bstr (new_value));
-	}
-	
-	EIF_PROCEDURE eiffel_procedure = 0;
-	eiffel_procedure = eif_procedure ("put_header", type_id);
-
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_new_value != NULL) ? eif_access (tmp_new_value) : NULL));
-	if (tmp_new_value != NULL)
-		eif_wean (tmp_new_value);
-	
-	END_ECATCH;
-	return S_OK;
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelHTMLDocEvents_impl_stub::put_string(  /* [in] */ BSTR new_value )
-
-/*-----------------------------------------------------------
-	Put a string to the output
------------------------------------------------------------*/
-{
-	ECATCH;
-
-	EIF_OBJECT tmp_new_value = NULL;
-	if (new_value != NULL)
-	{
-		tmp_new_value = eif_protect (rt_ce.ccom_ce_bstr (new_value));
-	}
-	
-	EIF_PROCEDURE eiffel_procedure = 0;
-	eiffel_procedure = eif_procedure ("put_string", type_id);
-
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_new_value != NULL) ? eif_access (tmp_new_value) : NULL));
-	if (tmp_new_value != NULL)
-		eif_wean (tmp_new_value);
-	
-	END_ECATCH;
-	return S_OK;
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelHTMLDocEvents_impl_stub::put_class_document_message(  /* [in] */ BSTR new_value )
-
-/*-----------------------------------------------------------
-	Put a class name to the output
------------------------------------------------------------*/
-{
-	ECATCH;
-
-	EIF_OBJECT tmp_new_value = NULL;
-	if (new_value != NULL)
-	{
-		tmp_new_value = eif_protect (rt_ce.ccom_ce_bstr (new_value));
-	}
-	
-	EIF_PROCEDURE eiffel_procedure = 0;
-	eiffel_procedure = eif_procedure ("put_class_document_message", type_id);
-
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_new_value != NULL) ? eif_access (tmp_new_value) : NULL));
-	if (tmp_new_value != NULL)
-		eif_wean (tmp_new_value);
-	
-	END_ECATCH;
-	return S_OK;
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelHTMLDocEvents_impl_stub::put_initializing_documentation( void )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelHtmlDocumentationEvents_impl_stub::NotifyInitalizingDocumentation( void )
 
 /*-----------------------------------------------------------
 	Notify that documentation generating is initializing
@@ -121,7 +43,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelHTMLDocEvents_impl_stub::put_initial
 {
 	ECATCH;
 EIF_PROCEDURE eiffel_procedure;
-	eiffel_procedure = eif_procedure ("put_initializing_documentation", type_id);
+	eiffel_procedure = eif_procedure ("notify_initalizing_documentation", type_id);
 
 	(FUNCTION_CAST ( void, (EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object));
 	
@@ -130,7 +52,7 @@ EIF_PROCEDURE eiffel_procedure;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelHTMLDocEvents_impl_stub::put_percentage_completed(  /* [in] */ ULONG new_value )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelHtmlDocumentationEvents_impl_stub::NotifyPercentageComplete(  /* [in] */ ULONG ul_percent )
 
 /*-----------------------------------------------------------
 	Notify that the percentage completed has changed
@@ -138,19 +60,122 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelHTMLDocEvents_impl_stub::put_percent
 {
 	ECATCH;
 
-	EIF_INTEGER tmp_new_value = (EIF_INTEGER)new_value;
+	EIF_INTEGER tmp_ul_percent = (EIF_INTEGER)ul_percent;
 	
 	EIF_PROCEDURE eiffel_procedure = 0;
-	eiffel_procedure = eif_procedure ("put_percentage_completed", type_id);
+	eiffel_procedure = eif_procedure ("notify_percentage_complete", type_id);
 
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_INTEGER))eiffel_procedure) (eif_access (eiffel_object), (EIF_INTEGER)tmp_new_value);
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_INTEGER))eiffel_procedure) (eif_access (eiffel_object), (EIF_INTEGER)tmp_ul_percent);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelHTMLDocEvents_impl_stub::GetTypeInfo( unsigned int itinfo, LCID lcid, ITypeInfo **pptinfo )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelHtmlDocumentationEvents_impl_stub::OutputHeader(  /* [in] */ BSTR bstr_msg )
+
+/*-----------------------------------------------------------
+	Put a header message to the output
+-----------------------------------------------------------*/
+{
+	ECATCH;
+
+	EIF_OBJECT tmp_bstr_msg = NULL;
+	if (bstr_msg != NULL)
+	{
+		tmp_bstr_msg = eif_protect (rt_ce.ccom_ce_bstr (bstr_msg));
+	}
+	
+	EIF_PROCEDURE eiffel_procedure = 0;
+	eiffel_procedure = eif_procedure ("output_header", type_id);
+
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_bstr_msg != NULL) ? eif_access (tmp_bstr_msg) : NULL));
+	if (tmp_bstr_msg != NULL)
+		eif_wean (tmp_bstr_msg);
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelHtmlDocumentationEvents_impl_stub::OutputString(  /* [in] */ BSTR bstr_msg )
+
+/*-----------------------------------------------------------
+	Put a string to the output
+-----------------------------------------------------------*/
+{
+	ECATCH;
+
+	EIF_OBJECT tmp_bstr_msg = NULL;
+	if (bstr_msg != NULL)
+	{
+		tmp_bstr_msg = eif_protect (rt_ce.ccom_ce_bstr (bstr_msg));
+	}
+	
+	EIF_PROCEDURE eiffel_procedure = 0;
+	eiffel_procedure = eif_procedure ("output_string", type_id);
+
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_bstr_msg != NULL) ? eif_access (tmp_bstr_msg) : NULL));
+	if (tmp_bstr_msg != NULL)
+		eif_wean (tmp_bstr_msg);
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelHtmlDocumentationEvents_impl_stub::OutputClassDocumentMessage(  /* [in] */ BSTR bstr_msg )
+
+/*-----------------------------------------------------------
+	Put a class name to the output
+-----------------------------------------------------------*/
+{
+	ECATCH;
+
+	EIF_OBJECT tmp_bstr_msg = NULL;
+	if (bstr_msg != NULL)
+	{
+		tmp_bstr_msg = eif_protect (rt_ce.ccom_ce_bstr (bstr_msg));
+	}
+	
+	EIF_PROCEDURE eiffel_procedure = 0;
+	eiffel_procedure = eif_procedure ("output_class_document_message", type_id);
+
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_bstr_msg != NULL) ? eif_access (tmp_bstr_msg) : NULL));
+	if (tmp_bstr_msg != NULL)
+		eif_wean (tmp_bstr_msg);
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelHtmlDocumentationEvents_impl_stub::ShouldContinue(  /* [in, out] */ VARIANT_BOOL * pvb_continue )
+
+/*-----------------------------------------------------------
+	Should compilation continue.
+-----------------------------------------------------------*/
+{
+	ECATCH;
+
+	EIF_OBJECT tmp_pvb_continue = NULL;
+	if (pvb_continue != NULL)
+	{
+		tmp_pvb_continue = eif_protect (rt_ce.ccom_ce_pointed_boolean (pvb_continue, NULL));
+	}
+	
+	EIF_PROCEDURE eiffel_procedure = 0;
+	eiffel_procedure = eif_procedure ("should_continue", type_id);
+
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_pvb_continue != NULL) ? eif_access (tmp_pvb_continue) : NULL));
+	rt_ec.ccom_ec_pointed_boolean (((tmp_pvb_continue != NULL) ? eif_wean (tmp_pvb_continue) : NULL), pvb_continue);
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelHtmlDocumentationEvents_impl_stub::GetTypeInfo( unsigned int itinfo, LCID lcid, ITypeInfo **pptinfo )
 
 /*-----------------------------------------------------------
 	Get type info
@@ -166,7 +191,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelHTMLDocEvents_impl_stub::GetTypeInfo
 		tmp_hr = LoadRegTypeLib (LIBID_EiffelComCompiler_, 2, 0, 0, &pTypeLib);
 		if (FAILED(tmp_hr))
 			return tmp_hr;
-		tmp_hr = pTypeLib->GetTypeInfoOfGuid (IID_IEiffelHTMLDocEvents_, &pTypeInfo);
+		tmp_hr = pTypeLib->GetTypeInfoOfGuid (IID_IEiffelHtmlDocumentationEvents_, &pTypeInfo);
 		pTypeLib->Release ();
 		if (FAILED(tmp_hr))
 			return tmp_hr;
@@ -176,7 +201,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelHTMLDocEvents_impl_stub::GetTypeInfo
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelHTMLDocEvents_impl_stub::GetTypeInfoCount( unsigned int * pctinfo )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelHtmlDocumentationEvents_impl_stub::GetTypeInfoCount( unsigned int * pctinfo )
 
 /*-----------------------------------------------------------
 	Get type info count
@@ -189,7 +214,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelHTMLDocEvents_impl_stub::GetTypeInfo
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelHTMLDocEvents_impl_stub::GetIDsOfNames( REFIID riid, OLECHAR ** rgszNames, unsigned int cNames, LCID lcid, DISPID *rgdispid )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelHtmlDocumentationEvents_impl_stub::GetIDsOfNames( REFIID riid, OLECHAR ** rgszNames, unsigned int cNames, LCID lcid, DISPID *rgdispid )
 
 /*-----------------------------------------------------------
 	IDs of function names 'rgszNames'
@@ -202,7 +227,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelHTMLDocEvents_impl_stub::GetIDsOfNam
 		tmp_hr = LoadRegTypeLib (LIBID_EiffelComCompiler_, 2, 0, 0, &pTypeLib);
 		if (FAILED(tmp_hr))
 			return tmp_hr;
-		tmp_hr = pTypeLib->GetTypeInfoOfGuid (IID_IEiffelHTMLDocEvents_, &pTypeInfo);
+		tmp_hr = pTypeLib->GetTypeInfoOfGuid (IID_IEiffelHtmlDocumentationEvents_, &pTypeInfo);
 		pTypeLib->Release ();
 		if (FAILED(tmp_hr))
 			return tmp_hr;
@@ -211,7 +236,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelHTMLDocEvents_impl_stub::GetIDsOfNam
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelHTMLDocEvents_impl_stub::Invoke( DISPID dispID, REFIID riid, LCID lcid, unsigned short wFlags, DISPPARAMS *pDispParams, VARIANT *pVarResult, EXCEPINFO *pExcepInfo, unsigned int *puArgErr )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelHtmlDocumentationEvents_impl_stub::Invoke( DISPID dispID, REFIID riid, LCID lcid, unsigned short wFlags, DISPPARAMS *pDispParams, VARIANT *pVarResult, EXCEPINFO *pExcepInfo, unsigned int *puArgErr )
 
 /*-----------------------------------------------------------
 	Invoke function.
@@ -256,7 +281,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelHTMLDocEvents_impl_stub::Invoke( DIS
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP_(ULONG) ecom_EiffelComCompiler::IEiffelHTMLDocEvents_impl_stub::Release()
+STDMETHODIMP_(ULONG) ecom_EiffelComCompiler::IEiffelHtmlDocumentationEvents_impl_stub::Release()
 
 /*-----------------------------------------------------------
 	Decrement reference count
@@ -277,7 +302,7 @@ STDMETHODIMP_(ULONG) ecom_EiffelComCompiler::IEiffelHTMLDocEvents_impl_stub::Rel
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP_(ULONG) ecom_EiffelComCompiler::IEiffelHTMLDocEvents_impl_stub::AddRef()
+STDMETHODIMP_(ULONG) ecom_EiffelComCompiler::IEiffelHtmlDocumentationEvents_impl_stub::AddRef()
 
 /*-----------------------------------------------------------
 	Increment reference count
@@ -288,18 +313,18 @@ STDMETHODIMP_(ULONG) ecom_EiffelComCompiler::IEiffelHTMLDocEvents_impl_stub::Add
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelHTMLDocEvents_impl_stub::QueryInterface( REFIID riid, void ** ppv )
+STDMETHODIMP ecom_EiffelComCompiler::IEiffelHtmlDocumentationEvents_impl_stub::QueryInterface( REFIID riid, void ** ppv )
 
 /*-----------------------------------------------------------
 	Query Interface
 -----------------------------------------------------------*/
 {
 	if (riid == IID_IUnknown)
-		*ppv = static_cast<ecom_EiffelComCompiler::IEiffelHTMLDocEvents*>(this);
+		*ppv = static_cast<ecom_EiffelComCompiler::IEiffelHtmlDocumentationEvents*>(this);
 	else if (riid == IID_IDispatch)
-		*ppv = static_cast<ecom_EiffelComCompiler::IEiffelHTMLDocEvents*>(this);
-	else if (riid == IID_IEiffelHTMLDocEvents_)
-		*ppv = static_cast<ecom_EiffelComCompiler::IEiffelHTMLDocEvents*>(this);
+		*ppv = static_cast<ecom_EiffelComCompiler::IEiffelHtmlDocumentationEvents*>(this);
+	else if (riid == IID_IEiffelHtmlDocumentationEvents_)
+		*ppv = static_cast<ecom_EiffelComCompiler::IEiffelHtmlDocumentationEvents*>(this);
 	else
 		return (*ppv = 0), E_NOINTERFACE;
 

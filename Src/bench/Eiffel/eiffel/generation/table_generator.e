@@ -1,7 +1,12 @@
--- Description of a generator of table: the aim of this is the split
--- of the routine/attribute offset table generation into several files
--- because the C compilers don't support too heavy files of static
--- declarations
+indexing
+	description: "[
+		Description of a generator of table: the aim of this is the split
+		of the routine/attribute offset table generation into several files
+		because the C compilers don't support too heavy files of static
+		declarations
+		]"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class TABLE_GENERATOR 
 
@@ -19,6 +24,8 @@ feature -- Initialization
 			file_counter_cell.set_item (1)
 			current_buffer := buffer
 			current_buffer.clear_all
+				-- Start C code generation for next block
+			current_buffer.start_c_specific_code
 		ensure
 			file_counter_set: file_counter = 1
 		end;
@@ -61,6 +68,10 @@ feature -- Access
 
 	init_file (file: INDENT_FILE) is
 			-- Initialization of new file
+		require
+			file_not_void: file /= Void
+			file_open_write: file.is_open_write
+			current_buffer_not_void: current_buffer /= Void
 		deferred
 		end; -- init_file
 
@@ -107,16 +118,21 @@ feature -- Access
 			file := new_file
 			init_file (file)
 			file.put_string (current_buffer)
+			finish_file
 			file.close
-			finish_file;
 			increment_file_counter
 		end;
 
-	finish_file is
+	finish_file  is
 			-- finish generation of `current_buffer'.
+		require
+			current_buffer_not_void: current_buffer /= Void
 		do
 				-- Clear buffer for Current generation
 			current_buffer.clear_all
+			
+				-- Start C code generation
+			current_buffer.start_c_specific_code
 		end;
 
 feature -- Settings

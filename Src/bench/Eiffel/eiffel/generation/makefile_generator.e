@@ -199,6 +199,7 @@ feature -- Cecil
 			Make_file.new_line;
 			Make_file.putstring ("%T$(RM) $(RCECIL)");
 			Make_file.new_line;
+			Make_file.new_line
 		end;
 
 feature -- Actual generation
@@ -239,6 +240,9 @@ feature -- Actual generation
 				-- How to produce a .o from a .c file
 			generate_compilation_rule;
 
+				-- Generate subdir names
+			generate_subdir_names;
+
 				-- Generate external objects
 			generate_externals;
 
@@ -247,6 +251,9 @@ feature -- Actual generation
 
 				-- Generate Cecil rules
 			generate_cecil;
+
+				-- Generate cleaning rules
+			generate_main_cleaning;
 
 				-- End production
 			generate_ending;
@@ -304,6 +311,8 @@ feature -- Sub makefile generation
 				Make_file.new_line;
 				Make_file.new_line;
 				generate_partial_objects_linking (sub_dir, i);
+					-- Generate cleaning rules
+				generate_sub_cleaning;
 					-- End production.
 				generate_ending;
 				Make_file.close;
@@ -351,6 +360,8 @@ feature -- Sub makefile generation
 			Make_file.new_line;
 			Make_file.new_line;
 			generate_partial_system_objects_linking;
+				-- Generate cleaning rules
+			generate_sub_cleaning;
 				-- End production.
 			generate_ending;
 			Make_file.close;
@@ -714,6 +725,8 @@ feature -- Generation (Linking rules)
 		local
 			i, baskets_count: INTEGER;
 		do
+			Make_file.putstring ("SUBDIRS = ");
+
 				-- Feature table object files.
 			from
 				baskets_count := feat_table_baskets.count;
@@ -769,7 +782,10 @@ feature -- Generation (Linking rules)
 
 			Make_file.putchar (' ');
 			Make_file.putstring (System_object_prefix);
-			Make_file.putint (1)
+			Make_file.putint (1);
+
+			Make_file.new_line;
+			Make_file.new_line
 		end;
 
 	generate_partial_objects_linking (suffix: STRING; index: INTEGER) is
@@ -847,11 +863,11 @@ feature -- Generation (Linking rules)
 			Make_file.putstring (System_object_prefix);
 			Make_file.putint (1);
 			Make_file.putchar (Directory_separator);
-			Make_file.putstring ("Emain.o: Makefile%N%T cd ");
+			Make_file.putstring ("Emain.o: Makefile%N%T (cd ");
 			Make_file.putstring (System_object_prefix);
 			Make_file.putint (1);
 			Make_file.putstring (" ; $(SHELL) Makefile.SH ; ")
-			Make_file.putstring ("$(MAKE) Emain.o ; cd ..%N%N")
+			Make_file.putstring ("$(MAKE) Emain.o)%N%N")
 			from i := 1 until i > partial_system_objects loop
 				Make_file.putstring (System_object_prefix);
 				Make_file.putint (1);
@@ -859,14 +875,14 @@ feature -- Generation (Linking rules)
 				Make_file.putstring (System_object_prefix);
 				Make_file.putstring ("obj");
 				Make_file.putint (i);
-				Make_file.putstring (".o: Makefile%N%Tcd ");
+				Make_file.putstring (".o: Makefile%N%T(cd ");
 				Make_file.putstring (System_object_prefix);
 				Make_file.putint (1);
 				Make_file.putstring (" ; $(SHELL) Makefile.SH ; $(MAKE) ")
 				Make_file.putstring (System_object_prefix);
 				Make_file.putstring ("obj");
 				Make_file.putint (i);
-				Make_file.putstring (".o ; cd ..%N%N");
+				Make_file.putstring (".o)%N%N");
 				i := i + 1
 			end
 		end;
@@ -889,11 +905,12 @@ feature -- Generation (Linking rules)
 				Make_file.putstring (Feature_table_suffix);
 				Make_file.putstring ("obj");
 				Make_file.putint (i);
-				Make_file.putstring (".o: Makefile%N%Tcd ");
+				Make_file.putstring (".o: Makefile%N%T(cd ");
 				Make_file.putstring (Feature_table_suffix);
 				Make_file.putint (i);
-				Make_file.putstring (" ; $(SHELL) Makefile.SH ; ")
-				Make_file.putstring ("$(MAKE) ; cd ..%N%N");
+				Make_file.putstring (" ; $(SHELL) Makefile.SH ; $(MAKE))");
+				Make_file.new_line;
+				Make_file.new_line;
 				i := i + 1
 			end;
 				-- Descriptor object files.
@@ -909,11 +926,12 @@ feature -- Generation (Linking rules)
 				Make_file.putstring (Descriptor_suffix);
 				Make_file.putstring ("obj");
 				Make_file.putint (i);
-				Make_file.putstring (".o: Makefile%N%Tcd ");
+				Make_file.putstring (".o: Makefile%N%T(cd ");
 				Make_file.putstring (Descriptor_suffix);
 				Make_file.putint (i);
-				Make_file.putstring (" ; $(SHELL) Makefile.SH ; ");
-				Make_file.putstring ("$(MAKE) ; cd ..%N%N");
+				Make_file.putstring (" ; $(SHELL) Makefile.SH ; $(MAKE))");
+				Make_file.new_line;
+				Make_file.new_line;
 				i := i + 1
 			end;
 				-- Class object files.
@@ -929,11 +947,12 @@ feature -- Generation (Linking rules)
 				Make_file.putstring (Class_suffix);
 				Make_file.putstring ("obj");
 				Make_file.putint (i);
-				Make_file.putstring (".o: Makefile%N%Tcd ");
+				Make_file.putstring (".o: Makefile%N%T(cd ");
 				Make_file.putstring (Class_suffix);
 				Make_file.putint (i);
-				Make_file.putstring (" ; $(SHELL) Makefile.SH ; ");
-				Make_file.putstring ("$(MAKE) ; cd ..%N%N");
+				Make_file.putstring (" ; $(SHELL) Makefile.SH ; $(MAKE))");
+				Make_file.new_line;
+				Make_file.new_line;
 				i := i + 1
 			end
 		end;
@@ -942,6 +961,38 @@ feature -- Generation (Linking rules)
 			-- Should the individual objects be removed
 			-- after a partial linking?
 		do
+		end;
+
+feature -- Cleaning rules
+
+	generate_main_cleaning is
+			-- Generate "make clean" and "make clobber" in the main Makefile.
+		do
+			Make_file.putstring ("clean: sub_clean local_clean%N");
+			Make_file.putstring ("clobber: sub_clobber local_clobber%N%N");
+			Make_file.putstring ("local_clean::%N");
+			Make_file.putstring ("%T$(RM) core *~ *.o%N%N");
+			Make_file.putstring ("local_clobber:: local_clean%N%T");
+			Make_file.putstring ("$(RM) Makefile config.sh finish_freezing%N");
+			Make_file.putstring ("%Nsub_clean::%N");
+			Make_file.putstring ("%Tfor i in $(SUBDIRS);\%N");
+			Make_file.putstring ("%Tdo\%N%T%T(cd $$i ; $(MAKE) clean);\");
+			Make_file.putstring ("%N%Tdone%N%N");
+			Make_file.putstring ("sub_clobber::%N");
+			Make_file.putstring ("%Tfor i in $(SUBDIRS);\%N");
+			Make_file.putstring ("%Tdo\%N%T%T(cd $$i ; $(MAKE) clobber);\");
+			Make_file.putstring ("%N%Tdone%N%N")
+		end;
+
+	generate_sub_cleaning is
+			-- Generate "make clean" and "make clobber" in the sub directories.
+		do
+			Make_file.putstring ("clean: local_clean%N");
+			Make_file.putstring ("clobber: local_clobber%N%N");
+			Make_file.putstring ("local_clean::%N");
+			Make_file.putstring ("%T$(RM) core *~ *.o%N%N");
+			Make_file.putstring ("local_clobber:: local_clean%N");
+			Make_file.putstring ("%T$(RM) Makefile%N%N");
 		end;
 
 feature -- Generation, Tail

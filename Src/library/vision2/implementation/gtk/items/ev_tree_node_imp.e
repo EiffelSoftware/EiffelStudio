@@ -281,19 +281,36 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 
 	insert_pixmap is
 		local
-			gdkpix, gdkmask, text_ptr: POINTER
+			gdkpix, gdkmask, text_ptr, tmp: POINTER
+			is_leaf, is_expded: BOOLEAN
+			success: INTEGER
 		do
 			C.gtk_label_get (text_label, $text_ptr)
-			if gtk_pixmap /= NULL then
+			if gtk_pixmap /= NULL and then parent_tree_imp /= Void then
 				C.gtk_pixmap_get (C.gtk_pixmap_struct_pixmap (gtk_pixmap), $gdkpix, $gdkmask)
-				C.gtk_ctree_node_set_pixtext (
+				success := C.gtk_ctree_get_node_info (
 					parent_tree_imp.list_widget,
 					tree_node_ptr,
-					0,
+					tmp,-- text,
+					tmp, -- spacing
+					tmp,
+					tmp,
+					tmp,
+					tmp,
+					$is_leaf,
+					$is_expded
+				)
+				C.gtk_ctree_set_node_info (
+					parent_tree_imp.list_widget,
+					tree_node_ptr,
 					text_ptr,-- text,
 					5, -- spacing
 					gdkpix,
-					gdkmask
+					gdkmask,
+					gdkpix,
+					gdkmask,
+					is_leaf,
+					is_expded
 				)
 			end
 		end

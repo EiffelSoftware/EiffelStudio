@@ -83,6 +83,8 @@ feature {NONE} -- Initialization
 			-- could not be performed in `initialize',
 			-- (due to regeneration of implementation class)
 			-- can be added here.
+		local
+			l_acc: EV_ACCELERATOR
 		do
 			set_slice_button.set_pixmap (icon_green_tick)
 			auto_set_slice_button.set_pixmap (icon_auto_slice_limits_color @ 1)
@@ -92,6 +94,12 @@ feature {NONE} -- Initialization
 			
 			editor.drop_actions.extend (agent on_stone_dropped)
 			editor.drop_actions.set_veto_pebble_function (agent is_stone_valid)			
+			
+			
+--			create l_acc.make_with_key_combination (
+--				create {EV_KEY}.make_with_code (feature {EV_KEY_CONSTANTS}.Key_escape),
+--				False, False, False)	
+--			l_acc.actions.extend (agent word_wrap_toggled)
 			
 			lower_slice_field.set_text (slice_min.out)
 			upper_slice_field.set_text (slice_max.out)			
@@ -222,7 +230,7 @@ feature -- Status setting
 				if has_object then
 					retrieve_dump_value
 					if current_dump_value /= Void then
-						editor.set_text (current_dump_value.string_representation (slice_min, slice_max))
+						editor.set_text (current_dump_value.formatted_truncated_string_representation (slice_min, slice_max))
 						l_str_length := "Complete length = " + current_dump_value.last_string_representation_length.out
 						window.set_title ("Expanded display : " + l_str_length)
 						upper_slice_field.set_tooltip (l_str_length)						

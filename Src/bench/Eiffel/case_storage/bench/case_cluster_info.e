@@ -159,7 +159,7 @@ feature {FORMAT_CASE_STORAGE, CASE_CLUSTER_INFO}
 					clusters.forth
 				end;
 				sorted_clust_l.sort;
-				!! clust_l.make (sorted_clust_l.count);
+				!! clust_l.make_filled (sorted_clust_l.count);
 				from
 					clust_l.start;
 					sorted_clust_l.start
@@ -393,7 +393,7 @@ end
 				classes.forth;
 			end;
 			stored_classes.sort;
-			!! Result.make (stored_classes.count);
+			!! Result.make_filled (stored_classes.count);
 			from
 				Result.start;
 				stored_classes.start

@@ -416,17 +416,18 @@ feature -- Element change
 			-- Append a copy of `s'.
 		local
 			al: ARRAYED_LIST [G]
-			c, new_count: INTEGER
+			c, old_count, new_count: INTEGER
 		do
 			al ?= s
 			if al /= Void then -- Optimization for arrayed lists
 				c := al.count
 					-- If `s' is empty nothing to be done.
 				if c > 0 then
-					new_count := count + c
+					old_count := count
+					new_count := old_count + c
 					conservative_resize (1, new_count)
-					subcopy (al, 1, c, count + 1)
 					set_count (new_count)
+					subcopy (al, 1, c, old_count + 1)
 				end
 			else
 				Precursor {DYNAMIC_LIST} (s)

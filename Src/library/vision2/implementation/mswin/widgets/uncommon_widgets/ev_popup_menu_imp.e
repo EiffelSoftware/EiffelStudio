@@ -64,16 +64,12 @@ feature -- Status setting
 		end
 
 	show_at_position (x, y: INTEGER) is
-			-- Show the popup menu at the given position relatively
-			-- to the parent position.
+			-- Show the popup menu at the given absolute position.
 		local
 			ww: WEL_COMPOSITE_WINDOW
-			point: WEL_POINT
 		do
 			ww ?= parent_imp
-			!! point.make (x, y)
-			point.client_to_screen (ww)
-			show_track (point.x, point.y, ww)
+			show_track (x, y, ww)
 		end
 
 feature -- Element change

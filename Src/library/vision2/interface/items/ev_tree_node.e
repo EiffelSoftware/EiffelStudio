@@ -74,6 +74,8 @@ feature -- Access
 			not_destroyed: not is_destroyed
 		do
 			Result := implementation.parent_tree
+		ensure
+			bridge_ok: Result = implementation.parent_tree
 		end		
 
 feature -- Status report

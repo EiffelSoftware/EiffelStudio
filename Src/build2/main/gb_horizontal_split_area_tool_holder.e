@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			default_create
 			extend (tool1)
 			create tool_holder.make_with_tool (tool2, title2)
-			extend (tool_holder)	
+			extend (tool_holder)
 		end
 		
 feature -- Basic operation
@@ -44,8 +44,10 @@ feature -- Basic operation
 				tool_holder.reset_maximize_button
 			end
 			if tool_holder.minimized then
+				resize_actions.wipe_out
 				set_split_position (restore_position.min (maximum_split_position))
 			else
+				resize_actions.force_extend (agent keep_minimized_on_resize)
 				restore_position := split_position
 				set_split_position (maximum_split_position)
 			end
@@ -71,5 +73,11 @@ feature {NONE} -- Implementation
 
 	restore_position: INTEGER
 		-- Position to restore to.
+		
+	keep_minimized_on_resize is
+			-- Adjust splitter to keep tool minimized.
+		do
+			set_split_position (maximum_split_position)
+		end
 
 end -- class GB_HORIZONTAL_SPLIT_AREA_TOOL_HOLDER

@@ -424,6 +424,7 @@ feature -- Creation
 			res: ANY
 			double_ref: DOUBLE_REF
 			integer_ref: INTEGER_REF
+			real_ref: REAL_REF
 			type_code: INTEGER
 		do
 			type_code := table_descr.type_list.i_th (table_descr.id_code)
@@ -431,20 +432,19 @@ feature -- Creation
 			if type_code = table_descr.Date_time_type then
 				Result := create {DATE_TIME}.make_now
 			else
-				if type_code = table_descr.Double_type then
-					double_ref ?= res
-					if double_ref /= Void then
-						Result := double_ref.item + 1
-					else
-						Result := 1.0
-					end
-				elseif type_code = table_descr.Integer_type then
-					integer_ref ?= res
-					if integer_ref /= Void then
-						Result := integer_ref.item + 1
-					else
-						Result := 1
-					end
+				double_ref ?= res
+				integer_ref ?= res
+				real_ref ?= res
+				if double_ref /= Void then
+					Result := double_ref.item + 1
+				elseif integer_ref /= Void then
+					Result := integer_ref.item + 1
+				elseif real_ref /= Void then
+					Result := real_ref.item + 1
+				elseif type_code = table_descr.Double_type or type_code = table_descr.real_type then						
+					Result := 1.0
+				elseif type_code = table_descr.Integer_type then					
+					Result := 1
 				else
 					has_error := True
 					error_message := id_creation_failed (table_descr.Table_name)

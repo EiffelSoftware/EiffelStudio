@@ -27,11 +27,14 @@
 >HAS_INDEX
 >HAS_LINK
 >HAS_LSTAT
+>HAS_MEMMOVE
 >HAS_MKDIR
 >HAS_READDIR
 >HAS_RENAME
 >HAS_REWINDDIR
 >HAS_RMDIR
+>HAS_SAFE_BCOPY
+>HAS_SAFE_MEMCPY
 >HAS_SBRK
 >HAS_SIGSETMASK
 >HAS_SIGVEC
@@ -160,6 +163,7 @@ d_keepsig
 d_link
 d_lstat
 d_maypanic
+d_memmove
 d_mkdir
 d_open3
 d_phostname
@@ -169,6 +173,8 @@ d_rename
 d_rewinddir
 d_rmdir
 d_rusage
+d_safebcpy
+d_safemcpy
 d_sbrk
 d_siglist
 d_sigsetmk

@@ -17,8 +17,6 @@ inherit
 			on_key_down
 		end
 
-	EV_BAR_ITEM_IMP
-
 	WEL_SINGLE_LINE_EDIT
 		rename
 			make as wel_make,

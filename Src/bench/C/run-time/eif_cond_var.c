@@ -88,7 +88,7 @@ int pthread_cond_wait (pthread_cond_t *cv, pthread_mutex_t external_mutex)
   /* If we're the last waiter thread            */
   /* during this particular broadcast then      */
   /* let all the other threads proceed.         */
-  if (cv->was_broadcast_ && cv->waiters_ == 0)  */
+  if (cv->was_broadcast_ && cv->waiters_ == 0)  
     SetEvent (cv->waiters_done_); 
   
   LeaveCriticalSection (&cv->waiters_lock_);

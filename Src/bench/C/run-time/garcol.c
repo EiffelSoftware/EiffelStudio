@@ -804,7 +804,8 @@ rt_public void reclaim(void)
 
 	EIF_GET_CONTEXT
 
-	 struct chunk *c, *cn; /* %%ss removed since lines below are commented */
+	struct chunk *c, *cn;
+	int destroy_mutex = 0; /* If non null, we'll destroy the 'join' mutex */
 
 #ifdef DEBUG
 	dprintf(1)("reclaim: collecting all objects...\n");
@@ -846,12 +847,44 @@ rt_public void reclaim(void)
 #endif
 
 #ifdef EIF_THREADS
+
+	/* 
+	 * Every thread that has created a child thread with eif_thr_create() or
+	 * eif_thr_create_with_args() has created a mutex and a condition 
+	 * variable to be able to do a join_all (or a join). If no children are
+	 * still alive, we destroy eif_children_mutex and eif_children_cond.
+	 * If children are still alive, it is better not to remove the mutex
+	 * because it would cause a crash upon their termination. If it is the
+	 * case, no join_all has been called, which is a bit dangerous--PCV
+	 */
+
+	if (eif_children_mutex) {
+		EIF_MUTEX_LOCK (eif_children_mutex, "Locking problem in reclaim()");
+		if (!n_children) destroy_mutex = 1; /* No children are alive */
+		EIF_MUTEX_UNLOCK (eif_children_mutex, "Unlocking problem in reclaim()");
+	}
+	if (destroy_mutex) {
+	  EIF_MUTEX_DESTROY(eif_children_mutex, "Couldn't destroy join mutex.");
+#ifndef EIF_NO_CONDVAR
+	  EIF_COND_DESTROY(eif_children_cond, "Couldn't destroy join cond. var");
+	  free(eif_children_cond);
+#endif
+	  eif_children_mutex = (EIF_MUTEX_TYPE *) 0;
+	}
+
 	free (eif_globals);
+
+	/* The TSD is managed in a different way under VxWorks: each thread
+	 * must call taskVarAdd upon initialization and taskVarDelete upon
+	 * termination.  It was impossible to call taskVarDelete using the same
+	 * model as on other platforms unless creating a new macro that would
+	 * be useful only for VxWorks. It is easier to do the following:
+	 */
 #ifdef VXWORKS
 	if (taskVarDelete(0,(int *)&(eif_global_key))) 
 	  eif_thr_panic("Problem with taskVarDelete\n");
 #endif
-#endif
+#endif /* EIF_THREADS */
 
 	EIF_END_GET_CONTEXT
 }
@@ -3245,7 +3278,7 @@ rt_private struct chunk *find_std_chunk(register struct chunk *start)
 	 */
 
 	EIF_GET_CONTEXT
-	register2 std_size = CHUNK - sizeof(struct chunk);
+	register2 std_size = eif_chunk_size - sizeof(struct chunk);
 
 	for (/* empty */; start != (struct chunk *) 0; start = start->ck_lprev) {
 
@@ -3286,7 +3319,7 @@ rt_private void find_to_space(struct sc_zone *to)
 	 * block coalescing.
 	 */
 	EIF_GET_CONTEXT
-	register1 std_size = CHUNK - sizeof(struct chunk);
+	register1 std_size = eif_chunk_size - sizeof(struct chunk);
 	register2 struct chunk *cur;	/* Current chunk we are considering */
 	register3 uint32 flags;			/* Malloc info flags */
 	register4 char *arena;			/* Where chunk's arena starts */
@@ -3654,7 +3687,7 @@ rt_private void mark_new_generation(EIF_CONTEXT_NOARG)
 	 * generation (thus they are allocated from the free-list). As with
 	 * locals, a double indirection is necessary.
 	 */
-	mark_stack(&once_set, GEN_SWITCH, moving);
+/* 	mark_stack(&once_set, GEN_SWITCH, moving); */
 
 	/* The hector stacks record the objects which has been given to C and may
 	 * have been kept by the C side. Those objects are alive, of course.

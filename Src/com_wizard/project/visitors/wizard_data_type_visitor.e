@@ -50,15 +50,18 @@ feature -- Basic Operations
 			if not is_interface and not is_coclass then
 				if need_generate_ce and not visited then
 					Generated_ce_mapper_writer.add_function (ce_function_writer, Public)
-					if c_header_file /= Void and then not c_header_file.empty then
+					if c_header_file /= Void and then not c_header_file.is_empty then
 						Generated_ce_mapper_writer.add_import (c_header_file)
 					end
 				end
 				if need_generate_ec and not visited then
 					Generated_ec_mapper_writer.add_function (ec_function_writer, Public)
-					if c_header_file /= Void and then not c_header_file.empty then
+					if c_header_file /= Void and then not c_header_file.is_empty then
 						Generated_ec_mapper_writer.add_import (c_header_file)
 					end
+				end
+				if need_generate_free_memory and not visited then
+					Generated_ce_mapper_writer.add_function (free_memory_function_writer, Public)
 				end
 			end
 		end
@@ -66,8 +69,32 @@ feature -- Basic Operations
 
 feature -- Access
 
+	free_memory_function_writer: WIZARD_WRITER_C_FUNCTION is
+			-- Writer for generated function to free memory.
+		require
+			need_generate_free_memory: need_generate_free_memory
+		local
+			comment: STRING
+		do
+			create Result.make
+			Result.set_body (free_memory_function_body)
+
+			create comment.make (100)
+			comment.append ("Free memory of ")
+			comment.append (c_type)
+			comment.append (c_post_type)
+			comment.append (Dot)
+			Result.set_comment (comment)
+
+			Result.set_name (free_memory_function_name)
+			Result.set_result_type ("void")
+			Result.set_signature (free_memory_function_signature)
+		ensure
+			non_void_ce_function_writer: Result /= Void
+		end
+		
 	ce_function_writer: WIZARD_WRITER_C_FUNCTION is
-			-- Writer for generated C to Eiffel conversion function
+			-- Writer for generated C to Eiffel conversion function.
 		require
 			need_generate_ce: need_generate_ce
 		local
@@ -125,11 +152,20 @@ feature -- Access
 	ec_function_name: STRING
 			-- Name of Eiffel to C conversion function.
 
+	free_memory_function_name: STRING
+			-- Name of function to free memory.
+
 	need_generate_ce: BOOLEAN
 			-- Do we need to generate body of CE function?
 
 	need_generate_ec: BOOLEAN
 			-- Do we need to generate body of EC function?
+	
+	need_generate_free_memory: BOOLEAN
+			-- Do we need to generate function to free memory?
+
+	need_free_memory: BOOLEAN
+			-- Do we need to free memory?
 
 	ce_function_body: STRING
 			-- Body of C to Eiffel conversion function.
@@ -137,11 +173,17 @@ feature -- Access
 	ec_function_body: STRING
 			-- Body of Eiffel to C conversion function.
 
+	free_memory_function_body: STRING
+			-- Body of function to free memory.
+
 	ce_function_signature: STRING
 			-- Signature of C to Eiffel conversion function.
 
 	ec_function_signature: STRING
 			-- Signature of Eiffel to C conversion function.
+
+	free_memory_function_signature: STRING
+			-- Signature of function to free memory.
 
 	ce_function_return_type: STRING
 			-- Return type of C to Eiffel conversion function.
@@ -154,7 +196,7 @@ feature -- Access
 
 	c_post_type: STRING
 			-- Only used for C arrays to specify array dimensions
-			-- Otherwise empty
+			-- Otherwise is_empty
 
 	eiffel_type: STRING 
 			-- Eiffel class name.
@@ -228,7 +270,7 @@ feature -- Element change
 			c_header_file := clone (a_name)
 		ensure
 			valid_header_file: c_header_file /= Void and
-					not a_name.empty implies c_header_file.is_equal (a_name)
+					not a_name.is_empty implies c_header_file.is_equal (a_name)
 		end
 
 	set_c_post_type (a_name: STRING) is
@@ -239,7 +281,7 @@ feature -- Element change
 			c_post_type := clone (a_name)
 		ensure
 			valid_c_post_type: c_post_type /= Void and
-					not a_name.empty implies c_post_type.is_equal (a_name)
+					not a_name.is_empty implies c_post_type.is_equal (a_name)
 		end
 
 	set_c_type (a_name: STRING) is
@@ -250,7 +292,7 @@ feature -- Element change
 			c_type := clone (a_name)
 		ensure
 			valid_c_type: c_type /= Void and
-					not a_name.empty implies c_type.is_equal (a_name)
+					not a_name.is_empty implies c_type.is_equal (a_name)
 		end
 
 	set_cecil_type (a_name: STRING) is
@@ -261,7 +303,7 @@ feature -- Element change
 			cecil_type := clone (a_name)
 		ensure
 			valid_cecil_type: cecil_type /= Void and
-					not a_name.empty implies cecil_type.is_equal (a_name)
+					not a_name.is_empty implies cecil_type.is_equal (a_name)
 		end
 
 	set_eiffel_type (a_name: STRING) is
@@ -272,7 +314,7 @@ feature -- Element change
 			eiffel_type := clone (a_name)
 		ensure
 			valid_eiffel_type: eiffel_type /= Void and
-					not a_name.empty implies eiffel_type.is_equal (a_name)
+					not a_name.is_empty implies eiffel_type.is_equal (a_name)
 		end
 
 	set_ce_function_body (a_name: STRING) is
@@ -283,7 +325,7 @@ feature -- Element change
 			ce_function_body := clone (a_name)
 		ensure
 			valid_ce_function_body: ce_function_body /= Void and
-					not a_name.empty implies ce_function_body.is_equal (a_name)
+					not a_name.is_empty implies ce_function_body.is_equal (a_name)
 		end
 
 	set_ce_function_name (a_name: STRING) is
@@ -294,7 +336,7 @@ feature -- Element change
 			ce_function_name := clone (a_name)
 		ensure
 			valid_ce_function_name: ce_function_name /= Void and
-					not a_name.empty implies ce_function_name.is_equal (a_name)
+					not a_name.is_empty implies ce_function_name.is_equal (a_name)
 		end
 
 	set_ce_function_return_type (a_name: STRING) is
@@ -305,7 +347,7 @@ feature -- Element change
 			ce_function_return_type := clone (a_name)
 		ensure
 			valid_ce_function_return_type: ce_function_return_type /= Void and
-					not a_name.empty implies ce_function_return_type.is_equal (a_name)
+					not a_name.is_empty implies ce_function_return_type.is_equal (a_name)
 		end
 
 	set_ce_function_signature (a_name: STRING) is
@@ -316,7 +358,7 @@ feature -- Element change
 			ce_function_signature := clone (a_name)
 		ensure
 			valid_ce_function_signature: ce_function_signature /= Void and
-					not a_name.empty implies ce_function_signature.is_equal (a_name)
+					not a_name.is_empty implies ce_function_signature.is_equal (a_name)
 		end
 
 	set_ec_function_body (a_name: STRING) is
@@ -327,7 +369,7 @@ feature -- Element change
 			ec_function_body := clone (a_name)
 		ensure
 			valid_ec_function_body: ec_function_body /= Void and
-					not a_name.empty implies ec_function_body.is_equal (a_name)
+					not a_name.is_empty implies ec_function_body.is_equal (a_name)
 		end
 
 	set_ec_function_name (a_name: STRING) is
@@ -338,7 +380,7 @@ feature -- Element change
 			ec_function_name := clone (a_name)
 		ensure
 			valid_ce_function_name: ec_function_name /= Void and
-					not a_name.empty implies ec_function_name.is_equal (a_name)
+					not a_name.is_empty implies ec_function_name.is_equal (a_name)
 		end
 
 	set_ec_function_return_type (a_name: STRING) is
@@ -349,7 +391,7 @@ feature -- Element change
 			ec_function_return_type := clone (a_name)
 		ensure
 			valid_ec_function_return_type: ec_function_return_type /= Void and
-					not a_name.empty implies ec_function_return_type.is_equal (a_name)
+					not a_name.is_empty implies ec_function_return_type.is_equal (a_name)
 		end
 
 	set_ec_function_signature (a_name: STRING) is
@@ -360,7 +402,40 @@ feature -- Element change
 			ec_function_signature := clone (a_name)
 		ensure
 			valid_ce_function_signature: ec_function_signature /= Void and
-					not a_name.empty implies ec_function_signature.is_equal (a_name)
+					not a_name.is_empty implies ec_function_signature.is_equal (a_name)
+		end
+
+	set_free_memory_function_body (a_name: STRING) is
+			-- Set `free_memory_function_body' with `a_name'.
+		require
+			valid_name: a_name /= Void
+		do
+			free_memory_function_body := clone (a_name)
+		ensure
+			valid_free_memory_function_body: free_memory_function_body /= Void and
+					not a_name.is_empty implies free_memory_function_body.is_equal (a_name)
+		end
+
+	set_free_memory_function_name (a_name: STRING) is
+			-- Set `free_memory_function_name' with `a_name'.
+		require
+			valid_name: a_name /= Void
+		do
+			free_memory_function_name := clone (a_name)
+		ensure
+			valid_free_memory_function_name: free_memory_function_name /= Void and
+					not a_name.is_empty implies free_memory_function_name.is_equal (a_name)
+		end
+
+	set_free_memory_function_signature (a_name: STRING) is
+			-- Set `free_memory_function_signature' with `a_name'.
+		require
+			valid_name: a_name /= Void
+		do
+			free_memory_function_signature := clone (a_name)
+		ensure
+			valid_free_memory_function_signature: free_memory_function_signature /= Void and
+					not a_name.is_empty implies free_memory_function_signature.is_equal (a_name)
 		end
 
 	set_array_basic_type (a_boolean: BOOLEAN) is
@@ -481,6 +556,22 @@ feature -- Element change
 			need_generate_ec := a_boolean
 		ensure
 			valid_result: need_generate_ec = a_boolean
+		end
+
+	set_need_generate_free_memory (a_boolean: BOOLEAN) is
+			-- Set `need_generate_free_memory' with `a_boolean'.
+		do
+			need_generate_free_memory := a_boolean
+		ensure
+			valid_result: need_generate_free_memory = a_boolean
+		end
+
+	set_need_free_memory (a_boolean: BOOLEAN) is
+			-- Set `need_free_memory' with `a_boolean'.
+		do
+			need_free_memory := a_boolean
+		ensure
+			valid_result: need_free_memory = a_boolean
 		end
 
 	set_can_free (a_boolean: BOOLEAN) is

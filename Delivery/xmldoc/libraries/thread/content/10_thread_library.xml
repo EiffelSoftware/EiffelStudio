@@ -177,7 +177,11 @@ Creating a thread is like creating an Eiffel object:
 												<code>
 													<feature_name>signal</feature_name>
 												</code>). You need to use a mutex.
-												<code_block>	<feature_name>my_mutex</feature_name><symbol>:</symbol> <class_name>MUTEX</class_name><line_break/><line_break/>	<keyword>create</keyword> <feature_name>my_mutex</feature_name>.<feature_name>make</feature_name></code_block>
+<code_block>
+	<feature_name>my_mutex</feature_name><symbol>:</symbol> <class_name>MUTEX</class_name>
+
+	<keyword>create</keyword> <feature_name>my_mutex</feature_name>.<feature_name>make</feature_name>
+</code_block>
 												<paragraph>
 													<code>
 														<local_variable>my_mutex</local_variable>

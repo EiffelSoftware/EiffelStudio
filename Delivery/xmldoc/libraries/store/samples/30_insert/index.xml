@@ -43,9 +43,12 @@
 				<list ordered="false">
 					<item>For ODBC:
 						<code_block>
-Database user authentication:<line_break/>
-Data Source Name: handson<line_break/>
-Name: smith<line_break/>
+Database user authentication:
+
+Data Source Name: handson
+
+Name: smith
+
 Password: mypass
 </code_block>
 						<note>
@@ -63,8 +66,10 @@ Password: mypass
 				<list ordered="false">
 					<item>For Oracle:
 						<code_block>
-Database user authentication:<line_break/>
-Name: smith@HANDSON<line_break/>
+Database user authentication:
+
+Name: smith@HANDSON
+
 Password: mypass
 </code_block>
 						<note>
@@ -77,13 +82,20 @@ Password: mypass
 				</list>
 				<paragraph>Then you can insert a book in the database, for        instance: </paragraph>
 				<code_block>
-What new book should I create?<line_break/>
-Author? John Smith<line_break/>
-Title? My book<line_break/>
-Quantity? 1<line_break/>
-Price? 50<line_break/>
-Year? 2001<line_break/>
-Double value? 12.675<line_break/>
+What new book should I create?
+
+Author? John Smith
+
+Title? My book
+
+Quantity? 1
+
+Price? 50
+
+Year? 2001
+
+Double value? 12.675
+
 Object inserted
 </code_block>
 				<note>

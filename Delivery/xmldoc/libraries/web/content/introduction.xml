@@ -13,11 +13,15 @@
 			<line_break/>
 			<line_break/>HTML forms are an easy way to collect user entries in a web page, which are sent by the browser to the CGI application. A simple example of a form is:
 			<paragraph>
-				<code_block>&lt;form action="/cgi-bin/convert.exe" method="post"&gt; 
-					<line_break/>&lt;input type="text" name="Celsius"&gt;
-					<line_break/>&lt;input type="submit"&gt;
-					<line_break/>&lt;/form &gt;
-				</code_block>
+				<code_block>
+&lt;form action="/cgi-bin/convert.exe" method="post"&gt;
+
+&lt;input type="text" name="Celsius"&gt;
+
+&lt;input type="submit"&gt;
+
+&lt;/form &gt;
+</code_block>
 			</paragraph>
 			<paragraph>When the user presses the submit button, the browser will launch the application located at 
 				<italic>/cgi-bin/convert.exe</italic> on the server, will use the HTTP Post protocol, and will store among others the environment variable 

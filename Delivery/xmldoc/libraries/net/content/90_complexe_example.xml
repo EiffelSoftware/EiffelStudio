@@ -7,7 +7,7 @@
 					<italic>advanced </italic>of the example directory
 				</cell>
 			</row>
-		</table><border>1</border>
+		</table>
 		<paragraph>The last example exercises most of EiffelNet's major facilities. It    consists of a server that allows an arbitrary number of clients to    connect to it. Each time the user of one of the client systems types a    line on the keyboard, the client sends this character to the server,    which then broadcasts it to all the clients (including the original    sender). This scheme allows several people to talk together, hence the    names chosen: the server class is called 
 			<code>
 				<class_name>CHAT</class_name>

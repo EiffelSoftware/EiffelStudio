@@ -1,0 +1,89 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<HTML>
+	<HEAD>
+		<TITLE>EiffelVision 2 Introduction</TITLE>
+		<LINK REL=StyleSheet HREF="/default.css">
+	</HEAD>
+
+	<BODY>
+		<H1>Overview</H1>
+
+		<H2>Preface</H2>
+
+		<P>The EiffelVision library offers an object-oriented framework for graphical user interface (GUI) development. Using EiffelVision, developers can access all necessary GUI components, called <B>widgets</B> (buttons, windows, listviews) as well as truly graphical elements such as points, lines, arcs, polygons and the like -- to develop a modern, functional and good-looking graphical interactive application.</P>
+
+        <P>EiffelVision has played a major role in ISE Eiffel and provided numerous Eiffel projects with a powerful, portable graphics development platform.&nbsp;
+        EiffelStudio is totally reliant on EiffelVision for its graphical
+        elements and overall interaction with the user.
+
+		<H3>Scope</H3>
+
+		<P>The EiffelVision library addresses all the major needs of developers of systems supporting modern graphical interfaces.&nbsp;
+        EiffelVision runs on Microsoft Windows and all major variations of Unix (including Linux). All versions are fully source-compatible; with only a recompile, applications will run on every supported platform with the native look-and-feel.</P>
+
+		<P>EiffelVision provides an effective way of building advanced graphical applications using user interface standards and toolkits (such as Microsoft Windows and GTK) without having to learn the details of the toolkits. Instead, you can use EiffelVision to work entirely in terms of high level abstractions representing windows, buttons, labels, graphical figures, menus, buttons etc., and apply clearly understandable operations to the corresponding objects.</P>
+
+		<H3>Architecture</H3>
+
+		<P>EiffelVision relies on a two-tiered architecture illustrated by the following figure.</P>
+
+		<IMG SRC="figure1.png">
+
+		<P>The two tiers play complementary roles:</P>
+
+		<UL>
+			<LI>At the top level, EiffelVision provides fully portable graphics.</LI>
+			<LI>At the lower level, platform-specific libraries cover the graphical mechanisms of graphics platforms such as Windows and GTK.</LI>
+		</UL>
+
+		<P>The lower tier serves for the implementation of the upper tier, but can also be used independently. For example WEL has had a resounding success with Windows developers who need an advanced mechanism for building Windows-specific graphical applications, taking advantage of every facility of the Windows API
+		(Application Programming Interface) and of the Eiffel approach, but do not need portability on the client side. The GEL library is a <B>wrapper</B> library, automatically generated from the entire GTK API by a tool named <B>The Gote Converter</B>.</P>
+
+		<P>This flexibility of the EiffelVision architecture, enabling users to work at their level of choice -- EiffelVision level for portable graphics, lower tier for platform-specific development, and possibly a mix of the two -- has proven to be a key attraction of the library.</P>
+
+		<H3>Features</H3>
+
+		<P>As stated before, the library has undergone some drastic changes since the previous release. Names have been changed to improve consistency. Contracts are added whereever possible. Following is a summary of the other re-engineered aspects of the library:</P>
+
+		<UL>
+			<LI>Taking full advantage of the <B>agent</B> mechanism of Eiffel, events are now triggered through <B>action sequences</B> (lists of actions) that will be executed in order. This system does not require separate classes to be written for each event, however the command pattern can still be used if desired.</LI>
+			<LI>The pick-and-drop mechanism now relies on the Eiffel type system. A <B>stone</B> (some transportable object) is now any Eiffel class and can always be dropped on a widget that accepts the type (or a more general type) of that stone.</LI>
+			<LI>Containers (widgets that contain other widgets) are now derived from EiffelBase classes. For example you can now insert widgets in any position and iterate over them.</LI>
+		</UL>
+
+		<H2>Design</H2>
+
+		<P>EiffelVision provides programmers with high-level classes, that provide all mechanism and data structures needed to build advanced user interfaces for deployment on almost all platforms without having to worry about detailed requirements of toolkits.</P>
+
+		<P>The abstract design has been derived from an analysis of user interfaces. Therefore we have classes with names like MENU, WINDOW, BUTTON, LINE or POLYGON. The features of these classes are simple, clearly defined properties or commands, like the feature `minimize' (a command) on WINDOW or `text' (a property of type STRING) on BUTTON.</P>
+
+		<P CLASS="note"><B>Note</B>: all class names in EiffelVision are
+        pre-pended with EV_ to avoid name clashes with existing classes. BUTTON hence becomes EV_BUTTON, etc.</P>
+
+		<H3>Properties</H3>
+
+		<P>When talking about a property of a class, like `text', in fact we are talking about multiple features. One is a query of the state of the property, in this case simply the query `text'. The other is the set-routine, which is by convention named `set_text' taking exactly one argument of the type of property. A property can be read-only, which means that it cannot be set by clients of the class.</P>
+
+		<CODE>
+		<A CLASS="efeature" HREF="/libraries/vision2/reference/interface/properties/ev_textable.html#f_text">text</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/string_chart.html">STRING</A><BR>
+		<A CLASS="efeature" HREF="/libraries/vision2/reference/interface/properties/ev_textable.html#f_set_text">set_text</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_text</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="esymbol">...</SPAN>
+		</CODE>
+
+		<P>Boolean properties have a different convention. Instead of one set-routine, it has one enable-routine and one disable-routine. The first one sets the property to true, the second to false. This has been done like this because sometimes these enable/disable features have trivial equivalents, for example for feature `enable_visible' a clearer name is `show'.</P>
+
+		<CODE>
+		<A CLASS="efeature" HREF="/libraries/vision2/reference/interface/properties/ev_sensitive.html#f_is_sensitive">is_sensitive</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A><BR>
+		<A CLASS="efeature" HREF="/libraries/vision2/reference/interface/properties/ev_sensitive.html#f_enable_sensitive">enable_sensitive</A>  <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="esymbol">...</SPAN>
+		<BR>
+		<A CLASS="efeature" HREF="/libraries/vision2/reference/interface/properties/ev_sensitive.html#f_disable_sensitive">disable_sensitive</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="esymbol">...</SPAN>
+		</CODE>
+
+		<H2>Implementation</H2>
+
+		<P>For flexibility, EiffelVision is built using the bridge pattern. This means that every platform-dependant component of the library consist of two classes, plus an implementation class for each platform (currently two). One is the interface. All the features of interfaces do nothing except delegate the call to the implementation object which is coupled to it. This object has the static type of the implementation-interface with the name of the interface class, with _I appended to it. From this implementation-interface, implementation classes inherit to implement platform-specific features.</P>
+
+
+
+	</BODY>
+</HTML>

@@ -6,14 +6,12 @@ OLE Automation. Help file:
 #define __ECOM_PICTURE23_H__
 #ifdef __cplusplus
 extern "C" {
+
+#ifndef __Picture_FWD_DEFINED__
+#define __Picture_FWD_DEFINED__
+class Picture;
 #endif
 
-#ifndef __Picture23_FWD_DEFINED__
-#define __Picture23_FWD_DEFINED__
-class Picture23;
-#endif
-
-#ifdef __cplusplus
 }
 #endif
 
@@ -23,15 +21,14 @@ class Picture23;
 
 #ifdef __cplusplus
 extern "C" {
-#endif
 
-#ifndef __Picture23_INTERFACE_DEFINED__
-#define __Picture23_INTERFACE_DEFINED__
-class Picture23 : public IDispatch
+#ifndef __Picture_INTERFACE_DEFINED__
+#define __Picture_INTERFACE_DEFINED__
+class Picture : public IDispatch
 {
 public:
-	Picture23 () {};
-	~Picture23 () {};
+	Picture () {};
+	~Picture () {};
 
 
 protected:
@@ -43,8 +40,6 @@ private:
 };
 #endif
 
-
-#ifdef __cplusplus
 }
 #endif
 #endif

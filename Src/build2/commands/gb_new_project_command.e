@@ -150,6 +150,8 @@ feature -- Basic operations
 				if created_project then
 						-- We must now initailize the tools for a new empty project.
 					object_handler.add_initial_window
+						-- Update title of `main_window' to reflect new state. 
+					main_window.update_title 
 				end
 			end
 

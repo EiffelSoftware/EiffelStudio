@@ -15,9 +15,6 @@ inherit
 
 	TEXT_FIELD_I
 
-
-
-	
 feature 
 
 	add_modify_action (a_command: COMMAND; argument: ANY) is
@@ -95,12 +92,6 @@ feature
 		deferred
 		end
 
-	disable_word_wrap is
-			-- Specify that lines are free to go off the right edge
-			-- of the window.
-		deferred
-		end; -- disable_word_wrap
-
 	enable_resize is
 			-- Enable that current text widget attempts to resize its width and
 			-- height to accommodate all the text contained.
@@ -123,12 +114,6 @@ feature
 			-- Enable the bell when an action is forbidden
 		deferred
 		end;
-
-	enable_word_wrap is
-			-- Specify that lines are to be broken at word breaks.
-			-- The text does not go off the right edge of the window.
-		deferred
-		end; -- disable_word_wrap
 
 	end_of_selection: INTEGER is
 			-- Position of the end of the current selection highlightened
@@ -172,7 +157,7 @@ feature
 	is_selection_active: BOOLEAN is
 			-- Is there a selection currently active ?
 		require
-            realized: realized
+			realized: realized
 		deferred
 		end; -- is_selection_active
 
@@ -264,31 +249,75 @@ feature
 		end -- set_selection
 
 	x_coordinate (char_pos: INTEGER): INTEGER is
-            -- X coordinate relative to the upper left corner
-            -- of Current text widget at character position `char_pos'.
+			-- X coordinate relative to the upper left corner
+			-- of Current text widget at character position `char_pos'.
 		deferred
-        end;
+		end;
 
-    y_coordinate (char_pos: INTEGER): INTEGER is
-            -- Y coordinate relative to the upper left corner
-            -- of Current text widget at character position `char_pos'.
+	y_coordinate (char_pos: INTEGER): INTEGER is
+			-- Y coordinate relative to the upper left corner
+			-- of Current text widget at character position `char_pos'.
 		deferred
-        end;
+		end;
 
-    character_position (x_pos, y_pos: INTEGER): INTEGER is
-            -- Character position at cursor position `x' and `y'
+	character_position (x_pos, y_pos: INTEGER): INTEGER is
+			-- Character position at cursor position `x' and `y'
 		deferred
-        end;
+		end;
 
-    top_character_position: INTEGER is
-            -- Character position of first character displayed
+	top_character_position: INTEGER is
+			-- Character position of first character displayed
 		deferred
-        end;
+		end;
 
-    set_top_character_position (char_pos: INTEGER) is
-            -- Set first character displayed to `char_pos'.
+	set_top_character_position (char_pos: INTEGER) is
+			-- Set first character displayed to `char_pos'.
 		deferred
-        end;
+		end;
+
+feature
+
+	rows: INTEGER is
+			-- Height of Current widget measured in character
+			-- heights.
+		require
+			is_multi_line_mode: is_multi_line_mode
+		deferred
+		end;
+ 
+	set_rows (i: INTEGER) is
+			-- Set the character height of Current widget to `i'.
+		require
+			is_multi_line_mode: is_multi_line_mode;
+			valid_i: i > 0
+		deferred
+		end;
+ 
+	set_single_line_mode is
+			-- Set editing for single line text.
+		deferred
+		end;
+ 
+	set_multi_line_mode is
+			-- Set editing for multiline text.
+		deferred
+		end;
+ 
+	is_multi_line_mode: BOOLEAN is
+			-- Is Current editing a multiline text?
+		deferred
+		end;
+ 
+	is_cursor_position_visible: BOOLEAN is
+			-- Is the insert cursor position marked
+			-- by a blinking text cursor?
+		deferred
+		end;
+
+	set_cursor_position_visible (flag: BOOLEAN) is
+			-- Set is_cursor_position_visible to flag.
+		deferred
+		end;
 
 end -- class TEXT_I
 

@@ -52,8 +52,6 @@ feature {NONE} -- Initialization
 			-- Create a combo-box.
 		do
 			base_make (an_interface)
-			-- create of the array where the items will be listed.
-			create ev_children.make (1)
 
 			-- create of the gtk object.
 			set_c_object (C.gtk_combo_new)
@@ -221,6 +219,9 @@ end -- class EV_COMBO_BOX_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.34  2000/04/20 16:32:18  king
+--| Removed reference to redundant ev_children LL
+--|
 --| Revision 1.33  2000/04/19 20:45:35  oconnor
 --| no more externals used
 --|

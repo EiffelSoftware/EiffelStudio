@@ -59,6 +59,10 @@ feature {NONE} -- Initialization
 				complete_initialization
 				start
 			end
+			debug ("press_enter_to_exit")
+				io.put_string ("Press Enter to exit the application...")
+				io.read_line
+			end
 		end
 		
 	complete_initialization is
@@ -205,12 +209,21 @@ feature {NONE} -- Implementation
 					end
 					
 					l_resolver.remove_from_app_domain
+					
+					if cache_writer /= Void and then not cache_writer.successful then
+						process_error (cache_writer.error_message)
+					end
 				else
 					process_error (error_message)
 				end
 			end
 			if successful and compact_cache then
 				compact_and_clean_cache
+			end
+			debug ("press_enter_to_finish")
+				io.put_string ("%NApplication has finished executing.")
+				io.put_string ("%NPress enter to exit.")
+				io.read_line
 			end
 		end
 

@@ -94,7 +94,7 @@ feature {NONE} -- Basic operation
 				children_size := a_width - 2 * bwidth - total_spacing
 
 					-- Homogeneous state : only the visible children are
-					-- importante.
+					-- important.
 				if is_homogeneous then
 					rate := children_size // childvisible_nb
 					total_rest := children_size \\ childvisible_nb

@@ -1,5 +1,5 @@
 : Makefile.SH generated from Jmake.tmpl and Jmakefile [jmake 3.0 PL70]
-: $X-Id: Jmake.tmpl,v 3.0.1.3 1997/02/28 14:56:16 ram Exp $
+: $X-Id: Jmake.tmpl,v 1.2 2004/11/30 00:21:14 manus Exp $
 
 case $CONFIG in
 '')
@@ -39,7 +39,7 @@ DIR = $DIR
 CC = $cc
 CTAGS = ctags
 JCFLAGS = \$(CFLAGS) $optimize $warning_level $ccflags $large
-JLDFLAGS = \$(LDFLAGS) $optimize $ldflags
+JLDFLAGS = \$(LDFLAGS) $ldflags
 LIBS = $libs
 LINT = lint
 MAKE = make
@@ -65,7 +65,7 @@ OBJECTS =  \$(OBJ)
 $spitshell >>Makefile <<'!NO!SUBS!'
 ########################################################################
 # Jmake rules for building libraries, programs, scripts, and data files
-# $X-Id: Jmake.rules,v 3.0.1.6 1997/02/28 14:56:01 ram Exp $
+# $X-Id: Jmake.rules,v 1.2 2004/11/30 00:21:14 manus Exp $
 ########################################################################
 # Force 'make depend' to be performed first -- do not edit
 

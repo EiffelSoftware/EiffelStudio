@@ -317,25 +317,12 @@ feature -- IL code generation
 				
 				if need_generation then
 						-- Perform call to feature
-					if precursor_type /= Void then
-							-- In IL, if you can call Precursor, it means that parent is
-							-- not expanded and therefore we can safely generate a static
-							-- call to Precursor feature.
-						il_generator.generate_precursor_feature_access (
-							target_type, feature_id, l_count, not return_type.is_void)
-					else
-						il_generator.generate_feature_access (
-							target_type, feature_id, l_count, not return_type.is_void,
+					if is_any_feature then
+						generate_il_any_call (target_type, cl_type,
 							cl_type.is_reference or else real_metamorphose)
-					end
-					if System.il_verifiable then
-						if 
-							not return_type.is_expanded and then
-							not return_type.is_none and then
-							not return_type.is_void
-						then
-							il_generator.generate_check_cast (Void, return_type)
-						end
+					else
+						generate_il_normal_call (target_type,
+							cl_type.is_reference or else real_metamorphose) 
 					end
 				end
 				if invariant_checked then
@@ -353,6 +340,59 @@ feature -- IL code generation
 					end
 				end
 			end
+		end
+
+feature {NONE} -- IL code generation
+
+	generate_il_any_call (written_type, target_type: TYPE_I; is_virtual: BOOLEAN) is
+			-- Generate call to routine of ANY that works for both ANY and SYSTEM_OBJECT
+		require
+			il_generation: System.il_generation
+			is_any_feature: is_any_feature
+			written_type_not_void: written_type /= Void
+			target_type_not_void: target_type /= Void
+		do
+		end
+
+	generate_il_normal_call (target_type: TYPE_I; is_virtual: BOOLEAN) is
+			-- Normal feature call.
+		require
+			target_type_not_void: target_type /= Void
+		local
+			l_count: INTEGER
+			l_return_type: TYPE_I
+		do
+			if parameters /= Void then
+				l_count := parameters.count
+			end
+
+			l_return_type := context.real_type (type)
+
+			if precursor_type /= Void then
+					-- In IL, if you can call Precursor, it means that parent is
+					-- not expanded and therefore we can safely generate a static
+					-- call to Precursor feature.
+				il_generator.generate_precursor_feature_access (
+					target_type, feature_id, l_count, not l_return_type.is_void)
+			else
+				il_generator.generate_feature_access (
+					target_type, feature_id, l_count, not l_return_type.is_void,
+					is_virtual)
+			end
+			if System.il_verifiable then
+				if 
+					not l_return_type.is_expanded and then
+					not l_return_type.is_none and then
+					not l_return_type.is_void
+				then
+					il_generator.generate_check_cast (Void, l_return_type)
+				end
+			end
+		end
+
+	is_any_feature: BOOLEAN is
+			-- Is Current an instance of ANY_FEATURE_B?
+		do
 		end
 
 feature -- Byte code generation

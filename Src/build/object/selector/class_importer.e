@@ -66,11 +66,9 @@ feature -- Creation
 			set_colors.execute (Current)
 			set_title ("Class importer")
 			available_label.set_text ("Available classes")
-			available_label.set_left_alignment
 			available_list.set_multiple_selection
 			available_list.compare_objects
 			selected_label.set_text ("Selected classes")
-			selected_label.set_left_alignment
 			selected_list.set_single_selection
 			selected_list.compare_objects
 			select_button.set_down
@@ -101,25 +99,27 @@ feature -- Creation
 			button_form.attach_left_position (refresh_button, 66)
 			button_form.attach_right_position (refresh_button, 100)
 
+			top_form.set_fraction_base (100)
 			top_form.attach_top (available_label, 0)
 			top_form.attach_left (available_label, 0)
 			top_form.attach_right (available_label, 0)
 			top_form.attach_top_widget (available_label, available_list, 5)
 			top_form.attach_left (available_list, 5)
 			top_form.attach_right (available_list, 5)
-			top_form.attach_top_widget (available_list, arrow_form, 15)
+			top_form.attach_bottom_widget (arrow_form, available_list, 15)
 			top_form.attach_left (arrow_form, 0)
 			top_form.attach_right (arrow_form, 0)
-			top_form.attach_top_widget (arrow_form, selected_label, 0)
+			top_form.attach_bottom_widget (selected_label, arrow_form, 0)
 			top_form.attach_left (selected_label, 0)
 			top_form.attach_right (selected_label, 0)
-			top_form.attach_top_widget (selected_label, selected_list, 5)
+			top_form.attach_bottom_position (selected_label, 60)
+			top_form.attach_top_position (selected_list, 60)
 			top_form.attach_left (selected_list, 5)
 			top_form.attach_right (selected_list, 5)
-			top_form.attach_top_widget (selected_list, separator1, 5)
+			top_form.attach_bottom_widget (separator1, selected_list, 5)
 			top_form.attach_left (separator1, 0)
 			top_form.attach_right (separator1, 0)
-			top_form.attach_top_widget (separator1, button_form, 2)
+			top_form.attach_bottom_widget (button_form, separator1, 2)
 			top_form.attach_left (button_form, 0)
 			top_form.attach_right (button_form, 0)
 			top_form.attach_bottom (button_form, 0)
@@ -338,20 +338,15 @@ feature -- Lists generation
 			class_list.wipe_out
 			import_cmd.execute (Void)
 			available_list.wipe_out
-			if not available_list.empty then
-				available_list.start
-				available_list.merge_right (class_list)
-			else
-				from 
-					class_list.start
-				until
-					class_list.after
-				loop
-					if not selected_list.has (class_list.item) then
-						available_list.extend (class_list.item)
-					end
-					class_list.forth
+			from 
+				class_list.start
+			until
+				class_list.after
+			loop
+				if not selected_list.has (class_list.item) then
+					available_list.extend (class_list.item)
 				end
+				class_list.forth
 			end
 		end
 

@@ -124,7 +124,7 @@ feature {NONE} -- Execution
 						end
 					else
 						warner (project_tool.popup_parent).custom_call 
-							(Current, Interface_names.t_Specify_ace, Interface_names.b_Browse, 
+							(Current, Warning_messages.w_specify_ace, Interface_names.b_Browse, 
 							Interface_names.b_Build, Interface_names.b_Cancel);
 					end;	
 				else

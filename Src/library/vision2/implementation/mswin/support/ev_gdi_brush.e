@@ -1,4 +1,3 @@
---| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: 
@@ -44,7 +43,10 @@ feature -- Access
 			color_hash_value: REAL
 		do
 			if color /= Void then
-				color_hash_value := 262144.0*color.red + 4096.0*color.green + 64.0*color.blue
+				color_hash_value :=
+					262144.0 * color.red +
+					4096.0 *color.green +
+					64.0 * color.blue
 				Result := color_hash_value.abs.floor
 			end
 			if pattern /= Void then
@@ -70,7 +72,8 @@ feature -- Comparison
 			equal_pattern: BOOLEAN -- are pattern equal ?
 		do
 			if color /= Void then
-				equal_color := other.color /= Void and then color.is_equal(other.color)
+				equal_color := other.color /= Void
+					and then color.is_equal (other.color)
 			else
 				equal_color := other.color = Void
 			end

@@ -184,11 +184,9 @@ feature -- Inherited precondition
 			valid_prec: bc.precondition /= Void;
 			not_have_ct: not has_prec_type (ct);
 		do
-			if not precondition_types.has (ct) then
-				precondition_types.extend (ct);
-				precondition_list.extend (bc.precondition);
-				prec_arg_list.extend (bc.arguments);
-			end;
+			precondition_types.extend (ct);
+			precondition_list.extend (bc.precondition);
+			prec_arg_list.extend (bc.arguments);
 		end;
 
 	has_prec_type (ct: CLASS_TYPE): BOOLEAN is

@@ -222,7 +222,7 @@ feature -- Access
 	pixmap_directory: STRING is
 			-- `Result' is DIRECTORY constant named `pixmap_directory'.
 		once
-			Result := "D:\My Documents\Documentation Project\systems\doc_builder\resources\icons"
+			Result := (create {APPLICATION_CONSTANTS}).icon_resources_directory
 		end
 
 	button_save_text: STRING is

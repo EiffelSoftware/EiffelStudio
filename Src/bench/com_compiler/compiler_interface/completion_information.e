@@ -439,9 +439,7 @@ feature {NONE} -- Implementation
 			non_void_target: target /= Void
 			valid_target: not target.is_empty
 		local
-			i: INTEGER
 			c: CHARACTER
-			type_name: STRING
 		do
 			target.to_lower
 			if target.substring (1, Agent_keyword_length).is_equal (Agent_keyword) then

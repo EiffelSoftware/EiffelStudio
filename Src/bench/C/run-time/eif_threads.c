@@ -21,6 +21,7 @@
 #include "eif_config.h"
 #include "eif_eiffel.h"
 #include "eif_threads.h"
+#include "eif_lmalloc.h"
 #include "eif_globals.h"
 #include "eif_err_msg.h"
 #include "eif_hector.h"      /* for efreeze() and eufreeze() */

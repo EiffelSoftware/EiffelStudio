@@ -48,6 +48,9 @@ feature -- Attributes
 	Packet_number: INTEGER is 100
 			-- Maximum number of files in a single linking phase
 
+	System_packet_number: INTEGER is 30
+			-- Maximum number of files in a single linking phase
+
 feature -- Initialization
 
 	make is
@@ -154,8 +157,8 @@ feature -- Object basket managment
 	compute_partial_system_objects is
 			-- Compute number of partial system objects needed.
 		do
-			partial_system_objects := system_basket.count // Packet_number
-			if (system_basket.count \\ Packet_number) /= 0 then
+			partial_system_objects := system_basket.count // System_packet_number
+			if (system_basket.count \\ System_packet_number) /= 0 then
 				partial_system_objects := partial_system_objects + 1
 			end
 		end
@@ -671,7 +674,7 @@ feature -- Generation, Object list(s)
 				basket.start
 				size := mname.count + 3
 			until
-				i = Packet_number or else basket.after
+				i = System_packet_number or else basket.after
 			loop
 				file_name := basket.item
 				size := size + file_name.count + 1

@@ -248,7 +248,7 @@ feature -- For DATABASE_REPOSITORY
 	Selection_string (rep_qualifier, rep_owner, rep_name: STRING): STRING is 
 		do
 			repository_name := rep_name
-			Result := "SELECT * FROM ALL_TAB_COLUMNS WHERE Table_Name =:rep"
+			Result := "SELECT * FROM USER_TAB_COLUMNS WHERE Table_Name =:rep"
 		end
 	
 	sql_string: STRING is "VARCHAR2("

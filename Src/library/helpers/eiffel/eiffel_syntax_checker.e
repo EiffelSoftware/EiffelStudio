@@ -81,8 +81,7 @@ feature -- Status report
 		local
 			lcop: STRING
 		do
-			lcop := clone (op)
-			lcop.to_lower
+			lcop := op.as_lower
 			Result := is_valid_free_operator (op) or else basic_operators.has (lcop)
 		end
 

@@ -51,9 +51,12 @@ feature
 
 	generate (file: INDENT_FILE) is
 			-- Generate value in `file'.
+			-- The '()' are present for the case where int_val=INT32_MIN,
+			-- ie: if we printed -INT32_MIN in Eiffel, we would get --INT32_MIN in C.
 		do
+			file.putchar('(');
 			file.putint (int_val);
-			file.putchar ('L');
+			file.putstring ("L)");
 		end;
 
 	make_byte_code (ba: BYTE_ARRAY) is

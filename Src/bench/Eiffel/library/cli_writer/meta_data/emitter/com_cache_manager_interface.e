@@ -213,7 +213,6 @@ feature -- Basic Oprtations
 			end
 		ensure
 			success: last_call_success = 0
-			non_void_result: Result /= Void
 		end
 
 	unload is

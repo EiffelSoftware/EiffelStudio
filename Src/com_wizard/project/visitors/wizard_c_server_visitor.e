@@ -27,7 +27,6 @@ feature -- Processing
 		do
 			Precursor (alias_descriptor)
 			create alias_server_generator
-			alias_server_generator.initialize
 			alias_server_generator.generate (alias_descriptor)
 		end
 
@@ -43,7 +42,6 @@ feature -- Processing
 		do
 			Precursor (coclass_descriptor)
 			create coclass_server_generator
-			coclass_server_generator.initialize
 			coclass_server_generator.generate (coclass_descriptor)
 		end
 
@@ -57,7 +55,6 @@ feature -- Processing
 		do
 			Precursor (interface_descriptor)
 			create implemented_interface_generator
-			implemented_interface_generator.initialize
 			implemented_interface_generator.generate (interface_descriptor)
 		end
 
@@ -71,7 +68,6 @@ feature -- Processing
 		do
 			Precursor (interface_descriptor)
 			create interface_server_generator
-			interface_server_generator.initialize
 			interface_server_generator.generate (interface_descriptor)
 		end
 
@@ -103,7 +99,6 @@ feature -- Processing
 		do
 			Precursor (record_descriptor)
 			create record_server_generator
-			record_server_generator.initialize
 			record_server_generator.generate (record_descriptor)
 		end
 

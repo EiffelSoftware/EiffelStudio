@@ -179,34 +179,6 @@ feature -- Status setting
 			bar.destroy
 		end
 
-	connect_radio_grouping (a_tool_bar: EV_TOOL_BAR) is
-			-- Join radio grouping of `a_container' to Current.
-		local
-			l: like radio_group
-			peer: EV_TOOL_BAR_IMP
-		do
-			peer ?= a_tool_bar.implementation
-			if peer = Void then
-				-- It's a widget that inherits from EV_CONTAINER,
-				-- but has implementation renamed.
-				-- If this is the case, on `a_container' this feature
-				-- had to be redefined.
---				a_tool_bar.merge_radio_button_groups (interface)
-			else
-				l := peer.radio_group
-				if l /= radio_group then
-					from
-						l.start
-					until
-						l.empty
-					loop
-						add_radio_button (l.item.interface)
-					end
-					peer.set_radio_group (radio_group)
-				end
-			end
-		end
-
 feature -- Element change
 
 	insert_item (button: EV_TOOL_BAR_BUTTON_IMP; an_index: INTEGER) is
@@ -736,6 +708,9 @@ end -- class EV_TOOL_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.53  2000/04/12 17:06:45  brendel
+--| Removed connect_radio_grouping.
+--|
 --| Revision 1.52  2000/04/12 01:32:16  pichery
 --| - new pixmap handling
 --|

@@ -307,7 +307,7 @@ feature -- Basic operations
 			a_working_directory.append (Clib)
 			create a_directory.make_open_read (a_working_directory)
 
-			Result := a_directory.empty
+			Result := a_directory.is_empty
 		end
 
 	server_generated_ace_file: STRING is

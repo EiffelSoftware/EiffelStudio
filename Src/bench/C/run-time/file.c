@@ -884,7 +884,7 @@ rt_public void file_stat (char *path, struct stat *buf)
 	for (;;) {
 		errno = 0;						/* Reset error condition */
 #ifdef HAS_LSTAT
-		status = lstat(name, buf);
+		status = lstat(path, buf);
 		if (status == 0) {
 			/* We found a file, not let's check if it is not a symbolic link,
 			 * if it is the case, we need to call `stat' to make sure the link
@@ -893,7 +893,7 @@ rt_public void file_stat (char *path, struct stat *buf)
 			 * in using `lstat' over `stat' the first time as more than 90%
 			 * of the files we stat are not symlink. */
 			if ((buf->st_mode & S_IFLNK) == S_IFLNK) {
-				status = stat (name, buf);
+				status = stat (path, buf);
 			}
 		}
 #else
@@ -1133,7 +1133,7 @@ rt_public EIF_BOOLEAN file_exists(char *name)
 		/* We found a file, not let's check if it is not a symbolic link,
 		 * if it is the case, we need to call `stat' to make sure the link
 		 * is valid. */
-		if ((buf->st_mode & S_IFLNK) == S_IFLNK) {
+		if ((buf.st_mode & S_IFLNK) == S_IFLNK) {
 			status = stat (name, &buf);
 		}
 	}

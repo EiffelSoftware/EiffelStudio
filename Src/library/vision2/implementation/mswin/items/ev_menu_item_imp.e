@@ -15,14 +15,13 @@ inherit
 
 	EV_MENU_ITEM_I
 
--- Apparently not necessary because there is no wel_window
--- All the features of EV_TEXT_CONTAINER_I then need to be
--- implemented
---	EV_TEXT_CONTAINER_IMP
---		redefine
---			text,
---			set_text
---		end
+	EV_ITEM_IMP
+		export {EV_MENU_ITEM_CONTAINER_IMP}
+			id,
+			set_id,
+			command,
+			arguments
+		end
 
 creation
 
@@ -31,14 +30,17 @@ creation
 feature {NONE} -- Initialization
 
 	make (par: EV_MENU_ITEM_CONTAINER) is
+			-- Create and add a menu_item with an empty label.
 		do
 			menu ?= par.implementation
 			check
 				parent_not_void: menu /= Void
 			end
+			menu.set_name ("")
 		end
 
 	make_with_text (par: EV_MENU_ITEM_CONTAINER; txt: STRING) is
+			-- Create and add a menu_item with `txt' as label.
 		do
 			menu ?= par.implementation
 			check
@@ -47,34 +49,15 @@ feature {NONE} -- Initialization
 			menu.set_name (txt)
 		end
 
-feature -- Event - command association
-	
-	add_activate_command (a_command: EV_COMMAND; 
-			       the_arguments: EV_ARGUMENTS) is	
-		do
-			command := a_command
-			arguments := the_arguments
-		end
-
 feature {EV_MENU_ITEM_CONTAINER_IMP} -- Access
 	
-	id: INTEGER
-		-- Id of the item in the menu_item_container
-
 	menu: EV_MENU_ITEM_CONTAINER_IMP
 		-- Container that contains the current item
-	
-	command: EV_COMMAND
-		-- Command that must be called when the menu is selected
-		-- by the user.
-
-	arguments: EV_ARGUMENTS
-		-- Argument that goes with the command
 
 feature -- Status report
 
 	text: STRING is
-		-- Current label of the menu item
+			-- Current label of the menu item
 		do
 			Result := menu.id_string (id)
 		end
@@ -94,10 +77,10 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_id (new_id: INTEGER) is
-			-- Set `id' to `new_id'
+	destroy is
+			-- Destroy the current item.
 		do
-			id := new_id
+			menu.remove_item (id)
 		end
 
 	set_menu (new_menu: EV_MENU_ITEM_CONTAINER_IMP) is
@@ -115,30 +98,6 @@ feature -- Status setting
 			else
 				menu.enable_item (id)
 			end
-		end
-
-	set_center_alignment is
-			-- Set text alignment of current label to center.
-		do
-			check
-                               not_yet_implemented: False
-            end
-		end
-
-	set_right_alignment is
-			-- Set text alignment of current label to right.
-		do
-			check
-                                not_yet_implemented: False
-                        end
-		end
-
-	set_left_alignment is
-			-- Set text alignment of current label to left.
-		do
-			check
-                                not_yet_implemented: False
-                        end
 		end
 
 feature {EV_MENU_ITEM_CONTAINER_IMP} -- Element change

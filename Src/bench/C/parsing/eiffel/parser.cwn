@@ -2488,7 +2488,7 @@ case 202:
 {list_init ();yacc_error_code=189;} break;
 case 203:
 # line 894 "parser.y"
-{yyval.node = create_node2 (CREATE_AS, NULL, list_new (CONSTRUCT_LIST_AS));yacc_error_code=190;} break;
+{yyval.node = list_new (CONSTRUCT_LIST_AS);yacc_error_code=190;} break;
 case 204:
 # line 901 "parser.y"
 {yyval.loc = current_location;yacc_error_code=191;} break;

@@ -55,7 +55,7 @@ feature -- Execution
 			st: like structured_text;
 			invariant_name: STRING
 		do
-			invariant_name := "_inv_";
+			invariant_name := "_invariant";
 			st := structured_text;
 			clients := current_class.clients;
 			!! table.make (20);

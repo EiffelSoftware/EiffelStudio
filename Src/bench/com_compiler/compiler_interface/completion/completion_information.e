@@ -228,7 +228,7 @@ feature -- Access
             non_void_source_row: source_row /= Void
         local
             def_parser: DEFINITION_PARSER
- 			fd: FEATURE_DESCRIPTOR
+ 			cf: COMPLETION_FEATURE
             ecom_var: ECOM_VARIANT
         do
             create def_parser.make
@@ -241,10 +241,10 @@ feature -- Access
                     -- creates empty arguments and init feature
                     create ecom_var.make
                     ecom_var.set_string_array (create {ECOM_ARRAY [STRING]}.make_empty)
-                    initialize_feature (def_parser.parsed_result_feature, ecom_var, ecom_var, def_parser.parsed_result_return_type, feature {ECOM_EIF_FEATURE_TYPES_ENUM}.eif_feature_types_function, target_file_name)
-                    fd := internal_target_feature (def_parser.parsed_result, def_parser.parsed_result_feature, target_file_name, false)
-                    if fd /= Void then
-                        fd.feature_location (source_file_name, source_row)
+                    initialize_feature (def_parser.parsed_result_feature, ecom_var, ecom_var, def_parser.parsed_result_return_type, feature {ECOM_EIF_FEATURE_TYPES_ENUM}.eif_feature_types_function, target_file_name, def_parser.parsed_result_feature_location)
+                    cf := internal_target_feature (def_parser.parsed_result, def_parser.parsed_result_feature, target_file_name, false)
+                    if cf /= Void then
+                        cf.feature_location (source_file_name, source_row)
                     end
                 end
             end
@@ -370,7 +370,7 @@ feature -- Basic Operations
             completion_features.remove (l_file_name)
         end
         
-    initialize_feature (a_name: STRING; a_arguments: ECOM_VARIANT; a_argument_types: ECOM_VARIANT; a_return_type: STRING; a_feature_type: INTEGER; a_file_name: STRING) is
+    initialize_feature (a_name: STRING; a_arguments: ECOM_VARIANT; a_argument_types: ECOM_VARIANT; a_return_type: STRING; a_feature_type: INTEGER; a_file_name: STRING; a_row: INTEGER) is
             -- Initialize a feature for completion without compilation
         require else -- Actually a "require" since parent precondition is "False"
             non_void_name: a_name /= Void
@@ -417,9 +417,9 @@ feature -- Basic Operations
                         end
                     end
                     if a_return_type = Void then
-                        create l_feature.make (a_name, l_arguments, a_feature_type, a_file_name)
+                        create l_feature.make (a_name, l_arguments, a_feature_type, a_file_name, a_row)
                     else
-                        create l_feature.make_with_return_type (a_name, l_arguments, a_return_type, a_feature_type, a_file_name)
+                        create l_feature.make_with_return_type (a_name, l_arguments, a_return_type, a_feature_type, a_file_name, a_row)
                     end
                     completion_features.search (a_file_name.as_lower)
                     if completion_features.found then
@@ -441,7 +441,7 @@ feature -- Basic Operations
             Result := False
         end
         
-    initialize_feature_user_precondition (a_name: STRING; a_arguments, a_argument_types: ECOM_VARIANT; a_return_type: STRING; a_feature_type: INTEGER; a_file_name: STRING): BOOLEAN is
+    initialize_feature_user_precondition (a_name: STRING; a_arguments, a_argument_types: ECOM_VARIANT; a_return_type: STRING; a_feature_type: INTEGER; a_file_name: STRING; a_row: INTEGER): BOOLEAN is
         do
             Result := False
         end 

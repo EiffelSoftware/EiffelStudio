@@ -62,6 +62,7 @@ struct stochunk {
 };
 
 /* Interpreter interface to outside world */
+extern void call_disp();			/* Function to call dispose routines */ 
 extern void xinterp();				/* Compound from a given address */
 extern void xiinv();				/* Invariant interpreter */
 extern void xinitint();				/* Initialize the interpreter */
@@ -81,6 +82,8 @@ extern void sync_registers();		/* Resynchronize registers on routine */
 #define iget()	opush((struct item *) 0)	/* Push empty cell on stack */
 
 extern char *IC;					/* Byte code to interpret */
+extern struct item *xstop;
+extern struct stochunk *xcur;
 extern struct opstack op_stack;		/* Operational stack */
 
 /*

@@ -195,7 +195,7 @@ feature {NONE} -- Constant strings
 	t_Copyright_info: STRING is
 		once
 			Result := 
-				"Copyright (C) 1985-2000 Interactive Software Engineering Inc.%N%
+				"Copyright (C) 1985-2002 Interactive Software Engineering Inc.%N%
 				%All rights reserved"
 		end
 
@@ -203,14 +203,14 @@ feature {NONE} -- Constant strings
 		once
 			create Result.make (500)
 			Result.append (
-				"Interactive Software Engineering Inc.%N%
-				%ISE Building%N%
+				"Eiffel Software%N%
 				%356 Storke Road, Goleta, CA 93117 USA%N%
-				%Telephone: 805-685-1006, Fax 805-685-6869%N%
+				%Telephone: 805-685-1006%N%
+				%Fax: 805-685-6869%N%
 				%Electronic mail: <info@eiffel.com>%N%
 				% %N%
 				%Web Customer Support: http://support.eiffel.com%N%
-				%Visit Eiffel on the Web: http://eiffel.com%N"
+				%Visit Eiffel on the Web: http://www.eiffel.com%N"
 			)
 		end
 

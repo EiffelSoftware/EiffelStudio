@@ -74,7 +74,7 @@ feature -- Creation
 			!! separator2.make (widget_names.separator, form)
 				--| Button bar
 			!! button_form.make (widget_names.form, form)
-			!! quit_b.make (Current, button_form)
+--			!! quit_b.make (Current, button_form)
 			!! cut_b.make (button_form)
 			!! namer_b.make (button_form)
 			!! help_b.make (button_form)
@@ -163,7 +163,7 @@ feature -- Creation
 	attach_all is
 			-- Perform attachments.
 		do
-			button_form.attach_top (quit_b, 0)
+--			button_form.attach_top (quit_b, 0)
 			button_form.attach_top (cut_b, 0)
 			button_form.attach_top (namer_b, 0)
 			button_form.attach_top (help_b, 0)
@@ -180,7 +180,7 @@ feature -- Creation
 			button_form.attach_top (v_separator_1, 0)
 			button_form.attach_top (v_separator_2, 0)
 			button_form.attach_top (v_separator_3, 0)
-			button_form.attach_bottom (quit_b, 0)
+--			button_form.attach_bottom (quit_b, 0)
 			button_form.attach_bottom (cut_b, 0)
 			button_form.attach_bottom (namer_b, 0)
 			button_form.attach_bottom (help_b, 0)
@@ -205,15 +205,16 @@ feature -- Creation
 			button_form.attach_left_widget (namer_b, cut_b, 0)
 			button_form.attach_left_widget (cut_b, v_separator_1, 0)
 			button_form.attach_left_widget (v_separator_1, generate_b, 0)
-			button_form.attach_left_widget (generate_b, import_b, 0)
+			button_form.attach_left_widget (generate_b, save_b, 0)
+			button_form.attach_left_widget (save_b, import_b, 0)
 			button_form.attach_left_widget (import_b, v_separator_2, 0)
 			button_form.attach_left_widget (v_separator_2, executing_box, 0)
 			button_form.attach_left_widget (executing_box, editing_box, 0)
 			button_form.attach_left_widget (editing_box, v_separator_3, 0)
 			button_form.attach_left_widget (v_separator_3, current_state_hole, 0)
 			button_form.attach_left_widget (current_state_hole, current_state_label, 3)
-			button_form.attach_right (quit_b, 0)
-			button_form.attach_right_widget (quit_b, save_b, 0)
+--			button_form.attach_right (quit_b, 0)
+--			button_form.attach_right_widget (quit_b, save_b, 0)
 
 			form.attach_top (separator1, 1)
 			form.attach_left (separator1, 0)
@@ -420,7 +421,7 @@ feature -- Graphical interface
 	-- None so far
 
 		--| Button Row
-	quit_b: CLOSE_WINDOW_BUTTON
+--	quit_b: CLOSE_WINDOW_BUTTON
 			-- `Quit' button
 	cut_b: CUT_HOLE
 			-- `Trash' button

@@ -130,6 +130,11 @@ feature -- Access
 			--| height or the width
 
 feature -- Change
+	set_proportion (p:INTEGER) is
+			-- Set the split proportion from 0 to 100
+		do
+			proportion := p
+		end
 
 	realize_current is
 			-- Create the actual Windows window.

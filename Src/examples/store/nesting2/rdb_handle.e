@@ -1,6 +1,6 @@
 class RDB_HANDLE inherit
 
-	ODBC_APPL
+	DATABASE_APPL [ODBC]
 
 feature
 

@@ -33,10 +33,10 @@ feature {NONE} -- Initialization
 			a_gs: GEL_STRING
 		do
 			base_make (an_interface)
-			set_c_object (C.gtk_window_new (C.GTK_WINDOW_DIALOG_ENUM))
+			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_window_new (feature {EV_GTK_EXTERNALS}.gTK_WINDOW_DIALOG_ENUM))
 			create a_gs.make ("Print")
-			C.gtk_window_set_title (c_object, a_gs.item)
-			C.gtk_widget_realize (c_object)
+			feature {EV_GTK_EXTERNALS}.gtk_window_set_title (c_object, a_gs.item)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_realize (c_object)
 		end
 
 	printer_rdo, file_rdo, all_rdo, range_rdo, 
@@ -60,9 +60,9 @@ feature {NONE} -- Initialization
 		do
 			Precursor {EV_STANDARD_DIALOG_IMP}
 			is_initialized := False
-			hbox := C.gtk_hbox_new (False, 0)
-			C.gtk_widget_show (hbox)
-			C.gtk_container_add (c_object, hbox)
+			hbox := feature {EV_GTK_EXTERNALS}.gtk_hbox_new (False, 0)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_show (hbox)
+			feature {EV_GTK_EXTERNALS}.gtk_container_add (c_object, hbox)
 			create main_dialog_container
 			main_dialog_container.set_padding (5)
 			main_dialog_container.set_border_width (5)
@@ -171,7 +171,7 @@ feature {NONE} -- Initialization
 			print_btn_imp.enable_can_default
 			cancel_btn_imp ?= cancel_btn.implementation
 			cancel_btn_imp.enable_can_default
-			C.gtk_widget_grab_default (print_btn_imp.c_object)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_grab_default (print_btn_imp.c_object)
 			enable_closeable
 			minimum_from_page := 1
 			maximum_to_page := 1

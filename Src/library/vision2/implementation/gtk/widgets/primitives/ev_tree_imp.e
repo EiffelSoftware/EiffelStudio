@@ -64,24 +64,24 @@ feature {NONE} -- Initialization
 			-- Create an empty Tree.
 		do
 			base_make (an_interface)
-			set_c_object (C.gtk_scrolled_window_new (NULL, NULL))
-			C.gtk_scrolled_window_set_policy (
+			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_scrolled_window_new (NULL, NULL))
+			feature {EV_GTK_EXTERNALS}.gtk_scrolled_window_set_policy (
 				c_object, 
-				C.GTK_POLICY_AUTOMATIC_ENUM,
-				C.GTK_POLICY_AUTOMATIC_ENUM
+				feature {EV_GTK_EXTERNALS}.gTK_POLICY_AUTOMATIC_ENUM,
+				feature {EV_GTK_EXTERNALS}.gTK_POLICY_AUTOMATIC_ENUM
 			)
-			C.gtk_scrolled_window_set_placement (c_object, C.GTK_CORNER_TOP_LEFT_ENUM)
+			feature {EV_GTK_EXTERNALS}.gtk_scrolled_window_set_placement (c_object, feature {EV_GTK_EXTERNALS}.gTK_CORNER_TOP_LEFT_ENUM)
 
-			list_widget := C.gtk_ctree_new (1, 0)
+			list_widget := feature {EV_GTK_EXTERNALS}.gtk_ctree_new (1, 0)
 			
-			C.gtk_ctree_set_line_style (list_widget, C.GTK_CTREE_LINES_DOTTED_ENUM)
-			C.gtk_clist_set_selection_mode (list_widget, C.GTK_SELECTION_BROWSE_ENUM)
-			C.gtk_ctree_set_expander_style (list_widget, C.GTK_CTREE_EXPANDER_SQUARE_ENUM)
-			C.gtk_clist_set_shadow_type (list_widget, C.GTK_SHADOW_NONE_ENUM)
-			C.gtk_ctree_set_show_stub (list_widget, True)
-			C.gtk_ctree_set_indent (list_widget, 17)
-			C.gtk_widget_show (list_widget)
-			C.gtk_scrolled_window_add_with_viewport (c_object, list_widget)
+			feature {EV_GTK_EXTERNALS}.gtk_ctree_set_line_style (list_widget, feature {EV_GTK_EXTERNALS}.gTK_CTREE_LINES_DOTTED_ENUM)
+			feature {EV_GTK_EXTERNALS}.gtk_clist_set_selection_mode (list_widget, feature {EV_GTK_EXTERNALS}.gTK_SELECTION_BROWSE_ENUM)
+			feature {EV_GTK_EXTERNALS}.gtk_ctree_set_expander_style (list_widget, feature {EV_GTK_EXTERNALS}.gTK_CTREE_EXPANDER_SQUARE_ENUM)
+			feature {EV_GTK_EXTERNALS}.gtk_clist_set_shadow_type (list_widget, feature {EV_GTK_EXTERNALS}.gTK_SHADOW_NONE_ENUM)
+			feature {EV_GTK_EXTERNALS}.gtk_ctree_set_show_stub (list_widget, True)
+			feature {EV_GTK_EXTERNALS}.gtk_ctree_set_indent (list_widget, 17)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_show (list_widget)
+			feature {EV_GTK_EXTERNALS}.gtk_scrolled_window_add_with_viewport (c_object, list_widget)
 			
 			create ev_children.make (0)
 				-- Make initial hash table with room for 100 child pointers, may be increased later.
@@ -101,13 +101,13 @@ feature {NONE} -- Initialization
 			a_wid: INTEGER
 		do
 			timer.set_interval (0)
-			C.gtk_clist_freeze (list_widget)
-			a_wid := C.gtk_clist_columns_autosize (list_widget) + 16
+			feature {EV_GTK_EXTERNALS}.gtk_clist_freeze (list_widget)
+			a_wid := feature {EV_GTK_EXTERNALS}.gtk_clist_columns_autosize (list_widget) + 16
 			if tree_width /= a_wid then
-				C.gtk_widget_set_usize (list_widget, a_wid, -1)
+				feature {EV_GTK_EXTERNALS}.gtk_widget_set_usize (list_widget, a_wid, -1)
 				tree_width := a_wid
 			end
-			C.gtk_clist_thaw (list_widget)
+			feature {EV_GTK_EXTERNALS}.gtk_clist_thaw (list_widget)
 		end
 	
 	visual_widget: POINTER is
@@ -186,9 +186,9 @@ feature {NONE} -- Initialization
 				a_screen_x, a_screen_y]
 
 			tree_item_imp := row_from_y_coord (a_y)
-			C.gtk_clist_freeze (list_widget)
+			feature {EV_GTK_EXTERNALS}.gtk_clist_freeze (list_widget)
 	
-			if a_type = C.GDK_BUTTON_PRESS_ENUM then
+			if a_type = feature {EV_GTK_EXTERNALS}.gDK_BUTTON_PRESS_ENUM then
 				if not is_transport_enabled and then pointer_button_press_actions_internal /= Void then
 					pointer_button_press_actions_internal.call (t)
 				end
@@ -201,7 +201,7 @@ feature {NONE} -- Initialization
 						timeout_imp.set_interval_kamikaze (100)
 				end
 
-			elseif a_type = C.GDK_2BUTTON_PRESS_ENUM then
+			elseif a_type = feature {EV_GTK_EXTERNALS}.gDK_2BUTTON_PRESS_ENUM then
 				if pointer_double_press_actions_internal /= Void then
 					pointer_double_press_actions_internal.call (t)
 				end
@@ -211,7 +211,7 @@ feature {NONE} -- Initialization
 						tree_item_imp.pointer_double_press_actions_internal.call (t)
 				end
 			end
-			C.gtk_clist_thaw (list_widget)
+			feature {EV_GTK_EXTERNALS}.gtk_clist_thaw (list_widget)
 		end
 
 	motion_handler (a_x, a_y: INTEGER; a_a, a_b, a_c: DOUBLE; a_d, a_e: INTEGER) is
@@ -242,12 +242,12 @@ feature {EV_APPLICATION_IMP} -- Implementation
 			pnd_row: EV_TREE_NODE_IMP
 		do
 			if is_displayed then
-				gdkwin_parent := C.gdk_window_get_parent (a_gdkwin)
+				gdkwin_parent := feature {EV_GTK_EXTERNALS}.gdk_window_get_parent (a_gdkwin)
 				if gdkwin_parent /= NULL then
-					gdkwin_parent_parent := C.gdk_window_get_parent (gdkwin_parent)
+					gdkwin_parent_parent := feature {EV_GTK_EXTERNALS}.gdk_window_get_parent (gdkwin_parent)
 				end
-				clist_parent := C.gdk_window_get_parent (
-					C.gtk_clist_struct_clist_window (list_widget)
+				clist_parent := feature {EV_GTK_EXTERNALS}.gdk_window_get_parent (
+					feature {EV_GTK_EXTERNALS}.gtk_clist_struct_clist_window (list_widget)
 				)
 				Result := gdkwin_parent = clist_parent or
 					gdkwin_parent_parent = clist_parent
@@ -280,7 +280,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 		local
 			a_tree_node_imp: EV_TREE_NODE_IMP
 		do
-			C.gtk_clist_freeze (list_widget)
+			feature {EV_GTK_EXTERNALS}.gtk_clist_freeze (list_widget)
 			a_tree_node_imp := tree_node_ptr_table.item (a_tree_item)
 			if a_tree_node_imp /= Void then
 				a_tree_node_imp.expand_callback
@@ -288,7 +288,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			if timer.interval = 0 then
 				timer.set_interval (500)
 			end	
-			C.gtk_clist_thaw (list_widget)
+			feature {EV_GTK_EXTERNALS}.gtk_clist_thaw (list_widget)
 		end
 
 	collapse_callback (a_tree_item: POINTER) is
@@ -296,12 +296,12 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 		local
 			a_tree_node_imp: EV_TREE_NODE_IMP
 		do
-			C.gtk_clist_freeze (list_widget)
+			feature {EV_GTK_EXTERNALS}.gtk_clist_freeze (list_widget)
 			a_tree_node_imp := tree_node_ptr_table.item (a_tree_item)
 			if a_tree_node_imp /= Void then
 				a_tree_node_imp.collapse_callback
 			end
-			C.gtk_clist_thaw (list_widget)
+			feature {EV_GTK_EXTERNALS}.gtk_clist_thaw (list_widget)
 			if timer.interval = 0 then
 				timer.set_interval (500)
 			end
@@ -315,7 +315,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			a_tree_node_imp: EV_TREE_NODE_IMP
 		do
 			a_tree_node_imp := tree_node_ptr_table.item (a_tree_item)
-			--C.gtk_clist_freeze (list_widget)
+			--feature {EV_GTK_EXTERNALS}.gtk_clist_freeze (list_widget)
 			if a_tree_node_imp /= Void and then a_tree_node_imp /= selected_node then
 				if select_actions_internal /= Void then
 					select_actions_internal.call ((App_implementation.gtk_marshal).empty_tuple)
@@ -324,7 +324,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 					a_tree_node_imp.select_actions_internal.call ((App_implementation.gtk_marshal).empty_tuple)
 				end
 			end
-			--C.gtk_clist_thaw (list_widget)
+			--feature {EV_GTK_EXTERNALS}.gtk_clist_thaw (list_widget)
 			selected_node := a_tree_node_imp
 		end
 		
@@ -334,7 +334,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			a_tree_node_imp: EV_TREE_NODE_IMP
 		do
 			a_tree_node_imp := tree_node_ptr_table.item (a_tree_item)
-			C.gtk_clist_freeze (list_widget)
+			feature {EV_GTK_EXTERNALS}.gtk_clist_freeze (list_widget)
 			if a_tree_node_imp /= Void and selected_node /= Void then
 				if deselect_actions_internal /= Void then
 					deselect_actions_internal.call ((App_implementation.gtk_marshal).empty_tuple)
@@ -343,7 +343,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 					a_tree_node_imp.deselect_actions_internal.call ((App_implementation.gtk_marshal).empty_tuple)
 				end
 			end
-			C.gtk_clist_thaw (list_widget)
+			feature {EV_GTK_EXTERNALS}.gtk_clist_thaw (list_widget)
 		end
 
 feature -- Status report
@@ -364,9 +364,9 @@ feature -- Status report
 		local
 			temp_item_ptr: POINTER
 		do	
-			temp_item_ptr := C.gtk_clist_struct_selection (list_widget)			
+			temp_item_ptr := feature {EV_GTK_EXTERNALS}.gtk_clist_struct_selection (list_widget)			
 			if temp_item_ptr /= NULL then
-				temp_item_ptr := C.g_list_nth_data (temp_item_ptr, 0)
+				temp_item_ptr := feature {EV_GTK_EXTERNALS}.g_list_nth_data (temp_item_ptr, 0)
 				-- This is incase of unwanted items due to wipeout hack.
 				Result := tree_node_ptr_table.item (temp_item_ptr)
 			end
@@ -628,7 +628,7 @@ feature {EV_TREE_NODE_IMP}
 		local
 			temp_row_ptr: POINTER
 		do
-			temp_row_ptr := C.gtk_ctree_node_nth (list_widget, a_y // (row_height + 1))
+			temp_row_ptr := feature {EV_GTK_EXTERNALS}.gtk_ctree_node_nth (list_widget, a_y // (row_height + 1))
 			if temp_row_ptr /= NULL then
 				Result := tree_node_ptr_table.item (temp_row_ptr)
 			end
@@ -644,18 +644,18 @@ feature {NONE} -- Implementation
 			node_ptr: POINTER
 			item_imp: EV_TREE_NODE_IMP
 		do
-			C.gtk_clist_freeze (list_widget)
+			feature {EV_GTK_EXTERNALS}.gtk_clist_freeze (list_widget)
 			tree_item_imp ?= an_item.implementation
 			node_ptr := tree_item_imp.tree_node_ptr
-			if not C.gtk_ctree_is_viewable (list_widget, node_ptr) then
+			if not feature {EV_GTK_EXTERNALS}.gtk_ctree_is_viewable (list_widget, node_ptr) then
 				expand_to_node (node_ptr)
 			end
 
 			item_imp ?= an_item.implementation
 
 				-- Show the node `an_item'
-			C.gtk_ctree_node_moveto (list_widget, item_imp.tree_node_ptr, 0, 0.0, 1.0)
-			C.gtk_clist_thaw (list_widget)
+			feature {EV_GTK_EXTERNALS}.gtk_ctree_node_moveto (list_widget, item_imp.tree_node_ptr, 0, 0.0, 1.0)
+			feature {EV_GTK_EXTERNALS}.gtk_clist_thaw (list_widget)
 		end
 
 	expand_to_node (a_node: POINTER) is
@@ -665,16 +665,16 @@ feature {NONE} -- Implementation
 		local
 			row, parent_node: POINTER
 		do
-			C.gtk_clist_freeze (list_widget)
-			if not C.gtk_ctree_is_viewable (list_widget, a_node) then
-				row := C.glist_struct_data (a_node)
-				parent_node := C.gtk_ctree_row_struct_parent (row)
+			feature {EV_GTK_EXTERNALS}.gtk_clist_freeze (list_widget)
+			if not feature {EV_GTK_EXTERNALS}.gtk_ctree_is_viewable (list_widget, a_node) then
+				row := feature {EV_GTK_EXTERNALS}.glist_struct_data (a_node)
+				parent_node := feature {EV_GTK_EXTERNALS}.gtk_ctree_row_struct_parent (row)
 				if parent_node /= NULL then
 					expand_to_node (parent_node)
-					C.gtk_ctree_expand (list_widget, parent_node)
+					feature {EV_GTK_EXTERNALS}.gtk_ctree_expand (list_widget, parent_node)
 				end
 			end
-			C.gtk_clist_thaw (list_widget)
+			feature {EV_GTK_EXTERNALS}.gtk_clist_thaw (list_widget)
 		end
 			
 	previous_selected_item: EV_TREE_NODE
@@ -695,9 +695,9 @@ feature {NONE} -- Implementation
 	append (s: SEQUENCE [EV_TREE_ITEM]) is
 			-- 
 		do
-			C.gtk_clist_freeze (list_widget)
+			feature {EV_GTK_EXTERNALS}.gtk_clist_freeze (list_widget)
 			Precursor (s)
-			C.gtk_clist_thaw (list_widget)
+			feature {EV_GTK_EXTERNALS}.gtk_clist_thaw (list_widget)
 		end
 
 	wipe_out is
@@ -706,7 +706,7 @@ feature {NONE} -- Implementation
 			item_imp: EV_TREE_NODE_IMP
 		do
 				-- Remove all items (GTK part)
-			C.gtk_clist_clear (list_widget)
+			feature {EV_GTK_EXTERNALS}.gtk_clist_clear (list_widget)
 			from
 				ev_children.start
 			until
@@ -748,7 +748,7 @@ feature {NONE} -- Implementation
 			child_array.put_left (v)
 			if i < count then
 				-- reorder_child (v, v_imp, i)
-				C.gtk_clist_row_move (list_widget, item_imp.index - 1, i - 1)
+				feature {EV_GTK_EXTERNALS}.gtk_clist_row_move (list_widget, item_imp.index - 1, i - 1)
 				ev_children.prune_all (item_imp)
 				ev_children.go_i_th (i)
 				ev_children.put_left (item_imp)
@@ -763,7 +763,7 @@ feature {NONE} -- Implementation
 			item_imp := (ev_children @ (a_position))
 
 				-- Remove from tree
-			C.gtk_ctree_remove_node (list_widget, item_imp.tree_node_ptr)
+			feature {EV_GTK_EXTERNALS}.gtk_ctree_remove_node (list_widget, item_imp.tree_node_ptr)
 			item_imp.set_item_and_children (NULL)
 			item_imp.set_parent_imp (Void)
 
@@ -807,7 +807,7 @@ feature {EV_TREE_NODE_IMP} -- Implementation
 	row_height: INTEGER is
 			-- 
 		do
-			Result := C.gtk_clist_struct_row_height (list_widget)
+			Result := feature {EV_GTK_EXTERNALS}.gtk_clist_struct_row_height (list_widget)
 		end
 
 	insert_ctree_node (a_item_imp: EV_TREE_NODE_IMP; par_node, a_sibling: POINTER): POINTER is
@@ -817,7 +817,7 @@ feature {EV_TREE_NODE_IMP} -- Implementation
 		do
 			create a_gs.make (a_item_imp.text)
 			text_ptr := a_gs.item
-			Result := C.gtk_ctree_insert_node (
+			Result := feature {EV_GTK_EXTERNALS}.gtk_ctree_insert_node (
 				list_widget,
 				par_node,
 				a_sibling,

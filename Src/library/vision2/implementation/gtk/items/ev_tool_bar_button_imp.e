@@ -83,15 +83,15 @@ feature {NONE} -- Initialization
 			-- Create the tool bar button.
 		do
 			base_make (an_interface)
-			set_c_object (C.gtk_button_new)
-			C.gtk_button_set_relief (c_object, C.gtk_relief_none_enum)
+			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_button_new)
+			feature {EV_GTK_EXTERNALS}.gtk_button_set_relief (c_object, feature {EV_GTK_EXTERNALS}.gtk_relief_none_enum)
 		end
 
 	initialize is
 			-- Initialization of button box and events.
 		do
 			{EV_ITEM_IMP} Precursor
-			GTK_WIDGET_UNSET_FLAGS (c_object, C.GTK_CAN_FOCUS_ENUM)
+			GTK_WIDGET_UNSET_FLAGS (c_object, feature {EV_GTK_EXTERNALS}.gTK_CAN_FOCUS_ENUM)
 			pixmapable_imp_initialize
 			textable_imp_initialize
 			initialize_button_box
@@ -103,13 +103,13 @@ feature {NONE} -- Initialization
 		local
 			box: POINTER
 		do
-			box := C.gtk_vbox_new (False, 0)
-			C.gtk_container_add (c_object, box)
-			C.gtk_widget_show (box)
-			C.gtk_box_pack_end (box, text_label, True, True, 0)
-			C.gtk_widget_hide (text_label)
-			C.gtk_box_pack_start (box, pixmap_box, True, True, 0)
-			C.gtk_widget_hide (pixmap_box)
+			box := feature {EV_GTK_EXTERNALS}.gtk_vbox_new (False, 0)
+			feature {EV_GTK_EXTERNALS}.gtk_container_add (c_object, box)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_show (box)
+			feature {EV_GTK_EXTERNALS}.gtk_box_pack_end (box, text_label, True, True, 0)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_hide (text_label)
+			feature {EV_GTK_EXTERNALS}.gtk_box_pack_start (box, pixmap_box, True, True, 0)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_hide (pixmap_box)
 		end
 
 feature -- Access
@@ -147,7 +147,7 @@ feature -- Status report
 			-- Index in toolbar
 		do
 			if parent_imp /= Void then
-				Result := C.gtk_list_child_position (
+				Result := feature {EV_GTK_EXTERNALS}.gtk_list_child_position (
 					parent_imp.list_widget,
 					Current.c_object
 				) + 1

@@ -30,11 +30,11 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 			create a_gs.make ("Select file")
 			set_c_object
-				(C.gtk_file_selection_new (a_gs.item))
-			C.gtk_window_set_modal (c_object, True)
+				(feature {EV_GTK_EXTERNALS}.gtk_file_selection_new (a_gs.item))
+			feature {EV_GTK_EXTERNALS}.gtk_window_set_modal (c_object, True)
 			filter := "*.*"
 			set_start_directory (".")
-			C.gtk_widget_realize (c_object)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_realize (c_object)
 		end
 
 	initialize is
@@ -45,22 +45,22 @@ feature {NONE} -- Initialization
 		do
 			Precursor {EV_STANDARD_DIALOG_IMP}
 			is_initialized := False
-			a_child_list := C.gtk_container_children (C.gtk_file_selection_struct_ok_button (c_object))
-			a_label := C.g_list_nth_data (
+			a_child_list := feature {EV_GTK_EXTERNALS}.gtk_container_children (feature {EV_GTK_EXTERNALS}.gtk_file_selection_struct_ok_button (c_object))
+			a_label := feature {EV_GTK_EXTERNALS}.g_list_nth_data (
 				a_child_list,
 				0)
-			C.g_list_free (a_child_list)
+			feature {EV_GTK_EXTERNALS}.g_list_free (a_child_list)
 			create a_gs.make (internal_accept)
-			C.gtk_label_set_text (a_label, a_gs.item)
+			feature {EV_GTK_EXTERNALS}.gtk_label_set_text (a_label, a_gs.item)
 			
 			real_signal_connect (
-				C.gtk_file_selection_struct_ok_button (c_object),
+				feature {EV_GTK_EXTERNALS}.gtk_file_selection_struct_ok_button (c_object),
 				"clicked",
 				agent (App_implementation.gtk_marshal).file_dialog_on_ok_intermediary (c_object),
 				Void
 			)
 			real_signal_connect (
-				C.gtk_file_selection_struct_cancel_button (c_object),
+				feature {EV_GTK_EXTERNALS}.gtk_file_selection_struct_cancel_button (c_object),
 				"clicked",
 				agent (App_implementation.gtk_marshal).file_dialog_on_cancel_intermediary (c_object),
 				Void
@@ -77,7 +77,7 @@ feature -- Access
 			if
 				selected_button /= Void and then selected_button.is_equal (internal_accept)
 			then
-				create Result.make_from_c (C.gtk_file_selection_get_filename (c_object))
+				create Result.make_from_c (feature {EV_GTK_EXTERNALS}.gtk_file_selection_get_filename (c_object))
 			else
 				Result := ""
 			end
@@ -123,7 +123,7 @@ feature -- Element change
 		do
 			filter := clone (a_filter)
 			create a_gs.make (filter)
-			C.gtk_file_selection_complete (c_object, a_gs.item)
+			feature {EV_GTK_EXTERNALS}.gtk_file_selection_complete (c_object, a_gs.item)
 		end
 
 	set_file_name (a_name: STRING) is
@@ -132,7 +132,7 @@ feature -- Element change
 			a_gs: GEL_STRING
 		do
 			create a_gs.make (a_name)
-			C.gtk_file_selection_set_filename (c_object, a_gs.item)
+			feature {EV_GTK_EXTERNALS}.gtk_file_selection_set_filename (c_object, a_gs.item)
 		end
 
 	set_start_directory (a_path: STRING) is
@@ -146,7 +146,7 @@ feature -- Element change
 				start_directory.append ("/")
 			end
 			create a_gs.make (start_directory)
-			C.gtk_file_selection_set_filename (
+			feature {EV_GTK_EXTERNALS}.gtk_file_selection_set_filename (
 				c_object,
 				a_gs.item
 			)
@@ -161,7 +161,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			temp_file: RAW_FILE
 		do
 			create temp_filename.make (0)
-			temp_filename.from_c (C.gtk_file_selection_get_filename (c_object))
+			temp_filename.from_c (feature {EV_GTK_EXTERNALS}.gtk_file_selection_get_filename (c_object))
 			create temp_file.make (temp_filename)
 			if (not temp_file.exists or else not temp_file.is_directory) and not 
 					temp_filename.item (temp_filename.count).is_equal ('/') then

@@ -128,14 +128,14 @@ feature -- Status report
 			-- Vertical distance from the origin of the drawing
 			-- operation to the top of the drawn character. 
 		do
-			Result := C.gdk_font_struct_ascent (c_object)
+			Result := feature {EV_GTK_EXTERNALS}.gdk_font_struct_ascent (c_object)
 		end
 
 	descent: INTEGER is
 			-- Vertical distance from the origin of the drawing
 			-- operation to the bottom of the drawn character. 
 		do
-			Result := C.gdk_font_struct_descent (c_object)
+			Result := feature {EV_GTK_EXTERNALS}.gdk_font_struct_descent (c_object)
 		end
 
 	width: INTEGER is
@@ -162,7 +162,7 @@ feature -- Status report
 			a_gs: GEL_STRING
 		do
 			create a_gs.make (a_string)
-			Result := C.gdk_string_width (c_object, a_gs.item)
+			Result := feature {EV_GTK_EXTERNALS}.gdk_string_width (c_object, a_gs.item)
 		end
 
 	horizontal_resolution: INTEGER is
@@ -296,7 +296,7 @@ feature {NONE} -- Implementation
 			a_gs: GEL_STRING
 		do
 			create a_gs.make (pattern)
-			Result := C.c_match_font_name (a_gs.item)
+			Result := feature {EV_GTK_EXTERNALS}.c_match_font_name (a_gs.item)
 		end
 
 feature {EV_FONT_DIALOG_IMP} -- Implementation

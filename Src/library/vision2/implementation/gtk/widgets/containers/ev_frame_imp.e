@@ -43,12 +43,12 @@ feature {NONE} -- Initialization
 			-- Create frame.
 		do
 			base_make (an_interface)
-			set_c_object (C.gtk_event_box_new)
-			container_widget := C.gtk_frame_new (NULL)
-			C.gtk_widget_show (container_widget)
-			C.gtk_container_add (c_object, container_widget)
-			C.gtk_frame_set_label (container_widget, NULL)
-			internal_alignment_code := C.Gtk_justify_left_enum
+			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_event_box_new)
+			container_widget := feature {EV_GTK_EXTERNALS}.gtk_frame_new (NULL)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_show (container_widget)
+			feature {EV_GTK_EXTERNALS}.gtk_container_add (c_object, container_widget)
+			feature {EV_GTK_EXTERNALS}.gtk_frame_set_label (container_widget, NULL)
+			internal_alignment_code := feature {EV_GTK_EXTERNALS}.gtk_justify_left_enum
 		end
 
 	container_widget: POINTER
@@ -67,14 +67,14 @@ feature -- Access
 		local
 			gtk_style: INTEGER
 		do
-			gtk_style := C.gtk_frame_struct_shadow_type (container_widget)
-			if gtk_style = C.Gtk_shadow_in_enum then
+			gtk_style := feature {EV_GTK_EXTERNALS}.gtk_frame_struct_shadow_type (container_widget)
+			if gtk_style = feature {EV_GTK_EXTERNALS}.gtk_shadow_in_enum then
 				Result := Ev_frame_lowered
-			elseif gtk_style = C.Gtk_shadow_out_enum then
+			elseif gtk_style = feature {EV_GTK_EXTERNALS}.gtk_shadow_out_enum then
 				Result := Ev_frame_raised
-			elseif gtk_style = C.Gtk_shadow_etched_in_enum then
+			elseif gtk_style = feature {EV_GTK_EXTERNALS}.gtk_shadow_etched_in_enum then
 				Result := Ev_frame_etched_in
-			elseif gtk_style = C.Gtk_shadow_etched_out_enum then
+			elseif gtk_style = feature {EV_GTK_EXTERNALS}.gtk_shadow_etched_out_enum then
 				Result := Ev_frame_etched_out
 			else
 				check
@@ -93,16 +93,16 @@ feature -- Element change
 		do
 			inspect a_style
 				when Ev_frame_lowered then
-					gtk_style := C.Gtk_shadow_in_enum
+					gtk_style := feature {EV_GTK_EXTERNALS}.gtk_shadow_in_enum
 					border_width := 1
 				when Ev_frame_raised then
-					gtk_style := C.Gtk_shadow_out_enum
+					gtk_style := feature {EV_GTK_EXTERNALS}.gtk_shadow_out_enum
 					border_width := 1
 				when Ev_frame_etched_in then
-					gtk_style := C.Gtk_shadow_etched_in_enum
+					gtk_style := feature {EV_GTK_EXTERNALS}.gtk_shadow_etched_in_enum
 					border_width := 2
 				when Ev_frame_etched_out then
-					gtk_style := C.Gtk_shadow_etched_out_enum
+					gtk_style := feature {EV_GTK_EXTERNALS}.gtk_shadow_etched_out_enum
 					border_width := 2
 			else
 				check
@@ -112,7 +112,7 @@ feature -- Element change
 			--| FIXME incorporate border_width.
 			--| NB This is not gtk_container_set_border_width!
 			--| Maybe we have to draw the frame ourselves.
-			C.gtk_frame_set_shadow_type (container_widget, gtk_style)
+			feature {EV_GTK_EXTERNALS}.gtk_frame_set_shadow_type (container_widget, gtk_style)
 		end
 
 feature -- Status setting
@@ -120,22 +120,22 @@ feature -- Status setting
 	align_text_left is
 			-- Display `text' left aligned.
 		do
-			C.gtk_frame_set_label_align (container_widget, 0, 0)
-			internal_alignment_code := C.Gtk_justify_left_enum
+			feature {EV_GTK_EXTERNALS}.gtk_frame_set_label_align (container_widget, 0, 0)
+			internal_alignment_code := feature {EV_GTK_EXTERNALS}.gtk_justify_left_enum
 		end
 
 	align_text_right is
 			-- Display `text' right aligned.
 		do
-			C.gtk_frame_set_label_align (container_widget, 1, 0)
-			internal_alignment_code := C.Gtk_justify_right_enum
+			feature {EV_GTK_EXTERNALS}.gtk_frame_set_label_align (container_widget, 1, 0)
+			internal_alignment_code := feature {EV_GTK_EXTERNALS}.gtk_justify_right_enum
 		end
         
 	align_text_center is
 			-- Display `text' centered.
 		do
-			C.gtk_frame_set_label_align (container_widget, 0.5, 0)
-			internal_alignment_code := C.gtk_justify_center_enum
+			feature {EV_GTK_EXTERNALS}.gtk_frame_set_label_align (container_widget, 0.5, 0)
+			internal_alignment_code := feature {EV_GTK_EXTERNALS}.gtk_justify_center_enum
 		end
 
 feature -- Access
@@ -143,11 +143,11 @@ feature -- Access
 	text_alignment: INTEGER is
 			-- Alignment of the text in the label.
 		do
-			if internal_alignment_code = C.Gtk_justify_center_enum then
+			if internal_alignment_code = feature {EV_GTK_EXTERNALS}.gtk_justify_center_enum then
 				Result := feature {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_center
-			elseif internal_alignment_code = C.Gtk_justify_left_enum then
+			elseif internal_alignment_code = feature {EV_GTK_EXTERNALS}.gtk_justify_left_enum then
 				Result := feature {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_left
-			elseif internal_alignment_code = C.Gtk_justify_right_enum then
+			elseif internal_alignment_code = feature {EV_GTK_EXTERNALS}.gtk_justify_right_enum then
 				Result := feature {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_right
 			else
 				check alignment_code_not_set: False end
@@ -172,14 +172,14 @@ feature -- Element change
 		do
 			internal_text := clone (a_text)
 			create a_gs.make (a_text)
-			C.gtk_frame_set_label (container_widget, a_gs.item)
+			feature {EV_GTK_EXTERNALS}.gtk_frame_set_label (container_widget, a_gs.item)
 		end
 
 	remove_text is
 			-- Make `text' `Void'.
 		do
 			internal_text := ""
-			C.gtk_frame_set_label (container_widget, NULL)
+			feature {EV_GTK_EXTERNALS}.gtk_frame_set_label (container_widget, NULL)
 		end
 
 feature {NONE} -- Implementation

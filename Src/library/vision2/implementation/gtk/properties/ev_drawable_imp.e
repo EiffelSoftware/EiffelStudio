@@ -111,7 +111,7 @@ feature -- Access
 			gcvalues := feature {EV_GTK_EXTERNALS}.c_gdk_gcvalues_struct_allocate
 			feature {EV_GTK_EXTERNALS}.gdk_gc_get_values (gc, gcvalues)
 			Result := feature {EV_GTK_EXTERNALS}.gdk_gcvalues_struct_line_width (gcvalues)
-			c_free (gcvalues)
+			gcvalues.memory_free
 		end
 
 	drawing_mode: INTEGER is
@@ -122,7 +122,7 @@ feature -- Access
 			gcvalues := feature {EV_GTK_EXTERNALS}.c_gdk_gcvalues_struct_allocate
 			feature {EV_GTK_EXTERNALS}.gdk_gc_get_values (gc, gcvalues)
 			gdk_drawing_mode := feature {EV_GTK_EXTERNALS}.gdk_gcvalues_struct_function (gcvalues)
-			c_free (gcvalues)
+			gcvalues.memory_free
 
 			if gdk_drawing_mode = feature {EV_GTK_EXTERNALS}.Gdk_copy_enum then
 				Result := drawing_mode_copy
@@ -160,7 +160,7 @@ feature -- Access
 			gcvalues := feature {EV_GTK_EXTERNALS}.c_gdk_gcvalues_struct_allocate
 			feature {EV_GTK_EXTERNALS}.gdk_gc_get_values (gc, gcvalues)
 			style := feature {EV_GTK_EXTERNALS}.gdk_gcvalues_struct_line_style (gcvalues)
-			c_free (gcvalues)
+			gcvalues.memory_free
 			Result := style = feature {EV_GTK_EXTERNALS}.Gdk_line_on_off_dash_enum
 		end
 
@@ -203,7 +203,7 @@ feature -- Element change
 				color_has_been_allocated: tempbool
 			end
 			feature {EV_GTK_EXTERNALS}.gdk_gc_set_foreground (gc, color_struct)
-			c_free (color_struct)
+			color_struct.memory_free
 		end
 
 	set_line_width (a_width: INTEGER) is
@@ -248,7 +248,7 @@ feature -- Element change
 			feature {EV_GTK_EXTERNALS}.set_gdk_rectangle_struct_width (rectangle_struct, an_area.width)
 			feature {EV_GTK_EXTERNALS}.set_gdk_rectangle_struct_height (rectangle_struct, an_area.height)
 			feature {EV_GTK_EXTERNALS}.gdk_gc_set_clip_rectangle (gc, rectangle_struct)
-			feature {EV_GTK_EXTERNALS}.c_gdk_rectangle_struct_free (rectangle_struct)
+			rectangle_struct.memory_free
 		end
 
 	remove_clip_area is

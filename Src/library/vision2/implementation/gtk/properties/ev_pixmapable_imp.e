@@ -25,7 +25,7 @@ feature -- Initialization
 	pixmapable_imp_initialize is
 			-- Create a GtkHBox to hold a GtkPixmap.
 		do
-			pixmap_box := C.gtk_hbox_new (False, 0)
+			pixmap_box := feature {EV_GTK_EXTERNALS}.gtk_hbox_new (False, 0)
 		end
 
 feature -- Access
@@ -40,7 +40,7 @@ feature -- Access
 			if temp_gtk_pixmap /= NULL then
 				create Result
 				pix_imp ?= Result.implementation
-				C.gtk_pixmap_get (temp_gtk_pixmap, $gdk_data, $gdk_mask)
+				feature {EV_GTK_EXTERNALS}.gtk_pixmap_get (temp_gtk_pixmap, $gdk_data, $gdk_mask)
 				pix_imp.copy_from_gdk_data (gdk_data, gdk_mask, pix_width, pix_height)
 			end
 		end
@@ -57,10 +57,10 @@ feature -- Element change
 			imp ?= a_pixmap.implementation
 			pix_width := imp.width
 			pix_height := imp.height
-			gtk_pix_wid := C.gtk_pixmap_new (imp.drawable, imp.mask)
-			C.gtk_widget_show (gtk_pix_wid)
-			C.gtk_container_add (pixmap_box, gtk_pix_wid)
-			C.gtk_widget_show (pixmap_box)		
+			gtk_pix_wid := feature {EV_GTK_EXTERNALS}.gtk_pixmap_new (imp.drawable, imp.mask)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_show (gtk_pix_wid)
+			feature {EV_GTK_EXTERNALS}.gtk_container_add (pixmap_box, gtk_pix_wid)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_show (pixmap_box)		
 		end
 
 	remove_pixmap is
@@ -70,11 +70,11 @@ feature -- Element change
 		do	
 			p := gtk_pixmap
 			if p /= NULL then
-				--C.gtk_object_ref (p)
+				--feature {EV_GTK_EXTERNALS}.gtk_object_ref (p)
 				--| We want p to be deallocated by gtk.
-				C.gtk_container_remove (pixmap_box, p)
+				feature {EV_GTK_EXTERNALS}.gtk_container_remove (pixmap_box, p)
 			end
-			C.gtk_widget_hide (pixmap_box)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_hide (pixmap_box)
 		end
 
 feature {NONE} -- Implementation
@@ -84,10 +84,10 @@ feature {NONE} -- Implementation
 		local
 			a_child_list: POINTER
 		do
-			a_child_list := C.gtk_container_children (pixmap_box)
+			a_child_list := feature {EV_GTK_EXTERNALS}.gtk_container_children (pixmap_box)
 			if a_child_list /= NULL then
-				Result := C.g_list_nth_data (a_child_list, 0)
-				C.g_list_free (a_child_list)
+				Result := feature {EV_GTK_EXTERNALS}.g_list_nth_data (a_child_list, 0)
+				feature {EV_GTK_EXTERNALS}.g_list_free (a_child_list)
 			end
 		end
 		

@@ -26,10 +26,10 @@ feature -- Element change
 			-- We redefine it to keep the page size the same as leap.
 		do
 			if leap /= a_leap then
-				C.set_gtk_adjustment_struct_upper (adjustment, value_range.upper + a_leap)
-				C.set_gtk_adjustment_struct_page_increment (adjustment, a_leap)
-				C.set_gtk_adjustment_struct_page_size (adjustment, a_leap)
-				C.gtk_adjustment_changed (adjustment)
+				feature {EV_GTK_EXTERNALS}.set_gtk_adjustment_struct_upper (adjustment, value_range.upper + a_leap)
+				feature {EV_GTK_EXTERNALS}.set_gtk_adjustment_struct_page_increment (adjustment, a_leap)
+				feature {EV_GTK_EXTERNALS}.set_gtk_adjustment_struct_page_size (adjustment, a_leap)
+				feature {EV_GTK_EXTERNALS}.gtk_adjustment_changed (adjustment)
 			end
 		ensure then
 			range_same: value_range.is_equal (old value_range)

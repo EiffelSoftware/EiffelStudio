@@ -30,10 +30,10 @@ feature {NONE} -- Initialization
 			-- Create a gtk check button.
 		do
 			base_make (an_interface)
-			set_c_object (C.gtk_event_box_new)
-			visual_widget := C.gtk_check_button_new
-			C.gtk_widget_show (visual_widget)
-			C.gtk_container_add (c_object, visual_widget)
+			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_event_box_new)
+			visual_widget := feature {EV_GTK_EXTERNALS}.gtk_check_button_new
+			feature {EV_GTK_EXTERNALS}.gtk_widget_show (visual_widget)
+			feature {EV_GTK_EXTERNALS}.gtk_container_add (c_object, visual_widget)
 		end
 
 	visual_widget: POINTER 
@@ -49,10 +49,10 @@ feature -- Element change
 			{EV_TOGGLE_BUTTON_IMP} Precursor (txt)
 
 			-- We left-align and vertical_center-position the text
-			C.gtk_misc_set_alignment (text_label, 0.0, 0.5)
+			feature {EV_GTK_EXTERNALS}.gtk_misc_set_alignment (text_label, 0.0, 0.5)
 
 			if gtk_pixmap /= NULL then
-				C.gtk_misc_set_alignment (pixmap_box, 0.0, 0.5)
+				feature {EV_GTK_EXTERNALS}.gtk_misc_set_alignment (pixmap_box, 0.0, 0.5)
 			end				
 		end
 

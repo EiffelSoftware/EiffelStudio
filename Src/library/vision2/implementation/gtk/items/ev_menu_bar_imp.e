@@ -27,10 +27,10 @@ feature {NONE} -- Initialization
 	make (an_interface: like interface) is
 		do
 			base_make (an_interface)
-			set_c_object (C.gtk_menu_bar_new)
-			C.gtk_menu_bar_set_shadow_type (c_object, C.GTK_SHADOW_NONE_ENUM)
-			C.gtk_widget_set_usize (c_object, 0, 10 + App_implementation.default_font_height)
-			C.gtk_widget_show (c_object)
+			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_menu_bar_new)
+			feature {EV_GTK_EXTERNALS}.gtk_menu_bar_set_shadow_type (c_object, feature {EV_GTK_EXTERNALS}.gTK_SHADOW_NONE_ENUM)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_set_usize (c_object, 0, 10 + App_implementation.default_font_height)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_show (c_object)
 		end
 		
 feature {EV_WINDOW_IMP} -- Implementation
@@ -71,17 +71,17 @@ feature {NONE} -- Implementation
 			if parent_imp /= Void then
 				menu_imp ?= an_item_imp
 				if menu_imp /= Void and then menu_imp.key /= 0 then
-					C.gtk_widget_add_accelerator (menu_imp.c_object,
+					feature {EV_GTK_EXTERNALS}.gtk_widget_add_accelerator (menu_imp.c_object,
 						a_gs.item,
 						parent_imp.accel_group,
 						menu_imp.key,
-						C.gdk_mod1_mask_enum,
+						feature {EV_GTK_EXTERNALS}.gdk_mod1_mask_enum,
 						0)
 				end			
 			end
 
 			an_item_imp.set_item_parent_imp (Current)
-			C.gtk_menu_shell_insert (list_widget, an_item_imp.c_object, pos - 1)
+			feature {EV_GTK_EXTERNALS}.gtk_menu_shell_insert (list_widget, an_item_imp.c_object, pos - 1)
 			child_array.go_i_th (pos)
 			child_array.put_left (an_item_imp.interface)
 		end

@@ -42,13 +42,13 @@ feature -- Conversion
 
 	-- FIXME this is a hack and needs to be thought over.
 		
-feature -- C externals
-
-	C: EV_GTK_EXTERNALS is
-			-- Access to external C functions.
-		once
-			create Result
-		end
+--feature -- C externals
+--
+--	C: EV_GTK_EXTERNALS is
+--			-- Access to external C functions.
+--		once
+--			create Result
+--		end
 
 feature {NONE} -- Nasty hack
 
@@ -56,14 +56,6 @@ feature {NONE} -- Nasty hack
 			-- Because Result := $x causes a syntax error.
 		do
 			Result := p
-		end
-
-	c_free (ptr: POINTER) is
-			-- free (void* ptr);
-		external
-			"C (void*) | <stdlib.h>"
-		alias
-			"free"
 		end
 
 end

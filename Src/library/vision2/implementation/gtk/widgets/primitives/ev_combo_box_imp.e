@@ -77,24 +77,24 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 
 			-- create of the gtk object.
-			set_c_object (C.gtk_vbox_new (False, 0))
-			container_widget := C.gtk_combo_new
-			C.gtk_widget_show (container_widget)
-			C.gtk_box_pack_start (c_object, container_widget, False, False, 0)
+			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_vbox_new (False, 0))
+			container_widget := feature {EV_GTK_EXTERNALS}.gtk_combo_new
+			feature {EV_GTK_EXTERNALS}.gtk_widget_show (container_widget)
+			feature {EV_GTK_EXTERNALS}.gtk_box_pack_start (c_object, container_widget, False, False, 0)
 
 			-- Pointer to the text we see.
-			entry_widget := C.gtk_combo_struct_entry (container_widget)
+			entry_widget := feature {EV_GTK_EXTERNALS}.gtk_combo_struct_entry (container_widget)
 
 			-- Pointer to the list of items.
-			list_widget := C.gtk_combo_struct_list (container_widget)
-			C.gtk_combo_set_use_arrows (container_widget, 0)
-			C.gtk_combo_set_case_sensitive (container_widget, 1)
+			list_widget := feature {EV_GTK_EXTERNALS}.gtk_combo_struct_list (container_widget)
+			feature {EV_GTK_EXTERNALS}.gtk_combo_set_use_arrows (container_widget, 0)
+			feature {EV_GTK_EXTERNALS}.gtk_combo_set_case_sensitive (container_widget, 1)
 	
 			create timer.make_with_interval (0)
 			timer.actions.extend (agent launch_select_actions)
 			timer_imp ?= timer.implementation
-			activate_id := C.gtk_combo_struct_activate_id (container_widget)
-			C.signal_handler_block (entry_widget, activate_id)
+			activate_id := feature {EV_GTK_EXTERNALS}.gtk_combo_struct_activate_id (container_widget)
+			feature {EV_GTK_EXTERNALS}.signal_handler_block (entry_widget, activate_id)
 			
 			on_key_pressed_intermediary_agent := agent (App_implementation.gtk_marshal).on_list_item_list_key_pressed_intermediary (c_object, ?, ?, ?)
 			on_item_clicked_intermediary_agent := agent (App_implementation.gtk_marshal).on_list_item_list_item_clicked_intermediary (c_object)
@@ -109,9 +109,9 @@ feature {NONE} -- Initialization
 			--| We don't call EV_TEXT_FIELD_IMP Precursor as this only
 			--| adds two extra ones to what ev_list_imp Precursor calls
 			--| already.
-			C.gtk_list_set_selection_mode (
+			feature {EV_GTK_EXTERNALS}.gtk_list_set_selection_mode (
 				list_widget,
-				C.GTK_SELECTION_SINGLE_ENUM
+				feature {EV_GTK_EXTERNALS}.gTK_SELECTION_SINGLE_ENUM
 			)
 			real_signal_connect (entry_widget, "focus-in-event", agent (App_implementation.gtk_marshal).widget_focus_in_intermediary (c_object), Void)
 			real_signal_connect (entry_widget, "focus-out-event", agent (App_implementation.gtk_marshal).widget_focus_out_intermediary (c_object), Void)
@@ -131,24 +131,24 @@ feature -- Status report
 		do
 			--| Shift to put bit in least significant place then take mod 2.
 			Result := ((
-				(C.gtk_object_struct_flags (entry_widget)
-				// C.GTK_HAS_FOCUS_ENUM) \\ 2) 
+				(feature {EV_GTK_EXTERNALS}.gtk_object_struct_flags (entry_widget)
+				// feature {EV_GTK_EXTERNALS}.gTK_HAS_FOCUS_ENUM) \\ 2) 
 			) = 1
 		end
 
 	rows: INTEGER is
 		 	-- Number of lines.
 		do
-			Result := C.g_list_length (
-				C.gtk_list_struct_children (list_widget)
+			Result := feature {EV_GTK_EXTERNALS}.g_list_length (
+				feature {EV_GTK_EXTERNALS}.gtk_list_struct_children (list_widget)
 			)
 		end
 
 	selected: BOOLEAN is
 			-- Is at least one item selected?
 		do
-			Result := C.g_list_length (
-				C.gtk_list_struct_selection (list_widget)
+			Result := feature {EV_GTK_EXTERNALS}.g_list_length (
+				feature {EV_GTK_EXTERNALS}.gtk_list_struct_selection (list_widget)
 			).to_boolean
 		end
 
@@ -165,7 +165,7 @@ feature -- Status setting
 	set_maximum_text_length (len: INTEGER) is
 			-- Set the length of the longest 
 		do
-			C.gtk_entry_set_max_length (entry_widget, len)
+			feature {EV_GTK_EXTERNALS}.gtk_entry_set_max_length (entry_widget, len)
 		end
 
 	set_foreground_color (a_color: EV_COLOR) is
@@ -177,7 +177,7 @@ feature -- Status setting
 	set_focus is
 			-- 
 		do
-			C.gtk_widget_grab_focus (entry_widget)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_grab_focus (entry_widget)
 		end
 
 feature {EV_LIST_ITEM_IMP} -- Implementation
@@ -232,13 +232,13 @@ feature {NONE} -- Implementation
 			a_gs: GEL_STRING
 		do
 			create a_gs.make (v_imp.text)
-			C.gtk_combo_set_item_string (container_widget, v_imp.c_object, a_gs.item)
-			C.gtk_container_add (list_widget, v_imp.c_object)
+			feature {EV_GTK_EXTERNALS}.gtk_combo_set_item_string (container_widget, v_imp.c_object, a_gs.item)
+			feature {EV_GTK_EXTERNALS}.gtk_container_add (list_widget, v_imp.c_object)
 			v_imp.set_item_parent_imp (Current)
 			real_signal_connect (v_imp.c_object, "button-press-event", on_item_clicked_intermediary_agent, Void)
 			real_signal_connect (v_imp.c_object, "key-press-event", on_key_pressed_intermediary_agent, key_event_translate_agent)
 			if count = 1 and is_sensitive then
-				C.gtk_list_item_select (v_imp.c_object)
+				feature {EV_GTK_EXTERNALS}.gtk_list_item_select (v_imp.c_object)
 			end
 		end
 
@@ -259,13 +259,13 @@ feature {NONE} -- Implementation
 			-- Reorder `a_child' to `an_index' in `c_object'.
 			-- `a_container' is ignored.
 		do
-			C.gtk_box_reorder_child (container_widget, a_child, an_index - 1)
+			feature {EV_GTK_EXTERNALS}.gtk_box_reorder_child (container_widget, a_child, an_index - 1)
 		end
 
 	foreground_color_pointer: POINTER is
 			-- Pointer on the C object representing the foreground color of Current
 		do
-			Result := C.gtk_style_struct_fg (C.gtk_widget_struct_style (list_widget))
+			Result := feature {EV_GTK_EXTERNALS}.gtk_style_struct_fg (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_style (list_widget))
 		end
 		
 	timer: EV_TIMEOUT; timer_imp: EV_TIMEOUT_IMP
@@ -290,11 +290,11 @@ feature {NONE} -- Implementation
 				if not avoid_callback then			
 				 	triggering_item ?= eif_object_from_c ((App_implementation.gtk_marshal).gtk_value_pointer (an_item))
 				 	if not button_pressed then
-						popwin := C.gtk_combo_struct_popwin (container_widget)
-						C.gtk_widget_hide (popwin)
-						if (((C.gtk_object_struct_flags (visual_widget) // C.GTK_HAS_GRAB_ENUM) \\ 2)) = 1 then
-							C.gtk_grab_remove (popwin)
-							C.gdk_pointer_ungrab (0)
+						popwin := feature {EV_GTK_EXTERNALS}.gtk_combo_struct_popwin (container_widget)
+						feature {EV_GTK_EXTERNALS}.gtk_widget_hide (popwin)
+						if (((feature {EV_GTK_EXTERNALS}.gtk_object_struct_flags (visual_widget) // feature {EV_GTK_EXTERNALS}.gTK_HAS_GRAB_ENUM) \\ 2)) = 1 then
+							feature {EV_GTK_EXTERNALS}.gtk_grab_remove (popwin)
+							feature {EV_GTK_EXTERNALS}.gdk_pointer_ungrab (0)
 						end
 					end
 					avoid_callback := True
@@ -321,9 +321,9 @@ feature {NONE} -- Implementation
 			if 
 				a_key /= Void and then Key_down = a_key.code
 			then
-					C.signal_handler_unblock (entry_widget, activate_id)
-				--	success := C.gtk_widget_activate (entry_widget)
-					C.signal_handler_block (entry_widget, activate_id)
+					feature {EV_GTK_EXTERNALS}.signal_handler_unblock (entry_widget, activate_id)
+				--	success := feature {EV_GTK_EXTERNALS}.gtk_widget_activate (entry_widget)
+					feature {EV_GTK_EXTERNALS}.signal_handler_block (entry_widget, activate_id)
 			end
 			Precursor {EV_TEXT_FIELD_IMP} (a_key, a_key_string, a_key_press)
 		end

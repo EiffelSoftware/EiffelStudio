@@ -40,10 +40,10 @@ feature {NONE} -- Initialization
 			-- Create a menu.
 		do
 			base_make (an_interface)
-			set_c_object (C.gtk_menu_item_new)
-			C.gtk_widget_show (c_object)
-			C.gtk_widget_set_sensitive (c_object, False)
-			C.gtk_widget_set_usize (c_object, -1, 8)
+			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_menu_item_new)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_show (c_object)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_set_sensitive (c_object, False)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_set_usize (c_object, -1, 8)
 		end
 
 	initialize is
@@ -62,9 +62,9 @@ feature {NONE} -- Initialization
 			-- Create and initialize menu item box.
 			--| This is just to satisfy pixmapable and textable contracts.
 		do
-			box := C.gtk_hbox_new (False, 0)
-			C.gtk_box_pack_start (box, text_label, True, True, 0)
-			C.gtk_box_pack_start (box, pixmap_box, True, True, 0)
+			box := feature {EV_GTK_EXTERNALS}.gtk_hbox_new (False, 0)
+			feature {EV_GTK_EXTERNALS}.gtk_box_pack_start (box, text_label, True, True, 0)
+			feature {EV_GTK_EXTERNALS}.gtk_box_pack_start (box, pixmap_box, True, True, 0)
 		end
 		
 feature {NONE} -- Implementation

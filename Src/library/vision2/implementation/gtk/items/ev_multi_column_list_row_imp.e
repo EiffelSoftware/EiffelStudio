@@ -67,7 +67,7 @@ feature -- Status setting
 			-- Select the row in the list.
 		do
 			if not is_selected then
-				C.gtk_clist_select_row (parent_imp.list_widget, index - 1, 0)
+				feature {EV_GTK_EXTERNALS}.gtk_clist_select_row (parent_imp.list_widget, index - 1, 0)
 			end
 		end
 
@@ -75,7 +75,7 @@ feature -- Status setting
 			-- Deselect the row from the list.
 		do
 			if is_selected then
-				C.gtk_clist_unselect_row (parent_imp.list_widget, index - 1, 0)
+				feature {EV_GTK_EXTERNALS}.gtk_clist_unselect_row (parent_imp.list_widget, index - 1, 0)
 			end
 		end
 
@@ -170,9 +170,9 @@ feature {EV_APPLICATION_IMP} -- Implementation
 			gdkwin_parent, clist_parent: POINTER
 		do
 			if parent_imp /= Void then
-				gdkwin_parent := C.gdk_window_get_parent (a_gdk_window)
-				clist_parent := C.gdk_window_get_parent (
-					C.gtk_clist_struct_clist_window (parent_imp.list_widget)
+				gdkwin_parent := feature {EV_GTK_EXTERNALS}.gdk_window_get_parent (a_gdk_window)
+				clist_parent := feature {EV_GTK_EXTERNALS}.gdk_window_get_parent (
+					feature {EV_GTK_EXTERNALS}.gtk_clist_struct_clist_window (parent_imp.list_widget)
 				)
 				if gdkwin_parent = clist_parent then
 					if parent_imp.row_from_y_coord (a_y) = index then
@@ -223,12 +223,6 @@ feature {EV_ANY_I} -- Implementation
 			-- part.
 			Result := parent_imp.ev_children.index_of (Current, 1)
 		end
-
-	C: EV_GTK_EXTERNALS is
-			-- Access to external C functions.
-		once
-			create Result
-		end	
 
 	interface: EV_MULTI_COLUMN_LIST_ROW
 

@@ -108,7 +108,7 @@ feature
 			first := an_item
 			set_item_resize (first, False)
 			update_splitter
-			feature {EV_GTK_EXTERNALS}.gtk_widget_queue_resize (container_widget)
+			--feature {EV_GTK_EXTERNALS}.gtk_widget_queue_resize (container_widget)
 		end
 
 	set_second (an_item: like item) is
@@ -123,7 +123,7 @@ feature
 			second := an_item
 			set_item_resize (second, True)
 			update_splitter
-			feature {EV_GTK_EXTERNALS}.gtk_widget_queue_resize (container_widget)
+			--feature {EV_GTK_EXTERNALS}.gtk_widget_queue_resize (container_widget)
 		end
 
 	prune (an_item: like item) is
@@ -153,7 +153,7 @@ feature
 				end
 				update_splitter
 			end
-			feature {EV_GTK_EXTERNALS}.gtk_widget_queue_resize (container_widget)
+			--feature {EV_GTK_EXTERNALS}.gtk_widget_queue_resize (container_widget)
 		end
 
 	enable_item_expand (an_item: like item) is
@@ -191,15 +191,15 @@ feature
 	show_separator is
 			-- Make separator visible.
 		do
-			C.gtk_paned_set_gutter_size (c_object, splitter_width)
-			C.gtk_paned_set_handle_size (c_object, splitter_width)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_paned_set_gutter_size (c_object, splitter_width)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_paned_set_handle_size (c_object, splitter_width)
 		end
 
 	hide_separator is
 			-- Hide Separator.
 		do
-			C.gtk_paned_set_gutter_size (c_object, 0)
-			C.gtk_paned_set_handle_size (c_object, 0)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_paned_set_gutter_size (c_object, 0)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_paned_set_handle_size (c_object, 0)
 		end
 
 feature {NONE} -- Implementation

@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 			-- Create a menu.
 		do
 			base_make (an_interface)
-			set_c_object (C.gtk_menu_item_new)
+			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_menu_item_new)
 		end
 	
 	initialize is
@@ -63,11 +63,11 @@ feature {NONE} -- Initialization
 		local
 			box: POINTER
 		do
-			box := C.gtk_hbox_new (False, 0)
-			C.gtk_container_add (c_object, box)
-			C.gtk_widget_show (box)
-			C.gtk_box_pack_start (box, pixmap_box, False, True, 0)
-			C.gtk_box_pack_start (box, text_label, True, True, 1)
+			box := feature {EV_GTK_EXTERNALS}.gtk_hbox_new (False, 0)
+			feature {EV_GTK_EXTERNALS}.gtk_container_add (c_object, box)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_show (box)
+			feature {EV_GTK_EXTERNALS}.gtk_box_pack_start (box, pixmap_box, False, True, 0)
+			feature {EV_GTK_EXTERNALS}.gtk_box_pack_start (box, text_label, True, True, 1)
 		ensure
 			menu_item_box /= NULL
 		end
@@ -96,22 +96,22 @@ feature -- Element change
 				temp_string := clone (a_text)
 				filter_ampersand (temp_string, '_')
 				create a_gs.make (temp_string)
-				key := C.gtk_label_parse_uline (text_label,
+				key := feature {EV_GTK_EXTERNALS}.gtk_label_parse_uline (text_label,
 				a_gs.item)
 			else
 				key := 0
 				create a_gs.make (a_text)
-				C.gtk_label_set_text (text_label, a_gs.item)
+				feature {EV_GTK_EXTERNALS}.gtk_label_set_text (text_label, a_gs.item)
 			end	
-			C.gtk_widget_show (text_label)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_show (text_label)
 		end
 
 	remove_text is
 			-- Assign `Void' to `text'.
 		do
 			real_text := ""
-			C.gtk_label_set_text (text_label, NULL)
-			C.gtk_widget_hide (text_label)
+			feature {EV_GTK_EXTERNALS}.gtk_label_set_text (text_label, NULL)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_hide (text_label)
 		end
 		
 feature {EV_MENU_ITEM_LIST_IMP} -- Assignment optimization
@@ -188,9 +188,9 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 				if p_imp.item_select_actions_internal /= Void then
 					p_imp.item_select_actions_internal.call ([interface])
 				end
-				C.gtk_menu_shell_deactivate (p_imp.list_widget)
+				feature {EV_GTK_EXTERNALS}.gtk_menu_shell_deactivate (p_imp.list_widget)
 			end
-			C.gtk_menu_item_deselect (c_object)
+			feature {EV_GTK_EXTERNALS}.gtk_menu_item_deselect (c_object)
 			if select_actions_internal /= Void then
 				select_actions_internal.call ((App_implementation.gtk_marshal).empty_tuple)
 			end
@@ -200,9 +200,9 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 		local
 			a_child_list: POINTER
 		do
-			a_child_list := C.gtk_container_children (c_object)
-			Result := C.g_list_nth_data (a_child_list, 0)
-			C.g_list_free (a_child_list)
+			a_child_list := feature {EV_GTK_EXTERNALS}.gtk_container_children (c_object)
+			Result := feature {EV_GTK_EXTERNALS}.g_list_nth_data (a_child_list, 0)
+			feature {EV_GTK_EXTERNALS}.g_list_free (a_child_list)
 		end
 
 	interface: EV_MENU_ITEM

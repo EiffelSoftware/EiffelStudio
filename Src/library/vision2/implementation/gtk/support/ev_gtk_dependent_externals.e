@@ -127,7 +127,6 @@ feature -- Externals
 			"gtk_object_unref"
 		end
 
-
 feature {NONE} -- Implementation
 
         gtk_editable_struct_editable (a_c_struct: POINTER): INTEGER is

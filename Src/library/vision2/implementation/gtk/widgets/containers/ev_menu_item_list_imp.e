@@ -58,7 +58,7 @@ feature {NONE} -- implementation
 					if radio_imp /= Void then
 						radio_imp.set_radio_group (sep_imp.radio_group)
 						if sep_imp.radio_group /= NULL then
-							C.gtk_check_menu_item_set_active (radio_imp.c_object, False)
+							feature {EV_GTK_EXTERNALS}.gtk_check_menu_item_set_active (radio_imp.c_object, False)
 						end
 						sep_imp.set_radio_group (radio_imp.radio_group)
 					end
@@ -71,14 +71,14 @@ feature {NONE} -- implementation
 					if sep_imp /= Void then
 						radio_imp.set_radio_group (sep_imp.radio_group)
 						if sep_imp.radio_group /= NULL then
-							C.gtk_check_menu_item_set_active (radio_imp.c_object, False)
+							feature {EV_GTK_EXTERNALS}.gtk_check_menu_item_set_active (radio_imp.c_object, False)
 						end
 						sep_imp.set_radio_group (radio_imp.radio_group)
 					else
 						radio_imp.set_radio_group (radio_group)
 						radio_item_pointer := radio_imp.radio_group
 						if radio_group /= NULL then
-							C.gtk_check_menu_item_set_active (radio_imp.c_object, False)
+							feature {EV_GTK_EXTERNALS}.gtk_check_menu_item_set_active (radio_imp.c_object, False)
 						end
 						set_radio_group (radio_imp.radio_group)
 					end
@@ -103,8 +103,8 @@ feature {NONE} -- implementation
 			-- Generic menu item insertion.
 		do
 			an_item_imp.set_item_parent_imp (Current)
-			C.gtk_menu_shell_append (list_widget, an_item_imp.c_object)
-			C.gtk_menu_reorder_child (list_widget, an_item_imp.c_object, pos - 1)
+			feature {EV_GTK_EXTERNALS}.gtk_menu_shell_append (list_widget, an_item_imp.c_object)
+			feature {EV_GTK_EXTERNALS}.gtk_menu_reorder_child (list_widget, an_item_imp.c_object, pos - 1)
 			child_array.go_i_th (pos)
 			child_array.put_left (an_item_imp.interface)
 		end
@@ -165,10 +165,10 @@ feature {NONE} -- implementation
 			if radio_imp /= Void then
 				if radio_imp.is_selected then
 					-- Select the first item in the radio group
-					if C.g_slist_length (radio_imp.radio_group) > 1 then
-						temp_item_pointer := C.g_slist_nth_data (radio_imp.radio_group, 0)
+					if feature {EV_GTK_EXTERNALS}.g_slist_length (radio_imp.radio_group) > 1 then
+						temp_item_pointer := feature {EV_GTK_EXTERNALS}.g_slist_nth_data (radio_imp.radio_group, 0)
 						if temp_item_pointer = radio_imp.c_object then
-							temp_item_pointer := C.g_slist_nth_data (radio_imp.radio_group, 1)
+							temp_item_pointer := feature {EV_GTK_EXTERNALS}.g_slist_nth_data (radio_imp.radio_group, 1)
 						end
 						radio_imp ?= eif_object_from_c (temp_item_pointer)
 						if radio_imp /= Void then
@@ -176,7 +176,7 @@ feature {NONE} -- implementation
 						end
 					end
 				end
-				C.gtk_radio_menu_item_set_group (radio_imp.c_object, NULL)
+				feature {EV_GTK_EXTERNALS}.gtk_radio_menu_item_set_group (radio_imp.c_object, NULL)
 			else
 				sep_imp ?= item_imp
 				if sep_imp /= Void and then a_position <= interface.count then

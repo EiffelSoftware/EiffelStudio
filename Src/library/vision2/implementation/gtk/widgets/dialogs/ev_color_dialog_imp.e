@@ -37,14 +37,14 @@ feature {NONE} -- Initialization
 			-- Create the gtk object.
 			create a_gs.make ("Color selection dialog")
 			set_c_object (
-				C.gtk_color_selection_dialog_new (
+				feature {EV_GTK_EXTERNALS}.gtk_color_selection_dialog_new (
 					a_gs.item
 				)
 			)
-			C.gtk_widget_hide (
-				C.gtk_color_selection_dialog_struct_help_button (c_object)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_hide (
+				feature {EV_GTK_EXTERNALS}.gtk_color_selection_dialog_struct_help_button (c_object)
 			)
-			C.gtk_widget_realize (c_object)	
+			feature {EV_GTK_EXTERNALS}.gtk_widget_realize (c_object)	
 		end
 
 	initialize is
@@ -103,7 +103,7 @@ feature -- Element change
 			a_color_array.put (a_color.green, 2)
 			a_color_array.put (a_color.blue, 3)
 			a_array_pointer := a_color_array.to_c
-			C.gtk_color_selection_set_color (
+			feature {EV_GTK_EXTERNALS}.gtk_color_selection_set_color (
 				gtk_color_selection_dialog_struct_colorsel (c_object),
 				$a_array_pointer
 			)

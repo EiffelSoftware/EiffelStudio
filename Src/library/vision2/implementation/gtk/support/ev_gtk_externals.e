@@ -25944,14 +25944,14 @@ feature -- Memory allocation
 			"calloc (sizeof(GdkColor), 1)"
 		end
 
-	c_gdk_color_struct_free (a_c_struct: POINTER) is
-			-- Free GdkColor struct allocaded by calloc.
-			-- (from C_GDK_COLOR_STRUCT)
-		external
-			"C | <stdlib.h>"
-		alias
-			"free"
-		end
+--	c_gdk_color_struct_free (a_c_struct: POINTER) is
+--			-- Free GdkColor struct allocaded by calloc.
+--			-- (from C_GDK_COLOR_STRUCT)
+--		external
+--			"C | <stdlib.h>"
+--		alias
+--			"free"
+--		end
 
 --	c_gdk_colormap_struct_allocate: POINTER is
 --			-- New GdkColormap struct allocaded by calloc.
@@ -25998,14 +25998,14 @@ feature -- Memory allocation
 --			"calloc (sizeof(GdkEventButton), 1)"
 --		end
 
-	c_gdk_event_button_struct_free (a_c_struct: POINTER) is
-			-- Free GdkEventButton struct allocaded by calloc.
-			-- (from C_GDK_EVENT_BUTTON_STRUCT)
-		external
-			"C | <stdlib.h>"
-		alias
-			"free"
-		end
+--	c_gdk_event_button_struct_free (a_c_struct: POINTER) is
+--			-- Free GdkEventButton struct allocaded by calloc.
+--			-- (from C_GDK_EVENT_BUTTON_STRUCT)
+--		external
+--			"C | <stdlib.h>"
+--		alias
+--			"free"
+--		end
 
 --	c_gdk_event_configure_struct_allocate: POINTER is
 --			-- New GdkEventConfigure struct allocaded by calloc.
@@ -26106,14 +26106,14 @@ feature -- Memory allocation
 			"calloc (sizeof(GdkGCValues), 1)"
 		end
 
-	c_gdk_gcvalues_struct_free (a_c_struct: POINTER) is
-			-- Free GdkGCValues struct allocaded by calloc.
-			-- (from C_GDK_GCVALUES_STRUCT)
-		external
-			"C | <stdlib.h>"
-		alias
-			"free"
-		end
+--	c_gdk_gcvalues_struct_free (a_c_struct: POINTER) is
+--			-- Free GdkGCValues struct allocaded by calloc.
+--			-- (from C_GDK_GCVALUES_STRUCT)
+--		external
+--			"C | <stdlib.h>"
+--		alias
+--			"free"
+--		end
 
 	c_gdk_geometry_struct_allocate: POINTER is
 			-- New GdkGeometry struct allocaded by calloc.
@@ -26124,14 +26124,14 @@ feature -- Memory allocation
 			"calloc (sizeof(GdkGeometry), 1)"
 		end
 
-	c_gdk_geometry_struct_free (a_c_struct: POINTER) is
-			-- Free GdkGeometry struct allocaded by calloc.
-			-- (from C_GDK_GEOMETRY_STRUCT)
-		external
-			"C | <stdlib.h>"
-		alias
-			"free"
-		end
+--	c_gdk_geometry_struct_free (a_c_struct: POINTER) is
+--			-- Free GdkGeometry struct allocaded by calloc.
+--			-- (from C_GDK_GEOMETRY_STRUCT)
+--		external
+--			"C | <stdlib.h>"
+--		alias
+--			"free"
+--		end
 
 --	c_gdk_point_struct_allocate: POINTER is
 --			-- New GdkPoint struct allocaded by calloc.
@@ -26160,14 +26160,14 @@ feature -- Memory allocation
 			"calloc (sizeof(GdkRectangle), 1)"
 		end
 
-	c_gdk_rectangle_struct_free (a_c_struct: POINTER) is
-			-- Free GdkRectangle struct allocaded by calloc.
-			-- (from C_GDK_RECTANGLE_STRUCT)
-		external
-			"C | <stdlib.h>"
-		alias
-			"free"
-		end
+--	c_gdk_rectangle_struct_free (a_c_struct: POINTER) is
+--			-- Free GdkRectangle struct allocaded by calloc.
+--			-- (from C_GDK_RECTANGLE_STRUCT)
+--		external
+--			"C | <stdlib.h>"
+--		alias
+--			"free"
+--		end
 
 --	c_gdk_visual_struct_allocate: POINTER is
 --			-- New GdkVisual struct allocaded by calloc.

@@ -48,8 +48,8 @@ feature {NONE} -- Initialization
 			-- Make a radio button with a default of selected.
 		do
 			base_make (an_interface)
-			set_c_object (C.gtk_toggle_button_new)
-			C.gtk_button_set_relief (c_object, C.gtk_relief_none_enum)
+			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_toggle_button_new)
+			feature {EV_GTK_EXTERNALS}.gtk_button_set_relief (c_object, feature {EV_GTK_EXTERNALS}.gtk_relief_none_enum)
 			avoid_reselection := True
 				-- Needed to prevent calling of action sequence.
 			enable_select
@@ -76,7 +76,7 @@ feature -- Status setting
 			-- Select `Current' in its grouping.
 		do
 			if not is_selected then
-				C.gtk_toggle_button_set_active (c_object, True)
+				feature {EV_GTK_EXTERNALS}.gtk_toggle_button_set_active (c_object, True)
 			end
 		end
 
@@ -85,7 +85,7 @@ feature -- Status report
 	is_selected: BOOLEAN is
 			-- Is `Current' selected.
 		do
-			Result := C.gtk_toggle_button_get_active (c_object)
+			Result := feature {EV_GTK_EXTERNALS}.gtk_toggle_button_get_active (c_object)
 		end
 
 feature {NONE} -- Implementation
@@ -129,7 +129,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 			if not avoid_reselection then
 				avoid_reselection := True
-				C.gtk_toggle_button_set_active (c_object, True)
+				feature {EV_GTK_EXTERNALS}.gtk_toggle_button_set_active (c_object, True)
 				-- Calls on_activate callback immediately
 				avoid_reselection := False
 			end				
@@ -142,7 +142,7 @@ feature {EV_ANY_I} -- Implementation
 		do
 			if is_selected then
 				avoid_reselection := True
-				C.gtk_toggle_button_set_active (c_object, False)
+				feature {EV_GTK_EXTERNALS}.gtk_toggle_button_set_active (c_object, False)
 				-- Calls on_activate callback immediately
 				avoid_reselection := False
 			end
@@ -152,8 +152,8 @@ feature {EV_ANY_I} -- Implementation
 			-- 
 		do
 			if not is_sensitive then
-				C.gtk_widget_set_sensitive (c_object, True)
-				C.gtk_widget_set_state (c_object, gtk_state)
+				feature {EV_GTK_EXTERNALS}.gtk_widget_set_sensitive (c_object, True)
+				feature {EV_GTK_EXTERNALS}.gtk_widget_set_state (c_object, gtk_state)
 			end
 		end
 	
@@ -161,8 +161,8 @@ feature {EV_ANY_I} -- Implementation
 			-- 
 		do
 			if is_sensitive then
-				gtk_state := C.gtk_widget_struct_state (c_object)
-				C.gtk_widget_set_sensitive (c_object, False)
+				gtk_state := feature {EV_GTK_EXTERNALS}.gtk_widget_struct_state (c_object)
+				feature {EV_GTK_EXTERNALS}.gtk_widget_set_sensitive (c_object, False)
 			end		
 		end
 	

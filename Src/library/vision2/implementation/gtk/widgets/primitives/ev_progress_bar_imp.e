@@ -25,7 +25,7 @@ feature {NONE} -- Implementation
 			-- Create the progress bar.
 		do
 			Precursor (an_interface)
-			set_c_object (C.gtk_progress_bar_new_with_adjustment (adjustment))
+			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_progress_bar_new_with_adjustment (adjustment))
 			gtk_progress_bar := c_object
 			enable_segmentation
 		end
@@ -35,8 +35,8 @@ feature -- Status report
 	is_segmented: BOOLEAN is
 			-- Is display segmented?
 		do
-			Result := C.gtk_progress_bar_struct_bar_style (gtk_progress_bar) =
-				C.Gtk_progress_discrete_enum
+			Result := feature {EV_GTK_EXTERNALS}.gtk_progress_bar_struct_bar_style (gtk_progress_bar) =
+				feature {EV_GTK_EXTERNALS}.gtk_progress_discrete_enum
 		end
 
 feature -- Status setting
@@ -44,18 +44,18 @@ feature -- Status setting
 	enable_segmentation is
 			-- Display bar divided into segments.
 		do
-			C.gtk_progress_bar_set_bar_style (
+			feature {EV_GTK_EXTERNALS}.gtk_progress_bar_set_bar_style (
 				gtk_progress_bar,
-				C.Gtk_progress_discrete_enum
+				feature {EV_GTK_EXTERNALS}.gtk_progress_discrete_enum
 			)
 		end
 
 	disable_segmentation is
 			-- Display bar without segments.
 		do
-			C.gtk_progress_bar_set_bar_style (
+			feature {EV_GTK_EXTERNALS}.gtk_progress_bar_set_bar_style (
 				gtk_progress_bar,
-			 	C.Gtk_progress_continuous_enum
+			 	feature {EV_GTK_EXTERNALS}.gtk_progress_continuous_enum
 			)
 		end
 

@@ -260,10 +260,10 @@ feature -- Default cursors
 
 feature {NONE} -- Externals
 
-	C: EV_GTK_EXTERNALS is
-		once
-			create Result
-		end
+--	C: EV_GTK_EXTERNALS is
+--		once
+--			create Result
+--		end
 
 	information_pixmap_xpm: POINTER is
 		external

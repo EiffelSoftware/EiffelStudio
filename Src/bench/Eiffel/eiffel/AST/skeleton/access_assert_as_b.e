@@ -20,12 +20,12 @@ inherit
 		rename
 			access_type as feature_access_type
 		redefine
-			parameters, feature_name
+			parameters, feature_name, is_argument
 		end;
 
 	ACCESS_INV_AS_B
 		redefine
-			access_type, parameters, feature_name
+			access_type, parameters, feature_name, is_argument
 		select
 			access_type
 		end
@@ -37,6 +37,16 @@ feature -- Properties
 	parameters: EIFFEL_LIST_B [EXPR_AS_B]
 
 feature -- Access
+
+    is_argument: BOOLEAN is
+            -- Is this an access to an argument
+		local
+			a_feature: FEATURE_I
+        do
+            a_feature := context.a_feature;
+            Result := 
+                a_feature.argument_position (feature_name) /= 0;
+        end
 
 	access_type: TYPE_A is
 			-- Type check an the access to an id

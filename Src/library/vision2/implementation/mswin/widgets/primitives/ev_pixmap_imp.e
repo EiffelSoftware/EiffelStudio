@@ -1344,7 +1344,7 @@ feature {NONE} -- Implementation
 			if not is_destroyed then
 				create drawable_pixmap.make_with_simple (Current)
 				interface.replace_implementation (drawable_pixmap)	
-				destroy	
+				safe_destroy	
 			end
 		end
 
@@ -1361,7 +1361,7 @@ feature {NONE} -- Implementation
 				interface.replace_implementation (widget_pixmap)
 
 					-- Discard current implementation
-				destroy
+				safe_destroy
 			end
 		end
 

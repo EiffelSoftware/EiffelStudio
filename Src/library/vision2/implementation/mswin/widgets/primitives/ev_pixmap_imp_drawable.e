@@ -117,7 +117,7 @@ feature {NONE} -- Initialization
 			height := internal_bitmap.height
 
 				-- Destroy `other' implementation
-			other.destroy
+			other.safe_destroy
 		end
 		
 	copy_events_from_other (other: EV_PIXMAP_I) is

@@ -119,7 +119,6 @@ feature {EV_ANY_I} -- Implementation
 				second_imp.update_for_pick_and_drop (starting)
 			end
 		end
-		
 
 feature {NONE} -- Implementation
 
@@ -278,22 +277,6 @@ feature {NONE} -- Implementation
 				check
 					implementation_of_second_not_void: Result /= Void
 				end
-			end
-		end
-
-	on_left_button_down (keys, x_pos, y_pos: INTEGER) is
-			-- Wm_lbuttondown message handling.
-		do
-				-- Pressing the left button on the splitter to move it, was
-				-- not bringing the window it was contained in to the front.
-				-- This fixes this.
-			top_level_window_imp.move_to_foreground
-				-- Start to move the splitter. We capture the mouse
-				-- message to be able to move the mouse over the
-				-- left or right control without losing the "mouse focus."
-			if not has_capture then
-				set_click_position (x_pos, y_pos)
-				set_capture
 			end
 		end
 

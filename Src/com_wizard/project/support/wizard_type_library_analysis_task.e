@@ -179,3 +179,14 @@ feature {NONE} -- Private Access
 			-- GUIDs of type libraries whose steps have already been counted
 
 end -- class WIZARD_TYPE_LIBRARY_ANALYSIS_TASK
+
+--+----------------------------------------------------------------
+--| EiffelCOM Wizard
+--| Copyright (C) 1999-2005 Eiffel Software. All rights reserved.
+--| Eiffel Software Confidential
+--| Duplication and distribution prohibited.
+--|
+--| Eiffel Software
+--| 356 Storke Road, Goleta, CA 93117 USA
+--| http://www.eiffel.com
+--+----------------------------------------------------------------

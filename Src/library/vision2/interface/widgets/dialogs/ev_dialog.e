@@ -8,6 +8,8 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
+--| FIXME See PR 2231 regaring minimum size of dialogs.
+
 class
 	EV_DIALOG
 
@@ -71,6 +73,9 @@ end -- class EV_DIALOG
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/03/27 19:03:14  oconnor
+--| added fixme
+--|
 --| Revision 1.14  2000/03/18 00:52:23  oconnor
 --| formatting, layout and comment tweaks
 --|

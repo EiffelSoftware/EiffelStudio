@@ -421,6 +421,9 @@ feature -- User input events
 	resize_actions: EV_GEOMETRY_ACTION_SEQUENCE
 			-- Actions to be performed when size changes.
 
+		--|FIXME add destroy actions and make sure it works for everything
+		--|including windows, titled and untitled.
+
 feature {EV_WIDGET, EV_ANY_I} -- Implementation
 
 	implementation: EV_WIDGET_I
@@ -772,6 +775,9 @@ end -- class EV_WIDGET
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.76  2000/03/27 19:01:40  oconnor
+--| added fixme
+--|
 --| Revision 1.75  2000/03/27 18:35:53  oconnor
 --| comments
 --|

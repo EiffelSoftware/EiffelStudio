@@ -1107,12 +1107,6 @@
                 <Component Id="x2c.exe" Guid="2788DC58-2331-4ADA-8650-494E49D4B01B">
                   <File Id="x2c.exe" Name="x2c.exe" KeyPath="yes" />
                 </Component>
-                <Component Id="xmlparse.dll" Guid="2FD27F9C-F88E-4DED-ADAB-B4467657BFAA">
-                  <File Id="xmlparse.dll" Name="xmlparse.dll" KeyPath="yes" />
-                </Component>
-                <Component Id="xmltok.dll" Guid="AECCFCBF-4C80-4854-963B-4DBB7DD65BBE">
-                  <File Id="xmltok.dll" Name="xmltok.dll" KeyPath="yes" />
-                </Component>
                 <Component Id="wel_hook.dll" Guid="44C8CF4C-2C14-4B0E-9586-EDBC54065160">
                   <File Id="wel_hook.dll" Name="wel_hook.dll" KeyPath="yes" />
                 </Component>

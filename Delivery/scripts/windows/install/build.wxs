@@ -154,12 +154,6 @@
                 <Component Id="wel_hook.dll" Guid="6E65E2A3-1D01-451D-B106-2DABD40F4286">
                   <File Id="wel_hook.dll" Name="wel_hook.dll" KeyPath="yes" />
                 </Component>
-                <Component Id="xmlparse.dll" Guid="2E4839F1-D07D-4CCA-8B80-C317093C6759">
-                  <File Id="xmlparse.dll" Name="xmlparse.dll" KeyPath="yes" />
-                </Component>
-                <Component Id="xmltok.dll" Guid="DC24E72C-5016-43C3-9296-C892CD34D34A">
-                  <File Id="xmltok.dll" Name="xmltok.dll" KeyPath="yes" />
-                </Component>
               </Directory>
             </Directory>
           </Directory>

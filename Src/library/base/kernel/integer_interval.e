@@ -73,7 +73,7 @@ feature -- Access
 		end;
 
 	has (v: INTEGER): BOOLEAN is
-			-- Does `v' appear in array?
+			-- Does `v' appear in interval?
  			-- (Reference or object equality,
 			-- based on `object_comparison'.)
 		do
@@ -169,7 +169,7 @@ feature -- Element change
 	
 	extend, put (v: INTEGER) is
 			-- Make sure that interval goes all the way
-			-- `v' (up or down).
+			-- to `v' (up or down).
 		do
 			if v < lower then
 				lower := v
@@ -178,7 +178,7 @@ feature -- Element change
 			end
 		ensure then
 			extended_down: lower = (old lower).min (v)
-			extended_up: upper = (old upper).min (v)
+			extended_up: upper = (old upper).max (v)
 		end
 
 feature -- Resizing
@@ -210,11 +210,11 @@ feature -- Conversion
 		local
 			i: INTEGER
 		do
-			Result.make (lower, upper)
+			create Result.make (lower, upper)
 			from
 				i := lower
 			until
-				i >= upper
+				i > upper
 			loop
 				Result.put (i, i)
 				i := i + 1
@@ -229,17 +229,12 @@ feature -- Conversion
 			-- for passing to external (non-Eiffel) routines.
 		do
 			Result := as_array.to_c
-		ensure then
-			same_as_array_version: Result = as_array.to_c
 		end;
 
 	linear_representation: LINEAR [INTEGER] is
 			-- Representation as a linear structure
 		do
 			Result := as_array.linear_representation
-		ensure then
-			same_as_array_version:
-				Result = as_array.linear_representation
 		end
 
 feature -- Duplication

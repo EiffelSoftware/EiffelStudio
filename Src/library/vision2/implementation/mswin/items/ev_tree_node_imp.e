@@ -47,7 +47,8 @@ inherit
 			interface as il_interface
 		undefine
 			pnd_press,
-			check_drag_and_drop_release
+			check_drag_and_drop_release,
+			escape_pnd
 		redefine
 			initialize
 		end
@@ -583,6 +584,10 @@ end -- class EV_TREE_NODE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.4  2001/06/14 00:10:43  rogers
+--| Undefined version of `escape_pnd' originally from EV_PICK_AND_DROPABLE_IMP,
+--| we must now use the version from EV_PICK_AND_DROPABLE_ITEM_HOLDER_IMP.
+--|
 --| Revision 1.3  2001/06/07 23:08:12  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

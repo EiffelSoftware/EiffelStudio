@@ -17,11 +17,6 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (par: EV_CONTAINER) is
-			-- Create an empty drawing area.
-		deferred
-		end
-
 end -- class EV_DRAWING_AREA_I
 
 --|----------------------------------------------------------------

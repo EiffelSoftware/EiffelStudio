@@ -379,36 +379,45 @@ feature {NONE} -- Implementation
 			create Result.make (0)
 			Result.append (tab)
 
-			-- EIF_TYPE_ID type_id;
+			-- EIF_TYPE_ID type_id = -1;
 
 			Result.append (Eif_type_id)
 			Result.append (Space)
 			Result.append (Type_id)
+			Result.append (Space_equal_space)
+			Result.append (Minus)
+			Result.append (One)
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
 
-			-- EIF_OBJECT eif_object;
+			-- EIF_OBJECT eif_object = 0;
 
 			Result.append (Eif_object)
 			Result.append (Space)
 			Result.append (Eif_object_variable)
+			Result.append (Space_equal_space)
+			Result.append (Zero)
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
 
-			-- EIF_POINTER_FUNCTION item;
+			-- EIF_POINTER_FUNCTION item = 0;
 
 			Result.append (Eif_pointer_function)
 			Result.append (Space)
 			Result.append (Item_clause)
+			Result.append (Space_equal_space)
+			Result.append (Zero)
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
 
-			-- EIF_POINTER a_pointer;
+			-- EIF_POINTER a_pointer = 0;
 			-- 
 
 			Result.append (Eif_pointer)
 			Result.append (Space)
 			Result.append (A_pointer)
+			Result.append (Space_equal_space)
+			Result.append (Zero)
 			Result.append (Semicolon)
 			Result.append (New_line)
 			Result.append (New_line_tab)
@@ -512,27 +521,34 @@ feature {NONE} -- Implementation
 			create Result.make (0)
 			Result.append (Tab)
 
-			-- EIF_TYPE_ID type_id;
+			-- EIF_TYPE_ID type_id = -1;
 
 			Result.append (Eif_type_id)
 			Result.append (Space)
 			Result.append ("type_id")
+			Result.append (Space_equal_space)
+			Result.append (Minus)
+			Result.append (One)
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
 
-			-- EIF_PROCEDURE make;
+			-- EIF_PROCEDURE make = 0;
 
 			Result.append (Eif_procedure)
 			Result.append (Space)
 			Result.append ("make")
+			Result.append (Space_equal_space)
+			Result.append (Zero)
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
 
-			-- EIF_OBJECT result;
+			-- EIF_OBJECT result = 0;
 
 			Result.append (Eif_object)
 			Result.append (Space)
 			Result.append ("result")
+			Result.append (Space_equal_space)
+			Result.append (Zero)
 			Result.append (Semicolon)
 			Result.append (New_line)
 

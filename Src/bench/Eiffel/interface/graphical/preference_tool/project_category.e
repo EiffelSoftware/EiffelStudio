@@ -46,8 +46,8 @@ feature {TTY_RESOURCES} -- Initialization
 			!! graphical_output_disabled.make ("graphical_output_disabled", 
 					rt, False);
 				-- True or False to have the selector at the beginning
-			!! selector_window.make ("Selector_window", rt, False) 
---			!! selector_window.make ("Selector_window", rt, True) 
+--  			!! selector_window.make ("Selector_window", rt, False) 
+			!! selector_window.make ("Selector_window", rt, True) 
 
 		end
 

@@ -40,6 +40,7 @@ feature {NONE} -- Initialization
 		do
 			create tree.make (Current, true)
 			create widget
+			widget.set_background_color ((create {EV_STOCK_COLORS}).White)
 			widget.extend (tree)
 		end
 

@@ -14,10 +14,12 @@ feature -- Access
 		local
 			a_guid: ECOM_GUID
 		once
-			create Result.make (1,1)
+			create Result.make (1,2)
 
 			create a_guid.make_from_string (stdole32)
 			Result.put (a_guid, 1)
+			create a_guid.make_from_string (vba_tlb)
+			Result.put (a_guid, 2)
 
 			Result.compare_objects
 		end

@@ -144,7 +144,7 @@ feature -- Basic operation
 
 	generate is
 			-- Generate the project as per settings in `project_settings'.
-		local	
+		local
 			directory: DIRECTORY
 			root_element: XM_ELEMENT
 			directory_file_name: FILE_NAME			
@@ -202,10 +202,6 @@ feature -- Basic operation
 			until
 				class_ids.off
 			loop
-				create directory.make (class_directories.item)
-				if not directory.exists then
-					directory.create_dir
-				end
 				reset_generation_constants_for_class
 				create window_file_name.make_from_string (class_directories.item)
 				build_main_window_implementation (document_info.generated_info_by_id.item (class_ids.item), window_file_name)
@@ -263,6 +259,7 @@ feature -- Basic operation
 			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
 			element_info: ELEMENT_INFORMATION
 			directory_name: FILE_NAME
+			directory: DIRECTORY
 		do
 			from
 				an_element.start
@@ -310,6 +307,10 @@ feature -- Basic operation
 									parent_directories.off
 								loop
 									directory_name.extend (parent_directories.item)
+									create directory.make (directory_name)
+									if not directory.exists then
+										directory.create_dir
+									end
 									parent_directories.forth
 								end
 								class_ids.extend (document_info.id)
@@ -651,6 +652,7 @@ feature {NONE} -- Implementation
 				constants_file_name := generated_path.twin
 				constants_file_name.extend (project_settings.constants_class_name.as_lower + Class_implementation_extension.as_lower + ".e")
 				create constants_file.make (constants_file_name)
+				
 				if constants_file.exists and not constants_file.is_access_writable then
 					read_only_files.extend (constants_file_name)
 				else

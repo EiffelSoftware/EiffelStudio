@@ -168,7 +168,7 @@ feature {NONE}
 				list.wipe_out;
 				list.put_right ("")
 			elseif not filter_dir.is_readable then
-				warning_message := w_Directory_wrong_permissions (filter_path);
+				warning_message := w_Cannot_read_directory (filter_path);
 				list.wipe_out;
 				list.put_right ("")
 			else

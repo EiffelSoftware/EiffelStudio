@@ -210,13 +210,12 @@ feature -- Status
 	nb_level (start_index, level: INTEGER): INTEGER is
 			-- Number of item of level `level', when searching
 			-- from `start_index'
-			--| Item at `start_index' should be greater or equal than `level'
 		require
-			good_level: level <= Expanded_level and then level >= Reference_level
+			good_level: level >= Reference_level and then level <= Expanded_level
 		local
 			current_area: SPECIAL [ATTR_DESC]
 			i, nb: INTEGER
-			last_level: INTEGER
+			item_level: INTEGER
 			done: BOOLEAN
 		do
 			if count /= 0 then
@@ -230,11 +229,18 @@ feature -- Status
 				until
 					done or else i > nb
 				loop
-					if current_area.item (i).level = level then
-						Result := Result + 1
+					item_level := current_area.item (i).level
+					if item_level < level then
+							-- We are not on the requested level yet.
 						i := i + 1
 					else
-						done := True
+						if item_level = level then
+							Result := Result + 1
+							i := i + 1
+						else
+								-- We are beyond the requested level.
+							done := True
+						end
 					end
 				end
 				position := i

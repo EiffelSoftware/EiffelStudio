@@ -432,7 +432,7 @@ feature -- Using widget_index information
 			if widget.depth > 0 then
 				widget_area := area;
 				from
-					i := w_index - 2
+					i := w_index - 1
 				until
 					Result /= Void
 				loop
@@ -470,7 +470,7 @@ feature {NONE}
 		do
 			widget_i := widget.implementation;
 			if widget_i /= Void then
-				Result := widget.implementation.widget_index;
+				Result := widget_i.widget_index;
 			end;
 			if Result = 0 then
 				widget_area := area;

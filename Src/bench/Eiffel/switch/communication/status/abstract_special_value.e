@@ -44,6 +44,9 @@ feature -- Properties
 
 feature -- Output
 
+	is_dummy_value: BOOLEAN is False
+			-- Does `Current' represent a object value or for instance an error message
+
 	sorted_children: DS_LIST [ABSTRACT_DEBUG_VALUE] is
 			-- Return items as childrens.
 		do

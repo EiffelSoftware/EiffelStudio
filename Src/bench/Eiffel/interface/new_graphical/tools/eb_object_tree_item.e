@@ -63,23 +63,33 @@ feature -- Change
 	set_debug_value (dv: ABSTRACT_DEBUG_VALUE) is
 		local
 			ost: OBJECT_STONE
+			dmdv: DUMMY_MESSAGE_DEBUG_VALUE
 		do
-			last_dump_value := dv.dump_value
-			set_text (dv.name + ": " + last_dump_value.type_and_value)
-			set_pixmap (icons @ (dv.kind))
-			set_data (dv)
-			if dv.expandable then
-				extend (create {EV_TREE_ITEM}.make_with_text ("Bug"))
-				expand_actions.extend (agent fill_item (Current))
-			end
-			if dv.address /= Void then
-					--| For now we don't support this for external type
-				create ost.make (dv.address, dv.name, dv.dynamic_class)
-				ost.set_associated_tree_item (Current)
-				ost.set_associated_debug_value (dv)
-				set_pebble (ost)
-				set_accept_cursor (ost.stone_cursor)
-				set_deny_cursor (ost.X_stone_cursor)
+			if dv.is_dummy_value then
+				last_dump_value := Void
+				dmdv ?= dv
+				set_text (dv.name + ": " + dmdv.display_message)
+				set_pixmap (icons @ (dv.kind))
+				set_data (dv)			
+			else
+				last_dump_value := dv.dump_value
+				set_text (dv.name + ": " + last_dump_value.type_and_value)
+				set_pixmap (icons @ (dv.kind))
+				set_data (dv)
+			
+				if dv.expandable then
+					extend (create {EV_TREE_ITEM}.make_with_text ("Bug"))
+					expand_actions.extend (agent fill_item (Current))
+				end
+				if dv.address /= Void then
+						--| For now we don't support this for external type
+					create ost.make (dv.address, dv.name, dv.dynamic_class)
+					ost.set_associated_tree_item (Current)
+					ost.set_associated_debug_value (dv)
+					set_pebble (ost)
+					set_accept_cursor (ost.stone_cursor)
+					set_deny_cursor (ost.X_stone_cursor)
+				end				
 			end
 			update
 		end
@@ -97,31 +107,33 @@ feature -- Updating
 			l_integer64_value: INTEGER_64
 		do
 			l_dmp := last_dump_value
-			inspect l_dmp.type 
-				when feature {DUMP_VALUE_CONSTANTS}.Type_integer then
-					l_text := text
-					l_pos := l_text.index_of ('=', 1)
-					l_integer_value := l_dmp.value_integer
-					l_text :=  l_text.substring (1, l_pos)
-					if hexa_mode_enabled then
-						l_text.append_string ("0x" + l_integer_value.to_hex_string)
+			if l_dmp /= Void then
+				inspect l_dmp.type 
+					when feature {DUMP_VALUE_CONSTANTS}.Type_integer then
+						l_text := text
+						l_pos := l_text.index_of ('=', 1)
+						l_integer_value := l_dmp.value_integer
+						l_text :=  l_text.substring (1, l_pos)
+						if hexa_mode_enabled then
+							l_text.append_string ("0x" + l_integer_value.to_hex_string)
+						else
+							l_text.append_string (l_integer_value.out)
+						end
+						set_text (l_text)
+					when feature {DUMP_VALUE_CONSTANTS}.Type_integer_64 then
+						l_text := text
+						l_pos := l_text.index_of ('=', 1)
+						l_integer64_value := l_dmp.value_integer_64
+						l_text :=  l_text.substring (1, l_pos)
+						if hexa_mode_enabled then
+							l_text.append_string ("0x" + l_integer64_value.to_hex_string)
+						else
+							l_text.append_string (l_integer64_value.out)
+						end
+						set_text (l_text)
 					else
-						l_text.append_string (l_integer_value.out)
-					end
-					set_text (l_text)
-				when feature {DUMP_VALUE_CONSTANTS}.Type_integer_64 then
-					l_text := text
-					l_pos := l_text.index_of ('=', 1)
-					l_integer64_value := l_dmp.value_integer_64
-					l_text :=  l_text.substring (1, l_pos)
-					if hexa_mode_enabled then
-						l_text.append_string ("0x" + l_integer64_value.to_hex_string)
-					else
-						l_text.append_string (l_integer64_value.out)
-					end
-					set_text (l_text)
-				else
-					-- Skip
+						-- Skip
+				end
 			end
 		end
 
@@ -130,13 +142,14 @@ feature {NONE} -- Implementation
 	icons: ARRAY [EV_PIXMAP] is
 			-- List of available icons for objects.
 		once
-			create Result.make (Immediate_value, External_reference_value)
+			create Result.make (Immediate_value, Error_message_value)
 			Result.put (Pixmaps.Icon_void_object, Void_value)
 			Result.put (Pixmaps.Icon_object_symbol, Reference_value)
 			Result.put (Pixmaps.Icon_immediate_value, Immediate_value)
 			Result.put (Pixmaps.Icon_object_symbol, Special_value)
 			Result.put (Pixmaps.Icon_expanded_object, Expanded_value)
 			Result.put (Pixmaps.Icon_external_symbol, External_reference_value)
+			Result.put (Pixmaps.Icon_exception , Error_message_value)
 		end
 
 	hexa_mode_enabled: BOOLEAN is

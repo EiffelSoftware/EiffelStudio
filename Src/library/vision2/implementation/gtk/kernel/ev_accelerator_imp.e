@@ -52,7 +52,7 @@ feature {NONE} -- Implementation
 					c_object,
 					eiffel_to_c ("pressed"),
 					accel_group,
-					key_code,
+					key.code, --| FIXME
 					modifier_mask,
 					0)
 			end
@@ -65,7 +65,7 @@ feature {NONE} -- Implementation
 				C.gtk_widget_remove_accelerator (
 					c_object,
 					accel_group,
-					key_code,
+					key.code, --| FIXME
 					modifier_mask)
 			end
 		end
@@ -97,12 +97,12 @@ feature {EV_TITLED_WINDOW_IMP} -- Implementation
 			-- Get the GTK string representation.
 		do
 			create Result.make (0)
-			Result.from_c (C.gtk_accelerator_name (key_code, modifier_mask))
+			Result.from_c (C.gtk_accelerator_name (key.code, modifier_mask))
 		end
 
 feature -- Access
 
-	key_code: INTEGER
+	key: EV_KEY
 			-- Representation of the character that must be entered
 			-- by the user. See class EV_KEY_CODE
 
@@ -117,11 +117,11 @@ feature -- Access
 
 feature -- Element change
 
-	set_key_code (a_key_code: INTEGER) is
-			-- Set `a_key_code' as new key that has to be pressed.
+	set_key (a_key: EV_KEY) is
+			-- Set `a_key' as new key that has to be pressed.
 		do
 			remove_accel
-			key_code := a_key_code
+			key := a_key
 			add_accel
 		end
 
@@ -196,6 +196,9 @@ end -- class EV_ACCELERATOR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.4  2000/03/15 22:56:08  brendel
+--| Changed key_code to key.
+--|
 --| Revision 1.3  2000/02/22 18:39:34  oconnor
 --| updated copyright date and formatting
 --|

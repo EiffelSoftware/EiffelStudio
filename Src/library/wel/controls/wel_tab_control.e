@@ -19,6 +19,11 @@ class
 
 inherit
 	WEL_CONTROL
+		redefine
+			process_notification,
+			resize,
+			move_and_resize
+		end
 
 	WEL_TCM_CONSTANTS
 		export
@@ -26,6 +31,11 @@ inherit
 		end
 
 	WEL_TCS_CONSTANTS
+		export
+			{NONE} all
+		end
+
+	WEL_TCN_CONSTANTS
 		export
 			{NONE} all
 		end
@@ -64,18 +74,105 @@ feature -- Access
 			positive_result: Result >= 0
 		end
 
+	row_count: INTEGER is
+			-- Number of tab rows in the tab control
+		require
+			exists: exists
+		do
+			Result := cwin_send_message_result (item, Tcm_getrowcount, 0 ,0)
+		ensure
+			positive_result: Result >= 0
+		end
+
+	sheet_rect: WEL_RECT is
+			-- Client area of each tab sheet
+			-- (excluding the labeled index)
+		do
+			Result := client_rect
+			cwin_send_message (item, Tcm_adjustrect, 0, Result.to_integer)
+		end
+
+	label_index_rect: WEL_RECT is
+			-- Labeled index area of selected tab
+			-- (excluding the tab sheet)
+		do
+			!! Result.make (0, 0, 0, 0)
+			cwin_send_message (item, Tcm_getitemrect, current_selection, Result.to_integer)
+		end
+
+feature -- Status report
+
+	current_selection: INTEGER is
+			-- Selected zero-based tab
+		require
+			exists: exists
+		do
+			Result := cwin_send_message_result (item,
+				Tcm_getcursel, 0, 0)
+		ensure
+			consistent_result: Result >= 0 and Result < count
+		end
+
+	get_item (index: INTEGER): WEL_TAB_CONTROL_ITEM is
+			-- Give the item at the zero-based index of tab.
+			-- As we must give a maximum size for the retrieving
+			-- of the label, we allow only 30 letters. If the
+			-- label is longer, it will be cut.
+		require
+			exists: exists
+		do
+			!! Result.make
+			Result.set_text ("")
+			Result.set_cchtextmax (30)
+			cwin_send_message (item, Tcm_getitem, index, Result.to_integer)
+		end
+
+feature -- Status setting
+
+	set_current_selection (index: INTEGER) is
+			-- Set the zero-based tab `index'.
+		require
+			exists: exists
+			index_large_enough: index >= 0
+			index_small_enough: index < count
+		do
+			on_tcn_selchanging
+			cwin_send_message (item, Tcm_setcursel, index, 0)
+			on_tcn_selchange
+		ensure
+			current_selection_set: current_selection = index
+		end
+
+	set_vertical_font (fnt: WEL_FONT) is
+			-- Assign `font' to the vertical tabs of this tab control.
+			-- (Cannot use `set_font' since its postcondition is not always fulfilled)
+			-- To use for a notebook with the tabs on the left or 
+			-- the right.
+		do
+			cwin_send_message (item, wm_setfont, cwel_pointer_to_integer (fnt.item), cwin_make_long (1, 0))
+		end			
+
 feature -- Element change
 
 	insert_item (index: INTEGER; an_item: WEL_TAB_CONTROL_ITEM) is
 			-- Insert `an_item' at the zero-based `index'.
+			-- A window must be associate to the item before to call
+			-- this feature.
 		require
 			exists: exists
 			an_item_not_void: an_item /= Void
 			index_large_enough: index >= 0
 			index_small_enough: index <= count
+			window_exists: an_item.window /= Void and an_item.window.exists
 		do
 			cwin_send_message (item, Tcm_insertitem, index,
 				an_item.to_integer)
+			an_item.window.move_and_resize (sheet_rect.left, sheet_rect.top, sheet_rect.width, sheet_rect.height, True)
+			if index = 0 then
+				an_item.window.show
+			else
+				an_item.window.hide
+			end
 		ensure
 			count_increased: count = old count + 1
 		end
@@ -102,31 +199,98 @@ feature -- Element change
 			empty: count = 0
 		end
 
-feature -- Status report
-
-	current_selection: INTEGER is
-			-- Selected zero-based tab
-		require
-			exists: exists
+	set_label_index_size (new_width, new_height: INTEGER) is
+			-- Set size of labeled index area of each tab
+			-- Width is only reset if tabs are fixed-width; height is always reset
 		do
-			Result := cwin_send_message_result (item,
-				Tcm_getcursel, 0, 0)
-		ensure
-			consistent_result: Result >= 0 and Result < count
+			cwin_send_message (item, Tcm_Setitemsize, 0, cwin_make_long (new_width, new_height))
 		end
 
-feature -- Status setting
+feature -- Notifications
 
-	set_current_selection (index: INTEGER) is
-			-- Set the zero-based tab `index'.
+	on_tcn_keydown is
+			-- A key has been pressed
 		require
 			exists: exists
-			index_large_enough: index >= 0
-			index_small_enough: index < count
 		do
-			cwin_send_message (item, Tcm_setcursel, index, 0)
-		ensure
-			current_selection_set: current_selection = index
+		end
+
+	on_tcn_selchange is
+			-- The selection has changed
+		require
+			exists: exists
+		local
+			selected_item: WEL_TAB_CONTROL_ITEM
+		do
+			selected_item := get_item (current_selection)
+			if selected_item.window /= Void and then selected_item.window.exists then
+				selected_item.window.show
+			end
+		end
+
+	on_tcn_selchanging is
+			-- The selection is about to change
+		require
+			exists: exists
+		local
+			selected_item: WEL_TAB_CONTROL_ITEM
+		do
+			selected_item := get_item (current_selection)
+			if selected_item.window /= Void and then selected_item.window.exists then
+				selected_item.window.hide
+			end
+		end
+
+feature {NONE} -- Basic operation
+
+	adjust_items is
+			-- Adjust the size of the windows of the items
+			-- to the current size.
+		local
+			index: INTEGER
+			child_item: WEL_TAB_CONTROL_ITEM
+		do
+			from
+				index := 0
+			until
+				index = count
+			loop
+				child_item := get_item (index)
+				child_item.window.move_and_resize (sheet_rect.left, sheet_rect.top, sheet_rect.width, sheet_rect.height, False)
+				index := index + 1
+			end
+		end
+
+feature {WEL_COMPOSITE_WINDOW} -- Implementation
+
+	process_notification (notification_code: INTEGER) is
+			-- Process a `notification_code' sent by Windows
+			-- through the Wm_notify message
+		do
+			if notification_code = Tcn_keydown then
+				on_tcn_keydown
+			elseif notification_code = Tcn_selchange then
+				on_tcn_selchange
+			elseif notification_code = Tcn_selchanging then
+				on_tcn_selchanging
+			else
+				default_process_notification (notification_code)
+			end
+		end
+
+	resize (a_width, a_height: INTEGER) is
+   			-- Resize the window with `a_width', `a_height'.
+ 		do
+ 			{WEL_CONTROL} Precursor (a_width, a_height)
+			adjust_items
+		end
+
+	move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is
+   			-- Move the window to `a_x', `a_y' position and
+   			-- resize it with `a_width', `a_height'.
+		do
+			{WEL_CONTROL} Precursor (a_x, a_y, a_width, a_height, repaint)
+			adjust_items
 		end
 
 feature {NONE} -- Implementation
@@ -142,6 +306,7 @@ feature {NONE} -- Implementation
 			-- Default style used to create the control
 		once
 			Result := Ws_visible + Ws_child + Ws_group + Ws_tabstop
+						+ Tcs_multiline
 		end
 
 feature {NONE} -- Externals

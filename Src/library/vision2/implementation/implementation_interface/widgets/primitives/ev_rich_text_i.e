@@ -433,7 +433,7 @@ feature -- Status setting
 		require
 			filename_not_void: a_filename /= Void
 		local
-			text_file: PLAIN_TEXT_FILE
+			text_file: RAW_FILE
 			l_text: STRING
 			buffer: EV_RICH_TEXT_BUFFERING_STRUCTURES_I
 		do

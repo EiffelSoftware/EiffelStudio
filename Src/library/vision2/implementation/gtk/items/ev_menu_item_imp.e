@@ -122,6 +122,7 @@ feature -- Element change
 
 	clear_items is
 			-- Clear all the items of the list.
+			-- (Remove them from the menu and destroy them).
 		do
 			-- clear the EiffelVision objects.
 			clear_ev_children

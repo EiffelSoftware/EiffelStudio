@@ -149,7 +149,7 @@ feature -- Formatting
 --						if cur /= Void then
 --							tool.text_window.go_to (cur)
 --						end
---						tool.set_last_format (holder)
+						tool.set_last_format (Current)
 						display_header (stone)
 --						mp.restore
 					end

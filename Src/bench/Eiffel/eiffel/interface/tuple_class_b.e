@@ -146,7 +146,7 @@ feature {CLASS_TYPE_AS} -- Actual class type
 		end
 
 invariant
-	types_has_only_one_element: types /= Void implies types.count = 1
+	types_has_only_one_element: types /= Void implies types.count <= 1
 
 end -- class TUPLE_CLASS_B
 

@@ -21,6 +21,8 @@
 #define TCS_RIGHT			0x0002
 #define TCS_BOTTOM			0x0002
 #define TCS_HOTTRACK		0x0040
+
+#define LVCF_IMAGE			0x0010
 #endif
 
 #endif /* __WEL_COMMONCONTROLS__ */

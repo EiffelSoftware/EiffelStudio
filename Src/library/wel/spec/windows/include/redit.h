@@ -13,6 +13,10 @@
 #	include <richedit.h>
 #endif
 
+#ifdef EIF_BORLAND
+#define SCF_ALL			0x0004
+#endif
+
 #endif /* __WEL_RICHEDIT__ */
 
 /*

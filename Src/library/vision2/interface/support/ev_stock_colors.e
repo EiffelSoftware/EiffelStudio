@@ -29,6 +29,18 @@ feature -- Access
 			Result := implementation.Color_read_write
 		end
 
+	default_background_color: EV_COLOR is
+			-- Default background color for most of the widgets.
+		do
+			Result := implementation.default_background_color
+		end
+
+	default_foreground_color: EV_COLOR is
+			-- Default foreground color for most of the widgets.
+		do
+			Result := implementation.default_foreground_color
+		end
+
 feature {NONE} -- Implementation
 
 	implementation: EV_DEFAULT_COLORS_IMP is

@@ -211,6 +211,8 @@ feature {NONE} -- Implementation
 						Missing_output)
 			Result.extend (["Invalid Identifier", "consumer", "Identifier is invalid: {1}", Warning],
 						Invalid_identifier)
+			Result.extend (["Missing Reference", "consumer", "Referenced assembly could not be found: {1}", Warning],
+						Missing_reference)
 
 			-- Consumer Information
 			Result.extend (["Void Argument", "consumer", "Arguments list of feature `{1}' contain a Void reference", Information],

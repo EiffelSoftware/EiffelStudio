@@ -54,7 +54,7 @@ cluster
 
 	all parser:		"$EIFFEL_SRC\dotnet\codedom_provider\parser"
 		exclude
-			"CVS"; "interface"; 
+			"CVS"; "interface"; "cluster_indexing_parser.e"; "external_parser.e"; "external_scanner.e"; "external_tokens.e"
 		default
 			namespace ("EiffelSoftware.CodeDom.Parser")
 		end

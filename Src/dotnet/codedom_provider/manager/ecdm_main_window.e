@@ -56,6 +56,7 @@ feature {NONE} -- Initialization
 			l_constants: ECDM_CONSTANTS
 			l_dialog: EV_MESSAGE_DIALOG
 			l_configs: LIST [ECDM_CONFIGURATION]
+			l_config: ECDM_CONFIGURATION
 		do
 			if manager.Default_configuration = Void then
 				create l_dialog.make_with_text ("Could not load default configuration file, please check Eiffel Codedom Provider installation.")
@@ -105,19 +106,25 @@ feature {NONE} -- Initialization
 			until
 				l_configs.after
 			loop
-				if (create {RAW_FILE}.make (l_configs.item.path)).exists then
-					create l_item.make_with_text (l_configs.item.name)
-					l_item.set_data (l_configs.item)
+				l_config := l_configs.item
+				if (create {RAW_FILE}.make (l_config.path)).exists then
+					create l_item.make_with_text (l_config.name)
+					l_item.set_data (l_config)
 					configurations_list.extend (l_item)
+				end
+				if l_config.precompile /= Void then
+					precompile_combo.extend (create {EV_LIST_ITEM}.make_with_text (l_config.precompile))
 				end
 				l_configs.forth
 			end
 			configurations_list.first.enable_select
-			initialize_from_configuration;
+			prefixes_list.set_column_titles (<<"Prefix", "Assembly File Name">>)
+			initialize_from_configuration
 			set_help_context (agent hlp_ctxt)
 			create help_parent_control.make_from_text ("")
 			create help_control
 			help_control.extend (help_parent_control)
+			show_actions.extend (agent on_column_resize (1))
 		end
 
 feature -- Access
@@ -306,17 +313,17 @@ feature {NONE} -- Events
 			end
 		end
 
-	on_crash_on_error_select is
-			-- Called by `select_actions' of `crash_on_error_check_button'.
+	on_fail_on_error_select is
+			-- Called by `select_actions' of `fail_on_error_check_button'.
 			-- Update selected configuration object.
 			-- Set dirty flag.
 		local
 			l_set: BOOLEAN
 		do
 			if active_configuration /= Void then
-				l_set := crash_on_error_check_button.is_selected
-				if active_configuration.crash_on_error /= l_set then
-					active_configuration.set_crash_on_error (l_set)
+				l_set := fail_on_error_check_button.is_selected
+				if active_configuration.fail_on_error /= l_set then
+					active_configuration.set_fail_on_error (l_set)
 					set_dirty
 				end
 			end
@@ -404,7 +411,7 @@ feature {NONE} -- Events
 		do
 			if active_configuration /= Void then
 				create l_dialog.make_with_title ("Find Precompiled Library")
-				l_dialog.set_filter ("*.epr")
+				l_dialog.filters.extend (["*.epr", "Eiffel Projects (*.epr)"])
 				l_dialog.show_modal_to_window (Current)
 				l_path := l_dialog.file_name
 				if not l_path.is_empty then
@@ -424,7 +431,7 @@ feature {NONE} -- Events
 		do
 			if active_configuration /= Void then
 				create l_dialog.make_with_title ("Find Application")
-				l_dialog.set_filter ("*.exe")
+				l_dialog.filters.extend (["*.exe", "Applications (*.exe)"])
 				l_dialog.show_modal_to_window (Current)
 				l_path := l_dialog.file_name
 				if not l_path.is_empty then
@@ -536,6 +543,96 @@ feature {NONE} -- Events
 			end
 		end
 		
+	on_assembly_file_name_select (an_item: EV_MULTI_COLUMN_LIST_ROW) is
+			-- Called by `select_actions' of `prefixes_list'.
+		do
+			check_can_remove_prefix
+			prefix_text_field.set_text (an_item.i_th (1))
+			assembly_file_name_text_field.set_text (an_item.i_th (2))
+		end
+	
+	on_assembly_file_name_deselect (an_item: EV_MULTI_COLUMN_LIST_ROW) is
+			-- Called by `deselect_actions' of `prefixes_list'.
+		do
+			assembly_file_name_add_button.disable_sensitive
+			assembly_file_name_remove_button.disable_sensitive
+		end
+
+	on_prefix_change is
+			-- Called by `change_actions' of `prefix_text_field'.
+		do
+			check_can_add_prefix
+		end
+
+	on_assembly_file_name_change is
+			-- Called by `change_actions' of `assembly_file_name_text_field'.
+		do
+			check_can_add_prefix
+		end
+	
+	on_assembly_file_name_browse is
+			-- Called by `select_actions' of `assembly_file_name_browse_button'.
+		local
+			l_dialog: EV_FILE_OPEN_DIALOG
+			l_file_name: STRING
+			l_runtime_dir: STRING
+		do
+			create l_dialog.make_with_title ("Browse for assembly...")
+			l_dialog.filters.extend (["*.dll", "Assembly File (*.dll)"])
+			l_dialog.filters.extend (["*.*", "All Files (*.*)"])
+			l_dialog.show_modal_to_window (Current)
+			l_file_name := l_dialog.file_name
+			if not l_file_name.is_empty then
+				l_runtime_dir := feature {RUNTIME_ENVIRONMENT}.get_runtime_directory
+				if l_file_name.substring_index (l_runtime_dir, 1) = 1 then
+					l_file_name.keep_tail (l_file_name.count - l_runtime_dir.count)
+				end
+				assembly_file_name_text_field.set_text (l_file_name)
+			end
+		end
+	
+	on_add_assembly_file_name is
+			-- Called by `select_actions' of `assembly_file_name_add_button'.
+		local
+			l_runtime_dir, l_file_name: STRING
+			l_row: EV_MULTI_COLUMN_LIST_ROW
+		do
+			if active_configuration /= Void then
+				l_file_name := assembly_file_name_text_field.text
+				l_runtime_dir := feature {RUNTIME_ENVIRONMENT}.get_runtime_directory
+				if l_file_name.substring_index (l_runtime_dir, 1) = 1 then
+					l_file_name.keep_tail (l_file_name.count - l_runtime_dir.count)
+				end
+				active_configuration.add_prefix (l_file_name, prefix_text_field.text)
+				create l_row
+				l_row.extend (prefix_text_field.text)
+				l_row.extend (assembly_file_name_text_field.text)
+				prefixes_list.extend (l_row)
+				assembly_file_name_add_button.disable_sensitive
+				set_dirty
+			end
+		end
+	
+	on_remove_assembly_file_name is
+			-- Called by `select_actions' of `assembly_file_name_remove_button'.
+		do
+			if active_configuration /= Void then
+				active_configuration.remove_prefix (prefixes_list.selected_item.i_th (2))
+				prefixes_list.prune_all (prefixes_list.selected_item)
+				assembly_file_name_add_button.enable_sensitive
+				set_dirty
+			end
+		end
+
+	on_column_resize (a_column: INTEGER) is
+			-- Called by `column_resize_actions' of `prefixes_list'.
+			-- Make sure last column fills all available space.
+		do
+			if a_column = 1 then
+				prefixes_list.set_column_width (prefixes_list.width - prefixes_list.column_width (1), 2)
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	initialize_from_configuration is
@@ -543,14 +640,16 @@ feature {NONE} -- Implementation
 		local
 			l_config: ECDM_CONFIGURATION
 			l_apps: LIST [STRING]
+			l_assemblies: LIST [STRING]
+			l_row: EV_MULTI_COLUMN_LIST_ROW
 		do
 			l_config := active_configuration
 			if l_config /= Void then
 				initialized := True
-				if l_config.crash_on_error then
-					crash_on_error_check_button.enable_select
+				if l_config.fail_on_error then
+					fail_on_error_check_button.enable_select
 				else
-					crash_on_error_check_button.disable_select
+					fail_on_error_check_button.disable_select
 				end
 				log_server_text_field.set_text (l_config.log_server_name)
 				log_level_combo.retrieve_item_by_data (l_config.log_level, True).enable_select
@@ -604,6 +703,19 @@ feature {NONE} -- Implementation
 				end
 				if not properties_button.is_sensitive then
 					properties_button.enable_sensitive				
+				end
+				l_assemblies := l_config.prefixed_assemblies
+				from
+					l_assemblies.start
+					prefixes_list.wipe_out
+				until
+					l_assemblies.after
+				loop
+					create l_row
+					l_row.extend (l_config.assembly_prefix (l_assemblies.item))
+					l_row.extend (l_assemblies.item)
+					prefixes_list.extend (l_row)
+					l_assemblies.forth
 				end
 				set_clean -- we have to manually clean as setting the values
 							-- dirtied the configuration
@@ -671,6 +783,37 @@ feature {NONE} -- Implementation
 			revert_button_disabled: not revert_button.is_sensitive
 		end
 	
+	check_can_remove_prefix is
+			-- Check whether `Remove' button from prefix list should be enabled.
+		local
+			l_item: EV_MULTI_COLUMN_LIST_ROW
+		do
+			l_item := prefixes_list.selected_item
+			if l_item /= Void and active_configuration /= Void then
+				if active_configuration.Default_prefixes.has (l_item.i_th (2)) then
+					assembly_file_name_remove_button.disable_sensitive
+				else
+					assembly_file_name_remove_button.enable_sensitive
+				end
+			else
+				assembly_file_name_remove_button.disable_sensitive
+			end
+		end
+		
+	check_can_add_prefix is
+			-- Check whether `Add' button from prefix list should be enabled.
+		do
+			if active_configuration /= Void and not prefix_text_field.text.is_empty and not assembly_file_name_text_field.text.is_empty then
+				if not active_configuration.prefixed_assemblies.has (assembly_file_name_text_field.text) then
+					assembly_file_name_add_button.enable_sensitive
+				else
+					assembly_file_name_add_button.disable_sensitive
+				end
+			else
+				assembly_file_name_add_button.disable_sensitive
+			end
+		end
+
 	cancel_selection is
 			-- Set `selection_cancelled' to `True'.
 		do

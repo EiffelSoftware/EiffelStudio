@@ -39,10 +39,10 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	generate_namespace_label: STRING is
-			-- `Result' is STRING constant named `generate_namespace_label'.
+	compile_compile_unit_label: STRING is
+			-- `Result' is STRING constant named `compile_compile_unit_label'.
 		once
-			Result := "Generate from namespace"
+			Result := "Compile assembly from compile unit"
 		end
 
 	icons_directory: STRING is
@@ -83,10 +83,10 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	compile_compile_unit_label: STRING is
-			-- `Result' is STRING constant named `compile_compile_unit_label'.
+	generate_namespace_label: STRING is
+			-- `Result' is STRING constant named `generate_namespace_label'.
 		once
-			Result := "Compile assembly from compile unit"
+			Result := "Generate from namespace"
 		end
 
 	generate_expression_label: STRING is

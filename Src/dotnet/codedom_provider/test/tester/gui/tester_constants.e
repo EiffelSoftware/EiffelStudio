@@ -8,13 +8,13 @@ class
 
 inherit
 	TESTER_CONSTANTS_IMP
---		redefine
---			icons_directory
---		end
+		redefine
+			icons_directory
+		end
 
 feature -- Access
 
---	icons_directory: STRING is "icons"
+	icons_directory: STRING is "icons"
 			-- Icons directory
 
 end -- class TESTER_CONSTANTS

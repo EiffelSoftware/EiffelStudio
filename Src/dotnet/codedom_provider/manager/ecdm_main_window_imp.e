@@ -29,6 +29,7 @@ feature {NONE}-- Initialization
 		local 
 			l_ev_menu_separator_1, l_ev_menu_separator_2: EV_MENU_SEPARATOR
 			l_ev_horizontal_separator_1: EV_HORIZONTAL_SEPARATOR
+			l_ev_cell_1, l_ev_cell_2: EV_CELL
 		do
 			Precursor {EV_TITLED_WINDOW}
 			initialize_constants
@@ -70,11 +71,11 @@ feature {NONE}-- Initialization
 			create general_frame
 			create general_box
 			create general_titles_box
-			create crash_on_error_label
+			create fail_on_error_label
 			create log_server_label
 			create log_level_label
 			create general_values_box
-			create crash_on_error_check_button
+			create fail_on_error_check_button
 			create log_server_text_field
 			create log_level_combo
 			create compiler_frame
@@ -88,6 +89,18 @@ feature {NONE}-- Initialization
 			create precompile_combo
 			create precompile_padding_cell
 			create browse_button
+			create prefixes_frame
+			create prefixes_box
+			create prefixes_list
+			create prefix_components_box
+			create prefix_text_field
+			create assembly_file_name_text_field
+			create assembly_file_name_browse_button
+			create assembly_file_name_buttons_box
+			create l_ev_cell_1
+			create assembly_file_name_add_button
+			create assembly_file_name_remove_button
+			create l_ev_cell_2
 			create applications_frame
 			create applications_box
 			create applications_list
@@ -134,11 +147,11 @@ feature {NONE}-- Initialization
 			edit_box.extend (general_frame)
 			general_frame.extend (general_box)
 			general_box.extend (general_titles_box)
-			general_titles_box.extend (crash_on_error_label)
+			general_titles_box.extend (fail_on_error_label)
 			general_titles_box.extend (log_server_label)
 			general_titles_box.extend (log_level_label)
 			general_box.extend (general_values_box)
-			general_values_box.extend (crash_on_error_check_button)
+			general_values_box.extend (fail_on_error_check_button)
 			general_values_box.extend (log_server_text_field)
 			general_values_box.extend (log_level_combo)
 			edit_box.extend (compiler_frame)
@@ -152,6 +165,18 @@ feature {NONE}-- Initialization
 			precompile_box.extend (precompile_combo)
 			precompile_box.extend (precompile_padding_cell)
 			precompile_box.extend (browse_button)
+			edit_box.extend (prefixes_frame)
+			prefixes_frame.extend (prefixes_box)
+			prefixes_box.extend (prefixes_list)
+			prefixes_box.extend (prefix_components_box)
+			prefix_components_box.extend (prefix_text_field)
+			prefix_components_box.extend (assembly_file_name_text_field)
+			prefix_components_box.extend (assembly_file_name_browse_button)
+			prefixes_box.extend (assembly_file_name_buttons_box)
+			assembly_file_name_buttons_box.extend (l_ev_cell_1)
+			assembly_file_name_buttons_box.extend (assembly_file_name_add_button)
+			assembly_file_name_buttons_box.extend (assembly_file_name_remove_button)
+			assembly_file_name_buttons_box.extend (l_ev_cell_2)
 			edit_box.extend (applications_frame)
 			applications_frame.extend (applications_box)
 			applications_box.extend (applications_list)
@@ -226,8 +251,8 @@ feature {NONE}-- Initialization
 			general_titles_box.set_minimum_width (120)
 			general_titles_box.set_padding_width (5)
 			general_titles_box.set_border_width (5)
-			crash_on_error_label.set_text ("Crash on error")
-			crash_on_error_label.align_text_left
+			fail_on_error_label.set_text ("Fail on error")
+			fail_on_error_label.align_text_left
 			log_server_label.set_text ("Log Server")
 			log_server_label.align_text_left
 			log_level_label.set_text ("Log level")
@@ -253,7 +278,28 @@ feature {NONE}-- Initialization
 			precompile_box.disable_item_expand (precompile_padding_cell)
 			precompile_box.disable_item_expand (browse_button)
 			precompile_padding_cell.set_minimum_width (5)
-			browse_button.set_text ("Browse")
+			browse_button.set_text ("...")
+			browse_button.set_minimum_width (40)
+			prefixes_frame.set_text ("Assembly Prefixes")
+			prefixes_box.set_padding_width (5)
+			prefixes_box.set_border_width (5)
+			prefixes_box.disable_item_expand (prefix_components_box)
+			prefixes_box.disable_item_expand (assembly_file_name_buttons_box)
+			prefix_components_box.set_padding_width (5)
+			prefix_components_box.disable_item_expand (prefix_text_field)
+			prefix_components_box.disable_item_expand (assembly_file_name_browse_button)
+			prefix_text_field.set_minimum_width (100)
+			assembly_file_name_browse_button.set_text ("...")
+			assembly_file_name_browse_button.set_minimum_width (40)
+			assembly_file_name_buttons_box.set_padding_width (5)
+			assembly_file_name_buttons_box.disable_item_expand (assembly_file_name_add_button)
+			assembly_file_name_buttons_box.disable_item_expand (assembly_file_name_remove_button)
+			assembly_file_name_add_button.disable_sensitive
+			assembly_file_name_add_button.set_text ("Add")
+			assembly_file_name_add_button.set_minimum_width (100)
+			assembly_file_name_remove_button.disable_sensitive
+			assembly_file_name_remove_button.set_text ("Remove")
+			assembly_file_name_remove_button.set_minimum_width (100)
 			applications_frame.set_text ("Configuration used by")
 			applications_frame.hide
 			applications_box.set_padding_width (5)
@@ -286,7 +332,7 @@ feature {NONE}-- Initialization
 			help_button.select_actions.extend (agent on_help_select)
 			configurations_list.select_actions.extend (agent on_configuration_select)
 			configurations_list.pointer_double_press_actions.extend (agent on_configuration_double_click (?, ?, ?, ?, ?, ?, ?, ?))
-			crash_on_error_check_button.select_actions.extend (agent on_crash_on_error_select)
+			fail_on_error_check_button.select_actions.extend (agent on_fail_on_error_select)
 			log_server_text_field.change_actions.extend (agent on_log_server_select)
 			log_server_text_field.return_actions.extend (agent on_log_server_select)
 			log_server_text_field.focus_out_actions.extend (agent on_log_server_select)
@@ -296,6 +342,14 @@ feature {NONE}-- Initialization
 			precompile_combo.select_actions.extend (agent on_precompiled_select)
 			precompile_combo.change_actions.extend (agent on_precompiled_select)
 			browse_button.select_actions.extend (agent on_precompiled_browse)
+			prefixes_list.select_actions.extend (agent on_assembly_file_name_select (?))
+			prefixes_list.deselect_actions.extend (agent on_assembly_file_name_deselect (?))
+			prefixes_list.column_resize_actions.extend (agent on_column_resize (?))
+			prefix_text_field.change_actions.extend (agent on_prefix_change)
+			assembly_file_name_text_field.change_actions.extend (agent on_assembly_file_name_change)
+			assembly_file_name_browse_button.select_actions.extend (agent on_assembly_file_name_browse)
+			assembly_file_name_add_button.select_actions.extend (agent on_add_assembly_file_name)
+			assembly_file_name_remove_button.select_actions.extend (agent on_remove_assembly_file_name)
 			applications_list.select_actions.extend (agent on_application_select)
 			applications_list.deselect_actions.extend (agent on_application_deselect)
 			add_button.select_actions.extend (agent on_add_application)
@@ -315,19 +369,22 @@ feature -- Access
 	delete_menu_item, help_content_menu_item, about_menu_item: EV_MENU_ITEM
 	show_text_menu_item, show_tooltips_menu_item: EV_CHECK_MENU_ITEM
 	window_box, configurations_box, edit_box, general_titles_box, general_values_box, 
-	compiler_titles_box, compiler_values_box, applications_box: EV_VERTICAL_BOX
-	tool_bars_box, main_box, general_box, compiler_box, precompile_box, buttons_box: EV_HORIZONTAL_BOX
+	compiler_titles_box, compiler_values_box, prefixes_box, applications_box: EV_VERTICAL_BOX
+	tool_bars_box, main_box, general_box, compiler_box, precompile_box, prefix_components_box, 
+	assembly_file_name_buttons_box, buttons_box: EV_HORIZONTAL_BOX
 	main_tool_bar, help_tool_bar: EV_TOOL_BAR
 	new_button, save_button, revert_button, properties_button, delete_button, help_button: EV_TOOL_BAR_BUTTON
 	tool_bars_padding_cell, precompile_padding_cell, left_buttons_padding_cell, right_buttons_padding_cell: EV_CELL
 	configurations_list, applications_list: EV_LIST
-	general_frame, compiler_frame, applications_frame: EV_FRAME
-	crash_on_error_label, log_server_label, log_level_label, default_root_clas_label, 
+	general_frame, compiler_frame, prefixes_frame, applications_frame: EV_FRAME
+	fail_on_error_label, log_server_label, log_level_label, default_root_clas_label, 
 	precompile_label: EV_LABEL
-	crash_on_error_check_button: EV_CHECK_BUTTON
-	log_server_text_field, root_class_text_field: EV_TEXT_FIELD
+	fail_on_error_check_button: EV_CHECK_BUTTON
+	log_server_text_field, root_class_text_field, prefix_text_field, assembly_file_name_text_field: EV_TEXT_FIELD
 	log_level_combo, precompile_combo: EV_COMBO_BOX
-	browse_button, add_button, remove_button: EV_BUTTON
+	browse_button, assembly_file_name_browse_button, assembly_file_name_add_button, 
+	assembly_file_name_remove_button, add_button, remove_button: EV_BUTTON
+	prefixes_list: EV_MULTI_COLUMN_LIST
 
 feature {NONE} -- Implementation
 
@@ -404,8 +461,8 @@ feature {NONE} -- Implementation
 		deferred
 		end
 	
-	on_crash_on_error_select is
-			-- Called by `select_actions' of `crash_on_error_check_button'.
+	on_fail_on_error_select is
+			-- Called by `select_actions' of `fail_on_error_check_button'.
 		deferred
 		end
 	
@@ -431,6 +488,46 @@ feature {NONE} -- Implementation
 	
 	on_precompiled_browse is
 			-- Called by `select_actions' of `browse_button'.
+		deferred
+		end
+	
+	on_assembly_file_name_select (an_item: EV_MULTI_COLUMN_LIST_ROW) is
+			-- Called by `select_actions' of `prefixes_list'.
+		deferred
+		end
+	
+	on_assembly_file_name_deselect (an_item: EV_MULTI_COLUMN_LIST_ROW) is
+			-- Called by `deselect_actions' of `prefixes_list'.
+		deferred
+		end
+	
+	on_column_resize (a_column: INTEGER) is
+			-- Called by `column_resize_actions' of `prefixes_list'.
+		deferred
+		end
+	
+	on_prefix_change is
+			-- Called by `change_actions' of `prefix_text_field'.
+		deferred
+		end
+	
+	on_assembly_file_name_change is
+			-- Called by `change_actions' of `assembly_file_name_text_field'.
+		deferred
+		end
+	
+	on_assembly_file_name_browse is
+			-- Called by `select_actions' of `assembly_file_name_browse_button'.
+		deferred
+		end
+	
+	on_add_assembly_file_name is
+			-- Called by `select_actions' of `assembly_file_name_add_button'.
+		deferred
+		end
+	
+	on_remove_assembly_file_name is
+			-- Called by `select_actions' of `assembly_file_name_remove_button'.
 		deferred
 		end
 	

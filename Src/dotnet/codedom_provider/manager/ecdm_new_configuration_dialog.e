@@ -86,7 +86,7 @@ feature {NONE} -- Events
 			l_open_dialog: EV_FILE_OPEN_DIALOG
 		do
 			create l_open_dialog.make_with_title ("Add Application")
-			l_open_dialog.set_filter ("*.exe")
+			l_open_dialog.filters.extend (["*.exe", "Applications"])
 			l_open_dialog.show_modal_to_window (Current)
 			l_app := l_open_dialog.file_name
 			if l_app /= Void and then not l_app.is_empty then

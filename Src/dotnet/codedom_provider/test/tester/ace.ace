@@ -5,7 +5,7 @@ root
 	TESTER_ROOT_CLASS: make_and_launch
 
 default
-	il_verifiable (yes)
+	il_verifiable (no)
 	cls_compliant (yes)
 	dotnet_naming_convention (yes)
 	use_cluster_name_as_namespace (no)
@@ -29,7 +29,7 @@ default
 	disabled_debug ("wel_gdi_references")
 	disabled_debug ("win_dispatcher")
 	debug (no)
-	line_generation (no)
+	line_generation (yes)
 	profile (no)
 	trace (no)
 	check_vape (yes)

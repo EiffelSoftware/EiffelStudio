@@ -6,12 +6,18 @@ indexing
 					<?xml version="1.0"?>
 					<configuration>
 						<general>
-							<crash_on_error>False</crash_on_error>
+							<fail_on_error>False</fail_on_error>
 							<log_level>1</log_level>
 							<log_source_name>Eiffel Codedom Provider</log_source_name>
-							<log_server_name>localhost</log_server_name>
+							<log_server_name>.</log_server_name>
 							<log_name>System</log_name>
 						</general>
+						<prefixes>
+							<prefix value="SYSTEM_DLL_" assembly="system.dll"/>
+							<prefix value="XML_" assembly="system.xml.dll"/>
+							<prefix value="DRAWING_" assembly="system.drawing.dll"/>
+							<prefix value="WINFORMS_" assembly="system.windows.forms.dll"/>
+						</prefixes>
 						<compiler>
 							<default_root_class>ANY</default_root_class>
 							<precompile></precompile>
@@ -62,11 +68,11 @@ feature {NONE} -- Initialization
 	
 feature -- Access
 
-	crash_on_error: BOOLEAN is
+	fail_on_error: BOOLEAN is
 			-- Should CodeDom stop on error?
 			-- Useful for debugging
 		do
-			Result := config_values.item ("crash_on_error").to_boolean
+			Result := config_values.item ("fail_on_error").to_boolean
 		end
 
 	log_level: INTEGER is
@@ -114,6 +120,35 @@ feature -- Access
 			Result := config_values.item ("default_root_class")
 		end
 
+	prefixed_assemblies: LIST [STRING] is
+			-- Assemblies with associated prefixes
+		do
+			create {ARRAYED_LIST [STRING]} Result.make_from_array (prefixes.current_keys)
+			Result.compare_objects
+		end
+
+	assembly_prefix (a_file_name: STRING): STRING is
+			-- Prefix associated with assembly located at `a_file_name'.
+			-- Empty string if none.
+		do
+			prefixes.search (a_file_name)
+			if prefixes.found then
+				Result := prefixes.found_item
+			else
+				create Result.make_empty
+			end
+		end
+		
+	Default_prefixes: HASH_TABLE [STRING, STRING] is
+			-- Default prefixes that should not be modified
+		once
+			create Result.make (4)
+			Result.extend ("SYSTEM_DLL_", "system.dll")
+			Result.extend ("XML_", "system.xml.dll")
+			Result.extend ("DRAWING_", "system.drawing.dll")
+			Result.extend ("WINFORMS_", "system.windows.forms.dll")
+		end
+		
 feature -- Basic Operations
 
 	load (a_config_file: STRING) is
@@ -126,6 +161,8 @@ feature -- Basic Operations
 			l_value_name: STRING
 			l_retried: BOOLEAN
 		do
+			initialize_default_values
+			initialize_prefixes
 			if not l_retried then
 				create l_xml_reader.make_from_url (a_config_file)
 				from
@@ -134,8 +171,17 @@ feature -- Basic Operations
 				loop
 					if l_xml_reader.node_type = feature {XML_XML_NODE_TYPE}.Element then
 						l_value_name := l_xml_reader.name
+						if l_value_name.is_equal ("prefixes") then
+							from
+							until
+								not l_xml_reader.read or else not l_xml_reader.name.equals (("prefix").to_cil)
+							loop
+								internal_prefixes.force (l_xml_reader.get_attribute ("value"), l_xml_reader.get_attribute ("assembly"))
+							end
+							l_value_name := l_xml_reader.name
+						end
 					elseif l_xml_reader.node_type = feature {XML_XML_NODE_TYPE}.Text then
-						config_values.force (l_xml_reader.value, l_value_name)
+						internal_config_values.force (l_xml_reader.value, l_value_name)
 					end
 				end
 				l_xml_reader.close
@@ -158,20 +204,47 @@ feature {NONE} -- Implementation
 			Result := internal_config_values
 		end
 
+	prefixes: HASH_TABLE [STRING, STRING] is
+			-- Configuration prefixes
+		do
+			if internal_prefixes = Void then
+				initialize_prefixes
+				reload
+			end
+			Result := internal_prefixes
+		end
+
 	initialize_default_values is
 			-- Initialize fields to default values.
 		do
-			create internal_config_values.make (10)
-			internal_config_values.extend ("False", "crash_on_error")
+			create internal_config_values.make (7)
+			internal_config_values.extend ("False", "fail_on_error")
 			internal_config_values.extend ("1", "log_level")
 			internal_config_values.extend ("Eiffel Codedom Provider", "log_source_name")
-			internal_config_values.extend ("localhost", "log_server_name")
+			internal_config_values.extend (".", "log_server_name")
 			internal_config_values.extend ("System", "log_name")
 			internal_config_values.extend ("generated", "default_system_name")
 			internal_config_values.extend ("NONE", "default_root_class")
 		end
 		
+	initialize_prefixes is
+			-- Initialize prefixes to default values.
+		do
+			create internal_prefixes.make (4)
+			from
+				Default_prefixes.start
+			until
+				Default_prefixes.after
+			loop
+				internal_prefixes.extend (Default_prefixes.item_for_iteration, Default_prefixes.key_for_iteration)
+				Default_prefixes.forth
+			end
+		end
+		
 	internal_config_values: HASH_TABLE [STRING, STRING]
+			-- Internal object for once per object implementation
+
+	internal_prefixes: HASH_TABLE [STRING, STRING]
 			-- Internal object for once per object implementation
 
 invariant

@@ -114,9 +114,9 @@ feature -- Basic Operations
 				l_config_file.put_string ("<?xml version=%"1.0%"?>%N")
 				l_config_file.put_string ("<configuration>%N")
 				l_config_file.put_string ("%T<general>%N")
-				l_config_file.put_string ("%T%T<crash_on_error>")
-				l_config_file.put_string (crash_on_error.out)
-				l_config_file.put_string ("</crash_on_error>%N")
+				l_config_file.put_string ("%T%T<fail_on_error>")
+				l_config_file.put_string (fail_on_error.out)
+				l_config_file.put_string ("</fail_on_error>%N")
 				l_config_file.put_string ("%T%T<log_level>")
 				l_config_file.put_string (log_level.out)
 				l_config_file.put_string ("</log_level>%N")
@@ -130,6 +130,20 @@ feature -- Basic Operations
 				l_config_file.put_string (log_name)
 				l_config_file.put_string ("</log_name>%N")
 				l_config_file.put_string ("%T</general>%N")
+				l_config_file.put_string ("%T<prefixes>%N")
+				from
+					prefixes.start
+				until
+					prefixes.after
+				loop
+					l_config_file.put_string ("%T%T<prefix value=%"")
+					l_config_file.put_string (prefixes.item_for_iteration)
+					l_config_file.put_string ("%" assembly=%"")
+					l_config_file.put_string (prefixes.key_for_iteration)
+					l_config_file.put_string ("%"/>%N")
+					prefixes.forth
+				end
+				l_config_file.put_string ("%T</prefixes>%N")
 				l_config_file.put_string ("%T<compiler>%N")
 				if default_root_class /= Void then
 					l_config_file.put_string ("%T%T<default_root_class>")
@@ -174,10 +188,10 @@ feature -- Element Settings
 			configuration_name_set: name = a_config_name
 		end
 
-	set_crash_on_error (a_value: BOOLEAN) is
-			-- Set `crash_on_error' with `a_value'.
+	set_fail_on_error (a_value: BOOLEAN) is
+			-- Set `fail_on_error' with `a_value'.
 		do
-			config_values.force (a_value.out, "crash_on_error")
+			config_values.force (a_value.out, "fail_on_error")
 		end
 
 	set_log_level (a_value: INTEGER) is
@@ -227,6 +241,27 @@ feature -- Element Settings
 			config_values.force (a_value, "default_root_class")
 		end
 
+	add_prefix (a_assembly, a_prefix: STRING) is
+			-- Add `a_assembly' to list of prefixed assemblies with prefix `a_prefix'.
+		require
+			non_void_assembly: a_assembly /= Void
+			non_void_prefix: a_prefix /= Void
+		do
+			prefixes.force (a_prefix, a_assembly)
+		ensure
+			added: prefixes.has (a_assembly) and then assembly_prefix (a_assembly).is_equal (a_prefix)
+		end
+	
+	remove_prefix (a_assembly: STRING) is
+			-- Remove `a_assembly' from list of prefixed assemblies.
+		require
+			non_void_assembly: a_assembly /= Void
+		do
+			prefixes.remove (a_assembly)
+		ensure
+			removed: not prefixes.has (a_assembly)
+		end
+		
 invariant
 	non_void_configuration_folder: folder /= Void
 	valid_configuration_folder: folder.item (folder.count) = (create {OPERATING_ENVIRONMENT}).Directory_separator

@@ -181,6 +181,7 @@ rt_public void sstore (EIF_INTEGER fd, char *object, EIF_CHARACTER file_storage_
 
 rt_public void allocate_gen_buffer (void)
 {
+	EIF_GET_CONTEXT
 	if (general_buffer == (char *) 0) {
 		char g_status = g_data.status;
 
@@ -201,6 +202,7 @@ if no compression, use buffer_size -> 1k instead of 32k + padding
 	}
 	current_position = 0;
 	end_of_buffer = 0;
+	EIF_END_GET_CONTEXT
 }
 
 rt_private void internal_store(char *object)

@@ -77,6 +77,7 @@ rt_shared void traversal(char *object, int p_accounting)
 {
 	/* First pass of the store mechanism consisting in marking objects. */
 
+	EIF_GET_CONTEXT
 	char *object_ref, *reference;
 	long count, elem_size;
 	union overhead *zone;		/* Object header */
@@ -181,6 +182,7 @@ rt_shared void traversal(char *object, int p_accounting)
 
 	if (mapped_object)
 		epop(&loc_stack, 1);
+	EIF_END_GET_CONTEXT
 }
 
 /*

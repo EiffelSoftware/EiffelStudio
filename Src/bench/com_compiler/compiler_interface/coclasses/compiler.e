@@ -293,7 +293,7 @@ feature -- Basic Operations
 	Freeze_command_arguments: STRING is
 			-- Retrieve command-line arguments needed by Freeze command.
 		once
-			Result := Freeze_command_name + " -vs"
+			Result := Freeze_command_name + " -vs -silent"
 		end
 
 	Freeze_command_relative_path: STRING is "\Studio\spec\windows\bin\"

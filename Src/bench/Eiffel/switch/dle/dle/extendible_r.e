@@ -10,13 +10,8 @@ inherit
 	SHARED_ERROR_HANDLER;
 	SHARED_RESCUE_STATUS;
 	PROJECT_CONTEXT
-		redefine
-			init_extendible_directory
-		end
 
 feature
-
-	init_extendible_directory: PROJECT_DIR;
 
 	retried: BOOLEAN;
 
@@ -25,7 +20,7 @@ feature
 			-- the dynamically extendible project directory.
 		local
 			project_name: STRING;
-			project_dir: PROJECT_DIR;
+			project_dir: REMOTE_PROJECT_DIRECTORY;
 			workb: WORKBENCH_I;
 			workbench_file: RAW_FILE;
 			freeze: BOOLEAN;
@@ -41,8 +36,7 @@ feature
 				Error_handler.checksum;
 
 				if project_dir.is_valid then
-					init_extendible_directory := project_dir;
-					if Extendible_directory = Void then end;
+					Extendible_directory.make_from_string (project_name);
 					!! workb;
 					!! workbench_file.make_open_read (Extendible_file_name);
 					workb ?= workb.retrieved (workbench_file);
@@ -60,7 +54,6 @@ feature
 							-- Do not call the once function `System' directly
 							-- since it's value will be replaced later on
 							-- (the system describes a Dynamic Class Set).
-						freeze := Workbench.system.freeze;
 						!! dle_system;
 						Workbench.set_system (dle_system);
 debug ("DLE SYSTEM")
@@ -68,12 +61,11 @@ io.error.put_string ("The DLE `System' has just been initialized.");
 io.error.new_line
 end;
 						dle_system.extending (workb.system);
-						System.set_freeze (freeze);
-						if System.uses_precompiled then
-							!!precomp_r;
+						if dle_system.uses_precompiled then
+							!! precomp_r;
 							precomp_r.set_precomp_dir
 						end;
-						System.server_controler.init;
+						dle_system.server_controler.init;
 						Universe.update_cluster_paths
 					else
 						!! v9ds;
@@ -104,12 +96,9 @@ end;
 
 	set_extendible_dir is
 			-- Creates the once function `Extendible_directory'
-		local
-			project_dir: PROJECT_DIR
 		do
-			!! project_dir.make (workbench.extendible_directory_name);
-			init_extendible_directory := project_dir;
-			if Extendible_directory = Void then end
+			Extendible_directory.make_from_string 
+							(workbench.extendible_directory_name);
 		end;
 			
 end

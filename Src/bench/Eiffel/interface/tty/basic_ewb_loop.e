@@ -88,6 +88,8 @@ feature -- Initialization
 			Result.add_entry (ewb_cmd)
 			!EWB_CLASS_LIST! ewb_cmd;
 			Result.add_entry (ewb_cmd)
+			-- 3.4 !EWB_CLUSTER_HIERARCHY! ewb_cmd;
+			--Result.add_entry (ewb_cmd)
 			!EWB_CLUSTERS! ewb_cmd;
 			Result.add_entry (ewb_cmd)
 			!EWB_EDIT_ACE! ewb_cmd;

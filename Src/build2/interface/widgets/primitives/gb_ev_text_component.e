@@ -9,7 +9,6 @@ class
 	GB_EV_TEXT_COMPONENT
 	
 	-- The following properties from EV_TEXT_COMPONENT are manipulated by `Current'.
-	-- Text - Performed on the real object and the display_object child.
 	-- Is_editable - Performed on the real object and the display_object child.
 
 inherit
@@ -45,13 +44,6 @@ feature -- Access
 			label: EV_LABEL
 		do
 			Result := Precursor {GB_EV_ANY}
-			create label.make_with_text (text_string)
-			Result.extend (label)
-			create text_entry
-			Result.extend (text_entry)
-			text_entry.change_actions.extend (agent set_text)
-			text_entry.change_actions.extend (agent update_editors)
-			
 			
 			create editable_button.make_with_text ("Is editable?")
 			Result.extend (editable_button)
@@ -68,18 +60,14 @@ feature -- Access
 			-- Update status of `attribute_editor' to reflect information
 			-- from `objects.first'.
 		do
-			text_entry.change_actions.block
 			editable_button.select_actions.block
-				
-			text_entry.set_text (first.text)
 			
 			if first.is_editable then
 				editable_button.enable_select
 			else
 				editable_button.disable_select
 			end
-
-			text_entry.change_actions.resume
+			
 			editable_button.select_actions.resume
 		end
 		
@@ -88,9 +76,6 @@ feature {GB_XML_STORE} -- Output
 	generate_xml (element: XML_ELEMENT) is
 			-- Generate an XML representation of `Current' in `element'.
 		do
-			if not first.text.is_empty then
-				add_element_containing_string (element, text_string, first.text)	
-			end
 			if not first.is_editable then
 				add_element_containing_string (element, Is_editable_string, False_string)
 			end
@@ -103,10 +88,6 @@ feature {GB_XML_STORE} -- Output
 			element_info: ELEMENT_INFORMATION
 		do
 			full_information := get_unique_full_info (element)
-			element_info := full_information @ (text_string)
-			if element_info /= Void and then element_info.data.count /= 0 then
-				for_all_objects (agent {EV_TEXT_COMPONENT}.set_text (element_info.data))
-			end
 			element_info := full_information @ (Is_editable_string)
 			if element_info /= Void and then element_info.data.is_equal (False_string) then
 				for_all_objects (agent {EV_TEXT_COMPONENT}.disable_edit)	
@@ -125,16 +106,12 @@ feature {GB_CODE_GENERATOR} -- Output
 		do
 			Result := ""
 			full_information := get_unique_full_info (element)
-			element_info := full_information @ (text_string)
-			if element_info /= Void and then element_info.data.count /= 0 then
-				Result := a_name + ".set_text (%"" + element_info.data + "%")"
-			end
 			element_info := full_information @ (Is_editable_string)
 			if element_info /= Void then
 				if element_info.data.is_equal (True_string) then
-					Result := Result + indent + a_name + ".enable_edit"
+					Result := a_name + ".enable_edit"
 				else
-					Result := Result + indent + a_name + ".disable_edit"
+					Result := a_name + ".disable_edit"
 				end
 			end
 			Result := strip_leading_indent (Result)
@@ -150,34 +127,28 @@ feature {NONE} -- Implementation
 			objects.extend (vision2_object)
 			user_event_widget.change_actions.force_extend (agent start_timer)
 		end	
-		
-		start_timer is
-				-- Start a timer, which is used as a delay between an event begin
-				-- received by `user_event_widget' and `check_state'.
-			local
-				timer: EV_TIMEOUT
-			do
-				create timer.make_with_interval (10)
-				timer.actions.extend (agent check_state)
-				timer.actions.extend (agent timer.destroy)
-			end
-			
-		check_state is
-				-- Update the display window representation of
-				-- the gauge, to reflect change from user.
-			do
-				objects.first.set_text (user_event_widget.text)
-				update_editors
-			end
-			
-		user_event_widget: like ev_type
-			-- Used to handle the events on the builder window.
-		
-	set_text is
-			-- Update text for all objects to reflect `text_entry'.
+	
+	start_timer is
+			-- Start a timer, which is used as a delay between an event begin
+			-- received by `user_event_widget' and `check_state'.
+		local
+			timer: EV_TIMEOUT
 		do
-			for_all_objects (agent {EV_TEXT_COMPONENT}.set_text (text_entry.text))
+			create timer.make_with_interval (10)
+			timer.actions.extend (agent check_state)
+			timer.actions.extend (agent timer.destroy)
 		end
+		
+	check_state is
+			-- Update the display window representation of
+			-- the gauge, to reflect change from user.
+		do
+			objects.first.set_text (user_event_widget.text)
+			update_editors
+		end
+		
+	user_event_widget: like ev_type
+		-- Used to handle the events on the builder window.
 		
 	set_is_editable is
 			-- Update editable status for all objects to reflect `editable_button'.
@@ -189,14 +160,8 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-		
-	text_entry: EV_TEXT_FIELD
-		-- Entry field to enter text.
-		
 	editable_button: EV_CHECK_BUTTON
 		-- Used to control is_editable state.
-
-	Text_string: STRING is "Text"
 	
 	Is_editable_string: STRING is "Is_editable"
 

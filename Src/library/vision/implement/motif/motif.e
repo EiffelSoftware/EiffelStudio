@@ -129,6 +129,13 @@ feature -- Widget Access
 			!! Result.make (a_font_box_d, oui_parent)
 		end; 
 
+	message (a_message: MESSAGE; managed: BOOLEAN;
+		oui_parent: COMPOSITE): MESSAGE_M is
+			-- Motif implementation of `a_message'
+		do
+			!! Result.make (a_message, managed, oui_parent)
+		end;
+
 	pict_color_b (a_picture_color_button: PICT_COLOR_B; managed: BOOLEAN;
 				oui_parent: COMPOSITE): PICT_COL_B_M is
 			-- Motif implementation of `a_picture_color_button'

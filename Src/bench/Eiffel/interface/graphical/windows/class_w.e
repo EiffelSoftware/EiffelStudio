@@ -391,7 +391,7 @@ feature {NONE} -- Properties; Window Properties
 	tool_name: STRING is
 			-- The name of this tool.
 		do
-			Result := l_Class
+			Result := l_Empty_class
 		end;
 
 	hole: CLASS_HOLE;

@@ -49,7 +49,10 @@ feature -- Access
 
 	stone_type: INTEGER is do Result := Explain_type end;
 
-	stone_name: STRING is do Result := l_Explain end;
+	stone_name: STRING is
+		do
+			Result := l_Explain_stone
+		end;
 
 	help_text: LINKED_LIST [STRING] is
 			-- Content of the file where the help is

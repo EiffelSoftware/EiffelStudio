@@ -84,7 +84,10 @@ feature -- Access
  
 	stone_type: INTEGER is do Result := Class_type end;
  
-	stone_name: STRING is do Result := l_Class end;
+	stone_name: STRING is
+		do
+			Result := l_Class_stone
+		end;
  
 --	feature_named (n: STRING): FEATURE_STONE is
 --			-- Nothing: class is not compiled

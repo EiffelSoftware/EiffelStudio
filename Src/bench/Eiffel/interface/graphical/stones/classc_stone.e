@@ -89,7 +89,7 @@ feature -- Access
 
 	stone_name: STRING is 
 		do 
-			Result := l_Class 
+			Result := l_Class_stone
 		end;
  
 	click_list: CLICK_STONE_ARRAY is

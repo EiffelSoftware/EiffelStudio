@@ -45,7 +45,10 @@ feature -- Access
 
 	origin_text: STRING is "";
 
-	stone_type: INTEGER is do Result := Object_type end;
+	stone_type: INTEGER is
+		do
+			Result := Object_type
+		end;
 
 	stone_cursor: SCREEN_CURSOR is
 			-- Cursor associated with
@@ -54,7 +57,10 @@ feature -- Access
 			Result := cur_Object
 		end;
  
-	stone_name: STRING is do Result := l_Object end;
+	stone_name: STRING is
+		do
+			Result := l_Object_stone
+		end;
 
 	signature: STRING is
 		do

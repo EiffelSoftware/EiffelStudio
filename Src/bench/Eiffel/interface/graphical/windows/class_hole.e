@@ -48,7 +48,7 @@ feature -- Properties
 
 	name: STRING is
 		do
-			Result := l_Class
+			Result := l_New_class
 		end;
 
 feature -- Access

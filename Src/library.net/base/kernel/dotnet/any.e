@@ -10,7 +10,7 @@ inherit
 		export
 			{NONE} all
 		redefine
-			finalize, equals, get_hash_code, memberwise_clone, to_string
+			finalize, equals, get_hash_code, to_string
 		end
 	
 feature -- Access
@@ -360,13 +360,6 @@ feature {NONE} -- Implement .NET feature
 			else
 				Result := feature {ISE_RUNTIME}.hash_code (Current)
 			end
-		end
-		
-	frozen memberwise_clone: SYSTEM_OBJECT is
-			-- New object equal to `other' using `copy'
-		 	-- To change copying/cloning semantics, redefine `copy'.
-		 do
-			Result := clone (Current)
 		end
 		
 invariant

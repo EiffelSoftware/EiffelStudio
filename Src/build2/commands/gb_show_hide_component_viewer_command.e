@@ -43,11 +43,7 @@ feature -- Access
 	menu_name: STRING is
 			-- Name as it appears in menus.
 		do
-			if component_viewer.is_show_requested then
-				Result := "Hide component viewer"
-			else
-				Result := "Show component viewer"
-			end
+			Result := Show_hide_component_viewer_menu_text
 		end
 
 	pixmap: ARRAY [EV_PIXMAP] is

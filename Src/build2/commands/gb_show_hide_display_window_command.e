@@ -38,12 +38,7 @@ feature -- Access
 	menu_name: STRING is
 			-- Name as it appears in menus.
 		do
-			if display_window.is_show_requested then
-				Result := "Hide display window"
-			else
-				Result := "Show display window"
-			end
-			
+			Result := Show_hide_display_window_menu_text
 		end
 
 	pixmap: ARRAY [EV_PIXMAP] is

@@ -41,11 +41,7 @@ feature -- Access
 	menu_name: STRING is
 			-- Name as it appears in menus.
 		do
-			if history.dialog.is_show_requested then
-				Result := "Hide history window"
-			else
-				Result := "Show history window"
-			end
+			Result := Show_hide_history_window_menu_text
 		end
 		
 	pixmap: ARRAY [EV_PIXMAP] is

@@ -16,8 +16,6 @@ inherit
 	EV_SIMPLE_ITEM_IMP
 		undefine
 			pixmap_size_ok
-		redefine
-			set_pixmap
 		end
 
 	EV_MENU_ITEM_HOLDER_IMP
@@ -38,29 +36,11 @@ feature {NONE} -- Initialization
 			-- Create an item with an empty name.
 		do
 			widget := gtk_menu_item_new
+			gtk_object_ref (widget)
 			initialize
 			create_text_label ("")
-			gtk_misc_set_alignment (label_widget, 0.0, 0.5)
+			gtk_misc_set_alignment (gtk_misc (label_widget), 0.0, 0.5)
 			gtk_misc_set_padding (label_widget, 21, 0)
-		end
-	
-	make_with_text (txt: STRING) is
-			-- Create an item with `txt' as label.
-		do
-			widget := gtk_menu_item_new
-			initialize
-			create_text_label (txt)
-			gtk_misc_set_alignment (label_widget, 0.0, 0.5)
-			gtk_misc_set_padding (label_widget, 21, 0)
-		end
-
-	initialize is
-			-- Common initialization for buttons
-		do
-			gtk_object_ref (widget)
-			box := gtk_hbox_new (False, 5)
-			gtk_widget_show (box)
-			gtk_container_add (GTK_CONTAINER (widget), box)
 		end
 
 feature -- Status setting
@@ -169,20 +149,6 @@ feature {NONE} -- Implementation
 			-- Remove `item_imp' from the list.
 		do
 			gtk_container_remove (GTK_CONTAINER (C_GTK_MENU_ITEM_SUBMENU(widget)), item_imp.widget)
-		end
-
-	set_pixmap (pix: EV_PIXMAP) is
-			-- Add a pixmap in the container
-		local
-			pixmap_imp: EV_PIXMAP_IMP
-		do
-			pixmap_imp ?= pix.implementation
-			check
-				imp_not_void: pixmap_imp /= Void
-			end
-			add_child (pixmap_imp)
-			gtk_misc_set_padding (label_widget, 0, 0)
-			gtk_box_pack_start (GTK_BOX(box), pixmap_imp.widget, False, False, 0)
 		end
 
 end -- class EV_MENU_ITEM_IMP

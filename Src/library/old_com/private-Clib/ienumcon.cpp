@@ -8,6 +8,12 @@
 //   external_name: "$RCSfile$";
 //---------------------------------------------------------------------------
 //-- $Log$
+//-- Revision 1.8  1999/01/22 18:51:14  marina
+//--  Modified Files:
+//--  	Eautostr.cpp Eoleauto.cpp eifole.h ieconpnt.cpp ienumcon.cpp
+//--  	ienumukn.cpp
+//-- 		-- removed use of `eif_generic_id'
+//--
 //-- Revision 1.7  1998/02/09 19:20:14  raphaels
 //-- Mainly cosmetics. Added `character' to EOLE_VARIANT.
 //--
@@ -17,7 +23,6 @@
 //---------------------------------------------------------------------------
 
 #include "eifole.h"
-#include "eif_hector.h"
 
 int enum_connections_next_eiffel_called;
 
@@ -171,7 +176,7 @@ extern "C" EIF_OBJ eole2_enum_connections_next (EIF_POINTER ptr, EIF_INTEGER cou
 	if (enum_connections_next_eiffel_called)
 		result = (EIF_OBJ)*rgpcd;
 	else {
-		eif_array_id = eif_generic_id ("ARRAY", eif_type_id ("EOLE_CONNECT_DATA"));
+		eif_array_id = eif_type_id ("ARRAY [EOLE_CONNECTDATA]");
 		eif_connect_id = eif_type_id ("EOLE_CONNECTDATA");
 		result = eif_create (eif_array_id);
 		connect = (EIF_OBJ*)malloc (*pcFetched * sizeof (EIF_OBJ));

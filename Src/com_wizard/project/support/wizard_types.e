@@ -68,6 +68,8 @@ feature -- Eiffel types
 
 	Integer_ref_type: STRING is "INTEGER_REF"
 
+	Integer64_ref_type: STRING is "INTEGER_64_REF"
+
 	Real_ref_type: STRING is "REAL_REF"
 
 	Double_ref_type: STRING is "DOUBLE_REF"
@@ -132,9 +134,9 @@ feature -- COM/C types
 
 	Olechar: STRING is "OLECHAR"
 
-	Large_integer: STRING is "LARGE_INTEGER"
+	Large_integer: STRING is "LONGLONG"
 
-	Ularge_integer: STRING is "ULARGE_INTEGER"
+	Ularge_integer: STRING is "ULONGLONG"
 
 	Safearray: STRING is "SAFEARRAY"
 

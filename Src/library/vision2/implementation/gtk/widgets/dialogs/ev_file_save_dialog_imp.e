@@ -18,28 +18,30 @@ feature {NONE} -- Initialization
 
 	make (par: EV_CONTAINER) is
 			-- Create a window with a parent.
+		local
+			a: ANY
+			s: STRING
+			par_imp: EV_CONTAINER_IMP
 		do
-		end
+			s := "Save file dialog"
+			a := s.to_c
+			par_imp ?= par.implementation
 
-feature -- Status report
+			-- Create the gtk object.
+			widget := gtk_file_selection_new ($a)
 
-	selected_filter_name: STRING is
-			-- Name of the currently selected filter
-		do
-		end
+			-- Attach the window to `par'.
+			gtk_window_set_transient_for (widget, par_imp.widget)
+			-- Set it as modal (nothing can be done
+			-- until the window is closed).
+			gtk_window_set_modal (widget, True)
 
-feature -- Status setting
+			-- Make it appear where the mouse is.
+			gtk_window_set_position (GTK_WINDOW (widget), 1)
 
-	select_filter_by_name (name: STRING) is
-			-- Select the filter called `name'.
-		do
-		end
-
-feature -- Element change
-
-	set_file (name: STRING) is
-			-- Make the file named `name' the new selected file.
-		do
+			-- Connect destroy command to `OK' and `Cancel' buttons.
+			add_dialog_close_command (ok_widget)
+			add_dialog_close_command (cancel_widget)		
 		end
 
 end -- class EV_FILE_SAVE_DIALOG_IMP

@@ -21,9 +21,13 @@ inherit
 
 	EB_CLICKABLE_TEXT
 		rename
-			freeze as geler,
-			thaw as degeler,
-				-- tant que freeze et thaw sont pas implementees...
+			freeze as temp_freeze,
+			thaw as temp_thaw,
+				--| FIXME
+				--| Christophe, 26 oct 1999
+				--| freeze and thaw where "about to be implemented".
+				--| now it is not sure anymore. maybe these functions
+				--| could be removed.
 			hole_target as source,
 			count as array_count,
 			widget as source
@@ -52,23 +56,27 @@ creation
 
 feature -- Initialization
 
-	make_from_tool (par: EV_CONTAINER; a_tool: EB_EDITOR) is
-			-- Initialize text window with name `a_name', parent `a_parent',
-			-- and tool window `a_tool'.
+	make_from_tool (par: EV_CONTAINER; ed: EB_EDIT_TOOL) is
+			-- Initialize Current with parent `par',
+			-- and link it to `ed'.
 		require
-			valid_tool: a_tool /= Void and then not a_tool.destroyed
+			valid_tool: ed /= Void and then not ed.destroyed
+		local
+			rc: EV_ROUTINE_COMMAND
+			arg: EV_ARGUMENT1 [EB_EDIT_TOOL]
 		do
 			make (par)
-			a_tool.init_change_command (Current)
+			create rc.make (~modify)
+			create arg.make (ed)
+			add_change_command (rc, arg)
 		end
 
-	make (a_parent: EV_CONTAINER) is
-			-- Initialize text window with name `a_name', parent `a_parent',
-			-- and tool window `a_tool'.
+	make (par: EV_CONTAINER) is
+			-- Initialize Current with parent `par'.
 		require else
-			valid_parent: a_parent /= Void 
+			valid_parent: par /= Void 
 		do
-			{EV_RICH_TEXT} Precursor (a_parent)
+			{EV_RICH_TEXT} Precursor (par)
 --			initialize_transport
 			array_create (1, 0)
 --			upper := -1 			-- Init clickable array.
@@ -254,7 +262,7 @@ feature -- Text manipulation
 			set_text("")
 			set_position (1)
 			set_changed (False)
-			set_editable (False)
+--			set_editable (False)
 		ensure then
 			struct_position = 1
 			clickable_count = 0
@@ -368,8 +376,8 @@ feature -- Focus Access
 
 feature -- Update
 
-	geler is do hide end
-	degeler is do show end
+	temp_freeze is do hide end
+	temp_thaw is do show end
 
 --	update_after_transport (but_data: BUTTON_DATA) is
 --			-- Update Current stone and related information
@@ -444,6 +452,19 @@ feature -- Execution
 					process_action (arg, data)
 				end
 			end
+		end
+
+	modify (arg: EV_ARGUMENT1 [EB_EDIT_TOOL]; data: EV_EVENT_DATA) is
+			-- action performed when user changes the text.
+		require
+			arg_exists: arg /= Void
+		do
+			if not changed then
+				set_changed (True)
+				arg.first.update_save_symbol
+			end
+		ensure 
+			changed: changed	
 		end
 
 feature {EB_TOOL} -- Objects in Current text area

@@ -55,12 +55,12 @@
 #define EIF_MUTEX_INVALID_ERRCODE(errcode)	(0)
 
 #define EIF_TSD_TYPE					DWORD
-#define EIF_TSD_VAL_TYPE				void *
+#define EIF_TSD_VAL_TYPE				LPVOID
 #define EIF_TSD_ERRCODE_TYPE			DWORD
 #define EIF_TSD_CREATE(key,errcode)		key=TlsAlloc(); errcode=((key)==0xFFFFFFFF)
 #define EIF_TSD_SET(key,val,errcode)	errcode=(TlsSetValue((key),(EIF_TSD_VAL_TYPE)(val))==FALSE)
-#define EIF_TSD_GET(key,val,errcode)	val=TlsGetValue(key); errcode=(GetLastError()!=NO_ERROR)
-#define EIF_TSD_GET_NOCHECK(key,val)	val=TlsGetValue(key)
+#define EIF_TSD_GET(key,val,errcode)	val=(eif_global_context_t *)TlsGetValue(key); errcode=(GetLastError()!=NO_ERROR)
+#define EIF_TSD_GET_NOCHECK(key,val)	val=(eif_global_context_t *)TlsGetValue(key)
 #define EIF_TSD_DESTROY(key,errcode)	errcode=(TlsFree()==FALSE)
 #define	EIF_TSD_INVALID_ERRCODE(errcode)	(errcode)
 

@@ -108,8 +108,11 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	list_widget: POINTER
+	list_widget: POINTER is
 			-- GtkWidget that holds the list.
+		do
+			Result := c_object
+		end
 
 feature {NONE} -- Implementation
 
@@ -142,6 +145,9 @@ end -- class EV_DYNAMIC_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.4  2000/04/06 20:24:51  brendel
+--| Changed list_widget from attribute to function.
+--|
 --| Revision 1.3  2000/04/06 02:06:23  brendel
 --| Added invariant.
 --|

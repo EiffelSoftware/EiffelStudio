@@ -21,9 +21,27 @@ creation
 
 feature -- Status setting
 
+	select_item (index: INTEGER) is
+			-- Select item at the zero-based `index'.
+		do
+			cwin_send_message (item, Lb_setsel, 1, index)
+		end
+
+	unselect_item (index: INTEGER) is
+			-- Unselect item at the zero-based `index'.
+		require
+			exists: exists
+			index_small_enough: index < count
+			index_large_enough: index >= 0
+		do
+			cwin_send_message (item, Lb_setsel, 0, index)
+		ensure
+			is_not_selected: not is_selected (index)
+		end
+
 	select_items (start_index, end_index: INTEGER) is
 			-- Select items between `start_index'
-			-- and `end_index' (zero-base index).
+			-- and `end_index' (zero-based index).
 		require
 			exists: exists
 			valid_range: end_index >= start_index
@@ -39,7 +57,7 @@ feature -- Status setting
 
 	unselect_items (start_index, end_index: INTEGER) is
 			-- Unselect items between `start_index'
-			-- and `end_index' (zero-base index).
+			-- and `end_index' (zero-based index).
 		require
 			exists: exists
 			valid_range: end_index >= start_index
@@ -75,9 +93,9 @@ feature -- Status setting
 			count_items_selected: count_selected_items = 0
 		end
 
-	set_caret_index (index: INTEGER; scroll: BOOLEAN) is
+	set_caret_index (index: INTEGER; scrolling: BOOLEAN) is
 			-- Set the focus rectangle to the item at the
-			-- specified zero-based `index'. If `scroll' is
+			-- specified zero-based `index'. If `scrolling' is
 			-- True the item is scrolled until it is at least
 			-- partially visible, otherwise the item is scrolled
 			-- until it is fully visible.
@@ -86,7 +104,7 @@ feature -- Status setting
 			index_small_enough: index < count
 			index_large_enough: index >= 0
 		do
-			if scroll then
+			if scrolling then
 				cwin_send_message (item, Lb_setcaretindex,
 					index, cwin_make_long (1, 0))
 			else
@@ -98,6 +116,12 @@ feature -- Status setting
 		end
 
 feature -- Status report
+
+	selected: BOOLEAN is
+			-- Is at least one item selected?
+		do
+			Result := count_selected_items > 0
+		end
 
 	count_selected_items: INTEGER is
 			-- Number of items selected
@@ -181,7 +205,6 @@ feature {NON} -- Implementation
 		end
 
 invariant
-
 	valid_count: exists implies selected_items.count = count_selected_items
 
 end -- class WEL_MULTIPLE_SELECTION_LIST_BOX

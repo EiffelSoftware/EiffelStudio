@@ -124,23 +124,40 @@ feature -- Tool generation
 	generate_command is
 			-- Generate the associated command.
 		local
-			cmd: USER_CMD
 			temp_string: STRING
 		do
-			!! cmd.make
-			cmd.set_internal_name ("")
-			temp_string := clone (cmd.template)
-			cmd.set_eiffel_text (generated_eiffel_text (temp_string))
-			cmd.set_visual_name (visual_command_name)
-			cmd.overwrite_text
-			command_catalog.add_to_page (cmd, command_catalog.generated_commands)
+			!! generated_command.make
+			generated_command.set_internal_name ("")
+			generated_command.set_eiffel_text (generated_eiffel_text)
+			generated_command.set_visual_name (visual_command_name)
+			generated_command.overwrite_text
+			command_catalog.add_to_page (generated_command, command_catalog.generated_commands)
 		end
 
-	generated_eiffel_text (a_template: STRING): STRING is
+	generated_eiffel_text: STRING is
 			-- Generated eiffel text for associated command.
-		local
-			i: INTEGER
 		do
+			!! Result.make (0)
+			Result.append (indexing_clause)
+			Result.append (class_declaration)
+			Result.append (feature_execute)
+			Result.append (initialization_clause)
+			Result.append (invariant_clause)
+			Result.append (end_class_clause)
+		end
+
+feature {NONE} -- Code generation
+
+	generated_command: USER_CMD
+			-- Generated command
+
+	indexing_clause: STRING is
+			-- Generate indexing clause.
+		local
+			class_name, routine_name: STRING
+		do
+			class_name := clone (application_class.class_name)
+-- 			routine_name := clone (application_routine.routine_name)
 			!! Result.make (0)
 			Result.append ("indexing%N")
 			Result.append ("%Tdescription: %" Generated command used to change %%%N%T%T%T%T%% the queries of a ")
@@ -149,9 +166,30 @@ feature -- Tool generation
 			Result.append ("%Tvisual_name: %"")
 			Result.append (visual_command_name)
 			Result.append ("%"%N%N")
-			i := a_template.substring_index ("execute", 1)
-			i := a_template.substring_index ("%T%Tdo%N", i)
-			Result.append (a_template.substring (1, i + 4))
+		end
+
+	class_declaration: STRING is
+			-- Generate declaration of the class.
+		require
+			command_exists: generated_command /= Void
+		local
+			class_name: STRING
+		do
+			class_name := clone (generated_command.eiffel_type)
+			class_name.to_upper
+			!! Result.make (0)
+			Result.append ("class%N%N%T")
+			Result.append (class_name)
+			Result.append ("%N%Ninherit%N%N%TGENERATED_COMMAND [")
+			Result.append (application_class.class_name)
+			Result.append ("]%N%NWINDOWS%N%Ncreation%N%N%Tmake%N%Nfeature%N%N")
+		end
+
+	feature_execute: STRING is
+			-- Generate feature `execute'.
+		do
+			!! Result.make (0)
+			Result.append ("%Texecute is%N%T%Trequire else%N%T%T%Ttarget_set: target_set%N%T%Tdo%N") 
 			from
 				form_list.start
 			until
@@ -161,13 +199,29 @@ feature -- Tool generation
 				form_list.forth
 			end
 			Result.append ("%T%Tend%N%N")
-			Result.append ("%Ttarget: ")
-			Result.append (application_class.class_name)
-			Result.append ("%N%N%Tset_target (new_target: ")
-			Result.append (application_class.class_name)
-			Result.append (") is%N%T%Tdo%N%T%T%Ttarget := new_target%N")
+		end
+		
+	initialization_clause: STRING is
+			-- Initialization.
+		do
+			!! Result.make (0)
+			Result.append ("%Tmake is%N%T%Tdo%N%T%Tend%N%N")
+		end
 
-			Result.append (a_template.substring (i + 5, a_template.count))
+	invariant_clause: STRING is
+			-- Invariant clause.
+		do
+			!! Result.make (0)
+			Result.append ("invariant%N%N%Ttarget_exist_if_set: target_set implies (target /= Void)%N%N")
+		end
+
+	end_class_clause: STRING is
+			-- End of class
+		do
+			!! Result.make (0)
+			Result.append ("end -- class ")
+			Result.append (generated_command.eiffel_type)
+			Result.append ("%N")
 		end
 
 feature -- Attributes

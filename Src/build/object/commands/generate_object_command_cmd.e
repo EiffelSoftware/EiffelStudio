@@ -87,11 +87,12 @@ feature -- Command generation
 			Result.append (initialization_clause)
 			Result.append (access_clause)
 			Result.append (element_change_clause)
-			Result.append (status_report_clause)
 			Result.append (basic_operation_clause)
 			Result.append (invariant_clause)
 			Result.append (end_class_clause)
 		end
+
+feature {NONE} -- Code generation
 
 	indexing_clause: STRING is
 			-- Indexing clause in the generated code.
@@ -141,9 +142,7 @@ feature -- Command generation
 			arg_list: LINKED_LIST [APPLICATION_ARGUMENT]
 		do
 			!! Result.make (0)
-			Result.append ("feature -- Access%N%N%Ttarget: ")
-			Result.append (application_class.class_name)
-			Result.append ("%N%T%T%T-- Target of next execution%N%N")
+			Result.append ("feature -- Access%N%N")
 			arg_list := application_routine.argument_list
 			from
 				arg_list.start
@@ -211,13 +210,6 @@ feature -- Command generation
 			Result.append ("%T%Tend%N%N")
 		end
 
-	status_report_clause: STRING is
-			-- Status report clause.
-		do
-			!! Result.make (0)
-			Result.append ("feature -- Status report%N%N%Ttarget_set: BOOLEAN%N%T%T%T-- Has target been explicitly set?%N%N")
-		end
-
 	basic_operation_clause: STRING is
 			-- Basic operation clause.
 		local
@@ -226,7 +218,7 @@ feature -- Command generation
 		do
 			arg_list := application_routine.argument_list
 			!! Result.make (0)
-			Result.append ("feature -- Basic operations%N%N%Texecute is%N%T%Trequire%N%T%T%Ttarget_set: target_set%N%T%Tdo%N%T%T%Ttarget.")
+			Result.append ("feature -- Basic operations%N%N%Texecute is%N%T%Trequire else%N%T%T%Ttarget_set: target_set%N%T%Tdo%N%T%T%Ttarget.")
 			Result.append (application_routine.routine_name)
 			if not arg_list.empty then
 				Result.append (" (")

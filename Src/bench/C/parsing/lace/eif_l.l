@@ -29,7 +29,7 @@ static int eif_char();
 
 A		([a-z]|[A-Z])
 X		([A-Z]|[a-z]|[0-9]|_)
-W		[ \t\n]
+W		[ \t\n\r]
 c		[cC]
 l		[lL]
 a		[aA]
@@ -69,7 +69,7 @@ static int get_string()
 	while ((c = input()) != 0 && c != '"') {
 		if (c == '%') {
 			extension = 0;
-			while ((cc = input()) == ' ' || cc == '\t' || cc == '\n') {
+			while ((cc = input()) == ' ' || cc == '\t' || cc == '\n' || cc == '\r') {
 				extension = 1;
 			}
 			if (0 == extension) {

@@ -80,14 +80,14 @@ O		[0-7]
 E		(((e|E)[+-]?{D}+)?)
 A		([a-z]|[A-Z])
 X		([a-z]|[A-Z]|[0-9]|_)
-W		[ \t\n]
+W		[ \t\n\r]
 T		[0-9][0-9][0-9]
 U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 
 %%
 --.*						{	start_position = end_position;
 								end_position += yyleng;}
-[ \t\n]+					{	start_position = end_position;
+[ \t\n\r]+					{	start_position = end_position;
 								end_position += yyleng;}
 {D}+/".."					{return process_name(TE_INTEGER);}
 \1							{return process(TE_END);}
@@ -275,7 +275,7 @@ static int get_string()
 		end_position++;
 		if (c == '%') {
 			extension = 0;
-			while ((cc = input()) == ' ' || cc == '\t' || cc == '\n') {
+			while ((cc = input()) == ' ' || cc == '\t' || cc == '\n' || cc == '\r') {
 				extension = 1;
 				end_position++;
 			}

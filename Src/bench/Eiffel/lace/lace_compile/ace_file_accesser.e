@@ -443,11 +443,38 @@ feature -- Access
 			not_system_defaults: not system_defaults_used (name)
 		local
 			cl: CLUSTER_SD
-			cluster_properties: CLUSTER_PROPERTIES
+			cl_prop: CLUST_PROP_SD
+			cl_defaults: LACE_LIST [D_OPTION_SD]
+			opt: OPTION_SD
+			val: OPT_VAL_SD
 		do
 			cl := cluster_sd_with_name (name)
-			create cluster_properties.make_with_cluster_sd_and_ace_accesser (cl, Current)
-			Result := cluster_properties.evaluate_require_by_default
+			if cl /= Void then
+				cl_prop := cl.cluster_properties
+				if cl_prop /= Void then
+					cl_defaults	:= cl_prop.default_option
+					if cl_defaults /= Void then
+						from
+							cl_defaults.start
+						until
+							Result or else cl_defaults.after
+						loop
+							opt := cl_defaults.item.option
+							if opt.is_assertion then
+								val := cl_defaults.item.value
+								if val.is_require or else val.is_all then
+									Result := True
+								end
+							end								
+							cl_defaults.forth
+						end
+					else
+						Result := require_evaluated
+					end
+				else
+					Result := require_evaluated
+				end
+			end
 		end
 
 	ensure_evaluated_in_cluster (name: STRING): BOOLEAN is
@@ -458,11 +485,38 @@ feature -- Access
 			not_system_defaults: not system_defaults_used (name)
 		local
 			cl: CLUSTER_SD
-			cluster_properties: CLUSTER_PROPERTIES
+			cl_prop: CLUST_PROP_SD
+			cl_defaults: LACE_LIST [D_OPTION_SD]
+			opt: OPTION_SD
+			val: OPT_VAL_SD
 		do
 			cl := cluster_sd_with_name (name)
-			create cluster_properties.make_with_cluster_sd_and_ace_accesser (cl, Current)
-			Result := cluster_properties.evaluate_ensure_by_default
+			if cl /= Void then
+				cl_prop := cl.cluster_properties
+				if cl_prop /= Void then
+					cl_defaults	:= cl_prop.default_option
+					if cl_defaults /= Void then
+						from
+							cl_defaults.start
+						until
+							Result or else cl_defaults.after
+						loop
+							opt := cl_defaults.item.option
+							if opt.is_assertion then
+								val := cl_defaults.item.value
+								if val.is_ensure or else val.is_all then
+									Result := True
+								end
+							end								
+							cl_defaults.forth
+						end
+					else
+						Result := ensure_evaluated
+					end
+				else
+					Result := ensure_evaluated
+				end
+			end
 		end
 
 	check_evaluated_in_cluster (name: STRING): BOOLEAN is
@@ -473,11 +527,38 @@ feature -- Access
 			not_system_defaults: not system_defaults_used (name)
 		local
 			cl: CLUSTER_SD
-			cluster_properties: CLUSTER_PROPERTIES
+			cl_prop: CLUST_PROP_SD
+			cl_defaults: LACE_LIST [D_OPTION_SD]
+			opt: OPTION_SD
+			val: OPT_VAL_SD
 		do
 			cl := cluster_sd_with_name (name)
-			create cluster_properties.make_with_cluster_sd_and_ace_accesser (cl, Current)
-			Result := cluster_properties.evaluate_check_by_default
+			if cl /= Void then
+				cl_prop := cl.cluster_properties
+				if cl_prop /= Void then
+					cl_defaults	:= cl_prop.default_option
+					if cl_defaults /= Void then
+						from
+							cl_defaults.start
+						until
+							Result or else cl_defaults.after
+						loop
+							opt := cl_defaults.item.option
+							if opt.is_assertion then
+								val := cl_defaults.item.value
+								if val.is_check or else val.is_all then
+									Result := True
+								end
+							end								
+							cl_defaults.forth
+						end
+					else
+						Result := check_evaluated
+					end
+				else
+					Result := check_evaluated
+				end
+			end
 		end
 
 	loop_evaluated_in_cluster (name: STRING): BOOLEAN is
@@ -488,11 +569,38 @@ feature -- Access
 			not_system_defaults: not system_defaults_used (name)
 		local
 			cl: CLUSTER_SD
-			cluster_properties: CLUSTER_PROPERTIES
+			cl_prop: CLUST_PROP_SD
+			cl_defaults: LACE_LIST [D_OPTION_SD]
+			opt: OPTION_SD
+			val: OPT_VAL_SD
 		do
 			cl := cluster_sd_with_name (name)
-			create cluster_properties.make_with_cluster_sd_and_ace_accesser (cl, Current)
-			Result := cluster_properties.evaluate_loop_by_default
+			if cl /= Void then
+				cl_prop := cl.cluster_properties
+				if cl_prop /= Void then
+					cl_defaults	:= cl_prop.default_option
+					if cl_defaults /= Void then
+						from
+							cl_defaults.start
+						until
+							Result or else cl_defaults.after
+						loop
+							opt := cl_defaults.item.option
+							if opt.is_assertion then
+								val := cl_defaults.item.value
+								if val.is_loop or else val.is_all then
+									Result := True
+								end
+							end								
+							cl_defaults.forth
+						end
+					else
+						Result := loop_evaluated
+					end
+				else
+					Result := loop_evaluated
+				end
+			end
 		end
 
 	invariant_evaluated_in_cluster (name: STRING): BOOLEAN is
@@ -503,11 +611,38 @@ feature -- Access
 			not_system_defaults: not system_defaults_used (name)
 		local
 			cl: CLUSTER_SD
-			cluster_properties: CLUSTER_PROPERTIES
+			cl_prop: CLUST_PROP_SD
+			cl_defaults: LACE_LIST [D_OPTION_SD]
+			opt: OPTION_SD
+			val: OPT_VAL_SD
 		do
 			cl := cluster_sd_with_name (name)
-			create cluster_properties.make_with_cluster_sd_and_ace_accesser (cl, Current)
-			Result := cluster_properties.evaluate_invariant_by_default
+			if cl /= Void then
+				cl_prop := cl.cluster_properties
+				if cl_prop /= Void then
+					cl_defaults	:= cl_prop.default_option
+					if cl_defaults /= Void then
+						from
+							cl_defaults.start
+						until
+							Result or else cl_defaults.after
+						loop
+							opt := cl_defaults.item.option
+							if opt.is_assertion then
+								val := cl_defaults.item.value
+								if val.is_invariant or else val.is_all then
+									Result := True
+								end
+							end								
+							cl_defaults.forth
+						end
+					else
+						Result := invariant_evaluated
+					end
+				else
+					Result := invariant_evaluated
+				end
+			end
 		end
 
 	excluded_in_cluster (name: STRING): LINKED_LIST [STRING] is
@@ -600,31 +735,6 @@ feature -- Access
 			end
 		ensure
 			valid_ast: is_valid
-		end
-
-	cluster_sd_with_name (name: STRING): CLUSTER_SD is
-			-- Cluster named `name' in current system.
-			-- Void if no match.
-		require
-			valid_ast: is_valid
-			name_not_void: name /= Void
-			name_not_empty: not name.is_empty
-		local
-			l_clusters: LACE_LIST [CLUSTER_SD]
-		do
-			l_clusters := root_ast.clusters
-			if l_clusters /= Void then
-				from
-					l_clusters.start
-				until
-					Result /= Void or else l_clusters.after
-				loop
-					if l_clusters.item.cluster_name.is_equal (new_id_sd (name, False)) then
-						Result := l_clusters.item
-					end
-					l_clusters.forth
-				end
-			end
 		end
 		
 feature -- Element change
@@ -1458,6 +1568,30 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	cluster_sd_with_name (name: STRING): CLUSTER_SD is
+			-- Cluster named `name' in current system.
+			-- Void if no match.
+		require
+			valid_ast: is_valid
+			name_not_void: name /= Void
+			name_not_empty: not name.is_empty
+		local
+			l_clusters: LACE_LIST [CLUSTER_SD]
+		do
+			l_clusters := root_ast.clusters
+			if l_clusters /= Void then
+				from
+					l_clusters.start
+				until
+					Result /= Void or else l_clusters.after
+				loop
+					if l_clusters.item.cluster_name.is_equal (new_id_sd (name, False)) then
+						Result := l_clusters.item
+					end
+					l_clusters.forth
+				end
+			end
+		end
 
 invariant
 	non_void_root_ast: root_ast /= Void

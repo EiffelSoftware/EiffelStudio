@@ -57,6 +57,17 @@ feature -- Basic operations
 			item := default_pointer
 		end
 
+	quick_release is
+			-- Release the device context
+		do
+			check
+				window_not_void: window /= Void
+				window_exist: window.exists
+			end
+			cwin_release_dc (hwindow, item)
+			item := default_pointer
+		end
+
 feature {NONE} -- Implementation
 
 	hwindow: POINTER

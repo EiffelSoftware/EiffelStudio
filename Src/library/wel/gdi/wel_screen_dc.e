@@ -26,6 +26,13 @@ feature -- Basic operations
 			item := default_pointer
 		end
 
+	quick_release is
+			-- Release the device context
+		do
+			cwin_release_dc (default_pointer, item)
+			item := default_pointer
+		end
+
 feature {NONE} -- Implementation
 
 	destroy_item is

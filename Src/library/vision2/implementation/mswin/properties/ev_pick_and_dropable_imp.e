@@ -18,34 +18,38 @@ inherit
 
 feature -- Implementation
 
-	initialize_transport (args: EV_ARGUMENT2 [EV_INTERNAL_COMMAND, EV_COMMAND]; data: EV_BUTTON_EVENT_DATA) is
+	initialize_transport (args: EV_ARGUMENT2 [EV_INTERNAL_COMMAND, EV_COMMAND]; ev_data: EV_BUTTON_EVENT_DATA) is
 			-- Initialize the pick and drop mechanism.
 		local
 			transporter: EV_PND_TRANSPORTER_IMP
-			arg1, arg2: EV_ARGUMENT2 [INTEGER, EV_PND_SOURCE_IMP]
+			arg: EV_ARGUMENT2 [like Current, EV_INTERNAL_COMMAND]
+			arg1: EV_ARGUMENT1 [like Current]
 		do
-			if not data.first_button_pressed
-			and then not data.second_button_pressed
-			and then not data.shift_key_pressed
-			and then not data.control_key_pressed
+			if not ev_data.first_button_pressed
+			and then not ev_data.second_button_pressed
+			and then not ev_data.shift_key_pressed
+			and then not ev_data.control_key_pressed
 			then
 				if args.first /= Void then
-					args.first.execute (data)
+					args.first.execute (ev_data)
 				end
 				if transportable then
 					create transporter
-					transporter.transport (Current, args.first)
-					create arg1.make (2, Current)
-					create arg2.make (3, Current)
-	
-					-- We add the commands
+					if initial_point /= Void then
+						transporter.start_from (Current, initial_point.x, initial_point.y)
+					else
+						transporter.start_from (Current, ev_data.absolute_x, ev_data.absolute_y)
+					end
+						-- We add the commands
 					remove_single_command (Cmd_button_three_press, args.second)
-					widget_source.add_command (Cmd_button_three_press, transporter, arg1)
-					widget_source.add_command (Cmd_button_one_press, transporter, arg2)
-					widget_source.add_command (Cmd_button_two_press, transporter, arg2)
-
-					-- We set a command that draw the line
-					create arg1.make (1, Current)
+					create drop_cmd.make (transporter~drop_command)
+					create cancel_cmd.make (transporter~cancel_command)
+					create arg.make (Current, args.first)
+					widget_source.add_command (Cmd_button_three_press, drop_cmd, arg)
+					widget_source.add_command (Cmd_button_one_press, cancel_cmd, arg)
+					widget_source.add_command (Cmd_button_two_press, cancel_cmd, arg)
+						-- We set a command that draw the line
+					create arg1.make (Current)
 					widget_source.add_command (Cmd_motion_notify, transporter, arg1)
 				end
 			end
@@ -61,9 +65,11 @@ feature -- Implementation
 			create arg.make (cmd, com)
 
 			-- We remove the commands added before
-			widget_source.remove_single_command (Cmd_button_three_press, transporter)
-			widget_source.remove_single_command (Cmd_button_one_press, transporter)
-			widget_source.remove_single_command (Cmd_button_two_press, transporter)
+			widget_source.remove_single_command (Cmd_button_three_press, drop_cmd)
+			widget_source.remove_single_command (Cmd_button_one_press, cancel_cmd)
+			widget_source.remove_single_command (Cmd_button_two_press, cancel_cmd)
+			drop_cmd := Void
+			cancel_cmd := Void
 			add_command (Cmd_button_three_press, com, arg)
 
 			-- We remove the drawing command
@@ -71,11 +77,6 @@ feature -- Implementation
 		end
 
 feature {EV_PND_TRANSPORTER_IMP} -- Implemented in descendants.
-
-	widget_source: EV_WIDGET_IMP is
-			-- Widget drag source used for transport
-		deferred
-		end
 
 	add_command (event_id: INTEGER; cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' and `arg' to the list corresonding to `event_id'
@@ -89,6 +90,11 @@ feature {EV_PND_TRANSPORTER_IMP} -- Implemented in descendants.
 			-- with the event `event_id'.
 		deferred
 		end
+
+feature {NONE} -- Implementation
+
+	drop_cmd, cancel_cmd: EV_ROUTINE_COMMAND
+			-- Pick and Drop commands
 
 end -- class EV_PND_SOURCE_IMP
 

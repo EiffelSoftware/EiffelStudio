@@ -42,13 +42,10 @@ feature {NONE} -- Initialization
 
 			-- set the widget's attribut `application' to `interface'.
 			w.application.put (Current)
+
+			-- show the first window
+			w.show
 		end
-
-feature -- Access
-
-	main_window: EV_WINDOW_IMP
-			-- Implementation of the main window of
-			-- the application.
 
 feature -- Accelerators - command association
 
@@ -101,15 +98,6 @@ feature {NONE} -- Implementation
 			-- Start the application.
                         gtk_main
                 end
-
-	exit_from_main_window is
-			-- Exit the application after the user
-			-- closed the main window.
-		do
-			if not main_window.has_close_command then
-				exit
-			end
-		end
 
 feature {EV_UNTITLED_WINDOW_I} -- Root windows management
 

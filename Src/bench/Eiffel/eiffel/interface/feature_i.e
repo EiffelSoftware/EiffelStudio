@@ -1579,6 +1579,8 @@ feature -- C code generation
 			byte_code: BYTE_CODE;
 		do
 			if used then
+				generate_header (file);
+
 				byte_code := Byte_server.disk_item (body_id);
 
 					-- Generation of C code for an Eiffel feature written in
@@ -1591,6 +1593,17 @@ feature -- C code generation
 				byte_context.clear_all;
 
 			end;
+		end;
+
+	generate_header (file: INDENT_FILE) is
+			-- Generate a header before the body of the feature
+		require
+			valid_file: file /= Void;
+			file_open_for_writing: file.is_open_write or file.is_open_append;
+		do
+			file.putstring ("/* ");
+			file.putstring (feature_name);
+			file.putstring (" */%N%N");
 		end;
 
 feature -- Debug purpose

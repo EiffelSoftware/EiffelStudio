@@ -30,6 +30,7 @@ inherit
 	MEMORY;
 	SK_CONST;
 	SHARED_RESCUE_STATUS;
+	SHARED_STATUS;
 	SHARED_ASSERTION_LEVEL
 
 creation
@@ -2599,7 +2600,8 @@ end;
 			filter: GEN_TYPE_I;
 			new_class_type: CLASS_TYPE;
 			base_c: CLASS_C;
-			local_cursor: LINKABLE [GEN_TYPE_I]
+			local_cursor: LINKABLE [GEN_TYPE_I];
+			melt_exp: MELT_EXP;
 		do
 			if not derivations.has_derivation (id, data) then
 					-- The recursive update is done only once
@@ -2619,7 +2621,15 @@ end;
 					-- If class is TO_SPECIAL or else SPECIAL
 					-- then freeze system.
 				if is_special then
-					System.set_freeze (True);
+					if melt_only and then not System.precompilation then
+						!!melt_exp;
+						melt_exp.set_class (Current);
+						melt_exp.set_generic_type (data);
+						Error_handler.insert_error (melt_exp);
+						Error_handler.raise_error;
+					else
+						System.set_freeze (True);
+					end;
 				end;
 					-- Mark the class `changed4' because there is a new
 					-- type

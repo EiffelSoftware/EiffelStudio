@@ -1246,6 +1246,10 @@ rt_public void flush_st_buffer (void)
 		store_write_func();
 }
 
+int char_write(char *pointer, int size)
+{
+    return write(fides, pointer, size);
+}
 
 void store_write(void)
 {

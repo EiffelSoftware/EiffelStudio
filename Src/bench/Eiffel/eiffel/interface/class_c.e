@@ -1790,7 +1790,6 @@ feature -- Class initialization
 			vhpr1: VHPR1
 			dummy_list: LINKED_LIST [INTEGER]
 			a_client: CLASS_C
-			class_i: CLASS_I
 			changed_status, changed_frozen: BOOLEAN
 			is_exp, changed_generics, changed_expanded, changed_separate: BOOLEAN
 			pars: like parents

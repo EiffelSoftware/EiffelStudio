@@ -15,8 +15,11 @@
 #ifndef _eif_threads_h_
 #define _eif_threads_h_
 
+extern void eif_thr_panic(char *);
 extern void eif_init_root_thread(void);
 extern void eif_register_thread(void);
+
+/* extern void eif_thr_create (EIF_OBJ current_obj, EIF_PROC init_func); */
 
 #ifdef POSIX_THREADS
 
@@ -41,7 +44,7 @@ extern void eif_register_thread(void);
 #define EIF_THR_CREATION_FLAGS
 
 #define EIF_THR_TYPE						HANDLE
-#define EIF_THR_CREATE(entry,arg,tid,msg)	tid=_beginthread((entry),0,(EIF_THR_ENTRY_ARG_TYPE)(arg)); if ((int)tid==-1) panic(msg)
+#define EIF_THR_CREATE(entry,arg,tid,msg)	tid=_beginthread((entry),0,(EIF_THR_ENTRY_ARG_TYPE)(arg)); if ((int)tid==-1) eif_thr_panic(msg)
 #define EIF_THR_EXIT(arg)					_endthread()
 #define EIF_THR_JOIN(which)
 
@@ -53,11 +56,11 @@ extern void eif_register_thread(void);
 
 #define EIF_TSD_TYPE						DWORD
 #define EIF_TSD_VAL_TYPE					LPVOID
-#define EIF_TSD_CREATE(key,msg)				if ((key=TlsAlloc())==0xFFFFFFFF) panic(msg)
-#define EIF_TSD_SET(key,val,msg)			if (!TlsSetValue((key),(EIF_TSD_VAL_TYPE)(val))) panic(msg)
-#define EIF_TSD_GET(key,val,msg)			val=TlsGetValue(key); if (GetLastError()!=NO_ERROR) panic(msg)
-#define EIF_TSD_GET_CONTEXT(key,val,msg)	val=(eif_global_context_t *)TlsGetValue(key); if (GetLastError()!=NO_ERROR) panic(msg)
-#define EIF_TSD_DESTROY(key,msg)			if (!TlsFree(key)) panic(msg)
+#define EIF_TSD_CREATE(key,msg)				if ((key=TlsAlloc())==0xFFFFFFFF) eif_thr_panic(msg)
+#define EIF_TSD_SET(key,val,msg)			if (!TlsSetValue((key),(EIF_TSD_VAL_TYPE)(val))) eif_thr_panic(msg)
+#define EIF_TSD_GET(key,val,msg)			val=TlsGetValue(key); if (GetLastError()!=NO_ERROR) eif_thr_panic(msg)
+#define EIF_TSD_GET_CONTEXT(key,val,msg)	val=(eif_global_context_t *)TlsGetValue(key); if (GetLastError()!=NO_ERROR) eif_thr_panic(msg)
+#define EIF_TSD_DESTROY(key,msg)			if (!TlsFree(key)) eif_thr_panic(msg)
 
 
 #elif defined SOLARIS_THREADS
@@ -75,21 +78,25 @@ extern void eif_register_thread(void);
 #define EIF_THR_CREATION_FLAGS	THR_NEW_LWP
 
 #define EIF_THR_TYPE						thread_t
-#define EIF_THR_CREATE(entry,arg,tid,msg)	if (thr_create(NULL,0,entry,(EIF_THR_ENTRY_ARG_TYPE)(arg),EIF_THR_CREATION_FLAGS,&(tid))) panic(msg)
+#define EIF_THR_CREATE(entry,arg,tid,msg)	if (thr_create(NULL,0,entry,(EIF_THR_ENTRY_ARG_TYPE)(arg),EIF_THR_CREATION_FLAGS,&(tid))) eif_thr_panic(msg)
 #define EIF_THR_EXIT(arg)					thr_exit(arg)
 #define EIF_THR_JOIN(which)					thr_join(0,(which),NULL)
 
 #define EIF_MUTEX_TYPE				mutex_t
-#define EIF_MUTEX_CREATE(m,msg)		if (mutex_init(&(m),USYNC_THREAD,NULL)) panic(msg)
-#define EIF_MUTEX_LOCK(m,msg)		if (mutex_lock(&(m))) panic(msg)
-#define EIF_MUTEX_UNLOCK(m,msg)		if (mutex_unlock(&(m))) panic(msg)
+#define EIF_MUTEX_CREATE(m,msg)		if (mutex_init(&(m),USYNC_THREAD,NULL)) eif_thr_panic(msg)
+#define EIF_MUTEX_LOCK(m,msg)		if (mutex_lock(&(m))) eif_thr_panic(msg)
+#define EIF_MUTEX_UNLOCK(m,msg)		if (mutex_unlock(&(m))) eif_thr_panic(msg)
 #define EIF_MUTEX_DESTROY(m,msg)
 
 #define EIF_TSD_TYPE					thread_key_t
 #define EIF_TSD_VAL_TYPE				void *
-#define EIF_TSD_CREATE(key,msg)			if (thr_keycreate(&(key),NULL)) panic(msg)
-#define EIF_TSD_SET(key,val,msg)		if (thr_setspecific((key),(EIF_TSD_VAL_TYPE)(val))) panic(msg)
-#define EIF_TSD_GET(key,val,msg)		if (thr_getspecific((key),(void **)&(val))) panic(msg)
+#define EIF_TSD_CREATE(key,i,msg)			\
+	if (i=thr_keycreate(&(key),NULL)) { \
+		printf("thr_keycreate = %d\n",i); \
+		eif_thr_panic(msg); \
+	} else printf("OK key create\n")
+#define EIF_TSD_SET(key,val,msg)		if (thr_setspecific((key),(EIF_TSD_VAL_TYPE)(val))) eif_thr_panic(msg); else printf("OK key set\n")
+#define EIF_TSD_GET(key,val,msg)		if (thr_getspecific((key),(void **)&(val))) eif_thr_panic(msg)
 #define EIF_TSD_GET_CONTEXT(key,val,msg)	EIF_TSD_GET(key,val,msg)
 #define EIF_TSD_DESTROY(key,errcode)
 

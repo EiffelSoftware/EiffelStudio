@@ -230,7 +230,7 @@ feature {COMPILER_EXPORTER} -- Case storage
 	storage_info: S_EXPORT_SET_I is
 			-- Case storage of export set 
 		do
-			!! Result.make;
+			!! Result.make (count);
 			from
 				start
 			until

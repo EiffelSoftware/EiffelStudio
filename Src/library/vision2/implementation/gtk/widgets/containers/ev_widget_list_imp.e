@@ -1,6 +1,5 @@
 indexing
-	description: 
-		"EiffelVision widget list. GTK+ implementation."
+	description: "Eiffel Vision widget list. GTK+ implementation."
 	status: "See notice at end of class"
 	keywords: "widget list, container"
 	date: "$Date$"
@@ -219,7 +218,6 @@ feature -- Removal
 			index := index - 1
 		end
 
-
 	remove_right is
 			-- Remove item to the right of cursor position.
 			-- Do not move cursor.
@@ -267,6 +265,9 @@ end -- class EV_WIDGET_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2000/02/26 02:02:14  brendel
+--| Formatting.
+--|
 --| Revision 1.4  2000/02/26 01:29:02  brendel
 --| Added calls to action sequences when adding/removing an item.
 --|

@@ -30,8 +30,20 @@ feature -- Initialization
 
 feature -- Access
 
-	pixmap: EV_PIXMAP
+	pixmap: EV_PIXMAP is
 			-- Pixmap that has been set.
+		local
+			pix_imp: EV_PIXMAP_IMP
+			temp_gtk_pixmap, gdk_data, gdk_mask: POINTER
+		do
+			temp_gtk_pixmap := gtk_pixmap
+			if temp_gtk_pixmap /= NULL then
+				create Result
+				pix_imp ?= Result.implementation
+				C.gtk_pixmap_get (temp_gtk_pixmap, $gdk_data, $gdk_mask)
+				pix_imp.copy_from_gdk_data (gdk_data, gdk_mask, pix_width, pix_height)
+			end
+		end
 
 feature -- Element change
 
@@ -39,12 +51,15 @@ feature -- Element change
 			-- Assign `a_pixmap' to `pixmap'.
 		local
 			imp: EV_PIXMAP_IMP
+			gtk_pix_wid: POINTER
 		do
 			remove_pixmap
-			create pixmap
-			pixmap.copy (a_pixmap)
-			imp ?= pixmap.implementation
-			C.gtk_container_add (pixmap_box, imp.c_object)
+			imp ?= a_pixmap.implementation
+			pix_width := imp.width
+			pix_height := imp.height
+			gtk_pix_wid := C.gtk_pixmap_new (imp.drawable, imp.mask)
+			C.gtk_widget_show (gtk_pix_wid)
+			C.gtk_container_add (pixmap_box, gtk_pix_wid)
 			C.gtk_widget_show (pixmap_box)		
 		end
 
@@ -52,11 +67,11 @@ feature -- Element change
 			-- Assign Void to `pixmap'.
 		local
 			p: POINTER
-		do
-			pixmap := Void
+		do	
 			p := gtk_pixmap
 			if p /= NULL then
-				C.gtk_object_ref (p)
+				--C.gtk_object_ref (p)
+				--| We want p to be deallocated by gtk.
 				C.gtk_container_remove (pixmap_box, p)
 			end
 			C.gtk_widget_hide (pixmap_box)
@@ -75,6 +90,9 @@ feature {NONE} -- Implementation
 				C.g_list_free (a_child_list)
 			end
 		end
+		
+	pix_width, pix_height: INTEGER
+		-- Stored dimensions used for creating on the fly pixmaps.
 
 	pixmap_box: POINTER
 			-- GtkHBox to hold the GtkPixmap.

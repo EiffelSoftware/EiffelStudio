@@ -3,6 +3,8 @@
 # gen_action_sequences
 # This program translates an action sequence definition file into a collection
 # of eiffel classes. 
+# Date: $Date$
+# Revision: $Revision$
 #===============================================================================
 
 while (<>) {
@@ -114,6 +116,9 @@ EOT
 #===============================================================================
 #
 # $Log$
+# Revision 1.5  1999/10/27 20:43:30  oconnor
+# added cvs date revision keywords
+#
 # Revision 1.4  1999/10/27 20:42:30  oconnor
 # added cvs log keyword
 #

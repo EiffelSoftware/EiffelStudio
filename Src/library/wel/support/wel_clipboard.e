@@ -8,6 +8,9 @@ class
 	WEL_CLIPBOARD
 inherit
 	WEL_CLIPBOARD_CONSTANTS
+		export
+			{NONE} all
+		end
 
 feature -- Access
 

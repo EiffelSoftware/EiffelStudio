@@ -20,7 +20,9 @@ remtrace gobo
 exprt -r $DEFAULT_CVS_TAG -d free_add_ons free_add_ons/gobo
 gunzip -c free_add_ons/gobo_33_unix.tgz | tar -xf -
 fullrd free_add_ons
-remtrace helpers
+remtrace graph
+exprt -r $DEFAULT_CVS_TAG -d graph "Src/library/graph"
+remtrace graph
 exprt -r $DEFAULT_CVS_TAG -d helpers "Src/library/helpers"
 remtrace keygen
 exprt -r $DEFAULT_CVS_TAG -d keygen "Src/library/keygen"

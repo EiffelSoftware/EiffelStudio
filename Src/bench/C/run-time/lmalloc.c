@@ -21,13 +21,20 @@
 */
 
 
-#include <stdio.h>
 #include "eif_portable.h"
-#include <assert.h>
 #include "eif_config.h"
 #include "eif_malloc.h"
 #include "eif_garcol.h"
 #include "eif_lmalloc.h"
+#if defined LMALLOC_DEBUG || defined LMALLOC_CHECK
+#include <stdio.h>
+#ifdef I_STRING
+#include <string.h>
+#else
+#include <strings.h>
+#endif	/* I_STRING */
+#endif	/* LMALLOC_CHECK or LMALLOC_DEBUG */
+#include <assert.h>
 
 #if !defined EIF_VMS && !defined VXWORKS
 #include <malloc.h>
@@ -50,8 +57,11 @@ rt_private char *rcsid =
 /*---------------*/
 /* Definitions.  */
 /*---------------*/
+#define EIF_FSZ	16
 struct lm_entry {
 	void *ptr;	
+	int line;
+	char file[EIF_FSZ];
 	struct lm_entry *next;
 }; 
 
@@ -60,7 +70,7 @@ rt_shared int is_in_lm (void *ptr);
 rt_private struct lm_entry **lm = (struct lm_entry **) 0;
 
 rt_private int lm_create (); 
-rt_private int lm_put (void *ptr);
+rt_private int lm_put (void *ptr, char *file, int line);
 rt_private int lm_remove (void *ptr);
 rt_shared  int eif_lm_free ();
 
@@ -100,7 +110,7 @@ rt_private int lm_create () {
 /*-------------------------------------*/
 /* Add an entry in lm linked list.     */
 /*-------------------------------------*/
-rt_private int lm_put (void *ptr) {
+rt_private int lm_put (void *ptr, char *file, int line) {
 
 	struct lm_entry *ne;
 	
@@ -115,7 +125,7 @@ rt_private int lm_put (void *ptr) {
 		}
 		alloc = 1;
 		EIF_MUTEX_CREATE (lm_lock, "Couldn't create lm lock\n");
-		lm_put (lm_lock);
+		lm_put (lm_lock, "N/A", 0);
 	}  
 	assert (alloc == 1);
 	assert (lm_lock != NULL);
@@ -138,6 +148,8 @@ rt_private int lm_put (void *ptr) {
 	}
 
 	ne->ptr = ptr;
+	strncpy (ne->file, file, EIF_FSZ);
+	ne->line = line;
 	ne->next = *lm;
 	*lm = ne;
 	EIF_LM_UNLOCK;
@@ -232,13 +244,15 @@ rt_shared void eif_lm_display () {
 #endif
 	EIF_LM_LOCK;
 	if (!(*lm)) {
-		fprintf (stderr, "lm is empty\n");	
+		fprintf (stderr, "*** lm is empty ***\n");	
 		EIF_LM_UNLOCK;
 		return;
 	}
+	fprintf (stderr, "*** Objects remaining in lm list ***\n");
 	for (cur = *lm; cur != NULL; cur = cur->next) {
-		fprintf (stderr, "lm:0x%x\n", (size_t) cur->ptr);
+		fprintf (stderr, "0x%x allocated at %s:%d\n", (size_t) cur->ptr,  cur->file, cur->line);
 	}
+	fprintf (stderr, "*** end ***\n");
 	EIF_LM_UNLOCK;	
 }
 	
@@ -267,7 +281,7 @@ rt_shared int eif_lm_free () {
 	free (lm);
 	EIF_LM_UNLOCK
 #ifdef EIF_THREADS
-	fprintf (stderr, "Destroy and free lm lock 0x%lx\n", (unsigned long) lm_lock);
+	fprintf (stderr, "*** Destroy and free lm lock 0x%lx\n", (unsigned long) lm_lock);
 	EIF_MUTEX_DESTROY (lm_lock, "Couldn't destroy lm lock");
 	lm_lock = NULL;
 #endif /* EIF_THREADS */
@@ -275,14 +289,18 @@ rt_shared int eif_lm_free () {
 }
 #endif	/* LMALLOC_CHECK */
 
+#if defined LMALLOC_DEBUG || defined LMALLOC_CHECK
+rt_public Malloc_t eiffel_malloc (register unsigned int nbytes, char *file, int line)
+#else
 rt_public Malloc_t eiffel_malloc (register unsigned int nbytes)
+#endif
 {
 #ifdef LMALLOC_CHECK
 	Malloc_t ret;
 
 	ret = (Malloc_t) malloc (nbytes);
-	if (lm_put (ret))	
-		fprintf (stderr, "Warning: cannot lm malloc %d bytes\n", nbytes);
+	if (lm_put (ret, file, line))	
+		fprintf (stderr, "*** Warning: cannot lm malloc %d bytes\n", nbytes);
 #ifdef LMALLOC_DEBUG
 #ifdef EIF_THREADS
 	fprintf (stderr, "EIF_MALLOC: 0x%lx\t(%d bytes) in thread %lx\n", (unsigned long) ret, nbytes, EIF_THR_SELF);	
@@ -296,13 +314,17 @@ rt_public Malloc_t eiffel_malloc (register unsigned int nbytes)
 #endif	/* LMALLOC_CHECK */
 }
 
+#if defined LMALLOC_CHECK || defined LMALLOC_DEBUG
+rt_public Malloc_t eiffel_calloc (unsigned int nelem, unsigned int elsize, char *file, int line)
+#else
 rt_public Malloc_t eiffel_calloc (unsigned int nelem, unsigned int elsize)
+#endif
 {
 #ifdef LMALLOC_CHECK
 	Malloc_t ret;
 	ret = (Malloc_t) calloc (nelem, elsize);
-	if (lm_put (ret))	
-		fprintf (stderr, "Warning: cannot lm calloc %d * %d \n", (unsigned int) nelem, (unsigned int) elsize);
+	if (lm_put (ret, file, line))	
+		fprintf (stderr, "*** Warning: cannot lm calloc %d * %d \n", (unsigned int) nelem, (unsigned int) elsize);
 #ifdef LMALLOC_DEBUG
 #ifdef EIF_THREADS
 	fprintf (stderr, "EIF_CALLOC: 0x%lx\t(%d elts * %d bytes = %d bytes) in thread %lx\n", (unsigned long) ret, nelem, elsize, nelem*elsize, EIF_THR_SELF);	
@@ -316,7 +338,11 @@ rt_public Malloc_t eiffel_calloc (unsigned int nelem, unsigned int elsize)
 #endif	/* LMALLOC_CHECK */
 }
 
+#if defined LMALLOC_DEBUG || LMALLOC_CHECK
+rt_public Malloc_t eiffel_realloc (register void *ptr, register unsigned int nbytes, char *file, int line)
+#else
 rt_public Malloc_t eiffel_realloc (register void *ptr, register unsigned int nbytes)
+#endif
 {
 #ifdef LMALLOC_CHECK
 	Malloc_t ret;
@@ -324,9 +350,9 @@ rt_public Malloc_t eiffel_realloc (register void *ptr, register unsigned int nby
 	ret = (Malloc_t) realloc (ptr, nbytes);
 	if (ptr != ret) {
 	if (lm_remove (ptr))	
-		fprintf (stderr, "Warning: cannot lm remove-realloc 0x%x\n", (size_t) ptr);
-	if (lm_put (ret))	
-		fprintf (stderr, "Warning: cannot lm realloc 0x%x with %d bytes\n", (size_t) ptr, nbytes);
+		fprintf (stderr, "*** Warning: cannot lm remove-realloc 0x%x\n", (size_t) ptr);
+	if (lm_put (ret, file, line))	
+		fprintf (stderr, "*** Warning: cannot lm realloc 0x%x with %d bytes\n", (size_t) ptr, nbytes);
 	}
 #ifdef LMALLOC_DEBUG
 #ifdef EIF_THREADS
@@ -341,12 +367,16 @@ rt_public Malloc_t eiffel_realloc (register void *ptr, register unsigned int nby
 #endif	/* LMALLOC_CHECK */
 }
 
+#if defined LMALLOC_CHECK || defined LMALLOC_DEBUG
+void eiffel_free(register void *ptr, char *date, int line)
+#else
 void eiffel_free(register void *ptr)
+#endif
 {
 #ifdef LMALLOC_CHECK
 	free (ptr);
 	if (lm_remove (ptr))	
-		fprintf (stderr, "Warning: cannot lm free 0x%lx\n", (unsigned long) ptr);
+		fprintf (stderr, "*** Warning: cannot lm free 0x%lx\n", (unsigned long) ptr);
 #ifdef LMALLOC_DEBUG
 #ifdef EIF_THREADS
 	fprintf (stderr, "EIF_FREE: 0x%lx in thread %lx\n", (unsigned long) ptr, EIF_THR_SELF);	

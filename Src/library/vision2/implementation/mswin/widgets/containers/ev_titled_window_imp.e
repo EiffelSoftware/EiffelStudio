@@ -23,11 +23,6 @@ inherit
 			set_title
 		end
 
-	WEL_SIZE_CONSTANTS
-		export
-			{NONE} all
-		end
-
 creation
 	make,
 	make_with_owner,

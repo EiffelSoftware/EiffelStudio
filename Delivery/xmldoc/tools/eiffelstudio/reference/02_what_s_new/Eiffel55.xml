@@ -7,12 +7,13 @@
 			<heading><size>3</size>Improvements</heading>
 			<list ordered="false">
 				<item>Added full configuration of colors used in editor</item>
+				<item>Added docking facilities for various tools. It permits the re-ordering of tools within the interface, including making them "float" externally.</item>
 			</list>
 		<heading><size>2</size>Debugger</heading>
 			<list ordered="false">
 				<item>Enabled conditional breakpoing and expression evaluation for .NET</item>
 				<item>Improved expression evaluation abilities (full range of Eiffel expressions are now supported).</item>
-				<item>Improved object viewer window</item>
+				<item>Improved object viewer window (word wrapping for large text, ability to see the whole content in one click without having to enter the lower and upper index of a range).</item>
 			</list>
 		<heading><size>2</size>EiffelBuild</heading>
 		<heading><size>2</size>Compiler</heading>

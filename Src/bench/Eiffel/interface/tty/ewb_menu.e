@@ -14,15 +14,15 @@ inherit
 	ARRAY [EWB_CMD]
 	SHARED_EWB_HELP
 		undefine
-			consistent, copy, setup, is_equal
+			copy, is_equal
 		end
 	SHARED_EWB_CMD_NAMES
 		undefine
-			consistent, copy, setup, is_equal
+			copy, is_equal
 		end
 	SHARED_EWB_ABBREV
 		undefine
-			consistent, copy, setup, is_equal
+			copy, is_equal
 		end
 creation
 

@@ -1,7 +1,5 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
-	description: "EiffelVision pixmap container. %
-				% Mswindows implementation."
+	description: "EiffelVision pixmap container. Mswindows implementation."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
@@ -16,10 +14,10 @@ inherit
 feature -- Access
 
 	pixmap: EV_PIXMAP
-			-- An image.
+			-- Pixmap of `Current'.
 
 	pixmap_imp: EV_PIXMAP_IMP is
-			-- Implementation of the pixmap contained 
+			-- Implementation of pixmap in `Current'.
 		do
 			if pixmap /= Void then
 				Result ?= pixmap.implementation
@@ -29,7 +27,7 @@ feature -- Access
 feature -- Element change
 
 	set_pixmap (pix: EV_PIXMAP) is
-			-- Make `pix' the new pixmap of the widget.
+			-- Make `pix' the new pixmap of `Current'.
 			-- We need to destroy the dc that comes with it,
 			-- because a bitmap can be linked to only one dc
 			-- at a time.
@@ -40,7 +38,7 @@ feature -- Element change
 		end
 
 	remove_pixmap is
-			-- Remove the pixmap from the container
+			-- Remove the pixmap from `Current'.
 		local
 			current_pixmap_imp: EV_PIXMAP_IMP
 		do
@@ -50,12 +48,16 @@ feature -- Element change
 feature {NONE} -- deferred features
 
 	invalidate is
+			-- Invalide the entire client area of `Current'.
+			--| This will force the client area to be re-drawn.
+			--| The background of the client area will be cleared before
+			--| the re-draw.
 		deferred
 		end
 
 end -- class EV_PIXMAPABLE_IMP
 
---|----------------------------------------------------------------
+--|-----------------------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
@@ -69,13 +71,16 @@ end -- class EV_PIXMAPABLE_IMP
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
+--|-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2000/05/02 00:20:41  rogers
+--| Removed FIXME NOT_REVIEWED. Comments and formatting.
+--|
 --| Revision 1.13  2000/04/11 19:35:52  pichery
 --| cosmetics, removed unused features and instructions.
 --|

@@ -106,8 +106,7 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	last_saved_stack_path_preference: STRING_PREFERENCE
 	interrupt_every_n_instructions_preference: INTEGER_PREFERENCE
 	debug_output_evaluation_enabled_preference: BOOLEAN_PREFERENCE
-	generating_type_evaluation_enabled_preference: BOOLEAN_PREFERENCE		
-	optimized_jit_debugging_enabled_preference: BOOLEAN_PREFERENCE
+	generating_type_evaluation_enabled_preference: BOOLEAN_PREFERENCE
 	min_slice_preference: INTEGER_PREFERENCE
 	max_slice_preference: INTEGER_PREFERENCE
 	main_splitter_position_preference: INTEGER_PREFERENCE
@@ -124,8 +123,7 @@ feature -- Preference Strings
 	last_saved_stack_path_string: STRING is "debug_tool.last_saved_stack_path"
 	interrupt_every_n_instructions_string: STRING is "debug_tool.interrupt_every_n_instructions"
 	debug_output_evaluation_enabled_string: STRING is "debug_tool.debug_output_evaluation"	
-	generating_type_evaluation_enabled_string: STRING is "debug_tool.generating_type_evaluation"			
-	optimized_jit_debugging_enabled_string: STRING is "debug_tool.enable_optimized_jit_debugging"	
+	generating_type_evaluation_enabled_string: STRING is "debug_tool.generating_type_evaluation"				
 	min_slice_string: STRING is "debug_tool.min_slice"
 	max_slice_string: STRING is "debug_tool.max_slice"
 	main_splitter_position_string: STRING is "debug_tool.main_splitter_position"
@@ -150,7 +148,6 @@ feature {NONE} -- Implementation
 			interrupt_every_n_instructions_preference := l_manager.new_integer_resource_value (l_manager, interrupt_every_n_instructions_string, 1)
 			debug_output_evaluation_enabled_preference := l_manager.new_boolean_resource_value (l_manager, debug_output_evaluation_enabled_string, True)
 			generating_type_evaluation_enabled_preference := l_manager.new_boolean_resource_value (l_manager, generating_type_evaluation_enabled_string, True)
-			optimized_jit_debugging_enabled_preference := l_manager.new_boolean_resource_value (l_manager, optimized_jit_debugging_enabled_string, False)
 			min_slice_preference := l_manager.new_integer_resource_value (l_manager, min_slice_string, 0)
 			max_slice_preference := l_manager.new_integer_resource_value (l_manager, max_slice_string, 50)
 			main_splitter_position_preference := l_manager.new_integer_resource_value (l_manager, main_splitter_position_string, 250)
@@ -172,7 +169,6 @@ invariant
 	interrupt_every_n_instructions_preference_not_void: interrupt_every_n_instructions_preference /= Void
 	debug_output_evaluation_enabled_preference_not_void: debug_output_evaluation_enabled_preference /= Void
 	generating_type_evaluation_enabled_preference_not_void: generating_type_evaluation_enabled_preference /= Void
-	optimized_jit_debugging_enabled_preference_not_void: optimized_jit_debugging_enabled_preference /= Void
 	min_slice_preference_not_void: min_slice_preference /= Void
 	max_slice_preference_not_void: max_slice_preference /= Void
 	main_splitter_position_preference_not_void: main_splitter_position_preference /= Void

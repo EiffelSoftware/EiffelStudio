@@ -18,7 +18,7 @@ feature
 	init_file is
 			-- Initialization of new file
 		do
-			current_file.putstring ("#include %"macros.h%"%N");
+			current_file.putstring ("#include %"eif_macros.h%"%N");
 			if System.is_dynamic then
 				current_file.putstring ("#include %"");
 				current_file.putstring (Infix_file_name);

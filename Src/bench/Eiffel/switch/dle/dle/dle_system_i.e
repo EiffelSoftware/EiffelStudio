@@ -602,8 +602,8 @@ end;
 			Skeleton_file := Skeleton_f (final_mode);
 			Skeleton_file.open_write;
 
-			Skeleton_file.putstring ("#include %"struct.h%"%N");
-			Skeleton_file.putstring ("#include %"macros.h%"%N");
+			Skeleton_file.putstring ("#include %"eif_struct.h%"%N");
+			Skeleton_file.putstring ("#include %"eif_macros.h%"%N");
 			if final_mode then
 				Skeleton_file.putstring ("#include %"");
 				Skeleton_file.putstring (Eskelet);
@@ -799,11 +799,11 @@ end;
 			final_mode := byte_context.final_mode;
 			Cecil_file := cecil_f (final_mode);
 			Cecil_file.open_write;
-			Cecil_file.putstring ("#include %"cecil.h%"%N");
+			Cecil_file.putstring ("#include %"eif_cecil.h%"%N");
 			if final_mode then
-				Cecil_file.putstring ("#include %"ececil.h%"%N")
+				Cecil_file.putstring ("#include %"eif_ececil.h%"%N")
 			end;
-			Cecil_file.putstring ("#include %"struct.h%"%N%N");
+			Cecil_file.putstring ("#include %"eif_struct.h%"%N%N");
 			Cecil_file.putstring ("extern struct ctable ce_type;%N");
 			Cecil_file.putstring ("extern struct ctable ce_gtype;%N%N");
 			from classes.start until classes.after loop
@@ -913,7 +913,7 @@ end;
 			Conformance_file := conformance_f (byte_context.final_mode);
 			Conformance_file.open_write;
 
-			Conformance_file.putstring ("#include %"struct.h%"%N%N");
+			Conformance_file.putstring ("#include %"eif_struct.h%"%N%N");
 
 			from
 				i := 1;
@@ -1066,7 +1066,7 @@ end;
 		do
 			Option_file.open_write;
 
-			Option_file.putstring ("#include %"struct.h%"%N%N");
+			Option_file.putstring ("#include %"eif_struct.h%"%N%N");
 
 				-- First debug keys
 			from classes.start until classes.after loop
@@ -1172,29 +1172,19 @@ end;
 				i := min_type_id;
 				nb := type_id_counter.value;
 				file.open_write;
-				file.putstring ("#include %"macros.h%"");
-				file.new_line;
-				file.new_line;
-				file.putstring ("void dle_esize(void)");
-				file.new_line;
-				file.putchar ('{');
-				file.new_line;
+				file.putstring ("#include %"eif_macros.h%"%N%N");
+				file.putstring ("void dle_esize(void)%N{%N");
 				file.indent;
 				file.putstring ("esize = (long *)cmalloc(");
 				file.putint (Type_id_counter.value);
-				file.putstring (" * sizeof(long));");
-				file.new_line;
-				file.putstring ("if (esize == (long *) 0)");
-				file.new_line;
+				file.putstring (" * sizeof(long));%N");
+				file.putstring ("if (esize == (long *) 0)%N");
 				file.indent;
-				file.putstring ("enomem();");
-				file.new_line;
+				file.putstring ("enomem();%N");
 				file.exdent;
 				file.putstring ("bcopy(fsize, esize, ");
 				file.putint (min_type_id - 1);
-				file.putstring (" * sizeof(long));");
-				file.new_line;
-				file.new_line
+				file.putstring (" * sizeof(long));%N");
 			until
 				i > nb
 			loop
@@ -1241,7 +1231,7 @@ end;
 				i := min_type_id;
 				nb := type_id_counter.value;
 				Reference_file.open_write;
-				Reference_file.putstring ("#include %"plug.h%"");
+				Reference_file.putstring ("#include %"eif_plug.h%"");
 				Reference_file.new_line;
 				Reference_file.new_line;
 				Reference_file.putstring ("void dle_eref(void)");
@@ -1312,8 +1302,8 @@ end;
 			final_mode := in_final_mode;
 			Plug_file := plug_f (final_mode);
 			Plug_file.open_write;
-			Plug_file.putstring ("#include %"plug.h%"%N");
-			Plug_file.putstring ("#include %"struct.h%"%N%N");
+			Plug_file.putstring ("#include %"eif_plug.h%"%N");
+			Plug_file.putstring ("#include %"eif_struct.h%"%N%N");
 			if final_mode then
 					-- Extern declarations
 				init_name := Initialization_rout_id.table_name;

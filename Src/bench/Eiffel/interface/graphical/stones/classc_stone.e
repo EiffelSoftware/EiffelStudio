@@ -18,7 +18,9 @@ inherit
 			is_valid
 		end;
 
-	SHARED_WORKBENCH
+	SHARED_WORKBENCH;
+	
+	HASHABLE
 
 creation
 
@@ -129,6 +131,14 @@ feature -- Synchronization
 					end
 				end
 			end
+		end;
+
+feature -- Hashable
+
+	hash_code: INTEGER is
+			-- Hash code value
+		do
+			Result := class_c.class_name.hash_code
 		end;
 
 end

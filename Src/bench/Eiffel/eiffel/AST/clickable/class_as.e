@@ -33,24 +33,26 @@ inherit
 feature {AST_FACTORY, EXTERNAL_CLASS_C} -- Initialization
 
 	initialize (n: like class_name;
-		ext_name: STRING;
-		is_d, is_e, is_s, is_fc, is_ex: BOOLEAN;
-		top_ind: like top_indexes;
-		bottom_ind: like bottom_indexes;
-		g: like generics;
-		p: like parents;
-		c: like creators;
-		co: like convertors;
-		f: like features;
-		inv: like invariant_part;
-		s: like suppliers;
-		o: like obsolete_message;
-		cl: like click_list) is
+			ext_name: STRING;
+			is_d, is_e, is_s, is_fc, is_ex: BOOLEAN;
+			top_ind: like top_indexes;
+			bottom_ind: like bottom_indexes;
+			g: like generics;
+			p: like parents;
+			c: like creators;
+			co: like convertors;
+			f: like features;
+			inv: like invariant_part;
+			s: like suppliers;
+			o: like obsolete_message;
+			cl: like click_list)
+		is
 			-- Create a new CLASS AST node.
 		require
 			n_not_void: n /= Void
 			s_not_void: s /= Void
 			cl_not_void: cl /= Void
+			co_valid: co /= Void implies not co.is_empty
 		do
 			class_name := n
 			external_class_name := ext_name
@@ -371,6 +373,7 @@ feature {CLASS_C, COMPILED_CLASS_INFO} -- Class information
 				-- List `parent_list' will be filled by feature `init'
 				-- of CLASS_C
 			Result.set_creators (creators)
+			Result.set_convertors (convertors)
 		end
 
 feature -- Stoning
@@ -761,5 +764,8 @@ feature {NONE} -- Implementation
 			end
 			ctxt.commit
 		end
+
+invariant
+	convertors_valid: convertors /= Void implies not convertors.is_empty
 
 end -- class CLASS_AS

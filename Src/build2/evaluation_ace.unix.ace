@@ -44,7 +44,9 @@ cluster
 
 	build2_demo_version:		"$EIFFEL_SRC/build2/demo_version"
 
-	all gel:		"$EIFFEL_SRC/library/gel"
+	all gobo:		"$EIFFEL_SRC/library/gobo"
+		exclude
+			"hact"; "se"; "ve"; "base"; "CVS"; "other"; "gelint"; "test"; 
 		default
 			assertion (no)
 		end
@@ -71,20 +73,20 @@ cluster
 			"mswin"; "wizard_window.e"; "wizard_project_manager.e"; "wizard_shared.e"; "wizard_initial_state_window.e";
 		end
 
+	all preferences:		"$EIFFEL_SRC/library/preferences"
+		exclude
+			"xml_implementation"; 
+		end
+
 external
 
 	include_path:
-		"\$(EIFFEL_SRC)/C_library/expat/xmlparse",
-		"\$(EIFFEL_SRC)/build2/modified_libraries/gobo_16/library/kernel/include",
-		"\$(EIFFEL_SRC)/build2/modified_libraries/exml/lib/implementation/expat/compiler_specific/ise/clib",
 		"\$(EIFFEL_SRC)/library/vision2/implementation/gtk/Clib `gtk-config --cflags`",
 		"\$(EIFFEL_SRC)/C_library/libpng",
 		"\$(EIFFEL_SRC)/C_library/zlib",
 		"\$(EIFFEL_SRC)/library/vision2/spec/include"
 
 	object:
-		"$(EIFFEL_SRC)/build2/modified_libraries/exml/lib/implementation/expat/compiler_specific/ise/spec/$(ISE_PLATFORM)/lib/exml_parser.o",
-		"$(EIFFEL_SRC)/C_library/expat/xmlparse/libexpat.a",
 		"$(EIFFEL_SRC)/library/vision2/spec/$(ISE_PLATFORM)/lib/gtk_eiffel.o",
 		"$(EIFFEL_SRC)/library/vision2/spec/$(ISE_PLATFORM)/lib/load_pixmap.o `gtk-config --libs`",
 		"$(EIFFEL_SRC)/C_library/libpng/libpng.a",

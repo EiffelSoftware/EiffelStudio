@@ -682,7 +682,11 @@ feature -- Status setting
 			Swp_const := set_flag (Swp_const, Swp_framechanged)
 			cwin_set_window_pos (item, Hwnd_const, 0, 0, 0, 0, Swp_const)
 		ensure
-			ex_style_set: ex_style = an_ex_style
+			ex_style_set: ex_style >= an_ex_style
+				-- we cannot be sure that the two styles are
+				-- exactly the same. Windows may have added a
+				-- flag (for example, when a_style=Ws_popup,
+				-- Windows automatically adds Ws_clipsiblings)
 		end
 
 feature -- Element change

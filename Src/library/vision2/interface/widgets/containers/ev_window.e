@@ -13,10 +13,10 @@ inherit
 	
 	EV_CONTAINER
 		redefine
-			implementation
+			implementation,
+			parent
 		end
-	
-	
+
 creation
 	
 	make, make_top_level
@@ -43,8 +43,15 @@ feature {NONE} -- Initialization
 			implementation.set_interface (Current)
 		end
 	
-		
 feature  -- Access
+
+	parent: EV_WINDOW is
+			-- The parent of the Current window: a window
+			-- If the widget is an EV_WINDOW without parent,
+			-- this attribute will be `Void'
+		do
+			Result := implementation.parent
+		end
 
 	icon_name: STRING is
 			-- Short form of application name to be

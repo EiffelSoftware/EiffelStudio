@@ -209,6 +209,17 @@ feature -- Element change
 			has_v: has (v)
 		end
 
+	put_left (v: like item) is
+			-- Add `v' to the left of cursor position. Do not move cursor.
+		require
+			v_not_void: v /= Void
+		do
+			insert_i_th (v, index)
+			index := index + 1
+		ensure
+			has_v: has (v)
+		end
+
 	put_i_th (v: like item; i: INTEGER) is
 			-- Replace item at `i'-th position by `v'.
 		require
@@ -374,6 +385,9 @@ end -- class EV_DYNAMIC_LIST_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/04/07 23:59:36  brendel
+--| Added put_left.
+--|
 --| Revision 1.7  2000/04/07 18:37:55  brendel
 --| Fixed bug in prune.
 --|

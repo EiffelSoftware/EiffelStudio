@@ -24,7 +24,8 @@ inherit
 		end
 
 creation
-	make
+	make,
+	make_from_string
 
 feature -- Access
 

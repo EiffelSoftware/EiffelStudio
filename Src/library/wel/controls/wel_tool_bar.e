@@ -254,6 +254,22 @@ feature -- Status setting
 			tooltip_set: tooltip = a_tooltip
 		end
 
+	enable_hot_item (command_id: INTEGER) is
+			-- Set hot item for button identified by `command_id'.
+		require
+			exists: exists
+		do
+			cwin_send_message (item, Tb_sethotitem, command_id, 0)
+		end
+
+	disable_hot_item is
+			-- Unset the hot item.
+		require
+			exists: exists
+		do
+			cwin_send_message (item, Tb_sethotitem, -1, 0)
+		end
+
 feature -- Status report
 
 	has_bitmap: BOOLEAN

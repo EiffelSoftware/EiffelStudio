@@ -443,6 +443,7 @@ feature {NONE} -- Initialization
 			l_external: EXTERNAL_I
 			l_constant: CONSTANT_I
 			l_ext: IL_EXTENSION_I
+			l_enum_ext: IL_ENUM_EXTENSION_I
 			l_all_export: EXPORT_ALL_I
 			l_none_export: EXPORT_NONE_I
 			l_feat_arg: FEAT_ARG
@@ -476,6 +477,10 @@ feature {NONE} -- Initialization
 							l_literal_not_void: l_literal /= Void
 						end
 						if external_class.is_enum then
+								-- Too bad here we just discarded newly created extension
+								-- object `l_ext', but that simpler this way.
+							create l_enum_ext
+							l_ext := l_enum_ext
 							create {EXTERNAL_FUNC_I} l_external.make (l_ext)
 							l_feat := l_external
 						else
@@ -571,12 +576,13 @@ feature {NONE} -- Initialization
 
 				l_ext.set_base_class (l_member.declared_type.name)
 
+				l_names_heap.put (l_member.dotnet_name)
+				l_ext.set_alias_name_id (l_names_heap.found_item)
 				if l_ext.type = feature {SHARED_IL_CONSTANTS}.Enum_field_type then
-					l_names_heap.put (l_literal.value)
-					l_ext.set_alias_name_id (l_names_heap.found_item)
-				else
-					l_names_heap.put (l_member.dotnet_name)
-					l_ext.set_alias_name_id (l_names_heap.found_item)
+					check
+						l_enum_ext_not_void: l_enum_ext /= Void
+					end
+					l_enum_ext.set_value (l_literal.value.to_integer)
 				end
 				l_feat.set_private_external_name_id (l_names_heap.found_item)
 				if l_member.has_return_value then

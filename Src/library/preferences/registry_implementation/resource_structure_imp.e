@@ -2,10 +2,10 @@ indexing
 	description: "Windows Registry resource structure implementation."
 
 class
-	RESOURCE_STRUCTURE_IMP
+	PREFERENCE_STRUCTURE_IMP
 
 inherit
-	RESOURCE_STRUCTURE_I
+	PREFERENCE_STRUCTURE_I
 	
 	WEL_REGISTRY
 
@@ -13,7 +13,7 @@ create
 	make_empty,
 	make_with_location
 
-feature {RESOURCE_STRUCTURE} -- Initialization
+feature {PREFERENCE_STRUCTURE} -- Initialization
 	
 	make_empty is
 			-- Create resource structure in the registry.  Registry key created base on name of application 
@@ -70,7 +70,7 @@ feature {RESOURCE_STRUCTURE} -- Initialization
 			end		
 		end
 
-feature {RESOURCE_STRUCTURE} -- Resource Management
+feature {PREFERENCE_STRUCTURE} -- Resource Management
 
 	has_resource (a_name: STRING): BOOLEAN is
 			-- Does the underlying store contain a resource with `a_name'?
@@ -95,24 +95,20 @@ feature {RESOURCE_STRUCTURE} -- Resource Management
 			l_handle := open_key_with_access (location, Key_read)			
 			l_child_handle := open_key (l_handle, location + a_name, Key_read)
 			
-			check
-				key_open_for_reading: l_child_handle /= Void
-			end
-			
 			l_key_value := key_value (l_child_handle, location + a_name)
 			Result := l_key_value.string_value
 			close_key (l_child_handle)
 			close_key (l_handle)			
 		end	
 
-	save_resource (a_resource: RESOURCE) is
+	save_resource (a_resource: PREFERENCE) is
 			-- Save `a_resource' to registry
 		local
 			l_parent_key: POINTER
 			l_new_value: WEL_REGISTRY_KEY_VALUE
 			l_registry_resource_name: STRING
 		do
-			l_registry_resource_name := a_resource.string_type + "_" + a_resource.full_name
+			l_registry_resource_name := a_resource.string_type + "_" + a_resource.name
 			l_parent_key := open_key_with_access (location, key_write)
 			create l_new_value.make (feature {WEL_REGISTRY_KEY_VALUE_TYPE}.reg_sz, a_resource.string_value)		
 			
@@ -120,7 +116,7 @@ feature {RESOURCE_STRUCTURE} -- Resource Management
 			close_key (l_parent_key)
 		end		
 
-	save (resources: ARRAYED_LIST [RESOURCE]) is
+	save (resources: ARRAYED_LIST [PREFERENCE]) is
 			-- Save all resources.			
 		do			
 			from
@@ -136,4 +132,4 @@ feature {RESOURCE_STRUCTURE} -- Resource Management
 invariant
 	has_session_values: session_values /= Void
 
-end -- class RESOURCE_STRUCTURE_IMP
+end -- class PREFERENCE_STRUCTURE_IMP

@@ -394,7 +394,7 @@ feature -- Settings
 		require
 			a_class_type_not_void: a_class_type /= Void
 		do
-			current_module := il_modules (a_class_type)
+			current_module := il_module (a_class_type)
 				-- Refine so that only classes being generated in current compilation
 				-- unit needs the module to be generated as well.
 			if a_class_type.is_generated and then not current_module.is_generated then
@@ -402,7 +402,7 @@ feature -- Settings
 			end
 		ensure
 			current_module_set: current_module /= Void
-			associated_current_module: current_module = il_modules (a_class_type)
+			associated_current_module: current_module = il_module (a_class_type)
 		end
 
 feature {NONE} -- Settings
@@ -621,7 +621,7 @@ feature -- Generation Structure
 				loop
 					l_type := l_types.item (i)
 					if l_type /= Void and then l_type.is_generated then
-						l_module := il_modules (l_type)
+						l_module := il_module (l_type)
 						
 						file_token.search (l_module)
 						if file_token.found then
@@ -2015,7 +2015,7 @@ feature -- IL Generation
 						-- or off.
 					False and then
 					(not l_is_external and then not l_class_type.is_precompiled and then
-					il_modules (current_class_type) = il_modules (l_class_type) and then
+					il_module (current_class_type) = il_module (l_class_type) and then
 					(l_cur_sig = Void or else l_cur_sig.is_equal (l_impl_sig)))
 				then
 					if is_debug_info_enabled then
@@ -4645,7 +4645,7 @@ feature -- Once per feature definition
 
 feature -- Mapping between Eiffel compiler and generated tokens
 
-	il_modules (a_class_type: CLASS_TYPE): IL_MODULE is
+	il_module (a_class_type: CLASS_TYPE): IL_MODULE is
 			-- Perform lookup for module associated with `a_class_type'. If not
 			-- found then create a module used for reference only.
 		require
@@ -4658,7 +4658,8 @@ feature -- Mapping between Eiffel compiler and generated tokens
 			if is_single_module then
 				l_type_id := 1
 			else
-				l_type_id := a_class_type.associated_class.class_id
+				l_type_id :=
+					a_class_type.associated_class.class_id // System.msil_classes_per_module + 1
 			end
 			Result := internal_il_modules.item (l_type_id)
 			if Result = Void then

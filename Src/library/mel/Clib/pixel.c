@@ -9,108 +9,58 @@
 #include "mel.h"
 #include "pixel.h"
 
-EIF_INTEGER get_color_by_name (a_name, screen_ptr, error_ptr)
+EIF_INTEGER last_color_alloc_status = 0; /* Global variable */
+
+EIF_POINTER get_color_by_name (a_name, a_display, a_colormap)
 char *a_name;
-Screen *screen_ptr;
-EIF_INTEGER *error_ptr;
+EIF_POINTER a_display;
+EIF_POINTER a_colormap;
 {
 	/*
 	 * This function tries to allocate a pixel according to a name.
 	 */
 
 	XColor exact_def;
-	Colormap default_cmap;
 
-	int screen_num;
-	int i;
-
-	/*
-	 * Retrieve the number of the screen according to its address.
-	 */
-
-	i = 0;
-	while ( (ScreenOfDisplay (DisplayOfScreen (screen_ptr), i) != screen_ptr)
-		  &&
-			(i < ScreenCount (DisplayOfScreen (screen_ptr)))
-		  )
-		i++;
-
-	if (i == ScreenCount (DisplayOfScreen (screen_ptr)))
-	{
-		*error_ptr = BAD_SCREEN_REFERENCE;
-		return 0;
-	}
-	else
-		screen_num = i;
-
-	/*
-	 * Retrieve the colormap of the screen.
-	 */
-
-	default_cmap = DefaultColormapOfScreen (screen_ptr);
+	last_color_alloc_status = (EIF_INTEGER) 0;
 
 	/*
 	 * Parse the color name.
 	 */
 
-	if (!XParseColor (DisplayOfScreen (screen_ptr), default_cmap, a_name, &exact_def))
+	if (!XParseColor ((Display *) a_display, 
+				(Colormap) a_colormap, a_name, &exact_def))
 	{
-		*error_ptr = BAD_COLOR_NAME;
-		return 0;
+		last_color_alloc_status = (EIF_INTEGER) BAD_COLOR_NAME;
+		return (EIF_POINTER) NULL;
 	}
 
 	/*
 	 * Allocate the color.
 	 */
 
-	if (!XAllocColor (DisplayOfScreen (screen_ptr), default_cmap, &exact_def))
+	if (!XAllocColor ((Display *) a_display, 
+				(Colormap) a_colormap, &exact_def))
 	{
-		*error_ptr = NO_FREE_CELL_AVAILABLE;
-		return 0;
+		last_color_alloc_status = (EIF_INTEGER) NO_FREE_CELL_AVAILABLE;
+		return (EIF_POINTER) NULL;
 	}
 	else
-		return exact_def.pixel;
+		return (EIF_POINTER) exact_def.pixel;
 }
 
-EIF_INTEGER get_color_by_rgb_value (red, green, blue, screen_ptr, error_ptr)
+EIF_POINTER get_color_by_rgb_value (red, green, blue, a_display, a_colormap)
 EIF_INTEGER red, green, blue;
-Screen *screen_ptr;
-EIF_INTEGER *error_ptr;
+EIF_POINTER a_display;
+EIF_POINTER a_colormap;
 {
 	/*
 	 * This function tries to allocate a pixel according to a rgb value.
 	 */
 
 	XColor exact_def;
-	Colormap default_cmap;
 
-	int screen_num;
-	int i;
-
-	/*
-	 * Retrieve the number of the screen according to its address.
-	 */
-
-	i = 0;
-	while ( (ScreenOfDisplay (DisplayOfScreen (screen_ptr), i) != screen_ptr)
-		  &&
-			(i < ScreenCount (DisplayOfScreen (screen_ptr)))
-		  )
-		i++;
-
-	if (i == ScreenCount (DisplayOfScreen (screen_ptr)))
-	{
-		*error_ptr = BAD_SCREEN_REFERENCE;
-		return 0;
-	}
-	else
-		screen_num = i;
-
-	/*
-	 * Retrieve the colormap of the screen.
-	 */
-
-	default_cmap = DefaultColormapOfScreen (screen_ptr);
+	last_color_alloc_status = (EIF_INTEGER) 0;
 
 	/*
 	 * Set the values of the wished color.
@@ -124,107 +74,128 @@ EIF_INTEGER *error_ptr;
 	 * Allocate the color.
 	 */
 
-	if (!XAllocColor (DisplayOfScreen (screen_ptr), default_cmap, &exact_def))
+	if (!XAllocColor ((Display *) a_display, 	
+				(Colormap) a_colormap, &exact_def))
 	{
-		*error_ptr = NO_FREE_CELL_AVAILABLE;
-		return 0;
+		last_color_alloc_status = (EIF_INTEGER) NO_FREE_CELL_AVAILABLE;
+		return (EIF_POINTER) NULL;
 	}
 	else
-		return exact_def.pixel;
+		return (EIF_POINTER) exact_def.pixel;
 }
 
-EIF_INTEGER red_component (pixel, screen_ptr)
-Pixel pixel;
-Screen *screen_ptr;
+EIF_INTEGER red_component (pixel, a_display, a_colormap)
+EIF_POINTER pixel;
+EIF_POINTER a_display;
+EIF_POINTER a_colormap;
 {
 	/*
 	 * This functions returns the red component of a pixel.
 	 */
 
-	Colormap default_cmap;
 	XColor colorcell_def;
-
-	/*
-	 * Retrieve the colormap of the screen.
-	 */
-
-	default_cmap = DefaultColormapOfScreen (screen_ptr);
 
 	/*
 	 * Set the pixel value of the XColor.
 	 */
 
-	colorcell_def.pixel = pixel;
+	colorcell_def.pixel = (Pixel) pixel;
 
 	/*
 	 * Retrieve the XColor structure from the server.
 	 */
 
-	XQueryColors (DisplayOfScreen (screen_ptr), default_cmap, &colorcell_def, 1);
+	XQueryColors ((Display *) a_display, 
+			(Colormap) a_colormap, &colorcell_def, 1);
 
 	return (EIF_INTEGER) colorcell_def.red;
 }
 
-EIF_INTEGER green_component (pixel, screen_ptr)
-Pixel pixel;
-Screen *screen_ptr;
+EIF_INTEGER green_component (pixel, a_display, a_colormap)
+EIF_POINTER pixel;
+EIF_POINTER a_display;
+EIF_POINTER a_colormap;
 {
 	/*
 	 * This functions returns the green component of a pixel.
 	 */
 
-	Colormap default_cmap;
 	XColor colorcell_def;
-
-	/*
-	 * Retrieve the colormap of the screen.
-	 */
-
-	default_cmap = DefaultColormapOfScreen (screen_ptr);
 
 	/*
 	 * Set the pixel value of the XColor.
 	 */
 
-	colorcell_def.pixel = pixel;
+	colorcell_def.pixel = (Pixel) pixel;
 
 	/*
 	 * Retrieve the XColor structure from the server.
 	 */
 
-	XQueryColors (DisplayOfScreen (screen_ptr), default_cmap, &colorcell_def, 1);
+	XQueryColors ((Display *) a_display, 
+			(Colormap) a_colormap, &colorcell_def, 1);
 
 	return (EIF_INTEGER) colorcell_def.green;
 }
 
-EIF_INTEGER blue_component (pixel, screen_ptr)
-Pixel pixel;
-Screen *screen_ptr;
+EIF_INTEGER blue_component (pixel, a_display, a_colormap)
+EIF_POINTER pixel;
+EIF_POINTER a_display;
+EIF_POINTER a_colormap;
 {
 	/*
 	 * This functions returns the blue component of a pixel.
 	 */
 
-	Colormap default_cmap;
 	XColor colorcell_def;
-
-	/*
-	 * Retrieve the colormap of the screen.
-	 */
-
-	default_cmap = DefaultColormapOfScreen (screen_ptr);
 
 	/*
 	 * Set the pixel value of the XColor.
 	 */
 
-	colorcell_def.pixel = pixel;
+	colorcell_def.pixel = (Pixel) pixel;
 
 	/*
 	 * Retrieve the XColor structure from the server.
 	 */
 
-	XQueryColors (DisplayOfScreen (screen_ptr), default_cmap, &colorcell_def, 1);
+	XQueryColors ((Display *) a_display, 
+			(Colormap) a_colormap, &colorcell_def, 1);
 
 	return (EIF_INTEGER) colorcell_def.blue;
 }
+
+void x_free_color (display, colormap, num)
+EIF_POINTER display;
+EIF_POINTER colormap;
+EIF_POINTER num;
+{
+	XFreeColors ((Display *) display, (Colormap) colormap, (unsigned long *) &num, 1, 0);
+}
+
+EIF_POINTER x_create_pixmap_cursor (display, a_pixmap, a_mask,
+	fg_red, fg_green, fg_blue, bg_red, bg_green, bg_blue, x_hot, y_hot)
+EIF_POINTER display;
+EIF_POINTER a_pixmap;
+EIF_POINTER a_mask;
+EIF_INTEGER fg_red, fg_green, fg_blue;
+EIF_INTEGER bg_red, bg_green, bg_blue;
+EIF_INTEGER x_hot;
+EIF_INTEGER y_hot;
+{
+	
+	XColor fg, bg;
+
+    bg.red = bg_red;
+	bg.green = bg_green;
+	bg.blue = bg_blue; 
+    fg.red = fg_red;
+	fg.green = fg_green;
+	fg.blue = fg_blue; 
+
+	return (EIF_POINTER) XCreatePixmapCursor ((Display *) display,
+				(Pixmap) a_pixmap, (Pixmap) a_mask, &fg, &bg,
+				x_hot, y_hot);
+
+}
+

@@ -377,10 +377,12 @@ rt_private void eif_free_context (rt_global_context_t *rt_globals)
 		/* gen_conf.c */
 	eif_gen_conf_thread_cleanup ();
 
+#ifdef EIF_WINDOWS
 		/* WEL data if any */
 	if (rt_globals->eif_globals->wel_per_thread_data) {
 		eif_free (rt_globals->eif_globals->wel_per_thread_data);
 	}
+#endif
 
 		/* Context data if any */
 	if (eif_thr_context) {

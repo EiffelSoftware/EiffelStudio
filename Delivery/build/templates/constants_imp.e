@@ -124,7 +124,7 @@ feature {NONE} -- Implementation
 						end_quote2 := line_contents.index_of ('"', start_quote2 + 1)
 						name := line_contents.substring (start_quote1 + 1, end_quote1 - 1)
 						value := line_contents.substring (start_quote2 + 1, end_quote2 - 1)
-						all_constants.extend (value, name)
+						all_constants.put (value, name)
 					end
 				end
 			end

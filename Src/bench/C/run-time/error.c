@@ -37,14 +37,10 @@ public char *error_tag(code)
 	if (code == 0)					/* No error recorded */
 		return (char *) 0;			/* No description necessary */
 
-#ifdef HAS_STRERROR
-	return (char *) strerror(code);
-#else
-#ifdef HAS_SYS_ERRLIST
-	return strerror(code);			/* Macro defined by Configure */
+#if defined HAS_STRERROR || defined HAS_SYS_ERRLIST
+	return (char *) Strerror(code);			/* Macro defined by Configure */
 #else
 	return (char *) 0;		/* English description not available */
-#endif
 #endif
 }
 

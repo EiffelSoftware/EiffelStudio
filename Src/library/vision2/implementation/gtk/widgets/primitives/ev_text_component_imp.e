@@ -191,7 +191,7 @@ feature {EV_ANY_I} -- Implementation
 		do
 			create Result
 			--real_connect_signal_to_actions (entry_widget, "changed", Result, Void)
-			real_signal_connect (visual_widget, "changed", agent gtk_marshal.text_component_change_intermediary (c_object), Void)
+			real_signal_connect (entry_widget, "changed", agent gtk_marshal.text_component_change_intermediary (c_object), Void)
 		end
 
 	entry_widget: POINTER is

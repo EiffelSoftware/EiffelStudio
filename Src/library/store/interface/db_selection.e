@@ -243,7 +243,6 @@ feature -- Basic operations
 					cursor.fill_in
 				end
 			end
-			implementation.terminate
 		ensure
 			cursor_not_void: cursor /= Void
 			exit_condition_met: is_exiting

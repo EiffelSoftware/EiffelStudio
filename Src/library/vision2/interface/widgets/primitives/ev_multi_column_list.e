@@ -42,32 +42,6 @@ feature {NONE} -- Initialization
 			columns_assigned: columns = n_columns
 		end
 
-	make_for_test is
-		local
-			i, j: INTEGER
-		do
-			make_with_columns (4)
-			set_column_titles (<<"Title 1", "Title 2", "Title 3", "Title 4">>)
-			from
-				i := 1
-			until
-				i > 9
-			loop
-				extend (create {EV_MULTI_COLUMN_LIST_ROW})
-				from
-					j := 1
-				until
-					j > 4
-				loop
-					last.set_cell_text (j, "Row" + i.out + " Col" + j.out)
-					last.select_actions.extend (~prune (last))
-					last.select_actions.extend (~put_front (last))
-					j := j + 1
-				end
-				i := i + 1
-			end
-		end
-
 feature -- Access
 
 	columns: INTEGER is
@@ -327,6 +301,34 @@ feature {NONE} -- Implementation
 			create column_click_actions
 		end
 
+feature -- Contract support
+
+	make_for_test is
+		local
+			i, j: INTEGER
+		do
+			make_with_columns (4)
+			set_column_titles (<<"Title 1", "Title 2", "Title 3", "Title 4">>)
+			from
+				i := 1
+			until
+				i > 9
+			loop
+				extend (create {EV_MULTI_COLUMN_LIST_ROW})
+				from
+					j := 1
+				until
+					j > 4
+				loop
+					last.set_cell_text (j, "Row" + i.out + " Col" + j.out)
+					last.select_actions.extend (~prune (last))
+					last.select_actions.extend (~put_front (last))
+					j := j + 1
+				end
+				i := i + 1
+			end
+		end
+
 feature -- Obsolete
 
 	rows: INTEGER is
@@ -368,6 +370,9 @@ end -- class EV_MULTI_COLUMN_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.43  2000/03/21 21:42:07  oconnor
+--| formatting
+--|
 --| Revision 1.42  2000/03/21 20:17:29  king
 --| Implemented basic make_for_test
 --|

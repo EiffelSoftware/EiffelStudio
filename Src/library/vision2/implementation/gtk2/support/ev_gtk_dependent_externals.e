@@ -8,6 +8,16 @@ class
 
 feature -- Externals
 
+	frozen gdk_gc_set_rgb_fg_color (a_gc: POINTER; a_color: POINTER) is
+		external
+			"C (GdkGC*, GdkColor*) | <gtk/gtk.h>"
+		end
+
+	frozen gdk_gc_set_rgb_bg_color (a_gc: POINTER; a_color: POINTER) is
+		external
+			"C (GdkGC*, GdkColor*) | <gtk/gtk.h>"
+		end
+
 	frozen gtk_settings_set_string_property (a_settings, a_property, a_value, a_origin: POINTER) is
 		external
 			"C signature (GtkSettings*, gchar*, gchar*, gchar*) use <gtk/gtk.h>"
@@ -2348,6 +2358,11 @@ feature -- Externals
 	frozen gtk_image_new_from_pixmap (a_pixmap: POINTER; a_mask: POINTER): POINTER is
 		external
 			"C signature (GdkPixmap*, GdkBitmap*): GtkImage* use <gtk/gtk.h>"
+		end
+
+	frozen gtk_image_new_from_pixbuf (a_pixbuf: POINTER): POINTER is
+		external
+			"C signature (GdkPixbuf*): GtkImage* use <gtk/gtk.h>"
 		end
 
 	frozen gtk_image_new: POINTER is

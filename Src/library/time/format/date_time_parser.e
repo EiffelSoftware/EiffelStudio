@@ -199,8 +199,7 @@ feature -- Basic operations
 			l_year_now: INTEGER
 		do
 			l_year_now := (create {C_DATE}).year_now
-			s := clone (source_string)
-			s.to_upper
+			s := source_string.as_upper
 			year_val := 1
 			month_val := 1
 			day_val := 1

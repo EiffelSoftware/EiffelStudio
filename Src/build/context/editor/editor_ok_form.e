@@ -18,9 +18,9 @@ feature {NONE}
 			!!separator.make (Widget_names.separator, Current);
 			separator.set_horizontal (true);
 
-			set_fraction_base (16);
+			set_fraction_base (100);
 			attach_left (ok_button, 10);
-			attach_right_position (ok_button, 7);
+			attach_right_position (ok_button, 48);
 			attach_left (separator, 0);
 			attach_right (separator, 0);
 			attach_bottom (ok_button, 10);

@@ -207,10 +207,10 @@ feature {AST_EIFFEL} -- Output
 			-- Reconstitute text.
 		local
 			end_to_print: BOOLEAN
-			pc: CLASS_C
 		do
-			pc := associated_class (ctxt.class_c)
-			ctxt.set_classes (pc, pc)
+				-- There is no source as it is a parent description and target is
+				-- current analyzed class.
+			ctxt.set_classes (Void, ctxt.class_c)
 			ctxt.format_ast (type)
 			if renaming /= Void then
 				format_clause (ctxt, ti_Rename_keyword, renaming)

@@ -30,7 +30,9 @@ create
 
 feature -- Access
 
-	accelerators: ACTIVE_LIST [EV_ACCELERATOR]
+	--| FIXME Segmentation violation on both platforms when extending this
+	--| list when calling rout_obj_call_procedure. Run-time bug?
+	--| accelerators: ACTIVE_LIST [EV_ACCELERATOR]
 			-- Key combination shortcuts associated with this window.
 		--| FIXME The same key combination can be added to this list.
 		--| GTK takes only the latest one set. Object-comparison is turned on
@@ -39,12 +41,14 @@ feature -- Access
 
 	connect_accelerator (an_accel: EV_ACCELERATOR) is
 			-- Associate `an_accel' with this window.
+			-- May be replaced by ACTIVE_LIST [EV_ACCELERATOR].
 		do
 			implementation.connect_accelerator (an_accel)
 		end
 
 	disconnect_accelerator (an_accel: EV_ACCELERATOR) is
 			-- Remove `an_accel' from this window.
+			-- May be replaced by ACTIVE_LIST [EV_ACCELERATOR].
 		do
 			implementation.disconnect_accelerator (an_accel)
 		end
@@ -181,15 +185,16 @@ feature {NONE} -- Implementation
 				-- See `{EV_ANY}.create_action_sequences'.
 		do   
 			Precursor
-			create accelerators
-			accelerators.compare_objects
-			accelerators.add_actions.extend (implementation~connect_accelerator (?))
-			accelerators.remove_actions.extend
-				(implementation~disconnect_accelerator (?))
+		--| FIXME See top.
+		--|	create accelerators
+		--|	accelerators.compare_objects
+		--|	accelerators.add_actions.extend (implementation~connect_accelerator (?))
+		--|	accelerators.remove_actions.extend
+		--|		(implementation~disconnect_accelerator (?))
 		end
 
-invariant
-	accelerators_not_void: accelerators /= Void
+--|invariant
+--|	accelerators_not_void: accelerators /= Void
 		
 end -- class EV_TITLED_WINDOW
 
@@ -214,6 +219,11 @@ end -- class EV_TITLED_WINDOW
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2000/03/21 20:11:03  brendel
+--| Commented out accelerators (ACTIVE_LIST [EV_ACCELERATOR]) in favor of
+--| `connect_accelerator' and `disconnect_accelerator', until the bug has been
+--| fixed. See comments for details.
+--|
 --| Revision 1.11  2000/03/21 02:25:27  brendel
 --| ACTIVE_LIST is not used anymore.
 --| Replaced by 2 features.

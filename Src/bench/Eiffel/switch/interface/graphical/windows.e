@@ -129,12 +129,6 @@ end;
 			!!Result.make (project_tool.screen, 2);
 		end;
 
-	custom_window: CUSTOM_W is
-			-- Window for custom formats in class windows
-		once
-			!!Result.make (project_tool.screen)
-		end
-
 feature {NONE} -- Implementation
 
 	last_warner_cell: CELL [WARNER_W] is

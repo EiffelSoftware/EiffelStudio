@@ -34,6 +34,7 @@ feature {NONE} -- Initialization
 			p := C.gtk_hseparator_new
 			C.gtk_widget_show (p)
 			C.gtk_container_add (c_object, p)
+			C.gtk_widget_set_usize (c_object, -1, 3)
 		end
 
 feature {EV_ANY_I} -- Implementation

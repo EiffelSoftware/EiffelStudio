@@ -5,7 +5,7 @@ class SPECIAL_B
 inherit
 	CLASS_C
 		redefine
-			check_validity, new_type, is_special
+			check_validity, new_type, is_special, is_special_array
 		end
 
 	SPECIAL_CONST
@@ -85,11 +85,11 @@ feature
 	new_type (data: CL_TYPE_I): SPECIAL_CLASS_TYPE is
 			-- New class type for class SPECIAL
 		do
-			!! Result.make (data)
+			create Result.make (data)
 		end
 
-	is_special: BOOLEAN is True
-			-- Is the class special ?
+	is_special, is_special_array: BOOLEAN is True
+			-- Is class SPECIAL?
 	
 	generate_dynamic_types (buffer: GENERATION_BUFFER) is
 			-- Generate dynamic types of type classes available in the system

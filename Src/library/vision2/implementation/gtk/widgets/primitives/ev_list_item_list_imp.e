@@ -188,11 +188,14 @@ feature {EV_LIST_ITEM_LIST_IMP, EV_LIST_ITEM_IMP} -- Implementation
 		local
 			item_pointer: POINTER
 				-- Single element glist holding `a_child'.
+			a_child_list: POINTER
 		do
+			a_child_list := C.gtk_container_children (a_container)
 			item_pointer := C.g_list_nth (
-						C.gtk_container_children (a_container),
+						a_child_list,
 						C.gtk_list_child_position (a_container, a_child)
 					)
+			C.g_list_free (a_child_list)
 			check
 				item_pointer_not_null: item_pointer /= NULL
 			end

@@ -150,19 +150,32 @@ feature -- Status Report
 		end
 
 	has_formal: BOOLEAN is
-			-- Are some meta formals present in `meta_generic' ?
+			-- Are some meta formals present in `meta_generic'?
 		local
 			i, count: INTEGER
 			l_meta: like meta_generic
+			l_true: like true_generics
+			l_type: TYPE_I
 		do
 			from
 				i := 1
 				l_meta := meta_generic
+				l_true := true_generics
 				count := l_meta.count
 			until
 				i > count or else Result
 			loop
 				Result := l_meta.item (i).has_formal
+				if not Result then
+						-- Let's check that each entry in `true_generics' does not
+						-- have a formal. If the entry is a formal generic parameter,
+						-- then it does not count since `meta_generics' tell us it is not
+						-- a formal already, i.e. it has already been instantiated properly.
+						-- The idea here is to ensure that the `meta_generic' part of the
+						-- `true_generics' items does not have a formal.
+					l_type := l_true.item (i)
+					Result := not l_type.is_formal and then l_type.has_formal
+				end
 				i := i + 1
 			end
 		end

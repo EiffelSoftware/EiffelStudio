@@ -265,7 +265,7 @@ feature -- Basic operations
 
 feature -- Bit operations
 
-	bit_and (i: like Current): like Current is
+	bit_and (i: INTEGER): like Current is
 			-- Bitwise and between Current' and `i'.
 		local
 			n, exp, src, res: INTEGER

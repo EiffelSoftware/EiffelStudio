@@ -90,16 +90,9 @@ feature -- Status setting
 			if not fixed_size_flag and not updating then
 				h := form_child_list.height (Current)
 				w := form_child_list.width (Current)
-				if h > height and w > width then
+				if h > height or else w > width then
 					set_size (w, h)
-				else
-					if h > height then
-						set_height (h)
-					end			
-					if w > width then
-						set_width (w)
-					end
-				end
+				end	
 			end
 		end
 
@@ -107,16 +100,19 @@ feature -- Status setting
 			-- Set the height to `new_height',
 			-- width to `new_width'.
 		do
-			if width /= new_width or else height /= new_height then
+			if private_attributes.width /= new_width
+			or else private_attributes.height /= new_height then
 				bulletin_set_size (new_width, new_height)
-				update_all
+				if not updating then
+					update_all
+				end
 			end
 		end 
 	
 	set_width (new_width : INTEGER) is
 			-- Set width to `new_width'.
 		do
-			if width /= new_width then
+			if private_attributes.width /= new_width then
 				bulletin_set_width (new_width)
 				if not updating then
 					update_all
@@ -127,7 +123,7 @@ feature -- Status setting
 	set_height (new_height : INTEGER) is
 			-- Set height to `new_height'.
 		do
-			if height /= new_height then
+			if private_attributes.height /= new_height then
 				bulletin_set_height (new_height)
 				if not updating then
 					update_all

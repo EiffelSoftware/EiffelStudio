@@ -44,6 +44,7 @@ extern fnptr init_array[];				/* Initialization routines array */
 extern fnptr c_id_area;					/* Access to area of STRING */
 extern fnptr c_id_create;				/* STRING allocation */
 extern char token_str[];				/* Buffer for strings */
+extern int yacc_position;				/* Position recorded in AST */
 extern fnptr c_list_area;				/* Access to an area */
 
 /*

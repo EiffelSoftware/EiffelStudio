@@ -62,6 +62,7 @@ fnptr c_id_area;				/* Area of ID: Eiffel feature `to_c' of
 char token_str[STRINGLENGTH];	/* Allocated buffer for strings read by
 								 * lexical analyzers.
 								 */
+int yacc_position;				/* Position recorded in AST */
 
 /* 
  * Declarations for argument passing  between Eiffel and Yacc

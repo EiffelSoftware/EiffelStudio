@@ -75,16 +75,12 @@ feature -- Basic Exportations
 			non_void_name: a_name /= Void
 			valid_name: a_name.length > 0
 		local
-			l_app_domain: APP_DOMAIN
 			l_impl: MARSHAL_CACHE_MANAGER
-		do	
-			l_app_domain := feature {APP_DOMAIN}.create_domain ("EiffelSoftware.MetadataConsumer", Void, Void)
-			
-			l_impl := new_cache_manager (l_app_domain)
+		do				
+			l_impl := new_marshalled_cache_manager
 			l_impl.consume_assembly (a_name, a_version, a_culture, a_key)
 
 			update_current (l_impl)
-			feature {APP_DOMAIN}.unload (l_app_domain)
 		end
 		
 	consume_assembly_from_path (a_path: SYSTEM_STRING) is
@@ -95,7 +91,6 @@ feature -- Basic Exportations
 			valid_path: a_path.length > 0
 		local
 			i, nb: INTEGER
-			l_app_domain: APP_DOMAIN
 			l_impl: MARSHAL_CACHE_MANAGER
 			l_native_array: NATIVE_ARRAY [SYSTEM_STRING]
 			l_path: SYSTEM_STRING
@@ -114,10 +109,8 @@ feature -- Basic Exportations
 					l_path, feature {PATH}.get_directory_name (l_native_array.item (i)))
 				i := i + 1
 			end
-			
-			l_app_domain := feature {APP_DOMAIN}.create_domain ("EiffelSoftware.MetadataConsumer", Void, Void)
 		
-			l_impl := new_cache_manager (l_app_domain)
+			l_impl := new_marshalled_cache_manager
 			
 			from
 				i := 0
@@ -145,7 +138,6 @@ feature -- Basic Exportations
 			
 			--l_resolver.dispose
 			update_current (l_impl)
-			feature {APP_DOMAIN}.unload (l_app_domain)
 		end
 		
 	relative_folder_name (a_name, a_version, a_culture, a_key: SYSTEM_STRING): SYSTEM_STRING is
@@ -155,16 +147,12 @@ feature -- Basic Exportations
 			non_void_name: a_name /= Void
 			valid_name: a_name.length > 0
 		local
-			l_app_domain: APP_DOMAIN
 			l_impl: MARSHAL_CACHE_MANAGER
-		do	
-			l_app_domain := feature {APP_DOMAIN}.create_domain ("EiffelSoftware.MetadataConsumer", Void, Void)
-			
-			l_impl := new_cache_manager (l_app_domain)
+		do			
+			l_impl := new_marshalled_cache_manager
 			Result := l_impl.relative_folder_name (a_name, a_version, a_culture, a_key)
 
 			update_current (l_impl)
-			feature {APP_DOMAIN}.unload (l_app_domain)
 		ensure
 			non_void_result: Result /= Void
 			non_empty_result: Result.length > 0
@@ -178,16 +166,12 @@ feature -- Basic Exportations
 			valid_path: a_path.length > 0
 			path_exists: (create {FILE_INFO}.make (a_path)).exists
 		local
-			l_app_domain: APP_DOMAIN
 			l_impl: MARSHAL_CACHE_MANAGER
-		do	
-			l_app_domain := feature {APP_DOMAIN}.create_domain ("EiffelSoftware.MetadataConsumer", Void, Void)
-			
-			l_impl := new_cache_manager (l_app_domain)
+		do			
+			l_impl := new_marshalled_cache_manager
 			Result := l_impl.relative_folder_name_from_path (a_path)
 
 			update_current (l_impl)
-			feature {APP_DOMAIN}.unload (l_app_domain)
 		ensure
 			non_void_result: Result /= Void
 			non_empty_result: Result.length > 0
@@ -200,20 +184,15 @@ feature -- Basic Exportations
 			non_void_path: a_path /= Void
 			valid_path: a_path.length > 0
 		local
-			l_app_domain: APP_DOMAIN
 			l_impl: MARSHAL_CACHE_MANAGER
-		do
-			l_app_domain := feature {APP_DOMAIN}.create_domain ("EiffelSoftware.MetadataConsumer", Void, Void)
-				
-			l_impl := new_cache_manager (l_app_domain)
+		do		
+			l_impl := new_marshalled_cache_manager
 			Result := l_impl.assembly_info_from_assembly (a_path)
 
 			update_current (l_impl)
-			feature {APP_DOMAIN}.unload (l_app_domain)
 		ensure
 			non_void_result: Result /= Void
 		end
-
 
 feature {NONE} -- Implementation
 
@@ -226,26 +205,46 @@ feature {NONE} -- Implementation
 		do
 			is_successful := a_impl.is_successful
 			last_error_message := a_impl.last_error_message
-		end
+		end	
 	
-	new_cache_manager (a_app_domain: APP_DOMAIN): MARSHAL_CACHE_MANAGER is
+	new_marshalled_cache_manager: MARSHAL_CACHE_MANAGER is
 			-- New instance of `MARSHAL_CACHE_MANAGER' created in `a_app_domain'.
 		indexing
 			metadata: create {COM_VISIBLE_ATTRIBUTE}.make (False) end
-		require
-			a_app_domain_not_void: a_app_domain /= Void
+		local
+			l_app_domain: APP_DOMAIN
+			l_inst_obj_handle: OBJECT_HANDLE
+			l_lifetime_lease: ILEASE
+			l_time_span: TIME_SPAN
 		do
-			Result ?= a_app_domain.create_instance_from_and_unwrap (
-				to_dotnet.get_type.assembly.location,
-				"EiffelSoftware.MetadataConsumer.MARSHAL_CACHE_MANAGER")
-			check
-				created_new_cache_manager: Result /= Void
-			end
-
-			if eac_path = Void then
-				Result.initialize (clr_version)
+			if internal_marshalled_cache_manager = Void then
+				l_app_domain := feature {APP_DOMAIN}.create_domain ("EiffelSoftware.MetadataConsumer" + feature {GUID}.new_guid.to_string, Void, Void)
+				l_inst_obj_handle ?= l_app_domain.create_instance_from (
+					to_dotnet.get_type.assembly.location,
+					"EiffelSoftware.MetadataConsumer.MARSHAL_CACHE_MANAGER")
+				check
+					created_new_cache_manager: l_inst_obj_handle /= Void
+				end
+				l_lifetime_lease ?= l_inst_obj_handle.get_lifetime_service
+				check
+					l_lifetime_lease_not_void: l_lifetime_lease /= Void
+				end
+				l_time_span := l_lifetime_lease.renew (feature {TIME_SPAN}.from_days (356))
+				Result ?= l_inst_obj_handle.unwrap
+				check
+					result_unwrapped: Result /= Void
+				end
+	
+				if eac_path = Void then
+					Result.initialize (clr_version)
+				else
+					Result.initialize_with_path (eac_path, clr_version)
+				end
+				if Result.is_initialized then
+					internal_marshalled_cache_manager := Result
+				end
 			else
-				Result.initialize_with_path (eac_path, clr_version)
+				Result := internal_marshalled_cache_manager
 			end
 		ensure
 			new_cache_manager_not_void: Result /= Void
@@ -262,5 +261,8 @@ feature {NONE} -- Implementation
 		indexing
 			metadata: create {COM_VISIBLE_ATTRIBUTE}.make (False) end
 		end
+
+	internal_marshalled_cache_manager: MARSHAL_CACHE_MANAGER
+			-- internal marshalled cache manager
 
 end -- class MARSHAL_CACHE_MANAGER

@@ -118,6 +118,16 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	WEL_ILC_CONSTANTS
+		export
+			{NONE} all
+		end
+		
+	EV_SHARED_IMAGE_LIST_IMP
+		export
+			{NONE} all
+		end
 
 	EV_NOTEBOOK_ACTION_SEQUENCES_IMP
 
@@ -133,6 +143,7 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 			wel_make (default_parent, 0, 0, 0, 0, 0)
 			tab_pos := interface.tab_top
+			initialize_pixmaps
 			index := 0
 		end
 
@@ -172,6 +183,25 @@ feature {EV_ANY_I} -- Status report
 			elseif tab_pos = interface.Tab_right then
 				Result:= interface.Tab_right
 			end
+		end
+		
+	pointed_tab_index: INTEGER is
+			-- index of tab currently under mouse pointer, or 0 if none.
+		local
+			hit_test_info: WEL_TC_HITTESTINFO
+			point: WEL_POINT
+		do
+			create point.make_by_cursor_position
+			point.set_x (point.x - screen_x)
+			point.set_y (point.y - screen_y)
+			create hit_test_info.make_with_point (point)		
+			Result := cwin_send_message_result (wel_item, tcm_hittest, 0, cwel_pointer_to_integer (hit_test_info.item)) + 1
+		end
+		
+	item_tab (an_item: EV_WIDGET): EV_NOTEBOOK_TAB is
+			-- Tab associated with `an_item'.
+		do
+			create Result.make_with_widgets (interface, an_item)
 		end
 
 feature {EV_ANY_I} -- Status setting
@@ -238,14 +268,14 @@ feature {EV_ANY_I} -- Status setting
 			-- Enable notebook.
 		do
 			set_insensitive (False)
-			Precursor
+			Precursor {EV_WIDGET_LIST_IMP}
 		end
 
 	disable_sensitive is
 			-- Disable notebook.
 		do
 			set_insensitive (True)
-			Precursor
+			Precursor {EV_WIDGET_LIST_IMP}
 		end
 
 feature {EV_ANY_I} -- Element change
@@ -605,8 +635,6 @@ feature {NONE} -- WEL Implementation
 			Precursor {EV_WIDGET_LIST_IMP} (virtual_key, key_data)
 		end
 
-	interface: EV_NOTEBOOK
-
 	wel_move_and_resize (a_x, a_y, a_width, a_height: INTEGER;
 			repaint: BOOLEAN) is
 			-- Move the window to `a_x', `a_y' position and
@@ -827,7 +855,7 @@ feature {NONE} -- Implementation
 			notify_change (Nc_minsize, v_imp)
 		end
 
-feature {NONE} -- Implementation
+feature {EV_NOTEBOOK_TAB_IMP} -- Implementation
 
 	selected_item_index: INTEGER is
 			-- One based index of topmost page.	
@@ -862,6 +890,91 @@ feature {NONE} -- Implementation
 			a_wel_item.set_text (a_text)
 			a_wel_item.set_mask (Tcif_text)
 			update_item (child_index - 1, a_wel_item)
+		end
+		
+	image_list: EV_IMAGE_LIST_IMP
+		-- Image list associated with `Current'.
+		-- `Void' if none.
+		
+	set_item_pixmap (v: like item; a_pixmap: EV_PIXMAP) is
+			-- Assign `a_text' to the label for `an_item'.
+		require else
+			has_an_item: has (v)
+		local
+			a_wel_item: WEL_TAB_CONTROL_ITEM
+			child_index: INTEGER
+			item_imp: EV_WIDGET_IMP
+		do
+			item_imp ?= v.implementation
+			child_index := get_child_index (item_imp)
+			create a_wel_item.make
+				-- Ensure that the item mask allows `iimage' to be a required member.
+			a_wel_item.set_mask (tcif_image)
+			
+			if a_pixmap /= Void then
+				if image_list = Void then
+						-- If no image list is associated with `Current', retrieve
+						-- and associate one.
+					image_list := get_imagelist_with_size (pixmaps_width, pixmaps_height)
+					cwin_send_message (wel_item, tcm_setimagelist, 0, cwel_pointer_to_integer (image_list.item))
+				end
+				image_list.add_pixmap (a_pixmap)
+					-- Set the `iimage' to the index of the image to be used
+					-- from the image list. We subtract one as it is zero based.
+				a_wel_item.set_iimage (image_list.count - 1)
+			else
+					-- An `iimage' value of -1 signifies that no image
+					-- is associated with a tab.
+				a_wel_item.set_iimage (-1)
+			end
+			
+				-- Update status of tab item.
+			update_item (child_index - 1, a_wel_item)
+		end
+		
+	item_pixmap (v: like item): EV_PIXMAP is
+			-- `Result' is pixmap associated with `Current' or `Void' if none.
+		require
+			has_an_item: has (v)
+		local
+			a_wel_item: WEL_TAB_CONTROL_ITEM
+			image_icon: WEL_ICON
+			image_index: INTEGER
+			pix_imp: EV_PIXMAP_IMP
+		do
+			if image_list /= Void then
+				create a_wel_item.make
+					-- Ensure the mask is set so the `iitem' state is retrieved.
+				a_wel_item.set_mask (tcif_image)
+					-- Note that `get_item' is not used as this does not set the `mask' enabling
+					-- `iimage' to be returned. I did not want to change the behaviour in WEL_TAB_CONTROL_ITEM
+					-- to avoid breaking something. Julian
+				cwin_send_message (wel_item, Tcm_getitem, index_of (v, 1) - 1, a_wel_item.to_integer)
+				image_index := a_wel_item.iimage
+					-- `image_index' may be -1 in the case where a tab does not have an associated image.
+					-- If so, there is nothing to do as the returned pixmap must be `Void'.
+				if image_index >= 0 then
+						-- An image index greater or equal to zero indicates an image is used,
+						-- so we retrieve this image and 
+					image_icon := image_list.get_icon (image_index, Ild_normal)
+					create Result
+					pix_imp ?= Result.implementation
+					check
+						pix_imp /= Void
+					end
+					image_icon.enable_reference_tracking
+					pix_imp.set_with_resource (image_icon)
+					image_icon.decrement_reference
+				end
+			end
+		end
+
+	pixmaps_size_changed is
+			-- Size of pixmaps displayed in tabs of `Current' has changed
+			-- so update to reflect this new size.
+		do
+			cwin_set_item_size (wel_item, label_index_rect.width, pixmaps_height.max (font.height))
+			set_default_minimum_size
 		end
 
 	item_text (v: like item): STRING is
@@ -898,7 +1011,7 @@ feature {NONE} -- Font implementation
 			if
 				(tab_pos = interface.Tab_top)
 				or else (tab_pos = interface.Tab_bottom)
-				--| FIXME, there appears to be no way to use a cusotm font
+				--| FIXME, there appears to be no way to use a custom font
 				-- when the tabs are left or right. In this case, we use the default
 				-- font. Julian
 			then
@@ -917,6 +1030,10 @@ feature {NONE} -- Font implementation
 			end
 			notify_change (2 + 1, Current)
 		end
+		
+feature {EV_ANY_I} -- Implementation
+		
+	interface: EV_NOTEBOOK
 
 end -- EV_NOTEBOOK_IMP
 

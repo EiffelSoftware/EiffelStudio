@@ -1,6 +1,10 @@
 indexing
 	description: 
 		"Input field for a single line of `text'."
+	appearance:
+		"+-------------+%N%
+		%| 'text'      |%N%
+		%+-------------+"
 	status: "See notice at end of class"
 	keywords: "input, text, field, query"
 	date: "$Date$"
@@ -100,6 +104,9 @@ end -- class EV_TEXT_FIELD
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.23  2000/04/07 01:13:36  brendel
+--| Added appearance clause.
+--|
 --| Revision 1.22  2000/03/21 19:10:39  oconnor
 --| comments, formatting
 --|

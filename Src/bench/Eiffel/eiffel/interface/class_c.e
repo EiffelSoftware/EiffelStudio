@@ -2458,7 +2458,7 @@ feature -- Parent checking
 		local
 			vtug: VTUG
 			vtcg4: VTCG4
-			il_inherit_error: IL_INHERIT_ERROR
+			il_inherit_error: VIFI
 			parent_actual_type: CL_TYPE_A
 			l_area: SPECIAL [CL_TYPE_A]
 			i, nb: INTEGER

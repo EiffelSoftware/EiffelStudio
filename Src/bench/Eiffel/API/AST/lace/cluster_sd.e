@@ -88,7 +88,6 @@ feature {COMPILER_EXPORTER} -- Lace recompilation
 			elseif old_cluster = Void then
 					-- New cluster
 				!!cluster.make (directory_name);
-				cluster.set_new_id;
 				cluster.set_cluster_name (cluster_name);
 				Universe.insert_cluster (cluster);
 debug ("REMOVE_CLASS")
@@ -220,7 +219,6 @@ feature {COMPILER_EXPORTER} -- DLE
 			elseif old_cluster = Void then
 					-- New cluster
 				!!cluster.make (directory_name);
-				cluster.set_new_id;
 				cluster.set_cluster_name (cluster_name);
 				Universe.insert_cluster (cluster);
 debug ("REMOVE_CLASS")

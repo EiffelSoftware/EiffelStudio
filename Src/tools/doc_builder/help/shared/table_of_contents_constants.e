@@ -76,15 +76,25 @@ feature -- XML tags
 
 feature -- Id generation
 
-	unique_id: INTEGER
-			-- Unique node id
+	unique_id: TUPLE [INTEGER] is
+			-- Unique node id, starts at 1
+		once
+			create Result
+			Result.put_integer (1, 1)
+		end
 
 	next_id: INTEGER is
 			-- Next unique id
 		do
-			Result := unique_id + 1
-			unique_id := unique_id + 1
+			Result := unique_id.integer_item (1) + 1
+			set_unique_id (Result)
 		end
+		
+	set_unique_id (a_id: INTEGER) is
+			-- Set the unique id
+		do
+			unique_id.put_integer (a_id, 1)
+		end		
 		
 feature {NONE} -- Implementation		
 		

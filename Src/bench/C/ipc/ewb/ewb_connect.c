@@ -119,7 +119,7 @@ char *host;			/* The host we wish to connect to */
 		return -1;
 	}
 
-#ifdef KEEPALIVE
+#ifdef CAN_KEEPALIVE
 	/* Set SO_KEEPALIVE, in order to know if a connection
 	 * broke itself (or has been suddenly broken by kill -9)
 	 */

@@ -50,6 +50,8 @@ inherit
 	EV_FONTABLE_IMP
 		rename
 			interface as ev_fontable_interface
+		redefine
+			set_font
 		end
 
 	WEL_BS_CONSTANTS
@@ -295,6 +297,13 @@ feature -- Element change
 				set_bitmap (a_wel_bitmap)
 				a_wel_bitmap.decrement_reference
 			end
+			set_default_minimum_size
+		end
+	
+	set_font (ft: EV_FONT) is
+			-- Make `ft' new font of `Current'.
+		do
+			Precursor {EV_FONTABLE_IMP} (ft)
 			set_default_minimum_size
 		end
 

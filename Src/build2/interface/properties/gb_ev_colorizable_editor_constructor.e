@@ -32,107 +32,64 @@ feature -- Access
 			-- A vision2 component to enable modification
 			-- of items held in `objects'.
 		local
-			first_object: EV_COLORIZABLE
-			bounding_frame: EV_FRAME
 			horizontal_box: EV_HORIZONTAL_BOX
-			vertical_box: EV_VERTICAL_BOX
-			button, button1: EV_BUTTON
-			frame: EV_FRAME
-			cell: EV_CELL
+			label: EV_LABEL
+			reset_button: EV_TOOL_BAR_BUTTON
+			tool_bar: EV_TOOL_BAR
+			reset_pixmap: EV_PIXMAP
 		do
 			create Result
 			initialize_attribute_editor (Result)
-			create color_dialog
-			first_object := objects.first
-			create bounding_frame.make_with_text (gb_ev_colorizable_background_color)
-			Result.extend (bounding_frame)
 			
+			reset_pixmap := (create {GB_SHARED_PIXMAPS}).pixmap_by_name ("icon_recycle_bin_color")
+			
+			create label.make_with_text (gb_ev_colorizable_foreground_color)
+			Result.extend (label)
+			Result.disable_item_expand (label)
+			Result.set_padding_width (object_editor_vertical_padding_width)
 			create horizontal_box
-			create vertical_box
-			bounding_frame.extend (vertical_box)
-			vertical_box.extend (horizontal_box)
-			create frame
-			create b_area
-			b_area.set_pebble_function (agent retrieve_color (b_area, False))
-			b_area.drop_actions.extend (agent accept_background_color_stone (?))
-			frame.set_minimum_width (40)
-			b_area.set_tooltip (gb_ev_colorizable_background_color_tooltip)
-			create button.make_with_text (Select_button_text)
-			button.set_tooltip ("Select background color")
-			background_color := first_object.background_color	
-			frame.extend (b_area)
-			horizontal_box.set_padding (2)
-			create cell
-			horizontal_box.extend (cell)
-			horizontal_box.disable_item_expand (cell)
-			horizontal_box.extend (frame)
-			horizontal_box.extend (button)
-			horizontal_box.disable_item_expand (button)
-			horizontal_box.disable_item_expand (frame)
-			b_area.expose_actions.force_extend (agent b_area.clear)
-			button.select_actions.extend (agent update_background_color)
+			create foreground_color_entry.make (Current, horizontal_box, foreground_color_string, "", gb_ev_colorizable_foreground_color_tooltip,
+				agent actually_set_foreground_color (?), agent valid_color (?))
+			foreground_color_entry.color_area.set_pebble_function (agent retrieve_color (foreground_color_entry.color_area, True))
+			create reset_button
+			create tool_bar
+			tool_bar.extend (reset_button)
+			reset_button.set_pixmap (reset_pixmap)
+			reset_button.set_tooltip (reset_foreground_color_tooltip)
+			reset_button.select_actions.extend (agent restore_foreground_color)
+			horizontal_box.extend (tool_bar)
+			horizontal_box.disable_item_expand (tool_bar)
+			Result.extend (horizontal_box)
+			
+			create label.make_with_text (gb_ev_colorizable_background_color)
+			Result.extend (label)
+			Result.disable_item_expand (label)
 			create horizontal_box
-			horizontal_box.set_border_width (2)
-			create button1.make_with_text (gb_ev_colorizable_restore_color)
-			button1.set_tooltip (background_color_restore)
-			button1.select_actions.extend (agent restore_background_color)
-			horizontal_box.extend (button1)
-			vertical_box.extend (horizontal_box)
-			horizontal_box.disable_item_expand (button1)
-				-- Add two for the padding of the box
-			button1.set_minimum_width (button.minimum_width + frame.minimum_width + 2)
-			
-			
+			create background_color_entry.make (Current, horizontal_box, background_color_string, "", gb_ev_colorizable_background_color_tooltip,
+				agent actually_set_background_color (?), agent valid_color (?))
+			background_color_entry.color_area.set_pebble_function (agent retrieve_color (background_color_entry.color_area, False))
+			create reset_button
+			create tool_bar
+			tool_bar.extend (reset_button)
+			reset_button.set_pixmap (reset_pixmap)
+			reset_button.set_tooltip (reset_background_color_tooltip)
+			reset_button.select_actions.extend (agent restore_background_color)
+			horizontal_box.extend (tool_bar)
+			horizontal_box.disable_item_expand (tool_bar)
+			Result.extend (horizontal_box)
 
-			create bounding_frame.make_with_text (gb_ev_colorizable_foreground_color)
-			Result.extend (bounding_frame)
-
-			create horizontal_box
-			create vertical_box
-			bounding_frame.extend (vertical_box)
-			vertical_box.extend (horizontal_box)
-			create frame
-			create f_area
-			f_area.set_pebble_function (agent retrieve_color (f_area, True))
-			f_area.drop_actions.extend (agent accept_foreground_color_stone (?))
-			frame.set_minimum_width (40)
-			f_area.set_tooltip (gb_ev_colorizable_foreground_color_tooltip)
-			create button.make_with_text (Select_button_text)
-			button.set_tooltip ("Select foreground color")
-			foreground_color := first_object.foreground_color	
-			frame.extend (f_area)
-			horizontal_box.set_padding (2)
-			create cell
-			horizontal_box.extend (cell)
-			horizontal_box.disable_item_expand (cell)
-			horizontal_box.extend (frame)
-			horizontal_box.extend (button)
-			horizontal_box.disable_item_expand (button)
-			horizontal_box.disable_item_expand (frame)
-			f_area.expose_actions.force_extend (agent f_area.clear)
-			button.select_actions.extend (agent update_foreground_color)
-			create horizontal_box
-			horizontal_box.set_border_width (2)
-			create button1.make_with_text (gb_ev_colorizable_restore_color)
-			button1.set_tooltip (foreground_color_restore)
-			button1.select_actions.extend (agent restore_foreground_color)
-			horizontal_box.extend (button1)
-			vertical_box.extend (horizontal_box)
-			horizontal_box.disable_item_expand (button1)
-			button1.set_minimum_width (button.minimum_width + frame.minimum_width + 2)
-			
 			update_attribute_editor
 
 			disable_all_items (Result)
 			align_labels_left (Result)
 		end
 		
-		update_attribute_editor is
+	update_attribute_editor is
 			-- Update status of `attribute_editor' to reflect information
 			-- from `objects.first'.
 		do
-			update_background_display
-			update_foreground_display
+			foreground_color_entry.update_constant_display (first.foreground_color)
+			background_color_entry.update_constant_display (first.background_color)
 		end
 
 feature {NONE} -- Implementation
@@ -170,9 +127,9 @@ feature {NONE} -- Implementation
 			-- from `background_color' of `label'.
 		do
 			if is_foreground then
-				Result := create {GB_COLOR_STONE}.make_with_properties (label.background_color, True)
+				Result := create {GB_COLOR_STONE}.make_with_properties (label.background_color.twin, True)
 			else
-				Result := create {GB_COLOR_STONE}.make_with_properties (label.background_color, False)
+				Result := create {GB_COLOR_STONE}.make_with_properties (label.background_color.twin, False)
 			end
 		end
 
@@ -181,12 +138,19 @@ feature {NONE} -- Implementation
 		local
 			colorizable: EV_COLORIZABLE
 			p: PROCEDURE [EV_ANY, TUPLE]
+			constant_context: GB_CONSTANT_CONTEXT
 		do
+				-- Firsty remove the constant if one exists.
+			constant_context := object.constants.item (type + background_color_string)
+			if constant_context /= Void then
+				constant_context.destroy
+			end
 			colorizable ?= default_object_by_type (class_name (first))
 			p := agent {EV_COLORIZABLE}.set_background_color (colorizable.background_color)
 			for_all_objects (p)
 			update_editors
-			update_background_display
+			update_attribute_editor
+			background_color_entry.update_constant_display (first.background_color)
 		end
 		
 	restore_foreground_color is
@@ -194,12 +158,19 @@ feature {NONE} -- Implementation
 		local
 			colorizable: EV_COLORIZABLE
 			p: PROCEDURE [EV_ANY, TUPLE]
+			constant_context: GB_CONSTANT_CONTEXT
 		do
+				-- Firsty remove the constant if one exists.
+			constant_context := object.constants.item (type + foreground_color_string)
+			if constant_context /= Void then
+				constant_context.destroy
+			end
 			colorizable ?= default_object_by_type (class_name (first))
 			p := agent {EV_COLORIZABLE}.set_foreground_color (colorizable.foreground_color)
 			for_all_objects (p)
 			update_editors
-			update_foreground_display
+			update_attribute_editor
+			foreground_color_entry.update_constant_display (first.foreground_color)
 		end
 
 	update_background_color is
@@ -215,7 +186,7 @@ feature {NONE} -- Implementation
 	actually_set_background_color (color: EV_COLOR) is
 			-- Actually update the background colors.
 		local
-			container: EV_CONTAINER
+--			container: EV_CONTAINER
 			p: PROCEDURE [EV_ANY, TUPLE]
 		do
 			p := agent {EV_COLORIZABLE}.set_background_color (color)
@@ -230,21 +201,7 @@ feature {NONE} -- Implementation
 --			end
 			background_color := color
 			update_editors
-			update_background_display
-		end
-
-	update_background_display is
-			-- Update area displaying the background color of the EV_COLORIZABLE.
-		do
-			b_area.set_background_color (first.background_color)
-			b_area.clear
-		end
-		
-	update_foreground_display is
-			-- Update area displaying the background color of the EV_COLORIZABLE.
-		do
-			f_area.set_background_color (first.foreground_color)
-			f_area.clear
+--			update_background_display
 		end
 
 	update_foreground_color is
@@ -266,7 +223,12 @@ feature {NONE} -- Implementation
 			for_all_objects (p)
 			foreground_color := color
 			update_editors
-			update_foreground_display
+		end
+		
+	valid_color (a_color: EV_COLOR): BOOLEAN is
+			-- Is `a_color' a valid color?
+		do
+			Result := True
 		end
 
 	foreground_color: EV_COLOR
@@ -275,6 +237,10 @@ feature {NONE} -- Implementation
 	b_area, f_area: EV_DRAWING_AREA
 	
 	color_dialog: EV_COLOR_DIALOG
+	
+	foreground_color_entry: GB_COLOR_INPUT_FIELD
+	
+	background_color_entry: GB_COLOR_INPUT_FIELD
 
 	-- Constants for XML
 	

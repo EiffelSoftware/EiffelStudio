@@ -27,16 +27,19 @@ char string_buffer [500];
 
 Formatter::Formatter()
 {
-}
+};
+//--------------------------------------------------------------------------------
 
 Formatter::~Formatter()
 {
-}
+};
+//--------------------------------------------------------------------------------
 
 EIF_REFERENCE Formatter::ccom_format_message( EIF_INTEGER Code )
 {	
 	return makestr( ( char* )c_format_message ((long) Code), strlen( (char *)string_buffer ));
-}
+};
+//--------------------------------------------------------------------------------
 
 char* Formatter::c_format_message( long Code )
 {
@@ -61,18 +64,20 @@ char* Formatter::c_format_message( long Code )
 	
 	
 	return ( char* )string_buffer;
-}
+};
+//--------------------------------------------------------------------------------
 	
-	EIF_INTEGER Formatter::ccom_hresult (char * exception_code_name) 
-	{
-		char *stopstring;
-		long result, high_bits, low_bits;
-		char high_str [7];
-		strncpy (high_str, exception_code_name, 6);
-		high_str [6] = '\0';
+EIF_INTEGER Formatter::ccom_hresult (char * exception_code_name) 
+{
+	char *stopstring;
+	long result, high_bits, low_bits;
+	char high_str [7];
+	strncpy (high_str, exception_code_name, 6);
+	high_str [6] = '\0';
 
-		high_bits = strtol (high_str, &stopstring, 16);
-		low_bits = strtol (exception_code_name + 6, &stopstring, 16);
-		result = (high_bits << 16) + low_bits;
-		return (EIF_INTEGER)result;
-	};
+	high_bits = strtol (high_str, &stopstring, 16);
+	low_bits = strtol (exception_code_name + 6, &stopstring, 16);
+	result = (high_bits << 16) + low_bits;
+	return (EIF_INTEGER)result;
+};
+//--------------------------------------------------------------------------------

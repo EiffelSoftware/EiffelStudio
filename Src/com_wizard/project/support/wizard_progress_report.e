@@ -34,7 +34,7 @@ feature -- Access
 	progress_dialog: WIZARD_PROGRESS_DIALOG is
 			-- Progress dialog
 		once
-			Result := create {WIZARD_PROGRESS_DIALOG}.make (parent)
+			create Result.make (parent)
 		end
 
 	title: STRING is

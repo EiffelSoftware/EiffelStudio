@@ -671,9 +671,6 @@ feature -- Export checking
 		local
 			type_a: TYPE_A
 			a_class: CLASS_C
-			depend_unit: DEPEND_UNIT
-			feature_i: FEATURE_I
-			like_feat: LIKE_FEATURE
 		do
 				-- Create the supplier set for the feature
 			type_a ?= type
@@ -682,14 +679,7 @@ feature -- Export checking
 				if a_class /= Void then
 					feat_depend.add_supplier (a_class)
 				end
-				like_feat ?= type
-				if like_feat /= Void then
-					-- we must had a dependance to the anchor feature
-					a_class := like_feat.class_id.associated_class
-					feature_i := a_class.feature_table.item (like_feat.feature_name)
-					!! depend_unit.make (like_feat.class_id, feature_i)
-					feat_depend.extend (depend_unit)
-				end
+				type_a.update_dependance (feat_depend)
 			end
 			if has_arguments then
 				from

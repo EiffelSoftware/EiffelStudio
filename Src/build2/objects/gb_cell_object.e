@@ -74,23 +74,19 @@ feature {NONE} -- Implementation
 			container: EV_CONTAINER
 		do
 			--|FIXME for now, actually use a cell
-			if type.is_equal (Ev_titled_window_string) then
-				create display_object.make_as_root_window (builder_window)
-			else
-				container ?= vision2_object_from_type (type)
-				check
-					container_not_void: container /= Void
-				end
-				create display_object.make_with_name_and_child (type, container)
-				display_object.set_pebble_function (agent retrieve_pebble)
-				display_object.child.set_pebble_function (agent retrieve_pebble)
-				display_object.drop_actions.extend (agent add_new_object_wrapper (?))
-				display_object.drop_actions.extend (agent add_new_component_wrapper (?))
-				display_object.child.drop_actions.extend (agent add_new_object_wrapper (?))
-				display_object.child.drop_actions.extend (agent add_new_component_wrapper (?))
-				display_object.drop_actions.set_veto_pebble_function (agent can_add_child (?))
-				display_object.child.drop_actions.set_veto_pebble_function (agent can_add_child (?))
+			container ?= vision2_object_from_type (type)
+			check
+				container_not_void: container /= Void
 			end
+			create display_object.make_with_name_and_child (type, container)
+			display_object.set_pebble_function (agent retrieve_pebble)
+			display_object.child.set_pebble_function (agent retrieve_pebble)
+			display_object.drop_actions.extend (agent add_new_object_wrapper (?))
+			display_object.drop_actions.extend (agent add_new_component_wrapper (?))
+			display_object.child.drop_actions.extend (agent add_new_object_wrapper (?))
+			display_object.child.drop_actions.extend (agent add_new_component_wrapper (?))
+			display_object.drop_actions.set_veto_pebble_function (agent can_add_child (?))
+			display_object.child.drop_actions.set_veto_pebble_function (agent can_add_child (?))
 		end
 
 end -- class GB_CELL_OBJECT

@@ -50,7 +50,9 @@ feature -- Access
 			-- Create the C memory corresponding to the C
 			-- buffer.
 		do
-			buffer := c_malloc (buffer_size)
+			check
+				not_implemented: False
+			end
 		end
 
 	retrieved: ANY is
@@ -62,8 +64,9 @@ feature -- Access
 		local
 			size: INTEGER
 		do
-			Result := c_retrieved (buffer, buffer_size, 0, $size)
-			object_stored_size := size
+			check
+				not_implemented: False
+			end
 		end
 
 feature -- Element change
@@ -75,8 +78,9 @@ feature -- Element change
 		local
 			size: INTEGER
 		do
-			buffer_size := c_stream_basic_store (buffer, buffer_size, $object, $size)
-			object_stored_size := size
+			check
+				not_implemented: False
+			end
 		end
 
 	general_store (object: ANY) is
@@ -90,8 +94,9 @@ feature -- Element change
 		local
 			size: INTEGER
 		do
-			buffer_size := c_stream_general_store (buffer, buffer_size, $object, $size)
-			object_stored_size := size
+			check
+				not_implemented: False
+			end
 		end
 
 	independent_store (object: ANY) is
@@ -102,65 +107,14 @@ feature -- Element change
 		local
 			size: INTEGER
 		do
-			buffer_size := c_stream_independent_store (buffer, buffer_size, $object, $size)
-			object_stored_size := size
+			check
+				not_implemented: False
+			end
 		end
 
 	set_additional_size (new_size: INTEGER) is
 			-- Set `new_size' to BUFFER_SIZE, internal value used to
 			-- increment `buffer_size' during storable operations.
-		do
-			check
-				not_implemented: False
-			end
-		end
-
-feature {NONE} -- Implementation
- 
-	c_stream_basic_store (stream_buffer: POINTER; stream_buffer_size: INTEGER; object: POINTER; c_real_size: POINTER): INTEGER is
-			-- Store object structure reachable form current object
-			-- Return new size of `buffer'.
-		do
-			check
-				not_implemented: False
-			end
-		end
-
-	c_stream_general_store (stream_buffer: POINTER; stream_buffer_size: INTEGER; object: POINTER; c_real_size: POINTER): INTEGER is
-			-- Store object structure reachable form current object
-			-- Return new size of `buffer'.
-		do
-			check
-				not_implemented: False
-			end
-		end
-
-	c_stream_independent_store (stream_buffer: POINTER; stream_buffer_size: INTEGER; object: POINTER; c_real_size: POINTER): INTEGER is
-			-- Store object structure reachable form current object
-			-- Return new size of `buffer'.
-		do
-			check
-				not_implemented: False
-			end
-		end
-
-	c_retrieved (stream_buffer: POINTER; stream_buffer_size: INTEGER; stream_buffer_position: INTEGER; c_real_size: POINTER): ANY is
-			-- Object structured retrieved from stream of pointer
-			-- `stream_ptr'
-		do
-			check
-				not_implemented: False
-			end
-		end
-	
-	c_malloc (size: INTEGER): POINTER is
-		do
-			check
-				not_implemented: False
-			end
-		end
-
-	c_free (buf: POINTER) is
 		do
 			check
 				not_implemented: False
@@ -209,8 +163,10 @@ feature -- Status setting
 			-- Close medium.
 		do
 			is_closed := True
-			c_free (buffer)
 			buffer := default_pointer
+			check
+				not_implemented: False
+			end
 		end
 
 feature -- Output

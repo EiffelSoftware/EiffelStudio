@@ -43,7 +43,7 @@ do
 		#	 echo "> 80 cols! $file"
 		#fi
 		grep -v "^[ 	]*--|" < $file > $file.tmp
-		sed -e 's/--|.*//g' < $file.tmp > $file
+		sed -e 's/[ 	]--|.*//g' < $file.tmp > $file
 		rm -f $file.tmp
 	fi
 done
@@ -56,6 +56,7 @@ cvs -d :pserver:$USER@cvs:/home/cvs export -r $1 C_library
 mv C_library/* .
 grep -v -- "--|" event/action_sequence.e > vision2/interface/support/action_sequence.e
 grep -v -- "--|" event/active_list.e > vision2/interface/support/active_list.e
+grep -v -- "--|" event/interactive_list.e > vision2/interface/support/interactive_list.e
 echo "See vision2/RELEASE_NOTES" > README
 tar czf $1.tgz README vision2 base gel wel libpng zlib
 rm -rf base gel event vision2 wel C_library libpng zlib

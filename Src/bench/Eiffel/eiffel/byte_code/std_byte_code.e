@@ -843,11 +843,11 @@ feature
 			if exception_stack_managed or rescue_clause /= Void then
 				generated_file.putstring ("RTEX;");
 				generated_file.new_line;
-				if not context.workbench_mode then
-						-- We only need this for finalized mode...
-					generated_file.putstring ("RTLT;");
-					generated_file.new_line;
-				end;
+			end
+			if rescue_clause /= Void and not context.workbench_mode then
+					-- We only need this for finalized mode...
+				generated_file.putstring ("RTLT;");
+				generated_file.new_line;
 			end;
 		end;
 

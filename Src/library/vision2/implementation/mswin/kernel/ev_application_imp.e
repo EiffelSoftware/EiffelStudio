@@ -61,6 +61,7 @@ feature {NONE} -- Initialization
 			init_instance
 			init_application
 			tooltip_delay := no_tooltip_delay_assigned
+			stop_processing_requested_msg := cwin_register_window_message ($ev_stop_processing_requested)
 		end
 
 	launch  is
@@ -534,6 +535,54 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
+		
+	process_events_until_stopped is
+			-- Process all events until 'stop_processing' is called.
+		local
+			msg: WEL_MSG
+		do
+			from
+				create msg.make
+			until
+				stop_processing_requested
+			loop
+				msg.peek_all
+				if msg.last_boolean_result then
+					process_message (msg)
+				else
+					if not internal_idle_actions.is_empty then
+						internal_idle_actions.call (Void)
+					elseif idle_actions_internal /= Void and then
+						not idle_actions_internal.is_empty then 
+						idle_actions_internal.call (Void)
+					else
+						msg.wait
+					end
+				end
+			end
+				-- Signal to Windows to our thread is now
+ 				-- idle.
+			c_sleep (0)
+			stop_processing_requested := False
+			msg.peek_all
+		end
+		
+	stop_processing is
+			--  Exit `process_events_until_stopped'.
+		do
+			stop_processing_requested := True
+			cwin_post_message (default_pointer, stop_processing_requested_msg, 0, 0)
+		end
+		
+	stop_processing_requested_msg: INTEGER
+		-- Custom message sent by `stop_processing'.
+		
+	ev_stop_processing_requested: STRING is
+			-- `Result' is string used to register custom stop processing
+			-- message with Windows.
+		once
+			Result := "ev_stop_processing_requested"
+		end
 
 feature {NONE} -- Blocking Dispatcher
 
@@ -547,6 +596,15 @@ feature {NONE} -- Blocking Dispatcher
 		end
 
 feature {NONE} -- Externals
+
+	cwin_register_window_message (message_name: POINTER): INTEGER is
+			-- Register a custom window message named `message_name'.
+			-- `Result' is id of new message.
+		external
+			"C [macro <windows.h>] (LPCTSTR): EIF_INTEGER"
+		alias
+			"RegisterWindowMessage"
+		end
 
 	c_sleep (v: INTEGER) is
 			-- Sleep for `v' milliseconds.
@@ -579,6 +637,15 @@ feature {NONE} -- Externals
 			"C [macro %"wel.h%"] (HWND, UINT, WPARAM, LPARAM)"
 		alias
 			"SendMessage"
+		end
+
+	cwin_post_message (hwnd: POINTER; msg, wparam,
+				lparam: INTEGER) is
+			-- SDK PostMessage (without the result)
+		external
+			"C [macro %"wel.h%"] (HWND, UINT, WPARAM, LPARAM)"
+		alias
+			"PostMessage"
 		end
 
 end -- class EV_APPLICATION_IMP

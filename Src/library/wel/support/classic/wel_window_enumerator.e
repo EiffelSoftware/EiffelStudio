@@ -7,6 +7,8 @@ class
 	WEL_WINDOW_ENUMERATOR
 	
 inherit
+	ANY
+
 	WEL_WINDOWS_ROUTINES
 		export
 			{NONE} all

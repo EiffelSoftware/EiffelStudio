@@ -9,6 +9,8 @@ class
 	WEL_SCROLLER
 
 inherit
+	ANY
+	
 	WEL_SB_CONSTANTS
 		export
 			{NONE} all

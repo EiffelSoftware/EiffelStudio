@@ -79,8 +79,10 @@ feature {NONE} -- initialization
 			cwin_make_lang_id (a_language, a_sublanguage))
 		end
 
+feature -- Measurement
+
 	structure_size: INTEGER is
- 		-- size of structure `MSGBOXPARAMS'
+ 			-- size of structure `MSGBOXPARAMS'
  		do
 			Result := c_size_of_msgboxparams
 		end

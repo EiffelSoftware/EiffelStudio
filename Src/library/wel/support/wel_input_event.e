@@ -9,6 +9,8 @@ class
 	WEL_INPUT_EVENT
 
 inherit
+	ANY
+
 	WEL_INPUT_CONSTANTS
 		export
 			{NONE} all

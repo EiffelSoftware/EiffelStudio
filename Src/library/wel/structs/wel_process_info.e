@@ -81,7 +81,7 @@ feature -- Element Settings
 			id_set: thread_id = a_id
 		end
 
-feature {NONE} -- Measurement
+feature -- Measurement
 
 	structure_size: INTEGER is
 			-- Size to allocate (in bytes)

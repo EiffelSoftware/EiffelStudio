@@ -20,11 +20,26 @@ inherit
 			parent,
 			move_and_resize,
 			move,
-			move_absolute
+			move_absolute,
+			make,
+			set_parent
 		end
 
 create
 	make
+
+feature {NONE} -- Initialization
+
+	make (a_parent: WEL_MDI_FRAME_WINDOW; a_name: STRING) is
+			-- Make window as child of `a_parent' and `a_name' as title.
+		do
+			register_class
+			internal_window_make (a_parent, a_name,
+				default_style,
+				default_x, default_y,
+				default_width, default_height,
+				default_id, default_pointer)
+		end
 
 feature -- Access
 
@@ -66,6 +81,23 @@ feature -- Basic operations
 			parent.client_window.destroy_window (Current)
 		end
 
+feature -- Element change
+
+	set_parent (a_parent: WEL_WINDOW) is
+			-- Change parent of current window if possible.
+		local
+			l_parent: like parent
+		do
+			l_parent ?= a_parent
+			if l_parent /= Void then
+				parent := l_parent
+				cwin_set_parent (item, l_parent.item)
+			else
+				parent := Void
+				cwin_set_parent (item, default_pointer)
+			end
+		end
+		
 feature {NONE} -- Implementation
 
 	internal_window_make (a_parent: WEL_MDI_FRAME_WINDOW; a_name: STRING;

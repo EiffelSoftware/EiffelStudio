@@ -8,6 +8,8 @@ class
 	WEL_MESSAGE_INFORMATION
 
 inherit
+	ANY
+
 	WEL_WORD_OPERATIONS
 		export
 			{NONE} all

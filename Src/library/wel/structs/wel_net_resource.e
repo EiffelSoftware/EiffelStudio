@@ -298,7 +298,7 @@ feature -- Element change
 			value_set: equal (provider, a_value)
 		end
 		
-feature {NONE} -- Measurement
+feature -- Measurement
 
 	structure_size: INTEGER is
 			-- Size to allocate (in bytes)

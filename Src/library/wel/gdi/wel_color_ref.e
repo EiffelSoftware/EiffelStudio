@@ -8,10 +8,12 @@ class
 	WEL_COLOR_REF
 
 inherit
+	ANY
+
 	WEL_COLOR_CONSTANTS
 		export
 			{NONE} all
-			{ANY} is_equal, valid_color_constant
+			{ANY} valid_color_constant
 		end
 
 create

@@ -297,7 +297,7 @@ feature -- Element Change
 			error_output_set: std_error = an_error_output
 		end
 
-feature {NONE} -- Measurement
+feature -- Measurement
 
 	structure_size: INTEGER is
 			-- Size to allocate (in bytes)

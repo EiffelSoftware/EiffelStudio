@@ -8,6 +8,8 @@ class
 	WEL_STANDARD_PENS
 
 inherit
+	ANY
+
 	WEL_STANDARD_COLORS
 		export
 			{NONE} all

@@ -8,6 +8,8 @@ class
 	WEL_SYSTEM_COLORS
 	
 inherit
+	ANY
+
 	WEL_CONSTANTS
 		export
 			{NONE} all

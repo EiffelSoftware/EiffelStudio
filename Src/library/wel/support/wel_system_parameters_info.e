@@ -7,6 +7,8 @@ class
 	WEL_SYSTEM_PARAMETERS_INFO
 
 inherit
+	ANY
+
 	WEL_SPI_CONSTANTS
 		export
 			{NONE} all

@@ -50,9 +50,6 @@ feature {NONE} -- Access
 	main_parent: CLASS_C
 			-- Shortcut to `current_class.main_parent'.
 
-	is_processing_main_parent: BOOLEAN
-			-- Are we currently processing the main branch?
-
 feature -- IL Generation
 
 	generate_il_implementation (class_c: CLASS_C; class_type: CLASS_TYPE) is
@@ -101,6 +98,8 @@ feature -- IL Generation
 			processed_tbl.wipe_out
 		end
 
+feature {NONE} -- Implementation
+
 	generate_il_type_features (class_c: CLASS_C; class_type: CLASS_TYPE;
 			type_features: HASH_TABLE [TYPE_FEATURE_I, INTEGER])
 		is
@@ -144,49 +143,9 @@ feature -- IL Generation
 				l_cl_type := l_interface.class_type
 				if l_cl_type.associated_class = class_type.associated_class.main_parent then
 					processed_tbl.put (l_cl_type.static_type_id)
-					is_processing_main_parent := True
 					generate_il_first_parent_implementation (l_interface,
 						l_interface.associated_class, l_cl_type)
-					is_processing_main_parent := False
-					internal_generate_il_main_parent (l_interface)
-				end
-				parents.forth
-			end
-		end
-
-	internal_generate_il_main_parent (class_interface: CLASS_INTERFACE) is
-			-- Generate IL code for feature in `class_c'.
-		require
-			class_interface_not_void: class_interface /= Void
-		local
-			parents: SEARCH_TABLE [CLASS_INTERFACE]
-			l_interface: CLASS_INTERFACE
-			l_cl_type: CLASS_TYPE
-		do
-			from
-				parents := class_interface.parents
-				parents.start
-			until
-				parents.after
-			loop
-				l_interface := parents.item_for_iteration
-				l_cl_type := l_interface.class_type
-
-				if not processed_tbl.has (l_cl_type.static_type_id) then
-					processed_tbl.put (l_cl_type.static_type_id)
-					if
-						l_cl_type.associated_class =
-							class_interface.class_type.associated_class.main_parent
-					then
-						is_processing_main_parent := True
-						generate_il_first_parent_implementation (l_interface,
-							l_interface.associated_class, l_cl_type)
-						is_processing_main_parent := False
-					else
-						generate_il_first_parent_implementation (l_interface,
-							l_interface.associated_class, l_cl_type)
-					end
-					internal_generate_il_main_parent (l_interface)
+					generate_il_main_parent (l_cl_type)
 				end
 				parents.forth
 			end
@@ -214,8 +173,8 @@ feature -- IL Generation
 					processed_tbl.put (l_cl_type.static_type_id)
 					generate_il_implementation_inherited (l_interface,
 						l_interface.associated_class, l_cl_type)
-					generate_il_implementation_parents (l_interface)
 				end
+				generate_il_implementation_parents (l_interface)
 				parents.forth
 			end
 		end
@@ -248,7 +207,7 @@ feature -- IL Generation
 
 					-- Generate code for current class only.
 				if not feat.is_deferred then
-					if feat.written_in = l_class_id or feat.is_attribute then
+					if feat.written_in = l_class_id then
 						generate_local_feature (feat, Void, class_type, False)
 						mark_as_treated (feat)
 					else
@@ -263,11 +222,13 @@ feature -- IL Generation
 						end
 					end
 				else
-						generate_local_feature (feat, Void, class_type, False)
-						mark_as_treated (feat)
 						-- Nothing to be done here. Parent was deferred and we
 						-- are still deferred. It should only happen when
 						-- generating a deferred class.
+						-- FIXME: Manu 08/20/2002, there is a bug in Microsoft Runtime
+						-- which forces us to generate an empty routine.
+					generate_empty_local_feature (feat, Void, class_type, False)
+					mark_as_treated (feat)
 					check
 						deferred_class:
 							current_class_type.associated_class.is_deferred
@@ -307,39 +268,53 @@ feature -- IL Generation
 				rout_id := inh_feat.rout_id_set.first
 				if rout_ids_tbl.has (rout_id) then
 					feat := rout_ids_tbl.found_item
-					if not feat.is_deferred and not feat.is_il_external then
-						generate_method_impl (feat, class_type, inh_feat,
-							is_processing_main_parent)
-					end
+					generate_method_impl (feat, class_type, inh_feat)
 				else
+						-- Note: `feat' might be Void in case of inherited external
+						-- static features that do not exist anymore. In which case
+						-- nothing has to be done. If it is an IL external, then
+						-- it means it is a static as we are currently processing
+						-- interfaces only.
 					feat := current_select_tbl.item (rout_id)
-						-- Generate code for current class only.
-					if
-						feat /= Void and then
-						not feat.is_deferred and then not feat.is_il_external
-					then
-						if feat.written_in = l_class_id or feat.is_attribute then
-							generate_local_feature (feat, inh_feat, class_type, False)
-							mark_as_treated (feat)
+					if feat /= Void and then not feat.is_il_external then
+							-- Generate code for current class only.
+						if not feat.is_deferred then
+							if
+								feat.written_in = l_class_id or
+								(feat.is_attribute and
+									not main_parent.simple_conform_to (feat.written_class))
+							then
+								generate_local_feature (feat, inh_feat, class_type, False)
+								mark_as_treated (feat)
+							else
+									-- Case of local renaming or implicit
+									-- covariant redefinition.
+								if feat.is_attribute then
+									if
+										not main_parent.simple_conform_to (feat.written_class)
+									then
+										generate_inherited_feature (feat, inh_feat, class_type)
+										mark_as_treated (feat)
+									end
+								else
+									generate_inherited_feature (feat, inh_feat, class_type)
+									mark_as_treated (feat)
+								end
+							end
 						else
-								-- Case of local renaming or implicit
-								-- covariant redefinition.
-							generate_inherited_feature (feat, inh_feat, class_type)
+								-- Nothing to be done here. Parent was deferred and we
+								-- are still deferred. It should only happen when
+								-- generating a deferred class.
+								-- FIXME: Manu 08/20/2002, there is a bug in Microsoft Runtime
+								-- which forces us to generate an empty routine.
+							generate_empty_local_feature (feat, inh_feat, class_type, False)
 							mark_as_treated (feat)
+							check
+								deferred_class:
+									current_class_type.associated_class.is_deferred
+							end
 						end
-					else
---							generate_local_feature (feat, inh_feat, class_type, False)
---							mark_as_treated (feat)
-							-- Nothing to be done here. Parent was deferred and we
-							-- are still deferred. It should only happen when
-							-- generating a deferred class.
-						check
-							deferred_class:
-								current_class_type.associated_class.is_deferred or else
-								inh_feat.is_il_external or else
-								(feat = Void or else feat.is_il_external)
-						end
-					end						
+					end
 				end
 				features.forth
 			end
@@ -377,48 +352,43 @@ feature -- IL Generation
 						-- This is where we should do a MethodImpl on the inherited
 						-- implementation and not on the interface.
 					feat := rout_ids_tbl.found_item
-					if not feat.is_deferred and not feat.is_il_external then
- 						if is_method_impl_needed (feat, inh_feat) then
-							generate_method_impl (feat, class_type, inh_feat,
-								is_processing_main_parent)
- 						end
-					end
+ 					if is_method_impl_needed (feat, inh_feat) then
+						generate_method_impl (feat, class_type, inh_feat)
+ 					end
 				else
+						-- Note: `feat' might be Void in case of inherited external
+						-- static features.
 					feat := current_select_tbl.item (rout_id)
-						-- Generate code for current class only.
-					if
-						feat /= Void and then
-						not feat.is_deferred and then not feat.is_il_external
-					then
-						if feat.written_in = l_class_id or feat.is_attribute then
-							generate_local_feature (feat, inh_feat, class_type, False)
-							mark_as_treated (feat)
+					if feat /= Void then
+							-- Generate code for current class only.
+						if not feat.is_deferred then
+							if feat.written_in = l_class_id then
+								generate_local_feature (feat, inh_feat, class_type, False)
+								mark_as_treated (feat)
+							else
+								if not main_parent.simple_conform_to (feat.written_class) then
+										-- Case of local renaming or implicit
+										-- covariant redefinition.
+									generate_inherited_feature (feat, inh_feat, class_type)
+									mark_as_treated (feat)
+								end
+							end
 						else
-							if not is_processing_main_parent then
-									-- Case of local renaming or implicit
-									-- covariant redefinition.
-								generate_inherited_feature (feat, inh_feat, class_type)
+							if feat.is_origin then
+									-- Nothing to be done here. Parent was deferred and we
+									-- are still deferred. It should only happen when
+									-- generating a deferred class.
+									-- FIXME: Manu 08/20/2002, there is a bug in Microsoft
+									-- Runtime which forces us to generate an empty routine.
+								generate_empty_local_feature (feat, inh_feat, class_type, False)
 								mark_as_treated (feat)
 							end
+							check
+								deferred_class:
+									current_class_type.associated_class.is_deferred
+							end
 						end
-					else
-						if
-							feat /= Void and then feat.is_deferred and then
-							feat.is_origin
-						then
-							generate_local_feature (feat, inh_feat, class_type, False)
-							mark_as_treated (feat)
-						end
-							-- Nothing to be done here. Parent was deferred and we
-							-- are still deferred. It should only happen when
-							-- generating a deferred class.
-						check
-							deferred_class:
-								current_class_type.associated_class.is_deferred or else
-								inh_feat.is_il_external or else
-								(feat = Void or else feat.is_il_external)
-						end
-					end						
+					end
 				end
 				features.forth
 			end
@@ -489,8 +459,7 @@ feature -- IL Generation
 					if inh_feat /= Void then
 						generate_feature (feat, False, False, False)
 						if is_method_impl_needed (feat, inh_feat) then
- 							generate_method_impl (feat, class_type, inh_feat,
-								is_processing_main_parent)
+ 							generate_method_impl (feat, class_type, inh_feat)
 						end
  					end
 					generate_feature_code (feat)
@@ -499,7 +468,25 @@ feature -- IL Generation
 				if not feat.is_deferred and then l_is_method_impl_generated then
 						-- We need a MethodImpl here for mapping
 						-- inherited method to current defined one.
-					generate_method_impl (feat, class_type, inh_feat, is_processing_main_parent)
+					generate_method_impl (feat, class_type, inh_feat)
+				end
+			end
+		end
+
+	generate_empty_local_feature (feat, inh_feat: FEATURE_I; class_type: CLASS_TYPE; is_replicated: BOOLEAN) is
+			-- Generate a feature `feat' implemented in `current_class_type', ie
+			-- generate encapsulation that calls its static implementation.
+		require
+			feat_not_void: feat /= Void
+			feat_is_deferred: feat.is_deferred
+			class_type_not_void: class_type /= Void
+		do
+			implementation_generate_feature (feat, False, False, False, True)
+			generate_empty_body (feat)
+
+			if inh_feat /= Void then
+				if is_method_impl_needed (feat, inh_feat) then
+					generate_method_impl (feat, class_type, inh_feat)
 				end
 			end
 		end
@@ -544,7 +531,7 @@ feature -- IL Generation
 				-- We need a MethodImpl here for mapping
 				-- inherited method to current defined one.
 			if l_is_method_impl_generated then
-				generate_method_impl (feat, class_type, inh_feat, is_processing_main_parent)
+				generate_method_impl (feat, class_type, inh_feat)
 			end
 		end
 

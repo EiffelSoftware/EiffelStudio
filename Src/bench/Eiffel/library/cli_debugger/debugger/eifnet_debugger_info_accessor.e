@@ -66,23 +66,6 @@ feature {EIFNET_EXPORTER}
 			Result.set_debugger_info (Eifnet_debugger_info)
 		end
 
---feature {EIFNET_EXPORTER} -- Data status
---
---	data_changed: BOOLEAN is
---		do
---			Result := Eifnet_debugger_info.data_changed
---		end
---
---	set_data_changed (v: BOOLEAN) is
---		do
---			Eifnet_debugger_info.set_data_changed (v)
---		end
---
---	reset_data_changed is
---		do
---			Eifnet_debugger_info.set_data_changed (False)
---		end
-
 feature -- Queries
 
 	icor_debug_module (a_mod_name: STRING): ICOR_DEBUG_MODULE is

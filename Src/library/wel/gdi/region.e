@@ -30,14 +30,14 @@ feature {NONE} -- Initialization
 	make_empty is
 			-- Make an empty rectangle region
 		do
-			item := cwin_create_rect (0, 0, 0, 0)
+			item := cwin_create_rect_rgn (0, 0, 0, 0)
 		end
 
 	make_elliptic (left, top, right, bottom: INTEGER) is
 			-- Make an elliptical region specified by the
 			-- bounding rectangle `left', `top', `right', `bottom'
 		do
-			item := cwin_create_elliptic (left, top, right, bottom)
+			item := cwin_create_elliptic_rgn (left, top, right, bottom)
 		end
 
 	make_elliptic_indirect (rect: WEL_RECT) is
@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 		require
 			rect_not_void: rect /= Void
 		do
-			item := cwin_create_elliptic_indirect (rect.item)
+			item := cwin_create_elliptic_rgn_indirect (rect.item)
 		end
 
 	make_polygon_alternate (points: ARRAY [INTEGER]) is
@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 			a: ANY
 		do
 			a := points.to_c
-			item := cwin_create_polygon ($a, points.count // 2,
+			item := cwel_create_polygon_rgn ($a, points.count // 2,
 				Alternate)
 		end
 
@@ -76,7 +76,7 @@ feature {NONE} -- Initialization
 			a: ANY
 		do
 			a := points.to_c
-			item := cwin_create_polygon ($a, points.count // 2,
+			item := cwel_create_polygon_rgn ($a, points.count // 2,
 				Winding)
 		end
 
@@ -84,7 +84,7 @@ feature {NONE} -- Initialization
 			-- Make a rectangle region specified by
 			-- `left', `top', `right', `bottom'.
 		do
-			item := cwin_create_rect (left, top, right, bottom)
+			item := cwin_create_rect_rgn (left, top, right, bottom)
 		end
 
 	make_rect_indirect (rect: WEL_RECT) is
@@ -93,7 +93,7 @@ feature {NONE} -- Initialization
 		require
 			rect_not_void: rect /= Void
 		do
-			item := cwin_create_rect_indirect (rect.item)
+			item := cwin_create_rect_rgn_indirect (rect.item)
 		end
 
 feature -- Comparison
@@ -160,7 +160,7 @@ feature -- Status report
 
 feature {NONE} -- Externals
 
-	cwin_create_elliptic (x1, y1, x2, y2: INTEGER): POINTER is
+	cwin_create_elliptic_rgn (x1, y1, x2, y2: INTEGER): POINTER is
 			-- SDK CreateEllipticRgn
 		external
 			"C [macro <wel.h>] (int, int, int, int): EIF_POINTER"
@@ -168,7 +168,7 @@ feature {NONE} -- Externals
 			"CreateEllipticRgn"
 		end
 
-	cwin_create_elliptic_indirect (rect: POINTER): POINTER is
+	cwin_create_elliptic_rgn_indirect (rect: POINTER): POINTER is
 			-- SDK CreateEllipticRgnIndirect
 		external
 			"C [macro <wel.h>] (RECT *): EIF_POINTER"
@@ -176,15 +176,13 @@ feature {NONE} -- Externals
 			"CreateEllipticRgnIndirect"
 		end
 
-	cwin_create_polygon (points: POINTER; num, mode: INTEGER): POINTER is
+	cwel_create_polygon_rgn (points: POINTER; num, mode: INTEGER): POINTER is
 			-- SDK CreatePolygonRgn
 		external
-			"C [macro <wel.h>] (POINT *, int, int): EIF_POINTER"
-		alias
-			"CreatePolygonRgn"
+			"C"
 		end
 
-	cwin_create_rect (x1, y1, x2, y2: INTEGER): POINTER is
+	cwin_create_rect_rgn (x1, y1, x2, y2: INTEGER): POINTER is
 			-- SDK CreateRectRgn
 		external
 			"C [macro <wel.h>] (int, int, int, int): EIF_POINTER"
@@ -192,7 +190,7 @@ feature {NONE} -- Externals
 			"CreateRectRgn"
 		end
 
-	cwin_create_rect_indirect (rect: POINTER): POINTER is
+	cwin_create_rect_rgn_indirect (rect: POINTER): POINTER is
 			-- SDK CreateRectRgnIndirect
 		external
 			"C [macro <wel.h>] (RECT *): EIF_POINTER"

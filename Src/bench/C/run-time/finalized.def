@@ -443,9 +443,12 @@ EXPORTS
 	eifbool
 	eifptr
 	eifref
+	eif_type_by_object
 	eiftype
 	eifname
+	old_eifaddr
 	eifaddr
+	eif_field_safe
 	eifgbit
 	eifsbit
 	eifibit

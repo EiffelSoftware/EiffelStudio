@@ -11,6 +11,28 @@ deferred class
 inherit
 	EV_ITEM_HOLDER_IMP
 
+feature {EV_LIST_ITEM_HOLDER_IMP, EV_LIST_ITEM_IMP} -- Implementation
+
+ 	ev_children: ARRAYED_LIST [EV_LIST_ITEM_IMP] is
+ 			-- List of the children.
+		deferred
+		end
+ 
+	list_widget: POINTER
+			-- Pointer to the gtk_list.
+			-- We need this pointer because the EiffelVision2
+			-- EV_LIST_ITEM_HOLDER are often composed by
+			-- several Gtk object.
+			-- ex: EV_LIST = GtkScrolledWindow + GtkList
+			--  `widget' would point to the 1st object
+			-- and `list_widget' to the 2nd.
+	widget: POINTER is
+			-- Pointer to the Gtk object,
+			-- we need it for class EV_LIST_ITEM_IMP
+			-- to access to this pointer in several features.
+		deferred
+		end
+
 end -- class EV_LIST_ITEM_HOLDER_IMP
 
 --!----------------------------------------------------------------

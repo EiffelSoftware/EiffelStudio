@@ -639,6 +639,10 @@ feature {EV_TREE_ITEM_IMP} -- Implementation
 			-- to GtkCTreeNode. Put them back associated to the new GtkCTreeNode.
 			-- If there is no former  or new GtkCtreeNode, it will just update the different
 			-- commands and argument arrays.
+		require
+			event_id_ok: event_id = tree_select_row_id or
+				event_id = tree_unselect_row_id or
+				event_id = tree_subtree_id
 		local
 			cmd_list: LINKED_LIST [EV_COMMAND]
 			arg_list: LINKED_LIST [EV_ARGUMENT]
@@ -775,6 +779,17 @@ feature {EV_TREE_ITEM_HOLDER_IMP} -- Implementation
 		do
 		end
 
+feature {EV_TREE_ITEM_HOLDER_IMP} -- Implementation - constant
+
+	tree_subtree_id: INTEGER is 35
+			-- Constant just needed in this class.
+			-- Used in `update_commands' when an item
+			-- has been expanded or collapsed.
+			-- (This signal does not exist in GTK).
+			-- The value has been chosen regarding
+			-- tree_select_row_id = 33 and
+			-- tree_unselect_row_id = 34.
+	
 end -- class EV_TREE_ITEM_IMP
 
 --|----------------------------------------------------------------

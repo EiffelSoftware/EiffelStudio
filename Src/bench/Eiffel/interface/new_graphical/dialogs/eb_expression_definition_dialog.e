@@ -30,6 +30,7 @@ inherit
 
 create
 	make,
+	make_with_expression_text,
 	make_with_class,
 	make_with_object,
 	make_for_context,
@@ -149,6 +150,15 @@ feature {NONE} -- Initialization
 			dialog.show_actions.extend (agent on_shown)
 			focused_widget := expression_field
 		end
+		
+	make_with_expression_text (t: STRING) is
+			-- Initialize `Current' and set the expression string to `t'.
+		require
+			valid_string: t /= Void and not t.is_empty
+		do
+			make
+			expression_field.set_text (t)
+		end		
 
 	make_with_class (cl: CLASS_C) is
 			-- Initialize `Current' and force the creation of a class-related expression.

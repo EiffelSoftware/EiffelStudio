@@ -95,13 +95,15 @@ end;
 			-- Remove all empty files from disk
 		local
 			file: SERVER_FILE
+			local_files: EXTEND_TABLE [SERVER_FILE, FILE_ID]
 		do
 			from
-				files.start
+				local_files := files
+				local_files.start
 			until
-				files.after
+				local_files.after
 			loop
-				file := files.item_for_iteration;
+				file := local_files.item_for_iteration;
 				if
 					file /= Void and then
 					not (file.precompiled or file.is_static) and then
@@ -109,22 +111,25 @@ end;
 				then
 					remove_file (file);
 				end;
-				files.forth
+				local_files.forth
 			end
 		end;
 
 	new_id: FILE_ID is
 			-- New id
+		local
+			local_files: EXTEND_TABLE [SERVER_FILE, FILE_ID]
 		do
 			from
-				files.start
+				local_files := files
+				local_files.start
 			until
-				files.after or else files.item_for_iteration = Void
+				local_files.after or else local_files.item_for_iteration = Void
 			loop
-				files.forth
+				local_files.forth
 			end;
-			if not files.after then
-				Result := files.key_for_iteration
+			if not local_files.after then
+				Result := local_files.key_for_iteration
 			else
 				Result := file_counter.next_id
 			end
@@ -184,18 +189,20 @@ feature -- Status report
 			-- Are the server files readable?
 		local
 			file: SERVER_FILE
+			local_files: EXTEND_TABLE [SERVER_FILE, FILE_ID]
 		do
 			from
 				Result := true;
-				files.start
+				local_files := files
+				local_files.start
 			until
-				not Result or files.after
+				not Result or local_files.after
 			loop
-				file:= files.item_for_iteration;
+				file:= local_files.item_for_iteration;
 				if file /= Void and then file.exists then
 					Result := file.is_readable
 				end;
-				files.forth
+				local_files.forth
 			end
 		end;
 
@@ -203,14 +210,16 @@ feature -- Status report
 			-- Are the server files readable and writable?
 		local
 			file: SERVER_FILE
+			local_files: EXTEND_TABLE [SERVER_FILE, FILE_ID]
 		do
 			from
 				Result := True;
-				files.start
+				local_files := files
+				local_files.start
 			until
-				not Result or files.after
+				not Result or local_files.after
 			loop
-				file:= files.item_for_iteration;
+				file:= local_files.item_for_iteration;
 				if file /= Void and then file.exists then
 					if file.precompiled or file.is_static then
 						Result := file.is_readable
@@ -218,7 +227,7 @@ feature -- Status report
 						Result := (file.is_readable and file.is_writable)
 					end
 				end;
-				files.forth
+				local_files.forth
 			end
 		end
 
@@ -226,18 +235,20 @@ feature -- Status report
 			-- Do the server files exist?
 		local
 			file: SERVER_FILE
+			local_files: EXTEND_TABLE [SERVER_FILE, FILE_ID]
 		do
 			from
 				Result := True;
-				files.start
+				local_files := files
+				local_files.start
 			until
-				not Result or files.after
+				not Result or local_files.after
 			loop
-				file:= files.item_for_iteration;
+				file:= local_files.item_for_iteration;
 				if file /= Void then
 					Result := file.exists
 				end
-				files.forth
+				local_files.forth
 			end
 		end	
 
@@ -247,17 +258,19 @@ feature -- Initialization
 			-- Update the path names of the various server files.
 		local
 			file: SERVER_FILE
+			local_files: EXTEND_TABLE [SERVER_FILE, FILE_ID]
 		do
 			from
-				files.start
+				local_files := files
+				local_files.start
 			until
-				files.after
+				local_files.after
 			loop
-				file := files.item_for_iteration;
+				file := local_files.item_for_iteration;
 				if file /= Void then
 					file.update_path
 				end;
-				files.forth
+				local_files.forth
 			end;
 		end;
 
@@ -287,17 +300,19 @@ feature -- Debug
 	trace is
 		local
 			file: SERVER_FILE
+			local_files: EXTEND_TABLE [SERVER_FILE, FILE_ID]
 		do
 			from
-				files.start
+				local_files := files
+				local_files.start
 			until
-				files.after
+				local_files.after
 			loop
-				file := files.item_for_iteration;
+				file := local_files.item_for_iteration;
 				if file /= Void then
 					file.trace
 				end;
-				files.forth
+				local_files.forth
 			end
 		end;
 

@@ -390,14 +390,24 @@ feature {EV_ANY_I} -- Event handling
 			keyval: INTEGER
 			key: EV_KEY
 		do
-			if n_args /= 1 then
-				print ("********** /= 1 nargs *********%N");
-			else
 			gdk_event := gtk_value_pointer (args)
 			--print (C.gdk_event_any_struct_type (gdk_event).out + "%N");
 			if C.gdk_event_any_struct_type (gdk_event) < 100000 then
 			inspect
 				C.gdk_event_any_struct_type (gdk_event)
+			when
+				Gdk_motion_notify_enum
+			then
+					-- gdk_event type GdkEventMotion
+				Result := [
+					C.gdk_event_motion_struct_x (gdk_event).truncated_to_integer,
+					C.gdk_event_motion_struct_y (gdk_event).truncated_to_integer,
+					C.gdk_event_motion_struct_xtilt (gdk_event),
+					C.gdk_event_motion_struct_ytilt (gdk_event),
+					C.gdk_event_motion_struct_pressure (gdk_event),
+					C.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer,
+					C.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer
+				]
 			when
 				Gdk_nothing_enum,
 				Gdk_delete_enum,
@@ -420,21 +430,6 @@ feature {EV_ANY_I} -- Event handling
 					C.gdk_rectangle_struct_width (p),
 					C.gdk_rectangle_struct_height (p)
 				]
-
-			when
-				Gdk_motion_notify_enum
-			then
-					-- gdk_event type GdkEventMotion
-				Result := [
-					C.gdk_event_motion_struct_x (gdk_event).truncated_to_integer,
-					C.gdk_event_motion_struct_y (gdk_event).truncated_to_integer,
-					C.gdk_event_motion_struct_xtilt (gdk_event),
-					C.gdk_event_motion_struct_ytilt (gdk_event),
-					C.gdk_event_motion_struct_pressure (gdk_event),
-					C.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer,
-					C.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer
-				]
-
 			when
 				Gdk_button_press_enum,
 				Gdk_2button_press_enum
@@ -561,7 +556,6 @@ feature {EV_ANY_I} -- Event handling
 					gdk_no_expose_event_not_handled: False
 				end
 
-			end
 			end
 			end
 		end

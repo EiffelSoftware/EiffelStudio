@@ -54,7 +54,7 @@ feature -- File	Location
 			l_file_path: FILE_NAME
 		once
 			create l_file_path.make_from_string ((create {APPLICATION_CONSTANTS}).templates_path)
-			l_file_path.extend ("WebHelpTemplate.html")
+			l_file_path.extend ("WebHelpTemplateWithHeader.html")
 			Result := l_file_path.string
 		end	
 
@@ -114,11 +114,23 @@ feature -- Access
 	html_filter_token: STRING is "[!FilterHTML!]"
 			-- Token to replace with document HTML filter
 	
+	html_filter_search_token: STRING is "[!FilterSearchHTML!]"
+			-- Token to replace with document HTML filter for search form
+	
 	html_toc_token: STRING is "[!TOCHTML!]"
 			-- Token to replace with document HTML toc
+			
+	html_toc_script: STRING is "[!TOCScript!]"
+			-- Token for location of toc javascript
+
+	html_toc_style: STRING is "[!TOCStyle!]"
+			-- Token for location of toc stylesheet
 	
 	html_default_toc: STRING is "[!DefaultTOC!]"
 			-- Token to replace default document toc
+	
+	filter_frame_size_token: STRING is "[!FilterFrameSize!]"
+			-- Token to replace filter frame size
 	
 	chart_suffix: STRING is "_chart"
 			-- Suffix for code chart view files

@@ -12,8 +12,7 @@ feature {HTML_FILTER} -- Access
 			-- Element to element mappings
 		once
 			create Result.make (15)
-			Result.compare_objects
-			Result.extend ("head", "meta_data")
+			Result.compare_objects			
 			Result.extend ("table", "table")
 			Result.extend ("tr", "row")
 			Result.extend ("td", "cell")
@@ -41,6 +40,7 @@ feature {HTML_FILTER} -- Access
 			create Result.make (5)
 			Result.compare_objects			
 			Result.extend ("html", "document")
+			Result.extend ("head", "meta_data")
 			Result.extend ("body", "document_paragraph")
 			Result.extend ("p", "paragraph")
 			Result.extend ("p", "paragraph_end")
@@ -176,6 +176,7 @@ feature -- Element Data
 			Result.extend ("script")
 			Result.extend ("document_paragraph")
 			Result.extend ("start")
+			Result.extend ("document")
 		end
 	
 	style_elements: ARRAYED_LIST [STRING] is

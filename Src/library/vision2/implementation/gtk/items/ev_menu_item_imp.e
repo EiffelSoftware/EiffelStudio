@@ -206,9 +206,12 @@ feature {EV_ANY_I} -- Implementation
 		end
 
 	menu_item_box: POINTER is
+		local
+			a_child_list: POINTER
 		do
-			Result := C.gtk_container_children (c_object)
-			Result := C.g_list_nth_data (Result, 0)
+			a_child_list := C.gtk_container_children (c_object)
+			Result := C.g_list_nth_data (a_child_list, 0)
+			C.g_list_free (a_child_list)
 		end
 
 	interface: EV_MENU_ITEM

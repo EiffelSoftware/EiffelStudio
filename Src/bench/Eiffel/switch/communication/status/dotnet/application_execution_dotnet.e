@@ -85,36 +85,39 @@ feature {EIFNET_DEBUGGER, EIFNET_EXPORTER} -- Trigger eStudio done
 			l_status: APPLICATION_STATUS_DOTNET
 		do
 			debug ("debugger_trace_callback_notify")
-				print ("Notify callback: " + Eifnet_debugger_info.last_managed_callback_name + "%N")
+				print ("  - eStudio Notify: START :: " + Eifnet_debugger_info.last_managed_callback_name + "%N")
 			end
 			callback_notification_processed := False
-			if eifnet_debugger /= Void then
-				if eifnet_debugger.data_changed then
-					l_status := status
-					if
-						l_status.is_stopped
-						and then not l_status.is_evaluating
-					then
-						eifnet_debugger.reset_data_changed
-						if Eifnet_debugger_info.last_managed_callback_is_exit_process then --| Exit Process |--	
-							notify_execution_on_exit_process
-						elseif Eifnet_debugger_info.debugger_error_occurred then
-							notify_execution_on_debugger_error
-						else
-							notify_execution_on_stopped
-						end
-					elseif --| Evaluation |--
-						Eifnet_debugger_info.last_managed_callback_is_eval_complete
-						and then l_status.is_evaluating
-					then
-						eifnet_debugger.reset_data_changed
-						notify_evaluation_done
-					end	
+			if 
+				eifnet_debugger /= Void 
+				and then eifnet_debugger.data_changed
+			then
+				l_status := status
+				if
+					l_status.is_stopped
+					and then not l_status.is_evaluating
+				then
+					eifnet_debugger.reset_data_changed
+					if Eifnet_debugger_info.last_managed_callback_is_exit_process then --| Exit Process |--	
+						notify_execution_on_exit_process
+					elseif Eifnet_debugger_info.debugger_error_occurred then
+						notify_execution_on_debugger_error
+					else
+						notify_execution_on_stopped
+					end
+				elseif --| Evaluation |--
+					Eifnet_debugger_info.last_managed_callback_is_eval_complete
+					and then l_status.is_evaluating
+				then
+					eifnet_debugger.reset_data_changed
+					notify_evaluation_done
+				else
+					--| do_nothing
 				end
 			end
 			callback_notification_processed := True
 			debug ("debugger_trace_callback_notify")
-				print ("End of estudio notification%N")
+				print ("  - eStudio Notify: END%N")
 			end
 		end
 

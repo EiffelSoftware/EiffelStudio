@@ -314,6 +314,24 @@ feature -- Status report
 				create Result.make_by_pointer (pointer)
 			end
 		end
+		
+	get_background_color: WEL_COLOR_REF is
+			-- `Result' is background color used for control.
+		local
+			color_int: INTEGER
+		do
+			color_int := cwin_send_message_result (item, Tvm_getbkcolor, 0, 0)
+			create Result.make_by_color (color_int)
+		end
+		
+	get_text_color: WEL_COLOR_REF is
+			-- `Result' is color for item text.
+		local
+			color_int: INTEGER
+		do
+			color_int := cwin_send_message_result (item, Tvm_gettextcolor, 0, 0)
+			create Result.make_by_color (color_int)
+		end
 
 feature -- Status setting
 
@@ -420,6 +438,18 @@ feature -- Status setting
 	set_tooltip (tooltip: WEL_TOOLTIP) is
 		do
 			treeview_settooltips (item, tooltip.item)
+		end
+		
+	set_background_color (a_color: WEL_COLOR_REF) is
+			-- Assign `a_color' to background color.
+		do
+			cwin_send_message (item, Tvm_setbkcolor, 0, a_color.item)
+		end
+		
+	set_text_color (a_color: WEL_COLOR_REF) is
+			-- Assign `a_color' to color of item text.
+		do
+			cwin_send_message (item, Tvm_settextcolor, 0, a_color.item)
 		end
 
 feature -- Element change

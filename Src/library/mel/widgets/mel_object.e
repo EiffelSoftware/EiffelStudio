@@ -18,13 +18,13 @@ inherit
 
 	SHARED_MEL_DISPATCHER;
 
-	MEL_X_FUNCTIONS;
-
 	MEL_XT_FUNCTIONS;
 
 	MEL_XM_FUNCTIONS;
 
 	MEL_EVENT_MASK_CONSTANTS
+
+creation
 
 feature -- Access
 
@@ -33,6 +33,16 @@ feature -- Access
 
 	screen_object: POINTER;
 			-- Screen object of Current
+
+	is_valid_parent (a_screen_object: POINTER; 
+			a_parent: MEL_COMPOSITE): BOOLEAN is
+			-- Is `a_parent' a valid parent for `a_screen_object'?
+		require
+			valid_screen_object: a_screen_object /= default_pointer;
+			valid_parent: a_parent /= Void
+		do
+			Result := xt_parent (a_screen_object) = a_parent.screen_object
+		end;
 
 	name: STRING is
 			-- Name of Current
@@ -43,15 +53,6 @@ feature -- Access
 			Result.from_c (xt_name (screen_object))
 		ensure
 			name_not_void: Result /= Void
-		end;
-
-	window: INTEGER is
-			-- Associated window
-		require
-			exists: not is_destroyed;
-			realized: realized
-		do
-			Result := xt_window (screen_object)
 		end;
 
 	application_context: MEL_APPLICATION_CONTEXT is
@@ -91,6 +92,14 @@ feature -- Access
 			Result := screen_object.hash_code
 		end;
 
+	current_time: INTEGER is
+			-- Call `CurrentTime' from X
+		external
+			"C [macro <X11/X.h>]: EIF_INTEGER"
+		alias
+			"CurrentTime"
+		end;
+
 feature -- Status report
 
 	realized: BOOLEAN is
@@ -101,7 +110,7 @@ feature -- Status report
 			Result := xt_is_realized (screen_object);
 		end;
 
-	managed: BOOLEAN is
+	is_managed: BOOLEAN is
 			-- Is Current managed?
 		require
 			exists: not is_destroyed
@@ -123,7 +132,7 @@ feature -- Status report
 			exists: not is_destroyed;
 			widget_realized: realized
 		do
-			Result := xt_is_visible (screen_object)
+			Result := is_managed and then xt_is_visible (screen_object)
 		end;
 
 	is_destroyed: BOOLEAN is
@@ -141,7 +150,7 @@ feature -- Status setting
 		do
 			xt_manage_child (screen_object)
 		ensure
-			managed: parent /= Void implies managed
+			is_managed: parent /= Void implies is_managed
 		end;
 
 	unmanage is
@@ -151,7 +160,7 @@ feature -- Status setting
 		do
 			xt_unmanage_child (screen_object)
 		ensure
-			unmanaged: parent /= Void implies not managed
+			is_unmanaged: parent /= Void implies not is_managed
 		end;
 
 	set_sensitive (b: BOOLEAN) is
@@ -172,7 +181,9 @@ feature -- Status setting
 		do
 			xt_map_widget (screen_object)
 		ensure
-			widget_is_shown: is_shown
+			shown: (parent /= Void and then 
+				parent.is_shown implies is_shown) or else
+				(parent = Void implies is_shown)
 		end;
 
 	unmap, hide is
@@ -183,7 +194,9 @@ feature -- Status setting
 		do
 			xt_unmap_widget (screen_object)
 		ensure
-			widget_is_hidden: not is_shown
+			widget_is_hidden: (parent /= Void and then
+				parent.is_shown implies not is_shown) or else
+				(parent = Void implies not is_shown)
 		end;
 
 	realize is
@@ -218,6 +231,15 @@ feature -- Update
 		do
 			if xm_process_traversal (screen_object, a_direction) then
 			end
+		end;
+
+	update_display is
+			-- Update the display of Current widget by forcing all pending
+			-- exposure events to be processed immediately.
+		require
+			exists: not is_destroyed
+		do
+			xm_update_display (screen_object)	
 		end
 
 feature -- Element change
@@ -281,6 +303,16 @@ feature -- Removal
 		local
 			clean_up_callback: MEL_CLEAN_UP_CALLBACK
 		do
+debug ("MEL")
+	io.error.putstring ("destroying widget: ");
+	io.error.putstring (name);
+	io.error.putstring (" type: ");
+	io.error.putstring (generator);
+	io.error.new_line;
+end;
+			check
+				is_in_widget_manager: Mel_widgets.has (screen_object)
+			end
 			if Mel_dispatcher.has_callback (screen_object, XmNdestroyCallback) then
 				!! clean_up_callback;
 				add_destroy_callback (clean_up_callback, Void);
@@ -289,15 +321,6 @@ feature -- Removal
 				xt_destroy_widget (screen_object);
 				clean_up
 			end
-debug ("MEL")
-	io.error.putstring ("destroying widget: ");
-	io.error.putstring (name);
-	io.error.putstring (" type: ");
-	io.error.putstring (generator);
-	io.error.new_line;
-end;
-		ensure
-			is_destroyed: is_destroyed
 		end;
 
 feature -- Miscellaneous
@@ -308,32 +331,24 @@ feature -- Miscellaneous
 		do
 		end;
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
-	make_from_existing (a_screen_object: POINTER) is
+	make_from_existing (a_screen_object: POINTER; a_parent: MEL_COMPOSITE) is
 			-- Create a mel widget from existing widget `a_screen_object'.
 		require
-			a_screen_object_exists: a_screen_object /= default_pointer
+			screen_object_not_null: a_screen_object /= default_pointer;
+			parent_not_void: a_parent /= Void;
+			valid_parent: is_valid_parent (a_screen_object, a_parent)
 		do
 			screen_object := a_screen_object;
-			check
-				parent_exists: Mel_widgets.item (xt_parent (screen_object)) /= Void
-			end;
-			parent ?= Mel_widgets.item (xt_parent (screen_object));
-			Mel_widgets.put (Current, screen_object)
+			parent := a_parent;
+			Mel_widgets.add (Current)
 		ensure
-			exists: not is_destroyed
+			exists: not is_destroyed;
+			set: screen_object = a_screen_object and then parent = a_parent
 		end
 
 feature {MEL_COMPOSITE, MEL_CLEAN_UP_CALLBACK} -- Basic operations
-
-	clean_up is
-			-- Clean up the object.
-		do
-			object_clean_up
-		ensure
-			not_in_manager: not Mel_widgets.has (screen_object);
-		end;
 
 	clean_up_callbacks is
 			-- Remove callback structures associated with Current.
@@ -360,10 +375,12 @@ feature {MEL_DISPATCHER} -- Implementation
 			result_not_void: Result /= Void
 		end;
 
-feature {MEL_OBJECT} -- Convienence
+feature {MEL_OBJECT, MEL_CLEAN_UP_CALLBACK} -- Implementation
 
-	object_clean_up is
-			-- Clean up object widget.
+	clean_up, object_clean_up is
+			-- Clean up object widget data structures.
+		require
+			exist: not is_destroyed
 		do
 debug ("MEL")
 	io.error.putstring ("cleaning up widget: ");
@@ -373,12 +390,35 @@ debug ("MEL")
 	io.error.new_line;
 end;
 			Mel_widgets.remove (screen_object);
-			parent := Void;
 			clean_up_callbacks;
-			screen_object := default_pointer
+			screen_object := default_pointer;
+			parent := Void
 		ensure
-			not_in_manager: not Mel_widgets.has (screen_object);
+			destroyed: is_destroyed;
+			no_parent: parent = Void
 		end;
+
+feature {NONE} -- Implementation
+
+	xm_process_traversal (a_target: POINTER; dir: INTEGER): BOOLEAN is
+		external
+			"C [macro <Xm/Xm.h>] (Widget, XmTraversalDirection): EIF_BOOLEAN"
+		alias
+			"XmProcessTraversal"
+		end;
+
+	xm_update_display (a_target: POINTER) is
+		external
+			"C [macro <Xm/Xm.h>] (Widget)"
+		alias
+			"XmUpdateDisplay"
+		end;
+
+invariant
+
+	destroyed_implies_null_screen_object: is_destroyed 
+			implies screen_object = default_pointer;
+	destroyed_implies_void_parent: is_destroyed implies parent = Void
 
 end -- class MEL_OBJECT
 

@@ -151,7 +151,7 @@ feature {NONE} -- debugger behavior
 		end		
 
 	end_of_managed_callback_on_error (cb_id: INTEGER) is
-			-- called at each ending of callback where an error occured
+			-- called at each ending of callback where an error occurred
 		do			
 			debug ("debugger_eifnet_data")
 				io.error.put_string ("End of Managed callback : retry on error %N")

@@ -321,7 +321,7 @@ feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Access
 
 feature -- Debugger error
 
-	debugger_error_occured: BOOLEAN
+	debugger_error_occurred: BOOLEAN
 
 	debugger_error_code: INTEGER
 
@@ -329,14 +329,14 @@ feature -- Debugger error
 
 	notify_debugger_error (a_error_hr, a_error_code: INTEGER) is
 		do
-			debugger_error_occured := True
+			debugger_error_occurred := True
 			debugger_error_hr := a_error_hr
 			debugger_error_code := a_error_code
 		end
 
 	reset_debugger_error is
 		do
-			debugger_error_occured := False
+			debugger_error_occurred := False
 			debugger_error_hr := 0
 			debugger_error_code := 0
 		end

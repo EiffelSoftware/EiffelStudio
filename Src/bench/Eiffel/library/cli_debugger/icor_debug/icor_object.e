@@ -125,7 +125,7 @@ feature {NONE}
 		alias
 			"[
 				extern char *eif_typename(int16);
-				printf ("\nAn error occured while disposing of %s with item value 0x%lX\n", eif_typename((int16)Dftype($an_obj)), $a_ptr);
+				printf ("\nAn error occurred while disposing of %s with item value 0x%lX\n", eif_typename((int16)Dftype($an_obj)), $a_ptr);
 			]"
 		end
 		

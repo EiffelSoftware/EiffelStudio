@@ -6,13 +6,38 @@ body
 	background-color: #6699cc;
 }
 
-a, a:hover, a:visited, a:link,
+a
 {
 	color:black;
 	font-size: 70%;
 	font-family: verdana, arial, helvetica, sans-serif;
 	text-decoration:none;
 }
+
+a:hover
+{
+	color:black;
+	font-size: 70%;
+	font-family: verdana, arial, helvetica, sans-serif;
+	text-decoration:none;
+}
+
+a:visited
+{
+	color:black;
+	font-size: 70%;
+	font-family: verdana, arial, helvetica, sans-serif;
+	text-decoration:none;
+}
+
+a:link
+{
+	color:black;
+	font-size: 70%;
+	font-family: verdana, arial, helvetica, sans-serif;
+	text-decoration:none;
+}
+
 
 a:active
 {

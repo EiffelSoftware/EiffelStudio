@@ -166,14 +166,7 @@ feature -- Status Setting
 			-- Set `text_displayed' to `text'
 		require
 			text_not_void: a_text /= Void
-		do
-			if a_text.reading_text_finished and then a_text /= Void and then a_text.text /= Void then
-				if a_text.text.count >= 50 then
-					print ("setting text panel text with: " + a_text.text.substring (1, 50) + "%N")
-				else
-					print ("setting text panel text with: " + a_text.text.substring (1, a_text.text.count) + "%N")
-				end
-			end			
+		do		
 			text_displayed := a_text			
 		end		
 		

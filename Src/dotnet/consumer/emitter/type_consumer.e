@@ -96,10 +96,10 @@ feature {NONE} -- Initialization
 			
 			internal_properties := t.get_properties_binding_flags (feature {BINDING_FLAGS}.instance |
 					feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.public |
-					feature {BINDING_FLAGS}.non_public | feature {BINDING_FLAGS}.flatten_hierarchy)
+					feature {BINDING_FLAGS}.flatten_hierarchy)
 			internal_events := t.get_events_binding_flags (feature {BINDING_FLAGS}.instance |
 					feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.public |
-					feature {BINDING_FLAGS}.non_public | feature {BINDING_FLAGS}.flatten_hierarchy)
+					feature {BINDING_FLAGS}.flatten_hierarchy)
 			internal_constructors := t.get_constructors
 			internal_referenced_type := referenced_type_from_type (t)
 		ensure
@@ -300,13 +300,7 @@ feature {NONE} -- Implementation
 		do
 			l_info := info.get_get_method
 			if l_info = Void then
-				l_info := info.get_get_method_boolean (True)
-				if l_info = Void then
-					l_info := info.get_set_method
-					if l_info = Void then
-						l_info := info.get_set_method_boolean (True)
-					end
-				end
+				l_info := info.get_set_method
 			end
 			check
 				is_property: l_info /= Void
@@ -320,7 +314,7 @@ feature {NONE} -- Implementation
 				l_info.get_is_public,
 				l_info.get_is_static,
 				referenced_type_from_type (info.get_property_type),
-				referenced_type_from_type (info.get_declaring_type))				
+				referenced_type_from_type (info.get_declaring_type))
 		ensure
 			non_void_property: Result /= Void
 		end
@@ -339,17 +333,8 @@ feature {NONE} -- Implementation
 			l_parameter_type: CONSUMED_REFERENCED_TYPE
 		do
 			l_add_method := info.get_add_method
-			if l_add_method = Void then
-				l_add_method := info.get_add_method_boolean (True)
-			end
 			l_remove_method := info.get_remove_method
-			if l_remove_method = Void then
-				l_remove_method := info.get_remove_method_boolean (True)
-			end
 			l_raise_method := info.get_raise_method
-			if l_raise_method = Void then
-				l_raise_method := info.get_raise_method_boolean (True)
-			end
 			if l_raise_method /= Void then
 				l_dotnet_args := l_raise_method.get_parameters
 				nb := l_dotnet_args.get_length

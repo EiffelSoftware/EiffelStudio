@@ -26,8 +26,8 @@ feature -- basic Operations
 	display_state_text is
 			-- Display message text relative to current state.
 		do
-			title.set_text (Bench_interface_names.t_Project_allready_exist)
-			message.set_text (Bench_interface_names.m_Project_allready_exist)
+			title.set_text (Bench_interface_names.t_Project_already_exist)
+			message.set_text (Bench_interface_names.m_Project_already_exist)
 		end
 
 	proceed_with_current_info is

@@ -250,7 +250,7 @@ feature {GB_XML_STORE, GB_XML_LOAD, GB_XML_OBJECT_BUILDER}
 			end
 			element_info := full_information @ (name_string)
 			if element_info /= Void then
-				name := element_info.data
+				set_name (element_info.data)
 				layout_item.set_text (name + ": " + short_type)
 			end
 			element_info := full_information @ ("Expanded")

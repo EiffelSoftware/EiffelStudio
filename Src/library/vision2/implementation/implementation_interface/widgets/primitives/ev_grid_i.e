@@ -408,9 +408,15 @@ feature -- Status setting
 			if not a_col_i.is_visible then
 				a_col_i.set_is_visible (True)
 				visible_column_count := visible_column_count + 1
-			end
 			
-			fixme ("Implement showing of column header%N")
+				fixme ("Handle index for all columns hidden before this one.")
+					-- Now show the header
+				header.go_i_th (previous_visible_column_from_index (a_col_i.index))
+				header.put_right (a_col_i.header_item)
+				
+				recompute_column_offsets
+				redraw_client_area
+			end
 		ensure
 			column_displayed: column_displayed (a_column)
 		end
@@ -426,9 +432,13 @@ feature -- Status setting
 			if a_col_i.is_visible then
 				a_col_i.set_is_visible (False)
 				visible_column_count := visible_column_count - 1
-			end
 			
-			fixme ("Implement hiding of column header%N")
+					-- Now hide the header
+				header.prune_all (a_col_i.header_item)
+			
+				recompute_column_offsets
+				redraw_client_area
+			end
 		ensure
 			column_not_displayed: not column_displayed (a_column)
 		end
@@ -1222,7 +1232,9 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			loop
 				a_column := column (i)
 				found := a_column.implementation.is_visible
-				i := i - 1
+				if not found then
+					i := i - 1
+				end
 			end
 			Result := i
 		ensure
@@ -1762,7 +1774,9 @@ feature {NONE} -- Drawing implementation
 			until
 				column_index > l_column_count
 			loop
-				i := i + temp_columns.i_th (column_index).width
+				if column_displayed (column_index) then
+					i := i + temp_columns.i_th (column_index).width
+				end
 				column_offsets.extend (i)
 				column_index := column_index + 1
 			end
@@ -2033,6 +2047,32 @@ feature {NONE} -- Drawing implementation
 		
 feature {NONE} -- Event handling
 
+	item_indent (an_item: EV_GRID_ITEM_I): INTEGER is
+			-- `Result' is indent of `an_item' in pixels.
+			-- May be 0 for items that are not tree nodes.
+		require
+			an_item_not_void: an_item /= Void
+		local
+			a_subrow_indent: INTEGER
+			first_tree_node_indent: INTEGER
+			node_pixmap_width, node_pixmap_height: INTEGER
+			total_tree_node_width: INTEGER
+			node_index: INTEGER
+			pointed_row_i: EV_GRID_ROW_I
+		do
+			pointed_row_i := an_item.row_i
+			node_pixmap_width := expand_node_pixmap.width
+			node_pixmap_height := expand_node_pixmap.height
+			total_tree_node_width := node_pixmap_width + 2 * tree_node_spacing
+			a_subrow_indent := (tree_node_spacing * 2) + node_pixmap_width + subrow_indent
+			first_tree_node_indent := total_tree_node_width + 2 * tree_node_spacing
+			node_index := an_item.column_i.index.min (pointed_row_i.first_set_item_index)
+			if node_index = an_item.column_i.index then
+				Result := a_subrow_indent * (pointed_row_i.indent_depth_in_tree - 1) + first_tree_node_indent	
+			end
+		end
+		
+
 	pointer_button_press_received (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
 			-- A pointer button press has been received by `drawable' so propagate to the interface.
 		local
@@ -2052,21 +2092,13 @@ feature {NONE} -- Event handling
 			if pointed_item /= Void then
 				pointed_row_i := pointed_item.row_i
 				node_pixmap_width := expand_node_pixmap.width
-				node_pixmap_height := expand_node_pixmap.height
-				total_tree_node_width := node_pixmap_width + 2 * tree_node_spacing
-				a_subrow_indent := (tree_node_spacing * 2) + node_pixmap_width + subrow_indent
-				first_tree_node_indent := total_tree_node_width + 2 * tree_node_spacing
-				node_index := pointed_item.column_i.index.min (pointed_row_i.first_set_item_index)
-				if node_index = pointed_item.column_i.index then
-					current_subrow_indent := a_subrow_indent * (pointed_row_i.indent_depth_in_tree - 1) + first_tree_node_indent	
-				end
+				current_subrow_indent := item_indent (pointed_item)
 				current_item_x_position := (column_offsets @ (pointed_item.column.index)) - (internal_client_x - viewport.x_offset)
 				node_x_position_click_edge := current_subrow_indent - node_pixmap_width - 3 * tree_node_spacing + current_item_x_position
 				
 				if a_button = 1 and a_x >= node_x_position_click_edge then
-					if pointed_row_i.subrow_count > 0 and
-						node_index = pointed_item.column.index and
-						a_x < current_subrow_indent + current_item_x_position then		
+					if pointed_row_i.subrow_count >0 and then current_subrow_indent > 0 and a_x < current_subrow_indent + current_item_x_position then		
+
 						if pointed_row_i.is_expanded then
 							pointed_row_i.collapse
 						else
@@ -2268,14 +2300,6 @@ feature {NONE} -- Implementation
 			physical_column_count := physical_column_count + 1
 
 			show_column (a_index)
-			
-				-- Now add the header for the new item.
-				fixme ("[
-					Needs to use the actual index of the column taking into account those that are hidden before it.
-					Also headers before may be needed to pad it out.
-					]")
-			header.go_i_th (a_index)
-			header.put_left (a_column_i.header_item)
 			header_item_resizing (header.last)
 			header_item_resize_ended (header.last)
 		ensure

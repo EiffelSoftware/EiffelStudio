@@ -15,7 +15,7 @@
 					<width>400</width>
 					<url>/images/dotnet_samples/hello_world.png</url>
 					<alt_text>Hello world form</alt_text>
-				</image>
+				</image><line_break></line_break>
 				<image>
 					<height>100</height>
 					<width>203</width>
@@ -31,56 +31,78 @@
 		<heading>
 			<size>2</size>Compiling
 		</heading>
+		<paragraph>To compile the example:
+			<list ordered="false">
+				<item>Launch EiffelStudio.</item>
+				<item>Select 
+					<bold>Use existing Ace (control file)</bold> and click 
+					<bold>OK</bold>
+				</item>
+				<item>Browse to 
+					<output output="envision">ENViSioN! root directory</output>
+					<output output="studio">Eiffel54</output>\examples\dotnet\winforms\hello_world_dlg\.
+					<italic/>
+				</item>
+				<item>Choose
+					<italic/>.ace
+				</item>
+				<item>Choose the directory where the project will be compiled, by default the same directory containing the Ace file.</item>
+				<item>Click 
+					<bold>OK</bold>.
+				</item>
+			</list>
+		</paragraph>
 		<heading>
 			<size>2</size>Running
 		</heading>
 		<paragraph>After launching the application, you will see a window displayed with a similar appearance to the one above. </paragraph>
 		<paragraph>Click on the 
-			<span>BUTTON</span> "Click Me!" and a message box will appear with the text that you have entered in the 
-			<span>TEXT_FIELD</span>.
+			<span><code><class_name>BUTTON</class_name></code></span> "Click Me!" and a message box will appear with the text that you have entered in the 
+			<span><code><class_name>TEXT_FIELD</class_name></code></span>.
 		</paragraph>
 		<paragraph/>
 		<heading>
 			<size>2</size>Under the Hood
 		</heading>
 		<paragraph>The application shows how to use the very useful 
-			<span>MESSAGE_BOX</span> control.
+			<span><code><class_name>MESSAGE_BOX</class_name></code></span> control.
 		</paragraph>
-		<paragraph>An event ( 
-			<span>EVENT_HANDLER)</span> is associated to a control (here to the 
-			<span>BUTTON</span>). So the line ' 
-			<code>. ( {}. make (Current, $ ))</code>' associates a click to 
+		<paragraph>An event (
+			<span><code><class_name>EVENT_HANDLER</class_name></code>)</span> is associated to a control (here to the 
+			<span><code><class_name>BUTTON</class_name></code></span>). So the line ' 
+			<code_block><feature_name>my_button</feature_name>.<feature_name>add_click</feature_name> <symbol>(</symbol><keyword>create</keyword> <symbol>{</symbol><class_name>EVENT_HANDLER</class_name><symbol>}</symbol><feature_name></feature_name>.<feature_name>make</feature_name> <symbol>(</symbol><keyword>Current</keyword>, <symbol>$</symbol><feature_name>on_my_button_clicked</feature_name> <symbol>)</symbol><symbol>)</symbol></code_block>
+			associates a click to 
 			<span>my_button</span> to the feature 
-			<span>on_my_button_clicked</span>. So every time the 
-			<span>BUTTON</span>
-			<span>my_button</span> is clicked, the feature 
+			<span><code><feature_name>on_my_button_clicked</feature_name></code></span>. So every time the 
+			<span>BUTTON</span> 
+			<span><code><feature_name>my_button</feature_name></code></span> is clicked, the feature 
 			<span>on_my_button_clicked</span> is executed.
 		</paragraph>
 		<paragraph>The feature 
-			<span>my_button_clicked</span>displays a 
-			<span>MESSAGE_BOX</span> ( 
-			<span>feature</span> { 
+			<span><code><feature_name>my_button_clicked</feature_name></code></span> displays a 
+			<span><code><class_name>MESSAGE_BOX</class_name></code></span> ( 
+			<span>feature</span> {
 			<span>WINFORMS_MESSAGE_BOX</span>}. 
-			<span>show</span> ( 
+			<span><code><feature_name>show</feature_name></code></span> ( 
 			<italic>msg</italic>)) with the text contained in 
-			<span>TEXT_FIELD</span> ( 
+			<span><code><class_name>TEXT_FIELD</class_name></code></span> ( 
 			<italic>msg</italic> := 
-			<span>my_text_field</span>. 
-			<span>text</span>).
+			<span><code><feature_name>my_text_field</feature_name></code></span>. 
+			<span><code><feature_name>text</feature_name></code></span>).
 		</paragraph>
 		<paragraph>This sample contains the following class:</paragraph>
 		<list ordered="false">
 			<item>
-				<span>FORM</span>
+				<span><code><class_name>FORM</class_name></code></span>
 			</item>
 			<item>
-				<span>BUTTON</span>
+				<span><code><class_name>BUTTON</class_name></code></span>
 			</item>
 			<item>
-				<span>TEXT_FIELD</span>
+				<span><code><class_name>TEXT_FIELD</class_name></code></span>
 			</item>
 			<item>
-				<span>EVENT_HANDLER</span>
+				<span><code><class_name>EVENT_HANDLER</class_name></code></span>
 			</item>
 		</list>
 		<heading>

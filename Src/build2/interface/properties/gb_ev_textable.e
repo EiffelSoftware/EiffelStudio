@@ -52,11 +52,19 @@ feature {GB_XML_STORE} -- Output
 		local
 			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
 			element_info: ELEMENT_INFORMATION
+			text: STRING
 		do
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (text_string)
+				-- We must prune the CDATA tag. We will only have this while generating internally
+				-- while resetting an object. When we are using the XML document, this is stripped
+				-- automatically so we do not encounter it.
 			if element_info /= Void and then element_info.data.count /= 0 then
-				for_all_objects (agent {EV_TEXTABLE}.set_text (element_info.data))
+				text := element_info.data
+				if text.substring_index (cdata_opening, 1) = 1 then
+					text := text.substring (cdata_opening.count + 1, text.count - cdata_closing.count)
+				end
+				for_all_objects (agent {EV_TEXTABLE}.set_text (text))
 			end
 		end
 		

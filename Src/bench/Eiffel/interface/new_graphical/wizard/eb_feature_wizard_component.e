@@ -22,17 +22,6 @@ inherit
 
 feature -- Factory
 
-	new_text_field (a_text: STRING): EV_TEXT_FIELD is
-			-- Create new text field with `a_text'.
-		do
-			if a_text.is_empty then
-				create Result
-			else
-				create Result.make_with_text (a_text)
-			end
-			Result.set_minimum_width (50)
-		end
-
 	new_label (a_text: STRING): EV_LABEL is
 			-- Create new label with `a_text'.
 		do
@@ -70,5 +59,5 @@ feature {NONE} -- Implementation
 
 	Indent_size: INTEGER is 30
 			-- Number of pixels used to indent widgets.
-
+		
 end -- class FEATURE_WIZARD_COMPONENT

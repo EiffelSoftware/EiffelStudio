@@ -1,6 +1,7 @@
 indexing	
 	description: 
-		"EiffelVision list item. Menu a container of menu itemsInvisible container that allows unlimited number of other widgets to be packed inside it. Box controls the location the children's location and size automatically."
+		"EiffelVision list item. This items are used in %
+		%the lists."
 	status: "See notice at end of class"
 	id: "$$"
 	date: "$Date$"
@@ -28,6 +29,7 @@ feature {NONE} -- Initialization
 			-- to `par' list.
 		do
 			!EV_LIST_ITEM_IMP!implementation.make (par)
+			implementation.set_interface (Current)
 			par.implementation.add_item (Current)
 		end
 
@@ -36,6 +38,7 @@ feature {NONE} -- Initialization
 			-- add it in the `par' list.
 		do
 			!EV_LIST_ITEM_IMP!implementation.make_with_text (par, txt)
+			implementation.set_interface (Current)
 			par.implementation.add_item (Current)
 		end	
 
@@ -43,6 +46,8 @@ feature -- Status report
 
 	is_selected: BOOLEAN is
 			-- Is the item selected
+		require
+			exists: not destroyed
 		do
 			Result := implementation.is_selected
 		end
@@ -51,13 +56,16 @@ feature -- Status setting
 
 	set_selected (flag: BOOLEAN) is
 			-- Select the item if `flag', unselect it otherwise.
+		require
+			exists: not destroyed
 		do
 			implementation.set_selected (flag)
 		end
 
 	toggle is
-			-- Change the state of the toggle button to
-			-- opposit status.
+			-- Change the state of selection of the item.
+		require
+			exists: not destroyed
 		do
 			implementation.toggle
 		end
@@ -68,6 +76,8 @@ feature -- Event : command association
 			       arg: EV_ARGUMENTS) is
 			-- Add 'command' to the list of commands to be
 			-- executed when the item is double clicked
+		require
+			exists: not destroyed
 		do
 			implementation.add_double_click_command (a_command, arg)
 		end	
@@ -76,7 +86,7 @@ feature -- Implementation
 
 	implementation: EV_LIST_ITEM_I
 
-end -- class EV_LIST
+end -- class EV_LIST_ITEM
 
 --|----------------------------------------------------------------
 --| Windows Eiffel Library: library of reusable components for ISE Eiffel.

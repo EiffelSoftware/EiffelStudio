@@ -93,7 +93,7 @@ feature {NONE} -- Implementation
 					Result.append (func_desc.arguments.item.name)
 
 					Result.append (Comma)
-					add_header_file (visitor)
+					add_header_file (func_desc.arguments.item.type)
 
 					func_desc.arguments.forth
 				end
@@ -106,7 +106,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_header_file (a_visitor: WIZARD_DATA_TYPE_VISITOR) is
+	add_header_file (a_descriptor: WIZARD_DATA_TYPE_DESCRIPTOR) is
 			-- Add header file to list of header files if needed.
 		do
 		end

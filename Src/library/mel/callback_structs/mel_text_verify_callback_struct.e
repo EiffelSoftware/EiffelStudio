@@ -109,6 +109,12 @@ feature -- Status setting
 			not_do_it: not do_it 
 		end;
 
+	set_all_to (c: CHARACTER) is
+			-- Set all characters in changed text to 'c'
+		do
+			c_memset (c_text_ptr (text_ptr), c.code, text_length)
+		end;
+
 feature {NONE} -- Implementation
 
 	c_doit (a_callback_struct_ptr: POINTER): BOOLEAN is
@@ -161,6 +167,13 @@ feature {NONE} -- Implementation
 			"C [macro %"callback_struct.h%"] %
 					%(EIF_BOOLEAN, XmTextVerifyCallbackStruct *)"
 		end;
+
+	c_memset (ptr: POINTER; ch: INTEGER; len: INTEGER) is
+		external
+			"C | <string.h>"
+		alias
+			"memset"
+		end
 
 end -- class MEL_TEXT_VERIFY_CALLBACK_STRUCT
 

@@ -12,6 +12,13 @@ inherit
 			{NONE} all
 		end
 
+	EXECUTION_ENVIRONMENT
+		rename
+			return_code as exec_return_code
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -123,7 +130,7 @@ feature -- Element Change
 			non_void_file: ace_file /= Void
 			valid_ace_file: not ace_file.is_empty
 		do
-			ace_file_name := clone (ace_file)
+			ace_file_name := ace_file
 		end
 
 	set_in_process_server (a_boolean: BOOLEAN) is
@@ -182,7 +189,7 @@ feature -- Element Change
 			non_void_name: c_name /= Void
 			valid_name: not c_name.is_empty
 		do
-			eiffel_class_name := clone (c_name)
+			eiffel_class_name := c_name
 			eiffel_class_name.to_upper
 		ensure
 			name_set: eiffel_class_name /= Void and then not eiffel_class_name.is_empty
@@ -194,7 +201,7 @@ feature -- Element Change
 			non_void_name: c_name /= Void
 			valid_name: not c_name.is_empty
 		do
-			class_cluster_name := clone (c_name)
+			class_cluster_name := c_name
 		ensure
 			name_set: class_cluster_name /= Void and then not class_cluster_name.is_empty
 		end
@@ -205,7 +212,7 @@ feature -- Element Change
 			non_void_name: p_name /= Void
 			valid_name: not p_name.is_empty
 		do
-			eiffel_project_name := clone (p_name)
+			eiffel_project_name := p_name
 		ensure
 			name_set: eiffel_project_name.is_equal (p_name)
 		end
@@ -216,8 +223,8 @@ feature -- Element Change
 			non_void_folder: a_folder /= Void
 			valid_folder: not a_folder.is_empty
 		do
-			destination_folder := clone (a_folder)
-			if not (destination_folder.item (destination_folder.count) = Directory_separator) then
+			destination_folder := expanded_path (a_folder)
+			if destination_folder.item (destination_folder.count) /= Directory_separator then
 				destination_folder.append_character (Directory_separator)
 			end
 		end
@@ -227,15 +234,17 @@ feature -- Element Change
 		require
 			non_void_name: a_name /= Void
 			valid_name: not a_name.is_empty
+		local
+			l_index: INTEGER
 		do
-			if a_name.index_of ('.', 1) /= 0 then
-				project_name := a_name.substring (1, a_name.index_of ('.', 1) - 1)
+			l_index := a_name.last_index_of ('.', a_name.count)
+			if l_index > 0 then
+				project_name := a_name.substring (1, l_index - 1)
 			else
-				project_name := clone (a_name)
+				project_name := a_name
 			end
 		ensure
-			project_name_set: (a_name.has ('.') implies project_name.is_equal (a_name.substring (1, a_name.index_of ('.', 1) - 1))) and (not a_name.has ('.') implies project_name.is_equal (a_name))
-			valid_project_name: not project_name.has ('.')
+			project_name_set: project_name = a_name or else project_name.is_equal (a_name.substring (1, a_name.last_index_of ('.', a_name.count) - 1))
 		end
 
 	set_proxy_stub_file_name (a_proxy_stub: like proxy_stub_file_name) is
@@ -244,9 +253,9 @@ feature -- Element Change
 			non_void_proxy_stub: a_proxy_stub /= Void
 			valid_proxy_stub: not a_proxy_stub.is_empty
 		do
-			proxy_stub_file_name := clone (a_proxy_stub)
+			proxy_stub_file_name := expanded_path (a_proxy_stub)
 		ensure
-			proxy_stub_file_name_set: proxy_stub_file_name.is_equal (a_proxy_stub)
+			proxy_stub_file_name_set: proxy_stub_file_name.is_equal (expanded_path (a_proxy_stub))
 		end
 	
 	set_idl_file_name (a_idl_file_name: like idl_file_name) is
@@ -255,9 +264,9 @@ feature -- Element Change
 			non_void_idl_file_name: a_idl_file_name /= Void
 			valid_idl_file_name: not a_idl_file_name.is_empty
 		do
-			idl_file_name := clone (a_idl_file_name)
+			idl_file_name := expanded_path (a_idl_file_name)
 		ensure
-			idl_file_name_set: idl_file_name.is_equal (a_idl_file_name)
+			idl_file_name_set: idl_file_name.is_equal (expanded_path(a_idl_file_name))
 		end
 	
 	set_type_library_file_name (a_type_library_file_name: like type_library_file_name) is
@@ -266,9 +275,9 @@ feature -- Element Change
 			non_void_type_library_file_name: a_type_library_file_name /= Void
 			valid_type_library_file_name: not a_type_library_file_name.is_empty
 		do
-			type_library_file_name := clone (a_type_library_file_name)
+			type_library_file_name := expanded_path (a_type_library_file_name)
 		ensure
-			type_library_file_name_set: type_library_file_name.is_equal (a_type_library_file_name)
+			type_library_file_name_set: type_library_file_name.is_equal (expanded_path (a_type_library_file_name))
 		end
 
 	set_new_eiffel_project (l_bool: BOOLEAN) is
@@ -390,7 +399,56 @@ feature -- Element Change
 		ensure
 			clean_destination_folder_set: clean_destination_folder = a_boolean
 		end
-		
+
+feature {NONE} -- Implementation
+
+	expanded_path (a_path: STRING): STRING is
+			-- Expand all environment variables in `a_path'.
+		require
+			non_void_path: a_path /= Void
+		local
+			l_list: LIST [STRING]
+			l_value: STRING
+		do
+			if not a_path.has ('$') then
+				-- Optimization
+				Result := a_path
+			else
+				create Result.make (a_path.count)
+				l_list := a_path.split (Directory_separator)
+				from
+					l_list.start
+					if not l_list.after then
+						l_value := l_list.item
+						if l_value.count > 0 and then l_value.item (1) = '$' then
+							l_value.keep_tail (l_value.count - 1)
+							l_value := get (l_value)
+						end
+						if l_value /= Void then
+							Result.append (l_value)
+						end
+						l_list.forth
+					end
+				until
+					l_list.after
+				loop
+					Result.append_character (Directory_separator)
+					l_value := l_list.item
+					if l_value.count > 0 and then l_value.item (1) = '$' then
+						l_value.keep_tail (l_value.count - 1)
+						l_value := get (l_value)
+					end
+					if l_value /= Void then
+						Result.append (l_value)
+					end
+					l_list.forth
+				end
+			end
+		ensure
+			non_void_expanded_path: Result /= Void
+			expanded_path: not Result.has ('$')
+		end
+
 invariant
 	server_or_client: server xor client
 	valid_output_level: output_level = Output_warnings or output_level = Output_all or output_level = Output_none

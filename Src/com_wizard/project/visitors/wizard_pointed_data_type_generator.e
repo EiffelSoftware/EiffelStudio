@@ -51,7 +51,9 @@ feature -- Basic operations
 
 			create c_post_type.make (10)
 			c_post_type.append (pointed_visitor.c_post_type)
-			c_header_file := clone (pointed_visitor.c_header_file)
+			if pointed_visitor.c_header_file /= Void then
+				c_header_file := pointed_visitor.c_header_file.twin
+			end
 
 			create ce_function_name.make (100)
 			create ec_function_name.make (100)
@@ -60,7 +62,7 @@ feature -- Basic operations
 
 			if pointed_visitor.is_structure then
 				is_structure_pointer := True
-				eiffel_type := clone (pointed_visitor.eiffel_type)
+				eiffel_type := pointed_visitor.eiffel_type.twin
 
 				need_generate_ce := True
 				need_generate_ec := True
@@ -79,7 +81,7 @@ feature -- Basic operations
 				ce_function_signature.append (Space)
 				ce_function_signature.append ("a_record_pointer")
 
-				ce_function_return_type := clone (Eif_reference)
+				ce_function_return_type := Eif_reference.twin
 				ce_function_body := ce_function_body_record (eiffel_type)
 
 				create ec_function_signature.make (100)
@@ -87,7 +89,7 @@ feature -- Basic operations
 				ec_function_signature.append (Space)
 				ec_function_signature.append ("eif_ref")
 
-				ec_function_return_type := clone (c_type)
+				ec_function_return_type := c_type.twin
 
 				ec_function_body := ec_function_wrapper (eiffel_type, c_type, False)
 
@@ -96,7 +98,7 @@ feature -- Basic operations
 
 			elseif pointed_visitor.is_interface then
 				is_interface_pointer := True
-				eiffel_type := clone (pointed_visitor.eiffel_type)
+				eiffel_type := pointed_visitor.eiffel_type.twin
 
 				ce_function_name.append ("ccom_ce_pointed_interface_")
 				ce_function_name.append_integer (local_counter)
@@ -118,14 +120,14 @@ feature -- Basic operations
 
 				ce_function_body := ce_function_body_interface 
 						(a_descriptor.interface_descriptor.implemented_interface.impl_eiffel_class_name (True))
-				ce_function_return_type := clone (Eif_reference)
+				ce_function_return_type := Eif_reference.twin
 
 				create ec_function_signature.make (100)
 				ec_function_signature.append (Eif_reference)
 				ec_function_signature.append (Space)
 				ec_function_signature.append ("eif_ref")
 
-				ec_function_return_type := clone (c_type)
+				ec_function_return_type := c_type.twin
 
 				ec_function_body := ec_function_wrapper (eiffel_type, c_type, True)
 
@@ -134,7 +136,7 @@ feature -- Basic operations
 
 			elseif pointed_visitor.is_coclass then
 				is_coclass_pointer := True
-				eiffel_type := clone (pointed_visitor.eiffel_type)
+				eiffel_type := pointed_visitor.eiffel_type.twin
 
 				ce_function_name.append ("ccom_ce_pointed_coclass_")
 				ce_function_name.append_integer (local_counter)
@@ -154,14 +156,14 @@ feature -- Basic operations
 				ce_function_signature.append ("a_interface_pointer")
 
 				ce_function_body := ce_function_body_interface (eiffel_type)
-				ce_function_return_type := clone (Eif_reference)
+				ce_function_return_type := Eif_reference.twin
 
 				create ec_function_signature.make (100)
 				ec_function_signature.append (Eif_reference)
 				ec_function_signature.append (Space)
 				ec_function_signature.append ("eif_ref")
 
-				ec_function_return_type := clone (c_type)
+				ec_function_return_type := c_type.twin
 
 				ec_function_body := ec_function_wrapper (eiffel_type, c_type, True)
 
@@ -272,7 +274,7 @@ feature -- Basic operations
 												%CoTaskMemFree (a_pointer);"
 
 			elseif is_hresult (pointed_visitor.vt_type) or is_error (pointed_visitor.vt_type) then
-				eiffel_type := clone (Ecom_hresult)
+				eiffel_type := Ecom_hresult.twin
 				writable := True
 				ec_function_name := "ccom_ec_pointed_hresult"
 				ce_function_name := "ccom_ce_pointed_hresult"
@@ -340,7 +342,7 @@ feature -- Basic operations
 				ce_function_signature.append (Space)
 				ce_function_signature.append ("an_object")
 
-				ce_function_return_type := clone (Eif_reference)
+				ce_function_return_type := Eif_reference.twin
 				ce_function_body := ce_function_body_cell (c_type, pointed_visitor.ce_function_name, 
 					pointed_visitor.eiffel_type, pointed_visitor.can_free, 
 					pointed_visitor.need_generate_ce, pointed_visitor.writable)
@@ -354,7 +356,7 @@ feature -- Basic operations
 				ec_function_signature.append (Space)
 				ec_function_signature.append (Old_keyword)
 
-				ec_function_return_type := clone (c_type)
+				ec_function_return_type := c_type.twin
 
 				ec_function_body := ec_function_body_cell (pointed_visitor.eiffel_type, 
 														pointed_visitor.c_type, 

@@ -36,7 +36,7 @@ feature -- Basic operations
 			ccom_feature_writer.set_body (feature_body (interface_name))
 
 			if ccom_feature_writer.result_type = Void then
-				ccom_feature_writer.set_result_type (clone ("void"))
+				ccom_feature_writer.set_result_type (("void").twin)
 			end
 		ensure
 			non_void_feature_writer: ccom_feature_writer /= Void

@@ -81,7 +81,7 @@ feature {NONE} -- Implementation
 		do
 			if a_descriptor.coclass_eiffel_names.has (a_component_descriptor.name) then
 				property_renamed := True
-				access_feature_name := clone (a_descriptor.coclass_eiffel_names.item (a_component_descriptor.name))
+				access_feature_name := a_descriptor.coclass_eiffel_names.item (a_component_descriptor.name).twin
 				changed_names.put (access_feature_name, a_descriptor.interface_eiffel_name)
 
 				create tmp_string.make (100)
@@ -182,7 +182,7 @@ feature {NONE} -- Implementation
 
 			external_access_feature.set_result_type (a_visitor.eiffel_type)
 			external_access_feature.set_comment (a_descriptor.description)
-			external_access_feature.add_argument (clone (Default_pointer_argument))
+			external_access_feature.add_argument (Default_pointer_argument.twin)
 			external_access_feature.set_body 
 					(external_access_body (c_type (a_component_descriptor), 
 											a_component_descriptor.c_header_file_name, 
@@ -211,7 +211,7 @@ feature {NONE} -- Implementation
 
 			external_setting_feature.set_name (external_set_feature_name)
 
-			external_setting_feature.add_argument (clone (Default_pointer_argument))	
+			external_setting_feature.add_argument (Default_pointer_argument.twin)
 		
 			create an_argument.make (100)
 			an_argument.append (Argument_name)

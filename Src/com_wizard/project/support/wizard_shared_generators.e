@@ -99,8 +99,8 @@ feature -- Access
 		do
 			create mapper.make
 			mapper.set_header ("Writer for generated C to Eiffel mappers class")
-			a_header_file_name := clone (Generated_ce_class_name)
-			mapper.set_name (clone (a_header_file_name))
+			a_header_file_name := Generated_ce_class_name.twin
+			mapper.set_name (a_header_file_name.twin)
 			a_header_file_name.append (Header_file_extension)
 			mapper.set_header_file_name (a_header_file_name)
 			create a_constructor.make
@@ -142,8 +142,8 @@ feature -- Access
 		do
 			create mapper.make
 			mapper.set_header ("Writer for generated Eiffel to C mappers class")
-			a_header_file_name := clone (Generated_ec_class_name)
-			mapper.set_name (clone (a_header_file_name))
+			a_header_file_name := Generated_ec_class_name.twin
+			mapper.set_name (a_header_file_name.twin)
 			a_header_file_name.append (Header_file_extension)
 			mapper.set_header_file_name (a_header_file_name)
 			create a_constructor.make

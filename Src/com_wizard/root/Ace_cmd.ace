@@ -2,7 +2,7 @@ system
 	"com_wizard_cmd"
 
 root
-	root_class: make
+	ROOT_CLASS: make
 
 default
 	assertion (require)
@@ -21,6 +21,7 @@ default
 	exception_trace (no)
 	inlining (no)
 	multithreaded (no)
+	working_directory ("E:\Delivery\codedom_provider\checkout\dotnet\VisualStudio\tools\documentation_manager")
 
 
 -- This Ace file requires the following environment variables:
@@ -34,9 +35,7 @@ default
 cluster
 	root_cluster:		"$EIFFEL_SRC\com_wizard\root"
 
-
 	all e2_idl:		"$EIFFEL_SRC\com_wizard\eiffeltoidl"
-
 
 	descriptors:		"$EIFFEL_SRC\com_wizard\project\descriptors"
 		default
@@ -60,7 +59,6 @@ cluster
 
 	gui:		"$EIFFEL_SRC\com_wizard\project\gui"
 
-
 	support:		"$EIFFEL_SRC\com_wizard\project\support"
 		default
 			assertion (no)
@@ -73,10 +71,9 @@ cluster
 
 	wizard_library_constants:		"$EIFFEL_SRC\com_wizard\project\library\constants"
 
-
 	wizard_library_interfaces:		"$EIFFEL_SRC\com_wizard\project\library\interfaces"
 		visible
-			ecom_type_info
+			ECOM_TYPE_INFO
 				end
 		end
 
@@ -84,17 +81,17 @@ cluster
 		option
 			assertion (require): ecom_safe_array_bound
 		visible
-			ecom_type_lib_find_name_result
+			ECOM_TYPE_LIB_FIND_NAME_RESULT
 				end
-			ecom_safe_array_bound
+			ECOM_SAFE_ARRAY_BOUND
 				export
 					"make_by_pointer"
 				end
-			ecom_cust_data_item
+			ECOM_CUST_DATA_ITEM
 				end
-			ecom_dll_entry
+			ECOM_DLL_ENTRY
 				end
-			ecom_documentation
+			ECOM_DOCUMENTATION
 				end
 		end
 
@@ -102,29 +99,25 @@ cluster
 		exclude
 			"table_eiffel3"; "desc"; "CVS"; 
 		visible
-			array
+			ARRAY
 				end
-			string
+			STRING
 				end
 		end
 
 	all wel:		"$EIFFEL_SRC\library\wel"
 
-
 	ecom_constants:		"$EIFFEL_SRC\library\com\Constants"
-
 
 	ecom_interfaces:		"$EIFFEL_SRC\library\com\Interfaces"
 
-
 	ecom_support:		"$EIFFEL_SRC\library\com\Support"
-
 
 	ecom_structures:		"$EIFFEL_SRC\library\com\Structures"
 		visible
-			ecom_currency
+			ECOM_CURRENCY
 				end
-			ecom_decimal
+			ECOM_DECIMAL
 				end
 		end
 

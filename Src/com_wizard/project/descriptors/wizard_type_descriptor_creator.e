@@ -43,7 +43,7 @@ feature -- Basic Operations
 			loop
 				name.append ("_2")
 			end
-			system_descriptor.add_c_type (clone (name))
+			system_descriptor.add_c_type (name.twin)
 		end
 
 	add_type_lib_description (a_type_lib: WIZARD_TYPE_LIBRARY_DESCRIPTOR) is
@@ -69,7 +69,7 @@ feature -- Basic Operations
 			if description /= Void and then not description.is_empty then
 				a_descriptor.set_description (description)
 			else
-				a_descriptor.set_description (clone (No_description_available))
+				a_descriptor.set_description (No_description_available.twin)
 			end
 			a_descriptor.set_eiffel_class_name (eiffel_class_name)
 			a_descriptor.set_c_header_file_name (c_header_file_name)

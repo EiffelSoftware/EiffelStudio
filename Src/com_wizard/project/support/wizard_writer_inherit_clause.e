@@ -31,7 +31,7 @@ feature -- Access
 	generated_code: STRING is
 			-- Generated code
 		do
-			Result := clone (Tab)
+			Result := Tab.twin
 			Result.append (name)
 			if not sources.is_empty or not exports.is_empty or not undefines.is_empty or
 				not redefines.is_empty or not selects.is_empty then

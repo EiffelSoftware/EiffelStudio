@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			non_void_name: r_name /= Void
 			valid_name: not r_name.is_empty
 		do
-			name := clone (r_name)
+			name := r_name.twin
 			create parameters.make
 			create result_type.make (0)
 			create comment.make (0)
@@ -58,7 +58,7 @@ feature -- Element change
 			non_void_name: f_name /= Void
 			valid_name: not f_name.is_empty
 		do
-			name := clone (f_name)
+			name := f_name.twin
 		ensure
 			name_set: name.is_equal (f_name)	
 		end
@@ -69,7 +69,7 @@ feature -- Element change
 			non_void_comment: new_comment /= Void
 			valid_comment: not new_comment.is_empty
 		do
-			comment := clone (new_comment)
+			comment := new_comment.twin
 		ensure
 			comment_set: comment.is_equal (new_comment)
 		end
@@ -80,7 +80,7 @@ feature -- Element change
 			non_void_type: new_result_type /= Void
 			valid_result_type: not new_result_type.is_empty
 		do
-			result_type := clone (new_result_type)
+			result_type := new_result_type.twin
 		ensure
 			result_type_set: result_type.is_equal (new_result_type)
 		end

@@ -49,9 +49,9 @@ feature -- Status report
 			valid_component_name: not a_component.name.is_empty
 		do
 			if coclass_eiffel_names.has (a_component.name) then
-				Result := clone (coclass_eiffel_names.item (a_component.name))
+				Result := coclass_eiffel_names.item (a_component.name).twin
 			else
-				Result := clone (interface_eiffel_name)
+				Result := interface_eiffel_name.twin
 			end
 		ensure
 			non_void_name: Result /= Void
@@ -79,8 +79,8 @@ feature -- Transformation
 					name.append (One)
 				end
 			end
-			tmp_name := clone (interface_eiffel_name)
-			tmp_precondition_name := clone (tmp_name)
+			tmp_name := interface_eiffel_name.twin
+			tmp_precondition_name := tmp_name.twin
 			tmp_precondition_name.append ("_user_precondition")
 			if 
 				a_coclass_descriptor.feature_eiffel_names.has (tmp_name) or
@@ -95,18 +95,18 @@ feature -- Transformation
 					not a_coclass_descriptor.feature_eiffel_names.has (tmp_precondition_name)
 				loop
 					tmp_name.append (One)
-					tmp_precondition_name := clone (tmp_name)
+					tmp_precondition_name := tmp_name.twin
 					tmp_precondition_name.append ("_user_precondition")
 				end
 				add_coclass_eiffel_name (tmp_name, a_coclass_descriptor.name)
 			end
-			a_coclass_descriptor.feature_eiffel_names.force (clone (tmp_name))
-			tmp_precondition_name := clone (tmp_name)
+			a_coclass_descriptor.feature_eiffel_names.force (tmp_name.twin)
+			tmp_precondition_name := tmp_name.twin
 			tmp_precondition_name.append ("_user_precondition")
 			a_coclass_descriptor.feature_eiffel_names.force (tmp_precondition_name)
 			
-			a_coclass_descriptor.feature_c_names.force (clone (name))
-			an_interface_descriptor.feature_c_names.force (clone (name))
+			a_coclass_descriptor.feature_c_names.force (name.twin)
+			an_interface_descriptor.feature_c_names.force (name.twin)
 		end
 
 	disambiguate_eiffel_names (an_interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR) is
@@ -119,9 +119,9 @@ feature -- Transformation
 			if system_descriptor.c_types.has (name) then
 				name.prepend ("a_")
 			end
-			tmp_string := clone (interface_eiffel_name)
+			tmp_string := interface_eiffel_name.twin
 			tmp_string.to_lower
-			tmp_string2 := clone (tmp_string)
+			tmp_string2 := tmp_string.twin
 			tmp_string2.append ("_user_precondition")
 			if 
 				an_interface_descriptor.feature_eiffel_names.has (tmp_string) or
@@ -129,8 +129,8 @@ feature -- Transformation
 			then
 				interface_eiffel_name.append_integer (counter)
 			end
-			tmp_string := clone (interface_eiffel_name)
-			tmp_string2 := clone (tmp_string)
+			tmp_string := interface_eiffel_name.twin
+			tmp_string2 := tmp_string.twin
 			tmp_string2.append ("_user_precondition")
 			an_interface_descriptor.feature_eiffel_names.force (tmp_string)
 			an_interface_descriptor.feature_eiffel_names.force (tmp_string2)
@@ -157,7 +157,7 @@ feature -- Basic operations
 		require
 			valid_name: a_name /= Void and then not a_name.is_empty
 		do
-			interface_eiffel_name := clone (a_name)
+			interface_eiffel_name := a_name.twin
 		ensure
 			valid_name: interface_eiffel_name /= Void and then not interface_eiffel_name.is_empty and interface_eiffel_name.is_equal (a_name)
 		end
@@ -167,7 +167,7 @@ feature -- Basic operations
 		require
 			valid_name: a_name /= Void and then not a_name.is_empty
 		do
-			name := clone (a_name)
+			name := a_name.twin
 		ensure
 			valid_name: name /= Void and then not name.is_empty and name.is_equal (a_name)
 		end

@@ -361,7 +361,7 @@ feature -- Basic operations
 								a_lib := user_defined_type_descriptor.library_descriptor
 								an_index := user_defined_type_descriptor.type_descriptor_index
 								aliased_descriptor := a_lib.descriptors.item (an_index)
-								a_name := clone (aliased_descriptor.name)
+								a_name := aliased_descriptor.name.twin
 								a_name.to_upper
 								if 
 									(a_name.substring_index ("__MIDL___MIDL_", 1) > 0) or

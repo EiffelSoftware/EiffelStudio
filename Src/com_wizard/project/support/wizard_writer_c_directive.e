@@ -32,7 +32,7 @@ feature -- Access
 	generated_code: STRING is
 			-- Generated code
 		do
-			Result := clone (Sharp)
+			Result := Sharp.twin
 			Result.append (body)
 		end
 

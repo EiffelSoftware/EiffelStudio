@@ -60,11 +60,11 @@ feature -- Basic operations
 			a_path: STRING
 		do
 			if not retried then
-				a_path := clone (Shared_wizard_environment.destination_folder)
+				a_path := Shared_wizard_environment.destination_folder.twin
 				a_path.append (Shared_wizard_environment.project_name)
 				a_path.append (Log_file_extension)
 				Shared_log_file_cell.replace (create {PLAIN_TEXT_FILE}.make_open_write (a_path))
-				a_path := clone (Shared_wizard_environment.destination_folder)
+				a_path := Shared_wizard_environment.destination_folder.twin
 				a_path.append (Generated_files_file_name)
 				Shared_generated_files_file_cell.replace (create {PLAIN_TEXT_FILE}.make_open_write (a_path))
 			end
@@ -100,7 +100,7 @@ feature -- Basic operations
 			a_string: STRING
 		do
 			create a_date_time.make_now
-			a_string := clone (type_title.item (a_type))
+			a_string := type_title.item (a_type).twin
 			a_string.append (Tab)
 			a_string.append (a_date_time.out)
 			a_string.append (Tab)

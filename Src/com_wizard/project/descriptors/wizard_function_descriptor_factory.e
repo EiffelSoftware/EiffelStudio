@@ -79,7 +79,7 @@ feature -- Basic operations
 			return_type := data_type_descriptor_factory.create_data_type_descriptor (a_type_info,
 				a_func_desc.return_type.type_desc, system_descriptor)
 			tmp_names := a_type_info.names (member_id, a_count + 1)
-			name := clone (tmp_names.item (1))
+			name := tmp_names.item (1).twin
 			if name = Void or else name.is_empty then
 				tmp_type_lib := a_type_info.containing_type_lib
 				tmp_guid := tmp_type_lib.library_attributes.guid
@@ -135,7 +135,7 @@ feature -- Basic operations
 			until
 				i > count + 1
 			loop
-				arg_name := clone (some_names.item (i))
+				arg_name := some_names.item (i)
 				if arg_name = Void or else arg_name.is_empty then
 					create arg_name.make (100)
 					arg_name.append ("arg_")

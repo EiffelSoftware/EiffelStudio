@@ -39,7 +39,7 @@ feature -- Access
 	registration_class_name: STRING is
 			-- Registration class name
 		do
-			Result := clone (Ecom_prefix)
+			Result := Ecom_prefix.twin
 			Result.append (to_eiffel_name (Shared_wizard_environment.project_name))
 			Result.append (Registration_suffix)
 			Result.to_upper
@@ -63,7 +63,7 @@ feature -- Basic Operations
 			non_void_name: a_feature_name /= Void
 			valid_name: not a_feature_name.is_empty
 		do
-			Result := clone (a_feature_name)
+			Result := a_feature_name.twin
 			Result.append (Underscore)
 			Result.append (User_precondition)
 		ensure
@@ -90,7 +90,7 @@ feature -- Basic Operations
 			-- Name of heir of coclass `a_coclass_name'
 			-- Implementation class for component server.
 		do
-			Result := clone (a_coclass_name)
+			Result := a_coclass_name.twin
 			Result.append (Implemented_coclass_extension)
 		end
 
@@ -146,7 +146,7 @@ feature -- Basic Operations
 			elseif (a_type = Tkind_record) then
 				Result.append ("_RECORD")
 				if standard_structures.has (a_name) then
-					Result := clone (standard_structures.item (a_name))
+					Result := standard_structures.item (a_name).twin
 				end
 			elseif 
 				(a_type = Tkind_interface) or
@@ -190,7 +190,7 @@ feature -- Basic Operations
 			non_void_name: a_name /= Void
 			valid_name: not a_name.is_empty
 		do
-			Result :=name_for_feature (a_name)
+			Result := name_for_feature (a_name)
 
 			if eiffel_key_words.has (Result) and not shared_wizard_environment.new_eiffel_project then
 				Result.append (One)
@@ -233,7 +233,7 @@ feature -- Basic Operations
 			end
 			Result.append (".h")
 
-			tmp_string := clone (Result)
+			tmp_string := Result.twin
 			tmp_string.to_lower
 			if library_headers.has (tmp_string) then
 				if not standard_structures.has (a_name) then

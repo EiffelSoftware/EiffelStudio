@@ -50,7 +50,7 @@ feature -- Basic operations
 						class_not_found := False  
 
 						input_file.read_line
-						l_name := clone (input_file.last_string)
+						l_name := input_file.last_string.twin
 						l_name.left_adjust
 						l_name.right_adjust
 
@@ -73,11 +73,11 @@ feature -- Basic operations
 									end
 	
 									create raw_features.make
-									raw_features.extend (clone (input_file.last_string))
+									raw_features.extend (input_file.last_string.twin)
 								elseif 
 									input_file.last_string.substring_index ("--", 1) = 1 
 								then
-									raw_features.extend (clone (input_file.last_string))
+									raw_features.extend (input_file.last_string.twin)
 								end
 							end
 						end
@@ -90,7 +90,7 @@ feature -- Basic operations
 						end
 
 					elseif input_file.last_string.substring_index (Description_indicator, 1) = 1 then
-						l_description := parsed_description (clone (input_file.last_string))
+						l_description := parsed_description (input_file.last_string.twin)
 					end
 				end
 			end

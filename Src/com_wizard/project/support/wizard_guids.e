@@ -12,7 +12,7 @@ feature -- Access
 	Iunknown_guid: ECOM_GUID is
 			-- IUnknown IID
 		once
-			create Result.make_from_string (clone (Iunknown_guid_string))
+			create Result.make_from_string (Iunknown_guid_string.twin)
 		end
 
 	Iunknown_guid_string: STRING is "{00000000-0000-0000-C000-000000000046}"
@@ -21,7 +21,7 @@ feature -- Access
 	Idispatch_guid: ECOM_GUID is
 			-- IDispatch IID
 		once
-			create Result.make_from_string (clone (Idispatch_guid_string))
+			create Result.make_from_string (Idispatch_guid_string.twin)
 		end
 
 	Idispatch_guid_string: STRING is "{00020400-0000-0000-C000-000000000046}"

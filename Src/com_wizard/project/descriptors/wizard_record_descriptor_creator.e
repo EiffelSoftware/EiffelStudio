@@ -40,8 +40,8 @@ feature -- Basic operations
 			tmp_type_lib: ECOM_TYPE_LIB
 			tmp_guid: ECOM_GUID
 		do
-			name := clone (a_documentation.name)
-			description := clone (a_documentation.doc_string)
+			name := a_documentation.name.twin
+			description := a_documentation.doc_string.twin
 			type_kind := a_type_info.type_attr.type_kind
 
 			is_union := (type_kind = Tkind_union)

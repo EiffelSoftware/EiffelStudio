@@ -60,7 +60,7 @@ feature -- Element Change
 			if running and then progress_dialog.progress_static.exists then
 				progress_dialog.progress_static.set_text (a_title)
 			end
-			title := clone (a_title)
+			title := a_title.twin
 		end
 		
 	set_progress (an_integer: INTEGER) is

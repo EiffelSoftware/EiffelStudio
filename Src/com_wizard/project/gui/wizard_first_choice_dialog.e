@@ -92,7 +92,7 @@ feature -- Behavior
 		local
 			tmp_help_path: STRING			
 		do
-			tmp_help_path := clone (Eiffel4_location)
+			tmp_help_path := Eiffel4_location.twin
 			tmp_help_path.append ("\wizards\com\eiffelcom.hlp")
 			win_help (tmp_help_path, Help_context, help_topic_id)
 		end

@@ -58,9 +58,9 @@ feature -- Basic operations
 		do
 			l_succeed := True
 
-			tmp_name := clone (l_feature.name)
+			tmp_name := l_feature.name.twin
 			if c_keywords.has (tmp_name) then
-				tmp_string := clone (tmp_name)
+				tmp_string := tmp_name.twin
 				tmp_string.append (message_output.name_is_C_keyword)
 				message_output.add_warning (Current, tmp_string)
 			end
@@ -86,7 +86,7 @@ feature -- Basic operations
 					if type_mapper.supported_eiffel_type (l_feature.parameters.item.type) then
 						com_type := type_mapper.com_type (l_feature.parameters.item.type)
 						if com_type /= Void then
-							tmp_name := clone (l_feature.parameters.item.name)
+							tmp_name := l_feature.parameters.item.name.twin
 							if c_keywords.has (tmp_name) then
 								tmp_name.prepend ("a_")
 							end

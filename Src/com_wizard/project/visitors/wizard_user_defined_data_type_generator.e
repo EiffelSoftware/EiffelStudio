@@ -69,8 +69,8 @@ feature -- Processing
 			c_type.append (alias_descriptor.c_type_name)
 			
 			create c_post_type.make (100)
-			c_header_file := clone (alias_descriptor.c_header_file_name)
-			eiffel_type := clone (alias_descriptor.eiffel_class_name)
+			c_header_file := alias_descriptor.c_header_file_name.twin
+			eiffel_type := alias_descriptor.eiffel_class_name.twin
 
 			need_generate_ce := True
 
@@ -95,9 +95,9 @@ feature -- Processing
 				if need_generate_free_memory then
 					free_memory_function_name := "free_memory_" + local_counter.out
 					free_memory_function_signature := (c_type + " a_pointer")
-					free_memory_function_body := clone (a_type_visitor.free_memory_function_body)
+					free_memory_function_body := a_type_visitor.free_memory_function_body.twin
 				else
-					free_memory_function_name := clone (a_type_visitor.free_memory_function_name)
+					free_memory_function_name := a_type_visitor.free_memory_function_name.twin
 				end
 			end
 
@@ -116,8 +116,8 @@ feature -- Processing
 
 			if a_type_visitor.is_basic_type  then
 				need_generate_ce := False
-				cecil_type := clone (a_type_visitor.cecil_type)
-				eiffel_type := clone (a_type_visitor.eiffel_type)
+				cecil_type := a_type_visitor.cecil_type.twin
+				eiffel_type := a_type_visitor.eiffel_type.twin
 				vt_type := a_type_visitor.vt_type
 
 			else
@@ -136,23 +136,23 @@ feature -- Processing
 				ec_function_name.append (eiffel_type)
 				ec_function_name.append_integer (local_counter)
 
-				ec_function_body := clone (a_type_visitor.ec_function_body)
-				ec_function_signature := clone (a_type_visitor.ec_function_signature)
-				ec_function_return_type := clone (c_type)
+				ec_function_body := a_type_visitor.ec_function_body.twin
+				ec_function_signature := a_type_visitor.ec_function_signature.twin
+				ec_function_return_type := c_type.twin
 
 			else
-				ec_function_name := clone (a_type_visitor.ec_function_name)
+				ec_function_name := a_type_visitor.ec_function_name.twin
 			end
 
 			if a_type_visitor.vt_type = Vt_bool then
 				vt_type := Vt_bool
 				is_basic_type := False
-				eiffel_type := clone (a_type_visitor.eiffel_type)
+				eiffel_type := a_type_visitor.eiffel_type.twin
 				need_generate_ce := False
 				need_generate_ec := False
 
-				ec_function_name := clone (a_type_visitor.ec_function_name)
-				ce_function_name := clone (a_type_visitor.ce_function_name)
+				ec_function_name := a_type_visitor.ec_function_name.twin
+				ce_function_name := a_type_visitor.ce_function_name.twin
 			end
 			can_free := a_type_visitor.can_free
 			if vt_type = Vt_userdefined or Vt_type = binary_or (Vt_userdefined, Vt_byref) then
@@ -183,7 +183,7 @@ feature -- Processing
 			c_type.append (coclass_descriptor.default_interface_descriptor.c_type_name)
 			
 			create c_post_type.make (100)
-			c_header_file := clone (coclass_descriptor.default_interface_descriptor.c_header_file_name)
+			c_header_file := coclass_descriptor.default_interface_descriptor.c_header_file_name.twin
 			eiffel_type := name_for_class (coclass_descriptor.name, coclass_descriptor.type_kind, shared_wizard_environment.client)
 
 			is_coclass := True
@@ -233,8 +233,8 @@ feature -- Processing
 			c_type.append (interface_descriptor.c_type_name)
 			
 			create c_post_type.make (0)
-			c_header_file := clone (interface_descriptor.c_header_file_name)
-			eiffel_type := clone (interface_descriptor.eiffel_class_name)
+			c_header_file := interface_descriptor.c_header_file_name.twin
+			eiffel_type := interface_descriptor.eiffel_class_name.twin
 			create ce_function_name.make (0)
 			create ec_function_name.make (0)
 		end
@@ -249,7 +249,7 @@ feature -- Processing
 			c_type.append (interface_descriptor.c_type_name)
 			create c_post_type.make (0)
 			is_interface := True
-			c_header_file := clone (interface_descriptor.c_header_file_name)
+			c_header_file := interface_descriptor.c_header_file_name.twin
 			create ce_function_name.make (100)
 			create ec_function_name.make (100)
 
@@ -286,7 +286,7 @@ feature -- Processing
 				else
 					vt_type := Vt_unknown
 				end
-				eiffel_type := clone (interface_descriptor.eiffel_class_name)
+				eiffel_type := interface_descriptor.eiffel_class_name.twin
 
 				need_generate_ce := True
 				need_generate_ec := True
@@ -340,8 +340,8 @@ feature -- Processing
 			c_type.append (record_descriptor.c_type_name)
 			
 			create c_post_type.make (100)
-			c_header_file := clone (record_descriptor.c_header_file_name)
-			eiffel_type := clone (record_descriptor.eiffel_class_name)
+			c_header_file := record_descriptor.c_header_file_name.twin
+			eiffel_type := record_descriptor.eiffel_class_name.twin
 
 			is_structure := True
 
@@ -388,9 +388,9 @@ feature -- Processing
 				vt_type := Vt_void
 				need_generate_ce := False
 				need_generate_ec := False
-				c_header_file := clone ("")
-				cecil_type := clone ("EIF_INTEGER")
-				c_type := clone (Void_c_keyword)
+				c_header_file := ("").twin
+				cecil_type := ("EIF_INTEGER").twin
+				c_type := Void_c_keyword.twin
 			end
 		end
 
@@ -403,11 +403,11 @@ feature {NONE} -- Implementation
 	enum_processing is
 			-- Enumeration processing.
 		do
-			c_type := clone (Long)
-			cecil_type := clone (Eif_integer)
+			c_type := Long.twin
+			cecil_type := Eif_integer.twin
 			create c_post_type.make (100)
 			create c_header_file.make (100)
-			eiffel_type := clone (Integer_type)
+			eiffel_type := Integer_type.twin
 			vt_type := Vt_i4
 
 			is_enumeration := True

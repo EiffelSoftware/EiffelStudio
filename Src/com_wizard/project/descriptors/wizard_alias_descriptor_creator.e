@@ -41,8 +41,8 @@ feature -- Basic operations
 			tmp_guid: ECOM_GUID
 			tmp_lib_descriptor: WIZARD_TYPE_LIBRARY_DESCRIPTOR
 		do
-			name := clone (a_documentation.name)
-			description := clone (a_documentation.doc_string)
+			name := a_documentation.name.twin
+			description := a_documentation.doc_string.twin
 			type_kind := a_type_info.type_attr.type_kind
 
 			tmp_type_lib := a_type_info.containing_type_lib
@@ -73,7 +73,7 @@ feature -- Basic operations
 			
 			create c_header_file_name.make (30)
 			if not Non_generated_type_libraries.has (tmp_lib_descriptor.guid) then
-				c_header_file_name.append (clone (Alias_header_file_name))
+				c_header_file_name.append (Alias_header_file_name.twin)
 			end
 
 			type_desc := a_type_info.type_attr.type_alias
@@ -81,7 +81,7 @@ feature -- Basic operations
 					(a_type_info, type_desc, system_descriptor)
 
 			if vartype_namer.is_basic (type_descriptor.type) then
-				eiffel_class_name := clone (vartype_namer.eiffel_name (type_descriptor.type))
+				eiffel_class_name := vartype_namer.eiffel_name (type_descriptor.type).twin
 			end
 
 			create Result.make (Current)

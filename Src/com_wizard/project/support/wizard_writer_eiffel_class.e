@@ -34,7 +34,7 @@ feature -- Access
 		local
 			an_integer: INTEGER
 		do
-			Result := clone (indexing_keyword)
+			Result := indexing_keyword.twin
 			Result.append (New_line_tab)
 			Result.append (Description_keyword)
 			Result.append (Colon)

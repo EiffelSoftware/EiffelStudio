@@ -145,7 +145,7 @@ feature -- Basic operations
 			create a_type_lib.make_from_name (a_type_library_file_name)
 			create a_type_library_descriptor.make (a_type_lib)
 			type_lib_guid := a_type_library_descriptor.guid
-			name := clone (a_type_library_descriptor.name)
+			name := a_type_library_descriptor.name.twin
 			add_library_descriptor (a_type_library_descriptor)
 			a_type_library_descriptor.generate
 
@@ -270,7 +270,7 @@ feature -- Basic operations
 			non_void_type: a_type /= Void
 			valid_type: not a_type.is_empty
 		do
-			c_types.force (clone (a_type), clone (a_type))
+			c_types.force (a_type.twin, a_type.twin)
 		ensure
 			has: c_types.has (a_type)
 		end

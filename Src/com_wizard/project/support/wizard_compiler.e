@@ -58,7 +58,7 @@ feature -- Basic Operations
 		local
 			a_local_folder: STRING
 		do
-			a_local_folder := clone (Shared_wizard_environment.destination_folder)
+			a_local_folder := Shared_wizard_environment.destination_folder.twin
 			a_local_folder.append (a_folder)
 			-- The ".epr" file is in the Eifgen folder for a precompiled system
 			Result := has_directory_epr (a_local_folder)
@@ -123,20 +123,20 @@ feature -- Basic Operations
 		local
 			a_string: STRING
 		do
-			a_string := clone (Idl_compiler)
+			a_string := Idl_compiler.twin
 			a_string.append (Space)
 			a_string.append (Idl_compiler_command_line)
 			message_output.add_message (Current, a_string)
 
-			a_string := clone (Shared_wizard_environment.destination_folder)
+			a_string := Shared_wizard_environment.destination_folder.twin
 			a_string.append (shared_wizard_environment.project_name)
 			a_string.append (".tlb")
 			shared_wizard_environment.set_type_library_file_name (a_string)
 
 			execution_environment.change_working_directory (Shared_wizard_environment.destination_folder)
 			generate_command_line_file (Idl_compiler_command_line, Temporary_input_file_name)
-			a_string := clone (Idl_compiler)
-			a_string.append (clone (Space))
+			a_string := Idl_compiler.twin
+			a_string.append (Space.twin)
 			a_string.append (last_make_command)
 			launch (a_string, Shared_wizard_environment.destination_folder)
 			check_return_code
@@ -166,12 +166,12 @@ feature -- Basic Operations
 			a_string: STRING
 		do
 			generate_def_file
-			a_string := clone (linker)
+			a_string := linker.twin
 			a_string.append (Space)
 			a_string.append (Linker_command_line)
 			message_output.add_message (Current, a_string)
 			generate_command_line_file (Linker_command_line, Temporary_input_file_name)
-			a_string := clone (Linker)
+			a_string := Linker.twin
 			a_string.append (Space)
 			a_string.append (last_make_command)
 			launch (a_string, shared_wizard_environment.destination_folder)
@@ -188,7 +188,7 @@ feature -- Basic Operations
 			a_local_folder: STRING
 			a_directory: DIRECTORY
 		do
-			a_local_folder := clone (a_folder)
+			a_local_folder := a_folder.twin
 			a_local_folder.append_character (Directory_separator)
 			a_local_folder.append ("Component")
 			create a_directory.make (a_local_folder)
@@ -211,7 +211,7 @@ feature -- Basic Operations
 			a_project_file, a_dest_file: STRING
 		do
 			-- Delete EIFGEN directory if exists.
-			a_local_folder := clone (a_folder)
+			a_local_folder := a_folder.twin
 			a_local_folder.append_character (Directory_separator)
 			a_local_folder.append (Eifgen)
 			create a_directory.make (a_local_folder)
@@ -230,7 +230,7 @@ feature -- Basic Operations
 				launch (eiffel_compile_command, a_folder)
 			end
 			if eiffel_compilation_successful (a_folder) then
-				a_local_folder := clone (a_folder)
+				a_local_folder := a_folder.twin
 				a_local_folder.append_character (Directory_separator)
 				a_local_folder.append (Eifgen)
 				a_local_folder.append_character (Directory_separator)
@@ -242,9 +242,9 @@ feature -- Basic Operations
 					not Shared_wizard_environment.not_spawn_ebench
 				then
 					if a_folder.is_equal (Client) then
-						a_dest_file := clone (a_folder)
+						a_dest_file := a_folder.twin
 						a_dest_file.append_character (Directory_separator)
-						a_project_file := clone (a_dest_file)
+						a_project_file := a_dest_file.twin
 						a_dest_file.append (Precompile_name)
 						a_project_file.append (Eifgen)
 						a_project_file.append_character (Directory_separator)
@@ -270,7 +270,7 @@ feature -- Basic Operations
 			a_file_list: LIST [STRING]
 			found: BOOLEAN
 		do
-			a_local_folder := clone (a_folder)
+			a_local_folder := a_folder.twin
 			a_local_folder.append_character (Directory_separator)
 			a_local_folder.append (Eifgen)
 			a_local_folder.append_character (Directory_separator)
@@ -314,7 +314,7 @@ feature {NONE} -- Implementation
 	proxy_stub_file_name: STRING is
 			-- Proxy/Stub fil name
 		once
-			Result := clone (shared_wizard_environment.destination_folder)
+			Result := shared_wizard_environment.destination_folder.twin
 			Result.append_character (Directory_separator)
 			Result.append (shared_wizard_environment.project_name)
 			Result.append ("_ps.dll")
@@ -342,9 +342,9 @@ feature {NONE} -- Implementation
 	Idl_compiler_command_line: STRING is
 			-- MIDL command line
 		do
-			Result := clone (Common_idl_compiler_options)
+			Result := Common_idl_compiler_options.twin
 			Result.append ("  /out %"")
-			Result.append (clone (shared_wizard_environment.destination_folder))
+			Result.append (shared_wizard_environment.destination_folder.twin)
 			Result.append_character (Directory_separator)
 			Result.append ("%" /h %"")
 			Result.append (Generated_header_file_name)
@@ -355,7 +355,7 @@ feature {NONE} -- Implementation
 			Result.append ("%" /proxy %"")
 			Result.append (Generated_ps_file_name)
 			Result.append ("%" /tlb %"")
-			Result.append (clone (shared_wizard_environment.project_name))
+			Result.append (shared_wizard_environment.project_name.twin)
 			Result.append (".tlb%" ")
 			if Shared_wizard_environment.output_level = message_output.Output_none then
 				Result.append (" /nologo ")
@@ -371,7 +371,7 @@ feature {NONE} -- Implementation
 		local
 			a_string: STRING
 		do
-			Result := clone (Common_linker_options)
+			Result := Common_linker_options.twin
 			if Shared_wizard_environment.output_level = message_output.Output_none then
 				Result.append (" /nologo ")
 			end
@@ -381,22 +381,22 @@ feature {NONE} -- Implementation
 			Result.append ("%"")
 			Result.append (" /def:")
 			Result.append ("%"")
-			Result.append (clone (Def_file_name))
+			Result.append (Def_file_name.twin)
 			Result.append ("%"")
-			a_string := clone (shared_wizard_environment.destination_folder)
+			a_string := shared_wizard_environment.destination_folder.twin
 			a_string.append (c_to_obj (Generated_iid_file_name))
 			Result.append (" ")
 			Result.append ("%"")
 			Result.append (a_string)
 			Result.append ("%"")
-			a_string := clone (shared_wizard_environment.destination_folder)
+			a_string := shared_wizard_environment.destination_folder.twin
 			a_string.append_character (Directory_separator)
 			a_string.append (c_to_obj (Generated_ps_file_name))
 			Result.append (" ")
 			Result.append ("%"")
 			Result.append (a_string)
 			Result.append ("%"")
-			a_string := clone (shared_wizard_environment.destination_folder)
+			a_string := shared_wizard_environment.destination_folder.twin
 			a_string.append (c_to_obj (Generated_dlldata_file_name))
 			Result.append (" ")
 			Result.append ("%"")
@@ -459,7 +459,7 @@ feature {NONE} -- Implementation
 	user_def_file_name: STRING is
 			-- ".def" file name used for DLL compilation
 		do
-			Result := clone (Shared_wizard_environment.project_name)
+			Result := Shared_wizard_environment.project_name.twin
 			Result.append (Def_file_extension)
 		end
 	

@@ -60,7 +60,7 @@ feature -- Basic operations
 			Result.append ("1 typelib ")
 			Result.append (Double_quote)
 			
-			str_buffer := clone (Shared_wizard_environment.type_library_file_name)
+			str_buffer := Shared_wizard_environment.type_library_file_name.twin
 			str_buffer.replace_substring_all ("%H", "%H%H")
 
 			Result.append (str_buffer)

@@ -76,7 +76,7 @@ feature -- Basic Operations
 		require
 			valid_name: a_name /= Void and then not a_name.is_empty
 		do
-			name := clone (a_name)
+			name := a_name.twin
 		ensure
 			valid_name: name /= Void and name.is_equal (a_name)
 		end
@@ -87,9 +87,9 @@ feature -- Basic Operations
 			non_void_description: a_description /= Void
 		do
 			if not a_description.is_empty then
-				description := clone (a_description)
+				description := a_description.twin
 			else
-				description := clone (No_description_available)
+				description := No_description_available.twin
 			end
 		ensure
 			non_void_description: description /= Void
@@ -101,7 +101,7 @@ feature -- Basic Operations
 		require
 			valid_name: a_name /= Void and then not a_name.is_empty
 		do
-			eiffel_class_name := clone (a_name)
+			eiffel_class_name := a_name.twin
 		ensure
 			valid_eiffel_class_name: eiffel_class_name /= Void and then not eiffel_class_name.is_empty
 						and eiffel_class_name.is_equal (a_name)
@@ -112,7 +112,7 @@ feature -- Basic Operations
 		require
 			non_void_name: a_name /= Void
 		do
-			c_header_file_name := clone (a_name)
+			c_header_file_name := a_name.twin
 		ensure
 			valid_c_header_file_name: c_header_file_name /= Void
 			valid_c_header_file_name: c_header_file_name.is_equal (a_name)
@@ -123,7 +123,7 @@ feature -- Basic Operations
 		require
 			non_void_name: a_name /= Void
 		do
-			c_type_name := clone (a_name)
+			c_type_name := a_name.twin
 		ensure
 			valid_c_type_name: c_type_name /= Void
 			valid_c_type_name: c_type_name.is_equal (a_name)
@@ -134,7 +134,7 @@ feature -- Basic Operations
 		require
 			non_void_namespace: a_namespace /= Void
 		do
-			namespace  := clone (a_namespace )
+			namespace  := a_namespace.twin
 		ensure
 			valid_namespace: namespace  /= Void
 			valid_namespace: namespace .is_equal (a_namespace )

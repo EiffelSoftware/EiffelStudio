@@ -62,7 +62,7 @@ feature -- Processing
 			an_eiffel_type: STRING
 		do
 			a_data_type_visitor := a_safearray_descriptor.visitor
-			an_eiffel_type := clone (a_data_type_visitor.eiffel_type)
+			an_eiffel_type := a_data_type_visitor.eiffel_type.twin
 
 			create inherit_clause.make
 			inherit_clause.set_name (an_eiffel_type)
@@ -134,7 +134,7 @@ feature -- Processing
 			an_eiffel_type: STRING
 		do
 			a_data_type_visitor := an_array_descriptor.visitor
-			an_eiffel_type := clone (a_data_type_visitor.eiffel_type)
+			an_eiffel_type := a_data_type_visitor.eiffel_type.twin
 
 			create inherit_clause.make
 			inherit_clause.set_name (an_eiffel_type)
@@ -165,7 +165,7 @@ feature -- Processing
 			an_eiffel_type: STRING
 		do
 			a_data_type_visitor := a_user_defined_descriptor.visitor
-			an_eiffel_type := clone (a_data_type_visitor.eiffel_type)
+			an_eiffel_type := a_data_type_visitor.eiffel_type.twin
 
 			create inherit_clause.make
 			inherit_clause.set_name (a_data_type_visitor.eiffel_type)
@@ -202,7 +202,7 @@ feature -- Processing
 			an_eiffel_type: STRING
 		do
 			a_data_type_visitor := a_pointed_descriptor.visitor
-			an_eiffel_type := clone (a_data_type_visitor.eiffel_type)
+			an_eiffel_type := a_data_type_visitor.eiffel_type.twin
 
 			create inherit_clause.make
 			inherit_clause.set_name (an_eiffel_type)

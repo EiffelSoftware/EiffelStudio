@@ -17,7 +17,7 @@ feature {NONE} -- Initialization
 			non_void_name: c_name /= Void
 			valid_name: not c_name.is_empty
 		do
-			name := clone (c_name)
+			name := c_name.twin
 			create guid.make
 			guid.generate
 
@@ -47,7 +47,7 @@ feature -- Element change
 			non_void_name: c_name /= Void
 			valid_name: not c_name.is_empty
 		do
-			name := clone (c_name)
+			name := c_name.twin
 		ensure
 			name_set: name.is_equal (c_name)
 		end
@@ -58,7 +58,7 @@ feature -- Element change
 			non_void_guid: l_guid /= Void
 			valid_guid: l_guid.exists
 		do
-			guid := clone (l_guid)
+			guid := l_guid.twin
 		ensure
 			guid_set: guid.is_equal (l_guid)
 		end
@@ -69,7 +69,7 @@ feature -- Element change
 			non_void_description: desc /= Void
 			valid_description: not desc.is_empty
 		do
-			description := clone (desc)
+			description := desc.twin
 		ensure
 			description_set: description.is_equal (desc)
 		end

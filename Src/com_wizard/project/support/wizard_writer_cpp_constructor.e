@@ -25,13 +25,13 @@ feature -- Access
 	generated_code: STRING is
 			-- Generated code
 		do
-			Result := clone (Open_parenthesis)
+			Result := Open_parenthesis.twin
 			if signature /= Void then
 				Result.append (Space)
 				Result.append (signature)
 				Result.append (Space)
 			end
-			Result.append (clone (Close_parenthesis))
+			Result.append (Close_parenthesis.twin)
 			Result.append (New_line)
 			Result.append (Open_curly_brace)
 			Result.append (New_line)
@@ -62,7 +62,7 @@ feature -- Element Change
 		require
 			signature_not_void: a_signature /= Void
 		do
-			signature := clone (a_signature)
+			signature := a_signature.twin
 		ensure
 			signature_set: signature.is_equal (a_signature)
 		end
@@ -72,7 +72,7 @@ feature -- Element Change
 		require
 			body_not_void: a_body /= Void
 		do
-			body := clone (a_body)
+			body := a_body.twin
 		ensure
 			body_set: body.is_equal (a_body)
 		end

@@ -168,20 +168,20 @@ feature -- Basic operations
 				ce_function_name.append ("ccom_ce_safearray_interface")
 				ce_function_name.append_integer (local_counter)
 
-				ce_function_signature := clone (c_type)
+				ce_function_signature := c_type.twin
 				ce_function_signature.append (Space)
 				ce_function_signature.append ("a_safearray")
 
-				ce_function_return_type := clone (Eif_reference)
+				ce_function_return_type := Eif_reference.twin
 
 				ce_function_body := safearray_interface_ce_function_body (pointed_data_type_descriptor)
 
 				ec_function_name.append ("ccom_ec_safearray_interface")
 				ec_function_name.append_integer (local_counter)
 
-				ec_function_return_type := clone (c_type)
+				ec_function_return_type := c_type.twin
 
-				ec_function_signature := clone (Eif_reference)
+				ec_function_signature := Eif_reference.twin
 				ec_function_signature.append (Space)
 				ec_function_signature.append ("a_ref")
 
@@ -206,20 +206,20 @@ feature -- Basic operations
 				ce_function_name.append ("ccom_ce_safearray_structure")
 				ce_function_name.append_integer (local_counter)
 
-				ce_function_signature := clone (c_type)
+				ce_function_signature := c_type.twin
 				ce_function_signature.append (Space)
 				ce_function_signature.append ("a_safearray")
 
-				ce_function_return_type := clone (Eif_reference)
+				ce_function_return_type := Eif_reference.twin
 
 				ce_function_body := safearray_record_ce_function_body (user_defined_element_descriptor)
 
 				ec_function_name.append ("ccom_ec_safearray_structure")
 				ec_function_name.append_integer (local_counter)
 
-				ec_function_return_type := clone (c_type)
+				ec_function_return_type := c_type.twin
 
-				ec_function_signature := clone (Eif_reference)
+				ec_function_signature := Eif_reference.twin
 				ec_function_signature.append (Space)
 				ec_function_signature.append ("a_ref")
 
@@ -244,20 +244,20 @@ feature -- Basic operations
 				ce_function_name.append ("ccom_ce_safearray_safearray")
 				ce_function_name.append_integer (local_counter)
 
-				ce_function_signature := clone (c_type)
+				ce_function_signature := c_type.twin
 				ce_function_signature.append (Space)
 				ce_function_signature.append ("a_safearray")
 
-				ce_function_return_type := clone (Eif_reference)
+				ce_function_return_type := Eif_reference.twin
 
 				ce_function_body := safearray_safearray_ce_function_body (element_safearray_descriptor)
 
 				ec_function_name.append ("ccom_ec_safearray_safearray")
 				ec_function_name.append_integer (local_counter)
 
-				ec_function_return_type := clone (c_type)
+				ec_function_return_type := c_type.twin
 
-				ec_function_signature := clone (Eif_reference)
+				ec_function_signature := Eif_reference.twin
 				ec_function_signature.append (Space)
 				ec_function_signature.append ("a_ref")
 

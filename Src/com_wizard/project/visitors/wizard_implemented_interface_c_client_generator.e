@@ -78,7 +78,7 @@ feature -- Basic operations
 
 				-- Add memeber "EXCEPINFO * excepinfo"
 				create data_member.make
-				data_member.set_name (clone (Excepinfo_variable_name))
+				data_member.set_name (Excepinfo_variable_name.twin)
 				
 				create a_result_type.make (100)
 				a_result_type.append (Excepinfo)

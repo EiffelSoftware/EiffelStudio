@@ -77,7 +77,7 @@ feature -- Element change
 	set_name (a_name: like name) is
 			-- Set `name' with `a_name'.
 		do
-			name := clone (a_name)
+			name := a_name.twin
 		ensure
 			name_set: name.is_equal (a_name)
 		end
@@ -88,7 +88,7 @@ feature -- Element change
 			non_void_feature: a_feature /= Void
 			valid_feature: not a_feature.is_empty
 		do
-			exported_features.extend (clone (a_feature))
+			exported_features.extend (a_feature.twin)
 		ensure
 			added: exported_features.last.is_equal (a_feature)
 		end

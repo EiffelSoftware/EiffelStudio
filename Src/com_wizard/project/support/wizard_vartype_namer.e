@@ -229,7 +229,7 @@ feature -- Access
 		require
 			valid_var_type: valid_var_type (a_var_type)
 		do	
-			Result := clone (c_names.item (a_var_type))
+			Result := c_names.item (a_var_type).twin
 		ensure
 			non_void_c_name: Result /= Void
 			valid_c_name: not Result.is_empty
@@ -240,7 +240,7 @@ feature -- Access
 		require
 			valid_var_type: valid_var_type (a_var_type)
 		do	
-			Result := clone (eiffel_names.item (a_var_type))
+			Result := eiffel_names.item (a_var_type).twin
 		ensure
 			non_void_eiffel_name: Result /= Void
 			valid_eiffel_name: not Result.is_empty
@@ -263,15 +263,15 @@ feature -- Access
 				end
 			end
 
-			Result := clone (variant_field_names.item (a_type))
+			Result := variant_field_names.item (a_type).twin
 
 			if (Result = Void or else Result.is_empty) then
 				if a_visitor.is_interface_pointer or a_visitor.is_coclass_pointer then
-					Result := clone (Variant_punkval)
+					Result := Variant_punkval.twin
 				elseif  a_visitor.is_interface_pointer_pointer or a_visitor.is_coclass_pointer_pointer then
-					Result := clone (Variant_ppunkval)
+					Result := Variant_ppunkval.twin
 				else
-					tmp_string := clone (a_visitor.c_type)
+					tmp_string := a_visitor.c_type.twin
 					tmp_string.append (Space)
 					tmp_string.append (message_output.Not_variant_type)
 					message_output.add_warning (Current, tmp_string)
@@ -285,7 +285,7 @@ feature -- Access
 		require
 			valid_var_type: valid_var_type (a_var_type)
 		do	
-			Result := clone (ce_array_function_names.item (a_var_type))
+			Result := ce_array_function_names.item (a_var_type).twin
 		ensure
 			non_void_ce_array_function_name: Result /= Void
 			valid_c_name: not Result.is_empty
@@ -296,7 +296,7 @@ feature -- Access
 		require
 			valid_var_type: valid_var_type (a_var_type)
 		do	
-			Result := clone (ec_array_function_names.item (a_var_type))
+			Result := ec_array_function_names.item (a_var_type).twin
 		ensure
 			non_void_ec_array_function_name: Result /= Void
 			valid_c_name: not Result.is_empty

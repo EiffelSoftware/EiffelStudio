@@ -86,7 +86,7 @@ feature {NONE} -- Implementation
 				create a_file.make (a_file_name)
 				if a_file.exists then
 					if is_overwritable (a_file_name) then
-						a_string := clone (message_output.File_already_exists)
+						a_string := message_output.File_already_exists.twin
 						a_string.append (Colon)
 						a_string.append (Space)
 						a_string.append (a_file_name)
@@ -105,7 +105,7 @@ feature {NONE} -- Implementation
 					a_file.close
 				end
 			else
-				a_string := clone (message_output.Could_not_write_file)
+				a_string := message_output.Could_not_write_file.twin
 				a_string.append (Colon)
 				a_string.append (Space)
 				a_string.append (a_file_name)
@@ -123,7 +123,7 @@ feature {NONE} -- Implementation
 		local
 			an_index: INTEGER
 		do
-			Result := clone (a_file_name)
+			Result := a_file_name.twin
 			an_index := Result.last_index_of ('.', 1) - 1
 			if an_index > 0 then
 				Result.keep_head (an_index)
@@ -136,7 +136,7 @@ feature {NONE} -- Implementation
 		local
 			lower_case_implemented_coclass_extension: STRING
 		do
-			lower_case_implemented_coclass_extension := clone (implemented_coclass_extension)
+			lower_case_implemented_coclass_extension := implemented_coclass_extension.twin
 			lower_case_implemented_coclass_extension.to_lower
 			Result := not a_file_name.substring (a_file_name.count -implemented_coclass_extension.count - 1, a_file_name.count -2).is_equal (lower_case_implemented_coclass_extension)
 		end

@@ -40,7 +40,7 @@ feature -- Basic operations
 		do
 			message_output.add_message (Current, "Processing Eiffel class")
 
-			destination_folder := clone (shared_wizard_environment.destination_folder)
+			destination_folder := shared_wizard_environment.destination_folder.twin
 
 			destination_folder.append ("idl")
 
@@ -105,7 +105,7 @@ feature {NONE} -- Basic operations
 			if not (a_command_line.item (a_command_line.count) = '"') then
 				a_command_line.append ("%"")
 			end
-			a_string := clone (Console_spawn_application)
+			a_string := Console_spawn_application.twin
 			a_string.append (" ")
 			a_string.append (a_command_line)
 			spawn (a_string, a_working_directory)
@@ -148,7 +148,7 @@ feature {NONE} -- Basic operations
 	raw_file_name: STRING is
 			-- Intermediate file for IDL generator.
 		once
-			Result := clone (shared_wizard_environment.destination_folder)
+			Result := shared_wizard_environment.destination_folder.twin
 			Result.append ("idl\e2idl.output")
 	
 		end

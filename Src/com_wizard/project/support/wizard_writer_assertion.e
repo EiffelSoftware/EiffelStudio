@@ -35,7 +35,7 @@ feature -- Access
 	generated_code: STRING is
 			-- Generated code
 		do
-			Result :=  clone (tag)
+			Result :=  tag.twin
 			Result.append (Colon)
 			Result.append (Space)
 			Result.append (body)

@@ -38,8 +38,6 @@ feature -- Access
 					end
 				end
 			end
-		ensure
-			non_void_location: Result /= Void
 		end
 
 	eiffel_compiler: STRING is

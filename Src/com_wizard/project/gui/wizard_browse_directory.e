@@ -49,7 +49,7 @@ feature -- Basic operations
 			a_name, a_title: STRING	
 		do
 			if a_file_dialog.selected then
-				a_name := clone (a_file_dialog.file_name)
+				a_name := a_file_dialog.file_name.twin
 				a_title := a_file_dialog.file_title
 				a_name.keep_head (a_name.count - a_title.count)
 				set_browse_directory (a_name)

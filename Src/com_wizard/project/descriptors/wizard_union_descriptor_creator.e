@@ -31,14 +31,14 @@ feature -- Basic operations
 			valid_type_info: a_type_info /= Void and then a_type_info.type_attr.type_kind = Tkind_union
 			valid_documentation: a_documentation /= Void
 		do
-			name := clone (a_documentation.name)
+			name := a_documentation.name.twin
 			if name = Void or else name.is_empty then
 				create name.make (100)
 				name.append ("union_")
 				name.append_integer (a_type_info.index_in_type_lib + 1)
 			end
 
-			description := clone (a_documentation.doc_string)
+			description := a_documentation.doc_string.twin
 			type_kind := a_type_info.type_attr.type_kind
 
 			create eiffel_class_name.make (100)

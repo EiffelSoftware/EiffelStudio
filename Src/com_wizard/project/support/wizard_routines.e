@@ -25,7 +25,7 @@ feature -- Basic Operations
 		local
 			dot_index: INTEGER
 		do
-			Result := clone (a_file_name)
+			Result := a_file_name.twin
 			dot_index := Result.index_of ('.', 1)
 			Result.keep_head (dot_index)
 			Result.append ("obj")

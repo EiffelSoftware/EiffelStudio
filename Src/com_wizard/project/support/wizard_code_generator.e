@@ -334,7 +334,7 @@ feature -- Basic operations
 				progress_report.set_range (3)
 
 				if not shared_wizard_environment.abort then
-					Clib_folder_name := clone (Client)
+					Clib_folder_name := Client.twin
 					Clib_folder_name.append_character (Directory_separator)
 					Clib_folder_name.append (Clib)
 					
@@ -342,7 +342,7 @@ feature -- Basic operations
 					progress_report.step
 				end
 				if not shared_wizard_environment.abort then
-					Clib_folder_name := clone (Server)
+					Clib_folder_name := Server.twin
 					Clib_folder_name.append_character (Directory_separator)
 					Clib_folder_name.append (Clib)
 					
@@ -350,7 +350,7 @@ feature -- Basic operations
 					progress_report.step
 				end
 				if not shared_wizard_environment.abort then
-					Clib_folder_name := clone (Common)
+					Clib_folder_name := Common.twin
 					Clib_folder_name.append_character (Directory_separator)
 					Clib_folder_name.append (Clib)
 					

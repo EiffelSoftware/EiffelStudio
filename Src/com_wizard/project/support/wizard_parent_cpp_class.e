@@ -22,8 +22,10 @@ feature -- Initialization
 			valid_name: not a_name.is_empty
 			valid_export_status: is_valid_export_status (an_export_status)
 		do
-			name := clone (a_name)
-			namespace := clone (a_namespace)
+			name := a_name.twin
+			if a_namespace /= Void then
+				namespace := a_namespace.twin
+			end
 			export_status := an_export_status
 		ensure
 			non_void_name: name /= Void

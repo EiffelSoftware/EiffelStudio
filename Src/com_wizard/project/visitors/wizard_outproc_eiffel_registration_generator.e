@@ -105,7 +105,7 @@ feature {NONE} -- Implementation
 			create tmp_writer.make
 			tmp_writer.set_name ("WEL_SW_CONSTANTS")
 			create feature_list.make
-			feature_list.force (clone (All_keyword))
+			feature_list.force (All_keyword.twin)
 			tmp_writer.add_export (feature_list, None_keyword)
 			an_eiffel_writer.add_inherit_clause (tmp_writer)
 		end

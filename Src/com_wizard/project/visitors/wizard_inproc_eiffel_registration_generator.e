@@ -89,7 +89,7 @@ feature {NONE} -- Implementation
 			Result.set_effective
 			Result.set_comment ("Initialize server.")
 
-			tmp_body := clone (Tab_tab_tab)
+			tmp_body := Tab_tab_tab.twin
 			Result.set_body (tmp_body)
 		ensure
 			non_void_writer: Result /= Void

@@ -51,7 +51,7 @@ feature -- Basic operations
 			element_descriptor := an_array_descriptor.array_element_descriptor
 			element_visitor := element_descriptor.visitor
 			an_element_type := element_visitor.vt_type
-			array_size := clone (an_array_descriptor.array_size)
+			array_size := an_array_descriptor.array_size.twin
 
 			from
 				i := array_size.lower
@@ -143,7 +143,7 @@ feature -- Basic operations
 				ec_function_name.append ("ccom_ec_array_automation")
 				ec_function_name.append_integer (local_counter)
 
-				c_type := clone  (element_visitor.c_type)
+				c_type := element_visitor.c_type.twin
 				if dimension_count = 1 then
 					eiffel_type.append (Array_type)
 				else

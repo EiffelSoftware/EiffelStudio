@@ -28,7 +28,7 @@ feature -- Access
 	generated_code: STRING is
 			-- Generated code
 		do
-			Result := clone (root_class_name)
+			Result := root_class_name.twin
 
 			if not class_creation_feature_name.is_empty then
 				Result.append (Space_open_parenthesis)
@@ -92,7 +92,7 @@ feature -- Element Change
 			non_void_name: a_name /= Void
 			valid_name: not a_name.is_empty
 		do
-			root_class_name := clone (a_name)
+			root_class_name := a_name.twin
 		ensure
 			name_set: root_class_name.is_equal (a_name)
 		end
@@ -103,7 +103,7 @@ feature -- Element Change
 			non_void_name: a_feature_name /= Void
 			valid_name: not a_feature_name.is_empty
 		do
-			class_creation_feature_name := clone (a_feature_name)
+			class_creation_feature_name := a_feature_name.twin
 		ensure
 			name_set: class_creation_feature_name.is_equal (a_feature_name)
 		end
@@ -114,7 +114,7 @@ feature -- Element Change
 			non_void_name: a_feature_name /= Void
 			valid_name: not a_feature_name.is_empty
 		do
-			export_feature_name := clone (a_feature_name)
+			export_feature_name := a_feature_name.twin
 		ensure
 			name_set:export_feature_name.is_equal (a_feature_name)
 		end
@@ -135,7 +135,7 @@ feature -- Element Change
 			non_void_alias: an_alias /= Void
 			valid_alias: not an_alias.is_empty
 		do
-			feature_alias := clone (an_alias)
+			feature_alias := an_alias.twin
 		ensure
 			alias_set: feature_alias.is_equal (an_alias)
 		end

@@ -24,8 +24,55 @@ inherit
 
 create
 	make,
-	make_from_pointer
+	make_from_pointer,
+	make_from_character,
+	make_from_integer,
+	make_from_real,
+	make_from_double,
+	make_from_boolean,
+	make_from_date,
+	make_from_error,
+	make_from_decimal,
+	make_from_currency,
+	make_from_string,
+	make_from_variant,
+	make_from_iunknown,
+	make_from_integer_array,
+	make_from_real_array,
+	make_from_double_array,
+	make_from_char_array,
+	make_from_error_array,
+	make_from_currency_array,
+	make_from_date_array,
+	make_from_string_array,
+	make_from_boolean_array,
+	make_from_decimal_array
 
+convert
+	make_from_pointer ({POINTER}),
+	make_from_character ({CHARACTER}),
+	make_from_integer ({INTEGER}),
+	make_from_real ({REAL}),
+	make_from_double ({DOUBLE}),
+	make_from_boolean ({BOOLEAN}),
+	make_from_date ({DATE_TIME}),
+	make_from_error ({ECOM_HRESULT}),
+	make_from_decimal ({ECOM_DECIMAL}),
+	make_from_currency ({ECOM_CURRENCY}),
+	make_from_string ({STRING}),
+	make_from_variant ({ECOM_VARIANT}),
+	make_from_iunknown ({ECOM_INTERFACE}),
+	make_from_integer_array ({ECOM_ARRAY [INTEGER]}),
+	make_from_real_array ({ECOM_ARRAY [REAL]}),
+	make_from_double_array ({ECOM_ARRAY [DOUBLE]}),
+	make_from_boolean_array ({ECOM_ARRAY [BOOLEAN]}),
+	make_from_char_array ({ECOM_ARRAY [CHARACTER]}),
+	make_from_error_array ({ECOM_ARRAY [ECOM_HRESULT]}),
+	make_from_currency_array ({ECOM_ARRAY [ECOM_CURRENCY]}),
+	make_from_date_array ({ECOM_ARRAY [DATE_TIME]}),
+	make_from_string_array ({ECOM_ARRAY [STRING]}),
+	make_from_decimal_array ({ECOM_ARRAY [ECOM_DECIMAL]})
+	
 feature -- Initialization
 
 	make is
@@ -39,6 +86,204 @@ feature -- Initialization
 			-- Make from pointer.
 		do
 			make_by_pointer (a_pointer)
+		end
+
+	make_from_character (a_value: CHARACTER) is
+			-- Initialize instance with character `a_value'.
+		do
+			make
+			set_character (a_value)
+		ensure
+			character: character_value = a_value
+		end
+
+	make_from_integer (a_value: INTEGER) is
+			-- Initialize instance with integer `a_value'.
+		do
+			make
+			set_integer (a_value)
+		ensure
+			integer: integer_value = a_value
+		end
+
+	make_from_real (a_value: REAL) is
+			-- Initialize instance with real `a_value'.
+		do
+			make
+			set_real (a_value)
+		ensure
+			real: real_value = a_value
+		end
+
+	make_from_double (a_value: DOUBLE) is
+			-- Make from double `a_value'.
+		do
+			make
+			set_double (a_value)
+		ensure
+			double: double_value = a_value
+		end
+
+	make_from_boolean (a_value: BOOLEAN) is
+			-- Initialize instance with boolean `a_value'.
+		do
+			make
+			set_boolean (a_value)
+		ensure
+			boolean: boolean_value = a_value
+		end
+
+	make_from_date (a_value: DATE_TIME) is
+			-- Initialize instance with date `a_value'.
+		do
+			make
+			set_date (a_value)
+		ensure
+			date: date_value.is_equal (a_value)
+		end
+
+	make_from_error (a_value: ECOM_HRESULT) is
+			-- Initialize instance with scode `a_value'.
+		do
+			make
+			set_error (a_value)
+		ensure
+			error: error.is_equal (a_value)
+		end
+
+	make_from_decimal (a_value: ECOM_DECIMAL) is
+			-- Initialize instance with decimal `a_value'.
+		do
+			make
+			set_decimal (a_value)
+		ensure
+			decimal: decimal.is_equal (a_value)
+		end
+
+	make_from_currency (a_value: ECOM_CURRENCY) is
+			-- Initialize instance with currency `a_value'.
+		do
+			make
+			set_currency (a_value)
+		ensure
+			currency: currency.is_equal (a_value)
+		end
+
+	make_from_string (a_value: STRING) is
+			-- Initialize instance with string `a_value'.
+		do
+			make
+			set_string (a_value)
+		ensure
+			string: string_value.is_equal (a_value)
+		end
+
+	make_from_variant (a_value: ECOM_VARIANT) is
+			-- Initialize instance with variant `a_value'.
+		do
+			make
+			set_variant (a_value)
+		ensure
+			variant_value: variant_value.is_equal (a_value)
+		end
+
+	make_from_iunknown (a_value: ECOM_INTERFACE) is
+			-- Initialize instance with IUnknown interface `a_value'.
+		do
+			make
+			set_iunknown (a_value)
+		ensure
+			iunknown: iunknown.item = a_value.item
+		end
+
+	make_from_integer_array (a_value: ECOM_ARRAY [INTEGER]) is
+			-- Initialize instance with integer array `a_value'.
+		do
+			make
+			set_integer_array (a_value)
+		ensure
+			integer_array: integer_array.is_equal (a_value)
+		end
+
+	make_from_real_array (a_value: ECOM_ARRAY [REAL]) is
+			-- Initialize instance with real array `a_value'.
+		do
+			make
+			set_real_array (a_value)
+		ensure
+			real_array: real_array.is_equal (a_value)
+		end
+
+	make_from_double_array (a_value: ECOM_ARRAY [DOUBLE]) is
+			-- Initialize instance with double array `a_value'.
+		do
+			make
+			set_double_array (a_value)
+		ensure
+			double_array: double_array.is_equal (a_value)
+		end
+
+	make_from_boolean_array (a_value: ECOM_ARRAY [BOOLEAN]) is
+			-- Initialize instance with boolean array `a_value'.
+		do
+			make
+			set_boolean_array (a_value)
+		ensure
+			boolean_array: boolean_array.is_equal (a_value)
+		end
+
+	make_from_char_array (a_value: ECOM_ARRAY [CHARACTER]) is
+			-- Initialize instance with char array `a_value'.
+		do
+			make
+			set_char_array (a_value)
+		ensure
+			char_array: char_array.is_equal (a_value)
+		end
+
+	make_from_error_array (a_value: ECOM_ARRAY [ECOM_HRESULT]) is
+			-- Initialize instance with scode array `a_value'.
+		do
+			make
+			set_error_array (a_value)
+		ensure
+			error_array: error_array.is_equal (a_value)
+		end
+
+	make_from_currency_array (a_value: ECOM_ARRAY [ECOM_CURRENCY]) is
+			-- Initialize instance with currency array `a_value'.
+		do
+			make
+			set_currency_array (a_value)
+		ensure
+			currency_array: currency_array.is_equal (a_value)
+		end
+
+	make_from_date_array (a_value: ECOM_ARRAY [DATE_TIME]) is
+			-- Initialize instance with date array `a_value'.
+		do
+			make
+			set_date_array (a_value)
+		ensure
+			date_array: date_array.is_equal (a_value)
+		end
+
+	make_from_string_array (a_value: ECOM_ARRAY [STRING]) is
+			-- Initialize instance with string array `a_value'.
+		do
+			make
+			set_string_array (a_value)
+		ensure
+			string_array: string_array.is_equal (a_value)
+		end
+
+	make_from_decimal_array (a_value: ECOM_ARRAY [ECOM_DECIMAL]) is
+			-- Initialize instance with decimal array `a_value'.
+		do
+			make
+			set_decimal_array (a_value)
+		ensure
+			decimal_array: decimal_array.is_equal (a_value)
 		end
 
 feature -- Access
@@ -177,37 +422,37 @@ feature -- Access
 			Result := ccom_unsigned_integer_reference (item)
 		end
 
-	real4: REAL is
+	real_value: REAL is
 			-- Real value
 		require
-			is_real4: variable_type = Vt_r4
+			is_real: variable_type = Vt_r4
 		do
-			Result := ccom_real4 (item)
+			Result := ccom_real (item)
 		end
 
-	real4_reference: REAL_REF is
+	real_reference: REAL_REF is
 			-- Reference real value
 		require
-			is_real4_ref: is_real4 (variable_type) and is_byref (variable_type)
+			is_real_ref: is_real (variable_type) and is_byref (variable_type)
 		do
-			Result := ccom_real4_reference (item)
+			Result := ccom_real_reference (item)
 		end
 			
 
-	real8: DOUBLE is
+	double_value: DOUBLE is
 			-- Double value
 		require
-			is_real8: variable_type = Vt_r8
+			is_double: variable_type = Vt_r8
 		do
-			Result := ccom_real8 (item)
+			Result := ccom_double (item)
 		end
 
-	real8_reference: DOUBLE_REF is
+	double_reference: DOUBLE_REF is
 			-- Reference double value
 		require
-			is_real8_ref: is_real8 (variable_type) and is_byref (variable_type)
+			is_double_ref: is_double (variable_type) and is_byref (variable_type)
 		do
-			Result := ccom_real8_reference (item)
+			Result := ccom_double_reference (item)
 		end
 
 	boolean_value: BOOLEAN is
@@ -317,48 +562,48 @@ feature -- Access
 			Result.set_unshared
 		end
 
-	unknown_interface: ECOM_UNKNOWN_INTERFACE is
+	iunknown: ECOM_UNKNOWN_INTERFACE is
 			-- IUnknown interface value
 		require
-			is_unknown_ref: variable_type = Vt_unknown
+			is_iunknown: is_iunknown (variable_type)
 		do
-			create Result.make_from_pointer( ccom_unknown_interface (item))
+			create Result.make_from_pointer( ccom_iunknown (item))
 		end
 
-	unknown_interface_reference: CELL[ECOM_UNKNOWN_INTERFACE] is
+	iunknown_reference: CELL[ECOM_UNKNOWN_INTERFACE] is
 			-- IUnknown interface reference value
 		require
-			is_unknown_ref: is_unknown (variable_type) and is_byref (variable_type)
+			is_unknown_ref: has_iunknown (variable_type) and is_byref (variable_type)
 		local
 			unk_interface: ECOM_UNKNOWN_INTERFACE
 		do
-			create unk_interface.make_from_pointer (ccom_unknown_interface_reference (item))
+			create unk_interface.make_from_pointer (ccom_iunknown_reference (item))
 			create Result.put (unk_interface)
 		end
 
-	dispatch_interface: ECOM_AUTOMATION_INTERFACE is
+	idispatch: ECOM_AUTOMATION_INTERFACE is
 			-- IDispatch interface value
 		require
-			is_dispatch_ref: variable_type = Vt_dispatch
+			is_idispatch: is_idispatch (variable_type)
 		do
-			create Result.make_from_pointer (ccom_dispatch_interface (item))
+			create Result.make_from_pointer (ccom_idispatch (item))
 		end
 
-	dispatch_interface_reference: CELL[ECOM_AUTOMATION_INTERFACE] is
+	idispatch_reference: CELL[ECOM_AUTOMATION_INTERFACE] is
 			-- IDispatch interface reference value
 		require
-			is_dispatch_ref: is_dispatch (variable_type) and is_byref (variable_type)
+			is_idispatch_ref: has_idispatch (variable_type) and is_byref (variable_type)
 		local
 			disp_interface: ECOM_AUTOMATION_INTERFACE
 		do
-			create disp_interface.make_from_pointer (ccom_dispatch_interface_reference (item))
+			create disp_interface.make_from_pointer (ccom_idispatch_reference (item))
 			create Result.put (disp_interface)
 		end
 
 	integer4_array: ECOM_ARRAY [INTEGER] is
 			-- Integer ARRAY value
 		require
-			is_integer4: is_integer4 (variable_type)
+			has_integer4: has_integer4 (variable_type)
 			is_array: is_array (variable_type)
 		do
 			Result := ccom_safearray_long (item)
@@ -367,7 +612,7 @@ feature -- Access
 	short_array: ECOM_ARRAY [INTEGER] is
 			-- Integer ARRAY value
 		require
-			is_integer2: is_integer2 (variable_type)
+			has_integer2: has_integer2 (variable_type)
 			is_array: is_array (variable_type)
 		do
 			Result := ccom_safearray_short (item)
@@ -376,7 +621,7 @@ feature -- Access
 	real_array: ECOM_ARRAY [REAL] is
 			-- ARRAY of reals
 		require
-			is_real4: is_real4 (variable_type)
+			has_real: has_real (variable_type)
 			is_array: is_array (variable_type)
 		do
 			Result := ccom_safearray_float (item)
@@ -385,7 +630,7 @@ feature -- Access
 	double_array: ECOM_ARRAY [DOUBLE] is
 			-- ARRAY of doubles
 		require
-			is_real8: is_real8 (variable_type)
+			has_double: has_double (variable_type)
 			is_array: is_array (variable_type)
 		do
 			Result := ccom_safearray_double (item)
@@ -394,7 +639,7 @@ feature -- Access
 	char_array: ECOM_ARRAY [CHARACTER] is
 			-- ARRAY of characters
 		require
-			is_character: is_character (variable_type)
+			has_character: has_character (variable_type)
 			is_array: is_array (variable_type)
 		do
 			Result := ccom_safearray_character (item)
@@ -403,16 +648,16 @@ feature -- Access
 	error_array: ECOM_ARRAY [ECOM_HRESULT] is
 			-- ARRAY of HRESULTs
 		require
-			is_error: is_error (variable_type)
+			has_error: has_error (variable_type)
 			is_array: is_array (variable_type)
 		do
-			Result := ccom_safearray_hresult (item)
+			Result := ccom_safearray_error (item)
 		end
 
 	currency_array: ECOM_ARRAY [ECOM_CURRENCY] is
 			-- ARRAY of CURRENCY
 		require
-			is_currency: is_currency (variable_type)
+			has_currency: has_currency (variable_type)
 			is_array: is_array (variable_type)
 		do
 			Result := ccom_safearray_currency (item)
@@ -421,7 +666,7 @@ feature -- Access
 	date_array: ECOM_ARRAY [DATE_TIME] is
 			-- ARRAY of DATE
 		require
-			is_date: is_date (variable_type)
+			has_date: has_date (variable_type)
 			is_array: is_array (variable_type)
 		do
 			Result := ccom_safearray_date (item)
@@ -430,7 +675,7 @@ feature -- Access
 	string_array: ECOM_ARRAY [STRING] is
 			-- ARRAY of STRING.
 		require
-			is_bstr: is_bstr (variable_type)
+			has_bstr: has_bstr (variable_type)
 			is_array: is_array (variable_type)
 		do
 			Result := ccom_safearray_bstr (item)
@@ -439,7 +684,7 @@ feature -- Access
 	boolean_array: ECOM_ARRAY [BOOLEAN] is
 			-- ARRAY of BOOLEAN.
 		require
-			is_boolean: is_boolean (variable_type)
+			has_boolean: has_boolean (variable_type)
 			is_array: is_array (variable_type)
 		do
 			Result := ccom_safearray_boolean (item)
@@ -448,7 +693,7 @@ feature -- Access
 	variant_array: ECOM_ARRAY [ECOM_VARIANT] is
 			-- ARRAY of ECOM_VARIANTs.
 		require
-			is_variant: is_variant (variable_type)
+			has_variant: has_variant (variable_type)
 			is_array: is_array (variable_type)
 		do
 			Result := ccom_safearray_variant (item)
@@ -457,34 +702,34 @@ feature -- Access
 	decimal_array: ECOM_ARRAY [ECOM_DECIMAL] is
 			-- ARRAY of ECOM_DECIMALs.
 		require
-			is_decimal: is_decimal (variable_type)
+			has_decimal: has_decimal (variable_type)
 			is_array: is_array (variable_type)
 		do
 			Result := ccom_safearray_decimal (item)
 		end
 
-	dispatch_interface_array: ECOM_ARRAY [ECOM_AUTOMATION_INTERFACE] is
+	idispatch_array: ECOM_ARRAY [ECOM_AUTOMATION_INTERFACE] is
 			-- ARRAY of ECOM_AUTOMATION_INTERFACEs.
 		require
-			is_dispatch: is_dispatch (variable_type)
+			has_idispatch: has_idispatch (variable_type)
 			is_array: is_array (variable_type)
 		do
-			Result := ccom_safearray_dispatch_interface (item)
+			Result := ccom_safearray_idispatch (item)
 		end
 
-	unknown_interface_array: ECOM_ARRAY [ECOM_UNKNOWN_INTERFACE] is
+	iunknown_array: ECOM_ARRAY [ECOM_UNKNOWN_INTERFACE] is
 			-- ARRAY of ECOM_UNKNOWN_INTERFACEs.
 		require
-			is_unknown: is_unknown (variable_type)
+			has_iunknown: has_iunknown (variable_type)
 			is_array: is_array (variable_type)
 		do
-			Result := ccom_safearray_unknown_interface (item)
+			Result := ccom_safearray_iunknown (item)
 		end
 
 	unsigned_character_array: ECOM_ARRAY[CHARACTER] is
 			-- Array of unsigned character
 		require
-			is_unsigned_char: is_unsigned_char (variable_type)
+			has_unsigned_char: has_unsigned_char (variable_type)
 			is_array: is_array (variable_type)
 		do
 			Result := ccom_safearray_unsigned_character (item)
@@ -493,7 +738,7 @@ feature -- Access
 	unsigned_short_array: ECOM_ARRAY[INTEGER] is
 			-- Array of unsigned short
 		require
-			is_unsigned_short: is_unsigned_short (variable_type)
+			has_unsigned_short: has_unsigned_short (variable_type)
 			is_array: is_array (variable_type)
 		do
 			Result := ccom_safearray_unsigned_short (item)
@@ -502,7 +747,7 @@ feature -- Access
 	unsigned_integer4_array: ECOM_ARRAY[INTEGER] is
 			-- Array of unsigned long
 		require
-			is_unsigned_long: is_unsigned_long (variable_type)
+			has_unsigned_long: has_unsigned_long (variable_type)
 			is_array: is_array (variable_type)
 		do
 			Result := ccom_safearray_unsigned_long (item)
@@ -511,7 +756,7 @@ feature -- Access
 	integer_array: ECOM_ARRAY[INTEGER] is
 			-- Array of integers
 		require
-			is_int: is_int (variable_type)
+			has_int: has_int (variable_type)
 			is_array: is_array (variable_type)
 		do
 			Result := ccom_safearray_integer (item)
@@ -520,7 +765,7 @@ feature -- Access
 	unsigned_integer_array: ECOM_ARRAY[INTEGER] is
 			-- Array of unsigned int
 		require
-			is_unsigned_int: is_unsigned_int (variable_type)
+			has_unsigned_int: has_unsigned_int (variable_type)
 			is_array: is_array (variable_type)
 		do
 			Result := ccom_safearray_unsigned_integer (item)
@@ -529,7 +774,7 @@ feature -- Access
 	integer4_array_reference: CELL[ECOM_ARRAY [INTEGER]] is
 			-- Reference integer ARRAY value
 		require
-			is_integer4: is_integer4 (variable_type)
+			has_integer4: has_integer4 (variable_type)
 			is_array: is_array (variable_type)
 			is_byref: is_byref (variable_type)
 		do
@@ -539,7 +784,7 @@ feature -- Access
 	short_array_reference: CELL[ECOM_ARRAY [INTEGER]] is
 			-- Integer ARRAY value
 		require
-			is_integer2: is_integer2 (variable_type)
+			has_integer2: has_integer2 (variable_type)
 			is_array: is_array (variable_type)
 			is_byref: is_byref (variable_type)
 		do
@@ -549,7 +794,7 @@ feature -- Access
 	real_array_reference: CELL[ECOM_ARRAY [REAL]] is
 			-- ARRAY of reals
 		require
-			is_real4: is_real4 (variable_type)
+			has_real: has_real (variable_type)
 			is_array: is_array (variable_type)
 			is_byref: is_byref (variable_type)
 		do
@@ -559,7 +804,7 @@ feature -- Access
 	double_array_reference: CELL[ECOM_ARRAY [DOUBLE]] is
 			-- ARRAY of doubles
 		require
-			is_real8: is_real8 (variable_type)
+			has_double: has_double (variable_type)
 			is_array: is_array (variable_type)
 			is_byref: is_byref (variable_type)
 		do
@@ -569,7 +814,7 @@ feature -- Access
 	char_array_reference: CELL[ECOM_ARRAY[CHARACTER]] is
 			-- ARRAY of characters
 		require
-			is_character: is_character (variable_type)
+			has_character: has_character (variable_type)
 			is_array: is_array (variable_type)
 			is_byref: is_byref (variable_type)
 		do
@@ -579,17 +824,17 @@ feature -- Access
 	error_array_reference: CELL[ECOM_ARRAY [ECOM_HRESULT]] is
 			-- ARRAY of HRESULTs
 		require
-			is_error: is_error (variable_type)
+			has_error: has_error (variable_type)
 			is_array: is_array (variable_type)
 			is_byref: is_byref (variable_type)
 		do
-			Result := ccom_safearray_hresult_reference (item)
+			Result := ccom_safearray_error_reference (item)
 		end
 
 	currency_array_reference: CELL[ECOM_ARRAY [ECOM_CURRENCY]] is
 			-- ARRAY of CURRENCY
 		require
-			is_currency: is_currency (variable_type)
+			has_currency: has_currency (variable_type)
 			is_array: is_array (variable_type)
 			is_byref: is_byref (variable_type)
 		do
@@ -599,7 +844,7 @@ feature -- Access
 	date_array_reference: CELL[ECOM_ARRAY [DATE_TIME]] is
 			-- ARRAY of DATE
 		require
-			is_date: is_date (variable_type)
+			has_date: has_date (variable_type)
 			is_array: is_array (variable_type)
 			is_byref: is_byref (variable_type)
 		do
@@ -609,7 +854,7 @@ feature -- Access
 	string_array_reference: CELL[ECOM_ARRAY [STRING]] is
 			-- ARRAY of STRING.
 		require
-			is_bstr: is_bstr (variable_type)
+			has_bstr: has_bstr (variable_type)
 			is_array: is_array (variable_type)
 			is_byref: is_byref (variable_type)
 		do
@@ -619,7 +864,7 @@ feature -- Access
 	boolean_array_reference: CELL[ECOM_ARRAY[BOOLEAN]] is
 			-- ARRAY of BOOLEAN.
 		require
-			is_boolean: is_boolean (variable_type)
+			has_boolean: has_boolean (variable_type)
 			is_array: is_array (variable_type)
 			is_byref: is_byref (variable_type)
 		do
@@ -629,7 +874,7 @@ feature -- Access
 	variant_array_reference: CELL[ECOM_ARRAY[ECOM_VARIANT]] is
 			-- ARRAY of ECOM_VARIANTs.
 		require
-			is_variant: is_variant (variable_type)
+			has_variant: has_variant (variable_type)
 			is_array: is_array (variable_type)
 			is_byref: is_byref (variable_type)
 		do
@@ -639,37 +884,37 @@ feature -- Access
 	decimal_array_reference: CELL[ECOM_ARRAY[ECOM_DECIMAL]] is
 			-- ARRAY of ECOM_DECIMALs.
 		require
-			is_decimal: is_decimal (variable_type)
+			has_decimal: has_decimal (variable_type)
 			is_array: is_array (variable_type)
 			is_byref: is_byref (variable_type)
 		do
 			Result := ccom_safearray_decimal_reference (item)
 		end
 
-	dispatch_interface_array_reference: CELL[ECOM_ARRAY[ECOM_AUTOMATION_INTERFACE]] is
+	idispatch_array_reference: CELL[ECOM_ARRAY[ECOM_AUTOMATION_INTERFACE]] is
 			-- ARRAY of ECOM_AUTOMATION_INTERFACEs.
 		require
-			is_dispatch: is_dispatch (variable_type)
+			has_idispatch: has_idispatch (variable_type)
 			is_array: is_array (variable_type)
 			is_byref: is_byref (variable_type)
 		do
-			Result := ccom_safearray_dispatch_interface_reference (item)
+			Result := ccom_safearray_idispatch_reference (item)
 		end
 
-	unknown_interface_array_reference: CELL[ECOM_ARRAY[ECOM_UNKNOWN_INTERFACE]] is
+	iunknown_array_reference: CELL[ECOM_ARRAY[ECOM_UNKNOWN_INTERFACE]] is
 			-- ARRAY of ECOM_UNKNOWN_INTERFACEs.
 		require
-			is_unknown: is_unknown (variable_type)
+			has_iunknown: has_iunknown (variable_type)
 			is_array: is_array (variable_type)
 			is_byref: is_byref (variable_type)
 		do
-			Result := ccom_safearray_unknown_interface_reference (item)
+			Result := ccom_safearray_iunknown_reference (item)
 		end
 
 	unsigned_character_array_reference: CELL[ECOM_ARRAY[CHARACTER]] is
 			-- Array of unsigned character
 		require
-			is_unsigned_char: is_unsigned_char (variable_type)
+			has_unsigned_char: has_unsigned_char (variable_type)
 			is_array: is_array (variable_type)
 			is_byref: is_byref (variable_type)
 		do
@@ -679,7 +924,7 @@ feature -- Access
 	unsigned_short_array_reference: CELL[ECOM_ARRAY[INTEGER]] is
 			-- Array of unsigned short
 		require
-			is_unsigned_short: is_unsigned_short (variable_type)
+			has_unsigned_short: has_unsigned_short (variable_type)
 			is_array: is_array (variable_type)
 			is_byref: is_byref (variable_type)
 		do
@@ -689,7 +934,7 @@ feature -- Access
 	unsigned_integer4_array_reference: CELL[ECOM_ARRAY[INTEGER]] is
 			-- Array of unsigned long
 		require
-			is_unsigned_long: is_unsigned_long (variable_type)
+			has_unsigned_long: has_unsigned_long (variable_type)
 			is_array: is_array (variable_type)
 			is_byref: is_byref (variable_type)
 		do
@@ -699,8 +944,9 @@ feature -- Access
 	integer_array_reference: CELL[ECOM_ARRAY[INTEGER]] is
 			-- Array of integers
 		require
-			is_int: is_int (variable_type)
+			has_int: has_int (variable_type)
 			is_array: is_array (variable_type)
+			is_byref: is_byref (variable_type)
 		do
 			Result := ccom_safearray_integer_reference (item)
 		end
@@ -708,8 +954,9 @@ feature -- Access
 	unsigned_integer_array_reference: CELL[ECOM_ARRAY[INTEGER]] is
 			-- Array of unsigned int
 		require
-			is_unsigned_int: is_unsigned_int (variable_type)
+			has_unsigned_int: has_unsigned_int (variable_type)
 			is_array: is_array (variable_type)
+			is_byref: is_byref (variable_type)
 		do
 			Result := ccom_safearray_unsigned_integer_reference (item)
 		end
@@ -727,167 +974,246 @@ feature -- Element change
 	set (a: ANY) is
 			-- Set VARIANT with ANY.
 		local
-			character_ref: CHARACTER_REF
-			integer_ref: INTEGER_REF
-			real_ref: REAL_REF
-			double_ref: DOUBLE_REF
-			boolean_ref: BOOLEAN_REF
-			date_tyme: DATE_TIME
-			date_time_cell: CELL[DATE_TIME]
-			hresult: ECOM_HRESULT
-			ecom_decimal: ECOM_DECIMAL
-			ecom_currency: ECOM_CURRENCY
-			string: STRING
-			string_cell: CELL [STRING]
-			interface: ECOM_INTERFACE
-			interface_cell: CELL [ECOM_INTERFACE]
-			an_array: ECOM_ARRAY [ECOM_VARIANT]
-			a_boolean_array: ECOM_ARRAY [BOOLEAN]
-			a_boolean_array_ref: CELL [ECOM_ARRAY [BOOLEAN]]
-			a_chracter_array: ECOM_ARRAY [CHARACTER]
-			a_chracter_array_ref: CELL [ECOM_ARRAY [CHARACTER]]
-			a_currency_array: ECOM_ARRAY [ECOM_CURRENCY]
-			a_currency_array_ref: CELL [ECOM_ARRAY [ECOM_CURRENCY]]
-			a_date_array: ECOM_ARRAY [DATE_TIME]
-			a_date_array_ref: CELL [ECOM_ARRAY [DATE_TIME]]
-			a_decimal_array: ECOM_ARRAY [ECOM_DECIMAL]
-			a_decimal_array_ref: CELL [ECOM_ARRAY [ECOM_DECIMAL]]
-			a_double_array: ECOM_ARRAY [DOUBLE]
-			a_double_array_ref: CELL [ECOM_ARRAY [DOUBLE]]
-			an_hresult_array: ECOM_ARRAY [ECOM_HRESULT]
-			an_hresult_array_ref: CELL [ECOM_ARRAY [ECOM_HRESULT]]
-			an_integer_array: ECOM_ARRAY [INTEGER]
-			an_integer_array_ref: CELL [ECOM_ARRAY [INTEGER]]
-			a_real_array: ECOM_ARRAY [REAL]
-			a_real_array_ref: CELL [ECOM_ARRAY [REAL]]
-			a_string_array: ECOM_ARRAY [STRING]
-			a_string_array_ref: CELL [ECOM_ARRAY [STRING]]
-			an_unknown_array: ECOM_ARRAY [ECOM_INTERFACE]
-			an_unknown_array_ref: CELL [ECOM_ARRAY [ECOM_INTERFACE]]
-			a_variant_array: CELL [ECOM_ARRAY [ECOM_VARIANT]]
-			a_variant: ECOM_VARIANT
+			l_char: CHARACTER_REF
+			l_int: INTEGER_REF
+			l_real: REAL_REF
+			l_double: DOUBLE_REF
+			l_boolean: BOOLEAN_REF
+			l_date: DATE_TIME
+			l_date_cell: CELL[DATE_TIME]
+			l_hr: ECOM_HRESULT
+			l_decimal: ECOM_DECIMAL
+			l_currency: ECOM_CURRENCY
+			l_string: STRING
+			l_string_cell: CELL [STRING]
+			l_interface: ECOM_INTERFACE
+			l_interface_cell: CELL [ECOM_INTERFACE]
+			l_array: ECOM_ARRAY [ECOM_VARIANT]
+			l_boolean_array: ECOM_ARRAY [BOOLEAN]
+			l_boolean_array_cell: CELL [ECOM_ARRAY [BOOLEAN]]
+			l_char_array: ECOM_ARRAY [CHARACTER]
+			l_char_array_cell: CELL [ECOM_ARRAY [CHARACTER]]
+			l_currency_array: ECOM_ARRAY [ECOM_CURRENCY]
+			l_currency_array_cell: CELL [ECOM_ARRAY [ECOM_CURRENCY]]
+			l_date_array: ECOM_ARRAY [DATE_TIME]
+			l_date_array_cell: CELL [ECOM_ARRAY [DATE_TIME]]
+			l_decimal_array: ECOM_ARRAY [ECOM_DECIMAL]
+			l_decimal_array_cell: CELL [ECOM_ARRAY [ECOM_DECIMAL]]
+			l_double_array: ECOM_ARRAY [DOUBLE]
+			l_double_array_cell: CELL [ECOM_ARRAY [DOUBLE]]
+			l_error_array: ECOM_ARRAY [ECOM_HRESULT]
+			l_error_array_cell: CELL [ECOM_ARRAY [ECOM_HRESULT]]
+			l_integer_array: ECOM_ARRAY [INTEGER]
+			l_integer_array_cell: CELL [ECOM_ARRAY [INTEGER]]
+			l_real_array: ECOM_ARRAY [REAL]
+			l_real_array_cell: CELL [ECOM_ARRAY [REAL]]
+			l_string_array: ECOM_ARRAY [STRING]
+			l_string_array_cell: CELL [ECOM_ARRAY [STRING]]
+			l_unknown_array: ECOM_ARRAY [ECOM_INTERFACE]
+			l_unknown_array_cell: CELL [ECOM_ARRAY [ECOM_INTERFACE]]
+			l_variant_array: CELL [ECOM_ARRAY [ECOM_VARIANT]]
+			l_variant: ECOM_VARIANT
 		do
 			if a = Void then
 				set_empty
 			else
-				character_ref ?= a
-				integer_ref ?= a
-				real_ref ?= a
-				double_ref ?= a
-				boolean_ref ?= a
-				date_tyme ?= a
-				date_time_cell ?= a
-				hresult ?= a
-				ecom_decimal ?= a
-				ecom_currency ?= a
-				string ?= a
-				string_cell ?= a
-				interface ?= a
-				interface_cell ?= a
-				an_array ?= a
-				a_boolean_array ?= a
-				a_boolean_array_ref ?= a
-				a_chracter_array ?= a
-				a_chracter_array_ref ?= a
-				a_currency_array ?= a
-				a_currency_array_ref ?= a
-				a_date_array ?= a
-				a_date_array_ref ?= a
-				a_decimal_array ?= a
-				a_decimal_array_ref ?= a
-				a_double_array ?= a
-				a_double_array_ref ?= a
-				an_hresult_array ?= a
-				an_hresult_array_ref ?= a
-				an_integer_array ?= a
-				an_integer_array_ref ?= a
-				a_real_array ?= a
-				a_real_array_ref ?= a
-				a_string_array ?= a
-				a_string_array_ref ?= a
-				an_unknown_array ?= a
-				an_unknown_array_ref ?= a
-				a_variant_array ?= a
-				a_variant ?= a
-				
-				if character_ref /= Void then
-					set_character_reference (character_ref)
-				elseif integer_ref /= Void then
-					set_integer4_reference (integer_ref)
-				elseif real_ref /= Void then
-					set_real4_reference (real_ref)
-				elseif double_ref /= Void then
-					set_real8_reference (double_ref)
-				elseif boolean_ref /= Void then
-					set_boolean_reference (boolean_ref)
-				elseif date_tyme /= Void then
-					set_date (date_tyme)
-				elseif date_time_cell /= Void then
-					set_date_reference (date_time_cell)
-				elseif hresult /= Void then
-					set_error (hresult)
-				elseif ecom_decimal /= Void then
-					set_decimal (ecom_decimal)
-				elseif ecom_currency /= Void then
-					set_currency (ecom_currency)
-				elseif string /= Void then
-					set_string (string)
-				elseif string_cell /= Void then
-					set_string_reference (string_cell)
-				elseif interface /= Void then
-					set_unknown_interface (interface)
-				elseif interface_cell /= Void then
-					set_unknown_interface_reference (interface_cell)
-				elseif an_array /= Void then
-					set_array (an_array)
-				elseif a_boolean_array /= Void then
-					set_boolean_array (a_boolean_array)
-				elseif a_boolean_array_ref /= Void then
-					set_boolean_array_reference (a_boolean_array_ref)
-				elseif a_chracter_array /= Void then
-					set_char_array (a_chracter_array)
-				elseif a_chracter_array_ref /= Void then
-					set_char_array_reference (a_chracter_array_ref)
-				elseif a_currency_array /= Void then
-					set_currency_array (a_currency_array)
-				elseif a_currency_array_ref /= Void then
-					set_currency_array_reference (a_currency_array_ref)
-				elseif a_date_array /= Void then
-					set_date_array (a_date_array)
-				elseif a_date_array_ref /= Void then
-					set_date_array_reference (a_date_array_ref)
-				elseif a_decimal_array /= Void then
-					set_decimal_array (a_decimal_array)
-				elseif a_decimal_array_ref /= Void then
-					set_decimal_array_reference (a_decimal_array_ref)
-				elseif a_double_array /= Void then
-					set_double_array (a_double_array)
-				elseif a_double_array_ref /= Void then
-					set_double_array_reference (a_double_array_ref)
-				elseif an_hresult_array /= Void then
-					set_error_array (an_hresult_array)
-				elseif an_hresult_array_ref /= Void then
-					set_error_array_reference (an_hresult_array_ref)
-				elseif an_integer_array /= Void then
-					set_integer4_array (an_integer_array)
-				elseif an_integer_array_ref /= Void then
-					set_integer4_array_reference (an_integer_array_ref)
-				elseif a_real_array /= Void then
-					set_real_array (a_real_array)
-				elseif a_real_array_ref /= Void then
-					set_real_array_reference (a_real_array_ref)
-				elseif a_string_array /= Void then
-					set_string_array (a_string_array)
-				elseif a_string_array_ref /= Void then
-					set_string_array_reference (a_string_array_ref)
-				elseif an_unknown_array /= Void then
-					set_unknown_array (an_unknown_array)
-				elseif an_unknown_array_ref /= Void then
-					set_unknown_interface_array_reference (an_unknown_array_ref)
-				elseif a_variant_array /= Void then
-					set_variant_array_reference (a_variant_array)
-				elseif a_variant /= Void then
-					set_variant (a_variant)
+				l_char ?= a
+				if l_char /= Void then
+					set_character_reference (l_char)
+				else
+					l_int ?= a
+					if l_int /= Void then
+						set_integer4_reference (l_int)
+					else
+						l_real ?= a
+						if l_real /= Void then
+							set_real_reference (l_real)
+						else
+							l_double ?= a
+							if l_double /= Void then
+								set_double_reference (l_double)
+							else
+								l_boolean ?= a
+								if l_boolean /= Void then
+									set_boolean_reference (l_boolean)
+								else
+									l_date ?= a
+									if l_date /= Void then
+										set_date (l_date)
+									else
+										l_date_cell ?= a
+										if l_date_cell /= Void then
+											set_date_reference (l_date_cell)
+										else
+											l_hr ?= a
+											if l_hr /= Void then
+												set_error (l_hr)
+											else
+												l_decimal ?= a
+												if l_decimal /= Void then
+													set_decimal (l_decimal)
+												else
+													l_currency ?= a
+													if l_currency /= Void then
+														set_currency (l_currency)
+													else
+														l_string ?= a
+														if l_string /= Void then
+															set_string (l_string)
+														else
+															l_string_cell ?= a
+															if l_string_cell /= Void then
+																set_string_reference (l_string_cell)
+															else
+																l_interface ?= a
+																if l_interface /= Void then
+																	set_iunknown (l_interface)
+																else
+																	l_interface_cell ?= a
+																	if l_interface_cell /= Void then
+																		set_iunknown_reference (l_interface_cell)
+																	else
+																		l_array ?= a
+																		if l_array /= Void then
+																			set_array (l_array)
+																		else
+																			l_boolean_array ?= a
+																			if l_boolean_array /= Void then
+																				set_boolean_array (l_boolean_array)
+																			else
+																				l_boolean_array_cell ?= a
+																				if l_boolean_array_cell /= Void then
+																					set_boolean_array_reference (l_boolean_array_cell)
+																				else
+																					l_char_array ?= a
+																					if l_char_array /= Void then
+																						set_char_array (l_char_array)
+																					else
+																						l_char_array_cell ?= a
+																						if l_char_array_cell /= Void then
+																							set_char_array_reference (l_char_array_cell)
+																						else
+																							l_currency_array ?= a
+																							if l_currency_array /= Void then
+																								set_currency_array (l_currency_array)
+																							else
+																								l_currency_array_cell ?= a
+																								if l_currency_array_cell /= Void then
+																									set_currency_array_reference (l_currency_array_cell)
+																								else
+																									l_date_array ?= a
+																									if l_date_array /= Void then
+																										set_date_array (l_date_array)
+																									else
+																										l_date_array_cell ?= a
+																										if l_date_array_cell /= Void then
+																											set_date_array_reference (l_date_array_cell)
+																										else
+																											l_decimal_array ?= a
+																											if l_decimal_array /= Void then
+																												set_decimal_array (l_decimal_array)
+																											else
+																												l_decimal_array_cell ?= a
+																												if l_decimal_array_cell /= Void then
+																													set_decimal_array_reference (l_decimal_array_cell)
+																												else
+																													l_double_array ?= a
+																													if l_double_array /= Void then
+																														set_double_array (l_double_array)
+																													else
+																														l_double_array_cell ?= a
+																														if l_double_array_cell /= Void then
+																															set_double_array_reference (l_double_array_cell)
+																														else
+																															l_error_array ?= a
+																															if l_error_array /= Void then
+																																set_error_array (l_error_array)
+																															else
+																																l_error_array_cell ?= a
+																																if l_error_array_cell /= Void then
+																																	set_error_array_reference (l_error_array_cell)
+																																else
+																																	l_integer_array ?= a
+																																	if l_integer_array /= Void then
+																																		set_integer4_array (l_integer_array)
+																																	else
+																																		l_integer_array_cell ?= a
+																																		if l_integer_array_cell /= Void then
+																																			set_integer4_array_reference (l_integer_array_cell)
+																																		else
+																																			l_real_array ?= a
+																																			if l_real_array /= Void then
+																																				set_real_array (l_real_array)
+																																			else
+																																				l_real_array_cell ?= a
+																																				if l_real_array_cell /= Void then
+																																					set_real_array_reference (l_real_array_cell)
+																																				else
+																																					l_string_array ?= a
+																																					if l_string_array /= Void then
+																																						set_string_array (l_string_array)
+																																					else
+																																						l_string_array_cell ?= a
+																																						if l_string_array_cell /= Void then
+																																							set_string_array_reference (l_string_array_cell)
+																																						else
+																																							l_unknown_array ?= a
+																																							if l_unknown_array /= Void then
+																																								set_iunknown_array (l_unknown_array)
+																																							else
+																																								l_unknown_array_cell ?= a
+																																								if l_unknown_array_cell /= Void then
+																																									set_iunknown_array_reference (l_unknown_array_cell)
+																																								else
+																																									l_variant_array ?= a
+																																									if l_variant_array /= Void then
+																																										set_variant_array_reference (l_variant_array)
+																																									else
+																																										l_variant ?= a				
+																																										if l_variant /= Void then
+																																											set_variant (l_variant)
+																																										else
+																																											check
+																																												invalid_type: False
+																																											end
+																																										end
+																																									end
+																																								end
+																																							end
+																																						end
+																																					end
+																																				end
+																																			end
+																																		end
+																																	end
+																																end
+																															end
+																														end
+																													end
+																												end
+																											end
+																										end
+																									end
+																								end
+																							end
+																						end
+																					end
+																				end
+																			end
+																		end
+																	end
+																end
+															end
+														end
+													end
+												end
+											end
+										end
+									end
+								end
+							end
+						end
+					end
 				end				
 			end
 		end
@@ -902,6 +1228,8 @@ feature -- Element change
 			-- Set character value.
 		do
 			ccom_set_character (item, a_char)
+		ensure
+			set: character_value = a_char
 		end
 
 	set_character_reference (a_char: CHARACTER_REF) is
@@ -910,6 +1238,8 @@ feature -- Element change
 			non_void: a_char /= Void
 		do
 			ccom_set_character_reference (item, a_char)
+		ensure
+			set: character_reference = a_char
 		end
 
 	set_unsigned_character (a_value: CHARACTER) is
@@ -1010,33 +1340,32 @@ feature -- Element change
 			ccom_set_unsigned_integer_reference (item, a_value)
 		end
 
-	set_real4 (a_value: REAL) is
+	set_real (a_value: REAL) is
 			-- Set real value.
 		do
-			ccom_set_real4 (item, a_value)
+			ccom_set_real (item, a_value)
 		end
 
-	set_real4_reference (a_value: REAL_REF) is
+	set_real_reference (a_value: REAL_REF) is
 			-- Set reference real value.
 		require
 			non_void: a_value /= Void
 		do
-			ccom_set_real4_reference (item, a_value)
+			ccom_set_real_reference (item, a_value)
 		end
-			
 
-	set_real8 (a_value: DOUBLE) is
+	set_double (a_value: DOUBLE) is
 			-- Set double value.
 		do
-			ccom_set_real8 (item, a_value)
+			ccom_set_double (item, a_value)
 		end
 
-	set_real8_reference (a_value: DOUBLE_REF) is
+	set_double_reference (a_value: DOUBLE_REF) is
 			-- Set reference double value.
 		require
 			non_void: a_value /= Void
 		do
-			ccom_set_real8_reference (item, a_value)
+			ccom_set_double_reference (item, a_value)
 		end
 
 	set_boolean (a_value: BOOLEAN) is
@@ -1148,7 +1477,7 @@ feature -- Element change
 			ccom_set_variant (item, a_value.item)
 		end
 
-	set_unknown_interface (a_value: ECOM_INTERFACE) is
+	set_iunknown (a_value: ECOM_INTERFACE) is
 			-- Set IUnknown interface value.
 		require
 			non_void: a_value /= Void
@@ -1163,10 +1492,10 @@ feature -- Element change
 				end
 			end
 			a_ptr := a_value.item
-			ccom_set_unknown_interface (item, a_ptr)
+			ccom_set_iunknown (item, a_ptr)
 		end
 
-	set_unknown_interface_reference (a_value: CELL [ECOM_INTERFACE]) is
+	set_iunknown_reference (a_value: CELL [ECOM_INTERFACE]) is
 			-- Set IUnknown interface reference value.
 		require
 			non_void: a_value /= Void
@@ -1183,10 +1512,10 @@ feature -- Element change
 				end
 				a_ptr := a_value.item.item
 			end	
-			ccom_set_unknown_interface_reference (item, a_ptr)
+			ccom_set_iunknown_reference (item, a_ptr)
 		end
 
-	set_dispatch_interface (a_value: ECOM_INTERFACE) is
+	set_idispatch (a_value: ECOM_INTERFACE) is
 			-- Set IDispatch interface value.
 		require
 			non_void: a_value /= Void
@@ -1201,10 +1530,10 @@ feature -- Element change
 				end
 			end
 			a_ptr := a_value.item
-			ccom_set_dispatch_interface (item, a_ptr)
+			ccom_set_idispatch (item, a_ptr)
 		end
 
-	set_dispatch_interface_reference (a_value: CELL[ECOM_INTERFACE]) is
+	set_idispatch_reference (a_value: CELL[ECOM_INTERFACE]) is
 			-- Set IDispatch interface reference value.
 		require
 			non_void: a_value /= Void
@@ -1221,7 +1550,7 @@ feature -- Element change
 				end
 				a_ptr := a_value.item.item
 			end	
-			ccom_set_dispatch_interface_reference (item, a_ptr)
+			ccom_set_idispatch_reference (item, a_ptr)
 		end
 
 	set_integer4_array (a_value: ECOM_ARRAY [INTEGER]) is
@@ -1269,7 +1598,7 @@ feature -- Element change
 		require
 			non_void_value: a_value /= Void
 		do
-			ccom_set_safearray_hresult (item, a_value)
+			ccom_set_safearray_error (item, a_value)
 		end
 
 	set_currency_array (a_value: ECOM_ARRAY [ECOM_CURRENCY]) is
@@ -1320,20 +1649,20 @@ feature -- Element change
 			ccom_set_safearray_decimal (item, a_value)
 		end
 
-	set_dispatch_array (a_value: ECOM_ARRAY [ECOM_INTERFACE]) is
+	set_idispatch_array (a_value: ECOM_ARRAY [ECOM_INTERFACE]) is
 			-- Set ARRAY of ECOM_AUTOMATION_INTERFACEs.
 		require
 			non_void_value: a_value /= Void
 		do
-			ccom_set_safearray_dispatch_interface (item, a_value)
+			ccom_set_safearray_idispatch (item, a_value)
 		end
 
-	set_unknown_array (a_value: ECOM_ARRAY [ECOM_INTERFACE]) is
+	set_iunknown_array (a_value: ECOM_ARRAY [ECOM_INTERFACE]) is
 			-- Set ARRAY of ECOM_INTERFACEs.
 		require
 			non_void_value: a_value /= Void
 		do
-			ccom_set_safearray_unknown_interface (item, a_value)
+			ccom_set_safearray_iunknown (item, a_value)
 		end
 
 	set_unsigned_character_array (a_value: ECOM_ARRAY[CHARACTER]) is
@@ -1421,7 +1750,7 @@ feature -- Element change
 		require
 			non_void_value: a_value /= Void
 		do
-			ccom_set_safearray_hresult_reference (item, a_value.item)
+			ccom_set_safearray_error_reference (item, a_value.item)
 		end
 
 	set_currency_array_reference (a_value: CELL[ECOM_ARRAY[ECOM_CURRENCY]]) is
@@ -1472,20 +1801,20 @@ feature -- Element change
 			ccom_set_safearray_decimal_reference (item, a_value.item)
 		end
 
-	set_dispatch_interface_array_reference (a_value: CELL[ECOM_ARRAY[ECOM_INTERFACE]]) is
+	set_idispatch_array_reference (a_value: CELL[ECOM_ARRAY[ECOM_INTERFACE]]) is
 			-- Set ARRAY of ECOM_AUTOMATION_INTERFACEs.
 		require
 			non_void_value: a_value /= Void
 		do
-			ccom_set_safearray_dispatch_interface_reference (item, a_value.item)
+			ccom_set_safearray_idispatch_reference (item, a_value.item)
 		end
 
-	set_unknown_interface_array_reference (a_value: CELL[ECOM_ARRAY[ECOM_INTERFACE]]) is
+	set_iunknown_array_reference (a_value: CELL[ECOM_ARRAY[ECOM_INTERFACE]]) is
 			-- Set ARRAY of ECOM_UNKNOWN_INTERFACEs.
 		require
 			non_void_value: a_value /= Void
 		do
-			ccom_set_safearray_unknown_interface_reference (item, a_value.item)
+			ccom_set_safearray_iunknown_reference (item, a_value.item)
 		end
 
 	set_unsigned_character_array_reference (a_value: CELL[ECOM_ARRAY[CHARACTER]]) is
@@ -1533,52 +1862,54 @@ feature -- Output
 	out: STRING is
 			-- Printable representation of  value.
 		do
-			create Result.make (0)
-			if  (variable_type = Vt_bool) then
-				Result.append (boolean_value.out)
+			if (variable_type = Vt_bool) then
+				Result:= boolean_value.out
 			elseif (variable_type = Vt_i1) then
+				create Result.make (6)
 				Result.append_character ('%Q')
 				Result.append (character_value.out)
 				Result.append_character ('%'')
 			elseif (variable_type = Vt_i2) then
-				Result.append (integer2.out)
+				Result := integer2.out
 			elseif (variable_type = Vt_i4) then
-				Result.append (integer4.out)
+				Result := integer4.out
 			elseif (variable_type = Vt_int) then
-				Result.append (integer_value.out)
+				Result := integer_value.out
 			elseif (variable_type = Vt_r4) then
-				Result.append (real4.out)
+				Result := real_value.out
 			elseif (variable_type = Vt_r8) then
-				Result.append (real8.out)
+				Result := double_value.out
 			elseif (variable_type = Vt_bstr) then
+				create Result.make (100)
 				Result.append_character ('%"')
 				if string_value /= Void then
 					Result.append (string_value.out)
 				end
 				Result.append_character ('%"')
 			elseif (variable_type = Vt_ui1) then
-				Result.append (unsigned_character_value.out)
+				Result := unsigned_character_value.out
 			elseif (variable_type = Vt_uint) then
-				Result.append (unsigned_integer.out)
+				Result := unsigned_integer.out
 			elseif (variable_type = Vt_ui2) then
-				Result.append (unsigned_integer2.out)
+				Result := unsigned_integer2.out
 			elseif (variable_type = Vt_ui4) then
-				Result.append (unsigned_integer4.out)
+				Result := unsigned_integer4.out
 			elseif (variable_type = Vt_date) then
 				if date_value /= Void then
 					Result.append (date_value.out)
 				end
+			else
+				Result := "Variant"
 			end
-		end;
-
+		end
 
 feature {NONE} -- Implementation
 
 	variant_true: INTEGER is -1
-			-- True value of type VARAINT_BOOL
+			-- True value of type VARIANT_BOOL
 	
 	variant_false: INTEGER is 0
-			-- False value of type BOOL
+			-- False value of type VARIANT_BOOL
 
 feature {NONE} -- Element change
 
@@ -1791,42 +2122,42 @@ feature {NONE} -- Externals
 			"C (VARIANT *, EIF_OBJECT) |%"E_variant.h%""
 		end
 
-	ccom_real4 (a_ptr: POINTER): REAL is
+	ccom_real (a_ptr: POINTER): REAL is
 		external
 			"C (VARIANT *): EIF_REAL |%"E_variant.h%""
 		end
 
-	ccom_set_real4 (a_ptr: POINTER; a: REAL) is
+	ccom_set_real (a_ptr: POINTER; a: REAL) is
 		external
 			"C (VARIANT *, EIF_REAL) |%"E_variant.h%""
 		end
 
-	ccom_real4_reference (a_ptr: POINTER): REAL_REF is
+	ccom_real_reference (a_ptr: POINTER): REAL_REF is
 		external
 			"C (VARIANT *): EIF_REFERENCE |%"E_variant.h%""
 		end
 
-	ccom_set_real4_reference (a_ptr: POINTER; a: REAL_REF) is
+	ccom_set_real_reference (a_ptr: POINTER; a: REAL_REF) is
 		external
 			"C (VARIANT *, EIF_OBJECT) |%"E_variant.h%""
 		end
 
-	ccom_real8 (a_ptr: POINTER): DOUBLE is
+	ccom_double (a_ptr: POINTER): DOUBLE is
 		external
 			"C (VARIANT *): EIF_DOUBLE |%"E_variant.h%""
 		end
 
-	ccom_set_real8 (a_ptr: POINTER; a: DOUBLE) is
+	ccom_set_double (a_ptr: POINTER; a: DOUBLE) is
 		external
 			"C (VARIANT *, EIF_DOUBLE) |%"E_variant.h%""
 		end
 
-	ccom_real8_reference (a_ptr: POINTER): DOUBLE_REF is
+	ccom_double_reference (a_ptr: POINTER): DOUBLE_REF is
 		external
 			"C (VARIANT *): EIF_REFERENCE |%"E_variant.h%""
 		end
 
-	ccom_set_real8_reference (a_ptr: POINTER; a: DOUBLE_REF) is
+	ccom_set_double_reference (a_ptr: POINTER; a: DOUBLE_REF) is
 		external
 			"C (VARIANT *, EIF_OBJECT) |%"E_variant.h%""
 		end
@@ -1961,42 +2292,42 @@ feature {NONE} -- Externals
 			"C (VARIANT *, VARIANT *)  |%"E_variant.h%""
 		end
 
-	ccom_unknown_interface (a_ptr: POINTER):  POINTER is
+	ccom_iunknown (a_ptr: POINTER):  POINTER is
 		external
 			"C (VARIANT *): EIF_POINTER  |%"E_variant.h%""
 		end
 
-	ccom_set_unknown_interface (a_ptr: POINTER; a: POINTER) is
+	ccom_set_iunknown (a_ptr: POINTER; a: POINTER) is
 		external
 			"C (VARIANT *, IUnknown *)  |%"E_variant.h%""
 		end
 
-	ccom_unknown_interface_reference (a_ptr: POINTER):  POINTER is
+	ccom_iunknown_reference (a_ptr: POINTER):  POINTER is
 		external
 			"C (VARIANT *): EIF_POINTER  |%"E_variant.h%""
 		end
 
-	ccom_set_unknown_interface_reference (a_ptr: POINTER; a: POINTER) is
+	ccom_set_iunknown_reference (a_ptr: POINTER; a: POINTER) is
 		external
 			"C (VARIANT *, IUnknown *)  |%"E_variant.h%""
 		end
 
-	ccom_dispatch_interface (a_ptr: POINTER):  POINTER is
+	ccom_idispatch (a_ptr: POINTER):  POINTER is
 		external
 			"C (VARIANT *): EIF_POINTER  |%"E_variant.h%""
 		end
 
-	ccom_set_dispatch_interface (a_ptr: POINTER; a_value: POINTER) is
+	ccom_set_idispatch (a_ptr: POINTER; a_value: POINTER) is
 		external
 			"C (VARIANT *, IDispatch *)  |%"E_variant.h%""
 		end
 
-	ccom_dispatch_interface_reference (a_ptr: POINTER):  POINTER is
+	ccom_idispatch_reference (a_ptr: POINTER):  POINTER is
 		external
 			"C (VARIANT *): EIF_POINTER  |%"E_variant.h%""
 		end
 
-	ccom_set_dispatch_interface_reference (a_ptr: POINTER; a_value: POINTER) is
+	ccom_set_idispatch_reference (a_ptr: POINTER; a_value: POINTER) is
 		external
 			"C (VARIANT *, IDispatch *)  |%"E_variant.h%""
 		end
@@ -2066,12 +2397,12 @@ feature {NONE} -- Externals
 			"C (VARIANT *): EIF_REFERENCE  |%"E_variant.h%""
 		end
 
-	ccom_safearray_dispatch_interface (a_ptr: POINTER): ECOM_ARRAY[ECOM_AUTOMATION_INTERFACE] is
+	ccom_safearray_idispatch (a_ptr: POINTER): ECOM_ARRAY[ECOM_AUTOMATION_INTERFACE] is
 		external
 			"C (VARIANT *): EIF_REFERENCE  |%"E_variant.h%""
 		end
 
-	ccom_safearray_hresult (a_ptr: POINTER): ECOM_ARRAY[ECOM_HRESULT] is
+	ccom_safearray_error (a_ptr: POINTER): ECOM_ARRAY[ECOM_HRESULT] is
 		external
 			"C (VARIANT *): EIF_REFERENCE  |%"E_variant.h%""
 		end
@@ -2091,7 +2422,7 @@ feature {NONE} -- Externals
 			"C (VARIANT *): EIF_REFERENCE  |%"E_variant.h%""
 		end
 
-	ccom_safearray_unknown_interface (a_ptr: POINTER): ECOM_ARRAY[ECOM_UNKNOWN_INTERFACE] is
+	ccom_safearray_iunknown (a_ptr: POINTER): ECOM_ARRAY[ECOM_UNKNOWN_INTERFACE] is
 		external
 			"C (VARIANT *): EIF_REFERENCE  |%"E_variant.h%""
 		end
@@ -2161,12 +2492,12 @@ feature {NONE} -- Externals
 			"C (VARIANT *): EIF_REFERENCE  |%"E_variant.h%""
 		end
 
-	ccom_safearray_dispatch_interface_reference (a_ptr: POINTER): CELL[ECOM_ARRAY[ECOM_AUTOMATION_INTERFACE]] is
+	ccom_safearray_idispatch_reference (a_ptr: POINTER): CELL[ECOM_ARRAY[ECOM_AUTOMATION_INTERFACE]] is
 		external
 			"C (VARIANT *): EIF_REFERENCE  |%"E_variant.h%""
 		end
 
-	ccom_safearray_hresult_reference (a_ptr: POINTER): CELL[ECOM_ARRAY[ECOM_HRESULT]] is
+	ccom_safearray_error_reference (a_ptr: POINTER): CELL[ECOM_ARRAY[ECOM_HRESULT]] is
 		external
 			"C (VARIANT *): EIF_REFERENCE  |%"E_variant.h%""
 		end
@@ -2186,7 +2517,7 @@ feature {NONE} -- Externals
 			"C (VARIANT *): EIF_REFERENCE  |%"E_variant.h%""
 		end
 
-	ccom_safearray_unknown_interface_reference (a_ptr: POINTER): CELL[ECOM_ARRAY[ECOM_UNKNOWN_INTERFACE]] is
+	ccom_safearray_iunknown_reference (a_ptr: POINTER): CELL[ECOM_ARRAY[ECOM_UNKNOWN_INTERFACE]] is
 		external
 			"C (VARIANT *): EIF_REFERENCE  |%"E_variant.h%""
 		end
@@ -2256,12 +2587,12 @@ feature {NONE} -- Externals
 			"C (VARIANT *, EIF_OBJECT)  |%"E_variant.h%""
 		end
 
-	ccom_set_safearray_dispatch_interface (a_ptr: POINTER; a_value: ECOM_ARRAY[ECOM_INTERFACE]) is
+	ccom_set_safearray_idispatch (a_ptr: POINTER; a_value: ECOM_ARRAY[ECOM_INTERFACE]) is
 		external
 			"C (VARIANT *, EIF_OBJECT)  |%"E_variant.h%""
 		end
 
-	ccom_set_safearray_hresult (a_ptr: POINTER; a_value: ECOM_ARRAY[ECOM_HRESULT]) is
+	ccom_set_safearray_error (a_ptr: POINTER; a_value: ECOM_ARRAY[ECOM_HRESULT]) is
 		external
 			"C (VARIANT *, EIF_OBJECT)  |%"E_variant.h%""
 		end
@@ -2281,7 +2612,7 @@ feature {NONE} -- Externals
 			"C (VARIANT *, EIF_OBJECT)  |%"E_variant.h%""
 		end
 
-	ccom_set_safearray_unknown_interface (a_ptr: POINTER; a_value: ECOM_ARRAY[ECOM_INTERFACE]) is
+	ccom_set_safearray_iunknown (a_ptr: POINTER; a_value: ECOM_ARRAY[ECOM_INTERFACE]) is
 		external
 			"C (VARIANT *, EIF_OBJECT)  |%"E_variant.h%""
 		end
@@ -2351,12 +2682,12 @@ feature {NONE} -- Externals
 			"C (VARIANT *, EIF_OBJECT)  |%"E_variant.h%""
 		end
 
-	ccom_set_safearray_dispatch_interface_reference (a_ptr: POINTER; a_value: ECOM_ARRAY[ECOM_INTERFACE]) is
+	ccom_set_safearray_idispatch_reference (a_ptr: POINTER; a_value: ECOM_ARRAY[ECOM_INTERFACE]) is
 		external
 			"C (VARIANT *, EIF_OBJECT)  |%"E_variant.h%""
 		end
 
-	ccom_set_safearray_hresult_reference (a_ptr: POINTER; a_value: ECOM_ARRAY[ECOM_HRESULT]) is
+	ccom_set_safearray_error_reference (a_ptr: POINTER; a_value: ECOM_ARRAY[ECOM_HRESULT]) is
 		external
 			"C (VARIANT *, EIF_OBJECT)  |%"E_variant.h%""
 		end
@@ -2376,7 +2707,7 @@ feature {NONE} -- Externals
 			"C (VARIANT *, EIF_OBJECT)  |%"E_variant.h%""
 		end
 
-	ccom_set_safearray_unknown_interface_reference (a_ptr: POINTER; a_value: ECOM_ARRAY[ECOM_INTERFACE]) is
+	ccom_set_safearray_iunknown_reference (a_ptr: POINTER; a_value: ECOM_ARRAY[ECOM_INTERFACE]) is
 		external
 			"C (VARIANT *, EIF_OBJECT)  |%"E_variant.h%""
 		end

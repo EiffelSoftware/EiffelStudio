@@ -169,59 +169,55 @@ feature -- Element change
 			end
 		end
 
-	append_natural_8 (i: INTEGER_8) is
-			-- Append natural `i' in the array
+	append_natural_8 (n: NATURAL_8) is
+			-- Append natural `n' in the array
 		local
 			new_position: INTEGER
 		do
-			fixme ("Use NATURAL_XX types after compiler bootstrap")
 			new_position := position + natural_8_bytes
 			if new_position >= count then
 				resize (count + Chunk)
 			end
-			($area + position).memory_copy ($i, natural_8_bytes)
+			($area + position).memory_copy ($n, natural_8_bytes)
 			position := new_position
 		end
 
-	append_natural_16 (i: INTEGER_16) is
-			-- Append natural `i' in the array
+	append_natural_16 (n: NATURAL_16) is
+			-- Append natural `n' in the array
 		local
 			new_position: INTEGER
 		do
-			fixme ("Use NATURAL_XX types after compiler bootstrap")
 			new_position := position + natural_16_bytes
 			if new_position >= count then
 				resize (count + Chunk)
 			end
-			($area + position).memory_copy ($i, natural_16_bytes)
+			($area + position).memory_copy ($n, natural_16_bytes)
 			position := new_position
 		end
 
-	append_natural_32 (i: INTEGER) is
+	append_natural_32 (n: NATURAL_32) is
 			-- Append unsigned 32 bits natural in the array
 		local
 			new_position: INTEGER
 		do
-			fixme ("Use NATURAL_XX types after compiler bootstrap")
 			new_position := position + natural_32_bytes
 			if new_position >= count then
 				resize (count + Chunk)
 			end
-			($area + position).memory_copy ($i, natural_32_bytes)
+			($area + position).memory_copy ($n, natural_32_bytes)
 			position := new_position
 		end
 
-	append_natural_64 (i: INTEGER_64) is
-			-- Append long natural `i' in the array
+	append_natural_64 (n: NATURAL_64) is
+			-- Append long natural `n' in the array
 		local
 			new_position: INTEGER
 		do
-			fixme ("Use NATURAL_XX types after compiler bootstrap")
 			new_position := position + natural_64_bytes
 			if new_position >= count then
 				resize (count + Chunk)
 			end
-			($area + position).memory_copy ($i, natural_64_bytes)
+			($area + position).memory_copy ($n, natural_64_bytes)
 			position := new_position
 		end
 

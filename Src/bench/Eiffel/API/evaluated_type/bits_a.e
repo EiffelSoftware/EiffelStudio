@@ -80,7 +80,7 @@ feature -- Output
 	dump: STRING is
 			-- Dumped trace
 		do
-			!!Result.make (9);
+			!!Result.make (10);
 			Result.append ("BIT ");
 			Result.append_integer (bit_count);
 		end;

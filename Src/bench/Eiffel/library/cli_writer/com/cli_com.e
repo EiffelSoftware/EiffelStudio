@@ -32,6 +32,13 @@ feature -- Disposal
 		
 feature {NONE} -- Initialization
 
+	frozen com_uninitialize is
+		external
+			"C inline use %"unknwn.h%""
+		alias
+			"CoUninitialize()"
+		end
+
 	frozen com_initialize: INTEGER is
 		external
 			"C inline use %"unknwn.h%""

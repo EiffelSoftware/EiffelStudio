@@ -14,8 +14,7 @@ inherit
 
 	EV_TEXT_COMPONENT_IMP
 		redefine
-			on_key_down,
-			set_maximum_line_length
+			on_key_down
 		end
 
 	EV_BAR_ITEM_IMP
@@ -73,14 +72,6 @@ feature {NONE} -- Initialization
 			wel_make (default_parent.item, txt, 0, 0, 0, 0, 0)
 		end
 
-feature -- Status setting
-
-	set_maximum_line_length (length: INTEGER) is
-			-- Maximum number of charachters on line
-		do
-			set_text_limit (length)
-		end
-
 feature -- Event - command association
 	
 	add_activate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
@@ -91,13 +82,6 @@ feature -- Event - command association
 			add_command (Cmd_activate, cmd, arg)
 		end
 
-	add_change_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add 'cmd' to the list of commands to be executed 
-			-- when the text of the widget have changed.
-		do
-			add_command (Cmd_change, cmd, arg)
-		end
-
 feature -- Event -- removing command association
 
 	remove_activate_commands is
@@ -106,13 +90,6 @@ feature -- Event -- removing command association
 			-- press the enter key.
 		do
 			remove_command (Cmd_activate)
-		end
-
-	remove_change_commands is
-			-- Empty the list of commands to be executed
-			-- when the text of the widget have changed.
-		do
-			remove_command (Cmd_change)
 		end
 
 feature {NONE} -- Implementation

@@ -22,7 +22,7 @@ create
 feature {NONE} -- Initialization
 
 	make is
-			-- Create the tooltip with par as parent.
+			-- Create the tooltip.
 		do
 			create {EV_TOOLTIP_IMP} implementation.make
 		end

@@ -42,7 +42,7 @@ inherit
 			setup, is_equal, copy
 		end
 
-creation
+create
 	make, make_filled
 
 feature -- Element change
@@ -51,7 +51,7 @@ feature -- Element change
 			-- Add `v' to end.
 			-- Do not move cursor.
 		do
-			{ARRAYED_LIST} Precursor (v)
+			Precursor {ARRAYED_LIST} (v)
 			if v /= Void and then is_persistent then
 				check_persistence (v)
 				mt_remove_ignore_nosuchsucc (v)
@@ -63,7 +63,7 @@ feature -- Element change
 			-- Add `v' to end.
 			-- Do not move cursor.
 		do
-			{ARRAYED_LIST} Precursor (v)
+			Precursor {ARRAYED_LIST} (v)
 			if v /= Void and then is_persistent then
 				check_persistence (v)
 				mt_remove_ignore_nosuchsucc (v)
@@ -77,7 +77,7 @@ feature -- Element change
 			old_item: like first
 		do
 			old_item := item
-			{ARRAYED_LIST} Precursor (v)
+			Precursor {ARRAYED_LIST} (v)
 			mt_remove (old_item)
 			if v /= Void and then is_persistent then
 				check_persistence (v)
@@ -138,7 +138,7 @@ feature -- Removal
 			to_be_removed: like first
 		do
 			to_be_removed := item
-			{ARRAYED_LIST} Precursor
+			Precursor {ARRAYED_LIST}
 			mt_remove (to_be_removed)
 		end
 
@@ -148,14 +148,14 @@ feature -- Removal
 			-- based on `object_comparison').
 			-- Leave cursor `after'.
 		do
-			{ARRAYED_LIST} Precursor (v)
+			Precursor {ARRAYED_LIST} (v)
 			mt_set_all
 		end
 	
 	wipe_out is
 			-- Remove all items.
 		do
-			{ARRAYED_LIST} Precursor
+			Precursor {ARRAYED_LIST}
 			mt_remove_all
 		end
 	
@@ -165,7 +165,7 @@ feature {NONE} -- Internal
 			-- Add `v' at `pos', moving subsequent items
 			-- to the right.
 		do
-			{ARRAYED_LIST} Precursor (v, pos)
+			Precursor {ARRAYED_LIST} (v, pos)
 			if v /= Void and then is_persistent then
 				check_persistence (v)
 				mt_remove_ignore_nosuchsucc (v)
@@ -188,12 +188,12 @@ feature {NONE} -- Implementation
 		do
 			resize (1, new_size)
 		end
-	
+
 	wipe_out_at_reverting is
 		do
 			list_wipe_out
 		end
-	
+
 end -- class MT_ARRAYED_LIST
 
 

@@ -27,7 +27,7 @@ feature {NONE}
 			-- Save a file with the chosen name.
 		local
 			fn: STRING;
-			new_file: RAW_FILE;
+			new_file: PLAIN_TEXT_FILE;
 			to_write: STRING;
 			aok: BOOLEAN;
 			temp: STRING

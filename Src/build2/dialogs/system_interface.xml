@@ -7,9 +7,12 @@
 		<Name >modify_pixmap_dialog_title</Name>
 		<Value >Modify Pixmap</Value>
 		</Constant>
-	<Constant ><type >STRING</type>
-		<Name >close_text</Name>
-		<Value >Close</Value>
+	<Constant ><type >PIXMAP</type>
+		<Name >lightbulb_png</Name>
+		<Value ></Value>
+		<is_absolute >False</is_absolute>
+		<Directory >png_location</Directory>
+		<Filename >lightbulb.png</Filename>
 		</Constant>
 	<Constant ><type >STRING</type>
 		<Name >constants_dialog_title</Name>
@@ -20,19 +23,16 @@
 		<Value >80</Value>
 		</Constant>
 	<Constant ><type >STRING</type>
+		<Name >ok_button_text</Name>
+		<Value >OK</Value>
+		</Constant>
+	<Constant ><type >STRING</type>
 		<Name >next_tip_text</Name>
 		<Value >Next tip</Value>
 		</Constant>
 	<Constant ><type >STRING</type>
 		<Name >system_window_title</Name>
 		<Value >Project Configuration</Value>
-		</Constant>
-	<Constant ><type >PIXMAP</type>
-		<Name >lightbulb_png</Name>
-		<Value ></Value>
-		<is_absolute >False</is_absolute>
-		<Directory >png_location</Directory>
-		<Filename >lightbulb.png</Filename>
 		</Constant>
 	<Constant ><type >STRING</type>
 		<Name >new_button_add_text</Name>
@@ -54,13 +54,13 @@
 		<Name >pixmap_settings_dialog_title</Name>
 		<Value >Pixmap Selection</Value>
 		</Constant>
+	<Constant ><type >STRING</type>
+		<Name >modify_button_text</Name>
+		<Value >Modify</Value>
+		</Constant>
 	<Constant ><type >INTEGER</type>
 		<Name >negative</Name>
 		<Value >-100</Value>
-		</Constant>
-	<Constant ><type >STRING</type>
-		<Name >ok_button_text</Name>
-		<Value >OK</Value>
 		</Constant>
 	<Constant ><type >INTEGER</type>
 		<Name >large_spacing_width</Name>
@@ -75,8 +75,8 @@
 		<Value >Cancel</Value>
 		</Constant>
 	<Constant ><type >STRING</type>
-		<Name >modify_button_text</Name>
-		<Value >Modify</Value>
+		<Name >close_text</Name>
+		<Value >Close</Value>
 		</Constant>
 	<Constant ><type >DIRECTORY</type>
 		<Name >png_location</Name>
@@ -127,7 +127,7 @@
 					<EV_COLORIZABLE />
 					<EV_FONTABLE />
 					<EV_SENSITIVE />
-					<EV_TEXTABLE ><Text >Constants Defined</Text>
+					<EV_TEXTABLE ><Text ><![CDATA[Constants Defined]]></Text>
 						</EV_TEXTABLE>
 					<EV_WIDGET />
 					<EV_FRAME />
@@ -178,7 +178,7 @@
 								<EV_DESELECTABLE ><Is_selected >True</Is_selected>
 									</EV_DESELECTABLE>
 								<EV_SENSITIVE />
-								<EV_TEXTABLE ><Text >Show all types</Text>
+								<EV_TEXTABLE ><Text ><![CDATA[Show all types]]></Text>
 									</EV_TEXTABLE>
 								<EV_TOOLTIPABLE />
 								<EV_WIDGET />
@@ -247,7 +247,7 @@
 										<EV_COLORIZABLE />
 										<EV_FONTABLE />
 										<EV_SENSITIVE />
-										<EV_TEXTABLE ><Text >Type</Text>
+										<EV_TEXTABLE ><Text ><![CDATA[Type]]></Text>
 											</EV_TEXTABLE>
 										<EV_TOOLTIPABLE />
 										<EV_WIDGET />
@@ -262,7 +262,7 @@
 									<EV_COLORIZABLE />
 									<EV_FONTABLE />
 									<EV_SENSITIVE />
-									<EV_TEXTABLE ><Text >DIRECTORY</Text>
+									<EV_TEXTABLE ><Text ><![CDATA[DIRECTORY]]></Text>
 										</EV_TEXTABLE>
 									<EV_TOOLTIPABLE />
 									<EV_WIDGET ><Minimum_width >80</Minimum_width>
@@ -274,7 +274,7 @@
 											<Expanded >0</Expanded>
 											</Internal_properties>
 										<EV_DESELECTABLE />
-										<EV_TEXTABLE ><Text >STRING</Text>
+										<EV_TEXTABLE ><Text ><![CDATA[STRING]]></Text>
 											</EV_TEXTABLE>
 										<EV_TOOLTIPABLE />
 										<EV_PIXMAPABLE />
@@ -286,7 +286,7 @@
 											<Expanded >0</Expanded>
 											</Internal_properties>
 										<EV_DESELECTABLE />
-										<EV_TEXTABLE ><Text >INTEGER</Text>
+										<EV_TEXTABLE ><Text ><![CDATA[INTEGER]]></Text>
 											</EV_TEXTABLE>
 										<EV_TOOLTIPABLE />
 										<EV_PIXMAPABLE />
@@ -299,7 +299,7 @@
 											</Internal_properties>
 										<EV_DESELECTABLE ><Is_selected >True</Is_selected>
 											</EV_DESELECTABLE>
-										<EV_TEXTABLE ><Text >DIRECTORY</Text>
+										<EV_TEXTABLE ><Text ><![CDATA[DIRECTORY]]></Text>
 											</EV_TEXTABLE>
 										<EV_TOOLTIPABLE />
 										<EV_PIXMAPABLE />
@@ -311,7 +311,7 @@
 											<Expanded >0</Expanded>
 											</Internal_properties>
 										<EV_DESELECTABLE />
-										<EV_TEXTABLE ><Text >PIXMAP</Text>
+										<EV_TEXTABLE ><Text ><![CDATA[PIXMAP]]></Text>
 											</EV_TEXTABLE>
 										<EV_TOOLTIPABLE />
 										<EV_PIXMAPABLE />
@@ -359,7 +359,7 @@
 										<EV_COLORIZABLE />
 										<EV_FONTABLE />
 										<EV_SENSITIVE />
-										<EV_TEXTABLE ><Text >Name</Text>
+										<EV_TEXTABLE ><Text ><![CDATA[Name]]></Text>
 											</EV_TEXTABLE>
 										<EV_TOOLTIPABLE />
 										<EV_WIDGET />
@@ -421,7 +421,7 @@
 										<EV_COLORIZABLE />
 										<EV_FONTABLE />
 										<EV_SENSITIVE />
-										<EV_TEXTABLE ><Text >Value</Text>
+										<EV_TEXTABLE ><Text ><![CDATA[Value]]></Text>
 											</EV_TEXTABLE>
 										<EV_TOOLTIPABLE />
 										<EV_WIDGET />
@@ -646,7 +646,7 @@
 							<EV_COLORIZABLE />
 							<EV_FONTABLE />
 							<EV_SENSITIVE />
-							<EV_TEXTABLE ><Text >Project Location:</Text>
+							<EV_TEXTABLE ><Text ><![CDATA[Project Location:]]></Text>
 								</EV_TEXTABLE>
 							<EV_TOOLTIPABLE />
 							<EV_WIDGET />
@@ -714,7 +714,7 @@
 										<EV_COLORIZABLE />
 										<EV_FONTABLE />
 										<EV_SENSITIVE />
-										<EV_TEXTABLE ><Text >Build Type</Text>
+										<EV_TEXTABLE ><Text ><![CDATA[Build Type]]></Text>
 											</EV_TEXTABLE>
 										<EV_WIDGET />
 										<EV_FRAME />
@@ -749,7 +749,7 @@
 													<EV_COLORIZABLE />
 													<EV_FONTABLE />
 													<EV_SENSITIVE />
-													<EV_TEXTABLE ><Text >Project</Text>
+													<EV_TEXTABLE ><Text ><![CDATA[Project]]></Text>
 														</EV_TEXTABLE>
 													<EV_TOOLTIPABLE />
 													<EV_WIDGET />
@@ -766,7 +766,7 @@
 													<EV_FONTABLE />
 													<EV_DESELECTABLE />
 													<EV_SENSITIVE />
-													<EV_TEXTABLE ><Text >Always rebuild ace?</Text>
+													<EV_TEXTABLE ><Text ><![CDATA[Always rebuild ace?]]></Text>
 														</EV_TEXTABLE>
 													<EV_TOOLTIPABLE />
 													<EV_WIDGET />
@@ -792,7 +792,7 @@
 													<EV_COLORIZABLE />
 													<EV_FONTABLE />
 													<EV_SENSITIVE />
-													<EV_TEXTABLE ><Text >Class</Text>
+													<EV_TEXTABLE ><Text ><![CDATA[Class]]></Text>
 														</EV_TEXTABLE>
 													<EV_TOOLTIPABLE />
 													<EV_WIDGET />
@@ -811,7 +811,7 @@
 										<EV_COLORIZABLE />
 										<EV_FONTABLE />
 										<EV_SENSITIVE />
-										<EV_TEXTABLE ><Text >Names</Text>
+										<EV_TEXTABLE ><Text ><![CDATA[Names]]></Text>
 											</EV_TEXTABLE>
 										<EV_WIDGET />
 										<EV_FRAME />
@@ -834,7 +834,7 @@
 												<EV_COLORIZABLE />
 												<EV_FONTABLE />
 												<EV_SENSITIVE />
-												<EV_TEXTABLE ><Text >Project name:</Text>
+												<EV_TEXTABLE ><Text ><![CDATA[Project name:]]></Text>
 													</EV_TEXTABLE>
 												<EV_TOOLTIPABLE />
 												<EV_WIDGET />
@@ -859,7 +859,7 @@
 												<EV_COLORIZABLE />
 												<EV_FONTABLE />
 												<EV_SENSITIVE />
-												<EV_TEXTABLE ><Text >Application class name:</Text>
+												<EV_TEXTABLE ><Text ><![CDATA[Application class name:]]></Text>
 													</EV_TEXTABLE>
 												<EV_TOOLTIPABLE />
 												<EV_WIDGET />
@@ -923,7 +923,7 @@
 										<EV_FONTABLE />
 										<EV_DESELECTABLE />
 										<EV_SENSITIVE />
-										<EV_TEXTABLE ><Text >Attribute declarations grouped?</Text>
+										<EV_TEXTABLE ><Text ><![CDATA[Attribute declarations grouped?]]></Text>
 											</EV_TEXTABLE>
 										<EV_TOOLTIPABLE />
 										<EV_WIDGET />
@@ -938,7 +938,7 @@
 										<EV_FONTABLE />
 										<EV_DESELECTABLE />
 										<EV_SENSITIVE />
-										<EV_TEXTABLE ><Text >Attributes declared as locals?</Text>
+										<EV_TEXTABLE ><Text ><![CDATA[Attributes declared as locals?]]></Text>
 											</EV_TEXTABLE>
 										<EV_TOOLTIPABLE />
 										<EV_WIDGET />
@@ -953,7 +953,7 @@
 										<EV_FONTABLE />
 										<EV_DESELECTABLE />
 										<EV_SENSITIVE />
-										<EV_TEXTABLE ><Text >Generate debugging information?</Text>
+										<EV_TEXTABLE ><Text ><![CDATA[Generate debugging information?]]></Text>
 											</EV_TEXTABLE>
 										<EV_TOOLTIPABLE />
 										<EV_WIDGET />
@@ -968,7 +968,7 @@
 										<EV_FONTABLE />
 										<EV_DESELECTABLE />
 										<EV_SENSITIVE />
-										<EV_TEXTABLE ><Text >Client of windows?</Text>
+										<EV_TEXTABLE ><Text ><![CDATA[Client of windows?]]></Text>
 											</EV_TEXTABLE>
 										<EV_TOOLTIPABLE />
 										<EV_WIDGET />
@@ -983,7 +983,7 @@
 										<EV_FONTABLE />
 										<EV_DESELECTABLE />
 										<EV_SENSITIVE />
-										<EV_TEXTABLE ><Text >Load constants from file?</Text>
+										<EV_TEXTABLE ><Text ><![CDATA[Load constants from file?]]></Text>
 											</EV_TEXTABLE>
 										<EV_TOOLTIPABLE />
 										<EV_WIDGET />
@@ -1134,7 +1134,7 @@
 								<EV_COLORIZABLE />
 								<EV_FONTABLE />
 								<EV_SENSITIVE />
-								<EV_TEXTABLE ><Text >Select Individual ...</Text>
+								<EV_TEXTABLE ><Text ><![CDATA[Select Individual ...]]></Text>
 									</EV_TEXTABLE>
 								<EV_TOOLTIPABLE />
 								<EV_WIDGET />
@@ -1161,7 +1161,7 @@
 								<EV_COLORIZABLE />
 								<EV_FONTABLE />
 								<EV_SENSITIVE />
-								<EV_TEXTABLE ><Text >Select Directory...</Text>
+								<EV_TEXTABLE ><Text ><![CDATA[Select Directory...]]></Text>
 									</EV_TEXTABLE>
 								<EV_TOOLTIPABLE />
 								<EV_WIDGET />
@@ -1262,7 +1262,7 @@
 									<EV_COLORIZABLE />
 									<EV_FONTABLE />
 									<EV_SENSITIVE />
-									<EV_TEXTABLE ><Text >Check all</Text>
+									<EV_TEXTABLE ><Text ><![CDATA[Check all]]></Text>
 										</EV_TEXTABLE>
 									<EV_TOOLTIPABLE ><Tooltip ><![CDATA[Check all items, for inclusion as new pixmap constants]]></Tooltip>
 										</EV_TOOLTIPABLE>
@@ -1279,7 +1279,7 @@
 									<EV_COLORIZABLE />
 									<EV_FONTABLE />
 									<EV_SENSITIVE />
-									<EV_TEXTABLE ><Text >Uncheck all</Text>
+									<EV_TEXTABLE ><Text ><![CDATA[Uncheck all]]></Text>
 										</EV_TEXTABLE>
 									<EV_TOOLTIPABLE ><Tooltip ><![CDATA[Uncheck all items]]></Tooltip>
 										</EV_TOOLTIPABLE>
@@ -1311,7 +1311,7 @@
 						<EV_FONTABLE />
 						<EV_SENSITIVE ><Is_sensitive >False</Is_sensitive>
 							</EV_SENSITIVE>
-						<EV_TEXTABLE ><Text >Pixmap location</Text>
+						<EV_TEXTABLE ><Text ><![CDATA[Pixmap location]]></Text>
 							</EV_TEXTABLE>
 						<EV_TOOLTIPABLE />
 						<EV_WIDGET />
@@ -1339,7 +1339,7 @@
 					<EV_FONTABLE />
 					<EV_SENSITIVE ><Is_sensitive >False</Is_sensitive>
 						</EV_SENSITIVE>
-					<EV_TEXTABLE ><Text >Built from</Text>
+					<EV_TEXTABLE ><Text ><![CDATA[Built from]]></Text>
 						</EV_TEXTABLE>
 					<EV_WIDGET />
 					<EV_FRAME />
@@ -1385,7 +1385,7 @@
 									<EV_COLORIZABLE />
 									<EV_FONTABLE />
 									<EV_SENSITIVE />
-									<EV_TEXTABLE ><Text >Absolute PIXMAP constant named</Text>
+									<EV_TEXTABLE ><Text ><![CDATA[Absolute PIXMAP constant named]]></Text>
 										</EV_TEXTABLE>
 									<EV_TOOLTIPABLE />
 									<EV_WIDGET />
@@ -1485,7 +1485,7 @@
 										<EV_COLORIZABLE />
 										<EV_FONTABLE />
 										<EV_SENSITIVE />
-										<EV_TEXTABLE ><Text >Relative PIXMAP constant named:</Text>
+										<EV_TEXTABLE ><Text ><![CDATA[Relative PIXMAP constant named:]]></Text>
 											</EV_TEXTABLE>
 										<EV_TOOLTIPABLE />
 										<EV_WIDGET />
@@ -1524,7 +1524,7 @@
 										<EV_COLORIZABLE />
 										<EV_FONTABLE />
 										<EV_SENSITIVE />
-										<EV_TEXTABLE ><Text >Comprised of DIRECTORY: </Text>
+										<EV_TEXTABLE ><Text ><![CDATA[Comprised of DIRECTORY: ]]></Text>
 											</EV_TEXTABLE>
 										<EV_TOOLTIPABLE />
 										<EV_WIDGET />
@@ -1696,9 +1696,9 @@
 					<EV_COLORIZABLE />
 					<EV_FONTABLE />
 					<EV_SENSITIVE />
-					<EV_TEXTABLE ><Text >You have not specified a DIRECTORY constant for one or more relative PIXMAP
+					<EV_TEXTABLE ><Text ><![CDATA[You have not specified a DIRECTORY constant for one or more relative PIXMAP
 constants, and no matching directory constant is available. 
-Please enter the name of a DIRECTORYconstant which will be used.</Text>
+Please enter the name of a DIRECTORYconstant which will be used.]]></Text>
 						</EV_TEXTABLE>
 					<EV_TOOLTIPABLE />
 					<EV_WIDGET />
@@ -1724,7 +1724,7 @@ Please enter the name of a DIRECTORYconstant which will be used.</Text>
 					<EV_COLORIZABLE />
 					<EV_FONTABLE />
 					<EV_SENSITIVE />
-					<EV_TEXTABLE ><Text >Use DIRECTORY constant named:</Text>
+					<EV_TEXTABLE ><Text ><![CDATA[Use DIRECTORY constant named:]]></Text>
 						</EV_TEXTABLE>
 					<EV_TOOLTIPABLE />
 					<EV_WIDGET />
@@ -1961,7 +1961,7 @@ Please enter the name of a DIRECTORYconstant which will be used.</Text>
 											<Preferred_family >Microsoft Sans Serif</Preferred_family>
 											</EV_FONTABLE>
 										<EV_SENSITIVE />
-										<EV_TEXTABLE ><Text >Did you know...</Text>
+										<EV_TEXTABLE ><Text ><![CDATA[Did you know...]]></Text>
 											</EV_TEXTABLE>
 										<EV_TOOLTIPABLE />
 										<EV_WIDGET />
@@ -2068,7 +2068,7 @@ Please enter the name of a DIRECTORYconstant which will be used.</Text>
 					<EV_FONTABLE />
 					<EV_DESELECTABLE />
 					<EV_SENSITIVE />
-					<EV_TEXTABLE ><Text >Show tips at startup</Text>
+					<EV_TEXTABLE ><Text ><![CDATA[Show tips at startup]]></Text>
 						</EV_TEXTABLE>
 					<EV_TOOLTIPABLE />
 					<EV_WIDGET />
@@ -2121,6 +2121,161 @@ Please enter the name of a DIRECTORYconstant which will be used.</Text>
 					<EV_PIXMAPABLE />
 					<Events ><Event >select_actions EV_BUTTON_ACTION_SEQUENCES close_button_selected</Event>
 						</Events>
+					</item>
+				</item>
+			</item>
+		</item>
+	</item>
+<item type="Directory"><Internal_properties ><name >gb_naming_dialog</name>
+		</Internal_properties>
+	<item type="EV_DIALOG"><Internal_properties ><id >156</id>
+			<name >gb_naming_dialog</name>
+			<Expanded >1</Expanded>
+			</Internal_properties>
+		<EV_COLORIZABLE />
+		<EV_SENSITIVE />
+		<EV_WIDGET ><Minimum_width >250</Minimum_width>
+			<Minimum_height >120</Minimum_height>
+			</EV_WIDGET>
+		<EV_WINDOW ><Title ><![CDATA[Display window]]></Title>
+			</EV_WINDOW>
+		<EV_PIXMAPABLE />
+		<EV_CONTAINER />
+		<item type="EV_VERTICAL_BOX"><Internal_properties ><id >157</id>
+				<Expanded >1</Expanded>
+				</Internal_properties>
+			<EV_COLORIZABLE />
+			<EV_SENSITIVE />
+			<EV_WIDGET />
+			<EV_BOX ><Padding ><Constant >large_spacing_width</Constant>
+					</Padding>
+				<Border ><Constant >small_padding</Constant>
+					</Border>
+				<Is_item_expanded >1</Is_item_expanded>
+				</EV_BOX>
+			<EV_PIXMAPABLE />
+			<EV_CONTAINER />
+			<item type="EV_VERTICAL_BOX"><Internal_properties ><id >158</id>
+					<Expanded >1</Expanded>
+					</Internal_properties>
+				<EV_COLORIZABLE />
+				<EV_SENSITIVE />
+				<EV_WIDGET />
+				<EV_BOX ><Is_item_expanded >0010</Is_item_expanded>
+					</EV_BOX>
+				<EV_PIXMAPABLE />
+				<EV_CONTAINER />
+				<item type="EV_LABEL"><Internal_properties ><id >159</id>
+						<name >prompt_label</name>
+						<Expanded >0</Expanded>
+						</Internal_properties>
+					<EV_COLORIZABLE />
+					<EV_FONTABLE />
+					<EV_SENSITIVE />
+					<EV_TEXTABLE />
+					<EV_TOOLTIPABLE />
+					<EV_WIDGET />
+					<EV_TEXT_ALIGNABLE ><Text_alignment >Left</Text_alignment>
+						</EV_TEXT_ALIGNABLE>
+					</item>
+				<item type="EV_HORIZONTAL_BOX"><Internal_properties ><id >160</id>
+						<Expanded >1</Expanded>
+						</Internal_properties>
+					<EV_COLORIZABLE />
+					<EV_SENSITIVE />
+					<EV_WIDGET />
+					<EV_BOX ><Is_item_expanded >1</Is_item_expanded>
+						</EV_BOX>
+					<EV_PIXMAPABLE />
+					<EV_CONTAINER />
+					<item type="EV_TEXT_FIELD"><Internal_properties ><id >161</id>
+							<name >name_field</name>
+							<Expanded >0</Expanded>
+							</Internal_properties>
+						<EV_COLORIZABLE />
+						<EV_FONTABLE />
+						<EV_SENSITIVE />
+						<EV_TEXTABLE />
+						<EV_TOOLTIPABLE />
+						<EV_WIDGET />
+						<EV_TEXT_COMPONENT />
+						</item>
+					</item>
+				<item type="EV_CELL"><Internal_properties ><id >162</id>
+						<Expanded >0</Expanded>
+						</Internal_properties>
+					<EV_COLORIZABLE />
+					<EV_SENSITIVE />
+					<EV_WIDGET ><Minimum_height ><Constant >small_padding</Constant>
+							</Minimum_height>
+						</EV_WIDGET>
+					<EV_PIXMAPABLE />
+					<EV_CONTAINER />
+					</item>
+				<item type="EV_HORIZONTAL_BOX"><Internal_properties ><id >163</id>
+						<Expanded >1</Expanded>
+						</Internal_properties>
+					<EV_COLORIZABLE />
+					<EV_SENSITIVE />
+					<EV_WIDGET />
+					<EV_BOX ><Is_item_expanded >1000</Is_item_expanded>
+						</EV_BOX>
+					<EV_PIXMAPABLE />
+					<EV_CONTAINER />
+					<item type="EV_CELL"><Internal_properties ><id >164</id>
+							<Expanded >0</Expanded>
+							</Internal_properties>
+						<EV_COLORIZABLE />
+						<EV_SENSITIVE />
+						<EV_WIDGET />
+						<EV_PIXMAPABLE />
+						<EV_CONTAINER />
+						</item>
+					<item type="EV_BUTTON"><Internal_properties ><id >165</id>
+							<name >ok_button</name>
+							<Expanded >0</Expanded>
+							</Internal_properties>
+						<EV_COLORIZABLE />
+						<EV_FONTABLE />
+						<EV_SENSITIVE />
+						<EV_TEXTABLE ><Text ><Constant >ok_button_text</Constant>
+								</Text>
+							</EV_TEXTABLE>
+						<EV_TOOLTIPABLE />
+						<EV_WIDGET ><Minimum_width ><Constant >default_button_width</Constant>
+								</Minimum_width>
+							</EV_WIDGET>
+						<EV_TEXT_ALIGNABLE />
+						<EV_PIXMAPABLE />
+						</item>
+					<item type="EV_CELL"><Internal_properties ><id >166</id>
+							<Expanded >0</Expanded>
+							</Internal_properties>
+						<EV_COLORIZABLE />
+						<EV_SENSITIVE />
+						<EV_WIDGET ><Minimum_width ><Constant >small_padding</Constant>
+								</Minimum_width>
+							</EV_WIDGET>
+						<EV_PIXMAPABLE />
+						<EV_CONTAINER />
+						</item>
+					<item type="EV_BUTTON"><Internal_properties ><id >167</id>
+							<name >cancel_button</name>
+							<Expanded >0</Expanded>
+							</Internal_properties>
+						<EV_COLORIZABLE />
+						<EV_FONTABLE />
+						<EV_SENSITIVE />
+						<EV_TEXTABLE ><Text ><Constant >cancel_button_text</Constant>
+								</Text>
+							</EV_TEXTABLE>
+						<EV_TOOLTIPABLE />
+						<EV_WIDGET ><Minimum_width ><Constant >default_button_width</Constant>
+								</Minimum_width>
+							</EV_WIDGET>
+						<EV_TEXT_ALIGNABLE />
+						<EV_PIXMAPABLE />
+						</item>
 					</item>
 				</item>
 			</item>

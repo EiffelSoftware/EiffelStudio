@@ -55,7 +55,6 @@ feature {NONE}-- Initialization
 			create l_cell_20
 			create next_tip_button
 			create close_button
-			create internal_font
 			
 			extend (l_vertical_box_23)
 			l_vertical_box_23.extend (l_horizontal_box_25)
@@ -101,6 +100,7 @@ feature {NONE}-- Initialization
 			l_vertical_box_26.disable_item_expand (l_label_11)
 			l_cell_15.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
 			l_label_11.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
+			create internal_font
 			internal_font.set_family (3)
 			internal_font.set_weight (7)
 			internal_font.set_shape (10)
@@ -115,6 +115,7 @@ feature {NONE}-- Initialization
 			l_cell_17.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
 			l_cell_17.set_minimum_width (20)
 			tip_label.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
+			create internal_font
 			internal_font.set_family (3)
 			internal_font.set_weight (7)
 			internal_font.set_shape (10)

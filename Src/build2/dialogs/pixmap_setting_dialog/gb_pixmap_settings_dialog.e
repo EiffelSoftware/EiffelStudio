@@ -716,7 +716,7 @@ feature {NONE} -- Implementation
 			l_array: ARRAYED_LIST [STRING]
 		do
 			--|FIXME temporary 
---			Result := pixmap_file_title_to_constant_name (a_file_name)
+			Result := pixmap_file_title_to_constant_name (a_file_name)
 --			create l_array.make (1000)
 --			l_array := clone (Object_handler.all_object_and_event_names)
 --			l_array.finish

@@ -63,7 +63,7 @@ feature -- Duplication
 	duplicate: like Current is
 			-- Duplicate current object
 		do
-			Result := clone (Current)
+			Result := twin
 		end
 
 feature -- Comparison

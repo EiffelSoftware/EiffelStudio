@@ -151,12 +151,11 @@ feature {NONE} -- Retrieval
 					arguments_file.end_of_file
 				loop
 					arguments_file.read_line
-					l_last_string := clone (arguments_file.last_string)
+					l_last_string := arguments_file.last_string.twin
 					if 
-						l_last_string /= Void and 
 						not (l_last_string.is_empty or else
-							l_last_string.is_equal (No_argument_string) or else
-							l_last_string.is_equal (" "))
+						l_last_string.is_equal (No_argument_string) or else
+						l_last_string.is_equal (" "))
 					then
 						if l_last_string.item (1) = '[' then
 							-- This is the saved argument so don't add it to the list here.
@@ -171,10 +170,10 @@ feature {NONE} -- Retrieval
 						else
 							-- Add argument to list.
 						create l_row
-						l_row.extend (clone (l_last_string))
+						l_row.extend (l_last_string.twin)
 						user_arguments_list.extend (l_row)
 							-- Add argument to combo.
-						user_combo.extend (create {EV_LIST_ITEM}.make_with_text (clone (l_last_string)))
+						user_combo.extend (create {EV_LIST_ITEM}.make_with_text (l_last_string))
 						end
 					end
 				end
@@ -302,7 +301,7 @@ feature {NONE} -- Storage
 			
 			if ace_arguments_list.count > 0 then
 				if ace_arguments_list.selected_item /= Void then
-					sel_arg := clone (ace_arguments_list.selected_item.i_th (1))
+					sel_arg := ace_arguments_list.selected_item.i_th (1).twin
 					defaults.extend (new_d_option (sel_arg))
 				end
  				from
@@ -314,7 +313,7 @@ feature {NONE} -- Storage
 						sel_arg /= Void and then 
 						not ace_arguments_list.item.i_th (1).is_equal (sel_arg) 
 					then
-						argument_text := clone (ace_arguments_list.item.i_th (1))
+						argument_text := ace_arguments_list.item.i_th (1).twin
 						defaults.extend (new_d_option (argument_text))
 					end
 					ace_arguments_list.forth

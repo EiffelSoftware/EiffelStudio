@@ -78,8 +78,8 @@ feature {NONE} -- Initialization
 			if not retried then
 				Precursor
 				declared_type := current_feature.declared_type
-				name_of_current_feature := clone (current_feature.eiffel_name)
-				dotnet_name_of_current_feature := clone (current_feature.dotnet_eiffel_name)
+				name_of_current_feature := current_feature.eiffel_name.twin
+				dotnet_name_of_current_feature := current_feature.dotnet_eiffel_name.twin
 				create ast.make (current_feature)
 				is_valid := True
 			else

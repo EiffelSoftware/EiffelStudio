@@ -15,7 +15,6 @@ inherit
 		end
 
 create
-	default_create,
 	initialize
 
 feature {AST_FACTORY} -- Initialization
@@ -24,14 +23,15 @@ feature {AST_FACTORY} -- Initialization
 			-- Create a new INDEX AST node.
 		require
 			i_not_void: i /= Void
+			l_not_void: l /= Void
 		do
 			tag := t
 			index_list := i
-			location := l
+			location := l.twin
 		ensure
 			tag_set: tag = t
 			index_list_set: index_list = i
-			location_set: location = l
+			location_set: equal (location, l)
 		end
 
 feature -- Visitor
@@ -122,5 +122,8 @@ feature {AST_EIFFEL} -- Output
 				ctxt.set_in_indexing_clause (False)
 			end
 		end
-	
+
+invariant
+	index_list_not_void: index_list /= Void
+
 end -- class INDEX_AS

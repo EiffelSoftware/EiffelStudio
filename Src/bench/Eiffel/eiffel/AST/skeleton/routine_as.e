@@ -37,6 +37,7 @@ feature {AST_FACTORY} -- Initialization
 			-- Create a new ROUTINE AST node.
 		require
 			b_not_void: b /= Void
+			end_pos_not_void: end_pos /= Void
 		do
 			obsolete_message := o
 			precondition := pr
@@ -45,7 +46,7 @@ feature {AST_FACTORY} -- Initialization
 			postcondition := po
 			rescue_clause := r
 			body_start_position := p
-			end_location := clone (end_pos)
+			end_location := end_pos.twin
 		ensure
 			obsolete_message_set: obsolete_message = o
 			precondition_set: precondition = pr

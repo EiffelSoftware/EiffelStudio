@@ -151,7 +151,11 @@ feature -- Duplication
 		do
 			if other /= Current then
 				first := other.first
-				area := standard_clone (other.area)
+				if other.area /= Void then
+					area := other.area.standard_twin
+				else
+					area := Void
+				end
 			end
 		end
 

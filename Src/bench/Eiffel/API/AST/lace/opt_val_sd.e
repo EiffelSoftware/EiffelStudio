@@ -171,7 +171,7 @@ feature -- Duplication
 			if is_name then
 				create Result.make (value.duplicate)
 			else
-				Result := clone (Current)
+				Result := twin
 			end
 		end
 

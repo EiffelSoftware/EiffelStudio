@@ -273,7 +273,7 @@ feature {NONE} -- Implementation
 			if a_path = Void or else a_path.is_empty then
 				Result := item_list
 			else
-				new_path := clone (a_path)
+				new_path := a_path.twin
 				new_path.start
 				curr_item := new_path.item
 				curr_folder_name := new_path.item.name

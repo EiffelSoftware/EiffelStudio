@@ -73,7 +73,7 @@ feature -- Initialization
 			set_title (Interface_names.t_About)
 
 				-- Create controls.
-			eiffel_image := clone (Pixmaps.bm_About)
+			eiffel_image := Pixmaps.bm_About.twin
 			eiffel_image.set_minimum_size (eiffel_image.width, eiffel_image.height)
 			eiffel_image.set_background_color (White)
 			create info_label.make_with_text (t_info)
@@ -107,7 +107,7 @@ feature -- Initialization
 				borland_label.align_text_left
 				borland_label.set_background_color (White)
 
-				borland_image := clone (Pixmaps.bm_Borland)
+				borland_image := Pixmaps.bm_Borland.twin
 				borland_image.set_minimum_size (borland_image.width, borland_image.height)
 				borland_image.set_background_color (White)
 				

@@ -89,7 +89,7 @@ feature -- Duplication
 			-- Duplicate current object.
 		do
 				-- Nothing to be duplicated, so we do a basic clone.
-			Result := clone (Current)
+			Result := twin
 		end
 
 feature -- Comparison

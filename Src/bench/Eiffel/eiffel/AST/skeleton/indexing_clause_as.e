@@ -218,7 +218,7 @@ feature -- Element change
 					l_index := lookup_table.found_item
 					l_index.index_list.append (v.index_list)
 				else
-					create l_index.initialize (v.tag, clone (v.index_list), clone (v.location))
+					create l_index.initialize (v.tag, v.index_list.twin, v.location.twin)
 					lookup_table.put (l_index, l_index.tag)
 				end
 				if obsolete_tags.has (v.tag) then

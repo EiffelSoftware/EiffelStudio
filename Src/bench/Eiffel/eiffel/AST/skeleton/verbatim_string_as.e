@@ -51,7 +51,7 @@ feature {AST_EIFFEL} -- Output
 			-- Reconstitute text.
 		do
 			ctxt.put_string_item ("%"" + verbatim_marker + "[")
-			append_format_multilined (clone (value), ctxt.text, ctxt.in_indexing_clause)
+			append_format_multilined (value.twin, ctxt.text, ctxt.in_indexing_clause)
 			ctxt.new_line
 			ctxt.put_string_item ("]" + verbatim_marker + "%"")
 		end

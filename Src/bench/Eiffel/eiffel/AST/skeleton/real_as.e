@@ -81,7 +81,7 @@ feature {AST_EIFFEL} -- Output
 
 	string_value: STRING is
 		do
-			Result := clone (value)
+			Result := value.twin
 		end
 
 end -- class REAL_AS

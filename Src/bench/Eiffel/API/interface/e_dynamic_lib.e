@@ -29,7 +29,9 @@ feature -- Access
 				create a_file.make_open_read (file_name)
 				a_file.readstream (a_file.count)
 				a_file.close
-				Result := clone (a_file.laststring)
+					-- No need to twin `last_string' because it belongs to `a_file'
+					-- which is only used locally.
+				Result := a_file.last_string
 			end
 		ensure
 			text_not_void_if_file_valid: valid_file_name (file_name) implies Result /= Void
@@ -87,7 +89,7 @@ feature -- Setting
 		require
 			valid_f_name_if_not_void: f_name /= Void implies valid_file_name (f_name)
 		do
-			file_name := clone(f_name)
+			file_name := f_name.twin
 		ensure
 			file_name_set: equal (f_name, file_name)
 		end
@@ -269,7 +271,7 @@ feature -- DYNAMIC_LIB Exports processing.
 				f.end_of_file
 			loop
 				f.readline
-				lastline := clone(f.last_string)
+				lastline := f.last_string.twin
 
 				lastline.left_adjust
 				lastline.right_adjust
@@ -445,7 +447,7 @@ feature -- DYNAMIC_LIB Exports processing.
 				end
 
 				if t_creation =Void and then t_routine /= Void then
-					t_creation	:= clone(t_routine)
+					t_creation	:= t_routine.twin
 				end
 
 				add_export_feature_from_file(t_class,t_creation,t_routine,t_index, t_alias, t_call_type)
@@ -484,9 +486,7 @@ feature -- DYNAMIC_LIB Exports processing.
 					out_text.append( "%N-- CLASS [" )
 	
 					dynamic_lib_exports.item_for_iteration.start
-					class_name := clone(dynamic_lib_exports.item_for_iteration.item.compiled_class.name)
-	
-					class_name.to_upper
+					class_name := dynamic_lib_exports.item_for_iteration.item.compiled_class.name_in_upper
 					out_text.append(class_name)
 	
 					out_text.append( "]%N" )
@@ -496,8 +496,7 @@ feature -- DYNAMIC_LIB Exports processing.
 					loop
 						dl_exp := dynamic_lib_exports.item_for_iteration.item
 
-						class_name := clone (dl_exp.compiled_class.name)
-						class_name.to_upper
+						class_name := dl_exp.compiled_class.name_in_upper
 						out_text.append (class_name)
 
 						if (dl_exp.creation_routine /= Void) and then (dl_exp.routine.feature_id /= dl_exp.creation_routine.feature_id) then

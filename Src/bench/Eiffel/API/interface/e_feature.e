@@ -557,8 +557,7 @@ feature -- Output
 		local
 			l_name: STRING
 		do
-			l_name := clone (name)
-			l_name.to_lower
+			l_name := name.as_lower
 			if is_once or else is_constant then
 				l_name.put ((l_name @ 1).upper, 1)
 			end

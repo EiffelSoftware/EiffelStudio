@@ -151,7 +151,7 @@ feature -- Store/Retrieve
 			end
 
 				-- Save clusters
-			copy_clusters := clone (clusters)
+			copy_clusters := clusters.twin
 			l_clusters := root_ast.clusters
 			if l_clusters = Void then
 					-- No cluster option, we need to create them
@@ -1260,5 +1260,6 @@ feature {NONE} -- Assertion checks access through list
 		
 invariant
 	cluster_tree_not_void: cluster_tree /= Void
+	clusters_not_void: clusters /= Void
 	
 end -- class EB_SYSTEM_GENERAL_TAB

@@ -31,12 +31,13 @@ feature {NONE} -- Initialization
 			-- Create a new CREATION_EXPR AST node.
 		require
 			t_not_void: t /= Void
+			l_not_void: l /= Void
 		local
 			dcr_id : ID_AS
 		do
 			type := t
 			call := c
-			location := clone (l)
+			location := l.twin
 
 				-- If there's no call create 'default_call'
 			if call = Void then

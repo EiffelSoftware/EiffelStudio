@@ -1174,8 +1174,7 @@ feature -- Access
 			i_not_void: i /= Void
 			l_not_void: l /= Void
 		do
-			create Result
-			Result.initialize (t, i, l)
+			create Result.initialize (t, i, l)
 		ensure
 			index_as_not_void: Result /= Void
 			tag_set: Result.tag = t

@@ -363,7 +363,7 @@ feature {NONE} -- Implementation
 		local
 			t_width: INTEGER
 		do
-			t_width := font.implementation.string_width (current, s)
+			t_width := font.implementation.width_of_string (s)
 			largest_width := largest_width.max (t_width)
 			if t_width + 25 > width then	
 				if not fixed_size then
@@ -382,9 +382,9 @@ feature {NONE} -- Implementation
 					add_string (s)
 				end
 			end
-			if not fixed_size then
-				set_visible_item_count (count)
-			end
+			--if not fixed_size then
+			--	set_visible_item_count (count)
+			--end
 		end
 
 	delete_item (i: INTEGER) is
@@ -562,10 +562,11 @@ feature {NONE} -- Implementation
 			if exists then
 				delete_string (index - 1)
 			end
-			index := index + 1
+			if empty then
+				index := 0
+			end
 		ensure then
-			count = old count - 1
-			not empty implies index = old index
+			not_empty_unchanged_index: not empty implies index = old index
 		end
 
 	prune_all (an_item: STRING) is

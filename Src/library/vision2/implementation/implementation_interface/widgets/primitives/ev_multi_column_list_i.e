@@ -26,6 +26,7 @@ feature {NONE} -- Initialization
 			update_children_agent := ~update_children
 			create column_titles.make
 			create column_widths.make
+			create column_alignments.make
 		end
 
 feature -- Access
@@ -83,6 +84,28 @@ feature -- Status report
 		do
 			if a_column <= column_widths.count then
 				Result := column_widths @ a_column
+			elseif a_column <= column_count then
+				Result := Default_column_width
+			end
+		end
+
+	column_alignment (a_column: INTEGER): EV_TEXT_ALIGNMENT is
+			-- Text alignment of `a_column' in pixels.
+		require
+			a_column_positive: a_column > 0
+		local
+			an_assignment_code: INTEGER
+		do
+			if a_column <= column_alignments.count then
+				create Result
+				an_assignment_code := column_alignments.i_th (a_column)
+				if an_assignment_code = Result.left_alignment then
+					Result.set_left_alignment
+				elseif an_assignment_code = Result.center_alignment then
+					Result.set_center_alignment
+				else
+					Result.set_right_alignment
+				end
 			end
 		end
 
@@ -143,25 +166,41 @@ feature -- Status setting
 			-- Display text of `a_column' left aligned.
 			-- First column is always left aligned.
 		require
-			a_column_withing_range: a_column > 1 and a_column <= column_count
-		deferred
+			a_column_within_range: a_column >= 1 and a_column <= column_count
+		local
+			an_alignment: EV_TEXT_ALIGNMENT
+		do
+			create an_alignment.make_with_left_alignment
+			set_column_alignment (an_alignment, a_column)
 		end
 
 	align_text_center (a_column: INTEGER) is
 			-- Display text of `a_column' centered.
 			-- First column is always left aligned.
 		require
-			a_column_within_range: a_column > 1 and a_column <= column_count
-		deferred
+			a_column_within_range: a_column >= 1 and a_column <= column_count
+		local
+			an_alignment: EV_TEXT_ALIGNMENT
+		do
+			create an_alignment.make_with_center_alignment
+			set_column_alignment (an_alignment, a_column)
 		end
+
 	
 	align_text_right (a_column: INTEGER) is
 			-- Display text of `a_column' right aligned.
 			-- First column is always left aligned.
 		require
-			a_column_within_range: a_column > 1 and a_column <= column_count
-		deferred
+			a_column_within_range: a_column >= 1 and a_column <= column_count
+		local
+			an_alignment: EV_TEXT_ALIGNMENT
+		do
+			create an_alignment.make_with_right_alignment
+			set_column_alignment (an_alignment, a_column)
 		end
+
+
+	--| FIXME IEK Will setting first column alignment cause problems on Win32.
 
 feature -- Element change
 
@@ -177,7 +216,7 @@ feature -- Element change
 			else
 				from	
 				until
-					a_column = column_titles.count + 1
+					column_titles.count = a_column - 1
 				loop
 					column_titles.extend (Void)
 				end
@@ -236,7 +275,7 @@ feature -- Element change
 			else
 				from	
 				until
-					a_column > column_widths.count
+					column_widths.count = a_column - 1
 				loop
 					column_widths.extend (Default_column_width) 
 				end
@@ -269,12 +308,79 @@ feature -- Element change
 			end
 			from
 			until
-				old_count <= 0
+				old_count < 1
 			loop
 				column_width_changed (Default_column_width, i)
 				i := i + 1
 				old_count := old_count - 1
 			end
+		end
+
+	set_column_alignments (alignments: LINKED_LIST [EV_TEXT_ALIGNMENT]) is
+			-- Assign `alignments' to column text alignments in order.
+		require
+			alignments_not_void: alignments /= Void
+			alignments_count_in_column_range: alignments.count <= column_count
+		local
+			i: INTEGER
+			old_count: INTEGER
+		do
+			from
+				i := 1
+				alignments.start
+				old_count := column_alignments.count
+				column_alignments.wipe_out
+			until
+				alignments.after
+			loop
+				column_alignment_changed (alignments.item, i)
+				column_alignments.extend (alignments.item.alignment_code)
+				alignments.forth
+				i := i + 1
+				old_count := old_count - 1
+			end
+			from
+			until
+				old_count < 1
+			loop
+				align_text_left (i)
+				i := i + 1
+				old_count := old_count + 1
+			end
+			if column_alignments.count > column_count then
+				expand_column_count_to (column_alignments.count)
+			end
+		end
+
+	set_column_alignment (an_alignment: EV_TEXT_ALIGNMENT; a_column: INTEGER) is
+			-- Assign text alignment to `an_alignment' for column `a_column'.
+		require
+			an_alignment_not_void: an_alignment /= Void
+			a_column_within_range: a_column > 0 and a_column <= column_count
+		do
+			if a_column <= column_alignments.count then
+				column_alignments.go_i_th (a_column)
+				column_alignments.replace (an_alignment.alignment_code)
+			else
+				from	
+				until
+					column_alignments.count = a_column - 1
+				loop
+					column_alignments.extend (an_alignment.left_alignment) 
+				end
+				column_alignments.extend (an_alignment.alignment_code)
+			end
+			column_alignment_changed (an_alignment, a_column)
+		end
+		
+
+	set_row_height (a_height: INTEGER) is
+			-- Set all rows to `a_height'.
+		require
+			height_valid: a_height > 0
+		deferred
+		ensure
+			a_height_assigned: a_height = row_height
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -394,6 +500,14 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
+	column_alignment_changed (an_alignment: EV_TEXT_ALIGNMENT; a_column: INTEGER) is
+			-- Set alignment of `a_column' to corresponding `alignment_code'.
+		require
+			a_column_positive: a_column > 0
+			an_alignment_not_void: an_alignment /= Void
+		deferred
+		end
+
 	update_children_agent: PROCEDURE [EV_MULTI_COLUMN_LIST_I, TUPLE []]
 			-- Agent object for `update_children'.
 
@@ -416,6 +530,10 @@ feature {EV_ANY_I} -- Implementation
 	column_widths: LINKED_LIST [INTEGER]
 			-- All column widths set using `set_column_widths' and
 			-- `set_column_width'.
+
+	column_alignments: LINKED_LIST [INTEGER]
+			--  All column alignment codes set using `set_column_alignments'
+			--  and `set_column_alignment'.
 
 	Default_column_width: INTEGER is 80
 
@@ -445,6 +563,9 @@ end -- class EV_MULTI_COLUMN_LIST_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.48  2000/04/20 21:30:21  king
+--| Added column alignment features
+--|
 --| Revision 1.47  2000/04/20 18:45:18  rogers
 --| Removed set_row_height.
 --|

@@ -172,7 +172,7 @@ feature -- Status setting
 			-- Display text of `a_column' left aligned.
 			-- First column is always left aligned.
 		require
-			a_column_withing_range: a_column > 1 and a_column <= column_count
+			a_column_withing_range: a_column >= 1 and a_column <= column_count
 		do
 			implementation.align_text_left (a_column)
 		end
@@ -181,7 +181,7 @@ feature -- Status setting
 			-- Display text of `a_column' centered.
 			-- First column is always left aligned.
 		require
-			a_column_within_range: a_column > 1 and a_column <= column_count
+			a_column_within_range: a_column >= 1 and a_column <= column_count
 		do
 			implementation.align_text_center (a_column)
 		end
@@ -190,10 +190,12 @@ feature -- Status setting
 			-- Display text of `a_column' right aligned.
 			-- First column is always left aligned.
 		require
-			a_column_within_range: a_column > 1 and a_column <= column_count
+			a_column_within_range: a_column >= 1 and a_column <= column_count
 		do
 			implementation.align_text_right (a_column)
 		end
+
+	--| FIXME IEK Is changing alignment to include first column going to cause Win32 problem.
 
 feature -- Element change
 
@@ -215,7 +217,7 @@ feature -- Element change
 		do
 			implementation.set_column_titles (titles)
 		end
-		--|FIXME This nees a postcondition!
+		--|FIXME This needs a postcondition!
 
 	set_column_width (a_width: INTEGER; a_column: INTEGER) is
 			-- Assign `a_width' `column_width'(`a_column').
@@ -232,11 +234,30 @@ feature -- Element change
 				-- Assign `widths' to column widths in order.
 		require
 			widths_not_void: widths /= Void
-			widths_count_is_column_count: widths.count = column_count
+			widths_within_column_range: widths.count <= column_count
 		do
 			implementation.set_column_widths (widths)
 		end
-		--|FIXME This nees a postcondition!
+		--|FIXME This needs a postcondition!
+
+	set_column_alignment (an_alignment: EV_TEXT_ALIGNMENT; a_column: INTEGER) is
+		require
+			a_column_within_range: a_column > 0 and a_column <= column_count
+			alignment_not_void: an_alignment /= Void
+		do
+			implementation.set_column_alignment (an_alignment, a_column)
+		end
+		--|FIXME IEK This needs a postcondition!
+
+	set_column_alignments (alignments: LINKED_LIST [EV_TEXT_ALIGNMENT]) is
+			-- Assign `alignments' to column text alignments in order.
+		require
+			alignments_not_void: alignments /= Void
+			alignments_count_in_column_range: alignments.count <= column_count
+		do
+			implementation.set_column_alignments (alignments)
+		end
+		--| FIXME IEK This needs a postcondition!
 
 	set_row_height (a_height: INTEGER) is
 			-- Set all rows to `a_height'.
@@ -371,6 +392,9 @@ end -- class EV_MULTI_COLUMN_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.54  2000/04/20 21:31:18  king
+--| Added column alignment features
+--|
 --| Revision 1.53  2000/04/20 18:44:14  rogers
 --| Previous comment should read - made set_row_height odsolete.
 --|

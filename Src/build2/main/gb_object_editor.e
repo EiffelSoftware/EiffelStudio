@@ -192,7 +192,6 @@ feature -- Status setting
 						object.cancel_edited_name
 					else
 						create command_name_change.make (object, object.edited_name, object.name)
-						object.accept_edited_name
 						command_name_change.execute
 					end
 				end
@@ -324,7 +323,6 @@ feature {GB_SHARED_OBJECT_EDITORS} -- Implementation
 						-- Use the text in `name_field' as the new name of the object.
 						-- We have guaranteed that the name is unique at this point.
 					create command_name_change.make (object, object.edited_name, object.name)
-					object.accept_edited_name
 					command_name_change.execute
 				end
 			end
@@ -563,7 +561,6 @@ feature {NONE} -- Implementation
 					-- does accept the name, even though we still have the focus in the text field
 					-- and are editing it.
 				create command_name_change.make (object, object.edited_name, object.name)
-				object.accept_edited_name
 				command_name_change.execute
 			end
 			name_field.focus_out_actions.resume

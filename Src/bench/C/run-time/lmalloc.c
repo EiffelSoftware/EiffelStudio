@@ -62,7 +62,7 @@ rt_private struct lm_entry **lm = (struct lm_entry **) 0;
 rt_private int lm_create (); 
 rt_private int lm_put (void *ptr);
 rt_private int lm_remove (void *ptr);
-rt_private int lm_free ();
+rt_shared  int eif_lm_free ();
 
 /*----------------------*/
 /* MT declarations.     */
@@ -71,8 +71,6 @@ rt_private int lm_free ();
 #ifdef EIF_THREADS
 rt_private EIF_MUTEX_TYPE *lm_lock = NULL;
 #define EIF_LM_LOCK \
-	if (!lm_lock) \
-		EIF_MUTEX_CREATE (lm_lock, "Couldn't create lm lock\n"); \
 	EIF_MUTEX_LOCK (lm_lock, "Couldn't lock lm lock"); \
 
 #define EIF_LM_UNLOCK \
@@ -91,15 +89,11 @@ rt_private int lm_create () {
 
 	assert (lm == (struct lm_entry **) 0);
 
-	EIF_LM_LOCK
 	lm = (struct lm_entry **) malloc (sizeof(struct lm_entry *));
-	if (!lm) {
-		EIF_LM_UNLOCK
+	if (!lm) 
 		return -1;
-	}
 	
 	*lm = (struct lm_entry *) 0;
-	EIF_LM_UNLOCK
 	return 0;
 }
 
@@ -110,7 +104,25 @@ rt_private int lm_put (void *ptr) {
 
 	struct lm_entry *ne;
 	
+#ifdef EIF_THREADS
+	static int alloc = 0;
+		
+	if (!lm_lock) {
+		if (alloc)	{/* Are we allocating lm lock? */
+			if (lm_create ())
+				return -1;
+			return 0;
+		}
+		alloc = 1;
+		EIF_MUTEX_CREATE (lm_lock, "Couldn't create lm lock\n");
+		lm_put (lm_lock);
+	}  
+	assert (alloc == 1);
+	assert (lm_lock != NULL);
+#endif /* EIF_THREADS */
+
 	EIF_LM_LOCK
+
 	if (!lm) {
 		if (lm_create ()) {
 			EIF_LM_UNLOCK
@@ -139,9 +151,13 @@ rt_private int lm_remove (void *ptr) {
 
 	struct lm_entry *cur;
 	struct lm_entry *tmp;
-	assert (lm != (struct lm_entry **) 0);	
-	
+#ifdef EIF_THREADS	
+	if (ptr == lm_lock)
+		return 0;
+#endif
+
 	EIF_LM_LOCK
+	assert (lm != (struct lm_entry **) 0);	
 	if (!ptr) {
 		EIF_LM_UNLOCK
 		return 0;
@@ -161,10 +177,6 @@ rt_private int lm_remove (void *ptr) {
 	if (cur->ptr == ptr) {
 		*lm = cur->next;
 		free (cur);
-		if (!(*lm))	{	/* Is `lm' empty? */
-			free (lm);
-			lm = NULL;
-		}
 		EIF_LM_UNLOCK
 		return 0;
 	}
@@ -215,14 +227,18 @@ rt_shared int is_in_lm (void *ptr) {
 rt_shared void eif_lm_display () {
 	struct lm_entry *cur;
 
+#ifdef EIF_THREADS
+	assert (lm_lock != (EIF_MUTEX_TYPE *) 0);
+#endif
 	EIF_LM_LOCK;
-	if (!lm) {
+	if (!(*lm)) {
 		fprintf (stderr, "lm is empty\n");	
 		EIF_LM_UNLOCK;
 		return;
 	}
-	for (cur = *lm; cur != NULL; cur = cur->next) 
+	for (cur = *lm; cur != NULL; cur = cur->next) {
 		fprintf (stderr, "0x%x\n", (size_t) cur->ptr);
+	}
 	EIF_LM_UNLOCK;	
 }
 	
@@ -230,21 +246,31 @@ rt_shared void eif_lm_display () {
 /*------------------------------*/
 /* Free lm linked list.         */
 /*------------------------------*/
-rt_private int lm_free (struct lm_entry **lm) {
+rt_shared int eif_lm_free () {
 	struct lm_entry *cur, *tmp;
 
+#ifdef EIF_THREADS
+	if (!lm_lock)
+		return -1;
+#endif
 	EIF_LM_LOCK
-
 	if (!lm) {
 		EIF_LM_UNLOCK
 		return -1;
 	}
+		
 	for (cur = *lm; cur != NULL; ) {
 		tmp = cur;
 		cur = cur->next;	
 		free (tmp);
 	}
+	free (lm);
 	EIF_LM_UNLOCK
+#ifdef EIF_THREADS
+	fprintf (stderr, "Destroy and free lm lock 0x%lx\n", (unsigned long) lm_lock);
+	EIF_MUTEX_DESTROY (lm_lock, "Couldn't destroy lm lock");
+	lm_lock = NULL;
+#endif /* EIF_THREADS */
 	return 0;
 }
 #endif	/* LMALLOC_CHECK */
@@ -258,7 +284,11 @@ rt_public Malloc_t eif_malloc (register unsigned int nbytes)
 	if (lm_put (ret))	
 		fprintf (stderr, "Warning: cannot lm malloc %d bytes\n", nbytes);
 #ifdef LMALLOC_DEBUG
-	fprintf (stderr, "EIF_MALLOC: 0x%x\t(%d bytes)\n", ret, nbytes);	
+#ifdef EIF_THREADS
+	fprintf (stderr, "EIF_MALLOC: 0x%lx\t(%d bytes) in thread %lx\n", (unsigned long) ret, nbytes, EIF_THR_SELF);	
+#else	/* EIF_THREADS */
+	fprintf (stderr, "EIF_MALLOC: 0x%lx\t(%d bytes)\n", (unsigned long) ret, nbytes);	
+#endif	/* EIF_THREADS */
 #endif
 	return ret;
 #else	/* LMALLOC_CHECK */
@@ -270,12 +300,15 @@ rt_public Malloc_t eif_calloc (unsigned int nelem, unsigned int elsize)
 {
 #ifdef LMALLOC_CHECK
 	Malloc_t ret;
-
 	ret = (Malloc_t) calloc (nelem, elsize);
 	if (lm_put (ret))	
 		fprintf (stderr, "Warning: cannot lm calloc %d * %d \n", (unsigned int) nelem, (unsigned int) elsize);
 #ifdef LMALLOC_DEBUG
-	fprintf (stderr, "EIF_CALLOC: 0x%x\t(%d elts * %d bytes = %d bytes)\n", ret, nelem, elsize, nelem*elsize);	
+#ifdef EIF_THREADS
+	fprintf (stderr, "EIF_CALLOC: 0x%lx\t(%d elts * %d bytes = %d bytes) in thread %lx\n", (unsigned long) ret, nelem, elsize, nelem*elsize, EIF_THR_SELF);	
+#else
+	fprintf (stderr, "EIF_CALLOC: 0x%lx\t(%d elts * %d bytes = %d bytes)\n", (unsigned long) ret, nelem, elsize, nelem*elsize);	
+#endif /* EIF_THREADS */
 #endif
 	return ret;
 #else	/* LMALLOC_CHECK */
@@ -296,8 +329,12 @@ rt_public Malloc_t eif_realloc (register void *ptr, register unsigned int nbytes
 		fprintf (stderr, "Warning: cannot lm realloc 0x%x with %d bytes\n", (size_t) ptr, nbytes);
 	}
 #ifdef LMALLOC_DEBUG
-	fprintf (stderr, "EIF_REALLOC: 0x%x\t(old 0x%x, %d bytes)\n", ret, ptr, nbytes);	
-#endif
+#ifdef EIF_THREADS
+	fprintf (stderr, "EIF_REALLOC: 0x%lx\t(old 0x%lx, %d bytes) in thread %lx\n", (unsigned long) ret, (unsigned long) ptr, nbytes, EIF_THR_SELF);	
+#else	/* EIF_THREADS */
+	fprintf (stderr, "EIF_REALLOC: 0x%lx\t(old 0x%lx, %d bytes)\n", (unsigned long) ret, (unsigned long) ptr, nbytes);	
+#endif	/* EIF_THREADS */
+#endif	/* LMALLOC_DEBUG */
 	return ret;
 #else	/* LMALLOC_CHECK */
 	return (Malloc_t) realloc (ptr, nbytes);
@@ -309,9 +346,13 @@ void eif_free(register void *ptr)
 #ifdef LMALLOC_CHECK
 	free (ptr);
 	if (lm_remove (ptr))	
-		fprintf (stderr, "Warning: cannot lm free 0x%x\n", (size_t) ptr);
+		fprintf (stderr, "Warning: cannot lm free 0x%lx\n", (unsigned long) ptr);
 #ifdef LMALLOC_DEBUG
-	fprintf (stderr, "EIF_FREE: 0x%x\n", ptr);	
+#ifdef EIF_THREADS
+	fprintf (stderr, "EIF_FREE: 0x%lx in thread %lx\n", (unsigned long) ptr, EIF_THR_SELF);	
+#else	/* EIF_THREADS */
+	fprintf (stderr, "EIF_FREE: 0x%lx\n", (unsigned long) ptr);	
+#endif	/* EIF_THREADS */
 #endif
 #else	/* LMALLOC_CHECK */
 	free (ptr);

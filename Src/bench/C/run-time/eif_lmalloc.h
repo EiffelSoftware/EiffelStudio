@@ -19,6 +19,7 @@ extern "C" {
 
 extern int is_in_lm (void *ptr);
 extern void eif_lm_display ();
+extern int eif_lm_free ();
 extern Malloc_t eif_malloc (register unsigned int nbytes);
 extern Malloc_t eif_calloc (unsigned int nelem, unsigned int elsize) ;
 extern Malloc_t eif_realloc (void *ptr, unsigned int nbytes);

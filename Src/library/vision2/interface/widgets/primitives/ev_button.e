@@ -15,7 +15,8 @@ inherit
 	EV_PRIMITIVE
 		redefine
 			create_action_sequences,
-			implementation
+			implementation,
+			make_for_test
 		end
 
 	EV_TEXTABLE
@@ -79,6 +80,15 @@ feature {EV_ANY_I} -- Implementation
 	implementation: EV_BUTTON_I
 			-- Implementation of button.
 
+feature {NONE} -- Contract support
+
+	make_for_test is
+			-- Create with action for testing purposes.
+		do
+			{EV_PRIMITIVE} Precursor
+			press_actions.extend (~print (text + " button pressed.%N"))
+		end
+
 invariant
 	press_actions_not_void: press_actions /= Void
  
@@ -105,6 +115,9 @@ end -- class EV_BUTTON
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.26  2000/03/06 19:47:39  oconnor
+--| added make_for_test
+--|
 --| Revision 1.25  2000/03/01 20:07:36  king
 --| Corrected export clauses for implementation and create_imp/act_seq
 --|

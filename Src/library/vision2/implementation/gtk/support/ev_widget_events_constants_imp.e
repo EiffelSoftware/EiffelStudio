@@ -53,8 +53,8 @@ feature -- General events for widgets
 	leave_notify_event_id: INTEGER is 14
 			-- The pointer of the mouse leaved the widget
 
-	destroy_event_id: INTEGER is 15
-			-- The pointer of the mouse leaved the widget
+	destroy_id: INTEGER is 15
+			-- The widget gets destroyed.
 
 	focus_in_event_id: INTEGER is 16
 			-- The widget gets the focus.

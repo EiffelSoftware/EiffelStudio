@@ -24,6 +24,9 @@ inherit
 			reset
 		end
 
+	SHARED_PARSER_FILE_BUFFER
+		export {NONE} all end
+
 	AST_FACTORY
 		export {NONE} all end
 
@@ -58,7 +61,7 @@ feature -- Initialization
 feature -- Parsing
 
 	parse (a_file: IO_MEDIUM) is
-			-- Parser Eiffel class text from `a_file'.
+			-- Parse Eiffel class text from `a_file'.
 			-- Make result available in `root_node'.
 			-- An exception is raised if a syntax error is found.
 		require
@@ -71,6 +74,8 @@ feature -- Parsing
 			yy_load_input_buffer
 			filename := a_file.name
 			yyparse
+			reset
+		rescue
 			reset
 		end
 
@@ -914,14 +919,6 @@ feature {NONE} -- Error handling
 		end
 
 feature {NONE} -- Constants
-
-	File_buffer: YY_FILE_BUFFER is
-			-- Input file buffer
-		once
-			!! Result.make_with_size (io.input, 50000)
-		ensure
-			file_buffer_not_void: Result /= Void
-		end
 
 	Dummy_clickable_as: CLICKABLE_AST is
 			-- Dummy CLICKABLE_AST used to temporarily

@@ -16,11 +16,11 @@ inherit
 
 	EV_PIXMAPABLE_IMP
 		rename
-			set_parent as widget_set_parent,
-			parent_imp as widget_parent_imp,
-			parent_set as widget_parent_set,
 			add_double_click_command as old_add_dblclk,
-			remove_double_click_commands as old_remove_dblclk
+			remove_double_click_commands as old_remove_dblclk,
+			set_parent as widget_set_parent,
+			parent_set as widget_parent_set,
+			parent_imp as widget_parent_imp
 		undefine
 			has_parent,
 			set_foreground_color,

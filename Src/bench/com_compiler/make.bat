@@ -29,6 +29,7 @@ CALL generate_dll.bat
 DEL *.e
 DEL Clib\*.cpp
 DEL Clib\*.c
+DEL Clib\*.obj
 DEL Clib\*.h
 
 COPY generated\Client\Interface_proxy .\

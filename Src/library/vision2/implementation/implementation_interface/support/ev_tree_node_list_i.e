@@ -28,7 +28,7 @@ Feature -- Status report
 				if equal (data, item.data) then
 					Result := item
 				else
-					Result := item.find_item_recursively_by_data (data)
+					Result := item.implementation.find_item_recursively_by_data (data)
 				end
 				interface.forth
 			end
@@ -51,7 +51,7 @@ Feature -- Status report
 				if equal (an_item, item) then
 					Result := True
 				else
-					Result := item.has_recursively (an_item)
+					Result := item.implementation.has_recursively (an_item)
 				end
 				interface.forth
 			end
@@ -72,7 +72,7 @@ Feature -- Status report
 			until
 				interface.after
 			loop
-				item.recursive_do_all (action)
+				item.implementation.recursive_do_all (action)
 				t.put (item, 1)
 				action.call (t)
 				interface.forth

@@ -25,7 +25,8 @@ inherit
 			minimum_width,
 			minimum_height,
 			enable_capture,
-			disable_capture
+			disable_capture,
+			on_key_event
 		end
 
 	EV_SENSITIVE_IMP
@@ -500,12 +501,6 @@ feature {EV_DOCKABLE_SOURCE_I} -- Implementation
 		end
 
 feature {NONE} -- Agent functions.
-
-	key_event_translate_agent: FUNCTION [EV_GTK_CALLBACK_MARSHAL, TUPLE [INTEGER, POINTER], TUPLE] is
-			-- Translation agent used for key events
-		once
-			Result := agent (App_implementation.gtk_marshal).key_event_translate
-		end
 
 	configure_translate_agent: FUNCTION [EV_GTK_CALLBACK_MARSHAL, TUPLE [INTEGER, POINTER], TUPLE] is
 			-- Translation agent used for size allocation events

@@ -14,7 +14,7 @@ inherit
 -- END of mt_odl generation of inheritance
 
 
-creation
+create
 	make_from_name
 
 feature

@@ -17,7 +17,7 @@ inherit
 		redefine out 
 		end
 		
-creation
+create
 	make
 	
 feature

@@ -20,7 +20,7 @@ inherit
 		redefine out
 		end
 	
-creation
+create
 	make
 
 feature -- Initialization
@@ -28,9 +28,9 @@ feature -- Initialization
 	make(a_zip_code: INTEGER) is
 		do
 			zip_code := a_zip_code
-			!!city_names.make
-			!!states.make
-			!!zip_types.make
+			create city_names.make
+			create states.make
+			create zip_types.make
 		end
 		
 -- BEGIN generation of accessors by mt_odl
@@ -150,7 +150,7 @@ feature -- Output
 
 	out : STRING is
 		do
-			!!Result.make(0)
+			create Result.make(0)
 			Result.append(zip_code_out) Result.append(":%N")
 			Result.append("City Name                     State     ZIP code type%N")
 			Result.append("-----------------------------------------------------%N")

@@ -12,7 +12,7 @@ inherit
 	
 	ARGUMENTS
 
-creation
+create
 	make
 	
 feature
@@ -21,7 +21,7 @@ feature
 			if arg_number /= 3 then
 				print_usage
 			else
-			!!mt_appl.set_login(argument(1), argument(2))
+			create mt_appl.set_login(argument(1), argument(2))
 			mt_appl.connect
 			load_zip_code
 			mt_appl.disconnect
@@ -49,40 +49,40 @@ feature
 		do
 			mt_appl.start_transaction
 			
-			!!the_table
+			create the_table
 			current_db.persist(the_table)
 			hash_table := the_table.get_zip_table
 			
-			!!a_zip.make(94403)
+			create a_zip.make(94403)
 			a_zip.add_city("SAN MATEO", "CA", Zip_Standard)
 			hash_table.put(a_zip, a_zip.get_zip_code)
 			
-			!!a_zip.make(94402)
+			create a_zip.make(94402)
 			a_zip.add_city("SAN MATEO", "CA", Zip_Standard)
 			hash_table.put(a_zip, a_zip.get_zip_code)
 			
-			!!a_zip.make(93117)
+			create a_zip.make(93117)
 			a_zip.add_city("GOLETA", "CA", Zip_Standard)
 			a_zip.add_city("GAVIOTA", "CA", Zip_Standard)
 			a_zip.add_city("ISLA VISTA", "CA", Zip_Standard)
 			a_zip.add_city("SANTA BARBARA", "CA", Zip_Standard)
 			hash_table.put(a_zip, a_zip.get_zip_code)
 			
-			!!a_zip.make(12345)
+			create a_zip.make(12345)
 			a_zip.add_city("SCHENECTADY", "NY", Zip_Unique)
 			a_zip.add_city("GENERAL ELECTRIC", "NY", Zip_Unique)
 			a_zip.add_city("SCHDY", "NY", Zip_Unique)
 			hash_table.put(a_zip, a_zip.get_zip_code)
 
-			!!a_zip.make(09876)
+			create a_zip.make(09876)
 			a_zip.add_city("APO", "AE", Zip_Military)
 			hash_table.put(a_zip, a_zip.get_zip_code)
 			
-			!!a_zip.make(20001)
+			create a_zip.make(20001)
 			a_zip.add_city("WASHINGTON", "DC", Zip_Standard)
 			hash_table.put(a_zip, a_zip.get_zip_code)
 			
-			!!a_zip.make(67039)
+			create a_zip.make(67039)
 			a_zip.add_city("DOUGLASS", "KS", Zip_Standard)
 			hash_table.put(a_zip, a_zip.get_zip_code)
 			
@@ -100,7 +100,7 @@ feature
 			n: INTEGER
 		do
 			mt_appl.start_version_access
-			!!c.make_from_name("ZIP_CODE_TABLE")
+			create c.make_from_name("ZIP_CODE_TABLE")
 			the_table ?= c.all_instances.item(0)
 			hash_table := the_table.get_zip_table
 			

@@ -11,7 +11,7 @@ inherit
 	
 	ARGUMENTS
 	
-creation
+create
 	make
 
 feature -- Initialization
@@ -21,7 +21,7 @@ feature -- Initialization
 			if arg_number /= 3 then
 				print_usage
 			else
-			!!appl.set_login(argument(1), argument(2))
+			create appl.set_login(argument(1), argument(2))
 				-- Setting a host name of the database server,
 				-- database name, accessing priority and wait time.
 			appl.connect
@@ -160,19 +160,19 @@ feature
 			print("%NIs it OK? (yes or no) ")
 			io.readline
 			if io.laststring.is_equal("yes") then
-			!!a_file.make_open_read("..\..\books.dat")
+			create a_file.make_open_read("..\..\books.dat")
 			
 			-- Creating PUBLISHER object
 			a_file.read_integer
 			count := a_file.last_integer
-			!!pubs.make(10)
+			create pubs.make(10)
 			from
 				i := 1
 			until
 				i > count
 			loop
 				a_file.readline
-				!!a_pub
+				create a_pub
 				a_pub.set_name(a_file.laststring)
 				pubs.put(a_pub, a_pub.get_name)
 				i := i + 1
@@ -181,14 +181,14 @@ feature
 			-- Creating AUTHOR object
 			a_file.read_integer
 			count := a_file.last_integer
-			!!authors.make(10)
+			create authors.make(10)
 			from
 				i := 1
 			until
 				i > count
 			loop
 				a_file.readline
-				!!an_author
+				create an_author
 				an_author.set_name(a_file.laststring)
 				a_file.read_integer
 				an_author.set_birth_year(a_file.lastint)
@@ -205,7 +205,7 @@ feature
 				i > count
 			loop
 				a_file.readline
-				!!a_book
+				create a_book
 				a_book.set_title(a_file.laststring)
 				current_db.persist(a_book)
 					-- Explicit promotion of transient object into persistent one
@@ -252,7 +252,7 @@ feature -- Programs in the document
 			i: INTEGER
 		do
 			print("%N%Nfind_and_print_books_from_title%N")
-			!!ep.make_from_name("title", "BOOK")
+			create ep.make_from_name("title", "BOOK")
 			an_array :=  ep.retrieve_objects(a_title)
 			from
 				i := an_array.lower
@@ -272,7 +272,7 @@ feature -- Programs in the document
 			criterion: MT_INDEX_CRITERION
 		do
 			print("%N%Nfind_and_print_books_using_index%N")
-			!!an_index.make("BookTitleIndex")
+			create an_index.make("BookTitleIndex")
 			criterion := an_index.criteria.item(0)
 			criterion.set_start_value(start_v)
 			criterion.set_end_value(end_v)
@@ -299,7 +299,7 @@ feature -- Programs in the document
 			print("%N%Nprint_all_instances of class ")
 			print(a_class_name)
 			io.new_line
-			!!a_class.make_from_name(a_class_name)
+			create a_class.make_from_name(a_class_name)
 			all_instances := a_class.all_instances
 			from
 				i := all_instances.lower
@@ -320,7 +320,7 @@ feature -- Programs in the document
 			i: INTEGER
 		do
 			print("%N%Nprint_all_instances_by_stream%N")
-			!!a_class.make_from_name(a_class_name)
+			create a_class.make_from_name(a_class_name)
 			a_stream := a_class.open_stream
 			from
 				a_stream.start
@@ -342,7 +342,7 @@ feature -- Programs in the document
 -- 			i: INTEGER
 -- 		do
 -- 			print("%N%Nprint_properites_of_book%N")
--- 			!!an_ep.make_from_name("title", "BOOK")
+-- 			create an_ep.make_from_name("title", "BOOK")
 -- 			books := an_ep.retrieve_objects(book_title)
 -- 			from i := books.lower
 -- 			until	i > books.upper
@@ -369,7 +369,7 @@ feature -- Programs in the document
 			i: INTEGER
 		do
 			print("%N%Nprint_properites_of_book_using_mt_get_functions%N")
-			!!an_ep.make_from_name("title", "BOOK")
+			create an_ep.make_from_name("title", "BOOK")
 			books := an_ep.retrieve_objects(book_title)
 			from i := books.lower
 			until i > books.upper
@@ -393,7 +393,7 @@ feature -- Programs in the document
 			i: INTEGER
 		do
 			print("%N%Nprint_all_authors_of_book: Using get_written_by%N")
-			!!an_ep.make_from_name("title", "BOOK")
+			create an_ep.make_from_name("title", "BOOK")
 			a_book ?= an_ep.retrieve_objects(book_title).item(1)
 			authors := a_book.get_written_by
 			from
@@ -417,7 +417,7 @@ feature -- Programs in the document
 -- 			i: INTEGER
 -- 		do
 -- 			print("%N%Nprint_all_authors_of_book_3%N")
--- 			!!an_ep.make_from_name("title", "BOOK")
+-- 			create an_ep.make_from_name("title", "BOOK")
 -- 			a_book ?= an_ep.retrieve_first(book_title)
 -- 			authors := a_book.written_by
 -- 			authors.load_successors
@@ -440,7 +440,7 @@ feature -- Programs in the document
 -- 			an_ep: MT_ENTRYPOINT
 -- 		do
 -- 			print("%N%Nprint_all_authors_of_book: Using stream%N")
--- 			!!an_ep.make_from_name("title", "BOOK")
+-- 			create an_ep.make_from_name("title", "BOOK")
 -- 			a_book ?= an_ep.retrieve_first(book_title)
 -- 			if a_book /= Void then
 -- 				a_stream := a_book.written_by.open_stream
@@ -464,7 +464,7 @@ feature -- Programs in the document
 			a_book: BOOK
 		do
 			print("%N%NRemove value%N")
-			!!ep.make_from_name("title", "BOOK")
+			create ep.make_from_name("title", "BOOK")
 			a_book ?= ep.retrieve_first(book_title)
 			if a_book /= Void then
 				a_book.mt_remove_value_by_name("price")
@@ -479,7 +479,7 @@ feature -- Programs in the document
 		do
 			print("%N%Ndelete book: ")
 			print(book_title) io.new_line
-			!!ep.make_from_name("title", "BOOK")
+			create ep.make_from_name("title", "BOOK")
 			a_book ?= ep.retrieve_first(book_title)
 			if a_book = Void then
 				print("The book is not found%N")
@@ -501,7 +501,7 @@ feature
 -- 			i: INTEGER
 -- 		do
 -- 			print("%N%Nprint_publisher_and_authors_of_book using explicit loading%N")
--- 			!!an_ep.make_from_name("title", "BOOK")
+-- 			create an_ep.make_from_name("title", "BOOK")
 -- 			a_book ?= an_ep.retrieve_first(book_title)
 -- 			if a_book /= Void then
 -- 				a_book.mt_load_all_successors
@@ -533,7 +533,7 @@ feature
 			i: INTEGER
 		do
 			print("%N%Nprint_publisher_and_authors_of_book using transparent loading%N")
-			!!an_ep.make_from_name("title", "BOOK")
+			create an_ep.make_from_name("title", "BOOK")
 			a_book ?= an_ep.retrieve_objects(book_title).item(1)
 			if a_book /= Void then
 				a_publisher := a_book.get_publisher

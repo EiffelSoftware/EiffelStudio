@@ -24,8 +24,7 @@ feature {NONE}
 		-- Value is a container class name in upper case.
 		-- Key is a MATISSE relationship name.
 		once
-			!!Result.make(20)
+			create Result.make(20)
 			Result.put("MT_HASH_TABLE", "ZIP_CODE_TABLE__zip_table")
 		end
 
-end -- class MT_CONTAINER_TYPES

@@ -57,9 +57,9 @@ struct utimbuf {
 #include <descrip.h>
 #include <rmsdef.h>
 #include <unixlib.h>		/* for mkdir, geteuid, getegid,... */
-#include <unixio.h>			/* for access(),chown() */
+#include <unixio.h>  		/* for access(),chown() */
 #include <processes.h>		/* for system() */
-#endif
+#endif /* EIF_VMS */
 
 #include "eif_err_msg.h"
 #ifdef I_PWD
@@ -115,7 +115,7 @@ rt_private void swallow_nl(FILE *f);		/* Swallow next character if new line */
 
 #ifndef HAS_UTIME
 /* rt_private int utime(); */ /* %%ss removed and replaced by below */
-#ifdef EIF_VMS
+#ifdef EIF_VMSxxx
 rt_private int utime(char *path, char *times);		/* %%ss */
 #else
 rt_private int utime(char *path, struct utimbuf *times);	/* %%ss */
@@ -1634,7 +1634,7 @@ rt_public int mkdir(char *path)
 #endif
 
 #ifndef HAS_UTIME
-#ifdef EIF_VMS
+#ifdef EIF_VMSxxx
 rt_private int utime(char *path, char *times)
 #else
 rt_private int utime(char *path, struct utimbuf *times)

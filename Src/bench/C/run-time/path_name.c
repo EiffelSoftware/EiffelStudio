@@ -259,6 +259,7 @@ rt_public void eif_append_directory(EIF_REFERENCE string, EIF_POINTER p, EIF_POI
 	/* allowable forms for p are device:[dir]file	*/
 	/* allowable forms for v are [.subdir] or subdir */
 	/* make p "[x]" look like "[x." if p is not "[x.]" */
+	if (*p == '\0') strcpy (p, "[.]");
 	if (*((char *)p) != '\0') {
 	    char *q = p + strlen(p) - 1;	/* q --> last char of p	*/
 	    char *w = (char*)v;			/* w --> 1st char of v	*/
@@ -271,8 +272,8 @@ rt_public void eif_append_directory(EIF_REFERENCE string, EIF_POINTER p, EIF_POI
 	    if (*q == ':') {			/* if a : (device only)	*/
 		*++q = '[';			/*   append [ after :	*/
 	    } else if (*q == ']') {		/* if a ]		*/
-		if (*(q-1) != '.')		/* if not .]		*/
-		    *q = '.';			/*   make it so		*/
+		if (*--q != '.')		/* if not .]		*/
+		    *++q = '.';			/*   make it so		*/
 	    } else {				/* none (name only)	*/
 		*++q = ':'; *++q = '[';		/* append :[		*/
 	    }
@@ -283,7 +284,7 @@ rt_public void eif_append_directory(EIF_REFERENCE string, EIF_POINTER p, EIF_POI
 		strcat (p, "]");
 	} else { /* p is empty string */
 	    /* what to do with v??? */
-	    strcpy (p,v);
+	    strcpy (p, v);
 	}
 
 #else	/* (not) EIF_VMS */
@@ -305,7 +306,9 @@ rt_public void eif_set_directory(EIF_REFERENCE string, EIF_POINTER p, EIF_POINTE
 		/* Set the absolute part of the path name */
 #ifdef EIF_VMS
 	/* assume *p == '\0' ? */
+	*p = '\0';
 	strcat (strcat (strcat ((char*)p, "["), (char*)v), "]");
+	strcpy (p, v);
 #elif defined EIF_WIN32 || defined EIF_OS2
 	strcat ((char *)p, (char *)v);
 #else	/* Unix */

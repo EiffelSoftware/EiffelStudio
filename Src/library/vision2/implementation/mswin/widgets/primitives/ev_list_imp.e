@@ -213,7 +213,7 @@ feature -- Element change
 
 feature -- Event : command association
 
-	add_selection_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is	
+	add_selection_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	
 			-- Add `cmd' to the list of commands to be executed
 			-- when the selection has changed.
 		do

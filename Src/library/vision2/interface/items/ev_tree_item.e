@@ -56,7 +56,7 @@ feature -- Status report
 
 feature -- Event : command association
 
-	add_subtree_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+	add_subtree_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Make 'cmd' the executed command when the subtree expand
 			-- or collapse.
 		require

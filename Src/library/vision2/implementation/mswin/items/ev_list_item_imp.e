@@ -143,7 +143,7 @@ feature -- Element change
 
 feature -- Event : command association
 
-	add_double_click_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+	add_double_click_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add 'command' to the list of commands to be executed
 			-- when the item is double clicked.
 		do

@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 
 feature -- Event : command association
 
-	add_selection_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is	
+	add_selection_command (a_command: EV_COMMAND; arguments: EV_ARGUMENT) is	
 			-- Make `command' executed when an item is
 			-- selected.
 		require

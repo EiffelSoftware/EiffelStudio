@@ -78,7 +78,7 @@ feature -- Status setting
 
 feature -- Event : command association
 
-	add_double_click_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+	add_double_click_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Make 'cmd' the executed command the item is double clicked.
 		require
 			exists: not destroyed

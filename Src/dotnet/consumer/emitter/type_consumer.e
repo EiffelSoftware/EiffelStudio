@@ -31,47 +31,54 @@ feature {NONE} -- Initialization
 			inter: NATIVE_ARRAY [TYPE]
 			interfaces: ARRAY [CONSUMED_REFERENCED_TYPE]
 			parent: CONSUMED_REFERENCED_TYPE
-			i, count: INTEGER
+			i, nb, count: INTEGER
 			parent_type: TYPE
-			members, constructors: NATIVE_ARRAY [MEMBER_INFO]
 		do
 			create dotnet_name.make_from_cil (t.get_full_name)
 			parent_type := t.get_base_type
 			if parent_type /= Void and then is_consumed_type (parent_type) then
 				parent := referenced_type_from_type (parent_type)
 			end 
-			inter := t.get_interfaces
-			create interfaces.make (1, 0)
 			from
-				i := 1
+				inter := t.get_interfaces
+				i := 0
+				nb := inter.count - 1
+				create interfaces.make (1, nb + 1)
 		 	until
-				i > inter.get_length
+				i > nb
 			loop
-				parent_type := inter.item (i - 1)
+				parent_type := inter.item (i)
 				if is_consumed_type (parent_type) then
 					count := count + 1
 					interfaces.force (referenced_type_from_type (parent_type), count)
 				end
 				i := i + 1
 			end
-			create consumed_type.make (dotnet_name,
-										en,
-										t.get_is_interface,
-										t.get_is_abstract,
-										t.get_is_sealed,
-										t.get_is_value_type,
-										t.get_is_enum,
-										parent,
-										interfaces)
-			internal_members := t.get_members_binding_flags (feature {BINDING_FLAGS}.instance |
-													feature {BINDING_FLAGS}.static |
-													feature {BINDING_FLAGS}.public |
-													feature {BINDING_FLAGS}.non_public)
+
+			if count <= nb then
+					-- Resize array only if needed.
+				interfaces := interfaces.subarray (1, count)
+			end
+
+			create consumed_type.make (dotnet_name, en, t.get_is_interface, t.get_is_abstract,
+				t.get_is_sealed, t.get_is_value_type, t.get_is_enum, parent, interfaces)
+
+			if t.get_is_interface then
+					-- Lookup members of current interface `t' but also add members coming
+					-- from parent interfaces as `t.get_members_binding_flags' does not do it.
+				update_interface_members (t)
+			else
+				internal_members := t.get_members_binding_flags (feature {BINDING_FLAGS}.instance |
+					feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.public |
+					feature {BINDING_FLAGS}.non_public)
+			end
 			internal_constructors := t.get_constructors
+			internal_referenced_type := referenced_type_from_type (t)
 		ensure
 			non_void_consumed_type: consumed_type /= Void
 			non_void_internal_members: internal_members /= Void
 			non_void_internal_constructors: internal_constructors /= Void
+			non_void_internal_referenced_type: internal_referenced_type /= Void
 		end
 		
 feature -- Access
@@ -92,8 +99,9 @@ feature -- Basic Operation
 		require
 			not_initialized: not initialized
 		local
-			i, arg_count, index: INTEGER
+			i, nb, arg_count, index: INTEGER
 			fields: ARRAYED_LIST [CONSUMED_FIELD]
+			l_functions, l_other_functions: ARRAY [CONSUMED_FUNCTION]
 			cf: CONSUMED_FIELD
 			cons: CONSTRUCTOR_INFO
 			field: FIELD_INFO
@@ -114,8 +122,9 @@ feature -- Basic Operation
 
 			from
 				i := 0
+				nb := internal_constructors.count
 			until
-				i = internal_constructors.get_length
+				i = nb
 			loop
 				cons := internal_constructors.item (i)
 				if is_consumed_method (cons) then
@@ -126,8 +135,9 @@ feature -- Basic Operation
 			
 			from
 				i := 0
+				nb := internal_members.count
 			until
-				i = internal_members.get_length
+				i = nb
 			loop
 				member := internal_members.item (i)
 				if member.get_member_type = feature {MEMBER_TYPES}.field then
@@ -155,7 +165,24 @@ feature -- Basic Operation
 			overload_solver.set_reserved_names (reserved_names)
 			overload_solver.solve
 			consumed_type.set_procedures (overload_solver.procedures)
-			consumed_type.set_functions (overload_solver.functions)
+			l_functions := overload_solver.functions
+			if consumed_type.is_enum then
+				from
+					i := 1
+					l_other_functions := l_functions
+					nb := l_other_functions.count
+					create l_functions.make (1, nb + Additional_enum_features)
+				until
+					i > nb
+				loop
+					l_functions.put (l_other_functions.item (i), i)
+					i := i + 1
+				end
+				l_functions.put (infix_or_feature (internal_referenced_type), i)
+				l_functions.put (from_integer_feature (internal_referenced_type), i + 1)
+				l_functions.put (to_integer_feature (internal_referenced_type), i + 2)
+			end
+			consumed_type.set_functions (l_functions)			
 			initialized := True
 		ensure
 			initialized: initialized
@@ -173,27 +200,42 @@ feature {NONE} -- Implementation
 			non_void_field_info: info /= Void
 		local
 			dotnet_name: STRING
+			l_type: TYPE
+			l_value: SYSTEM_OBJECT
 		do
 			create dotnet_name.make_from_cil (info.get_name)
+			l_type := info.get_declaring_type
 			if info.get_is_literal then
+				if l_type.get_is_enum then
+						-- Conversion to integer is required to get associated value of `info',
+						-- Otherwise we simply get an object where calling `ToString' on it
+						-- will print out field name.
+					l_value := feature {CONVERT}.to_int64_object (info.get_value (Void))
+				else
+					l_value := info.get_value (Void)
+				end
 				create {CONSUMED_LITERAL_FIELD} Result.make (
 					unique_feature_name (dotnet_name),
 					dotnet_name,
 					referenced_type_from_type (info.get_field_type),
 					info.get_is_static,
 					info.get_is_public,
-					info.get_value (Void))
+					literal_field_value (l_value),
+					referenced_type_from_type (l_type))
 			else
 				create Result.make (
 					unique_feature_name (dotnet_name),
 					dotnet_name,
 					referenced_type_from_type (info.get_field_type),
 					info.get_is_static,
-					info.get_is_public)
+					info.get_is_public,
+					referenced_type_from_type (l_type))
 			end
 		end
 
-	solved_constructors (tc: SORTED_TWO_WAY_LIST [CONSTRUCTOR_SOLVER]): ARRAY [CONSUMED_CONSTRUCTOR] is
+	solved_constructors (
+			tc: SORTED_TWO_WAY_LIST [CONSTRUCTOR_SOLVER]): ARRAY [CONSUMED_CONSTRUCTOR]
+		is
 			-- Initialize `constructors' from `tc'.
 		require
 			non_void_constructors: tc /= Void
@@ -249,6 +291,10 @@ feature {NONE} -- Implementation
 
 	internal_constructors: NATIVE_ARRAY [CONSTRUCTOR_INFO]
 			-- Constructors of .NET type
+			
+	internal_referenced_type: CONSUMED_REFERENCED_TYPE
+			-- Representation of Current if it was used 
+			-- for CONSUMED_REFERENCED_TYPE.
 
 	Default_creation_routine_name: STRING is "make"
 			-- Default Eiffel creation routine name
@@ -259,4 +305,203 @@ feature {NONE} -- Implementation
 	Creation_routine_name_prefix: STRING is "make_from_"
 			-- Creation routine name prefix
 
+feature {NONE} -- Added features of System.Object to Interfaces
+
+	update_interface_members (t: TYPE) is
+			-- 
+		local
+			l_members: NATIVE_ARRAY [MEMBER_INFO]
+			l_processed: HASHTABLE
+		do
+			create l_processed.make_1 (10)
+			internal_members := internal_update_interface_members (t, l_processed)
+
+			create l_members.make (internal_members.count + Object_members.count)
+			feature {SYSTEM_ARRAY}.copy_ (internal_members, l_members, internal_members.count)
+			feature {SYSTEM_ARRAY}.copy__array_int32 (Object_members, 0, l_members,
+				internal_members.count, Object_members.count)
+			internal_members := l_members
+		end
+
+	internal_update_interface_members (t: TYPE; processed: HASHTABLE): NATIVE_ARRAY [MEMBER_INFO] is
+			-- Update `internal_members' and recursively explores parent interface
+			-- if not already in `processed'.
+		local
+			l_members, l_merged_members: NATIVE_ARRAY [MEMBER_INFO]
+			l_interfaces: NATIVE_ARRAY [TYPE]
+			i, nb: INTEGER
+			l_interface: TYPE
+		do
+			from
+				l_interfaces := t.get_interfaces
+				Result := t.get_members_binding_flags (feature {BINDING_FLAGS}.instance |
+					feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.public |
+					feature {BINDING_FLAGS}.non_public)
+				processed.Add (t, t)
+				i := 0
+				nb := l_interfaces.count - 1
+			until
+				i > nb
+			loop
+				l_interface := l_interfaces.item (i)
+				if not processed.Contains (l_interface) then
+					l_members := internal_update_interface_members (l_interface, processed)
+					create l_merged_members.make (Result.count + l_members.count)
+					feature {SYSTEM_ARRAY}.copy_ (Result, l_merged_members, Result.count)
+					feature {SYSTEM_ARRAY}.copy__array_int32 (l_members, 0, l_merged_members,
+						Result.count, l_members.count)
+					Result := l_merged_members
+				end
+				i := i + 1
+			end
+		end
+
+	object_members: NATIVE_ARRAY [MEMBER_INFO] is
+			-- List of members of System.Object.
+		local
+			l_type: TYPE
+		once
+			l_type := feature {TYPE}.get_type_string (("System.Object").to_cil)
+			Result := l_type.get_members_binding_flags (feature {BINDING_FLAGS}.instance |
+				feature {BINDING_FLAGS}.public)
+		ensure
+			object_members_not_void: Result /= Void
+		end
+		
+feature {NONE} -- Added features for ENUM types.
+
+	Additional_enum_features: INTEGER is 3
+			-- Number of additional features for enum types.
+
+	infix_or_feature (enum_type: CONSUMED_REFERENCED_TYPE): CONSUMED_FUNCTION is
+			-- Create instance of CONSUMED_FUNCTION for`|' in enum type `t'.
+		require
+			enum_type_not_void: enum_type /= Void
+		local
+			l_args: ARRAY [CONSUMED_ARGUMENT]
+			l_arg: CONSUMED_ARGUMENT
+		do
+			create l_arg.make ("other", "other", enum_type, False)
+			l_args := <<l_arg>>
+			create Result.make ("infix %"|%"", "|", l_args, enum_type,
+				True,	-- is_frozen
+				False,	-- is_static
+				False,	-- is_deferred
+				True,	-- is_infix
+				False,	-- is_prefix
+				True,	-- is_public
+				enum_type)
+		end
+
+	from_integer_feature (enum_type: CONSUMED_REFERENCED_TYPE): CONSUMED_FUNCTION is
+			-- Create instance of CONSUMED_FUNCTION for`from_integer' in enum type `t'.
+		require
+			enum_type_not_void: enum_type /= Void
+		local
+			l_args: ARRAY [CONSUMED_ARGUMENT]
+			l_arg: CONSUMED_ARGUMENT
+		do
+			create l_arg.make ("a_value", "a_value", integer_type, False)
+			l_args := <<l_arg>>
+			create Result.make ("from_integer", "from_integer", l_args, enum_type,
+				True,	-- is_frozen
+				False,	-- is_static
+				False,	-- is_deferred
+				True,	-- is_infix
+				False,	-- is_prefix
+				True,	-- is_public
+				enum_type)
+		end
+
+	to_integer_feature (enum_type: CONSUMED_REFERENCED_TYPE): CONSUMED_FUNCTION is
+			-- Create instance of CONSUMED_FUNCTION for`to_integer' in enum type `t'.
+		require
+			enum_type_not_void: enum_type /= Void
+		local
+			l_args: ARRAY [CONSUMED_ARGUMENT]
+		do
+			create l_args.make (1, 0)
+			create Result.make ("to_integer", "to_integer", l_args, integer_type,
+				True,	-- is_frozen
+				False,	-- is_static
+				False,	-- is_deferred
+				True,	-- is_infix
+				False,	-- is_prefix
+				True,	-- is_public
+				enum_type)
+		end
+				
+	integer_type: CONSUMED_REFERENCED_TYPE is
+			-- Referenced type of `System.Int32'.
+		once
+			Result := referenced_type_from_type (
+				feature {TYPE}.get_type_string (("System.Int32").to_cil))
+		ensure
+			integer_type_not_void: integer_type /= Void
+		end
+
+	literal_field_value (val: SYSTEM_OBJECT): STRING is
+			-- Convert `val' into a STRING representation.
+		require
+			val_not_void: val /= Void
+		local
+			d: DOUBLE
+			r: REAL
+			a: NATIVE_ARRAY [INTEGER_8]
+		do
+			if val.get_type.equals (Double_type) then
+				d ?= val
+				check
+					is_double: d /= Void
+				end
+				Result := bytes_to_string (feature {BIT_CONVERTER}.get_bytes_double (d))
+			elseif val.get_type.equals (Real_type) then
+				r ?= val
+				check
+					is_real: r /= Void
+				end
+				Result := bytes_to_string (feature {BIT_CONVERTER}.get_bytes_single (r))
+			else
+				create Result.make_from_cil (val.to_string)
+			end
+
+		end
+
+	bytes_to_string (a: NATIVE_ARRAY [INTEGER_8]): STRING is
+			-- Convert `a' into an hexadecimal string.
+		require
+			non_void_array: a /= Void
+		local
+			i, nb: INTEGER
+			l_hex: INTEGER
+			l_hex_string: STRING
+		do
+			from
+				nb := a.count
+				create Result.make (nb * 2)
+			until
+				i >= nb
+			loop
+				l_hex := a.item (i)
+				l_hex_string := l_hex.to_hex_string
+				l_hex_string.keep_tail (2)
+				Result.append (l_hex_string)
+				i := i + 1
+			end
+		ensure
+			converted: Result /= Void and then not Result.is_empty
+		end
+		
+	Double_type: TYPE is
+			-- typeof (double)
+		once
+			Result := feature {TYPE}.get_type_string (("System.Double").to_cil)
+		end
+		
+	Real_type: TYPE is
+			-- typeof (float)
+		once
+			Result := feature {TYPE}.get_type_string (("System.Float").to_cil)
+		end
+		
 end -- class TYPE_CONSUMER

@@ -166,6 +166,17 @@ rt_shared uint32 gen_scavenge = GS_SET;	/* Generation scavenging to be set */
  */
 rt_public long eiffel_usage = 0;		/* Monitor Eiffel memory usage */
 
+/* This variable is the maximum amount of memory the run-time can allocate.
+ * If it is null or negative, there is no limit.
+ */
+rt_shared int eif_max_mem = 0;
+
+/* These variables are used to know the size of chunks and scavenge zones
+ * to allocate. They are initialized in eif_alloc_init (main.c) */
+
+int eif_chunk_size;			/* Size of memory chunks */
+int eif_scavenge_size;		/* Size of scavenge zones */
+
 #endif /* EIF_THREADS */
 
 /* Error message commonly used */
@@ -991,15 +1002,15 @@ rt_private union overhead *add_core(register unsigned int nbytes, int type)
 	 * be reallocated than Eiffel ones. Moreover, C chunks are not meant to be
 	 * scavenged, so it is less important.
 	 */
-	if (asked <= CHUNK)
-		asked = CHUNK;
+	if (asked <= eif_chunk_size)
+		asked = eif_chunk_size;
 	else if (type == EIFFEL_T)
-		asked = CHUNK +
-			(((asked - CHUNK) / PAGESIZE_VALUE) + 1) * PAGESIZE_VALUE;
+		asked = eif_chunk_size +
+			(((asked - eif_chunk_size) / PAGESIZE_VALUE) + 1) * PAGESIZE_VALUE;
 	else {
-		over_chunk = (asked % CHUNK);
+		over_chunk = (asked % eif_chunk_size);
 		if (over_chunk != 0)
-			asked += CHUNK - over_chunk;
+			asked += eif_chunk_size - over_chunk;
 	}
 
 	/* If we request for more than a CHUNK, we'll loop only once (for Eiffel,
@@ -1013,6 +1024,17 @@ rt_private union overhead *add_core(register unsigned int nbytes, int type)
 		flush;
 #endif
 
+		/* We check that we are not asking for more than the limit
+		 * the user has fixed:
+		 *   - eif_max_mem (total allocated memory)
+		 * If the value of eif_max_mem is 0, there is no limit.
+		 */
+
+		if (eif_max_mem > 0)
+			if (m_data.ml_total + asked > eif_max_mem) {
+				printf ("Too much!\n");
+				return (union overhead *) 0;
+			}
 		/* Now request for some more core, checking the return value
 		 * from mmap() if available or sbrk() if available or malloc()
 		 * as the last option. Every failure is handled as a "no more memory"
@@ -1091,6 +1113,10 @@ bzero (oldbrk, sizeof(struct chunk) + OVERHEAD);
 		c_data.ml_chunk++;
 		c_data.ml_total += asked;
 		c_data.ml_over += sizeof(struct chunk) + OVERHEAD;
+#ifdef MEM_STAT
+		printf ("C: %ld used, %ld total (+%ld) (add_core)\n",
+			c_data.ml_used, c_data.ml_total, asked);
+#endif
 	}
 
 	/* We got the memory we wanted. Make a chunk out of it, build one
@@ -2580,24 +2606,24 @@ rt_private int create_scavenge_zones(void)
 	 * Lastly, the garbage collector will simply ignore the block, which is
 	 * just fine--RAM.
 	 */
-	if ((char *) 0 == (from = xmalloc(GS_ZONE_SZ, C_T, GC_OFF)))
+	if ((char *) 0 == (from = xmalloc(eif_scavenge_size, C_T, GC_OFF)))
 		return -1;
-	if ((char *) 0 == (to = xmalloc(GS_ZONE_SZ, C_T, GC_OFF))) {
+	if ((char *) 0 == (to = xmalloc(eif_scavenge_size, C_T, GC_OFF))) {
 		xfree(from);
 		return -1;
 	}
 
 	/* Now set up the zones */
 	SIGBLOCK;								/* Critical section */
-	sc_from.sc_size = sc_to.sc_size = GS_ZONE_SZ;	/* Used by GC statistics */
+	sc_from.sc_size = sc_to.sc_size = eif_scavenge_size; /* GC statistics */
 	sc_from.sc_arena = from;				/* Base address */
 	sc_to.sc_arena = to;
 	sc_from.sc_top = from;					/* First free address */
 	sc_to.sc_top = to;
 	sc_from.sc_mark = from + GS_WATERMARK;	/* Water mark (nearly full) */
 	sc_to.sc_mark = to + GS_WATERMARK;
-	sc_from.sc_end = from + GS_ZONE_SZ;		/* First free location beyond */
-	sc_to.sc_end = to + GS_ZONE_SZ;
+	sc_from.sc_end = from + eif_scavenge_size;	/* First free location beyond */
+	sc_to.sc_end = to + eif_scavenge_size;
 	SIGRESUME;								/* End of critical section */
 
 	gen_scavenge = GS_ON;		/* Generation scavenging activated */
@@ -3587,7 +3613,7 @@ rt_private void run_tests(void)
 		(void) vmalloc(j);
 
 	printf(">> Mallocing memory (big blocks) with frees\n");
-	for (j = CHUNK, i = 0; i < 3; i++, j *= 2)
+	for (j = CHUNK_DEFAULT, i = 0; i < 3; i++, j *= 2)
 		vfree(vmalloc(j));
 
 	printf(">> Ensuring big mallocs fail\n");
@@ -3621,13 +3647,13 @@ rt_private void run_tests(void)
 	/* Testing calloc */
 	printf(">> Testing calloc, followed by free\n");
 	printf(">>> Big block...\n");
-	p1 = vcalloc(CHUNK + 5);
+	p1 = vcalloc(CHUNK_DEFAULT + 5);
 	printf(">>> Small block...\n");
 	p2 = vcalloc(40);
 	vfree(p2);
 	vfree(p1);
 	printf(">>> Big block again !!\n");
-	p1 = vcalloc(CHUNK + 5);
+	p1 = vcalloc(CHUNK_DEFAULT + 5);
 	vfree(p1);
 
 	mem_reset();

@@ -39,7 +39,11 @@ feature -- Initialization
 
 feature {WIZARD_STATE_WINDOW}
 
-	pixmap_icon_location: STRING is "eiffel_wizard_icon.bmp"
+	pixmap_icon_location: FILE_NAME is
+			--
+		do
+			create Result.make_from_string ("eiffel_wizard_icon.bmp")
+		end
 
 
 

@@ -33,6 +33,10 @@ feature -- basic Operations
 								%%N%NThen, you will be able to use the generated classes to build your own%NProject.")
 		end
 
-	pixmap_icon_location: STRING is "eiffel_wizard_icon.bmp"
+	pixmap_icon_location: FILE_NAME is
+		do
+			create Result.make_from_string ("eiffel_wizard_icon")
+			Result.add_extension (pixmap_extension)
+		end
 
 end -- class WIZARD_INITIAL_STATE

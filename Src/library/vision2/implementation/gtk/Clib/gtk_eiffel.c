@@ -1575,25 +1575,22 @@ GtkWidget* c_gtk_pixmap_create_with_size ( GtkWidget *window_parent,
 		gtk_widget_realize (window_parent);
 	}	
 	
-	/* Attempt to create mask... */
-	
-      
       	mask = gdk_pixmap_new (window_parent->window, width, height, 1);
       	gc = gdk_gc_new (mask);
-      
       	mask_pattern.pixel = 0;
       	gdk_gc_set_foreground (gc, &mask_pattern);
       	gdk_draw_rectangle (mask, gc, TRUE, 0, 0, -1, -1);
-      
-      	mask_pattern.pixel = 1;
-      	gdk_gc_set_foreground (gc, &mask_pattern);
-
-/*	mask = (GdkBitmap *)gdk_bitmap_create_from_data (window_parent->window,
-				empty_bitmap_data, width, height);*/
+ 
 	pixmap = (GdkPixmap *) gdk_pixmap_new(window_parent->window, width, height, -1);
-
+	gc = gdk_gc_new(pixmap);
+	mask_pattern.pixel = 1;
+	gdk_gc_set_foreground(gc, &mask_pattern);
+	gdk_draw_rectangle(pixmap, gc, TRUE, 0, 0, -1, -1);
+	
 	return (gtk_pixmap_new (pixmap, mask));
     }
+
+
 /*********************************
  *
  * Function : `c_gtk_pixmap_read_from_xpm'

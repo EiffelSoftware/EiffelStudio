@@ -5473,7 +5473,7 @@ feature -- Line info
 			end
 		end
 
-	put_debug_info (location: TOKEN_LOCATION) is
+	put_debug_info (location: LOCATION_AS) is
 			-- Generate debug information for `location' to enable to
 			-- find corresponding Eiffel class file in IL code.
 		local
@@ -5482,13 +5482,14 @@ feature -- Line info
 			if is_debug_info_enabled then
 				l_pos := dbg_offsets_count
 				dbg_offsets.force (method_body.count, l_pos)
-				dbg_start_lines.force (location.line_number, l_pos)
-				dbg_start_columns.force (location.start_column_position, l_pos)
-				dbg_end_lines.force (location.line_number, l_pos)
-				dbg_end_columns.force (location.end_column_position, l_pos)
+				dbg_start_lines.force (location.line, l_pos)
+				dbg_start_columns.force (location.column, l_pos)
+				dbg_end_lines.force (location.line, l_pos)
+				dbg_end_columns.force (location.final_column, l_pos)
 				dbg_offsets_count := l_pos + 1
 				
-				Il_debug_info_recorder.record_line_info (current_class_type, Byte_context.current_feature, method_body.count, location.line_number)			
+				Il_debug_info_recorder.record_line_info (current_class_type,
+					Byte_context.current_feature, method_body.count, location.line)			
 				method_body.put_nop
 			end
 		end
@@ -5503,7 +5504,7 @@ feature -- Line info
 			end
 		end
 		
-	put_silent_debug_info (location: TOKEN_LOCATION) is
+	put_silent_debug_info (location: LOCATION_AS) is
 			-- Generate debug information for `location' to enable to
 			-- find corresponding Eiffel class file in IL code.
 			-- But in case of dotnet debugger inside eStudio

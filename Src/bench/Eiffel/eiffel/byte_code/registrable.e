@@ -47,13 +47,10 @@ feature
 
 	print_register_by_name is
 			-- Generates the C representation of a register
-		local
-			index: INTEGER;
 		do
 			if context.need_gc_hooks then
 				context.generated_file.putstring ("l[");
-				index := context.local_index (register_name);
-				context.generated_file.putint (index);
+				context.generated_file.putint (context.local_index (register_name));
 				context.generated_file.putchar (']');
 			else
 				context.generated_file.putstring (register_name);
@@ -84,7 +81,7 @@ feature
 	is_predefined: BOOLEAN is
 			-- Is Current a predefined entity ?
 		do
-			Result := is_local or is_argument or is_result or is_current;
+			Result := is_local or else is_argument or else is_result or else is_current;
 		end;
 
 	is_special: BOOLEAN is

@@ -39,6 +39,30 @@ feature -- Basic operations
 		deferred
 		end
 
+feature {EV_ITEM_HOLDER_IMP} -- Implementation
+ 
+ 	ev_children: ARRAYED_LIST [EV_ITEM_IMP] is
+ 			-- List of the children
+ 		deferred
+ 		end
+ 
+ 	clear_ev_children is
+ 			-- Clear all the items of the list.
+ 		local
+ 			list: ARRAYED_LIST [EV_ITEM_IMP]
+ 		do
+ 			from
+ 				list := ev_children
+ 				list.start
+ 			until
+ 				list.after
+ 			loop
+ 				list.item.interface.remove_implementation
+ 				list.forth
+ 			end
+ 			list.wipe_out
+ 		end
+
 end -- class EV_ITEM_HOLDER_IMP
 
 --|----------------------------------------------------------------

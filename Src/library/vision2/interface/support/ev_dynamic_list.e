@@ -105,6 +105,31 @@ feature -- Access
 		ensure then
 			bridge_ok: Result = implementation.index_of (v, i)
 		end
+		
+	item_by_data (some_data: ANY): G is
+			-- `Result' is first item in `Current' with data
+			-- matching `some_data'. Comparison is based on
+			-- `object_comparison'.
+		do
+			Result := implementation.item_by_data (some_data)
+		ensure
+			not_found_in_empty: Result /= Void implies not is_empty
+			index_not_changed: old index = index
+		end
+		
+	items_by_data (some_data: ANY): ARRAYED_LIST [G] is
+			-- `Result' is all items in `Current' with data
+			-- matching `some_data'. Comparison is based on
+			-- `object_comparison'.
+		do
+			Result := implementation.items_by_data (some_data)
+		ensure
+			Result_not_void: Result /= Void
+			not_found_in_empty: not Result.is_empty implies not is_empty
+			index_not_changed: old index = index
+		end
+		
+		
 
 feature -- Measurement
 

@@ -224,7 +224,7 @@ Wizards,,,,
 ,3,Eiffel beautifier (automatically indents the text correctly and put it in the editor = clickable + load_text),Xavier,WIZ0003
 ,4,"In the new blank project wizard, let the user choose the name of the root_class and of the root_cluster",Xavier,WIZ0004,Xavier,1,Done
 ,3,"Tool that checks for various possible problems in the code (empty comments, unused variables, empty feature clauses, indentation, very long lines,....)",Julian,WIZ0005,,,
-
+,4,"Tool that gives runtime information concerning the memory (integrated in the debugger?), such as memory statistics, objects of a given type, referers, fragmentation information, GC statistics, repartition of objects among sizes, class that eats up the most memory, etc.",,,,,
 
 
 

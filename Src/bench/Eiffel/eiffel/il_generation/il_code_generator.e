@@ -2113,26 +2113,10 @@ feature -- Basic feature
 	generate_hash_code is
 			-- Given an INTEGER on top of stack, put on stack
 			-- a positive INTEGER.
-		local
-			else_label, end_label: IL_LABEL
 		do
-			else_label := create_label
-			end_label := create_label
-			
 			implementation.convert_to_integer32
-			implementation.duplicate_top
-			implementation.put_integer32_constant (0x8000000)
-			implementation.generate_eq
-			
-			branch_on_false (else_label)
-			implementation.pop
 			implementation.put_integer32_constant (0x7FFFFFFF)
-			branch_to (end_label)
-			
-			mark_label (else_label)
-			generate_abs (create {LONG_I}.make (32))
-			
-			mark_label (end_label)
+			implementation.generate_and
 		end
 		
 	generate_out (type: TYPE_I) is

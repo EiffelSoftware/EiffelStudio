@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that ..."
+	description: "Action sequences for EV_DOCKABLE_TARGET_I."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
@@ -13,8 +13,7 @@ feature -- Event handling
 		-- Actions to be performed
 		do
 			if docked_actions_internal = Void then
-				docked_actions_internal :=
-					 create_docked_actions
+				create docked_actions_internal
 			end
 			Result := docked_actions_internal
 		ensure
@@ -23,13 +22,8 @@ feature -- Event handling
 
 feature {EV_ANY_I} -- Implementation
 
-	create_docked_actions: EV_DOCKABLE_SOURCE_ACTION_SEQUENCE is
-			-- Create a pick action sequence.
-		deferred
-		end
-
 	docked_actions_internal: EV_DOCKABLE_SOURCE_ACTION_SEQUENCE
-			-- Implementation of once per object `pick_actions'.
+			-- Implementation of once per object `docked_actions'.
 
 end -- class EV_DOCKABLE_TARGET_ACTION_SEQUENCES_I
 

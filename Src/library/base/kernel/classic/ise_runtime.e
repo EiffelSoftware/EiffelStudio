@@ -118,7 +118,7 @@ feature -- Feature specific to ISE runtime.
 
 feature -- Internal C routines
 
-	type_id_from_name (s: POINTER): INTEGER is
+	frozen type_id_from_name (s: POINTER): INTEGER is
 			-- Dynamic type whose name is represented by `s'.
 		external
 			"C signature (char *): EIF_INTEGER use %"eif_cecil.h%""
@@ -126,7 +126,7 @@ feature -- Internal C routines
 			"eif_type_id"
 		end
 
-	dynamic_type (object: POINTER): INTEGER is
+	frozen dynamic_type (object: POINTER): INTEGER is
 			-- Dynamic type of `object'.
 		external
 			"C macro signature (EIF_REFERENCE): EIF_INTEGER use %"eif_macros.h%""

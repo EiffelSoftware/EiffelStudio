@@ -42,7 +42,5 @@ feature -- Status setting
 		do
 			is_saving := False
 		end
-		
-		
 
 end -- class GB_GENERATION_SETTINGS

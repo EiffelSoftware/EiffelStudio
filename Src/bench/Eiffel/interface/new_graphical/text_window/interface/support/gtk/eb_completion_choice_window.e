@@ -301,6 +301,7 @@ feature -- Events handling
 			-- process user entry
 		local
 			searched_w: STRING
+			lc: CHARACTER
 		do
 			if not to_be_inserted.text.is_empty then
 				searched_w := to_be_inserted.text.out
@@ -493,28 +494,6 @@ feature {NONE} -- Implementation
 			end
 		end
   
-	exit is
-			-- cancel autocomplete
-		do
-			if not is_closing then
-				is_closing := True
-				if before_complete /= void then
-					if feature_mode then
-						editor.complete_feature_from_window (point_if_needed + before_complete, False)
-					else
-						editor.complete_class_from_window (before_complete)
-					end
-				end
-				if has_capture then
-					disable_capture
-				end
-				destroy
-				if feature_mode then
-					editor.exit_complete_mode
-				end
-			end
-		end
-		
 	is_closing: BOOLEAN
 			-- is the window being closed ?
 

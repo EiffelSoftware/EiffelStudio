@@ -67,19 +67,19 @@ feature {SHARED_XML_ROUTINES} -- Processing
 			-- Find in sub-elememt of `elem' integer item with tag `a_name'.
 		local
 			e: XM_ELEMENT
-			cd: XM_CHARACTER_DATA
+			int_str: STRING
 		do
-			e := element_by_name (elem, a_name)
+			e := elem.element_by_name (a_name)
 			if e /= Void then
-				if not e.is_empty then
-					cd ?= e.first
-					if cd /= Void then
-						if cd.content.is_integer then
-							Result := cd.content.to_integer
-							valid_tags_read
-						end
-					end
+				int_str := e.text
+				if int_str /= Void and then int_str.is_integer then
+					Result := int_str.to_integer
+					valid_tags_read
+				else
+					display_warning_message ("Value of element " + a_name + " is not valid.")
 				end
+			else
+				display_warning_message ("Element " + a_name + " expected but not found.")
 			end
 		end
 
@@ -87,19 +87,19 @@ feature {SHARED_XML_ROUTINES} -- Processing
 			-- Find in sub-elememt of `elem' boolean item with tag `a_name'.
 		local
 			e: XM_ELEMENT
-			cd: XM_CHARACTER_DATA
+			bool_str: STRING
 		do
-			e := element_by_name (elem, a_name)
+			e := elem.element_by_name (a_name)
 			if e /= Void then
-				if not e.is_empty then
-					cd ?= e.first
-					if cd /= Void then
-						if cd.content.is_boolean then
-							Result := cd.content.to_boolean
-							valid_tags_read
-						end
-					end
+				bool_str := e.text
+				if bool_str /= Void and then bool_str.is_boolean then
+					Result := bool_str.to_boolean
+					valid_tags_read
+				else
+					display_warning_message ("Value of element " + a_name + " is not valid.")
 				end
+			else
+				display_warning_message ("Element " + a_name + " expected but not found.")
 			end
 		end
 
@@ -107,19 +107,19 @@ feature {SHARED_XML_ROUTINES} -- Processing
 			-- Find in sub-elememt of `elem' integer item with tag `a_name'.
 		local
 			e: XM_ELEMENT
-			cd: XM_CHARACTER_DATA
+			double_str: STRING
 		do
-			e := element_by_name (elem, a_name)
+			e := elem.element_by_name (a_name)
 			if e /= Void then
-				if not e.is_empty then
-					cd ?= e.first
-					if cd /= Void then
-						if cd.content.is_double then
-							Result := cd.content.to_double
-							valid_tags_read
-						end
-					end
+				double_str := e.text
+				if double_str /= Void and then double_str.is_double then
+					Result := double_str.to_double
+					valid_tags_read
+				else
+					display_warning_message ("Value of element " + a_name + " is not valid.")
 				end
+			else
+				display_warning_message ("Element " + a_name + " expected but not found.")
 			end
 		end
 
@@ -127,17 +127,13 @@ feature {SHARED_XML_ROUTINES} -- Processing
 			-- Find in sub-elememt of `elem' string item with tag `a_name'.
 		local
 			e: XM_ELEMENT
-			cd: XM_CHARACTER_DATA
 		do
-			e := element_by_name (elem, a_name)
+			e := elem.element_by_name (a_name)
 			if e /= Void then
-				if not e.is_empty then
-					cd ?= e.first
-					if cd /= Void then
-						Result := cd.content
-						valid_tags_read
-					end
-				end
+				Result := e.text
+				valid_tags_read
+			else
+				display_warning_message ("Element " + a_name + " expected but not found.")
 			end
 		end
 
@@ -149,47 +145,44 @@ feature {SHARED_XML_ROUTINES} -- Processing
 			s: STRING
 			sc1, sc2: INTEGER
 			r, g, b: INTEGER
+			rescued: BOOLEAN
 		do
-			e := element_by_name (elem, a_name)
-			if e /= Void then
-				cd ?= e.first
-				if cd /= Void then
-					s := cd.content
+			if not rescued then
+				e := elem.element_by_name (a_name)
+				if e /= Void then
+					s := e.text
 				end
-			end
-			if s /= Void then
-				check
-					two_semicolons: s.occurrences (';') = 2
+				if s /= Void and then not s.is_empty then
+					check
+						two_semicolons: s.occurrences (';') = 2
+					end
+					sc1 := s.index_of (';', 1)
+					r := s.substring (1, sc1 - 1).to_integer
+					sc2 := s.index_of (';', sc1 + 1)
+					g := s.substring (sc1 + 1, sc2 - 1).to_integer
+					b := s.substring (sc2 + 1, s.count).to_integer
+					create Result.make_with_8_bit_rgb (r, g, b)
+					valid_tags_read
+				else
+					display_warning_message ("Value of element " + a_name + " is not valid.")
 				end
-				sc1 := s.index_of (';', 1)
-				r := s.substring (1, sc1 - 1).to_integer
-				sc2 := s.index_of (';', sc1 + 1)
-				g := s.substring (sc1 + 1, sc2 - 1).to_integer
-				b := s.substring (sc2 + 1, s.count).to_integer
-				create Result.make_with_8_bit_rgb (r, g, b)
-				valid_tags_read
+			else
+				display_warning_message ("Retrieve default color.")
+					-- Default color
+				create Result.make_with_8_bit_rgb (255, 255, 0)
 			end
+		ensure
+			non_void_color: Result /= Void
+		rescue
+			retry
 		end
 
 	element_by_name (e: XM_ELEMENT; n: STRING): XM_ELEMENT is
 			-- Find in sub-elemement of `e' an element with tag `n'.
 		require
 			e_not_void: e /= Void
-		local
-			i: INTEGER
-			f: XM_ELEMENT
 		do
-			from
-				i := 1
-			until
-				Result /= Void or i > e.count
-			loop
-				f ?= e.item (i)
-				if f /= Void and then f.name.is_equal (n) then
-					Result := f
-				end
-				i := i + 1
-			end
+			Result := e.element_by_name (n)
 		end
 
 	xml_string_node (a_parent: XM_ELEMENT; s: STRING): XM_CHARACTER_DATA is
@@ -237,13 +230,11 @@ feature {SHARED_XML_ROUTINES} -- Saving
 			end
 		rescue
 			retried := True
-			create error_window
 			if ptf /= Void then
-				error_window.set_text ("Unable to write file: " + ptf.name)
+				display_error_message ("Unable to write file: " + ptf.name)
 			else
-				error_window.set_text ("Unable to write file.")
+				display_error_message ("Unable to write file.")
 			end
-			error_window.show
 			retry
 		end
 
@@ -342,10 +333,5 @@ feature {SHARED_XML_ROUTINES} -- Error management
 			create l_warning_window.make_with_text (a_warning_msg)
 			l_warning_window.show_modal_to_window (a_parent_window)
 		end
-
-feature {NONE} -- Implementation
-
-	error_window: EV_WARNING_DIALOG
-			-- Window that warns user of wrong ".ead" file.
 
 end -- class SHARED_XML_ROUTINES

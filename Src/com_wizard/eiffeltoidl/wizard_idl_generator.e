@@ -1,6 +1,5 @@
 indexing
 	description: "Objects that ..."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -113,7 +112,7 @@ feature {NONE} -- Basic operations
 			output_pipe.close_input
 			from
 				output_pipe.read_stream (Block_size)
-				create a_output.make (0)
+				create a_output.make (100)
 			until
 				not output_pipe.last_read_successful or Shared_wizard_environment.abort
 			loop

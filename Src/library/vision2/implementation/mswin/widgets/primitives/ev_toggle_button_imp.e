@@ -27,7 +27,7 @@ inherit
 	WEL_SELECTABLE_BUTTON
 		rename
 			make as wel_make,
-			parent as wel_window_parent,
+			parent as wel_parent,
 			set_parent as wel_set_parent,
 			font as wel_font,
 			set_font as wel_set_font,
@@ -116,6 +116,9 @@ end -- class EV_TOGGLE_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.28  2000/04/25 16:14:52  rogers
+--| Parent from WEL_SELECTABLE_BUTTON is now renamed as wel_parent.
+--|
 --| Revision 1.27  2000/03/28 00:17:00  brendel
 --| Revised `text' related features as specified by new EV_TEXTABLE_IMP.
 --|

@@ -65,12 +65,6 @@ feature -- Access
 		local
 			layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
 			parent_object: GB_OBJECT
-			all_dependents: HASH_TABLE [GB_OBJECT, INTEGER]
-			contents: XM_ELEMENT
-			element_info: ELEMENT_INFORMATION
-			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
-			top_level_id: INTEGER
-			actual_object: GB_OBJECT
 			selected_window: GB_WINDOW_SELECTOR_ITEM
 		do
 			Result := not clipboard.is_empty and ((layout_constructor.has_focus and layout_constructor.selected_item /= Void) or (window_selector.has_focus))
@@ -92,25 +86,7 @@ feature -- Access
 					-- Now ensure that we do not nest an instance of a top level widget in a structure
 					-- that does not permit such nesting, thereby preventing nested inheritance cycles.
 				if Result then
-					if parent_object /= Void then	
-						contents ?= clipboard.contents_cell.item.first
-						contents ?= child_element_by_name (contents, internal_properties_string)
-						full_information := get_unique_full_info (contents)
-						element_info := full_information @ (reference_id_string)
-						if element_info /= Void then
-							top_level_id := element_info.data.to_integer
-						
-							create all_dependents.make (4)
-							actual_object := object_handler.deep_object_from_id (top_level_id)
-							if actual_object /= Void then
-								actual_object.all_dependents_recursive (actual_object, all_dependents)
-								all_dependents.extend (actual_object, actual_object.id)
-								Result := Result and not all_dependents.has (parent_object.id)
-							end
-							
-							Result := Result and parent_object.override_drop_on_child (actual_object)
-						end
-					end
+					Result := Result and parent_object.has_clashing_dependencies (clipboard.object_stone)
 				end
 			end
 		end

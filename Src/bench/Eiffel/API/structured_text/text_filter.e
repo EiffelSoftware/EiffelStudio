@@ -657,6 +657,8 @@ feature {NONE} -- Text processing
 	set_keywords_for_feature (f: E_FEATURE) is
 			-- Set keywords "$file$" and "$feature$" to the correct
 			-- values for `f'.
+		require
+			f_not_void: f /= Void
 		local
 			real_feature: E_FEATURE
 			written_class: CLASS_C

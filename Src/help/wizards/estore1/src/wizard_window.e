@@ -37,7 +37,7 @@ feature -- Initialization
 			v1.extend(h1)
 			Create wizard_page
 			Create pix	
-			pix.set_with_named_file(wizard_resource_path+"\essai.bmp")
+			pix.set_with_named_file(wizard_bmp_path+"\essai.bmp")
 			pix.set_minimum_width(pix.width)	
 			Create sep
 			Create v2

@@ -39,4 +39,27 @@ feature -- Access
 			Result_exists: Result /= Void
 		end
 
+	wizard_source: STRING is
+			-- Wizard sources
+		require
+			argument_count>0
+		once
+			Result := argument(1)
+		ensure
+			exists: Result /= Void
+		end
+
+	wizard_bmp_path: STRING is 
+			-- Bitmaps location
+		once
+			Result := wizard_source+ "\bmp" 
+		end
+
+	wizard_resources_path: STRING is
+			-- Resource location.
+		once
+			Result := wizard_source +"\resources"
+		end
+
+
 end -- class SHARED

@@ -191,7 +191,7 @@ feature -- Processing
 			fi: PLAIN_TEXT_FILE
 			s: STRING
 		do
-			Create f1.make_from_string(resource_path)
+			Create f1.make_from_string(wizard_resources_path)
 			f_name := clone(f1)
 			f_name.extend(name)
 			f_name.add_extension("e")
@@ -263,7 +263,7 @@ feature -- Implementation
 
 	progress: EV_HORIZONTAL_PROGRESS_BAR
 
-	resource_path: STRING is "c:\development\eiffelweb_wizard\estore1\resources"
+	--resource_path: STRING is "c:\development\eiffelweb_wizard\estore1\resources"
 
 	repositories: LINKED_LIST[DB_REPOSITORY]
 		-- Repositories relative to Current DB.

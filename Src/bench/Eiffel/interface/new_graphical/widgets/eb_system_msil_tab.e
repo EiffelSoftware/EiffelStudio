@@ -45,6 +45,12 @@ feature -- MSIL options
 	dotnet_naming_convention_check: EV_CHECK_BUTTON
 			-- Will names generated in assembly follow the .NET guideline?
 			
+	cluster_name_check: EV_CHECK_BUTTON
+			-- Will we generate names with cluster name?
+			
+	full_cluster_name_check: EV_CHECK_BUTTON
+			-- Will we generate full names with cluster name?
+			
 	signing_key_field: EV_PATH_FIELD
 			-- Filename of the cryptographic assembly key
 			
@@ -118,6 +124,12 @@ feature -- Store/Retrieve
 			defaults.extend (new_special_option_sd (
 				feature {FREE_OPTION_SD}.dotnet_naming_convention, Void,
 				dotnet_naming_convention_check.is_selected))
+			defaults.extend (new_special_option_sd (
+				feature {FREE_OPTION_SD}.use_cluster_name_as_namespace, Void,
+				cluster_name_check.is_selected))
+			defaults.extend (new_special_option_sd (
+				feature {FREE_OPTION_SD}.use_all_cluster_name_as_namespace, Void,
+				full_cluster_name_check.is_selected))
 			
 			if dll_check.is_selected then
 				defaults.extend (new_special_option_sd (
@@ -255,6 +267,10 @@ feature {NONE} -- Filling
 					set_selected (cls_compliant_check, val.is_yes)
 				when feature {FREE_OPTION_SD}.Dotnet_naming_convention then
 					set_selected (dotnet_naming_convention_check, val.is_yes)
+				when feature {FREE_OPTION_SD}.Use_cluster_name_as_namespace then
+					set_selected (cluster_name_check, val.is_yes)
+				when feature {FREE_OPTION_SD}.Use_all_cluster_name_as_namespace then
+					set_selected (full_cluster_name_check, val.is_yes)
 				else
 					is_item_removable := False
 				end
@@ -279,6 +295,8 @@ feature -- Initialization
 			enable_select (dotnet_naming_convention_check)
 			enable_select (verifiable_check)
 			disable_select (dll_check)
+			enable_select (full_cluster_name_check)
+			enable_select (cluster_name_check)
 		ensure then
 			verifiable_check_selected: verifiable_check.is_selected
 			dll_check_not_selected: not dll_check.is_selected
@@ -298,9 +316,21 @@ feature {NONE} -- Initialization
 			default_create
 			
 			extend (msil_info_frame (".NET application information"))
-			extend (options_frame ("Options"))
+			extend (options_box)
 
 			msil_specific_widgets.extend (Current)
+		end
+
+	options_box: EV_HORIZONTAL_BOX is
+			-- Box containing use options.
+		local
+			b: EV_FRAME
+		do
+			create Result
+			Result.set_border_width (Layout_constants.Small_border_size)
+			Result.set_padding (Layout_constants.Small_padding_size)		
+			Result.extend (options_frame ("Options"))
+			Result.extend (name_options_frame ("Naming"))
 		end
 
 	msil_info_frame (st: STRING): EV_FRAME is
@@ -471,18 +501,45 @@ feature {NONE} -- Initialization
 			vbox.disable_item_expand (item_box)
 			
 			create item_box
-			dotnet_naming_convention_check := new_check_button (item_box,
-				"Follow .NET naming guidelines", False)
-			vbox.extend (item_box)
-			vbox.disable_item_expand (item_box)
-			
-			create item_box
 			verifiable_check := new_check_button (item_box, "Verifiable", False)
 			vbox.extend (item_box)
 			vbox.disable_item_expand (item_box)
 			
 			create item_box
 			dll_check := new_check_button (item_box, "Generate DLL", False)
+			vbox.extend (item_box)
+			vbox.disable_item_expand (item_box)
+
+			Result.extend (vbox)
+		end
+		
+	name_options_frame (st: STRING): EV_FRAME is
+			-- MSIL specific options
+		require
+			st_not_void: st /= Void
+			st_not_empty: not st.is_empty
+		local
+			vbox, item_box: EV_VERTICAL_BOX
+		do
+			create Result.make_with_text (st)
+			
+			create vbox
+			vbox.set_border_width (Layout_constants.Small_border_size)
+			
+			create item_box
+			dotnet_naming_convention_check := new_check_button (item_box,
+				"Follow .NET naming guidelines", False)
+			vbox.extend (item_box)
+			vbox.disable_item_expand (item_box)
+			
+			create item_box
+			cluster_name_check := new_check_button (item_box,
+				"Use cluster names", False)
+			vbox.extend (item_box)
+			vbox.disable_item_expand (item_box)
+			
+			create item_box
+			full_cluster_name_check := new_check_button (item_box, "Use full cluster names", False)
 			vbox.extend (item_box)
 			vbox.disable_item_expand (item_box)
 

@@ -22,14 +22,14 @@ feature {NONE} -- Attributes
 
 	dropped: BOOLEAN_REF is
 		once
-			!! Result
+			create Result
 		end
 
 feature {EV_PND_TARGET_IMP} -- Targets
 
 	targets: LINKED_LIST [EV_PND_TARGET_IMP] is
 		once
-			!! Result.make
+			create Result.make
 		end
 
 feature {EV_PND_TARGET_IMP} -- Access
@@ -57,7 +57,7 @@ feature {EV_PND_TARGET_IMP} -- Access
 
 feature -- Transport
 
-	transport (data_source: EV_PND_SOURCE_IMP; cmd: TUPLE [EV_COMMAND, EV_ARGUMENT]) is
+	transport (dt_src: EV_PND_SOURCE_IMP; cmd: TUPLE [EV_COMMAND, EV_ARGUMENT]) is
 			-- Start the transport and
 			-- draw the line from the point `pt'.
 			-- If Void, start the line from the current cursor position. 
@@ -65,20 +65,20 @@ feature -- Transport
 			wel_point: WEL_POINT
 		do
 			default_command := cmd
-			if data_source.initial_point /= Void then
-				x0 := data_source.initial_point.x
-				y0 := data_source.initial_point.y
+			if dt_src.initial_point /= Void then
+				x0 := dt_src.initial_point.x
+				y0 := dt_src.initial_point.y
 			else
-				!! wel_point.make (0, 0)
+				create wel_point.make (0, 0)
 				wel_point.set_cursor_position
 				x0 := wel_point.x
 				y0 := wel_point.y
 			end
 			x1 := x0
 			y1 := y0
-			data_source.set_capture
---			if data_source.data_type.cursor /= Void then
---				set_cursor (data_source.data_type.cursor)
+			dt_src.widget_source.set_capture
+--			if dt_src.data_type.cursor /= Void then
+--				set_cursor (dt_src.data_type.cursor)
 --			end
 			dropped.set_item (False)
 		end
@@ -87,7 +87,7 @@ feature {EV_PND_SOURCE_IMP} -- Default command
 
 	default_command: TUPLE [EV_COMMAND, EV_ARGUMENT]
 
-feature {NONE}
+feature {NONE} -- Implementation
 
 	draw_segment (lx1, ly1, lx2, ly2: INTEGER) is
 			-- Draw a segment between (`lx1', `ly1') and (`lx2', `ly2').
@@ -95,8 +95,8 @@ feature {NONE}
 			screen_dc: WEL_SCREEN_DC
 			point_color: WEL_COLOR_REF
 		do
-			!! screen_dc
-			!! point_color.make_system (color_windowtext)	
+			create screen_dc
+			create point_color.make_system (color_windowtext)	
 			screen_dc.get
 			screen_dc.set_rop2 (R2_not)
 			screen_dc.line (lx1, ly1, lx2, ly2)
@@ -108,21 +108,29 @@ feature {NONE}
 			-- Hole at mouse position
 		local
 			wel_point: WEL_POINT
+			toolbar: EV_TOOL_BAR_IMP
+			toolbar_b: EV_TOOL_BAR_BUTTON_IMP
 			widget_pointed: EV_WIDGET_IMP
 		do
-			!! wel_point.make (0, 0)
+			targets.start
+			create wel_point.make (0, 0)
 			wel_point.set_cursor_position
-			widget_pointed ?= wel_point.window_at
-			if widget_pointed /= Void then
-				from
-					targets.start
-				until
-					targets.after or else Result /= Void
-				loop
-					if (widget_pointed = targets.item) then
+			toolbar ?= wel_point.window_at
+			if toolbar /= Void then
+				toolbar_b := toolbar.find_item_at_position (wel_point.x, wel_point.y)
+				if toolbar_b /= Void then
+					targets.search (toolbar_b)
+					if not targets.exhausted then
 						Result := targets.item
 					end
-					targets.forth
+				end
+			else
+				widget_pointed ?= wel_point.window_at
+				if widget_pointed /= Void then
+					targets.search (widget_pointed)
+					if not targets.exhausted then
+						Result := targets.item
+					end
 				end
 			end
 		end
@@ -132,32 +140,36 @@ feature {NONE}
 			target: EV_PND_TARGET_IMP
 			wel_point: WEL_POINT
 		do
-			if args.first = 1 then
-				-- Drag the data.
+			inspect args.first
+			when 1 then -- Drag the data.
 				if not dropped.item then
-					!! wel_point.make (0, 0)
+					create wel_point.make (0, 0)
 					draw_segment (x0, y0, x1, y1)	
 					wel_point.set_cursor_position
 					x1 := wel_point.x
 					y1 := wel_point.y
 					draw_segment (x0, y0, x1, y1)
+--					target := pointed_target
+--					if target ?= Void and then target.accept (args.second.data_type) then
+--						set "allowed" cursor
+--					else
+--						set "forbiden" cursor
+--					end
 				end
-			elseif args.first = 2 then
-				-- Drop the data in a target.
+			when 2 then -- Drop the data in a target.
 				dropped.set_item (True)
 				target := pointed_target
 				args.second.terminate_transport (Current, args.third, default_command)
-				args.second.release_capture
+				args.second.widget_source.release_capture
 --				unset_cursor
 				draw_segment (x0, y0, x1, y1)
 				if target /= Void then
 					target.receive (args.second.data_type, args.second.transported_data, data)
 				end
-			elseif args.first = 3 then
-				-- Drag canceled.
+			when 3 then -- Drag canceled.
 				dropped.set_item (True)
 				args.second.terminate_transport (Current, args.third, default_command)
-				args.second.release_capture
+				args.second.widget_source.release_capture
 --				unset cursor
 				draw_segment (x0, y0, x1, y1)
 			end

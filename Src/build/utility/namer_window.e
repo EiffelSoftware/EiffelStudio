@@ -47,7 +47,7 @@ feature {NONE}
 			!! top_form.make (Widget_names.form, form);
 			!! focus_label.make (top_form);
 			!! close_b.make (Current, top_form, focus_label);
-			!! namer_hole.make (Current, top_form);
+			!! namer_hole.make (top_form);
 			!! ok_b.make (Current, top_form);
 			!! text.make (Widget_names.textfield, form)
 
@@ -127,7 +127,7 @@ feature
 			namable.check_new_name (text.text);
 			if namable.is_valid_new_name then
 				!! namer_cmd;
-				namer_cmd.execute (Current);
+				namer_cmd.execute (Void);
 				namable.set_visual_name(text.text)
 			end
 		end;
@@ -138,12 +138,8 @@ feature
 		do
 			!! tmp.make (0);
 			tmp.append (Widget_names.visual_name_label);
-			tmp.append (namable.label);
-			if namable.visual_name = Void then
-				text.clear;
-			else
-				text.set_text (namable.visual_name);
-			end;
+			tmp.append (namable.title_label);
+			text.set_text (namable.label);
 			set_title (tmp)
 			set_icon_name (tmp)
 		end;
@@ -154,7 +150,9 @@ feature {NONE} -- Command Actions
 		do
 			if not equal (text.text, namable.visual_name) then
 				set_name;
-				popdown;
+				if namable.is_valid_new_name then
+					popdown;
+				end;
 			end
 		end
 

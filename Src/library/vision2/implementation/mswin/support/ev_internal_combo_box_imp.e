@@ -180,7 +180,10 @@ feature {NONE} -- Implementation
 			-- Wm_setcursor message.
 			-- See class WEL_HT_CONSTANTS for valid `hit_code' values.
 		do
-			parent.on_set_cursor (hit_code)
+			if (hit_code = (feature {WEL_HT_CONSTANTS}.Htnowhere) or else hit_code = (feature {WEL_HT_CONSTANTS}.Htclient))
+				and then parent.cursor_pixmap /= Void then
+				parent.internal_on_set_cursor
+			end
 		end
 
 	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is

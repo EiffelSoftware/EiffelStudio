@@ -766,10 +766,13 @@ feature -- Removal
 
 	clear_all is
 			-- Reset all items to default values; reset status.
+		local
+			default_value: G
 		do
 			content.clear_all
 			keys.clear_all
 			deleted_marks.clear_all
+			found_item := default_value
 			count := 0
 			used_slot_count := 0
 			position := 0

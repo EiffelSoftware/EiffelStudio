@@ -143,10 +143,12 @@ feature -- Class info
 	generate_basic_type_class_mapping,
 	generate_generic_type_class_mapping,
 	generate_formal_type_class_mapping,
-	generate_none_type_class_mapping (type_id: INTEGER) is
+	generate_none_type_class_mapping,
+	generate_eiffel_type_info_type_class_mapping (type_id: INTEGER) is
 			-- Create correspondance between `type_id' and ISE.Runtime.TYPE,
 			-- ISE.Runtime.CLASS_TYPE, ISE.Runtime.GENERIC_TYPE,
-			-- ISE.Runtime.FORMAL_TYPE and ISE.Runtime.NONE_TYPE.
+			-- ISE.Runtime.FORMAL_TYPE, ISE.Runtime.NONE_TYPE and
+			-- ISE.Runtime.EIFFEL_TYPE_INFO.
 		require
 			type_id_set: type_id > 0
 		deferred
@@ -204,7 +206,14 @@ feature -- Class info
 			-- `start_parents_list' should have been called before.
 		deferred
 		end
-	
+
+	set_any_type_id (id: INTEGER) is
+			-- Let code generator knows about type id of ANY.
+		require
+			valid_id: id > 0
+		deferred
+		end
+		
 feature -- Features info
 
 	start_features_list (type_id: INTEGER) is

@@ -229,16 +229,20 @@ feature {NONE} -- Type description
 				j := classes_count
 				degree_output.put_start_degree (1, j)
 
-					-- We add `1' because it is for ISE.Runtiume.TYPE
-				il_generator.start_class_mappings (static_type_id_counter.count + 6)
-					-- Identify `ISE.Runtime.TYPE'.
+					-- We add `7' because they are 7 types from ISE.Runtime
+					-- we want to reuse.
+				il_generator.start_class_mappings (static_type_id_counter.count + 7)
+
+					-- Identify all runtime types.
 				il_generator.set_type_id (static_type_id_counter.count + 1)
 				il_generator.set_class_type_id (static_type_id_counter.count + 2)
 				il_generator.set_generic_type_id (static_type_id_counter.count + 3)
 				il_generator.set_formal_type_id (static_type_id_counter.count + 4)
 				il_generator.set_none_type_id (static_type_id_counter.count + 5)
 				il_generator.set_basic_type_id (static_type_id_counter.count + 6)
+				il_generator.set_eiffel_type_info_type_id (static_type_id_counter.count + 7)
 				il_generator.generate_type_class_mappings
+				il_generator.set_any_type_id (System.any_class.compiled_class.types.first.type_id)
 			variant
 				nb - i + 1
 			until

@@ -108,6 +108,10 @@ feature -- Generation Info
 		do
 		end
 
+	set_any_type_id (id: INTEGER) is
+		do
+		end
+
 feature -- Class info
 
 	generate_class_mappings (dotnet_name, eiffel_name: STRING; id, interface_id: INTEGER; filename, element_type_name: STRING) is
@@ -120,7 +124,8 @@ feature -- Class info
 	generate_generic_type_class_mapping,
 	generate_basic_type_class_mapping,
 	generate_formal_type_class_mapping,
-	generate_none_type_class_mapping (type_id: INTEGER) is
+	generate_none_type_class_mapping,
+	generate_eiffel_type_info_type_class_mapping (type_id: INTEGER) is
 		do
 		end
 

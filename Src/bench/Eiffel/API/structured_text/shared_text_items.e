@@ -579,6 +579,12 @@ feature {NONE} -- Symbol names
 			!!Result.make ("%"")
 		end
 
+	ti_Empty: SYMBOL_TEXT is
+			-- Empty character
+		once
+			!!Result.make ("")
+		end
+
 	ti_Equal: SYMBOL_TEXT is
 			-- "=" character
 		once

@@ -209,7 +209,6 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 			command: GB_COMMAND_CHANGE_TYPE
 		do	
 			create command.make (an_object, an_object.type, type)
-			history.cut_off_at_current_position
 			command.execute
 		end
 		

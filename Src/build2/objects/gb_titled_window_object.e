@@ -267,7 +267,6 @@ feature -- Access
 				-- to drop in this case.
 				-- `menu_object' is already contained in current.
 			create command_add.make (Current, menu_object, layout_item.count + 1)
-			history.cut_off_at_current_position
 			command_add.execute
 				-- Now we expand the layout item.
 			if not layout_item.is_expanded then

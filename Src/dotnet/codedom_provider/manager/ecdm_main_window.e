@@ -582,17 +582,21 @@ feature {NONE} -- Implementation
 						delete_button.enable_sensitive
 					end
 					l_apps := manager.applications (l_config)
-					from
-						l_apps.start
-						applications_list.wipe_out
-					until
-						l_apps.after
-					loop
-						applications_list.extend (create {EV_LIST_ITEM}.make_with_text (l_apps.item))
-						l_apps.forth
-					end
-					if l_apps.count = 1 and remove_button.is_sensitive then
-						remove_button.disable_sensitive -- There has to be at least one application for the configuration
+					if l_apps /= Void then
+						from
+							l_apps.start
+							applications_list.wipe_out
+						until
+							l_apps.after
+						loop
+							applications_list.extend (create {EV_LIST_ITEM}.make_with_text (l_apps.item))
+							l_apps.forth
+						end
+						if l_apps.count = 1 and remove_button.is_sensitive then
+							remove_button.disable_sensitive -- There has to be at least one application for the configuration
+						end
+					else
+						remove_button.disable_sensitive
 					end
 				end
 				if not properties_button.is_sensitive then

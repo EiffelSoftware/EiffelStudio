@@ -12,8 +12,10 @@ inherit
 			make as sr_make,
 			default_value as value
 		redefine
-			set_value, value, xml_trace
+			set_value, value, xml_trace,
+			registry_name
 		end
+
 
 creation
 	make, 
@@ -130,6 +132,12 @@ feature -- Output
 			Result.append ("<LIST_STRING>")
 			Result.append (xml_value)
 			Result.append ("</LIST_STRING></TEXT>")
+		end
+
+	registry_name: STRING is
+			-- name of Current in the registry
+		do
+			Result := "EIFARR_" + name
 		end
 
 end -- class ARRAY_RESOURCE

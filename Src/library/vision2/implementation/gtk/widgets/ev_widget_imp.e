@@ -68,13 +68,6 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	gtk_widget_no_window (a_wid: POINTER): BOOLEAN is
-		external
-			"C [macro <gtk/gtk.h>]"
-		alias
-			"GTK_WIDGET_NO_WINDOW"
-		end
-
 	initialize is
 			-- Show non window widgets.
 			-- Initialize default options, colors and sizes.
@@ -83,9 +76,7 @@ feature {NONE} -- Initialization
 			if not C.gtk_is_widget (c_object) then
 				print ("not widget!! " + generating_type)
 			end
-			if
-				C.gtk_is_widget (c_object) and not C.gtk_is_window (c_object)
-			then
+			if C.gtk_is_widget (c_object) and not C.gtk_is_window (c_object) then
 				C.gtk_widget_show (c_object)
 			end
 
@@ -95,34 +86,19 @@ feature {NONE} -- Initialization
 
 				--| "configure-event" only happens for windows,
 				--| so we connect to the "size-allocate" function.
-
 			if C.gtk_is_window (c_object) then
-				real_signal_connect (
-					c_object,
-					"configure-event",
-					~on_size_allocate,
-					Default_translate
-				)
+				real_signal_connect (c_object, "configure-event", agent on_size_allocate, Default_translate)
 			else
-				real_signal_connect (
-					c_object,
-					"size-allocate",
-					~on_size_allocate,
-					~size_allocate_translate
-				)
+				real_signal_connect (c_object, "size-allocate", agent on_size_allocate, agent size_allocate_translate)
 			end
 
-			real_signal_connect (visual_widget, "key_press_event", ~on_key_event, ~key_event_translate)
-			real_signal_connect (visual_widget, "key_release_event", ~on_key_event, ~key_event_translate)
+			real_signal_connect (visual_widget, "key_press_event", agent on_key_event, agent key_event_translate)
+			real_signal_connect (visual_widget, "key_release_event", agent on_key_event, agent key_event_translate)
+
 				--| "button-press-event" is a special case, see below.
-			pointer_button_press_actions.not_empty_actions.extend (
-				~connect_button_press_switch
-			)
-			pointer_double_press_actions.not_empty_actions.extend (
-				~connect_button_press_switch
-			)
-			if not pointer_button_press_actions.is_empty or
-				not pointer_double_press_actions.is_empty then
+			pointer_button_press_actions.not_empty_actions.extend (agent connect_button_press_switch)
+			pointer_double_press_actions.not_empty_actions.extend (agent connect_button_press_switch)
+			if not pointer_button_press_actions.is_empty or not pointer_double_press_actions.is_empty then
 				connect_button_press_switch
 			end
 			is_initialized := True
@@ -174,11 +150,7 @@ feature {NONE} -- Initialization
 			--| See comment in `button_press_switch' above.
 		do
 			if not button_press_switch_is_connected then
-				signal_connect (
-					"button-press-event",
-					~button_press_switch,
-					default_translate
-				)
+				signal_connect ("button-press-event", agent button_press_switch, default_translate)
 				button_press_switch_is_connected := True
 			end
 		end
@@ -205,16 +177,12 @@ feature -- Access
 			x, y, s: INTEGER
 			child: POINTER
 		do
-			child := C.gdk_window_get_pointer (
-				C.gtk_widget_struct_window (c_object),
-				$x, $y, $s
-			)
+			child := C.gdk_window_get_pointer (C.gtk_widget_struct_window (c_object), $x, $y, $s)
 			create Result.set (x, y)
 		end
 
 	pointer_style: EV_CURSOR
 			-- Cursor displayed when the pointer is over this widget.
-
 
 	popup_menu: EV_MENU
 			-- Menu popped up when button 3 is pressed on widget.
@@ -251,21 +219,19 @@ feature -- Status report
 			-- Will `Current' be displayed when its parent is?
 			-- See also `is_displayed'.
 		do
-			--| Shift to put bit in least significant place then take mod 2.
-			Result := (
-				(C.gtk_object_struct_flags (c_object)
-				// C.GTK_VISIBLE_ENUM) \\ 2
-			) = 1
+			Result := has_struct_flag (C.GTK_VISIBLE_ENUM)
+			check
+				Result = (((C.gtk_object_struct_flags (c_object)// C.GTK_VISIBLE_ENUM) \\ 2) = 1)
+			end
 		end
 
 	is_displayed: BOOLEAN is
 			-- Is `Current' visible on the screen?
 		do
-			--| Shift to put bit in least significant place then take mod 2.
-			Result := ((
-				(C.gtk_object_struct_flags (c_object)
-				// C.GTK_MAPPED_ENUM) \\ 2)
-			) = 1
+			Result := has_struct_flag (C.GTK_MAPPED_ENUM)
+			check
+				Result = ((((C.gtk_object_struct_flags (c_object)// C.GTK_MAPPED_ENUM) \\ 2)) = 1)
+			end
 		end
 
 	has_focus: BOOLEAN is
@@ -277,11 +243,13 @@ feature -- Status report
 	has_capture: BOOLEAN is
 			-- Has capture?
 		do
-			--| Shift to put bit in least significant place then take mod 2.
-			Result := ((
-				(C.gtk_object_struct_flags (visual_widget)
-				// C.GTK_HAS_GRAB_ENUM) \\ 2)
-			) = 1
+			Result := has_struct_flag (C.GTK_HAS_GRAB_ENUM)
+			check
+				Result = (((
+					(C.gtk_object_struct_flags (visual_widget)
+					// C.GTK_HAS_GRAB_ENUM) \\ 2)
+				) = 1)
+			end
 		end
 
 feature -- Status setting
@@ -331,9 +299,9 @@ feature -- Status setting
 				C.GDK_BUTTON_MOTION_MASK_ENUM +
 				--C.GDK_POINTER_MOTION_HINT_MASK_ENUM +
 				C.GDK_POINTER_MOTION_MASK_ENUM,
-				NULL,                      -- GdkWindow* confine_to 
-				NULL,                      -- GdkCursor *cursor
-				0)                                    -- guint32 time
+				NULL,						-- GdkWindow* confine_to 
+				NULL,						-- GdkCursor *cursor
+				0)							-- guint32 time
 			end
 
 	disable_capture is
@@ -436,9 +404,7 @@ feature -- Measurement
 			a_aux_info: POINTER
 			tmp_struct_x: INTEGER
 		do
-			Result := C.gtk_allocation_struct_x (
-				C.gtk_widget_struct_allocation (c_object)
-			)
+			Result := C.gtk_allocation_struct_x (C.gtk_widget_struct_allocation (c_object))
 			a_aux_info := aux_info_struct
 			if a_aux_info /= NULL then
 				tmp_struct_x := C.gtk_widget_aux_info_struct_x (a_aux_info)
@@ -455,9 +421,7 @@ feature -- Measurement
 			a_aux_info: POINTER
 			tmp_struct_y: INTEGER
 		do
-			Result := C.gtk_allocation_struct_y (
-				C.gtk_widget_struct_allocation (c_object)
-			)
+			Result := C.gtk_allocation_struct_y (C.gtk_widget_struct_allocation (c_object))
 			a_aux_info := aux_info_struct
 			if a_aux_info /= NULL then
 				tmp_struct_y := C.gtk_widget_aux_info_struct_y (a_aux_info)
@@ -540,8 +504,15 @@ feature {EV_ANY_I} -- Implementation
 				
 feature {NONE} -- Implementation
 
+	has_struct_flag (a_flag: INTEGER): BOOLEAN is
+			-- Has this widget the flag `a_flag' in struct_flags?
+		do
+				--| Shift to put bit in least significant place then take mod 2.
+			Result := (((C.gtk_object_struct_flags (visual_widget) // a_flag) \\ 2)) = 1
+		end
+
 	cursor_signal_tag: INTEGER
-		-- Tag returned from Gtk used to disconnect `enter-notify' signal
+			-- Tag returned from Gtk used to disconnect `enter-notify' signal
 
 feature {EV_WINDOW_IMP} -- Implementation
 
@@ -549,22 +520,6 @@ feature {EV_WINDOW_IMP} -- Implementation
 			-- Used for drawing area to keep focus on all keys.
 		do
 			Result := False
-		end
-
-feature {NONE} -- Externals
-
-	gtk_widget_set_flags (a_widget: POINTER; a_flag: INTEGER) is
-		external
-			"C [macro <gtk/gtk.h>]"
-		alias
-			"GTK_WIDGET_SET_FLAGS"
-		end
-
-	gtk_widget_unset_flags (a_widget: POINTER; a_flag: INTEGER) is
-		external
-			"C [macro <gtk/gtk.h>]"
-		alias
-			"GTK_WIDGET_UNSET_FLAGS"
 		end
 
 feature {NONE} -- Implementation
@@ -670,7 +625,7 @@ feature {EV_WINDOW_IMP} -- Implementation
 			temp_key_string: STRING
 		do
 			if a_key_press then
-				-- The event is a key press event.
+					-- The event is a key press event.
 				if a_key /= Void and then key_press_actions_internal /= Void then
 					key_press_actions_internal.call ([a_key])
 				end
@@ -687,7 +642,7 @@ feature {EV_WINDOW_IMP} -- Implementation
 					key_press_string_actions_internal.call ([temp_key_string])
 				end
 			else
-				-- The event is a key release event.
+					-- The event is a key release event.
 				if a_key /= Void and then key_release_actions_internal /= Void then
 					key_release_actions_internal.call ([a_key])
 				end
@@ -701,10 +656,10 @@ feature {NONE} -- Implementation
 		do
 				--| Shift to put bit in least significant place then take mod 2.
 			if a_c_object /= NULL then
-				Result := ((
-					(C.gtk_object_struct_flags (a_c_object)
-					// C.GTK_HAS_FOCUS_ENUM) \\ 2) 
-				) = 1
+				Result := has_struct_flag (C.GTK_HAS_FOCUS_ENUM)
+				check
+					Result = ((((C.gtk_object_struct_flags (a_c_object) // C.GTK_HAS_FOCUS_ENUM) \\ 2)) = 1)
+				end
 			end
 		end
 		
@@ -713,9 +668,9 @@ feature {NONE} -- Implementation
 		local
 			temp_int: INTEGER
 		do
-				if is_displayed then
-					temp_int := C.gtk_main_iteration_do (False)
-				end
+			if is_displayed then
+				temp_int := C.gtk_main_iteration_do (False)
+			end
 		end
 
 	propagate_foreground_color_internal (a_color: EV_COLOR; a_c_object: POINTER) is
@@ -725,9 +680,7 @@ feature {NONE} -- Implementation
 			child: POINTER
 			fg: EV_COLOR
 		do
-			if
-				C.gtk_is_container (a_c_object)
-			then
+			if C.gtk_is_container (a_c_object) then
 				from
 					fg := a_color
 					l := C.gtk_container_children (a_c_object)
@@ -823,6 +776,29 @@ feature {EV_ANY_I} -- Contract Support
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_WIDGET
+
+feature {NONE} -- Externals
+
+	gtk_widget_set_flags (a_widget: POINTER; a_flag: INTEGER) is
+		external
+			"C [macro <gtk/gtk.h>]"
+		alias
+			"GTK_WIDGET_SET_FLAGS"
+		end
+
+	gtk_widget_unset_flags (a_widget: POINTER; a_flag: INTEGER) is
+		external
+			"C [macro <gtk/gtk.h>]"
+		alias
+			"GTK_WIDGET_UNSET_FLAGS"
+		end
+
+	gtk_widget_no_window (a_wid: POINTER): BOOLEAN is
+		external
+			"C [macro <gtk/gtk.h>]"
+		alias
+			"GTK_WIDGET_NO_WINDOW"
+		end
 
 end -- class EV_WIDGET_IMP
 

@@ -7,15 +7,15 @@ indexing
 	revision: "$Revision$"
 
 class
-	
 	EXEC_STEP
 
 inherit
-
 	EXEC_FORMAT
+		rename
+			All_breakable_points as execution_mode
+		end
 
 creation
-
 	make
 
 feature -- Properties
@@ -28,21 +28,15 @@ feature -- Properties
 
 feature {NONE} -- Attributes
 
-	execution_mode: INTEGER is
-			-- Mode of execution.
-		once
-			Result := All_breakable_points
-		end;
-
 	name: STRING is
 			-- Name of the command.
-		do
+		once
 			Result := Interface_names.f_Exec_step
 		end;
 
 	menu_name: STRING is
 			-- Name used in menu entry
-		do
+		once
 			Result := Interface_names.m_Exec_step
 		end;
 

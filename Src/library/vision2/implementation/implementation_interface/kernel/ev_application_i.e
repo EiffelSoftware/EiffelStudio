@@ -46,11 +46,7 @@ feature -- Basic operation
 
 	splash_pixmap (pix: EV_PIXMAP) is
 			-- Show the splash screen pixmap `pix'.
-		do
-			create splash_screen.make
-			splash_screen.set_background_pixmap (pix)
-			splash_screen.set_minimum_size (pix.width, pix.height)
-			splash_screen.show
+		deferred
 		end
 
 	splash_screen: EV_UNTITLED_WINDOW_IMP

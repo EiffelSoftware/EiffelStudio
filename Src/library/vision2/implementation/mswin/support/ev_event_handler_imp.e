@@ -1,7 +1,7 @@
 indexing
 	description: "This class is a heir of EV_WIDGET_IMP, EV_ITEM_IMP%
 				% and EV_MESSAGE_DIALOG_IMP"
-	author: ""
+	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -10,19 +10,22 @@ deferred class
 
 feature {NONE} -- Initialization
 
-	initialize_list is
-			-- Create the `command_list' and the `arguments_list'.
-		deferred
+	initialize_list (count: INTEGER) is
+			-- Create the `command_list' and the `arguments_list' with a length
+			-- of count.
+		do
+			!! command_list.make (1, count)
+			!! argument_list.make (1, count)
 		end
 
 feature {NONE} -- Access
 
-	command_list: ARRAY [EV_COMMAND]
+	command_list: ARRAY [LINKED_LIST [EV_COMMAND]]
 			-- The list of the commands asociated with the widget
 			-- The command are sort by event_id. For this ids,
 			-- See the class EV_EVENT_CONSTANTS
 
-	argument_list: ARRAY [EV_ARGUMENTS]
+	argument_list: ARRAY [LINKED_LIST [EV_ARGUMENTS]]
 			-- The list of the arguments asociated with the commands
 			-- The arguments follow the same order than the commands.
 
@@ -35,20 +38,21 @@ feature {NONE} -- status setting
 			-- The argument can be `Void', in this case, there is 
 			-- no argument passed to the command.
 		require
-			command_not_void: a_command /= Void
+			valid_command: a_command /= Void
+			valid_id: event_id >= 1 and event_id <= command_list.count
+			valid_lists: command_list /= Void and argument_list /= Void
 		local
-			com: EV_COMMAND
+			list_com: LINKED_LIST [EV_COMMAND]
+			list_arg: LINKED_LIST [EV_ARGUMENTS]
 		do
-			if command_list = Void then
-				initialize_list
+			if (command_list @ event_id) = Void then
+				!! list_com.make
+				!! list_arg.make
+				command_list.force (list_com, event_id)
+				argument_list.force (list_arg, event_id)
 			end
-			if a_command.event_data /= Void then
-				com := deep_clone (a_command)
-			else	
-				com := a_command
-			end
-			command_list.force (com, event_id)
-			argument_list.force (arguments, event_id)
+			(command_list @ event_id).extend (a_command)
+			(argument_list @ event_id).extend (arguments)
 		end
 
 	remove_command (command_id: INTEGER) is
@@ -67,10 +71,27 @@ feature {NONE} -- Basic operation
 
 	execute_command (event_id: INTEGER; data: EV_EVENT_DATA) is
 			-- Execute the command that correspond to the event `event_id'.
+		require
+			valid_commands: command_list /= Void
+			valid_arguments: argument_list /= Void
+			valid_id: event_id >= 1 and event_id <= command_list.count
+		local
+			com_list: LINKED_LIST [EV_COMMAND]
+			arg_list: LINKED_LIST [EV_ARGUMENTS]
 		do
-			if command_list /= Void and command_list @ event_id /= Void then
-				(command_list @ event_id).set_event_data (data)
-				(command_list @ event_id).execute (argument_list @ event_id)
+			if (command_list @ event_id) /= Void then
+				com_list := (command_list @ event_id)
+				arg_list := (argument_list @ event_id)
+				from
+					com_list.start
+					arg_list.start				
+				until
+					com_list.after
+				loop
+					com_list.item.execute (arg_list.item, data)
+					com_list.forth
+					arg_list.forth
+				end
 			end
 		end
 

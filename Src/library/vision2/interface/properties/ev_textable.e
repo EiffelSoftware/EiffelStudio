@@ -22,7 +22,6 @@ feature {NONE} -- Initialization
 			-- Create `Current' and assign `a_text' to `text'
 		require
 			a_text_not_void: a_text /= Void
-			a_text_not_empty: not a_text.is_empty
 		do
 			default_create
 			set_text (a_text)
@@ -40,8 +39,8 @@ feature -- Access
 			Result := implementation.text
 		ensure
 			bridge_ok: equal (Result, implementation.text)
-			not_void_implies_cloned: Result /= Void implies
-				Result /= implementation.text
+			not_void: Result /= Void
+			cloned: Result /= implementation.text
 		end
 
 	alignment: EV_TEXT_ALIGNMENT is
@@ -93,7 +92,6 @@ feature -- Element change
 		require
 			not_destroyed: not is_destroyed
 			a_text_not_void: a_text /= Void
-			a_text_not_empty: not a_text.is_empty
 		do
 			implementation.set_text (a_text)
 		ensure
@@ -101,13 +99,13 @@ feature -- Element change
 		end
 
 	remove_text is
-			-- Make `text' `Void'.
+			-- Make `text' empty.
 		require
 			not_destroyed: not is_destroyed
 		do
 			implementation.remove_text
 		ensure
-			text_removed: text = Void
+			text_empty: text.is_empty
 		end
 		
 feature {NONE} -- Contract support
@@ -115,7 +113,7 @@ feature {NONE} -- Contract support
 	is_in_default_state: BOOLEAN is
 			-- Is `Current' in its default state?
 		do
-			Result := Precursor {EV_ANY} and text = Void
+			Result := Precursor {EV_ANY} and text.is_empty
 		end
 
 	cycle_alignment is
@@ -136,8 +134,7 @@ feature {EV_ANY_I} -- Implementation
 			-- Responsible for interaction with native graphics toolkit.
 			
 invariant
-	text_not_void_implies_text_not_empty:
-		is_usable and text /= Void implies text.count > 0
+	text_not_void_implies_text_not_empty: is_usable implies text /= Void
 
 end -- class EV_TEXTABLE
 

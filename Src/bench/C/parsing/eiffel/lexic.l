@@ -133,6 +133,8 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 "!"							{return process(TE_BANG);}
 "<<"						{return process(TE_LARRAY);}
 ">>"						{return process(TE_RARRAY);}
+"<<<"						{return process(TE_LTUPLE);}
+">>>"						{return process(TE_RTUPLE);}
 (@|#|\||&)[@#0-9a-zA-Z_!\"\$&\'\(\)\*\+\,\-\./:;<>=\?\[\\\]\^\`\{\}\|\~%]*	{return process_name(TE_FREE);}
 "//"						{return process(TE_DIV);}
 "\\\\"						{return process(TE_MOD);}

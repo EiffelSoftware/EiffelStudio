@@ -497,24 +497,22 @@ feature {NONE} -- WEL Implementation
 	on_cbn_selchange is
 			-- The selection is about to be changed.
 		do
-				-- Event for the unselected item
-			--if selected and then not equal (old_selected_item, ev_children.i_th (wel_selected_item + 1)) then
-			--end
-				-- Event for the newly selected item
 			if selected and then wel_selected_item /= Void then
-			if selected and then not equal (old_selected_item, ev_children.i_th (wel_selected_item + 1)) then
+				if selected and then not equal (old_selected_item, ev_children.i_th (wel_selected_item + 1)) then
+					if old_selected_item /= Void then
 						old_selected_item.execute_command (Cmd_item_deactivate, Void)
 						execute_command (Cmd_unselect, Void)
+					end
 	
-					-- Only performed if an item is selected and the new selection is not equal to
-					-- the current selection.
-				old_selected_item := ev_children.i_th (wel_selected_item + 1)
-				old_selected_item.execute_command (Cmd_item_activate, Void)
-				execute_command (Cmd_select, Void)
-					-- Must now manually inform combo box that a selection is taking place
-			elseif wel_selected_item/= Void and then not equal (old_selected_item, ev_children.i_th (wel_selected_item + 1)) then
-				old_selected_item := Void
-			end
+						-- Only performed if an item is selected and the new selection is not equal to
+						-- the current selection.
+					old_selected_item := ev_children.i_th (wel_selected_item + 1)
+					old_selected_item.execute_command (Cmd_item_activate, Void)
+					execute_command (Cmd_select, Void)
+						-- Must now manually inform combo box that a selection is taking place
+				elseif wel_selected_item/= Void and then not equal (old_selected_item, ev_children.i_th (wel_selected_item + 1)) then
+					old_selected_item := Void
+				end
 			end
 		end
 

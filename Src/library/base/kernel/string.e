@@ -293,6 +293,14 @@ feature -- Measurement
 			end
 		end;
 
+	index_set: INTEGER_INTERVAL is
+			-- Range of acceptable indexes
+		do
+			create Result.make (1, count)
+		ensure then
+			Result.count = count
+		end
+
 feature -- Comparison
 
 	is_equal (other: like Current): BOOLEAN is
@@ -1377,6 +1385,7 @@ invariant
 
 	extendible: extendible;
 	compare_character: object_comparison = false
+	index_set_has_same_count: index_set.count = count
 
 end -- class STRING
 

@@ -36,7 +36,7 @@ class FIXED_LIST [G] inherit
 			put,
 			remove
 		select
-			extendible
+			extendible, index_set
 		end;
 
 	ARRAY [G]
@@ -46,6 +46,7 @@ class FIXED_LIST [G] inherit
 			item as i_th,
 			force as force_i_th,
 			bag_put as put,
+			index_set as array_index_set,
 			extendible as array_extendible
 		export
 			{NONE}

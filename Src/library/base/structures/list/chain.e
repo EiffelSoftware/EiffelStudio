@@ -123,6 +123,8 @@ feature -- Access
 		deferred
 		end;
 
+feature -- Measurement
+
 	occurrences (v: like item): INTEGER is
 			-- Number of times `v' appears.
 			-- (Reference or object equality,
@@ -134,6 +136,14 @@ feature -- Access
 			Result := sequential_occurrences (v);
 			go_to (pos)
 		end;
+
+	index_set: INTEGER_INTERVAL is
+			-- Range of acceptable indexes
+		do
+			create Result.make (1, count)
+		ensure then
+			Result.count = count
+		end
 
 feature -- Cursor movement
 
@@ -323,6 +333,7 @@ invariant
 	isfirst_definition: isfirst = ((not empty) and (index = 1));
 	islast_definition: islast = ((not empty) and (index = count));
 	item_corresponds_to_index: (not off) implies (item = i_th (index))
+	index_set_has_same_count: index_set.count = count
 
 end -- class CHAIN
 

@@ -1,7 +1,7 @@
 indexing
 
 	description:
-		"Tables whose keys are integers or equivalent";
+		"Tables whose keys are integers in a contiguous interval";
 
 	status: "See notice at end of class";
 	names: indexable, access;
@@ -16,7 +16,28 @@ deferred class INDEXABLE [G, H -> INTEGER] inherit
 		rename
 			valid_key as valid_index
 		redefine
-			put
+			put, valid_index
+		end
+
+feature -- Measurement
+
+	index_set: INTEGER_INTERVAL is
+			-- Range of acceptable indexes
+		deferred
+		ensure
+			not_void: Result /= Void
+		end
+
+feature -- Status report
+
+	valid_index (i: H): BOOLEAN is
+			-- Is `i' a valid index?
+		deferred
+		ensure then
+			only_if_in_index_set:
+				Result implies
+					((i >= index_set.lower) and
+					(i <= index_set.upper))
 		end
 
 feature -- Element change
@@ -27,6 +48,10 @@ feature -- Element change
 		ensure then
 			insertion_done: item (k) = v
 		end;
+
+invariant
+
+	index_set_not_void: index_set /= Void
 
 end -- class INDEXABLE
 

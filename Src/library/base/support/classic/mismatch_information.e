@@ -18,15 +18,13 @@ indexing
 class MISMATCH_INFORMATION
 
 inherit
-
 	HASH_TABLE [ANY, STRING]
 		redefine
 			default_create,
 			out
 		end
 
-creation
-
+create
 	default_create
 
 feature -- Initialization
@@ -35,12 +33,7 @@ feature -- Initialization
 			-- Make container with default size
 		do
 			make (5)
-		end
-
-	set_callback_pointers is
-			-- Sets call-back pointers in the run-time
-		once
-			set_mismatch_information_access (Current, $clear_all, $internal_put)
+			set_callback_pointers
 		end
 
 feature -- Access
@@ -48,7 +41,9 @@ feature -- Access
 	class_name: STRING is
 			-- Name of generating class which held attribute values
 		do
-			check has_class_entry: has (Class_key) end
+			check
+				has_class_entry: has (Class_key)
+			end
 			Result ?= item (Class_key)
 		ensure
 			result_exists: Result /= Void
@@ -100,12 +95,21 @@ feature {NONE} -- Implementation
 			put (value, key)
 		end
 
+	set_callback_pointers is
+			-- Sets call-back pointers in the run-time
+		once
+			set_mismatch_information_access (Current, $clear_all, $internal_put)
+		end
+
 feature {NONE} -- Externals
 
 	set_mismatch_information_access (obj: ANY; init, add: POINTER) is
 		external
 			"C"
 		end
+
+invariant
+	singleton: mismatch_information /= Void implies Current = mismatch_information
 
 indexing
 

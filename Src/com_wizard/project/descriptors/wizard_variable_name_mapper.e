@@ -97,7 +97,7 @@ feature -- Basic Operations
 			valid_type: is_valid_type_kind (a_type)
 		do
 			Result := to_eiffel_name (a_name)
-			
+
 			Result.to_upper
 			if (a_type = Tkind_enum) then
 				Result.append ("_ENUM")

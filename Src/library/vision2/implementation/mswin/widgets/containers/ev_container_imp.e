@@ -108,8 +108,7 @@ feature -- Access
 			-- `Result' is pixmap used for background.
 		do
 			if background_pixmap_imp /= Void then
-				create Result
-				Result.copy(background_pixmap_imp.interface)
+				Result := background_pixmap_imp.interface	
 			end
 		end
 
@@ -140,9 +139,13 @@ feature -- Element change
 
 	set_background_pixmap (pix: EV_PIXMAP) is
 			-- Set the background pixmap and redraw the container.
+		local
+			pixmap: EV_PIXMAP
 		do
 			if pix /= Void then
-				background_pixmap_imp ?= pix.implementation
+				create pixmap
+				pixmap.copy (pix)
+				background_pixmap_imp ?= pixmap.implementation
 			end
 			if exists then
 				invalidate

@@ -46,6 +46,11 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	GB_SHARED_TOOLS
+		export
+			{NONE} all
+		end
 
 feature -- Basic operation
 
@@ -63,6 +68,9 @@ feature -- Basic operation
 				-- We must build an XML file representing the project, and
 				-- then for every window found in that file, generate a new window.
 			generate_xml_for_project
+			
+			window_counter := 0	
+			total_windows := window_selector.objects.count
 		
 				-- Note that the generation of the XML file used internally,
 				-- is not performed until `build_main_window_implementation' is called.
@@ -167,18 +175,26 @@ feature {NONE} -- Implementation
 			store: GB_XML_STORE
 			generation_settings: GB_GENERATION_SETTINGS
 		do
-			set_progress (0.3)
 			create store
 				-- Generate an XML representation of the current project.
 				-- We will build our class text directly from this XML.
 			create generation_settings
 			generation_settings.enable_generate_names
+			store.register_object_written_agent (agent report_progress_from_store)
 			store.generate_document (generation_settings)
 			current_document := store.document
 			check
 				current_document_not_void: current_document/= Void
 			end
 		end
+		
+	report_progress_from_store (total, stored: INTEGER) is
+			-- Report progress from XML store, represented by percentage
+			-- of `stored' against `total'.
+		do
+			set_progress (progress_switch * (stored / total))
+		end
+		
 
 	reset_generation_constants is
 			-- Reset all constants and attributes required before a generation.
@@ -213,7 +229,6 @@ feature {NONE} -- Implementation
 		local
 			debug_ace_file, release_ace_file: FILE_NAME
 		do
-			set_progress (0.1)
 			if system_status.is_wizard_system then
 				create debug_ace_file.make_from_string (visual_studio_information.wizard_installation_path + "\wizards\build")
 				debug_ace_file.extend ("templates")
@@ -291,7 +306,6 @@ feature {NONE} -- Implementation
 				application_class_name: STRING
 				change_pos: INTEGER
 			do
-				set_progress (0.2)
 				if system_status.is_wizard_system then
 					create application_template.make_from_string (visual_studio_information.wizard_installation_path + "\wizards\build")
 					application_template.extend ("templates")
@@ -334,7 +348,8 @@ feature {NONE} -- Implementation
 				window_template, file_name: FILE_NAME
 				a_class_name, temp_string: STRING
 			do
-				set_progress (0.6)
+				window_counter := window_counter + 1
+				set_progress (progress_switch + (progress_switch * (window_counter / total_windows)))
 					-- Build the file name for generation
 				check
 					document_info_not_void: document_info /= Void
@@ -378,9 +393,6 @@ feature {NONE} -- Implementation
 				else
 					add_generated_string (class_text, Void, custom_feature_tag)
 				end
-	
-				
-				set_progress (0.7)
 				
 					-- Generate the widget declarations and creation lines.
 				generate_declarations
@@ -389,12 +401,9 @@ feature {NONE} -- Implementation
 				create all_generated_events.make (0)
 				all_generated_events.compare_objects
 				
-				set_progress (0.8)
-				
 					-- Generate the widget building code.
 				generate_structure
-				
-				set_progress (0.9)
+
 					-- Generate the widget setting code.
 				generate_setting
 				
@@ -1116,6 +1125,12 @@ feature {NONE} -- Implementation
 			end
 		end
 		
+	window_counter: INTEGER
+		-- Counts the number of windows that have been generated
+		
+	total_windows: INTEGER
+		-- The total number of windows that muat be generated.
+		
 	set_progress (value: REAL)	is
 			-- Assign `value' to proportion of `progress_bar'
 			-- if `progress_bar' /= Void
@@ -1196,5 +1211,10 @@ feature {NONE} -- Implementation
 		
 	progress_bar: EV_PROGRESS_BAR
 		-- A progress bar that will be updated during generation.
+		
+	progress_switch: REAL is 0.6
+		-- Progress level for end of xml storing, and start of generation.
+		-- As they are performed independently, we need the progress of each to
+		-- work as a whole
 
 end -- class GB_CODE_GENERATOR

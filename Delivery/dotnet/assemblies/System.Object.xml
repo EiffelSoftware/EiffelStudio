@@ -1,6 +1,5 @@
 <?xml version="1.0"?>
 <R N="ROOT" T="CONSUMED_TYPE">
-<S N="dotnet_name">System.Object</S>
 <NONE N="parent"></NONE>
 <S N="eiffel_name">SYSTEM_OBJECT</S>
 <A N="constructors" L="1" C="0" T="NONE">
@@ -15,169 +14,170 @@
 </A>
 <A N="internal_procedures" L="1" C="1" T="CONSUMED_PROCEDURE">
 <R N="1" T="CONSUMED_PROCEDURE">
-<A N="arguments" L="1" C="0" T="NONE">
+<A N="a" L="1" C="0" T="NONE">
 </A>
-<I N="internal_flags">1024</I>
-<S N="dotnet_name">Finalize</S>
-<S N="eiffel_name">finalize</S>
-<R N="declared_type" T="CONSUMED_REFERENCED_TYPE">
-<S N="name">System.Object</S>
-<I N="assembly_id">1</I>
+<I N="f">1024</I>
+<S N="n">Finalize</S>
+<S N="e">finalize</S>
+<R N="d" T="CONSUMED_REFERENCED_TYPE">
+<S N="n">System.Object</S>
+<I N="i">1</I>
 </R>
 </R>
 </A>
 <A N="internal_functions" L="1" C="7" T="CONSUMED_FUNCTION">
 <R N="1" T="CONSUMED_FUNCTION">
-<R N="return_type" T="CONSUMED_REFERENCED_TYPE">
-<S N="name">System.Int32</S>
-<I N="assembly_id">1</I>
+<R N="r" T="CONSUMED_REFERENCED_TYPE">
+<S N="n">System.Int32</S>
+<I N="i">1</I>
 </R>
-<A N="arguments" L="1" C="0" T="NONE">
+<A N="a" L="1" C="0" T="NONE">
 </A>
-<I N="internal_flags">1568</I>
-<S N="dotnet_name">GetHashCode</S>
-<S N="eiffel_name">get_hash_code</S>
-<R N="declared_type" T="CONSUMED_REFERENCED_TYPE">
-<S N="name">System.Object</S>
-<I N="assembly_id">1</I>
+<I N="f">1568</I>
+<S N="n">GetHashCode</S>
+<S N="e">get_hash_code</S>
+<R N="d" T="CONSUMED_REFERENCED_TYPE">
+<S N="n">System.Object</S>
+<I N="i">1</I>
 </R>
 </R>
 <R N="2" T="CONSUMED_FUNCTION">
-<R N="return_type" T="CONSUMED_REFERENCED_TYPE">
-<S N="name">System.Boolean</S>
-<I N="assembly_id">1</I>
+<R N="r" T="CONSUMED_REFERENCED_TYPE">
+<S N="n">System.Boolean</S>
+<I N="i">1</I>
 </R>
-<A N="arguments" L="1" C="1" T="CONSUMED_ARGUMENT">
+<A N="a" L="1" C="1" T="CONSUMED_ARGUMENT">
 <R N="1" T="CONSUMED_ARGUMENT">
-<S N="dotnet_name">obj</S>
-<S N="eiffel_name">obj</S>
-<R N="type" T="CONSUMED_REFERENCED_TYPE">
-<S N="name">System.Object</S>
-<I N="assembly_id">1</I>
+<S N="d">obj</S>
+<S N="e">obj</S>
+<R N="t" T="CONSUMED_REFERENCED_TYPE">
+<S N="n">System.Object</S>
+<I N="i">1</I>
 </R>
-<B N="is_out">False</B>
+<B N="o">False</B>
 </R>
 </A>
-<I N="internal_flags">1568</I>
-<S N="dotnet_name">Equals</S>
-<S N="eiffel_name">equals</S>
-<R N="declared_type" T="CONSUMED_REFERENCED_TYPE">
-<S N="name">System.Object</S>
-<I N="assembly_id">1</I>
+<I N="f">1568</I>
+<S N="n">Equals</S>
+<S N="e">equals</S>
+<R N="d" T="CONSUMED_REFERENCED_TYPE">
+<S N="n">System.Object</S>
+<I N="i">1</I>
 </R>
 </R>
 <R N="3" T="CONSUMED_FUNCTION">
-<R N="return_type" T="CONSUMED_REFERENCED_TYPE">
-<S N="name">System.String</S>
-<I N="assembly_id">1</I>
+<R N="r" T="CONSUMED_REFERENCED_TYPE">
+<S N="n">System.String</S>
+<I N="i">1</I>
 </R>
-<A N="arguments" L="1" C="0" T="NONE">
+<A N="a" L="1" C="0" T="NONE">
 </A>
-<I N="internal_flags">1568</I>
-<S N="dotnet_name">ToString</S>
-<S N="eiffel_name">to_string</S>
-<R N="declared_type" T="CONSUMED_REFERENCED_TYPE">
-<S N="name">System.Object</S>
-<I N="assembly_id">1</I>
+<I N="f">1568</I>
+<S N="n">ToString</S>
+<S N="e">to_string</S>
+<R N="d" T="CONSUMED_REFERENCED_TYPE">
+<S N="n">System.Object</S>
+<I N="i">1</I>
 </R>
 </R>
 <R N="4" T="CONSUMED_FUNCTION">
-<R N="return_type" T="CONSUMED_REFERENCED_TYPE">
-<S N="name">System.Boolean</S>
-<I N="assembly_id">1</I>
+<R N="r" T="CONSUMED_REFERENCED_TYPE">
+<S N="n">System.Boolean</S>
+<I N="i">1</I>
 </R>
-<A N="arguments" L="1" C="2" T="CONSUMED_ARGUMENT">
+<A N="a" L="1" C="2" T="CONSUMED_ARGUMENT">
 <R N="1" T="CONSUMED_ARGUMENT">
-<S N="dotnet_name">objA</S>
-<S N="eiffel_name">obj_a</S>
-<R N="type" T="CONSUMED_REFERENCED_TYPE">
-<S N="name">System.Object</S>
-<I N="assembly_id">1</I>
+<S N="d">objA</S>
+<S N="e">obj_a</S>
+<R N="t" T="CONSUMED_REFERENCED_TYPE">
+<S N="n">System.Object</S>
+<I N="i">1</I>
 </R>
-<B N="is_out">False</B>
+<B N="o">False</B>
 </R>
 <R N="2" T="CONSUMED_ARGUMENT">
-<S N="dotnet_name">objB</S>
-<S N="eiffel_name">obj_b</S>
-<R N="type" T="CONSUMED_REFERENCED_TYPE">
-<S N="name">System.Object</S>
-<I N="assembly_id">1</I>
+<S N="d">objB</S>
+<S N="e">obj_b</S>
+<R N="t" T="CONSUMED_REFERENCED_TYPE">
+<S N="n">System.Object</S>
+<I N="i">1</I>
 </R>
-<B N="is_out">False</B>
+<B N="o">False</B>
 </R>
 </A>
-<I N="internal_flags">35</I>
-<S N="dotnet_name">Equals</S>
-<S N="eiffel_name">equals_object_object</S>
-<R N="declared_type" T="CONSUMED_REFERENCED_TYPE">
-<S N="name">System.Object</S>
-<I N="assembly_id">1</I>
+<I N="f">35</I>
+<S N="n">Equals</S>
+<S N="e">equals_object_object</S>
+<R N="d" T="CONSUMED_REFERENCED_TYPE">
+<S N="n">System.Object</S>
+<I N="i">1</I>
 </R>
 </R>
 <R N="5" T="CONSUMED_FUNCTION">
-<R N="return_type" T="CONSUMED_REFERENCED_TYPE">
-<S N="name">System.Boolean</S>
-<I N="assembly_id">1</I>
+<R N="r" T="CONSUMED_REFERENCED_TYPE">
+<S N="n">System.Boolean</S>
+<I N="i">1</I>
 </R>
-<A N="arguments" L="1" C="2" T="CONSUMED_ARGUMENT">
+<A N="a" L="1" C="2" T="CONSUMED_ARGUMENT">
 <R N="1" T="CONSUMED_ARGUMENT">
-<S N="dotnet_name">objA</S>
-<S N="eiffel_name">obj_a</S>
-<R N="type" T="CONSUMED_REFERENCED_TYPE">
-<S N="name">System.Object</S>
-<I N="assembly_id">1</I>
+<S N="d">objA</S>
+<S N="e">obj_a</S>
+<R N="t" T="CONSUMED_REFERENCED_TYPE">
+<S N="n">System.Object</S>
+<I N="i">1</I>
 </R>
-<B N="is_out">False</B>
+<B N="o">False</B>
 </R>
 <R N="2" T="CONSUMED_ARGUMENT">
-<S N="dotnet_name">objB</S>
-<S N="eiffel_name">obj_b</S>
-<R N="type" T="CONSUMED_REFERENCED_TYPE">
-<S N="name">System.Object</S>
-<I N="assembly_id">1</I>
+<S N="d">objB</S>
+<S N="e">obj_b</S>
+<R N="t" T="CONSUMED_REFERENCED_TYPE">
+<S N="n">System.Object</S>
+<I N="i">1</I>
 </R>
-<B N="is_out">False</B>
+<B N="o">False</B>
 </R>
 </A>
-<I N="internal_flags">35</I>
-<S N="dotnet_name">ReferenceEquals</S>
-<S N="eiffel_name">reference_equals</S>
-<R N="declared_type" T="CONSUMED_REFERENCED_TYPE">
-<S N="name">System.Object</S>
-<I N="assembly_id">1</I>
+<I N="f">35</I>
+<S N="n">ReferenceEquals</S>
+<S N="e">reference_equals</S>
+<R N="d" T="CONSUMED_REFERENCED_TYPE">
+<S N="n">System.Object</S>
+<I N="i">1</I>
 </R>
 </R>
 <R N="6" T="CONSUMED_FUNCTION">
-<R N="return_type" T="CONSUMED_REFERENCED_TYPE">
-<S N="name">System.Type</S>
-<I N="assembly_id">1</I>
+<R N="r" T="CONSUMED_REFERENCED_TYPE">
+<S N="n">System.Type</S>
+<I N="i">1</I>
 </R>
-<A N="arguments" L="1" C="0" T="NONE">
+<A N="a" L="1" C="0" T="NONE">
 </A>
-<I N="internal_flags">33</I>
-<S N="dotnet_name">GetType</S>
-<S N="eiffel_name">get_type</S>
-<R N="declared_type" T="CONSUMED_REFERENCED_TYPE">
-<S N="name">System.Object</S>
-<I N="assembly_id">1</I>
+<I N="f">33</I>
+<S N="n">GetType</S>
+<S N="e">get_type</S>
+<R N="d" T="CONSUMED_REFERENCED_TYPE">
+<S N="n">System.Object</S>
+<I N="i">1</I>
 </R>
 </R>
 <R N="7" T="CONSUMED_FUNCTION">
-<R N="return_type" T="CONSUMED_REFERENCED_TYPE">
-<S N="name">System.Object</S>
-<I N="assembly_id">1</I>
+<R N="r" T="CONSUMED_REFERENCED_TYPE">
+<S N="n">System.Object</S>
+<I N="i">1</I>
 </R>
-<A N="arguments" L="1" C="0" T="NONE">
+<A N="a" L="1" C="0" T="NONE">
 </A>
-<I N="internal_flags">1</I>
-<S N="dotnet_name">MemberwiseClone</S>
-<S N="eiffel_name">memberwise_clone</S>
-<R N="declared_type" T="CONSUMED_REFERENCED_TYPE">
-<S N="name">System.Object</S>
-<I N="assembly_id">1</I>
+<I N="f">1</I>
+<S N="n">MemberwiseClone</S>
+<S N="e">memberwise_clone</S>
+<R N="d" T="CONSUMED_REFERENCED_TYPE">
+<S N="n">System.Object</S>
+<I N="i">1</I>
 </R>
 </R>
 </A>
 <NONE N="internal_associated_reference_type"></NONE>
 <I N="internal_flags">0</I>
+<S N="dotnet_name">System.Object</S>
 </R>

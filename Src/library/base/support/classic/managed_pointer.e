@@ -3,6 +3,9 @@ indexing
 		To easily manage allocation and release of allocated C memory, and
 		to perform insertion of basic elements. Byte order is by default
 		platform specific.
+		Although memory allocation routines do not accept a zero sized pointer
+		MANAGED_POINTER does by allocating in fact a 1 byte sized pointer for
+		this particular case.
 		]"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -29,9 +32,9 @@ feature {NONE} -- Initialization
 	make (n: INTEGER) is
 			-- Allocate `item' with `n' bytes.
 		require
-			n_positive: n > 0
+			n_non_negative: n >= 0
 		do
-			item := item.memory_calloc (1, n)
+			item := item.memory_calloc (1, n.max (1))
 			if item = default_pointer then
 				(create {EXCEPTIONS}).raise ("No more memory")
 			end
@@ -49,7 +52,7 @@ feature {NONE} -- Initialization
 			data_not_void: data /= Void
 		do
 			count := data.count
-			item := item.memory_alloc (count)
+			item := item.memory_alloc (count.max (1))
 			if item = default_pointer then
 				(create {EXCEPTIONS}).raise ("No more memory")
 			end
@@ -64,9 +67,9 @@ feature {NONE} -- Initialization
 			-- Copy `a_count' bytes from `a_ptr' into current.
 		require
 			a_ptr_not_null: a_ptr /= default_pointer
-			n_positive: n > 0
+			n_non_negative: n >= 0
 		do
-			item := item.memory_alloc (n)
+			item := item.memory_alloc (n.max (1))
 			if item = default_pointer then
 				(create {EXCEPTIONS}).raise ("No more memory")
 			end
@@ -82,7 +85,7 @@ feature {NONE} -- Initialization
 			-- Use directly `a_ptr' with count `n' to hold current data.
 		require
 			a_ptr_not_null: a_ptr /= default_pointer
-			n_positive: n > 0
+			n_non_negative: n >= 0
 		do
 			item := a_ptr
 			count := n
@@ -576,7 +579,7 @@ feature -- Concatenation
 			new_count: INTEGER
 		do
 			new_count := count + other.count
-			item := item.memory_realloc (new_count)
+			item := item.memory_realloc (new_count.max (1))
 			if item = default_pointer then
 				(create {EXCEPTIONS}).raise ("No more memory")
 			end
@@ -594,6 +597,7 @@ feature -- Resizing
 		do
 			if n > count then
 					-- Reallocate.
+				check n_positive: n > 1 end
 				item := item.memory_realloc (n)
 				if item = default_pointer then
 					(create {EXCEPTIONS}).raise ("No more memory")

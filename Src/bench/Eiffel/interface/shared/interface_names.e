@@ -105,7 +105,7 @@ feature -- Button texts
 	b_Bkpt_disable: STRING is					"Disable Breakpoints"
 	b_Bkpt_remove: STRING is					"Remove Breakpoints"
 	b_Bkpt_stop_in_hole: STRING is				"Pause"
-	b_Exec_kill: STRING is						"Kill the debugged application"
+	b_Exec_kill: STRING is						"Kill debugged application"
 	b_Exec_into: STRING is						"Step into"
 	b_Exec_no_stop: STRING is					"Launch without stopping"
 	b_Exec_out: STRING is						"Step out"

@@ -167,7 +167,7 @@ feature -- Status setting
 			-- Ensure header displayed.
 		do
 			is_header_displayed := True
-			rebuild_widget_structure
+			header.show
 		ensure
 			header_displayed: is_header_displayed
 		end
@@ -176,7 +176,7 @@ feature -- Status setting
 			-- Ensure header is hidden.
 		do
 			is_header_displayed := False
-			rebuild_widget_structure
+			header.hide
 		ensure
 			header_not_displayed: not is_header_displayed
 		end
@@ -407,7 +407,8 @@ feature {NONE} -- Implementation
 			-- Initialize `Current'. To be called during `initialize' of
 			-- the implementation classes.
 		local
-			header_item: EV_HEADER_ITEM
+			vertical_box, l_vertical_box: EV_VERTICAL_BOX
+			horizontal_box: EV_HORIZONTAL_BOX
 		do
 			set_minimum_size (default_minimum_size, default_minimum_size)
 			create row_list.make (5)
@@ -418,11 +419,25 @@ feature {NONE} -- Implementation
 			create drawable
 			create vertical_scroll_bar
 			create horizontal_scroll_bar
-			create fixed
-			fixed.extend (vertical_scroll_bar)
-			fixed.extend (horizontal_scroll_bar)
+			create horizontal_box
+			create vertical_box
+			horizontal_box.extend (vertical_box)
+			create l_vertical_box
+			horizontal_box.extend (l_vertical_box)
+			l_vertical_box.extend (vertical_scroll_bar)
+			horizontal_box.disable_item_expand (l_vertical_box)
+			create scroll_bar_spacer
+			l_vertical_box.extend (scroll_bar_spacer)
+			l_vertical_box.disable_item_expand (scroll_bar_spacer)
+			
+				-- This ensures that the two scroll bars meet exactly at the corners
+				-- with `scroll_bar_spacer' displayed in the corner.
+			scroll_bar_spacer.set_minimum_height (horizontal_scroll_bar.minimum_height)
+			
 			create viewport
-			fixed.extend (viewport)
+			vertical_box.extend (viewport)
+			vertical_box.extend (horizontal_scroll_bar)
+			vertical_box.disable_item_expand (horizontal_scroll_bar)
 			create vertical_box
 			create header
 			header.set_minimum_height (default_header_height)
@@ -431,29 +446,8 @@ feature {NONE} -- Implementation
 			create drawable
 			vertical_box.extend (drawable)
 			viewport.extend (vertical_box)
+			extend (horizontal_box)
 			viewport.resize_actions.extend (agent viewport_resized)
-			fixed.resize_actions.extend (agent fixed_resized)
-			extend (fixed)
-		end
-		
-	rebuild_widget_structure is
-			-- Rebuild widget structure of `Current' based on current size
-			-- and internal properties.
-		do
-			fixed_resized (0, 0, width, height)
-			drawer.full_redraw
-		end
-
-	fixed_resized (an_x, a_y, a_width, a_height: INTEGER) is
-			-- Respond to a resize of `fixed'. Must position all contents based
-			-- on current state.
-		do
-			fixed.set_item_position (vertical_scroll_bar, a_width - vertical_scroll_bar.minimum_width, 0)
-			fixed.set_item_size (vertical_scroll_bar, vertical_scroll_bar.minimum_width, height - horizontal_scroll_bar.height)
-			
-			fixed.set_item_position (horizontal_scroll_bar, 0, a_height - horizontal_scroll_bar.minimum_height)
-			fixed.set_item_size (horizontal_scroll_bar, width - vertical_scroll_bar.width, horizontal_scroll_bar.minimum_height)
-			fixed.set_item_size (viewport, width - vertical_scroll_bar.width, height - horizontal_scroll_bar.height)
 		end
 		
 	viewport_resized (an_x, a_y, a_width, a_height: INTEGER) is
@@ -477,9 +471,9 @@ feature {NONE} -- Implementation
 		
 	header: EV_HEADER
 		-- Header displayed at top of `Current'.
-	
-	vertical_box: EV_VERTICAL_BOX
-		-- A vertical box to hold `header' and and `drawable' which is inserted within `viewport'.
+		
+	scroll_bar_spacer: EV_CELL
+		-- A spacer to separate the corners of the scroll bars.
 	
 	fixed: EV_FIXED
 		-- Main widget contained in `Current' used to manipulate the individual widgets required.

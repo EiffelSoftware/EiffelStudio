@@ -34,11 +34,15 @@ feature
 				list.go_i_th (index - 1);
 				list.put_right (element);
 			end;
-			edited_command.update_text
+			update
 		end; -- undo
 
-	
 feature {NONE}
+
+	update is
+		do
+			edited_command.update_text
+		end;
 
 	command_work is
 		do
@@ -46,7 +50,7 @@ feature {NONE}
 			list.go_i_th (index);
 			element := list.item;
 			list.remove;
-			edited_command.update_text
+			update
 		end; 
 
 	worked_on: STRING is

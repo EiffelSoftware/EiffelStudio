@@ -43,9 +43,17 @@ extern char *striparr();			/* Build an Eiffel ARRAY[ANY] object for strip*/
 extern int str_dtype;				/* Dynamic type for string */
 extern int arr_dtype;				/* Dynamic type for ARRAY[ANY] */
 extern int32 disp_rout_id;			/* Dispose routine id */ 
-extern void (*eif_strmake)();		/* STRING creation feature */
+
+#ifdef __STDC__
+extern void (*eif_strmake)(char *, EIF_INTEGER);	/* STRING creation feature */
+extern void (*eif_strset)(char *, EIF_INTEGER);		/* STRING `set_count' feature */
+extern void (*eif_arrmake)(char *, EIF_INTEGER, EIF_INTEGER);	/* STRING creation feature */
+#else
+extern void (*eif_strmake)();	/* STRING creation feature */
 extern void (*eif_strset)();		/* STRING `set_count' feature */
-extern void (*eif_arrmake)();		/* STRING creation feature */
+extern void (*eif_arrmake)();	/* STRING creation feature */
+#endif
+
 extern char *argarr();				/* ARRAY[STRING] creation from command line arguments */
 
 extern long *eif_lower_table;		/* ARRAY `lower' (array optimization) */

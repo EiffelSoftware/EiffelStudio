@@ -33,10 +33,14 @@ inherit
 			set_page as wel_set_leap,
 			width as wel_width,
 			height as wel_height,
-			move as move_to,
 			enabled as is_sensitive,
 			item as wel_item,
-			set_range as wel_set_range
+			set_range as wel_set_range,
+			move as wel_move,
+			resize as wel_resize,
+			move_and_resize as wel_move_and_resize,
+			x as x_position,
+			y as y_position
 		undefine
 			window_process_message,
 			remove_command,
@@ -141,6 +145,9 @@ end -- class EV_RANGE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/03/21 23:39:00  brendel
+--| Modified inheritance clause in compliance with EV_SIZEABLE_IMP.
+--|
 --| Revision 1.6  2000/02/19 07:11:26  oconnor
 --| fixed broken comment
 --|
@@ -164,7 +171,9 @@ end -- class EV_RANGE_IMP
 --| added --| FIXME Not for release
 --|
 --| Revision 1.3.10.2  2000/01/06 20:37:19  rogers
---| Now works with the major changes in Vision2. The interface has been added. A lot of renaming has been done from ancestors, to fit in with changes. See the diff.
+--| Now works with the major changes in Vision2. The interface has been added.
+--| A lot of renaming has been done from ancestors, to fit in with changes.
+--| See the diff.
 --|
 --| Revision 1.3.10.1  1999/11/24 17:30:33  oconnor
 --| merged with DEVEL branch

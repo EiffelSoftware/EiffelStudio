@@ -36,10 +36,7 @@ inherit
 
 	EV_WEL_CONTROL_CONTAINER_IMP
 		rename
-			make as ev_wel_control_container_make,
-			move as wel_move,
-			resize as wel_resize,
-			move_and_resize as wel_move_and_resize
+			make as ev_wel_control_container_make
 		redefine
 			top_level_window_imp,
 			has_focus,
@@ -383,6 +380,9 @@ end -- class EV_BOX_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.32  2000/03/21 23:39:00  brendel
+--| Modified inheritance clause in compliance with EV_SIZEABLE_IMP.
+--|
 --| Revision 1.31  2000/03/21 17:11:35  brendel
 --| Moved all features from EV_INVISIBLE_CONTAINER_IMP up, making it
 --| obsolete. If a common ancestor for EV_FIXED and EV_TABLE turn out

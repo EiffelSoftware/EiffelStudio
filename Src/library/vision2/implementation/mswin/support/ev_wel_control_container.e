@@ -23,6 +23,9 @@ inherit
 			enabled as is_sensitive,
 			width as wel_width,
 			height as wel_height,
+			resize as wel_resize,
+			move as wel_move,
+			move_and_resize as wel_move_and_resize,
 			x as x_position,
 			y as y_position
 		undefine
@@ -190,6 +193,9 @@ end -- class EV_WEL_CONTROL_CONTAINER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.19  2000/03/21 23:39:01  brendel
+--| Modified inheritance clause in compliance with EV_SIZEABLE_IMP.
+--|
 --| Revision 1.18  2000/03/21 02:34:11  brendel
 --| Removed on_accelerator_command from undefine clause.
 --|

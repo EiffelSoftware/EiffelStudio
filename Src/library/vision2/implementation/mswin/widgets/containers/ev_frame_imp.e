@@ -52,12 +52,11 @@ inherit
 	EV_WEL_CONTROL_CONTAINER_IMP
 		rename
 			text as wel_text,
-			make as ev_wel_control_container_make,
-			move as move_to
+			make as ev_wel_control_container_make
 		redefine
 			on_paint,
 			top_level_window_imp,
-			move_and_resize,
+			wel_move_and_resize,
 			set_text
 		end
 
@@ -104,7 +103,8 @@ feature -- Access
 	client_height: INTEGER is
 			-- Height of the client area of container
 		do
-			Result := (client_rect.height - box_text_height - 2 * box_width).max (0)
+			Result := (client_rect.height - box_text_height -
+				2 * box_width).max (0)
 		end
 
 	top_level_window_imp: EV_WINDOW_IMP
@@ -128,7 +128,8 @@ feature -- Status setting
 		do
 			!! dc.make (Current)
 			dc.get
-			internal_set_minimum_size (dc.string_width (wel_text) + 2 * box_width + 10, box_text_height + 2 * box_width)
+			internal_set_minimum_size (dc.string_width (wel_text) +
+				2 * box_width + 10, box_text_height + 2 * box_width)
 			dc.release
 		end
 
@@ -157,7 +158,8 @@ feature {NONE} -- Implementation for automatic size compute.
 			-- Recompute the minimum_width of the object.
 		do
 			if child /= Void then
-				internal_set_minimum_width (child.minimum_width + 2 * box_width)
+				internal_set_minimum_width (child.minimum_width +
+					2 * box_width)
 			end
 		end
 
@@ -165,7 +167,8 @@ feature {NONE} -- Implementation for automatic size compute.
 			-- Recompute the minimum_width of the object.
 		do
 			if child /= Void then
-				internal_set_minimum_height (child.minimum_height + box_text_height + 2 * box_width)
+				internal_set_minimum_height (child.minimum_height +
+					box_text_height + 2 * box_width)
 			end
 		end
 
@@ -181,16 +184,18 @@ feature {NONE} -- Implementation for automatic size compute.
 
 feature {NONE} -- WEL Implementation
 
-	move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is
+	wel_move_and_resize (a_x, a_y, a_width, a_height: INTEGER;
+		repaint: BOOLEAN) is
 			-- Make `x' and `y' the new position of the current object and
 			-- `w' and `h' the new width and height of it.
 			-- If there is any child, it also adapt them to fit to the given
 			-- value.
 		do
-			{EV_WEL_CONTROL_CONTAINER_IMP} Precursor (a_x, a_y, a_width, a_height, repaint)
+			{EV_WEL_CONTROL_CONTAINER_IMP} Precursor (a_x, a_y, a_width,
+				a_height, repaint)
 			if child /= Void then
-				child.set_move_and_size (box_width, box_text_height + box_width, 
-					client_width, client_height)
+				child.set_move_and_size (box_width, box_text_height +
+					box_width, client_width, client_height)
 			end
 		end
 
@@ -215,7 +220,8 @@ feature {NONE} -- WEL Implementation
 				paint_dc.line (0, top, width - 2, top)
 			else
 				paint_dc.line (0, top, 7, top)
-				paint_dc.line (width - 2, top, paint_dc.string_size (wel_text).width + 13 , top)
+				paint_dc.line (width - 2, top,
+					paint_dc.string_size (wel_text).width + 13 , top)
 			end
 
 			paint_dc.select_pen (highlight_pen)
@@ -226,7 +232,8 @@ feature {NONE} -- WEL Implementation
 				paint_dc.line (1, 1, width - 3, 1)
 			else
 				paint_dc.line (1, top + 1, 7, top +1)
-				paint_dc.line (width - 3, top + 1, paint_dc.string_size (wel_text).width + 13, top + 1)
+				paint_dc.line (width - 3, top + 1,
+					paint_dc.string_size (wel_text).width + 13, top + 1)
 			end
 		end
 
@@ -243,11 +250,13 @@ feature {NONE} -- WEL Implementation
 			dc.get
 			dc.select_font (a_font)
 			if child /= Void then
-				internal_set_minimum_size (dc.string_width (wel_text) + 2 * box_width + 10 + child.minimum_width,
-						box_text_height + 2 * box_width + child.minimum_height)
+				internal_set_minimum_size (dc.string_width (wel_text) +
+					2 * box_width + 10 + child.minimum_width,
+					box_text_height + 2 * box_width + child.minimum_height)
 			else
-				internal_set_minimum_size (dc.string_width (wel_text) + 2 * box_width + 10,
-						box_text_height + 2 * box_width)
+				internal_set_minimum_size (dc.string_width (wel_text) +
+					2 * box_width + 10,
+					box_text_height + 2 * box_width)
 			end
 			dc.release
 		end
@@ -300,8 +309,14 @@ end -- class EV_FRAME_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.24  2000/03/21 23:39:00  brendel
+--| Modified inheritance clause in compliance with EV_SIZEABLE_IMP.
+--|
 --| Revision 1.23  2000/02/22 01:16:24  rogers
---| Renamed text inherited from EV_WEL_CONTROL_CONTAINER_IMP to wel_text. Implemented text to return Void if wel_text is empty, wel text otherwise. All references to text, where apprpriate have been changed to wel_text. Added a FIXME to box_text_height, this change is only temporary.
+--| Renamed text inherited from EV_WEL_CONTROL_CONTAINER_IMP to wel_text.
+--| Implemented text to return Void if wel_text is empty, wel text otherwise.
+--| All references to text, where apprpriate have been changed to wel_text.
+--| Added a FIXME to box_text_height, this change is only temporary.
 --|
 --| Revision 1.22  2000/02/19 05:45:00  oconnor
 --| released
@@ -317,7 +332,8 @@ end -- class EV_FRAME_IMP
 --| added --| FIXME Not for release
 --|
 --| Revision 1.20.10.2  1999/12/17 00:53:26  rogers
---| Altered to fit in with the review branch. Redefinitions required, make now requires an interface.
+--| Altered to fit in with the review branch. Redefinitions required, make now
+--| requires an interface.
 --|
 --| Revision 1.20.10.1  1999/11/24 17:30:26  oconnor
 --| merged with DEVEL branch

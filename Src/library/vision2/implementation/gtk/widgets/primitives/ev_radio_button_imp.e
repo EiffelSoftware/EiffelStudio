@@ -36,15 +36,15 @@ create
 
 feature {NONE} -- Initialization
 
-        make (an_interface: like interface) is
-                        -- Create radio button.
+	make (an_interface: like interface) is
+			-- Create radio button.
 		do
 			base_make (an_interface)
 			set_c_object (C.gtk_event_box_new)
 			button_widget := C.gtk_radio_button_new (NULL)
 			C.gtk_widget_show (button_widget)
 			C.gtk_container_add (c_object, button_widget)
-                end
+		end
 
 	initialize is
 		do

@@ -66,7 +66,9 @@ feature {NONE} -- Type check, byte code production, dead_code_removal
 			context.begin_expression
    
 				-- Type check the target
+			context.set_is_in_assignment (True)
 			target.type_check
+			context.set_is_in_assignment (False)
 
 				-- Check if the target is not read-only mode. Remember that
 				-- a failure an on access will raise an error. So here, we

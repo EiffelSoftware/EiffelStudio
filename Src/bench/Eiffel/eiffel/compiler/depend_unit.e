@@ -101,6 +101,9 @@ feature -- Access
 	written_in: INTEGER
 			-- Class ID where current feature is written in.
 
+	internal_flags: INTEGER_8
+			-- Flags to store some info about current unit.
+
 	is_external: BOOLEAN is
 			-- Is Current an external feature?
 		do
@@ -170,11 +173,6 @@ feature -- Comparison
 			Result := class_id = other.class_id and rout_id = other.rout_id
 		end
 
-feature {DEPEND_UNIT} -- Access
-
-	internal_flags: INTEGER_8
-			-- Flags to store some info about current unit.
-
 feature {NONE} -- Implementation: flags
 
 	is_external_flag: INTEGER_8 is 0x01
@@ -188,6 +186,9 @@ feature -- Flags
 	is_in_check_flag: INTEGER_8 is 0x08
 	is_in_ensure_flag: INTEGER_8 is 0x10
 	is_in_invariant_flag: INTEGER_8 is 0x20
+	
+	is_in_assignment_flag: INTEGER_8 is 0x40
+	is_in_creation_flag: INTEGER_8 is 0x80
 			-- Mask used for internal property.
 
 feature -- Debug

@@ -109,7 +109,9 @@ feature -- Type check, byte code and dead code removal
 			context.begin_expression
 
 				-- Type check access
+			context.set_is_in_creation (True)
 			target.type_check
+			context.set_is_in_creation (False)
 
 				-- Last access: if error happened, then routine
 				-- `type_check' of ACCESS_FEAT_AS will raise an error, so

@@ -315,14 +315,11 @@ feature -- Modification
 			valid_syntax: valid_syntax
 			not_modified: not is_modified
 		local
-			n: STRING
 			p: PARENT_AS
 			pl: EIFFEL_LIST [PARENT_AS]
 			ip: INTEGER
 		do
-			n := clone (a_name)
-			n.to_lower
-			p := class_as.parent_with_name (n)
+			p := class_as.parent_with_name (a_name.as_lower)
 			if p /= Void then
 				pl := class_as.parents
 				pl.start
@@ -743,14 +740,12 @@ feature -- Modification
 			valid_syntax: valid_syntax
 			not_modified: not is_modified
 		local
-			n, old_comment: STRING
+			old_comment: STRING
 			f: FEATURE_AS
 			clauses: EIFFEL_LIST [FEATURE_CLAUSE_AS]
 			old_f_clause, f_clause: FEATURE_CLAUSE_AS
 		do
-			n := clone (a_name)
-			n.to_lower
-			f := class_as.feature_with_name (n)
+			f := class_as.feature_with_name (a_name.as_lower)
 			clauses := class_as.features
 			from
 				clauses.start
@@ -1060,8 +1055,7 @@ feature {CLASS_NAME_REPLACER} -- Implementation
 			exp, s, c: STRING
 			lcs: like leading_clauses
 		do
-			exp := clone (a_export)
-			exp.to_lower
+			exp := a_export.as_lower
 			insertion_position := 0
 
 				-- Check if specified clause is present.
@@ -1124,8 +1118,7 @@ feature {CLASS_NAME_REPLACER} -- Implementation
 			s.append ("feature")
 			if not a_export.is_empty then
 				s.append (" {")
-				up := clone (a_export)
-				up.to_upper
+				up := a_export.as_upper
 				s.append (up)
 				s.extend ('}')
 			end

@@ -1052,8 +1052,7 @@ feature {NONE} -- XML
 				if node /= Void then
 					if node.name.is_equal ("CLUSTER_FIGURE") then
 						if node.has_attribute_by_name ("NAME") then
-							cluster_name := clone (node.attribute_by_name ("NAME").value)
-							cluster_name.to_upper
+							cluster_name := node.attribute_by_name ("NAME").value.as_upper
 							clf := cluster_figure_by_cluster_name (cluster_name)
 							if clf /= Void then
 								clf.set_with_xml_element (node)
@@ -1063,8 +1062,7 @@ feature {NONE} -- XML
 						end
 					elseif node.name.is_equal ("CLASS_FIGURE") then
 						if node.has_attribute_by_name ("NAME") then
-							class_name := clone (node.attribute_by_name ("NAME").value)
-							class_name.to_upper
+							class_name := node.attribute_by_name ("NAME").value.as_upper
 							cf := class_figure_by_class_name (class_name)
 							if cf /= Void then
 								cf.set_with_xml_element (node)
@@ -1077,11 +1075,9 @@ feature {NONE} -- XML
 							node.has_attribute_by_name ("SRC") and
 							node.has_attribute_by_name ("TRG")
 						then
-							a_source_name := clone (node.attribute_by_name ("SRC").value)
-							a_source_name.to_upper
+							a_source_name := node.attribute_by_name ("SRC").value.as_upper
 							cf := class_figure_by_class_name (a_source_name)
-							a_target_name := clone (node.attribute_by_name ("TRG").value)
-							a_target_name.to_upper
+							a_target_name := node.attribute_by_name ("TRG").value.as_upper
 							cf2 := class_figure_by_class_name (a_target_name)
 							hf ?= inherit_link (cf, cf2)
 							if hf /= Void then
@@ -1095,11 +1091,9 @@ feature {NONE} -- XML
 							node.has_attribute_by_name ("SRC") and
 							node.has_attribute_by_name ("TRG")
 						then
-							a_source_name := clone (node.attribute_by_name ("SRC").value)
-							a_source_name.to_upper
+							a_source_name := node.attribute_by_name ("SRC").value.as_upper
 							cf := class_figure_by_class_name (a_source_name)
-							a_target_name := clone (node.attribute_by_name ("TRG").value)
-							a_target_name.to_upper
+							a_target_name := node.attribute_by_name ("TRG").value.as_upper
 							cf2 := class_figure_by_class_name (a_target_name)
 							csf ?= client_link (cf, cf2)
 							if csf /= Void then
@@ -1119,8 +1113,7 @@ feature {NONE} -- XML
 							if child_node /= Void then
 								if child_node.name.is_equal ("CLUSTER") then
 									if child_node.has_attribute_by_name ("NAME") then		
-										cluster_name := clone (child_node.attribute_by_name ("NAME").value) 
-										cluster_name.to_upper 
+										cluster_name := child_node.attribute_by_name ("NAME").value.as_upper 
 										clf := cluster_figure_by_cluster_name (cluster_name) 
 										if clf = Void then 
 											cluster_name.to_lower 
@@ -1135,8 +1128,7 @@ feature {NONE} -- XML
 									 end 
 								elseif child_node.name.is_equal ("CLASS") then
 									if child_node.has_attribute_by_name ("NAME") then
-										class_name := clone (child_node.attribute_by_name ("NAME").value)
-										class_name.to_upper
+										class_name := child_node.attribute_by_name ("NAME").value.as_upper
 										cf := class_figure_by_class_name (class_name)
 										if cf = Void then
 											class_name.to_lower
@@ -1168,8 +1160,7 @@ feature {NONE} -- XML
 							if child_node /= Void then
 								if child_node.name.is_equal ("CLUSTER") then 
 									if child_node.has_attribute_by_name ("NAME") then 			
-										cluster_name := clone (child_node.attribute_by_name ("NAME").value) 
-										cluster_name.to_upper 
+										cluster_name := child_node.attribute_by_name ("NAME").value.as_upper
 										clf := cluster_figure_by_cluster_name (cluster_name) 
 										if clf /= Void then 
 											clf.recursive_remove_from_diagram (True)
@@ -1179,8 +1170,7 @@ feature {NONE} -- XML
 									 end 
 								elseif child_node.name.is_equal ("CLASS") then
 									if child_node.has_attribute_by_name ("NAME") then
-										class_name := clone (child_node.attribute_by_name ("NAME").value)
-										class_name.to_upper
+										class_name := child_node.attribute_by_name ("NAME").value.as_upper
 										cf := class_figure_by_class_name (class_name)
 										if cf /= Void then
 											cf.remove_from_diagram (True)

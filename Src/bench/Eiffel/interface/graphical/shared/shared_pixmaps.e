@@ -18,6 +18,22 @@ feature {NONE}
 			Result := pixmap_file_content ("breakpt.bm");
 		end;
 
+	bm_graphical_Breakablepoint: PIXMAP is
+		once
+			Result := pixmap_file_content ("gbreakpt.bm");
+			if not Result.is_valid then
+				Result := Bm_default
+			end
+		end;
+
+	bm_graphical_Stoppoint: PIXMAP is
+		once
+			Result := pixmap_file_content ("gstoppt.bm");
+			if not Result.is_valid then
+				Result := Bm_default
+			end
+		end;
+
 	bm_Case_storage: PIXMAP is
 		once
 			Result := pixmap_file_content ("casestor.bm");

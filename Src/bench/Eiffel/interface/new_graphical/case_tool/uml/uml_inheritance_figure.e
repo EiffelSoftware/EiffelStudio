@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that ..."
+	description: "Objects that is an UML view for an inheritance link."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
@@ -9,18 +9,12 @@ class
 inherit
 	EIFFEL_INHERITANCE_FIGURE
 		redefine
---			update,
 			recursive_transform,
 			set_line_width,
 			xml_element,
 			xml_node_name,
 			set_with_xml_element
 		end
-		
---	BON_FIGURE
---		undefine
---			default_create
---		end
 		
 	UML_CONSTANTS
 		undefine
@@ -38,7 +32,6 @@ feature {NONE} -- Initialization
 		do
 			default_create
 			model := a_model
---			is_high_quality := True
 			initialize
 			set_line_width (uml_inheritance_line_width)
 			set_foreground_color (uml_inheritance_color)
@@ -91,41 +84,6 @@ feature -- Element change
 			real_line_width := a_line_width
 		end
 		
---feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
---		
---	update is
---			-- Some properties of `Current' may have changed.
---		local
---			an_angle: DOUBLE
---			l_point_array: SPECIAL [EV_COORDINATE]
---			p0, p1: EV_COORDINATE
---		do
---			if is_high_quality then
---				Precursor {EIFFEL_INHERITANCE_FIGURE}
---			else
---				l_point_array := low_quality_line.point_array
---				p0 := l_point_array.item (0)
---				p1 := l_point_array.item (1)
---				
---				if descendant /= Void then
---					p0.set_position (descendant.port_x, descendant.port_y)
---				end
---				if ancestor /= Void then
---					p1.set_position (ancestor.port_x, ancestor.port_y)
---				end
---				an_angle := line_angle (p0.x_precise, p0.y_precise, p1.x_precise, p1.y_precise)
---				if descendant /= Void then
---					descendant.update_edge_point (p0, an_angle)
---				end
---				if ancestor /= Void then
---					ancestor.update_edge_point (p1, an_angle + pi)
---				end
---				low_quality_line.invalidate
---				low_quality_line.center_invalidate
---			end
---			is_update_required := False
---		end
-		
 feature {EV_MODEL_GROUP} -- Transformation
 
 	recursive_transform (a_transformation: EV_MODEL_TRANSFORMATION) is
@@ -153,48 +111,5 @@ feature {NONE} -- Implementation
 			
 	real_arrow_head_size: REAL
 			-- Real size of arrow head.
-
---	low_quality_line: EV_MODEL_LINE
---			-- line used if `is_low_quality' is True.
---			
---	set_is_high_quality (a_high_quality: like is_high_quality) is
---			-- Set `is_high_quality' to `a_high_quality'.
---		do
---			if is_high_quality /= a_high_quality then
---				is_high_quality := a_high_quality
---				if is_high_quality then
---					prune_all (low_quality_line)
---					extend (line)
---					line.enable_sensitive
---					line.set_arrow_size (real_arrow_head_size.rounded.max (1))
---					from
---						edge_move_handlers.start
---					until
---						edge_move_handlers.after
---					loop
---						extend (edge_move_handlers.item)
---						edge_move_handlers.item.enable_sensitive
---						edge_move_handlers.forth
---					end
---				else
---					create low_quality_line
---					prune_all (line)
---					line.disable_sensitive
---					from
---						edge_move_handlers.start
---					until
---						edge_move_handlers.after
---					loop
---						prune_all (edge_move_handlers.item)
---						edge_move_handlers.item.disable_sensitive
---						edge_move_handlers.forth
---					end
---					extend (low_quality_line)
---					low_quality_line.set_foreground_color (foreground_color)
---					low_quality_line.enable_end_arrow
---					low_quality_line.set_arrow_size (real_arrow_head_size.rounded.max (1))
---				end
---			end
---		end
 
 end -- class UML_INHERITANCE_FIGURE

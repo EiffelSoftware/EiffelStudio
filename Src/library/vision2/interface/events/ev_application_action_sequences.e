@@ -77,7 +77,18 @@ feature -- Event handling
 			Result := implementation.pnd_motion_actions
 		ensure
 			not_void: Result /= Void
-		end	
+		end
+
+	uncaught_exception_actions: ACTION_SEQUENCE [TUPLE [EXCEPTION]] is
+		-- Actions to be performed when an
+		-- action sequence called via callback
+		-- from the underlying toolkit raises an
+		-- exception that is not caught
+		do
+			Result := implementation.uncaught_exception_actions
+		ensure
+			not_void: Result /= Void
+		end
 
 end
 

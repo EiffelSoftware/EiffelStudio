@@ -12,7 +12,7 @@ inherit
 		rename
 			start_position as text_position
 		redefine
-			format, simple_format, has_formal_generic
+			format, simple_format, has_formal_generic, is_loose
 		end
 
 	CLICKABLE_AST
@@ -64,6 +64,9 @@ feature -- Properties
 
 	has_formal_generic: BOOLEAN is True
 			-- Has type a formal generic parameter?
+
+	is_loose: BOOLEAN is True
+			-- Does type depend on formal generic parameters and/or anchors?
 
 feature -- Comparison
 

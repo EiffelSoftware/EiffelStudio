@@ -9,7 +9,7 @@ class LIKE_CUR_AS
 inherit
 	TYPE_AS
 		redefine
-			has_like, simple_format
+			has_like, is_loose, simple_format
 		end
 
 feature {AST_FACTORY} -- Initialization
@@ -40,6 +40,9 @@ feature -- Properties
 
 	has_like: BOOLEAN is True
 			-- Does the type have anchor in its definition ?
+
+	is_loose: BOOLEAN is True
+			-- Does type depend on formal generic parameters and/or anchors?
 
 feature
 

@@ -11,6 +11,7 @@ inherit
 			is_formal,
 			instantiation_in,
 			has_formal_generic,
+			is_loose,
 			instantiated_in,
 			same_as,
 			format,
@@ -163,6 +164,9 @@ feature {COMPILER_EXPORTER}
 		do
 			Result := True
 		end
+
+	is_loose: BOOLEAN is True
+			-- Does type depend on formal generic parameters and/or anchors?
 
 	conform_to (other: TYPE_A): BOOLEAN is
 			-- Does Current conform to `other'?

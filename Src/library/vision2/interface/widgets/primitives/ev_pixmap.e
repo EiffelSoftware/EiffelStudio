@@ -17,7 +17,9 @@ inherit
 		end
 
 create
-	default_create, make_with_size
+	default_create,
+	make_with_size,
+	make_for_test
 
 feature {NONE} -- Initialization
 
@@ -124,6 +126,9 @@ end -- class EV_PIXMAP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.19  2000/03/01 03:12:18  oconnor
+--| added create make_for_test
+--|
 --| Revision 1.18  2000/02/22 18:39:52  oconnor
 --| updated copyright date and formatting
 --|

@@ -420,7 +420,7 @@ feature -- Status setting
 							from
 								i := 1
 							variant
-								c.count - i
+								c.count - i + 1
 							until
 								i > c.count
 							loop
@@ -727,8 +727,6 @@ feature -- Removal
 				from
 					c := translation_commands.cursor
 					translation_commands.start
-				variant
-					translation_commands.count - translation_commands.index
 				until
 					translation_commands.off or else
 					translation_commands.item.translation.is_equal (a_translation)
@@ -1490,8 +1488,6 @@ feature {NONE} -- Implementation
 			if translation_commands /= Void then
 				from
 					translation_commands.start
-				variant
-					translation_commands.count - translation_commands.index
 				until
 					translation_commands.off
 				loop

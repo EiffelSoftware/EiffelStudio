@@ -68,144 +68,6 @@ feature -- Initialization
 			initialize
 		end
 
-feature -- Assertion test
-
-	add_child_ok: BOOLEAN is
-			-- Used in the precondition of
-			-- 'add_child'. True, if it is ok to add a
-			-- child to the window by testing if its hbox has
-			-- not child
-		local
-			le_result : INTEGER			
-		do
-			le_result:= c_gtk_container_nb_children (hbox)
-			Result := c_gtk_container_nb_children (hbox)= 0
-		end
-
-	is_child (a_child: EV_WIDGET_IMP): BOOLEAN is
-			-- Is `a_child' a child of the window?
-			-- by testing if a_child is a child of its
-			-- hbox
-		do
-			Result := c_gtk_container_has_child (hbox, a_child.widget)
-		end
-
-	child_added (a_child: EV_WIDGET_IMP): BOOLEAN is
-			-- Has `a_child' been added properly?
-		do
-			Result := c_gtk_container_has_child (hbox, a_child.widget)
-		end
-
-
-feature {EV_APPLICATION_IMP} -- Implementation
-	
-	connect_to_application (exit_function, the_application, the_untitled_window: POINTER) is
-		local
-			i: INTEGER
-			a: ANY
-			s: string
-		do
-			-- connect delete and destroy events to exit signals
-			-- Temporary XXX!
-			!!s.make (0)
-			s := "destroy"
-			a := s.to_c
-					
-			-- Connect the signal
-			i := c_gtk_signal_connect (widget, $a, exit_function, 
-						   the_application, the_untitled_window, 
-						   Default_pointer, Default_pointer,
-						   Default_pointer, 0, False)
-			
---			-- What about delete signal?
---			s := "delete"
---			a ?= s.to_c
---			i := c_gtk_signal_connect (widget, $a, interface.routine_address($delete_window_action), Current, Default_pointer)
-		end
-
-feature {NONE} -- Implementation
-
-	initialize is
-		do
-			vbox := gtk_vbox_new (False, 0)
-			gtk_widget_show (vbox)
-			gtk_container_add (GTK_CONTAINER (widget), vbox)
-			hbox := gtk_hbox_new (False, 0)
-			gtk_widget_show (hbox)
-			gtk_box_pack_end (vbox, hbox, True, True, 0)
-
-		end
-
-	vbox: POINTER
-		-- Vertical_box to have a possibility for a menu on the
-		-- top.
-
-	hbox: POINTER
-		-- Horizontal box for the child
-
-feature {EV_CONTAINER, EV_WIDGET} -- Element change
-	
-	add_child (child_imp: EV_WIDGET_IMP) is
-			-- Add `child_imp' in the window.
-		do
-			gtk_box_pack_end (hbox, child_imp.widget, True, True, 0)
-		end
-
-	remove_child (child_imp: EV_WIDGET_IMP) is
-			-- Remove `child_imp' from the window.
-		do
-			gtk_container_remove (hbox, child_imp.widget)
-		end
-
-	set_parent (par: EV_WINDOW) is
-			-- Make `par' the new parent of the widget.
-			-- `par' can be Void then the parent is the screen.
-		do
-			if parent_imp /= Void then
-				parent_imp := Void
-			end
-			if par /= Void then
-				parent_imp ?= par.implementation
-
-				-- Attach the window to `par'.
-				gtk_window_set_transient_for (widget, parent_imp.widget)
-			end
-		end
-
-feature {EV_STATIC_MENU_BAR_IMP} -- Implementation
-
-	add_static_menu (menu: EV_STATIC_MENU_BAR_IMP) is
-			-- Add a static menu bar at the top of the window.
-		do
-			gtk_box_pack_start (vbox, menu.widget, False, True, 0)
-		end
-
-feature {EV_STATUS_BAR_IMP} -- Implementation
-
-	add_status_bar (status_bar: EV_STATUS_BAR_IMP) is
-			-- Add a status bar at the bottom of the window.
-		do
-			gtk_object_ref (hbox)
-			gtk_container_remove (vbox, hbox)
-			gtk_box_pack_end (vbox, status_bar.widget, False, True, 0)
-			gtk_box_pack_end (vbox, hbox, True, True, 0)
-			gtk_object_unref (hbox)
-		end
-
-feature {EV_APPLICATION_IMP} -- Implementation
-
-	has_close_command: BOOLEAN
-			-- Did the user added a close command to the window.
-
-feature {NONE} -- Implementation
-
-	child_packing_changed (child_imp: EV_WIDGET_IMP) is
-			-- changed the settings of his child `the_child'.
-			-- Redefined because the child is placed in a hbox (see `add_child').
-		do
-			c_gtk_box_set_child_options (hbox, child_imp.widget, child_imp.expandable, False)
-		end
-
 feature  -- Access
 
 	x: INTEGER is
@@ -319,6 +181,63 @@ feature -- Element change
             		end
 		end
 
+feature {EV_CONTAINER, EV_WIDGET} -- Element change
+	
+	add_child (child_imp: EV_WIDGET_IMP) is
+			-- Add `child_imp' in the window.
+		do
+			gtk_box_pack_end (hbox, child_imp.widget, True, True, 0)
+		end
+
+	remove_child (child_imp: EV_WIDGET_IMP) is
+			-- Remove `child_imp' from the window.
+		do
+			gtk_container_remove (hbox, child_imp.widget)
+		end
+
+	set_parent (par: EV_WINDOW) is
+			-- Make `par' the new parent of the widget.
+			-- `par' can be Void then the parent is the screen.
+		do
+			if parent_imp /= Void then
+				parent_imp := Void
+			end
+			if par /= Void then
+				parent_imp ?= par.implementation
+
+				-- Attach the window to `par'.
+				gtk_window_set_transient_for (widget, parent_imp.widget)
+			end
+		end
+
+feature -- Assertion test
+
+	add_child_ok: BOOLEAN is
+			-- Used in the precondition of
+			-- 'add_child'. True, if it is ok to add a
+			-- child to the window by testing if its hbox has
+			-- not child
+		local
+			le_result : INTEGER			
+		do
+			le_result:= c_gtk_container_nb_children (hbox)
+			Result := c_gtk_container_nb_children (hbox)= 0
+		end
+
+	is_child (a_child: EV_WIDGET_IMP): BOOLEAN is
+			-- Is `a_child' a child of the window?
+			-- by testing if a_child is a child of its
+			-- hbox
+		do
+			Result := c_gtk_container_has_child (hbox, a_child.widget)
+		end
+
+	child_added (a_child: EV_WIDGET_IMP): BOOLEAN is
+			-- Has `a_child' been added properly?
+		do
+			Result := c_gtk_container_has_child (hbox, a_child.widget)
+		end
+
 feature -- Event - command association
 
 	add_close_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
@@ -372,6 +291,86 @@ feature -- Event -- removing command association
 			-- when the widget is resized.
 		do
 			remove_commands (widget, move_event_id)
+		end
+
+feature {EV_APPLICATION_IMP} -- Implementation
+	
+	connect_to_application (exit_function, the_application, the_untitled_window: POINTER) is
+		local
+			i: INTEGER
+			a: ANY
+			s: string
+		do
+			-- connect delete and destroy events to exit signals
+			-- Temporary XXX!
+			!!s.make (0)
+			s := "destroy"
+			a := s.to_c
+					
+			-- Connect the signal
+			i := c_gtk_signal_connect (widget, $a, exit_function, 
+						   the_application, the_untitled_window, 
+						   Default_pointer, Default_pointer,
+						   Default_pointer, 0, False)
+			
+--			-- What about delete signal?
+--			s := "delete"
+--			a ?= s.to_c
+--			i := c_gtk_signal_connect (widget, $a, interface.routine_address($delete_window_action), Current, Default_pointer)
+		end
+
+feature {NONE} -- Implementation
+
+	initialize is
+		do
+			vbox := gtk_vbox_new (False, 0)
+			gtk_widget_show (vbox)
+			gtk_container_add (GTK_CONTAINER (widget), vbox)
+			hbox := gtk_hbox_new (False, 0)
+			gtk_widget_show (hbox)
+			gtk_box_pack_end (vbox, hbox, True, True, 0)
+
+		end
+
+	vbox: POINTER
+		-- Vertical_box to have a possibility for a menu on the
+		-- top.
+
+	hbox: POINTER
+		-- Horizontal box for the child
+
+feature {EV_STATIC_MENU_BAR_IMP} -- Implementation
+
+	add_static_menu (menu: EV_STATIC_MENU_BAR_IMP) is
+			-- Add a static menu bar at the top of the window.
+		do
+			gtk_box_pack_start (vbox, menu.widget, False, True, 0)
+		end
+
+feature {EV_STATUS_BAR_IMP} -- Implementation
+
+	add_status_bar (status_bar: EV_STATUS_BAR_IMP) is
+			-- Add a status bar at the bottom of the window.
+		do
+			gtk_object_ref (hbox)
+			gtk_container_remove (vbox, hbox)
+			gtk_box_pack_end (vbox, status_bar.widget, False, True, 0)
+			gtk_box_pack_end (vbox, hbox, True, True, 0)
+			gtk_object_unref (hbox)
+		end
+
+feature {EV_APPLICATION_IMP} -- Implementation
+
+	has_close_command: BOOLEAN
+			-- Did the user added a close command to the window.
+
+feature {NONE} -- Implementation
+
+	child_packing_changed (child_imp: EV_WIDGET_IMP) is
+			-- changed the settings of his child `the_child'.
+			-- Redefined because the child is placed in a hbox (see `add_child').
+		do
+			c_gtk_box_set_child_options (hbox, child_imp.widget, child_imp.expandable, False)
 		end
 
 end -- class EV_UNTITLED_WINDOW_IMP

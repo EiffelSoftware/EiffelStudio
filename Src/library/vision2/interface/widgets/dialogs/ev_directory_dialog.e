@@ -65,7 +65,7 @@ feature -- Element change
 		end
 
 	set_base_directory (path: STRING) is
-			-- Make `path' the base directory in detrmining files
+			-- Make `path' the base directory in determining files
 			-- to be displayed.
 		require
 			exists: not destroyed

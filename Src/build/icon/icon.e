@@ -4,7 +4,7 @@ indexing
 	Date: "$Date$"
 	Revision: "$Revision$"
 
-class ICON 
+deferred class ICON 
 
 inherit
 
@@ -48,8 +48,8 @@ feature
 				button.unmanage
 				button.set_pixmap (s)
 				button.manage
+				update_positions
 			end
-			update_positions
 		end
 
 	set_label (s: STRING) is
@@ -71,9 +71,9 @@ feature
 					set_width (icon_label.width.max (button.width))
 				else
 					set_width (icon_label.width)
-				end
+				end	
+				update_positions
 			end
-			update_positions
 		end
 
 	widget_created: BOOLEAN is
@@ -210,8 +210,7 @@ feature {NONE} -- Update position
 	update_positions is
 			-- Center the button in the bulletin.
 		do
-			if button /= Void then
-
+			if button /= Void and is_centered then
 				if label = Void or else label.empty then
 					button.set_x_y (1, 1)
 				else

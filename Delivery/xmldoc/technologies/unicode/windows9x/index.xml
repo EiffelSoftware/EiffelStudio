@@ -8,7 +8,7 @@
 		</heading>
 		<paragraph>Download the Microsoft Layer for Unicode 
 			<link>
-				<url>http://download. microsoft.com/download/platformsdk/Redist/1. 0/W9XMe/EN-US/unicows.exe</url>
+				<url>http://www.microsoft.com/downloads/details.aspx?familyid=73ba7bd7-ed06-4f0d-80a4-2a7eeaee17e2&amp;displaylang=en</url>
 				<label>here</label>
 			</link> This contains the unicows. dll. The other file needed to get MSLU working, unicows. lib, can be found in the Microsoft Platform SDK. 
 		</paragraph>

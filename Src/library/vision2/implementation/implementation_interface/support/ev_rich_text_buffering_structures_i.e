@@ -228,6 +228,7 @@ feature {EV_ANY_I} -- Status Setting
 		local
 			current_character: CHARACTER
 			found_opening_brace: BOOLEAN
+			paragraph_format: EV_PARAGRAPH_FORMAT
 		do
 			last_load_successful := True
 			if rtf_text.item (1).is_equal (rtf_open_brace_character) then
@@ -235,6 +236,10 @@ feature {EV_ANY_I} -- Status Setting
 				create all_fonts.make (0, 50)
 				create all_colors.make (0, 50)
 				create all_formats.make (50)
+				create all_paragraph_formats.make (50)
+				create all_paragraph_indexes.make (50)
+				create all_paragraph_format_keys.make (50)
+				number_of_characters_opened := 0
 				current_depth := 0
 				first_color_is_auto := False
 				last_colorred := -1
@@ -289,6 +294,15 @@ feature {EV_ANY_I} -- Status Setting
 					no_carriage_returns: not plain_text.has ('%R')
 				end
 				rich_text.flush_buffer
+				from
+					all_paragraph_format_keys.start
+				until
+					all_paragraph_format_keys.off
+				loop
+					paragraph_format := all_paragraph_formats.item (all_paragraph_format_keys.item)
+					rich_text.format_paragraph (all_paragraph_indexes.i_th (all_paragraph_format_keys.index), all_paragraph_indexes.i_th (all_paragraph_format_keys.index) + 1, paragraph_format)
+					all_paragraph_format_keys.forth
+				end
 			else
 				last_load_successful := False
 			end
@@ -374,8 +388,9 @@ feature {NONE} -- Implementation
 			character_format: EV_CHARACTER_FORMAT
 			a_font: EV_FONT
 			effects: EV_CHARACTER_FORMAT_EFFECTS
+			paragraph_format: EV_PARAGRAPH_FORMAT
 		do
-			if not all_formats.has (current_format.out) then
+			if not all_formats.has (current_format.character_format_out) then
 					-- Only create a new character format if an equivalent one does not already
 					-- exist in `all_formats'.
 				create character_format
@@ -409,11 +424,26 @@ feature {NONE} -- Implementation
 				character_format.set_effects (effects)
 				a_font.set_height (half_points_to_pixels (current_format.font_height))
 				character_format.set_font (a_font)
-				all_formats.put (character_format, current_format.out)
+				all_formats.put (character_format, current_format.character_format_out)
+			end
+			if all_paragraph_formats.is_empty or else not all_paragraph_formats.has (current_format.paragraph_format_out) then
+				create paragraph_format
+				paragraph_format.set_alignment (current_format.alignment)
+				paragraph_format.set_left_margin (current_format.left_margin)
+				paragraph_format.set_right_margin (current_format.right_margin)
+				paragraph_format.set_top_spacing (current_format.top_spacing)
+				paragraph_format.set_bottom_spacing (current_format.bottom_spacing)
+				
+				all_paragraph_formats.put (paragraph_format, current_format.paragraph_format_out)
+			end
+			if all_paragraph_format_keys.is_empty or else not all_paragraph_format_keys.last.is_equal (current_format.paragraph_format_out) then
+				all_paragraph_format_keys.extend (current_format.paragraph_format_out)
+				all_paragraph_indexes.extend (number_of_characters_opened + 1)
 			end
 			
-			character_format := all_formats.item (current_format.out)
+			character_format := all_formats.item (current_format.character_format_out)
 			rich_text.buffered_append (a_text, character_format)
+			number_of_characters_opened := number_of_characters_opened + a_text.count
 		end
 
 	get_character (rtf_text: STRING; index: INTEGER): CHARACTER is
@@ -595,6 +625,24 @@ feature {NONE} -- Implementation
 					is_start_of_group: rtf_text.substring (tag_start_position - 1, tag_start_position).is_equal ("{\")
 				end
 				move_to_end_of_tag (rtf_text, tag_start_position - 1)
+			elseif tag.is_equal (rtf_new_paragraph) then
+				current_format.reset_paragraph
+			elseif tag.is_equal (rtf_paragraph_left_aligned) then
+				current_format.set_alignment (feature {EV_PARAGRAPH_CONSTANTS}.alignment_left)
+			elseif tag.is_equal (rtf_paragraph_center_aligned) then
+				current_format.set_alignment (feature {EV_PARAGRAPH_CONSTANTS}.alignment_center)
+			elseif tag.is_equal (rtf_paragraph_right_aligned) then
+				current_format.set_alignment (feature {EV_PARAGRAPH_CONSTANTS}.alignment_right)
+			elseif tag.is_equal (rtf_paragraph_justified) then
+				current_format.set_alignment (feature {EV_PARAGRAPH_CONSTANTS}.alignment_justified)
+			elseif tag.is_equal (rtf_paragraph_left_indent) then
+				current_format.set_left_margin (half_points_to_pixels (tag_value.to_integer) // 10)
+			elseif tag.is_equal (rtf_paragraph_right_indent) then
+				current_format.set_right_margin (half_points_to_pixels (tag_value.to_integer) // 10)
+			elseif tag.is_equal (rtf_paragraph_space_before) then
+				current_format.set_top_spacing (half_points_to_pixels (tag_value.to_integer) // 10)
+			elseif tag.is_equal (rtf_paragraph_space_after) then
+				current_format.set_bottom_spacing (half_points_to_pixels (tag_value.to_integer) // 10)
 			else
 				--print ("Unhandled tag : " + tag.out + "%N")
 			end	
@@ -775,6 +823,14 @@ feature {NONE} -- Implementation
 	all_formats: HASH_TABLE [EV_CHARACTER_FORMAT, STRING]
 		-- All unique formats retreived during parsing.
 		
+	all_paragraph_formats: HASH_TABLE [EV_PARAGRAPH_FORMAT, STRING]
+	
+	all_paragraph_format_keys: ARRAYED_LIST [STRING]
+	
+	all_paragraph_indexes: ARRAYED_LIST [INTEGER]
+
+	number_of_characters_opened: INTEGER		
+		
 	current_depth: INTEGER
 			-- Current depth of rtf parsing as determined by openeing "{" and
 			-- closing "}". Valid rtf opens as many as are closed.
@@ -877,7 +933,7 @@ feature {NONE} -- Implementation
 			-- `Result' is pixels converted to half points, being
 			-- the meaurement used for font sizes in RTF.
 		do
-			Result := (pixels * points_per_inch // screen.vertical_resolution) * 2
+			Result := (pixels * points_per_inch * 2) // screen.vertical_resolution
 		end
 		
 	half_points_to_pixels (half_points: INTEGER): INTEGER is

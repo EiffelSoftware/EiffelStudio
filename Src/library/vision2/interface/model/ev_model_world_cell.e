@@ -87,6 +87,8 @@ feature {NONE} -- Initialization
 			drawing_area.pointer_button_release_actions.extend (agent on_pointer_button_release_on_drawing_area)
 			drawing_area.pointer_motion_actions.extend (agent on_pointer_button_move_on_drawing_area)
 			drawing_area.mouse_wheel_actions.extend (agent on_mouse_wheel_on_drawing_area)
+			drawing_area.key_press_actions.extend (agent on_key_pressed_on_drawing_area)
+			drawing_area.key_release_actions.extend (agent on_key_released_on_drawing_area)
 			
 			create autoscroll.make_with_interval (500)
 			autoscroll.actions.extend (agent on_autoscroll_time_out)
@@ -530,6 +532,22 @@ feature {NONE} -- Implementation
 						vertical_scrollbar.set_value ((vertical_scrollbar.value + step).min (vertical_scrollbar.value_range.upper))
 					end
 				end
+			end
+		end
+		
+	on_key_pressed_on_drawing_area (a_key: EV_KEY) is
+			-- User pressed a key. Turn on grid if shift was pressed.
+		do
+			if ev_application.shift_pressed then
+				world.enable_grid
+			end
+		end
+		
+	on_key_released_on_drawing_area (a_key: EV_KEY) is
+			-- User released key. Turn off grid.
+		do
+			if world.grid_enabled then
+				world.disable_grid
 			end
 		end
 

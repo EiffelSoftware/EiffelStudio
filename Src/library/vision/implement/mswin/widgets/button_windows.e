@@ -108,7 +108,7 @@ feature -- Status setting
 			private_text := clone (t)
 			if exists then
 				wel_set_text (t)
-			elseif in_menu and then managed then
+			elseif realized and then in_menu and then managed then
 				set_managed (False)
 				set_managed (True)
 			end

@@ -69,7 +69,13 @@ feature
 
 	c_string: STRING is "EIF_REAL"
 			-- String generated for the type.
-
+			
+	c_string_id: INTEGER is
+			-- String ID generated for Current
+		once
+			Result := Names_heap.eif_real_name_id
+		end
+		
 	union_tag: STRING is "farg"
 
 	separate_get_macro: STRING is "CURGR"

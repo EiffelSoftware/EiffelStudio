@@ -74,6 +74,12 @@ feature
 	c_string: STRING is "EIF_REFERENCE"
 			-- String generated for the type.
 
+	c_string_id: INTEGER is
+			-- String ID generated for type.
+		once
+			Result := Names_heap.eif_reference_name_id
+		end
+		
 	union_tag: STRING is "rarg"
 
 	separate_get_macro: STRING is "CURGSO"

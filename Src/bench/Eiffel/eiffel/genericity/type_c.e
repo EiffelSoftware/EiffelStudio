@@ -2,6 +2,11 @@ deferred class TYPE_C
 
 inherit
 	HASHABLE
+	
+	SHARED_NAMES_HEAP
+		export
+			{NONE} all
+		end
 
 feature
 
@@ -99,18 +104,20 @@ feature
 			good_array: arg_types.lower = 1
 		local
 			i, nb: INTEGER
+			sep: STRING
 		do
 			buffer.putstring ("FUNCTION_CAST(")
 			buffer.putstring (c_string)
 			buffer.putstring (", (")
 			from
 				i := 1
+				sep := ", "
 				nb := arg_types.count
 			until
 				i > nb
 			loop
 				if i /= 1 then
-					buffer.putstring (", ")
+					buffer.putstring (sep)
 				end
 				buffer.putstring (arg_types @ i)
 				i := i + 1
@@ -125,6 +132,7 @@ feature
 			good_array: arg_types.lower = 1
 		local
 			i, nb: INTEGER
+			sep: STRING
 		do
 			buffer.putstring ("FUNCTION_CAST_TYPE(")
 			buffer.putstring (c_string)
@@ -134,11 +142,12 @@ feature
 			from
 				i := 1
 				nb := arg_types.count
+				sep := ", "
 			until
 				i > nb
 			loop
 				if i /= 1 then
-					buffer.putstring (", ")
+					buffer.putstring (sep)
 				end
 				buffer.putstring (arg_types @ i)
 				i := i + 1
@@ -178,6 +187,11 @@ feature
 		deferred
 		end
 
+	c_string_id: INTEGER is
+			-- String ID generated for the type.
+		deferred
+		end
+		
 	union_tag: STRING is
 			-- Union tag name for type in EIF_ARG_UNIONs.
 		deferred

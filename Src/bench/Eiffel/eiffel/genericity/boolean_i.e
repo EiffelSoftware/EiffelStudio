@@ -48,6 +48,12 @@ feature
 	c_string: STRING is "EIF_BOOLEAN"
 			-- String generated for the type.
 
+	c_string_id: INTEGER is
+			-- String ID generated for Current
+		once
+			Result := Names_heap.eif_boolean_name_id
+		end
+		
 	union_tag: STRING is "barg"
 
 	hash_code: INTEGER is

@@ -106,7 +106,7 @@ feature -- Access
 	node: TABLE_OF_CONTENTS_NODE
 			-- Node
 
-feature {TABLE_OF_CONTENTS_NODE_AGENT_FACTORY} -- Actions
+feature -- Actions
 
 	move_node (a_node: like Current) is
 			-- Move `a_node' into Current

@@ -168,7 +168,6 @@ feature {NONE} -- Implementation
 			total_prog: INTEGER
 			progress_file_path: FILE_NAME
 			eifgen_path: DIRECTORY_NAME
-			finish_freezing_command: FILE_NAME
 		do
 				-- We need to find the path, the exact name and the full name of the Ace file
 				-- knowing the full name. (Can be fixed .. )
@@ -200,6 +199,7 @@ feature {NONE} -- Implementation
 					command.append (proj_path)
 					command.append (" -output_file ")
 					command.append (progress_file_path)
+					command.append (" -c_compile")
 					launch (command)
 				until
 					to_end = True
@@ -221,14 +221,6 @@ feature {NONE} -- Implementation
 					progress_text.set_text ("Total progress: " + total_prog.out + "%%")
 				end
 			end
-			
-				-- Launch `finish_freezing'
-			eifgen_path.extend ("W_code")
-			change_working_directory (eifgen_path)
-			create finish_freezing_command.make_from_string (Eiffel_compiler_location)
-			finish_freezing_command.set_file_name ("finish_freezing")
-			launch (finish_freezing_command)
-
 			n_lib_done := n_lib_done + 1
 		end
 
@@ -290,7 +282,10 @@ feature {NONE} -- Implementation
 				current_application.sleep (100)
 				current_application.process_events
 
-				create fi.make_open_read (progress_file_path)
+				create fi.make (progress_file_path)
+				if fi.exists then
+					fi.open_read
+				end
 				if not fi.is_closed and then fi.is_readable then
 					fi.read_stream (fi.count)
 					s := fi.last_string
@@ -326,18 +321,13 @@ feature {NONE} -- Implementation
 			degree_substring: STRING
 		do
 			tab_index := a_output_string.index_of('%T', 1)
-			Result := a_output_string.substring (1, tab_index).to_integer
-
-			degree_substring := a_output_string.substring (1, tab_index)
-			if degree_substring @ 1 = '-' then
-				if degree_substring.is_integer then
-					Result := -(degree_substring.substring (2, degree_substring.count).to_integer)
-				end
-			else
+			if tab_index > 1 then
+				degree_substring := a_output_string.substring (1, tab_index - 1)
 				if degree_substring.is_integer then
 					Result := degree_substring.to_integer
 				end
 			end
+			
 			if Result = -1 then
 				Result := 1
 			elseif Result = -2 then

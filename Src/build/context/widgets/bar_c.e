@@ -6,7 +6,7 @@ inherit
 
 	MENU_C
 		redefine
-			widget, stored_node, add_to_option_list
+			widget, stored_node, is_resizable
 		end
 
 feature 
@@ -60,6 +60,12 @@ feature
 		do
 			widget.allow_recompute_size;
 		end;
+
+	is_resizable: BOOLEAN is
+		do
+			Result := False
+		end;
+
 -- ****************
 -- Storage features
 -- ****************

@@ -152,7 +152,7 @@ feature -- Initialization
 			process_features (l_feat_tbl, l_functions)
 
 				-- Clean `overloaded_names' to remove non-overloaded routines.
-			clean_overloaded_names
+			clean_overloaded_names (l_feat_tbl)
 			l_feat_tbl.set_overloaded_names (overloaded_names)
 
 				-- Initialize `types'.
@@ -214,16 +214,23 @@ feature -- Access
 feature {NONE} -- Implementation: Overloading
 
 	overloaded_names: HASH_TABLE [ARRAYED_LIST [INTEGER], INTEGER]
-			-- Store overloaded features if any indexed by their name ID.
+			-- Hash_table of overloaded features.
+			-- The key corresponds to overloaded feature name id, and for each entry it gives a
+			-- list of associated resolved feature name id. (e.g. for `put' you will possibly
+			-- find `put_integer', `put_double',...)
 
-	clean_overloaded_names is
+	clean_overloaded_names (a_feat_tbl: FEATURE_TABLE) is
 			-- Remove single entries of `overloaded_names'.
 		require
 			overloaded_names_not_void: overloaded_names /= Void
+			a_feat_tbl_not_void: a_feat_tbl /= Void
 		local
 			l_result: like overloaded_names
+			l_list: ARRAYED_LIST [INTEGER]
 			l_count: INTEGER
 		do
+				-- First pass of cleaning to estimate the actual count
+				-- of overloaded routines.
 			from
 				overloaded_names.start
 			until
@@ -242,15 +249,89 @@ feature {NONE} -- Implementation: Overloading
 				until
 					overloaded_names.after
 				loop
-					if overloaded_names.item_for_iteration.count > 1 then
-						l_result.put (overloaded_names.item_for_iteration,
-							overloaded_names.key_for_iteration)
+					l_list := overloaded_names.item_for_iteration
+					if l_list.count > 1 then
+						l_list := updated_overloaded_list (a_feat_tbl, l_list)
+						if l_list.count > 1 then
+							l_result.put (l_list, overloaded_names.key_for_iteration)
+						end
 					end
 					overloaded_names.forth
 				end
 				overloaded_names := l_result
 			else
 				overloaded_names := Void
+			end
+		end
+
+	updated_overloaded_list (a_feat_tbl: FEATURE_TABLE; a_list: ARRAYED_LIST [INTEGER]): ARRAYED_LIST [INTEGER] is
+			-- Process `a_list' to ensure that there are no 2 routines that only differ by
+			-- their return type. CLS rules guarantee that the two routines cannot be in the
+			-- same class, so we return a new list with the one which is defined in
+			-- an ancestor class (including the Current class) the closest to the Current class,
+			-- the others are removed from the list to avoid ambiguity when calling an
+			-- overloaded routine.
+		require
+			a_feat_tbl_not_void: a_feat_tbl /= Void
+			a_list_not_void: a_list /= Void
+			a_list_has_at_least_2_items: a_list.count > 1
+		local
+			l_feat, l_other: FEATURE_I
+			l_name_id: INTEGER
+			i, j, nb: INTEGER
+			l_has_overload_on_return_type, l_is_overloaded: BOOLEAN
+			l_processed: SPECIAL [BOOLEAN]
+		do
+			l_feat := a_feat_tbl.item_id (a_list.first)
+			if not l_feat.is_function then
+					-- Case of a procedure or a query that is not a function. Thus there is no
+					-- possible overloading on return type.
+				Result := a_list
+			else
+					-- Iterate through `a_list' and eliminate features with same parameters,
+					-- more precisely only keeps the one that have distinct parameters.
+				from
+					i := 1
+					nb := a_list.count
+					create l_processed.make (nb + 1)
+					create Result.make (nb)
+				until
+					i > nb
+				loop
+						-- If a routine was found in the sub-loop to be overloaded, we do not
+						-- need to process it again.
+					if not l_processed.item (i) then
+						l_name_id := a_list.i_th (i)
+						l_feat := a_feat_tbl.item_id (l_name_id)
+						from
+							l_has_overload_on_return_type := False
+							j := i + 1
+						until
+							j > nb
+						loop
+							if not l_processed.item (j) then
+								l_other := a_feat_tbl.item_id (a_list.i_th (j))
+									-- Find if `l_feat' and `l_other' have the same parameter
+									-- signature. If they do, we should not insert them in the
+									-- overloading resolution list.
+								l_is_overloaded := 
+									(not l_feat.has_arguments and not l_other.has_arguments) or else
+									((l_feat.has_arguments and l_other.has_arguments) and then
+									(l_feat.arguments.count = l_other.arguments.count) and then
+									l_feat.arguments.same_interface (l_other.arguments))
+								if l_is_overloaded then
+									l_has_overload_on_return_type := True
+									l_processed.put (True, j)
+								end
+							end
+							j := j + 1
+						end
+						if not l_has_overload_on_return_type then
+							Result.extend (l_name_id)
+						end
+					end
+					i := i + 1
+				end
 			end
 		end
 
@@ -1039,6 +1120,8 @@ feature {NONE} -- Implementation
 			Result := internal_type_from_consumed_type_in_assembly (
 				lace_class.assembly.referenced_assemblies.item (c.assembly_id),
 				force_compilation, c)
+		ensure
+			result_not_void: force_compilation implies Result /= Void
 		end
 
 	internal_type_from_consumed_type_in_assembly (

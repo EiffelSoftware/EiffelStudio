@@ -20,21 +20,23 @@ create
 	
 feature -- Initialization
 	
-	make_with_consumed_field (a_consumed_procedure: CONSUMED_FIELD) is
+	make_with_consumed_field (a_consumed_field: CONSUMED_FIELD) is
 		require
-			non_void_a_consumed_procedure: a_consumed_procedure /= Void
+			non_void_a_consumed_field: a_consumed_field /= Void
 		do
-			eiffel_name := a_consumed_procedure.eiffel_name
-			dotnet_name := a_consumed_procedure.dotnet_name
-			arguments := a_consumed_procedure.arguments
-			declared_type := a_consumed_procedure.declared_type
-			return_type := a_consumed_procedure.return_type
+			eiffel_name := a_consumed_field.eiffel_name
+			dotnet_name := a_consumed_field.dotnet_name
+			arguments := a_consumed_field.arguments
+			declared_type := a_consumed_field.declared_type
+			return_type := a_consumed_field.return_type
+			internal_flags := a_consumed_field.internal_flags
 		ensure
-			eiffel_name_set: eiffel_name = a_consumed_procedure.eiffel_name
-			dotnet_name_set: dotnet_name = a_consumed_procedure.dotnet_name
-			arguments_set: arguments = a_consumed_procedure.arguments
-			declared_type_set: declared_type = a_consumed_procedure.declared_type
-			return_type_set: return_type = a_consumed_procedure.return_type
+			eiffel_name_set: eiffel_name = a_consumed_field.eiffel_name
+			dotnet_name_set: dotnet_name = a_consumed_field.dotnet_name
+			arguments_set: arguments = a_consumed_field.arguments
+			declared_type_set: declared_type = a_consumed_field.declared_type
+			return_type_set: return_type = a_consumed_field.return_type
+			internal_flags_set: internal_flags = a_consumed_field.internal_flags
 		end
 
 feature -- Implementation

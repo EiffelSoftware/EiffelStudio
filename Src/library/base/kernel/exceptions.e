@@ -55,7 +55,7 @@ feature -- Status report
 	developer_exception_name: STRING is
 			-- Name of last developer-raised exception
 		do
-			Result := original_recipient_name
+			Result := original_tag_name
 		end;
 
 	is_signal: BOOLEAN is

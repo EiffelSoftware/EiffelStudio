@@ -41,9 +41,7 @@ feature -- Basic operations
 			until
 				coclass.interface_descriptors.off
 			loop
-				if not has_descendants_in_coclass (coclass, coclass.interface_descriptors.item) then
-					generate_interface_features (coclass.interface_descriptors.item)
-				end
+				generate_interface_features (coclass.interface_descriptors.item)
 				coclass.interface_descriptors.forth
 			end
 

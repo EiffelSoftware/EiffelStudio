@@ -24,8 +24,7 @@ inherit
 		rename
 			item_command_count as command_count
 		redefine
-			add_item,
-			find_item_by_data
+			add_item
 		end
 
 	EV_PND_SOURCE_IMP
@@ -132,29 +131,6 @@ feature -- Status report
 				Result := top_parent_imp.is_parent (Current)
 			else
 				Result := (internal_children /= Void) and then (internal_children.count > 0)
-			end
-		end
-
-	find_item_by_data (data: ANY): EV_TREE_ITEM is
-			-- If `data' contained in a tree item,
-			-- assign this item to `Result'.
-			-- Redefined as trees are recursive structures.
-		local
-			list: ARRAYED_LIST [like item_type]
-			litem: EV_TREE_ITEM
-		do
-			from
-				list.start
-			until
-				list.after or Result/= Void
-			loop
-				litem ?= list.item.interface
-				if litem.data.is_equal (data) then
-					Result ?= litem
-				else
-					Result ?= litem.find_item_by_data (data)
-				end
-				list.forth
 			end
 		end
 

@@ -17,11 +17,26 @@ inherit
 
 creation
 	
-	make
+	make, make_for_bench
 
 feature {NONE} -- Initialization
 
-	make (s: STRING; id: CLASS_ID) is
+	make (s: STRING; id: INTEGER) is
+			-- Set id to `s' and set
+			-- class_id to `id'.
+		require
+			valid_s: s = Void implies id > 0; 
+		do
+			if s /= Void then
+				free_text_name := clone (s);
+				free_text_name.to_upper;
+			end;
+			class_id := id
+		ensure
+			class_id_set: class_id = id;
+		end;
+
+	make_for_bench (s: STRING; id: CLASS_ID) is
 			-- Set id to `s' and set
 			-- class_id to `id'.
 		require

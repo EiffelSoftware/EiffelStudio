@@ -50,7 +50,7 @@ feature -- Basic Operation
 				-- `update_object_editors_for_delete'.
 			previous_parent_object := child_layout_item.object.parent_object
 			child_layout_item.object.unparent
-			update_object_editors_for_delete (child_layout_item.object, previous_parent_object, all_editors)
+			update_object_editors_for_delete (child_layout_item.object, previous_parent_object)
 				-- We now need to mark the deleted object and all children as
 				-- deleted.
 			object_handler.mark_as_deleted (child_layout_item.object)
@@ -106,12 +106,14 @@ feature {NONE} -- Implementation
 		-- Position of `child_layout_item' within `parent_layout_item' when `make'
 		-- was called.
 	
-	update_object_editors_for_delete (deleted_object, parent_object: GB_OBJECT editors: ARRAYED_LIST [GB_OBJECT_EDITOR]) is
+	update_object_editors_for_delete (deleted_object, parent_object: GB_OBJECT) is
 			-- For every item in `editors', update to reflect removal of `deleted_object' from `parent_object'.
 		local
 			editor: GB_OBJECT_EDITOR
 			window_parent: EV_WINDOW
+			editors: ARRAYED_LIST [GB_OBJECT_EDITOR]
 		do
+			editors := all_editors
 			from
 				editors.start
 			until
@@ -122,6 +124,8 @@ feature {NONE} -- Implementation
 					-- is contained.
 				if object_handler.object_contained_in_object (deleted_object, editor.object) or
 					deleted_object = editor.object then
+						-- If we are the doced object editor, then just empty it.
+						-- If not, we destroy the editor and the containing window.
 					if editor = docked_object_editor then
 						editor.make_empty
 					else
@@ -131,8 +135,6 @@ feature {NONE} -- Implementation
 						end
 						editor.destroy
 						window_parent.destroy
-						--| FIXME should this be `editors' prune?
-						--| if not, then we may not even need the argument anymore.
 						floating_object_editors.prune (editor)
 					end
 				end

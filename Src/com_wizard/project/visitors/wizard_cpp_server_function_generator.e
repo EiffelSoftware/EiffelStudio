@@ -633,7 +633,7 @@ feature {NONE} -- Implementation
 					Result := cecil_function_declaration_code (Eif_character_function, Eif_character_function_name)	
 					
 				elseif is_real4 (visitor.vt_type) then
-					Result := cecil_function_declaration_code (Eif_double_function, Eif_real_function_name)
+					Result := cecil_function_declaration_code (Eif_real_function, Eif_real_function_name)
 					
 				elseif is_real8 (visitor.vt_type) then
 					Result := cecil_function_declaration_code (Eif_double_function, Eif_double_function_name)

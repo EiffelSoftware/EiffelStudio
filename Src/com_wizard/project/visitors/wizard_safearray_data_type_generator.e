@@ -555,12 +555,10 @@ feature -- Basic operations
 			a_lcid := an_interface_descriptor.library_descriptor.lcid
 			
 			create tmp_element_ec_function.make (100)
-			if a_visitor.need_generate_ce then
-				tmp_element_ec_function.append (Generated_ce_mapper)
-			else
+			if not a_visitor.need_generate_ce then
 				tmp_element_ec_function.append (Ce_mapper)
+				tmp_element_ec_function.append (Dot)
 			end
-			tmp_element_ec_function.append (Dot)
 			tmp_element_ec_function.append (a_visitor.ec_function_name)
 
 

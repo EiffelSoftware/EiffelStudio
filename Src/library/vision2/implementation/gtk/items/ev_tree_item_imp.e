@@ -11,23 +11,21 @@ inherit
 	EV_TREE_ITEM_I
 	
 	EV_ITEM_IMP
-		rename
-			set_parent as widget_set_parent
 		redefine
 			make,
 			make_with_text,
-			parent_imp
+			has_parent
 		end
 
 	EV_TREE_ITEM_HOLDER_IMP
 		rename
-			interface as widget_interface,
-			set_interface as set_widget_interface,
+			parent_set as widget_parent_set,
 			add_double_click_command as old_add_dblclk,
 			remove_double_click_commands as old_remove_dblclk,
+			parent_imp as widget_parent_imp,
 			set_parent as widget_set_parent
-		redefine
-			parent_imp
+		undefine
+			has_parent
 		end
 
 creation
@@ -71,20 +69,20 @@ feature {NONE} -- Initialization
 			-- Not implemented
 		end
 
-feature -- Acces
+feature -- Access
 
-	parent: EV_TREE_ITEM_HOLDER is
-			-- Parent of the current item.
-		do
-			if parent_imp /= Void then
-				Result ?= parent_imp.interface
-			else
-				Result := Void
-			end
-		end
+--	parent: EV_TREE_ITEM_HOLDER is
+--			-- Parent of the current item.
+--		do
+--			if parent_imp /= Void then
+--				Result ?= parent_imp.interface
+--			else
+--				Result := Void
+--			end
+--		end
 
-	parent_imp: EV_TREE_ITEM_HOLDER_IMP
-			-- Parent implementation
+--	parent_imp: EV_TREE_ITEM_HOLDER_IMP
+--			-- Parent implementation
 
 feature -- Status report
 
@@ -109,6 +107,7 @@ feature -- Element change
 			-- `par' can be Void then the parent is the screen.
 		local
 			par_imp: EV_TREE_ITEM_HOLDER_IMP
+			parent_temp : EV_TREE_ITEM_HOLDER
 		do
 			if parent_imp /= Void then
 				gtk_object_ref (widget)
@@ -116,15 +115,29 @@ feature -- Element change
 				parent_imp := Void
 			end
 			if par /= Void then
-				show
 				par_imp ?= par.implementation
 				check
 					parent_not_void: par_imp /= Void
 				end
 				parent_imp ?= par_imp
+
+
+				parent_temp ?= parent_imp.interface
+
 				par_imp.add_item (Current)
+				show
 				gtk_object_unref (widget)
 			end
+		end
+
+feature -- Assertion
+
+	has_parent : BOOLEAN is
+			-- Redefinition of has_a_parent, already defined
+			-- in EV_WIDGET_I, because parent_imp has been
+			-- redefined as widget_parent_imp
+		do
+			Result := parent_imp /= void
 		end
 
 feature -- Event : command association

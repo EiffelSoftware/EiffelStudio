@@ -96,8 +96,13 @@ feature -- Update
 
 	set_root_class_name (s: STRING) is
 			-- Assign `s' to `root_class_name'.
+		require
+			s_not_void: s /= Void
+			s_in_upper: s.is_equal (s.as_upper)
 		do
 			root_class_name := s
+		ensure
+			root_class_name_set: root_class_name = s
 		end
 
 	set_creation_name (s: STRING) is

@@ -18,7 +18,7 @@ inherit
 
 feature -- Properties
 
-	parent_type: TYPE_A;
+	parent_type: CLASS_TYPE_AS;
 			-- Parent type involved in the error
 
 	code: STRING is "VHPR";
@@ -28,7 +28,7 @@ feature -- Properties
 
 feature {COMPILER_EXPORTER} -- Setting
 
-	set_parent_type (p: TYPE_A) is
+	set_parent_type (p: like parent_type) is
 			-- Assign `o' to `parent_type'.
 		do
 			parent_type := p;

@@ -20,17 +20,6 @@ feature -- Access
 	system_value_type_class: EXTERNAL_CLASS_I
 			-- Class System.ValueType
 
-	ancestor_class_to_all_classes: CLASS_I is
-		do
-			if il_generation then
-				Result := system_object_class
-			else
-				Result := any_class
-			end
-		ensure
-			result_not_void: Result /= Void
-		end
-
 	boolean_class: CLASS_I
 			-- Class BOOLEAN
 

@@ -215,10 +215,11 @@ rt_public void str_replace(EIF_CHARACTER *str, EIF_CHARACTER *new, EIF_INTEGER s
 	}
 
 	/* Now there is room to copy the replacement string as is, starting at the
-	 * 'start' index. We may safely use memcpy  here, as there is no overlapping.
+	 * 'start' index. We cannot use memcpy  here, as `str' and `new' can point
+	 * to the same area.
 	 */
 	
-	memcpy (str + (start - 1),new,  new_len);
+	memmove (str + (start - 1),new,  new_len);
 }
 
 rt_public void str_insert(EIF_CHARACTER *str, EIF_CHARACTER *new, EIF_INTEGER string_length, EIF_INTEGER new_len, EIF_INTEGER idx)

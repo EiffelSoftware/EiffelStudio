@@ -221,6 +221,8 @@ feature {CACHE_WRITER} -- Implementation
 
 	info: CACHE_INFO is
 			-- Information on EAC content
+		require
+			non_void_clr_version: clr_version /= Void
 		local
 			des: EIFFEL_XML_DESERIALIZER
 		do

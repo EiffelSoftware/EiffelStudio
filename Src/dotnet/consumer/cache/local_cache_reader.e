@@ -42,6 +42,9 @@ feature {NONE}
 			relative_path: STRING
 			a_dir: DIRECTORY
 		do
+			check
+				non_void_clr_version: clr_version /= Void
+			end
 			relative_path := relative_assembly_path_from_consumed_assembly (ca)
 			create Result.make (local_cache_path.count + relative_path.count)
 			Result.append (local_cache_path)
@@ -66,6 +69,9 @@ feature {NONE}
 			relative_path: STRING
 			a_dir: DIRECTORY
 		do
+			check
+				non_void_clr_version: clr_version /= Void
+			end
 			relative_path := relative_assembly_path (name)
 			create Result.make (local_cache_path.count + relative_path.count)
 			Result.append (local_cache_path)

@@ -6,11 +6,9 @@ indexing
 	revision: "$Revision$"
 	
 class
-	
 	EV_HORIZONTAL_SPLIT_AREA_IMP
 	
 inherit
-	
 	EV_HORIZONTAL_SPLIT_AREA_I
 		
 	EV_SPLIT_AREA_IMP
@@ -19,7 +17,6 @@ inherit
 		end
 	
 creation
-	
 	make
 
 feature {NONE} -- Access
@@ -32,6 +29,12 @@ feature {NONE} -- Access
 			else
 				Result := 0
 			end
+		end
+
+	splitter_region: WEL_REGION is
+			-- A region that recover the splitter
+		do
+			!! Result.make_rect (level, 0, level + size, height)
 		end
 
 	minimum_level: INTEGER is
@@ -56,36 +59,7 @@ feature {NONE} -- Access
 			end
 		end
 
-feature -- Implementation
-
---	child_width_changed (new_width: INTEGER; the_child: EV_WIDGET_IMP) is
-			-- Resize the window and redraw the split according to
-			-- the resize of a child.
---		local
---			temp_width: INTEGER
---		do
---			if the_child = child1 then
---				refresh
---			else
---				temp_width := size + child1.child_cell.width
---				if child2 /= Void then
---					child2.set_x (temp_width)
---					temp_width := temp_width + child2.child_cell.width
---					set_width (temp_width)
---				end
---				parent_imp.child_width_changed (width, Current)
---			end
---		end
-
-	set_local_height (new_height: INTEGER) is
-			-- Make `new_height' the new `height' of the 
-			-- container and both children.
-		do
-			if new_height > minimum_height then
-				set_height (new_height)
-				resize_children (level)
-			end
-		end
+feature {NONE} -- Basic operation
 
 	set_local_width (new_width: INTEGER) is
 			-- Make `new_width' the new `width' of the 
@@ -98,6 +72,32 @@ feature -- Implementation
 				end
 			end
 		end
+
+	set_local_height (new_height: INTEGER) is
+			-- Make `new_height' the new `height' of the 
+			-- container and both children.
+		do
+			if new_height > minimum_height then
+				set_height (new_height)
+				resize_children (level)
+			end
+		end
+
+	resize_children (a_level: INTEGER) is
+			-- Resize the two children according to the new level of the 
+			-- splitter.
+		do
+			if child1 /= Void then
+				child1.parent_ask_resize (a_level, height)
+			end
+			if child2 /= Void then
+				child2.set_move_and_size (a_level + size, 0, 
+							width - a_level - size, height)
+			end
+			refresh
+		end
+
+feature {NONE} -- Implementation for automatic size compute
 
 	child_minwidth_changed (child_new_minimum: INTEGER; the_child: EV_WIDGET_IMP) is
 			-- Change the current minimum_width because the child did.
@@ -115,38 +115,58 @@ feature -- Implementation
 
 feature {NONE} -- Implementation
 
-	resize_children (a_level: INTEGER) is
-			-- Resize the two children according to the new level of the 
-			-- splitter.
+	draw_split is
+			-- draw a vertical split at `level'.
+		local
+			ldc: WEL_CLIENT_DC
+			llevel: INTEGER
 		do
-			if child1 /= Void then
-				child1.parent_ask_resize (a_level, height)
-			end
-			if child2 /= Void then
-				child2.set_move_and_size (a_level + size, 0, 
-							width - a_level - size, height)
-			end
+			-- Some local variable for speed
+			ldc := dc
+			llevel := level
+			-- Drawing
+			ldc.get
+			ldc.select_pen (face_pen)
+			ldc.line (llevel, 0, llevel, height)
+			ldc.select_pen (highlight_pen)
+			ldc.line (llevel + 1, 0, llevel + 1, height)
+			ldc.select_pen (face_pen)
+			ldc.line (llevel + 2, 0, llevel + 2, height)
+			ldc.line (llevel + 3, 0, llevel + 3, height)
+			ldc.select_pen (shadow_pen)
+			ldc.line (llevel + 4, 0, llevel + 4, height)
+			ldc.select_pen (window_frame_pen)
+			ldc.line (llevel + 5, 0, llevel + 5, height)
+			ldc.release
 		end
 
-feature {NONE} -- Implementation : Event handling
-
-	on_wm_erase_background (wparam: INTEGER) is
-			-- Wm_erasebkgnd message.
+	invert_split is
+			-- Invert the vertical split from `first' position to `last' position
+			-- Used when the user move the split
+			-- It uses rectangle and not fill_rectangle because
+			-- the second feature doesn't use the rop2 status.
 		local
-			rectangle: WEL_RECT
+			old_rop2: INTEGER
 		do
 			dc.get
-			if 	child1 = Void then
-				!! rectangle.make (0, 0, level, height)
-				dc.fill_rect (rectangle, class_background)
-			end
-			if child2 = Void and width > level + size then
-				!! rectangle.make (level + size, 0, width, height)
-				dc.fill_rect (rectangle, class_background)
-			end
+			old_rop2 := dc.rop2
+			dc.set_rop2 (R2_xorpen)
+			dc.select_brush (splitter_brush)
+			dc.rectangle (temp_level, -1, temp_level + size, height+1)
+			dc.set_rop2 (old_rop2)
 			dc.release
-			disable_default_processing
 		end
+
+	update_display is
+			-- Feature that update the actual container.
+		do
+			if child1.width = 0 then
+				child1.parent_ask_resize (child1.minimum_width, height)
+			end
+			resize_children (level)
+		end
+
+feature {NONE} -- WEL Implementation
 
 	on_set_cursor (code: INTEGER) is
 			-- Respond to a cursor message.
@@ -209,47 +229,8 @@ feature {NONE} -- Implementation : Event handling
 			if is_splitting then
 				is_splitting := False
 				resize_children (temp_level)
-				on_wm_erase_background (0)	
-				draw_split
 				release_capture
 			end
-		end
-
-feature -- Implementation : Basic routines
-
-	draw_split is
-			-- draw a vertical split at `level'.
-		do
-			dc.get
-			dc.select_pen (face_pen)
-			dc.line (level, 0, level, height)
-			dc.select_pen (highlight_pen)
-			dc.line (level + 1, 0, level + 1, height)
-			dc.select_pen (face_pen)
-			dc.line (level + 2, 0, level + 2, height)
-			dc.line (level + 3, 0, level + 3, height)
-			dc.select_pen (shadow_pen)
-			dc.line (level + 4, 0, level + 4, height)
-			dc.select_pen (window_frame_pen)
-			dc.line (level + 5, 0, level + 5, height)
-			dc.release
-		end
-
-	invert_split is
-			-- Invert the vertical split from `first' position to `last' position
-			-- Used when the user move the split
-			-- It uses rectangle and not fill_rectangle because
-			-- the second feature doesn't use the rop2 status.
-		local
-			old_rop2: INTEGER
-		do
-			dc.get
-			old_rop2 := dc.rop2
-			dc.set_rop2 (R2_xorpen)
-			dc.select_brush (splitter_brush)
-			dc.rectangle (temp_level, -1, temp_level + size, height+1)
-			dc.set_rop2 (old_rop2)
-			dc.release
 		end
 
 end -- EV_HORIZONTAL_SPLIT_AREA_IMP

@@ -1,4 +1,4 @@
-Windows Eiffel Library, Version 2.2, January 24, 1997.
+Windows Eiffel Library, Version 2.4, March 6, 1997.
 
 Copyright (c) Interactive Software Engineering Inc., 1995-1997
 Use subject to restrictions of customer license.

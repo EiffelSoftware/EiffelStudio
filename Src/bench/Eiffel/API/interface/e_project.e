@@ -133,42 +133,38 @@ feature -- Initialization
 
 feature -- Properties
 
+	ace: E_ACE is
+			-- Eiffel Ace file
+		once
+			!! Result
+		end;
+
 	system: E_SYSTEM;
 			-- Eiffel system
 
 	lace_file_name: STRING is
 			-- Path to the universe/system description
+		obsolete
+			"Use file_name from E_ACE"
 		do
-			Result := Lace.file_name
+			Result := Ace.file_name
 		end;
 
 	lace_text: STRING is
 			-- Text of the Lace file.
 			-- Void if unreadable file
-		require
-			valid_file_name: lace_file_name /= Void
-		local
-			a_file: RAW_FILE
+		obsolete
+			"Use text from E_ACE"
 		do
-			!! a_file.make (lace_file_name);
-			if a_file.exists and then a_file.is_readable then
-				a_file.open_read;
-				a_file.readstream (a_file.count);
-				a_file.close;
-				Result := clone (a_file.laststring)
-			end
+			Result := Ace.text
 		end;
 
 	lace_click_list: CLICK_LIST is
 			-- Click list for the lace file
+		obsolete
+			"Use click_list from E_ACE"
 		do
-			if
-				(Lace /= Void) and then (Lace.root_ast /= Void) and then
-				Lace.not_first_parsing and then
-				system.root_class_name /= Void
-			then
-				Result := Lace.root_ast.click_list
-			end
+			Result := Ace.click_list
 		end;
 
 	name: DIRECTORY_NAME is
@@ -303,13 +299,10 @@ feature -- Setting
 
 	set_lace_file_name (f_name: STRING) is
 			-- Set lace_file_name to `f_name'.
-		require
-			--valid_file_name: f_name /= Void implies f_nameis valid
-			-- check existances ....
+		obsolete
+			"Use set_file_name from E_ACE"
 		do
-			lace.set_file_name (f_name)
-		ensure
-			lace_file_name_set: equal (f_name, lace_file_name)
+			Ace.set_file_name (f_name)
 		end;
 
 	set_error_displayer (ed: like error_displayer) is
@@ -326,9 +319,9 @@ feature -- Update
 
 	melt is
 			-- Incremental recompilation of Eiffel project.
-			-- Raise error messages if necessary. Otherwize, a
+			-- Raise error messages if necessary if unsuccessful. Otherwize,
 			-- save the project and link driver to precompiled library 
-			-- (if it exists) after a successful compilation.
+			-- (if it exists).
 		require
 			able_to_compile: able_to_compile
 		do
@@ -353,8 +346,7 @@ feature -- Update
 
 	freeze is
 			-- Melt eiffel project and then freeze it (i.e generate
-			-- C code for workbench mode) if allowed (specifed
-			-- in SHARED_MELT_ONLY).
+			-- C code for workbench mode).
 		require
 			able_to_compile: able_to_compile
 		do
@@ -372,8 +364,7 @@ feature -- Update
 
 	finalize (keep_assertions: BOOLEAN) is
 			-- Melt eiffel project and then finalize it (i.e generate
-			-- optimize C code for workbench mode) if allowed (specifed
-			-- in SHARED_MELT_ONLY).
+			-- optimize C code for workbench mode).
 		require
 			able_to_compile: able_to_compile
 		local
@@ -584,7 +575,7 @@ feature {PRECOMP_R} -- Implementation
 			system := s
 		end;
 
-feature {NONE, E_PROJECT, PRECOMP_R, EXTENDIBLE_R} -- Implementation
+feature {E_PROJECT, PRECOMP_R, EXTENDIBLE_R} -- Implementation
 
 	saved_workbench: WORKBENCH_I;
 

@@ -187,7 +187,7 @@ static int curr_modify = NO_CURRMODIF;
 #ifdef EIF_WIN32
 		dynamic_evaluation(sp, arg_1, arg_2, arg_3 & 1, (arg_3 >> 1) & 1, (arg_3 >> 2) & 1);
 #else
-		dynamic_evaluation(writefd (sp), arg_1, arg_2, arg_3 & 1, arg_3 >> 1);
+		dynamic_evaluation(writefd (sp), arg_1, arg_2, arg_3 & 1, (arg_3 >> 1) & 1, (arg_3 >> 2) & 1);
 #endif
 		break;
 	case MODIFY_LOCAL:				/* modify the value of a local variable, an argument or the result */
@@ -903,7 +903,6 @@ rt_private void rec_inspect(EIF_REFERENCE object)
 						}
 					}
 				} else {
-					int32 dtype = type & SK_DTYPE;
 					is_void = EIF_TRUE;
 					twrite (&sk_type, sizeof(uint32));
 					twrite (&is_special, sizeof(EIF_BOOLEAN));

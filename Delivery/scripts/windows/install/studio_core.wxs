@@ -5,7 +5,7 @@
 	<IgnoreModularization Name="PROJECTDIR" Type="Property" />
 	<IgnoreModularization Name="SELECTEDCCOMPILER" Type="Property" />
 		<Directory Id="TARGETDIR" Name="SourceDir">
-			<Component Id="LocalMachineRegistry" Guid="E4C043A0-6236-4A40-A532-2F5EE81F5BDF">
+			<Component Id="LocalMachineRegistry" Guid="E4C043A0-6236-4A40-A532-2F5EE81F5BDF" Win64="$(var.IsWin64)">
 				<Registry Root="HKLM" Key="Software\ISE\Eiffel56\wizard" Name="ISE_PROJECTS" Value="[PROJECTDIR]" KeyPath="yes" Id="registry36" Type="string" />
 				<Registry Root="HKLM" Key="Software\ISE\Eiffel56\finish_freezing" Name="ISE_EIFFEL" Value="[Application]" Id="registry44" Type="string" />
 				<Registry Root="HKLM" Key="Software\ISE\Eiffel56\ec" Name="ISE_PROJECTS" Value="[PROJECTDIR]" Id="registry49" Type="string" />

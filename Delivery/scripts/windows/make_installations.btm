@@ -15,6 +15,11 @@ iff "%@SEARCH[light.exe]" == "" then
 endiff
 
 cdd %INIT_DIR\install
+iff .%ISE_PLATFORM%.==.win64. then
+	set IS_WIN64=yes
+else
+	set IS_WIN64=no
+endiff
 
 remtrace In order to work INSTALL_DIR needs to be properly defined (see above checks)
 call build.btm base_libraries
@@ -28,27 +33,27 @@ call build.btm studio_core
 call build.btm vision2_tour
 
 remtrace EiffelBuild Enterprise
-candle -dISE_RELEASE=enterprise -dISE_MODULE_NAME=build_enterprise -dISE_PRODUCT_NAME="EiffelBuild Enterprise Edition" build.wxs
+candle -dIsWin64=%IS_WIN64% -dISE_RELEASE=enterprise -dISE_MODULE_NAME=build_enterprise -dISE_PRODUCT_NAME="EiffelBuild Enterprise Edition" build.wxs
 light /b %INSTALL_DIR build.wixobj -out MSMs\build_enterprise.msm
 del build.wixobj
 
 remtrace EiffelBuild Free version
-candle -dISE_RELEASE=free_version -dISE_MODULE_NAME=build_free -dISE_PRODUCT_NAME="EiffelBuild Evaluation Edition" build.wxs
+candle -dIsWin64=%IS_WIN64% -dISE_RELEASE=free_version -dISE_MODULE_NAME=build_free -dISE_PRODUCT_NAME="EiffelBuild Evaluation Edition" build.wxs
 light /b %INSTALL_DIR build.wixobj -out MSMs\build_free.msm
 del build.wixobj
 
 remtrace EiffelStudio Enterprise
-candle -dISE_RELEASE=enterprise -dISE_MODULE_NAME=ec_enterprise -dISE_PRODUCT_NAME="EiffelStudio Enterprise Edition" ec.wxs
+candle -dIsWin64=%IS_WIN64% -dISE_RELEASE=enterprise -dISE_MODULE_NAME=ec_enterprise -dISE_PRODUCT_NAME="EiffelStudio Enterprise Edition" ec.wxs
 light /b %INSTALL_DIR ec.wixobj -out MSMs\ec_enterprise.msm
 del ec.wixobj
 
 remtrace EiffelStudio University
-candle -dISE_RELEASE=university_version -dISE_MODULE_NAME=ec_university -dISE_PRODUCT_NAME="EiffelStudio University Edition" ec.wxs
+candle -dIsWin64=%IS_WIN64% -dISE_RELEASE=university_version -dISE_MODULE_NAME=ec_university -dISE_PRODUCT_NAME="EiffelStudio University Edition" ec.wxs
 light /b %INSTALL_DIR ec.wixobj -out MSMs\ec_university.msm
 del ec.wixobj
 
 remtrace EiffelStudio Free version
-candle -dISE_RELEASE=free_version -dISE_MODULE_NAME=ec_free -dISE_PRODUCT_NAME="EiffelStudio Evaluation Edition" ec.wxs
+candle -dIsWin64=%IS_WIN64% -dISE_RELEASE=free_version -dISE_MODULE_NAME=ec_free -dISE_PRODUCT_NAME="EiffelStudio Evaluation Edition" ec.wxs
 light /b %INSTALL_DIR ec.wixobj -out MSMs\ec_free.msm
 del ec.wixobj
 
@@ -61,17 +66,17 @@ if not exist setups\Free mkdir setups\Free
 cdd %INIT_DIR\install
 
 remtrace Preparing Free edition
-candle -dEDITION="free" -dEDITIONNAME="Free Edition" Eiffel.wxs
+candle -dIsWin64=%IS_WIN64% -dEDITION="free" -dEDITIONNAME="Free Edition" Eiffel.wxs
 light /b %INSTALL_DIR Eiffel.wixobj -out %INSTALL_DIR\setups\Free\Eiffel56.msi
 del Eiffel.wixobj
 
 remtrace Preparing University edition
-candle -dEDITION="university" -dEDITIONNAME="University Edition" Eiffel.wxs
+candle -dIsWin64=%IS_WIN64% -dEDITION="university" -dEDITIONNAME="University Edition" Eiffel.wxs
 light /b %INSTALL_DIR Eiffel.wixobj -out %INSTALL_DIR\setups\University\Eiffel56.msi
 del Eiffel.wixobj
 
 remtrace Preparing Enterprise edition
-candle -dEDITION="enterprise" -dEDITIONNAME="Enterprise Edition" Eiffel.wxs
+candle -dIsWin64=%IS_WIN64% -dEDITION="enterprise" -dEDITIONNAME="Enterprise Edition" Eiffel.wxs
 light /b %INSTALL_DIR Eiffel.wixobj -out %INSTALL_DIR\setups\Enterprise\Eiffel56.msi
 del Eiffel.wixobj
 

@@ -1,3 +1,7 @@
-candle %1.wxs
+iff .%ISE_PLATFORM%.==.win64. then
+	candle -dIsWin64=yes %1.wxs
+else
+	candle -dIsWin64=no %1.wxs
+endiff
 light /b %INSTALL_DIR %1.wixobj -out MSMs\%1.msm
 del %1.wixobj

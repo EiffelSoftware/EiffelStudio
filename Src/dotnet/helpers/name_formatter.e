@@ -6,13 +6,45 @@ class
 
 feature -- Basic Operations
 
-	format_type_name (name: STRING): STRING is
-			-- Format `name' to Eiffel conventions
+	formatted_type_name (name: STRING; depth: INTEGER): STRING is
+			-- Format `name' to Eiffel conventions.
+			-- Use last `depth' . in .NET name.
 		require
 			non_void_name: name /= Void
+			valid_name: not name.is_empty and then name.item (1) /= '.'
+			valid_depth: depth >= 0 and depth <= name.occurrences ('.')
 		local
-			container, nested: STRING
+			partial: STRING
+			i, index, count: INTEGER
+		do
+			count := name.count
+			index := name.last_index_of ('.', count)
+			if index > 0 then
+				from
+					i := 1
+				until
+					i > depth
+				loop
+					index := name.last_index_of ('.', index - 1)
+					i := i + 1
+				end
+				partial := name.substring (index + 1, count)
+			else
+				partial := name
+			end
+			Result := full_formatted_type_name (partial)
+		ensure
+			non_void_name: Result /= Void
+		end
+		
+	full_formatted_type_name (name: STRING): STRING is
+			-- Format .NET type name `name' to Eiffel class name.
+		require
+			non_void_name: name /= Void
+			valid_name: not name.is_empty
+		local
 			i: INTEGER
+			container, nested: STRING
 		do
 			type_mapping_table.search (name)
 			if type_mapping_table.found then
@@ -21,13 +53,13 @@ feature -- Basic Operations
 				Result := clone (name)
 				if Result.item (name.count) = ']' then
 					Result.keep_head (Result.count - 2)
-					Result := "NATIVE_ARRAY [" + format_type_name (Result) + "]"
+					Result := "NATIVE_ARRAY [" + full_formatted_type_name (Result) + "]"
 				else
 					i := name.index_of ('+', 1)
 					if i > 0 then
 						container := name.substring (1, i - 1)
 						nested := name.substring (i + 1, name.count)
-						Result := format_type_name (nested) + "_IN_" + format_type_name (container)
+						Result := full_formatted_type_name (nested) + "_IN_" + full_formatted_type_name (container)
 					else
 						if Result.item (Result.count) = '&' then
 							Result.keep_head (Result.count - 1)
@@ -38,16 +70,16 @@ feature -- Basic Operations
 						if Result.item (1) = '_' then
 							Result.prepend_character ('X')
 						end
-						Result := generic_format (Result)
+						Result := eiffel_format (Result)
 						Result.to_upper
 					end
 				end
 			end
 		ensure
-			non_void_result: Result /= Void
+			non_void_name: Result /= Void
 		end
 	
-	format_feature_name (name: STRING): STRING is
+	formatted_feature_name (name: STRING): STRING is
 			-- Format `name' to Eiffel conventions
 		require
 			non_void_name: name /= Void
@@ -69,13 +101,13 @@ feature -- Basic Operations
 				if Result.item (1) = '_' then
 					Result.prepend_character ('x')
 				end
-				Result := generic_format (Result)
+				Result := eiffel_format (Result)
 			end
 		ensure
 			non_void_result: Result /= Void
 		end	
 
-	format_variable_name (name: STRING): STRING is
+	formatted_variable_name (name: STRING): STRING is
 			-- Format `name' to Eiffel conventions
 		require
 			non_void_name: name /= Void
@@ -95,12 +127,12 @@ feature -- Basic Operations
 				if i > 0 then
 					container := name.substring (1, i - 1)
 					nested := name.substring (i + 1, name.count)
-					Result := format_type_name (nested) + "_IN_" + format_type_name (container)
+					Result := full_formatted_type_name (nested) + "_IN_" + full_formatted_type_name (container)
 				else
 					Result := clone (name)
 					if Result.item (name.count) = ']' then
 						Result.keep_head (Result.count - 2)
-						Result := "array_" + format_type_name (Result)
+						Result := "array_" + full_formatted_type_name (Result)
 					end
 					if Result.item (Result.count) = '&' then
 						Result.keep_head (Result.count - 1)
@@ -111,14 +143,14 @@ feature -- Basic Operations
 					if Result.item (1) = '_' then
 						Result.prepend_character ('a')
 					end
-					Result := generic_format (Result)
+					Result := eiffel_format (Result)
 				end
 			end
 		ensure
 			non_void_result: Result /= Void
 		end
 		
-	format_argument_type_name (name: STRING): STRING is
+	formatted_argument_type_name (name: STRING): STRING is
 			-- Format `name' to Eiffel conventions
 		require
 			non_void_name: name /= Void
@@ -130,9 +162,9 @@ feature -- Basic Operations
 			head.to_lower
 			if head.is_equal ("ref ") then
 				name.remove_head (4)
-				Result := format_variable_name (name)
+				Result := formatted_variable_name (name)
 			else
-				Result := format_variable_name (name)
+				Result := formatted_variable_name (name)
 			end
 		ensure
 			non_void_result: Result /= Void
@@ -140,7 +172,7 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	generic_format (s: STRING): STRING is
+	eiffel_format (s: STRING): STRING is
 			-- Format from CamelCase to eiffel_case
 		require
 			non_void_value: s /= Void

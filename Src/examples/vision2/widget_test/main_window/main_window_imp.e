@@ -84,9 +84,9 @@ feature {NONE}-- Initialization
 			create test_class_display
 			create flat_short_display_parent
 			create flat_short_display
-			create l_horizontal_box_6
+			create search_parent_box
 			create l_frame_1
-			create l_horizontal_box_7
+			create l_horizontal_box_6
 			create search_field
 			create search_button
 			create match_case_button
@@ -153,13 +153,13 @@ feature {NONE}-- Initialization
 			l_horizontal_box_5.extend (test_class_display)
 			main_notebook.extend (flat_short_display_parent)
 			flat_short_display_parent.extend (flat_short_display)
-			flat_short_display_parent.extend (l_horizontal_box_6)
-			l_horizontal_box_6.extend (l_frame_1)
-			l_frame_1.extend (l_horizontal_box_7)
-			l_horizontal_box_7.extend (search_field)
-			l_horizontal_box_7.extend (search_button)
-			l_horizontal_box_7.extend (match_case_button)
-			l_horizontal_box_6.extend (l_frame_2)
+			flat_short_display_parent.extend (search_parent_box)
+			search_parent_box.extend (l_frame_1)
+			l_frame_1.extend (l_horizontal_box_6)
+			l_horizontal_box_6.extend (search_field)
+			l_horizontal_box_6.extend (search_button)
+			l_horizontal_box_6.extend (match_case_button)
+			search_parent_box.extend (l_frame_2)
 			l_frame_2.extend (l_cell_3)
 			l_cell_3.extend (modify_text_size)
 			
@@ -245,15 +245,15 @@ feature {NONE}-- Initialization
 			object_editor.set_border_width (3)
 			padding_cell.set_minimum_width (180)
 			test_class_display.disable_edit
-			flat_short_display_parent.disable_item_expand (l_horizontal_box_6)
+			flat_short_display_parent.disable_item_expand (search_parent_box)
 			flat_short_display.disable_edit
-			l_horizontal_box_6.disable_item_expand (l_frame_2)
+			search_parent_box.disable_item_expand (l_frame_2)
 			l_frame_1.set_text ("Search")
-			l_horizontal_box_7.set_padding_width (10)
-			l_horizontal_box_7.set_border_width (2)
-			l_horizontal_box_7.disable_item_expand (search_field)
-			l_horizontal_box_7.disable_item_expand (search_button)
-			l_horizontal_box_7.disable_item_expand (match_case_button)
+			l_horizontal_box_6.set_padding_width (10)
+			l_horizontal_box_6.set_border_width (2)
+			l_horizontal_box_6.disable_item_expand (search_field)
+			l_horizontal_box_6.disable_item_expand (search_button)
+			l_horizontal_box_6.disable_item_expand (match_case_button)
 			search_field.set_text ("Text to be searched")
 			search_field.set_minimum_width (120)
 			search_button.set_text ("Search")
@@ -308,7 +308,7 @@ feature {NONE} -- Implementation
 	l_horizontal_separator_1, l_horizontal_separator_2: EV_HORIZONTAL_SEPARATOR
 	l_horizontal_box_1, main_notebook_properties_item, horizontal_spacing_box, l_horizontal_box_2, 
 	l_horizontal_box_3, main_notebook_tests, l_horizontal_box_4, l_horizontal_box_5, 
-	l_horizontal_box_6, l_horizontal_box_7: EV_HORIZONTAL_BOX
+	search_parent_box, l_horizontal_box_6: EV_HORIZONTAL_BOX
 	l_tool_bar_1, l_tool_bar_2, l_tool_bar_3, l_tool_bar_4: EV_TOOL_BAR
 	generate_button: EV_TOOL_BAR_BUTTON
 	l_cell_1, l_cell_2, widget_selector_parent, left_spacing_cell, top_spacing_cell, 

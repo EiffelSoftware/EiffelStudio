@@ -151,8 +151,8 @@ rt_private void eif_interp_bit_operations (void);	/* execute bit operations on i
 rt_private void eif_interp_basic_operations (void);	/* execute basic operations on basic types */
 
 /* Assertion checking */
-rt_private void icheck_inv(char *obj, struct stochunk *scur, struct item *stop, int where);				/* Invariant check */
-rt_private void irecursive_chkinv(int dtype, char *obj, struct stochunk *scur, struct item *stop, int where);		/* Recursive invariant check */
+rt_private void icheck_inv(EIF_REFERENCE obj, struct stochunk *scur, struct item *stop, int where);				/* Invariant check */
+rt_private void irecursive_chkinv(int dtype, EIF_REFERENCE obj, struct stochunk *scur, struct item *stop, int where);		/* Recursive invariant check */
 
 /* Getting constants */
 rt_private uint32 get_uint32(void);			/* Get an unsigned int32 */
@@ -160,7 +160,7 @@ rt_private EIF_DOUBLE get_double(void);			/* Get a EIF_DOUBLE constant */
 rt_private long get_long(void);				/* Get a long constant */
 rt_private EIF_INTEGER_64 get_int64(void);		/* Get an INTEGER_64 constant */
 rt_private short get_short(void);				/* Get a short constant */
-rt_private short get_compound_id(char *obj, short dtype);			/* Get a compound type id */
+rt_private short get_compound_id(EIF_REFERENCE obj, short dtype);			/* Get a compound type id */
 
 /* Interpreter interface */
 rt_public void exp_call(void);				/* Sets IC before calling interpret */ /* %%ss undefine */
@@ -178,7 +178,7 @@ rt_private void address(int32 fid, int stype, int for_rout_obj);					/* Address 
 rt_private void assign(long offset, uint32 type);									/* Assignment in an attribute */
 
 /* Calling protocol */
-rt_private void init_var(struct item *ptr, long int type, char *current_ref); /* Initialize to 0 a variable entity */
+rt_private void init_var(struct item *ptr, long int type, EIF_REFERENCE current_ref); /* Initialize to 0 a variable entity */
 rt_private void init_registers(void);			/* Intialize registers in callee */
 rt_private void allocate_registers(void);		/* Allocate the register array */
 rt_shared void sync_registers(struct stochunk *stack_cur, struct item *stack_top); /* Resynchronize the register array */
@@ -292,7 +292,7 @@ rt_public void metamorphose_top()
 			break;
 		case SK_POINTER:
 			new_obj = RTLN(egc_point_ref_dtype);
-			*(char **) new_obj = last->it_ptr;
+			*(EIF_REFERENCE *) new_obj = last->it_ptr;
 			break;
 		case SK_REF:			/* Had to do this for bit operations */
 			new_obj = last->it_ref;
@@ -511,7 +511,7 @@ rt_private void interpret(int flag, int where)
 				/* Put pointer to 'result' in 'PResult' */
 
 				/* MTOG = MT Once Get */
-			if (MTOG((char *),EIF_once_values[once_key], PResult))
+			if (MTOG((EIF_REFERENCE *),EIF_once_values[once_key], PResult))
 			{
 				/* Already executed. 'PResult' points to result */
 
@@ -623,12 +623,12 @@ rt_private void interpret(int flag, int where)
 
 		/* Expanded clone of arguments (if any) */
 		while (*IC++ != BC_NO_CLONE_ARG) {
-			char *ref;
+			EIF_REFERENCE ref;
 
 			code = get_short();		/* Get the argument number to clone */
 			last = arg(code);
 			ref = last->it_ref;
-			if (ref == (char *) 0)
+			if (ref == NULL)
 				xraise(EN_VEXP);	/* Void assigned to expanded */
 			switch (last->type & SK_HEAD) {
 			case SK_REF:			/* Lovely comment */
@@ -1065,9 +1065,9 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_REXP_ASSIGN\n");
 #endif
-		{	char *ref = opop()->it_ref;
+		{	EIF_REFERENCE ref = opop()->it_ref;
 
-			if (ref == (char *) 0)
+			if (ref == NULL)
 				xraise(EN_VEXP);	/* Void assigned to expanded */
 			eif_std_ref_copy(ref, iresult->it_ref);
 
@@ -1120,9 +1120,9 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_LEXP_ASSIGN\n");
 #endif
-		{	char *ref = opop()->it_ref;
+		{	EIF_REFERENCE ref = opop()->it_ref;
 
-			if (ref == (char *) 0)
+			if (ref == NULL)
 				xraise(EN_VEXP);	/* Void assigned to expanded */
 			code = get_short();		/* Get the local # (from 1 to locnum) */
 			eif_std_ref_copy(ref, loc(code)->it_ref);		/* Copy */
@@ -1173,10 +1173,10 @@ rt_private void interpret(int flag, int where)
 #endif
 		{
 			/* struct ac_info *info; */ /* %%ss removed */
-			char *ref;
+			EIF_REFERENCE ref;
 
 			ref = opop()->it_ref;		/* Expression type */
-			if (ref == (char *) 0)
+			if (ref == (EIF_REFERENCE) 0)
 				xraise(EN_VEXP);		/* Void assigned to expanded */
 			offset = get_long();		/* Get the feature id */
 			code = get_short();			/* Get the static type */
@@ -1195,11 +1195,11 @@ rt_private void interpret(int flag, int where)
 #endif
 		{
 			/* struct ac_info *info; */ /* %%ss removed */
-			char *ref;
+			EIF_REFERENCE ref;
 			int32 origin, ooffset;
 
 			ref = opop()->it_ref;		/* Expression type */
-			if (ref == (char *) 0)
+			if (ref == (EIF_REFERENCE) 0)
 				xraise(EN_VEXP);		/* Void assigned to expanded */
 			origin = get_long();		/* Get the origin class id */
 			ooffset = get_long();		/* Get the offset in origin */
@@ -1233,7 +1233,7 @@ rt_private void interpret(int flag, int where)
 		type = get_compound_id(MTC icurrent->it_ref,(short) type);
 
 		if (!RTRA(type, last->it_ref))
-			iresult->it_ref = (char *) 0;
+			iresult->it_ref = (EIF_REFERENCE) 0;
 		else
 			iresult->it_ref = last->it_ref;
 
@@ -1262,7 +1262,7 @@ rt_private void interpret(int flag, int where)
 		type = get_compound_id(MTC icurrent->it_ref, (short)type);
 
 		if (!RTRA(type, last->it_ref))
-			loc(code)->it_ref = (char *) 0;
+			loc(code)->it_ref = (EIF_REFERENCE) 0;
 		else
 			loc(code)->it_ref = last->it_ref;
 		break;
@@ -1287,7 +1287,7 @@ rt_private void interpret(int flag, int where)
 			type = get_compound_id(MTC icurrent->it_ref,(short)type);
 
 			if (!RTRA(type, last->it_ref))
-				last->it_ref = (char *) 0;
+				last->it_ref = (EIF_REFERENCE) 0;
 			assign(RTWA(code, offset, icur_dtype), meta);
 		}
 		break;
@@ -1313,7 +1313,7 @@ rt_private void interpret(int flag, int where)
 			type = get_compound_id(MTC icurrent->it_ref,(short)type);
 
 			if (!RTRA(type, last->it_ref))
-				last->it_ref = (char *) 0;
+				last->it_ref = (EIF_REFERENCE) 0;
 			assign(RTWPA(origin, ooffset, icur_dtype), meta);
 		}
 		break;
@@ -1325,7 +1325,7 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_CLONE\n");
 #endif
-		{	char *ref;
+		{	EIF_REFERENCE ref;
 			unsigned long stagval;
 	
 			stagval = tagval;
@@ -1355,7 +1355,7 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_VOID\n");
 #endif
-		otop()->it_ref = (char *) 0;
+		otop()->it_ref = (EIF_REFERENCE) 0;
 		break;
 	
 	/*
@@ -1540,7 +1540,7 @@ rt_private void interpret(int flag, int where)
 #endif
 		offset = get_long();	/* Number of keys */
 		if (offset == 0L)
-			code = WDBG(icur_dtype, (char *) 0);		/* No debug key */
+			code = WDBG(icur_dtype, NULL);		/* No debug key */
 		else {
 			int i;
 			int length;
@@ -1574,13 +1574,13 @@ rt_private void interpret(int flag, int where)
 		dprintf(2)("BC_RCREATE\n");
 #endif
 		{
-			char *new_obj;						/* New object */
+			EIF_REFERENCE new_obj;						/* New object */
 			unsigned long stagval;
 			short has_args, has_open, has_closed;
 			struct item *addr, *true_addr, *aargs, *aopen, *aclosed;
-			char *args, *open, *closed;
+			EIF_REFERENCE args, open, closed;
 
-			args = open = closed = (char *) 0;
+			args = open = closed = (EIF_REFERENCE) 0;
 			has_args = get_short(); /* Do we have an argument tuple? */
 			has_open = get_short(); /* Do we have an open map array? */
 			has_closed = get_short(); /* Do we have a closed map array? */
@@ -1591,17 +1591,17 @@ rt_private void interpret(int flag, int where)
 			if (has_closed)
 			{
 				aclosed = opop();
-				closed = (char *) (aclosed->it_ref);
+				closed = (EIF_REFERENCE) (aclosed->it_ref);
 			}
 			if (has_open)
 			{
 				aopen = opop();
-				open = (char *) (aopen->it_ref);
+				open = (EIF_REFERENCE) (aopen->it_ref);
 			}
 			if (has_args)
 			{
 				aargs = opop();
-				args = (char *) (aargs->it_ref);
+				args = (EIF_REFERENCE) (aargs->it_ref);
 			}
 			stagval = tagval;
 				/* Create new object */
@@ -1635,7 +1635,7 @@ rt_private void interpret(int flag, int where)
 
 		if (*IC == BC_BIT)
 		{
-			char  *new_obj;		/* New bit object created */
+			EIF_REFERENCE new_obj;		/* New bit object created */
 			uint32 realcount;	/* Real bit count */
 
 			++IC;
@@ -1707,7 +1707,7 @@ rt_private void interpret(int flag, int where)
 		 * creation routine, so it's useless to resynchronize registers--RAM.
 		 */
 		{
-			char *new_obj;						/* New object */
+			EIF_REFERENCE new_obj;						/* New object */
 			unsigned long stagval;
 
 			stagval = tagval;
@@ -1923,7 +1923,7 @@ rt_private void interpret(int flag, int where)
 
 			string = IC;					/* Get the feature name */
 			IC += strlen((char *) IC) + 1;
-			if (otop()->it_ref == (char *) 0)/* Called on a void reference? */
+			if (otop()->it_ref == (EIF_REFERENCE) 0)/* Called on a void reference? */
 				eraise((char *) string, EN_VOID);	/* Yes, raise exception */
 			origin = get_long();			/* Get the origin class id */
 			offset = get_long();			/* Get the offset in origin */
@@ -2053,7 +2053,7 @@ rt_private void interpret(int flag, int where)
 #endif
 		last = otop();
 		last->type = SK_POINTER;	/* So the EIF_OBJECT will be ignored by GC */
-		last->it_ref = (char *) RTHP(last->it_ref);
+		last->it_ref = (EIF_REFERENCE) RTHP(last->it_ref);
 		break;
 
 	/* 
@@ -2301,7 +2301,7 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 	dprintf(2)("BC_STANDARD_EQUAL\n");
 #endif
-		{	char *ref;
+		{	EIF_REFERENCE ref;
 
 			ref = opop()->it_ref;
 			last = otop();
@@ -2318,7 +2318,7 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 	dprintf(2)("BC_STD_EQUAL\n");
 #endif
-		{	char *bit;
+		{	EIF_REFERENCE bit;
 
 			bit = opop()->it_bit;
 			last = otop();
@@ -2424,7 +2424,7 @@ rt_private void interpret(int flag, int where)
 
 				last = oitem(value_offset);
 				last->type = SK_POINTER;
-				last->it_ref = (char *) (icurrent->it_ref+offset);
+				last->it_ref = (EIF_REFERENCE) (icurrent->it_ref+offset);
 				break;
 			default:
 				eif_panic(MTC "illegal address access");
@@ -2512,8 +2512,8 @@ rt_private void interpret(int flag, int where)
 #endif
 		{
 			long nbr_of_items;
-			char *new_obj;
-			char *sp_area;
+			EIF_REFERENCE new_obj;
+			EIF_REFERENCE sp_area;
 			short stype, dtype, feat_id;
 			unsigned long stagval;
 			int curr_pos = 0;
@@ -2547,7 +2547,7 @@ rt_private void interpret(int flag, int where)
 			if (tagval != stagval)
 				sync_registers(MTC scur, stop); /* If calls melted make of array */ 
 		
-			sp_area = *(char **) new_obj;
+			sp_area = *(EIF_REFERENCE *) new_obj;
 			while ((curr_pos++) != nbr_of_items) {
 				/* Fill the special area with the expressions
 				* for the manifest array.
@@ -2574,8 +2574,8 @@ rt_private void interpret(int flag, int where)
 						break;
 					case SK_REF:
 						/* No need to call RTAS as the area is the last object allocated and is thus in the NEW set */
-						*(char **) sp_area = it->it_ref;
-						sp_area += sizeof(char *);
+						*(EIF_REFERENCE *) sp_area = it->it_ref;
+						sp_area += sizeof(EIF_REFERENCE);
 						break;
 					case SK_INT8:
 						*(EIF_INTEGER_8 *) sp_area = it->it_int8;
@@ -2602,7 +2602,7 @@ rt_private void interpret(int flag, int where)
 						sp_area += sizeof(EIF_DOUBLE);
 						break;
 					case SK_POINTER:
-						*(char **) sp_area = it->it_ptr;
+						*(EIF_POINTER *) sp_area = it->it_ptr;
 						sp_area += sizeof(fnptr);
 						break;
 					default:
@@ -2627,8 +2627,8 @@ rt_private void interpret(int flag, int where)
 		{
 			int32 origin, ooffset;
 			long nbr_of_items;
-			char *new_obj;
-			char *sp_area;
+			EIF_REFERENCE new_obj;
+			EIF_REFERENCE sp_area;
 			short dtype;
 			unsigned long stagval;
 			int curr_pos = 0;
@@ -2660,7 +2660,7 @@ rt_private void interpret(int flag, int where)
 			if (tagval != stagval)
 				sync_registers(MTC scur, stop); /* If calls melted make of array */ 
 		
-			sp_area = *(char **) new_obj;
+			sp_area = *(EIF_REFERENCE *) new_obj;
 			while ((curr_pos++) != nbr_of_items) {
 				/* Fill the special area with the expressions
 				* for the manifest array.
@@ -2686,8 +2686,8 @@ rt_private void interpret(int flag, int where)
 						break;
 					case SK_REF:
 						/* No need to call RTAS as the area is the last object allocated and is thus in the NEW set */
-						*(char **) sp_area = it->it_ref;
-						sp_area += sizeof(char *);
+						*(EIF_REFERENCE *) sp_area = it->it_ref;
+						sp_area += sizeof(EIF_REFERENCE);
 						break;
 					case SK_INT8:
 						*(EIF_INTEGER_8 *) sp_area = it->it_int8;
@@ -2714,7 +2714,7 @@ rt_private void interpret(int flag, int where)
 						sp_area += sizeof(EIF_DOUBLE);
 						break;
 					case SK_POINTER:
-						*(char **) sp_area = it->it_ptr;
+						*(EIF_POINTER *) sp_area = it->it_ptr;
 						sp_area += sizeof(fnptr);
 						break;
 					default:
@@ -2802,8 +2802,8 @@ rt_private void interpret(int flag, int where)
 		dprintf(2)("BC_END_STRIP\n");
 #endif
 		{	long nbr_of_items, temp;
-			char **stripped;
-			char *array;
+			EIF_REFERENCE *stripped;
+			EIF_REFERENCE array;
 			short d_type; /* %%ss removed , s_type; */
 			unsigned long stagval;
 
@@ -2811,8 +2811,8 @@ rt_private void interpret(int flag, int where)
 			d_type = get_short();           /* Get the dynamic type */
 			nbr_of_items = get_long();
 			temp = nbr_of_items;
-			stripped = (char **) cmalloc(sizeof(char *)*nbr_of_items);
-			if (stripped == (char **) 0) 
+			stripped = (EIF_REFERENCE *) cmalloc(sizeof(EIF_REFERENCE) * nbr_of_items);
+			if (stripped == NULL)
 				enomem(MTC_NOARG);
 			while (nbr_of_items--) {
 				last = opop();
@@ -2821,7 +2821,7 @@ rt_private void interpret(int flag, int where)
 			array = striparr(icurrent->it_ref, d_type, stripped, temp);
 			if (tagval != stagval)
 				sync_registers(MTC scur, stop); /* If G.C calls melted dispose */
-			xfree ((char *) stripped);
+			xfree ((EIF_REFERENCE) stripped);
 			last = iget();
 			last->type = SK_REF;
 			last->it_ref = array;
@@ -2836,7 +2836,7 @@ rt_private void interpret(int flag, int where)
 		dprintf(2)("BC_STRING\n");
 #endif
 		{
-			char *str_obj;			  /* String object created */
+			EIF_REFERENCE str_obj;			  /* String object created */
 			unsigned long stagval;
 			int32 length;
  
@@ -2871,7 +2871,7 @@ rt_private void interpret(int flag, int where)
 		dprintf(2)("BC_BIT\n");
 #endif
 		{
-			char  *new_obj;		/* New bit object created */
+			EIF_REFERENCE new_obj;		/* New bit object created */
 			uint32 bcount;		/* Bit count */
 			uint32 realcount;	/* Real bit count */
 			int nb_uint32;
@@ -3284,7 +3284,7 @@ rt_private void interpret(int flag, int where)
 #endif
 
 			string = feature_name;
-			if (otop()->it_ref == (char *) 0) /* Called on a void reference? */
+			if (otop()->it_ref == (EIF_REFERENCE) 0) /* Called on a void reference? */
 				eraise(string, EN_VOID); 	/* Yes, raise exception */
 			if (tyc_command == BC_SEP_FEATURE_INV || tyc_command == BC_SEP_EXTERN_INV) {
 				offset = get_long(); 		/* Get the feature id */		
@@ -3443,7 +3443,7 @@ rt_private void interpret(int flag, int where)
 			dprintf(2)("	class=%s, feature=%s\n", class_name, feature_name);
 #endif
 			string = feature_name;
-			if (otop()->it_ref == (char *) 0)
+			if (otop()->it_ref == (EIF_REFERENCE) 0)
 				eraise(string, EN_VOID);
 			if (tyc_command == BC_SEP_ATTRIBUTE_INV) {
 				offset = get_long();  			/* Get feature id */ 
@@ -3686,7 +3686,7 @@ char *inv_mark_table = (char *) 0;	/* Marking table to avoid checking the same
 									 */ /* %%ss mt */
 #endif /* EIF_THREADS */
 
-rt_private void icheck_inv(char *obj, struct stochunk *scur, struct item *stop, int where)          
+rt_private void icheck_inv(EIF_REFERENCE obj, struct stochunk *scur, struct item *stop, int where)          
 					  		/* Current chunk (stack context) */
 							/* To save stack context */
 		  					/* Invariant after or before */
@@ -3709,7 +3709,7 @@ rt_private void icheck_inv(char *obj, struct stochunk *scur, struct item *stop, 
 	}
 }
 
-rt_private void irecursive_chkinv(int dtype, char *obj, struct stochunk *scur, struct item *stop, int where)
+rt_private void irecursive_chkinv(int dtype, EIF_REFERENCE obj, struct stochunk *scur, struct item *stop, int where)
 		  
 		  
 					  		/* Current chunk (stack context) */
@@ -5133,7 +5133,7 @@ rt_private void interp_access(int fid, int stype, uint32 type)
 	 * attribute replace it on the stack.
 	 */
 
-	char *current;							/* Current object */
+	EIF_REFERENCE current;							/* Current object */
 	/* struct ac_info *attrinfo;*/ /* Call info for attribute */ /* %%ss removed */
 	struct item *last;						/* Value on top of the stack */
 	long offset;							/* Attribute offset */
@@ -5153,8 +5153,8 @@ rt_private void interp_access(int fid, int stype, uint32 type)
 	case SK_FLOAT: last->it_float = *(EIF_REAL *) (current + offset); break;
 	case SK_DOUBLE: last->it_double = *(EIF_DOUBLE *) (current + offset); break;
 	case SK_BIT: last->it_bit = (current + offset); break;
-	case SK_POINTER: last->it_ptr = *(char **) (current + offset); break;
-	case SK_REF: last->it_ref = *(char **) (current + offset); break;
+	case SK_POINTER: last->it_ptr = *(EIF_POINTER *) (current + offset); break;
+	case SK_REF: last->it_ref = *(EIF_REFERENCE *) (current + offset); break;
 	case SK_EXP: last->it_ref = (current + offset); break;
 	default:
 		eif_panic(MTC "unknown attribute type");
@@ -5173,7 +5173,7 @@ rt_private void interp_paccess(int32 origin, int32 f_offset, uint32 type)
 	 * replace it on the stack.
 	 */
 
-	char *current;							/* Current object */
+	EIF_REFERENCE current;							/* Current object */
 	/* struct ac_info *attrinfo; */	/* Call info for attribute */ /* %%ss removed */
 	struct item *last;						/* Value on top of the stack */
 	long offset;							/* Attribute offset */
@@ -5193,8 +5193,8 @@ rt_private void interp_paccess(int32 origin, int32 f_offset, uint32 type)
 	case SK_FLOAT: last->it_float = *(EIF_REAL *) (current + offset); break;
 	case SK_DOUBLE: last->it_double = *(EIF_DOUBLE *) (current + offset); break;
 	case SK_BIT: last->it_bit = (current + offset); break;
-	case SK_POINTER: last->it_ptr = *(char **) (current + offset); break;
-	case SK_REF: last->it_ref = *(char **) (current + offset); break;
+	case SK_POINTER: last->it_ptr = *(EIF_POINTER *) (current + offset); break;
+	case SK_REF: last->it_ref = *(EIF_REFERENCE *) (current + offset); break;
 	case SK_EXP: last->it_ref = (current + offset); break;
 	default:
 		eif_panic(MTC "unknown attribute type");
@@ -5212,7 +5212,7 @@ rt_private void assign(long offset, uint32 type)
 	
 	EIF_GET_CONTEXT
 	struct item *last;				/* Value on top of the stack */
-	char *ref;
+	EIF_REFERENCE ref;
 
 	last = opop();					/* Value to be assigned */
 
@@ -5242,7 +5242,7 @@ rt_private void assign(long offset, uint32 type)
 		}
 		break;
 	case SK_DOUBLE: *(EIF_DOUBLE *) (i->it_ref + offset) = l->it_double; break;
-	case SK_POINTER: *(char **) (i->it_ref + offset) = l->it_ptr; break;
+	case SK_POINTER: *(EIF_POINTER *) (i->it_ref + offset) = l->it_ptr; break;
 	case SK_BIT: b_copy(l->it_bit, i->it_ref + offset); break;
 	case SK_REF:
 		/* Perform aging tests: if the reference is new and is assigned to an
@@ -5252,7 +5252,7 @@ rt_private void assign(long offset, uint32 type)
 		 */
 		ref = icurrent->it_ref;
 		RTAR(last->it_ref, ref);
-		*(char **) (ref + offset) = last->it_ref;
+		*(EIF_REFERENCE *) (ref + offset) = last->it_ref;
 		break;
 	default: eif_panic(MTC unknown_type);
 	}
@@ -5262,7 +5262,7 @@ rt_private void assign(long offset, uint32 type)
 #undef l
 }
 
-void call_disp(uint32 dtype, char *object)
+void call_disp(uint32 dtype, EIF_REFERENCE object)
 {
 	/* Save the interpreter counter and restore it after the dispose
 	 * routine for `object' with dynamic type `dtype'.
@@ -5400,7 +5400,7 @@ rt_private uint32 get_uint32(void)
 	return *(uint32 *) &xuint32;	  /* Correctly aligned by union */
 }
 
-rt_private short get_compound_id(char *Current, short dtype)
+rt_private short get_compound_id(EIF_REFERENCE Current, short dtype)
 {
 	/* Get array of short ints and convert it to a compound id. */
 	EIF_GET_CONTEXT
@@ -5472,7 +5472,7 @@ rt_private short get_compound_id(char *Current, short dtype)
  * Calling protocol
  */
 
-rt_private void init_var(struct item *ptr, long int type, char *current_ref)
+rt_private void init_var(struct item *ptr, long int type, EIF_REFERENCE current_ref)
 {
 	/* Initializes variable 'ptr' to be of type 'type' */
 	short dtype;
@@ -5489,14 +5489,14 @@ rt_private void init_var(struct item *ptr, long int type, char *current_ref)
 	case SK_INT64:		ptr->it_int64 = (EIF_INTEGER_64) 0; break;
 	case SK_FLOAT:		ptr->it_float = (EIF_REAL) 0; break;
 	case SK_DOUBLE:		ptr->it_double = (EIF_DOUBLE) 0; break;
-	case SK_BIT:		ptr->it_ref = (char *)0; break;
+	case SK_BIT:		ptr->it_ref = (EIF_REFERENCE)0; break;
 	case SK_EXP:		dtype = get_short ();
 						dtype = get_compound_id(MTC current_ref, (short) dtype);
 						ptr->type = (type & EO_UPPER) | ((uint32) dtype);
-						ptr->it_ref = (char *) 0;
+						ptr->it_ref = (EIF_REFERENCE) 0;
 						break;
-	case SK_REF:		ptr->it_ref = (char *) 0; break;
-	case SK_POINTER:	ptr->it_ptr = (char *) 0; break;
+	case SK_REF:		ptr->it_ref = (EIF_REFERENCE) 0; break;
+	case SK_POINTER:	ptr->it_ptr = (EIF_POINTER) 0; break;
 	case SK_VOID:		break;
 	default:			eif_panic(MTC unknown_type);
 	}
@@ -5516,7 +5516,7 @@ rt_private void init_registers(void)
 	register2 struct item **reg;	/* Pointer in register array */
 	register3 struct item *last;	/* Initialization of stack frame */
 	struct opstack op_context;		/* To save stack's context */
-	char *current;					/* Saved value of current */
+	EIF_REFERENCE current;					/* Saved value of current */
 
 	allocate_registers(MTC);			/* Make sure array is big enough */
 
@@ -6035,7 +6035,7 @@ rt_private void wipe_out(register struct stochunk *chunk)
 			chunk != (struct stochunk *) 0; 
 			chunk = next, next = chunk ? chunk->sk_next : chunk
 	)
-		xfree((char *) chunk);
+		xfree((EIF_REFERENCE) chunk);
 	}
 
 /*
@@ -6146,11 +6146,11 @@ rt_public struct item *ivalue(int code, int num, uint32 start)
 			case SK_INT64: result_item->it_int64 = *((EIF_INTEGER_64 *)(result_item->it_addr)); break;
 			case SK_FLOAT: result_item->it_float = *((EIF_REAL *)(result_item->it_addr)); break;
 			case SK_DOUBLE: result_item->it_double = *((EIF_DOUBLE *)(result_item->it_addr)); break;
-			case SK_POINTER: result_item->it_ptr = *((char **)(result_item->it_addr)); break;
-			case SK_BIT: result_item->it_bit = *((char **)(result_item->it_addr)); break;
+			case SK_POINTER: result_item->it_ptr = *((EIF_POINTER *)(result_item->it_addr)); break;
+			case SK_BIT: result_item->it_bit = *((EIF_REFERENCE *)(result_item->it_addr)); break;
 			case SK_EXP:
 			case SK_REF:
-				result_item->it_ref = *((char **)(result_item->it_addr)); break;
+				result_item->it_ref = *((EIF_REFERENCE *)(result_item->it_addr)); break;
 			case SK_VOID:
 				/* nothing to do*/
 				break;

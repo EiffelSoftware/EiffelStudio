@@ -37,7 +37,8 @@ feature -- Element change
 			-- Do not insert `v' if it was the last inserted item.
 			-- Move the cursor to the last inserted stone.
 		do
-			if v /= Void and (empty or else not equal (v, last)) then
+			if v /= Void and
+					(empty or else not equal (v, last) or else not equal (v.signature, item.signature)) then
 				twl_extend (v);
 				if count > capacity then
 					start; remove

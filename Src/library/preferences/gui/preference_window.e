@@ -238,10 +238,14 @@ feature {NONE} -- Execution
 			it: RESOURCE_LIST_ITEM
 			edition_window_x: INTEGER
 			edition_window_y: INTEGER
+			edition_window_width: INTEGER
+			edition_window_height: INTEGER
 			column2_width: INTEGER
 			column1_width: INTEGER
+			rl_bottom_y: INTEGER
 			box: SELECTION_BOX
 			gtype: GRAPHICAL_RESOURCE_TYPE
+			a_screen: EV_SCREEN
 		do
 			clear
 			it ?= l_item
@@ -261,10 +265,23 @@ feature {NONE} -- Execution
 			
 			column1_width := right_list.column_width (1)
 			column2_width := right_list.column_width (2)
-			edition_window_x := right_list.screen_x + column1_width + 3
-			edition_window_y := right_list.screen_y + it.row_number * right_list.row_height + 1
+			
+			edition_window_width := (column2_width + 1).max (current_edition_window.width)
+			edition_window_height := right_list.row_height
+			
+			create a_screen
+			edition_window_x := right_list.screen_x + column1_width
+			edition_window_x := edition_window_x.min (a_screen.width - edition_window_width).max (0)
+			
+				--| FIXME IEK Need to be able to query scrollbar values in Vision2 lists
+			rl_bottom_y := right_list.screen_y + right_list.height - (right_list.row_height * 2)
+				--| Make sure popup dialog stays within preference window area
+			edition_window_y := (right_list.screen_y + (it.row_number * right_list.row_height + (edition_window_height - right_list.row_height))).min (rl_bottom_y)
+			
+			edition_window_y := edition_window_y.min (a_screen.height - edition_window_height)
+			
 			current_edition_window.set_position (edition_window_x, edition_window_y)
-			current_edition_window.set_size (column2_width - 2, right_list.row_height - 5)
+			current_edition_window.set_size (edition_window_width, edition_window_height)
 			current_edition_window.show_relative_to_window (Current)
 			end
 		end

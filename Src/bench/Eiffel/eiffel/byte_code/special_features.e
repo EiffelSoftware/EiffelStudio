@@ -184,6 +184,12 @@ feature -- C special code generation
 				target.print_register
 			when as_integer_32_type, to_integer_32_type then
 				buffer.put_string ("(EIF_INTEGER_32) ")
+				if target.c_type.is_pointer then
+						-- Special code generation for conversion from POINTER to INTEGER without
+						-- raising a warning at the C compilation level on platforms where the pointer
+						-- size is different from the size of an INTEGER_32.
+					buffer.put_string ("(rt_int_ptr) ")
+				end
 				target.print_register
 			when as_integer_64_type, to_integer_64_type then
 				buffer.put_string ("(EIF_INTEGER_64) ")
@@ -282,6 +288,8 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (to_natural_16_type, feature {PREDEFINED_NAMES}.to_natural_16_name_id)
 			Result.put (to_natural_32_type, feature {PREDEFINED_NAMES}.to_natural_32_name_id)
 			Result.put (to_natural_64_type, feature {PREDEFINED_NAMES}.to_natural_64_name_id)
+			Result.put (to_real_64_type, feature {PREDEFINED_NAMES}.to_real_64_name_id)
+			Result.put (to_real_32_type, feature {PREDEFINED_NAMES}.to_real_32_name_id)
 			Result.put (to_real_64_type, feature {PREDEFINED_NAMES}.to_double_name_id)
 			Result.put (to_real_32_type, feature {PREDEFINED_NAMES}.to_real_name_id)
 			Result.put (offset_type, feature {PREDEFINED_NAMES}.infix_plus_name_id)
@@ -359,6 +367,8 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (to_natural_16_type, feature {PREDEFINED_NAMES}.to_natural_16_name_id)
 			Result.put (to_natural_32_type, feature {PREDEFINED_NAMES}.to_natural_32_name_id)
 			Result.put (to_natural_64_type, feature {PREDEFINED_NAMES}.to_natural_64_name_id)
+			Result.put (to_real_64_type, feature {PREDEFINED_NAMES}.to_real_64_name_id)
+			Result.put (to_real_32_type, feature {PREDEFINED_NAMES}.to_real_32_name_id)
 			Result.put (to_real_64_type, feature {PREDEFINED_NAMES}.to_double_name_id)
 			Result.put (to_real_32_type, feature {PREDEFINED_NAMES}.to_real_name_id)
 			Result.put (three_way_comparison_type, feature {PREDEFINED_NAMES}.three_way_comparison_name_id)

@@ -420,6 +420,13 @@ feature -- Generation constants
 			-- String corresponding to creation instruction in generated_code.
 
 	Optimal_string: STRING is "Optimal"
+	
+	item_text_string: STRING is "Item_text"
+		-- Constant used for referencing notebook item texts in XML.
+		
+	Item_pixmap_string: STRING is "Item_pixmap"
+		-- String used to represent the pixmap of the notebook tabs in the XML	
+
 
 feature -- Wizard
 
@@ -687,7 +694,6 @@ feature -- Object editor properties
 	gb_ev_progress_bar_is_segmented_tooltip: STRING is "feature `is_segmented' from EV_PROGRESS_BAR"
 	
 	select_button_text: STRING is "Select..."
-	set_with_named_file_text: STRING is "Set with named file..."
 	set_with_named_file_tooltip: STRING is "Set pixmap image with named file"
 	clear_text: STRING is "Clear"
 	clear_tooltip: STRING is "Clear pixmap image"

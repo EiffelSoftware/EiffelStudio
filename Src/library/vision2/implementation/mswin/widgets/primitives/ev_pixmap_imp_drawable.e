@@ -768,7 +768,7 @@ feature -- Delegated features
 
 invariant
 	bitmap_not_void: 
-		is_initialized implies bitmap /= Void
+		is_initialized implies internal_bitmap /= Void
 
 	bitmap_selected_in_dc:
 		is_initialized implies dc.bitmap_selected
@@ -813,6 +813,9 @@ end -- class EV_PIXMAP_IMP_DRAWABLE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.4  2000/04/20 22:48:20  pichery
+--| Improved invariant.
+--|
 --| Revision 1.3  2000/04/20 01:15:03  pichery
 --| Fixed call to an obsolete feature
 --|

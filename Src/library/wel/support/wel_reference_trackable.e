@@ -121,7 +121,7 @@ feature -- Removal
 				destroy_item
 			end
 		ensure
-			destroyed: not exists
+			destroyed: not shared implies not exists
 		end
 
 feature {NONE} -- Removal

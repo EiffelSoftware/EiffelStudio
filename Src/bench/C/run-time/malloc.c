@@ -790,7 +790,7 @@ rt_public EIF_REFERENCE sp_init (EIF_REFERENCE obj, uint32 dftype, EIF_INTEGER l
 					zone = (union overhead *) (obj + offset);
 					zone->ov_size = OVERHEAD + offset;	/* For GC */
 					zone->ov_flags = dftype | EO_EXP;	/* Expanded type */
-					(cp) (obj + OVERHEAD + offset);
+					(init) (obj + OVERHEAD + offset, obj + OVERHEAD + offset);
 				}
 				RT_GC_WEAN(obj);
 			}

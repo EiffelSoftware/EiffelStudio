@@ -1,0 +1,68 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<HTML>
+	<HEAD>
+		<TITLE>Creating a new project</TITLE>
+		<META NAME="MS-HKWD" CONTENT="New, project">
+		<META NAME="MS-HKWD" CONTENT="Creating new project">
+		<META NAME="MS-HKWD" CONTENT="Starting a new project">
+		<LINK REL=StyleSheet HREF="/default.css">
+	</HEAD>
+
+	<BODY>
+		<H1>Creating a new project</H1>
+        <p>The first thing to do to start Eiffeling is to create a project. Most
+        commands are disabled when no project is created.</p>
+        <p>When opening EiffelStudio, by default a dialog is popped up that
+        proposes to create or open a project:</p>
+        <p align="center"><IMG SRC="/images/eiffelstudio/dialogs_and_wizards/startup_dialog.png"></p>
+        <p>Under <b>Create a new project</b>, several options are
+        offered, which depend on the package of EiffelStudio you have and on the
+        platform you are on.</p>
+        <ul>
+          <li>
+            <p align="left"><b>Basic application</b> is the most basic new
+            project that can be generated. It only includes the 
+            <A HREF="/libraries/base/reference/introduction.html">base library</A> and
+            by default only creates the frame of the project. This is the ideal choice to start
+            a textual (console) application, or to discover Eiffel. Indeed, the
+            project is very light and includes only things that are essential in
+            any project. It is available on all platforms.</li>
+          <li>
+            <p align="left"><b>.NET application</b> has by default all essential
+            components to start a project targetting the Microsoft .NET
+            platform. Of course, it is only available on Windows.</li>
+          <li>
+            <p align="left"><b>Vision2 application</b> creates a new project
+            that includes the <A HREF="/libraries/vision2/reference/introduction.html">EiffelVision2 library</A>. This is the
+            perfect choice to start a platform-independent graphic application, or even any
+            graphic application, since EiffelVision2 is easier to use than
+            platform-specific libraries. This option is available on all
+            platforms and all packages.</li>
+          <li>
+            <p align="left"><b>WEL application</b> generates a project using the
+            <A HREF="/libraries/wel/reference/introduction.html">Windows Eiffel Library (WEL)</A>. This option is recommended for
+            projects needing advanced Windows features, or Windows applications
+            that are time-critical, since the graphic functionality provided
+            by WEL is more efficient than the one provided by Vision2, which on
+            the other hand provides a platform-independent abstract interface.</li>
+          <li>
+            <p align="left"><b>Wizard application</b> generates a new basic
+            wizard using the <A HREF="/libraries/wizards/reference/introduction.html">wizard library</A>. You can then extend the generated
+            wizard to fit your needs. It is available on all platforms and in
+            all packages.</li>
+        </ul>
+        <p align="left">All those options are also available in the <b>File</b>/<b>New
+        project...</b> menu. This pops up a dialog with all the options to generate
+        a new project:
+        <p align="center"><IMG SRC="/images/eiffelstudio/dialogs_and_wizards/create_a_project.png">
+        <p class="tip"><b>Tip</b>: If you checked the &quot;Don't
+        show this dialog at startup&quot; checkbox in the start-up dialog but want to get it back, you
+        can use the <A HREF="preferences_dialog_reference_change_dialogs.html">Preferences dialog</A> to reset the default value.</P>
+		<P CLASS="seealso">
+		<B>See Also</B><BR>
+					<A HREF="20_retrieving_a_project_from_an_ace_file.html">Retrieving a project from an Ace file</A><BR>
+					<A HREF="30_opening_an_existing_project.html">Opening a compiled project<A>
+		</P>
+	</BODY>
+</HTML>

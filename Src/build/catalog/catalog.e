@@ -3,28 +3,28 @@ deferred class CATALOG [T->DATA]
 
 inherit
 
-	CONSTANTS;
+	CONSTANTS
 	FORM
 		rename
 			make as form_create,
 			init_toolkit as form_init_toolkit
-		end;
+		end
 
 feature 
 
-	current_page: CAT_PAGE [T];
+	current_page: CAT_PAGE [T]
 			-- Page currently shown in catalog
 
-	pages: LINKED_LIST [like current_page];
+	pages: LINKED_LIST [like current_page]
 			-- Contains all pages in the catalog
 
 feature {COMMAND_PAGE}
 
-	button_rc: ROW_COLUMN;
+	button_rc: ROW_COLUMN
 
 feature {NONE}
 
-	page_sw: SCROLLED_W;
+	page_sw: SCROLLED_W
 
 feature 
 
@@ -45,14 +45,14 @@ feature
 			-- Create the catalog interface with `a_screen' 
 			-- as the parent.
 		do
-			form_create (a_name, a_parent);
-			create_interface;
-		end;
+			form_create (a_name, a_parent)
+			create_interface
+		end
 
 	create_interface is
 			-- Create the interface of the catalog.
 		deferred
-		end;
+		end
 
 	add_page (page: CAT_PAGE [T]) is
 			-- Add a `page' to the catalog. Also add the button to the
@@ -60,12 +60,12 @@ feature
 			-- the widgets with their corresponding name and parents) 
 			-- and attach them appropriately in the interface.
 		require
-			not_Void_page: page /= Void;
+			not_Void_page: page /= Void
 		do
-			pages.extend (page);
+			pages.extend (page)
 		ensure
 			page_has_been_added: pages.has (page)
-		end; -- add_page
+		end -- add_page
 
 	update_interface is
 			-- Update the interface by incorporating the pages 
@@ -76,65 +76,65 @@ feature
 			-- If current_page not defined then the first page
 			-- added is used by default.
 		local
-			page: CAT_PAGE [T];
-			opt_pages: LINKED_LIST [CAT_PAGE [T]];
+			page: CAT_PAGE [T]
+			opt_pages: LINKED_LIST [CAT_PAGE [T]]
 			fix_pages: LINKED_LIST [CAT_PAGE [T]]
 		do
 			if (current_page = Void) then
 				set_initial_page (pages.first)
-			end;
+			end
 			from
-				!!opt_pages.make;
-				!!fix_pages.make;
+				!! opt_pages.make
+				!! fix_pages.make
 				pages.start
 			until
 				pages.after
 			loop
-				page := pages.item;
+				page := pages.item
 				if page.is_optional then
-					opt_pages.extend (page);
+					opt_pages.extend (page)
 				else
-					fix_pages.extend (page);
-				end;
-				pages.forth;
-			end;
+					fix_pages.extend (page)
+				end
+				pages.forth
+			end
 			from 
-				fix_pages.start;
+				fix_pages.start
 			until
 				fix_pages.after
 			loop
-				page := fix_pages.item;
-				page.make_button_visible (button_rc);
+				page := fix_pages.item
+				page.make_button_visible (button_rc)
 				fix_pages.forth
-			end;
+			end
 			from
 				opt_pages.start
 			until
 				opt_pages.after
 			loop
-				page := opt_pages.item;
-				page.make_button_visible (button_rc);
+				page := opt_pages.item
+				page.make_button_visible (button_rc)
 				opt_pages.forth
-			end;
-			current_page.make_unmanaged (page_sw);
+			end
+			current_page.make_unmanaged (page_sw)
 			current_page.set_selected_symbol
 			if not current_page.empty then
-				current_page.go_i_th (1);
+				current_page.go_i_th (1)
 				current_page.update_display
 			end
-			page_sw.set_working_area (current_page);
-			current_page.manage;
-		end; -- update_interface 
+			page_sw.set_working_area (current_page)
+			current_page.manage
+		end -- update_interface 
 
 	set_initial_page (page: CAT_PAGE [T]) is
             -- Set current_page to `page', update the drawing_sw
             -- working area with `page'
         require
-            not_Void_page: page /= Void;
-            page_exists: pages.has (page);
+            not_Void_page: page /= Void
+            page_exists: pages.has (page)
         do
 			current_page := page
-		end;
+		end
 
 feature {NONE}
 
@@ -142,23 +142,23 @@ feature {NONE}
 			-- Set current_page to `page', update the drawing_sw
 			-- working area with `page'
 		require
-			not_Void_page: page /= Void;
-			page_exists: pages.has (page);
+			not_Void_page: page /= Void
+			page_exists: pages.has (page)
 			current_page_non_Void: current_page /= Void
 		do
-			current_page.hide;
-			current_page.set_symbol;
+			current_page.hide
+			current_page.set_symbol
 			page.set_selected_symbol
-			current_page := page;
-			page.unmanage;
-			page_sw.set_working_area (page);
+			current_page := page
+			page.unmanage
+			page_sw.set_working_area (page)
 			if not just_created and then not page.empty then
 					-- Refresh page correctly (ok its for motif)
-				page.go_i_th (1);
+				page.go_i_th (1)
 				page.refresh_display
-			end;
-			page.manage;
-		end;
+			end
+			page.manage
+		end
 
 feature
 
@@ -167,23 +167,23 @@ feature
 		local
 			mp: MOUSE_PTR
 		do
-			if current_page /= page then
+	--		if current_page /= page then
 				if not page.is_visible then
-					!! mp;					
-					mp.set_watch_shape;
-					page.make_unmanaged (page_sw);
+					!! mp					
+					mp.set_watch_shape
+					page.make_unmanaged (page_sw)
 					if not page.empty then
-						page.go_i_th (1);
+						page.go_i_th (1)
 						page.update_display
 					end
-					page.manage;
-					set_current_page (page, true);
+					page.manage
+					set_current_page (page, true)
 					mp.restore
 				else
-					page.show;
-					set_current_page (page, false);
-				end;
-			end
-		end; -- execute
+					page.show
+					set_current_page (page, false)
+				end
+	--		end
+		end -- execute
 
 end 

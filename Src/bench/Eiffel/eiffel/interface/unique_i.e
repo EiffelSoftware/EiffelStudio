@@ -6,7 +6,8 @@ inherit
 
 	CONSTANT_I
 		redefine
-			is_unique, check_types, equiv, value, replicated, unselected
+			is_unique, check_types, equiv, value, 
+			replicated, unselected, new_api_feature
 		end
 	
 feature 
@@ -91,6 +92,19 @@ feature
 			transfer_to (unselect);
 			unselect.set_access_in (in);
 			Result := unselect;
+		end;
+
+feature {NONE} -- Implementation
+
+	new_api_feature: E_UNIQUE is
+			-- API feature creation
+		local
+			t: TYPE_A
+		do
+			t ?= type;
+			!! Result.make (feature_name, feature_id);
+			Result.set_type (t);
+			Result.set_value (value.string_value);
 		end;
 
 end

@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 
 			create error_label.make_with_text (Warning_messages.w_Internal_error)
 			error_label.align_text_left
-			error_pixmap := clone (Pixmaps.error_pixmap)
+			error_pixmap := Pixmaps.error_pixmap.twin
 			error_pixmap.set_minimum_size (error_pixmap.width, error_pixmap.height)
 			
 			create quit_button.make_with_text_and_action ("Quit now!", agent execute_die)

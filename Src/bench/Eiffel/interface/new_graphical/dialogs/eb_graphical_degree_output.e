@@ -285,8 +285,7 @@ feature -- Output on per class
 		local
 			str: STRING
 		do
-			str := clone (a_name)
-			str.to_lower
+			str := a_name.as_lower
 			dialog.set_current_degree (str)
 			dialog.graphical_update
 		end

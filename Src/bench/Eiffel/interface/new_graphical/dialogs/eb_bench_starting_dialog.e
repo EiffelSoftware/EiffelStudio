@@ -115,7 +115,7 @@ feature {NONE} -- Initialization
 			new_project_vb.set_border_width (Layout_constants.Small_border_size)
 			new_project_vb.set_padding (Layout_constants.Default_border_size)
 			create wizard_rb.make_with_text (Interface_names.l_Use_wizard)
-			add_option_box (clone (Pixmaps.Icon_wizard_project), wizard_rb, new_project_vb)
+			add_option_box (Pixmaps.Icon_wizard_project.twin, wizard_rb, new_project_vb)
 			create_and_fill_wizards_list
 			new_project_vb.extend (wizards_list)
 			new_project_frame.extend (new_project_vb)
@@ -126,12 +126,12 @@ feature {NONE} -- Initialization
 			open_project_vb.set_border_width (Layout_constants.Small_border_size)
 			open_project_vb.set_padding (Layout_constants.Default_border_size)
 			create open_ace_file_rb.make_with_text (Interface_names.l_Use_existing_ace)
-			add_option_box (clone (Pixmaps.Icon_wizard_ace_project), open_ace_file_rb, open_project_vb)
+			add_option_box (Pixmaps.Icon_wizard_ace_project.twin, open_ace_file_rb, open_project_vb)
 
 			if show_open_project_frame then
 				create open_epr_project_rb.make_with_text (Interface_names.l_Open_an_existing_project)
 				create browse_button.make_with_text_and_action (Interface_names.b_Browse, agent open_existing_project_not_listed)
-				add_option_box_and_button (clone (Pixmaps.Icon_open_project), open_epr_project_rb, browse_button, open_project_vb)
+				add_option_box_and_button (Pixmaps.Icon_open_project.twin, open_epr_project_rb, browse_button, open_project_vb)
 				create_and_fill_compiled_projects_list
 				open_project_vb.extend (compiled_projects_list)
 			end
@@ -370,9 +370,9 @@ feature {NONE} -- Execution
 			create file_dialog
 			file_dialog.set_title (Interface_names.t_Choose_ace_file)
 			file_dialog.set_filter ("*.ace")
-			default_project_directory := clone (Eiffel_projects_directory)
+			default_project_directory := Eiffel_projects_directory
 			if default_project_directory /= Void then
-				file_dialog.set_start_directory (default_project_directory)
+				file_dialog.set_start_directory (default_project_directory.twin)
 			end
 			file_dialog.show_modal_to_window (Current)
 
@@ -631,7 +631,7 @@ feature {NONE} -- Implementation
 				until
 					entries.after
 				loop
-					extension := clone(entries.item)
+					extension := entries.item.twin
 					extension.keep_tail(4)
 	
 					if extension.is_equal (".dsc") then
@@ -677,14 +677,17 @@ feature {NONE} -- Implementation
 	create_project (directory_name: STRING; ace_file_name: STRING) is
 			-- Create a project in directory `directory_name', with ace file
 			-- `ace_file_name'.
+		require
+			directory_name_not_void: directory_name /= Void
+			ace_file_name_not_void: ace_file_name /= Void
 		local
 			cmd: EB_NEW_PROJECT_COMMAND
 			ebench_name: STRING
 			last_char: CHARACTER
 			ace_name, dir_name: STRING
 		do
-			ace_name := clone (ace_file_name)
-			dir_name := clone (directory_name)
+			ace_name := ace_file_name.twin
+			dir_name := directory_name.twin
 
 			if dir_name.count > 1 then
 				last_char := dir_name.item (dir_name.count)
@@ -697,7 +700,7 @@ feature {NONE} -- Implementation
 				cmd.create_project (dir_name, True)
 				eiffel_ace.set_file_name (ace_name)
 			else
-				ebench_name := clone (Estudio_command_name)
+				ebench_name := Estudio_command_name.twin
 				ebench_name.append (" -create %"")
 				ebench_name.append (dir_name)
 				ebench_name.append ("%" -ace %"")
@@ -743,9 +746,9 @@ feature {NONE} -- Implementation
 						result_parameters.after
 					loop
 						if (result_parameters.item @ 1).is_equal ("ace") then
-							ace_filename := clone (result_parameters.item @ 2)
+							ace_filename := result_parameters.item.item (2).twin
 						elseif (result_parameters.item @ 1).is_equal ("directory") then
-							directory_name := clone (result_parameters.item @ 2)
+							directory_name := result_parameters.item.item (2).twin
 						elseif (result_parameters.item @ 1).is_equal ("compilation") then
 							(result_parameters.item @ 2).to_lower
 							compile_project := (result_parameters.item @ 2).is_equal ("yes")

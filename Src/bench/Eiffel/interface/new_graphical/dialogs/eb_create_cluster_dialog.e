@@ -200,8 +200,7 @@ feature -- Basic operations
 			was_sensitive: BOOLEAN
 		do
 			cluster := target.cluster
-			str := clone (cluster_n)
-			str.to_lower
+			str := cluster_n.as_lower
 			cluster_entry.set_text (str)	
 			clus_list := Eiffel_universe.clusters_sorted_by_tag
 			if not clus_list.is_empty then
@@ -263,8 +262,7 @@ feature {NONE} -- Implementation
 	cluster_name: STRING is
 			-- Name of the cluster entered by the user, in lower case.
 		do
-			Result := clone (cluster_entry.text)
-			Result.to_lower
+			Result := cluster_entry.text.as_lower
 		end
 
 	file_name: FILE_NAME is
@@ -272,7 +270,7 @@ feature {NONE} -- Implementation
 		local
 			str: STRING
 		do
-			str := clone (folder_entry.text)
+			str := folder_entry.text.twin
 			create Result.make_from_string (str)
 		end
 

@@ -57,6 +57,24 @@ public:
 
 
 	/*-----------------------------------------------------------
+	Compile with piped output.
+	-----------------------------------------------------------*/
+	STDMETHODIMP compile_to_pipe( void );
+
+
+	/*-----------------------------------------------------------
+	Finalize with piped output.
+	-----------------------------------------------------------*/
+	STDMETHODIMP finalize_to_pipe( void );
+
+
+	/*-----------------------------------------------------------
+	Precompile with piped output.
+	-----------------------------------------------------------*/
+	STDMETHODIMP precompile_to_pipe( void );
+
+
+	/*-----------------------------------------------------------
 	Was last compilation successful?
 	-----------------------------------------------------------*/
 	STDMETHODIMP is_successful(  /* [out, retval] */ VARIANT_BOOL * return_value );
@@ -114,6 +132,24 @@ public:
 	Remove file locks
 	-----------------------------------------------------------*/
 	STDMETHODIMP remove_file_locks( void );
+
+
+	/*-----------------------------------------------------------
+	Output pipe's name
+	-----------------------------------------------------------*/
+	STDMETHODIMP output_pipe_name(  /* [out, retval] */ BSTR * return_value );
+
+
+	/*-----------------------------------------------------------
+	Set output pipe's name
+	-----------------------------------------------------------*/
+	STDMETHODIMP set_output_pipe_name(  /* [in] */ BSTR return_value );
+
+
+	/*-----------------------------------------------------------
+	Is compiler output sent to pipe `output_pipe_name'
+	-----------------------------------------------------------*/
+	STDMETHODIMP is_output_piped(  /* [out, retval] */ VARIANT_BOOL * return_value );
 
 
 	/*-----------------------------------------------------------

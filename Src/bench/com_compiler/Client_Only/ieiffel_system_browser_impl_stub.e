@@ -36,6 +36,12 @@ feature -- Access
 			-- Put Implementation here.
 		end
 
+	assemblies: IENUM_ASSEMBLY_INTERFACE is
+			-- Returns all of the assemblies in an enumerator
+		do
+			-- Put Implementation here.
+		end
+
 	cluster_count: INTEGER is
 			-- Number of top-level clusters in system.
 		do
@@ -84,6 +90,23 @@ feature -- Basic Operations
 			-- Search feature with names matching `a_string'.
 			-- `a_string' [in].  
 			-- `is_substring' [in].  
+		do
+			-- Put Implementation here.
+		end
+
+	description_from_dotnet_type (a_assembly_name: STRING; a_full_dotnet_type: STRING): STRING is
+			-- Retrieve description from dotnet type
+			-- `a_assembly_name' [in].  
+			-- `a_full_dotnet_type' [in].  
+		do
+			-- Put Implementation here.
+		end
+
+	description_from_dotnet_feature (a_assembly_name: STRING; a_full_dotnet_type: STRING; a_feature_signature: STRING): STRING is
+			-- Retrieve description from dotnet feature
+			-- `a_assembly_name' [in].  
+			-- `a_full_dotnet_type' [in].  
+			-- `a_feature_signature' [in].  
 		do
 			-- Put Implementation here.
 		end

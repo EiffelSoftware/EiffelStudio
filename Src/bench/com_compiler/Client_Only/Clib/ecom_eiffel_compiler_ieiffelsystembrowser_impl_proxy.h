@@ -26,6 +26,8 @@ class IEiffelSystemBrowser_impl_proxy;
 
 #include "ecom_eiffel_compiler_IEnumCluster.h"
 
+#include "ecom_eiffel_compiler_IEnumAssembly.h"
+
 #include "ecom_eiffel_compiler_IEiffelClusterDescriptor.h"
 
 #include "ecom_eiffel_compiler_IEiffelClassDescriptor.h"
@@ -73,6 +75,12 @@ public:
 
 
 	/*-----------------------------------------------------------
+	Returns all of the assemblies in an enumerator
+	-----------------------------------------------------------*/
+	EIF_REFERENCE ccom_assemblies(  );
+
+
+	/*-----------------------------------------------------------
 	Number of top-level clusters in system.
 	-----------------------------------------------------------*/
 	EIF_INTEGER ccom_cluster_count(  );
@@ -112,6 +120,18 @@ public:
 	Search feature with names matching `a_string'.
 	-----------------------------------------------------------*/
 	EIF_REFERENCE ccom_search_features(  /* [in] */ EIF_OBJECT a_string,  /* [in] */ EIF_BOOLEAN is_substring );
+
+
+	/*-----------------------------------------------------------
+	Retrieve description from dotnet type
+	-----------------------------------------------------------*/
+	EIF_REFERENCE ccom_description_from_dotnet_type(  /* [in] */ EIF_OBJECT a_assembly_name,  /* [in] */ EIF_OBJECT a_full_dotnet_type );
+
+
+	/*-----------------------------------------------------------
+	Retrieve description from dotnet feature
+	-----------------------------------------------------------*/
+	EIF_REFERENCE ccom_description_from_dotnet_feature(  /* [in] */ EIF_OBJECT a_assembly_name,  /* [in] */ EIF_OBJECT a_full_dotnet_type,  /* [in] */ EIF_OBJECT a_feature_signature );
 
 
 	/*-----------------------------------------------------------

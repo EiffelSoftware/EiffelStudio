@@ -38,6 +38,13 @@ feature -- Status Report
 			Result := True
 		end
 
+	assemblies_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `assemblies'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
 	cluster_count_user_precondition: BOOLEAN is
 			-- User-defined preconditions for `cluster_count'.
 			-- Redefine in descendants if needed.
@@ -87,6 +94,20 @@ feature -- Status Report
 			Result := True
 		end
 
+	description_from_dotnet_type_user_precondition (a_assembly_name: STRING; a_full_dotnet_type: STRING): BOOLEAN is
+			-- User-defined preconditions for `description_from_dotnet_type'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	description_from_dotnet_feature_user_precondition (a_assembly_name: STRING; a_full_dotnet_type: STRING; a_feature_signature: STRING): BOOLEAN is
+			-- User-defined preconditions for `description_from_dotnet_feature'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
 feature -- Basic Operations
 
 	system_classes: IENUM_EIFFEL_CLASS_INTERFACE is
@@ -117,6 +138,14 @@ feature -- Basic Operations
 			-- List of system's external clusters.
 		require
 			external_clusters_user_precondition: external_clusters_user_precondition
+		deferred
+
+		end
+
+	assemblies: IENUM_ASSEMBLY_INTERFACE is
+			-- Returns all of the assemblies in an enumerator
+		require
+			assemblies_user_precondition: assemblies_user_precondition
 		deferred
 
 		end
@@ -181,6 +210,27 @@ feature -- Basic Operations
 			-- `is_substring' [in].  
 		require
 			search_features_user_precondition: search_features_user_precondition (a_string, is_substring)
+		deferred
+
+		end
+
+	description_from_dotnet_type (a_assembly_name: STRING; a_full_dotnet_type: STRING): STRING is
+			-- Retrieve description from dotnet type
+			-- `a_assembly_name' [in].  
+			-- `a_full_dotnet_type' [in].  
+		require
+			description_from_dotnet_type_user_precondition: description_from_dotnet_type_user_precondition (a_assembly_name, a_full_dotnet_type)
+		deferred
+
+		end
+
+	description_from_dotnet_feature (a_assembly_name: STRING; a_full_dotnet_type: STRING; a_feature_signature: STRING): STRING is
+			-- Retrieve description from dotnet feature
+			-- `a_assembly_name' [in].  
+			-- `a_full_dotnet_type' [in].  
+			-- `a_feature_signature' [in].  
+		require
+			description_from_dotnet_feature_user_precondition: description_from_dotnet_feature_user_precondition (a_assembly_name, a_full_dotnet_type, a_feature_signature)
 		deferred
 
 		end

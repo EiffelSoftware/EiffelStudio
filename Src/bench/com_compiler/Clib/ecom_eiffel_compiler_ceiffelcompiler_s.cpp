@@ -102,6 +102,57 @@ EIF_PROCEDURE eiffel_procedure;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
+STDMETHODIMP ecom_eiffel_compiler::CEiffelCompiler::compile_to_pipe( void )
+
+/*-----------------------------------------------------------
+	Compile with piped output.
+-----------------------------------------------------------*/
+{
+	ECATCH;
+EIF_PROCEDURE eiffel_procedure;
+	eiffel_procedure = eif_procedure ("compile_to_pipe", type_id);
+
+	(FUNCTION_CAST ( void, (EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object));
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+STDMETHODIMP ecom_eiffel_compiler::CEiffelCompiler::finalize_to_pipe( void )
+
+/*-----------------------------------------------------------
+	Finalize with piped output.
+-----------------------------------------------------------*/
+{
+	ECATCH;
+EIF_PROCEDURE eiffel_procedure;
+	eiffel_procedure = eif_procedure ("finalize_to_pipe", type_id);
+
+	(FUNCTION_CAST ( void, (EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object));
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+STDMETHODIMP ecom_eiffel_compiler::CEiffelCompiler::precompile_to_pipe( void )
+
+/*-----------------------------------------------------------
+	Precompile with piped output.
+-----------------------------------------------------------*/
+{
+	ECATCH;
+EIF_PROCEDURE eiffel_procedure;
+	eiffel_procedure = eif_procedure ("precompile_to_pipe", type_id);
+
+	(FUNCTION_CAST ( void, (EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object));
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
 STDMETHODIMP ecom_eiffel_compiler::CEiffelCompiler::is_successful(  /* [out, retval] */ VARIANT_BOOL * return_value )
 
 /*-----------------------------------------------------------
@@ -365,6 +416,85 @@ EIF_PROCEDURE eiffel_procedure;
 	eiffel_procedure = eif_procedure ("remove_file_locks", type_id);
 
 	(FUNCTION_CAST ( void, (EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object));
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+STDMETHODIMP ecom_eiffel_compiler::CEiffelCompiler::output_pipe_name(  /* [out, retval] */ BSTR * return_value )
+
+/*-----------------------------------------------------------
+	Output pipe's name
+-----------------------------------------------------------*/
+{
+	ECATCH;
+
+	
+	EIF_REFERENCE_FUNCTION eiffel_function = 0;
+	eiffel_function = eif_reference_function ("output_pipe_name", type_id);
+	EIF_REFERENCE tmp_value = 0;
+	if (eiffel_function != NULL)
+		tmp_value = (FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
+	else
+		tmp_value = eif_field (eif_access (eiffel_object), "output_pipe_name", EIF_REFERENCE);
+	if (tmp_value != NULL)
+	{
+		EIF_OBJECT tmp_object = eif_protect (tmp_value);
+		*return_value = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
+		eif_wean (tmp_object);
+	}
+	else
+		*return_value = NULL;
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+STDMETHODIMP ecom_eiffel_compiler::CEiffelCompiler::set_output_pipe_name(  /* [in] */ BSTR return_value )
+
+/*-----------------------------------------------------------
+	Set output pipe's name
+-----------------------------------------------------------*/
+{
+	ECATCH;
+
+	EIF_OBJECT tmp_return_value = NULL;
+	if (return_value != NULL)
+	{
+		tmp_return_value = eif_protect (rt_ce.ccom_ce_bstr (return_value));
+	}
+	
+	EIF_PROCEDURE eiffel_procedure = 0;
+	eiffel_procedure = eif_procedure ("set_output_pipe_name", type_id);
+
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_return_value != NULL) ? eif_access (tmp_return_value) : NULL));
+	if (tmp_return_value != NULL)
+		eif_wean (tmp_return_value);
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+STDMETHODIMP ecom_eiffel_compiler::CEiffelCompiler::is_output_piped(  /* [out, retval] */ VARIANT_BOOL * return_value )
+
+/*-----------------------------------------------------------
+	Is compiler output sent to pipe `output_pipe_name'
+-----------------------------------------------------------*/
+{
+	ECATCH;
+
+	
+	EIF_BOOLEAN_FUNCTION eiffel_function = 0;
+	eiffel_function = eif_boolean_function ("is_output_piped", type_id);
+	EIF_BOOLEAN tmp_value = 0;
+	if (eiffel_function != NULL)
+		tmp_value = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
+	else
+		tmp_value = eif_field (eif_access (eiffel_object), "is_output_piped", EIF_BOOLEAN);
+	*return_value = rt_ec.ccom_ec_boolean (tmp_value);
 	
 	END_ECATCH;
 	return S_OK;

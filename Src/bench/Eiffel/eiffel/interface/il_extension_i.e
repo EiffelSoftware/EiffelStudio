@@ -7,6 +7,9 @@ class IL_EXTENSION_I
 
 inherit
 	EXTERNAL_EXT_I
+		redefine
+			is_il
+		end
 
 	SHARED_IL_CONSTANTS
 		undefine
@@ -20,6 +23,9 @@ inherit
 
 feature -- Access
 
+	is_il: BOOLEAN is True
+			-- Current external is an IL external.
+			
 	type: INTEGER
 			-- Type of IL external.
 			--| See SHARED_IL_CONSTANTS for all types constants.

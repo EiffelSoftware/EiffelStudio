@@ -31,6 +31,11 @@ inherit
 
 feature -- Status report
 
+	is_il: BOOLEAN is
+			-- Is current external an IL one?
+		do
+		end
+		
 	is_cpp: BOOLEAN is
 		do
 		end

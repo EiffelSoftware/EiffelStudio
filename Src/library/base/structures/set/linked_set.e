@@ -20,7 +20,7 @@ class LINKED_SET [G] inherit
 			extend, put, prune
 		end;
 
-	 LINKED_LIST [G]
+	LINKED_LIST [G]
 		rename
 			extend as ll_extend,
 			put as ll_put,

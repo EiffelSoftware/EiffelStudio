@@ -139,7 +139,7 @@ feature -- Status setting
 			control_required: control_required
 		end
 
-	disable_control_key is
+	disable_control_required is
 			-- Make `control_required' False.
 		do
 			implementation.disable_control_key
@@ -222,6 +222,9 @@ end -- class EV_ACCELERATOR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2000/03/16 17:17:49  brendel
+--| disable_control_key -> disable_control_required.
+--|
 --| Revision 1.10  2000/03/16 01:08:06  oconnor
 --| reinserted accidently removed FIXME
 --|

@@ -10,7 +10,8 @@ inherit
 		redefine
 			process_command
 		end;
-	REMOVABLE
+	REMOVABLE;
+	ERROR_POPUPER
 
 creation
 
@@ -44,8 +45,19 @@ feature {NONE}
 		do
 			user_cmd ?= data;
 			if user_cmd /= Void then
-				page.remove_command (user_cmd)
+				if user_cmd.has_descendents then
+					error_box.popup (Current, 
+						Messages.cannot_remove_cmd_er, 
+						user_cmd.label)
+				else
+					page.remove_command (user_cmd)
+				end
 			end;
+		end;
+
+	popuper_parent: COMPOSITE is
+		do
+			Result := Command_catalog
 		end;
 
 end

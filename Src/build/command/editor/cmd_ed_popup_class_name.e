@@ -106,4 +106,9 @@ feature {NONE}
 			end
 		end;
 
+	popuper_parent: COMPOSITE is
+		do
+			Result := command_editor
+		end;
+
 end

@@ -74,6 +74,11 @@ feature
 
 			end;
 		end;
+
+	popuper_parent: COMPOSITE is
+		do
+			Result := Command_catalog
+		end
  
 
 end

@@ -42,7 +42,7 @@ feature -- Conversion
 
 	-- FIXME this is a hack and needs to be thought over.
 		
-feature {EV_GTK_CALLBACK_MARSHAL}
+feature -- C externals
 
 	C: EV_C_EXTERNALS is
 			-- Access to external C functions.

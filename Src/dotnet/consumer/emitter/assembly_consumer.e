@@ -128,10 +128,14 @@ feature {NONE} -- Implementation
 			list: SORTED_TWO_WAY_LIST [TYPE_NAME_SOLVER]
 			used_names: HASH_TABLE [STRING, STRING]
 			names: HASH_TABLE [SORTED_TWO_WAY_LIST [TYPE_NAME_SOLVER], STRING]
+			l_string_tuple: like string_tuple
+			l_empty_tuple: like empty_tuple
 		do
 			modules := ass.get_modules
 			module_count := modules.count
 			create names.make (1024)
+			l_string_tuple := string_tuple
+			l_empty_tuple := empty_tuple
 			from
 				i := 0
 			until
@@ -161,7 +165,7 @@ feature {NONE} -- Implementation
 					j := j + 1
 				end
 				if status_querier /= Void then
-					status_querier.call ([])
+					status_querier.call (l_empty_tuple)
 					done := status_querier.last_result
 				end
 				i := i + 1
@@ -197,7 +201,7 @@ feature {NONE} -- Implementation
 					list.forth
 				end
 				if status_querier /= Void then
-					status_querier.call ([])
+					status_querier.call (l_empty_tuple)
 					done := status_querier.last_result
 				end
 				names.forth
@@ -218,16 +222,18 @@ feature {NONE} -- Implementation
 					create type_consumer.make (type_name.internal_type, type_name.eiffel_name)
 					type_consumers.put (type_consumer, type_name.eiffel_name)
 					if status_printer /= Void then
-						status_printer.call (["Analyzed " + create {STRING}.make_from_cil (type_name.internal_type.get_full_name)])
+						l_string_tuple.put ("Analyzed " +
+							create {STRING}.make_from_cil (type_name.internal_type.get_full_name), 1)
+						status_printer.call (l_string_tuple)
 					end
 					if status_querier /= Void then
-						status_querier.call ([])
+						status_querier.call (l_empty_tuple)
 						done := status_querier.last_result
 					end
 					list.forth
 				end
 				if status_querier /= Void then
-					status_querier.call ([])
+					status_querier.call (l_empty_tuple)
 					done := status_querier.last_result
 				end
 				names.forth
@@ -244,10 +250,14 @@ feature {NONE} -- Implementation
 			type: CONSUMED_TYPE
 			types: CONSUMED_ASSEMBLY_TYPES
 			mapping: CONSUMED_ASSEMBLY_MAPPING
+			l_string_tuple: like string_tuple
+			l_empty_tuple: like empty_tuple
 		do
 			(create {DIRECTORY}.make (destination_path + Classes_path)).create_dir
 			create serializer
 			create types.make (type_consumers.count)			
+			l_string_tuple := string_tuple
+			l_empty_tuple := empty_tuple
 			from
 				type_consumers.start
 			until
@@ -265,13 +275,15 @@ feature {NONE} -- Implementation
 				serializer.serialize (type, s)
 				if not serializer.successful and error_printer /= Void then
 					set_error (Serialization_error, type.eiffel_name + ", " + serializer.error_message)
-					error_printer.call ([error_message])
+					l_string_tuple.put (error_message, 1)
+					error_printer.call (l_string_tuple)
 				else
 					if status_printer /= Void then
-						status_printer.call (["Written " + s])
+						l_string_tuple.put ("Written " + s, 1)
+						status_printer.call (l_string_tuple)
 					end
 					if status_querier /= Void then
-						status_querier.call ([])
+						status_querier.call (l_empty_tuple)
 						done := status_querier.last_result
 					end
 				end
@@ -287,5 +299,19 @@ feature {NONE} -- Implementation
 
 	assembly_ids: ARRAY [CONSUMED_ASSEMBLY]
 			-- Assembly ids
+
+feature {NONE} -- Constants
+
+	empty_tuple: TUPLE is
+			-- Empty tuple to avoid too many TUPLE creation which can be slow.
+		once
+			create Result.make
+		end
+
+	string_tuple: TUPLE [STRING] is
+			-- Tuple that contain only a string object.
+		once
+			create Result.make
+		end
 
 end -- class ASSEMBLY_CONSUMER

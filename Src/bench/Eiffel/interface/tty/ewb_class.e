@@ -20,7 +20,7 @@ feature -- Initialization
 			-- Initialize class_name to `cn'.
 		do
 			class_name := cn;
-			class_name.to_lower;
+			class_name.to_upper;
 		ensure
 			set: class_name = cn
 		end;
@@ -65,7 +65,6 @@ feature {NONE} -- Execution
 			if at_pos = 0 then
 				class_list := Eiffel_universe.classes_with_name (class_name);
 				if class_list.is_empty then
-					class_name.to_upper;
 					io.error.putstring (class_name);
 					create id.make (0);
 					id.append (class_name);
@@ -78,7 +77,6 @@ feature {NONE} -- Execution
 					class_i := class_list.first
 				else
 					io.error.putstring ("Several classes have the same name:%N")
-					class_name.to_upper;
 					from class_list.start until class_list.after loop
 						class_i := class_list.item;
 						io.error.put_character ('%T');
@@ -109,7 +107,6 @@ feature {NONE} -- Execution
 				else
 					class_i := cluster.classes.item (class_name);
 					if class_i = Void then
-						class_name.to_upper;
 						io.error.putstring (class_name);
 						create id.make (0);
 						id.append (class_name);
@@ -127,7 +124,6 @@ feature {NONE} -- Execution
 				if want_compiled_class (class_i) then
 					e_class := class_i.compiled_class;
 					if e_class = Void then
-						class_name.to_upper;
 						io.error.putstring (class_name);
 						io.error.putstring (" is not in the system%N");
 					else

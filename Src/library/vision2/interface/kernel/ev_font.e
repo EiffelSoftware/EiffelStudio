@@ -27,116 +27,94 @@ feature {NONE} -- Initialization
 			!EV_FONT_IMP!implementation.make (Current)
 		end
 
-	make_by_name (a_name: STRING) is
+	make_by_name (str: STRING) is
 			-- Create the font corresponding to the given name.
 			-- The font is directly readed on a file.
 		do
-			!EV_FONT_IMP!implementation.make_by_name (Current, a_name)
+			!EV_FONT_IMP!implementation.make_by_name (Current, str)
 		end
 
 feature -- Access
 
-	ascent: INTEGER is
-			-- Ascent value in pixel of the font loaded for `a_screen'.
-		require
-			font_specified: is_specified
-			valid_font: is_font_valid 
-		do
-			Result := implementation.ascent 
-		ensure
-			non_negative_result: Result >= 0
-		end;
-
-	descent: INTEGER is
-			-- Descent value in pixel of the font loaded 
-		require
-			font_specified: is_specified
-			valid_font: is_font_valid 
-		do
-			Result := implementation.descent 
-		ensure
-			non_negative_result: Result >= 0
-		end
-
-	width_of_string (a_text: STRING): INTEGER is
-			-- Width in pixel of `a_text' in the current font loaded 
-		require
-			a_text_exists: a_text /= Void
-			font_specified: is_specified
-			valid_font: is_font_valid 
-		do
-			Result := implementation.width_of_string (a_text)
-		ensure
-			non_negative_result: Result >= 0
-		end
-
-	average_character_width: INTEGER is
-			-- Width of all characters in the font in tenth of pixel
-		require
-			font_specified: is_specified
-			font_standard: is_standard
-		do
-			Result := implementation.average_character_width
-		ensure
-			non_negative_result: average_character_width >= 0
-		end
-
-	maximum_character_width: INTEGER is
-			-- Width of the widest character in the font
-		require
-			font_specified: is_specified
-			font_standard: is_standard
-		do
-			Result := implementation.maximum_character_width
-		ensure
-			non_negative_result: maximum_character_width >= 0
-		end
-
-	character_set: STRING is
-			-- (iso8859-1...)
-		require
-			font_specified: is_specified
-			font_standard: is_standard
-		do
-			Result := implementation.character_set
-		ensure
-			result_exists: Result /= Void
-		end
-
-	family: STRING is
-			-- Family name (Courier, Helvetica...)
-		require
-			font_specified: is_specified
-			font_standard: is_standard
-		do
-			Result := implementation.family
-		ensure
-			result_exists: Result /= Void
-		end
-
 	name: STRING is
 			-- Name of the font
 		require
-			font_specified: is_specified
+			exists: not destroyed
 		do
 			Result := implementation.name
 		end
 
-	foundry: STRING is
-			-- Foundry name (Adobe...)
+	ascent: INTEGER is
+			-- Ascent value in pixel of the font loaded.
 		require
-			font_specified: is_specified
+			exists: not destroyed 
+		do
+			Result := implementation.ascent 
+		ensure
+			positive_result: Result >= 0
+		end
+
+	descent: INTEGER is
+			-- Descent value in pixel of the font loaded.
+		require
+			exists: not destroyed 
+		do
+			Result := implementation.descent 
+		ensure
+			positive_result: Result >= 0
+		end
+
+feature -- Measurement
+
+	height: INTEGER is
+			-- Height of the font
+		require
+			exists: not destroyed
 			font_standard: is_standard
 		do
-			Result := implementation.foundry
+			Result := implementation.height
 		ensure
-			result_exists: Result /= Void
+			positive_result: Result >= 0
+		end
+
+	width: INTEGER is
+			-- Average width of the current font
+		require
+			exists: not destroyed
+			font_standard: is_standard
+		do
+			Result := implementation.width
+		ensure
+			positive_result: Result >= 0
+		end
+
+	maximum_width: INTEGER is
+			-- Width of the widest character in the font
+		require
+			exists: not destroyed
+			font_standard: is_standard
+		do
+			Result := implementation.maximum_width
+		ensure
+			positive_result: Result >= 0
+		end
+		
+	string_width (str: STRING): INTEGER is
+			-- Width in pixel of `str' in the current font.
+		require
+			exists: not destroyed
+			valid_text: str /= Void
+		do
+			Result := implementation.string_width (str)
+		ensure
+			positive_result: Result >= 0
 		end
 
 	horizontal_resolution: INTEGER is
-			-- Horizontal resolution of screen for which the font is designed
+			-- Horizontal resolution of screen for which the font
+			-- is designed
 		require
-			font_specified: is_specified
+			exists: not destroyed
 			font_standard: is_standard
 		do
 			Result := implementation.horizontal_resolution
@@ -144,74 +122,11 @@ feature -- Access
 			positive_result: Result > 0
 		end
 
-feature -- Status report
-
-	is_font_valid: BOOLEAN is
-			-- Is the font valid?
-		require
-			font_specified: is_specified
-		do
-			Result := implementation /= Void and then not implementation.destroyed
-		end
-
-	is_proportional: BOOLEAN is
-			-- Is the font proportional ?
-		require
-			font_specified: is_specified
-			font_standard: is_standard
-		do
-			Result := implementation.is_proportional
-		end
-
-	is_standard: BOOLEAN is
-			-- Is the font standard and informations available (except for name) ?
-		require
-			font_specified: is_specified
-		do
-			Result := implementation.is_standard
-		end
-
-	is_specified: BOOLEAN is
-			-- Is the font specified ?
-		do
-			Result := implementation.is_specified
-		end
-
-	pixel_size: INTEGER is
-			-- Size of font in pixel
-		require
-			font_specified: is_specified
-			font_standard: is_standard
-		do
-			Result := implementation.pixel_size
-		ensure
-			positive_result: Result > 0
-		end
-
-	point: INTEGER is
-			-- Size of font in tenth of points (1 point = 1/72 of an inch)
-		require
-			font_specified: is_specified
-			font_standard: is_standard
-		do
-			Result := implementation.point
-		ensure
-			positive_result: Result > 0
-		end
-
-	slant: CHARACTER is
-			-- Slant of font (o, r, i...)
-		require
-			font_specified: is_specified
-			font_standard: is_standard
-		do
-			Result := implementation.slant
-		end
-
 	vertical_resolution: INTEGER is
-			-- Vertical resolution of screen for which the font is designed
+			-- Vertical resolution of screen for which the font
+			-- is designed
 		require
-			font_specified: is_specified
+			exists: not destroyed
 			font_standard: is_standard
 		do
 			Result := implementation.vertical_resolution
@@ -219,10 +134,29 @@ feature -- Status report
 			positive_result: Result > 0
 		end
 
+feature -- Status report
+
+	is_proportional: BOOLEAN is
+			-- Is the font proportional ?
+		require
+			exists: not destroyed
+			font_standard: is_standard
+		do
+			Result := implementation.is_proportional
+		end
+
+ 	is_standard: BOOLEAN is
+ 			-- Is the font standard and informations available (except for name) ?
+ 		require
+			exists: not destroyed
+ 		do
+ 			Result := implementation.is_standard
+ 		end
+ 
 	weight: STRING is
 			-- Weight of font (Bold, Medium...)
 		require
-			font_specified: is_specified
+			exists: not destroyed
 			font_standard: is_standard
 		do
 			Result := implementation.weight
@@ -230,53 +164,54 @@ feature -- Status report
 			result_exists: Result /= Void
 		end
 
-	width: STRING is
-			-- Width of font (Normal, Condensed...)
-		require
-			font_specified: is_specified
-			font_standard: is_standard
-		do
-			Result := implementation.width
-		ensure
-			result_exists: Result /= Void
-		end
-
 feature -- Element change
 
-	set_name (a_name: STRING) is
-			-- Set `name' to `a_name'.
+	set_name (str: STRING) is
+			-- Make `str' the new name of the string.
 		require
-			a_name_exists: a_name /= Void
+			exists: not destroyed
+			valid_name: str /= Void
 		do
-			implementation.set_name (a_name)
-		ensure
-			name_set: is_specified implies a_name.is_equal (a_name)
+			implementation.set_name (str)
 		end
 
---feature -- Obsolete features
+	set_width (value: INTEGER) is
+			-- Make `value' the new width.
+		require
+			exists: not destroyed
+			valid_value: value >= 0
+		do
+			implementation.set_width (value)
+		end
 
---	string_width (a_screen: EV_WIDGET; a_text: STRING): INTEGER is
---			-- Width in pixel of `a_text' in the current font loaded for `a_screen'.
---		obsolete
---			"Use `width_of_string' instead."
---		require
---			a_screen_exists: a_screen /= Void
---			a_text_exists: a_text /= Void
---			font_specified: is_specified
---			font_valid_for_a_screen: is_valid (a_screen)
---		do
---			Result := width_of_string (a_text)
---		ensure
---			valid_result: Result >= 0
---		end
+	set_height (value: INTEGER) is
+			-- Make `value' the new height.
+		require
+			exists: not destroyed
+			valid_value: value >= 0
+		do
+			implementation.set_height (value)
+		end
+
+	set_weight (value: INTEGER) is
+			-- Make `value' the new weight.
+		require
+			exists: not destroyed
+			valid_value: value >= 0
+		do
+			implementation.set_weight (value)
+		end
 
 feature -- Implementation
 
-		implementation: EV_FONT_I
+	implementation: EV_FONT_I
 			-- Implementation of font
 
---invariant
---	valid_implementation: implementation /= Void
+	set_implementation (imp: EV_FONT_IMP) is
+			-- Make `imp' the new implementation of the font.
+		do
+			implementation := imp
+		end
 
 end -- class EV_FONT
 

@@ -293,7 +293,7 @@ feature {NONE} -- Implementation
 					flag := arguments.item.flags
 					visitor := arguments.item.type.visitor
 
-					if is_paramflag_fout (arguments.item.flags) then
+					if is_paramflag_fout (arguments.item.flags) or is_byref (visitor.vt_type) then
 						out_variable := True  
 						if is_paramflag_fin (arguments.item.flags) then
 							Result.append (inout_parameter_set_up (arguments.item.name, counter, visitor))

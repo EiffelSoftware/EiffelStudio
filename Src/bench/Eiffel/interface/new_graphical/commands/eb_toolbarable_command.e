@@ -35,6 +35,28 @@ feature -- Access
 			valid_result: Result /= Void
 		end
 
+	tooltext: STRING is
+			-- Text displayed when `has_text' is True
+		require
+			has_text: has_text
+		do
+			Result := ""
+		ensure
+			valid_result: Result /= Void
+		end
+
+	has_text: BOOLEAN is
+			-- Does `Current' show text when displayed
+		do
+			Result := tooltext /= Void and then not tooltext.is_equal ("")
+		end
+
+	is_tooltext_important: BOOLEAN is
+			-- Is the tooltext important shown when view is 'Selective Text'
+		do
+			Result := False
+		end
+
 feature -- Status Report
 
 	is_displayed: BOOLEAN
@@ -103,31 +125,9 @@ feature -- Basic operations
 			--
 			-- Call `recycle' on the result when you don't need it anymore otherwise
 			-- it will never be garbage collected.
-		local
-			tt: STRING
 		do
-				-- Add it to the managed toolbar items
-			if managed_toolbar_items = Void then
-				create managed_toolbar_items.make (1)
-			end
 			create Result.make (Current)
-			if display_text and pixmap.count >= 2 then
-				Result.set_pixmap (pixmap @ 2)
-			else
-				Result.set_pixmap (pixmap @ 1)
-			end
-			if is_sensitive then
-				Result.enable_sensitive
-			else
-				Result.disable_sensitive
-			end
-			tt := tooltip.twin
-			if accelerator /= Void then
-				tt.append (Opening_parenthesis)
-				tt.append (accelerator.out)
-				tt.append (Closing_parenthesis)
-			end
-			Result.set_tooltip (tt)
+			initialize_toolbar_item (Result, display_text, use_gray_icons)
 			Result.select_actions.extend (agent execute)
 		end
 
@@ -136,9 +136,6 @@ feature -- Basic operations
 		require
 			mini_pixmap_not_void: mini_pixmap /= Void
 		do
-			if managed_toolbar_items = Void then
-				create managed_toolbar_items.make (1)
-			end
 			create Result.make (Current)
 			Result.set_pixmap (mini_pixmap @ 1)
 			if is_sensitive then
@@ -150,10 +147,43 @@ feature -- Basic operations
 			Result.select_actions.extend (agent execute)
 		end
 
-feature {EB_COMMAND_TOOL_BAR_BUTTON} -- Implementation
+feature {NONE} -- Implementation
 
-	managed_toolbar_items: ARRAYED_LIST [like new_toolbar_item]
+	initialize_toolbar_item (a_item: EB_COMMAND_TOOL_BAR_BUTTON; display_text: BOOLEAN; use_gray_icons: BOOLEAN) is
+			-- Initialize `a_item'
+		local
+			tt: STRING
+		do
+			if display_text and has_text then
+				a_item.set_text (tooltext)
+			end
+			a_item.set_pixmap (pixmap @ 1)
+			if is_sensitive then
+				a_item.enable_sensitive
+			else
+				a_item.disable_sensitive
+			end
+			tt := tooltip.twin
+			if accelerator /= Void then
+				tt.append (opening_parenthesis)
+				tt.append (accelerator.out)
+				tt.append (closing_parenthesis)
+			end
+			a_item.set_tooltip (tt)
+		end
+
+feature {EB_COMMAND_TOOL_BAR_BUTTON} -- Implementation
+	
+	internal_managed_toolbar_items: ARRAYED_LIST [like new_toolbar_item]
+
+	managed_toolbar_items: ARRAYED_LIST [like new_toolbar_item] is
 			-- Toolbar items associated with this command.
+		do
+			if internal_managed_toolbar_items = Void then
+				create internal_managed_toolbar_items.make (1)
+			end
+			Result := internal_managed_toolbar_items
+		end
 	
 	Opening_parenthesis: STRING is " ("
 	Closing_parenthesis: STRING is ")"

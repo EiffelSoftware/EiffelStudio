@@ -346,6 +346,8 @@ feature -- Status setting
 	set_background_pixmap (a_pixmap: PIXMAP) is
 			-- Set the background pixmap
 			-- but does nothing
+		require else
+			always_true: True
 		do
 			--debug ("WINDOWS")
 			--	check
@@ -1018,6 +1020,11 @@ feature -- Implementation
 		deferred
 		end
 
+	disable_default_processing is
+			-- Prevent default_processing of a message by windows.
+		deferred
+		end
+
 	set_z_order (z_order: INTEGER) is
 			-- Set the z-order of the window.
 		deferred
@@ -1063,8 +1070,16 @@ feature {NONE} -- Implementation
 			-- EiffelVision mouse move event
 		local
 			cd: MOTNOT_DATA
+			wp: WEL_POINT
+			e_x, e_y: INTEGER
+			ww: WEL_WINDOW
 		do
-			!! cd.make (owner, x_pos, y_pos, x_pos + absolute_x, y_pos + absolute_y, buttons_state);
+			!! wp.make (x_pos, y_pos)
+			ww ?= Current
+			wp.client_to_screen (ww)
+			e_x := wp.x
+			e_y := wp.y
+			!! cd.make (owner, x_pos, y_pos, e_x, e_y, buttons_state);
 			pointer_motion_actions.execute (Current, cd)
 		end;
 
@@ -1121,19 +1136,24 @@ feature {NONE} -- Implementation
 	on_mouse_move (keys, x_pos, y_pos: INTEGER) is
 			-- Wm_mousemove message
 		do
-			on_vision_mouse_enter
-			--if left_button_down_widget /= Void then
-			if flag_set (keys, Mk_lbutton) then
-				on_lbutton_move (keys, x_pos, y_pos)
-			end;
-			if flag_set (keys, Mk_mbutton) then
-			--if middle_button_down_widget /= Void then
-				on_mbutton_move (keys, x_pos, y_pos)
-			end;
-			if flag_set (keys, Mk_rbutton) then
-			--if right_button_down_widget /= Void then
-				on_rbutton_move (keys, x_pos, y_pos)
-			end;
+			if flag_set (keys, Mk_lbutton) or 
+			flag_set (keys, Mk_mbutton) or 
+			flag_set (Keys, Mk_rbutton) then
+				--if left_button_down_widget /= Void then
+				if flag_set (keys, Mk_lbutton) then
+					on_lbutton_move (keys, x_pos, y_pos)
+				end;
+				if flag_set (keys, Mk_mbutton) then
+				--if middle_button_down_widget /= Void then
+					on_mbutton_move (keys, x_pos, y_pos)
+				end;
+				if flag_set (keys, Mk_rbutton) then
+				--if right_button_down_widget /= Void then
+					on_rbutton_move (keys, x_pos, y_pos)
+				end;
+			else
+				on_vision_mouse_enter
+			end
 			on_vision_mouse_move (keys, x_pos, y_pos)
 		end;
 
@@ -1141,27 +1161,53 @@ feature {NONE} -- Implementation
 			-- Executed when the mouse moves with the left button dowm
 		local
 			cd: MOTNOT_DATA
+			wp: WEL_POINT
+			e_x, e_y: INTEGER
+			ww: WEL_WINDOW
 		do
-			!! cd.make (widget_oui, x_pos, y_pos, x_pos + absolute_x, y_pos + absolute_y, buttons_state)
-			left_button_motion_actions.execute (Current, cd)
+			!! wp.make (x_pos, y_pos)
+			ww ?= Current
+			wp.client_to_screen (ww)
+			e_x := wp.x
+			e_y := wp.y
+			!! cd.make (widget_oui, x_pos, y_pos, e_x, e_y, buttons_state)
+--			left_button_motion_actions.execute (Current, cd)
+			left_button_motion_actions.execute (left_button_down_widget, cd)
 		end;
 
 	on_mbutton_move (keys, x_pos, y_pos: INTEGER) is
 			-- Executed when the mouse moves with the middle button dowm
 		local
 			cd: MOTNOT_DATA
+			wp: WEL_POINT
+			e_x, e_y: INTEGER
+			ww: WEL_WINDOW
 		do
-			!! cd.make (widget_oui, x_pos, y_pos, x_pos + absolute_x, y_pos + absolute_y, buttons_state)
-			middle_button_motion_actions.execute (Current, cd)
+			!! wp.make (x_pos, y_pos)
+			ww ?= Current
+			wp.client_to_screen (ww)
+			e_x := wp.x
+			e_y := wp.y
+			!! cd.make (widget_oui, x_pos, y_pos, e_x, e_y, buttons_state)
+			middle_button_motion_actions.execute (middle_button_down_widget, cd)
 		end;
 
 	on_rbutton_move (keys, x_pos, y_pos: INTEGER) is
 			-- Executed when the mouse moves with the right button dowm
 		local
 			cd: MOTNOT_DATA
+			wp: WEL_POINT
+			e_x, e_y: INTEGER
+			ww: WEL_WINDOW
 		do
-			!! cd.make (widget_oui, x_pos, y_pos, x_pos + absolute_x, y_pos + absolute_y, buttons_state)
-			right_button_motion_actions.execute (Current, cd)
+			!! wp.make (x_pos, y_pos)
+			ww ?= Current
+			wp.client_to_screen (ww)
+			e_x := wp.x
+			e_y := wp.y
+			!! cd.make (widget_oui, x_pos, y_pos, e_x, e_y, buttons_state)
+--			right_button_motion_actions.execute (Current, cd)
+			right_button_motion_actions.execute (right_button_down_widget, cd)
 		end;
 
 	on_left_button_down (keys, a_x, a_y: INTEGER) is
@@ -1170,11 +1216,19 @@ feature {NONE} -- Implementation
 		local
 			cd: BTPRESS_DATA;
 			k: KEYBOARD_WINDOWS
+			wp: WEL_POINT
+			e_x, e_y: INTEGER
+			ww: WEL_WINDOW
 		do
+			!! wp.make (a_x, a_y)
+			ww ?= Current
+			wp.client_to_screen (ww)
+			e_x := wp.x
+			e_y := wp.y
 			left_button_down_implementation.replace (true);
 			left_button_down_widget_implementation.replace (Current);
 			!! k.make_from_mouse_state (keys)
-			!! cd.make (owner, a_x, a_y, absolute_x + a_x, absolute_y + a_y, 1, buttons_state, k);
+			!! cd.make (owner, a_x, a_y, e_x, e_y, 1, buttons_state, k);
 			left_button_press_actions.execute (Current, cd)
 		end;
 
@@ -1184,33 +1238,44 @@ feature {NONE} -- Implementation
 		local
 			cd: BUTREL_DATA;
 			k: KEYBOARD_WINDOWS
+			w: WIDGET_WINDOWS
+			wp: WEL_POINT
+			e_x, e_y: INTEGER
+			ww: WEL_WINDOW
 		do
+			w := left_button_down_widget
+			!! wp.make (a_x, a_y)
+			ww ?= Current
+			wp.client_to_screen (ww)
+			e_x := wp.x
+			e_y := wp.y
 			left_button_down_implementation.replace (false);
 			left_button_down_widget_implementation.replace (void);
 			!! k.make_from_mouse_state (keys)
-			!! cd.make (owner, a_x, a_y, absolute_x + a_x, absolute_y + a_y, 1, buttons_state, k);
-			left_button_release_actions.execute (Current, cd)
+			!! cd.make (owner, a_x, a_y, e_x, e_y, 1, buttons_state, k);
+			left_button_release_actions.execute (w, cd)
+--			left_button_release_actions.execute (Current, cd)
 		end;
 
-	on_right_button_down (keys, e_x, e_y: INTEGER) is
+	on_right_button_down (keys, a_x, a_y: INTEGER) is
 			-- Wm_rbuttondown message
 			-- See class WEL_MK_CONSTANTS for `keys' value
 		local
 			cd: BTPRESS_DATA;
 			k: KEYBOARD_WINDOWS
 			wp: WEL_POINT
-			a_x, a_y: INTEGER
+			e_x, e_y: INTEGER
 			ww: WEL_WINDOW
 		do
-			!! wp.make (e_x, e_y)
+			!! wp.make (a_x, a_y)
 			ww ?= Current
 			wp.client_to_screen (ww)
-			a_x := wp.x
-			a_y := wp.y
+			e_x := wp.x
+			e_y := wp.y
 			right_button_down_implementation.replace (true);
 			right_button_down_widget_implementation.replace (Current);
 			!! k.make_from_mouse_state (keys)
-			!! cd.make (owner, e_x, e_y, a_x, a_y, 3, buttons_state, k);
+			!! cd.make (owner, a_x, a_y, e_x, e_y, 3, buttons_state, k);
 			right_button_press_actions.execute (Current, cd)
 		end;
 
@@ -1220,15 +1285,26 @@ feature {NONE} -- Implementation
 		local
 			cd: BUTREL_DATA;
 			k: KEYBOARD_WINDOWS
+			wp: WEL_POINT
+			e_x, e_y: INTEGER
+			ww: WEL_WINDOW
+			w: WIDGET_WINDOWS
 		do
+			w := right_button_down_widget
+			!! wp.make (a_x, a_y)
+			ww ?= Current
+			wp.client_to_screen (ww)
+			e_x := wp.x
+			e_y := wp.y
 			right_button_down_implementation.replace (true);
 			!! k.make_from_mouse_state (keys)
-			!! cd.make (owner, a_x, a_y, absolute_x + a_x, absolute_y + a_y, 3, buttons_state, k);
+			!! cd.make (owner, a_x, a_y, e_x, e_y, 3, buttons_state, k);
 			if right_button_down_widget_implementation.item = Current then
 				right_button_click_actions.execute (Current, cd)
 			end
 			right_button_down_widget_implementation.replace (void);
-			right_button_release_actions.execute (Current, cd)
+--			right_button_release_actions.execute (Current, cd)
+			right_button_release_actions.execute (w, cd)
 		end;
 
 	on_key_down (code, flags: INTEGER) is
@@ -1279,16 +1355,19 @@ feature {NONE} -- Implementation
 			if scw /= Void then
 				scw.set
 				Result := true
+				disable_default_processing
 			else
 				scw := screen_cursor
 				if scw /= Void then
 					scw.set
 					Result := true
+					disable_default_processing
 				else
 					scw := global_cursor_windows
 					if scw /= Void then
 						scw.set
 						Result := true
+						disable_default_processing
 					end
 				end
 			end

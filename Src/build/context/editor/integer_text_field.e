@@ -45,7 +45,9 @@ feature
 
 	int_value: INTEGER is
 		do
-			Result := text.to_integer
+			if text.is_integer then
+				Result := text.to_integer
+			end
 		end;
 
 end

@@ -21,11 +21,25 @@ inherit
 	OUTPUT_CONSTANTS
 
 create
-	make	
+	make,
+	make_with_default_flag
 	
 feature -- Creation
 
-	make (a_output_flag, a_description: STRING) is
+	make (a_description: STRING) is
+				-- Create with description
+		require			
+			description_not_void: a_description /= Void
+		do
+			make_basic_filter
+			create output_flags.make (1)
+			output_flags.compare_objects
+			description := a_description
+		ensure
+			has_description: description /= Void
+		end
+
+	make_with_default_flag (a_output_flag, a_description: STRING) is
 				-- Create with initial output flag and description
 		require			
 			flag_not_void: a_output_flag /= Void

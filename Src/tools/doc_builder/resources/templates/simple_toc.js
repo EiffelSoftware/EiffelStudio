@@ -55,7 +55,10 @@ function getCookie(name)
 function pageLoad()
 //Page load function
 {	
-	selectFilterNode();
+	if (top.filter_frame.document.theForm.filterMenu)
+	{
+		selectFilterNode();
+	}
 	loadCookie();
 }
 
@@ -116,56 +119,59 @@ function documentLoaded (aUrl)
 {
 
 	//Synchronize the TOC
-	synchronize (aUrl);
+	//synchronize (aUrl);
 
 	//Extract filter words from filter string
 	var widget = top.filter_frame.document.theForm.filterMenu;
-	var filterString =  widget [widget.selectedIndex].name;
-
-	if (!filterString.length < 1)
+	if (widget)
 	{
-		filterStrings = new Object();
-		cnt = 1;
+		var filterString =  widget [widget.selectedIndex].name;
 
-		while (filterString.indexOf(',') > -1)
+		if (!filterString.length < 1)
 		{
-			filterStrings [cnt] = filterString.substring(0, filterString.indexOf(','));
-			filterString = filterString.substring((filterString.indexOf(',')) + 1);
-			cnt++;
+			filterStrings = new Object();
+			cnt = 1;
+
+			while (filterString.indexOf(',') > -1)
+			{
+				filterStrings [cnt] = filterString.substring(0, filterString.indexOf(','));
+				filterString = filterString.substring((filterString.indexOf(',')) + 1);
+				cnt++;
+			}
+
+			filterStrings [cnt] = filterString;
 		}
 
-		filterStrings [cnt] = filterString;
-	}
+		//Get filter string and document span tag elements
+		var pageSpans = parent.content_frame.document.getElementsByTagName("span")
 
-	//Get filter string and document span tag elements
-	var pageSpans = parent.content_frame.document.getElementsByTagName("span")
-
-	for (i = 0; i < pageSpans.length; i++)
-	{
-		spanId = pageSpans[i].getAttribute('id');
-
-		match = spanId == "";
-
-		if (!match)
+		for (i = 0; i < pageSpans.length; i++)
 		{
-			//Look for match in strings against span id
-			for (j in filterStrings)
+			spanId = pageSpans[i].getAttribute('id');
+
+			match = spanId == "";
+
+			if (!match)
 			{
-				if (spanId == filterStrings [j])
+				//Look for match in strings against span id
+				for (j in filterStrings)
 				{
-					match = true;
+					if (spanId == filterStrings [j])
+					{
+						match = true;
+					}
 				}
 			}
-		}
 
-		//Process match (or not)
-		if (!match)
-		{
-			pageSpans[i].style.display = 'none'
-		}
-		else
-		{
-			pageSpans[i].style.display = ''
+			//Process match (or not)
+			if (!match)
+			{
+				pageSpans[i].style.display = 'none'
+			}
+			else
+			{
+				pageSpans[i].style.display = ''
+			}
 		}
 	}
 }

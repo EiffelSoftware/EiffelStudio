@@ -1,15 +1,13 @@
 body 
 {
 	font-family: verdana;
-	margin: 0px 0px 0px 0px;
-	font-size: 70%;
+	margin: 0px 0px 0px 0px;	
 	background-color: #6699cc;
 }
 
 a
 {
 	color:black;
-	font-size: 70%;
 	font-family: verdana, arial, helvetica, sans-serif;
 	text-decoration:none;
 }
@@ -17,7 +15,6 @@ a
 a:hover
 {
 	color:red;
-	font-size: 70%;
 	font-family: verdana, arial, helvetica, sans-serif;
 	text-decoration:none;
 }
@@ -25,7 +22,6 @@ a:hover
 a:link
 {
 	color:black;
-	font-size: 70%;
 	font-family: verdana, arial, helvetica, sans-serif;
 	text-decoration:none;
 }
@@ -34,7 +30,6 @@ a:link
 a:active
 {
 	color:red;
-	font-size: 70%;
 	font-family: verdana, arial, helvetica, sans-serif;
 	text-decoration:none;
 }
@@ -46,7 +41,8 @@ img
 
 td
 {
-	white-space: nowrap;
+	white-space: nowrap;	
+	font-size: 70%;
 }
 
 td.bordered_cell
@@ -90,5 +86,5 @@ table.toc_toolbar
 table
 {
 	margin: 0px 0px 0px 0px;
-	background-color: #EFEEDF;
+	background-color: #EFEEDF;	
 }

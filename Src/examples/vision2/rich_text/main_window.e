@@ -11,11 +11,6 @@ class
 
 inherit
 	MAIN_WINDOW_IMP
-	
-	PROFILING_SETTING
-		undefine
-			copy, is_equal, default_create
-		end
 
 feature {NONE} -- Initialization
 
@@ -46,7 +41,7 @@ feature {NONE} -- Initialization
 				-- Connect events.
 			rich_text.caret_move_actions.extend (agent caret_moved)
 			rich_text.selection_change_actions.extend (agent selection_changed)
-			rich_text.file_access_actions.extend (agent update_progress_on_save)
+			rich_text.file_access_actions.extend (agent update_progress_on_file_access)
 			close_request_actions.extend (agent exit)
 			
 					-- Now load all available fonts into `font_selection' combo box.
@@ -85,9 +80,9 @@ feature {NONE} -- Initialization
 				counter := counter + 2 + (counter // 10)
 			end
 			
-				-- Load contents of `rich_text' from rich text file "Welcome.rtf"
+				-- Load contents of `rich_text' from rich text file "welcome.rtf"
 			create a_file_name.make_from_string (rich_text_example_root)
-			a_file_name.extend ("Welcome.rtf")
+			a_file_name.extend ("welcome.rtf")
 			rich_text.set_with_named_file (a_file_name)
 			
 				-- Now we must add an example of every available font to `rich_text'.
@@ -1213,9 +1208,7 @@ feature {NONE} -- To be removed
 				save_progress.value_range.adapt (create {INTEGER_INTERVAL}.make (1, rich_text.text_length))
 				general_label.hide
 				save_progress.show
-				start_profiling
 				rich_text.save_to_named_file (create {FILE_NAME}.make_from_string (current_file_name))
-				stop_profiling
 				save_progress.hide
 				general_label.show
 			end
@@ -1275,8 +1268,8 @@ feature {NONE} -- To be removed
 	file_dialog_cancelled: BOOLEAN
 		-- Was dialog shown by last call to `get_file_name' cancelled?
 
-	update_progress_on_save (pos: INTEGER) is
-			-- 
+	update_progress_on_file_access (pos: INTEGER) is
+			-- Display progress of file loading or saving operation.
 		do
 			save_progress.set_value (pos.max (1).min (rich_text.text_length))			
 			(create {EV_ENVIRONMENT}).application.process_events

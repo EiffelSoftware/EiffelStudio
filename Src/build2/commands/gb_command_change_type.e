@@ -38,6 +38,9 @@ feature -- Basic Operation
 	execute is
 			-- Execute `Current'.
 		do
+				-- We now need to mark the deleted object and all children as
+				-- deleted.
+			object_handler.mark_as_deleted (layout_item.object)
 			object_handler.replace_object_type (layout_item.object, new_type)
 			if not history.command_list.has (Current) then
 				history.add_command (Current)
@@ -49,6 +52,10 @@ feature -- Basic Operation
 			-- Undo `Current'.
 			-- Must restore state to that before `execute'.
 		do
+			--| FIXME, we should be restoring the original object, not building a new one of
+			--| the same type. This is not a real undo.
+				-- We now need to ensure that the object is no longer marked as
+				-- deleted.
 			object_handler.replace_object_type (layout_item.object, original_type)
 			command_handler.update
 		end

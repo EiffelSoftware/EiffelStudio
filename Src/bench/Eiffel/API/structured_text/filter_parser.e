@@ -25,6 +25,7 @@ feature {NONE} -- Formats
 			not_filename_empty: not filename.empty
 		local
 			construct, before, after: STRING;
+			construct_list: LINKED_LIST [STRING];
 			in_construct, in_before: BOOLEAN;
 			new_format: CELL2 [STRING, STRING];
 			normal_format: BOOLEAN;
@@ -43,7 +44,8 @@ feature {NONE} -- Formats
 						from
 							in_construct := true;
 							in_before := false;
-							!!construct.make (10);
+							!! construct.make (10);
+							!! construct_list.make;
 							before := Void;
 							after := Void;
 							get_next_character
@@ -54,6 +56,10 @@ feature {NONE} -- Formats
 							if in_construct then
 								if not is_last_meta then
 									construct.extend (last_char_read)
+ 								elseif last_char_read = ',' then
+									construct_list.extend (construct);
+										-- synoymn constructs i.e c1, c2
+									!! construct.make (0)
  								elseif last_char_read = '|' then
 									in_construct := false;
 									in_before := true;
@@ -85,38 +91,45 @@ feature {NONE} -- Formats
 							end
 						end;
 						if not read_error then
-							normal_format := true;
-							construct.left_adjust;
-							if construct.count >= 7 then
-								escape := construct.substring (1, 6);
-								escape.to_lower;
-								if escape.is_equal ("escape") then
-									normal_format := false;
-									if before /= Void and after = Void then
-										escape_char :=
-											construct.item (construct.count);
-										construct.right_adjust;
-										if construct.count > 6 then
-											escape_char := 
-												construct.item (construct.count)
-										end;
-										escape_characters.force 
-												(before, escape_char)
-									else
-										syntax_error 
-												("Escape character expected")
+							construct_list.extend (construct);
+							from
+								construct_list.start
+							until
+								construct_list.after
+							loop
+								construct := construct_list.item;
+								normal_format := true;
+								construct.left_adjust;
+								if construct.count >= 7 then
+									escape := construct.substring (1, 6);
+									escape.to_lower;
+									if escape.is_equal ("escape") then
+										normal_format := false;
+										if before /= Void and after = Void then
+											escape_char :=
+												construct.item (construct.count);
+											construct.right_adjust;
+											if construct.count > 6 then
+												escape_char := 
+													construct.item (construct.count)
+											end;
+											escape_characters.force 
+													(before, escape_char)
+										else
+											syntax_error 
+													("Escape character expected")
+										end
 									end
-								end
-							end;
-							if normal_format then
-								construct.right_adjust;
-								construct.to_lower;
-								if 
-									not construct.empty and then 
-									before /= Void 
-								then
-									!!new_format.make (before, after);
-									format_table.force (new_format, construct)
+								end;
+								if normal_format then
+									construct.right_adjust;
+									construct.to_lower;
+									if 
+										not construct.empty and then 
+										before /= Void 
+									then
+										!!new_format.make (before, after);
+										format_table.force (new_format, construct)
 debug ("FILTERS")
 	io.error.putstring (construct);
 	io.error.putstring (" -> ");
@@ -127,13 +140,15 @@ debug ("FILTERS")
 	end;
 	io.error.new_line
 end
-								elseif construct.empty and before /= Void then
-									syntax_error ("Construct expected")
-								elseif 
-									not construct.empty and before = Void 
-								then
-									syntax_error ("Appearance expected")
-								end
+									elseif construct.empty and before /= Void then
+										syntax_error ("Construct expected")
+									elseif 
+										not construct.empty and before = Void 
+									then
+										syntax_error ("Appearance expected")
+									end
+								end;
+								construct_list.forth
 							end
 						else
 								-- Go to the beginning of the next line
@@ -206,7 +221,7 @@ end
 							last_char_read := filter_file.lastchar
 						end
 					end
-				when '|', '*' then
+				when ',', '|', '*' then
 					last_char_read := filter_file.lastchar;
 					is_last_meta := true
 				when '%N' then

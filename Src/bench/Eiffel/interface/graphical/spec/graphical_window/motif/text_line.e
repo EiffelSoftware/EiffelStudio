@@ -24,13 +24,17 @@ feature {NONE} -- Initialization
 			-- Create current.
 		do
 			list_make (10);
-			figures := f
+			figures := f;
+			text_position := f.text_position
 		end;
 
 feature -- Properties
 
 	figures: GRAPHICAL_FIGURES;
 			-- Associated figure list
+
+	text_position: INTEGER;
+			-- Text position
 
 	is_in_highlighted_line: BOOLEAN
 			-- Is the Current line in a highlighted line?
@@ -57,6 +61,29 @@ feature -- Access
 			Result := p.y <= base_left_y and p.y >= base_left_y - height
 		end;
 
+	text_with_position (char_pos: INTEGER): TEXT_FIGURE is
+			-- Text figure that contain character position `char_pos'.
+		local
+			a: like area;
+			i, c: INTEGER;
+			last_fig, fig: TEXT_FIGURE
+		do
+			from
+				c := count;
+				a := area;
+				i := 0
+			until
+				Result /= Void or else i >= c
+			loop
+				fig := a.item (i);
+				if fig.contains_position (char_pos) then
+					-- Get the previous figure
+					Result := fig
+				end;
+				i := i + 1
+			end;
+		end;
+
 feature -- Setting
 
 	set_base_left_y (i: like base_left_y) is
@@ -66,7 +93,6 @@ feature -- Setting
 		end;
 
 feature -- Access
-
 
 	text_figure (p: COORD_XY): TEXT_FIGURE is
 			-- Text figure that contain point `p'.

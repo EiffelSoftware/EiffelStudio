@@ -49,14 +49,69 @@ feature -- Properties
 feature -- Access
 
 	contains (p: COORD_XY): BOOLEAN is
-			-- Does line contain point `p'?
+			-- Does figure contain point `p'?
 		require
 			valid_p: p /= Void
 		do
-				--| Do not check to see if `p' is within the top or bottom
-				--| of text since this associated line would have
-				--| check this before calling this routine.
+			--| Do not check to see if `p' is within the top or bottom
+			--| of text since this associated line would have
+			--| check this before calling this routine.
 			Result := p.x >= base_left_x and p.x <= base_left_x + width
+			end;
+
+	contains_position (char_pos: INTEGER): BOOLEAN is
+			-- Does line contain character position `char_pos'?
+		do
+			Result := char_pos >= text_position and then
+				char_pos <= text_position + text.count
+		end;
+
+	character_position (values: GRAPHICAL_VALUES; x_pos: INTEGER): INTEGER is
+			-- Character position at cursor position `x'
+		require
+			valid_x_pos: x_pos >= base_left_x and then
+			x_pos <= base_left_x + width
+		local
+			prev_x, curr_x: INTEGER;
+			str: STRING;
+			c, i: INTEGER
+		do
+			from
+				curr_x := base_left_x;
+				c := text.count;
+				!! str.make (0);
+					-- Text should not be empty
+				i := 0
+			until
+				curr_x > x_pos or else i = c
+			loop
+				str.extend (text.item (i + 1));
+				curr_x := base_left_x + font (values).width_of_string (str);
+				i := i + 1
+			end
+			Result := text_position + i - 1
+		ensure
+			contains_position: contains_position (Result)
+		end;
+
+	coordinate (values: GRAPHICAL_VALUES; char_pos: INTEGER): COORD_XY is
+			-- Coordinate of character position in current figure
+		require
+			contains_position: contains_position (char_pos)
+		local
+			pos: INTEGER;
+			str: STRING
+		do
+			!! Result;
+			pos := char_pos - text_position;
+			-- Extract the string
+			if pos = 0 then
+				str := ""
+			else
+				str := text.substring (1, pos);
+			end;
+			-- Figure out the coord
+			Result.set (base_left_x + font (values).width_of_string (str), base_left_y)
 		end;
 
 feature -- Setting
@@ -132,5 +187,41 @@ feature -- Output
 					base_left_y - y_offset, 	
 					text);
 		end;
+
+	select_clickable (d: DRAWING_X;
+			values: GRAPHICAL_VALUES;
+			x_offset, y_offset: INTEGER) is
+			-- Select current figure.
+		require
+			drawable: d /= Void and then d.is_drawable
+		do
+			d.set_drawing_font (font (values));
+			d.set_background_gc_color (values.selected_clickable_bg_color);
+			d.set_foreground_gc_color (values.selected_clickable_fg_color);
+			d.draw_image_string (d,
+					base_left_x - x_offset,
+					base_left_y - y_offset,
+					text);
+		end;
+ 
+	unselect_clickable (d: DRAWING_X;
+			values: GRAPHICAL_VALUES;
+			x_offset, y_offset: INTEGER) is
+			-- Un select current figure.
+		require
+			drawable: d /= Void and then d.is_drawable
+		do
+			d.set_drawing_font (font (values));
+			d.set_background_gc_color (values.text_background_color);
+			d.set_foreground_gc_color (foreground_color (values));
+			d.draw_image_string (d,
+					base_left_x - x_offset,
+					base_left_y - y_offset,
+					text);
+		end;
+ 
+invariant
+
+	valid_text: text /= Void implies not text.empty
 
 end -- class TEXT_FIGURE

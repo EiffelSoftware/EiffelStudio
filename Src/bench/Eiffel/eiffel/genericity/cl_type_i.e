@@ -139,7 +139,17 @@ feature -- Access
 					end
 				end
 				if not l_is_precompiled then
-					Result := internal_il_type_name (l_class_c.name.twin, a_prefix)
+					if l_class_c.external_class_name.is_equal (l_class_c.name) then
+						Result := internal_il_type_name (l_class_c.name.twin, a_prefix)
+					else
+						Result := l_class_c.external_class_name.twin
+						if a_prefix /= Void then
+							if Result.item (Result.count) /= '.' then
+								Result.append_character ('.')
+							end
+							Result.append (a_prefix)
+						end
+					end
 				end
 			end
 		end

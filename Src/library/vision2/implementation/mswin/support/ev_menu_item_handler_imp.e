@@ -104,13 +104,13 @@ feature -- Basic operations
 
 feature {NONE} -- WEL Implementation
 
-	on_menu_command (menu_id: INTEGER) is
+--	on_menu_command (menu_id: INTEGER) is
 			-- The `menu_id' has been choosen from the menu.
 			-- If this feature is called, it means that the 
 			-- child is a menu.
-		do
+--		do
 			--menu_items.item(menu_id).on_activate
-		end
+--		end
 
 feature {EV_POPUP_MENU_IMP} -- Deferred features
 
@@ -142,6 +142,10 @@ end -- class EV_MENU_ITEM_HANDLER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/02/23 02:20:45  brendel
+--| Removed feature `on_menu_command'.
+--| This is now handled in EV_WINDOW_IMP.
+--|
 --| Revision 1.5  2000/02/19 05:45:00  oconnor
 --| released
 --|

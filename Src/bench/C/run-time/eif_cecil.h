@@ -107,7 +107,7 @@ struct ctable {
  * The array gt_gen holds patterns like [INTERGER, REFERENCE] in an unstructured
  * way (i.e. they are simply gathered in a whole array, for static intialization
  * purposes). The end of the array is signaled by a *single* SK_INVALID marker.
- * All the types are skeleton types as declared in struct.h. For references,
+ * All the types are skeleton types as declared in eif_struct.h. For references,
  * we don't need the dynamic type, so we simply use SK_DTYPE.
  * The gt_type array then lists the associated types (entry at "index" i in
  * gt_gen is associated to the same index i in gt_type).

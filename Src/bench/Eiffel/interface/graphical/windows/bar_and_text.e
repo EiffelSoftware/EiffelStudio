@@ -103,8 +103,7 @@ feature -- Standard Interface
 			!! format_menu.make (Interface_names.m_Formats, menu_bar);
 			!! special_menu.make (Interface_names.m_Special, menu_bar);
 			!! window_menu.make (Interface_names.m_Windows, menu_bar);
-			!! help_menu.make (Interface_names.m_Help, menu_bar);
-			menu_bar.set_help_button (help_menu.menu_button)
+			build_help_menu;
 		end;
 
 	build_bar is
@@ -131,6 +130,7 @@ feature -- Standard Interface
 			!! hole_holder.make_plain (hole);
 			hole_holder.set_button (hole_button);
 			build_edit_menu (edit_bar);
+			build_print_menu_entry;
 			!! quit_cmd.make (Current);
 			!! quit_button.make (quit_cmd, edit_bar);
 			!! quit_menu_entry.make (quit_cmd, file_menu);
@@ -251,7 +251,6 @@ feature -- Window Implementation
 			!! show_pref_menu_entry.make_default (show_pref_cmd, window_menu);
 			!! raise_tool_cmd.make (Project_tool);
 			!! menu_entry.make (raise_tool_cmd, window_menu);
-			!! menu_entry.make (Project_tool.explain_hole_holder.associated_command, help_menu);
 		end;
 
 	set_x_y (new_x, new_y: INTEGER) is
@@ -315,6 +314,7 @@ feature -- Window Implementation
 			quit_menu_entry: EB_MENU_ENTRY
 			exit_menu_entry: EB_MENU_ENTRY;
 		do
+			build_print_menu_entry;
 			!! quit_cmd.make (Current);
 			!! quit_button.make (quit_cmd, edit_bar);
 			!! quit_menu_entry.make (quit_cmd, file_menu);
@@ -328,7 +328,8 @@ feature -- Window Implementation
 	close_windows is
 			-- Close sub-windows.
 		do
-			close_search_window
+			close_search_window;
+			close_print_window
 		end;
 
 	resize_action is
@@ -417,15 +418,11 @@ feature -- Window Properties
 			end
 		end;
 
-	menu_bar: BAR;
-
 	format_menu: MENU_PULL;
 
 	special_menu: MENU_PULL;
 
 	window_menu: MENU_PULL;
-
-	help_menu: MENU_PULL;
 
 	hole: DEFAULT_HOLE_COMMAND;
 			-- Hole characterizing Current.

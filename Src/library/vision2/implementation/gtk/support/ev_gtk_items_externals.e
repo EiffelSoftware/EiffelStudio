@@ -87,6 +87,10 @@ feature {NONE} -- GTK C functions for list items
 		external "C | %"gtk_eiffel.h%""
 		end
 
+	c_gtk_list_item_is_selected (list: POINTER; item: POINTER): BOOLEAN is
+		external "C | %"gtk_eiffel.h%""
+		end
+
 feature {NONE} -- GTK C functions for multi-columns rows
 
 	c_gtk_clist_set_pixtext (list: POINTER; row, column: INTEGER; pixmap: POINTER; text: POINTER) is
@@ -176,7 +180,7 @@ feature {NONE} -- GTK C function for tree items
 
 feature {NONE} -- GTK C function for status bar items
 
-	c_gtk_statusbar_item_set_pixmap (statusbar: POINTER; pixmap: POINTER) is
+	c_gtk_statusbar_item_create_pixmap_place (statusbar: POINTER): POINTER is
 		external "C | %"gtk_eiffel.h%""
 		end
 

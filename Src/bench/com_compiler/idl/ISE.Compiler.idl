@@ -374,6 +374,9 @@ interface IEiffelCompletionInfo: IDispatch
 	[id (DISPID_EiffelComCompiler_FlushArguments), helpstring ("Flush arguments list")]
 	HRESULT FlushArguments();
 
+	[id (DISPID_EiffelComCompiler_TargetClasses), helpstring ("Classes starting with given string.")]
+	HRESULT TargetClasses ([in] BSTR bstrStart, [out, retval] IEnumEiffelClass** pClasses);
+
 	[id (DISPID_EiffelComCompiler_TargetFeatures), helpstring ("Features accessible from target.")]
 	HRESULT TargetFeatures ([in] BSTR bstrTarget, [in] BSTR bstrLocationName, [in] EIF_COMPLETION_LOCATION clLocation, [in] BSTR bstrFileName, [in] VARIANT_BOOL vbUseOverloading, [out] VARIANT* pvarNames, [out] IEiffelEnumString** pDescriptions, [out] VARIANT* pvarImageIndexes);
 

@@ -67,6 +67,23 @@ feature -- Access
 		alias
 			"HDM_SETITEM"
 		end
+		
+	Hdm_set_image_list: INTEGER is
+			-- Assigns an image list to an existing header control.
+		external
+			"C [macro %"cctrl.h%"]"
+		alias
+			"HDM_SETIMAGELIST"
+		end
+		
+	Hdm_get_image_list: INTEGER is
+			-- Retrieves the handle to the image list that has been set for an existing header control.
+		external
+			"C [macro %"cctrl.h%"]"
+		alias
+			"HDM_GETIMAGELIST"
+		end
+		
 
 end -- class WEL_HDM_CONSTANTS
 

@@ -48,6 +48,5 @@ feature {NONE}
 	include_path_name_sd: INTEGER is 159;
 	d_precompiled_sd: INTEGER is 162;
 	precompiled_sd: INTEGER is 163
-	multithreaded_sd: INTEGER is 164
 
 end

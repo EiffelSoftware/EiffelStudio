@@ -51,16 +51,14 @@
 		</paragraph>
 		<paragraph>An event (
 			<span>EVENT_HANDLER)</span> is associated to a control (here to the 
-			<span>BUTTON</span>). So the line
-		</paragraph>
-		<code>. ( {}. make (Current, $ ))</code>associates a click to 
+			<span>BUTTON</span>). So the line '		
+		<code>. ( {}. make (Current, $ ))</code>' associates a click to 
 		<span>my_button</span> to the feature 
 		<span>on_my_button_clicked</span>. So every time the 
 		<span>BUTTON</span> 
 		<span>my_button</span> is clicked, the feature 
 		<span>on_my_button_clicked</span> is executed. 
-		<line_break></line_break>
-		<line_break></line_break> 
+		</paragraph> 
 		<paragraph>The feature 
 			<span>my_button_clicked</span>displays a 
 			<span>MESSAGE_BOX</span> (

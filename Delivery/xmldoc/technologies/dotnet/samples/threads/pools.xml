@@ -1,8 +1,99 @@
-<document title="Pools"><meta_data ><help ><toc ><envision_pseudo_name>20</envision_pseudo_name><envision_location>Samples\Threading</envision_location></toc></help></meta_data><paragraph ><heading ><size >1</size>Pools example</heading><paragraph >This sample demonstrates use of the <code ><class_name >THREAD_POOL</class_name></code> (ThreadPool) class. The sample queues up an asynchronous method call that is executed by a thread from the thread pool managed by the Common Language Runtime. The method "does some work" and then sets an event indicating that the work has finished. The main thread waits on the event and then exits.</paragraph><heading ><size >2</size>Compiling</heading><paragraph >To see compiling instructions, you have to enable javascript.</paragraph><heading ><size >2</size>Running</heading><paragraph >After you launch the sample, the following output appears: </paragraph>
-<code_block >
+<document title="Pools">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_pseudo_name>20</envision_pseudo_name>
+				<envision_location>Samples\Threading</envision_location>
+			</toc>
+		</help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Pools example
+		</heading>
+		<paragraph>This sample demonstrates use of the 
+			<code>
+				<class_name>THREAD_POOL</class_name>
+			</code> (ThreadPool) class. The sample queues up an asynchronous method call that is executed by a thread from the thread pool managed by the Common Language Runtime. The method "does some work" and then sets an event indicating that the work has finished. The main thread waits on the event and then exits.
+		</paragraph>
+		<heading>
+			<size>2</size>Compiling
+		</heading>
+		<paragraph>To see compiling instructions, you have to enable javascript.</paragraph>
+		<heading>
+			<size>2</size>Running
+		</heading>
+		<paragraph>After you launch the sample, the following output appears: </paragraph><code_block>
 Main thread: Queuing an asynchronous operation.
 Main thread: Performing other operations.
 WorkItem thread: Performing asynchronous operation
 Main thread: Waiting for asynchronous operation to complete.
 </code_block>
-<paragraph >When the display is finished, the application wait for you to pressed the return key to finished the application.</paragraph><heading ><size >2</size>Under the Hood</heading><paragraph >This application shows how to use the thread <code ><class_name >THREAD_POOL</class_name></code>. An asynchronous thread is launched (<code ><keyword >feature</keyword></code> {<code ><class_name >THREAD_POOL</class_name></code>}.<code ><feature_name >queue_user_work_item_wait_callback_object</feature_name></code>(<code ><keyword >create</keyword></code> {<code ><class_name >WAIT_CALLBACK</class_name></code>}.<code ><feature_name >make</feature_name></code> (<code ><keyword >Current</keyword></code>, $<code ><feature_name >my_async_operation</feature_name></code>), <code ><local_variable >l_async_operation_done</local_variable></code>)) and is associated to the local variable <code ><local_variable >l_async_operation_done</local_variable>.</code>Both threads perform simultaneously some operations. The main thread wait for the asynchronous thread to complete his own operations (<code ><local_variable >l_async_operation_done</local_variable></code>.<code ><feature_name >wait_one</feature_name></code>) to close the application.</paragraph><paragraph >This sample contains the following class: </paragraph><list ordered="false">  <item ><code ><class_name >THREAD_POOL</class_name></code></item>  <item ><code ><class_name >WAIT_CALLBACK</class_name></code></item>  <item ><code ><class_name >AUTO_RESET_EVENT</class_name></code></item></list><heading ><size >2</size>Notes</heading><paragraph >This sample is translated from the example located in the Samples\Technologies\Threading\Pools subdirectory of the .NET Framework SDK samples directory of Microsoft Visual Studio .NET. </paragraph></paragraph></document>
+		<paragraph>When the display is finished, the application wait for you to pressed the return key to finished the application.</paragraph>
+		<heading>
+			<size>2</size>Under the Hood
+		</heading>
+		<paragraph>This application shows how to use the thread 
+			<code>
+				<class_name>THREAD_POOL</class_name>
+			</code>. An asynchronous thread is launched (
+			<code>
+				<keyword>feature</keyword>
+			</code> {
+			<code>
+				<class_name>THREAD_POOL</class_name>
+			</code>}.
+			<code>
+				<feature_name>queue_user_work_item_wait_callback_object</feature_name>
+			</code>(
+			<code>
+				<keyword>create</keyword>
+			</code> {
+			<code>
+				<class_name>WAIT_CALLBACK</class_name>
+			</code>}.
+			<code>
+				<feature_name>make</feature_name>
+			</code> (
+			<code>
+				<keyword>Current</keyword>
+			</code>, $
+			<code>
+				<feature_name>my_async_operation</feature_name>
+			</code>), 
+			<code>
+				<local_variable>l_async_operation_done</local_variable>
+			</code>)) and is associated to the local variable 
+			<code>
+				<local_variable>l_async_operation_done</local_variable>.
+			</code>Both threads perform simultaneously some operations. The main thread wait for the asynchronous thread to complete his own operations (
+			<code>
+				<local_variable>l_async_operation_done</local_variable>
+			</code>.
+			<code>
+				<feature_name>wait_one</feature_name>
+			</code>) to close the application.
+		</paragraph>
+		<paragraph>This sample contains the following class: </paragraph>
+		<list ordered="false">  
+			<item>
+				<code>
+					<class_name>THREAD_POOL</class_name>
+				</code>
+			</item>  
+			<item>
+				<code>
+					<class_name>WAIT_CALLBACK</class_name>
+				</code>
+			</item>  
+			<item>
+				<code>
+					<class_name>AUTO_RESET_EVENT</class_name>
+				</code>
+			</item>
+		</list>
+		<heading>
+			<size>2</size>Notes
+		</heading>
+		<paragraph>This sample is translated from the example located in the Samples\Technologies\Threading\Pools subdirectory of the .NET Framework SDK samples directory of Microsoft Visual Studio .NET. </paragraph>
+	</paragraph></document>

@@ -4,8 +4,6 @@
 			<toc>
 				<envision_location>Samples\Windows Forms</envision_location>
 				<envision_pseudo_name>50</envision_pseudo_name>
-				<studio_location></studio_location>
-				<studio_title></studio_title>
 			</toc>
 		</help>
 	</meta_data>
@@ -39,7 +37,7 @@
 			<span>LABEL</span> and a 
 			<link>
 				<url>../../../../../images/dotnet_samples/menu_contextuel.png</url>
-				<label>contextmenu will appear</label>
+				<label>context menu will appear</label>
 			</link>. 
 		</paragraph>
 		<paragraph></paragraph>

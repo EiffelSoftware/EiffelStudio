@@ -1,7 +1,5 @@
 <document title="Porting Instructions" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>11</size>Porting from one platform to another

@@ -1,7 +1,26 @@
-<document title="Dotnet Examples"><meta_data ><help ><toc ><envision_location>Samples\ADO.NET</envision_location><envision_title >ADO Sample</envision_title><studio_location /><studio_title /></toc></help></meta_data><paragraph ><heading ><size >1</size>ADO.NET example</heading><paragraph >This sample consist in a command line showing how to interact with a database.</paragraph><paragraph >The DataReader object is somewhat synonymous with a read-only/forward-only cursor over data. The DataReader API supports flat as well as hierarchical data. A DataReader object is returned after executing a command against a database. The format of the returned DataReader object is different from a recordset. For example, you might use the DataReader to show the results of a search list in a web page.</paragraph><heading ><size >2</size>Compiling</heading><paragraph >To see compiling instructions, you have to enable javascript.</paragraph><heading ><size >2</size>Running</heading><paragraph >After you launch the sample, the following output appears:</paragraph>
-
-
-<code_block >
+<document title="Dotnet Examples">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_location>Samples\ADO.NET</envision_location>
+				<envision_title>ADO Sample</envision_title>
+			</toc>
+		</help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>ADO.NET example
+		</heading>
+		<paragraph>This sample consist in a command line showing how to interact with a database.</paragraph>
+		<paragraph>The DataReader object is somewhat synonymous with a read-only/forward-only cursor over data. The DataReader API supports flat as well as hierarchical data. A DataReader object is returned after executing a command against a database. The format of the returned DataReader object is different from a recordset. For example, you might use the DataReader to show the results of a search list in a web page.</paragraph>
+		<heading>
+			<size>2</size>Compiling
+		</heading>
+		<paragraph>To see compiling instructions, you have to enable javascript.</paragraph>
+		<heading>
+			<size>2</size>Running
+		</heading>
+		<paragraph>After you launch the sample, the following output appears:</paragraph><code_block>
 Customer ID    Company Name
 ALFKI    Alfreds Futterkiste
 ANATR    Ana Trujillo Emparedados y helados
@@ -26,5 +45,49 @@ EASTC    Eastern Connection
 WILMK    Wilman Kala
 WOLZA    Wolski  Zajazd
 </code_block>
-
-<paragraph >When the display is finished, the application wait for you to pressed the return key to finish the application.</paragraph><heading ><size >2</size>Under the Hood</heading><paragraph >This application shows how to interact with a database. First the connection to the database is open (<code ><keyword >create</keyword></code> <code ><local_variable >my_sql_connection</local_variable></code>.<code ><feature_name >make_from_connection_string </feature_name></code> (<italic >my_database</italic>)), then a request to the database is made (create my_sql_command.<code ><feature_name >make_from_cmd_text_and_connection </feature_name></code>(<italic >my_command</italic>,<code ><local_variable >my_sql_connection</local_variable></code>)). Finally,  the result of the request is displayed.</paragraph><paragraph >This sample contains the following class: </paragraph><list ordered="false">  <item ><code ><class_name >SQL_DATA_READER</class_name></code></item>  <item ><code ><class_name >SQL_CONNECTION</class_name></code></item>  <item ><code ><class_name >SQL_COMMAND</class_name></code></item></list><heading ><size >2</size>Notes</heading><paragraph >This sample is translated from the example located in the QuickStart\howto\samples\adoplus subdirectory of the .NET Framework SDK samples directory of Microsoft Visual Studio .NET.</paragraph></paragraph></document>
+		<paragraph>When the display is finished, the application wait for you to pressed the return key to finish the application.</paragraph>
+		<heading>
+			<size>2</size>Under the Hood
+		</heading>
+		<paragraph>This application shows how to interact with a database. First the connection to the database is open (
+			<code>
+				<keyword>create</keyword>
+			</code> 
+			<code>
+				<local_variable>my_sql_connection</local_variable>
+			</code>.
+			<code>
+				<feature_name>make_from_connection_string </feature_name>
+			</code> (
+			<italic>my_database</italic>)), then a request to the database is made (create my_sql_command.
+			<code>
+				<feature_name>make_from_cmd_text_and_connection </feature_name>
+			</code>(
+			<italic>my_command</italic>,
+			<code>
+				<local_variable>my_sql_connection</local_variable>
+			</code>)). Finally,  the result of the request is displayed.
+		</paragraph>
+		<paragraph>This sample contains the following class: </paragraph>
+		<list ordered="false">  
+			<item>
+				<code>
+					<class_name>SQL_DATA_READER</class_name>
+				</code>
+			</item>  
+			<item>
+				<code>
+					<class_name>SQL_CONNECTION</class_name>
+				</code>
+			</item>  
+			<item>
+				<code>
+					<class_name>SQL_COMMAND</class_name>
+				</code>
+			</item>
+		</list>
+		<heading>
+			<size>2</size>Notes
+		</heading>
+		<paragraph>This sample is translated from the example located in the QuickStart\howto\samples\adoplus subdirectory of the .NET Framework SDK samples directory of Microsoft Visual Studio .NET.</paragraph>
+	</paragraph></document>

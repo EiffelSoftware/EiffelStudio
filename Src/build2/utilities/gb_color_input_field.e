@@ -116,6 +116,7 @@ feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY, GB_EV_EDITOR_CONSTRUCTOR} -- Imple
 		local
 			constant_context: GB_CONSTANT_CONTEXT
 			list_item: EV_LIST_ITEM
+			blocked_list_item: EV_LIST_ITEM
 		do
 			constant_context := object.constants.item (internal_gb_ev_any.type + internal_type)
 			if constant_context /= Void then
@@ -125,11 +126,10 @@ feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY, GB_EV_EDITOR_CONSTRUCTOR} -- Imple
 				list_item := constants_combo_box.selected_item
 				if list_item /= Void then
 					list_item.deselect_actions.block
+					blocked_list_item := list_item
 				end
-				switch_constants_mode
-				if list_item /= Void then
-					list_item.deselect_actions.resume
-				end
+				enable_constant_mode
+				
 				list_item := list_item_with_matching_text (constants_combo_box, constant_context.constant.name)
 				check
 					list_item_not_void: list_item /= Void
@@ -137,12 +137,17 @@ feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY, GB_EV_EDITOR_CONSTRUCTOR} -- Imple
 				list_item.select_actions.block
 				list_item.enable_select
 				list_item.select_actions.resume
+				if blocked_list_item /= Void then
+					blocked_list_item.deselect_actions.resume
+				end	
 			else
 				constants_button.select_actions.block
 				constants_button.disable_select
 				constants_button.select_actions.resume
-				switch_constants_mode
-				constants_combo_box.first.enable_select
+				disable_constant_mode
+				if has_select_item then
+					remove_select_item
+				end
 			end
 			color_area.set_background_color (a_value)
 			color_area.clear
@@ -173,35 +178,47 @@ feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY, GB_EV_EDITOR_CONSTRUCTOR} -- Imple
 			color_area.clear
 		end
 
-	switch_constants_mode is
-			-- Respond to a user press of `constants_button' and
-			-- update the displayed input fields accordingly.
+	disable_constant_mode is
+			-- Ensure constant entry fields are displayed.
 		do
-			if constants_button.is_selected then
-				select_button.parent.hide
-				color_area_parent.hide
-				constants_combo_box.show
+			constants_combo_box.hide
+			select_button.parent.show
+			color_area_parent.show
+			constants_combo_box.remove_selection
+			spacing_cell.show
+		end
+		
+
+	enable_constant_mode is
+			-- Ensure constant entry fields are hidden.
+		do
+			select_button.parent.hide
+			color_area_parent.hide
+			constants_combo_box.show
+			spacing_cell.hide
+			if object.constants.item (internal_gb_ev_any.type + internal_type) = Void then
+				if not has_select_item then
+					add_select_item
+				end
 				constants_combo_box.first.enable_select
-				spacing_cell.hide
-			else
-				constants_combo_box.hide
-				select_button.parent.show
-				color_area_parent.show
-				constants_combo_box.remove_selection
-				spacing_cell.show
 			end
 		end
 		
+		
 	populate_constants  is
 			-- Populate all constants.
+		require
+			no_selected_item: constants_combo_box.selected_item = Void
 		local
 			color_constants: ARRAYED_LIST [GB_CONSTANT]
 			list_item: EV_LIST_ITEM
 			lookup_string: STRING
 		do
 			constants_combo_box.wipe_out
-			create list_item.make_with_text (select_constant_string)
-			constants_combo_box.extend (list_item)
+			lookup_string := internal_gb_ev_any.type + internal_type
+			if internal_gb_ev_any.object.constants.item (lookup_string) = Void then
+				add_select_item
+			end
 			color_constants := Constants.color_constants
 			from
 				color_constants.start
@@ -211,10 +228,13 @@ feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY, GB_EV_EDITOR_CONSTRUCTOR} -- Imple
 				create list_item.make_with_text (color_constants.item.name)
 				list_item.set_pixmap (color_constants.item.small_pixmap)
 				list_item.set_data (color_constants.item)
-				
 				constants_combo_box.extend (list_item)
+				
+				list_item.deselect_actions.block
+				list_item.disable_select
+				list_item.deselect_actions.resume
+
 				if internal_type /= Void then
-					lookup_string := internal_gb_ev_any.type + internal_type
 					if internal_gb_ev_any.object.constants.has (lookup_string) and
 						color_constants.item = internal_gb_ev_any.object.constants.item (lookup_string).constant then
 						constants_button.enable_select
@@ -246,6 +266,9 @@ feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY, GB_EV_EDITOR_CONSTRUCTOR} -- Imple
 					constant.add_referer (constant_context)
 					object.add_constant_context (constant_context)
 					execute_agent (constant.value)
+					if has_select_item then
+						remove_select_item
+					end
 				else
 					create warning_dialog.make_initialized (1, show_invalid_constant_selection_warning, constant_rejected_warning, Constants_do_not_show_again)
 					warning_dialog.set_icon_pixmap (Icon_build_window @ 1)
@@ -253,6 +276,9 @@ feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY, GB_EV_EDITOR_CONSTRUCTOR} -- Imple
 					warning_dialog.set_title ("Invalid Constant Selected")
 					warning_dialog.show_modal_to_window (parent_window (Current))
 					preferences.save_resources
+					if not has_select_item then
+						add_select_item
+					end
 					constants_combo_box.first.enable_select
 				end
 			end

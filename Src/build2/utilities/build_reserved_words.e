@@ -179,6 +179,9 @@ feature -- Access
 			Result.extend ("set_icon_pixmap")
 			Result.extend ("make_with_title")
 			Result.extend ("default_create")
+			Result.extend ("default_create_called")
+			Result.extend ("is_in_default_state")
+			Result.extend ("user_initialization")
 			
 				-- Add names specific to Build.
 			Result.extend ("window")

@@ -50,6 +50,7 @@ inherit
 			on_set_focus,
 			on_kill_focus,
 			on_key_down,
+			on_char,
 			on_key_up,
 			on_set_cursor,
 			show,
@@ -289,6 +290,16 @@ feature {NONE} -- WEL Implementation
 		do
 			{EV_PRIMITIVE_IMP} Precursor (virtual_key, key_data)
 			process_tab_key (virtual_key)
+		end
+
+	on_char (character_code, key_data: INTEGER) is
+			-- Wm_char message
+			-- Avoid an unconvenient `bip' when the user
+			-- tab to another control.
+		do
+			if not has_focus then
+				disable_default_processing
+			end
 		end
 
 feature {NONE} -- Feature that should be directly implemented by externals

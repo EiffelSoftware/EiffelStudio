@@ -29,7 +29,8 @@ inherit
 			resize,
 			move,
 			destroy,
-			on_key_down
+			on_key_down,
+			on_char
 		end
 
 	WEL_UDS_CONSTANTS
@@ -178,6 +179,16 @@ feature {NONE} -- WEL Implementation
 				end
 			end
 		end	
+
+	on_char (character_code, key_data: INTEGER) is
+			-- Wm_char message
+			-- Avoid an unconvenient `bip' when the user
+			-- tab to another control.
+		do
+			if not has_focus then
+				disable_default_processing
+			end
+		end
 
 	move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is
 			-- We must not resize the height of the tool-bar.

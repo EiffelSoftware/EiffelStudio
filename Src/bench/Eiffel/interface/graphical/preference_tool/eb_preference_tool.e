@@ -8,8 +8,6 @@ indexing
 class EB_PREFERENCE_TOOL
 
 inherit
-
-	TOOLTIP_INITIALIZER;
 	PREFERENCE_TOOL
 		rename
 			display as p_display
@@ -26,14 +24,6 @@ inherit
 
 creation
 	make
-
-feature -- Access
-
-	tooltip_parent: COMPOSITE is
-			-- Tooltip parent is the preference tool
-		do
-			Result := Current
-		end
 
 feature -- Output
 
@@ -83,74 +73,74 @@ feature {NONE} -- Initialization
 feature {NONE} -- Constants
 
 	t_Tool_name: STRING is
-		do
+		once
 			Result := Interface_names.n_X_resource_name
 		end;
 
 	m_File: STRING is
-		do
+		once
 			Result := Interface_names.m_File
 		end;
 
 	m_Category: STRING is
-		do
+		once
 			Result := Interface_names.m_Category
 		end;
 
 	m_Help: STRING is
 		   -- Menu names
-		do
+		once
 			Result := Interface_names.f_Help
 		end;
 
 	b_Ok: STRING is
-		do
+		once
 			Result := Interface_names.b_Ok
 		end;
 
 	m_Ok: STRING is
-		do
+		once
 			Result := Interface_names.m_Ok
 		end;
 
 	b_Apply: STRING is
-		do
+		once
 			Result := Interface_names.b_Apply
 		end;
 
 	m_Apply: STRING is
-		do
+		once
 			Result := Interface_names.m_Apply
 		end;
 
 	b_Exit: STRING is
 			-- Buttons names
-		do
+		once
 			Result := Interface_names.b_Exit
 		end;
 
 	f_Exit: STRING is
-		do
+		once
 			Result := Interface_names.f_Exit
 		end;
 
 	m_Exit: STRING is
-		do
+		once
 			Result := Interface_names.m_Exit
 		end;
 
 	m_Save: STRING is
-		do
+		once
 			Result := Interface_names.m_Save
 		end;
 
 	a_Save: STRING is
-		do
+		once
 			Result := Interface_names.a_Save
 		end;
 
 	m_Validate: STRING is
-		do
+		once
 			Result := Interface_names.m_Validate
 		end;
 

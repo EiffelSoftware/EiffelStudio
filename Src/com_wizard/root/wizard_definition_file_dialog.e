@@ -42,6 +42,7 @@ feature {NONE} -- Initialization
 			create destination_folder_browse_button.make_by_id (Current, Destination_folder_browse_button_constant)
 			create help_button.make_by_id (Current, Help_button_constant)
 			create id_back.make_by_id (Current, Id_back_constant)
+			create msg_box.make
 		end
 
 feature -- Behavior
@@ -159,11 +160,8 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	msg_box: WEL_MSG_BOX is
+	msg_box: WEL_MSG_BOX
 			-- Message box
-		once
-			create Result.make
-		end
 
 	Initialization_error: STRING is "Initialization Error"
 			-- Initialization error message

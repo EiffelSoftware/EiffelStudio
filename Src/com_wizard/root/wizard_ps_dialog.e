@@ -38,13 +38,18 @@ feature {NONE} -- Initialization
 			create browse_button.make_by_id (Current, Browse_button_constant)
 			create help_button.make_by_id (Current, Help_button_constant)
 			create id_cancel.make_by_id (Current, Idcancel)
+			create msg_box.make
 		end
 
 feature -- Behavior
 
 	notify (control: WEL_CONTROL; notify_code: INTEGER) is
 		do
-			if control = browse_button then
+			if control = virtual_table_standard_radio then
+				proxy_stub_input_edit.enable
+			elseif control = virtual_table_universal_radio or control = automation_radio then
+				proxy_stub_input_edit.disable
+			elseif control = browse_button then
 				File_selection_dialog.activate (Current)
 				if File_selection_dialog.selected then
 					proxy_stub_input_edit.set_text (file_selection_dialog.file_name)

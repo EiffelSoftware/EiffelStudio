@@ -104,7 +104,7 @@ feature -- Status report
 	window_at: WEL_WINDOW is
 			-- Window containing current point
 		do
-			Result := windows.item (cwin_window_from_point (item))
+			Result := window_of_item (cwin_window_from_point (item))
 		end
 
 feature -- Comparison

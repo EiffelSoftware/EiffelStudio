@@ -43,7 +43,7 @@ feature -- Access
 	window: WEL_WINDOW is
 			-- Window that contains the tool
 		do
-			Result := window_manager.windows.item (cwel_toolinfo_get_hwnd (item))
+			Result := window_manager.window_of_item (cwel_toolinfo_get_hwnd (item))
 		end
 
 	id: INTEGER is

@@ -86,7 +86,7 @@ feature -- Access
 			window_id := cwel_tc_item_get_lparam (item)
 			window_hwmd := cwel_integer_to_pointer (window_id)
 			if window_hwmd /= default_pointer then
-				Result ?= windows.item (window_hwmd)
+				Result := window_of_item (window_hwmd)
 			end
 		end
 

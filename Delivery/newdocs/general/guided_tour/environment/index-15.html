@@ -1,0 +1,659 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN"><HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=ISO-8859-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+<META NAME="GENERATOR" CONTENT="Adobe FrameMaker 5.5/HTML Export Filter">
+<LINK REL="STYLESHEET" HREF="tour.css" CHARSET="ISO-8859-1" TYPE="text/css">
+<TITLE> 14  COMPUTING PROJECT METRICS</TITLE>
+</HEAD>
+<!--------------------------------------------------->
+<SCRIPT LANGUAGE="Javascript">
+	// Default values
+	var oNewWindow = 0;
+
+	function ImageClick( oImage )
+	{
+		if( oNewWindow == 0 || oNewWindow.closed )
+		{
+			oNewWindow = window.open (oImage.src,"", "status=no, toolbar=no, menubar=no, location=no, resizable=yes");
+		}
+		else
+		{
+			oNewWindow.location = oImage.src;
+		}
+	}
+</SCRIPT>
+<!--------------------------------------------------->
+<body bgcolor="#faf0e6">
+<DIV>
+<p class="top" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a> -- <a href="../index.html">Getting started with Eiffel (local)</a>
+
+<img src="power.gif" ALT="Eiffel Home Page" align="right" border="0"  usemap="#eiffel"><map name="eiffel"><area shape="RECT" alt="Eiffel Home Page" coords="0,0,109,226" HREF="http://www.eiffel.com"><area shape="default" nohref></map>
+
+<p class="top" ALIGN="left"><IMG SRC="normaldoc.gif" ALT="Previous, Up, Next" BORDER="0" WIDTH="300" HEIGHT="40" USEMAP="#navigation"><map name="navigation"><AREA SHAPE="RECT" alt="Previous section" COORDS="0,0,95,40" HREF="index-14.html"><AREA SHAPE="RECT" alt="Up" COORDS="96,0,199,40" HREF="index.html"><AREA SHAPE="RECT" alt="Next section" COORDS="200,0,300,40" HREF="index-16.html"><area shape="default" nohref></MAP>
+</DIV>
+<H1 CLASS="aa-sec2">
+<A NAME="pgfId-522626"></A>14  COMPUTING PROJECT METRICS</H1>
+<P CLASS="nn-first">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="tour-help.html">Help reading this manual</a>
+<P CLASS="nn-first">
+<A NAME="pgfId-522831"></A>In earlier sections we saw how EiffelStudio provides extensive documentation on your systems. That information was qualitative. Project managers and developers will also be interested in <SPAN CLASS="ff-italics">
+quantitative </SPAN>
+information about their projects. You can get such information through the <SPAN CLASS="ee-keyword">
+Metrics</SPAN>
+ tab of the Context pane, which enables you to perform a number of operations, to be detailed next:
+<UL>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-522834"></A>Apply predefined metrics (such as number of classes, number of invariants, number of features, number of compilations so far, and many others) to components of a system at various levels including feature, class, cluster, entire system.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-522839"></A>Define new metrics, through mathematical formulae or boolean selection, and apply them to your project.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-522842"></A>Store  measurement results, as well as metric definitions, into an XML archive that can be stored locally or made available on the Web for future reference.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-522845"></A>Compare the measurements on a system to those on record locally or on a Web site. ISE has released on its own site an archive recording the metric properties of its basic libraries, available to any other project for comparison.</LI>
+</UL>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-522631"></A>Meethodological observations</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-522860"></A>Although the field of software metrics is a rich one with an abundant literature, its methodological basis is sometimes subject to question. One should resist the tendency to believe numbers just because they are numbers (&quot;lies, damn lies, and metrics&quot;).
+<P CLASS="nn-normal">
+<A NAME="pgfId-522865"></A>Software engineers and their managers expect, however, to reap at least some of the benefits that precise quantification has brought to other engineering fields. Such is the purpose of software metrics, defined as <SPAN CLASS="ff-bold">
+quantitative estimates of product and project properties</SPAN>
+. Object-oriented development, with the rich software structures that it induces, is a particularly amenable to metric analysis. Even when some of the measures do not seem to bring much by themselves, comparing them to those of other projects may point to important properties of the software.
+<P CLASS="nn-normal">
+<A NAME="pgfId-522879"></A>The metrics capabilities of EiffelStudio were designed with these observations in mind. They result from a conservative approach, where no metric is provided without a credible assumption that it reflects some meaningful project or product attribute. For example, you will find a way to define a new metric as a linear combination of existing ones, but not a way to compute arbitrary arithmetic operations, since it isn't clear that multiplying two metrics, for example, ever makes sense.
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-522895"></A>Metric terminology</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-522896"></A>The following terms are used in the presentation of EiffelStudio metric mechanisms.
+<P CLASS="nn-normal">
+<A NAME="pgfId-522658"></A>A <SPAN CLASS="ff-bold">
+metric</SPAN>
+ -- not to be confused with a measure -- is a quantitative property of software products or processes whose possible values are numbers. A <SPAN CLASS="ff-bold">
+measure</SPAN>
+ is the value of a metric for a certain product or process.
+<P CLASS="nn-normal">
+<A NAME="pgfId-522659"></A>For example, we can evaluate the metric &quot;number of classes in the system&quot;, called just <SPAN CLASS="ee-text">
+Classes</SPAN>
+, by counting the classes in our system.  This yields a measure.
+<P CLASS="nn-normal">
+<A NAME="pgfId-522660"></A>We may distinguish between <SPAN CLASS="ff-italics">
+product</SPAN>
+ metrics, which measure properties of the elements being turned out (code, designs, documentation, bug reports...) and process metrics, which measure properties of the process whereby they are being turned out (salaries, expenses, time spent, delays...). The current metric facilities of EiffelStudio are primarily product-oriented, although a few metrics, such as &quot;number of compilations&quot;, are process metrics.
+<P CLASS="nn-normal">
+<A NAME="pgfId-522661"></A>Any metric should be relevant: related to some interesting property of the processes or products being measured: cost, estimated number of bugs, ease of maintenance... A <SPAN CLASS="ff-bold">
+metric theory</SPAN>
+ is a set of metric definitions accompanied with a set of convincing arguments to show that the metrics are relevant. Neither EiffelStudio nor this document provides a metric theorys. 
+<P CLASS="nn-normal">
+<A NAME="pgfId-522664"></A>The numbers yielded by measures are meaningless unless we describe what they refer to. Every metric is relative to a certain <SPAN CLASS="ff-bold">
+unit</SPAN>
+, specified as part of its definition. For example the unit for a metric that counts classes, such as <SPAN CLASS="ee-text">
+Classes</SPAN>
+, is called <SPAN CLASS="ee-text">
+CLASS</SPAN>
+.
+<P CLASS="nn-normal">
+<A NAME="pgfId-522665"></A>EiffelStudio provides a set of predefined units. Some simply serve to count occurrences of certain construct specimens in the software; examples include <SPAN CLASS="ee-text">
+CLASS</SPAN>
+, <SPAN CLASS="ee-text">
+CLUSTER</SPAN>
+, <SPAN CLASS="ee-text">
+FEATURE</SPAN>
+, <SPAN CLASS="ee-text">
+LINE</SPAN>
+, <SPAN CLASS="tt-nsymbol">
+&#8230;</SPAN>
+ The metric <SPAN CLASS="ee-text">
+RATIO</SPAN>
+ describes metrics whose values are divisions, for example &quot;average number of classes per cluster&quot;, obtained by dividing the number of classes by the number of classes.
+<P CLASS="nn-normal">
+<A NAME="pgfId-522670"></A>Any metric applies over one or more <SPAN CLASS="ff-bold">
+scope types</SPAN>
+. A scope type is a type of product or process over which the metric is measured; for product metric, examples include <SPAN CLASS="ee-text">
+feature</SPAN>
+ (meaning that we will compute a metric over a single feature), <SPAN CLASS="ee-text">
+class</SPAN>
+, <SPAN CLASS="ee-text">
+cluster</SPAN>
+, <SPAN CLASS="ee-text">
+system</SPAN>
+. They obey an order relation corresponding to containment order: a feature belongs to a class, a class to a cluster and so on.
+<P CLASS="nn-normal">
+<A NAME="pgfId-522671"></A>A <SPAN CLASS="ff-bold">
+scope</SPAN>
+ is an instance of a scope type. For example a given cluster is an instance of the scope type <SPAN CLASS="ee-text">
+cluster</SPAN>
+.
+<P CLASS="nn-normal">
+<A NAME="pgfId-522672"></A>To compute a measure is to apply a certain metric over a certain scope of an applicable scope type. For example we may compute the value of the metric <SPAN CLASS="ee-text">
+Classes</SPAN>
+ over a certain system.
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-522673"></A>Kinds of metrics</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-522675"></A>The EiffelStudio metric framework provides a number of predefined metrics but also enables users to define their own metrics in terms of the predefined ones according to a taxonomy illustrated as follows:
+<DIV>
+<MAP NAME="index-93">
+</MAP>
+<p>
+<ul>
+<!----><IMG SRC="index-93.png" USEMAP="#index-93">
+</ul>
+<p>
+</DIV>
+<P CLASS="nn-first">
+<A NAME="pgfId-522685"></A>Metrics are divided into elementary and composite:
+<UL>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-522686"></A>An elementary metric measures the number of occurrences of a certain pattern in the product or process. An example is the number of precondition clauses in a class.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-522687"></A>A composite metric, defined by a user of the environment, applies a mathematical or logical formula involving other metrics (elementary or previously defined metrics). </LI>
+</UL>
+<P CLASS="nn-first">
+<A NAME="pgfId-522690"></A>Among elementary metrics, we make a further distinction between raw and derived:
+<UL>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-522691"></A>Raw metrics are simple counts, built-in into the environment, of occurrences of certain basic elements. For example <SPAN CLASS="ee-text">
+Classes</SPAN>
+, the number of classes, is raw.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-522692"></A>It is often useful to define a new metric by subjecting a raw metric to one or more <SPAN CLASS="ff-bold">
+selection criteria</SPAN>
+. For example a class may be either deferred (abstract) or effective (concrete, i.e. fully implemented). This is a selection criterion. Separately, a class may have an invariant, or not; this is another selection criterion, <SPAN CLASS="ee-text">
+Invariant_equipped</SPAN>
+. You might want to know the number of classes that are deferred and have no invariant clause; if so, you may define a derived metric by submitting the raw metric <SPAN CLASS="ee-text">
+Classes</SPAN>
+ to both of these criteria connected by an &quot;and&quot;.</LI>
+</UL>
+<P CLASS="nn-first">
+<A NAME="pgfId-522693"></A>The precise definition of <SPAN CLASS="ff-italics">
+selection criterion</SPAN>
+ for a raw metric is: a property with a fixed set of possible values (two or more) characterizing the patterns being counted by the metric. Without the notions of selection criteria and derived metrics, EiffelStudio would need to have predefined (raw) metrics including all possible combinations, such as &quot;deferred and no invariant&quot;. This would quickly grow out of hand.
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-523135"></A>Defining a derived metric</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-523070"></A>Let us define a new derived metric. In the Context pane, choose the <SPAN CLASS="ee-keyword">
+Metrics</SPAN>
+ tab. Click the <SPAN CLASS="ee-keyword">
+Define new metric</SPAN>
+ button:
+<DIV>
+<p>
+<ul>
+<A TARGET="screenshots" HREF="index-94.png"><IMG WIDTH="100" SRC="index-94.png"></A>
+</ul>
+<p>
+</DIV>
+<P CLASS="nn-first">
+<A NAME="pgfId-522701"></A>In the dialog that comes up, the first tab, selected by default, is the one we want, <SPAN CLASS="ee-keyword">
+Derived</SPAN>
+:
+<DIV>
+<p>
+<ul>
+<A TARGET="screenshots" HREF="index-95.png"><IMG WIDTH="100" SRC="index-95.png"></A>
+</ul>
+<p>
+</DIV>
+<P CLASS="nn-first">
+<A NAME="pgfId-523080"></A>In the <SPAN CLASS="ee-keyword">
+Raw Metric</SPAN>
+ entry, currently set to <SPAN CLASS="ee-text">
+Classes</SPAN>
+, bring up the menu and select <SPAN CLASS="ee-text">
+Features</SPAN>
+. Note the large number of selection criteria applicable to the raw metric <SPAN CLASS="ee-text">
+Features</SPAN>
+ (number of features), reflecting the many angles under which it is possible to classify features:
+<DIV>
+<p>
+<ul>
+<A TARGET="screenshots" HREF="index-96.png"><IMG WIDTH="100" SRC="index-96.png"></A>
+</ul>
+<p>
+</DIV>
+<P CLASS="nn-first">
+<A NAME="pgfId-522702"></A>Assume you want a metric called <SPAN CLASS="ee-text">
+Public_functions_full_contracts</SPAN>
+ that counts the number of features that are functions, are exported, and have both a precondition and a postcondition. Enter its name and check the selected criteria:
+<DIV>
+<p>
+<ul>
+<A TARGET="screenshots" HREF="index-97.png"><IMG WIDTH="100" SRC="index-97.png"></A>
+</ul>
+<p>
+</DIV>
+<P CLASS="nn-first">
+<A NAME="pgfId-523143"></A>Click <SPAN CLASS="ee-keyword">
+OK </SPAN>
+to add this metric to the set of available metrics. It's actually been entered as the default metric to be computed, although we'll compute it only in a short while:
+<DIV>
+<p>
+<ul>
+<A TARGET="screenshots" HREF="index-98.png"><IMG WIDTH="100" SRC="index-98.png"></A>
+</ul>
+<p>
+</DIV>
+<P CLASS="nn-first">
+<A NAME="pgfId-523146"></A>Note that the <SPAN CLASS="ee-keyword">
+Unit </SPAN>
+field indicates the unit automatically assigned to this derived metric, <SPAN CLASS="ee-text">
+Feature</SPAN>
+, the same as the unit for the raw metric <SPAN CLASS="ee-text">
+Features</SPAN>
+ from which you have derived it.
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-522703"></A>Composite metrics</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-522704"></A>A composite metrics applies one or more mathematical operators to a set of metrics, themselves either elementary (raw or derived) or already composite. In line with the conservative approach mentioned earlier, EiffelStudio permits only three kinds of mathematical operator:
+<UL>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-522706"></A><SPAN CLASS="ff-bold">
+Linear</SPAN>
+ metrics of the form <SPAN CLASS="ee-symbol">
+&#8721;</SPAN>
+ <SPAN CLASS="ee-text">
+k</SPAN>
+<SPAN CLASS="ee-sub">
+i</SPAN>
+ <SPAN CLASS="ee-symbol">
+.</SPAN>
+ <SPAN CLASS="ee-text">
+m</SPAN>
+<SPAN CLASS="ee-sub">
+i </SPAN>
+, where the <SPAN CLASS="ee-text">
+k</SPAN>
+<SPAN CLASS="ee-sub">
+i</SPAN>
+ are real values and the <SPAN CLASS="ee-text">
+m</SPAN>
+<SPAN CLASS="ee-sub">
+i</SPAN>
+ existing metrics (either elementary or basic) with the same unit, other than RATIO. (It would be improper to add two RATIO since they might be ratios of incompatible things.)</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-523167"></A><SPAN CLASS="ff-bold">
+Ratio</SPAN>
+ metrics of the form <SPAN CLASS="ee-text">
+m</SPAN>
+<SPAN CLASS="ee-sub">
+1</SPAN>
+ <SPAN CLASS="ee-text">
+/</SPAN>
+ <SPAN CLASS="ee-text">
+m</SPAN>
+<SPAN CLASS="ee-sub">
+2</SPAN>
+ where both <SPAN CLASS="ee-text">
+m</SPAN>
+<SPAN CLASS="ee-sub">
+i</SPAN>
+ are previously defined metrics, not necessarily with the same unit, neither of which a RATIO (again because <SPAN CLASS="ee-text">
+RATIO</SPAN>
+ is a catch-all category for all divisions, so you can't divide further without courting incoherence). The resulting unit is <SPAN CLASS="ee-text">
+RATIO</SPAN>
+.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-523178"></A><SPAN CLASS="ff-bold">
+Scope comparison</SPAN>
+ metrics that measure the ratio of the value of a given non-ratio metric over two different scope types. For example by choosing the metric Classes and the scope types &quot;cluster&quot; and &quot;system&quot; we can measure the proportion of classes in a system that belong to the current cluster.</LI>
+</UL>
+<P CLASS="nn-first">
+<A NAME="pgfId-523239"></A>Let's define a linear metric <SPAN CLASS="ee-text">
+Direct_dependents </SPAN>
+that counts heirs (direct descendants) and direct clients of a class. Click <SPAN CLASS="ee-keyword">
+Define new metric</SPAN>
+ again and choose the tab <SPAN CLASS="ee-keyword">
+Linear</SPAN>
+. Bring up the <SPAN CLASS="ee-keyword">
+Metric</SPAN>
+ menu:
+<DIV>
+<p>
+<ul>
+<A TARGET="screenshots" HREF="index-99.png"><IMG WIDTH="100" SRC="index-99.png"></A>
+</ul>
+<p>
+</DIV>
+<P CLASS="nn-first">
+<A NAME="pgfId-523252"></A>To define the first term of the sum, select <SPAN CLASS="ee-text">
+Clients</SPAN>
+. Do <SPAN CLASS="ff-bold">
+not</SPAN>
+ click the button marked OK (we are not done yet as we need a second term) but instead click the <SPAN CLASS="ee-keyword">
++</SPAN>
+ button next to <SPAN CLASS="ee-keyword">
+Metric</SPAN>
+:
+<DIV>
+<p>
+<ul>
+<A TARGET="screenshots" HREF="index-100.png"><IMG WIDTH="100" SRC="index-100.png"></A>
+</ul>
+<p>
+</DIV>
+<P CLASS="nn-first">
+<A NAME="pgfId-522735"></A>The field at the bottom reflects the current state of the linear combination, which only includes the term <SPAN CLASS="ee-text">
+Clients</SPAN>
+, with the default coefficient 1. Now bring up the <SPAN CLASS="ee-keyword">
+Metric</SPAN>
+ menu again, choose <SPAN CLASS="ee-text">
+Heirs</SPAN>
+ this time, and click <SPAN CLASS="ee-keyword">
++</SPAN>
+ again. The expression for the sum appears in the bottom field:
+<DIV>
+<p>
+<ul>
+<A TARGET="screenshots" HREF="index-101.png"><IMG WIDTH="100" SRC="index-101.png"></A>
+</ul>
+<p>
+</DIV>
+<P CLASS="nn-first">
+<A NAME="pgfId-523267"></A>The name of our new linear metric will be <SPAN CLASS="ee-text">
+Direct_dependents</SPAN>
+. Enter it into the top field, <SPAN CLASS="ee-keyword">
+New_metric_name</SPAN>
+ (if you forget, you will be reminded), and click <SPAN CLASS="ee-keyword">
+OK</SPAN>
+. The name of the new metric and its unit become the defaults in the corresponding fields of the Context pane.
+<P CLASS="nn-normal">
+<A NAME="pgfId-523285"></A>Let's define one more metric, this time a ratio. We want to know the &quot;branching factor&quot;: average number of heirs per class. This will be the ration of metrics <SPAN CLASS="ee-text">
+Heirs</SPAN>
+ and <SPAN CLASS="ee-text">
+Classes</SPAN>
+. Click <SPAN CLASS="ee-keyword">
+Define new metric</SPAN>
+ then <SPAN CLASS="ee-keyword">
+Metric ratio</SPAN>
+:
+<DIV>
+<p>
+<ul>
+<A TARGET="screenshots" HREF="index-102.png"><IMG WIDTH="100" SRC="index-102.png"></A>
+</ul>
+<p>
+</DIV>
+<P CLASS="nn-first">
+<A NAME="pgfId-523294"></A>Select <SPAN CLASS="ee-text">
+Heirs</SPAN>
+ in the <SPAN CLASS="ee-keyword">
+Numerator</SPAN>
+ menu on the left, <SPAN CLASS="ee-text">
+Classes</SPAN>
+ in the <SPAN CLASS="ee-keyword">
+Denominator</SPAN>
+ menu on the right; do <SPAN CLASS="ff-italics">
+not </SPAN>
+check the box &quot;Display as percentage&quot; at the bottom (we prefer to see the branching factor as a number); enter the metric name <SPAN CLASS="ee-text">
+Average_heirs</SPAN>
+, more clear than &quot;branching factor&quot;, in the field at the top, and click <SPAN CLASS="ee-keyword">
+OK</SPAN>
+. You now have three user-defined metrics available in addition to predefined metrics, as you can check by bringing up the <SPAN CLASS="ee-keyword">
+Metric</SPAN>
+ menu on the Context pane:
+<DIV>
+<p>
+<ul>
+<A TARGET="screenshots" HREF="index-103.png"><IMG WIDTH="100" SRC="index-103.png"></A>
+</ul>
+<p>
+</DIV>
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-522736"></A>Applicable scope types</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-523315"></A>The reason <SPAN CLASS="ee-text">
+Average_heirs</SPAN>
+ is grayed out on the last figure is that it's not applicable to the current scope. Each metric indeed has a minimum &quot;applicable scope type&quot;; for example it doesn't make sense to compute the number of attributes in a feature, since the smallest construct in which attributes appear is a class, bigger than a feature. Similarly, the minimum scope type for <SPAN CLASS="ee-text">
+Classes</SPAN>
+ (the denominator of <SPAN CLASS="ee-text">
+Average_heirs</SPAN>
+) is <SPAN CLASS="ee-text">
+Cluster</SPAN>
+, since we can only start counting classes at that level.
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-523323"></A>Computing measures</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-523324"></A>Let's now compute a few measures. These will all be relative to the entire system, so the first thing to do is to change the <SPAN CLASS="ee-keyword">
+Scope</SPAN>
+ field of the Context pane (the second field from the left at the top on the preceding figure) to <SPAN CLASS="ee-text">
+System</SPAN>
+, the next-to-last entry on the corresponding menu.
+<P CLASS="jj-small">
+<A NAME="pgfId-523325"></A>The measures that you get should be identical to those shown next, or very close. Differences, if any, may result from changes in the EiffelStudio delivery, especially EiffelBase, or operations that you have performed on the Guided Tour system.
+<P CLASS="nn-first">
+<A NAME="pgfId-523326"></A>First let's use a predefined metric to compute the number of classes in our system. In the <SPAN CLASS="ee-keyword">
+Metrics </SPAN>
+field bring up the menu and choose <SPAN CLASS="ee-keyword">
+Classes </SPAN>
+<SPAN CLASS="ee-symbol">
+--> </SPAN>
+<SPAN CLASS="ee-keyword">
+All</SPAN>
+. The<SPAN CLASS="ee-keyword">
+ Unit</SPAN>
+ field is updated to the unit of that metric:
+<DIV>
+<p>
+<ul>
+<A TARGET="screenshots" HREF="index-104.png"><IMG WIDTH="100" SRC="index-104.png"></A>
+</ul>
+<p>
+</DIV>
+<P CLASS="nn-first">
+<A NAME="pgfId-523331"></A>For more clarity, change the name of the next measure, initialized to <SPAN CLASS="ee-text">
+Result1</SPAN>
+ (leftmost top field above) to <SPAN CLASS="ee-text">
+Class_count</SPAN>
+. Now compute that measure by clicking the <SPAN CLASS="ee-keyword">
+Calculate metric</SPAN>
+ button, at the place shown on the figure. This diplays the resulting measure in the field just below:
+<DIV>
+<p>
+<ul>
+<A TARGET="screenshots" HREF="index-105.png"><IMG WIDTH="100" SRC="index-105.png"></A>
+</ul>
+<p>
+</DIV>
+<P CLASS="nn-first">
+<A NAME="pgfId-523348"></A>As you see, our system has 183 classes. Refining the measure -- for example by restricting the scope to certain clusters -- would show that all but a handful belong to the EiffelBase library. But you already know this, so don't perform these measures yet (you can do them later).
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-523349"></A>Saving measures</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-523350"></A>When you compute a measure, it's not kept anywhere, and the next measure will displace it. To keep the one you just made, click the button labeled <SPAN CLASS="ee-keyword">
+Add measure to the list and save it</SPAN>
+ on the above figure:
+<DIV>
+<p>
+<ul>
+<A TARGET="screenshots" HREF="index-106.png"><IMG WIDTH="100" SRC="index-106.png"></A>
+</ul>
+<p>
+</DIV>
+<P CLASS="nn-first">
+<A NAME="pgfId-523316"></A>The operation has had two effects:
+<UL>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-523361"></A>Add the latest measure to the table of currently displayed measure.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-523362"></A>The first time around, as here, created a metrics file; a messages tells us this:</LI>
+</UL>
+<DIV>
+<p>
+<ul>
+<A TARGET="screenshots" HREF="index-107.png"><IMG WIDTH="100" SRC="index-107.png"></A>
+</ul>
+<p>
+</DIV>
+<P CLASS="nn-first">
+<A NAME="pgfId-523383"></A>Metric information will be kept in the subdirectory <SPAN CLASS="ee-keyword">
+Metrics</SPAN>
+ of the project directory. The generated <SPAN CLASS="ee-keyword">
+metric_file.xml</SPAN>
+ file contains both the metrics you have defined, and the measures you have performed. This makes it possible to use it both for:
+<UL>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-523387"></A>Applying to a new project the metrics that you have defined for an existing one (so that, as you go, you can accumulate a portfolio of useful metrics).</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-523388"></A>Using existing measures as a comparison for new projects.</LI>
+</UL>
+<P CLASS="nn-first">
+<A NAME="pgfId-523391"></A>To obtain more measures, apply the three metrics that you defined earlier -- with names <SPAN CLASS="ee-text">
+Public_functions_full_contracts</SPAN>
+, <SPAN CLASS="ee-text">
+Direct_dependents</SPAN>
+ and <SPAN CLASS="ee-text">
+Average_heirs</SPAN>
+ -- to the entire system and save the corresponding measures. You can use appropriate names for the results or use the EiffelStudio defaults. The result will be as follows:
+<DIV>
+<p>
+<ul>
+<A TARGET="screenshots" HREF="index-108.png"><IMG WIDTH="100" SRC="index-108.png"></A>
+</ul>
+<p>
+</DIV>
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-522771"></A>Operations on metrics</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-523419"></A>Click the button labeled <SPAN CLASS="ee-keyword">
+Manage metrics</SPAN>
+ on the last figure. This brings up the metric management panel:
+<DIV>
+<p>
+<ul>
+<A TARGET="screenshots" HREF="index-109.png"><IMG WIDTH="100" SRC="index-109.png"></A>
+</ul>
+<p>
+</DIV>
+<P CLASS="nn-first">
+<A NAME="pgfId-523424"></A>You can use it to rearrange the order of the metrics you have defined (by selecting one of them and clicking <SPAN CLASS="ee-keyword">
+Up </SPAN>
+or <SPAN CLASS="ee-keyword">
+Down</SPAN>
+) and delete any of them. The <SPAN CLASS="ee-keyword">
+Formula </SPAN>
+field shows the definition -- arithmetic, or boolean -- of the selected metric. The <SPAN CLASS="ee-keyword">
+Import</SPAN>
+ button will let you, if you have defined metrics in another project, select the corresponding XML file to add them to those of your current project.
+<P CLASS="nn-normal">
+<A NAME="pgfId-523425"></A>Here (possibly after having tried rearranging the metrics) just click <SPAN CLASS="ee-keyword">
+Exit</SPAN>
+.
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-523426"></A>Metric archives</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-522772"></A>What does a measure mean? You don't necessarily know in the absolute, but you might want to compare your results to those of other projects. For example, if you have measured the average number of invariant or other contract clauses in your system, you might be curious to know how this compares to ISE's EiffelBase library.
+<P CLASS="nn-first">
+<A NAME="pgfId-522773"></A>The notion of metric archive addresses this need. You may:
+<UL>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-522774"></A>As noted above, archive all current measures into an XML file, called a measurement archive.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-522775"></A>Make this measurement archive available in a shared directory, or as a URL on the Internet.</LI>
+</UL>
+<P CLASS="nn-first">
+<A NAME="pgfId-522776"></A>At any time in a project, select any measurement archive, local or URL, as the reference archive; in that case all measures that you perform will be compared to those of the reference archive. You may select various comparison formats: percentage (the default), difference percentage, plain value.
+<P CLASS="nn-first">
+<A NAME="pgfId-522785"></A>ISE has established a new Web site, <SPAN CLASS="ww-crossref">
+<A HREF="http://metrics.eiffel.com" CLASS="URL">http://metrics.eiffel.com</A></SPAN>
+, as a publicly available reference for metric collections on ISE's own libraries (EiffelBase, EiffelVision, ...) and products. This provides an invaluable source of comparisons for other projects within and without ISE.
+<P CLASS="nn-normal">
+<A NAME="pgfId-523449"></A>Let's see how this works. We'll compare the number of classes in our system to the number of classes in EiffelVision. Click the last button, <SPAN CLASS="ee-keyword">
+Compare to archive</SPAN>
+, in the Context panel:
+<DIV>
+<p>
+<ul>
+<A TARGET="screenshots" HREF="index-110.png"><IMG WIDTH="100" SRC="index-110.png"></A>
+</ul>
+<p>
+</DIV>
+<P CLASS="nn-normal">
+<A NAME="pgfId-527276"></A>This brings up the archive comparison dialog:
+<DIV>
+<p>
+<ul>
+<A TARGET="screenshots" HREF="index-111.png"><IMG WIDTH="100" SRC="index-111.png"></A>
+</ul>
+<p>
+</DIV>
+<P CLASS="nn-first">
+<A NAME="pgfId-527281"></A>You can <SPAN CLASS="ee-keyword">
+Browse...</SPAN>
+ to select a local archive (a <SPAN CLASS="ee-keyword">
+.xml</SPAN>
+ file) for comparison, but if you have access to the Internet enter the following URL in the <SPAN CLASS="ee-keyword">
+File or URL</SPAN>
+ file:
+<p><ul><table bgcolor="#cfffcf" width="79%" BORDER="1">
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-527288"></A><SPAN CLASS="ee-keyword">
+http://metrics.eiffel.com/vision.xml</SPAN>
+
+</TD>
+</TR>
+</table></ul><p>
+<P CLASS="nn-first">
+<A NAME="pgfId-527289"></A>If you do not have access to the Web, <SPAN CLASS="ee-keyword">
+Browse... </SPAN>
+instead to the file <SPAN CLASS="ee-keyword">
+vision.xml</SPAN>
+ of the documentation directory, which has the same information, although possibly less up to date. 
+<P CLASS="nn-normal">
+<A NAME="pgfId-527306"></A>Click the <SPAN CLASS="ee-keyword">
+Set </SPAN>
+button next to <SPAN CLASS="ee-keyword">
+Ratio of computed measure to archive</SPAN>
+ to select this format for displaying the comparisons.<SPAN CLASS="ee-keyword">
+</SPAN>
+
+<P CLASS="nn-normal">
+<A NAME="pgfId-527305"></A>Click <SPAN CLASS="ee-keyword">
+Close</SPAN>
+. This updates the display of computed measures as shown by the following figure. All future measures that you perform will be immediately compared to the values in the selected archive if the metric is available on both sides.
+<DIV>
+<p>
+<ul>
+<A TARGET="screenshots" HREF="index-112.png"><IMG WIDTH="100" SRC="index-112.png"></A>
+</ul>
+<p>
+</DIV>
+<P CLASS="nn-first">
+<A NAME="pgfId-527308"></A>The option that we saw in the <SPAN CLASS="ee-keyword">
+Compare to archive</SPAN>
+ dialog enables you to define an existing archive as reference for your current and future measurements. 
+<P CLASS="nn-normal">
+<A NAME="pgfId-527313"></A>The other two self-explanatory options, shown in the picture of the dialog on the previous page, enable you to <SPAN CLASS="ff-bold">
+create</SPAN>
+ your own archive, and to update an existing one. You can then make this archive available, in a local file or on the Web, for other projects to perform comparisons.
+<P CLASS="nn-normal">
+<A NAME="pgfId-527341"></A>An archive, stored as an XML file, include both the project metrics and its current measures. The metrics will be made available for import to projects selecting the archive for comparison.
+</DIV>
+<p class="bottom" ALIGN="left"><IMG SRC="normaldoc.gif" ALT="Previous, Up, Next" BORDER="0" WIDTH="300" HEIGHT="40" USEMAP="#navigation"><map name="navigation"><AREA SHAPE="RECT" alt="Previous section" COORDS="0,0,95,40" HREF="index-14.html"><AREA SHAPE="RECT" alt="Up" COORDS="96,0,199,40" HREF="index.html"><AREA SHAPE="RECT" alt="Next section" COORDS="200,0,300,40" HREF="index-16.html"><area shape="default" nohref></MAP>
+
+<p class="bottom" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a> -- <a href="../index.html">Getting started with Eiffel (local)</a>
+
+<p class="copyright" align="center">Copyright Interactive Software Engineering, 2001
+</BODY>
+</HTML>

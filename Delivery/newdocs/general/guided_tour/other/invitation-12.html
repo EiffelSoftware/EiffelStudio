@@ -1,0 +1,237 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN"><HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=ISO-8859-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+<META NAME="GENERATOR" CONTENT="Adobe FrameMaker 5.5/HTML Export Filter">
+<LINK REL="STYLESHEET" HREF="tour.css" CHARSET="ISO-8859-1" TYPE="text/css">
+<TITLE> 11  POLYMORPHISM AND DYNAMIC BINDING </TITLE>
+</HEAD>
+<!--------------------------------------------------->
+<SCRIPT LANGUAGE="Javascript">
+	// Default values
+	var oNewWindow = 0;
+
+	function ImageClick( oImage )
+	{
+		if( oNewWindow == 0 || oNewWindow.closed )
+		{
+			oNewWindow = window.open (oImage.src,"", "status=no, toolbar=no, menubar=no, location=no, resizable=yes");
+		}
+		else
+		{
+			oNewWindow.location = oImage.src;
+		}
+	}
+</SCRIPT>
+<!--------------------------------------------------->
+<body bgcolor="#faf0e6">
+<DIV>
+<p class="top" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a> -- <a href="../index.html">Getting started with Eiffel (local)</a>
+
+<img src="power.gif" ALT="Eiffel Home Page" align="right" border="0"  usemap="#eiffel"><map name="eiffel"><area shape="RECT" alt="Eiffel Home Page" coords="0,0,109,226" HREF="http://www.eiffel.com"><area shape="default" nohref></map>
+
+<p class="top" ALIGN="left"><IMG SRC="normaldoc.gif" ALT="Previous, Up, Next" BORDER="0" WIDTH="300" HEIGHT="40" USEMAP="#navigation"><map name="navigation"><AREA SHAPE="RECT" alt="Previous section" COORDS="0,0,95,40" HREF="invitation-11.html"><AREA SHAPE="RECT" alt="Up" COORDS="96,0,199,40" HREF="invitation.html"><AREA SHAPE="RECT" alt="Next section" COORDS="200,0,300,40" HREF="invitation-13.html"><area shape="default" nohref></MAP>
+</DIV>
+<H1 CLASS="aa-sec2">
+<A NAME="pgfId-445445"></A>11  POLYMORPHISM AND DYNAMIC BINDING </H1>
+<P CLASS="nn-first">
+<A NAME="pgfId-445448"></A><A NAME="marker-445446"></A>Inheritance<A NAME="marker-445447"></A> is not just a module combination and enrichment mechanism. It also enables the definition of flexible entities that may become attached to objects of various forms at run time, a property known as polymorphism. 
+<P CLASS="nn-normal">
+<A NAME="pgfId-445450"></A>This remarkable facility must be reconciled with static <A NAME="marker-445449"></A>typing. The language convention is simple: an assignment of the form <SPAN CLASS="ee-text">
+a</SPAN>
+<SPAN CLASS="ee-comment">
+ :=</SPAN>
+ <SPAN CLASS="ee-text">
+b</SPAN>
+ is permitted not only if <SPAN CLASS="ee-text">
+a</SPAN>
+ and <SPAN CLASS="ee-text">
+b</SPAN>
+ are of the same type, but more generally if <SPAN CLASS="ee-text">
+a</SPAN>
+ and <SPAN CLASS="ee-text">
+b</SPAN>
+ are of reference types <SPAN CLASS="ee-text">
+A</SPAN>
+ and <SPAN CLASS="ee-text">
+B</SPAN>
+, based on classes<SPAN CLASS="ee-text">
+ A</SPAN>
+ and <SPAN CLASS="ee-text">
+B</SPAN>
+ such that <SPAN CLASS="ee-text">
+B</SPAN>
+ is a descendant of <SPAN CLASS="ee-text">
+A</SPAN>
+. 
+<P CLASS="nn-normal">
+<A NAME="pgfId-445451"></A>This corresponds to the intuitive idea that a value of a more specialized type may be assigned to an entity of a less specialized type -- but not the reverse. (As an analogy, consider that if you request vegetables, getting green vegetables is fine, but if you ask for green vegetables, receiving a dish labeled just &quot;vegetables&quot; is not acceptable, as it could include, say, carrots.) 
+<P CLASS="nn-normal">
+<A NAME="pgfId-445452"></A>What makes this possibility particularly powerful is the complementary facility: <SPAN CLASS="ff-bold">
+feature redefinition</SPAN>
+<A NAME="marker-445453"></A>. A class may redefine some or all of the features which it inherits from its parents. For an attribute or function, the redefinition may affect the type, replacing the original by a descendant; for a routine it may also affect the implementation, replacing the original's routine body by a new one. 
+<P CLASS="nn-normal">
+<A NAME="pgfId-445454"></A>Assume for example a class <SPAN CLASS="ee-text">
+POLYGON</SPAN>
+, describing polygons, whose features include an array of points representing the vertices and a function <SPAN CLASS="ee-text">
+perimeter</SPAN>
+ which computes a polygon's perimeter by summing the successive distances between adjacent vertices. An heir of <SPAN CLASS="ee-text">
+POLYGON</SPAN>
+ may begin as:
+<p><ul><table bgcolor="#cfffcf" width="79%" BORDER="1">
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-445457"></A><SPAN CLASS="ee-keyword">
+class</SPAN>
+ RECTANGLE <SPAN CLASS="ee-keyword">
+inherit</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-445459"></A>&nbsp;&nbsp;&nbsp;&nbsp;POLYGON <SPAN CLASS="ee-keyword">
+redefine</SPAN>
+<A NAME="marker-445458"></A> perimeter <SPAN CLASS="ee-keyword">
+end</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-445460"></A><SPAN CLASS="ee-keyword">
+feature</SPAN>
+ -- Specific features of rectangles, such as:
+<P CLASS="ee-text">
+<A NAME="pgfId-452713"></A>&nbsp;&nbsp;&nbsp;&nbsp;side1: REAL; side2: REAL
+<P CLASS="ee-text">
+<A NAME="pgfId-445461"></A>&nbsp;&nbsp;&nbsp;&nbsp;perimeter: REAL <SPAN CLASS="ee-keyword">
+is</SPAN>
+
+<P CLASS="ee-comment">
+<A NAME="pgfId-445463"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-- Rectangle-specific version
+<P CLASS="ee-text">
+<A NAME="pgfId-452718"></A><SPAN CLASS="ee-keyword">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;do</SPAN>
+ Result := 2 * (side1 + side2) <SPAN CLASS="ee-keyword">
+end</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-445464"></A>&nbsp;&nbsp;&nbsp;&nbsp;... Other RECTANGLE features ... 
+</TD>
+</TR>
+</table></ul><p>
+<P CLASS="nn-first">
+<A NAME="pgfId-445466"></A>Here it is appropriate to redefine <SPAN CLASS="ee-text">
+perimeter</SPAN>
+ for rectangles as there is a simpler and more efficient algorithm. Note the explicit <SPAN CLASS="ee-keyword">
+redefine</SPAN>
+ subclause (which would come after the <SPAN CLASS="ee-keyword">
+rename</SPAN>
+ if present). 
+<P CLASS="nn-normal">
+<A NAME="pgfId-445467"></A>Other descendants of <SPAN CLASS="ee-text">
+POLYGON</SPAN>
+ may also have their own redefinitions of <SPAN CLASS="ee-text">
+perimeter</SPAN>
+. The version to use in any call is determined by the run-time form of the target. Consider the following class fragment:
+<p><ul><table bgcolor="#cfffcf" width="79%" BORDER="1">
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-452723"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;p: POLYGON; r: RECTANGLE
+<P CLASS="ee-text">
+<A NAME="pgfId-445470"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;... <SPAN CLASS="ee-keyword">
+create</SPAN>
+  p; <SPAN CLASS="ee-keyword">
+create</SPAN>
+  r; ...
+<P CLASS="ee-text">
+<A NAME="pgfId-445472"></A><SPAN CLASS="ee-keyword">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if</SPAN>
+ c <SPAN CLASS="ee-keyword">
+then</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-445473"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;p := r
+<P CLASS="ee-text">
+<A NAME="pgfId-445474"></A><SPAN CLASS="ee-keyword">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-445475"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print (p<SPAN CLASS="ee-dot">
+.</SPAN>
+perimeter) 
+</TD>
+</TR>
+</table></ul><p>
+<P CLASS="nn-first">
+<A NAME="pgfId-445476"></A>The polymorphic assignment <SPAN CLASS="ee-text">
+p </SPAN>
+:= <SPAN CLASS="ee-text">
+r</SPAN>
+ is valid because of the above rule. If condition <SPAN CLASS="ee-text">
+c</SPAN>
+ is false, <SPAN CLASS="ee-text">
+p</SPAN>
+ will be attached to an object of type <SPAN CLASS="ee-text">
+POLYGON</SPAN>
+ for the computation of <SPAN CLASS="ee-text">
+p</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+perimeter</SPAN>
+, which will thus use the polygon algorithm. In the opposite case, however, <SPAN CLASS="ee-text">
+p</SPAN>
+ will be attached to a rectangle; then the computation will use the version redefined for <SPAN CLASS="ee-text">
+RECTANGLE</SPAN>
+. This is known as <SPAN CLASS="ff-bold">
+dynamic binding</SPAN>
+<A NAME="marker-445477"></A>. 
+<P CLASS="nn-normal">
+<A NAME="pgfId-445478"></A>Dynamic binding provides a high degree of flexibility. The advantage for clients is the ability to request an operation (such as perimeter computation) without explicitly selecting one of its variants; the choice only occurs at run-time. This is essential in large systems, where many variants may be available; dynamic binding protects each component against changes in other components. 
+<P CLASS="nn-normal">
+<A NAME="pgfId-445479"></A>This technique is particularly attractive when compared to its closest equivalent in traditional approaches, where you would need records with variant components, or union types (C), together with <SPAN CLASS="ee-keyword">
+case</SPAN>
+ (switch) instructions to discriminate between variants. This means that every client must know about every possible case, and that any extension may invalidate a large body of existing software.
+<P CLASS="nn-normal">
+<A NAME="pgfId-445480"></A>The combination of inheritance, feature redefinition, polymorphism and dynamic binding supports a development mode in which every module is open and incremental. When you want to reuse an existing class but need to adapt it to a new context, you can define a new descendant of that class (with new features, redefined ones, or both) without any change to the original. This facility is of great importance in software development, an activity that -- by design or circumstance -- is invariably incremental. 
+<P CLASS="nn-normal">
+<A NAME="pgfId-445481"></A>The power of these techniques demands adequate controls. First, feature redefinition, as seen above, is explicit. Second, because the language is typed, a compiler can check statically whether a feature application <SPAN CLASS="ee-text">
+a</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+f </SPAN>
+is correct. In contrast, dynamically typed object-oriented languages defer checks until run-time and hope for the best: if an object &quot;sends a message&quot; to another (that is to say, calls one of its routines) one just expects that the corresponding class, or one of its ancestors, will happen to include an appropriate routine; if not, a run-time error will occur. Such errors will not happen during the execution of a type-checked Eiffel system. 
+<P CLASS="nn-normal">
+<A NAME="pgfId-445483"></A>In other words, the language reconciles dynamic <SPAN CLASS="ff-italics">
+binding</SPAN>
+ with static <SPAN CLASS="ff-italics">
+typing</SPAN>
+<A NAME="marker-445482"></A>. Dynamic binding guarantees that whenever more than one version of a routine is applicable the <SPAN CLASS="ff-italics">
+right</SPAN>
+ version (the one most directly adapted to the target object) will be selected. Static typing means that the compiler makes sure there is <SPAN CLASS="ff-italics">
+at least one</SPAN>
+ such version. 
+<P CLASS="nn-normal">
+<A NAME="pgfId-445484"></A>This policy also yields an important performance benefit: in contrast with the costly run-time searches that may be needed with dynamic typing (since a requested routine may not be defined in the class of the target object but inherited from a possibly remote ancestor), the EiffelBench implementation always finds the appropriate routine in constant-bounded time. 
+<P CLASS="nn-normal">
+<A NAME="pgfId-445485"></A>Assertions provide a further mechanism for controlling the power of redefinition. In the absence of specific precautions, redefinition may be dangerous: how can a client be sure that evaluation of<SPAN CLASS="ee-text">
+ p</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+perimeter</SPAN>
+ will not in some cases return, say, the area? Preconditions and postconditions provide the answer by limiting the amount of freedom granted to eventual redefiners. The rule is that any redefined version must satisfy a weaker or equal precondition and ensure a stronger or equal postcondition than in the original. This means that it must stay within the semantic boundaries set by the original assertions.
+<P CLASS="nn-normal">
+<A NAME="pgfId-445488"></A>The rules on redefinition and assertions are part of the <A NAME="marker-445486"></A>Design <A NAME="marker-445487"></A>by Contract theory, where redefinition and dynamic binding introduce <SPAN CLASS="ff-italics">
+subcontracting</SPAN>
+<A NAME="marker-445489"></A>. <SPAN CLASS="ee-text">
+POLYGON</SPAN>
+, for example, subcontracts the implementation of perimeter to <SPAN CLASS="ee-text">
+RECTANGLE</SPAN>
+ when applied to any entity that is attached at run-time to a rectangle object. An honest subcontractor is bound to honor the contract accepted by the prime contractor. <A NAME="marker-445490"></A>This means that it may not impose stronger requirements on the clients, but may accept more general requests: weaker precondition; and that it must achieve at least as much as promised by the prime contractor, but may achieve more: stronger postcondition. <A NAME="marker-445491"></A><A NAME="marker-445492"></A>
+<p class="bottom" ALIGN="left"><IMG SRC="normaldoc.gif" ALT="Previous, Up, Next" BORDER="0" WIDTH="300" HEIGHT="40" USEMAP="#navigation"><map name="navigation"><AREA SHAPE="RECT" alt="Previous section" COORDS="0,0,95,40" HREF="invitation-11.html"><AREA SHAPE="RECT" alt="Up" COORDS="96,0,199,40" HREF="invitation.html"><AREA SHAPE="RECT" alt="Next section" COORDS="200,0,300,40" HREF="invitation-13.html"><area shape="default" nohref></MAP>
+
+<p class="bottom" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a> -- <a href="../index.html">Getting started with Eiffel (local)</a>
+
+<p class="copyright" align="center">Copyright Interactive Software Engineering, 2001
+</BODY>
+</HTML>

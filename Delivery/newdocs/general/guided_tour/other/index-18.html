@@ -1,0 +1,440 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN"><HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=ISO-8859-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+<META NAME="GENERATOR" CONTENT="Adobe FrameMaker 5.5/HTML Export Filter">
+<LINK REL="STYLESHEET" HREF="tour.css" CHARSET="ISO-8859-1" TYPE="text/css">
+<TITLE> 17  THE COMMAND-LINE COMPILER</TITLE>
+</HEAD>
+<!--------------------------------------------------->
+<SCRIPT LANGUAGE="Javascript">
+	// Default values
+	var oNewWindow = 0;
+
+	function ImageClick( oImage )
+	{
+		if( oNewWindow == 0 || oNewWindow.closed )
+		{
+			oNewWindow = window.open (oImage.src,"", "status=no, toolbar=no, menubar=no, location=no, resizable=yes");
+		}
+		else
+		{
+			oNewWindow.location = oImage.src;
+		}
+	}
+</SCRIPT>
+<!--------------------------------------------------->
+<body bgcolor="#faf0e6">
+<DIV>
+<p class="top" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a> -- <a href="../index.html">Getting started with Eiffel (local)</a>
+
+<img src="power.gif" ALT="Eiffel Home Page" align="right" border="0"  usemap="#eiffel"><map name="eiffel"><area shape="RECT" alt="Eiffel Home Page" coords="0,0,109,226" HREF="http://www.eiffel.com"><area shape="default" nohref></map>
+
+<p class="top" ALIGN="left"><IMG SRC="normaldoc.gif" ALT="Previous, Up, Next" BORDER="0" WIDTH="300" HEIGHT="40" USEMAP="#navigation"><map name="navigation"><AREA SHAPE="RECT" alt="Previous section" COORDS="0,0,95,40" HREF="index-17.html"><AREA SHAPE="RECT" alt="Up" COORDS="96,0,199,40" HREF="index.html"><AREA SHAPE="RECT" alt="Next section" COORDS="200,0,300,40" HREF="index-19.html"><area shape="default" nohref></MAP>
+</DIV>
+<H1 CLASS="aa-sec2">
+<A NAME="pgfId-522597"></A>17  THE COMMAND-LINE COMPILER</H1>
+<P CLASS="nn-first">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="tour-help.html">Help reading this manual</a>
+<P CLASS="nn-first">
+<A NAME="pgfId-527928"></A>Along with compilation from within EiffelStudio, it is possible to start compilation from a command line (shell). This is useful in particular to recompile your system automatically as part of a script.
+<P CLASS="nn-normal">
+<A NAME="pgfId-527946"></A>To use the command-line compiler -- <SPAN CLASS="ee-keyword">
+ec</SPAN>
+ for Eiffel Compilation -- execute
+<p><ul><table bgcolor="#cfffcf" width="79%" BORDER="1">
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-527945"></A><SPAN CLASS="ee-keyword">
+ec </SPAN>
+<SPAN CLASS="ee-text">
+option </SPAN>
+<SPAN CLASS="tt-nsymbol">
+&#8230; </SPAN>
+<SPAN CLASS="ee-comment">
+[</SPAN>
+<SPAN CLASS="ee-text">
+class_name</SPAN>
+<SPAN CLASS="ee-comment">
+] [</SPAN>
+<SPAN CLASS="ee-text">
+feature_name</SPAN>
+<SPAN CLASS="ee-comment">
+]</SPAN>
+
+</TD>
+</TR>
+</table></ul><p>
+<P CLASS="nn-first">
+<A NAME="pgfId-527947"></A>Specify <SPAN CLASS="ee-text">
+class_name</SPAN>
+ and <SPAN CLASS="ee-text">
+feature_name</SPAN>
+ only if you wish to produce information about a class or a feature. Otherwise <SPAN CLASS="ee-keyword">
+ec</SPAN>
+ will compile a system according to each specified <SPAN CLASS="ee-text">
+option</SPAN>
+. Here is the set of supported options.
+<p><ul><table bgcolor="#cfffcf" width="79%" BORDER="1">
+<TR>
+<TH ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltitle">
+<A NAME="pgfId-528202"></A>OPTION
+</TH>
+<TH ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltitle">
+<A NAME="pgfId-528204"></A>ARGUMENTS
+</TH>
+<TH ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltitle">
+<A NAME="pgfId-528206"></A>EFFECT
+</TH>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-528208"></A><SPAN CLASS="ee-keyword">
+-ace</SPAN>
+<SPAN CLASS="ee-normal">
+ </SPAN>
+<SPAN CLASS="ee-text">
+file_name</SPAN>
+
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-528210"></A>&nbsp;
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-528212"></A>Use as Ace the file of name <SPAN CLASS="ee-text">
+file_name</SPAN>
+. (Default: file <SPAN CLASS="ee-keyword">
+Ace.ace</SPAN>
+<SPAN CLASS="ee-normal">
+ </SPAN>
+in current directory.)
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-528214"></A><SPAN CLASS="ee-keyword">
+-ancestors</SPAN>
+
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-528216"></A><SPAN CLASS="ee-text">
+class_name</SPAN>
+
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-528218"></A>Print ancestors of this class.
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-528220"></A><SPAN CLASS="ee-keyword">
+-aversions</SPAN>
+
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-528222"></A><SPAN CLASS="ee-text">
+class_name, feature_name</SPAN>
+
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-528224"></A>Print all versions of this feature in ancestors of this class.
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-528226"></A><SPAN CLASS="ee-keyword">
+-callers</SPAN>
+
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-528228"></A><SPAN CLASS="ee-text">
+class_name, feature_name</SPAN>
+
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-528230"></A>Print all routines that call this feature.
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-528232"></A><SPAN CLASS="ee-keyword">
+-clients</SPAN>
+
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-528234"></A><SPAN CLASS="ee-text">
+class_name</SPAN>
+
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-528236"></A>Print clients of this class.
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-528238"></A><SPAN CLASS="ee-keyword">
+-descendants</SPAN>
+
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-528240"></A><SPAN CLASS="ee-text">
+class_name</SPAN>
+
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-528242"></A>Print descendants of this class.
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-528244"></A><SPAN CLASS="ee-keyword">
+-dversions</SPAN>
+
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-528246"></A><SPAN CLASS="ee-text">
+class_name, feature_name</SPAN>
+
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-528248"></A>Print all versions of this feature in descendants of this class.
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-528251"></A><SPAN CLASS="ee-keyword">
+-filter </SPAN>
+<A NAME="marker-528250"></A><SPAN CLASS="ee-text">
+filter_name</SPAN>
+
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-528253"></A><SPAN CLASS="ee-text">
+class_name</SPAN>
+
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-528255"></A>Print text of class as processed by <SPAN CLASS="ee-text">
+filter_name</SPAN>
+.
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-528257"></A><SPAN CLASS="ee-keyword">
+-finalize</SPAN>
+
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-528259"></A>&nbsp;
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-528261"></A>Produce finalized version of system (optimized ANSI C code and executable module).
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-528263"></A><SPAN CLASS="ee-keyword">
+-flat</SPAN>
+
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-528265"></A><SPAN CLASS="ee-text">
+class_name</SPAN>
+
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-528267"></A>Print flat form of this class.
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-528269"></A><SPAN CLASS="ee-keyword">
+-flatshort</SPAN>
+
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-528271"></A><SPAN CLASS="ee-text">
+class_name</SPAN>
+
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-528273"></A>Print flat-short form of this class.
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-528275"></A><SPAN CLASS="ee-keyword">
+-freeze</SPAN>
+
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-528277"></A><SPAN CLASS="ee-text">
+</SPAN>
+&nbsp;
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-528279"></A>Freeze system.
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-528281"></A><SPAN CLASS="ee-keyword">
+-help</SPAN>
+
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-528283"></A><SPAN CLASS="ee-text">
+</SPAN>
+&nbsp;
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-528285"></A>Print short help message listing options of <SPAN CLASS="ee-keyword">
+ec</SPAN>
+.
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-528287"></A><SPAN CLASS="ee-keyword">
+-implementers</SPAN>
+
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-528289"></A><SPAN CLASS="ee-text">
+class_name, feature_name</SPAN>
+
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-528291"></A>Print all classes that declare or redeclare this feature.
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-528293"></A><SPAN CLASS="ee-keyword">
+-keep</SPAN>
+
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-528295"></A>&nbsp;
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-528297"></A>Keep assertions in final mode (useful with<BR>
+<SPAN CLASS="ee-keyword">
+-finalize</SPAN>
+ only).
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-528299"></A><SPAN CLASS="ee-keyword">
+-loop</SPAN>
+
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-528301"></A>&nbsp;
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-528303"></A>Enter interactive mode where you may repeatedly request <SPAN CLASS="ee-keyword">
+ec</SPAN>
+ operations without having to restart <SPAN CLASS="ee-keyword">
+ec. </SPAN>
+
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-528305"></A><SPAN CLASS="ee-keyword">
+-precompile</SPAN>
+
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-528307"></A>&nbsp;
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-528309"></A>Precompile system, treating it as a library.
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-528311"></A><SPAN CLASS="ee-keyword">
+-project </SPAN>
+<SPAN CLASS="ee-text">
+directory_name</SPAN>
+
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-528313"></A>&nbsp;
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-528315"></A>Use <SPAN CLASS="ee-text">
+directory_name</SPAN>
+ as project directory. (Default: current directory.)
+</TD>
+</TR>
+</table></ul><p>
+<p class="bottom" ALIGN="left"><IMG SRC="normaldoc.gif" ALT="Previous, Up, Next" BORDER="0" WIDTH="300" HEIGHT="40" USEMAP="#navigation"><map name="navigation"><AREA SHAPE="RECT" alt="Previous section" COORDS="0,0,95,40" HREF="index-17.html"><AREA SHAPE="RECT" alt="Up" COORDS="96,0,199,40" HREF="index.html"><AREA SHAPE="RECT" alt="Next section" COORDS="200,0,300,40" HREF="index-19.html"><area shape="default" nohref></MAP>
+
+<p class="bottom" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a> -- <a href="../index.html">Getting started with Eiffel (local)</a>
+
+<p class="copyright" align="center">Copyright Interactive Software Engineering, 2001
+</BODY>
+</HTML>

@@ -1,0 +1,205 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN"><HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=ISO-8859-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+<META NAME="GENERATOR" CONTENT="Adobe FrameMaker 5.5/HTML Export Filter">
+<LINK REL="STYLESHEET" HREF="tour.css" CHARSET="ISO-8859-1" TYPE="text/css">
+<TITLE> 2  GENERAL PROPERTIES</TITLE>
+</HEAD>
+<!--------------------------------------------------->
+<SCRIPT LANGUAGE="Javascript">
+	// Default values
+	var oNewWindow = 0;
+
+	function ImageClick( oImage )
+	{
+		if( oNewWindow == 0 || oNewWindow.closed )
+		{
+			oNewWindow = window.open (oImage.src,"", "status=no, toolbar=no, menubar=no, location=no, resizable=yes");
+		}
+		else
+		{
+			oNewWindow.location = oImage.src;
+		}
+	}
+</SCRIPT>
+<!--------------------------------------------------->
+<body bgcolor="#faf0e6">
+<DIV>
+<p class="top" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a> -- <a href="../index.html">Getting started with Eiffel (local)</a>
+
+<img src="power.gif" ALT="Eiffel Home Page" align="right" border="0"  usemap="#eiffel"><map name="eiffel"><area shape="RECT" alt="Eiffel Home Page" coords="0,0,109,226" HREF="http://www.eiffel.com"><area shape="default" nohref></map>
+
+<p class="top" ALIGN="left"><IMG SRC="normaldoc.gif" ALT="Previous, Up, Next" BORDER="0" WIDTH="300" HEIGHT="40" USEMAP="#navigation"><map name="navigation"><AREA SHAPE="RECT" alt="Previous section" COORDS="0,0,95,40" HREF="tutorial-02.html"><AREA SHAPE="RECT" alt="Up" COORDS="96,0,199,40" HREF="tutorial.html"><AREA SHAPE="RECT" alt="Next section" COORDS="200,0,300,40" HREF="tutorial-04.html"><area shape="default" nohref></MAP>
+</DIV>
+<H1 CLASS="aa-sec2">
+<A NAME="pgfId-513899"></A>2  GENERAL PROPERTIES</H1>
+<P CLASS="nn-first">
+<A NAME="pgfId-513900"></A>Here is an overview of the facilities supported by Eiffel:
+<UL>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-513901"></A>Completely <SPAN CLASS="ff-italics">
+object-oriented </SPAN>
+approach. Eiffel is a full-fledged application of object technology, not a &quot;hybrid&quot; of O-O and traditional concepts.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-513902"></A><SPAN CLASS="ff-italics">
+External interfaces</SPAN>
+. Eiffel is a software composition tool and is easily interfaced with software written in such languages as C, C++, Java and C#.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-513903"></A><SPAN CLASS="ff-italics">
+Full lifecycle support</SPAN>
+. Eiffel is applicable throughout the development process, including analysis, design, implementation and maintenance.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-513904"></A><SPAN CLASS="ff-italics">
+Classes</SPAN>
+ as the basic structuring tool. A class is the description of a set of run-time objects, specified through the applicable operations and abstract properties. An Eiffel system is made entirely of classes, serving as the only module mechanism.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-513905"></A><SPAN CLASS="ff-italics">
+Consistent type system</SPAN>
+. Every type is based on a class, including basic types such as integer, boolean, real, character, string, array.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-513906"></A><SPAN CLASS="ff-italics">
+Design by Contract. </SPAN>
+Every system component can be accompanied by a precise specification of its abstract properties, governing its internal operation and its interaction with other components.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-513907"></A><SPAN CLASS="ff-italics">
+Assertions</SPAN>
+. The method and notation support writing the logical properties of object states, to express the terms of the contracts. These properties, known as assertions, can be monitored at run-time for testing and quality assurance. They also serve as documentation mechanism. Assertions include preconditions, postconditions, class invariants, loop invariants, and also appear in &quot;check&quot; instructions.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-513908"></A><SPAN CLASS="ff-italics">
+Exception handling</SPAN>
+. You can set up your software to detect abnormal conditions, such as unexpected operating system signals and contract violations, correct them, and recover</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-513909"></A><SPAN CLASS="ff-italics">
+Information hiding</SPAN>
+. Each class author decides, for each feature, whether it is available to all client classes, to specific clients only, or just for internal purposes.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-513910"></A><SPAN CLASS="ff-italics">
+Self-documentation</SPAN>
+. The notation is designed to enable environment tools to produce abstract views of classes and systems, textual or graphical, and suitable for reusers, maintainers and client authors.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-513911"></A><SPAN CLASS="ff-italics">
+Inheritance</SPAN>
+. You can define a class as extension or specialization of others.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-513912"></A><SPAN CLASS="ff-italics">
+Redefinition</SPAN>
+. An inherited feature (operation) can be given a different implementation or signature.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-513913"></A><SPAN CLASS="ff-italics">
+Explicit redefinition</SPAN>
+. Any feature redefinition must be explicitly stated.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-513914"></A><SPAN CLASS="ff-italics">
+Subcontracting</SPAN>
+. Redefinition rules require new assertions to be compatible with inherited ones.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-513915"></A><SPAN CLASS="ff-italics">
+Deferred features and classes</SPAN>
+. It is possible for a feature, and the enclosing class, to be specified -- including with assertions -- but not implemented. Deferred classes are also known as abstract classes.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-513916"></A><SPAN CLASS="ff-italics">
+Polymorphism</SPAN>
+. An entity (variable, argument etc.) can become attached to objects of many different types.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-513917"></A><SPAN CLASS="ff-italics">
+Dynamic binding</SPAN>
+. Calling a feature on an object always triggers the version of the feature specifically adapted to that object, even in the presence of polymorphism and redefinition.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-513918"></A><SPAN CLASS="ff-italics">
+Static typing</SPAN>
+. A compiler can check statically that all type combinations will be valid, so that no run-time situation will occur in which an attempt will be made to apply an inexistent feature to an object.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-513919"></A><SPAN CLASS="ff-italics">
+Assignment attempt </SPAN>
+(&quot;type narrowing&quot;). It is possible to check at run time whether the type of an object conforms to a certain expectation, for example if the object comes from a database or a network.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-513920"></A><SPAN CLASS="ff-italics">
+Multiple inheritance</SPAN>
+. A class can inherit from any number of others.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-513921"></A><SPAN CLASS="ff-italics">
+Feature renaming</SPAN>
+. To remove name clashes under multiple inheritance, or to give locally better names, a class can give a new name to an inherited feature.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-513922"></A><SPAN CLASS="ff-italics">
+Repeated inheritance</SPAN>
+:<SPAN CLASS="ff-italics">
+ sharing and replication</SPAN>
+. If, as a result of multiple inheritance, a class inherits from another through two or more paths, the class author can specify, for each repeatedly inherited feature, that it yields either one feature (sharing) or two (replication).</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-513923"></A><SPAN CLASS="ff-italics">
+No ambiguity under repeated inheritance</SPAN>
+. Conflicting redefinitions under repeated inheritance are resolved through a &quot;selection&quot; mechanism.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-513924"></A><SPAN CLASS="ff-italics">
+Unconstrained genericity</SPAN>
+. A class can be parameterized, or &quot;generic&quot;, to describe containers of objects of an arbitrary type.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-513925"></A><SPAN CLASS="ff-italics">
+Constrained genericity</SPAN>
+. A generic class can be declared with a generic constraint, to indicate that the corresponding types must satisfy some properties, such as the presence of a particular operation.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-513926"></A><SPAN CLASS="ff-italics">
+Garbage collection</SPAN>
+. The dynamic model is designed so that memory reclamation, in a supporting environment, can be automatic rather than programmer-controlled.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-513927"></A><SPAN CLASS="ff-italics">
+No-leak modular structure</SPAN>
+. All software is built out of classes, with only two inter-class relations, client and inheritance.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-513928"></A><SPAN CLASS="ff-italics">
+Once routines</SPAN>
+. A feature can be declared as &quot;once&quot;, so that it is executed only for its first call, subsequently returning always the same result (if required). This serves as a convenient initialization mechanism, and for shared objects.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-513929"></A><SPAN CLASS="ff-italics">
+Standardized library</SPAN>
+. The Kernel Library, providing essential abstractions, is standardized across implementations.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-513930"></A><SPAN CLASS="ff-italics">
+Other libraries</SPAN>
+. Eiffel development is largely based on high-quality libraries covering many common needs of software development, from general algorithms and data structures to networking and databases.</LI>
+</UL>
+<P CLASS="nn-first">
+<A NAME="pgfId-513931"></A>It is also useful, as in any design, to list some of what is <SPAN CLASS="ff-bold">
+not</SPAN>
+ present in Eiffel. The approach is indeed based on a small number of coherent concepts so as to remain easy to master. Eiffel typically takes a few hours to a few days to learn, and users seldom need to return to the reference manual once they have understood the basic concepts. Part of this simplicity results from the explicit decision to exclude a number of possible facilities:
+<UL>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-513932"></A><SPAN CLASS="ff-italics">
+No global variables</SPAN>
+, which would break the modularity of systems and hamper extendibility, reusability and reliability.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-513933"></A><SPAN CLASS="ff-italics">
+No union types</SPAN>
+ (or record type with variants), which force the explicit enumeration of all variants; in contrast, inheritance is an open mechanism which permits the addition of variants at any time without changing existing code.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-513934"></A><SPAN CLASS="ff-italics">
+No in-class overloading</SPAN>
+ which, by assigning the same name to different features within a single context, causes confusions, errors, and conflicts with object-oriented mechanisms such as dynamic binding. (Dynamic binding itself is a powerful form of inter-class overloading, without any of these dangers.)</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-513935"></A><SPAN CLASS="ff-italics">
+No goto instructions</SPAN>
+ or similar control structures (break, exit, multiple-exit loops) which break the simplicity of the control flow and make it harder or impossible to reason about the software (in particular through loop invariants and variants).</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-513936"></A><SPAN CLASS="ff-italics">
+No exceptions to the type rules</SPAN>
+. To be credible, a type system must not allow unchecked &quot;casts&quot; converting from a type to another. (Safe cast-like operations are available through assignment attempt.)</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-513937"></A><SPAN CLASS="ff-italics">
+No side-effect expression operators</SPAN>
+ confusing computation and modification.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-513938"></A><SPAN CLASS="ff-italics">
+No low-level pointers, no pointer arithmetic</SPAN>
+, a well-known source of bugs. (There is however a type <SPAN CLASS="ff-italics">
+POINTER</SPAN>
+, used for interfacing Eiffel with C and other languages.)</LI>
+</UL>
+<p class="bottom" ALIGN="left"><IMG SRC="normaldoc.gif" ALT="Previous, Up, Next" BORDER="0" WIDTH="300" HEIGHT="40" USEMAP="#navigation"><map name="navigation"><AREA SHAPE="RECT" alt="Previous section" COORDS="0,0,95,40" HREF="tutorial-02.html"><AREA SHAPE="RECT" alt="Up" COORDS="96,0,199,40" HREF="tutorial.html"><AREA SHAPE="RECT" alt="Next section" COORDS="200,0,300,40" HREF="tutorial-04.html"><area shape="default" nohref></MAP>
+
+<p class="bottom" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a> -- <a href="../index.html">Getting started with Eiffel (local)</a>
+
+<p class="copyright" align="center">Copyright Interactive Software Engineering, 2001
+</BODY>
+</HTML>

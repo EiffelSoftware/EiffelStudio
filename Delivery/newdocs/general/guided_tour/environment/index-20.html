@@ -1,0 +1,543 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN"><HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=ISO-8859-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+<META NAME="GENERATOR" CONTENT="Adobe FrameMaker 5.5/HTML Export Filter">
+<LINK REL="STYLESHEET" HREF="tour.css" CHARSET="ISO-8859-1" TYPE="text/css">
+<TITLE> 19  APPENDIX: WRITING DOCUMENTATION FILTERS WITH EFF, THE EIFFEL FILTER FORMAT</TITLE>
+</HEAD>
+<!--------------------------------------------------->
+<SCRIPT LANGUAGE="Javascript">
+	// Default values
+	var oNewWindow = 0;
+
+	function ImageClick( oImage )
+	{
+		if( oNewWindow == 0 || oNewWindow.closed )
+		{
+			oNewWindow = window.open (oImage.src,"", "status=no, toolbar=no, menubar=no, location=no, resizable=yes");
+		}
+		else
+		{
+			oNewWindow.location = oImage.src;
+		}
+	}
+</SCRIPT>
+<!--------------------------------------------------->
+<body bgcolor="#faf0e6">
+<DIV>
+<p class="top" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a> -- <a href="../index.html">Getting started with Eiffel (local)</a>
+
+<img src="power.gif" ALT="Eiffel Home Page" align="right" border="0"  usemap="#eiffel"><map name="eiffel"><area shape="RECT" alt="Eiffel Home Page" coords="0,0,109,226" HREF="http://www.eiffel.com"><area shape="default" nohref></map>
+
+<p class="top" ALIGN="left"><IMG SRC="lastdoc.gif" ALT="Previous, Up" BORDER="0" WIDTH="300" HEIGHT="40" USEMAP="#navigation"><map name="navigation"><AREA SHAPE="RECT" alt="Previous section" COORDS="0,0,95,40" HREF="index-19.html"><AREA SHAPE="RECT" alt="Up" COORDS="96,0,199,40" HREF="index.html"><area shape="default" nohref></MAP>
+</DIV>
+<H1 CLASS="aa-sec2">
+<A NAME="pgfId-521093"></A>19  <A NAME="35873"></A>APPENDIX: WRITING DOCUMENTATION FILTERS WITH EFF, THE EIFFEL FILTER FORMAT</H1>
+<P CLASS="nn-first">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="tour-help.html">Help reading this manual</a>
+<P CLASS="nn-first">
+<A NAME="pgfId-495697"></A>We saw in the section on documentation (<A HREF="index-09.html#20935" CLASS="XRef"><SPAN CLASS="ww-crossref">
+8, page 39</SPAN>
+</A>) that you can output documentation about your system in many different formats. A number of predefined formats are available, from Postscript to Microsoft's Rich Text Format, FrameMaker, TEX and others. There's nothing special about these formats: they just make their conventions known to EiffelStudio through a <SPAN CLASS="ff-bold">
+filter</SPAN>
+ expressed in a simple notation called EFF, or Eiffel Filter Format. If you have a favorite format that you'd like EiffelStudio to use for producing documentation, you can define your own filter in EFF. Applications include:
+<UL>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-495698"></A>Producing a variant of an existing format, to support some &quot;house style&quot; that you have defined, such as a different formating or fonts.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-495699"></A>Producing documentation for a text processing tool that's not among those supported by default.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-495700"></A>Producing documentation that purposely omit some parts of Eiffel texts, in line with the ideas applied by the Contract and Interface forms.</LI>
+</UL>
+<P CLASS="nn-first">
+<A NAME="pgfId-495701"></A>This appendix describes EFF and its conventions, enabling you to write filters. Note that in practice the best way to write an EFF filter is usually not from scratch, but by copying an existing filter -- one that seems closest to your needs -- and adapting the copy.
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-495702"></A>Where to put filters</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-495703"></A>When you choose to generate documentation, EiffelStudio will ask you to select a filter from a list it obtains by looking up the files of extension <SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-keyword">
+fil </SPAN>
+in the directory
+<p><ul><table bgcolor="#cfffcf" width="79%" BORDER="1">
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-495706"></A><SPAN CLASS="ee-keyword">
+$ISE_EIFFEL/examples/bench/filters</SPAN>
+
+</TD>
+</TR>
+</table></ul><p>
+<P CLASS="nn-first">
+<A NAME="pgfId-495707"></A>To make a new filter available to yourself and other users of this installation, just add the corresponding file <SPAN CLASS="ee-text">
+name</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-keyword">
+fil</SPAN>
+ to this directory. Make sure to choose the appropriate <SPAN CLASS="ee-text">
+name</SPAN>
+, since this is what the menu of available filters will display.<A NAME="marker-495708"></A>    <A NAME="marker-495709"></A>
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-495710"></A>Filter basics</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-495711"></A>An EFF filter follows a very simple structure. As with all other Eiffel-related notations (such as Eiffel itself and Lace, the control language for Eiffel systems), any line or part of a line beginning with two consecutive dashes <SPAN CLASS="ee-keyword">
+-  - </SPAN>
+is a comment, except if it immediately follows a percent sign since, as will be seen below, <SPAN CLASS="ee-keyword">
+%-- </SPAN>
+is used to denote an Eiffel comment in the class text. Blank lines are also permitted. Comments and blank lines carry no semantic value.
+<P CLASS="nn-normal">
+<A NAME="pgfId-495715"></A>Except for comments and blank lines, a filter is a sequence of entries, all of the form
+<p><ul><table bgcolor="#cfffcf" width="79%" BORDER="1">
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-495714"></A><SPAN CLASS="ff-italics">
+Construct </SPAN>
+<SPAN CLASS="ee-keyword">
+ | </SPAN>
+<SPAN CLASS="ff-italics">
+Replacement</SPAN>
+
+</TD>
+</TR>
+</table></ul><p>
+<P CLASS="nn-first">
+<A NAME="pgfId-495716"></A>where: <SPAN CLASS="ee-text">
+Construct</SPAN>
+ is one of a set of possible strings, most of which corresponds to Eiffel constructs, such as <SPAN CLASS="ee-keyword">
+Class_declaration</SPAN>
+, or keywords, such as <SPAN CLASS="ee-keyword">
+class</SPAN>
+; and <SPAN CLASS="ee-text">
+Replacement</SPAN>
+ is a string indicating how to format specimens of the <SPAN CLASS="ee-text">
+Construct</SPAN>
+ that appear in a class text.
+<P CLASS="nn-normal">
+<A NAME="pgfId-495717"></A>For readability, there may be any number of blanks or tabs between the <SPAN CLASS="ee-text">
+Construct</SPAN>
+ and the vertical bar <SPAN CLASS="ee-keyword">
+|</SPAN>
+, so that you can align all the bars if you wish. On the right of the bar, however, all characters including blanks and tabs are significant, since they are part of the replacement for the <SPAN CLASS="ee-text">
+Construct</SPAN>
+.
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-495718"></A>The asterisk</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-495720"></A>In<A NAME="marker-495719"></A> the <SPAN CLASS="ee-text">
+Replacement</SPAN>
+ part, you may use the symbol <SPAN CLASS="ee-symbol">
+&#8727;</SPAN>
+ (asterisk) to denote the construct specimen itself. So for example the entry
+<p><ul><table bgcolor="#cfffcf" width="79%" BORDER="1">
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-495723"></A><SPAN CLASS="ee-keyword">
+Feature_clause | %N%N*%N%N</SPAN>
+
+</TD>
+</TR>
+</table></ul><p>
+<P CLASS="nn-first">
+<A NAME="pgfId-495724"></A>specifies the following formating for any <SPAN CLASS="ee-keyword">
+Feature_clause</SPAN>
+: two successive blank lines (expressed as <SPAN CLASS="ee-keyword">
+%N</SPAN>
+, New Line, a convention taken from Eiffel); the feature clause itself; two blank lines.
+<P CLASS="nn-first">
+<A NAME="pgfId-495728"></A>Similarly, in an HTML format, the entry
+<p><ul><table bgcolor="#cfffcf" width="79%" BORDER="1">
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-495727"></A><SPAN CLASS="ee-keyword">
+External |&lt;B&gt;</SPAN>
+<SPAN CLASS="ee-symbol">
+&#8727;</SPAN>
+<SPAN CLASS="ee-keyword">
+&lt;/B&gt;</SPAN>
+
+</TD>
+</TR>
+</table></ul><p>
+<P CLASS="nn-first">
+<A NAME="pgfId-495729"></A>means that the Eiffel keyword <SPAN CLASS="ee-keyword">
+external </SPAN>
+must appear in the filtered form immediately preceded by <SPAN CLASS="ee-keyword">
+&lt;B&gt;</SPAN>
+, the HTML code for switching to boldface, and immediately followed by <SPAN CLASS="ee-keyword">
+&lt;/B&gt;</SPAN>
+, the code for reverting to the previous setup. Here you can also write the right-hand side without the asterisks, as <SPAN CLASS="ee-keyword">
+&lt;B&gt;external&lt;/B&gt;</SPAN>
+. If, however, all keywords are to use boldface, it is preferable to write a single entry
+<p><ul><table bgcolor="#cfffcf" width="79%" BORDER="1">
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-495732"></A><SPAN CLASS="ee-keyword">
+Keyword |&lt;B&gt;</SPAN>
+<SPAN CLASS="ee-symbol">
+&#8727;</SPAN>
+<SPAN CLASS="ee-keyword">
+&lt;/B&gt;</SPAN>
+
+</TD>
+</TR>
+</table></ul><p>
+<P CLASS="nn-first">
+<A NAME="pgfId-495733"></A>which, thanks to the asterisk, will govern all construct specimens of the <SPAN CLASS="ee-keyword">
+Keyword</SPAN>
+ category. You can still override this specification for an individual keyword by including a specific entry for it.<A NAME="marker-495734"></A>
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-495735"></A>Constructs</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-495737"></A>The<A NAME="marker-495736"></A> following general syntactic constructs may appear as the left-hand side, <SPAN CLASS="ee-text">
+Construct</SPAN>
+, of an entry:
+<p><ul><table bgcolor="#cfffcf" width="79%" BORDER="1">
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-495740"></A><SPAN CLASS="ee-keyword">
+Class_declaration</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-495741"></A><SPAN CLASS="ee-keyword">
+Class_end</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-495742"></A><SPAN CLASS="ee-keyword">
+Class_header</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-495743"></A><SPAN CLASS="ee-keyword">
+Class_name</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-495744"></A><SPAN CLASS="ee-keyword">
+Comment</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-495745"></A><SPAN CLASS="ee-keyword">
+Creators</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-495746"></A><SPAN CLASS="ee-keyword">
+Escape</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-495747"></A><SPAN CLASS="ee-keyword">
+Feature_clause</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-495748"></A><SPAN CLASS="ee-keyword">
+Feature_declaration</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-495749"></A><SPAN CLASS="ee-keyword">
+Features</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-495750"></A><SPAN CLASS="ee-keyword">
+Formal_generics</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-495751"></A><SPAN CLASS="ee-keyword">
+Indexing_clause</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-532003"></A><SPAN CLASS="ee-keyword">
+Inheritance</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-532004"></A><SPAN CLASS="ee-keyword">
+Invariant_clause</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-532005"></A><SPAN CLASS="ee-keyword">
+Keyword</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-532006"></A><SPAN CLASS="ee-keyword">
+New_line</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-532007"></A><SPAN CLASS="ee-keyword">
+Obsolete_clause</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-532008"></A><SPAN CLASS="ee-keyword">
+Suffix</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-532009"></A><SPAN CLASS="ee-keyword">
+Symbol</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-495753"></A><SPAN CLASS="ee-keyword">
+Tab</SPAN>
+
+</TD>
+</TR>
+</table></ul><p>
+<P CLASS="nn-first">
+<A NAME="pgfId-495760"></A>Most of these denote Eiffel constructs as they appear in the official language reference, the book <SPAN CLASS="ww-crossref">
+<A HREF="http://eiffel.com/doc/documentation.html#etl" CLASS="URL">Eiffel: The Language</A></SPAN>
+. Since the the Eiffel construct names <SPAN CLASS="ee-keyword">
+Feature</SPAN>
+, <SPAN CLASS="ee-keyword">
+Invariant</SPAN>
+ and <SPAN CLASS="ee-keyword">
+Obsolete </SPAN>
+are also keywords and EFF, like Eiffel, is case-insensitive, the EFF construct names use the the suffix <SPAN CLASS="ee-keyword">
+_clause</SPAN>
+, for example <SPAN CLASS="ee-keyword">
+Feature_clause</SPAN>
+.
+<P CLASS="nn-first">
+<A NAME="pgfId-495762"></A>The constructs corresponding to syntactic constructs are self-explanatory. The others are: 
+<UL>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-495763"></A><SPAN CLASS="ee-keyword">
+Class_end</SPAN>
+, denoting the final end of a class text.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-495764"></A><SPAN CLASS="ee-keyword">
+Keyword</SPAN>
+, denoting any Eiffel keyword among those listed in boldface in the corresponding appendix in <SPAN CLASS="ww-crossref">
+<A HREF="http://eiffel.com/doc/documentation.html#etl" CLASS="URL">Eiffel: The Language</A></SPAN>
+</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-495766"></A><SPAN CLASS="ee-keyword">
+New_line</SPAN>
+, denoting any passage to a new line in the class text.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-495767"></A><SPAN CLASS="ee-keyword">
+Suffix</SPAN>
+, used to introduce the file extension for the generated documentation files. If you don't specify this, EiffelStudio will use the filter's name as extension.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-495768"></A><SPAN CLASS="ee-keyword">
+Symbol</SPAN>
+, denoting any of the Eiffel symbols listed in the corresponding appendix of <SPAN CLASS="ww-crossref">
+<A HREF="http://eiffel.com/doc/documentation.html#etl" CLASS="URL">Eiffel: The Language</A></SPAN>
+.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-495770"></A><SPAN CLASS="ee-keyword">
+Escape</SPAN>
+, to protect special characters of the external tool, as explained below.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-495772"></A><SPAN CLASS="ee-keyword">
+Tab</SPAN>
+, denoting any tab character appearing in the class text.<A NAME="marker-495771"></A></LI>
+</UL>
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-495773"></A>Keywords</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-495776"></A><A NAME="marker-495774"></A>A<A NAME="marker-495775"></A> <SPAN CLASS="ee-text">
+Construct</SPAN>
+ part may consist of the name of an Eiffel keyword. To see the complete list of possible keywords, look at the <SPAN CLASS="ee-keyword">
+template</SPAN>
+ filter, file <SPAN CLASS="ee-keyword">
+format.fil-template </SPAN>
+in the default filter directory <SPAN CLASS="ee-keyword">
+$ISE_EIFFEL/bench/filters</SPAN>
+, which includes all of them with a single asterisk <SPAN CLASS="ee-symbol">
+&#8727;</SPAN>
+ as the <SPAN CLASS="ee-text">
+Replacement</SPAN>
+<SPAN CLASS="ff-italics">
+ </SPAN>
+part.
+<P CLASS="nn-normal">
+<A NAME="pgfId-495777"></A>If entries are present for both the <SPAN CLASS="ee-keyword">
+Keyword </SPAN>
+construct and individual keywords, the individual keyword entries will override the general entry for the keywords listed; the general entry will apply to all other keywords. This makes it possible to have both a general convention for keywords and a special convention for some of<A NAME="marker-495778"></A> them.<A NAME="marker-495779"></A>
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-495780"></A>Symbols</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-495782"></A>A <SPAN CLASS="ee-text">
+Construct</SPAN>
+<A NAME="marker-495781"></A><SPAN CLASS="ff-italics">
+ </SPAN>
+part may consist of an Eiffel symbol, such as <SPAN CLASS="ee-keyword">
+:=</SPAN>
+, <SPAN CLASS="ee-keyword">
+&lt;&lt; </SPAN>
+and many others. Again, you may see the complete list by looking at <SPAN CLASS="ee-keyword">
+format.fil-template</SPAN>
+. Note the following conventions:
+<UL>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-495783"></A><SPAN CLASS="ee-keyword">
+%</SPAN>
+<SPAN CLASS="ee-symbol">
+&#8727;</SPAN>
+<SPAN CLASS="ee-keyword">
+ </SPAN>
+represents an asterisk. for example as a multiplication operator; the <SPAN CLASS="ee-keyword">
+% </SPAN>
+avoids the confusion with the special meaning of the asterisk for EFF. You can find examples of this convention in the EFF filters for troff and gtroff.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-495784"></A>Similarly, the Eiffel comment symbol appears as <SPAN CLASS="ee-keyword">
+%-  -</SPAN>
+, since just writing <SPAN CLASS="ee-keyword">
+-  - </SPAN>
+would introduce a comment in the EFF filter itself.</LI>
+</UL>
+<P CLASS="nn-first">
+<A NAME="pgfId-495785"></A>As with keywords, you may specify a general convention for symbols, defined by an entry for the construct <SPAN CLASS="ee-keyword">
+Symbol</SPAN>
+, and special conventions for certain individual symbols. Specific symbol entries will override the general <SPAN CLASS="ee-keyword">
+Symbol</SPAN>
+ convention.<A NAME="marker-495786"></A>
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-495787"></A>Escape characters</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-495788"></A>A text processing system or other external tool may attach a special role to characters that may normally appear in Eiffel texts. For example, the braces <SPAN CLASS="ee-keyword">
+{ </SPAN>
+and <SPAN CLASS="ee-keyword">
+}</SPAN>
+, used in Eiffel's Export clauses, have a special meaning for <A NAME="marker-495789"></A>TEX. Including them without precaution in <A NAME="marker-495790"></A>TEX input will cause trouble. Similarly, many text processing formats attach a special meaning to the backslash character <SPAN CLASS="ee-keyword">
+&#92; </SPAN>
+which, although not special for Eiffel, may appear in an Eiffel string.
+<P CLASS="nn-normal">
+<A NAME="pgfId-495791"></A>In such cases the filter must &quot;<SPAN CLASS="ff-italics">
+escape</SPAN>
+&quot; the special character, that is to say, protect it by other characters. For example troff and other text processing tools treat two successive backslash characters <SPAN CLASS="ee-keyword">
+&#92;&#92; </SPAN>
+as denoting a single backslash in the text to be output. The first backslash is the escape character, protecting the second one.
+<P CLASS="nn-normal">
+<A NAME="pgfId-495792"></A>The <SPAN CLASS="ee-keyword">
+Escape</SPAN>
+ construct addresses such cases. The first character that follows <SPAN CLASS="ee-keyword">
+Escape </SPAN>
+(after one or more blanks or tabs) is the character to be escaped. The string after the vertical bar is the replacement for that character.
+<P CLASS="nn-normal">
+<A NAME="pgfId-495793"></A>Here for example is an escape entry for the backslash in tools that need to escape it through another backslash:
+<p><ul><table bgcolor="#cfffcf" width="79%" BORDER="1">
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-495796"></A><SPAN CLASS="ee-keyword">
+Escape &#92;|&#92;&#92;</SPAN>
+
+</TD>
+</TR>
+</table></ul><p>
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-495797"></A>Special characters and strings</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-495800"></A>EFF <A NAME="marker-495798"></A>uses Eiffel-like <A NAME="&lt;$startrange&gt;strings (in filters)"></A>conventions, based on the percent sign, for control characters appearing in <SPAN CLASS="ff-italics">
+Replacement</SPAN>
+ parts of entries. Two of these conventions have just been noted: <SPAN CLASS="ee-keyword">
+%</SPAN>
+<SPAN CLASS="ee-symbol">
+&#8727;</SPAN>
+ to represent an asterisk and <SPAN CLASS="ee-keyword">
+%- </SPAN>
+to represent a dash that does not introduce an Eiffel comment. In addition:
+<UL>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-495801"></A><SPAN CLASS="ee-keyword">
+%|</SPAN>
+ denotes a vertical bar. (This is necessary since EFF uses <SPAN CLASS="ee-keyword">
+|</SPAN>
+ by itself in each entry to separate the <SPAN CLASS="ff-italics">
+Construct</SPAN>
+ from the corresponding <SPAN CLASS="ff-italics">
+Replacement</SPAN>
+.)</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-495802"></A><SPAN CLASS="ee-keyword">
+%N </SPAN>
+(recommended form) or <SPAN CLASS="ee-keyword">
+%n </SPAN>
+denotes a new line.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-495803"></A><SPAN CLASS="ee-keyword">
+%T </SPAN>
+(recommended form) or <SPAN CLASS="ee-keyword">
+%t</SPAN>
+ denotes a tab.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-495804"></A><SPAN CLASS="ee-keyword">
+%% </SPAN>
+denotes a percent sign.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-495805"></A><SPAN CLASS="ee-keyword">
+% </SPAN>
+  (percent followed by a space) denotes a space. This is equivalent to just a space, but more visible.</LI>
+</UL>
+<P CLASS="nn-first">
+<A NAME="pgfId-495806"></A>If <SPAN CLASS="ee-text">
+c</SPAN>
+<SPAN CLASS="ee-keyword">
+ </SPAN>
+is not one of the characters for which special conventions have been listed, <SPAN CLASS="ee-keyword">
+%</SPAN>
+<SPAN CLASS="ee-text">
+c</SPAN>
+ denotes the character <SPAN CLASS="ee-text">
+c</SPAN>
+<SPAN CLASS="ee-keyword">
+ </SPAN>
+itself.
+<P CLASS="nn-normal">
+<A NAME="pgfId-495807"></A>A multi-line entry uses the Eiffel convention for string continuations: <SPAN CLASS="ee-keyword">
+%</SPAN>
+ at the end of a line to signal that there is a continuation; a continuation line begins with zero or more spaces and tabs followed by a <SPAN CLASS="ee-keyword">
+%</SPAN>
+; the characters after the <SPAN CLASS="ee-keyword">
+%</SPAN>
+ are the continuation of the<A NAME="end"></A> string.
+<P CLASS="nn-normal">
+<A NAME="pgfId-495810"></A><A NAME="marker-495809"></A>&nbsp;
+<P CLASS="nn-normal">
+<A NAME="pgfId-495812"></A>      <A NAME="marker-495811"></A>      
+<P CLASS="nn-normal">
+<A NAME="pgfId-495813"></A>&nbsp;
+<P CLASS="nn-normal">
+<A NAME="pgfId-495814"></A>&nbsp;
+<P CLASS="nn-normal">
+<A NAME="pgfId-495818"></A>&nbsp;
+<P CLASS="nn-normal">
+<A NAME="pgfId-495820"></A>      <A NAME="marker-495819"></A>                         <A NAME="marker-495821"></A>                <A NAME="marker-495822"></A>          <A NAME="marker-495823"></A>        
+<P CLASS="nn-first">
+<A NAME="pgfId-487045"></A>&nbsp;
+<P CLASS="nn-normal">
+<A NAME="pgfId-438426"></A>.<A NAME="marker-438428"></A>
+<P CLASS="nn-normal">
+<A NAME="pgfId-438886"></A><A NAME="marker-438887"></A>&nbsp;
+<P CLASS="nn-normal">
+<A NAME="pgfId-439417"></A>                    <A NAME="marker-439418"></A>              <A NAME="marker-439419"></A>                <A NAME="marker-439420"></A>          <A NAME="marker-439421"></A>                <A NAME="marker-439422"></A>
+<P CLASS="nn-normal">
+<A NAME="pgfId-494850"></A> 
+<P CLASS="nn-first">
+<A NAME="pgfId-437752"></A>&nbsp;
+</DIV>
+<p class="bottom" ALIGN="left"><IMG SRC="lastdoc.gif" ALT="Previous, Up" BORDER="0" WIDTH="300" HEIGHT="40" USEMAP="#navigation"><map name="navigation"><AREA SHAPE="RECT" alt="Previous section" COORDS="0,0,95,40" HREF="index-19.html"><AREA SHAPE="RECT" alt="Up" COORDS="96,0,199,40" HREF="index.html"><area shape="default" nohref></MAP>
+
+<p class="bottom" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a> -- <a href="../index.html">Getting started with Eiffel (local)</a>
+
+<p class="copyright" align="center">Copyright Interactive Software Engineering, 2001
+</BODY>
+</HTML>

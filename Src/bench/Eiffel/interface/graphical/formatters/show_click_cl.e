@@ -48,7 +48,7 @@ feature -- Formatting
 		do
 			if not retried then
 				root_stone ?= tool.stone;
-				same_stone := stone.same_as (root_stone)
+				same_stone := root_stone /= Void and then stone.same_as (root_stone)
 				if
 					do_format or else filtered or else
 					(tool.last_format.associated_command /= Current or

@@ -26,23 +26,36 @@ feature {NONE}
 
 	confirm_and_compile (argument: ANY) is
 		do
-			if argument = text_window then
+			if 
+				argument = text_window or
+				(argument /= Void and 
+				argument = last_confirmer and not end_run_confirmed)
+			then
 				assert_confirmed := False;
-				warner.set_window (text_window);
-				warner.custom_call (Current, w_Finalize_warning,
+				warner (text_window).custom_call (Current, w_Finalize_warning,
 					"Finalize now", Void, "Cancel");
 			elseif 
-				(argument = warner) or else
+				(argument = last_warner) or else
 				(argument = Current) or else
+				(argument = last_confirmer) or else
 				(argument = Void)
 			then
 				if not assert_confirmed then
 					assert_confirmed := True;
-					warner.set_window (text_window);
-					warner.custom_call (Current, w_Assertion_warning,
-						"Keep assertions", "Discard assertions", "Cancel"); 
-				else
+					warner (text_window).custom_call (Current, 
+						w_Assertion_warning, "Keep assertions", 
+						"Discard assertions", "Cancel"); 
+				elseif 
+					not Run_info.is_running or else
+					(argument /= Void and 
+					argument = last_confirmer and end_run_confirmed)
+				then
 					compile (argument);
+				else
+					confirmer (text_window).call (Current,
+							"Recompiling project will end current run.%N%
+							%Start compilation anyway?", "Compile");
+					end_run_confirmed := true
 				end;
 			end;
 		end;
@@ -51,7 +64,8 @@ feature {NONE}
 		do
 			-- If the argument is `warner' the user 
 			-- pressed on "Keep assertions"
-			System.finalized_generation (argument = warner);
+			System.finalized_generation (last_warner /= Void and 
+									argument = last_warner);
 		end;
 
 	launch_c_compilation (argument: ANY) is
@@ -69,7 +83,10 @@ feature {NONE}
 					%%Texecutable, finalize from a new project and do%N%
 					%%Tnot use precompilation.%N%N");
 			end;
-			if (argument = warner) and then Lace.has_assertions then
+			if 
+				(last_warner /= Void and argument = last_warner)
+				and then Lace.has_assertions
+			then
 				error_window.put_string 
 					("Warning: the finalized system incorporates assertions.%N%
 						%%TIt might therefore not be optimal in size and speed%N%N");

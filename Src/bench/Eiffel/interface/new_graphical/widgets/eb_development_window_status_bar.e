@@ -115,6 +115,8 @@ feature {NONE} -- Initialization
 				-- It should be nine with the separator, but it looks too wide then.
 			coordinate_label.set_minimum_width (coordinate_label.font.width * 8)
 			coordinate_label.align_text_center
+			project_label.set_tooltip (Interface_names.e_Project_name)
+			coordinate_label.set_tooltip (Interface_names.e_Cursor_position)
 			
 				-- Organize widgets.
 			create vp
@@ -455,9 +457,9 @@ feature {NONE} -- Copy of once icons, to avoid numerous clonings
 			i: INTEGER
 		do
 			Icon_compilation_succeeded := clone (pixmaps.Icon_compilation_succeeded)
-			Icon_compilation_succeeded.set_tooltip (interface_names.e_Compilation_succeeded)
+			Icon_compilation_succeeded.set_tooltip (interface_names.e_Last_compilation_succeeded)
 			Icon_compilation_failed := clone (pixmaps.Icon_compilation_failed)
-			Icon_compilation_failed.set_tooltip (interface_names.e_Compilation_failed)
+			Icon_compilation_failed.set_tooltip (interface_names.e_Last_compilation_failed)
 			Icon_application_paused := clone (pixmaps.Icon_application_paused)
 			Icon_application_paused.set_tooltip (interface_names.e_Paused)
 			Icon_edited := clone (pixmaps.Icon_edited)

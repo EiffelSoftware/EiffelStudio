@@ -114,7 +114,7 @@ feature -- Status report
 		require
 			exists: not destroyed
 		do
-			Result := implementation.background_color.interface
+			Result := implementation.background_color
 		ensure
 			valid_result: Result /= Void
 		end
@@ -125,23 +125,23 @@ feature -- Status report
 		require
 			exists: not destroyed
 		do
-			Result := implementation.foreground_color.interface
+			Result := implementation.foreground_color
 		ensure
 			valid_result: Result /= Void
 		end
 
 feature -- Status setting
 
---	set_parent (par: EV_CONTAINER) is
---			-- Make `par' the new parent of the widget.
---			-- `par' can be Void then the parent is the screen.
---		require
---			exists: not destroyed
---		do
---			implementation.reparent (par)
---		ensure
---			parent_set: parent = par
---		end
+	set_parent (par: EV_CONTAINER) is
+			-- Make `par' the new parent of the widget.
+			-- `par' can be Void then the parent is the screen.
+		require
+			exists: not destroyed
+		do
+			implementation.set_parent (par)
+		ensure
+			parent_set: parent = par
+		end
 
 	hide is
 		 	-- Make widget invisible on the screen.

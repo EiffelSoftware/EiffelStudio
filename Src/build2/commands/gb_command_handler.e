@@ -73,6 +73,12 @@ feature -- Access
 			create Result.make
 		end
 		
+	show_hide_component_viewer_command: GB_SHOW_HIDE_COMPONENT_VIEWER_COMMAND is
+			-- Command representing a show/hide component viewer request.
+		once
+			create Result.make
+		end
+		
 		
 
 feature -- Basic operation

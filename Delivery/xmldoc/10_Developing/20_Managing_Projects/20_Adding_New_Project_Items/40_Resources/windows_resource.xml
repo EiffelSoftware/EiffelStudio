@@ -1,9 +1,6 @@
 <document output="envision" title="Windows Resource">
 	<meta_data/>
 	<paragraph>
-		<table>
-			<row>
-				<cell>
 					<paragraph>The Windows Resources item adds a new A .NET resource file. </paragraph>
 					<seealso>
 						<bold>See Also</bold>
@@ -13,7 +10,4 @@
 							<label>  Adding New Project Items</label>
 						</link>
 					</seealso>
-				</cell>
-			</row>
-		</table>
 	</paragraph></document>

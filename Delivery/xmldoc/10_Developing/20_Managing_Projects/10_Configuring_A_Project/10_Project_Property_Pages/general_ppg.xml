@@ -7,9 +7,6 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<table>
-			<row>
-				<cell>
 					<paragraph>
 						<paragraph>The General Property Page is used to configure all of your project(s) basic  compilation details.</paragraph>
 						<heading>
@@ -88,7 +85,4 @@
 							</link>
 						</seealso>
 					</paragraph>
-				</cell>
-			</row>
-		</table>
 	</paragraph></document>

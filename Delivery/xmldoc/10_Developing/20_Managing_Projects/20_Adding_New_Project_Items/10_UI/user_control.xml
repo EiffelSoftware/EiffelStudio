@@ -1,9 +1,6 @@
 <document output="envision" title="User Control">
 	<meta_data/>
 	<paragraph>
-		<table>
-			<row>
-				<cell>
 					<paragraph>  The User Control itemadds a class for creating a Windows Form control using the visual designer. This item when added will open in the  Visual Studio .NET Windows Form designer. </paragraph>
 					<paragraph>Please ensure that the <code><class_name>Accessiblity</class_name></code> <code><class_name>System.Windows.Forms</class_name></code> and  <code><class_name>System.Drawing</class_name></code> assemblies have been added to your project before adding a  Windows Form item to your project.</paragraph>
 					<seealso>
@@ -15,7 +12,4 @@
 						</link>
 						<line_break/>
 					</seealso>
-				</cell>
-			</row>
-		</table>
 	</paragraph></document>

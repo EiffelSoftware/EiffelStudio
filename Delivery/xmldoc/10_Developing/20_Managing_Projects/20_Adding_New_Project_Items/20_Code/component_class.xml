@@ -1,9 +1,6 @@
 <document output="envision" title="Component Class">
 	<meta_data/>
 	<paragraph>
-		<table>
-			<row>
-				<cell>
 					<paragraph>  The Component Class is used for creating components using the visual  designer.The class contains all of the default implementation  required to create a component. </paragraph>
 					<seealso>
 						<bold>See Also</bold>
@@ -13,7 +10,4 @@
 							<label>  Adding New Project Items</label>
 						</link>
 					</seealso>
-				</cell>
-			</row>
-		</table>
 	</paragraph></document>

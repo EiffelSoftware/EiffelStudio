@@ -1,9 +1,6 @@
 <document output="envision" title="EiffelVision2 Window">
 	<meta_data/>
 	<paragraph>
-		<table>
-			<row>
-				<cell>
 					<paragraph>The EiffelVision2 Window item is a new Eiffel Class, 
 						<code>
 							<class_name>TITLED_WINDOW</class_name>
@@ -69,7 +66,4 @@
 						</link>
 						<line_break/>
 					</seealso>
-				</cell>
-			</row>
-		</table>
 	</paragraph></document>

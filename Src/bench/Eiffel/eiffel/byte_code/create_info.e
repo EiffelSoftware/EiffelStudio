@@ -154,10 +154,4 @@ feature -- Assignment attempt
 			make_gen_type_byte_code (ba)
 		end
 
-feature -- Debug
-
-	trace is
-		deferred
-		end
-
 end -- class CREATE_INFO

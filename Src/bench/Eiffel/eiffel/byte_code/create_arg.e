@@ -226,14 +226,4 @@ feature -- Assignment attempt
 			ba.append_short_integer (cl_type_i.generated_id (False))
 		end
 
-feature -- Debug
-
-	trace is
-		do
-			io.error.putstring (generator)
-			io.error.putstring ("  ")
-			io.error.putint (position)
-			io.error.new_line
-		end
-
 end -- class CREATE_ARG

@@ -148,14 +148,4 @@ feature -- Assignment attempt
 			end
 		end
 
-feature -- Debug
-
-	trace is
-		do
-			io.error.putstring (generator)
-			io.error.putstring ("  ")
-			type.trace
-			io.error.new_line
-		end
-
 end -- class CREATE_TYPE

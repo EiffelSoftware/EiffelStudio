@@ -128,12 +128,4 @@ feature -- Assignment attempt
 			buffer.putstring (")")
 		end
 
-feature -- Debug
-
-	trace is
-		do
-			io.error.putstring (generator)
-			io.error.new_line
-		end
-
 end -- class CREATE_CURRENT

@@ -426,15 +426,6 @@ feature -- Basic operation
 
 			if pre_drop_it /= Void and not transport_executing
 				and not item_is_in_pnd then
-				radio_button ?= pre_drop_it
-				if radio_button /= Void and button = 1 and 
-					radio_button.is_sensitive then
-					-- We check `button' as the radio button is only
-					-- selected if the button is equal to 1.
-					-- If another button is pressed, we do not need to
-					-- unselect the selected button from the group.
-					radio_button.update_radio_states
-				end
 				if pre_drop_it.pointer_button_press_actions_internal
 					/= Void then
 					pre_drop_it.interface.pointer_button_press_actions.call
@@ -474,15 +465,6 @@ feature -- Basic operation
 				--| EV_MULTI_COLUMN_LIST_IMP has a fuller explanation.
 			if not item_press_actions_called then
 				if post_drop_it /= Void and pre_drop_it = post_drop_it then
-					radio_button ?= post_drop_it
-					if radio_button /= Void and button = 1 and 
-						radio_button.is_sensitive then
-						-- We check `button' as the radio button is only
-						-- selected if the button is equal to 1.
-						-- If another button is pressed, we do not need to
-						-- unselect the selected button from the group.
-						radio_button.update_radio_states
-					end
 					post_drop_it.interface.pointer_button_press_actions.call
 							([x_pos - child_x (post_drop_it.interface), y_pos,
 							button, 0.0, 0.0, 0.0, pt.x, pt.y])
@@ -555,6 +537,7 @@ feature {EV_INTERNAL_TOOL_BAR_IMP} -- Click action event
 		local
 			but: EV_TOOL_BAR_BUTTON_IMP
 			toggle_but: EV_TOOL_BAR_TOGGLE_BUTTON_IMP
+			radio_button: EV_TOOL_BAR_RADIO_BUTTON_IMP
 		do
 				-- Assign button associated with `command_id' to but.
 			but := button_associated_with_id (command_id)
@@ -564,6 +547,15 @@ feature {EV_INTERNAL_TOOL_BAR_IMP} -- Click action event
 			toggle_but ?= but
 			if toggle_but /= Void then
 				toggle_but.update_selected (button_checked  (command_id))
+			end
+			
+			radio_button ?= but
+			
+			if radio_button /= Void and radio_button.is_sensitive then
+				radio_button.update_radio_states
+				if radio_button.selected_peer = radio_button.interface then
+					radio_button.enable_select
+				end
 			end
 
 				-- Call the actions.
@@ -644,6 +636,7 @@ feature {NONE} -- Implementation
 			end
 			ev_children.go_to (a_cursor)
 		end
+
 	a_child_has_text: BOOLEAN is
 			-- Does a child of `Current' have a text set?
 		local

@@ -63,7 +63,7 @@ library emitter
         [id(0x60020009)]
         HRESULT _set_impl([in] IUnknown* p1);
         [id(0x6002000a)]
-        HRESULT _emitter_type_2752([out, retval] _TYPE** pRetVal);
+        HRESULT _emitter_type_2752([out, retval] void** pRetVal);
     };
 
     [
@@ -95,12 +95,6 @@ library emitter
         HRESULT version([out, retval] BSTR* pRetVal);
         [id(0x60020003)]
         HRESULT culture([out, retval] BSTR* pRetVal);
-        [id(0x60020004)]
-        HRESULT public_key_token([out, retval] BSTR* pRetVal);
-        [id(0x60020005)]
-        HRESULT impl([out, retval] IUnknown** pRetVal);
-        [id(0x60020006)]
-        HRESULT _set_impl([in] IUnknown* p1);
     };
 
     [

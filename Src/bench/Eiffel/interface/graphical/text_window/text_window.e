@@ -37,7 +37,8 @@ feature
 			add_callbacks;
 			temp ?= implementation;
 			c_widget := temp.action_target;
-			hide_horizontal_scrollbar
+			hide_horizontal_scrollbar;
+			upper := -1 			-- Init clickable array.
 		end;
 
 	last_format: FORMATTER;
@@ -208,7 +209,7 @@ feature
 			-- Erase internal structures of current
 		do
 			image.wipe_out;
-			clickable_count := 0;
+			clear_clickable;
 			position := 0;
 			text_position := 0;
 			focus_start := 0;

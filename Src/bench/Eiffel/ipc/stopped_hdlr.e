@@ -6,6 +6,7 @@ inherit
 	SHARED_DEBUG;
 	SHARED_WORKBENCH;
 	BASIC_ROUTINES;
+	OBJECT_ADDR;
 	WINDOWS
 
 creation
@@ -41,19 +42,23 @@ feature
 			address: STRING;
 			reason: INTEGER
 		do
+			run_info.set_is_stopped (true);
+
+				-- Physical address of objects held in object tools
+				-- may have been change...
+			update_addresses;
+			window_manager.object_win_mgr.synchronize;
 
 			position := 1;
-
-				--| Seems useless
-			run_info.set_is_stopped (true);
 
 				-- Read feature name.
 			read_string;
 			name := last_string;
 
-				-- Read object address.
+				-- Read object address and convert it to hector address.
 			read_string;
-			address := last_string;
+
+			address := hector_addr (last_string);
 
 				-- Read origin of feature
 			read_int;
@@ -185,9 +190,7 @@ feature -- Display
 	display_status is
 		local
 			c, oc: CLASS_C;
-			tout_request: TOUT_REQUEST;
 			os: OBJECT_STONE;
-			temp: STRING;
 			ll: LINKED_LIST [STRING];
 			fi, ofi: FEATURE_I;
 --			rid: INTEGER;
@@ -197,10 +200,8 @@ feature -- Display
 
 				-- Print object address.
 			debug_window.put_string ("Stopped in object [");
-				!! os.make (Run_info.object_address);
-			temp := "0x";
-			temp.append (Run_info.object_address);
-			debug_window.put_clickable_string (os, temp);
+			!! os.make (Run_info.object_address);
+			debug_window.put_clickable_string (os, Run_info.object_address);
 			debug_window.put_string ("]%N");
 
 				-- Print class name.

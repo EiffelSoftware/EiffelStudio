@@ -387,26 +387,33 @@ feature -- Step by step debugging
 			-- be step-by-step debugged to be sure to stop on the 
 			-- next breakpoint.
 		local
-			f: FEATURE_I;
+			d_list: LINKED_LIST [DEBUGGABLE];
 			breakable_points: SORTED_TWO_WAY_LIST [AST_POSITION];
 			real_body_id: INTEGER;
 			bp: BREAKPOINT
 		do
 			if not stepped_routines.empty then
-				f := stepped_routines.item;
+				d_list := debuggables (stepped_routines.item);
 				from
-					breakable_points := debuggables (f).first.breakable_points;
-					real_body_id := debuggables (f).first.real_body_id;
-					breakable_points.start
+					d_list.start
 				until
-					breakable_points.after
+					d_list.after
 				loop
-					!! bp;
-					bp.set_stop;
-					bp.set_offset (breakable_points.item.position);
-					bp.set_real_body_id	(real_body_id);
-					new_breakpoints.extend (bp);
-					breakable_points.forth
+					from
+						breakable_points := d_list.item.breakable_points;
+						real_body_id := d_list.item.real_body_id;
+						breakable_points.start
+					until
+						breakable_points.after
+					loop
+						!! bp;
+						bp.set_stop;
+						bp.set_offset (breakable_points.item.position);
+						bp.set_real_body_id	(real_body_id);
+						new_breakpoints.extend (bp);
+						breakable_points.forth
+					end;
+					d_list.forth
 				end
 			end
 		end;
@@ -417,29 +424,36 @@ feature -- Step by step debugging
 			-- and leave those set by the user.
 		local
 			breakable_points: SORTED_TWO_WAY_LIST [AST_POSITION];
-			debuggable: DEBUGGABLE;
+			d_list: LINKED_LIST [DEBUGGABLE];
 			real_body_id: INTEGER;
 			bp: BREAKPOINT
 		do
 			if not stepped_routines.empty then
+				d_list := debuggables (stepped_routines.item);
 				from
-					debuggable := debuggables (stepped_routines.item).first;
-					breakable_points := debuggable.breakable_points;
-					real_body_id := debuggable.real_body_id;
-					breakable_points.start
+					d_list.start
 				until
-					breakable_points.after
+					d_list.after
 				loop
-					!! bp;
-					if breakable_points.item.is_set then
-						bp.set_stop
-					else
-						bp.set_continue
+					from
+						breakable_points := d_list.item.breakable_points;
+						real_body_id := d_list.item.real_body_id;
+						breakable_points.start
+					until
+						breakable_points.after
+					loop
+						!! bp;
+						if breakable_points.item.is_set then
+							bp.set_stop
+						else
+							bp.set_continue
+						end;
+						bp.set_offset (breakable_points.item.position);
+						bp.set_real_body_id	(real_body_id);
+						new_breakpoints.extend (bp);
+						breakable_points.forth
 					end;
-					bp.set_offset (breakable_points.item.position);
-					bp.set_real_body_id	(real_body_id);
-					new_breakpoints.extend (bp);
-					breakable_points.forth
+					d_list.forth
 				end
 			end
 		end;

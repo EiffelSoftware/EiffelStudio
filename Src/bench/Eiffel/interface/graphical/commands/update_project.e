@@ -28,6 +28,13 @@ feature {NONE}
 	reset_debugger is
 		do
 			debug_info.wipe_out;
+			if Run_info.is_running then
+				debug_info.restore;
+				debug_window.clear_window;   
+				debug_window.put_string ("Application terminated%N");
+				debug_window.display;
+				run_info.set_is_running (false)
+			end;
 			quit_cmd.exit_now;
 		end;
 

@@ -16,7 +16,8 @@ inherit
 			{NONE} all
 		end;
 	ICONED_COMMAND;
-	SHARED_DEBUG
+	SHARED_DEBUG;
+	OBJECT_ADDR
 
 
 creation
@@ -58,25 +59,42 @@ feature
 		do
 			if Run_info.is_running then
 				if Run_info.is_stopped then
+						-- Application is running. Continue execution.
 debug
 	io.error.putstring (generator);
 	io.error.putstring (": Contine execution%N");
 end;
-						-- Application is running. Continue execution.
+						-- Ask the application to wean objects the
+						-- debugger doesn't need anymore.
+					keep_objects (window_manager.object_win_mgr.objects_kept);
+
 					status := cont_request.send_byte_code;
 					if status then
 						cont_request.send_breakpoints
 					end;
 					debug_info.tenure;
 					hide_stopped_mark;
+						-- For `hang_on' to work properly, application 
+						-- must not be stopped (is_stopped = False).
+					Run_info.set_is_stopped (False);
+					window_manager.object_win_mgr.hang_on;
 					cont_request.send_rqst_1 (Rqst_resume, Resume_cont);
+					debug_window.clear_window;
+					debug_window.put_string ("Application is running%N");
+					debug_window.display
 				end;
 			else
+					-- Application is not running. Start it.
+
 debug
 	io.error.putstring (generator);
 	io.error.putstring (": Start execution%N");
 end;
-					-- Application is not running. Start it.
+
+					-- Get rid of object stones from previous execution.
+					-- (`is_running' must be false).
+				window_manager.object_win_mgr.hang_on;
+
 				if project_tool.initialized and then 
 					System.system_name /= Void 
 				then

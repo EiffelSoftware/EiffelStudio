@@ -525,6 +525,15 @@ debug ("FS_RBRF")
 end;
 		end;
 
+	prepare_for_current is
+			-- Prepare for Current
+		do
+			old_types := format.local_types;
+			new_types := format.local_types.new_adapt_current;
+			format.set_local_types (new_types);
+			arguments := Void;
+		end;
+
 	prepare_for_result is
 			-- Prepare for Result
 		do

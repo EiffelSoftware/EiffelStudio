@@ -849,23 +849,16 @@ int level;		/* Delta by which we should move active cursor */
  */
 
 shared char *dview(root)
-char *root;
+EIF_OBJ root;
 {
 	/* Compute the tagged out form for object 'root' and return a pointer to
 	 * the location of the C buffer holding the string. Note that the
 	 * build_out() run-time routine expects an EIF_OBJ pointer.
 	 */
 
-	EIF_OBJ object;				/* The hector pointer */
 	char *out;					/* Where out form is stored */
 
-	/*object = hrecord(root);*/		/* Protect object against GC effects */
-	/*out = build_out(object);*/	/* Build `tagged_out' (I hate that name--RAM) */
-	/*epop(&hec_stack);*/			/* Release object from hector stack */
-
-	/* FIXME */
-	/* We would like to use the hector protection, but it does not seem to work */
-	out = build_out (&root);
+	out = build_out (root);
 	return out;		/* To-be-freed pointer to the tagged out representation */
 }
 

@@ -30,6 +30,7 @@ creation
 	make_day_month_year,
 	make_now,
 	make_by_days,
+	make_from_string_default,
 	make_from_string,
 	make_by_compact_date
 

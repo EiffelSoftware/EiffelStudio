@@ -25,8 +25,8 @@ creation
 feature {NONE} -- Initialization
 
         make (par: EV_CONTAINER) is
-                        -- Create a fixed widget with, `par' as
-                        -- parent
+                        -- Create an horizontal box with `par' as
+                        -- parent.
 		do
 			!EV_HORIZONTAL_BOX_IMP!implementation.make (par)
 			widget_make (par)

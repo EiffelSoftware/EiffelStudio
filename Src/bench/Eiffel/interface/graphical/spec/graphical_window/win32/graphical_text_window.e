@@ -19,7 +19,8 @@ inherit
 			put_quoted_comment, put_operator, put_symbol,
 			put_keyword, put_comment, put_stone, put_exported_feature_name,
 			put_string, new_line,  put_after_class, 
-			put_normal_string, process_text, disable_clicking, is_graphical
+			put_normal_string, process_text, disable_clicking, is_graphical,
+			set_text
 		end
 
 	GRAPHICAL_VALUES
@@ -47,6 +48,13 @@ feature -- Output
 			set_changed (False)
 		end
 
+	set_text (t: STRING) is
+			-- Set `text' to `t' with `text_format'
+		do
+			implementation.set_character_format_word (text_format)
+			Precursor {SCROLLED_TEXT_WINDOW} (t)
+		end
+
 	reset is
 		do
 			{SCROLLED_TEXT_WINDOW} Precursor
@@ -62,6 +70,8 @@ feature -- Output
 
 	init_resource_values is
 			-- Initialize the resource values.
+		local
+			previous_position: INTEGER
 		do
 			set_changed (True)
 			init_graphical_values
@@ -144,7 +154,7 @@ feature -- Update
 			else
 				implementation.set_character_format_word (symbol_format)
 			end
-			{SCROLLED_TEXT_WINDOW} precursor (str, e_feature, is_keyword)
+			{SCROLLED_TEXT_WINDOW} Precursor (str, e_feature, is_keyword)
 		end
 
 	put_string (s: STRING) is
@@ -165,7 +175,7 @@ feature -- Update
 			-- `str' at current position.
 		do
 			implementation.set_character_format_word (class_format)
-			{SCROLLED_TEXT_WINDOW} precursor (e_class, str)
+			{SCROLLED_TEXT_WINDOW} Precursor (e_class, str)
 		end
 
 	put_cluster (e_cluster: CLUSTER_I str: STRING) is
@@ -181,14 +191,14 @@ feature -- Update
 			-- `str' at current position.
 		do
 			implementation.set_character_format_word (class_format)
-			{SCROLLED_TEXT_WINDOW} precursor (e_class, str)
+			{SCROLLED_TEXT_WINDOW} Precursor (e_class, str)
 		end
 
 	put_class_syntax (syn: SYNTAX_ERROR e_class: CLASS_C; str: STRING) is
 			-- Put `address' for `e_class'.
 		do
 			implementation.set_character_format_word (class_format)
-			{SCROLLED_TEXT_WINDOW} precursor (syn, e_class, str)
+			{SCROLLED_TEXT_WINDOW} Precursor (syn, e_class, str)
 		end
 
 	put_error (error: ERROR str: STRING) is
@@ -196,7 +206,7 @@ feature -- Update
 			-- `str' at current position.
 		do
 			implementation.set_character_format_word (error_format)
-			{SCROLLED_TEXT_WINDOW} precursor (error, str)
+			{SCROLLED_TEXT_WINDOW} Precursor (error, str)
 		end
 
 	put_feature_error (feat: E_FEATURE str: STRING; a_pos: INTEGER) is
@@ -204,7 +214,7 @@ feature -- Update
 			-- representation `str' at current position.
 		do
 			implementation.set_character_format_word (feature_format)
-			{SCROLLED_TEXT_WINDOW} precursor (feat, str, a_pos)
+			{SCROLLED_TEXT_WINDOW} Precursor (feat, str, a_pos)
 		end
 
 	put_feature (feat: E_FEATURE str: STRING) is
@@ -212,27 +222,27 @@ feature -- Update
 			-- representation `str' at current position.
 		do
 			implementation.set_character_format_word (feature_format)
-			{SCROLLED_TEXT_WINDOW} precursor (feat, str)
+			{SCROLLED_TEXT_WINDOW} Precursor (feat, str)
 		end
 
 	put_feature_name (f_name: STRING e_class: CLASS_C) is
 			-- Put feature name `f_name' defined in `e_class'.
 		do
 			implementation.set_character_format_word (feature_format)
-			{SCROLLED_TEXT_WINDOW} precursor (f_name, e_class)
+			{SCROLLED_TEXT_WINDOW} Precursor (f_name, e_class)
 		end
 
 	put_exported_feature_name (f_name: STRING; e_class: CLASS_C; alias_name: STRING) is
 		do
 			implementation.set_character_format_word (feature_format)
-			{SCROLLED_TEXT_WINDOW} precursor (f_name, e_class, alias_name)
+			{SCROLLED_TEXT_WINDOW} Precursor (f_name, e_class, alias_name)
 		end
 
 	put_address (address: STRING a_name: STRING; e_class: CLASS_C) is
 			-- Put `address' with `a_name' for `e_class'.
 		do
 			implementation.set_character_format_word (object_format)
-			{SCROLLED_TEXT_WINDOW} precursor (address, a_name, e_class)
+			{SCROLLED_TEXT_WINDOW} Precursor (address, a_name, e_class)
 		end
 
 	put_comment (s: STRING) is
@@ -260,7 +270,7 @@ feature -- Update
 			-- Add quoted text `s'.
 		do
 			implementation.set_character_format_word (comment_format)
-			{SCROLLED_TEXT_WINDOW} precursor (s)
+			{SCROLLED_TEXT_WINDOW} Precursor (s)
 		end
 
 	put_stone (a_stone: STONE stone_string: STRING) is

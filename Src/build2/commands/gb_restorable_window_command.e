@@ -35,6 +35,8 @@ feature -- Status setting
 
 	execute is
 			-- Execute command (toggle between show and hide).
+		local
+			iconable_tool: GB_ICONABLE_TOOL
 		do
 			reverse_is_selected
 			if is_selected then
@@ -62,13 +64,23 @@ feature -- Status setting
 					-- then we must show the window relative to the
 					-- main window. This is because we are shown modally
 					-- to Visual Studio, and otherwise, the windows
-					-- become very annoying.				
+					-- become very annoying.
+					
+					-- Note that we must also update the icons on the windows,
+					-- dependent on whether they are relative of not.
+					-- This is because on Windows, if we have multiple windows
+					-- show relative, they all share the same icon. Therefore,
+					-- we need to set it to an appropriate one.
+				iconable_tool ?= window
 				if system_status.is_wizard_system then
 					window.show_relative_to_window (first_window)
+					iconable_tool.set_default_icon
 				elseif system_status.tools_always_on_top then
 					window.show_relative_to_window (main_window)
+					iconable_tool.set_default_icon
 				else
 					window.show
+					iconable_tool.restore_icon
 				end
 			else
 					-- Store previous dimensions so we can restore

@@ -29,12 +29,23 @@ feature -- Status setting
 		deferred
 		end
 
+	format_region (first_pos, last_pos: INTEGER; format: EV_CHARACTER_FORMAT) is
+			-- Set the format of the text between `first_pos' and `last_pos' to
+			-- `format'. May or may not change the cursor position.
+		require
+			exists: not destroyed
+			valid_positions: valid_position (first_pos) and valid_position (last_pos)
+			format_not_void: format /= Void
+		deferred
+		end
+
 feature -- Status report
 
 	line_number_from_position (a_pos: INTEGER): INTEGER is
 			-- Retrieves the line number from a character position
 			-- Line numbers start at 1.
 		require
+			exists: not destroyed
 			index_large_enough: a_pos >= 0
 			index_small_enough: a_pos <= text_length + 2
 		deferred
@@ -57,6 +68,9 @@ feature -- Element change
 
 	remove_text (start_pos, end_pos: INTEGER) is
 			-- Remove the text between `start_pos' and `end_pos'.
+		require
+			exists: not destroyed
+			valid_positions: valid_position (start_pos) and valid_position (end_pos)
 		deferred
 		end
 

@@ -34,7 +34,18 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
+
 feature -- Status report
+
+	current_line_number: INTEGER is
+			-- Returns the number of the line the cursor currently
+			-- is on.
+		require
+			exist: not destroyed
+		deferred
+		ensure
+			valid_line_index: valid_line_index (Result)
+		end
 
 	line_count: INTEGER is
 			-- Number of lines in widget
@@ -45,24 +56,24 @@ feature -- Status report
 			result_greater_zero: Result > 0
 		end 
 
-	first_character_from_line_number (i: INTEGER): INTEGER is
+	first_position_from_line_number (i: INTEGER): INTEGER is
 			-- Position of the first character on the `i'-th line.
 		require
 			exist: not destroyed
 			valid_line: valid_line_index (i)
 		deferred
 		ensure
-			valid_character_position: valid_character_position (i)
+			valid_position: valid_position (i)
 		end
 
-	last_character_from_line_number (i: INTEGER): INTEGER is
+	last_position_from_line_number (i: INTEGER): INTEGER is
 			-- Position of the last character on the `i'-th line.
 		require
 			exist: not destroyed
 			valid_line: valid_line_index (i)
 		deferred
 		ensure
-			valid_character_position: valid_character_position (i)
+			valid_position: valid_position (i)
 		end
 
 	valid_line_index (i: INTEGER): BOOLEAN is
@@ -73,7 +84,42 @@ feature -- Status report
 			Result := i > 0 and i < line_count
 		end
 
+	has_system_frozen_widget: BOOLEAN is
+			-- Is there any widget frozen?
+			-- If a widget is frozen any updates made to it
+			-- will not be shown until the widget is
+			-- thawn again.
+		require
+			exist: not destroyed
+		deferred
+		end
+
 feature -- Status settings
+
+	freeze is
+			-- Freeze the widget.
+			-- If the widget is frozen any updates made to the
+			-- window will not be shown until the widget is
+			-- thawn again.
+			-- Note: Only one window can be frozen at a time.
+			-- This is because of a limitation on Windows.
+		require
+			exist: not destroyed
+			not_widget_is_frozen: not has_system_frozen_widget
+		deferred
+		ensure
+			is_frozen: has_system_frozen_widget
+		end
+
+	thaw is
+			-- Thaw a frozen widget.
+		require
+			exist: not destroyed
+			is_frozen: has_system_frozen_widget
+		deferred
+		ensure
+			no_widget_is_frozen: not has_system_frozen_widget
+		end
 
 	set_default_options is
 			-- Initialize the options of the widget.

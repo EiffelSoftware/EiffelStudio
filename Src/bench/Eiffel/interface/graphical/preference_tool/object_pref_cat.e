@@ -13,7 +13,8 @@ inherit
 			Object_resources as associated_category
 		export
 			{NONE} all
-		end;
+		end
+
 	PREFERENCE_CATEGORY
 		redefine
 			init_colors

@@ -18,6 +18,7 @@ feature
 	Triangle_type: INTEGER is 7;
 	Custom_type: INTEGER is 8;
 	Shell_type: INTEGER is 9;
-	Breakable_type: INTEGER is 10
+	Breakable_type: INTEGER is 10;
+	Call_stack_type: INTEGER is 11
 
 end -- class STONE_TYPES

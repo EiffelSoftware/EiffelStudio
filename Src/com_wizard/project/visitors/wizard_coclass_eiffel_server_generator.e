@@ -39,7 +39,6 @@ feature -- Access
 	generate (a_descriptor: WIZARD_COCLASS_DESCRIPTOR) is
 			-- Generate eiffel class for coclass.
 		local
-			definition_file_generator: WIZARD_DEFINITION_FILE_GENERATOR
 			server_impl_generator: WIZARD_COCLASS_EIFFEL_SERVER_IMPL_GENERATOR
 			new_descriptor: WIZARD_COCLASS_DESCRIPTOR
 			local_string: STRING
@@ -65,11 +64,6 @@ feature -- Access
 			create server_impl_generator
 
 			server_impl_generator.generate (coclass_descriptor)
-			
-			if shared_wizard_environment.in_process_server then
-				create definition_file_generator
-				definition_file_generator.generate (coclass_descriptor)
-			end
 		end
 
 feature --  Basic operation

@@ -37,8 +37,12 @@ feature -- Processing
 				-- add deferred interface class as parent
 		do
 			Precursor (coclass_descriptor)
-			coclass_server_generator.initialize
-			coclass_server_generator.generate (coclass_descriptor)
+			if shared_wizard_environment.new_eiffel_project then
+				coclass_impl_generator.generate (coclass_descriptor)
+			else
+				coclass_server_generator.initialize
+				coclass_server_generator.generate (coclass_descriptor)
+			end
 		end
 
 	process_implemented_interface (interface_descriptor: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR) is
@@ -58,9 +62,11 @@ feature -- Processing
 			-- `inteface_descriptor' must provide information on
 			-- every functiom of interface
 		do
-			Precursor (interface_descriptor)
-			interface_server_generator.initialize
-			interface_server_generator.generate (interface_descriptor)
+			if not shared_wizard_environment.new_eiffel_project then
+				Precursor (interface_descriptor)
+				interface_server_generator.initialize
+				interface_server_generator.generate (interface_descriptor)
+			end
 		end
 
 	process_enum (enum_descriptor: WIZARD_ENUM_DESCRIPTOR) is
@@ -122,6 +128,12 @@ feature {NONE}
 
 	interface_server_generator: WIZARD_INTERFACE_EIFFEL_SERVER_GENERATOR is
 			-- Interface eiffel server generator
+		once
+			create Result
+		end
+
+	coclass_impl_generator: WIZARD_COCLASS_EIFFEL_SERVER_IMPL_GENERATOR is
+			-- Coclass implementation generator
 		once
 			create Result
 		end

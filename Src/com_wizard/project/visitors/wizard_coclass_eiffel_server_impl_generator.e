@@ -28,6 +28,7 @@ feature -- Basic operation
 		local
 			local_string: STRING
 			a_visible: WIZARD_WRITER_VISIBLE_CLAUSE
+			definition_file_generator: WIZARD_DEFINITION_FILE_GENERATOR
 		do
 			create a_visible.make
 			a_visible.set_name (implemented_coclass_name (a_descriptor.eiffel_class_name))
@@ -38,18 +39,26 @@ feature -- Basic operation
 
 			-- Set class name and description
 			eiffel_writer.set_class_name (implemented_coclass_name (a_descriptor.eiffel_class_name))
+			if not shared_wizard_environment.new_eiffel_project then
+				-- Process interfaces.
+				process_interfaces
+			end
+
 			local_string := clone (coclass_descriptor.eiffel_class_name)
 			local_string.append (" Implementation.")
 			eiffel_writer.set_description (local_string)
-
-			-- Process interfaces.
-			process_interfaces
 
 			set_default_ancestors (eiffel_writer)
 
 			-- Generate code
 			Shared_file_name_factory.create_file_name (Current, eiffel_writer)
 			eiffel_writer.save_file (Shared_file_name_factory.last_created_file_name)
+
+			if shared_wizard_environment.in_process_server then
+				create definition_file_generator
+				definition_file_generator.generate (coclass_descriptor)
+			end
+
 		end
 
 	add_creation is
@@ -153,7 +162,12 @@ feature {NONE} -- Implementation
 			tmp_writer: WIZARD_WRITER_INHERIT_CLAUSE
 		do
 			create tmp_writer.make
-			tmp_writer.set_name (coclass_descriptor.eiffel_class_name)
+
+			if shared_wizard_environment.new_eiffel_project then
+				tmp_writer.set_name (shared_wizard_environment.eiffel_class_name)
+			else
+				tmp_writer.set_name (coclass_descriptor.eiffel_class_name)
+			end
 
 			an_eiffel_writer.add_inherit_clause (tmp_writer)
 

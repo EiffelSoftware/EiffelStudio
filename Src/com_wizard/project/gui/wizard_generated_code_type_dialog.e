@@ -48,10 +48,17 @@ feature -- Behavior
 		do
 			Precursor {WIZARD_DIALOG}
 			uncheck_all
-			if shared_wizard_environment.client then
-				client_radio.set_checked
+
+			if shared_wizard_environment.new_eiffel_project then
+				client_radio.disable
+				server_radio.set_checked
+			else
+				if shared_wizard_environment.client then
+					client_radio.set_checked
+				end
 			end
-			if shared_wizard_environment.server then
+
+			if shared_wizard_environment.server or shared_wizard_environment.new_eiffel_project then
 				server_radio.set_checked
 			end
 			if shared_wizard_environment.in_process_server then

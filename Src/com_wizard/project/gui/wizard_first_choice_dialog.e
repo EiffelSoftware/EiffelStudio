@@ -18,6 +18,11 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_SHARED_DATA
+		export
+			{NONE} all
+		end
+
 creation
 	make
 
@@ -31,12 +36,15 @@ feature {NONE} -- Initialization
 		do
 			make_by_id (a_parent, Wizard_first_choice_dialog_constant)
 			create open_project_radio.make_by_id (Current, Open_project_check_constant)
-			create create_project_radio.make_by_id (Current, Create_project_check_constant)
+			create create_project_from_com_radio.make_by_id (Current, Create_project_from_com_check_constant)
+			create create_project_from_eiffel_class_radio.make_by_id (Current, Create_project_from_eiffel_check_constant)
 			create id_ok.make_by_id (Current, Idok)
 			create id_cancel.make_by_id (Current, Idcancel)
 			create help_button.make_by_id (Current, Help_button_constant)
 			create id_back.make_by_id (Current, Id_back_constant)
 			create welcome_static.make_by_id (Current, Title_static_constant)
+
+			new_project := False
 		end
 
 feature -- Behavior
@@ -53,7 +61,14 @@ feature -- Behavior
 	on_ok is
 			-- Record values of buttons.
 		do
-			new_project := not open_project_radio.checked
+			if create_project_from_com_radio.checked then
+				shared_wizard_environment.set_new_eiffel_project (False)
+				new_project := True
+			elseif create_project_from_eiffel_class_radio.checked then
+				shared_wizard_environment.set_new_eiffel_project (True)
+				new_project := True
+			end
+
 			Precursor {WEL_MODAL_DIALOG}
 		end
 
@@ -77,10 +92,13 @@ feature -- Access
 
 	new_project: BOOLEAN
 			-- Should a new EiffelCOM project be created?
-			
-	create_project_radio: WEL_RADIO_BUTTON
-			-- Create new project button
+
+	create_project_from_com_radio: WEL_RADIO_BUTTON
+			-- Create new project from COM definition file button
 	
+	create_project_from_eiffel_class_radio: WEL_RADIO_BUTTON
+			-- Create new project from Eiffel class button
+
 	welcome_static: WEL_STATIC
 			-- Welcome message static
 			

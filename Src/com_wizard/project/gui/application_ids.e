@@ -66,6 +66,13 @@ feature -- Access
 	Title_question_static_constant: INTEGER is 1044
 	Server_radio_constant: INTEGER is 1062
 
+	Project_file_edit_constant: INTEGER is 1064
+	Project_file_browse_button_constant: INTEGER is 1065
+	Eiffel_class_edit_constant: INTEGER is 1066
+	Create_project_from_com_check_constant: INTEGER is 1050
+	Create_project_from_eiffel_check_constant: INTEGER is 1051
+	Wizard_eiffel_project_file_dialog_constant: INTEGER is 129
+	
 end -- class APPLICATION_IDS
 
 --|-------------------------------------------------------------------

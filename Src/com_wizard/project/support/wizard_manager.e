@@ -75,67 +75,85 @@ feature -- Basic Operations
 
 	run is
 			-- Start generation.
-		do		
+		local
+			idl_file_generator: WIZARD_IDL_GENERATOR
+		do
 			if shared_wizard_environment.abort then
 				finish
 			else
 				message_output.initialize_log_file
-				progress_report.set_title (Idl_compilation_title)
-				progress_report.start
-				-- Compile IDL
-				if shared_wizard_environment.idl then
-					if shared_wizard_environment.use_universal_marshaller then
-						progress_report.set_range (1)
-					else
-						progress_report.set_range (6)
-					end
-					message_output.add_title (Current, Idl_compilation_title)
-					compiler.compile_idl
-					if not shared_wizard_environment.abort then
-						progress_report.step
-						-- Create Proxy/Stub
-						if not shared_wizard_environment.use_universal_marshaller and Shared_wizard_environment.server then
-							-- Compile c iid file
-							message_output.add_title (Current, Iid_compilation_title)
-							compiler.compile_iid
-							if not shared_wizard_environment.abort then
-								progress_report.step
-								-- Compile c dlldata file
-								message_output.add_title (Current, Data_compilation_title)
-								compiler.compile_data
+				if shared_wizard_environment.new_eiffel_project then
+					progress_report.set_title ("Process Eiffel class")
+					progress_report.start
+					progress_report.set_range (2)
+
+					create idl_file_generator.make (message_output)
+					progress_report.step
+					idl_file_generator.generate
+					progress_report.step
+				end
+
+				if shared_wizard_environment.abort then
+					finish
+				else
+					-- Compile IDL
+					if shared_wizard_environment.idl then
+						progress_report.set_title (Idl_compilation_title)
+						progress_report.start
+
+						if shared_wizard_environment.use_universal_marshaller then
+							progress_report.set_range (1)
+						else
+							progress_report.set_range (6)
+						end
+						message_output.add_title (Current, Idl_compilation_title)
+						compiler.compile_idl
+						if not shared_wizard_environment.abort then
+							progress_report.step
+							-- Create Proxy/Stub
+							if not shared_wizard_environment.use_universal_marshaller and Shared_wizard_environment.server then
+								-- Compile c iid file
+								message_output.add_title (Current, Iid_compilation_title)
+								compiler.compile_iid
 								if not shared_wizard_environment.abort then
 									progress_report.step
-									-- Compile c proxy/stub file
-									message_output.add_title (Current, Ps_compilation_title)
-									compiler.compile_ps
+									-- Compile c dlldata file
+									message_output.add_title (Current, Data_compilation_title)
+									compiler.compile_data
 									if not shared_wizard_environment.abort then
 										progress_report.step
-										-- Final link
-										message_output.add_title (Current, Link_title)
-										compiler.link
+										-- Compile c proxy/stub file
+										message_output.add_title (Current, Ps_compilation_title)
+										compiler.compile_ps
 										if not shared_wizard_environment.abort then
 											progress_report.step
-											-- Registration
-											message_output.add_title (Current, Ps_registration_title)
-											compiler.register_ps
+											-- Final link
+											message_output.add_title (Current, Link_title)
+											compiler.link
 											if not shared_wizard_environment.abort then
 												progress_report.step
-												generate
+												-- Registration
+												message_output.add_title (Current, Ps_registration_title)
+												compiler.register_ps
+												if not shared_wizard_environment.abort then
+													progress_report.step
+													generate
+												end
 											end
 										end
 									end
 								end
+							else
+								generate
 							end
-						else
-							generate
 						end
+					else
+						generate
 					end
-				else
-					generate
-				end
-				message_output.close_log_file
-				if Shared_wizard_environment.abort then
-					finish
+					message_output.close_log_file
+					if Shared_wizard_environment.abort then
+						finish
+					end
 				end
 			end
 		rescue
@@ -537,6 +555,17 @@ feature {NONE} -- Implementation
 
 	Ps_registration_title: STRING is "Registering Proxy/Stub"
 			-- Proxy/Stub Registration
+
+	cwin_create_process (a_name, a_command_line, a_sec_attributes1, a_sec_attributes2: POINTER;
+							a_herit_handles: BOOLEAN; a_flags: INTEGER; an_environment, a_directory,
+							a_startup_info, a_process_info: POINTER): BOOLEAN is
+			-- SDK CreateProcess
+		external
+			"C [macro <winbase.h>] (LPCTSTR, LPTSTR, LPSECURITY_ATTRIBUTES, LPSECURITY_ATTRIBUTES, BOOL, DWORD, LPVOID, LPCTSTR, LPSTARTUPINFO, LPPROCESS_INFORMATION) :EIF_BOOLEAN"
+		alias
+			"CreateProcess"
+		end
+
 
 end -- class WIZARD_MANAGER
 

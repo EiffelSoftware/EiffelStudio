@@ -92,6 +92,7 @@ feature {NONE} -- Initialization
 			set_menu (main_menu)
 			create generated_code_type_dialog.make (Current)
 			create definition_file_dialog.make (Current)
+			create eiffel_project_file_dialog.make (Current)
 			create idl_dialog.make (Current)
 			create ps_dialog.make (Current)
 			create final_dialog.make (Current)
@@ -150,6 +151,9 @@ feature -- GUI Elements
 
 	definition_file_dialog: WIZARD_DEFINITION_FILE_DIALOG
 			-- Wizard initial dialog
+
+	eiffel_project_file_dialog: WIZARD_EIFFEL_PROJECT_FILE_DIALOG
+			-- Wizard Eiffel project dialog
 
 	idl_dialog: WIZARD_IDL_DIALOG
 			-- Wizard IDL dialog
@@ -275,7 +279,7 @@ feature -- Output
 
 feature {NONE} -- State management
 
-	First_state, Introduction_state, Initial_state, Idl_state, Ps_state, Final_state, Finished_state, Abort_state: INTEGER is unique
+	First_state, Introduction_state, Initial_state, Initial_eiffel_state, Idl_state, Ps_state, Final_state, Finished_state, Abort_state: INTEGER is unique
 			-- Possible states
 
 	state: INTEGER
@@ -295,6 +299,8 @@ feature {NONE} -- State management
 				Result := Generated_code_type_dialog
 			when Initial_state then
 				Result := Definition_file_dialog
+			when Initial_eiffel_state then
+				Result := eiffel_project_file_dialog
 			when Idl_state then
 				Result := Idl_dialog
 			when Ps_state then
@@ -340,7 +346,12 @@ feature {NONE} -- State management
 				inspect
 					state	
 				when Introduction_state then
-					state := Initial_state
+					if shared_wizard_environment.new_eiffel_project then
+						state := Initial_eiffel_state
+					else
+						state := Initial_state
+					end
+
 				when Initial_state then
 					if not shared_wizard_environment.server then
 						state := Final_state
@@ -349,6 +360,8 @@ feature {NONE} -- State management
 					else
 						state := Ps_state
 					end
+				When Initial_eiffel_state then
+					state := Idl_state
 				when Idl_state, Ps_state then
 					state := Final_state
 				when Final_state then

@@ -673,6 +673,8 @@ feature -- Object editor properties
 	
 	select_constant_tooltip: STRING is "Select constant"
 	
+	object_editor_padding_width: INTEGER is 3
+	
 feature -- Booleans
 
 	multiple_line_entry: BOOLEAN is True

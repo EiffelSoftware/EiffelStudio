@@ -23,7 +23,11 @@ inherit
 
 	EV_PRIMITIVE_IMP
 		rename
-			make as old_make
+			make as old_make,
+			set_parent as old_set_parent
+		redefine
+			width,
+			height
 		end
 	
 creation
@@ -32,26 +36,48 @@ creation
 
 feature {NONE} -- Initialization
 
-	make is --(parent: EV_PIXMAPABLE) is
-                        -- Create a gtk pixmap.
---                local
---			par_imp: EV_WIDGET_IMP
-                do
---			par_imp ?= parent.implementation
---			check 
---				parent_ok: par_imp /= Void
---			end
---			parent_widget := par_imp.widget
---			widget := c_gtk_pixmap_create_empty (parent_widget)
+	make is
+                        -- Create a gtk pixmap with a temporary window
+			-- as parent.
+                local
+			par_imp: EV_WIDGET_IMP
+			p: ANY
+			xpmFile: STRING
+		do
+			-- create the temporary window needed to create the pixmap
+			creation_window := gtk_window_new (GTK_WINDOW_TOPLEVEL)
 
-			widget := c_gtk_pixmap_create_empty (default_pointer)
+			-- create the pixmap
+			-- Here we create the pixmap with a default xpm.
+			widget := c_gtk_pixmap_create_empty (creation_window)
+
+			-- (3) We need to add a reference because of the unreference
+			-- in feature `set_pixmap'.
+			gtk_object_ref (widget)
                 end
 
 	make_with_size (w, h: INTEGER) is
 			-- Create a pixmap with 'par' as parent, 
 			-- 'w' and `h' as size.
 		do
+			-- create the temporary window needed to create the pixmap
+			creation_window := gtk_window_new (GTK_WINDOW_TOPLEVEL)
+
+			-- create the gdk pixmap
+			gdk_pixmap_widget := c_gtk_pixmap_create_with_size (creation_window, w, h)
 		end	
+
+feature -- Measurement
+
+	width: INTEGER is
+		do
+			Result := c_gtk_pixmap_width (widget)
+		end
+
+	height: INTEGER is
+		do
+			Result := c_gtk_pixmap_height (widget)
+		end
 
 feature -- Element change
 
@@ -65,23 +91,45 @@ feature -- Element change
 			a := file_name.to_c
 			
 			if widget = Void then
-				widget := c_gtk_pixmap_create_from_xpm (parent_widget, 
+				widget := c_gtk_pixmap_create_from_xpm (creation_window, 
 									$a)
 			else
-				c_gtk_pixmap_read_from_xpm (widget, parent_widget, $a)
+				c_gtk_pixmap_read_from_xpm (widget, creation_window, $a)
 			end
-			
 		end	
 
 feature {NONE} -- Implementation
 
 	parent_widget: POINTER
 
+feature {EV_PIXMAPABLE_IMP} -- Implementation
+
+	creation_window: POINTER
+			-- gtk window defined because to create the pixmap
+			-- we need a realized widget.
+
+	set_window_pointer (pointer: POINTER) is
+			-- Set attribute `creation_pointer' to `pointer'.
+		do
+			creation_window := pointer
+		end
+
+	gdk_pixmap_widget: POINTER
+			-- GDK pixmap pointer given when pixmap is created
+			-- using `make_with_size'.
+			-- This means we will use the pixmap in a drawing
+			-- area.
+
+	set_parent (par_imp: EV_PIXMAPABLE_IMP) is
+			-- Set `parent_imp' attribute to `par'
+		do
+			parent_imp := par_imp
+		end
+
 feature {NONE} -- Inapplicable
 
 	old_make is
 		do
-
 			check
 				Inapplicable: False
 			end

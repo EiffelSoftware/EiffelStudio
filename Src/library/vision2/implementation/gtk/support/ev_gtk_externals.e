@@ -443,7 +443,24 @@ feature {NONE} -- GTK C functions
 	gtk_notebook_set_page (notebook: POINTER; page: INTEGER) is
 		external "C | <gtk/gtk.h>"
 		end
+	
+	--paned
+	gtk_hpaned_new: POINTER is
+		external "C | <gtk/gtk.h>"
+		end
+	
+	gtk_vpaned_new: POINTER is
+		external "C | <gtk/gtk.h>"
+		end
 
+	gtk_paned_add1 (paned: POINTER; child: POINTER) is
+		external "C | <gtk/gtk.h>"
+		end
+	
+	gtk_paned_add2 (paned: POINTER; child: POINTER) is
+		external "C | <gtk/gtk.h>"
+		end
+						
 feature {NONE} -- code in the glue library
 
 

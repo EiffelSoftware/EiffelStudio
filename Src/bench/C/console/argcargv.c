@@ -11,7 +11,6 @@
 #include <windows.h>
 
 #include "eif_argcargv.h"
-#include "eif_econsole.h"
 #include "eif_lmalloc.h"
 #include "eif_except.h"		/* For `eraise' */
 

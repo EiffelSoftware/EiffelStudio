@@ -14,7 +14,6 @@
 #include <windows.h>
 #include "eif_argcargv.h"
 #include "eif_err_msg.h"
-#include "eif_econsole.h"
 #include "eif_error.h"
 #include "rt_threads.h"
 #include "rt_main.h"

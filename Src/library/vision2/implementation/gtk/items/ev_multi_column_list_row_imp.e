@@ -22,9 +22,8 @@ inherit
 	EV_MULTI_COLUMN_LIST_ROW_ACTION_SEQUENCES_IMP
 	
 	EV_PND_DEFERRED_ITEM
-		undefine
-			copy,
-			is_equal
+		redefine
+			interface
 		end
 
 create

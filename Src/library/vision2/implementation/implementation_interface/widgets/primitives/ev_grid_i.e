@@ -18,6 +18,11 @@ inherit
 		end
 	
 	REFACTORING_HELPER
+	
+	EV_STOCK_COLORS
+		export
+			{NONE} all
+		end
 
 feature -- Access
 
@@ -660,6 +665,7 @@ feature {NONE} -- Drawing implementation
 			horizontal_box: EV_HORIZONTAL_BOX
 		do
 			set_minimum_size (default_minimum_size, default_minimum_size)
+			set_background_color (white)
 			create internal_row_data.make
 			create grid_columns.make
 			create grid_rows.make

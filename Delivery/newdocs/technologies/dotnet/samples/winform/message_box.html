@@ -49,18 +49,14 @@ box will appear with the text that you have entered in the <span class="eClass">
 <h2>Under the Hood</h2>
 <p>The application shows how to use the very useful <span class="eClass">MESSAGE_BOX</span> control.  </p>
 <p>An event (<span class="eClass">EVENT_HANDLER)</span> is associated to a control (here to the
-<span class="eClass">BUTTON</span>). So the line <span class="eLocal">my_button</span>.<span class="eFeature">add_click</span> (<span class="eKeyword">create</span> {<span class="eClass">EVENT_HANDLER</span>}.make
-(Current, $<span class="eFeature">my_button_clicked </span>)) associates a click to <span class="eLocal">my_button</span> to the feature
-
-<span class="eFeature">my_button_clicked</span>. So every time the
+<span class="eClass">BUTTON</span>). So the line <pre><span class="eLocal">my_button</span>.<span class="eFeature">add_click</span> (<span class="eKeyword">create</span> {<span class="eClass">EVENT_HANDLER</span>}.make (Current, $<span class="eFeature">on_my_button_clicked </span>))</pre> associates a click to <span class="eLocal">my_button</span> to the feature
+<span class="eFeature">on_my_button_clicked</span>. So every time the
 <span class="eClass">BUTTON</span> <span class="eLocal">my_button</span> is
-clicked, the feature
-
-<span class="eFeature">my_button_clicked</span> is executed.</p>
+clicked, the feature <span class="eFeature">on_my_button_clicked</span> is executed.</p>
 <p>The feature <span class="eFeature">my_button_clicked</span> displays a <span class="eClass">MESSAGE_BOX</span>
 (<span class="eKeyword">feature</span> {<span class="eClass">WINFORMS_MESSAGE_BOX</span>}.<span class="eFeature">show</span> (<i>msg</i>))
 with the text contained in
-  <span class="eClass">TEXT_FIELD</span> (<i>msg</i> := <span class="eLocal">my_text_field</span>.<span class="eFeature">get_text</span>).</p>
+  <span class="eClass">TEXT_FIELD</span> (<i>msg</i> := <span class="eLocal">my_text_field</span>.<span class="eFeature">text</span>).</p>
 <p>This sample contains the following class: </p>
 <ul>
   <li>

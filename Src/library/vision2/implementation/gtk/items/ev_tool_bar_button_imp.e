@@ -32,7 +32,8 @@ inherit
 			set_foreground_color,
 			foreground_color_pointer,
 			visual_widget,
-			event_widget
+			event_widget,
+			enable_sensitive
 		redefine
 			initialize,
 			pointer_double_press_actions_internal,

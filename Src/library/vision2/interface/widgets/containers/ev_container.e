@@ -185,10 +185,14 @@ feature -- Contract support
 		local
 			c: CURSOR
 			l: LINEAR [EV_WIDGET]
+			cs: CURSOR_STRUCTURE
 		do
 			Result := True
 			l := linear_representation
-			c := l.cursor
+			cs ?= l
+			if cs /= Void then
+				c := cs.cursor
+			end
 			from
 				l.start
 			until
@@ -199,7 +203,9 @@ feature -- Contract support
 				end
 				l.forth
 			end
-			l.go_to (c)
+			if cs /= Void then
+				cs.go_to (c)
+			end
 		end
 
 	items_unique: BOOLEAN is
@@ -209,11 +215,15 @@ feature -- Contract support
 			c: CURSOR
 			l: LINEAR [EV_WIDGET]
 			ll: LINKED_LIST [EV_WIDGET]
+			cs: CURSOR_STRUCTURE
 		do
 			create ll.make
 			Result := True
 			l := linear_representation
-			c := l.cursor
+			cs ?= l
+			if cs /= Void then
+				c := cs.cursor
+			end
 			from
 				l.start
 			until
@@ -225,7 +235,9 @@ feature -- Contract support
 				ll.extend (item)
 				l.forth
 			end
-			l.go_to (c)
+			if cs /= Void then
+				cs.go_to (c)
+			end
 		end
 
 	foreground_color_propagated: BOOLEAN is
@@ -349,6 +361,9 @@ end -- class EV_CONTAINER
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.26  2000/03/17 23:58:28  oconnor
+--| fixed attempt to get curesor from LINEAR
+--|
 --| Revision 1.25  2000/03/17 23:47:16  oconnor
 --| Moved uniqueness and parenting invariants from widget_list to container.
 --|

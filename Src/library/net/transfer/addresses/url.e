@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 			analyze
 		ensure
 			address_set: address = a
-			default_port_set: port = Default_port
+			port_set: port > 0
 			no_proxy_set: proxy_information = Void
 		end
 

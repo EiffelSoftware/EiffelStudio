@@ -402,10 +402,21 @@ feature -- Status report
 			der = l_object.____type ();
 			cl_type = der.generics_type [pos - 1];
 			if (!cl_type.is_basic ()) {
-				generic_type = (INTERFACE_TYPE_ATTRIBUTE)
-					Type.GetTypeFromHandle (cl_type.type).
-						GetCustomAttributes (typeof (INTERFACE_TYPE_ATTRIBUTE), false) [0];
-				Result = generic_type.class_type;
+				if (cl_type.type.Value != (System.IntPtr) 0) {
+					generic_type = (INTERFACE_TYPE_ATTRIBUTE)
+						Type.GetTypeFromHandle (cl_type.type).
+							GetCustomAttributes (typeof (INTERFACE_TYPE_ATTRIBUTE), false) [0];
+					Result = generic_type.class_type;
+				} else {
+						/* Generic parameter is of type NONE, so we return an instance
+						 * of NONE_TYPE as associated type. It is mostly there to fix
+						 * assertions violations in TUPLE when one of the elements of
+						 * a manifest tuple is `Void'. */
+					#if ASSERTIONS
+						ASSERTIONS.CHECK ("Is NONE type.", cl_type is NONE_TYPE);
+					#endif
+					Result = typeof(NONE_TYPE);
+				}
 			} else {
 				Result = Type.GetTypeFromHandle (cl_type.type);
 			}

@@ -529,7 +529,7 @@ feature {NONE} -- Implementation
 			variant
 				private_list.count - i
 			until
-				i > n or private_list.islast
+				i > n or cursor_index = private_list.count
 			loop
 				private_list.remove_right
 				if realized then

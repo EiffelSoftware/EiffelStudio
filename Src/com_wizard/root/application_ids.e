@@ -3,56 +3,62 @@ class
 
 feature -- Access
 
+	Minimum_radio_constant: INTEGER is 1029
+	Automation2_radio_constant: INTEGER is 1026
 	Proxy_stub_file_edit_constant: INTEGER is 1030
-	About_button_constant: INTEGER is 1017
-	Wizard_bitmap_constant: INTEGER is 1006
+	Standard2_radio_constant: INTEGER is 1025
+	Launch_id: INTEGER is 5
+	Paths_static_constant: INTEGER is 1043
+	Output_static_constant: INTEGER is 1032
+	Introduction3_static_constant: INTEGER is 1043
 	Idl_static_constant: INTEGER is 1008
 	Universal2_radio_constant: INTEGER is 1024
+	Wizard_icon_constant: INTEGER is 119
 	Client_check_constant: INTEGER is 1019
-	Definition_file_edit_constant: INTEGER is 1007
+	Maximum_radio_constant: INTEGER is 1037
+	Wizard_introduction_dialog_constant: INTEGER is 106
 	Location_static_constant: INTEGER is -1
 	Universal_radio_constant: INTEGER is 1026
+	Output_level_static_constant: INTEGER is 1036
 	Remote_check_constant: INTEGER is 1015
+	Idok2_constant: INTEGER is 3
 	Standard_radio_constant: INTEGER is 1027
-	Minimum_radio_constant: INTEGER is 1029
-	Maximum_radio_constant: INTEGER is 1037
 	Marshaling2_static_constant: INTEGER is 1022
 	Type2_static_constant: INTEGER is 1023
 	Local_check_constant: INTEGER is 1014
-	Marshaling_static_constant: INTEGER is 1025
-	Generate_static_constant: INTEGER is 1011
-	Wizard_final_dialog_constant: INTEGER is 104
-	Browse_button_constant: INTEGER is 1009
-	Wizard_ps_dialog_constant: INTEGER is 103
-	Wizard_initial_dialog_constant: INTEGER is 101
-	Generate_edit_constant: INTEGER is 1010
-	Virtual_table2_radio_constant: INTEGER is 1027
-	Automation2_radio_constant: INTEGER is 1026
-	In_process_check_constant: INTEGER is 1013
-	Final_static_constant: INTEGER is 1039
-	Final2_static_constant: INTEGER is 1038
-	Final3_static_constant: INTEGER is 1040
-	Browse2_button_constant: INTEGER is 1012
-	Server_check_constant: INTEGER is 1020
-	Wizard_idl_dialog_constant: INTEGER is 102
-	Standard2_radio_constant: INTEGER is 1025
-	Wizard_ouput_dialog_constant: INTEGER is 105
-	Proxy_stub_static_constant: INTEGER is 1028
-	Help_button_constant: INTEGER is 1018
-	Output_Progress_constant: INTEGER is 1031
-	Output_Static_constant: INTEGER is 1032
-	Toolbar_bitmap_constant: INTEGER is 113
 	Wizard1_bitmap_constant: INTEGER is 114
-	Wizard2_bitmap_constant: INTEGER is 115
-	Wizard3_bitmap_constant: INTEGER is 116
-	Wizard4_bitmap_constant: INTEGER is 117
 	New_id: INTEGER is 1
-	Open_id:INTEGER is 2
-	Save_id:INTEGER is 3
+	Virtual_table2_radio_constant: INTEGER is 1027
+	Generate_static_constant: INTEGER is 1016
+	Idback_constant: INTEGER is 1040
+	Wizard2_bitmap_constant: INTEGER is 115
+	Introduction2_static_constant: INTEGER is 1042
+	Browse_button_constant: INTEGER is 1009
+	Wizard_ps_dialog_constant: INTEGER is 105
+	Wizard_initial_dialog_constant: INTEGER is 101
+	Toolbar_bitmap_constant: INTEGER is 113
+	Generate_edit_constant: INTEGER is 1010
+	Wizard4_bitmap_constant: INTEGER is 117
+	Marshalling_static_constant: INTEGER is 1044
+	Wizard_final_dialog_constant: INTEGER is 104
+	Definition_file_edit_constant: INTEGER is 1007
+	In_process_check_constant: INTEGER is 1013
+	Generate_code_static_constant: INTEGER is 1021
+	Browse2_button_constant: INTEGER is 1012
+	Open_id: INTEGER is 2
+	Introduction_static_constant: INTEGER is 1041
+	Server_check_constant: INTEGER is 1020
+	Marshaling_static_constant: INTEGER is 1025
+	Wizard_idl_dialog_constant: INTEGER is 102
+	Save_id: INTEGER is 3
+	Output2_static_constant: INTEGER is 1038
+	Proxy_stub_static_constant: INTEGER is 1028
+	Wizard3_bitmap_constant: INTEGER is 116
+	Marshalling2_static_constant: INTEGER is 1045
+	Paths_static2_constant: INTEGER is 1044
 	Clear_id: INTEGER is 4
-	Launch_id: INTEGER is 5
+	Help_button_constant: INTEGER is 1018
 	Exit_id: INTEGER is 6
-
 end -- class APPLICATION_IDS
 
 --|-------------------------------------------------------------------

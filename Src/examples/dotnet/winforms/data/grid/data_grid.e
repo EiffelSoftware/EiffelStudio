@@ -44,7 +44,7 @@ feature -- Initialization
 			create data_grid.make
 			set_geometry (data_grid,5,35,620,400,Void)
 			data_grid.set_caption_text (("This is DataGrid's caption text").to_cil)
-			main_window.get_controls.add (data_grid)
+			main_window.controls.add (data_grid)
 
 			create handler.make (Current,$on_resize)
 			main_window.add_resize (handler)
@@ -89,7 +89,7 @@ feature -- Actions
 	on_resize (sender: SYSTEM_OBJECT; event_args: EVENT_ARGS) is
 			-- Close current application.
 		do
-			set_geometry (data_grid,0,0,main_window.get_width-20,main_window.get_height-70,Void)
+			set_geometry (data_grid,0,0,main_window.width-20,main_window.height-70,Void)
 		end
 
 feature {NONE} -- Implementation
@@ -113,16 +113,16 @@ feature {NONE} -- Implementation
 				-- create a DATA_SQL_CONNECTION from the given connection string.
 				-- Change the data source value to the name of your computer.
 			connection_string := "server="
-			append_cil (connection_string,tb_server.get_text)
+			append_cil (connection_string,tb_server.text)
 			connection_string.append (";Trusted_Connection=yes;database=")
-			append_cil (connection_string,tb_database.get_text)
+			append_cil (connection_string,tb_database.text)
 			create northwind_connection.make_from_connection_string (connection_string.to_cil)
 
 				-- Create a DATA_SQL_DATA_ADAPTER for the Suppliers table.
 			create suppliers_adapter.make
 			
 				-- A table mapping tells the adapter what to call the table.
-			a_mapping := suppliers_adapter.get_table_mappings.add_string (("Table").to_cil,
+			a_mapping := suppliers_adapter.table_mappings.add_string (("Table").to_cil,
 				("Suppliers").to_cil)
 
 			northwind_connection.open
@@ -141,7 +141,7 @@ feature {NONE} -- Implementation
 				-- the Products table, a child table of Suppliers.
 
 			create products_adapter.make
-			a_mapping := products_adapter.get_table_mappings.add_string (("Table").to_cil,
+			a_mapping := products_adapter.table_mappings.add_string (("Table").to_cil,
 				("Products").to_cil)
 
 			create command_on_products.make_from_cmd_text_and_connection (("SELECT * FROM Products").to_cil,
@@ -157,14 +157,14 @@ feature {NONE} -- Implementation
 				-- You must create a DATA_DATA_RELATION to link the two tables.
 				-- Get the parent and child columns of the two tables.
 
-			data_column_1 := data_set.get_tables.get_item_string (
-				("Suppliers").to_cil).get_columns.get_item_string(("SupplierID").to_cil)
-			data_column_2 := data_set.get_tables.get_item_string (
-				("Products").to_cil).get_columns.get_item_string(("SupplierID").to_cil)
+			data_column_1 := data_set.tables.item_string (
+				("Suppliers").to_cil).columns.item_string(("SupplierID").to_cil)
+			data_column_2 := data_set.tables.item_string (
+				("Products").to_cil).columns.item_string(("SupplierID").to_cil)
 
 			create data_relation.make_from_relation_name_and_parent_column_and_child_column (
 				("suppliers2products").to_cil, data_column_1, data_column_2)
-			data_set.get_relations.add (data_relation)
+			data_set.relations.add (data_relation)
 		end
 
 	set_geometry (a_control: WINFORMS_CONTROL; a_x, a_y, a_w, a_h: INTEGER; a_text: STRING) is

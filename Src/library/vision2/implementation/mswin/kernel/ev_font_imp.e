@@ -232,29 +232,31 @@ feature -- Status report
 	maximum_width: INTEGER is
 			-- Width of the biggest character in the font.
 		do
-			Result := string_width ("w")
+			Result := string_width ("W")
 		end
 
 	string_width (a_string: STRING): INTEGER is
 			-- Width in pixels of `a_string' in the current font.
-		local
-			screen_dc: WEL_SCREEN_DC
-			ww: WEL_WINDOW
-			number_of_lines: INTEGER
+	--	local
+	--		screen_dc: WEL_SCREEN_DC
+	--		ww: WEL_WINDOW
+	--		number_of_lines: INTEGER
 		do
-			if a_string /= Void and then not a_string.empty then
-				create screen_dc
-				screen_dc.get
-				screen_dc.select_font (wel_font)
-				number_of_lines := a_string.occurrences ('%N') + 1
-				if number_of_lines > 1 then
-					Result := maximum_line_width (screen_dc, a_string, number_of_lines)
-				else
-					Result := screen_dc.string_width (a_string)
-				end
-				screen_dc.unselect_font
-				screen_dc.release
-			end
+	--		if not a_string.empty then
+	--			create screen_dc
+	--			screen_dc.get
+	--			screen_dc.select_font (wel_font)
+	--			number_of_lines := a_string.occurrences ('%N') + 1
+	--			if number_of_lines > 1 then
+	--				Result := maximum_line_width (screen_dc, a_string, number_of_lines)
+	--			else
+	--				Result := screen_dc.string_width (a_string)
+	--			end
+	--			screen_dc.unselect_font
+	--			screen_dc.release
+	--		end
+			calculate_text_extent (a_string)
+			Result := last_text_width
 		end
 
 	horizontal_resolution: INTEGER is
@@ -521,6 +523,52 @@ feature {NONE} -- Implementation
 			end
 		end
 
+feature {EV_TEXTABLE_IMP} -- Implementation
+
+	--| Features used to recalculate sizes of widgets.
+
+	last_text_width: INTEGER
+			-- Last calculated text width.
+
+	last_text_height: INTEGER
+			-- Last calculated text height.
+
+	calculate_text_extent (a_string: STRING) is
+			-- Recompute `last_text_width' and `last_text_height'.
+		require
+			a_string_not_void: a_string /= Void
+		local
+			index, n: INTEGER
+			screen_dc: WEL_SCREEN_DC
+			extent: WEL_SIZE
+		do
+			last_text_width := 0
+			last_text_height := 0
+			create screen_dc
+		--	screen_dc.get
+			screen_dc.select_font (wel_font)
+			from
+				n := 1
+			until
+				n > a_string.count
+			loop
+				index := a_string.index_of ('%N', n)
+				if index > 0 then
+					extent := screen_dc.string_size (a_string.substring (n, index))
+					if extent.width > last_text_width then
+						last_text_width := extent.width
+					end
+					last_text_height := last_text_height + extent.height
+					n := index + 1
+				else
+					-- End of string reached.
+					n := a_string.count + 1
+				end
+			end
+		--	screen_dc.unselect_font
+		--	screen_dc.release
+		end
+
 feature {NONE} -- Not used
 
 	set_charset (a_charset: STRING) is
@@ -674,6 +722,9 @@ end -- class EV_FONT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.25  2000/03/03 00:53:27  brendel
+--| Attempt to improve string_width. Testing required.
+--|
 --| Revision 1.24  2000/02/24 05:00:32  pichery
 --| Fixed a bug: The default creation procedure created a new font using the
 --| characteristics of the last font used instead of creating a fresh new font

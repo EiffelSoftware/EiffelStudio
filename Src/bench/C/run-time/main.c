@@ -139,10 +139,9 @@ rt_public void once_init (void)
 
 	/* Allocate room for once values */
 
-	EIF_once_values = (char **) cmalloc ( EIF_once_count * sizeof (char *) );
-
-	if (EIF_once_values == (char **) 0)
-		/* Out of memory */
+	EIF_once_values = (char **) malloc (EIF_once_count * sizeof (char *));
+			/* needs malloc; crashes otherwise on some pure C-ansi compiler (SGI)*/
+	if (EIF_once_values == (char **) 0) /* Out of memory */
 		enomem();
 
 	bzero((char *)EIF_once_values, EIF_once_count * sizeof (char *));

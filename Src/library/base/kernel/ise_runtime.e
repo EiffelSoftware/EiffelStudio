@@ -94,4 +94,22 @@ feature -- Feature specific to ISE runtime.
  			"eif_gen_typename"
  		end
 
+feature -- Internal C routines
+
+	type_id_from_name (s: POINTER): INTEGER is
+			-- Dynamic type whose name is represented by `s'.
+		external
+			"C (char *): EIF_INTEGER | %"eif_cecil.h%""
+		alias
+			"eif_type_id"
+		end
+
+	dynamic_type (object: POINTER): INTEGER is
+			-- Dynamic type of `object'.
+		external
+			"C macro signature (EIF_REFERENCE): EIF_INTEGER use %"eif_macros.h%""
+		alias
+			"Dftype"
+		end
+		
 end -- class ISE_RUNTIME

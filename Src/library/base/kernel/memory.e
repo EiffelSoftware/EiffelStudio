@@ -156,14 +156,27 @@ feature -- Status report
 
 feature -- Status report
 
-	referers (an_object: ANY): ARRAY [ANY] is
+	referers (an_object: ANY): SPECIAL [ANY] is
 			-- Objects that refer to `an_object'.
 		local
-			a: ANY
+			a: ARRAY [ANY]
+			spec: SPECIAL [ANY]
 		do
-			create Result.make (0, 200)
-			a := Result.area
-			find_referers ($an_object, $a, Result.count)
+			create a.make (0, 200)
+			spec := a.area
+			Result := find_referers ($an_object, feature {ISE_RUNTIME}.dynamic_type ($spec))
+		end
+		
+	objects_instance_of (an_object: ANY): SPECIAL [ANY] is
+			-- Objects that have same dynamic type as `an_object'.
+		local
+			a: ARRAY [ANY]
+			spec: SPECIAL [ANY]
+		do
+			create a.make (0, 200)
+			spec := a.area
+			Result := find_instance_of (feature {ISE_RUNTIME}.dynamic_type ($an_object),
+				feature {ISE_RUNTIME}.dynamic_type ($spec))			
 		end
 
 feature -- Status setting
@@ -334,7 +347,12 @@ feature {NONE} -- Implementation
 			"gc_mon"
 		end
 	
-	find_referers (target: POINTER; esult: POINTER; result_size: INTEGER) is
+	find_referers (target: POINTER; result_type: INTEGER): SPECIAL [ANY] is
+		external
+			"C | %"eif_traverse.h%""
+		end
+
+	find_instance_of (dtype, result_type: INTEGER): SPECIAL [ANY] is
 		external
 			"C | %"eif_traverse.h%""
 		end

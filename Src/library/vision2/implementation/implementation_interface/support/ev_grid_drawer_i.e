@@ -96,7 +96,9 @@ feature -- Basic operations
 				column_offsets := grid.column_offsets
 					-- Retrieve the column offsets from `grid'.
 				check
-					column_offsets_count_equal_to_columns: column_offsets.count = grid.column_count
+					column_offsets_count_equal_to_columns: column_offsets.count = grid.column_count + 1
+					-- If this fails it means that somebody did not call `grid.recompute_column_offsets' when
+					-- they should have done.
 				end
 				
 				from
@@ -150,20 +152,15 @@ feature -- Basic operations
 							print ("An_x : " + an_x.out + "%N")
 							print ("a_width : " + a_width.out + "%N")
 						end
-						if current_index_in_row <= column_offsets.count - 1 then
-							
-							grid_label_item ?= current_row @ (current_index_in_row - 1)
-							
-							
-							temp := (column_offsets @ (current_index_in_row)) - (virtual_x_position - horizontal_buffer_offset)
-							
-							grid.drawable.set_foreground_color (red)
-							grid.drawable.fill_rectangle (temp, y, column_offsets @ (column_counter + 1), height)
-							grid.drawable.set_foreground_color (black)
-							grid.drawable.draw_text_top_left (temp, y, grid_label_item.text)
-						else
+						grid_label_item ?= current_row @ (current_index_in_row - 1)
+
+						temp := (column_offsets @ (current_index_in_row)) - (virtual_x_position - horizontal_buffer_offset)
 						
-						end
+						grid.drawable.set_foreground_color (red)
+						grid.drawable.fill_rectangle (temp, y, column_offsets @ (column_counter + 1) - column_offsets @ (column_counter), height)
+						grid.drawable.set_foreground_color (black)
+						grid.drawable.draw_text_top_left (temp, y, grid_label_item.text)
+							
 						column_counter := column_counter + 1
 						current_index_in_row := current_index_in_row + 1
 					end

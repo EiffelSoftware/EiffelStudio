@@ -512,7 +512,6 @@ feature -- Implementation
 		once
 			create Result
 			Result.set_foreground_color ((create {EV_STOCK_COLORS}).white)
-			Result.enable_dashed_line_style
 			Result.set_invert_mode
 		end
 

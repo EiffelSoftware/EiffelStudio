@@ -22,6 +22,7 @@
 #include "eif_io.h"
 #include "eif_in.h"
 #include <string.h>
+#include "rt_garcol.h"
 
 EIF_PROC set_rout;
 EIF_PROC set_integer_8;

@@ -38,31 +38,6 @@ feature -- Property
 	class_i: CLASS_I;
 			-- Eiffel class associated with class text
 
-feature -- Access
-
-	file_name: STRING is
-			-- Name of the file where the class text is stored;
-			-- The final ".e" has been removed
-		local
-			count: INTEGER
-		do
-			if class_i = Void then
-				!! Result.make (0)
-			else
-				Result := clone (class_i.file_name)
-			end
-			count := Result.count;
-			if 
-				count > 1 and then 
-				Result.item (count) = 'e' and then
-				Result.item (count - 1) = '.'
-			then
-				Result.head (count - 2)
-			end
-		ensure
-			non_void_result: Result /= Void
-		end;
-
 feature {TEXT_FORMATTER} -- Implementation
 
 	append_to (text: TEXT_FORMATTER) is

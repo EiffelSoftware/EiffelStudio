@@ -19,6 +19,7 @@
 */
 
 #include "idr.h"
+#include "networku.h"
 
 rt_public bool_t idr_short(IDR *idrs, short int *sp)
 {

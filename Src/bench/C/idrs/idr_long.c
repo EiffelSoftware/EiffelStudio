@@ -19,6 +19,7 @@
 */
 
 #include "idr.h"
+#include "networku.h"
 #include "eif_size.h"
 
 rt_public bool_t idr_long(IDR *idrs, long int *lp)
@@ -74,7 +75,7 @@ rt_public bool_t idr_long(IDR *idrs, long int *lp)
 			}
 #endif
 		} else {				/*decode an 8 byte long */
-			long upper, lower, temp;
+			long upper, lower;
 
 			bcopy(idrs->i_ptr, &value, 4);
 			lower = (long) ntohl(value);

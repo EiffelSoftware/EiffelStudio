@@ -19,7 +19,9 @@
 */
 
 #include "idr.h"
+#include "networku.h"
 #include "eif_size.h"
+
 /*
 
 rt_public bool_t idr_u_long(idrs, lp)

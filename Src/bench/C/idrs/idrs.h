@@ -78,6 +78,8 @@ extern bool_t idr_int(IDR *idrs, int *ip);		/* Encoding of an integer */
 extern bool_t idr_u_int(IDR *idrs, unsigned int *ip);		/* Encoding of an unsigned integer */
 extern bool_t idr_float(IDR *idrs, float *fp);		/* Encoding of a float */
 extern bool_t idr_double(IDR *idrs, double *dp);		/* Encoding of a double */
+extern bool_t idr_string(IDR *idrs, char **sp, unsigned int maxlen);	/* Encoding of a string */
+
 extern bool_t idr_opaque(IDR *idrs, char *p, int len);		/* Opaque data transmission */
 extern bool_t idr_vector(IDR *idrs, char *array, int size, int elemsize, bool_t (*idr_elem) (/* ??? */));		/* Fixed size array */
 extern bool_t idr_array(IDR *idrs, char **ap, int *lp, int maxlength, int elemsize, bool_t (*idr_elem) (/* ??? */));		/* Variable size array */

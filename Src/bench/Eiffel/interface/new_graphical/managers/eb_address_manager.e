@@ -1337,6 +1337,7 @@ feature {NONE} -- open new class
 			-- Try to update `current_typed_class' based on the contents of `class_address'.
 		local
 			clist: CLASS_C_SERVER
+			l_class: CLASS_C
 			i: INTEGER
 			ccname: STRING
 		do
@@ -1350,8 +1351,9 @@ feature {NONE} -- open new class
 				until
 					i > clist.count or current_typed_class /= Void
 				loop
-					if clist @ i /= Void and then (clist @ i).name.is_equal (ccname) then
-						current_typed_class := clist @ i
+					l_class := clist.item (i)
+					if l_class /= Void and then (l_class).name.is_equal (ccname) then
+						current_typed_class := l_class
 					else
 						i := i + 1
 					end
@@ -1373,6 +1375,7 @@ feature {NONE} -- open new class
 			same_st, dif: BOOLEAN
 			last_caret_position: INTEGER
 			str_area, current_area, other_area: SPECIAL [CHARACTER]
+			l_class: CLASS_C
 		do
 				-- The text in `class_address' has changed => we don't know what's inside.
 			current_typed_class := Void
@@ -1405,44 +1408,47 @@ feature {NONE} -- open new class
 				until
 					index > array_count
 				loop
-					cname := (list @ index).name
-					other_area := cname.area
-						-- We first check that other_area and str_area have the same start.
-					if other_area.count >= nb then
-						from
-							j := 0
-							same_st := True
-						until
-							j = nb or not same_st
-						loop
-							same_st := (str_area.item (j)) = (other_area.item (j))
-							j := j + 1
-						end
-						if same_st then
-							if current_found = Void then
-								current_found := cname
-								current_area := other_area
-							else
-								from
-									minc := other_area.count.min (current_area.count)
-									dif := False
-								until
-									dif or j = minc
-								loop
-									if (current_area.item (j)) /= (other_area.item (j)) then
-										dif := True
-										if (current_area.item (j)) > (other_area.item (j)) then
-											current_found := cname
-											current_area := other_area
-										end
-									end
-									j := j + 1
-								end
-								if not dif and other_area.count < current_area.count then
-										-- Other and Current have the same characters.
-										-- Return the shorter one.
+					l_class := (list @ index)
+					if l_class /= Void then
+						cname := l_class.name
+						other_area := cname.area
+							-- We first check that other_area and str_area have the same start.
+						if other_area.count >= nb then
+							from
+								j := 0
+								same_st := True
+							until
+								j = nb or not same_st
+							loop
+								same_st := (str_area.item (j)) = (other_area.item (j))
+								j := j + 1
+							end
+							if same_st then
+								if current_found = Void then
 									current_found := cname
 									current_area := other_area
+								else
+									from
+										minc := other_area.count.min (current_area.count)
+										dif := False
+									until
+										dif or j = minc
+									loop
+										if (current_area.item (j)) /= (other_area.item (j)) then
+											dif := True
+											if (current_area.item (j)) > (other_area.item (j)) then
+												current_found := cname
+												current_area := other_area
+											end
+										end
+										j := j + 1
+									end
+									if not dif and other_area.count < current_area.count then
+											-- Other and Current have the same characters.
+											-- Return the shorter one.
+										current_found := cname
+										current_area := other_area
+									end
 								end
 							end
 						end

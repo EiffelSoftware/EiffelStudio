@@ -1093,7 +1093,7 @@ feature -- Class info
 				l_field_sig := field_sig
 				l_field_sig.reset
 				l_field_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_class,
-					current_module.ise_eiffel_derivation_type_token)
+					current_module.ise_generic_type_token)
 				uni_string.set_string ("$$____type")
 				l_type_field_token := md_emit.define_field (uni_string, l_class_token,
 					feature {MD_FIELD_ATTRIBUTES}.Family, l_field_sig)
@@ -1109,7 +1109,7 @@ feature -- Class info
 				l_sig.set_parameter_count (1)
 				l_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
 				l_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_class,
-					current_module.ise_eiffel_derivation_type_token)
+					current_module.ise_generic_type_token)
 
 				uni_string.set_string ("____set_type")
 				l_meth_token := md_emit.define_method (uni_string,
@@ -1132,7 +1132,7 @@ feature -- Class info
 				l_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Has_current)
 				l_sig.set_parameter_count (0)
 				l_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_class,
-					current_module.ise_eiffel_derivation_type_token)
+					current_module.ise_generic_type_token)
 
 				uni_string.set_string ("____type")
 				l_meth_token := md_emit.define_method (uni_string,
@@ -1350,7 +1350,7 @@ feature -- Features info
 			if class_c.anchored_features /= Void then
 				generate_implementation_type_features (class_c.anchored_features, class_c.class_id)
 			end
-			
+
 			is_single_class := False
 		end
 
@@ -2026,7 +2026,7 @@ feature -- IL Generation
 			end
 			if is_generic then
 				l_meth_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_class,
-					current_module.ise_eiffel_derivation_type_token)
+					current_module.ise_generic_type_token)
 			end
 
 			l_name := il_casing.pascal_casing (System.dotnet_naming_convention,
@@ -4639,19 +4639,13 @@ feature -- Generic conformance
 		do
 			internal_generate_external_call (current_module.ise_runtime_token, 0,
 				generic_type_class_name,
-				"set_type_array", Normal_type, <<type_array_class_name>>, Void, True);
+				"set_generics", Normal_type, <<type_array_class_name>>, Void, True);
 
 			duplicate_top
 			put_type_token (gen_type.implementation_id)
 			internal_generate_external_call (current_module.ise_runtime_token, 0,
 				generic_type_class_name,
 				"set_type", Normal_type, <<type_handle_class_name>>, Void, True)
-
-			duplicate_top
-			put_integer_32_constant (gen_type.meta_generic.count)
-			internal_generate_external_call (current_module.ise_runtime_token, 0,
-				generic_type_class_name,
-				"set_nb_generics", Normal_type, <<integer_32_class_name>>, Void, True)
 		end
 
 	generate_none_type_instance is
@@ -4775,17 +4769,12 @@ feature {NONE} -- Implementation: generation
 
 				internal_generate_external_call (current_module.ise_runtime_token, 0,
 					generic_type_class_name,
-					"set_type_array", normal_type, <<type_array_class_name>>, Void, True)
+					"set_generics", normal_type, <<type_array_class_name>>, Void, True)
 				duplicate_top
 				put_type_token (l_gen_type.implementation_id)
 				internal_generate_external_call (current_module.ise_runtime_token, 0,
 					generic_type_class_name,
 					"set_type", normal_type, <<type_handle_class_name>>, Void, True)
-				duplicate_top
-				put_integer_32_constant (l_gen_type.meta_generic.count)
-				internal_generate_external_call (current_module.ise_runtime_token, 0,
-					generic_type_class_name,
-					"set_nb_generics", normal_type, <<integer_32_class_name>>, Void, True)
 			end
 			generate_return (True)
 			method_writer.write_current_body

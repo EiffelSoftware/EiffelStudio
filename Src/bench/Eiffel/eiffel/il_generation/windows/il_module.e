@@ -252,7 +252,6 @@ feature -- Access: tokens
 	ise_formal_type_token,
 	ise_none_type_token,
 	ise_basic_type_token,
-	ise_eiffel_derivation_type_token,
 	ise_eiffel_class_name_attr_ctor_token,
 	ise_assertion_level_attr_ctor_token,
 	ise_interface_type_attr_ctor_token,
@@ -670,7 +669,7 @@ feature -- Metadata description
 	generate_interface_class_mapping (class_type: CLASS_TYPE) is
 			-- Define reference/definition of Eiffel type `class_type' used for
 			-- interface purpose (i.e. interface class of an implementation class,
-			-- or class itself if `is_frozen' or `is_single' class).
+			-- or class itself if generated as a single class).
 		require
 			is_generated: is_generated
 			class_type_not_void: class_type /= Void
@@ -773,6 +772,10 @@ feature -- Metadata description
 				
 				if class_c.is_deferred then
 					l_attributes := l_attributes | feature {MD_TYPE_ATTRIBUTES}.Abstract
+				end
+
+				if class_c.is_frozen then
+					l_attributes := l_attributes | feature {MD_TYPE_ATTRIBUTES}.Sealed
 				end
 			
 				if not class_type.is_generated_as_single_type then
@@ -1459,7 +1462,7 @@ feature -- Mapping between Eiffel compiler and generated tokens
 				a_table.put (l_hash, a_type_id)
 			end
 
-			l_hash.put (a_token, a_feature_id)
+			l_hash.force (a_token, a_feature_id)
 		ensure
 			inserted: a_table.item (a_type_id).item (a_feature_id) = a_token
 		end
@@ -1928,7 +1931,7 @@ feature {NONE} -- Once per modules being generated.
 			create l_ass_info.make
 			l_ass_info.set_major_version (5)
 			l_ass_info.set_minor_version (5)
-			l_ass_info.set_build_number (424)
+			l_ass_info.set_build_number (626)
 
 			create l_pub_key.make_from_array (
 				<<0xDE, 0xF2, 0x6F, 0x29, 0x6E, 0xFE, 0xF4, 0x69>>)
@@ -2006,8 +2009,6 @@ feature {NONE} -- Once per modules being generated.
 				create {UNI_STRING}.make (None_type_class_name), ise_runtime_token)
 			ise_basic_type_token := md_emit.define_type_ref (
 				create {UNI_STRING}.make (basic_type_class_name), ise_runtime_token)
-			ise_eiffel_derivation_type_token := md_emit.define_type_ref (
-				create {UNI_STRING}.make (eiffel_derivation_class_name), ise_runtime_token)
 			l_ise_eiffel_class_name_attr_token := md_emit.define_type_ref (
 				create {UNI_STRING}.make (eiffel_class_name_attribute), ise_runtime_token)
 			l_ise_assertion_level_attr_token := md_emit.define_type_ref (
@@ -2023,7 +2024,7 @@ feature {NONE} -- Once per modules being generated.
 			l_meth_sig.set_parameter_count (1)
 			l_meth_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
 			l_meth_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_class, 
-				ise_eiffel_derivation_type_token)
+				ise_generic_type_token)
 
 			ise_set_type_token := md_emit.define_member_ref (
 				create {UNI_STRING}.make ("____set_type"),

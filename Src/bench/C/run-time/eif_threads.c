@@ -44,6 +44,7 @@ doc:<file name="eif_thread.c" header="eif_thread.h" version="$Id$" summary="Thre
 #include "rt_option.h"
 #include "rt_rw_lock.h"
 #include "rt_traverse.h"
+#include "rt_object_id.h"
 
 #include <string.h>
 
@@ -162,6 +163,7 @@ rt_public void eif_thr_init_global_mutexes (void)
 	EIF_LW_MUTEX_CREATE(eif_trace_mutex, -1, "Couldn't create tracemutex");
 	EIF_LW_MUTEX_CREATE(eif_eo_store_mutex, -1, "Couldn't create EO_STORE mutex");
 	EIF_LW_MUTEX_CREATE(eif_global_once_set_mutex, 4000, "Couldn't create global once set mutex");
+	EIF_LW_MUTEX_CREATE(eif_object_id_stack_mutex, 4000, "Couldn't create object_id set mutex");
 }
 
 rt_public void eif_thr_init_root(void) 
@@ -214,6 +216,7 @@ rt_shared void eif_thread_cleanup (void)
 	EIF_LW_MUTEX_DESTROY(eif_memory_mutex, "Could not destroy mutex");
 	EIF_LW_MUTEX_DESTROY(eif_eo_store_mutex, "Could not destroy mutex");
 	EIF_LW_MUTEX_DESTROY(eif_global_once_set_mutex, "Could not destroy mutex");
+	EIF_LW_MUTEX_DESTROY(eif_object_id_stack_mutex, "Could not destroy mutex");
 
 	EIF_TSD_DESTROY(eif_global_key, "Could not free key");
 	EIF_TSD_DESTROY(rt_global_key, "Could not free key");
@@ -450,6 +453,7 @@ rt_public void eif_thr_create_with_args (EIF_OBJECT thr_root_obj,
 		EIF_THR_YIELD;	
 	}
 	EIF_EXIT_C;
+	RTGC;
 	eif_wean (root_object);
 }
 

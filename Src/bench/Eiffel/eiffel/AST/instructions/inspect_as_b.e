@@ -6,7 +6,8 @@ inherit
 
 	INSTRUCTION_AS
 		redefine
-			type_check, byte_node
+			type_check, byte_node,
+			find_breakable
 		end;
 	SHARED_INSPECT
 
@@ -87,6 +88,19 @@ feature -- Type check, byte code and dead code removal
 			end;
 			if else_part /= Void then
 				Result.set_else_part (else_part.byte_node);
+			end;
+		end;
+
+feature -- Debugger
+
+	find_breakable is
+			-- Look for breakable instructions.
+		do
+			if case_list /= Void then
+				case_list.find_breakable;
+			end;
+			if else_part /= Void then
+				else_part.find_breakable;
 			end;
 		end;
 

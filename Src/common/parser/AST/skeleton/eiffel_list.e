@@ -8,7 +8,8 @@ inherit
 		undefine
 			pass_address, twin
 		redefine
-			byte_node, type_check
+			byte_node, type_check,
+			find_breakable
 		end;
 	CONSTRUCT_LIST [T]
 
@@ -52,5 +53,23 @@ feature -- Type check, byte code and dead code removal
 			end;
 		end;
 
+feature -- Debugger
+ 
+	find_breakable is
+			-- Look for breakable instructions.
+		local
+			i, l_count: INTEGER;
+		do
+			from
+				i := 1;
+				l_count := count;
+			until
+				i > l_count
+			loop
+				i_th (i).find_breakable;
+				i := i + 1
+			end;
+		end;
+ 
 end
 			

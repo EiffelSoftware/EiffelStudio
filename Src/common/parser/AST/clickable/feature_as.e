@@ -6,7 +6,8 @@ inherit
 
 	AST_EIFFEL
 		redefine
-			is_feature_obj, type_check, byte_node
+			is_feature_obj, type_check, byte_node,
+			find_breakable
 		end;
 	IDABLE
 		rename
@@ -108,5 +109,17 @@ feature -- stoning
 
 	start_position, end_position: INTEGER
 			-- Start and end of the text of the feature in origin file
+
+
+feature -- Debugger
+ 
+	find_breakable is
+			-- Look for breakable instructions.
+			-- Definition: a breakable instruction is an Eiffel instruction
+			-- which may be followed by a breakpoint.
+		do
+			context.start_lines;	-- Initialize instruction FIFO stack
+			body.find_breakable;	-- Traverse tree to record instructions
+		end;
 
 end

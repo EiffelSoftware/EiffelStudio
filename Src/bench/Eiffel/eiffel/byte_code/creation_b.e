@@ -69,6 +69,7 @@ feature -- Byte code generation
 			if call /= Void then
 				call.make_creation_byte_code (ba);
 			end;
+			make_breakable (ba);
 		end;
 
 end

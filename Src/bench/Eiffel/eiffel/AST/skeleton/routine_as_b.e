@@ -8,7 +8,8 @@ inherit
 		redefine
 			is_require_else, is_ensure_then,
 			has_precondition, has_postcondition, has_rescue,
-			type_check, byte_node
+			type_check, byte_node,
+			find_breakable
 		end;
 	SHARED_INSTANTIATOR;
 	SHARED_CONSTRAINT_ERROR;
@@ -345,6 +346,20 @@ feature -- Type check, byte code and dead code removal
 			-- Empty local table
 		once
 			!!Result.make (1)
+		end;
+
+feature -- Debugger
+ 
+	find_breakable is
+			-- Look for breakable instructions.
+		do
+				-- Order matters.
+			if routine_body /= Void then
+				routine_body.find_breakable;
+			end;
+			if rescue_clause /= Void then
+				rescue_clause.find_breakable;
+			end;
 		end;
 
 end

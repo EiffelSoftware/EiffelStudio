@@ -1,0 +1,83 @@
+#!/bin/sh
+
+INITIAL_DIR=`pwd`
+
+echo Compile the C libraries C code
+echo libpng
+cd $INITIAL_DIR/C_library/libpng
+if [ "$ISE_PLATFORM" = "linux-glibc" -o "$ISE_PLATFORM" = "linux-glibc2.1" ]; then
+	cp scripts/makefile.linux .
+	make -f makefile.linux
+else
+	echo Here are the available makefiles for the libpng library:
+	ls scripts
+	echo "What is the extension of the makefile that should be used?"
+	read rep
+	while [ ! -f "scripts/makefile.$rep" ]; do
+		echo "scripts/makefile.$rep doesn't exist... Try another one"
+		read rep
+	done
+	echo "OK, now everything should be automated."
+	cp scripts/makefile.$rep .
+	make -f makefile.$rep
+fi
+echo expat
+cd C_library/expat
+make
+
+echo zlib
+cd $INITIAL_DIR/C_library/zlib
+make                                                                        
+
+
+echo Compile the Eiffel libraries C code
+if [ -d $INITIAL_DIR/library/Eiffel2Java ]; then
+	echo Eiffel2Java
+	cd $INITIAL_DIR/library/Eiffel2Java/Clib
+	finish_freezing -library
+fi
+if [ -d $INITIAL_DIR/library/event ]; then
+	echo event
+	cd $INITIAL_DIR/library/event/Clib
+	finish_freezing -library
+fi
+if [ -d $INITIAL_DIR/library/exml ]; then
+	echo exml
+	cd $INITIAL_DIR/library/exml/compiler_specific/ise/clib
+	finish_freezing -library
+fi
+if [ -d $INITIAL_DIR/library/gel ]; then
+	echo gel
+	cd $INITIAL_DIR/library/gel/glib
+	configure
+fi
+if [ -d $INITIAL_DIR/library/mel ]; then
+	echo mel
+	cd $INITIAL_DIR/library/mel/Clib
+	finish_freezing -library
+fi
+if [ -d $INITIAL_DIR/library/net ]; then
+	echo net
+	cd $INITIAL_DIR/library/net/Clib
+	finish_freezing -library
+fi
+if [ -d $INITIAL_DIR/library/store ]; then
+	echo store
+	cd $INITIAL_DIR/library/store/Clib
+	finish_freezing -library
+fi
+if [ -d $INITIAL_DIR/library/time ]; then
+	echo time
+	cd $INITIAL_DIR/library/time/Clib
+	finish_freezing -library
+fi
+if [ -d $INITIAL_DIR/library/vision2 ]; then
+	echo vision2
+	cd $INITIAL_DIR/library/vision2/Clib
+	finish_freezing -library
+	cd $INITIAL_DIR/library/vision2/implementation/gtk/Clib
+	finish_freezing -library
+fi
+cd $INITIAL_DIR
+
+

@@ -11,16 +11,16 @@ inherit
 
 	BAR_AND_TEXT
 		rename
-			attach_all as default_attach_all,
-			make as normal_create,
-			reset as old_reset
+			reset as old_reset,
+			make_shell as bar_and_text_make_shell
 		redefine
 			hole, hole_button, build_format_bar, text_window,
 			build_bar, tool_name, close_windows,
-			build_widgets, set_default_size,
+			build_widgets, set_default_size, attach_all,
 			resize_action, stone, stone_type,
 			set_stone, synchronize, process_feature,
-			process_class, process_breakable, compatible
+			process_class, process_breakable, compatible,
+			close
 		end
 
 	BAR_AND_TEXT
@@ -28,26 +28,35 @@ inherit
 			hole, hole_button, build_format_bar, text_window,
 			build_bar, tool_name, close_windows,
 			build_widgets, attach_all, reset,
-			set_default_size, make, resize_action,
+			set_default_size, resize_action,
 			stone, stone_type, set_stone, synchronize, process_feature,
-			process_class, process_breakable, compatible
+			process_class, process_breakable, compatible,
+			make_shell, close
 		select
-			attach_all, reset, make
+			reset, make_shell
 		end
 
 creation
 
-	make
+	make_shell, form_create
 
 feature -- Initialization
 
-	make (a_screen: SCREEN) is
+	make_shell (a_shell: EB_SHELL) is
 			-- Create a feature tool
 		do
-			normal_create (a_screen);
+			show_menus := True;
+			bar_and_text_make_shell (a_shell);
 			text_window.set_read_only
 		end;
-	
+
+	form_create (a_form: FORM) is
+			-- Create a feature tool from a form.
+		do
+			show_menus := False;
+			make_form (a_form)
+		end;
+
 feature -- Window Properties
 
 	text_window: ROUTINE_TEXT;
@@ -72,6 +81,17 @@ feature -- Resetting
 			change_routine_command.clear;
 		end;
 
+	close is
+			-- Close Current.
+		do
+			if is_a_shell then
+				hide;
+				reset
+			else
+				Project_tool.display_feature_cmd_holder.associated_command.work (Void)
+			end
+		end;
+
 feature -- Access
 
 	compatible (a_stone: STONE): BOOLEAN is
@@ -82,6 +102,24 @@ feature -- Access
 				a_stone.stone_type = Breakable_type or else
 				a_stone.stone_type = Class_type
 		end;
+
+	close_windows is
+			-- Pop down the associated windows.
+		local
+			cf: CHANGE_FONT;
+			ss: SEARCH_STRING
+		do
+	   		ss ?= search_cmd_holder.associated_command;
+			ss.close;
+			cf ?= change_font_cmd_holder.associated_command;
+			cf.close;
+			if change_routine_command.choice.is_popped_up then
+				change_routine_command.choice.popdown
+			end;
+			if change_class_command.choice.is_popped_up then
+				change_class_command.choice.popdown
+			end
+	   	 end;
 
 feature {TEXT_WINDOW} -- Update
 
@@ -184,20 +222,26 @@ feature -- Graphical Interface
 	build_widgets is
 			-- Build the widgets for this window.
 		do
-			set_default_size;
-			if tabs_disabled then
-				!! text_window.make (new_name, global_form, Current);
-			else
-				!ROUTINE_TAB_TEXT! text_window.make (new_name, global_form, Current);
+			if is_a_shell then
+				set_default_size
 			end;
-			build_menus
+			if tabs_disabled then
+				!! text_window.make (new_name, Current, Current)
+			else
+				!ROUTINE_TAB_TEXT! text_window.make (new_name, Current, Current)
+			end;
+			if show_menus then
+				build_menus
+			end;
 			!! edit_bar.make (new_name, global_form);
 			build_bar;
 			!! format_bar.make (new_name, global_form);
 			build_format_bar;
 			!! command_bar.make (new_name, global_form);
 			build_command_bar;
-			fill_menus;
+			if show_menus then
+				fill_menus
+			end;
 			text_window.set_last_format (default_format);
 			attach_all	
 		end;
@@ -205,7 +249,28 @@ feature -- Graphical Interface
 	attach_all is
 			-- Attach all widgets.
 		do
-			default_attach_all;
+			if show_menus then
+				global_form.attach_left (menu_bar, 0);
+				global_form.attach_right (menu_bar, 0);
+				global_form.attach_top (menu_bar, 0)
+			end;
+
+			global_form.attach_left (edit_bar, 0);
+			global_form.attach_right (edit_bar, 0);
+			if show_menus then
+				global_form.attach_top_widget (menu_bar, edit_bar, 0)
+			else
+				global_form.attach_top (edit_bar, 0)
+			end
+
+			global_form.attach_left (text_window, 0);
+			global_form.attach_right (text_window, 0);
+			global_form.attach_bottom_widget (format_bar, text_window, 0);
+			global_form.attach_top_widget (edit_bar, text_window, 0);
+
+			global_form.attach_left (format_bar, 0);
+			global_form.attach_right (format_bar, 0);
+			global_form.attach_bottom (format_bar, 0);
 
 			global_form.detach_right (text_window);
 			global_form.attach_right (command_bar, 0);
@@ -233,7 +298,7 @@ feature {ROUTINE_TEXT} -- Forms And Holes
 	stop_hole: DEBUG_STOPIN_CMD;
 			-- To set breakpoints
 
-feature {ROUTINE_TEXT} -- Formats
+feature {ROUTINE_TEXT, PROJECT_W} -- Formats
 
 	showroutclients_frmt_holder: FORMAT_HOLDER;
 
@@ -280,26 +345,8 @@ feature {NONE} -- Implementation; Window Settings
 	set_default_size is
 			-- Set the size of Current to its default.
 		do
-			set_size (650, 450)
+			eb_shell.set_size (650, 450)
 		end;
-
-	close_windows is
-			-- Pop down the associated windows.
-		local
-			cf: CHANGE_FONT;
-			ss: SEARCH_STRING
-		do
-	   		ss ?= search_cmd_holder.associated_command;
-			ss.close;
-			cf ?= change_font_cmd_holder.associated_command;
-			cf.close;
-			if change_routine_command.choice.is_popped_up then
-				change_routine_command.choice.popdown
-			end;
-			if change_class_command.choice.is_popped_up then
-				change_class_command.choice.popdown
-			end
-	   	 end;
 
 feature {NONE} -- Implementation; Graphical Interface
 
@@ -318,26 +365,51 @@ feature {NONE} -- Implementation; Graphical Interface
 			current_target_cmd: CURRENT_ROUTINE;
 			current_target_button: EB_BUTTON;
 			current_target_menu_entry: EB_MENU_ENTRY;
-			sep: SEPARATOR
+			sep: SEPARATOR;
+			history_list_cmd: ROUTINE_HISTORY
 		do
 			!! shell_cmd.make (command_bar, text_window);
 			!! shell_button.make (shell_cmd, command_bar);
 			shell_button.add_button_click_action (3, shell_cmd, Void);
-			!! shell_menu_entry.make (shell_cmd, special_menu);
-			!! shell.make (shell_cmd, shell_button, shell_menu_entry);
+			if show_menus then
+				!! shell_menu_entry.make (shell_cmd, special_menu);
+				!! shell.make (shell_cmd, shell_button, shell_menu_entry);
+			else
+				!! shell.make_plain (shell_cmd);
+				shell.set_button (shell_button);
+			end;
 			!! current_target_cmd.make (text_window);
 			!! current_target_button.make (current_target_cmd, command_bar);
-			!! sep.make (new_name, special_menu);
-			!! current_target_menu_entry.make (current_target_cmd, special_menu);
-			!! current_target_cmd_holder.make (current_target_cmd, current_target_button, current_target_menu_entry)
+			if show_menus then
+				!! sep.make (new_name, special_menu);
+				!! current_target_menu_entry.make (current_target_cmd, special_menu);
+				!! current_target_cmd_holder.make (current_target_cmd, current_target_button, current_target_menu_entry)
+			else
+				!! current_target_cmd_holder.make_plain (current_target_cmd);
+				current_target_cmd_holder.set_button (current_target_button)
+			end;
 			!! next_target_cmd.make (text_window);
 			!! next_target_button.make (next_target_cmd, command_bar);
-			!! next_target_menu_entry.make (next_target_cmd, special_menu);
-			!! next_target_cmd_holder.make (next_target_cmd, next_target_button, next_target_menu_entry)
+			if show_menus then
+				!! next_target_menu_entry.make (next_target_cmd, special_menu);
+				!! next_target_cmd_holder.make (next_target_cmd, next_target_button, next_target_menu_entry)
+			else
+				!! next_target_cmd_holder.make_plain (next_target_cmd);
+				next_target_cmd_holder.set_button (next_target_button)
+			end;
 			!! previous_target_cmd.make (text_window);
 			!! previous_target_button.make (previous_target_cmd, command_bar);
-			!! previous_target_menu_entry.make (previous_target_cmd, special_menu);
-			!! previous_target_cmd_holder.make (previous_target_cmd, previous_target_button, previous_target_menu_entry)
+			if show_menus then
+				!! previous_target_menu_entry.make (previous_target_cmd, special_menu);
+				!! previous_target_cmd_holder.make (previous_target_cmd, previous_target_button, previous_target_menu_entry)
+			else
+				!! previous_target_cmd_holder.make_plain (previous_target_cmd);
+				previous_target_cmd_holder.set_button (previous_target_button)
+			end;
+
+			!! history_list_cmd.make (text_window);
+			next_target_button.add_button_click_action (3, history_list_cmd, next_target_button);
+			previous_target_button.add_button_click_action (3, history_list_cmd, previous_target_button);
 
 			command_bar.attach_left (shell_button, 0);
 			command_bar.attach_bottom (shell_button, 0);
@@ -381,38 +453,78 @@ feature {NONE} -- Implementation; Graphical Interface
 				-- First we create all needed objects.
 			!! text_cmd.make (text_window);
 			!! text_button.make (text_cmd, format_bar);
-			!! text_menu_entry.make (text_cmd, format_menu);
-			!! showtext_frmt_holder.make (text_cmd, text_button, text_menu_entry);
+			if show_menus then
+				!! text_menu_entry.make (text_cmd, format_menu);
+				!! showtext_frmt_holder.make (text_cmd, text_button, text_menu_entry)
+			else
+				!! showtext_frmt_holder.make_plain (text_cmd);
+				showtext_frmt_holder.set_button (text_button)
+			end;
 			!! rout_flat_cmd.make (text_window);
 			!! rout_flat_button.make (rout_flat_cmd, format_bar);
-			!! rout_flat_menu_entry.make (rout_flat_cmd, format_menu);
-			!! showflat_frmt_holder.make (rout_flat_cmd, rout_flat_button, rout_flat_menu_entry);
+			if show_menus then
+				!! rout_flat_menu_entry.make (rout_flat_cmd, format_menu);
+				!! showflat_frmt_holder.make (rout_flat_cmd, rout_flat_button, rout_flat_menu_entry)
+			else
+				!! showflat_frmt_holder.make_plain (rout_flat_cmd);
+				showflat_frmt_holder.set_button (rout_flat_button)
+			end;
 			!! rout_cli_cmd.make (text_window);
 			!! rout_cli_button.make (rout_cli_cmd, format_bar);
-			!! sep.make (new_name, format_menu);
-			!! rout_cli_menu_entry.make (rout_cli_cmd, format_menu);
-			!! showroutclients_frmt_holder.make (rout_cli_cmd, rout_cli_button, rout_cli_menu_entry);
+			if show_menus then
+				!! sep.make (new_name, format_menu);
+				!! rout_cli_menu_entry.make (rout_cli_cmd, format_menu);
+				!! showroutclients_frmt_holder.make (rout_cli_cmd, rout_cli_button, rout_cli_menu_entry)
+			else
+				!! showroutclients_frmt_holder.make_plain (rout_cli_cmd);
+				showroutclients_frmt_holder.set_button (rout_cli_button)
+			end;
 			!! rout_hist_cmd.make (text_window);
 			!! rout_hist_button.make (rout_hist_cmd, format_bar);
-			!! rout_hist_menu_entry.make (rout_hist_cmd, format_menu);
-			!! showhistory_frmt_holder.make (rout_hist_cmd, rout_hist_button, rout_hist_menu_entry);
+			if show_menus then
+				!! rout_hist_menu_entry.make (rout_hist_cmd, format_menu);
+				!! showhistory_frmt_holder.make (rout_hist_cmd, rout_hist_button, rout_hist_menu_entry)
+			else
+				!! showhistory_frmt_holder.make_plain (rout_hist_cmd);
+				showhistory_frmt_holder.set_button (rout_hist_button)
+			end;
 			!! past_cmd.make (text_window);
 			!! past_button.make (past_cmd, format_bar);
-			!! past_menu_entry.make (past_cmd, format_menu);
-			!! showpast_frmt_holder.make (past_cmd, past_button, past_menu_entry);
+			if show_menus then
+				!! past_menu_entry.make (past_cmd, format_menu);
+				!! showpast_frmt_holder.make (past_cmd, past_button, past_menu_entry)
+			else
+				!! showpast_frmt_holder.make_plain (past_cmd);
+				showpast_frmt_holder.set_button (past_button)
+			end;
 			!! future_cmd.make (text_window);
 			!! future_button.make (future_cmd, format_bar);
-			!! future_menu_entry.make (future_cmd, format_menu);
-			!! showfuture_frmt_holder.make (future_cmd, future_button, future_menu_entry);
+			if show_menus then
+				!! future_menu_entry.make (future_cmd, format_menu);
+				!! showfuture_frmt_holder.make (future_cmd, future_button, future_menu_entry)
+			else
+				!! showfuture_frmt_holder.make_plain (future_cmd);
+				showfuture_frmt_holder.set_button (future_button)
+			end;
 			!! homonym_cmd.make (text_window);
 			!! homonym_button.make (homonym_cmd, format_bar);
-			!! homonym_menu_entry.make (homonym_cmd, format_menu);
-			!! showhomonyms_frmt_holder.make (homonym_cmd, homonym_button, homonym_menu_entry);
+			if show_menus then
+				!! homonym_menu_entry.make (homonym_cmd, format_menu);
+				!! showhomonyms_frmt_holder.make (homonym_cmd, homonym_button, homonym_menu_entry)
+			else
+				!! showhomonyms_frmt_holder.make_plain (homonym_cmd);
+				showhomonyms_frmt_holder.set_button (homonym_button)
+			end;
 			!! stop_cmd.make (text_window);
 			!! stop_button.make (stop_cmd, format_bar);
-			!! sep.make (new_name, format_menu);
-			!! stop_menu_entry.make (stop_cmd, format_menu);
-			!! showstop_frmt_holder.make (stop_cmd, stop_button, stop_menu_entry);
+			if show_menus then
+				!! sep.make (new_name, format_menu);
+				!! stop_menu_entry.make (stop_cmd, format_menu);
+				!! showstop_frmt_holder.make (stop_cmd, stop_button, stop_menu_entry)
+			else
+				!! showstop_frmt_holder.make_plain (stop_cmd);
+				showstop_frmt_holder.set_button (stop_button)
+			end;
 
 				-- Now we do all attachments. This is done here because of speed.
 			format_bar.attach_top (text_button, 0);
@@ -476,22 +588,39 @@ feature {NONE} -- Implementation; Graphical Interface
 			!! change_class_command.make (change_class_form, text_window);
 			!! quit_cmd.make (text_window);
 			!! quit_button.make (quit_cmd, edit_bar);
-			!! quit_menu_entry.make (quit_cmd, file_menu);
-			!! quit.make (quit_cmd, quit_button, quit_menu_entry);
-			!! exit_menu_entry.make (Project_tool.quit_cmd_holder.associated_command, file_menu);
+			if show_menus then
+				!! quit_menu_entry.make (quit_cmd, file_menu);
+				!! quit.make (quit_cmd, quit_button, quit_menu_entry)
+			else
+				!! quit.make_plain (quit_cmd);
+				quit.set_button (quit_button)
+			end
 			!! exit_cmd_holder.make_plain (Project_tool.quit_cmd_holder.associated_command);
-			exit_cmd_holder.set_menu_entry (exit_menu_entry);
+			if show_menus then
+				!! exit_menu_entry.make (Project_tool.quit_cmd_holder.associated_command, file_menu);
+				exit_cmd_holder.set_menu_entry (exit_menu_entry)
+			end;
 			!! change_font_cmd.make (text_window);
 			!! change_font_button.make (change_font_cmd, edit_bar);
 			if not change_font_cmd.tabs_disabled then
 				change_font_button.add_button_click_action (3, change_font_cmd, change_font_cmd.tab_setting)
 			end;
-			!! change_font_menu_entry.make (change_font_cmd, preference_menu);
-			!! change_font_cmd_holder.make (change_font_cmd, change_font_button, change_font_menu_entry);
+			if show_menus then
+				!! change_font_menu_entry.make (change_font_cmd, preference_menu);
+				!! change_font_cmd_holder.make (change_font_cmd, change_font_button, change_font_menu_entry)
+			else
+				!! change_font_cmd_holder.make_plain (change_font_cmd);
+				change_font_cmd_holder.set_button (change_font_button)
+			end;
 			!! search_cmd.make (edit_bar, text_window);
 			!! search_button.make (search_cmd, edit_bar);
-			!! search_menu_entry.make (search_cmd, edit_menu);
-			!! search_cmd_holder.make (search_cmd, search_button, search_menu_entry);
+			if show_menus then
+				!! search_menu_entry.make (search_cmd, edit_menu);
+				!! search_cmd_holder.make (search_cmd, search_button, search_menu_entry)
+			else
+				!! search_cmd_holder.make_plain (search_cmd);
+				search_cmd_holder.set_button (search_button)
+			end;
 
 				-- Now we do all the attachments. This is done here for speed.
 			edit_bar.attach_left (hole_form, 0);
@@ -539,6 +668,9 @@ feature {NONE} -- Properties
 
 	command_bar: FORM;
 			-- Bar with the command buttons
+
+	show_menus: BOOLEAN;
+			-- Should the menus be shown?
 
 feature {ROUTINE_TEXT} -- Properties
 

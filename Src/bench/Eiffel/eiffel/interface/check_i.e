@@ -1,7 +1,7 @@
-class CHECK_I 
+class
+	CHECK_I 
 
 inherit
-
 	LOOP_I
 		redefine
 			check_check, generation_value, byte_code
@@ -9,23 +9,17 @@ inherit
 	
 feature 
 
-	check_check: BOOLEAN is
+	check_check: BOOLEAN is True
 			-- Must the check assertions be verified ?
-		do
-			Result := True;
-		end;
 
-	generation_value: STRING is
+	generation_value: STRING is "AS_CHECK"
 			-- Generation value associated to the current assertion
 			-- level
-		do
-			Result := "AS_CHECK";
-		end;
 
 	byte_code: CHARACTER is
 			-- Byte code value
 		do
-			Result := As_check;
-		end;
+			Result := As_check
+		end
 
 end

@@ -468,6 +468,7 @@ feature {NONE} -- Implementation
 			h1.extend (cell)
 			h1.disable_item_expand (ok_button)
 			vertical_box.extend (h1)
+			vertical_box.disable_item_expand (h1)
 
 			horizontal_box.extend (scrollable_area)
 			scrollable_area.extend (drawing_area)

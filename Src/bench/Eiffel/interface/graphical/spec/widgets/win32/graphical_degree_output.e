@@ -14,8 +14,9 @@ inherit
 		redefine
 			setup_dialog, on_cancel
 		end;
+	EB_CONSTANTS;
 	WINDOWS;
-	INTERFACE_W;
+	SHARED_EIFFEL_PROJECT;
 	DEGREE_OUTPUT
 		redefine
 			put_start_degree_6, put_end_degree_6, put_degree_6,
@@ -30,7 +31,9 @@ inherit
 			put_dead_code_removal_message,
 			put_start_reverse_engineering, put_case_cluster_message,
 			put_case_class_message, put_case_message, put_string,
-			put_resynchronizing_breakpoints_message
+			put_resynchronizing_breakpoints_message,
+			put_class_document_message,
+			put_start_documentation
 		end
 
 feature -- Start output
@@ -41,11 +44,10 @@ feature -- Start output
 		local
 			i_name: STRING
 		do
-			icon_name := Project_tool.icon_name;
 			create_window;
-
+			cancel_b.enable;
 			total_number := total_nbr;
-			nbr_of_clusters := total_nbr;
+			processed := 0;
 			current_degree := 6;
 
 			degree_text.set_width (saved_width);
@@ -72,6 +74,10 @@ feature -- Start output
 		local
 			i_name: STRING
 		do
+			if not exists then
+				create_window;
+			end
+			set_text (Interface_names.d_Compilation_progress);
 			total_number := total_nbr;
 			current_degree := degree_nbr;
 			processed := 0;
@@ -163,7 +169,30 @@ feature -- Start output
 			put_non_degree_message (a_message);
 
 			process_messages
-		end
+		end;
+
+	put_start_documentation (total_num: INTEGER; type: STRING) is
+			-- Initialize the reverse engineering part.
+		do
+			if not exists then
+				create_window
+			end;
+			set_text (Interface_names.d_Documentation);
+			icon_name := Project_tool.icon_name;
+			total_number := total_num;
+			processed := 0;
+
+			degree_text.set_text (Interface_names.d_Generating);
+			entity_text.set_text (Interface_names.d_Compilation_class);
+			nbr_to_go_text.set_text (Interface_names.d_Classes_to_go);
+			current_degree_text.set_text (type);
+			current_nbr_to_go_text.set_text (total_num.out);
+			current_entity_text.set_text (Empty_string)
+
+			progress_bar.set_position (0);
+
+			process_messages
+		end;
 
 	put_resynchronizing_breakpoints_message is
 			-- Put a message to indicate that the
@@ -178,7 +207,7 @@ feature -- End output
 			-- Put message indicating the end of degree six.
 		do
 			current_degree := 0;
-			nbr_of_clusters := 0;
+			processed := 0;
 			update_interface (Empty_string, 0, 100);
 			progress_bar.set_position (0);
 			total_number := 0;
@@ -189,6 +218,9 @@ feature -- End output
 	put_end_degree is
 			-- Put message indeicating the end of `current_degree'.
 		do
+			if current_degree = 3 then
+				cancel_b.disable
+			end;
 			current_degree := 0;
 			update_interface (Empty_string, 0, 100);
 			progress_bar.set_position (100);
@@ -226,13 +258,15 @@ feature -- Per entity output
 			-- Put message to indicate that a_cluster' is being
 			-- compiled during degree six.
 		local
-			a_per: INTEGER
+			a_per: INTEGER;
+			nbr_of_clusters: INTEGER
 		do
-			a_per := 100 - (nbr_of_clusters * 100 // total_number);
+			nbr_of_clusters := total_number - processed;
+			a_per := percentage_calculation (nbr_of_clusters);
 
 			update_interface (a_cluster.cluster_name, nbr_of_clusters, a_per);
 			progress_bar.set_position (a_per);
-			nbr_of_clusters := nbr_of_clusters - 1;
+			processed := processed + 1;
 
 			process_messages
 		end;
@@ -244,15 +278,31 @@ feature -- Per entity output
 		local
 			a_per: INTEGER
 		do
+			total_number := nbr_to_go + processed;
+			a_per := percentage_calculation (nbr_to_go);
+			update_interface (a_class.name_in_upper, nbr_to_go, a_per);
+			progress_bar.set_position (a_per);
 			processed := processed + 1;
-			a_per := 100 - (nbr_to_go * 100 // (nbr_to_go + processed));
+
+			process_messages
+		end;
+
+	put_degree_3 (a_class: E_CLASS; nbr_to_go: INTEGER) is
+			-- Put message to inidcate that `a_class' is_being
+			-- compiled during `current_degree' with `nbr_to_go'
+			-- classes to go.
+		local
+			a_per: INTEGER
+		do
+			processed := processed + 1;
+			a_per := percentage_calculation (nbr_to_go);
+
 			update_interface (a_class.name_in_upper, nbr_to_go, a_per);
 			progress_bar.set_position (a_per);
 
 			process_messages
 		end;
 
-	put_degree_3,
 	put_degree_2,
 	put_degree_1,
 	put_degree_minus_1,
@@ -266,7 +316,7 @@ feature -- Per entity output
 		local
 			a_per: INTEGER
 		do
-			a_per := 100 - (nbr_to_go * 100 // total_number);
+			a_per := percentage_calculation (nbr_to_go);
 
 			update_interface (a_class.name_in_upper, nbr_to_go, a_per);
 			progress_bar.set_position (a_per);
@@ -283,7 +333,8 @@ feature -- Per entity output
 		do
 			processed := processed + features_done;
 			current_entity_text.set_text (processed.out);
-			a_per := 100 - ((features_done * 100) // (nbr_to_go + features_done));
+			total_number := nbr_to_go + features_done;
+			a_per := percentage_calculation (features_done);
 			update_interface (Empty_string, nbr_to_go, a_per);
 			progress_bar.set_position (a_per);
 
@@ -303,13 +354,13 @@ feature -- Per entity output
 			process_messages
 		end;
 
-	put_case_class_message (a_class: E_CLASS) is
+	put_class_document_message, put_case_class_message (a_class: E_CLASS) is
 			-- Put message to indicate that `a_class' is being
 			-- analyzed for ECase.
 		local
 			a_per: INTEGER
 		do
-			a_per := ((100 * processed) // total_number);
+			a_per := percentage_calculation (processed);
 			processed := processed + 1;
 			progress_bar.set_position (a_per);
 			update_interface (a_class.name_in_upper, total_number - processed, a_per);
@@ -324,18 +375,20 @@ feature {NONE} -- Implementation
 		local
 			wi: WEL_COMPOSITE_WINDOW
 		do
+			icon_name := Project_tool.icon_name;
 			wi ?= Project_tool.implementation;
 			make_by_id (wi, Dlg_graphical_degree_output);
 			!! progress_bar.make_by_id (Current, Prg_compilation_progress);
 			!! degree_text.make_by_id (Current, Txt_degree);
 			!! entity_text.make_by_id (Current, Txt_entity);
+			!! cancel_b.make_by_id (Current, Idcancel);
 			!! nbr_to_go_text.make_by_id (Current, Txt_nbr_to_go);
 			!! current_degree_text.make_by_id (Current, Txt_current_degree);
 			!! current_entity_text.make_by_id (Current, Txt_current_entity);
 			!! current_nbr_to_go_text.make_by_id (Current, Txt_current_nbr_to_go);
 			!! percentage_text.make_by_id (Current, Txt_percentage);
 
-			activate
+			activate;
 		end;
 
 	update_interface (a_name: STRING; nbr_to_go: INTEGER; a_per: INTEGER) is
@@ -413,15 +466,15 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Dialog IDs
 
-	Dlg_graphical_degree_output: INTEGER is 105;
-	Prg_compilation_progress: INTEGER is 106;
-	Txt_degree: INTEGER is 107;
-	Txt_entity: INTEGER is 108;
-	Txt_current_degree: INTEGER is 109;
-	Txt_current_entity: INTEGER is 110;
-	Txt_percentage: INTEGER is 111;
-	Txt_nbr_to_go: INTEGER is 112;
-	Txt_current_nbr_to_go: INTEGER is 113
+	Dlg_graphical_degree_output: INTEGER is 101;
+	Prg_compilation_progress: INTEGER is 1000;
+	Txt_degree: INTEGER is 1001;
+	Txt_entity: INTEGER is 1002;
+	Txt_current_degree: INTEGER is 1003;
+	Txt_current_entity: INTEGER is 1005;
+	Txt_percentage: INTEGER is 3019;
+	Txt_nbr_to_go: INTEGER is 1004;
+	Txt_current_nbr_to_go: INTEGER is 1006;
 
 feature {NONE} -- Properties
 
@@ -450,12 +503,15 @@ feature {NONE} -- Windows Message Handlers
 	on_cancel is
 			-- Button Cancel has been pressed.
 		do
+			cancel_b.disable
+			Eiffel_project.interrupt_compilation
 			process_messages
 		end
 
 feature {NONE} -- User Interface Objects
 
-	progress_bar: WEL_PROGRESS_BAR;
+	cancel_b: WEL_PUSH_BUTTON
+	progress_bar: WEL_PROGRESS_BAR
 	degree_text,
 	entity_text,
 	nbr_to_go_text,

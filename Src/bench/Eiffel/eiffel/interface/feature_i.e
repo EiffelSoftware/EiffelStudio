@@ -1647,6 +1647,13 @@ feature -- Byte code access
 			Result_exists: Result /= Void
 		end;
 
+feature {NONE} -- log file
+
+	add_in_log (class_type: CLASS_TYPE; encoded_name: STRING) is
+		do
+			System.used_features_log_file.add (class_type, feature_name, encoded_name)
+		end
+
 feature -- C code generation
 
 	generate (class_type: CLASS_TYPE; file: INDENT_FILE) is
@@ -1658,7 +1665,6 @@ feature -- C code generation
 			not_deferred: not is_deferred;
 		local
 			byte_code: BYTE_CODE;
-			log_file: PLAIN_TEXT_FILE;
 		do
 			if used then
 					-- `generate' from BYTE_CODE will log the feature name
@@ -1686,13 +1692,7 @@ feature -- C code generation
 				byte_context.clear_all;
 
 			else
-				log_file := System.removed_log_file
-				log_file.putstring (class_type.associated_class.cluster.cluster_name);
-				log_file.putchar ('%T');
-				class_type.type.dump (log_file);
-				log_file.putchar ('%T');
-				log_file.putstring (feature_name);
-				log_file.new_line;
+				System.removed_log_file.add (class_type, feature_name)
 			end;
 		end;
 

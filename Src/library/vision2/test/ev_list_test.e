@@ -42,7 +42,7 @@ feature -- Basic operation
 			-- Perform testing.
 		local
 			test_list: LINKED_LIST [TUPLE [STRING, PROCEDURE [ANY, TUPLE []]]]
-			s: STRING
+			s, tmp: STRING
 			p: PROCEDURE [ANY, TUPLE []]
 		do
 			description := "--------------------------------------------------------------------------------%NTesting " + subject_name + "%N%N"
@@ -78,7 +78,11 @@ feature -- Basic operation
 				sub_test_successful := True
 				s ?= test_list.item.entry (1)
 				p ?= test_list.item.entry (2)
-				description.append ("  " + s + ":")
+				tmp := "  " + s + ":"
+				from start until tmp.count > 14 loop
+					tmp.append (" ")
+				end
+				description.append (tmp)
 				empty_and_test (p, s)
 				fill_start_and_test (p, s)
 				fill_go_middle_and_test (p, s)
@@ -87,7 +91,7 @@ feature -- Basic operation
 				fill_go_after_and_test (p, s)
 				test_list.forth
 				if sub_test_successful then
-					description.append (" passed%N")
+					description.append (" :)%N")
 				else
 					description.append (" FAILED%N")
 					test_successful := False
@@ -275,7 +279,7 @@ feature {NONE} -- Implementation
 			elseif list.after /= similar_list.after then 
 				Result := "after /= " + similar_list.after.out
 			elseif list.before /= similar_list.before then 
-				Result := "before /=" + similar_list.before.out
+				Result := "before /= " + similar_list.before.out
 			elseif list.off /= similar_list.off then 
 				Result := "off /= " + similar_list.off.out
 			elseif similar_list.valid_index (1)
@@ -708,6 +712,9 @@ end -- class EV_LIST_TEST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.23  2000/03/16 17:08:36  oconnor
+--| tweaked output format
+--|
 --| Revision 1.22  2000/03/16 16:50:03  oconnor
 --| tweaked output format
 --|

@@ -9,16 +9,29 @@ class
 	
 inherit
 	GB_CELL_OBJECT
+		export
+			{GB_WINDOW_SELECTOR_ITEM} output_name
 		redefine
 			object, display_object, is_full, build_display_object, build_drop_actions_for_layout_item,
 			add_new_object_wrapper, add_new_component_wrapper, can_add_child, add_child_object, accepts_child
 		end
 		
 	GB_PARENT_OBJECT
+		export
+			{NONE} all
+		end
 
 	GB_SHARED_TOOLS
+		export
+			{NONE} all
+		end
 	
 	GB_OBJECT_HANDLER
+		export
+			{NONE} all
+			{GB_WINDOW_SELECTOR} store_layout_constructor, restore_layout_constructor, state_tree
+		end
+		
 	
 create
 	make_with_type,
@@ -33,6 +46,9 @@ feature -- Access
 	display_object: GB_CELL_DISPLAY_OBJECT
 		-- The representation of `object' used in `build_window'.
 		-- This is used in the builder window.
+		
+	window_selector_item: GB_WINDOW_SELECTOR_ITEM
+		-- Representation of `Current' in `window_selector'.
 		
 	is_full: BOOLEAN is
 			-- Is `Current' full?
@@ -147,14 +163,6 @@ feature -- Access
 			display_object.set_child (Builder_window)
 		end
 		
-
-	build_display_object is
-			-- Build `display_object' from type of `Current'
-			-- and hence `object'.
-		do
-			create display_object.make_as_root_window (builder_window)
-		end
-		
 	add_child_object (an_object: GB_OBJECT; position: INTEGER) is
 			-- Add `an_object' to `Current'.
 		local
@@ -230,8 +238,7 @@ feature -- Access
 			end
 			add_menu_bar (menu_object)
 		end
-		
-		
+
 	add_menu_bar (menu_object: GB_MENU_BAR_OBJECT) is
 			-- Add `menu_object' to `Current'.
 			-- We have to handle menu bars seperately from
@@ -260,6 +267,47 @@ feature -- Access
 			if not layout_item.is_expanded then
 				layout_item.expand
 			end
+		end
+		
+feature {GB_WINDOW_SELECTOR_ITEM} -- Implementation
+		
+	set_window_selector_item (a_window_selector_item: GB_WINDOW_SELECTOR_ITEM) is
+			-- Assign `a_window_selctor_item' to `window_selector_item'.
+		require
+			item_not_void: a_window_selector_item /= Void
+		do
+			window_selector_item := a_window_selector_item
+		ensure
+			item_set: window_selector_item = a_window_selector_item
+		end
+		
+feature {GB_OBJECT_HANDLER} -- Implementation
+
+	set_object (a_window: EV_TITLED_WINDOW) is
+			-- Assign `a_window' to `object'.
+		require
+			object_not_void: a_window /= Void
+		do
+			object := a_window
+		ensure
+			object_set: object = a_window
+		end
+
+	build_display_object is
+			-- Build `display_object' from type of `Current'
+			-- and hence `object'.
+		do
+			create display_object.make_as_root_window (create {EV_TITLED_WINDOW})
+		end
+		
+	set_display_object  (display_win: GB_BUILDER_WINDOW) is
+			-- Assign `display_win' to `display_object'.
+		require
+			window_not_void: display_win /= Void
+		do
+			create display_object.make_as_root_window (display_win)
+		ensure
+			window_set: display_object.child = display_win
 		end
 
 end -- class GB_TITLED_WINDOW_OBJECT

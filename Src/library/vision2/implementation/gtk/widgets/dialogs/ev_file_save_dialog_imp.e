@@ -9,7 +9,7 @@ class
 
 inherit
 	EV_FILE_SAVE_DIALOG_I
-	EV_FILE_SELECTION_DIALOG_IMP
+	EV_FILE_DIALOG_IMP
 
 creation
 	make

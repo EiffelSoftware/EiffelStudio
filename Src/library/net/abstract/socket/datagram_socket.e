@@ -115,7 +115,7 @@ feature {NONE} -- Implementation
 
 feature -- Externals
 
-	c_rcv_from (fd: INTEGER; buf: ANY; len:INTEGER; flags: INTEGER; addr: ANY; l: INTEGER_REF): INTEGER is
+	c_rcv_from (fd: INTEGER; buf: POINTER; len:INTEGER; flags: INTEGER; addr: POINTER; l: POINTER): INTEGER is
 			-- external routine to read `l' length of data
 			-- from the socket identified by fd connected
 			-- to a peer address of `addr'
@@ -123,7 +123,7 @@ feature -- Externals
 			"C"
 		end
 
-	c_send_to (fd: INTEGER; buf: ANY; len: INTEGER; flags: INTEGER; addr: ANY; l: INTEGER): INTEGER is
+	c_send_to (fd: INTEGER; buf: POINTER; len: INTEGER; flags: INTEGER; addr: POINTER; l: INTEGER): INTEGER is
 			-- external routine to write `l' length of data
 			-- from the socket identified by fd connected
 			-- to a peer address of `addr'

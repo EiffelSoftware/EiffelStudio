@@ -66,6 +66,14 @@
           base class of the type of the elements inherited from <span class="eclass">MEMORY</span> and 
           redefined <span class="efeature">dispose</span>. You could possibly end up freeing twice an external 
           resource.</li>
+          <li>Changed implementation of <span class="eclass">INTERACTIVE_LIST</span> to be based on 
+          <span class="eclass">ARRAYED_LIST</span> rather than on <span class="eclass">LINKED_LIST</span>.</li>
+          <li>Added efficient implementation of <span class="efeature">append</span> in <span class="eclass">ARRAYED_LIST</span>.</li>
+          <li>Fixed bug in multithreaded mode when you open in two different 
+          threads a different file with a different mode. For example one is in 
+          read mode, the other one is in write mode. If the operation happens at 
+          the same time, you could end up with two files open in read mode or 
+          two files open in write mode, which is not the expected behavior.</li>
         </ul>
         <h3>EiffelNet</h3>
         <ul>
@@ -75,7 +83,9 @@
           maximum_seg_size</span> in <span class="eclass">NETWORK_STREAM_SOCKET</span>.</li>
           <li>Added recoverable storable to EiffelNet (was not included in 
           previous version although recoverable storable was available for 
-          files)</li>
+          files).</li>
+          <li>Fixed <span class="eclass">SMTP_PROTOCOL</span> to follow more closely SMTP RFCs.</li>
+          <li>Added support for multi-line error codes in <span class="eclass">SMTP_PROTOCOL</span>.</li>
         </ul>
         <h3>EiffelTime</h3>
         <ul>
@@ -87,18 +97,42 @@
           made
           <span class="efeature">make_by_compact_date</span> obsolete.</li>
           <li>In <span class="eclass">DATE_VALIDITY_CHECKER</span> added <span class="efeature">ordered_compact_date_valid</span>.</li>
+          <li>Fixed <span class="eclass">C_DATE</span> to bufferize the current time rather than querying it 
+          for each of the time components. Not doing that was causing a bug in 
+          <span class="eclass">DATE</span>, <span class="eclass">DATE_TIME</span> and <span class="eclass">TIME</span> where if the computation was done on December 
+          31st at 23:59:59 2003, we could end up with a date of January 1st 
+          2003, therefore being one year off. This is a breaking change from 
+          before and  if you are using C_DATE, use <span class="efeature">update</span> 
+          before each call to the <span class="efeature">*_now</span> queries if 
+          you expected to reflect the time at the time of the query.</li>
         </ul>
         <h3>EiffelThread</h3>
         <ul>
           <li>Added support for .NET</li>
           <li>Made <span class="eclass">OBJECT_OWNER</span> obsolete</li>
           <li>Added <span class="efeature">wait_with_timeout</span> in <span class="eclass">CONDITION_VARIABLE</span></li>
+          <li>Added <span class="eclass">READ_WRITE_LOCK</span> class to be used 
+          in a system where few writes are done compare to reads. A typical 
+          example of its use would be to have a thread safe lookup table where 
+          few insertions are done.</li>
+          <li>Now a C externals that might block the execution of a system, 
+          should be marked `blocking'.
+          <a href="../30_compiler/60_version_history/04_54_release/00_53_to_54_changes.html">
+          See compiler changes for more details</a>.</li>
         </ul>
         <h3>EiffelVision2</h3>
         <ul>
           <li>
           <a href="../../../../libraries/vision2/content/0-_revisions/index.html">
           Click here to see list of update and modification to EiffelVision2</a>.</li>
+        </ul>
+        <h3>EiffelWeb</h3>
+        <ul>
+          <li>Fixed issue when sending exception trace to browser. On most 
+          servers you were getting an internal error rather than the exception 
+          trace.</li>
+          <li>Fixed issue with <span class="efeature">cookies</span> from <span class="eclass">CGI_ENVIRONMENT</span> as keys were stored 
+          as items, now the keys are stored as keys, items as items.</li>
         </ul>
         <h3>WEL</h3>
         <ul>
@@ -107,6 +141,8 @@
           <li>Renamed <span class="efeature">convert</span> from 
           <span class="eclass">WEL_FONT_FAMILY_ENUMERATOR</span> class into <span class="efeature">update_current</span>.</li>
 			<li>In <span class="eclass">WEL_TREE_VIEW</span>, calling <span class="efeature">deselect_item</span> will now really deselect the item, whereas previously, it only caused the item to be redrawn without selection.</li>
+			<li>In <span class="eclass">WEL_REGISTRY</span>, <span class="efeature">open_value_key</span> will now accept an empty 
+            string so that the default key value can be read.</li>
         </ul>
         <h3>.NET libraries</h3>
         <ul>

@@ -52,9 +52,8 @@ inherit
 	ECOM_STUB
 
 creation
-	make
---	,
---	make_from_pointer
+	make,
+	make_from_pointer
 
 feature {NONE}  -- Initialization
 

@@ -71,9 +71,13 @@ feature -- Comparison
 feature -- Stoning
 
 	associated_eiffel_class (reference_class: CLASS_C): CLASS_C is
+		local
+			class_i: CLASS_I
 		do
-			Result := Universe.class_named (parent_name, 
-						reference_class.cluster).compiled_class
+			class_i :=  Universe.class_named (parent_name, reference_class.cluster)
+			if class_i /= Void then
+				Result := class_i.compiled_class
+			end
 		end
 
 feature -- Type check, byte code and dead code removal
@@ -463,7 +467,7 @@ feature {NONE}  -- precursor table
 			a_feature: E_FEATURE
 			p_name: STRING
 			spec_p_name: STRING
-			p_list: HASH_TABLE [BOOLEAN, STRING]
+			p_list: HASH_TABLE [CL_TYPE_A, STRING]
 			i, rc: INTEGER
 			pair: PAIR [CL_TYPE_A, ROUTINE_ID]
 		do
@@ -490,7 +494,7 @@ feature {NONE}  -- precursor table
 				-- If construct is qualified, check
 				-- specified parent only.
 
-				if not (p_list.has (p_name) and then not p_list.found_item) and then
+				if not (p_list.has (p_name) and then p_list.found_item.is_equivalent (parents.item)) and then
 					(spec_p_name = Void or else spec_p_name.is_equal (p_name)) then
 
 						-- Check if parent has an effective precursor
@@ -508,7 +512,7 @@ feature {NONE}  -- precursor table
 							pair.set_first (parents.item)
 							pair.set_second (rout_id)
 							Result.extend (pair)
-							p_list.put (parents.item.has_generics, p_name)
+							p_list.put (parents.item, p_name)
 							i := rc -- terminate loop
 						end
 

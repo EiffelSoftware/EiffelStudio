@@ -26,20 +26,5 @@ EIF_INTEGER c_eole_unregister_typelib (EIF_POINTER a_string, EIF_INTEGER major_v
 };
 /*--------------------------------------------------------------------------*/
 
-EIF_REFERENCE c_eole_get_path_filename (EIF_POINTER a_file_name)
 
-// Retrieves the full path and filename for the executable file containing the specified module. 	
-{
-	HMODULE hModule;
-	WCHAR lpFilename[300];
-	DWORD hr;
-	
-	hModule = GetModuleHandle (Eif2OleString (a_file_name));
-	if (hModule == 0)
-	{
-		hr = GetLastError();
-	}
-	hr = GetModuleFileName (hModule, lpFilename, 300);
 
-	return Ole2EifString (lpFilename);	
-};

@@ -53,6 +53,7 @@ feature -- Basic Operations
 			a_boolean: BOOLEAN
 			an_integer: INTEGER
 			a_last_process_result: INTEGER
+			a_output: STRING
 		do
 			if not (a_command_line.item (1) = '"') then
 				a_command_line.prepend ("%"")
@@ -72,12 +73,15 @@ feature -- Basic Operations
 			output_pipe.close_input
 			from
 				output_pipe.read_stream (Block_size)
+				create a_output.make (0)
 			until
 				not output_pipe.last_read_successful
 			loop
-				message_output.add_message (Current, output_pipe.last_string)
+				a_output.append (output_pipe.last_string)
 				output_pipe.read_stream (Block_size)
 			end
+			a_output.replace_substring_all ("%R%N", "%N")
+			message_output.add_message (Current, a_output)
 			an_integer := cwin_wait_for_single_object (process_info.process_handle, cwin_infinite)
 			check
 				valid_external_call: an_integer = cwin_wait_object_0

@@ -365,7 +365,7 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 #define eif_children_cond (eif_globals->children_cond_cx)
 #define last_child		(eif_globals->last_child_cx)
 
-extern EIF_TSD_TYPE eif_global_key;
+RT_LNK EIF_TSD_TYPE eif_global_key;
 
 #else
 

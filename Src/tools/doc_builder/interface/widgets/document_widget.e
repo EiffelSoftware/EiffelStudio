@@ -79,7 +79,7 @@ feature -- Commands
 			internal_html_widget.set_document (document)
 		end
 
-feature {DOCUMENT_EDITOR, DOC_BUILDER_WINDOW} -- Implementation
+feature {DOCUMENT_EDITOR, DOC_BUILDER_WINDOW, ERROR_ACTIONS, DOCUMENT_EDITOR_PREFERENCES} -- Implementation
 
 	document: DOCUMENT
 			-- Associated document

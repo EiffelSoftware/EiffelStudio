@@ -40,7 +40,7 @@ feature -- Access
 			end
 			initialize_attribute_editor (Result)
 				create text_entry.make (Current, Result, text_string, Gb_ev_textable_text, Gb_ev_textable_text_tooltip,
-				agent set_text (?), agent valid_value (?), line_entry_type)
+				agent set_text (?), agent validate_true (?), line_entry_type)
 			update_attribute_editor
 
 			disable_all_items (Result)
@@ -62,12 +62,6 @@ feature {NONE} -- Implementation
 			-- Assign `text' of `text_entry' to all objects.
 		do
 			for_all_objects (agent {EV_TEXTABLE}.set_text (a_text))
-		end
-		
-	valid_value (a_value: STRING): BOOLEAN is
-			-- Is `a_value' valid for the text?
-		do
-			Result := True
 		end
 		
 	text_entry: GB_STRING_INPUT_FIELD

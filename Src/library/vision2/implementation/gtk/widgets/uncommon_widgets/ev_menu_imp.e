@@ -33,8 +33,10 @@ feature -- Basic operations
 	show is
 			-- Pop up on the current pointer position.
 		do
-			check
-				to_be_implemented: False
+			if not interface.empty then
+				C.gtk_menu_popup (menu_widget, Default_pointer,
+					Default_pointer, Default_pointer,
+					Default_pointer, 0, 0)
 			end
 		end
 
@@ -90,6 +92,9 @@ end -- class EV_MENU_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.27  2000/03/23 02:29:13  brendel
+--| Implemented `show'.
+--|
 --| Revision 1.26  2000/03/22 22:57:55  brendel
 --| Added show and show_at. Marked as "to be implemented".
 --|

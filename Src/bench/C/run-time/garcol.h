@@ -152,4 +152,8 @@ extern struct stack once_set;			/* Once functions */
 extern struct gacinfo g_data;			/* Garbage collection status */
 extern struct gacstat g_stat[GST_NBR];	/* Collection statistics */
 
+/* To start timing or not for GC-profiling */
+extern int gc_ran;				/* Has the GC been running */
+extern double last_gc_time;			/* Time spent during the last run */
+
 #endif

@@ -18,11 +18,10 @@ creation
 
 feature -- Initialization
 
-	make (c: COMPOSITE; a_text_window: TEXT_WINDOW) is
+	make (a_text_window: TEXT_WINDOW) is
 			-- Initialize the command, create a callback for a click action
 			-- on button three, and create the shell window.
 		do
-			!!shell_window.make (c, Current);
 			init (a_text_window);
 		end;
 
@@ -58,8 +57,11 @@ feature {NONE} -- Implementation
 			feature_stone: FEATURE_STONE;
 			position, line_nb, i, text_count: INTEGER
 		do
-			if argument = Void then
+			if argument = button_three_action then
 					-- 3rd button pressed
+				if shell_window = Void then
+					!!shell_window.make (popup_parent, Current);
+				end;
 				shell_window.call 
 			elseif tool.stone /= Void then
 				fs ?= tool.stone;

@@ -554,8 +554,6 @@ feature -- IL code generation
 			res: RESULT_B
 			target_type, l_type: TYPE_I
 			cl_type: CL_TYPE_I
-			feat_tbl: FEATURE_TABLE
-			feat: FEATURE_I
 		do
 			target_type := Context.real_type (type)
 			if target_type.is_reference and then source_type.is_expanded then

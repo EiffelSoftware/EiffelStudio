@@ -111,15 +111,9 @@ feature
 				if precursor_type /= Void then
 					-- Use dynamic type of parent instead 
 					-- of dynamic type of Current.
-					if context.workbench_mode then
-						f.putstring ("RTUD(");
-						f.putstring (
-						 precursor_type.associated_class_type.id.generated_id
-												 );
-						f.putchar (')');
-					else
-						f.putint (precursor_type.type_id - 1);
-					end;
+					f.putstring ("RTUD(");
+					f.putstring (precursor_type.associated_class_type.id.generated_id);
+					f.putchar (')');
 				else
 					context.generate_current_dtype;
 				end

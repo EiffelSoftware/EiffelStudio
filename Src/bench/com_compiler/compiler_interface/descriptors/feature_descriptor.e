@@ -192,9 +192,36 @@ feature -- Access
 
 	description: STRING is
 			-- Feature description.
+		local
+			l_index: INTEGER
+			l_overloads: STRING
+			l_new_lines: BOOLEAN
 		do
  			extract_description (compiler_feature, compiler_class, name)
  			Result := extracted_description
+ 			if overload_count >0 then
+	 			l_index := Result.index_of ('%N', 1)
+	 			l_new_lines := l_index > 0
+	 			if l_new_lines then
+	 				Result.remove (l_index)
+	 			else
+	 				l_index := Result.count + 1
+	 			end
+	 			create l_overloads.make (20)
+	 			l_overloads.append (" (+")
+	 			l_overloads.append (overload_count.out)
+	 			l_overloads.append (" ")
+	 			if overload_count = 1 then
+	 				l_overloads.append ("overload")
+	 			else
+	 				l_overloads.append ("overloads")
+	 			end
+	 			l_overloads.append_character (')')
+	 			if l_new_lines then
+	 				l_overloads.append_character ('%N')
+	 			end
+	 			Result.insert_string (l_overloads, l_index)
+ 			end
         ensure then
             result_exists: Result /= void           
         end
@@ -234,6 +261,9 @@ feature -- Access
          ensure then
             result_exists: Result /= void           
         end
+
+	overload_count: INTEGER
+			-- Overload count, used for completion
 
     all_callers: FEATURE_ENUMERATOR is
             -- List of all feature callers, including callers of ancestor and descendant versions.
@@ -519,6 +549,14 @@ feature {COMPLETION_HELPERS} -- Element settings
 			internal_name := a_name
 		ensure
 			name_set: name = a_name
+		end
+	
+	increment_overload_count is
+			-- Increment `overload_count'.
+		do
+			overload_count := overload_count + 1
+		ensure
+			overload_count_incremented: overload_count = old overload_count + 1
 		end
 		
 feature {FEATURE_DESCRIPTOR} -- Implementation

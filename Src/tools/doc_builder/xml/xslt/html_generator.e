@@ -50,31 +50,18 @@ feature -- Generation
 			l_src,
 			l_target: DIRECTORY
 		do
-			print ("Starting HTML generation...%N")
-			print ("Making src directory (" + Shared_project.root_directory + ")%N")
 			create l_src.make (Shared_project.root_directory)
-			print ("Making target directory (" + location + ")%N")
 			create l_target.make (location)
 			if not l_target.exists then
-				print ("Creating target directory since it does not exist%N")
 				l_target.create_dir
 			end
-			print ("Deleting contents of target directory%N")
 			l_target.delete_content
 			if should_generate then
-				print ("Entering generation%N")
-				print ("Setting title%N")
 				progress_generator.set_title ("HTML Generation")
-				print ("Setting procedure%N")
 				progress_generator.set_procedure (agent generate_directory (l_src, l_target))
-				print ("Setting upper range%N")
 				progress_generator.set_upper_range (files.count)
-				print ("Setting heading text%N")
 				progress_generator.set_heading_text ("Generating HTML Files...")
-				print ("Generating%N")
 				progress_generator.generate
-			else
-				print ("Not generating%N")
 			end
 		end	
 
@@ -169,9 +156,7 @@ feature {NONE} -- Generation
 			l_name, l_html: STRING
 			l_filename: FILE_NAME
 			filtered_document: FILTERED_DOCUMENT
-		do		
-			print ("%NGenerating HTML from XML file " + a_doc.name + " in " + target.name)
-		
+		do				
 					-- First filter the document according to correct filter
 			filtered_document := Shared_project.filter_manager.filtered_document (a_doc)
 				

@@ -1,0 +1,457 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSPY v5 rel. 2 U (http://www.xmlspy.com) by Neil Collier (hfhfhf) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="document">
+		<xs:annotation>
+			<xs:documentation>Documentation document type</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:all>
+				<xs:element name="paragraph">
+					<xs:annotation>
+						<xs:documentation>Generic content block capable of containing other content blocks (paragraphs, lists, etc)</xs:documentation>
+					</xs:annotation>
+					<xs:complexType mixed="true">
+						<xs:complexContent mixed="true">
+							<xs:extension base="compositeTextType">
+								<xs:attribute name="title" type="xs:string" use="optional"/>
+								<xs:attribute name="level" type="xs:string" use="optional"/>
+							</xs:extension>
+						</xs:complexContent>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="help" type="helpType">
+					<xs:annotation>
+						<xs:documentation>Information specific to the documents status within the overall help system - keywords, titles, etc.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:all>
+			<xs:attribute name="title" type="xs:string" use="optional"/>
+			<xs:attribute name="output" type="outputType" use="optional"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="eiffelLinkType" mixed="true">
+		<xs:annotation>
+			<xs:documentation>Type for links to Eiffel classes, features, etc.</xs:documentation>
+		</xs:annotation>
+		<xs:all minOccurs="0">
+			<xs:element name="url" type="xs:string" minOccurs="0"/>
+			<xs:element name="label" type="xs:string" minOccurs="0"/>
+			<xs:element name="target" type="xs:string" minOccurs="0"/>
+		</xs:all>
+	</xs:complexType>
+	<xs:complexType name="msLinkType" mixed="true">
+		<xs:annotation>
+			<xs:documentation>Link type for Microsoft Help 2.0 help systems</xs:documentation>
+		</xs:annotation>
+		<xs:all>
+			<xs:element name="keywords" type="xs:string"/>
+			<xs:element name="tab_index" type="xs:string"/>
+			<xs:element name="hover_color" type="xs:string" minOccurs="0"/>
+			<xs:element name="disambiguator" type="xs:string" minOccurs="0"/>
+			<xs:element name="error_url" type="xs:string" minOccurs="0"/>
+			<xs:element name="filter_name" type="xs:string" minOccurs="0"/>
+			<xs:element name="filter_string" type="xs:string" minOccurs="0"/>
+			<xs:element name="index_moniker" type="xs:string" minOccurs="0"/>
+			<xs:element name="namespace" type="xs:string" minOccurs="0"/>
+			<xs:element name="options" type="xs:string" minOccurs="0"/>
+		</xs:all>
+	</xs:complexType>
+	<xs:complexType name="docLinkType">
+		<xs:annotation>
+			<xs:documentation>A link with a label</xs:documentation>
+		</xs:annotation>
+		<xs:all minOccurs="0">
+			<xs:element name="url" type="xs:string"/>
+			<xs:element name="label" type="compositeTextType" minOccurs="0"/>
+			<xs:element name="target" type="xs:string" minOccurs="0"/>
+		</xs:all>
+	</xs:complexType>
+	<xs:complexType name="listType">
+		<xs:annotation>
+			<xs:documentation>List type containing items</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="item" type="compositeTextType" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="ordered" type="xs:string" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="descriptiveLinkType">
+		<xs:annotation>
+			<xs:documentation>Link with label and description</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="link" type="docLinkType"/>
+			<xs:element name="description" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="codeType" mixed="true">
+		<xs:annotation>
+			<xs:documentation>Type defining Eiffel source code elements</xs:documentation>
+		</xs:annotation>
+		<xs:choice minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="link" type="docLinkType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Link in code</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="string" type="xs:string" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Strings in code</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="number" type="xs:string" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Number in code</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="character" type="xs:string" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Character in code</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="reserved_word" type="xs:string" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Reserved Eiffel word (Result, Void, etc)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="comment" type="codeType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Comment in code</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="local_variable" type="xs:string" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Local variable in code</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="symbol" type="xs:string" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Eiffel symbol ('[', ':='))</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="local_variable_quoted" type="xs:string" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Quoted local variable in comment</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="generics" type="xs:string" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Class generics</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="contract_tag" type="xs:string" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Eiffel contract tag (require, ensure, etc.)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="indexing_tag" type="xs:string" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Class indexing tag text</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="keyword" type="xs:string" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Eiffel keyword (is, do, etc.)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="italic" type="xs:string" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>For italic text</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="bold" type="xs:string" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>For bold text</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="line_break" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>A line break/new line.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="class_name" type="eiffelLinkType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Eiffel class name</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="cluster_name" type="eiffelLinkType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Eiffel cluster name</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="feature_name" type="eiffelLinkType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Eiffel feature name</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="syntax" type="xs:string" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>For syntax text</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="tab" type="xs:string" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Formatting tab</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="helpType">
+		<xs:annotation>
+			<xs:documentation>Type containing help data (keywords...)</xs:documentation>
+		</xs:annotation>
+		<xs:sequence maxOccurs="unbounded">
+			<xs:element name="meta" type="metaHelpType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Generic HTML Meta information for compatibility with Microsoft Help 1.x</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="xml" type="xmlHelpType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>XML Data Island containing help specific information for Microsoft Help 2.0</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="toc" minOccurs="0">
+				<xs:complexType>
+					<xs:choice maxOccurs="unbounded">
+						<xs:element name="real_location" type="xs:string" minOccurs="0"/>
+						<xs:element name="studio_location" type="xs:string" minOccurs="0"/>
+						<xs:element name="envision_location" type="xs:string" minOccurs="0"/>
+						<xs:element name="studio_title" type="xs:string" minOccurs="0"/>
+						<xs:element name="envision_title" type="xs:string" minOccurs="0"/>
+					</xs:choice>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="imageMapType">
+		<xs:annotation>
+			<xs:documentation>HTML Image Map representation</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="id" type="xs:string"/>
+			<xs:element name="area" type="areaType" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="areaType">
+		<xs:annotation>
+			<xs:documentation>HTML image map area representation</xs:documentation>
+		</xs:annotation>
+		<xs:all>
+			<xs:element name="alt_text" type="xs:string" minOccurs="0"/>
+			<xs:element name="url" type="xs:anyURI" minOccurs="0"/>
+			<xs:element name="shape" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="rect"/>
+						<xs:enumeration value="rectangle"/>
+						<xs:enumeration value="circ"/>
+						<xs:enumeration value="circle"/>
+						<xs:enumeration value="poly"/>
+						<xs:enumeration value="polygon"/>
+						<xs:enumeration value="default"/>
+						<xs:enumeration value="RECT"/>
+						<xs:enumeration value="RECTANGLE"/>
+						<xs:enumeration value="CIRC"/>
+						<xs:enumeration value="CIRCLE"/>
+						<xs:enumeration value="POLY"/>
+						<xs:enumeration value="POLYGON"/>
+						<xs:enumeration value="DEFAULT"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="co-ordinates" type="xs:string" minOccurs="0"/>
+		</xs:all>
+	</xs:complexType>
+	<xs:complexType name="imageType">
+		<xs:annotation>
+			<xs:documentation>Image</xs:documentation>
+		</xs:annotation>
+		<xs:all>
+			<xs:element name="url" type="xs:string"/>
+			<xs:element name="alt_text" type="xs:string" minOccurs="0"/>
+			<xs:element name="border" type="xs:integer" minOccurs="0"/>
+			<xs:element name="width" type="xs:integer" minOccurs="0"/>
+			<xs:element name="height" type="xs:integer" minOccurs="0"/>
+			<xs:element name="usemap" type="xs:string" minOccurs="0"/>
+		</xs:all>
+	</xs:complexType>
+	<xs:complexType name="xmlHelpType">
+		<xs:annotation>
+			<xs:documentation>Help type for Microsoft Help 2.0 xml data islands</xs:documentation>
+		</xs:annotation>
+		<xs:choice maxOccurs="unbounded">
+			<xs:element name="toctitle" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Contains the topic title that appears in the table of contents.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="title" type="xs:string"/>
+					</xs:sequence>
+					<xs:attribute name="title" type="xs:string" use="required"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="rltitle" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Contains the topic title that appears in an index.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="title" type="xs:string"/>
+					</xs:sequence>
+					<xs:attribute name="title" type="xs:string" use="required"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="include" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Instructs the compiler to include an HTML topic file in the compiled Help file.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="file" type="xs:string"/>
+					</xs:sequence>
+					<xs:attribute name="file" type="xs:string" use="required"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="keyword" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Contains keyword data for an index entry.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:all>
+						<xs:element name="index" type="xs:string"/>
+						<xs:element name="term" type="xs:string"/>
+					</xs:all>
+					<xs:attribute name="index" type="xs:string" use="required"/>
+					<xs:attribute name="term" type="xs:string" use="required"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="attr" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Specifies which of the attributes defined in the attribute definition (.HxA) file applies to a topic.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:all>
+						<xs:element name="name" type="xs:string"/>
+						<xs:element name="value" type="xs:string"/>
+					</xs:all>
+					<xs:attribute name="name" type="xs:string" use="required"/>
+					<xs:attribute name="value" type="xs:string" use="required"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="metaHelpType">
+		<xs:annotation>
+			<xs:documentation>Help type for meta tag compatible help systems</xs:documentation>
+		</xs:annotation>
+		<xs:all>
+			<xs:element name="name" type="xs:string"/>
+			<xs:element name="content" type="xs:string"/>
+		</xs:all>
+	</xs:complexType>
+	<xs:complexType name="rowType">
+		<xs:annotation>
+			<xs:documentation>Table row</xs:documentation>
+		</xs:annotation>
+		<xs:sequence maxOccurs="unbounded">
+			<xs:element name="cell" type="compositeTextType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="tableType">
+		<xs:annotation>
+			<xs:documentation>Table</xs:documentation>
+		</xs:annotation>
+		<xs:sequence maxOccurs="unbounded">
+			<xs:element name="row" type="rowType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="compositeTextType" mixed="true">
+		<xs:annotation>
+			<xs:documentation>Composite type containing other elements</xs:documentation>
+		</xs:annotation>
+		<xs:choice minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="link" type="docLinkType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Link to another document</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="image" type="imageType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="heading" type="headingType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>A heading of a particular sixe from 1-6</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="list" type="listType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>A list of text items</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="seealso" type="compositeTextType" minOccurs="0"/>
+			<xs:element name="sample" type="compositeTextType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="div" type="compositeTextType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="span" type="compositeTextType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="paragraph" type="compositeTextType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="note" type="compositeTextType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="tip" type="compositeTextType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="warning" type="compositeTextType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="bold" type="xs:string" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>For bold text</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="italic" type="xs:string" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>For italic text</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="image_map" type="imageMapType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="line_break" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>A line break/new line.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="code" type="codeType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>A block of sample source code</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="table" type="tableType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="help_link" type="msLinkType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="output" type="compositeTextType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="code_block" type="codeType" minOccurs="0"/>
+			<xs:element name="info" type="compositeTextType" minOccurs="0"/>
+			<xs:element name="image_link" type="imageLinkType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:choice>
+		<xs:attribute name="output" type="outputType" use="optional" default="all"/>
+		<xs:attribute name="inline" type="xs:boolean" use="optional" default="true"/>
+	</xs:complexType>
+	<xs:simpleType name="outputType">
+		<xs:annotation>
+			<xs:documentation>Type defining possible output targets (EiffelStudio, Envision!, etc.)</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="all"/>
+			<xs:enumeration value="envision"/>
+			<xs:enumeration value="studio"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="headingType" mixed="true">
+		<xs:all minOccurs="0">
+			<xs:element name="size" type="xs:string"/>
+			<xs:element name="content" type="compositeTextType" minOccurs="0"/>
+		</xs:all>
+	</xs:complexType>
+	<xs:complexType name="imageLinkType">
+		<xs:annotation>
+			<xs:documentation>A image that is also a link</xs:documentation>
+		</xs:annotation>
+		<xs:all minOccurs="0">
+			<xs:element name="url" type="xs:string"/>
+			<xs:element name="target" type="xs:string" minOccurs="0"/>
+			<xs:element name="image" type="imageType"/>
+		</xs:all>
+	</xs:complexType>
+</xs:schema>

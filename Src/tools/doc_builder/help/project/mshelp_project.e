@@ -1,0 +1,214 @@
+indexing
+	description: "Microsoft Help 2.0 Project (VSIP)."
+	date: "$Date$"
+	revision: "$Revision$"
+
+class
+	MSHELP_PROJECT
+
+inherit
+	HELP_PROJECT
+	
+	UTILITY_FUNCTIONS
+
+create
+	make_from_directory,
+	make_from_toc
+
+feature -- File
+
+	generate_files is
+			-- Generate necessary files
+		do
+			create_project_file
+			create_files_file
+			create_collection_file
+		end		
+
+	create_project_file is
+			-- Create the actual project file for Visual Studio
+		local
+			template: PLAIN_TEXT_TEMPLATE_FILE
+			template_file: FILE_NAME
+		do
+			create template_file.make_from_string (Shared_constants.Application_constants.Templates_path)
+			template_file.extend ("HelpProjectTemplate.hwproj")
+			create template.make (template_file)
+			template.add_symbol ("project_name", name)
+			template.add_symbol ("files", retrieve_files (False, True, table_of_contents.root_node))
+			template.add_symbol ("directories", retrieve_files (True, True, table_of_contents.root_node))
+			template.save_file (project_file_name)
+			create project_file.make (template.template_filename)
+		end
+
+	create_files_file is
+			-- Create the project include files file
+		local
+			template: PLAIN_TEXT_TEMPLATE_FILE
+			template_file: FILE_NAME
+		do
+			create template_file.make_from_string (Shared_constants.Application_constants.templates_path)
+			template_file.extend ("HelpFilesTemplate.HxF")
+			create template.make (template_file)
+			template.add_symbol ("files", retrieve_files (False, False, table_of_contents.root_node))
+			template.save_file (Help_directory.out + "\" + name + ".HxF")
+			create files_file.make (template.template_filename)
+		end
+		
+	create_collection_file is
+			-- Create the projects collection file
+		local
+			template: PLAIN_TEXT_TEMPLATE_FILE		
+			template_file: FILE_NAME
+		do
+			create template_file.make_from_string (Shared_constants.Application_constants.templates_path)
+			template_file.extend ("HelpCollectionTemplate.HxC")
+			create template.make (template_file)
+			template.add_symbol ("project_name", name)
+			template.save_file (Help_directory.out + "\" + name + ".HxC")
+			create collection_file.make (template.template_filename)
+		end
+
+	project_file: PLAIN_TEXT_FILE
+			-- Project File	
+
+	files_file: PLAIN_TEXT_FILE
+			-- Project File
+		
+	collection_file: PLAIN_TEXT_FILE
+			-- Table of Contents File
+
+feature -- Commands
+
+	build_table_of_contents is
+			-- Build table of contents
+		do
+			if is_widget then
+				create {MSHELP_TABLE_OF_CONTENTS} table_of_contents.make_from_widget (Current, toc_widget)
+			else		
+				create {MSHELP_TABLE_OF_CONTENTS} table_of_contents.make_from_directory (Current, toc_location)
+			end
+			table_of_contents.write_contents_file
+		end
+
+	generate is
+			-- Generate help project
+		local
+			l_generator: HELP_GENERATOR
+		do
+			table_of_contents.write_contents_file
+			generate_files
+		end		
+
+feature {NONE} -- Project
+
+	retrieve_files (get_dirs, tags: BOOLEAN; a_dir: HELP_TOPIC_FOLDER): STRING is
+			-- Retrieve the project files string or directories string
+			-- if `get_dirs'
+		local
+			l_project_file: HELP_TOPIC_FILE
+			l_project_folder: HELP_TOPIC_FOLDER
+			l_file_path: STRING
+			l_dir: DIRECTORY
+		do
+			from
+				a_dir.start
+				create Result.make_empty				
+			until
+				a_dir.after
+			loop
+				l_project_folder ?= a_dir.item
+				l_project_file ?= a_dir.item
+				if l_project_folder /= Void then
+					Result.append (retrieve_files (get_dirs, tags, l_project_folder))
+				end				
+				if get_dirs then
+					if l_project_folder /= Void then
+						if l_project_folder.directory = Void then
+							Result.append ("<Dir Url=%"" + l_project_folder.relative_url + "%"")
+						else
+							Result.append ("<Dir Url=%"" + l_project_folder.directory.name + "%"")
+						end						
+						if tags and then l_project_folder.entry_title /= Void then
+							Result.append (" Title=%"" + l_project_folder.entry_title + "%"")
+						end
+						Result.append ("/>%N")
+					end
+				else				
+					if l_project_file /= Void and then l_project_file.url /= Void then
+						Result.append ("%T<File Url=%"" + l_project_file.relative_url + "%"")
+						if tags and then l_project_file.entry_title /= Void then
+							Result.append (" Title=%"" + l_project_file.entry_title + "%"")
+						end
+						Result.append ("/>%N")
+					end
+				end
+				a_dir.forth
+			end
+			if not get_dirs then
+						-- Retrieve images
+				Result.append (retrieve_images (Shared_constants.Application_constants.Temporary_help_directory))
+			end					
+		ensure
+			non_void_result: Result /= Void
+		end
+
+	retrieve_images (a_path: STRING): STRING is
+			-- Retrieve all image files and add to list of files in project
+		require
+			path_not_void: a_path /= Void
+			path_exists: (create {DIRECTORY}.make (a_path)).exists
+		local
+			l_cnt: INTEGER
+			l_file: RAW_FILE
+			l_dir, l_folder: DIRECTORY
+			l_name: DIRECTORY_NAME
+		do
+			create l_dir.make (a_path)
+			from
+				l_cnt := 0
+				l_dir.open_read
+				l_dir.start
+				create Result.make_empty
+			until
+				l_cnt = l_dir.count
+			loop
+				l_dir.readentry
+				create l_name.make_from_string (a_path)
+				l_name.extend (l_dir.lastentry)
+				l_folder ?= create {DIRECTORY}.make (l_name)
+				if l_folder.exists and then not l_folder.is_empty then
+					Result.append (retrieve_images (l_name))
+				else
+					l_file ?= create {RAW_FILE}.make (l_name.string)
+					if l_file /= Void and then image_file_types.has (file_type (l_file.name)) then
+						Result.append ("%T<File Url=%"" + l_file.name + "%"")
+						Result.replace_substring_all (shared_constants.application_constants.temporary_help_directory, "")
+						Result.append ("/>%N")
+					end
+				end
+				l_cnt := l_cnt + 1
+			end
+		end	
+
+feature {NONE} -- Implementation
+
+	compiled_filename_extension: STRING is
+			-- Extension for this project compiled file
+		do
+			Result := "HxS"
+		end
+
+	project_filename_extension: STRING is
+			-- Extension for this project type
+		do
+			Result := "HWProj"
+		end
+		
+	toc_filename_extension: STRING is
+			-- Extension for compiled help file
+		do
+			Result := "HxT"
+		end
+
+end -- class MSHELP_PROJECT

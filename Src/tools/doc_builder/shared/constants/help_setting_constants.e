@@ -1,0 +1,144 @@
+indexing
+	description: "Constants for Help generation"
+	date: "$Date$"
+	revision: "$Revision$"
+
+class
+	HELP_SETTING_CONSTANTS
+
+inherit
+	APPLICATION_CONSTANTS
+
+feature -- Access
+
+	is_html_help: BOOLEAN
+			-- Is Microsoft HTML Help 1.x?
+			
+	is_vsip_help: BOOLEAN
+			-- Visual Studio .NET Integration help?
+			
+	is_web_help: BOOLEAN
+			-- Help for web page content?
+			
+	help_toc_location: DIRECTORY_NAME
+			-- Directory containing table of contents hierarchy from which to
+			-- generate new help project
+			
+	help_project_name: STRING
+			-- Name chosen for help project
+
+	toc_is_physical: BOOLEAN
+			-- Table of Contents is generated from a physical location on 
+			-- disk rather than other structure such as tree widget or XML file
+
+feature -- Path Locations
+
+	help_directory: DIRECTORY_NAME is
+			-- Root directory for help generation	
+		do
+			Result := help_directory_cell.item
+		end
+
+	toc_path: DIRECTORY_NAME is
+			-- Path to TOC directory
+		once
+			create Result.make_from_string (Temporary_help_directory)
+			Result.extend ("toc")
+		end
+		
+	help_compiler: FILE_NAME is
+			-- Location of HTML Help 1.x compiler executable
+		do
+			create Result.make_from_string (Bin_directory)
+			Result.extend ("hhc.exe")
+		end		
+		
+feature -- XML Tags
+
+	directory_tag: STRING is "working_directory"
+
+	help_project_tag: STRING is "help_project"
+	
+	name_tag: STRING is "name"
+	
+	title_tag: STRING is "title"
+	
+	files_tag: STRING is "files"
+	
+	project_file_tag: STRING is "project_file"
+	
+	compiled_file_tag: STRING is "compiled_file"
+	
+	toc_file_tag: STRING is "table_of_contents"
+	
+	log_file_tag: STRING is "log_file"
+
+feature -- Status Setting
+
+	set_help_directory (a_dir: DIRECTORY_NAME) is
+			-- Set root location for help project generation
+		require
+			directory_not_void: a_dir /= Void
+			directory_valid: (create {DIRECTORY}.make (a_dir)).exists
+		do
+			help_directory_cell.put (a_dir)		
+		end
+	
+	set_help_toc_location (a_location: STRING) is
+			-- Set directory containing table of contents hierarchy from which to
+			-- generate new help project
+		do
+			create help_toc_location.make_from_string (a_location)
+		end
+		
+	set_help_project_name (a_name: STRING) is
+			-- Set name for help project
+		do
+			help_project_name := a_name
+		end	
+		
+	set_help_type (a_type: INTEGER) is
+			-- Set chosen help generation type
+		do
+			inspect
+				a_type
+			when html_help then
+				is_html_help := True
+				is_vsip_help := False
+				is_web_help := False
+			when vsip_help then
+				is_html_help := False
+				is_vsip_help := True
+				is_web_help := False
+			when web_help then
+				is_html_help := False
+				is_vsip_help := False
+				is_web_help := True
+			end
+		end	
+		
+	set_toc_is_physical	(a_flag: BOOLEAN) is
+			-- Set `toc_is_physical'
+		do
+			toc_is_physical := a_flag	
+		end		
+		
+feature -- Implementation
+
+	html_help,
+	vsip_help,
+	web_help: INTEGER is unique
+			-- Transformation type chosen identifier
+
+	help_directory_cell: CELL [DIRECTORY_NAME] is
+			-- Once cell containing help directory name
+		once
+			create Result			
+		end
+		
+invariant
+	html_help_exclusive: is_html_help implies (not is_vsip_help and not is_web_help)
+	vsip_help_exclusive: is_vsip_help implies (not is_html_help and not is_web_help)
+	web_help_exclusive: is_web_help implies (not is_vsip_help and not is_html_help)
+
+end -- class HELP_SETTING_CONSTANTS

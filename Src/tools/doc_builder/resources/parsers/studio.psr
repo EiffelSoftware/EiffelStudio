@@ -1,0 +1,4 @@
+\n || 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ||
+xsi:noNamespaceSchemaLocation="D:\My Documents\Documentation Project\Misc Files\document.xsd" ||
+<document([^>]*)> || <document\1\ output="studio">

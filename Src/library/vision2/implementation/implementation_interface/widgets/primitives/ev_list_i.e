@@ -139,16 +139,16 @@ feature -- Event : command association
 
 	add_select_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	
 			-- Add `cmd' to the list of commands to be executed
-			-- when an item has been selected. 
+			-- when an item has been selected.
 		require
 			exists: not destroyed
 			valid_command: cmd /= Void
 		deferred
 		end
 
-	add_unselect_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	
+	add_unselect_command (a_command: EV_COMMAND; arguments: EV_ARGUMENT) is	
 			-- Add `cmd' to the list of commands to be executed
-			-- when an item has been unselected. 
+			-- when an item has been unselected.
 		require
 			exists: not destroyed
 			valid_command: cmd /= Void
@@ -159,8 +159,7 @@ feature -- Event -- removing command association
 
 	remove_select_commands is	
 			-- Empty the list of commands to be executed
-			-- when an item has been selected. 
-			-- when the selection has changed.
+			-- when an item has been selected.
 		require
 			exists: not destroyed
 		deferred
@@ -168,7 +167,7 @@ feature -- Event -- removing command association
 
 	remove_unselect_commands is	
 			-- Empty the list of commands to be executed
-			-- when an item has been unselected. 
+			-- when an item has been unselected.
 		require
 			exists: not destroyed
 		deferred

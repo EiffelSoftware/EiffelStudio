@@ -111,7 +111,9 @@ feature {EV_ANY_IMP} -- Key Event intermediary agent routines
 			a_widget: EV_WIDGET_IMP
 		do
 			a_widget ?= c_get_eif_reference_from_object_id (a_c_object)
-			a_widget.on_key_event (a_key, a_key_string, a_key_press)
+			if a_widget /= Void then
+				a_widget.on_key_event (a_key, a_key_string, a_key_press)
+			end
 		end
 
 feature {EV_ANY_IMP} -- List and list item intermediary agent routines

@@ -73,6 +73,7 @@ feature {NONE} -- Commands
 			set_check_button_value (html_stylesheet_check, project_preferences.process_html_stylesheet)
 			set_check_button_value (nav_links_check, project_preferences.include_navigation_links)
 			set_check_button_value (dhtml_filter_check, project_preferences.generate_dhtml_filter)
+			set_check_button_value (generate_feature_nodes_check, project_preferences.generate_feature_nodes)
 			
 			if project_preferences.use_header_file then
 				header_file_radio.enable_select

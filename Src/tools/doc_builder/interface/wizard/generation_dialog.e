@@ -337,7 +337,11 @@ feature {NONE} -- Implementation
 					elseif html_radio.is_selected then
 						shared_constants.help_constants.set_help_type (shared_constants.help_constants.html_help)						
 					elseif web_radio.is_selected then
-						shared_constants.help_constants.set_help_type (shared_constants.help_constants.web_help)												
+						if tree_web_help_radio.is_selected then							
+							shared_constants.help_constants.set_help_type (shared_constants.help_constants.web_help_tree)												
+						else		
+							shared_constants.help_constants.set_help_type (shared_constants.help_constants.web_help_simple)																		
+						end
 					end					
 				elseif is_html then
 					generation_data.set_conversion_type (generation_data.to_html)				
@@ -359,9 +363,11 @@ feature {NONE} -- Implementation
 		do
 			create l_generator
 			if not web_radio.is_selected then	
-				l_toc ?= toc_list.selected_item.data
-				shared_project.filter_manager.set_filter (l_toc.filter)
-				shared_constants.help_constants.set_help_toc (l_toc)	
+				if toc_list.is_sensitive then
+					l_toc ?= toc_list.selected_item.data
+					shared_project.filter_manager.set_filter (l_toc.filter)
+					shared_constants.help_constants.set_help_toc (l_toc)				
+				end					
 				l_generator.generate
 			else
 					-- For web output we must associated filters chosen with tocs
@@ -417,9 +423,11 @@ feature {NONE} -- Implementation
 				toc_list.enable_multiple_selection				
 				filter_list.enable_multiple_selection
 				help_filter_box.show
+				web_toc_type_box.show
 			else
 				toc_list.disable_multiple_selection
 				help_filter_box.hide
+				web_toc_type_box.hide
 			end
 		end
 

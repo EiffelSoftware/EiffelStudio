@@ -58,6 +58,9 @@ feature {NONE}-- Initialization
 			create html_radio
 			create vs_radio
 			create web_radio
+			create web_toc_type_box
+			create tree_web_help_radio
+			create tree_web_simple_radio
 			create help_toc_box
 			create l_ev_frame_1
 			create l_ev_vertical_box_6
@@ -101,6 +104,9 @@ feature {NONE}-- Initialization
 			l_ev_vertical_box_5.extend (html_radio)
 			l_ev_vertical_box_5.extend (vs_radio)
 			l_ev_vertical_box_5.extend (web_radio)
+			l_ev_vertical_box_5.extend (web_toc_type_box)
+			web_toc_type_box.extend (tree_web_help_radio)
+			web_toc_type_box.extend (tree_web_simple_radio)
 			l_ev_vertical_box_4.extend (help_toc_box)
 			help_toc_box.extend (l_ev_frame_1)
 			l_ev_frame_1.extend (l_ev_vertical_box_6)
@@ -175,9 +181,16 @@ feature {NONE}-- Initialization
 			l_ev_vertical_box_5.disable_item_expand (html_radio)
 			l_ev_vertical_box_5.disable_item_expand (vs_radio)
 			l_ev_vertical_box_5.disable_item_expand (web_radio)
+			l_ev_vertical_box_5.disable_item_expand (web_toc_type_box)
 			html_radio.set_text ("Microsoft HTML Help 1.x")
 			vs_radio.set_text ("Visual Studio Integrated Help (MS Help 2.0)")
 			web_radio.set_text ("Web Help (can generate multiple interchangable tocs)")
+			web_toc_type_box.set_padding_width (padding_width)
+			web_toc_type_box.set_border_width (inner_border_width)
+			web_toc_type_box.disable_item_expand (tree_web_help_radio)
+			web_toc_type_box.disable_item_expand (tree_web_simple_radio)
+			tree_web_help_radio.set_text ("DHTML Tree TOC")
+			tree_web_simple_radio.set_text ("DHTML Single level TOC")
 			help_toc_box.set_padding_width (padding_width)
 			help_toc_box.set_border_width (border_width)
 			l_ev_frame_1.set_text ("Table of Contents")
@@ -214,7 +227,7 @@ feature {NONE}-- Initialization
 feature -- Access
 
 	l_ev_vertical_box_1, l_ev_vertical_box_2, l_ev_vertical_box_3, l_ev_vertical_box_4, 
-	l_ev_vertical_box_5, l_ev_vertical_box_6, l_ev_vertical_box_7: EV_VERTICAL_BOX
+	l_ev_vertical_box_5, web_toc_type_box, l_ev_vertical_box_6, l_ev_vertical_box_7: EV_VERTICAL_BOX
 	filter_frame, help_frame, l_ev_frame_1, l_ev_frame_2: EV_FRAME
 	l_ev_horizontal_box_1, convert_box, transform_box, l_ev_horizontal_box_2, l_ev_horizontal_box_3, 
 	help_toc_box, help_filter_box, l_ev_horizontal_box_4: EV_HORIZONTAL_BOX
@@ -223,7 +236,7 @@ feature -- Access
 	transform_file_combo, filter_option_combo, web_filter_option_combo, web_toc_option_combo: EV_COMBO_BOX
 	location_text, help_name_text: EV_TEXT_FIELD
 	browse_button, finish_button, cancel_button: EV_BUTTON
-	html_radio, vs_radio, web_radio: EV_RADIO_BUTTON
+	html_radio, vs_radio, web_radio, tree_web_help_radio, tree_web_simple_radio: EV_RADIO_BUTTON
 	toc_list, filter_list: EV_MULTI_COLUMN_LIST
 
 feature {NONE} -- Implementation

@@ -444,10 +444,8 @@ feature {NONE}-- Initialization
 			selector.set_item_text (toc_container, "TOC View")
 			selector.set_item_text (element_area, "Schema Elements")
 			selector.set_item_text (type_area, "Types")
-			documentation_area.hide
 			documentation_area.set_padding_width (padding_width)
 			documentation_area.set_border_width (border_width)
-			toc_container.hide
 			toc_container.set_minimum_height (400)
 			l_ev_vertical_split_area_3.set_minimum_height (400)
 			l_ev_vertical_box_3.set_minimum_height (310)
@@ -512,7 +510,6 @@ feature {NONE}-- Initialization
 			l_ev_label_3.align_text_left
 			node_properties_close.set_pixmap (icon_close_color_ico)
 			node_properties_list.set_minimum_height (0)
-			element_area.hide
 			element_area.set_minimum_height (20)
 			element_area.set_padding_width (padding_width)
 			element_area.set_border_width (border_width)
@@ -529,7 +526,6 @@ feature {NONE}-- Initialization
 			l_ev_label_4.set_text (" Attributes")
 			l_ev_label_4.align_text_left
 			attribute_list.set_minimum_height (0)
-			type_area.hide
 			type_area.set_padding_width (padding_width)
 			type_area.set_border_width (border_width)
 			sub_element_tool.set_style (1)

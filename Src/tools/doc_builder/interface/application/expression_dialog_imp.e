@@ -152,7 +152,6 @@ feature {NONE}-- Initialization
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_14)
 			notebook.set_item_text (l_ev_vertical_box_2, "Regular Expressions")
 			notebook.set_item_text (xml_widget_box, "XML Parsing")
-			l_ev_vertical_box_2.hide
 			l_ev_vertical_box_2.set_padding_width (padding_width)
 			l_ev_vertical_box_2.set_border_width (border_width)
 			l_ev_vertical_box_2.disable_item_expand (l_ev_horizontal_box_1)
@@ -197,7 +196,6 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_7.disable_item_expand (expression_button)
 			expression_button.set_text (button_add_text)
 			expression_button.set_minimum_width (button_width)
-			xml_widget_box.hide
 			xml_widget_box.set_padding_width (padding_width)
 			xml_widget_box.set_border_width (border_width)
 			xml_widget_box.disable_item_expand (l_ev_horizontal_box_8)

@@ -177,7 +177,11 @@ feature {NONE} -- Implmentation
 				create help.make (create {MSHELP_PROJECT}.make (l_loc, l_name, l_toc))
 				help.generate				
 			elseif l_help_settings.is_web_help then				
-				create help.make (create {WEB_HELP_PROJECT}.make (l_loc, l_name, l_toc))
+				if l_help_settings.is_tree_web_help then					
+					create help.make (create {WEB_HELP_PROJECT_TREE}.make (l_loc, l_name, l_toc))
+				else					
+					create help.make (create {WEB_HELP_PROJECT_SIMPLE}.make (l_loc, l_name, l_toc))
+				end
 				help.generate
 			end
 		end

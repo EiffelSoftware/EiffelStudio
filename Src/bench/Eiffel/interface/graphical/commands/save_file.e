@@ -45,24 +45,24 @@ feature {NONE} -- Implementation
 			temp: STRING;
 			char: CHARACTER
 		do
-			if text_window.file_name /= Void then
-				!!new_file.make (text_window.file_name);
+			if tool.file_name /= Void then
+				!!new_file.make (tool.file_name);
 				aok := True;
 				if
 					(new_file.exists) and then (not new_file.is_plain)
 				then
 					aok := False;
-					warner (text_window).gotcha_call (w_Not_a_plain_file (new_file.name))
+					warner (popup_parent).gotcha_call (w_Not_a_plain_file (new_file.name))
 				elseif
 					new_file.exists and then (not new_file.is_writable)
 				then
 					aok := False;
-					warner (text_window).gotcha_call (w_Not_writable (new_file.name))
+					warner (popup_parent).gotcha_call (w_Not_writable (new_file.name))
 				elseif
 					 (not new_file.exists) and then (not new_file.is_creatable)
 				then
 					aok := False;
-					warner (text_window).gotcha_call (w_Not_creatable (new_file.name))
+					warner (popup_parent).gotcha_call (w_Not_creatable (new_file.name))
                 end;
 
 				if aok then
@@ -77,9 +77,8 @@ feature {NONE} -- Implementation
 						end; 
 					end;
 					new_file.close;
-					text_window.clear_clickable;
-					text_window.set_changed (false);
-					text_window.tool.update_save_symbol;
+					text_window.disable_clicking;
+					tool.update_save_symbol;
 				end
 			end
 		end;

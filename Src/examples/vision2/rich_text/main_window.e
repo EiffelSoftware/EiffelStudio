@@ -35,6 +35,7 @@ feature {NONE} -- Initialization
 
 				-- Update toolbar button display.
 			format_toolbar.disable_vertical_button_style
+			paragraph_toolbar.disable_vertical_button_style
 			
 				-- Connect events.
 			rich_text.caret_move_actions.extend (agent caret_moved)
@@ -360,6 +361,90 @@ feature {NONE} -- Event handling
 				tab_control_holder.hide
 			end
 		end
+		
+	left_alignment_selected is
+			-- Called by `select_actions' of `left_alignment_button'.
+		local
+			paragraph: EV_PARAGRAPH_FORMAT
+		do
+			if not left_alignment_button.is_selected then
+				left_alignment_button.select_actions.block
+				left_alignment_button.enable_select
+				left_alignment_button.select_actions.resume
+			else
+				unselect_all_buttons_except (left_alignment_button)
+			end
+			create paragraph
+			paragraph.enable_left_alignment
+			if rich_text.has_selection then
+				rich_text.format_paragraph (rich_text.line_number_from_position (rich_text.selection_start), rich_text.line_number_from_position (rich_text.selection_end), paragraph)
+			else
+				rich_text.format_paragraph (rich_text.current_line_number, rich_text.current_line_number, paragraph)
+			end
+		end
+	
+	center_alignment_selected is
+			-- Called by `select_actions' of `center_alignment_button'.
+		local
+			paragraph: EV_PARAGRAPH_FORMAT
+		do
+			if not center_alignment_button.is_selected then
+				center_alignment_button.select_actions.block
+				center_alignment_button.enable_select
+				center_alignment_button.select_actions.resume
+			else
+				unselect_all_buttons_except (center_alignment_button)
+			end
+			create paragraph
+			paragraph.enable_center_alignment
+			if rich_text.has_selection then
+				rich_text.format_paragraph (rich_text.line_number_from_position (rich_text.selection_start), rich_text.line_number_from_position (rich_text.selection_end), paragraph)
+			else
+				rich_text.format_paragraph (rich_text.current_line_number, rich_text.current_line_number, paragraph)
+			end
+		end
+	
+	right_alignment_selected is
+			-- Called by `select_actions' of `right_alignment_button'.
+		local
+			paragraph: EV_PARAGRAPH_FORMAT
+		do
+			if not right_alignment_button.is_selected then
+				right_alignment_button.select_actions.block
+				right_alignment_button.enable_select
+				right_alignment_button.select_actions.resume
+			else
+				unselect_all_buttons_except (right_alignment_button)
+			end
+			create paragraph
+			paragraph.enable_right_alignment
+			if rich_text.has_selection then
+				rich_text.format_paragraph (rich_text.line_number_from_position (rich_text.selection_start), rich_text.line_number_from_position (rich_text.selection_end), paragraph)
+			else
+				rich_text.format_paragraph (rich_text.current_line_number, rich_text.current_line_number, paragraph)
+			end
+		end
+		
+	justified_selected is
+			-- Called by `select_actions' of `justified_button'.
+		local
+			paragraph: EV_PARAGRAPH_FORMAT
+		do
+			if not justified_button.is_selected then
+				justified_button.select_actions.block
+				justified_button.enable_select
+				justified_button.select_actions.resume
+			else
+				unselect_all_buttons_except (justified_button)
+			end
+			create paragraph
+			paragraph.enable_justification
+			if rich_text.has_selection then
+				rich_text.format_paragraph (rich_text.line_number_from_position (rich_text.selection_start), rich_text.line_number_from_position (rich_text.selection_end), paragraph)
+			else
+				rich_text.format_paragraph (rich_text.current_line_number, rich_text.current_line_number, paragraph)
+			end
+		end
 
 feature {NONE} -- Implementation
 
@@ -368,6 +453,7 @@ feature {NONE} -- Implementation
 			local
 				current_line_number: INTEGER
 				format: EV_CHARACTER_FORMAT
+				paragraph_format: EV_PARAGRAPH_FORMAT
 				x, y: INTEGER
 			do
 				current_line_number := rich_text.current_line_number
@@ -382,6 +468,9 @@ feature {NONE} -- Implementation
 					-- new caret position.
 				format := rich_text.character_format (new_position)
 				display_format (format)
+				
+				paragraph_format := rich_text.paragraph_format (new_position)
+				display_paragraph_format (paragraph_format)
 			end
 			
 		display_format (format: EV_CHARACTER_FORMAT) is
@@ -391,8 +480,10 @@ feature {NONE} -- Implementation
 			local
 				font: EV_FONT
 				name_matched: BOOLEAN
+				effects: EV_CHARACTER_FORMAT_EFFECTS
 			do
 				font := format.font
+				effects := format.effects
 				
 					-- Updated Displayed font weight
 				bold_button.select_actions.block
@@ -411,6 +502,25 @@ feature {NONE} -- Implementation
 					italic_button.disable_select
 				end
 				italic_button.select_actions.resume
+				
+					-- Update displayed font underline.
+				underlined_button.select_actions.block
+				if effects.is_underlined then					
+					underlined_button.enable_select
+				else
+					underlined_button.disable_select
+				end
+				underlined_button.select_actions.resume
+				
+					-- Update displayed font strike through.
+				striked_through_button.select_actions.block
+				if effects.is_striked_out then					
+					striked_through_button.enable_select
+				else
+					striked_through_button.disable_select
+				end
+				striked_through_button.select_actions.resume
+				
 				
 					-- Udpate displayed font size.
 				size_selection.set_text (font.height.out)
@@ -434,13 +544,43 @@ feature {NONE} -- Implementation
 				end
 			end
 			
-			
+		display_paragraph_format (paragraph_format: EV_PARAGRAPH_FORMAT) is
+				-- Update display to reflect paragraph formatting in `paragraph_format'.
+			do
+				if paragraph_format.is_left_aligned then
+					left_alignment_button.select_actions.block
+					unselect_all_buttons_except (left_alignment_button)
+					left_alignment_button.enable_select
+					general_label.set_text ("Paragraph formatting left aligned")
+					left_alignment_button.select_actions.resume
+				elseif paragraph_format.is_center_aligned then
+					center_alignment_button.select_actions.block
+					unselect_all_buttons_except (center_alignment_button)
+					center_alignment_button.enable_select
+					general_label.set_text ("Paragraph formatting center aligned")
+					center_alignment_button.select_actions.resume
+				elseif paragraph_format.is_right_aligned then
+					right_alignment_button.select_actions.block
+					unselect_all_buttons_except (right_alignment_button)
+					right_alignment_button.enable_select
+					general_label.set_text ("Paragraph formatting right aligned")
+					right_alignment_button.select_actions.resume
+				elseif paragraph_format.is_justified then
+					right_alignment_button.select_actions.resume
+					unselect_all_buttons_except (justified_button)
+					justified_button.enable_select
+					general_label.set_text ("Paragraph formatting justified")
+					right_alignment_button.select_actions.resume
+				end
+			end
+
 		selection_changed is
 				-- The selection in `rich_text' has changed, so update
 				-- formatting displayed in toolbar.
 			local
 				format: EV_CHARACTER_FORMAT
 				formatting: EV_CHARACTER_FORMAT_RANGE_INFORMATION
+				paragraph: EV_PARAGRAPH_FORMAT
 				current_value: STRING
 			do
 				if rich_text.has_selection then
@@ -449,7 +589,7 @@ feature {NONE} -- Implementation
 					format := rich_text.character_format (rich_text.selection_end)
 					
 						-- Retrieve information regarding the consistency of formatting within selected range.
-					formatting := rich_text.formatting_range_information (rich_text.selection_start, rich_text.selection_end + 1)
+					formatting := rich_text.character_format_range_information (rich_text.selection_start, rich_text.selection_end + 1)
 
 					if formatting.font_height then
 							-- Font height is consistent throughout complete selection so display this size.
@@ -479,7 +619,7 @@ feature {NONE} -- Implementation
 					end
 					
 					if formatting.font_family then
-							-- Font family is consistent throughout compelte selection so display the family.
+							-- Font family is consistent throughout compelete selection so display the family.
 						current_value := format.font.name.out
 						if not font_selection.text.is_equal (current_value) then
 							from
@@ -532,12 +672,35 @@ feature {NONE} -- Implementation
 						italic_button.disable_select						
 					end
 					italic_button.select_actions.resume
+					
+						-- Now handle information regarding paragraphs.
+						
+					paragraph := rich_text.paragraph_format (rich_text.selection_end)
+					if rich_text.paragraph_format_contiguous (rich_text.line_number_from_position (rich_text.selection_start), rich_text.line_number_from_position (rich_text.selection_end)) then
+						if paragraph.is_left_aligned then
+							unselect_all_buttons_except (left_alignment_button)
+						elseif paragraph.is_center_aligned then
+							unselect_all_buttons_except (center_alignment_button)
+						elseif paragraph.is_right_aligned then
+							unselect_all_buttons_except (right_alignment_button)
+						elseif paragraph.is_justified then
+							unselect_all_buttons_except (justified_button)
+						else
+							check
+								invalid_alignment: FALSE
+							end
+						end	
+					else
+						unselect_all_buttons (paragraph_toolbar)
+					end
 				else
 						-- `selection_changed_actions' is fired once when the selection is removed,
 						-- so in this case, we treat the update identically to when the caret has moved
 						-- by calling `display_format'.
 					format := rich_text.character_format (rich_text.caret_position)
 					display_format (format)
+					paragraph := rich_text.paragraph_format (rich_text.caret_position)
+					display_paragraph_format (paragraph)
 				end
 			end
 		
@@ -586,11 +749,62 @@ feature {NONE} -- Implementation
 			color_undefined := True
 		end
 		
-	tab_width_changed (a_value: INTEGER) is
-			-- Called by `change_actions' of `l_ev_spin_button_1'.
+	unselect_all_buttons_except (a_button: EV_TOOL_BAR_TOGGLE_BUTTON) is
+			-- Unselect all toggle buttons in `parent' of `a_button', excluding `a_button'.
+			-- Do not fire `select_actions' of disabled buttons.
+		require
+			a_button_not_void: a_button /= Void
+			a_button_parented: a_button.parent /= Void
+		local
+			tool_bar: EV_TOOL_BAR
+			toggle_button: EV_TOOL_BAR_TOGGLE_BUTTON
 		do
-			rich_text.set_tab_width (a_value)
+			tool_bar := a_button.parent
+			from
+				tool_bar.start
+			until
+				tool_bar.off
+			loop
+				if tool_bar.item /= a_button then
+					toggle_button ?= tool_bar.item
+					if toggle_button /= Void then
+						toggle_button.select_actions.block
+						toggle_button.disable_select
+						toggle_button.select_actions.resume
+					end
+				else
+						-- Now ensure `a_button' is selected.
+					a_button.select_actions.block
+					a_button.enable_select
+					a_button.select_actions.resume
+				end
+				tool_bar.forth
+			end
 		end
+		
+	unselect_all_buttons (tool_bar: EV_TOOL_BAR) is
+			-- Unselect all toggle buttons in `tool_bar'.
+		require
+			tool_bar_not_void: tool_bar /= Void
+		local
+			toggle_button: EV_TOOL_BAR_TOGGLE_BUTTON
+		do
+			from
+				tool_bar.start
+			until
+				tool_bar.off
+			loop
+				toggle_button ?= tool_bar.item
+				if toggle_button /= Void then
+					toggle_button.select_actions.block
+					toggle_button.disable_select
+					toggle_button.select_actions.resume
+				end
+				tool_bar.forth
+			end
+		end
+		
+		
 		
 feature {NONE} -- Implementation
 
@@ -660,10 +874,28 @@ feature {NONE} -- To be removed
 			-- A feature connected to an accelerator for testing purposes.
 		local
 			char: EV_CHARACTER_FORMAT
+			format: EV_PARAGRAPH_FORMAT
+			counter: INTEGER
 		do
 			--| FIXME remove this.
-			rich_text.select_region (5, 8)
-			char := rich_text.character_format (1)
+			--rich_text.select_region (5, 8)
+			--char := rich_text.character_format (1)
+--			from
+--				counter := 1
+--			until
+--				counter > 100
+--			loop
+--				create format
+--				if counter \\ 2 = 1 then
+--					format.enable_left_alignment
+--				else
+--					format.enable_center_alignment
+--				end
+--				rich_text.format_paragraph (rich_text.line_number_from_position (rich_text.selection_start), rich_text.line_number_from_position (rich_text.selection_end), format)
+--				(create {EV_ENVIRONMENT}).application.process_events
+--				counter := counter + 1
+--			end
+			format := rich_text.paragraph_format (10)
 		end
 		
 	accelerator: EV_ACCELERATOR

@@ -54,20 +54,29 @@ feature {NONE}
 						name_chooser.call (Current);
 					elseif argument = name_chooser then
 						fn := clone (name_chooser.selected_file);
-						!! f.make (fn);
-						if 
-							f.exists and then f.is_readable and then f.is_plain
-						then
-							Lace.set_file_name (name_chooser.selected_file);
-							work (Current);
+						if not fn.empty then
+							!! f.make (fn);
+							if 
+								f.exists and then 
+								f.is_readable and then 
+								f.is_plain
+							then
+								Lace.set_file_name (fn);
+								work (Current);
+							elseif f.exists and then not f.is_plain then
+								warner (project_tool.text_window).custom_call 
+									(Current, w_Not_a_file_retry (fn), 
+									" OK ", Void, "Cancel")
+							else
+								warner (project_tool.text_window).custom_call 
+									(Current, w_Cannot_read_file_retry (fn), 
+									" OK ", Void, "Cancel")
+							end
 						else
-							!!temp.make (0);
-							temp.append ("File: ");
-							temp.append (fn);
-							temp.append ("%Ncannot be read. Try again?");
 							warner (project_tool.text_window).custom_call 
-								(Current, temp, " OK ", Void, "Cancel");
-						end;
+								(Current, w_Not_a_file_retry (fn), 
+								" OK ", Void, "Cancel")
+						end
 					else
 						warner (project_tool.text_window).custom_call 
 							(Current, l_Specify_ace, " OK ", 

@@ -60,7 +60,10 @@ feature -- Basic operations
 					or is_aborted_stack.item
 				loop
 					if snapshot.item.valid_operands (a_pebble_tuple) then
-						if veto_pebble_function /= Void then
+						if
+							veto_pebble_function /= Void and then
+							veto_pebble_function.valid_operands (a_pebble_tuple)
+						then
 							veto_pebble_function.call (a_pebble_tuple)
 							if veto_pebble_function.last_result then
 								snapshot.item.call (a_pebble_tuple)
@@ -110,8 +113,9 @@ feature -- Status report
 			loop
 				Result := item.valid_operands (a_tuple) 
 				if
+					Result and then
 					veto_pebble_function /= Void and then
-					Result
+					veto_pebble_function.valid_operands (a_tuple)
 				then
 					veto_pebble_function.call (a_tuple)
 					Result := Result and then veto_pebble_function.last_result

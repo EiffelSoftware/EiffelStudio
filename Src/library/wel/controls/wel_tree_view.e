@@ -341,7 +341,6 @@ feature -- Status setting
 			exists: exists
 			valid_item: has_item (an_item)
 		do
-
 			cwin_send_message (item, Tvm_selectitem,
 				Tvgn_caret, cwel_pointer_to_integer (an_item.h_item))
 		ensure
@@ -349,19 +348,20 @@ feature -- Status setting
 		end
 
 	deselect_item (an_item: WEL_TREE_VIEW_ITEM) is
-			-- Deselect the given item
+			-- Deselect the given item.
+		obsolete "This features is not actually obsolete. However, the%
+			%behaviour has changed so that the item is really deselected.%
+			%The previous implementation would only change the appearence of the%
+			%item, and if you were relying on this behaviour, you should set the%
+			%mask of the item to reflect an unselected state."
 		require
 			exists: exists
 			valid_item: has_item (an_item)
 		local
 			mask: INTEGER
 		do
-			mask := an_item.mask
-			an_item.set_mask (Tvif_state)
-			an_item.set_statemask (Tvis_selected)
-			an_item.set_state (0)
-			cwin_send_message (item, Tvm_setitem, 0, an_item.to_integer)
-			an_item.set_mask (mask)
+			cwin_send_message (item, Tvm_selectitem,
+				Tvgn_caret, cwel_pointer_to_integer (default_pointer))
 		ensure
 			item_deselected: not is_selected (an_item)
 		end

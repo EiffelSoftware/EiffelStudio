@@ -7,6 +7,10 @@
 #pragma module NET_NETWORK
 #endif /* __VMS */
 
+#ifdef EIF_WIN32
+#define FD_SETSIZE 256
+#endif
+
 #include "eif_config.h"
 #include "eif_portable.h" 	/* required for VMS, recommended for others */
 #include "eif_except.h"  
@@ -14,7 +18,6 @@
 #include "eif_error.h"    	/* for eio() */
 
 #ifdef EIF_WIN32
-#define FD_SETSIZE 256
 #define WIN32_LEAN_AND_MEAN
 #include <winsock.h>
 #define EWOULDBLOCK WSAEWOULDBLOCK
@@ -368,9 +371,11 @@ EIF_INTEGER get_servent_port(EIF_POINTER name, EIF_POINTER proto)
 #endif
 
 	sp = getservbyname((char *) name, (char *) proto);
-	if (sp == (struct servent *) 0)
+	if (sp == (struct servent *) 0) {
 		eio();
-	else
+			/* Not Reached */
+		return -1;
+	} else
 		return (EIF_INTEGER) ntohs(sp->s_port);
 }
 

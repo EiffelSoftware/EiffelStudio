@@ -165,7 +165,7 @@ feature -- Properties
 		do
 		end;
 
-	argument_names: FIXED_LIST [STRING] is
+	argument_names: LIST [STRING] is
 			-- Argument names
 		do
 		end;

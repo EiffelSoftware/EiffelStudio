@@ -232,7 +232,7 @@ feature {COMPILER_EXPORTER} -- Case storage
 	storage_info: S_EXPORT_SET_I is
 			-- Case storage of export set 
 		local
-			l: FIXED_LIST [STRING];
+			l: LIST [STRING];
 			cl: STRING
 		do
 			!! Result.make (count);

@@ -20,7 +20,7 @@ creation
 
 feature -- Property
 
-	argument_names: FIXED_LIST [STRING];
+	argument_names: LIST [STRING];
 			-- Argument names
 
 feature -- Setting

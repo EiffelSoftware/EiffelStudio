@@ -23,6 +23,14 @@ feature -- Properties
 			-- Do nothing
 		end
 
+	is_loose: BOOLEAN is
+			-- Does type depend on formal generic parameters and/or anchors?
+		do
+			-- Do nothing
+		ensure
+			definition: Result = (has_like or has_formal_generic)
+		end
+
 	is_void: BOOLEAN is
 			-- Is the type void (procedure type) ?
 		do

@@ -11,7 +11,7 @@ inherit
 		undefine
 			same_as, solved_type, instantiation_in
 		redefine
-			actual_type, has_like, is_like, is_external,
+			actual_type, has_like, is_loose, is_like, is_external,
 			is_basic, instantiated_in, meta_type,
 			has_associated_class,
 			is_reference, is_expanded
@@ -29,6 +29,9 @@ feature -- Properties
 
 	has_like: BOOLEAN is True
 			-- Does the type have anchored type in its definition ?
+
+	is_loose: BOOLEAN is True
+			-- Does type depend on formal generic parameters and/or anchors?
 
 	class_id: INTEGER
 			-- Class ID of the class where the anchor is referenced

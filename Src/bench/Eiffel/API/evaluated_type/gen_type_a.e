@@ -11,7 +11,7 @@ inherit
 			make as cl_make
 		redefine
 			generics, valid_generic, parent_type, dump, ext_append_to,
-			has_like, duplicate, solved_type, type_i, good_generics,
+			has_like, is_loose, duplicate, solved_type, type_i, good_generics,
 			error_generics, check_constraints, has_formal_generic, instantiated_in,
 			has_expanded, is_valid, expanded_deferred, valid_expanded_creation,
 			same_as, format, is_equivalent,
@@ -273,7 +273,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 		end
 
 	has_formal_generic: BOOLEAN is
-			-- Are smae formal generic paraemter in the type ?
+			-- Has type a formal generic parameter?
 		local
 			i, count: INTEGER
 		do
@@ -285,6 +285,23 @@ feature {COMPILER_EXPORTER} -- Primitives
 			loop
 				Result := generics.item (i).has_formal_generic
 				i := i + 1
+			end
+		end
+
+	is_loose: BOOLEAN is
+			-- Does type depend on formal generic parameters and/or anchors?
+		local
+			g: like generics
+			i: INTEGER
+		do
+			from
+				g := generics
+				i := g.count
+			until
+				i <= 0 or else Result
+			loop
+				Result := g.item (i).is_loose
+				i := i - 1
 			end
 		end
 

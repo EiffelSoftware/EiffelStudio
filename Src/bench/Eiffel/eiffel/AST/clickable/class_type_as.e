@@ -8,7 +8,7 @@ class CLASS_TYPE_AS
 inherit
 	TYPE_AS
 		redefine
-			has_formal_generic, has_like,
+			has_formal_generic, has_like, is_loose,
 			simple_format, is_equivalent,
 			check_constraint_type, solved_type_for_format,
 			append_to
@@ -119,6 +119,24 @@ feature -- Access
 				loop
 					Result := generics.item.has_formal_generic
 					generics.forth
+				end
+			end
+		end
+
+	is_loose: BOOLEAN is
+			-- Does type depend on formal generic parameters and/or anchors?
+		local
+			g: like generics
+		do
+			g := generics
+			if g /= Void then
+				from
+					g.start
+				until
+					g.after or else Result
+				loop
+					Result := g.item.is_loose
+					g.forth
 				end
 			end
 		end

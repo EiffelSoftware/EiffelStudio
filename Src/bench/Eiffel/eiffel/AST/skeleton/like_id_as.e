@@ -9,7 +9,7 @@ class
 inherit
 	TYPE_AS
 		redefine
-			has_like, simple_format
+			has_like, is_loose, simple_format
 		end
 
 	SHARED_LIKE_CONTROLER
@@ -51,6 +51,9 @@ feature -- Access
 
 	has_like: BOOLEAN is True
 			-- Has the type anchored type in its definition ?
+
+	is_loose: BOOLEAN is True
+			-- Does type depend on formal generic parameters and/or anchors?
 
 feature -- Implementation of inherited deferred features
 

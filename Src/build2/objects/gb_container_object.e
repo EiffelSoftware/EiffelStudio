@@ -76,7 +76,7 @@ feature {NONE} -- Implementation
 			--| If `Type' is "EV_TITLED_WINDOW" then
 			--| `display_object' must be a normal EV_TITLED_WINDOW,
 			--| not a modified version.
-			if type_conforms_to (dynamic_type_from_string (type), dynamic_type_from_string ("EV_TITLED_WINDOW")) then
+			if type_conforms_to (dynamic_type_from_string (type), dynamic_type_from_string (Ev_titled_window_string)) then
 				display_object ?= vision2_object_from_type (type)
 			else
 				widget ?= vision2_object_from_type (type)

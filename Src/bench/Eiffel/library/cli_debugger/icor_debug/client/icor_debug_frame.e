@@ -17,6 +17,8 @@ create
 feature {ICOR_EXPORTER} -- QueryInterface
 
 	query_interface_icor_debug_il_frame: ICOR_DEBUG_IL_FRAME is
+		require
+			item /= Default_pointer
 		local
 			p: POINTER
 		do
@@ -24,11 +26,11 @@ feature {ICOR_EXPORTER} -- QueryInterface
 			if p /= default_pointer then
 				create Result.make_by_pointer (p)
 			end
-		ensure
---			success: last_call_success = 0
 		end
 
 	query_interface_icor_debug_native_frame: ICOR_DEBUG_NATIVE_FRAME is
+		require
+			item /= Default_pointer
 		local
 			p: POINTER
 		do
@@ -36,13 +38,13 @@ feature {ICOR_EXPORTER} -- QueryInterface
 			if p /= default_pointer then
 				create Result.make_by_pointer (p)
 			end
-		ensure
---			success: last_call_success = 0
 		end
 
 feature {ICOR_EXPORTER} -- Access
 
 	get_chain: ICOR_DEBUG_CHAIN is
+		require
+			item /= Default_pointer
 		local
 			p: POINTER
 		do
@@ -55,6 +57,8 @@ feature {ICOR_EXPORTER} -- Access
 		end
 
 	get_code: ICOR_DEBUG_CODE is
+		require
+			item /= Default_pointer
 		local
 			p: POINTER
 		do
@@ -67,6 +71,8 @@ feature {ICOR_EXPORTER} -- Access
 		end
 
 	get_function: ICOR_DEBUG_FUNCTION is
+		require
+			item /= Default_pointer
 		local
 			p: POINTER
 		do
@@ -77,6 +83,8 @@ feature {ICOR_EXPORTER} -- Access
 		end
 
 	get_function_token: INTEGER is
+		require
+			item /= Default_pointer
 		do
 			last_call_success := cpp_get_function_token (item, $Result)
 		ensure
@@ -84,6 +92,8 @@ feature {ICOR_EXPORTER} -- Access
 		end
 
 	get_caller: ICOR_DEBUG_FRAME is
+		require
+			item /= Default_pointer
 		local
 			p: POINTER
 		do
@@ -91,11 +101,11 @@ feature {ICOR_EXPORTER} -- Access
 			if p /= default_pointer then
 				create Result.make_by_pointer (p)
 			end
-		ensure
---			success: last_call_success = 0
 		end
 
 	get_callee: ICOR_DEBUG_FRAME is
+		require
+			item /= Default_pointer
 		local
 			p: POINTER
 		do
@@ -103,11 +113,11 @@ feature {ICOR_EXPORTER} -- Access
 			if p /= default_pointer then
 				create Result.make_by_pointer (p)
 			end
-		ensure
---			success: last_call_success = 0
 		end
 
 	create_stepper: ICOR_DEBUG_STEPPER is
+		require
+			item /= Default_pointer
 		local
 			l_p_stepper: POINTER
 		do

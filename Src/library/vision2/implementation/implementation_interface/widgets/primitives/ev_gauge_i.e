@@ -45,6 +45,19 @@ feature -- Access
 		deferred
 		end
 
+feature -- Status report
+
+	proportion: REAL is
+			-- Relative position of `value' in `range'. Range: [0, 1].
+		do
+			if maximum = minimum then
+				Result := (value - minimum) / (maximum - minimum)
+			else
+				--| By definition:
+				Result := 0.0
+			end
+		end
+
 feature -- Status setting
 
 	step_forward is
@@ -161,6 +174,19 @@ feature -- Element change
 			assigned: range.is_equal (a_range)
 		end
 
+feature -- Status setting
+
+	set_proportion (a_proportion: REAL) is
+			-- Move `value' to `a_proportion' within `range'.
+		require
+			a_proportion_within_range: a_proportion >= 0 and a_proportion <= 1
+		do
+			if maximum /= minimum then
+				set_value (((maximum - minimum) * a_proportion).rounded
+					+ minimum)
+			end
+		end
+
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_GAUGE
@@ -188,6 +214,9 @@ end -- class EV_GAUGE_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/04/13 18:02:44  brendel
+--| Added proportion and set_proportion.
+--|
 --| Revision 1.7  2000/02/22 18:39:44  oconnor
 --| updated copyright date and formatting
 --|
@@ -217,7 +246,8 @@ end -- class EV_GAUGE_I
 --| added --| FIXME Not for release
 --|
 --| Revision 1.3.6.3  2000/01/06 20:41:57  rogers
---| fixed to work with major new vision2 changes. Make with range no longer takes a parent. redefined interface.
+--| fixed to work with major new vision2 changes. Make with range no longer
+--| takes a parent. redefined interface.
 --|
 --| Revision 1.3.6.2  1999/12/09 03:15:06  oconnor
 --| commented out make_with_* features, these should be in interface only

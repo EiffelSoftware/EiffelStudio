@@ -64,7 +64,7 @@ feature
 			bw.wel_destroy
 		end;
 
-feature {NONE}
+feature {NONE} -- Implementation
 
 	set_toolkit  is
 			-- Set MS-Windows as toolkit.

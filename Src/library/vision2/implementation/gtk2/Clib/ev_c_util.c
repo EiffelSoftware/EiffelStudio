@@ -25,43 +25,46 @@ void ev_gtk_log (
 	if (a_debug_mode > 0)
 	{
 	// If no debugging is set then everything is left to DBC
-	switch (log_level) {
-	case G_LOG_LEVEL_ERROR:
-		level = "ERROR";
-		fatal = TRUE;
-		break;
-	case G_LOG_LEVEL_CRITICAL:
-		level = "CRITICAL";
-		fatal = TRUE;
-		break;
-	case G_LOG_LEVEL_WARNING:
-		level = "WARNING";
-		break;
-	case G_LOG_LEVEL_MESSAGE:
-		level = "MESSAGE";
-		break;
-	case G_LOG_LEVEL_INFO:
-		level = "INFO";
-		break;
-	case G_LOG_LEVEL_DEBUG:
-		level = "DEBUG";
-	default:
-		level = "UNKNOWN";
-		fatal = TRUE;
-	}
-	if ( strlen (log_domain) + strlen (level) + strlen (message) + 2 > 999 ) {
-		if ( strlen (log_domain) + strlen (level) > 999 ) {
-			sprintf (buf, "%s-%s\n", log_domain, level);
-		} else {
-			sprintf (buf, "GTK-%s\n", level);
+		switch (log_level) 
+		{
+		case G_LOG_LEVEL_ERROR:
+			level = "ERROR";
+			fatal = TRUE;
+			break;
+		case G_LOG_LEVEL_CRITICAL:
+			level = "CRITICAL";
+			fatal = TRUE;
+			break;
+		case G_LOG_LEVEL_WARNING:
+			level = "WARNING";
+			break;
+		case G_LOG_LEVEL_MESSAGE:
+			level = "MESSAGE";
+			break;
+		case G_LOG_LEVEL_INFO:
+			level = "INFO";
+			break;
+		case G_LOG_LEVEL_DEBUG:
+			level = "DEBUG";
+		default:
+			level = "UNKNOWN";
+			fatal = TRUE;
 		}
-	} else {
-		sprintf (buf, "%s-%s %s", log_domain, level, message);
-	}
-	printf ("%s\n", buf);
-	if (fatal && a_debug_mode > 1) {
-		eraise (buf, EN_EXT);
-	}
+
+		if ( strlen (log_domain) + strlen (level) + strlen (message) + 2 > 999 )
+		{
+			if ( strlen (log_domain) + strlen (level) > 999 )
+				sprintf (buf, "%s-%s\n", log_domain, level);
+			else
+				sprintf (buf, "GTK-%s\n", level);
+			
+		} 
+		else 
+			sprintf (buf, "%s-%s %s", log_domain, level, message);
+		
+		printf ("%s\n", buf);
+		if (fatal && a_debug_mode > 1)
+			eraise (buf, EN_EXT);
 	}
 }
 
@@ -69,16 +72,19 @@ void enable_ev_gtk_log (int a_mode)
 {
 	g_log_set_handler ("Gtk", G_LOG_LEVEL_ERROR | G_LOG_LEVEL_CRITICAL |
 		G_LOG_LEVEL_WARNING | G_LOG_LEVEL_MESSAGE | G_LOG_LEVEL_INFO |
-		G_LOG_LEVEL_DEBUG | G_LOG_FLAG_FATAL, ev_gtk_log, (gpointer) a_mode);
-    g_log_set_handler ("Gdk", G_LOG_LEVEL_ERROR | G_LOG_LEVEL_CRITICAL |
-        G_LOG_LEVEL_WARNING | G_LOG_LEVEL_MESSAGE | G_LOG_LEVEL_INFO |
-		G_LOG_LEVEL_DEBUG | G_LOG_FLAG_FATAL, ev_gtk_log, (gpointer) a_mode);
+		G_LOG_LEVEL_DEBUG | G_LOG_FLAG_FATAL | G_LOG_FLAG_RECURSION, ev_gtk_log, (gpointer) a_mode);
+
+	g_log_set_handler ("Gdk", G_LOG_LEVEL_ERROR | G_LOG_LEVEL_CRITICAL |
+        	G_LOG_LEVEL_WARNING | G_LOG_LEVEL_MESSAGE | G_LOG_LEVEL_INFO |
+		G_LOG_LEVEL_DEBUG | G_LOG_FLAG_FATAL | G_LOG_FLAG_RECURSION, ev_gtk_log, (gpointer) a_mode);
+
 	g_log_set_handler ("GLib",  G_LOG_LEVEL_ERROR | G_LOG_LEVEL_CRITICAL |
-        G_LOG_LEVEL_WARNING | G_LOG_LEVEL_MESSAGE | G_LOG_LEVEL_INFO |
-        G_LOG_LEVEL_DEBUG | G_LOG_FLAG_FATAL, ev_gtk_log, (gpointer) a_mode);
-    g_log_set_handler (NULL,  G_LOG_LEVEL_ERROR | G_LOG_LEVEL_CRITICAL |
-        G_LOG_LEVEL_WARNING | G_LOG_LEVEL_MESSAGE | G_LOG_LEVEL_INFO |
-        G_LOG_LEVEL_DEBUG | G_LOG_FLAG_FATAL, ev_gtk_log, (gpointer) a_mode);
+        	G_LOG_LEVEL_WARNING | G_LOG_LEVEL_MESSAGE | G_LOG_LEVEL_INFO |
+        	G_LOG_LEVEL_DEBUG | G_LOG_FLAG_FATAL | G_LOG_FLAG_RECURSION, ev_gtk_log, (gpointer) a_mode);
+
+	g_log_set_handler (NULL,  G_LOG_LEVEL_ERROR | G_LOG_LEVEL_CRITICAL |
+        	G_LOG_LEVEL_WARNING | G_LOG_LEVEL_MESSAGE | G_LOG_LEVEL_INFO |
+        	G_LOG_LEVEL_DEBUG | G_LOG_FLAG_FATAL | G_LOG_FLAG_RECURSION, ev_gtk_log, (gpointer) a_mode);
 }
 
 /* XPM */
@@ -1142,6 +1148,10 @@ char **wait_cursor_xpm (void) {
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.6  2004/08/04 20:08:25  king
+// Added RECURSION glog flag as previously this was missing and going to the default handler which would abort the program
+// Formatting
+//
 // Revision 1.5  2004/02/12 22:38:47  king
 // Added default_pixmap_xpm
 //

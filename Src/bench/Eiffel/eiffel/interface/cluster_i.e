@@ -115,6 +115,13 @@ feature -- Creation feature
 			cl: like classes;
 			c: CLASS_I;
 		do
+debug ("REMOVE_CLASS")
+	io.error.putstring ("Copy old_cluster ");
+	io.error.putstring (old_cluster_i.cluster_name);
+	io.error.putstring (" path ");
+	io.error.putstring (old_cluster_i.path);
+	io.error.new_line;
+end;
 			old_cluster := old_cluster_i;
 			is_precompiled := old_cluster_i.is_precompiled;
 			set_date (old_cluster_i.date);
@@ -224,6 +231,9 @@ feature -- Creation feature
 				-- do a degree 6
 			if changed (ex_l, inc_l) then
 				Result.set_old_cluster (duplicate);
+debug ("REMOVE_CLASS")
+	io.error.putstring ("New cluster calling fill%N");
+end;
 				Result.fill (ex_l, inc_l);
 			else
 				Result.copy_old_cluster (Current)
@@ -256,7 +266,13 @@ feature -- Creation feature
 			class_file: EXTEND_FILE;
 			found: BOOLEAN;
 		do
-				-- Check if the path is valid
+debug ("REMOVE_CLASS")
+	io.error.putstring ("Fill ");
+	io.error.putstring (cluster_name);
+	io.error.putstring (" path ");
+	io.error.putstring (path);
+	io.error.new_line;
+end;				-- Check if the path is valid
 			!!cluster_file.make (path);
 			if not cluster_file.exists then
 				!!vd01;
@@ -409,6 +425,11 @@ feature -- Creation feature
 			class_path.append (file_name);
 			class_name := read_class_name_in_file (class_path);
 			if class_name /= Void then
+debug ("REMOVE_CLASS")
+	io.error.putstring ("Insert class from file ");
+	io.error.putstring (class_name);
+	io.error.new_line;
+end;
 				a_class := classes.item (class_name);
 				if a_class /= Void then
 					-- Error
@@ -421,10 +442,16 @@ feature -- Creation feature
 				end;
 					-- Valid eiffel class in file
 				if old_cluster /= Void then
+debug ("REMOVE_CLASS")
+	io.error.putstring ("Old cluster not Void%N");
+end;
 					a_class := old_cluster.classes.item (class_name);
 					if a_class /= Void then
 							-- The file name may have changed even
 							-- if the class was already in this cluster
+debug ("REMOVE_CLASS")
+	io.error.putstring ("Old cluster has the class%N");
+end;
 						a_class.set_base_name (file_name);
 						a_class.set_cluster (Current);
 						str := class_path.to_c;
@@ -439,6 +466,9 @@ feature -- Creation feature
 					end;
 				end;
 				if a_class = Void then
+debug ("REMOVE_CLASS")
+	io.error.putstring ("new class!!!%N");
+end;
 					!!a_class.make;
 					a_class.set_class_name (class_name);
 					a_class.set_base_name (file_name);
@@ -495,6 +525,11 @@ feature -- Creation feature
 			-- Remove the CLASS_C if the class was compiled before
 			-- and propagate recompilation of the clients.
 		do
+debug ("REMOVE_CLASS")
+	io.error.putstring ("Removing class ");
+	io.error.putstring (a_class.class_name);
+	io.error.new_line;
+end;
 			classes.remove (a_class.class_name);
 
 				-- If a_class has already be compiled,
@@ -509,6 +544,11 @@ feature -- Creation feature
 			class_i: CLASS_I;
 			clients: LINKED_LIST [CLASS_C];
 		do
+debug ("REMOVE_CLASS")
+	io.error.putstring ("Removing class from system ");
+	io.error.putstring (a_class.class_name);
+	io.error.new_line;
+end;
 			class_c := a_class.compiled_class;
 			if class_c /= Void then
 				clients := class_c.syntactical_clients;
@@ -519,6 +559,11 @@ feature -- Creation feature
 				loop
 						-- recompile the client
 					class_i := clients.item.lace_class;
+debug ("REMOVE_CLASS")
+	io.error.putstring ("Propagation to client: ");
+	io.error.putstring (class_i.class_name);
+	io.error.new_line;
+end;
 					Workbench.add_class_to_recompile (class_i);
 					class_i.set_changed (True);
 					clients.forth;
@@ -684,6 +729,13 @@ feature -- Creation feature
 				Error_handler.insert_error (vd40);
 				Error_handler.raise_error;
 			end;
+debug ("REMOVE_CLASS")
+	io.error.putstring ("Removing cluster ");
+	io.error.putstring (cluster_name);
+	io.error.putstring (" path ");
+	io.error.putstring (path);
+	io.error.new_line;
+end;
 			from
 				classes.start
 			until

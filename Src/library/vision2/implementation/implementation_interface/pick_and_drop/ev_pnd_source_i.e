@@ -66,7 +66,7 @@ feature -- Access
 	set_pick_position (a_x, a_y: INTEGER) is
 			-- Set the initial position for the pick and drop.
 		do
-			!! initial_point.set (a_x, a_y)
+			create initial_point.set (a_x, a_y)
 		end
 
 feature -- Event - command association
@@ -113,8 +113,20 @@ feature -- Event -- removing command association
 
 feature {EV_PND_SOURCE_I} -- Implementation
 
-	initialize_transport (args: EV_ARGUMENT2 [EV_INTERNAL_COMMAND, EV_COMMAND]; data: EV_BUTTON_EVENT_DATA) is
+	initialize_transport (args: EV_ARGUMENT2 [EV_INTERNAL_COMMAND, EV_COMMAND]; ev_data: EV_BUTTON_EVENT_DATA) is
 			-- Initialize the pick and drop mechanism.
+		deferred
+		end
+
+feature {EV_PND_TRANSPORTER_I} -- Implemented in descendants
+
+	terminate_transport (transporter: EV_PND_TRANSPORTER_I; cmd: EV_INTERNAL_COMMAND) is
+			-- Terminate the pick and drop mechanim.
+	deferred
+	end
+
+	widget_source: EV_WIDGET_IMP is
+			-- Widget drag source used for transport
 		deferred
 		end
 

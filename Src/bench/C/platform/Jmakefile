@@ -15,9 +15,10 @@ LOBJ = \
 LIBRUN = ../run-time
 
 /* The following are understood by jmake to alter built-in commands */
-DPFLAGS = -I$(TOP) -I$(LIBRUN)
+DPFLAGS = -I$(TOP) -I$(LIBRUN) -I$(LIBRUN)/include
 CFLAGS = $(DPFLAGS)
 
+NormalObjectRule()
 NormalLibraryTarget(platform,$(LSRC),$(LOBJ))
 DependTarget()
 LintTarget()

@@ -250,7 +250,7 @@ feature {NONE} -- Basic operations
 			send_command (Data, Data_code)
 			mail_message.prepend (sub_header)
 			if mail_signature /= Void then
-				mail_message.append (mail_signature)
+				mail_message.append ("%N" + mail_signature)
 			end
 			mail_message.replace_substring_all ("%N.", ".%N")
 			mail_message.append ("%N.")

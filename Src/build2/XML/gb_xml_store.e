@@ -166,7 +166,7 @@ feature {GB_XML_HANDLER, GB_OBJECT_HANDLER} -- Implementation
 				if an_object.name.is_empty then
 					new_name := unique_name (generated_names, Local_object_name_prepend_string + an_object.short_type)
 					generated_names.force (new_name)
-					add_element_containing_string (new_type_element, name_string, new_name)--generate_new_name (an_object.short_type))
+					add_element_containing_string (new_type_element, name_string, new_name)
 				end
 			end
 			
@@ -243,7 +243,7 @@ feature {GB_CODE_GENERATOR} -- Implementation
 			end
 			
 			create namespace.make ("", "")
-			create application_element.make_root ("application", namespace)-- := new_root_element (root_node_name, "")
+			create application_element.make_root ("application", namespace)
 			add_attribute_to_element (application_element, "xsi", "xmlns", Schema_instance)	
 			create document.make
 

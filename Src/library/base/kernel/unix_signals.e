@@ -340,7 +340,7 @@ feature {NONE} -- Implementation
 			"esigmap"
 		end;
 
-	c_signal_name (i: INTEGER): ANY is
+	c_signal_name (i: INTEGER): POINTER is
 		external
 			"C"
 		alias

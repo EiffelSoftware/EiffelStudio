@@ -67,7 +67,7 @@ feature -- Initialization
 			Result.share (s)
 		end;
 
-	from_c (c_string: ANY) is
+	from_c (c_string: POINTER) is
 			-- Reset contents of string from contents of `c_string',
 			-- a string created by some external C function.
 		require
@@ -75,9 +75,9 @@ feature -- Initialization
 		local
 			length: INTEGER
 		do
-			length := str_len ($c_string);
+			length := str_len (c_string);
 			make_area (length);
-			str_cpy ($area, $c_string, length);
+			str_cpy ($area, c_string, length);
 			count := length
 		end;
 
@@ -834,7 +834,7 @@ feature {STRING} -- Implementation
 			Result := Integer_bits // Character_bits;
 		end;
 
-	str_len (c_string: ANY): INTEGER is
+	str_len (c_string: POINTER): INTEGER is
 			-- Length of the C string: `c_string'
 		external
 			"C"
@@ -893,7 +893,7 @@ feature {STRING} -- Implementation
 		end;
 	
 
-	str_cpy (to_str: like area; from_str: ANY; length_from: INTEGER) is
+	str_cpy (to_str: like area; from_str: POINTER; length_from: INTEGER) is
 			-- Copy `length_from' characters from `from_str' into `to_str'.
 		external
 			"C"

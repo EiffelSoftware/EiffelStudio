@@ -41,14 +41,16 @@ feature -- Access
 			s_exists: s /= Void
 		local
 			ext: ANY;
+			c_string: POINTER;
+			void_pointer: POINTER
 		do
 			ext := s.to_c
-			ext := eif_getenv($ext)
-			if ext /= Void then
+			c_string := eif_getenv($ext)
+			if c_string /= void_pointer then
 				!!Result.make (0)
-				Result.from_c (ext)
+				Result.from_c (c_string)
 			end
-		end		
+		end	
 
 feature -- Status
 	
@@ -92,7 +94,7 @@ feature -- Status setting
 
 feature {NONE} -- External
 
-	eif_getenv (s : ANY): ANY is
+	eif_getenv (s : ANY): POINTER is
 			-- Value of environment variable `s'
 		external
 			"C"	

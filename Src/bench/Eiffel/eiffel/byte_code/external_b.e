@@ -252,8 +252,8 @@ feature -- IL code generation
 					if is_static_call then
 							-- Bug fix until we generate direct static access
 							-- to C external.
-						(create {CREATE_TYPE}.make (
-							create {CL_TYPE_I}.make (written_in))).generate_il
+						(create {CREATE_TYPE}.make (il_generator.implemented_type 
+							(written_in, cl_type))).generate_il
 					else
 						il_generator.generate_current
 					end

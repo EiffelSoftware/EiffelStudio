@@ -21,7 +21,7 @@ creation
 
 feature -- Access
 
-	upper_left: EV_COORD
+	upper_left: EV_POINT
 			-- Upper-left coiner of the clip area
 
 	width: INTEGER
@@ -45,14 +45,14 @@ feature -- Debug
 
 feature -- Element change
 
-	set (upper_left_coord: EV_COORD; new_width, new_height: INTEGER) is
+	set (upper_left_POINT: EV_POINT; new_width, new_height: INTEGER) is
 			-- Set the clip
 		require
-			upper_left_coord: upper_left_coord /= Void
+			upper_left_POINT: upper_left_POINT /= Void
 			new_width_positive: new_width >= 0
 			new_height_positive: new_height >= 0
 		do
-			upper_left := upper_left_coord
+			upper_left := upper_left_POINT
 			width := new_width
 			height := new_height
 		end

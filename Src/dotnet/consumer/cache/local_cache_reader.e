@@ -87,6 +87,46 @@ feature {NONE}
 			Result.compare_objects
 		end
 
+	total_consumed_assemblies: ARRAY [CONSUMED_ASSEMBLY_INFO] is
+			-- Array of consumed assemblies from both local and global caches.
+		local
+			a_info_assemblies, a_local_info_assemblies: ARRAY [CONSUMED_ASSEMBLY_INFO]
+			a_local_info: LOCAL_CACHE_INFO
+			i, a_count: INTEGER
+		do
+			if is_initialized then
+				a_info_assemblies := info.assemblies_info
+				a_count := a_info_assemblies.count
+				a_local_info := local_info
+				if a_local_info /= Void then
+					a_local_info_assemblies := local_info.assemblies_info
+					a_count := a_count + a_local_info_assemblies.count
+				end
+
+				create Result.make (1, a_count)
+				from 
+					i := 1
+				until
+					i > a_info_assemblies.count
+				loop
+					Result.put (a_info_assemblies @ i, i)
+					i := i + 1
+				end
+
+				if a_local_info_assemblies /= Void then
+					from
+						-- i is already correctly set from last loop
+					until
+						i > a_count
+					loop
+						Result.put (a_local_info_assemblies @ (i - a_info_assemblies.count), i)
+						i := i + 1
+					end
+				end
+			end
+		end
+
+
 feature -- Conversion
 
 	consumed_type (t: TYPE): CONSUMED_TYPE is

@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 			temp_c_object := c_object
 			c_object := list_widget
 			signal_connect ("select_child", ~select_callback)
-			signal_connect ("unselect_child", ~deselect_callback)
+			-- Gtk bug means that select_child signal is fired on mouse press.
 			c_object := temp_c_object
 		end
 
@@ -71,19 +71,16 @@ feature {NONE} -- Initialization
 			t_item: EV_TREE_ITEM_IMP
 		do
 		 	t_item ?= eif_object_from_c (a_tree_item)
-			t_item.interface.select_actions.call ([])
-			interface.select_actions.call ([])
+			
+			if t_item.is_selected then
+				t_item.interface.select_actions.call ([])
+				interface.select_actions.call ([])
+			else
+				t_item.interface.deselect_actions.call ([])
+				interface.deselect_actions.call ([])
+			end
 		end
 
-	deselect_callback (a_tree_item: POINTER) is
-			-- Called when a tree item is deselected
-		local
-			t_item: EV_TREE_ITEM_IMP
-		do
-		 	t_item ?= eif_object_from_c (a_tree_item)
-			t_item.interface.deselect_actions.call ([])
-			interface.deselect_actions.call ([])	
-		end
 
 feature -- Status setting
 
@@ -125,7 +122,7 @@ feature -- Status report
 		end
 
 	selected_items: LINKED_LIST [EV_TREE_ITEM] is
-			-- Items which are currently selected.
+				-- Items which are currently selected.
 		local
 			list_pointer, item_pointer: POINTER
 			o: EV_ANY_IMP
@@ -149,7 +146,7 @@ feature -- Status report
 					Result.extend (current_item)
 					a_counter := a_counter + 1
 				end
-			end	
+			end
 		end
 
 	multiple_selection_enabled: BOOLEAN is
@@ -253,6 +250,9 @@ end -- class EV_TREE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.27  2000/02/29 22:29:35  king
+--| Merged selection callbacks in to one due to gtk bug
+--|
 --| Revision 1.26  2000/02/29 00:01:53  king
 --| Added multiple selection features
 --|

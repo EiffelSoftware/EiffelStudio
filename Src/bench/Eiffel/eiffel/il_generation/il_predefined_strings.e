@@ -20,6 +20,7 @@ feature -- Access
 	generic_conformance_class_name: STRING is "ISE.Runtime.GENERIC_CONFORMANCE"
 	type_info_class_name: STRING is "ISE.Runtime.EIFFEL_TYPE_INFO"
 	integer_32_class_name: STRING is "System.Int32"
+	system_object_class_name: STRING is "System.Object"
 	type_handle_class_name: STRING is "System.RuntimeTypeHandle"
 			-- Type used by code generation.
 

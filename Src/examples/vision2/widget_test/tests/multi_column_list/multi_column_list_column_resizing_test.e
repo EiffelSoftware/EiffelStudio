@@ -21,12 +21,11 @@ feature {NONE} -- Initialization
 		do
 			create multi_column_list
 			multi_column_list.set_minimum_size (300, 300)
-			
 				-- Build the first row.
 			create multi_column_list_row
-			multi_column_list.column_resized_actions.extend (agent update_width_information)
 			multi_column_list_row.fill (<<"Please resize column", "Please resize column", "Please resize column">>)
 			multi_column_list.extend (multi_column_list_row)
+			multi_column_list.column_resized_actions.extend (agent update_width_information)
 			widget := multi_column_list
 		end
 		

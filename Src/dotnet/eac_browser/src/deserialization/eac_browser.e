@@ -10,7 +10,13 @@ class
 
 inherit
 	CACHE
+		export
+			{NONE}all
+		end
 	CACHE_PATH
+		export
+			{NONE}all
+		end
 
 feature -- Access
 

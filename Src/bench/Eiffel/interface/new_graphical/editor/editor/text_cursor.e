@@ -16,7 +16,7 @@ create
 
 feature -- Initialization
 
-	make_form_absolute_pos (x, y : INTEGER; a_text: STRUCTURED_TEXT) is
+	make_from_absolute_pos (x, y : INTEGER; a_text: STRUCTURED_TEXT) is
 		require
 			a_text_valid: a_text /= Void
 			x_valid: x >= 0
@@ -26,10 +26,6 @@ feature -- Initialization
 			set_y_in_lines (y)
 			set_x_in_pixels (x)
 		end
---| FIXME
---| Christophe, 26 jan 2000
---| if `set_y_in_lines' uses `token' and `pos_in_token' (not defined yet),
---| then we should not use it.
 
 feature -- Access
 
@@ -60,7 +56,7 @@ feature -- Element change
 			-- Update `x_in_pixels' accordingly.
 		require
 			token_not_void: a_token /= Void
-			a_position_positive_not_null: p >= 0
+			a_position_positive_not_null: a_position >= 0
 		local
 			current_width: INTEGER
 			current_token: EDITOR_TOKEN
@@ -189,6 +185,13 @@ feature -- Transformation
 		do
 			go_left_char
 			delete_char
+		end
+
+	insert_eol is
+		local
+			s: STRING
+		do
+			
 		end
 
 feature {NONE} -- Implementation

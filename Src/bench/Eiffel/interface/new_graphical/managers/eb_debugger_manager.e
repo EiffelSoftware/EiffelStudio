@@ -1106,7 +1106,9 @@ feature {NONE} -- MSIL system implementation
 	is_msil_dll_system: BOOLEAN is
 			-- Is a MSIL DLL system ?
 		do
-			Result := Eiffel_system.System.il_generation
+			Result := Eiffel_project.system_defined
+					and then Eiffel_system.System /= Void 
+					and then Eiffel_system.System.il_generation
 					and then Eiffel_system.System.msil_generation_type.is_equal (dll_type)			
 		end
 		

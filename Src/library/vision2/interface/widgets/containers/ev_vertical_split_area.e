@@ -27,7 +27,7 @@ feature -- Initialization
 			create {EV_HORIZONTAL_SEPARATOR} sep
 			initialize_split_area
 			sep.pointer_button_press_actions.extend (~on_click)
-			is_initialized := True
+			Precursor
 		end
 
 feature -- Access
@@ -94,7 +94,8 @@ feature {NONE} -- Implementation
 		-- Has the separator line been drawn on screen.
 
 	y_offset: INTEGER
-		-- Y Offset of the initial click on the separator, used to draw line under pointer.
+		-- Y Offset of the initial click on the separator, used to draw line
+		-- under pointer.
 
 	mouse_screen_coord: INTEGER
 		-- Initial Y screen-coordinate of the drag.
@@ -124,9 +125,11 @@ feature {NONE} -- Implementation
 			if separator_in_motion then
 				scr.draw_segment (first_cell_screen_x, previous_split_position,
 					first_cell_screen_x + sep.width, previous_split_position)
-				scr.draw_segment (first_cell_screen_x, hgt, first_cell_screen_x + sep.width, hgt)
+				scr.draw_segment (first_cell_screen_x, hgt,
+					first_cell_screen_x + sep.width, hgt)
 			else
-				scr.draw_segment (first_cell_screen_x, hgt, first_cell_screen_x + sep.width, hgt)
+				scr.draw_segment (first_cell_screen_x, hgt,
+					first_cell_screen_x + sep.width, hgt)
 				separator_in_motion := True
 			end
 
@@ -139,8 +142,12 @@ feature {NONE} -- Implementation
 		-- Previous split_position
 
 	first_cell_screen_x: INTEGER
+		-- Horizontal screen offset of first cell.
+		-- Used for speed optimization of motion routine.
+
 	first_cell_screen_y: INTEGER
-		-- Screen X/Y of first cell, used for speed optimization of motion routine.
+		-- Vertical screen offset of first cell.
+		-- Used for speed optimization of motion routine.
 
 	on_release (a_x, a_y, e: INTEGER; f, g, h: DOUBLE; scr_x, scr_y: INTEGER) is
 			-- End of the drag.
@@ -153,7 +160,8 @@ feature {NONE} -- Implementation
 				first_cell_screen_x + sep.width, previous_split_position)
 			end
 
-			first_cell.set_minimum_height (valid_split_position (scr_y - mouse_screen_coord))
+			first_cell.set_minimum_height (valid_split_position (
+				scr_y - mouse_screen_coord))
 			sep.pointer_motion_actions.wipe_out
 			sep.disable_capture
 			separator_in_motion := False
@@ -176,7 +184,8 @@ feature {NONE} -- Implementation
 
 			if Result < first.minimum_height then
 				Result := first.minimum_height
-			elseif Result > (split_box.height - sep.height - sec_item_min_height) then
+			elseif Result > (split_box.height - sep.height -
+					sec_item_min_height) then
 				Result := (split_box.height - sep.height - sec_item_min_height)
 			end
 		end
@@ -204,6 +213,10 @@ end -- class EV_VERTICAL_SPLIT_AREA
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/03/03 20:32:24  brendel
+--| Fixed bug in initialize. Before, Precursor was not called.
+--| Formatted for 80 columns.
+--|
 --| Revision 1.8  2000/03/01 03:30:06  oconnor
 --| added make_for_test
 --|
@@ -211,7 +224,8 @@ end -- class EV_VERTICAL_SPLIT_AREA
 --| updated copyright date and formatting
 --|
 --| Revision 1.6  2000/02/21 21:11:54  rogers
---| There is no longer an EV_VERTICAL_SPLIT_AREA_I so moved the appropriate implementation into this class.
+--| There is no longer an EV_VERTICAL_SPLIT_AREA_I so moved the appropriate
+--| implementation into this class.
 --|
 --| Revision 1.5  2000/02/14 11:40:52  oconnor
 --| merged changes from prerelease_20000214

@@ -36,6 +36,15 @@ feature -- Access
 		ensure
 			positive_result: Result >= 0
 		end
+
+	spacing: INTEGER is
+			-- Spacing between the objects in the box
+		require
+			exists: not destroyed
+		deferred
+		ensure
+			positive_result: Result >= 0
+		end
 	
 feature -- Status settings
 	

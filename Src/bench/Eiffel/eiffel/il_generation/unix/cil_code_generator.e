@@ -1468,8 +1468,14 @@ feature -- Basic feature
 		do
 		end
 
-	generate_is_digit is
-			-- Generate `is_digit' on CHARACTER.
+	generate_is_query_on_character (query_name: STRING) is
+			-- Generate is_`query_name' on CHARACTER returning a boolean.
+		require
+			query_name_not_void: query_name /= Void
+		do
+		end
+
+	generate_upper_lower (is_upper: STRING) is
 		do
 		end
 

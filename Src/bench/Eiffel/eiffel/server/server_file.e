@@ -189,6 +189,7 @@ end
 		do
 			file_close (file_pointer)
 			is_open := False
+			file_pointer := default_pointer
 debug ("SERVER")
 	io.error.put_string ("Closing file ")
 	io.error.put_string (id.file_name)
@@ -201,13 +202,12 @@ end
 	clear_content is
 			-- Clear the content of a file by opening it
 			-- in write-only mode and closing it.
-		require
-			exists: exists
 		local
 			external_name: ANY
 		do
 			external_name := name.to_c
 			file_pointer := file_open ($external_name, 1)
+			is_open := True
 			close
 		end
 

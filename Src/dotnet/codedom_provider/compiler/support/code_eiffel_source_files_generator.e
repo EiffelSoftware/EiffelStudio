@@ -17,6 +17,11 @@ inherit
 			{NONE} all
 		end
 
+	CODE_SHARED_EVENT_MANAGER
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -27,8 +32,35 @@ feature -- Initialization
 		require
 			non_void_directory: a_dir /= Void
 			valid_directory: (create {DIRECTORY}.make (a_dir)).exists
+		local
+			l_content: LIST [STRING]
+			l_file: RAW_FILE
+			l_item, l_file_name, l_dir: STRING
+			l_count: INTEGER
 		do
 			create destination_directory.make (a_dir)
+			l_content := destination_directory.linear_representation
+			from
+				l_content.start
+			until
+				l_content.after
+			loop
+				l_item := l_content.item
+				l_count := l_item.count
+				if l_item.substring (l_count - 1, l_count).is_equal (".e") then
+					l_dir := destination_directory.name
+					create l_file_name.make (l_dir.count + l_count + 1)
+					l_file_name.append (l_dir)
+					l_file_name.append_character ((create {OPERATING_ENVIRONMENT}).Directory_separator)
+					l_file_name.append (l_item)
+					create l_file.make (l_file_name)
+					if l_file.exists then
+						Event_manager.raise_event (feature {CODE_EVENTS_IDS}.File_deletion, [l_file.name])
+						l_file.delete
+					end
+				end
+				l_content.forth
+			end
 			last_index_suffix := 1
 		ensure
 			destination_directory_set: destination_directory.name.is_equal (a_dir)

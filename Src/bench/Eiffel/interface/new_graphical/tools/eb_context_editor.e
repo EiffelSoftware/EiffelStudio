@@ -455,6 +455,7 @@ feature -- Status setting
 				if l_class_view /= Void then
 					class_view := l_class_view
 				end
+				reset_scrollbars
 				last_build_cancelled := False
 			else
 				clear_area

@@ -296,6 +296,7 @@ feature {GB_DELETE_OBJECT_COMMAND} -- Basic operation
 		local
 			window_selector_item: GB_WINDOW_SELECTOR_ITEM
 			instance_referers: HASH_TABLE [INTEGER, INTEGER]
+			command_flatten: GB_COMMAND_FLATTEN_OBJECT
 		do
 			window_selector_item ?= selector_item
 			if window_selector_item /= Void then
@@ -309,7 +310,8 @@ feature {GB_DELETE_OBJECT_COMMAND} -- Basic operation
 						instance_referers.is_empty
 					loop
 						instance_referers.start
-						object_handler.deep_object_from_id (instance_referers.item_for_iteration).flatten
+						create command_flatten.make (object_handler.deep_object_from_id (instance_referers.item_for_iteration), False)
+						command_flatten.execute
 					end
 				end
 			end

@@ -20,7 +20,8 @@ create
 
 feature {NONE} -- Initalization
 
-	make (a_name: STRING; list_creator: like list_agent; item_creator: like item_agent) is
+	make (a_name: STRING; list_creator: like list_agent;
+			item_creator: like item_agent) is
 			-- test `a_list'.
 		require
 			a_name_not_void: a_name /= Void
@@ -51,7 +52,7 @@ feature -- Basic operation
 		--	test_list.extend (["extend", ~test_extend])
 		--	test_list.extend (["put", ~test_put])
 		--	test_list.extend (["replace", ~test_replace])
-		--	test_list.extend (["put_left", ~test_put_left])
+			test_list.extend (["put_left", ~test_put_left])
 		--	test_list.extend (["put_right", ~test_put_right])
 		--	test_list.extend (["put_i_th", ~test_put_i_th])
 		--	test_list.extend (["force", ~test_force])
@@ -63,9 +64,9 @@ feature -- Basic operation
 		--	test_list.extend (["remove_right", ~test_remove_right])
 		--	test_list.extend (["append", ~test_append])
 		--	test_list.extend (["fill", ~test_fill])
-			test_list.extend (["append", ~test_append])
+		--	test_list.extend (["append", ~test_append])
 			test_list.extend (["merge_left", ~test_merge_left])
-			test_list.extend (["merge_right", ~test_merge_right])
+		--	test_list.extend (["merge_right", ~test_merge_right])
 
 			description.append ("Initial state... ")
 			append_result
@@ -88,7 +89,8 @@ feature -- Basic operation
 		rescue
 			test_successful := False
 			if assertion_violation then
-				description.append ("%N*** assertion failed: " + tag_name + " ***%N")
+				description.append ("%N*** assertion failed: " +
+					tag_name + " ***%N")
 			else
 				description.append ("%N" + meaning (exception) + "%N")
 			end
@@ -102,12 +104,12 @@ feature -- Basic operation
 			check
 				testcase_correct: list.empty and then similar_list.empty
 			end
-			description.append ("Testing feature `" + name + "' with state `empty'...")
 			test_agent.call ([])
-			append_result
+			append_result (name, "empty")
 		end
 
-	fill_start_and_test (test_agent: PROCEDURE [ANY, TUPLE []]; name: STRING) is
+	fill_start_and_test (test_agent: PROCEDURE [ANY, TUPLE []];
+			name: STRING) is
 		do
 			fill_lists
 			list.start
@@ -115,12 +117,12 @@ feature -- Basic operation
 			check
 				testcase_correct: list.isfirst and then similar_list.isfirst
 			end
-			description.append ("Testing feature `" + name + "' with state `isfirst'...")
 			test_agent.call ([])
-			append_result
+			append_result (name, "isfirst")
 		end
 
-	fill_go_middle_and_test (test_agent: PROCEDURE [ANY, TUPLE []]; name: STRING) is
+	fill_go_middle_and_test (test_agent: PROCEDURE [ANY, TUPLE []];
+			name: STRING) is
 		do
 			fill_lists
 			list.go_i_th (Testsize)
@@ -128,12 +130,12 @@ feature -- Basic operation
 			check
 				testcase_correct: not list.off and then not similar_list.off
 			end
-			description.append ("Testing feature `" + name + "' with cursor somewhere in middle...")
 			test_agent.call ([])
-			append_result
+			append_result (name, "not off")
 		end
 
-	fill_finish_and_test (test_agent: PROCEDURE [ANY, TUPLE []]; name: STRING) is
+	fill_finish_and_test (test_agent: PROCEDURE [ANY, TUPLE []];
+			name: STRING) is
 		do
 			fill_lists
 			list.finish
@@ -141,12 +143,12 @@ feature -- Basic operation
 			check
 				testcase_correct: list.islast and then similar_list.islast
 			end
-			description.append ("Testing feature `" + name + "' with state `islast'...")
 			test_agent.call ([])
-			append_result
+			append_result (name, "islast")
 		end
 
-	fill_go_before_and_test (test_agent: PROCEDURE [ANY, TUPLE []]; name: STRING) is
+	fill_go_before_and_test (test_agent: PROCEDURE [ANY, TUPLE []];
+			name: STRING) is
 		do
 			fill_lists
 			list.go_i_th (0)
@@ -154,12 +156,12 @@ feature -- Basic operation
 			check
 				testcase_correct: list.before and then similar_list.before
 			end
-			description.append ("Testing feature `" + name + "' with state `before'...")
 			test_agent.call ([])
-			append_result
+			append_result (name, "before")
 		end
 
-	fill_go_after_and_test (test_agent: PROCEDURE [ANY, TUPLE []]; name: STRING) is
+	fill_go_after_and_test (test_agent: PROCEDURE [ANY, TUPLE []];
+			name: STRING) is
 		do
 			fill_lists
 			list.go_i_th (list.count + 1)
@@ -167,15 +169,15 @@ feature -- Basic operation
 			check
 				testcase_correct: list.after and then similar_list.after
 			end
-			description.append ("Testing feature `" + name + "' with state `after'...")
 			test_agent.call ([])
-			append_result
+			append_result (name, "after")
 		end
 
 feature -- Access
 
 	description: STRING
-			-- Description of the test, its results and other (ir)relevant information.
+			-- Description of the test, its results and other
+			-- (ir)relevant information.
 
 	subject_name: STRING
 			-- The classname of the DYNAMIC_LIST.
@@ -232,81 +234,71 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	avoid_cond: BOOLEAN is
+	append_result (feature_name, test_state: STRING) is
+			-- Append a message if test with `feature_name' in
+			-- `test_state' failed.
 		do
-			--description.append ("Your list's item: " + item_text (list.item) + "; LINKED_LIST: " + item_text (similar_list.item) + "%N")
-			Result := True
+			if error_message /= Void then
+				description.append ("Testing feature `" + feature_name +
+					"' with state `" + test_state + "'...")
+				description.append (error_message + "%N")
+				test_successful := False
+			end
 		end
 
-	append_result is
-		require
-			avoid_cond
+	error_message: STRING is
 		do
 			if list.count /= similar_list.count then
-				description.append (" `count' incorrect.%N")
-				test_successful := False
+				Result := "`count' incorrect."
 			elseif list.empty /= similar_list.empty then 
-				description.append (" `empty' incorrect.%N")
-				test_successful := False
-			elseif not similar_list.empty and then list.first /= similar_list.first then 
-				description.append (" `first' incorrect.%N")
-				test_successful := False
+				Result := "`empty' incorrect."
+			elseif not similar_list.empty and then
+					list.first /= similar_list.first then 
+				Result := "`first' incorrect."
 			elseif list.has (last_item) /= similar_list.has (last_item) then 
-				description.append (" `has' incorrect.%N")
-				test_successful := False
+				Result := "`has' incorrect."
 			elseif list.after /= similar_list.after then 
-				description.append (" `after' incorrect.%N")
+				Result := "`after' incorrect."
 				description.append ("Your list's after: " + list.after.out + "; LINKED_LIST: " + similar_list.after.out + ".%N")
-				test_successful := False
 			elseif list.before /= similar_list.before then 
-				description.append (" `before' incorrect.%N")
-				test_successful := False
+				Result := "`before' incorrect."
 			elseif list.off /= similar_list.off then 
-				description.append (" `off' incorrect.%N")
-				test_successful := False
-			elseif similar_list.valid_index (1) and then list.i_th (1) /= similar_list.i_th (1) then 
-				description.append (" `i_th' incorrect.%N")
-				test_successful := False
+				Result := "`off' incorrect."
+			elseif similar_list.valid_index (1)
+					and then list.i_th (1) /= similar_list.i_th (1) then 
+				Result := "`i_th' incorrect."
 			elseif list.index /= similar_list.index then
-				description.append (" index incorrect.%N")
-				description.append ("Your list's index: " + list.index.out + "; LINKED_LIST: " + similar_list.index.out + ".%N")
-				test_successful := False
-			elseif list.index_of (last_item, 1) /= similar_list.index_of (last_item, 1) then 
-				description.append (" `index_of' incorrect.%N")
-				test_successful := False
-			elseif (not similar_list.off) and then list.item /= similar_list.item then 
-				description.append (" `item' incorrect.%N")
+				Result := "`index' incorrect.%N" +
+					"Your list's index: " + list.index.out +
+					"; LINKED_LIST: " + similar_list.index.out + "."
+			elseif list.index_of (last_item, 1) /= similar_list.index_of (
+					last_item, 1) then 
+				Result := "`index_of' incorrect."
+			elseif (not similar_list.off)
+					and then list.item /=similar_list.item then 
+				Result := "`item' incorrect."
 				description.append ("Your list's item: " + item_text (list.item) + "; LINKED_LIST: " + item_text (similar_list.item) + "%N")
-				test_successful := False
-			elseif not similar_list.empty and then list.last /= similar_list.last then 
-				description.append (" `last' incorrect.%N")
-				test_successful := False
-			elseif list.sequential_occurrences (last_item) /= similar_list.sequential_occurrences (last_item) then 
-				description.append (" `sequential_occurrences' incorrect.%N")
-				test_successful := False
-			elseif list.occurrences (last_item) /= similar_list.occurrences (last_item) then 
-				description.append (" `occurrences' incorrect.%N")
-				test_successful := False
+			elseif not similar_list.empty
+					and then list.last /= similar_list.last then 
+				Result := "`last' incorrect."
+			elseif list.sequential_occurrences (last_item) /=
+					similar_list.sequential_occurrences (last_item) then 
+				Result := "`sequential_occurrences' incorrect."
+			elseif list.occurrences (last_item) /=
+					similar_list.occurrences (last_item) then 
+				Result := "`occurrences' incorrect."
 			elseif list.empty /= similar_list.empty then 
-				description.append (" `empty' incorrect.%N")
-				test_successful := False
+				Result := "`empty' incorrect."
 			elseif list.exhausted /= similar_list.exhausted then 
-				description.append (" `exhausted' incorrect.%N")
-				test_successful := False
+				Result := "`exhausted' incorrect."
 			elseif list.full /= similar_list.full then 
-				description.append (" `full' incorrect.%N")
-				test_successful := False
+				Result := "`full' incorrect."
 			elseif list.isfirst /= similar_list.isfirst then 
-				description.append (" `isfirst' incorrect.%N")
-				test_successful := False
+				Result := "`isfirst' incorrect."
 			elseif list.islast /= similar_list.islast then 
-				description.append (" `islast' incorrect.%N")
-				test_successful := False
+				Result := "`islast' incorrect."
 			elseif not items_equal then 
-				description.append (" items incorrect.%N")
-				test_successful := False
-			else
-				description.append (" OK%N")
+				Result := "items incorrect."
 			end
 		end
 
@@ -667,7 +659,8 @@ feature {NONE} -- Implementation
 			until
 				n < 1
 			loop
-				if not similar_list.off and then similar_list.valid_index (n) then
+				if not similar_list.off
+						and then similar_list.valid_index (n) then
 					list.swap (n)
 					similar_list.swap (n)
 				end
@@ -702,6 +695,10 @@ end -- class EV_LIST_TEST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.17  2000/03/03 18:54:11  brendel
+--| Formatted for 80 columns.
+--| Does not display anything for succeeded tests to avoid huge description.
+--|
 --| Revision 1.16  2000/03/02 19:54:31  brendel
 --| Added 1 comment.
 --|

@@ -41,6 +41,8 @@
 
 #define GEN_MAX	8				/* Maximum number of generic parameters */
 
+/* Null pointer */
+rt_private	const void *eif_default_pointer = NULL;
 /* Function declarations */
 rt_private int cid_to_dtype(EIF_TYPE_ID cid);		/* Converts a class ID into a dynamic type */
 rt_private int locate(EIF_REFERENCE object, char *name);			/* Locate attribute by name in skeleton */
@@ -265,7 +267,7 @@ rt_public EIF_REFERENCE_FUNCTION eifref(char *routine, EIF_TYPE_ID cid)
 #ifndef WORKBENCH
 	ref = (EIF_REFERENCE_FUNCTION *) ct_value(ptr_table, routine);	/* Code location */
 	if (!ref)	/* Was function found? */
-		if (!eif_ignore_invisible)	/* Is Visible exception enabled? */
+		if (eif_ignore_invisible)	/* Is Visible exception enabled? */
 			eraise ("Unknown routine (visible?)", EN_PROG);	
 		else
 			return (EIF_REFERENCE_FUNCTION) 0;
@@ -409,8 +411,9 @@ rt_public void *eifaddr(EIF_REFERENCE object, char *name, int * const ret)
 	i = locate(object, name);		/* Locate attribute in skeleton */
 	if (i == EIF_NO_ATTRIBUTE) {					/* Attribute not found */
 		*ret = EIF_NO_ATTRIBUTE;	/* Set "*ret" */
-		eif_panic ("Attribute not found.");
-		return (void *) 0;	/* NOTREACHED */	
+		if (!eif_ignore_invisible)	
+			eraise ("Unknown attribute (visible?)", EN_PROG);
+		return &eif_default_pointer;	/* NOTREACHED */	
 						   
 	}
 

@@ -109,14 +109,6 @@ feature -- Access
 			Result.set_file_name (Driver)
 		end
 
-	precompiled_descobj: FILE_NAME is
-			-- Full name of the precompilation descriptor tables
-		do
-			!! Result.make_from_string (name);
-			Result.extend_from_array (<<Eiffelgen, W_code>>);
-			Result.set_file_name (Descobj)
-		end
-
 feature -- Check
 
 	check_precompiled is
@@ -133,7 +125,6 @@ feature -- Check
 			if has_precompiled_preobj then
 				check_precompiled_optional (<<Eiffelgen, W_code>>, Preobj)
 			end;
-			check_precompiled_optional (<<Eiffelgen, W_code>>, Descobj)
 		end
 
 	check_extendible is

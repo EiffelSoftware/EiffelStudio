@@ -951,8 +951,10 @@ feature {COMPILER_EXPORTER} -- Element change
 			new_class_not_void: new_class /= Void
 			old_class_not_void: old_class /= Void
 		do
-			new_class.reset_class_c_information (old_class.compiled_class)
-			workbench.change_class (new_class)
+			if old_class.is_compiled then
+				new_class.reset_class_c_information (old_class.compiled_class)
+				workbench.change_class (new_class)
+			end
 			if workbench.automatic_backup then
 				record_moved_class (old_class.name, old_class.file_name, new_class.file_name)
 			end

@@ -52,14 +52,16 @@ feature -- Access
 				create label.make_with_text ("Item texts:")
 				Result.extend (label)
 			end
+			create text_entries.make (4)
 			from
 				first.start
 			until
 				first.off
 			loop
-				create name_field.make_with_text (first.item_text (first.item))
-				name_field.change_actions.extend (agent change_item_text (name_field, first.index))
-				Result.extend (name_field)
+				create text_entry.make (Current, Result, item_text_string + first.index.out, Gb_ev_textable_text + first.index.out, Gb_ev_textable_text_tooltip,
+				agent set_text (?, first.index), agent validate_true (?), single_line_entry)
+				text_entry.hide_label
+				text_entries.extend (text_entry)
 				first.forth
 			end
 
@@ -84,6 +86,14 @@ feature -- Access
 				left_item.enable_select
 			end
 			combo_box.select_actions.resume
+			from
+				text_entries.start
+			until
+				text_entries.off
+			loop
+				text_entries.item.update_constant_display (first.item_text (first.i_th (text_entries.index)))
+				text_entries.forth
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -91,8 +101,24 @@ feature {NONE} -- Implementation
 	initialize_agents is
 			-- Initialize `validate_agents' and `execution_agents' to
 			-- contain all agents required for modification of `Current.
+		local
+			counter: INTEGER
 		do
-			-- Nothing to perform here
+				-- When using constants for notebook items, the validation agents need to be dynamic.
+				-- Unfortunately, the mechanism is not currently set up in this fashion.
+				-- Therefore we add 32 agents, to cover handling of notebooks with up to 32 items.
+				-- If more items are contained, and a user changes a constant value used as
+				-- a notebook item text for an index greater than 32, EiffelBuild will crash.
+				-- This is extremely unlikely although a better solution needs to be found.
+			from
+				counter := 1
+			until
+				counter > 32
+			loop
+				validate_agents.extend (agent validate_true (?), item_text_string + counter.out)
+				execution_agents.extend (agent set_text (?, counter), item_text_string + counter.out)
+				counter := counter + 1
+			end
 		end
 
 	selection_changed is
@@ -116,6 +142,20 @@ feature {NONE} -- Implementation
 			end
 			enable_project_modified
 		end
+
+	set_text (a_string: STRING; index: INTEGER) is
+			--
+		local
+			second: like ev_type
+		do
+			first.set_item_text (first.i_th (index), a_string)
+			second := objects @ 2
+			if second /= Void then
+				second.set_item_text (second.i_th (index), a_string)
+			end
+			enable_project_modified
+		end
+		
 		
 	names_from_string (a_string: STRING): ARRAYED_LIST [STRING] is
 			-- `Result' is all tab names encoded in `a_string'.
@@ -167,6 +207,9 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
+		
+	text_entries: ARRAYED_LIST [GB_STRING_INPUT_FIELD]
+		-- All text entries created to permit entry of item texts.
 
 	combo_box: EV_COMBO_BOX
 		-- Holds possible tab positions.
@@ -181,10 +224,18 @@ feature {NONE} -- Implementation
 		-- String used to represent the tab position in the XML.
 	Item_text_string: STRING is "Item_text"
 		-- String used to represent the texts of the tabs in the XML.
+		
+	Item_text_string_new: STRING is "Item_texts"
+		-- String used to represent the parent node for the texts in the XML.
+		-- This has been added to permit the item texts of notebooks to
+		-- support constants.
 	
 	separator_char: CHARACTER is '^'
 	
 	top_item, bottom_item, left_item, right_item: EV_LIST_ITEM
 		-- Selctions for combo box.
+		
+	text_entry: GB_STRING_INPUT_FIELD
+		-- Input field for text.
 
 end -- class GB_EV_NOTEBOOK_EDITOR_CONSTRUCTOR

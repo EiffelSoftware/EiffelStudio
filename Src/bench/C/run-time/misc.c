@@ -20,6 +20,11 @@
 #include "macros.h"
 #include "cecil.h"
 
+#ifdef __WATCOMC__
+#include "windows.h"
+#include "argv.h"
+#endif
+
 /*
  * Various casts.
  */
@@ -57,7 +62,7 @@ EIF_DOUBLE d;
 public EIF_INTEGER conv_di(d)
 EIF_DOUBLE d;
 {
-	return (EIF_INTEGER) d;    /* (EIF_DOUBLE) -> (EIF_INTEGER) */
+	return (EIF_INTEGER) d;		/* (EIF_DOUBLE) -> (EIF_INTEGER) */
 }
 
 public EIF_INTEGER bointdiv(n1, n2)
@@ -77,7 +82,7 @@ EIF_INTEGER n1, n2;
 	 * integer division of `n1' by `n2'
 	 */
 
-    return ((n1 >= 0) ^ (n2 > 0)) ? n1 / n2: ((n1 % n2) ? n1 / n2 + 1: n1 / n2);
+	return ((n1 >= 0) ^ (n2 > 0)) ? n1 / n2: ((n1 % n2) ? n1 / n2 + 1: n1 / n2);
 }
 
 /*
@@ -152,11 +157,19 @@ char *s;
 
 	Signal_t (*old_signal_hdlr)();
 
+#ifdef SIGCLD
 	old_signal_hdlr = signal (SIGCLD, SIG_IGN);
-
+#endif
+#ifdef __WATCOMC__
+	result = WinExec (s, SW_SHOWNORMAL);
+	if (result > 32)
+		result = 0;
+#else
 	result = (EIF_INTEGER) system (s);
-
+#endif
+#ifdef SIGCLD
 	(void)signal (SIGCLD, old_signal_hdlr);
+#endif
 
 	return result;
 }
@@ -172,6 +185,19 @@ EIF_OBJ v,k;
 	int l1, l2;
 	char *s1;
 
+#ifdef __WATCOMC__
+	EIF_INTEGER result;
+	char *ini;
+
+	if ((ini = (char *) calloc (strlen(eif_argv[0])+1,1)) == (char *)0)
+		return (EIF_INTEGER) -1;
+
+	strncpy (ini,eif_argv[0], rindex(eif_argv[0],'.')-eif_argv[0]);
+	strcat (ini, ".INI");
+	result = WritePrivateProfileString("Environment", eif_access (v), eif_access (k), ini);
+	free (ini);
+	return (result ? 0 : -1);  /* Non zero indicate ok - yuk */
+#else
 	l1 = strlen(eif_access(k));
 	l2 = strlen(eif_access(v));
 
@@ -183,12 +209,27 @@ EIF_OBJ v,k;
 	strcat (new_string, eif_access(v));
 
 	return (EIF_INTEGER) putenv (new_string);
+#endif
 }
 
 public EIF_OBJ eif_getenv (k)
 EIF_OBJ k;
 {
+#ifdef __WATCOMC__
+	char *ini;
+	static buf[128];
+
+	if ((ini = (char *) calloc (strlen(eif_argv[0])+1,1)) == (char *)0)
+		return (EIF_INTEGER) 0;
+
+	strncpy (ini, eif_argv[0], rindex(eif_argv[0],'.')-eif_argv[0]);
+	strcat (ini, ".INI");
+	GetPrivateProfileString ("Environment", k, "", buf, 128, ini);
+	free (ini);
+	return buf;
+#else
 	return (EIF_OBJ) getenv (k);
+#endif
 }
 
 /***************************************/

@@ -257,6 +257,8 @@ feature -- Basic operations
 										referees.item (i).forth
 									end
 									descriptors.put (Void, i)
+								else
+									alias_descriptor.set_c_header_file_name (clone (Alias_header_file_name))
 								end
 							end
 						end

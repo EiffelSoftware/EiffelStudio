@@ -288,10 +288,12 @@ feature -- Conversion
 	to_c: ANY is
 			-- Address of actual sequence of values,
 			-- for passing to external (non-Eiffel) routines.
-		require
-			finite: upper_defined and lower_defined
+		obsolete
+			"No replacement"
 		do
-			Result := as_array.to_c
+			check
+				False
+			end
 		end
 
 	linear_representation: LINEAR [INTEGER] is

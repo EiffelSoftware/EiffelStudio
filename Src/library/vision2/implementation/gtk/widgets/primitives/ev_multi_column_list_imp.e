@@ -1122,6 +1122,8 @@ feature {NONE} -- Implementation
 			-- remove the row from the `ev_children'
 			ev_children.go_i_th (a_position)
 			ev_children.remove
+			child_array.go_i_th (a_position)
+			child_array.remove
 			update_pnd_status
 		end
 

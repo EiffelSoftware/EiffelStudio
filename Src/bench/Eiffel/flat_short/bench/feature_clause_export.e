@@ -9,7 +9,7 @@ inherit
 		undefine
 			is_equal
 		end;
-	SPECIAL_AST
+	SPECIAL_AST_B
 
 creation
 
@@ -18,14 +18,14 @@ creation
 
 feature
 
-	make (ast: FEATURE_AS; f: FEATURE_I) is
+	make (ast: FEATURE_AS_B; f: FEATURE_I) is
 		do
 			reference := f.export_status;
 			!!features.make;
 			add (ast);
 		end;
 
-	features: SORTED_TWO_WAY_LIST [FEATURE_AS];
+	features: SORTED_TWO_WAY_LIST [FEATURE_AS_B];
 	
 	comment: EIFFEL_COMMENTS;
 
@@ -35,7 +35,7 @@ feature
 		end;
 
 	
-	add (f: FEATURE_AS) is
+	add (f: FEATURE_AS_B) is
 		do
 			if not order_same_as_text then
 				features.extend (f);
@@ -78,7 +78,7 @@ feature
 			features.merge (other.features);			
 		end;
 
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: FORMAT_CONTEXT_B) is
 			-- Reconstitute text
 		do
 			ctxt.put_text_item (ti_Before_feature_clause);

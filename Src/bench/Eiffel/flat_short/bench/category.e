@@ -6,7 +6,7 @@ inherit
 		undefine
 			is_equal
 		end;
-	SPECIAL_AST
+	SPECIAL_AST_B
 
 creation
 
@@ -145,7 +145,7 @@ feature
 			end;
 		end
 
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: FORMAT_CONTEXT_B) is
 			-- Reconstitute text
 		do
 			ctxt.begin;

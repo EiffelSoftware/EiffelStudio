@@ -79,10 +79,10 @@ feature {EV_TREE_ITEM_IMP} -- Implementation
 			
 			if t_item.is_selected then
 				t_item.interface.select_actions.call ([])
-				interface.select_actions.call ([])
+				interface.select_actions.call ([t_item.interface])
 				previous_selected_item := t_item.interface
 			else
-				interface.deselect_actions.call ([])
+				interface.deselect_actions.call ([t_item.interface])
 				previous_selected_item := Void
 			end		
 		end
@@ -257,6 +257,9 @@ end -- class EV_TREE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.32  2000/03/06 20:13:51  king
+--| Made compatible with new action sequence
+--|
 --| Revision 1.31  2000/03/02 00:27:49  king
 --| Updated bug comment
 --|

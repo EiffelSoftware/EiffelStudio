@@ -122,21 +122,31 @@ feature {NONE} -- Initialization
 		end
 
 	select_callback (int: TUPLE [INTEGER]) is
+		local
+			temp_int: INTEGER_REF
+			a_position: INTEGER
+			an_item: EV_MULTI_COLUMN_LIST_ROW
 		do
-			interface.select_actions.call ([])
-			selected_item.select_actions.call ([])
+			temp_int ?= int.item (1)
+			a_position := temp_int.item + 1
+
+			an_item := interface.i_th (a_position)
+			an_item.select_actions.call ([])
+			interface.select_actions.call ([an_item])
 		end
 
 	deselect_callback (int: TUPLE [INTEGER]) is
 		local
 			temp_int: INTEGER_REF
 			a_position: INTEGER
+			an_item: EV_MULTI_COLUMN_LIST_ROW
 		do
 			temp_int ?= int.item (1)
 			a_position := temp_int.item + 1
-
-			interface.i_th (a_position).deselect_actions.call ([])
-			interface.deselect_actions.call ([])
+			
+			an_item := interface.i_th (a_position)
+			an_item.deselect_actions.call ([])
+			interface.deselect_actions.call ([an_item])
 		end
 
 	column_click_callback (int: TUPLE [INTEGER]) is
@@ -570,6 +580,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.38  2000/03/06 20:12:29  king
+--| Made compatible with new action sequence
+--|
 --| Revision 1.37  2000/03/04 00:25:54  king
 --| Commented out redundant code that deals with setting individual colors of rows
 --|

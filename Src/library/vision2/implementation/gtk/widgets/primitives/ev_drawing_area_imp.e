@@ -60,9 +60,6 @@ feature {NONE} -- Implementation
 
 	default_key_processing_blocked (a_key: EV_KEY): BOOLEAN is
 		do
-			if a_key.code = App_implementation.Key_constants.Key_down then
-				C.gtk_widget_queue_draw (visual_widget)
-			end
 			if a_key.is_arrow or else a_key.code = App_implementation.Key_constants.key_tab then
 				Result := True
 			end
@@ -160,14 +157,12 @@ feature {NONE} -- Implementation
 			-- Key event has occured
 		do
 			Precursor {EV_PRIMITIVE_IMP} (a_key, a_key_string, a_key_press)
-			if not a_key_press then
-				if 
-					a_key.code = App_implementation.Key_constants.Key_up or else a_key.code = App_implementation.Key_constants.Key_down
-				then
-					-- This is a hack for Studio to force trailing cursors to be undrawn upon key scrolling.
-					C.gtk_widget_queue_draw (c_object)
-				end				
-			end
+			if 
+				a_key.code = App_implementation.Key_constants.Key_up or else a_key.code = App_implementation.Key_constants.Key_down
+			then
+				-- This is a hack for Studio to force trailing cursors to be undrawn upon key scrolling.
+				C.gtk_widget_queue_draw (c_object)
+			end				
 		end
 
 	destroy is

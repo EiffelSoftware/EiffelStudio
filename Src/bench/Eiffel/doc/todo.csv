@@ -197,8 +197,8 @@ compiler,,,,,,,
 ,3,Warn the user when an attribute or local is initialized but never used,Xavier,CMP0037,,,
 ,3,"When an attribute is never queried (recursive check in callers), discard it and its initializations altogether",Xavier,CMP0037,,,
 ,2,"When an attribute is always accessed polymorphically in its class, make sure it is put in a local variable in the case there is no function call that could modify its value and that we are not in multithreaded mode",Manus,CMP0038,,,
-
-
+,3,Detect changes made in external editor and in override cluster,Manus,CMP0039,,,
+,3,Having the ability to not display an output or to redirect all outputs into a FILE rather than on the console,Manus,CMP0040,,,
 
 
 

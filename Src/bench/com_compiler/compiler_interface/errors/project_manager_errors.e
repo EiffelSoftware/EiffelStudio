@@ -1,6 +1,5 @@
 indexing
-  description: "Objects that ..."
-  author: ""
+  description: "Errors that can happen during project loading/compiling"
   date: "$Date$"
   revision: "$Revision$"
 
@@ -8,7 +7,7 @@ class
 	PROJECT_MANAGER_ERRORS
   
 inherit
-	ECOM_eif_exceptions_ENUM
+	ECOM_EIF_EXCEPTIONS_ENUM
 		export
 			{NONE} all
 		end

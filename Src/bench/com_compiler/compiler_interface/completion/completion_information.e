@@ -139,8 +139,7 @@ feature -- Access
 							feature_table.search (targets.first)
 							if feature_table.found then
 								create Result.make_with_class_i_and_feature_i (ci, feature_table.found_item)
-							end
-							if Result = Void then
+							else
 								Result := completion_feature (target, file_name)
 							end
 						else
@@ -221,6 +220,7 @@ feature -- Access
 			-- `return_signatures' [out].
 			-- `return_image_indexes' [out].
 		local
+			l_target_features_finder: TARGET_FEATURES_FINDER
 			l_entries: like completion_list_for_target
 			l_entry: COMPLETION_ENTRY
 			l_feature_descriptor: FEATURE_DESCRIPTOR
@@ -231,74 +231,72 @@ feature -- Access
 			l_image_indexes: ECOM_ARRAY [INTEGER]
 			l_image_index_enum: ECOM_EIF_ENTITY_IMAGES_ENUM
 			l_image_index: INTEGER
-			retried: BOOLEAN
 		do
-			if not retried then
+			create l_target_features_finder.make (file_name)
+			l_target_features_finder.set_locals (locals)
+			l_target_features_finder.set_arguments (arguments)
+			l_target_features_finder.set_completion_features (completion_features)
+			l_target_features_finder.set_feature_name (feature_name)
+			l_target_features_finder.find (target, use_overloading)
+			if l_target_features_finder.found then
+				l_entries := l_target_features_finder.found_items
 				create l_image_index_enum
-				l_entries := completion_list_for_target (target, feature_name, file_name)
-				if l_entries /= Void then
-					create l_names.make (1, <<1>>, <<l_entries.count>>)
-					create l_signatures.make (1, <<1>>, <<l_entries.count>>)
-					create l_image_indexes.make (1, <<1>>, <<l_entries.count>>)
-					
-					from 
-						l_index := 1
-					until
-						l_index > l_entries.count
-					loop
-						l_entry := l_entries.i_th (l_index)
-						l_names.put (clone (l_entry.name), <<l_index>>)
-						l_signatures.put (clone (l_entry.signature), <<l_index>>)
-		
-						create l_bool_ref
-						l_entry.is_feature (l_bool_ref)
-						if l_bool_ref.item then
-							l_feature_descriptor ?= l_entry
-							if l_feature_descriptor /= Void then
-								if l_feature_descriptor.is_constant or l_feature_descriptor.is_unique then
-									l_image_index := l_image_index_enum.Eif_entity_images_frozen_once
-								elseif l_feature_descriptor.is_attribute then
-									if l_feature_descriptor.is_obsolete then
-										l_image_index := l_image_index_enum.Eif_entity_images_obsolete
-									elseif l_feature_descriptor.is_frozen then
-										l_image_index := l_image_index_enum.Eif_entity_images_frozen_attribute
-									else
-										l_image_index := l_image_index_enum.Eif_entity_images_attribute
-									end
-								elseif l_feature_descriptor.is_once then
-									if l_feature_descriptor.is_obsolete then
-										l_image_index := l_image_index_enum.Eif_entity_images_obsolete
-									elseif l_feature_descriptor.is_frozen then
-										l_image_index := l_image_index_enum.Eif_entity_images_frozen_attribute
-									else
-										l_image_index := l_image_index_enum.Eif_entity_images_once
-									end
-								elseif l_feature_descriptor.is_obsolete then
+				create l_names.make (1, <<1>>, <<l_entries.count>>)
+				create l_signatures.make (1, <<1>>, <<l_entries.count>>)
+				create l_image_indexes.make (1, <<1>>, <<l_entries.count>>)
+				from 
+					l_index := 1
+				until
+					l_index > l_entries.count
+				loop
+					l_entry := l_entries.i_th (l_index)
+					l_names.put (clone (l_entry.name), <<l_index>>)
+					l_signatures.put (clone (l_entry.signature), <<l_index>>)
+	
+					create l_bool_ref
+					l_entry.is_feature (l_bool_ref)
+					if l_bool_ref.item then
+						l_feature_descriptor ?= l_entry
+						if l_feature_descriptor /= Void then
+							if l_feature_descriptor.is_constant or l_feature_descriptor.is_unique then
+								l_image_index := l_image_index_enum.Eif_entity_images_frozen_once
+							elseif l_feature_descriptor.is_attribute then
+								if l_feature_descriptor.is_obsolete then
 									l_image_index := l_image_index_enum.Eif_entity_images_obsolete
-								elseif l_feature_descriptor.is_frozen and l_feature_descriptor.is_external then
-									l_image_index := l_image_index_enum.Eif_entity_images_frozen_external
 								elseif l_feature_descriptor.is_frozen then
-									l_image_index := l_image_index_enum.Eif_entity_images_frozen_feature
-								elseif l_feature_descriptor.is_external then
-									l_image_index := l_image_index_enum.Eif_entity_images_external_feature
-								elseif l_feature_descriptor.is_deferred then
-									l_image_index := l_image_index_enum.Eif_entity_images_deferred
+									l_image_index := l_image_index_enum.Eif_entity_images_frozen_attribute
 								else
-									l_image_index := l_image_index_enum.Eif_entity_images_feature
+									l_image_index := l_image_index_enum.Eif_entity_images_attribute
 								end
+							elseif l_feature_descriptor.is_once then
+								if l_feature_descriptor.is_obsolete then
+									l_image_index := l_image_index_enum.Eif_entity_images_obsolete
+								elseif l_feature_descriptor.is_frozen then
+									l_image_index := l_image_index_enum.Eif_entity_images_frozen_attribute
+								else
+									l_image_index := l_image_index_enum.Eif_entity_images_once
+								end
+							elseif l_feature_descriptor.is_obsolete then
+								l_image_index := l_image_index_enum.Eif_entity_images_obsolete
+							elseif l_feature_descriptor.is_frozen and l_feature_descriptor.is_external then
+								l_image_index := l_image_index_enum.Eif_entity_images_frozen_external
+							elseif l_feature_descriptor.is_frozen then
+								l_image_index := l_image_index_enum.Eif_entity_images_frozen_feature
+							elseif l_feature_descriptor.is_external then
+								l_image_index := l_image_index_enum.Eif_entity_images_external_feature
+							elseif l_feature_descriptor.is_deferred then
+								l_image_index := l_image_index_enum.Eif_entity_images_deferred
 							else
-								l_image_index := l_image_index_enum.Eif_entity_images_variable
+								l_image_index := l_image_index_enum.Eif_entity_images_feature
 							end
 						else
 							l_image_index := l_image_index_enum.Eif_entity_images_variable
 						end
-						l_image_indexes.put (l_image_index, <<l_index>>)
-						l_index := l_index + 1
+					else
+						l_image_index := l_image_index_enum.Eif_entity_images_variable
 					end
-				else
-					create l_names.make_empty
-					create l_signatures.make_empty
-					create l_image_indexes.make_empty
+					l_image_indexes.put (l_image_index, <<l_index>>)
+					l_index := l_index + 1
 				end
 			else
 				create l_names.make_empty
@@ -312,9 +310,6 @@ feature -- Access
 			non_void_names: return_names /= Void
 			non_void_signatures: return_signatures /= Void
 			non_void_image_indexes: return_image_indexes /= Void
-		rescue
-			retried := True
-			retry
 		end
 
 	parse_source_for_expr (source_text: STRING; source_row, source_col: INTEGER; expr, feat: CELL [STRING]; is_class_expr: BOOLEAN_REF) is
@@ -1065,26 +1060,38 @@ feature {NONE} -- Implementation
 	Agent_keyword: STRING is "agent"
 			-- Eiffel agent keyword
 	
-	Agent_keyword_length: INTEGER is 5
-			-- Eiffel agent keyword character count
-	
 	Feature_keyword: STRING is "feature"
 			-- Eiffel feature keyword
-	
-	Feature_keyword_length: INTEGER is 7
-			-- Eiffel feature keyword character count
 	
 	Precursor_keyword: STRING is "precursor"
 			-- Eiffel precursor keyword
 	
-	Precursor_keyword_length: INTEGER is 9
-			-- Eiffel precursor keyword character count
-	
 	Create_keyword: STRING is "create"
 			-- Eiffel create keyword
 	
-	Create_keyword_length: INTEGER is 6
+	Agent_keyword_length: INTEGER is
+			-- Eiffel agent keyword character count
+		once
+			Result := Agent_keyword.count
+		end
+	
+	Feature_keyword_length: INTEGER is
+			-- Eiffel feature keyword character count
+		once
+			Result := Feature_keyword.count
+		end
+	
+	Precursor_keyword_length: INTEGER is
+			-- Eiffel precursor keyword character count
+		once
+			Result := Precursor_keyword.count
+		end
+	
+	Create_keyword_length: INTEGER is
 			-- Eiffel create keyword character count
+		once
+			Result := Create_keyword.count
+		end
 	
 	class_i: CLASS_I
 			-- Class in which code is being completed

@@ -510,6 +510,7 @@ feature {NONE} -- Implementation
 			create split_area
 			horizontal_box.extend (split_area)
 			create vertical_box
+			scrollable_area.set_minimum_width (100)
 			split_area.extend (scrollable_area)
 			split_area.enable_item_expand (scrollable_area)
 			split_area.extend (vertical_box)
@@ -1260,7 +1261,7 @@ feature {NONE} -- Attributes
 	select_prompt: STRING is "Please select desired widget."
 		-- Prompt to help user.
 		
-	full_prompt: STRING is "Child fills table. Resize to manipulate."
+	full_prompt: STRING is "Child fills table. Resize table to manipulate."
 		-- Prompt when table is full.
 		
 	position_prompt: STRING is "Position highlighted widget."

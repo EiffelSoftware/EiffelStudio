@@ -93,7 +93,7 @@ feature -- Basic Operations
 					update_client_assembly_mappings (l_ca)
 				end
 				if cache_reader.is_assembly_in_cache (l_assembly.location, True) then
-					if l_ca.location /= a_path.as_lower then
+					if l_ca.location /= a_path.as_lower and then l_ca.location = l_ca.gac_path then
 							-- update path information if a better path is found
 						l_ca.set_location (a_path)
 						l_info := cache_reader.info
@@ -389,6 +389,7 @@ feature {NONE} -- Implementation
 			debug ("assemblies_are_never_stale")
 				Result := False
 			end
+			Result := False
 		end
 		
 	remove_assembly_internal (a_path: STRING) is

@@ -1,0 +1,733 @@
+<HTML XMLNS:MSHelp="http://msdn.microsoft.com/mshelp">
+	<HEAD>
+		<TITLE>Inheritance</TITLE>
+		<meta content="HTML 4.0" name="vs_targetSchema">
+		<LINK href="../../../../default.css" type="text/css" charset="ISO-8859-1" rel="STYLESHEET">
+			<LINK href="ms-help://Hx/HxRuntime/HxLinkDefault.css" type="text/css" rel="stylesheet">
+				<LINK href="ms-help://Hx/HxRuntime/HxLink.css" type="text/css" rel="stylesheet"></HEAD>
+	<BODY>
+		<P></LINK></LINK></LINK></P>
+		<h1>Inheritance</h1>
+		<P><MSHELP:LINK tabIndex="0" indexMoniker="!DefaultKeywordIndex" keywords="inheritance">Inheritance</MSHELP:LINK>,
+			along with
+			<MSHELP:LINK tabIndex="0" indexMoniker="!DefaultKeywordIndex" keywords="client/supplier relationship">client/supplier</MSHELP:LINK>,
+			are the two relationships that can exist between classes.
+		</P>
+		<P>Inheritance lets us mirror in software the types of abstractions that are common
+			in many problem domains, i.e., the more general to the more specialized.&nbsp;</P>
+		<P>Inheritance also gives a way&nbsp;us to combine these abstractions.
+		</P>
+		<P>Inheritance allows us to make extensions and adaptations to existing software,
+			while at the same time, leaving the original software unaltered.</P>
+		<H2>The Eiffel Inheritance Model</H2>
+		<P>If class <SPAN CLASS="eclass">B</SPAN> inherits from class <SPAN CLASS="eclass">A</SPAN>, then:
+		</P>
+		<UL>
+			<LI>
+			Every feature of <SPAN CLASS="eclass">A</SPAN> is also a feature of <SPAN CLASS="eclass">B</SPAN>
+			<LI>
+				In any case in which an
+				<MSHELP:LINK tabIndex="0" indexMoniker="!DefaultKeywordIndex" keywords="instance">instance</MSHELP:LINK>
+				of <SPAN CLASS="eclass">A</SPAN> is called for, then an instance of <SPAN CLASS="eclass">B</SPAN> will suffice.</LI></UL>
+		<P>Flexibility and adaptability are key&nbsp;qualities of the Eiffel inheritance
+			model. On an informal level, this means that, except as prevented by certain
+			constraints,&nbsp;a class can inherit from a set of classes
+			containing&nbsp;just about any&nbsp;other classes.
+		</P>
+		<P>Eiffel classes can be
+			<MSHELP:LINK tabIndex="0" indexMoniker="!DefaultKeywordIndex" keywords="effective class">effective</MSHELP:LINK>
+			or
+			<MSHELP:LINK tabIndex="0" indexMoniker="!DefaultKeywordIndex" keywords="deferred class">deferred</MSHELP:LINK>.
+			If a class is effective, then it is completely implemented.&nbsp;As a
+			result,&nbsp;it is possible to create and use
+			<MSHELP:LINK tabIndex="0" indexMoniker="!DefaultKeywordIndex" keywords="direct instance">direct
+instances</MSHELP:LINK>
+			of an effective class at runtime.
+		</P>
+		<P>If a class is deferred, then it is not completely implemented. A class is
+			deferred if it&nbsp;contains at least one
+			<MSHELP:LINK tabIndex="0" indexMoniker="!DefaultKeywordIndex" keywords="deferred feature">deferred feature</MSHELP:LINK>.
+			So, it is possible for you&nbsp;to mark a feature (and by&nbsp;consequence also
+			its class) as deferred when you code it. This means that the specification for
+			this class dictates that such a feature exists, but there is no implementation
+			for the feature included in the class. As a result, there can be no direct
+			instances of deferred classes at runtime. However, a class that inherits from a
+			deferred class can implement, or effect, the deferred features. This results in
+			an effective descendant to the deferred class. And it is possible to create
+			direct instances of this effective descendant. Such instances would also be
+			instances (albeit not direct instances) of the original deferred class.
+		</P>
+		<P>What this means to us as software producers, is that in any development effort,
+			we have available a great number of classes which can serve as potential
+			starting points. That is, classes&nbsp;that&nbsp;we could make&nbsp;parents to
+			the classes we produce. And, those classes do not have to chosen from a strict
+			dichotomy of classes which are either completely abstract or completely
+			implemented. Inheritance from classes that are deferred&nbsp;but&nbsp;have some
+			implemented features is both&nbsp;possible and&nbsp;encouraged. It reuses
+			existing software and it reduces the opportunity for error.
+		</P>
+		<P>Consider the deferred class <SPAN CLASS="eclass">COMPARABLE</SPAN> from the Eiffel Base Library. A portion
+			of <SPAN CLASS="eclass">COMPARABLE</SPAN> is shown below:</P>
+		<CODE>
+		<SPAN CLASS="ekeyword">deferred</SPAN> <SPAN CLASS="ekeyword">class</SPAN> <br>&nbsp;&nbsp;&nbsp; <SPAN CLASS="eclass">COMPARABLE</SPAN>
+			<br>
+			<br>
+			<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">-- Comparison</SPAN>&nbsp;
+			<br>
+			<br>
+			&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">infix</SPAN> "&lt;" (<SPAN CLASS="eitag">other</SPAN>: <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ekeyword">Current</SPAN>): <SPAN CLASS="eclass">BOOLEAN</SPAN> <SPAN CLASS="ekeyword">is</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ecomment">-- Is
+			current object less than `other'?</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">deferred</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">end</SPAN>&nbsp;
+			<br>
+			<br>
+			&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">infix</SPAN> "&lt;=" (<SPAN CLASS="eitag">other</SPAN>: <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ekeyword">Current</SPAN>): <SPAN CLASS="eclass">BOOLEAN</SPAN> <SPAN CLASS="ekeyword">is</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ecomment">-- Is
+			current object less than or equal to `other'?</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">do</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">Result</SPAN> :=
+			<SPAN CLASS="ekeyword">not</SPAN> (<SPAN CLASS="eitag">other</SPAN> &lt; <SPAN CLASS="ekeyword">Current</SPAN>)&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">end</SPAN>&nbsp;
+			<br>
+			<br>
+			&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">infix</SPAN> "&gt;" (<SPAN CLASS="eitag">other</SPAN>: <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ekeyword">Current</SPAN>): <SPAN CLASS="eclass">BOOLEAN</SPAN> <SPAN CLASS="ekeyword">is</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ecomment">-- Is
+			current object greater than `other'?&nbsp;
+</SPAN>			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">do</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">Result</SPAN> :=
+			<SPAN CLASS="eitag">other</SPAN> &lt; <SPAN CLASS="ekeyword">Current</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">end</SPAN>&nbsp;
+			<br>
+			<br>
+			&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">infix</SPAN> "&gt;=" (<SPAN CLASS="eitag">other</SPAN>: <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ekeyword">Current</SPAN>): <SPAN CLASS="eclass">BOOLEAN</SPAN> <SPAN CLASS="ekeyword">is</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ecomment">-- Is
+			current object greater than or equal to `other'?</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">do</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">Result</SPAN> :=
+			<SPAN CLASS="ekeyword">not</SPAN> (<SPAN CLASS="ekeyword">Current</SPAN> &lt; <SPAN CLASS="eitag">other</SPAN>)&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">end</SPAN>&nbsp;
+			<br>
+			<br>
+			&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">is_equal</SPAN> (<SPAN CLASS="eitag">other</SPAN>: <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ekeyword">Current</SPAN>): <SPAN CLASS="eclass">BOOLEAN</SPAN> <SPAN CLASS="ekeyword">is</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment"> -- Is
+			`other' attached to an object of the same type</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ecomment">-- as
+			current object and identical to it?&nbsp;
+</SPAN>			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">do</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">Result</SPAN> :=
+			(<SPAN CLASS="ekeyword">not</SPAN> (<SPAN CLASS="ekeyword">Current</SPAN> &lt; <SPAN CLASS="eitag">other</SPAN>) <SPAN CLASS="ekeyword">and</SPAN> <SPAN CLASS="ekeyword">not</SPAN> (<SPAN CLASS="eitag">other</SPAN> &lt; <SPAN CLASS="ekeyword">Current</SPAN>))&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">end</SPAN>
+		</CODE>
+		<P>If you are producing a class that you wish to support basic comparison
+			operators, like&nbsp;"&lt;" and&nbsp;"&gt;", you can have that class inherit
+			from <SPAN CLASS="eclass">COMPARABLE</SPAN>, which has features which correspond to those operators. The
+			text for <SPAN CLASS="eclass">COMPARABLE</SPAN> contains eight features. Seven of these are effective and
+			one is deferred.
+		</P>
+		<P>So through inheritance from <SPAN CLASS="eclass">COMPARABLE</SPAN>, your class, let's call it <SPAN CLASS="eclass">WHATZIT</SPAN>, would
+			now have these features available. But how would the features of <SPAN CLASS="eclass">COMPARABLE</SPAN>
+			know&nbsp;what it means&nbsp;to compare <SPAN CLASS="eclass">WHATZIT</SPAN>s?
+		</P>
+		<P>Of course, it would have no way of knowing, so you must show it. And you do that
+			by writing the implementation for "&lt;", the one deferred feature that <SPAN CLASS="eclass">WHATZIT</SPAN>
+			inherits from the <SPAN CLASS="eclass">COMPARABLE</SPAN> class.
+		</P>
+		<P>When you look closely at the effective features of <SPAN CLASS="eclass">COMPARABLE</SPAN>, you see that
+			their implementations are ultimately based on "&lt;". If we were not able to
+			inherit from multiple partially implemented classes, then we would be forced to
+			implement many more features, a process which invites error, or, in the case of
+			comparison,&nbsp;to move to a less appealing model.
+		</P>
+		<H2>The Inheritance Part of Classes in Eiffel</H2>
+		<P>Because the inheritance model has such flexibility, it must also have
+			adaptability. A consequence of inheriting from multiple classes is that&nbsp;it
+			would be possible to&nbsp;inherit multiple features with the same name ... and
+			you remember from&nbsp;<A href="../../eiffel_for_dotnet/30_Adding_Class_Features.htm">Adding
+				Class Features</A>&nbsp;that a class is not allowed to have more than one
+			feature with the same name. A process called feature adaptation allows us to
+			resolve these issues in an heir. Feature adaptation is also done for reasons
+			other than resolving name clashes as well.</P>
+		<P>Feature adaptation is an enabling capability, but it is also one that takes some
+			study to understand fully.
+		</P>
+		<P>We will look at the types of feature adaptation that will serve most useful to
+			you as you begin to produce Eiffel software.</P>
+		<P>In&nbsp;<A href="../../eiffel_for_dotnet/20_Eiffel_Classes.htm">Eiffel Classes</A>
+			you saw where the inheritance part fits into the class structure. Shown below
+			is a portion of class&nbsp;<SPAN CLASS="eclass">LINKED_QUEUE</SPAN>&nbsp;from the Eiffel libraries.
+			<SPAN CLASS="eclass">LINKED_QUEUE</SPAN> is an effective class which implements the abstract notion of a
+			<SPAN CLASS="eclass">QUEUE</SPAN> (a deferred class)&nbsp;with an implementation based on the services
+			provided by <SPAN CLASS="eclass">LINKED_LIST</SPAN> (an effective class).</P>
+		<CODE><SPAN CLASS="ekeyword">class</SPAN> <BR>&nbsp;&nbsp;&nbsp; <SPAN CLASS="eclass">LINKED_QUEUE</SPAN> [<SPAN CLASS="egeneric">G</SPAN>]
+			<br>
+			<SPAN CLASS="ekeyword">inherit</SPAN>&nbsp;
+			<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="eclass">QUEUE</SPAN> [<SPAN CLASS="egeneric">G</SPAN>]&nbsp;&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<SPAN CLASS="ekeyword">undefine</SPAN>&nbsp;&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<SPAN CLASS="efeature">is_empty</SPAN>,&nbsp;&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<SPAN CLASS="efeature">copy</SPAN>,&nbsp;&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<SPAN CLASS="efeature">is_equal</SPAN>&nbsp;&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<SPAN CLASS="efeature">redefine</SPAN>&nbsp;&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<SPAN CLASS="efeature">linear_representation</SPAN>,&nbsp;&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<SPAN CLASS="efeature">prune_all</SPAN>,&nbsp;&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<SPAN CLASS="efeature">extend</SPAN>&nbsp;&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<SPAN CLASS="ekeyword">select</SPAN>&nbsp;&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<SPAN CLASS="efeature">item</SPAN>,&nbsp;&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<SPAN CLASS="efeature">put</SPAN>&nbsp;&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">end</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp; <SPAN CLASS="eclass">LINKED_LIST</SPAN> [<SPAN CLASS="egeneric">G</SPAN>]&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">rename</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<SPAN CLASS="efeature">item</SPAN> <SPAN CLASS="ekeyword">as</SPAN> <SPAN CLASS="efeature">ll_item</SPAN>,&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<SPAN CLASS="efeature">remove</SPAN> <SPAN CLASS="ekeyword">as</SPAN> <SPAN CLASS="efeature">ll_remove</SPAN>,&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<SPAN CLASS="efeature">make</SPAN> <SPAN CLASS="ekeyword">as</SPAN> <SPAN CLASS="efeature">ll_make</SPAN>,&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<SPAN CLASS="efeature">remove_left</SPAN> <SPAN CLASS="ekeyword">as</SPAN> <SPAN CLASS="efeature">remove</SPAN>,&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<SPAN CLASS="efeature">put</SPAN> <SPAN CLASS="ekeyword">as</SPAN> <SPAN CLASS="efeature">ll_put</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">export</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			{<SPAN CLASS="eclass">NONE</SPAN>}&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<SPAN CLASS="ekeyword">all</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			{<SPAN CLASS="eclass">ANY</SPAN>}&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<SPAN CLASS="efeature">writable</SPAN>,&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<SPAN CLASS="efeature">extendible</SPAN>,&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<SPAN CLASS="efeature">wipe_out</SPAN>,&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<SPAN CLASS="efeature">readable</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<SPAN CLASS="ekeyword">undefine</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<SPAN CLASS="efeature">fill</SPAN>,&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<SPAN CLASS="efeature">append</SPAN>,&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<SPAN CLASS="efeature">prune</SPAN>,&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<SPAN CLASS="efeature">readable</SPAN>,&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<SPAN CLASS="efeature">writable</SPAN>,&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<SPAN CLASS="efeature">prune_all</SPAN>,&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<SPAN CLASS="efeature">extend</SPAN>,&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<SPAN CLASS="efeature">force</SPAN>,&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<SPAN CLASS="efeature">is_inserted</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<SPAN CLASS="ekeyword">redefine</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<SPAN CLASS="efeature">duplicate</SPAN>,&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<SPAN CLASS="efeature">linear_representation</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">select</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<SPAN CLASS="efeature">remove</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">end</SPAN>
+		</CODE>
+		<P>Okay ... now calm down ... please. This is an example from a very highly-evolved
+			and sophisticated library which is replete with software reuse. <SPAN CLASS="eclass">LINKED_QUEUE</SPAN>
+			has two parents and uses considerable feature adaptation.&nbsp;In fact, it uses
+			every feature adaptation&nbsp;option available. The benefit is obvious,
+			though.&nbsp;<SPAN CLASS="eclass">LINKED_QUEUE</SPAN> class&nbsp;has only seven
+			features&nbsp;actually&nbsp;coded.&nbsp;In&nbsp;total there
+			are&nbsp;only&nbsp;26 lines of instructions!</P>
+		<P>In practice you can use inheritance, even multiple inheritance, to do some quite
+			productive programming in Eiffel without having to write anything that looks
+			like the inheritance part of <SPAN CLASS="eclass">LINKED_QUEUE</SPAN> above.</P>
+		<P>Regardless, let's&nbsp;break&nbsp;<SPAN CLASS="eclass">LINKED_QUEUE</SPAN>'s inheritance part&nbsp;into
+			chunks&nbsp;and take a look at some of them.</P>
+		<h3>Rename</h3>
+		<CODE>
+			<P><FONT color="darkgray">class <BR>&nbsp;&nbsp;&nbsp; LINKED_QUEUE [G]
+					<BR>
+					inherit&nbsp;<BR>
+					&nbsp;&nbsp;&nbsp;&nbsp;LINKED_LIST [G]&nbsp; </FONT>
+			</P>
+			<P><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">rename</SPAN>&nbsp;
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="efeature">item</SPAN> <SPAN CLASS="ekeyword">as</SPAN> <SPAN CLASS="efeature">ll_item</SPAN>,&nbsp;
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="efeature">remove</SPAN> <SPAN CLASS="ekeyword">as</SPAN> <SPAN CLASS="efeature">ll_remove</SPAN>,&nbsp;
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="efeature">make</SPAN> <SPAN CLASS="ekeyword">as</SPAN> <SPAN CLASS="efeature">ll_make</SPAN>,&nbsp;
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="efeature">remove_left</SPAN> <SPAN CLASS="ekeyword">as</SPAN> <SPAN CLASS="efeature">remove</SPAN>,&nbsp;
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="efeature">put</SPAN> <SPAN CLASS="ekeyword">as</SPAN> <SPAN CLASS="efeature">ll_put</SPAN>&nbsp;&nbsp;<BR>
+				&nbsp;&nbsp;&nbsp;</P>
+		</CODE>
+		<P>As you might have already guessed, the rename part, introduced oddly enough by
+			the keyword "<SPAN CLASS="ekeyword">rename</SPAN>", is used to rename features.</P>
+		<P>Specifically, it is used when an heir wants to use a feature from a parent, but
+			wants to use it under a different name than that by which the parent knows it.
+			So in the example, the feature known as <SPAN CLASS="efeature">item</SPAN> in <SPAN CLASS="eclass">LINKED_LIST</SPAN> is perfectly
+			usable in <SPAN CLASS="eclass">LINKED_QUEUE</SPAN>, but must be applied as <SPAN CLASS="efeature">ll_item</SPAN>.
+		</P>
+		<P>This is common when your&nbsp;class&nbsp;inherits two different features with
+			the same name from two different parents and you want to be able to use them
+			both. Because you can only have one feature with a given name, then rename one
+			of the features.</P>
+		<h3>New Exports</h3>
+		<CODE>
+			<P><FONT color="darkgray">class <BR>&nbsp;&nbsp;&nbsp; LINKED_QUEUE [G]
+					<BR>
+					inherit&nbsp;<BR>
+					&nbsp;&nbsp;&nbsp;&nbsp;LINKED_LIST [G]&nbsp; </FONT>
+			</P>
+			<P><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">export</SPAN>&nbsp;
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				{<SPAN CLASS="eclass">NONE</SPAN>}&nbsp;
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="ekeyword">all</SPAN>&nbsp;
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				{<SPAN CLASS="eclass">ANY</SPAN>}&nbsp;
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="efeature">writable</SPAN>,&nbsp;
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="efeature">extendible</SPAN>,&nbsp;
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="efeature">wipe_out</SPAN>,&nbsp;
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="efeature">readable</SPAN>&nbsp;&nbsp;<BR>
+				&nbsp;&nbsp;</P>
+		</CODE>
+		<P>The new exports part is introduced by the keyword "<SPAN CLASS="ekeyword">export</SPAN>". This section allows
+			you to change the export status of inherited features. Remember from&nbsp;<A href="../../eiffel_for_dotnet/30_Adding_Class_Features.htm">Adding
+				Class Features</A> that features become available (or not) to clients by
+			their export status. Export status of immediate features is controlled in the
+			feature clause. But here we are dealing with inherited features, so we control
+			their status in the export part of the class's inheritance section. Any feature
+			not mentioned will have the same export status as it did in the parent class.
+		</P>
+		<P>In this example, the keyword "<SPAN CLASS="ekeyword">all</SPAN>" is used first to say that all features
+			inherited form <SPAN CLASS="eclass">LINKED_LIST</SPAN> are unavailable to any clients (export to class
+			<SPAN CLASS="eclass">NONE</SPAN>). This is typical for&nbsp;a class like <SPAN CLASS="eclass">LINKED_QUEUE</SPAN>&nbsp;in which the
+			features important to the client come from the deferred parent, in this case
+			<SPAN CLASS="eclass">QUEUE</SPAN>, and the class <SPAN CLASS="eclass">LINKED_LIST</SPAN> is used only for implementation. But, it seems
+			that also in this case, the producer&nbsp;felt differently&nbsp;about the
+			features <SPAN CLASS="efeature">writable</SPAN>, <SPAN CLASS="efeature">extendible</SPAN>, <SPAN CLASS="efeature">wipe_out</SPAN>, and <SPAN CLASS="efeature">readable</SPAN>, and decided the
+			allow clients of <SPAN CLASS="eclass">ANY</SPAN> type to utilize these features inherited from <SPAN CLASS="eclass">LINKED_LIST</SPAN>.
+		</P>
+		<h3>Undefine</h3>
+		<CODE>
+			<P><FONT color="darkgray">class <BR>&nbsp;&nbsp;&nbsp; LINKED_QUEUE [G]
+					<BR>
+					inherit&nbsp;<BR>
+					&nbsp;&nbsp;&nbsp;&nbsp;LINKED_LIST [G]&nbsp; </FONT>
+			</P>
+			<P><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="ekeyword">undefine</SPAN>&nbsp;&nbsp;
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="efeature">is_empty</SPAN>,&nbsp;&nbsp;
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="efeature">copy</SPAN>,&nbsp;&nbsp;
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="efeature">is_equal</SPAN>&nbsp;&nbsp;&nbsp;<BR>
+				&nbsp;&nbsp;</P>
+		</CODE>
+		<P>Next, undefine ... it's probably not what you think. You might assume that
+			undefine is a way to banish forever any inherited features that you just do not
+			want to deal with. But what happens to features whose names are listed&nbsp;in
+			an undefine clause is that they become deferred features in the heir.
+		</P>
+		<P>Undefine is useful if you inherit two different features of the same name from
+			different parents, a situation you cannot live with. If you like one and you
+			don't like the other, then you can undefine the one you don't like. The the
+			only version you get is the one you like.
+		</P>
+		<P>Another&nbsp;way you might use undefine is&nbsp;in the case in which
+			you&nbsp;actually want&nbsp;a feature to be deferred in an heir that was
+			effective in a parent.</P>
+		<h3>Redefine</h3>
+		<CODE>
+ 			<P><FONT color="darkgray">class <BR>&nbsp;&nbsp;&nbsp; LINKED_QUEUE [G]
+					<BR>
+					inherit&nbsp;<BR>
+					&nbsp;&nbsp;&nbsp;&nbsp;LINKED_LIST [G]</FONT>
+					</P>
+			<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="ekeyword">redefine</SPAN>&nbsp;&nbsp;
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="efeature">linear_representation</SPAN>,&nbsp;&nbsp;
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="efeature">prune_all</SPAN>,&nbsp;&nbsp;
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="efeature">extend</SPAN>&nbsp;&nbsp;&nbsp;<BR>
+				&nbsp;&nbsp;</P>
+		</CODE>
+		<P>The redefine part lists the names of effective features for which the producer
+			of the heir class would like to provide implementations that replace the
+			inherited implementations.
+		</P>
+		<P>So,&nbsp;in this example&nbsp;the implementation for <SPAN CLASS="efeature">linear_representation</SPAN>,
+			for example, that <SPAN CLASS="eclass">LINKED_QUEUE</SPAN> would have inherited from <SPAN CLASS="eclass">QUEUE</SPAN> will not be
+			used. Instead <SPAN CLASS="eclass">LINKED_QUEUE</SPAN> implements its own version of
+			<SPAN CLASS="efeature">linear_representation</SPAN>.
+		</P>
+		<DIV class="note" id="DIV1" style="WIDTH: 80%">
+				<P><STRONG>Note:</STRONG> When a class implements a version of an inherited feature
+					which was deferred in its parent, this is known as "effecting" the feature.
+					Because features being effected&nbsp;are getting their first implementation, it
+					is not necessary to list their names in the redefine part, or anywhere
+					else&nbsp;in the inheritance part of the heir.</P>
+
+		</DIV>
+		<h3>Select</h3>
+		<CODE>
+ 			<P><FONT color="darkgray">class <BR>&nbsp;&nbsp;&nbsp; LINKED_QUEUE [G]
+					<BR>
+					inherit&nbsp;<BR>
+					&nbsp;&nbsp;&nbsp;&nbsp;LINKED_LIST [G]</FONT>
+					</P>
+			<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="ekeyword">select</SPAN>&nbsp;
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="efeature">remove</SPAN>&nbsp;
+				<BR>
+			</P>
+		</CODE>
+		<P>The select part is used only under special circumstances. The case in which
+			select&nbsp;is required&nbsp;involves a situation called "repeated"
+			inheritance. Repeated inheritance occurs when an heir inherits more than once
+			from the same ancestor. Usually this means it has two or more parents who have
+			a common proper ancestor (but it can occur directly). The features from the
+			common ancestor are inherited by each of the parents and passed on to the heir.
+			The rules and effects of repeated inheritance occupy an entire chapter in the
+			official Eiffel language reference and will not be reproduced here.&nbsp;Just
+			understand at this point&nbsp;that it is sometimes necessary to use <SPAN CLASS="ekeyword">select</SPAN>
+			to&nbsp;provide the dynamic binding system&nbsp;with an unambiguous choice of
+			features in the presence of polymorphic attachment.</P>
+		<P>You should note&nbsp;also that repeated inheritance can and does occur often without
+			causing any&nbsp;problem at all. In fact it happens in every case of multiple
+			inheritance, due to the fact that all classes inherit from class ANY and
+			receive its features as a result. The reason it is not a problem is that in the
+			case that any feature makes it from the original common ancestor along multiple
+			paths to the&nbsp;heir&nbsp;with its name and implementation still intact,
+			it&nbsp;will arrive as only one feature heir. This is called sharing and
+			nothing special needs to be done to make it happen.</P>
+		<H2>Polymorphism</H2>
+		<P>It is time now to see another way in which inheritance helps build more
+			extendible software.
+		</P>
+		<P>Assume that we have to build classes that model different&nbsp;types of
+			polygons. We would do this by building a class for polygon which would model a
+			garden-variety polygon, a multi-sided closed figure. But when we consider that
+			there are specialized types of polygons, like triangles and rectangles, we
+			realize that to support these specializations, we need classes for them as
+			well. And this is an obvious opportunity for inheritance. All triangles and
+			rectangles <EM>are</EM> polygons. So, we start with class <SPAN CLASS="eclass">POLYGON</SPAN> and its
+			proper descendants <SPAN CLASS="eclass">TRIANGLE</SPAN> and <SPAN CLASS="eclass">RECTANGLE</SPAN>.</P>
+		<P>So we can make declarations like:</P>
+		<CODE>
+			<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">my_polygon</SPAN>: <SPAN CLASS="eclass">POLYGON</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;<SPAN CLASS="efeature">your_polygon</SPAN>: <SPAN CLASS="eclass">POLYGON</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">my_triangle</SPAN>: <SPAN CLASS="eclass">TRIANGLE</SPAN>&nbsp;<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">my_rectangle</SPAN>: <SPAN CLASS="eclass">RECTANGLE</SPAN>&nbsp;&nbsp;<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">another_rectangle</SPAN>: <SPAN CLASS="eclass">RECTANGLE</SPAN></P>
+		</CODE>
+		<P>Assume these declarations are in force for all the examples this section on
+			polymorphism.</P>
+		<P>We saw in&nbsp;<A href="../../eiffel_for_dotnet/30_Adding_Class_Features.htm">Adding
+				Class Features</A> that we can say that one class conforms to another if it
+			is the same class or one of its proper descendants. Therefore POLYGON conforms
+			to <SPAN CLASS="eclass">POLYGON</SPAN>. Also, <SPAN CLASS="eclass">TRIANGLE</SPAN> and <SPAN CLASS="eclass">RECTANGLE</SPAN> conform to <SPAN CLASS="eclass">POLYGON</SPAN>. But,
+			importantly,&nbsp;<SPAN CLASS="eclass">POLYGON</SPAN> <EM>does not</EM> conform to <SPAN CLASS="eclass">TRIANGLE</SPAN> or <SPAN CLASS="eclass">RECTANGLE</SPAN>.
+			This makes sense intuitively, because we know all rectangles and triangles are
+			polygons ... and we also know that not all polygons are rectangles.
+		</P>
+		<h3>Polymorphic Attachment</h3>
+		<P>These facts affect how assignments can work. Using the declarations above:</P>
+		<CODE>
+			<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">my_polygon</SPAN> :=
+				<SPAN CLASS="efeature">your_polygon</SPAN>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="ecomment">-- Is valid</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">your_polygon</SPAN> :=
+				<SPAN CLASS="efeature">my_polygon</SPAN>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			 <SPAN CLASS="ecomment"> -- Is valid</SPAN>	<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">my_polygon</SPAN> :=
+				<SPAN CLASS="efeature">my_rectangle</SPAN>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">--
+				Is valid<BR>
+</SPAN>				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">my_polygon</SPAN> :=
+				<SPAN CLASS="efeature">my_triangle</SPAN>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="ecomment">-- Is valid</SPAN></P>
+				</CODE>
+			<P>but</P>
+				<CODE>
+			<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">my_rectangle</SPAN> :=
+				<SPAN CLASS="efeature">my_polygon</SPAN>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="ecomment">-- Is not valid</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">my_triangle</SPAN> :=
+				<SPAN CLASS="efeature">my_polygon</SPAN>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="ecomment">-- Is not valid</SPAN></P>
+				</CODE>
+			<P>and of course</P>
+					<CODE>
+			<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">my_rectangle</SPAN> :=
+				<SPAN CLASS="efeature">my_triangle</SPAN>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="ecomment">-- Is not valid</SPAN></P>
+		</CODE>
+		<P>Consider now the assignment below&nbsp;which&nbsp;is valid.</P>
+		<CODE>
+			<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">my_polygon</SPAN> :=
+				<SPAN CLASS="efeature">my_rectangle</SPAN>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</P>
+		</CODE>
+		<P>After an assignment&nbsp;like this executes the entity <SPAN CLASS="efeature">my_polygon</SPAN> will be
+			holding at runtime a reference to an instance of a type which is not a direct
+			instance of its declared type <SPAN CLASS="eclass">POLYGON</SPAN>. But conformance ensures us that,
+			although it may not be a direct instance, it will indeed by an instance. (all
+			rectangles are polygons).</P>
+		<P>Depending upon how many different types of polygons get modeled in classes, the
+			entity "<SPAN CLASS="efeature">my_polygon</SPAN>" could be attached objects of may different types ... it
+			could take on many forms. This in fact is the basis for the term
+			"polymorphism"; having many forms. So we speak of "polymorphic attachment" as
+			the process by which at runtime entities can hold references to objects which
+			are not of the entity's declared type ... but they are of conforming types.</P>
+		<P>Now let's see how we get some value from this.</P>
+		<h3>Dynamic Binding</h3>
+		<P>Suppose that one of the features of <SPAN CLASS="eclass">POLYGON</SPAN> is a
+			query&nbsp;<SPAN CLASS="efeature">perimeter</SPAN>&nbsp;which returns&nbsp;an instance's&nbsp;perimeter.
+			The producer of <SPAN CLASS="eclass">POLYGON</SPAN> may have implemented <SPAN CLASS="efeature">perimeter</SPAN> as a function that
+			computes the perimeter by adding up the lengths of all the sides. This approach
+			is guaranteed to work for all polygons, and we can apply the <SPAN CLASS="efeature">perimeter</SPAN> feature
+			to any polygon. Let's print some perimeters:</P>
+		<CODE>
+			<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">print</SPAN> (<SPAN CLASS="efeature">my_polygon</SPAN>.<SPAN CLASS="efeature">perimeter</SPAN>)<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">print</SPAN>
+				(<SPAN CLASS="efeature">my_triangle</SPAN>.<SPAN CLASS="efeature">perimeter</SPAN>)&nbsp;<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">print</SPAN> (<SPAN CLASS="efeature">my_rectangle</SPAN>.<SPAN CLASS="efeature">perimeter</SPAN>)</P>
+		</CODE>
+		<P><SPAN CLASS="eclass">TRIANGLE</SPAN> and <SPAN CLASS="eclass">RECTANGLE</SPAN> might have properties, expressed as queries, which as a
+			part of their specialization, distinguish them from run-of-the-mill polygons.
+			Two features of rectangles are <SPAN CLASS="efeature">width</SPAN> and <SPAN CLASS="efeature">height</SPAN> the lengths of the sides.
+		</P>
+		<P>Armed with these <SPAN CLASS="eclass">RECTANGLE</SPAN>-specific features, the producer of <SPAN CLASS="eclass">RECTANGLE</SPAN> may say,
+			"Now I no longer have to depend upon that crude implementation of <SPAN CLASS="efeature">perimeter</SPAN>
+			that is inherited from <SPAN CLASS="eclass">POLYGON</SPAN>. I can build an efficient <SPAN CLASS="eclass">RECTANGLE</SPAN>-specific
+			implementation of <SPAN CLASS="efeature">perimeter</SPAN>, based on the knowledge that for all <SPAN CLASS="eclass">RECTANGLE</SPAN>s
+			perimeter = 2*(width+height)"</P>
+		<P>To implement this specialized version of <SPAN CLASS="eclass">perimeter</SPAN>, the producer of <SPAN CLASS="eclass">RECTANGLE</SPAN>
+			must add the feature to the class, but also must list its name in the
+			"<SPAN CLASS="ekeyword">redefine</SPAN>" part of the <SPAN CLASS="eclass">RECTANGLE</SPAN>'s inheritance clause.</P>
+		<CODE>
+			<P><SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="eclass">RECTANGLE</SPAN><BR>
+				<SPAN CLASS="ekeyword">inherit</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="eclass">POLYGON</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">redefine</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="efeature">perimeter</SPAN>&nbsp;<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.&nbsp;&nbsp;<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp; .<BR>
+				<SPAN CLASS="ekeyword">feature</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">perimeter</SPAN>: <SPAN CLASS="eclass">REAL</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment"> --&nbsp;Sum
+				of lengths of all sides<BR>
+</SPAN>				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">Result</SPAN>
+				:= 2 * (<SPAN CLASS="efeature">width</SPAN> +&nbsp;<SPAN CLASS="efeature">height</SPAN>)<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+			</P>
+		</CODE>
+		<P>You would expect then, that this version of <SPAN CLASS="efeature">perimeter</SPAN> would be executed in the
+			following context:</P>
+		<CODE>
+			<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">print</SPAN> (<SPAN CLASS="efeature">my_rectangle</SPAN>.<SPAN CLASS="efeature">perimeter</SPAN>)</P>
+		</CODE>
+		<P>But what makes this interesting is that even in the context below</P>
+		<CODE>
+			<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">my_polygon</SPAN> := <SPAN CLASS="efeature">my_rectangle</SPAN>&nbsp;<BR>
+
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">print</SPAN> (<SPAN CLASS="efeature">my_polygon</SPAN>.<SPAN CLASS="efeature">perimeter</SPAN>)</P>
+		</CODE>
+		<P>in which <SPAN CLASS="efeature">perimeter</SPAN> is being applied to a entity declared as <SPAN CLASS="eclass">POLYGON</SPAN>, the
+			specialized version of <SPAN CLASS="efeature">perimeter</SPAN> from <SPAN CLASS="eclass">RECTANGLE</SPAN> is being used. It would be
+			impossible to ensure at compile time which version of <SPAN CLASS="efeature">perimeter</SPAN> is most
+			appropriate. So it must be done at runtime. This ability to choose the best
+			version of a feature to apply, just&nbsp;at the moment&nbsp;it needs to be
+			applied, is called "dynamic binding".</P>
+		<P>Static typing tells us at compile time that it is safe to apply <SPAN CLASS="efeature">perimeter</SPAN> to
+			<SPAN CLASS="efeature">my_polygon</SPAN> No matter which of the&nbsp;types of polygons is attached to
+			<SPAN CLASS="efeature">my_polygon</SPAN>, there will be a <SPAN CLASS="efeature">perimeter</SPAN> feature that will work.
+		</P>
+		<P>Dynamic binding tells us that when we&nbsp;apply <SPAN CLASS="efeature">perimeter</SPAN>, we know that the
+			most appropriate version of the feature will get applied at runtime.
+		</P>
+		<h3>Assignment Attempt</h3>
+		<P>Now let's add another situation. Consider the code below:</P>
+		<CODE>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">my_polygon</SPAN> := <SPAN CLASS="efeature">my_rectangle</SPAN>&nbsp;<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">print</SPAN> (<SPAN CLASS="efeature">my_polygon</SPAN>.<SPAN CLASS="efeature">perimeter</SPAN>)<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">print</SPAN>
+				(<SPAN CLASS="efeature">my_polygon</SPAN>.<SPAN CLASS="efeature">width</SPAN>)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="ecomment">-- Is invalid</SPAN><br>
+		</CODE>
+		<P>We could apply <SPAN CLASS="efeature">perimeter</SPAN> to <SPAN CLASS="efeature">my_polygon</SPAN> and everything is fine ... we
+			even get <SPAN CLASS="eclass">RECTANGLE</SPAN>'s specialized version of the feature. But it is invalid for
+			us to try to apply <SPAN CLASS="efeature">width</SPAN> to <SPAN CLASS="efeature">my_polygon</SPAN> even though we feel (with rather
+			strong conviction) that at this point in execution, <SPAN CLASS="efeature">my_polygon</SPAN> will be
+			attached to an object of type <SPAN CLASS="eclass">RECTANGLE</SPAN>, and we know that <SPAN CLASS="efeature">width</SPAN> is a valid
+			query on <SPAN CLASS="eclass">RECTANGLE</SPAN>s.</P>
+		<P>The reason follows. When we declared <SPAN CLASS="efeature">my_polygon</SPAN> as type <SPAN CLASS="eclass">POLYGON</SPAN>, we made a
+			deal that says that the only features that can be applied to <SPAN CLASS="efeature">my_polygon</SPAN> are
+			the features of <SPAN CLASS="eclass">POLYGON</SPAN>. Remember that static typing guarantees us at compile
+			time&nbsp;that at runtime there&nbsp;will be&nbsp;at least one version of the
+			feature available that can be applied.
+		</P>
+		<CODE>
+			<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">print</SPAN>
+				(<SPAN CLASS="efeature">my_polygon</SPAN>.<SPAN CLASS="efeature">width</SPAN>)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="ecomment">-- Is invalid</SPAN></P>
+		</CODE>
+		<P>But in the case above, the guarantee cannot be made. <SPAN CLASS="efeature">my_polygon</SPAN> is declared
+			with class <SPAN CLASS="eclass">POLYGON</SPAN> which has no <SPAN CLASS="efeature">width</SPAN> feature, despite the fact that some of
+			its proper descendants might.</P>
+		<P>Does this mean that we can never do <SPAN CLASS="eclass">RECTANGLE</SPAN> things with this instance again,
+			once we have attached it to <SPAN CLASS="efeature">my_polygon</SPAN>?</P>
+		<P>No. There is a language facility called the "assignment attempt" which will come
+			to our rescue. The assignment attempt will allow us safely to attach our
+			instance back to an entity typed as <SPAN CLASS="eclass">RECTANGLE</SPAN>. After doing so, we are free use
+			<SPAN CLASS="eclass">RECTANGLE</SPAN> features.
+		</P>
+
+     <CODE>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">my_polygon</SPAN> := <SPAN CLASS="efeature">my_rectangle</SPAN><BR>
+ 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">print</SPAN> (<SPAN CLASS="efeature">my_polygon</SPAN>.<SPAN CLASS="efeature">perimeter</SPAN>)<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">another_rectangle</SPAN> ?= <SPAN CLASS="efeature">my_polygon</SPAN><BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">print</SPAN> (<SPAN CLASS="efeature">another_rectangle</SPAN>.<SPAN CLASS="efeature">width</SPAN>)<BR>
+     </CODE>
+		<P>The assignment attempt uses the syntax "?=", versus the ":=" of assignment.</P>
+		<P>This is significant ... as is the name assignment <EM>attempt</EM>. The reason
+			is that it is possible in some context that <SPAN CLASS="efeature">my_polygon</SPAN> will be attached to
+			something other than a rectangle when we do this:</P>
+		<CODE>
+			<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">another_rectangle</SPAN> ?= <SPAN CLASS="efeature">my_polygon</SPAN></P>
+		</CODE>
+		<P>If it were true that <SPAN CLASS="efeature">my_polygon</SPAN> were attached to an instance of say <SPAN CLASS="eclass">TRIANGLE</SPAN>
+			when the assignment attempt above was executed, then <SPAN CLASS="efeature">another_rectangle</SPAN> would
+			be left as a <SPAN CLASS="ekeyword">Void</SPAN> reference. As a consequence, it is prudent to check to see if
+			the attachment has actually been made before trying to apply features. Applying
+			a feature to a <SPAN CLASS="ekeyword">Void</SPAN> reference will cause an exception. Almost always,
+			assignment attempt will be used in the following manner:</P>
+		<CODE>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">my_polygon</SPAN> := <SPAN CLASS="efeature">my_rectangle</SPAN><BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">print</SPAN> (<SPAN CLASS="efeature">my_polygon</SPAN>.<SPAN CLASS="efeature">perimeter</SPAN>)<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">another_rectangle</SPAN> ?= <SPAN CLASS="efeature">my_polygon</SPAN><BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="efeature">another_rectangle</SPAN> /= <SPAN CLASS="ekeyword">Void</SPAN>
+				<SPAN CLASS="ekeyword">then</SPAN>&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment"> -- Make sure assignment happened</SPAN><BR>
+			&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">print</SPAN>
+				(<SPAN CLASS="efeature">another_rectangle</SPAN>.<SPAN CLASS="efeature">width</SPAN>)&nbsp;&nbsp;
+			</P>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">end</SPAN><BR>
+		</CODE>
+		<P>&nbsp;</P>
+		<P>&nbsp;</P>
+	</BODY>
+</HTML>

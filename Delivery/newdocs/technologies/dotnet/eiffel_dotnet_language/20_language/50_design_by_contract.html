@@ -1,0 +1,631 @@
+<HTML XMLNS:MSHelp="http://msdn.microsoft.com/mshelp">
+	<HEAD>
+		<TITLE>Design by Contract and Assertions</TITLE>
+		<meta content="HTML 4.0" name="vs_targetSchema">
+		<LINK href="../../../../default.css" type="text/css" charset="ISO-8859-1" rel="STYLESHEET">
+			<LINK href="ms-help://Hx/HxRuntime/HxLinkDefault.css" type="text/css" rel="stylesheet">
+				<LINK href="ms-help://Hx/HxRuntime/HxLink.css" type="text/css" rel="stylesheet"></HEAD>
+	<BODY>
+		<P></LINK></LINK></LINK></P>
+		<h1>Design by Contract and Assertions</h1>
+		<h2>Motivation: Concerning Correctness</h2>
+		<p>When you produce an element of software, how do you know that what you produced
+			is correct?</p>
+		<p>This is a difficult question for anyone to answer. Informally speaking, correct
+			software is software that does what it is supposed to do.&nbsp;That is what
+			makes&nbsp;answering the question so&nbsp;tricky. Before you can have any idea
+			whether the software is correct, you must be able to express what it is
+			supposed to do ... and that proves to be quite difficult itself.</p>
+		<p>In conventional software engineering, a document called a software specification
+			is written in order to describe what it is that&nbsp;a piece of software is
+			supposed to do. Writers of software specifications tend to pursue one of two
+			approaches: the informal&nbsp;or the formal.
+		</p>
+		<P>Informal specifications attempt to describe software behavior in the natural
+			languages with which humans communicate on a daily basis. There are problems
+			with this approach. Natural language is not precise. Informal specifications
+			are subject to interpretation and affected by the ambiguities, noise, and
+			contradiction inherent in natural language.
+		</P>
+		<P>In&nbsp;order to avoid these problems, proponents of formal methods of
+			specification turn to the most precise language they know: mathematics. It may
+			be no exaggeration that the study of formal methods has&nbsp;produced&nbsp;more
+			PhD's in Computer Science than it has well-specified software systems. Still
+			the idea that the precision of mathematics can be brought to bear on the
+			problem of specifying software is quite&nbsp;appealing. But,&nbsp;problems lurk
+			here as well. Formal specifications are difficult and time-consuming to
+			construct and verify against themselves, and most software engineers&nbsp;do
+			not have a working&nbsp;knowledge of&nbsp;the mathematics required to&nbsp;work
+			with&nbsp;formal specifications.</P>
+		<P>There is one more significant problem with both of these approaches. Even if you
+			have a very precise specification, expressed in elegant text and graphics, and
+			placed carefully in an expensive ring binder, how do you know that the software product
+			actually reflects that specification and vice versa? If either is changed, the
+			other must be as well. This is&nbsp;the document synchronization problem.</P>
+		<h3>Design by Contract to the Rescue</h3>
+		<P>Design by Contract&nbsp;(DbC) begins as&nbsp;an implementation&nbsp;of&nbsp;some
+			of the ideas from formal methods and matures into a powerful way of thinking
+			about software. And it does it in a way that is easy for programmers and
+			managers to understand. DbC also puts the software specification into the
+			software document itself which makes it checkable at runtime and eliminates the
+			document synchronization problem.</P>
+		<h2>Model for Software Correctness</h2>
+		<P>Design by Contract is built around a model for software correctness that is
+			really pretty simple.</P>
+		<P>Suppose there is software routine called <SPAN CLASS="efeature">s</SPAN>. If we were going to test <SPAN CLASS="efeature">s</SPAN>, we would
+			probably devise some test inputs or test values to be in place when <SPAN CLASS="efeature">s</SPAN> starts
+			and then observe what things look like after <SPAN CLASS="efeature">s</SPAN> completes. If they look the way
+			we think they should then that leads us to believe that&nbsp;S is working
+			correctly for those test inputs.
+		</P>
+		<P>We can&nbsp;generalize and formalize that process a bit, taking it back from
+			testing an into design. If indeed we know what it means for <SPAN CLASS="efeature">s</SPAN> to be correct,
+			then we should be able to make a statement&nbsp;of&nbsp;any conditions that
+			must be&nbsp;true prior to executing <SPAN CLASS="efeature">s</SPAN>. That is, we will state the conditions
+			required for&nbsp;it to be possible for <SPAN CLASS="efeature">s</SPAN> to&nbsp;run correctly. We call this
+			statement of preconditions for success&nbsp;<SPAN CLASS="efeature">s</SPAN>'s
+			<MSHELP:LINK tabIndex="0" keywords="precondition" indexMoniker="!DefaultKeywordIndex">precondition</MSHELP:LINK>.
+		</P>
+		<P>Likewise we should be able to make a statement of the conditions that will be
+			true always if <SPAN CLASS="efeature">s</SPAN> works correctly. This we call <SPAN CLASS="efeature">s</SPAN>'s
+			<MSHELP:LINK tabIndex="0" keywords="postcondition" indexMoniker="!DefaultKeywordIndex">postcondition</MSHELP:LINK>.</P>
+		<P>As an&nbsp;example, suppose <SPAN CLASS="efeature">s</SPAN> accepted an argument of type <SPAN CLASS="eclass">REAL</SPAN> and returned
+			another <SPAN CLASS="eclass">REAL</SPAN> which was the square root of the argument. The precondition for <SPAN CLASS="efeature">s</SPAN>
+			would be that the argument could not be less that zero, as there is no real square root
+			for negative numbers. <SPAN CLASS="efeature">s</SPAN>'s postcondition would be that the result
+			multiplied by itself would yield the value of the original argument (give or
+			take a little to allow for floating point error).</P>
+		<h2>Assertions in Eiffel</h2>
+		<P>Each Eiffel feature which is a routine, i.e. a function or procedure, can
+			support one assertion for a precondition and one for a postcondition.&nbsp;We
+			saw where precondition and postcondition fit into the structure of the routine
+			in <A href="../../eiffel_for_dotnet/30_Adding_Class_Features.htm">Adding Class
+				Features</A> . An assertion&nbsp;is expressed as one or more assertion
+			clauses&nbsp;which are logically <SPAN CLASS="ekeyword">and</SPAN>-ed together to produce the assertion.
+			Assertions clauses are boolean expressions that evaluate to true or false.</P>
+		<P>Let's look at another example. Assume you need to produce a class to model a
+			time of day. Each instance of <SPAN CLASS="eclass">TIME_OF_DAY</SPAN>&nbsp;would hold some particular time
+			of day accurate to the second&nbsp;between 00:00:00 and 23:59:59 inclusive.
+		</P>
+		<P>As a producer, you would be faced with a decision concerning how to maintain the
+			time internally in each instance. For the purpose of our example, let us
+			consider two alternatives:</P>
+		<OL>
+			<LI>
+			Keep three instance of <SPAN CLASS="eclass">INTEGER</SPAN>. One each for hour, minute, and second.
+			<LI>
+				Keep one instance of <SPAN CLASS="eclass">INTEGER</SPAN>&nbsp;representing the time of day as&nbsp;the
+				number of seconds since 00:00:00.</LI></OL>
+		<P>This would be an implementation&nbsp;issue for the producer, because it would
+			not affect the services that <SPAN CLASS="eclass">TIME_OF_DAY</SPAN> could offer clients. If we have a
+			query called <SPAN CLASS="efeature">minute</SPAN> the first alternative allows us simply to provide the
+			value from storage. Whereas the second alternative will likely cause us to compute <SPAN CLASS="efeature">minute</SPAN>
+			each time it is requested. But the service looks and works the same for the
+			client in either alternative.</P>
+		<P>For now let us assume that we are using the first design alternative. In that
+			case we would code class features for <SPAN CLASS="efeature">hour</SPAN>, <SPAN CLASS="efeature">minute</SPAN>, and <SPAN CLASS="efeature">second</SPAN>.</P>
+		<CODE>
+		<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">-- Access</SPAN>&nbsp;
+			<BR>
+			<BR>
+			&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">hour</SPAN>: <SPAN CLASS="eclass">INTEGER</SPAN>&nbsp;
+			<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ecomment">-- Hour
+			expressed as 24-hour value&nbsp;</SPAN>
+			<BR>
+			<BR>
+			&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">minute</SPAN>: <SPAN CLASS="eclass">INTEGER</SPAN>&nbsp;
+			<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ecomment">-- Minutes
+			past the hour&nbsp;
+</SPAN>			<BR>
+			<BR>
+			&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">second</SPAN>: <SPAN CLASS="eclass">INTEGER</SPAN>&nbsp;
+			<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ecomment">-- Seconds
+			past the minute
+</SPAN>
+</CODE>
+		<P></P>
+		<P>Below is the code for a procedure <SPAN CLASS="efeature">set_second</SPAN> which receives an argument of
+			type <SPAN CLASS="eclass">INTEGER</SPAN> and sets the value of the <SPAN CLASS="efeature">second</SPAN> feature to the argurment.
+		</P>
+		<CODE>
+		&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">set_second</SPAN> (<SPAN CLASS="eitag">s</SPAN>:
+			<SPAN CLASS="efeature">INTEGER</SPAN>) <SPAN CLASS="ekeyword">is</SPAN>&nbsp;
+			<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ecomment">-- Set the
+			second from `s'</SPAN>&nbsp;
+			<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">do</SPAN>&nbsp;
+			<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">second</SPAN> :=
+			<SPAN CLASS="eitag">s</SPAN>&nbsp;
+			<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">end</SPAN>
+		</CODE>
+		<P>The routine is simple enough, but there is a problem with it. Suppose a client
+			calls <SPAN CLASS="efeature">set_second</SPAN> with an argument whose value is invalid,
+			say&nbsp;3574.&nbsp;Our&nbsp;routine would just stuff this value into <SPAN CLASS="efeature">second</SPAN>
+			and we would end up with&nbsp;an instance of <SPAN CLASS="eclass">TIME_OF_DAY</SPAN> which is invalid. In
+			the days before&nbsp;Design&nbsp;by Contract,&nbsp;as soon as we recognized that
+			this&nbsp;problem&nbsp;exists,&nbsp;we would go into "defensive programming"
+			mode and code some "<SPAN CLASS="ekeyword">if</SPAN>" statements inside the routine to validate the argument,
+			before acting.</P>
+		<P>Consider though what we can do with Design by Contract. We will add a
+			precondition assertion to <SPAN CLASS="efeature">set_second</SPAN> that expresses the need for valid
+			arguments.</P>
+		<CODE>
+		&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">set_second</SPAN> (<SPAN CLASS="eitag">s</SPAN>:
+			<SPAN CLASS="eclass">INTEGER</SPAN>) is&nbsp;
+			<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ecomment">-- Set the
+			second from `s'</SPAN>&nbsp;&nbsp;<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<SPAN CLASS="eitag">valid_argument_for_second</SPAN>: 0 &lt;= <SPAN CLASS="eitag">s</SPAN> <SPAN CLASS="ekeyword">and</SPAN> <SPAN CLASS="eitag">s</SPAN> &lt;= 59<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">do</SPAN>&nbsp;&nbsp;<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">second</SPAN> :=
+			<SPAN CLASS="eitag">s</SPAN>&nbsp;
+			<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">end</SPAN>
+		</CODE>
+		<P>The precondition is introduced by the keyword "<SPAN CLASS="ekeyword">require</SPAN>". The text
+			"<SPAN CLASS="eitag">valid_argument_for_second</SPAN>" is the label for the assertion clause. The boolean
+			expression&nbsp;"0 &lt;= <SPAN CLASS="eitag">s</SPAN> and <SPAN CLASS="eitag">s</SPAN> &lt;= 59" says that a good value for <SPAN CLASS="eitag">s</SPAN> will
+			be between 0 and 59 inclusive.
+		</P>
+		<P>Remember that the precondition specifies those things that must be true if
+			<SPAN CLASS="efeature">set_second</SPAN> has a chance of working correctly. As such, upon execution, the
+			body of this routine will never be executed if an attempt is made to call it in
+			a state that does not meet its precondition. Instead, the caller will incur a
+			precondition violation exception. We will investigate more about what
+			exceptions mean further in <A href="60_exception_mechanism.html">
+				Exception Mechanism</A>.
+		</P>
+		<P>So, what about a postcondition? We noted earlier that a postcondition should
+			make a statement of what will be true in the case that the routine does its
+			work correctly. For <SPAN CLASS="efeature">set_second</SPAN> this means that after it finishes, the query
+			<SPAN CLASS="efeature">second</SPAN> should have the same value as the argument that was received from the
+			caller. Below is the feature with the postcondition added.</P>
+		<CODE>
+		&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">set_second</SPAN> (<SPAN CLASS="eitag">s</SPAN>:
+			<SPAN CLASS="eclass">INTEGER</SPAN>) <SPAN CLASS="ekeyword">is</SPAN>&nbsp;
+			<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ecomment">-- Set the
+			second from `s'</SPAN>&nbsp;&nbsp;<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<SPAN CLASS="eitag">valid_argument_for_second</SPAN>: 0 &lt;= <SPAN CLASS="eitag">s</SPAN> <SPAN CLASS="ekeyword">and</SPAN> <SPAN CLASS="eitag">s</SPAN> &lt;= 59<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">do</SPAN>&nbsp;&nbsp;<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">second</SPAN> :=
+			<SPAN CLASS="eitag">s</SPAN>&nbsp;&nbsp;<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">ensure</SPAN><BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="eitag">second_set</SPAN>:
+			<SPAN CLASS="efeature">second</SPAN> = <SPAN CLASS="eitag">s</SPAN><BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">end</SPAN>
+		</CODE>
+		<P>The postcondition is introduced by the keyword "<SPAN CLASS="ekeyword">ensure</SPAN>". Here the expression
+			"<SPAN CLASS="efeature">second</SPAN> = <SPAN CLASS="eitag">s</SPAN>" makes certain that the routine did actually do the necessary work
+			to ensure that the value of <SPAN CLASS="efeature">second</SPAN> matches the value of the argument
+			received.</P>
+		<P>As you look at the postcondition, you may be&nbsp;tempted to think that the
+			one-line body of the routine is so simple as to make the postconditon
+			unnecessary. To answer this concern we need to look again for a moment at
+			software specification.</P>
+		<h3>Specification of a Routine</h3>
+		<P>If we remove the instructions from a routine&nbsp;and leave&nbsp;its signature,
+			header comment and assertions, we have a specification for the routine.</P>
+		<CODE>
+		&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">set_second</SPAN> (<SPAN CLASS="eitag">s</SPAN>:
+			<SPAN CLASS="eclass">INTEGER</SPAN>) <SPAN CLASS="ekeyword">is</SPAN>&nbsp;
+			<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ecomment">-- Set the
+			second from `s'</SPAN>&nbsp;&nbsp;<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<SPAN CLASS="eitag">valid_argument_for_second</SPAN>: 0 &lt;= <SPAN CLASS="eitag">s</SPAN> and <SPAN CLASS="eitag">s</SPAN> &lt;= 59<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; en<SPAN CLASS="ekeyword"></SPAN>sure<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="eitag">second_set</SPAN>:
+			<SPAN CLASS="efeature">second</SPAN> = <SPAN CLASS="eitag">s</SPAN><BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">end</SPAN>
+		</CODE>
+		<P>This specification of <SPAN CLASS="efeature">set_second</SPAN> tells us what is required of reuse consumers
+			if they wish to use <SPAN CLASS="efeature">set_second</SPAN> and what <SPAN CLASS="efeature">set_second</SPAN> promises to do for them.
+			Importantly, it does that <EM>without</EM> revealing how it does it does what
+			it does.
+		</P>
+		<P>So, this specification view,&nbsp;officially called&nbsp;the contract
+			view,&nbsp;is how consumers of class <SPAN CLASS="eclass">TIME_OF_DAY</SPAN> would view the feature.
+		</P>
+		<P>If this is the specification, then haven't we put the cart before the horse? The
+			answer is yes. We have done so to illustrate the problems that assertion-based
+			specification can help solve.</P>
+		<P>Instead of starting with a routine and adding a specification, we really want to
+			start in accepted software engineering fashion with specification first, and
+			then add implementation. Therefore, the specification you see above would exist
+			before the implementation.
+		</P>
+		<P>Now back to the concern over whether the postcondition is redundant for this
+			simple one-line routine. Obviously, if this specification exists first, then
+			the postcondition must be there, and it would be silly to remove it later. But,
+			more importantly, suppose that when the producer of the class decided on an
+			implementation, he or she chose the second design alternative we mentioned
+			above. This would mean that the internal state of an instance of <SPAN CLASS="eclass">TIME_OF_DAY</SPAN>
+			would be only one <SPAN CLASS="eclass">INTEGER</SPAN> with the number of seconds since midnight. That would
+			mean that the query <SPAN CLASS="efeature">second</SPAN> would probably be a function that computed seconds
+			from that one <SPAN CLASS="eclass">INTEGER</SPAN>&nbsp;instead of&nbsp;an attribute.
+		</P>
+		<P>What would change in the specification of <SPAN CLASS="efeature">set_second</SPAN>? Nothing. The
+			implementation for the routine would be more complex, but what it does, setting
+			the second in an instance of <SPAN CLASS="eclass">TIME_OF_DAY</SPAN>, would stay the same.
+		</P>
+		<P>In summary, the precondition and postcondition ensure for use that the routine
+			will only execute if called in a state in which the precondition is true, and
+			then will either complete in a state in which the postcondition is true, or
+			cause a postcondition violation exception.</P>
+		<h3>The Contract for a Routine</h3>
+		<P>Having assertions on its routines forms a contract between the <SPAN CLASS="eclass">TIME_OF_DAY</SPAN> class
+			and all potential reuse consumers. The contract is much like a contract in
+			business, with obligations and benefits&nbsp;for both parties.&nbsp;</P>
+		<UL>
+			<LI>
+			The client's benefits are outlined in the postcondition.&nbsp;
+			<LI>
+			The client's obligations come from the precondition.&nbsp;
+			<LI>
+			The supplier's obligations are in the postcondition.&nbsp;
+			<LI>
+				The supplier's benefits come from the precondition.&nbsp;</LI></UL>
+		<P>We can see the&nbsp;specifics of&nbsp;these by using <SPAN CLASS="efeature">set_second</SPAN> as an example.</P>
+		<P></P>
+		<UL>
+			<LI>
+			The client gets the desired value for seconds set in the instance.
+			<LI>
+			The client must provide an argument that is valid for seconds.
+			<LI>
+			The supplier must update the instance successfully.
+			<LI>
+				The supplier need not&nbsp;risk disaster&nbsp;attempting to process&nbsp;in an
+				invalid state&nbsp;nor&nbsp;waste time validating the argument received from
+				the client.</LI></UL>
+		<h3>Valid State for Instances</h3>
+		<P>Assertions on&nbsp;<SPAN CLASS="eclass">TIME_OF_DAY</SPAN>'s routines gives us specification for each
+			routine and guarantees that if&nbsp;the specification of a routine gets
+			violated at runtime&nbsp;we will be served immediately with an exception. This
+			will go a long way toward preventing invalid instances from going unnoticed in
+			a running system and fouling up lots of other stuff.</P>
+		<P>What will help even more is something called a
+			<MSHELP:LINK tabIndex="0" keywords="class invariant" indexMoniker="!DefaultKeywordIndex">class invariant</MSHELP:LINK>.
+			Using the class invariant we are able to state&nbsp;what it means for an
+			instance of a class to be valid, or as it is sometimes put, in a stable state.</P>
+		<P>The class invariant is an assertion like precondition and postcondition, but
+			there is only one per class. Check&nbsp;<A href="../../eiffel_for_dotnet/20_Eiffel_Classes.htm">Eiffel
+				Classes</A> to see how&nbsp;the class invariant&nbsp;fits into the class
+			structure.</P>
+		<P>How would we code the class invariant for <SPAN CLASS="eclass">TIME_OF_DAY</SPAN>? An instance would be
+			valid if its hour were between 0 and 23 inclusive, minute were between 0 and 59
+			inclusive, and its second were between 0 and 59 inclusive. We can code the
+			invariant as shown below.</P>
+		<CODE>
+		&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">invariant</SPAN>&nbsp;<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="eitag">hour_valid</SPAN>: 0 &lt;= <SPAN CLASS="efeature">hour</SPAN> and
+			<SPAN CLASS="efeature">hour</SPAN> &lt;= 23<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="eitag">minute_valid</SPAN>: 0 &lt;= <SPAN CLASS="efeature">minute</SPAN>
+			and <SPAN CLASS="efeature">minute</SPAN> &lt;= 59<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="eitag">second_valid</SPAN>: 0 &lt;= <SPAN CLASS="efeature">second</SPAN>
+			and <SPAN CLASS="efeature">second</SPAN> &lt;= 59
+			</CODE>
+		<P>The name invariant implies that the assertion can never be false ... and that's
+			true up to a point. It's really more like, "it must be true at times&nbsp;when
+			it really counts".</P>
+		<P>At runtime the invariant must be true for an instance&nbsp;at anytime
+			that&nbsp;the instance is available to clients. In general, this means that the
+			invariant must be true before and after the execution of every exported
+			routine.</P>
+		<P>As with the assertions on routines, if ever the invariant is not true when it
+			should be, then a class invariant violation occurs.</P>
+		<P>Remember in the example above, that the features <SPAN CLASS="efeature">hour</SPAN>, <SPAN CLASS="efeature">minute</SPAN>, and <SPAN CLASS="efeature">second</SPAN>
+			are queries, but they could be either attributes or functions.
+		</P>
+		<h2>The Contract for a Class</h2>
+		<P>Earlier we saw the contract for a routine. Now we can define the contract for a
+			class as the aggregation of the contracts for all its exported features, plus
+			its class invariant.</P>
+		<P>In Design by Contract we design based on these contracts. They are the
+			specifications for the modules in our system. We work in a reuse-oriented
+			world. Whenever we produce a class, we produce it with a comprehensive contract
+			which serves as its specification.&nbsp;We build each class with the thought
+			that it may eventually become reusable.
+		</P>
+		<P>When we are in our reuse consumer role, using existing classes, we tend not to
+			look at the implementations for the classes we use. Instead we look at their
+			contract views. It is there that we find the obligations and benefits of using
+			each class.&nbsp;&nbsp;</P>
+		<H2>Contracts and Debugging</H2>
+		<P>We saw earlier that having contracts in the code tends to expose bugs at an
+			early stage of development. It is possible selectively to turn off and on the
+			runtime checking of assertions by changing project settings. Checking
+			assertions does involve processing. More about turn off assertion checking in a
+			moment.
+		</P>
+		<P>Having contracts on a class gives another advantage when the contract
+			gets&nbsp;broken.&nbsp;The contract tells us whose fault it is.&nbsp;Whenever
+			there is a violation of a precondition, postcondition, or class invariant then
+			the software is out of specification. This situation is called a defect, or
+			bug.
+		</P>
+		<P>Whose fault is it? If a precondition was violated, then a client class attempted
+			to call a routine in a supplier, but made the call in a state that did not
+			satisfy the supplier's precondition. Therefore the bug is in the client.</P>
+		<P>If a postcondition was violated, then a client made a call in a state that did
+			satisfy the supplier's precondition, but the supplier was unable to complete
+			the work as agreed. Therefore the fault lies with the supplier.</P>
+		<P>If a class invariant was violated, then the
+			instance has been placed in an invalid state during the execution of a routine, and left that way when the
+			processing completed. This caused the invariant violation. As with the
+			postcondition violation, because the problem occurred while executing routines
+			in the supplier, preconditions must have been met. The supplier then is to
+			blame.</P>
+		<P>Based on this knowledge, we can say that it is most practical first to turn off
+			runtime checking of postconditions and invariants as we gain confidence in a
+			class. Meaning of course, that we feel confident that any&nbsp;calls that meet
+			preconditions will be properly processed. Then our only worry is that some
+			deranged client will,&nbsp;with total disregard for our carefully crafted
+			preconditions, make calls to our routines&nbsp;from invalid states. So, maybe
+			we will leave precondition checking turned on for a while.</P>
+		<H2>Contracts and Inheritance</H2>
+		<P>In the section titled&nbsp;<A href="../../eiffel_for_dotnet/40_Inheritance.htm">Inheritance</A>
+			you saw that it was possible through inheritance to produce a new class that
+			has all the features of an existing one. This is a very powerful notion, and
+			could be dangerous. What would keep descendants from redefining inherited
+			features with semantics that were totally different from those intended by the
+			producer of the original class? Nothing if it were not for the contract.</P>
+		<P>Simply speaking assertions on a parent class, preconditions, postconditions, and
+			class invariants, all are inherited by the class's proper descendants.
+		</P>
+		<P>For class invariants, if any new invariants are coded in an heir, they will be
+			added to those inherited from the parent, using a non-strict version of logical
+			"and" (We will define non-strict booleans in Writing Assertions below).</P>
+		<P>That is simple enough. And the situation is also simple for effective routines
+			inherited and left unchanged ... the contracts stand as written.
+		</P>
+		<P>From our example above you may have gotten the idea that contracts are really
+			useful only for effective routines. Such is not the case. In fact, specifying a
+			contract on a deferred routine is really a powerful notion. It says not only
+			that effective descendants must provide an implementation for this routine, but
+			also that there is a contract that must be satisfied. Effecting or redefining a
+			routine in a descendant class will not make the contract go away. Here is an
+			feature from the Base Library deferred class <SPAN CLASS="eclass">ACTIVE</SPAN> which models data
+			structures with a current item, and is an ancestor to many effective container
+			type classes.</P>
+		<CODE>
+		<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">-- Element change</SPAN>
+			<br>
+			<br>
+			&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">replace</SPAN> (<SPAN CLASS="eitag">v</SPAN>: <SPAN CLASS="egeneric">G</SPAN>) <SPAN CLASS="ekeyword">is</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ecomment">-- Replace
+			current item by `v'.</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">require</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="eitag">writable</SPAN>:
+			<SPAN CLASS="efeature">writable</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">deferred</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">ensure</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<SPAN CLASS="eitag">item_replaced</SPAN>: <SPAN CLASS="efeature">item</SPAN> = <SPAN CLASS="eitag">v</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">end</SPAN>
+		</CODE>
+		<P>Feature <SPAN CLASS="efeature">replace</SPAN> carries the semantics necessary for replacing an item in an
+			<SPAN CLASS="eclass">ACTIVE</SPAN>. It does not, however provide an implementation. All implementers must
+			produce versions of <SPAN CLASS="efeature">replace</SPAN> that satisfy the contract specified here.</P>
+		<P>It actually is possible to alter&nbsp;a&nbsp;feature assertion in an effected or
+			redefined version(technically its a replacement of the original version):</P>
+		<UL>
+			<LI>
+			The precondition can only become weaker than in the inherited contract.
+			<LI>
+				The postcondition can only become stronger than in the inherited contract.</LI></UL>
+		<P>These rules are imposed as a consequence of the effect of effected or redefined
+			routines on polymorphism and dynamic binding. But, you can understand them from
+			an intuitive viewpoint, if you reconsider the business contract analogy.
+			Suppose a contractor makes a deal with a client to do certain work (represented
+			by the postcondition). Part of the deal might be that the client agrees to have
+			a site ready by a certain date (represented by the
+			precondition). The contractor represents the parent class in
+			the analogy. Now suppose the contractor brings in a subcontractor (representing
+			the heir class) to do a portion of the work. The subcontractor cannot force the
+			client to change the date that the site is to&nbsp;be ready to an earlier
+			date&nbsp;(no strengthing of the precondition). The deal with the client was
+			made by the contractor and so no new or stronger requirements can be imposed by
+			the subcontractor. Likewise the subcontractor must provide at least as much
+			work as was bargained for by the contractor, but may promise to provide more if
+			appropriate (strengthing of postcondition is allowed.)</P>
+		<P>In Writing Assertions below you will see the syntax for weaking preconditions
+			and strengthening postconditions.</P>
+		<H2>Unfinished Business</H2>
+		<P>In the section <A href="../../eiffel_for_dotnet/30_Adding_Class_Features.htm">Adding
+				Class Features</A>, we promised to explain two issues during this
+			discussion of Design by Contract.</P>
+		<h3>Short Routines</h3>
+		<P>One of these is the tendency of mature Eiffel programmers to write routines that
+			are quite short. It should be clear by now that we wish to build a contract on
+			each routine. The contract describes the semantics of the routine in a
+			declarative fashion. In other words, it tells what the routine does, without
+			giving an indication of how it does it.</P>
+		<P>Try to imagine giving a declarative description of a routine that was 50 lines
+			long. Hardly possible. So decomposition of complex computations into chunks
+			small enough to describe with assertions is what gets done.</P>
+		<h3>Command/Query Separation</h3>
+		<P>In <A href="../../eiffel_for_dotnet/30_Adding_Class_Features.htm">Adding Class
+				Features</A>, we saw that we can categorize features as either queries or
+			commands. A query will ask a question or make an observation about an instance.
+			A command will tell the instance to take some action which may result in
+			changing the instances internal state.
+		</P>
+		<P>We said that when program routines, that those routines should either be
+			commands or queries but not both. Importantly, asking a question about an
+			instance should not change the instance. Likewise, taking an action that
+			changes the state of an instance should not return a result.
+		</P>
+		<P>Here's the rationale. In a routines postcondition we use boolean expressions to
+			ensure that the routine has done its job properly. Likewise, class
+			invariants,&nbsp;which define&nbsp;the valid state&nbsp;for instances,&nbsp;are
+			written as boolean expressions. In both cases we may use the features of the
+			class which are queries to ask about an instances current state.
+		</P>
+		<P>If a query that we use in an assertion were to change the state of the instance,
+			then the result we received would be invalid as soon as we received it.
+		</P>
+		<P>Therein lies the primary reasoning behind command/query separation. You cannot
+			reason about the integrity of an object if the act of asking a question changes
+			the object.</P>
+		<H2>Writing&nbsp;Assertions</H2>
+		<P>You have seen fairly typical assertions written in the examples above. Study the
+			classes in the libraries&nbsp;to see&nbsp;some excellent working&nbsp;examples.
+			There are a couple of things that need to be covered.</P>
+		<h3>Non-Strict Booleans</h3>
+		<P>One is that, as you can probably imagine, it is not a good thing to cause an
+			exception during the process of checking an assertion. One of the most common
+			ways to cause such an exception is to apply a feature to a Void reference.</P>
+		<P>The way to avoid this is to use the non-strict booleans "<SPAN CLASS="ekeyword">and then</SPAN>" and "<SPAN CLASS="ekeyword">or
+			else</SPAN>". These forms of "<SPAN CLASS="ekeyword">and</SPAN>" and "<SPAN CLASS="ekeyword">or</SPAN>" do not force the checking of all
+			conditions. As soon as a determination can be made, they stop checking. It is
+			typical to see "<SPAN CLASS="ekeyword">and then</SPAN>" used to avoid applying a feature to a void reference
+			in preconditons.&nbsp;Below is a creation procedure that uses a&nbsp;non-strict
+			boolean in its precondition.</P>
+		<CODE>
+		&nbsp;&nbsp;&nbsp; make (<SPAN CLASS="eitag">a_nm</SPAN>:
+			<SPAN CLASS="eclass">STRING</SPAN>; <SPAN CLASS="eitag">a_offset</SPAN>: <SPAN CLASS="eclass">INTEGER</SPAN>) <SPAN CLASS="ekeyword">is</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment"> -- Initalize
+			with name `a_nm' and utcoffset `a_offset'</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">require</SPAN>&nbsp;&nbsp;<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<SPAN CLASS="eitag">name_not_empty</SPAN>: <SPAN CLASS="eitag">a_nm</SPAN> /= <SPAN CLASS="ekeyword">Void</SPAN> <SPAN CLASS="ekeyword">and</SPAN> <SPAN CLASS="ekeyword">then</SPAN> <SPAN CLASS="ekeyword">not</SPAN> <SPAN CLASS="eitag">a_nm</SPAN>.<SPAN CLASS="efeature">is_empty</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<SPAN CLASS="eitag">offset_valid</SPAN>: <SPAN CLASS="eitag">a_offset</SPAN> &gt;= -12 and <SPAN CLASS="eitag">a_offset</SPAN> &lt;= 12&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">do</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">name</SPAN> :=
+			<SPAN CLASS="efeature">clone</SPAN> (<SPAN CLASS="eitag">a_nm</SPAN>)&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">utcoffset</SPAN> :=
+			<SPAN CLASS="eitag">a_offset</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">ensure</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<SPAN CLASS="eitag">name_initialized</SPAN>: <SPAN CLASS="efeature">name</SPAN>.<SPAN CLASS="efeature">is_equal</SPAN> (<SPAN CLASS="eitag">a_nm</SPAN>)&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<SPAN CLASS="eitag">utcoffset_initialized</SPAN>: <SPAN CLASS="efeature">utcoffset</SPAN> = <SPAN CLASS="eitag">a_offset</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; end
+		</CODE>
+		<h3>Replacing Inherited Feature Assertions</h3>
+		<P>
+			To replace a precondition on a feature you are effecting or redefining, you use
+			the "<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ekeyword">else</SPAN>" keywords to introduce new conditions. These conditions will
+			be logically "<SPAN CLASS="ekeyword">or</SPAN>-ed" with the original precondition to form an new one.</P>
+		<P>Likewise use "<SPAN CLASS="ekeyword">and</SPAN> <SPAN CLASS="ekeyword">then</SPAN>" to add conditions to a postcondition. The added
+			conditions will be "<SPAN CLASS="ekeyword">and</SPAN>-ed" to the original.</P>
+		<P>Below is an example of weakening a precondition. The first feature shown is from
+			class <SPAN CLASS="eclass">DYNAMIC_CHAIN</SPAN> in the Base Library.
+		</P>
+		<CODE>
+		&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">remove_left</SPAN>
+			<SPAN CLASS="ekeyword">is</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ecomment">-- Remove
+			item to the left of cursor position</SPAN>.&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ecomment">-- Do not
+			move cursor.</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">require</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="eitag">left_exists</SPAN>:
+			<SPAN CLASS="efeature">index</SPAN> &gt; 1&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">deferred</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">ensure</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="eitag">new_count</SPAN>:
+			<SPAN CLASS="efeature">count</SPAN> = <SPAN CLASS="ekeyword">old</SPAN> <SPAN CLASS="efeature">count</SPAN> - 1&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="eitag">new_index</SPAN>:
+			<SPAN CLASS="efeature">index</SPAN> = <SPAN CLASS="ekeyword">old</SPAN> <SPAN CLASS="efeature">index</SPAN> - 1
+			<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">end</SPAN>
+		</CODE>
+		<P>The next feature is from <SPAN CLASS="eclass">DYNAMIC_LIST</SPAN>, a proper descendant of <SPAN CLASS="eclass">DYNAMIC_CHAIN</SPAN>.
+			<SPAN CLASS="eclass">DYNAMIC_LIST</SPAN> weakens the precondition it inherited from <SPAN CLASS="eclass">DYNAMIC_CHAIN</SPAN>.
+			Originally in <SPAN CLASS="eclass">DYNAMIC_CHAIN</SPAN>,&nbsp;"<SPAN CLASS="efeature">index</SPAN> &gt; 1"&nbsp;was required for
+			<SPAN CLASS="efeature">remove_left</SPAN>.&nbsp;In <SPAN CLASS="eclass">DYNAMIC_LIST</SPAN>&nbsp;either "<SPAN CLASS="efeature">index</SPAN> &gt; 1" or&nbsp;"<SPAN CLASS="ekeyword">not</SPAN>
+			<SPAN CLASS="efeature">before</SPAN>" (or both) will suffice.
+		</P>
+		<CODE>
+		&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">remove_left</SPAN>
+			<SPAN CLASS="ekeyword">is</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ecomment">-- Remove
+			item to the left of cursor position.</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ecomment">-- Do not
+			move cursor.</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">require else</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="eitag">not_before</SPAN>:
+			<SPAN CLASS="ekeyword">not</SPAN> <SPAN CLASS="efeature">before</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">deferred</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">end</SPAN>
+		</CODE>
+		<H2 style="LEFT: 5px; TOP: 5118px">Not Writing&nbsp;Assertions</H2>
+		<P>Let's close this discussion of Design by Contract with&nbsp;one more interesting
+			and&nbsp;point to make about assertions. The precondition and postcondition
+			parts of a routine are optional, as you may remember from <A href="../../eiffel_for_dotnet/30_Adding_Class_Features.htm">
+				Adding Class Features</A>. Suppose you write a routine and do not code
+			either precondition or postcondition. You might be tempted to think that you
+			have simply written a routine that has no contract. But, that would not be the
+			case.</P>
+		<P>The contract exists, even though you do not code it explicitly. If it were
+			written out, it&nbsp;would look as follows.</P>
+		<CODE>
+		&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">my_routine</SPAN>
+			<SPAN CLASS="ekeyword">is</SPAN>&nbsp;
+			<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ecomment">--&nbsp;My
+			descriptive header comment</SPAN><BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">require</SPAN>&nbsp;&nbsp;<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">True</SPAN>&nbsp;&nbsp;<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">ensure</SPAN>&nbsp;&nbsp;<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">True</SPAN>&nbsp;<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">end</SPAN>
+		</CODE>
+		<P>What does this mean? It means that you have selected the weakest possible
+			precondition and postcondition for your routine. Of course, this may be
+			perfectly valid under some circumstances.</P>
+		<P>Just understand that&nbsp;if your routine could speak, it would&nbsp;be telling
+			you, "I can always work successfully without any particular guarantees from
+			you&nbsp;at all. On the other hand, I won't promise you&nbsp;any particular
+			results when I get done."</P>
+		<P>&nbsp;</P>
+		<P>&nbsp;</P>
+	</BODY>
+</HTML>

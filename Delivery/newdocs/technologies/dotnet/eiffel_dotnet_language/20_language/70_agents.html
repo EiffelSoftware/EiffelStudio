@@ -1,0 +1,500 @@
+<HTML XMLNS:MSHelp="http://msdn.microsoft.com/mshelp">
+	<HEAD>
+		<TITLE>Event Programming with Agents</TITLE>
+		<meta content="HTML 4.0" name="vs_targetSchema">
+		<LINK href="../../../../default.css" type="text/css" charset="ISO-8859-1" rel="STYLESHEET"></LINK>
+		<LINK href="ms-help://Hx/HxRuntime/HxLinkDefault.css" type="text/css" rel="stylesheet"></LINK>
+		<LINK href="ms-help://Hx/HxRuntime/HxLink.css" type="text/css" rel="stylesheet"></LINK></HEAD>
+	<BODY>
+		<P></P>
+		<h1>Event Programming with Agents</h1>
+		<P>In Eiffel there is a facility&nbsp;referred to as&nbsp;agents.
+		</P>
+		<P>The implementation of agents&nbsp;is an advanced topic, but you do not have to 
+			understand the details of the implementation of agents to put agents to work 
+			for you. That is what you will learn in this section.
+		</P>
+		<h2>Objects that Represent Operations</h2>
+		<p>Object technology is based on the idea that when we model real world objects, we 
+			model them based on the things that they have and what they can do ... their 
+			properties and their operations. The operations in Eiffel are the
+			<MSHELP:LINK tabIndex="0" keywords="routine" indexMoniker="!DefaultKeywordIndex">routines</MSHELP:LINK>, 
+			i.e., the
+			<MSHELP:LINK tabIndex="0" keywords="function" indexMoniker="!DefaultKeywordIndex">functions</MSHELP:LINK>
+			and
+			<MSHELP:LINK tabIndex="0" keywords="procedure" indexMoniker="!DefaultKeywordIndex">procedures</MSHELP:LINK>, 
+			of classes. Operations are not objects.
+		</p>
+		<P>Having said that, it is sometimes desirable for us to model operations. We do 
+			this in the same fashion that we model other concepts: statically as classes, 
+			and as objects at runtime.</P>
+		<P>An object that represents an operation is called an <EM>agent</EM>.</P>
+		<P>If we can have a&nbsp;runtime object that represents an operation, then we can 
+			place the object in the structure of another object, where at some later time, 
+			a client can cause the associated operation to execute.
+		</P>
+		<P>This is a very desirable model for event driven processing, like graphical user 
+			interfaces. The&nbsp;operations that are executed&nbsp;when a user take some 
+			action like clicking on a button, could be represented by agents. When the user 
+			interface element is initialized, agents that represent the action routines are 
+			stored within the interface element. Then at the time that an event, say a 
+			button click, occurs, the agents for that event are retrieved and their 
+			associated operations are executed.</P>
+		<P>Another area in which agents are commonly used&nbsp;is in traversing data 
+			structures. Many of the data structure classes in the Base Library include 
+			routines which take agents as there arguments. For example, the feature
+			<SPAN CLASS="efeature">do_all</SPAN>
+			takes an agent which represents some procedure and will apply the 
+			procedure&nbsp;to every item in the structure.</P>
+		<H2>Classes to Model Operations</H2>
+		<P>We know that there are two types of routines in Eiffel, functions and 
+			procedures.
+		</P>
+		<P>Not surprisingly, the implementation of agents relies on three classes in the 
+			Base Library. Class
+			<SPAN CLASS="eclass">ROUTINE</SPAN>, and its heirs
+			<SPAN CLASS="eclass">FUNCTION</SPAN>
+			and
+			<SPAN CLASS="eclass">PROCEDURE</SPAN>.</P>
+		<P>When you use an agent from a client routine, you will be building an instance of 
+			either
+			<SPAN CLASS="eclass">FUNCTION</SPAN>
+			or
+			<SPAN CLASS="eclass">ROUTINE</SPAN>. This happens implicitly as you will see.</P>
+		<H2>Using Agents</H2>
+		<P>Below is an instruction which passes an agent as an argument to a procedure.
+		</P>
+		<CODE>
+			<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="efeature">button</SPAN>.<SPAN CLASS="efeature">select_actions</SPAN>.<SPAN CLASS="efeature">extend</SPAN>
+				(<SPAN CLASS="ekeyword">agent</SPAN>
+				<SPAN CLASS="eitag">gauge</SPAN>.<SPAN CLASS="efeature">step_forward</SPAN>)</P>
+		</CODE>
+		<P>In this example, the producer wants to add the action of stepping the gauge 
+			forward in the event that a button is clicked. The&nbsp;keyword "<SPAN CLASS="ekeyword">agent</SPAN>" 
+			is used to&nbsp;indicate that at runtime an object&nbsp;of type&nbsp;<SPAN CLASS="eclass">PROCEDURE</SPAN>
+			should be created&nbsp;which represents&nbsp;applying&nbsp;the feature
+			<SPAN CLASS="efeature">step_forward</SPAN>
+			to the object attached to
+			<SPAN CLASS="eitag">gauge</SPAN>. It is the object of type
+			<SPAN CLASS="eclass">PROCEDURE</SPAN>
+			that is passed as&nbsp;the argument.
+		</P>
+		<P>It is important to understand that
+			<SPAN CLASS="efeature">step_forward</SPAN>
+			does not get applied at the point that the instruction above is executed. 
+			Rather the procedure object that represents
+			<SPAN CLASS="efeature">step_forward</SPAN>
+			is given to the button to hold in reserve. Then at the point that the button 
+			click event takes place, the button will go through its list of
+			<SPAN CLASS="efeature">select_actions</SPAN>
+			executing their associated routines. Only then does
+			<SPAN CLASS="efeature">step_forward</SPAN>
+			get applied to
+			<SPAN CLASS="eitag">gauge</SPAN>.</P>
+		<h3>Agents with Arguments</h3>
+		<P>In this example, the routine "<SPAN CLASS="efeature">step_forward</SPAN>"&nbsp;on 
+			which the agent is based takes no arguments. If you drilled down into the 
+			workings of this example you&nbsp;would find that&nbsp;class that 
+			implements&nbsp;the feature&nbsp;<SPAN class="efeature">extend</SPAN>
+			is class
+			<SPAN CLASS="eclass">EV_NOTIFY_ACTION_SEQUENCE</SPAN>.&nbsp;You would 
+			also&nbsp;see that the&nbsp;signature for&nbsp;the feature
+			<SPAN class="efeature">extend</SPAN>
+			is as essentially as follows.&nbsp;</P>
+		<CODE>
+			<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="efeature">extend</SPAN>
+				(<SPAN CLASS="eitag">v</SPAN>:
+				<SPAN class="eclass">PROCEDURE</SPAN>
+				[<SPAN class="eclass">ANY</SPAN>,
+				<SPAN class="eclass">TUPLE</SPAN>])</P>
+		</CODE>
+		<P>We don't have to know too much about the&nbsp;workings of agents&nbsp;to see 
+			that "<SPAN CLASS="efeature">extend</SPAN>" takes an argument
+			<SPAN CLASS="eitag">v</SPAN>
+			which is of type
+			<SPAN CLASS="eclass">PROCEDURE</SPAN>. It turns out that the actual generic 
+			parameter
+			<SPAN CLASS="eclass">TUPLE</SPAN>
+			represents the set of "open" arguments. In this case, extend is expecting an 
+			agent which has no open arguments.&nbsp;</P>
+		<h3>Open and Closed Arguments</h3>
+		<P>It is this business of open and closed arguments which really makes agents 
+			remarkable. To get a feel for it, let's simplify the example some. Instead of 
+			considering an agent passed as an argument let's look at it as a simple 
+			assignment within a class.</P>
+		<P>Suppose a class has a feature declared as shown below.</P>
+		<CODE>
+			<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="efeature">my_procedure</SPAN>:
+				<SPAN class="eclass">PROCEDURE</SPAN>
+				[<SPAN class="eclass">ANY</SPAN>,
+				<SPAN class="eclass">TUPLE</SPAN>]</P>
+		</CODE>
+		<P>Then what can be assigned to
+			<SPAN CLASS="efeature">my_procedure</SPAN>?. An agent, of course. Say the class 
+			has procedures as follows.</P>
+		<CODE>
+			<P>&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="efeature">no_argument_procedure</SPAN>
+				<SPAN CLASS="ekeyword">is</SPAN>&nbsp;
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="ecomment">-- A
+				procedure with no arguments</SPAN>&nbsp;
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="ekeyword">do</SPAN>&nbsp;&nbsp;
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">print</SPAN>
+				(<SPAN CLASS="estring">"No argument here!%N%N"</SPAN>)&nbsp;
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="ekeyword">end</SPAN></P>
+			<P>&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="efeature">two_argument_procedure</SPAN>
+				(<SPAN CLASS="eitag">an_int</SPAN>:
+				<SPAN CLASS="eclass">INTEGER</SPAN>;
+				<SPAN CLASS="eitag">another_int</SPAN>:
+				<SPAN CLASS="eclass">INTEGER</SPAN>)
+				<SPAN CLASS="ekeyword">is</SPAN>&nbsp;
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment"> -- A
+				procedure with two arguments</SPAN>&nbsp;
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="ekeyword">do</SPAN>&nbsp;&nbsp;
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">print</SPAN>
+				(<SPAN CLASS="estring">"My arguments are: "</SPAN>
+				+
+				<SPAN CLASS="eitag">an_int</SPAN>.<SPAN CLASS="efeature">out</SPAN>
+				+
+				<SPAN CLASS="estring">" and "</SPAN>
+				+
+				<SPAN CLASS="eitag">another_int</SPAN>.<SPAN CLASS="efeature">out</SPAN>
+				+
+				<SPAN CLASS="estring">"%N"</SPAN>)&nbsp;
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="ekeyword">end</SPAN></P>
+		</CODE>
+		<P>Then the following assignment is valid.</P>
+		<CODE>
+			<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="efeature">my_procedure</SPAN>
+				:=
+				<SPAN CLASS="ekeyword">agent</SPAN>
+				<SPAN CLASS="efeature">no_argument_procedure</SPAN></P>
+		</CODE>
+		<P>What this means is that the agent created and associated with the procedure
+			<SPAN CLASS="efeature">no_argument_procedure</SPAN>
+			must conform to the type
+			<SPAN class="eclass">PROCEDURE</SPAN>
+			[<SPAN class="eclass">ANY</SPAN>,
+			<SPAN class="eclass">TUPLE</SPAN>]. The feature
+			<SPAN CLASS="efeature">my_procedure</SPAN>
+			(which is of type
+			<SPAN CLASS="eclass">PROCEDURE</SPAN>) can be attached at runtime to an agent 
+			representing a procedure with no open arguments, which indeed is what
+			<SPAN CLASS="efeature">no_argument_procedure</SPAN>
+			is.
+		</P>
+		<P>Now let's turn our attention to the other procedure
+			<SPAN CLASS="efeature">two_argument_procedure</SPAN>. You might think that 
+			because it takes two arguments, that you would not be able to build an agent 
+			from it which could be assigned to the attribute
+			<SPAN CLASS="efeature">my_procedure</SPAN>. But you can do it by closing the 
+			two arguments at the time that the agent is created, as in the following.
+		</P>
+		<CODE>
+			<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="efeature">my_procedure</SPAN>
+				:=
+				<SPAN CLASS="ekeyword">agent</SPAN>
+				<SPAN CLASS="efeature">two_argument_procedure</SPAN>
+				(1, 2)&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="ecomment">-- Is Valid</SPAN></P>
+		</CODE>
+		<P>What happens here is that&nbsp; values are fixed for those arguments at the time 
+			that the agent, an object of type&nbsp;<SPAN class="eclass">PROCEDURE</SPAN>
+			[<SPAN class="eclass">ANY</SPAN>,
+			<SPAN class="eclass">TUPLE</SPAN>] is created.
+		</P>
+		<P>So this is the wonderful thing about agents. A routine which will be represented 
+			as an agent does not have to be an exact fit for the expected signature. By 
+			closing some arguments at agent creation, you have effectively produced a new 
+			and conforming routine.</P>
+		<P>The advantange of this is that you can sometimes avoid building specialized 
+			routines for the sole purpose of having a routine which conforms to the agent 
+			signature.</P>
+		<P>To leave an argument open, you hold its place with a question mark. If you 
+			intend for all arguments to be open, then you may make them all question marks, 
+			or leave off the arguments entirely.</P>
+		<P><CODE> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="efeature">my_procedure</SPAN>
+				:=
+				<SPAN CLASS="ekeyword">agent</SPAN>
+				<SPAN CLASS="efeature">two_argument_procedure</SPAN>
+				(?, 2)&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment"> -- Argument 1 left open</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="efeature">my_procedure</SPAN>
+				:=
+				<SPAN CLASS="ekeyword">agent</SPAN>
+				<SPAN CLASS="efeature">two_argument_procedure</SPAN>
+				(?, ?)&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="ecomment">-- Both arguments left open</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="efeature">my_procedure</SPAN>
+				:=
+				<SPAN CLASS="ekeyword">agent</SPAN>
+				<SPAN CLASS="efeature">two_argument_procedure</SPAN>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="ecomment">-- Both arguments left open</SPAN><BR>
+			</CODE>
+		<P></P>
+		<P>If an argument is open, then it means that a value is not provided for that 
+			argument at the time that the agent is created. The implication is that the 
+			value must be provided at some time prior to the time that the agent's 
+			associated routine gets executed. A precondition to executing a routine 
+			associated with an agent is that the agent has a valid set of arguments (called 
+			operands within the
+			<SPAN CLASS="eclass">ROUTINE</SPAN>
+			classes)&nbsp;for the call. If you were to leave one or both of the arguments 
+			to
+			<SPAN CLASS="efeature">two_argument_procedure</SPAN>
+			open as in the examples above, the assignment would still work due to the rules 
+			governing
+			<SPAN CLASS="ekeyword">TUPLE</SPAN>
+			conformance. But, at runtime unless the other arguments had been provided, the 
+			"<SPAN CLASS="eitag">valid operands</SPAN>"&nbsp;precondition would be 
+			violated.</P>
+		<P>Let's see an example in which we leave a target open. Suppose we have a class 
+			that has a feature coded as below</P>
+		<CODE>
+			<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="efeature">my_strings</SPAN>:&nbsp;<SPAN CLASS="eclass">LINKED_LIST</SPAN>
+				[<SPAN CLASS="eclass">STRING</SPAN>]</P>
+		</CODE>
+		<P>and some code to put some strings in
+			<SPAN CLASS="efeature">my_strings</SPAN>:</P>
+		<CODE>
+			<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">create</SPAN>
+				<SPAN CLASS="efeature">my_things</SPAN>.<SPAN CLASS="efeature">make</SPAN><br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">my_strings</SPAN>.<SPAN CLASS="efeature">extend</SPAN>
+				(<SPAN CLASS="estring">"Hello"</SPAN>)&nbsp;&nbsp;<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="efeature">my_strings</SPAN>.<SPAN CLASS="efeature">extend</SPAN>
+				(<SPAN CLASS="estring">"World!"</SPAN>)</P>
+		</CODE>
+		<P>Our class also has a feature called
+			<SPAN CLASS="efeature">print_on_new_line</SPAN>
+			which we created to print a string preceded by a new line character.</P>
+		<CODE>
+			<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="efeature">print_on_new_line</SPAN>
+				(<SPAN CLASS="eitag">s</SPAN>:
+				<SPAN CLASS="eclass">STRING</SPAN>)
+				<SPAN CLASS="ekeyword">is</SPAN>&nbsp;
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment"> -- Print `s'
+				preceded by a new line</SPAN>&nbsp;
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="ekeyword">do</SPAN>&nbsp;
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="efeature">print</SPAN>
+				(<SPAN CLASS="eitag">"%N"</SPAN>
+				+
+				<SPAN CLASS="eitag">s</SPAN>)&nbsp;
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="ekeyword">end</SPAN></P>
+		</CODE>
+		<P>Now suppose we want to print the values of all the strings in&nbsp;<SPAN CLASS="efeature">my_strings</SPAN>
+			each on a separate line by invoking
+			<SPAN CLASS="efeature">print_on_new_line</SPAN>.&nbsp; Traditionally, we would 
+			do it by traversing the
+			<SPAN CLASS="eclass">LINKED_LIST</SPAN>
+			and printing each item. Like this:</P>
+		<CODE>
+			<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="ekeyword">from</SPAN>&nbsp;
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="efeature">my_list</SPAN>.<SPAN CLASS="efeature">start</SPAN>&nbsp;
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="ekeyword">until</SPAN>&nbsp;
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="efeature">my_list</SPAN>.<SPAN CLASS="efeature">exhausted</SPAN>&nbsp;
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="ekeyword">loop</SPAN>&nbsp;
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="efeature">print_on_new_line</SPAN>
+				(<SPAN CLASS="efeature">my_list</SPAN>.<SPAN CLASS="efeature">item</SPAN>)&nbsp;
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="efeature">my_list</SPAN>.<SPAN CLASS="efeature">forth</SPAN>&nbsp;
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="ekeyword">end</SPAN>
+			</P>
+		</CODE>
+		<P>The availability of agents gives us new options.
+			<SPAN CLASS="eclass">LINKED_LIST</SPAN>
+			has a feature
+			<SPAN CLASS="efeature">do_all</SPAN>
+			which comes to it from its ancestor
+			<SPAN CLASS="eclass">LINEAR</SPAN>. The
+			<SPAN CLASS="efeature">do_all</SPAN>
+			feature's signature looks like this:</P>
+		<CODE>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<SPAN CLASS="efeature">do_all</SPAN>
+			(<SPAN CLASS="eitag">action</SPAN>:
+			<SPAN CLASS="eclass">PROCEDURE</SPAN>
+			[<SPAN CLASS="eclass">ANY</SPAN>,
+			<SPAN CLASS="ekeyword">TUPLE</SPAN>
+			[<SPAN CLASS="egeneric">G</SPAN>]]) </CODE>
+		<P>As an argument
+			<SPAN CLASS="efeature">do_all</SPAN>
+			takes an agent based on a procedure with one open argument which is the same 
+			type as the list items (in this class,
+			<SPAN CLASS="egeneric">G</SPAN>
+			is the formal generic parameter representing the type of the items being 
+			stored). Then it traverses the list&nbsp;executing the routine associated 
+			with&nbsp;that agent and providing the current list item to satisfy the open 
+			argument.
+		</P>
+		<P>Instead of coding the loop shown above, we can code this instruction:</P>
+		<CODE>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<SPAN CLASS="efeature">my_list</SPAN>.<SPAN CLASS="efeature">do_all</SPAN>
+			(<SPAN CLASS="ekeyword">agent</SPAN>
+			<SPAN CLASS="efeature">print_on_new_line</SPAN>
+			(?)) </CODE>
+		<P>we leave the argument to
+			<SPAN CLASS="efeature">print</SPAN>
+			open, and
+			<SPAN CLASS="efeature">do_all</SPAN>
+			will provide it as a reference to the current list item as it traverses the 
+			list.</P>
+		<h3>Targets for Agents' Routines</h3>
+		<P>In Eiffel every routine must be applied against a target object. In our model 
+			for computation,
+			<SPAN CLASS="eitag">x</SPAN>.<SPAN CLASS="efeature">f</SPAN>
+			(<SPAN CLASS="eitag">a</SPAN>, ...),
+			<SPAN CLASS="eitag">x</SPAN>
+			is the target of the application of feature
+			<SPAN CLASS="efeature">f</SPAN>. In the case of an agent, the agent must 
+			account for objects for each of the arguments and an object for the target of 
+			the routine.</P>
+		<P>Let's identify the targets in the examples shown. First:</P>
+		<CODE>
+			<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="efeature">button</SPAN>.<SPAN CLASS="efeature">select_actions</SPAN>.<SPAN CLASS="efeature">extend</SPAN>
+				(<SPAN CLASS="ekeyword">agent</SPAN>
+				<SPAN CLASS="eitag">gauge</SPAN>.<SPAN CLASS="efeature">step_forward</SPAN>)</P>
+		</CODE>
+		<P>Here the target is the object attached to the entity "gauge" which is (although 
+			you cannot determine it from this line taken out of context) an object of type
+			<SPAN CLASS="eclass">EV_GAUGE</SPAN>.</P>
+		<P>How about this:</P>
+		<CODE>
+			<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="efeature">my_procedure</SPAN>
+				:=
+				<SPAN CLASS="ekeyword">agent</SPAN>
+				<SPAN CLASS="efeature">two_argument_procedure</SPAN>
+				(1, 2)&nbsp;&nbsp;</P>
+		</CODE>
+		<P>Here, since there was no qualification, then the target is the current instance. 
+			Same with this:</P>
+		<CODE>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">my_list</SPAN>.<SPAN CLASS="efeature">do_all</SPAN>
+			(<SPAN CLASS="ekeyword">agent</SPAN>
+			<SPAN CLASS="efeature">print_on_new_line</SPAN>
+			(?)) </CODE>
+		<P>Again, consider the fact that the agent must account for objects for each of the 
+			arguments to a routine, and an object for the target. So, in the examples we've 
+			seen so far, the target is close, that is provided at the time of the creation 
+			of the agent.</P>
+		<P>But we can actually leave the target open as well. Now we cannot use the 
+			question mark notation to do that, because if we did, there would be no way to 
+			know of which class the routine is a feature. So instead, we mark an open 
+			target with the class name in braces.</P>
+		<P>Suppose in our list of strings example, we wanted to print the strings, then 
+			convert them to lower case, then print them again. Remember that "do_all" has 
+			one open argument, which will be provided as the current list item during the 
+			traversal.
+		</P>
+		<CODE>
+			<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">my_list</SPAN>.<SPAN CLASS="efeature">do_all</SPAN>
+				(<SPAN CLASS="ekeyword">agent</SPAN>
+				<SPAN CLASS="efeature">print_on_new_line</SPAN>
+				(?))<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">my_list</SPAN>.<SPAN CLASS="efeature">do_all</SPAN>
+				(<SPAN CLASS="ekeyword">agent</SPAN>
+				{<SPAN CLASS="eclass">STRING</SPAN>}.<SPAN CLASS="efeature">to_lower</SPAN>)<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">my_list</SPAN>.<SPAN CLASS="efeature">do_all</SPAN>
+				(<SPAN CLASS="ekeyword">agent</SPAN>
+				<SPAN CLASS="efeature">print_on_new_line</SPAN>
+				(?))</P>
+		</CODE>
+		<P>In between printing the list two times, we provide
+			<SPAN CLASS="efeature">do_all</SPAN>
+			with an agent that&nbsp;representing the
+			<SPAN CLASS="eclass">STRING</SPAN>
+			class's feature
+			<SPAN CLASS="efeature">to_lower</SPAN>
+			which will convert each string in the list to lower case. Notice that
+			<SPAN CLASS="efeature">to_lower</SPAN>
+			does not take an argument of type
+			<SPAN CLASS="eclass">STRING</SPAN>
+			as
+			<SPAN CLASS="efeature">print_on_new_line</SPAN>
+			did. Rather it gets applied to an instance of
+			<SPAN CLASS="eclass">STRING</SPAN>, so it is targeted to a string. So we leave 
+			its target open and
+			<SPAN CLASS="efeature">do_all</SPAN>
+			provides the current list item as the target.</P>
+		<P>Agents for Functions</P>
+		<P>So far all the agents that we have coded have created instances of
+			<SPAN CLASS="eclass">PROCEDURE</SPAN>. But functions are routines and can be 
+			represented as agents as well. The difference is that functions have a return 
+			value.
+		</P>
+		<P>Let's extend the string example by using an agent that represents a function. 
+			Suppose we wanted to print only those strings which contain a particular 
+			character, say the exclamation point.&nbsp;</P>
+		<P>Here again&nbsp;we'll use a feature of the
+			<SPAN CLASS="eclass">LINKED_LIST</SPAN>
+			class. There is a feature called
+			<SPAN CLASS="efeature">do_if</SPAN>
+			which takes two agents as arguments. One is an action procedure like the 
+			argument that
+			<SPAN CLASS="efeature">do_all</SPAN>
+			takes, and the other is a function&nbsp;which returns a boolean and&nbsp;used 
+			as a test. As each list item is current, the test is applied first. If the 
+			result is true, then the action is applied with the current item.</P>
+		<CODE>
+			<P>&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">my_list</SPAN>.<SPAN CLASS="efeature">do_if</SPAN>
+				(<SPAN CLASS="ekeyword">agent</SPAN>
+				<SPAN CLASS="efeature">print_on_new_line</SPAN>(?),
+				<SPAN CLASS="ekeyword">agent</SPAN>
+				{<SPAN CLASS="eclass">STRING</SPAN>}.<SPAN CLASS="efeature">has</SPAN>('!'))</P>
+		</CODE>
+		<P>The agent for the action is the same as we used earlier. We've added an agent 
+			for the test. It represents applying the
+			<SPAN CLASS="efeature">has</SPAN>&nbsp;feature of the&nbsp;<SPAN CLASS="eclass">STRING</SPAN>
+			class. Here the target is left open, because we want each of the strings in the 
+			list to be the target of
+			<SPAN CLASS="efeature">has</SPAN>.</P>
+		<P>&nbsp;</P>
+		<P>&nbsp;</P>
+		<P>&nbsp;</P>
+		<P>&nbsp;</P>
+	</BODY>
+</HTML>

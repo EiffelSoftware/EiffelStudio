@@ -1,0 +1,481 @@
+<HTML XMLNS:MSHelp="http://msdn.microsoft.com/mshelp">
+	<HEAD>
+		<TITLE>Eiffel Class and Feature Names</TITLE>
+		<meta content="HTML 4.0" name="vs_targetSchema">
+		<LINK href="../../../../default.css" type="text/css" charset="ISO-8859-1" rel="STYLESHEET">
+			<LINK href="ms-help://Hx/HxRuntime/HxLinkDefault.css" type="text/css" rel="stylesheet"></HEAD>
+	<BODY>
+		<META http-equiv="Content-Style-Type" content="text/css">
+		</LINK><LINK href="ms-help://Hx/HxRuntime/HxLink.css" type="text/css" rel="stylesheet"></LINK></LINK>
+		<h1>Eiffel Class and Feature Names</h1>
+		<p>&nbsp;</p>
+		<p>Certain naming conventions are respected by Eiffel programmers. Although Eiffel 
+			is not case-sensitive, convention dictates the use of upper and lower case in 
+			particular situations. When you program in ENViSioN!, you create new Eiffel 
+			classes, but you also use types from .NET assemblies. These .NET types are 
+			presented to you in a view that is consistent with Eiffel conventions.</p>
+		<p>&nbsp;</p>
+		<h2>Eiffel Class Names</h2>
+		<p>&nbsp;</p>
+		<p>Convention dictates that Eiffel
+			<MSHELP:LINK tabIndex="0" keywords="class" indexMoniker="!DefaultKeywordIndex">class</MSHELP:LINK>
+			names are always all upper case characters with words separated by the 
+			underscore ("_") character. Eiffel classes are not quailified by "namespace" as 
+			in some other languages. This means that Eiffel class names must be unique with 
+			in a system. It also means that any types from existing .NET assemblies will 
+			have their names mapped to conventional Eiffel class names in order to be used 
+			by Eiffel classes in ENViSioN!</p>
+		<p>Here are some class names and their descriptions from the Eiffel Base Library. 
+			These class names comply with the Eiffel class naming convention.
+		</p>
+		<div class="sample" style="WIDTH: 80%">
+			<p class="eclass">STRING</p>
+			<BLOCKQUOTE dir="ltr" style="MARGIN-RIGHT: 0px">
+				<p class="ecomment">Sequences of characters, accessible through integer indices in 
+					a contiguous range.</p>
+			</BLOCKQUOTE>
+			<p class="eclass">RANDOM</p>
+			<BLOCKQUOTE dir="ltr" style="MARGIN-RIGHT: 0px">
+				<p class="ecomment">Pseudo-random number sequence, linear congruential method.</p>
+			</BLOCKQUOTE>
+			<p class="eclass">ARRAYED_LIST</p>
+			<BLOCKQUOTE dir="ltr" style="MARGIN-RIGHT: 0px">
+				<p class="ecomment">Lists implemented by resizable arrays.</p>
+			</BLOCKQUOTE>
+			<p class="eclass">LINKED_QUEUE</p>
+			<BLOCKQUOTE dir="ltr" style="MARGIN-RIGHT: 0px">
+				<p class="ecomment">Unbounded queues implemented as linked lists.</p>
+			</BLOCKQUOTE>
+		</div>
+		<p>&nbsp;</p>
+		<p>Now here are some type names from the .NET mscorlib as they appear as 
+			conventional Eiffel class names (i.e., in the form in which they become 
+			available to Eiffel for .NET programmers), followed by their full .NET type and 
+			their Summary from the .NET library. names.</p>
+		<div class="sample" style="WIDTH: 80%">
+			<p class="eclass">SYSTEM_STRING</p>
+			<p class="eclass">System.String</p>
+			<BLOCKQUOTE dir="ltr" style="MARGIN-RIGHT: 0px">
+				<p class="ecomment">Represents an immutable series of characters.</p>
+			</BLOCKQUOTE>
+			<p class="eclass">SYSTEM_RANDOM</p>
+			<p class="eclass">System.Random</p>
+			<BLOCKQUOTE dir="ltr" style="MARGIN-RIGHT: 0px">
+				<p class="ecomment">Represents a pseudo-random number generator, a device that 
+					produces a sequence of numbers that meet certain statistical requirements for 
+					randomness.</p>
+			</BLOCKQUOTE>
+			<p class="eclass">ARRAY_LIST</p>
+			<p class="eclass">System.Collections.ArrayList</p>
+			<BLOCKQUOTE dir="ltr" style="MARGIN-RIGHT: 0px">
+				<p class="ecomment">Implements the System.Collections.IListinterface using an array 
+					whose size is dynamically increased as required.</p>
+			</BLOCKQUOTE>
+			<p class="eclass">SYSTEM_QUEUE</p>
+			<p class="eclass">System.Collections.Queue</p>
+			<BLOCKQUOTE dir="ltr" style="MARGIN-RIGHT: 0px">
+				<p class="ecomment">Represents a first-in, first-out collection of objects.</p>
+			</BLOCKQUOTE>
+		</div>
+		<p>&nbsp;</p>
+		<P>In summary, Eiffel class names and type names from .NET assemblies made 
+			available to Eiffel programmers will be all upper case, with words separated by 
+			the underscore character.
+		</P>
+		<h3>Eiffel Names for .NET Types</h3>
+		<P>How Eiffel compliant names are derived from .NET type names is fairly simple in 
+			most cases. The "simple" class name, that is, the word following the rightmost 
+			dot in the full class name, is converted to an Eiffel compliant name by making 
+			it upper case and separating in embedded words by underscore. In the example 
+			above,
+			<SPAN CLASS="eclass">System.Collection.ArrayList</SPAN>
+			becomes
+			<SPAN CLASS="eclass">ARRAY_LIST</SPAN>.
+		</P>
+		<P>The other cases in the example are not quite so simple. If the basic derivation 
+			produces a name which conflicts with a class&nbsp;name in the Eiffel Base 
+			Library, then it will be disambiguated. The simple derivation of
+			<SPAN CLASS="eclass">System.String</SPAN>
+			would be
+			<SPAN CLASS="eclass">STRING</SPAN>, but this would conflict with Eiffel's
+			<SPAN CLASS="eclass">STRING</SPAN>
+			class, so
+			<SPAN CLASS="eclass">System.String</SPAN>
+			becomes available to Eiffel for .NET programmers as
+			<SPAN CLASS="eclass">SYSTEM_STRING</SPAN>.</P>
+		<P>Sometimes it is better to disambiguate an entire assembly rather than handling 
+			individual exceptions to the simple derivation. This is done by specifying a 
+			common prefix for all types in the assembly. For example, ENViSioN! uses a 
+			prefix of "<SPAN CLASS="eclass">DATA_</SPAN>" for all classes in the .NET 
+			assembly System.Data. As a result, the type
+			<SPAN CLASS="eclass">System.Data.Constraint</SPAN>
+			is available in Eiffel as class
+			<SPAN CLASS="eclass">DATA_CONSTRAINT</SPAN>.</P>
+		<P>You'll see a little more about namespaces, assemblies, and Eiffel clusters in
+			<MSHELP:LINK tabIndex="0" keywords="type organization" indexMoniker="!DefaultKeywordIndex">Type
+Organization</MSHELP:LINK>.
+		</P>
+		<h3>Similar Types from Both Libraries</h3>
+		<p>You may have noticed a similarity in the names and descriptions from the Eiffel 
+			Base Library and those from the .NET "mscorlib" library. This is not by 
+			accident. The Eiffel class
+			<SPAN CLASS="eclass">STRING</SPAN>
+			is a different class from the .NET type
+			<SPAN CLASS="eclass">System.String</SPAN>, which Eiffel programmers see 
+			represented as Eiffel class
+			<SPAN CLASS="eclass">SYSTEM_STRING</SPAN>. There is more on this subject in
+			<MSHELP:LINK tabIndex="0" keywords="similar types" indexMoniker="!DefaultKeywordIndex">Similar Types Occurring in Both
+Libraries</MSHELP:LINK>.
+		</p>
+		<P>&nbsp;</P>
+		<h2>Eiffel Feature Names</h2>
+		<p>&nbsp;</p>
+		<p>By convention,
+			<MSHELP:LINK tabIndex="0" keywords="feature" indexMoniker="!DefaultKeywordIndex">feature</MSHELP:LINK>
+			names in Eiffel use all lower case characters, and like class names, words are 
+			separated by underscore. Also as with class names, the names of members from 
+			.NET assemblies will be represented in a form that complies with the Eiffel 
+			convention.
+		</p>
+		<p>Let's look at some simple examples. First some feature names from the Eiffel 
+			Base Library.</p>
+		<div class="sample" style="WIDTH: 80%">
+			<p class="efeature">to_upper</p>
+			<BLOCKQUOTE dir="ltr" style="MARGIN-RIGHT: 0px">
+				<p class="ecomment">From class
+					<SPAN CLASS="eclass">STRING</SPAN>: Converts to upper case.
+				</p>
+			</BLOCKQUOTE>
+			<p class="efeature">item_double</p>
+			<BLOCKQUOTE dir="ltr" style="MARGIN-RIGHT: 0px">
+				<p class="ecomment">From class
+					<SPAN CLASS="eclass">RANDOM</SPAN>: The current random number as a double 
+					between 0 and 1</p>
+			</BLOCKQUOTE>
+		</div>
+		<p>&nbsp;</p>
+		<P>Now check out these member names from the .NET "mscorlib" type library. These 
+			have been made available to Eiffel for .NET programmers in the Eiffel 
+			convention. Following the Eiffel name, you see their .NET member name and type 
+			name.
+		</P>
+		<div class="sample" style="WIDTH: 80%">
+			<p class="efeature">to_upper</p>
+			<p class="ecomment">Member
+				<SPAN CLASS="efeature">ToUpper</SPAN>
+				from type
+				<SPAN CLASS="eclass">System.String</SPAN></p>
+			<BLOCKQUOTE dir="ltr" style="MARGIN-RIGHT: 0px">
+				<p class="ecomment">Returns a new
+					<SPAN CLASS="eclass">System.String</SPAN>
+					with the same content as the target, except all upper case.</p>
+			</BLOCKQUOTE>
+			<p class="efeature">next_double</p>
+			<p class="ecomment">Member
+				<SPAN CLASS="efeature">NextDouble</SPAN>
+				from type
+				<SPAN CLASS="efeature">System.Random</SPAN></p>
+			<BLOCKQUOTE dir="ltr" style="MARGIN-RIGHT: 0px">
+				<p class="ecomment">A double-precision floating point number greater than or equal 
+					to 0.0, and less than 1.0.</p>
+			</BLOCKQUOTE>
+		</div>
+		<p>&nbsp;</p>
+		<p>So, Eiffel feature names, and the names of .NET members made available to Eiffel 
+			for .NET programmers, are all lower case with words separated by underscores.
+		</p>
+		<P>&nbsp;</P>
+		<h2>Overloaded .NET Member Names</h2>
+		<p>&nbsp;</p>
+		<p>The .NET object model allows overloading of function names. This means that a 
+			.NET type can support multiple functions with the same name, that vary only by 
+			the types of the arguments they accept. For example, the .NET type 
+			System.Text.StringBuilder supports nineteen overloaded versions of the Append 
+			function. Here are a couple of examples, in their .NET forms:
+		</p>
+		<div class="sample" style="WIDTH: 80%">
+			<p class="nefeature">.NET function signature:
+				<SPAN CLASS="efeature">Append</SPAN>(<SPAN CLASS="eclass">System.String</SPAN>)</p>
+			<p class="neclass">Member of type
+				<SPAN CLASS="eclass">System.Text.StringBuilder</SPAN></p>
+			<BLOCKQUOTE dir="ltr" style="MARGIN-RIGHT: 0px">
+				<p class="ecomment">Appends a copy of the specified string to the end of this 
+					instance.</p>
+			</BLOCKQUOTE>
+			<p class="nefeature">.NET function signature:
+				<SPAN CLASS="efeature">Append</SPAN>(<SPAN CLASS="eclass">System.Char</SPAN>)</p>
+			<p class="neclass">Member of type
+				<SPAN CLASS="eclass">System.Text.StringBuilder</SPAN></p>
+			<BLOCKQUOTE dir="ltr" style="MARGIN-RIGHT: 0px">
+				<p class="ecomment">Appends the string representation of a specified Unicode 
+					character to the end of this instance.
+				</p>
+			</BLOCKQUOTE>
+		</div>
+		<p>&nbsp;</p>
+		<p>The Eiffel language does not allow
+			<MSHELP:LINK tabIndex="0" keywords="overloading" indexMoniker="!DefaultKeywordIndex">overloaded</MSHELP:LINK>
+			routine names. That means that you cannot code multiple routines with the same 
+			name in a single class. That in itself is not a problem. But it also means that 
+			to work in the .NET environment, where overloading is allowed some compromise 
+			has to be made. So, what happens is this: if you are programming in Eiffel for 
+			.NET and you are using types from a .NET assembly, those types will be 
+			presented to you as if they are Eiffel classes. We have already seen that the 
+			type and feature names will be shown in the Eiffel naming convention. With 
+			overloaded feature names, the presentation will use name augmentation to 
+			disambiguate the overloaded versions. What you see is a distinct feature name 
+			for each overloaded version. The basic feature name is augmented by adding the 
+			types of its respective arguments, separated by underscore.
+		</p>
+		<p>Let's look again at the two
+			<SPAN CLASS="efeature">Append</SPAN>
+			functions from
+			<SPAN CLASS="eclass">System.Text.StringBuilder</SPAN>.
+		</p>
+		<div class="sample" style="WIDTH: 80%">
+			<p class="ecomment">.NET function signature:
+				<SPAN CLASS="efeature">Append</SPAN>(<SPAN CLASS="eclass">System.String</SPAN>)</p>
+			<p class="ecomment">Known to Eiffel as:
+				<SPAN CLASS="efeature">append_string</SPAN>
+				(<SPAN CLASS="eitag">value</SPAN>:
+				<SPAN CLASS="eclass">SYSTEM_STRING</SPAN>)</p>
+			<p class="ecomment">Member of type
+				<SPAN CLASS="eclass">System.Text.StringBuilder</SPAN>, known to Eiffel as
+				<SPAN CLASS="eclass">STRING_BUILDER</SPAN></p>
+			<BLOCKQUOTE dir="ltr" style="MARGIN-RIGHT: 0px">
+				<p class="ecomment">Appends a copy of the specified string to the end of this 
+					instance.</p>
+			</BLOCKQUOTE>
+			<p class="ecomment">.NET function signature:
+				<SPAN CLASS="efeature">Append</SPAN>(<SPAN CLASS="eclass">System.Char</SPAN>)</p>
+			<p class="ecomment">Known to Eiffel as:
+				<SPAN CLASS="efeature">append_character</SPAN>
+				(<SPAN CLASS="eitag">value</SPAN>:
+				<SPAN CLASS="eclass">CHARACTER</SPAN>)</p>
+			<p class="ecomment">Member of type
+				<SPAN CLASS="eclass">System.Text.StringBuilder</SPAN>, known to Eiffel as
+				<SPAN CLASS="eclass">STRING_BUILDER</SPAN></p>
+			<BLOCKQUOTE dir="ltr" style="MARGIN-RIGHT: 0px">
+				<p class="ecomment">Appends the string representation of a specified Unicode 
+					character to the end of this instance.
+				</p>
+			</BLOCKQUOTE>
+		</div>
+		<p>&nbsp;</p>
+		<p>The overloading story does not end quite yet. The .NET object model allows the 
+			overloading of constructors. This issue will be discussed in the section
+			<MSHELP:LINK tabIndex="0" keywords="constructors" indexMoniker="!DefaultKeywordIndex">Constructors and
+Creation Procedures</MSHELP:LINK>.
+		</p>
+		<P>&nbsp;</P>
+		<h2>.NET Properties as Eiffel Features</h2>
+		<P>&nbsp;</P>
+		<P>Properties in .NET provide:</P>
+		<UL>
+			<li>
+				the opportunity to <STRONG>strengthen encapsulation,</STRONG>
+			because values cannot be receive assignment without executing the property's 
+			"set" code
+			<LI>
+				<STRONG>uniform access</STRONG>
+				<MSHELP:LINK tabIndex="0" keywords="query" indexMoniker="!DefaultKeywordIndex">queries,</MSHELP:LINK>
+				because properties are queries, but unlike previous C-style OO languages in 
+				which properties did not exist, if a property is used in programming a client 
+				class, the programmer does not need to know whether the data provided by the 
+				property was done so from memory or through computation. This leaves the 
+				producer of the class with the property the latitude to change the 
+				implementation without breaking existing clients.</LI></UL>
+		<P>In Eiffel, the same goals are fulfilled, but a little differently. Simple
+			<MSHELP:LINK tabIndex="0" keywords="attribute" indexMoniker="!DefaultKeywordIndex">attributes</MSHELP:LINK>
+			are well-encapsulated, because the Eiffel language does not allow direct 
+			assignment to them from outside the control of their class. So any assignment 
+			of the form
+			<SPAN CLASS="efeature">x</SPAN>.<SPAN CLASS="efeature">f</SPAN>
+			:=
+			<SPAN CLASS="efeature">y</SPAN>
+			is not valid in Eiffel. To allow
+			<MSHELP:LINK tabIndex="0" keywords="client" indexMoniker="!DefaultKeywordIndex">client</MSHELP:LINK>
+			to set values of the attribute
+			<SPAN CLASS="efeature">f</SPAN>, the
+			<MSHELP:LINK tabIndex="0" keywords="reuse producer" indexMoniker="!DefaultKeywordIndex">producer</MSHELP:LINK>
+			of the class of which
+			<SPAN CLASS="efeature">x</SPAN>
+			is an instance would have built a command (a "<SPAN CLASS="efeature">set_</SPAN>" 
+			procedure) to do so. Then the code in a client to set
+			<SPAN CLASS="efeature">f</SPAN>
+			would look like this:
+			<SPAN CLASS="efeature">x</SPAN>.<SPAN CLASS="efeature">set_f</SPAN>
+			(<SPAN CLASS="efeature">y</SPAN>).</P>
+		<P>Uniform access is achieved in Eiffel through the way in which clients&nbsp;see 
+			features which are queries. The code "<SPAN CLASS="efeature">print</SPAN>
+			(<SPAN CLASS="efeature">x</SPAN>.<SPAN CLASS="efeature">count</SPAN>)" applies 
+			the query
+			<SPAN CLASS="efeature">count</SPAN>
+			to the object attached to
+			<SPAN CLASS="efeature">x</SPAN>
+			and prints the result. You cannot tell by looking at this code whether
+			<SPAN CLASS="efeature">count</SPAN>
+			is an attribute or a function, that is, whether the
+			<SPAN CLASS="efeature">count</SPAN>
+			is returned from memory or through computation. In fact, it could be either, 
+			but that is a matter for its producer to deal with. As
+			<MSHELP:LINK tabIndex="0" keywords="reuse consumer" indexMoniker="!DefaultKeywordIndex">reuse
+consumers,</MSHELP:LINK>the implementation of&nbsp;<SPAN CLASS="efeature">count</SPAN>&nbsp;is 
+			not important to us ... but the fact that the producer can change the 
+			implementation without causing our code to need modification is very important 
+			to us.</P>
+		<P>Because Eiffel does not support properties directly, the properties&nbsp;of 
+			types&nbsp;which Eiffel for .NET programmers use&nbsp;from .NET assemblies have 
+			to be mapped to Eiffel features.
+		</P>
+		<P>In order to ask for the property's current value (technically, receiving the 
+			result of the property's
+			<SPAN CLASS="efeature">get</SPAN>
+			routine), a query feature is generated for the property. The query will be 
+			named&nbsp;the Eiffel name of the property.
+		</P>
+		<P>As noted above, setting the value of a property cannot be done in Eiffel as it 
+			is done in C# and VB.NET because Eiffel disallows assignments of the form
+			<SPAN CLASS="efeature">x</SPAN>.<SPAN CLASS="efeature">f</SPAN>
+			:=
+			<SPAN CLASS="efeature">y</SPAN>. So, for each writable property, an Eiffel 
+			command feature is available to set the value of the property. The name for 
+			this command will be
+			<SPAN CLASS="efeature">set_</SPAN>
+			followed by the Eiffel name for the property.
+		</P>
+		<P>As a result, the code for using a .NET property looks very much like the code to 
+			use an Eiffel attribute. In the following code fragment, an instance of the 
+			type
+			<SPAN CLASS="eclass">System.Windows.Forms.Form</SPAN>
+			which is available in Eiffel for .NET as
+			<SPAN CLASS="eclass">WINFORMS_FORM</SPAN>
+			is used by an Eiffel client.
+			<SPAN CLASS="eclass">System.Windows.Forms.Form</SPAN>
+			has a property
+			<SPAN CLASS="efeature">Text</SPAN>
+			which is of type
+			<SPAN CLASS="eclass">System.String</SPAN>. Here the
+			<SPAN CLASS="efeature">Text</SPAN>
+			property is being set using the
+			<SPAN CLASS="efeature">set_text</SPAN>
+			feature, and then being recalled by using the query
+			<SPAN CLASS="efeature">text</SPAN>.
+		</P>
+		<CODE>
+			<P><SPAN CLASS="ekeyword">local</SPAN>
+				<BR>
+				&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="efeature">my_window</SPAN>:
+				<SPAN CLASS="eclass">WINFORMS_FORM</SPAN>
+				<BR>
+				&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="efeature">my_string</SPAN>:
+				<SPAN CLASS="eclass">SYSTEM_STRING</SPAN>
+				<BR>
+				<SPAN CLASS="ekeyword">do</SPAN>
+				<BR>
+				&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="ekeyword">create</SPAN>
+				<SPAN CLASS="efeature">my_window</SPAN>.<SPAN CLASS="efeature">make</SPAN>
+				<BR>
+				&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="efeature">my_window</SPAN>.<SPAN CLASS="efeature">set_text</SPAN>
+				(<SPAN CLASS="efeature">my_window_title</SPAN>)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- Set Text property</SPAN>
+				<BR>
+				&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="efeature">my_string</SPAN>
+				:=
+				<SPAN CLASS="efeature">my_window</SPAN>.<SPAN CLASS="efeature">text</SPAN>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">--
+				Query Text property</SPAN>
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.
+				<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.
+				<br>
+				<SPAN CLASS="ekeyword">end</SPAN>
+			</P>
+		</CODE>
+		<P>&nbsp;</P>
+		<H2>Static Features in .NET</H2>
+		<P>&nbsp;</P>
+		<P>In the .NET object model it is possible for certain members of a type to be 
+			"static". When these members are used, they are used without an instance of the 
+			class as a target. In essence, they are called on the class itself.
+		</P>
+		<P>In Eiffel for .NET, these static&nbsp;members will made available with feature 
+			names derived&nbsp;using the same conventions as ordinary features, but 
+			applying them will be a bit different.</P>
+		<P>There is not a concept analogous to static members in Eiffel. The model for 
+			object-oriented computation in Eiffel specifies that whenever
+			<MSHELP:LINK tabIndex="0" keywords="feature application" indexMoniker="!DefaultKeywordIndex">feature
+application</MSHELP:LINK>
+			takes place, there must be an object, i.e. an instance of some class, that 
+			serves as a target.</P>
+		<P>In order to use .NET types that include static members, a special syntax has 
+			been added into Eiffel for .NET. The following example uses this syntax to call 
+			a static function:</P>
+		<CODE>
+			<P><SPAN CLASS="ekeyword">local</SPAN>
+				<BR>
+				&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="efeature">my_window</SPAN>:
+				<SPAN CLASS="eclass">WINFORMS_FORM</SPAN>&nbsp;
+				<BR>
+				<SPAN CLASS="ekeyword">do</SPAN>
+				<BR>
+				&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="ekeyword">create</SPAN>
+				<SPAN CLASS="efeature">my_window</SPAN>.<SPAN CLASS="efeature">make</SPAN>
+				<BR>
+				&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="efeature">my_window</SPAN>.<SPAN CLASS="efeature">set_text</SPAN>
+				(<SPAN CLASS="efeature">my_window_title</SPAN>)&nbsp;<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.&nbsp;<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">feature</SPAN>
+				{<SPAN CLASS="eclass">WINFORMS_APPLICATION</SPAN>}.<SPAN CLASS="efeature">run_form</SPAN>
+				(<SPAN CLASS="efeature">my_window</SPAN>)
+				<br>
+				<SPAN CLASS="ekeyword">end</SPAN>
+			</P>
+		</CODE>
+		<P>The type
+			<SPAN CLASS="eclass">System.Windows.Forms.Application</SPAN>
+			is used here. It is available to Eiffel under the name
+			<SPAN CLASS="eclass">WINFORMS_APPLICATION</SPAN>. The static member being used 
+			is
+			<SPAN CLASS="efeature">Run</SPAN>, in particular the overloaded version of
+			<SPAN CLASS="efeature">Run</SPAN>
+			which takes an argument of type
+			<SPAN CLASS="eclass">System.Windows.Forms.Form</SPAN>. That version is 
+			available in Eiffel under the name
+			<SPAN CLASS="efeature">run_form</SPAN>.</P>
+		<P>The important thing to see here is that when you need to apply a static member, 
+			you introduce the call with the keyword
+			<SPAN CLASS="ekeyword">feature</SPAN>. Then enclose the type name in braces and 
+			apply the feature as if it were targeted to an object. This is&nbsp;fairly 
+			close to the way that the call would be made in C#, where the feature name 
+			would be applied to the type name, versus a target object:</P>
+		<CODE>
+			<P>{&nbsp;<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="eclass">Form</SPAN>
+				<SPAN CLASS="efeature">my_window</SPAN>;<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">my_window</SPAN>
+				=
+				<SPAN CLASS="ekeyword">new</SPAN>
+				<SPAN CLASS="efeature">Form</SPAN>();<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">my_window</SPAN>.<SPAN CLASS="efeature">Text</SPAN>
+				=
+				<SPAN CLASS="estring">"Hello World!"</SPAN>;<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.<br>
+				&nbsp;&nbsp; &nbsp;<SPAN CLASS="eclass">Application</SPAN>.<SPAN CLASS="efeature">Run</SPAN>(<SPAN CLASS="efeature">my_window</SPAN>);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">//
+				This is C#</SPAN>
+				<BR>
+				}
+			</P>
+		</CODE>
+	</BODY>
+</HTML>

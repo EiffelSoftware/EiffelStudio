@@ -1,0 +1,206 @@
+<HTML XMLNS:MSHelp="http://msdn.microsoft.com/mshelp">
+	<HEAD>
+		<TITLE>Genericity</TITLE>
+		<meta content="HTML 4.0" name="vs_targetSchema">
+		<LINK href="../../../../default.css" type="text/css" charset="ISO-8859-1" rel="STYLESHEET">
+			<LINK href="ms-help://Hx/HxRuntime/HxLinkDefault.css" type="text/css" rel="stylesheet">
+	</HEAD>
+	<BODY>
+		<P></LINK><LINK href="ms-help://Hx/HxRuntime/HxLink.css" type="text/css" rel="stylesheet"></LINK></LINK></P>
+		<h1>Genericity</h1>
+		<P>
+			We got a very short introduction to&nbsp;
+			<MSHELP:LINK tabIndex="0" indexMoniker="!DefaultKeywordIndex" keywords="generic class">generic
+classes</MSHELP:LINK>
+			when we were looking at the formal generic part of class structure in <A href="../../eiffel_for_dotnet/20_Eiffel_Classes.htm">
+				Eiffel Classes</A>. That discussion left to the imagination the motivation
+			and benefits for creating generic classes.
+		</P>
+		<P>You will see that most of the generic classes model containers for multiple
+			items and at least one of their formal generic parameters represents the type
+			of items that are to be stored in the container. Some generic classes, like
+			<SPAN CLASS="eclass">LINKABLE</SPAN>, care for only one instance of the type represented by their formal
+			generic parameter.</P>
+		<h2>Motivation</h2>
+		<P>Imagine that a software producer is planning to build a class which would
+			represent a list of things. Some one might ask "What kinds of things?" To which
+			the producer would reply, "Just things. I want my list to be usable for all
+			kinds of things."</P>
+		<P>Using the idea of polymorphic attachment that we learned in&nbsp;<A href="../../eiffel_for_dotnet/40_Inheritance.htm">Inheritance</A>,
+			the producer could build such a class. It might have a&nbsp;query&nbsp;<SPAN CLASS="efeature">item</SPAN>
+			which would return the thing from the list to which a cursor currently points.
+			It might have a command <SPAN CLASS="efeature">put</SPAN> which would enter some new thing into the list.</P>
+		<P>What would be the type of <SPAN CLASS="efeature">item</SPAN>? And what would be the type of the argument to
+			<SPAN CLASS="efeature">put</SPAN>?</P>
+		<P>If the producer wants the class to handle all kinds of things, then the answer
+			must be class <SPAN CLASS="eclass">ANY</SPAN>, the class from which all others inherit.
+		</P>
+		<CODE>
+			<P><SPAN CLASS="ekeyword">class</SPAN><BR>&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="eclass">LIST_OF_THINGS</SPAN>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.&nbsp;&nbsp;<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.</P>
+			<P><SPAN CLASS="ekeyword">feature</SPAN>&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- Access</SPAN></P>
+			<P>&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">item</SPAN>: <SPAN CLASS="eclass">ANY</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ecomment">-- The thing
+				currently pointed to by cursor</SPAN></P>
+			<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .</P>
+			<P><SPAN CLASS="ekeyword">feature</SPAN>&nbsp;&nbsp; <SPAN CLASS="ecomment">-- Element change</SPAN>&nbsp;&nbsp;</P>
+			<P>&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">put</SPAN> (<SPAN CLASS="eitag">new_item</SPAN>: <SPAN CLASS="eclass">ANY</SPAN>)&nbsp;&nbsp;<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- Add
+				`new_item' at the end of the list</SPAN>&nbsp;<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.&nbsp;&nbsp;<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.&nbsp;</P>
+		</CODE>
+		<P>This will work, but has some definite disadvantages. Suppose you choose to use
+			this class to maintain a list of cats in one of your classes. You might make
+			this declaration:</P>
+		<CODE>
+			<P>&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">my_cats</SPAN>: <SPAN CLASS="eclass">LIST_OF_THINGS</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment"> -- A list of
+				my cats</SPAN></P>
+		</CODE>
+		<P>Then you could add individual instances to the list:</P>
+		<CODE>
+			&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">fluffy</SPAN>, <SPAN CLASS="efeature">twinkie</SPAN>: <SPAN CLASS="eclass">CAT</SPAN><BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.&nbsp;&nbsp;<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.&nbsp;<BR>
+			&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">my_cats</SPAN>.<SPAN CLASS="efeature">put</SPAN> (<SPAN CLASS="efeature">fluffy</SPAN>)<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; <SPAN CLASS="efeature">my_cats</SPAN>.<SPAN CLASS="efeature">put</SPAN> (<SPAN CLASS="efeature">twinkie</SPAN>)<BR>
+		</CODE>
+		<P>One problem with this type of list is that the type system will not help you
+			keep from doing something pathological like:</P>
+		<CODE>
+			&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">fluffy</SPAN>, <SPAN CLASS="efeature">twinkie</SPAN>: <SPAN CLASS="eclass">CAT</SPAN><BR>
+			&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">thor</SPAN>: <SPAN CLASS="eclass">PSYCHOTIC_HYDROPHOBIC_CAT_HATING_DOG</SPAN><BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.&nbsp;&nbsp;<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.&nbsp;<BR>
+			&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">my_cats</SPAN>.<SPAN CLASS="efeature">put</SPAN> (<SPAN CLASS="efeature">fluffy</SPAN>)<BR>
+			&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">my_cats</SPAN>.<SPAN CLASS="efeature">put</SPAN> (<SPAN CLASS="efeature">twinkie</SPAN>)<BR>
+			&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">my_cats</SPAN>.<SPAN CLASS="efeature">put</SPAN> (<SPAN CLASS="efeature">thor</SPAN>)<BR>
+		</CODE>
+		<P>Another problem is that to do any CAT things with an item in the list, you must
+			reattach it to a CAT entity. The following is invalid.</P>
+		<CODE>
+			<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="efeature">my_cats</SPAN>.<SPAN CLASS="efeature">item</SPAN>.<SPAN CLASS="efeature">purr</SPAN>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="ecomment">-- Is invalid</SPAN></P>
+		</CODE>
+		<P>This is because "item" is type ANY and although it may be currently attached to
+			an instance of CAT, the static typing system cannot guarantee that. So you must
+			use assignment attempt as we saw in the polymorphism example in <A href="../../eiffel_for_dotnet/40_Inheritance.htm">
+				Inheritance</A>.</P>
+		<CODE>
+
+			&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">some_cat</SPAN>: <SPAN CLASS="eclass">CAT</SPAN><BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">some_cat</SPAN> ?= <SPAN CLASS="efeature">my_cats</SPAN>.<SPAN CLASS="efeature">item</SPAN><BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="efeature">some_cat</SPAN> /= <SPAN CLASS="ekeyword">Void</SPAN> <SPAN CLASS="ekeyword">then</SPAN><BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">some_cat</SPAN>.<SPAN CLASS="efeature">purr</SPAN><BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">end</SPAN>&nbsp;&nbsp;<BR>
+		</CODE>
+		<P>You can see that this type of list has its drawbacks. Of course you could build
+			a <SPAN CLASS="eclass">LIST_OF_CATS</SPAN> class in which <SPAN CLASS="efeature">item</SPAN> and the argument for <SPAN CLASS="efeature">put</SPAN> would be of
+			type <SPAN CLASS="eclass">CAT</SPAN>. This would let you <SPAN CLASS="efeature">purr</SPAN> a cat without pulling it out of the list,
+			and it would also prevent you from accidently letting old Thor in with the
+			cats. But, every time you needed a list to hold a different type of object, you
+			have to write a new class.
+		</P>
+		<P>Indeed, this is how things are done in&nbsp;environements&nbsp;without
+			facilities&nbsp;genericity.</P>
+		<P>What we would like to have is a way to produce the text of the list class once.
+			Then only when we make declarations do we add the additional information about
+			the particular types we want allowed in the list.</P>
+		<H2>Basic Genericity</H2>
+		<P>In Eiffel this is accomplished through generic classes. Generic classes are
+			written relative not to a specific class but to a kind of phony class name
+			called a formal generic parameter. With genericity, the <SPAN CLASS="eclass">LIST_OF_THINGS</SPAN> class
+			might become a class called <SPAN CLASS="eclass">LIST</SPAN> which is a list of items of type <SPAN CLASS="egeneric">G</SPAN>.
+			In class <SPAN CLASS="eclass">LIST</SPAN> we would declare <SPAN CLASS="efeature">item</SPAN> as type G, as
+			well as the argument to <SPAN CLASS="efeature">put</SPAN>.
+		</P>
+		<CODE>
+			<SPAN CLASS="ekeyword">class</SPAN>&nbsp;<BR>&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="eclass">LIST</SPAN> [<SPAN CLASS="egeneric">G</SPAN>]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.&nbsp;&nbsp;<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.<BR>
+			<SPAN CLASS="ekeyword">feature</SPAN>&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- Access</SPAN><BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">item</SPAN>:&nbsp;<SPAN CLASS="egeneric">G</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ecomment">--
+				The&nbsp;item currently pointed to by cursor</SPAN><BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .<BR>
+			<SPAN CLASS="ekeyword">feature</SPAN>&nbsp;&nbsp;<SPAN CLASS="ecomment"> -- Element change</SPAN>&nbsp;&nbsp;<BR>
+			&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">put</SPAN> (<SPAN CLASS="eitag">new_item</SPAN>: <SPAN CLASS="egeneric">G</SPAN>)&nbsp;&nbsp;<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- Add
+				`new_item' at the end of the list&nbsp;</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.&nbsp;&nbsp;<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.&nbsp;<BR>
+		</CODE>
+		<P>We could declare feature <SPAN CLASS="efeature">my_cats</SPAN> as a <SPAN CLASS="eclass">LIST</SPAN> of items of type <SPAN CLASS="eclass">CAT</SPAN>. By doing so
+			we are providing <SPAN CLASS="eclass">CAT</SPAN> as an "actual generic parameter" in the declaration. Then
+			we are free to treat the features of&nbsp;<SPAN CLASS="eclass">LIST</SPAN> as if&nbsp;the class name
+			<SPAN CLASS="eclass">CAT</SPAN>&nbsp;had been&nbsp;substituted for every occurrence of the formal generic
+			parameter <SPAN CLASS="egeneric">G</SPAN>.</P>
+		<CODE>
+			&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">my_cats</SPAN>: <SPAN CLASS="eclass">LIST</SPAN> [<SPAN CLASS="eclass">CAT</SPAN>]<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ecomment">-- A list of
+				my cats</SPAN><BR>
+			&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">fluffy</SPAN>, <SPAN CLASS="efeature">twinkie</SPAN>: <SPAN CLASS="eclass">CAT</SPAN><BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.&nbsp;&nbsp;<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.&nbsp;<BR>
+			&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">my_cats</SPAN>.<SPAN CLASS="efeature">put</SPAN> (<SPAN CLASS="efeature">fluffy</SPAN>)<BR>
+			&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">my_cats</SPAN>.<SPAN CLASS="efeature">put</SPAN> (<SPAN CLASS="efeature">twinkie</SPAN>)<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.&nbsp;<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="efeature">my_cats</SPAN>.<SPAN CLASS="efeature">item</SPAN>.<SPAN CLASS="efeature">purr</SPAN>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ecomment">--
+				Valid now</SPAN><BR>
+		</CODE>
+		<P>The following would no longer be valid:</P>
+		<CODE>
+			<P>&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">my_cats</SPAN>: <SPAN CLASS="eclass">LIST</SPAN> [<SPAN CLASS="eclass">CAT</SPAN>]<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ecomment">-- A list of
+				my cats</SPAN></P>
+			<P>&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">thor</SPAN>: <SPAN CLASS="eclass">PSYCHOTIC_HYDROPHOBIC_CAT_HATING_DOG</SPAN></P>
+			<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.&nbsp;&nbsp;<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.&nbsp;</P>
+			<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">my_cats</SPAN>.<SPAN CLASS="efeature">put</SPAN>
+				(<SPAN CLASS="efeature">thor</SPAN>)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment"> -- Is invalid</SPAN></P>
+		</CODE>
+		<H2>Constrained Genericity</H2>
+		<P>The generic class <SPAN CLASS="eclass">LIST</SPAN> illustrated above is perfectly useful for making typed
+			lists of any type of object. The features of the <SPAN CLASS="eclass">LIST</SPAN> will not attempt to use
+			the objects in the list in any way. Sometimes though, it is important for a
+			class to be guaranteed more about the nature of the types that can be
+			substituted for its formal generic parameter.</P>
+		<P>Take for example the case of a class called <SPAN CLASS="eclass">SORTED_LIST</SPAN>. A <SPAN CLASS="eclass">SORTED_LIST</SPAN> is a
+			list, of course, but it is special in that it acts upon the elements that it
+			holds&nbsp;to keep them&nbsp;in order.
+		</P>
+		<P>A <SPAN CLASS="eclass">SORTED_LIST</SPAN> needs to be able to order its elements. So, it must be able to
+			apply queries to those elements to determine which should sort high than which.
+			The elements themselves must respond to ordering operations.</P>
+		<P>If <SPAN CLASS="eclass">SORTED_LIST</SPAN> were defined like we did <SPAN CLASS="eclass">LIST</SPAN></P>
+		<CODE>
+			<P><SPAN CLASS="ekeyword">class</SPAN>&nbsp;<BR>&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="eclass">SORTED_LIST</SPAN> [<SPAN CLASS="egeneric">G</SPAN>]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</P>
+		</CODE>
+		<P>there would be no guarantee that ordering operations, like "&lt;" and "&gt;"
+			could be applied to all types that could be listed.&nbsp;An
+			Eiffel&nbsp;facility called "constrained genericity" will solve this problem
+			for us. In the case of <SPAN CLASS="eclass">SORTED_LIST</SPAN>, we would add to the formal generic part as
+			follows.</P>
+		<CODE>
+			<P><SPAN CLASS="ekeyword">class</SPAN>&nbsp;<BR>&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="eclass">SORTED_LIST</SPAN> [<SPAN CLASS="egeneric">G</SPAN> -&gt; <SPAN CLASS="eclass">COMPARABLE</SPAN>]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</P>
+		</CODE>
+		<P>You may remember from&nbsp;<A href="../../eiffel_for_dotnet/40_Inheritance.htm">Inheritance</A>
+			that if we make instances of a class comparable with each other, then we make
+			the class inherit from <SPAN CLASS="eclass">COMPARABLE</SPAN> and effect the feature "&lt;".
+		</P>
+		<P>Here, constrained genericity does two things for us.</P>
+		<UL>
+				<LI><P>First,&nbsp;it states that any candidate for substitution for <SPAN CLASS="egeneric">G</SPAN> must conform to
+				class <SPAN CLASS="eclass">COMPARABLE</SPAN>. Typically this means it must inherit from <SPAN CLASS="eclass">COMPARABLE</SPAN>.</P>
+			<P><LI>Second, it allows, within the features of <SPAN CLASS="eclass">SORTED_LIST</SPAN>, the features of
+				<SPAN CLASS="eclass">COMPARABLE</SPAN> to be applied to any item which&nbsp;has a type&nbsp;of <SPAN CLASS="egeneric">G</SPAN>.</P>
+			<P>&nbsp;</P>
+			</UL>
+	</BODY>
+</HTML>

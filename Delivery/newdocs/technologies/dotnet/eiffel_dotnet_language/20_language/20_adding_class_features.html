@@ -1,0 +1,927 @@
+<HTML XMLNS:MSHelp="http://msdn.microsoft.com/mshelp">
+	<HEAD>
+		<TITLE>Adding Class Features</TITLE>
+		<meta content="HTML 4.0" name="vs_targetSchema">
+		<LINK href="../../../../default.css" type="text/css" charset="ISO-8859-1" rel="STYLESHEET">
+			<LINK href="ms-help://Hx/HxRuntime/HxLinkDefault.css" type="text/css" rel="stylesheet">
+				<LINK href="ms-help://Hx/HxRuntime/HxLink.css" type="text/css" rel="stylesheet"></HEAD>
+	<BODY>
+		<P></LINK></LINK></LINK></P>
+		<h1>Adding Class Features</h1>
+		<P>The
+			<MSHELP:LINK tabIndex="0" indexMoniker="!DefaultKeywordIndex" keywords="feature">features</MSHELP:LINK>
+			of a class make it useful. They are the things that objects which are instances
+			of the class have and can do.
+		</P>
+		<P>It is during the process of adding class features that we relate a class we are
+			producing to other classes via the
+			<MSHELP:LINK tabIndex="0" indexMoniker="!DefaultKeywordIndex" keywords="client/supplier relationship">client/supplier
+relationship</MSHELP:LINK>.
+		</P>
+		<P>It is when we add features to a class that&nbsp;we can build the executable code
+			that makes things happen.
+		</P>
+		<h2>Categorizing Features</h2>
+		<P>In Eiffel, we have several ways of thinking abstractly about features and
+			categorizing them. As you saw in&nbsp;<A href="../../eiffel_for_dotnet/20_Eiffel_Classes.htm">Eiffel
+				Classes</A> the <SPAN CLASS="ekeyword">feature</SPAN> clause gives us a way to group features in the
+			software text. We have ways to group features more generally, too. Here are
+			some.</P>
+		<h3>Source</h3>
+		<P>You remember the example class&nbsp;from&nbsp;<A href="../../eiffel_for_dotnet/20_Eiffel_Classes.htm">Eiffel
+				Classes</A>:
+				<CODE>
+				<SPAN CLASS="ekeyword">indexing</SPAN>&nbsp;
+				<BR>
+				&nbsp;&nbsp;&nbsp; <SPAN CLASS="eitag">description</SPAN>: <SPAN CLASS="estring">“Objects that model&nbsp;lists”</SPAN>&nbsp;
+				<BR>
+				&nbsp;&nbsp;&nbsp; <SPAN CLASS="eitag">revision</SPAN>: <SPAN CLASS="estring">“$Revision$”</SPAN><BR>
+				<BR>
+				<SPAN CLASS="ekeyword">class</SPAN>
+				<BR>
+				&nbsp;&nbsp;&nbsp; <SPAN CLASS="eclass">OLD_FASHIONED_LIST</SPAN> [<SPAN CLASS="egeneric">G</SPAN>]<BR>
+				<BR>
+				<SPAN CLASS="ekeyword">obsolete</SPAN> <SPAN CLASS="estring">"This class is obsolete, use <SPAN CLASS="eclass">LINKED_LIST</SPAN> [<SPAN CLASS="egeneric">G</SPAN>]&nbsp;instead"</SPAN><BR>
+				<BR>
+				<SPAN CLASS="ekeyword">inherit</SPAN>
+				<BR>
+				&nbsp;&nbsp;&nbsp; <SPAN CLASS="eclass">DYNAMIC_LIST</SPAN> [<SPAN CLASS="egeneric">G</SPAN>]<BR>
+				<BR>
+				<SPAN CLASS="ekeyword">create</SPAN>
+				<BR>
+				&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">make</SPAN><BR>
+				<BR>
+				<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">-- Initialization</SPAN>
+				<BR>
+				<BR>
+				&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">make</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ecomment">-- Create an
+				empty list.
+</SPAN>				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">do</SPAN>
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">before</SPAN> :=
+				<SPAN CLASS="ekeyword">True</SPAN>
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="eitag">is_before</SPAN>: <SPAN CLASS="efeature">before</SPAN>
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">end</SPAN>
+				<BR>
+				<BR>
+				<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="eclass">-- Access</SPAN>
+				<BR>
+				<BR>
+				&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">item</SPAN>: <SPAN CLASS="egeneric">G</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ecomment">-- Current
+				item
+</SPAN>				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">do</SPAN>
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">Result</SPAN> :=
+				<SPAN CLASS="efeature">active</SPAN>.<SPAN CLASS="efeature">item</SPAN>
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">end</SPAN><BR>
+				<BR>
+				&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">first</SPAN>: <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="efeature">item</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ecomment">-- Item at
+				first position
+</SPAN>				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">do</SPAN>
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">Result</SPAN> :=
+				<SPAN CLASS="efeature">first_element</SPAN>.<SPAN CLASS="efeature">item</SPAN>
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">end</SPAN>
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<EM>(other features omitted)</EM><BR>
+				<BR>
+				<SPAN CLASS="ekeyword">invariant</SPAN>
+				<BR>
+				&nbsp;&nbsp;&nbsp; <SPAN CLASS="eitag">before_constraint</SPAN>: <SPAN CLASS="efeature">before</SPAN> <SPAN CLASS="ekeyword">implies</SPAN> (<SPAN CLASS="efeature">active</SPAN> = <SPAN CLASS="efeature">first_element</SPAN>)
+				<BR>
+				&nbsp;&nbsp;&nbsp; <SPAN CLASS="eitag">after_constraint</SPAN>: <SPAN CLASS="efeature">after</SPAN> <SPAN CLASS="ekeyword">implies</SPAN> (<SPAN CLASS="efeature">active</SPAN> = <SPAN CLASS="efeature">last_element</SPAN>)
+				<BR><SPAN CLASS="ekeyword">end</SPAN><BR>
+				</CODE>
+		</P>
+		<P>The example&nbsp;shows three of the features (<SPAN CLASS="efeature">make</SPAN>, <SPAN CLASS="efeature">item</SPAN>, and <SPAN CLASS="efeature">first</SPAN>)&nbsp;coded
+			directly in the class. These features (and the ones omitted from the example in
+			the interest of brevity) may not be the only features of the class
+			<SPAN CLASS="eclass">OLD_FASHIONED_LIST</SPAN>. In fact we can just about guarantee that there are other
+			features of this class. Remember the inheritance part of the class:
+		</P>
+		<CODE>
+			<SPAN CLASS="ekeyword">inherit</SPAN>
+			<br>
+			&nbsp;&nbsp;&nbsp; <SPAN CLASS="eclass">DYNAMIC_LIST</SPAN> [<SPAN CLASS="egeneric">G</SPAN>]
+		</CODE>
+		<P>This means that every feature in <SPAN CLASS="eclass">DYNAMIC_LIST</SPAN> will be a feature of
+			<SPAN CLASS="eclass">OLD_FASHIONED_LIST</SPAN>. So one way we can think of features is by their source.</P>
+		<UL>
+			<LI>
+			Immediate features are those that are introduced by a class itself.
+			<LI>
+				Inherited features are those that come to the class from its proper ancestors.</LI></UL>
+		<P>We will see more about this in <A href="30_inheritance.html">
+				Inheritance</A>.</P>
+		<h3>Implementation Type</h3>
+		<P>Whenever we are building a class in Eiffel, we are potential
+			<MSHELP:LINK tabIndex="0" indexMoniker="!DefaultKeywordIndex" keywords="reuse producer">reuse
+producers</MSHELP:LINK>. As such, we can categorize the features of a class based on the
+			three types of feature implementation:</P>
+		<UL>
+			<LI>
+				<MSHELP:LINK tabIndex="0" indexMoniker="!DefaultKeywordIndex" keywords="attribute">Attribute</MSHELP:LINK>
+			<LI>
+				<MSHELP:LINK tabIndex="0" indexMoniker="!DefaultKeywordIndex" keywords="function">Function</MSHELP:LINK>
+			<LI>
+				<MSHELP:LINK tabIndex="0" indexMoniker="!DefaultKeywordIndex" keywords="procedure">Procedure</MSHELP:LINK></LI></UL>
+		<P>Attributes are those features which occupy storage in an instance. When you code
+			an attribute in a class that you are producing, that class becomes a
+			<MSHELP:LINK tabIndex="0" indexMoniker="!DefaultKeywordIndex" keywords="client">client</MSHELP:LINK>
+			to the class of the attribute. This is the most common way to establish a
+			<MSHELP:LINK tabIndex="0" indexMoniker="!DefaultKeywordIndex" keywords="client/supplier relationship">client/supplier
+relationship</MSHELP:LINK>
+			between the classses. Client/supplier is one of the two&nbsp;
+			<MSHELP:LINK tabIndex="0" indexMoniker="!DefaultKeywordIndex" keywords="relationship">relationships</MSHELP:LINK>
+			that can exist between classes.&nbsp;&nbsp;&nbsp;</P>
+		<P>Functions and procedures are the computation features, that is they are features
+			that involve executable code. Functions and procedures together are themselves
+			categorized as routines.</P>
+		<P>Also, from the producer standpoint we may view features as whether they work
+			from memory or through computation:</P>
+		<UL>
+			<LI>
+				Memory
+				<UL>
+					<LI>
+						Attribute</LI></UL>
+			<LI>
+				Computation
+				<UL>
+					<LI>
+					Function
+					<LI>
+						Procedure</LI></UL>
+			</LI>
+		</UL>
+		<P>This view can be valuable when a producer is considering performance issues. For
+			example, if there is some class function called <SPAN CLASS="efeature">count</SPAN>, a producer might
+			investigate whether it is better to leave <SPAN CLASS="efeature">count</SPAN> as a function, computing it
+			each time the feature is applied, or to change it to an attribute and compute
+			it less often.</P>
+		<h3>Usage</h3>
+		<P>A times we&nbsp;find it appropriate to categorize features by how we use them.
+			Specifically, as:</P>
+		<UL>
+			<LI>
+				<MSHELP:LINK tabIndex="0" indexMoniker="!DefaultKeywordIndex" keywords="query">Query</MSHELP:LINK>
+				<UL>
+					<LI>
+					Attribute
+					<LI>
+						Function</LI></UL>
+			<LI>
+				<MSHELP:LINK tabIndex="0" indexMoniker="!DefaultKeywordIndex" keywords="command">Command</MSHELP:LINK>
+				<UL>
+					<LI>
+						Procedure</LI></UL>
+			</LI>
+		</UL>
+		<P>Queries are features that, when applied to an instance, provide a value
+			in&nbsp;response. Commands instruct an intance to take some action, but do not
+			return a value. Seeing features as either queries or commands is of primary
+			interest to
+			<MSHELP:LINK tabIndex="0" indexMoniker="!DefaultKeywordIndex" keywords="reuse consumer">reuse
+consumers</MSHELP:LINK>. But as producers there are important reasons for ensuring that
+			when we implement a feature, we implement it as a query or as a&nbsp;command,
+			but not both. We will see more about this in <A href="50_design_by_contract.html">
+				Design by Contract and Assertions</A>.
+		</P>
+		<h2>General&nbsp;Syntax of Features</h2>
+		<h3>More&nbsp;Sample Features</h3>
+		<P>Here is another example class. Again this class&nbsp;contrived, so it does not
+			do anyhing worthwhile <EM>except</EM> show you&nbsp;what different types of
+			features look like.&nbsp;This class has an&nbsp;attribute and a constant
+			attribute, and functions and procedures both with and without arguments.
+		</P>
+		<CODE>
+			<P><SPAN CLASS="ekeyword">class</SPAN>
+				<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="eclass">SOME_CLASS</SPAN></P>
+			<P><SPAN CLASS="ekeyword">create</SPAN>
+				<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">make</SPAN>,
+				<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">make_with_arguments</SPAN></P>
+			<P><SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">-- Initialization</SPAN></P>
+			<P>&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">make</SPAN> <SPAN CLASS="ekeyword">is</SPAN>&nbsp;
+				<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ecomment">-- Creation
+				procedure&nbsp;
+</SPAN>				<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">do</SPAN>&nbsp;
+				<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">an_attribute</SPAN>
+				:= 5&nbsp;
+				<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">end</SPAN></P>
+			<P>&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">make_with_arguments</SPAN> (<SPAN CLASS="eitag">hour</SPAN>: <SPAN CLASS="eclass">INTEGER</SPAN>; <SPAN CLASS="eitag">minute</SPAN>: <SPAN CLASS="eclass">INTEGER</SPAN>; <SPAN CLASS="eitag">second</SPAN>:
+				<SPAN CLASS="eclass">INTEGER</SPAN>) <SPAN CLASS="ekeyword">is</SPAN>&nbsp;
+				<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ecomment">-- Another
+				creation procedure&nbsp;
+</SPAN>				<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">do</SPAN>&nbsp;
+				<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">an_attribute</SPAN>
+				:= <SPAN CLASS="eitag">second</SPAN> + (<SPAN CLASS="eitag">minute</SPAN> * 60) + (<SPAN CLASS="eitag">hour</SPAN> * 3600)&nbsp;
+				<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">end</SPAN></P>
+			<P><SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">-- Access</SPAN></P>
+			<P>&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">an_attribute</SPAN>: <SPAN CLASS="eclass">INTEGER</SPAN>&nbsp;
+				<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ecomment">-- An
+				attribute of type <SPAN CLASS="eclass">INTEGER</SPAN></SPAN></P>
+			<P>&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">another_attribute</SPAN>: <SPAN CLASS="eclass">INTEGER</SPAN> <SPAN CLASS="ekeyword">is</SPAN> 46<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ecomment">-- A
+				constant attribute</SPAN></P>
+			<P>&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">a_function</SPAN>: <SPAN CLASS="eclass">STRING</SPAN> <SPAN CLASS="ekeyword">is</SPAN>&nbsp;
+				<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ecomment">-- A
+				function without arguments&nbsp;
+</SPAN>				<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">do</SPAN>&nbsp;&nbsp;<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">Result</SPAN> :=
+				<SPAN CLASS="efeature">an_attribute</SPAN>.<SPAN CLASS="efeature">out</SPAN>&nbsp;
+				<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN></P>
+			<P>&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">another_function</SPAN> (<SPAN CLASS="eitag">an_int</SPAN>: <SPAN CLASS="eclass">INTEGER</SPAN>): <SPAN CLASS="eclass">INTEGER</SPAN> <SPAN CLASS="ekeyword">is</SPAN>&nbsp;
+				<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ecomment">-- A
+				function with arguments&nbsp;</SPAN>
+				<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">do</SPAN>&nbsp;&nbsp;<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">Result</SPAN> :=
+				<SPAN CLASS="efeature">an_attribute</SPAN> + <SPAN CLASS="eitag">an_int</SPAN>&nbsp;
+				<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">end</SPAN></P>
+			<P><SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">-- Basic Operations</SPAN></P>
+			<P>&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">a_procedure</SPAN> <SPAN CLASS="ekeyword">is</SPAN>&nbsp;
+				<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ecomment">-- A
+				procedure with no arguments&nbsp;
+</SPAN>				<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">do</SPAN>&nbsp;
+				<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">an_attribute</SPAN>
+				:= <SPAN CLASS="efeature">an_attribute</SPAN> + 5&nbsp;
+				<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">end</SPAN></P>
+			<P>&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">another_procedure</SPAN> (<SPAN CLASS="eitag">an_int</SPAN>: <SPAN CLASS="eclass">INTEGER</SPAN>; <SPAN CLASS="eitag">another_int</SPAN>: <SPAN CLASS="eclass">INTEGER</SPAN>)
+				<SPAN CLASS="ekeyword">is</SPAN>&nbsp;
+				<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ecomment">-- A
+				procedure with arguments&nbsp;
+</SPAN>				<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">do</SPAN>&nbsp;
+				<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">an_attribute</SPAN>
+				:= <SPAN CLASS="efeature">an_attribute</SPAN> + <SPAN CLASS="eitag">an_int</SPAN> + <SPAN CLASS="eitag">another_int</SPAN>&nbsp;
+				<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">end</SPAN></P>
+			<P><SPAN CLASS="ekeyword">end</SPAN> <SPAN CLASS="ecomment">-- Class <SPAN CLASS="eclass">SOME_CLASS</SPAN></SPAN></P>
+		</CODE>
+		<P>&nbsp;</P>
+		<h3>Feature Declaration</h3>
+		<P>When you write a feature in a class, you typically will include some of the
+			following:
+		</P>
+		<UL>
+			<LI>
+				The feature's name
+				<DIV class="note" id="DIV1" style="WIDTH: 80%">
+					<P><STRONG>Note:</STRONG> In Eiffel&nbsp;every feature of a&nbsp;class must have
+						a&nbsp;name that is unique within that class.
+					</P>
+				</DIV>
+			<LI>
+			The feature's type (in the case of&nbsp;an attribute or a function)
+			<LI>
+			The feature's formal argument list (in&nbsp;the case of&nbsp;a function or
+			procedure that has arguments)
+			<LI>
+			The actual value of the feature (in the case of a constant attribute)
+			<LI>
+				The implementation code (in the case of a function or procedure)</LI></UL>
+		<P>Let's dissect&nbsp;one feature and identify its parts:</P>
+		<CODE>
+			<P>&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">another_function</SPAN> (<SPAN CLASS="eitag">an_int</SPAN>: <SPAN CLASS="eclass">INTEGER</SPAN>): <SPAN CLASS="eclass">INTEGER</SPAN> <SPAN CLASS="ekeyword">is</SPAN>&nbsp;
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ecomment">-- A
+				function with arguments&nbsp;
+</SPAN>				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">do</SPAN>&nbsp;&nbsp;<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">Result</SPAN> :=
+				<SPAN CLASS="efeature">an_attribute</SPAN> + <SPAN CLASS="eitag">an_int</SPAN>&nbsp;
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">end</SPAN></P>
+		</CODE>
+		<P>In this feature:</P>
+		<UL>
+			<LI>
+			"another_function" is the feature's&nbsp;name.&nbsp;
+			<LI>
+				"(an_int: INTEGER)" is the argument list.
+				<UL>
+					<LI>
+					"an_int" is the name of the first argument
+					<LI>
+						"INTEGER" is the type "an_int"</LI></UL>
+			<LI>
+			"INTEGER" (after the argument list) is the feature's type.
+			<LI>
+			"do "&nbsp;introduces the implementation code.
+			<LI>
+				"Result := an_attribute + an_int" is an instruction.
+				<DIV class="warning" id="DIV1" style="WIDTH: 80%" DESIGNTIMEDRAGDROP="4196"><STRONG>Note:</STRONG>
+					This feature is a function. As a consequence the computation uses the keyword
+					"Result" as an entity name for the value to be returned by the function</DIV>
+			<LI>
+				"end" ends the feature declaration</LI></UL>
+		<H2>General&nbsp;Structure of Routines</H2>
+		<P>As you can imagine, the possibilities for coding routines are more complex than
+			those for coding attributes. Routines always contain the keyword "is" after the
+			first part of the feature declaration. The part after the "is" is called the
+			routine part.</P>
+		<P>The routine part is made up of the following sections:</P>
+		<UL dir="ltr">
+			<LI>
+				<A href="#Header Comment">Header Comment</A>
+			<LI>
+				<A href="#obsolete">Obsolete</A>
+			<LI>
+				<A href="#Precondition">Precondition</A>
+			<LI>
+				<A href="#Local Declarations">Local Declarations</A>
+			<LI>
+				<A href="#Routine Body">Routine Body</A>
+			<LI>
+				<A href="#Postcondition">Postcondition</A>
+			<LI>
+				<A href="#Rescue">Rescue</A>
+			</LI>
+		</UL>
+		<P>All of the sections except the Routine Body are optional.</P>
+		<P>Here is another feature, a routine, which has all of these except obsolete and
+			rescue.
+		</P>
+		<CODE>
+		<SPAN CLASS="efeature">insert_text_header_item</SPAN> (<SPAN CLASS="eitag">a_label</SPAN>:
+			<SPAN CLASS="eclass">STRING</SPAN>;
+			<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="eitag">a_width</SPAN>, <SPAN CLASS="eitag">a_format</SPAN>: <SPAN CLASS="eclass">INTEGER</SPAN>;
+			<SPAN CLASS="eitag">insert_after_item_no</SPAN>: <SPAN CLASS="eclass">INTEGER</SPAN>) <SPAN CLASS="ekeyword">is</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ecomment">-- Insert a
+			text item to the header control
+</SPAN>			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<SPAN CLASS="ecomment">--&nbsp;&nbsp;&nbsp;&nbsp; after the `insert_item_item_no' item.&nbsp;</SPAN>
+			<br>
+			&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">require</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="eitag">exists</SPAN>: <SPAN CLASS="efeature">exists</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="eitag">label_not_void</SPAN>: <SPAN CLASS="eitag">a_label</SPAN> /=
+			<SPAN CLASS="ekeyword">Void</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="eitag">insert_after_item_no_positive</SPAN>:
+			<SPAN CLASS="eitag">insert_after_item_no</SPAN> &gt;= 0&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">local</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="eitag">hd_item</SPAN>: <SPAN CLASS="eclass">WEL_HD_ITEM</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">do</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="eitag">hd_item</SPAN>.<SPAN CLASS="efeature">make</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="eitag">hd_item</SPAN>.<SPAN CLASS="efeature">set_text</SPAN> (<SPAN CLASS="eitag">a_label</SPAN>)&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="eitag">hd_item</SPAN>.<SPAN CLASS="efeature">set_width</SPAN> (<SPAN CLASS="eitag">a_width</SPAN>)&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="eitag">hd_item</SPAN>.<SPAN CLASS="efeature">set_format</SPAN> (<SPAN CLASS="eitag">a_format</SPAN>)&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">insert_header_item</SPAN> (<SPAN CLASS="eitag">hd_item</SPAN>,
+			<SPAN CLASS="eitag">insert_after_item_no</SPAN>)&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">ensure</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="eitag">item_count_increased</SPAN>: <SPAN CLASS="efeature">item_count</SPAN> =
+			<SPAN CLASS="ekeyword">old</SPAN> <SPAN CLASS="efeature">item_count</SPAN> + 1
+			<br>
+			<SPAN CLASS="ekeyword">end</SPAN>
+		</CODE>
+		<P>Using this example, let's identify and discuss the different sections.</P>
+		<a name="Header Comment"></a>
+		<h3>Header Comment</h3>
+		<CODE>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		 <SPAN CLASS="ecomment"> -- Insert a text item to the header control
+</SPAN>				<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		 <SPAN CLASS="ecomment"> --&nbsp;&nbsp;&nbsp;&nbsp; after the `insert_item_item_no' item.&nbsp;
+</SPAN>			</CODE>
+		<P>Although the feature's&nbsp;header comment is optional, most Eiffel programmers
+			and their technical&nbsp; managers feel that it should never be omitted. Header
+			comments are included by some language processing tools in specialized views of
+			classes. Header comments are almost always short, usually no more than a few
+			lines. Header comments serve to provide a natural language description of what
+			the feature will do (in the case of&nbsp;features that are&nbsp;
+			<MSHELP:LINK tabIndex="0" indexMoniker="!DefaultKeywordIndex" keywords="command">commands</MSHELP:LINK>)
+			or what information it provides (in the case of
+			<MSHELP:LINK tabIndex="0" indexMoniker="!DefaultKeywordIndex" keywords="query">queries</MSHELP:LINK>
+			).
+		</P>
+		<a name="Obsolete"></a>
+		<h3>Obsolete</h3>
+		<P>The feature <SPAN CLASS="efeature">insert_text_header_item</SPAN> is not obsolete ... but if it were it
+			would include an <SPAN CLASS="ekeyword">obsolete</SPAN> clause. This works much like the obsolete part for
+			classes that we saw in <A href="../../eiffel_for_dotnet/\20_Language\10_Eiffel_NET\20_Eiffel_Classes.htm">Eiffel
+				Classes</A>: the keyword "<SPAN CLASS="ekeyword">obsolete</SPAN>" followed by a manifest string which
+			bears a message to potential reuse consumers:</P>
+		<a name="Precondition"></a>
+		<h3>Precondition</h3>
+		<CODE>
+		&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">require</SPAN>&nbsp;
+			<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="eitag">exists</SPAN>: <SPAN CLASS="efeature">exists</SPAN>&nbsp;
+			<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="eitag">label_not_void</SPAN>: <SPAN CLASS="eitag">a_label</SPAN> /=
+			<SPAN CLASS="ekeyword">Void</SPAN>&nbsp;
+			<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="eitag">insert_after_item_no_positive</SPAN>:
+			<SPAN CLASS="eitag">insert_after_item_no</SPAN> &gt;= 0&nbsp;
+		</CODE>
+		<P>The precondition part of a feature is introduced by the keyword "<SPAN CLASS="ekeyword">require</SPAN>". It
+			contains a set of assertions which define the state necessary for the correct
+			execution of&nbsp;a routine. We will see more about assertions in <A href="../../eiffel_for_dotnet/\20_Language\10_Eiffel_NET\60_Design_By_Contract.htm">
+				Design by Contract and Assertions</A>.
+		</P>
+		<a name="Local Declarations"></a>
+		<h3>Local Declarations
+		</h3>
+		<CODE>
+		&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">local</SPAN>&nbsp;
+			<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="eitag">hd_item</SPAN>: <SPAN CLASS="eclass">WEL_HD_ITEM</SPAN>&nbsp;
+		</CODE>
+		<P>This part contains the declarations for any "local entities" used by the
+			feature. Sometimes the computation accomplished in a feature requires the use
+			of entities which are only temporary. It would not be appropriate to make these
+			attributes of the class. So, instead we can use local entities, which have
+			scope only within the feature in which they are declared. In the example,
+			<SPAN CLASS="eitag">hd_item</SPAN> is available as type <SPAN CLASS="eclass">WEL_HD_ITEM</SPAN> during the computation of feature
+			<SPAN CLASS="efeature">insert_text_header_item</SPAN>.</P>
+		<DIV class="note" id="DIV1" style="WIDTH: 80%">
+			<P><STRONG>Note:</STRONG> A local entity name must not be the same as any feature
+				of the class in which its feature occurs&nbsp;or the same as any argument name
+				of the feature in which it occurs.</P>
+		</DIV>
+		<a name="Routine Body"></a>
+		<h3>Routine Body</h3>
+		<CODE>
+		&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">do</SPAN>&nbsp;
+			<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="eitag">hd_item</SPAN>.<SPAN CLASS="efeature">make</SPAN>&nbsp;
+			<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="eitag">hd_item</SPAN>.<SPAN CLASS="efeature">set_text</SPAN> (<SPAN CLASS="eitag">a_label</SPAN>)&nbsp;
+			<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="eitag">hd_item</SPAN>.<SPAN CLASS="efeature">set_width</SPAN> (<SPAN CLASS="eitag">a_width</SPAN>)&nbsp;
+			<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="eitag">hd_item</SPAN>.<SPAN CLASS="efeature">set_format</SPAN> (<SPAN CLASS="eitag">a_format</SPAN>)&nbsp;
+			<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">insert_header_item</SPAN> (<SPAN CLASS="eitag">hd_item</SPAN>,
+			<SPAN CLASS="eitag">insert_after_item_no</SPAN>)&nbsp;
+		</CODE>
+		<P>This is the routine body for a fairly typical effective, internal routine. It
+			contains the instructions that get the job done for the feature. You may notice
+			that experienced Eiffel programmers rarely write routine bodies that are more
+			than a few lines long. The reason for this is more that just intuitive. This
+			phenomenon will be explained in the section <A href="../../eiffel_for_dotnet/\20_Language\10_Eiffel_NET\60_Design_By_Contract.htm">
+				Design by Contract and Assertions</A> &nbsp;.
+		</P>
+		<P>There are other forms that a routine body can take. Here are some examples of
+			some others:
+		</P>
+		<h4>External Routines</h4>
+		<CODE>
+			<P><SPAN CLASS="efeature">cwin_tooltips_class</SPAN>: <SPAN CLASS="eclass">POINTER</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+				<BR>
+				&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">external</SPAN>
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "C [macro
+				<CCTRL.H>] : EIF_POINTER" <BR>&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">alias</SPAN> <BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "TOOLTIPS_CLASS"
+<BR><SPAN CLASS="ekeyword">end</SPAN>
+			</P>
+		</CODE>
+		<P>The routine body above is for an "external" routine. External routines are used
+			to represent within Eiffel classes, routines that are written in other
+			languages.
+		</P>
+		<DIV class="tip" id="DIV1" style="WIDTH: 80%">
+			<P><STRONG>Tip:</STRONG> Because of the high degree of language interaction
+				provided by Microsoft .NET, it is not necessary in&nbsp;Eiffel for .NET&nbsp;to
+				use externals to use software components from .NET assemblies. Instead, these
+				components are presented to the Eiffel programmer as if they were Eiffel
+				classes. Read more about this in <A href="../../eiffel_for_dotnet/\20_Language\10_Eiffel_NET\10_Conventions.htm">
+					Conventions</A>.</P>
+		</DIV>
+		<h4>Once Routines</h4>
+		<P></P>
+		<CODE>
+			<P>&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">once</SPAN>&nbsp;&nbsp;<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">Result</SPAN> := <EM>some_computation</EM></P>
+		</CODE>
+		<P>This is the routine body of a "once" routine, specifically a "once function". A
+			once routine is introduced by the
+			keyword "<SPAN CLASS="ekeyword">once</SPAN>" rather than <SPAN CLASS="ekeyword">do</SPAN>. It contains an computational body that&nbsp;executes only the first time
+			it is called. Upon subsequent calls it has no effect.
+		</P>
+		<P>Once procedures are useful for doing things that for some reason should not be
+			done multiple times.</P>
+		<P>If the once routine is a function (as the example above), it computes the
+			resulting object on the first call, then on subsequent calls, it returns the
+			object it originally created without executing the computation. Once functions
+			facilitate shared objects which helps us&nbsp;in avoiding globals. A class
+			containing a once function can be inherited by many other classes. The first
+			object to apply the once function causes the resulting object to be created and
+			initialized. Subsequent applications by any other object accesses the
+			originally created instance.</P>
+		<h4>Deferred Routines</h4>
+		<CODE>
+		&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">deferred</SPAN>&nbsp;
+		</CODE>
+		<P>The body for a deferred routine is simply the keyword "<SPAN CLASS="ekeyword">deferred</SPAN>". Below is the
+			deferred routine body in the context of an entire feature.</P>
+		<CODE>
+		<SPAN CLASS="efeature">set_position</SPAN> (<SPAN CLASS="eitag">new_position</SPAN>:
+			<SPAN CLASS="eclass">INTEGER</SPAN>) <SPAN CLASS="ekeyword">is</SPAN>&nbsp;<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ecomment">-- Set
+			`position' with `new_position'&nbsp;</SPAN><BR>
+			&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">require</SPAN>&nbsp;<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="eitag">exists</SPAN>: <SPAN CLASS="efeature">exists</SPAN>&nbsp;<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="eitag">valid_minimum</SPAN>: <SPAN CLASS="eitag">new_position</SPAN> &gt;=
+			<SPAN CLASS="efeature">minimum</SPAN>&nbsp;<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="eitag">valid_maximum</SPAN>: <SPAN CLASS="eitag">new_position</SPAN> &lt;=
+			<SPAN CLASS="efeature">maximum</SPAN>&nbsp;<BR>
+			&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">deferred</SPAN>&nbsp;<BR>
+			&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">ensure</SPAN>&nbsp;<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="eitag">position_set</SPAN>: <SPAN CLASS="efeature">position</SPAN> =
+			<SPAN CLASS="eitag">new_position</SPAN>
+			<BR>
+			<SPAN CLASS="ekeyword">end</SPAN>
+		</CODE>
+		<P>As we learned in&nbsp;<A href="../../eiffel_for_dotnet/\20_Language\10_Eiffel_NET\20_Eiffel_Classes.htm">Eiffel
+				Classes</A> a deferred routine has specification, but no implementation. We
+			will investigate deferred classes and features further in&nbsp;<A href="../../eiffel_for_dotnet/\20_Language\10_Eiffel_NET\40_Inheritance.htm">Inheritance</A>.
+		</P>
+		<a name="Postcondition"></a>
+		<h3>Postcondition</h3>
+		<CODE>&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">ensure</SPAN>&nbsp;
+			<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="eitag">item_count_increased</SPAN>: <SPAN CLASS="efeature">item_count</SPAN> =
+			<SPAN CLASS="ekeyword">old</SPAN> <SPAN CLASS="efeature">item_count</SPAN> + 1
+		</CODE>
+		<P></P>
+		<P>The postcondition part of a routine is introduced by the keyword "<SPAN CLASS="ekeyword">ensure</SPAN>". The
+			postcondition is a group of assertions which describe the state that must be
+			satisfied upon the successful completion of the routine. We will see more about
+			assertions in <A href="../../eiffel_for_dotnet/\20_Language\10_Eiffel_NET\60_Design_By_Contract.htm">Design
+				by Contract and Assertions</A>.</P>
+		<a name="Rescue"></a>
+		<h3>Rescue</h3>
+		<P>Our example feature does not have an explicitly coded rescue part. The rescue,
+			introduced by the keyword "<SPAN CLASS="ekeyword">rescue</SPAN>", provides&nbsp;a routine with&nbsp;a chance
+			to do additional processing in the case that it incurs an exeption during
+			normal processing. We will learn about the rescue clause in the section <A href="../../eiffel_for_dotnet/\20_Language\10_Eiffel_NET\70_Exception_Mechanism.htm">
+				Exception Mechanism</A> . Until then, you can see&nbsp;what a rescue part
+			looks like&nbsp;in the feature below.</P>
+		<CODE>
+		<SPAN CLASS="efeature">bind</SPAN> <SPAN CLASS="ekeyword">is</SPAN>&nbsp;
+			<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment"> -- Bind
+			socket to local address in `address'.&nbsp;
+</SPAN>			<BR>
+			&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">require</SPAN>&nbsp;
+			<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="eitag">socket_exists</SPAN>: <SPAN CLASS="efeature">exists</SPAN>&nbsp;
+			<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="eitag">valid_local_address</SPAN>: <SPAN CLASS="efeature">address</SPAN> /=
+			<SPAN CLASS="ekeyword">Void</SPAN>&nbsp;
+			<BR>
+			&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">local</SPAN>
+			<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="eitag">ext</SPAN>: <SPAN CLASS="eclass">ANY</SPAN>&nbsp;
+			<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="eitag">retried</SPAN>: <SPAN CLASS="eclass">BOOLEAN</SPAN>&nbsp;
+			<BR>
+			&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">do</SPAN>&nbsp;
+			<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="ekeyword">not</SPAN> <SPAN CLASS="eitag">retried</SPAN> <SPAN CLASS="ekeyword">then</SPAN>&nbsp;
+			<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="eitag">ext</SPAN> :=
+			<SPAN CLASS="efeature">address</SPAN>.<SPAN CLASS="efeature">socket_address</SPAN>
+			<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">c_bind</SPAN>
+			(<SPAN CLASS="efeature">descriptor</SPAN>, $<SPAN CLASS="eitag">ext</SPAN>, <SPAN CLASS="efeature">address</SPAN>.<SPAN CLASS="efeature">count</SPAN>)&nbsp;
+			<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">is_open_read</SPAN>
+			:= <SPAN CLASS="ekeyword">True</SPAN>&nbsp;
+			<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN>&nbsp;
+			<BR>
+			&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">rescue</SPAN>&nbsp;
+			<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="ekeyword">not</SPAN> <SPAN CLASS="efeature">assertion_violation</SPAN>
+			<SPAN CLASS="ekeyword">then</SPAN>&nbsp;
+			<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">is_open_read</SPAN>
+			:= <SPAN CLASS="ekeyword">False</SPAN>&nbsp;
+			<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="eitag">retried</SPAN> :=
+			<SPAN CLASS="ekeyword">True</SPAN>&nbsp;
+			<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">retry</SPAN>&nbsp;
+			<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">end</SPAN>
+			<BR>
+			<SPAN CLASS="ekeyword">end</SPAN>
+		</CODE>
+		<P>&nbsp;</P>
+		<H2>Making&nbsp;Features Available to Clients</H2>
+		<P>Remember that when we build classes in Eiffel, we&nbsp;keep in mind
+			the&nbsp;possibility that&nbsp;these classes may eventually become valued,
+			reusable software components. As a result we have a responsibility to make sure
+			that our classes allow clients to use them in a safe and productive fashion. We
+			make available those features that it is appropriate for clients to use, and we
+			hide the rest. In Eiffel we say that a feature that is available to clients is
+			"exported".
+		</P>
+		<P>Control of the export of features inherited from ancestors is done by using the
+			"export" keyword. Export of inherited features will be discussed in <A href="../../eiffel_for_dotnet/\20_Language\10_Eiffel_NET\40_Inheritance.htm">
+				Inheritance</A>.</P>
+		<P>Control of the export of immediate features (those features introduced in the
+			text of a class) is done with the "feature" clause. We have encountered the
+			feature clause already:</P>
+		<CODE>
+			<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">-- Access
+</SPAN>			<BR>
+			<BR>
+			<BR>
+			&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">an_attribute</SPAN>: <SPAN CLASS="eclass">INTEGER</SPAN>&nbsp;
+			<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ecomment">-- An
+			attribute of type INTEGER<BR>
+</SPAN>			<BR>
+			&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">another_attribute</SPAN>: <SPAN CLASS="eclass">INTEGER</SPAN> <SPAN CLASS="ekeyword">is</SPAN> 46<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ecomment">-- A
+			constant attribute</SPAN><BR>
+			<BR>
+			&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">a_function</SPAN>: <SPAN CLASS="eclass">STRING</SPAN> <SPAN CLASS="ekeyword">is</SPAN>&nbsp;
+			<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ecomment">-- A
+			function without arguments</SPAN>&nbsp;
+			<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">do</SPAN>&nbsp;&nbsp;<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">Result</SPAN> :=
+			<SPAN CLASS="efeature">an_attribute</SPAN>.<SPAN CLASS="efeature">out</SPAN>&nbsp;
+			<BR>
+			<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+			<BR>
+			&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">another_function</SPAN> (<SPAN CLASS="eitag">an_int</SPAN>: <SPAN CLASS="eclass">INTEGER</SPAN>): <SPAN CLASS="eclass">INTEGER</SPAN> <SPAN CLASS="ekeyword">is</SPAN>&nbsp;
+			<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ecomment">-- A
+			function with arguments</SPAN>&nbsp;
+			<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">do</SPAN>&nbsp;&nbsp;<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">Result</SPAN> :=
+			<SPAN CLASS="efeature">an_attribute</SPAN> + <SPAN CLASS="eitag">an_int</SPAN>&nbsp;
+			<BR>
+			<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">end</SPAN>
+			<BR>
+			<BR>
+			<BR>
+			<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">-- Basic Operations</SPAN><BR>
+			<BR>
+			<BR>
+			&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">a_procedure</SPAN> <SPAN CLASS="ekeyword">is</SPAN>&nbsp;
+			<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ecomment">-- A
+			procedure with no arguments</SPAN>&nbsp;
+			<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">do</SPAN>&nbsp;
+			<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">an_attribute</SPAN>
+			:= <SPAN CLASS="efeature">an_attribute</SPAN> + 5&nbsp;
+			<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">end</SPAN><BR>
+			<BR>
+			&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">another_procedure</SPAN> (<SPAN CLASS="eitag">an_int</SPAN>: <SPAN CLASS="eclass">INTEGER</SPAN>; <SPAN CLASS="eitag">another_int</SPAN>: <SPAN CLASS="eclass">INTEGER</SPAN>)
+			<SPAN CLASS="ekeyword">is</SPAN>&nbsp;
+			<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ecomment">-- A
+			procedure with arguments</SPAN>&nbsp;
+			<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">do</SPAN>&nbsp;
+			<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">an_attribute</SPAN>
+			:= <SPAN CLASS="efeature">an_attribute</SPAN> + <SPAN CLASS="eitag">an_int</SPAN> + <SPAN CLASS="eitag">another_int</SPAN>&nbsp;
+			<BR>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">end</SPAN><BR>
+		</CODE>
+		<P>A feature clause like the ones in the example above means that all the features
+			that follow, until the next feature clause are exported to clients based on any
+			class. Techically, this</P>
+		<CODE>
+		<SPAN CLASS="ekeyword">feature</SPAN><SPAN CLASS="ecomment"> -- Basic Operations</SPAN>
+		</CODE>
+		<P>is equivalent to</P>
+		<CODE>
+		<SPAN CLASS="ekeyword">feature</SPAN> {<SPAN CLASS="eclass">ANY</SPAN>} <SPAN CLASS="ecomment">-- Basic Operations</SPAN>
+		</CODE>
+		<P>which means that the following features are available to clients which conform
+			to class <SPAN CLASS="eclass">ANY</SPAN>. And in Eiffel, <SPAN CLASS="eclass">ANY</SPAN> is the class from which all other classes
+			inherit. As a consequence all&nbsp;classes conform to <SPAN CLASS="eclass">ANY</SPAN>.</P>
+		<P>Inside the braces is a list of classes which are eligible as clients.
+		</P>
+		<CODE>
+		<SPAN CLASS="ekeyword">feature</SPAN> {<SPAN CLASS="eclass">STRING_HANDLER</SPAN>} <SPAN CLASS="ecomment">--
+			Implementation
+</SPAN>		</CODE>
+		<P>Features following this example from class <SPAN CLASS="ekeyword">STRING</SPAN> will be available to client
+			class <SPAN CLASS="eclass">STRING_HANDLER</SPAN> and all its proper descendants.
+		</P>
+		<P>As stated above, you can put a list of class names in the braces:</P>
+		<CODE><SPAN CLASS="ekeyword">feature</SPAN> {<SPAN CLASS="eclass">CLASS_A</SPAN>, <SPAN CLASS="eclass">CLASS_B</SPAN>, <SPAN CLASS="eclass">CLASS_C</SPAN>} <SPAN CLASS="ecomment">-- Semi-private features
+</SPAN>		</CODE>
+		<P>Often features which are solely for implementation should not be seen or used by clients
+			of any type. You can ensure this by exporting to class <SPAN CLASS="eclass">NONE</SPAN>, the class from
+			which no other class can inherit:
+		</P>
+		<CODE>
+		<SPAN CLASS="ekeyword">feature</SPAN> {<SPAN CLASS="eclass">NONE</SPAN>} <SPAN CLASS="ecomment">-- Implementation
+</SPAN>		</CODE>
+		<P>&nbsp;</P>
+		<h2>Eiffel Instructions and Control Structures</h2>
+		<P>When you begin to write routines in Eiffel, you will need to understand how to
+			write instructions. Fortunately, the set of instruction types you can code is
+			fairly small. Here we will look the most common of these. You will see
+			some&nbsp;more in other topics.</P>
+		<h3>Creation
+		</h3>
+		<CODE>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="eitag">hd_item</SPAN>.<SPAN CLASS="efeature">make</SPAN>&nbsp;
+		</CODE>
+		<P>We discussed creation procedures and the process of bringing new objects into
+			being in <A href="../../eiffel_for_dotnet/\20_Language\10_Eiffel_NET\20_Eiffel_Classes.htm">Eiffel Classes</A>.
+			A creation instruction starts with the keyword "<SPAN CLASS="ekeyword">create</SPAN>". It&nbsp;creates a new
+			object, initialize its fields, may apply a creation procedure, and attaches the
+			object to an entity.</P>
+		<h3>Procedure Call</h3>
+		<CODE>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<SPAN CLASS="eitag">hd_item</SPAN>.<SPAN CLASS="efeature">set_text</SPAN> (<SPAN CLASS="eitag">a_label</SPAN>)&nbsp;
+		</CODE>
+		<P>The application of a feature to an object&nbsp;constitutes an instruction if the
+			feature is a procedure.</P>
+		<h3>Assignment</h3>
+		<P>In Eiffel, assignment syntax is simple. But depending upon the types involved,
+			what actually happens may need some explanation. Assume here that
+			<SPAN CLASS="efeature">is_open_read</SPAN> is an attribute declared as type <SPAN CLASS="eclass">BOOLEAN</SPAN>:</P>
+		<CODE>
+			<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">is_open_read</SPAN> := <SPAN CLASS="ekeyword">False</SPAN></P>
+		</CODE>
+		<P>In this instruction,&nbsp;an attribute of type <SPAN CLASS="eclass">BOOLEAN</SPAN>
+			named&nbsp;<SPAN CLASS="efeature">is_open_read</SPAN>&nbsp;is being assigned the&nbsp;value of
+			the&nbsp;manifest boolean "<SPAN CLASS="ekeyword">False</SPAN>". The attribute <SPAN CLASS="efeature">is_open_read</SPAN> is based on an
+			expanded class <SPAN CLASS="eclass">BOOLEAN</SPAN>, so that means that the value for <SPAN CLASS="ekeyword">False</SPAN> is held in the
+			field for <SPAN CLASS="efeature">is_open_read</SPAN>. This is in contrast to what happens with reference
+			types.</P>
+		<CODE>
+			<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">my_string</SPAN> := <SPAN CLASS="efeature">some_other_string</SPAN></P>
+		</CODE>
+		<P>In this assignment, we will assume that both entities are type <SPAN CLASS="eclass">STRING</SPAN>. Because
+			<SPAN CLASS="eclass">STRING</SPAN> is a reference type, the field for <SPAN CLASS="efeature">my_string</SPAN> will hold either a
+			reference to an instance of <SPAN CLASS="eclass">STRING</SPAN>, or it will be <SPAN CLASS="ekeyword">Void</SPAN>. When the assignment
+			above executes, then whatever was in the field for <SPAN CLASS="efeature">my_string</SPAN> is replaced with
+			a reference to the same object that <SPAN CLASS="efeature">some_other_string</SPAN> refers to.&nbsp;</P>
+		<P>In summary, for objects based on&nbsp;expanded classes, assignment means
+			assignment of value. For objects based on reference classes, assignment means
+			assignment of reference.</P>
+		<h4>Conformance</h4>
+		<P>There is an important rule about assignment in Eiffel. The rule exists to ensure
+			type safety. Consider the following assignment which we would read
+			as "<SPAN CLASS="efeature">x</SPAN>
+			receives <SPAN CLASS="efeature">y</SPAN>" or "<SPAN CLASS="efeature">x</SPAN>
+			gets <SPAN CLASS="efeature">y</SPAN>".</P>
+		<CODE>
+			<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">x</SPAN> := <SPAN CLASS="efeature">y</SPAN></P>
+		</CODE>
+		<P>then the rule says that this assignment is valid only if the type of <SPAN CLASS="efeature">y</SPAN>
+			conforms to the type of <SPAN CLASS="efeature">x</SPAN>.
+		</P>
+		<P>The rule is clear enough ... if you know what "conform" means. In the presence
+			of mechanisms like
+			<MSHELP:LINK tabIndex="0" indexMoniker="!DefaultKeywordIndex" keywords="expanded class">expanded types</MSHELP:LINK>,
+			<MSHELP:LINK tabIndex="0" indexMoniker="!DefaultKeywordIndex" keywords="inheritance">inheritance</MSHELP:LINK>,
+			and
+			<MSHELP:LINK tabIndex="0" indexMoniker="!DefaultKeywordIndex" keywords="genericity">genericity</MSHELP:LINK>,
+			a precise definition of conformance is lengthy.
+		</P>
+		<P>But we can get by for a while with much less. For now let us be satisfied with
+			this:
+		</P>
+		<P>Consider the classes in the declarations for <SPAN CLASS="efeature">x</SPAN> and <SPAN CLASS="efeature">y</SPAN>.
+		</P>
+		<P>You might be tempted to say that to achieve "conformance", the classes would
+			have to be the same. And for the case in which the declarations
+			for <SPAN CLASS="efeature">x</SPAN> and <SPAN CLASS="efeature">y</SPAN>
+			are
+			<MSHELP:LINK tabIndex="0" indexMoniker="!DefaultKeywordIndex" keywords="expanded class">expanded
+classes</MSHELP:LINK>, you'd be correct. They conform only if they are the same class.</P>
+		<P>But for
+			<MSHELP:LINK tabIndex="0" indexMoniker="!DefaultKeywordIndex" keywords="reference type">reference
+types</MSHELP:LINK>, that&nbsp;constraint is unnecessarily restrictive. So, for reference
+			types, the class of <SPAN CLASS="efeature">y</SPAN> conforms to that <SPAN CLASS="efeature">x</SPAN> if it is the same class or a
+			proper descendant of that class. This facilitates a powerful idea known as
+			polymorphic attachment that we will see&nbsp;more&nbsp;closely&nbsp;in the
+			section on <A href="../../eiffel_for_dotnet/\20_Language\10_Eiffel_NET\40_Inheritance.htm">Inheritance</A>.</P>
+		<h3>Conditional</h3>
+		<CODE>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="efeature">l_c</SPAN>.<SPAN CLASS="efeature">is_digit</SPAN> <SPAN CLASS="ekeyword">then</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<SPAN CLASS="efeature">l_state</SPAN> := 2&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">elseif</SPAN> <SPAN CLASS="efeature">l_c</SPAN> =
+			'-' or <SPAN CLASS="efeature">l_c</SPAN> = '+' <SPAN CLASS="ekeyword">then</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<SPAN CLASS="efeature">l_state</SPAN> := 1&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">else</SPAN>&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<SPAN CLASS="efeature">l_state</SPAN> := 3&nbsp;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">end</SPAN>
+		</CODE>
+		<P>Conditionals in Eiffel use at a minimum the keywords "<SPAN CLASS="ekeyword">if</SPAN>", "<SPAN CLASS="ekeyword">then</SPAN>",and "<SPAN CLASS="ekeyword">end</SPAN>".
+			Optionally, they may use the keywords "<SPAN CLASS="ekeyword">elseif</SPAN>" and &nbsp;"<SPAN CLASS="ekeyword">else</SPAN>".</P>
+		<h3>Loop</h3>
+		<P></P>
+		<CODE>
+			<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">from</SPAN>&nbsp;
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="eitag">i</SPAN> := <SPAN CLASS="efeature">lower</SPAN>&nbsp;
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">until</SPAN>&nbsp;
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="eitag">i</SPAN> &gt; <SPAN CLASS="efeature">upper</SPAN>&nbsp;
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">loop</SPAN>&nbsp;
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="efeature">item</SPAN> (<SPAN CLASS="eitag">i</SPAN>) /= <SPAN CLASS="ekeyword">Void</SPAN> <SPAN CLASS="ekeyword">and</SPAN> <SPAN CLASS="ekeyword">then</SPAN> <SPAN CLASS="eitag">v</SPAN>.<SPAN CLASS="efeature">is_equal</SPAN> (<SPAN CLASS="efeature">item</SPAN> (<SPAN CLASS="eitag">i</SPAN>)) <SPAN CLASS="ekeyword">then</SPAN>&nbsp;
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="ekeyword">Result</SPAN> := <SPAN CLASS="ekeyword">Result</SPAN> + 1&nbsp;
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="ekeyword">end</SPAN>&nbsp;
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<SPAN CLASS="eitag">i</SPAN> := <SPAN CLASS="eitag">i</SPAN> + 1&nbsp;
+				<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">end</SPAN>
+			</P>
+		</CODE>
+		<P>There is only one structure for&nbsp;loops in&nbsp;Eiffel. In its&nbsp;typical
+			form it uses the four keywords "<SPAN CLASS="ekeyword">from</SPAN>", "<SPAN CLASS="ekeyword">until</SPAN>", "<SPAN CLASS="ekeyword">loop</SPAN>", and "<SPAN CLASS="ekeyword">end</SPAN>". The
+			instructions following the <SPAN CLASS="ekeyword">from</SPAN> keyword do any initialization necessary for
+			the loop. After <SPAN CLASS="ekeyword">until</SPAN> is a boolean expression which is the exit condition.
+			The&nbsp;loop body&nbsp;after <SPAN CLASS="ekeyword">loop</SPAN>&nbsp;is a list of instructions that are
+			executed for every iteration. As you can imagine, something in the loop
+			body&nbsp;should most likely cause the exit condition&nbsp;eventually to become
+			true.</P>
+		<P>&nbsp;</P>
+	</BODY>
+</HTML>

@@ -1,0 +1,169 @@
+<HTML XMLNS:MSHelp="http://msdn.microsoft.com/mshelp">
+	<HEAD>
+		<TITLE>Type Organization</TITLE>
+		<meta content="HTML 4.0" name="vs_targetSchema">
+	</HEAD>
+	<BODY>
+		<META http-equiv="Content-Style-Type" content="text/css">
+		<LINK href="../../../../default.css" type="text/css" charset="ISO-8859-1" rel="STYLESHEET"></LINK><LINK href="ms-help://Hx/HxRuntime/HxLink.css" type="text/css" rel="stylesheet"></LINK><LINK href="ms-help://Hx/HxRuntime/HxLinkDefault.css" type="text/css" rel="stylesheet"></LINK>
+		<h1>Class and Type Organization in Eiffel for .NET</h1>
+		<p>&nbsp;</p>
+		<p>In any comprehensive object-oriented system, the act of programming results in
+			creation of new
+			<MSHELP:LINK tabIndex="0" indexMoniker="!DefaultKeywordIndex" keywords="type">data types</MSHELP:LINK>
+			.&nbsp;There must be a way of organizing these types and/or their static
+			representation as
+			<MSHELP:LINK tabIndex="0" indexMoniker="!DefaultKeywordIndex" keywords="class">classes</MSHELP:LINK>.
+			This section tells you how classes are organized in Eiffel and in .NET, and how
+			these organization methods are used together.
+		</p>
+		<p>&nbsp;</p>
+		<h2>Eiffel Clusters</h2>
+		<p>&nbsp;</p>
+		<p>Eiffel classes are grouped in
+			<MSHELP:LINK tabIndex="0" indexMoniker="!DefaultKeywordIndex" keywords="cluster">clusters</MSHELP:LINK>.
+			These clusters of classes ordinarily share some commonality of functionality or
+			purpose.&nbsp;In other words,&nbsp;the classes in a particular cluster may
+			provide the same sorts of capabilities or relate to a single software model. In
+			the Eiffel Base Library there is a cluster called <SPAN CLASS="ecluster">list</SPAN> which contains classes
+			which implement different types of lists, for example, <SPAN CLASS="eclass">ARRAYED_LIST</SPAN>,
+			<SPAN CLASS="eclass">LINKED_LIST</SPAN>, <SPAN CLASS="eclass">SORTED_TWO_WAY_LIST</SPAN>, <SPAN CLASS="eclass">TWO_WAY_CIRCULAR</SPAN>. At an abstract level all
+			these classes are related to the software model of the notion of "list".
+		</p>
+		<p>The cluster <SPAN CLASS="ecluster">list</SPAN> is actually a subcluster of the cluster <SPAN CLASS="ecluster">structures</SPAN> which
+			contains clusters other than <SPAN CLASS="ecluster">list</SPAN> related to data structures other than
+			lists. Eiffel convention dictates that a cluster should either contain classes
+			or subclusters, but not both.
+		</p>
+		<p>So clusters serve both to <EM>categorize</EM> and <EM>locate</EM> classes. So,
+			class <SPAN CLASS="eclass">LINKED_LIST</SPAN> can be described as a basic library class implementing a data
+			structure, more particularly a list. As such, it can be found in the Base
+			Library, in cluster <SPAN CLASS="ecluster">structures</SPAN> in subcluster <SPAN CLASS="ecluster">list</SPAN>.
+		</p>
+		<p>&nbsp;</p>
+		<h2>.NET Namespaces and Assemblies</h2>
+		<p>&nbsp;</p>
+		<p>In .NET, types (the language independent, compiled form of classes) are stored
+			in "assemblies". So, we locate a type we want to use by referencing the
+			assembly in which it resides.
+		</p>
+		<P>As .NET programmers, we think of types as being categorized by namespace. For
+			example, we view the type <SPAN CLASS="eclass">System.Windows.Forms.TextBox</SPAN> as the <SPAN CLASS="eclass">TextBox</SPAN> type in
+			the context of the windows forms namespace (<SPAN CLASS="eclass">System.Windows.Forms</SPAN>).
+			Particularly, this is in contrast to type <SPAN CLASS="eclass">System.Web.UI.TextBox</SPAN> which is a
+			<SPAN CLASS="eclass">TextBox</SPAN> for web forms. As it relates to making .NET types usable by Eiffel, the
+			important thing to understand is that the real .NET type name is the fully
+			qualified type name, including the namespace. Namespaces are simply a bit of
+			"syntactic sugar" that keeps us from having to repeat the entire type name
+			every time we use it in source code.
+		</P>
+		<P>&nbsp;</P>
+		<h3>.NET Assemblies Available to Eiffel</h3>
+		<P>When types from .NET assemblies are made available to Eiffel programmers, each
+			assembly is mapped to a cluster. So all the types in an assembly appear as if
+			they were Eiffel classes in a cluster which corresponds to the .NET assembly.
+		</P>
+		<P>To summarize, as you learned in
+			<MSHELP:LINK tabIndex="0" keywords="naming conventions" indexMoniker="!DefaultKeywordIndex">Naming
+Conventions and Name Handling</MSHELP:LINK>, unambiguous Eiffel-style names are made
+			available for the&nbsp;.NET types in an assembly. The assembly is represented
+			to Eiffel for .NET programmers as a cluster of classes. The process of name
+			derivation is based upon a portion of the .NET type name, possibly augmented
+			with a prefix to ensure uniqueness.</P>
+		<P>&nbsp;</P>
+		<h3>Assemblies Built with Eiffel</h3>
+		<p>
+			The object model for which Eiffel was designed differs in some ways from the
+			.NET object model. Importantly, Eiffel supports the facilties of full,
+			controllable multiple
+			<MSHELP:LINK tabIndex="0" indexMoniker="!DefaultKeywordIndex" keywords="inheritance">inheritance</MSHELP:LINK>,
+			and
+			<MSHELP:LINK tabIndex="0" indexMoniker="!DefaultKeywordIndex" keywords="genericity">genericity</MSHELP:LINK>,
+			among other things, that the inherent .NET object model does not. That does not
+			mean that these things cannot work in .NET. Indeed they can, and they make
+			Eiffel for .NET very powerful. But, they&nbsp;do make things look a little
+			different.
+		</p>
+		<P>
+			When you compile Eiffel for .NET, the result is a .NET assembly; either an
+			executable system, or a library of potentially reusable data types. Because the
+			object model for Eiffel is different from that of .NET, the assembly resulting
+			from a compile is different in some ways.
+		</P>
+		<P>First an assembly built using Eiffel for .NET will likely contain lots of types
+			and interfaces. This is because as you use a class from the Eiffel libaries,
+			say class <SPAN CLASS="eclass">STRING</SPAN>, all the classes upon which <SPAN CLASS="eclass">STRING</SPAN> depends (<SPAN CLASS="eclass">STRING</SPAN>'s
+			<MSHELP:LINK tabIndex="0" indexMoniker="!DefaultKeywordIndex" keywords="supplier">suppliers</MSHELP:LINK>
+			and
+			<MSHELP:LINK tabIndex="0" indexMoniker="!DefaultKeywordIndex" keywords="ancestors">ancestors</MSHELP:LINK>)
+			must also be included in the assembly. That's because the Eiffel libraries,
+			unlike the Microsoft .NET libraries like <SPAN CLASS="ecluster">mscorlib</SPAN> and <SPAN CLASS="ecluster">System.Data</SPAN>, are not
+			distributed as shared type libraries.
+		</P>
+		<P>Another thing you may notice is that each Eiffel class you produce is
+			represented by three entities in the assembly ... two classes and an interface.
+			So, if you produce a class called <SPAN CLASS="eclass">GUARD_DOG</SPAN>, then in the assembly you'd see an
+			interface called <SPAN CLASS="eclass">GuardDog</SPAN>, a class called <SPAN CLASS="eclass">Impl.GuardDog</SPAN>, and a class called
+			<SPAN CLASS="eclass">Create.GuardDog</SPAN>. Again, this is done for reasons that concern the differences
+			in the object models between Eiffel and .NET.
+		</P>
+		<P>The <SPAN CLASS="eclass">GuardDog</SPAN> interface is what you use when you declare an entity or variable of
+			that type. The objects attached to that entity at runtime will be of the type
+			<SPAN CLASS="eclass">Impl.GuardDog</SPAN>. You create an instance of <SPAN CLASS="eclass">Impl.GuardDog</SPAN> and attach it to an
+			entity of type <SPAN CLASS="eclass">GuardDog</SPAN> by calling&nbsp;a&nbsp;routine in the factory class
+			<SPAN CLASS="eclass">Create.GuardDog</SPAN>. The factory routines will almost always have names that begin
+			with the word "<SPAN CLASS="efeature">Make</SPAN>", and represent the creation routines of Eiffel the
+			classes. So in the case of using an instance of <SPAN CLASS="eclass">GuardDog</SPAN> from a C# class, the
+			code would like this:</P>
+		<CODE>
+			{
+			<br>
+			&nbsp;&nbsp;&nbsp; <SPAN CLASS="eclass">GuardDog</SPAN> <SPAN CLASS="efeature">aGuardDog</SPAN> = <SPAN CLASS="eclass">Create.GuardDog</SPAN>.<SPAN CLASS="efeature">Make</SPAN>(); <SPAN CLASS="ecomment">//Create an
+			instance
+</SPAN>			<br>
+			&nbsp;&nbsp;&nbsp;
+			<SPAN CLASS="efeature">aGuardDog</SPAN>.<SPAN CLASS="efeature">RollOver</SPAN>();&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<SPAN CLASS="ecomment">// Apply a feature</SPAN>
+			<br>
+			}
+		</CODE>
+		<P>&nbsp;</P>
+		<p>
+			This object creation model accounts for some of the differences between
+			constructors in .NET and creation procedures in Eiffel. These differences will
+			be discussed in more detail in
+			<MSHELP:LINK tabIndex="0" indexMoniker="!DefaultKeywordIndex" keywords="constructors">Constructors and
+  Creation Procedures</MSHELP:LINK>.
+		</p>
+		<p>
+			Another advantage is that it provides a syntax that is similar to that used to
+			create objects in Eiffel. An Eiffel for .NET client to the class <SPAN CLASS="eclass">GUARD_DOG</SPAN>
+			might use the following code to create and use an instance.
+		</p>
+		<CODE>
+			<SPAN CLASS="ekeyword">local</SPAN>
+			<br>
+			&nbsp;&nbsp;&nbsp; <SPAN CLASS="efeature">a_guard_dog</SPAN>: <SPAN CLASS="eclass">GUARD_DOG</SPAN>&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- Declare an entity</SPAN>
+			of the type
+			<br>
+			<SPAN CLASS="ekeyword">do</SPAN>
+			<br>
+			&nbsp;&nbsp;&nbsp; <SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="efeature">a_guard_dog</SPAN>.<SPAN CLASS="efeature">make</SPAN>&nbsp;&nbsp;<SPAN CLASS="ecomment">--
+			Create and instance and attach to entity</SPAN>
+			<br>
+			&nbsp;&nbsp;&nbsp;
+			<SPAN CLASS="efeature">a_guard_dog</SPAN>.<SPAN CLASS="efeature">roll_over</SPAN>&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">--
+			Apply a feature
+</SPAN>			<br>
+			<SPAN CLASS="ekeyword">end</SPAN>
+		</CODE>
+		<P>&nbsp;</P>
+		<P>You may have noticed in these examples that even though the type <SPAN CLASS="eclass">GuardDog</SPAN> was
+			compiled from an Eiffel class, when the C# client uses <SPAN CLASS="eclass">GuardDog</SPAN>, it uses what
+			would be considered the .NET naming convention for&nbsp;the type <SPAN CLASS="eclass">GuardDog</SPAN>
+			(vs.&nbsp;<SPAN CLASS="eclass">GUARD_DOG</SPAN>)&nbsp;and the method name <SPAN CLASS="efeature">RollOver</SPAN> (vs <SPAN CLASS="efeature">roll_over</SPAN>). What
+			happens here is that when assemblies are produced from Eiffel classes, by
+			default .NET naming standards are used in the assembly.</P>
+		<P>&nbsp;</P>
+	</BODY>
+</HTML>

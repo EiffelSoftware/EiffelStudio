@@ -291,7 +291,7 @@ feature -- Basic operations
 			expose_actions.execute (Current, expose_data)
 			unset_drawing_dc
 			drawing_dc := old_dc
-			drawing_dc.save (virtual_bitmap, a_file_name)
+			drawing_dc.save_bitmap (virtual_bitmap, a_file_name)
 			painting := false
 		end
 

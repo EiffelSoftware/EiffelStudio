@@ -1911,6 +1911,12 @@ rt_private int16 eif_id_of (int16 stype, int16 **intab,
 			}
 
 			gdp = eif_derivations [(amap->map)[stype - (amap->min_id)]];
+
+			if (gdp == NULL) {
+					/* The static call context is not a generic class.
+					 * Hence we have to take 'obj_type'. */
+				gdp = eif_derivations [obj_type];
+			}
 		}
 		else
 		{

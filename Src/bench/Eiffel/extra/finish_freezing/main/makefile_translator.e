@@ -67,7 +67,7 @@ feature -- Initialization
 		do
 			quick_prg := clone (eiffel_dir)
 			quick_prg.append_character (operating_environment.directory_separator)
-			quick_prg.append ("bench")
+			quick_prg.append ("studio")
 			quick_prg.append_character (operating_environment.directory_separator)
 			quick_prg.append ("spec")
 			quick_prg.append_character (operating_environment.directory_separator)
@@ -1745,7 +1745,7 @@ feature {NONE} -- Implementation
 
 	config_eif_fn: STRING is
 			-- the full filename for the CONFIG.EIF file
-			-- currently: $ISE_EIFFEL|bench|spec|$ISE_PLATFORM|config|config.eif
+			-- currently: $ISE_EIFFEL|studio|spec|$ISE_PLATFORM|$ISE_C_COMPILER|config.eif
 		once
 			debug ("implementation")
 				io.putstring("%Tconfig_eif_fn = ")
@@ -1753,14 +1753,12 @@ feature {NONE} -- Implementation
 
 			Result := clone (eiffel_dir)
 			Result.append_character (operating_environment.directory_separator)
-			Result.append ("bench")
+			Result.append ("studio")
 			Result.append_character (operating_environment.directory_separator)
-			Result.append ("spec")
+			Result.append ("config")
 			Result.append_character (operating_environment.directory_separator)
 			Result.append (platform)
 			Result.append_character (operating_environment.directory_separator)
-			Result.append ("config")
-      	  	Result.append_character (operating_environment.directory_separator)
 			Result.append (compiler)
 			Result.append_character (operating_environment.directory_separator)
 			Result.append ("config.eif")

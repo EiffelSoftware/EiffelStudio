@@ -43,6 +43,9 @@ feature -- Callbacks
 		do
 			chooser := name_chooser (popup_parent);
 			chooser.set_open_file;
+			chooser.set_pattern ("*.ace")
+			chooser.set_pattern_name ("System File (*.ace)")
+
 			chooser.call (Current);
 		end;
 

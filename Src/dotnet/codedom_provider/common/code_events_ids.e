@@ -151,6 +151,9 @@ feature -- Consumer Warnings
 	Invalid_identifier: INTEGER is 20022
 			-- Invalid identifier
 
+	Missing_reference: INTEGER is 20023
+			-- Reference was not found
+
 feature -- Consumer Information
 
 	Void_argument: INTEGER is 30001

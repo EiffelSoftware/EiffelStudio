@@ -9,12 +9,6 @@ class
 inherit
 	CODE_TYPE
 
-	CODE_SHARED_CODE_GENERATOR_CONTEXT
-		undefine
-			default_create,
-			is_equal
-		end
-
 create
 	make
 

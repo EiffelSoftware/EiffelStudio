@@ -13,8 +13,8 @@ feature {AST_YACC} -- Implementation
 
 	process_class_as (l_as: CLASS_AS) is
 			-- Process `l_as'.
-			-- | Create CODE_COMPILE_UNIT in witch is a CODE_NAMESPACE
-			-- | in witch is a CODE_TYPE_DECLARATION.
+			-- | Create CODE_COMPILE_UNIT in which is a CODE_NAMESPACE
+			-- | in which is a CODE_TYPE_DECLARATION.
 		require else
 			referenced_assemblies_initialized: (create {CODE_REFERENCED_ASSEMBLIES}).assemblies_initialized
 		local

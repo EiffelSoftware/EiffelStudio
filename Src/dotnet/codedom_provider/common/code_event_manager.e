@@ -29,7 +29,7 @@ feature -- Basic Operations
 			else
 				create l_event.make (an_id, a_context)
 				if l_event.is_error then
-					if crash_on_error then
+					if fail_on_error then
 						(create {EXCEPTIONS}).raise (l_event.message)
 					elseif log_level > No_log then
 						log (l_event)

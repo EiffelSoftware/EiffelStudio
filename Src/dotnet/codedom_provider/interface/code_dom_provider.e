@@ -36,10 +36,8 @@ feature -- Access
 	file_extension: SYSTEM_STRING is
 			-- Get the file name extension to use when creating source code files.
 			-- Files passed to codeDomGenerator.
-		local
-			l_watcher: SYSTEM_DLL_FILE_SYSTEM_WATCHER
 		once
-			Result := ".es"
+			Result := "es"
 		end
 
 	language_options: SYSTEM_DLL_LANGUAGE_OPTIONS is

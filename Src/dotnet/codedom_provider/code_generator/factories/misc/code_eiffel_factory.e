@@ -11,7 +11,7 @@ inherit
 
 	CODE_DOM_PATH
 
-	CODE_SHARED_EVENT_MANAGER
+	CODE_REFERENCED_ASSEMBLIES
 		export
 			{NONE} all
 		end
@@ -98,12 +98,26 @@ feature {NONE} -- Implementation
 			l_namespaces: SYSTEM_DLL_CODE_NAMESPACE_COLLECTION
 			l_namespace: SYSTEM_DLL_CODE_NAMESPACE
 			l_types: SYSTEM_DLL_CODE_TYPE_DECLARATION_COLLECTION
+			l_referenced_assemblies: SYSTEM_DLL_STRING_COLLECTION
 		do	
-			Resolver.clear_all_local_variables
+			Resolver.clear_all_local_variables 
 
+			l_referenced_assemblies := a_source.referenced_assemblies
+			from
+				l_count := l_referenced_assemblies.count
+			until
+				i = l_count
+			loop
+				add_referenced_assembly (l_referenced_assemblies.item (i))
+				if not assembly_added then
+					Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_reference, [l_referenced_assemblies.item (i)])
+				end
+				i := i + 1
+			end
 			l_namespaces := a_source.namespaces
 			if l_namespaces /= Void then
 				from
+					i := 0
 				until
 					i = l_namespaces.count
 				loop

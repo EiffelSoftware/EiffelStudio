@@ -402,7 +402,6 @@ feature {NONE}-- Initialization
 			tests_notebook.set_item_text (compiler_box, "Compiler")
 			tests_notebook.set_item_text (code_parser_box, "Parser")
 			tests_notebook.set_item_text (output_text, "Output")
-			code_generator_box.hide
 			code_generator_box.set_padding_width (5)
 			code_generator_box.set_border_width (5)
 			code_generator_box.disable_item_expand (generation_tests_frame)
@@ -658,7 +657,6 @@ feature {NONE}-- Initialization
 			referenced_assemblies_remove_button.disable_sensitive
 			referenced_assemblies_remove_button.set_text ("Remove")
 			referenced_assemblies_remove_button.set_minimum_width (100)
-			code_parser_box.hide
 			code_parser_box.set_padding_width (10)
 			code_parser_box.set_border_width (5)
 			code_parser_box.disable_item_expand (code_parser_frame)
@@ -688,7 +686,6 @@ feature {NONE}-- Initialization
 			parse_button.disable_sensitive
 			parse_button.set_text ("Parse")
 			parse_button.set_minimum_width (100)
-			output_text.hide
 			output_text.set_minimum_height (100)
 			output_text.disable_edit
 			

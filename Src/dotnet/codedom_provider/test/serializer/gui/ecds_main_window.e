@@ -90,17 +90,19 @@ feature {NONE} -- Implementation
 			l_file_name: STRING
 		do
 			l_file_name := name_text_field.text
-			l_count := l_file_name.count
-			l_char := l_file_name.item (l_count)
-			if l_count = 1 and l_char = ' ' then
-				name_text_field.remove_text
-			elseif l_char = '?' or l_char = '/' or l_char = '\' or l_char = '*' or l_char = '<' or l_char = '>'
-				or l_char = '|' or l_char = ':' or l_char = '"' then
-				l_file_name.keep_head (l_count - 1)
-				name_text_field.set_text (l_file_name)
-			end
 			if not l_file_name.is_empty then
-				set_last_file_title (l_file_name)				
+				l_count := l_file_name.count
+				l_char := l_file_name.item (l_count)
+				if l_count = 1 and l_char = ' ' then
+					name_text_field.remove_text
+				elseif l_char = '?' or l_char = '/' or l_char = '\' or l_char = '*' or l_char = '<' or l_char = '>'
+					or l_char = '|' or l_char = ':' or l_char = '"' then
+					l_file_name.keep_head (l_count - 1)
+					name_text_field.set_text (l_file_name)
+				end
+				if not l_file_name.is_empty then
+					set_last_file_title (l_file_name)				
+				end
 			end
 			check_wsdl_generation
 			check_aspnet_generation

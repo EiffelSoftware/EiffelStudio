@@ -684,9 +684,6 @@ feature {EB_DEVELOPMENT_WINDOW} -- Implementation
 	display_error_help_cmd: EB_ERROR_INFORMATION_CMD
 			-- Command to pop up a dialog giving help on compilation errors.
 
-	dotnet_import_cmd: EB_DOTNET_IMPORT_CMD
-			-- Manage .Net assemblies.
-			
 	eac_browser_cmd: EB_OPEN_EAC_BROWSER_CMD
 			-- Command that displays the EAC browser tool.
 

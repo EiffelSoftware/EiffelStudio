@@ -500,7 +500,7 @@ feature -- Command loop
 				if last_request_abb = quit_abb then
 					done := True;
 				elseif last_request_cmd /= Void then
-					if licence.alive then
+					if license.alive then
 						yank_window.reset_output;
 						last_request_cmd.loop_action;
 					else

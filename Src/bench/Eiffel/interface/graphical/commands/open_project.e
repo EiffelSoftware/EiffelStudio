@@ -13,7 +13,7 @@ inherit
 	SHARED_APPLICATION_EXECUTION;
 	PROJECT_CONTEXT;
 	COMMAND_W;
-	LICENCED_COMMAND
+	LICENSED_COMMAND
 		rename
 			parent_window as Project_tool
 		end;
@@ -27,7 +27,7 @@ feature -- Callbacks
 
 	exit_bench is
 		do
-			discard_licence;
+			discard_licenses;
 			exit
 		end;
 
@@ -62,8 +62,8 @@ feature {NONE} -- Implementation
 					new_name_chooser.hide_file_selection_list;
 					new_name_chooser.hide_file_selection_label;
 					new_name_chooser.set_title (Interface_names.t_Select_a_directory)
-					if not licence.is_unlimited then
-						expiration := licence.time_left
+					if not license.is_unlimited then
+						expiration := license.time_left
 						if expiration < 30 then
 							msg := "Your license will expire in ";
 							msg.append_integer (expiration);

@@ -1,13 +1,11 @@
 class DLE_LICENSE inherit
 
-	ISE_LICENCE
+	ISE_LICENSE
 		rename
 			make as ise_make
 		redefine
 			handle_error
 		end;
-
-	SHARED_LICENSE
 
 creation
 
@@ -26,7 +24,7 @@ feature
 			ise_make
 			set_version (4.0)
 			set_application_name ("eiffeldle")
-			get_licence
+			get_license
 		end
 
 feature

@@ -13,7 +13,7 @@ inherit
 		rename
 			init as make
 		redefine
-			licence_checked
+			license_checked
 		end;
 	SYSTEM_CONSTANTS;
 	WARNER_CALLBACKS
@@ -136,8 +136,8 @@ feature {NONE} -- Implementation
 
 feature {NONE}
 
-	licence_checked: BOOLEAN is True;
-			-- Is the licence checked?
+	license_checked: BOOLEAN is True;
+			-- Is the license checked?
 
 	name: STRING is
 			-- Name of the command.

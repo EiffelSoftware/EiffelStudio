@@ -57,7 +57,7 @@ feature -- Execution
 					-- The user wants to execute this format,
 					-- even though it's a long format.
 				if not text_window.changed then
-					execute_licenced (formatted);
+					execute_licensed (formatted);
 				else
 					warner (popup_parent).call (Current, Warning_messages.w_File_changed)
 				end
@@ -66,7 +66,7 @@ feature -- Execution
 				formatted ?= tool.stone;
 				if not text_window.changed then
 					!! mp.set_watch_cursor;
-					execute_licenced (formatted);
+					execute_licensed (formatted);
 					mp.restore
 				else
 					warner (popup_parent).call (Current, Warning_messages.w_File_changed)
@@ -78,7 +78,7 @@ feature -- Execution
 					formatted ?= argument
 				end;
 				if formatted = Void then
-					execute_licenced (Void)
+					execute_licensed (Void)
 				elseif formatted /= Void and then formatted.clickable then
 					confirmer (popup_parent).call (Current, 
 						"This format requires exploring the entire%N%

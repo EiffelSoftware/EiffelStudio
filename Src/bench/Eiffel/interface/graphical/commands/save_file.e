@@ -17,7 +17,7 @@ inherit
 			true_state_symbol as unmodified_pixmap,
 			false_state_symbol as modified_pixmap
 		redefine
-			licence_checked, modified_pixmap
+			license_checked, modified_pixmap
 		end
 
 creation
@@ -99,8 +99,8 @@ feature {NONE} -- Implementation
 	
 feature {NONE} -- Attributes
 
-	licence_checked: BOOLEAN is True;
-			-- Is the licence checked?
+	license_checked: BOOLEAN is True;
+			-- Is the license checked?
 
 	dark_symbol: PIXMAP is
 			-- Dark version of `symbol'.

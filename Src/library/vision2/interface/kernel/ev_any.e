@@ -70,6 +70,23 @@ feature {EV_ANY} -- Initialization
 			is_in_default_state: is_in_default_state
 		end
 		
+feature -- Access
+		
+	data: ANY
+		-- Arbitrary user data may be stored here.
+
+feature -- Element change
+
+	set_data (some_data: like data) is
+			-- Assign `some_data' to `data'.
+		require
+			not_destroyed: not is_destroyed
+		do
+			data := some_data
+		ensure
+			data_assigned: data = some_data
+		end
+		
 feature -- Command
 
 	destroy is

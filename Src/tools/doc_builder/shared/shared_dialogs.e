@@ -92,4 +92,10 @@ feature -- Access
 			create Result
 		end			
 			
+	shortcut_dialog: SHORTCUTS_DIALOG is
+			-- Dialog for editor shortcuts
+		once
+			create Result
+		end			
+			
 end -- class SHARED_DIALOGS

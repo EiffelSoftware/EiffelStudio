@@ -61,8 +61,6 @@ feature {NONE} -- Initialization
 	make_top (a_name: STRING) is
 			-- Make a top window (without parent) with `a_name'
 			-- as a title.
-		require
-			a_name_not_void: a_name /= Void
 		do
 			register_class
 			internal_window_make (Void, a_name,

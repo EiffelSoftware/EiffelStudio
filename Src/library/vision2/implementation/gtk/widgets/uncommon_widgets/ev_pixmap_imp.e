@@ -13,7 +13,12 @@ class
 inherit
 	EV_PIXMAP_I
 
+	EV_DRAWABLE_IMP
+
 	EV_PRIMITIVE_IMP
+		rename
+			make as widget_make
+		end
 	
 creation
 
@@ -21,10 +26,10 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (parent: EV_CONTAINER) is
+	make (parent: EV_PIXMAP_CONTAINER) is
                         -- Create a gtk pixmap.
                 local
-			par_imp: EV_CONTAINER_IMP
+			par_imp: EV_WIDGET_IMP
                 do
 			par_imp ?= parent.implementation
 			check 
@@ -37,7 +42,6 @@ feature {NONE} -- Initialization
                 end
 
 feature -- Element change
-	
 
 	read_from_file (file_name: STRING) is
 			-- Load the pixmap described in 'file_name'. 
@@ -61,7 +65,7 @@ feature {NONE} -- Implementation
 
 	parent_widget: POINTER
 
-end 
+end -- EV_PIXMAP_IMP
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

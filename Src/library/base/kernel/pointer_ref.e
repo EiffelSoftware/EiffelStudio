@@ -60,7 +60,7 @@ feature -- Memory copy
 			valid_size: a_size >= 0
 			valid_source: a_source /= default_pointer
 		do
-			item := c_memcpy (item, a_source, a_size)
+			c_memcpy (item, a_source, a_size)
 		end
 
 	memory_move (a_source: POINTER; a_size: INTEGER) is
@@ -70,7 +70,7 @@ feature -- Memory copy
 			valid_size: a_size >= 0
 			valid_source: a_source /= default_pointer
 		do
-			item := c_memmove (item, a_source, a_size)
+			c_memmove (item, a_source, a_size)
 		end
 
 feature -- Output
@@ -105,18 +105,18 @@ feature {NONE} -- Implementation
 			"RTPOF"
 		end
 
-	c_memcpy (destination, source: POINTER; count: INTEGER): POINTER is
+	c_memcpy (destination, source: POINTER; count: INTEGER) is
 			-- C memcpy
 		external
-			"C (void *, const void *, size_t): EIF_POINTER | <string.h>"
+			"C (void *, const void *, size_t) | <string.h>"
 		alias
 			"memcpy"
 		end
 	
-	c_memmove (destination, source: POINTER; count: INTEGER): POINTER is
+	c_memmove (destination, source: POINTER; count: INTEGER) is
 			-- C memmove
 		external
-			"C (void *, const void *, size_t): EIF_POINTER | <string.h>"
+			"C (void *, const void *, size_t) | <string.h>"
 		alias
 			"memmove"
 		end

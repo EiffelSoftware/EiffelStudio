@@ -50,6 +50,10 @@ feature -- Access
 		local
 			retried: BOOLEAN
 			white_space_handling: SYSTEM_XML_WHITESPACEHANDLING
+			slash_index: INTEGER
+			base_path: STRING
+			read_lock: STRING
+			file: SYSTEM_IO_FILE
 		do
 			if not retried then
 				create type_description.make_xmltextreader_10 (a_filename)
@@ -67,8 +71,13 @@ feature -- Access
 				Result := eiffel_class
 				eiffel_class := Void
 			else
-				create Result.make1
-				Result.make
+				Result := Void
+				slash_index := a_filename.last_index_of ("\")
+				if slash_index /= -1 then
+					base_path := a_filename.substring_int32_int32 (0, slash_index).trim
+					read_lock := base_path.concat_string_string (base_path, Read_lock_filename)
+					file.Delete (read_lock)
+				end
 			end
 		ensure
 			non_void_eiffel_class: Result /= Void
@@ -97,6 +106,10 @@ feature -- Access
 			retried: BOOLEAN
 			reflection_support: REFLECTION_SUPPORT
 			white_space_handling: SYSTEM_XML_WHITESPACEHANDLING
+			slash_index: INTEGER
+			base_path: STRING
+			read_lock: STRING
+			file: SYSTEM_IO_FILE
 		do
 			if not retried then
 				create reflection_support.make
@@ -143,6 +156,12 @@ feature -- Access
 				assembly_description.Close
 			else
 				Result := Void
+				slash_index := a_filename.last_index_of ("\")
+				if slash_index /= -1 then
+					base_path := a_filename.substring_int32_int32 (0, slash_index).trim
+					read_lock := base_path.concat_string_string (base_path, Read_lock_filename)
+					file.Delete (read_lock)
+				end
 			end
 		rescue
 			retried := True

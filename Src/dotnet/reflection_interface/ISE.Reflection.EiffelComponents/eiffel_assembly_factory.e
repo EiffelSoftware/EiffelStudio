@@ -5,7 +5,7 @@ indexing
 
 class 
 	EIFFEL_ASSEMBLY_FACTORY
-	
+		
 create
 	make
 

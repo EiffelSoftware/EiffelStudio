@@ -168,7 +168,9 @@ feature -- Basic Operations
 				filename := reflection_support.Eiffel_delivery_path
 				filename := filename.concat_string_string (filename, reflection_support.Assembly_Folder_Path_From_Info (a_descriptor))
 				found := dir.Exists (filename)
-				search_result := assembly (a_descriptor)
+				if found then
+					search_result := assembly (a_descriptor)
+				end
 			else
 				found := False
 				search_result := Void
@@ -250,6 +252,7 @@ feature -- Retrieval
 				xml_reader.Close
 			else
 				Result := Void
+				file.Delete (assembly_path.Concat_String_String_String (assembly_path, "\", support.Read_Lock_Filename))
 			end
 		ensure
 			assemblies_built: Result /= Void
@@ -314,6 +317,7 @@ feature -- Retrieval
 				end
 			else
 				Result := Void
+				file.Delete (assembly_path.Concat_String_String_String (assembly_path, "\", support.Read_Lock_Filename))
 			end
 		rescue
 			retried := True
@@ -377,7 +381,9 @@ feature -- Retrieval
 									read_lock.Close
 									xml_type_filename := assembly_path.Concat_String_String_String_String (assembly_path, "\", formatter.Format_Type_Name (a_type.get_Full_Name).To_Lower, Xml_Extension)
 									Result := eiffel_type (xml_type_filename)
-									current_history.add_type (a_type, Result)
+									if Result /= Void then
+										current_history.add_type (a_type, Result)
+									end
 									last_read_successful := True
 									file.Delete (assembly_path.Concat_String_String_String (assembly_path, "\", support.Read_Lock_Filename))
 								end
@@ -387,6 +393,7 @@ feature -- Retrieval
 				end
 			else
 				Result := Void
+				file.Delete (assembly_path.Concat_String_String_String (assembly_path, "\", support.Read_Lock_Filename))
 			end
 		rescue
 			retried := True

@@ -54,6 +54,13 @@ feature -- Basic Operations
 			"ArgumentTypeFullNameElement"
 		end
 
+	create_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"CreateElement"
+		end
+
 	arguments_element: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.XmlElements"
@@ -61,11 +68,11 @@ feature -- Basic Operations
 			"ArgumentsElement"
 		end
 
-	create_element: STRING is
+	frozen_element: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.XmlElements"
 		alias
-			"CreateElement"
+			"FrozenElement"
 		end
 
 	create_none_element: STRING is
@@ -194,11 +201,11 @@ feature -- Basic Operations
 			"ExpandedElement"
 		end
 
-	static_element: STRING is
+	class_element: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.XmlElements"
 		alias
-			"StaticElement"
+			"ClassElement"
 		end
 
 	prefix_element: STRING is
@@ -206,13 +213,6 @@ feature -- Basic Operations
 			"IL signature (): System.String use ISE.Reflection.XmlElements"
 		alias
 			"PrefixElement"
-		end
-
-	return_type_full_name_element: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"ReturnTypeFullNameElement"
 		end
 
 	body_element: STRING is
@@ -227,6 +227,13 @@ feature -- Basic Operations
 			"IL signature (): System.String use ISE.Reflection.XmlElements"
 		alias
 			"EnumTypeElement"
+		end
+
+	simple_name_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"SimpleNameElement"
 		end
 
 	postcondition_tag_element: STRING is
@@ -248,13 +255,6 @@ feature -- Basic Operations
 			"IL signature (): System.String use ISE.Reflection.XmlElements"
 		alias
 			"AssemblyElement"
-		end
-
-	class_element: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"ClassElement"
 		end
 
 	parent_element: STRING is
@@ -411,11 +411,11 @@ feature -- Basic Operations
 			"FooterElement"
 		end
 
-	simple_name_element: STRING is
+	access_element: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.XmlElements"
 		alias
-			"SimpleNameElement"
+			"AccessElement"
 		end
 
 	frozen_feature_element: STRING is
@@ -460,11 +460,11 @@ feature -- Basic Operations
 			"MethodElement"
 		end
 
-	frozen_element: STRING is
+	return_type_full_name_element: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.XmlElements"
 		alias
-			"FrozenElement"
+			"ReturnTypeFullNameElement"
 		end
 
 	initialization_element: STRING is
@@ -488,11 +488,11 @@ feature -- Basic Operations
 			"InvariantElement"
 		end
 
-	access_element: STRING is
+	static_element: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.XmlElements"
 		alias
-			"AccessElement"
+			"StaticElement"
 		end
 
 	emitter_version_number_element: STRING is

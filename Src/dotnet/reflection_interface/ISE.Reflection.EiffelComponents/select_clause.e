@@ -11,7 +11,6 @@ inherit
  
  create
  	make
-
 feature -- Access
 
 	eiffel_keyword: STRING is

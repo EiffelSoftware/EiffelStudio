@@ -287,18 +287,13 @@ extern void undiscard_breakpoints(void);	/* un-discard all breakpoints. */
 		(x).st_top = (z);			\
 	}
 
-#ifndef lint
-rt_private char *rcsid =
-	"$Id$";
-#endif
-
 rt_public void metamorphose_top()
 {
 	RT_GET_CONTEXT
 
 	EIF_REFERENCE new_obj = NULL;
 	uint32 head_type;
-	register2 struct item * last;	/* Last pushed value */
+	struct item * last;	/* Last pushed value */
 	unsigned long stagval;
 	struct item * stop;				
 	struct stochunk * scur;
@@ -489,9 +484,9 @@ rt_private void interpret(int flag, int where)
 
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
-	register1 int volatile code;			/* Current intepreted byte code */
-	register2 struct item * volatile last;	/* Last pushed value */
-	register3 long volatile offset;			/* Offset for jumps and al */
+	int volatile code;			/* Current intepreted byte code */
+	struct item * volatile last;	/* Last pushed value */
+	long volatile offset;			/* Offset for jumps and al */
 	unsigned char * volatile string;		/* Strings for assertions tag */
 	int volatile type;						/* Often used to hold type values */
 	int volatile saved_assertion;
@@ -4985,10 +4980,10 @@ rt_private void eif_interp_bit_operations (void)
 			break;
 		case BC_INT_BIT_TEST:
 			switch (first->type & SK_HEAD) {
-				case SK_INT8: first->it_char = eif_bit_test (first->it_int8, second->it_int32); break;
-				case SK_INT16: first->it_char = eif_bit_test (first->it_int16, second->it_int32); break;
-				case SK_INT32: first->it_char = eif_bit_test (first->it_int32, second->it_int32); break;
-				case SK_INT64: first->it_char = eif_bit_test (first->it_int64, second->it_int32); break;
+				case SK_INT8: first->it_char = eif_bit_test (EIF_INTEGER_8, first->it_int8, second->it_int32); break;
+				case SK_INT16: first->it_char = eif_bit_test (EIF_INTEGER_16, first->it_int16, second->it_int32); break;
+				case SK_INT32: first->it_char = eif_bit_test (EIF_INTEGER_32, first->it_int32, second->it_int32); break;
+				case SK_INT64: first->it_char = eif_bit_test (EIF_INTEGER_64, first->it_int64, second->it_int32); break;
 				}
 			first->type = SK_BOOL;
 			break;
@@ -5403,8 +5398,8 @@ rt_private EIF_DOUBLE get_double(void)
 		char xtract[sizeof(EIF_DOUBLE)];
 		EIF_DOUBLE value;
 	} xdouble;
-	register1 char *p = (char *) &xdouble;
-	register2 int i;
+	char *p = (char *) &xdouble;
+	int i;
 
 	for (i = 0; i < sizeof(EIF_DOUBLE); i++)
 		*p++ = *IC++;
@@ -5423,8 +5418,8 @@ rt_private EIF_INTEGER get_long(void)
 		char xtract[sizeof(EIF_INTEGER)];
 		EIF_INTEGER value;
 	} xlong;
-	register1 char *p = (char *) &xlong;
-	register2 int i;
+	char *p = (char *) &xlong;
+	int i;
 
 	for (i = 0; i < sizeof(EIF_INTEGER); i++)
 		*p++ = *IC++;
@@ -5443,8 +5438,8 @@ rt_private EIF_INTEGER_64 get_int64(void)
 		char xtract[sizeof(EIF_INTEGER_64)];
 		EIF_INTEGER_64 value;
 	} xint64;
-	register1 char *p = (char *) &xint64;
-	register2 int i;
+	char *p = (char *) &xint64;
+	int i;
 
 	for (i = 0; i < sizeof(EIF_INTEGER_64); i++)
 		*p++ = *IC++;
@@ -5463,8 +5458,8 @@ rt_private EIF_INTEGER_16 get_short(void)
 		char xtract[sizeof(EIF_INTEGER_16)];
 		EIF_INTEGER_16 value;
 	} xshort;
-	register1 char *p = (char *) &xshort;
-	register2 int i;
+	char *p = (char *) &xshort;
+	int i;
 
 	for (i = 0; i < sizeof(EIF_INTEGER_16); i++)
 		*p++ = *IC++;
@@ -5483,8 +5478,8 @@ rt_private uint32 get_uint32(void)
 		char xtract[sizeof(uint32)];
 		uint32 value;
 	} xuint32;
-	register1 char *p = (char *) &xuint32;
-	register2 int i;
+	char *p = (char *) &xuint32;
+	int i;
 
 	for (i = 0; i < sizeof(uint32); i++)
 		*p++ = *IC++;
@@ -5662,9 +5657,9 @@ rt_private void init_registers(void)
 	 */
 
 	RT_GET_CONTEXT
-	register1 int n;				/* # of locals/arguments to be fetched */
-	register2 struct item **reg;	/* Pointer in register array */
-	register3 struct item *last;	/* Initialization of stack frame */
+	int n;				/* # of locals/arguments to be fetched */
+	struct item **reg;	/* Pointer in register array */
+	struct item *last;	/* Initialization of stack frame */
 	struct opstack op_context;		/* To save stack's context */
 	EIF_REFERENCE current;					/* Saved value of current */
 
@@ -5734,8 +5729,8 @@ rt_private void allocate_registers(void)
 
 	RT_GET_CONTEXT
 	static int bigger = 0;			/* Records # of time array is bigger */
-	register1 int size;				/* Size of iregs array */
-	register2 struct item **new;	/* New location for array extension */
+	int size;				/* Size of iregs array */
+	struct item **new;	/* New location for array extension */
 
 	size = nbregs * ITEM_SZ;				/* The size it should have */
 	if (size > iregsz) {					/* The array is not big enough */
@@ -5773,8 +5768,8 @@ rt_shared void sync_registers(struct stochunk *stack_cur, struct item *stack_top
 	 */
 
 	RT_GET_CONTEXT
-	register1 int n;				/* Loop index */
-	register2 struct item **reg;	/* Address in register's array */
+	int n;				/* Loop index */
+	struct item **reg;	/* Address in register's array */
 	struct opstack op_context;		/* To save stack's context */
 	
 	memcpy (&op_context, &op_stack, sizeof(struct opstack));
@@ -5833,7 +5828,7 @@ rt_private void pop_registers(void)
 	 */
 
 	RT_GET_CONTEXT
-	register1 int nb_items;			/* Number of registers to be popped off */
+	int nb_items;			/* Number of registers to be popped off */
 	struct item *result;			/* To save the result */
 	struct item saved_result;		/* Save value pointed to by iresult */
 	
@@ -5868,8 +5863,8 @@ rt_private struct item *stack_allocate(register int size)
 	 */
 
 	RT_GET_CONTEXT
-	register2 struct item *arena;		/* Address for the arena */
-	register3 struct stochunk *chunk;	/* Address of the chunk */
+	struct item *arena;		/* Address for the arena */
+	struct stochunk *chunk;	/* Address of the chunk */
 
 	size *= ITEM_SZ;
 	size += sizeof(*chunk);
@@ -5904,7 +5899,7 @@ rt_public struct item *opush(register struct item *val)
 	 * get a new cell at the top of the stack.
 	 */
 	RT_GET_CONTEXT
-	register1 struct item *top = op_stack.st_top;	/* Top of stack */
+	struct item *top = op_stack.st_top;	/* Top of stack */
 	
 	if (top == (struct item *) 0)	{			/* No stack yet? */
 		top = stack_allocate(STACK_CHUNK);		/* Create one */
@@ -5923,7 +5918,7 @@ rt_public struct item *opush(register struct item *val)
 				enomem(MTC_NOARG);
 			top = op_stack.st_top;					/* New top */
 		} else {
-			register2 struct stochunk *current;		/* New current chunk */
+			struct stochunk *current;		/* New current chunk */
 
 			/* Update the new stack context (main structure) */
 			current = op_stack.st_cur = op_stack.st_cur->sk_next;
@@ -5947,8 +5942,8 @@ rt_private int stack_extend(register int size)
 	 * 0 is returned in case of success. Otherwise, -1 is returned.
 	 */
 	RT_GET_CONTEXT
-	register2 struct item *arena;		/* Address for the arena */
-	register3 struct stochunk *chunk;	/* Address of the chunk */
+	struct item *arena;		/* Address for the arena */
+	struct stochunk *chunk;	/* Address of the chunk */
 
 	size *= ITEM_SZ;
 	size += sizeof(*chunk);
@@ -5979,9 +5974,9 @@ rt_public struct item *opop(void)
 	 * the removed item, which also happens to be the first free location.
 	 */
 	RT_GET_CONTEXT
-	register1 struct item *top = op_stack.st_top;	/* Top of the stack */
-	register2 struct stochunk *s;			/* To walk through stack chunks */
-	register3 struct item *arena;			/* Base address of current chunk */
+	struct item *top = op_stack.st_top;	/* Top of the stack */
+	struct stochunk *s;			/* To walk through stack chunks */
+	struct item *arena;			/* Base address of current chunk */
 
 	/* Optimization: try to update the top, hoping it will remain in the
 	 * same chunk. This avoids pointer manipulation (walking along the stack)
@@ -6018,9 +6013,10 @@ rt_private void npop(register int nb_items)
 	 * not do that in opop() because that would create an overhead...
 	 */
 	RT_GET_CONTEXT
-	register2 struct item *top;			/* Current top of operational stack */
-	register3 struct stochunk *s;		/* To walk through stack chunks */
-	register4 struct item *arena;		/* Base address of current chunk */
+	struct item *top;			/* Current top of operational stack */
+	struct stochunk *s;		/* To walk through stack chunks */
+	struct item *arena;		/* Base address of current chunk */
+	rt_int_ptr nb = nb_items;
 
 	/* Optimization: try to update the top, hoping it will remain in the
 	 * same chunk. That would indeed make popping very efficient.
@@ -6028,7 +6024,7 @@ rt_private void npop(register int nb_items)
 
 	arena = op_stack.st_cur->sk_arena;
 	top = op_stack.st_top;
-	top -= nb_items;				/* Hopefully, we remain in current chunk */
+	top -= nb;				/* Hopefully, we remain in current chunk */
 	if (top >= arena) {
 		op_stack.st_top = top;		/* Yes! Update top */
 		return;						/* Done, how lucky we were! */
@@ -6042,11 +6038,11 @@ rt_private void npop(register int nb_items)
 	SIGBLOCK;			/* Entering protected section */
 
 	top = op_stack.st_top;
-	for (s = op_stack.st_cur; nb_items > 0; /* empty */) {
+	for (s = op_stack.st_cur; nb > 0; /* empty */) {
 		arena = s->sk_arena;
-		nb_items -= top - arena;
-		if (nb_items <= 0) {			/* Have we gone too far? */
-			top = arena - nb_items;		/* Yes, reset top correctly */
+		nb -= top - arena;
+		if (nb <= 0) {			/* Have we gone too far? */
+			top = arena - nb;		/* Yes, reset top correctly */
 			break;						/* Done */
 		}
 		s = s->sk_prev;					/* Look at previous chunk */
@@ -6148,7 +6144,7 @@ rt_private void stack_truncate(void)
 	 */
 
 	RT_GET_CONTEXT
-	register2 struct item *top;		/* The current top of the stack */
+	struct item *top;		/* The current top of the stack */
 	struct stochunk *next;			/* Address of next chunk */
 
 	/* We know the program is running, because this function is only called
@@ -6174,7 +6170,7 @@ rt_private void wipe_out(register struct stochunk *chunk)
 	{
 	/* Free all the chunks after 'chunk' */
 
-	register2 struct stochunk *next;	/* Address of next chunk */
+	struct stochunk *next;	/* Address of next chunk */
 
 	if (chunk == (struct stochunk *) 0)	/* No chunk */
 		return;							/* Nothing to be done */

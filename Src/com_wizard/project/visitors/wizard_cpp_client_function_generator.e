@@ -210,6 +210,8 @@ feature {NONE} -- Implementation
 							if not visitor.is_array_type then
 								variables.append (visitor.c_post_type)
 							end
+							variables.append (Space_equal_space)
+							variables.append (Zero)
 							variables.append (Semicolon)
 							variables.append (New_line_tab)
 
@@ -217,6 +219,7 @@ feature {NONE} -- Implementation
 							signature.append (arguments.item.name)
 	
 							variables.append ( in_out_parameter_set_up (arguments.item.name, arguments.item.type, visitor))
+							variables.append (New_line_tab)
 							out_value.append ( out_set_up (arguments.item.name, arguments.item.type.type, visitor))
 						end
 						signature.append (Comma)
@@ -374,7 +377,10 @@ feature {NONE} -- Implementation
 					Result.append (Dot)
 					Result.append (visitor.ec_function_name)
 					Result.append (Space_open_parenthesis)
+					Result.append (Eif_access)
+					Result.append (Space_open_parenthesis)
 					Result.append (name)
+					Result.append (Close_parenthesis)
 					if visitor.writable then
 						Result.append (Comma_space)
 						Result.append (Null)

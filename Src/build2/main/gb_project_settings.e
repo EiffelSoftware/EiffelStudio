@@ -35,6 +35,7 @@ feature {NONE} -- Initialization
 			project_name := "VISION2_PROJECT"
 			enable_complete_project
 			enable_grouped_locals
+			enable_rebuild_ace_file
 		end
 		
 
@@ -72,6 +73,9 @@ feature -- Access
 		-- Should generated code use EV_WINDOW as client?
 		-- If False, then we inherit EV_WINDOW.
 		
+	rebuild_ace_file: BOOLEAN
+		-- Should we rebuild ace file every time?
+		
 	load_cancelled: BOOLEAN
 		-- Was last call to `load' cancelled by user?
 		-- This can only occur if the file was in an old format, and
@@ -96,6 +100,7 @@ feature -- Basic operation
 			data.extend ([debugging_output_string, debugging_output.out])
 			data.extend ([attributes_local_string, attributes_local.out])
 			data.extend ([client_of_window_string, client_of_window.out])
+			data.extend ([rebuild_ace_file_string, rebuild_ace_file.out])
 			create file_name.make_from_string (project_location)
 			file_name.extend (project_filename)
 			create file_handler
@@ -119,7 +124,7 @@ feature -- Basic operation
 				check
 					data_not_void: data /= Void
 				end
-				if data.count = 9 then
+				if data.count = 10 then
 					set_string_attribute (data @ 1, agent set_project_name (?))
 					set_string_attribute (data @ 2, agent set_project_location (?))
 					set_string_attribute (data @ 3, agent set_main_window_class_name (?))
@@ -129,6 +134,7 @@ feature -- Basic operation
 					set_boolean_attribute (data @ 7, agent enable_debugging_output, agent disable_debugging_output)
 					set_boolean_attribute (data @ 8, agent enable_attributes_local, agent disable_attributes_local)
 					set_boolean_attribute (data @ 9, agent enable_client_of_window, agent disable_client_of_window)
+					set_boolean_attribute (data @ 10, agent enable_rebuild_ace_file, agent disable_rebuild_ace_file)
 				else
 					create dialog.make_with_text (invalid_bpr_file)
 					dialog.button ((create {EV_DIALOG_CONSTANTS}).ev_abort).select_actions.extend (agent cancel_load)
@@ -246,6 +252,20 @@ feature -- Status Setting
 		do
 			attributes_local := False
 		end
+		
+	enable_rebuild_ace_file is
+			-- Assign `True' to `rebuild_ace_file'.
+		do
+			rebuild_ace_file := True
+		end
+		
+	disable_rebuild_ace_file is
+			-- Assign `False' to `rebuild_ace_file'.
+		do
+			rebuild_ace_file := False
+		end
+		
+		
 
 
 feature {NONE} --Implementation
@@ -268,6 +288,8 @@ feature {NONE} --Implementation
 	project_name_string: STRING is "Project_name"
 	
 	client_of_window_string: STRING is "Client_of_window"
+	
+	rebuild_ace_file_string: STRING is "Rebuild_ace_file"
 	
 	set_string_attribute (temp_tuple: TUPLE [STRING, STRING]; an_agent: PROCEDURE [ANY, TUPLE [STRING]]) is
 			-- Call `an_agent' with `temp_tuple' @ 2 string.

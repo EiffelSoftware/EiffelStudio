@@ -313,23 +313,24 @@ cluster
 	wizard_bench(interface):	"$\graphical\wizard\bench"
 
 		-- new graphical interface (bench):
-	new_bench_common(interface):	"$\new_graphical\common";
-	new_case_tool(interface):	"$\new_graphical\case_tool";
+--	new_bench_common(interface):	"$\new_graphical\common";
+--	new_case_tool(interface):	"$\new_graphical\case_tool";
 	new_commands(interface):	"$\new_graphical\commands";
 	new_debugg_tool (interface):	"$\new_graphical\debug_tool";
-	new_debugging_tool (interface):	"$\new_graphical\debugging";
-	new_drag_and_drop(interface):	"$\new_graphical\drag_and_drop";
+--	new_debugging_tool (interface):	"$\new_graphical\debugging";
+	new_drag_and_drop(interface):	"$\new_graphical\dialogs";
+--	new_drag_and_drop(interface):	"$\new_graphical\drag_and_drop";
 	new_formatters(interface):	"$\new_graphical\formatters";
 	new_main(interface):		"$\new_graphical\main";
 	new_graphical_shared(interface):"$\new_graphical\shared";
-	new_stones(interface):		"$\new_graphical\stones";
+--	new_stones(interface):		"$\new_graphical\stones";
 	new_text_window(interface):	"$\new_graphical\text_window";
 	new_windows(interface):		"$\new_graphical\windows";
 	new_preference_tool(interface):	"$\new_graphical\preference_tool";
 	new_preference_tool_parameters (new_preference_tool):	"$\parameters";
 	new_profile_tool(interface):	"$\new_graphical\profile_tool";
-	new_wizard_common(interface):	"$\new_graphical\wizard\common";
-	new_wizard_bench(interface):	"$\new_graphical\wizard\bench";
+--	new_wizard_common(interface):	"$\new_graphical\wizard\common";
+--	new_wizard_bench(interface):	"$\new_graphical\wizard\bench";
 	to_be_moved(interface):		"$\new_graphical\to_be_moved";
 
 		-- Windows specific classes

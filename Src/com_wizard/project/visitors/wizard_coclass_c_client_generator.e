@@ -139,7 +139,10 @@ feature {NONE} -- Implementation
 					a_name := interface_descriptors.item.c_type_name
 					interface_names.extend (a_name)
 
-					if interface_descriptors.item.dispinterface or interface_descriptors.item.dual then
+					if 
+						interface_descriptors.item.dispinterface and 
+						not  interface_descriptors.item.dual 
+					then
 						dispatch_interface := True
 					end
 

@@ -80,8 +80,7 @@ all:: .FORCE_DEPEND
 SRC = ewb_proto.c eproto.c eif_in.c eif_out.c ewb_init.c ewb_dumped.c
 
 # Derived object file names
-OBJ = \
-	ewb_proto.o \
+OBJ = ewb_proto.o \
 	eproto.o \
 	eif_in.o \
 	eif_out.o \

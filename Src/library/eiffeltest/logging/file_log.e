@@ -39,7 +39,9 @@ feature {NONE} -- Implementation
 	open is
 			-- Open device.
 		do
-			output_device.open_write
+			if not output_device.is_open_write then
+				output_device.open_write
+			end
 		end
 
 	close is

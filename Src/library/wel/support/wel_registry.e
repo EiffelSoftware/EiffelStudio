@@ -56,7 +56,7 @@ feature -- Actions
 	open_key_with_access (key_path: STRING; acc: INTEGER): POINTER is
 				-- Open the key relative to the path 'key_path', with
 				-- the access 'acc'.
-				-- Return the key reference (defaul_pointer if the operation failed).
+				-- Return the key reference (default_pointer if the operation failed).
 		require
 			at_least_one_back_slash: key_path /= Void and then key_path.has('\')
 		local

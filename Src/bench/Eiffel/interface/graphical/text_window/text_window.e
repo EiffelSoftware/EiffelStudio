@@ -163,14 +163,13 @@ feature -- Status setting
 	clear_text is
 			-- Clear the text structures.
 		deferred
-		end
+		end;
 
-feature -- Element change
-
-	put_breakpoint_stone (a_stone: BREAKABLE_STONE; stone_string: STRING) is
-			-- Add breakpoint stone `a_stone' with image `stone_string'.
-		deferred
-		end
+	reset is
+			-- Reset the contents of the text window.
+		do
+			clear_window
+		end;
 
 feature -- Update
 
@@ -180,15 +179,15 @@ feature -- Update
 		deferred
 		end;
 
-	search (s: STRING) is
-			-- Highlight and show next occurence of `s'.
+	search_text (s: STRING; is_case_sensitive: BOOLEAN) is
+			-- Highlight and show next occurence of text `s'.
 		require
 			valid_s: s /= Void;
 			s_not_empty: not s.empty
 		deferred
 		end
 
-	replace_text (s, r: STRING; replace_all: BOOLEAN) is
+	replace_text (s, r: STRING; replace_all, is_case_sensitive: BOOLEAN) is
 			-- Replace next occurence of `s' with `r'.
 		require
 			valid_s: s /= Void;

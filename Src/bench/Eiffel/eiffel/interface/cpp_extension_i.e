@@ -66,19 +66,19 @@ feature -- Code generation
 				inspect
 					type
 				when standard, data_member then
-					l_buffer.putstring ("if ((")
-					l_buffer.putstring (class_name)
-					l_buffer.putstring ("*) arg1 == NULL)")
-					l_buffer.new_line
+					l_buffer.put_string ("if ((")
+					l_buffer.put_string (class_name)
+					l_buffer.put_string ("*) arg1 == NULL)")
+					l_buffer.put_new_line
 					l_buffer.indent
-					l_buffer.putstring ("RTET(%"")
-					l_buffer.putstring (class_name)
-					l_buffer.putstring ("::")
-					l_buffer.putstring (cpp_byte_code.external_name)
-					l_buffer.putstring ("%", EN_VOID);")
-					l_buffer.new_line
+					l_buffer.put_string ("RTET(%"")
+					l_buffer.put_string (class_name)
+					l_buffer.put_string ("::")
+					l_buffer.put_string (cpp_byte_code.external_name)
+					l_buffer.put_string ("%", EN_VOID);")
+					l_buffer.put_new_line
 					l_buffer.exdent
-					l_buffer.new_line
+					l_buffer.put_new_line
 				else
 					-- Nothing to be done otherwise.
 				end
@@ -87,15 +87,15 @@ feature -- Code generation
 			l_ret_type := cpp_byte_code.result_type
 			if not l_ret_type.is_void then
 				a_result.print_register
-				l_buffer.putstring (" = ")
+				l_buffer.put_string (" = ")
 				l_ret_type.c_type.generate_cast (l_buffer)
 			end
 
 			internal_generate (cpp_byte_code.external_name, Void, cpp_byte_code.argument_count,
 				l_ret_type)
 
-			l_buffer.putchar (';')
-			l_buffer.new_line
+			l_buffer.put_character (';')
+			l_buffer.put_new_line
 		end
 
 	generate_access (external_name: STRING; parameters: BYTE_LIST [EXPR_B]; a_ret_type: TYPE_I) is
@@ -134,31 +134,31 @@ feature {NONE} -- Code generation
 			context.set_has_cpp_externals_calls (True)
 			
 			if a_ret_type.is_boolean then
-				buffer.putstring("EIF_TEST")
+				buffer.put_string("EIF_TEST")
 			end
 
-			buffer.putchar ('(')
+			buffer.put_character ('(')
 
 			inspect
 				type
 			when standard, data_member then
-				buffer.putchar ('(')
+				buffer.put_character ('(')
 				generate_cpp_object_access (parameters)
-				buffer.putstring (")->")
-				buffer.putstring (external_name);
+				buffer.put_string (")->")
+				buffer.put_string (external_name);
 			when static, static_data_member then
-				buffer.putstring (class_name)
-				buffer.putstring ("::")
-				buffer.putstring (external_name);
+				buffer.put_string (class_name)
+				buffer.put_string ("::")
+				buffer.put_string (external_name);
 			when new then
-				buffer.putstring ("new ")
-				buffer.putstring (class_name)
+				buffer.put_string ("new ")
+				buffer.put_string (class_name)
 			when delete then
-				buffer.putstring ("delete ((")
-				buffer.putstring (class_name)
-				buffer.putstring (" *) ")
+				buffer.put_string ("delete ((")
+				buffer.put_string (class_name)
+				buffer.put_string (" *) ")
 				generate_cpp_object_access (parameters)
-				buffer.putchar (')')
+				buffer.put_character (')')
 			end
 
 			inspect
@@ -166,16 +166,16 @@ feature {NONE} -- Code generation
 			when delete, data_member, static_data_member then
 					-- Nothing to generate
 			when standard, static, new then
-				buffer.putchar ('(')
+				buffer.put_character ('(')
 				if parameters /= Void then
 					generate_parameter_list (parameters, parameters.count)
 				else
 					generate_parameter_list (Void, nb)
 				end
-				buffer.putchar (')')
+				buffer.put_character (')')
 			end
  
-			buffer.putchar (')')
+			buffer.put_character (')')
 		end
 	
 	generate_cpp_object_access (parameters: BYTE_LIST [EXPR_B]) is
@@ -186,9 +186,9 @@ feature {NONE} -- Code generation
 			buffer: GENERATION_BUFFER
 		do
 			buffer := Context.buffer
-			buffer.putchar ('(')
-			buffer.putstring (class_name)
-			buffer.putstring ("*) ")
+			buffer.put_character ('(')
+			buffer.put_string (class_name)
+			buffer.put_string ("*) ")
 			generate_i_th_parameter (parameters, 1)
 		end
 
@@ -221,16 +221,16 @@ feature {NONE} -- Code generation
 					i > nb
 				loop
 					if has_cast then
-						buffer.putchar ('(')
-						buffer.putstring (l_names_heap.item (arg_types.item (j)))
-						buffer.putchar (')')
-						buffer.putchar (' ')
+						buffer.put_character ('(')
+						buffer.put_string (l_names_heap.item (arg_types.item (j)))
+						buffer.put_character (')')
+						buffer.put_character (' ')
 						j := j + 1
 					end
 					generate_i_th_parameter (parameters, i)
 					i := i + 1
 					if i <= nb then
-						buffer.putstring (gc_comma)
+						buffer.put_string (gc_comma)
 					end
 				end
 			end

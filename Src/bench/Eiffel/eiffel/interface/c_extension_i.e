@@ -21,7 +21,7 @@ feature -- Code generation
 			l_ret_type := c_byte_code.result_type
 			if not l_ret_type.is_void then
 				a_result.print_register
-				l_buffer.putstring (" = ")
+				l_buffer.put_string (" = ")
 				l_ret_type.c_type.generate_cast (l_buffer)
 			end
 
@@ -32,8 +32,8 @@ feature -- Code generation
 			end
 			
 			internal_generate_access (c_byte_code.external_name, Void, c_byte_code.argument_count, l_ret_type, l_args)
-			l_buffer.putchar (';')
-			l_buffer.new_line
+			l_buffer.put_character (';')
+			l_buffer.put_new_line
 		end
 
 	generate_access (external_name: STRING; parameters: BYTE_LIST [EXPR_B]; a_args: ARRAY [STRING]; a_ret_type: TYPE_I) is
@@ -76,40 +76,40 @@ feature {NONE} -- Implementation
 			if has_include_list then
 				generate_header_files
 			else
-				l_header.putstring ("extern ")
+				l_header.put_string ("extern ")
 				if return_type > 0 then
-					l_header.putstring (Names_heap.item (return_type))
+					l_header.put_string (Names_heap.item (return_type))
 				else
 					a_ret_type.c_type.generate (l_header)
 				end
 
-				l_header.putstring (external_name)
-				l_header.putchar ('(')
+				l_header.put_string (external_name)
+				l_header.put_character ('(')
 				from
 					i := l_argument_types.lower
 					l_count := l_argument_types.upper
 				until
 					i > l_count
 				loop
-					l_header.putstring (l_argument_types.item (i))
+					l_header.put_string (l_argument_types.item (i))
 					if i < l_count then
-						l_header.putstring (", ")
+						l_header.put_string (", ")
 					end
 					i := i + 1
 				end
-				l_header.putstring (");")
-				l_header.new_line
+				l_header.put_string (");")
+				l_header.put_new_line
 			end
 			
 			if a_ret_type.is_boolean then
-				l_buffer.putstring ("EIF_TEST")
+				l_buffer.put_string ("EIF_TEST")
 			end
-			l_buffer.putchar ('(')
-			l_buffer.putstring (external_name)
-			l_buffer.putchar ('(')
+			l_buffer.put_character ('(')
+			l_buffer.put_string (external_name)
+			l_buffer.put_character ('(')
 			generate_parameter_list (parameters, nb)
-			l_buffer.putchar (')')
-			l_buffer.putchar (')')
+			l_buffer.put_character (')')
+			l_buffer.put_character (')')
 		end
 
 end -- class C_EXTENSION_I

@@ -735,9 +735,9 @@ feature -- Expanded rues validity
 			l_cursor: CURSOR
 		do
 debug ("CHECK_EXPANDED")
-io.error.putstring ("Checking expanded for: ")
-io.error.putstring (name)
-io.error.new_line
+io.error.put_string ("Checking expanded for: ")
+io.error.put_string (name)
+io.error.put_new_line
 end
 			feature_table.check_expanded
 
@@ -853,11 +853,11 @@ feature -- Third pass: byte code production and type check
 
 debug ("SEP_DEBUG")
 feature_name := feature_i.feature_name
-io.error.putstring ("CLASS_C.PASS3 Feature ")
-io.error.putstring (feature_name)
-io.error.putstring (" whose FEATURE_ID: ")
-io.error.putint (feature_i.feature_id)
-io.error.new_line
+io.error.put_string ("CLASS_C.PASS3 Feature ")
+io.error.put_string (feature_name)
+io.error.put_string (" whose FEATURE_ID: ")
+io.error.put_integer (feature_i.feature_id)
+io.error.put_new_line
 end
 
 				local_type_checking := feature_i.to_melt_in (Current)
@@ -876,9 +876,9 @@ end
 					end
 
 debug ("SEP_DEBUG", "ACTIVITY")
-	io.error.putstring ("%TTo melt_in True: ")
-	io.error.putstring (feature_name)
-	io.error.new_line
+	io.error.put_string ("%TTo melt_in True: ")
+	io.error.put_string (feature_name)
+	io.error.put_new_line
 end
 						-- For a feature written in the class
 					feature_changed := 	changed_features.has (feature_name_id)
@@ -899,9 +899,9 @@ end
 					feature_changed := feature_changed and not feature_i.is_attribute
 
 debug ("SEP_DEBUG", "ACTIVITY")
-	io.error.putstring ("%T%Tfeature_changed: ")
-	io.error.putbool (feature_changed)
-	io.error.new_line
+	io.error.put_string ("%T%Tfeature_changed: ")
+	io.error.put_boolean (feature_changed)
+	io.error.put_new_line
 end
 			
 					f_suppliers := dependances.item (feature_i.body_index)
@@ -912,9 +912,9 @@ end
 					if not (feature_changed or else f_suppliers = Void) then
 						feature_changed := (not propagators.melted_empty_intersection (f_suppliers))
 debug ("SEP_DEBUG", "ACTIVITY")
-	io.error.putstring ("%T%Tfeature_changed (After melted_empty_intersection): ")
-	io.error.putbool (feature_changed)
-	io.error.new_line
+	io.error.put_string ("%T%Tfeature_changed (After melted_empty_intersection): ")
+	io.error.put_boolean (feature_changed)
+	io.error.put_new_line
 end
 						if not feature_changed then
 							if f_suppliers.has_removed_id then
@@ -950,29 +950,29 @@ end
 						then
 								-- Type check
 debug ("SEP_DEBUG", "VERBOSE", "ACTIVITY")
-	io.error.putstring ("%Ttype check ")
-	io.error.putstring (feature_name)
-	io.error.new_line
+	io.error.put_string ("%Ttype check ")
+	io.error.put_string (feature_name)
+	io.error.put_new_line
 end
 debug ("SEP_DEBUG", "ACTIVITY")
-	io.error.putstring ("%T%Tfeature changed: ")
-	io.error.putbool (feature_changed)
-	io.error.new_line
+	io.error.put_string ("%T%Tfeature changed: ")
+	io.error.put_boolean (feature_changed)
+	io.error.put_new_line
 	if f_suppliers /= Void then
-		io.error.putstring ("%T%Tf_suppliers /= Void%N%T%Tempty_intersection: ")
-		io.error.putbool (propagators.empty_intersection (f_suppliers))
-		io.error.putstring ("%N%T%Tchanged_status_empty_intersection: ")
-		io.error.putbool (propagators.changed_status_empty_intersection (f_suppliers.suppliers))
-		io.error.new_line
+		io.error.put_string ("%T%Tf_suppliers /= Void%N%T%Tempty_intersection: ")
+		io.error.put_boolean (propagators.empty_intersection (f_suppliers))
+		io.error.put_string ("%N%T%Tchanged_status_empty_intersection: ")
+		io.error.put_boolean (propagators.changed_status_empty_intersection (f_suppliers.suppliers))
+		io.error.put_new_line
 	end
 end
 
 							Error_handler.mark
 debug ("SEP_DEBUG", "ACTIVITY")
 	if f_suppliers /= Void then
-		io.error.putstring ("Feature_suppliers%N")
+		io.error.put_string ("Feature_suppliers%N")
 		f_suppliers.trace
-		io.error.new_line
+		io.error.put_new_line
 	end
 end
 
@@ -1020,9 +1020,9 @@ end
 
 									-- Byte code processing
 debug ("SEP_DEBUG", "VERBOSE", "ACTIVITY")
-	io.error.putstring ("%Tbyte code for ")
-	io.error.putstring (feature_name)
-	io.error.new_line
+	io.error.put_string ("%Tbyte code for ")
+	io.error.put_string (feature_name)
+	io.error.put_new_line
 end
 								feature_i.compute_byte_code (has_default_rescue)
 								byte_code_generated := True
@@ -1049,9 +1049,9 @@ end
 						and then not (type_check_error or else feature_i.is_deferred)
 					then
 debug ("SEP_DEBUG", "VERBOSE", "ACTIVITY")
-	io.error.putstring ("%TMelted_set.put for ")
-	io.error.putstring (feature_name)
-	io.error.new_line
+	io.error.put_string ("%TMelted_set.put for ")
+	io.error.put_string (feature_name)
+	io.error.put_new_line
 end
 							-- Remember the melted feature information
 							-- if it is not deferred. If it is an external, then
@@ -1100,7 +1100,7 @@ end
 				-- Recomputation of invariant clause
 
 debug ("SEP_DEBUG", "VERBOSE", "ACTIVITY")
-	io.error.putstring ("%TProcessing invariant%N")
+	io.error.put_string ("%TProcessing invariant%N")
 end
 
 			if invariant_feature /= Void then
@@ -1155,7 +1155,7 @@ end
 					Error_handler.mark
 
 debug ("SEP_DEBUG", "ACTIVITY")
-	io.error.putstring ("%TType check for invariant%N")
+	io.error.put_string ("%TType check for invariant%N")
 end
 					ast_context.set_current_feature (invariant_feature)
 					invar_clause.type_check
@@ -1185,7 +1185,7 @@ end
 						new_suppliers.add_occurrence (f_suppliers)
 
 debug ("SEP_DEBUG", "VERBOSE", "ACTIVITY")
-	io.error.putstring ("%TByte code for invariant%N")
+	io.error.put_string ("%TByte code for invariant%N")
 end
 
 						ast_context.start_lines
@@ -1356,7 +1356,7 @@ end
 --					Error_handler.mark
 --
 --debug ("ACTIVITY")
---	io.error.putstring ("%TType check for invariant%N")
+--	io.error.put_string ("%TType check for invariant%N")
 --end
 --					invar_clause.type_check
 --					--if	invariant_changed
@@ -1373,7 +1373,7 @@ end
 --						new_suppliers.add_occurrence (f_suppliers)
 --
 --debug ("ACTIVITY")
---	io.error.putstring ("%TByte code for invariant%N")
+--	io.error.put_string ("%TByte code for invariant%N")
 --end
 --
 --						ast_context.start_lines
@@ -1599,10 +1599,10 @@ feature -- Workbench feature and descriptor table generation
 					-- Clear buffer for Current generation
 				buffer := generation_buffer
 				buffer.clear_all
-				buffer.putstring ("/*%N * Class ")
-				buffer.putstring (external_class_name)
-				buffer.putstring ("%N */%N%N")
-				buffer.putstring ("#include %"eif_macros.h%"%N#include %"eif_struct.h%"%N%N")
+				buffer.put_string ("/*%N * Class ")
+				buffer.put_string (external_class_name)
+				buffer.put_string ("%N */%N%N")
+				buffer.put_string ("#include %"eif_macros.h%"%N#include %"eif_struct.h%"%N%N")
 				buffer.start_c_specific_code
 				feature_table.generate (buffer)
 				buffer.end_c_specific_code
@@ -3010,9 +3010,9 @@ feature -- Propagation
 			loop
 				class_i := l_syntactical_clients.item.lace_class
 				debug ("REMOVE_CLASS")
-					io.error.putstring ("Propagation to client: ")
-					io.error.putstring (class_i.name)
-					io.error.new_line
+					io.error.put_string ("Propagation to client: ")
+					io.error.put_string (class_i.name)
+					io.error.put_new_line
 				end
 				workbench.add_class_to_recompile (class_i)
 				class_i.set_changed (True)
@@ -3321,11 +3321,11 @@ feature -- Incrementality
 			good_argument: feature_name_id > 0
 		do
 debug ("ACTIVITY")
-	io.error.putstring ("CLASS_C: ")
-	io.error.putstring (name)
-	io.error.putstring ("%NChanged_feature: ")
-	io.error.putstring (Names_heap.item (feature_name_id))
-	io.error.new_line
+	io.error.put_string ("CLASS_C: ")
+	io.error.put_string (name)
+	io.error.put_string ("%NChanged_feature: ")
+	io.error.put_string (Names_heap.item (feature_name_id))
+	io.error.put_new_line
 end
 			changed_features.put (feature_name_id)
 		end
@@ -3404,14 +3404,14 @@ end
 				derivations.insert_derivation (class_id, data)
 				
 debug ("GENERICITY")
-	io.error.putstring ("Update_types%N")
-	io.error.putstring (name)
+	io.error.put_string ("Update_types%N")
+	io.error.put_string (name)
 	data.trace
 end
 				if not types.has_type (data) then
 					-- Found a new type for the class
 debug ("GENERICITY")
-	io.error.putstring ("new type%N")
+	io.error.put_string ("new type%N")
 end
 					new_class_type := new_type (data)
 						-- If class is TO_SPECIAL or else SPECIAL
@@ -3453,11 +3453,11 @@ end
 						filter := filters.item
 					end
 debug ("GENERICITY")
-	io.error.putstring ("Propagation of ")
+	io.error.put_string ("Propagation of ")
 	filter.trace
-	io.error.putstring ("propagation to ")
-	io.error.putstring (filter.base_class.name)
-	io.error.new_line
+	io.error.put_string ("propagation to ")
+	io.error.put_string (filter.base_class.name)
+	io.error.put_new_line
 end
 						-- We need to store cursor position because when you
 						-- have an expanded class used as a reference or vice versa

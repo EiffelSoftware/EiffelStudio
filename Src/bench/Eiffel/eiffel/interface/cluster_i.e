@@ -403,11 +403,11 @@ feature {COMPILER_EXPORTER} -- Element change
 			c: CLASS_I
 		do
 			debug ("REMOVE_CLASS")
-				io.error.putstring ("Copy old_cluster ")
-				io.error.putstring (old_cluster_i.cluster_name)
-				io.error.putstring (" path ")
-				io.error.putstring (old_cluster_i.path)
-				io.error.new_line
+				io.error.put_string ("Copy old_cluster ")
+				io.error.put_string (old_cluster_i.cluster_name)
+				io.error.put_string (" path ")
+				io.error.put_string (old_cluster_i.path)
+				io.error.put_new_line
 			end
 			old_cluster := old_cluster_i
 			parent_cluster := old_cluster.parent_cluster
@@ -557,7 +557,7 @@ feature {COMPILER_EXPORTER} -- Element change
 
 				Result.set_old_cluster (duplicate)
 				debug ("REMOVE_CLASS")
-					io.error.putstring ("New cluster calling fill%N")
+					io.error.put_string ("New cluster calling fill%N")
 				end
 				Result.set_is_recursive (process_subclusters)
 				Result.set_belongs_to_all (belongs_to_all)
@@ -843,9 +843,9 @@ feature {COMPILER_EXPORTER} -- Element change
 			class_name := read_class_name_in_file (class_path)
 			if class_name /= Void then
 				debug ("REMOVE_CLASS")
-					io.error.putstring ("Insert class from file ")
-					io.error.putstring (class_name)
-					io.error.new_line
+					io.error.put_string ("Insert class from file ")
+					io.error.put_string (class_name)
+					io.error.put_new_line
 				end
 				a_class := classes.item (class_name)
 				if a_class /= Void then
@@ -863,14 +863,14 @@ feature {COMPILER_EXPORTER} -- Element change
 					-- Valid eiffel class in file
 				if old_cluster /= Void then
 					debug ("REMOVE_CLASS")
-						io.error.putstring ("Old cluster not Void%N")
+						io.error.put_string ("Old cluster not Void%N")
 					end
 					a_class := old_cluster.classes.item (class_name)
 					if a_class /= Void then
 							-- The file name may have changed even
 							-- if the class was already in this cluster
 						debug ("REMOVE_CLASS")
-							io.error.putstring ("Old cluster has the class%N")
+							io.error.put_string ("Old cluster has the class%N")
 						end
 						a_class.set_base_name (file_name)
 						a_class.set_cluster (Current)
@@ -887,7 +887,7 @@ feature {COMPILER_EXPORTER} -- Element change
 				end
 				if a_class = Void then
 					debug ("REMOVE_CLASS")
-						io.error.putstring ("new class!!!%N")
+						io.error.put_string ("new class!!!%N")
 					end
 					create a_class.make (class_name)
 					a_class.set_base_name (file_name)
@@ -1096,11 +1096,11 @@ feature {COMPILER_EXPORTER} -- Element change
 			l_classes, l_overriden_classes: LIST [CLASS_I]
 		do
 			debug ("REMOVE_CLASS")
-				io.error.putstring ("Removing cluster ")
-				io.error.putstring (cluster_name)
-				io.error.putstring (" path ")
-				io.error.putstring (path)
-				io.error.new_line
+				io.error.put_string ("Removing cluster ")
+				io.error.put_string (cluster_name)
+				io.error.put_string (" path ")
+				io.error.put_string (path)
+				io.error.put_new_line
 			end
 			if is_override_cluster then
 				from
@@ -1375,9 +1375,9 @@ feature {NONE} -- Implementation
 			-- Can only be called by compiler tools, not by compiler itself.
 		do
 			debug ("REMOVE_CLASS")
-				io.error.putstring ("Removing class ")
-				io.error.putstring (a_class.name)
-				io.error.new_line
+				io.error.put_string ("Removing class ")
+				io.error.put_string (a_class.name)
+				io.error.put_new_line
 			end
 
 				-- If a_class has already be compiled,
@@ -1401,9 +1401,9 @@ feature {NONE} -- Implementation
 			class_c: CLASS_C
 		do
 			debug ("REMOVE_CLASS")
-				io.error.putstring ("Removing class from system ")
-				io.error.putstring (a_class.name)
-				io.error.new_line
+				io.error.put_string ("Removing class from system ")
+				io.error.put_string (a_class.name)
+				io.error.put_new_line
 			end
 			class_c := a_class.compiled_class
 			if class_c /= Void then
@@ -1483,7 +1483,7 @@ feature {NONE} -- Automatic backup
 			file.put_string (orig)
 			file.put_string (" to ")
 			file.put_string (dest)
-			file.new_line
+			file.put_new_line
 			file.close
 		end
 
@@ -1497,7 +1497,7 @@ feature {NONE} -- Automatic backup
 			file := backup_log_file
 			file.put_string ("Removed: ")
 			file.put_string (class_name)
-			file.new_line
+			file.put_new_line
 			file.close
 		end
 
@@ -1511,7 +1511,7 @@ feature {NONE} -- Automatic backup
 			file := backup_log_file
 			file.put_string ("Inserted: ")
 			file.put_string (class_name)
-			file.new_line
+			file.put_new_line
 			file.close
 		end
 
@@ -1537,9 +1537,9 @@ feature -- Document processing
 		do
 			private_document_path := a_path
 			debug ("DOCUMENT")
-				io.error.putstring ("Set document path to: ")
+				io.error.put_string ("Set document path to: ")
 				print (a_path)
-				io.error.new_line
+				io.error.put_new_line
 			end
 		ensure
 			set: document_path = a_path

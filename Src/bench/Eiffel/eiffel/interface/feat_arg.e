@@ -344,15 +344,15 @@ feature -- Debugging
 			l_area: SPECIAL [TYPE]
 			i, nb: INTEGER
 		do
-			io.putstring ("feature argument types%N")
+			io.put_string ("feature argument types%N")
 			from
 				l_area := area
 				nb := count
 			until
 				i = nb 
 			loop
-				io.putstring (l_area.item (i).actual_type.dump)
-				io.new_line
+				io.put_string (l_area.item (i).actual_type.dump)
+				io.put_new_line
 				i := i + 1
 			end
 		end

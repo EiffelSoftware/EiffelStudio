@@ -200,11 +200,11 @@ feature -- Initialization
 --					or else
 --						(postcondition /= Void and then postcondition.is_then)
 --					then
---io.error.putstring ("Error VE05: require else or ensure then%NClass: ")
---io.error.putstring (System.current_class.name)
---io.error.putstring ("%NFeature: ")
---io.error.putstring (feature_name)
---io.error.new_line
+--io.error.put_string ("Error VE05: require else or ensure then%NClass: ")
+--io.error.put_string (System.current_class.name)
+--io.error.put_string ("%NFeature: ")
+--io.error.put_string (feature_name)
+--io.error.put_new_line
 --						!!ve05
 --						ve05.set_class (System.current_class)
 --						ve05.set_feature (Current)

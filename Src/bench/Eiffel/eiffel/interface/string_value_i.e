@@ -112,14 +112,14 @@ feature -- Code generation
 	generate (buffer: GENERATION_BUFFER) is
 			-- Generate value in `buffer'.
 		do
-			buffer.putstring ("RTMS_EX_H(%"")
+			buffer.put_string ("RTMS_EX_H(%"")
 			buffer.escape_string (string_value)
-			buffer.putchar('"')
-			buffer.putchar(',')
-			buffer.putint(string_value.count)
-			buffer.putchar(',')
-			buffer.putint(string_value.hash_code)
-			buffer.putchar (')')
+			buffer.put_character('"')
+			buffer.put_character(',')
+			buffer.put_integer(string_value.count)
+			buffer.put_character(',')
+			buffer.put_integer(string_value.hash_code)
+			buffer.put_character (')')
 		end
 
 	generate_il is

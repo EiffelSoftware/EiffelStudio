@@ -199,90 +199,90 @@ feature -- C code generation
 				if is_once then
 					if local_byte_context.workbench_mode or else System.has_multithreaded then
 						class_id := byte_context.original_class_type.static_type_id
-						buffer.putstring ("%TEIF_REFERENCE *PResult;%N%
+						buffer.put_string ("%TEIF_REFERENCE *PResult;%N%
 							%%Tif (MTOG((EIF_REFERENCE *),*(EIF_once_values + EIF_oidx_off")
-						buffer.putint (class_id)
-						buffer.putstring (" + ")
-						buffer.putint (local_byte_context.once_index)
-						buffer.putstring ("),PResult)) return *PResult;")
-						buffer.putstring (";%N%
+						buffer.put_integer (class_id)
+						buffer.put_string (" + ")
+						buffer.put_integer (local_byte_context.once_index)
+						buffer.put_string ("),PResult)) return *PResult;")
+						buffer.put_string (";%N%
 							%%TPResult = (EIF_REFERENCE *) RTOC(0);%N%
 							%%TMTOS(*(EIF_once_values + EIF_oidx_off")
-						buffer.putint (class_id)
-						buffer.putstring (" + ")
-						buffer.putint (local_byte_context.once_index)
-						buffer.putstring ("),PResult);%N%
+						buffer.put_integer (class_id)
+						buffer.put_string (" + ")
+						buffer.put_integer (local_byte_context.once_index)
+						buffer.put_string ("),PResult);%N%
 							%%T*PResult = ")
 						value.generate (buffer)
-						buffer.putchar (';')
-						buffer.new_line
+						buffer.put_character (';')
+						buffer.put_new_line
 
 						if local_byte_context.workbench_mode then
 								-- Real body id to be stored in the id list of 
 								-- already called once routines.
-							buffer.putstring ("%TRTWO(")
-							buffer.generate_real_body_id (real_body_id)
-							buffer.putstring (");")
-							buffer.new_line
+							buffer.put_string ("%TRTWO(")
+							buffer.put_real_body_id (real_body_id)
+							buffer.put_string (");")
+							buffer.put_new_line
 						end
-						buffer.putstring ("%Treturn *PResult")
+						buffer.put_string ("%Treturn *PResult")
 					else
 						special_once_generation := True
 						header_buffer := local_byte_context.header_buffer
-						header_buffer.new_line
-						header_buffer.putstring ("extern EIF_REFERENCE ")
-						header_buffer.putstring (internal_name)
-						header_buffer.putstring ("_result;")
-						header_buffer.new_line
-						header_buffer.putstring ("extern EIF_BOOLEAN ")
-						header_buffer.putstring (internal_name)
-						header_buffer.putstring ("_done;")
-						header_buffer.new_line
-						header_buffer.new_line
+						header_buffer.put_new_line
+						header_buffer.put_string ("extern EIF_REFERENCE ")
+						header_buffer.put_string (internal_name)
+						header_buffer.put_string ("_result;")
+						header_buffer.put_new_line
+						header_buffer.put_string ("extern EIF_BOOLEAN ")
+						header_buffer.put_string (internal_name)
+						header_buffer.put_string ("_done;")
+						header_buffer.put_new_line
+						header_buffer.put_new_line
 					
 						buffer.indent
-						buffer.putstring ("if (")
-						buffer.putstring (internal_name)
-						buffer.putstring ("_done) return ")
-						buffer.putstring (internal_name)
-						buffer.putstring ("_result;")
-						buffer.new_line
-						buffer.putstring (internal_name)
-						buffer.putstring ("_done = EIF_TRUE;")
-						buffer.new_line
-						buffer.putstring (internal_name)
-						buffer.putstring ("_result = ")
+						buffer.put_string ("if (")
+						buffer.put_string (internal_name)
+						buffer.put_string ("_done) return ")
+						buffer.put_string (internal_name)
+						buffer.put_string ("_result;")
+						buffer.put_new_line
+						buffer.put_string (internal_name)
+						buffer.put_string ("_done = EIF_TRUE;")
+						buffer.put_new_line
+						buffer.put_string (internal_name)
+						buffer.put_string ("_result = ")
 						value.generate (buffer)
-						buffer.putchar (';')
-						buffer.new_line
-						buffer.putstring ("RTOC_NEW(")
-						buffer.putstring (internal_name)
-						buffer.putstring ("_result);")
-						buffer.new_line
-						buffer.putstring ("return ")
-						buffer.putstring (internal_name)
-						buffer.putstring ("_result;")
+						buffer.put_character (';')
+						buffer.put_new_line
+						buffer.put_string ("RTOC_NEW(")
+						buffer.put_string (internal_name)
+						buffer.put_string ("_result);")
+						buffer.put_new_line
+						buffer.put_string ("return ")
+						buffer.put_string (internal_name)
+						buffer.put_string ("_result;")
 						buffer.exdent
 					end
 				else
 					buffer.indent
-					buffer.putstring ("return ")
+					buffer.put_string ("return ")
 					type_i.c_type.generate_cast (buffer)
 					value.generate (buffer)
 					buffer.exdent
 				end
-				buffer.putstring (";%N}%N")
+				buffer.put_string (";%N}%N")
 				if special_once_generation then
-					buffer.new_line
-					buffer.putstring ("EIF_REFERENCE ")
-					buffer.putstring (internal_name)
-					buffer.putstring ("_result = NULL;")
-					buffer.new_line
-					buffer.putstring ("EIF_BOOLEAN ")
-					buffer.putstring (internal_name)
-					buffer.putstring ("_done = EIF_FALSE;")
-					buffer.new_line
-					buffer.new_line
+					buffer.put_new_line
+					buffer.put_string ("EIF_REFERENCE ")
+					buffer.put_string (internal_name)
+					buffer.put_string ("_result = NULL;")
+					buffer.put_new_line
+					buffer.put_string ("EIF_BOOLEAN ")
+					buffer.put_string (internal_name)
+					buffer.put_string ("_done = EIF_FALSE;")
+					buffer.put_new_line
+					buffer.put_new_line
 				end
 			elseif not System.is_used (Current) then
 				System.removed_log_file.add (class_type, feature_name)

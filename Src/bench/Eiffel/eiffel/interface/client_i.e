@@ -163,17 +163,17 @@ feature -- Debug purpose
 	trace is
 			-- Debug purpose
 		do
-			io.error.putchar ('[')
-			io.error.putstring (System.class_of_id (written_in).cluster.path)
-			io.error.putstring ("] : ")
+			io.error.put_character ('[')
+			io.error.put_string (System.class_of_id (written_in).cluster.path)
+			io.error.put_string ("] : ")
 			from
 				clients.start
 			until
 				clients.after
 			loop
-				io.error.putchar ('%T')
-				io.error.putstring (clients.item)
-				io.error.putchar (' ')
+				io.error.put_character ('%T')
+				io.error.put_string (clients.item)
+				io.error.put_character (' ')
 				clients.forth
 			end
 		end

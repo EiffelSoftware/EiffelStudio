@@ -575,18 +575,18 @@ feature -- Incrementality
 				and then is_once = other.is_once
 debug ("ACTIVITY")
 	if not Result then
-			io.error.putbool (written_in = other.written_in) io.error.new_line;
-			io.error.putbool (is_selected = other.is_selected) io.error.new_line;
-			io.error.putbool (rout_id_set.same_as (other.rout_id_set)) io.error.new_line;
-			io.error.putbool (is_origin = other.is_origin) io.error.new_line;
-			io.error.putbool (is_frozen = other.is_frozen) io.error.new_line;
-			io.error.putbool (is_deferred = other.is_deferred) io.error.new_line;
-			io.error.putbool (is_external = other.is_external) io.error.new_line;
-			io.error.putbool (export_status.same_as (other.export_status)) io.error.new_line;
-			io.error.putbool (same_signature (other)) io.error.new_line;
-			io.error.putbool (has_precondition = other.has_precondition) io.error.new_line;
-			io.error.putbool (has_postcondition = other.has_postcondition) io.error.new_line;
-			io.error.putbool (is_once = other.is_once) io.error.new_line;
+			io.error.put_boolean (written_in = other.written_in) io.error.put_new_line;
+			io.error.put_boolean (is_selected = other.is_selected) io.error.put_new_line;
+			io.error.put_boolean (rout_id_set.same_as (other.rout_id_set)) io.error.put_new_line;
+			io.error.put_boolean (is_origin = other.is_origin) io.error.put_new_line;
+			io.error.put_boolean (is_frozen = other.is_frozen) io.error.put_new_line;
+			io.error.put_boolean (is_deferred = other.is_deferred) io.error.put_new_line;
+			io.error.put_boolean (is_external = other.is_external) io.error.put_new_line;
+			io.error.put_boolean (export_status.same_as (other.export_status)) io.error.put_new_line;
+			io.error.put_boolean (same_signature (other)) io.error.put_new_line;
+			io.error.put_boolean (has_precondition = other.has_precondition) io.error.put_new_line;
+			io.error.put_boolean (has_postcondition = other.has_postcondition) io.error.put_new_line;
+			io.error.put_boolean (is_once = other.is_once) io.error.put_new_line;
 	end
 end
 			if Result then
@@ -611,9 +611,9 @@ end
 
 debug ("ACTIVITY")
 	if not Result then
-		io.error.putstring ("%T%T")
-		io.error.putstring (feature_name)
-		io.error.putstring (" is not equiv%N")
+		io.error.put_string ("%T%T")
+		io.error.put_string (feature_name)
+		io.error.put_string (" is not equiv%N")
 	end
 end
 		end
@@ -1068,12 +1068,12 @@ feature -- Check
 			record_suppliers (context.supplier_ids)
 
 			debug ("SERVER", "TYPE_CHECK")
-				io.error.putstring ("feature name: ")
-				io.error.putstring (feature_name)
-				io.error.new_line
-				io.error.putstring ("body index: ")
-				io.error.putint (body_index)
-				io.error.new_line
+				io.error.put_string ("feature name: ")
+				io.error.put_string (feature_name)
+				io.error.put_new_line
+				io.error.put_string ("body index: ")
+				io.error.put_integer (body_index)
+				io.error.put_new_line
 			end
 
 				-- Make type check
@@ -1362,15 +1362,15 @@ feature -- Signature checking
 				solved_type /= Void
 			end
 debug ("ACTIVITY")
-	io.error.putstring ("Check types of ")
-	io.error.putstring (feature_name)
-	io.error.new_line
+	io.error.put_string ("Check types of ")
+	io.error.put_string (feature_name)
+	io.error.put_new_line
 	if solved_type = Void then
-		io.error.putstring ("VOID solved type!!%N")
+		io.error.put_string ("VOID solved type!!%N")
 	else
-		io.error.putstring ("Solved type: ")
-		io.error.putstring (solved_type.dump)
-		io.error.new_line
+		io.error.put_string ("Solved type: ")
+		io.error.put_string (solved_type.dump)
+		io.error.put_new_line
 	end
 end
 
@@ -1450,9 +1450,9 @@ end
 			vtec2: VTEC2
 		do
 debug ("CHECK_EXPANDED")
-	io.error.putstring ("Check expanded of ")
-	io.error.putstring (feature_name)
-	io.error.new_line
+	io.error.put_string ("Check expanded of ")
+	io.error.put_string (feature_name)
+	io.error.put_new_line
 end
 			if class_c.class_id = written_in then
 					-- Check validity of an expanded result type
@@ -1504,9 +1504,9 @@ end
 			ve02a: VE02A
 		do
 debug ("ACTIVITY")
-	io.error.putstring ("Check signature of ")
-	io.error.putstring (feature_name)
-	io.error.new_line
+	io.error.put_string ("Check signature of ")
+	io.error.put_string (feature_name)
+	io.error.put_new_line
 end
 			current_class := System.current_class
 
@@ -1535,24 +1535,24 @@ end
 				-- instantiated
 			new_type := type.actual_type
 debug ("ACTIVITY")
-	io.error.putstring ("Types:%N")
+	io.error.put_string ("Types:%N")
 	if old_type /= Void then
-		io.error.putstring ("old type:%N")
-		io.error.putstring (old_type.dump)
-		io.error.new_line
+		io.error.put_string ("old type:%N")
+		io.error.put_string (old_type.dump)
+		io.error.put_new_line
 	end
 	if new_type /= Void then
-		io.error.putstring ("new type:%N")
-		io.error.putstring (new_type.dump)
-		io.error.new_line
+		io.error.put_string ("new type:%N")
+		io.error.put_string (new_type.dump)
+		io.error.put_new_line
 	else
-		io.error.putstring ("New type: VOID%Ntype:")
-		io.error.putstring (type.dump)
-		io.error.new_line
-		io.error.putstring (type.out)
-		io.error.new_line
+		io.error.put_string ("New type: VOID%Ntype:")
+		io.error.put_string (type.dump)
+		io.error.put_new_line
+		io.error.put_string (type.out)
+		io.error.put_new_line
 	end
-	io.error.new_line
+	io.error.put_new_line
 end
 
 			if not new_type.conform_to (old_type) then
@@ -1587,18 +1587,18 @@ end
 					old_type := old_type.conformance_type.actual_type
 					new_type := arguments.i_th (i).actual_type
 debug ("ACTIVITY")
-	io.error.putstring ("Types:%N")
+	io.error.put_string ("Types:%N")
 	if old_type /= Void then
-		io.error.putstring ("old type:%N")
-		io.error.putstring (old_type.dump)
-		io.error.new_line
+		io.error.put_string ("old type:%N")
+		io.error.put_string (old_type.dump)
+		io.error.put_new_line
 	end
 	if new_type /= Void then
-		io.error.putstring ("new type:%N")
-		io.error.putstring (new_type.dump)
-		io.error.new_line
+		io.error.put_string ("new type:%N")
+		io.error.put_string (new_type.dump)
+		io.error.put_new_line
 	end
-	io.error.new_line
+	io.error.put_new_line
 end
 					if not new_type.conform_to (old_type) then
 						create vdrd53
@@ -2055,9 +2055,9 @@ feature -- C code generation
 		require
 			valid_buffer: buffer /= Void
 		do
-			buffer.putstring ("/* ")
-			buffer.putstring (feature_name)
-			buffer.putstring (" */%N%N")
+			buffer.put_string ("/* ")
+			buffer.put_string (feature_name)
+			buffer.put_string (" */%N%N")
 		end
 
 feature -- Debug purpose
@@ -2065,30 +2065,30 @@ feature -- Debug purpose
 	trace is
 			-- Debug purpose
 		do
-			io.error.putstring ("feature name: ")
-			io.error.putstring (feature_name)
-			io.error.putchar (' ')
+			io.error.put_string ("feature name: ")
+			io.error.put_string (feature_name)
+			io.error.put_character (' ')
 			rout_id_set.trace
-			io.error.putstring (" {")
-			io.error.putstring ("fid = ")
-			io.error.putint (feature_id)
-			io.error.putstring ("}");
-			io.error.putstring (" {")
-			io.error.putstring ("body_index = ")
-			io.error.putint (body_index)
-			io.error.putstring ("}");
-			io.error.putstring (" {")
-			io.error.putstring ("written in = ")
-			io.error.putstring (written_class.name)
-			io.error.putstring ("}");
-			io.error.putstring (" {")
-			io.error.putstring ("body_index = ")
+			io.error.put_string (" {")
+			io.error.put_string ("fid = ")
+			io.error.put_integer (feature_id)
+			io.error.put_string ("}");
+			io.error.put_string (" {")
+			io.error.put_string ("body_index = ")
+			io.error.put_integer (body_index)
+			io.error.put_string ("}");
+			io.error.put_string (" {")
+			io.error.put_string ("written in = ")
+			io.error.put_string (written_class.name)
+			io.error.put_string ("}");
+			io.error.put_string (" {")
+			io.error.put_string ("body_index = ")
 			if body_index > 0 then
-				io.error.putint (body_index)
+				io.error.put_integer (body_index)
 			else
-				io.error.putint (0)
+				io.error.put_integer (0)
 			end
-			io.error.new_line
+			io.error.put_new_line
 		end
 
 feature -- Debugging

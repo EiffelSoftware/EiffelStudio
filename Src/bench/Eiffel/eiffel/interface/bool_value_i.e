@@ -50,9 +50,9 @@ feature -- Access
 			-- Generate value in `file'.
 		do
 			if boolean_value then
-				buffer.putstring ("'\01'");
+				buffer.put_string ("'\01'");
 			else
-				buffer.putstring ("'\0'");
+				buffer.put_string ("'\0'");
 			end;
 		end;
 

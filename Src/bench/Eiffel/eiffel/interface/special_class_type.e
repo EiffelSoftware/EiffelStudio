@@ -109,7 +109,7 @@ feature {NONE} -- C code generation
 			l_param_is_expanded := gen_param.is_true_expanded;
 			type_c := gen_param.c_type;
 
-			buffer.putstring ("/* put */%N");
+			buffer.put_string ("/* put */%N");
 			encoded_name := Encoder.feature_name (static_type_id, feat.body_index);
 
 			System.used_features_log_file.add (Current, "put", encoded_name);
@@ -121,7 +121,7 @@ feature {NONE} -- C code generation
 			final_mode := byte_context.final_mode;
 
 			if l_param_is_expanded then
-				buffer.putstring ("%
+				buffer.put_string ("%
 					%%Tif (arg1 == (EIF_REFERENCE) 0)%N%
 					%%T%TRTEC(EN_VEXP);%N");
 			end;
@@ -132,26 +132,26 @@ feature {NONE} -- C code generation
 				if final_mode then
 						-- Optimization: size is know at compile time
 
-					buffer.putstring ("%Tecopy(arg1, Current + OVERHEAD + arg2 * (EIF_Size(");
+					buffer.put_string ("%Tecopy(arg1, Current + OVERHEAD + arg2 * (EIF_Size(");
 					expanded_type ?= gen_param;
-					buffer.putint (expanded_type.type_id - 1);
-					buffer.putstring (") + OVERHEAD));%N")
+					buffer.put_type_id (expanded_type.type_id);
+					buffer.put_string (") + OVERHEAD));%N")
 				else
-					buffer.putstring ("%Tecopy(arg1, Current + OVERHEAD + arg2 * (");
-					buffer.putstring ("*(EIF_INTEGER *) (Current + %
+					buffer.put_string ("%Tecopy(arg1, Current + OVERHEAD + arg2 * (");
+					buffer.put_string ("*(EIF_INTEGER *) (Current + %
 						%(HEADER(Current)->ov_size & B_SIZE) - LNGPAD(2) + %
 						%sizeof(EIF_INTEGER))));%N")
 				end
 			else
-				buffer.putstring ("%T*(")
+				buffer.put_string ("%T*(")
 				type_c.generate_access_cast (buffer)
-				buffer.putstring (" Current + arg2) = arg1;")
+				buffer.put_string (" Current + arg2) = arg1;")
 				if type_c.level = c_ref then
-					buffer.putstring ("%TRTAR(Current, arg1);%N");
+					buffer.put_string ("%TRTAR(Current, arg1);%N");
 				end;
 			end;
 
-			buffer.putstring ("%N}%N%N");
+			buffer.put_string ("%N}%N%N");
 		end;
 
 	generate_item (feat: FEATURE_I; buffer: GENERATION_BUFFER) is
@@ -173,7 +173,7 @@ feature {NONE} -- C code generation
 			l_param_is_expanded := gen_param.is_true_expanded;
 			type_c := gen_param.c_type;
 
-			buffer.putstring ("/* item */%N");
+			buffer.put_string ("/* item */%N");
 
 			encoded_name := Encoder.feature_name (static_type_id, feat.body_index);
 
@@ -191,23 +191,23 @@ feature {NONE} -- C code generation
 				if final_mode then
 						-- Optimization: size of expanded is known at compile time
 
-					buffer.putstring ("%Treturn Current + OVERHEAD + arg1 * (EIF_Size(");
+					buffer.put_string ("%Treturn Current + OVERHEAD + arg1 * (EIF_Size(");
 					expanded_type ?= gen_param;
-					buffer.putint (expanded_type.type_id - 1);
-					buffer.putstring (") + OVERHEAD);%N")
+					buffer.put_type_id (expanded_type.type_id);
+					buffer.put_string (") + OVERHEAD);%N")
 				else
-					buffer.putstring ("%Treturn Current + OVERHEAD + arg1 * (");
-					buffer.putstring ("*(EIF_INTEGER *) (Current + %
+					buffer.put_string ("%Treturn Current + OVERHEAD + arg1 * (");
+					buffer.put_string ("*(EIF_INTEGER *) (Current + %
 						%(HEADER(Current)->ov_size & B_SIZE) - LNGPAD(2) + %
 						%sizeof(EIF_INTEGER)));%N")
 				end
 			else
-				buffer.putstring ("%Treturn *(")
+				buffer.put_string ("%Treturn *(")
 				type_c.generate_access_cast (buffer)
-				buffer.putstring (" Current + arg1);")
+				buffer.put_string (" Current + arg1);")
 			end;
 
-			buffer.putstring ("%N}%N%N");
+			buffer.put_string ("%N}%N%N");
 		end;
 
 	generate_item_address (feat: FEATURE_I; buffer: GENERATION_BUFFER) is
@@ -226,7 +226,7 @@ feature {NONE} -- C code generation
 			l_param_is_expanded := gen_param.is_true_expanded;
 			type_c := gen_param.c_type;
 
-			buffer.putstring ("/* item_address */%N");
+			buffer.put_string ("/* item_address */%N");
 
 			result_type := feat.type.actual_type.type_i
 			if result_type.has_formal then
@@ -243,17 +243,17 @@ feature {NONE} -- C code generation
 
 			generate_precondition (buffer, byte_context.final_mode, "arg1")
 
-			buffer.putstring ("%Treturn ")
+			buffer.put_string ("%Treturn ")
 			result_type.c_type.generate_cast (buffer)
-			buffer.putstring ("(Current + ")
+			buffer.put_string ("(Current + ")
 			if l_param_is_expanded then
-				buffer.putstring ("OVERHEAD + arg1 * sp_elem_size (Current));")
+				buffer.put_string ("OVERHEAD + arg1 * sp_elem_size (Current));")
 			else
-				buffer.putstring ("arg1 * sizeof(")
+				buffer.put_string ("arg1 * sizeof(")
 				type_c.generate (buffer)
-				buffer.putstring ("));")
+				buffer.put_string ("));")
 			end
-			buffer.putstring ("%N}%N%N");
+			buffer.put_string ("%N}%N%N");
 		end;
 
 	generate_base_address (feat: FEATURE_I; buffer: GENERATION_BUFFER) is
@@ -273,7 +273,7 @@ feature {NONE} -- C code generation
 			l_param_is_expanded := gen_param.is_true_expanded;
 			type_c := gen_param.c_type;
 
-			buffer.putstring ("/* base_address */%N");
+			buffer.put_string ("/* base_address */%N");
 
 			result_type := feat.type.actual_type.type_i
 			if result_type.has_formal then
@@ -291,14 +291,14 @@ feature {NONE} -- C code generation
 			final_mode := byte_context.final_mode;
 
 			if l_param_is_expanded and not final_mode then
-				buffer.putstring ("%TEIF_INTEGER elem_size;%N");
+				buffer.put_string ("%TEIF_INTEGER elem_size;%N");
 			end;
 
-			buffer.putstring ("%Treturn ")
+			buffer.put_string ("%Treturn ")
 			result_type.c_type.generate_cast (buffer)
-			buffer.putstring (" Current;")
+			buffer.put_string (" Current;")
 
-			buffer.putstring ("%N}%N%N");
+			buffer.put_string ("%N}%N%N");
 		end;
 
 	generate_precondition (buffer: GENERATION_BUFFER; final_mode: BOOLEAN; arg_name: STRING) is
@@ -310,39 +310,39 @@ feature {NONE} -- C code generation
 		do
 			if (not final_mode) or else associated_class.assertion_level.check_precond then
 				if final_mode then
-					buffer.putstring ("%Tif (~in_assertion) {%N");
-					buffer.putstring ("%
+					buffer.put_string ("%Tif (~in_assertion) {%N");
+					buffer.put_string ("%
 						%%TRTCT(%"index_large_enough%", EX_PRE);%N%
 						%%Tif (")
-					buffer.putstring (arg_name)
-					buffer.putstring (">= 0) {%N%
+					buffer.put_string (arg_name)
+					buffer.put_string (">= 0) {%N%
 						%%T%TRTCK;%N%
 						%%T} else {%N%
 						%%T%TRTCF;%N%T}%N");
 
-					buffer.putstring ("%
+					buffer.put_string ("%
 						%%TRTCT(%"index_small_enough%", EX_PRE);%N%
 						%%Tif (")
-					buffer.putstring (arg_name)
-					buffer.putstring ("< *(EIF_INTEGER *) %
+					buffer.put_string (arg_name)
+					buffer.put_string ("< *(EIF_INTEGER *) %
 							%(Current + (HEADER(Current)->ov_size & B_SIZE)%
 							% - LNGPAD(2))) {%N%
 						%%T%TRTCK;%N%
 						%%T} else {%N%
 						%%T%TRTCF;%N%T}%N");
 
-					buffer.putstring ("%T}%N");
+					buffer.put_string ("%T}%N");
 				else
-					buffer.putstring ("%
+					buffer.put_string ("%
 						%%Tif (")
-					buffer.putstring (arg_name)
-					buffer.putstring ("< 0) {%N%
+					buffer.put_string (arg_name)
+					buffer.put_string ("< 0) {%N%
 						%%T%Teraise (%"index_large_enough%", EN_RT_CHECK);%N%T}%N");
 
-					buffer.putstring ("%
+					buffer.put_string ("%
 						%%Tif (")
-					buffer.putstring (arg_name)
-					buffer.putstring (">= *(EIF_INTEGER *) %
+					buffer.put_string (arg_name)
+					buffer.put_string (">= *(EIF_INTEGER *) %
 							%(Current + (HEADER(Current)->ov_size & B_SIZE)%
 							% - LNGPAD(2))) {%N%
 						%%T%Teraise (%"index_small_enough%", EN_RT_CHECK);%N%T}%N");

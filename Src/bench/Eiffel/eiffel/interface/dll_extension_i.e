@@ -108,67 +108,67 @@ feature {NONE} -- Internal generation
 			l_names_heap := Names_heap
 			shared_include_queue.put (l_names_heap.eif_misc_header_name_id)
 
-			buf.putchar ('{')
-			buf.new_line
+			buf.put_character ('{')
+			buf.put_new_line
 			buf.indent
-			buf.putstring ("static char done = 0;")
-			buf.new_line
-			buf.putstring ("static EIF_POINTER fp = NULL;")
-			buf.new_line
+			buf.put_string ("static char done = 0;")
+			buf.put_new_line
+			buf.put_string ("static EIF_POINTER fp = NULL;")
+			buf.put_new_line
 	
-			buf.putstring ("if (!done) {")
+			buf.put_string ("if (!done) {")
 			buf.indent
-			buf.new_line
+			buf.put_new_line
 				-- Declare local variables required by the call
-			buf.putstring ("HMODULE a_result;")
-			buf.new_line
+			buf.put_string ("HMODULE a_result;")
+			buf.put_new_line
 
 				-- Now comes the body
-			buf.putstring ("a_result = eif_load_dll(")
-			buf.putstring (name)
-			buf.putstring (");")
-			buf.new_line
-			buf.putstring ("if (a_result == NULL) eraise(%"Cannot load library%",EN_PROG);")
-			buf.new_line
-			buf.putstring ("fp = (EIF_POINTER) GetProcAddress(a_result,")
+			buf.put_string ("a_result = eif_load_dll(")
+			buf.put_string (name)
+			buf.put_string (");")
+			buf.put_new_line
+			buf.put_string ("if (a_result == NULL) eraise(%"Cannot load library%",EN_PROG);")
+			buf.put_new_line
+			buf.put_string ("fp = (EIF_POINTER) GetProcAddress(a_result,")
 			if index > -1 then 
-				buf.putstring ("MAKEINTRESOURCE (")
-				buf.putint (index)
-				buf.putstring (")")
+				buf.put_string ("MAKEINTRESOURCE (")
+				buf.put_integer (index)
+				buf.put_string (")")
 			else
-				buf.putchar ('"')
-				buf.putstring (dll_byte_code.external_name)
-				buf.putchar ('"')
+				buf.put_character ('"')
+				buf.put_string (dll_byte_code.external_name)
+				buf.put_character ('"')
 			end
-			buf.putstring (");")
-			buf.new_line
-			buf.putstring ("if (fp == NULL) eraise(%"Cannot find entry point")
+			buf.put_string (");")
+			buf.put_new_line
+			buf.put_string ("if (fp == NULL) eraise(%"Cannot find entry point")
 			if index > -1 then
-				buf.putstring (" at index ")
-				buf.putint (index)
+				buf.put_string (" at index ")
+				buf.put_integer (index)
 			else
-				buf.putstring (" of ")
-				buf.putstring (dll_byte_code.external_name)
+				buf.put_string (" of ")
+				buf.put_string (dll_byte_code.external_name)
 			end
-			buf.putstring ("%",EN_PROG);")
-			buf.new_line
-			buf.putstring ("done = (char) 1;")
-			buf.new_line
+			buf.put_string ("%",EN_PROG);")
+			buf.put_new_line
+			buf.put_string ("done = (char) 1;")
+			buf.put_new_line
 			buf.exdent
-			buf.putchar ('}')
-			buf.new_line
+			buf.put_character ('}')
+			buf.put_new_line
 
 			l_ret_type := dll_byte_code.result_type
 			if not l_ret_type.is_void then
 				a_result.print_register
-				buf.putstring (" = ")
+				buf.put_string (" = ")
 				l_ret_type.c_type.generate_cast (buf)
 				if l_ret_type.is_boolean then
-					buf.putstring (" EIF_TEST")
+					buf.put_string (" EIF_TEST")
 				end
 			end
-			buf.putchar ('(')
-			buf.putchar ('(')
+			buf.put_character ('(')
+			buf.put_character ('(')
 				-- FIXME: Manu 07/21/2003: function cast is done using the Eiffel return type.
 				-- This is not correct, it should use, if specified, the return type from
 				-- signature. Some C compiler might optimize incorrectly otherwise.
@@ -187,16 +187,16 @@ feature {NONE} -- Internal generation
 					l_ret_type.c_type.generate_function_cast (buf, <<"void">>)
 				end
 			end
-			buf.putstring ("fp )(")
+			buf.put_string ("fp )(")
 			generate_parameter_list (Void, dll_byte_code.argument_count)
-			buf.putchar (')');
-			buf.putchar (')');
-			buf.putchar (';');
+			buf.put_character (')');
+			buf.put_character (')');
+			buf.put_character (';');
 
 			buf.exdent
-			buf.new_line
-			buf.putchar ('}')
-			buf.new_line
+			buf.put_new_line
+			buf.put_character ('}')
+			buf.put_new_line
 		end
 
 	stdcall: STRING is "__stdcall"

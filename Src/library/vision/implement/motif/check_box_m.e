@@ -13,8 +13,8 @@ inherit
 	CHECK_BOX_I;
 
 	MANAGER_M
-        rename
-            is_shown as shown
+		rename
+			is_shown as shown
 		undefine
 			create_callback_struct
 		end;

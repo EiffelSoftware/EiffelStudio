@@ -149,7 +149,7 @@ feature
 		deferred
 		ensure
 			not shown
-		end; -- hide
+		end;
 
 	insensitive: BOOLEAN is
 			-- Is current widget sensitive?
@@ -167,31 +167,30 @@ feature
 			-- Is there geometry managment on screen widget implementation
 			-- performed by window manager of parent widget?
 		deferred
-		end; -- managed
+		end;
 
 	propagate_event is
 			-- Propagate event to direct ancestor if no action
-			-- is specified for event.
+			-- is specified for event. 
 		require
 			widget_realized: realized
 		deferred
-		end; -- propagate_event
+		end;
 
 	raise is
-			--raise current to top of
-			-- peer stacking order
+			-- Raise current to top of peer stacking order
 		deferred
 		end;
 
 	real_x: INTEGER is
-			-- Vertical position relative to root window
-		deferred
-		end; -- real_x
-
-	real_y: INTEGER is
 			-- Horizontal position relative to root window
 		deferred
-		end; -- real_y
+		end;
+
+	real_y: INTEGER is
+			-- Vertical position relative to root window
+		deferred
+		end;
 
 	realize is
 			-- Create screen window implementation and all
@@ -374,7 +373,7 @@ feature
 		require
 			widget_realized: realized
 		deferred
-		end; -- set_no_event_propagation
+		end;
 
 	set_size (new_width:INTEGER; new_height: INTEGER) is
 			-- Set both width and height to `new_width'
@@ -421,14 +420,14 @@ feature
 		deferred
 		ensure
 			shown
-		end; -- show
+		end;
 
 	shown: BOOLEAN is
 			-- Is current widget visible?
 		require
 			widget_realized: realized
 		deferred
-		end; -- shown
+		end;
 
 	ungrab is
 			-- Release the mouse and the keyboard from an earlier grab.

@@ -83,7 +83,7 @@ static  char    *names [] = {
 "BC_STRING" ,
 "BC_AND_THEN" ,
 "BC_OR_ELSE" ,
-"BC_NOTUSED_76" ,
+"BC_SPCREATE" ,
 "BC_NOTUSED_77" ,
 "BC_JMP_T" ,
 "BC_NOTUSED_79" ,
@@ -117,9 +117,9 @@ static  char    *names [] = {
 "BC_NOT_REC" ,
 "BC_END_PRE" ,
 "BC_NOTUSED_109" ,
-"BC_CAST_LONG" ,
-"BC_CAST_FLOAT" ,
-"BC_CAST_DOUBLE" ,
+"BC_CAST_INTEGER" ,
+"BC_CAST_REAL_32" ,
+"BC_CAST_REAL_64" ,
 "BC_INV_NULL" ,
 "BC_CREAT_INV" ,
 "BC_END_EVAL_OLD" ,
@@ -157,24 +157,24 @@ static  char    *names [] = {
 "BC_NOTUSED_147" ,
 "BC_NOTUSED_148" ,
 "BC_NOTUSED_149" ,
-"BC_SEP_SET" ,
-"BC_SEP_UNSET" ,
-"BC_SEP_RESERVE" ,
-"BC_SEP_FREE" ,
-"BC_SEP_TO_SEP" ,
-"BC_SEP_RAISE_PREC" ,
-"BC_SEP_CREATE" ,
-"BC_SEP_CREATE_END" ,
-"BC_SEP_ATTRIBUTE_INV" ,
-"BC_SEP_EXTERN_INV" ,
-"BC_SEP_FEATURE_INV" ,
-"BC_SEP_PATTRIBUTE_INV" ,
-"BC_SEP_PEXTERN_INV" ,
-"BC_SEP_PFEATURE_INV" ,
-"BC_SEP_EXTERN" ,
-"BC_SEP_FEATURE" ,
-"BC_SEP_PEXTERN" ,
-"BC_SEP_PFEATURE" ,
+"BC_NOTUSED_150" ,
+"BC_NOTUSED_151" ,
+"BC_NOTUSED_152" ,
+"BC_NOTUSED_153" ,
+"BC_NOTUSED_154" ,
+"BC_NOTUSED_155" ,
+"BC_NOTUSED_156" ,
+"BC_NOTUSED_157" ,
+"BC_NOTUSED_158" ,
+"BC_NOTUSED_159" ,
+"BC_NOTUSED_160" ,
+"BC_NOTUSED_161" ,
+"BC_NOTUSED_162" ,
+"BC_NOTUSED_163" ,
+"BC_NOTUSED_164" ,
+"BC_NOTUSED_165" ,
+"BC_NOTUSED_166" ,
+"BC_NOTUSED_167" ,
 "BC_TUPLE",
 "BC_PTUPLE",
 "BC_NOTUSED_170",
@@ -261,6 +261,7 @@ static  void    print_instructions (void);
 static  void    print_dtype (int, uint32);
 static  void    print_ctype (short);
 static  void    print_cid (void);
+static	void	get_creation_type (void);
 static  void    advance (int);
 static  void    panic (void);
 
@@ -286,7 +287,6 @@ static  EIF_CHARACTER * bstr (int length);
 /*------------------------------------------------------------------*/
 
 int main (int argc, char **argv)
-
 {
 	long    i;
 
@@ -634,18 +634,14 @@ static  void    print_instructions ()
 			case  BC_RREVERSE :
 				/* Reverse assignment to 'Result' */
 				/* Static type of target */
-				print_ctype (bshort ());
-/*GENERIC CONFORMANCE*/
-				print_cid ();
+				get_creation_type();
 				break;
 			case  BC_LREVERSE :
 				/* Reverse assignment to a local */
 				/* local index */
 				fprintf (ofp,"%d ", (int) bshort ());
 				/* Static type of target */
-				print_ctype (bshort ());
-/*GENERIC CONFORMANCE*/
-				print_cid ();
+				get_creation_type();
 				break;
 			case  BC_REVERSE :
 				/* Attribute */
@@ -653,12 +649,10 @@ static  void    print_instructions ()
 				fprintf (ofp,"fid %d ", blong ());
 				/* Static type of class */
 				print_ctype (bshort ());
-				/* True type */
-				print_dtype (0,buint32 ());
+				/* Meta-type */
+				print_dtype (0, buint32 ());
 				/* Static type of target */
-				print_ctype (bshort ());
-/*GENERIC CONFORMANCE*/
-				print_cid ();
+				get_creation_type ();
 				break;
 			case  BC_PREVERSE :
 				/* Precompiled attribute */
@@ -666,12 +660,10 @@ static  void    print_instructions ()
 				fprintf (ofp,"oid %d ", blong ());
 				/* Org. offset */
 				fprintf (ofp,"ooff %d ", blong ());
-				/* True type */
+				/* Meta-type */
 				print_dtype (0,buint32 ());
 				/* Static type of target */
-				print_ctype (bshort ());
-/*GENERIC CONFORMANCE*/
-				print_cid ();
+				get_creation_type ();
 				break;
 
 /* Creation */
@@ -696,57 +688,26 @@ static  void    print_instructions ()
 					fprintf (ofp," dup_top_object ");
 				}
 
-					/* Type of creation */
-				cval = bchar ();
+				get_creation_type ();
+				break;
 
-				switch (cval)
-				{
-					case  BC_CTYPE :
-						/* creation type */
-						fprintf (ofp, " (BC_CTYPE) ");
-						print_ctype (bshort ());
-/*GENERIC CONFORMANCE*/
-						print_cid ();
-						break;
-
-					case  BC_CCUR :
-						/* like current */
-						fprintf (ofp, " (BC_CCUR) ");
-						break;
-					case  BC_CARG :
-						/* like argument */
-						/* static creation type */
-						fprintf (ofp, " (BC_CARG) ");
-
-						print_ctype (bshort ());
-/*GENERIC CONFORMANCE*/
-						print_cid ();
-						/* argument index */
-						fprintf (ofp,"%d", (int) bshort ());
-						break;
-					case  BC_CLIKE :
-						/* like feature */
-						/* creation type */
-						fprintf (ofp, " (BC_CLIKE) ");
-						print_ctype (bshort ());
-						/* Anchor id */
-						fprintf (ofp,"%d", blong ());
-						break;
-					case  BC_PCLIKE :
-						/* like precompiled feature */
-						/* Org. id */
-						fprintf (ofp, " (BC_PCTYPE) ");
-
-						print_ctype (bshort ());
-						fprintf (ofp,"oid %d ", blong ());
-						/* Org. offset */
-						fprintf (ofp,"ooff %d", blong ());
-						break;
-					case BC_GEN_PARAM_CREATE:
-						fprintf (ofp, " (BC_GEN_PARAM_CREATE) ");
-						print_ctype (bshort());
-						fprintf (ofp,"pos %d", blong ());
-						break;
+			case BC_SPCREATE:
+				get_creation_type ();
+				fprintf (ofp, " ");
+					/* Read various flags about special we want to create. */
+				if (bchar()) { fprintf (ofp, "is_reference "); }
+				if (bchar()) { fprintf (ofp, "is_basic "); }
+				cval = bchar();
+				if (cval) { fprintf (ofp, "is_bit "); }
+				if (bchar()) {
+					fprintf (ofp, "is_expanded of type %d", bshort());
+				} else {
+						/* Read SK_XX type */
+					buint32();
+				}
+				if (cval) {
+						/* Get size of bits. */
+					buint32();
 				}
 				break;
 
@@ -939,12 +900,12 @@ static  void    print_instructions ()
 				break;
 
 /* Casts */
-			case  BC_CAST_LONG :
+			case  BC_CAST_INTEGER :
 				fprintf (ofp,"%d", blong ());
 				break;
-			case  BC_CAST_FLOAT :
+			case  BC_CAST_REAL_32 :
 				break;
-			case  BC_CAST_DOUBLE :
+			case  BC_CAST_REAL_64 :
 				break;
 			case  BC_METAMORPHOSE :
 				break;
@@ -1230,9 +1191,13 @@ static  void    print_dtype (int cid, uint32 type)
 			case SK_BOOL:   fprintf (ofp," [BOOLEAN]"); break;
 			case SK_CHAR:   fprintf (ofp," [CHARACTER]"); break;
 			case SK_WCHAR:   fprintf (ofp," [WIDE_CHARACTER]"); break;
+			case SK_UINT8:   fprintf (ofp," [NATURAL_8]"); break;
+			case SK_UINT16:   fprintf (ofp," [NATURAL_16]"); break;
+			case SK_UINT32:   fprintf (ofp," [NATURAL_32]"); break;
+			case SK_UINT64:   fprintf (ofp," [NATURAL_64]"); break;
 			case SK_INT8:   fprintf (ofp," [INTEGER_8]"); break;
 			case SK_INT16:   fprintf (ofp," [INTEGER_16]"); break;
-			case SK_INT32:   fprintf (ofp," [INTEGER]"); break;
+			case SK_INT32:   fprintf (ofp," [INTEGER_32]"); break;
 			case SK_INT64:   fprintf (ofp," [INTEGER_64]"); break;
 			case SK_REAL32:  fprintf (ofp," [REAL_32]"); break;
 			case SK_REAL64: fprintf (ofp," [REAL_64]"); break;
@@ -1265,6 +1230,65 @@ static  void    print_dtype (int cid, uint32 type)
 	else
 	{
 		fprintf (ofp,"VOID");
+	}
+}
+
+/*------------------------------------------------------------------*/
+static void get_creation_type (void)
+	/* Type of creation */
+{
+	unsigned char   cval;
+
+	cval = bchar ();
+
+	switch (cval)
+	{
+		case  BC_CTYPE :
+			/* creation type */
+			fprintf (ofp, " (BC_CTYPE) ");
+			print_ctype (bshort ());
+/*GENERIC CONFORMANCE*/
+			print_cid ();
+			break;
+
+		case  BC_CCUR :
+			/* like current */
+			fprintf (ofp, " (BC_CCUR) ");
+			break;
+		case  BC_CARG :
+			/* like argument */
+			/* static creation type */
+			fprintf (ofp, " (BC_CARG) ");
+
+			print_ctype (bshort ());
+/*GENERIC CONFORMANCE*/
+			print_cid ();
+			/* argument index */
+			fprintf (ofp,"%d", (int) bshort ());
+			break;
+		case  BC_CLIKE :
+			/* like feature */
+			/* creation type */
+			fprintf (ofp, " (BC_CLIKE) ");
+			print_ctype (bshort ());
+			/* Anchor id */
+			fprintf (ofp,"%d", blong ());
+			break;
+		case  BC_PCLIKE :
+			/* like precompiled feature */
+			/* Org. id */
+			fprintf (ofp, " (BC_PCTYPE) ");
+
+			print_ctype (bshort ());
+			fprintf (ofp,"oid %d ", blong ());
+			/* Org. offset */
+			fprintf (ofp,"ooff %d", blong ());
+			break;
+		case BC_GEN_PARAM_CREATE:
+			fprintf (ofp, " (BC_GEN_PARAM_CREATE) ");
+			print_ctype (bshort());
+			fprintf (ofp,"pos %d", blong ());
+			break;
 	}
 }
 /*------------------------------------------------------------------*/

@@ -511,18 +511,7 @@ feature {NONE} -- Implementation
 				Result.append (argument_value_set_up (position, vartype_namer.variant_field_name (visitor), name, visitor))
 
 			elseif (type = Vt_variant) then
-				tmp_value := clone (Ec_mapper)
-				tmp_value.append (Dot)
-				tmp_value.append ("ccom_ec_pointed_variant")
-				tmp_value.append (Space_open_parenthesis)
-				tmp_value.append (Eif_access)
-				tmp_value.append (Space_open_parenthesis)
-				tmp_value.append (name)
-				tmp_value.append (Close_parenthesis)
-				tmp_value.append (Comma_space)
-				tmp_value.append (Null)
-				tmp_value.append (Close_parenthesis)
-				Result.append (argument_value_set_up (position,  vartype_namer.variant_field_name (visitor), tmp_value, visitor))
+				Result.append (argument_value_set_up (position,  vartype_namer.variant_field_name (visitor), name, visitor))
 
 			else
 				if is_byref (type) then

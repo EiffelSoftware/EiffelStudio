@@ -197,10 +197,12 @@ feature -- Status setting
 				if Application.is_dotnet then
 					if tree_item /= Void then
 						abstract_value ?= tree_item.data
-						if abstract_value /= Void then
-							Application.imp_dotnet.keep_object (abstract_value)					
-							create {EB_OBJECT_DISPLAY_PARAMETERS_DOTNET} n_obj.make_from_debug_value (abstract_value)
-						end
+					else
+						abstract_value ?= a_stone.debug_value
+					end
+					if abstract_value /= Void then
+						Application.imp_dotnet.keep_object (abstract_value)					
+						create {EB_OBJECT_DISPLAY_PARAMETERS_DOTNET} n_obj.make_from_debug_value (abstract_value)
 					end
 					if n_obj = Void then
 						create {EB_OBJECT_DISPLAY_PARAMETERS_DOTNET} n_obj.make (a_stone.dynamic_class, a_stone.object_address)
@@ -468,6 +470,7 @@ feature {EB_SET_SLICE_SIZE_CMD}
 					--| For now we don't support this for external type
 				create ost.make (dv.address, dv.name, dv.dynamic_class)
 				ost.set_associated_tree_item (Result)
+				ost.set_associated_debug_value (dv)
 				Result.set_pebble (ost)
 				Result.set_accept_cursor (ost.stone_cursor)
 				Result.set_deny_cursor (ost.X_stone_cursor)				
@@ -563,7 +566,7 @@ feature {NONE} -- Implementation
 			item: EV_TREE_ITEM
 			l_exception_detail: TUPLE [STRING, STRING]
 			l_exception_module_detail: STRING
-			l_exception_to_string: STRING
+			l_exception_message, l_exception_to_string: STRING
 			exception_item: EV_TREE_ITEM
 		do
 			if Application.is_dotnet and then Application.imp_dotnet.exception_occured then
@@ -579,6 +582,26 @@ feature {NONE} -- Implementation
 					end
 					exception_item.set_pixmap (Pixmaps.Icon_green_tick)
 					
+						--| Exception message
+					
+					l_exception_message := Application.imp_dotnet.exception_message
+					if l_exception_message /= Void then
+						create item
+						item.set_data (l_exception_message)
+						item.set_text (l_exception_message)
+						item.set_tooltip (l_exception_message)
+						item.set_pixmap (Pixmaps.Icon_exception)
+						exception_item.extend (item)						
+					end	
+					
+						--| Module name
+					create item
+					item.set_text ("Module " + l_exception_module_detail)
+					item.set_data (l_exception_module_detail)
+					item.set_pixmap (Pixmaps.Icon_exception)
+					exception_item.extend (item)
+					
+						--| Exception to_string					
 					l_exception_to_string := Application.imp_dotnet.exception_to_string
 					if l_exception_to_string /= Void then
 						create item
@@ -589,12 +612,6 @@ feature {NONE} -- Implementation
 						item.pointer_double_press_actions.extend (agent show_text_in_popup (l_exception_to_string, ?,?,?,?,?,?,?,?))
 						exception_item.extend (item)						
 					end						
-
-					create item
-					item.set_text ("Module " + l_exception_module_detail)
-					item.set_data (l_exception_module_detail)
-					item.set_pixmap (Pixmaps.Icon_exception)
-					exception_item.extend (item)
 
 					a_tree.extend (exception_item)
 					exception_item.expand
@@ -979,4 +996,4 @@ feature {NONE} -- Implementation
 	display_first, display_first_attributes, display_first_onces, display_first_special: BOOLEAN
 			-- Memorize the display parameters of the current object.
 
-end -- class EB_OBJECT_TOOL
+end

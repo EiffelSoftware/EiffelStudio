@@ -94,6 +94,7 @@ int n;
 	else
 		n = s;
 
+/* FIXME: use bzero or equiv */
 	for (i = 0; i < n; i++)
 		a2[i] = '\0';
 

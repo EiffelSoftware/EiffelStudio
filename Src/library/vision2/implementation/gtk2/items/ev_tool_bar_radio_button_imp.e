@@ -17,7 +17,6 @@ inherit
 
 	EV_TOOL_BAR_BUTTON_IMP
 		redefine
-			parent_imp,
 			make,
 			interface,
 			set_item_parent_imp,
@@ -83,11 +82,6 @@ feature {NONE} -- Implementation
 				-- `Current' is being unparented so we unset the radio group
 				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_radio_tool_button_set_group (visual_widget, NULL)
 			end
-		end
-
-	parent_imp: EV_TOOL_BAR_IMP is
-		do
-			Result ?= Precursor
 		end
 
 feature {EV_ANY_I} -- Implementation

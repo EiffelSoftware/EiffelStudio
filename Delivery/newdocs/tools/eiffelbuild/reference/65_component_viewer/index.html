@@ -1,0 +1,23 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN"><HTML><HEAD><TITLE>Component viewer</TITLE><LINK REL=StyleSheet HREF="/default.css"></HEAD>
+<BODY><H1>Component viewer</H1>
+<P>The Component viewer allows you to view the structure of a 
+<A HREF="/tools/eiffelbuild/reference/02_notation.html#component">component</A> without having to create new <A HREF="/tools/eiffelbuild/reference/02_notation.html#object">objects</A> from the <A HREF="/tools/eiffelbuild/reference/02_notation.html#component">component</A>.</P>
+<P>This tool is displayed in a seperate window, and may either be shown or hidden (default). To change between these two states, click <img SRC="/images/eiffelbuild/icons/icon_component_viewer_color.png" > on the <A HREF="/tools/eiffelbuild/reference/10_general_interface_description/20_main_toolbars.html">main toolbar</A>, or select <B>Show/Hide component viewer</B> from the <B>View</B> menu.</P>
+<P align="center"><IMG SRC="/images/eiffelbuild/screenshots/display_window.png"></p>
+<H2>Targeting a component</H2>
+<P>To target a <A HREF="/tools/eiffelbuild/reference/02_notation.html#component">component</A> into the tool, <A HREF="/tools/eiffelbuild/reference/02_notation.html#pick_and_drop">pick</A> the <A HREF="/tools/eiffelbuild/reference/02_notation.html#component">component</A> from the <A HREF="/tools/eiffelbuild/reference/65_component_viewer/index.html">component_viewer</A>, and <A HREF="/tools/eiffelbuild/reference/02_notation.html#pick_and_drop">drop</A> on the <img SRC="/images/eiffelbuild/icons/icon_component_viewer_color.png" > displayed in the tool bar of the component viewer (See screenshot above). Any existing component displayed will simply be removed.</P>
+<P>Alternatively, you can hold don the Ctrl key while starting a <A HREF="/tools/eiffelbuild/reference/02_notation.html#pick_and_drop">pick</A> on a <A HREF="/tools/eiffelbuild/reference/02_notation.html#component">component</A> in the <A HREF="/tools/eiffelbuild/reference/63_component_selector/index.html">component_selector</A>. This will automatically target the <A HREF="/tools/eiffelbuild/reference/02_notation.html#component">component</A> to the component viewer. If the viewer is currently hidden, it will also make it visible.</P>
+<H2>View types</H2>
+<P>Looking at the screenshot above, you can see that the <img SRC="/images/eiffelbuild/icons/icon_component_build_view_color.png" > button is depressed, meaning the component viewer is in builder view mode. Clicking on <img SRC="/images/eiffelbuild/icons/icon_component_display_view_color.png" > will put the  component viewer into display mode view. These modes are mutually exclusive.</P>
+<P>The two modes are described below:
+<UL>
+	<LI><B>Builder view</B> - This view is similar to the view used by the <A HREF="/tools/eiffelbuild/reference/50_layout_window/index.html">display window</A>. i.e. the <A HREF="/libraries/vision2/00_introduction.html">EiffelVision2</A> controls are displayed exactly as is defined in the <A HREF="/tools/eiffelbuild/reference/02_notation.html#component">component</A>.</LI>
+	<LI><B>Display view</B> - This view is similar to the view used by the <A HREF="/tools/eiffelbuild/reference/60_builder_window/index.html">builder window</A>. i.e. all <A HREF="/libraries/vision2/00_introduction.html">EiffelVision2</A> containers are represented by frames so they are immediately visible. This makes the actual structure represented by the <A HREF="/tools/eiffelbuild/reference/02_notation.html#component">component</A> completely visible.</LI>
+</UL>
+<P CLASS="note"><B>Note</B>: The type of the "root_object" within the component is displayed in the toolbar of the component viewer.</P>
+</P>
+
+
+
+<P CLASS="seealso"><B>See also</B>: <BR><A HREF="../60_builder_window/index.html">builder window</A><BR><A HREF="/tools/eiffelbuild/reference/20_layout_constructor/index.html">layout constructor</A></P>
+</BODY></HTML>

@@ -20,6 +20,12 @@ feature -- General Errors
 	Not_supported: INTEGER is 4
 			-- Construct is not supported
 
+	Missing_setup_key: INTEGER is 5
+			-- Setup keys in regsitry are missing
+
+	Missing_installation_directory: INTEGER is 6
+			-- Installation directory in registry is missing
+
 feature -- General Warning
 
 	Incorrect_result: INTEGER is 1001
@@ -52,6 +58,18 @@ feature -- Consumer Errors
 
 	Missing_feature_name: INTEGER is 10002
 			-- Feature name is missing
+
+	Non_external_type: INTEGER is 10003
+			-- Type is not external and hasn't been registered as generated
+
+	Missing_consumed_type: INTEGER is 10004
+			-- Type not found in Eiffel Assembly Cache
+
+	No_assembly: INTEGER is 10005
+			-- Type assembly cannot be retrieved because type is generated
+
+	Missing_implementing_type: INTEGER is 10006
+			-- Could not find implementing type for feature
 
 feature -- Consumer Warnings
 
@@ -90,6 +108,30 @@ feature -- Consumer Warnings
 
 	Missing_members: INTEGER is 20012
 			-- Construct is missing members
+
+	Missing_type: INTEGER is 20013
+			-- Type definition is missing
+
+	Missing_consumed_assembly: INTEGER is 20014
+			-- Assembly is missing from Eiffel Assembly Cache
+
+	Non_generated_type: INTEGER is 20015
+			-- Type used in feature is external but should be generated
+
+	Missing_feature: INTEGER is 20016
+			-- Feature with given name could not be found in given type with given dynamic arguments
+
+	Variable_name_not_found: INTEGER is 20017
+			-- Lookup of variable with given name failed
+	
+	Feature_name_not_found: INTEGER is 20018
+			-- Lookup of feature with given name failed
+
+	Missing_types: INTEGER is 20019
+			-- Namespace does not define types
+
+	Missing_namespaces: INTEGER is 20020
+			-- Compile unit does not define namespaces
 
 feature -- Consumer Information
 

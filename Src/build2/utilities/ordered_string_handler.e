@@ -47,7 +47,6 @@ feature {NONE} -- Implementation
 		do
 			if not items.full then
 				items.extend (new_string)
-				io.putstring (items.count.out)
 			else
 				items.start
 				items.forth

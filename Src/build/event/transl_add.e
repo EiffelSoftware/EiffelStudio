@@ -28,7 +28,7 @@ feature
 				Shared_translation_list.remove;
 				context_catalog.update_translation_page;
 				if translation.edited then
-					translation.editor.reset
+					translation.editor.clear
 				end
 			end
 		end;

@@ -17,7 +17,7 @@ inherit
 		redefine
 			loop_action
 		end;
-	SHARED_SERVER
+	EB_CONSTANTS
 
 creation
 
@@ -57,7 +57,8 @@ feature {NONE} -- Implementation
 			command_line_io.get_filter_name;
 			filter_name := command_line_io.last_input;
 				-- FIXME get initialial value from resources
-			command_line_io.get_option_value ("All senders", to_show_all_callers);
+			command_line_io.get_option_value ("All senders",
+				Feature_tool_resources.show_all_callers.actual_value);
 			to_show_all_callers := command_line_io.last_input.to_boolean;
 			check_arguments_and_execute;
 		end;

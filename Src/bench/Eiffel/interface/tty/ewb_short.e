@@ -15,6 +15,7 @@ inherit
 		redefine
 			help_message, name, abbreviation
 		end;
+	EB_CONSTANTS
 
 creation
 
@@ -57,7 +58,8 @@ feature {NONE} -- Execution
 	associated_cmd: E_SHOW_SHORT is
 		do
 			!! Result.do_nothing;
-			Result.set_feature_clause_order (Void)
+			Result.set_feature_clause_order 
+				(Class_tool_resources.feature_clause_order.actual_value)
 		end;
 
 end -- class EWB_SHORT

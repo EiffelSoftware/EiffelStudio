@@ -516,6 +516,7 @@
 			<TEXT DESCRIPTION="Display warning dialog when changing resources that need you to restart EiffelStudio">confirm_change_resource_need_restart<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT DESCRIPTION="Display confirmation dialog before converting an old project">confirm_convert_project<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT DESCRIPTION="Display dialog that warns that text is being loaded and is not editable or clickable.">acknowledge_not_loaded<BOOLEAN>True</BOOLEAN></TEXT>
+			<TEXT DESCRIPTION="Display dialog that warns that homonym format can take a long time.">generate_homonyms<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT DESCRIPTION="Display dialog before killing a debugged application">confirm_kill<BOOLEAN>True</BOOLEAN></TEXT>
 		</TOPIC>
 	</TOPIC>

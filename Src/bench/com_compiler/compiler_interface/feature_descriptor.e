@@ -242,6 +242,7 @@ feature -- Access
 			res: ARRAYED_LIST [IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE]
 			desc: FEATURE_DESCRIPTOR
 			feat: FEATURE_I
+			written_in: INTEGER
 		do
 			current_class := compiler_class.compiled_class
 			current_feature := compiler_feature.api_feature (current_class.class_id)
@@ -259,9 +260,9 @@ feature -- Access
 			rc := rout_id_set.count
 			create res.make (classes.count * rc)
 			from
-				i := 0
+				i := 1
 			until
-				i >= rc
+				i > rc
 			loop
 				rout_id := rout_id_set.item (i)
 				from
@@ -270,8 +271,9 @@ feature -- Access
 					classes.after
 				loop
 					c := classes.item
-					feat := c.feature_table.origin_table.item (rout_id)
-					if feat /= Void then
+					written_in := c.class_id
+					feat := c.feature_table.feature_of_rout_id (rout_id)
+					if feat /= Void and then feat.written_in = written_in then
 						create {FEATURE_DESCRIPTOR} desc.make_with_class_i_and_feature_i (c.lace_class, feat)
 						res.extend (desc)
 					end

@@ -589,9 +589,11 @@ feature {NONE} -- Display functions
 		local
 			fld: INTEGER
 			old_height: INTEGER
+			w,h: INTEGER
 		do
 				-- Resize & redraw the buffered screen.
 			if buffered_screen /= Void then -- System initialized.
+				in_resize := True
 				number_of_lines_displayed := a_height // line_height
 				fld := maximum_top_line_index
 				if fld <= 0 then
@@ -605,17 +607,32 @@ feature {NONE} -- Display functions
 				update_horizontal_scrollbar
 
 				if buffered_screen.width + left_margin_width < a_width then
-					buffered_screen.set_size (editor_width.max (a_width - left_margin_width), a_height.max (1))
-					left_margin_buffered_screen.set_size (left_margin_width, a_height)
-					update_buffered_screen (0, a_height)
+					if in_resize then
+						w := editor_width.max (a_width - left_margin_width)
+						h := a_height.max (1)
+					else
+						w := editor_width.max (a_width - left_margin_width).max (buffered_screen.width)
+						h := a_height.max (1).max (buffered_screen.height)
+					end
+					buffered_screen.set_size (w, h)
+					left_margin_buffered_screen.set_size (left_margin_width, h)
+					update_buffered_screen (0, h)
 				else
 					old_height := buffered_screen.height
-					buffered_screen.set_size (editor_width.max (editor_area.width - left_margin_width), a_height.max (1))
-					left_margin_buffered_screen.set_size (left_margin_width, a_height)
+					if in_resize then
+						w := editor_width.max (editor_area.width - left_margin_width)
+						h := a_height.max (1)
+					else
+						w := editor_width.max (editor_area.width - left_margin_width).max (buffered_screen.width)
+						h := a_height.max (1).max (buffered_screen.height)
+					end
+					buffered_screen.set_size (w, h)
+					left_margin_buffered_screen.set_size (left_margin_width, h)
 					if old_height < a_height then
-						update_buffered_screen (old_height - 1, a_height)
+						update_buffered_screen (old_height - 1, h)
 					end
 				end
+				in_resize := False
 			end
 		end
 
@@ -652,7 +669,6 @@ feature {NONE} -- Display functions
  
  				curr_y := (curr_line - first_line_displayed) * line_height
  			end
- 
  			if curr_y < bottom then
  				-- The file is too small for the screen, so we fill in the
  				-- last portion of the screen.
@@ -869,6 +885,9 @@ feature {NONE} -- Text loading
 		end
 
 feature {NONE} -- implementation
+
+	in_resize: BOOLEAN
+			-- Are we a call to on_resize that was not triggered by the function itself.
 
 	text_displayed: TEXT
 			-- Text currently displayed on the screen.

@@ -44,7 +44,7 @@ feature
 			current_type_id: INTEGER;
 			entry: ATTR_ENTRY;
 			cl_type: CLASS_TYPE;
-			first_class: CLASS_C;
+			first_type: CLASS_TYPE
 			i, nb, old_position: INTEGER
 			local_copy: ATTR_TABLE
 			system_i: SYSTEM_I
@@ -64,16 +64,15 @@ feature
 					if i <= nb then
 						local_copy := Current
 						from
-							cl_type := system_i.class_type_of_id (type_id);
-							first_class := cl_type.associated_class;
-							offset := cl_type.skeleton.offset (local_copy.array_item (i).feature_id)
+							first_type := system_i.class_type_of_id (type_id);
+							offset := first_type.skeleton.offset (local_copy.array_item (i).feature_id)
 							i := i + 1
 						until
 							Result or else i > nb
 						loop
 							entry := local_copy.array_item (i)
 							cl_type := system_i.class_type_of_id (entry.type_id);
-							Result := cl_type.associated_class.simple_conform_to (first_class)
+							Result := cl_type.conform_to (first_type)
 									and then not (cl_type.skeleton.offset (entry.feature_id) = offset)
 							i := i + 1
 						end;
@@ -83,9 +82,8 @@ feature
 						goto_used (type_id)
 						local_copy := Current
 						i := lower
-						cl_type := system_i.class_type_of_id (type_id);
-						first_class := cl_type.associated_class;
-						offset := cl_type.skeleton.offset (local_copy.array_item (position).feature_id)
+						first_type := system_i.class_type_of_id (type_id);
+						offset := first_type.skeleton.offset (local_copy.array_item (position).feature_id)
 					until
 						Result or else i > nb
 					loop
@@ -93,7 +91,7 @@ feature
 						current_type_id := entry.type_id;
 						if current_type_id /= type_id then
 							cl_type := system_i.class_type_of_id (current_type_id);
-							Result := cl_type.associated_class.simple_conform_to (first_class)
+							Result := cl_type.conform_to (first_type)
 									and then not (cl_type.skeleton.offset (entry.feature_id) = offset) 
 						end;
 						i := i + 1

@@ -128,6 +128,8 @@ feature -- Status setting
 			get_headers
 			transfer_initiated := True
 			is_packet_pending := True
+		rescue
+			error_code := Transfer_failed
 		end
 	
 	set_read_mode is

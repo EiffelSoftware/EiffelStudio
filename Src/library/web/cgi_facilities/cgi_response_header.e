@@ -21,8 +21,12 @@ feature -- Basic Operations
 			-- you send anything else to the browser.
 		require
 			header_exists: header /= Void
+			not_yet_sent: not is_sent
 		do
 			output.put_string(header+"%N%N")
+			is_sent := TRUE
+		ensure
+			header_sent: is_sent
 		end
 
 	generate_text_header is
@@ -30,16 +34,18 @@ feature -- Basic Operations
 			-- you are going to send.
 		require
 			header_void: header = Void  
+			not_yet_sent: not is_sent
 		do
 			header := "Content-type: text/html"
 			is_complete_header := TRUE
 		end
 
-	generate_http_redirection(an_url: STRING;is_secure: BOOLEAN) is	
+	generate_http_redirection (an_url: STRING;is_secure: BOOLEAN) is	
 			-- Generate CGI secure re-direction, via 'https' protocol if secure,
 			--	via http if not.
 		require
-			url_not_void: an_url /= Void
+			not_yet_sent: not is_sent
+			url_not_void_and_not_empty: an_url /= Void and then not an_url.empty
 			header_void: header = Void  
 		do
 			if is_secure then
@@ -54,19 +60,33 @@ feature -- Basic Operations
 				-- A complete list of status may be found at : 
 				-- http://www.w3.org/hypertext/WWW/protocols/HTTP/HTRESP.html
 				-- See also CGI_COMMON_STATUS_TYPES
-	 	require
+	 	require			not_yet_sent: not is_sent
 			message_exists: a_message /= Void
 			header_void: header = Void  
 		do
 			header.append("%NStatus: "+a_status.out+" "+a_message)
-		end			
+		end	
+
+	reinitialize_header is
+			-- Re-initialize header.
+			-- May be called if the header built sor far 
+			-- has to be re-build from scratch.
+		require
+			not_yet_sent: not is_sent
+		do
+			header := Void
+			is_complete_header := FALSE
+		ensure
+			reinitialized: header = Void and not is_complete_header and not is_sent
+		end		
 
 feature -- Advanced Settings
 
-	set_expiration(a_date: STRING) is
+	set_expiration (a_date: STRING) is
 			-- Set the expiration date before which the page needs to be 
 			-- refreshed
 		 require
+			not_yet_sent: not is_sent
 			date_exists: a_date /= Void
 			header_exists: header /= Void
 			header_is_complete: is_complete_header  
@@ -74,10 +94,12 @@ feature -- Advanced Settings
 			header.append("%NExpires: "+a_date)
 		end
 
-	set_pragma(a_pragma: STRING) is
-			-- Set the pragma which indicates whether the page accepts to be cached
+	set_pragma (a_pragma: STRING) is
+			-- Set the pragma which indicates whether
+			-- the page accepts to be cached
 			-- or not. An example of pragam is "no-cache"
 		 require
+			not_yet_sent: not is_sent
 			pragma_exists: a_pragma /= Void
 			header_exists: header /= Void
 			header_is_complete: is_complete_header  
@@ -85,11 +107,13 @@ feature -- Advanced Settings
 			header.append("%NPragma: "+a_pragma)
 		end	
 
-	set_cookie(key,value,expiration,path,domain,secure: STRING) is
+	set_cookie (key,value,expiration,path,domain,secure: STRING) is
 			-- Set a cookie on the client's machine
 			-- with key 'key' and value 'value'.
 		require
-			make_sense: key /= Void and value /= Void
+			not_yet_sent: not is_sent
+			make_sense: (key /= Void and value /= Void) and then 
+						(not key.empty and not value.empty)
 			header_exists: header /= Void
 			header_is_complete: is_complete_header  
 		local
@@ -111,13 +135,16 @@ feature -- Advanced Settings
 			header.append(s)			
 		end
 
-feature -- Implementation
+feature -- Access
 
 	header: STRING
 			-- Message Header which will be returned to the 
 			-- the browser.
 
+	is_sent: BOOLEAN
+			-- Is current header sent to the browser ?
+
 	is_complete_header: BOOLEAN
-			-- IS Current header a complete header ?
+			-- Is Current header a complete header ?
 		
 end -- class CGI_RESPONSE_HEADER

@@ -112,6 +112,7 @@ feature -- Basic operations
 			menu_bar: EV_MENU_BAR
 			all_children: ARRAYED_LIST [GB_OBJECT]
 		do
+			(create {GB_GLOBAL_STATUS}).block
 			if last_clipboard_object /= Void then
 					-- Destroy the previous clipboard objects if any.
 				create all_children.make (20)
@@ -145,6 +146,7 @@ feature -- Basic operations
 			
 				-- Flag `clipboard_dialog' as up to date.
 			clipboard_dialog_up_to_date := True
+			(create {GB_GLOBAL_STATUS}).resume
 		end	
 	
 	execute is

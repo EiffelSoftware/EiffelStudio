@@ -36,6 +36,12 @@ wkeiflib='wkbench'
 suffix='.a'
 
 optimize='-O'
+wkoptimize='-O'
+
+start_test='if [ ! -f finished ] ; then'
+end_test='; fi'
+create_test='touch finished'
+
 large=''
 mkdep='/lannion3/manuelt/Misc/mkdep'
 mv='/usr/5bin/mv'

@@ -979,8 +979,8 @@ feature {CLASS_NAME_REPLACER} -- Implementation
 				extend_from_diagram_successful := True
 				diagram.context_editor.history.do_named_undoable(
 					Interface_names.t_Diagram_add_cs_link_cmd,
-					~extend_feature_on_diagram_with_wizard (fcw, supplier_data),
-					~remove_feature_from_diagram_with_wizard (fcw, supplier_data))
+					agent extend_feature_on_diagram_with_wizard (fcw, supplier_data),
+					agent remove_feature_from_diagram_with_wizard (fcw, supplier_data))
 				if not extend_from_diagram_successful then
 					diagram.context_editor.history.remove_last
 				else

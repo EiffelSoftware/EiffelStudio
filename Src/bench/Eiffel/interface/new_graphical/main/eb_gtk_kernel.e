@@ -29,9 +29,9 @@ feature
 			io_watcher2.read_actions.wipe_out
 			io_watcher2.error_actions.wipe_out
 			io_watcher2.exception_actions.wipe_out
-			io_watcher2.read_actions.extend (~execute (Void))
-			io_watcher2.error_actions.extend (~execute (Void))
-			io_watcher2.exception_actions.extend (~execute (Void))
+			io_watcher2.read_actions.extend (agent execute (Void))
+			io_watcher2.error_actions.extend (agent execute (Void))
+			io_watcher2.exception_actions.extend (agent execute (Void))
 
 		end
 

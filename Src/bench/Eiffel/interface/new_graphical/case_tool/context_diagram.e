@@ -118,8 +118,8 @@ feature {NONE} -- Initialization
 			extend (inheritance_mover_layer)
 			create label_mover_layer
 			extend (label_mover_layer)
-			drop_actions.extend (~on_class_drop)
-			drop_actions.extend (~on_new_class_drop)
+			drop_actions.extend (agent on_class_drop)
+			drop_actions.extend (agent on_new_class_drop)
 			Xml_routines.reset_valid_tags
 		end
 
@@ -1020,8 +1020,8 @@ feature {CLASS_FIGURE} -- Relations
 				end
 				context_editor.history.do_named_undoable (
 					Interface_names.t_Diagram_add_inh_link_cmd,
-					ih_fig~put_on_diagram (Current),
-					ih_fig~remove_from_diagram (Current))
+					agent ih_fig.put_on_diagram (Current),
+					agent ih_fig.remove_from_diagram (Current))
 				if not ih_fig.last_generation_successful then
 					context_editor.history.remove_last
 				end
@@ -2519,8 +2519,8 @@ feature {NONE} -- Implementation
 					check cf_not_void: cf /= Void end
 					context_editor.history.do_named_undoable (
 						Interface_names.t_Diagram_include_class_cmd,
-						~include_dropped_class (cf, a_x, a_y),
-						~remove_dropped_class (cf))
+						agent include_dropped_class (cf, a_x, a_y),
+						agent remove_dropped_class (cf))
 				end
 			end
 		end
@@ -2625,8 +2625,8 @@ feature {NONE} -- Events
 				include_dropped_class (cf, drop_x, drop_y)
 				context_editor.history.register_named_undoable (
 					Interface_names.t_Diagram_include_class_cmd,
-					~reinclude_dropped_class (cf),
-					~remove_dropped_class (cf))	
+					agent reinclude_dropped_class (cf),
+					agent remove_dropped_class (cf))	
 			end
 		end
 

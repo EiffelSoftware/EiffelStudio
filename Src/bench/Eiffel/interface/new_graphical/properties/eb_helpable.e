@@ -40,7 +40,7 @@ feature -- Basic Operations
 	build_interface is
 			-- Connect default help context.
 		do
-			window.set_help_context (~default_help_context (help_base_id, Root_index))
+			window.set_help_context (agent default_help_context (help_base_id, Root_index))
 		end
 
 feature 

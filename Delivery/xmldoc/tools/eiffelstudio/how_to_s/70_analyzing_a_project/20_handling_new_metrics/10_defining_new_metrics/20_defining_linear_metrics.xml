@@ -1,0 +1,53 @@
+<document title="Defining linear metrics" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Defining linear metrics
+		</heading>  
+		<paragraph>To define a linear metric, you must have already clicked on 
+			<image>
+				<url>/images/eiffelstudio/icons/icon_new_metric_color.gif</url>
+			</image> of the "Metric" tab in the context tool. Select then the "Linear" tab of the "New metric" dialog:
+		</paragraph>  
+		<paragraph>
+			<image>
+				<url>/images/eiffelstudio/metrics_png/linear.png</url>
+			</image>
+		</paragraph> 
+		<list ordered="true">      
+			<item>     &gt;Enter a name in the "New metric name" field.</item>   
+			<item>Define a single term by entering a coefficient in the "Coefficient" field and choosing a metric from the            "Metric" combo box. The unit field and the formula field will be automatically filled regarding the selected metric.</item> 
+			<item>        Click on 
+				<image>
+					<url>/images/eiffelstudio/metrics_png/plus.png</url>
+				</image>&gt; to validate the defined term. It will be displayed in the "Linear sum" field.
+			</item>   
+			<item>To add other terms, repeat operation 2. and 3. as many times as needed.</item>   
+			<item>To remove the last entered term, click on 
+				<image>
+					<url>/images/eiffelstudio/icons/icon_delete_small_color.gif</url>
+				</image>. To remove a term, click on the same button as many times as needed, then re-enter missing terms.
+			</item>  
+			<item>If you want to save the metric definition without exiting the interface, click on "Save", otherwise, click on "OK" to save and exit.</item> 
+			<item>If you want to define another linear metric, click on 
+				<image>
+					<url>/images/eiffelstudio/icons/icon_new_metric_color.gif</url>
+				</image> to reset.
+			</item>  
+		</list>     
+		<paragraph>
+			<bold>Note</bold>: After you have selected the first term of the linear sum, you can only add terms containing metrics of the same        unit.
+		</paragraph>
+		<paragraph>
+			<bold>See Also</bold>
+			<line_break></line_break>
+			<link>
+				<url>/tools/eiffelstudio/how_to_s/70_analyzing_a_project/20_handling_new_metrics/20_managing_new_metrics/00_introduction.xml</url>
+				<label> Managing new metrics</label>
+			</link> 
+			<line_break></line_break>
+		</paragraph>
+	</paragraph>
+</document>

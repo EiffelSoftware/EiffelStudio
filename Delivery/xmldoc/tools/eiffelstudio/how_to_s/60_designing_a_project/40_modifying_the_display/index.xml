@@ -1,0 +1,54 @@
+<document title="Modifying the display" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Modifying the display
+		</heading>
+		<list ordered="false">
+			<item>
+				<link>
+					<url>10_show_hide.xml</url>
+					<label>Showing or hiding links and labels</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>20_select_depth.xml</url>
+					<label>Changing system exploration depth</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>30_remove_from_view.xml</url>
+					<label>Removing items from a view</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>40_change_color.xml</url>
+					<label>Changing colors of classes</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>50_zooming.xml</url>
+					<label>Zooming a diagram</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>60_retrieve_all.xml</url>
+					<label>Retrieving all classes into a cluster</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>70_iconify.xml</url>
+					<label>Iconifying and restoring a cluster</label>
+				</link>
+			</item>
+		</list>
+	</paragraph>
+</document>

@@ -1,0 +1,37 @@
+<document title="Implementers" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Implementers
+		</heading>
+		<paragraph>The implementers view 
+			<image>
+				<url>/images/eiffelstudio/icons/icon_format_feature_implementers_color.gif</url>
+			</image> displays all the different versions of the current feature by exploring the 
+			<link>
+				<url>./25_ancestor_format.xml</url>
+				<label>ancestor versions</label>
+			</link> and the 
+			<link>
+				<url>./30_descendant_format.xml</url>
+				<label>descendant versions</label>
+			</link>, and selecting among those the ones which are not inherited.
+		</paragraph>
+		<seealso>
+			<bold>See Also</bold>
+			<line_break></line_break> 
+			<link>
+				<url>./25_ancestor_format.xml</url>
+				<label>Ancestor versions</label>
+			</link>
+			<line_break></line_break> 
+			<link>
+				<url>./30_descendant_format.xml</url>
+				<label>Descendant versions</label>
+			</link>
+			<line_break></line_break>
+		</seealso>
+	</paragraph>
+</document>

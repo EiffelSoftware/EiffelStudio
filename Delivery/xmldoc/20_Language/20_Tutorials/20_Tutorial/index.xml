@@ -1,0 +1,153 @@
+<document title="An Eiffel Tutorial">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_pseudo_name>20</envision_pseudo_name>
+			</toc>
+		</help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Invitation to Eiffel
+		</heading>
+		<heading>
+			<size>2</size>Interactive Software Engineering
+		</heading>
+		<link>
+			<url></url>
+			<label>MANUAL IDENTIFICATION AND COPYRIGHT</label>
+		</link>
+		<note>This document is available both locally, as part of the ISE Eiffel delivery, and on the
+			<link>
+				<url>http://docs.eiffel.com/general/guided_tour/language/invitation-00.xml</url>
+				<label>http://docs.eiffel.com</label>
+			</link> Web site.
+		</note>
+		<heading>
+			<size>2</size>
+			<content>
+				<link>
+					<url>invitation-02.xml</url>
+					<label>1  WHAT MUST I KNOW FIRST?</label>
+				</link>
+			</content>
+		</heading>
+		<heading>
+			<size>2</size>
+			<content>
+				<link>
+					<url>invitation-03.xml</url>
+					<label>2  DESIGN PRINCIPLES</label>
+				</link>
+			</content>
+		</heading>
+		<heading>
+			<size>2</size>
+			<content>
+				<link>
+					<url>invitation-04.xml</url>
+					<label>3  OBJECT-ORIENTED DESIGN</label>
+				</link>
+			</content>
+		</heading>
+		<heading>
+			<size>2</size>
+			<content>
+				<link>
+					<url>invitation-05.xml</url>
+					<label>4  CLASSES </label>
+				</link>
+			</content>
+		</heading>
+		<heading>
+			<size>2</size>
+			<content>
+				<link>
+					<url>invitation-06.xml</url>
+					<label>5  TYPES </label>
+				</link>
+			</content>
+		</heading>
+		<heading>
+			<size>2</size>
+			<content>
+				<link>
+					<url>invitation-07.xml</url>
+					<label>6  DESIGN BY CONTRACT AND ASSERTIONS</label>
+				</link>
+			</content>
+		</heading>
+		<heading>
+			<size>2</size>
+			<content>
+				<link>
+					<url>invitation-08.xml</url>
+					<label>7  EXCEPTIONS</label>
+				</link>
+			</content>
+		</heading>
+		<heading>
+			<size>2</size>
+			<content>
+				<link>
+					<url>invitation-09.xml</url>
+					<label>8  EVENT-DRIVEN PROGRAMMING AND AGENTS</label>
+				</link>
+			</content>
+		</heading>
+		<heading>
+			<size>2</size>
+			<content>
+				<link>
+					<url>invitation-10.xml</url>
+					<label>9  GENERICITY</label>
+				</link>
+			</content>
+		</heading>
+		<heading>
+			<size>2</size>
+			<content>
+				<link>
+					<url>invitation-11.xml</url>
+					<label>10  INHERITANCE </label>
+				</link>
+			</content>
+		</heading>
+		<heading>
+			<size>2</size>
+			<content>
+				<link>
+					<url>invitation-12.xml</url>
+					<label>11  POLYMORPHISM AND DYNAMIC BINDING </label>
+				</link>
+			</content>
+		</heading>
+		<heading>
+			<size>2</size>
+			<content>
+				<link>
+					<url>invitation-13.xml</url>
+					<label>12  COMBINING GENERICITY AND INHERITANCE </label>
+				</link>
+			</content>
+		</heading>
+		<heading>
+			<size>2</size>
+			<content>
+				<link>
+					<url>invitation-14.xml</url>
+					<label>13  DEFERRED CLASSES AND SEAMLESS DEVELOPMENT</label>
+				</link>
+			</content>
+		</heading>
+		<heading>
+			<size>2</size>
+			<content>
+				<link>
+					<url>invitation-15.xml</url>
+					<label>14  PUTTING A SYSTEM TOGETHER</label>
+				</link>
+			</content>
+		</heading>
+	</paragraph>
+</document>

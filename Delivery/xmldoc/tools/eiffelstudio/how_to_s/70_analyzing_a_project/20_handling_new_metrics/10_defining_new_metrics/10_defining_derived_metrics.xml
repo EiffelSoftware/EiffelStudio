@@ -1,0 +1,73 @@
+<document title="Defining derived metrics." output="studio">
+	<meta_data>
+		<help>
+			<meta>
+				<content>Metric,new,derived,define</content>
+				<name>MS-HKWD</name>
+			</meta>
+		</help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>
+		</heading>
+		<paragraph>To define a derived metric, you must have already clicked on
+			<image>
+				<border>0</border>
+				<url>/images/eiffelstudio/icons/icon_new_metric_color.gif</url>
+			</image> of the "Metric" tab in the context tool. Select then the "Derived" tab of the "New metric" dialog:
+		</paragraph>
+		<paragraph>
+			<image>
+				<url>/images/eiffelstudio/metrics_png/derived.png</url>
+				<border>0</border>
+			</image>
+		</paragraph>
+		<list ordered="true">
+			<item>Enter a name in the "New metric name" field.</item>
+			<item>
+				<paragraph>Select a raw metric. Regarding the selected metric, you will get one of the following panel in the "Criteria" frame:
+					<line_break></line_break>
+					<line_break></line_break> 
+					<image>
+						<url>/images/eiffelstudio/metrics_png/dclasses.png</url>
+						<border>0</border>
+					</image>
+					<line_break></line_break>
+					<line_break></line_break> 
+					<image>
+						<url>/images/eiffelstudio/metrics_png/ddependents.png</url>
+						<border>0</border>
+					</image>
+					<line_break></line_break>
+					<line_break></line_break> 
+					<image>
+						<url>/images/eiffelstudio/metrics_png/dfeatures.png</url>
+						<border>0</border>
+					</image>
+					<line_break></line_break>
+				</paragraph>
+			</item>
+			<item>Choose your criteria by selecting one button from each line.</item>
+			<item>When you are evaluating this metric on a scope, all criteria could be met, or just some or none of them. If you want the currently defined metric to count scopes that have all the criteria select "All of the following are met", and if you want it to count scopes that have a t least one of the defined criteria, select "At least one of the following is met.</item>
+			<item>If you want to save the metric definition without exiting the interface, click on "Save", otherwise, click on "OK" to save and exit.</item>
+			<item>If you want to define another derived metric, click on 
+				<image>
+					<border>0</border>
+					<url>/images/eiffelstudio/icons/icon_new_metric_color.gif</url>
+				</image> to reset
+			</item>
+		</list>
+		<note>
+			<bold>Note</bold>: Unit is adjusted in the "Unit" field regarding the selected raw metric
+		</note>
+		<seealso>
+			<bold>See Also</bold>
+			<line_break></line_break>
+			<link>
+				<url>/tools/eiffelstudio/how_to_s/70_analyzing_a_project/20_handling_new_metrics/20_managing_new_metrics/00_introduction.xml</url>
+				<label>Managing new metrics</label>
+			</link>
+		</seealso>
+	</paragraph>
+</document>

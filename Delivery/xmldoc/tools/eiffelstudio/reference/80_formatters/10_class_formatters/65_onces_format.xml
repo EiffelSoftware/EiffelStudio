@@ -1,0 +1,34 @@
+<document title="Once routines and constants" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Once routines and constants
+		</heading>
+		<paragraph>The once view 
+			<image>
+				<url>/images/eiffelstudio/icons/icon_format_onces_color.gif</url>
+			</image>displays all the 
+			<link>
+				<url>./55_routines_format.xml</url>
+				<label>routines</label>
+			</link> declared as 
+			<bold>once</bold> and the constant 
+			<link>
+				<url>./50_attributes_format.xml</url>
+				<label>attributes</label>
+			</link> in the current class (or in its 
+			<link>
+				<url>./30_ancestors_format.xml</url>
+				<label>ancestors.</label>
+			</link>).
+			<line_break></line_break>It is available through the 
+			<bold>Class</bold> tab of the 
+			<link>
+				<url>/tools/eiffelstudio/reference/05_general_interface_description/20_eiffelstudio_window_overview.xml</url>
+				<label>context tool</label>
+			</link>.
+		</paragraph>
+	</paragraph>
+</document>

@@ -1,0 +1,18 @@
+<document title="Profiler how to's" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Profiler how to's
+		</heading>
+		<list ordered="false">
+			<item>
+				<link>
+					<url>10_setup_profiler_configuration_file.xml</url>
+					<label>How to setup a Profiler Configuration File</label>
+				</link>
+			</item>
+		</list>
+	</paragraph>
+</document>

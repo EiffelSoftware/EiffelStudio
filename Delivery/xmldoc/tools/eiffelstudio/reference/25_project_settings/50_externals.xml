@@ -1,0 +1,85 @@
+<document title="Externals Tab" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Externals Tab
+		</heading>
+		<paragraph> </paragraph>
+		<paragraph>This tab is only active when standard C generation is selected in the 
+			<link>
+				<url>10_general.xml</url>
+				<label>General Tab</label>
+			</link>. Even when it is selected, you will find that most Eiffel projects do not include C external libraries and therefore the tab is not filled. In the case of the calculator example, here is what you will get:
+		</paragraph>
+		<paragraph> </paragraph>
+		<paragraph>
+			<image>
+				<url>../../../../images/eiffelstudio/project_settings/externals_tab.png</url>
+				<border>0</border>
+			</image>
+		</paragraph>
+		<paragraph> </paragraph>
+		<paragraph>This tab needs to be filled when compiling projects that use some C libraries. In the case of the ISE Eiffel libraries, here is a non-exhaustive list that needs some entries in this tab:</paragraph>
+		<list ordered="false">
+			<item>
+				<link>
+					<url>../../../../libraries/eiffel2java/index.xml</url>
+					<label>Eiffel2Java</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>../../../../libraries/net/index.xml</url>
+					<label>EiffelNet</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>../../../../libraries/store/index.xml</url>
+					<label>EiffelStore</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>../../../../libraries/vision2/index.xml</url>
+					<label>EiffelVision2</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>../../../../libraries/wel/index.xml</url>
+					<label>WEL</label>
+				</link>
+			</item>
+			<item>MEL</item>
+		</list>
+		<paragraph> </paragraph>
+		<heading>
+			<size>2</size>Include path
+		</heading>
+		<paragraph>This is where you can enter the location of the directories where the C compiler will look for the header files that are required. The header files which the C compiler will look for are the ones that appear in an encapsulation of a C external in an Eiffel class. Click 
+			<link>
+				<url>../30_compiler/30_external_features/00_introduction.xml</url>
+				<label>here</label>
+			</link> to have more information about C/C++ externals specification.
+		</paragraph>
+		<paragraph> </paragraph>
+		<heading>
+			<size>2</size>Object file
+		</heading>
+		<paragraph>When you use an external C/C++ library what you have is header files and library files. We have seen how to include the header files, in this part you can select the inclusion of the library files.</paragraph>
+		<paragraph> </paragraph>
+		<heading>
+			<size>2</size>An example
+		</heading>
+		<paragraph>Here is what you will need to have if you are creating a project that is using WEL:</paragraph>
+		<paragraph>
+			<image>
+				<url>../../../../images/eiffelstudio/project_settings/externals_tab_wel.png</url>
+				<border>0</border>
+			</image>
+		</paragraph>
+	</paragraph>
+</document>

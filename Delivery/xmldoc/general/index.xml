@@ -1,0 +1,31 @@
+<document title="General" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>
+			<content>General Introduction Content</content>
+		</heading>
+		<list ordered="false">
+			<item>
+				<link>
+					<url>guided_tour/index.xml</url>
+					<label>Getting Started</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>release_notes/index.xml</url>
+					<label>Release Notes</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>licenses/index.xml</url>
+					<label>Licenses</label>
+				</link>
+			</item>
+		</list>
+	</paragraph>
+</document>

@@ -1,0 +1,16 @@
+<document title="Save call stack" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Save call stack
+		</heading>
+		<paragraph>It is now possible to save the current call stack to a text file. This may be useful to indicate to other people of a team where an error occurred. After the button is clicked, a dialog is popped up that prompts for a place where to save the 
+			<link>
+				<url>10_call_stack_tool.xml</url>
+				<label>call stack</label>
+			</link> (if the selected file already exists, it is overwritten).
+		</paragraph>
+	</paragraph>
+</document>

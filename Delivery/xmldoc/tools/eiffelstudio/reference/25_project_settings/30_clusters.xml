@@ -1,0 +1,88 @@
+<document title="Clusters Tab" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Clusters Tab
+		</heading>
+		<paragraph> </paragraph>
+		<paragraph>This is where you specify the directories where to look for classes when compiling your system. A cluster has a name and a path associated with it. Each cluster name in the system must be unique and only one cluster can reference a path, i.e. two clusters with different names cannot refer to the same path.</paragraph>
+		<paragraph>Here is how the clusters tab looks like for the calculatorexample:</paragraph>
+		<paragraph>
+			<image>
+				<url>../../../../images/eiffelstudio/project_settings/clusters_tab.png</url>
+				<border>0</border>
+			</image>
+		</paragraph>
+		<paragraph> </paragraph>
+		<paragraph>In this tab, you will have on the left hand side of the window a tree representation of the clusters list. The tree representation lets you see the cluster hierarchy of the system. On the right hand side you can specify the cluster properties.</paragraph>
+		<paragraph> </paragraph>
+		<heading>
+			<size>2</size>Cluster properties
+		</heading>
+		<paragraph> </paragraph>
+		<paragraph>The name of the cluster is what you will see displayed in the 
+			<link>
+				<url>../10_browsing_tools/20_cluster_tool/10_cluster_tree.xml</url>
+				<label>Cluster Tree</label>
+			</link>. The path name will be used by the compiler to find the classes it needs to complete the compilation of your system. The 'Namespace' field is applicable to .NET compiled systems and indicates the namespace of the currently selected cluster.
+		</paragraph>
+		<paragraph>You can also specify if the cluster is an "override" one. There can be only one override cluster. Each time you select one to be the override cluster, the previous override cluster if any will lose this property.</paragraph>
+		<paragraph>To make it easy to find classes you can specify either the `library' or `all' option. They will both have the same effect when looking for classes, i.e. the compiler will look at all Eiffel classes located in the specified directory 
+			<italic>and its subdirectories</italic>. The difference between these two options is that when you select `library', the classes will not be editable from the EiffelStudio environment.
+		</paragraph>
+		<paragraph>The idea is that you should use `library' when reusing a library made by someone else over which you have no control. For example, EiffelBase is a such a library. You should use `all' for the libraries you are working on.</paragraph>
+		<paragraph> </paragraph>
+		<heading>
+			<size>3</size>Cluster options
+		</heading>
+		<paragraph>This is where you can override some options that have been set for your system in either the General tab or the Debug Tab.</paragraph>
+		<paragraph>
+			<image>
+				<url>../../../../images/eiffelstudio/project_settings/clusters_options_tab.png</url>
+				<border>0</border>
+			</image>
+		</paragraph>
+		<paragraph>You can choose to specify for the currently selected cluster:</paragraph>
+		<list ordered="false">
+			<item>a different assertion level</item>
+			<item>to enable or disable the trace</item>
+			<item>to enable or disable the profiler</item>
+		</list>
+		<paragraph>If you choose to override all options, here is how it will looklike:</paragraph>
+		<paragraph>
+			<image>
+				<url>../../../../images/eiffelstudio/project_settings/clusters_options_tab_active.png</url>
+				<border>0</border>
+			</image>
+		</paragraph>
+		<paragraph> </paragraph>
+		<heading>
+			<size>3</size>Visible Classes
+		</heading>
+		<paragraph>When you need to compile a project that will be used for a CECIL or an EiffelCOM application you need to mark some classes as visible. You can do it using the visible classes tab:</paragraph>
+		<paragraph>
+			<image>
+				<url>../../../../images/eiffelstudio/project_settings/clusters_visible_tab.png</url>
+				<border>0</border>
+			</image>
+		</paragraph>
+		<paragraph>To add a class, simply enter its name and click on Add. This will only work for classes that are in the selected cluster. If you put an invalid class name an error will be raised during the compilation of your system.</paragraph>
+		<paragraph>If you made an error simply select the class from the list, modify it in the `Entry' field and then click on Apply. The correct name will now appear in the list.</paragraph>
+		<paragraph>To remove a class from the list, simply select it and click on Remove.</paragraph>
+		<paragraph> </paragraph>
+		<heading>
+			<size>3</size>Exclude/Include
+		</heading>
+		<paragraph>
+			<image>
+				<url>../../../../images/eiffelstudio/project_settings/clusters_exclude_include_tab.png</url>
+				<border>0</border>
+			</image>
+		</paragraph>
+		<paragraph>The exclude part is there to exclude certain directories or filenames during the class lookup performed by the compiler. This option is especially useful in conjunction with the 'all' or 'library' options on clusters. For example, if you are using CVS as a source control, you will notice that a CVS directory is created in each one of your directories. So adding CVS in the exclude list will speed up the compiler since it won't have to look inside the CVS directories.</paragraph>
+		<paragraph> </paragraph>
+		<paragraph>The include part is useful when you have some Eiffel classes that do not follow the standard Eiffel file name pattern, i.e. "class_name.e". To make sure the compiler finds those classes, you have to include the file name of every Eiffel class that does not follow the standard naming pattern for Eiffel file names.</paragraph>
+	</paragraph>
+</document>

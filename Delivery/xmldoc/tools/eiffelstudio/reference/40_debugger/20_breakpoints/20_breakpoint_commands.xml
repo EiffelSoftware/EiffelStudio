@@ -1,0 +1,34 @@
+<document title="Breakpoint commands" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Breakpoint commands
+		</heading>
+		<paragraph>Located in the 
+			<bold>debug</bold> menu and the 
+			<bold>project</bold> toolbar, these three commands allow to change the state of set 
+			<link>
+				<url>00_introduction.xml</url>
+				<label>breakpoints</label>
+			</link> in the system.
+		</paragraph>
+		<paragraph>Enable breakpoints ( 
+			<image>
+				<url>../../../../../images/eiffelstudio/icons/icon_enable_bkpt_color.gif</url>
+			</image> ), disable breakpoints ( 
+			<image>
+				<url>../../../../../images/eiffelstudio/icons/icon_disable_bkpt_color.gif</url>
+			</image> ) and remove breakpoints ( 
+			<image>
+				<url>../../../../../images/eiffelstudio/icons/icon_del_bkpt_color.gif</url>
+			</image> ) have all global and local actions. Left-clicking on them has a global action: all set breakpoints of the system will be respectively enabled, disabled, or discarded. However, it is also possible to 
+			<link>
+				<url>../../../../../tools/eiffelstudio/reference/05_general_interface_description/10_general_interface_mechanisms/10_pick_and_drop.xml</url>
+				<label>drop</label>
+			</link> a feature or a class onto them, in which case only set breakpoints of the feature/class will be affected.
+		</paragraph>
+		<paragraph>Note that these commands work only on set breakpoints (that is, enabled or disabled breakpoints). Therefore, discarded breakpoints cannot be set again thanks to these commands.</paragraph>
+	</paragraph>
+</document>

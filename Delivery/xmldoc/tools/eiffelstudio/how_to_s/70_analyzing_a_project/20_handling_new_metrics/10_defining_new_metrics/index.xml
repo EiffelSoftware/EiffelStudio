@@ -1,0 +1,42 @@
+<document title="Defining new metrics" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Defining new metrics
+		</heading>
+		<list ordered="false">
+			<item>
+				<link>
+					<url>00_introduction.xml</url>
+					<label>Introduction</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>10_defining_derived_metrics.xml</url>
+					<label>Derived metrics</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>20_defining_linear_metrics.xml</url>
+					<label>Linear metrics</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>30_defining_ratio_metrics.xml</url>
+					<label>Ratio metrics</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>40_defining_scope_comparison_metrics.xml</url>
+					<label>Scope comparison metrics</label>
+				</link>
+			</item>
+		</list>
+	</paragraph>
+</document>

@@ -1,0 +1,18 @@
+<document title="Wizards" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Wizards
+		</heading>
+		<list ordered="false">
+			<item>
+				<link>
+					<url>com/index.xml</url>
+					<label>EiffelCOM Wizard</label>
+				</link>
+			</item>
+		</list>
+	</paragraph>
+</document>

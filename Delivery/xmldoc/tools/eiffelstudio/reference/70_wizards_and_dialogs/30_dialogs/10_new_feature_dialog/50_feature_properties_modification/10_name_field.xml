@@ -1,0 +1,19 @@
+<document title="Name field" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Name field
+		</heading>
+		<paragraph>The feature name field is a textbox that lets you enter a name for the feature. For help on how to choose the right name for a feature, see: 
+			<link>
+				<url>http://www.eiffel.com/doc/oosc/</url>
+				<label>Object-Oriented Software Construction, Second Edition</label>
+			</link>, paragraph 26.2.
+		</paragraph>
+		<warning>
+			<bold>Warning</bold>: EiffelStudio performs no validation on the name you choose. For example if you type a space in it, it will generate the code, and detect a syntax error only when compiling.
+		</warning>
+	</paragraph>
+</document>

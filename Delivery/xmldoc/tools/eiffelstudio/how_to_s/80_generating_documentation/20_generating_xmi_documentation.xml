@@ -1,0 +1,50 @@
+<document title="Generating XMI documentation" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Generating XMI documentation
+		</heading>
+		<paragraph>EiffelStudio can generate an 
+			<bold>XMI</bold> description of a system; 
+			<bold>XMI</bold> (XML Metadata Interchange) format is the new industry standard way to describe and exchange object-oriented systems, further information can be found 
+			<link>
+				<url>http://www-4.ibm.com/software/ad/library/standards/xmi.xml</url>
+				<label>here</label>
+			</link>.
+		</paragraph>
+		<note>
+			<bold>Note</bold>: Rational Rose needs 
+			<link>
+				<url>http://www.rational.com/products/rose/forms/xmisupport/xmisupport.jsp</url>
+				<label>this add-on</label>
+			</link> to be able to import XMI.
+		</note>
+		<paragraph>The 
+			<bold>XMI Export wizard</bold> is available in the 
+			<bold>Project</bold>menu, under the entry 
+			<bold>Export XMI</bold>.
+		</paragraph>
+		<paragraph>The first page of the wizard lets you select the clusters you want to produce documentation for:</paragraph>
+		<paragraph>
+			<image>
+				<url>/images/eiffelstudio/dialogs_and_wizards/xmi_wizard_cluster_selection.png</url>
+			</image>
+		</paragraph>
+		<paragraph>On the second and last page, you can choose the directory where the XML file is going to be generated:</paragraph>
+		<paragraph>
+			<image>
+				<url>/images/eiffelstudio/dialogs_and_wizards/doc_wizard_path_selection.png</url>
+			</image>
+		</paragraph>
+		<seealso>
+			<bold>See Also</bold>
+			<line_break></line_break> 
+			<link>
+				<url>10_generating_documentation_files.xml</url>
+				<label>Generating multi-format documentation</label>
+			</link>
+		</seealso>
+	</paragraph>
+</document>

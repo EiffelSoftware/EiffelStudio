@@ -1,0 +1,99 @@
+<document title="Advanced Tab" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Advanced Tab
+		</heading>
+		<paragraph> </paragraph>
+		<paragraph>Here you can select the most advanced options of your project. Here is how it looks like for the calculator example:</paragraph>
+		<paragraph> </paragraph>
+		<paragraph>
+			<image>
+				<url>../../../../images/eiffelstudio/project_settings/advanced_tab.png</url>
+				<border>0</border>
+			</image>
+		</paragraph>
+		<paragraph> </paragraph>
+		<heading>
+			<size>2</size>Global setting
+		</heading>
+		<paragraph>As you might have notice, the project settings is a simple facade to the Ace file. Every modification that is done in this window is saved in the Ace file of your project. Since it is just a facade, it does not provide all the 
+			<link>
+				<url>../30_compiler/50_technology/20_lace_syntax.xml</url>
+				<label>available options in the Ace file</label>
+			</link>, but just the most common.
+		</paragraph>
+		<paragraph>If you want to edit the current settings, simply click on the Edit button. It will edit your Ace file in the 
+			<link>
+				<url>../85_preferences/20_preferences_reference/10_global_preferences.xml</url>
+				<label>external editor</label>
+			</link> you have selected in the preferences. The project settings window will automatically vanish, to make sure there will not conflicts between its contents and the modified Ace file.
+		</paragraph>
+		<paragraph>If you decide to change your Ace file, simply click on the `Load from...' button, a standard open file selection dialog will popup and you can choose a new Ace file. If the Ace file is invalid, a warning dialog will appear and the Ace file change will not betaken into account. If the Ace file is valid, the project settings tab will be updated with the new values extracted from the Ace file.</paragraph>
+		<paragraph>If you want to redo your Ace file, you can click on the Reset button. This will clear all settings to their default values and delete the list of included clusters. No warning is displayed so make sure you know all the consequences of doing so.</paragraph>
+		<paragraph> </paragraph>
+		<heading>
+			<size>2</size>Standard options
+		</heading>
+		<paragraph>For a project using the standard C compilation generation, here is what you can select:</paragraph>
+		<paragraph>
+			<image>
+				<url>../../../../images/eiffelstudio/project_settings/advanced_tab_standard_options.png</url>
+				<border>0</border>
+			</image>
+		</paragraph>
+		<paragraph> </paragraph>
+		<list ordered="false">
+			<item>console application: has no effect on Unix systems. It lets Windows users choose between creating a console application or a GUI application (in which case a console will be created if needed, instead of using the console the program was launched from).</item>
+			<item>Enforce VAPE validity constraint: lets you disable type checking for 
+				<bold>VAPE</bold> errors in preconditions, which correspond to insufficiently exported features used in preconditions (ETL 2ndedition page 122).
+			</item>
+			<item>Dynamic runtime: makes the generated executable use a shared library version of the runtime on both Windows (DLL) and Unix platforms (.so) that supports shared libraries.</item>
+		</list>
+		<note>
+			<bold>Note</bold>: On Windows, the dynamic run-time is available only if you compile with the Microsoft Visual compiler.
+		</note>
+		<list ordered="false">
+			<item>Multithreaded runtime: generates a multithreaded application. This option cannot be changed during the development of your project and has to be set correctly at the first compilation of your system.</item>
+			<item>Address expression: lets you pass `
+				<bold>$(s.to_c)</bold>' to a feature instead of declaring `a' of type 
+				<bold>ANY</bold>, and then assigning `
+				<bold>s.to_c</bold>' to `a' and passing `
+				<bold>$a</bold>'. Turn this option on only if you have advanced knowledge of the garbage collector insides, since using this syntax illegally can lead to bugs very hard to trace.
+			</item>
+			<item>Shared library definition: lets you specify a `file_name.def'as the file where the Eiffel compiler will look when it tries to generate the exported functions of the shared library you a redeveloping. To have more information concerning definition files, see the 
+				<link>
+					<url>../30_compiler/40_dynamic_library_generation/00_introduction.xml</url>
+					<label>Dynamic library builder reference</label>
+				</link>.
+			</item>
+		</list>
+		<paragraph>For a dotnet system, only the first two are available, and thus you get:</paragraph>
+		<paragraph>
+			<image>
+				<url>../../../../images/eiffelstudio/project_settings/advanced_tab_standard_options_dotnet.png</url>
+				<border>0</border>
+			</image>
+		</paragraph>
+		<paragraph> </paragraph>
+		<heading>
+			<size>2</size>Finalization options
+		</heading>
+		<paragraph>This is only active for project using the standard C compilation generation. Here is what you can select:</paragraph>
+		<paragraph>
+			<image>
+				<url>../../../../images/eiffelstudio/project_settings/advanced_tab_finalization_options.png</url>
+				<border>0</border>
+			</image>
+		</paragraph>
+		<list ordered="false">
+			<item>array optimization: enables array optimization which increases performance of array computation in loops. It is enabled only if arrays are used as local variables or arguments of an Eiffel feature.</item>
+			<item>dead code removal: avoids generating the C code for Eiffel routines that are not called in your code, and thus reduces the size of the generated application.</item>
+			<item>exception trace: makes it possible to see a complete exception trace when your finalized application is crashing. Because it is adding some code to remember where the application was during the crash it can slow down the performance of your application by a factor of 5% to 30% depending of your platform.</item>
+			<item>inlining: enables inlining on Eiffel features that can be inlined, i.e. whose size is less or equal to the specified size in the combo box. The size value given in parameter corresponds to the number of instructions as the Eiffel compiler sees them (for example a := b.f corresponds to 2 instructions for the Eiffel compiler). The ISE Eiffel inlining is very powerful since it can inline a function in all your Eiffel code, without scope limitation as in C or C++ compilers.</item>
+		</list>
+		<paragraph> </paragraph>
+	</paragraph>
+</document>

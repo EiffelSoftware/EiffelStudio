@@ -1,0 +1,20 @@
+<document title="EiffelBuild Introduction" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>EiffelBuild Introduction
+		</heading>        
+		<paragraph>EiffelBuild is the new graphical builder by 
+			<link>
+				<url>http://www.eiffel</url>
+				<label>Interactive Software Engineering</label>
+			</link> which allows you to simply and quickly develop a 
+			<link>
+				<url>/libraries/vision2/00_introduction</url>
+				<label>Vision2</label>
+			</link> GUI.
+		</paragraph>
+	</paragraph>
+</document>

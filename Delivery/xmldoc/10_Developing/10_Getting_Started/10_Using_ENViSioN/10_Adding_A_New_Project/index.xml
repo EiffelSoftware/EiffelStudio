@@ -1,0 +1,105 @@
+<document title="Adding a New Project" output="envision">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_pseudo_name>10</envision_pseudo_name>
+			</toc>
+		</help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Adding a New Project
+		</heading>
+		<paragraph> A selection of wizards have been provided which enable you to quickly and easily start new Eiffel for .NET projects.</paragraph>
+		<paragraph>Each wizard is composed of a series of `pages' from which you can modify the settings for the new project. Upon completion of the wizard, a new Eiffel System will be created for you.</paragraph>
+		<paragraph>To access the wizards, select 
+			<bold>New</bold>, 
+			<bold>Project</bold> from the 
+			<bold>File</bold> menu, or right click on a solution in the 
+			<help_link>
+				<tab_index>0</tab_index>
+				<index_moniker>!DefaultAssociativeIndex</index_moniker>
+				<keywords>Eiffel Solution Explorer</keywords>&gt;solution explorer
+			</help_link>, and select 
+			<bold>Add</bold>, 
+			<bold>New Project</bold> from the context menu. The following dialog will be displayed:
+		</paragraph>
+		<paragraph>
+			<image>
+				<alt_text>projects</alt_text>
+				<url>projects.PNG</url>
+			</image>
+		</paragraph>
+		<paragraph> To start a new Eiffel Project, browse to Eiffel Projects in the project types browser, and select the desired wizard. Be sure to select the correct name and location for your new project before you click OK, as this cannot be changed once a wizard is launched. </paragraph>
+		<paragraph>There are two versions of ENViSioN! available, Enterprise and Free. The Enterprise version contains all wizards, but the Free version only contains a limited set of wizards.</paragraph>
+		<paragraph>
+			<paragraph>The following wizards are available in both the Free and Enterprise versions:</paragraph>
+			<list ordered="false">
+				<item>
+					<link>
+						<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/10_Adding_A_New_Project/blank_project.xml</url>
+						<label>  Blank Project Wizard</label>
+					</link> - Creates a blank Eiffel project. 
+				</item>
+				<item>
+					<link>
+						<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/10_Adding_A_New_Project/windows_only_project.xml</url>
+						<label>  Windows Only Project Wizard</label>
+					</link> - Creates a simple WEL application. 
+				</item>
+				<item>
+					<link>
+						<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/10_Adding_A_New_Project/advanced_graphics_project.xml</url>
+						<label>  GUI Project Wizard</label>
+					</link> - Creates a simple Vision2 application. 
+				</item>
+				<item>
+					<link>
+						<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/10_Adding_A_New_Project/precompile_wizard.xml</url>
+						<label>  Precompile Project Wizard</label>
+					</link>-Create a new precompiled library. 
+				</item>
+				<item>
+					<link>
+						<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/10_Adding_A_New_Project/import_eiffelstudio_project.xml</url>
+						<label>  Import Eiffel Studio Project Wizard</label>
+					</link> - Allows you to create a project  from an existing EiffelStudio Project. 
+				</item>
+			</list>
+			<paragraph> The following wizards are only available in the Enterprise version:</paragraph>
+			<list ordered="false">
+				<item>
+					<link>
+						<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/10_Adding_A_New_Project/interactive_gui_project/index.xml</url>
+						<label>  Advanced GUI Project Wizard</label>
+					</link> - Allows you to build a Vision2 system using an interactive GUI builder. 
+				</item>
+				<item>
+					<link>
+						<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/10_Adding_A_New_Project/deployment_wizard.xml</url>
+						<label>  Deployment Project Wizard</label>
+					</link> - Allows you to deploy any number of Projects into a single deployment package. 
+				</item>
+				<item>
+					<link>
+						<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/10_Adding_A_New_Project/html_report_wizard.xml</url>
+						<label>  HTML Report Project Wizard</label>
+					</link> - Generates HTML documentation for all or  part of your compiled project.
+				</item>
+			</list>
+			<seealso>
+				<bold>See Also</bold>
+				<line_break></line_break>
+				<link>
+					<url>/10_Developing/20_Managing_Projects/index.xml</url>
+					<label>Managing Projects</label>
+				</link>
+				<line_break></line_break>
+				<link>
+					<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/index.xml</url>
+					<label>Using  ENViSioN! Within Visual Studio.NET</label>
+				</link>
+			</seealso>
+		</paragraph>
+	</paragraph>
+</document>

@@ -1,0 +1,81 @@
+<document title="Editor Quick Info" output="envision">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_pseudo_name>20</envision_pseudo_name>
+			</toc>
+		</help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Editor Quick Info
+		</heading>
+		<paragraph>When browsing or editing a 
+			<help_link>
+				<tab_index>0</tab_index>
+				<index_moniker>!DefaultAssociativeIndex</index_moniker>
+				<keywords>Eiffel class</keywords>&gt;class
+			</help_link> text the editor provides quick, context-sensitive information about the current 
+			<help_link>
+				<tab_index>0</tab_index>
+				<index_moniker>!DefaultAssociativeIndex</index_moniker>
+				<keywords>Eiffel class</keywords>&gt;class
+			</help_link>. This allows the developer to quickly get summary information about a particular 
+			<help_link>
+				<tab_index>0</tab_index>
+				<index_moniker>!DefaultAssociativeIndex</index_moniker>
+				<keywords>Eiffel feature</keywords>&gt;feature
+			</help_link> such as the name, 
+			<help_link>
+				<tab_index>0</tab_index>
+				<index_moniker>!DefaultAssociativeIndex</index_moniker>
+				<keywords>Eiffel argument</keywords>&gt;argument
+			</help_link> parameters, return type and usage description at a glance. The example screenshot below illustrates this
+			<help_link>
+				<tab_index>0</tab_index>
+				<index_moniker>!DefaultAssociativeIndex</index_moniker>
+				<keywords>Eiffel feature</keywords>&gt;feature
+			</help_link> in action on the 'index_of' function provided by the Eiffel   STRING
+			<help_link>
+				<tab_index>0</tab_index>
+				<index_moniker>!DefaultAssociativeIndex</index_moniker>
+				<keywords>Eiffel type</keywords>&gt;type
+			</help_link>. We can see the full signature of the 
+			<help_link>
+				<tab_index>0</tab_index>
+				<index_moniker>!DefaultAssociativeIndex</index_moniker>
+				<keywords>Eiffel function</keywords>&gt;function
+			</help_link> and a full description of what this 
+			<help_link>
+				<tab_index>0</tab_index>
+				<index_moniker>!DefaultAssociativeIndex</index_moniker>
+				<keywords>Eiffel function</keywords>&gt;function
+			</help_link> actually does. 
+		</paragraph>
+		<paragraph>
+			<image>
+				<border>0</border>
+				<url>editor_quick_info.png</url>
+			</image>
+		</paragraph>
+		<seealso>
+			<bold>See Also</bold>
+			<line_break></line_break>
+			<link>
+				<url>./index.xml</url>
+				<label>The Eiffel Editor</label>
+			</link>
+			<line_break></line_break>
+			<link>
+				<url>./EditorFeatures.xml</url>
+				<label>Editor Features</label>
+			</link>
+			<line_break></line_break>
+			<link>
+				<url>./EditorAdvancedSettings.xml</url>
+				<label>Editor Advanced Settings</label>
+			</link>
+			<line_break></line_break>
+		</seealso>
+	</paragraph>
+</document>

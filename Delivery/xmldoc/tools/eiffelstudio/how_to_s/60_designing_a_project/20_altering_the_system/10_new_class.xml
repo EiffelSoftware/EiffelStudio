@@ -1,0 +1,23 @@
+<document title="Creating a new class" output="studio">
+	<meta_data>
+		<help>
+			<meta>
+				<content>Class,New</content>
+				<name>MS-HKWD</name>
+			</meta>
+		</help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Creating a new class
+		</heading>
+		<list ordered="false">
+			<item>To create a new class pick from the 
+				<bold>Create a new class</bold>button. 
+				<image>
+					<url>/images/eiffelstudio/icons/icon_new_class_color.gif</url>
+				</image> Then drop on the diagram where you want to place the class bubble. Adialog now appears where you can enter a name and specify the cluster.
+			</item>
+		</list>
+	</paragraph>
+</document>

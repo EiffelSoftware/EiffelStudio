@@ -1,0 +1,31 @@
+<document title="Handling exceptions" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Handling exceptions
+		</heading>
+		<paragraph>It is possible to raise and catch exceptions in Eiffel. Catching exceptions is done by using the rescue keyword. The 
+			<link>
+				<url>/libraries/base/reference/kernel/exceptions.xml</url>
+				<label>EXCEPTIONS class</label>
+			</link> provides helper features to analyze the caught exception and handle it.
+		</paragraph>
+		<paragraph>The EXCEPTIONS class also provides ways to raise exception, via its feature 
+			<link>
+				<url>/libraries/base/reference/kernel/exceptions.html#f_raise</url>
+				<label>`raise'</label>
+			</link>.
+		</paragraph>
+		<paragraph>When an exception is raised while the application is being debugged, the application stops immediately and the debugger displays the context in which the exception occurred, whether or not the exception is rescued.</paragraph>
+		<seealso>
+			<bold>See Also</bold>:
+			<line_break></line_break> 
+			<link>
+				<url>/general/guided_tour/language/tutorial-09.xml</url>
+				<label>Reference of exceptions</label>
+			</link>
+		</seealso>
+	</paragraph>
+</document>

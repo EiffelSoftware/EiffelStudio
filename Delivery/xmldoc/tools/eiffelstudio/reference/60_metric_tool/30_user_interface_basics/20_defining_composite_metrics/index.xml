@@ -1,0 +1,42 @@
+<document title="Defining composite metrics" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Defining composite metrics
+		</heading>
+		<list ordered="false">
+			<item>
+				<link>
+					<url>00_introduction.xml</url>
+					<label>Introduction</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>10_linear_combination.xml</url>
+					<label>Linear combination</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>20_ratio.xml</url>
+					<label>Ratio</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>30_scope_comparison.xml</url>
+					<label>Scope comparison</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>40_metric_management.xml</url>
+					<label>Metric management</label>
+				</link>
+			</item>
+		</list>
+	</paragraph>
+</document>

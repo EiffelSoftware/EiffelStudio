@@ -1,0 +1,65 @@
+<document title="The Eiffel Editor" output="envision">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_pseudo_name>60</envision_pseudo_name>
+			</toc>
+		</help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>The Eiffel Editor
+		</heading>
+		<paragraph>
+			<paragraph>The editor allows you to view and edit the Eiffel 
+				<help_link>
+					<tab_index>0</tab_index>
+					<index_moniker>!DefaultAssociativeIndex</index_moniker>
+					<keywords>Eiffel class</keywords>&gt;classes
+				</help_link> that are included in your solution.
+			</paragraph>
+			<paragraph>
+				<image>
+					<alt_text>General Property Page</alt_text>
+					<url>General_editor.PNG</url>
+				</image>
+			</paragraph>
+			<paragraph>The screenshot shows the editor with one 
+				<help_link>
+					<tab_index>0</tab_index>
+					<index_moniker>!DefaultAssociativeIndex</index_moniker>
+					<keywords>Eiffel class</keywords>&gt;class
+				</help_link> open for editing, ROOT_CLASS. You can open as many 
+				<help_link>
+					<tab_index>0</tab_index>
+					<index_moniker>!DefaultAssociativeIndex</index_moniker>
+					<keywords>Eiffel class</keywords>&gt;class
+				</help_link> source texts as you desire and choose between them by clicking the tab corresponding to the 
+				<help_link>
+					<tab_index>0</tab_index>
+					<index_moniker>!DefaultAssociativeIndex</index_moniker>
+					<keywords>Eiffel class</keywords>&gt;class
+				</help_link> you wish to edit/view.
+			</paragraph>
+			<seealso>
+				<bold>See Also</bold>
+				<line_break></line_break>
+				<link>
+					<url>./EditorFeatures.xml</url>
+					<label>Editor Features</label>
+				</link>
+				<line_break></line_break>
+				<link>
+					<url>./EditorQuickInfo.xml</url>
+					<label>Editor Quick Info</label>
+				</link>
+				<line_break></line_break>
+				<link>
+					<url>./EditorAdvancedSettings.xml</url>
+					<label>Editor Advanced Settings</label>
+				</link>
+				<line_break></line_break>
+			</seealso>
+		</paragraph>
+	</paragraph>
+</document>

@@ -1,0 +1,147 @@
+<document title="----An Eiffel Tutorial----" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>An Eiffel Tutorial
+		</heading>
+		<heading>
+			<size>2</size>Interactive Software Engineering
+		</heading>
+		<link>
+			<url></url>
+			<label>MANUAL IDENTIFICATION AND COPYRIGHT</label>
+		</link>
+		<note>This document is available both locally, as part of the ISE Eiffel delivery, and on the
+			<link>
+				<url>http://docs.eiffel.com/general/guided_tour/language/tutorial-00.xml</url>
+				<label>http://docs.eiffel.com</label>
+			</link> Web site.  
+			<output output="studio">See the
+				<link>
+					<url>../index.xml</url>
+					<label>list of introductory documents</label>
+				</link>. This is
+				<bold>not</bold> an introduction to the EiffelStudio development environment. Followthe preceding link for a Guided Tour of EiffelStudio.  You will also find there a detailed Eiffel Tutorial.
+			</output>
+		</note>
+		<heading>
+			<size>2</size>
+			<content>
+				<link>
+					<url>tutorial-02.xml</url>
+					<label>1  OVERVIEW</label>
+				</link>
+			</content>
+		</heading>
+		<heading>
+			<size>2</size>
+			<content>
+				<link>
+					<url>tutorial-03.xml</url>
+					<label>2  GENERAL PROPERTIES</label>
+				</link>
+			</content>
+		</heading>
+		<heading>
+			<size>2</size>
+			<content>
+				<link>
+					<url>tutorial-04.xml</url>
+					<label>3  THE SOFTWARE PROCESS IN EIFFEL</label>
+				</link>
+			</content>
+		</heading>
+		<heading>
+			<size>2</size>
+			<content>
+				<link>
+					<url>tutorial-05.xml</url>
+					<label>4  HELLO WORLD</label>
+				</link>
+			</content>
+		</heading>
+		<heading>
+			<size>2</size>
+			<content>
+				<link>
+					<url>tutorial-06.xml</url>
+					<label>5  THE STATIC PICTURE: SYSTEM ORGANIZATION</label>
+				</link>
+			</content>
+		</heading>
+		<heading>
+			<size>2</size>
+			<content>
+				<link>
+					<url>tutorial-07.xml</url>
+					<label>6  THE DYNAMIC STRUCTURE: EXECUTION MODEL</label>
+				</link>
+			</content>
+		</heading>
+		<heading>
+			<size>2</size>
+			<content>
+				<link>
+					<url>tutorial-08.xml</url>
+					<label>7  GENERICITY AND ARRAYS</label>
+				</link>
+			</content>
+		</heading>
+		<heading>
+			<size>2</size>
+			<content>
+				<link>
+					<url>tutorial-09.xml</url>
+					<label>8  DESIGN BY CONTRACT TM, ASSERTIONS, EXCEPTIONS</label>
+				</link>
+			</content>
+		</heading>
+		<heading>
+			<size>2</size>
+			<content>
+				<link>
+					<url>tutorial-10.xml</url>
+					<label>9  INHERITANCE</label>
+				</link>
+			</content>
+		</heading>
+		<heading>
+			<size>2</size>
+			<content>
+				<link>
+					<url>tutorial-11.xml</url>
+					<label>10  OTHER MECHANISMS</label>
+				</link>
+			</content>
+		</heading>
+		<heading>
+			<size>2</size>
+			<content>
+				<link>
+					<url>tutorial-12.xml</url>
+					<label>11  AGENTS</label>
+				</link>
+			</content>
+		</heading>
+		<heading>
+			<size>2</size>
+			<content>
+				<link>
+					<url>tutorial-13.xml</url>
+					<label>12  LEXICAL CONVENTIONS AND STYLE RULES</label>
+				</link>
+			</content>
+		</heading>
+		<heading>
+			<size>2</size>
+			<content>
+				<link>
+					<url>tutorial-14.xml</url>
+					<label>13  TO LEARN MORE</label>
+				</link>
+			</content>
+		</heading>
+	</paragraph>
+</document>

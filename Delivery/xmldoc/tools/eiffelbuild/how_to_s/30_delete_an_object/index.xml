@@ -1,0 +1,52 @@
+<document title="Delete an object">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_pseudo_name>20</envision_pseudo_name>
+				<envision_location>Developing With ENViSioN!\Using ENViSioN! within Visual Studio.Net\Adding a New Project\Advanced GUI Project Wizard\Interface Construction Page\How To's</envision_location>
+			</toc>
+		</help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Delete an object
+		</heading>
+		<paragraph>To remove an
+			<link>
+				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
+				<label>object</label>
+			</link> from your EiffelBuild system,
+			<link>
+				<url>/tools/eiffelbuild/reference/02_notation.html#pick_and_drop</url>
+				<label>pick</label>
+			</link> the object you wish to delete, and
+			<link>
+				<url>/tools/eiffelbuild/reference/02_notation.html#pick_and_drop</url>
+				<label>drop</label>
+			</link> it on
+			<image>
+				<url>/images/eiffelbuild/icons/icon_delete_small_color.png</url>
+			</image>in the
+			<link>
+				<url>/tools/eiffelbuild/reference/10_general_interface_description/20_main_toolbars</url>
+				<label>main toolbar</label>
+			</link>.
+		</paragraph>
+		<note>
+			<bold>Note</bold>: Only user defined objects may be deleted. The EV_TITLED_WINDOW may not be deleted.
+		</note>
+		<seealso>
+			<bold>See Also</bold>
+			<line_break></line_break>
+			<link>
+				<url>/tools/eiffelbuild/reference/70_history/index.html</url>
+				<label>History</label>
+			</link>
+			<line_break></line_break>
+			<link>
+				<url>/tools/eiffelbuild/reference/30_type_selector/index.html</url>
+				<label>Type selector</label>
+			</link>
+		</seealso>
+	</paragraph>
+</document>

@@ -1,0 +1,43 @@
+<document title="EiffelStudio release notes" output="studio">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_location></envision_location>
+				<envision_title></envision_title>
+				<studio_location></studio_location>
+				<studio_title></studio_title>
+			</toc>
+		</help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Release notes
+		</heading>
+		<list ordered="false">          
+			<item>
+				<link>
+					<url>Eiffel53.html</url>
+					<label>ISE Eiffel 5.3</label>
+				</link>
+			</item>          
+			<item>
+				<link>
+					<url>Eiffel52.html</url>
+					<label>ISE Eiffel 5.2</label>
+				</link>
+			</item>          
+			<item>
+				<link>
+					<url>Eiffel51.html</url>
+					<label>ISE Eiffel 5.1</label>
+				</link>
+			</item>          
+			<item>
+				<link>
+					<url>Eiffel50.html</url>
+					<label>ISE Eiffel 5.0</label>
+				</link>
+			</item>        
+		</list>
+	</paragraph>
+</document>

@@ -1,0 +1,36 @@
+<document title="Searching" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Searching
+		</heading>
+		<list ordered="false">
+			<item>
+				<link>
+					<url>10_looking_for_a_cluster.xml</url>
+					<label>Looking  for a cluster.</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>20_looking_for_a_class.xml</url>
+					<label>Looking for a class.</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>30_looking_for_a_feature.xml</url>
+					<label>Looking for a feature.</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>40_looking_for_a_expression_in_a_text.xml</url>
+					<label>Looking for an expression.</label>
+				</link>
+			</item>
+		</list>
+	</paragraph>
+</document>

@@ -1,0 +1,36 @@
+<document title="Dynamic library generation" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Dynamic library generation
+		</heading>
+		<list ordered="false">
+			<item>
+				<link>
+					<url>00_introduction.xml</url>
+					<label>Introduction</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>10_dynamic_library_builder.xml</url>
+					<label>Dynamic library builder</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>20_definition_file_syntax.xml</url>
+					<label>Definition file</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>30_output_files.xml</url>
+					<label>Generated files</label>
+				</link>
+			</item>
+		</list>
+	</paragraph>
+</document>

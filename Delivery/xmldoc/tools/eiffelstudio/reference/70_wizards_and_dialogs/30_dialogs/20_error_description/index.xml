@@ -1,0 +1,18 @@
+<document title="Error descriptor" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Error descriptor
+		</heading>
+		<list ordered="false">
+			<item>
+				<link>
+					<url>00_introduction.xml</url>
+					<label>Error wizard</label>
+				</link>
+			</item>
+		</list>
+	</paragraph>
+</document>

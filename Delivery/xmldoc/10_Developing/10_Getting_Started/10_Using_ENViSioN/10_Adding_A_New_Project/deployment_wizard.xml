@@ -1,0 +1,98 @@
+<document title="Deployment Project Wizard" output="envision">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_pseudo_name>60</envision_pseudo_name>
+			</toc>
+		</help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Deployment Project Wizard
+		</heading>
+		<paragraph>Availability: Enterprise version only.</paragraph>
+		<paragraph>
+			<line_break></line_break> This wizard enables you to deploy any number of ENViSioN! project into a single deployment package. 
+		</paragraph>
+		<heading>
+			<size>2</size>Page content
+		</heading>
+		<paragraph>
+			<line_break></line_break> The wizard comprises of the following pages:
+		</paragraph>
+		<list ordered="false">
+			<item> Introduction Page - Introducing the wizard and its requirements </item>
+			<item> Select ENViSioN! Projects - The compiled ENViSioN! project(s) to deploy </item>
+			<item>  Summary - The summary of the wizard, and what happens next</item>
+		</list>
+		<heading>
+			<size>2</size>Requirements
+		</heading>
+		<paragraph>
+			<line_break></line_break> The deployment wizard requires that you compile all of those ENViSioN! projects and have ready all dependant assemblies for those projects. For the best results ensure thatyou compile in the release configuration mode, or a configuration mode that has the '
+			<italic>Optimize  Code</italic>' project property set in the 
+			<link>
+				<url>/10_Developing\20_Managing_Projects\10_Configuring_A_Project\10_Project_Property_Pages\GeneralPage.xml</url>
+				<label>  General</label>
+			</link> properties.
+			<line_break></line_break>
+		</paragraph>
+		<heading>
+			<size>2</size>Deployment Wizard Overview
+		</heading>
+		<paragraph>
+			<line_break></line_break> The deployment wizard allows you to deploy your ENViSioN! project(s) into a Merge Module project for Visual Studio.NET. This gives you the flexibility to adjust the mergemodule to how it best suits your chosen deployment/installation software. At the same time as creating a merge module project, all of the selected project(s) dependencies are copied to the location of the mergemodule Merge Module project. A basic directory structure created to segregate the deployment files into the appropriate installation paths. The following directories are created:
+		</paragraph>
+		<list ordered="false">
+			<item> System: For all system files that should reside in %SystemRoot%\System32 </item>
+			<item>  GAC: Global Assembly Cache Dependencies. The assemblies here will need to be  added to the Global Assembly Cache on installation</item>
+		</list>
+		<paragraph>The merge modules project root directory contains all of the selected ENViSioN! project(s) compiled assemblies.</paragraph>
+		<paragraph>If you are going to use the merge module Merge Module project as your deployment package then the assemblies in the GAC folder are not required as they are directly reference from theGAC. If however your preferred deployment/installation software does not support merge modules the you simply discard the generated Merge Module project and uses those files copied to the specified deploymentproject's directory.
+			<line_break></line_break>
+		</paragraph>
+		<heading>
+			<size>2</size>Select ENViSioN! Projects
+		</heading>
+		<paragraph>
+			<line_break></line_break> The Select ENViSioN! Project(s) page allows you to added any number of ENViSioN! project to the deployment package. As the requirements state, the project(s) must becompiled before deployment. If a project has not been compiled you will not be able to add the project to be deployed.
+		</paragraph>
+		<paragraph>To add a project specify the location of the corresponding Eiffel Project File (*.epr) in the 'Project File' text box, or use 'Browse...' to browse for the project file. Eiffel Project files are locatedin the corresponding configuration directory for each project. The file name will be that name that is given in '
+			<link>
+				<url>/10_Developing\20_Managing_Projects\10_Configuring_A_Project\10_Project_Property_Pages\GeneralPage.htm#SystemName</url>
+				<label>
+					<italic>System  Name</italic>
+				</label>
+			</link>' in the 
+			<link>
+				<url>/10_Developing\20_Managing_Projects\10_Configuring_A_Project\10_Project_Property_Pages\GeneralPage.xml</url>
+				<label>  General</label>
+			</link>properties. In the case of a precompile project the name of the Eiffel Project File is 
+			<bold>precomp.epr </bold>and not the name given in '
+			<link>
+				<url>/10_Developing\20_Managing_Projects\10_Configuring_A_Project\10_Project_Property_Pages\GeneralPage.htm#SystemName</url>
+				<label>
+					<italic>System  Name</italic>
+				</label>
+			</link>'. 
+		</paragraph>
+		<warning>
+			<bold>Note:</bold>When deploying a precompile project only the assembly will be placed in deployment package.
+		</warning>
+		<paragraph>
+			<image>
+				<alt_text>Import EiffelStudio Wizard</alt_text>
+				<url>deployment_wizard.PNG</url>
+			</image>
+			<line_break></line_break>
+		</paragraph>
+		<seealso>
+			<bold>See Also</bold>
+			<line_break></line_break>
+			<link>
+				<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/10_Adding_A_New_Project/index.xml</url>
+				<label>  Adding a New Project</label>
+			</link>
+		</seealso>
+	</paragraph>
+</document>

@@ -1,0 +1,36 @@
+<document title="User interface basics" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>User interface basics
+		</heading>
+		<list ordered="false">
+			<item>
+				<link>
+					<url>00_introduction.xml</url>
+					<label>User interface basics</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>10_measuring.xml</url>
+					<label>Measuring</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>20_defining_composite_metrics/index.xml</url>
+					<label>EiffelStudio how to's</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>30_archives.xml</url>
+					<label>Archives</label>
+				</link>
+			</item>
+		</list>
+	</paragraph>
+</document>

@@ -1,0 +1,26 @@
+<document title="Kill a debugged application" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Kill a debugged application
+		</heading>
+		<paragraph>This command kills the debugged application, if any. This stops the debugging session.</paragraph>
+		<paragraph>It is accessible through the 
+			<bold>project</bold> toolbar ( 
+			<image>
+				<url>../../../../../images/eiffelstudio/icons/icon_exec_quit_color.gif</url>
+			</image> ) or through the 
+			<bold>debug</bold> menu.
+		</paragraph>
+		<seealso>
+			<bold>See Also</bold>
+			<line_break></line_break> 
+			<link>
+				<url>00_introduction.xml</url>
+				<label>Execution commands</label>
+			</link>
+		</seealso>
+	</paragraph>
+</document>

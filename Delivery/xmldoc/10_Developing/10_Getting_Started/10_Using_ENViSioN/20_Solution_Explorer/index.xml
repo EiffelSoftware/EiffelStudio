@@ -1,0 +1,64 @@
+<document title="Solution Explorer" output="envision">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_pseudo_name>20</envision_pseudo_name>
+			</toc>
+		</help>
+	</meta_data>
+	<paragraph><!-- Insert HTML here -->
+		<heading>
+			<size>1</size> Solution Explorer
+		</heading>
+		<paragraph> The Solution Explorer allows you to explore and interact with the structure of the projects contained within your solution. When browsing an Eiffel project within your solution, the Solution Explorer allows you to add, view and remove files that are included in your project directory, as well as showing the .Net Assemblies referenced in your Eiffel system.</paragraph>
+		<heading>
+			<size>2</size>Solution Explorer Structure
+		</heading>
+		<paragraph>
+			<image>
+				<alt_text></alt_text>
+				<url>./solution_explorer.PNG</url>
+			</image>
+		</paragraph>
+		<paragraph>From the picture above we can see that we have a Solution open called 'My Solution', contained within is an Eiffel Project named 'My Eiffel Project'. The Solution Explorer for Eiffel projects allows you to view the three different types of files that are included/referenced in 'My Eiffel Project'. These files types are distinguished within the project by having their own folder, the file types available being:</paragraph>
+		<list ordered="false">
+			<item> Eiffel Source Files - These are the Eiffel Source files that have been added to your project </item>
+			<item> Referenced Assemblies - These are the .Net assemblies that are referenced by your project </item>
+			<item>  Misc - These are miscellaneous files such as Text and Bitmaps.</item>
+		</list>
+		<heading>
+			<size>2</size>Eiffel Source Files
+		</heading>
+		<paragraph>The Eiffel Source Files folder contains all of the Eiffel source files that are contained within your project directory. These files may be viewed by double clicking on the file node (root_class.e in the picture above) or right clicking on the file node and using the context menu (see context menus)</paragraph>
+		<heading>
+			<size>2</size>Referenced Assemblies
+		</heading>
+		<paragraph>The Referenced Assemblies folder shows all of the .Net assemblies referenced from the Eiffel project, they are listed in order of Name, Version, Culture and Public-Key token.</paragraph>
+		<heading>
+			<size>2</size>Misc
+		</heading>
+		<paragraph>The Misc folder holds any files that are not Eiffel class files. Examples of these files being a text file such as Readme.txt shown in the image above. Double clicking on this file will launch the appropriate editor, in the Readme.txt's case it would be a basic text editor. If the file was a bitmap, the default graphics editor within Visual Studio would launch.</paragraph>
+		<heading>
+			<size>2</size>Renaming Nodes
+		</heading>
+		<paragraph>The Solution Explorer allows you to change the name of the nodes, by doing so the name of the file that the node represents also changes. To rename a node you can perform two single-clicks on the node and a floating label should pop up to allow you to change the name. Another way to perform this change is to right-click on the node and then use the Rename menu item in the context menu.</paragraph>
+		<seealso>
+			<bold>See Also</bold>
+			<line_break></line_break>
+			<link>
+				<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/30_Class_View/index.xml</url>
+				<label>Class View</label>
+			</link>
+			<line_break></line_break>
+			<link>
+				<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/40_Object_Browser/index.xml</url>
+				<label>Object Browser</label>
+			</link>
+			<line_break></line_break>
+			<link>
+				<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/index.xml</url>
+				<label>Using ENViSioN! Within Visual Studio.NET</label>
+			</link>
+		</seealso>
+	</paragraph>
+</document>

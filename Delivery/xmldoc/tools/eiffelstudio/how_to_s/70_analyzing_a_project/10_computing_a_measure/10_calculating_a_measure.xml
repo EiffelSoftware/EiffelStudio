@@ -1,0 +1,102 @@
+<document title="Evaluating a measure" output="studio">
+	<meta_data>
+		<help>
+			<meta>
+				<content>Metric,evaluate,calculate</content>
+				<name>MS-HKWD</name>
+			</meta>
+			<meta>
+				<content>Measure,evaluate,calculate</content>
+				<name>MS-HKWD</name>
+			</meta>
+		</help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Evaluating a measure
+		</heading>
+		<paragraph>To evaluate a metric over a scope:</paragraph>
+		<list ordered="true">
+			<item>Select the object you want to evaluate the metric on (a feature, a class or a cluster. System is compulsory the running one).</item>
+			<item>Select the scope type from the 
+				<link>
+					<url>/tools/eiffelstudio/reference/60_metric_tool/metric_toolbar.html#scope</url>
+					<label>scope combo box</label>
+				</link> (you can either choose the scope type of the previously selected object or a greater scope type in the sense of the following order relation: feature &lt; class &lt; cluster &lt; system &lt; archive). 
+				<line_break></line_break>
+				<line_break></line_break> 
+				<image>
+					<height>120</height>
+					<width>420</width>
+					<url>/images/eiffelstudio/metrics_png/scopecombobox.png</url>
+					<border>0</border>
+				</image>
+				<line_break></line_break>
+				<line_break></line_break> Note: If you choose "Archive" as scope type, a dialog will ask for opening an archive file to compute the metric over. Select then an archive file.
+				<line_break></line_break>
+			</item>
+			<item>Select a metric from the 
+				<link>
+					<url>/tools/eiffelstudio/reference/60_metric_tool/metric_toolbar.html#metric</url>
+					<label>metric menu</label>
+				</link>.
+				<line_break></line_break>
+				<line_break></line_break> 
+				<image>
+					<height>282</height>
+					<width>504</width>
+					<url>/images/eiffelstudio/metrics_png/metricmenu.png</url>
+					<border>0</border>
+				</image>
+				<line_break></line_break>
+			</item>
+			<item>Click the 
+				<link>
+					<url>/tools/eiffelstudio/reference/60_metric_tool/metric_toolbar.html#calculate</url>
+					<label>calculate</label>
+				</link> 
+				<link>
+					<url>10_calculating_a_measure.xml</url>
+				</link> button.
+			</item>
+		</list>
+		<paragraph>The measure is displayed in the provided text field below commands, see red rectangle in the following example:</paragraph>
+		<paragraph>
+			<image>
+				<height>268</height>
+				<width>730</width>
+				<url>/images/eiffelstudio/metrics_png/calculate.png</url>
+				<border>0</border>
+			</image>
+		</paragraph>
+		<paragraph>In some cases, you can get more information about the evaluated metric. See 
+			<link>
+				<url>40_viewing_measure_details.xml</url>
+				<label>detailing a measure</label>
+			</link>.
+		</paragraph>
+		<paragraph></paragraph>
+		<note>
+			<bold>Note</bold>: - Scope type list is either shrunk or extended regarding selected object (only greater scope types appear).
+			<line_break></line_break>           - All metrics are not available for any scope type.
+		</note>
+		<warning>
+			<bold>Caution</bold>: When calculated, a measure is not saved yet!
+		</warning>
+		<seealso>
+			<bold>See Also</bold>
+			<line_break></line_break>
+			<link>
+				<url>20_saving_a_measure.xml</url>
+				<label>Saving a measure</label>
+			</link>
+			<link>
+				<url>40_viewing_measure_details.xml</url>
+				<label>detailing a measure</label>
+			</link>
+			<line_break></line_break>
+		</seealso>  
+		<line_break></line_break>
+		<line_break></line_break>
+	</paragraph>
+</document>

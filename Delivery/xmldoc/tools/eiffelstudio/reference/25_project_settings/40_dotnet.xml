@@ -1,0 +1,126 @@
+<document title=".NET Tab" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>.NET Tab
+		</heading>
+		<paragraph> </paragraph>
+		<paragraph>This tab is only available when you have the .NET generation enabled. Here is what you will see if you have .NET generationenabled.</paragraph>
+		<paragraph>
+			<image>
+				<url>../../../../images/eiffelstudio/project_settings/dotnet_tab.png</url>
+				<border>0</border>
+			</image>
+		</paragraph>
+		<paragraph> </paragraph>
+		<heading>
+			<size>2</size>.NET application information
+		</heading>
+		<paragraph>In this part you will be able to enter the information regarding the assembly such as:</paragraph>
+		<list ordered="false">
+			<item>Namespace name</item>
+			<item>Version</item>
+			<item>Compatibility</item>
+			<item>Culture</item>
+			<item>Company</item>
+			<item>Product</item>
+			<item>Trademark</item>
+			<item>Copyright</item>
+		</list>
+		<paragraph>You can also specify a cryptographic key for your application so that the compiled assembly can be added to the Global Assembly Cache (GAC). Alternatively, if you wish to create a new cryptographic key for your assembly then the 'Generate' key will automatically generate one.</paragraph>
+		<paragraph> </paragraph>
+		<heading>
+			<size>2</size>Options
+		</heading>
+		<paragraph> </paragraph>
+		<list ordered="false">
+			<item>verifiable: in the .NET world, verifiability is important. This is the only way to ensure that an application is not going to crash or to crash your system by accessing not authorized memory locations. Due to some semantic differences between Eiffel and.NET, our code generation is not always verifiable for performance reasons. If you want your code to be verifiable, you need to select this option. The compiler will then generate a code that will be slightly slower.</item>
+			<item>generate DLL: instead of generating an EXE it will generate a DLL.</item>
+		</list>
+		<paragraph> </paragraph>
+		<heading>
+			<size>2</size>Class and feature naming
+		</heading>
+		<paragraph> </paragraph>The standard naming conventions for .NET and Eiffel are different.  To accommodate this difference Eiffel Studio provides a number of options to the developer, allowing for consistent naming of classes and features within and between .NET systems.  To illustrate this we shall consider a system using the EiffelBase library and focus on the CURSOR class.  The base cluster is included in the project settings Cluster tab as shown below, where $ISE_EIFFEL is the environment variable pointing to the location of Eiffel on your hard disk. 
+		<paragraph> </paragraph>
+		<paragraph>
+			<image>
+				<height>160</height>
+				<width>290</width>
+				<url>../../../../images/eiffelstudio/project_settings/dotnet_base_path.png</url>
+				<border>0</border>
+			</image>
+		</paragraph>
+		<paragraph> </paragraph>
+		<paragraph>The CURSOR class is located at '$ISE_EIFFEL\library\base\structures\cursors'.  </paragraph>
+		<paragraph> </paragraph>
+		<list ordered="false">
+			<item>Follow .NET naming guidelines: this option determines whether the generated .NET code uses the Eiffel or .NET naming convention.  Using Ildasm, the IL disassemble tool provided with the .NET Framework, we can see the difference between them.  The Eiffel naming convention uses uppercase characters for all classes whereas the .NET nomenclature uses the Camel Case style.  Note that this option is only available in anon-compiled system.  Once the system has been compiled the naming standard is thus fixed for the project.</item>
+		</list>
+		<paragraph>
+			<image>
+				<url>../../../../images/eiffelstudio/project_settings/naming_guidelines_unchecked.png</url>
+				<border>0</border>
+			</image>
+		</paragraph>
+		<paragraph> </paragraph>
+		<paragraph>
+			<image>
+				<url>../../../../images/eiffelstudio/project_settings/ildasm_no_dotnet_naming.png</url>
+				<border>0</border>
+			</image>
+		</paragraph>
+		<paragraph> </paragraph>
+		<paragraph>
+			<image>
+				<height>18</height>
+				<width>173</width>
+				<url>../../../../images/eiffelstudio/project_settings/naming_guidelines_checked.png</url>
+				<border>0</border>
+			</image>
+		</paragraph>
+		<paragraph> </paragraph>
+		<paragraph>
+			<image>
+				<url>../../../../images/eiffelstudio/project_settings/ildasm_dotnet_naming.png</url>
+				<border>0</border>
+			</image>
+		</paragraph>
+		<paragraph> </paragraph>
+		<list ordered="false">
+			<item>Use cluster names and Use full cluster names:  These options dictate how a class is known to the system.  In our CURSOR example there are 4 main scenarios.  For a quick overview of all scenarios refer to the table at the bottom of the page.  If neither box is selected we just have 'CURSOR' or 'Cursor' (depending on whether the .NET naming guidelines are used), as seen above.  If 'Use cluster names' is checked then the cluster name is pre-pended to the class name, so 'CURSOR' now becomes 'base.CURSOR'.</item>
+		</list>
+		<paragraph>
+			<image>
+				<url>../../../../images/eiffelstudio/project_settings/use_cluster_names.png</url>
+				<border>0</border>
+			</image>
+		</paragraph>
+		<paragraph> </paragraph>
+		<paragraph>If 'Use full cluster names' is selected then the full cluster name is pre-pended to the class name, so it thus becomes 'base.structures.cursors.CURSOR'.</paragraph>
+		<paragraph> </paragraph>
+		<paragraph>
+			<image>
+				<url>../../../../images/eiffelstudio/project_settings/use_full_cluster_names.png</url>
+				<border>0</border>
+			</image>
+		</paragraph>
+		<paragraph> </paragraph>
+		<paragraph>The final scenario is where a namespace has been defined for the cluster in the Clusters tab of the Project Settings.  In this situation the namespace overrides the name of the cluster.  In the example below the namespace name 'MyBaseNameSpace' is used so the resulting name is'MyBaseNameSpace.structures.cursors.CURSOR'.</paragraph>
+		<paragraph> </paragraph>
+		<paragraph>
+			<image>
+				<url>../../../../images/eiffelstudio/project_settings/use_namespace_name.png</url>
+				<border>0</border>
+			</image>
+		</paragraph>
+		<paragraph> </paragraph>
+		<heading>
+			<size>2</size>Naming Scenarios
+		</heading>
+		<paragraph>This table shows how the class name generation is affected by the naming options using the CURSOR class found in '$ISE_EIFFEL\library\base\structures\cursors' as an example.</paragraph>
+		<paragraph> </paragraph>
+	</paragraph>
+</document>

@@ -1,0 +1,27 @@
+<document title="Homonyms" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Homonyms
+		</heading>
+		<paragraph>The homonyms view 
+			<image>
+				<url>/images/eiffelstudio/icons/icon_format_feature_homonyms_color.gif</url>
+			</image> displays all the features in the system which have the same name as the current feature.
+		</paragraph>
+		<warning>
+			<bold>Caution</bold>: This operation may take a longtime if the system has a lot of classes.
+		</warning>
+		<seealso>
+			<bold>See Also</bold>
+			<line_break></line_break> 
+			<link>
+				<url>./20_implementers_format.xml</url>
+				<label>Implementers</label>
+			</link>
+			<line_break></line_break>
+		</seealso>
+	</paragraph>
+</document>

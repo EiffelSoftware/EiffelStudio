@@ -1,0 +1,23 @@
+<document title="Context tools" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Context tools
+		</heading>This sub-categories gathers the preferences related to context tools. 
+		<paragraph>There are ten of them :</paragraph>
+		<line_break></line_break>  
+		<line_break></line_break>  
+		<line_break></line_break>  
+		<line_break></line_break>
+		<seealso>
+			<bold>See Also</bold>
+			<line_break></line_break>
+			<link>
+				<url>index.xml</url>
+				<label>Preferences for other tools</label>
+			</link>
+		</seealso>
+	</paragraph>
+</document>

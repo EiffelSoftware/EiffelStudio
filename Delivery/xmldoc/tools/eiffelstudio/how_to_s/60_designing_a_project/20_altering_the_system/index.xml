@@ -1,0 +1,36 @@
+<document title="Altering the system" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Altering the system
+		</heading>
+		<list ordered="false">
+			<item>
+				<link>
+					<url>10_new_class.xml</url>
+					<label>Creating a new class</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>20_new_feature.xml</url>
+					<label>Creating a new feature</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>30_class_header.xml</url>
+					<label>Changing class names and formal generics</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>40_remove_from_system.xml</url>
+					<label>Deleting items</label>
+				</link>
+			</item>
+		</list>
+	</paragraph>
+</document>

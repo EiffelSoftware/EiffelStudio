@@ -1,0 +1,29 @@
+<document title="Removing a feature" output="studio">
+	<meta_data>
+		<help>
+			<meta>
+				<content>feature, remove</content>
+				<name>MS-HKWD</name>
+			</meta>
+		</help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Removing a feature
+		</heading>To remove a feature, you may of course delete the corresponding lines in the class text. You can also use the Diagram tool if it is an attribute or a function. To do so, make sure that supplier links are shown in the diagram (if 
+		<image>
+			<url>/images/eiffelstudio/icons/icon_supplier_color.gif</url>
+		</image> is not pressed, click it). Pick the link that correspond to the feature you want to remove and drop the pebble on 
+		<image>
+			<url>/images/eiffelstudio/icons/icon_delete_color.gif</url>
+		</image>. 
+		<seealso>
+			<bold>See Also</bold>
+			<line_break></line_break>
+			<link>
+				<url>30_adding_a_feature/00_introduction.xml</url>
+				<label>Adding a feature</label>
+			</link>
+		</seealso>
+	</paragraph>
+</document>

@@ -1,0 +1,16 @@
+<document title="Postcondition" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Postcondition
+		</heading>
+		<paragraph>Enter a postcondition in the 
+			<code>
+				<keyword>ensure</keyword>
+			</code> field. A postcondition clause will be added to the feature:
+		</paragraph>
+		<code></code>
+	</paragraph>
+</document>

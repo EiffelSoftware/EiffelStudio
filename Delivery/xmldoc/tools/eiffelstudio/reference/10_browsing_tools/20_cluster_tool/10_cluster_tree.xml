@@ -1,0 +1,62 @@
+<document title="System tree representation" output="studio">
+	<meta_data>
+		<help>
+			<meta>
+				<content>cluster tree</content>
+				<name>MS-HKWD</name>
+			</meta>
+			<meta>
+				<content>class tree</content>
+				<name>MS-HKWD</name>
+			</meta>
+		</help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>System tree representation
+		</heading>
+		<paragraph>The cluster tool is mainly composed of a tree representation of the system.</paragraph>
+		<paragraph>
+			<image>
+				<url>/images/eiffelstudio/browsing_tools/cluster_tree.png</url>
+			</image>
+		</paragraph>
+		<paragraph>Here is the meaning of the symbols of the cluster tree:</paragraph>
+		<list ordered="false">
+			<item>
+				<image>
+					<url>/images/eiffelstudio/icons/icon_cluster_symbol_color.gif</url>
+				</image>are clusters
+			</item>
+			<item>
+				<image>
+					<url>/images/eiffelstudio/icons/icon_class_symbol_color.gif</url>
+				</image> are compiled classes
+			</item>
+			<item>
+				<image>
+					<url>/images/eiffelstudio/icons/icon_deferred_class_symbol_color.gif</url>
+				</image> are deferred compiled classes
+			</item>
+			<item>
+				<image>
+					<url>/images/eiffelstudio/icons/icon_class_symbol_gray.gif</url>
+				</image> are classes outside the system
+			</item>
+			<item>Classes and clusters that are part of a library are shown with a  brighter icon than normal (they cannot be modified)</item>
+		</list>
+		<paragraph>Recursive clusters (i.e. clusters that have a `all' or `library' tag in the Ace) have a short name in the tree, but the full name is available as a tool tip.</paragraph>
+		<paragraph>Left-clicking on any item will send it to the editor. It is also possible to 
+			<link>
+				<url>/tools/eiffelstudio/reference/05_general_interface_description/10_general_interface_mechanisms/10_pick_and_drop.xml</url>
+				<label>pick</label>
+			</link> items to send them to various components of the development window.
+		</paragraph>
+		<paragraph>
+			<link>
+				<url>/tools/eiffelstudio/reference/05_general_interface_description/10_general_interface_mechanisms/10_pick_and_drop.xml</url>
+				<label>Dropping</label>
+			</link> a class in this tree representation moves it to a different cluster (either the cluster it is dropped on or the cluster containing the class it is dropped on, according to where it is dropped). This is only possible if the dropped class is not in a library cluster, if its source file is readable and writable, and if the destination cluster is not a library or precompiled cluster itself.
+		</paragraph>
+	</paragraph>
+</document>

@@ -1,0 +1,67 @@
+<document title="Eiffel for .NET" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>The Eiffel for .NET Language
+		</heading>
+		<paragraph></paragraph>
+		<list ordered="false">
+			<item>
+				<link>
+					<url>00_introduction.xml</url>
+					<label>Introduction</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>10_eiffel_classes.xml</url>
+					<label>Eiffel Classes</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>20_adding_class_features.xml</url>
+					<label>Adding ClassFeatures</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>30_inheritance.xml</url>
+					<label>Inheritance</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>40_genericity.xml</url>
+					<label>Genericity</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>50_design_by_contract.xml</url>
+					<label>Design byContract</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>60_exception_mechanism.xml</url>
+					<label>ExceptionMechanism</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>70_agents.xml</url>
+					<label>Event Programming with Agents</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>80_assemblies.xml</url>
+					<label>Using ReferencedAssemblies</label>
+				</link>
+			</item>
+		</list>
+	</paragraph>
+</document>

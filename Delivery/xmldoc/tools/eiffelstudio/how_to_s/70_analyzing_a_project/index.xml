@@ -1,0 +1,36 @@
+<document title="How to analyze a project" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>How to analyze a project
+		</heading>
+		<list ordered="false">
+			<item>
+				<link>
+					<url>00_introduction.xml</url>
+					<label>Introduction</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>10_computing_a_measure/index.xml</url>
+					<label>Computing a measure</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>20_handling_new_metrics/index.xml</url>
+					<label>Handling new metrics</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>30_handling_archives/index.xml</url>
+					<label>Handling archives</label>
+				</link>
+			</item>
+		</list>
+	</paragraph>
+</document>

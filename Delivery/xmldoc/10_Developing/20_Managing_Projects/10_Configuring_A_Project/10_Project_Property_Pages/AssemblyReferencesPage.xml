@@ -1,0 +1,123 @@
+<document title="Assembly References Page" output="envision">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_pseudo_name>60</envision_pseudo_name>
+			</toc>
+		</help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size> Assembly References Property Page
+		</heading>
+		<paragraph> The Assembly References Property Page is where add the external references to any other compiled Microsoft.NET assembly. If a project needs to use classes from any assembly that has been compiled and distributes by Microsoft, Eiffel Software or any third party vendor then it must be referenced here.</paragraph>
+		<paragraph>
+			<image>
+				<alt_text>Assembly References Property Page</alt_text>
+				<url>AssembliesPPG.PNG</url>
+			</image>
+		</paragraph>
+		<paragraph>There are two types of assembly that can be added to a projects configuration. An assembly that is located in the Global Assembly Cache (GAC) or locally referenced assembly.</paragraph>
+		<heading>
+			<size>2</size>GAC Assemblies
+		</heading>
+		<heading>
+			<size>3</size>Adding GAC Assemblies
+		</heading>
+		<paragraph>To add an assembly from the GAC click the '
+			<italic>Add</italic>' button below the list of GAC assemblies (Titled - Referenced assemblies from GAC). On doing so another dialog will present a list of assemblies that can be added to the current configuration(s). This is shown below.
+		</paragraph>
+		<paragraph>
+			<image>
+				<alt_text>Gac Dialog</alt_text>
+				<url>GACDialog.PNG</url>
+			</image>
+		</paragraph>
+		<paragraph>The Reference GAC Assemblies dialog only shows all of those assemblies that are in the GAC that have not already been added to the current configuration. In multiple configurations the dialog will exclude only those assemblies that are common to all of the configurations. </paragraph>
+		<paragraph>To add one or more assemblies, check those that you need to reference in the current configuration(s) and click '
+			<italic>OK</italic>'. To close the dialog and discard any selected assemblies click '
+			<italic>Cancel</italic>'. When the dialog closes the list of Reference GAC Assemblies will be updated to reflect the any new additions.
+		</paragraph>
+		<heading>
+			<size>3</size>Removing GAC Assemblies
+		</heading>
+		<paragraph>To remove any reference to a GAC assembly, select the assembly to be removed and click the 'Remove' button underneath the list of Reference GAC Assemblies. A confirmation dialog will ask you to confirm removal of the assembly. Click '
+			<italic>Ok</italic>' to remove the assembly and '
+			<italic>Cancel</italic> ' to leave the assembly in the current configuration(s). 
+			<bold>Caution</bold>: The assemblies mscorlib must added to all configurations. The option to remove mscorlib remains in tact for future releases of mscorlib, enabling you to choose which version of mscorlib to use.
+			<heading>
+				<size>2</size> Local Assemblies
+			</heading>
+			<paragraph>
+				<line_break></line_break> Local assemblies are those assemblies that are references via a path. Local assemblies do not have to be signed like those assemblies found in the GAC. 
+			</paragraph>
+			<heading>
+				<size>3</size>Add Local Assembly
+			</heading>
+			<paragraph>To add a reference to a local assembly you need to use the 'Add' button featured below the list of Locally referenced assemblies. Once you have done so then a file browse dialog will appear asking for the location of the assembly. If an assembly is selected, then it will be added to the configuration(s). Attempts to add an assembly twice will display an error prompt informing you that the assembly has already been added to the project.</paragraph>
+			<heading>
+				<size>3</size>Remove Local Assembly
+			</heading>
+			<paragraph> To remove any reference to a local assembly, select the assembly to be removed and click the 'Remove' button underneath the list of Locally reference assemblies. A confirmation dialog will ask you to confirm removal of the assembly. Click '
+				<italic>Ok</italic>' to remove the assembly and '
+				<italic>Cancel</italic> ' to leave the assembly in the current configuration(s).
+			</paragraph>
+			<heading>
+				<size>2</size>Assembly Prefixes
+			</heading>
+			<paragraph>Both the GAC and Locally referenced assemblies provide the ability to prefix the assembly referenced. The prefix is used to prefix all classes in an assembly with the supplied prefix. This is resolve class name clashes.</paragraph>
+			<paragraph>For example, if a project has the 
+				<bold>class A</bold> and has an assembly reference to the assembly 
+				<bold>AssemblyWithA</bold>.dll, which also happens to contain the
+				<bold>class AssemblyWithA.A</bold>. Because Eiffel disregards namespaces when referencing an assembly, assembly AssemblyWithA class AssemblyWithA.A will become simple class 
+				<bold>A</bold>. This creates a class name clash. The solution is to prefix the assembly. Using the prefix 
+				<bold>ASMWA</bold>_ on the assembly AssemblyWithA will prefix AssemblyWithA's class A to create the new class name 
+				<bold>ASMWA_A </bold> resolving the class name clash.
+			</paragraph>
+			<paragraph>To edit the prefix just double click on the relevant assembly in the appropriate list twice. Only a valid prefix may be entered which must adhere to the following rules.</paragraph>
+			<list ordered="false">
+				<item> Must begin with a character between 'a' to 'z' or 'A' to 'Z'. </item>
+				<item>  May only contain alphanumerical characters and underscores thereafter (no white  spaces) </item>
+			</list>
+			<paragraph>Initially the prefix is set to 
+				<bold>&lt;NONE&gt;</bold> when an assembly is added to the configuration(s). If at any time you need to remove a prefix simply erase the entire prefix, which will reset its value.
+			</paragraph>
+			<bold>Note</bold>: A prefix for an assembly is not limited to a single assembly. A prefix can be associated with as many assemblies possible without cause another class name clash.
+			<heading>
+				<size>3</size>Prefixes in multiple configurations
+			</heading>
+			<paragraph>When the Assemblies property page is viewed in multiple configurations only those assemblies that are common to all configurations are shown. It is possible to have different prefixes for the same assembly in different configurations. If this happens the prefix is displayed as 
+				<bold>&lt;????&gt;</bold>.
+			</paragraph>
+			<heading>
+				<size>2</size>Using The Assembly References Property Page With Multiple Configurations
+			</heading>
+			<paragraph>
+				<line_break></line_break> If the Assembly References Property Page is view with multiple configurations only those assemblies that are the same in all configurations are the shown. For GAC assemblies the assemblies 
+				<bold>Name</bold> (case-sensitive), 
+				<bold>Version</bold>, 
+				<bold>Culture</bold> and 
+				<bold>Public Key Token</bold> must be the same. For locally referenced assemblies only the 
+				<bold>path</bold> to the assembly must be the same.
+			</paragraph>
+			<seealso>
+				<bold>See Also</bold>
+				<line_break></line_break>
+				<link>
+					<url>./ProjectConfiguration.xml</url>
+					<label>Property Page Overview</label>
+				</link>
+				<line_break></line_break>
+				<link>
+					<url>ClustersPage.xml</url>
+					<label>Clusters Property Page</label>
+				</link>
+				<line_break></line_break>
+				<link>
+					<url>ExternalsPage.xml</url>
+					<label>Externals Property Page</label>
+				</link>
+			</seealso>
+		</paragraph>
+	</paragraph>
+</document>

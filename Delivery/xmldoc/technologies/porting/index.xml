@@ -1,0 +1,18 @@
+<document title="Porting Instructions" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>11</size>Porting from one platform to another
+		</heading>    
+		<list ordered="false">      
+			<item>
+				<link>
+					<url>win_unix_porting.xml</url>
+					<label>Porting from traditional Windows to UNIX and vice-versa. </label>
+				</link>
+			</item>    
+		</list>
+	</paragraph>
+</document>

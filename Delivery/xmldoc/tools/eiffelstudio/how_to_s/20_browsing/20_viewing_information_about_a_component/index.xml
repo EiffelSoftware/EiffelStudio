@@ -1,0 +1,36 @@
+<document title="Viewing information about a component" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Viewing information about a component
+		</heading>
+		<list ordered="false">
+			<item>
+				<link>
+					<url>10_centering_tools_on_a_component.xml</url>
+					<label>Centering tools on a component.</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>20_viewing_information_about_a_cluster.xml</url>
+					<label>Viewing information about a cluster.</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>30_viewing_information_about_a_class.xml</url>
+					<label>Viewing information about a class.</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>40_viewing_information_about_a_feature.xml</url>
+					<label>Viewing information about a feature.</label>
+				</link>
+			</item>
+		</list>
+	</paragraph>
+</document>

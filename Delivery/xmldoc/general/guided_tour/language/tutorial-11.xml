@@ -1,0 +1,210 @@
+<document title="10 Other Mechanisms"><meta_data ><help ><toc ><envision_location >Eiffel, The Language\Tutorials\An Eiffel Tutorial</envision_location><envision_pseudo_name>91</envision_pseudo_name><envision_title >Other Mechanisms</envision_title><studio_location /><studio_title /></toc></help></meta_data><paragraph ><heading ><size >1</size><content >10 OTHER MECHANISMS</content></heading><paragraph >We now examine a few important mechanisms that complement the preceding picture: shared objects; constants; instructions; and lexical conventions.  </paragraph><heading ><size >2</size><content >Once routines and shared objects</content></heading><paragraph >The Eiffel's method obsession with extendibility, reusability and maintainability yields, as has been seen, modular and decentralized architectures, where inter-module coupling is limited to the strictly necessary, interfaces are clearly delimited, and all the temptations to introduce obscure dependencies, in particular global variables, have been removed.  There is a need, however, to let various components of a system access common objects, without requiring their routines to pass these objects around as arguments (which would only be slightly better than global variables).  For example various classes may need to perform output to a common "console window", represented by a shared object.  </paragraph><paragraph >Eiffel addresses this need through an original mechanism that also takes care of another important issue, poorly addressed by many design and programming approaches: initialization.  The idea is simple: if instead of <code ><keyword >do</keyword></code> the implementation of an effective routine starts with the keyword <code ><keyword >once</keyword></code>, it will only be executed the first time the routine is called during a system execution (or, in a multithreaded environment, the first time in each thread), regardless of what the caller was.  Subsequent calls from the same caller or others will have no effect; if the routine is a function, it will always return the result computed by the first call -- object if an expanded type, reference otherwise.  </paragraph><paragraph >In the case of procedures, this provides a convenient initialization mechanism.  A delicate problem in the absence of a <code ><keyword >once</keyword></code> mechanism is how to provide the users of a library with a set of routines which they can call in any order, but which all need, to function properly, the guarantee that some context had been properly set up.  Asking the library clients to precede the first call with a call to an initialization procedure <code ><string >setup</string></code> is not only user-unfriendly but silly: in a well-engineered system we will want to check proper set-up in every of the routines, and report an error if necessary; but then if we were able to detect improper set-up we might as well shut up and set up ourselves (by calling <code ><string >setup</string></code> ).  This is not easy, however, since the object on which we call <code ><string >setup</string></code> must itself be properly initialized, so we are only pushing the problem further.  Making <code ><string >setup</string></code> a <code ><keyword >once</keyword></code> procedure solves it: we can simply include a call</paragraph>
+<code_block >
+	setup
+</code_block>
+
+<paragraph >at the beginning of each affected routine; the first one to come in will perform the needed initializations; subsequent calls will have, as desired, no effect.  </paragraph><paragraph >Once functions will give us shared objects.  A common scheme is</paragraph>
+<code_block >
+console: WINDOW is
+
+        -- Shared console window
+
+     once
+
+         create Result . make (...)
+
+     end
+</code_block>
+
+<paragraph >Whatever client first calls this function will create the appropriate window and return a reference to it.  Subsequent calls, from anywhere in the system, will return that same reference.  The simplest way to make this function available to a set of classes is to include it in a class <code ><string >SHARED_STRUCTURES</string></code> which the classes needing a set of related shared objects will simply inherit.  </paragraph><paragraph >For the classes using it, <code ><string >console</string></code>, although a function, looks very much as if it were an attribute -- only one referring to a shared object.  </paragraph><paragraph >The "Hello World" system at the beginning of this discussion (section <link ><url >tutorial-05.html#35212</url></link> ) used an output instruction of the form <code ><string >io</string></code><span >.  </span> <code ><string >put_string</string></code> <code ><comment >("</comment></code> <code ><string >string Some</string></code> "<code ><comment >)</comment></code> .  This is another example of the general scheme illustrated by <code ><string >console</string></code> .  Feature <code ><string >io</string></code>, declared in <code ><string >ANY</string></code> and hence usable by all classes, is a once function that returns an object of type <code ><string >STANDARD_FILES</string></code> (another Kernel Library class) providing access to basic input and output features, one of which is procedure <code ><string >put_string</string></code>.  Because basic input and output must all work on the same files, <code ><string >io</string></code> should clearly be a once function, shared by all classes that need these mechanisms.  </paragraph><heading ><size >2</size><content >Constant and unique attributes</content></heading><paragraph >The attributes studied earlier were variable: each represents a field present in each instance of the class and changeable by its routines.  </paragraph><paragraph >It is also possible to declare constant attributes, as in</paragraph>
+<code_block >
+	Solar_system_planet_count : INTEGER is 9
+</code_block>
+
+<paragraph >These will have the same value for every instance and hence do not need to occupy any space in objects at execution time.  (In other approaches similar needs would be addressed by symbolic constants, as in Pascal or Ada, or macros, as in C.  )</paragraph><paragraph >What comes after the <code ><keyword >is</keyword></code> is a manifest constant: a self-denoting value of the appropriate type.  Manifest constants are available for integers, reals (also used for doubles), booleans (<code ><string >True</string></code> and <code ><string >False</string></code> ), characters (in single quotes, as <code ><comment >'</comment></code> <code ><string >A</string></code> <code ><comment >'</comment></code>, with special characters expressed using a percent sign as in <code ><comment >'%</comment></code> <code ><string >N</string></code> <code ><comment >'</comment></code>  for new line, <code ><comment >'%</comment></code> <code ><string >B</string></code> <code ><comment >'</comment></code> for backspace and <code ><comment >'%</comment></code> <code ><string >U</string></code> <code ><comment >'</comment></code> for null).  </paragraph><paragraph >For integer constants, it is also possible to avoid specifying the values.  A declaration of the form</paragraph>
+<code_block >
+	a, b, c, ...n : INTEGER is unique
+</code_block>
+
+<paragraph >introduces <code ><string >a</string></code>, <code ><string >b</string></code>, <code ><string >c</string></code>, ...<code ><string >n</string></code> as constant integer attributes, whose value are assigned by the Eiffel compiler rather than explicitly by the programmer.  The values are different for all <code ><keyword >unique</keyword></code> attributes in a system; they are all positive, and, in a single declaration such as the above, guaranteed to be consecutive (so that you may use an invariant property of the form <code ><string >code</string></code> <code ><comment >&gt;</comment></code> <code ><string >a</string></code> <code ><keyword >and</keyword></code> <code ><string >code</string></code> <code ><comment >&lt;</comment></code> <code ><string >n</string></code> to express that <code ><string >code</string></code> should be one of the values).  This mechanism replaces the "enumerated types" found in many languages, without suffering from the same problems.  (Enumerated types have an ill-defined place in the type system; and it is not clear what operations are permitted.  )</paragraph><paragraph >You may use Unique values in conjunction with the <code ><keyword >inspect</keyword></code> multi-branch instruction studied in the next section.  They are only appropriate for codes that can take on a fixed number of well-defined values -- not as a way to program operations with many variants, a need better addressed by the object-oriented technique studied earlier and relying on inheritance, polymorphism, redeclaration and dynamic binding.  </paragraph><paragraph >Manifest constants are also available for strings, using double quotes as in</paragraph>
+<code_block >
+	User_friendly_error_message : STRING is "Go get a life !"
+</code_block>
+
+<paragraph >with special characters again using the <code ><comment >%</comment></code> codes.  It is also possible to declare manifest arrays using double angle brackets:</paragraph>
+<code_block >
+	&lt;&lt; 1, 2, 3, 5, 7, 11, 13, 17, 19 &gt;&gt;
+</code_block>
+
+<paragraph >which is an expression of type <code ><string >ARRAY</string></code> <code ><comment >[</comment></code> <code ><string >INTEGER</string></code> <code ><comment >]</comment></code> .  Manifest arrays and strings are not atomic, but denote instances of the Kernel Library classes <code ><string >STRING</string></code> and <code ><string >ARRAY</string></code>, as can be produced by once functions.  </paragraph><heading ><size >2</size><content >Instructions</content></heading><paragraph >Eiffel has a remarkably small set of instructions.  The basic computational instructions have been seen: creation, assignment, assignment attempt, procedure call, <code ><keyword >retry</keyword></code> .  They are complemented by control structures: conditional, multi-branch, loop, as well as <code ><keyword >debug</keyword></code> and <code ><keyword >check</keyword></code> .  </paragraph><paragraph >A conditional instruction has the form <code ><keyword >if</keyword></code>  ...<code ><keyword >then</keyword></code> ...<code ><keyword >elseif</keyword></code> ...<code ><keyword >then</keyword></code> ...<code ><keyword >else</keyword></code> ...<code ><keyword >end</keyword></code> .  The <code ><keyword >elseif</keyword></code> ...<code ><keyword >then</keyword></code> ...part (of which there may be more than one) and the <code ><keyword >else</keyword></code> ...part are optional.  After <code ><keyword >if</keyword></code> and <code ><keyword >elseif</keyword></code> comes a boolean expression; after <code ><keyword >then</keyword></code>, <code ><keyword >elseif</keyword></code> and <code ><keyword >else</keyword></code> come zero or more instructions.  </paragraph><paragraph >A multi-branch instruction has the form</paragraph>
+<code_block >
+inspect
+
+    exp
+
+when v 1 then
+
+    inst 1
+
+when v 2 then
+
+    inst 2
+
+...
+
+else
+
+    inst 0
+
+end
+</code_block>
+
+<paragraph >where the <code ><keyword >else</keyword></code> <code ><string >inst</string></code> <span >0</span>  part is optional, <code ><string >exp</string></code> is a character or integer expression, <code ><string >v</string></code> <span >1</span>, <code ><string >v</string></code> <span >2</span>, ...are constant values of the same type as <code ><string >exp</string></code>, all different, and <code ><string >inst</string></code> <span >0</span>, <code ><string >inst</string></code> <span >1</span>, <code ><string >inst</string></code> <span >2</span>, ...are sequences of zero or more instructions.  In the integer case, it is often convenient to use <code ><keyword >unique</keyword></code> values (<link ><url >tutorial-11.html#94304</url></link> ) for the <code ><string >v</string></code> <span >i</span> .  </paragraph><paragraph >The effect of such a multi-branch instruction, if the value of <code ><string >exp</string></code> is one of the <code ><string >v</string></code> <span >i</span>, is to execute the corresponding <code ><string >inst</string></code> <span >i</span> .  If none of the <code ><string >v</string></code> <span >i</span>  matches, the instruction executes <code ><string >inst</string></code> <span >0</span>, unless there is no <code ><keyword >else</keyword></code> part, in which case it triggers an exception.  </paragraph><paragraph >Raising an exception is the proper behavior, since the absence of an <code ><keyword >else</keyword></code> indicates that the author asserts that one of the values will match.  If you want an instruction that does nothing in this case, rather than cause an exception, use an <code ><keyword >else</keyword></code> part with an empty <code ><string >inst</string></code> <span >0</span> .  In contrast, <code ><keyword >if</keyword></code> <code ><string >c</string></code> <code ><keyword >then</keyword></code> <code ><string >inst</string></code> <code ><keyword >end</keyword></code> with no <code ><keyword >else</keyword></code> part does nothing in the absence of an <code ><keyword >else</keyword></code> part, since in this case there is no implied claim that <code ><string >c</string></code> must hold.  )</paragraph><paragraph >The loop construct has the form</paragraph>
+<code_block >
+from
+
+    initialization
+
+until
+
+    exit
+
+invariant
+
+    inv
+
+variant
+
+    var
+
+loop
+
+    body
+
+end
+
+</code_block>
+
+<paragraph >where the <code ><keyword >invariant</keyword></code> <code ><string >inv</string></code> and <code ><keyword >variant</keyword></code> <code ><string >var</string></code> parts are optional, the others required.  <code ><string >initialization</string></code> and <code ><string >body</string></code> are sequences of zero or more instructions; <code ><string >exit</string></code> and <code ><string >inv</string></code> are boolean expressions (more precisely, <code ><string >inv</string></code> is an assertion); <code ><string >var</string></code> is an integer expression.  </paragraph><paragraph >The effect is to execute <code ><string >initialization</string></code>, then, zero or more times until <code ><string >exit</string></code> is satisfied, to execute <code ><string >body</string></code> .  (If after <code ><string >initialization</string></code> the value of <code ><string >exit</string></code> is already true, <code ><string >body</string></code> will not be executed at all.  ) Note that the syntax of loops always includes an initialization, as most loops require some preparation.  If not, just leave <code ><string >initialization</string></code> empty, while including the <code ><keyword >from</keyword></code> since it is a required component.  </paragraph><paragraph >The assertion <code ><string >inv</string></code>, if present, expresses a <bold >loop invariant</bold>  (not to be confused with class invariants).  For the loop to be correct, <code ><string >initialization</string></code> must ensure <code ><string >inv</string></code>, and then every iteration of <code ><string >body</string></code> executed when <code ><string >exit</string></code> is false must preserve the invariant; so the effect of the loop is to yield a state in which both <code ><string >inv</string></code> and <code ><string >exit</string></code>are true.  The loop must terminate after a finite number of iterations, of course; this can be guaranteed by using a <bold >loop variant</bold> <code ><string >var</string></code> .  It must be an integer expression whose value is non-negative after execution of <code ><string >initialization</string></code>, and decreased by at least one, while remain non-negative, by any execution of <code ><string >body</string></code> when <code ><string >exit</string></code> is false; since a non-negative integer cannot be decreased forever, this ensures termination.  The assertion monitoring mode, if turned on at the highest level, will check these properties of the invariant and variant after initialization and after each loop iteration, triggering an exception if the invariant does not hold or the variant is negative or does not decrease.  </paragraph><paragraph >An occasionally useful instruction is <code ><keyword >debug</keyword></code> <code ><comment >(</comment></code> <code ><string >Debug_key, </string></code> ...<code ><comment >)</comment></code> <code ><string >instructions</string></code> <code ><keyword >end</keyword></code> where <code ><string >instructions</string></code> is a sequence of zero or more instructions and the part in parentheses is optional, containing if present one or more strings, called debug keys.  The EiffelStudio compiler lets you specify the corresponding <code ><keyword >debug</keyword></code> compilation option: <code ><keyword >yes</keyword></code>, <code ><keyword >no</keyword></code>, or an explicit debug key.  The <code ><string >instructions</string></code> will be executed if and only if the corresponding option is on.  The obvious use is for instructions that should be part of the system but executed only in some circumstances, for example to provide extra debugging information.  </paragraph><paragraph >The final instruction is connected with Design by Contract.  The instruction <code ><keyword >check</keyword></code> <code ><string >Assertions</string></code> <code ><keyword >end</keyword></code>, where <code ><string >Assertions</string></code> is a sequence of zero or more assertions, will have no effect unless assertion monitoring is turned on at the <code ><keyword >Check</keyword></code> level or higher.  If so it will evaluate all the assertions listed, having no further effect if they are all satisfied; if any one of them does not hold, the instruction will trigger an exception.  </paragraph><paragraph >This instruction serves to state properties that are expected to be satisfied at some stages of the computation -- other than the specific stages, such as routine entry and exit, already covered by the other assertion mechanisms such as preconditions, postconditions and invariants.  A recommended use of <code ><keyword >check</keyword></code> involves calling a routine with a precondition, where the call, for good reason, does not explicitly test for the precondition.  Consider a routine of the form</paragraph>
+<code_block >
+r (ref: SOME_REFERENCE_TYPE) is
+
+     require
+
+        not_void: r /= Void
+
+     do
+
+        r . some_feature
+
+        ...
+
+     end
+
+</code_block>
+
+<paragraph >Because of the call to <code ><string >some_feature</string></code>, the routine will only work if its precondition is satisfied on entry.  To guarantee this precondition, the caller may protect it by the corresponding test, as in</paragraph>
+<code_block >
+	if x /= Void then a .  r ( x ) end
+</code_block>
+
+<paragraph >but this is not the only possible scheme; for example if an <code ><keyword >create</keyword></code> <code ><string >x</string></code> appears shortly before the call we know <code ><string >x</string></code> is not void and do not need the protection.  It is a good idea in such cases to use a <code ><keyword >check</keyword></code> instruction to document this property, if only to make sure that a reader of the code will realize that the omission of an explicit test (justified or not) was not a mistake.  This is particularly appropriate if the justification for not testing the precondition is less obvious.  For example <code ><string >x</string></code> could have been obtained, somewhere else in the algorithm, as <code ><string >clone</string></code> <code ><comment >(</comment></code> <code ><string >y</string></code> <code ><comment >)</comment></code> for some <code ><string >y</string></code> that you know is not void.  You should document this knowledge by writing the call as</paragraph>
+<code_block >
+     check
+
+        x_not_void: x /= Void end
+
+            -- Because x was obtained as a clone of y ,
+            -- and y is not void because [ etc. ]
+
+     end
+
+a . r (x)
+</code_block>
+
+<info >Note the recommended convention: extra indentation of the <code ><keyword >check</keyword></code> part to separate it from the algorithm proper; and inclusion of a comment listing the rationale behind the developer's decision not to check explicitly for the precondition.  </info><paragraph >In production mode with assertion monitoring turned off, this instruction will have no effect.  But it will be precious for a maintainer of the software who is trying to figure out what it does, and in the process to reconstruct the original developer's reasoning.  (The maintainer might of course be the same person as the developer, six months later.  ) And if the rationale is wrong somewhere, turning assertion checking on will immediately uncover the bug.  </paragraph><heading ><size >2</size><content >Obsolete features and classes</content></heading><paragraph >One of the conditions for producing truly great reusable software is to recognize that although you should try to get everything right the first time around you won't always succeed.  But if "good enough" may be good enough for application software, it's not good enough, in the long term, for reusable software.  The aim is to get ever closer to the asymptote of perfection.  If you find a better way, you must implement it.  The activity of <span >generalization</span>, discussed as part of the lifecycle, doesn't stop at the first release of a reusable library.  </paragraph><paragraph >This raises the issue of backward compability: how to move forward with a better design, without compromising existing applications that used the previous version?</paragraph><paragraph >The notion of obsolete class and feature helps address this issue.  By declaring a feature as <code ><keyword >obsolete</keyword></code>, using the syntax</paragraph>
+<code_block >
+enter ( i : INTEGER ; x: G) is
+
+    obsolete
+
+         " Use ` put ( x, i )' instead "
+
+     require
+
+        ...
+
+     do
+
+        put (x, i)
+
+     end
+</code_block>
+
+<paragraph >you state that you are now advising against using it, and suggest a replacement through the message that follows the keyword <code ><keyword >obsolete</keyword></code>, a mere string.  The obsolete feature is still there, however; using it will cause no other harm than a warning message when someone compiles a system that includes a call to it.  Indeed, you don't want to hold a gun to your client authors' forehead ("<span >Upgrade now or die</span> !'); but you do want to let them know that there is a new version and that they should upgrade at their leisure.  </paragraph><paragraph >Besides routines, you may also mark classes as obsolete.  </paragraph><paragraph >The example above is a historical one, involving an early change of interface for the EiffelBase library class <code ><string >ARRAY</string></code> ; the change affected both the feature's name, with a new name ensuring better consistency with other classes, and the order of arguments, again for consistency.  It shows the recommended style for using <code ><keyword >obsolete</keyword></code> :</paragraph><paragraph ><image ><height >6</height><width >6</width><alt_text >+</alt_text><url >greenball.gif          </url></image> In the message following the keyword, explain the recommended replacement.  This message will be part of the warning produced by the compiler for a system that includes the obsolete element.  </paragraph><paragraph ><image ><height >6</height><width >6</width><alt_text >+</alt_text><url >greenball.gif          </url></image> In the body of the routine, it is usually appropriate, as here, to replace the original implementation by a call to the new version.  This may imply a small performance overhead, but simplifies maintenance and avoids errors.  </paragraph><paragraph >It is good discipline not to let obsolete elements linger around for too long.  The next major new release, after a suitable grace period, should remove them.  </paragraph><paragraph >The design flexibility afforded by the <code ><keyword >obsolete</keyword></code> keyword is critical to ensure the harmonious long-term development of ambitious reusable software.  </paragraph><heading ><size >2</size><content >Creation variants</content></heading><paragraph >The basic forms of creation instruction, and the one most commonly used, are the two illustrated earlier (<link ><url >tutorial-07.html#59651</url></link> ):</paragraph>
+<code_block >
+	create x . make ( 2000 )
+	create x
+</code_block>
+
+<paragraph >the first one if the corresponding class has a <code ><keyword >create</keyword></code> clause, the second one if not.  In either form you may include a type name in braces, as in</paragraph>
+<code_block >
+	create { SAVINGS_ACCOUNT } x .  make ( 2000 )
+</code_block>
+
+<paragraph >which is valid only if the type listed, here <code ><string >SAVINGS_ACCOUNT</string></code>, conforms to the type of <code ><string >x</string></code>, assumed here to be <code ><string >ACCOUNT</string></code>.  This avoids introducing a local entity, as in</paragraph>
+<code_block >
+local
+
+    sx : SAVINGS_ACCOUNT
+
+do
+
+    create xs . make ( 2000 )
+
+    x := xs
+
+        ...
+</code_block>
+
+<paragraph >and has exactly the same effect.  Another variant is the <bold >creation expression</bold>, which always lists the type, but returns a value instead of being an instruction.  It is useful in the following context:</paragraph>
+<code_block >
+	some_routine ( create { ACCOUNT } .  make ( 2000 ))
+</code_block>
+
+<paragraph >which you may again view as an abbreviation for a more verbose form that would need a local entity, using a creation instruction:</paragraph>
+<code_block >
+local
+
+    x : ACCOUNT
+
+do
+
+    create x . make ( 2000 )
+
+     some_routine ( x )
+
+        ...
+</code_block>
+
+<paragraph >Unlike creation instructions, creation expressions must always list the type explicitly, <code ><comment >{</comment></code> <code ><string >ACCOUNT</string></code> <code ><comment >}</comment></code> in the example.  They are useful in the case shown: creating an object that only serves as an argument to be passed to a routine.  If you need to retain access to the object through an entity, the instruction <code ><keyword >create</keyword></code> <code ><string >x</string></code> ...is the appropriate construct.  </paragraph><paragraph >The creation mechanism gets an extra degree of flexibility through the notion of <code ><string >default_create</string></code> .  The simplest form of creation instruction, <code ><keyword >create</keyword></code> <code ><string >x</string></code> without an explicit creation procedure, is actually an abbreviation for <code ><keyword >create</keyword></code> <code ><string >x</string></code> <span >.  </span> <code ><string >default_create</string></code>, where <code ><string >default_create</string></code> is a procedure defined in class <code ><string >ANY</string></code> to do nothing.  By redefining <code ><string >default_create</string></code> in one of your classes, you can ensure that <code ><keyword >create</keyword></code> <code ><string >x</string></code> will take care of non-default initialization (and ensure the invariant if needed).  When a class has no <code ><keyword >create</keyword></code> clause, it's considered to have one that lists only <code ><string >default_create</string></code> .  If you want to allow <code ><keyword >create</keyword></code> <code ><string >x</string></code> as well as the use of some explicit creation procedures, simply list <code ><string >default_create</string></code> along with these procedures in the <code ><keyword >create</keyword></code> clause.  To disallow creation altogether, include an empty <code ><keyword >create</keyword></code> clause, although this technique is seldom needed since most non-creatable classes are deferred, and one can't instantiate a deferred class.  </paragraph><paragraph >One final twist is the mechanism for creating instances of formal generic parameters.  For <code ><string >x</string></code> of type <code ><string >G</string></code> in a class C <code ><comment >[</comment></code> <code ><string >G</string></code> <code ><comment >]</comment></code>, it wouldn't be safe to allow <code ><keyword >create</keyword></code> <code ><string >x</string></code>, since <code ><string >G</string></code> stands for many possible types, all of which may have their own creation procedures.  To allow such creation instructions, we rely on constrained genericity.  You may declare a class as</paragraph>
+<code_block >
+	[G -&gt; T create cp end ]
+</code_block>
+
+<paragraph >to make <code ><string >G</string></code> constrained by <code ><string >T</string></code>, as we learned before, and specify that any actual generic parameter must have <code ><string >cp</string></code> among its creation procedures.  Then it's permitted to use <code ><keyword >create</keyword></code> <code ><string >x</string></code> <span >.  </span> <code ><string >cp</string></code>, with arguments if required by <code ><string >cp</string></code>, since it is guaranteed to be safe.  The mechanism is very general since you may use <code ><string >ANY</string></code> for <code ><string >T</string></code> and <code ><string >default_create</string></code> for <code ><string >cp</string></code> .  The only requirement on <code ><string >cp</string></code> is that it must be a <span >procedure</span> of <code ><string >T</string></code>, not necessarily a <span >creation</span> procedure; this permits using the mechanism even if <code ><string >T</string></code> is deferred, a common occurrence.  It's only descendants of <code ><string >T</string></code> that must make <code ><string >cp</string></code> a creation procedure, by listing it in the <code ><keyword >create</keyword></code> clause, if they want to serve as actual generic parameters for <code ><string >C</string></code> .  </paragraph><heading ><size >2</size><content >Tuple types</content></heading><paragraph >The study of genericity described arrays.  Another common kind of container objects bears some resemblance to arrays: sequences, or "tuples", of elements of specified types.  The difference is that all elements of an array were of the same type, or a conforming one, whereas for tuples you will specify the types we want for each relevant element.  A typical tuple type is of the form</paragraph>
+<code_block >
+	TUPLE [ X, Y, Z ]
+</code_block>
+
+<paragraph >denoting a tuple of least three elements, such that the type of the first conforms to <code ><string >X</string></code>, the second to <code ><string >Y</string></code>, and the third to <code ><string >Z</string></code> .  </paragraph><paragraph >You may list any number of types in brackets, including none at all: <code ><string >TUPLE</string></code>, with no types in brackets, denotes tuples of arbitrary length.  </paragraph><info >The syntax, with brackets, is intentionally reminiscent of generic classes, but <code ><string >TUPLE</string></code> is a reserved word, not the name of a class; making it a class would not work since a generic class has a fixed number of generic parameters.  You may indeed use <code ><string >TUPLE</string></code> to obtain the effect of a generic class with a variable number of parameters.  </info><paragraph >To write the tuples themselves -- the sequences of elements, instances of a tuple type -- you will also use square brackets; for example</paragraph>
+<code_block >
+	[ x1, y1, z1 ]
+</code_block>
+
+<paragraph >with <code ><string >x1</string></code> of type <code ><string >X</string></code> and so on is a tuple of type <code ><string >TUPLE</string></code> <code ><comment >[</comment></code> <code ><string >X</string></code> <code ><comment >, </comment></code> <code ><string >Y</string></code> <code ><comment >, </comment></code> <code ><string >Z</string></code> <code ><comment >]</comment></code> .  </paragraph><paragraph >The definition of tuple types states that <code ><string >TUPLE</string></code> <code ><comment >[</comment></code> <code ><string >X1</string></code> <code ><comment >, </comment></code> <span >...</span> <code ><comment >, </comment></code> <code ><string >Xn</string></code> <code ><comment >]</comment></code> denotes sequences of <span >at least</span> <code ><string >n</string></code> elements, of which the first <code ><string >n</string></code> have types respectively conforming to <code ><string >X1</string></code><code ><comment >, </comment></code> <span >...</span> <code ><comment >, </comment></code> <code ><string >Xn</string></code>.  Such a sequence may have more than <code ><string >n</string></code> elements.  </paragraph><paragraph >Features available on tuple types include <code ><string >count</string></code> <code ><comment >:</comment></code> <code ><string >INTEGER</string></code>, yielding the number of elements in a tuple, <code ><string >item</string></code> <code ><comment >(</comment></code> <code ><string >INTEGER i:</string></code> <code ><comment >):</comment></code> <code ><string >ANY</string></code> which returns the <code ><string >i</string></code> -th element, and <code ><string >put</string></code> which replaces an element.  </paragraph><paragraph >Tuples are appropriate when these are the only operations you need, that is to say, you are using sequences with no further structure or properties.  Tuples give you "anonymous classes" with predefined features <code ><string >count</string></code>, <code ><string >item</string></code> and <code ><string >put</string></code> .  A typical example is a general-purpose output procedure that takes an arbitrary sequence of values, of arbitrary types, and prints them.  It may simply take an argument of type <code ><string >TUPLE</string></code>, so that clients can call it under the form</paragraph>
+<code_block >
+	write ([ your_integer, your_real, your_account ])
+</code_block>
+
+<paragraph >As soon as you need a type with more specific features, you should define a class.  </paragraph></paragraph></document>

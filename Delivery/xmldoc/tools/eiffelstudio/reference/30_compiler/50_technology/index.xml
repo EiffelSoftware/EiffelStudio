@@ -1,0 +1,30 @@
+<document title="Compiler information" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Compiler information
+		</heading>
+		<list ordered="false">
+			<item>
+				<link>
+					<url>05_melting_ice_technology.xml</url>
+					<label>Melting ice technology</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>10_supported_c_compilers.xml</url>
+					<label>Supported C compilers</label>
+				</link>
+			</item>  
+			<item>
+				<link>
+					<url>20_lace_syntax.xml</url>
+					<label>Lace syntax</label>
+				</link>
+			</item>  
+		</list>
+	</paragraph>
+</document>

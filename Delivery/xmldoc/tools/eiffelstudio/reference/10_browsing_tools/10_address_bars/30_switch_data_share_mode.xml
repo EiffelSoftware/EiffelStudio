@@ -1,0 +1,34 @@
+<document title="Change data share mode" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Change data share mode
+		</heading>
+		<paragraph>Located in the 
+			<bold>View</bold> menu, named either 
+			<bold>Link context tool</bold> or 
+			<bold>Unlink context tool</bold>, this command allows you to switch between the two possible 
+			<link>
+				<url>00_introduction.xml</url>
+				<label>addressing modes</label>
+			</link>. It is also accessible through the main toolbar ( 
+			<image>
+				<url>/images/eiffelstudio/icons/icon_unify_stone_color.gif</url>
+			</image>).
+		</paragraph>
+		<note>
+			<bold>Note</bold>: This command only applies to the development window where it is invoked, and this setting is not automatically saved when exiting EiffelStudio.
+		</note>
+		<seealso>
+			<bold>See Also</bold>
+			<line_break></line_break> 
+			<link>
+				<url>../../85_preferences/20_preferences_reference/20_tools/20_context_tools.xml</url>
+				<label>Change the default data sharing</label>
+			</link>
+			<line_break></line_break>
+		</seealso>
+	</paragraph>
+</document>

@@ -1,0 +1,60 @@
+<document title="Positioning fixed children">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_pseudo_name>10</envision_pseudo_name>
+				<envision_location>Developing With ENViSioN!\Using ENViSioN! within Visual Studio.Net\Adding a New Project\Advanced GUI Project Wizard\Interface Construction Page\Reference\Object editor</envision_location>
+			</toc>
+		</help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Positioning fixed children
+		</heading>
+		<paragraph>If the current 
+			<link>
+				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
+				<label>object</label>
+			</link> in the object editor is of type EV_FIXED, 
+			<image>
+				<url>/images/eiffelbuild/screenshots/position_children_button.png</url>
+			</image> will be contained in the object editor. Click this button, to display the following window:
+		</paragraph>
+		<paragraph>
+			<image>
+				<url>/images/eiffelbuild/screenshots/fixed_child_positioner.png</url>
+			</image>
+		</paragraph>
+		<list ordered="false">
+			<item>
+				<bold>Moving</bold> - Press and hold the left mouse button within the selected child, and move the mouse.
+			</item>
+			<item>
+				<bold>Resizing</bold> - Move the mouse over the border of the child, until the cursor changes to a resize cursor, then press and hold the left mouse button to re-size the child.
+			</item>
+		</list>
+		<note>
+			<bold>Note</bold>: As placing a child in an EV_FIXED does not modify the size of the child, it is possible that some children have a size of 0x0 pixels, and hence do not show up in the diagram. In this case, there will be the following displayed in the status bar "Widget is 0x0 pixels, click HERE to enlarge". If you subsequently click on the status bar, then the widget will be enlarged to a more useful size.
+		</note>
+		<heading>
+			<size>2</size>Grid Properties
+		</heading>
+		<paragraph>The grid properties are displayed in the bottom right hand side of the window. You may modify the following attributes:</paragraph>
+		<list ordered="false">
+			<item>
+				<bold>Snap to grid</bold> - Select this option if you wish all widget coordinates to be snapped to the grid displayed in the window.
+			</item>
+			<item>
+				<bold>Visible</bold> - If selected, then the grid is visible.
+			</item>
+			<item>
+				<bold>Grid size</bold> - The spacing between grid elements in pixels.
+			</item>
+		</list>
+		<paragraph>When you have finished manipulating the children of the table, click 
+			<image>
+				<url>/images/eiffelbuild/screenshots/done_button.png</url>
+			</image>to close the dialog.
+		</paragraph>
+	</paragraph>
+</document>

@@ -1,0 +1,27 @@
+<document title="Samples" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Samples
+		</heading>
+		<paragraph>In this chapter you will find a series of examples that will permit to you to understand the bases of programming with dotnet.</paragraph>
+		<paragraph>However, you should be familiar with Object-Oriented programming model.</paragraph>
+		<list ordered="false">
+			<item>
+				<link>
+					<url>platform/platform.xml</url>
+					<label>Platform examples</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>winform/index.xml</url>
+					<label>Windows Form examples</label>
+				</link>
+			</item>
+		</list>
+		<paragraph> </paragraph>
+	</paragraph>
+</document>

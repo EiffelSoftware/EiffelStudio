@@ -1,0 +1,71 @@
+<document title="Project settings window" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Project settings window
+		</heading>
+		<paragraph> </paragraph>
+		<paragraph>This is where global settings regarding your project are going to be made. In here you can specify:</paragraph>
+		<list ordered="false">
+			<item>the clusters that contain your classes</item>
+			<item>which assertion level you want to check</item>
+			<item>which debug clauses will be activated</item>
+			<item>the command line arguments and the current working directory when you debug your application</item>
+			<item>which C externals your project needs</item>
+			<item>the compiler options concerning optimization</item>
+			<item>advanced options such as multithreading</item>
+		</list>
+		<paragraph> </paragraph>
+		<paragraph>The window is organized in six tabs:</paragraph>
+		<list ordered="true">
+			<item>
+				<link>
+					<url>10_general.xml</url>
+					<label>General</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>20_debug.xml</url>
+					<label>Debug/Profile</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>30_clusters.xml</url>
+					<label>Clusters</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>40_dotnet.xml</url>
+					<label>.NET</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>45_dotnet_assemblies.xml</url>
+					<label>.NET assemblies</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>50_externals.xml</url>
+					<label>Externals</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>60_advanced.xml</url>
+					<label>Advanced</label>
+				</link>
+			</item>
+		</list>
+		<paragraph>The .NET tabs is only enabled on the Windows platform.</paragraph>
+		<paragraph> </paragraph>
+		<paragraph>Most of the changes that can be made here are taken into account when you next recompile your project. Instead of automatically performing the compilation each time you click Ok or Apply we decided to save the modifications and let the user decide when to recompile. At the moment, only the specification of the command line arguments and of the current working directory for debugging do not require a recompilation of your system.</paragraph>
+		<paragraph> </paragraph>
+	</paragraph>
+</document>

@@ -1,0 +1,21 @@
+<document title="Eiffel for .NET Terminology">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_title>Eiffel Terminolgy</envision_title>
+				<envision_pseudo_name>10</envision_pseudo_name>
+				<envision_location>Eiffel, The Language\The Eiffel for .NET Language\Conventions</envision_location>
+			</toc>
+		</help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Eiffel for .NET Terminology
+		</heading>
+		<heading>
+			<size>2</size>Eiffel Terminology Defined for C# and VB.NET Programmers
+		</heading>
+		<paragraph>Eiffel programmers feel that it is important to have a set of precise terms with which to communicate about our method of software development. Like everything else in Eiffel, the use of certain terms is not accidental. They were chosen carefully to impart particular meaning. Many of the Terms that Eiffel programmers use are different from those used by developers using other object-oriented languages. But that does not mean that their meanings will be foreign to you. If you have some understanding of object-oriented technology, you will find that in many cases the Eiffel terms describe concepts with which you were already familiar, just under different names, and possibly with slightly different meanings. </paragraph>
+		<paragraph>The intention of this glossary is to give you a list of these terms with extended definitions that will relate the Eiffel terms to language with which you may be more familiar. Also, you will find an occasional term which comes from other programming cultures but is not used in Eiffel. </paragraph>Missing Table
+	</paragraph>
+</document>

@@ -1,0 +1,30 @@
+<document title="Feature tool" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Feature tool
+		</heading>
+		<list ordered="false">
+			<item>
+				<link>
+					<url>00_introduction.xml</url>
+					<label>Introduction</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>10_feature_tree.xml</url>
+					<label>Tree representation</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>20_new_feature_command.xml</url>
+					<label>New feature command</label>
+				</link>
+			</item>
+		</list>
+	</paragraph>
+</document>

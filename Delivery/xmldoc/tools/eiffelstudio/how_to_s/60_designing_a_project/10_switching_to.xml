@@ -1,0 +1,29 @@
+<document title="Switching to the diagram tool" output="studio">
+	<meta_data>
+		<help>
+			<meta>
+				<content>Diagram tool,Open</content>
+				<name>MS-HKWD</name>
+			</meta>
+			<meta>
+				<content>Diagram tool, Switch to</content>
+				<name>MS-HKWD</name>
+			</meta>
+		</help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Switching to the diagram tool
+		</heading>
+		<list ordered="false">
+			<item>In order to switch from coding to designing, click the
+				<bold>Diagram</bold> tab in the 
+				<bold>Context</bold> tool. Open the context tool by checking menu item 
+				<bold>View | Explorer Bar |Context</bold>.
+			</item>
+		</list>
+		<tip>
+			<bold>Tip</bold>: to make sure all your changes are in the diagram, perform a compilation.
+		</tip>
+	</paragraph>
+</document>

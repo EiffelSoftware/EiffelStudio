@@ -1,0 +1,83 @@
+<document title="New procedure layout" output="studio">
+	<meta_data>
+		<help>
+			<meta>
+				<content>new feature dialog, procedure layout</content>
+				<name>MS-HKWD</name>
+			</meta>
+		</help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>
+		</heading>
+		<div>
+			<image>
+				<border>0</border>
+				<url>/images/eiffelstudio/dialogs_and_wizards/feature-wizard-procedure.png</url>
+			</image>
+		</div>
+		<paragraph>When clicking 
+			<bold>Procedure</bold>, the window changes to the procedure layout. It has the following components:
+		</paragraph>
+		<list ordered="false">
+			<item>
+				<link>
+					<url>50_feature_properties_modification/00_feature_clauses.xml</url>
+					<label>Feature clause selection</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>50_feature_properties_modification/10_name_field.xml</url>
+					<label>Feature name field</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>50_feature_properties_modification/20_argument_list.xml</url>
+					<label>Argument list</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>50_feature_properties_modification/30_comment_field.xml</url>
+					<label>Header comment field</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>50_feature_properties_modification/40_precondition.xml</url>
+					<label>Precondition field</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>50_feature_properties_modification/50_local_field.xml</url>
+					<label>Local variable field</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>50_feature_properties_modification/60_feature_body.xml</url>
+					<label>Selection for: normal, once, deferred or external routine</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>50_feature_properties_modification/70_postcondition.xml</url>
+					<label>Postcondition field</label>
+				</link>
+			</item>
+		</list>
+		<heading>
+			<size>2</size>Example
+		</heading>
+		<div>
+			<image>
+				<url>/images/eiffelstudio/dialogs_and_wizards/feature-wizard-procedure-example.png</url>
+			</image>
+		</div>
+		<code></code>
+	</paragraph>
+</document>

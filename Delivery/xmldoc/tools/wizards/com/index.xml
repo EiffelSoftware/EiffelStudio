@@ -1,0 +1,56 @@
+<document title="EiffelCOM Wizard" output="studio">
+	<meta_data>
+		<help>
+			<meta>
+				<content>EiffelCOM</content>
+				<name>MS-HKWD</name>
+			</meta>
+			<meta>
+				<content>EiffelCOM Wizard</content>
+				<name>MS-HKWD</name>
+			</meta>
+		</help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>EiffelCOM Wizard
+		</heading>
+		<paragraph>Type: Wizard
+			<line_break></line_break> Platform: Windows
+			<line_break></line_break> Version: 5.0
+			<line_break></line_break> Availability: Full Package
+		</paragraph>
+		<paragraph>See:</paragraph>
+		<list ordered="false">
+			<item>
+				<link>
+					<url>01_introduction.xml</url>
+					<label>Introduction</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>guided_tour/index.xml</url>
+					<label>Guided Tour</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>reference/index.xml</url>
+					<label>Reference</label>
+				</link>
+			</item>
+		</list>
+		<seealso>
+			<link>
+				<url>../../../technologies/com/index.xml</url>
+				<label>The Component ObjectModel</label>
+			</link>
+			<link>
+				<url>../../../libraries/com/index.xml</url>
+				<label>EiffelCOMlibrary</label>
+			</link>
+		</seealso>
+		<paragraph> </paragraph>
+	</paragraph>
+</document>

@@ -1,0 +1,24 @@
+<document title="Ancestor versions" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Ancestor versions
+		</heading>
+		<paragraph>The ancestor view 
+			<image>
+				<url>/images/eiffelstudio/icons/icon_format_feature_ancestors_color.gif</url>
+			</image> displays all the features which the current feature is redefining.
+		</paragraph>
+		<seealso>
+			<bold>See Also</bold>
+			<line_break></line_break> 
+			<link>
+				<url>./30_descendant_format.xml</url>
+				<label>Descendant versions</label>
+			</link>
+			<line_break></line_break>
+		</seealso>
+	</paragraph>
+</document>

@@ -1,0 +1,90 @@
+<document title="Object Browser" output="envision">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_pseudo_name>40</envision_pseudo_name>
+			</toc>
+		</help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Object Browser
+		</heading>
+		<paragraph>
+			<paragraph>The Object Browser allows you to browse the objects available for use in your  system. You may only browse the objects of a compiled system that is currently  open in Visual Studio. Aswell as being able to view available objects, the  object browser allows you to see the  
+				<help_link>
+					<tab_index>0</tab_index>
+					<index_moniker>!DefaultAssociativeIndex</index_moniker>
+					<keywords>Eiffel feature</keywords>&gt;features
+				</help_link>  of each object and the relationships between objects, for example,  
+				<help_link>
+					<tab_index>0</tab_index>
+					<index_moniker>!DefaultAssociativeIndex</index_moniker>
+					<keywords>Eiffel ancestors</keywords>&gt;ancestors
+				</help_link>.
+			</paragraph>
+			<paragraph>
+				<image>
+					<alt_text>Object Browser</alt_text>
+					<url>ObjectBrowser.PNG</url>
+				</image>
+			</paragraph>
+			<paragraph>Looking at the screenshot, you can see that there is one root node in the object  browser, which corresponds to the fact that there is only one project, named  "sample", in the currentlyopened solution. If there is more than one project  in the current solution, then there will be multiple entries in the tree.</paragraph>
+			<paragraph>The object browser has three main areas:</paragraph>
+			<list ordered="false">
+				<item>   Objects - Situated at the top left hand side of the object browser, this pane   allows you to browse the objects in the system, their   
+					<help_link>
+						<tab_index>0</tab_index>
+						<index_moniker>!DefaultAssociativeIndex</index_moniker>
+						<keywords>Eiffel feature</keywords>&gt;features
+					</help_link>   and any   
+					<help_link>
+						<tab_index>0</tab_index>
+						<index_moniker>!DefaultAssociativeIndex</index_moniker>
+						<keywords>Eiffel ancestors</keywords>&gt;ancestors
+					</help_link>.  Selecting an object in this pane will display the features defined in this  object only in the Memberspane, and to see all the features available for the  object, select the all features node.  
+				</item>
+				<item>  Members - Situated at the top right hand side of the object browser, this pane  displays the current members of the selected item in the Objects pane. Certain  selections, such asancestors, have no members, as the information is displayed  in the Objects pane when the node is expanded.  </item>
+				<item>   Description - Pertinent information regarding the selected item in the Objects pane or Members pane will be displayed in this pane. For some selections, this pane may be empty, asthere will be no information on the currently selected   node.</item>
+			</list>
+			<paragraph>  The toolbar at the very top of the object browser allows you to modify the  information displayed.</paragraph>
+			<paragraph>Double clicking an Eiffel class or a feature in the object browser will  automatically open up its definition in the  
+				<help_link>
+					<tab_index>0</tab_index>
+					<index_moniker>!DefaultAssociativeIndex</index_moniker>
+					<keywords>Eiffel Editor</keywords>&gt;Editor
+				</help_link>.
+			</paragraph>
+			<paragraph>Right clicking on any node in the class view will display a 
+				<link>
+					<url>context_menu.xml</url>
+					<label>   context menu</label>
+				</link> for the current node.
+			</paragraph>
+			<paragraph>For details of the hierarchy displayed in the Object Browser, click 
+				<link>
+					<url>hierarchy.xml</url>
+					<label>   here</label>
+				</link>.
+			</paragraph>
+			<seealso>
+				<bold>See Also</bold>
+				<line_break></line_break>
+				<link>
+					<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/20_Solution_Explorer/index.xml</url>
+					<label>Solution Explorer</label>
+				</link>
+				<line_break></line_break>
+				<link>
+					<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/30_Class_View/index.xml</url>
+					<label>Class View</label>
+				</link>
+				<line_break></line_break>
+				<link>
+					<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/index.xml</url>
+					<label>Using ENViSioN! Within Visual Studio.NET</label>
+				</link>
+			</seealso>
+		</paragraph>
+	</paragraph>
+</document>

@@ -1,0 +1,55 @@
+<document title="GDI plus - text">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_pseudo_name>90</envision_pseudo_name>
+				<envision_location>Samples\Windows Forms</envision_location>
+			</toc>
+		</help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>GDI plus - text
+		</heading>
+		<div>
+			<paragraph>
+				<image>
+					<height>500</height>
+					<width>750</width>
+					<url>/images/dotnet_samples/text.png</url>
+					<alt_text>Hello world form</alt_text>
+				</image>
+			</paragraph>
+		</div>
+		<paragraph>
+			<line_break></line_break>
+			<line_break></line_break>
+		</paragraph>
+		<heading>
+			<size>2</size>Compiling
+		</heading>
+		<heading>
+			<size>2</size>Running
+		</heading>
+		<paragraph>After launching the application, you will see a window displayed with a similar appearance to the one above. </paragraph>
+		<paragraph></paragraph>
+		<heading>
+			<size>2</size>Under the Hood
+		</heading>
+		<paragraph>This sample show how to draw some text in a window, using different brushes, different fonts, different style and different colors. </paragraph>
+		<paragraph>This sample contains the following class:</paragraph>
+		<list ordered="false">
+			<item>
+				<code>
+					<class_name>FORM</class_name>
+				</code>
+			</item>
+		</list>
+		<heading>
+			<size>2</size>Notes
+		</heading>
+		<paragraph>This sample is translated from the example located in the QuickStart\winforms\samples\gdiplus subdirectory of the .NET Framework SDK samples directory of Microsoft Visual Studio.NET. </paragraph>
+		<paragraph></paragraph>
+		<paragraph></paragraph>
+	</paragraph>
+</document>

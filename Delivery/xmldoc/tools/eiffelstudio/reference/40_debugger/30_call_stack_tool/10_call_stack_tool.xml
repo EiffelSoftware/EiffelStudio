@@ -1,0 +1,37 @@
+<document title="Call stack tool" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Call stack tool
+		</heading>
+		<paragraph>
+			<image>
+				<url>../../../../../images/eiffelstudio/debugger/call_stack_tool.png</url>
+			</image>
+		</paragraph>
+		<paragraph>The call stack tool gives information about the current call stack of a debugged application.</paragraph>
+		<paragraph>It is mainly composed of a list representing the call stack elements, where the entry feature of the program is at the bottom and the top of the call stack is at the top. The current call stack element, to which the 
+			<link>
+				<url>20_current_level_information.xml</url>
+				<label>other debug tools</label>
+			</link> refer, is represented by a green arrow. Clicking on a call stack element, or picking it and dropping it onto either the call stack list or the locals view defines it as being the current call stack element. For each feature in the call stack, its name, its dynamic class and its static class are displayed. An asterisk next to the name of a feature means the feature is melted, as opposed to frozen. The dynamic class is the type of the object upon which the feature is called, whereas the static class is the class in which the feature was written.
+		</paragraph>
+		<paragraph>On top of this list, a line gives the state of the debugged application, and another one describes the exception that caused the application to stop, if any. For more information concerning exceptions, see the 
+			<link>
+				<url>30_supported_exceptions.xml</url>
+				<label>supported exceptions</label>
+			</link>.
+		</paragraph>
+		<paragraph>In the toolbar, the button gives the possibility to 
+			<link>
+				<url>40_save_call_stack.xml</url>
+				<label>save the call stack</label>
+			</link> to a text file. The 
+			<image>
+				<url>../../../../../images/eiffelstudio/icons/icon_set_stack_depth_color.gif</url>
+			</image> button makes it possible to choose which call stack depth should be displayed in the list (the default is to display the 100 top stack elements, but it is configurable with the same button).
+		</paragraph>
+	</paragraph>
+</document>

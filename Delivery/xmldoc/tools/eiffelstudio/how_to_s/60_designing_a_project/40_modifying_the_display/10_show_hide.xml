@@ -1,0 +1,43 @@
+<document title="Showing or hiding links and labels" output="studio">
+	<meta_data>
+		<help>
+			<meta>
+				<content>Client link, Hide all</content>
+				<name>MS-HKWD</name>
+			</meta>
+			<meta>
+				<content>Inheritance link, Hide all</content>
+				<name>MS-HKWD</name>
+			</meta>
+			<meta>
+				<content>Client link labels, Hide all</content>
+				<name>MS-HKWD</name>
+			</meta>
+		</help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Showing or hiding links and labels
+		</heading>
+		<list ordered="false">
+			<item>To toggle visibility of all client links, click 
+				<bold>Show/hide client-supplier links</bold>. 
+				<image>
+					<url>/images/eiffelstudio/icons/icon_supplier_color.gif</url>
+				</image>
+			</item>
+			<item>To toggle visibility of all inheritance links, click
+				<bold>Show/hide inheritance links</bold>. 
+				<image>
+					<url>/images/eiffelstudio/icons/icon_inherit_color.gif</url>
+				</image>
+			</item>
+			<item>To toggle visibility of all client link labels, click
+				<bold>Show/hide client-supplier links</bold>. 
+				<image>
+					<url>/images/eiffelstudio/icons/icon_display_labels_color.gif</url>
+				</image> 
+			</item>
+		</list>
+	</paragraph>
+</document>

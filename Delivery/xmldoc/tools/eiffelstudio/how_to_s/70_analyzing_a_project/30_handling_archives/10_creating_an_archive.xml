@@ -1,0 +1,55 @@
+<document title="Creating an archive" output="studio">
+	<meta_data>
+		<help>
+			<meta>
+				<content>Metric,archive,create</content>
+				<name>MS-HKWD</name>
+			</meta>
+		</help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Creating an archive
+		</heading>
+		<paragraph>Users may want to archive the result of the system they are working on. To create an archive, you must have already clicked on
+			<image>
+				<height>16</height>
+				<width>16</width>
+				<url>/images/eiffelstudio/icons/icon_delete_small_color.gif</url>
+				<border>0</border>
+			</image> in the "Metric" tab of the contexttool.
+		</paragraph>
+		<paragraph>
+			<image>
+				<height>526</height>
+				<width>279</width>
+				<url>/images/eiffelstudio/metrics_png/archive_create.png</url>
+				<border>0</border>
+			</image>
+		</paragraph>
+		<list ordered="true">
+			<item>In the "Create/replace archive" frame, click on "Browse".</item>
+			<item>Select a folder and enter the name of the archive you are about to create. (Do not forget the ".xml" location!)</item>
+		</list>
+		<paragraph>All the available metrics (except for scope comparison ones, since) are then evaluated over the system scope. Measures are saved in the specified file.</paragraph>
+		<note>
+			<bold>Note</bold>: A warning dialog will inform you incase an error occurs (the created file already exists, or you cannot create a file in current location).
+		</note>
+		<seealso>
+			<bold>See Also</bold>
+			<line_break></line_break>
+			<link>
+				<url>20_updating_an_archive.xml</url>
+				<label>Updating an archive</label>
+			</link>
+			<link>
+				<url>30_comparing_to_an_archive.xml</url>
+				<label>Comparing to an archive</label>
+			</link>
+			<link>
+				<url>40_evaluating_a_metric_over_an_archive.xml</url>
+				<label>Evaluating a metric over an archive</label>
+			</link>
+		</seealso>
+	</paragraph>
+</document>

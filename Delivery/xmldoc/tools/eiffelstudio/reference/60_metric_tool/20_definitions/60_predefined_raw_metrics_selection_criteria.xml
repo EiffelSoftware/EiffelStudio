@@ -1,0 +1,27 @@
+<document output="studio" title="Predefined raw metrics">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Predefined raw metrics
+		</heading>
+		<paragraph>The environment should make it possible, for any project, to apply the elementary metrics in the following table, each with an associated unit and a one-identifier name. Each of the major divisions of the table starts with a raw metric, for example Classes, and, when appropriate, continues with selection criteria that yield derived metrics based on that raw metric, for example Deferred_classes.</paragraph>
+		<paragraph>The last column specifies the basic scope types of the metric; this notion, discussed in more detail in a later section, denotes the set of scope types on which the metric will need to get its information directly from the software product (rather than being simply computed by adding the corresponding values on a scope''s constituents).</paragraph>
+		<table>
+			<row>
+				<cell>missing table</cell>
+			</row>
+		</table>
+		<paragraph>A few comments on specific entries: </paragraph>
+		<list ordered="false">
+			<item>The list of criteria for Features does not include Routines because a routine is a feature that is not an attribute; to obtain the number of routines, just count features that do not satisfy the Attributes criterion.</item>
+			<item>The selection criteria Attributes and Deferred for Features are, a noted earlier, not independent, since attributes may not be deferred. </item>
+			<item>Another case of dependency: a procedure is never part of Queries but always a command. Queries, however, include both Attributes and Functions.</item>
+			<item>Two more cases of dependency: Redeclared and Renamed can only be satisfied for features that are inherited. A feature that is not inherited, but introduced fresh in the enclosing class, is called immediate. </item>
+			<item>The Redeclared attribute has three values: a feature is redefined it was effective in the parent, or it was deferred in the parent and the new class keeps it deferred with a different signature or contract; it is effected if it was deferred and the class makes it effective; or it may be neither of these.</item>
+		</list>
+		<paragraph>All metrics listed are product metrics with one exception: Compilations, the only process metric, counting the number of compilations of the project (in ISE Eiffel 5, this is based on ISE's Melting Ice technology). There is room for more process metrics, such as cost estimates; this requires standard formats letting project managers enter the appropriate information, a point that future versions of the metrics policy described here may develop further.</paragraph>
+		<paragraph>There is also room for elementary product metrics other than those in the preceding table. In fact, every syntactic construct is a candidate for an elementary metric that simply counts the number of its occurrences; but we should limit ourselves to those that we judge interesting. The metrics literature also suggests elementary metrics assessing complexity of the control structure through properties of the control graph (McCabe), or routine coherence through such properties as the number of attributes accessed by a routine; we should only add them if we can find convincing arguments for their theoretical soundness.</paragraph>
+	</paragraph>
+</document>

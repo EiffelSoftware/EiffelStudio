@@ -1,0 +1,59 @@
+<document title="Merge EiffelStudio Project Wizard" output="envision">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Merge Project Wizard
+		</heading>
+		<paragraph>Availability: Enterprise version only.</paragraph>
+		<paragraph>
+			<line_break></line_break> The purpose of this wizard is to allow you to share your Eiffel for .NET EiffelStudio projects with ENViSioN!. 
+		</paragraph>
+		<heading>
+			<size>2</size>Page content
+		</heading>
+		<paragraph>
+			<line_break></line_break> The wizard comprises of the following pages:
+		</paragraph>
+		<list ordered="false">
+			<item> Introduction Page - Introducing the wizard and its requirements </item>
+			<item> Select EiffelStudio Project - Select the existing EiffelStudio project </item>
+			<item>  Summary - The summary of the wizard, and what happens next</item>
+		</list>
+		<heading>
+			<size>2</size>Requirements
+		</heading>
+		<paragraph>
+			<line_break></line_break> The Merge Eiffel Studio Wizard requires a compatible Eiffel for .NET EiffelStudio project and a corresponding ace file. The select Eiffel Project File (*.epr) also must not be in use by EiffelStudio when adding it to the wizard.
+		</paragraph>
+		<warning>
+			<bold>Warning:</bold> The ACE file of the project to merge should not include any installation specific environment variables such as $ISE_EIFFEL. You may use your own environment variables or absolute paths in these cases. 
+		</warning>
+		<heading>
+			<size>2</size>EiffelStudio Project Selection
+		</heading>
+		<paragraph>
+			<line_break></line_break> The Select EiffelStudio Project asks for the corresponding EiffelStudio Eiffel Project File (*.epr), which must be compiled under Eiffel for .NET. Enter the path to the Eiffel Project File in the Project File text box, or simply use the 'Browse...' button to located it. The project Ace (*.ace)file also need specifying. By default when a project file has been selected and validated it will use the ace file used when compiling the Eiffel Project File. The ace file may be changed, however the ENViSioN project ace file will not be synchronized with EiffelStudio ace file.
+		</paragraph>
+		<paragraph>
+			<image>
+				<alt_text>Import EiffelStudio Wizard</alt_text>
+				<url>merge_eiffel_studio_wizard.PNG</url>
+			</image>
+		</paragraph>
+		<seealso>
+			<bold>See Also</bold>
+			<line_break></line_break>
+			<link>
+				<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/10_Adding_A_New_Project/index.xml</url>
+				<label>  Adding a New Project</label>
+			</link>
+			<line_break></line_break>
+			<link>
+				<url>./import_eiffelstudio_project.xml</url>
+				<label>Import EiffelStudio Project Wizard</label>
+			</link>
+		</seealso>
+	</paragraph>
+</document>

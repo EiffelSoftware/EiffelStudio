@@ -1,0 +1,23 @@
+<document title="Callers" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Callers
+		</heading>
+		<paragraph>The callers view 
+			<image>
+				<url>/images/eiffelstudio/icons/icon_format_feature_callers_color.gif</url>
+			</image> display all the features which are calling the current feature. It is possible to choose in the preferences if callers of the descendants should be displayed too (they are by default).
+		</paragraph>
+		<seealso>
+			<bold>See Also</bold>
+			<line_break></line_break> 
+			<link>
+				<url>/tools/eiffelstudio/reference/80_formatters/10_class_formatters/40_clients_format.xml</url>
+				<label>Class clients view</label>
+			</link>
+		</seealso>
+	</paragraph>
+</document>

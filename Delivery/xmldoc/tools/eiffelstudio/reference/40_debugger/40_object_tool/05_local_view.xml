@@ -1,0 +1,35 @@
+<document title="Local view" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Local view
+		</heading>
+		<paragraph>
+			<image>
+				<url>../../../../../images/eiffelstudio/debugger/locals_tree.png</url>
+			</image>
+		</paragraph>
+		<paragraph>The first tree in the 
+			<link>
+				<url>00_introduction.xml</url>
+				<label>object tool</label>
+			</link> gives information about the 
+			<link>
+				<url>../30_call_stack_tool/00_introduction.xml</url>
+				<label>current stack element</label>
+			</link>. Namely, it provides the current value of the parameters that were passed to the corresponding feature, the value of the local variables, as well as the value of the Result, if this feature is a function.
+		</paragraph>
+		<paragraph>All objects can be expanded to see the value of their attributes. They are also pickable, so that it is possible to drop them onto the 
+			<link>
+				<url>10_object_view.xml</url>
+				<label>object view</label>
+			</link> or an editor. It is also possible to use the 
+			<link>
+				<url>20_slice_size_command.xml</url>
+				<label>set slice size command</label>
+			</link> with SPECIAL objects.
+		</paragraph>
+	</paragraph>
+</document>

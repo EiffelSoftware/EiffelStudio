@@ -1,0 +1,83 @@
+<document title="Adding New Project Items" output="envision">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_pseudo_name>10</envision_pseudo_name>
+			</toc>
+		</help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Adding New Project Items
+		</heading>
+		<paragraph>A set of predefined project items have been defined for Eiffel Systems. To add a  new item to a project that is currently open, right click on the project icon  in the  
+			<help_link>
+				<tab_index>0</tab_index>
+				<index_moniker>!DefaultAssociativeIndex</index_moniker>
+				<keywords>Eiffel Solution Explorer</keywords>&gt;Solution Explorer
+			</help_link>  and from the context menu, select Add, Add New Item as follows:
+		</paragraph>
+		<paragraph>
+			<image>
+				<alt_text>Add new item</alt_text>
+				<url>add_new_item.PNG</url>
+			</image>
+		</paragraph>
+		<paragraph>A new item may also be added through the project menu:</paragraph>
+		<paragraph>
+			<image>
+				<alt_text>Add new item menu</alt_text>
+				<url>add_new_item_menu.PNG</url>
+			</image>
+		</paragraph>
+		<paragraph>The Add New Item dialog will then be displayed:</paragraph>
+		<paragraph>
+			<image>
+				<alt_text>Add new item dialog</alt_text>
+				<url>add_new_item_dialog.PNG</url>
+			</image>
+		</paragraph>
+		<paragraph>Select the type of item that you wish to add to your project, and click 
+			<bold>Open</bold>. A new item of the type selected will be added to your project. There are four types of new items available:
+			<list ordered="false">
+				<item>
+					<link>
+						<url>new_class.xml</url>
+						<label>New Class</label>
+					</link>
+				</item>
+				<item>
+					<link>
+						<url>dialog.xml</url>
+						<label>Vision2 Dialog</label>
+					</link>
+				</item>
+				<item>
+					<link>
+						<url>titled_window.xml</url>
+						<label>Vision2 Titled Window</label>
+					</link>
+				</item>
+				<item>
+					<link>
+						<url>web_service.xml</url>
+						<label>Web Service</label>
+					</link>
+				</item>
+			</list>
+			<seealso>
+				<bold>See Also</bold>
+				<line_break></line_break>
+				<link>
+					<url>/10_Developing/20_Managing_Projects/index.xml</url>
+					<label>Managing Projects</label>
+				</link>
+				<line_break></line_break>
+				<link>
+					<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/index.xml</url>
+					<label>Using ENViSioN! Within Visual Studio.NET</label>
+				</link>
+			</seealso>
+		</paragraph>
+	</paragraph>
+</document>

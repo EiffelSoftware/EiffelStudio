@@ -1,0 +1,67 @@
+<document title="Debug Page" output="envision">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_pseudo_name>30</envision_pseudo_name>
+			</toc>
+		</help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size> Debug Property Page
+		</heading>
+		<paragraph> The Debug property pages is used to define the debugging options for your project.</paragraph>
+		<paragraph>
+			<image>
+				<alt_text>Debug Property Page</alt_text>
+				<url>DebugPPG.PNG</url>
+			</image>
+		</paragraph>
+		<heading>
+			<size>2</size> Actions(Optional)
+		</heading>
+		<paragraph>
+			<line_break></line_break> The property listed in this section are User-Specific properties and will not be applied to the project as a whole, but saved in a separate user configuration file. The user specific settings do not require a project recompilation to reflect their changes.
+			<line_break></line_break>
+		</paragraph>
+		<heading>
+			<size>3</size> Start Application
+		</heading>
+		<paragraph>If your project requires a client application to function correctly (such as if the Project Type property in General is set to dll)then you will need to specify that client application here. When running the project, the client application will load making use of your projects compiled assembly.</paragraph>
+		<bold>Note</bold>: Please ensure that the output of the project is the same assembly that the client application will be using when it is run. Failure to do so, you will not be able to debug the project and you may experience undesired results.
+		<heading>
+			<size>3</size> Start Application Path
+		</heading>
+		<paragraph> The Start Applications Path is used to change the working directory of the client application that uses the projects compiled assembly. 
+			<heading>
+				<size>3</size>  Arguments
+			</heading>
+			<paragraph> The Arguments property allows you to specify any required command line arguments for either the selected project or, if a Start Application is defined, the Start Application.</paragraph>
+			<heading>
+				<size>2</size> Generate Debug Info
+			</heading>
+			<heading>
+				<size>3</size>Generate Debug Info
+			</heading>
+			<paragraph>This property tells the compiler whether or not to generate the debugging information needed by the debugger to debug your project. It is recommended that this option is set to true for all debugging related configurations, and set to false for any release related configurations. If this property is set to false you will be unable to debug the code for the selected project.</paragraph>
+			<seealso>
+				<bold>See Also</bold>
+				<line_break></line_break>
+				<link>
+					<url>./ProjectConfiguration.xml</url>
+					<label>Property Page Overview</label>
+				</link>
+				<line_break></line_break>
+				<link>
+					<url>AssemblyInfoPage.xml</url>
+					<label>Assembly Info Property Page</label>
+				</link>
+				<line_break></line_break>
+				<link>
+					<url>AssertionsPage.xml</url>
+					<label>Assertions Property Page</label>
+				</link>
+			</seealso>
+		</paragraph>
+	</paragraph>
+</document>

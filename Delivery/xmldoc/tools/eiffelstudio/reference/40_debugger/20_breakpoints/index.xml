@@ -1,0 +1,71 @@
+<document title="Breakpoints" output="studio">
+	<meta_data>
+		<help>
+			<meta>
+				<content>breakpoints</content>
+				<name>MS-HKWD</name>
+			</meta>
+			<meta>
+				<content>stop points</content>
+				<name>MS-HKWD</name>
+			</meta>
+		</help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Breakpoints
+		</heading>
+		<list ordered="false">
+			<item>
+				<link>
+					<url>00_introduction.xml</url>
+					<label>Introduction</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>10_breakpoint_menu.xml</url>
+					<label>Breakpoint menu</label>
+				</link>
+			</item>
+			<item>
+				<image>
+					<height>16</height>
+					<width>16</width>
+					<url>../../../../../images/eiffelstudio/icons/icon_enable_bkpt_color.gif</url>
+				</image> 
+				<image>
+					<height>16</height>
+					<width>16</width>
+					<url>../../../../../images/eiffelstudio/icons/icon_disable_bkpt_color.gif</url>
+				</image> 
+				<image>
+					<height>16</height>
+					<width>16</width>
+					<url>../../../../../images/eiffelstudio/icons/icon_del_bkpt_color.gif</url>
+				</image> 
+				<link>
+					<url>20_breakpoint_commands.xml</url>
+					<label>Breakpoint commands</label>
+				</link>
+			</item>
+			<item>
+				<image>
+					<height>16</height>
+					<width>16</width>
+					<url>../../../../../images/eiffelstudio/icons/icon_bkpt_info_color.gif</url>
+				</image> 
+				<link>
+					<url>30_breakpoint_information.xml</url>
+					<label>Breakpoint information command</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>40_conditional_breakpoints.xml</url>
+					<label>Conditional breakpoints</label>
+				</link>
+			</item>
+		</list>
+	</paragraph>
+</document>

@@ -1,0 +1,131 @@
+<document title="Java externals" output="studio">
+	<meta_data>
+		<help>
+			<meta>
+				<content>Java externals</content>
+				<name>MS-HKWD</name>
+			</meta>
+			<meta>
+				<content>externals, Java</content>
+				<name>MS-HKWD</name>
+			</meta>
+		</help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Java externals
+		</heading>
+		<heading>
+			<size>2</size>Introduction
+		</heading>
+		<paragraph>The Java interface allows you to call Java routines or attributes from your Eiffel code. It uses the Java Native Interface(JNI) provided by the Java Development Kit (JDK) 1.1.4. You can get more information about the JNI at:</paragraph>
+		<heading>
+			<size>3</size>Requirements
+		</heading>
+		<list ordered="false">
+			<item>JDK 1.1.4 correctly set (download it at 
+				<link>
+					<url>http://java.sun.com/products/jdk/1.1/index.xml</url>
+					<label>http://java.sun.com/products/jdk/1.1/index.html</label>
+				</link>).
+			</item>
+			<item>The Java classes you want to use must be in the environment variable CLASSPATH.</item>
+		</list>
+		<heading>
+			<size>3</size>Limitations
+		</heading>
+		<list ordered="false">
+			<item>In this version, you can only use one JNI environment.</item>
+			<item>Only one thread can interact with the Java Virtual Machine(JVM).</item>
+			<item>It is not possible to call Eiffel features from Java programs.</item>
+			<item>The Eiffel side cannot deal with 'long' integer (64 bits).</item>
+			<item>The Eiffel feature `destroy_vm' of `JAVA_VM' calls a C function of the Java Native Interface that is not fully implemented in jdk 1.1.4. This function, called DestroyJavaVM, always returns-1 in jdk 1.1.4. For further information, go on the JNI pagesat the address above. </item>
+		</list>
+		<heading>
+			<size>2</size>Interface classes
+		</heading>
+		<heading>
+			<size>3</size>JNI_ENVIRONMENT
+		</heading>
+		<heading>
+			<size>3</size>SHARED_JNI_ENVIRONMENT
+		</heading>
+		<heading>
+			<size>3</size>JAVA_VM
+		</heading>
+		<heading>
+			<size>3</size>JAVA_CLASS
+		</heading>
+		<heading>
+			<size>3</size>JAVA_OBJECT
+		</heading>
+		<heading>
+			<size>3</size>JAVA_EXTERNALS
+		</heading>
+		<heading>
+			<size>3</size>JAVA_***_ARRAY
+		</heading>
+		<heading>
+			<size>3</size>JAVA_ARGS
+		</heading>
+		<heading>
+			<size>3</size>JAVA_OBJECT_TABLE
+		</heading>
+		<heading>
+			<size>2</size>An example
+		</heading>
+		<code>           ## the Java Class ##class test {    test () {}    public int my_integer;    public static in my_static_integer;    public void my_method (int arg_int, String arg_string) {        ...    }    ...}            ## the Eiffel Side ##
+			<keyword>class</keyword>    
+			<class_name>EIFFEL_TO_JAVA</class_name>        
+			<keyword>inherit</keyword>    
+			<class_name>SHARED_JNI_ENVIRONMENT</class_name>
+			<keyword>creation</keyword>    
+			<feature_name>make</feature_name>
+			<keyword>feature</keyword> 
+			<comment>-- Creation</comment>    
+			<feature_name>make</feature_name> 
+			<keyword>is</keyword>        
+			<keyword>local</keyword>            class_test: 
+			<class_name>JAVA_CLASS</class_name>            instance_of_class_test: 
+			<class_name>JAVA_OBJECT</class_name>            fid: 
+			<class_name>POINTER</class_name>            value: 
+			<class_name>INTEGER</class_name>            j_args: 
+			<class_name>JAVA_ARGS</class_name>        
+			<keyword>do</keyword>            
+			<comment>--| Creation of the Java object</comment>            class_test := 
+			<feature_name>jni</feature_name>.
+			<feature_name>find_class</feature_name> ("test")            
+			<keyword>create</keyword> instance_of_class_test.
+			<feature_name>create_instance</feature_name> (class_test, "()V", 
+			<keyword>Void</keyword>)                            
+			<comment>--| Access to a public attribute</comment>            fid := instance_of_class_test.
+			<feature_name>field_id</feature_name> ("my_integer", "I")                
+			<comment>-- 'fid' contains the id of the field 'my_integer'</comment>            value := instance_of_class_test.
+			<feature_name>integer_attribute</feature_name> (fid)                
+			<comment>-- 'value' contains the value of the field referenced</comment>                
+			<comment>-- by 'fid'</comment>            ...            
+			<comment>--| Access to a static attribute using directly the JAVA_CLASS</comment>            fid := class_test.
+			<feature_name>field_id</feature_name> ("my_static_integer", "I")            value := class_test.
+			<feature_name>integer_attribute</feature_name> (fid)            ...            
+			<comment>--| Access to a static attribute using the attribute 'jclass'</comment>            fid := instance_of_class_test.
+			<feature_name>jclass</feature_name>.
+			<feature_name>field_id</feature_name> ("my_static_integer", "I")            value := instance_of_class_test.
+			<feature_name>jclass</feature_name>.
+			<feature_name>integer_attribute</feature_name> (fid)            ...            
+			<comment>--| Access to the method 'my_method'</comment>            fid := instance_of_class_test.
+			<feature_name>method_id</feature_name> ("my_method", "(ILjava/lang/String;)V")                
+			<comment>-- Get the id of 'my_method'</comment>            
+			<keyword>create</keyword> j_args.
+			<feature_name>make</feature_name>(2)            j_args.
+			<feature_name>push_int</feature_name> (2)            j_args.
+			<feature_name>push_string</feature_name>("String test")                
+			<comment>-- Create the set of arguments for 'my_method'</comment>            instance_of_class_test.
+			<feature_name>void_method</feature_name> (fid, j_args)                
+			<comment>-- Call to the void method referenced by 'fid'</comment>            ...                    
+			<keyword>end</keyword> 
+			<comment>-- make</comment>
+			<keyword>end</keyword> 
+			<comment>-- class EIFFEL_TO_JAVA</comment>
+		</code>
+	</paragraph>
+</document>

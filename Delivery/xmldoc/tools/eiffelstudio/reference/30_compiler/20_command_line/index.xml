@@ -1,0 +1,36 @@
+<document title="Command line" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Command line
+		</heading>
+		<list ordered="false">
+			<item>
+				<link>
+					<url>00_introduction.xml</url>
+					<label>Introduction</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>10_command_line_options.xml</url>
+					<label>Command line options</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>20_batch_compilation.xml</url>
+					<label>Batch compilation</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>30_interactive_mode/index.xml</url>
+					<label>Command line interactive mode</label>
+				</link>
+			</item>
+		</list>
+	</paragraph>
+</document>

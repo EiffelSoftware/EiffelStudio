@@ -1,0 +1,72 @@
+<document title="Definitions" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Definitions
+		</heading>
+		<list ordered="false">
+			<item>
+				<link>
+					<url>00_introduction.xml</url>
+					<label>Introduction</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>10_attributes_metrics_measures.xml</url>
+					<label>Attributes, metrics and measures</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>20_units.xml</url>
+					<label>Units</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>30_metric_frame_work_theory.xml</url>
+					<label>Metric frame work, metric theory</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>40_elementary_composite_metrics.xml</url>
+					<label>Elementary and composite metrics</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>50_raw_metrics_selection_criteria.xml</url>
+					<label>Raw metrics and selection criteria</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>60_predefined_raw_metrics_selection_criteria.xml</url>
+					<label>Predefined raw metrics and selection criteria</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>70_scopes_scope_types.xml</url>
+					<label>Scopes, scopetypes</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>80_basic_scope_type.xml</url>
+					<label>Basic scope type</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>90_measurement_archive.xml</url>
+					<label>Measurement archive</label>
+				</link>
+			</item>
+		</list>
+	</paragraph>
+</document>

@@ -1,0 +1,189 @@
+<document title="Samples" output="envision">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_pseudo_name>30</envision_pseudo_name>
+			</toc>
+		</help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>ENViSioN! Samples
+		</heading>
+		<paragraph>A number of samples are provided with Eiffel ENViSioN!, designed to illustrate different functionalities of the libraries, and how to implement them in your Projects. The samples are categorizedby library, exceptthe console application which demonstrates the use of 
+			<link>
+				<url>\libraries\base\index.xml</url>
+				<label>Eiffel Base</label>
+			</link>, with standard console output. The following samples are available:
+		</paragraph>
+		<heading>
+			<size>2</size>Console sample
+		</heading>
+		<list ordered="false">
+			<item>
+				<link>
+					<url>/technologies/dotnet/samples/console/calculator.xml</url>
+					<label>Calculator</label>
+				</link>
+			</item>
+		</list>
+		<heading>
+			<size>2</size>Threads Samples
+		</heading>
+		<list ordered="false">
+			<item>
+				<link>
+					<url>/technologies/dotnet/samples/threads/pools.xml</url>
+					<label>Pools</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>/technologies/dotnet/samples/threads/timers.xml</url>
+					<label>Timers</label>
+				</link>
+			</item>
+		</list>
+		<heading>
+			<size>2</size>ADO.NETsample
+		</heading>
+		<list ordered="false">
+			<item>
+				<link>
+					<url>/technologies/dotnet/samples/ado/ado.xml</url>
+					<label>ADO.NET</label>
+				</link>
+			</item>
+		</list>
+		<heading>
+			<size>2</size>Windows Form samples
+		</heading>
+		<paragraph>The Hello World sample is the simplest, and therefore, the recommended starting point.</paragraph>
+		<list ordered="false">
+			<item>
+				<link>
+					<url>/technologies/dotnet/samples/winform/simple_hello_world.xml</url>
+					<label>Hello world form</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>/technologies/dotnet/samples/winform/message_box.xml</url>
+					<label>Message box</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>/technologies/dotnet/samples/winform/date_time_picker.xml</url>
+					<label>Calendar and dates</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>/technologies/dotnet/samples/winform/progress_bar.xml</url>
+					<label>Progress bar</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>/technologies/dotnet/samples/winform/menu/index.xml</url>
+					<label>Adding Menu to a Form</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>/technologies/dotnet/samples/winform/mdi/index.xml</url>
+					<label>Writing MDI Applications</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>/technologies/dotnet/samples/winform/tree_view.xml</url>
+					<label>Tree view</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>/technologies/dotnet/samples/winform/calculator.xml</url>
+					<label>Calculator</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>/technologies/dotnet/samples/winform/gdi_plus_text.xml</url>
+					<label>Text (gdi plus)</label>
+				</link>
+			</item>
+		</list>
+		<heading>
+			<size>2</size>Vision2 samples
+		</heading>
+		<paragraph>The following samples demonstrate the use of the 
+			<link>
+				<url>/libraries/vision2/index.xml</url>
+				<label>Eiffel Vision2</label>
+			</link> library.
+		</paragraph>
+		<list ordered="false">
+			<item>
+				<link>
+					<url>/Libraries/Vision2/samples/accelerator/index.xml</url>
+					<label>Accelerator</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>/Libraries/Vision2/samples/cursor/index.xml</url>
+					<label>Cursor</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>/Libraries/Vision2/samples/gauges/index.xml</url>
+					<label>Gauges</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>/Libraries/Vision2/samples/standard_dialogs/index.xml</url>
+					<label>Standarddialogs</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>/Libraries/Vision2/samples/viewport/index.xml</url>
+					<label>Viewport</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>/Libraries/Vision2/samples/widgets/index.xml</url>
+					<label>Widgets</label>
+				</link>
+			</item>
+		</list>
+		<heading>
+			<size>2</size>Wel samples
+		</heading>
+		<paragraph>The following samples demonstrate the use of the 
+			<link>
+				<url>/libraries/WEL/index.xml</url>
+				<label>Windows Only Library - WEL</label>
+			</link>.
+		</paragraph>
+		<list ordered="false">
+			<item>
+				<link>
+					<url>/libraries/Wel/samples/tutorial/index.xml</url>
+					<label>WELtutorial</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>/libraries/Wel/samples/xcell/index.xml</url>
+					<label>xCell</label>
+				</link>
+			</item>
+		</list>
+	</paragraph>
+</document>

@@ -1,0 +1,32 @@
+<document title="Key shortcuts" output="studio">
+	<meta_data>
+		<help>
+			<meta>
+				<content>key shortcuts</content>
+				<name>MS-HKWD</name>
+			</meta>
+		</help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Key shortcuts
+		</heading>
+		<paragraph>Many operations in EiffelStudio do not require the use of the mouse. The same effect can be achieved through the keyboard only.</paragraph>
+		<paragraph>This page gathers all the keyboard shortcuts available in the environment. They are sorted in several categories, depending on their domain of application.</paragraph>
+		<heading>
+			<size>2</size>Editor shortcuts
+		</heading>
+		<paragraph>
+			<bold>Note</bold>: These shortcuts are not available everywhere. All operations that do not imply changes in the text are available both in the editor and in the class and feature tabs of the context tool. Other operations are available only in theeditor.
+		</paragraph>
+		<heading>
+			<size>2</size>Compiler
+		</heading>
+		<heading>
+			<size>2</size>Debugger
+		</heading>
+		<heading>
+			<size>2</size>Miscellaneous
+		</heading>
+	</paragraph>
+</document>

@@ -1,0 +1,48 @@
+<document title="Search functionality" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Search functionality
+		</heading>
+		<paragraph>EiffelStudio editor provides a search functionality. To search an expression in the edited text, you can either use the 
+			<link>
+				<url>../10_browsing_tools/60_search_tool.xml</url>
+				<label>Search tool</label>
+			</link> or use a set of keyboard accelerators available directly from the editor. From the editor, you can:
+		</paragraph>
+		<list ordered="false">
+			<item>
+				<paragraph>Search the next occurrence of the last searched pattern.
+					<line_break></line_break>To do so, press "F3". You can change this key binding in 
+					<link>
+						<url>../85_preferences/20_preferences_reference/20_tools/30_editor/20_keyboard_shortcuts_preferences.xml</url>
+						<label>the preferences</label>
+					</link>. If you press "F3" as some text is selected, the editor will highlight the next occurrence of this text, if any. You can change this behavior in 
+					<link>
+						<url>../85_preferences/20_preferences_reference/20_tools/30_editor/20_keyboard_shortcuts_preferences.xml</url>
+						<label>the preferences</label>
+					</link>.
+				</paragraph>
+			</item>
+			<item>
+				<paragraph>Search the previous occurrence of the last searched pattern.
+					<line_break></line_break>To do so, press "Shift+F3". You can change this key binding in 
+					<link>
+						<url>../85_preferences/20_preferences_reference/20_tools/30_editor/20_keyboard_shortcuts_preferences.xml</url>
+						<label>the preferences</label>
+					</link> too.
+				</paragraph>
+			</item>
+		</list>
+		<seealso>
+			<bold>See Also</bold>
+			<line_break></line_break> 
+			<link>
+				<url>../10_browsing_tools/60_search_tool.xml</url>
+				<label>Search tool</label>
+			</link>
+		</seealso>
+	</paragraph>
+</document>

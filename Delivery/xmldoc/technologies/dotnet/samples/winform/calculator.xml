@@ -1,0 +1,70 @@
+<document title="Calculator">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_pseudo_name>80</envision_pseudo_name>
+				<envision_location>Samples\Windows Forms</envision_location>
+			</toc>
+		</help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Calculator
+		</heading>
+		<div>
+			<paragraph>
+				<image>
+					<height>257</height>
+					<width>258</width>
+					<url>/images/dotnet_samples/calculator.png</url>
+					<alt_text>Calculator</alt_text>
+				</image>
+			</paragraph>
+		</div>
+		<paragraph>
+			<line_break></line_break>
+			<line_break></line_break>
+		</paragraph>
+		<heading>
+			<size>2</size>Compiling
+		</heading>
+		<heading>
+			<size>2</size>Running
+		</heading>
+		<paragraph>After launching the application, you will see a window displayed with a similar appearance to the one above. This is a really simple calculator that can take only two operands. So you should enter the first operand, then enter an operator, then the second operand. Click the "Calculate" button to generate the result. </paragraph>
+		<paragraph></paragraph>
+		<heading>
+			<size>2</size>Under the Hood
+		</heading>
+		<paragraph>The application uses two local external assemblies, math.dll and parserutils.dll. </paragraph>
+		<paragraph>parserutils parses the command line entered, and checks if it is of the form operand1 operator operand2. math.dll calculates the actual result of the command line. </paragraph>
+		<paragraph>For the parserutils.dll, we have been obliged to introduce the prefix "parser_" to avoid conflicts between name classes. </paragraph>
+		<paragraph>
+			<image>
+				<url>/images/dotnet_samples/calculator_local_assemblies.png</url>
+				<alt_text>Local assemblies</alt_text>
+			</image>
+		</paragraph>
+		<paragraph>This sample contains the following class:</paragraph>
+		<list ordered="false">
+			<item>
+				<span>FORM</span>
+			</item>
+			<item>
+				<span>BUTTON</span>
+			</item>
+			<item>
+				<span>TEXT_FIELD</span>
+			</item>
+			<item>
+				<span>LABEL</span>
+			</item>
+		</list>
+		<heading>
+			<size>2</size>Notes
+		</heading>
+		<paragraph>This sample is translated from the example located in the Tutorials\resources and localization\worldcalc subdirectory of the.NET Framework SDK samples directory of Microsoft Visual Studio.NET. </paragraph>
+		<paragraph></paragraph>
+		<paragraph></paragraph>
+	</paragraph>
+</document>

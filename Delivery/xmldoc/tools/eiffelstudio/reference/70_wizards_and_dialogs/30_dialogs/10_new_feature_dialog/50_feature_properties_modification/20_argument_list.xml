@@ -1,0 +1,38 @@
+<document title="Argument list" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Argument list
+		</heading>
+		<paragraph>For functions and procedures, you can build a formal argument list. You can do this by clicking on the 
+			<bold>New argument</bold> button as many times as you need arguments.
+		</paragraph>
+		<note>
+			<bold>Note</bold>: even though this dialog always shows parentheses, they are not generated if the list is empty (Eiffel's command-query separation (CQS) principle).
+		</note>
+		<div>
+			<image>
+				<url>/images/eiffelstudio/dialogs_and_wizards/feature-wizard-3-arguments.png</url>
+			</image>
+		</div>
+		<note>
+			<bold>Note</bold>: if you add arguments to a routine, It is not possible anymore to select routine type 
+			<bold>once</bold>.
+		</note>
+		<paragraph>For every attribute you selected, enter a name in the textbox and a type using the 
+			<link>
+				<url>80_type_selection.xml</url>
+				<label>type selection</label>
+			</link>.
+		</paragraph>
+		<div>
+			<image>
+				<url>/images/eiffelstudio/dialogs_and_wizards/feature-wizard-1-argument.png</url>
+			</image>
+		</div>
+		<paragraph>The code that is generated:</paragraph>
+		<code></code>
+	</paragraph>
+</document>

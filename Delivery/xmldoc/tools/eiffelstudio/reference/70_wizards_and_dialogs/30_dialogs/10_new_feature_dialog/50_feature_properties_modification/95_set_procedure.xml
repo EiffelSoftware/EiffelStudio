@@ -1,0 +1,38 @@
+<document title="Set-procedure" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Set-procedure
+		</heading>
+		<paragraph>When creating an attribute, it is common that you will also need a set-procedure for it. For example, for attribute 
+			<code>
+				<feature_name>property</feature_name>
+			</code> you need a procedure 
+			<code>
+				<feature_name>set_property</feature_name>
+			</code> to set it. This feature takes one argument of the same type as 
+			<code>
+				<feature_name>property</feature_name>
+			</code> or is anchored to it. The only thing you have to do with the feature wizard is check the button
+			<bold>Generate set procedure</bold>.
+		</paragraph>
+		<div>
+			<image>
+				<url>/images/eiffelstudio/dialogs_and_wizards/feature-wizard-setprocedure.png</url>
+			</image>
+		</div>
+		<paragraph>The feature that is generated in addition to the attribute itself is placed in feature clause 
+			<code>
+				<comment>change Element</comment>
+			</code> and is exported to all classes. If you have selected or entered an invariant, the precondition will protect this invariant. Example of a generated set-procedure:
+		</paragraph>
+		<div>
+			<image>
+				<url>/images/eiffelstudio/dialogs_and_wizards/feature-wizard-setprocedure-example.png</url>
+			</image>
+		</div>
+		<code></code>
+	</paragraph>
+</document>

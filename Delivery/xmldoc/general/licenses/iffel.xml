@@ -1,0 +1,210 @@
+<document title="IFELL">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_pseudo_name>20</envision_pseudo_name>
+				<envision_location>Licenses</envision_location>
+				<envision_title></envision_title>
+				<studio_location></studio_location>
+				<studio_title></studio_title>
+			</toc>
+		</help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>The ISE Free Eiffel Library License (IFELL)
+		</heading>
+		<code>
+			<comment>(This license describes the terms applicable to the open-source EiffelBase libraries. For the EiffelStudio and other libraries license terms, please refer to the ISE end-user license.)</comment>
+		</code>
+		<paragraph>On August 4, 1998 -- as part of the Eiffel Summit at TOOLS USA '98 -- InteractiveSoftware Engineering (ISE)officially made its flagship
+			<link>
+				<url>../../libraries/base/index.xml</url>
+				<label>EiffelBase library</label>
+			</link>available for free to any organization that wants to use it, for eithercommercial or nonprofit purposes.
+		</paragraph>
+		<paragraph>The terms of the new EiffelBase license are given below.Changes since the original version are recorded in the
+			<link>
+				<url>#changes</url>
+				<label>changes section</label>
+			</link>.
+		</paragraph>
+		<paragraph>We hope that others will be inspired by this example to release theirown reusable Eiffel components to the public.
+			<heading>
+				<size>2</size>Preamble
+			</heading>(This Preamble is not part of the license.)
+		</paragraph>
+		<paragraph>EiffelBase is one of the principal contributions of Eiffel: a library offundamental structures and algorithms covering the basics of computing,and resulting from a "Linnaean" effort at a general-purpose taxonomy ofcomputing structures. We believe that EiffelBase is one of the most carefullydesigned and extensively used libraries in the object-oriented industry.The library and its design principles are described in detail in thebook
+			<link>
+				<url>http://www.eiffel.com/doc/#ru</url>
+				<label>
+					<italic>Reusable Software: The BaseObject-Oriented Component Libraries</italic>
+				</label>
+			</link>.
+		</paragraph>
+		<paragraph>EiffelBase is at the center of ISE Eiffel and has been among the majorfactors attracting users to the technology. In spite of this competitiveadvantage, ISE officially announced in June of 1998 that it wouldrelease the library to the public in source form, under the termsof the license below. There are two main reasons for this initiative:</paragraph>
+		<list ordered="false">
+			<item>As the software industry seems poised to adopt the idea of reusablecomponents, we feel that EiffelBase provides an ideal basis andare happy to contribute it to the community.</item>
+			<item>We are impressed by the quality of some  public-domain softwareand the effectiveness of the "open source" movement. We hope thatthe public availability of EiffelBase in source form will encouragemany people to take a close look at the classes of EiffelBase,criticize its weaker points, provide improvements, and add theirown high-quality contributions.</item>
+		</list>
+		<heading>
+			<size>3</size>About the license
+		</heading>
+		<paragraph>After considering existing license contracts for publicly availablesoftware, we felt that the GPL (Gnu Public License) as wellas LGPL, its variant for libraries, while useful and interesting,were not adequate since they are too restrictive.</paragraph>
+		<paragraph>In particular a crucial requirement was that the license should allowcommercial companies to use EiffelBase (and other libraries thatmay use this license in the future) in for-profit developmentswithout any fear (justified or not) that GPL-likerequirements could cause proprietary elements oftheir products to come under the open source umbrella themselves.</paragraph>
+		<paragraph>The closest model was that of the Perl Artistic License, whichsignificantly influenced the terms of the agreement as shown below.It too, however, was not applicable verbatim. EiffelBase was initiallydesigned as a commercial product and then released as free software,a different situation from that of software that was never commercial.</paragraph>
+		<paragraph>You will note that there are few restrictions on the useof EiffelBase in the license given below. You can use EiffelBasein your academic work and re-publish the source; you can producea commercial software product using EiffelBase and not owe acent to ISE.</paragraph>
+		<heading>
+			<size>3</size>Ownership
+		</heading>
+		<paragraph>EiffelBase remains an ISE product and will continue to be distributedas such to ISE customers. This means in particular that there isno lessening of our maintenance and support responsibilityto our customers under maintenance. In fact, the increased scrutinyand outside contributions will mean an increase of our commitmentto develop EiffelBase and of the quality of the product.</paragraph>
+		<heading>
+			<size>2</size>The License Text
+		</heading>
+		<paragraph>This is the official license text.</paragraph>
+		<heading>
+			<size>3</size>Definitions
+		</heading>"ISE" refers to Interactive Software Engineering Inc.
+		<paragraph>"The Library" refers to the collection of software texts in the Eiffellanguage, originally written by ISE, and constituting the EiffelBase libraryof fundamental computing science structures, as well as any derivatives ofthese texts as may be created through textual modification (by people) orthrough translation to lower-level languages (by programs such as compilers).</paragraph>
+		<paragraph>"Standard Version" refers to the version of the Library maintained by ISEand distributed by ISE to its customers under maintenance.</paragraph>
+		<paragraph>"You" means any person interested in using, modifying or distributing the Library.</paragraph>
+		<paragraph>"Source form" means the text of the the Library's classes, inthe Eiffel language.</paragraph>
+		<paragraph>"Object form" means the translation, as performed by acompiler or other program, of the Library or part of the Libraryinto another, usually lower-level code (such as C, assembly languageor machine language) intended for execution by a machine.</paragraph>
+		<paragraph>"Reference implementation" means the latest officially releasedversion of ISE's implementation of the Eiffel language.</paragraph>
+		<heading>
+			<size>3</size>Statement of copyright and ownership
+		</heading>
+		<paragraph>
+			<bold>1.</bold> The Library is the property of ISE and bears ISE's copyright.Any use you make of the Library must respect ISE's proprietary rights.
+		</paragraph>
+		<heading>
+			<size>3</size>Right of use
+		</heading>
+		<bold>2.</bold> ISE hereby grants you permission to do any of the followingwithout payment to ISE, under the conditions of sections 3 to 7of this Agreement:
+		<list ordered="false">
+			<item>
+				<bold>2.1.</bold> Use the Library, in source form or object form, as part of any softwareyou develop and distribute to other parties.
+			</item>
+			<item>
+				<bold>2.2.</bold> Distribute the source of the Library to other parties.
+			</item>
+		</list>
+		<heading>
+			<size>3</size>Conditions
+		</heading>
+		<paragraph>
+			<bold>3.</bold> If you use (2.1) or distribute (2.2) the Library, you are encouraged, but not required,to provide toISE and the rest of the Library's user community any bug fixesor other improvementsthat you make to the existing classes of the Library.Such changes may be communicated through any appropriate means; it isrecommended that you deposit new classes in the FTP directory forcontributions, currently
+			<list ordered="false">
+				<item>
+					<link>
+						<url>ftp://ftp.eiffel.com/pub/incoming</url>
+						<label>ftp://ftp.eiffel.com/pub/incoming</label>
+					</link>
+				</item>
+			</list>and that you present and discuss the changes in the the Librarydiscussion group
+		</paragraph>
+		<paragraph>
+			<bold>4.</bold>If you produce new classes based on the Library or extendingthe Library,you are encouraged, but not required,to make them available in the same way.
+		</paragraph>
+		<paragraph>
+			<bold>5.</bold> If you use the Library (2.1) in source or object form forproducing software that you distribute, you are encouraged,but not required, to include the following mention (or its translationinto the language of the rest of the distribution, if other than English)in the documentation of your software, including textual documentationas well as online documentation such as "About..." entries:
+			<list ordered="false">
+				<item>
+					<italic>This product includes EiffelBase software from Interactive SoftwareEngineering, used according to the terms of the ISE Free Eiffel LibraryLicense (IFELL). </italic>See 
+					<link>
+						<url>http://eiffel.com/</url>
+						<label>http://eiffel.com</label>
+					</link>and, for the license terms,
+					<link>
+						<url>http://eiffel.com/products/base/license.xml</url>
+						<label>http://eiffel.com/products/base/license.html</label>
+					</link>.
+				</item>
+			</list>
+		</paragraph>
+		<paragraph>
+			<bold>6.</bold> If you distribute the source code of part or all of the Library (2.2)you must:
+			<list ordered="false">
+				<item>Distribute entire classes, not just extracts.</item>
+				<item>Retain, in the distributed version, the entire copyright notice of theseclasses.</item>
+				<item>If you need to make any modification to the classes, mark those modificationsclearly in the class texts.</item>
+				<item>Ensure that the text remains valid Eiffel.Note that this license does not authorize you todistribute versions of the Library restated in other programming,analysis or design languages, except ifmechanically translated from the source form by an Eiffel compiler,in which case they fall under "object form". For any non-mechanicaladaptation to other languages you must obtain authorization from ISE."Valid Eiffel" includes the language described in the latestedition or printing of the book
+					<link>
+						<url>http://www.eiffel.com/doc/page.html#etl</url>
+						<label>
+							<italic>Eiffel: The Language</italic>
+						</label>
+					</link>(Prentice Hall), plus any changes or extensions that have beenapproved by the Nonprofit International Consortium for Eiffel (NICE)or have been accepted for discussion by the Language Committeeof NICE, provided they are accepted by the reference implementation.
+				</item>
+				<item>If ISE releases a new version of the Library, you must, nolater than six months after the release of that version,either: (A) update your distribution to thenew version; (B) add the following notice to all files in your distribution:"
+					<italic>This is an obsolete version of EiffelBase.  The latest versionis available from http://eiffel.com</italic>"; or (C) cease distributing your version.
+				</item>
+			</list>
+		</paragraph>
+		<paragraph>You may not charge any fee for the distributionof the Library (source or binary),although you may charge for software thatincludes the Library in whole or in part as per the other provisionsof this Agreement.</paragraph>
+		<paragraph>
+			<bold>7.</bold> You may not use the name of ISE to endorse or promote products derived fromthe Library without specific prior written permission.
+		</paragraph>
+		<paragraph>
+			<bold>8.</bold> THIS PACKAGE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+		</paragraph>
+		<heading>
+			<size>2</size>Changes
+		</heading>(This list of changes is not part of the license.)
+		<paragraph>
+			<bold>General note on changes</bold>:as usage of free EiffelBase grows and more people contribute to it,some terms of the license text may occasionally have to be changedin light of this accumulated experience and of commentsreceived from users and contributors. It is our intention to ensure that
+			<list ordered="false">
+				<item>(1) Any such changes will be minor, affecting the details of thelicensing rather than the spirit of IFELL.</item>
+				<item>(2) If they affect the substance of the license in any way, they go inthe general direction of extending, not restricting, the rights of usersof EiffelBase.</item>
+			</list>
+		</paragraph>
+		<paragraph>Should a question arise regarding use of EiffelBase, the termsto be applied are those in effect at the time of use, disregardingany later change.</paragraph>
+		<paragraph>
+			<bold>28 June 2000</bold>: in response to comments byJoachim Durchholz through Patrick Schoenbach,replacement of most occurrences of the word "EiffelBase" by"the Library" to facilitate application to other libraries.
+		</paragraph>
+		<paragraph>
+			<bold>7 May 1999</bold>: in response to comments by David Broadfoot onthe ISE Eiffel user list, rewording of the
+			<link>
+				<url>#contamination</url>
+				<label>explanation</label>
+			</link>of why we are applying more liberal terms than GPL-style licenses.regarding fears of 
+			<link>
+				<url>#contamination</url>
+				<label>contamination</label>
+			</link>with the Gnu Public License.
+		</paragraph>
+		<paragraph>
+			<bold>6 May 1999</bold>: following comments by Ed Avis and Alexander Kjeldaas,we now permit distribution maintainers tocontinue distributing an old version as long as they
+			<link>
+				<url>#obsolete_version</url>
+				<label>mention clearly that it's obsolete</label>
+			</link>.
+		</paragraph>
+		<paragraph>
+			<bold>7 April 1999</bold>: following comments by Loryn Jenkins and Ed Avis,removal of the requirement that bug fixesand improvements be provided back to the maintainers of the library.This requirement has been changed to a mere
+			<link>
+				<url>#encourage_bug_reports</url>
+				<label>encouragement</label>
+			</link>, facilitatinguse of the library. Of course it is in everyone's interest toreport bugs and improvements.
+		</paragraph>
+		<paragraph>
+			<bold>7 April 1999</bold>: following comments by Loryn Jenkins,loosening of the
+			<link>
+				<url>#valid_eiffel</url>
+				<label>definition of "valid Eiffel"</label>
+			</link>.This change also caused addition of the notionof 
+			<link>
+				<url>#reference_implementation</url>
+				<label>reference implementation</label>
+			</link>.The purpose is to avoid crippling EiffelBase by preventing it fromutilizing innovative language constructs and corrections in thelanguage contributions. Such language extensions are OK as longas they have been accepted for discussion by NICE and are supportedby the reference implementation.
+		</paragraph>
+		<paragraph>
+			<bold>1 April 1999</bold>: following some comments by Richard Stallman,addition of a qualification ("
+			<italic>justified or not</italic>") to the notesregarding fears of 
+			<link>
+				<url>#contamination</url>
+				<label>contamination</label>
+			</link>with the Gnu Public License.Our intention is not to criticize the GPL but simply to note that theGPL does cause some fears, "justified or not", among commercial developers.
+		</paragraph>
+	</paragraph>
+</document>

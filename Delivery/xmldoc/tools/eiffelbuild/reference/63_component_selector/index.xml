@@ -1,0 +1,158 @@
+<document title="Component selector">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_pseudo_name>60</envision_pseudo_name>
+				<envision_location>Developing With ENViSioN!\Using ENViSioN! within Visual Studio.Net\Adding a New Project\Advanced GUI Project Wizard\Interface Construction Page\Reference</envision_location>
+			</toc>
+		</help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Component selector
+		</heading>
+		<paragraph>The component selector allows you to build and retrieve user defined 
+			<link>
+				<url>/tools/eiffelbuild/reference/02_notation.html#component</url>
+				<label>components</label>
+			</link> for use in your project.
+		</paragraph>
+		<paragraph>
+			<image>
+				<url>/images/eiffelbuild/screenshots/component_selector.png</url>
+			</image>
+		</paragraph>
+		<heading>
+			<size>2</size>Creating a component
+		</heading>
+		<paragraph>To define a new 
+			<link>
+				<url>/tools/eiffelbuild/reference/02_notation.html#component</url>
+				<label>component</label>
+			</link>, 
+			<link>
+				<url>/tools/eiffelbuild/reference/02_notation.html#pick_and_drop</url>
+				<label>pick</label>
+			</link> the 
+			<link>
+				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
+				<label>object</label>
+			</link> that you wish to create the component from, and then 
+			<link>
+				<url>/tools/eiffelbuild/reference/02_notation.html#pick_and_drop</url>
+				<label>drop</label>
+			</link> it anywhere in the component selector. The following dialog will appear:
+		</paragraph>
+		<paragraph>
+			<image>
+				<url>/images/eiffelbuild/screenshots/component_namer.png</url>
+			</image>
+		</paragraph>
+		<paragraph>Modify the suggested name as desired, and then click 
+			<bold>OK</bold> to create the new component. If you click 
+			<bold>Cancel</bold>, the component will not be created.
+		</paragraph>
+		<paragraph>The component that has been created will contain enough information to allow a copy to be built of the existing object. This includes all the children of the original object (to any depth) and the properties (width, height, color etc)of all objects within the structure. The only properties of the objects that will not be set inside a component are the user defined names, and any events connected to the objects.</paragraph>
+		<heading>
+			<size>2</size>Using a component
+		</heading>To create a new set of 
+		<link>
+			<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
+			<label>objects</label>
+		</link> from a 
+		<link>
+			<url>/tools/eiffelbuild/reference/02_notation.html#component</url>
+			<label>component</label>
+		</link>, 
+		<link>
+			<url>/tools/eiffelbuild/reference/02_notation.html#pick_and_drop</url>
+			<label>pick</label>
+		</link> the 
+		<link>
+			<url>/tools/eiffelbuild/reference/02_notation.html#component</url>
+			<label>component</label>
+		</link>, and 
+		<link>
+			<url>/tools/eiffelbuild/reference/02_notation.html#pick_and_drop</url>
+			<label>drop</label>
+		</link> onto an 
+		<link>
+			<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
+			<label>object</label>
+		</link> representation. If an object is full, or does not allow other objects of the new type to be contained, then you will not be able to 
+		<link>
+			<url>/tools/eiffelbuild/reference/02_notation.html#pick_and_drop</url>
+			<label>drop</label>
+		</link> on it.
+		<line_break></line_break>
+		<paragraph>If the 
+			<link>
+				<url>/tools/eiffelbuild/reference/02_notation.html#pick_and_drop</url>
+				<label>pick and drop</label>
+			</link> completed successfully, then you should have a new set of objects matching the structure of the 
+			<link>
+				<url>/tools/eiffelbuild/reference/02_notation.html#component</url>
+				<label>component</label>
+			</link>.
+			<link></link>
+		</paragraph>
+		<heading>
+			<size>2</size>Deleting a component
+		</heading>
+		<paragraph>To remove a 
+			<link>
+				<url>/tools/eiffelbuild/reference/02_notation.html#component</url>
+				<label>component</label>
+			</link> from your EiffelBuild system, 
+			<link>
+				<url>/tools/eiffelbuild/reference/02_notation.html#pick_and_drop</url>
+				<label>pick</label>
+			</link> it, and then 
+			<link>
+				<url>/tools/eiffelbuild/reference/02_notation.html#pick_and_drop</url>
+				<label>drop</label>
+			</link> it on 
+			<image>
+				<url>/images/eiffelbuild/icons/icon_delete_small_color.png</url>
+			</image> in the 
+			<link>
+				<url>/tools/eiffelbuild/reference/10_general_interface_description/20_main_toolbars.xml</url>
+				<label> main toolbar</label>
+			</link>.
+		</paragraph>
+		<note>
+			<bold>Note</bold>: The deletion of a 
+			<link>
+				<url>/tools/eiffelbuild/reference/02_notation.html#component</url>
+				<label>component</label>
+			</link> can not be undone.
+		</note>
+		<heading>
+			<size>2</size>Viewing a component
+		</heading>
+		<paragraph>To view an existing component, use the 
+			<link>
+				<url>/tools/eiffelbuild/reference/65_component_viewer/index.xml</url>
+				<label>component_viewer</label>
+			</link>.
+		</paragraph>
+		<seealso>
+			<bold>See also</bold>
+			<line_break></line_break>
+			<link>
+				<url>/tools/eiffelbuild/reference/65_component_viewer/index.xml</url>
+				<label>Component_viewer</label>
+			</link>
+			<line_break></line_break>
+			<link>
+				<url>../60_builder_window/index.xml</url>
+				<label>Builder window</label>
+			</link>
+			<line_break></line_break>
+			<link>
+				<url>/tools/eiffelbuild/reference/20_layout_constructor/index.xml</url>
+				<label> Layout Constructor</label>
+			</link>
+		</seealso>
+	</paragraph>
+</document>

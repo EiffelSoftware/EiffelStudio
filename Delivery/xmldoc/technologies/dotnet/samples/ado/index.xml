@@ -1,0 +1,23 @@
+<document title="ADO .NET Samples">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_title>ADO.NET</envision_title>
+				<envision_location>Samples</envision_location>
+			</toc>
+		</help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>ADO .NET Samples
+		</heading>
+		<list ordered="false">          
+			<item>
+				<link>
+					<url>ado.xml</url>
+					<label>Ado</label>
+				</link>
+			</item>
+		</list>
+	</paragraph>
+</document>

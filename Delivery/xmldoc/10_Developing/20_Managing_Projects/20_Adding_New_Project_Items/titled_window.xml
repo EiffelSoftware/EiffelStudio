@@ -1,0 +1,49 @@
+<document title="Add New Item - Titled Window" output="envision">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_pseudo_name>30</envision_pseudo_name>
+			</toc>
+		</help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Add New Item - Titled Window
+		</heading>
+		<paragraph>
+			<paragraph>The Titled Window item is a new Eiffel Class, TITLED_WINDOW  that represents a Vision2 titled window, inheriting    EV_TITLED_WINDOW.</paragraph>
+			<paragraph>  Default feature clauses are contained within the class text, and three  pre-defined features are contained:</paragraph>
+			<list ordered="false">
+				<item>initialize - Redefined from    EV_TITLED_WINDOW, this feature performs the initialization of the  window, and any custom initialization required for your window, can be added  here.initialize is executed as a result of calling    default_create on the window.  </item>
+				<item>is_in_default_state - Is the window in the correct  default state after initialization? If you wish to check the default state of  your window, add code to perform this here.  </item>
+				<item>close_requested - Destroys the window. Connected to the    close_request_actions of the window during initialize.  The close_request_actions are fired when a user  attempts to closethe window, and if you wish to override the default  behavior, add your code to this feature.</item>
+			</list>
+			<paragraph>For more information regarding the use of 
+				<link>
+					<url>/libraries/vision2/index.xml</url>
+					<label>Vision2</label>
+				</link>,  click 
+				<link>
+					<url>/libraries/vision2/index.xml</url>
+					<label>here</label>
+				</link>
+			</paragraph>
+			<paragraph>Appearance of an    EV_TITLED_WINDOW:</paragraph>
+			<paragraph>
+				<image>
+					<alt_text>titled window</alt_text>
+					<url>titled_window.PNG</url>
+				</image>
+			</paragraph>
+			<seealso>
+				<bold>See Also</bold>
+				<line_break></line_break>
+				<link>
+					<url>/10_Developing/20_Managing_Projects/20_Adding_New_Project_Items/index.xml</url>
+					<label>   Adding New Project Items</label>
+				</link>
+			</seealso>
+			<line_break></line_break>
+		</paragraph>
+	</paragraph>
+</document>

@@ -1,0 +1,69 @@
+<document title="Generation Tab" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Generation Tab
+		</heading> 
+		<paragraph>This tab contains information about the available code generation options.</paragraph>
+		<paragraph>Here is the appearence of the Generation tab with default settings for a Build project:</paragraph>
+		<paragraph>
+			<image>
+				<url>/images/eiffelbuild/screenshots/project_generation.png</url>
+			</image>&gt;
+		</paragraph>
+		<paragraph>The options available in this tab are as follows:</paragraph>
+		<list ordered="false">
+			<item>
+				<bold>Attribute declarations grouped</bold>
+				<paragraph>Should different objects of same type be declared individually, or grouped?
+					<line_break></line_break>
+					<line_break></line_break>button1: EV_BUTTON
+					<line_break></line_break>button2: EV_BUTTON
+					<line_break></line_break>button3: EV_BUTTON
+					<line_break></line_break>
+					<bold>or</bold>
+					<line_break></line_break>button1, button2, button3: EV_BUTTON
+					<line_break></line_break> 
+				</paragraph>
+			</item>
+			<item>
+				<bold>Attributes declared as locals</bold>
+				<paragraph>Should attribute declarations be local to initialization feature, or attributes of the class?</paragraph>
+			</item>
+			<item>
+				<bold>Generate debugging information</bold>
+				<paragraph>If selected, then for every feature connected to an event, code will be generated which outputs to the console, the name of the feature, and the values of all arguments.</paragraph>
+			</item>
+			<item>
+				<bold>Client of EV_TITLED_WINDOW</bold>
+				<paragraph>If selected, then the generated window will be a client of EV_TITLED_WINDOW, otherwise it will be a direct descendent.</paragraph>
+			</item>
+		</list>
+		<paragraph>
+			<bold>See Also</bold>
+			<line_break></line_break>
+			<link>
+				<url>/tools/eiffelbuild/reference/90_code_generation/index.xml</url>
+				<label>Code generation</label>
+			</link>
+			<line_break></line_break>
+			<link>
+				<url>index.xml</url>
+				<label>Project settings window</label>
+			</link>
+			<line_break></line_break>
+			<link>
+				<url>10_general.xml</url>
+				<label>General tab</label>
+			</link>
+			<line_break></line_break>
+			<link>
+				<url>20_build.xml</url>
+				<label>Build tab</label>
+			</link>
+			<line_break></line_break>
+		</paragraph>
+	</paragraph>
+</document>

@@ -1,0 +1,97 @@
+<document title="MANUAL IDENTIFICATION AND COPYRIGHT" output="studio">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_location></envision_location>
+				<envision_title></envision_title>
+				<studio_location></studio_location>
+				<studio_title></studio_title>
+			</toc>
+		</help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>2</size>
+			<content>Manual Identification and Copyright</content>
+		</heading>
+		<paragraph>Title: 
+			<span>Invitation to Eiffel</span>, ISE Technical Report TR-EI-67/IV.  
+		</paragraph>
+		<heading>
+			<size>2</size>
+			<content>Publication history</content>
+		</heading>First published 1987.  Some revisions (in particular Web versions) have used the title "
+		<span>Eiffel in a Nutshell</span> "
+		<line_break></line_break>This version: July 2001.  Introduces coverage of agents; several other improvements.  Corresponds to release 5.  0 of the ISE Eiffel environment.  
+		<heading>
+			<size>2</size>
+			<content>Author</content>
+		</heading>Bertrand Meyer
+		<heading>
+			<size>2</size>
+			<content>Software Credits</content>
+		</heading>See acknowledgments in book 
+		<span>
+			<link>
+				<url>http://www.eiffel.com/doc/page.html#etl</url>
+				<label>Eiffel: The Language</label>
+			</link>
+		</span> .  
+		<heading>
+			<size>2</size>
+			<content>Cover Design</content>
+		</heading>Rich Ayling.  
+		<heading>
+			<size>2</size>
+			<content>Copyright notice and proprietary information</content>
+		</heading>Copyright Interactive Software Engineering Inc.  (ISE), 2001.  May not be reproduced in any form (including electronic storage) without the written permission of ISE.  "Eiffel Power" and the Eiffel Power logo are trademarks of ISE.  All uses of the product documented here are subject to the terms and conditions of the ISE Eiffel user license.  Any other use or duplication is a violation of the applicable laws on copyright, trade secrets and intellectual property.  
+		<heading>
+			<size>2</size>
+			<content>Special duplication permission for educational institutions</content>
+		</heading>Degree-granting educational institutions using ISE Eiffel for teaching purposes as part of the 
+		<span>
+			<link>
+				<url> http://www.eiffel.com/educators/resources.xml</url>
+				<label>Eiffel University Partnership Program</label>
+			</link>
+		</span> may be permitted under certain conditions to copy specific parts of this book.  Contact ISE for details.  
+		<info>About ISE ISE (Interactive Software Engineering) helps you produce software better, faster and cheaper.  ISE provides a wide range of products and services based on object technology, including ISE Eiffel, a complete development environment for the full system lifecycle.  ISE's training courses, available worldwide, cover key management and technical topics.  ISE's consultants are available to address your project needs at all levels.  ISE's TOOLS (Technology of Object-Oriented Languages and Systems) conferences, 
+			<link>
+				<url>http://www.tools-conferences.com</url>
+				<label>http://www.tools-conferences.com</label>
+			</link>, are the meeting point for anyone interested in the software technologies of the future.  ISE originated one of the earliest .  NET products and offers a full range of .  NET services and training at 
+			<link>
+				<url>http://www.dotnetexperts.com</url>
+				<label>http://www.dotnetexperts.com</label>
+			</link>.  
+			<heading>
+				<size>2</size>
+				<content>For more information</content>
+			</heading>    Interactive Software Engineering Inc.      ISE Building, 360 Storke Road    Goleta, CA 93117 USA    Telephone 805-685-1006, Fax 805-685-6869 
+			<heading>
+				<size>2</size>
+				<content>Internet and email</content>
+			</heading>ISE maintains a rich source of information at 
+			<link>
+				<url>http://eiffel.com</url>
+				<label>http://eiffel.com</label>
+			</link>, with more than 1200 Web pages including online documentation, downloadable files, product descriptions, links to ISE partners, University Partnership program, mailing list archives, announcements, press coverage, Frequently Asked Questions, Support pages, and much more.  Visit 
+			<link>
+				<url>http://contact.eiffel.com</url>
+				<label>http://contact.eiffel.com</label>
+			</link>to request information about products and services.  To subscribe to the ISE Eiffel user list, go to 
+			<link>
+				<url>http://groups.  yahoo.com/group/ise_users/join</url>
+				<label>http://groups.  yahoo.com/group/ise_users/join</label>
+			</link>.  
+			<heading>
+				<size>2</size>
+				<content>Support programs</content>
+			</heading>ISE offers a variety of support options tailored to the diverse needs of its customers.  See 
+			<link>
+				<url>http://support.eiffel.com</url>
+				<label>http://support.eiffel.com</label>
+			</link> for details.  
+		</info>
+	</paragraph>
+</document>

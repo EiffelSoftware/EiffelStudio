@@ -1,0 +1,38 @@
+<document title="Deleting a view" output="studio">
+	<meta_data>
+		<help>
+			<meta>
+				<content>View,Delete</content>
+				<name>MS-HKWD</name>
+			</meta>
+		</help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Deleting a view
+		</heading>
+		<paragraph></paragraph>
+		<list ordered="true">
+			<item>To delete a view, select the view you want to remove using the
+				<bold>View</bold> combo box.
+				<line_break></line_break> 
+				<image>
+					<url>/images/eiffelstudio/diagram/diagram-defaultview.png</url>
+				</image>
+			</item>
+			<item>Click the 
+				<bold>Delete current view</bold> button. 
+				<image>
+					<url>/images/eiffelstudio/icons/icon_delete_view_color.gif</url>
+				</image>
+				<line_break></line_break>
+			</item>
+			<item>If you choose to confirm, the view has been deleted, and the "DEFAULT" view is selected.</item>
+		</list>
+		<line_break></line_break>
+		<line_break></line_break> 
+		<note>
+			<bold>Note</bold>: you cannot delete the view "DEFAULT".
+		</note>
+	</paragraph>
+</document>

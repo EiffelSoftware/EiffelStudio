@@ -1,0 +1,40 @@
+<document title="General Tab" output="studio">
+	<meta_data>
+		<help></help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>General Tab
+		</heading>
+		<paragraph>This contains only one field, 'project location', which may not be modified. This displays the location of the build project you are developing, and it is this location into which the files will be generated.</paragraph>
+		<paragraph>
+			<image>
+				<url>/images/eiffelbuild/screenshots/project_general.png</url>
+			</image>
+		</paragraph>
+		<paragraph>
+			<bold>See Also</bold>
+			<line_break></line_break>
+			<link>
+				<url>/tools/eiffelbuild/reference/90_code_generation/index.xml</url>
+				<label>Code generation</label>
+			</link>
+			<line_break></line_break>
+			<link>
+				<url>index.xml</url>
+				<label>Project settings window</label>
+			</link>
+			<line_break></line_break>
+			<link>
+				<url>20_build.xml</url>
+				<label>Build tab</label>
+			</link>
+			<line_break></line_break>
+			<link>
+				<url>30_generation.xml</url>
+				<label>Generation tab</label>
+			</link>
+			<line_break></line_break>
+		</paragraph>
+	</paragraph>
+</document>

@@ -1,0 +1,36 @@
+<document title="Porting an Eiffel application from UNIX to Windows or vice-versa" output="studio"><meta_data ><help /></meta_data><paragraph ><heading ><size >1</size>Porting an Eiffel application from UNIX to Windows or vice-versa</heading><heading ><size >2</size>Requirements</heading><paragraph >Before starting your project, you must first decide if you want your program to run either single or multi-platform. If you decide to go multi-platform make sure you use platform independent Eiffel libraries or C/C++ code. ISE Eiffel provides the following multi-platform libraries:</paragraph><list ordered="false"><item >Eiffel2Java (on platform that supports JNI)</item><item >EiffelBase</item><item >EiffelLex/EiffelParse</item><item >EiffelNet (except UNIX specific classes)</item><item >EiffelPreferences</item><item >EiffelStore</item><item >EiffelThread</item><item >EiffelTime</item><item >EiffelVision2</item><item >EiffelWeb</item><item >EiffelWizards</item></list><heading ><size >2</size>Configuring your project</heading><paragraph >For porting between different UNIX systems, you simply need one configuration file as the C/C++ externals should be the same. If this is not the case, as with UNIX and Windows, you will need a different configuration file for each platform where there is a difference. </paragraph><paragraph >The usual scenario is to port from UNIX to Windows or vice versa. In this case, the only difference in the configuration file is that of the external clause. An example of this is demonstrated with the following external specification of a Vision2 project first for UNIX:</paragraph>
+
+<code_block >
+external
+	include_path:
+		"\$(ISE_EIFFEL)/library/vision2/implementation/gtk/Clib `gtk-config --cflags`",
+		"\$(ISE_EIFFEL)/C_library/libpng",
+		"\$(ISE_EIFFEL)/C_library/zlib",
+		"\$(ISE_EIFFEL)/library/vision2/spec/include"
+
+	object:
+		"$(ISE_EIFFEL)/library/vision2/spec/$(ISE_PLATFORM)/lib/gtk_eiffel.o",
+		"$(ISE_EIFFEL)/library/vision2/spec/$(ISE_PLATFORM)/lib/load_pixmap.o `gtk-config --libs`",
+		"$(ISE_EIFFEL)/library/vision2/spec/$(ISE_PLATFORM)/lib/libpng.a",
+		"$(ISE_EIFFEL)/library/vision2/spec/$(ISE_PLATFORM)/lib/libz.a",
+		"-L/usr/X11R6/lib/ -lXtst"
+</code_block>
+
+and then for Windows:
+
+<code_block >
+external
+
+	include_path:
+		"$(ISE_EIFFEL)\library\wel\spec\windows\include",
+		"$(ISE_EIFFEL)\library\vision2\spec\include",
+		"$(ISE_EIFFEL)\C_library\zlib"
+
+	object:
+		"$(ISE_EIFFEL)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
+		"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\vision2.lib",
+		"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\zlib.lib",
+		"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\libpng.lib"
+</code_block>
+
+<paragraph >Note the `\` in front of the include path for UNIX. This is required to compile correctly on some UNIX platforms. </paragraph><paragraph >It is important to also note that some multi-platform libraries such as EiffelVision2 do not include the same clusters for both UNIX and Windows. As with externals, clusters need to be specified depending on the target platform. </paragraph><heading ><size >2</size>UNIX systems</heading><paragraph >When compiling for many UNIX system, you should finalize without launching the C compilation. At the end, the EIFGEN/F_code directory is built. This is the portable C code that you can take from one platform to another. We recommend you to create an archive of the F_code for backup. </paragraph><paragraph >To compile on a given platform, you have to make sure that you have a complete ISE Eiffel delivery for the target platform and that your PATH environment variable contains $ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin. You then have to check that all C externals that you are using have been compiled for this platform. </paragraph><paragraph >You can then launch the `finish_freezing' script that will automatically recompile the C generated code and generate a new executable for the given platform. </paragraph><heading ><size >2</size>Between UNIX and Windows</heading><paragraph >As shown above you will need to have two different configuration files to port your Windows application to UNIX. You can then use the UNIX configuration file to re-finalize your project (without C compilation) and then you have ANSI compliant C code that may be compiled on a UNIX platform using the above instructions. </paragraph><paragraph >To compile your UNIX application on Windows simply follow the same instructions as above using a Windows configuration file instead. When the ANSI C code is generated, run finish_freezing.exe in the F_code directory on the target Windows platform and your system will be compiled. </paragraph></paragraph></document>

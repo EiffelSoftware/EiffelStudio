@@ -1,0 +1,82 @@
+<document title="Progress bar sample">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_pseudo_name>40</envision_pseudo_name>
+				<envision_title>Progress Bar</envision_title>
+				<envision_location>Samples\Windows Forms</envision_location>
+			</toc>
+		</help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>Progress bar sample
+		</heading>
+		<div>
+			<paragraph>
+				<image>
+					<height>200</height>
+					<width>512</width>
+					<url>/images/dotnet_samples/progress_bar.png</url>
+					<alt_text>Hello world form</alt_text>
+				</image>
+			</paragraph>
+		</div>
+		<paragraph>
+			<line_break></line_break>
+			<line_break></line_break>
+		</paragraph>
+		<heading>
+			<size>2</size>Compiling
+		</heading>
+		<heading>
+			<size>2</size>Running
+		</heading>
+		<paragraph>After launching the application, you will see a window displayed with a similar appearance to the one above. On the left of the form you have the 
+			<span>PROGRESS_BAR</span> control, and on the right you have some controls to configure the 
+			<span>PROGRESS_BAR</span>. 
+		</paragraph>
+		<paragraph></paragraph>
+		<heading>
+			<size>2</size>Under the Hood
+		</heading>
+		<paragraph>The application shows how to configure a 
+			<span>PROGRESS_BAR</span>. 
+		</paragraph>
+		<paragraph>The feature 
+			<span>on_load</span> is redefined and launch a thread 
+			<code>
+				<class_name>(THREAD_START)</class_name>
+			</code> that simulates the progression of a process. 
+		</paragraph>
+		<paragraph>This sample contains the following class:</paragraph>
+		<list ordered="false">
+			<item>
+				<span>PROGRESS_BAR</span>
+			</item>
+			<item>
+				<span>GROUP_BOX</span>
+			</item>
+			<item>
+				<span>TRACK_BAR</span>
+			</item>
+			<item>
+				<span>COMBO_BOX</span>
+			</item>
+			<item>
+				<span>LABEL</span>
+			</item>
+			<item>
+				<code>
+					<class_name>THREAD_START</class_name>
+				</code>
+			</item>
+		</list>
+		<heading>
+			<size>2</size>Notes
+		</heading>
+		<paragraph>This sample is translated from the example located in theQuickStart\winforms\samples\controlReference\ProgressBarsubdirectory of the .NET Framework SDK samples directory of Microsoft Visual Studio .NET. </paragraph>
+		<paragraph></paragraph>
+		<paragraph></paragraph>
+	</paragraph>
+</document>

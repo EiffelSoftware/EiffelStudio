@@ -9,9 +9,6 @@ class
 
 inherit
 	SINGLE_ARRAY_ITEM_RESOURCE_TYPE
-		select
-			xml_name
-		end
 
 	GRAPHICAL_RESOURCE_TYPE
 

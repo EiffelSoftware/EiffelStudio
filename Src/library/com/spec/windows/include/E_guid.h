@@ -18,7 +18,7 @@
 #include "eif_eiffel.h"
 
 #define ccom_string_to_guid(_pwchar_,_p_guid_) (CLSIDFromString ((LPOLESTR)_pwchar_, (LPCLSID)_p_guid_))
-#define ccom_is_equal_guid(_guid1_,_guid2_) ((IsEqualGUID((GUID *)_guid1_,(GUID *)_guid2_) == FALSE)? EIF_FALSE : EIF_TRUE)
+#define ccom_is_equal_guid(_guid1_,_guid2_) ((IsEqualGUID((REFGUID)_guid1_,(REFGUID)_guid2_) == FALSE)? EIF_FALSE : EIF_TRUE)
 EIF_POINTER ccom_guid_to_wide_string (GUID * guid);
 
 #endif // !__ECOM_E_GUID_H_INC__

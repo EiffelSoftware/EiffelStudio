@@ -595,6 +595,7 @@ feature {NONE} -- Implementation
 		local
 			l_versions: LINEAR [STRING]
 			l_il_environment: IL_ENVIRONMENT
+			l_default_version: STRING
 		do
 			create l_il_environment
 			l_versions := l_il_environment.installed_runtimes
@@ -610,6 +611,7 @@ feature {NONE} -- Implementation
 			if clr_runtime_version_combo.is_empty then
 				clr_runtime_version_combo.disable_sensitive
 			end
+			select_runtime_version (l_il_environment.default_version)
 		end
 		
 	load_culture is

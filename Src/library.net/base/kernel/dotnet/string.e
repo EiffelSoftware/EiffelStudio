@@ -342,9 +342,13 @@ feature -- Access
 			start_small_enough: start <= count
 			acceptable_fuzzy: fuzz <= other.count
 		do
-			check
-				False
-				-- Not implemented.
+			if fuzz = 0 then
+				Result := substring_index (other, start)				
+			else
+				check
+					False
+					-- Not implemented.
+				end
 			end
 		end
 

@@ -23,16 +23,18 @@ feature -- Filtering; Implementation
 			root_stone: STONE;
 			mp: MOUSE_PTR
 		do
-			root_stone := text_window.root_stone;
+			root_stone := tool.stone;
 			if root_stone /= Void then
 				!! mp.set_watch_cursor;
 				new_text := filtered_text (root_stone, filtername);
 				if new_text /= Void then
 					text_window.clear_text;
+					tool.set_editable_text;
+					tool.show_editable_text;
 					text_window.set_text (new_text);
-					text_window.set_changed (false);
 					display_filter_header (root_stone, filtername);
-					text_window.set_file_name (filtered_file_name (root_stone, filtername))
+					tool.set_file_name (filtered_file_name 
+							(root_stone, filtername))
 					text_window.set_editable;
 					filter_name := clone (filtername);
 					filtered := true
@@ -56,7 +58,7 @@ feature -- Filtering; Properties
 			text_filter: TEXT_FILTER
 		do
 			if filtername.empty then
-				warner (text_window).gotcha_call (w_No_filter_selected)
+				warner (popup_parent).gotcha_call (w_No_filter_selected)
 			else
 				!!full_pathname.make_from_string (filter_path);
 				full_pathname.set_file_name (filtername);
@@ -69,7 +71,7 @@ feature -- Filtering; Properties
 					text_filter.process_text (tmp_text);
 					Result := text_filter.image
 				else
-					warner (text_window).gotcha_call 
+					warner (popup_parent).gotcha_call 
 						(w_Cannot_read_filter (full_pathname))
 				end
 			end
@@ -203,7 +205,7 @@ feature {NONE} -- Implementation
 			new_title.append (" (");
 			new_title.append (filtername);
 			new_title.append (" format)");
-			text_window.display_header (new_title)
+			tool.set_title (new_title)
 		end;
 
 end -- class FILTERABLE

@@ -204,11 +204,14 @@ feature -- Query
 		local
 			l_path: STRING
 		do
-			l_path := Dotnet_framework_sdk_bin_path
-			if l_path /= Void then
-				if use_cordbg (a_debug) then
-					Result := l_path + a_debug + ".exe"
-				elseif use_dbgclr (a_debug) then
+			if use_cordbg (a_debug) then
+				l_path := Dotnet_framework_sdk_bin_path
+				if l_path /= Void then
+					Result := l_path + a_debug + ".exe"					
+				end
+			elseif use_dbgclr (a_debug) then
+				l_path := Dotnet_framework_sdk_path
+				if l_path /= Void then				
 					Result := l_path + "GuiDebug\" + a_debug + ".exe"
 				end
 			end	

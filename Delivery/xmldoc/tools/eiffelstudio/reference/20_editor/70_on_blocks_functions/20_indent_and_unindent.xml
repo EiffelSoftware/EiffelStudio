@@ -10,13 +10,9 @@
 					<link>
 						<url>../80_edit_menu_commands.xml</url>
 						<label>
-							<bold>Edit</bold>
+							<bold>Edit</bold> Menu
 						</label>
-					</link> 
-					<link>
-						<url>../80_edit_menu_commands.xml</url>
-						<label>Menu</label>
-					</link>. It may be called by using the keyboard shortcut "Tab" too. Its action is to insert a tabulation in front of each 
+					</link>. It may be called by using the keyboard shortcut "Tab". Its action is to insert a tabulation in front of each 
 					<link>
 						<url>../20_selection.xml</url>
 						<label>selected</label>
@@ -30,13 +26,9 @@
 					<link>
 						<url>../80_edit_menu_commands.xml</url>
 						<label>
-							<bold>Edit</bold>
+							<bold>Edit</bold> Menu
 						</label>
-					</link> 
-					<link>
-						<url>../80_edit_menu_commands.xml</url>
-						<label>Menu</label>
-					</link>. It may be called by using the keyboard shortcut "Shift+Tab" too. Its action is to remove the tabulation in front of each 
+					</link>. It may be called by using the keyboard shortcut "Shift+Tab". Its action is to remove the tabulation in front of each 
 					<link>
 						<url>../20_selection.xml</url>
 						<label>selected</label>

@@ -14,11 +14,11 @@
 			<link>
 				<url>./50_search_functionality.xml</url>
 				<label>search</label>
-			</link> facilities. More advanced, class text specific functionality is also available. Its description can be found in " 
+			</link> facilities. More advanced, class text specific functionality is also available. Its description can be found in "
 			<link>
 				<url>60_autocomplete/00_introduction.xml</url>
 				<label>Auto-complete</label>
-			</link>" and " 
+			</link>" and "
 			<link>
 				<url>70_on_blocks_functions/00_introduction.xml</url>
 				<label>Operations on text blocks</label>

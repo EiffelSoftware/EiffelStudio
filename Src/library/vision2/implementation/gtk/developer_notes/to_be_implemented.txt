@@ -173,9 +173,11 @@ DATE:	19990909
 WHO:	king
 remove_menu
 =========================================================================
-CLASS: 
-DATE:	
-WHO:	
+CLASS: EV_FONT_IMP 
+DATE: 19990915
+WHO: Alex
+character_format
+font
 
 
 

@@ -51,6 +51,7 @@ feature {NONE} -- Implementation
 			-- the application is not running.
 		local
 			st: STRUCTURED_TEXT
+			st_syst: STRUCTURED_TEXT
 		do
 			!! st.make
 			if Application.is_running then
@@ -62,6 +63,10 @@ feature {NONE} -- Implementation
 			else
 				st.add_string ("System not launched")
 				st.add_new_line
+				st_syst := project_tool.structured_system_info 
+				if st_syst /= Void then
+					st.append (st_syst)
+				end
 				Debug_window.clear_window
 				Debug_window.process_text (st)
 				Debug_window.display

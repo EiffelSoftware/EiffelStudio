@@ -116,8 +116,8 @@ feature -- Cursor Management
 	position_cursor (a_cursor: TEXT_CURSOR; x_pos, y_pos: INTEGER) is
 			-- Position `cursor' as close as possible from coordinates (x_pos, y_pos).
 		require
-			valid_y: y_pos > 0
-			valid_x: x_pos > 0
+			valid_y: y_pos >= 0
+			valid_x: x_pos >= 0
 		local
 			l_number		: INTEGER
 			current_width	: INTEGER

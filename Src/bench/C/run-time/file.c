@@ -1050,6 +1050,7 @@ rt_public EIF_BOOLEAN file_access(char *name, EIF_INTEGER op)
 		return (EIF_BOOLEAN) ((-1 != access(name, R_OK)) ? '\01' : '\0');
 	default:
 		eif_panic(MTC "illegal access request");
+		return ('\0');	/* NOT REACHED */
 	}
 #endif
 }

@@ -75,8 +75,9 @@ feature -- Initialization
 		local
 			wizard_initial_state: WIZARD_INITIAL_STATE
 		do
-			wizard_initial_state.make(Create {WIZARD_INFORMATION}.make)
+			Create wizard_initial_state.make(Create {WIZARD_INFORMATION}.make)
 			proceed_with_new_state(wizard_initial_state)
+			update_navigation
 		end
 
 feature -- Implementation
@@ -97,10 +98,38 @@ feature -- Basic Operations
 			-- Current state is final, hence a special
 			-- process.
 		do
-			previous_b.parent.prune(previous_b)
-			next_b.set_text("Exit")
-			next_b.press_actions.extend(~destroy)
-			cancel_b.parent.prune(cancel_b)
+			is_final_state := TRUE
+
+				previous_b.parent.prune(previous_b)
+				cancel_b.parent.prune(cancel_b)
+				
+				next_b.set_text("Exit")
+				next_b.press_actions.wipe_out
+				next_b.press_actions.extend(~test)
+
+--				next_b.parent.prune(next_b)
+--				next_b.set_text("Exit")
+--				next_b.press_actions.extend(~destroy)
+--				cancel_b.set_text("Exit")
+--				cancel_b.show
+--				cancel_b.press_actions.extend(~destroy)
+
+
+
+--			next_b.hide
+--			cancel_b.set_text("Exit")
+--			previous_b.parent.prune(previous_b)
+--			next_b.parent.prune(next_b)
+--			next_b.hide
+--			next_b.set_text("Exit")
+--			next_b.press_actions.extend(~destroy)
+--			cancel_b.set_text("Exit")
+--			cancel_b.parent.prune(cancel_b)
+		end
+
+	test is
+		do
+			first_window.destroy
 		end
 
 	previous_page is
@@ -116,16 +145,16 @@ feature -- Basic Operations
 			-- Update navigation buttons.
 		do
 			if history.count<1 or else history.isfirst then
-				previous_b.disable_sensitive
+				previous_b.hide
 			else
-				previous_b.enable_sensitive
+				previous_b.show
 			end
 		end
 
 	next_page is
 			-- Go to next page if possible.
 		do
-			if not history.after then 
+			if not history.after then
 				next
 			end
 			update_navigation

@@ -216,8 +216,13 @@ feature -- Basic operations
 						tmp_string.append_integer (local_counter)
 						descriptors.item (i).eiffel_class_name.append (tmp_string)
 						if not (descriptors.item (i).type_kind = Tkind_alias) then
-							descriptors.item (i).c_header_file_name.insert 
-								(tmp_string, descriptors.item (i).c_header_file_name.index_of ('.', 1))
+							if 
+								descriptors.item (i).c_header_file_name /= Void and then 
+								not descriptors.item (i).c_header_file_name.empty 
+							then
+								descriptors.item (i).c_header_file_name.insert 
+									(tmp_string, descriptors.item (i).c_header_file_name.index_of ('.', 1))
+							end
 						end
 						if (descriptors.item (i).type_kind = Tkind_interface) or (descriptors.item (i).type_kind = Tkind_dispatch) then
 							descriptors.item (i).c_type_name.append (tmp_string)

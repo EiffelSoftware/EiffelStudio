@@ -8,7 +8,8 @@ inherit
 	WIZARD_DIALOG
 		redefine
 			setup_dialog,
-			on_ok
+			on_ok,
+			notify
 		end
 
 	APPLICATION_IDS
@@ -31,6 +32,7 @@ feature {NONE} -- Initialization
 			create client_check.make_by_id (Current, Client_check_constant)
 			create server_check.make_by_id (Current, Server_check_constant)
 			create eiffel_code_compilation_check.make_by_id (Current, Eiffel_code_compilation_check_constant)
+			create c_code_compilation_check.make_by_id (Current, C_code_compilation_check_constant)
 			create in_process_check.make_by_id (Current, In_process_check_constant)
 			create out_of_process_check.make_by_id (Current, out_of_process_check_constant)
 			create id_ok.make_by_id (Current, Idok)
@@ -58,6 +60,12 @@ feature -- Behavior
 			if shared_wizard_environment.out_of_process_server then
 				out_of_process_check.set_checked
 			end
+			if not shared_wizard_environment.compile_eiffel then
+				eiffel_code_compilation_check.set_checked
+			end
+			if not shared_wizard_environment.compile_c then
+				c_code_compilation_check.set_checked
+			end
 		end
 
 	on_ok is
@@ -67,7 +75,27 @@ feature -- Behavior
 			shared_wizard_environment.set_server (server_check.checked)
 			shared_wizard_environment.set_in_process_server (in_process_check.checked)
 			shared_wizard_environment.set_out_of_process_server (out_of_process_check.checked)
+			Shared_wizard_environment.set_compile_eiffel (not eiffel_code_compilation_check.checked)			
+			Shared_wizard_environment.set_compile_c (not c_code_compilation_check.checked)
 			Precursor {WIZARD_DIALOG}
+		end
+
+	notify (control: WEL_CONTROL; notify_code: INTEGER) is
+			-- A `notify_code' is received for `control'.
+		do
+			if control = c_code_compilation_check then
+				if c_code_compilation_check.checked then
+					eiffel_code_compilation_check.set_checked
+					eiffel_code_compilation_check.disable
+				else
+					if not Shared_wizard_environment.compile_eiffel then
+						eiffel_code_compilation_check.set_checked
+					else
+						eiffel_code_compilation_check.set_unchecked
+					end
+					eiffel_code_compilation_check.enable
+				end
+			end
 		end
 
 feature -- Access
@@ -79,6 +107,9 @@ feature -- Access
 			-- Server code generation check box
 
 	eiffel_code_compilation_check: WEL_CHECK_BOX
+			-- Eiffel code compilation check box
+
+	c_code_compilation_check: WEL_CHECK_BOX
 			-- Eiffel code compilation check box
 
 	in_process_check: WEL_RADIO_BUTTON

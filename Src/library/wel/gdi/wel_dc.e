@@ -99,12 +99,12 @@ feature -- Access
 feature -- Basic operations
 
 	get is
-			-- Get the device context
+			-- Get the device context.
 		deferred
 		end
 
 	release is
-			-- Release the device context
+			-- Release the device context.
 		deferred
 		end
 

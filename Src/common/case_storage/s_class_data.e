@@ -1,11 +1,13 @@
+indexing
+
+	description: "Data representing class information";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class S_CLASS_DATA
 
 inherit
 
-	HASHABLE
-		rename
-			hash_code as view_id
-		end;
 	S_LINKABLE_DATA
 		rename
 			make as old_make
@@ -15,12 +17,24 @@ inherit
 			chart, set_chart
 		end;
 	S_CASE_INFO;
+	HASHABLE
+		rename
+			hash_code as view_id
+		end
 
 creation
 
 	make
 
-feature
+feature {NONE} -- Specification
+
+	make (a_name: STRING) is
+		do
+			old_make (a_name);
+			!! disk_content.make;
+		end;
+
+feature -- Properties
 
 	id: INTEGER;
 			-- Id of Current
@@ -51,7 +65,81 @@ feature
 			-- Is the current class the root of
 			-- the system ?
 
-feature -- Comparable
+	public_features: ARRAYED_LIST [S_FEATURE_DATA] is
+			-- Exported features 
+		local
+			f_clause: S_FEATURE_CLAUSE
+		do
+			!! Result.make (20);
+			from
+				feature_clause_list.start
+			until
+				feature_clause_list.after
+			loop
+				f_clause := feature_clause_list.item;
+				if f_clause.export_i.is_all then
+					Result.append (f_clause.features);
+				end;
+				feature_clause_list.forth
+			end
+		ensure
+			valid_result: Result /= Void
+		end;
+
+	private_features: ARRAYED_LIST [S_FEATURE_DATA] is
+			-- Private features 
+		local
+			f_clause: S_FEATURE_CLAUSE
+		do
+			!! Result.make (20);
+			from
+				feature_clause_list.start
+			until
+				feature_clause_list.after
+			loop
+				f_clause := feature_clause_list.item;
+				if f_clause.export_i.is_none then
+					Result.append (f_clause.features);
+				end;
+				feature_clause_list.forth
+			end
+		ensure
+			valid_result: Result /= Void
+		end;
+
+	features: ARRAYED_LIST [S_FEATURE_DATA] is
+			-- All features 
+		do
+			!! Result.make (20);
+			from
+				feature_clause_list.start
+			until
+				feature_clause_list.after
+			loop
+				Result.append (feature_clause_list.item.features);
+				feature_clause_list.forth
+			end
+		end; 
+
+	feature_clause_list: ARRAYED_LIST [S_FEATURE_CLAUSE] is
+			-- Features of class
+		do
+			Result := disk_content.feature_clause_list
+		end;
+ 
+	invariants: FIXED_LIST [S_TAG_DATA] is
+			-- Invariants of the current class
+		do
+			Result := disk_content.invariants
+		end;
+ 
+	chart: S_CLASS_CHART is
+			-- Informal description of Current class
+		do
+			Result := disk_content.chart
+		end;
+
+feature -- Comparison
 
 	infix "<" (other: like Current): BOOLEAN is
 			-- Is Current's name before or after other's name?
@@ -59,19 +147,7 @@ feature -- Comparable
 			Result := view_id < other.view_id
 		end;
 
-feature {CLASS_DATA, CLASS_CONTENT_SERVER, RESCUE_INFO}
-
-	disk_content: S_CLASS_CONTENT;
-			-- Information stored to disk
-
-	set_content (cont: like disk_content) is
-		require
-			valid_cont: cont /= Void
-		do
-			disk_content := cont
-		end;
-
-feature
+feature -- Setting
 
 	set_booleans (is_d, is_e, is_i, is_p, is_re, is_ro: BOOLEAN) is
 			-- Set all booleans for Current.
@@ -127,91 +203,6 @@ feature
 			feature_number := i
 		end;
 
-
-feature {NONE}
-
-	make (a_name: STRING) is
-		do
-			old_make (a_name);
-			!! disk_content.make;
-		end;
-
-feature
-
-	public_features: ARRAYED_LIST [S_FEATURE_DATA] is
-			-- All features 
-		local
-			f_clause: S_FEATURE_CLAUSE
-		do
-			!! Result.make (20);
-			from
-				feature_clause_list.start
-			until
-				feature_clause_list.after
-			loop
-				f_clause := feature_clause_list.item;
-				if f_clause.export_i.is_all then
-					Result.append (f_clause.features);
-				end;
-				feature_clause_list.forth
-			end
-		ensure
-			valid_result: Result /= Void
-		end;
-
-	private_features: ARRAYED_LIST [S_FEATURE_DATA] is
-			-- All features 
-		local
-			f_clause: S_FEATURE_CLAUSE
-		do
-			!! Result.make (20);
-			from
-				feature_clause_list.start
-			until
-				feature_clause_list.after
-			loop
-				f_clause := feature_clause_list.item;
-				if f_clause.export_i.is_none then
-					Result.append (f_clause.features);
-				end;
-				feature_clause_list.forth
-			end
-		ensure
-			valid_result: Result /= Void
-		end;
-
-	features: ARRAYED_LIST [S_FEATURE_DATA] is
-			-- All features 
-		do
-			!! Result.make (20);
-			from
-				feature_clause_list.start
-			until
-				feature_clause_list.after
-			loop
-				Result.append (feature_clause_list.item.features);
-				feature_clause_list.forth
-			end
-		end; 
-
-	feature_clause_list: ARRAYED_LIST [S_FEATURE_CLAUSE] is
-			-- Features of class
-		do
-			Result := disk_content.feature_clause_list
-		end;
- 
-	invariants: FIXED_LIST [S_TAG_DATA] is
-			-- Invariants of the current class
-		do
-			Result := disk_content.invariants
-		end;
- 
-	chart: S_CLASS_CHART is
-			-- Informal description of Current class
-		do
-			Result := disk_content.chart
-		end;
-
 	set_feature_clause_list (l: like feature_clause_list) is
 			-- Set features to `l'.
 			--| Allow empty features to be stored
@@ -242,7 +233,7 @@ feature
 			disk_content.set_chart (ch);
 		end;
 
-feature -- Storing
+feature -- Storage
 
 	directory_path (p: STRING; i: INTEGER): STRING is
 		local
@@ -328,19 +319,6 @@ feature -- Storing
 			internal_file: RAW_FILE;
 		do
 			!! internal_file.make (file_path (storage_path, view_id, True));
-			if internal_file.exists then
-				internal_file.delete
-			end
-		end;
-
-	remove_file (storage_path: STRING) is
-			-- Remove file associated with Current.
-		require
-			valid_storage_path: storage_path /= Void
-		local
-			internal_file: RAW_FILE;
-		do
-			!! internal_file.make (file_path (storage_path, view_id, False));
 			if internal_file.exists then
 				internal_file.delete
 			end
@@ -442,4 +420,17 @@ feature {CASE_RECORD_INHERIT_INFO}
 			end
 		end;
 
-end
+feature {CLASS_DATA, CLASS_CONTENT_SERVER, RESCUE_INFO} -- Implementation
+
+	disk_content: S_CLASS_CONTENT;
+			-- Information stored to disk
+
+	set_content (cont: like disk_content) is
+			-- Set `disk_content' to cont.
+		require
+			valid_cont: cont /= Void
+		do
+			disk_content := cont
+		end;
+
+end -- class S_CLASS_DATA

@@ -42,6 +42,13 @@ inherit
 		undefine
 			is_equal, copy			
 		end
+		
+	SHARED_EIFNET_DEBUG_VALUE_FACTORY
+		export
+			{NONE} all
+		undefine
+			is_equal, copy			
+		end			
 
 create {RUN_INFO, APPLICATION_STATUS_DOTNET}
 
@@ -140,7 +147,9 @@ feature {NONE} -- Initialization
 			l_line_number: INTEGER
 			l_il_offset: INTEGER
 
-			l_address: INTEGER
+			l_stack_object: ICOR_DEBUG_VALUE
+			l_stack_adv: ABSTRACT_DEBUG_VALUE
+			l_hexaddress: STRING
 		do
 			debug ("DEBUGGER_TRACE_CALLBACK")
 				io.error.putstring ("  @-> EIFFEL_CALL_STACK: Creating Eiffel Stack%N")
@@ -191,16 +200,20 @@ feature {NONE} -- Initialization
 										l_il_offset := l_frame_il.get_ip
 										l_line_number := Il_debug_info_recorder.feature_eiffel_breakable_line_for_il_offset (l_class_type, l_feature_i, l_il_offset)
 									
-										--| FIXME: JFIAT : set for real in CALL_STACK_ELEMENT_DOTNET.initialize_callstack
-										--| get address from current object
-										l_address := l_frame_il.get_argument(0).get_address.to_integer
-										
-										--| Here we have a valid Eiffel callstack point										
+
+											--| Here we have a valid Eiffel callstack point
 										create call.make(level)
+
+											-- Compute data to get address and co ...
+										l_stack_object := l_frame_il.get_argument (0)
+										l_stack_adv := debug_value_from_icdv (l_stack_object)
+										l_hexaddress := l_stack_adv.address
+
+										call.set_private_current_object (l_stack_adv)
 										call.set_routine (
 												l_frame_il,
 												False, -- is_melted (this is a dotnet system)
-												"0x" + l_address.to_hex_string, -- address
+												l_hexaddress,
 												l_class_type, -- dyn type
 												l_feature_i.written_class, -- origin class
 												l_feature_i, -- routine, routine_name ...

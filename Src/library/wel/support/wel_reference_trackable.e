@@ -147,6 +147,8 @@ feature {NONE} -- Removal
 				eif_object_id_free (internal_object_id)
 				internal_object_id := 0
 			end
+		ensure then
+			internal_object_id_freed: internal_object_id = 0
 		end
 
 feature -- Removal

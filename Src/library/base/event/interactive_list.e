@@ -112,13 +112,13 @@ feature -- Element Change
 			i: INTEGER
 		do
 			i := count + 1	
-			set_count (count + s.count)
 			conservative_resize (lower, lower + count)
 			from
 				s.start
 			until
 				s.after
 			loop
+				set_count (count + 1)
 				put_i_th (s.item, i)
 				i := i + 1
 				s.forth

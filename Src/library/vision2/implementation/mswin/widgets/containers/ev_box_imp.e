@@ -231,16 +231,15 @@ feature {NONE} -- Basic operation
 				if non_expandable_children.is_empty then
 					non_expandable_children := Void
 				else
-					if an_index <= non_expandable_children.count then
-						from
-							non_expandable_children.go_i_th (an_index)
-						until
-							non_expandable_children.off
-						loop
-							value := non_expandable_children.item
-							non_expandable_children.remove
-							non_expandable_children.put_left (value - 1)
+					from
+						non_expandable_children.start
+					until
+						non_expandable_children.off
+					loop
+						if an_index < non_expandable_children.item then
+							non_expandable_children.replace (non_expandable_children.item - 1)
 						end
+						non_expandable_children.forth
 					end
 				end
 			end

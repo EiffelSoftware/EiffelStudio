@@ -236,9 +236,9 @@ feature -- Status report
 					end
 				end
 			else
-				f := debug_output_feature.ancestor_version (dynamic_type)
 				create expr.make_with_object (
-					create {DEBUGGED_OBJECT}.make (value_object, 0, 1), f.name)
+					create {DEBUGGED_OBJECT}.make_with_class (value_object, debuggable_class),
+					debuggable_name)
 				expr.evaluate
 				if expr.error_message = Void and then not expr.final_result_value.is_void then
 					Result := expr.final_result_value.string_representation (min, max)
@@ -448,13 +448,13 @@ feature {NONE} -- Implementation
 		do
 			lc := internal_debuggable_class.item
 			if lc = Void then
-				cis := Eiffel_universe.compiled_classes_with_name (debuggable_class_name)
+				cis := Eiffel_universe.compiled_classes_with_name (debuggable_name)
 				if not cis.is_empty then
 					Result := cis.first.compiled_class
 				end
 				internal_debuggable_class.put (Result)
 			elseif not lc.is_valid then
-				cis := Eiffel_universe.compiled_classes_with_name (debuggable_class_name)
+				cis := Eiffel_universe.compiled_classes_with_name (debuggable_name)
 				if not cis.is_empty then
 					Result := cis.first.compiled_class
 				end
@@ -474,7 +474,8 @@ feature {NONE} -- Implementation
 			if
 				internal_debug_output_feature.item = Void
 			then
-				internal_debug_output_feature.put (debuggable_class.feature_with_name ("debug_output"))
+				internal_debug_output_feature.put (
+					debuggable_class.feature_with_name (debuggable_name))
 			end
 			Result := internal_debug_output_feature.item
 		end
@@ -493,7 +494,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Private Constants
 	
-	debuggable_class_name: STRING is "debug_output"
+	debuggable_name: STRING is "debug_output"
 	area_name: STRING is "area"
 	count_name: STRING is "count"
 	

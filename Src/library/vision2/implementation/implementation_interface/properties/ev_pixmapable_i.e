@@ -29,7 +29,7 @@ feature -- Element change
 			exists: not destroyed
 			valid_pixmap: is_valid (pix)
 			valid_size: pixmap_size_ok (pix)
-			free_pixmap: not pix.is_locked
+			unlocked_pixmap: not pix.is_locked
 		deferred
 		ensure then
 			pixmap_set: pixmap = pix
@@ -42,6 +42,7 @@ feature -- Element change
 		deferred
 		ensure then
 			pixmap_removed: pixmap = Void
+			unlocked_pixmap: not (old pixmap).is_locked
 		end
 
 feature -- Assertion features

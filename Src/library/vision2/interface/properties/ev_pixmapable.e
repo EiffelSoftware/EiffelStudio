@@ -34,24 +34,23 @@ feature -- Element change
 		require
 			exists: not destroyed
 			valid_pixmap: is_valid (pix)
-			free_pixmap: pix.is_free
+			valid_size: implementation.pixmap_size_ok (pix)
+			unlocked_pixmap: not pix.is_locked
 		do
 			implementation.set_pixmap (pix)
 		ensure then
 			pixmap_set: pixmap = pix
-			not_free_pixmap: not pixmap.is_free
 		end
 
 	unset_pixmap is
 			-- Remove the pixmap from the container
 		require
 			has_pixmap: pixmap /= Void
-			not_free_pixmap: not pixmap.is_free
 		do
 			implementation.unset_pixmap
 		ensure then
 			pixmap_removed: pixmap = Void
-			free_pixmap: (old pixmap).is_free
+			unlocked_pixmap: not (old pixmap).is_locked
 		end
 
 feature -- Implementation

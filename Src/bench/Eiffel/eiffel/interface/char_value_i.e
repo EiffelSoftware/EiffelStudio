@@ -50,4 +50,9 @@ feature
 			!VQMC2!Result;
 		end;
 
+	trace is
+		do
+			io.error.putchar (char_val);
+		end;
+
 end

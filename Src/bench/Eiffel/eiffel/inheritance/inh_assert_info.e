@@ -75,7 +75,7 @@ feature
 			io.putstring ("has_postcondition: ");
 			io.putbool (has_postcondition);
 			io.new_line;
-			io.putstring ("has_preccondition: ");
+			io.putstring ("has_precondition: ");
 			io.putbool (has_precondition);
 			io.new_line;
 		end;

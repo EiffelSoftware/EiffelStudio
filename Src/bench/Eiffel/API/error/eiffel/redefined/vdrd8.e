@@ -48,9 +48,9 @@ feature
 			a_feature.append_clickable_name (error_window, a_feature.written_class);
 			if postcondition then
 				if precondition then
-					put_string ("%NInvalid assertion clauses: precondition and poscondition%N")
+					put_string ("%NInvalid assertion clauses: precondition and postcondition%N")
 				else
-					put_string ("%NInvalid assertion clause: poscondition%N")
+					put_string ("%NInvalid assertion clause: postcondition%N")
 				end;
 			else
 				put_string ("%NInvalid assertion clause: precondition%N")

@@ -65,8 +65,7 @@ feature
 			io.new_line;
 
 			if	
-				((associated_class.changed and then
-					not associated_class.pass2_done)
+				(associated_class.changed
 			or else
 				associated_class.changed2)
 			then

@@ -5,7 +5,7 @@ class VKCN
 inherit
 
 	FEATURE_ERROR
-	
+
 feature
 
 	code: STRING is "VKCN";

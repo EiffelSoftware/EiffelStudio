@@ -33,19 +33,26 @@ components will show up quickly.
 
 o New Windows 95 common controls.
 
-o Common dialog boxes (Print, Page setup, Choose font, Choose color,
-  Find and replace). However, the File open and File save dialog boxes 
-  are available. They will be available in future release.
+o Common dialog boxes (Print, Page setup, Choose font, Find and replace).
+  They will be available in future release. However, the File open, File
+  save and Choose color dialog boxes are available.
 
 
-3. Documentation
+3. Resource file
+----------------
+
+When you change the resource file (.rc) of the application, you have to
+freeze the system in order to recompile the resource file and see the effect.
+
+
+4. Documentation
 ----------------
 
 The documentation is not yet available but the shipped examples should
 be a good start to understand how to use WEL.
 
 
-4. Examples
+5. Examples
 -----------
 
 WEL includes a few examples (Eiffel classes and an executable) which are:
@@ -61,25 +68,30 @@ o XY: A simple program that shows the coordinates of the mouse
 o Menus: This example illustrates dynamic creation of menus and
   track popup menus.
 
+o Cursors: This example demonstrates how to change the cursor.
+
 o MDI: A basic Muliple Document Interface application.
 
 o Controls: This example demontrates several Windows controls.
 
-o Fun: Some funny stuff using the GDI classes of WEL.
+o Fun: Some funny stuff using the GDI classes of WEL. (*)
 
 o Pizza: Order your pizza with WEL.
 
 o Brushes: A nice example to illustrate the brushes.
 
+o Bitmap Viewer: A MDI bitmap file viewer (16 colors bitmap only).
+
 o Windows: Shows the different kind of windows.
 
 o Printer: A simple example to print a page.
 
-o Xcell: A pretty nice card game (Compatible only with Windows 95/NT
-  since Win32s has some DC limitations).
+o Xcell: A pretty nice card game. (*)
 
-All the examples (except Xcell) are compatible with Windows 95, Windows NT and 
+All the examples (except those marked by `(*)') are compatible with Windows 95, Windows NT and
 Windows 3.1 with Win32s 1.25 and above.
+The examples marked by `(*)' do not work under Win32s since Win32s has DC
+limitations.
 
 
 Enjoy!

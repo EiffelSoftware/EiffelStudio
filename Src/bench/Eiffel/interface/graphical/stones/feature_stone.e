@@ -207,6 +207,12 @@ feature -- dragging
 	is_valid: BOOLEAN is
 			-- Is `Current' a valid stone?
 		do
+			if start_position = -1 then
+				initialize_positions;
+				if private_start_position = 0 then
+					feature_i := Void
+				end
+			end;
 			Result := fs_valid and then class_c /= Void 
 						and then feature_i /= Void
 		end;
@@ -248,8 +254,8 @@ feature {NONE} -- Implementation
 		local
 			body_as: FEATURE_AS
 		do
-			if feature_i.body_index > 0 then
-				body_as := feature_i.body
+			body_as := feature_i.body;
+			if body_as /= Void then
 				private_start_position := body_as.start_position
 				private_end_position := body_as.end_position
 			else

@@ -3,18 +3,9 @@
 class GENERIC_DESC
 
 inherit
-
-	ATTR_DESC
-		rename
-			same_as as basic_same_as
-		redefine
-			has_formal, instantiation_in
-		end;
 	ATTR_DESC
 		redefine
 			has_formal, instantiation_in, same_as
-		select
-			same_as
 		end;
 
 feature
@@ -36,7 +27,7 @@ feature
 		local
 			other_generic: GENERIC_DESC;
 		do
-			if basic_same_as (other) then
+			if {ATTR_DESC} Precursor (other) then
 				other_generic ?= other;
 				Result := type.same_as (other_generic.type);
 			end;

@@ -98,6 +98,7 @@ feature -- Status setting
 				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_blue (color, b)
 			end
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_modify_bg (a_c_object, feature {EV_GTK_EXTERNALS}.gTK_STATE_NORMAL_ENUM, color)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_modify_base (a_c_object, feature {EV_GTK_EXTERNALS}.gTK_STATE_NORMAL_ENUM, color)
 				
 			
 			if a_color /= Void then

@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 feature -- Basic Operations
 
 	draw_grid is
-			-- Draw the grid on the canvas.
+			-- Draw grid on canvas.
 			-- `world.point' is the origin of the grid.
 		local
 			cur_x, cur_y: INTEGER
@@ -56,7 +56,7 @@ feature -- Basic Operations
 feature -- Access
 
 	drawable: EV_DRAWABLE
-			-- Drawable surface. (screen, drawing area or pixmap)
+			-- Drawable surface (screen, drawing area or pixmap).
 
 	world: EV_FIGURE_WORLD is 
 		deferred
@@ -81,8 +81,7 @@ feature -- Element Change
 feature -- Figure drawing
 
 	draw_figure_arc (arc: EV_FIGURE_ARC) is
-			-- Draw a standard representation of `arc' to
-			-- the canvas.
+			-- Draw standard representation of `arc' to canvas.
 		local
 			d: like drawable
 			m: TUPLE [INTEGER, INTEGER, INTEGER, INTEGER]
@@ -107,8 +106,7 @@ feature -- Figure drawing
 		end
 
 	draw_figure_dot (dot: EV_FIGURE_DOT) is
-			-- Draw a standard representation of `dot' to
-			-- the canvas.
+			-- Draw standard representation of `dot' to canvas.
 		local
 			m: TUPLE [INTEGER, INTEGER, INTEGER]
 			w: INTEGER
@@ -129,8 +127,7 @@ feature -- Figure drawing
 		end
 
 	draw_figure_ellipse (ellipse: EV_FIGURE_ELLIPSE) is
-			-- Draw a standard representation of `ellipse' to
-			-- the canvas.
+			-- Draw standard representation of `ellipse' to canvas.
 		local
 			m: TUPLE [INTEGER, INTEGER, INTEGER, INTEGER]
 			a_x, a_y, a_width, a_height: INTEGER
@@ -160,8 +157,7 @@ feature -- Figure drawing
 		end
 
 	draw_figure_equilateral (eql: EV_FIGURE_EQUILATERAL) is
-			-- Draw a standard representation of `eql' to
-			-- the canvas.
+			-- Draw standard representation of `eql' to canvas.
 		local
 			bg: EV_COLOR
 			d: like drawable
@@ -184,8 +180,7 @@ feature -- Figure drawing
 		end
 
 	draw_figure_line (line: EV_FIGURE_LINE) is
-			-- Draw a standard representation of `line' to
-			-- the canvas.
+			-- Draw standard representation of `line' to canvas.
 		local
 			s, t: EV_RELATIVE_POINT
 			p: EV_FIGURE_POLYGON
@@ -228,8 +223,7 @@ feature -- Figure drawing
 		end
 
 	draw_figure_picture (picture: EV_FIGURE_PICTURE) is
-			-- Draw a standard representation of `picture' to
-			-- the canvas.
+			-- Draw standard representation of `picture' to canvas.
 		local
 			c: EV_COORDINATE
 		do
@@ -238,8 +232,7 @@ feature -- Figure drawing
 		end
 
 	draw_figure_pie_slice (slice: EV_FIGURE_PIE_SLICE) is
-			-- Draw a standard representation of `slice' to
-			-- the canvas.
+			-- Draw standard representation of `slice' to canvas.
 		local
 			m: TUPLE [INTEGER, INTEGER, INTEGER, INTEGER]
 			cx, cy, a_width, a_height: INTEGER
@@ -259,11 +252,11 @@ feature -- Figure drawing
 			bg := slice.background_color
 			if bg /= Void then
 				d.set_foreground_color (bg)
-				d.fill_pie_slice (cx, cy, a_height, a_width,
+				d.fill_pie_slice (cx, cy, a_width, a_height,
 					slice.start_angle, slice.aperture)
 			end
 			d.set_foreground_color (slice.foreground_color)
-			d.draw_pie_slice (cx, cy, a_height, a_width,
+			d.draw_pie_slice (cx, cy, a_width, a_height,
 				slice.start_angle, slice.aperture)
 			if slice.dashed_line_style then
 				d.disable_dashed_line_style
@@ -271,8 +264,7 @@ feature -- Figure drawing
 		end
 
 	draw_figure_polygon (polygon: EV_FIGURE_POLYGON) is
-			-- Draw a standard representation of `polygon' to
-			-- the canvas.
+			-- Draw standard representation of `polygon' to canvas.
 		local
 			bg: EV_COLOR
 			d: like drawable
@@ -295,8 +287,7 @@ feature -- Figure drawing
 		end
 
 	draw_figure_polyline (line: EV_FIGURE_POLYLINE) is
-			-- Draw a standard representation of `polyline' to
-			-- the canvas.
+			-- Draw standard representation of `polyline' to canvas.
 		local
 			s, t: EV_RELATIVE_POINT
 			p: EV_FIGURE_POLYGON
@@ -343,8 +334,7 @@ feature -- Figure drawing
 		end
 
 	draw_figure_rectangle (rectangle: EV_FIGURE_RECTANGLE) is
-			-- Draw a standard representation of `rectangle' to
-			-- the canvas.
+			-- Draw standard representation of `rectangle' to canvas.
 		local
 			top, left: INTEGER
 			d: like drawable
@@ -386,7 +376,7 @@ feature -- Figure drawing
 		end
 
 	draw_figure_rounded_rectangle (f: EV_FIGURE_ROUNDED_RECTANGLE) is
-			-- Draw a standard representation of `f' to the canvas.
+			-- Draw standard representation of `f' to canvas.
 		local
 			d: like drawable
 			bg: EV_COLOR
@@ -409,8 +399,7 @@ feature -- Figure drawing
 		end
 
 	draw_figure_star (star: EV_FIGURE_STAR) is
-			-- Draw a standard representation of `star' to
-			-- the canvas.
+			-- Draw standard representation of `star' to canvas.
 		local
 			cx, cy: INTEGER
 			cl: ARRAY [EV_COORDINATE]
@@ -439,8 +428,7 @@ feature -- Figure drawing
 		end
 
 	draw_figure_text (text_figure: EV_FIGURE_TEXT) is
-			-- Draw a standard representation of `text_figure' to
-			-- the canvas.
+			-- Draw standard representation of `text_figure' to canvas.
 			--| FIXME Hazardous when origin of `text_figure' has
 			--| different values for `scale_x_abs'
 			--| and `scale_y_abs'.

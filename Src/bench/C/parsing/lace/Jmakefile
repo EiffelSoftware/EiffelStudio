@@ -9,7 +9,7 @@ CFLAGS = $(DPFLAGS)
 YFLAGS = -d
 
 
-SRCS = lace_l.l lace_y.y lace_c.c eif_l.l eif_c.c lac_err.c keyword.c
+SRCS = lace_l.l lace_y.y lace_c.c eif_l.l lac_err.c keyword.c
 
 OBJS = \
 |expand f!$(SRCS)!

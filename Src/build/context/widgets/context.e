@@ -29,7 +29,10 @@ inherit
 			process_attribute, compatible
 		end;
 	REMOVABLE;
-	NAMABLE;
+	NAMABLE
+		rename
+			label as full_label
+		end;
 	DEFERRED_CREATOR;
 	EDITABLE;
 	DRAG_SOURCE
@@ -69,7 +72,7 @@ feature {NONE}
 
 	update_tree_element is
 		do
-			tree_element.set_text (label);
+			tree_element.set_text (full_label);
 			tree.display (data);
 			context_catalog.update_name_in_editors (Current);
 		end;
@@ -185,7 +188,22 @@ feature
 			if (visual_name = Void) then
 				Result := entity_name
 			else
-				Result := visual_name
+				Result := visual_name;
+			end;
+		end;
+
+	full_label: STRING is
+		do
+			if (visual_name = Void) then
+				Result := clone (entity_name);
+				Result.append (" (");	
+				Result.append (eiffel_type);
+				Result.extend (')');	
+			else
+				Result := clone (visual_name);
+				Result.append (" (");	
+				Result.append (eiffel_type);
+				Result.extend (')');	
 			end;
 		end;
 
@@ -726,7 +744,11 @@ feature -- EiffelVision attributes
 			else
 				!!a_color.make;
 				a_color.set_name (a_color_name);
-				widget.set_background_color (a_color);
+				if previous_bg_color = Void then
+					widget.set_background_color (a_color);
+				else
+					previous_bg_color := a_color
+				end
 				bg_color_modified := True;
 			end;
 		end;
@@ -931,6 +953,7 @@ feature
 			valid_previouse_color: previous_bg_color /= Void
 		do
 			widget.set_background_color (previous_bg_color);
+			previous_bg_color := Void
 		end;
 
 	set_grouped (flag: BOOLEAN) is
@@ -960,6 +983,7 @@ feature
 		end;
 
 	group: LINKED_LIST [CONTEXT] is
+			-- Selected group
 		do
 			Result := Eb_selection_mgr.group
 		end;
@@ -984,7 +1008,7 @@ feature
 			widget_is_hidden: not widget.managed
 		end;
 
-	cut_list: LINKED_LIST [CONTEXT] is
+	children_list_plus_current, cut_list: LINKED_LIST [CONTEXT] is
 			-- Current Context and all its children 
 			-- that will be destroyed
 		local
@@ -1303,7 +1327,7 @@ feature {NONE}
 				function_int_int_to_string (Result, context_name, 
 					"set_x_y", x, y);
 			end;
-			if parent.is_bulletin and then size_modified then
+			if size_modified then
 				function_int_int_to_string (Result, context_name, 
 						"set_size", width, height);
 			end;
@@ -1324,7 +1348,7 @@ feature
 			until
 				child_offright
 			loop
-				context_name := clone (child.entity_name);
+				context_name := clone (child.full_name);
 				context_name.append (".");
 				Result.append (child.eiffel_color (context_name));
 				child_forth
@@ -1593,7 +1617,7 @@ feature
 			visual_name := clone (s);
 		end;
 
-	retrieve_oui_widget is
+	retrieve_oui_group_child_widget, retrieve_oui_widget is
 		local
 			parent_widget: COMPOSITE;
 			temp_w: TEMP_WIND_C
@@ -1614,7 +1638,7 @@ feature
 			end;
 			if is_window then
 				widget.realize;
-				temp_w ?= Current;
+				temp_w ?= Current
 				if temp_w /= Void then
 					show
 				end
@@ -1626,11 +1650,11 @@ feature
 
 	import_oui_widget (group_table: INT_H_TABLE [INTEGER]) is
 		local
-			parent_widget: COMPOSITE
+			parent_widget: COMPOSITE;
+			temp_w: TEMP_WIND_C
 		do
 			generate_internal_name;
-			retrieved_node.set_name_change (full_name);
-			if not (parent = Void) then
+			if parent /= Void then
 				parent_widget ?= parent.widget;
 			end;
 			retrieve_oui_create (parent_widget);
@@ -1644,7 +1668,12 @@ feature
 				child.import_oui_widget (group_table);
 				child_forth
 			end;
-			if not is_window then
+			if is_window then
+				temp_w ?= Current
+				if temp_w /= Void then
+					show
+				end
+			else
 				widget.manage;
 			end;
 			retrieved_node := Void

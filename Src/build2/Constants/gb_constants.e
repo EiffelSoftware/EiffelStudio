@@ -59,13 +59,13 @@ feature -- Menu texts.
 	
 	Gb_view_tools_text: STRING is "Tools"
 	
-	Show_hide_component_viewer_menu_text: STRING is "component viewer"
+	Show_hide_component_viewer_menu_text: STRING is "Component viewer"
 	
-	Show_hide_builder_window_menu_text: STRING is "builder window"
+	Show_hide_builder_window_menu_text: STRING is "Builder window"
 	
-	Show_hide_display_window_menu_text: STRING is "display window"
+	Show_hide_display_window_menu_text: STRING is "Display window"
 	
-	Show_hide_history_window_menu_text: STRING is "history window"
+	Show_hide_history_window_menu_text: STRING is "History window"
 	
 	Show_tool_windows_modeless_text: STRING is "Tools always on top?"
 	

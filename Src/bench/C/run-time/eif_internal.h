@@ -20,10 +20,10 @@ extern "C" {
 #endif
 
 /* Returns the number of logical fields in `object'. */
-#define ei_count_field_of_type(type_id)		(egc_fsystem[Deif_bid(type_id)].cn_nbattr)
+#define ei_count_field_of_type(type_id)		(System(Deif_bid(type_id)).cn_nbattr)
 
 /* Returns name of the i_th logical field of `object'. */
-#define ei_field_name_of_type(i,type_id)	(egc_fsystem[Deif_bid(type_id)].cn_names[i])
+#define ei_field_name_of_type(i,type_id)	(System(Deif_bid(type_id)).cn_names[i])
 
 RT_LNK char *ei_field (long i, EIF_REFERENCE object);
 RT_LNK long ei_field_type_of_type(long i, EIF_INTEGER type_id);

@@ -173,14 +173,14 @@ feature -- Update
 feature -- Stone process
 
 	process (d_class:CLASS_C; d_creation:E_FEATURE; 
-			 d_routine:E_FEATURE; d_index:INTEGER) is
+			 d_routine:E_FEATURE; d_index:INTEGER; d_alias: STRING) is
 		do
 			if d_routine.is_attribute then
 				warner (eb_shell).gotcha_call ("An attribute can not be exported.")
 			elseif d_routine.is_deferred then
 				warner (eb_shell).gotcha_call ("A deferred feature can not be exported.%N")
 			else
-				Eiffel_dynamic_lib.add_export_feature (d_class, d_creation, d_routine, d_index)
+				Eiffel_dynamic_lib.add_export_feature (d_class, d_creation, d_routine, d_index, d_alias)
 			end
 			synchronize
 		end
@@ -205,8 +205,15 @@ feature -- Stone process
 
 	process_feature (s: FEATURE_STONE) is
 			-- Proces feature stone.
+		local
+			f: EXPORTED_FEATURE_NAME_STONE
 		do
-			process (s.e_class, Void, s.e_feature, 0)
+			f ?= s
+			if f = Void then
+				process (s.e_class, Void, s.e_feature, 0, Void)
+			else
+				process (s.e_class, Void, s.e_feature, 0, f.alias_name)
+			end
 		end
 
 	process_feature_error (s: FEATURE_ERROR_STONE) is
@@ -235,13 +242,11 @@ feature -- Stone process
 			a_file: PLAIN_TEXT_FILE
 			content:STRING
 		do
-
 			!!a_file.make_open_read (a_file_name)
 			a_file.readstream (a_file.count)
 
-			if Eiffel_dynamic_lib.parse_exports_from_file(a_file) then 
-			else
-				io.put_string ("Error in the eiffel def file%N")
+			if not Eiffel_dynamic_lib.parse_exports_from_file(a_file) then 
+				warner (eb_shell).gotcha_call ("Error in the eiffel def file%N")
 			end
 			a_file.close
 
@@ -276,7 +281,7 @@ feature -- Stone process
 			loop
 				st.add_string( "%N-- CLASS [" )
 
-				class_name := clone(dynamic_lib_exports.item_for_iteration.item.dl_class.name)
+				class_name := clone(dynamic_lib_exports.item_for_iteration.item.compiled_class.name)
 
 				class_name.to_upper
 				st.add_string(class_name)
@@ -293,41 +298,46 @@ feature -- Stone process
 
 						dl_exp := dynamic_lib_exports.item_for_iteration.item
 
-						class_name := clone(dl_exp.dl_class.name)
+						class_name := clone(dl_exp.compiled_class.name)
 						class_name.to_upper
 						if is_clickable then
-							st.add_classi (dl_exp.dl_class.lace_class, class_name)
+							st.add_classi (dl_exp.compiled_class.lace_class, class_name)
 						else
 							st.add_string (class_name)
 						end
 
-						if (dl_exp.dl_creation /=Void) and then (dl_exp.dl_routine.id /= dl_exp.dl_creation.id) then
+						if (dl_exp.creation_routine /=Void) and then (dl_exp.routine.id /= dl_exp.creation_routine.id) then
 							st.add_string (" (")
 							if is_clickable then
---  								st.add_feature_name (dl_exp.dl_creation, dl_exp.dl_creation.name)
-								st.add_feature_name (dl_exp.dl_creation.name,dl_exp.dl_class)
+--  								st.add_feature_name (dl_exp.creation_routine, dl_exp.creation_routine.name)
+								st.add_feature_name (dl_exp.creation_routine.name,dl_exp.compiled_class)
 							else
-								st.add_string (dl_exp.dl_creation.name)
+								st.add_string (dl_exp.creation_routine.name)
 							end
 							st.add_string (")")
-						elseif (dl_exp.dl_creation =Void) then
+						elseif (dl_exp.creation_routine =Void) then
 							st.add_string (" (!!)")
 						end
-						if (dl_exp.dl_routine /= Void) then
+						if (dl_exp.routine /= Void) then
 							st.add_string (" : ")
 							if is_clickable then
---  								st.add_feature_name (dl_exp.dl_routine, dl_exp.dl_routine.name)
-								st.add_feature_name (dl_exp.dl_routine.name, dl_exp.dl_class)
+--  								st.add_exported_feature_name (dl_exp.routine, dl_exp.routine.name, dl_exp.alias_name)
+								st.add_exported_feature_name (dl_exp.routine.name, dl_exp.compiled_class, dl_exp.alias_name)
 							else
-								st.add_string (dl_exp.dl_routine.name)
+								st.add_string (dl_exp.routine.name)
 							end
 						end
-						if (dl_exp.dl_index /= 0) then
+						if (dl_exp.index /= 0) then
 							st.add_string (" @ ")
-							st.add_int (dl_exp.dl_index)
+							st.add_int (dl_exp.index)
 						end
-						st.add_string ("%N")
 
+						if dl_exp.alias_name /= Void then
+							st.add_string (" alias ")
+							st.add_string (dl_exp.alias_name)
+						end
+
+						st.add_string ("%N")
 
 						dynamic_lib_exports.item_for_iteration.forth
 					end

@@ -1,13 +1,11 @@
 indexing
-
-	description: ""
+	description: "Abstract representation of addition of Eiffel routines in a dynamic library"
 	date: "$Date$";
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 class E_DYNAMIC_LIB
 
 inherit
-
 	SHARED_WORKBENCH
 	SHARED_EIFFEL_PROJECT
 	COMPILER_EXPORTER
@@ -32,13 +30,13 @@ feature -- Data
 
 feature -- DYNAMIC_LIB Exports processing.
 
-	add_export_feature (d_class:CLASS_C; d_creation:E_FEATURE; d_routine:E_FEATURE; d_index:INTEGER) is
+	add_export_feature (d_class:CLASS_C; d_creation:E_FEATURE; d_routine:E_FEATURE; d_index:INTEGER; d_alias: STRING) is
 		require
-			class_exists: d_class /=Void
+			class_exists: d_class /= Void
 			--creation_exists: d_creation /= Void
 			routine_exists: d_routine /= Void
 		local
-			dl_exp: DYNAMIC_LIB_EXPORT_FEATURE
+			dl_exp, dl_item: DYNAMIC_LIB_EXPORT_FEATURE
 			dl_exp_list: LINKED_LIST[DYNAMIC_LIB_EXPORT_FEATURE]
 			dl_creation:like d_creation
 			list_valid_creation: LINKED_LIST[E_FEATURE]
@@ -48,22 +46,25 @@ feature -- DYNAMIC_LIB Exports processing.
 			tmp:STRING
 		do
 			if d_creation = Void then
-				!! list_dl.make(d_class, d_routine,d_index)
+					-- Addition of an export feature from the environment.
+				!! list_dl.make(d_class, d_routine,d_index, d_alias)
 				list_dl.choose_creation
 			else
+					-- Addition of an export feature already defined in a ".def" file.
 				dl_creation := d_creation
 				if dl_creation.arguments /= Void and then d_creation /= d_routine then
-					io.put_string ("%NThe creation procedure must have no argument.%N")
+					-- Error: a creation procedure cannot have an argument
 				elseif d_routine.is_attribute then
-					io.put_string ("%NAn attribute can not be exported.%N")
+					-- Error: an attribute cannot be exported.
 				elseif d_routine.is_deferred then
-					io.put_string ("%NA deferred feature can not be exported.%N")
+					-- Error: a deferred feature cannot be exported.
 				else
 					set_modified (True)
 					if dynamic_lib_exports.has (d_class.id.id) then
 						dl_exp_list := dynamic_lib_exports.found_item
 					else
 						!! dl_exp_list.make
+						dynamic_lib_exports.put (dl_exp_list, d_class.id.id)
 					end
 
 						-- Check if the feature is or is not in the list.
@@ -72,8 +73,10 @@ feature -- DYNAMIC_LIB Exports processing.
 					until
 						has_feature = True or else dl_exp_list.after
 					loop
-						has_feature := (d_routine.id = dl_exp_list.item.dl_routine_id)
-										and then ( d_creation.id = dl_exp_list.item.dl_creation.id )
+						dl_item := dl_exp_list.item
+						has_feature := (d_routine.id = dl_item.routine_id)
+										and then (d_creation.id = dl_item.creation_routine.id)
+										and then (equal (d_alias, dl_item.alias_name))
 						i := dl_exp_list.index
 						dl_exp_list.forth
 					end
@@ -81,16 +84,19 @@ feature -- DYNAMIC_LIB Exports processing.
 					if not has_feature then
 						!! dl_exp.make (d_class, dl_creation, d_routine)
 
-						if (dl_creation /=Void) then
-							dl_exp.set_dl_creation (dl_creation)
+						if dl_creation /= Void then
+							dl_exp.set_creation_routine (dl_creation)
 						end
 
-						if (d_index /=0) then
-							dl_exp.set_dl_index (d_index)
+						if d_index /= 0 then
+							dl_exp.set_index (d_index)
+						end
+
+						if d_alias /= Void then
+							dl_exp.set_alias_name (d_alias)
 						end
 
 						dl_exp_list.extend (dl_exp)
-						dynamic_lib_exports.put (dl_exp_list, d_class.id.id)
 					else
 						dl_exp_list.go_i_th(i)
 						dl_exp_list.remove
@@ -103,7 +109,7 @@ feature -- DYNAMIC_LIB Exports processing.
 			end
 		end
 
-   add_export_feature_from_file (t_class,t_creation,t_routine,t_index:STRING) is
+   add_export_feature_from_file (t_class, t_creation, t_routine, t_index, t_alias: STRING) is
 		local
 			class_list: LINKED_LIST [CLASS_I]
 			class_i:CLASS_I
@@ -119,13 +125,13 @@ feature -- DYNAMIC_LIB Exports processing.
 				class_list := Eiffel_universe.compiled_classes_with_name (t_class)
 			
 				if class_list.empty then
+						-- Error cannot process the line
 					class_list := Void;
-					io.put_string("Can not process the line%N")
 				elseif class_list.count = 1 then
 					class_i := class_list.first --FIXME: if there are many cluster with the 
 					class_list := Void
 				else
-					io.put_string("Can not process the line%N")
+						-- Error cannot process the line
 				end
 
 				if class_i /= Void then 
@@ -137,11 +143,9 @@ feature -- DYNAMIC_LIB Exports processing.
 
 					if api_feature_table.has (t_creation) then
 						dl_creation:= api_feature_table.found_item
--- 					elseif api_feature_table.has (t_creation) then
--- 						dl_creation:= api_feature_table.found_item
 					end
 
-					if t_index/=Void then
+					if t_index/= Void then
 						dl_index:=t_index.to_integer
 					else
 						dl_index := 0
@@ -150,7 +154,7 @@ feature -- DYNAMIC_LIB Exports processing.
 					if dl_class /= Void and then
 						dl_creation /= Void and then
 						dl_routine /= Void then
-						add_export_feature (dl_class,dl_creation,dl_routine,dl_index)
+						add_export_feature (dl_class,dl_creation,dl_routine,dl_index, t_alias)
 					end
 				end
 			end
@@ -159,23 +163,25 @@ feature -- DYNAMIC_LIB Exports processing.
 
 	parse_exports_from_file(f:PLAIN_TEXT_FILE):BOOLEAN is
 		local
-			lastline:STRING
-			pos, mark:INTEGER
-			done:INTEGER
-			t_class:STRING
-			t_creation:STRING
-			t_routine:STRING
-			t_index:STRING
+			lastline: STRING
+			lastchar: CHARACTER
+			pos, mark, index_mark, alias_mark: INTEGER
+			state, done: INTEGER
+			t_class: STRING
+			t_creation: STRING
+			t_routine: STRING
+			t_index: STRING
+			t_alias: STRING
 		do
 			dynamic_lib_exports.clear_all
-			Result:=True
+			Result := True
 			from
 				f.start
 			until
 				f.end_of_file
 			loop
 				f.readline
-				lastline :=clone(f.last_string)
+				lastline := clone(f.last_string)
 
 				lastline.left_adjust
 				lastline.right_adjust
@@ -183,78 +189,117 @@ feature -- DYNAMIC_LIB Exports processing.
 				if not lastline.substring(1,2).is_equal("--") and then not lastline.empty then
 					from
 						pos := 0
-						done:= 0
+						done := 0
 					until
-						pos >= lastline.count or done>0
+						pos >= lastline.count or done > 0
 					loop
-						pos:=pos + 1
+						pos := pos + 1
 						if lastline.item(pos).is_equal('(') then
-							done:=1
+							done := 1
 						elseif lastline.item(pos).is_equal(':') then
-							done:=2
+							done := 2
 						end
 					end
 
 					if done > 0 then 
-						mark:=pos+1
+						mark := pos+1
 
 						--Class
-						t_class:=lastline.substring(1,pos-1)
+						t_class := lastline.substring(1,pos-1)
 
-						if done=1 then
-							--creation
+						if done = 1 then
+								--creation
 							from
 							until
-								pos >= lastline.count or done>1
+								pos >= lastline.count or done > 1
 							loop
-								pos:=pos + 1
+								pos := pos + 1
 								if lastline.item(pos).is_equal(')') then
-									done:=3
+									done := 3
 								end
 							end
 						end
 
-						if done>1 then
-							if done=3 then
-								t_creation:=lastline.substring(mark,pos-1)
-							elseif done=2 then
-								t_creation:=Void
+						if done > 1 then
+							if done = 3 then
+								t_creation := lastline.substring(mark,pos-1)
+							elseif done = 2 then
+								t_creation := Void
 							end
-							--routine
+								--routine
 							from 
-								if done=2 then -- we already found ':'
-									done:=1
-									pos:=pos-1
+								if done = 2 then -- we already found ':'
+									done := 1
+									pos := pos-1
 								else
-									done:=0
+									done := 0
 								end
 							until
-								pos >= lastline.count or done>1
+								pos >= lastline.count or done > 1
 							loop
-								pos:=pos + 1
+								pos := pos + 1
 								if lastline.item(pos).is_equal(':') then
-									done:=1
-									mark:=pos+1
+									done := 1
+									mark := pos + 1
 								elseif lastline.item(pos).is_equal('@') then
-									done:=done+2
+									done := done + 2
+									index_mark := pos
 								end
 							end
-	
-							if done=0 or else done=2 then
-								Result:=False
-							elseif done=1  then
-								t_routine:=lastline.substring(mark,lastline.count)
-							elseif done=3 then
-								t_routine:=lastline.substring(mark,pos-1)
-								t_index:=lastline.substring(pos+1,lastline.count)
+
+								-- Read alias part if there is one
+								--| Note: the alias part is at the end of the line, so
+								--| that we can export a feature with the name `alias'.
+							from
+								if done /= 3 then
+									pos := mark
+								else
+									pos := index_mark + 1
+								end
+								state := 0
+								alias_mark := 0
+							until
+								pos >= lastline.count or else state = 3
+							loop
+								lastchar := lastline.item (pos)
+								if state = 0 and then (lastchar.is_alpha or lastchar.is_digit) then
+										-- We either find `routine_name' or `index'.
+									state := 1
+								elseif state = 1 and then not (lastchar.is_alpha or lastchar.is_digit) then
+										-- We either find the end of `routine_name' or `index'
+									state := 2
+								elseif state = 2 and then has_alias_keyword (lastline, pos) then
+										-- We find the `alias' keyword.
+									state := 3
+									alias_mark := pos
+								end
+								pos := pos + 1
+							end
+
+							if alias_mark /= 0 then
+									-- We found the `alias' keyword.
+								t_alias := lastline.substring (alias_mark + 6, lastline.count)
+							else
+								alias_mark := lastline.count + 1
+							end
+
+							if done = 0 or else done = 2 then
+								Result := False
+							elseif done = 1  then
+									-- We only found a routine name.
+								t_routine := lastline.substring(mark, alias_mark - 1)
+							elseif done = 3 then
+									-- We found a routine name and the `@' sign.
+								t_routine := lastline.substring (mark, index_mark - 1)
+								t_index := lastline.substring (index_mark + 1, alias_mark - 1)
 							end
 						else
 							Result := False
-						end -- if on "done>2"
+						end -- if on "done > 2"
 
 					else
 						Result := False
-					end -- if on "done>1"					
+					end -- if on "done > 1"					
 				end -- if not "--"
 
 				if t_class /= Void then
@@ -277,16 +322,22 @@ feature -- DYNAMIC_LIB Exports processing.
 					t_index.right_adjust
 				end
 
-				if t_creation =Void and then t_routine /=Void then
+				if t_alias /= Void and then not t_alias.empty then
+					t_alias.left_adjust
+					t_alias.right_adjust
+				end
+
+				if t_creation =Void and then t_routine /= Void then
 					t_creation	:= clone(t_routine)
 				end
 
-				add_export_feature_from_file(t_class,t_creation,t_routine,t_index)
+				add_export_feature_from_file(t_class,t_creation,t_routine,t_index, t_alias)
 
-				t_class		:=Void
-				t_creation	:=Void
-				t_routine	:=Void
-				t_index		:=Void
+				t_class := Void
+				t_creation := Void
+				t_routine := Void
+				t_index := Void
+				t_alias := Void
 
 			end -- loop on file
 			set_modified(False)
@@ -323,7 +374,6 @@ feature -- Access
 			Result := f.exists and then f.is_readable
 		end
 
-
 feature -- Setting
 
 	set_file_name (f_name: STRING) is
@@ -336,6 +386,21 @@ feature -- Setting
 			file_name_set: equal (f_name, file_name)
 		end
 
-end -- class E_DYNAMIC_LIB
- 
+feature {NONE} -- Implementation
 
+	has_alias_keyword (current_line: STRING; pos: INTEGER): BOOLEAN is
+			-- Is there the `alias' keyword in `current_line'?
+		require
+			valid_line: current_line /= Void and then current_line.count > 0
+			valid_position: pos > 0
+		local
+			temp: STRING
+		do
+			temp := current_line.substring (pos, pos + 4)	
+			if temp.count = 5 then
+				temp.to_lower
+				Result := temp.is_equal ("alias")
+			end
+		end
+
+end -- class E_DYNAMIC_LIB

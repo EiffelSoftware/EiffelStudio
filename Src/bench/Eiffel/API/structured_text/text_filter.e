@@ -519,6 +519,12 @@ feature {NONE} -- Text processing
 			process_basic_text (text)
 		end;
 
+	process_exported_feature_name_text (text: EXPORTED_FEATURE_NAME_TEXT) is
+			-- Process feature name text `t'.
+		do
+			process_basic_text (text)
+		end;
+
 	process_feature_text (text: FEATURE_TEXT) is
 			-- Process feature text `text'.
 		do

@@ -85,6 +85,8 @@ feature -- Callbacks
 			else
 				chooser := name_chooser (popup_parent);
 				chooser.set_open_file;
+				chooser.set_pattern ("*.def")
+				chooser.set_pattern_name ("Dynamic Library Definition File (*.def)")
 				chooser.call (Current);
 			end
 		end;

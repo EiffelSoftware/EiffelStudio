@@ -312,6 +312,17 @@ feature -- Element change
 			add (l_item)
 		end;
 
+	add_exported_feature_name (f_name: STRING; e_class: CLASS_C; exported_name: STRING) is
+			-- Put feature_name `f_name' defined in `e_class' with `exported_name'.
+		require
+			valid_f_name: f_name /= Void
+		local
+			l_item: like item
+		do
+			!EXPORTED_FEATURE_NAME_TEXT! l_item.make (f_name, e_class, exported_name)
+			add (l_item)
+		end
+
 	add_quoted_text (s: STRING) is
 			-- Put `s' at current position.
 		require

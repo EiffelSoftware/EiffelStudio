@@ -203,7 +203,7 @@ char *constrained;
 
 	/* Save the name of the generic parameter. */
 	if (nb_generics <  MAXG)
-		Generic_name[nb_generics++] = strsave(gen_name);
+		Generic_name[nb_generics++] = str_save(gen_name);
 
 	/* Even if already MAXG generic parameters have been found, we
 	 * create a new FORMAL_GENERIC node. The error will be reported

@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-char *strsave(s)
+char *str_save(s)
 char *s;
 {
     char *result;

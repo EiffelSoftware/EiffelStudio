@@ -1839,6 +1839,7 @@ end:
 		dprintf(2)("BC_OLD\n");
 #endif
 		last = opop();
+        code = get_short();     /* Get the local number (from 1 to locnum) */
 		if (~in_assertion & WASC(icur_dtype) & CK_ENSURE) {
 											/* Only clone if checking postcondition */
 			switch (last->type & SK_HEAD) {	
@@ -1847,7 +1848,6 @@ end:
 					last->it_ref = rtclone(last->it_ref); 	/* Clone ref */
 					break;
 			}
-        	code = get_short();     /* Get the local number (from 1 to locnum) */
         	bcopy(last, loc(code), ITEM_SZ);
 		}
 		break;

@@ -82,7 +82,7 @@ extern Malloc_t malloc();
 #include <strings.h>
 #endif
 
-public char *strsave(s)
+public char *str_save(s)
 char *s;
 {
 	/* Save string 's' somewhere in memory */

@@ -2885,13 +2885,13 @@ int sig;
 
 #ifndef lint
 private char *e_what =
-	"@(#) Eiffel run-time and C code generation: Raphael Manfredi";
+	"@(#) ISE Eiffel 3 by:";
 private char *e_waht2 =
-	"@(#) Compiler front-end: Frederic Dernbach";
+	"@(#)      Frederic Deramat, Frederic Dernbach";
 private char *e_waht3 =
-	"@(#) Workbench interface: Philippe Stephan";
+	"@(#)      Xavier Levourch, Raphael Manfredi";
 private char *e_waht4 =
-	"@(#) Melting ice: Frederic Dernbach and Raphael Manfredi";
+	"@(#)      Philippe Stephan, Dino Valente";
 private char *e_waht5 =
 	"@(#) Language design: Betrand Meyer";
 #endif

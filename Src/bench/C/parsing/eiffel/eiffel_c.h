@@ -40,5 +40,5 @@ extern char		*create_generic();
  * Miscellaneous
  */
 
-extern char *strsave();				/* String duplication */
+extern char *str_save();				/* String duplication */
 extern char *inspect_else();        /* Inspect default list */

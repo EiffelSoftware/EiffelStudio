@@ -66,7 +66,7 @@ extern void arg_init();					/* Command line arguments saving */
 extern void mem_diagnose();				/* Memory usage dump */
 #endif
 
-public void eif_init(argc, argv, envp)
+public void eif_rtinit(argc, argv, envp)
 int argc;
 char **argv;
 char **envp;

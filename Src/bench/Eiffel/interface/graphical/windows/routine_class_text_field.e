@@ -13,6 +13,9 @@ inherit
 	TEXT_FIELD
 		rename
 			make as text_field_make
+		export
+			{NAVIGATE_CMD} implementation
+			{ROUTINE_W} toolkit		
 		end;
 	SHARED_EIFFEL_PROJECT
 
@@ -25,13 +28,32 @@ feature -- Initialization
 	make (a_parent: COMPOSITE; a_tool: ROUTINE_W) is
 			-- Initialize the text field "Class_name".
 			-- Set up the activate actions.
+		local
+			debug_tip_cmd: DEBUG_TOOLTIP_CMD
+			imp: TEXT_FIELD_IMP
 		do
 			text_field_make ("", a_parent);
+			!! debug_tip_cmd
+			imp ?= implementation
+			imp.set_motion_verify_callback (debug_tip_cmd, Void)
+			imp.disable_verify_bell
 			add_activate_action (Current, Void);
 			tool := a_tool
 		end;
 
 feature -- Properties
+	
+	debug_tab (previous_tab: TEXT_FIELD) is
+			-- manually fix the keyboard navigation with tab
+		local
+			navigate_tab_cmd: NAVIGATE_CMD
+		do
+			if not toolkit.name.is_equal ("MS_WINDOWS") then
+				!! navigate_tab_cmd.make (previous_tab)
+				set_action ("<Key>Tab", navigate_tab_cmd, Void)
+				set_action ("Shift<Key>Tab", navigate_tab_cmd, Void)
+			end
+		end
 
 	tool: ROUTINE_W;
 			-- Tool of the routine.

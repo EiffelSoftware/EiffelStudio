@@ -1,3 +1,4 @@
+--| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
@@ -98,6 +99,9 @@ end -- class EV_TREE_ITEM_HOLDER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2000/04/10 19:16:55  brendel
+--| Unreleased.
+--|
 --| Revision 1.10  2000/03/07 17:45:32  rogers
 --| Commented out find_item_recursively_by_data. This class is no longer required by Vision2.
 --|

@@ -11,15 +11,16 @@ inherit
 	WIZARD_EIFFEL_EFFECTIVE_FUNCTION_GENERATOR
 
 create 
-	generate
+	generate,
+	generate_source,
+	generate_on_hook
 
 feature -- Basic operations
 
 	generate (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR; a_descriptor: WIZARD_FUNCTION_DESCRIPTOR) is
-			-- Generate server feature signature.
+			-- Generate server feature.
 		local
 			coclass_name: STRING
-			visitor: WIZARD_DATA_TYPE_VISITOR
 		do
 			coclass_name := a_component_descriptor.name
 			func_desc := a_descriptor
@@ -38,16 +39,97 @@ feature -- Basic operations
 			end
 
 			set_feature_result_type_and_arguments
-
-			visitor := func_desc.return_type.visitor 
-
+			
 			feature_writer.set_comment (func_desc.description)
 			add_feature_argument_comments
-			feature_writer.set_body (Exception_body)
+			feature_writer.set_body (Empty_function_body)
 
 			feature_writer.set_effective
 		end
 
+	generate_source (a_descriptor: WIZARD_FUNCTION_DESCRIPTOR) is
+			-- Generate feature for source interface.
+		local
+			body: STRING
+		do
+			func_desc := a_descriptor
+			create feature_writer.make
+			feature_writer.set_name (a_descriptor.interface_eiffel_name)
+			set_feature_result_type_and_arguments
+			feature_writer.set_comment (func_desc.description)
+			add_feature_argument_comments
+			
+			create body.make (100)
+			body.append ("%T%T%T") 
+			body.append (on_hook_feature_name (a_descriptor.interface_eiffel_name))
+			body.append (on_hook_feature_arguments)
+			feature_writer.set_body (body)
+
+			feature_writer.set_effective
+		end
+
+	generate_on_hook (a_descriptor: WIZARD_FUNCTION_DESCRIPTOR) is
+			-- "on_" hook feature.
+		do
+			func_desc := a_descriptor
+			create feature_writer.make
+			feature_writer.set_name (on_hook_feature_name (a_descriptor.interface_eiffel_name))
+			set_feature_result_type_and_arguments
+			feature_writer.set_comment (func_desc.description)
+			add_feature_argument_comments
+			feature_writer.set_body (Empty_function_body)
+
+			feature_writer.set_effective
+		end
+
+feature {NONE} -- Implementation
+
+	on_hook_feature_name (a_name: STRING): STRING is
+			-- Name of "on_" hook feature.
+		require
+			non_void_name: a_name /= Void
+			valid_name: not a_name.empty
+		do
+			Result := clone (a_name)
+			Result.prepend ("on_")
+		ensure
+			non_void_name: Result /= Void
+			valid_name: not Result.empty
+		end
+	
+	on_hook_feature_arguments: STRING is
+			-- Arguments to call "on_" hook feature.
+		require
+			non_void_func_desc: func_desc /= Void
+			non_void_arguments: func_desc.arguments /= Void
+		local
+			arguments: LINKED_LIST[WIZARD_PARAM_DESCRIPTOR]
+		do
+			arguments := func_desc.arguments
+
+			from
+				arguments.start
+				create Result.make (100)
+			until
+				arguments.after
+			loop
+				if Result.empty then
+					Result.append (" (")
+				else
+					Result.append (", ")
+				end
+				Result.append (arguments.item.name)
+				arguments.forth
+			end
+			if not Result.empty then
+				Result.append (")")
+			end
+		ensure
+			non_void_arguments: Result /= Void
+			valid_arguments: not func_desc.arguments.empty implies 
+				not Result.empty
+		end
+		
 end -- class WIZARD_EIFFEL_SERVER_FUNCTION_GENERATOR
 --|----------------------------------------------------------------
 --| EiffelCOM: library of reusable components for ISE Eiffel.

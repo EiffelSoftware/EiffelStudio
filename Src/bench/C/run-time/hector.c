@@ -63,7 +63,7 @@ rt_private  struct stack free_stack = {			/* Entries free in hector */
 	(EIF_REFERENCE *) 0,			/* st_top */
 	(EIF_REFERENCE *) 0,			/* st_end */
 };
-#endif /* EIF_THREADS */
+#endif /* !EIF_THREADS */
 
 /* Private function declarations */
 rt_private EIF_REFERENCE hpop(void);				/* Pop a free entry off the free stack */

@@ -92,7 +92,7 @@ feature {NONE} -- Properties
 				!! cs.make (dynamic_class);
 				Result.add_classi (dynamic_class.lace_class, type_name);
 				Result.add_string (" [");
-				Result.add_address (object.object_address, dynamic_class);
+				Result.add_address (object.object_address, object.name, dynamic_class);
 				Result.add_char (']');
 				Result.add_new_line;
 				Result.add_new_line;

@@ -86,7 +86,7 @@ feature {NONE} -- Properties
 				type_name.to_upper;
 				Result.add_classi (dynamic_class.lace_class, type_name);
 				Result.add_string (" [");
-				Result.add_address (object.object_address, dynamic_class);
+				Result.add_address (object.name, object.object_address, dynamic_class);
 				Result.add_char (']');
 				Result.add_new_line;
 				Result.add_new_line;

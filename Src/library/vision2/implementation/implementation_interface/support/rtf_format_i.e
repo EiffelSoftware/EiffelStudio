@@ -264,7 +264,7 @@ feature -- Element change
 
 invariant
 	character_format_non_negative: character_format >= 0
-	font_height_positive: font_height > 0
+	font_height_non_negative: font_height >= 0
 	text_color_non_negative: text_color >= 0
 	highlight_color_non_negative: highlight_color >= 0
 	left_margin_non_negative: left_margin >= 0

@@ -50,7 +50,7 @@ feature
 
 	Melt_abb: CHARACTER is 'l';
 
-	Modifs_abb: CHARACTER is 'm';
+	Modified_abb: CHARACTER is 'o';
 
 	Once_abb: CHARACTER is 'o';
 
@@ -66,7 +66,7 @@ feature
 
 	Storage_abb: CHARACTER is 's';
 
-	Synonyms_abb: CHARACTER is 's';
+	Homonyms_abb: CHARACTER is 'o';
 
 	System_abb: CHARACTER is 's';
 

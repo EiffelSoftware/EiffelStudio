@@ -44,13 +44,17 @@ feature -- Properties
 
 feature {E_PROJECT} -- Element change
 
-	insert_interrupt_error is
+	insert_interrupt_error (is_during_comp: BOOLEAN) is
 			-- Insert an `interrup_error' so that the compilation
-			-- can be stopped.
+			-- can be stopped. `is_during_comp' indicates if it was
+			-- done during a compilation.
 		local
 			interrupt_error: INTERRUPT_ERROR
 		do
 			!! interrupt_error;
+			if is_during_comp then
+				interrupt_error.set_during_compilation
+			end;
 			insert_error (interrupt_error);
 		end;
 

@@ -25,26 +25,12 @@ feature {NONE} -- Initialization
 		indexing
 			description: "Creation routine"
 			external_name: "Make"
-		local
-			a: HASH_TABLE [INTERFACE, STRING]
-			t: CONSOLE
-			b: BOOLEAN
-			tsd: POINTER
 		do 
-			tsd := $make
-			b := f and g and f and g
-			b := f or g or f or g
-
-			b := f and g or f and g
-			b := f or g and f or g
-
-			create t
-			io := t
+			create io
 			io.put_string ("%N*********************************%N")
 			io.put_string ("Calculator in reverse Polish form%N")
 			io.put_string ("*********************************%N")
-			create a.make (10)
-			associated_operator := a
+			create associated_operator.make (10)
 			initialize
 			session
 		end

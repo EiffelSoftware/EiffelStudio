@@ -339,8 +339,20 @@ EIF_BOOLEAN eif_console_eof ()
 }
 
 void eif_console_next_line()
-/* Doing nothing here because the next call to a read function will reset the buffer */
 {
+	EIF_BOOLEAN done = (EIF_BOOLEAN) 0;
+
+		/* We read until we reach the sequence '13','10' or just '10'. */
+	while (!done) {
+		switch (eif_console_readchar()) {
+			case (EIF_CHARACTER) 13:
+				done = (EIF_BOOLEAN) (eif_console_readchar() == (EIF_CHARACTER) 10);
+				break;
+			case (EIF_CHARACTER) 10:
+				done == EIF_TRUE;
+				break;
+		}
+	}
 }
 
 int print_err_msg (FILE *err, char *StrFmt, ...)

@@ -139,6 +139,14 @@ feature -- Element change
 			isubitem_set: isubitem = value
 		end
 
+	set_lparam (value: INTEGER) is
+			-- Set `lparam' with `value'.
+		do
+			cwel_lv_item_set_lparam (item, value)
+		ensure
+			lparam_set: lparam = value
+		end
+
 	set_state (value: INTEGER) is
 			-- Set `state' with `value'.
 		do

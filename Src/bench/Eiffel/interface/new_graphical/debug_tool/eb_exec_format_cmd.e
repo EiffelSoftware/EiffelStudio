@@ -181,10 +181,10 @@ feature {NONE} -- Implementation
 					else
 						argument_dialog.update
 					end
-					if argument_dialog.is_displayed then
-						argument_dialog.raise
+					if not argument_dialog.is_displayed then
+						argument_dialog.show
 					else
-						argument_dialog.show_relative_to_window (dev)
+						argument_dialog.raise
 					end
 				end
 			end

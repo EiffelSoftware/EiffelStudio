@@ -272,6 +272,7 @@ feature {NONE} -- Actions
 			click_ast_not_void: n.second /= Void
 			s_not_void: s /= Void
 			cl_not_void: cl /= Void
+			co_valid: co /= Void implies not co.is_empty
 		local
 			ext_name: STRING
 		do

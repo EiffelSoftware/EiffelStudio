@@ -52,8 +52,6 @@ extern "C" {
 	RT_LNK int egc_char_ref_dtype;	/* Dynamic type of CHARACTER_REF */
 	RT_LNK int egc_point_ref_dtype;	/* Dynamic type of POINTER_REF */
 
-
-
 	RT_LNK struct ctable egc_ce_type;			/* Class name -> type ID */
 	RT_LNK struct ctable egc_ce_gtype;			/* Generic class name -> gt_info */
 	RT_LNK struct cnode *egc_fsystem;			/* Describes the full frozen Eiffel system */

@@ -41,15 +41,6 @@ feature -- Windowing
 			Result := implementation.is_no_grab
 		end;
 
-	is_poped_up: BOOLEAN is
-			-- Is the popup widget popped up on screen ?
-		obsolete "Use is_popped_up, corrected spelling for feature."
-		require
-			exists: not destroyed
-		do
-			Result := implementation.is_popped_up
-		end;
-
 	is_popped_up: BOOLEAN is
 			-- Is the popup widget popped up on screen ?
 		require

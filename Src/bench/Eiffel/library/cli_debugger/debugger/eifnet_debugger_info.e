@@ -530,10 +530,11 @@ feature {NONE} -- COM Object
 			if not last_icd_controller_updated then
 				if 
 					last_p_icd_controller = Default_pointer 
-					and last_icd_controller /= Void 
 				then
-					last_icd_controller.clean_on_dispose
-					last_icd_controller := Void
+					if last_icd_controller /= Void then
+						last_icd_controller.clean_on_dispose
+						last_icd_controller := Void
+					end
 				else
 					create last_icd_controller.make_by_pointer (last_p_icd_controller)
 					n := feature {CLI_COM}.add_ref (last_p_icd_controller)
@@ -550,10 +551,11 @@ feature {NONE} -- COM Object
 			if not last_icd_process_updated then
 				if 
 					last_p_icd_process = Default_pointer
-					and last_icd_process /= Void
 				then
-					last_icd_process.clean_on_dispose
-					last_icd_process := Void
+					if last_icd_process /= Void	then
+						last_icd_process.clean_on_dispose
+						last_icd_process := Void
+					end
 				else
 					create last_icd_process.make_by_pointer (last_p_icd_process)
 					n := feature {CLI_COM}.add_ref (last_p_icd_process)					
@@ -570,10 +572,11 @@ feature {NONE} -- COM Object
 			if not last_icd_thread_updated then
 				if 
 					last_p_icd_thread = Default_pointer
-					and last_icd_thread /= Void
 				then
-					last_icd_thread.clean_on_dispose
-					last_icd_thread := Void
+					if last_icd_thread /= Void then
+						last_icd_thread.clean_on_dispose
+						last_icd_thread := Void
+					end
 				else
 					create last_icd_thread.make_by_pointer (last_p_icd_thread)
 					n := feature {CLI_COM}.add_ref (last_p_icd_thread)
@@ -590,10 +593,11 @@ feature {NONE} -- COM Object
 			if not last_icd_breakpoint_updated then
 				if 
 					last_p_icd_breakpoint = Default_pointer 
-					and last_icd_breakpoint /= Void
 				then
-					last_icd_breakpoint.clean_on_dispose
-					last_icd_breakpoint := Void
+					if last_icd_breakpoint /= Void then
+						last_icd_breakpoint.clean_on_dispose
+						last_icd_breakpoint := Void
+					end
 				else
 					create last_icd_breakpoint.make_by_pointer (last_p_icd_breakpoint)
 					n := feature {CLI_COM}.add_ref (last_p_icd_breakpoint)					

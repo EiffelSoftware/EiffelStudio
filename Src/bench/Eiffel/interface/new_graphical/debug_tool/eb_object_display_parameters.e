@@ -120,9 +120,8 @@ feature -- Status report
 			onces_loaded := False
 			create title.make (50)
 			title.append (dtype.external_class_name)
-			title.append (" [")
-			title.append (address)
-			title.append ("]")
+			title.append_character (' ')
+			title.append ((create {DUMP_VALUE}.make_object (address, dtype)).full_output)
 			create main_item.make_with_text (title)
 			create ost.make (address, " ", dtype)
 			main_item.set_accept_cursor (ost.stone_cursor)
@@ -374,7 +373,7 @@ feature {NONE} -- Implementation
 		local
 			ost: OBJECT_STONE
 		do
-			create Result.make_with_text (dv.name + ": " + dv.type_and_value)
+			create Result.make_with_text (dv.name + ": " + dv.dump_value.type_and_value)
 			Result.set_pixmap (icons @ (dv.kind))
 			Result.set_data (dv)
 			if dv.expandable then

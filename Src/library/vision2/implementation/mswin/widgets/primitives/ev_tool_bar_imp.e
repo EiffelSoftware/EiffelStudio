@@ -19,6 +19,7 @@ inherit
 			on_right_button_down,
 			on_left_button_down,
 			on_middle_button_down,
+			on_left_button_up,
 			minimum_height,
 			integrate_changes,
 			pnd_press
@@ -735,6 +736,9 @@ end -- class EV_TOOL_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.64  2000/04/27 23:14:44  rogers
+--| Undefined on_left_button_up from EV_PRIMITIVE_IMP.
+--|
 --| Revision 1.63  2000/04/26 19:56:35  rogers
 --| All references to tool bar item types have been replaced with
 --| reverse assignments. Added add_toggle_button which which is

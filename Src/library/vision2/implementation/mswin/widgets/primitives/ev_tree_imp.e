@@ -27,6 +27,7 @@ inherit
 			on_right_button_down,
 			on_left_button_down,
 			on_middle_button_down,
+			on_left_button_up,
 			pnd_press
 		redefine
 			on_mouse_move,
@@ -557,6 +558,9 @@ end -- class EV_TREE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.68  2000/04/27 23:14:20  rogers
+--| Undefined on_left_button_up from EV_PRIMITIVE_IMP.
+--|
 --| Revision 1.67  2000/04/26 00:03:12  pichery
 --| Slight redesign of the pixmap handling in
 --| trees and multi-column lists.

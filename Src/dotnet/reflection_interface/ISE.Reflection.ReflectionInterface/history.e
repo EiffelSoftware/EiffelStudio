@@ -79,23 +79,8 @@ feature -- Status Report
 			external_name: "HasAssembly"
 		require
 			non_void_descriptor: a_descriptor /= Void
-		local
-			enumerator: SYSTEM_COLLECTIONS_IENUMERATOR
-			current_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR
 		do
-			enumerator := assemblies_table.keys.getenumerator
-			from
-			until
-				not enumerator.movenext or Result 
-			loop
-				current_descriptor ?= enumerator.current_
-				if current_descriptor /= Void then
-					Result := current_descriptor.name.tolower.equals_string (a_descriptor.name.tolower) and
-									current_descriptor.version.tolower.equals_string (a_descriptor.version.tolower) and
-									current_descriptor.culture.tolower.equals_string (a_descriptor.culture.tolower) and
-									current_descriptor.publickey.tolower.equals_string (a_descriptor.publickey.tolower)
-				end
-			end
+			Result := assemblies_table.contains (a_descriptor)
 		end
 
 	has_type (a_type: SYSTEM_TYPE): BOOLEAN is
@@ -104,20 +89,8 @@ feature -- Status Report
 			external_name: "HasType"
 		require
 			non_void_type: a_type /= Void
-		local
-			enumerator: SYSTEM_COLLECTIONS_IENUMERATOR
-			current_type: SYSTEM_TYPE
 		do
-			enumerator := types_table.keys.getenumerator
-			from
-			until
-				not enumerator.movenext or Result 
-			loop
-				current_type ?= enumerator.current_
-				if current_type /= Void then
-					Result := current_type.assemblyqualifiedname.tolower.equals_string (a_type.assemblyqualifiedname.tolower)
-				end
-			end
+			Result := types_table.contains (a_type)
 		end
 		
 feature -- Basic Operations
@@ -176,28 +149,10 @@ feature -- Basic Operations
 			external_name: "SearchForAssembly"
 		require
 			non_void_descriptor: a_descriptor /= Void
-		local
-			enumerator: SYSTEM_COLLECTIONS_IENUMERATOR
-			current_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR
-			found: BOOLEAN
 		do
-			enumerator := assemblies_table.keys.getenumerator
-			from
-				assembly_found := False
-			until
-				not enumerator.movenext or found 
-			loop
-				current_descriptor ?= enumerator.current_
-				if current_descriptor /= Void then
-					assembly_found := current_descriptor.name.tolower.equals_string (a_descriptor.name.tolower) and
-									current_descriptor.version.tolower.equals_string (a_descriptor.version.tolower) and
-									current_descriptor.culture.tolower.equals_string (a_descriptor.culture.tolower) and
-									current_descriptor.publickey.tolower.equals_string (a_descriptor.publickey.tolower)
-					if assembly_found then
-						search_for_assembly_result ?= assemblies_table.item (current_descriptor)
-						found := True
-					end
-				end
+			assembly_found := assemblies_table.contains (a_descriptor)
+			if assembly_found then
+				search_for_assembly_result ?= assemblies_table.item (a_descriptor)
 			end
 		end
 
@@ -212,20 +167,9 @@ feature -- Basic Operations
 			current_type: SYSTEM_TYPE
 			found: BOOLEAN
 		do
-			enumerator := types_table.keys.getenumerator
-			from
-				type_found := False
-			until
-				not enumerator.movenext or found 
-			loop
-				current_type ?= enumerator.current_
-				if current_type /= Void then
-					type_found := current_type.assemblyqualifiedname.tolower.equals_string (a_type.assemblyqualifiedname.tolower)
-					if type_found then
-						search_for_type_result ?= types_table.item (current_type)
-						found := True
-					end
-				end
+			type_found := types_table.contains (a_type)
+			if type_found then
+				search_for_type_result ?= types_table.item (a_type)
 			end
 		end
 		

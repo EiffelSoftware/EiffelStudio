@@ -179,74 +179,6 @@ feature -- Basic Operations
 			last_error := support.lasterror
 			retry
 		end
-	
-	clean_assemblies is
-		indexing
-			description: "Remove read and write locks from the `assemblies' folder."
-			external_name: "CleanAssemblies"
-		local
-			xml_reader: SYSTEM_XML_XMLTEXTREADER
-			index_path: STRING
-			assembly_path: STRING
-			file: SYSTEM_IO_FILE
-			reflection_support: ISE_REFLECTION_REFLECTIONSUPPORT
-			retried: BOOLEAN		
-		do
-			if not retried then
-				create reflection_support.make_reflectionsupport
-				reflection_support.Make
-				index_path := reflection_support.Eiffeldeliverypath
-				index_path := index_path.Concat_String_String_String_String (index_path, reflection_support.AssembliesFolderPath, IndexFilename, XmlExtension)
-
-				create xml_reader.make_xmltextreader_10 (index_path)
-					-- WhitespaceHandling = None
-				xml_reader.set_WhitespaceHandling (2)
-				xml_reader.ReadStartElement_String (AssembliesElement)
-				from
-				until
-					not xml_reader.Name.Equals_String (AssemblyFilenameElement)
-				loop
-					assembly_path := xml_reader.ReadElementString_String (AssemblyFilenameElement)	
-					assembly_path := assembly_path.replace (reflection_support.Eiffelkey, reflection_support.Eiffeldeliverypath)
-					if support.HasReadLock (assembly_path) then
-						file.delete (assembly_path.Concat_String_String_String (assembly_path, "\", support.ReadLockFilename))
-					elseif support.HasWriteLock (assembly_path) then
-						file.delete (assembly_path.Concat_String_String_String (assembly_path, "\", support.WriteLockFilename))	
-					end
-				end
-				xml_reader.ReadEndElement
-				xml_reader.Close
-			end
-		rescue
-			retried := True
-			retry
-		end
-	
-	clean_assembly (a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR) is
-		indexing
-			description: "Remove read and write locks from folder corresponding to `a_descriptor'."
-			external_name: "CleanAssembly"
-		local
-			assembly_path: STRING
-			file: SYSTEM_IO_FILE
-			reflection_support: ISE_REFLECTION_REFLECTIONSUPPORT
-			retried: BOOLEAN		
-		do
-			if not retried then
-				create reflection_support.make_reflectionsupport
-				reflection_support.Make
-				assembly_path := reflection_support.Eiffeldeliverypath
-				assembly_path := assembly_path.concat_string_string (assembly_path, reflection_support.AssemblyFolderPathFromInfo (a_descriptor))
-				if support.HasReadLock (assembly_path) then
-					file.delete (assembly_path.Concat_String_String_String (assembly_path, "\", support.ReadLockFilename))
-				elseif support.HasWriteLock (assembly_path) then
-					file.delete (assembly_path.Concat_String_String_String (assembly_path, "\", support.WriteLockFilename))	
-				end
-			end
-		rescue
-			retried := True
-			retry
-		end
 		
 feature -- Retrieval
 
@@ -282,9 +214,10 @@ feature -- Retrieval
 					-- WhitespaceHandling = None
 				xml_reader.set_WhitespaceHandling (2)
 				xml_reader.ReadStartElement_String (AssembliesElement)
-				from
+				last_read_successful := True
+				from					
 				until
-					not xml_reader.Name.Equals_String (AssemblyFilenameElement)
+					not xml_reader.Name.Equals_String (AssemblyFilenameElement) or not last_read_successful
 				loop
 					assembly_path := xml_reader.ReadElementString_String (AssemblyFilenameElement)	
 					assembly_path := assembly_path.replace (reflection_support.Eiffelkey, reflection_support.Eiffeldeliverypath)
@@ -316,14 +249,12 @@ feature -- Retrieval
 				xml_reader.ReadEndElement
 				xml_reader.Close
 			else
-				create Result.make
+				Result := Void
 			end
 		ensure
 			assemblies_built: Result /= Void
 		rescue
 			retried := True
-			support.createerror (error_messages.Assemblies_retrieval_failed, error_messages.Assemblies_retrieval_failed_message)
-			last_error := support.lasterror
 			retry
 		end
 		
@@ -386,8 +317,6 @@ feature -- Retrieval
 			end
 		rescue
 			retried := True
-			support.createerror (error_messages.Assembly_retrieval_failed, error_messages.Assembly_retrieval_failed_message)
-			last_error := support.lasterror
 			retry
 		end
 		
@@ -461,8 +390,6 @@ feature -- Retrieval
 			end
 		rescue
 			retried := True
-			support.createerror (error_messages.Type_retrieval_failed, error_messages.Type_retrieval_failed_message)
-			last_error := support.lasterror
 			retry
 		end
 

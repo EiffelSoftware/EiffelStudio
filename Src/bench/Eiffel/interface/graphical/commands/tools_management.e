@@ -84,6 +84,9 @@ feature {NONE} -- Execution
 				if Preference_tool /= Void then
 					Preference_tool.close
 				end
+				if Dynamic_lib_tool /= Void then
+					Dynamic_lib_tool.close
+				end
 			when Raise_all_tools_action then
 				window_manager.raise_all_editors
 				if is_system_tool_created then 
@@ -94,6 +97,9 @@ feature {NONE} -- Execution
 				end
 				if Preference_tool /= Void then
 					Preference_tool.raise
+				end
+				if Dynamic_lib_tool /= Void then
+					Dynamic_lib_tool.raise
 				end
 			end
 		end

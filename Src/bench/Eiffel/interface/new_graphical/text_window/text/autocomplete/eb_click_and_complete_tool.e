@@ -1053,6 +1053,10 @@ feature {NONE} -- Completion implementation
 				end
 				insert_in_completion_possibilities (name)
 			end
+			if name /= Void and feat.type /= Void then
+				name.append (": ")
+				name.append (feat.type.dump)
+			end
 		end
 
 	matches (str, pat: STRING): BOOLEAN is

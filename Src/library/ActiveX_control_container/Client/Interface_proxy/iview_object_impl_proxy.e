@@ -42,8 +42,13 @@ feature -- Basic Operations
 			-- `hdc_draw' [in].  
 			-- `lprc_bounds' [in].  
 			-- `lprc_wbounds' [in].  
+		local
+			ptd_item: POINTER
 		do
-			ccom_draw (initializer, dw_draw_aspect, lindex, pv_aspect, ptd.item, hdc_target_dev, hdc_draw, lprc_bounds.item, lprc_wbounds.item)
+			if ptd /= Void then
+				ptd_item := ptd.item
+			end
+			ccom_draw (initializer, dw_draw_aspect, lindex, pv_aspect, ptd_item, hdc_target_dev, hdc_draw, lprc_bounds.item, lprc_wbounds.item)
 		end
 
 	get_color_set (dw_draw_aspect: INTEGER; lindex: INTEGER; pv_aspect: INTEGER; ptd: TAG_DVTARGETDEVICE_RECORD; hic_target_dev: INTEGER; pp_color_set: CELL [TAG_LOGPALETTE_RECORD]) is

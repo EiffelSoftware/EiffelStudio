@@ -709,4 +709,30 @@ feature {NONE} -- Basic text
 			!!Result.make (5);
 		end;
 
+feature {NONE} -- Difference items
+
+	ti_Added: DIFFERENCE_TEXT_ITEM is
+			-- Added text item
+		once
+			!! Result.make (" + ")
+		end
+
+	ti_Modified: DIFFERENCE_TEXT_ITEM is
+			-- Modified text item
+		once
+			!! Result.make (" | ")
+		end
+
+	ti_No_diff: DIFFERENCE_TEXT_ITEM is
+			-- Modified text item
+		once
+			!! Result.make ("   ")
+		end
+
+	ti_Removed: DIFFERENCE_TEXT_ITEM is
+			-- Removed text item
+		once
+			!! Result.make (" - ")
+		end
+
 end -- class SHARED_TEXT_ITEMS

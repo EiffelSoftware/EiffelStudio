@@ -1,5 +1,5 @@
 indexing
-	description: "Check box which has 3 states (on, off, indeterminated)."
+	description: "Check box which has 3 states (on, off, indeterminate)."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,6 +16,18 @@ inherit
 creation
 	make,
 	make_by_id
+
+feature -- Status setting
+
+	set_indeterminate is
+			-- Set the indeterminate state.
+		require
+			exists: exists
+		do
+			cwin_send_message (item, Bm_setcheck, 3, 0)
+		ensure
+			indeterminate: indeterminate
+		end
 
 feature -- Status report
 
@@ -36,6 +48,9 @@ feature {NONE} -- Implementation
 			Result := Ws_visible + Ws_child + Ws_group +
 				Ws_tabstop + Bs_auto3state
 		end
+
+invariant
+	consistent_state: exists and then checked implies not indeterminate
 
 end -- class WEL_CHECK_BOX_3_STATE
 

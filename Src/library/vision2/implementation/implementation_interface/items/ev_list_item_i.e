@@ -11,11 +11,6 @@ deferred class
 inherit
 	EV_ITEM_I
 
-feature -- Access
-
-	parent_imp: EV_LIST_IMP
-			-- Parent of the Current item
-
 feature -- Status report
 
 	is_selected: BOOLEAN is

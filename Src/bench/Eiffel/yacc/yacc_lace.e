@@ -51,6 +51,8 @@ feature
 			as41: CLICK_AST;
 			as42: EXECUTABLE_NAME_SD;
 			as43: INCLUDE_PATH_NAME_SD;
+			as44: D_PRECOMPILED_SD
+			as45: PRECOMPILED_SD
 		do
 			!!as_1.make (0);
 			as_1.pass_address(id_sd);
@@ -129,6 +131,10 @@ feature
 			as42.pass_address (executable_name_sd);
 			!!as43;
 			as43.pass_address (include_path_name_sd);
+			!!as44;
+			as44.pass_address (d_precompiled_sd);
+			!!as45;
+			as45.pass_address (precompiled_sd)
 		end;
 
 end

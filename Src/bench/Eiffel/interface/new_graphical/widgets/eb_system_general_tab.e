@@ -115,7 +115,7 @@ feature -- Store/Retrieve
 			create root_sd.initialize (
 				new_id_sd (to_upper(root_class_field.text), False),
 				Void, Void)
-			if root_creation_field.text /= Void then
+			if not root_creation_field.text.is_empty then
 				root_sd.set_creation_procedure_name (new_id_sd (root_creation_field.text, False))
 			end
 			root_ast.set_root (root_sd)

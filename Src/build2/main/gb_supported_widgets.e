@@ -30,6 +30,18 @@ feature -- Access
 				"EV_VERTICAL_RANGE", "EV_VERTICAL_SEPARATOR", "EV_DRAWING_AREA", "EV_VERTICAL_SCROLL_BAR",
 				"EV_HORIZONTAL_SCROLL_BAR">>
 		end
+		
+	items: ARRAY [STRING] is
+		once
+			Result := <<"EV_LIST_ITEM">>
+		end
+		
+	tool_bar_items: ARRAY [STRING] is
+		once
+			Result := <<"EV_TOOL_BAR_BUTTON", "EV_TOOL_BAR_TOGGLE_BUTTON", "EV_TOOL_BAR_RADIO_BUTTON", "EV_TOOL_BAR_SEPARATOR">>
+		end
+		
+		
 
 feature {NONE} -- Implementation
 		
@@ -78,6 +90,11 @@ feature {NONE} -- Implementation
 			drawing_area: EV_DRAWING_AREA
 			vertical_scroll_bar: EV_VERTICAL_SCROLL_BAR
 			horizontal_scroll_bar: EV_HORIZONTAL_SCROLL_BAR
+			tool_bar_button: EV_TOOL_BAR_BUTTON
+			tool_bar_toggle_button: EV_TOOL_BAR_TOGGLE_BUTTON
+			tool_bar_radio_button: EV_TOOL_BAR_RADIO_BUTTON
+			tool_bar_separator: EV_TOOL_BAR_SEPARATOR
+			list_item: EV_LIST_ITEM
 			
 			gb_ev_sensitive: GB_EV_SENSITIVE
 			gb_ev_tooltipable: GB_EV_TOOLTIPABLE
@@ -97,5 +114,6 @@ feature {NONE} -- Implementation
 invariant
 	containers_not_void: containers /= Void
 	primitives_not_void: primitives /= Void
+	items_not_void: items /= Void
 
 end -- class GB_SUPPORTED_WIDGETS

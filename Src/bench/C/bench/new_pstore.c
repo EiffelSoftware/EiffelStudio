@@ -14,7 +14,6 @@
 #include "eif_config.h"
 #include "eif_portable.h"
 #include "eif_memory.h"
-#include "eif_traverse.h"
 #include "eif_hashinin.h"
 #include "eif_error.h"
 #include <assert.h>
@@ -37,6 +36,7 @@ rt_private int store_object (EIF_REFERENCE object, int object_count);
 rt_private EIF_REFERENCE retrieve_objects (EIF_INTEGER nb_obj);
 rt_private int st_write_cid (char **tmp_buffer, uint32 dftype);	/* Store generic info */
 rt_private char *rt_read_cid (char *tmp_buffer, uint32 *crflags, uint32 *nflags, uint32 oflags);
+rt_private void traversal (EIF_REFERENCE object);	/* Object traversal */
 
 rt_private struct store_htable *address_table;	/* HASH_TABLE [INTEGER, ADDRESS] */
 rt_private int max_object_id;	/* Current maximum allowed object id */
@@ -45,6 +45,7 @@ rt_private char *buffer;	/* Memory area when storage is done */
 rt_private EIF_INTEGER current_buffer_pos;	/* Offset where we are writing at the moment */
 rt_private fnptr make_index, need_index;	/* Hook functions. */
 rt_private int file_position;	/* File position as given */
+rt_private EIF_INTEGER obj_nb;	/* Numberof stored objects computed by `traversal'. */
 
 rt_public long store_append(
 		EIF_INTEGER f_desc,
@@ -132,7 +133,7 @@ rt_private EIF_REFERENCE retrieve_objects (EIF_INTEGER nb_obj)
 {
 	EIF_INTEGER i, j, object_id, dtype;
 	EIF_INTEGER nb_bytes, nb_ref, object_size;
-	EIF_REFERENCE *obj_array, o_ref, *o_field, o_ptr;
+	EIF_REFERENCE *obj_array, o_ref, *o_field;
 	uint32 crflags, fflags, flags;
 	union overhead *zone;
 	char *tmp_buffer = buffer + sizeof(EIF_INTEGER);
@@ -140,21 +141,38 @@ rt_private EIF_REFERENCE retrieve_objects (EIF_INTEGER nb_obj)
 		/* Allocate array where all retrieved objects will be stored */
 	obj_array = (EIF_REFERENCE *) xmalloc ((nb_obj + 1) * sizeof(EIF_REFERENCE), C_T, GC_OFF);
 
+		/* First pass of retrieving. We create `nb_obj' objects in one
+		 * pass without resolving the references between objects.
+		 * At this point, all objects which have references, contains
+		 * numbers between 1 and `nb_obj'.*/
 	for (i = 0; i < nb_obj ; i++) {
+			/* Read ID of `i-th' object. */
 		tmp_buffer = buffer_read (tmp_buffer, &object_id, sizeof(EIF_INTEGER));
+
+			/* Read flags of `i-th' object. */
 		tmp_buffer = buffer_read (tmp_buffer, &flags, sizeof(uint32));
-			/* For generic conformance */
+
+			/* Read creation flags for generic conformance */
 		tmp_buffer = rt_read_cid (tmp_buffer, &crflags, &fflags, flags);
 	
 		if (flags & EO_SPEC) {	/* Special reference */
+				/* Read SPECIAL size. */
 			tmp_buffer = buffer_read (tmp_buffer, &object_size, sizeof(EIF_INTEGER));
 			nb_bytes = object_size & B_SIZE;
+
+				/* Create SPECIAL */
 			o_ref = spmalloc (nb_bytes);
+
+				/* Set generic types and flags */
 			HEADER(o_ref)->ov_flags |= crflags & (EO_REF|EO_COMP|EO_TYPE);
+
 				/* Read SPECIAL content and copy it into `o_ref'. */
-			tmp_buffer = buffer_read (tmp_buffer, o_ref, object_size);
+			tmp_buffer = buffer_read (tmp_buffer, o_ref, nb_bytes);
 		} else {
+				/* Read Object size */
 			nb_bytes = EIF_Size((uint16)(flags & EO_TYPE));
+
+				/* Create object and copy its content from `tmp_buffer'. */
 			o_ref = emalloc(crflags & EO_TYPE);
 			tmp_buffer = buffer_read (tmp_buffer, o_ref, nb_bytes);
 		}
@@ -162,17 +180,22 @@ rt_private EIF_REFERENCE retrieve_objects (EIF_INTEGER nb_obj)
 		obj_array [object_id] = o_ref;
 	}
 
-		/* Update missing references */
+		/* Now, all objects have been retrieved, we do need to update
+		 * references between objects, so that we have a consistent object.
+		 * We have to start the loop at `1' because `obj_array' starts at
+		 * `1'. This is imposed by the storing mechanism which cannot use
+		 * `0' as lower bound, since it is used for error checking. */
 	for (i = 1; i <= nb_obj ; i++) {
 		o_ref = obj_array [i];
 		zone = HEADER(o_ref);
 		flags = zone->ov_flags;
 		if (flags & EO_SPEC) {	/* SPECIAL object */
+				/* We update SPECIAL object only if it is full of references. */
 			if (flags & EO_REF) {	/* SPECIAL of reference */
-				o_ptr = (EIF_REFERENCE) (o_ref + (zone->ov_size & B_SIZE) - LNGPAD_2);
-				nb_ref = *(EIF_INTEGER *) o_ptr;
+					/* Get the number of elements in SPECIAL */
+				nb_ref = *(EIF_INTEGER *) (o_ref + (zone->ov_size & B_SIZE) - LNGPAD_2);
 				for (j = 0; j < nb_ref; j++) {
-					o_field = (EIF_REFERENCE *) o_ref[j];
+					o_field = (EIF_REFERENCE *) (o_ref + j * sizeof(EIF_REFERENCE));
 					if (*o_field != NULL) {
 						*o_field = obj_array [(EIF_INTEGER) (*o_field)];
 						RTAS_OPT (*o_field, j, o_ref);
@@ -192,7 +215,7 @@ rt_private EIF_REFERENCE retrieve_objects (EIF_INTEGER nb_obj)
 		}
 	}
 
-		/* Return root object */
+		/* Return root object stored in first entry of `obj_array'. */
 	return obj_array [1];
 }
 
@@ -208,7 +231,7 @@ rt_private void partial_store_append(EIF_REFERENCE object, fnptr mid, fnptr nid)
 		/* Number of objects is stored in global variables `obj_nb'      */
 	obj_nb = 0;
 	storable_size = 0;
-	traversal (object, 0);
+	traversal (object);
 
 	need_index = nid;
 	make_index = mid;
@@ -462,4 +485,40 @@ rt_private int st_write_cid (char **tmp_buffer, uint32 dftype)
 	}
 
 	return result;
+}
+
+rt_private void traversal (EIF_REFERENCE object)
+	/* Set all objects referenced from `object' with `EO_STORE' flags
+	 * and returns the number of objects that has been encountered. */
+{
+	EIF_REFERENCE o_ref;
+	EIF_INTEGER count, i;
+	union overhead *zone;
+	uint32 flags;
+
+	zone = HEADER(object);
+	flags = zone->ov_flags;
+
+	if (flags & (EO_C | EO_STORE))
+		return;
+
+	flags |= EO_STORE;	/* We marked object as traversed. */
+	obj_nb++;
+
+	if (flags & EO_SPEC) {	/* Special object */
+		if (!(flags & EO_REF))	/* Object does not have any references. */
+			return;
+		assert (!(flags & EO_COMP));	/* We do not handle SPECIAL of expanded objects. */
+
+		count = *(EIF_INTEGER *) (object + (zone->ov_size & B_SIZE) - LNGPAD_2);
+	} else {
+		count = References(Deif_bid(flags));
+	}
+
+		/* Perform recursion on enclosed references */
+	for (i = 0; i < count; i++) {
+		o_ref = *((EIF_REFERENCE *) object + i);
+		if (o_ref != NULL)
+			traversal (o_ref);
+	}
 }

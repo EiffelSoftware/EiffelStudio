@@ -256,7 +256,7 @@ feature -- Execution
 			kept_objects: LINKED_SET [STRING]
 			wd: EV_WARNING_DIALOG
 			cd: EV_CONFIRMATION_DIALOG
-			ignore_all_breakpoints_confirmation_dialog: EB_STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
+			ignore_all_breakpoints_confirmation_dialog: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
 		do
 			if  (not Eiffel_project.system_defined) or else (Eiffel_System.name = Void) then
 				create wd.make_with_text (Warning_messages.w_No_system)

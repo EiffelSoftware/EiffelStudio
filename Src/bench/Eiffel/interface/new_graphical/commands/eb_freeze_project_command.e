@@ -35,7 +35,7 @@ feature {NONE} -- Implementation
 	confirm_and_compile is
 			-- Ask for confirmation, and compile thereafter.
 		local
-			cd: EB_STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
+			cd: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
 		do
 			create cd.make_initialized (
 				3, "confirm_freeze",

@@ -407,7 +407,7 @@ feature {NONE} -- Implementation
 			Window_manager.for_all_development_windows ({EB_DEVELOPMENT_WINDOW}~enable_sensitive)
 		end
 
-	running_dialog: EB_STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
+	running_dialog: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
 			-- Dialog that is displayed while we wait for the output of the command.
 
 	check_not_finished is

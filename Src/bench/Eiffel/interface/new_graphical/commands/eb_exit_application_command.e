@@ -69,7 +69,7 @@ feature {EB_WINDOW_MANAGER} -- Exit methods.
 	ask_confirmation is
 			-- Display a confirmation dialog box
 		local
-			exit_confirmation_dialog: EB_STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
+			exit_confirmation_dialog: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
 		do
 			if not already_confirmed then
 				already_confirmed := True

@@ -78,7 +78,7 @@ feature {NONE} -- Implementation
 	ask_and_kill is
 			-- Pop up a discardable confirmation dialog before killing the application.
 		local
-			cd: EB_STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
+			cd: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
 		do
 			create cd.make_initialized (2, "confirm_kill", 
 					Interface_names.l_Confirm_kill, Interface_names.l_Do_not_show_again)

@@ -52,7 +52,7 @@ feature {NONE} -- Implementation
 	generate_text is
 			-- Fill `formatted_text' with information concerning `associated_feature'.
 		local
-			cf: EB_STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
+			cf: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
 		do
 			confirmed := False
 			create cf.make_initialized (2, "generate_homonyms", Interface_names.l_homonym_confirmation, Interface_names.L_do_not_show_again)

@@ -292,7 +292,7 @@ feature -- Update
 
 feature -- Input
 
-	put_after_class (e_class: E_CLASS; str: STRING) is
+	put_after_class (e_class: CLASS_C; str: STRING) is
 			-- Put "-- class" followed by `t' in the text.
 		do
 			put_comment (" -- ");
@@ -386,7 +386,7 @@ end
 			add_text_figure (fig, str)
 		end;
 
-	put_class (e_class: E_CLASS; str: STRING) is
+	put_class (e_class: CLASS_C; str: STRING) is
 			-- Put `e_class' with string representation
 			-- `str' at current position.
 		local
@@ -399,7 +399,7 @@ end
 			add_text_figure (fig, str)
 		end;
 
-	put_class_syntax (syn: SYNTAX_ERROR; e_class: E_CLASS; str: STRING) is
+	put_class_syntax (syn: SYNTAX_ERROR; e_class: CLASS_C; str: STRING) is
 			-- Put `address' for `e_class'.
 		local
 			fig: CLASS_TEXT_IMAGE;
@@ -462,7 +462,7 @@ end
 			add_text_figure (fig, str)
 		end;
 
-	put_feature_name (f_name: STRING; e_class: E_CLASS) is
+	put_feature_name (f_name: STRING; e_class: CLASS_C) is
 			-- Put feature name `f_name' defined in `e_class'.
 		local
 			fig: FEATURE_TEXT_IMAGE;
@@ -474,7 +474,7 @@ end
 			add_text_figure (fig, f_name)
 		end;
 
-	put_address (address: STRING; a_name: STRING; e_class: E_CLASS) is
+	put_address (address: STRING; a_name: STRING; e_class: CLASS_C) is
 			-- Put `address' with `a_name' for `e_class'.
 		local
 			fig: OBJECT_TEXT_IMAGE;

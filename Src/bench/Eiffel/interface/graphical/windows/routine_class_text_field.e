@@ -212,7 +212,7 @@ feature {ROUTINE_TEXT_FIELD} -- Implementation
 					check
 						class_i.compiled
 					end
-					!! stone.make (class_i.compiled_eclass);
+					!! stone.make (class_i.compiled_class);
 					tool.routine_text_field.execute (stone);
 				end
 			end

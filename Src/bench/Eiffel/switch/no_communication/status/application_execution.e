@@ -65,7 +65,7 @@ feature
 		do
 		end
 
-	super_melt_class (c: E_CLASS) is
+	super_melt_class (c: CLASS_C) is
 		do
 		end
 
@@ -148,7 +148,7 @@ feature -- Removal
 		do
 		end;
 
-	remove_class (c: E_CLASS) is
+	remove_class (c: CLASS_C) is
 		do
 		end;
 

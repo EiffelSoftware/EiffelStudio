@@ -26,7 +26,7 @@ feature -- format
 			stone_text, class_name: STRING
 			filed_stone: FILED_STONE
 			classc_stone: CLASSC_STONE
-			e_class: E_CLASS
+			e_class: CLASS_C
 			class_tool: CLASS_W
 			modified_class: BOOLEAN
 			retried: BOOLEAN

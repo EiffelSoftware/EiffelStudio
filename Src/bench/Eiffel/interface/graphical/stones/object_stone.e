@@ -21,7 +21,7 @@ creation
 	
 feature {NONE} -- Initialization
 
-	make (addr: STRING; a_name: STRING; dclass: E_CLASS) is
+	make (addr: STRING; a_name: STRING; dclass: CLASS_C) is
 		require
 			not_addr_void: addr /= Void;
 			dclass_exists: dclass /= Void;
@@ -40,7 +40,7 @@ feature -- Properties
 	object_address: STRING;
 			-- Hector address (with an indirection)
 
-	dynamic_class: E_CLASS;
+	dynamic_class: CLASS_C;
 			-- Class associated with dynamic type of `Current'
 
 feature -- Access

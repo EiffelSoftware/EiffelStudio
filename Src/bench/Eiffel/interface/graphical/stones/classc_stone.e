@@ -36,7 +36,7 @@ creation
 	
 feature {NONE} -- Initialization
 
-	make (a_class: E_CLASS) is
+	make (a_class: CLASS_C) is
 			-- Copy all information from argument
 			-- OR KEEP A REFERENCE?
 		do
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 
 feature -- Properties
 
-	e_class: E_CLASS;
+	e_class: CLASS_C;
 
 feature -- Access
 

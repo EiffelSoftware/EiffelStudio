@@ -11,7 +11,7 @@ creation
 	
 feature -- Initialization
 
-	make (ec:E_CLASS; ecr:E_FEATURE; ef:E_FEATURE)  is
+	make (ec:CLASS_C; ecr:E_FEATURE; ef:E_FEATURE)  is
 		do
 			dl_class ?= ec
 			dl_creation := ecr
@@ -36,7 +36,7 @@ feature -- Access.
 
 feature -- Changes.
 
-	set_dl_class (c:E_CLASS) is
+	set_dl_class (c:CLASS_C) is
 		do
 			dl_class ?= c
 		end

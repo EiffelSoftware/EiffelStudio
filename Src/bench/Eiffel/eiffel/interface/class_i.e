@@ -79,12 +79,6 @@ feature -- Properties
 	compiled_class: CLASS_C;
 			-- Compiled class
 
-	compiled_eclass: E_CLASS  is
-			-- Compiled class
-		do
-			Result := compiled_class
-		end;
-		
 	assertion_level: ASSERTION_I;
 			-- Assertion checking level
 
@@ -245,7 +239,7 @@ end;
 		do
 			compiled_class := Void
 		ensure
-			void_compiled_class: compiled_eclass = Void
+			void_compiled_class: compiled_class = Void
 		end;
 
 	set_date is

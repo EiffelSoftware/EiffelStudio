@@ -148,7 +148,7 @@ feature -- Update
 			-- (By default, do nothing).
 		local
 			syn_error: SYNTAX_ERROR
-			e_class: E_CLASS
+			e_class: CLASS_C
 			txt, msg: STRING
 		do
 			e_class := stone.e_class
@@ -315,7 +315,7 @@ feature -- Stone updating
 
 	process_class (a_stone: CLASSC_STONE) is
 		local
-			c: E_CLASS
+			c: CLASS_C
 			ris: ROUT_ID_SET
 			i: INTEGER
 			rout_id: ROUTINE_ID
@@ -518,7 +518,7 @@ feature {NONE} -- Implementation Graphical Interface
  			toolbar_parent.set_margin_height (0)
  			toolbar_parent.set_spacing (1)
  			!! routine_toolbar.make (Interface_names.n_Command_bar_name, toolbar_parent)
- 			routine_toolbar.set_height (22)
+ 			routine_toolbar.set_height (23)
 		end
 
 	build_toolbar_menu is

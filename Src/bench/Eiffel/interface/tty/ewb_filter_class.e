@@ -38,7 +38,7 @@ feature {NONE} -- Execution
 		deferred
 		end
 
-	process_compiled_class (e_class: E_CLASS) is
+	process_compiled_class (e_class: CLASS_C) is
 			-- Execute associated command
 		local
 			cmd: like associated_cmd

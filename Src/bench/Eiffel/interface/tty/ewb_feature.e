@@ -88,7 +88,7 @@ feature {NONE} -- Implementation
 			feature_name_cleared: feature_name = Void
 		end
 
-	process_compiled_class (e_class: E_CLASS) is
+	process_compiled_class (e_class: CLASS_C) is
 			-- Retrieve feature from `class_c' with
 			-- `feature_name' and execute associated command.
 		local
@@ -113,7 +113,7 @@ feature {NONE} -- Implementation
 			feature_name := Void;
 		end;
 
-	process_feature (e_feature: E_FEATURE; e_class: E_CLASS) is
+	process_feature (e_feature: E_FEATURE; e_class: CLASS_C) is
 			-- Process feature `feature_i' defined in `class_c'.
 		require
 			valid_e_feature: e_feature /= Void;

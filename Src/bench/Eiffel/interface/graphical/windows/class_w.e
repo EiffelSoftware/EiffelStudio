@@ -236,7 +236,7 @@ feature -- Stone process
 			-- Proces feature stone.
 		local
 			cl_stone: CLASSC_STONE
-			e_class: E_CLASS
+			e_class: CLASS_C
 			txt: STRING
 			pos, end_pos: INTEGER
 		do
@@ -271,7 +271,7 @@ feature -- Stone process
 			-- Proces feature stone.
 		local
 			cl_stone: CLASSC_STONE
-			e_class: E_CLASS
+			e_class: CLASS_C
 		do
 			e_class := s.e_feature.written_class
 			!! cl_stone.make (e_class)
@@ -361,7 +361,7 @@ feature -- Update
 			class_text_field.set_text (s)
 		end
 
-	update_clickable_format (e_class: E_CLASS) is
+	update_clickable_format (e_class: CLASS_C) is
 		local
 			new_title: STRING
 		do
@@ -386,7 +386,7 @@ feature -- Update
 			syn_error: SYNTAX_ERROR
 			classc_stone: CLASSC_STONE
 			syn_stone: CL_SYNTAX_STONE
-			e_class: E_CLASS
+			e_class: CLASS_C
 			txt, msg: STRING
 			error_message: STRING
 			error_code: INTEGER
@@ -561,13 +561,13 @@ feature {NONE} -- Implemetation Window Settings
 
 feature {SHOW_HTML_TEXT} -- Parsing checking
 
-	has_class_name_changed (e_class: E_CLASS): BOOLEAN is
+	has_class_name_changed (e_class: CLASS_C): BOOLEAN is
 			-- Has the name of the class been changed during its editing?
 		do
 			Result := not e_class.lace_class.name.is_equal (new_class_name (e_class))
 		end
 	
-	new_class_name (e_class: E_CLASS): STRING is
+	new_class_name (e_class: CLASS_C): STRING is
 		local
 			class_as_b: CLASS_AS_B
 		do

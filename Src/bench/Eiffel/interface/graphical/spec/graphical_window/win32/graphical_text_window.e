@@ -121,7 +121,7 @@ feature -- Update
 			{SCROLLED_TEXT_WINDOW} precursor
 		end
 
-	put_after_class (e_class: E_CLASS str: STRING) is
+	put_after_class (e_class: CLASS_C str: STRING) is
 			-- Put "-- class" followed by `t' in the text.
 		local
 			class_stone: CLASSC_STONE
@@ -172,7 +172,7 @@ feature -- Update
 			put_normal_string (str)
 		end
 
-	put_class (e_class: E_CLASS str: STRING) is
+	put_class (e_class: CLASS_C str: STRING) is
 			-- Put `e_class' with string representation
 			-- `str' at current position.
 		do
@@ -180,7 +180,7 @@ feature -- Update
 			{SCROLLED_TEXT_WINDOW} precursor (e_class, str)
 		end
 
-	put_class_syntax (syn: SYNTAX_ERROR e_class: E_CLASS; str: STRING) is
+	put_class_syntax (syn: SYNTAX_ERROR e_class: CLASS_C; str: STRING) is
 			-- Put `address' for `e_class'.
 		do
 			implementation.set_character_format_word (class_format)
@@ -211,14 +211,14 @@ feature -- Update
 			{SCROLLED_TEXT_WINDOW} precursor (feat, str)
 		end
 
-	put_feature_name (f_name: STRING e_class: E_CLASS) is
+	put_feature_name (f_name: STRING e_class: CLASS_C) is
 			-- Put feature name `f_name' defined in `e_class'.
 		do
 			implementation.set_character_format_word (feature_format)
 			{SCROLLED_TEXT_WINDOW} precursor (f_name, e_class)
 		end
 
-	put_address (address: STRING a_name: STRING; e_class: E_CLASS) is
+	put_address (address: STRING a_name: STRING; e_class: CLASS_C) is
 			-- Put `address' with `a_name' for `e_class'.
 		do
 			implementation.set_character_format_word (object_format)

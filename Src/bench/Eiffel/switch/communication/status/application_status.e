@@ -77,11 +77,11 @@ feature -- Values
 	e_feature: E_FEATURE;
 			-- Feature in which we are currently stopped
 
-	dynamic_class: E_CLASS;
+	dynamic_class: CLASS_C;
 			-- Class type of object in which we are currently
 			-- stopped
 
-	origin_class: E_CLASS;
+	origin_class: CLASS_C;
 			-- Origin of feature in which we are currently
 			-- stopped
 
@@ -171,7 +171,7 @@ feature -- Output
 	display_status (st: STRUCTURED_TEXT) is
 			-- Display the status of the running application.
 		local
-			c, oc: E_CLASS;
+			c, oc: CLASS_C;
 			ll: LINKED_LIST [STRING];
 			f, of: E_FEATURE;
 			cs: CALL_STACK_ELEMENT;

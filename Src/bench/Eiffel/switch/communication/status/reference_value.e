@@ -72,7 +72,7 @@ feature -- Properties
 
 feature -- Access
 
-	dynamic_class: E_CLASS is
+	dynamic_class: CLASS_C is
 		do
 			Result := private_dynamic_class;
 			if Result = Void then
@@ -90,7 +90,7 @@ feature -- Output
 
 	append_type_and_value (st: STRUCTURED_TEXT) is 
 		local
-			ec: E_CLASS;
+			ec: CLASS_C;
 			status: APPLICATION_STATUS
 		do 
 			if address = Void then
@@ -124,7 +124,7 @@ feature -- Output
 			-- all the information has been received from the application.)
 			-- If referenced object is a STRING, get its value.
 		local
-			ec: E_CLASS;
+			ec: CLASS_C;
 			value: STRING;
 			value_area: SPECIAL [CHARACTER];
 			i, value_count: INTEGER
@@ -162,7 +162,7 @@ feature {NONE} -- Property
 	dynamic_type_id: INTEGER;
 			-- Dynamic type id of return type
 
-	private_dynamic_class: E_CLASS
+	private_dynamic_class: CLASS_C
 			-- Saved class 
 
 end -- class REFERENCE_VALUE

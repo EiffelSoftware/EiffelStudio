@@ -23,7 +23,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_syntax_errori: SYNTAX_ERROR; c: E_CLASS) is
+	make (a_syntax_errori: SYNTAX_ERROR; c: CLASS_C) is
 		do
 			syntax_error_i := a_syntax_errori;
 			associated_class := c
@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 
 feature -- Properties
 
-	associated_class: E_CLASS;
+	associated_class: CLASS_C;
 		-- Associated class for error
 
 feature -- Access

@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 feature -- Properties
  
 	e_feature: E_FEATURE;
-	e_class: E_CLASS;
+	e_class: CLASS_C;
 
 	start_position: INTEGER;
 			-- Start position of the feature in

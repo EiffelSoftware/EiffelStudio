@@ -18,7 +18,7 @@ creation
 
 feature -- Initialization
 
-	make (d_c:E_CLASS; d_r:E_FEATURE; d_i:INTEGER) is
+	make (d_c:CLASS_C; d_r:E_FEATURE; d_i:INTEGER) is
 		do
 			init (Project_tool)
 			d_class := d_c
@@ -45,7 +45,7 @@ feature -- Properties
 		do
 		end
 
-	d_class: E_CLASS
+	d_class: CLASS_C
 	d_routine: E_FEATURE
 	d_index: INTEGER
 
@@ -89,7 +89,7 @@ feature {NONE} -- Execution
 	
 feature {NONE} -- Implementation
 
-	valid_creation (cl:E_CLASS): LINKED_LIST[E_FEATURE] is
+	valid_creation (cl:CLASS_C): LINKED_LIST[E_FEATURE] is
 			-- Calculate the list of valid creation procedure.
 		local
 			list_creators: ARRAY[STRING]

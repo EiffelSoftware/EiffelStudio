@@ -59,7 +59,7 @@ feature {NONE} -- Properties
 			attributes: LIST [DEBUG_VALUE];
 			type_name: STRING;
 			is_special: BOOLEAN;
-			dynamic_class: E_CLASS;
+			dynamic_class: CLASS_C;
 			status: APPLICATION_STATUS;
 			stone: CLASSC_STONE;
 		do

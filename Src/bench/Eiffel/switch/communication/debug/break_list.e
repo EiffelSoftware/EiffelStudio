@@ -5,7 +5,7 @@
 -- same real_body_id and offset).
 
 class
-	BREAK_LIST
+	BREAK_LIST 
 
 inherit
 	HASH_TABLE [BREAKPOINT, BREAKPOINT]

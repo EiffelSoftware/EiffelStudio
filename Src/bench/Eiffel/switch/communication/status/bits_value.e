@@ -71,10 +71,10 @@ feature -- Property
 
 feature -- Access
 
-	dynamic_class: E_CLASS is
+	dynamic_class: CLASS_C is
 			-- Bit ref class
 		do
-			Result := Eiffel_system.bit_class.compiled_eclass
+			Result := Eiffel_system.bit_class.compiled_class
 		end;
 
 feature -- Output

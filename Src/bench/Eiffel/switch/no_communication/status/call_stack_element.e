@@ -24,12 +24,12 @@ feature -- Properties
 		do
 		end
 
-	dynamic_class: E_CLASS is
+	dynamic_class: CLASS_C is
 			-- Dynamic class where routine is called from
 		do
 		end
 
-	origin_class: E_CLASS is
+	origin_class: CLASS_C is
 			-- Class where routine is written in
 		do
 		end

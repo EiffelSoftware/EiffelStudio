@@ -42,10 +42,10 @@ feature {NONE} -- Execution
 			--| If the class is in the system: True
 			--| else: False.
 		do
-			Result := class_i.compiled_eclass /= Void
+			Result := class_i.compiled_class /= Void
 		end;
 
-	process_compiled_class (e_class: E_CLASS) is
+	process_compiled_class (e_class: CLASS_C) is
 			-- Display the (may be) filtered text of `e_class'.
 		local
 			ctxt: CLASS_TEXT_FORMATTER;

@@ -41,6 +41,51 @@ feature
 			system_basket.put ("Ecall.o");
 		end;
 
+	add_cecil_objects is
+		do
+			cecil_rt_basket.put ("network.o");
+			cecil_rt_basket.put ("wmath.o");
+			cecil_rt_basket.put ("wmalloc.o");
+			cecil_rt_basket.put ("wgarcol.o");
+			cecil_rt_basket.put ("wlocal.o");
+			cecil_rt_basket.put ("wexcept.o");
+			cecil_rt_basket.put ("wstore.o");
+			cecil_rt_basket.put ("wretrieve.o");
+			cecil_rt_basket.put ("whash.o");
+			cecil_rt_basket.put ("wtraverse.o");
+			cecil_rt_basket.put ("whashin.o");
+			cecil_rt_basket.put ("wtools.o");
+			cecil_rt_basket.put ("winternal.o");
+			cecil_rt_basket.put ("wplug.o");
+			cecil_rt_basket.put ("wcopy.o");
+			cecil_rt_basket.put ("wequal.o");
+			cecil_rt_basket.put ("wlmalloc.o");
+			cecil_rt_basket.put ("wout.o");
+			cecil_rt_basket.put ("wtimer.o");
+			cecil_rt_basket.put ("wurgent.o");
+			cecil_rt_basket.put ("wsig.o");
+			cecil_rt_basket.put ("whector.o");
+			cecil_rt_basket.put ("wcecil.o");
+			cecil_rt_basket.put ("wbits.o");
+			cecil_rt_basket.put ("wfile.o");
+			cecil_rt_basket.put ("wdir.o");
+			cecil_rt_basket.put ("wstring.o");
+			cecil_rt_basket.put ("wmisc.o");
+			cecil_rt_basket.put ("wpattern.o");
+			cecil_rt_basket.put ("werror.o");
+			cecil_rt_basket.put ("wumain.o");
+			cecil_rt_basket.put ("wmemory.o");
+			cecil_rt_basket.put ("wargv.o");
+			cecil_rt_basket.put ("wboolstr.o");
+			cecil_rt_basket.put ("wsearch.o");
+			cecil_rt_basket.put ("wmain.o");
+			cecil_rt_basket.put ("debug.o");
+			cecil_rt_basket.put ("interp.o");
+			cecil_rt_basket.put ("option.o");
+			cecil_rt_basket.put ("update.o");
+			cecil_rt_basket.put ("wbench.o");
+		end;
+
 	add_eiffel_objects is
 			-- Add Eiffel objects to the basket, i.e. C code for
 			-- each class as well as feature tables and descriptor

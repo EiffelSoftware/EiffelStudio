@@ -38,13 +38,18 @@ feature
 				retrieve_project;
 				if not error_occurred then
 					class_c := Universe.unique_class (class_name).compiled_class;
-					!!ctxt.make (class_c, True);
-					if troffed then
-						!! troffer.make;
-						troffer.process_text (ctxt.text);
-						io.putstring (troffer.image)
+					if class_c = Void then
+						io.error.putstring (class_name);
+						io.error.putstring (" is not in the system%N");
 					else
-						io.putstring (ctxt.text.image)
+						!!ctxt.make (class_c, True);
+						if troffed then
+							!! troffer.make;
+							troffer.process_text (ctxt.text);
+							io.putstring (troffer.image)
+						else
+							io.putstring (ctxt.text.image)
+						end
 					end
 				end;
 			end;

@@ -126,6 +126,17 @@ feature {NONE}
 			!!Result.make (file_name);
 		end;
 
+	Initialization_file: UNIX_FILE is
+			-- File where the C routine `c_main' is generated
+		local
+			file_name: STRING;
+		once
+			!!file_name.make (generation_path.count + 12);
+			file_name.append (generation_path);
+			file_name.append ("/Einit.c");
+			!!Result.make (file_name);
+		end;
+
 	Main_file: UNIX_FILE is
 			-- File where the C routine `c_main' is generated
 		local

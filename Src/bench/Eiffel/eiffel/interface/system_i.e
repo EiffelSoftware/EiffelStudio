@@ -1603,6 +1603,8 @@ end;
 
 			generate_plug;
 
+			generate_init_file;
+
 			generate_main_file;
 
 			generate_option_file;
@@ -1817,6 +1819,7 @@ end;
 
 				-- Generate main file
 			generate_main_file;
+			generate_init_file;
 
 			remover := Void;
 		end;
@@ -2733,6 +2736,39 @@ feature -- Dispatch and execution tables generation
 feature -- Main file generation
 
 	generate_main_file is
+		do
+			Main_file.open_write;
+
+			Main_file.putstring ("%N%
+				%#include %"except.h%"%N%
+				%extern void emain();%N%
+				%extern void reclaim();%N%
+				%extern void failure();%N%
+				%extern void eif_init();%N%N");
+
+			Main_file.putstring ("void main(argc, argv, envp)%N%
+				%int argc;%N%
+				%char **argv;%N%
+				%char **envp;%N%
+				%{%N%
+				%%Tstruct ex_vect *exvect;%N%
+				%%Tjmp_buf exenv;%N%N%
+				%%Tinitsig();%N%
+				%%Tinitstk();%N%
+				%%Texvect = exset((char *) 0, 0, (char *) 0);%N%
+				%%Texvect->ex_jbuf = (char *) exenv;%N%
+				%%Tif (echval = setjmp(exenv))%N%
+				%%T%Tfailure();%N%N%
+				%%Teif_init(argc, argv, envp);%N%
+				%%Temain((char *) 0);%N%
+				%%Treclaim();%N%
+				%%Texit(0);%N%
+				%}%N");
+
+			Main_file.close;
+		end;
+
+	generate_init_file is
 			-- Generation of the main file
 		local
 			root_cl: CLASS_C;
@@ -2763,29 +2799,29 @@ feature -- Main file generation
 				end;
 			end;
 
-			Main_file.open_write;
+			Initialization_file.open_write;
 
-			Main_file.putstring ("%
+			Initialization_file.putstring ("%
 				%#include <macros.h>%N%
 				%#include <struct.h>%N%N");
 		
 			if not final_mode then
-				Main_file.putstring ("int rcst = ");
-				Main_file.putint (static_type);
-				Main_file.putstring (";%Nint rcdt = ");
-				Main_file.putint (dtype);
-				Main_file.putstring (";%Nint32 rcfid = ");
-				Main_file.putint (feature_id);
-				Main_file.putstring (";%Nint rcarg = ");
+				Initialization_file.putstring ("int rcst = ");
+				Initialization_file.putint (static_type);
+				Initialization_file.putstring (";%Nint rcdt = ");
+				Initialization_file.putint (dtype);
+				Initialization_file.putstring (";%Nint32 rcfid = ");
+				Initialization_file.putint (feature_id);
+				Initialization_file.putstring (";%Nint rcarg = ");
 				if has_argument then
-					Main_file.putstring ("1");
+					Initialization_file.putstring ("1");
 				else
-					Main_file.putstring ("0");
+					Initialization_file.putstring ("0");
 				end;
-				Main_file.putstring (";%N%N");
+				Initialization_file.putstring (";%N%N");
 			end;
 	
-			Main_file.putstring ("%
+			Initialization_file.putstring ("%
 				%void emain(args)%N%
 				%char *args;%N%
 				%{%N%
@@ -2795,53 +2831,53 @@ feature -- Main file generation
 				if final_mode then
 					c_name := Encoder.feature_name
 										(cl_type.id, root_feat.body_id);
-					Main_file.putstring ("%Textern void ");
-					Main_file.putstring (c_name);
-					Main_file.putstring (" ();%N%N");
+					Initialization_file.putstring ("%Textern void ");
+					Initialization_file.putstring (c_name);
+					Initialization_file.putstring (" ();%N%N");
 				end;
 			end;
 
 			-- Set C variable `scount'.
 			if final_mode then
-				Main_file.putstring ("%Tscount = ");
-				Main_file.putint (type_id_counter.value);
-				Main_file.putstring (";%N");
+				Initialization_file.putstring ("%Tscount = ");
+				Initialization_file.putint (type_id_counter.value);
+				Initialization_file.putstring (";%N");
 			end;
 
-			Main_file.putstring ("%Troot_obj = RTLN(");
+			Initialization_file.putstring ("%Troot_obj = RTLN(");
 			if final_mode then
-				Main_file.putint (dtype);
+				Initialization_file.putint (dtype);
 			else
-				Main_file.putstring ("rcdt");
+				Initialization_file.putstring ("rcdt");
 			end;
-			Main_file.putstring (");%N");
+			Initialization_file.putstring (");%N");
 	
 			if final_mode then
 				if creation_name /= Void then
-					Main_file.putchar ('%T');
-					Main_file.putstring (c_name);
-					Main_file.putstring ("(root_obj");
+					Initialization_file.putchar ('%T');
+					Initialization_file.putstring (c_name);
+					Initialization_file.putstring ("(root_obj");
 					if root_feat.has_arguments then
-						Main_file.putstring (", args");
+						Initialization_file.putstring (", args");
 					end;
-					Main_file.putstring (");%N");
+					Initialization_file.putstring (");%N");
 				end;
 			else
-				Main_file.putstring ("%Tif (rcfid)%N%
+				Initialization_file.putstring ("%Tif (rcfid)%N%
 					%%T%Tif (rcarg)%N%
 					%%T%T%T((void (*)()) RTWF(rcst, rcfid, rcdt))(root_obj, args);%N%
 					%%T%Telse%N%
 					%%T%T%T((void (*)()) RTWF(rcst, rcfid, rcdt))(root_obj);%N");
 			end;
 
-			Main_file.putstring ("}%N");
+			Initialization_file.putstring ("}%N");
 
 			-- Generation of einit() and tabinit(). Only for workbench
 			-- mode.
 
 			if not final_mode then
 
-				Main_file.putstring ("%Nvoid tabinit()%N{%N");
+				Initialization_file.putstring ("%Nvoid tabinit()%N{%N");
 				from
 					i := 1;
 					nb := type_id_counter.value
@@ -2854,32 +2890,32 @@ feature -- Main file generation
 -- cl_type cannot be Void if process_dynamic_types has been done in
 -- freeze_system.
 					if cl_type /= Void then
-						Main_file.putstring ("%TInit");
-						Main_file.putint (cl_type.id);
-						Main_file.putstring ("();%N")
+						Initialization_file.putstring ("%TInit");
+						Initialization_file.putint (cl_type.id);
+						Initialization_file.putstring ("();%N")
 					end;
 					i := i + 1
 				end;
-				Main_file.putstring ("}%N");
+				Initialization_file.putstring ("}%N");
 
-				Main_file.putstring ("%Nvoid einit()%N{%N");
+				Initialization_file.putstring ("%Nvoid einit()%N{%N");
 
 					-- Set C variable `scount'.
-				Main_file.putstring ("%Tscount = ");
-				Main_file.putint (type_id_counter.value);
+				Initialization_file.putstring ("%Tscount = ");
+				Initialization_file.putint (type_id_counter.value);
 					-- Set C variable `ccount'.
-				Main_file.putstring (";%N%Tccount = ");
-				Main_file.putint (class_counter.value);
+				Initialization_file.putstring (";%N%Tccount = ");
+				Initialization_file.putint (class_counter.value);
 					-- Set C variable `dcount'.
-				Main_file.putstring (";%N%Tdcount = ");
-				Main_file.putint (dispatch_table.counter);
+				Initialization_file.putstring (";%N%Tdcount = ");
+				Initialization_file.putint (dispatch_table.counter);
 					-- Set the frozen level
-				Main_file.putstring (";%N%Tzeroc = ");
-				Main_file.putint (frozen_level);
-				Main_file.putstring (";%N}%N");
+				Initialization_file.putstring (";%N%Tzeroc = ");
+				Initialization_file.putint (frozen_level);
+				Initialization_file.putstring (";%N}%N");
 			end;
 
-			Main_file.close;
+			Initialization_file.close;
 		end;
 
 feature -- Workbench routine info table file generation

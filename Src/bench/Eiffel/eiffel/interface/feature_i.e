@@ -1689,6 +1689,15 @@ io.error.putstring ("Making a stone for a FEATURE_NAME, with 0,0 as start/end: F
 
 feature -- Debugging
 
+	is_debuggable: BOOLEAN is
+		do
+			Result := (not is_external)
+				and then (not is_attribute)
+				and then (not is_constant)
+				and then (not is_deferred)
+				and then (not is_unique)
+		end;
+
 	debuggables: LINKED_LIST [DEBUGGABLE] is
 			-- List of byte code arrays and associated
 			-- information corresponding to Current
@@ -1700,15 +1709,17 @@ feature -- Debugging
 		local
 			type_list: LINKED_LIST [CLASS_TYPE]
 		do
-			!!Result.make;
-			from
-				type_list := written_class.types;
-				type_list.start
-			until
-				type_list.after
-			loop
-				Result.add (debuggable (type_list.item));
-				type_list.forth
+			if is_debuggable then
+				!!Result.make;
+				from
+					type_list := written_class.types;
+					type_list.start
+				until
+					type_list.after
+				loop
+					Result.add (debuggable (type_list.item));
+					type_list.forth
+				end
 			end
 		end;
 

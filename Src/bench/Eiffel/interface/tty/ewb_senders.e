@@ -41,8 +41,20 @@ feature
 						-- Get the class
 						-- Note: class name amiguities are not resolved.
 					class_c := Universe.unique_class (class_name).compiled_class;
-					feature_i := class_c.feature_table.item (feature_name);
-					display_senders (error_window, class_c, feature_i);
+					if class_c = Void then
+						io.error.putstring (class_name);
+						io.error.putstring (" is not in the system%N");
+					else
+						feature_i := class_c.feature_table.item (feature_name);
+						if feature_i = Void then
+							io.error.putstring (feature_name);
+							io.error.putstring (" is not a feature of ");
+							io.error.putstring (class_name);
+							io.error.new_line
+						else
+							display_senders (error_window, class_c, feature_i);
+						end;
+					end;
 				end;
 			end;
 		end;

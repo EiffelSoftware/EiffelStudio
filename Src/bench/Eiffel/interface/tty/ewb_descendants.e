@@ -34,7 +34,12 @@ feature
 				retrieve_project;
 				if not error_occurred then
 					class_c := Universe.unique_class (class_name).compiled_class;
-					print_descendants (class_c, 0);
+					if class_c = Void then
+						io.error.putstring (class_name);
+						io.error.putstring (" is not in the system%N");
+					else
+						print_descendants (class_c, 0);
+					end;
 				end;
 			end;
 		end;
@@ -67,7 +72,7 @@ feature
 			until
 				j > i
 			loop
-				Result.append ("    ");
+				Result.append ("	");
 				j := j + 1
 			end;
 		end;

@@ -25,6 +25,10 @@ feature -- Attributes
 			-- The entire set of system object files we have 
 			-- to make
 
+	cecil_rt_basket: EXTEND_STACK [STRING];
+			-- Run-time object files to be put in the Cecil
+			-- archive
+
 	empty_class_types: SORTED_SET [INTEGER];
 			-- Set of all the class types that have no used
 			-- features (final mode), i.e. the C file would
@@ -48,6 +52,7 @@ feature -- Initialization
 		do
 			!!object_basket.make;
 			!!system_basket.make;
+			!!cecil_rt_basket.make;
 			!!empty_class_types.make
 		end;
 
@@ -56,6 +61,7 @@ feature -- Initialization
 		do
 			object_basket := Void;
 			system_basket := Void;
+			cecil_rt_basket := Void;
 			empty_class_types := Void;
 		end;
 
@@ -91,7 +97,7 @@ feature -- Object basket managment
 			system_basket.put ("Eplug.o");
 			system_basket.put ("Eskelet.o");
 			system_basket.put ("Evisib.o");
-			system_basket.put ("Emain.o");
+			system_basket.put ("Einit.o");
 		end;
 
 	compute_partial_objects is
@@ -118,6 +124,49 @@ feature -- Object basket managment
 			end;
 		end;
 
+feature -- Cecil
+
+	add_cecil_objects is
+		deferred
+		end;
+
+	generate_cecil is
+		local
+			libname: STRING;
+		do
+				-- Cecil run-time macro
+			generate_macro ("RCECIL", cecil_rt_basket);
+
+				-- Cecil library prodcution rule
+			Make_file.putstring ("cecil: ");
+			generate_objects_macros (partial_objects, False);
+			Make_file.putchar (' ');
+			generate_objects_macros (partial_system_objects, True);
+			Make_file.new_line;
+			Make_file.putstring ("%Tar x ");
+			Make_file.putstring (run_time);
+			Make_file.new_line;
+			Make_file.putstring ("%Tar cr ");
+				!! libname.make (0);
+				libname.append ("lib");
+				libname.append (system_name);
+				libname.append (".a");
+			Make_file.putstring (libname);
+			Make_file.putchar (' ');
+			generate_objects_macros (partial_objects, False);
+			Make_file.putchar (' ');
+			generate_objects_macros (partial_system_objects, True);
+			Make_file.putstring (" \%N");
+			generate_other_objects;
+			Make_file.putstring ("%T%T$(RCECIL)");
+			Make_file.new_line;
+			Make_file.putstring ("%T$(RANLIB) ");
+			Make_file.putstring (libname);
+			Make_file.new_line;
+			Make_file.putstring ("%T$(RM) $(RCECIL)");
+			Make_file.new_line;
+		end;
+
 feature -- Actual generation
 
 	generate is
@@ -139,6 +188,8 @@ feature -- Actual generation
 				-- that we may count them.
 			add_eiffel_objects;
 
+			add_cecil_objects;
+
 				-- Compute number of partial objects needed
 				-- and generate corresponding object lists.
 			compute_partial_objects;
@@ -150,12 +201,16 @@ feature -- Actual generation
 				-- Generate executable
 			generate_executable;
 
+				-- Generate Cecil rules
+			generate_cecil;
+
 				-- End production
 			generate_ending;
 
 			Make_file.close;
 			object_basket.wipe_out;
 			system_basket.wipe_out;
+			cecil_rt_basket.wipe_out;
 		end;
 
 feature -- Generation, Header
@@ -206,6 +261,7 @@ feature -- Generation, Header
 				%MAKE = make%N%
 				%MKDEP = $mkdep $(DPFLAGS) --%N%
 				%MV = $mv%N%
+				%RANLIB = $ranlib%N%
 				%RM = $rm -f%N%N");
 			Make_file.putstring ("%
 				%!GROK!THIS!%N%
@@ -362,6 +418,8 @@ feature -- Generation (Linking rules)
 			generate_objects_macros (partial_objects, False);
 			Make_file.putchar (' ');
 			generate_objects_macros (partial_system_objects, True);
+			Make_file.putchar (' ');
+			Make_file.putstring ("Emain.o");
 			Make_file.new_line;
 			Make_file.putstring ("%T$(RM) ");
 			Make_file.putstring (system_name);
@@ -376,6 +434,8 @@ feature -- Generation (Linking rules)
 			generate_objects_macros (partial_objects, False);
 			Make_file.putchar (' ');
 			generate_objects_macros (partial_system_objects, True);
+			Make_file.putchar (' ');
+			Make_file.putstring ("Emain.o");
 			Make_file.putchar (' ');
 			Make_file.putchar ('\');
 			Make_file.new_line;

@@ -36,29 +36,40 @@ feature -- Input/Output
 			io.error.putstring (argument (0));
 			io.error.putstring (": incorrect options%N"); 
 			print_usage;
+			io.error.putstring ("Options:%N"); 
 			print_help
 		end;
 
 	print_usage is
 		do
-			io.error.putstring ("Usage: ");
+			io.error.putstring ("Usage:%N%T");
 			io.error.putstring (argument (0));
-			io.error.putstring ("-h [-f|-F|-p|-clean|-senders class feature]%
-				% [-fs [-troff] class] [-descendants class] [-ace Ace] [-project Project]%N");
+			io.error.putstring (" [-help|-freeze|-finalize|-precompile|-clean|%N%
+				%%T-flatshort [-troff] class|-flat class|%N%
+				%%T-descendants class|-ancestors class|%N%
+				%%T-aversions class feature|-dversions class feature|%N%
+				%%T-callers class feature|-dependents class feature|%N%
+				%%T[-ace Ace] [-project Project]]%N");
 		end;
 
 	print_help is
 		do
-			print_one_help ("-h", "print this help message");
-			print_one_help ("-f", "freeze the system");
-			print_one_help ("-F", "finalize the system");
-			print_one_help ("-p", "precompile the system");
+			print_one_help ("default (no option)", "recompile the system");
+			print_one_help ("-help", "print this help message");
+			print_one_help ("-freeze", "freeze the system");
+			print_one_help ("-finalize", "finalize the system");
+			print_one_help ("-precompile", "precompile the system");
 			print_one_help ("-clean", "clean the compilation structures");
 			print_one_help ("-ace", "specify the Ace file");
 			print_one_help ("-project", "specify the compilation directory");
-			print_one_help ("-senders", "print the senders of a class feature");
+			print_one_help ("-callers", "print the callers of a class feature");
 			print_one_help ("-descendants", "print the descendants of a class");
-			print_one_help ("-fs", "print the flat-short of a class")
+			print_one_help ("-ancestors", "print the ancestors of a class");
+			print_one_help ("-flatshort", "print the flat-short form of a class");
+			print_one_help ("-flat", "print the flat form of a class");
+			print_one_help ("-aversions", "print the ancestor versions of a class feature");
+			print_one_help ("-dversions", "print the descendant versions of a class feature");
+			print_one_help ("-dependents", "print the classes depending on a class feature")
 		end;
 
 	print_one_help (opt: STRING; txt: STRING) is
@@ -125,15 +136,15 @@ feature -- Command line options
 		do
 			option := argument (current_option);	
 
-			if option.is_equal ("-h") then
+			if option.is_equal ("-help") then
 				help_only := True
-			elseif option.is_equal ("-f") then
+			elseif option.is_equal ("-freeze") then
 				if command /= Void then
 					option_error := True
 				else
 					!EWB_FREEZE!command
 				end
-			elseif option.is_equal ("-F") then
+			elseif option.is_equal ("-finalize") then
 				if command /= Void then
 					option_error := True
 				else
@@ -145,13 +156,41 @@ feature -- Command line options
 				else
 					!EWB_CLEAN!command
 				end
-			elseif option.is_equal ("-p") then
+			elseif option.is_equal ("-precompile") then
 				if command /= Void then
 					option_error := True
 				else
 					!EWB_PRECOMP!command
 				end
-			elseif option.is_equal ("-senders") then
+			elseif option.is_equal ("-aversions") then
+				if current_option < (argument_count - 2) then
+					if command /= Void then
+						option_error := True
+					else
+						current_option := current_option + 1;
+						cn := argument (current_option);
+						current_option := current_option + 1;
+						fn := argument (current_option);
+						!EWB_PAST!command.make (cn, fn);
+					end;
+				else
+					option_error := True
+				end;
+			elseif option.is_equal ("-dversions") then
+				if current_option < (argument_count - 2) then
+					if command /= Void then
+						option_error := True
+					else
+						current_option := current_option + 1;
+						cn := argument (current_option);
+						current_option := current_option + 1;
+						fn := argument (current_option);
+						!EWB_FUTURE!command.make (cn, fn);
+					end;
+				else
+					option_error := True
+				end;
+			elseif option.is_equal ("-callers") then
 				if current_option < (argument_count - 2) then
 					if command /= Void then
 						option_error := True
@@ -165,7 +204,7 @@ feature -- Command line options
 				else
 					option_error := True
 				end;
-			elseif option.is_equal ("-depend") then
+			elseif option.is_equal ("-dependents") then
 				if current_option < (argument_count - 2) then
 					if command /= Void then
 						option_error := True
@@ -179,7 +218,7 @@ feature -- Command line options
 				else
 					option_error := True
 				end;
-			elseif option.is_equal ("-fs") then
+			elseif option.is_equal ("-flatshort") then
 				if current_option < (argument_count - 1) then
 					if command /= Void then
 						option_error := True
@@ -197,6 +236,30 @@ feature -- Command line options
 							cn := argument (current_option);
 							!EWB_FS!command.make (cn, troffed)
 						end
+					end;
+				else
+					option_error := True
+				end;
+			elseif option.is_equal ("-flat") then
+				if current_option < (argument_count - 1) then
+					if command /= Void then
+						option_error := True
+					else
+						current_option := current_option + 1;
+						cn := argument (current_option);
+						!EWB_FLAT!command.make (cn)
+					end;
+				else
+					option_error := True
+				end;
+			elseif option.is_equal ("-ancestors") then
+				if current_option < (argument_count - 1) then
+					if command /= Void then
+						option_error := True
+					else
+						current_option := current_option + 1;
+						cn := argument (current_option);
+						!EWB_ANCESTORS!command.make (cn)
 					end;
 				else
 					option_error := True

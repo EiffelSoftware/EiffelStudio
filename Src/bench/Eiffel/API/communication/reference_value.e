@@ -15,8 +15,8 @@ feature
 			os: OBJECT_STONE;
 			class_c: CLASS_C
         do 
-			class_c := System.class_types.item (dynamic_type + 1).associated_class;
-			class_c.append_clickable_name (cw);
+--			class_c := System.class_types.item (dynamic_type + 1).associated_class;
+--			class_c.append_clickable_name (cw);
 			cw.put_string (" [");
 			!! os.make (reference.out);
 			cw.put_clickable_string (os, reference.out);

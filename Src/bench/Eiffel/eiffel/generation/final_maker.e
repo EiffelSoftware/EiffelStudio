@@ -68,6 +68,45 @@ feature
 			end;
 		end;
 
+	add_cecil_objects is
+		do
+			cecil_rt_basket.put ("math.o");
+			cecil_rt_basket.put ("malloc.o");
+			cecil_rt_basket.put ("garcol.o");
+			cecil_rt_basket.put ("local.o");
+			cecil_rt_basket.put ("except.o");
+			cecil_rt_basket.put ("store.o");
+			cecil_rt_basket.put ("retrieve.o");
+			cecil_rt_basket.put ("hash.o");
+			cecil_rt_basket.put ("traverse.o");
+			cecil_rt_basket.put ("hashin.o");
+			cecil_rt_basket.put ("tools.o");
+			cecil_rt_basket.put ("internal.o");
+			cecil_rt_basket.put ("plug.o");
+			cecil_rt_basket.put ("copy.o");
+			cecil_rt_basket.put ("equal.o");
+			cecil_rt_basket.put ("lmalloc.o");
+			cecil_rt_basket.put ("out.o");
+			cecil_rt_basket.put ("timer.o");
+			cecil_rt_basket.put ("urgent.o");
+			cecil_rt_basket.put ("sig.o");
+			cecil_rt_basket.put ("hector.o");
+			cecil_rt_basket.put ("cecil.o");
+			cecil_rt_basket.put ("bits.o");
+			cecil_rt_basket.put ("file.o");
+			cecil_rt_basket.put ("dir.o");
+			cecil_rt_basket.put ("string.o");
+			cecil_rt_basket.put ("misc.o");
+			cecil_rt_basket.put ("pattern.o");
+			cecil_rt_basket.put ("error.o");
+			cecil_rt_basket.put ("umain.o");
+			cecil_rt_basket.put ("memory.o");
+			cecil_rt_basket.put ("argv.o");
+			cecil_rt_basket.put ("boolstr.o");
+			cecil_rt_basket.put ("search.o");
+			cecil_rt_basket.put ("main.o");
+		end;
+
 	add_eiffel_objects is
 			-- Add class C code objects.
 		local

@@ -12,8 +12,8 @@ feature
 		local
 			os: OBJECT_STONE
 		do 
-			cw.put_string ("BITS ");
-			cw.put_int (size);
+--			cw.put_string ("BITS ");
+--			cw.put_int (size);
 			cw.put_string (" [");
 			!! os.make (reference.out);
 			cw.put_clickable_string (os, reference.out);

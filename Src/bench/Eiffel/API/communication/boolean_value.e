@@ -10,7 +10,7 @@ feature
 
 	 append_value (cw: CLICK_WINDOW) is 
 		do 
-			cw.put_string ("BOOLEAN = ");
+			cw.put_string (" = ");
 			cw.put_string (value.out)
 		end;
 

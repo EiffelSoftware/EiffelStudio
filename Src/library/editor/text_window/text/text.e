@@ -72,12 +72,10 @@ feature -- Reinitialization
 			abort_idle_processing
 			wipe_out
 			text_being_processed := True
-			print ("reset_Text: TRUE%N")
 			reading_text_finished := False
 			current_string := Void
 			current_pos := 0
 			on_text_reset		
---			finish_reading_agent := Void
 		end
 
 feature -- Access
@@ -335,8 +333,6 @@ feature {NONE} -- Text Loading
 
 	finish_reading_string is
 			-- Read the file named `a_name' and perform a lexical analysis
---		require
---			current_string_not_void: current_string /= Void
 		local
 			curr_string	: STRING
 			j			: INTEGER
@@ -409,7 +405,6 @@ feature {NONE} -- Text Loading
 			-- Stop text processing done during idle actions.
 		do
 			text_being_processed := False
-			print ("abort_idle_processing: FALSE%N")
 			ev_application.idle_actions.prune_all (finish_reading_string_agent)
 		end
 
@@ -418,7 +413,6 @@ feature {NONE} -- Text Loading
 		do
 			ev_application.idle_actions.prune_all (finish_reading_string_agent)
 			text_being_processed := False
-			print ("after_reading_idle_action: FALSE%N")
 			on_text_fully_loaded
 		end
 

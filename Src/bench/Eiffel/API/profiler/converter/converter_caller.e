@@ -29,8 +29,7 @@ feature {EWB_GENERATE} -- Initialization
 					-- Check whether the profile file exists.
 				check_profile_file (arguments.item (1), arguments.item (2));
 				if not exists then
-					io.putstring (arguments.item (1));
-					io.putstring (": File does not exist.%N%N")
+					conf_load_error := true
 				else
 
 					if config.get_config_name.is_equal ("eiffel") then
@@ -119,6 +118,9 @@ feature -- Access
 
 	is_last_conversion_ok: BOOLEAN
 			-- Has the last conversion worked properly?
+
+	conf_load_error: BOOLEAN
+			-- configuration load error
 
 feature {NONE} -- attributes
 

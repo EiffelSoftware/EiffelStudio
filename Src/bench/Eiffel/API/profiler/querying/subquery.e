@@ -50,6 +50,17 @@ feature -- Properties
 			Result := int_value;
 		end;
 
+	image: STRING is
+		do
+			!! Result.make(0)
+			Result.append (column)
+			Result.extend (' ')
+			Result.append (operator)
+			Result.extend (' ')
+			Result.append (value)
+			Result.extend (' ')
+		end
+
 feature {NONE} -- Attributes
 
 	int_column,

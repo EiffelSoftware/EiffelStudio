@@ -11,8 +11,6 @@ inherit
 	WEL_STRUCTURE
 		rename
 			make as structure_make
-		redefine
-			make_by_pointer
 		end
 
 	WEL_FONT_QUALITY_CONSTANTS
@@ -57,7 +55,7 @@ inherit
 
 creation 
 	make,
-	make_by_pointer,
+	make_with_pointer,
 	make_by_font
 
 feature {NONE} -- Initialization
@@ -111,7 +109,7 @@ feature {NONE} -- Initialization
 			cwin_get_object (font.item, structure_size, item)
 		end
 
-	make_by_pointer (a_pointer: POINTER) is
+	make_with_pointer (a_pointer: POINTER) is
 			-- Copy structure pointed by `a_pointer' in
 			-- `item'.
 		do

@@ -78,7 +78,7 @@ feature {NONE} -- Implementation
 		do
 			init_action
 			if family /= Void then
-				!! str.make (family)
+				create str.make (family)
 				p := str.item
 			end
 			cwin_enum_font_families (dc.item, p, cwel_enum_font_fam_procedure, default_pointer)
@@ -92,8 +92,8 @@ feature {NONE} -- Implementation
 			elf: WEL_ENUM_LOG_FONT
 			tm: WEL_TEXT_METRIC
 		do
-			!! elf.make_by_pointer (lpelf)
-			!! tm.make_by_pointer (lpntm)
+			create elf.make_with_pointer (lpelf)
+			create tm.make_by_pointer (lpntm)
 			action (elf, tm, font_type)
 		end
 

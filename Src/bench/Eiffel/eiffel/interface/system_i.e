@@ -3008,8 +3008,8 @@ feature -- Main file generation
 			Initialization_file.open_write;
 
 			Initialization_file.putstring ("%
-				%#include <macros.h>%N%
-				%#include <struct.h>%N%N");
+				%#include %"macros.h%"%N%
+				%#include %"struct.h%"%N%N");
 		
 			if not final_mode then
 				Initialization_file.putstring ("int rcst = ");

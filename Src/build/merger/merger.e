@@ -229,7 +229,7 @@ feature -- Integrate command
 			end
 		end;
 
-	command_caller: CMD_EDITOR;
+	command_caller: COMMAND_EDITOR
 
 	set_command_caller (c: like command_caller) is
 		do

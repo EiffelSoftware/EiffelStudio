@@ -106,6 +106,55 @@ feature -- disposable
 			Precursor
 		end
 		
+feature -- Various continuing mode from callback
+
+	call_disable_next_estudio_notification is
+			-- In call_back processing, if we continue/step.. right away
+			-- we don't need to process estudio_notification
+		do
+			eifnet_debugger_info.debugger.disable_next_estudio_notification
+		end
+		
+	call_terminate_debugging is
+			-- If there is no CorDebugController, then we can not continue
+			-- thus let's terminate debugging
+		do
+			debug ("debugger_trace_callstack")
+				io.error.put_string ("No ICorDebugController ... going to terminate_debugger ...%N")
+			end
+			Eifnet_debugger_info.debugger.terminate_debugging
+		end
+
+	call_do_continue is
+		do
+			if Eifnet_debugger_info.icd_controller /= Void then
+				Eifnet_debugger_info.debugger.do_continue
+				call_disable_next_estudio_notification			
+			else
+				call_terminate_debugging
+			end
+		end
+
+	call_do_step_out is
+		do
+			if Eifnet_debugger_info.icd_controller /= Void then
+				Eifnet_debugger_info.debugger.do_step_out
+				call_disable_next_estudio_notification				
+			else
+				call_terminate_debugging
+			end
+		end
+
+	call_do_step_into is
+		do
+			if Eifnet_debugger_info.icd_controller /= Void then
+				Eifnet_debugger_info.debugger.do_step_into
+				call_disable_next_estudio_notification				
+			else
+				call_terminate_debugging
+			end
+		end
+
 feature {NONE} -- debugger behavior
 
 	begin_of_managed_callback (cb_id: INTEGER) is
@@ -118,7 +167,7 @@ feature {NONE} -- debugger behavior
 			
 			if not eifnet_debugger_info.is_inside_function_evaluation then
 				Eifnet_debugger_info.reset_current_callstack
-			end			
+			end
 
 			debug ("DEBUGGER_TRACE_CALLBACK_DATA")
 				l_msg := "[EIFFEL/DEB/CALL] ###"
@@ -170,14 +219,8 @@ feature {NONE} -- debugger behavior
 			-- Continue witout stopping the system
 		do
 				--| Let's continue, we don't stop on this callback
-			if Eifnet_debugger_info.icd_controller /= Void then
-				Eifnet_debugger_info.debugger.do_continue
-			else
-				debug ("debugger_trace_callstack")
-					io.error.put_string ("No ICorDebugController ... going to terminate_debugger ...%N")
-				end
-				Eifnet_debugger_info.debugger.terminate_debugging
-			end
+
+				call_do_continue
 			Result := False
 		end
 
@@ -205,7 +248,7 @@ feature {NONE} -- debugger behavior
 				Eifnet_debugger_info.is_inside_function_evaluation
 			then
 				if Eifnet_debugger_info.icd_controller /= Void then
-					Eifnet_debugger_info.debugger.do_continue
+					call_do_continue
 				end					
 				execution_stopped := False
 			else
@@ -264,7 +307,7 @@ feature {NONE} -- debugger behavior
 			create l_copy.make_copy (l_previous_stack_info)
 			l_copy.set_current_il_offset (l_potential_il_offset)
 			if l_copy.is_equal (l_current_stack_info) then
-				Eifnet_debugger_info.debugger.do_continue				
+				call_do_continue
 				Result := False
 			else			
 				Result := True
@@ -308,7 +351,7 @@ feature {NONE} -- debugger behavior
 				Eifnet_debugger_info.last_control_mode_is_step_into
 				and then Eifnet_debugger_info.is_current_state_same_as_previous
 			then
-				Eifnet_debugger_info.Application.imp_dotnet.step_into
+				call_do_step_into
 			elseif
 				Eifnet_debugger_info.last_control_mode_is_stop
 			then
@@ -332,7 +375,7 @@ feature {NONE} -- debugger behavior
 						print ("[!] Unknown Class [0x" + l_class_token.to_hex_string + "] .. we'd better go out to breath %N")
 						print ("[!] module = " + l_module_name + "%N")
 					end
-					Eifnet_debugger_info.debugger.do_step_out
+					call_do_step_out
 				else
 					l_class_type := Il_debug_info_recorder.class_type_for_module_class_token (l_module_name, l_class_token)
 					l_feat_token := l_current_stack_info.current_feature_token
@@ -353,7 +396,7 @@ feature {NONE} -- debugger behavior
 						
 						if l_current_il_offset = 0 then
 								--| Let's skip the first `nop' , non sense for the eStudio debugger					
-							Eifnet_debugger_info.debugger.do_step_into					
+							call_do_step_into					
 						else
 							is_valid_callstack_offset := Il_debug_info_recorder.is_il_offset_related_to_eiffel_line (l_class_type, l_feat, l_current_il_offset)					
 							if 
@@ -369,7 +412,7 @@ feature {NONE} -- debugger behavior
 									--| or we are in a step_into concerning a `foo( a(), b())'
 									--| so in either case, a step_into is the correct behavior.
 								
-								Eifnet_debugger_info.debugger.do_step_into
+								call_do_step_into
 							else
 									--| we can stop, this is a valid stoppable point for
 									--| the eStudio debugger
@@ -386,7 +429,7 @@ feature {NONE} -- debugger behavior
 						
 							--| ranges ...
 						if Eifnet_debugger_info.last_control_mode_is_step_out then
-							Eifnet_debugger_info.debugger.do_step_out
+							call_do_step_out
 						elseif 
 							Eifnet_debugger_info.last_control_mode_is_step_into
 						then

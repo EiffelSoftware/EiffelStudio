@@ -188,6 +188,9 @@ feature -- Removal
 			remove_item_actions.call ([v])
 			imp ?= v.implementation
 			C.gtk_container_remove (c_object, imp.c_object)
+			if index > count + 1 then
+				index := count + 1
+			end
 		end
 
 	remove is
@@ -265,6 +268,9 @@ end -- class EV_WIDGET_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/02/26 06:27:46  oconnor
+--| adjust index after prune to ensure it is not too big
+--|
 --| Revision 1.5  2000/02/26 02:02:14  brendel
 --| Formatting.
 --|

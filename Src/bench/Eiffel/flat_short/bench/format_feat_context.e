@@ -1,32 +1,19 @@
 indexing
-
-	description: 
-		"Formatting context for feature ast (flat and breakable format).";
+	description: "Formatting context for feature ast (flat and breakable format).";
 	date: "$Date$";
 	revision: "$Revision $"
 
 class FORMAT_FEAT_CONTEXT
 
 inherit
-
-	FORMAT_CONTEXT_B
-		rename
-			execute as old_execute,
-			put_origin_comment as old_put_origin_comment
-		redefine
-			chained_assertion
-		end
 	FORMAT_CONTEXT_B
 		rename
 			execute as old_execute
 		redefine
 			put_origin_comment, chained_assertion
-		select
-			put_origin_comment
 		end
 
 creation
-
 	make
 
 feature -- Property
@@ -93,11 +80,8 @@ feature -- Execution
 				rout_as ?= f_ast.body.content;
 				start_pos := f_ast.start_position;
 				if written_in_class.is_precompiled then
-					if Class_comments_server.has 
-							(written_in_class.id) 
-					then
-						c_comments := Class_comments_server.disk_item 
-									(written_in_class.id);
+					if Class_comments_server.has (written_in_class.id) then
+						c_comments := Class_comments_server.disk_item (written_in_class.id);
 						feature_comments := c_comments.item (start_pos)
 					end
 				else
@@ -138,8 +122,17 @@ feature -- Element change
 			-- Print the origin comment if necessary and
 			-- print the export status.
 		do
-			old_put_origin_comment;
-			print_export_status
+			{FORMAT_CONTEXT_B} Precursor;
+
+				--| Print export status.
+			if not export_status.is_all then
+				put_text_item (ti_Dashdash);
+				put_space;
+				put_comment_text ("(export status ");
+				export_status.format (Current);
+				put_comment_text (")");
+				new_line;
+			end;
 		end;
 
 	chained_assertion: CHAINED_ASSERTIONS is
@@ -151,17 +144,5 @@ feature -- Element change
 feature {NONE} -- Feature comments 
 
 	export_status: EXPORT_I;
-
-	print_export_status is
-		do
-			if not export_status.is_all then
-				put_text_item (ti_Dashdash);
-				put_space;
-				put_comment_text ("(export status ");
-				export_status.format (Current);
-				put_comment_text (")");
-				new_line;
-			end;
-		end;
 
 end	

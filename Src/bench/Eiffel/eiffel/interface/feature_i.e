@@ -2048,6 +2048,7 @@ feature -- Case storage informatio
 			loop			
 				instruc := li.item
 				!! format_c.make_for_case
+				format_c.set_class_c (written_class)
 				instruc.simple_format(format_c)
 				!!ss.make ( 20 )
 				if format_c.text/= Void then
@@ -2085,6 +2086,7 @@ feature -- Case storage informatio
 			if exter/= Void then
 					-- external	
 				!! format_c.make_for_case
+				format_c.set_class_c (written_class)
 				exter.simple_format(format_c)
 				!!ss.make ( 20 )
 				if format_c.text/= Void then
@@ -2114,6 +2116,7 @@ feature -- Case storage informatio
 					loop
 						instruc := intern.compound.item
 						!! format_c.make_for_case
+						format_c.set_class_c (written_class)
 						instruc.simple_format(format_c)
 						!!ss.make ( 20 )
 						if format_c.text/= Void then

@@ -68,6 +68,17 @@ feature {NONE} -- Initialization
 			feature {EV_GTK_EXTERNALS}.GDK_VISIBILITY_NOTIFY_MASK_ENUM
 		end
 
+	initialize_events is
+		do
+				-- Initialize events
+			if needs_event_box then
+				feature {EV_GTK_EXTERNALS}.gtk_widget_set_events (c_object, Gdk_events_mask)
+			end
+		--	if not feature {EV_GTK_EXTERNALS}.gtk_widget_no_window (visual_widget) then
+				feature {EV_GTK_EXTERNALS}.gtk_widget_add_events (visual_widget, Gdk_events_mask)
+		--	end			
+		end
+		
 
 	initialize is
 			-- Show non window widgets.
@@ -77,13 +88,7 @@ feature {NONE} -- Initialization
 			connect_button_press_switch_agent: PROCEDURE [EV_GTK_CALLBACK_MARSHAL, TUPLE[]]
 			on_key_event_intermediary_agent: PROCEDURE [EV_GTK_CALLBACK_MARSHAL, TUPLE [EV_KEY, STRING, BOOLEAN]]
 		do
-				-- Initialize events
-			if not feature {EV_GTK_EXTERNALS}.gtk_widget_no_window (c_object) then
-				feature {EV_GTK_EXTERNALS}.gtk_widget_set_events (c_object, Gdk_events_mask)
-			end
-			if not feature {EV_GTK_EXTERNALS}.gtk_widget_no_window (visual_widget) then
-				feature {EV_GTK_EXTERNALS}.gtk_widget_set_events (visual_widget, Gdk_events_mask)
-			end
+			initialize_events
 			if not feature {EV_GTK_EXTERNALS}.gtk_is_window (c_object) then
 				feature {EV_GTK_EXTERNALS}.gtk_widget_show (c_object)
 			else
@@ -104,12 +109,12 @@ feature {NONE} -- Initialization
 			end
 	
 			on_key_event_intermediary_agent := agent (App_implementation.gtk_marshal).on_key_event_intermediary (c_object, ?, ?, ?)
-			real_signal_connect (visual_widget, "key_press_event", on_key_event_intermediary_agent, key_event_translate_agent)
-			real_signal_connect (visual_widget, "key_release_event", on_key_event_intermediary_agent, key_event_translate_agent)
+			real_signal_connect (event_widget, "key_press_event", on_key_event_intermediary_agent, key_event_translate_agent)
+			real_signal_connect (event_widget, "key_release_event", on_key_event_intermediary_agent, key_event_translate_agent)
 				--| "button-press-event" is a special case, see below.
 				
-			real_signal_connect (visual_widget, "focus-in-event", agent (App_implementation.gtk_marshal).widget_focus_in_intermediary (c_object), Void)
-			real_signal_connect (visual_widget, "focus-out-event", agent (App_implementation.gtk_marshal).widget_focus_out_intermediary (c_object), Void)
+			real_signal_connect (event_widget, "focus-in-event", agent (App_implementation.gtk_marshal).widget_focus_in_intermediary (c_object), Void)
+			real_signal_connect (event_widget, "focus-out-event", agent (App_implementation.gtk_marshal).widget_focus_out_intermediary (c_object), Void)
 				
 			connect_button_press_switch_agent := agent (App_implementation.gtk_marshal).connect_button_press_switch_intermediary (c_object)
 			pointer_button_press_actions.not_empty_actions.extend (connect_button_press_switch_agent)
@@ -167,7 +172,8 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			--| See comment in `button_press_switch' above.
 		do
 			if not button_press_switch_is_connected then
-				real_signal_connect (visual_widget, "button-press-event", agent (App_implementation.gtk_marshal).button_press_switch_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?), App_implementation.default_translate)
+				--real_signal_connect (event_widget, "scroll-event", agent (App_implementation.gtk_marshal).button_press_switch_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?), agent (App_implementation.gtk_marshal).scroll_wheel_translate)
+				real_signal_connect (event_widget,  "button-press-event", agent (App_implementation.gtk_marshal).button_press_switch_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?), App_implementation.default_translate)
 				button_press_switch_is_connected := True
 			end
 		end
@@ -197,29 +203,24 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES} -- Implementation
 		do
 			t := [a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure,
 				a_screen_x, a_screen_y]
-				
-			if not has_focus and then (a_button = 1 or a_button = 3) then
-					-- We explicitly set the focus for both left and right mouse buttons if not set already
-				feature {EV_GTK_EXTERNALS}.gtk_widget_grab_focus (visual_widget)
-			else
-					-- Mouse Wheel implementation.
-				if a_type = feature {EV_GTK_EXTERNALS}.GDK_BUTTON_PRESS_ENUM then
-					mouse_wheel_delta := 1
-				elseif a_type = feature {EV_GTK_EXTERNALS}.GDK_2BUTTON_PRESS_ENUM then
-					mouse_wheel_delta := 1
-				elseif a_type = feature {EV_GTK_EXTERNALS}.GDK_3BUTTON_PRESS_ENUM then
-					mouse_wheel_delta := 1
-				end
-				if a_button = 4 and mouse_wheel_delta > 0 then
+
+				-- Mouse Wheel implementation.
+			if a_type = feature {EV_GTK_EXTERNALS}.GDK_BUTTON_PRESS_ENUM then
+				mouse_wheel_delta := 1
+			elseif a_type = feature {EV_GTK_EXTERNALS}.GDK_2BUTTON_PRESS_ENUM then
+				mouse_wheel_delta := 1
+			elseif a_type = feature {EV_GTK_EXTERNALS}.GDK_3BUTTON_PRESS_ENUM then
+				mouse_wheel_delta := 1
+			end
+			if a_button = 4 and mouse_wheel_delta > 0 then
 					-- This is for scrolling up
-					if mouse_wheel_actions_internal /= Void then
-						mouse_wheel_actions_internal.call ([mouse_wheel_delta])
-					end
-				elseif a_button = 5 and mouse_wheel_delta > 0 then
+				if mouse_wheel_actions_internal /= Void then
+					mouse_wheel_actions_internal.call ([mouse_wheel_delta])
+				end
+			elseif a_button = 5 and mouse_wheel_delta > 0 then
 					-- This is for scrolling down
-					if mouse_wheel_actions_internal /= Void then
-						mouse_wheel_actions_internal.call ([- mouse_wheel_delta])
-					end
+				if mouse_wheel_actions_internal /= Void then
+					mouse_wheel_actions_internal.call ([- mouse_wheel_delta])
 				end
 			end
 			
@@ -239,19 +240,15 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES} -- Implementation
 	on_size_allocate (a_x, a_y, a_width, a_height: INTEGER) is
 			-- Gtk_Widget."size-allocate" happened.
 		do
-			if not in_resize_event then
-				in_resize_event := True
-				if last_width /= a_width or else last_height /= a_height then
-					if resize_actions_internal /= Void then
-						resize_actions_internal.call ([a_x, a_y, a_width, a_height])
-					end
-					if parent_imp /= Void then
-						parent_imp.child_has_resized (Current)
-					end
-					last_width := a_width
-					last_height := a_height
+			if last_width /= a_width or else last_height /= a_height then
+				last_width := a_width
+				last_height := a_height
+				if resize_actions_internal /= Void then
+					resize_actions_internal.call ([a_x, a_y, a_width, a_height])
 				end
-				in_resize_event := False
+				if parent_imp /= Void then
+					parent_imp.child_has_resized (Current)
+				end
 			end
 		end
 		
@@ -263,11 +260,11 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES} -- Implementation
 				if focus_in_actions_internal /= Void then
 					focus_in_actions_internal.call (Void)
 				end
-			else
+			elseif parent_imp /= Void then
 				if focus_out_actions_internal /= Void then
 					focus_out_actions_internal.call (Void)
 				end
-			end
+			end				
 		end
 
 feature -- Access
@@ -309,8 +306,7 @@ feature {EV_WIDGET_IMP} -- Position retrieval
 			i: INTEGER
 		do
 			
-			if is_displayed then
-					
+			if is_displayed then	
 					i := feature {EV_GTK_EXTERNALS}.gdk_window_get_origin (
 						feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object),
 				    	$a_x, NULL)
@@ -367,7 +363,7 @@ feature -- Status report
 	has_capture: BOOLEAN is
 			-- Has capture?
 		do
-			Result := has_struct_flag (c_object, feature {EV_GTK_EXTERNALS}.GTK_HAS_GRAB_ENUM)
+			Result := has_struct_flag (event_widget, feature {EV_GTK_EXTERNALS}.GTK_HAS_GRAB_ENUM)
 		end
 
 feature -- Status setting
@@ -395,24 +391,26 @@ feature -- Status setting
 			--| Used by pick and drop.
 		local
 			i: INTEGER
-		do		
-			disable_debugger
-			App_implementation.set_captured_widget (interface)
-			feature {EV_GTK_EXTERNALS}.gtk_grab_add (visual_widget)
-			i := feature {EV_GTK_EXTERNALS}.gdk_pointer_grab (
-				feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (visual_widget),
-				1, -- gint owner_events
-				feature {EV_GTK_EXTERNALS}.GDK_BUTTON_RELEASE_MASK_ENUM +
-				feature {EV_GTK_EXTERNALS}.GDK_BUTTON_PRESS_MASK_ENUM +
-				feature {EV_GTK_EXTERNALS}.GDK_BUTTON_MOTION_MASK_ENUM +
-				feature {EV_GTK_EXTERNALS}.GDK_POINTER_MOTION_MASK_ENUM,
-				NULL,						-- GdkWindow* confine_to 
-				NULL,						-- GdkCursor *cursor
-				0)							-- guint32 time
-			i := feature {EV_GTK_EXTERNALS}.gdk_keyboard_grab (
-				feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (visual_widget),
-				True, -- gint owner events
-				0) -- guint32 time
+		do
+			if not has_capture then
+				disable_debugger
+				App_implementation.set_captured_widget (interface)
+				feature {EV_GTK_EXTERNALS}.gtk_grab_add (event_widget)
+				i := feature {EV_GTK_EXTERNALS}.gdk_pointer_grab (
+					feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (event_widget),
+					1, -- gint owner_events
+					feature {EV_GTK_EXTERNALS}.GDK_BUTTON_RELEASE_MASK_ENUM +
+					feature {EV_GTK_EXTERNALS}.GDK_BUTTON_PRESS_MASK_ENUM +
+				--	feature {EV_GTK_EXTERNALS}.GDK_BUTTON_MOTION_MASK_ENUM +
+					feature {EV_GTK_EXTERNALS}.GDK_POINTER_MOTION_MASK_ENUM,
+					NULL,						-- GdkWindow* confine_to 
+					NULL,						-- GdkCursor *cursor
+					0)							-- guint32 time
+				i := feature {EV_GTK_EXTERNALS}.gdk_keyboard_grab (
+					feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (event_widget),
+					True, -- gint owner events
+					0) -- guint32 time				
+			end
 		end
 
 	disable_capture is
@@ -420,7 +418,7 @@ feature -- Status setting
 			--| Used by pick and drop.
 		do
 			App_implementation.set_captured_widget (Void)
-			feature {EV_GTK_EXTERNALS}.gtk_grab_remove (visual_widget)
+			feature {EV_GTK_EXTERNALS}.gtk_grab_remove (event_widget)
 			feature {EV_GTK_EXTERNALS}.gdk_pointer_ungrab (
 				0 -- guint32 time
 			)
@@ -720,7 +718,7 @@ feature {NONE} -- Implementation
 			if a_minimum_height /= -1 then
 				internal_minimum_height := a_minimum_height
 			end
-			feature {EV_GTK_EXTERNALS}.gtk_widget_set_usize (c_object, a_minimum_width, a_minimum_height)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_minimum_size (c_object, a_minimum_width, a_minimum_height)
 			update_request_size
 		end
 

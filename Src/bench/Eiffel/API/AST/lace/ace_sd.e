@@ -157,9 +157,8 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 		local
 			d_option: D_OPTION_SD;
 			value: OPT_VAL_SD;
-			vd38: VD38;
-			vd44: VD44;
 		do
+			!! Result.make;
 			if defaults /= Void then
 				from
 					defaults.start
@@ -168,21 +167,11 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 				loop
 					d_option := defaults.item;
 					if d_option.option.is_precompiled then
-						if Result /= Void then
-							value := d_option.value;
-							if value.is_name then
-									-- If it is not a NAME_SD, the normal
-									-- adapt will trigger the error
-								Result.extend (value.value)
-							end
-						else
-							value := d_option.value;
-							if value.is_name then
-									-- If it is not a NAME_SD, the normal
-									-- adapt will trigger the error
-								!! Result.make;
-								Result.extend (value.value)
-							end
+						value := d_option.value;
+						if value.is_name then
+								-- If it is not a NAME_SD, the normal
+								-- adapt will trigger the error
+							Result.extend (value.value)
 						end
 					end;
 					defaults.forth
@@ -195,13 +184,55 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 			if
 				melt_only and then
 				not Compilation_modes.is_precompiling and then
-				Result = Void
+				Result.empty
 			then
 					-- For the melt_only version, if no precompiled project is
 					-- specified, return $EIFFEL3/precomp/spec/$PLATFORM/base
-				!! Result.make;
 				Result.extend (Default_precompiled_base_location)
 			end
+		ensure
+			precomp_project_names_not_void: Result /=  Void
+		end;
+
+	precompiled_options: HASH_TABLE [D_PRECOMPILED_SD, STRING] is
+			-- Precompilation options, as specified in the
+			-- default clause in the Ace file
+		local
+			d_precompiled_option: D_PRECOMPILED_SD;
+			value: OPT_VAL_SD
+		do
+			!! Result.make (5);
+			if defaults /= Void then
+				from defaults.start until defaults.after loop
+					d_precompiled_option ?= defaults.item;
+					if d_precompiled_option /= Void then
+						value := d_precompiled_option.value;
+						if value.is_name then
+								-- If it is not a NAME_SD, the normal
+								-- adapt will trigger the error
+							Result.force (d_precompiled_option, value.value)
+						end
+					end;
+					defaults.forth
+				end
+			end;
+				-- Do not call the once function `System' directly since it's
+				-- value may be replaced during the first compilation (as soon
+				-- as we figured out whether the system describes a Dynamic
+				-- Class Set or not).
+			if
+				melt_only and then
+				not Compilation_modes.is_precompiling and then
+				Result.empty
+			then
+					-- For the melt_only version, if no precompiled project is
+					-- specified, return $EIFFEL3/precomp/spec/$PLATFORM/base
+				!! d_precompiled_option;
+				d_precompiled_option.set_default_base_location
+				Result.put (d_precompiled_option, Default_precompiled_base_location)
+			end
+		ensure
+			precompiled_options_not_void: precompiled_options /= Void
 		end;
 
 	process_system_level_options is
@@ -236,6 +267,8 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 					clusters.item.build;
 					clusters.forth;
 				end;
+			else
+				Degree_output.put_start_degree_6 (0)
 			end;
 		end;
 
@@ -513,6 +546,8 @@ feature {COMPILER_EXPORTER} -- DLE
 					clusters.item.build_dle;
 					clusters.forth
 				end
+			else
+				Degree_output.put_start_degree_6 (0)
 			end
 		end;
 

@@ -192,7 +192,7 @@ feature -- Basic operation
 			implementation.select_all
 		ensure
 			has_selection: has_selection
-			selection_start_set: selection_start = 0
+			selection_start_set: selection_start = 1
 			selection_end_set: selection_end <= text_length + 2
 		end
 

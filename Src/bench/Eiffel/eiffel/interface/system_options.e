@@ -144,8 +144,7 @@ feature -- Update
 
 	set_system_namespace (n: STRING) is
 			-- Set `system_namespace' to `n'.
-		require
-			n_not_void: n /= Void
+			--| `n' can be Void as we need to reset him before analyzing Ace file.
 		do
 			system_namespace := n
 		ensure

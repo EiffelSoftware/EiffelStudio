@@ -45,6 +45,7 @@ feature {NONE} -- Initialization
 			initialize
 			create {CLUSTER_FIGURE_STONE} pebble.make (Current)
 			set_accept_cursor (Cursors.cur_Cluster)
+			set_deny_cursor (Cursors.Cur_x_cluster)
 			build_figure
 		end
 

@@ -43,6 +43,7 @@ feature {NONE} -- Initialization
 			set_target_name (clone (name))
 			drop_actions.extend (~on_class_drop)
 			set_accept_cursor (Cursors.cur_Class)
+			set_deny_cursor (Cursors.cur_X_class)
 			build_figure
 		end
 

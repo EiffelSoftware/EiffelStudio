@@ -27,13 +27,64 @@ feature -- HTML Help 1.x
 		end
 		
 	default_url: STRING is
-			-- Url to be used for folder nodes (i.e "index"), if any
+			-- Url identifier to be used for folder nodes (i.e "index.xml"), if any
 		once
-			Result := Shared_constants.Application_constants.index_file_name + ".html"
+			Result := Shared_constants.Application_constants.index_file_name
 		end
 
 	use_title_tag: BOOLEAN is True
 			-- Use HTML <title> tag to determine node names?  If False then
 			-- just take file/folder name directly
+			
+------------------------------------------------			
+			
+feature -- Pixmaps
+
+	folder_closed_icon: EV_PIXMAP is
+			-- Icon for Closing
+		local
+			l_file: FILE_NAME
+		once
+			create Result
+			create l_file.make_from_string (Shared_constants.Application_constants.Icon_resources_directory)
+			l_file.extend ("toc_folder_closed.ico")
+			Result.set_with_named_file (l_file)
+		end
+		
+	folder_open_icon: EV_PIXMAP is
+			-- Icon for Opening
+		local
+			l_file: FILE_NAME
+		once
+			create Result
+			create l_file.make_from_string (Shared_constants.Application_constants.Icon_resources_directory)
+			l_file.extend ("toc_folder_open.ico")
+			Result.set_with_named_file (l_file)
+		end
+		
+	file_icon: EV_PIXMAP is
+			-- File icon
+		local
+			l_file: FILE_NAME
+		once
+			create Result
+			create l_file.make_from_string (Shared_constants.Application_constants.Icon_resources_directory)
+			l_file.extend ("icon_format_text_color.ico")
+			Result.set_with_named_file (l_file)
+		end
+			
+feature -- XML tags			
+			
+	id_string: STRING is "id"
+			
+	title_string: STRING is "title"
+	
+	url_string: STRING is "url"
+	
+	file_string: STRING is "file"
+	
+	folder_string: STRING is "folder"
+	
+	root_string: STRING is "table_of_contents"
 
 end -- class TABLE_OF_CONTENTS_CONSTANTS

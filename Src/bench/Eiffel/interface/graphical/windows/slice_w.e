@@ -148,26 +148,18 @@ feature {NONE}
 				lower_string := clone (from_field.text);
 				lower_string.left_adjust;
 				lower_string.right_adjust;
-				if 
-					lower_string.empty or else
-					(lower_string.item (1).code < Zero or
-					lower_string.item (1).code > Nine)
-				then
-					sp_lower := -1
-				else
+				if lower_string.is_integer then
 					sp_lower := lower_string.to_integer
+				else
+					sp_lower := -1
 				end;	
 				upper_string := clone (to_field.text);
 				upper_string.left_adjust;
 				upper_string.right_adjust;
-				if 
-					upper_string.empty or else
-					(upper_string.item (1).code < Zero or
-					upper_string.item (1).code > Nine)
-				then
-					sp_upper := -1
-				else
+				if upper_string.is_integer then
 					sp_upper := upper_string.to_integer
+				else
+					sp_upper := -1
 				end	
 			end;
 			if 

@@ -91,7 +91,7 @@ feature {NONE} -- Implementation
 		local
 			l_visitor: WIZARD_DATA_TYPE_VISITOR
 		do
-			create Result.make (10000)
+			create Result.make (2000)
 			if is_return_hresult then
 				Result.append (Ecatch)
 			end
@@ -157,11 +157,7 @@ feature {NONE} -- Implementation
 		do
 			create arguments.make (100)
 			create cecil_call.make (1000)
-			arguments.append (Space_open_parenthesis)
-			arguments.append (Eif_access)
-			arguments.append (Space_open_parenthesis)
-			arguments.append (Eiffel_object)
-			arguments.append (Close_parenthesis)
+			arguments.append (" (eif_access (eiffel_object)")
 
 			if func_desc.argument_count > 0 then
 				from
@@ -178,8 +174,7 @@ feature {NONE} -- Implementation
 				end
 			end
 
-			arguments.append (Close_parenthesis)
-			arguments.append (Semicolon)
+			arguments.append (");")
 
 			if is_return_data then
 				cecil_call.append (cecil_function_declaration (func_desc.return_type.visitor))

@@ -1,29 +1,61 @@
 indexing
-	description: "Code HTML generation constants."
+	description: "Constants for template files."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	CODE_HTML_CONSTANTS
+	TEMPLATE_CONSTANTS
 
-feature -- File
+feature -- File	Location
 
-	template_file_name: STRING is 
-			-- Template file
+	code_template_file_name: STRING is 
+			-- Template file for code HTML
 		local
 			l_file_path: FILE_NAME
-		do
+		once
 			create l_file_path.make_from_string ((create {APPLICATION_CONSTANTS}).templates_path)
-			l_file_path.extend ("HTMLTemplate.txt")
+			l_file_path.extend ("HTMLCodeTemplate.html")
 			Result := l_file_path.string			
 		end
 
-	template_text: STRING is
+	empty_html_template_file_name: STRING is
+			-- Empty HTML template file
+		local
+			l_file_path: FILE_NAME
+		once
+			create l_file_path.make_from_string ((create {APPLICATION_CONSTANTS}).templates_path)
+			l_file_path.extend ("HTMLEmptyTemplate.html")
+			Result := l_file_path.string
+		end	
+
+	header_xml_template_file_name: STRING is
+			-- Header XML template file
+		local
+			l_file_path: FILE_NAME
+		once
+			create l_file_path.make_from_string ((create {APPLICATION_CONSTANTS}).templates_path)
+			l_file_path.extend ("XMLHeaderTemplate.xml")
+			Result := l_file_path.string
+		end	
+		
+	footer_xml_template_file_name: STRING is
+			-- Footer XML template file
+		local
+			l_file_path: FILE_NAME
+		once
+			create l_file_path.make_from_string ((create {APPLICATION_CONSTANTS}).templates_path)
+			l_file_path.extend ("XMLFooterTemplate.xml")
+			Result := l_file_path.string
+		end	
+
+feature -- File Content
+
+	template_text (a_filename: STRING): STRING is
 			-- Template text
 		local
 			l_file: PLAIN_TEXT_FILE
-		once
-			create l_file.make (template_file_name)
+		do
+			create l_file.make (a_filename)
 			if l_file.exists then
 				l_file.open_read
 				l_file.read_stream (l_file.count)
@@ -42,19 +74,26 @@ feature -- Access
 	
 	html_stylesheet_token: STRING is "[!Stylesheet!]"
 			-- Stylesheet token
+			
+	html_product_token: STRING is "[!Product!]"
+			-- Token to indicate output product
 	
+	html_navigation_token: STRING is "[!Navigation!]"
+			-- Token to replace with document navigation
+		
+	
+	chart_suffix: STRING is "_chart"
+			-- Suffix for code chart view files
+		
+	contract_suffix: STRING is "_flatshort"
+			-- Suffix for code contract view
+			
 feature -- Query
 
 	replace_token (text, a_token, new_text: STRING) is
 			-- Replace `a_token' in `text' with `new_text'
 		do
 			text.replace_substring_all (a_token, new_text)	
-		end	
-		
-	chart_suffix: STRING is "_chart"
-			-- Suffix for code chart view files
-		
-	contract_suffix: STRING is "_flatshort"
-			-- Suffix for code contract view
+		end		
 
 end -- class CODE_HTML_CONSTANTS

@@ -273,10 +273,8 @@ feature {EV_ANY_IMP} -- Access
 			-- Convert GtkAllocation to tuple.
 		local
 			gtk_alloc: POINTER
-			local_C: EV_GTK_EXTERNALS
 		do
 			gtk_alloc := gtk_value_pointer (p)
-			local_C := C
 			set_dimension_tuple (
 				feature {EV_GTK_EXTERNALS}.gtk_allocation_struct_x (gtk_alloc),
 				feature {EV_GTK_EXTERNALS}.gtk_allocation_struct_y (gtk_alloc),

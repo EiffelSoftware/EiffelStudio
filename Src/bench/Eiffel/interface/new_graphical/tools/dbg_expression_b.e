@@ -32,8 +32,8 @@ feature -- Parsing
 				end
 			else
 				debug ("debugger_evaluator")
-					print ("Error in DB_EXPRESSION.parse_expression %N")
-					print (p.error_message + "%N")
+					io.error.put_string ("Error in DB_EXPRESSION.parse_expression %N")
+					io.error.put_string (p.error_message + "%N")
 				end
 				syntax_error := True
 				error_message := p.error_message

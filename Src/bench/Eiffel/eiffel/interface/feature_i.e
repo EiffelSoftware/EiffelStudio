@@ -151,6 +151,11 @@ feature -- Access
 			-- Not used at the moment.
 		end
 
+	extension: EXTERNAL_EXT_I is
+			-- Encapsulation of the external extension
+		do
+		end
+
 	external_name: STRING is
 			-- External name
 		require
@@ -757,27 +762,13 @@ feature -- Conveniences
 	has_static_access: BOOLEAN is
 			-- Can Current be access in a static manner?
 		local
-			ext: EXTERNAL_I
-			att: ATTRIBUTE_I
-			extension: IL_EXTENSION_I
+			l_extension: IL_EXTENSION_I
 		do
 			if System.il_generation then
-				ext ?= Current
-				if ext /= Void then
-					Result := not ext.extension.is_il
-					if not Result then
-							-- Not a C external, let's check IL external
-						extension ?= ext.extension
-					end
-				else
-					att ?= Current
-					if att /= Void then
-						extension ?= att.extension
-					end
-				end
+				l_extension ?= extension
 				if not Result then
-					Result :=  (extension /= Void and then
-						not extension.need_current (extension.type)) or
+					Result :=  (l_extension /= Void and then
+						not l_extension.need_current (l_extension.type)) or
 						is_constant and then not is_once
 				end
 			else

@@ -37,6 +37,17 @@ feature {ICOR_EXPORTER} -- Properties
 	
 	address_as_string: STRING
 	
+feature {ICOR_EXPORTER} -- References Properties
+
+	is_null_reference: BOOLEAN
+			-- If Current is a reference value, return True if Current is null
+			
+	set_is_null_reference (v: like is_null_reference) is
+			-- Set value `v' to `is_null_reference' attribute
+		do
+			is_null_reference := v
+		end
+	
 feature -- helpers
 
 	is_valid_object: BOOLEAN is

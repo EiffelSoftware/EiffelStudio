@@ -158,13 +158,21 @@ feature {NONE} -- Internal Initialisation
 					is_reference_type := False
 				end
 				
-				if is_reference_type and then interface_debug_reference_value /= Void then
-					is_null := interface_debug_reference_value.is_null
+				if is_reference_type then
+-- FIXME jfiat [2004/07/06] : we already compute the IsNull property
+-- so let's use it. Let's keep these lines commented
+-- to keep in mind, we should handle the case where icd_prepared_value is invalid
+-- in the future Void.
+--					if interface_debug_reference_value /= Void then
+--						is_null := interface_debug_reference_value.is_null
+--					else
+						is_null := icd_prepared_value.is_null_reference
+--					end
 				end
 
 				if is_reference_type or else is_class or else is_valuetype or else is_object then
 					has_object_interface := (interface_debug_object_value /= Void)
-				end				
+				end
 			end
 		rescue
 			error_occurred := True

@@ -142,6 +142,7 @@ feature -- Object basket managment
 			add_in_system_basket (Eplug);
 			add_in_system_basket (Eskelet);
 			add_in_system_basket (Evisib);
+			add_in_system_basket (Ececil);
 			add_in_system_basket (Einit);
 		end;
 

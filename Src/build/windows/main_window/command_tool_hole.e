@@ -36,7 +36,7 @@ feature -- Creation
 
 	make (a_parent: COMPOSITE) is
 		do
-			Precursor (a_parent)
+			{EDIT_BUTTON} Precursor (a_parent)
 			initialize_transport
 		end
 feature -- Initialization
@@ -141,8 +141,10 @@ feature {NONE} -- Attribute
 		local
 			an_instance: CMD_INSTANCE
 		do
-			!! an_instance.session_init (parent_command_tool.edited_command)
-			parent_command_tool.set_instance_only (an_instance)
+			if parent_command_tool.command_instance /= Void then
+				!! an_instance.session_init (parent_command_tool.edited_command)
+				parent_command_tool.set_instance_only (an_instance)
+			end
 		end
 
 feature -- Drag source features

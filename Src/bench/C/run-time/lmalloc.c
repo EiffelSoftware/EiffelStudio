@@ -29,9 +29,9 @@
 #include "eif_garcol.h"
 #include "eif_lmalloc.h"
 
-#if !defined EIF_VMS || !defined VXWORKS
+#if !defined EIF_VMS && !defined VXWORKS
 #include <malloc.h>
-#endif	/* !defined EIF_VMS || !defined VXWORKS */
+#endif	/* !defined EIF_VMS && !defined VXWORKS */
 
 #ifdef I_STRING
 #include <string.h>		/* For memset(), bzero() */

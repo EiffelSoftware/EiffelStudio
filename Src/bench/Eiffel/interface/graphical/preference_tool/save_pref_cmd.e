@@ -124,24 +124,24 @@ feature {PREFERENCE_COMMAND} -- Execution
 			end
 		end
 
-    save_resources_to_file (file: PLAIN_TEXT_FILE) is
-            -- Save all resources to `file'.
-        require
-            file_not_void: file /= Void;
-            file_is_open_write: file.is_open_write
-        local
-            cats: LINKED_LIST [PREFERENCE_CATEGORY];
-        do
-            from
-                cats := tool.category_list;
-                cats.start
-            until
-                cats.after
-            loop
-                cats.item.save_resources (file);
-                cats.forth
-            end
-        end;
+	save_resources_to_file (file: PLAIN_TEXT_FILE) is
+			-- Save all resources to `file'.
+		require
+			file_not_void: file /= Void;
+			file_is_open_write: file.is_open_write
+		local
+			cats: LINKED_LIST [PREFERENCE_CATEGORY];
+		do
+			from
+				cats := tool.category_list;
+				cats.start
+			until
+				cats.after
+			loop
+				cats.item.save_resources (file);
+				cats.forth
+			end
+		end;
 
 feature {NONE} -- Implementation
 

@@ -106,7 +106,7 @@ Index_list: Index_clause
 	;
 
 Index_clause: Index Index_terms ASemi
-			{ $$ := new_index_as ($1, $2) }
+			{ $$ := new_index_as ($1, $2, current_position) }
 	;
 
 Index: Identifier TE_COLON

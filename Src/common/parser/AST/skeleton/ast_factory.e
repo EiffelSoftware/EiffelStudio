@@ -1165,17 +1165,18 @@ feature -- Access
 			end_location_set: Result.end_location.is_equal (end_location)
 		end
 
-	new_index_as (t: ID_AS; i: EIFFEL_LIST [ATOMIC_AS]): INDEX_AS is
+	new_index_as (t: ID_AS; i: EIFFEL_LIST [ATOMIC_AS]; l: TOKEN_LOCATION): INDEX_AS is
 			-- Create a new INDEX AST node.
 		require
 			i_not_void: i /= Void
 		do
 			create Result
-			Result.initialize (t, i)
+			Result.initialize (t, i, l)
 		ensure
 			index_as_not_void: Result /= Void
 			tag_set: Result.tag = t
 			index_list_set: Result.index_list = i
+			location_set: equal (Result.location, l)
 		end
 
 	new_infix_as (op: STRING_AS; b: BOOLEAN): INFIX_PREFIX_AS is

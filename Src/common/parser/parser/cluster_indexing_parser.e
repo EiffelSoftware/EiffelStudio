@@ -306,7 +306,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'cluster_indexing.y' at line 108")
 end
 
-yyval6 := new_index_as (yytype5 (yyvs.item (yyvsp - 2)), yytype10 (yyvs.item (yyvsp - 1))) 
+yyval6 := new_index_as (yytype5 (yyvs.item (yyvsp - 2)), yytype10 (yyvs.item (yyvsp - 1)), current_position) 
 			yyval := yyval6
 		end
 

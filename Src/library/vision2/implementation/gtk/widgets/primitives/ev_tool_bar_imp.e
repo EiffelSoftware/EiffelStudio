@@ -98,16 +98,18 @@ feature -- Implementation
 		local
 			r: EV_TOOL_BAR_RADIO_BUTTON_IMP
 		do
+			--| FIXME IEK Implement removal feature to call this feature.
 			r ?= w.implementation
 			if r /= Void then
-				--set_radio_group (C.g_slist_remove (radio_group, r.c_object))
-				--C.gtk_radio_button_set_group (r.c_object, Default_pointer)
 				if r.is_selected then
+					radio_group := C.g_slist_remove (radio_group, r.c_object)
 					if radio_group /= Default_pointer then
-					--	C.gtk_toggle_button_set_active (C.gslist_struct_data (radio_group), True)
+						C.gtk_toggle_button_set_active (
+							C.gslist_struct_data (radio_group), True
+						)
 					end
 				else
-					--C.gtk_toggle_button_set_active (r.c_object, True)
+					C.gtk_toggle_button_set_active (r.c_object, True)
 				end
 			end
 		end
@@ -143,6 +145,9 @@ end -- class EV_TOOL_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.20  2000/04/14 16:57:04  king
+--| Implemented remove radio button
+--|
 --| Revision 1.19  2000/04/13 22:10:30  king
 --| Added radio peering functionality
 --|

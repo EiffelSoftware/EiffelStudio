@@ -28,7 +28,12 @@ inherit
 			interface
 		end
 
-creation
+	EV_PICK_AND_DROPABLE_IMP
+		redefine
+			interface
+		end
+
+create
 	make
 
 feature -- Access
@@ -223,6 +228,9 @@ end -- class EV_MULTI_COLUMN_LIST_ROW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.22  2000/03/09 16:13:52  brendel
+--| Added inheritance of EV_PICK_AND_DROPABLE_IMP.
+--|
 --| Revision 1.21  2000/03/03 19:03:32  rogers
 --| Fixed set_parent by adding handling a Void argument.
 --|

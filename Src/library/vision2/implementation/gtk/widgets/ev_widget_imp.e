@@ -227,14 +227,17 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES} -- Implementation
 					end
 				end
 			end
-			if a_type = feature {EV_GTK_EXTERNALS}.GDK_BUTTON_PRESS_ENUM and not is_transport_enabled then
-				if pointer_button_press_actions_internal /= Void then
-					pointer_button_press_actions_internal.call (t)
-				end
-			elseif a_type = feature {EV_GTK_EXTERNALS}.GDK_2BUTTON_PRESS_ENUM then
-				if pointer_double_press_actions_internal /= Void then
-					pointer_double_press_actions_internal.call (t)
-				end
+			
+			if a_button >= 1 and then a_button <= 3 then
+				if a_type = feature {EV_GTK_EXTERNALS}.GDK_BUTTON_PRESS_ENUM and not is_transport_enabled then
+					if pointer_button_press_actions_internal /= Void then
+						pointer_button_press_actions_internal.call (t)
+					end
+				elseif a_type = feature {EV_GTK_EXTERNALS}.GDK_2BUTTON_PRESS_ENUM then
+					if pointer_double_press_actions_internal /= Void then
+						pointer_double_press_actions_internal.call (t)
+					end
+				end			
 			end
        end
        

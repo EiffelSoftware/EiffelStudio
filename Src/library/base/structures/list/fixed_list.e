@@ -85,6 +85,7 @@ feature -- Initialization
 			-- Create an empty list.
 		do
 			array_make (1, n)
+			count := 0
 		ensure
 			is_before: before
 			new_count: count = 0

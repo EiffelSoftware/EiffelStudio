@@ -1,12 +1,7 @@
 --| FIXME NOT_REVIEWED this file has not been reviewed
  indexing
-	description: "EiffelVision list. Mswindows implementation."
-	note: "In the wel_list, the index starts with the element%
-		% number zero although in the linked_list, it starts%
-		% with number one. That is the reason for the graps in%
-		% the list calls."
+	description: "Eiffel Vision list. Mswindows implementation."
 	status: "See notice at end of class"
-	id: "$$"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -17,24 +12,15 @@ inherit
 	EV_LIST_I
 		redefine
 			interface
-		select
-			interface
-		end
-
-	EV_ITEM_EVENTS_CONSTANTS_IMP
-		rename
-			command_count as ev_item_events_constants_imp_command_count
 		end
 		
-	EV_LIST_ITEM_HOLDER_IMP
+	EV_ITEM_LIST_IMP [EV_LIST_ITEM]
 		redefine
 			initialize,
 			interface
 		end
 	
 	EV_PRIMITIVE_IMP
-		rename
-			interface as ev_primitive_imp_interface
 		undefine
 			set_default_colors
 		redefine
@@ -45,10 +31,11 @@ inherit
 			on_key_down,
 			on_mouse_move,
 			pnd_press,
-			initialize
+			initialize,
+			interface
 		end
 
- 	WEL_LIST_BOX
+ 	WEL_SINGLE_SELECTION_LIST_BOX
 		rename
 			make as wel_make,
 			parent as wel_parent,
@@ -59,7 +46,6 @@ inherit
 			foreground_color as wel_foreground_color,
 			font as wel_font,
 			set_font as wel_set_font,
-			select_item as wel_select_item,
 			move as wel_move,
 			item as wel_item,
 			enabled as is_sensitive,
@@ -68,7 +54,13 @@ inherit
 			x as x_position,
 			y as y_position,
 			resize as wel_resize,
-			move_and_resize as wel_move_and_resize
+			move_and_resize as wel_move_and_resize,
+			--| All features specific to single selection (ss_*)
+			select_item as ss_select_item,
+			unselect as ss_unselect,
+			selected as ss_selected,
+			selected_item as ss_selected_item,
+			default_style as ss_default_style
 		undefine
 			window_process_message,
 			remove_command,
@@ -91,10 +83,75 @@ inherit
 			show,
 			hide
 		redefine
-			wel_select_item,
 			on_lbn_selchange,
+			on_lbn_selcancel,
 			on_size,
-			default_style,
+			default_ex_style
+		select
+			ss_default_style,
+			ss_selected,
+			ss_select_item
+		end
+
+ 	WEL_MULTIPLE_SELECTION_LIST_BOX
+		rename
+			make as wel_make,
+			parent as wel_parent,
+			destroy as wel_destroy,
+			shown as is_displayed,
+			set_parent as wel_set_parent,
+			background_color as wel_background_color,
+			foreground_color as wel_foreground_color,
+			font as wel_font,
+			set_font as wel_set_font,
+			move as wel_move,
+			item as wel_item,
+			enabled as is_sensitive,
+			width as wel_width,
+			height as wel_height,
+			x as x_position,
+			y as y_position,
+			resize as wel_resize,
+			move_and_resize as wel_move_and_resize,
+			--| All features specific to multiple selection (ms_*)
+			select_item as ms_select_item,
+			unselect_item as ms_unselect_item,
+			select_items as ms_select_items,
+			unselect_items as ms_unselect_items,
+			select_all as ms_select_all,
+			unselect_all as ms_unselect_all,
+			set_caret_index as ms_set_caret_index,
+			selected as ms_selected,
+			count_selected_items as ms_count_selected_items,
+			selected_items as ms_selected_items,
+			selected_strings as ms_selected_strings,
+			caret_index as ms_caret_index,
+			default_style as ms_default_style
+		undefine
+			window_process_message,
+			remove_command,
+			set_width,
+			set_height,
+			on_left_button_down,
+			on_right_button_down,
+			on_left_button_up,
+			on_right_button_up,
+			on_left_button_double_click,
+			on_right_button_double_click,
+			on_mouse_move,
+			on_key_down,
+			on_key_up,
+			on_set_focus,
+			on_kill_focus,
+			on_set_cursor,
+			wel_background_color,
+			wel_foreground_color,
+			show,
+			hide
+		redefine
+			on_lbn_selchange,
+			on_lbn_selcancel,
+			on_size,
 			default_ex_style
 		end
 
@@ -109,14 +166,11 @@ creation
 feature {NONE} -- Initialization
 	
 	make (an_interface: like interface) is         
-			-- Create a list widget.
-			-- By default, it is a single selection list,
-			-- use set_selection to change it into a multiple
-			-- selection list.
+			-- Create list as single selection.
 		do
 			base_make (an_interface)
 			internal_window_make (default_parent, Void,
-				default_style, 0, 0, 0, 0, 0, default_pointer)
+				default_style, 0, 0, 0, 0, 0, Default_pointer)
 			id := 0
 			!! ev_children.make (2)
 		end	
@@ -124,128 +178,132 @@ feature {NONE} -- Initialization
 	initialize is
 		do
 			{EV_PRIMITIVE_IMP} Precursor
-			{EV_LIST_ITEM_HOLDER_IMP} Precursor
+			{EV_ITEM_LIST_IMP} Precursor
 		end
-		
 
 feature -- Status report
 
-	selected: BOOLEAN is
-			-- Is at least one item selected ?
-		do
-			if multiple_selection_enabled then
-				Result := count_selected_items > 0
-			else
-				Result := cwin_send_message_result (wel_item,
-					Lb_getcursel, 0, 0) /= Lb_err
-			end
-		end
-
-	multiple_selection_enabled: BOOLEAN is
-			-- True if the user can choose several items,
-			-- False otherwise
-		do
-			if parent_imp = Void then
-				Result := True
-			else
-				Result := flag_set (style, Lbs_multiplesel)
-			end
-		end
+	multiple_selection_enabled: BOOLEAN
+			-- Can more than one item be selected?
 
 feature -- Status setting
 
 	select_item (an_index: INTEGER) is
-			-- Select item at the one-based `an_index'.
+			-- Select item at `an_index'.
 		do
-			wel_select_item (an_index - 1)
-			cwin_send_message (parent_item, Wm_command, Lbn_selchange * 65536 + id,
-				cwel_pointer_to_integer (wel_item))
-		end
-
-	select_all is
-			-- Select all the items of the list.
-		require
-			multiple_selection: multiple_selection_enabled
-		do
-			select_items (0, count - 1)			
+			if multiple_selection_enabled then
+				ms_select_item (an_index - 1)
+			else
+				ss_select_item (an_index - 1)
+			end
+			--| FIXME VB Presumed not to be needed anymore, since
+			--| redefinition of onlbn_selcancel
+			--|cwin_send_message (parent_item, Wm_command,
+			--|	Lbn_selchange * 65536 + id,
+			--|	cwel_pointer_to_integer (wel_item))
 		end
 
 	deselect_item (an_index: INTEGER) is
-			-- Unselect the item at the one-based `an_index'.
+			-- Deselect item at `an_index'.
 		do
 			if multiple_selection_enabled then
-				cwin_send_message (wel_item, Lb_setsel, 0, an_index - 1)
+				ms_unselect_item (index - 1)
 			else
-				cwin_send_message (wel_item, Lb_setcursel, -1, 0)
-				on_lbn_selchange
-				last_selected_item := Void
+				if ss_selected and then ss_selected_item = an_index - 1 then
+					ss_unselect
+				end
+				--| FIXME VB Presumed not to be needed anymore, since
+				--| redefinition of onlbn_selcancel
+				--|cwin_send_message (wel_item, Lb_setcursel, -1, 0)
+				--|on_lbn_selchange
+				--|last_selected_item := Void
 			end
 		end
 
 	clear_selection is
-			-- Clear the selection of the list.
+			-- Ensure there are no `selected_items'.
 		do
 			if multiple_selection_enabled then
-				unselect_items (0, count - 1)
+				ms_unselect_all
 			else
-				cwin_send_message (wel_item, Lb_setcursel, -1, 0)
-				if last_selected_item /= Void then
-					-- If there is a selected item then
-					on_lbn_selchange
-				end
-				last_selected_item := Void
+				ss_unselect
+				--| FIXME VB Presumed not to be needed anymore, since
+				--| redefinition of onlbn_selcancel
+				--|if last_selected_item /= Void then
+				--|	-- If there is a selected item then
+				--|	on_lbn_selchange
+				--|nd
+				--|last_selected_item := Void
 			end
 		end
 
 	enable_multiple_selection is
-			-- Allow the user to do a multiple selection simply
-			-- by clicking on several choices.
-		local
-			wel_imp: WEL_WINDOW
-			a, b, c, d: INTEGER
+			-- Allow more than one item to be selected.
 		do
 			if not multiple_selection_enabled then
+				multiple_selection_enabled := True
 				last_selected_item := Void
-				wel_imp ?= parent_imp
-				a := x_position
-				b := y_position
-				c := width
-				d := height
-				wel_destroy
-				internal_window_make (wel_imp, Void,
-					default_style + Lbs_multiplesel,
-				   	a, b, c, d, 0, default_pointer)
-				id := 0
-				internal_copy_list
+				recreate_list
 			end
 		end
 
 	disable_multiple_selection is
-			-- Allow the user to do only one selection. It is the
-			-- default status of the list
-		local
-			wel_imp: WEL_WINDOW
-			a, b, c, d: INTEGER
+			-- Allow only one item to be selected.
 		do
 			if multiple_selection_enabled then
-				wel_imp ?= parent_imp
-				a := x_position
-				b := y_position
-				c := width
-				d := height
-				wel_destroy
-				internal_window_make (wel_imp, Void,
-					default_style, a, b, c, d, 0,
-				    default_pointer)
-				id := 0
-				internal_copy_list
+				multiple_selection_enabled := False
+				recreate_list
 			end
 		end
 
 feature {NONE} -- Implementation
 
-	last_selected_item: EV_LIST_ITEM_IMP
-			-- Last selected item
+	recreate_list is
+			-- Re-initialize object.
+			--| enable_multiple_selection has been changed.
+		local
+			wel_win: WEL_WINDOW
+		do
+			wel_win ?= parent_imp
+			wel_destroy
+			internal_window_make (wel_win, Void, default_style,
+				x_position, y_position, width, height, 0,
+			    Default_pointer)
+			id := 0
+			internal_copy_list
+		end
+
+	internal_copy_list is
+			-- Take an empty list and initialize all the children with
+			-- the contents of `ev_children'.
+		local
+			list: ARRAYED_LIST [EV_LIST_ITEM_IMP]
+			original_index: INTEGER
+		do
+			original_index := index
+			if not ev_children.empty then
+				from
+					list := ev_children
+					list.start
+				until
+					list.after
+				loop
+					graphical_insert_item (list.item.interface, list.index - 1)
+					list.forth
+				end
+			end
+			interface.go_i_th (original_index)
+		ensure
+			index_not_changed: index = old index
+		end
+
+	insert_item (item_imp: EV_LIST_ITEM_IMP; an_index: INTEGER) is
+			-- Insert `item_imp' at the `an_index' position.
+		do
+			ev_children.go_i_th (an_index - 1)
+			ev_children.put_right (item_imp)
+			graphical_insert_item (item_imp.interface, an_index - 1)
+		end
 
 	graphical_insert_item (item_imp: EV_LIST_ITEM; an_index: INTEGER) is
 			-- Insert `item_imp' at the `an_index' position of the
@@ -258,7 +316,20 @@ feature {NONE} -- Implementation
 			end
 		end
 
-feature {EV_LIST_ITEM_IMP} -- implementation
+	remove_item (item_imp: EV_LIST_ITEM_IMP) is
+			-- Remove `itemm' from the list.
+		local
+			child_id: INTEGER
+		do
+			child_id := ev_children.index_of (item_imp, 1)
+			delete_string (child_id - 1)
+			ev_children.go_i_th (child_id)
+			ev_children.remove
+		end
+
+feature {EV_LIST_ITEM_IMP} -- Implementation
+
+--| FIXME Indentation, names, comments, contracts.
 
 		list_is_pnd_source : BOOLEAN
 
@@ -292,7 +363,8 @@ feature {EV_LIST_ITEM_IMP} -- implementation
 			do
 				transport_started_in_item := False
 			end
-feature {EV_ANY_I} -- Implementation : WEL features
+
+feature {EV_ANY_I} -- Implementation
 
 	pnd_press (a_x, a_y, a_button, a_screen_x, a_screen_y: INTEGER) is
 		do
@@ -336,7 +408,7 @@ feature {EV_ANY_I} -- Implementation : WEL features
 		end
 
 	find_item_at_position (x_pos, y_pos: INTEGER): EV_LIST_ITEM_IMP is
-			-- Result  is list item at pixel position `x_pos', `y_pos'.
+			-- Result is list item at pixel position `x_pos', `y_pos'.
 		local
 			temporary_position: INTEGER
 		do
@@ -352,10 +424,12 @@ feature {EV_ANY_I} -- Implementation : WEL features
 	default_style: INTEGER is
 			-- Default style of the list.
 		do
-			Result := Ws_child + Ws_visible + Ws_group 
-						+ Ws_tabstop + Ws_border + Ws_vscroll
-						+ Lbs_notify --+ Lbs_ownerdrawfixed 
-						+ Lbs_hasstrings + Lbs_nointegralheight
+			if multiple_selection_enabled then
+				Result := ms_default_style
+			else
+				Result := ss_default_style
+			end
+			Result := Result + Lbs_hasstrings + Lbs_nointegralheight
 		end
 
 	default_ex_style: INTEGER is
@@ -364,70 +438,65 @@ feature {EV_ANY_I} -- Implementation : WEL features
 			Result := Ws_ex_clientedge
 		end
 
-	on_lbn_selchange is
-			-- The selection has changed.
-			-- We call the selection command of the list and the select
-			-- command of the item if necessary.
-		local
-			last, actual: EV_LIST_ITEM_IMP
-			actual_index: INTEGER
-		do
-			-- A local variable for speed
-			last := last_selected_item
-			
-			-- In multiple selection mode, no `last_selected_item'
-			-- has no use.
-			if multiple_selection_enabled then
-				actual := ev_children @ (caret_index + 1)
-				if actual.is_selected then
-					actual.interface.select_actions.call ([])
-					interface.select_actions.call ([actual.interface])
-				else
-					actual.interface.deselect_actions.call ([])
-					interface.deselect_actions.call ([actual.interface])
-				end
+	last_selected_item: EV_LIST_ITEM_IMP
+			-- Item was last selected as notified by `on_lbn_selchange'.
 
-			-- Another treatment in single selection mode.
-			else
-				if selected then
-					actual := ev_children @ (selected_index + 1)
-					actual_index := interface.index_of (actual.interface, 1)
-						-- Get the selected item.
-					if last /= Void and then last /= actual then
-							-- If there was a previously selected item, different
-							-- from the item now selected then call the deselect events
-							-- on this previously selected item.
-						last.interface.deselect_actions.call ([])
-						interface.deselect_actions.call ([last.interface])
-					end
-					if last = Void or last /= actual then
-							-- If there is no previously selected child (Required for at
-							-- start when last and actual may be void, so => equal), or
-							-- the selected item is different from the previously selected
-							-- item then call the deselect events on the previously selected item.
-						actual.interface.select_actions.call ([])
-						interface.select_actions.call ([actual.interface])
-					end
-					if selected then
-						-- Check that the user has not done something that may have
-						-- unselected and item.
-						last_selected_item := ev_children @ (selected_index + 1)
-					else
-						-- If so then there will be no last selected item, and we need
-						-- to call the deselect actions.
-						if actual /= Void then
-								-- We check that `actual' has not been destroyed during the agent call.
-							actual.interface.deselect_actions.call ([])
-						end
-						interface.deselect_actions.call ([actual.interface])
-					end
+	on_lbn_selchange is
+			-- The selection is about to change.
+		local
+			li_imp: EV_LIST_ITEM_IMP
+		do
+			if multiple_selection_enabled then
+				li_imp := ev_children @ (ms_caret_index + 1)
+				if li_imp.is_selected then
+					notify_select (li_imp.interface)
 				else
-						-- Call the deselect events on the previously selected item.
-					last_selected_item := Void
-					last.interface.deselect_actions.call ([])
-					interface.deselect_actions.call ([last.interface])
+					notify_deselect (li_imp.interface)
+				end
+			else
+				if ss_selected then
+					li_imp := ev_children @ (ss_selected_item + 1)
+					if last_selected_item /= Void and then li_imp /= last_selected_item then
+						notify_deselect (last_selected_item.interface)
+					end
+					notify_select (li_imp.interface)
+					last_selected_item := li_imp
+				else
+					if last_selected_item /= Void then
+						notify_deselect (last_selected_item.interface)
+						last_selected_item := Void
+					end
 				end
 			end
+		end
+
+	on_lbn_selcancel is
+			-- Cancel the selection.
+		do
+			if multiple_selection_enabled then
+				--| FIXME Do we have to do stuff here?
+			else
+				notify_deselect (last_selected_item.interface)
+				last_selected_item := Void
+			end
+		end
+
+	notify_deselect (i: EV_LIST_ITEM) is
+			-- Call action sequences related to deselection of `i'.
+		require
+			i_not_void: i /= Void
+		do
+			i.deselect_actions.call ([])
+			interface.deselect_actions.call ([i])
+		end
+
+	notify_select (i: EV_LIST_ITEM) is
+			-- Call action sequences related to selection of `i'.
+		require
+			i_not_void: i /= Void
+		do
+			i.select_actions.call ([])
+			interface.select_actions.call ([i])
 		end
 
 	on_left_button_down (keys, x_pos, y_pos: INTEGER) is
@@ -454,8 +523,7 @@ feature {EV_ANY_I} -- Implementation : WEL features
 			it: EV_LIST_ITEM_IMP
 			a: BOOLEAN
 		do
-
-			a:= transport_started_in_item
+			a := transport_started_in_item
 			create pt.make (x_pos, y_pos)
 			pt := client_to_screen (x_pos, y_pos)
 			internal_propagate_pointer_press (keys, x_pos, y_pos, 3)
@@ -510,95 +578,6 @@ feature {EV_ANY_I} -- Implementation : WEL features
 	wel_foreground_color: WEL_COLOR_REF is
 		do
 			Result := foreground_color_imp
-		end
-
-feature {NONE} -- Copy of WEL features
-
-	wel_select_item (an_index: INTEGER) is
-			-- Select item at the one-based `index'.
-		do
-			if multiple_selection_enabled then
-				cwin_send_message (wel_item, Lb_setsel, 1, an_index)
-			else
-				cwin_send_message (wel_item, Lb_setcursel, an_index, 0)
-			end
-		end
-
- 	selected_index: INTEGER is
- 			-- Zero-based index of the selected item
- 		require
- 			exists: exists
-			single_selection: not multiple_selection_enabled
- 			selected: selected
- 		do
- 			Result := cwin_send_message_result (wel_item,
-				Lb_getcursel, 0, 0)
- 		ensure
- 			result_large_enough: Result >= 0
- 			result_small_enough: Result < count
- 		end
-
-	select_items (start_index, end_index: INTEGER) is
-			-- Select items between `start_index'
-			-- and `end_index' (zero-based index).
-		require
-			multiple_selection: multiple_selection_enabled
-			exists: exists
-			valid_range: end_index >= start_index
-			start_index_small_enough: start_index < count
-			start_index_large_enough: start_index >= 0
-			end_index_small_enough: end_index < count
-			end_index_large_enough: end_index >= 0
-			valid_range: end_index >= start_index
-		do
-			cwin_send_message (wel_item, Lb_selitemrange, 1,
-				cwin_make_long (start_index, end_index))
-		ensure
-			selected: selected
-			-- For every `i' in `start_index'..`end_index',
-			-- `is_selected' (`i') = True
-		end
-
-	unselect_items (start_index, end_index: INTEGER) is
-			-- Unselect items between `start_index'
-			-- and `end_index' (zero-based index).
-		require
-			multiple_selection: multiple_selection_enabled
-			exists: exists
-			valid_range: end_index >= start_index
-			start_index_small_enough: start_index < count
-			start_index_large_enough: start_index >= 0
-			end_index_small_enough: end_index < count
-			end_index_large_enough: end_index >= 0
-			valid_range: end_index >= start_index
-		do
-			cwin_send_message (wel_item, Lb_selitemrange, 0,
-				cwin_make_long (start_index, end_index))
-		ensure
-			-- For every `i' in `start_index'..`end_index',
-			-- `is_selected' (`i') = False
-		end
-
-	count_selected_items: INTEGER is
-			-- Number of items selected
-		require
-			exits: exists
-			multiple_selection: multiple_selection_enabled
-		do
-			Result := cwin_send_message_result (wel_item,
-				Lb_getselcount, 0, 0)
-		ensure
-			result_large_enough: Result >= 0
-			result_small_enough: Result <= count
-		end
-
-	caret_index: INTEGER is
-			-- Index of the item that has the focus
-		require
-			exists: exists
-		do
-			Result := cwin_send_message_result (wel_item,
-				Lb_getcaretindex, 0, 0)
 		end
 
 feature {NONE} -- Feature that should be directly implemented by externals
@@ -675,6 +654,12 @@ end -- class EV_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.53  2000/03/29 02:20:47  brendel
+--| Revised. Cleaned up.
+--| Now inherits from WEL_SINGLE_SELECTION_LIST_BOX and
+--| WEL_MULTIPLE_SELECTION_LIST_BOX. Features applying to multiple selection
+--| start with ms_* and single sel. with ss_*.
+--|
 --| Revision 1.52  2000/03/24 19:14:52  rogers
 --| Redefined initialize from EV_LIST_ITEM_HOLDER_IMP.
 --|

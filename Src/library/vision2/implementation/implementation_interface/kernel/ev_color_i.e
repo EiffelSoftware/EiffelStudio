@@ -234,6 +234,13 @@ feature {EV_COLOR} -- Conversion
 			blue_assigned: blue_16_bit = a_16_bit_blue
 		end
 
+	set_with_other (other: EV_COLOR) is
+			-- Take on the appearance of `other'.
+		do
+			set_red (other.red)
+			set_green (other.green)
+			set_blue (other.blue)
+		end
 
 feature --{EV_COLOR_I, EV_COLOR} -- Implementation
 
@@ -290,6 +297,9 @@ end -- class EV_COLOR_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/05/02 18:26:13  oconnor
+--| Optimised copy
+--|
 --| Revision 1.7  2000/02/22 18:39:40  oconnor
 --| updated copyright date and formatting
 --|

@@ -21,7 +21,7 @@ inherit
 			string_value
 		redefine
 			generate, is_integer,
-			set_real_type
+			set_real_type, unary_minus
 		end
 
 	EXPR_B
@@ -35,7 +35,8 @@ inherit
 			line_number
 		redefine
 			print_register, make_byte_code,
-			is_simple_expr, is_predefined, generate_il
+			is_simple_expr, is_predefined, generate_il,
+			evaluate
 		end;
 
 create
@@ -110,6 +111,39 @@ feature -- Properties
 			create {LONG_I} Result.make (size)
 		end
 
+feature -- Evaluation
+
+	evaluate: VALUE_I is
+			-- Evaluate current expression, if possible.
+		do
+			Result := Current
+		end
+
+feature -- Unary operators
+
+	unary_minus: INTEGER_CONSTANT is
+			-- Apply `-' operator to Current.
+		do
+			Result := clone (Current)
+			Result.negate
+		end
+
+feature {INTEGER_CONSTANT} -- Operations
+
+	negate is
+			-- Perform negation of current value.
+		local
+			i: INTEGER_64
+		do
+			if size <= 32 then
+				lower := -lower
+			else
+				i := -to_integer_64
+				lower := (i & 0x00000000FFFFFFFF).to_integer
+				upper := ((i |>> 32) & 0x00000000FFFFFFFF).to_integer
+			end
+		end
+	
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is

@@ -11,7 +11,8 @@ class
 
 create
 	make,
-	make_empty
+	make_empty,
+	make_by_pointer
 
 feature --{NONE} -- Initialization
 
@@ -41,7 +42,30 @@ feature --{NONE} -- Initialization
 			count := 0
 		end
 	
+	make_by_pointer (a_ptr: POINTER) is
+			-- 
+		local
+			lth: INTEGER
+		do
+			lth := cwel_string_length (a_ptr)
+			create managed_data.make (4 * (lth + 1))
+			managed_data.item.memory_copy (a_ptr, lth * 2)
+		end
+		
+	
 feature -- Access
+
+	string: STRING is
+			-- Eiffel string
+		local
+			u_string: UNI_STRING
+			nb: INTEGER
+		do
+			create u_string.make_empty (length)
+			nb := cwel_wide_char_to_multi_byte (feature {WEL_CP_CONSTANTS}.Cp_utf8, 0, item, length, u_string.item, u_string.capacity, default_pointer, default_pointer)
+			create Result.make_from_c (u_string.item)
+		end
+		
 
 	item: POINTER is
 			-- Get pointer to allocated area.
@@ -51,8 +75,20 @@ feature -- Access
 			item_not_null: Result /= default_pointer
 		end
 		
-	count: INTEGER
+	capacity: INTEGER is
 			-- Number of character in Current.
+		do
+			Result := managed_data.count
+		end
+
+	count: INTEGER
+
+	length: INTEGER is
+			-- 
+		do
+			Result := cwel_string_length (item)
+		end
+		
 
 feature -- Element change
 

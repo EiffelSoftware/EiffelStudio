@@ -3701,12 +3701,21 @@ rt_private EIF_REFERENCE scavenge(register EIF_REFERENCE root, struct sc_zone *t
 			/* Compute original object's address (before scavenge) */
 		EIF_REFERENCE exp;					/* Expanded data space */
 		EIF_REFERENCE new;					/* New object's address */
-		zone = (union overhead *) ((EIF_REFERENCE) zone - (zone->ov_size & B_SIZE));
-		if (!(zone->ov_size & B_FWD))
+		register2 union overhead *container_zone;	/* Header of object containing
+													 * expanded object `root' */
+		container_zone = (union overhead *) ((EIF_REFERENCE) zone - (zone->ov_size & B_SIZE));
+
+		if (!(container_zone->ov_size & B_FWD)) {
+				/* Container object of `root' did not move, so nothing
+				 * needs to be done */
 			return root;
-		new = zone->ov_fwd;			/* Data space of the scavenged object */
-		exp = new + (root - (EIF_REFERENCE) (zone + 1));	/* New data space */
-		return exp;					/* This is the new location of expaded */
+		}
+		new = container_zone->ov_fwd;			/* Data space of the scavenged object */
+		exp = new + (root - (EIF_REFERENCE) (container_zone + 1));	/* New data space */
+			
+		zone->ov_fwd = exp;			/* Leave forwarding pointer */
+		zone->ov_size |= B_FWD;		/* Mark object as forwarded */
+		return exp;					/* This is the new location of expanded */
 	}
 
 	CHECK ("Not in Generation Scavenge TO zone",

@@ -30,7 +30,7 @@ feature {NONE} -- Implementation
 		
 feature -- Access
 
-	h_filename: STRING is "reference\20_application_type_and_project_settings\index.html"
+	h_filename: STRING is "help\wizards\edotnet\docs\reference\20_application_type_and_project_settings\index.html"
 			-- Path to HTML help file
 			
 feature -- Basic Operation

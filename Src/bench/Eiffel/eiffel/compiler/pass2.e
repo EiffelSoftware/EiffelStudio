@@ -129,9 +129,6 @@ end;
 			System.set_current_class (Void);
 
 			changed_status.wipe_out;
-debug ("ZOON")
-    io.putstring ("execute pass 2%N")
-end
 		end;
 
 	remove_class (a_class: CLASS_C) is

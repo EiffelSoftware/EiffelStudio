@@ -373,7 +373,7 @@ rt_private EIF_GEN_DER *eif_new_gen_der(long, int16*, int16, char, char, int16);
 rt_private EIF_ANC_ID_MAP *eif_new_anc_id_map (int16, int16);
 rt_private void eif_compute_anc_id_map (int16);
 rt_private void eif_expand_tables(int);
-rt_private int16 eif_id_of (int16, int16**, int16**, int16, int16,char *);
+rt_private int16 eif_id_of (int16, int16**, int16**, int16, int16);
 rt_private void eif_compute_ctab (int16);
 rt_private EIF_CONF_TAB *eif_new_conf_tab (int16, int16, int16, int16);
 rt_private void eif_enlarge_conf_tab (EIF_CONF_TAB *, int16);
@@ -857,7 +857,6 @@ rt_public int16 eif_compound_id (int16 *cache, int16 current_dftype, int16 base_
 {
 	int16   result, gresult;
 	int16   outtab [256], *outtable, *intable;
-	char    cachable;
 
 	result = base_id;
 
@@ -865,7 +864,7 @@ rt_public int16 eif_compound_id (int16 *cache, int16 current_dftype, int16 base_
 	{
 		/* Check if it's cached - if yes return immediately */
 
-		if ((cache != (int16 *)0) && (*cache != TERMINATOR))
+		if ((cache) && (*cache != TERMINATOR))
 		{
 #ifdef GEN_CONF_DEBUG
 			log_puts ("Cached -> ");
@@ -890,9 +889,8 @@ rt_public int16 eif_compound_id (int16 *cache, int16 current_dftype, int16 base_
 
 		intable  = types+1;
 		outtable = outtab;
-		cachable = (char) 1;
 
-		gresult = eif_id_of (*types, &intable, &outtable, current_dftype, 1, &cachable);
+		gresult = eif_id_of (*types, &intable, &outtable, current_dftype, 1);
 		
 #ifdef GEN_CONF_DEBUG
 		log_puts (eif_typename(gresult));
@@ -900,8 +898,7 @@ rt_public int16 eif_compound_id (int16 *cache, int16 current_dftype, int16 base_
 		log_puti ((int) gresult);
 #endif
 
-		if (cachable && (cache != (int16 *) 0))
-		{
+		if (cache) {
 #ifdef GEN_CONF_DEBUG
 			log_puts (" CACHED");
 #endif
@@ -1967,12 +1964,11 @@ done:
 /* obj_type   : Full type of object; RTUD(yes). Used to replace a   */
 /*              formal generic by an actual generic of the object.  */
 /* apply_rtud : Send result through RTUD?                           */
-/* cachable   : Is result cachable?                                 */
 /*------------------------------------------------------------------*/
 
 rt_private int16 eif_id_of (int16 stype, int16 **intab, 
 							int16 **outtab, int16 obj_type, 
-							int16 apply_rtud, char *cachable)
+							int16 apply_rtud)
 
 {
 	int16   dftype, gcount = 0, i, hcode, uniformizer = 0;
@@ -2020,10 +2016,7 @@ rt_private int16 eif_id_of (int16 stype, int16 **intab,
 	}
 
 	if (dftype <= FORMAL_TYPE) {
-		/* formal generic */
-
-		*cachable = (char) 0;   /* Cannot cache - may change */
-
+			/* formal generic */
 		pos = FORMAL_TYPE - dftype;
 
 		/* get actual generic from `stype' for descendant
@@ -2112,7 +2105,7 @@ rt_private int16 eif_id_of (int16 stype, int16 **intab,
 	(*intab)++;
 
 	for (hcode = 0, i = gcount; i; --i) {
-		hcode += eif_id_of (stype, intab, outtab, obj_type, 0, cachable);
+		hcode += eif_id_of (stype, intab, outtab, obj_type, 0);
 	}
 
 	/* Search */
@@ -3046,7 +3039,7 @@ rt_private void eif_compute_ctab (int16 dftype)
 	int16 min_low, max_low, min_high, max_high, pftype, dtype, *ptypes;
 	int i, count, offset, pcount;
 	unsigned char *src, *dest, *src_comp, *dest_comp, mask;
-	char is_expanded, cachable;
+	char is_expanded;
 	struct eif_par_types *pt;
 	EIF_CONF_TAB *ctab, *pctab;
 	EIF_GEN_DER *gdp;
@@ -3087,7 +3080,7 @@ rt_private void eif_compute_ctab (int16 dftype)
 
 	while (*intable != TERMINATOR)
 	{
-		pftype = eif_id_of (-1, &intable, &outtable, dftype, 1, &cachable);
+		pftype = eif_id_of (-1, &intable, &outtable, dftype, 1);
 		++pcount;
 
 		ctab = eif_conf_tab [pftype];
@@ -3153,7 +3146,7 @@ rt_private void eif_compute_ctab (int16 dftype)
 
 	while (*intable != TERMINATOR)
 	{
-		pftype = eif_id_of (-1, &intable, &outtable, dftype, 1, &cachable);
+		pftype = eif_id_of (-1, &intable, &outtable, dftype, 1);
 		pctab = eif_conf_tab [pftype];
 
 		/* Register parent type */
@@ -3257,7 +3250,6 @@ rt_private void eif_compute_anc_id_map (int16 dftype)
 	int16 *src, *dest;
 	struct eif_par_types *pt;
 	EIF_ANC_ID_MAP *map, *pamap;
-	char cachable;
 
 	/* Get parent table */
 
@@ -3277,7 +3269,7 @@ rt_private void eif_compute_anc_id_map (int16 dftype)
 
 	while (*intable != TERMINATOR)
 	{
-		pftype = eif_id_of (-1, &intable, &outtable, dftype, 1, &cachable);
+		pftype = eif_id_of (-1, &intable, &outtable, dftype, 1);
 
 		map = eif_anc_id_map [pftype];
 
@@ -3308,7 +3300,7 @@ rt_private void eif_compute_anc_id_map (int16 dftype)
 
 	while (*intable != TERMINATOR)
 	{
-		pftype = eif_id_of (-1, &intable, &outtable, dftype, 1, &cachable);
+		pftype = eif_id_of (-1, &intable, &outtable, dftype, 1);
 		pamap = eif_anc_id_map [pftype];
 
 		/* Register parent type */

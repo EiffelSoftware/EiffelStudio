@@ -16,20 +16,27 @@ inherit
 			format,
 			is_full_named_type,
 			convert_to,
-			check_const_gen_conformance
+			check_const_gen_conformance,
+			is_reference,
+			is_expanded
 		end
 		
 create
-	default_create,
-	make_constraint_with_reference
+	make
 
 feature {NONE} -- Initialization
 
-	make_constraint_with_reference is
+	make (is_ref: like is_reference; is_exp: like is_expanded; i: like position) is
 			-- Initialize new instance of FORMAL_A which is garanteed to
-			-- be instantiated as a reference type.
+			-- be instantiated as a reference type if `is_ref'.
 		do
-			is_reference := True
+			is_reference := is_ref
+			is_expanded := is_exp
+			position := i
+		ensure
+			is_reference_set: is_reference = is_ref
+			is_expanded_set: is_expanded = is_exp
+			position_set: position = i
 		end
 		
 feature -- Property
@@ -43,6 +50,9 @@ feature -- Property
 	is_reference: BOOLEAN
 			-- Is current constrained to be always a reference?
 
+	is_expanded: BOOLEAN
+			-- Is current constrained to be always an expanded?
+
 	hash_code: INTEGER is
 			-- 
 		do
@@ -54,7 +64,9 @@ feature -- Comparison
 	is_equivalent (other: like Current): BOOLEAN is
 			-- Is `other' equivalent to the current object ?
 		do
-			Result := position = other.position
+			Result := position = other.position and then
+				is_reference = other.is_reference and then
+				is_expanded = other.is_expanded
 		end
 
 feature -- Access
@@ -66,7 +78,7 @@ feature -- Access
 		do
 			other_formal ?= other
 			if other_formal /= Void then
-				Result := position = other_formal.position
+				Result := is_equivalent (other_formal)
 			end
 		end
 
@@ -78,14 +90,6 @@ feature -- Access
 	position: INTEGER
 			-- Position of the formal parameter in the
 			-- generic class declaration
-
-feature -- Setting
-
-	set_position (p: like position) is
-			-- Assign `p' to `position'.
-		do
-			position := p
-		end
 
 feature -- Output
 
@@ -105,7 +109,7 @@ feature -- Output
 			if f /= Void then
 				l_class := f.associated_class.ast
 				if l_class.generics.valid_index (position) then
-					s := l_class.generics.i_th (position).formal_name.as_upper
+					s := l_class.generics.i_th (position).name.as_upper
 					st.add (create {GENERIC_TEXT}.make (s))
 				else
 						-- We are in case where actual generic position does not match
@@ -129,7 +133,7 @@ feature {COMPILER_EXPORTER} -- Type checking
 			-- For formal generic parameter, we do check that their constraint
 			-- conforms to `a_target_type'.
 		local
-			l_is_ref: BOOLEAN
+			l_is_ref, l_is_exp: BOOLEAN
 		do
 				-- We simply consider conformance as if current formal
 				-- was constrained to be a reference type, it enables us
@@ -137,9 +141,19 @@ feature {COMPILER_EXPORTER} -- Type checking
 				-- class B [G -> STRING]
 				-- class A [G -> STRING, H -> B [G]]
 			l_is_ref := is_reference
+			l_is_exp := is_expanded
 			is_reference := True
+			is_expanded := False
 			Precursor {NAMED_TYPE_A} (a_gen_type, a_target_type, a_class, i)
 			is_reference := l_is_ref
+			is_expanded := l_is_exp
+
+				-- Note that even if the constraint is not valid, e.g.
+				-- class B [reference G -> STRING]
+				-- class A [expanded G -> STRING, H -> B [G]]
+				-- we do not trigger an error. This is ok, because an
+				-- error will be triggered when trying to write a generic
+				-- derivation of A as none is possible.
 		end
 
 feature {COMPILER_EXPORTER}
@@ -153,21 +167,23 @@ feature {COMPILER_EXPORTER}
 	conform_to (other: TYPE_A): BOOLEAN is
 			-- Does Current conform to `other'?
 		local
-			other_formal: FORMAL_A
 			l_constraint: TYPE_A
 		do
-			other_formal ?= other.actual_type
-			if other_formal /= Void then
-				Result := position = other_formal.position
-			elseif is_reference then
-					-- We are always a reference, we can check conformance
-					-- of constrained generic type to `other'.
-				check
-					has_generics: System.current_class.generics /= Void
-					count_ok: System.current_class.generics.count >= position
+			Result := same_as (other.actual_type)
+			if not Result then
+					-- We do not treat the case `is_expanded' as if it is an
+					-- expanded then it does not conform to anything but itself
+					-- so this is automatically taken care by `same_as' above.
+				if is_reference then
+						-- We are always a reference, we can check conformance
+						-- of constrained generic type to `other'.
+					check
+						has_generics: System.current_class.generics /= Void
+						count_ok: System.current_class.generics.count >= position
+					end
+					l_constraint := System.current_class.constraint (position)
+					Result := l_constraint.conform_to (other)
 				end
-				l_constraint := System.current_class.constraint (position)
-				Result := l_constraint.conform_to (other)
 			end
 		end
 
@@ -219,7 +235,7 @@ feature {COMPILER_EXPORTER}
 	type_i: FORMAL_I is
 			-- C type
 		do
-			create Result.make (position)
+			create Result.make (is_reference, is_expanded, position)
 		end
 
 	create_info: CREATE_FORMAL_TYPE is
@@ -232,7 +248,6 @@ feature {COMPILER_EXPORTER}
 			-- reconstitute text
 		do
 			ctxt.put_text_item (create {GENERIC_TEXT}.make (ctxt.formal_name (position)))
---			ctxt.put_string (ctxt.formal_name (position))
 		end
 
 end -- class FORMAL_A

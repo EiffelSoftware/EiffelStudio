@@ -311,14 +311,10 @@ feature -- Array optimization
 
 	optimized_byte_node: EXPR_B is
 		do
-			if is_built_in then
-				Result := Current
-				left := left.optimized_byte_node
-				right := right.optimized_byte_node
-				access := access.optimized_byte_node
-			else
-				Result := nested_b.optimized_byte_node
-			end
+			Result := Current
+			left := left.optimized_byte_node
+			right := right.optimized_byte_node
+			access := access.optimized_byte_node
 		end
 
 feature -- Inlining

@@ -304,6 +304,12 @@ cluster
 
 	new_tty:		"$EIFFEL_SRC\Eiffel\interface\new_tty"
 
+	all cli_writer:		"$EIFFEL_SRC\Eiffel\library\cli_writer"
+
+	all xml_deserializer:		"$EIFFEL_SRC\Eiffel\library\xml_deserializer"
+
+	all eac_components:		"$EIFFEL_SRC\dotnet\consumer\components"
+
 external
 
 	include_path:
@@ -318,10 +324,9 @@ external
 		"$(EIFFEL_SRC)\C\platform",
 		"$(EIFFEL_SRC)\C_library\expat\xmlparse",
 		"$(EIFFEL_SRC)\C_library\zlib",
-		"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\core\Clib",
 		"$(EIFFEL_SRC)\Eiffel\interface\new_graphical\help\Clib",
-		"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\eac\Clib",
-		"$(EIFFEL_SRC)\com_compiler\Clib"
+		"$(EIFFEL_SRC)\com_compiler\Clib",
+		"$(EIFFEL_SRC)\Eiffel\library\cli_writer\Clib"
 
 	object:
 		"$(EIFFEL_SRC)\library\time\spec\$(ISE_C_COMPILER)\lib\datetime.lib",
@@ -340,10 +345,10 @@ external
 		"$(EIFFEL_SRC)\library\exml\compiler_specific\ise\clib\$(ISE_C_COMPILER)\exml.lib",
 		"$(EIFFEL_SRC)\library\com\spec\$(ISE_C_COMPILER)\lib\com.lib",
 		"$(EIFFEL_SRC)\library\com\spec\$(ISE_C_COMPILER)\lib\com_runtime.lib",
-		"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\core\Clib\ecom.lib",
 		"$(EIFFEL_SRC)\Eiffel\interface\new_graphical\help\Clib\htmlhelp.lib",
 		"$(EIFFEL_SRC)\library\net\spec\$(ISE_C_COMPILER)\lib\net.lib",
-		"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\eac\Clib\ecom.lib",
-		"$(EIFFEL_SRC)\com_compiler\Clib\$(ISE_C_COMPILER)\ecom_final.lib"
+		"$(EIFFEL_SRC)\com_compiler\Clib\$(ISE_C_COMPILER)\ecom_final.lib",
+		"$(EIFFEL_SRC)\Eiffel\library\cli_writer\spec\msc\lib\cli_writer.lib",
+		"corguids.lib"
 
 end

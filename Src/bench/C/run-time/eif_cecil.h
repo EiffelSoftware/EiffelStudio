@@ -205,21 +205,22 @@ struct ctable {
 	char *h_values;		/* Array of values (pointer needs casting) */
 };
 
-/* Information on generic types. The structure records the number of generic
+/* Information on types. The structure records the number of generic
  * parameters and an array which gives the type ids for every possible meta-
  * type as defined in the compiler (i.e. simple types plus expandeds).
  * The array gt_gen holds patterns like [INTEGER, REFERENCE] in an unstructured
  * way (i.e. they are simply gathered in a whole array, for static intialization
  * purposes). The end of the array is signaled by a *single* SK_INVALID marker.
- * All the types are skeleton types as declared in eif_struct.h. For references,
- * we don't need the dynamic type, so we simply use SK_DTYPE.
+ * All the types are skeleton types as declared in eif_struct.h.
  * The gt_type array then lists the associated types (entry at "index" i in
  * gt_gen is associated to the same index i in gt_type).
  */
-struct gt_info {
-	int gt_param;		/* Number of generic parameters */
-	int32 *gt_gen;		/* Generic parameters patterns */
-	int16 *gt_type;		/* Type ID associated with each meta-type */
+struct cecil_info {
+	int nb_param;			/* Number of generic parameters, 0 if none*/
+	int32 *patterns;		/* Generic parameters patterns, if generics,
+							   otherwise the SK_xx value. */
+	int16 *dynamic_types;	/* Type ID associated with each meta-type if generics,
+							   otherwise the dynamic type. */
 };
 
 /*

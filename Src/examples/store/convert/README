@@ -6,4 +6,8 @@ Changing a field (it's type or format) in an
 example.dat file, highlighs the parser error 
 detection mechanism.
 
-When the example has been compiled, put the two files "example1.dat" and "example2.dat" in the directory "EIFGEN/W_CODE".
+When the example has been compiled, put the two
+files "example1.dat" and "example2.dat" in the
+directory "EIFGEN/W_CODE" or in "EIFGEN/F_code"
+directory depending on your type of Eiffel
+compilation.

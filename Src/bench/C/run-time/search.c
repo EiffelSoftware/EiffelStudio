@@ -29,7 +29,7 @@ rt_public struct s_table *s_create(uint32 size)
 	char **keys;
 	struct s_table *result;
 
-	real_size = nprime(4 * size / 3);
+	real_size = nprime((4 * size) / 3);
 	keys = (char **) xcalloc(real_size, sizeof(char *));
 	if (keys == (char **) 0)
 		enomem(MTC_NOARG);

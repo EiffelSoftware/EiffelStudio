@@ -618,7 +618,7 @@ rt_private char *malloc_free_list(unsigned int nbytes, union overhead **hlist, i
 	 * collection.
 	 */
 	if (CHUNK_TYPE(hlist) == EIFFEL_T) {
-		if (eiffel_usage > th_alloc && gc_flag)		/* Above threshold */
+		if ((eiffel_usage > th_alloc) && gc_flag)		/* Above threshold */
 			if (0 == acollect())			/* Perform automatic collection */
 				eiffel_usage = 0;			/* Reset amount of allocated data */
 		eiffel_usage += nbytes + OVERHEAD;	/* Memory used by Eiffel */

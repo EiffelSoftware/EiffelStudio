@@ -363,7 +363,6 @@ feature {NONE} -- Implementation
 						d.set_foreground_color (line.foreground_color)
 					end
 					d.draw_polyline (poly, not is_client_supplier)
-					
 				end
 				a1 := p.point_array.item (1)
 				a2 := p.point_array.item (2)
@@ -372,11 +371,18 @@ feature {NONE} -- Implementation
 				x1 := p0.x + offset_x
 				y1 := p0.y + offset_y
 				
-				x2 := ((a1.x_precise + a2.x_precise) / 2).truncated_to_integer + offset_x
-				y2 := ((a1.y_precise + a2.y_precise) / 2).truncated_to_integer + offset_y
+				x2 := as_integer ((a1.x_precise + a2.x_precise) / 2) + offset_x
+				y2 := as_integer ((a1.y_precise + a2.y_precise) / 2) + offset_y
+				
+				if (x1 - x2).abs = 1 then
+					x1 := x2
+				end
+				if (y1 - y2).abs = 1 then
+					y1 := y2
+				end
+
 				d.draw_segment (x1, y1, x2, y2)
 			end
-
 		end
 
 	draw_figure_bonpolyline (line: EV_MODEL_POLYLINE; is_client_supplier: BOOLEAN) is
@@ -389,12 +395,12 @@ feature {NONE} -- Implementation
 			old_lex, old_ley: DOUBLE
 			l_item: EV_COORDINATE
 			x1, y1, x2, y2: INTEGER
+			x2d, y2d: DOUBLE
 			pa: SPECIAL [EV_COORDINATE]
 		do
 			d := drawable
 			d.set_foreground_color (line.foreground_color)
-			
-			
+
 			if line.point_count > 2 then
 				point_array := create {EV_COORDINATE_ARRAY}.make_from_area (line.point_array)
 
@@ -415,7 +421,6 @@ feature {NONE} -- Implementation
 				old_lex := l_item.x_precise
 				old_ley := l_item.y_precise
 				l_item.set_precise ((a1.x_precise + a2.x_precise) / 2, (a1.y_precise + a2.y_precise) / 2)
-	
 
 				if offset_x /= 0 or else offset_y /= 0 then
 					offset_coordinates (point_array)
@@ -457,8 +462,14 @@ feature {NONE} -- Implementation
 				x1 := p0.x + offset_x
 				y1 := p0.y + offset_y
 				
-				x2 := ((a1.x_precise + a2.x_precise) / 2).truncated_to_integer + offset_x
-				y2 := ((a1.y_precise + a2.y_precise) / 2).truncated_to_integer + offset_y
+				x2 := as_integer ((a1.x_precise + a2.x_precise) / 2) + offset_x
+				y2 := as_integer ((a1.y_precise + a2.y_precise) / 2) + offset_y
+				if (x1 - x2).abs = 1 then
+					x1 := x2
+				end
+				if (y1 - y2).abs = 1 then
+					y1 := y2
+				end
 				d.draw_segment (x1, y1, x2, y2)
 				if is_client_supplier and then line.line_width > 4 then
 					d.set_line_width (line.line_width - 4)

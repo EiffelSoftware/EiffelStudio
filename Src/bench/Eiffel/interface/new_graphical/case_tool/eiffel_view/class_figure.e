@@ -316,7 +316,7 @@ feature {NONE} -- Implementation
 			loop
 				cf ?= world.figure_from_model (classes.item)
 				if cf /= Void then
-					cf.set_port_position (port_x + (cosine (l_angle) * radius).truncated_to_integer, port_y + (sine (l_angle) * radius).truncated_to_integer)
+					cf.set_port_position (port_x + as_integer (cosine (l_angle) * radius), port_y + as_integer (sine (l_angle) * radius))
 				end
 				classes.forth
 				l_angle := l_angle + angle_inc

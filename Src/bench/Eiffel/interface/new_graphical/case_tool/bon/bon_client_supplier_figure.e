@@ -287,8 +287,8 @@ feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 				set_aggregate_figure_position (aggregate_figure_distance)
 			else
 				if is_reflexive then
-					low_quality_circle.set_x_y (source.port_x + source.width // 2 + reflexive_radius // 2, source.port_y)
-					name_label.set_point_position (source.port_x + source.width // 2, low_quality_circle.y - name_label.height // 2)
+					low_quality_circle.set_x_y (source.port_x + as_integer (source.width / 2 + reflexive_radius / 2), source.port_y)
+					name_label.set_point_position (source.port_x + as_integer (source.width / 2), low_quality_circle.y - as_integer (name_label.height / 2))
 				else
 					l_point_array := low_quality_line.point_array
 					p0 := l_point_array.item (0)
@@ -412,8 +412,8 @@ feature {NONE} -- Implementation
 			px := a_point.x
 			py := a_point.y
 			
-			aggregate_figure.set_point_a_position (px + (dcos - hssin).truncated_to_integer, py + (dsin + hscos).truncated_to_integer)
-			aggregate_figure.set_point_b_position (px + (dcos + hssin).truncated_to_integer, py + (dsin - hscos).truncated_to_integer)	
+			aggregate_figure.set_point_a_position (px + as_integer (dcos - hssin), py + as_integer (dsin + hscos))
+			aggregate_figure.set_point_b_position (px + as_integer (dcos + hssin), py + as_integer (dsin - hscos))	
 		end
 		
 	on_is_aggregated_change is
@@ -550,7 +550,7 @@ feature {NONE} -- Implementation
 					ny := m * (nx - lx) + ly
 				end
 			end
-			label_move_handle.set_point_position (nx.truncated_to_integer, ny.truncated_to_integer)
+			label_move_handle.set_point_position (as_integer (nx), as_integer (ny))
 		end
 		
 	on_label_group_double_clicked (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is

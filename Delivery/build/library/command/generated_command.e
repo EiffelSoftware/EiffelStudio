@@ -16,6 +16,8 @@ feature
 
 	target: G
 
+	error_dialog: BUILD_ERROR_DIALOG
+
 	set_target (t: G) is
 			-- Make `t' the target for next execution
 		require
@@ -31,6 +33,16 @@ feature
 			-- Has a non-void target been defined?
 		do
 			Result := target /= Void
+		end
+
+	display_error_message (a_message: STRING; a_parent: COMPOSITE) is
+			-- Display error message `a_message'.
+		do
+			if a_parent /= Void then
+				!! error_dialog.make (a_message, a_parent)
+			else
+				io.put_string (a_message)
+			end
 		end
 
 end -- class GENERATED_COMMAND

@@ -7,11 +7,9 @@ indexing
 	revision: "$Revision$"
 
 deferred class 
-
 	EV_ITEM_I
 
 inherit
-
 	EV_TEXT_CONTAINER_I
 
 feature -- Access

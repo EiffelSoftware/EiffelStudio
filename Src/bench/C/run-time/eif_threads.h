@@ -376,6 +376,9 @@ RT_LNK EIF_POINTER eif_thr_last_thread(void);
 #define EIF_MUTEX_DESTROY0(m,msg) \
     if (pthread_mutex_destroy(m)) eraise(msg, EN_EXT)
 
+	/* tid */
+#define EIF_THR_SELF	pthread_self();	/* Return a pthread_t */
+
 #elif defined EIF_WIN32
 
 /*-------------------------------*/
@@ -490,6 +493,7 @@ rt_public typedef struct {
   int pol;
 } eif_thr_attr_t;
 
+ 
 #define EIF_THR_CREATION_FLAGS THR_NEW_LWP | THR_DETACHED
 #define EIF_MIN_PRIORITY 0
 #define EIF_MAX_PRIORITY INT_MAX
@@ -581,6 +585,9 @@ rt_public typedef struct {
     if (mutex_destroy(m)) eraise(msg, EN_EXT)
 #define EIF_MUTEX_DESTROY(m,msg) \
     EIF_MUTEX_DESTROY0(m,msg); eif_free(m)
+
+	/* tid */
+#define EIF_THR_SELF	thread_self();	/* Return a thread_t */
 
 #elif defined VXWORKS
 

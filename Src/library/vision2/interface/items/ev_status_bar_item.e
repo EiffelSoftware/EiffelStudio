@@ -40,25 +40,20 @@ feature -- Measurement
 			-- Horizontal size in pixels.
 		do
 			Result := implementation.width
+		ensure
+			bridge_ok: Result = implementation.width
 		end
 
 feature -- Status setting
 
 	set_width (a_width: INTEGER) is
 			-- Assign `a_width' to `width'.
-			-- If -1, then the item reach the right of the status bar.
-			--| FIXME what kind up hella ungly hack is this?
-			--| Screw you guys, I'm going home.
-			--| <IRONIC> RESPECT MY AUTHORITAY!! </IRONIC>
 		require
-			has_parent: parent /= Void
-			valid_value: a_width >= -1
-			maximise_ok: a_width = -1
-				implies (parent.i_th (parent.count) = Current)
+			a_width_non_negative: a_width >= 0
 		do
 			implementation.set_width (a_width)
 		ensure
-			width_set: (a_width = width) or (a_width = -1)
+			width_assigned: a_width = width
 		end
 
 feature {NONE} -- Implementation
@@ -95,6 +90,9 @@ end -- class EV_STATUS_BAR_ITEM
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.19  2000/04/26 21:19:01  brendel
+--| Revised.
+--|
 --| Revision 1.18  2000/04/07 22:15:40  brendel
 --| Removed EV_SIMPLE_ITEM from inheritance hierarchy.
 --|

@@ -1,0 +1,55 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+	<HEAD>
+		<TITLE>Using libraries</TITLE>
+		<META NAME="MS-HKWD" CONTENT="libraries, importing">
+		<META NAME="MS-HKWD" CONTENT="using libraries">
+		<META NAME="MS-HKWD" CONTENT="C externals, using">
+		<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+	</HEAD>
+
+	<BODY>
+		<H1>Using libraries</H1>
+        <p>There are two kinds of libraries in Eiffel: precompiled Eiffel
+        libraries and C libraries.</p>
+
+        <p>To use an Eiffel precompiled library:</p>
+
+		<UL>
+			<LI>Open the <a href="HYPERLINK(reference_project_settings)">System Settings</A> dialog.
+			<LI>In the <b>General</b> tab, enter the location of the precompiled
+              library you want to use in the <b>Precompiled Library</b> field.
+			<LI>Click <b> Apply</b> or <b>OK</b>.
+			<LI>You must <a href="10_generating_executables.html">recompile</a> your project for the changes to take effect.
+		</UL>
+
+        <p>SCREENSHOT(profiling in project settings dialog).</p>
+
+        <P CLASS="note"><B>Note</B>: You can only use one precompiled library at
+        a time in a project. To use more than one, you should precompile all the
+        libraries you want to use together in a single precompiled library.</P>
+
+        <P>To use a C library:</P>
+
+		<UL>
+			<LI>Open the <a href="HYPERLINK(reference_project_settings)">System Settings</A> dialog.
+			<LI>In the <b>Externals</b> tab, in the <b>Include path</b> field,
+              type the paths of the header files needed to use the library
+              (pressing the <b>Add</b> button for each).
+			<LI>In the <b>Object file</b> field, type the object files needed to
+              use the library (pressing the <b>Add</b> button for each). These
+              files can be either library files (.lib, .a, etc) or object files
+              (.obj, .o, etc)
+			<LI>Click <b> Apply</b> or <b>OK</b>.
+			<LI>You must <a href="10_generating_executables.html">recompile</a> your project for the changes to take effect.
+		</UL>
+
+        <P CLASS="seealso">
+		<B>See Also</B><BR>
+					<A HREF="15_generating_libraries.html">Creating libraries</A><BR>
+					<A HREF="HYPERLINK(editing_a_project/adding_components).html">Adding classes and clusters from
+                    Eiffel libraries without precompiling the library</A><BR>
+					<A HREF="HYPERLINK(reference_c_externals).html">Making C calls in Eiffel</A><BR>
+		</P>
+	</BODY>
+</HTML>

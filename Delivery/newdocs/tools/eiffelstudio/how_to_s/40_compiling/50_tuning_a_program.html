@@ -1,0 +1,63 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+	<HEAD>
+		<TITLE>Tuning a program</TITLE>
+		<META NAME="MS-HKWD" CONTENT="Optimizing a program">
+		<META NAME="MS-HKWD" CONTENT="Speeding up a program">
+		<META NAME="MS-HKWD" CONTENT="Tuning a program">
+		<META NAME="MS-HKWD" CONTENT="Program, optimizing">
+		<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+	</HEAD>
+
+	<BODY>
+		<H1>Tuning a program</H1>
+        <p>The best way to speed up a program is of course to improve the
+        algorithms and data structures you are using. Spotting the functions
+        that slow down the execution and improving can change a lot in a
+        program. HYPERLINK(debugging/Profiling) Profiling can be used for this.</p>
+        <p>Try to keep the number of classes and objects in your system as low
+        as possible to ensure maximum efficiency. This should never hinder
+        the design of the system, though.</p>
+        <p>You can also use the functionalities provided by the HYPERLINK(MEMORY
+        class) MEMORY class to tweak the garbage collector behavior according to
+        your needs. However, be careful with this, since providing erroneous
+        parameters might lead to memory leaks, huge memory consumption, or on
+        the contrary a dramatic slow down of the application. If you are not
+        entirely sure what a parameter is for, avoid changing it. The default
+        values should fit for most standard applications.</p>
+
+        <p>Besides, EiffelStudio provides powerful optimizations, some being
+        done automatically, other being configurable. To have a maximum
+        efficiency, it is recommended to <A HREF="10_generating_executables.html">Finalize</a>
+        your program from scratch and
+        without using precompiled libraries.</p>
+
+        <p>In the <a href="HYPERLINK(reference_project_settings)">System Settings</A> 
+        dialog, try experimenting the <b>Inlining</b> option, and setting the
+        maximum size of features that should be inlined. Only Eiffel features
+        are inlined by this option, to see how to inline the C functions you may
+        be using in your program, please refer to your C documentation.</p>
+
+        <p>In the <a href="HYPERLINK(reference_project_settings)">System Settings</A> 
+        dialog, enabling the <b>Dead code removal</b> will help produce smaller
+        executables.</p>
+
+        <p>Removing the <b>Execution Trace</b> will slightly optimize the
+        executable in size and speed, but in case of crash no information will
+        be available.</p>
+
+        <p>You can also enable the <b>Array optimization</b> option to slightly
+        speed up array access.</p>
+
+        <p>All these options are located in the <a href="HYPERLINK(reference_project_settings)">System Settings</A> 
+        dialog, under the <b>Advanced</b> tab. They are only effective during
+        finalizations.</p>
+
+        <p>SCREENSHOT(finalization options in project settings dialog).</p>
+
+        <P CLASS="seealso">
+		<B>See Also</B><BR>
+					<A HREF="HYPERLINK(profiler_reference)">Profiler reference</A><BR>
+		</P>
+	</BODY>
+</HTML>

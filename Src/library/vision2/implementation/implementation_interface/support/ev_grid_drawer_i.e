@@ -566,15 +566,13 @@ feature -- Basic operations
 											if current_column_index > 1 or drawing_subrow then
 												l_x_start := current_item_x_position.max (parent_x_indent_position)
 												l_x_end := horizontal_node_pixmap_left_offset
-												if l_x_start < current_item_x_position + current_column_width and
-													l_x_end < current_item_x_position + current_column_width then
+												if l_x_start < current_item_x_position + current_column_width then
 														fixme ("Clip this line correctly as required")
 													grid.drawable.set_foreground_color (black)
-													grid.drawable.draw_segment (l_x_start, row_vertical_center, l_x_end, row_vertical_center)
+													grid.drawable.draw_segment (l_x_start, row_vertical_center, l_x_end.min (current_item_x_position + current_column_width), row_vertical_center)
 													-- Draw a horizontal line from the left edge of the item to the either the node horizontal offset or the edge of the actual item position
 												 	-- if the node to which we are connected is within a different column.
-												end
-											 		
+												end	
 											end
 											 
 											if drawing_subrow and then parent_node_index = current_column_index then
@@ -711,10 +709,6 @@ feature -- Basic operations
 		once
 			Result := (create {EV_STOCK_COLORS}).black
 		end
-		
-	tree_node_button_dimension: INTEGER is 9	
-		-- Dimension of the expand/collapse node used in the tree.
-		--fixme ("Remove")
 		
 	horizontal_border_width: INTEGER is 3
 		-- Border from edge of text to edge of grid items.

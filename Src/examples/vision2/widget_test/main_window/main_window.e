@@ -65,6 +65,12 @@ feature {NONE} -- Initialization
 				-- window, so that we can see any changes to the interface.
 			register_type_change_agent (agent unlock_current)
 			
+				-- Ensure that the three tool bar buttons behave as radio buttons.
+			properties_button.select_actions.extend (agent update_tool_bar_radio_buttons (properties_button))			
+			tests_button.select_actions.extend (agent update_tool_bar_radio_buttons (tests_button))			
+			documentation_button.select_actions.extend (agent update_tool_bar_radio_buttons (documentation_button))
+			main_notebook.selection_actions.extend (agent update_buttons)
+			
 			setup_initial_screen
 		end
 
@@ -159,6 +165,13 @@ feature {NONE} -- Implementation
 				main_split_area.go_to_second
 				main_split_area.replace (main_box)
 			end
+			
+				-- Now enable the tool bar buttons.
+			properties_button.enable_sensitive
+			properties_button.enable_select
+			tests_button.enable_sensitive
+			documentation_button.enable_sensitive
+				
 		ensure
 			main_split_area.has (main_box)
 		end
@@ -175,6 +188,48 @@ feature {NONE} -- Implementation
 			-- it to be registered as a type change agent.
 		do
 			unlock_update
+		end
+		
+	update_tool_bar_radio_buttons (selected_button: EV_TOOL_BAR_TOGGLE_BUTTON) is
+			--
+		do
+			if selected_button /= properties_button then
+				properties_button.select_actions.block
+				properties_button.disable_select
+				properties_button.select_actions.resume
+			else
+				main_notebook.select_item (main_notebook_properties_item)
+				generate_button.disable_sensitive
+			end
+			if selected_button /= tests_button then
+				tests_button.select_actions.block
+				tests_button.disable_select
+				tests_button.select_actions.resume
+			else
+				main_notebook.select_item (main_notebook_tests)
+				generate_button.enable_sensitive
+			end
+			if selected_button /= documentation_button then
+				documentation_button.select_actions.block
+				documentation_button.disable_select
+				documentation_button.select_actions.resume
+			else
+				main_notebook.select_item (flat_short_display)
+				generate_button.disable_sensitive
+			end
+		end
+		
+	update_buttons is
+		do
+			if main_notebook.selected_item = main_notebook_properties_item then
+				properties_button.enable_select
+			end
+			if main_notebook.selected_item = main_notebook_tests then
+				tests_button.enable_select
+			end
+			if main_notebook.selected_item = flat_short_display then
+				documentation_button.enable_select
+			end
 		end
 
 end -- class MAIN_WINDOW

@@ -709,40 +709,34 @@ feature -- Element change
 
 	append (s: STRING) is
                         -- Append `s' at the end of current text.
-		local
-			a_text: STRING
 		do
-			a_text := clone (text)
-			a_text.append (s)
-			update_private_text (a_text)
 			if exists then
 				if has_selection then
 					unselect
 				end
 				set_caret_position (text.count)
 				replace_selection (s)
+			else
+				text.append (s)
 			end
 		end
 
 	insert (s: STRING; a_position: INTEGER) is
                         -- Insert `s' in current text field at `a_position'.
                         -- Same as `replace (a_position, a_position, s)'.
-		local
-			a_text: STRING
 		do
-			a_text := clone (text)
-			if a_position = a_text.count then
-				a_text.append (s)
-			else
-				a_text.insert (s, a_position + 1)
-			end
-			update_private_text (a_text)
 			if exists then
 				if has_selection then
 					unselect
 				end
 				set_caret_position (a_position)
 				replace_selection (s)
+			else
+				if a_position = text.count then
+					text.append (s)
+				else
+					text.insert (s, a_position + 1)
+				end
 			end
 		end
 
@@ -760,8 +754,13 @@ feature -- Element change
 					set_selection (from_position, to_position)
 					replace_selection (s)
 				end
+			else
+				if from_position = to_position then
+					text.insert (s, from_position + 1)
+				else
+					text.replace_substring (s, from_position + 1, to_position)
+				end
 			end
---			update_private_text (a_text)
 		end
 
 feature -- Removal

@@ -141,14 +141,14 @@ feature {NONE} -- Externals
 		external
 			"C | %"desop.h%""
 		alias
-			"decrypt"
+			"des_decrypt"
 		end;
 
 	c_encrypt (data: POINTER; size: INTEGER) is
 		external
 			"C | %"desop.h%""
 		alias
-			"encrypt"
+			"des_encrypt"
 		end;
 
 	desinit (mode: INTEGER): INTEGER is

@@ -29,7 +29,6 @@ rt_public struct eif_par_types **eif_par_table2 = (struct eif_par_types **) 0;
 rt_public int    eif_par_table2_size = 0;
 rt_public int16  *eif_cid_map = (int16 *) 0;
 rt_public int16 *rtud_inv = (int16 *) 0;
-rt_public char *eif_typename (int16);
 
 /*------------------------------------------------------------------*/
 /* egc_any_dtype is used for creating ARRAY[ANY] in the run-time    */
@@ -121,6 +120,7 @@ rt_private EIF_CONF_TAB *eif_new_conf_tab (int16, int16, int16, int16);
 rt_private void eif_enlarge_conf_tab (EIF_CONF_TAB *, int16);
 rt_private EIF_ANC_ID_MAP *eif_new_anc_id_map (int16, int16);
 rt_private void eif_expand_tables(int);
+rt_private char *eif_typename (int16);
 rt_private int  eif_typename_len (int16);
 rt_private void eif_create_typename (int16, char*);
 rt_private int16 eif_gen_seq_len (int16);
@@ -553,14 +553,20 @@ rt_public int16 eif_register_bit_type (long size)
 
 rt_public int16 eif_typeof_array_of (int16 dtype)
 {
-	int16   typearr [4];
+	int16   typearr [4], arr_dtype;
+
+#ifdef WORKBENCH
+	arr_dtype = RTUD_INV(egc_arr_dtype);
+#else
+	arr_dtype = egc_arr_dtype;
+#endif
 
 	typearr [0] = -1;           /* No static call context */
-	typearr [1] = egc_arr_dtype;/* Base type of ARRAY     */
+	typearr [1] = arr_dtype;    /* Base type of ARRAY     */
 	typearr [2] = dtype;        /* Parameter type */
 	typearr [3] = -1;
 
-	return eif_compound_id ((int16 *)0, (char *)0,(int16) egc_arr_dtype, typearr);
+	return eif_compound_id ((int16 *)0, (char *)0,(int16) arr_dtype, typearr);
 }
 /*------------------------------------------------------------------*/
 /* Full type name of `obj' as STRING object.                        */
@@ -1639,7 +1645,7 @@ rt_private void eif_expand_tables(int new_size)
 /* Full type name for type `dftype' as C string.                    */
 /*------------------------------------------------------------------*/
 
-rt_public char *eif_typename (int16 dftype)
+rt_private char *eif_typename (int16 dftype)
 {
 	EIF_GEN_DER *gdp;
 	int         len;

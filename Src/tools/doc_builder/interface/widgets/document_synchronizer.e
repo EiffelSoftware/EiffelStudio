@@ -41,9 +41,6 @@ feature -- Implementation
 	update_toc (a_doc: DOCUMENT) is
 			-- TOC
 		do
-			if Shared_project.document_toc /= Void then
-				Shared_project.document_toc.update_node (a_doc)
-			end
 		end
 
 end -- class DOCUMENT_SYNCHRONIZER

@@ -76,7 +76,7 @@ feature -- Query
 			dir: DIRECTORY
 			cnt: INTEGER
 			file: RAW_FILE
-			a_doc: DOCUMENT
+			l_last_entry: STRING
 		do
 			create Result.make (5)
 			from
@@ -87,7 +87,8 @@ feature -- Query
 				cnt = root_dir.count
 			loop
 				root_dir.readentry
-				if root_dir.lastentry /= Void then
+				l_last_entry := root_dir.lastentry
+				if l_last_entry /= Void and then not l_last_entry.is_equal (".") and then not l_last_entry.is_equal ("..") then
 					create file.make (root_dir.name + "\" + root_dir.lastentry)
 					create dir.make (root_dir.name + "\" + root_dir.lastentry)
 					if dir.exists then
@@ -97,7 +98,7 @@ feature -- Query
 						Result.extend (node)
 					elseif file.exists and then Shared_project.allowed_file_types.has (file_type (short_name (file.name))) then								
 						create file_node.make_with_text (root_dir.lastentry)
-						file_node.pointer_double_press_actions.force_extend (agent Shared_document_editor.load_document_from_file (file.name))
+						file_node.pointer_double_press_actions.force_extend (agent Shared_document_manager.load_document_from_file (file.name))
 						file_node.set_pixmap (Shared_constants.Graphical_constants.File_icon)
 						Result.extend (file_node)					
 					end

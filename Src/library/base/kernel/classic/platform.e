@@ -63,6 +63,38 @@ feature -- Access bytes size
 			"sizeof(EIF_WIDE_CHAR)"
 		end
 
+	Natural_8_bytes: INTEGER is
+			-- Number of bytes in a value of type `INTEGER_8'
+		external
+			"C macro use %"eif_misc.h%""
+		alias
+			"sizeof(EIF_NATURAL_8)"
+		end
+
+	Natural_16_bytes: INTEGER is
+			-- Number of bytes in a value of type `INTEGER_16'
+		external
+			"C macro use %"eif_misc.h%""
+		alias
+			"sizeof(EIF_NATURAL_16)"
+		end
+
+	Natural_32_bytes: INTEGER is
+			-- Number of bytes in a value of type `INTEGER'
+		external
+			"C macro use %"eif_misc.h%""
+		alias
+			"sizeof(EIF_NATURAL_32)"
+		end
+
+	Natural_64_bytes: INTEGER is
+			-- Number of bytes in a value of type `INTEGER_64'
+		external
+			"C macro use %"eif_misc.h%""
+		alias
+			"sizeof(EIF_NATURAL_64)"
+		end
+
 	Integer_8_bytes: INTEGER is
 			-- Number of bytes in a value of type `INTEGER_8'
 		external
@@ -84,7 +116,7 @@ feature -- Access bytes size
 		external
 			"C macro use %"eif_misc.h%""
 		alias
-			"sizeof(EIF_INTEGER)"
+			"sizeof(EIF_INTEGER_32)"
 		end
 
 	Integer_64_bytes: INTEGER is
@@ -137,6 +169,35 @@ feature -- Access bits size
 			"eschar_size"
 		end
 
+	Natural_8_bits: INTEGER is
+		external
+			"C macro use %"eif_misc.h%""
+		alias
+			"esuint8_size"
+		end
+
+	Natural_16_bits: INTEGER is
+		external
+			"C macro use %"eif_misc.h%""
+		alias
+			"esuint16_size"
+		end
+
+	Natural_32_bits: INTEGER is
+			-- Number of bits in a value of type `INTEGER'
+		external
+			"C macro use %"eif_misc.h%""
+		alias
+			"esuint32_size"
+		end
+
+	Natural_64_bits: INTEGER is
+		external
+			"C macro use %"eif_misc.h%""
+		alias
+			"esuint64_size"
+		end
+
 	Integer_8_bits: INTEGER is
 		external
 			"C macro use %"eif_misc.h%""
@@ -156,7 +217,7 @@ feature -- Access bits size
 		external
 			"C macro use %"eif_misc.h%""
 		alias
-			"esint_size"
+			"esint32_size"
 		end
 
 	Integer_64_bits: INTEGER is

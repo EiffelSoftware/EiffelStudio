@@ -38,8 +38,16 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
+	is_selected: BOOLEAN is
+			-- Is the item selected?
+		require
+			exists: not destroyed
+		do
+			Result := implementation.is_selected
+		end
+
 	is_expanded: BOOLEAN is
-			-- is the item expanded ?
+			-- is the item expanded?
 		require
 			exists: not destroyed
 		do

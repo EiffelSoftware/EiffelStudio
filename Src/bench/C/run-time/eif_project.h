@@ -20,67 +20,71 @@ generated in a system
 extern "C" {
 #endif
 
-	extern EIF_BOOLEAN exception_stack_managed;	/* Is the stack managed (always True in workbench mode) */
+	RT_LNK EIF_BOOLEAN exception_stack_managed;	/* Is the stack managed (always True in workbench mode) */
 
-	extern EIF_INTEGER egc_prof_enabled;	  /* Is the Eiffel profiler on */
-	extern void (*egc_strmake)(char *, EIF_INTEGER);	/* STRING creation feature */
-	extern void (*egc_strset)(char *, EIF_INTEGER);		/* STRING `set_count' feature */
-	extern void (*egc_arrmake)(char *, EIF_INTEGER, EIF_INTEGER);	/* STRING creation feature */
-	extern int egc_str_dtype;				/* Dynamic type for string */
-	extern int egc_arr_dtype;				/* Dynamic type for ARRAY[ANY] */
-	extern int32 egc_disp_rout_id;			/* Dispose routine id */ 
-	extern int egc_bit_dtype;			/* Dynamic type of BIT, E1/plug.c */
+/*************/	
+/* variables */
+/*************/	
 
-	extern int egc_sp_bool;			/* Dynamic type of SPECIAL[BOOLEAN] */
-	extern int egc_sp_char;			/* Dynamic type of SPECIAL[CHARACTER] */
-	extern int egc_sp_int;			/* Dynamic type of SPECIAL[INTEGER] */
-	extern int egc_sp_real;			/* Dynamic type of SPECIAL[REAL] */
-	extern int egc_sp_double;		/* Dynamic type of SPECIAL[DOUBLE] */
-	extern int egc_sp_pointer;		/* Dynamic type of SPECIAL[POINTER] */
+	RT_LNK EIF_INTEGER egc_prof_enabled;	  /* Is the Eiffel profiler on */
+	RT_LNK void (*egc_strmake)(char *, EIF_INTEGER);	/* STRING creation feature */
+	RT_LNK void (*egc_strset)(char *, EIF_INTEGER);		/* STRING `set_count' feature */
+	RT_LNK void (*egc_arrmake)(char *, EIF_INTEGER, EIF_INTEGER);	/* STRING creation feature */
+	RT_LNK int egc_str_dtype;				/* Dynamic type for string */
+	RT_LNK int egc_arr_dtype;				/* Dynamic type for ARRAY[ANY] */
+	RT_LNK int32 egc_disp_rout_id;			/* Dispose routine id */ 
+	RT_LNK int egc_bit_dtype;			/* Dynamic type of BIT, E1/plug.c */
 
-	extern int egc_int_ref_dtype;	/* Dynamic type of INTEGER_REF */
-	extern int egc_bool_ref_dtype;	/* Dynamic type of BOOLEAN_REF */
-	extern int egc_real_ref_dtype;	/* Dynamic type of REAL_REF */
-	extern int egc_doub_ref_dtype;	/* Dynamic type of DOUBLE_REF */
-	extern int egc_char_ref_dtype;	/* Dynamic type of CHARACTER_REF */
-	extern int egc_point_ref_dtype;	/* Dynamic type of POINTER_REF */
+	RT_LNK int egc_sp_bool;			/* Dynamic type of SPECIAL[BOOLEAN] */
+	RT_LNK int egc_sp_char;			/* Dynamic type of SPECIAL[CHARACTER] */
+	RT_LNK int egc_sp_int;			/* Dynamic type of SPECIAL[INTEGER] */
+	RT_LNK int egc_sp_real;			/* Dynamic type of SPECIAL[REAL] */
+	RT_LNK int egc_sp_double;		/* Dynamic type of SPECIAL[DOUBLE] */
+	RT_LNK int egc_sp_pointer;		/* Dynamic type of SPECIAL[POINTER] */
+
+	RT_LNK int egc_int_ref_dtype;	/* Dynamic type of INTEGER_REF */
+	RT_LNK int egc_bool_ref_dtype;	/* Dynamic type of BOOLEAN_REF */
+	RT_LNK int egc_real_ref_dtype;	/* Dynamic type of REAL_REF */
+	RT_LNK int egc_doub_ref_dtype;	/* Dynamic type of DOUBLE_REF */
+	RT_LNK int egc_char_ref_dtype;	/* Dynamic type of CHARACTER_REF */
+	RT_LNK int egc_point_ref_dtype;	/* Dynamic type of POINTER_REF */
 
 
 
-	extern struct ctable egc_ce_type;			/* Class name -> type ID */
-	extern struct ctable egc_ce_gtype;			/* Generic class name -> gt_info */
-	extern struct cnode *egc_fsystem;			/* Describes the full frozen Eiffel system */
-	extern struct conform **egc_fco_table; 
-	extern void (*egc_system_mod_init) (void);	/* Module Initialization (from einit.c) */
+	RT_LNK struct ctable egc_ce_type;			/* Class name -> type ID */
+	RT_LNK struct ctable egc_ce_gtype;			/* Generic class name -> gt_info */
+	RT_LNK struct cnode *egc_fsystem;			/* Describes the full frozen Eiffel system */
+	RT_LNK struct conform **egc_fco_table; 
+	RT_LNK void (*egc_system_mod_init) (void);	/* Module Initialization (from einit.c) */
 
 #ifdef WORKBENCH
-	extern fnptr *egc_frozen;			/* C routine array (frozen routines) */
-	extern int *egc_fpatidtab;			/* Table of pattern id's indexed by body id's */
-	extern struct eif_opt *egc_foption;	/* Frozen option table */
-	extern fnptr **egc_address_table;		/* Table of $ operator encapsulation functions */
-	extern uint32 *egc_fdispatch;		/* Frozen disaptch table */
-	extern struct p_interface *egc_fpattern;
+	RT_LNK fnptr *egc_frozen;			/* C routine array (frozen routines) */
+	RT_LNK int *egc_fpatidtab;			/* Table of pattern id's indexed by body id's */
+	RT_LNK struct eif_opt *egc_foption;	/* Frozen option table */
+	RT_LNK fnptr **egc_address_table;		/* Table of $ operator encapsulation functions */
+	RT_LNK uint32 *egc_fdispatch;		/* Frozen disaptch table */
+	RT_LNK struct p_interface *egc_fpattern;
 
-	extern void (*egc_einit)(void);		/* System-dependent initializations, E1/einit.c */
-	extern void (*egc_tabinit)(void);		/* E1/einit.c */
+	RT_LNK void (*egc_einit)(void);		/* System-dependent initializations, E1/einit.c */
+	RT_LNK void (*egc_tabinit)(void);		/* E1/einit.c */
 
-	extern int32 **egc_fcall;	/* Routine id arrays indexed by feature id's */
-	extern struct rout_info *egc_forg_table;/* Routine origin/offset table */
-	extern int16 *egc_fdtypes;	/* Dynamic type  array indexed by old
+	RT_LNK int32 **egc_fcall;	/* Routine id arrays indexed by feature id's */
+	RT_LNK struct rout_info *egc_forg_table;/* Routine origin/offset table */
+	RT_LNK int16 *egc_fdtypes;	/* Dynamic type  array indexed by old
 								* dynamic types (for re-freezing) */
 #else
-	extern void (**egc_edispose)(void);
-	extern void (**egc_ecreate)(void);
-	extern struct ctable *egc_ce_rname;
-	extern long *egc_fnbref ;
-	extern long *egc_fsize;
+	RT_LNK void (**egc_edispose)(void);
+	RT_LNK void (**egc_ecreate)(void);
+	RT_LNK struct ctable *egc_ce_rname;
+	RT_LNK long *egc_fnbref ;
+	RT_LNK long *egc_fsize;
 #endif
 
 
-	extern int32 egc_rcdt;				/* E1/einit.c */
-	extern int32 egc_rcorigin;			/* E1/einit.c */
-	extern int32 egc_rcoffset;			/* E1/einit.c */
-	extern int egc_rcarg;				/* E1/einit.c */
+	RT_LNK int32 egc_rcdt;				/* E1/einit.c */
+	RT_LNK int32 egc_rcorigin;			/* E1/einit.c */
+	RT_LNK int32 egc_rcoffset;			/* E1/einit.c */
+	RT_LNK int egc_rcarg;				/* E1/einit.c */
 
 #ifdef __cplusplus
 }

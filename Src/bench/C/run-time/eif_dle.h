@@ -30,8 +30,8 @@ extern "C" {
 
 
 #ifdef WORKBENCH
-extern uint32 dle_level;		/* DLE level */
-extern uint32 dle_zeroc;		/* Frozen level in the DC-set */
+RT_LNK uint32 dle_level;		/* DLE level */
+RT_LNK uint32 dle_zeroc;		/* Frozen level in the DC-set */
 extern fnptr *dle_frozen;		/* DLE C routine array (frozen routines) */
 extern char **dle_melt;			/* Byte code array of DLE melted features */
 extern int *dle_mpatidtab;		/* Table of pattern id's indexed by body id's */

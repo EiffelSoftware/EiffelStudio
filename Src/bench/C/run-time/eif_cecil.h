@@ -156,8 +156,8 @@ extern int eifsibit(EIF_BIT bit, int i);					/* Set ith bit to 1 */
 extern int eifribit(EIF_BIT bit, int i);					/* Reset ith bit to 0 */
 extern EIF_BIT eifbcln(EIF_BIT bit);				/* Eiffel bit cloning */
 
-extern void  failure(void);					/* The Eiffel exectution failed */
-extern void eif_rtinit(int argc, char **argv, char **envp);				/* Eiffel run-time initialization */
+RT_LNK void  failure(void);					/* The Eiffel exectution failed */
+RT_LNK void eif_rtinit(int argc, char **argv, char **envp);				/* Eiffel run-time initialization */
 
 #ifndef WORKBENCH
 #define Cecil(x)	egc_ce_rname[x]			/* Final mode acces to hash table */

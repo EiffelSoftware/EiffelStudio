@@ -22,26 +22,26 @@
 extern "C" {
 #endif
 
-extern EIF_FN_REF wfeat(int static_type, int32 feature_id, int dyn_type); /* Feature call */
-extern EIF_FN_REF wpfeat(int32 origin, int32 offset, int dyn_type);	/* Precompiled feature call */
-extern EIF_FN_REF wfeat_inv(int static_type, int32 feature_id, char *name, char *object); /* Nested feature call */
-extern EIF_FN_REF wpfeat_inv(int32 origin, int32 offset, char *name, char *object);/* Nested precompiled feature call */
-extern void wexp(int static_type, int32 feature_id, int dyn_type, char *object);						/* Creation call for expanded types */
-extern void wpexp(int32 origin, int32 offset, int dyn_type, char *object);			/* Creation call for precomp expanded types */
-extern EIF_FN_REF wdisp(int dyn_type); /* Feature call for dispose routine */ 
-extern long	wattr(int static_type, int32 feature_id, int dyn_type);					/* Attribute access */
-extern long	wpattr(int32 origin, int32 offset, int dyn_type);					/* Precompiled attribute access */
-extern long wattr_inv(int static_type, int32 feature_id, char *name, char *object);				/* Nested attribute access */
-extern long wpattr_inv(int32 origin, int32 offset, char *name, char *object);				/* Nested precompiled attribute access*/
-extern int wtype(int static_type, int32 feature_id, int dyn_type);						/* Creation type */
-extern int wptype(int32 origin, int32 offset, int dyn_type);					/* Creation type of a precomp feature */
+RT_LNK EIF_FN_REF wfeat(int static_type, int32 feature_id, int dyn_type); /* Feature call */
+RT_LNK EIF_FN_REF wpfeat(int32 origin, int32 offset, int dyn_type);	/* Precompiled feature call */
+RT_LNK EIF_FN_REF wfeat_inv(int static_type, int32 feature_id, char *name, char *object); /* Nested feature call */
+RT_LNK EIF_FN_REF wpfeat_inv(int32 origin, int32 offset, char *name, char *object);/* Nested precompiled feature call */
+RT_LNK void wexp(int static_type, int32 feature_id, int dyn_type, char *object);						/* Creation call for expanded types */
+RT_LNK void wpexp(int32 origin, int32 offset, int dyn_type, char *object);			/* Creation call for precomp expanded types */
+RT_LNK EIF_FN_REF wdisp(int dyn_type); /* Feature call for dispose routine */ 
+RT_LNK long	wattr(int static_type, int32 feature_id, int dyn_type);					/* Attribute access */
+RT_LNK long	wpattr(int32 origin, int32 offset, int dyn_type);					/* Precompiled attribute access */
+RT_LNK long wattr_inv(int static_type, int32 feature_id, char *name, char *object);				/* Nested attribute access */
+RT_LNK long wpattr_inv(int32 origin, int32 offset, char *name, char *object);				/* Nested precompiled attribute access*/
+RT_LNK int wtype(int static_type, int32 feature_id, int dyn_type);						/* Creation type */
+RT_LNK int wptype(int32 origin, int32 offset, int dyn_type);					/* Creation type of a precomp feature */
 
 
-extern void init_desc(void);				/* Call structure initialization */
-extern void put_desc(struct desc_info *desc_ptr, int org, int dtype);					/* Call structure insertion */
-extern void put_mdesc(struct desc_info *desc_ptr, int org, int dtype);				/* Melted call structure insertion */
-extern void create_desc(void);				/* Call structure creation */
-extern char desc_fill;					/* Is it an actual insertion or do we 
+RT_LNK void init_desc(void);				/* Call structure initialization */
+RT_LNK void put_desc(struct desc_info *desc_ptr, int org, int dtype);					/* Call structure insertion */
+RT_LNK void put_mdesc(struct desc_info *desc_ptr, int org, int dtype);				/* Melted call structure insertion */
+RT_LNK void create_desc(void);				/* Call structure creation */
+RT_LNK char desc_fill;					/* Is it an actual insertion or do we 
 										 * wish to compute the size ? */
 
 #define IDSC(x,y,z) put_desc(x,y,z)		/* Descriptor initialization */

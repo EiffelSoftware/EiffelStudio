@@ -191,7 +191,7 @@ EIF_INTEGER _concur_blk_cli_list_count = 0;
 /* The following are external variables                    */
 /*---------------------------------------------------------*/
 
-extern char *root_obj;
+RT_LNK char *root_obj;
 #ifndef WORKBENCH
 extern struct ctable *ce_sep_pat;
 #endif

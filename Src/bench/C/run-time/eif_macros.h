@@ -33,7 +33,7 @@
 extern "C" {
 #endif
 
-extern int in_assertion;
+RT_LNK int in_assertion;
 
 /* On a BSD system, we should use _setjmp and _longjmp if they are available,
  * so that no system call is made to preserve the signal mask flag. It should
@@ -81,7 +81,7 @@ extern int in_assertion;
 #define RTXB(x,y) b_copy(x,y)
 #define RTEB(x,y) b_equal(x,y)
 #ifdef WORKBENCH
-extern int fcount;
+RT_LNK int fcount;
 #define RTUD(x) ((x)>=fcount?(x):egc_fdtypes[x])  /* Updated dynamic type */
 #define RTLX(x)   cr_exp(x)
 #endif

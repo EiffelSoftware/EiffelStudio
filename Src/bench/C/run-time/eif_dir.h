@@ -61,33 +61,33 @@ typedef struct tagEIF_WIN_DIRENT {
 } EIF_WIN_DIRENT;
 #endif
 
-extern EIF_POINTER dir_open(char *name);
-extern EIF_OBJ dir_current(void);
-extern EIF_CHARACTER eif_dir_separator (void);
-extern EIF_INTEGER eif_chdir (EIF_OBJ path);
-extern EIF_BOOLEAN eif_dir_exists(char *name);
-extern EIF_BOOLEAN eif_dir_is_readable(char *name);
-extern EIF_BOOLEAN eif_dir_is_writable(char *name);
-extern EIF_BOOLEAN eif_dir_is_executable(char *name);
-extern void eif_dir_delete(char *name);
+RT_LNK EIF_POINTER dir_open(char *name);
+RT_LNK EIF_OBJ dir_current(void);
+RT_LNK EIF_CHARACTER eif_dir_separator (void);
+RT_LNK EIF_INTEGER eif_chdir (EIF_OBJ path);
+RT_LNK EIF_BOOLEAN eif_dir_exists(char *name);
+RT_LNK EIF_BOOLEAN eif_dir_is_readable(char *name);
+RT_LNK EIF_BOOLEAN eif_dir_is_writable(char *name);
+RT_LNK EIF_BOOLEAN eif_dir_is_executable(char *name);
+RT_LNK void eif_dir_delete(char *name);
 
 #ifdef EIF_WIN32					/* %%zs added if..elif..else -> DIR definition... */
-extern void dir_rewind(EIF_WIN_DIRENT *dirp);
-extern char *dir_search(EIF_WIN_DIRENT *dirp, char *name);
-extern char *dir_next(EIF_WIN_DIRENT *dirp);
-extern void dir_close(EIF_WIN_DIRENT *dirp);
+RT_LNK void dir_rewind(EIF_WIN_DIRENT *dirp);
+RT_LNK char *dir_search(EIF_WIN_DIRENT *dirp, char *name);
+RT_LNK char *dir_next(EIF_WIN_DIRENT *dirp);
+RT_LNK void dir_close(EIF_WIN_DIRENT *dirp);
 
 #elif defined EIF_OS2
-extern void dir_rewind(EIF_OS2_DIRENT *dirp);
-extern char *dir_search(EIF_OS2_DIRENT *dirp, char *name);
-extern char *dir_next(EIF_OS2_DIRENT *dirp);
-extern void dir_close(EIF_OS2_DIRENT *dirp);
+RT_LNK void dir_rewind(EIF_OS2_DIRENT *dirp);
+RT_LNK char *dir_search(EIF_OS2_DIRENT *dirp, char *name);
+RT_LNK char *dir_next(EIF_OS2_DIRENT *dirp);
+RT_LNK void dir_close(EIF_OS2_DIRENT *dirp);
 
 #else
-extern void dir_rewind(DIR *dirp);
-extern char *dir_search(DIR *dirp, char *name);
-extern char *dir_next(DIR *dirp);
-extern void dir_close(DIR *dirp);
+RT_LNK void dir_rewind(DIR *dirp);
+RT_LNK char *dir_search(DIR *dirp, char *name);
+RT_LNK char *dir_next(DIR *dirp);
+RT_LNK void dir_close(DIR *dirp);
 
 #endif
 

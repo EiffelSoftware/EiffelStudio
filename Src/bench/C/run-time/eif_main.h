@@ -19,16 +19,16 @@ extern "C" {
 #include "eif_threads.h"
 #include "eif_globals.h"
 
-extern long EIF_once_count;			/* Nr. of once routines */
-extern long EIF_bonce_count;		/* Nr. of once routines in bytecode */
+RT_LNK long EIF_once_count;			/* Nr. of once routines */
+RT_LNK long EIF_bonce_count;		/* Nr. of once routines in bytecode */
 extern void once_init (void);		/* Initialization and creation of once keys */
 extern void dinterrupt(void);
 extern void dserver(void);
 extern void eif_alloc_init();
-extern int in_assertion;
+RT_LNK int in_assertion;
 extern char *ename;				/* Name of the Eiffel program running */
 extern int cc_for_speed;		/* Optimized for speed or for memory */
-extern int scount;				/* Maximum dtype */
+RT_LNK int scount;				/* Maximum dtype */
 #ifdef __cplusplus
 }
 #endif

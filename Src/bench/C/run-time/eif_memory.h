@@ -16,27 +16,27 @@
 extern "C" {
 #endif
 
-extern void mem_free(char *object);	/* Unconditionally free object */
-extern void mem_speed(void);
-extern void mem_slow(void);
-extern void mem_tiny(void);
-extern int mem_largest(void);
-extern void mem_coalesc(void);
-extern long mem_tget(void);
-extern void mem_tset(long int value);
-extern long mem_pget(void);
-extern void mem_pset(long int value);
-extern void mem_stat(long int type);
-extern long mem_info(long int field);
-extern void gc_mon(char flag);
+RT_LNK void mem_free(char *object);	/* Unconditionally free object */
+RT_LNK void mem_speed(void);
+RT_LNK void mem_slow(void);
+RT_LNK void mem_tiny(void);
+RT_LNK int mem_largest(void);
+RT_LNK void mem_coalesc(void);
+RT_LNK long mem_tget(void);
+RT_LNK void mem_tset(long int value);
+RT_LNK long mem_pget(void);
+RT_LNK void mem_pset(long int value);
+RT_LNK void mem_stat(long int type);
+RT_LNK long mem_info(long int field);
+RT_LNK void gc_mon(char flag);
 extern void gc_stat(long int type);	/* Initialize the GC statistics buffer */
 extern long gc_info(long int field);
 extern double gc_infod(long int field);
-extern char gc_ison(void);
-extern void eif_set_max_mem(EIF_INTEGER); /* Set max memory RT can allocate */
-extern EIF_INTEGER eif_get_max_mem(void); /* Return max_mem */
-extern EIF_INTEGER eif_get_chunk_size(void); /* Return chunk_size */
-extern void eif_set_chunk_size(EIF_INTEGER); /* Set the size of memory chunks */
+RT_LNK char gc_ison(void);
+RT_LNK void eif_set_max_mem(EIF_INTEGER); /* Set max memory RT can allocate */
+RT_LNK EIF_INTEGER eif_get_max_mem(void); /* Return max_mem */
+RT_LNK EIF_INTEGER eif_get_chunk_size(void); /* Return chunk_size */
+RT_LNK void eif_set_chunk_size(EIF_INTEGER); /* Set the size of memory chunks */
 #ifdef __cplusplus
 }
 #endif

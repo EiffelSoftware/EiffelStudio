@@ -17,52 +17,52 @@ generated in a system
 extern "C" {
 #endif
 
-	EIF_BOOLEAN exception_stack_managed;	/* Is the stack managed (always True in workbench mode) */
+	EIF_BOOLEAN exception_stack_managed;	
 
-	EIF_INTEGER egc_prof_enabled;	  /* Is the Eiffel profiler on */
-	void (*egc_strmake)(char *, EIF_INTEGER);	/* STRING creation feature */
-	void (*egc_strset)(char *, EIF_INTEGER);	/* STRING `set_count' feature */
-	void (*egc_arrmake)(char *, EIF_INTEGER, EIF_INTEGER);	/* STRING creation feature */
-	int egc_str_dtype;				/* Dynamic type for string */
-	int egc_arr_dtype;				/* Dynamic type for ARRAY[ANY] */
-	int32 egc_disp_rout_id;			/* Dispose routine id */ 
-	int egc_bit_dtype;			/* Dynamic type of BIT, E1/plug.c */
+	EIF_INTEGER egc_prof_enabled;	  
+	void (*egc_strmake)(char *, EIF_INTEGER); 
+	void (*egc_strset)(char *, EIF_INTEGER); 
+	void (*egc_arrmake)(char *, EIF_INTEGER, EIF_INTEGER);	
 
-	int egc_sp_bool;			/* Dynamic type of SPECIAL[BOOLEAN] */
-	int egc_sp_char;			/* Dynamic type of SPECIAL[CHARACTER] */
-	int egc_sp_int;			/* Dynamic type of SPECIAL[INTEGER] */
-	int egc_sp_real;			/* Dynamic type of SPECIAL[REAL] */
-	int egc_sp_double;		/* Dynamic type of SPECIAL[DOUBLE] */
-	int egc_sp_pointer;		/* Dynamic type of SPECIAL[POINTER] */
+	int egc_str_dtype;				
+	int egc_arr_dtype;				
+	int32 egc_disp_rout_id;			
+	int egc_bit_dtype;			
+	int egc_sp_bool;			
+	int egc_sp_char;			
+	int egc_sp_int;			
+	int egc_sp_real;			
+	int egc_sp_double;		
+	int egc_sp_pointer;		
 
-	int egc_int_ref_dtype;	/* Dynamic type of INTEGER_REF */
-	int egc_bool_ref_dtype;	/* Dynamic type of BOOLEAN_REF */
-	int egc_real_ref_dtype;	/* Dynamic type of REAL_REF */
-	int egc_doub_ref_dtype;	/* Dynamic type of DOUBLE_REF */
-	int egc_char_ref_dtype;	/* Dynamic type of CHARACTER_REF */
-	int egc_point_ref_dtype;	/* Dynamic type of POINTER_REF */
+	int egc_int_ref_dtype;	
+	int egc_bool_ref_dtype;	
+	int egc_real_ref_dtype;	
+	int egc_doub_ref_dtype;	
+	int egc_char_ref_dtype;	
+	int egc_point_ref_dtype;	
 
-	struct ctable egc_ce_type;			/* Class name -> type ID */
-	struct ctable egc_ce_gtype;			/* Generic class name -> gt_info */
-	struct cnode *egc_fsystem;	/* Describes the full frozen Eiffel system */
+	struct ctable egc_ce_type;			
+	struct ctable egc_ce_gtype;			
+	struct cnode *egc_fsystem;	
 	struct conform **egc_fco_table;  
-	void (*egc_system_mod_init) (void);	/* Module Initialization (from einit.c) */
+	void (*egc_system_mod_init) (void);	
+
 
 #ifdef WORKBENCH
-	fnptr *egc_frozen;			/* C routine array (frozen routines) */
-	int *egc_fpatidtab;		/* Table of pattern id's indexed by body id's */
-	struct eif_opt *egc_foption;	/* Frozen option table */
-	fnptr **egc_address_table;	/* Table of $ operator encapsulation functions */
-	uint32 *egc_fdispatch;		/* Frozen disaptch table */
+
+	fnptr *egc_frozen;			
+	int *egc_fpatidtab;		
+	struct eif_opt *egc_foption;	
+	fnptr **egc_address_table;	
+	uint32 *egc_fdispatch;		
 	struct p_interface *egc_fpattern;
+	void (*egc_einit)(void);	
+	void (*egc_tabinit)(void);	
+	int32 **egc_fcall;
+	struct rout_info *egc_forg_table;
+	int16 *egc_fdtypes;
 
-	void (*egc_einit)(void);		/* System-dependent initializations, E1/einit.c */
-	void (*egc_tabinit)(void);		/* E1/einit.c */
-
-	int32 **egc_fcall;			/* Routine id arrays indexed by feature id's */
-	struct rout_info *egc_forg_table;	/* Routine origin/offset table */
-	int16 *egc_fdtypes;				/* Dynamic type  array indexed by old
-									* dynamic types (for re-freezing) */
 #else
 	void (**egc_edispose)(void);
 	void (**egc_ecreate)(void);
@@ -71,11 +71,10 @@ extern "C" {
 	long *egc_fsize;
 #endif
 
-
-	int32 egc_rcdt;				/* E1/einit.c */
-	int32 egc_rcorigin;			/* E1/einit.c */
-	int32 egc_rcoffset;			/* E1/einit.c */
-	int egc_rcarg;				/* E1/einit.c */
+	int32 egc_rcdt;
+	int32 egc_rcorigin;
+	int32 egc_rcoffset;
+	int egc_rcarg;
 
 #ifdef __cplusplus
 }

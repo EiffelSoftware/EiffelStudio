@@ -19,9 +19,9 @@ extern "C" {
 
 extern int eif_argc;			/* Initial argc value (argument count) */
 extern char **eif_argv;			/* Copy of initial argv (argument vector) */
-extern int arg_number(void);
+RT_LNK int arg_number(void);
 extern void arg_init(int eargc, char **eargv);			/* Command line arguments saving */
-extern char *arg_option(int num);	/* Eiffel string of argv[num] */
+RT_LNK char *arg_option(int num);	/* Eiffel string of argv[num] */
 
 #ifdef __cplusplus
 }

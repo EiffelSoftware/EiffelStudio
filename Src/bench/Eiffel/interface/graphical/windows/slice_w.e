@@ -125,7 +125,7 @@ feature -- Access
 			popup;
 			raise
 		end;
-	
+
 feature {NONE} -- Properties
 
 	ok_it: ANY is

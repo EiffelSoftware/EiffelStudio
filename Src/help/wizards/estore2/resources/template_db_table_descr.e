@@ -9,8 +9,6 @@ class
 
 inherit
 	DB_TABLE_DESCRIPTION
---		rename
---			Tables as Abstract_tables
 		undefine
 			Tables,
 			is_valid_code

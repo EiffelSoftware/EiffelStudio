@@ -115,12 +115,6 @@ feature -- Basic operation
 			set_x_position (preferences.integer_resource_value (Preferences.build_window__x_position, 200))
 			set_y_position (preferences.integer_resource_value (Preferences.build_window__y_position, 200))
 			
-				-- The split areas do not re-position correctly when
-				-- `Current' is not shown, so when shown, we initialize
-				-- them. This is only done once, as if the user moves through the
-				-- wizard, we need to keep their desired layout.
-			show_actions.extend_kamikaze (agent initialize_split_areas)
-			
 				-- Register an event that clips recent projects with the preferences.
 				-- This permits the update of paticular properties in the system after a preferences
 				-- value has changed.
@@ -180,13 +174,6 @@ feature -- Basic operation
 				-- Ensure `recent_projects_menu' is sensitive.
 			recent_projects_menu.disable_sensitive
 			
-				-- This causes a postcondition to fail in EV_SPLIT_AREA.
-				-- However, it needs to be executed here so that it is not
-				-- visible. The problem is, that while the window is still
-				-- locked, the re-sizing is not completely calculated, hence
-				-- the postcondition violation.
-			initialize_split_areas
-
 				-- Now restore from preferences
 			if horizontal_split_area.full then
 				set_split_position (horizontal_split_area, preferences.integer_resource_value (Preferences.main_split__position, 100))

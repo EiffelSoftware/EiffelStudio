@@ -39,7 +39,7 @@ rt_public void com_initialize ()
 	HRESULT hr;
 	hr = CoInitialize (NULL);
 
-	CHECK (hr, "CoInitialize failed");
+	CHECK ((hr == S_OK) || (hr == S_FALSE), "CoInitialize failed");
 }
 
 // ISE_COM_CACHE_MANAGER---------------------------------------------------------------------
@@ -69,7 +69,7 @@ rt_public EIF_POINTER new_cor_runtime_host (LPWSTR version, DWORD flags)
 	HMODULE mscoree = NULL;
 	FARPROC cor_bind_to_runtime_ex = NULL;
 	ICorRuntimeHost *pHost = NULL;
-	
+
 	mscoree = LoadLibrary ("mscoree.dll");
 	if (mscoree != NULL) {
 		cor_bind_to_runtime_ex = GetProcAddress (mscoree, "CorBindToRuntimeEx");

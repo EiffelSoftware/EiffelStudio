@@ -37,23 +37,18 @@ feature -- Callbacks
 			-- Save a file with a chosen name.
 		local
 			fn: STRING;
-			--new_file: PLAIN_TEXT_FILE;
-			new_file: RAW_FILE; -- Because of windows
+			new_file: RAW_FILE;	-- It should be PLAIN_TEXT_FILE, however windows will expand %R and %N as %N
 			to_write: STRING;
 			aok: BOOLEAN;
-			char: CHARACTER;
 			temp: STRING
 		do
 			fn := clone (last_name_chooser.selected_file);
 			if not fn.empty then
 				!!new_file.make (fn);
 				aok := True;
-				if
-					(new_file.exists) and then (not new_file.is_plain)
-				then
+				if (new_file.exists) and then (not new_file.is_plain) then
 					aok := False;
-					warner (popup_parent).gotcha_call 
-						(Warning_messages.w_Not_a_plain_file (fn))
+					warner (popup_parent).gotcha_call (Warning_messages.w_Not_a_plain_file (fn))
 				elseif 
 					argument = last_name_chooser and then 
 					(new_file.exists and then new_file.is_writable)
@@ -62,15 +57,11 @@ feature -- Callbacks
 					warner (popup_parent).custom_call (Current, 
 						Warning_messages.w_File_exists (fn), 
 						Interface_names.b_Overwrite, Void, Interface_names.b_Cancel);
-				elseif
-					new_file.exists and then (not new_file.is_writable)
-				then
+				elseif new_file.exists and then (not new_file.is_writable) then
 					aok := False;
 					warner (popup_parent).gotcha_call 
 						(Warning_messages.w_Not_writable (fn))
-				elseif
-					not new_file.is_creatable
-				then
+				elseif not new_file.is_creatable then
 					aok := False;
 					warner (popup_parent).gotcha_call 
 						(Warning_messages.w_Not_creatable (fn))
@@ -80,18 +71,23 @@ feature -- Callbacks
 				warner (popup_parent).gotcha_call 
 					(Warning_messages.w_Not_a_plain_file (fn))
 			end;
+
 			if aok then
 				new_file.open_write;
 				to_write := text_window.text;
 				if not to_write.empty then
-					new_file.putstring (to_write);
-					char := to_write.item (to_write.count);
-					if Platform_constants.is_unix and then char /= '%N' and then char /= '%R' then
-							-- Add a carriage return like vi 
-							-- if there's none at the end
-						new_file.new_line
-					end;
-				end;
+					to_write.prune_all ('%R')
+					if general_resources.text_mode.value.is_equal ("UNIX") then
+						new_file.putstring (to_write)
+						if to_write.item (to_write.count) /= '%N' then 
+							-- Add a carriage return like `vi' if there's none at the end 
+							new_file.new_line
+						end
+					else
+						to_write.replace_substring_all ("%N", "%R%N")
+						new_file.putstring (to_write)
+					end
+				end
 				new_file.close;
 				if text_window.changed then 
 					text_window.disable_clicking

@@ -12,15 +12,11 @@ inherit
 	CODE_SHARED_EVENT_MANAGER
 		export
 			{NONE} all
-		undefine
-			is_equal
 		end
 
 	CODE_STOCK_TYPE_REFERENCES
 		export
 			{NONE} all
-		undefine
-			is_equal
 		end
 
 create
@@ -43,7 +39,7 @@ feature {NONE} -- Initialization
 		
 feature -- Access
 
-	routine: CODE_MEMBER_REFERENCE
+	routine: STRING
 			-- Routine name
 			
 	target: CODE_EXPRESSION
@@ -57,32 +53,27 @@ feature -- Access
 			-- | Set `dummy_variable' to true if `returned_type_routine' /= Void
 			-- Eiffel code of routine reference expression
 		local
-			l_target_name, l_current: STRING
 			l_type_ref_exp: CODE_TYPE_REFERENCE_EXPRESSION
 		do
 			create Result.make (120)
-			if target /= Void then
-				l_type_ref_exp ?= target
-				if l_type_ref_exp /= Void then
-					Result.append ("feature {")
-					Result.append (l_type_ref_exp.code)
-					Result.append ("}.")
-				else
-					l_target_name := target.code
-					create l_current.make (routine.implementing_type.namespace.count + routine.implementing_type.name.count + 1)
-					l_current.append (routine.implementing_type.namespace)
-					l_current.append (".")
-					l_current.append (routine.implementing_type.eiffel_name)
-					if  not l_target_name.is_equal (l_current) and not l_target_name.is_equal ("Current") then
-						Result.append (l_target_name)
+			if member /= Void then
+				if not is_current_generated_type (target.type) then
+					l_type_ref_exp ?= target
+					if l_type_ref_exp /= Void then
+						Result.append ("feature {")
+						Result.append (l_type_ref_exp.code)
+						Result.append ("}.")
+					else
+						Result.append (target.code)
 						Result.append (".")
 					end
-					if routine.result_type /= Void and then not routine.result_type.full_name.is_equal ("System.Void") then
-						set_dummy_variable (True) 
-					end
+				end
+				if Resolver.is_generated (member.implementing_type) then
+					Result.append (member.eiffel_name)
+				else
+					Result.append (member.overloaded_eiffel_name)
 				end
 			end
-			Result.append (routine.eiffel_name)
 		end
 		
 feature -- Status Report
@@ -90,11 +81,36 @@ feature -- Status Report
 	type: CODE_TYPE_REFERENCE is
 			-- Type
 		do
-			Result := routine.result_type
+			if member /= Void then
+				Result := member.result_type
+			end
 			if Result = Void then
 				Result := None_type_reference
 			end
 		end
+		
+feature {NONE} -- Implementation
+
+	member: CODE_MEMBER_REFERENCE is
+			-- Corresponding member
+		require
+			in_generation: current_state = Code_generation
+		do
+			if not member_searched then
+				member_searched := True
+				internal_member := target.type.member_from_name (routine)
+				if internal_member = Void then
+					Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_feature, [routine, target.type.name])
+				end
+			end
+			Result := internal_member
+		end
+	
+	internal_member: CODE_MEMBER_REFERENCE
+			-- Cached `member'
+	
+	member_searched: BOOLEAN
+			-- Was `member' called?
 
 invariant
 	non_void_routine: routine /= Void

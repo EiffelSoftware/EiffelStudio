@@ -19,12 +19,9 @@ feature {NONE} -- Initialization
 
 	make (token: INTEGER) is
 			-- Create new instance ready to be updated.
-		local
-			a: ARRAY [INTEGER_8]
 		do
-			create a.make (0, Chunk_size)
+			create item.make (Chunk_size)
 			create labels.make (1, 5)
-			internal_body := a.area
 			create exception_block.make
 			remake (token)
 		ensure
@@ -71,6 +68,9 @@ feature -- Access
 			Result := current_position
 		end
 		
+	item: MANAGED_POINTER
+			-- Hold data for current method_body.
+		
 	max_stack: INTEGER
 			-- Max stack of current feature.
 	
@@ -112,14 +112,9 @@ feature -- Savings
 		require
 			not_yet_written: not is_written
 			m_not_void: m /= Void
-			valid_pos: pos >=0 and pos < m.size
-		local
-			l_spe: like internal_body
-			l_ptr: POINTER
+			valid_pos: pos >= 0 and pos < m.size
 		do
-			l_spe := internal_body;
-			l_ptr := m.item + pos
-			l_ptr.memory_copy ($l_spe, current_position)
+			(m.item + pos).memory_copy (item.item, current_position)
 			is_written := True
 		ensure
 			is_written_set: is_written
@@ -192,7 +187,7 @@ feature -- Opcode insertion
 			not_yet_written: not is_written
 		do
 			put_opcode (opcode)
-			internal_body.put (i, current_position)
+			internal_put (i, current_position)
 			current_position := current_position + 1
 		end
 
@@ -417,18 +412,18 @@ feature {NONE} -- Opcode insertion helpers
 		end
 
 	internal_put (val: INTEGER_8; pos: INTEGER) is
-			-- Safe insertion that will resize `internal_body' if needed.
+			-- Safe insertion that will resize `item' if needed.
 		require
 			not_yet_written: not is_written
 			valid_pos: pos >= 0
 		local
 			l_capacity: INTEGER
 		do
-			l_capacity := internal_body.count
+			l_capacity := item.count
 			if pos > l_capacity then
-				internal_body := internal_body.resized_area (pos.max (l_capacity + Chunk_size))
+				item.resize (pos.max (l_capacity + Chunk_size))
 			end
-			internal_body.put (val, pos)
+			item.put_integer_8 (val, pos)
 		end
 
 feature {NONE} -- Stack depth management
@@ -447,11 +442,8 @@ feature {NONE} -- Stack depth management
 
 feature {NONE} -- Implementation
 
-	internal_body: SPECIAL [INTEGER_8]
-			-- To hold body.
-
 	current_position: INTEGER
-			-- Current position in `internal_body' for next insertion.
+			-- Current position in `item' for next insertion.
 
 	Chunk_size: INTEGER is 50
 			-- Default body size.
@@ -463,8 +455,8 @@ feature {NONE} -- Implementation
 			-- List all labels used in current body.
 			
 invariant
-	internal_body_not_void: internal_body /= Void
-	current_position_valid: current_position >= 0 and current_position < internal_body.count
+	item_not_void: item /= Void
+	current_position_valid: current_position >= 0 and current_position < item.count
 	valid_max_stack: max_stack >= 0 and then max_stack < 65535
 	
 end -- class MD_METHOD_BODY

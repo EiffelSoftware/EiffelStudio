@@ -20,6 +20,7 @@ feature -- Saving
 		require
 			m_not_void: m /= Void
 			valid_pos: pos >=0 and pos < m.size
+			enough_space: m.size >= pos + size
 		deferred
 		end
 		

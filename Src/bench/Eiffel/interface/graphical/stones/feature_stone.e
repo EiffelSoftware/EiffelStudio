@@ -78,7 +78,7 @@ feature -- Access
 			!!Result.make (0);
 			Result.append ("Feature: ");
 			Result.append (e_feature.name);
-			Result.append ("	Class: ");
+			Result.append (" Class: ");
 			Result.append (e_class.signature);
 		end;
  

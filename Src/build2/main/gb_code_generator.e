@@ -51,6 +51,11 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	GB_SHARED_CONSTANTS
+		export
+			{NONE} all
+		end
 
 feature -- Basic operation
 
@@ -303,11 +308,18 @@ feature {NONE} -- Implementation
 		end
 		
 		build_constants_file is
-				--
+				-- Build class file containing all generated constants.
 			local
 				constants_file_name: FILE_NAME
 				constants_file: PLAIN_TEXT_FILE
 				constants_content: STRING
+				generated_constants_string: STRING
+				all_constants: HASH_TABLE [GB_CONSTANT, STRING]
+				constant: GB_CONSTANT
+				integer_constant: GB_INTEGER_CONSTANT
+				string_constant: GB_STRING_CONSTANT
+				pixmap_constant: GB_PIXMAP_CONSTANT
+				directory_constant: GB_DIRECTORY_CONSTANT
 			do
 				--| FIXME handle visual studio wizard.
 				
@@ -317,10 +329,51 @@ feature {NONE} -- Implementation
 				constants_file.close
 				constants_content := constants_file.last_string
 				
+					-- Now generate string representing all constants.
+				all_constants := constants.all_constants
+				generated_constants_string := ""
+				from
+					all_constants.start
+				until
+					all_constants.off
+				loop
+					constant := all_constants.item_for_iteration
+					integer_constant ?= constant
+					if integer_constant /= Void then
+						generated_constants_string := generated_constants_string + Indent_less_two + integer_constant.name + ": INTEGER is " +
+							integer_constant.value_as_string + Indent_less_one + "-- `Result' is INTEGER constant named " + integer_constant.name + ".%N"
+					end
+					string_constant ?= constant
+					if string_constant /= Void then
+						generated_constants_string := generated_constants_string + Indent_less_two + string_constant.name + ": STRING is %"" +
+							string_constant.value_as_string + "%"" + Indent_less_one + "-- `Result' is STRING constant named " + string_constant.name + ".%N"
+					end
+					pixmap_constant ?= constant
+					if pixmap_constant /= Void then
+						if pixmap_constant.is_absolute then
+							--generated_constants_string := generated_constants_string + Indent_less_two + pixmap_constant.name +: EV_PIXMAP is 
+							generated_constants_string := generated_constants_string + Indent_less_two + pixmap_constant.name + ": EV_PIXMAP is" + Indent_less_one +
+							"Once" + Indent + "create Result" + Indent + "Result.set_with_named_file (%"" + pixmap_constant.value + "%")" + Indent_less_one + "end" + "%N"
+						else
+							generated_constants_string := generated_constants_string + Indent_less_two + pixmap_constant.name + ": EV_PIXMAP is" + Indent_less_one +
+							"local" + indent + "a_file_name: FILE_NAME" + Indent_less_one + "Once" + Indent + "create Result" + Indent + 
+							"create a_file_name.make_from_string (" + pixmap_constant.directory + ")" + Indent + "a_file_name.extend (%"" + pixmap_constant.filename +"%")" +
+							indent + "Result.set_with_named_file (a_file_name)" + Indent_less_one + "end" + "%N"
+						end
+					end
+					directory_constant ?= constant
+					if directory_constant/= Void then
+						generated_constants_string := generated_constants_string + Indent_less_two + directory_constant.name + ": STRING is %"" +
+							directory_constant.value_as_string + "%"" + Indent_less_one + "-- `Result' is DIRECTORY constant named " + directory_constant.name + ".%N"
+					end
+					all_constants.forth
+				end
+
+				add_generated_string (constants_content, generated_constants_string, constants_tag)
+				
 					-- Now write the new constants file to disk.
 				constants_file_name := clone (generated_path)
 				constants_file_name.extend ("constants.e")
-
 				create constants_file.make_open_write (constants_file_name)
 				constants_file.start
 				constants_file.putstring (constants_content)

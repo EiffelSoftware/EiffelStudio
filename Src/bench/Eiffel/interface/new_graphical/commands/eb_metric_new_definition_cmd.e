@@ -182,7 +182,7 @@ feature -- Access
 	valid_metric_definition: BOOLEAN
 		-- Is new metric's definition syntaxly correct?
 
-	metric_definition: XML_ELEMENT
+	metric_definition: XM_ELEMENT
 		-- Definition part of the newly defined metric.
 
 	is_derived: BOOLEAN
@@ -280,7 +280,7 @@ feature -- Action
 		require
 			tab_set: tab /= Void
 		local
-			new_metric_element: XML_ELEMENT
+			new_metric_element: XM_ELEMENT
 			retried: BOOLEAN
 			x_pos, y_pos, index_of_metric: INTEGER
 			error_dialog: EB_INFORMATION_DIALOG

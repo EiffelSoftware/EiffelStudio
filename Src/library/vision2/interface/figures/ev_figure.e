@@ -497,6 +497,7 @@ feature {EV_FIGURE_GROUP} -- Implementation
 
 	unreference_group is
 			-- Set group to Void after removal from it.
+			-- Remove `Current' from `group'.
 		require
 			group_exists: group /= Void
 		do

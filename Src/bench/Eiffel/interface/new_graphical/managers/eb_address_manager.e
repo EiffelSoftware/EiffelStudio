@@ -2111,29 +2111,33 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 		local
 			orig_font: EV_FONT
 			csts: EV_FONT_CONSTANTS
-		once
+		do
 			create csts
-			orig_font := create {EV_FONT}
+			orig_font := Default_font
 			create Result.make_with_values (
 				orig_font.family, csts.Weight_black, orig_font.shape, orig_font.height)
 		end
 
 	Default_font: EV_FONT is
 			-- Font used to display labels.
-		once
+		do
 			Result := create {EV_FONT}
 		end
 
 	highlight_label (lab: EV_LABEL) is
 			-- Display `lab' with a bold font.
+		local
+			a_font: EV_FONT
 		do
-			lab.set_font (big_font)
+			a_font := big_font
+			lab.set_minimum_width (a_font.string_width (lab.text))
+			lab.set_font (a_font)
 		end
 
 	unhighlight_label (lab: EV_LABEL) is
 			-- Display `lab' with a bold font.
 		do
-			lab.set_font (create {EV_FONT})
+			lab.set_font (Default_font)
 		end
 
 	enable_complete: BOOLEAN is

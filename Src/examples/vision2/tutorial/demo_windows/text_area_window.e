@@ -30,6 +30,10 @@ feature {NONE} -- Initialization
 	set_tabs is
 			-- Set the tabs for the action window.
 		do
+			set_primitive_tabs
+			tab_list.extend (text_component_tab)
+			tab_list.extend (text_tab)
+			create action_window.make (Current, tab_list)
 		end
 
 feature -- Access

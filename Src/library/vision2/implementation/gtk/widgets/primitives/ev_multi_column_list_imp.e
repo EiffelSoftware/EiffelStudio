@@ -20,7 +20,7 @@ inherit
 	EV_PRIMITIVE_IMP
 		redefine
 			initialize,
-			pebble_over_widget,
+			pointer_over_widget,
 			interface,
 			destroy,
 			set_foreground_color,
@@ -454,8 +454,8 @@ feature -- Element change
 
 feature {EV_APPLICATION_IMP} -- Implementation
 
-	pebble_over_widget (a_gdkwin: POINTER; a_x, a_y: INTEGER): BOOLEAN is
-			-- Is the PND pebble hovering above list.
+	pointer_over_widget (a_gdkwin: POINTER; a_x, a_y: INTEGER): BOOLEAN is
+			-- Is mouse pointer hovering above list.
 		local
 			gdkwin_parent, gdkwin_parent_parent: POINTER
 			clist_parent: POINTER
@@ -482,15 +482,17 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- Implementation
 
 	row_from_y_coord (a_y: INTEGER): INTEGER is
 			-- Returns the row at relative coordinate `a_y'.
+		local
+			v_adjust: POINTER
 		do
-			Result := a_y // (row_height + 1) + 1
+			v_adjust :=  C.gtk_scrolled_window_get_vadjustment (scroll_window)
+			Result := C.gtk_adjustment_struct_value (v_adjust).rounded
+			Result := a_y + Result
+			Result := Result // (row_height + 1) + 1
 			if Result > ev_children.count then
 				Result := 0
 			end
 		end
-
-	scroll_window: POINTER
-		-- Pointer to the scrollable window tree is in.
 
 feature {NONE} -- Implementation
 
@@ -623,6 +625,9 @@ feature {NONE} -- Implementation
 	row_height: INTEGER
 		-- Value used to store row height if list isn't yet created.
 
+	scroll_window: POINTER
+		-- Pointer to the scrollable window tree is in.
+
 feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- Implementation
 
 	list_widget: POINTER
@@ -654,6 +659,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.57  2000/03/31 19:12:29  king
+--| Accounted for name change of pebble_over_widget
+--|
 --| Revision 1.56  2000/03/30 19:30:26  king
 --| Changed to one column on creation, added column_* /= Void checks in create_list
 --|

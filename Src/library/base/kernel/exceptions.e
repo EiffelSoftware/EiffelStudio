@@ -13,6 +13,10 @@ class EXCEPTIONS
 inherit
 
 	EXCEP_CONST
+	ANY
+		redefine
+			die
+		end
 
 feature -- Status report
 
@@ -189,6 +193,17 @@ feature -- Status setting
 		do
 			c_trace_exception (False)
 		end;
+
+feature -- Basic operations
+
+	die (code: INTEGER) is
+			-- Stop execution with `exit' as status code,
+			-- without triggering an exception.
+		external
+			"C"
+		alias
+			"esdie"
+		end
 
 feature {NONE} -- Implementation
 

@@ -13,24 +13,9 @@ inherit
 			{NONE} all
 		end
 
-	WIZARD_COMPILER_ENVIRONMENT
-		export
-			{NONE} all
-		end
-
 	WIZARD_ROUTINES
 
 	WIZARD_RESCUABLE
-		export
-			{NONE} all
-		end
-
-	WIZARD_COMPILER_ENVIRONMENT
-		export
-			{NONE} all
-		end
-
-	WIZARD_WRITER_DICTIONARY
 		export
 			{NONE} all
 		end
@@ -42,8 +27,8 @@ inherit
 
 feature -- Miscellaneous
 
-	make_file (obj_list, a_library_name: STRING): STRING is
-			-- Makefile.
+	make_file (flags, obj_list, a_library_name: STRING): STRING is
+			-- Makefile text.
 		require
 			non_void_obj_list: obj_list /= Void
 			valid_obj_list: not obj_list.empty
@@ -51,7 +36,7 @@ feature -- Miscellaneous
 			create Result.make (1000)
 			Result.append ("# ecom.lib - Makefile for Microsoft C%N%N%
 					%CC = cl%N%
-					%CFLAGS = " + generated_standard_c_compiler_options +
+					%CFLAGS = " + flags +
 					"%N%NOBJ = " + obj_list + "%N%N" +
 					a_library_name + ".lib: $(OBJ)%N%
 					%	if exist $@ del $@%N%
@@ -98,14 +83,15 @@ feature -- Basic operations
 				a_file_list.forth
 			end
 			if not obj_list.empty then
-				generate_make_file (make_file (obj_list, a_library_name), "Makefile")
+				save_file (make_file (c_compiler_flags (workbench_c_compiler_flags_addition), obj_list, a_library_name), "Makefile")
+				save_file (make_file (c_compiler_flags (finalize_c_compiler_flags_addition), obj_list, a_library_name), "Makefile_finalize")
+				save_file ("nmake /f Makefile_finalize", "make_finalize.bat")
 			end
 			execution_environment.change_working_directory (a_working_directory)
 		end
 
-	generate_make_file (content, a_file_name: STRING) is
-			-- Generate makefile with content `content' and file name `a_file_name'.
-			-- Set `last_make_command' with argument to pass to compiler.
+	save_file (content, a_file_name: STRING) is
+			-- Save file with content `content' and file name `a_file_name'.
 		local
 			retried: BOOLEAN
 			a_file: PLAIN_TEXT_FILE
@@ -127,6 +113,27 @@ feature -- Basic operations
 				retry
 			end
 		end
+
+feature {NONE} -- Implementation
+
+	c_compiler_flags (an_addition: STRING): STRING is 
+			-- C compiler options to compile generated code.
+		do
+			create Result.make (200)
+			Result.append ("/W0 ")
+			Result.append (an_addition)
+			Result.append (" /D %"_WIN32_DCOM%" /c /I..\..\client\include /I..\..\server\include /I..\..\common\include /I")
+			Result.append (Eiffel4_location)
+			Result.append ("\bench\spec\windows\include /I")
+			Result.append (Eiffel4_location)
+			Result.append ("\library\com\spec\windows\include ")
+		end
+
+	workbench_c_compiler_flags_addition: STRING is "/Zi /DWORKBENCH"
+			-- C compiler options.
+
+	finalize_c_compiler_flags_addition: STRING is "/Ox"
+			-- C compiler options.
 
 end -- class WIZARD_MAKEFILE_GENERATOR
 

@@ -5,6 +5,8 @@
 
 */
 
+
+#include "eif_project.h"
 #define implement
 #include "eif_config.h"
 #include "eif_path_name.h"	/* this includes eif_portable.h */
@@ -298,7 +300,7 @@ rt_public void eif_append_directory(EIF_REFERENCE string, EIF_POINTER p, EIF_POI
 
 #endif	/* EIF_VMS */
 
-	(eif_strset)(string, strlen ((char *)p));
+	(egc_strset)(string, strlen ((char *)p));
 }
 
 rt_public void eif_set_directory(EIF_REFERENCE string, EIF_POINTER p, EIF_POINTER v)
@@ -315,7 +317,7 @@ rt_public void eif_set_directory(EIF_REFERENCE string, EIF_POINTER p, EIF_POINTE
 	strcat ((char *)p, "/");
 	strcat ((char *)p, (char *)v);
 #endif
-	(eif_strset)(string, strlen ((char *)p));
+	(egc_strset)(string, strlen ((char *)p));
 }
 
 rt_public void eif_append_file_name(EIF_REFERENCE string, EIF_POINTER p, EIF_POINTER v)
@@ -332,7 +334,7 @@ rt_public void eif_append_file_name(EIF_REFERENCE string, EIF_POINTER p, EIF_POI
 		strcat ((char *)p, (char *)v);
 	}
 
-	(eif_strset)(string, strlen ((char *)p));
+	(egc_strset)(string, strlen ((char *)p));
 }
 
 rt_public EIF_BOOLEAN eif_case_sensitive_path_names(void)
@@ -422,7 +424,7 @@ rt_public EIF_REFERENCE eif_extracted_paths(EIF_POINTER p)
 	EIF_GET_CONTEXT
 	EIF_REFERENCE array;
  
-	array = emalloc(arr_dtype);
+	array = emalloc(egc_arr_dtype);
 	epush(&loc_stack, (char *) (&array));
  
 #if defined EIF_WINDOWS || defined EIF_OS2

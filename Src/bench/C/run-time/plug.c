@@ -10,6 +10,7 @@
 	A set of routines to plug the run-time in the generated C code.
 */
 
+#include "eif_project.h" /* for egc... */
 #include "eif_config.h"
 #include "eif_eiffel.h"
 #include "eif_plug.h"
@@ -25,7 +26,6 @@
 #include "eif_hashin.h"
 #endif
 #include "eif_bits.h"
-#include "eif_project.h"		/* for bit_dtype */
 
 
 #ifndef lint
@@ -62,10 +62,10 @@ rt_public char *argarr(EIF_CONTEXT int argc, char **argv)
 	/*
 	 * Create the array
 	 */
-	array = emalloc(arr_dtype);		/* If we return, it succeeded */
+	array = emalloc(egc_arr_dtype);		/* If we return, it succeeded */
 	epush(&loc_stack, (char *) &array); 		/* Protect address in case it moves */
 	nstcall = 0;					/* Turn invariant checking off */
-	(eif_arrmake)(array, 0L, argc-1);	/* Call the `make' routine of ARRAY */
+	(egc_arrmake)(array, 0L, argc-1);	/* Call the `make' routine of ARRAY */
 	sp = *(char **) array;			/* Get the area of the ARRAY */
 	epush (&loc_stack, (char *) &sp);		/* Protect the area */
 
@@ -126,10 +126,10 @@ rt_public char *striparr(EIF_CONTEXT register char *curr, register int dtype, re
 	types = obj_desc->cn_types;
 
 	stripped_nbr = nbr_attr - nbr;
-	array = emalloc(arr_dtype);	/* If we return, it succeeded */
+	array = emalloc(egc_arr_dtype);	/* If we return, it succeeded */
 	epush(&loc_stack, (char *) &array); 	/* Protect address in case it moves */
 	nstcall = 0;
-	(eif_arrmake)(array, 1L, stripped_nbr);	
+	(egc_arrmake)(array, 1L, stripped_nbr);	
 								/* Call feature `make' in class ARRAY[ANY] */
 
 	sp = *(char **) array;		/* Get the area of the ARRAY */
@@ -155,27 +155,27 @@ rt_public char *striparr(EIF_CONTEXT register char *curr, register int dtype, re
 				new_obj = *(char **) o_ref;
 				break;
 			case SK_CHAR:
-				new_obj = RTLN(char_ref_dtype);
+				new_obj = RTLN(egc_char_ref_dtype);
 				*new_obj = * (char *) o_ref;
 				break;
 			case SK_BOOL:
-				new_obj = RTLN(bool_ref_dtype);
+				new_obj = RTLN(egc_bool_ref_dtype);
 				*new_obj = * (char *) o_ref;
 				break;
 			case SK_INT:
-				new_obj = RTLN(int_ref_dtype);
+				new_obj = RTLN(egc_int_ref_dtype);
 				*(long *) new_obj = *(long *) o_ref;
 				break;
 			case SK_DOUBLE:
-				new_obj = RTLN(doub_ref_dtype);
+				new_obj = RTLN(egc_doub_ref_dtype);
 				*(double *) new_obj = *(double *) o_ref;
 				break;
 			case SK_FLOAT:
-				new_obj = RTLN(real_ref_dtype);
+				new_obj = RTLN(egc_real_ref_dtype);
 				*(float *) new_obj = *(float *) o_ref;
 				break;
 			case SK_POINTER:
-				new_obj = RTLN(point_ref_dtype);
+				new_obj = RTLN(egc_point_ref_dtype);
 				*(fnptr *) new_obj = *(fnptr *) o_ref;
 				break;
 			case SK_BIT:
@@ -211,12 +211,12 @@ rt_public char *makestr(EIF_CONTEXT register char *s, register int len)
 	EIF_GET_CONTEXT
 	char *string;					/* Were string object is located */
 
-	string = emalloc(str_dtype);	/* If we return, it succeeded */
+	string = emalloc(egc_str_dtype);	/* If we return, it succeeded */
 	epush(&loc_stack, (char *) &string); /* Protect address in case it moves */
 	nstcall = 0;
-	(eif_strmake)(string, len);		/* Call feature `make' in class STRING */
+	(egc_strmake)(string, len);		/* Call feature `make' in class STRING */
 	nstcall = 0;
-	(eif_strset)(string, len);		/* Call feature `set_count' in STRING */
+	(egc_strset)(string, len);		/* Call feature `set_count' in STRING */
 
 	/* Copy C string `s' in special object `area' of the new string
 	 * descriptor `string'. We know the `area' is the very first reference
@@ -382,7 +382,7 @@ rt_private void recursive_chkinv(EIF_CONTEXT int dtype, char *obj, int where)
 		if (body_index != INVALID_INDEX) {
 			body_id = dispatch[body_index];
 			if (body_id < zeroc) { 		/* Frozen invariant */
-				((void (*)()) frozen[body_id])(obj, where);
+				((void (*)()) egc_frozen[body_id])(obj, where);
 			} else 
 #ifndef DLE
 				/* Melted invariant */
@@ -552,7 +552,7 @@ void wstdinit(char *obj, char *parent)
 			/* Set dynamic type for bit expanded object */	
 			CAttrOffs(offset,cn_attr[i],dtype);
 			zone = HEADER(l[0] + offset);
-			zone->ov_flags = bit_dtype;
+			zone->ov_flags = egc_bit_dtype;
 			zone->ov_flags |= EO_EXP;
 			zone->ov_size = offset + (l[0] - l[1]);
 			

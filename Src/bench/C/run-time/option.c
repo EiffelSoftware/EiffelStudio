@@ -11,6 +11,7 @@
 */
 
 #include <stdio.h>
+#include "eif_project.h"
 #include "eif_config.h"
 #ifdef I_STRING
 #include <string.h>
@@ -40,7 +41,7 @@ rt_public int trace_call_level = 0;	/* call level for E-TRACE
 
 rt_public struct stack *prof_stack;
 
-extern EIF_INTEGER prof_enabled;
+/*JOCE extern EIF_INTEGER egc_prof_enabled;*/
 
 /* Total execution time */
 
@@ -460,11 +461,11 @@ void check_options_stop(EIF_CONTEXT_NOARG)
 void initprf(void)
 {
 	/* Creates the table needed for E-PROFILE. This function only
-	 * allocates that table if `prof_enabled'. Record the time
+	 * allocates that table if `egc_prof_enabled'. Record the time
 	 * to be able to compute the total execution time.
 	 */
 
-	if(prof_enabled) {
+	if(egc_prof_enabled) {
 			/* Allocate table */
 		class_table = (struct htable *) cmalloc(sizeof(struct htable));
 		if (class_table == (struct htable *) 0)
@@ -497,7 +498,7 @@ void exitprf(void)
 	 * Store information to disk and deallocate structures.
 	 */
 
-	if(prof_enabled) {
+	if(egc_prof_enabled) {
 
 #ifdef HAS_GETRUSAGE
 		struct prof_rusage *execution_time;
@@ -606,7 +607,7 @@ void exitprf(void)
 		ht_free(class_table);		/* Free memory */
 		prof_stack_free();			/* Deallocate stack */
 
-		prof_enabled = 0;		/* Disactive the profiler to avoid the use of it during */
+		egc_prof_enabled = 0;		/* Disactive the profiler to avoid the use of it during */
 								/* the `full_sweep' from `reclaim' which makes come calls */
 								/* calls to the `dispose' routines and since there are */
 								/* eiffel function, they can be recorded in the profiler */
@@ -824,7 +825,7 @@ void prof_stack_init(void)
 	 *    again?
 	 */
 
-	if(prof_enabled) {
+	if(egc_prof_enabled) {
 			/* Allocate profile stack */
 		prof_stack = (struct stack *) cmalloc(sizeof(struct stack));
 		if(!prof_stack)
@@ -840,7 +841,7 @@ void prof_stack_free(void)
 {
 	/* Free the memory allocated for `prof_stack'. */
 
-	if(prof_enabled) {
+	if(egc_prof_enabled) {
 		xfree((char *)(prof_stack->st_cur));	/* Free memory used by chunk */
 		xfree((char *)prof_stack);			/* Free memory used by stack */
 	}

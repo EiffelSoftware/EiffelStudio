@@ -181,7 +181,7 @@ rt_public EIF_INTEGER dle_retrieve(EIF_REFERENCE obj, EIF_REFERENCE dle_path)
 		 * table will have to be rebuilt. We can hence safely get rid of
 		 * the current one.
 		 */
-	if (co_table != fco_table) {
+	if (co_table != egc_fco_table) {
 		int i;
 		for (i = 0; i < old_scount; i++)
 			xfree(co_table[i]->co_tab);
@@ -191,7 +191,7 @@ rt_public EIF_INTEGER dle_retrieve(EIF_REFERENCE obj, EIF_REFERENCE dle_path)
 
 			/*** Free memory for variable `eorg_table' ***/
 
-	if (eorg_table != forg_table)
+	if (eorg_table != egc_forg_table)
 		xfree(eorg_table);
 	
 
@@ -224,17 +224,17 @@ rt_public EIF_INTEGER dle_retrieve(EIF_REFERENCE obj, EIF_REFERENCE dle_path)
 
 			/*** Allocation of variable `esystem' ***/
 
-	if (esystem == fsystem) {
+	if (esystem == egc_fsystem) {
 #ifdef CONCURRENT_EIFFEL
 		esystem = (struct cnode *) cmalloc((scount+1) * sizeof(struct cnode));
 		if (esystem == (struct cnode *) 0)
 			enomem();
-		bcopy(fsystem, esystem, (old_scount+1) * sizeof(struct cnode));
+		bcopy(egc_fsystem, esystem, (old_scount+1) * sizeof(struct cnode));
 #else
 		esystem = (struct cnode *) cmalloc(scount * sizeof(struct cnode));
 		if (esystem == (struct cnode *) 0)
 			enomem();
-		bcopy(fsystem, esystem, old_scount * sizeof(struct cnode));
+		bcopy(egc_fsystem, esystem, old_scount * sizeof(struct cnode));
 #endif
 	} else {
 			/* `esystem' has already been "cmalloc"ed when we loaded
@@ -254,11 +254,11 @@ rt_public EIF_INTEGER dle_retrieve(EIF_REFERENCE obj, EIF_REFERENCE dle_path)
 
 			/*** Allocation of variable `ecall' ***/
 
-	if (ecall == fcall) {
+	if (ecall == egc_fcall) {
 		ecall = (int32 **) cmalloc(scount * sizeof(int32 *));
 		if (ecall == (int32 **) 0)
 			enomem();
-		bcopy(fcall, ecall, old_scount * sizeof(int32 *));
+		bcopy(egc_fcall, ecall, old_scount * sizeof(int32 *));
 	} else {
 			/* `ecall' has already been "cmalloc"ed when we loaded
 			 * the static melted code. We just have to realloc it.
@@ -282,11 +282,11 @@ rt_public EIF_INTEGER dle_retrieve(EIF_REFERENCE obj, EIF_REFERENCE dle_path)
 
 			/*** Allocation of variable `eoption' ***/
 
-	if (eoption == foption) {
+	if (eoption == egc_foption) {
 		eoption = (struct eif_opt *)cmalloc(scount * sizeof(struct eif_opt));
 		if (eoption == (struct eif_opt *) 0)
 			enomem();
-		bcopy(foption, eoption, old_scount * sizeof(struct eif_opt));
+		bcopy(egc_foption, eoption, old_scount * sizeof(struct eif_opt));
 	} else {
 			/* `eoption' has already been "cmalloc"ed when we loaded
 			 * the static melted code. We just have to realloc it.
@@ -306,11 +306,11 @@ rt_public EIF_INTEGER dle_retrieve(EIF_REFERENCE obj, EIF_REFERENCE dle_path)
 	dprintf(1)("=== New count for dispatch table: %ld [old = %ld] ===\n", count, dcount);
 #endif
 
-	if (dispatch == fdispatch) {
+	if (dispatch == egc_fdispatch) {
 		dispatch = (uint32 *) cmalloc(count * sizeof(uint32));
 		if (dispatch == (uint32 *) 0)
 			enomem();
-		bcopy(fdispatch, dispatch, dcount * sizeof(uint32));
+		bcopy(egc_fdispatch, dispatch, dcount * sizeof(uint32));
 	} else {
 			/* `dispatch' has already been "cmalloc"ed when we loaded
 			 * the static melted code. We just have to realloc it.

@@ -20,6 +20,11 @@ inherit
 
 	SHARED_IL_CONSTANTS
 	
+	SHARED_GENERATION
+		export
+			{NONE} all
+		end
+	
 create
 	make
 
@@ -309,7 +314,7 @@ feature {NONE} -- Feature generation
 				
 				if is_static then
 					if feat.is_c_external then
-						name := "__" + System.system_name + "_" + feat.external_name
+						name := encoder.feature_name (current_class_type.static_type_id, feat.body_index)
 					else
 						name := "$$" + feat.external_name
 					end
@@ -320,7 +325,7 @@ feature {NONE} -- Feature generation
 				il_generator.generate_feature_identification (name, feat.feature_id,
 					is_redefined, is_deferred, is_frozen, feat.is_attribute,
 					is_static and then feat.is_c_external, is_static)
-
+				
 				generate_arguments (feat)
 				generate_return_type (feat)
 

@@ -209,10 +209,12 @@ feature -- Execution
 						if target /= Void and then target.compatible (stone) then
 							if not is_compatible_target then
 								is_compatible_target := True
+								widget.ungrab;
 								widget.grab (stone.stone_cursor)
 							end
 						elseif is_compatible_target then
 							is_compatible_target := False;
+							widget.ungrab;
 							widget.grab (stone.x_stone_cursor)
 						end
 					end

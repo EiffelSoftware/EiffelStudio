@@ -338,7 +338,7 @@ feature -- IL Code generation
 				value.generate_il
 				il_generator.generate_return (True)
 			end
-			Byte_context.clear_all
+			Byte_context.clear_feature_data
 		end
 
 feature -- Byte code generation

@@ -226,7 +226,7 @@ feature
 				byte_code.analyze
 				byte_code.set_real_body_id (real_body_id)
 				byte_code.generate
-				byte_context.clear_all
+				byte_context.clear_feature_data
 			else
 				system.removed_log_file.add (class_type, feature_name)				
 			end

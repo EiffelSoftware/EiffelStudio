@@ -50,14 +50,15 @@ struct define
 	ub2 col_retlen, col_retcode;
 };
 
-struct describe desc[MAX_SELECT_LIST_SIZE];
-struct define def[MAX_SELECT_LIST_SIZE];
+struct describe desc[MAX_SELECT_LIST_SIZE] [MAX_SELECT_LIST_SIZE];
+struct define def [MAX_DESCRIPTOR] [MAX_SELECT_LIST_SIZE];
+struct define def [MAX_DESCRIPTOR] [MAX_SELECT_LIST_SIZE];
 
 Cda_Def *cda[MAX_DESCRIPTOR];
 
 ub4	hda[HDA_SIZE/(sizeof(ub4))];
 Lda_Def lda;
-int ncol;
+int ncol [MAX_DESCRIPTOR];
 text bind_values[MAX_BINDS][MAX_ITEM_BUFFER_SIZE];
 text descrip[MAX_SELECT_LIST_SIZE];
 ub2 descrip_len[MAX_SELECT_LIST_SIZE];
@@ -272,151 +273,123 @@ int ora_init_order (text order[1024], int no_desc)
 }
 
  /* Describe select–list items. */
-sword describe_define(Cda_Def *tmp)
-{
+sword describe_define(Cda_Def *tmp, int no_desc) {
 	sword col, deflen, deftyp;
 	static ub1 *defptr;
-/* Describe the select–list items. */
-	for (col = 0; col < MAX_SELECT_LIST_SIZE; col++)
-	{
-		desc[col].buflen = MAX_ITEM_BUFFER_SIZE;
-		if (odescr(tmp, col + 1, &desc[col].dbsize,
-		&desc[col].dbtype, &desc[col].buf[0],
-		&desc[col].buflen, &desc[col].dsize,
-		&desc[col].precision, &desc[col].scale,
-		&desc[col].nullok))
-		{
-/* Break on end of select list. */
-			if (tmp->rc == VAR_NOT_IN_LIST)
+	/* Describe the select–list items. */
+	for (col = 0; col < MAX_SELECT_LIST_SIZE; col++) {
+		desc [no_desc] [col].buflen = MAX_ITEM_BUFFER_SIZE;
+		if (odescr(tmp, col + 1, &desc [no_desc] [col].dbsize,
+				   &desc [no_desc] [col].dbtype, &desc [no_desc] [col].buf[0],
+				   &desc [no_desc] [col].buflen, &desc [no_desc] [col].dsize,
+				   &desc [no_desc] [col].precision, &desc [no_desc] [col].scale,
+				   &desc [no_desc] [col].nullok)) {
+			/* Break on end of select list. */
+			if (tmp->rc == VAR_NOT_IN_LIST) {
 				break;
-			else
-			{
+			} else {
 				ora_error_handler(tmp);
 				return -1;
 			}
 		}/* adjust sizes and types for display */
-		switch (desc[col].dbtype)
-		{
-			case NUMBER_TYPE:
-			desc[col].dbsize = numwidth;
-/* Handle NUMBER with scale as float. */
-			if (desc[col].scale != 0)
-			{
-				defptr = (ub1 *) &def[col].flt_buf;
+		switch (desc [no_desc] [col].dbtype) {
+		case NUMBER_TYPE:
+			desc [no_desc] [col].dbsize = numwidth;
+			/* Handle NUMBER with scale as float. */
+//			if (desc [no_desc] [col].scale != 0) {
+				defptr = (ub1 *) &def [no_desc] [col].flt_buf;
 				deflen = (sword) sizeof(float);
 				deftyp = FLOAT_TYPE;
-				desc[col].dbtype = FLOAT_TYPE;
-			}
-			else
-			{
-				defptr = (ub1 *) &def[col].int_buf;
-				deflen = (sword) sizeof(sword);
-				deftyp = INT_TYPE;
-				desc[col].dbtype = INT_TYPE;
-			}
+				desc [no_desc] [col].dbtype = FLOAT_TYPE;
+//  			} else {
+//  				defptr = (ub1 *) &def [no_desc] [col].int_buf;
+//  				deflen = (sword) sizeof(sword);
+//  				deftyp = INT_TYPE;
+//  				desc [no_desc] [col].dbtype = INT_TYPE;
+//  			}
+			
 			break;
-			default:
-			if (desc[col].dbtype == DATE_TYPE)
-				desc[col].dbsize = 19;
-			if (desc[col].dbtype == ROWID_TYPE)
-				desc[col].dbsize = 18;
-			defptr = def[col].buf;
-			deflen = desc[col].dbsize > MAX_ITEM_BUFFER_SIZE ? 
-			MAX_ITEM_BUFFER_SIZE : desc[col].dbsize + 1;
+
+		default:
+			if (desc [no_desc] [col].dbtype == DATE_TYPE)
+				desc [no_desc] [col].dbsize = 19;
+			if (desc [no_desc] [col].dbtype == ROWID_TYPE)
+				desc [no_desc] [col].dbsize = 18;
+			defptr = def [no_desc] [col].buf;
+			deflen = desc [no_desc] [col].dbsize > MAX_ITEM_BUFFER_SIZE ? 
+				MAX_ITEM_BUFFER_SIZE : desc [no_desc] [col].dbsize + 1;
 			deftyp = STRING_TYPE;
 			break;
 		}
-		if (odefin(
-					tmp,
-				   	col + 1, 
-					defptr, 
-					deflen,
-					deftyp,
-					-1,
-					&def[col].indp, 
-					(text *) 0,
-				   	-1,
-					-1,
-					&def[col].col_retlen, 
-					&def[col].col_retcode))
-		{
+		if (odefin(tmp, col + 1, defptr, deflen, deftyp, -1, &def [no_desc] [col].indp, (text*) 0, -1, -1,
+				   &def [no_desc] [col].col_retlen, &def [no_desc] [col].col_retcode)) {
 			ora_error_handler(tmp);
 			return -1;
 		}
 	}
+	
 	return col;
 }
 
 
 
 
-void print_header(sword ncols)
-{
+void print_header(sword ncols, int no_desc) {
 	sword col, n;
 	//fputc('\n', stdout);
-	for (col = 0; col < ncols; col++)
-	{
-		n = desc[col].dbsize - desc[col].buflen;
-		if (desc[col].dbtype == ORA_EIF_FLOAT_TYPE ||
-			desc[col].dbtype == INT_TYPE)
-		{
+	for (col = 0; col < ncols; col++) {
+		n = desc [no_desc] [col].dbsize - desc [no_desc] [col].buflen;
+		if (desc [no_desc] [col].dbtype == ORA_EIF_FLOAT_TYPE ||
+			desc [no_desc] [col].dbtype == INT_TYPE) {
 			printf("%*c", n, ' ');
-			printf("%*.*s", desc[col].buflen,
-			desc[col].buflen, desc[col].buf);
-		}
-		else
-		{
-			printf("%*.*s", desc[col].buflen,
-			desc[col].buflen, desc[col].buf);printf("%*c", n, ' ');
+			printf("%*.*s", desc [no_desc] [col].buflen,
+				   desc [no_desc] [col].buflen, desc [no_desc] [col].buf);
+		} else {
+			printf("%*.*s", desc [no_desc] [col].buflen,
+				   desc [no_desc] [col].buflen, desc [no_desc] [col].buf);printf("%*c", n, ' ');
 		}
 		//fputc(' ', stdout);
 	}
 	//fputc('\n', stdout);
-	for (col = 0; col < ncols; col++)
-	{
-		for (n = desc[col].dbsize; --n >= 0; );
+	for (col = 0; col < ncols; col++) {
+		for (n = desc [no_desc] [col].dbsize; --n >= 0; );
 		//	fputc('-', stdout);
 		//fputc(' ', stdout);
 	}
 	//fputc('\n', stdout);
 }
 
-void print_rows(Cda_Def *tmp, sword ncols)
-{
+void print_rows(Cda_Def *tmp, sword ncols, int no_desc) {
 	sword col, n;
-	for (;;)
-	{
+	for (;;) {
 		//fputc('\n', stdout);
-/* Fetch a row. Break on end of fetch,
-disregard null fetch ”error”. */
-		if (ofetch(tmp))
-		{
+		/* Fetch a row. Break on end of fetch,
+		   disregard null fetch ”error”. */
+		if (ofetch(tmp)) {
 			if (tmp->rc == NO_DATA_FOUND)
 				break;
 			if (tmp->rc != NULL_VALUE_RETURNED)
 				//ora_error_handler(tmp);
 				break;
 		}
-		for (col = 0; col < ncols ; col++)
-		{
-/* Check col. return code for null. If
-null, print n spaces, else print value. */
-			if (def[col].indp < 0)
-				printf("%*c", desc[col].dbsize, ' ');
-			else
-			{
-				switch (desc[col].dbtype)
-				{
-					case ORA_EIF_FLOAT_TYPE:
-						printf("%*.*f", numwidth, 2, def[col].flt_buf);
-						break;
-					case INT_TYPE:
-						printf("%*d", numwidth, def[col].int_buf);
-						break;
-					default:
-						printf("%s", def[col].buf);
-					n = desc[col].dbsize - strlen((char *)
-					def[col].buf);
+		
+		for (col = 0; col < ncols ; col++) {
+			/* Check col. return code for null. If
+			   null, print n spaces, else print value. */
+			if (def [no_desc] [col].indp < 0) {
+				printf("%*c", desc [no_desc] [col].dbsize, ' ');
+			} else {
+				switch (desc [no_desc] [col].dbtype) {
+				case ORA_EIF_FLOAT_TYPE:
+					printf("%*.*f", numwidth, 2, def [no_desc] [col].flt_buf);
+					break;
+				case INT_TYPE:
+					printf("%*d", numwidth, def [no_desc] [col].int_buf);
+					break;
+				default:
+					printf("%s", def [no_desc] [col].buf);
+					n = desc [no_desc] [col].dbsize - strlen((char *)
+															 def [no_desc] [col].buf);
 					if (n > 0)
 						printf("%*c", n, ' ');
 					break;
@@ -427,38 +400,36 @@ null, print n spaces, else print value. */
 	} /* end for (;;) */
 }
 
-int ora_put_data (int no_des, int index, char *result)
-{
+int ora_put_data (int no_des, int index, char *result) {
 	int size;
-	size = strlen ((char *) def[index-1].buf);
-//	switch (desc[index].dbtype)
-//	{
-//		case FLOAT_TYPE:
-//			memcpy((char *)(result), (char *)(def[index].flt_buf), size);
-//		case INT_TYPE:
-//			memcpy((char *)(result), (char *)(def[index].int_buf), size);
-//		default:
-			memcpy((char *)(result), (char *)(def[index-1].buf), size);
-//		break;
-//	}	
-			 // if (ora_tmp == "") {
-				    /* the retrived value is NULL, we use empty string to represent NULL */
-			//		result[0] = '\0';
-			//			return 0;
+	size = strlen ((char *) def [no_des] [index-1].buf);
+	//	switch (desc [no_des] [index].dbtype)
+	//	{
+	//		case FLOAT_TYPE:
+	//			memcpy((char *)(result), (char *)(def [no_des] [index].flt_buf), size);
+	//		case INT_TYPE:
+	//			memcpy((char *)(result), (char *)(def [no_des] [index].int_buf), size);
+	//		default:
+	memcpy((char *)(result), (char *)(def [no_des] [index-1].buf), size);
+	//		break;
+	//	}	
+	// if (ora_tmp == "") {
+	/* the retrived value is NULL, we use empty string to represent NULL */
+	//		result[0] = '\0';
+	//			return 0;
 							
-			//			  }
+	//			  }
 			  
-			 //   memcpy(result, def[i], odbc_tmp_indicator);
-				  /*result[odbc_tmp_indicator] = '\0';*/
+	//   memcpy(result, def [no_des] [i], odbc_tmp_indicator);
+	/*result[odbc_tmp_indicator] = '\0';*/
 	return (size);
 }
 
-int ora_put_select_name (int no_des, int i, char *result)
-{
+int ora_put_select_name (int no_des, int i, char *result) {
 	char *tmp_st;
 	int size;
 
-	tmp_st = (char *) desc[i-1].buf;
+	tmp_st = (char *) desc [no_des] [i-1].buf;
 	size = strlen (tmp_st);
 	memcpy (result, tmp_st, size);
 	return size;
@@ -481,51 +452,46 @@ int ora_put_select_name (int no_des, int i, char *result)
 /*                                                               */
 /*****************************************************************/
 
-int ora_start_order (int no_desc)
-{
-/* Process user’s SQL statements. */
-//for (;;)
-//{
+int ora_start_order (int no_desc) {
+	/* Process user’s SQL statements. */
+	//for (;;)
+	//{
 
-/* Save the SQL function code right after parse. */
+	/* Save the SQL function code right after parse. */
 
 /* If the statement is a query, describe and define
 all select–list items before doing the oexec. */
-	if (sql_function == FT_SELECT)
-		if ((ncol = describe_define(cda[no_desc])) == -1)
-		{
+	if (sql_function == FT_SELECT) {
+		if ((ncol [no_desc] = describe_define(cda[no_desc], no_desc)) == -1) {
 			ora_error_handler(cda[no_desc]);
 			//continue;
 		}
-/* Execute the statement. */
-		if (oexec(cda[no_desc]))
-		{
-			ora_error_handler(cda[no_desc]);
+	}
+	
+	/* Execute the statement. */
+	if (oexec(cda[no_desc])) {
+		ora_error_handler(cda[no_desc]);
 		//	continue;
-		}
-/* Fetch and display the rows for the query. */
-/*	if (sql_function == FT_SELECT)
-	{
+	}
+	/* Fetch and display the rows for the query. */
+	/*	if (sql_function == FT_SELECT)
+		{
 		print_header(ncols);
-		print_rows(cda[no_desc], ncols);
-	}*/
-/* Print the rows–processed count. */
+		print_rows(&cda[no_desc], ncols);
+		}*/
+	/* Print the rows–processed count. */
 	/*if (sql_function == FT_SELECT ||
-	sql_function == FT_UPDATE ||
-	sql_function == FT_DELETE ||
-	sql_function == FT_INSERT)
-		printf("\n%d row%c processed.\n", cda[no_desc]->rpc,
-		cda[no_desc]->rpc == 1 ? '\0' : 's');
-	else
-		printf("\nStatement processed.\n");*/
-//	} /* end for (;;) */
+	  sql_function == FT_UPDATE ||
+	  sql_function == FT_DELETE ||
+	  sql_function == FT_INSERT)
+	  printf("\n%d row%c processed.\n", cda[no_desc].rpc,
+	  cda[no_desc].rpc == 1 ? '\0' : 's');
+	  else
+	  printf("\nStatement processed.\n");*/
+	//	} /* end for (;;) */
+
 	return 0;
 }
-
-
-
-
-
 
 /*****************************************************************/
 /*                                                               */
@@ -786,25 +752,22 @@ int ora_trancount (void)
 /*****************************************************************/
 /*  The following function deal with the DATE data of  ora      */
 /*****************************************************************/
-int ora_get_integer_data (int no_desc, int i)
-{
-	return (int) def[i-1].int_buf;
+int ora_get_integer_data (int no_desc, int i) {
+	return (int) def [no_desc] [i-1].int_buf;
 }
 
-double ora_get_float_data (int no_desc, int i)
-{
-	return (double) def[i-1].flt_buf;
+double ora_get_float_data (int no_desc, int i) {
+	return (double) def [no_desc] [i-1].flt_buf;
 }
 
-float ora_get_real_data (int no_desc, int i)
-{
-	return (float) def[i-1].flt_buf;
+float ora_get_real_data (int no_desc, int i) {
+	return (float) def [no_desc] [i-1].flt_buf;
 }
 
-int ora_get_boolean_data (int no_desc, int i)
-{
-	return (int) def[i-1].int_buf;
+int ora_get_boolean_data (int no_desc, int i) {
+	return (int) def [no_desc] [i-1].int_buf;
 }
+
 
 char date[19];
 char d[2];
@@ -816,13 +779,13 @@ int ora_get_date_data (int no_des, int i)
 {
 	int size;
 	
-	if (desc[i-1].dbtype == DATE_TYPE)
+	if (desc [no_des] [i-1].dbtype == DATE_TYPE)
 	{
-		size = desc[i-1].buflen;
-		if (*(def[i-1].buf) == '\0')
+		size = desc [no_des] [i-1].buflen;
+		if (*(def [no_des] [i-1].buf) == '\0')
 			memcpy (&date, default_date, sizeof(date));
 		else
-			memcpy (&date, def[i-1].buf, sizeof(date));
+			memcpy (&date, def [no_des] [i-1].buf, sizeof(date));
 		return 1;
 
 	}
@@ -872,7 +835,7 @@ char * ora_get_warn_message (void)
 
 int ora_get_data_len (int no_des, int i)
 {
-	  return desc[i-1].buflen;
+	  return desc [no_des] [i-1].buflen;
 }
 
 int ora_conv_type (int i)
@@ -895,19 +858,16 @@ int ora_conv_type (int i)
 			return ORA_EIF_UNKNOWN_TYPE;
 																    }
 }
-int ora_get_col_type (int no_des, int i)
-{
-	  return ora_conv_type(desc[i-1].dbtype);
+int ora_get_col_type (int no_des, int i) {
+	return ora_conv_type(desc [no_des] [i - 1].dbtype);
 }
 
-int ora_get_count (int no_des)
-{
-	  return ncol;
+int ora_get_count (int no_des) {
+	return ncol [no_des];
 }
 
-int ora_get_col_len (int no_des, int i)
-{
-	  return desc[i-1].dsize;
+int ora_get_col_len (int no_des, int i) {
+	return desc [no_des] [i - 1].dsize;
 }
 
 int ora_c_string_type ()

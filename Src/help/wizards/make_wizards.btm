@@ -6,20 +6,20 @@ setdos /x0
 remtrace *****************************************************************
 remtrace *                 Compiling WEL Wizard                          *
 remtrace *****************************************************************
-call make_wel_wizard.btm >>& %INSTALL_LOG
+call make_a_wizard.btm new_projects wel wel_wizard >>& %INSTALL_LOG
 remtrace *****************************************************************
 remtrace *               Compiling Vision2 Wizard                        *
 remtrace *****************************************************************
-call make_vision2_wizard.btm >>& %INSTALL_LOG
+call make_a_wizard.btm new_projects vision2 vision2_wizard >>& %INSTALL_LOG
 remtrace *****************************************************************
 remtrace *                Compiling Wizard Wizard                        *
 remtrace *****************************************************************
-REM call make_wizard_wizard.btm >>& %INSTALL_LOG
+REM call make_a_wizard.btm new_projects wizard wizard_wizard >>& %INSTALL_LOG
 remtrace *****************************************************************
 remtrace *              Compiling Precompilation Wizard                  *
 remtrace *****************************************************************
-call make_precompile_wizard.btm >>& %INSTALL_LOG
+call make_a_wizard.btm others precompile precompile_wizard >>& %INSTALL_LOG
 remtrace *****************************************************************
 remtrace *                    Compiling .NET Wizard                      *
 remtrace *****************************************************************
-call make_dotnet_wizard.btm >>& %INSTALL_LOG
+call make_a_wizard.btm new_projects dotnet dotnet_wizard >>& %INSTALL_LOG

@@ -93,7 +93,8 @@ feature {NONE}
 	dead_code, exception_stack_managed, collect, precompilation,
 	code_replication, check_vape, array_optimization, inlining, 
 	inlining_size, server_file_size, extendible, extending,
-	dynamic, hide, profile, override_cluster: INTEGER is UNIQUE;
+	dynamic, hide, profile, override_cluster,
+	address_expression: INTEGER is UNIQUE;
 
 	valid_options: HASH_TABLE [INTEGER, STRING] is
 			-- Possible values for free operators
@@ -115,6 +116,7 @@ feature {NONE}
 			Result.force (hide, "hide");
 			Result.force (profile, "profile");
 			Result.force (override_cluster, "override_cluster");
+			Result.force (address_expression, "address_expression");
 		end;
 
 feature {COMPILER_EXPORTER}
@@ -284,6 +286,16 @@ feature {COMPILER_EXPORTER}
 				else
 					error_found := true
 				end
+			when address_expression then
+				if value = Void then
+					error_found := True
+				elseif value.is_no then
+					System.allow_address_expression (False)
+				elseif value.is_yes then
+					System.allow_address_expression (True)
+				else
+					error_found := True;
+				end;
 			when dynamic, hide, profile then
 					-- This has been taken care of in `adapt'.
 			else

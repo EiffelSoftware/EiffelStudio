@@ -19,8 +19,6 @@ feature -- Externals
 
 	Driver: STRING is external "C" alias "eif_driver" end;
 
-	Eiffel_suffix: CHARACTER is external "C" alias "eif_eiffel_suffix" end;
-
 	Executable_suffix: STRING is external "C" alias "eif_exec_suffix" end;
 
 	Finish_freezing_script: STRING is 

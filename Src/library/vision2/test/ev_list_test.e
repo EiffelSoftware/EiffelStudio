@@ -66,6 +66,8 @@ feature -- Basic operation
 				p ?= test_list.item.entry (2)
 				empty_and_test (p, s)
 				fill_start_and_test (p, s)
+				fill_go_middle_and_test (p, s)
+				fill_finish_and_test (p, s)
 				fill_go_before_and_test (p, s)
 				fill_go_after_and_test (p, s)
 				test_list.forth
@@ -90,25 +92,37 @@ feature -- Basic operation
 
 	fill_start_and_test (test_agent: PROCEDURE [ANY, TUPLE []]; name: STRING) is
 		do
-			list.wipe_out
-			similar_list.wipe_out
-			new_item
-			list.extend (last_item)
-			similar_list.extend (last_item)
+			fill_lists
 			list.start
 			similar_list.start
-			description.append ("Testing feature `" + name + "' with state `readable'...")
+			description.append ("Testing feature `" + name + "' with state `isfirst'...")
+			test_agent.call ([])
+			append_result
+		end
+
+	fill_go_middle_and_test (test_agent: PROCEDURE [ANY, TUPLE []]; name: STRING) is
+		do
+			fill_lists
+			list.go_i_th (Testsize)
+			similar_list.go_i_th (Testsize)
+			description.append ("Testing feature `" + name + "' with cursor somewhere in middle...")
+			test_agent.call ([])
+			append_result
+		end
+
+	fill_finish_and_test (test_agent: PROCEDURE [ANY, TUPLE []]; name: STRING) is
+		do
+			fill_lists
+			list.finish
+			similar_list.finish
+			description.append ("Testing feature `" + name + "' with state `islast'...")
 			test_agent.call ([])
 			append_result
 		end
 
 	fill_go_before_and_test (test_agent: PROCEDURE [ANY, TUPLE []]; name: STRING) is
 		do
-			list.wipe_out
-			similar_list.wipe_out
-			new_item
-			list.extend (last_item)
-			similar_list.extend (last_item)
+			fill_lists
 			list.go_i_th (0)
 			similar_list.go_i_th (0)
 			description.append ("Testing feature `" + name + "' with state `before'...")
@@ -118,11 +132,7 @@ feature -- Basic operation
 
 	fill_go_after_and_test (test_agent: PROCEDURE [ANY, TUPLE []]; name: STRING) is
 		do
-			list.wipe_out
-			similar_list.wipe_out
-			new_item
-			list.extend (last_item)
-			similar_list.extend (last_item)
+			fill_lists
 			list.go_i_th (list.count + 1)
 			similar_list.go_i_th (similar_list.count + 1)
 			description.append ("Testing feature `" + name + "' with state `after'...")
@@ -167,6 +177,24 @@ feature {NONE} -- Implementation
 			end
 			if Result = Void then
 				Result := "Void"
+			end
+		end
+
+	fill_lists is
+		local
+			n: INTEGER
+		do
+			list.wipe_out
+			similar_list.wipe_out
+			from
+				n := Testsize * 2
+			until
+				n = 1
+			loop
+				new_item
+				list.extend (last_item)
+				similar_list.extend (last_item)
+				n := n - 1
 			end
 		end
 
@@ -268,7 +296,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	Magnitude: INTEGER is 3
+	Testsize: INTEGER is 3
 			-- Order of test.
 
 	test_extend is
@@ -276,7 +304,7 @@ feature {NONE} -- Implementation
 			n: INTEGER
 		do
 			from
-				n := Magnitude
+				n := Testsize
 			until
 				n = 1
 			loop
@@ -294,7 +322,7 @@ feature {NONE} -- Implementation
 			n: INTEGER
 		do
 			from
-				n := Magnitude
+				n := Testsize
 			until
 				n = 1
 			loop
@@ -312,7 +340,7 @@ feature {NONE} -- Implementation
 			n: INTEGER
 		do
 			from
-				n := Magnitude
+				n := Testsize
 			until
 				n = 1
 			loop
@@ -330,7 +358,7 @@ feature {NONE} -- Implementation
 			n: INTEGER
 		do
 			from
-				n := Magnitude
+				n := Testsize
 			until
 				n = 1
 			loop
@@ -346,7 +374,7 @@ feature {NONE} -- Implementation
 			n: INTEGER
 		do
 			from
-				n := Magnitude
+				n := Testsize
 			until
 				n = 1
 			loop
@@ -364,7 +392,7 @@ feature {NONE} -- Implementation
 			n: INTEGER
 		do
 			from
-				n := Magnitude
+				n := Testsize
 			until
 				n = 1
 			loop
@@ -382,7 +410,7 @@ feature {NONE} -- Implementation
 			n: INTEGER
 		do
 			from
-				n := Magnitude
+				n := Testsize
 			until
 				n = 1
 			loop
@@ -400,7 +428,7 @@ feature {NONE} -- Implementation
 			n: INTEGER
 		do
 			from
-				n := Magnitude
+				n := Testsize
 			until
 				n = 1
 			loop
@@ -440,8 +468,8 @@ end -- class EV_LIST_TEST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.7  2000/03/01 22:43:29  brendel
---| Added better error messages.
+--| Revision 1.8  2000/03/01 22:57:22  brendel
+--| Added testcases for `islast', `before' and cursor in middle.
 --|
 --| Revision 1.6  2000/03/01 19:16:56  brendel
 --| Improved test sequence.

@@ -150,9 +150,13 @@ feature -- Status setting
 		do
 			if an_effect.is_underlined then
 				enable_underlined
+			else
+				disable_underlined
 			end
 			if an_effect.is_striked_out then
 				enable_striked_out
+			else
+				disable_striked_out
 			end
 			internal_effects := an_effect.twin
 		end

@@ -169,9 +169,13 @@ feature {EV_ANY_IMP} -- Button intermediary agent routines
 			-- Selected
 		local
 			a_button_imp: EV_BUTTON_IMP
+			a_rad_imp: EV_RADIO_BUTTON_IMP
 		do
 			a_button_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			if a_button_imp.select_actions_internal /= Void and then a_button_imp.parent_imp /= Void then
+			a_rad_imp ?= a_button_imp
+			if a_rad_imp /= Void and then not a_rad_imp.is_selected then
+				-- Do nothing as we shouldn't call the select actions of a radio button if it isn't selected
+			elseif a_button_imp.select_actions_internal /= Void and then a_button_imp.parent_imp /= Void then
 				a_button_imp.select_actions_internal.call (Empty_tuple)
 			end
 		end

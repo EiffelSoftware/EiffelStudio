@@ -31,11 +31,11 @@ fi
 
 
 
-create_one_platform $1 "linux"
-create_one_platform $1 "hp9000"
+create_one_platform $1 "linux-glibc"
 create_one_platform $1 "sgi"
 create_one_platform $1 "solaris"
-create_one_platform $1 "sparc"
+create_one_platform $1 "solaris-2.5+"
+create_one_platform $1 "alpha"
 create_one_platform $1 "unixware"
 
 

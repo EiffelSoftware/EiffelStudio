@@ -12,16 +12,7 @@ default
 cluster
 
 -- MEL
-	mel:				"$EIFFEL4/library/mel/";
-	mel_callback_structs(mel):	"$/callback_structs";
-	mel_constants(mel):		"$/constants";
-	mel_events(mel):		"$/events";
-	mel_extra(mel):			"$/extra";
-	mel_gadgets(mel):		"$/gadgets";
-	mel_implementation(mel):	"$/implementation";
-	mel_kernel(mel):		"$/kernel";
-	mel_resources(mel):		"$/resources";
-	mel_widgets(mel):		"$/widgets";
+	all mel:				"$EIFFEL4/library/mel/"
 
 external
  

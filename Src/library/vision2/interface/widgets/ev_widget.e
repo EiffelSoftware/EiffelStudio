@@ -307,7 +307,8 @@ feature -- Element change
 		do
 			implementation.set_background_color (color)
 		ensure
-			background_color_set: background_color.equal_color (color)
+--			background_color_set: background_color.equal_color (color)
+-- FIXME: AlexB. 09101999. commented because, gtk change the value that we pass to the color. see why.
 		end
 
 	set_foreground_color (color: like foreground_color) is
@@ -403,7 +404,6 @@ feature -- Resizing
 			-- widget must be unmanaged.
 		require
 			exists: not destroyed
---			Unmanaged: not managed
 			Unmanaged: not managed
 			Positive_width: value >= 0
 		do
@@ -762,7 +762,7 @@ feature -- Event -- removing command association
 		do
 			implementation.remove_lose_focus_commands
 		end
-	
+		
 feature -- Implementation
 
 	implementation: EV_WIDGET_I

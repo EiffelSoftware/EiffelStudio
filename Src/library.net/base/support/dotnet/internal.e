@@ -180,6 +180,32 @@ feature -- Access
 		do
 			Result := object.generator
 		end
+		
+	class_name_of_type (type_id: INTEGER): STRING is
+			-- Name of class associated with dynamic type `type_id'.
+		do
+			check
+				False
+			end
+		end
+
+	type_name (object: ANY): STRING is
+			-- Name of `object''s generating type (type of which `object'
+			-- is a direct instance).
+		require
+			object_not_void: object /= Void
+		do
+			Result := object.generating_type
+		end
+
+	type_name_of_type (type_id: INTEGER): STRING is
+			-- Name of `type_id''s generating type (type of which `type_id'
+			-- is a direct instance).
+		do
+			check
+				False
+			end
+		end
 
 	dynamic_type (object: ANY): INTEGER is
 			-- Dynamic type of `object'
@@ -252,7 +278,7 @@ feature -- Access
 		end
 
 	field_type (i: INTEGER; object: ANY): INTEGER is
-			-- Type of `i'-th field of `object'
+			-- Abstract type of `i'-th field of `object'
 		require
 			object_not_void: object /= Void
 			index_large_enough: i >= 1
@@ -290,6 +316,17 @@ feature -- Access
 				end
 			end
 				
+		end
+
+	field_static_type_of_type (i: INTEGER; type_id: INTEGER): INTEGER is
+			-- Static type of declared `i'-th field of dynamic type `type_id'
+		require
+			index_large_enough: i >= 1
+			index_small_enough: i <= field_count_of_type (type_id)
+		do
+			check
+				False
+			end
 		end
 
 	expanded_field_type (i: INTEGER; object: ANY): STRING is

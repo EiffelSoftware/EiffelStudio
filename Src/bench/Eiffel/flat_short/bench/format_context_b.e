@@ -115,7 +115,7 @@ feature -- Properties
 			-- its ancestors?
 
 	feature_clause_order: ARRAY [STRING];
-            -- Array of feature clause comment ordering
+			-- Array of feature clause comment ordering
 
 	is_clickable_format: BOOLEAN is
 			-- Is the generated format the "clickable" format?
@@ -219,14 +219,14 @@ feature -- Access
 feature -- Setting
 
 	set_feature_clause_order (fco: like feature_clause_order) is
-            -- Set `feature_clause_order' to `fco'
+			-- Set `feature_clause_order' to `fco'
 		require
 			valid_fco: fco /= Void
-        do
-            feature_clause_order := fco
-        ensure
-            set: feature_clause_order = fco
-        end;
+		do
+			feature_clause_order := fco
+		ensure
+			set: feature_clause_order = fco
+		end;
 
 	set_type_creation (t: TYPE) is
 			-- Set last_class_printed to the actual type of `t'.

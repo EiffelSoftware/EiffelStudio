@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			vb.extend (hb)
 			create pixmap_box
 			hb.extend (pixmap_box)
-			hb.disable_child_expand (pixmap_box)
+			hb.disable_item_expand (pixmap_box)
 			create label
 			label.align_text_center
 			hb.extend (label)
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 			create button_box
 			vb.extend (button_box)
 			button_box.extend (create {EV_CELL})
-			vb.disable_child_expand (button_box)
+			vb.disable_item_expand (button_box)
 			button_box.set_padding (5)
 			button_box.set_border_width (10)
 
@@ -189,7 +189,7 @@ feature {NONE} -- Implementation
 
 			new_button.press_actions.extend (~on_button_press (s))
 			button_box.extend (new_button)
-			button_box.disable_child_expand (new_button)
+			button_box.disable_item_expand (new_button)
 			new_button.set_minimum_width (60)
 			new_button.align_text_center
 		end
@@ -229,6 +229,9 @@ end -- class EV_MESSAGE_DIALOG
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.20  2000/03/09 16:42:20  rogers
+--| Replaced all disable_child_expand with disable_item_expand.
+--|
 --| Revision 1.19  2000/03/08 17:18:26  brendel
 --| Replaced `extend' with `put'.
 --|

@@ -23,6 +23,33 @@ feature -- Access
 /*
 feature -- Status Report
 */
+
+	public override TYPE evaluated_type (EIFFEL_TYPE_INFO context_object)
+		// Evaluate Current in context of `context_object'.
+	{
+		GENERIC_TYPE l_type;
+		Int32 i = 0;
+
+			// Duplicate current data as after the evaluation in context
+			// of `context_object' it will be the same except for `type_array'
+			// which will only contained fully evaluated types that's why
+			// `type_array' is created of type `CLASS_TYPE []'.
+		l_type = (GENERIC_TYPE) MemberwiseClone();
+		l_type.set_type_array (new CLASS_TYPE [nb_generics]);
+
+			// Evaluate all types contained in `type_array' in context of `context_object'
+		for (i = 0; i < nb_generics ; i ++) {
+				// No need for cast here as we are 100% sure that result of evaluation
+				// on each item of the array will yield to an instance of CLASS_TYPE.
+			#if ASSERTIONS
+				ASSERTIONS.CHECK ("Valid element type", type_array [i].evaluated_type (context_object) is CLASS_TYPE);
+			#endif
+			l_type.type_array [i] = type_array [i].evaluated_type (context_object);
+		}
+
+		return l_type;
+	}
+
 	public override String type_name ()
 		// Name of object's generating type who has Current as an EIFFEL_DERIVATION
 		// (type of which it is a direct instance)

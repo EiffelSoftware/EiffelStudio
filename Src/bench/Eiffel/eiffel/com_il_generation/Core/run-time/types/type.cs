@@ -32,7 +32,12 @@ feature -- Status Report
 	{
 		return String.Empty;
 	}
-		
+	
+	public virtual TYPE evaluated_type (EIFFEL_TYPE_INFO context_object)
+		// Evaluate Current in context of `context_object'.
+	{
+		return this;
+	}
 }
 
 }

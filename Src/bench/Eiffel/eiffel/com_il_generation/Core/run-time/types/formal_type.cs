@@ -15,6 +15,16 @@ feature -- Access
 */
 	public Int32 position;
 		// Formal position.
+
+/*
+feature -- Status report
+*/
+	public override TYPE evaluated_type (EIFFEL_TYPE_INFO context_object)
+		// Evaluate Current in context of `context_object'.
+	{
+			// Get type of formal in context of `a_current' object.
+		return context_object.____type().generics_type [position - 1];
+	}
 /*
 feature -- Settings
 */

@@ -24,7 +24,7 @@ inherit
 			update_integer_resource,
 			update_array_resource,
 			set_default_size,
-			resources, close
+			resources, close, update_graphical_resources
 		end;
 	EB_CONSTANTS;
 
@@ -75,7 +75,17 @@ feature -- Dispatch Resource
 			-- if the value of `new_res' is applicable.
 		do
 			old_res.update_with (new_res)
-		end
+		end;
+
+	update_graphical_resources is
+			-- Synchronize clickable elements with text, if possible
+			-- and update the graphical values in text window.
+		do
+			if realized then
+				initialize_text_window_resources;
+				synchronize
+			end
+		end;
 
 feature -- Properties
 

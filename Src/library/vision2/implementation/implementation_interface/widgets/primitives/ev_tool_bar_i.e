@@ -25,6 +25,13 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
+	make_with_height (h: INTEGER) is
+			-- Create the toolbar with h as the height for all buttons
+		require
+			valid_height: h >= 0
+		deferred
+		end
+
 feature -- Status setting
 
 	set_default_options is

@@ -80,6 +80,11 @@ inherit
 			{NONE} all
 		end
 
+	WEL_RASTER_OPERATIONS_CONSTANTS
+		export
+			{NONE} all
+		end
+
 creation
 	make
 
@@ -92,12 +97,13 @@ feature {NONE} -- Initialization
 	initialize is
 		local
 			s_dc: WEL_SCREEN_DC
+			m_dc: WEL_MEMORY_DC
 		do
 			create s_dc
 			s_dc.get
-			create bitmap_dc.make_by_dc (s_dc)
-			create bitmap.make_compatible (s_dc, 1, 1)
-			bitmap_dc.select_bitmap (bitmap)
+			create internal_bitmap.make_compatible (s_dc, 1, 1)
+			create bitmap_dc.make_by_dc(s_dc)
+			bitmap_dc.select_bitmap (internal_bitmap)
 			s_dc.release
 
 			{EV_DRAWING_AREA_IMP} Precursor
@@ -108,12 +114,15 @@ feature {NONE} -- Initialization
 			--| FIXME: If the file is in a wrong format, 
 			--|        an exception is raised.
 		local
-			file: RAW_FILE
 			dib: EV_WEL_DIB
 		do
 			create dib.make_by_stream (a_file)
 			bitmap_dc.select_palette (dib.palette)
-			create bitmap.make_by_dib (bitmap_dc, dib, Dib_rgb_colors)
+			create internal_bitmap.make_by_dib (
+				bitmap_dc, 
+				dib, 
+				Dib_rgb_colors
+				)
 
 				-- Initialize the new device context
 			dc_to_reset := True
@@ -165,7 +174,7 @@ feature {NONE} -- Initialization
 						-- retrieve the bitmap from the icon.
 					icon_info := icon.get_icon_info
 					if icon_info /= Void then
-						bitmap := icon_info.color_bitmap
+						internal_bitmap := icon_info.color_bitmap
 						mask_bitmap := icon_info.mask_bitmap
 					else
 						exception_raise ("Unable to retrieve icon information")
@@ -173,9 +182,9 @@ feature {NONE} -- Initialization
 				end
 
 				if data_type = Loadpixmap_hbitmap then
-					create bitmap.make_by_pointer(rgb_data)
+					create internal_bitmap.make_by_pointer(rgb_data)
 --| FIXME ARNAUD: see if the following lines are correct for the GC.
---					bitmap.set_unshared
+--					internal_bitmap.set_unshared
 					create mask_bitmap.make_by_pointer(alpha_data)
 --					mask_bitmap.set_unshared
 				end
@@ -186,7 +195,11 @@ feature {NONE} -- Initialization
 						rgb_data, 
 						size_row * pixmap_height + 40
 						)
-					create bitmap.make_by_dib (bitmap_dc, dib, Dib_rgb_colors)
+					create internal_bitmap.make_by_dib(
+						bitmap_dc, 
+						dib, 
+						Dib_rgb_colors
+						)
 					palette := dib.palette
 
 					size_row := 4 * ((pixmap_width * 1 + 31) // 32)
@@ -217,9 +230,15 @@ feature -- Access
 			Result := bitmap_dc
 		end
 
-	bitmap: WEL_BITMAP
-		-- Current bitmap used. Void if not initialized, not
-		-- Void otherwise.
+	bitmap: WEL_BITMAP is
+			-- Current bitmap used. Void if not initialized, not
+			-- Void otherwise (see Invariant at the end of class).
+		do
+			if bitmap_dc.bitmap_selected then	
+				bitmap_dc.unselect_bitmap
+			end
+			Result := internal_bitmap
+		end
 
 	mask_bitmap: WEL_BITMAP
 		-- Monochrome bitmap used as mask. Void if none.
@@ -244,30 +263,21 @@ feature -- Status setting
 			end
 		end
 
-	stretch, stretch_image (a_x, a_y: INTEGER) is
-			-- Stretch the image to fit in size `a_x' by `a_y'.
-		do
-			--|FIXME Implement
-			check
-				not_yet_implemented: False
-			end
-		end
-
-	set_size (new_width, new_height: INTEGER) is
-			-- Resize the current bitmap. If the new size
-			-- is smaller than the old one, the bitmap is
-			-- clipped.
+	stretch, stretch_image (new_width, new_height: INTEGER) is
+			-- Stretch the image to fit in size 
+			-- `new_width' by `new_height'.
 		local
 			s_dc				: WEL_SCREEN_DC
-			mem_dc				: WEL_MEMORY_DC
 			a_mask_bitmap_dc	: WEL_MEMORY_DC
 			old_bitmap_dc		: like bitmap_dc
 			old_mask_bitmap_dc	: WEL_MEMORY_DC
 			old_width			: INTEGER
 			old_height			: INTEGER
+			wel_rect			: WEL_RECT
 		do
 				-- Operation not possible on icons, so we convert..
 			convert_icon_to_bitmap
+			reset_dc(True)
 
 				-- Retrieve the current values
 			old_bitmap_dc := bitmap_dc
@@ -275,23 +285,29 @@ feature -- Status setting
 			old_height := height
 
 				-- create and assign a new bitmap & bitmap_dc
+			create bitmap_dc.make
 			create s_dc
 			s_dc.get
-			create bitmap_dc.make_by_dc (s_dc)
-			create bitmap.make_compatible (s_dc, new_width, new_height)
-			bitmap_dc.select_bitmap (bitmap)
+			create internal_bitmap.make_compatible (
+				s_dc, 
+				new_width, 
+				new_height
+				)
 			s_dc.release
+			bitmap_dc.select_bitmap (internal_bitmap)
 
-				-- Copy the content of the old bitmap into the
+				-- Stretch the content of the old bitmap into the
 				-- new one
-			bitmap_dc.bit_blt(
-				0,							-- x source
-				0, 							-- y source
-				new_width.min(old_width),	-- width source
-				new_height.min(old_height),	-- height source
-				old_bitmap_dc, 				-- dc source
+			bitmap_dc.stretch_blt(
 				0, 							-- x dest.
 				0, 							-- y dest.
+				new_width,					-- width dest
+				new_height,					-- height dest
+				old_bitmap_dc, 				-- dc source
+				0,							-- x source
+				0, 							-- y source
+				old_width,					-- width source
+				old_height,					-- height source
 				Srccopy						-- copy mode
 				)
 
@@ -325,20 +341,133 @@ feature -- Status setting
 
 					-- Copy the content of the old bitmap into the
 					-- new one
-				a_mask_bitmap_dc.bit_blt(
-					0,							-- x source
-					0,							-- y source
-					new_width.min(old_width),	-- width source
-					new_height.min(old_height),	-- height source
-					old_mask_bitmap_dc,			-- dc source
+				a_mask_bitmap_dc.stretch_blt(
 					0,							-- x dest.
 					0,							-- y dest.
+					new_width,					-- width dest
+					new_height,					-- height dest
+					old_mask_bitmap_dc,			-- dc source
+					0,							-- x source
+					0,							-- y source
+					old_width,					-- width source
+					old_height,					-- height source
+					Srccopy						-- copy mode
+					)
+			end
+		
+				-- Set the dc to be reseted.
+			dc_to_reset := True
+		end
+
+	set_size (new_width, new_height: INTEGER) is
+			-- Resize the current bitmap. If the new size
+			-- is smaller than the old one, the bitmap is
+			-- clipped.
+		local
+			s_dc				: WEL_SCREEN_DC
+			a_mask_bitmap_dc	: WEL_MEMORY_DC
+			old_bitmap_dc		: like bitmap_dc
+			old_mask_bitmap_dc	: WEL_MEMORY_DC
+			old_width			: INTEGER
+			old_height			: INTEGER
+			wel_rect			: WEL_RECT
+		do
+				-- Operation not possible on icons, so we convert..
+			convert_icon_to_bitmap
+			reset_dc(True)
+
+				-- Retrieve the current values
+			old_bitmap_dc := bitmap_dc
+			old_width := width
+			old_height := height
+
+				-- create and assign a new bitmap & bitmap_dc
+			create bitmap_dc.make
+			create s_dc
+			s_dc.get
+			create internal_bitmap.make_compatible (
+				s_dc, 
+				new_width, 
+				new_height
+				)
+			s_dc.release
+			bitmap_dc.select_bitmap (internal_bitmap)
+
+			if new_width > old_width or new_height > old_height then
+				-- Set the "new" pixels to the background color
+				create wel_rect.make(0, 0, new_width, new_height)
+				bitmap_dc.fill_rect(wel_rect, our_background_brush)
+			end
+
+				-- Copy the content of the old bitmap into the
+				-- new one
+			bitmap_dc.bit_blt(
+				0,							-- x dest.
+				0, 							-- y dest.
+				new_width.min(old_width),	-- width
+				new_height.min(old_height),	-- height
+				old_bitmap_dc, 				-- dc source
+				0, 							-- x source
+				0, 							-- y source
+				Srccopy						-- copy mode
+				)
+
+				-- Initialize the new device context
+			bitmap_dc.set_background_opaque
+			bitmap_dc.set_background_transparent
+			reset_pen
+			reset_brush
+
+				-- Delete the old bitmap_dc.
+			old_bitmap_dc.delete
+			old_bitmap_dc := Void
+
+			------------------------------
+			-- Resize the mask (if any) --
+			------------------------------
+			if mask_bitmap /= Void then
+				
+				-- Create the mask dc.
+				create old_mask_bitmap_dc.make
+				old_mask_bitmap_dc.select_bitmap(mask_bitmap)
+
+					-- create and assign a new bitmap & bitmap_dc
+				create a_mask_bitmap_dc.make
+				create mask_bitmap.make_compatible (
+					a_mask_bitmap_dc, 
+					new_width, 
+					new_height
+					)
+				a_mask_bitmap_dc.select_bitmap (mask_bitmap)
+
+					-- Fill in the mask with zeros...
+				a_mask_bitmap_dc.pat_blt(
+					0, 							-- x dest
+					0, 							-- y dest
+					new_width, 					-- width
+					new_height, 				-- height
+					Blackness					-- pat mode
+					)
+
+					-- Copy the content of the old bitmap into the
+					-- new one
+				a_mask_bitmap_dc.bit_blt(
+					0,							-- x dest.
+					0,							-- y dest.
+					new_width.min(old_width),	-- width
+					new_height.min(old_height),	-- height
+					old_mask_bitmap_dc,			-- dc source
+					0,							-- x source
+					0,							-- y source
 					Srccopy						-- copy mode
 					)
 			end
 		
 				-- Finally, call the precursor.
 			Precursor (new_width, new_height)
+
+				-- Set the dc to be reseted.
+			dc_to_reset := True
 		end
 
 feature -- Measurement
@@ -346,17 +475,13 @@ feature -- Measurement
 	width: INTEGER is
 			-- Width of the pixmap.
 		do
-			if bitmap /= Void then
-				Result := bitmap.width
-			end
+			Result := internal_bitmap.width
 		end
 
 	height: INTEGER is
 			-- Height of the pixmap.
 		do
-			if bitmap /= Void then
-				Result := bitmap.height
-			end
+			Result := internal_bitmap.height
 		end
 
 feature -- Element change
@@ -386,7 +511,7 @@ feature -- Element change
 				if bitmap_dc.bitmap_selected then
 					bitmap_dc.unselect_bitmap
 				end
-				bitmap_dc.select_bitmap (bitmap)
+				bitmap_dc.select_bitmap (internal_bitmap)
 
 				bitmap_dc.set_background_opaque
 				bitmap_dc.set_background_transparent
@@ -431,22 +556,27 @@ feature {NONE} -- Internal states and Operations
 			interface.expose_actions.extend (~paint_bitmap)
 		end
 
-feature {NONE} -- Implementation
+feature {EV_PIXMAP_IMP} -- Implementation
 
 	bitmap_dc: WEL_MEMORY_DC
 			-- The DC of the bitmap in memory.
 
+	internal_bitmap: WEL_BITMAP
+			-- Current picture.
+
 	display_bitmap: WEL_BITMAP
-			-- Temporary bitmap used for display
+			-- Temporary bitmap used for display (in feature paint_bitmap)
 
 	display_mask_bitmap: WEL_BITMAP
-			-- Temporary bitmap used for display
+			-- Temporary bitmap used for display (in feature paint_bitmap)
 
 	display_bitmap_dc: WEL_MEMORY_DC
 			-- Temporary device context used for display
+			-- (in feature paint_bitmap)
 
 	display_mask_dc: WEL_MEMORY_DC
 			-- Temporary device context bitmap used for display
+			-- (in feature paint_bitmap)
 
 	interface: EV_PIXMAP
 
@@ -482,192 +612,185 @@ feature {NONE} -- Implementation
 			bitmap_width, bitmap_height: INTEGER
 			window_width, window_height: INTEGER
 		do
-			if bitmap /= Void then
+			reset_dc(False)
+			bitmap_dc.select_bitmap(internal_bitmap)
 
-				reset_dc(False)
+				-- Compute usefull constants
+			bitmap_height := height
+			bitmap_width := width
+			window_width := display_width
+			window_height := display_height
+			bitmap_left := (display_width - bitmap_width) // 2
+			bitmap_top := (display_height - bitmap_height) // 2
+			bitmap_right := bitmap_left + bitmap_width
+			bitmap_bottom := bitmap_top + bitmap_height
+						
+				-- Draw the bitmap (If it is larger than the displayed
+				-- area, it will be clipped by Windows.
+			if icon /= Void then
+					-- Erase the background (otherwise we cannot 
+					-- apply the mask
+				create wel_rect.make (
+					bitmap_left, 
+					bitmap_top, 
+					bitmap_right, 
+					bitmap_bottom
+					)
+				display_dc.fill_rect(
+					wel_rect, 
+					our_background_brush
+					)
 
-					-- Compute usefull constants
-				bitmap_height := height
-				bitmap_width := width
-				window_width := display_width
-				window_height := display_height
-				bitmap_left := (display_width - bitmap_width) // 2
-				bitmap_top := (display_height - bitmap_height) // 2
-				bitmap_right := bitmap_left + bitmap_width
-				bitmap_bottom := bitmap_top + bitmap_height
-							
-					-- Draw the bitmap (If it is larger than the displayed
-					-- area, it will be clipped by Windows.
-				if icon /= Void then
-						-- Erase the background (otherwise we cannot 
-						-- apply the mask
-					create wel_rect.make (
-						bitmap_left, 
-						bitmap_top, 
-						bitmap_right, 
-						bitmap_bottom
-						)
-					display_dc.fill_rect(
-						wel_rect, 
-						our_background_brush
-						)
-
-					display_dc.draw_icon(
-						icon, 
-						bitmap_left, 
-						bitmap_top
-						)
-				elseif mask_bitmap /= Void then
-
-						-- Create the mask and image used for display. 
-						-- They are different than the real image because 
-						-- we need to apply logical operation in order 
-						-- to display the masked bitmap.
-					if display_bitmap = Void or 
-					   display_mask_bitmap = Void or 
-					   update_display_bitmap then
-						create display_mask_bitmap.make_by_bitmap(mask_bitmap)
-						create display_mask_dc.make
-						--_by_dc(display_dc)
-						display_mask_dc.select_bitmap(display_mask_bitmap)
-						display_mask_dc.pat_blt(
-							0, 
-							0, 
-							bitmap_width, 
-							bitmap_height, 
-							Dstinvert
-							)
-
-						create display_bitmap.make_by_bitmap(bitmap)
-						create display_bitmap_dc.make_by_dc(display_dc)
-						display_bitmap_dc.select_bitmap(display_bitmap)
-						display_bitmap_dc.bit_blt (
-							0, 
-							0, 
-							bitmap_width, 
-							bitmap_height, 
-							display_mask_dc, 
-							0, 
-							0, 
-							Srcand
-							)
-
-						update_display_bitmap := False
-					end
-
-						-- Erase the background (otherwise we cannot apply 
-						-- the mask
-					create wel_rect.make (
-						bitmap_left, 
-						bitmap_top, 
-						bitmap_right, 
-						bitmap_bottom
-						)
-					display_dc.fill_rect(
-						wel_rect, 
-						our_background_brush
+				display_dc.draw_icon(
+					icon, 
+					bitmap_left, 
+					bitmap_top
+					)
+			elseif mask_bitmap /= Void then
+					-- Create the mask and image used for display. 
+					-- They are different than the real image because 
+					-- we need to apply logical operation in order 
+					-- to display the masked bitmap.
+				if display_bitmap = Void or 
+				   display_mask_bitmap = Void or 
+				   update_display_bitmap then
+					create display_mask_bitmap.make_by_bitmap(mask_bitmap)
+					create display_mask_dc.make
+					--_by_dc(display_dc)
+					display_mask_dc.select_bitmap(display_mask_bitmap)
+					display_mask_dc.pat_blt(
+						0, 
+						0, 
+						bitmap_width, 
+						bitmap_height, 
+						Dstinvert
 						)
 
-					display_dc.bit_blt (
-						bitmap_left, 
-						bitmap_top, 
+					create display_bitmap.make_by_bitmap(internal_bitmap)
+					create display_bitmap_dc.make_by_dc(display_dc)
+					display_bitmap_dc.select_bitmap(display_bitmap)
+					display_bitmap_dc.bit_blt (
+						0, 
+						0, 
 						bitmap_width, 
 						bitmap_height, 
 						display_mask_dc, 
 						0, 
 						0, 
-						Maskpaint
+						Srcand
 						)
 
-					display_dc.bit_blt (
-						bitmap_left, 
-						bitmap_top,
-						bitmap_width, 
-						bitmap_height, 
-						display_bitmap_dc, 
-						0, 
-						0, 
-						Srcpaint
-						)
-				else
-					display_dc.bit_blt (
-						bitmap_left, 
-						bitmap_top, 
-						bitmap_width, 
-						bitmap_height, 
-						bitmap_dc, 
-						0, 
-						0, 
-						Srccopy
-						)
-				end
-				
-
-					--|  If the displayed area is larger than the bitmap, 
-					--|  we erase the background that is outside the bitmap
-					--|  (i.e: AREA 1, 2, 3 & 4)
-					--|
-					--|  XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-					--|  X                             X
-					--|  X          AREA 1             X
-					--|  X                             X
-					--|  XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-					--|  X         X         X         X
-					--|  X AREA 3  X BITMAP  X  AREA 4 X
-					--|  X         X         X         X
-					--|  XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-					--|  X                             X
-					--|  X          AREA 2             X
-					--|  X                             X
-					--|  XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-
-				create wel_rect.make (0, 0, 0, 0)
-					-- fill AREA 1
-				if bitmap_top > 0 then
-					wel_rect.set_rect (
-						0, 
-						0, 
-						window_width, 
-						bitmap_top
-						)
-					display_dc.fill_rect(wel_rect, our_background_brush)
+					update_display_bitmap := False
 				end
 
-					-- fill AREA 2
-				if bitmap_bottom < window_height then
-					wel_rect.set_rect (
-						0, 
-						bitmap_bottom, 
-						window_width, 
-						window_height
-						)
-					display_dc.fill_rect(wel_rect, our_background_brush)
-				end
+					-- Erase the background (otherwise we cannot apply 
+					-- the mask
+				create wel_rect.make (
+					bitmap_left, 
+					bitmap_top, 
+					bitmap_right, 
+					bitmap_bottom
+					)
+				display_dc.fill_rect(
+					wel_rect, 
+					our_background_brush
+					)
 
-					-- fill AREA 3
-				if bitmap_left > 0 then
-					wel_rect.set_rect (
-						0, 
-						bitmap_top, 
-						bitmap_left, 
-						bitmap_bottom
-						)
-					display_dc.fill_rect(wel_rect, our_background_brush)
-				end
+				display_dc.bit_blt (
+					bitmap_left, 
+					bitmap_top, 
+					bitmap_width, 
+					bitmap_height, 
+					display_mask_dc, 
+					0, 
+					0, 
+					Maskpaint
+					)
 
-					-- fill AREA 4
-				if bitmap_right < window_width then
-					wel_rect.set_rect (
-						bitmap_right, 
-						bitmap_top, 
-						window_width, 
-						bitmap_bottom
-						)
-					display_dc.fill_rect(wel_rect, our_background_brush)
-				end
+				display_dc.bit_blt (
+					bitmap_left, 
+					bitmap_top,
+					bitmap_width, 
+					bitmap_height, 
+					display_bitmap_dc, 
+					0, 
+					0, 
+					Srcpaint
+					)
 			else
-					-- Simply erase the background.
-				create wel_rect.make (0, 0, display_width, display_height)
+				display_dc.bit_blt (
+					bitmap_left, 
+					bitmap_top, 
+					bitmap_width, 
+					bitmap_height, 
+					bitmap_dc, 
+					0, 
+					0, 
+					Srccopy
+					)
+			end
+			
+
+				--|  If the displayed area is larger than the bitmap, 
+				--|  we erase the background that is outside the bitmap
+				--|  (i.e: AREA 1, 2, 3 & 4)
+				--|
+				--|  XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+				--|  X                             X
+				--|  X          AREA 1             X
+				--|  X                             X
+				--|  XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+				--|  X         X         X         X
+				--|  X AREA 3  X BITMAP  X  AREA 4 X
+				--|  X         X         X         X
+				--|  XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+				--|  X                             X
+				--|  X          AREA 2             X
+				--|  X                             X
+				--|  XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+			create wel_rect.make (0, 0, 0, 0)
+				-- fill AREA 1
+			if bitmap_top > 0 then
+				wel_rect.set_rect (
+					0, 
+					0, 
+					window_width, 
+					bitmap_top
+					)
+				display_dc.fill_rect(wel_rect, our_background_brush)
+			end
+
+				-- fill AREA 2
+			if bitmap_bottom < window_height then
+				wel_rect.set_rect (
+					0, 
+					bitmap_bottom, 
+					window_width, 
+					window_height
+					)
+				display_dc.fill_rect(wel_rect, our_background_brush)
+			end
+
+				-- fill AREA 3
+			if bitmap_left > 0 then
+				wel_rect.set_rect (
+					0, 
+					bitmap_top, 
+					bitmap_left, 
+					bitmap_bottom
+					)
+				display_dc.fill_rect(wel_rect, our_background_brush)
+			end
+
+				-- fill AREA 4
+			if bitmap_right < window_width then
+				wel_rect.set_rect (
+					bitmap_right, 
+					bitmap_top, 
+					window_width, 
+					bitmap_bottom
+					)
 				display_dc.fill_rect(wel_rect, our_background_brush)
 			end
 		end
@@ -879,8 +1002,8 @@ feature -- Duplication
 			other_implementation: like Current
 		do
 			other_implementation ?= other.implementation
-			bitmap_dc ?= other_implementation.dc
-			bitmap := other_implementation.bitmap
+			bitmap_dc ?= other_implementation.bitmap_dc
+			internal_bitmap := other_implementation.internal_bitmap
 			mask_bitmap := other_implementation.mask_bitmap
 			icon := other_implementation.icon
 			transparent_color := other_implementation.transparent_color
@@ -901,12 +1024,12 @@ feature -- Obsolete
 		local
 			info: WEL_BITMAP_INFO
 		do
-			create info.make_by_dc (bitmap_dc, bitmap, Dib_rgb_colors)
+			create info.make_by_dc (bitmap_dc, internal_bitmap, Dib_rgb_colors)
 			Result := bitmap_dc.di_bits (
-				bitmap, 
-				0, 
-				height, 
-				info, 
+				internal_bitmap,
+				0,
+				height,
+				info,
 				Dib_rgb_colors
 				)
 		end
@@ -929,8 +1052,8 @@ feature {NONE} -- Externals
 	Loadpixmap_hbitmap: INTEGER is 3
 
 invariant
-	bitmap_not_void: is_initialized implies bitmap /= Void
-
+	bitmap_not_void: is_initialized implies internal_bitmap /= Void
+	
 end -- class EV_PIXMAP_IMP
 
 --|----------------------------------------------------------------
@@ -954,8 +1077,9 @@ end -- class EV_PIXMAP_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.25  2000/03/28 23:53:24  pichery
---| Fixed bugs about mask
+--| Revision 1.26  2000/03/29 06:58:58  pichery
+--| Implemented `stretch'.
+--| Fixed lots of bugs everywhere. Seems to start working smoothly now...
 --|
 --| Revision 1.24  2000/03/28 20:08:59  pichery
 --| fixed compilation bug

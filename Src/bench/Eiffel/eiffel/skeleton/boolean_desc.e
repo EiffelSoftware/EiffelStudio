@@ -1,10 +1,9 @@
 class BOOLEAN_DESC 
 
 inherit
-
-	CHAR_DESC
+	ATTR_DESC
 		redefine
-			is_boolean, is_character, generate_code, sk_value
+			is_boolean
 		end
 	
 feature 
@@ -12,10 +11,10 @@ feature
 	is_boolean: BOOLEAN is True
 			-- Is the attribute a boolean one ?
 
-	is_character: BOOLEAN is
-			-- Is the attribute a character one ?
-		do
-			-- Do nothing
+	level: INTEGER is
+			-- Level comparison
+		once
+			Result := Character_level;
 		end;
 
 	generate_code (file: INDENT_FILE) is
@@ -29,6 +28,12 @@ feature
 			-- Sk value
 		do
 			Result := Sk_bool
+		end;
+
+	trace is
+		do
+			io.error.putstring (attribute_name);
+			io.error.putstring ("[BOOLEAN]");
 		end;
 
 end

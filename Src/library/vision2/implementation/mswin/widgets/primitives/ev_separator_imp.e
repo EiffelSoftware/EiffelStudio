@@ -59,7 +59,8 @@ inherit
 			on_paint,
 			on_key_down,
 			show,
-			hide
+			hide,
+			on_size
 		redefine
 			default_style,
 			background_brush
@@ -163,6 +164,9 @@ end -- class EV_SEPARATOR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.17  2000/05/03 20:13:27  brendel
+--| Fixed resize_actions.
+--|
 --| Revision 1.16  2000/03/21 02:34:12  brendel
 --| Removed on_accelerator_command from undefine clause.
 --|

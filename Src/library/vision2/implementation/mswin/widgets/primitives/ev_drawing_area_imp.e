@@ -84,14 +84,14 @@ inherit
 			on_set_focus,
 			on_set_cursor,
 			show,
-			hide
+			hide,
+			on_size
 		redefine
 			on_paint,
 			on_erase_background,
 			class_background,
 			default_style,
-			class_style,
-			on_size
+			class_style
 		end
 
 	WEL_CS_CONSTANTS
@@ -236,17 +236,6 @@ feature {NONE} -- Implementation
 				-- Switch back the dc from paint_dc to screen_dc.
 			internal_paint_dc := screen_dc
 			in_paint := False
-		end
-
-	on_size (size_type, a_width, a_height: INTEGER)is
-			-- Wm_size message.
-		do
-			interface.resize_actions.call ([
-				x_position,
-				y_position,
-				a_width,
-				a_height
-				])
 		end
 
 	on_left_button_down (keys, x_pos, y_pos: INTEGER) is
@@ -666,6 +655,9 @@ end -- class EV_DRAWING_AREA_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.42  2000/05/03 20:13:27  brendel
+--| Fixed resize_actions.
+--|
 --| Revision 1.41  2000/04/13 23:37:00  pichery
 --| Fixed a small bug. The brush and the pen were not correctly
 --| initialized after a `get_dc' or a `release_dc'

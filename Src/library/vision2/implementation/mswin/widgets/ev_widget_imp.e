@@ -764,6 +764,7 @@ feature -- Deferred features
 			-- Disable mouse and keyboard input
 		deferred
 		end
+
 	enable is
 			-- Enable mouse and keyboard input.
 		deferred
@@ -771,7 +772,10 @@ feature -- Deferred features
 
 	on_size (size_type, a_width, a_height: INTEGER) is
 			-- `Current' has been resized.
-		deferred
+		do
+			interface.resize_actions.call (
+				[screen_x, screen_y, a_width, a_height]
+			)
 		end
 
 	on_move (x_pos, y_pos: INTEGER) is
@@ -908,6 +912,9 @@ end -- class EV_WIDGET_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.74  2000/05/03 20:13:24  brendel
+--| Fixed resize_actions.
+--|
 --| Revision 1.73  2000/05/03 16:57:04  rogers
 --| Comments, formatting.
 --|

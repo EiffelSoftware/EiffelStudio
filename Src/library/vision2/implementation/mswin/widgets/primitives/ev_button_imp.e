@@ -296,14 +296,6 @@ feature {NONE} -- WEL Implementation
 			process_tab_key (virtual_key)
 		end
 
-	on_size (size_type, a_width, a_height: INTEGER) is
-			-- Button re-sized.
-		do
-			Precursor (size_type, a_width, a_height)
-			interface.resize_actions.call ([screen_x, screen_y, a_width,
-				a_height])
-		end
-
 feature {NONE} -- Feature that should be directly implemented by externals
 
 	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
@@ -372,6 +364,9 @@ end -- class EV_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.50  2000/05/03 20:13:27  brendel
+--| Fixed resize_actions.
+--|
 --| Revision 1.49  2000/05/03 00:35:39  pichery
 --| Changed the implementation of some
 --| `set_style' features. The new implementation

@@ -91,7 +91,8 @@ inherit
 			on_key_down,
 			show,
 			hide,
-			on_destroy
+			on_destroy,
+			on_size
 		redefine
 			default_ex_style,
 			default_style,
@@ -961,6 +962,9 @@ end -- EV_NOTEBOOK_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.56  2000/05/03 20:13:25  brendel
+--| Fixed resize_actions.
+--|
 --| Revision 1.55  2000/04/28 21:53:45  rogers
 --| Connected selection_actions,  as selecting a tab by clicking did not call them.
 --|

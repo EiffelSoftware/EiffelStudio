@@ -81,7 +81,8 @@ inherit
 			on_key_down,
 			on_set_cursor,
 			show,
-			hide
+			hide,
+			on_size
 		redefine
 			default_style,
 			wel_background_color,
@@ -286,6 +287,9 @@ end -- class EV_LABEL_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.43  2000/05/03 20:13:27  brendel
+--| Fixed resize_actions.
+--|
 --| Revision 1.42  2000/04/18 23:47:44  brendel
 --| Corrected error in accomodate_text.
 --|

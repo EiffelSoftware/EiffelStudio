@@ -68,7 +68,8 @@ inherit
 			wel_background_color,
 			wel_foreground_color,
 			show,
-			hide
+			hide,
+			on_size
 		redefine
 			on_key_down,
 			on_en_change,
@@ -243,6 +244,9 @@ end -- class EV_TEXT_FIELD_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.40  2000/05/03 20:13:27  brendel
+--| Fixed resize_actions.
+--|
 --| Revision 1.39  2000/05/02 16:13:59  brendel
 --| First implementation to disable ugly vertical resizing.
 --|

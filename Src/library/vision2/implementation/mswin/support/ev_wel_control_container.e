@@ -54,7 +54,8 @@ inherit
  			on_wm_hscroll,
 			show,
 			hide,
-			on_destroy
+			on_destroy,
+			on_size
 		redefine
 			default_style,
 			default_ex_style
@@ -195,6 +196,9 @@ end -- class EV_WEL_CONTROL_CONTAINER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.21  2000/05/03 20:13:23  brendel
+--| Fixed resize_actions.
+--|
 --| Revision 1.20  2000/03/28 00:17:00  brendel
 --| Revised `text' related features as specified by new EV_TEXTABLE_IMP.
 --|

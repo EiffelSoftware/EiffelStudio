@@ -67,7 +67,9 @@ inherit
  			on_wm_hscroll,
 			show,
 			hide,
-			on_destroy
+			on_destroy,
+			on_move,
+			on_size
 		redefine
 			default_style,
 			default_ex_style,
@@ -195,6 +197,9 @@ end -- class EV_VIEWPORT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/05/03 20:13:25  brendel
+--| Fixed resize_actions.
+--|
 --| Revision 1.12  2000/04/26 21:01:29  brendel
 --| child -> item or item_imp.
 --|

@@ -59,7 +59,8 @@ inherit
 			on_key_up,
 			on_set_cursor,
 			show,
-			hide
+			hide,
+			on_size
 		redefine
 			default_style
 		end
@@ -145,6 +146,9 @@ end -- class EV_RANGE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/05/03 20:13:27  brendel
+--| Fixed resize_actions.
+--|
 --| Revision 1.7  2000/03/21 23:39:00  brendel
 --| Modified inheritance clause in compliance with EV_SIZEABLE_IMP.
 --|

@@ -74,7 +74,8 @@ inherit
 			wel_background_color,
 			wel_foreground_color,
 			show,
-			hide
+			hide,
+			on_size
 		redefine
 			default_style,
 			default_ex_style,
@@ -401,6 +402,9 @@ end -- class EV_TEXT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.37  2000/05/03 20:13:27  brendel
+--| Fixed resize_actions.
+--|
 --| Revision 1.36  2000/04/20 01:15:39  brendel
 --| Redefined text and set_text to strip out/add CR's to text.
 --|

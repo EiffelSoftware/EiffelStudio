@@ -58,7 +58,8 @@ inherit
 			on_set_cursor,
 			default_style,
 			show,
-			hide
+			hide,
+			on_size
 		redefine
 			wel_set_step
 		end
@@ -227,6 +228,9 @@ end -- class EV_PROGRESS_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2000/05/03 20:13:27  brendel
+--| Fixed resize_actions.
+--|
 --| Revision 1.15  2000/04/13 18:18:54  brendel
 --| Removed proportion and set_proportion.
 --|

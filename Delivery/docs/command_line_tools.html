@@ -1,0 +1,99 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>ISE EiffelBench</title>
+<link rev="made" href="mailto:webmaster@eiffel.com">
+<link rel="stylesheet" href="styles/tech.css">
+</head>
+
+<body>
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="425">
+      <TR>
+              <TD><IMG SRC="images/ise-left.gif" width="200" height="65" ALIGN="BOTTOM" ALT="Interactive Software Engineering: tools and components for enterprise applications"
+                      BORDER="0"><IMG SRC="images/tech-right.gif" width="225" height="65" ALIGN="BOTTOM" ALT="ISE TECHNOLOGY"
+                      BORDER="0"></TD>
+      </TR>
+</TABLE>
+
+<table cols="1" cellpadding="0" cellspacing="0" border="0">
+<tr><td>
+<h1>Eiffel batch compiler - es4</h1>
+<pre>Usage:
+	es4 [-help | -version | -batch -freeze | -finalize [-keep] | -precompile |
+	-loop | -quick_melt | -clients [-filter filtername] class |
+	-suppliers [-filter filtername] class |
+	-flatshort [-filter filtername] [-all | -all_and_parents | class] |
+	-flat [-filter filtername] [-all | -all_and_parents | class] |
+	-short [-filter filtername] [-all | -all_and_parents | class] | 
+	-filter filtername [-all | class] |
+	-descendants [-filter filtername] class |
+	-ancestors [-filter filtername] class |
+	-aversions [-filter filtername] class feature |
+	-dversions [-filter filtername] class feature |
+	-implementers [-filter filtername] class feature |
+	-callers [-filter filtername] [-show_all] class feature |
+	[-stop] [-ace Ace] [-project Project_file_name]|
+	[-project_path Project_directory_path] [-file File]]
+
+Options:
+	default (no option): recompile the system.
+
+	-ace: specify the Ace file.
+	-ancestors: show the ancestors of a class.
+	-aversions: show the ancestor versions of a feature.
+	-batch: launch the compilation without user request.
+	-callers: show the callers of a feature.
+	-clients: show the clients of a class.
+	-descendants: show the descendants of a class.
+	-dversions: show the descendant versions of a feature.
+	-file: save the output to a file.
+	-filter: show a filtered form (troff, ...) of the class text.
+	-finalize: finalize the system (discard assertions by default).
+	-flat: show the flat form of a class.
+	-flatshort: show the flat-short form of a class.
+	-freeze: freeze the system.
+	-help: show this help message.
+	-implementers: show the classes implementing a feature.
+	-loop: run es4 as a command loop.
+	-precompile: precompile the system.
+	-project: specify the project file to load.
+	-project_path: specify the compilation directory.
+	-quick melt: quick melt the system.
+	-short: show the short form of a class.
+	-stop: stop on error.
+	-suppliers: show the suppliers of a class.
+	-version: show compiler version number.
+</pre>
+
+<h1>finish_freezing</h1>
+
+<p>On Unix there is no option for finish_freezing, on Windows they are the following:
+<ul>
+  <li><b>-location</b> location_path: enables to launch `finish_freezing' on a
+    remote directory.</li>
+  <li><b>-silent</b>: does not prompt the user to tell him if the compilation
+    either succeeded or failed.</li>
+</ul>
+<p>&nbsp;</p>
+
+
+<h1 align="left"><a name="batch">Batch compilation</a></h1>
+<p>Since the introduction of ISE EiffelBench 4.3, you can do some batch
+processing on Windows. Until then it was only possible on Unix platforms. With
+the introduction of ISE EiffelBench 4.5 new options has been added (see above
+for a list of options).</p>
+<p>In order to launch a compilation which can either be successful or
+unsuccessful you have to specify the `-batch' switch in the `es4' command line,
+otherwise the Eiffel compilation will be blocked. When compiling</p>
+<h2>Unix</h2>
+<p>&nbsp;</p>
+<h2>Windows</h2>
+
+</td></tr></table>
+</body>
+
+</html>

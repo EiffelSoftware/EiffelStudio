@@ -1,14 +1,24 @@
 /*
+--|----------------------------------------------------------------
+--| Eiffel runtime header file
+--| Copyright (C) 1985-2004 Eiffel Software. All rights reserved.
+--| Duplication and distribution prohibited.  May be used only with
+--| ISE Eiffel, under terms of user license.
+--| Contact Eiffel Software for any other use.
+--|
+--| Interactive Software Engineering Inc.
+--| dba Eiffel Software
+--| 356 Storke Road, Goleta, CA 93117 USA
+--| Telephone 805-685-1006, Fax 805-685-6869
+--| Contact us at: http://www.eiffel.com/general/email.html
+--| Customer support: http://support.eiffel.com
+--| For latest info on our award winning products, visit:
+--|     http://www.eiffel.com
+--|----------------------------------------------------------------
+*/
 
- #####   ######  #####  #####    #   ######  #    #  ######          #    #
- #    #  #         #    #    #   #   #       #    #  #               #    #
- #    #  #####     #    #    #   #   #####   #    #  #####           ######
- #####   #         #    #####    #   #       #    #  #        ###    #    #
- #   #   #         #    #   #    #   #        #  #   #        ###    #    #
- #    #  ######    #    #    #   #   ######    ##    ######   ###    #    #
-
+/*
 	Declarations for retrieve mechanism.
-
 */
 
 #ifndef _rt_retrieve_h_
@@ -28,10 +38,10 @@ extern "C" {
 typedef enum {RTU_KEYED, RTU_INDIRECTION} rt_unsolved_t;
 struct rt_cell {
 	struct rt_cell *next;
-	long offset;
+	size_t offset;
 	rt_unsolved_t status;
 	union {
-		unsigned long key;		/* key of SOLVED record when `status' == RTU_KEYED */
+		rt_uint_ptr key;		/* key of SOLVED record when `status' == RTU_KEYED */
 		EIF_OBJECT rtu_obj;		/* hector reference when `status' == RTU_INDIRECTION */
 	} u;
 };
@@ -138,7 +148,7 @@ typedef struct {
 	int16 attribute_count;
 
 		/* Count of generic arguments in storing system */
-	int16 generic_count;
+	uint16 generic_count;
 
 		/* Were attributes added to type in retrieving system? */
 	int16 mismatched;
@@ -239,15 +249,15 @@ typedef union {
 #define rt_obj		rtu_data.rtu_obj
 
 
-extern EIF_REFERENCE ise_compiler_retrieve (EIF_INTEGER f_desc, EIF_INTEGER a_pos, int (*ret_func) (void));
+extern EIF_REFERENCE ise_compiler_retrieve (EIF_INTEGER f_desc, EIF_INTEGER a_pos, size_t (*ret_func) (void));
 
 extern struct htable *rt_table;	/* Table used for solving references */
 extern int32 nb_recorded;		/* Number of items recorded in Hector */
 extern char rt_kind;
 extern char rt_kind_version;
-extern int end_of_buffer;
+extern size_t end_of_buffer;
 
-extern int (*retrieve_read_func)(void);
+extern size_t (*retrieve_read_func)(void);
 
 /*
  * Utilities
@@ -256,13 +266,13 @@ extern int (*retrieve_read_func)(void);
 extern char *rt_make(void);			/* Retrieve object graph */
 extern char *rt_nmake(EIF_CONTEXT long int objectCount);		/* Retrieve `n' objects */
 
-extern int old_retrieve_read(void);
-extern int retrieve_read(void);
+extern size_t old_retrieve_read(void);
+extern size_t retrieve_read(void);
 
-extern int old_retrieve_read_with_compression(void);
-extern int retrieve_read_with_compression(void);
+extern size_t old_retrieve_read_with_compression(void);
+extern size_t retrieve_read_with_compression(void);
 
-extern void rt_init_retrieve(int (*retrieve_function) (void), int (*char_read_function)(char *, int), int buf_size);
+extern void rt_init_retrieve(size_t (*retrieve_function) (void), int (*char_read_function)(char *, int), int buf_size);
 extern void rt_reset_retrieve(void);
 
 extern int (*char_read_func)(char *, int);

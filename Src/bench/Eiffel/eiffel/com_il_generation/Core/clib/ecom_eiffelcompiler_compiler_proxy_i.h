@@ -714,12 +714,6 @@ public:
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP GenerateReturnValue( void ) = 0;
-
-
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
 	virtual STDMETHODIMP GenerateOnceDoneInfo(  /* [in] */ BSTR name ) = 0;
 
 
@@ -733,6 +727,12 @@ public:
 	No description available.
 	-----------------------------------------------------------*/
 	virtual STDMETHODIMP generate_once_computed( void ) = 0;
+
+
+	/*-----------------------------------------------------------
+	No description available.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP generate_once_result_address( void ) = 0;
 
 
 	/*-----------------------------------------------------------

@@ -636,11 +636,6 @@ feature -- Return statements
 		deferred
 		end
 
-	generate_return_value is
-			-- Generate end of routine which returns `Result'.
-		deferred
-		end
-
 feature -- Once management
 
 	generate_once_done_info (name: STRING) is
@@ -664,6 +659,11 @@ feature -- Once management
 
 	generate_once_computed is
 			-- Mark current once as being computed.
+		deferred
+		end
+
+	generate_once_result_address is
+			-- Load address of result for a once.
 		deferred
 		end
 

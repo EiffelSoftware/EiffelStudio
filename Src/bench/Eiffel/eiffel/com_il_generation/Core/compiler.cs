@@ -1604,12 +1604,6 @@ feature -- Generation Structure
 		MethodIL.Emit (OpCodes.Ret);		
 	}
 	
-	// Generate return statement.
-	public void GenerateReturnValue() {
-		GenerateResult();
-		GenerateReturn();
-	}
-
 /* Onces */
 
 	public void GenerateOnceDoneInfo (string name) {
@@ -1637,6 +1631,12 @@ feature -- Generation Structure
 
 	public void GenerateOnceTest() {
 		MethodIL.Emit (OpCodes.Ldsfld, DoneBuilder);
+	}
+
+	public void generate_once_result_address ()
+		// Load address of static variable holding value of `Result'.
+	{
+		MethodIL.Emit (OpCodes.Ldsflda, ResultBuilder);
 	}
 
 	public void GenerateOnceResult() {

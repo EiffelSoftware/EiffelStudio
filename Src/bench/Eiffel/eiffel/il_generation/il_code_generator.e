@@ -110,6 +110,9 @@ feature -- Access
 	none_type_id: INTEGER
 			-- Identifier for class ISE.Runtime.NONE_TYPE.
 
+	once_generation: BOOLEAN
+			-- Are we currently generating a once feature?
+			
 feature -- Settings
 
 	set_type_id (an_id: like type_id) is
@@ -180,6 +183,14 @@ feature -- Settings
 			meta_data_generator_set: meta_data_generator = il_md_gen
 		end
 	
+	set_once_generation (v: BOOLEAN) is
+			-- Set `once_generation' to `v'.
+		do
+			once_generation := v
+		ensure
+			once_generation_set: once_generation = v
+		end
+
 feature -- Target of generation
 
 	set_for_interfaces is
@@ -1224,7 +1235,9 @@ feature -- Local variable info generation
 			il_generation_started: il_generation_started
 			type_i_not_void: type_i /= Void
 		do
-			implementation.put_result_info (static_id_of (type_i))
+			if not once_generation then
+				implementation.put_result_info (static_id_of (type_i))
+			end
 		end
 
 	put_local_info (type_i: TYPE_I; name_id: INTEGER) is
@@ -1340,7 +1353,11 @@ feature -- Variables access
 		require
 			il_generation_started: il_generation_started
 		do
-			implementation.generate_result
+			if once_generation then
+				implementation.generate_once_result
+			else
+				implementation.generate_result
+			end
 		end
 
 	generate_attribute (type_i: TYPE_I; feature_id: INTEGER) is
@@ -1455,7 +1472,11 @@ feature -- Addresses
 		require
 			il_generation_started: il_generation_started
 		do
-			implementation.generate_result_address
+			if once_generation then
+				implementation.generate_once_result_address
+			else
+				implementation.generate_result_address
+			end
 		end
 
 	generate_attribute_address (type_i: TYPE_I; feature_id: INTEGER) is
@@ -1535,7 +1556,11 @@ feature -- Assignments
 		require
 			il_generation_started: il_generation_started
 		do
-			implementation.generate_result_assignment
+			if once_generation then
+				implementation.generate_once_store_result
+			else
+				implementation.generate_result_assignment
+			end
 		end
 
 feature -- Conversion
@@ -1634,7 +1659,11 @@ feature -- Return statements
 		require
 			il_generation_started: il_generation_started
 		do
-			implementation.generate_return_value
+				-- We do not use implementation directly here, as `generate_result'
+				-- has a different behavior depending whether or not we are currently
+				-- generating a once function.
+			generate_result
+			implementation.generate_return
 		end
 
 feature -- Once management

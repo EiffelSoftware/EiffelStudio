@@ -852,12 +852,6 @@ feature -- Basic Operations
 			ccom_generate_return (initializer)
 		end
 
-	generate_return_value is
-			-- No description available.
-		do
-			ccom_generate_return_value (initializer)
-		end
-
 	generate_once_done_info (name: STRING) is
 			-- No description available.
 			-- `name' [in].  
@@ -877,6 +871,12 @@ feature -- Basic Operations
 			-- No description available.
 		do
 			ccom_generate_once_computed (initializer)
+		end
+
+	generate_once_result_address is
+			-- No description available.
+		do
+			ccom_generate_once_result_address (initializer)
 		end
 
 	generate_once_test is
@@ -1866,12 +1866,6 @@ feature {NONE}  -- Externals
 			"C++ [ecom_EiffelCompiler::COMPILER_PROXY %"ecom_EiffelCompiler_COMPILER_PROXY.h%"]()"
 		end
 
-	ccom_generate_return_value (cpp_obj: POINTER) is
-			-- No description available.
-		external
-			"C++ [ecom_EiffelCompiler::COMPILER_PROXY %"ecom_EiffelCompiler_COMPILER_PROXY.h%"]()"
-		end
-
 	ccom_generate_once_done_info (cpp_obj: POINTER; name: STRING) is
 			-- No description available.
 		external
@@ -1885,6 +1879,12 @@ feature {NONE}  -- Externals
 		end
 
 	ccom_generate_once_computed (cpp_obj: POINTER) is
+			-- No description available.
+		external
+			"C++ [ecom_EiffelCompiler::COMPILER_PROXY %"ecom_EiffelCompiler_COMPILER_PROXY.h%"]()"
+		end
+
+	ccom_generate_once_result_address (cpp_obj: POINTER) is
 			-- No description available.
 		external
 			"C++ [ecom_EiffelCompiler::COMPILER_PROXY %"ecom_EiffelCompiler_COMPILER_PROXY.h%"]()"

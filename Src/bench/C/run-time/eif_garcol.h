@@ -49,7 +49,7 @@ extern "C" {
 /* Exported data-structure declarations */
 RT_LNK EIF_REFERENCE root_obj;	/* Address of `root' object */	
 
-extern int epush(register struct stack *stk, register EIF_REFERENCE value);	/* Push an addess on a run-time stack */
+extern int epush(register struct stack *stk, register void *value);	/* Push an addess on a run-time stack */
 
 #ifdef ISE_GC
 

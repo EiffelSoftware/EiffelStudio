@@ -55,7 +55,7 @@ feature -- Status setting
 		local
 			a: ANY
 		do
-			a ?= txt.to_c
+			a := txt.to_c
 			gtk_entry_set_text (widget, $a)
 		end
 	
@@ -63,7 +63,7 @@ feature -- Status setting
 		local
 			a: ANY
 		do
-			a ?= txt.to_c
+			a := txt.to_c
 			gtk_entry_append_text (widget, $a)
 		end
 	
@@ -71,15 +71,10 @@ feature -- Status setting
 		local
 			a: ANY
 		do
-			a ?= txt.to_c
+			a := txt.to_c
 			gtk_entry_prepend_text (widget, $a)
 		end
-	
---	set_position (pos: INTEGER) is
---		do
---			gtk_entry_set_position (widget, pos)
---		end
-	
+		
 	set_maximum_text_length (len: INTEGER) is
 		do
 			gtk_entry_set_max_length (widget, len)
@@ -101,7 +96,7 @@ feature -- Event -- removing command association
 			-- when the text field is activated, ie when the user
 			-- press the enter key.
 		do
-			check False end
+			remove_commands (activate_id)
 		end
 
 end -- class EV_TEXT_FIELD_IMP

@@ -30,18 +30,27 @@ feature -- Basic Operation
 
 	build is 
 			-- Build entries.
-		do 
-			choice_box.set_minimum_size (640, 480)
+		do
+				-- Set a suitably large minimum size, as this state
+				-- is the Build interface state, so needs to be larger.
+			first_window.set_minimum_size (680, 560)
 				-- We only want to generate the interface once.
 			if choice_box.is_empty then
 				(create {GB_MAIN_WINDOW}).generate_interface (choice_box)	
 			end
 			set_updatable_entries(<<>>)
+			first_window.enable_user_resize
 		end
 
 	proceed_with_current_info is
 			-- User has clicked next, go to next step.
 		do
+				-- Force the window back to the smallest size it can be.
+				-- As we do not know the minimum_size, just make it as small
+				-- as possible, and its size will be constrained to
+				-- the widgets inside.
+			first_window.set_minimum_size (100, 100)
+			first_window.set_size (100, 100)
 			Precursor
 			proceed_with_new_state(create {WIZARD_FINAL_STATE}.make(wizard_information))
 			main_window.hide_all_floating_tools

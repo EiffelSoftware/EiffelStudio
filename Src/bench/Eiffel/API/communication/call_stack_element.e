@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 		local
 			l_count: INTEGER;
 		do
-if enabled_debug_trace then
+debug ("DEBUGGER_TRACE")
 	io.error.putstring ("%T%TCreating CALL_STACK_ELEMENT: ");
 end
 
@@ -42,7 +42,7 @@ end
 
 			c_recv_rout_info (Current);
 
-if enabled_debug_trace then
+debug ("DEBUGGER_TRACE")
 	if is_exhausted then
 		io.error.putstring ("EXHAUSTED");
 	else
@@ -82,7 +82,7 @@ end
 					c_recv_value (Current)
 				end;
 			end;
-if enabled_debug_trace then
+debug ("DEBUGGER_TRACE")
 	io.error.putstring ("%T%TFinished creating CALL_STACK_ELEMENT%N");
 end
 		end;
@@ -315,7 +315,7 @@ feature {NONE} -- Implementation
 			arg_names: FIXED_LIST [STRING];
 			rout: like routine
 		do
-if enabled_debug_trace then
+debug ("DEBUGGER_TRACE")
 	io.error.putstring ("%TInitializing stack (CALL_STACK_ELEMENT): ");
 	io.error.putstring (routine_name);
 	io.error.putstring (" from: ");
@@ -381,7 +381,7 @@ end
 			private_routine := rout;
 			unprocessed_values := Void;
 			initialized := True
-if enabled_debug_trace then
+debug ("DEBUGGER_TRACE")
 	io.error.putstring ("%TFinished initializating stack: ");
 	io.error.putstring (routine_name);
 	io.error.new_line

@@ -90,7 +90,7 @@ feature {NONE} -- Initialization
 		local
 			call: CALL_STACK_ELEMENT
 		do
-if enabled_debug_trace then
+debug ("DEBUGGER_TRACE")
 	io.error.putstring ("%TCreating Eiffel Stack (EIFFEL_CALL_STACK)%N")
 end
 			error_occurred := False;
@@ -119,7 +119,7 @@ end
 				item.set_hector_addr;
 				forth
 			end;
-if enabled_debug_trace then
+debug ("DEBUGGER_TRACE")
 	io.error.putstring ("%TFinished creating Eiffel Stack:%N")
 end
 		end;

@@ -577,7 +577,7 @@ feature {DEAD_HDLR} -- Implemenation
 			end;
 			status := Void;
 			current_execution_stack_number := 1;
-if enabled_debug_trace then
+debug ("DEBUGGER_TRACE")
 	io.error.putstring ("terminating project%N")
 end
 		ensure

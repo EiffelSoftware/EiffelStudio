@@ -108,6 +108,7 @@ inherit
 			on_middle_button_double_click,
 			on_right_button_double_click,
 			on_mouse_move,
+			on_mouse_wheel,
 			on_set_focus,
 			on_desactivate,
 			on_kill_focus,
@@ -582,7 +583,7 @@ feature {NONE} -- Implementation
 			internal_window_make (
 				par_imp, 
 				Void, 
-				default_style + creation_flag,
+				default_style | creation_flag,
 				cur_x, 
 				cur_y, 
 				cur_width, 
@@ -771,10 +772,10 @@ feature {NONE} -- WEL Implementation
 	default_style: INTEGER is
 			-- Default windows style used to create `Current'.
 		do
-			Result := Ws_child + Ws_visible + Ws_group
-						+ Ws_tabstop + Ws_vscroll
-						+ Cbs_autohscroll + Ws_clipchildren
-						+ Ws_clipsiblings
+			Result := Ws_child | Ws_visible | Ws_group
+						| Ws_tabstop | Ws_vscroll
+						| Cbs_autohscroll | Ws_clipchildren
+						| Ws_clipsiblings
 		end
 
 	old_selected_item: EV_LIST_ITEM_IMP

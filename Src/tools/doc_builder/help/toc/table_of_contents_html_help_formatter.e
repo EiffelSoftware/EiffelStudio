@@ -51,10 +51,14 @@ feature {NONE} -- Implementation
 			end			
 			
 			if not is_dir_url then
-				create l_name.make_from_string (l_util.toc_friendly_url (l_url))
-				l_name := l_util.file_no_extension (l_name)
-				l_name.append (".html")
-				Result.append ("%N<param name=%"Local%" value=%"")						
+				Result.append ("%N<param name=%"Local%" value=%"")	
+				if l_url /= Void then					
+					create l_name.make_from_string (l_util.toc_friendly_url (l_url))
+					l_name := l_util.file_no_extension (l_name)
+					l_name.append (".html")
+				else
+					create l_name.make_empty
+				end									
 				Result.append (l_name)
 				Result.append ("%">")
 				if not a_node.has_child then

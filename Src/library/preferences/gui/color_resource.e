@@ -14,7 +14,7 @@ inherit
 			set_value
 		end
  
-creation
+create
 	make, make_with_color
 
 feature {NONE} -- Initialization

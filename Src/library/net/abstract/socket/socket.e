@@ -26,7 +26,7 @@ inherit
 			{NONE} all
 		end
 		
-creation {SOCKET}
+create {SOCKET}
 
 	create_from_descriptor
 

@@ -10,7 +10,7 @@ class
 inherit
 	EV_MULTI_COLUMN_LIST_ROW
 
-creation
+create
 	make_resource
 
 feature {NONE} -- Initialization

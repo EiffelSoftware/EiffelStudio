@@ -11,7 +11,7 @@ inherit
 
 	WEL_COMMAND
 
-creation
+create
 	make, make_active
 
 feature -- Initialisation

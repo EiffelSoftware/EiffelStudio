@@ -31,7 +31,7 @@ feature
 			       reg_newline)
 	if reg_suc = 0 then
 	   -- compile succeeded
-	   !!last_regex.make(tmp_space)
+	   create last_regex.make(tmp_space)
 	   succeeded := true
 	else
 	   -- compile succeeded

@@ -19,7 +19,7 @@ inherit
 			is_equal
 		end
 
-creation
+create
 	make, make_with_font
 
 feature {NONE} -- Initialization

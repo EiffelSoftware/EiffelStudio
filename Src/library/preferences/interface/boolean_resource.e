@@ -9,7 +9,7 @@ class
 inherit
 	RESOURCE
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization

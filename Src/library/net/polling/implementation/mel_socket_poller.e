@@ -9,7 +9,7 @@ inherit
 
 	MEL_COMMAND
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization

@@ -32,7 +32,7 @@ inherit
 			make
 		end
 
-creation
+create
 
 	make, make_local_from_port, make_from_name_and_port,
 		make_from_ip_and_port

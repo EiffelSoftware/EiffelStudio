@@ -30,7 +30,7 @@ inherit
 			is_valid_peer_address, create_from_descriptor
 		end
 
-creation
+create
 
 	make, make_client_by_port, make_bound_client_by_port,
 	make_server_by_port,

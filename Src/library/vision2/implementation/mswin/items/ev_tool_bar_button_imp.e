@@ -96,15 +96,6 @@ feature -- Access
 
 feature -- Status report
 
-	type: INTEGER is
-			-- Type of the button.
-			-- Numeric value which the tool_bar_can use to
-			-- Identify the button type. Avoids reverse
-			-- assignment to identify actual type.
-		do
-			Result := 1
-		end
-
 	is_sensitive: BOOLEAN is
 			-- Is `Current' insensitive?
 		do
@@ -205,6 +196,9 @@ end -- class EV_TOOL_BAR_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.27  2000/04/26 22:20:36  rogers
+--| Removed type as now redundent.
+--|
 --| Revision 1.26  2000/04/25 22:00:24  rogers
 --| Comments, formatting.
 --|

@@ -256,7 +256,7 @@ feature -- Basic operations
 				Result := grid.item_internal (horizontal_span_items.first, vertical_span_items.first, False)
 				if Result /= Void then
 					item_indent := grid.item_indent (Result)
-					if an_x - Result.virtual_x_position < item_indent then
+					if an_x - Result.virtual_x_position < 0 then
 						Result := Void
 					end
 				end

@@ -59,7 +59,7 @@ extern int current_position;
 extern char * general_buffer;
 extern long buffer_size;
 extern int end_of_buffer;
-extern void set_buffer_size (int);
+RT_LNK void set_buffer_size (int);
 
 /* compression */
 extern char * cmps_general_buffer;

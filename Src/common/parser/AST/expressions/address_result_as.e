@@ -4,7 +4,7 @@ inherit
 
 	EXPR_AS
 		redefine
-			type_check, byte_node
+			type_check, byte_node, format
 		end
 
 feature
@@ -32,4 +32,11 @@ feature -- Type check, byte code and dead code removal
 			!!Result.make (result_access);
 		end;
 
+	format (ctxt: FORMAT_CONTEXT) is
+			-- Reconstitute text.
+		do
+			ctxt.put_special("$");
+			ctxt.put_string("Result");
+			ctxt.always_succeed;
+		end;
 end

@@ -46,14 +46,14 @@ feature {EV_WINDOW} -- Initialization
 		local
 			color: EV_COLOR
 		do
-			if parent_imp /= Void then
-				set_background_color (parent_imp.background_color.interface)
-				set_foreground_color (parent_imp.foreground_color.interface)
-			else
-				set_background_color (Color_dialog)
-				!! color.make_rgb (0, 0, 0)
-				set_foreground_color (color)
-			end
+--			if parent_imp /= Void then
+--				set_background_color (parent_imp.background_color.interface)
+--				set_foreground_color (parent_imp.foreground_color.interface)
+--			else
+--				set_background_color (Color_dialog)
+--				!! color.make_rgb (0, 0, 0)
+--				set_foreground_color (color)
+--			end
 		end
 
 feature  -- Access
@@ -229,13 +229,12 @@ feature -- Element change
 
 feature -- Event - command association
 
-	set_close_command (cmd: EV_COMMAND) is
+	add_close_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
 			-- Make `cmd' the executed command when the window is closed.
 		require
 			exists: not destroyed
 			valid_command: cmd /= Void
-		do
-			close_command := cmd
+		deferred
 		end
 
 	add_resize_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
@@ -269,33 +268,33 @@ feature {EV_WINDOW, EV_APPLICATION} -- Implementation
 		end	
 
 feature {NONE} -- Implementation
-	
-	close_command: EV_COMMAND	
 
-	window_closed is
-			-- Called when the window is deleted (closed).
-			-- If window is the main window of the
-			-- application, this feature will exit
-			-- application if `close_command' is not set).
-		local
-			a: EV_ARGUMENT1[EV_WINDOW]
-			window_interface: EV_WINDOW
-		do
-			if close_command = Void then
-				if application /= Void then
-					application.exit
-				end
-				plateform_closed
-				interface.remove_implementation
-			else
-				window_interface ?= interface
-				check
-					window_interface /= Void
-				end
-				!!a.make (window_interface)
-				close_command.execute (a)
-			end
-		end
+--	close_command: EV_COMMAND	
+--
+--	window_closed is
+--			-- Called when the window is deleted (closed).
+--			-- If window is the main window of the
+--			-- application, this feature will exit
+--			-- application if `close_command' is not set).
+--		local
+--			a: EV_ARGUMENT1[EV_WINDOW]
+--			window_interface: EV_WINDOW
+--		do
+--			if close_command = Void then
+--				if application /= Void then
+--					application.exit
+--				end
+--				plateform_closed
+--				interface.remove_implementation
+--			else
+--				window_interface ?= interface
+--				check
+--					window_interface /= Void
+--				end
+--				!!a.make (window_interface)
+--				close_command.execute (a)
+--			end
+--		end
        
 	plateform_closed is
 			-- A specific function for each plateform to definitely

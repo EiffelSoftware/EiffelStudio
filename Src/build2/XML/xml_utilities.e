@@ -58,6 +58,24 @@ feature -- Access
 			element.force_last (new_element)
 			add_string_data (new_element, value.out)
 		end
+		
+	add_element_containing_integer_constant (element: XM_ELEMENT; element_name: STRING; constant: STRING) is
+			-- 	Add an element named `element' marked `constant', containing another element named `element_name' with
+			-- constant named `constant'. This is the format used to store integer constants.
+		require
+			element_not_void: element /= Void
+			element_name_not_void: element_name /= Void
+			element_name_not_empty: element_name.count >= 1
+		local
+			new_element, new_constant_element: XM_ELEMENT
+		do
+			new_constant_element := new_child_element (element, element_name, "")
+			element.force_last (new_constant_element)
+			new_element := new_child_element (new_constant_element, Constant_string, "")
+			new_constant_element.force_last (new_element)
+			add_string_data (new_element, constant)
+		end
+		
 
 	add_element_containing_string (element: XM_ELEMENT; element_name, value: STRING) is
 			-- Add an element named `element' containing string data `value' to `element'.
@@ -133,7 +151,7 @@ feature -- Access
 			-- data of `Current' referenced by their unique names.
 			-- Ignores `item'.
 		local
-			current_element: XM_ELEMENT
+			current_element, inner_element: XM_ELEMENT
 			current_data_element: XM_CHARACTER_DATA
 			char_data: STRING
 			info: ELEMENT_INFORMATION
@@ -150,25 +168,43 @@ feature -- Access
 						not current_element.name.is_equal ("item_text") then
 						create info
 						info.set_name (current_element.name)
+						if info.name.is_equal ("Value") then
+							do_nothing;
+						end
 						info.set_element (current_element)
 						from
 							current_element.start
 						until
 							current_element.off
 						loop
-							current_data_element ?= current_element.item_for_iteration
-							if current_data_element /= Void then
-								char_data := current_data_element.content
-								char_data.replace_substring_all ("%T","")
-									-- If we are loading a multiple line text, then we must
-									-- keep appending a new line character and the new text.
-									--| FIXME, I believe that there is no longer a need to perform this
-									--| as now we use CDATA tags which support multiple lines of text.
-								if data_valid (char_data) then
-									if info.data = Void then
+							inner_element ?= current_element.item_for_iteration
+							if inner_element /= Void  then
+								if inner_element.name.is_equal (Constant_string) then
+									from
+										inner_element.start
+									until
+										inner_element.off
+									loop
+										current_data_element ?= inner_element.item_for_iteration
+										if current_data_element /= Void then
+											char_data := current_data_element.content
+											char_data.replace_substring_all ("%T","")	
+											if data_valid (char_data) then
+												info.set_data (char_data)
+												info.set_as_constant
+											end
+										end
+										inner_element.forth
+									end
+								end
+							end
+							if not info.is_constant then
+								current_data_element ?= current_element.item_for_iteration
+								if current_data_element /= Void then
+									char_data := current_data_element.content
+									char_data.replace_substring_all ("%T","")	
+									if data_valid (char_data) then
 										info.set_data (char_data)
-									else
-										info.set_data (info.data + "%N" + char_data)
 									end
 								end
 							end

@@ -84,8 +84,6 @@ feature -- Access
 			-- Go after if unsuccessful.
 			-- The 'fuzzy' parameter is the maximum allowed number
 			-- of mismatches within the pattern. A 0 means an exact match.
-		local
-			s_area: ANY
 		do
 			if not off then
 				index := fuzzy_index (s, index, fuzzy)

@@ -10,6 +10,7 @@ inherit
 	IEIFFEL_SYSTEM_ASSEMBLIES_IMPL_STUB
 		redefine
 			add_assembly,
+			add_fusion_assembly,
 			last_exception,
 			store,
 			flush_assemblies,
@@ -41,15 +42,18 @@ feature {NONE} -- Initialization
 
 						-- Initialize assemblies list
 					create assemblies_table.make (al.count)
+					create assemblies_impl.make (al.count)
 					al.start
 				until
 					al.after
 				loop
 					assemblies_table.put (al.item, al.item.cluster_name)
+					assemblies_impl.extend (al.item)
 					al.forth
 				end
 			else
-				create assemblies_table.make (13)	
+				create assemblies_table.make (13)
+				create assemblies_impl.make (0)
 			end
 		end
 
@@ -59,6 +63,7 @@ feature -- Access
 			-- clear currently held assemblies
 		do
 			assemblies_table.wipe_out
+			assemblies_impl.wipe_out
 		end
 		
 	add_assembly (a_prefix, a_cluster_name, a_path: STRING; a_copy: BOOLEAN) is
@@ -83,6 +88,45 @@ feature -- Access
 					create l_assembly.initialize (new_id_sd (l_cluster_name, True), new_id_sd (a_path, True), Void, Void, Void, Void)
 				end
 				assemblies_table.put (l_assembly, l_cluster_name)
+				assemblies_impl.extend (l_assembly)
+			else
+				--create last_exception
+			end
+		end
+		
+	add_fusion_assembly (a_prefix, a_cluster_name, a_name, a_version, a_culture, a_public_key_token: STRING; a_copy: BOOLEAN) is
+			-- add an assembly to ace
+		require else
+			valid_prefix: a_prefix /= Void implies is_valid_prefix (a_prefix)
+			non_void_cluster_name: a_cluster_name /= Void
+			valid_cluster_name: is_valid_cluster_name (a_cluster_name)
+			non_void_name: a_name /= Void
+			valid_name: not a_name.is_empty
+			non_void_version: a_version /= Void
+			valid_version: not a_version.is_empty
+			non_void_public_key_token: a_public_key_token /= Void
+			valid_public_key_token: not a_public_key_token.is_empty
+		local
+			l_assembly: ASSEMBLY_SD
+			l_cluster_name: STRING
+			l_public_key_token: STRING
+			l_culture: STRING
+		do
+			l_cluster_name := clone (a_cluster_name)
+			l_cluster_name.to_lower
+			
+			if a_culture = Void or else a_culture.is_empty then
+				l_culture := "neutral"	
+			end
+			
+			if not assemblies_table.has (l_cluster_name) then
+				if a_prefix /= Void and then not a_prefix.is_empty then
+					create l_assembly.initialize (new_id_sd (l_cluster_name, True), new_id_sd (a_name, True), new_id_sd (a_prefix, False), new_id_sd (a_version, True), new_id_sd (l_culture, True), new_id_sd (a_public_key_token, True))
+				else
+					create l_assembly.initialize (new_id_sd (l_cluster_name, True), new_id_sd (a_name, True), Void, new_id_sd (a_version, True), new_id_sd (l_culture, True), new_id_sd (a_public_key_token, True))
+				end
+				assemblies_table.put (l_assembly, l_cluster_name)
+				assemblies_impl.extend (l_assembly)
 			else
 				--create last_exception
 			end
@@ -95,44 +139,41 @@ feature -- Access
 			-- save the assemblies to the ace file
 		local
 			l_assemblies: LACE_LIST [ASSEMBLY_SD]
-			copy_assemblies: like assemblies_table
+			copy_assemblies: like assemblies_impl
 			cluster_name: ID_SD
 		do
 				-- Save assemblies
-			copy_assemblies := clone (assemblies_table)
+			copy_assemblies := clone (assemblies_impl)
 			l_assemblies := ace_accesser.root_ast.assemblies
 			if l_assemblies = Void then
 					-- if there is no assembly option then we need to create it
-				create l_assemblies.make (copy_assemblies.count)
+				create l_assemblies.make (assemblies_table.count)
 				ace_accesser.root_ast.set_assemblies (l_assemblies)
 			end
-
-				-- Insert assemblies in the order in which they were entered
-				-- originally.
+			
+			-- remove duplicate assemblies from AST
 			from
 				l_assemblies.start
 			until
 				l_assemblies.after
 			loop
-				cluster_name := l_assemblies.item.cluster_name
-				
-				if copy_assemblies.has (cluster_name) then
-					l_assemblies.put (copy_assemblies.item (cluster_name))
-					copy_assemblies.remove (cluster_name)
-					l_assemblies.forth
-				else
-					l_assemblies.remove
+				if assemblies_table.has (l_assemblies.item.cluster_name) then
+					copy_assemblies.search (assemblies_table.item (l_assemblies.item.cluster_name))
+					if not copy_assemblies.exhausted then
+						copy_assemblies.remove
+					end
 				end
+				l_assemblies.forth
 			end
 
-				-- Insert at the end new clusters.
+			-- Insert at the end new clusters.
 			if not copy_assemblies.is_empty then
 				from
 					copy_assemblies.start
 				until
 					copy_assemblies.after
 				loop
-					l_assemblies.extend (copy_assemblies.item_for_iteration)
+					l_assemblies.extend (copy_assemblies.item)
 					copy_assemblies.forth
 				end
 			end
@@ -208,7 +249,8 @@ feature {NONE} -- Implementation
 feature {NONE} -- Initialization
 	
 	ace_accesser: ACE_FILE_ACCESSER
-	assemblies_table: HASH_TABLE[ASSEMBLY_SD, STRING]
+	assemblies_table: HASH_TABLE [ASSEMBLY_SD, STRING]
+	assemblies_impl: ARRAYED_LIST [ASSEMBLY_SD]
 
 invariant
 	non_void_ace_accesser: ace_accesser /= Void

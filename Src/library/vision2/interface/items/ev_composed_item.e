@@ -44,14 +44,14 @@ feature -- Access
 			Result := implementation.text
 		end
 
-	pixmap_cell (index: INTEGER): EV_PIXMAP is
+	cell_pixmap (index: INTEGER): EV_PIXMAP is
 			-- Return the pixmap of the cell number
 			-- `index'. On windows platform, 
 			-- if index > 1, the result is void.
 		require
 			exists: not destroyed
 		do
-			Result := implementation.pixmap_cell (index)
+			Result := implementation.cell_pixmap (index)
 		end
 
 	pixmap: LINKED_LIST [EV_PIXMAP] is

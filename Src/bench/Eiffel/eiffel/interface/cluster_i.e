@@ -52,6 +52,14 @@ feature -- Attributes
 			-- It won't be removed even if it is no more
 			-- in the local Ace file
 
+	precomp_id: INTEGER;
+			-- Id of the precompiled library to which the
+			-- cluster belongs
+
+	precomp_ids: ARRAY [INTEGER];
+			-- Ids of libraries used for precompilation
+			-- of current cluster; Void if not precompiled
+
 	exclude_list: ARRAYED_LIST [STRING];
 			-- List of files to exclude
 
@@ -114,10 +122,14 @@ feature {COMPILER_EXPORTER} -- Conveniences
 			old_cluster := c;
 		end;
 
-	set_is_precompiled is
+	set_is_precompiled (ids: ARRAY [INTEGER]) is
 			-- Assign `True' to `is_precompiled'
 		do
-			is_precompiled := True;
+			if not is_precompiled then
+				is_precompiled := True;
+				precomp_id := System.compilation_id;
+				precomp_ids := ids
+			end
 		end;
 
 	set_dollar_path (s: STRING) is
@@ -187,6 +199,8 @@ debug ("REMOVE_CLASS")
 end;
 			old_cluster := old_cluster_i;
 			is_precompiled := old_cluster_i.is_precompiled;
+			precomp_id := old_cluster_i.precomp_id;
+			precomp_ids := old_cluster_i.precomp_ids;
 			is_dynamic := old_cluster_i.is_dynamic;
 			set_date (old_cluster_i.date);
 			exclude_list := old_cluster_i.exclude_list;
@@ -933,6 +947,17 @@ end;
 				end;
 			end;
 		end;
+
+	ignored (a_cluster: CLUSTER_I): BOOLEAN is
+			-- Are classes from `a_cluster' ignored in current cluster?
+		require
+			a_cluster_not_void: a_cluster /= Void
+		do
+			Result := ignore.has (a_cluster);
+			if not Result and precomp_ids /= Void then
+				Result := not precomp_ids.has (a_cluster.precomp_id)
+			end
+		end
 
 feature {COMPILER_EXPORTER}
 

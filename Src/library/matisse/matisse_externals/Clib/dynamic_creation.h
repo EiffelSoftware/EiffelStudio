@@ -26,17 +26,14 @@
 #define MT_RR_HASH_TABLE	"MT_RR_HASH_TABLE"
 
 /* attribute names for HASH_TABLE */
-#define HASH_TABLE__att_keys	"HASH_TABLE__att_keys"
-#define HASH_TABLE__att_values	"HASH_TABLE__att_values"
-#define HASH_TABLE__properties_type	"HASH_TABLE__properties_type"
+#define HASH_TABLE__att_keys	"att_keys"
+#define HASH_TABLE__att_values	"att_values"
+#define HASH_TABLE__properties_type	"properties_type"
 
 /* A sample of reference type for HASH_TABLE */
 #define HT_REFERENCE_TYPE	"STRING" 
 
-#ifdef WORKBENCH
+#define DTYPE(x)	((uint32) (x) & SK_DTYPE)
 #define DTYPE_GEN(x)	(rtud_inv[(uint32) (x) & SK_DTYPE])
-#else
-#define DTYPE_GEN(x)	((uint32) (x) & SK_DTYPE)
-#endif
 
 #endif

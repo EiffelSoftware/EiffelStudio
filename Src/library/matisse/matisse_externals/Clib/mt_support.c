@@ -78,9 +78,11 @@ EIF_OBJ obj;
 	EIF_OBJ object;
 	char *o_ptr, *o_ref;
 	long refer_count;
- 
+ 	int16 dtype;
+   
 	object = obj;
 	flags = HEADER(object)->ov_flags;
+	dtype = Dtype (object);
 	if (flags & EO_SPEC) {
 special: 
 		if (!(flags & EO_REF) && (flags & EO_COMP))
@@ -88,7 +90,7 @@ special:
 		else return (object);
 	}
 
-	refer_count = References(flags & EO_TYPE);
+	refer_count = References(dtype);
 	for (
 		o_ptr = object; refer_count > 0 ;
 		refer_count--, o_ptr = (char *)(((char **) o_ptr) +1)
@@ -98,6 +100,7 @@ special:
 			object = o_ref;		
 			flags = HEADER(object)->ov_flags;
 			if (flags & EO_SPEC) {
+				dtype = Dtype (object);
 				goto special;
 			}
 		}
@@ -120,17 +123,19 @@ EIF_OBJ obj;
 	char *o_ref, *o_ptr;
 	long refer_count;
 	EIF_OBJ object;
+	int16 dtype;
 
 	object = obj;
  	zone = HEADER(object);
 	flags = zone->ov_flags;
+	dtype = Dtype (object);
 	if (flags & EO_SPEC) {
 special:
    	o_ref = (char *) (object + (zone->ov_size & B_SIZE) - LNGPAD(2));
    	return (*(long *) o_ref);
 	}	
 	else {
-		refer_count = References(flags & EO_TYPE);
+		refer_count = References(dtype);
 		for (
 			o_ptr = object; refer_count > 0 ;
 			refer_count--, o_ptr = (char *)(((char **) o_ptr) +1)
@@ -141,6 +146,7 @@ special:
 				zone = HEADER(object);
 				flags = zone->ov_flags;
 				if (flags & EO_SPEC) {
+					dtype = Dtype(object);
 					goto special;
 				}
 			}
@@ -743,10 +749,7 @@ EIF_INTEGER c_get_dimension(object_id,attribute_id,rank)
 	return(odimension); }
 }
 
-void c_set_value_array_numeric(oid,aid,type,value,rank)
-	EIF_INTEGER oid,aid,type;
-	EIF_OBJ value;
-	EIF_INTEGER rank;
+void c_set_value_array_numeric(EIF_INTEGER oid,EIF_INTEGER aid,EIF_INTEGER type,EIF_OBJ value,EIF_INTEGER rank)
 {
 	long u;
 	void *area;
@@ -795,7 +798,8 @@ void c_set_value_short_array(EIF_INTEGER oid, EIF_INTEGER aid, EIF_INTEGER type,
 	short_array = (MtS16 *) malloc(sizeof(MtS16) * u);
 	for(i = 0; i < u; i++)
 		short_array[i] = (MtS16) area[i];
-	Result = Mt_SetValue(oid, aid, type, (void*)short_array, rank, u);
+	Result = 
+	(oid, aid, type, (void*)short_array, rank, u);
 	free(short_array);
 	CHECK_STS(Result);
 }
@@ -1406,7 +1410,8 @@ void c_remove_object(EIF_INTEGER oid)
  */
 void c_remove_successor(EIF_INTEGER pred_oid, EIF_INTEGER rid, EIF_INTEGER succ_oid)
 {
-	CHECK_STS(Mt_RemoveSuccessors(pred_oid, rid, 1, succ_oid));
+	Result = Mt_RemoveSuccessors(pred_oid, rid, 1, succ_oid);
+	CHECK_STS(Result);
 }
 
 /*

@@ -81,11 +81,6 @@ inherit
 creation
 	make
 
-feature -- Access
-
-	dc: WEL_CLIENT_DC
-			-- A dc to paint on it.
-
 feature {NONE} -- Initialization
 
 	make is
@@ -106,11 +101,17 @@ feature {NONE} -- Initialization
 			set_line_style (ps_solid)
 		end
 
+feature -- Access
+
+	dc: WEL_CLIENT_DC
+			-- A dc to paint on it.
+
 feature -- Element change
 
 	set_pixmap (pix: EV_PIXMAP) is
 			-- Make `pix' the new pixmap of the widget.
 		do
+--			{EV_PIXMAPABLE_IMP} Precursor (pix)
 			pixmap_imp ?= pix.implementation
 			set_minimum_size (pixmap_imp.width, pixmap_imp.height)
 		end
@@ -118,7 +119,8 @@ feature -- Element change
 	unset_pixmap is
 			-- Remove the pixmap from the container
 		do
-			pixmap_imp ?= Void
+--			{EV_PIXMAPABLE_IMP} Precursor
+			pixmap_imp := Void
 			set_minimum_size (0, 0)
 		end
 
@@ -213,7 +215,7 @@ feature {NONE} -- WEL Implementation
 		do
 			-- If a pixmap is linked to the area, we draw it
 			if pixmap_imp /= Void then
-				dc.copy_dc (pixmap_imp.dc, client_rect)
+				dc.copy_dc (pixmap_imp.internal_dc, client_rect)
 			end
 
 			-- arguments for the paint event.
@@ -237,12 +239,6 @@ feature {NONE} -- WEL Implementation
 			Result := Ws_child + Ws_visible + Cs_owndc
 		end
 
-	wel_window: WEL_WINDOW is
-			-- Current area.
-		do
-			Result := Current
-		end
-
 feature {NONE} -- Inapplicable
 
 	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
@@ -259,13 +255,6 @@ feature {NONE} -- Inapplicable
 			-- Encapsulation of the SDK GetNextDlgGroupItem,
 			-- because we cannot do a deferred feature become an
 			-- external feature.
-		do
-			check
-				Inapplicable: False
-			end
-		end
-
-	on_draw (struct: WEL_DRAW_ITEM_STRUCT) is
 		do
 			check
 				Inapplicable: False

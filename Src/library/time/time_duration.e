@@ -115,7 +115,10 @@ feature -- Attributes
 
 	minute: INTEGER
 
-	second: INTEGER
+	second: INTEGER is
+		do
+			Result := fine_second.truncated_to_integer
+		end
 
 	fine_second: DOUBLE 
 

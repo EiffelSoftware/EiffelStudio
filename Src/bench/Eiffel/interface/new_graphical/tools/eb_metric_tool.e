@@ -1267,7 +1267,7 @@ feature -- Correspondance: name-object.
 		require
 			correct_cluster_name: cluster_name /= Void and then not cluster_name. is_empty
 		local
-			list_clusters: LINKED_LIST [CLUSTER_I]
+			list_clusters: ARRAYED_LIST [CLUSTER_I]
 		do
 			list_clusters := universe.clusters
 			from

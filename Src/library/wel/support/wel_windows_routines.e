@@ -22,7 +22,7 @@ feature -- Basic operations
 		local
 			a_wel_string: WEL_STRING
 		do
-			!! a_wel_string.make (s)
+			create a_wel_string.make (s)
 			cwin_output_debug_string (a_wel_string.item)
 		end
 
@@ -80,9 +80,9 @@ feature -- Basic operations
 			a_wel_string: WEL_STRING
 			nb: INTEGER
 		do
-			!! Result.make (1024)
+			create Result.make (1024)
 			Result.fill_blank
-			!! a_wel_string.make (Result)
+			create a_wel_string.make (Result)
 			nb := cwin_load_string (
 				wr_main_args.current_instance.item,
 				an_id, a_wel_string.item, Result.count)
@@ -118,7 +118,7 @@ feature -- Status report
 			buffer: WEL_STRING
 			the_result: BOOLEAN
 		do
-			!! buffer.make_empty (11)
+			create buffer.make_empty (11)
 			the_result := cwin_get_key_name_text (key_data, buffer.item, buffer.capacity)
 			check
 				successfull_call: the_result
@@ -141,9 +141,9 @@ feature -- Status report
 			a_wel_string: WEL_STRING
 			nb: INTEGER
 		do
-			!! Result.make (cwin_get_system_directory (default_pointer, 0))
+			create Result.make (cwin_get_system_directory (default_pointer, 0))
 			Result.fill_blank
-			!! a_wel_string.make (Result)
+			create a_wel_string.make (Result)
 			nb := cwin_get_system_directory (a_wel_string.item, Result.count)
 			Result := a_wel_string.string
 			Result.head (nb)
@@ -157,9 +157,9 @@ feature -- Status report
 			a_wel_string: WEL_STRING
 			nb: INTEGER
 		do
-			!! Result.make (cwin_get_windows_directory (default_pointer, 0))
+			create Result.make (cwin_get_windows_directory (default_pointer, 0))
 			Result.fill_blank
-			!! a_wel_string.make (Result)
+			create a_wel_string.make (Result)
 			nb := cwin_get_windows_directory (a_wel_string.item, Result.count)
 			Result := a_wel_string.string
 			Result.head (nb)
@@ -171,18 +171,9 @@ feature {NONE} -- Implementation
 
 	wr_main_args: WEL_MAIN_ARGUMENTS is
 		once
-			!! Result
+			create Result
 		ensure
 			result_not_void: Result /= Void
-		end
-
-feature -- Obsolete
-
-	is_win32: BOOLEAN is obsolete
-			"WEL does not support Windows 3.1x anymore. %
-			%This function returns always True."
-		once
-			Result := True
 		end
 
 feature {NONE} -- Externals

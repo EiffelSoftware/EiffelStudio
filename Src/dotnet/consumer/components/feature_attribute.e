@@ -19,6 +19,7 @@ feature -- Access
 	Is_init_only: INTEGER is 256
 	Is_newslot: INTEGER is 512
 	Is_virtual: INTEGER is 1024
+	Is_attribute_setter: INTEGER is 2048
 			-- Possible attributes of a feature.
 
 end -- class FEATURE_ATTRIBUTE

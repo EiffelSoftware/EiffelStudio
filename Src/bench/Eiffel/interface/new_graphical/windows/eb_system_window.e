@@ -59,6 +59,9 @@ feature -- Tab access
 
 	msil_tab: EB_SYSTEM_MSIL_TAB
 			-- Widget describing MSIL specific option tab.
+			
+	msil_assembly_tab: EB_SYSTEM_MSIL_ASSEMBLY_TAB
+			-- Widget describing MSIL assembly specific option tab.
 
 	advanced_tab: EB_SYSTEM_ADVANCED_TAB
 			-- Widget describing advanced tab.
@@ -346,6 +349,10 @@ feature {NONE} -- Initialization
 				create msil_tab.make (Current)
 				notebook.extend (msil_tab)
 				notebook.set_item_text (msil_tab, msil_tab.name)
+				
+				create msil_assembly_tab.make (Current)
+				notebook.extend (msil_assembly_tab)
+				notebook.set_item_text (msil_assembly_tab, msil_assembly_tab.name)
 			end
 
 			create externals_tab.make (Current)
@@ -506,6 +513,7 @@ feature {NONE} -- Tab access
 				Result.extend (clusters_tab)
 				Result.extend (externals_tab)
 				Result.extend (msil_tab)
+				Result.extend (msil_assembly_tab)
 				Result.extend (advanced_tab)
 			else
 				create Result.make (5)

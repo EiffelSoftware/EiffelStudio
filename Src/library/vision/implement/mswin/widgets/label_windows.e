@@ -11,8 +11,14 @@ inherit
 	PRIMITIVE_WINDOWS
 		redefine
 			set_font,
-                        realize
+			realize
+		select
+			set_font
 		end
+		
+	PRIMITIVE_WINDOWS
+		rename
+			set_font as fontable_set_font
 
 	LABEL_I
 
@@ -142,7 +148,7 @@ feature -- Element change
 	set_font (a_font: FONT) is
 			-- Set the font for the text
 		do
-			private_font := a_font
+			fontable_set_font (a_font)
 			adjust_label
 		end
 
@@ -151,7 +157,7 @@ feature {NONE} -- Implementation
 	alignment_type: INTEGER
 			-- Type of alignment
 
-        realize is
+	realize is
 			-- Create the label.
 		local
 			wc: WEL_COMPOSITE_WINDOW
@@ -183,15 +189,9 @@ feature {NONE} -- Implementation
 			-- Resize the label according to `text' or
 			-- user-defined values.
 		local
-			f: FONT
 			fw: FONT_WINDOWS
 		do
 			if not fixed_size_flag then
-				if private_font /= Void then
-					f := private_font
-				else
-					f := font
-				end
 				fw ?= f.implementation
 				set_size (f.width_of_string (text), fw.string_height (Current, text))
 				if exists then

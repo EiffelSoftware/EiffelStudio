@@ -288,7 +288,7 @@ feature {NONE} -- Implementation
 				eiffel_to_c (pattern), 100, $actual_size)
 			create Result.make
 			from i := 0 until i >= actual_size loop
-				char_pointer := get_pointer_from_array_by_index (array_pointer, i)
+				char_pointer := pointer_array_i_th (array_pointer, i)
 				create s.make (0)
 				s.from_c (char_pointer)
 				Result.extend (s)
@@ -542,6 +542,9 @@ end -- class EV_FONT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/04/18 19:36:03  oconnor
+--| renamed get_pointer_from_array_by_index->pointer_array_i_th
+--|
 --| Revision 1.14  2000/03/28 21:51:41  brendel
 --| Redefined set_values for optimization purpose.
 --| update_font_face uses local variable for speed optimization.

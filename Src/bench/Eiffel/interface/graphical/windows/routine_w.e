@@ -12,10 +12,11 @@ inherit
 	BAR_AND_TEXT
 		rename
 			reset as old_reset,
-			make_shell as bar_and_text_make_shell
+			make_shell as bar_and_text_make_shell,
+			close_windows as old_close_windows
 		redefine
 			hole, build_format_bar, 
-			build_bar, tool_name, close_windows,
+			build_bar, tool_name, 
 			build_widgets, set_default_size, attach_all,
 			resize_action, stone, stone_type,
 			set_stone, synchronize, process_feature,
@@ -45,7 +46,7 @@ inherit
 			set_title, set_mode_for_editing, parse_file, resources,
 			history_window_title 
 		select
-			reset, make_shell
+			reset, make_shell, close_windows
 		end;
 	EB_CONSTANTS
 
@@ -258,8 +259,7 @@ feature -- Update
 		local
 			ss: SEARCH_STRING
 		do
-			ss ?= search_cmd_holder.associated_command;
-			ss.close;
+			old_close_windows;
 			routine_text_field.close_choice_window
 			class_text_field.close_choice_window
 		end;
@@ -821,6 +821,7 @@ feature {NONE} -- Implementation; Graphical Interface
 			build_edit_menu (edit_bar);
 			search_button := search_cmd_holder.associated_button;
 
+			build_print_menu_entry;
 			!! quit_cmd.make (Current);
 			!! quit_button.make (quit_cmd, edit_bar);
 			if create_menus then

@@ -169,13 +169,17 @@ RT_LNK int fcount;
 #define RTAS_OPT(x,i,y) RTAS (x,y)
 #endif	/* EIF_REM_SET_OPTIMIZATION */
 
-#else /* ISE_GC */
+#else
+#define RTAO(x) EIF_FALSE
+#define RTAE(x) (HEADER(x)->ov_flags & EO_REF)
+#define RTAG(x) EIF_FALSE
+#define RTAN(x) EIF_FALSE
 #define RTAM(x)		(x)
 #define RTAX(x,y)	(x)
 #define RTAR(x,y)
 #define RTAS(x,y)
 #define RTAS_OPT(x,i,y)
-#endif /* ISE_GC */
+#endif
 
 
 
@@ -255,30 +259,29 @@ RT_LNK int fcount;
 		RTLO(1); \
 	}
 
-#else /* ISE_GC */
+#else
 #define RTLI(x) 
 #define RTLE
-#define RTLD
+#define RTLD	\
+	EIF_REFERENCE ol
 #define RTLR(x,y)
 #define RTXI(x)
 #define RTXE 
-#define RTXL
-#endif /* ISE_GC */
+#define RTXL \
+	EIF_REFERENCE l
+#define RTLXD
+#define RTLXL
+#define RTLXE
+#endif
 
 
 
 /* Macro used to record once functions:
  *  RTOC calls onceset to record the address of Result (static variable)
  */
-#ifdef ISE_GC
 #define RTOC(x)			onceset();
 #define RTOC_NEW(x)		new_onceset((EIF_REFERENCE) &x);
 #define RTOC_GLOBAL(x)	globalonceset((EIF_REFERENCE) &x);
-#else
-#define RTOC(x)
-#define RTOC_NEW(x)
-#define RTOC_GLOBAL(x)
-#endif /* ISE_GC */
 #define RTOVP(n,c,a)	if (!(CAT2(n,_done))) c a
 #define RTOVF(n,c,a)	(CAT2(n,_done) ? CAT2(n,_result) : c a)
 		
@@ -417,6 +420,7 @@ RT_LNK int fcount;
  *  RTXH saves hector's stack context in case an exception occurs
  *  RTHS resynchronizes the hector stack by restoring saved context
  */
+#ifdef ISE_GC
 #define RTHP(x) hrecord(x)
 #define RTHF(x) epop(&hec_stack, x)
 #define RTXH \
@@ -426,6 +430,13 @@ RT_LNK int fcount;
 	hec_stack.st_cur = hc; \
 	if (hc) hec_stack.st_end = hc->sk_end; \
 	hec_stack.st_top = ht
+#else
+#define RTHP(x) (x)
+#define RTHF(x)
+#define RTXH \
+	EIF_REFERENCE ht
+#define RTHS
+#endif
 
 /* Loc stack protection:
  * RTXLS saves loc_stack context in case an exception occurs
@@ -440,9 +451,10 @@ RT_LNK int fcount;
 	if (lsc) loc_stack.st_end = lsc->sk_end; \
 	loc_stack.st_top = lst
 #else
-#define RTXLS
+#define RTXLS \
+	EIF_REFERENCE lst
 #define RTLS
-#endif /* ISE_GC */
+#endif
 
 
 

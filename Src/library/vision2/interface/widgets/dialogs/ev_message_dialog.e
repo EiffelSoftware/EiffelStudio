@@ -29,6 +29,7 @@ feature {NONE} -- Initialization
 			vb: EV_VERTICAL_BOX
 		do
 			Precursor
+
 			create buttons.make (5)
 			create vb
 			extend (vb)
@@ -36,20 +37,25 @@ feature {NONE} -- Initialization
 			vb.extend (hb)
 			create pixmap_box
 			hb.extend (pixmap_box)
-	--		hb.disable_item_expand (pixmap_box)
+			hb.disable_item_expand (pixmap_box)
 			create label
 			label.align_text_center
 			hb.extend (label)
-			hb.set_border_width (20)
+			hb.set_border_width (10)
+			hb.set_padding (10)
 			create button_box
 			vb.extend (button_box)
 			vb.disable_item_expand (button_box)
-			button_box.set_padding (5)
+			button_box.set_padding (10)
 			button_box.set_border_width (10)
-
-			set_title ("Dialog")
+			
+			set_title ("EiffelVision2 Generic Message Dialog")
 			set_text ("Your message.")
+			set_pixmap (Default_pixmaps.Information_pixmap)
+			
 			set_buttons (<<"OK", "Cancel">>)
+			set_default_push_button(button ("OK"))
+			set_default_cancel_button(button ("Cancel"))
 		end
 
 	make_with_text (a_text: STRING) is
@@ -78,7 +84,6 @@ feature {NONE} -- Initialization
 			from
 				buttons.start
 				i := 1
-
 			until
 				i > actions.count or
 				buttons.after
@@ -106,7 +111,9 @@ feature -- Status setting
 	set_pixmap (a_pixmap: EV_PIXMAP) is
 			-- Set icon associated with dialog.
 		do
+			pixmap := a_pixmap
 			pixmap_box.put (a_pixmap)
+			pixmap_box.set_minimum_size (a_pixmap.width, a_pixmap.height)
 		end
 
 	set_text (a_text: STRING) is
@@ -124,11 +131,32 @@ feature -- Status setting
 		local
 			i: INTEGER
 		do
-			button_box.wipe_out
-			buttons.clear_all
+			clean_buttons
 			button_box.extend (create {EV_CELL})
 			from i := 1 until i > button_labels.count loop
 				add_button (button_labels @ i)
+				i := i + 1
+			end
+			button_box.extend (create {EV_CELL})
+			button_box.enable_homogeneous
+		end
+
+	set_buttons_and_actions (
+		button_labels	: ARRAY [STRING]
+		actions			: ARRAY [PROCEDURE [ANY, TUPLE []]]
+	) is
+			-- Assign new buttons with `button_labels' to `buttons'.
+		local
+			i: INTEGER
+			c: CURSOR
+		do
+			clean_buttons
+			button_box.extend (create {EV_CELL})
+			from i := 1 until i > button_labels.count loop
+				add_button_with_action (
+					button_labels @ i,
+					actions @ i
+				)
 				i := i + 1
 			end
 			button_box.extend (create {EV_CELL})
@@ -170,6 +198,19 @@ feature {NONE} -- Implementation
 	pixmap_box: EV_CELL
 			-- Container to display pixmap in.
 
+	clean_buttons is
+			-- Remove all buttons from the dialog
+		do
+			if has_default_push_button then
+				remove_default_push_button
+			end
+			if has_default_cancel_button then
+				remove_default_cancel_button
+			end
+			button_box.wipe_out
+			buttons.clear_all
+		end
+
 	add_button (s: STRING) is
 			-- An item has been added to `buttons'.
 		local
@@ -184,8 +225,18 @@ feature {NONE} -- Implementation
 			new_button.select_actions.extend (~on_button_press (s))
 			button_box.extend (new_button)
 			button_box.disable_item_expand (new_button)
-			new_button.set_minimum_width (60)
+			new_button.set_minimum_width (new_button.minimum_width.max(75))
 			new_button.align_text_center
+		end
+
+	add_button_with_action (
+		s			: STRING
+		action		: PROCEDURE [ANY, TUPLE []]
+	) is
+			-- An item has been added to `buttons'.
+		do
+			add_button (s)
+			button (s).select_actions.extend (action)
 		end
 
 	on_button_press (a_button_text: STRING) is
@@ -193,12 +244,20 @@ feature {NONE} -- Implementation
 		do
 			selected_button := a_button_text
 			hide
+			close_actions.call ([])
 		end
 
 feature -- Status report
 
 	selected_button: STRING
 			-- Label of the last clicked button.
+
+feature {EV_MESSAGE_DIALOG} -- Constants
+
+	Default_pixmaps: EV_DEFAULT_PIXMAPS is
+		once
+			create Result
+		end
 
 end -- class EV_MESSAGE_DIALOG
 
@@ -223,6 +282,10 @@ end -- class EV_MESSAGE_DIALOG
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.23  2000/04/29 03:37:24  pichery
+--| Changed Dialogs. Added default & cancel
+--| buttons, Default pixmaps, ...
+--|
 --| Revision 1.22  2000/04/19 00:45:05  brendel
 --| Minor changes.
 --|

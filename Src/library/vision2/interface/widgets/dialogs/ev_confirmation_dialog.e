@@ -23,8 +23,8 @@ feature {NONE} -- Initialization
 	initialize is
 		do
 			Precursor
+			set_pixmap (Default_pixmaps.Question_pixmap)
 			set_title ("Confirmation")
-			set_buttons (<<"Ok", "Cancel">>)
 		end
 
 end -- class EV_CONFIRMATION_DIALOG
@@ -50,6 +50,10 @@ end -- class EV_CONFIRMATION_DIALOG
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.2  2000/04/29 03:37:24  pichery
+--| Changed Dialogs. Added default & cancel
+--| buttons, Default pixmaps, ...
+--|
 --| Revision 1.1  2000/03/10 00:50:31  bonnard
 --| Dialog composed of an "Ok" and a "Cancel" button.
 --|

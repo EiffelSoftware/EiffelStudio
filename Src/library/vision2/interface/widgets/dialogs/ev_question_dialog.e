@@ -25,7 +25,10 @@ feature {NONE} -- Initialization
 		do
 			Precursor
 			set_title ("Question")
+			set_pixmap (Default_pixmaps.Question_pixmap)
 			set_buttons (<<"Yes", "No", "Cancel">>)
+			set_default_push_button(button ("Yes"))
+			set_default_cancel_button(button ("Cancel"))
 		end
 
 end -- class EV_QUESTION_DIALOG
@@ -51,6 +54,10 @@ end -- class EV_QUESTION_DIALOG
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/04/29 03:37:24  pichery
+--| Changed Dialogs. Added default & cancel
+--| buttons, Default pixmaps, ...
+--|
 --| Revision 1.14  2000/03/06 19:17:42  oconnor
 --| Added make_with_text_and_actions,
 --| moved make_with_text from decendants to EV_MESSAGE_DIALOG.

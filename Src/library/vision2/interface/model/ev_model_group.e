@@ -504,7 +504,7 @@ feature -- List change
 			full_redraw
 		ensure then
 			fig_in_lookup_table: fig /= Void implies lookup_table.has (fig.id)
-			fig_in_group: fig.group = Current
+			fig_in_group: fig /= Void implies fig.group = Current
 		end
 
 	force_i_th (fig: like item; i: INTEGER) is
@@ -520,7 +520,7 @@ feature -- List change
 			full_redraw
 		ensure then
 			fig_in_lookup_table: fig /= Void implies lookup_table.has (fig.id)
-			fig_in_group: fig.group = Current
+			fig_in_group: fig /= Void implies fig.group = Current
 		end
 
 	replace (fig: like item) is
@@ -540,7 +540,7 @@ feature -- List change
 		ensure then
 			fig_in_lookup_table: fig /= Void implies lookup_table.has (fig.id)
 			item_not_in_lookup_table: not lookup_table.has (old item.id)
-			fig_in_group: fig.group = Current
+			fig_in_group: fig /= Void implies fig.group = Current
 			item_not_in_group: not (old item).is_in_group
 		end
 

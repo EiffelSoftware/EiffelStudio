@@ -100,5 +100,37 @@ feature -- Status setting
 		do
 			tools_always_on_top := False
 		end
+		
+	is_object_structure_changing: BOOLEAN is
+			-- Are we currently in the process of changing the structure of an object?
+			-- Some assertions may only be checked if we are not currently changing
+			-- the structure.
+		do
+			Result := is_object_structure_changing_cell.item
+		end
+
+	set_object_structure_changing is
+			-- Ensure `is_object_structure_changing' returns `True'.
+		do
+			is_object_structure_changing_cell.put (True)
+		ensure
+			is_object_structure_changing: is_object_structure_changing
+		end
+		
+	set_object_structure_changed is
+			-- Ensure `is_object_structure_changing' returns `False'.
+		do
+			is_object_structure_changing_cell.put (False)
+		ensure
+			not_is_object_structure_changing: not is_object_structure_changing
+		end
+		
+feature {NONE} -- Implementation
+
+	is_object_structure_changing_cell: CELL [BOOLEAN] is
+			-- A cell to hold the value of `is_object_structure_changing'.
+		once
+			create Result
+		end
 
 end -- class GB_SYSTEM_STATUS

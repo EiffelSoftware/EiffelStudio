@@ -9,6 +9,10 @@ class
 
 inherit
 	EV_DIALOG
+		export
+			{NONE} all
+			{ANY} show_modal_to_window
+		end
 	
 	GB_SUPPORTED_EVENTS
 		export
@@ -18,38 +22,55 @@ inherit
 		end
 		
 	INTERNAL
+		export
+			{NONE} all
 		undefine
 			default_create, copy
 		end
 		
 	GB_SHARED_SYSTEM_STATUS
+		export
+			{NONE} all
 		undefine
 			default_create, copy
 		end
 		
 	GB_SHARED_COMMAND_HANDLER
+		export
+			{NONE} all
+		end
 	
 	GB_NAMING_UTILITIES
+		export
+			{NONE} all
 		undefine
 			default_create, copy
 		end
 	
 	GB_WIDGET_UTILITIES
+		export
+			{NONE} all
 		undefine
 			default_create, copy
 		end
 		
 	GB_SHARED_OBJECT_HANDLER
+		export
+			{NONE} all
 		undefine
 			copy, default_create
 		end
 		
 	EIFFEL_RESERVED_WORDS
+		export
+			{NONE} all
 		undefine
 			copy, default_create
 		end
 		
 	GB_EVENT_UTILITIES
+		export
+			{NONE} all
 		undefine
 			copy, default_create
 		end
@@ -57,6 +78,8 @@ inherit
 	EV_STOCK_COLORS
 		rename
 			implementation as stock_colors_implementation
+		export
+			{NONE} all
 		undefine
 			copy, default_create, is_equal
 		end

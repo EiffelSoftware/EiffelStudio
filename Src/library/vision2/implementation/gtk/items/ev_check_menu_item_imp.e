@@ -40,7 +40,7 @@ feature -- Status report
 	is_selected: BOOLEAN is
 			-- Is this menu item checked?
 		do
-			C.gtk_check_menu_item_struct_active (c_object)
+			Result := C.gtk_check_menu_item_struct_active (c_object).to_boolean
 		end
 
 feature -- Status setting
@@ -90,6 +90,9 @@ end -- class EV_CHECK_MENU_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/02/18 19:26:05  king
+--| Corrected is_selected
+--|
 --| Revision 1.14  2000/02/14 11:40:27  oconnor
 --| merged changes from prerelease_20000214
 --|

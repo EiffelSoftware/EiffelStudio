@@ -562,7 +562,7 @@ feature {NONE} -- WEL Implementation
 			if it /= Void then
 				it.interface.pointer_motion_actions.call
 				([x_pos - child_x (it.interface),
-				child_y_absolute (it.interface) - y_pos, 0.0, 0.0, 0.0,
+				y_pos - child_y_absolute (it.interface), 0.0, 0.0, 0.0,
 				pt.x, pt.y])
 			end
 			if pnd_item_source /= Void then
@@ -644,6 +644,17 @@ feature {EV_PND_TRANSPORTER_IMP}
 			Result := button_rectangle.left
 		end
 
+	child_y (button: EV_TOOL_BAR_BUTTON): INTEGER is
+			-- `Result' is relative ycoor of `button' to `parent_imp'.
+		local
+			button_rectangle: WEL_RECT
+			but: EV_TOOL_BAR_BUTTON_IMP
+		do
+			but ?= button.implementation
+			button_rectangle := button_rect (internal_get_index (but))
+			Result := button_rectangle.top
+		end
+
 	child_y_absolute (button: EV_TOOL_BAR_BUTTON): INTEGER is
 			-- `Result' is absolute ycoor of `button'.	
 		local
@@ -657,8 +668,8 @@ feature {EV_PND_TRANSPORTER_IMP}
 			window_rectangle := window_rect
 			b := bar
 			Result := b.window_rect.top + 
-				((window_rect.height - button_rectangle.height)//2) - 1
-			
+			((window_rect.height - button_rectangle.height)//2) - 1
+			io.putstring ("child_y_absolute" + Result.out + "%N")
 		end
 
 feature {NONE} -- Feature that should be directly implemented by externals
@@ -735,6 +746,9 @@ end -- class EV_TOOL_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.45  2000/04/06 17:01:42  rogers
+--| Undefined count from WEL_COMBO_BOX_eXbutton_rectangle: WEL_RECT
+--|
 --| Revision 1.44  2000/04/05 21:16:12  brendel
 --| Merged changes from LIST_REFACTOR_BRANCH.
 --|

@@ -291,9 +291,9 @@ feature -- Importation
 			file: PLAIN_TEXT_FILE
 			list_item: EV_LIST_ITEM
 			imported_metrics: LINKED_LIST [EB_METRIC]
-			imported_xml_elements: LINKED_LIST [XML_ELEMENT]
-			list_item_data: CELL2 [EB_METRIC, XML_ELEMENT]
-			cell: CELL2 [EB_METRIC, XML_ELEMENT]
+			imported_xml_elements: LINKED_LIST [XM_ELEMENT]
+			list_item_data: CELL2 [EB_METRIC, XM_ELEMENT]
+			cell: CELL2 [EB_METRIC, XM_ELEMENT]
 			x_pos, y_pos: INTEGER
 			retried: BOOLEAN
 			error_dialog: EV_WARNING_DIALOG
@@ -378,7 +378,7 @@ feature -- Importation
 		local
 			imported: EV_LIST
 			list_item: EV_LIST_ITEM
-			cell: CELL2 [EB_METRIC, XML_ELEMENT]
+			cell: CELL2 [EB_METRIC, XM_ELEMENT]
 			i: INTEGER
 		do
 			from
@@ -442,9 +442,11 @@ feature -- Importation
 			basic_homonym: EB_METRIC_BASIC
 			composite_homonym: EB_METRIC_COMPOSITE
 			derived_homonym: EB_METRIC_DERIVED
-			cell: CELL2 [EB_METRIC, XML_ELEMENT]
+			cell: CELL2 [EB_METRIC, XM_ELEMENT]
 			new_name: STRING
-			name_attribute: XML_ATTRIBUTE
+			name_attribute: XM_ATTRIBUTE
+			l_att_list: DS_LIST [XM_ATTRIBUTE]
+			l_namespace: XM_NAMESPACE
 		do
 			if importable_metric_list.selected_item /= Void then
 				list_item := importable_metric_list.selected_item
@@ -470,8 +472,28 @@ feature -- Importation
 					importable_metric_list.prune (list_item)
 					list_item.set_text (new_name)
 					cell.item1.set_name (new_name)
-					create name_attribute.make ("Name", new_name)
-					cell.item2.attributes.replace (name_attribute, "Name")
+					create l_namespace.make ("", "")
+					l_att_list := cell.item2.attributes
+					from
+						l_att_list.start
+					until
+						l_att_list.after
+					loop
+						if l_att_list.item_for_iteration.name.is_equal ("Name") then
+							l_att_list.item_for_iteration.set_name (new_name)
+						end
+						l_att_list.forth						
+					end
+
+						-- Has to be debugged...
+					create name_attribute.make ("Name", l_namespace, new_name, cell.item2)
+--					cell.item2.attributes.replace_ (name_attribute, "Name")
+					cell.item2.search_forth (name_attribute) -- attributes.re
+					if not cell.item2.after then
+						cell.item2.remove_right
+					end
+					cell.item2.add_attribute ("Name", l_namespace, new_name) 
+
 					list_item.pointer_double_press_actions.wipe_out
 					list_item.pointer_double_press_actions.extend (~double_click_remove)
 					current_metric_list.extend (list_item)
@@ -592,7 +614,7 @@ feature -- Importation
 		local
 			selected_item: EV_LIST_ITEM
 			formula, unit: STRING
-			cell: CELL2 [EB_METRIC, XML_ELEMENT]
+			cell: CELL2 [EB_METRIC, XM_ELEMENT]
 		do
 			add_button.enable_sensitive
 			selected_item := importable_metric_list.selected_item
@@ -613,7 +635,7 @@ feature -- Importation
 		local
 			selected_item: EV_LIST_ITEM
 			formula, unit: STRING
-			cell: CELL2 [EB_METRIC, XML_ELEMENT]
+			cell: CELL2 [EB_METRIC, XM_ELEMENT]
 		do
 			selected_item := current_metric_list.selected_item
 			cell ?= selected_item.data

@@ -52,6 +52,15 @@ feature -- Status setting
 			implementation.set_maximum_text_length (value)
 		end
 
+	get_maximum_text_length: INTEGER is
+			-- Return the maximum number of characters
+			-- that the user may enter into the text field.
+		require
+			exist: not destroyed
+		do
+			Result := implementation.get_maximum_text_length
+		end
+
 feature -- Event - command association
 
 	add_return_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is

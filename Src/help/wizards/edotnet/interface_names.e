@@ -18,7 +18,7 @@ feature -- Labels names
 	l_Root_class_external_name: STRING is 	"Root class .NET name"
 	l_Selected_assemblies_name: STRING is	"Selected assemblies Name"
 	l_Version: STRING is 				"Version"
-	
+
 feature -- Buttons names
 
 	b_Abort: STRING is 				"Abort"
@@ -50,17 +50,16 @@ feature -- Messages
 								%%N%
 								%Click Abort to finish the wizard."
 
-
 	m_Empty_root_class_external_name_error: STRING is
 								"Please chose a .NET name for the root class.%N%
 								%The .NET name is the name that will be used%N%
 								%by other .NET components when calling this class."
-								
+
 	m_Empty_creation_routine_external_name_error: STRING is
 								"Please chose a .NET name for the creation routine.%N%
 								%The .NET name is the name that will be used%N%
 								%by other .NET components when calling this routine."
-								
+
 	m_Filename_error: STRING is 
 						"The .NET Assembly filename that you have chosen is not valid.%N%
 						%%N%
@@ -77,7 +76,7 @@ feature -- Messages
 							%be a letter.%N%
 							%%N%
 							%Click Back and choose valid Eiffel names."
-	
+
 	m_Root_class_name_error: STRING is
 							"The root class name that you have specified does not conform%N%
 							%the lace specification.%N%
@@ -87,9 +86,9 @@ feature -- Messages
 							%be a letter.%N%
 							%%N%
 							%Click Back and choose a valid root class name."
-	
+
 	m_Second_state: STRING is "You can create an executable file (.exe) or  dynamic-link library (.dll)"
-	
+
 	m_Welcome_message: STRING is 
 							"Using this wizard you can create a project (executable%N%
 							%or dynamic library) targeting the Microsoft .NET platform.%N%

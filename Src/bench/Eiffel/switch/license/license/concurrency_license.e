@@ -19,6 +19,8 @@ feature
 
 	license_checksum: INTEGER is 100
 
+	product_key: STRING is ""
+
 feature
 
 	make is

@@ -110,12 +110,11 @@ feature -- Tree features
 
 	fill_tree is
 		local
-			user_data, kernel, properties, items, widgets: EV_TREE_ITEM
+			kernel, properties, items, widgets: EV_TREE_ITEM
 			primitive, container, dialog, uncommon: EV_TREE_ITEM
 			demo: EV_TREE_ITEM	
 		do
 			-- The main topics
-			!! user_data.make_with_text (tree, "user data")
 			!! kernel.make_with_text (tree, "kernel")
 			!! properties.make_with_text (tree, "properties")
 			!! items.make_with_text (tree, "items")

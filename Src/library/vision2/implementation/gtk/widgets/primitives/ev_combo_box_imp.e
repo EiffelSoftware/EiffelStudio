@@ -83,6 +83,7 @@ feature {NONE} -- Initialization
 			list_widget := C.gtk_combo_struct_list (container_widget)
 		--	C.gtk_combo_disable_activate (container_widget)
 			C.gtk_combo_set_use_arrows (container_widget, 0)
+			C.gtk_combo_set_case_sensitive (container_widget, 1)
 		--	gtk_widget_set_flags (c_object, C.GTK_CAN_FOCUS_ENUM)
 			real_signal_connect (
 					entry_widget,
@@ -383,6 +384,9 @@ end -- class EV_COMBO_BOX_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.44  2001/07/12 16:06:44  etienne
+--| Made combo boxes case sensitive.
+--|
 --| Revision 1.43  2001/07/09 18:40:50  etienne
 --| Updated after changes in EV_KEY.
 --|

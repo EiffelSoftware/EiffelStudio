@@ -36,7 +36,6 @@ inherit
 			on_accelerator_command,
 			class_name,
 			is_displayed,
-			restore,
 			execute_resize_actions
 		end
 		
@@ -158,12 +157,6 @@ feature -- Status setting
 			-- shows the window.
 		do
 			wel_maximize
-		end
-		
-	restore is
-			-- restore `Current'.
-		do
-			Precursor {EV_WINDOW_IMP}
 		end
 
 feature -- Element change

@@ -136,8 +136,8 @@ feature {IL_CODE_GENERATOR} -- Access
 	is_cls_compliant: BOOLEAN
 			-- Does code generation generate CLS compliant code?
 			
-	any_type_id: INTEGER
-			-- Type id of ANY class.
+	any_type_id, object_type_id: INTEGER
+			-- Type id of ANY and SYSTEM_OBJECT class.
 
 	local_count: INTEGER
 			-- Number of meaningful local variables.
@@ -274,6 +274,15 @@ feature -- Settings
 			any_type_id := an_id
 		ensure
 			any_type_id_set: any_type_id = an_id
+		end
+
+	set_object_type_id (an_id: INTEGER) is
+		require
+			valid_id: an_id > 0
+		do
+			object_type_id := an_id
+		ensure
+			object_type_id_set: object_type_id = an_id
 		end
 
 feature -- Generation Structure

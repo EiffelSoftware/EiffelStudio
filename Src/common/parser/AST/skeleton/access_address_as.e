@@ -74,8 +74,6 @@ feature -- Type check
 			Error_handler.checksum
 		end;
 
-	
-
 	format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do

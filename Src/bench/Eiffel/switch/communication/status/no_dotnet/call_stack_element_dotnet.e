@@ -56,6 +56,10 @@ feature -- Dotnet Properties
 		do
 		end
 
+	dotnet_module_filename: STRING is
+		do
+		end
+
 feature -- Output
 
 	display_arguments (st: STRUCTURED_TEXT) is

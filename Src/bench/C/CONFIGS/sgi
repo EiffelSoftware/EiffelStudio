@@ -140,7 +140,7 @@ cc='c99'
 ccflags='-DLANGUAGE_C -G0 -xansi'
 cpp='CC'
 cppflags='-DLANGUAGE_C -G0 -xansi'
-cpp_stuff='1'
+cpp_stuff='42'
 defvoidused='15'
 #Check value for next 4
 eif_sgi='define'

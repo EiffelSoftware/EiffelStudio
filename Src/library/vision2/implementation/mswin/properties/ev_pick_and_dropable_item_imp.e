@@ -58,9 +58,11 @@ feature -- Access
 					set_pnd_original_parent
 					start_transport (a_x, a_y, a_button, 0, 0, 0.5, a_screen_x,
 						a_screen_y)
-					pnd_original_parent.set_parent_source_true
-					pnd_original_parent.set_item_source (Current)
-					pnd_original_parent.set_item_source_true
+					if pebble /= Void then
+						pnd_original_parent.set_parent_source_true
+						pnd_original_parent.set_item_source (Current)
+						pnd_original_parent.set_item_source_true
+					end
 				end
 			elseif press_action = Ev_pnd_end_transport then
 				end_transport (a_x, a_y, a_button, 0, 0, 0.5, a_screen_x, a_screen_y)

@@ -10,56 +10,33 @@ class
 inherit
 	HASHABLE
 		redefine
-			copy, is_equal
+			copy, is_equal, default_create
 		end
 
 create
-	make
+	default_create, make
 
 feature -- Creation
 
-	make is
+	default_create is
 			-- Create instance of TUPLE.
 		local
 			l_count: INTEGER
 		do
 			l_count := feature {ISE_RUNTIME}.generic_parameter_count (Current)
 			create native_array.make (l_count)
-		ensure
+		ensure then
 			non_void_native_array: native_array /= Void
 		end
 
-feature -- Status report
+	make is
+			-- Create instance of TUPLE
+		obsolete
+			"Use no creation procedure to create a TUPLE instance"
+		do
+			default_create
+		end
 
-	hash_code: INTEGER is
-			-- Hash code value
-		local 
-			i, nb: INTEGER 
-			l_item: SYSTEM_OBJECT
-			l_key: HASHABLE
-		do 
-			from
-				i := 1
-				nb := count
-			until
-				i > nb 
-			loop
-				l_item := fast_item (i - 1) 
-				if is_reference_item (i) then
-					l_key ?= l_item
-					if l_key /= Void then 
-						Result := Result + l_key.hash_code * internal_primes.i_th (i) 
-					end
-				else
-						-- A basic type
-					Result := Result + l_item.get_hash_code * internal_primes.i_th (i)
-				end
-				i := i + 1 
-			end 
-				-- Ensure it is a positive value.
-			Result := Result.hash_code
-		end 
-		
 feature -- Access
 
 	item, infix "@" (k: INTEGER): ANY is
@@ -68,6 +45,96 @@ feature -- Access
 			valid_index: valid_index (k)
 		do
 			Result ?= native_array.item (k - 1)
+		end
+
+	reference_item (index: INTEGER): ANY is
+			-- Reference item at `index'.
+		require
+			valid_index: valid_index (index)
+			is_reference: is_reference_item (index)
+		do
+			Result ?= native_array.item (index - 1)
+		end
+
+	boolean_item (index: INTEGER): BOOLEAN is
+			-- Boolean item at `index'.
+		require
+			valid_index: valid_index (index)
+			is_boolean: is_boolean_item (index)
+		do
+			Result ?= fast_item (index - 1)
+		end
+
+	character_item (index: INTEGER): CHARACTER is
+			-- Character item at `index'.
+		require
+			valid_index: valid_index (index)
+			is_character: is_character_item (index)
+		do
+			Result ?= fast_item (index - 1)
+		end
+
+	double_item (index: INTEGER): DOUBLE is
+			-- Double item at `index'.
+		require
+			valid_index: valid_index (index)
+			is_numeric: is_numeric_item (index)
+		do
+			Result ?= fast_item (index - 1)
+		end
+
+	integer_8_item (index: INTEGER): INTEGER_8 is
+			-- Integer item at `index'.
+		require
+			valid_index: valid_index (index)
+			is_integer: is_integer_8_item (index)
+		do
+			Result ?= fast_item (index - 1)
+		end
+
+	integer_16_item (index: INTEGER): INTEGER_16 is
+			-- Integer item at `index'.
+		require
+			valid_index: valid_index (index)
+			is_integer: is_integer_16_item (index)
+		do
+			Result ?= fast_item (index - 1)
+		end
+
+	integer_item, integer_32_item (index: INTEGER): INTEGER is
+			-- Integer item at `index'.
+		require
+			valid_index: valid_index (index)
+			is_integer: is_integer_item (index)
+		do
+			Result ?= fast_item (index - 1)
+		end
+
+	integer_64_item (index: INTEGER): INTEGER_64 is
+			-- Integer item at `index'.
+		require
+			valid_index: valid_index (index)
+			is_integer: is_integer_64_item (index)
+		do
+			Result ?= fast_item (index - 1)
+		end
+
+	pointer_item (index: INTEGER): POINTER is
+			-- Pointer item at `index'.
+		require
+			valid_index: valid_index (index)
+			is_pointer: is_pointer_item (index)
+		do
+			Result ?= fast_item (index - 1)
+		end
+
+	real_item (index: INTEGER): REAL is
+			-- real item at `index'.
+		require
+			valid_index: valid_index (index)
+			is_real_or_integer: is_real_item (index) or else is_integer_item (index)
+		do
+			Result ?= fast_item (index - 1)
 		end
 
 feature -- Comparison
@@ -110,17 +177,37 @@ feature -- Duplication
 			end
 		end
 
-feature {ROUTINE} -- Fast access
-
-	fast_item (k: INTEGER): SYSTEM_OBJECT is
-		require
-			valid_index: valid_index (k + 1)
-		do
-			Result := native_array.item (k)
-		end
-
 feature -- Status report
 
+	hash_code: INTEGER is
+			-- Hash code value
+		local 
+			i, nb: INTEGER 
+			l_item: SYSTEM_OBJECT
+			l_key: HASHABLE
+		do 
+			from
+				i := 1
+				nb := count
+			until
+				i > nb 
+			loop
+				l_item := fast_item (i - 1) 
+				if is_reference_item (i) then
+					l_key ?= l_item
+					if l_key /= Void then 
+						Result := Result + l_key.hash_code * internal_primes.i_th (i) 
+					end
+				else
+						-- A basic type
+					Result := Result + l_item.get_hash_code * internal_primes.i_th (i)
+				end
+				i := i + 1 
+			end 
+				-- Ensure it is a positive value.
+			Result := Result.hash_code
+		end 
+		
 	valid_index (k: INTEGER): BOOLEAN is
 			-- Is `k' a valid key?
 		do
@@ -157,7 +244,97 @@ feature -- Element change
 		do
 			native_array.put (k - 1, v)
 		end
-	
+
+	put_reference (v: SYSTEM_OBJECT; index: INTEGER) is
+			-- Put `v' at position `index' in Current.
+		require
+			valid_index: valid_index (index)
+			valid_type: is_reference_item (index)
+		do
+			native_array.put (index - 1, v)
+		end
+		
+	put_boolean (v: BOOLEAN; index: INTEGER) is
+			-- Put `v' at position `index' in Current.
+		require
+			valid_index: valid_index (index)
+			valid_type: is_boolean_item (index)
+		do
+			native_array.put (index - 1, v)
+		end
+		
+	put_character (v: CHARACTER; index: INTEGER) is
+			-- Put `v' at position `index' in Current.
+		require
+			valid_index: valid_index (index)
+			valid_type: is_character_item (index)
+		do
+			native_array.put (index - 1, v)
+		end
+		
+	put_double (v: DOUBLE; index: INTEGER) is
+			-- Put `v' at position `index' in Current.
+		require
+			valid_index: valid_index (index)
+			valid_type: is_double_item (index)
+		do
+			native_array.put (index - 1, v)
+		end
+		
+	put_real (v: REAL; index: INTEGER) is
+			-- Put `v' at position `index' in Current.
+		require
+			valid_index: valid_index (index)
+			valid_type: is_real_item (index)
+		do
+			native_array.put (index - 1, v)
+		end
+		
+	put_pointer (v: POINTER; index: INTEGER) is
+			-- Put `v' at position `index' in Current.
+		require
+			valid_index: valid_index (index)
+			valid_type: is_pointer_item (index)
+		do
+			native_array.put (index - 1, v)
+		end
+		
+	put_integer, put_integer_32 (v: INTEGER; index: INTEGER) is
+			-- Put `v' at position `index' in Current.
+		require
+			valid_index: valid_index (index)
+			valid_type: is_integer_item (index)
+		do
+			native_array.put (index - 1, v)
+		end
+		
+	put_integer_8 (v: INTEGER_8; index: INTEGER) is
+			-- Put `v' at position `index' in Current.
+		require
+			valid_index: valid_index (index)
+			valid_type: is_integer_8_item (index)
+		do
+			native_array.put (index - 1, v)
+		end
+		
+	put_integer_16 (v: INTEGER_16; index: INTEGER) is
+			-- Put `v' at position `index' in Current.
+		require
+			valid_index: valid_index (index)
+			valid_type: is_integer_16_item (index)
+		do
+			native_array.put (index - 1, v)
+		end
+		
+	put_integer_64 (v: INTEGER_64; index: INTEGER) is
+			-- Put `v' at position `index' in Current.
+		require
+			valid_index: valid_index (index)
+			valid_type: is_integer_64_item (index)
+		do
+			native_array.put (index - 1, v)
+		end
+
 feature -- Type queries
 
 	is_boolean_item (index: INTEGER): BOOLEAN is
@@ -407,89 +584,6 @@ feature -- Type conversion queries
 			yes_if_empty: (count = 0) implies Result
 		end
 
-feature -- Access
-
-	boolean_item (index: INTEGER): BOOLEAN is
-			-- Boolean item at `index'.
-		require
-			valid_index: valid_index (index)
-			is_boolean: is_boolean_item (index)
-		do
-			Result ?= fast_item (index - 1)
-		end
-
-	character_item (index: INTEGER): CHARACTER is
-			-- Character item at `index'.
-		require
-			valid_index: valid_index (index)
-			is_character: is_character_item (index)
-		do
-			Result ?= fast_item (index - 1)
-		end
-
-	double_item (index: INTEGER): DOUBLE is
-			-- Double item at `index'.
-		require
-			valid_index: valid_index (index)
-			is_numeric: is_numeric_item (index)
-		do
-			Result ?= fast_item (index - 1)
-		end
-
-	integer_8_item (index: INTEGER): INTEGER_8 is
-			-- Integer item at `index'.
-		require
-			valid_index: valid_index (index)
-			is_integer: is_integer_8_item (index)
-		do
-			Result ?= fast_item (index - 1)
-		end
-
-	integer_16_item (index: INTEGER): INTEGER_16 is
-			-- Integer item at `index'.
-		require
-			valid_index: valid_index (index)
-			is_integer: is_integer_16_item (index)
-		do
-			Result ?= fast_item (index - 1)
-		end
-
-	integer_item, integer_32_item (index: INTEGER): INTEGER is
-			-- Integer item at `index'.
-		require
-			valid_index: valid_index (index)
-			is_integer: is_integer_item (index)
-		do
-			Result ?= fast_item (index - 1)
-		end
-
-	integer_64_item (index: INTEGER): INTEGER_64 is
-			-- Integer item at `index'.
-		require
-			valid_index: valid_index (index)
-			is_integer: is_integer_64_item (index)
-		do
-			Result ?= fast_item (index - 1)
-		end
-
-	pointer_item (index: INTEGER): POINTER is
-			-- Pointer item at `index'.
-		require
-			valid_index: valid_index (index)
-			is_pointer: is_pointer_item (index)
-		do
-			Result ?= fast_item (index - 1)
-		end
-
-	real_item (index: INTEGER): REAL is
-			-- real item at `index'.
-		require
-			valid_index: valid_index (index)
-			is_real_or_integer: is_real_item (index) or else is_integer_item (index)
-		do
-			Result ?= fast_item (index - 1)
-		end
-
 feature -- Conversion
 
 	arrayed: ARRAY [ANY] is
@@ -684,7 +778,16 @@ feature -- Conversion
 		ensure
 			non_void_to_cil: Result /= Void
 		end
-		
+
+feature {ROUTINE} -- Fast access
+
+	fast_item (k: INTEGER): SYSTEM_OBJECT is
+		require
+			valid_index: valid_index (k + 1)
+		do
+			Result := native_array.item (k)
+		end
+
 feature {ROUTINE, TUPLE}
 
 	arg_item_code (index: INTEGER): INTEGER_8 is

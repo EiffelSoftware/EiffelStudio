@@ -1,9 +1,9 @@
 class SAVE_AS_BUTTON 
 inherit
 
-	EB_BUTTON_COM
-		rename
-			make_visible as make
+	CREATE_PROJ_BUTTON
+		redefine
+			focus_string, symbol, popup_window
 		end;
 	WINDOWS;
 
@@ -23,21 +23,13 @@ feature {NONE} -- Focusable
 			Result := Pixmaps.save_as_pixmap
 		end;
 
-	focus_label: LABEL is
-		do
-			Result := main_panel.focus_label
-		end
 
-feature {NONE} -- Execute
-
-	execute (argument: ANY) is
+	popup_window is
 		local
-			pw: SAVE_AS_PROJ_WIN	
+			pw: SAVE_AS_PROJ_WIN
 		do
-			if main_panel.project_initialized then
-				!!pw.make (main_panel.base)
-				pw.popup
-			end
-		end
+			!!pw.make (main_panel.base)
+			pw.popup
+		end;
 
 end

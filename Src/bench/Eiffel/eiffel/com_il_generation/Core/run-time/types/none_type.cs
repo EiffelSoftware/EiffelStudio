@@ -8,7 +8,14 @@ indexing
 using System;
 namespace ISE.Runtime {
 
-public class NONE_TYPE: TYPE {
+public class NONE_TYPE: CLASS_TYPE {
+
+	public override String class_name ()
+		// Name of object's generating type who has Current as an EIFFEL_DERIVATION
+		// (type of which it is a direct instance)
+	{
+		return "NONE";
+	}
 }
 
 }

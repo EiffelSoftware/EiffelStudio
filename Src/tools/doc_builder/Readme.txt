@@ -21,7 +21,7 @@ Requirements:
 Classic Mode Compilation
 ------------------------
 
-1) Compile 'docbuildeR_classic.ace'
+1) Compile 'docbuilder_classic.ace'
 
 
 ------------------------------------

@@ -224,13 +224,13 @@ rt_public EIF_BOOLEAN spiso(register EIF_REFERENCE target, register EIF_REFERENC
 		return EIF_FALSE;
 
 	s_flags = s_zone->ov_flags;
-	if (!(s_flags & EO_REF))
+	if (!(s_flags & EO_REF) && !(s_flags & EO_COMP))
 		/* Case 1: specials filled with direct instances: block comparison */
 		return EIF_TEST(!memcmp (source, target, s_size * sizeof(char)));
 
 	if (!(s_flags & EO_COMP)) {
 		/* Case 2: specials filled with references: we have to check fields
-		 * two by two.
+		 * one by one.
 		 */
 		for(
 			s_ref = (EIF_REFERENCE)source, t_ref = (EIF_REFERENCE) target;
@@ -426,7 +426,7 @@ rt_private EIF_BOOLEAN rdeepiter(register EIF_REFERENCE target, register EIF_REF
 				return EIF_FALSE;
 		else if (t_ref == 0)
 			return EIF_FALSE;
-		else if (!(rdeepiso(*(EIF_REFERENCE *)target, s_ref)))
+		else if (!(rdeepiso(t_ref, s_ref)))
 			return EIF_FALSE;
 	}
 	return EIF_TRUE;

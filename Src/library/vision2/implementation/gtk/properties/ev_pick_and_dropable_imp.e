@@ -512,6 +512,7 @@ feature -- Implementation
 		once
 			create Result
 			Result.set_foreground_color ((create {EV_STOCK_COLORS}).white)
+			Result.enable_dashed_line_style
 			Result.set_invert_mode
 		end
 
@@ -551,17 +552,6 @@ feature -- Implementation
 		end
 
 feature {EV_APPLICATION_IMP, EV_PICK_AND_DROPABLE_IMP, EV_DOCKABLE_SOURCE_IMP} -- Implementation
-
-	is_displayed: BOOLEAN is
-			-- Is `Current' visible on the screen?
-			-- Used for PND real_pointed_target optimization.
-		do
-			--| Shift to put bit in least significant place then take mod 2.
-			Result := ((
-				({EV_GTK_EXTERNALS}.gtk_object_struct_flags (visual_widget)
-				// {EV_GTK_EXTERNALS}.GTK_MAPPED_ENUM) \\ 2)
-			) = 1
-		end
 	
 	pre_pnd_state: INTEGER
 	

@@ -19,9 +19,6 @@ feature {NONE} -- Initialization
 		do
 			wizard_information := clone(an_info)
 			change_entries
---			if is_final_state then
---				first_window.set_final_state
---			end
 		ensure
 			information_set: wizard_information /= Void
 		end
@@ -78,19 +75,17 @@ feature -- Basic Operations
 			read_the_entries: entries_checked	
 		end
 
-	build is
-			-- Build widgets.
-		require
-			main_box_empty: main_box.count=0
-		deferred
-		ensure
-			main_box_has_at_least_one_element: main_box.count > 0
-		end
-
 	cancel is
 			-- Action performed by Current when the user
 			-- exits the wizard ( he presses "Cancel") .
 		do
+		end
+
+	build is
+			-- Build widgets
+		deferred
+		ensure
+			main_box_has_at_least_one_element: main_box.count > 0
 		end
 
 feature -- Settings
@@ -136,6 +131,31 @@ feature -- Access
 		deferred
 		ensure
 			exists: Result /= Void
+		end
+
+	pixmap: EV_PIXMAP is
+			-- Pixmap on which can be displayed a picture which 
+			-- goes with the state.
+		once
+			Create Result
+		end
+
+	message: STRING is 
+			-- Message which explains what the page is about.
+		deferred 
+		ensure
+			Result /= Void
+		end
+
+	title: STRING is
+			-- Page title.
+		deferred
+		ensure
+			Result /= Void
+		end
+
+	is_final_state: BOOLEAN is
+		do
 		end
 
 end -- class WIZARD_STATE_WINDOW

@@ -648,12 +648,6 @@ feature {NONE} -- Text processing
 			process_basic_text (text)
 		end
 
-	process_exported_feature_name_text (text: EXPORTED_FEATURE_NAME_TEXT) is
-			-- Process feature name text `t'.
-		do
-			process_basic_text (text)
-		end;
-
 	set_keywords_for_feature (f: E_FEATURE) is
 			-- Set keywords "$file$" and "$feature$" to the correct
 			-- values for `f'.

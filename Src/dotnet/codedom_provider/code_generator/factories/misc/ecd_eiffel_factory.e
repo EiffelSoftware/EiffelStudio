@@ -11,6 +11,11 @@ inherit
 
 	ECD_CODE_DOM_PATH
 
+	ECD_SHARED_EVENT_MANAGER
+		export
+			{NONE} all
+		end
+
 feature {ECD_CONSUMER_FACTORY} -- Visitor features.
 
 	generate_compile_unit (a_source: SYSTEM_DLL_CODE_COMPILE_UNIT) is
@@ -118,7 +123,7 @@ feature {NONE} -- Implementation
 					i := i + 1
 				end
 			else
-				(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Missing_namespaces, [])
+				Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Missing_namespaces, [])
 			end
 		end	
 
@@ -149,7 +154,7 @@ feature {NONE} -- Implementation
 					i := i + 1
 				end
 			else
-				(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Missing_types, [a_namespace.name])
+				Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Missing_types, [a_namespace.name])
 			end
 		end
 	

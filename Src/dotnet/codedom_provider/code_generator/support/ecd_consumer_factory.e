@@ -6,6 +6,12 @@ indexing
 class
 	ECD_CONSUMER_FACTORY
 
+inherit
+	ECD_SHARED_EVENT_MANAGER
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -134,7 +140,7 @@ feature {NONE} -- Implementation
 		do
 			delegate ?= a_type
 			if delegate /= Void then
-				(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Not_implemented, ["delegate type generation"])
+				Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Not_implemented, ["delegate type generation"])
 				--(create {ECD_TYPE_FACTORY}).generate_delegate (delegate)
 			else
 				(create {ECD_TYPE_FACTORY}).generate_type (a_type)
@@ -186,7 +192,7 @@ feature {NONE} -- Implementation
 									else
 										delegate ?= a_member
 										if delegate /= Void then
-											(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Not_implemented, ["delegate type generation"])
+											Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Not_implemented, ["delegate type generation"])
 										--	(create {ECD_TYPE_FACTORY}).generate_delegate (delegate)
 										else
 											type ?= a_member

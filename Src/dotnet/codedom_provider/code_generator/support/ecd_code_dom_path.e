@@ -12,6 +12,11 @@ inherit
 			{NONE} all
 		end
 
+	ECD_SHARED_EVENT_MANAGER
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
 	Codedom_installation_path: STRING is
@@ -23,11 +28,11 @@ feature -- Access
 			if not l_retried then
 				l_key := feature {REGISTRY}.local_machine.open_sub_key (Setup_key, False)
 				if l_key = Void then
-					(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Missing_setup_key, [])
+					Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Missing_setup_key, [])
 				else
 					Result ?= l_key.get_value (Installation_dir_value)
 					if Result = Void then
-						(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Missing_installation_directory, [])
+						Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Missing_installation_directory, [])
 					end
 				end
 			end
@@ -71,7 +76,7 @@ feature -- Access
 					Result := l_dir.name
 				end
 			else
-				(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.missing_installation_directory, [])
+				Event_manager.raise_event (feature {ECD_EVENTS_IDS}.missing_installation_directory, [])
 			end
 		end
 		

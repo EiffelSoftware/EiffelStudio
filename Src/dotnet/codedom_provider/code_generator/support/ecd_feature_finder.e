@@ -15,6 +15,11 @@ inherit
 
 	ECD_SHARED_CODE_GENERATOR_CONTEXT
 
+	ECD_SHARED_EVENT_MANAGER
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
 	eiffel_feature_name_from_dynamic_args (a_dotnet_type: TYPE; a_dotnet_feature_name: STRING; feature_arguments: LINKED_LIST [ECD_EXPRESSION]): STRING is
@@ -67,7 +72,7 @@ feature -- Access
 				end
 			end
 			if Result = Void then
-				(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Missing_feature, [a_dotnet_type.to_string, a_dotnet_feature_name])
+				Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Missing_feature, [a_dotnet_type.to_string, a_dotnet_feature_name])
 				Result := (create {NAME_FORMATTER}).formatted_feature_name (a_dotnet_feature_name)
 			end
 		ensure
@@ -99,7 +104,7 @@ feature -- Access
 				end
 			end
 			if Result = Void then
-				(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Non_generated_type, [a_dotnet_type_name, "declaring_type", "feature finder"])
+				Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Non_generated_type, [a_dotnet_type_name, "declaring_type", "feature finder"])
 				Result := a_dotnet_type_name
 			end
 		ensure
@@ -125,12 +130,12 @@ feature -- Access
 					if l_cache_reflection.is_assembly_in_cache (a_dotnet_type.assembly.get_name) then
 						Result := l_cache_reflection.feature_name (a_dotnet_type, a_dotnet_feature_name, a_feature_arguments)
 					else
-						(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Missing_consumed_assembly, [a_dotnet_type.assembly.get_name])
+						Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Missing_consumed_assembly, [a_dotnet_type.assembly.get_name])
 					end
 				end
 			end
 		rescue
-			(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Rescued_exception, [feature {ISE_RUNTIME}.last_exception])
+			Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Rescued_exception, [feature {ISE_RUNTIME}.last_exception])
 			l_rescued := True
 			retry
 		end

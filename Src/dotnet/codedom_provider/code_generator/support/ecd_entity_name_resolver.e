@@ -63,7 +63,7 @@ feature -- Access
 			elseif Variables.has (a_dotnet_feature_name) then
 				Result := Variables.item (a_dotnet_feature_name)
 			else
-				(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Missing_feature, [a_dotnet_feature_name, "current type"])
+				Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Missing_feature, [a_dotnet_feature_name, "current type"])
 			end
 		ensure
 			valid_dotnet_type_name: Result /= Void and not Result.is_empty

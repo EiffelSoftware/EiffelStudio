@@ -69,14 +69,14 @@ feature {NONE} -- Implementation
 				code_dom_generator.generate_type_reference_from_dom (l_delegate_type)
 				a_delegate_create_expression.set_delegate_type (last_return_type.name)
 			else
-				(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Missing_delegate_type, ["delegate create expression"])
+				Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Missing_delegate_type, ["delegate create expression"])
 			end
 			l_target_object := a_source.target_object
 			if l_target_object /= Void then
 				code_dom_generator.generate_expression_from_dom (l_target_object)
 				a_delegate_create_expression.set_target_object (last_expression)
 			else
-				(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Missing_target_object, ["delegate create expression"])
+				Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Missing_target_object, ["delegate create expression"])
 			end
 			a_delegate_create_expression.set_method_name (a_source.method_name)
 		end
@@ -103,7 +103,7 @@ feature {NONE} -- Implementation
 				code_dom_generator.generate_expression_from_dom (a_target_object)
 				a_delegate_invoke_expression.set_target_object (last_expression)
 			else
-				(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Missing_target_object, ["delegate invoke expression"])
+				Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Missing_target_object, ["delegate invoke expression"])
 			end
 		end
 
@@ -130,7 +130,7 @@ feature {NONE} -- Implementation
 					i := i + 1
 				end
 			else
-				(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Missing_parameters, ["delegate invoke expression"])
+				Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Missing_parameters, ["delegate invoke expression"])
 			end
 		end
 

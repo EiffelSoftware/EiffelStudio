@@ -24,7 +24,7 @@ feature {ECD_CONSUMER_FACTORY} -- Visitor features.
 			an_argument: ECD_ARGUMENT_REFERENCE_EXPRESSION
 		do
 			if current_type = Void then
-				(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Missing_current_type, ["argument reference expression"])
+				Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Missing_current_type, ["argument reference expression"])
 			end
 			
 			create an_argument.make
@@ -48,7 +48,7 @@ feature {ECD_CONSUMER_FACTORY} -- Visitor features.
 			l_parameter: ECD_PARAMETER_DECLARATION_EXPRESSION
 		do
 			if current_type = Void then
-				(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Missing_current_type, ["parameter declaration expression"])
+				Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Missing_current_type, ["parameter declaration expression"])
 			end
 
 			create l_parameter.make

@@ -10,11 +10,6 @@ class
 
 inherit
 	CONFIG_INSTALL_INSTALLER
-		undefine
-			to_string,
-			equals,
-			finalize,
-			get_hash_code
 		redefine
 			install,
 			uninstall,
@@ -22,7 +17,10 @@ inherit
 			rollback
 		end
 
-	ANY
+	ECD_SHARED_EVENT_MANAGER
+		export
+			{NONE} all
+		end
 	
 feature {SYSTEM_OBJECT} -- Redefined features.
 
@@ -116,7 +114,7 @@ feature {NONE} -- Implementation
 		ensure
 			non_void_machine_config: machine_config /= Void
 		rescue
-			(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Rescued_exception, [feature {ISE_RUNTIME}.last_exception])
+			Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Rescued_exception, [feature {ISE_RUNTIME}.last_exception])
 			l_retried := True
 			retry
 		end

@@ -9,6 +9,11 @@ class
 inherit
 	ECD_REGISTRY_KEYS
 
+	ECD_SHARED_EVENT_MANAGER
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
 	current_process_config_path: STRING is
@@ -22,7 +27,7 @@ feature -- Access
 			if l_file_name /= Void then
 				Result := application_config_path (l_file_name)
 			else
-				(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Missing_current_process_file_name, [])
+				Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Missing_current_process_file_name, [])
 			end
 		end
 		
@@ -121,7 +126,7 @@ feature -- Access
 				l_key.close
 			end
 			if Result = Void then
-				(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Missing_default_config, [])
+				Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Missing_default_config, [])
 			end
 		end
 

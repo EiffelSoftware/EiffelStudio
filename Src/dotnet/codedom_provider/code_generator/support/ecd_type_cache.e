@@ -14,6 +14,11 @@ inherit
 			{NONE} all
 		end
 
+	ECD_SHARED_EVENT_MANAGER
+		export
+			{NONE} all
+		end
+
 create
 	default_create
 
@@ -29,7 +34,7 @@ feature -- Access
 			if Generated_types.found then
 				Result := Generated_types.found_item
 			else
-				(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Non_generated_type, [a_type_name, "generated_type", "type cache"])
+				Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Non_generated_type, [a_type_name, "generated_type", "type cache"])
 			end
 		end
 		
@@ -43,7 +48,7 @@ feature -- Access
 			if Types.found then
 				Result := Types.found_item
 			else
-				(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Missing_type, [a_type_name])
+				Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Missing_type, [a_type_name])
 			end
 		end
 		
@@ -68,18 +73,18 @@ feature -- Access
 						create l_cache_reflection.make (Clr_version)
 						Result := l_cache_reflection.type_name (l_type)
 						if Result = Void or else Result.is_empty then
-							(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Missing_consumed_type, [a_dotnet_type_name])
+							Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Missing_consumed_type, [a_dotnet_type_name])
 							Result := a_dotnet_type_name
 						end
 						if not Result.is_empty then
 							Result.prepend (assembly_of_type (a_dotnet_type_name).assembly_prefix)
 						end
 					else
-						(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Non_external_type, [a_dotnet_type_name])
+						Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Non_external_type, [a_dotnet_type_name])
 						Result := a_dotnet_type_name
 					end
 				else
-					(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Missing_type, [a_dotnet_type_name])
+					Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Missing_type, [a_dotnet_type_name])
 					Result := a_dotnet_type_name
 				end
 			end
@@ -173,7 +178,7 @@ feature {NONE} -- Implementation
 					l_ref_ass.Referenced_assemblies.forth
 				end
 			else
-				(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.No_assembly, [a_dotnet_type_name])
+				Event_manager.raise_event (feature {ECD_EVENTS_IDS}.No_assembly, [a_dotnet_type_name])
 			end
 		ensure
 			non_void_assembly: Result /= Void

@@ -38,6 +38,11 @@ inherit
 			{NONE} all
 		end
 
+	ECD_SHARED_EVENT_MANAGER
+		export
+			{NONE} all
+		end
+
 create
 	reload
 	
@@ -136,7 +141,7 @@ feature -- Basic Operations
 				l_xml_reader.close
 			end
 		rescue
-			(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Rescued_exception, [feature {ISE_RUNTIME}.last_exception])
+			Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Rescued_exception, [feature {ISE_RUNTIME}.last_exception])
 			l_retried := True
 			retry
 		end

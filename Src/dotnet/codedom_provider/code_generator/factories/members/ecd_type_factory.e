@@ -176,7 +176,7 @@ feature {NONE} -- Type generation
 		do
 			l_members := a_source.members
 			if l_members = Void then
-				(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Missing_members, ["type feature initialization"])
+				Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Missing_members, ["type feature initialization"])
 			else
 				from
 					l_count := l_members.count

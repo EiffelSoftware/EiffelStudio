@@ -20,7 +20,6 @@ feature {NONE} -- Initialization
 			l_key_size: INTEGER
 			l_result: INTEGER
 			l_ptr: POINTER
-			l_raw_file: RAW_FILE
 		do
 				-- Read key pair data from `a_file_name'
 			key_pair := read_key_pair_from_file (a_file_name)

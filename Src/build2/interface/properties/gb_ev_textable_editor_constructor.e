@@ -70,6 +70,7 @@ feature {NONE} -- Implementation
 			-- Assign `text' of `text_entry' to all objects.
 		do
 			for_all_objects (agent {EV_TEXTABLE}.set_text (a_text))
+			update_editors
 		end
 		
 	text_entry: GB_STRING_INPUT_FIELD

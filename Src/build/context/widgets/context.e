@@ -218,21 +218,28 @@ feature {NONE}
 		end
 
 	process_instance (dropped: CMD_INST_STONE) is
-			-- Retarget the associted command tool creating
-			-- a new instance of `dropped.data'.
-
+			-- Add command associated to `dropped' in current
+			-- state defined on the main panel.
 		local
 			the_stone: COMMAND_TOOL_HOLE
 			the_behavior: BEHAVIOR
 		do
 			the_stone ?= dropped
-			if the_stone /= Void then
+			if the_stone /= Void and current_state /= Void then
 				!! the_behavior.make
-				the_behavior.set_context(Current)
-				the_behavior.set_input_data(default_event)
-				the_behavior.set_output_data(the_stone.data)
-			--	the_behavior.drop_pair
+				current_state.add (Current, the_behavior)
+				the_behavior.set_context (Current)
+				the_behavior.set_internal_name ("")
+				the_behavior.set_input_data (default_event)
+				the_behavior.set_output_data (the_stone.data)
+				the_behavior.drop_pair
 			end
+		end
+
+	current_state: STATE is
+			-- Current state on the main panel.
+		do
+			Result := main_panel.current_state
 		end
 
 	-- ************************

@@ -7,109 +7,66 @@ indexing
 class
 	WIZARD_MESSAGE_OUTPUT
 
-inherit
-	WIZARD_MESSAGES
-
-	WIZARD_WARNINGS
-
-	WIZARD_ERRORS
-
-	WIZARD_LOGGER
-
-	WIZARD_OUTPUT_LEVEL
-
-	WIZARD_SHARED_GENERATION_ENVIRONMENT
-		export
-			{NONE} all
-		end
-
 create
-	set_output
+	make
 
 feature {NONE} -- Initialization
 
-	set_output (a_output_window: WIZARD_OUTPUT_WINDOW) is
-			-- Set `output_window' to `a_output_window.
+	make (a_event_raiser: like event_raiser) is
+			-- Set `event_raiser' to `a_event_raiser.
 		require
-			non_void_output_window: a_output_window /= Void
+			non_void_event_raiser: a_event_raiser /= Void
 		do
-			output_window := a_output_window
+			event_raiser := a_event_raiser
 		ensure
-			output_window_set: output_window = a_output_window
+			event_raiser_set: event_raiser = a_event_raiser
 		end
 
 feature -- Access
 
-	output_window: WIZARD_OUTPUT_WINDOW
-			-- Output window
+	event_raiser: ROUTINE [ANY, TUPLE [EV_THREAD_EVENT]]
+			-- Agent on event raiser
 
 feature -- Basic operations
 
 	add_title (origin: ANY; reason: STRING) is
 			-- Display title.
 		do
-			output_window.add_title (reason)
-			add_log (Title, origin, reason)
+			event_raiser.call ([create {WIZARD_OUTPUT_EVENT}.make (feature {WIZARD_OUTPUT_EVENT_ID}.Display_title, reason)])
 		end
 
 	add_message (origin: ANY; reason: STRING) is
 			-- Display message `reason' from `origin'.
 		do
-			if Shared_wizard_environment.output_level = Output_all or forced_display then
-				output_window.add_message (reason)
-			end
-			add_log (Message, origin, reason)
+			event_raiser.call ([create {WIZARD_OUTPUT_EVENT}.make (feature {WIZARD_OUTPUT_EVENT_ID}.Display_message, reason)])
 		end
 
-	add_continuous_message (origin: ANY; reason: STRING) is
-			-- Display message `reason' from `origin' without adding a new line.
-			-- Do not log (to avoid multiple logs for the same event).
+	add_text (origin: ANY; reason: STRING) is
+			-- Display text `reason' from `origin'.
 		do
-			if Shared_wizard_environment.output_level = Output_all or forced_display then
-				output_window.add_continuous_message (reason)
-			end
+			event_raiser.call ([create {WIZARD_OUTPUT_EVENT}.make (feature {WIZARD_OUTPUT_EVENT_ID}.Display_text, reason)])
 		end
-			
+
 	add_warning (origin: ANY; reason: STRING) is
 			-- Display warning.
 		do
-			if Shared_wizard_environment.output_level = Output_warnings or 
-					Shared_wizard_environment.output_level = Output_all or forced_display
-			then
-				output_window.add_warning (reason)
-			end
-			add_log (Warning, origin, reason)
+			event_raiser.call ([create {WIZARD_OUTPUT_EVENT}.make (feature {WIZARD_OUTPUT_EVENT_ID}.Display_warning, reason)])
 		end
 
 	add_error (origin: ANY; reason: STRING) is
 			-- Display error.
 		do
-			output_window.add_error (reason)
-			add_log (Error, origin, reason)
+			event_raiser.call ([create {WIZARD_OUTPUT_EVENT}.make (feature {WIZARD_OUTPUT_EVENT_ID}.Display_error, reason)])
 		end
 
-	refresh is
-			-- Refresh message output.
+	clear is
+			-- Clear output.
 		do
-			output_window.refresh
+			event_raiser.call ([create {WIZARD_OUTPUT_EVENT}.make (feature {WIZARD_OUTPUT_EVENT_ID}.Clear, Void)])
 		end
 
-	set_forced_display is
-			-- Force display of output (independently of `output_level').
-		do
-			forced_display := True
-		end
-
-	set_normal_display is
-			-- Normal display of output (according to `output_level').
-		do
-			forced_display := False
-		end
-
-feature {NONE} -- Implementation
-
-	forced_display: BOOLEAN
-			-- Should next output be displayed indifferently of `output_level'?
+invariant
+	non_void_event_raiser: event_raiser /= Void
 
 end -- class WIZARD_MESSAGE_OUTPUT
 

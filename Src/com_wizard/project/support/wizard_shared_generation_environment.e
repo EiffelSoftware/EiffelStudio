@@ -14,8 +14,6 @@ inherit
 		end
 
 	WIZARD_EXECUTION_ENVIRONMENT
-
-	WIZARD_SHARED_DATA
 		export
 			{NONE} all
 		end
@@ -34,18 +32,6 @@ feature -- Access
 			Result := System_descriptor_cell.item
 		end
 
-	message_output: WIZARD_MESSAGE_OUTPUT is
-			-- Shared message output.
-		do
-			Result := message_output_cell.item
-		end
-
-	progress_report: WIZARD_PROGRESS_REPORT is
-			-- Shared wizard progress report.
-		do
-			Result := progress_report_cell.item
-		end
-
 	vartype_namer: WIZARD_VARTYPE_NAMER is
 			-- Vartype to string mapper
 		once
@@ -54,12 +40,16 @@ feature -- Access
 
 	Shared_process_launcher: WIZARD_PROCESS_LAUNCHER is
 			-- Process launcher
-		require
-			non_void_message_output: message_output /= Void
 		once
-			create Result.make (message_output)
+			create Result
 		end
 
+	compiler: WIZARD_COMPILER is
+			-- IDL/C compiler
+		once
+			create Result
+		end
+		
 	Formatter: STRING is "f"
 			-- Message formatter.
 
@@ -79,42 +69,10 @@ feature {WIZARD_MANAGER} -- Element Change
 			descriptor_set: system_descriptor = a_descriptor
 		end
 
-	set_message_output (a_window: like message_output) is
-			-- Set `message_output' with `a_window'.
-		require
-			non_void_window: a_window /= Void
-		do
-			message_output_cell.replace (a_window)
-		ensure
-			message_output_set: message_output = a_window
-		end
-
-	set_progress_report (a_progress_report: like progress_report) is
-			-- Set `progress_report' with `a_progress_report'.
-		require
-			non_void_progress_report: a_progress_report /= Void
-		do
-			progress_report_cell.replace (a_progress_report)
-		ensure
-			progress_report_set: progress_report = a_progress_report
-		end
-
 feature {NONE} -- Implementation
 
 	System_descriptor_cell: CELL [WIZARD_SYSTEM_DESCRIPTOR] is
 			-- System descriptor shell
-		once
-			create Result.put (Void)
-		end
-
-	message_output_cell: CELL [WIZARD_MESSAGE_OUTPUT] is
-			-- Output window shell
-		once
-			create Result.put (Void)
-		end
-
-	progress_report_cell: CELL [WIZARD_PROGRESS_REPORT] is
-			-- Progress report shell
 		once
 			create Result.put (Void)
 		end

@@ -126,8 +126,6 @@ feature -- Evaluation
 				if tmp_result_value /= Void then
 					final_result_value := tmp_result_value
 					final_result_type := tmp_result_value.dynamic_class
-	
-						-- FIXME JFIAT: useless I guess . to be removed
 					final_result_static_type := final_result_type
 				else
 					final_result_value := Void
@@ -169,8 +167,10 @@ feature -- EXPR_B evaluation
 
 			l_binary_b: BINARY_B
 			l_unary_b: UNARY_B
+			
+			l_void_b: VOID_B
 
-			l_value_i: VALUE_I			
+			l_value_i: VALUE_I
 		do
 			l_value_i := a_expr_b.evaluate
 			if l_value_i.is_no_value then
@@ -202,7 +202,13 @@ feature -- EXPR_B evaluation
 							if l_unary_b /= Void then
 								evaluate_unary_b (l_unary_b)
 							else
-								evaluate_manifest_value (a_expr_b)
+									--| VOID_B |--
+								l_void_b ?= a_expr_b
+								if l_void_b /= Void then
+									evaluate_void_b (l_void_b)
+								else
+									evaluate_manifest_value (a_expr_b)								
+								end
 							end
 						end
 					end
@@ -232,10 +238,22 @@ feature -- EXPR_B evaluation
 			tmp_result_value := l_tmp_result_value_backup
 			tmp_target := l_tmp_target_backup
 			tmp_result_static_type := l_tmp_result_static_type_backup
-		end			
+		end	
+		
+	evaluate_void_b	(a_void_b: VOID_B) is
+			-- Evaluate Void keyword value
+		local
+			t: TYPE_I
+		do
+			t := a_void_b.type
+
+			tmp_result_value := Void
+			create tmp_result_value.make_object (Void, Void)
+		end
 		
 	evaluate_manifest_value (a_expr_b: EXPR_B) is
-			-- 
+			-- Manifest value, that is to say STRING manisfest value,
+			-- since the INTEGER and so on value are handled by the parser
 		local
 			l_string_b: STRING_B
 		do
@@ -334,9 +352,28 @@ feature -- EXPR_B evaluation
 		end
 
 	evaluate_unary_b (a_unary_b: UNARY_B) is
+			-- Evaluate unary_b expression
 		local
+			l_un_minus_b: UN_MINUS_B
+			l_un_plus_b: UN_PLUS_B			
+			l_un_not_b: UN_NOT_B
 		do
-			error_message := a_unary_b.generator + " = UNARY_B : sorry not yet ready"				
+			l_un_not_b ?= a_unary_b
+			if l_un_not_b /= Void then
+				evaluate_nested_b (l_un_not_b.nested_b)				
+			else
+				l_un_minus_b ?= a_unary_b
+				if l_un_minus_b /= Void then
+					evaluate_nested_b (l_un_minus_b.nested_b)				
+				else
+					l_un_plus_b ?= a_unary_b
+					if l_un_plus_b /= Void then
+						evaluate_nested_b (l_un_plus_b.nested_b)				
+					else
+						error_message := a_unary_b.generator + " = UNARY_B : sorry not yet ready"	
+					end
+				end				
+			end
 		end
 
 	evaluate_access_b (a_access_b: ACCESS_B) is
@@ -665,7 +702,7 @@ feature -- EXPR_B evaluation
 				dv :=  cse.locals.i_th (l_local_b.position)
 				tmp_result_value := dv.dump_value
 				tmp_result_static_type := tmp_result_value.dynamic_class
-				-- FIXME jfiat [2004/02/26] : maybe compute the static type ....
+				-- FIXME jfiat [2004/02/26] : optimisation : maybe compute the static type ....
 			end
 		end
 		
@@ -691,7 +728,7 @@ feature -- EXPR_B evaluation
 				dv :=  cse.arguments.i_th (l_argument_b.position)
 				tmp_result_value := dv.dump_value
 				tmp_result_static_type := tmp_result_value.dynamic_class
-				-- FIXME jfiat [2004/02/26] : maybe compute the static type ....
+				-- FIXME jfiat [2004/02/26] : optimisation : maybe compute the static type ....
 			end
 		end		
 
@@ -1191,47 +1228,52 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	internal_counter: INTEGER -- FIXME JFIAT: remove, for debug only
-
 	get_expression_byte_node is
 			-- get expression byte node depending of the context
 		require
 			context_feature_not_void: on_context implies context_feature /= Void
 			context_class_not_void: context_class /= Void
+		local
+			retried: BOOLEAN
 		do
-			if internal_expression_byte_node = Void then
-				debug ("debugger_trace_eval_data")
-					internal_counter := internal_counter + 1
-					print ("["+internal_counter.out+"]%N")
-					print ("DBG_EXPRESSION_EVALUATOR_B: Recompute expression_byte_node ["+dbg_expression.expression+"]%N")
-					if on_context then
-						print ("                on_context: " + on_context.out +"%N")					
+			if not retried then
+				if internal_expression_byte_node = Void then
+					debug ("debugger_trace_eval_data")
+						print ("DBG_EXPRESSION_EVALUATOR_B: Recompute expression_byte_node ["+dbg_expression.expression+"]%N")
+						if on_context then
+							print ("                on_context: " + on_context.out +"%N")					
+						end
+						if on_class then
+							print ("                on_class  : " + on_class.out +"%N")
+						end
+						if on_object then
+							print ("                on_object : " + on_object.out +"%N")
+						end
+						if context_class /= Void then
+							print ("            context_class : " + context_class.name_in_upper +"%N")
+						end
+						if context_address /= Void then
+							print ("          context_address : " + context_address.out +"%N")						
+						end
+						if context_feature /= Void then
+							print ("          context_feature : " + context_feature.name +"%N")
+						end
 					end
-					if on_class then
-						print ("                on_class  : " + on_class.out +"%N")
-					end
-					if on_object then
-						print ("                on_object : " + on_object.out +"%N")
-					end
-					if context_class /= Void then
-						print ("            context_class : " + context_class.name_in_upper +"%N")
-					end
-					if context_address /= Void then
-						print ("          context_address : " + context_address.out +"%N")						
-					end
-					if context_feature /= Void then
-						print ("          context_feature : " + context_feature.name +"%N")
-					end
-				end
-					--| If we want to recompute the `expression_byte_node', 
-					--| we need to call `reset_expression_byte_nod' 
+						--| If we want to recompute the `expression_byte_node', 
+						--| we need to call `reset_expression_byte_nod' 
+						
+						--| Prepare AST context
+					prepare_ast_context (context_feature, context_class)
 					
-					--| Prepare AST context
-				prepare_ast_context (context_feature, context_class)
-				
-					--| Compute and get `expression_byte_node'
-				internal_expression_byte_node := expression_byte_node_from_ast (dbg_expression.expression_ast)				
+						--| Compute and get `expression_byte_node'
+					internal_expression_byte_node := expression_byte_node_from_ast (dbg_expression.expression_ast)				
+				end
+			else
+				error_message := "Error during expression analyse"
 			end
+		rescue
+			retried := True
+			retry
 		end
 
 	expression_byte_node_from_ast (exp: EXPR_AS): like expression_byte_node is

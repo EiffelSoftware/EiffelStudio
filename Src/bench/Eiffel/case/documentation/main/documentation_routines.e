@@ -702,7 +702,7 @@ feature {NONE} -- Implementation
 		local
 			cl: LIST [CLASS_I]
 		do
-			cl := Eiffel_system.Universe.compiled_classes_with_name ("action_sequence")
+			cl := Eiffel_system.Universe.compiled_classes_with_name ("ACTION_SEQUENCE")
 			if cl /= Void and then not cl.is_empty then
 				Result := cl.i_th (1).compiled_class
 			end

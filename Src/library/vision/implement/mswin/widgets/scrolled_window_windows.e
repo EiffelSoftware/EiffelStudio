@@ -123,7 +123,8 @@ feature -- Initialization
 				realize_current
 				realize_children
 				shown := true
-				resize_for_working_area
+			--	resize_for_working_area
+				update_scrolling
 			end
 		end
 
@@ -330,11 +331,11 @@ feature {NONE} -- Implementation
 				end
 				if has_vertical_scroll_bar then
 					if has_horizontal_scroll_bar then
-						working_area.set_x_y (x,
+						working_area.set_x_y (working_area.x,
 							working_area.y.max (height -
 							horizontal_scroll_bar_arrow_height - working_area.height).min (0))
 					else
-						working_area.set_x_y (x,
+						working_area.set_x_y (working_area.x,
 							working_area.y.max (height -
 							working_area.height).min (0))						
 					end

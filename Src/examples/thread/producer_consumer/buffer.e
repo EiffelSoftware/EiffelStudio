@@ -6,9 +6,7 @@ indexing
 
 class
 	BUFFER
-inherit
-	OBJECT_CONTROL
-		-- needed for `freeze'
+
 create
 	make
 
@@ -16,7 +14,7 @@ feature
 	monitor: MUTEX
 			-- Monitor lock.
 
-	p_finished : PROXY[BOOLEAN_REF]
+	finished : BOOLEAN_REF
 			-- Shared boolean for exiting program.
 
 	notfull, notempty: CONDITION_VARIABLE
@@ -37,7 +35,7 @@ feature
 	data: ARRAY [INTEGER]
 			-- Physical buffer of elements.
 
-	make (size, i: INTEGER; finish: PROXY [BOOLEAN_REF]) is 
+	make (size, i: INTEGER; finish: BOOLEAN_REF) is 
 			-- Initialize customizable parameters
 			-- and internal structures.
 			-- We need to freeze data because in the Eiffel4 implementation
@@ -50,20 +48,15 @@ feature
 			-- objects are by definition not collectable.
 		do
 
-			p_finished := finish
+			finished := finish
 			it := i
 			buffer_size := size - 1
 			create monitor.make
 			create notfull.make
 			create notempty.make
 			create data.make (0,buffer_size)
-			frozen_ptr := freeze (data)
-			
 		end
 	
-	frozen_ptr:  POINTER
-			-- Dummy pointer for `freeze'.
-
 	get (id: INTEGER) is
 			-- Get an element from the buffer.	
 			-- Note that we have to `wait' in a loop
@@ -77,12 +70,12 @@ feature
 				if num_full = 0 then
 					from
 					until
-						num_full /= 0 or else p_finished.item.item
+						num_full /= 0 or else finished.item
 					loop
 						notempty.wait (monitor)
 					end
 				end
-				if not p_finished.item.item then 
+				if not finished.item then 
 				d := data.item (num_full - 1)
 				data.put (0, num_full  - 1)
 				num_full := num_full - 1
@@ -106,12 +99,12 @@ feature
 				if num_full = buffer_size then
 					from 
 				until
-						num_full /= buffer_size or else p_finished.item.item
+						num_full /= buffer_size or else finished.item
 					loop
 						notfull.wait (monitor)
 					end
 				end
-				if not p_finished.item.item then 
+				if not finished.item then 
 				data.put (d, (num_full + start_idx)  \\ buffer_size)
 				num_full := num_full + 1
 				
@@ -136,10 +129,13 @@ feature
 				n_op := 0
 				display
 				io.put_string ("Press `Return' (`q' to exit)%N")
-				io.read_character
-				if io.last_character.is_equal ('q') then
+				io.read_line
+				if
+					not io.last_string.is_empty and then
+					io.last_string.item (1).is_equal ('q')
+				then
 					io.put_string ("Exiting...%N")
-					p_finished.item.set_item (True)
+					finished.set_item (True)
 					notempty.broadcast
 					notfull.broadcast
 				end

@@ -14,21 +14,21 @@ create
 
 feature	-- Initialization
 
-	make (buf: PROXY [BUFFER]; i: INTEGER; finish: PROXY [BOOLEAN_REF]) is
+	make (buf: BUFFER; i: INTEGER; finish: BOOLEAN_REF) is
 			-- Initialize parameters, set proxies,  and launch thread.
 		do
-			p_finished:= finish
-			p_buffer := buf
+			finished:= finish
+			buffer := buf
 			id := i			
 			launch
 		end
 
 feature	-- Shared access
 
-	p_buffer: PROXY [BUFFER]
+	buffer: BUFFER
 			-- Shared buffer.
 
-	p_finished : PROXY [BOOLEAN_REF]
+	finished: BOOLEAN_REF
 			-- Shared boolean for exiting.
 
 feature	{NONE} -- Private access
@@ -46,16 +46,16 @@ feature -- Thread execution
 		do
 			from
 			until 
-				p_finished.item.item
+				finished.item
 			loop
 				data :=  ( data + 1)  \\ 10000
-				p_buffer.item.put (data, id)			
+				buffer.put (data, id)			
 			end	
-			p_buffer.item.monitor.lock
+			buffer.monitor.lock
 			io.put_string ("Producer ")
 			io.put_integer (id)
 			io.put_string (" has terminated%N")	
-			p_buffer.item.monitor.unlock
+			buffer.monitor.unlock
 		end
 
 end -- class PRODUCER 

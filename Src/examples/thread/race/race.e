@@ -9,15 +9,13 @@ create
 feature
 
 	io_mutex: MUTEX
-	pm: PROXY [MUTEX]
 
 	make is
 		local
 			n, thread_count, nb_loop: INTEGER
 			r: RUNNER
 		do
-			create io_mutex.make
-			create pm.put (io_mutex)
+			create io_mutex
 			io_mutex.lock
 			io.putstring ("** Thread race%N** -----------%N")
 			io.putstring ("** # of racers: ")
@@ -34,7 +32,7 @@ feature
 			until
 				thread_count > n
 			loop
-				create r.make (pm, thread_count, nb_loop)
+				create r.make (io_mutex, thread_count, nb_loop)
 				r.launch
 				thread_count := thread_count + 1
 			end

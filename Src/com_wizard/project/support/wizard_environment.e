@@ -29,6 +29,7 @@ feature {NONE} -- Initialization
 			output_level := Output_warnings
 			Compile_c := True
 			Compile_eiffel := True
+			stop_on_error := True
 		end
 
 feature -- Access

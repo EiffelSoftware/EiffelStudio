@@ -25,6 +25,7 @@ feature {NONE} -- Initialization
 			main_window_class_name := "MAIN_WINDOW"
 			main_window_file_name := "main_window.e"
 			enable_complete_project
+			enable_grouped_locals
 		end
 		
 
@@ -43,6 +44,10 @@ feature -- Access
 	complete_project: BOOLEAN
 		-- Should we generate an ace file and an application class to
 		-- complete a system involving the newly generated class.
+		
+	grouped_locals: BOOLEAN
+		-- Should local variables be grouped by type, or declared on a separate line
+		-- for each?
 	
 feature -- Basic operation
 
@@ -58,6 +63,7 @@ feature -- Basic operation
 			data.extend ([main_window_class_name_string, main_window_class_name])
 			data.extend ([main_window_file_name_string, main_window_file_name])
 			data.extend ([complete_project_string, complete_project.out])
+			data.extend ([grouped_locals_string, grouped_locals.out])
 			create file_name.make_from_string (project_location)
 			file_name.extend (project_filename)
 			create file_handler
@@ -112,6 +118,18 @@ feature -- Basic operation
 				else
 					complete_project := False
 				end
+				
+				temp_tuple := data @ 5
+				temp_string ?= temp_tuple @ 2
+				check
+					data_was_string: temp_string /= Void
+				end
+				if temp_string.is_equal ("True") then
+					grouped_locals := True
+				else
+					grouped_locals := False
+				end
+				
 			end
 		end
 
@@ -159,6 +177,18 @@ feature -- Status Setting
 			complete_project := False
 		end
 		
+	enable_grouped_locals is
+			-- Assign `True' to `grouped_locals'.
+		do
+			grouped_locals := True
+		end
+		
+	disable_grouped_locals is
+			-- Assign `False' to `grouped_locals'.
+		do
+			grouped_locals := False
+		end
+		
 feature {NONE} --Implementation
 
 		-- Constants for saving to XML.
@@ -169,5 +199,7 @@ feature {NONE} --Implementation
 	main_window_file_name_string: STRING is "Main_window_file_name"
 		
 	complete_project_string: STRING is "Complete_project"
+	
+	grouped_locals_string: STRING is "Group_locals"
 	
 end -- class GB_PROJECT_SETTINGS

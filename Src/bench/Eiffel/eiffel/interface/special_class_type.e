@@ -173,7 +173,7 @@ feature
 			System.used_features_log_file.add (Current, "item", encoded_name);
 
 			buffer.generate_function_signature (type_c.c_string, encoded_name, True,
-				header_generation_buffer,
+				byte_context.header_buffer,
 				<<"Current", "arg1">>, <<"EIF_REFERENCE", "EIF_INTEGER">>);
 
 			final_mode := byte_context.final_mode;

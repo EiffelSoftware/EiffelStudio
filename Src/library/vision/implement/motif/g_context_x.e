@@ -66,7 +66,6 @@ feature {NONE}
 
 	root_window_object: POINTER is
 			-- X identifier of the root window of the screen.
-		
 		do
 			Result := c_root_window (display_pointer)
 		end; 

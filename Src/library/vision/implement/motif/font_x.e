@@ -46,6 +46,7 @@ feature {NONE}
 
 	is_used_by (a_widget: WIDGET): BOOLEAN is
 			-- Is `a_widget' using this resource ?
+-- ************* Check for font in terminal_m widget!!!!
 		require else
 			a_widget_exists: a_widget /= Void
 		local

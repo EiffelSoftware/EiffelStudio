@@ -24,9 +24,7 @@ feature -- Initialization
 			!!down_right;
 			empty := true;
 			infinite := false
-		end; -- Create
-
-
+		end; 
 	
 feature -- Access 
 
@@ -176,8 +174,8 @@ feature -- Modification & Insertion
 				clip_down_right.set
 					(clip.upper_left.x+clip.width, clip.upper_left.y+clip.height);
 				if empty then
-						up_left.set (clip_up_left.x, clip_up_left.y);
-						down_right.set (clip_down_right.x, clip_down_right.y);
+					up_left.set (clip_up_left.x, clip_up_left.y);
+					down_right.set (clip_down_right.x, clip_down_right.y);
 					empty := false
 				else
 					up_left.set_min (clip_up_left);

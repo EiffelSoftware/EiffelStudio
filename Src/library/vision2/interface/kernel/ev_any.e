@@ -124,10 +124,10 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			temp: BOOLEAN
 		do
 			temp := c_check_assert (False)
-			implementation.set_interface (Void)
+			implementation.disable_initialized
 			new_implementation.set_interface(Current)
 			implementation := new_implementation
-			implementation.set_initialized
+			implementation.enable_initialized
 			temp := c_check_assert (temp)
 		end
 
@@ -297,6 +297,12 @@ end -- class EV_ANY
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.18  2000/04/12 01:38:54  pichery
+--| when changing implementation, the
+--| old implementation still has a reference
+--| on the interface, but it is no more
+--| initialized.
+--|
 --| Revision 1.17  2000/04/11 17:55:47  oconnor
 --| oops
 --|

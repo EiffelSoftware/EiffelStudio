@@ -184,7 +184,7 @@ feature
 
 					if has_init then
 							-- Call initialization routines
-						file.putstring ("%T%Tinit = Create(")
+						file.putstring ("%T%Tinit = XCreate(")
 						file.putint (dtype)
 						file.putstring (");%N")
 					end
@@ -221,7 +221,7 @@ feature
 						%%T%Tchar *ref;%N%
 						%%T%Tlong i;%N%
 						%%T%Tfnptr init;%N%
-						%%T%Tinit = Create(");
+						%%T%Tinit = XCreate(");
 					file.putint (dtype);
 					file.putstring (");%N%
 						%%T%Tfor (ref = l[1]+OVERHEAD, i = 0; i < arg1; i++,%

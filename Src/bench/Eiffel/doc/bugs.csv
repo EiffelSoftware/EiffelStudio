@@ -74,7 +74,7 @@ Metrics,,,,,,,,,,
 
 Diagram,,,,,,,,,,
 ,5,2,"Edit a class, rename it in its diagram in the same window, crash",Julian,,,,DGM0001,11/27/2001
-
+,2,4,"If you add a link while they are hidden, they become visible but the tooltip is invalid",Raphael,,,,DGM0002,11/29/2001
 
 
 

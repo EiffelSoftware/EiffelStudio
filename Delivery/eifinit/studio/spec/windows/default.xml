@@ -63,6 +63,7 @@
 			<TEXT DESCRIPTION="Special mode (if selected above) : True = Vi, False = Emacs">special_mode_is_vi<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT DESCRIPTION="Automatic update when the file has not been modified">automatic_update<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT DESCRIPTION="Underscore %'_%' is a word separator">underscore_is_separator<BOOLEAN>False</BOOLEAN></TEXT>
+			<TEXT DESCRIPTION="Any features appears in the feature call complete window">call_complete_with_any_features<BOOLEAN>False</BOOLEAN></TEXT>
 			<TEXT DESCRIPTION="Autocomplete creates new feature structure">autocomplete_feature<BOOLEAN>False</BOOLEAN></TEXT>
 			<TEXT DESCRIPTION="Autocomplete adds require in the new feature structure">autocomplete_feature_adds_require<BOOLEAN>False</BOOLEAN></TEXT>
 			<TEXT DESCRIPTION="Autocomplete adds local in the new feature structure">autocomplete_feature_adds_local<BOOLEAN>False</BOOLEAN></TEXT>

@@ -25,7 +25,7 @@ feature -- Initialization
 	make (org: CLASS_C; offs: INTEGER) is
 		require
 			org_not_void: org /= Void
-			valid_offset: offs > 0
+			valid_offset: offs >= 0
 		do
 			origin := org.class_id
 			offset := offs
@@ -43,5 +43,9 @@ feature -- Access
 			-- Offset of routine in origin class.
 			-- This offset is used at run-time to locate
 			-- routine in objects conforming to origin class.
+
+invariant
+	valid_origin: origin > 0
+	valid_offset: offset >= 0
 
 end -- class ROUT_INFO

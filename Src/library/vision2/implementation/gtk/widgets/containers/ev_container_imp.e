@@ -17,7 +17,20 @@ inherit
 
 	EV_WIDGET_IMP
 		redefine
-			interface
+			interface,
+			initialize
+		end
+
+feature {NONE} -- Initialization
+
+	initialize is
+			-- Precusor and create new_item_actions.
+		do
+			Precursor
+			create new_item_actions.make ("new_item", <<"widget">>)
+			new_item_actions.extend (~add_radio_button)
+			create remove_item_actions.make ("remove_item", <<"widget">>)
+			remove_item_actions.extend (~remove_radio_button)
 		end
 
 feature -- Access
@@ -56,12 +69,53 @@ feature -- Element change
 			w: EV_WIDGET_IMP
 		do
 			if not interface.empty then
+				remove_item_actions.call ([interface.item])
 				w ?= interface.item.implementation
 				C.gtk_container_remove (c_object, w.c_object)
 			end
 			if v /= Void then
 				w ?= v.implementation
 				C.gtk_container_add (c_object, w.c_object)
+				new_item_actions.call ([v])
+			end
+		end
+
+	add_radio_button (w: EV_WIDGET) is
+			-- Called every time a widget is added to the container.
+		require
+			w_not_void: w /= Void
+		local
+			r: EV_RADIO_BUTTON_IMP
+		do
+			r ?= w.implementation
+			if r /= Void then
+				io.put_string (r.text + "%N")
+				if radio_group /= Default_pointer then
+					C.gtk_radio_button_set_group (r.c_object, radio_group)
+				else
+					C.gtk_toggle_button_set_active (r.c_object, False)
+				end
+				radio_group := C.gtk_radio_button_group (r.c_object)
+			end
+		end
+
+	remove_radio_button (w: EV_WIDGET) is
+			-- Called every time a widget is removed from the container.
+		require
+			w_not_void: w /= Void
+		local
+			r: EV_RADIO_BUTTON_IMP
+		do
+			r ?= w.implementation
+			if r /= Void then
+				radio_group := C.g_slist_remove (radio_group, r.c_object)
+				if r.is_selected then
+					if radio_group /= Default_pointer then
+						C.gtk_toggle_button_set_active (C.gslist_struct_data (radio_group), True)
+					end
+				else
+					C.gtk_toggle_button_set_active (r.c_object, True)
+				end
 			end
 		end
 
@@ -79,11 +133,23 @@ feature -- Element change
 		end
 			-- FIXME NPC
 
+feature -- Event handling
+
+	new_item_actions: ACTION_SEQUENCE [TUPLE [EV_WIDGET]]
+			-- Actions to be performed after an item is added.
+
+	remove_item_actions: ACTION_SEQUENCE [TUPLE [EV_WIDGET]]
+			-- Actions to be performed before an item is removed.
+
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_CONTAINER
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
+
+invariant
+	new_item_actions_not_void: is_useable implies new_item_actions /= Void
+	remove_item_actions_not_void: is_useable implies remove_item_actions /= Void
 
 end -- class EV_CONTAINER_IMP
 
@@ -108,6 +174,11 @@ end -- class EV_CONTAINER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.24  2000/02/26 01:28:06  brendel
+--| Implemented radio button add/remove functions.
+--| Added new_item_actions and remove_item_actions.
+--| Radio add/remove functions are added to the action sequences.
+--|
 --| Revision 1.23  2000/02/25 22:35:51  brendel
 --| Revised already existent radio grouping features.
 --|

@@ -38,7 +38,8 @@ inherit
 			set_default_colors
 		redefine
 			make,
-			on_key_down
+			on_key_down,
+			on_mouse_move
 		end
 
  	WEL_LIST_BOX
@@ -243,6 +244,20 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation : WEL features
 
+	find_item_at_position (x_pos, y_pos: INTEGER): EV_LIST_ITEM_IMP is
+			-- Result  is list item at pixel position `x_pos', `y_pos'.
+		local
+			temporary_position: INTEGER
+		do
+			temporary_position := (y_pos // item_height) + 1
+			if top_index > 0 then
+				temporary_position := top_index + temporary_position
+			end
+			if temporary_position <= count then
+				Result := ev_children @ temporary_position
+			end
+		end
+
 	default_style: INTEGER is
 			-- Default style of the list.
 		do
@@ -360,6 +375,21 @@ feature {NONE} -- Implementation : WEL features
 			Precursor (size_type, a_height, a_width)
 			interface.resize_actions.call ([screen_x, screen_y, a_width, a_height])
 		end
+
+	on_mouse_move (keys, x_pos, y_pos: INTEGER) is
+			-- Executed when the mouse move.
+		local
+			it: EV_LIST_ITEM_IMP
+			pt: WEL_POINT
+			offets: TUPLE [INTEGER, INTEGER]
+		do
+			it := find_item_at_position (x_pos, y_pos)
+			if it /= Void then
+				it.interface.pointer_motion_actions.call ([0,0, 0.0, 0.0, 0.0, 0, 0])
+			end
+			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
+		end 
+
 
 	wel_background_color: WEL_COLOR_REF is
 		do
@@ -534,6 +564,9 @@ end -- class EV_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.47  2000/03/14 23:53:09  rogers
+--| Redefined on_mouse_move from EV_PRIMITIVE_IMP so items events can be called. Added find_item_at_position.
+--|
 --| Revision 1.46  2000/03/14 19:24:14  rogers
 --| renamed
 --| 	move -> wel_move

@@ -77,7 +77,9 @@ feature -- Status setting
 				if main_window = Current then
 					set_main_window
 				end
+				realizing_children := True
 				realize_children
+				realizing_children := False
 				set_enclosing_size
 				resize_shell_children (width, height)
 				show
@@ -167,6 +169,9 @@ feature -- Status report
 		end
 
 feature {NONE} -- Implementation
+
+	realizing_children: BOOLEAN
+			-- Are the children currently being realized?
 
 	title_before_iconise: STRING
 			-- Storage for title before an iconise action

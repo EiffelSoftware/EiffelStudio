@@ -22,7 +22,8 @@ inherit
 		redefine
 			parent_ask_resize,
 			set_width,
-			set_height
+			set_height,
+			set_move_and_size
 		end
 
 
@@ -37,10 +38,10 @@ feature {NONE} -- Initialization
 			check
 				valid_container: cont_imp /= Void
 			end
-			!! wel_window.make (cont_imp.wel_window, "")
-			!! children.make
-			is_homogeneous := True -- Default_homogeneous
-			spacing := 0 -- Default spacing
+			!! wel_window.make (cont_imp.wel_window)
+			initialize
+			is_homogeneous := True --Default_homogeneous
+			spacing := 0 --Default spacing
 		end
 
 
@@ -55,21 +56,18 @@ feature {EV_BOX_IMP} -- Access
 	total_spacing: INTEGER
 			-- Total space occupied by spacing
 
-	children: LINKED_LIST [EV_WIDGET_IMP]
-			-- List of the children of the box
-
-
+	
 feature -- Status setting (box specific)
 
-	set_homogeneous (homogeneous: BOOLEAN) is
-			-- set `is_homogeneous' to `homogeneous'
-			-- and tell the box that a child has resized to
-			-- refresh the display of the container
+	set_homogeneous (flag: BOOLEAN) is
+			-- set `is_homogeneous' to `flag'.
+			-- Need to be resized
 		do
-			is_homogeneous := homogeneous
-			if not children.empty then
-				child_has_resized (0, 0, children.first)
-			end
+			is_homogeneous := flag
+--			if not children.empty then
+--				child_has_resized (0,0, children.first)
+--			end
+--			set_minimum_size
 		end
 
 	set_spacing (new_spacing: INTEGER) is
@@ -79,9 +77,6 @@ feature -- Status setting (box specific)
 		do
 			spacing := new_spacing
 			set_total_spacing
-			if not children.empty then
-				child_has_resized (0, 0, children.first)
-			end
 		end
 
 	set_total_spacing is
@@ -90,6 +85,19 @@ feature -- Status setting (box specific)
 			total_spacing := spacing * (children.count - 1)
 		end
 
+feature -- Resizing
+
+	set_width (new_width: INTEGER) is
+		do
+			set_local_width (new_width)
+			notify_size_to_parent
+		end
+
+	set_height (new_height: INTEGER) is
+		do
+			set_local_height (new_height)
+			notify_size_to_parent
+		end
 
 feature {NONE} -- Basic operation
 
@@ -101,14 +109,12 @@ feature {NONE} -- Basic operation
 		deferred
 		end
 
-
 feature {NONE} -- Implementation
 
 	add_child (child_imp: EV_WIDGET_IMP) is
 			-- Add child into composite at the level position.
 		do
-			child_imp.set_parent_imp (Current)
-			children.extend (child_imp)
+			Precursor (child_imp)
 			set_total_spacing
 			if child_imp.width /= 0 or child_imp.height /= 0 then
 				child_has_resized (child_imp.width, child_imp.height, child_imp)
@@ -126,8 +132,7 @@ feature {NONE} -- Implementation
 --			parent_ask_resize (minimum_width, minimum_height)
 --		end
 
-
-	parent_ask_resize (new_box_width:INTEGER; new_box_height: INTEGER) is
+	parent_ask_resize (new_box_width, new_box_height: INTEGER) is
 			-- Resize the box and all the children inside
 		do
 			if new_box_width /= width then
@@ -138,20 +143,12 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_width (new_width: INTEGER) is
+	set_move_and_size (a_x, a_y, a_width, a_height: INTEGER) is
+			-- Move and resize the componant in the same time.
+			-- Don't notice the parent of the change.
 		do
-			set_local_width (new_width)
-			if parent_imp /= Void then
-				parent_imp.child_has_resized (width, height, Current)
-			end
-		end
-
-	set_height (new_height: INTEGER) is
-		do
-			set_local_height (new_height)
-			if parent_imp /= Void then
-				parent_imp.child_has_resized (width, height, Current)
-			end
+			parent_ask_resize (a_width, a_height)
+			set_x_y (a_x, a_y)
 		end
 
 end -- class EV_BOX_IMP

@@ -55,22 +55,16 @@ feature {NONE} -- Basic operation
 				until
 					children.islast
 				loop
-					children.item.wel_window.disable_default_processing
-					adapt_child_size (children.item, width, temp_height)		
-					children.item.set_y (mark)
+					adapt_child (children.item, width, temp_height, mark)
 					mark := mark + children.item.height + spacing 
-					children.item.wel_window.enable_default_processing
 					children.forth
 				end
-				children.item.wel_window.disable_default_processing
 				adapt_last_child_size (children.item, width, temp_height, mark)
-				children.item.set_y (mark)
-				children.item.wel_window.enable_default_processing
 			end
 			wel_window.resize (width, temp_height)
 		end		
 
-	adapt_child_size (a_child: EV_WIDGET_IMP; a_width, a_height:INTEGER) is
+	adapt_child (a_child: EV_WIDGET_IMP; a_width, a_height, a_mark:INTEGER) is
 			-- Adapt the attributes of the child according to the options of the box and the child.
 		local
 			temp_height: INTEGER
@@ -83,7 +77,7 @@ feature {NONE} -- Basic operation
 	--			elseif not is_homogeneous and a_child.automatic_resize then
 	--				temp_height := a_child.minimum_height + (a_height - minimum_height) // children.count 
 	--			end
-				a_child.parent_ask_resize (a_width, temp_height)
+				a_child.set_move_and_size (0, a_mark, a_width, temp_height)
 	--		end
 		end
 
@@ -99,7 +93,7 @@ feature {NONE} -- Basic operation
 	--			elseif is_homogeneous then
 	--				temp_height := (minimum_height - total_spacing)// children.count  -- max of minimum size of children
 	--			end
-				a_child.parent_ask_resize (a_width, temp_height)
+				a_child.set_move_and_size (0, a_mark, a_width, temp_height)
 	--		end
 		end
 
@@ -159,7 +153,7 @@ feature {NONE} -- Implementation
 				set_minimum_height (add_children_height + total_spacing)
 			end	
 		end
-		
+
 end -- class EV_VERTICAL_BOX_IMP
 
 --|----------------------------------------------------------------

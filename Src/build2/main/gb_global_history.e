@@ -93,7 +93,6 @@ feature -- Basic operation
 			else
 				dialog.select_item (current_position)
 			end
-			--| FIXME may need to call update all commands here.
 		end
 		
 	redo is
@@ -108,7 +107,6 @@ feature -- Basic operation
 			set_current_position (current_position + 1)
 				-- Update undo/redo buttons.
 			dialog.select_item (current_position)
-			--| FIXME may need to update all command here.
 		end
 		
 	cut_off_at_current_position is

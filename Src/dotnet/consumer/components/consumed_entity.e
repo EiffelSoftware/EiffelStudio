@@ -84,23 +84,20 @@ feature -- ConsumerWrapper functions
 		do
 			Result := not is_property and then not is_event and then not is_constant
 		end
+		
+	is_field: BOOLEAN is
+			-- Is entity a .Net field?
+		do
+		end
 
 	is_property: BOOLEAN is
 			-- Is entity a .Net property?
-		local
-			a_prop: CONSUMED_PROPERTY
 		do
-			a_prop ?= Current
-			Result := a_prop /= Void
 		end
 		
 	is_event: BOOLEAN is
 			-- Is entity a .Net event?
-		local
-			an_event: CONSUMED_EVENT
 		do
-			an_event ?= Current
-			Result := an_event /= Void
 		end
 		
 	is_constant: BOOLEAN is
@@ -117,7 +114,6 @@ feature -- ConsumerWrapper functions
 			create Result.make (0)
 			Result.extend (Current)
 		end
-		
 		
 feature -- Status report
 

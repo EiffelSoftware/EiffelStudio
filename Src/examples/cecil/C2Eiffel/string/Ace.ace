@@ -12,28 +12,20 @@ default
 
 cluster
 
-	ROOT_CLUSTER: 		".";
+	ROOT_CLUSTER: 	"$EIFFEL4/examples/C2Eiffel/string;
+				-- If you intend to modify any part of the example,
+				-- copy all the files of $EIFFEL4/examples/C2Eiffel/string
+				-- into one of your directories, and replace
+				-- $EIFFEL4/examples/bench/debuggin by the name of
+				-- that directory on the above line.	
 
 -- EiffelBase
 
-    access:             "$EIFFEL4/library/base/structures/access";
-    cursors:            "$EIFFEL4/library/base/structures/cursors";
-    cursor_tree:        "$EIFFEL4/library/base/structures/cursor_tree";
-    dispenser:          "$EIFFEL4/library/base/structures/dispenser";
-    iteration:          "$EIFFEL4/library/base/structures/iteration";
-    kernel:             "$EIFFEL4/library/base/kernel"
-		visible
+    all base:           "$EIFFEL4/library/base/"
+   		visible
 			STD_FILES
 		end
-	end;
-				
-    list:               "$EIFFEL4/library/base/structures/list";
-    set:                "$EIFFEL4/library/base/structures/set";
-    sort:               "$EIFFEL4/library/base/structures/sort";
-    storage:            "$EIFFEL4/library/base/structures/storage";
-    support:            "$EIFFEL4/library/base/support";
-    table:              "$EIFFEL4/library/base/structures/table";
-    traversing:         "$EIFFEL4/library/base/structures/traversing";
-    tree:               "$EIFFEL4/library/base/structures/tree";
-
+		exclude
+			"desc";table_eiffel3"
+		end
 end

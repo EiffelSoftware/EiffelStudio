@@ -1,7 +1,7 @@
 class
 	ROOT_CLASS
 
-creation
+create
 	make
 
 feature	-- Initialization
@@ -15,7 +15,7 @@ feature	-- Initialization
 		do
 			io.put_string ("This example create n array on the Eiffel side and print it on the C side%N");
 			io.put_string ("Enter 10 integers: %N")	
-			!!a. make (1, 10)
+			create a. make (1, 10)
 			from 
 				i := 1
 			until

@@ -2,7 +2,7 @@ class
 	ROOT_CLASS
 inherit
 	MEMORY
-creation
+create
 	make
 
 feature -- Initialization
@@ -13,8 +13,8 @@ feature -- Initialization
 			-- Give o1 to C and try to forget it from Eiffel side.
 		do
 			allocate_tiny
-			!!o1.make ("o1")
-			!!o2.make ("o2")
+			create o1.make ("o1")
+			create o2.make ("o2")
 
 			io.put_string ("Creating o1%N")
 			o1.display

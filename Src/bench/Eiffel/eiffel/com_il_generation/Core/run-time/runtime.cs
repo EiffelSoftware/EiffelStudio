@@ -88,6 +88,9 @@ feature -- Assertions
 	public static string assertion_tag;
 		// Tag of last checked assertion
 
+	public static int assertion_code;
+		// Code of last checked assertion
+
 	public static void assertion_initialize (RuntimeTypeHandle type_handle)
 		// Initializes runtime datastructure for assembly associated with
 		// `type_handle'.

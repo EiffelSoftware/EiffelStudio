@@ -1,6 +1,6 @@
 -- Context variables for code generation and utilities.
 
-class BYTE_CONTEXT 
+class BYTE_CONTEXT
 
 inherit
 
@@ -15,9 +15,8 @@ inherit
 
 creation
 
-	make
+	make, make_from_context
 
-	
 feature
 
 	generation_mode: BOOLEAN;
@@ -120,6 +119,9 @@ feature
 	dt_current: INTEGER;
 			-- Number of time we need to compute Current's type
 
+	inlined_dt_current: INTEGER;
+			-- Number of time we need to compute Current's type
+
 	local_index_counter: INTEGER;
 			-- Index for local reference variables
 
@@ -127,7 +129,7 @@ feature
 			-- Type of assertion being generated
 
 	is_prec_first_block: BOOLEAN;
-			-- Is precondition in first block  
+			-- Is precondition in first block
 
 	Current_register: REGISTRABLE is
 			-- An instance of Current register for local var index computation
@@ -215,7 +217,7 @@ feature
 							)
 						)
 		end;
-	
+
 	has_precondition: BOOLEAN is
 			-- Do we have to generate any precondition ?
 		do
@@ -227,7 +229,7 @@ feature
 							byte_code.precondition /= Void
 						)
 		end;
-	
+
 	has_invariant: BOOLEAN is
 			-- Do we have to generate invariant checks ?
 		do
@@ -383,13 +385,29 @@ feature
 							or else
 							assertion_level.check_precond);
 		end;
-						
+
 	add_dt_current is
 			-- One more time we need to compute Current's type
 		do
-			dt_current := dt_current + 1;
+			if in_inlined_code then
+				inlined_dt_current := inlined_dt_current + 1
+			else
+				dt_current := dt_current + 1;
+			end
 		end;
-	
+
+	set_inlined_dt_current (i: INTEGER) is
+			-- Set the value of `inlined_dt_current' to `i'
+		do
+			inlined_dt_current := i
+		end
+
+	reset_inlined_dt_current is
+			-- Reset `inlined_dt_current' to 0
+		do
+			inlined_dt_current := 0
+		end
+
 	mark_current_used is
 			-- Signals that a reference is made to Current (apart
 			-- from computing a DT) and thus needs to be pushed on
@@ -397,7 +415,9 @@ feature
 			-- As a side effect, compute an index for Current in the
 			-- local variable array
 		do
-			if not current_used then
+				-- Not marking if inside inlined code:
+				-- Current is NOT in Current_b
+			if not (current_used or else in_inlined_code) then
 				set_local_index ("Current", Current_b);
 				current_used := true;
 			end;
@@ -409,15 +429,17 @@ feature
 			-- variable array, if the type is a pointer one and we are not
 			-- inside a once function.
 		do
-			if not result_used and
-				real_type (byte_code.result_type).c_type.is_pointer and
-				not byte_code.is_once
-			then
-				set_local_index ("Result", Result_register);
+			if not in_inlined_code then
+				if not result_used and
+					real_type (byte_code.result_type).c_type.is_pointer and
+					not byte_code.is_once
+				then
+					set_local_index ("Result", Result_register);
+				end
+				result_used := true;
 			end;
-			result_used := true;
 		end;
-	
+
 	mark_local_used (l: INTEGER) is
 			-- Signals that local variable `l' is used
 		do
@@ -581,7 +603,7 @@ feature
 	clear_old_expressions is
 			-- Clear old expressions.
 		do
-				--! Did this so it won't effect any old_expression 
+				--! Did this so it won't effect any old_expression
 				--! referencing this object.
 			!!old_expressions.make;
 		end;
@@ -595,6 +617,7 @@ feature
 			local_index_counter := 0;
 			exp_args := 0;
 			dt_current := 0;
+			inlined_dt_current := 0;
 			result_used := false;
 			current_used := false;
 			need_gc_hook_computed := false;
@@ -628,76 +651,33 @@ feature
 			byte_code := Void;
 		end;
 
-	saved_current_used: BOOLEAN;
-			-- Saved value of `current_used'
-
-	saved_result_used: BOOLEAN;
-			-- Saved value of `result_used'
-
-	saved_dt_current: INTEGER;
-			-- Saved value of `dt_current'
-
-	saved_non_gc_reg_vars: INTEGER;
-			-- Saved value of `non_gc_reg_vars'
-
-	saved_non_gc_tmp_vars: INTEGER;
-			-- Saved value of `non_gc_tmp_vars'
-
-	saved_local_index_table: EXTEND_TABLE [INTEGER, STRING];
-			-- Saved `local_index_table'
-
-	saved_associated_register_table: HASH_TABLE [REGISTRABLE, STRING];
-			-- Saved value of `associated_register_table'
-
-	saved_register_server: REGISTER_SERVER;
-			-- Saved value of `register_server'
-
-	saved_local_index_counter: INTEGER;
-			-- Saved value of `local_index_counter'
-
-	saved_need_gc_hook_computed: BOOLEAN;
-			-- Saved value of `need_gc_hook_computed'.
-
-	saved_need_gc_hook_saved: BOOLEAN;
-			-- Saved value of `need_gc_hook_saved'.
-
-	save is
+	make_from_context (other: like Current) is
 			-- Save context for later restoration. This makes the
 			-- use of unanalyze possible and meaningful.
-		local
-			i, count: INTEGER;
 		do
-			saved_register_server := register_server.duplicate;
-			saved_current_used := current_used;
-			saved_result_used := result_used;
-			saved_dt_current := dt_current;
-			saved_non_gc_reg_vars := non_gc_reg_vars;
-			saved_non_gc_tmp_vars := non_gc_tmp_vars;
-			saved_local_index_table := clone (local_index_table);
-			saved_local_index_counter := local_index_counter;
-			saved_need_gc_hook_computed := need_gc_hook_computed;
-			saved_need_gc_hook_saved := need_gc_hook_saved;
-			saved_associated_register_table := clone (associated_register_table);
+			copy (other);
+			register_server := other.register_server.duplicate;
+			local_index_table := clone (other.local_index_table);
+			associated_register_table := clone (other.associated_register_table);
 		end;
 
-	restore is
+	restore (saved_context: like Current) is
 			-- Restore the saved context after an analyze followed by an
 			-- unanalyze, so that we may analyze again with different
 			-- propagations (kind of feedback).
-		local
-			i, count: INTEGER;
 		do
-			register_server := saved_register_server;
-			current_used := saved_current_used;
-			result_used := saved_result_used;
-			dt_current := saved_dt_current;
-			non_gc_reg_vars := saved_non_gc_reg_vars;
-			non_gc_tmp_vars := saved_non_gc_tmp_vars;
-			local_index_table := saved_local_index_table;
-			local_index_counter := saved_local_index_counter;
-			associated_register_table := saved_associated_register_table;
-			need_gc_hook_computed := saved_need_gc_hook_computed;
-			need_gc_hook_saved := saved_need_gc_hook_saved;
+			register_server := saved_context.register_server;
+			current_used := saved_context.current_used;
+			result_used := saved_context.result_used;
+			dt_current := saved_context.dt_current;
+			inlined_dt_current := saved_context.inlined_dt_current;
+			non_gc_reg_vars := saved_context.non_gc_reg_vars;
+			non_gc_tmp_vars := saved_context.non_gc_tmp_vars;
+			local_index_table := saved_context.local_index_table;
+			local_index_counter := saved_context.local_index_counter;
+			associated_register_table := saved_context.associated_register_table;
+			need_gc_hook_computed := saved_context.need_gc_hook_computed;
+			need_gc_hook_saved := saved_context.need_gc_hook_saved;
 		end;
 
 	Local_var: LOCAL_B is
@@ -723,6 +703,20 @@ feature
 		once
 			!!Result;
 		end;
+
+	generate_current_dtype is
+			-- Generate the dynamic type of `Current'
+		do
+			if inlined_dt_current > 1 then
+				generated_file.putstring ("inlined_dtype");
+			elseif dt_current > 1 then
+				generated_file.putstring (gc_dtype);
+			else
+				generated_file.putstring (gc_upper_dtype_lparan);
+				Current_register.print_register_by_name;
+				generated_file.putchar (')');
+			end;
+		end
 
 	generate_temporary_ref_variables is
 			-- Generate temporary variables under the control of the
@@ -891,13 +885,13 @@ feature
 							and not (reg.is_current or reg.is_argument)
 							and not (reg.is_result and compound_or_post))
 						then
-							generated_file.putstring ("(char *) 0")	
+							generated_file.putstring ("(char *) 0")
 						else
 							if (reg.c_type.is_bit) and (reg.is_argument) then
 								-- Clone argument if it is bit
-								generated_file.putstring ("RTCB(");	
+								generated_file.putstring ("RTCB(");
 								generated_file.putstring (rname);
-								generated_file.putchar (')');	
+								generated_file.putchar (')');
 							else
 								generated_file.putstring (rname);
 							end;
@@ -1017,10 +1011,10 @@ feature -- Debugger
 				instruction_line.forth;
 				ast_node := instruction_line.item;
 					-- N.B. The way byte array is implemented
-					-- the position in the byte array is incremented after 
+					-- the position in the byte array is incremented after
 					-- insertion of a new byte code.
 					-- Therefore the offset of the breakable byte code
-					-- is equal to the position in the byte array 
+					-- is equal to the position in the byte array
 					-- minus 1.
 				!! ast_pos.make (ba.position - 1, ast_node);
 				breakable_points.extend (ast_pos);
@@ -1050,6 +1044,12 @@ feature -- Debugger
 		end;
 
 feature -- Inlining
+
+	in_inlined_code: BOOLEAN is
+			-- Are we dealing with inlined code?
+		do
+			Result := inlined_current_register /= Void
+		end
 
 	inlined_current_register: REGISTRABLE
 			-- pseudo Current register for inlined code

@@ -205,8 +205,8 @@ feature -- Generation
 			from
 				feature_table := current_class.feature_table;
 				feature_table.start;
-				byte_context.init (type);
-				byte_context.set_class_type (Current);
+				byte_context.init (Current);
+				--byte_context.set_class_type (Current);
 			until
 				feature_table.offright
 			loop
@@ -234,7 +234,6 @@ feature -- Generation
 				Extern_declarations.wipe_out;
 			end;
 			file.close;
-			byte_context.type_stack.wipe_out;
 		end;
 
 	generate_feature (f: FEATURE_I; file: INDENT_FILE) is
@@ -303,29 +302,6 @@ feature -- Generation
 			Result := not skeleton.offright;
 		end;
 
-	memory_dispose_id: INTEGER is
-			-- Memory dispose routine id of current class type.
-			-- Return 0 if the MEMORY class has not been compiled.
-			--! (Assumed memory must have a dispose routine).
-		require
-			checked_desc: System.memory_descendants /= Void
-		local
-			found: BOOLEAN;
-			feature_i: FEATURE_I;
-			class_c: CLASS_C;
-			nbr, i: INTEGER;
-			id_array: ARRAY [CLASS_C]
-		once
-			class_c := System.memory_class;
-			if class_c /= Void then
-				feature_i :=
-					class_c.feature_table.item ("dispose");
-				if feature_i /= Void then
-					Result := feature_i.rout_id_set.first;
-				end;
-			end
-		end;
- 
 	dispose_feature: FEATURE_I is
 			-- Feature for dispose routine; 
 			-- Void if dispose routine does not exist.
@@ -341,7 +317,7 @@ feature -- Generation
 					feature_table.offright or (Result /= Void) 
 				loop
 					item := feature_table.item_for_iteration;
-					if (item.rout_id_set.first = memory_dispose_id) then
+					if (item.rout_id_set.first = System.memory_dispose_id) then
 						Result := item
 					end;
 					feature_table.forth
@@ -516,8 +492,8 @@ feature -- Byte code generation
 				melted_list.start;
 
 					-- Initialization of the byte code context
-				byte_context.init (type);
-				byte_context.set_class_type (Current);
+				byte_context.init (Current);
+				--byte_context.set_class_type (Current);
 
 				feat_tbl := associated_class.feature_table;
 			until
@@ -716,14 +692,11 @@ feature -- Skeleton generation
 				Skeleton_file.putstring (",%N");
 				
 					-- Dispose routine id
-				Skeleton_file.putstring ("(int32) ");
 				if System.memory_descendants.has (associated_class) then
-					Skeleton_file.putint (memory_dispose_id);
+					Skeleton_file.putstring ("'\01',%N");
 				else
-					Skeleton_file.putint (0);
+					Skeleton_file.putstring ("'\0',%N");
 				end;
-				Skeleton_file.putchar (',');
-				Skeleton_file.new_line;
 
 					-- Generate reference on routine id array
 				Skeleton_file.putstring ("ra");
@@ -877,9 +850,9 @@ feature -- Byte code generation
 
 				-- Dispose routine id of dispose
 			if System.memory_descendants.has (associated_class) then
-				ba.append_int32_integer (memory_dispose_id);
+				ba.append ('%/001/');
 			else
-				ba.append_int32_integer (0);
+				ba.append ('%U');
 			end;
 
 			Result := ba.feature_table;

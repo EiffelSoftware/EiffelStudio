@@ -4,7 +4,8 @@ inherit
 
 	PROCEDURE_I
 		redefine
-			is_deferred, has_poly_unit, to_generate_in
+			is_deferred, has_poly_unit, to_generate_in,
+			to_melt_in
 		end
 	
 feature 
@@ -17,8 +18,19 @@ feature
 			Result := True
 		end;
 
+    to_melt_in (a_class: CLASS_C): BOOLEAN is
+            -- Has the current feature to be melted in class `a_class' ?
+			-- (Deferred routines with pre or post conditions are
+			-- melted)
+        do
+            Result := (a_class.id = written_in) and then 
+					(has_precondition or else has_postcondition);
+        end;
+
 	to_generate_in (a_class: CLASS_C): BOOLEAN is
 			-- Has the current feature to be generated in class `a_class' ?
+			-- (Deferred routines with pre or post conditions are
+			-- not generated)
 		do
 			-- Do nothing
 		end;

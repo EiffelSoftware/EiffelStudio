@@ -43,7 +43,7 @@ feature {COMPILER_EXPORTER}
 	set_local_name (s_id: INTEGER) is
 			-- Assign `s_id' to `local_name'.
 		require
-			valid_s_id: s_id >= 0
+			valid_s_id: s_id >= 1
 		do
 			local_name := Names_heap.item (s_id)
 		end

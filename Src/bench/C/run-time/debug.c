@@ -212,11 +212,13 @@ rt_public void dostk(EIF_CONTEXT_NOARG)
 	 * interpreter on any melted feature and get local and argument values.
 	 */
 
+	EIF_GET_CONTEXT
 	struct dcall *context;		/* Current calling context */
 
 	context = dtop();
 	context->dc_cur = op_stack.st_cur;	/* Value suitable for sync_registers */
 	context->dc_top = op_stack.st_top;
+	EIF_END_GET_CONTEXT
 }
 
 rt_public void dsync(void)
@@ -525,6 +527,7 @@ rt_private struct dcall *stack_allocate(register int size)
 	 * Return the arena value (bottom of stack).
 	 */
 
+	EIF_GET_CONTEXT
 	register2 struct dcall *arena;		/* Address for the arena */
 	register3 struct stdchunk *chunk;	/* Address of the chunk */
 
@@ -548,6 +551,7 @@ rt_private struct dcall *stack_allocate(register int size)
 	SIGRESUME;
 
 	return arena;			/* Stack allocated */
+	EIF_END_GET_CONTEXT
 }
 
 /* Stack handling routine. The following code has been cut/paste from the one
@@ -563,6 +567,7 @@ rt_public struct dcall *dpush(register struct dcall *val)
 	 * get a new cell at the top of the stack.
 	 */
 
+	EIF_GET_CONTEXT
 	register1 struct dcall *top = db_stack.st_top;	/* Top of stack */
 
 	/* Stack created at initialization time via initdb */
@@ -595,6 +600,7 @@ rt_public struct dcall *dpush(register struct dcall *val)
 		bzero(top, CALL_SZ);
 
 	return top;				/* Address of allocated item */
+	EIF_END_GET_CONTEXT
 }
 
 rt_private int stack_extend(register int size)
@@ -604,6 +610,7 @@ rt_private int stack_extend(register int size)
 	 * 0 is returned in case of success. Otherwise, -1 is returned.
 	 */
 
+	EIF_GET_CONTEXT
 	register2 struct dcall *arena;		/* Address for the arena */
 	register3 struct stdchunk *chunk;	/* Address of the chunk */
 
@@ -628,6 +635,7 @@ rt_private int stack_extend(register int size)
 	SIGRESUME;
 
 	return 0;			/* Everything is ok */
+	EIF_END_GET_CONTEXT
 }
 
 rt_public struct dcall *dpop(void)
@@ -636,6 +644,7 @@ rt_public struct dcall *dpop(void)
 	 * the removed item, which also happens to be the first free location.
 	 */
 	
+	EIF_GET_CONTEXT
 	register1 struct dcall *top = db_stack.st_top;	/* Top of the stack */
 	register2 struct stdchunk *s;			/* To walk through stack chunks */
 	register3 struct dcall *arena;			/* Base address of current chunk */
@@ -666,12 +675,14 @@ rt_public struct dcall *dpop(void)
 	SIGRESUME;
 
 	return db_stack.st_top;
+	EIF_END_GET_CONTEXT
 }
 
 rt_private void npop(register int nb_items)
 {
 	/* Removes 'nb_items' from the debugging stack */
 
+	EIF_GET_CONTEXT
 	register2 struct dcall *top;		/* Current top of debugging stack */
 	register3 struct stdchunk *s;		/* To walk through stack chunks */
 	register4 struct dcall *arena;		/* Base address of current chunk */
@@ -722,6 +733,7 @@ rt_private void npop(register int nb_items)
 	db_stack.st_end = s->sk_end;
 
 	SIGRESUME;				/* End of critical section */
+	EIF_END_GET_CONTEXT
 }
 
 rt_public struct dcall *dtop(void)
@@ -1062,6 +1074,7 @@ rt_private uint32 *list_allocate(register int size)
 	 * Return the arena value.
 	 */
 
+	EIF_GET_CONTEXT
 	register2 uint32 *arena;			/* Address for the arena */
 	register3 struct idlchunk *chunk;	/* Address of the chunk */
 
@@ -1084,6 +1097,7 @@ rt_private uint32 *list_allocate(register int size)
 	SIGRESUME;
 
 	return arena;			/* List allocated */
+	EIF_END_GET_CONTEXT
 }
 
 rt_public uint32 *onceadd(uint32 id)
@@ -1092,6 +1106,7 @@ rt_public uint32 *onceadd(uint32 id)
 	 * an "Out of memory" exception.
 	 */
 
+	EIF_GET_CONTEXT
 	register1 uint32 *last = once_list.idl_last;/* Last free element of list */
 
 	/* List created at initialization time via initdb */
@@ -1111,6 +1126,7 @@ rt_public uint32 *onceadd(uint32 id)
 	bcopy(&id, last, BODY_ID_SZ);		/* Add `id' in the list */
 
 	return last;						/* Address of allocated item */
+	EIF_END_GET_CONTEXT
 }
 
 rt_private int list_extend(register int size)
@@ -1120,6 +1136,7 @@ rt_private int list_extend(register int size)
 	 * 0 is returned in case of success. Otherwise, -1 is returned.
 	 */
 
+	EIF_GET_CONTEXT
 	register2 uint32 *arena;			/* Address for the arena */
 	register3 struct idlchunk *chunk;	/* Address of the chunk */
 
@@ -1143,6 +1160,7 @@ rt_private int list_extend(register int size)
 	SIGRESUME;
 
 	return 0;			/* Everything is ok */
+	EIF_END_GET_CONTEXT
 }
 
 rt_public uint32 *onceitem(register uint32 id)
@@ -1152,6 +1170,7 @@ rt_public uint32 *onceitem(register uint32 id)
 	 * list has been created.
 	 */
 
+	EIF_GET_CONTEXT
 	register2 struct idlchunk *chunk;	/* To walk through the list */
 	register3 uint32 *item;				/* To walk through the chunk */
 	register4 int done = 0;				/* Last element of list not reached */
@@ -1172,6 +1191,7 @@ rt_public uint32 *onceitem(register uint32 id)
 	}
 
 	return (uint32 *)0;		/* val not found */
+	EIF_END_GET_CONTEXT
 }
 
 rt_public struct item *docall(EIF_CONTEXT register uint32 body_id, register int arg_num) /* %%ss mt last caller */

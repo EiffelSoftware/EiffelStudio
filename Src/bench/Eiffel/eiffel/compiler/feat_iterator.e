@@ -69,6 +69,13 @@ feature {NONE}
 			mark_and_record (f, body_index, body_id, static_class_id, original_class_id);
 
 			if Tmp_poly_server.has (rout_id_val) then
+debug ("DEAD_CODE")
+	print ("%NMarking Poly_table `")
+	print (rout_id_val.id)
+	print ("'; for feature written in ")
+	print (original_class_id.associated_class.name)
+	print ("%N")
+end
 					-- If routine id available: this is not a deferred feature
 					-- without any implementation
 				table ?= Tmp_poly_server.item (rout_id_val);

@@ -124,6 +124,21 @@ feature -- Creation feature
 			end;
 		end;
 
+	reset_cluster is
+			-- Reset the attribute `cluster' of all the CLASS_I
+			-- (copy_old_cluster may have introduced an inconsistent
+			-- state)
+		do
+			from
+				classes.start
+			until
+				classes.after
+			loop
+				classes.item_for_iteration.set_cluster (Current);
+				classes.forth
+			end;
+		end;
+
 	insert_renaming (cl: CLUSTER_I; old_name,new_name: STRING) is
 			-- Insert renaming of a class of `cl' named `old_name' 
 			-- into `new_name'.
@@ -179,21 +194,69 @@ feature -- Creation feature
 				retry;
 		end;
 
-	fill (cluster_file: DIRECTORY) is
+	duplicate: CLUSTER_I is
+		do
+			!!Result.make (dollar_path);
+			Result.set_cluster_name (cluster_name);
+			Result.copy_old_cluster (Current);
+		end;
+
+	new_cluster (name: STRING): CLUSTER_I is
+		local
+			changed_classes: LINKED_LIST [CLASS_I];
+			unchanged_classes: LINKED_LIST [CLASS_I];
+		do
+			!!Result.make (dollar_path);
+			Result.set_cluster_name (name);
+			Universe.insert_cluster (Result);
+
+				-- If the cluster has changed,
+				-- do a degree 6
+			if changed then
+				Result.set_old_cluster (duplicate);
+				Result.fill;
+			else
+				Result.copy_old_cluster (Current)
+			end;
+		end;
+
+	display_degree_6 is
+			-- Verbose
+		do
+				-- Verbose
+			io.putstring ("Degree 6: cluster ");
+			io.putstring (cluster_name);
+			io.new_line;
+		end;
+
+	fill is
 			-- Fill the cluster name table with what is found in the path. If 
 			-- `old_cluster' exists, fill current with it.
 		require
 			table_is_empty: classes.empty;
-			cluster_file_exists: cluster_file.exists;
-			cluster_file_is_closed: cluster_file.is_closed;
 		local
 			file_name: STRING;
 			i: INTEGER;
 			a_class: CLASS_I;
 			class_path, class_name: STRING;
+			vd01: VD01;
 			vd11: VD11;
 			vd22: VD22;
+			cluster_file: DIRECTORY;
+			str: ANY;
+			file_date: INTEGER;
 		do
+				-- Check if the path is valid
+			!!cluster_file.make (path);
+			if not cluster_file.exists then
+				!!vd01;
+				vd01.set_path (path);
+				vd01.set_cluster_name (cluster_name);
+				Error_handler.insert_error (vd01);
+				Error_handler.raise_error;
+			end;
+			display_degree_6;
+
 				-- Set date first
 			date := new_date;
 
@@ -238,15 +301,30 @@ feature -- Creation feature
 									-- Valid eiffel class in file
 								if old_cluster /= Void then
 									a_class := old_cluster.classes.item (class_name);
+									if a_class /= Void then
+											-- The file name may have changed even
+											-- if the class was already in this cluster
+										a_class.set_base_name (file_name);
+										a_class.set_cluster (Current);
+										str := class_path.to_c;
+										file_date := eif_date ($str);
+										if a_class.date /= file_date then
+												-- The class has changed
+											Workbench.change_class (a_class);
+											a_class.set_date;
+										end;
+									end;
 								end;
 								if a_class = Void then
 									!!a_class.make;
 									a_class.set_class_name (class_name);
+									a_class.set_base_name (file_name);
+									a_class.set_cluster (Current);
+									a_class.set_date;
 								end;
-									-- The file name may have changed even
-									-- if the class was already in this cluster
-								a_class.set_base_name (file_name);
-								a_class.set_cluster (Current);
+io.error.putstring ("Inserting class ");
+io.error.putstring (class_name);
+io.error.new_line;
 								classes.put (a_class, class_name);
 							end;
 						end;
@@ -592,6 +670,21 @@ feature -- Creation feature
 			-- Is the cluster directory changed ?
 		do
 			Result := date /= new_date;
+			if Not Result then
+				from
+					classes.start
+				until
+					classes.after or else Result
+				loop
+					Result := classes.item_for_iteration.date_has_changed;
+					classes.forth
+				end;
+			end;
+if Result then
+	io.error.putstring ("Cluster ");
+	io.error.putstring (cluster_name);
+	io.error.putstring (" has changed%N");
+end;
 		end;
 
 feature {NONE} -- Externals

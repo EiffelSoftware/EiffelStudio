@@ -10,7 +10,7 @@
 
 #include "file.h"
 
-public char *file_def(file)
+public EIF_POINTER file_def(file)
 int file;
 {
 	/* Convert the integer `i' into the corresponding
@@ -22,26 +22,26 @@ int file;
 	 */
 
 	switch (file) {
-	case 0: return (char *) stdin;
-	case 1: return (char *) stdout;
-	case 2: return (char *) stderr;
+	case 0: return (EIF_POINTER) stdin;
+	case 1: return (EIF_POINTER) stdout;
+	case 2: return (EIF_POINTER) stderr;
 	default: panic("invalid file request");
 	}
 
 	/* NOTREACHED */
 }
 
-public char *console_def(file)
+public EIF_POINTER console_def(file)
 int file;
 {
 #ifdef __WATCOMC__
-	return NULL;
+	return (EIF_POINTER) NULL;
 #else
 	return file_def (file);
 #endif
 }            
 
-public char console_eof(fp)
+public EIF_BOOLEAN console_eof(fp)
 FILE *fp;      
 {
 #ifdef __WATCOMC__
@@ -57,7 +57,7 @@ FILE *fp;
 
 public void console_pi(f, number)
 FILE *f;
-int	number;
+EIF_INTEGER	number;
 {
 #ifdef __WATCOMC__
 	eif_console_putint (number);
@@ -68,7 +68,7 @@ int	number;
 
 public void console_pr(f, number)
 FILE *f;
-float number;
+EIF_REAL number;
 {
 #ifdef __WATCOMC__
 	eif_console_putreal (number);
@@ -80,7 +80,7 @@ float number;
 public void console_ps(f, str, len)
 FILE *f;
 char *str;
-int len;
+EIF_INTEGER len;
 {
 #ifdef __WATCOMC__
 	eif_console_putstring (str, len);
@@ -91,7 +91,7 @@ int len;
 
 public void console_pc(f, c)
 FILE *f;
-char c;
+EIF_CHARACTER c;
 {
 #ifdef __WATCOMC__
 	eif_console_putchar (c);
@@ -102,7 +102,7 @@ char c;
 
 public void console_pd(f, val)
 FILE *f;
-double val;
+EIF_DOUBLE val;
 {
 #ifdef __WATCOMC__
 	eif_console_putdouble (val);
@@ -130,7 +130,7 @@ FILE *f;
 #endif
 }
 
-public long console_readint(f) 
+public EIF_INTEGER console_readint(f) 
 FILE *f;     
 {
 #ifdef __WATCOMC__
@@ -140,7 +140,7 @@ FILE *f;
 #endif             
 }
 
-public float console_readreal(f) 
+public EIF_REAL console_readreal(f) 
 FILE *f;     
 {
 #ifdef __WATCOMC__
@@ -150,7 +150,7 @@ FILE *f;
 #endif             
 }
 
-public double console_readdouble(f) 
+public EIF_DOUBLE console_readdouble(f) 
 FILE *f;     
 {
 #ifdef __WATCOMC__
@@ -159,7 +159,7 @@ FILE *f;
 	return file_gd(f);
 #endif             
 }
-public char	console_readchar(f)
+public EIF_CHARACTER console_readchar(f)
 FILE *f;
 {
 #ifdef __WATCOMC__
@@ -169,11 +169,11 @@ FILE *f;
 #endif
 }
 
-public long console_readline(f, s, bound, start)
+public EIF_INTEGER console_readline(f, s, bound, start)
 FILE *f;		/* File stream descriptor */
 char *s;		/* Target buffer where read characters are written */
-long bound;		/* Size of the target buffer */
-long start;		/* Amount of characters already held in buffer */
+EIF_INTEGER bound;		/* Size of the target buffer */
+EIF_INTEGER start;		/* Amount of characters already held in buffer */
 {
 #ifdef __WATCOMC__
 	return eif_console_readline (s, bound, start);
@@ -182,10 +182,10 @@ long start;		/* Amount of characters already held in buffer */
 #endif
 }
 
-public long console_readstream(f, s, bound)
+public EIF_INTEGER console_readstream(f, s, bound)
 FILE *f;		/* File stream descriptor */
 char *s;		/* Target buffer where read characters are written */
-long bound;		/* Size of the target buffer */
+EIF_INTEGER bound;		/* Size of the target buffer */
 {
 #ifdef __WATCOMC__
 	return eif_console_readstream (s, bound);
@@ -194,11 +194,11 @@ long bound;		/* Size of the target buffer */
 #endif
 }
 
-public long console_readword(f, s, bound, start)
+public EIF_INTEGER console_readword(f, s, bound, start)
 FILE *f;		/* File stream descriptor */
 char *s;		/* Target buffer where read characters are written */
-long bound;		/* Size of the target buffer */
-long start;		/* Amount of characters already held in buffer */
+EIF_INTEGER bound;		/* Size of the target buffer */
+EIF_INTEGER start;		/* Amount of characters already held in buffer */
 {
 #ifdef __WATCOMC__
 	return eif_console_readword (s, bound, start);
@@ -207,11 +207,11 @@ long start;		/* Amount of characters already held in buffer */
 #endif
 }
 
-public char console_separator(f)
+public EIF_CHARACTER console_separator(f)
 FILE *f;
 {
 #ifdef __WATCOMC__
-	return ' ';
+	return (EIF_CHARACTER) ' ';
 #else
 	return file_lh (f);
 #endif

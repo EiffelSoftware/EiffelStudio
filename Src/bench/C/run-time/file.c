@@ -104,7 +104,8 @@ char mode;
 	}
 	return type;
 }
-public fnptr file_open(name, how)
+
+public EIF_POINTER file_open(name, how)
 char *name;
 int how;
 {
@@ -112,15 +113,15 @@ int how;
 
 #ifdef __WATCOMC__
 	if (how < 10)
-		return (fnptr) file_fopen(name, file_open_mode(how,'b'));
+		return (EIF_POINTER) file_fopen(name, file_open_mode(how,'b'));
 	else
-		return (fnptr) file_fopen(name, file_open_mode(how,'t'));
+		return (EIF_POINTER) file_fopen(name, file_open_mode(how,'t'));
 #else
-	return (fnptr) file_fopen(name, file_open_mode(how,'\0'));
+	return (EIF_POINTER) file_fopen(name, file_open_mode(how,'\0'));
 #endif
 }
 
-public fnptr file_dopen(fd, how)
+public EIF_POINTER file_dopen(fd, how)
 int fd;
 int how;
 {
@@ -128,15 +129,15 @@ int how;
 
 #ifdef __WATCOMC__
 	if (how < 10)
-		return (fnptr) file_fdopen(fd, file_open_mode(how,'b'));
+		return (EIF_POINTER) file_fdopen(fd, file_open_mode(how,'b'));
 	else
-		return (fnptr) file_fdopen(fd, file_open_mode(how,'t'));
+		return (EIF_POINTER) file_fdopen(fd, file_open_mode(how,'t'));
 #else
-	return (fnptr) file_fdopen(fd, file_open_mode(how,'\0'));
+	return (EIF_POINTER) file_fdopen(fd, file_open_mode(how,'\0'));
 #endif
 }
 
-public fnptr file_reopen(name, how, old)
+public EIF_POINTER file_reopen(name, how, old)
 char *name;
 int how;
 FILE *old;
@@ -148,41 +149,41 @@ FILE *old;
 
 #ifdef __WATCOMC__
 	if (how < 10)
-		return (fnptr) file_freopen(name, file_open_mode(how,'b'), old);
+		return (EIF_POINTER) file_freopen(name, file_open_mode(how,'b'), old);
 	else
-		return (fnptr) file_freopen(name, file_open_mode(how,'t'), old);
+		return (EIF_POINTER) file_freopen(name, file_open_mode(how,'t'), old);
 #else
-	return (fnptr) file_freopen(name, file_open_mode(how,'\0'), old);
+	return (EIF_POINTER) file_freopen(name, file_open_mode(how,'\0'), old);
 #endif
 }
 
-public fnptr file_binary_open(name, how)
+public EIF_POINTER file_binary_open(name, how)
 char *name;
 int how;
 {
 	/* Open file `name' with the corresponding type 'how'. */
 
 #ifdef __WATCOMC__
-	return (fnptr) file_fopen(name, file_open_mode(how,'b'));
+	return (EIF_POINTER) file_fopen(name, file_open_mode(how,'b'));
 #else
-	return (fnptr) file_fopen(name, file_open_mode(how,'\0'));
+	return (EIF_POINTER) file_fopen(name, file_open_mode(how,'\0'));
 #endif
 }
 
-public fnptr file_binary_dopen(fd, how)
+public EIF_POINTER file_binary_dopen(fd, how)
 int fd;
 int how;
 {
 	/* Open file `fd' with the corresponding type 'how'. */
 
 #ifdef __WATCOMC__
-	return (fnptr) file_fdopen(fd, file_open_mode(how,'b'));
+	return (EIF_POINTER) file_fdopen(fd, file_open_mode(how,'b'));
 #else
-	return (fnptr) file_fdopen(fd, file_open_mode(how,'\0'));
+	return (EIF_POINTER) file_fdopen(fd, file_open_mode(how,'\0'));
 #endif
 }
 
-public fnptr file_binary_reopen(name, how, old)
+public EIF_POINTER file_binary_reopen(name, how, old)
 char *name;
 int how;
 FILE *old;
@@ -193,9 +194,9 @@ FILE *old;
 	 */
 
 #ifdef __WATCOMC__
-	return (fnptr) file_freopen(name, file_open_mode(how,'b'), old);
+	return (EIF_POINTER) file_freopen(name, file_open_mode(how,'b'), old);
 #else
-	return (fnptr) file_freopen(name, file_open_mode(how,'\0'), old);
+	return (EIF_POINTER) file_freopen(name, file_open_mode(how,'\0'), old);
 #endif
 }
 
@@ -304,18 +305,18 @@ FILE *fp;
 
 public void file_pi(f, number)
 FILE *f;
-int	number;
+EIF_INTEGER	number;
 {
 	/* Write `number' on `f' */
 
 	errno = 0;
-	if (0 > fprintf(f, "%d", number))
+	if (0 > fprintf(f, "%ld", number))
 		eio();
 }
 
 public void file_pr(f, number)
 FILE *f;
-float number;
+EIF_REAL number;
 {
 	/* Write `number' on `f' */
 
@@ -326,30 +327,30 @@ float number;
 
 public void file_pib(f, number)
 FILE *f;
-int	number;
+EIF_INTEGER	number;
 {
 	/* Write `number' on `f' */
 
 	errno = 0;
-	if (1 != fwrite(&number, sizeof(int),1, f))
+	if (1 != fwrite(&number, sizeof(EIF_INTEGER),1, f))
 		eio();
 }
 
 public void file_prb(f, number)
 FILE *f;
-float number;
+EIF_REAL number;
 {
 	/* Write `number' on `f' */
 
 	errno = 0;
-    if (1 != fwrite(&number, sizeof(float),1, f))
+    if (1 != fwrite(&number, sizeof(EIF_REAL),1, f))
 		eio();
 }
 
 public void file_ps(f, str, len)
 FILE *f;
 char *str;
-int len;
+EIF_INTEGER len;
 {
 	/* Write string `str' on `f' */
 
@@ -374,7 +375,7 @@ char c;
 
 public void file_pd(f, val)
 FILE *f;
-double val;
+EIF_DOUBLE val;
 {
 	/* Write double `val' onto `f' */
 
@@ -385,7 +386,7 @@ double val;
 
 public void file_pdb(f, val)
 FILE *f;
-double val;
+EIF_DOUBLE val;
 {
 	/* Write double `val' onto `f' */
 
@@ -407,7 +408,7 @@ FILE *f;
 public void file_append(f, other, l)
 FILE *f;			/* Target file */
 FILE *other;		/* Source file */
-int l;				/* Amount of bytes from `other' to be appended */
+EIF_INTEGER l;		/* Amount of bytes from `other' to be appended */
 {
 	/*	Append a copy of `otherile' to `f' */
 
@@ -467,12 +468,12 @@ FILE *f;
 		eio();
 }
 
-public long file_gi(f) 
+public EIF_INTEGER file_gi(f) 
 FILE *f;     
 {             
 	/* Get an integer from `f' */
 
-	long i;     
+	EIF_INTEGER i;     
 
 	errno = 0;
 	if (0 > fscanf(f, "%ld", &i))
@@ -482,12 +483,12 @@ FILE *f;
 	return i;
 }
 
-public float file_gr(f) 
+public EIF_REAL file_gr(f) 
 FILE *f;     
 {             
 	/* Get a real from `f' */
 
-	float r;     
+	EIF_REAL r;     
 
 	errno = 0;
 	if (0 > fscanf(f, "%f", &r))
@@ -497,12 +498,12 @@ FILE *f;
 	return r;
 }
 
-public double file_gd(f) 
+public EIF_DOUBLE file_gd(f) 
 FILE *f;     
 {             
 	/* Get a double from `f' */
 
-	double d;     
+	EIF_DOUBLE d;     
 
 	errno = 0;
 	if (0 > fscanf(f, "%lf", &d))
@@ -511,52 +512,52 @@ FILE *f;
 
 	return d;
 }
-public long file_gib(f) 
+public EIF_INTEGER file_gib(f) 
 FILE *f;     
 {             
 	/* Get an integer from `f' */
 
-	long i;     
+	EIF_INTEGER i;     
 
 	errno = 0;
-	if (1 != fread (&i, sizeof (long), 1, f))
+	if (1 != fread (&i, sizeof (EIF_INTEGER), 1, f))
 		eio();
 	swallow_nl(f);
 
 	return i;
 }
 
-public float file_grb(f) 
+public EIF_REAL file_grb(f) 
 FILE *f;     
 {             
 	/* Get a real from `f' */
 
-	float r;     
+	EIF_REAL r;     
 
 	errno = 0;
-	if (1 != fread (&r, sizeof (float), 1, f))
+	if (1 != fread (&r, sizeof (EIF_REAL), 1, f))
 		eio();
 	swallow_nl(f);
 
 	return r;
 }
 
-public double file_gdb(f) 
+public EIF_DOUBLE file_gdb(f) 
 FILE *f;     
 {             
 	/* Get a double from `f' */
 
-	double d;     
+	EIF_DOUBLE d;     
 
 	errno = 0;
-	if (1 != fread (&d, sizeof(double), 1, f))
+	if (1 != fread (&d, sizeof(EIF_DOUBLE), 1, f))
 		eio();
 	swallow_nl(f);
 
 	return d;
 }
 
-public char	file_gc(f)
+public EIF_CHARACTER file_gc(f)
 FILE *f;
 {
 	/* Get a character from `f' */
@@ -568,23 +569,23 @@ FILE *f;
 	if (c == EOF && ferror(f))
 		eio();
 
-	return (char) c;
+	return (EIF_CHARACTER) c;
 }
 
-public long file_gs(f, s, bound, start)
+public EIF_INTEGER file_gs(f, s, bound, start)
 FILE *f;		/* File stream descriptor */
 char *s;		/* Target buffer where read characters are written */
-long bound;		/* Size of the target buffer */
-long start;		/* Amount of characters already held in buffer */
+EIF_INTEGER bound;		/* Size of the target buffer */
+EIF_INTEGER start;		/* Amount of characters already held in buffer */
 {
 	/* Get a string from `f' and fill it into `s' (at most `bound' characters),
 	 * with `start' being the amount of bytes already stored within s. This
 	 * means we really have to read (bound - start) characters.
 	 */
 
-	long amount;	/* Amount of bytes to be read */
+	EIF_INTEGER amount;	/* Amount of bytes to be read */
 	int c;			/* Last char read */
-	int read;		/* Number of characters read */
+	EIF_INTEGER read;		/* Number of characters read */
 
 	amount = bound - start;		/* Characters to be read */
 	s += start;					/* Where read characters are written */
@@ -614,16 +615,16 @@ long start;		/* Amount of characters already held in buffer */
 	return bound - start + 1;			/* Error condition */
 }
 
-public long file_gss(f, s, bound)
+public EIF_INTEGER file_gss(f, s, bound)
 FILE *f;		/* File stream descriptor */
 char *s;		/* Target buffer where read characters are written */
-long bound;		/* Size of the target buffer */
+EIF_INTEGER bound;		/* Size of the target buffer */
 {
 	/* Read min (bound, remaining bytes in file) characters into `s' and
 	 * return the number of characters read.
 	 */
 
-	long amount = bound;	/* Number of characters to be read */
+	EIF_INTEGER amount = bound;	/* Number of characters to be read */
 	int c;					/* Last char read */
 	
 	while (amount-- > 0) {
@@ -639,11 +640,11 @@ long bound;		/* Size of the target buffer */
 	return bound - amount - 1;	/* Number of characters read */
 }
 
-public long file_gw(f, s, bound, start)
+public EIF_INTEGER file_gw(f, s, bound, start)
 FILE *f;		/* File stream descriptor */
 char *s;		/* Target buffer where read characters are written */
-long bound;		/* Size of the target buffer */
-long start;		/* Amount of characters already held in buffer */
+EIF_INTEGER bound;		/* Size of the target buffer */
+EIF_INTEGER start;		/* Amount of characters already held in buffer */
 {
 	/* Get a word from `f' and fill it into `s' (at most `bound' characters),
 	 * with `start' being the amount of bytes already stored within s. This
@@ -651,7 +652,7 @@ long start;		/* Amount of characters already held in buffer */
 	 * spaces are skipped.
 	 */
 
-	long amount;	/* Amount of bytes to be read */
+	EIF_INTEGER amount;	/* Amount of bytes to be read */
 	int c;			/* Last char read */
 
 	amount = bound - start;		/* Characters to be read */
@@ -665,7 +666,7 @@ long start;		/* Amount of characters already held in buffer */
 		if (c == EOF && ferror(f))	/* An I/O error occurred */
 			eio();					/* Raise exception */
 		if (c == EOF)
-			return 0;				/* Reached EOF before word */
+			return (EIF_INTEGER) 0;				/* Reached EOF before word */
 		else if (EOF == ungetc(c, f))
 			eio();
 	}
@@ -694,7 +695,7 @@ long start;		/* Amount of characters already held in buffer */
 	return bound - start + 1;			/* Error condition */
 }
 
-public char file_lh(f)
+public EIF_CHARACTER file_lh(f)
 FILE *f;
 {
 	/* Look ahead one character. If EOF, return 0 */
@@ -709,7 +710,7 @@ FILE *f;
 	if (c != EOF && EOF == ungetc(c, f))
 		eio();
 
-	return c == EOF ? (char) 0 : (char) c;
+	return (EIF_CHARACTER) (c == EOF ? (char) 0 : (char) c);
 }
 
 /*
@@ -800,7 +801,7 @@ struct stat *buf;		/* Structure to fill in */
 	}
 }
 
-public long file_info (buf, op)
+public EIF_INTEGER file_info (buf, op)
 struct stat *buf;
 int op;
 {
@@ -810,57 +811,57 @@ int op;
 
     switch (op) {
 	case 0:	/* File permission mode */
-		return (long) (buf->st_mode & ST_MODE);
+		return (EIF_INTEGER) (buf->st_mode & ST_MODE);
 	case 1:	/* Inode number */
-		return (long) buf->st_ino;
+		return (EIF_INTEGER) buf->st_ino;
 	case 2:	/* Device inode resides on */
-		return (long) buf->st_dev;
+		return (EIF_INTEGER) buf->st_dev;
 	case 3:	/* Device type */
-		return (long) buf->st_rdev;
+		return (EIF_INTEGER) buf->st_rdev;
 	case 4:	/* UID of file */
-		return (long) buf->st_uid;
+		return (EIF_INTEGER) buf->st_uid;
 	case 5:	/* GID of file */
-		return (long) buf->st_gid;
+		return (EIF_INTEGER) buf->st_gid;
 	case 6:	/* Size of file, in bytes */
-		return (long) buf->st_size;
+		return (EIF_INTEGER) buf->st_size;
 	case 7:	/* Last modification time on file */
-		return (long) buf->st_mtime;
+		return (EIF_INTEGER) buf->st_mtime;
 	case 8:	/* Last access made on file */
-		return (long) buf->st_atime;
+		return (EIF_INTEGER) buf->st_atime;
 	case 9:	/* Last status change */
-		return (long) buf->st_ctime;
+		return (EIF_INTEGER) buf->st_ctime;
 	case 10: /* Number of links */
-		return (long) buf->st_nlink;
+		return (EIF_INTEGER) buf->st_nlink;
 	case 11: /* File type */
-		return (long) (buf->st_mode & ~ST_MODE);
+		return (EIF_INTEGER) (buf->st_mode & ~ST_MODE);
 	case 12: /* Is file a directory */
-		return (long) (buf->st_mode & S_IFDIR);
+		return (EIF_INTEGER) (buf->st_mode & S_IFDIR);
 	case 13: /* Is file a regular (plain) one */
 		if (buf->st_mode & S_IFREG || 0 == (buf->st_mode & ~ST_MODE))
-			return (long) S_IFREG;
-		return (long) 0;
+			return (EIF_INTEGER) S_IFREG;
+		return (EIF_INTEGER) 0;
 	case 14: /* Is file a device */
 		if (buf->st_mode & S_IFCHR)
-			return (long) S_IFCHR;
+			return (EIF_INTEGER) S_IFCHR;
 		if (buf->st_mode & S_IFBLK)
-			return (long) S_IFBLK;
-		return 0;
+			return (EIF_INTEGER) S_IFBLK;
+		return (EIF_INTEGER) 0;
 	case 15: /* Is file a character device */
-		return (long) (buf->st_mode & S_IFCHR);
+		return (EIF_INTEGER) (buf->st_mode & S_IFCHR);
 	case 16: /* Is file a block device */
-		return (long) (buf->st_mode & S_IFBLK);
+		return (EIF_INTEGER) (buf->st_mode & S_IFBLK);
 	case 17: /* Is file a FIFO */
-		return (long) (buf->st_mode & S_IFIFO);
+		return (EIF_INTEGER) (buf->st_mode & S_IFIFO);
 	case 18: /* Is file a symbolic link */
-		return (long) (buf->st_mode & S_IFLNK);
+		return (EIF_INTEGER) (buf->st_mode & S_IFLNK);
 	case 19: /* Is file a socket */
-		return (long) (buf->st_mode & S_IFSOCK);
+		return (EIF_INTEGER) (buf->st_mode & S_IFSOCK);
 	default:
 		panic("illegal stat request");
     }
 }
 
-public char file_eaccess(buf, op)
+public EIF_BOOLEAN file_eaccess(buf, op)
 struct stat *buf;
 int op;
 {
@@ -877,54 +878,54 @@ int op;
 	case 0: /* Is file readable */
 #ifdef HAS_GETEUID
 		if (uid == geteuid())
-			return (mode & S_IRUSR) ? '\01' : '\0';
+			return (EIF_BOOLEAN) ((mode & S_IRUSR) ? '\01' : '\0');
 		else if (gid = getegid())
-			return (mode & S_IRGRP) ? '\01' : '\0';
+			return (EIF_BOOLEAN) ((mode & S_IRGRP) ? '\01' : '\0');
 		else
 #endif
-			return (mode & S_IROTH) ? '\01' : '\0';
+			return (EIF_BOOLEAN) ((mode & S_IROTH) ? '\01' : '\0');
 	case 1: /* Is file writable */
 #ifdef HAS_GETEUID
 		if (uid == geteuid())
-			return (mode & S_IWUSR) ? '\01' : '\0';
+			return (EIF_BOOLEAN) ((mode & S_IWUSR) ? '\01' : '\0');
 		else if (gid = getegid())
-			return (mode & S_IWGRP) ? '\01' : '\0';
+			return (EIF_BOOLEAN) ((mode & S_IWGRP) ? '\01' : '\0');
 		else
 #endif
-			return (mode & S_IWOTH) ? '\01' : '\0';
+			return (EIF_BOOLEAN) ((mode & S_IWOTH) ? '\01' : '\0');
 	case 2: /* Is file executable */
 #ifdef HAS_GETEUID
 		if (uid == geteuid())
-			return (mode & S_IXUSR) ? '\01' : '\0';
+			return (EIF_BOOLEAN) ((mode & S_IXUSR) ? '\01' : '\0');
 		else if (gid = getegid())
-			return (mode & S_IXGRP) ? '\01' : '\0';
+			return (EIF_BOOLEAN) ((mode & S_IXGRP) ? '\01' : '\0');
 		else
 #endif
-			return (mode & S_IXOTH) ? '\01' : '\0';
+			return (EIF_BOOLEAN) ((mode & S_IXOTH) ? '\01' : '\0');
 	case 3: /* Is file setuid */
-		return (mode & S_ISUID) ? '\01' : '\0';
+		return (EIF_BOOLEAN) ((mode & S_ISUID) ? '\01' : '\0');
 	case 4: /* Is file setgid */
-		return (mode & S_ISGID) ? '\01' : '\0';
+		return (EIF_BOOLEAN) ((mode & S_ISGID) ? '\01' : '\0');
 	case 5: /* Is file sticky */
-		return (mode & S_ISVTX) ? '\01' : '\0';
+		return (EIF_BOOLEAN) ((mode & S_ISVTX) ? '\01' : '\0');
 	case 6: /* Is file owned by effective UID */
 #ifdef HAS_GETEUID
-		return (uid == geteuid()) ? '\01' : '\0';
+		return (EIF_BOOLEAN) ((uid == geteuid()) ? '\01' : '\0');
 #else
-		return '\01';
+		return (EIF_BOOLEAN) '\01';
 #endif
 	case 7: /* Is file owned by real UID */
 #ifdef HAS_GETEUID
-		return (uid == getuid()) ? '\01' : '\0';
+		return (EIF_BOOLEAN) ((uid == getuid()) ? '\01' : '\0');
 #else
-		return '\01';
+		return (EIF_BOOLEAN) '\01';
 #endif
 	default:
 		panic("illegal access request");
 	}
 }
 
-public char file_access(name, op)
+public EIF_BOOLEAN file_access(name, op)
 {
 	/* Check whether access permission 'op' are possible on file 'name' using
 	 * real UID and real GID. This is probably only useful to setuid or setgid
@@ -933,19 +934,19 @@ public char file_access(name, op)
 
 	switch (op) {
 	case 0: /* Does file exist? */
-		return (-1 != access(name, F_OK)) ? '\01' : '\0';
+		return (EIF_BOOLEAN) ((-1 != access(name, F_OK)) ? '\01' : '\0');
 	case 1: /* Test for search permission */
-		return (-1 != access(name, X_OK)) ? '\01' : '\0';
+		return (EIF_BOOLEAN) ((-1 != access(name, X_OK)) ? '\01' : '\0');
 	case 2: /* Test for write permission */
-		return (-1 != access(name, W_OK)) ? '\01' : '\0';
+		return (EIF_BOOLEAN) ((-1 != access(name, W_OK)) ? '\01' : '\0');
 	case 3: /* Test for read permission */
-		return (-1 != access(name, R_OK)) ? '\01' : '\0';
+		return (EIF_BOOLEAN) ((-1 != access(name, R_OK)) ? '\01' : '\0');
 	default:
 		panic("illegal access request");
 	}
 }
 
-public char file_exists(name)
+public EIF_BOOLEAN file_exists(name)
 char *name;
 {
 	/* Test whether file exists or not by checking the return from the stat()
@@ -960,7 +961,7 @@ char *name;
 
 	status = stat(name, &buf);	/* Attempt to stat file */
 
-	return status == -1 ? '\0' : '\01';
+	return (EIF_BOOLEAN) (status == -1 ? '\0' : '\01');
 }
 
 /*
@@ -1220,7 +1221,7 @@ int mode;
  * File cursor management.
  */
 
-public long file_tell(f)
+public EIF_INTEGER file_tell(f)
 FILE *f;
 {
 	/* Current position within file */
@@ -1228,12 +1229,12 @@ FILE *f;
 	if (f == (FILE *) 0)
 		eraise("invalid file pointer", EN_EXT);
 	
-	return ftell(f);
+	return (EIF_INTEGER) ftell(f);
 }
 
 public void file_go(f, pos)
 FILE *f;
-int pos;
+long pos;
 {
 	/* Go to absolute position 'pos' counted from start */
 
@@ -1245,7 +1246,7 @@ int pos;
 
 public void file_recede(f, pos)
 FILE *f;
-int pos;
+long pos;
 {
 	/* Go to absolute position 'pos' counted from end */
 
@@ -1257,7 +1258,7 @@ int pos;
 
 public void file_move(f, pos)
 FILE *f;
-int pos;
+long pos;
 {
 	/* Go to absolute position 'pos' counted from current position */
 
@@ -1271,17 +1272,17 @@ int pos;
  * Miscellaneous routines.
  */
 
-public long stat_size()
+public EIF_INTEGER stat_size()
 {
 	/* Size of the stat structure. This is used by the Eiffel side to create
 	 * the area (special object) which will play the role of a stat buffer
 	 * structure.
 	 */
 
-	return (long) sizeof(struct stat);
+	return (EIF_INTEGER) sizeof(struct stat);
 }
 
-public char file_creatable(path)
+public EIF_BOOLEAN file_creatable(path)
 char *path;
 {
 	/* Check whether the file `path' may be created: we need write permissions
@@ -1298,7 +1299,7 @@ char *path;
 		*ptr = '\0';
 	else
 		strcpy (temp, ".");
-	return (-1 != access(temp, W_OK)) ? '\01' : '\0';
+	return (EIF_BOOLEAN) ((-1 != access(temp, W_OK)) ? '\01' : '\0');
 }
 
 public EIF_INTEGER file_fd(f)

@@ -42,7 +42,7 @@ feature -- Access and queries
 			valid_key: valid_key (key)
 		do
 			internal_search (key)
-			if control = Found then
+			if control = Found_constant then
 				Result := content.item (position)
 			end
 		end
@@ -54,7 +54,7 @@ feature -- Access and queries
 			valid_key: valid_key (key)
 		do
 			internal_search (key)
-			Result := (control = Found)
+			Result := (control = Found_constant)
 		end
 
 	key_at (n: INTEGER): H is
@@ -71,6 +71,33 @@ feature -- Access and queries
 			Result := (count = 0)
 		end
 
+	search (key: H) is
+			-- Search for item of key `key'
+			-- If found, set `found' to True, and set
+			-- `found_item' to item associated with `key'.
+		local
+			default_value: H
+		do
+			internal_search (key)
+			if control = Found_constant then
+				found_item := content.item (position)
+			else
+				found_item := default_value
+			end
+		ensure
+			item_if_found: found implies (found_item = content.item (position))
+		end
+
+	found_item: H
+			-- Item found during a search with `has' to reduce the number of
+			-- search for clients
+
+	found: BOOLEAN is
+			-- Did last operation find the item sought?
+		do
+			Result := (control = Found_constant)
+		end
+
 feature -- Insertion, deletion
 
 	put (key: H) is
@@ -81,7 +108,7 @@ feature -- Insertion, deletion
 			valid_key (key)
 		do
 			internal_search (key)
-			if control = Found then
+			if control = Found_constant then
 				control := Conflict
 			else
 				if soon_full then
@@ -104,7 +131,7 @@ feature -- Insertion, deletion
 			valid_key (key)
 		do
 			internal_search (key)
-			if control /= Found then
+			if control /= Found_constant then
 				if soon_full then
 					add_space
 					internal_search (key)
@@ -120,12 +147,12 @@ feature -- Insertion, deletion
 	change_key (new_key: H; old_key: H) is
 			-- If table contains an item at `old_key',
 			-- replace its key by `new_key'.
-			-- Set `control' to `Changed', `Conflict' or `Not_found'.
+			-- Set `control' to `Changed', `Conflict' or `Not_found_constant'.
 		require
 			valid_keys: valid_key (new_key) and valid_key (old_key)
 		do
 			internal_search (old_key)
-			if control = Found then
+			if control = Found_constant then
 				content.put (new_key, position)
 				if control /= Conflict then
 					remove (old_key)
@@ -138,14 +165,14 @@ feature -- Insertion, deletion
 
 	remove, prune (key: H) is
 			-- Remove item associated with `key', if present.
-			-- Set `control' to `Removed' or `Not_found'.
+			-- Set `control' to `Removed' or `Not_found_constant'.
 		require
 			valid_key: valid_key (key)
 		local
 			dead_key: H
 		do
 			internal_search (key)
-			if control = Found then
+			if control = Found_constant then
 				content.put (dead_key, position)
 				deleted_marks.put (True, position)
 				count := count - 1
@@ -156,12 +183,15 @@ feature -- Insertion, deletion
 
 	wipe_out, clear_all is
 			-- Reset all items to default values.
+		local
+			default_value: H
 		do
 			content.clear_all
 			deleted_marks.clear_all
 			count := 0
 			control := 0
 			position := 0
+			found_item := default_value
 		end
 
 	merge (other: like Current) is
@@ -225,7 +255,7 @@ feature {NONE} -- Internal features
 			-- If successful, set `position' to index
 			-- of item with this key (the same index as the key's index).
 			-- If not, set position to possible position for insertion.
-			-- Set `control' to `Found' or `Not_found'.
+			-- Set `control' to `Found_constant' or `Not_found_constant'.
 		require
 			good_key: valid_key (search_key)
 		local
@@ -253,7 +283,7 @@ feature {NONE} -- Internal features
 				old_key := local_content.item (pos)
 				if old_key = default_key then
 					if not local_deleted_marks.item (pos) then
-						control := Not_found
+						control := Not_found_constant
 						stop := True
 						if first_deleted_position >= 0 then
 							pos := first_deleted_position
@@ -262,12 +292,12 @@ feature {NONE} -- Internal features
 						first_deleted_position := pos
 					end
 				elseif search_key.is_equal (old_key) then
-					control := Found
+					control := Found_constant
 					stop := True
 				end
 			end
 			if not stop then
-				control := Not_found
+				control := Not_found_constant
 				if first_deleted_position >= 0 then
 					pos := first_deleted_position
 				end
@@ -332,7 +362,7 @@ feature {NONE} -- Status
 	Inserted: INTEGER is unique
 			-- Insertion successful
 
-	Found: INTEGER is unique
+	Found_constant: INTEGER is unique
 			-- Key found
 
 	Changed: INTEGER is unique
@@ -344,7 +374,7 @@ feature {NONE} -- Status
 	Conflict: INTEGER is unique
 			-- Could not insert an already existing key
 
-	Not_found: INTEGER is unique
+	Not_found_constant: INTEGER is unique
 			-- Key not found
 
 feature {SEARCH_TABLE}

@@ -11,7 +11,10 @@ class
 
 inherit
 
-	TOGGLE_B_I;
+	TOGGLE_B_I
+		rename
+			set_accelerator_action as set_accelerator
+		end;
 
 	BUTTON_M
 		undefine
@@ -99,6 +102,12 @@ feature -- Removal
 			-- value is changed.
 		do
 			remove_value_changed_callback (mel_vision_callback (a_command), argument)
+		end;
+
+	remove_accelerator_action is
+			-- Remove the accelerator action.
+		do
+			set_accelerator ("")
 		end;
 
 end -- class TOGGLE_B_M

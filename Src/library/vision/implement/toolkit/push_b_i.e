@@ -11,6 +11,24 @@ inherit
 
 	BUTTON_I
 
+feature -- Element change
+
+	set_accelerator_action (a_translation: STRING) is
+			-- Set the accerlator action (modifiers and key to use as a shortcut
+			-- in selecting a button) to `a_translation'.
+			-- `a_translation' must be specified with the X toolkit conventions.
+		require
+			translation_not_void: a_translation /= Void
+		deferred
+		end
+
+feature -- Removal
+
+	remove_accelerator_action is
+			-- Remove the accelerator action.
+		deferred
+		end;
+
 end -- class PUSH_B_I
 
 

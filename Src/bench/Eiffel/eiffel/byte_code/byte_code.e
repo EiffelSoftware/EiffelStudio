@@ -433,31 +433,6 @@ feature -- Settings
 			end
 		end
 
-	process_expanded is
-			-- Enlarge expanded arguements
-		local
-			arg: TYPE_I
-			i, count: INTEGER
-		do
-			if arguments /= Void then
-				from
-					i := arguments.lower
-					count := arguments.count
-				until
-					i > count
-				loop
-					arg := real_type (arguments.item (i))
-					if arg.is_true_expanded then
-						context.inc_exp_args
-						context.Arg_var.set_position (i)
-						context.set_local_index (context.Arg_var.register_name,
-							context.Arg_var.enlarged)
-					end
-					i := i + 1
-				end
-			end
-		end
-
 	finish_compound is
 			-- Generate the end of the compound
 		do

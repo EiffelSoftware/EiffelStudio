@@ -6,7 +6,7 @@
 
 
 import "oaidl.idl";
-import "common_enums.idl";
+//import "common_enums.idl";
 
 interface IEiffelProject;
 interface IEiffelCompiler;
@@ -18,6 +18,13 @@ interface IEiffelFeatureDescriptor;
 interface IEiffelProjectProperties;
 interface IEiffelClusterProperties;
 
+typedef enum __EIF_COMPILATION_TYPES
+{
+    EIF_COMPT_is_application,
+    EIF_COMPT_is_library,
+    EIF_COMPT_is_precompilation
+    
+} EIF_COMPILATION_TYPES;
 
 [
   oleautomation,

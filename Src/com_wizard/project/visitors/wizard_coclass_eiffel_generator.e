@@ -5,7 +5,8 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	WIZARD_COCLASS_EIFFEL_GENERATOR
+	WIZARD_COCLASS_EIFFEL_GENERATOR 
+		[COMPONENT_INTERFACE_GENERATOR -> WIZARD_COMPONENT_INTERFACE_EIFFEL_GENERATOR create make end]
 
 inherit
 	WIZARD_EIFFEL_WRITER_GENERATOR
@@ -14,20 +15,24 @@ inherit
 
 feature -- Access
 
-	generate (a_descriptor: WIZARD_COCLASS_DESCRIPTOR) is
+	generate (a_coclass: WIZARD_COCLASS_DESCRIPTOR) is
 			-- Generate eiffel class for coclass.
 		local
 			generated_file: PLAIN_TEXT_FILE
+			interface_processor: WIZARD_COCLASS_INTERFACE_EIFFEL_PROCESSOR [COMPONENT_INTERFACE_GENERATOR]
 		do
 			create eiffel_writer.make
-			coclass_descriptor := a_descriptor
+			coclass_descriptor := a_coclass
 
 			-- Set class name and description
-			eiffel_writer.set_class_name (a_descriptor.eiffel_class_name)
-			eiffel_writer.set_description (a_descriptor.description)
+			eiffel_writer.set_class_name (a_coclass.eiffel_class_name)
+			eiffel_writer.set_description (a_coclass.description)
 
 			-- Process interfaces.
-			process_interfaces
+			create interface_processor.make (a_coclass, eiffel_writer)
+			interface_processor.process_interfaces
+
+			dispatch_interface := interface_processor.dispatch_interface
 
 			set_default_ancestors (eiffel_writer)
 			add_creation
@@ -40,52 +45,6 @@ feature {NONE} -- Implementation
 
 	coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR
 			-- Coclass descriptor
-
-	generate_functions_and_properties (descriptor: WIZARD_INTERFACE_DESCRIPTOR;
-				a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR;
-				an_eiffel_writer: WIZARD_WRITER_EIFFEL_CLASS;
-				inherit_clause: WIZARD_WRITER_INHERIT_CLAUSE) is
-			-- Generate functions and properties
-		require
-			non_void_descriptor: descriptor /= Void
-			non_void_eiffel_writer: eiffel_writer /= Void	
-			non_void_component_descriptor: a_component_descriptor /= Void
-			non_void_eiffel_writer: an_eiffel_writer /= Void
-		deferred
-		end
-
-	process_interfaces is
- 			-- Process inherited interfaces.
-		require
-			non_void_list: coclass_descriptor.interface_descriptors /= Void
-			not_empty: not coclass_descriptor.interface_descriptors.empty
-		local
-			inherit_clause: WIZARD_WRITER_INHERIT_CLAUSE
-		do
-			from
-				coclass_descriptor.interface_descriptors.start
-			until
-				coclass_descriptor.interface_descriptors.off
-			loop
-
-				if 
-					coclass_descriptor.interface_descriptors.item.dispinterface and 
-					not coclass_descriptor.interface_descriptors.item.dual
-				then
-					dispatch_interface := True
-				end
-				create inherit_clause.make
-				inherit_clause.set_name (coclass_descriptor.interface_descriptors.item.eiffel_class_name)
-
-				generate_functions_and_properties (coclass_descriptor.interface_descriptors.item, 
-						coclass_descriptor, eiffel_writer, inherit_clause)
-				eiffel_writer.add_inherit_clause (inherit_clause)
-
-				coclass_descriptor.interface_descriptors.forth
-			end
-		ensure
-			features_added: eiffel_writer.features /= Void 
-		end
 
 
 end -- class WIZARD_COCLASS_EIFFEL_GENERATOR

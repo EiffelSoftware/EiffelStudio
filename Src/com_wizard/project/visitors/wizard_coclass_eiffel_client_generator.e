@@ -8,18 +8,12 @@ class
 	WIZARD_COCLASS_EIFFEL_CLIENT_GENERATOR
 
 inherit
-	WIZARD_COCLASS_EIFFEL_GENERATOR
+	WIZARD_COCLASS_EIFFEL_GENERATOR [WIZARD_COMPONENT_INTERFACE_EIFFEL_CLIENT_GENERATOR]
 		redefine
-			generate,
-			process_interfaces,
-			set_default_ancestors
+			generate
 		end
 
 	WIZARD_COMPONENT_EIFFEL_CLIENT_GENERATOR
-		redefine
-			set_default_ancestors
-		end
-
 
 feature -- Initialization
 
@@ -84,38 +78,11 @@ feature {NONE} -- Implementation
 		local
 			tmp_writer: WIZARD_WRITER_INHERIT_CLAUSE
 		do
-			{WIZARD_COMPONENT_EIFFEL_CLIENT_GENERATOR} Precursor (an_eiffel_writer)
-
 			create tmp_writer.make
 			tmp_writer.set_name (Queriable_type)
 			an_eiffel_writer.add_inherit_clause (tmp_writer)
 		end
 
-	process_interfaces is
- 			-- Process inherited interfaces.
-		local
-			inherit_clause: WIZARD_WRITER_INHERIT_CLAUSE
-		do
-			from
-				coclass_descriptor.interface_descriptors.start
-			until
-				coclass_descriptor.interface_descriptors.off
-			loop
-				if 
-					coclass_descriptor.interface_descriptors.item.dispinterface and 
-					not coclass_descriptor.interface_descriptors.item.dual
-				then
-					dispatch_interface := True
-				end
-				create inherit_clause.make
-				inherit_clause.set_name (coclass_descriptor.interface_descriptors.item.eiffel_class_name)
-
-				generate_functions_and_properties (coclass_descriptor.interface_descriptors.item, 
-					coclass_descriptor, eiffel_writer, inherit_clause)
-				eiffel_writer.add_inherit_clause (inherit_clause)
-				coclass_descriptor.interface_descriptors.forth
-			end
-		end
 
 	add_default_features (a_coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR) is
 			-- Add default features to coclass client. 

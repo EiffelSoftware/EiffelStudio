@@ -166,7 +166,7 @@ feature -- Output
 			-- Used to display the corresponding icon.
 		deferred
 		ensure
-			valid_kind: Result >= Immediate_value and then Result <= External_reference_value
+			valid_kind: Result >= Immediate_value and then Result <= Error_message_value
 		end
 
 feature {DUMP_VALUE, CALL_STACK_ELEMENT, DEBUG_DYNAMIC_EVAL_HOLE, SHARED_DEBUG}

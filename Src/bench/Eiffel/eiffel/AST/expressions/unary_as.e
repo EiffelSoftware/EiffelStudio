@@ -178,6 +178,7 @@ io.putstring (">%N"); end
 				ctxt.need_dot
 				ctxt.prepare_for_prefix (prefix_feature_name)
 				ctxt.put_current_feature
+				ctxt.put_space
 				if ctxt.last_was_printed then
 					ctxt.commit
 				else
@@ -221,8 +222,8 @@ feature {AST_EIFFEL} -- Output
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
-			ctxt.case_prepare_for_prefix (prefix_feature_name)
-			ctxt.case_put_prefix_feature
+			ctxt.prepare_for_prefix (prefix_feature_name)
+			ctxt.put_prefix_feature
 			ctxt.put_space
 			expr.simple_format (ctxt)
 		end

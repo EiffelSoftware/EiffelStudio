@@ -114,7 +114,7 @@ feature {NONE} -- Output
 			-- Reconstitute text.
 		do
 			ctxt.new_expression
-			ctxt.case_prepare_for_feature (feature_name, Void)
+			ctxt.prepare_for_feature (feature_name, Void)
 			ctxt.put_text_item_without_tabs (ti_Dollar)
 			ctxt.put_current_feature
 		end

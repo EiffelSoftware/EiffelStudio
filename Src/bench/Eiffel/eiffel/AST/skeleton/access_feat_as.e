@@ -483,8 +483,8 @@ feature {AST_EIFFEL} -- Output
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
-			ctxt.case_prepare_for_feature (feature_name, parameters)
-			ctxt.case_put_current_feature
+			ctxt.prepare_for_feature (feature_name, parameters)
+			ctxt.put_current_feature
 		end
 
 feature {COMPILER_EXPORTER} -- Replication {ACCESS_FEAT_AS, USER_CMD, CMD}

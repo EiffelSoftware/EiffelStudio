@@ -107,7 +107,7 @@ feature {AST_EIFFEL} -- Output
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
-			ctxt.case_prepare_for_result
+			ctxt.prepare_for_result
 			ctxt.put_text_item (ti_Result)
 		end
 

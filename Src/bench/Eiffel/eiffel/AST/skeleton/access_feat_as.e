@@ -93,8 +93,7 @@ feature -- Type check, byte code and dead code removal
 		require
 			good_argument: feat /= Void
 		do
-				-- Delayed calls are always export valid!
-			Result := is_delayed or else feat.is_exported_for (context.current_class)
+			Result := feat.is_exported_for (context.current_class)
 		end
 
 	access_type: TYPE_A is

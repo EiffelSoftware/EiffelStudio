@@ -87,7 +87,7 @@ feature -- Initialization
 						is_server := True
 						project_name := a_project_name.twin
 						separator_index := project_name.last_index_of (Directory_separator, project_name.count)
-						project_name.tail (project_name.count - separator_index)
+						project_name.keep_tail (project_name.count - separator_index)
 						
 					elseif new_com_project /= Void then
 						is_new_eiffel_project := False
@@ -110,7 +110,7 @@ feature -- Initialization
 						end
 						project_name := com_file.twin
 						separator_index := project_name.last_index_of (Directory_separator, project_name.count)
-						project_name.tail (project_name.count - separator_index)
+						project_name.keep_tail (project_name.count - separator_index)
 					end
 					
 					if in_process /= Void then

@@ -279,7 +279,7 @@ feature -- Icon representing shell
 			-- Set `icon_mask' to `a_mask'.
 		require
 			exists: not destroyed;
-			not_a_mask_void: not (a_mask = Void)
+			not_a_mask_void: a_mask /= Void
 		do
 			implementation.set_icon_mask (a_mask)
 		end;
@@ -298,7 +298,7 @@ feature -- Icon representing shell
 			-- Set `icon_pixmap' to `a_pixmap'.
 		require
 			exists: not destroyed;
-			not_a_pixmap_void: not (a_pixmap = Void)
+			not_a_pixmap_void: a_pixmap /= Void
 		do
 			implementation.set_icon_pixmap (a_pixmap)
 		end;
@@ -356,7 +356,7 @@ feature -- Title
 			-- Set `title' to `a_title'.
 		require
 			exists: not destroyed;
-			not_a_title_void: not (a_title = Void)
+			not_a_title_void: a_title /= Void
 		do
 			implementation.set_title (a_title)
 		end;

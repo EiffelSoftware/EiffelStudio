@@ -48,7 +48,7 @@ feature -- Color
 			-- Set foreground color to `new_color'.
 		require
 			exists: not destroyed;
-			color_not_void: not (new_color = Void)
+			color_not_void: new_color /= Void
 		do
 			implementation.set_foreground_color (new_color)
 		ensure
@@ -59,7 +59,7 @@ feature -- Color
 			-- Set foreground color to `new_color'.
 		require
 			exists: not destroyed;
-			color_not_void: not (new_color = Void)
+			color_not_void: new_color /= Void
 		do
 			set_foreground_color (new_color)
 		ensure

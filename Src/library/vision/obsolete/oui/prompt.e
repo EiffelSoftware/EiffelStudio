@@ -52,7 +52,7 @@ feature
 			-- cancel button is activated.
 		require
 			exists: not destroyed;
-			not_a_command_void: not (a_command = Void)
+			not_a_command_void: a_command /= Void
 		do
 			implementation.add_cancel_action (a_command, argument)
 		end; -- add_cancel_action
@@ -62,7 +62,7 @@ feature
 			-- apply button is activated.
 		require
 			exists: not destroyed;
-			not_a_command_void: not (a_command = Void)
+			not_a_command_void: a_command /= Void
 		do
 			implementation.add_apply_action (a_command, argument)
 		end; -- add_apply_action
@@ -72,7 +72,7 @@ feature
 			-- help button is activated.
 		require
 			exists: not destroyed;
-			not_a_command_void: not (a_command = Void)
+			not_a_command_void: a_command /= Void
 		do
 			implementation.add_help_action (a_command, argument)
 		end; -- add_help_action
@@ -82,7 +82,7 @@ feature
 			-- ok button is activated.
 		require
 			exists: not destroyed;
-			not_a_command_void: not (a_command = Void)
+			not_a_command_void: a_command /= Void
 		do
 			implementation.add_ok_action (a_command, argument)
 		end; -- add_ok_action
@@ -125,7 +125,7 @@ feature
 			-- cancel button is activated.
 		require
 			exists: not destroyed;
-			not_a_command_void: not (a_command = Void)
+			not_a_command_void: a_command /= Void
 		do
 			implementation.remove_cancel_action (a_command, argument)
 		end; -- remove_cancel_action
@@ -135,7 +135,7 @@ feature
 			-- apply button is activated.
 		require
 			exists: not destroyed;
-			not_a_command_void: not (a_command = Void)
+			not_a_command_void: a_command /= Void
 		do
 			implementation.remove_apply_action (a_command, argument)
 		end; -- remove_apply_action
@@ -145,7 +145,7 @@ feature
 			-- help button is activated.
 		require
 			exists: not destroyed;
-			not_a_command_void: not (a_command = Void)
+			not_a_command_void: a_command /= Void
 		do
 			implementation.remove_help_action (a_command, argument)
 		end; -- remove_help_action
@@ -155,7 +155,7 @@ feature
 			-- ok button is activated.
 		require
 			exists: not destroyed;
-			not_a_command_void: not (a_command = Void)
+			not_a_command_void: a_command /= Void
 		do
 			implementation.remove_ok_action (a_command, argument)
 		end; -- remove_ok_action
@@ -171,7 +171,7 @@ feature
 			-- by default this label is `apply'.
 		require
 			exists: not destroyed;
-			not_label_void: not (a_label = Void)
+			not_label_void: a_label /= Void
 		do
 			implementation.set_apply_label (a_label)
 		end; -- set_apply_label
@@ -181,7 +181,7 @@ feature
 			-- by default this label is `cancel'.
 		require
 			exists: not destroyed;
-			not_label_void: not (a_label = Void)
+			not_label_void: a_label /=Void
 		do
 			implementation.set_cancel_label (a_label)
 		end; -- set_cancel_label
@@ -191,7 +191,7 @@ feature
 			-- by default this label is `help'.
 		require
 			exists: not destroyed;
-			not_label_void: not (a_label = Void)
+			not_label_void: a_label /=Void
 		do
 			implementation.set_help_label (a_label)
 		end; -- set_help_label
@@ -201,7 +201,7 @@ feature
 			-- by default this label is `ok'.
 		require
 			exists: not destroyed;
-			not_label_void: not (a_label = Void)
+			not_label_void: a_label /=Void
 		do
 			implementation.set_ok_label (a_label)
 		end; -- set_ok_label
@@ -211,6 +211,7 @@ feature
 			-- by default this label is `selection'.
 		require
 			exists: not destroyed
+			not_label_void: a_label /=Void
 		do
 			implementation.set_selection_label (a_label)
 		end; -- set_selection_label
@@ -219,7 +220,7 @@ feature
 			-- Set selection text to `a_text'.
 		require
 			exists: not destroyed;
-			a_text_not_void: not (a_text = Void)
+			a_text_not_void: a_text /= Void
 		do
 			implementation.set_selection_text (a_text)
 		end; -- set_selection_text

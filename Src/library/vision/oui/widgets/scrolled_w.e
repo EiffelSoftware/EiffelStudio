@@ -75,7 +75,7 @@ feature -- Working Area
 			-- Set work area of windon to `a_widget'.
 		require
 			exists: not destroyed;
-			not_a_widget_void: not (a_widget = Void)
+			not_a_widget_void: a_widget /= Void
 		do
 			implementation.set_working_area (a_widget)
 		ensure

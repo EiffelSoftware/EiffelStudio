@@ -25,11 +25,17 @@ inherit
 		export
 			{NONE} all
 		end
-	
-	GB_OBJECT_HANDLER
+		
+	GB_SHARED_PIXMAPS
 		export
 			{NONE} all
-			{GB_WINDOW_SELECTOR} store_layout_constructor, restore_layout_constructor, state_tree
+		undefine
+			Visual_studio_information
+		end
+
+	GB_SHARED_OBJECT_HANDLER
+		export
+			{NONE} all
 		end
 		
 create
@@ -268,6 +274,31 @@ feature -- Access
 			end
 		end
 		
+feature {GB_WINDOW_SELECTOR, GB_TITLED_WINDOW_OBJECT} -- Basic operation
+
+	set_as_root_window is
+			-- Ensure `Current' is the root window of the project,
+			-- which will be launched by the generated application.
+		do
+			if object_handler.root_window_object /= Void then
+					-- We only attempt to update the previous main window object, if there was one.
+				object_handler.root_window_object.update_as_root_window_changing
+			end
+			layout_item.set_pixmap (Icon_titled_window_main @ 1)
+			window_selector_item.set_pixmap (Icon_titled_window_main @ 1)
+			object_handler.set_root_window (Current)
+		end
+		
+	update_as_root_window_changing is
+			-- Update `Current' to reflect that fact that it is no longer the main
+			-- window for the system.
+		require
+			is_root_window: object_handler.root_window_object = Current
+		do
+			layout_item.set_pixmap (pixmap_by_name (type.as_lower))
+			window_selector_item.set_pixmap (pixmap_by_name (type.as_lower))
+		end
+	
 feature {GB_WINDOW_SELECTOR_ITEM, GB_OBJECT_HANDLER} -- Implementation
 		
 	set_window_selector_item (a_window_selector_item: GB_WINDOW_SELECTOR_ITEM) is

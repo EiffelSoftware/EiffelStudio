@@ -321,7 +321,6 @@ feature {GB_DELETE_OBJECT_COMMAND} -- Basic operation
 			window_item: GB_WINDOW_SELECTOR_ITEM
 			all_objects: ARRAYED_LIST [GB_OBJECT]
 			directory_of_root_window: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
-			original_root_index, new_root_index: INTEGER
 			titled_window_object: GB_TITLED_WINDOW_OBJECT
 			command_delete_directory: GB_COMMAND_DELETE_DIRECTORY
 		do
@@ -355,17 +354,7 @@ feature {GB_DELETE_OBJECT_COMMAND} -- Basic operation
 					if directory_of_root_window /= Void and then directory_of_root_window = a_directory then
 						-- We must now select the next root window in the tree, as the root window is contained in
 						-- `a_directory'.
-						original_root_index := all_objects.index_of (object_handler.root_window_object, 1)
-						if original_root_index < objects.count then
-							new_root_index := original_root_index + a_directory.count
-						else
-							new_root_index := 1
-						end
-						titled_window_object ?= all_objects.i_th (new_root_index)
-						check
-							object_was_window: titled_window_object /= Void
-						end
-						titled_window_object.set_as_root_window
+						mark_next_window_as_root (a_directory.count)
 					end
 				end
 				from
@@ -390,6 +379,29 @@ feature {GB_DELETE_OBJECT_COMMAND} -- Basic operation
 			end
 		end
 		
+feature {GB_COMMAND_DELETE_WINDOW_OBJECT} -- Implementation
+		
+	mark_next_window_as_root (index_to_move: INTEGER) is
+			-- Ensure that next window in `Current' is marked as root window.
+		local
+			original_root_index: INTEGER
+			new_root_index: INTEGER
+			titled_window_object: GB_TITLED_WINDOW_OBJECT
+			all_objects: ARRAYED_LIST [GB_OBJECT]
+		do
+			all_objects := objects
+			original_root_index := all_objects.index_of (object_handler.root_window_object, 1)
+			if original_root_index + index_to_move <= all_objects.count then
+				new_root_index := original_root_index + index_to_move
+			else
+				new_root_index := 1
+			end
+			titled_window_object ?= all_objects.i_th (new_root_index)
+			check
+				object_was_window: titled_window_object /= Void
+			end
+			titled_window_object.set_as_root_window
+		end
 
 feature {GB_WINDOW_SELECTOR_DIRECTORY_ITEM} -- Implementation
 
@@ -476,6 +488,8 @@ feature {GB_COMMAND_NAME_CHANGE} -- Implementation
 		local
 			directory_object: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
 			file_name: FILE_NAME
+			--ast_skeleton: AST_SKELETON
+		--	ast_visitor: AST_VISITOR
 		do
 			directory_object := directory_of_window (window_object.window_selector_item)
 			file_name := generated_path
@@ -492,6 +506,9 @@ feature {GB_COMMAND_NAME_CHANGE} -- Implementation
 				rename_file_if_exists (create {DIRECTORY}.make (file_name), old_name + Class_implementation_extension.as_lower + ".e",
 					new_name + Class_implementation_extension.as_lower + ".e")
 					--| FIXME must now go into class, and change name.
+					
+					
+					
 			end
 		end
 

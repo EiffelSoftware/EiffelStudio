@@ -46,10 +46,11 @@ feature -- Access
 	split_position: INTEGER is
 			-- Position from the left/top of the splitter from `Current'.
 		do
-			Result := gtk_paned_struct_child1_size (container_widget)
-			Result := Result.max (minimum_split_position).min (maximum_split_position)
 			if not is_displayed and then user_split_position /= -1 then
 				Result := user_split_position
+			else
+				Result := gtk_paned_struct_child1_size (container_widget)
+				Result := Result.max (minimum_split_position)
 			end
 		end
 

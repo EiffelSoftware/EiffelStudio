@@ -108,8 +108,8 @@ feature -- Status setting
 				enable_modal
 			end
 
-			set_blocking_window (a_window)
 			show
+			set_blocking_window (a_window)
 			block
 			set_blocking_window (Void)
 			
@@ -183,7 +183,6 @@ feature {NONE} -- Implementation
 			on_cancel
 		end
 
-		
 	user_clicked_ok: BOOLEAN
 		-- Has the user explicitly cancelled the dialog.
 

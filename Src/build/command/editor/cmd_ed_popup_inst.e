@@ -44,10 +44,12 @@ feature {NONE}
 
 	execute (arg: ANY) is
 		local
-			list: LINKED_LIST [CMD_INSTANCE];
+			list: LINKED_LIST [CMD_INSTANCE]
+			a_cmd: CMD
 		do
-			if command_editor.edited_command /= Void then
-				list := command_editor.edited_command.instances;
+			if command_editor.command_instance /= Void then
+				a_cmd := command_editor.command_instance.associated_command
+				list := a_cmd.instances;
 				!! edit_list.make (command_editor);
 				edit_list.popup_with_list (list)
 			end

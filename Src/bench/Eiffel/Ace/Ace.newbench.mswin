@@ -4,7 +4,7 @@ root
 	 EWB_WINDOWS (main): "make"
 
 default
-	assertion (no);
+	assertion (require);
 	dead_code_removal (yes);
 -- RTEA version
 	exception_trace (yes);

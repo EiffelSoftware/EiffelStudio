@@ -32,7 +32,6 @@ inherit
 	EB_DEBUG_TOOL_DATA
 		export
 			{NONE} all
-			{APPLICATION_EXECUTION_IMP} optimized_jit_debugging_enabled
 		end
 		
 	EB_SHARED_DEBUG_TOOLS

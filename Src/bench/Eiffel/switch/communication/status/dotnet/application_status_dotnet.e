@@ -17,7 +17,7 @@ inherit
 			set_current_thread_id
 		end
 		
-	EIFNET_DEBUGGER_INFO_ACCESSOR
+	SHARED_EIFNET_DEBUGGER
 
 create {APPLICATION_STATUS_EXPORTER}
 
@@ -37,48 +37,41 @@ feature {APPLICATION_STATUS_EXPORTER} -- Initialization
 			-- Set the various attributes identifying current 
 			-- position in source code.
 		local
-			l_curr_mod_name: STRING
-			l_curr_class_tok, l_curr_feature_tok: INTEGER
-			l_curr_il_offset: INTEGER
-			l_dyn_class_type: CLASS_TYPE
-			l_feature_i: FEATURE_I
-			
-			l_current_stack_info: EIFNET_DEBUGGER_STACK_INFO
+			curr_mod_name: STRING
+			curr_ctok, curr_ftok: INTEGER
+			curr_il_offset: INTEGER
+			dyn_ctype: CLASS_TYPE
+			feat_i: FEATURE_I
+			curr_stack_info: EIFNET_DEBUGGER_STACK_INFO
+			dbg_recorder: IL_DEBUG_INFO_RECORDER
 		do
-			Eifnet_debugger_info.init_current_callstack
-			l_current_stack_info := Eifnet_debugger_info.current_stack_info
-			if l_current_stack_info.is_synchronized then
-				l_curr_mod_name := l_current_stack_info.current_module_name
-				l_curr_class_tok := l_current_stack_info.current_class_token
-				l_curr_feature_tok := l_current_stack_info.current_feature_token
-				if Il_debug_info_recorder.has_info_about_module (l_curr_mod_name) then
-					l_dyn_class_type := Il_debug_info_recorder.class_type_for_module_class_token (l_curr_mod_name, l_curr_class_tok)
-					l_feature_i := Il_debug_info_recorder.feature_i_by_module_feature_token (l_curr_mod_name, l_curr_feature_tok)
-					if l_dyn_class_type /= Void then
-						dynamic_class := l_dyn_class_type.associated_class				
+			Eifnet_debugger.init_current_callstack
+			dbg_recorder := Eifnet_debugger.Il_debug_info_recorder
+			curr_stack_info := Eifnet_debugger.current_stack_info
+			if curr_stack_info.is_synchronized then
+				curr_mod_name := curr_stack_info.current_module_name
+				curr_ctok := curr_stack_info.current_class_token
+				curr_ftok := curr_stack_info.current_feature_token
+				if dbg_recorder.has_info_about_module (curr_mod_name) then
+					dyn_ctype := dbg_recorder.class_type_for_module_class_token (curr_mod_name, curr_ctok)
+					feat_i := dbg_recorder.feature_i_by_module_feature_token (curr_mod_name, curr_ftok)
+					if dyn_ctype /= Void then
+						dynamic_class := dyn_ctype.associated_class				
 				
-						if l_feature_i /= Void then
-							e_feature := l_feature_i.e_feature
+						if feat_i /= Void then
+							e_feature := feat_i.e_feature
+							origin_class := feat_i.written_class
 							body_index := e_feature.body_index
-							origin_class := l_feature_i.written_class
 			
-							l_curr_il_offset := l_current_stack_info.current_il_offset			
-							break_index := Il_debug_info_recorder.feature_eiffel_breakable_line_for_il_offset (l_dyn_class_type, l_feature_i, l_curr_il_offset)
+							curr_il_offset := curr_stack_info.current_il_offset			
+							break_index := dbg_recorder.feature_eiffel_breakable_line_for_il_offset (dyn_ctype, feat_i, curr_il_offset)
 						end
 					end						
-				else
-					l_dyn_class_type := Void
-					l_feature_i := Void					
 				end
-				object_address := l_current_stack_info.current_stack_address					
+				object_address := curr_stack_info.current_stack_address					
 			end
 		end
 	
-feature -- Values
-
-	is_evaluating: BOOLEAN
-			-- Is the debugged application evaluating expression ?	
-
 feature -- Update
 
 	update_on_stopped_state is
@@ -91,12 +84,18 @@ feature -- Update
 			end
 		end
 		
-feature -- settings
+feature -- Values
+
+	is_evaluating: BOOLEAN
+			-- Is the debugged application evaluating expression ?	
+		
+feature -- Changes
 
 	set_is_evaluating (b: BOOLEAN) is
 			-- set is_evaluating to `b'
 		do
 			is_evaluating := b
+			Eifnet_debugger.info.set_is_evaluating (b) -- For optimization purpose
 		end
 		
 feature -- Output
@@ -123,16 +122,19 @@ feature -- Thread info
 			-- Set current thread ID.
 		do
 			Precursor {APPLICATION_STATUS} (tid)
-			eifnet_debugger_info.set_last_icd_thread_id (tid)
+			Eifnet_debugger.info.set_last_icd_thread_id (tid)
 		end
 		
 	refresh_current_thread_id is
+		local
+			dbg_info: EIFNET_DEBUGGER_INFO
 		do
+			dbg_info := Eifnet_debugger.info
 			if current_thread_id = 0 then
-				set_current_thread_id (eifnet_debugger_info.last_icd_thread_id)
+				set_current_thread_id (dbg_info.last_icd_thread_id)
 			end
-			if not eifnet_debugger_info.is_valid_managed_thread_id (current_thread_id) then
-				set_current_thread_id (eifnet_debugger_info.default_managed_thread.thread_id)
+			if not dbg_info.is_valid_managed_thread_id (current_thread_id) then
+				set_current_thread_id (dbg_info.default_managed_thread.thread_id)
 			end
 		end
 		

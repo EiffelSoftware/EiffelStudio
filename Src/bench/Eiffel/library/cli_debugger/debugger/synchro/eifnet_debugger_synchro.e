@@ -7,20 +7,26 @@ indexing
 deferred class
 	EIFNET_DEBUGGER_SYNCHRO
 	
-inherit
-	ICOR_EXPORTER
-
 feature -- Synchro Initialization
 
-	init_dbg_synchronisation is
+	init_dbg_synchronisation (w: EB_VISION_WINDOW) is
 			-- Initialize eStudio/.NET debugger synchronisation
+		local
+			w_impl: EV_WINDOW_IMP
+			p: POINTER
 		do
 			debug ("debugger_eifnet_synchro")
 				io.error.put_string (">>Initialize eStudio/.NET debugger synchronisation%N")
 			end
 			dbg_timer_active := False
 			callback_notification_processing := False
-			c_init_dbg_synchronisation
+			next_estudio_notification_disabled := False
+			
+			w_impl ?= w.implementation
+			if w_impl /= Void then
+				p := w_impl.wel_item
+			end
+			c_init_dbg_synchronisation (p)
 		end
 		
 	terminate_dbg_synchronisation is
@@ -38,10 +44,15 @@ feature -- Synchro Initialization
 			-- Disable next estudio notification
 		do
 			debug ("debugger_trace_synchro")
-				io.error.put_string (">>Disable next estudio notification%N")
+				io.error.put_string ("%N>>Disable next estudio notification%N")
 			end
-			c_disable_next_estudio_notification
+			next_estudio_notification_disabled := True
 		end
+
+	next_estudio_notification_disabled: BOOLEAN
+			-- Proceed deep EiffelStudio notification ?
+			-- (Only at the Eiffel level.)
+			-- i.e: update eb tools
 		
 	is_dbg_synchronizing: BOOLEAN is
 			-- Are we still synchronizing ?
@@ -51,9 +62,10 @@ feature -- Synchro Initialization
 		
 feature -- eStudio callback
 
-	estudio_callback_event is
+	estudio_callback_event (cb_id: INTEGER) is
 			-- Callback trigger for processing at end of dotnet callback
-		deferred
+		do
+			--| To be redefined in EIFNET_DEBUGGER
 		end
 		
 	enable_estudio_callback is
@@ -127,13 +139,15 @@ feature -- Callback Notification
 		do
 			a := s.to_c
 			c_notify_from_estudio ($a)
-		end		
+		end
 	
 feature -- bridge to ICorDebugController->Continue ()
 
 	process_continue (icdc: ICOR_DEBUG_CONTROLLER; a_f_is_out_of_band:BOOLEAN): INTEGER is
 			-- Call `ICorDebugController->Continue (a_f_is_out_of_band)' on `icdc'
 			-- Nota: a dbg_start_timer is performed on `c_dbg_continue'
+		require
+			icdc /= Void and then icdc.item_not_null
 		do
 			Result := c_dbg_continue (icdc.item, a_f_is_out_of_band.to_integer)
 		end
@@ -143,11 +157,37 @@ feature -- Evaluation
 	lock_and_wait_for_callback (icdc: ICOR_DEBUG_CONTROLLER) is
 			-- Lock and wait for callback
 			-- used in evaluation processing.
+		require
+			icdc /= Void and then icdc.item_not_null
 		do
 			c_lock_and_wait_callback (icdc.item)
-		end			
+		end
+		
+feature -- Access to dbg data
 
-feature {NONE} -- External DBG Timer
+	dbg_cb_info_get_callback_id: INTEGER is
+			-- Callback id from stored callback datas
+		do
+			Result := c_dbg_cb_info_get_callback_id
+		end
+
+	dbg_cb_info_pointer_item (i: INTEGER): POINTER is
+			-- Pointer value of i_th item from stored callback datas
+		require
+			valid_index: i > 0 and i < 5
+		do
+			Result := c_dbg_cb_info_pointer_ith (i)
+		end
+
+	dbg_cb_info_integer_item (i: INTEGER): INTEGER is
+			-- Integer value of i_th item from stored callback datas
+		require
+			valid_index: i > 0 and i < 5
+		do
+			Result := c_dbg_cb_info_integer_ith (i)
+		end
+
+feature {NONE} -- External Dbg Sync routine
 
 	c_dbg_is_synchronizing: BOOLEAN is
 		external
@@ -156,9 +196,9 @@ feature {NONE} -- External DBG Timer
 			"dbg_is_synchronizing"
 		end
 
-	c_init_dbg_synchronisation is
+	c_init_dbg_synchronisation (p: POINTER) is
 		external
-			"C use %"cli_debugger.h%" "
+			"C signature (HWND) use %"cli_debugger.h%" "
 		alias
 			"dbg_init_synchro"
 		end
@@ -169,14 +209,6 @@ feature {NONE} -- External DBG Timer
 		alias
 			"dbg_terminate_synchro"
 		end
-
-	c_disable_next_estudio_notification  is
-		external
-			"C use %"cli_debugger.h%" "
-		alias
-			"dbg_disable_next_estudio_notification"
-		end		
-		
 		
 	c_dbg_enable_estudio_callback (obj: EIFNET_DEBUGGER_SYNCHRO; p_cb: POINTER) is
 		external
@@ -233,5 +265,29 @@ feature {NONE} -- External DBG Timer
 		alias
 			"dbg_notify_from_estudio"
 		end
+		
+	c_dbg_cb_info_get_callback_id: INTEGER is
+			-- Access `callback_id' data member of `dbg_cb_info' struct.
+		external
+			"C inline use %"cli_debugger.h%""
+		alias
+			"(EIF_INTEGER)((struct CorDbgCallbackInfo *) dbg_cb_info)->callback_id"
+		end
 
+	c_dbg_cb_info_pointer_ith (i: INTEGER): POINTER is
+			-- Access `ptr1' data member of `dbg_cb_info' struct.
+		external
+			"C inline use %"cli_debugger.h%""
+		alias
+			"DBG_CB_INFO_POINTER_ITEM($i)"
+		end
+		
+	c_dbg_cb_info_integer_ith (i: INTEGER): INTEGER is
+			-- Access `ptr1' data member of `dbg_cb_info' struct.
+		external
+			"C inline use %"cli_debugger.h%""
+		alias
+			"DBG_CB_INFO_INTEGER_ITEM($i)"
+		end
+		
 end -- class EIFNET_DEBUGGER_SYNCHRO

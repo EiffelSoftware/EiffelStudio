@@ -6,6 +6,9 @@ indexing
 
 class
 	SHARED_EIFNET_DEBUGGER
+	
+inherit
+	EIFNET_EXPORTER
 
 feature -- Access
 

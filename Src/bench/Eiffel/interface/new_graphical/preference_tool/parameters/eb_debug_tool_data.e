@@ -52,11 +52,6 @@ feature -- Access
 		do
 			Result := boolean_resource_value ("generating_type_evaluation", True)			
 		end
-		
-	optimized_jit_debugging_enabled: BOOLEAN is
-		do
-			Result := boolean_resource_value ("enable_optimized_jit_debugging", False)			
-		end		
 
 	default_displayed_string_size: INTEGER is
 			-- Default size of string to be retrieved from the application

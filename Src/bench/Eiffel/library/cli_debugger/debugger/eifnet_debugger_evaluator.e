@@ -335,7 +335,7 @@ feature {NONE} -- Backup state
 			-- Restore saved debugger state information
 		do
 			eifnet_debugger.set_last_managed_callback (saved_last_managed_callback)
-		end	
+		end
 		
 feature {NONE}
 
@@ -438,7 +438,6 @@ feature {NONE}
 			else			
 					--| And we wait for all callback to be finished
 				eifnet_debugger.lock_and_wait_for_callback (eifnet_debugger.icor_debug_controller)
-				eifnet_debugger.reset_data_changed
 				if 
 					eifnet_debugger.last_managed_callback_is_exception 
 				then
@@ -446,10 +445,9 @@ feature {NONE}
 					--			as an Eval exception, maybe we should manage this differently
 					last_eval_is_exception := True
 					debug ("DEBUGGER_TRACE_EVAL")
-						display_last_exception
+						eifnet_debugger.display_last_exception
 						io.error.put_string ("EIFNET_DEBUGGER.debug_output_.. :: WARNING Exception occurred %N")
 					end
-					eifnet_debugger.do_clear_exception
 				elseif eifnet_debugger.last_managed_callback_is_eval_exception then
 					-- Exception !!			
 					last_eval_is_exception := True
@@ -467,6 +465,7 @@ feature {NONE}
 			last_app_status /= Void
 		local
 			l_icd_eval: ICOR_DEBUG_EVAL
+			lmcb: INTEGER
 		do
 			l_icd_eval := last_icor_debug_eval
 			if l_icd_eval /= Void then
@@ -481,23 +480,22 @@ feature {NONE}
 			else
 					--| And we wait for all callback to be finished
 				eifnet_debugger.lock_and_wait_for_callback (eifnet_debugger.icor_debug_controller)
-				eifnet_debugger.reset_data_changed
+				lmcb := eifnet_debugger.last_managed_callback
 				if 
-					eifnet_debugger.last_managed_callback_is_exception 
+					eifnet_debugger.managed_callback_is_exception (lmcb)
 				then
 					-- FIXME jfiat [2004/12/17] : for now we consider an exception durign evaluation
 					--			as an Eval exception, maybe we should manage this differently
 					last_eval_is_exception := True
 					Result := Void --"WARNING: Could not evaluate output"
 					debug ("DEBUGGER_TRACE_EVAL")
-						display_last_exception
+						eifnet_debugger.display_last_exception
 						io.error.put_string ("EIFNET_DEBUGGER.debug_output_.. :: WARNING Exception occurred %N")
 					end
-					eifnet_debugger.do_clear_exception
-				elseif eifnet_debugger.last_managed_callback_is_eval_exception then
+				elseif eifnet_debugger.managed_callback_is_eval_exception (lmcb) then
 					Result := Void
 					last_eval_is_exception := True
-				elseif eifnet_debugger.last_managed_callback_is_exit_process then
+				elseif eifnet_debugger.managed_callback_is_exit_process (lmcb) then
 					eifnet_debugger.notify_exit_process_occurred
 					Result := Void
 				else				
@@ -512,28 +510,6 @@ feature {NONE}
 		do
 			last_icor_debug_eval.clean_on_dispose
 			last_icor_debug_eval := Void
-		end
-
-	display_last_exception is
-			-- Display information related to Last Exception
-			-- debug purpose only
-		require
-			eifnet_debugger.last_managed_callback_is_exception 
-		local
-			l_exception_info: EIFNET_DEBUG_VALUE_INFO
-			l_exception: ICOR_DEBUG_VALUE
-		do
-			l_exception := eifnet_debugger.new_active_exception_value
-			if l_exception /= Void then
-				create l_exception_info.make (l_exception)
-
-				io.error.put_string ("%N%NException ....%N")
-				io.error.put_string ("%T Class   => " + l_exception_info.value_class_name + "%N")
-				io.error.put_string ("%T Module  => " + l_exception_info.value_module_file_name + "%N")
-				l_exception_info.icd_prepared_value.clean_on_dispose
-				l_exception_info.clean
-				l_exception.clean_on_dispose
-			end
 		end
 
 feature {NONE} -- Implementation : ICor... once per session

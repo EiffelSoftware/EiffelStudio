@@ -9,23 +9,45 @@ class
 
 inherit
 	ICOR_OBJECT
+		export
+			{EIFNET_DEBUGGER_SYNCHRO} item
+		end
 
 create 
 	make_by_pointer
 	
+feature -- Access
+
+	item_not_null: BOOLEAN is
+		do
+			Result := item /= Default_pointer
+		end
+
 feature {ICOR_EXPORTER} -- Access
 
 	stop (a_timeout: INTEGER) is
+			-- Stop performs a cooperative stop on all threads running managed
+			-- code in the process.  Threads running unmanaged code are
+			-- suspended .  If the cooperative stop fails due to a deadlock, all 
+			-- threads are suspended (and E_TIMEOUT is returned)
+			--
+			-- NOTE: This function is the one function in the debugging API
+			-- that is synchronous. When Stop returns with S_OK, the process
+			-- is stopped. (No callback will be given to notify of the stop.)
+			-- The debugger must call Continue when it wishes to allow
+			-- the process to resume running.
+
+			-- NOTA: this may be only running "managed" code are suspended ...
+			-- The doc is not clear on that point.
 		do
 			debug ("debugger_eifnet_data")
 				io.error.put_string ("[>] ICOR_DEBUG_CONTROLLER.stop ("+a_timeout.out+")%N")
-			end			
+			end
 			last_call_success := cpp_stop (item, a_timeout)
---		ensure
---			success: last_call_success = 0 or else last_call_success = 1
 		end
 
 	continue (a_f_is_out_of_band: BOOLEAN) is
+			-- NOTA: what about is_out_of_band ... processing ?
 		local
 			retried: BOOLEAN
 		do
@@ -97,6 +119,11 @@ feature {ICOR_EXPORTER} -- Access
 		end
 
 	terminate (a_exitcode: INTEGER) is
+			-- Terminate terminates the process (with extreme prejudice, I might add).
+			
+			-- NOTE: If the process or appdomain is stopped when Terminate is called,
+			-- the process or appdomain should be continued using Continue so that the
+			-- ExitProcess or ExitAppDomain callback is received.
 		do
 			last_call_success := cpp_terminate (item, a_exitcode)
 		end
@@ -178,7 +205,7 @@ feature {NONE} -- Implementation
 			"EnumerateThreads"
 		end
 
-feature {NONE, ICOR_DEBUG_MANAGED_CALLBACK} -- Query
+feature {EIFNET_DEBUGGER} -- Query
 
 	frozen cpp_query_interface_ICorDebugController (obj: POINTER; a_p: POINTER): INTEGER is
 		external

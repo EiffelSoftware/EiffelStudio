@@ -96,7 +96,6 @@ rt_private Callback_ids dbg_last_callback_id;
 #define LOCKED_DBG_CB_ID_VALUE LOCKED_VALUE(dbg_last_callback_id)
 #define LOCKED_DBG_CB_ID_SET_VALUE(v) LOCKED_SET_VALUE(dbg_last_callback_id, v)
 #define LOCKED_DBG_CB_ID_IS_EQUAL(v) LOCKED_VALUE_IS_EQUAL(dbg_last_callback_id, v)
-#define LOCKED_DBG_CB_NAME Callback_name((e_callback_id) LOCKED_DBG_CB_ID_VALUE)
 
 rt_private UINT dbg_timer;
 #define LOCKED_DBG_TIMER_VALUE LOCKED_VALUE(dbg_timer)
@@ -113,11 +112,6 @@ rt_private BOOL dbg_start_timer_requested;
 #define LOCKED_DBG_START_TIMER_REQUESTED LOCKED_VALUE(dbg_start_timer_requested)
 #define LOCKED_DBG_START_TIMER_REQUEST LOCKED_SET_VALUE(dbg_start_timer_requested, true)
 #define LOCKED_DBG_START_TIMER_RESET LOCKED_SET_VALUE(dbg_start_timer_requested, false)
-
-rt_private BOOL dbg_estudio_notification_enabled;
-#define ESTUDIO_NOTIFICATION_ENABLED LOCKED_VALUE(dbg_estudio_notification_enabled)
-#define ENABLE_ESTUDIO_NOTIFICATION LOCKED_SET_VALUE(dbg_estudio_notification_enabled, true)
-#define DISABLE_ESTUDIO_NOTIFICATION LOCKED_SET_VALUE(dbg_estudio_notification_enabled, false)
 
 rt_private BOOL dbg_estudio_notification_processing;
 #define INSIDE_ESTUDIO_NOTIFICATION LOCKED_VALUE(dbg_estudio_notification_processing)
@@ -155,7 +149,6 @@ rt_private void reset_variables() {
 	LOCKED_DBG_KEEP_SYNCHRO;
 	LOCKED_DBG_EXIT_PROCESS_RESET;
 	LOCKED_ES_NOTIFICATION_STOP;
-	ENABLE_ESTUDIO_NOTIFICATION;
 }
 
 #define INSIDE_ESTUDIO_THREAD (estudio_thread_id == GetCurrentThreadId())
@@ -215,14 +208,6 @@ rt_private void raise_error (HRESULT hr, char *msg); /* Raise error */
 #define UNLOCK_DEBUG_OUTPUT_ACCESS CLI_MUTEX_UNLOCK(trace_mutex, "")
 
 rt_private CLI_MUTEX_TYPE *trace_mutex;
-
-/*
-#define LOCK_DEBUG_OUTPUT_ACCESS 
-#define UNLOCK_DEBUG_OUTPUT_ACCESS 
-#define CLI_MUTEX_CREATE(m,msg) 
-#define CLI_MUTEX_DESTROY(m,msg)
-*/
-
 rt_private LONG dbg_msg_displayed_index;
 rt_public void trace_event (char* mesg)
 {
@@ -292,15 +277,15 @@ rt_public void trace_event_dbg_dword (char* mesg,DWORD dw)
 #endif
 
 #ifdef DBGTRACE_ENABLED
-#define DBGTRACE(msg) trace_event(msg);
-#define DBGTRACE2(msg,msg2) trace_event(msg, msg2);
-#define DBGTRACE_HR(msg1,hr) trace_event_dbg_hr(msg1, hr);
-#define DBGTRACE_DWORD(msg1,dw) trace_event_dbg_dword(msg1, dw);
+#	 define DBGTRACE(msg) trace_event(msg);
+#	 define DBGTRACE2(msg,msg2) trace_event(msg, msg2);
+#	 define DBGTRACE_HR(msg1,hr) trace_event_dbg_hr(msg1, hr);
+#	 define DBGTRACE_DWORD(msg1,dw) trace_event_dbg_dword(msg1, dw);
 #else
-#define DBGTRACE(msg)
-#define DBGTRACE2(msg,msg2)
-#define DBGTRACE_HR(msg,hr)
-#define DBGTRACE_DWORD(msg,dw)
+#	 define DBGTRACE(msg)
+#	 define DBGTRACE2(msg,msg2)
+#	 define DBGTRACE_HR(msg,hr)
+#	 define DBGTRACE_DWORD(msg,dw)
 #endif
 
 #ifdef DBGTRACE_ENABLED
@@ -309,6 +294,33 @@ rt_private UINT once_enter_ec_cb;
 #endif
 
 
+/*
+//////////////////////////////////////////////////
+/// Synchro info                               ///
+//////////////////////////////////////////////////
+*/
+rt_private HWND dbg_hWnd_for_timer;
+
+rt_public struct CorDbgCallbackInfo * dbg_cb_info;
+
+rt_public void clear_dbg_cb_info() {
+	DBGTRACE("[CB] clear Cb Info ");
+
+	dbg_cb_info->callback_id = (Callback_ids) 0;
+	dbg_cb_info->items[0].itu_ptr = NULL;
+	dbg_cb_info->items[1].itu_ptr = NULL;
+	dbg_cb_info->items[2].itu_ptr = NULL;
+	dbg_cb_info->items[3].itu_ptr = NULL;
+}
+rt_public void reset_dbg_cb_info() {
+	if (dbg_cb_info != NULL) {
+		clear_dbg_cb_info();
+	} else {
+		DBGTRACE("[CB] create Cb Info ");
+		dbg_cb_info = (struct CorDbgCallbackInfo*) CoTaskMemAlloc ( sizeof (struct CorDbgCallbackInfo));
+		dbg_cb_info->items = (struct CorDbgCallbackInfo_item*) CoTaskMemAlloc ( 4 * sizeof (struct CorDbgCallbackInfo_item));
+	}
+}
 
 
 /*
@@ -325,6 +337,8 @@ rt_private void dbg_close_estudio_thread_handle () {
 rt_public void dbg_init_estudio_thread_handle () {
 	HANDLE pseudo_th_hdl;
 	BOOL fSuccess;
+
+	reset_dbg_cb_info();
 
 	pseudo_th_hdl = GetCurrentThread();
 	estudio_thread_id = GetCurrentThreadId();
@@ -348,12 +362,13 @@ rt_public void dbg_init_estudio_thread_handle () {
 rt_private void dbg_suspend_estudio_thread () {
 	DWORD result;
 	result = SuspendThread (estudio_thread_handle);
+	ENSURE((result == (DWORD) 0), "Error during dbg_suspend_estudio_thread");
 }
 
 rt_private void dbg_resume_estudio_thread () {
 	DWORD result;
 	result = ResumeThread (estudio_thread_handle);
-	ENSURE((result != (DWORD) -1), "Error during dbg_resume_estudio_thread");
+	ENSURE((result > (DWORD) 0), "Error during dbg_resume_estudio_thread");
 }
 #define DBG_INIT_CRITICAL_SECTION	dbg_init_critical_section ()
 #define DBG_INIT_ESTUDIO_THREAD_HANDLE dbg_init_estudio_thread_handle ()
@@ -376,13 +391,12 @@ rt_public EIF_BOOLEAN dbg_is_synchronizing () {
 	return EIF_TEST(LOCKED_DBG_SYNCHRO_IS_ON);
 }
 rt_public void dbg_notify_from_estudio (char * str) {
-#ifdef DBGTRACE_ENABLED
 	DBGTRACE2("[ES] From ES ", str);
-#endif
 }
 
-rt_public void dbg_init_synchro () {
+rt_public void dbg_init_synchro (HWND hWnd) {
 	/* Initialize synchronisation */
+	dbg_hWnd_for_timer = hWnd;
 #ifdef DBGTRACE_ENABLED
 	CLI_MUTEX_CREATE(trace_mutex, "");
 #endif
@@ -396,14 +410,8 @@ rt_public void dbg_terminate_synchro () {
 	LOCKED_DBG_STOP_SYNCHRO;
 	/* Release dbg in case dbg is waiting and stucked */
 	LOCKED_DBG_STATE_SET_VALUE (2); 
+	dbg_hWnd_for_timer = NULL;
 	DBGTRACE("[Synchro|ES] Terminate Synchro: done");
-}
-rt_public void dbg_disable_next_estudio_notification () {
-	/* Do not process next eStudio notification */
-	DBGTRACE("[Synchro|ES] Skip next notification: start");
-	REQUIRE (LOCKED_DBG_TIMER_IS_NOT_SET, "timer not zero")
-	DISABLE_ESTUDIO_NOTIFICATION;
-	DBGTRACE("[Synchro|ES] Skip next notification: done");
 }
 
 rt_public void dbg_enable_estudio_callback (EIF_OBJECT estudio_cb_obj, EIF_POINTER estudio_cb_event) {
@@ -411,18 +419,20 @@ rt_public void dbg_enable_estudio_callback (EIF_OBJECT estudio_cb_obj, EIF_POINT
 	estudio_callback_event	= estudio_cb_event;
 }
 
-
-rt_private void dbg_trigger_estudio_callback_event () {
+rt_private void dbg_trigger_estudio_callback_event (Callback_ids cb_id) {
 	/* Enable callback notification for EC exit */
+	REQUIRE(INSIDE_ESTUDIO_THREAD, "notification inside in eStudio thread !!")
 	LOCKED_ES_NOTIFICATION_START;
 	if (estudio_callback_event != NULL) {
-		(FUNCTION_CAST (void, (EIF_REFERENCE)) estudio_callback_event) (eif_access (estudio_callback_object));
+		(FUNCTION_CAST (void, (EIF_REFERENCE, Callback_ids)) estudio_callback_event) (eif_access (estudio_callback_object), cb_id);
 	}
 	LOCKED_ES_NOTIFICATION_STOP;
 }
 
-#define DBG_NOTIFY_ESTUDIO  \
-	dbg_trigger_estudio_callback_event ();
+#define DBG_NOTIFY_ESTUDIO(cb_id)  \
+	DBGTRACE("[Synchro] Notify EC : START"); \
+	dbg_trigger_estudio_callback_event (cb_id); \
+	DBGTRACE("[Synchro] Notify EC : END");
 
 /*
 ///////////////////////////////////////////////////////////
@@ -432,6 +442,7 @@ rt_private void dbg_trigger_estudio_callback_event () {
 
 rt_public EIF_INTEGER dbg_continue (void* icdc, BOOL a_f_is_out_of_band) {
 	HRESULT hr;
+	REQUIRE(INSIDE_ESTUDIO_THREAD, "notification inside in eStudio thread !!")
 	DBGTRACE("[???] start dbg_continue");
 	if ((INSIDE_ESTUDIO_NOTIFICATION) || (OUTSIDE_ESTUDIO_THREAD)) {
 		DBGTRACE("[???] Request a Start timer");
@@ -440,7 +451,7 @@ rt_public EIF_INTEGER dbg_continue (void* icdc, BOOL a_f_is_out_of_band) {
 		dbg_start_timer();
 	}
 	hr = ((ICorDebugController*)icdc)->Continue (a_f_is_out_of_band);
-	DBGTRACE_HR("[???] ICorDebugController->Continue(false) = ", (HRESULT)hr);
+	DBGTRACE_HR("[???] ICorDebugController->Continue(..) = ", (HRESULT)hr);
 	return hr;
 }
 
@@ -466,7 +477,7 @@ rt_public void dbg_start_timer () {
 	once_enter_cb = 0;
 #endif
 	LOCKED_DBG_START_TIMER_RESET;
-	LOCKED_DBG_TIMER_SET_VALUE (SetTimer (NULL, 0 /* ignored with HWnd NULL */, 10 /* millisecond */, (TIMERPROC) dbg_timer_callback) );
+	LOCKED_DBG_TIMER_SET_VALUE (SetTimer (dbg_hWnd_for_timer, 12345678 /* ignored with HWnd NULL */, 10 /* millisecond */, (TIMERPROC) dbg_timer_callback) );
 
 	DBGTRACE_DWORD("[???] timer started = ", LOCKED_DBG_TIMER_VALUE);
 	ENSURE(LOCKED_DBG_TIMER_IS_SET, "dbg_timer created")
@@ -477,7 +488,7 @@ rt_public void dbg_stop_timer () {
 	BOOL hr;
 	REQUIRE (LOCKED_DBG_TIMER_IS_SET, "timer not zero")
 	DBGTRACE("[???] STOP timer");
-	hr = KillTimer (NULL, dbg_timer);
+	hr = KillTimer (dbg_hWnd_for_timer, dbg_timer);
 	LOCKED_DBG_TIMER_SET_VALUE (0);
 
 #ifdef DBGTRACE_ENABLED
@@ -503,13 +514,14 @@ rt_public void dbg_restore_cb_notification_state () {
 
 /*
 ///////////////////////////////////////////////////////////
-/// dbg_timer_callback :: EC running               ///
+/// dbg_timer_callback :: EC running                    ///
 ///////////////////////////////////////////////////////////
 */
 rt_public void CALLBACK dbg_timer_callback (HWND hwnd, UINT uMsg, UINT idEvent, DWORD dwTime) {
+	Callback_ids cb_id;
 	DBGTRACE("[ES] enter timer action");
 	if (LOCKED_DBG_STATE_IS_NOT_EQUAL (1)) {
-//<not 1>---------------------------------------------------------//
+		/* <not 1> */
 #ifdef DBGTRACE_ENABLED
 		if (once_enter_ec_cb == 0) {
 			DBGTRACE("[ES] waiting for callback event");
@@ -518,59 +530,50 @@ rt_public void CALLBACK dbg_timer_callback (HWND hwnd, UINT uMsg, UINT idEvent, 
 #endif
 		return;
 	} else {
-//<1>---< dbg waiting >------------------------------------------//
+		/* <1> Callback occurred and Dbg is waiting */
 		dbg_stop_timer ();
+		cb_id = (Callback_ids) LOCKED_DBG_CB_ID_VALUE;
 		DBGTRACE("[ES] will give hand to dbg and SUSPEND itself");
-//<2>---< give hand to dbg >-------------------------------------//
-		ENABLE_ESTUDIO_NOTIFICATION;
+		/* <2> Give hand to dbg */
 		LOCKED_DBG_STATE_INCREMENT;
+		/* <3> */
 		DBG_SUSPEND_ESTUDIO_THREAD;
-//<4>------------------------------------------------------------//
-		if (ESTUDIO_NOTIFICATION_ENABLED) {
-			DBGTRACE("[Synchro|ES] Notify EC : START");
-			DBG_NOTIFY_ESTUDIO;
-			DBGTRACE("[Synchro|ES] Notify EC : END");
-#ifdef DBGTRACE_ENABLED
-		} else {
-			DBGTRACE("[Synchro|ES] Notify EC : Skipped");
-#endif
-		}
+		/* <4> */
+		DBG_NOTIFY_ESTUDIO(cb_id);
 
 		if (LOCKED_DBG_STATE_IS_EQUAL (4)) {
 			DBGTRACE("[ES] exit timer action and unlock dbg ");
-			LOCKED_DBG_STATE_INCREMENT;
 			if (LOCKED_DBG_SYNCHRO_IS_ON) {
-				LOCKED_DBG_STATE_SET_VALUE (0);
 				if (LOCKED_DBG_START_TIMER_REQUESTED) {
+					/* safe: dbg_state is 4, then the timer will wait for it to be 1 */
 					dbg_start_timer ();
+					LOCKED_DBG_STATE_SET_VALUE (0); /* Reset */
 				}
-#ifdef DBGTRACE_ENABLED
 				else {
 					DBGTRACE("[ES] start timer Not Requested !!");
+					LOCKED_DBG_STATE_INCREMENT; /* Give hand to cb */
+					DBGTRACE("[ES] exit timer callback (timer is off) !!");
 				}
-#endif
 			}
-#ifdef DBGTRACE_ENABLED
 			else {
+				LOCKED_DBG_STATE_INCREMENT;
 				DBGTRACE("[ES] exit timer callback WITHOUT continue synchro !!");
 			}
-#endif
-		} // Otherwise, this means an eval forced the priority
-#ifdef DBGTRACE_ENABLED
+		} /* Otherwise, this means an eval forced the priority */
 		else {
 			DBGTRACE("[ES] exit timer callback WITHOUT unlocking dbg, already done !!");
 		}
-#endif
 	}
 }
 
 /*
 ///////////////////////////////////////////////////////////
-/// dbg_lock_and_wait_callback :: EC evaluation    ///
+/// dbg_lock_and_wait_callback :: EC evaluation         ///
 ///////////////////////////////////////////////////////////
 */
 
 rt_public void dbg_lock_and_wait_callback (void* icdc) {
+	Callback_ids cb_id;
 
 	/*** Local  ***/
 #ifdef DBGTRACE_ENABLED
@@ -593,24 +596,24 @@ rt_public void dbg_lock_and_wait_callback (void* icdc) {
 
 	LOCKED_DBG_CB_ID_SET_VALUE(CB_NONE);
 	if (LOCKED_DBG_STATE_IS_EQUAL (4)) {
-		// We are in notification processing
-		// we need evaluation functionalities
-		// so we force the priority and overtake the estudio unlocking
+		/* We are in notification processing
+		 * we need evaluation functionalities
+		 * so we force the priority and overtake the estudio unlocking */
 		DBGTRACE("[ES::Eval] estudio into NOTIFY, eval forced, then estudio will end right away");
 		LOCKED_DBG_STATE_INCREMENT;
 	}
 
-	// Initialize data
-	// at begining we don't care about past
+	/* Initialize data
+	 * at begining we don't care about past */
 	eval_callback_proceed = false;
 
-	// Process the evaluation :
+	/* Process the evaluation : */
 	hr = ((ICorDebugController*)icdc)->Continue (false);
 	DBGTRACE_HR("[ES::Eval] Start effective evaluation: ICorDebugController->Continue(false) = ", (HRESULT)hr);
 	if (hr < 0) { eval_callback_proceed = true; }
 
 	while (!eval_callback_proceed) {
-		// While we haven't reach "eval callback", and proceed it 
+		/* While we haven't reach "eval callback", and proceed it  */
 
 #ifdef DBGTRACE_ENABLED
 		once_enter = 0;
@@ -627,8 +630,9 @@ rt_public void dbg_lock_and_wait_callback (void* icdc) {
 		
 		/* now check if last callback is about evaluating
 		 * only now, after synchronized with debugger, otherwise we may missed one */
-		DBGTRACE2("[ES::Eval] LastCallback = ", LOCKED_DBG_CB_NAME);
-		switch (LOCKED_DBG_CB_ID_VALUE) {
+		cb_id = (Callback_ids) LOCKED_DBG_CB_ID_VALUE;
+		DBGTRACE2("[ES::Eval] LastCallback = ", Callback_name(cb_id));
+		switch (cb_id) {
 			case CB_EVAL_COMPLETE:
 			case CB_EVAL_EXCEPTION:
 				eval_callback_proceed = true;
@@ -657,7 +661,10 @@ rt_public void dbg_lock_and_wait_callback (void* icdc) {
 		DBGTRACE("[ES::Eval] will give hand to dbg and SUSPEND itself");
 		LOCKED_DBG_STATE_INCREMENT;
 		DBG_SUSPEND_ESTUDIO_THREAD;
+
 		/* EC's thread has been suspended And resumed by dbg's thread */
+		DBG_NOTIFY_ESTUDIO(cb_id);
+
 		DBGTRACE("[ES::Eval] call back finished");
 		LOCKED_DBG_STATE_INCREMENT;
 		DBGTRACE("[ES::Eval] eval finished");
@@ -678,7 +685,7 @@ rt_public void dbg_lock_and_wait_callback (void* icdc) {
 rt_public void dbg_debugger_before_callback (Callback_ids callback_id) {
 	REQUIRE(!LOCKED_CALLBACK_PROCESSING, "No other callback processing")
 	LOCKED_DBG_CB_ID_SET_VALUE (callback_id);
-	DBGTRACE2("[CB] ENTER CALLBACK = ", LOCKED_DBG_CB_NAME);
+	DBGTRACE2("[CB] ENTER CALLBACK = ", Callback_name(callback_id));
 	LOCKED_CALLBACK_START;
 	/* It is not possible to have 2 callbacks at the same time, 
 	 * since it is supposed to be in the same thread ...  */
@@ -686,10 +693,10 @@ rt_public void dbg_debugger_before_callback (Callback_ids callback_id) {
 	once_enter_cb = 0;
 #endif
 	while (LOCKED_DBG_STATE_IS_EQUAL (4)) {
-//<4>---< wait for ec to finish >--------------------------------//
+		/* <4> Wait for ec to finish */
 		if (callback_id == CB_CREATE_PROCESS) {
-				/* Special case here to let EiffelStudio debugger to have time
-				 * to refresh itself before starting debugging. */
+			/* Special case here to let EiffelStudio debugger to have time
+			 * to refresh itself before starting debugging. */
 			Sleep (100);
 		}
 #ifdef DBGTRACE_ENABLED
@@ -699,12 +706,12 @@ rt_public void dbg_debugger_before_callback (Callback_ids callback_id) {
 		}
 #endif
 	}
-	// we set it again, in case this is unset by dbg_stop_timer
-	// Let's tell the timer we are ready
+	/* we set it again, in case this is unset by dbg_stop_timer
+	 * Let's tell the timer we are ready 						*/
 	DBGTRACE("2 - [CB] enter dbg callback");
 	LOCKED_DBG_STATE_SET_VALUE (1);
 
-//<1>---< give hand to ec >--------------------------------------//
+	/* <1> give hand to ec */
 	DBGTRACE("3 - [CB] now s=1, it is ec's turn");
 #ifdef DBGTRACE_ENABLED
 	once_enter_cb = 0;
@@ -715,14 +722,14 @@ rt_public void dbg_debugger_before_callback (Callback_ids callback_id) {
 		DBGTRACE("3.3 - [CB] now s=2, we by pass ec's turn, because dbg_keep_synchro == 0");
 	} else {
 		while (LOCKED_DBG_STATE_IS_EQUAL (1)) {
-//<1>---< wait for ec to finish >--------------------------------//
+			/* <1> Wait for ec to finish */
 			if (callback_id == CB_CREATE_PROCESS) {
-					/* Special case here to let EiffelStudio debugger to have time
-					 * to refresh itself before starting debugging. */
+				/* Special case here to let EiffelStudio debugger to have time
+				 * to refresh itself before starting debugging. */
 				Sleep (100);
 			}
-			// Dbg wait for the Ec to call back
-			// no sleep for a spinlock (active waiting)
+			/* Dbg wait for the Ec to call back 
+			 * no sleep for a spinlock (active waiting) */
 #ifdef DBGTRACE_ENABLED
 			if (once_enter_cb == 0) {
 				DBGTRACE("3.5 - [CB] wait at entrance door");
@@ -731,28 +738,28 @@ rt_public void dbg_debugger_before_callback (Callback_ids callback_id) {
 #endif
 		}
 	}
-//<2>---< ec waiting >-------------------------------------------//
+	/* <2> ec is waiting */
 	LOCKED_DBG_STATE_INCREMENT;
-//<3>---< ec waiting >-------------------------------------------//
-	DBGTRACE2("5 - [CB] start exec callback :", LOCKED_DBG_CB_NAME);
-	// Executing callback code
-	// and then come back by dbg_debugger_after_callback ...
+	/* <3> ec is waiting */
+	Sleep(2);
+	DBGTRACE2("5 - [CB] start exec callback :", Callback_name(callback_id));
+	/* Executing callback, then come back to dbg_debugger_after_callback */
 }
 
 rt_public void dbg_debugger_after_callback (Callback_ids callback_id) {
-//<3>---< come back from callback >------------------------------//
-	DBGTRACE2("6 - [CB] end exec callback : ", LOCKED_DBG_CB_NAME);
+	/* <3> come back from callback */
+	DBGTRACE2("6 - [CB] end exec callback : ", Callback_name(callback_id));
 
 	if (callback_id == CB_EXIT_PROCESS) {
 		LOCKED_DBG_EXIT_PROCESS_NOTIFY;
 	}
 
-//<4>---< give back the hand to ec >-----------------------------//
+	/* <4> give back the hand to ec */
 	LOCKED_DBG_STATE_INCREMENT;
 	DBGTRACE("7 - [CB] RESUME ES");
 	DBG_RESUME_ESTUDIO_THREAD;
-	DBGTRACE2("8 - [CB] EXIT CALLBACK = ", LOCKED_DBG_CB_NAME);
-	// Callback done
+	DBGTRACE2("8 - [CB] EXIT CALLBACK = ", Callback_name(callback_id));
+	/* Callback done */
 	LOCKED_CALLBACK_STOP;
 }
 

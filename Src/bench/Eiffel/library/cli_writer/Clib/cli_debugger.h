@@ -10,15 +10,37 @@
 extern "C" {
 #endif
 
+struct CorDbgCallbackInfo_item {
+	union {
+		IUnknown* itu_ptr;
+		EIF_INTEGER itu_int;
+	};
+};
+
+struct CorDbgCallbackInfo {
+	Callback_ids callback_id;
+	struct CorDbgCallbackInfo_item * items;
+};
+extern struct CorDbgCallbackInfo * dbg_cb_info;
+extern void clear_dbg_cb_info();
+#define CLEAR_DBG_CB_INFO clear_dbg_cb_info();
+#define SET_DBG_CB_INFO_CALLBACK_ID(v) dbg_cb_info->callback_id = v;
+#define SET_DBG_CB_INFO_POINTER(index,v) dbg_cb_info->items[index - 1].itu_ptr = v;
+#define SET_DBG_CB_INFO_INTEGER(index,v) dbg_cb_info->items[index - 1].itu_int = v;
+#define SET_DBG_CB_INFO_DWORD(index,v) dbg_cb_info->items[index - 1].itu_int = v;
+#define SET_DBG_CB_INFO_BOOL(index,v) dbg_cb_info->items[index - 1].itu_int = v;
+#define DBG_CB_INFO_POINTER_ITEM(index) dbg_cb_info->items[index - 1].itu_ptr
+#define DBG_CB_INFO_INTEGER_ITEM(index) dbg_cb_info->items[index - 1].itu_int
+
+
 extern EIF_INTEGER get_cordebug (LPWSTR a_dbg_version, EIF_POINTER ** );
 extern EIF_INTEGER dbg_continue (void*, BOOL);
 
 extern EIF_INTEGER dbg_timer_id ();
 extern EIF_BOOLEAN dbg_is_synchronizing();
-extern void dbg_init_synchro();
+extern void dbg_init_synchro(HWND hWnd);
 extern void dbg_notify_from_estudio(char*);
 extern void dbg_terminate_synchro ();
-extern void dbg_disable_next_estudio_notification();
 
 extern void dbg_enable_estudio_callback (EIF_OBJECT estudio_cb_obj, EIF_POINTER estudio_cb_event);
 

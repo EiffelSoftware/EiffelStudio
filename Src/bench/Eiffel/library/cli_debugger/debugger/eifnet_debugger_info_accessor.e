@@ -8,7 +8,8 @@ class
 	EIFNET_DEBUGGER_INFO_ACCESSOR
 	
 inherit
-	ANY
+	
+	REFACTORING_HELPER
 
 	SHARED_IL_DEBUG_INFO_RECORDER 
 		export 
@@ -23,11 +24,36 @@ inherit
 	EIFNET_DEBUGGER_CONTROL_CONSTANTS
 		export
 			{NONE} all
-		end				
+		end
+
+	EIFNET_DEBUGGER_UNMANAGED_CALLBACK_CONSTANTS
+		export
+			{NONE} all
+		end
+
+	EIFNET_DEBUGGER_MANAGED_CALLBACK_CONSTANTS
+		export
+			{NONE} all
+		end
+
+	EIFNET_EXPORTER
 	
 feature {EIFNET_EXPORTER}
 
+	reset_info is
+		do
+			Eifnet_debugger_info.reset
+			Callback_info.reset
+		end
+
 	Eifnet_debugger_info: EIFNET_DEBUGGER_INFO is
+		indexing
+			once_status: global
+		once
+			create Result.make
+		end
+
+	Callback_info: EIFNET_DEBUGGER_CALLBACK_INFO is
 		indexing
 			once_status: global
 		once
@@ -40,55 +66,22 @@ feature {EIFNET_EXPORTER}
 			Result.set_debugger_info (Eifnet_debugger_info)
 		end
 
-feature {EIFNET_EXPORTER} -- Data status
-
-	data_changed: BOOLEAN is
-		do
-			Result := Eifnet_debugger_info.data_changed
-		end
-
-	reset_data_changed is
-		do
-			Eifnet_debugger_info.set_data_changed (False)
-		end
-
-feature {NONE} -- Callback actions
-
-	notify_start_of_callback (cb_id: INTEGER) is
-		do
-			debug ("DEBUGGER_TRACE_CALLBACK")
-				print ("** BEGIN::Callback ** [" + Eifnet_debugger_info.value_of_cst_managed_cb (cb_id) + "]. %N")			
-				if Eifnet_debugger_info.is_inside_function_evaluation then
-					print ("                 Info : Callback inside an Evaluation%N")			
-				end
-			end			
-		end
-
-	notify_end_of_callback (cb_id: INTEGER; is_stopped: BOOLEAN) is
-		local
-			s: APPLICATION_STATUS
-		do
-			if not eifnet_debugger_info.is_inside_function_evaluation then
-				Eifnet_debugger_info.set_data_changed (True)
-				if is_stopped then
-					s := eifnet_debugger_info.application.status
-					s.set_is_stopped (is_stopped)
-					if not eifnet_debugger_info.last_managed_callback_is_exit_process then
-						s.set_current_thread_id (eifnet_debugger_info.last_icd_thread_id)
-						s.set_thread_ids (eifnet_debugger_info.loaded_managed_threads.current_keys)
-					end
-				end
-			end
-			
-			debug ("DEBUGGER_TRACE_CALLBACK")
-				print ("** ->END::Callback ** [" + Eifnet_debugger_info.value_of_cst_managed_cb (cb_id) + "]. %N")
-				if is_stopped then
-					print ("                 Info : Debuggee is STOPPED %N")
-				else
-					print ("                 Info : Debuggee is RUNNING %N")
-				end
-			end
-		end
+--feature {EIFNET_EXPORTER} -- Data status
+--
+--	data_changed: BOOLEAN is
+--		do
+--			Result := Eifnet_debugger_info.data_changed
+--		end
+--
+--	set_data_changed (v: BOOLEAN) is
+--		do
+--			Eifnet_debugger_info.set_data_changed (v)
+--		end
+--
+--	reset_data_changed is
+--		do
+--			Eifnet_debugger_info.set_data_changed (False)
+--		end
 
 feature -- Queries
 
@@ -96,6 +89,78 @@ feature -- Queries
 			-- ICorDebugModule related to `a_mod_name'
 		do
 			Result := eifnet_debugger_info.icor_debug_module (a_mod_name)
+		end
+
+feature -- Status
+
+	last_control_mode_is_stepping: BOOLEAN is
+		do
+			Result := Eifnet_debugger_info.last_control_mode_is_stepping
+		end
+		
+		
+	last_exception_is_handled: BOOLEAN is
+		do
+			Result := Eifnet_debugger_info.last_exception_is_handled
+		end		
+
+feature {EIFNET_EXPORTER} -- Restricted Bridge to EIFNET_DEBUGGER_INFO
+
+	managed_callback_name (cb_id: INTEGER): STRING is
+		do
+			Result := Callback_info.managed_callback_name (cb_id)
+		end
+
+	managed_callback_is_exit_process (cb_id: INTEGER): BOOLEAN is
+		do
+			Result := Callback_info.managed_callback_is_exit_process (cb_id)
+		end	
+
+	managed_callback_is_step_complete (cb_id: INTEGER): BOOLEAN is
+		do
+			Result := Callback_info.managed_callback_is_step_complete (cb_id)
+		end
+
+	managed_callback_is_breakpoint (cb_id: INTEGER): BOOLEAN is
+		do
+			Result := Callback_info.managed_callback_is_breakpoint (cb_id)
+		end
+
+	managed_callback_is_eval_complete (cb_id: INTEGER): BOOLEAN is
+		do
+			Result := Callback_info.managed_callback_is_eval_complete (cb_id)
+		end	
+
+	managed_callback_is_eval_exception (cb_id: INTEGER): BOOLEAN is
+		do
+			Result := Callback_info.managed_callback_is_eval_exception (cb_id)
+		end	
+		
+	managed_callback_is_exception (cb_id: INTEGER): BOOLEAN is
+		do
+			Result := Callback_info.managed_callback_is_exception (cb_id)
+		end	
+
+feature {EIFNET_EXPORTER} -- Restricted Bridge to EIFNET_DEBUGGER_INFO
+
+	set_last_managed_callback (cb_id: INTEGER) is
+		do
+			Callback_info.set_last_managed_callback (cb_id)
+		end
+
+	last_managed_callback: INTEGER is
+		do
+			Result := Callback_info.last_managed_callback
+		end
+
+	last_managed_callback_is_eval_exception: BOOLEAN is
+		do
+			Result := managed_callback_is_eval_exception (last_managed_callback)
+		end	
+		
+	last_managed_callback_is_exception: BOOLEAN is
+		do
+			Result := managed_callback_is_exception (last_managed_callback)
 		end
 		
 feature -- Access
@@ -115,6 +180,59 @@ feature -- Access
 			Result := Eifnet_debugger_info.icd_thread
 		end
 
+	runtime_module: ICOR_DEBUG_MODULE is
+			-- EiffelSoftware.runtime ICorDebugModule
+		do
+			Result := Eifnet_debugger_info.runtime_module
+		end
+
+feature -- Callstack related
+
+	current_stack_info: EIFNET_DEBUGGER_STACK_INFO is
+		do
+			Result := Eifnet_debugger_info.current_stack_info
+		end
+			
+	previous_stack_info: EIFNET_DEBUGGER_STACK_INFO is
+		do
+			Result := Eifnet_debugger_info.previous_stack_info
+		end
+
+	reset_current_callstack is
+		do
+			Eifnet_debugger_info.reset_current_callstack
+		end
+
+	init_current_callstack is
+		do
+			Eifnet_debugger_info.init_current_callstack
+		end
+
+	save_current_stack_as_previous is
+		do
+			Eifnet_debugger_info.save_current_stack_as_previous
+		end
+
+feature -- Breakpoint related
+
+	current_breakpoint: BREAKPOINT is
+		do
+			check
+				managed_callback_is_breakpoint (last_managed_callback)
+			end
+			Result := Eifnet_debugger_info.current_breakpoint
+		end
+
+	request_breakpoint_add (a_bp: BREAKPOINT; a_module_name: STRING; a_class_token: INTEGER; a_feature_token: INTEGER; a_line: INTEGER_64) is
+		do
+			Eifnet_debugger_info.request_breakpoint_add (a_bp, a_module_name, a_class_token, a_feature_token, a_line)
+		end
+
+	request_breakpoint_remove (a_bp: BREAKPOINT; a_module_name: STRING; a_class_token: INTEGER; a_feature_token: INTEGER; a_line: INTEGER_64) is
+		do
+			Eifnet_debugger_info.request_breakpoint_remove (a_bp, a_module_name, a_class_token, a_feature_token, a_line)
+		end
+
 feature {NONE} -- Change by pointer
 
 	set_last_controller_by_pointer (p: POINTER) is
@@ -125,6 +243,11 @@ feature {NONE} -- Change by pointer
 	set_last_process_by_pointer (p: POINTER) is
 		do
 			eifnet_debugger_info.set_last_icd_process (p)
+		end
+
+	set_last_exception_by_pointer (p: POINTER) is
+		do
+			eifnet_debugger_info.set_last_icd_exception (p)
 		end
 
 	set_last_breakpoint_by_pointer (p: POINTER) is

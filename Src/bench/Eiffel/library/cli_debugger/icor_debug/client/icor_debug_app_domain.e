@@ -109,7 +109,7 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0
 		end
 
-feature {NONE, ICOR_DEBUG_MANAGED_CALLBACK} -- Implementation
+feature {EIFNET_DEBUGGER} -- Implementation
 
 	frozen cpp_get_process (obj: POINTER; a_p: POINTER): INTEGER is
 		external
@@ -119,7 +119,19 @@ feature {NONE, ICOR_DEBUG_MANAGED_CALLBACK} -- Implementation
 			]"
 		alias
 			"GetProcess"
-		end		
+		end
+
+	frozen cpp_attach (obj: POINTER): INTEGER is
+		external
+			"[
+				C++ ICorDebugAppDomain signature(): EIF_INTEGER 
+				use "cli_headers.h"
+			]"
+		alias
+			"Attach"
+		end
+
+feature {NONE} -- Implementation
 
 	frozen cpp_enumerate_assemblies (obj: POINTER; a_p: POINTER): INTEGER is
 		external
@@ -169,16 +181,6 @@ feature {NONE, ICOR_DEBUG_MANAGED_CALLBACK} -- Implementation
 			]"
 		alias
 			"GetName"
-		end		
-
-	frozen cpp_attach (obj: POINTER): INTEGER is
-		external
-			"[
-				C++ ICorDebugAppDomain signature(): EIF_INTEGER 
-				use "cli_headers.h"
-			]"
-		alias
-			"Attach"
 		end		
 
 	frozen cpp_get_id (obj: POINTER; a_p_id: POINTER): INTEGER is

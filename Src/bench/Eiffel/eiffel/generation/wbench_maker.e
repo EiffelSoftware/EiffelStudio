@@ -236,30 +236,33 @@ feature
 			-- Run time with which the application must be linked
 		do
 			create Result.make (256)
-			Result.append (Lib_location)
-
+			
 			if System.has_dynamic_runtime then
-				Result.append ("$shared_prefix")
+				Result.append ("-L")
+			end
+			
+			Result.append (Lib_location)
+	
+			if System.has_dynamic_runtime then
+				Result.append (" -l")
 			else
 				Result.append ("$prefix")
 			end
-
+	
 			if System.has_multithreaded then
 				Result.append ("$mt_prefix")
 			end
-
+	
 			if System.has_separate then
 				Result.append ("$concurrent_prefix")
 			end
-
+	
 			Result.append ("$wkeiflib")
-
-			if System.has_dynamic_runtime then
-				Result.append ("$shared_rt_suffix")
-			else
+	
+			if not System.has_dynamic_runtime then
 				Result.append ("$suffix")
 			end
-
+	
 			if System.has_separate then
 				Result.append (Libnet_location)
 			end

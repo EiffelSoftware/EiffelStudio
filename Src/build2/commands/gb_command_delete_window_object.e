@@ -87,6 +87,10 @@ feature -- Basic Operation
 			check
 				object_was_window: window_object /= Void
 			end
+				-- If the root window is being deleted, select the next window.
+			if Object_handler.root_window_object = window_object then
+				Window_selector.mark_next_window_as_root (1)
+			end
 			object_handler.update_for_delete (original_id)
 			object_handler.update_object_editors_for_delete (window_object, Void)
 			window_object.layout_item.unparent

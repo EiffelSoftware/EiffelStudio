@@ -118,7 +118,7 @@ feature {EXTERNAL_CLASS_C} -- Mapping
 			Result.put (System.integer_32_class, "System.Int32")
 			Result.put (System.integer_64_class, "System.Int64")
 			Result.put (System.natural_8_class, "System.Byte")
-			Result.put (System.natural_16_class, "System.UInt64")
+			Result.put (System.natural_16_class, "System.UInt16")
 			Result.put (System.natural_32_class, "System.UInt32")
 			Result.put (System.natural_64_class, "System.UInt64")
 			Result.put (System.pointer_class, "System.IntPtr")

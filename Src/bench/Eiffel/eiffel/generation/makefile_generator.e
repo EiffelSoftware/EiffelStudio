@@ -863,11 +863,11 @@ feature -- Generation (Linking rules)
 			Make_file.putstring (System_object_prefix);
 			Make_file.putint (1);
 			Make_file.putchar (Directory_separator);
-			Make_file.putstring ("Emain.o: Makefile%N%T (cd ");
+			Make_file.putstring ("Emain.o: Makefile%N%T cd ");
 			Make_file.putstring (System_object_prefix);
 			Make_file.putint (1);
 			Make_file.putstring (" ; $(SHELL) Makefile.SH ; ")
-			Make_file.putstring ("$(MAKE) Emain.o)%N%N")
+			Make_file.putstring ("$(MAKE) Emain.o%N%N")
 			from i := 1 until i > partial_system_objects loop
 				Make_file.putstring (System_object_prefix);
 				Make_file.putint (1);
@@ -875,14 +875,14 @@ feature -- Generation (Linking rules)
 				Make_file.putstring (System_object_prefix);
 				Make_file.putstring ("obj");
 				Make_file.putint (i);
-				Make_file.putstring (".o: Makefile%N%T(cd ");
+				Make_file.putstring (".o: Makefile%N%Tcd ");
 				Make_file.putstring (System_object_prefix);
 				Make_file.putint (1);
 				Make_file.putstring (" ; $(SHELL) Makefile.SH ; $(MAKE) ")
 				Make_file.putstring (System_object_prefix);
 				Make_file.putstring ("obj");
 				Make_file.putint (i);
-				Make_file.putstring (".o)%N%N");
+				Make_file.putstring (".o%N%N");
 				i := i + 1
 			end
 		end;
@@ -905,10 +905,10 @@ feature -- Generation (Linking rules)
 				Make_file.putstring (Feature_table_suffix);
 				Make_file.putstring ("obj");
 				Make_file.putint (i);
-				Make_file.putstring (".o: Makefile%N%T(cd ");
+				Make_file.putstring (".o: Makefile%N%Tcd ");
 				Make_file.putstring (Feature_table_suffix);
 				Make_file.putint (i);
-				Make_file.putstring (" ; $(SHELL) Makefile.SH ; $(MAKE))");
+				Make_file.putstring (" ; $(SHELL) Makefile.SH ; $(MAKE)");
 				Make_file.new_line;
 				Make_file.new_line;
 				i := i + 1
@@ -926,10 +926,10 @@ feature -- Generation (Linking rules)
 				Make_file.putstring (Descriptor_suffix);
 				Make_file.putstring ("obj");
 				Make_file.putint (i);
-				Make_file.putstring (".o: Makefile%N%T(cd ");
+				Make_file.putstring (".o: Makefile%N%Tcd ");
 				Make_file.putstring (Descriptor_suffix);
 				Make_file.putint (i);
-				Make_file.putstring (" ; $(SHELL) Makefile.SH ; $(MAKE))");
+				Make_file.putstring (" ; $(SHELL) Makefile.SH ; $(MAKE)");
 				Make_file.new_line;
 				Make_file.new_line;
 				i := i + 1
@@ -947,10 +947,10 @@ feature -- Generation (Linking rules)
 				Make_file.putstring (Class_suffix);
 				Make_file.putstring ("obj");
 				Make_file.putint (i);
-				Make_file.putstring (".o: Makefile%N%T(cd ");
+				Make_file.putstring (".o: Makefile%N%Tcd ");
 				Make_file.putstring (Class_suffix);
 				Make_file.putint (i);
-				Make_file.putstring (" ; $(SHELL) Makefile.SH ; $(MAKE))");
+				Make_file.putstring (" ; $(SHELL) Makefile.SH ; $(MAKE)");
 				Make_file.new_line;
 				Make_file.new_line;
 				i := i + 1
@@ -971,17 +971,23 @@ feature -- Cleaning rules
 			Make_file.putstring ("clean: sub_clean local_clean%N");
 			Make_file.putstring ("clobber: sub_clobber local_clobber%N%N");
 			Make_file.putstring ("local_clean::%N");
-			Make_file.putstring ("%T$(RM) core *~ *.o%N%N");
+			Make_file.putstring ("%T$(RM) core *.o%N%N");
 			Make_file.putstring ("local_clobber:: local_clean%N%T");
 			Make_file.putstring ("$(RM) Makefile config.sh finish_freezing%N");
 			Make_file.putstring ("%Nsub_clean::%N");
-			Make_file.putstring ("%Tfor i in $(SUBDIRS);\%N");
-			Make_file.putstring ("%Tdo\%N%T%T(cd $$i ; $(MAKE) clean);\");
-			Make_file.putstring ("%N%Tdone%N%N");
+			Make_file.putstring ("%Tfor i in $(SUBDIRS); \%N");
+			Make_file.putstring ("%Tdo \%N%T%Tif [ -r $$i");
+			Make_file.putchar (Directory_separator);
+			Make_file.putstring ("Makefile ]; then \%N%T%T%T");
+			Make_file.putstring ("(cd $$i ; $(MAKE) clean); \");
+			Make_file.putstring ("%N%T%Tfi \%N%Tdone%N%N");
 			Make_file.putstring ("sub_clobber::%N");
-			Make_file.putstring ("%Tfor i in $(SUBDIRS);\%N");
-			Make_file.putstring ("%Tdo\%N%T%T(cd $$i ; $(MAKE) clobber);\");
-			Make_file.putstring ("%N%Tdone%N%N")
+			Make_file.putstring ("%Tfor i in $(SUBDIRS); \%N");
+			Make_file.putstring ("%Tdo \%N%T%Tif [ -r $$i");
+			Make_file.putchar (Directory_separator);
+			Make_file.putstring ("Makefile ]; then \%N%T%T%T");
+			Make_file.putstring ("(cd $$i ; $(MAKE) clobber); \");
+			Make_file.putstring ("%N%T%Tfi \%N%Tdone%N%N")
 		end;
 
 	generate_sub_cleaning is
@@ -990,7 +996,7 @@ feature -- Cleaning rules
 			Make_file.putstring ("clean: local_clean%N");
 			Make_file.putstring ("clobber: local_clobber%N%N");
 			Make_file.putstring ("local_clean::%N");
-			Make_file.putstring ("%T$(RM) core *~ *.o%N%N");
+			Make_file.putstring ("%T$(RM) core *.o%N%N");
 			Make_file.putstring ("local_clobber:: local_clean%N");
 			Make_file.putstring ("%T$(RM) Makefile%N%N");
 		end;

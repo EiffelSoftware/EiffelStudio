@@ -72,6 +72,9 @@ interface IEiffelProject: IUnknown
   [helpstring ("Has system been compiled?")]
   HRESULT is_compiled ([out, retval] VARIANT_BOOL * return_value);
 
+  [helpstring ("Has the project updated since last compilation?")]
+  HRESULT project_has_updated ([out, retval] VARIANT_BOOL * return_value);
+
   [helpstring ("System Browser.")]
   HRESULT system_browser ([out, retval] IEiffelSystemBrowser ** return_value);
 
@@ -113,6 +116,7 @@ interface IEiffelCompiler: IUnknown
 
   [helpstring ("Remove file locks")]
   HRESULT remove_file_locks ();
+
 };
 //---------------------------------------------------------------------
 

@@ -139,7 +139,7 @@ EIF_INTEGER c_month (EIF_INTEGER compact_date)
 
 EIF_INTEGER c_year (EIF_INTEGER compact_date)
 {
-	int res = normalize(compact_date & 0x0000ffff, sizeof(int));
+	int res = normalize(compact_date & 0x0000ffff, sizeof(char) * 2);
 	return (EIF_INTEGER) res;
 }
 

@@ -462,7 +462,7 @@ feature {NONE} -- Implementation
 			Result := area = Void or else area.count = 0
 		end;
 
-	conv_pp (p: like area): POINTER is
+	conv_pp (p: POINTER): POINTER is
 			-- Return its argument
 		external
 			"C"

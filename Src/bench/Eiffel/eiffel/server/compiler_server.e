@@ -450,7 +450,7 @@ end;
 
 feature {NONE} -- External features
 
-	store_append (f_desc: INTEGER; o: T; r: POINTER; s: like Current): INTEGER is
+	store_append (f_desc: INTEGER; o: POINTER; r: POINTER; s: POINTER): INTEGER is
 		external
 			"C"
 		end;

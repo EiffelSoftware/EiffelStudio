@@ -56,7 +56,7 @@ feature
 					collection_off;
 
 					ptr := file.file_pointer;
-					ast := lp_file ($ptr, $file_name);
+					ast := lp_file (ptr, $file_name);
 
 						-- Enable garbage collector after parsing
 					collection_on;
@@ -76,7 +76,7 @@ feature
 
 feature {NONE} -- Externals
 
-	lp_file (file: POINTER; fn: STRING): ACE_SD is
+	lp_file (file: POINTER; fn: POINTER): ACE_SD is
 			-- Call lace parser with a source file.
 		external
 			"C"

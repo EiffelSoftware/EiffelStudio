@@ -461,7 +461,7 @@ feature -- Forward and backward jump managment
 
 feature {NONE} -- Externals
 
-	ca_zero (ptr: like area; siz: INTEGER) is
+	ca_zero (ptr: POINTER; siz: INTEGER) is
 		external
 			"C"
 		alias
@@ -483,27 +483,27 @@ feature {NONE} -- Externals
 			"C"
 		end;
 
-	ca_wint32 (ptr: like area; val: INTEGER; pos: INTEGER) is
+	ca_wint32 (ptr: POINTER; val: INTEGER; pos: INTEGER) is
 		external
 			"C"
 		end;
 
-	ca_wuint32 (ptr: like area; val: INTEGER; pos: INTEGER) is
+	ca_wuint32 (ptr: POINTER; val: INTEGER; pos: INTEGER) is
 		external
 			"C"
 		end;
 
-	ca_wshort (ptr: like area; val: INTEGER; pos: INTEGER) is
+	ca_wshort (ptr: POINTER; val: INTEGER; pos: INTEGER) is
 		external
 			"C"
 		end;
 
-	ca_wlong (ptr: like area; val: INTEGER; pos: INTEGER) is
+	ca_wlong (ptr: POINTER; val: INTEGER; pos: INTEGER) is
 		external
 			"C"
 		end;
 
-	ca_wdouble (ptr: like area; val: DOUBLE; pos: INTEGER) is
+	ca_wdouble (ptr: POINTER; val: DOUBLE; pos: INTEGER) is
 		external
 			"C"
 		end;
@@ -514,7 +514,7 @@ feature {NONE} -- Externals
 			"C"
 		end;
 
-	ca_wbit(ptr: like area; val: ANY; pos: INTEGER; bit_count: INTEGER) is
+	ca_wbit(ptr: POINTER; val: ANY; pos: INTEGER; bit_count: INTEGER) is
 			-- Write in `ptr' at position `pos' a bit value `val'
 		external
 			"C"

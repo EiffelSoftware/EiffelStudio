@@ -255,19 +255,19 @@ feature {NONE} -- Externals
 			"lp_init"
 		end;
 
-	set_dtype1 (o: FEATURE_AS) is
+	set_dtype1 (o: POINTER) is
 			-- Record dynamic type of FEATURE_AS
 		external	
 			"C"
 		end;
 
-	set_dtype2 (o: INVARIANT_AS) is
+	set_dtype2 (o: POINTER) is
 			-- Record dynamic type of INVARIANT_AS
 		external
 			"C"
 		end;
 
-	eif_date (s: ANY): INTEGER is
+	eif_date (s: POINTER): INTEGER is
 			-- Date of file of name `str'.
 		external
 			"C"

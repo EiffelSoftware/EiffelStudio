@@ -20,22 +20,24 @@ feature -- Status setting
 			-- Set both `button' and `menu_entry'
 			-- to be selected.
 		do
-			if not safety_flag then
-				safety_flag := True
-				if button /= Void then
-					button.enable_select
-				end
-				if menu_item /= Void then
-					menu_item.enable_select
-				end
-				if
-					combo /= Void and then
-					(combo.text.is_empty or else
-					not combo.text.is_equal(capital_command_name))
-				then
-					combo.set_text (capital_command_name)
-				end
-				safety_flag := False
+			if button /= Void then
+				button.select_actions.block
+				button.enable_select
+				button.select_actions.resume
+			end
+			if menu_item /= Void then
+				menu_item.select_actions.block
+				menu_item.enable_select
+				menu_item.select_actions.resume
+			end
+			if
+				combo /= Void and then
+				(combo.text.is_empty or else
+				not combo.text.is_equal(capital_command_name))
+			then
+				combo.change_actions.block
+				combo.set_text (capital_command_name)
+				combo.change_actions.resume
 			end
 		ensure
 			button_selected: not safety_flag and button /= Void implies button.is_selected

@@ -31,8 +31,7 @@ inherit
 			align_text_left,
 			align_text_right,
 			interface,
-			set_text,
-			remove_text
+			set_text
 		end
 
 	EV_FONTABLE_IMP
@@ -133,7 +132,11 @@ feature -- Element change
 	set_text (a_text: STRING) is
 			-- Assign `a_text' to `text'.
 		do
-			accomodate_text (a_text)
+			if a_text.is_empty then
+				set_default_minimum_size
+			else
+				accomodate_text (a_text)
+			end
 			Precursor {EV_INTERNALLY_PROCESSED_TEXTABLE_IMP} (a_text)
 			invalidate
 		end
@@ -145,14 +148,6 @@ feature -- Element change
 			if text /= Void then
 				accomodate_text (text)
 			end
-			invalidate
-		end
-
-	remove_text is
-			-- Make `text' `Void'.
-		do
-			set_default_minimum_size
-			Precursor {EV_INTERNALLY_PROCESSED_TEXTABLE_IMP}
 			invalidate
 		end
 

@@ -137,6 +137,18 @@ feature -- Colors
 			Result := dialog_unit_to_pixels (7)
 		end
 
+	Small_padding_size: INTEGER is
+			-- Default size for padding
+		once
+			Result := dialog_unit_to_pixels (10)
+		end
+
+	Small_border_size: INTEGER is
+			-- Default size for borders
+		once
+			Result := dialog_unit_to_pixels (5)
+		end
+
 	Welcome_title_font: EV_FONT is
 			-- Title for welcome page
 		once

@@ -13,12 +13,8 @@ inherit
 
 feature -- Access
 
-	parent: EV_LIST is
-			-- Parent of the current item.
-		require
-			exists: not destroyed
-		deferred
-		end
+	parent_imp: EV_LIST_IMP
+			-- Parent of the Current item
 
 feature -- Status report
 
@@ -72,11 +68,7 @@ feature -- Element change
 	set_parent (par: EV_LIST) is
 			-- Make `par' the new parent of the widget.
 			-- `par' can be Void then the parent is the screen.
-		require
-			exists: not destroyed
 		deferred
-		ensure
-			parent_set: parent = par
 		end
 
 feature -- Event : command association

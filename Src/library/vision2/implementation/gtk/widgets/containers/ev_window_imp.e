@@ -97,9 +97,7 @@ feature -- Status report
 	is_maximized: BOOLEAN is
 			-- Is displayed at maximum size?
 		do
-			check
-				to_be_implemented: False
-			end
+			Result := old_geometry /= Void
 		end
 
 feature -- Status setting
@@ -122,30 +120,28 @@ feature -- Status setting
 			C.c_gdk_window_iconify (
 				C.gtk_widget_struct_window (c_object)
 			)
+			(create {EV_ENVIRONMENT}).application.process_events
 		end
 
 	maximize is
 			-- Display at maximum size.
 		do
-			create old_geometry.make (
-				x_position, y_position,
-				width, height)
-			C.gtk_widget_set_usize (c_object,
-				C.gdk_screen_width,
-				C.gdk_screen_height)
+			old_geometry := geometry
+			set_geometry (create {EV_RECTANGLE}.make (
+				0, 0, C.gdk_screen_width, C.gdk_screen_width))
 		end
 
 	restore is
 			-- Restore to original position when minimized or maximized.
 		do
-			if is_maximized or is_minimized then
-				C.gtk_widget_set_uposition (c_object,
-					old_geometry.x,
-					old_geometry.y)
-				C.gtk_widget_set_usize (c_object,
-					old_geometry.width,
-					old_geometry.height)
+			if is_minimized then
+				C.c_gdk_window_deiconify (
+					C.gtk_widget_struct_window (c_object)
+				)
+			elseif is_maximized then
+				set_geometry (old_geometry)
 			end
+			old_geometry := Void
 		end
 
 feature -- Element change
@@ -221,7 +217,32 @@ feature -- Element change
 
 feature {EV_ANY_I} -- Implementation
 
+	geometry: EV_RECTANGLE is
+			-- Extent of window.
+		local
+			x, y, w, h: INTEGER
+		do
+			C.gdk_window_get_geometry (
+				C.gtk_widget_struct_window (c_object),
+				$x, $y, $w, $h, Default_pointer)
+				--| `x' and `y' are not working, so:
+			C.gdk_window_get_root_origin (
+				C.gtk_widget_struct_window (c_object),
+				$x, $y)
+			create Result.make (x, y, w, h)
+		end
+
+	set_geometry (a_rect: EV_RECTANGLE) is
+			-- Set `geometry' to `a_rect'.
+		do
+			C.gdk_window_move_resize (
+				C.gtk_widget_struct_window (c_object),
+				a_rect.x, a_rect.y,
+				a_rect.width, a_rect.height)
+		end
+
 	old_geometry: EV_RECTANGLE
+			-- Saved metrics when maximized.
 
 	icon_name_holder: STRING
 			-- Name holder for applications icon name
@@ -251,6 +272,9 @@ end -- class EV_TITLED_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.41  2000/03/08 02:58:39  brendel
+--| Improved implementation.
+--|
 --| Revision 1.40  2000/03/07 19:25:44  brendel
 --| Corrected external call errors
 --|

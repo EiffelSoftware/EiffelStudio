@@ -127,7 +127,8 @@ feature -- Status Setting
 		local
 			cnt: INTEGER
 			is_void_element: BOOLEAN
-			l_element: XM_ELEMENT
+			l_element,
+			l_element2: XM_ELEMENT
 			l_attribute: XM_ATTRIBUTE
 		do
 			a_array_path.compare_references
@@ -147,7 +148,8 @@ feature -- Status Setting
 				if l_element /= Void then
 					l_attribute := l_element.attribute_by_name (a_attribute)
 					if l_attribute /= Void and then a_value.is_empty then
-						l_attribute.parent.equality_delete (l_attribute)
+						l_element2 ?= l_attribute.parent
+						l_element2.delete (l_attribute)
 					elseif l_attribute /= Void and then not a_value.is_empty then						
 						l_attribute.set_value (a_value)
 					elseif l_attribute = Void and then not a_value.is_empty then						
@@ -172,7 +174,7 @@ feature -- Status Setting
 		local
 			cnt: INTEGER
 			is_void_element: BOOLEAN
-			l_element, l_child_element: XM_ELEMENT
+			l_element, l_child_element, l_element2: XM_ELEMENT
 		do
 			a_array_path.compare_references
 			if not a_array_path.has (Void) then
@@ -199,7 +201,8 @@ feature -- Status Setting
 						l_child_element.remove (1)
 					end
 					if a_value.is_empty then
-						l_child_element.parent.equality_delete (l_child_element)
+						l_element2 ?= l_child_element.parent
+						l_element2.delete (l_child_element)
 					else
 						l_child_element.put_first (create {XM_CHARACTER_DATA}.make (l_child_element, a_value))
 					end					

@@ -14,8 +14,17 @@ feature -- General events for items
 	Cmd_item_activate: INTEGER is 1
 			-- The item has been selected
 
-	Cmd_item_dblclk: INTEGER is 2
+	Cmd_item_deactivate: INTEGER is 2
+			-- The item has been deselected
+
+	Cmd_item_dblclk: INTEGER is 3
 			-- The user dblclk on the item
+
+feature -- Upper constants value
+
+	item_command_count: INTEGER is 3
+			-- Size of the list that contains the commands or the
+			-- arguments.
 
 end -- class EV_ITEM_EVENTS_CONSTANTS_IMP
 

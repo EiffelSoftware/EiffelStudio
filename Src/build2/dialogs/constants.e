@@ -34,11 +34,11 @@ feature -- Access
 		once
 			Result := "New..."
 		end
-
+		
 	png_location: STRING is
-			-- `Result' is DIRECTORY constant named `png_location'.
-		once
-			Result := "D:\Eiffel54\build\bitmaps\png"
+			-- `Result' is location of PNG files in installation.
+		do
+			Result := (create {GB_SHARED_PIXMAPS}).png_location
 		end
 
 	default_button_width: INTEGER is 

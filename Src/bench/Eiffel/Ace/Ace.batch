@@ -111,7 +111,6 @@ cluster
 		unredefined_error:	"$BENCH/Eiffel/API/error/eiffel/unredefined";
 			-- Resources
 		resources:			"$BENCH/Eiffel/API/resources/common";
-		resources_bench:	"$BENCH/Eiffel/API/resources/bench";
 			-- Profiling
 		converter:			"$BENCH/Eiffel/API/profiler/converter";
 		profiling:			"$BENCH/Eiffel/API/profiler/profiling";

@@ -1487,14 +1487,13 @@ feature {WEL_DISPATCHER, WEL_WINDOW}
 		require
 			exists: exists
 		do
-			--| Unfortunately, we can not use inspect since
-			--| Wm_* are not real constants.
 			if commands /= Void and then
-				commands_enabled and then
-				commands.has (msg) then
-					commands.item (msg).execute (Current,
-						msg, wparam, lparam)
+			   commands_enabled and then
+			   commands.has (msg)
+			then
+				commands.item (msg).execute (Current, msg, wparam, lparam)
 			end
+
 			inspect msg
 			when Wm_mousemove then
 				on_mouse_move (wparam,

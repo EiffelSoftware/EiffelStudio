@@ -53,10 +53,11 @@ feature {NONE} -- Implementation
 	
 			if a_name /= Void then
 				-- Load by name
-				!! c_name.make (a_name)
+				create c_name.make (a_name)
 				result_id := cwin_dialog_box (
 					main_args.current_instance.item,
-					c_name.item, parent_item,
+					c_name.item, 
+					parent_item,
 					cwel_dialog_procedure_address)
 			else
 				-- Load by id

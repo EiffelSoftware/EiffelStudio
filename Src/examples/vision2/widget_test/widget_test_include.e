@@ -103,6 +103,7 @@ feature {NONE} -- Implementation
 			checkable_list_pixmap_test: CHECKABLE_LIST_PIXMAP_TEST
 			pixmap_basic_test: PIXMAP_BASIC_TEST
 			pixmap_drawing_test: PIXMAP_DRAWING_TEST
+			pixmap_figure_string_size_test: PIXMAP_FIGURE_STRING_SIZE_TEST
 			text_basic_test: TEXT_BASIC_TEST
 			test_scroll_to_line_test: TEXT_SCROLL_TO_LINE_TEST
 			cell_background_pixmap_test: CELL_BACKGROUND_PIXMAP_TEST

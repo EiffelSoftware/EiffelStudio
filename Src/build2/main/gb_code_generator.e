@@ -34,6 +34,8 @@ feature -- Basic operation
 			directory: DIRECTORY
 			directory_file_name: FILE_NAME
 		do
+				-- Note that the geenration of the XML file used internally,
+				-- is not performed until `build_main_window_implementation' is called.
 			create directory_file_name.make_from_string (project_settings.project_location)
 			create directory.make (directory_file_name)
 				-- If the directory for the generated code does not already exist then
@@ -185,9 +187,9 @@ feature {NONE} -- Implementation
 		build_main_window_implementation is
 				-- Generate a main window for the project.
 			local
-				store: GB_XML_STORE
 				window_template_file, window_output_file: RAW_FILE
 				window_file_name, window_template: FILE_NAME
+				store: GB_XML_STORE
 			do
 				set_progress (0.3)
 				create store
@@ -448,7 +450,7 @@ feature {NONE} -- Implementation
 						if current_name.is_equal (Internal_properties_string) and depth > 2 then
 								full_information := get_unique_full_info (current_element)
 								element_info := full_information @ (name_string)
-								new_object := object_handler.build_object_from_string (current_type)
+								new_object := object_handler.build_object_from_string_and_assign_id (current_type)
 									--| FIXME we must use the extend from the parent type.
 									
 									-- Because at the top level we are a window, we do not need to include the

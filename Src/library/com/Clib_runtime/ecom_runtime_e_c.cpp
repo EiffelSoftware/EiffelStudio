@@ -91,7 +91,7 @@ DATE ecom_runtime_ec::ccom_ec_date (EIF_REFERENCE a_ref)
 
 // Create DATE from Eiffel DATE_TIME
 {
-	EIF_OBJECT date_time;
+	EIF_OBJECT date_time = eif_protect (a_ref);
 
 	SYSTEMTIME * systime;
 	DATE variant_time;
@@ -99,7 +99,6 @@ DATE ecom_runtime_ec::ccom_ec_date (EIF_REFERENCE a_ref)
 	EIF_INTEGER_FUNCTION f_year, f_month, f_day, f_hour, f_minute, f_second;
 	EIF_TYPE_ID tid;
 
-	date_time = eif_protect (a_ref);
 	tid = eif_type_id ("DATE_TIME");
 
 	f_year = eif_integer_function ("year", tid);
@@ -392,7 +391,6 @@ int * ecom_runtime_ec::ccom_ec_pointed_integer (EIF_REFERENCE a_ref, int * old)
 	result = (int *) CoTaskMemAlloc (sizeof (int));
 	* result = (int) eif_field (eif_access(eif_object), "item", EIF_INTEGER);
 
-	eif_wean (eif_object);
 	eif_wean (eif_object);
 	if (old != NULL)
 	{

@@ -118,7 +118,6 @@ feature {NONE} -- Implementation
 			-- to represent `object'.
 		local
 			current_type: STRING
-			separator: EV_HORIZONTAL_SEPARATOR
 			label: EV_LABEL
 			current_window_parent: EV_WINDOW
 			locked_in_here: BOOLEAN

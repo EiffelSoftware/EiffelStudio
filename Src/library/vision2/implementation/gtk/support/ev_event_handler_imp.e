@@ -205,6 +205,13 @@ feature {NONE} -- Status report
 			elseif ev_str.is_equal ("value_changed") then
 				Result := value_changed_id
 
+			-- For toolbar toggle buttons
+			elseif ev_str.is_equal ("toggled_on_off") then
+				Result := toggled_on_off_id
+			elseif ev_str.is_equal ("toggled_on") then
+				Result := toggled_on_id
+			elseif ev_str.is_equal ("toggled_off") then
+				Result := toggled_off_id
 			end
 		ensure
 			event_id_ok: (Result > 0 and Result <= command_count)

@@ -179,9 +179,20 @@ feature -- Event for scrollbars, spin buttons and range (GtkScale)
 	value_changed_id: INTEGER is 48
 			-- The scrollbar has been moved.
 
+feature -- Event for three tool bar toggle button events
+
+	toggled_on_off_id: INTEGER is 49
+			-- The button has been `toggled'
+
+	toggled_on_id: INTEGER is 50
+			-- The button has been `selected'
+
+	toggled_off_id: INTEGER is 51
+			-- The button has been `unselected'
+
 feature -- Upper constants value
 
-	command_count: INTEGER is 48
+	command_count: INTEGER is 51
 			-- Number of different events
 
 end -- class EV_WIDGET_EVENTS_CONSTANTS_IMP

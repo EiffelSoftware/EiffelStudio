@@ -55,7 +55,7 @@ feature {NONE} -- code in the glue library
 
 	c_gtk_pixmap_create_with_size (window_parent: POINTER; width, height: INTEGER): POINTER is
 		external
-			"C | %"gtk_eiffel.h%""
+			"C (GtkWidget *, gint, gint): EIF_POINTER | %"gtk_eiffel.h%""
 		end
 
 end -- class EV_GTK_DRAWABLE_EXTERNALS

@@ -46,7 +46,7 @@ inherit
 			{ANY} off, after, before
 		end
 
-creation
+create
 	make, make_with_plane
 
 feature {NONE} -- Initialization
@@ -66,15 +66,15 @@ feature {NONE} -- Initialization
 			until
 				off
 			loop
-				!! ll.make
+				create ll.make
 				al_replace (ll)
 				al_forth
 			end
 			start
 			notify_make
-			!! changes_box.make
-			!! surround_box.make
-			!! origin.make
+			create changes_box.make
+			create surround_box.make
+			create origin.make
 			set_receive
 			set_not_notify
 			notified := Current
@@ -294,12 +294,12 @@ feature -- Output
 			new_clip: EV_CLIP
 			first_drawn_plane: INTEGER
 		do
-			!! box.make
+			create box.make
 			box.merge_clip (clip)
 			new_clip := clip
 			if receive then
 				if modified then
-					!! box.make
+					create box.make
 					box.merge_clip (new_clip)
 					box.merge (changes_box)
 					new_clip := box.as_clip
@@ -309,7 +309,7 @@ feature -- Output
 			else
 				recompute
 			end
-			!! box.make
+			create box.make
 			box.merge_clip (new_clip)
 			if drawing.is_drawable and surround_box.override (new_clip) then
 				world_mark
@@ -376,19 +376,19 @@ feature {EV_WORLD} -- Cursor
 
 end -- class EV_WORLD
 
---|----------------------------------------------------------------
---| EiffelVision: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
+--!----------------------------------------------------------------
+--! EiffelVision2: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-1999 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!----------------------------------------------------------------
 

@@ -19,7 +19,7 @@ inherit
 			make
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -28,9 +28,9 @@ feature {NONE} -- Initialization
 			-- Create a text.
 		do
 			init_fig (Void)
-			!! text.make (1)
-			!! font.make
-			!! top_left.make
+			create text.make (1)
+			create font.make
+			create top_left.make
 			ascent := 1
 			descent := 1
 			string_width := 1
@@ -52,7 +52,7 @@ feature -- Access
 	top_center: like top_left is
 			-- Top and center point of the rectangle containing the text
 		do
-			!! Result.set (top_left.x + (string_width // 2), top_left.y)
+			create Result.set (top_left.x + (string_width // 2), top_left.y)
 		end
 
 	top_left: EV_POINT
@@ -61,44 +61,44 @@ feature -- Access
 	top_right: like top_left is
 			-- Top and right point of the rectangle containing the text
 		do
-			!! Result.set (top_left.x + string_width, top_left.y)
+			create Result.set (top_left.x + string_width, top_left.y)
 		end
 
 	base_center: like top_left is
 			-- Center point of the baseline of the text
 		do
-			!! Result.set (top_left.x + (string_width // 2), top_left.y + ascent)
+			create Result.set (top_left.x + (string_width // 2), top_left.y + ascent)
 		end
 
 	base_left: like top_left is
 			-- Left point of the baseline of the text
 		do
-			!! Result.set (top_left.x, top_left.y + ascent)
+			create Result.set (top_left.x, top_left.y + ascent)
 		end
 
 	base_right: like top_left is
 			-- Right point of the baseline of the text
 		do
-			!! Result.set (top_left.x + string_width, top_left.y + ascent)
+			create Result.set (top_left.x + string_width, top_left.y + ascent)
 		end 
 
 	bottom_center: like top_left is
 			-- Center and bottom point of the rectangle containing the text
 		do
-			!! Result.set (top_left.x + (string_width // 2 ),
+			create Result.set (top_left.x + (string_width // 2 ),
 						 top_left.y+ascent + descent)
 		end
 
 	bottom_left: like top_left is
 			-- Left and bottom point of the rectangle containing the text
 		do
-			!! Result.set (top_left.x, top_left.y + ascent + descent)
+			create Result.set (top_left.x, top_left.y + ascent + descent)
 		end 
 
 	bottom_right: like top_left is
 			-- Right and bottom point of the rectangle containing the text
 		do
-			!! Result.set (top_left.x + string_width,
+			create Result.set (top_left.x + string_width,
 						top_left.y + ascent + descent)
 		end
 
@@ -108,20 +108,20 @@ feature -- Access
 	middle_center: like top_left is
 			-- Center and middle point of the rectangle containing the text
 		do
-			!! Result.set (top_left.x + (string_width // 2),
+			create Result.set (top_left.x + (string_width // 2),
 						top_left.y + ascent + descent)
 		end
 
 	middle_left: like top_left is
 			-- Left and middle point of the rectangle containing the text
 		do
-			!! Result.set (top_left.x, top_left.y + (ascent + descent) // 2)
+			create Result.set (top_left.x, top_left.y + (ascent + descent) // 2)
 		end
 
 	middle_right: like top_left is
 			-- Right and middle point of the rectangle containing the text
 		do
-			!! Result.set (top_left.x + string_width,
+			create Result.set (top_left.x + string_width,
 						(top_left.y + ascent + descent) // 2)
 		end
 
@@ -475,19 +475,19 @@ invariant
 
 end -- class EV_TEXT_FIGURE
 
---|----------------------------------------------------------------
---| EiffelVision: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
+--!----------------------------------------------------------------
+--! EiffelVision2: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-1999 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!----------------------------------------------------------------
 

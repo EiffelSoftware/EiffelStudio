@@ -4,13 +4,13 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
---| fix_me: General comment/question are contracts like this ok?
---|         valid_result: foo > bar
---|         valid result does not really say much. 
---|         would a more descriptive tag be better, after all the tag's
---|         only purpose is for extra description.
---|         bar_small_enough: foo > bar 
---|         - sam 19990920
+--! FIXME : General comment/question are contracts like this ok?
+--!         valid_result: foo > bar
+--!         valid result does not really say much. 
+--!         would a more descriptive tag be better, after all the tag's
+--!         only purpose is for extra description.
+--!         bar_small_enough: foo > bar 
+--!         - sam 19990920
 
 class 
 	EV_WINDOW
@@ -24,7 +24,7 @@ inherit
 			make_root
 		end
 
-creation
+create
 	make_root,
 	make_top_level,
 	make
@@ -36,10 +36,10 @@ feature {NONE} -- Initialization
 		do
 			create {EV_WINDOW_IMP} implementation.make_root
 			widget_make (Void)
-		ensure
-			False
-			--| fix_me Are we the aplication root?
-			--|        do we exist? - sam 19990920
+		ensure then
+--			False
+			--! FIXME  Are we the aplication root?
+			--!        do we exist? - sam 19990920
 		end
 
 	make_top_level is
@@ -48,10 +48,10 @@ feature {NONE} -- Initialization
 		do
 			create {EV_WINDOW_IMP} implementation.make
 			widget_make (Void)
-		ensure
-			False
-			--| fix_me Are we a parentless window?
-			--|        do we exist? - sam 19990920
+		ensure then
+--			False
+			--! FIXME  Are we a parentless window?
+			--!        do we exist? - sam 19990920
 		end
 
 	make (par: EV_WINDOW) is
@@ -60,25 +60,25 @@ feature {NONE} -- Initialization
 		do
 			create {EV_WINDOW_IMP} implementation.make_with_owner (par)
 			widget_make (par)
-		ensure
-			False
-			--| fix_me Are we a parented by `par'?
-			--|        do we exist? - sam 19990920
+		ensure then
+--			False
+			--! FIXME  Are we a parented by `par'?
+			--!        do we exist? - sam 19990920
 		end
 
 feature  -- Access
 
 	icon_name: STRING is
 			-- Alternative name, displayed when window iconified.
-			--| fix_me Do we say iconified of minimised? - sam 19990920
+			--! FIXME  Do we say iconified of minimised? - sam 19990920
 		require
 			exists: not destroyed
 		do
 			Result := implementation.icon_name
 		ensure
-			--| fix_me What if implementation.icon_name clones the string it returns?
-			--|        perhaps we want to say Result.is_equal (implementation.icon_name)
-			--|        -sam 19990920
+			--! FIXME  What if implementation.icon_name clones the string it returns?
+			--!        perhaps we want to say Result.is_equal (implementation.icon_name)
+			--!        -sam 19990920
 			valid_result: Result = implementation.icon_name
 		end 
 	
@@ -89,9 +89,9 @@ feature  -- Access
 		do
 			Result := implementation.icon_mask
 		ensure
-			--| fix_me What if implementation.icon_mask clones the pixmap it returns?
-			--|        perhaps we want to say Result.is_equal (implementation.icon_mask)
-			--|        -sam 19990920
+			--! FIXME  What if implementation.icon_mask clones the pixmap it returns?
+			--!        perhaps we want to say Result.is_equal (implementation.icon_mask)
+			--!        -sam 19990920
 			valid_result: Result = implementation.icon_mask
 		end
 
@@ -102,9 +102,9 @@ feature  -- Access
 		do
 			Result := implementation.icon_pixmap
 		ensure
-			--| fix_me What if implementation.icon_pixmap clones the pixmap it returns?
-			--|        perhaps we want to say Result.is_equal (implementation.icon_pixmap)
-			--|        -sam 19990920
+			--! FIXME  What if implementation.icon_pixmap clones the pixmap it returns?
+			--!        perhaps we want to say Result.is_equal (implementation.icon_pixmap)
+			--!        -sam 19990920
 			valid_result: Result = implementation.icon_pixmap
 		end
 
@@ -139,20 +139,20 @@ feature -- Status setting
 		do
 			implementation.raise
 		ensure
-			False
-			--| fix_me wee need to check if we are indeed above all other windows. - sam 19990920
+--			False
+			--! FIXME  wee need to check if we are indeed above all other windows. - sam 19990920
 		end
 
 	lower is
 			-- Display below all other windows.
-			--| fix_me Is this right? Does lower go all the way down or just one level down? - sam 19990920
+			--! FIXME  Is this right? Does lower go all the way down or just one level down? - sam 19990920
 		require
 			exists: not destroyed
 		do
 			implementation.lower
 		ensure
-			False
-			--| fix_me wee need to check if we are indeed below all other windows. - sam 19990920
+--			False
+			--! FIXME  wee need to check if we are indeed below all other windows. - sam 19990920
 		end
 
 	minimize is
@@ -182,7 +182,7 @@ feature -- Status setting
 		do
 			implementation.restore
 		ensure
-			--| fix_me I am maximised, I click minimise, then restore: not_maximised exception. - sam 19990920
+			--! FIXME  I am maximised, I click minimise, then restore: not_maximised exception. - sam 19990920
 			not_minimized: not is_minimized
 			not_maximized: not is_maximized
 		end
@@ -197,8 +197,8 @@ feature -- Element change
 		do
 			implementation.set_icon_name (txt)
 		ensure
-			False
-			--| fix_me has the icon name been set? - sam 19990920
+--			False
+			--! FIXME  has the icon name been set? - sam 19990920
 		end
 
 	set_icon_mask (pixmap: EV_PIXMAP) is
@@ -209,8 +209,8 @@ feature -- Element change
 		do
 			implementation.set_icon_mask (pixmap)
 		ensure
-			False
-			--| fix_me has the mask name been set? - sam 19990920
+--			False
+			--! FIXME  has the mask name been set? - sam 19990920
 		end
 
 	set_icon_pixmap (pixmap: EV_PIXMAP) is
@@ -221,21 +221,21 @@ feature -- Element change
 		do
 			implementation.set_icon_pixmap (pixmap)
 		ensure
-			False
-			--| fix_me has the pixmap name been set? - sam 19990920
+--			False
+			--! FIXME  has the pixmap name been set? - sam 19990920
 		end
 
 feature -- Implementation
 
 	implementation: EV_WINDOW_I
-			--| fix_me Do we need a reference to where ever the pattern
-			--| for this is described? - sam 19990920
+			--! FIXME  Do we need a reference to where ever the pattern
+			--! for this is described? - sam 19990920
 			-- Implementation of window
 		
 end -- class EV_WINDOW
 
 --!----------------------------------------------------------------
---! EiffelVision: library of reusable components for ISE Eiffel.
+--! EiffelVision2: library of reusable components for ISE Eiffel.
 --! Copyright (C) 1986-1999 Interactive Software Engineering Inc.
 --! All rights reserved. Duplication and distribution prohibited.
 --! May be used only with ISE Eiffel, under terms of user license. 

@@ -30,7 +30,7 @@ inherit
 			infix ">"
 		end
 
-creation
+create
 	make,
 	set
 
@@ -88,7 +88,7 @@ feature -- Basic operation
 		require
 			other_exists: other /= Void
 		do
-			!! Result.set (x - other.x, y - other.y)
+			create Result.set (x - other.x, y - other.y)
 		ensure
 			x_set: Result.x = x - other.x
 			y_set: Result.y = y - other.y
@@ -99,7 +99,7 @@ feature -- Basic operation
 		require
 			other_exists: other /= Void
 		do
-			!! Result.set (x + other.x, y + other.y)
+			create Result.set (x + other.x, y + other.y)
 		ensure
 			x_set: Result.x = x + other.x
 			y_set: Result.y = y + other.y
@@ -108,19 +108,19 @@ feature -- Basic operation
 	infix "*" (other: INTEGER): like Current is
 			-- Current point multiplied by `other'.
 		do
-			!! Result.set (x * other, y * other)
+			create Result.set (x * other, y * other)
 		end
 
 	infix "//" (other: INTEGER): like Current is
 			-- Current point devided by `other'.
 		do
-			!! Result.set (x // other, y // other)
+			create Result.set (x // other, y // other)
 		end
 
 	prefix "-": like Current is
 			-- Make a negative copy of current point
 		do
-			!! Result.set (-x, -y)
+			create Result.set (-x, -y)
 		ensure
 			x_set: Result.x = -x
 			y_set: Result.y = -y
@@ -129,7 +129,7 @@ feature -- Basic operation
 	prefix "+": like Current is
 			-- Make a positive copy of current point
 		do
-			!! Result.set (x, y)
+			create Result.set (x, y)
 		ensure
 			superimposable_result: Result.is_superimposable (Current)
 		end
@@ -139,7 +139,7 @@ feature -- Duplication
 	duplicate: like Current is
 			-- Create a copy of current point.
 		do
-			!! Result.set (x, y)
+			create Result.set (x, y)
 		ensure
 			superimposable_result: Result.is_superimposable (Current)
 		end
@@ -275,19 +275,19 @@ invariant
 
 end -- class EV_POINT
 
---|----------------------------------------------------------------
---| EiffelVision: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
+--!----------------------------------------------------------------
+--! EiffelVision2: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-1999 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!----------------------------------------------------------------
 

@@ -336,7 +336,7 @@ feature  -- Compatibility
 			text_displayed.new_line
 		end
 
-feature {EB_COMMAND} -- Search commands
+feature -- Search commands
 
 	find_next is
 			-- Find next occurrence of last searched pattern.

@@ -300,5 +300,9 @@ feature -- Warning Dialogs
 		%please select a different component name."
 		
 	Component_identical_name_warning: STRING is " is already used as a component name.%NPlease enter a unique component name."
+	
+	Windows_unsupported_pixmap_type: STRING is "File type not supported. BMP, ICO and PNG file types supported."
+	
+	Unix_unsupported_pixmap_type: STRING is "File type not supported. PNG and XPM file types supported."
 
 end -- class GB_CONSTANTS

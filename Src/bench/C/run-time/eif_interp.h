@@ -205,6 +205,7 @@ extern void idump(FILE *fd, char *start);
 
 /* Byte code for expression creation */
 #define BC_CREATE_EXP		(char) 135
+#define BC_NULL_POINTER		(char) 136
 
 #ifdef CONCURRENT_EIFFEL
 /* Instructions for Concurrent Eiffel */

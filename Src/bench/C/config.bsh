@@ -5,11 +5,29 @@ borland-=''
 include_path='$compiler_path\include'
 lib_path='$compiler_path\lib'
 make='$compiler_path\bin\make'
-ccflags='-N -M -w-'
-cc='bcc32'
-optimize='-O2'
+#
+#-- MT debug
+#-----------
+#optimize='-O2'
+#ccflags='-N -M -w- -v -tWM -DEIF_THREADS'
+#
+#-- MT no debug
+#--------------
+ccflags='-N -M -w- -tWM -DEIF_THREADS'
+#
+#-- no MT debug
+#--------
+#ccflags='-N -M -w- -v'
+#
+#-- no MT no debug
+#--------
+#ccflags='-N -M -w-'
+#
+#
 link_line='&$compiler_path\bin\tlib /c $@ +$**'
 link_wline='&$compiler_path\bin\tlib /c $@ +$**'
-extra_object_files='$compiler_path\bin\c0w32.obj'
+cc='bcc32'
+optimize='-O2'
+extra_object_files=''
 compiler_path='d:\apps\bc5'
 #

@@ -54,5 +54,5 @@ using System.Runtime.CompilerServices;
 //       documentation for more information on this.
 //
 [assembly: AssemblyDelaySign(false)]
-[assembly: AssemblyKeyFile("e:\\sources\\dotnet\\helpers\\isekey.snk")]
+[assembly: AssemblyKeyFile("isekey.snk")]
 [assembly: AssemblyKeyName("")]

@@ -39,6 +39,7 @@ feature
 		local
 			file, copy_file: RAW_FILE
 			f_name: FILE_NAME
+			f_count: INTEGER
 			vd21: VD21
 			vd22: VD22
 		do
@@ -63,9 +64,12 @@ feature
 						create copy_file.make (f_name)
 						if copy_file.is_creatable then
 							copy_file.open_write
-							file.readstream (file.count)
-							file.start
-							copy_file.putstring (file.laststring)
+							f_count := file.count
+							if f_count > 0 then
+								file.readstream (f_count)
+								file.start
+								copy_file.putstring (file.laststring)
+							end
 							copy_file.close
 						end
 					end

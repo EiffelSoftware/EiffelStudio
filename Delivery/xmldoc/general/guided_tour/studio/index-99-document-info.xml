@@ -2,12 +2,12 @@
 	<meta_data/>
 	<paragraph>
 		<paragraph>Title: 
-			<span>EiffelStudio: A Guided Tour</span>, ISE Technical Report TR-EI-68/GT.  (Replaces TR-EI-38/EB.  )
+			<italic>EiffelStudio: A Guided Tour</italic>, ISE Technical Report TR-EI-68/GT.  (Replaces TR-EI-38/EB.  )
 		</paragraph>
-		<paragraph>Publication history</paragraph>
+		<heading><size>3</size>Publication history</heading>
 		<paragraph>First published 1993 as 
-			<span>First Steps with EiffelBench</span> (TR-EI-38/EB) and revised as a chapter of 
-			<span>Eiffel: The Environment</span> 
+			<italic>First Steps with EiffelBench</italic> (TR-EI-38/EB) and revised as a chapter of 
+			<italic>Eiffel: The Environment</italic> 
 			<link>
 				<url>http://www.eiffel.com/doc/#ooe</url>
 				<label>(TR-EI-39/IE), also available as</label>
@@ -17,20 +17,20 @@
 		<paragraph>Version 3.  3.  8, 1995.  </paragraph>
 		<paragraph>Version 4.  1, 1997</paragraph>
 		<paragraph>This version: July 2001.  Corresponds to release 5.  0 of the ISE Eiffel environment.  </paragraph>
-		<paragraph>Author</paragraph>
-		<paragraph/>
-		<paragraph>Software credits</paragraph>
+		<heading><size>3</size>Author</heading>
+		<italic>Bertrand Meyer</italic>
+		<heading><size>3</size>Software credits</heading>
 		<paragraph>Emmanuel Stapf, Arnaud Pichery, Xavier Rousselot, Raphael Simon; Etienne Amodeo, Jrome Bou Aziz, Vincent Brendel, Gauthier Brillaud, Paul Colin de Verdiere, Jocelyn Fiat, Pascal Freund, Savrak Sar, Patrick Schonbach, Zoran Simic, Jacques Sireude, Tanit Talbi, Emmanuel Texier, Guillaume Wong-So; EiffelVision 2: Leila Ait-Kaci, Sylvain Baron, Sami Kallio, Ian King, Sam O'Connor, Julian Rogers.  See also acknowledgments for earlier versions in 
-			<span>Eiffel: The Environment</span>(TR-EI-39/IE)
+			<italic>Eiffel: The Environment</italic>(TR-EI-39/IE)
 		</paragraph>
 		<paragraph>Non-ISE: special thanks to Thomas Beale, Eric Bezault, Paul Cohen, Paul-Georges Crismer, Michael Gacsaly, Dave Hollenberg, Mark Howard, Randy John, Eirik Mangseth, Glenn Maughan, Jacques Silberstein.  </paragraph>
-		<paragraph>Cover design</paragraph>
+		<heading><size>3</size>Cover design</heading>
 		<paragraph>Rich Ayling.  </paragraph>
-		<paragraph>Copyright notice and proprietary information</paragraph>
+		<heading><size>3</size>Copyright notice and proprietary information</heading>
 		<paragraph>Copyright Interactive Software Engineering Inc.  (ISE), 2001.  May not be reproduced in any form (including electronic storage) without the written permission of ISE.  "Eiffel Power" and the Eiffel Power logo are trademarks of ISE.  </paragraph>
 		<paragraph>All uses of the product documented here are subject to the terms and conditions of the ISE Eiffel user license.  Any other use or duplication is a violation of the applicable laws on copyright, trade secrets and intellectual property.  </paragraph>
 		<paragraph>Any third-party products mentioned in this document are hereby acknowledged as trademarks of their respective owners.  </paragraph>
-		<paragraph>Special duplication permission for educational institutions</paragraph>
+		<heading><size>3</size>Special duplication permission for educational institutions</heading>
 		<paragraph>Degree-granting educational institutions using ISE Eiffel for teaching purposes as part of the 
 			<span>
 				<link>
@@ -39,4 +39,36 @@
 				</link>
 			</span> may be permitted under certain conditions to copy specific parts of this book.  Contact ISE for details.  
 		</paragraph>
+		<table>
+			<row>
+				<cell><alignment>center</alignment><bold>About ISE</bold> </cell></row>
+<row><cell>
+<paragraph>ISE (Interactive Software Engineering) helps you produce software better, faster and cheaper. </paragraph>
+
+<paragraph>ISE provides a wide range of products and services based on object technology, including ISE Eiffel, a complete development environment for the full system lifecycle. ISE's training courses, available worldwide, cover key management and technical topics. ISE's consultants are available to address your project needs at all levels. 
+</paragraph>
+
+<paragraph>ISE's TOOLS (Technology of Object-Oriented Languages and Systems) conferences, <link><url>http://www.tools-conferences.com</url><label>http://www.tools-conferences.com</label></link> , are the meeting point for anyone interested in the software technologies of the future.</paragraph> 
+
+<paragraph>ISE originated one of the earliest .NET products and offers a full range of .NET services and training at <link><url>http://www.dotnetexperts.com</url><label>http://www.dotnetexperts.com</label></link> . </paragraph>
+
+<paragraph>For more information <line_break/>
+<line_break/>
+    Interactive Software Engineering Inc.<line_break/>
+    ISE Building, 360 Storke Road<line_break/>
+    Goleta, CA 93117 USA<line_break/>
+    Telephone 805-685-1006, Fax 805-685-6869 <line_break/>
+<line_break/>
+Internet and e-mail </paragraph>
+
+<paragraph>ISE maintains a rich source of information at <link><url>http://eiffel.com</url><label>http://eiffel.com</label></link> , with more than 1200 Web pages including online documentation, downloadable files, product descriptions, links to ISE partners, University Partnership program, mailing list archives, announcements, press coverage, Frequently Asked Questions, Support pages, and much more. </paragraph>
+
+<paragraph>Visit <link><url>http://contact.eiffel.com</url><label>http://contact.eiffel.com</label></link> to request information about products and services. To subscribe to the ISE Eiffel user list, go to<link><url>http://groups.yahoo.com/group/ise_users/join</url><label> http://groups.yahoo.com/group/ise_users/join</label></link> . </paragraph>
+
+<paragraph>Support programs </paragraph>
+
+<paragraph>ISE offers a variety of support options tailored to the diverse needs of its customers. See <link><url>http://support.eiffel.com</url><label>http://support.eiffel.com</label></link> for details. </paragraph>
+</cell>
+			</row>	
+		</table>
 	</paragraph></document>

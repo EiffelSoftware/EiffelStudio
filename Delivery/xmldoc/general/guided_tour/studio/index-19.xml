@@ -120,7 +120,7 @@
 					<string>simple</string>
 				</code> doesn't), you will provide the appropriate arguments after the command name:
 			</paragraph>
-			<code_block>	system_name.<keyword>exe</keyword> &amp; arg &amp; .</code_block>
+			<code_block>	system_name.<keyword>exe</keyword> ... arg ...</code_block>
 			<paragraph>Because various platforms have different conventions, "relative paths" referenced in your system will mean something different under Unix/Linux, where they relate to the directory from which the command is launched, and under Windows, where they relate to the application's directory.  </paragraph>
 		</div>
 		<div>
@@ -151,4 +151,14 @@
 			</heading>
 			<paragraph>With this discussion of compilation and execution we have finished our review of the key capabilities of EiffelStudio.  Not everything has been covered, but you are now familiar with the essentials and ready to discover the rest by yourself, both by trying out various capabilities -- most of which should be self-explanatory -- and examining the extensive online documentation that accompanies the product.  </paragraph>
 		</div>
+		<paragraph>
+			<link>
+				<url>index-18.xml</url>
+				<label>&lt;&lt; Previous</label>
+			</link> 
+			<link>
+				<url>index-20.xml</url>
+				<label>Next &gt;&gt;</label>
+			</link>
+		</paragraph>
 	</paragraph></document>

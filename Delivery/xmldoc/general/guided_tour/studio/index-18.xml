@@ -32,6 +32,11 @@
 		</paragraph>
 		<table>
 			<row>
+				<cell><bold>OPTION</bold></cell>
+				<cell><bold>ARGUMENT</bold></cell>
+				<cell><bold>EFFECT</bold></cell>
+			</row>
+			<row>
 				<cell>-ace file_name</cell>
 				<cell/>
 				<cell>Use as Ace the file of name file_name . (Default: file Ace.ace in current directory.) </cell>
@@ -147,4 +152,14 @@
 				<cell>Print EiffelStudio version.</cell>
 			</row>
 		</table>
+		<paragraph>
+			<link>
+				<url>index-17.xml</url>
+				<label>&lt;&lt; Previous</label>
+			</link> 
+			<link>
+				<url>index-19.xml</url>
+				<label>Next &gt;&gt;</label>
+			</link>
+		</paragraph>
 	</paragraph></document>

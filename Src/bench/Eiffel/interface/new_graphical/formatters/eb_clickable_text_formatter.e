@@ -34,7 +34,7 @@ feature -- Properties
 feature -- Formatting
 
 	format (stone: STONE) is
-			-- Show special format of `stone' in class text `text_window',
+			-- Show special format of `stone' in class text `text_area',
 			-- if it's clickable; do nothing otherwise.
 		local
 --			cur: CURSOR
@@ -56,21 +56,21 @@ feature -- Formatting
 						not same_stone)
 					then
 						if c_stone.is_valid then
---							tool.close_search_window
+--							tool.close_search_dialog
 							if c_stone.clickable then
 								display_temp_header (c_stone)
 --								!! mp.set_watch_cursor
---								cur := tool.text_window.cursor
-								tool.text_window.clear_window
+--								cur := tool.text_area.cursor
+								tool.text_area.clear_window
 --								tool.set_editable (False)
 								tool.set_file_name (file_name (c_stone))
 								display_info (c_stone)
 --								if cur /= Void and then same_stone then
---									tool.text_window.go_to (cur)
+--									tool.text_area.go_to (cur)
 --								else
---									tool.text_window.set_top_character_position (0)
+--									tool.text_area.set_top_character_position (0)
 --								end
-								tool.text_window.display
+								tool.text_area.display
 									-- what does that do?
 								tool.set_stone (c_stone)
 								tool.set_last_format (Current)

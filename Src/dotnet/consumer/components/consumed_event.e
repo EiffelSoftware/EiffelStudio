@@ -19,7 +19,8 @@ inherit
 		end
 
 create
-	make
+	make,
+	my_make
 
 feature {NONE} -- Initialization
 
@@ -64,6 +65,31 @@ feature {NONE} -- Initialization
 			remover_set: has_remover implies remover /= Void
 			valid_remover: has_remover implies remover.is_property_or_event
 			raiser_set: raiser = rais
+			valid_raiser: raiser /= Void implies raiser.is_property_or_event
+		end
+
+	my_make (en, dn: STRING; pub: BOOLEAN; decl_type: CONSUMED_REFERENCED_TYPE; cp_raiser, cp_adder, cp_remover: CONSUMED_PROCEDURE) is
+			-- Initialize property with name `n' and type `type'.
+		require
+			non_void_eiffel_name: en /= Void
+			non_void_dotnet_name: dn /= Void
+			valid_eiffel_name: not en.is_empty
+			valid_dotnet_name: not dn.is_empty
+			non_void_declaring_type: decl_type /= Void
+		local
+			args: ARRAY [CONSUMED_ARGUMENT]
+		do
+			dotnet_name := dn
+			is_public := pub
+			entity_make (en, pub, decl_type)
+			raiser := cp_raiser
+			adder := cp_adder
+			remover := cp_remover
+		ensure
+			dotnet_name_set: dotnet_name = dn
+			raiser_set: raiser = cp_raiser
+			adder_set: adder = cp_adder
+			remover_set: remover = cp_remover
 			valid_raiser: raiser /= Void implies raiser.is_property_or_event
 		end
 

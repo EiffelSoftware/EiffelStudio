@@ -89,6 +89,7 @@ feature -- Initialization
 					retried := True;
 				end;
 			end;
+--!! FIXME: check Concurrent_Eiffel license
 			if not retried then
 				Project_directory.make_from_string (project_dir.name);
 				if not p_eif.is_closed then

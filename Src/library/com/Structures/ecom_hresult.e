@@ -7,6 +7,9 @@ indexing
 class
 	ECOM_HRESULT
 
+inherit
+	HRESULT_FORMATTER
+
 creation
 	make,
 	make_from_integer
@@ -48,6 +51,27 @@ feature -- Access
 			Result := cwin_hresult_severity_bit (item)
 		end
 
+	message: STRING is
+			-- Human-readable string.
+		local
+			error_messages: WEL_WINDOWS_ERROR_MESSAGES
+		do
+			Result := ccom_format_message (formatter, item)
+			Result.tail (Result.count - 10)
+			Result.left_adjust
+			Result.right_adjust
+			
+			if Result.empty then
+				create error_messages
+				Result := error_messages.error_messages.item (error_code)
+			end
+			if Result = Void then
+				create Result.make (0)
+			end
+		ensure
+			non_void_message: Result /= Void
+		end
+		
 feature -- Element change
 
 	set_item (an_item: like item) is
@@ -98,8 +122,8 @@ feature -- Status report
 		do
 			Result := (severity_bit = 0)
 		end
-
-feature {NONE} -- Implementation
+			
+feature {NONE} -- Externals
 
 	cwin_hresult_make_hresult (tmp_sev, a_facility_code, an_error_code: INTEGER): INTEGER is
 		external

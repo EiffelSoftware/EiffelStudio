@@ -20,13 +20,7 @@ inherit
 			{NONE} all
 		end
 		
-	MEMORY
-		export
-			{NONE} all
-		redefine
-			dispose
-		end
-
+	HRESULT_FORMATTER
 
 feature --  Access
 
@@ -89,29 +83,6 @@ feature -- Element Change
 			raise (ccom_hresult_to_string (formatter, code))
 		end
 
-feature {NONE} -- Implementation
-
-	formatter: POINTER is
-			-- Error messages formatter.
-		do
-			if impl_formatter = default_pointer then
-				impl_formatter := ccom_initialize_formatter
-			end
-			Result := impl_formatter
-		ensure
-			valid_formatter: Result /= default_pointer
-		end
-
-	impl_formatter: POINTER
-			-- Pointer holder.
-
-	dispose is
-			-- Free formatter first.
-		do
-			if impl_formatter /= default_pointer then
-				ccom_delete_formatter (impl_formatter)
-			end
-		end
 			
 feature {NONE} -- External
 
@@ -128,16 +99,6 @@ feature {NONE} -- External
 	ccom_hresult (a_pointer: POINTER; an_exception_code: POINTER ): INTEGER is
 		external
 			"C++ [Formatter %"ecom_exception.h%"] (char *): EIF_INTEGER"
-		end
-		
-	ccom_initialize_formatter: POINTER is
-		external
-			"C++ [new Formatter %"ecom_exception.h%"] ()"
-		end
-
-	ccom_delete_formatter (a_pointer: POINTER) is
-		external
-			"C++ [delete Formatter %"ecom_exception.h%"]()"
 		end
 
 	ccom_raise (a_pointer: POINTER; code: INTEGER) is

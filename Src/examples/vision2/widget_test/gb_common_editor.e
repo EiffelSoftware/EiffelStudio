@@ -188,7 +188,7 @@ feature {NONE} -- Implementation
 		end
 		
 	initialize_attribute_editor (editor: GB_OBJECT_EDITOR_ITEM) is
-			--
+			-- Initialize `editor'.
 		do
 		end
 		
@@ -205,7 +205,7 @@ feature {NONE} -- Implementation
 		end
 		
 	set_default_icon_pixmap (dialog: EV_DIALOG) is
-			--
+			-- Set the default icon pixmap to `dialog'.
 		do
 		end
 

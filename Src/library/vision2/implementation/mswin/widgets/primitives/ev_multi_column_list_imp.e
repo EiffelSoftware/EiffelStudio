@@ -627,8 +627,8 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 		do
 			i := ev_children.index_of (item_imp, 1) - 1
 			create litem.make_with_attributes (Lvif_state, i, 0, 0, "")
-			litem.set_state (Lvis_selected)
-			litem.set_statemask (Lvis_selected)	
+			litem.set_state (Lvis_selected + Lvis_focused)
+			litem.set_statemask (Lvis_selected + Lvis_focused)	
 			cwin_send_message (wel_item, Lvm_setitemstate, i,
 				litem.to_integer)
 		end
@@ -642,7 +642,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 			i := ev_children.index_of (item_imp, 1) - 1
 			create litem.make_with_attributes (Lvif_state, i, 0, 0, "")
 			litem.set_state (0)
-			litem.set_statemask (Lvis_selected)	
+			litem.set_statemask (Lvis_selected + Lvis_focused)	
 			cwin_send_message (wel_item, Lvm_setitemstate, i,
 				litem.to_integer)
 		end

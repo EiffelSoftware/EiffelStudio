@@ -283,7 +283,7 @@ feature -- Element change
 
 feature -- Update
 
-	iterate is
+	main_loop is
 			-- Loop the application.
 		require
 			is_valid: is_valid;

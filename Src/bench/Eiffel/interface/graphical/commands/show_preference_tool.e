@@ -12,7 +12,8 @@ inherit
 		rename
 			init as make
 		end;
-	WINDOWS
+	WINDOWS;
+	INTERFACE_W
 
 creation
 	make
@@ -21,7 +22,7 @@ feature {NONE} -- Execution
 
 	work (arg: ANY) is
 		do
-			!! preference_tool.make ("Preference Tool", Project_tool.screen);
+			!! preference_tool.make (l_X_resourse_name, Project_tool.screen);
 			!! spc.make (preference_tool);
 			!! pwpc.make (preference_tool);
 			!! ewpc.make (preference_tool);

@@ -7,7 +7,8 @@ inherit
 			make as mdi_child_window_make
 		redefine
 			on_paint, on_size, class_icon, default_style,
-			on_vertical_scroll, on_key_down, on_char
+			on_vertical_scroll, on_key_down, on_char,
+			on_left_button_down
 		end
 
 	APPLICATION_IDS
@@ -288,8 +289,19 @@ feature -- Basic operations
 
 				invalidate_cursor_rect(True)
 			end
-
  		end
+
+	on_left_button_down (mouse_key, x_pos, y_pos: INTEGER) is
+		local
+			l_number: INTEGER
+		do
+--			l_number := ((y_pos - Top_margin_width)// line_increment) + first_line_displayed
+--			create cursor.make_from_absolute_pos (x_pos - Left_margin_width, l_number, text_displayed)
+			l_number := (y_pos // line_increment) + first_line_displayed
+			cursor.make_from_absolute_pos (x_pos, l_number, Current)
+			invalidate
+			update
+		end
 
 feature {NONE} -- Display functions
 	

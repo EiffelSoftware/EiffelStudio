@@ -37,8 +37,13 @@ class STRING inherit
 			copy, is_equal, out
 		end;
 
+	STRING_HANDLER
+		redefine
+			copy, is_equal, out
+		end;
+
 creation
-	make
+	make, make_from_string, make_from_c
 
 feature {NONE} -- Initialization
 
@@ -1090,7 +1095,7 @@ feature -- Output
 			Result := clone (Current);
 		end;
 
-feature {STRING, IO_MEDIUM} -- Implementation
+feature {STRING_HANDLER} -- Implementation
 
 	frozen set_count (number: INTEGER) is
 			-- Set `count' to `number' of characters.

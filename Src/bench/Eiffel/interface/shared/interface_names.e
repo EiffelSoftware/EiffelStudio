@@ -138,10 +138,10 @@ feature -- Accelerator, focus label and menu name
 
 	f_new_project: STRING is			"New Project..."
 	m_new_project: STRING is			"&New Project...%TCtrl+N"
-	a_new_project: STRING is			"Ctrl<Key>n"
+	a_new_project: STRING is			"Ctrl<Key>N"
 	f_Open_project: STRING is			"Open Project..."
 	m_Open_project: STRING is			"&Open Project...%TCtrl+O"
-	a_Open_project: STRING is			"Ctrl<Key>o"
+	a_Open_project: STRING is			"Ctrl<Key>O"
 	m_Recent_project: STRING is			"&Recent Projects"
 	f_Exit_project: STRING is			"Exit"
 	m_Exit_project: STRING is			"E&xit"
@@ -427,7 +427,6 @@ feature -- Title part
 	t_Select_a_directory: STRING is		"Select a directory";
 	t_Shell_w: STRING is				"Shell command";
 	t_Short_form_of: STRING is			"Short form of class ";
-	t_Specify_ace: STRING is			"Specify ace";
 	t_Stoppoints_of: STRING is			"Stop points of ";
 	t_Slice_w: STRING is				"Special object slice";
 	t_Statistics_of: STRING is			"Statistics of system ";

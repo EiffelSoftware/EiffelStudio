@@ -31,16 +31,17 @@ feature -- Access
 			-- We recompute it if necessary.
 		do
 			if not in_minimum_width then
-			in_minimum_width := True
-			if is_minwidth_recomputation_needed then
-				set_minwidth_recomputation_needed (False)
-				if is_minheight_recomputation_needed then
-					set_minheight_recomputation_needed (False)
-					compute_minimum_size
-					compute_minimum_width
+				in_minimum_width := True
+				if is_minwidth_recomputation_needed then
+					if is_minheight_recomputation_needed then
+						compute_minimum_size
+						set_minheight_recomputation_needed (False)
+					else
+						compute_minimum_width
+					end
+					set_minwidth_recomputation_needed (False)
 				end
-			end
-			in_minimum_width := False
+				in_minimum_width := False
 			end
 			Result := internal_minimum_width
 		end
@@ -50,17 +51,17 @@ feature -- Access
 			-- We recompute it if necessary.
 		do
 			if not in_minimum_height then
-			in_minimum_height := True
-			if is_minheight_recomputation_needed then
-				if is_minwidth_recomputation_needed then
-					compute_minimum_size
-					set_minwidth_recomputation_needed (False)
-				else
-					compute_minimum_height
+				in_minimum_height := True
+				if is_minheight_recomputation_needed then
+					if is_minwidth_recomputation_needed then
+						compute_minimum_size
+						set_minwidth_recomputation_needed (False)
+					else
+						compute_minimum_height
+					end
+					set_minheight_recomputation_needed (False)
 				end
-				set_minheight_recomputation_needed (False)
-			end
-			in_minimum_height := False
+				in_minimum_height := False
 			end
 			Result := internal_minimum_height
 		end
@@ -330,6 +331,9 @@ end -- class EV_CONTAINER_SIZEABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2000/03/06 21:18:26  brendel
+--| Fixed bug in minimum_width
+--|
 --| Revision 1.11  2000/02/19 05:45:00  oconnor
 --| released
 --|

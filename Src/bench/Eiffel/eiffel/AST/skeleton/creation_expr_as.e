@@ -163,15 +163,10 @@ feature -- Type check
 				-- just after `call.type_check'
 			context.begin_expression
 
-			if type.has_like then
-					-- We need to evaluate `type' in context of current class
-					-- and current feature.
-				new_creation_type := creation_evaluator.evaluated_type (
-					type, Context.feature_table, Context.current_feature)
-			else
-					-- Entity to create is of the type specified between the curlies.
-				new_creation_type := type.actual_type
-			end
+				-- We need to evaluate `type' in context of current class
+				-- and current feature.
+			new_creation_type := creation_evaluator.evaluated_type (
+				type, Context.feature_table, Context.current_feature)
 
 			if new_creation_type.has_expanded then
 				if new_creation_type.expanded_deferred then

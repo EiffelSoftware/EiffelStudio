@@ -631,12 +631,12 @@ feature -- Update
 				if not save_error then
 					save_precomp (licensed)
 				end
-			end
-			if
-				not manager.is_project_loaded and then
-				Workbench.last_reached_degree < 3
-			then
-				manager.on_project_loaded
+				if
+					not manager.is_project_loaded and then
+					workbench.has_compilation_started
+				then
+					manager.on_project_loaded
+				end		
 			end
 			--Compilation_modes.reset_modes
 		ensure

@@ -467,6 +467,9 @@ feature {NONE} -- Implementation
 			-- remove the row from the `ev_children'
 			ev_children.go_i_th (a_position)
 			ev_children.remove
+			
+			child_array.go_i_th (a_position)
+			child_array.remove
 
 			if par_tree_imp /= Void then
 				par_tree_imp.update_pnd_status

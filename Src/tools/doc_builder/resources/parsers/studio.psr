@@ -1,6 +1,6 @@
+-- Regular expressions to perform complete parsing of HTML document to valid XML document
+-- for EiffelStudio output
 \n || 
-xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ||
-xsi:noNamespaceSchemaLocation="D:\My Documents\Documentation Project\Misc Files\document.xsd" ||
 \t\t ||  
 \t || 
 >[ ]*< || ><
@@ -10,7 +10,7 @@ xsi:noNamespaceSchemaLocation="D:\My Documents\Documentation Project\Misc Files\
 <link [^>]*> || 
 <meta[^>]*> || 
 <style[^>]*> || 
-<html[^>]*> || <document>
+<html[^>]*> || <document output="studio">
 <head> || <help/>
 </head> || 
 <body[^>]*> || <paragraph>
@@ -38,9 +38,7 @@ xsi:noNamespaceSchemaLocation="D:\My Documents\Documentation Project\Misc Files\
 </ol> || </list>
 </ul> || </list>
 <li> || <item>
-</li> || 
-<item> || </item><itemtemp>
-</list> || </item></list>
+</li> || </item>
 <list ordered="false"></item> || <list ordered="false">
 <list ordered="true"></item> || <list ordered="true">
 <item[^>]*>([^<][^/][^i][^t][^e][^m][^>]*)<item> || <item>\1\</item><item>
@@ -49,6 +47,8 @@ xsi:noNamespaceSchemaLocation="D:\My Documents\Documentation Project\Misc Files\
 </b> || </bold>
 <i> || <italic>
 </i> || </italic>
+<em> || <italic>
+</em> || </italic>
 <br[^>]*> || <line_break/>
 </br> || <line_break/>
 ### || &
@@ -59,6 +59,7 @@ indexmoniker="([^"]*)" || <index_moniker>\1\</index_moniker>
 <img || <image>
 alt="([^"]*)" || <alt_text>\1\</alt_text>
 src="([^"]*)" || <url>\1\</url>
+</img> || </image>
 (<image>.*</url>) /> || \1\</image>
 <([/]*)mshelp:link[ \t]*([>]*) || <\1\help_link>
 <spanclass="([^"]*)">([^<]*)</span> || <\1\>\2\</\1\>
@@ -81,3 +82,10 @@ src="([^"]*)" || <url>\1\</url>
 <help/>[^<]*</style> || 
 <strong> || <bold>
 </strong> || </bold>
+(<document output="envision")><meta_data/><TITLE>([^>]*)</TITLE> || \1\ title="\2\"><meta_data/>
+</url>> || </url></image>
+<meta_data/></LINK> || <meta_data/>
+<table><row><cell>Eiffel ENViSioN!</cell></row><row><cell>[^<]*</cell></row></TABLE> ||
+<table><row><cell>© 2003-2004 Eiffel Software. All rights reserved.</cell></row></TABLE> ||
+</LINK></LINK></LINK> ||
+

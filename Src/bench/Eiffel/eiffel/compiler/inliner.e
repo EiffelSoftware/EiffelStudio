@@ -166,7 +166,16 @@ feature -- Status
 				end
 
 				if Result then
-					Result := byte_code.size <= min_inlining_threshold
+					if
+						wc.is_special and then
+						(byte_code.feature_name_id = feature {PREDEFINED_NAMES}.Element_address_name_id or
+						byte_code.feature_name_id = feature {PREDEFINED_NAMES}.base_address_name_id)
+					then
+							-- Even if the routine is big we inline it, but only for `element_address'
+							-- and `base_address' of SPECIAL.
+					else
+						Result := byte_code.size <= min_inlining_threshold
+					end
 				end
 			end
 		end

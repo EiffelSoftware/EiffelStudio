@@ -1,6 +1,6 @@
 indexing
 	description:
-		""
+		"Portable Network Graphics (PNG) Graphical Format Abstraction used by {EV_PIXMAP}.save_to_named_file"
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -20,6 +20,7 @@ feature {EV_PIXMAP_I} -- Access
 		end
 
 	save (raw_image_data: EV_RAW_IMAGE_DATA; a_filename: FILE_NAME) is
+			-- Save `raw_image_data' to file `a_filename' in PNG format.
 		local
 			a_fn, char_array: ANY
 			a_width, a_height: INTEGER

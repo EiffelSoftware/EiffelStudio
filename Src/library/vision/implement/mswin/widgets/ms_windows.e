@@ -89,12 +89,6 @@ feature
 			!! Result.make (a_font)
 		end;
 
-	io_handler (an_io_handler: IO_HANDLER): IO_HANDLER_WINDOWS is
-                        -- MS-Windows implementation of `an_io_handler'
-		do
-			!! Result.make (an_io_handler)
-		end;
-
 	iterate is
 			-- Loop the application.
 		do

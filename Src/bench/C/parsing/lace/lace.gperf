@@ -30,7 +30,6 @@ include_path,	LAC_INCLUDE_PATH
 invariant,		LAC_INVARIANT
 loop,			LAC_LOOP
 make,			LAC_MAKE
-multithreaded,		LAC_MULTITHREADED
 no,				LAC_NO
 object,			LAC_OBJECT
 optimize,		LAC_OPTIMIZE

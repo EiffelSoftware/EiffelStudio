@@ -43,7 +43,6 @@
 %token LAC_LEFT_PARAM
 %token LAC_LOOP
 %token LAC_MAKE
-%token LAC_MULTITHREADED
 %token LAC_NO
 %token LAC_OBJECT
 %token LAC_OPTIMIZE
@@ -273,8 +272,6 @@ Option_name				:	LAC_ASSERTION
 							{$$ = create_node(OPTIMIZE_SD);}
 						| LAC_TRACE
 							{$$ = create_node(TRACE_SD);}
-						| LAC_MULTITHREADED
-							{$$ = create_node(MULTITHREADED_SD);}
 						| Name
 							{$$ = create_node1(FREE_OPTION_SD,$1);}
 						;

@@ -1,5 +1,5 @@
 /* C code produced by gperf version 1.9.1 (modified by Raphael Manfredi) */
-/* Command-line: gperf -l -k 1,2,$ -N std_prefix prefix.gperf  */
+/* Command-line: gperf -a -l -N std_prefix prefix.gperf  */
 
 
 
@@ -12,7 +12,8 @@
     5 is the maximum key range
 */
 
-static int hash (register char *str, register unsigned int len)
+static int
+hash (register const char *str, register int len)
 {
   static unsigned char hash_table[] =
     {
@@ -27,23 +28,14 @@ static int hash (register char *str, register unsigned int len)
      5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
      5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
      5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-     0, 0, 5, 5, 5, 5, 0, 5, 5, 5,
+     0, 5, 5, 5, 5, 5, 0, 5, 5, 5,
      5, 5, 5, 5, 5, 5, 5, 5,
     };
-  register int hval = len ;
-
-  switch (hval)
-    {
-      default:
-      case 2:
-        hval += hash_table[str[1]];
-      case 1:
-        hval += hash_table[str[0]];
-    }
-  return hval + hash_table[str[len - 1]] ;
+  return len + hash_table[str[len - 1]] + hash_table[str[0]];
 }
 
-char * std_prefix (register char *str, register unsigned int len)
+char *
+std_prefix (register const char *str, register int len)
 {
 
   static unsigned char lengthtable[] =

@@ -19,8 +19,6 @@ all,			TE_ALL
 and,			TE_AND
 as,				TE_AS
 bit,			TE_BIT
-#boolean,		0
-#character,		0
 check,			TE_CHECK
 class,			TE_CLASS
 creation,		TE_CREATION
@@ -28,7 +26,6 @@ current,		TE_CURRENT
 debug,			TE_DEBUG
 deferred,		TE_DEFERRED
 do,				TE_DO
-#double,			0
 else,			TE_ELSE
 elseif,			TE_ELSEIF
 end,			TE_END
@@ -46,21 +43,18 @@ indexing,		TE_INDEXING
 infix,			TE_INFIX
 inherit,		TE_INHERIT
 inspect,		TE_INSPECT
-#integer,		0
 invariant,		TE_INVARIANT
 is,				TE_IS
 like,			TE_LIKE
 local,			TE_LOCAL
 loop,			TE_LOOP
 not,			TE_NOT
-#none,			0
 obsolete,		TE_OBSOLETE
 old,			TE_OLD
 once,			TE_ONCE
 or,				TE_OR
 precursor,		TE_PRECURSOR
 prefix,			TE_PREFIX
-#real,			0
 redefine,		TE_REDEFINE
 rename,			TE_RENAME
 require,		TE_REQUIRE
@@ -69,7 +63,6 @@ result,			TE_RESULT
 retry,			TE_RETRY
 select,			TE_SELECT
 separate,		TE_SEPARATE
-#string,			0
 strip,			TE_STRIP
 then,			TE_THEN
 true,			TE_TRUE

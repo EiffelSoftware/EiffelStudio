@@ -230,6 +230,9 @@ feature -- Status setting
 				if exists then
 					resize (new_width, new_height)
 				end
+				if parent /= Void then
+					parent.child_has_resized
+				end
 			end
 		end
 

@@ -72,8 +72,10 @@ feature
 				class_type_info ?= type_info;
 				if class_type_info = Void then
                 	Result.append (type_info.string_value);
-				else
+				elseif class_type_info.class_id = id then
                 	Result.append ("...");
+				else
+                	Result.append (type_info.string_value);
 				end;
                 generics.forth;
                 if not generics.after then

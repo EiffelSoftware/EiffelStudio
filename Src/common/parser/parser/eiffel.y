@@ -292,7 +292,15 @@ Index_clause: Index Index_terms ASemi
 Index: Identifier TE_COLON
 			{ $$ := $1 }
 	|	-- Empty
-			-- { $$ := Void }
+			{
+				if has_syntax_warning then
+					Error_handler.insert_warning (
+						create {SYNTAX_WARNING}.make (current_position.start_position,
+						current_position.end_position, filename, 0,
+						"Missing `Index' part of `Index_clause'."))
+				end
+				$$ := Void
+			}
 	;
 
 Index_terms: Index_value

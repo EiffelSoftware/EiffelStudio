@@ -1950,7 +1950,7 @@ feature {GB_OBJECT_HANDLER, GB_CLIPBOARD} -- Implementation
 					-- Special check required for when calling this feature from
 					-- the clipboard. In this situation, the client representation is
 					-- added later.
-				if top_level_parent_object /= Current then
+				if top_level_parent_object.window_selector_item /= Void then--/= Current then
 					l_object.add_client_representation (Current)
 				end
 			end
@@ -1971,6 +1971,7 @@ feature {NONE} -- Contract support
 		local
 			list: ARRAYED_LIST [INTEGER]
 			referred_object: GB_OBJECT
+			instance_viewer: GB_INSTANCE_VIEWER
 		do
 			list := an_object.instance_referers.linear_representation
 			from
@@ -1980,6 +1981,9 @@ feature {NONE} -- Contract support
 			loop
 				if ids.has (list.item) then
 					current_result.set_item (False)
+					if system_status.is_in_debug_mode then
+						create instance_viewer.make_with_object (object_handler.object_from_id (list.item))
+					end
 				else
 					ids.extend (list.item, list.item)
 				end

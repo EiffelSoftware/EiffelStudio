@@ -1,1 +1,2 @@
-1 typelib "Eif_compiler.tlb"
+1 TYPELIB	"Eif_compiler.tlb"
+1 ICON		"ec.ico"

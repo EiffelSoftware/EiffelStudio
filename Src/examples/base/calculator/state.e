@@ -17,7 +17,7 @@ feature {NONE}
 	operand_stack: LINKED_STACK [REAL] is
 			-- Stack of operands.
 		once
-			!! Result.make
+			create  Result.make
 		end
 
 feature 

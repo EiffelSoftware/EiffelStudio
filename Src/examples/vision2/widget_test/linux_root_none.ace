@@ -17,14 +17,14 @@ cluster
 	all root_cluster:		"."
 
 
-	all base:		"$ISE_EIFFEL\library\base"
+	all base:		"$ISE_EIFFEL/library/base"
 		exclude
 			"table_eiffel3"; "desc"; 
 		end
 
-	all wel:		"$ISE_EIFFEL\library\wel"
+	all gel:		"$ISE_EIFFEL/library/gel"
 
-	all vision2:		"$ISE_EIFFEL\library\vision2"
+	all vision2:		"$ISE_EIFFEL/library/vision2"
 		exclude
 			"mswin"; 
 		end

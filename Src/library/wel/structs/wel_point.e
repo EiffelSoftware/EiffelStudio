@@ -103,8 +103,13 @@ feature -- Status report
 
 	window_at: WEL_WINDOW is
 			-- Window containing current point
+		local
+			ptr, null: POINTER
 		do
-			Result := window_of_item (cwin_window_from_point (item))
+			ptr := cwin_window_from_point (item)
+			if ptr /= null then
+				Result := window_of_item (ptr)
+			end
 		end
 
 feature -- Comparison

@@ -1214,7 +1214,7 @@ feature {NONE} -- Implementation: Properties dialog
 				hb.disable_item_expand (ilab)
 				create index_field
 				index_field.set_leap (1)
-				maxind :=  (1 |<< 15) - 1
+				maxind :=  ((1).to_integer_32 |<< 15) - 1
 				index_field.value_range.adapt (0 |..| maxind)
 				index_field.set_minimum_width (f.string_width ("20") + 50)
 				hb.extend (index_field)

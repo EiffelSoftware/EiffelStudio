@@ -189,7 +189,7 @@ feature -- Transformation
 			s: STRING
 		do
 			if c = '%N' then
-				insert_eol (False)
+				insert_eol
 			else
 				update_x_in_pixels
 				s := clone (token.image)
@@ -268,7 +268,7 @@ feature -- Transformation
 			t_before, t_after: EDITOR_TOKEN
 		do
 			if c = '%N' then
-				insert_eol (True)
+				insert_eol
 			elseif token = line.end_token then
 					s := line.image + c.out
 					whole_text.lexer.execute (s)
@@ -314,7 +314,7 @@ feature -- Transformation
 		end
 
 
-	insert_eol (overwrite_current_char : BOOLEAN) is
+	insert_eol is
 		local
 			t_image, s: STRING
 			i_t: EDITOR_TOKEN
@@ -326,11 +326,7 @@ feature -- Transformation
 				line.add_right (new_line)
 			else
 				t_image := token.image
-				if overwrite_current_char then
-					s := t_image.substring (pos_in_token + 1, t_image.count)
-				else
-					s := t_image.substring (pos_in_token, t_image.count)
-				end
+				s := t_image.substring (pos_in_token, t_image.count)
 				from
 					i_t := token.next
 				until

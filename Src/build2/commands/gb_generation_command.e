@@ -84,6 +84,7 @@ feature -- Basic operations
 			objects: ARRAYED_LIST [GB_OBJECT]
 			confirmation_dialog: EV_CONFIRMATION_DIALOG
 		do
+			force_name_change_completion_on_all_editors
 			objects := Window_selector.objects
 			if not object_handler.objects_all_named (objects) then
 				create confirmation_dialog.make_with_text (Not_all_windows_named_string)

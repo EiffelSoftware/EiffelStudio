@@ -29,7 +29,8 @@ inherit
 			compute_minimum_size,
 			interface,
 			initialize,
-			on_size
+			on_size,
+			destroy
 		end
 		
 	EV_WEL_CONTROL_CONTAINER_IMP
@@ -738,6 +739,18 @@ feature {NONE} -- Basic operations for implementation
 		end
 
 feature {NONE} -- Implementation
+
+	destroy is
+			-- Destroy `Current', but set the parent sensitive
+			-- in case it was set insensitive by the child.
+		do
+			if parent_imp /= Void then
+				parent_imp.interface.prune (Current.interface)
+			end
+			interface.discard_items
+			wel_destroy
+			is_destroyed := True
+		end
 
 	update_for_pick_and_drop (starting: BOOLEAN) is
 			-- Pick and drop status has changed so notify children.

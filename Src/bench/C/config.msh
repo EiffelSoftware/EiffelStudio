@@ -11,29 +11,29 @@ link32= '$compiler_path\bin\link'
 #-----------
 #ccflags='-W3 -nologo -Zi -MTd -DEIF_THREADS'
 #dllflags='-nologo -Zi -MTd -subsystem:WINDOWS -dll -incremental:no'
-#link_line='$compiler_path\bin\lib -OUT:$@ $(OBJECTS) -DEBUGTYPE:BOTH -NODEFAULTLIB:LIBC.LIB'
-#link_wline='$compiler_path\bin\lib -OUT:$@ $(WOBJECTS) -DEBUGTYPE:BOTH -NODEFAULTLIB:LIBC.LIB'
+#link_line='$compiler_path\bin\lib -OUT:$(OUTDIR)\$@ $(OBJECTS) -DEBUGTYPE:BOTH -NODEFAULTLIB:LIBC.LIB'
+#link_wline='$compiler_path\bin\lib -OUT:$(OUTDIR)\$@ $(WOBJECTS) -DEBUGTYPE:BOTH -NODEFAULTLIB:LIBC.LIB'
 #
 #-- MT no debug
 #--------------
 #ccflags='-W3 -nologo -MT -DEIF_THREADS'
 #dllflags='-nologo -MT -subsystem:WINDOWS -dll -incremental:no'
-#link_line='$compiler_path\bin\lib -OUT:$@ $(OBJECTS)'
-#link_wline='$compiler_path\bin\lib -OUT:$@ $(WOBJECTS)'
+#link_line='$compiler_path\bin\lib -OUT:$(OUTDIR)\$@ $(OBJECTS)'
+#link_wline='$compiler_path\bin\lib -OUT:$(OUTDIR)\$@ $(WOBJECTS)'
 #
 #-- MT DLL debug
 #--------------
 #ccflags='-W3 -nologo -Zi -MDd -DEIF_THREADS'
 #dllflags='-nologo -Zi -MDd -subsystem:WINDOWS -dll -incremental:no'
-#link_line='$compiler_path\bin\lib -OUT:$@ $(OBJECTS) -DEBUGTYPE:BOTH -NODEFAULTLIB:LIBC.LIB'
-#link_wline='$compiler_path\bin\lib -OUT:$@ $(WOBJECTS) -DEBUGTYPE:BOTH -NODEFAULTLIB:LIBC.LIB'
+#link_line='$compiler_path\bin\lib -OUT:$(OUTDIR)\$@ $(OBJECTS) -DEBUGTYPE:BOTH -NODEFAULTLIB:LIBC.LIB'
+#link_wline='$compiler_path\bin\lib -OUT:$(OUTDIR)\$@ $(WOBJECTS) -DEBUGTYPE:BOTH -NODEFAULTLIB:LIBC.LIB'
 #
 #-- MT DLL no debug
 #------------------
 #ccflags='-W3 -nologo -MD -DEIF_THREADS'
 #dllflags='-nologo -MD -subsystem:WINDOWS -dll -incremental:no'
-#link_line='$compiler_path\bin\lib -OUT:$@ $(OBJECTS)'
-#link_wline='$compiler_path\bin\lib -OUT:$@ $(WOBJECTS)'
+#link_line='$compiler_path\bin\lib -OUT:$(OUTDIR)\$@ $(OBJECTS)'
+#link_wline='$compiler_path\bin\lib -OUT:$(OUTDIR)\$@ $(WOBJECTS)'
 #
 #-- no MT debug
 #--------
@@ -47,13 +47,13 @@ link32= '$compiler_path\bin\link'
 #--------
 ccflags='-W3 -nologo'
 dllflags='-nologo -subsystem:WINDOWS -dll -incremental:no'
-link_line='$compiler_path\bin\lib -OUT:$@ $(OBJECTS)'
-link_wline='$compiler_path\bin\lib -OUT:$@ $(WOBJECTS)'
-link_eline='$compiler_path\bin\lib -OUT:$@ $(EOBJECTS)'
+link_line='$compiler_path\bin\lib -OUT:$(OUTDIR)\$@ $(OBJECTS)'
+link_wline='$compiler_path\bin\lib -OUT:$(OUTDIR)\$@ $(WOBJECTS)'
+link_eline='$compiler_path\bin\lib -OUT:$(OUTDIR)\$@ $(EOBJECTS)'
 #
 optimize='-O2 -Ogityb2 -Gs'
 #optimize=''
 cc='cl'
 extra_object_files=''
-compiler_path='D:\apps\DevStudio\VC'
+compiler_path='c:\progra~1\DevStudio\VC'
 #

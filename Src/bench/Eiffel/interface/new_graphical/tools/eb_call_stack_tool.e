@@ -625,7 +625,7 @@ feature {NONE} -- Implementation
 				end
 
 				dotnet_cse ?= e_cse
-				if dotnet_cse /= Void then
+				if dotnet_cse /= Void and dotnet_cse.dotnet_module_name /= Void then
 					l_tooltip.append_string ("%N   + Module = " + dotnet_cse.dotnet_module_name)
 				end	
 			

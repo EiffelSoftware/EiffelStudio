@@ -7,29 +7,19 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 	
-class EV_BOX
+--XX deferred class 
+class 
+
+	EV_BOX
 
 inherit
 
 	EV_INVISIBLE_CONTAINER
 		redefine
-			make,			
 			implementation
 		end
 	
-creation
-	
-	make
-	
-feature {NONE} -- Initialization
-
-        make (parent: EV_CONTAINER) is
-                        -- Create a fixed widget with, `parent' as
-                        -- parent
-		do
-			!EV_BOX_IMP!implementation.make (parent)
-			Precursor (parent)
-		end
+feature {NONE} -- Status report
 	
 	get_expand (box_child: EV_WIDGET): BOOLEAN is
 			-- Is the box expanded to fill the area 
@@ -48,13 +38,21 @@ feature {NONE} -- Initialization
 		do
 		end
 	
+feature -- Element change
+	
 	set_child_packing (box_child: EV_WIDGET; expand, fill: BOOLEAN; padding: INTEGER) is
 			-- Set expand, fill and padding for 'box_child'
 		
 		do
 		end
 	
-	-- feature child in this class means the last child
+	set_children_packing (expand, fill: BOOLEAN; padding: INTEGER) is
+			-- Set expand, fill and padding for each 
+			-- child in the box
+		
+		do
+		end	
+
 feature {NONE} -- Implementation
 	
 	implementation: EV_BOX_I

@@ -226,10 +226,11 @@ feature {NONE}-- Initialization
 			l_horizontal_box_4.disable_item_expand (controller_parent)
 			l_vertical_box_6.disable_item_expand (generation_button)
 			generation_button.set_text ("Generate Test Application")
-			test_class_display.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (253, 255, 255))
 			test_class_display.disable_edit
 			
 				--Connect events.
+			close_request_actions.extend (agent close_test)
+			file_menu.select_actions.extend (agent close_test)
 			l_notebook_1.selection_actions.extend (agent clear_events)
 			select_all.select_actions.extend (agent select_all_events)
 			clear_all.select_actions.extend (agent clear_all_events)
@@ -281,6 +282,11 @@ feature {NONE} -- Implementation
 	select_all, clear_all, generation_button: EV_BUTTON
 	l_vertical_split_area_1: EV_VERTICAL_SPLIT_AREA
 	test_class_display, flat_short_display: EV_TEXT
+	
+	close_test is
+			-- Called by `close_request_actions' of `Current'.
+		deferred
+		end
 	
 	clear_events is
 			-- Called by `selection_actions' of `l_notebook_1'.

@@ -377,12 +377,7 @@ feature
 					-- If Result was used, generate it. Otherwise, its value
 					-- is simply the initial one (i.e. generic 0).
 				if context.result_used then
-					if real_type (result_type).c_type.is_pointer then
-						context.Result_register.print_register_by_name
-					else
-						buf.putstring ("Result")
-					end
-					buf.putchar (';')
+					buf.putstring ("Result;")
 				else
 					type_i.c_type.generate_cast (buf)
 					buf.putstring ("0;")
@@ -644,16 +639,13 @@ feature
 					if context.local_vars.item(i) then
 							-- Local reference variable are declared via
 							-- the local variable array "l[]".
-						if not context.need_gc_hooks or else
-							not type_i.c_type.is_pointer then
-							type_i.c_type.generate (buf)
-							buf.putstring ("loc")
-							buf.putint (i)
-							buf.putstring (" = ")
-							type_i.c_type.generate_cast (buf)
-							buf.putstring ("0;")
-							buf.new_line
-						end
+						type_i.c_type.generate (buf)
+						buf.putstring ("loc")
+						buf.putint (i)
+						buf.putstring (" = ")
+						type_i.c_type.generate_cast (buf)
+						buf.putstring ("0;")
+						buf.new_line
 					end
 					i := i + 1
 				end
@@ -750,17 +742,12 @@ feature
 			buf: GENERATION_BUFFER
 		do
 			ctype := real_type (result_type).c_type
-			if ctype.is_pointer then
-					-- The generation is included in the declaration of local
-					-- variable array, hehe.
-			else
-				buf := buffer
-				ctype.generate (buf)
-				buf.putstring ("Result = ")
-				ctype.generate_cast (buf)
-				buf.putstring ("0;")
-				buf.new_line
-			end
+			buf := buffer
+			ctype.generate (buf)
+			buf.putstring ("Result = ")
+			ctype.generate_cast (buf)
+			buf.putstring ("0;")
+			buf.new_line
 		end
 
 	init_dtype is

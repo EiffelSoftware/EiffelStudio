@@ -97,7 +97,7 @@ feature -- Code generation
 			if context.byte_code.is_once and then id = 0 then
 				buf.putstring ("Result")
 			else
-				buf.put_protected_local (context.local_index (internal_reg_name (id)));
+				buf.putstring (internal_reg_name (id));
 			end
 		end
 

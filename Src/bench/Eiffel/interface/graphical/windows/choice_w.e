@@ -28,20 +28,28 @@ inherit
 
 creation
 
-	make
+	make, make_with_widget
 
 feature -- Initialization
 
 	make (a_parent: COMPOSITE) is
 			-- Make a choice window.
 		do
-			os_make ("Choic Window", a_parent);
+			os_make ("Choice Window", a_parent);
 			!! list.make (new_name, Current);
 			list.set_single_selection;
 			allow_resize;
 			set_exclusive_grab;
 			list.add_single_action (Current, Void);
 			set_composite_attributes (Current)
+			map_widget := a_parent;
+		end;
+
+	make_with_widget (a_parent: COMPOSITE; a_widget: WIDGET) is
+			-- Make a choice window, but map it to `a_widget'.
+		do
+			make (a_parent);
+			map_widget := a_widget
 		end;
 
 feature
@@ -89,20 +97,37 @@ feature
 			caller.execute (Current)
 		end;
 
-feature {NONE} -- Implementation
+	select_i_th (i: INTEGER) is
+			-- Select item at the `i'-th position.
+		do
+			if i >= 1 and then i <= list.count then
+				list.select_i_th (i)
+			end
+		end;
+
+feature {NONE} -- Properties
 
 	list: SCROLL_LIST;
 
 	caller: COMMAND_W;
 			-- Command who calls `Current'
 
-	work (argument: ANY) is do end;
+	map_widget: WIDGET;
+			-- Widget used while mapping Current on the screen
+
+feature {NONE} -- Implementation
+
+	work (argument: ANY) is
+		do
+		end;
 
 	display is
 			-- Display the choice window in order to be seen 
 			-- on the screen.
 		do
-			set_x_y (parent.real_x, parent.real_y);
+			set_x_y (map_widget.real_x, map_widget.real_y);
+			os_popup;
+			popdown;
 			if real_x + width > screen.width then
 				set_x (screen.width - width)
 			end;

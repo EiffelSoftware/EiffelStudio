@@ -95,7 +95,11 @@ feature {EV_ANY} -- Contract support
 				t_item.put_front (t_item2)
 				t_item2.prune (t_item3)
 				t_item.go_i_th (3)		
-			--| FIXME??	t_item.put_left (t_item3)
+				t_item3.parent.prune (t_item3)
+					check
+						p_v: t_item3.parent = Void
+					end
+				t_item.put_left (t_item3)
 				t_item3.prune (t_item4)
 				t_item.go_i_th (5)
 				t_item.replace (t_item4)
@@ -204,6 +208,9 @@ end -- class EV_TREE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.36  2000/05/03 18:14:25  oconnor
+--| extended make_for_test
+--|
 --| Revision 1.35  2000/04/26 00:04:04  pichery
 --| Slight redesign of the pixmap handling in
 --| trees and multi-column lists.

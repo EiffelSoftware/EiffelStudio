@@ -390,7 +390,7 @@ feature
 							buf.new_line;
 						end;
 						target.print_register;
-						buf.putstring (" = (char *) 0;");
+						buf.putstring (" = (EIF_REFERENCE) 0;");
 						buf.new_line;
 					else
 						generate_regular_assignment (Simple_assignment);
@@ -618,7 +618,7 @@ feature
 			end;
 			buf.putstring ("return ");
 			if how = None_assignment then
-				buf.putstring ("(char *) 0");
+				buf.putstring ("(EIF_REFERENCE) 0");
 			else
 				source_print_register;
 			end;

@@ -179,7 +179,7 @@ feature
 				source_print_register;
 				buf.putchar (')');
 			else
-				buf.putstring ("(char *) 0");
+				buf.putstring ("(EIF_REFERENCE) 0");
 			end;
 			buf.putchar (';');
 			buf.new_line;

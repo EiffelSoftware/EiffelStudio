@@ -951,7 +951,7 @@ feature
 							and not (reg.is_current or reg.is_argument)
 							and not (reg.is_result and compound_or_post))
 						then
-							buffer.putstring ("(char *) 0")
+							buffer.putstring ("(EIF_REFERENCE) 0")
 						else
 							if (reg.c_type.is_bit) and (reg.is_argument) then
 								-- Clone argument if it is bit
@@ -1147,7 +1147,7 @@ feature -- Concurrent Eiffel
 				buffer.putstring ("l[")
 				buffer.putint (ref_var_used + i)
 				buffer.putstring ("] = ")
-				buffer.putstring ("(char *) 0;")
+				buffer.putstring ("(EIF_REFERENCE) 0;")
 				buffer.new_line
 				i := i - 1
 			end

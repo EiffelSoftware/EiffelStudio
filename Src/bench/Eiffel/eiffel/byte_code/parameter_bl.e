@@ -158,7 +158,7 @@ feature
 			target_type := real_type (attachment_type);
 			source_type := real_type (expression.type);
 			if target_type.is_none then
-				buf.putstring ("(char *) 0");
+				buf.putstring ("(EIF_REFERENCE) 0");
 			elseif target_type.is_expanded then
 					-- The callee is responsible for cloning the reference.
 				expression.print_register;

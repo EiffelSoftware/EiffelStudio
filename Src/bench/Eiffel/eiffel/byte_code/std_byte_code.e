@@ -568,7 +568,7 @@ feature
 					arg := real_type (arguments.item (i))
 					if arg.is_expanded then
 						context.arg_var.set_position (i)
-						buf.putstring ("if ((char *) 0 == ")
+						buf.putstring ("if ((EIF_REFERENCE) 0 == ")
 						context.arg_var.print_register_by_name
 						buf.putchar (')')
 						buf.new_line

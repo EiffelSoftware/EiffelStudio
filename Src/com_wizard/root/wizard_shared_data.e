@@ -57,6 +57,9 @@ feature -- Access
 	Standard_abort_value: INTEGER is 10
 			-- Standard abort value
 
+	Generated_files_file_name: STRING is "generated.txt"
+			-- File including list of generated files
+
 feature -- Element Change
 
 	set_shared_wizard_environment (an_environment: WIZARD_ENVIRONMENT) is

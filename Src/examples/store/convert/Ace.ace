@@ -10,7 +10,7 @@ default
 
 cluster
 
-	root_cluster:		"$EIFFEL4/library/store/examples/convert";
+	root_cluster:		"$EIFFEL4/examples/store/convert";
 	estore_examples_objects:"$EIFFEL4/examples/store/Utilities";
 
 		-- EiffelStore
@@ -42,7 +42,7 @@ external
 	Object: 
 -- unix		"$(EIFFEL4)/library/store/spec/$(PLATFORM)/lib/libsys_time.a",
 -- unix		"$(EIFFEL4)/library/store/spec/$(PLATFORM)/lib/libsupport.a";
- 		"$(EIFFEL4)/library/store/spec/$(PLATFORM)/lib/sys_time.lib",
-		"$(EIFFEL4)/library/store/spec/$(PLATFORM)/lib/support.lib";
+ 		"$(EIFFEL4)/library/store/spec/$(COMPILER)/lib/sys_time.lib",
+		"$(EIFFEL4)/library/store/spec/$(COMPILER)/lib/support.lib";
 
 end

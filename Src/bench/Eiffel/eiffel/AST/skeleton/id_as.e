@@ -10,10 +10,12 @@ inherit
 		undefine
 			copy, out, is_equal
 		redefine
-			is_id, is_equivalent,
-			good_integer, good_character, is_inspect_value,
-			make_integer, make_character,
-			record_dependances
+			inspect_value,
+			is_id,
+			is_equivalent,
+			is_valid_inspect_value,
+			record_dependances,
+			unique_constant
 		end
 
 	STRING
@@ -62,7 +64,8 @@ feature -- Comparison
 		do
 			Result := is_equal (other)
 		end
-feature -- Conveniences
+
+feature -- Type check
 
 	record_dependances is
 		local
@@ -74,55 +77,35 @@ feature -- Conveniences
 			context.supplier_ids.extend (depend_unit)
 		end
 
-	good_integer: BOOLEAN is
-			-- Is the atomic a good integer bound for multi-branch ?
+feature {COMPILER_EXPORTER} -- Multi-branch instruction processing
+
+	is_valid_inspect_value (value_type: TYPE_A): BOOLEAN is
+			-- Is the atomic a good bound for multi-branch of the given `value_type'?
 		local
 			constant_i: CONSTANT_I
 		do
 			constant_i ?= context.current_class.feature_table.item (Current)
-			Result := constant_i /= Void
-						and then constant_i.value.is_integer
+			Result := constant_i /= Void and then constant_i.value.valid_type (value_type)
 		end
 
-	good_character: BOOLEAN is
-			-- Is the atomic a good character bound for multi-branch ?
+	inspect_value (value_type: TYPE_A): INTERVAL_VAL_B is
+			-- Inspect value of the given `value_type'
 		local
 			constant_i: CONSTANT_I
 		do
 			constant_i ?= context.current_class.feature_table.item (Current)
-			Result := constant_i /= Void
-						and then constant_i.value.is_character
+			Result := constant_i.value.inspect_constant (context.current_class, constant_i, value_type)
 		end
 
-	is_inspect_value (type: TYPE_A): BOOLEAN is
-			-- Is the atomic a good bound for multi-branch of the given `type'?
+	unique_constant: CONSTANT_I is
+			-- Associated unique constant (if any)
 		local
 			constant_i: CONSTANT_I
 		do
 			constant_i ?= context.current_class.feature_table.item (Current)
-			Result := constant_i /= Void and then constant_i.value.valid_type (type)
-		end
-
-	make_integer: INT_CONST_VAL_B is
-			-- Integer value
-		local
-			constant_i: CONSTANT_I
-			integer_value: INTEGER_CONSTANT
-		do
-			constant_i ?= context.current_class.feature_table.item (Current)
-			integer_value ?= constant_i.value
-			create Result.make (context.current_class, integer_value.integer_32_value, constant_i)
-		end
-
-	make_character: CHAR_CONST_VAL_B is
-			-- Character value
-		local
-			constant_i: CONSTANT_I
-			char_value: CHAR_VALUE_I
-		do
-			constant_i ?= context.current_class.feature_table.item (Current)
-			char_value ?= constant_i.value
-			create Result.make (context.current_class, char_value.character_value, constant_i)
+			if constant_i /= Void and then constant_i.is_unique then
+				Result := constant_i
+			end
 		end
 
 feature {COMPILER_EXPORTER, FEAT_NAME_ID_AS} -- Conveniences

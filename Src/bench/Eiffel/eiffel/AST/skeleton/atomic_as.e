@@ -22,23 +22,12 @@ feature -- Properties
 			-- Do nothing
 		end
 
-	is_integer: BOOLEAN is
-			-- Is the atomic an integer value ?
-		do
-			-- Do nothing
-		end
-
-	is_character: BOOLEAN is
-			-- Is the atomic a character value ?
-		do
-			-- Do nothing
-		end
-
 	is_id: BOOLEAN is
 			-- Is the atomic an id value ?
 		do
 			-- Do nothing
 		end
+
 feature -- Type check and dead code removal
 
 	byte_node: EXPR_B is
@@ -51,22 +40,33 @@ feature -- Type check and dead code removal
 			-- Do nothing
 		end
 
-feature {COMPILER_EXPORTER} -- Type check and dead code removal
+feature {COMPILER_EXPORTER} -- Multi-branch instruction processing
 
-	make_integer: INT_VAL_B is
-			-- Integer value.
+	is_valid_inspect_value (value_type: TYPE_A): BOOLEAN is
+			-- Is the atomic a good bound for multi-branch of the given `value_type'?
 		require
-			good_integer
+			value_type_not_void: value_type /= Void
 		do
 			-- Do nothing
 		end
 
-	make_character: CHAR_VAL_B is
-			-- Character value.
+	inspect_value (value_type: TYPE_A): INTERVAL_VAL_B is
+			-- Inspect value of the given `value_type'
 		require
-			good_character
+			value_type_not_void: value_type /= Void
+			is_valid_inspect_value: is_valid_inspect_value (value_type)
 		do
 			-- Do nothing
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	unique_constant: CONSTANT_I is
+			-- Associated unique constant (if any)
+		do
+			-- Do nothing
+		ensure
+			result_is_unique: Result /= Void implies Result.is_unique
 		end
 
 feature -- Output
@@ -74,28 +74,6 @@ feature -- Output
 	string_value: STRING is
 		deferred
 		end;
-
-feature -- Type check
-
-	good_integer: BOOLEAN is
-			-- Is the atomic a good integer bound for multi-branch ?
-		do
-			-- Do nothing
-		end
-
-	good_character: BOOLEAN is
-			-- Is the atomic a good character bound for multi-branch ?
-		do
-			-- Do nothing
-		end
-
-	is_inspect_value (type: TYPE_A): BOOLEAN is
-			-- Is the atomic a good bound for multi-branch of the given `type'?
-		require
-			type_not_void: type /= Void
-		do
-			-- Do nothing
-		end
 
 feature {COMPILER_EXPORTER, INTERVAL_AS} -- Dead code removal
 

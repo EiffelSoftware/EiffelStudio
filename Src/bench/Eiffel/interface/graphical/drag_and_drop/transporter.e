@@ -133,8 +133,7 @@ feature -- Update
 			--   Initialize drawing.
 			--   Grab the cursor.
 		require
-			valid_s: s /= Void;
-			valid_coord: ix > 0 and then iy > 0
+			valid_s: s /= Void
 		local
 			scr: SCREEN;
 		do

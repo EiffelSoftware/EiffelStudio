@@ -62,7 +62,7 @@ feature
 			else
 				error_window.put_string ("Internal error: Cannot generate EiffelCase project.%N")
 			end
-			--/*** REMOVEretry
+			retry
 		end
 
 feature {NONE}

@@ -1,7 +1,7 @@
 indexing
 
 	description: 
-		"Item to denote a class_name.";
+		"Item to denote a feature_name.";
 	date: "$Date$";
 	revision: "$Revision $"
 
@@ -22,23 +22,18 @@ creation
 
 feature -- Initialization
 
-    make (t: like image; f: like e_feature; c: like e_class) is
-            -- Initialize Current with class_i `e'
-            -- and image `t'.
-        do
-            image := t;
-            e_class := c;
-			e_feature := f
-        ensure
-            set: image = t and then
-                    e_class = c and then
-					e_feature = f
-        end;
+	make (t: like image; c: like e_class) is
+			-- Initialize Current with class_i `e'
+			-- and image `t'.
+		do
+			image := t;
+			e_class := c
+		ensure
+			set: image = t and then
+					e_class = c
+		end;
 
 feature -- Properties
-
-	e_feature: E_FEATURE
-			-- Eiffel feature associated with image
 
 	e_class: E_CLASS;
 			-- Eiffel class with e_feature is defined

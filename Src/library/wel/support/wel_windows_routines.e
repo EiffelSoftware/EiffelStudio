@@ -342,6 +342,14 @@ feature {NONE} -- Externals
 			"GetWindowLong"
 		end
 
+	cwin_redraw_window (hwnd, update_rectangle, update_region: POINTER; flags: INTEGER) is
+			-- SDK RedrawWindow
+		external
+			"C [macro %"wel.h%"] (HWND, CONST RECT *, HRGN, UINT)"
+		alias
+			"RedrawWindow"
+		end
+
 	eif_id_object (an_id: INTEGER): WEL_WINDOW is
 			-- Object associated with `an_id'
 		external

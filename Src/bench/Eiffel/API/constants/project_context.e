@@ -29,11 +29,11 @@ feature {NONE} -- Eiffel Project Directories
 			!! Result.make
 		end;
 
-	Precompilation_directory: DIRECTORY_NAME is
-			-- Shared precompilation directory
+	Precompilation_directories: HASH_TABLE [REMOTE_PROJECT_DIRECTORY,INTEGER] is
+			-- Shared precompilation directories, indexed by precompilation ids
 		once
-			!! Result.make
-		end;
+			!! Result.make (5)
+		end
 
 	Backup_path: DIRECTORY_NAME is
 			-- Path to the backup directory
@@ -87,36 +87,25 @@ feature {NONE} -- Eiffel Project Directories
 			Result.set_file_name (Dot_workbench);
 		end;
 
-	Precompilation_path: DIRECTORY_NAME is
-			-- Path to the precompilation directory
-		once
-			!! Result.make_from_string (Precompilation_directory);
-			Result.extend_from_array (<<Eiffelgen, Comp>>);
-		end;
-
 	Precompilation_file_name: FILE_NAME is
-			-- Full name of the file where the precompiled 
-			-- workbench is stored
-		once
-			!! Result.make_from_string (Precompilation_directory);
+			-- Full name of file where current precompilation
+			-- information is stored
+		do
+			!! Result.make_from_string (Project_directory);
 			Result.extend (Eiffelgen);
-			Result.set_file_name (Dot_workbench);
-		end;
-
-	Precompilation_preobj: FILE_NAME is
-			-- Full name of the `preobj' object file
-		once
-			!! Result.make_from_string (Precompilation_directory);
-			Result.extend_from_array (<<Eiffelgen, W_code>>);
-			Result.set_file_name (Preobj);
-		end;
+			Result.set_file_name (Precomp_eif);
+		end
 
 	Precompilation_driver: FILE_NAME is
-			-- Full name of the precompilation driver
+			-- Full name of the precompilation driver used
 		once
-			!! Result.make_from_string (Precompilation_directory);
-			Result.extend_from_array (<<Eiffelgen, W_code>>);
-			Result.set_file_name (Driver);
+			!! Result.make
+		end;
+
+	Precompilation_descobj: FILE_NAME is
+			-- Full name of the precompilation descriptor tables
+		once
+			!! Result.make
 		end;
 
 feature {NONE} -- Directory creation
@@ -184,41 +173,38 @@ feature {NONE} -- DLE Directories
 			!!Result.make (file_name)
 		end;
 
-	Extendible_directory: DIRECTORY_NAME is
+	Extendible_directory: REMOTE_PROJECT_DIRECTORY is
 			-- Directory of the project which is intended to
 			-- be dynamically extended
 		once
-			!! Result.make;
+			!! Result.make ("")
 		end;
 
 	Extendible_path: DIRECTORY_NAME is
 			-- Path of the system which is intended to
 			-- be dynamically extended
 		once
-			!! Result.make_from_string (Extendible_directory);
-			Result.extend_from_array (<<Eiffelgen, Comp>>);
+			Result := Extendible_directory.compilation_path
 		end;
 
 	Extendible_file_name: FILE_NAME is
 			-- Full name of the file where the dynamically extendible
 			-- project's workbench is stored
 		once
-			!! Result.make_from_string (Extendible_directory);
-			Result.extend (Eiffelgen);
-			Result.set_file_name (Dot_workbench);
+			Result := Extendible_directory.project_eif
 		end;
 
 	Extendible_W_code: DIRECTORY_NAME is
 			-- Workbench generation code directory of the static system
 		once
-			!! Result.make_from_string (Extendible_directory);
+			!! Result.make_from_string (Extendible_directory.name);
 			Result.extend_from_array (<<Eiffelgen, W_code>>);
 		end;
 
 	Extendible_F_code: DIRECTORY_NAME is
 			-- Finalization generation code directory of the static system
 		once
-			!! Result.make_from_string (Extendible_directory);
+			!! Result.make_from_string (Extendible_directory.name);
 			Result.extend_from_array (<<Eiffelgen, F_code>>);
 		end;
 

@@ -16,6 +16,13 @@ feature {NONE} -- GTK macros for casting types
 		alias
 			"GTK_OBJECT"
 		end
+
+	gtk_misc (widget: POINTER): POINTER is
+		external 
+			"C [macro <gtk/gtk.h>] (GtkObject *): EIF_POINTER"
+		alias
+			"GTK_MISC"
+		end
 	
 feature {NONE} -- Primitives
 

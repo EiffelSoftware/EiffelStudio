@@ -23,7 +23,8 @@ inherit
 			set_parent as wel_set_parent,
 			destroy as wel_destroy,
 			font as wel_font,
-			set_font as wel_set_font
+			set_font as wel_set_font,
+			selected_item as wel_selected_item
 		undefine
 			remove_command,
 			set_width,
@@ -61,6 +62,20 @@ feature -- Access
 
 	ev_children: HASH_TABLE [EV_TREE_ITEM_IMP, INTEGER]
 			-- Children of the tree Classified by their h_item
+
+	selected_item: EV_TREE_ITEM is
+			-- Item which is currently selected.
+		local
+			handle: INTEGER
+		do
+			if selected then
+				handle := cwin_send_message_result (item, Tvm_getnextitem,
+					Tvgn_caret, 0)
+				Result ?= (ev_children @ handle).interface
+			else
+				Result := Void
+			end
+		end
 
 feature -- Element change
 

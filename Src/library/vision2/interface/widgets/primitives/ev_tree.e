@@ -34,6 +34,26 @@ feature {NONE} -- Initialization
 			widget_make (par)
 		end
 
+feature -- Access
+
+	selected_item: EV_TREE_ITEM is
+			-- Item which is currently selected.
+		require
+			exists: not destroyed
+		do
+			Result := implementation.selected_item
+		end
+
+feature -- Status report
+
+	selected: BOOLEAN is
+			-- Is at least one item selected ?
+		require
+			exists: not destroyed
+		do
+			Result := implementation.selected
+		end
+
 feature -- Event : command association
 
 	add_selection_command (a_command: EV_COMMAND; arguments: EV_ARGUMENT) is	

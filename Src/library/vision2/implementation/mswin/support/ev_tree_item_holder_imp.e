@@ -10,7 +10,17 @@ deferred class
 inherit
 	EV_TREE_ITEM_HOLDER_I
 
-	EV_ITEM_HOLDER_IMP
+	EV_HASH_TABLE_ITEM_HOLDER_IMP
+
+feature {NONE} -- Implementatin
+
+	item_type: EV_TREE_ITEM_IMP is
+			-- An empty feature to give a type.
+			-- We don't use the genericity because it is
+			-- too complicated with the multi-platform design.
+			-- Need to be redefined.
+		do
+		end
 
 end -- class EV_TREE_ITEM_HOLDER_IMP
 

@@ -113,10 +113,7 @@ feature -- Access
 		end
 
 	ev_children: ARRAYED_LIST [EV_TOOL_BAR_BUTTON_IMP]
-			-- List of the direct children of the item holder.
-			-- Should be define here, but is not because we cannot
-			-- do the hastable deferred, it doesn't work, it should,
-			-- but it doesn't.
+			-- List of the direct children of `Current'.
 
 	parent_imp: EV_CONTAINER_IMP is
 			-- Parent container of `Current'.
@@ -417,7 +414,6 @@ feature -- Basic operation
 			-- appropriate event item. Called on a pointer button press.
 		local
 			pre_drop_it, post_drop_it: EV_TOOL_BAR_BUTTON_IMP
-			radio_button: EV_TOOL_BAR_RADIO_BUTTON_IMP
 			item_press_actions_called: BOOLEAN
 			pt: WEL_POINT
 		do

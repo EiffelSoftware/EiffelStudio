@@ -1,6 +1,10 @@
 
 class DEBUG_INFO
 
+inherit
+
+	SHARED_WORKBENCH
+
 creation
 
 	make
@@ -29,7 +33,9 @@ feature
 			clear_debuggables;
 			clear_breakpoints;
 			debugged_routines.wipe_out;
-			removed_routines.wipe_out
+			removed_routines.wipe_out;
+				-- Reset the supermelted body_ids counters.
+			System.reset_debug_counter
 		end;
 
 	restore is

@@ -35,109 +35,151 @@ feature {NONE}-- Initialization
 			create l_ev_frame_1
 			create l_ev_vertical_box_2
 			create l_ev_horizontal_box_1
-			create l_ev_label_1
-			create l_ev_horizontal_box_2
 			create l_ev_vertical_box_3
-			create transform_box
+			create convert_box
+			create l_ev_label_1
 			create l_ev_cell_1
-			create transform_radio
-			create transform_label
-			create help_box
+			create transform_file_combo
+			create transform_box
+			create l_ev_label_2
 			create l_ev_cell_2
-			create help_radio
-			create help_label
-			create transform_help_box
+			create filter_option_combo
+			create l_ev_horizontal_box_2
+			create l_ev_label_3
+			create location_text
+			create browse_button
 			create l_ev_cell_3
-			create transform_help_radio
-			create transform_help_label
+			create help_frame
+			create l_ev_vertical_box_4
 			create l_ev_horizontal_box_3
+			create l_ev_label_4
+			create help_name_text
+			create l_ev_vertical_box_5
+			create html_radio
+			create vs_radio
+			create web_radio
+			create l_ev_horizontal_box_4
+			create l_ev_label_5
+			create toc_combo
 			create l_ev_cell_4
-			create next1
-			create cancel1
+			create l_ev_horizontal_box_5
+			create l_ev_cell_5
+			create finish_button
+			create cancel_button
 			
 				-- Build_widget_structure.
 			extend (l_ev_vertical_box_1)
 			l_ev_vertical_box_1.extend (l_ev_frame_1)
 			l_ev_frame_1.extend (l_ev_vertical_box_2)
 			l_ev_vertical_box_2.extend (l_ev_horizontal_box_1)
-			l_ev_horizontal_box_1.extend (l_ev_label_1)
-			l_ev_vertical_box_2.extend (l_ev_horizontal_box_2)
-			l_ev_horizontal_box_2.extend (l_ev_vertical_box_3)
+			l_ev_horizontal_box_1.extend (l_ev_vertical_box_3)
+			l_ev_vertical_box_3.extend (convert_box)
+			convert_box.extend (l_ev_label_1)
+			convert_box.extend (l_ev_cell_1)
+			convert_box.extend (transform_file_combo)
 			l_ev_vertical_box_3.extend (transform_box)
-			transform_box.extend (l_ev_cell_1)
-			transform_box.extend (transform_radio)
-			transform_box.extend (transform_label)
-			l_ev_vertical_box_3.extend (help_box)
-			help_box.extend (l_ev_cell_2)
-			help_box.extend (help_radio)
-			help_box.extend (help_label)
-			l_ev_vertical_box_3.extend (transform_help_box)
-			transform_help_box.extend (l_ev_cell_3)
-			transform_help_box.extend (transform_help_radio)
-			transform_help_box.extend (transform_help_label)
-			l_ev_vertical_box_2.extend (l_ev_horizontal_box_3)
-			l_ev_horizontal_box_3.extend (l_ev_cell_4)
-			l_ev_horizontal_box_3.extend (next1)
-			l_ev_horizontal_box_3.extend (cancel1)
+			transform_box.extend (l_ev_label_2)
+			transform_box.extend (l_ev_cell_2)
+			transform_box.extend (filter_option_combo)
+			l_ev_vertical_box_3.extend (l_ev_horizontal_box_2)
+			l_ev_horizontal_box_2.extend (l_ev_label_3)
+			l_ev_horizontal_box_2.extend (location_text)
+			l_ev_horizontal_box_2.extend (browse_button)
+			l_ev_vertical_box_2.extend (l_ev_cell_3)
+			l_ev_vertical_box_1.extend (help_frame)
+			help_frame.extend (l_ev_vertical_box_4)
+			l_ev_vertical_box_4.extend (l_ev_horizontal_box_3)
+			l_ev_horizontal_box_3.extend (l_ev_label_4)
+			l_ev_horizontal_box_3.extend (help_name_text)
+			l_ev_vertical_box_4.extend (l_ev_vertical_box_5)
+			l_ev_vertical_box_5.extend (html_radio)
+			l_ev_vertical_box_5.extend (vs_radio)
+			l_ev_vertical_box_5.extend (web_radio)
+			l_ev_vertical_box_4.extend (l_ev_horizontal_box_4)
+			l_ev_horizontal_box_4.extend (l_ev_label_5)
+			l_ev_horizontal_box_4.extend (toc_combo)
+			l_ev_vertical_box_1.extend (l_ev_cell_4)
+			l_ev_vertical_box_1.extend (l_ev_horizontal_box_5)
+			l_ev_horizontal_box_5.extend (l_ev_cell_5)
+			l_ev_horizontal_box_5.extend (finish_button)
+			l_ev_horizontal_box_5.extend (cancel_button)
 			
 			set_minimum_width (dialog_width)
 			set_minimum_height (dialog_height)
 			set_title ("Generation Wizard")
 			l_ev_vertical_box_1.set_padding_width (padding_width)
 			l_ev_vertical_box_1.set_border_width (border_width)
-			l_ev_frame_1.set_text ("Generation Type")
+			l_ev_vertical_box_1.disable_item_expand (l_ev_frame_1)
+			l_ev_vertical_box_1.disable_item_expand (help_frame)
+			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_5)
+			l_ev_frame_1.set_text ("File Options")
 			l_ev_vertical_box_2.set_padding_width (padding_width)
 			l_ev_vertical_box_2.set_border_width (border_width)
-			l_ev_vertical_box_2.disable_item_expand (l_ev_horizontal_box_1)
-			l_ev_vertical_box_2.disable_item_expand (l_ev_horizontal_box_3)
-			l_ev_horizontal_box_1.set_minimum_height (50)
 			l_ev_horizontal_box_1.set_padding_width (padding_width)
 			l_ev_horizontal_box_1.set_border_width (border_width)
-			l_ev_label_1.set_text ("Welcome to the Generation Wizard.  Please select your generation%Npreferences from the options listed below.")
-			l_ev_label_1.align_text_left
-			l_ev_horizontal_box_2.set_padding_width (padding_width)
-			l_ev_horizontal_box_2.set_border_width (border_width)
 			l_ev_vertical_box_3.set_padding_width (padding_width)
 			l_ev_vertical_box_3.set_border_width (inner_border_width)
+			l_ev_vertical_box_3.disable_item_expand (convert_box)
+			l_ev_vertical_box_3.disable_item_expand (transform_box)
+			l_ev_vertical_box_3.disable_item_expand (l_ev_horizontal_box_2)
+			convert_box.set_minimum_width (15)
+			convert_box.set_padding_width (padding_width)
+			convert_box.set_border_width (border_width)
+			convert_box.disable_item_expand (l_ev_label_1)
+			convert_box.disable_item_expand (transform_file_combo)
+			l_ev_label_1.set_text ("Convert XML documents into")
+			l_ev_label_1.align_text_left
+			transform_file_combo.set_minimum_width (100)
+			transform_file_combo.disable_edit
 			transform_box.set_minimum_width (15)
-			transform_box.set_padding_width (padding_width)
-			transform_box.set_border_width (border_width)
-			transform_box.disable_item_expand (l_ev_cell_1)
-			transform_box.disable_item_expand (transform_radio)
-			transform_box.merge_radio_button_groups (help_box)
-			transform_box.merge_radio_button_groups (transform_help_box)
-			l_ev_cell_1.set_minimum_width (empty_cell_width)
-			transform_radio.set_minimum_width (radio_button_width)
-			transform_label.set_text ("Convert project XML documents into documents%Naccording to a loaded custom filter.%N(Note: requires that both a Schema Definition and filter file%Nis loaded to convert documents)")
-			transform_label.align_text_left
-			help_box.set_padding_width (padding_width)
-			help_box.set_border_width (border_width)
-			help_box.disable_item_expand (l_ev_cell_2)
-			help_box.disable_item_expand (help_radio)
-			help_box.merge_radio_button_groups (transform_box)
-			help_box.merge_radio_button_groups (transform_help_box)
-			l_ev_cell_2.set_minimum_width (empty_cell_width)
-			help_radio.set_minimum_width (radio_button_width)
-			help_label.set_text ("Convert project HTML documents into a structured help %Nproject for use in a Windows application, Visual Studio.NET%Nor the Internet.%N(Note: requires a Table of Contents)")
-			help_label.align_text_left
-			transform_help_box.set_padding_width (padding_width)
-			transform_help_box.set_border_width (border_width)
-			transform_help_box.disable_item_expand (l_ev_cell_3)
-			transform_help_box.disable_item_expand (transform_help_radio)
-			transform_help_box.merge_radio_button_groups (transform_box)
-			transform_help_box.merge_radio_button_groups (help_box)
-			l_ev_cell_3.set_minimum_width (empty_cell_width)
-			transform_help_radio.set_minimum_width (radio_button_width)
-			transform_help_label.set_text ("Convert project XML documents into a structured%Nhelp project for use in a Windows application,%NVisual Studio.NET or the Internet.%N(Note: requires that both a Schema Definition and filter file%Nis loaded to convert documents, and that a Table of Contents%Nhas been loaded)")
-			transform_help_label.align_text_left
+			transform_box.set_padding_width (5)
+			transform_box.set_border_width (2)
+			transform_box.disable_item_expand (l_ev_label_2)
+			transform_box.disable_item_expand (filter_option_combo)
+			l_ev_label_2.set_text ("Filter documents for")
+			l_ev_label_2.align_text_left
+			filter_option_combo.set_minimum_width (100)
+			filter_option_combo.disable_edit
+			l_ev_horizontal_box_2.set_padding_width (5)
+			l_ev_horizontal_box_2.set_border_width (2)
+			l_ev_horizontal_box_2.disable_item_expand (l_ev_label_3)
+			l_ev_horizontal_box_2.disable_item_expand (browse_button)
+			l_ev_label_3.set_text ("Save output to")
+			browse_button.set_text ("Browse...")
+			browse_button.set_minimum_width (80)
+			help_frame.disable_sensitive
+			help_frame.set_text ("Help Project Options")
+			l_ev_vertical_box_4.set_padding_width (padding_width)
+			l_ev_vertical_box_4.set_border_width (border_width)
+			l_ev_vertical_box_4.disable_item_expand (l_ev_horizontal_box_4)
 			l_ev_horizontal_box_3.set_padding_width (padding_width)
 			l_ev_horizontal_box_3.set_border_width (border_width)
-			l_ev_horizontal_box_3.disable_item_expand (next1)
-			l_ev_horizontal_box_3.disable_item_expand (cancel1)
-			next1.set_text (button_next_text)
-			next1.set_minimum_width (button_width)
-			cancel1.set_text (button_cancel_text)
-			cancel1.set_minimum_width (button_width)
+			l_ev_horizontal_box_3.disable_item_expand (l_ev_label_4)
+			l_ev_label_4.set_text ("Project Name")
+			l_ev_label_4.align_text_left
+			help_name_text.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (212, 208, 200))
+			l_ev_vertical_box_5.set_padding_width (5)
+			l_ev_vertical_box_5.set_border_width (inner_border_width)
+			l_ev_vertical_box_5.disable_item_expand (html_radio)
+			l_ev_vertical_box_5.disable_item_expand (vs_radio)
+			l_ev_vertical_box_5.disable_item_expand (web_radio)
+			html_radio.set_text ("Microsoft HTML Help 1.x")
+			vs_radio.set_text ("Visual Studio Integrated Help (MS Help 2.0)")
+			web_radio.set_text ("Web Help")
+			l_ev_horizontal_box_4.set_padding_width (padding_width)
+			l_ev_horizontal_box_4.set_border_width (border_width)
+			l_ev_horizontal_box_4.disable_item_expand (l_ev_label_5)
+			l_ev_label_5.set_text ("Table of Contents ")
+			l_ev_label_5.align_text_left
+			toc_combo.disable_edit
+			l_ev_horizontal_box_5.set_padding_width (padding_width)
+			l_ev_horizontal_box_5.set_border_width (border_width)
+			l_ev_horizontal_box_5.disable_item_expand (finish_button)
+			l_ev_horizontal_box_5.disable_item_expand (cancel_button)
+			finish_button.set_text (button_finish_text)
+			finish_button.set_minimum_width (button_width)
+			cancel_button.set_text (button_cancel_text)
+			cancel_button.set_minimum_width (button_width)
 			
 				--Connect events.
 				-- Close the application when an interface close
@@ -149,14 +191,17 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	l_ev_vertical_box_1, l_ev_vertical_box_2, l_ev_vertical_box_3: EV_VERTICAL_BOX
-	l_ev_frame_1: EV_FRAME
-	l_ev_horizontal_box_1, l_ev_horizontal_box_2, transform_box, help_box, transform_help_box, 
-	l_ev_horizontal_box_3: EV_HORIZONTAL_BOX
-	l_ev_label_1, transform_label, help_label, transform_help_label: EV_LABEL
-	l_ev_cell_1, l_ev_cell_2, l_ev_cell_3, l_ev_cell_4: EV_CELL
-	transform_radio, help_radio, transform_help_radio: EV_RADIO_BUTTON
-	next1, cancel1: EV_BUTTON
+	l_ev_vertical_box_1, l_ev_vertical_box_2, l_ev_vertical_box_3, l_ev_vertical_box_4, 
+	l_ev_vertical_box_5: EV_VERTICAL_BOX
+	l_ev_frame_1, help_frame: EV_FRAME
+	l_ev_horizontal_box_1, convert_box, transform_box, l_ev_horizontal_box_2, l_ev_horizontal_box_3, 
+	l_ev_horizontal_box_4, l_ev_horizontal_box_5: EV_HORIZONTAL_BOX
+	l_ev_label_1, l_ev_label_2, l_ev_label_3, l_ev_label_4, l_ev_label_5: EV_LABEL
+	l_ev_cell_1, l_ev_cell_2, l_ev_cell_3, l_ev_cell_4, l_ev_cell_5: EV_CELL
+	transform_file_combo, filter_option_combo, toc_combo: EV_COMBO_BOX
+	location_text, help_name_text: EV_TEXT_FIELD
+	browse_button, finish_button, cancel_button: EV_BUTTON
+	html_radio, vs_radio, web_radio: EV_RADIO_BUTTON
 
 feature {NONE} -- Implementation
 

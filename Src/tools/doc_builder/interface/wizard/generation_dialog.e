@@ -1,5 +1,5 @@
 indexing
-	description: "Dialog for start of generation wizard."
+	description: "Dialog for start generation."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -7,20 +7,7 @@ class
 	GENERATION_DIALOG
 
 inherit
-	GENERATION_DIALOG_IMP
-		undefine
-			show
-		end
-
-	WIZARD_DIALOG
-		rename
-			user_initialization as wizard_user_initialization
-		undefine
-			initialize,
-			is_in_default_state
-		redefine
-			move_next
-		end
+	GENERATION_DIALOG_IMP	
 
 	SHARED_OBJECTS
 		undefine
@@ -37,90 +24,215 @@ feature {NONE} -- Initialization
 			-- (due to regeneration of implementation class)
 			-- can be added here.
 		do
-			next1.select_actions.extend (agent move_next)
-			cancel1.select_actions.extend (agent cancel)			
-			set_options
+			finish_button.select_actions.extend (agent run)
+			cancel_button.select_actions.extend (agent cancel)
+			transform_file_combo.select_actions.extend (agent conversion_combo_changed)
+			filter_option_combo.select_actions.extend (agent filter_combo_changed)
+			browse_button.select_actions.extend (agent browse_location)
+			populate_widgets
 		end
 
 feature -- Status Setting
 
-	move_next is
-			-- Move to `next_dialog'
+	browse_location is
+			-- Browse disk directory structure.  Write chosen location to `location_text'
 		local
-			l_next: WIZARD_DIALOG
-			l_dir: DIRECTORY
+			l_directory_dialog: EV_DIRECTORY_DIALOG
 		do
-			if transform_radio.is_selected then
-				Wizard_data.set_conversion_type (To_html)
-				create {FINAL_DIALOG} l_next.make_with_previous (Current)
-				create {TRANSFORM_DIALOG} next_dialog.make (l_next, Current)
-				l_next.set_previous (next_dialog)
-			elseif help_radio.is_selected or transform_help_radio.is_selected then
-			
-				if help_radio.is_selected then
-					Wizard_data.set_conversion_type (To_help)
-				elseif transform_help_radio.is_selected then					
-					Wizard_data.set_conversion_type (To_html_to_help)
-							-- For [XML -> HTML -> Help] always put HTML into intermediate directory
-					create l_dir.make (Shared_constants.Application_constants.Temporary_html_directory)
-					if l_dir.exists then
-						l_dir.recursive_delete
-					end
-					l_dir.create_dir
-					Shared_constants.Application_constants.set_html_location (l_dir.name)
-				end
-				
-				create {FINAL_DIALOG} l_next.make_with_previous (Current)
-				create {HELP_DIALOG} next_dialog.make (l_next, Current)
-				l_next.set_previous (next_dialog)				
---			elseif transform_help_radio.is_selected then				
---				Wizard_data.set_conversion_type (To_html_to_help)
---				create {HELP_DIALOG} l_next.make_with_previous (next_dialog)
---				next_dialog.set_next (l_next)	
---				l_next.set_next (create {FINAL_DIALOG}.make_with_previous (l_next))
-			end
-			Precursor
-		end
-	
-feature {NONE} -- Implementation
-
-	set_summary is
-			-- Set summary data
-		do
-			Summary.wipe_out
-			remove_summary
-			if transform_radio.is_selected then
-				add_option ("Transforming XML to HTML.%N")
-			elseif help_radio.is_selected then
-				add_option ("Transforming HTML to Help Project.%N")
-			elseif transform_help_radio.is_selected then	
-				add_option ("Transforming XML to Help Project.%N")
-			end
-			Summary_list.extend (Summary)
-		end
-
-	summary: SUMMARY_BOX is
-			-- Summary widget
-		once
-			create Result.make (Current, "Generation Type")
-		end
-
-	set_options is
-			-- Set available options
-		local
-			l_has_schema,
-			l_has_toc: BOOLEAN
-		do
-			l_has_schema := Shared_document_manager.has_schema
-			l_has_toc := not Shared_toc_manager.is_empty
-			if l_has_toc then
-				help_box.enable_sensitive
-				transform_help_box.enable_sensitive
-			else
-				help_box.disable_sensitive
-				transform_help_box.disable_sensitive
+			create l_directory_dialog
+			l_directory_dialog.show_modal_to_window (Current)
+			if l_directory_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_ok) then
+				location_text.set_text (l_directory_dialog.directory)
+				generation_data.set_generated_file_location (l_directory_dialog.directory)
 			end
 		end	
+
+feature {NONE} -- Query
+
+	is_html: BOOLEAN is
+			-- Is html generation?
+		do
+			Result := transform_file_combo.selected_item.text.is_equal ("html")
+		end	
+		
+	is_help: BOOLEAN is
+			-- Is help project generation?
+		do
+			Result := transform_file_combo.selected_item.text.is_equal ("help project")
+		end
+
+	options_valid: BOOLEAN is
+			-- Are options valid?
+		do
+			Result := True
+			error_report.clear
+			
+				-- Test for output directory
+			if location_text.text.is_empty then
+				error_report.append_error (create {ERROR}.make ("No output location specified"))	
+			end
+			
+				-- Test for help specific details
+			if is_help then
+				if help_name_text.text.is_empty then
+					error_report.append_error (create {ERROR}.make ("Name for help project is required"))
+				end
+				if not Shared_document_manager.has_schema then
+					error_report.append_error (create {ERROR}.make ("No schema loaded") )
+				end
+				if Shared_toc_manager.is_empty then
+					error_report.append_error (create {ERROR}.make ("No table of content defined"))
+				end		
+			end
+			
+			Result := error_report.is_empty
+		end	
+
+feature {NONE} -- GUI
+
+	populate_widgets is
+			-- Build widgets with data
+		do
+			populate_file_combo
+			populate_filter_combo
+			populate_toc_combo
+		end		
+		
+	populate_file_combo is
+			-- Populate file type combo
+		do
+			transform_file_combo.wipe_out
+			transform_file_combo.extend (create {EV_LIST_ITEM}.make_with_text ("html"))
+			transform_file_combo.extend (create {EV_LIST_ITEM}.make_with_text ("help project"))
+		end
+		
+	populate_filter_combo is
+			-- Populate filter combo
+		local
+			l_filters: HASH_TABLE [DOCUMENT_FILTER, STRING]
+			l_list_item: EV_LIST_ITEM
+		do
+			if shared_project.filter_manager /= Void then
+				l_filters := shared_project.filter_manager.filters
+				filter_option_combo.wipe_out
+				from
+					l_filters.start
+				until
+					l_filters.after
+				loop
+					create l_list_item.make_with_text (l_filters.key_for_iteration)
+					filter_option_combo.extend (l_list_item)
+					l_filters.forth
+				end
+			end			
+		end
+		
+	populate_toc_combo is
+			-- Populate `toc_combo'
+		local
+			l_list_item: EV_LIST_ITEM
+			l_tocs: ARRAY [STRING]
+			l_manager: TABLE_OF_CONTENTS_MANAGER
+			l_cnt: INTEGER
+		do
+			l_manager := Shared_toc_manager
+			from				
+				toc_combo.wipe_out
+				l_tocs := l_manager.displayed_tocs_list
+				l_cnt := 1
+			until
+				l_cnt > l_tocs.count
+			loop
+				create l_list_item.make_with_text (l_tocs.item (l_cnt))
+				l_list_item.set_data (l_manager.toc_by_name (l_tocs.item (l_cnt)))
+				toc_combo.extend (l_list_item)
+				l_cnt := l_cnt + 1
+			end
+		end
+
+	conversion_combo_changed is
+			-- Conversion type combo was changed
+		do
+			if is_help then
+				help_frame.enable_sensitive
+			else
+				help_frame.disable_sensitive			
+			end	
+		end		
+		
+	filter_combo_changed is
+			-- Filter type combo was changed
+		local
+			l_description: STRING
+			l_filter: OUTPUT_FILTER
+		do
+			l_description := filter_option_combo.selected_item.text
+			l_filter ?= shared_project.filter_manager.filter_by_description (l_description)
+			shared_project.filter_manager.set_filter (l_filter)
+		end		
+
+feature {NONE} -- Implementation
+
+	cancel is
+			-- Cancel
+		do
+			hide	
+		end		
+		
+	run is
+			-- Run
+		local
+			l_error_report: ERROR_REPORT
+			l_html_dir, l_toc_dir: DIRECTORY
+			l_generator: FINAL_GENERATOR
+			l_toc: TABLE_OF_CONTENTS
+		do
+			if options_valid then
+				if is_help then
+					generation_data.set_conversion_type (generation_data.to_html_to_help)						
+					
+						-- For [XML -> HTML] put HTML into intermediate directory					
+					create l_html_dir.make (shared_constants.application_constants.temporary_html_directory)
+					if l_html_dir.exists then
+						l_html_dir.recursive_delete
+					end
+					l_html_dir.create_dir
+					
+						-- For [HTML -> Help] put Help into intermediate directory					
+					create l_toc_dir.make (shared_constants.application_constants.temporary_help_directory)
+					if l_toc_dir.exists then
+						l_toc_dir.recursive_delete
+					end
+					l_toc_dir.create_dir
+					
+					shared_constants.help_constants.set_help_project_name (help_name_text.text)
+					
+					if vs_radio.is_selected then
+						shared_constants.help_constants.set_help_type (shared_constants.help_constants.vsip_help)
+					elseif html_radio.is_selected then
+						shared_constants.help_constants.set_help_type (shared_constants.help_constants.html_help)						
+					elseif web_radio.is_selected then
+						shared_constants.help_constants.set_help_type (shared_constants.help_constants.web_help)						
+					end
+					
+					l_toc ?= toc_combo.selected_item.data
+					shared_constants.help_constants.set_help_toc (l_toc)	
+				elseif is_html then
+					generation_data.set_conversion_type (generation_data.to_html)				
+				end
+				create l_generator
+				l_generator.generate
+				hide
+			else
+				error_report.show
+			end			
+		end	
+
+	error_report: ERROR_REPORT is
+			-- Error report
+		once
+			create Result.make ("Errors")
+		end
 
 end -- class GENERATION_DIALOG
 

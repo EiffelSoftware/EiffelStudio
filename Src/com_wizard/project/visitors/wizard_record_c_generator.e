@@ -168,7 +168,7 @@ feature {NONE} -- Implementation
 				Result.append (a_data_visitor.ce_function_name)
 				Result.append (Space)
 				Result.append (Open_parenthesis)
-				if a_data_visitor.is_structure or a_data_visitor.is_interface then
+				if a_data_visitor.is_interface then
 					Result.append (Ampersand)
 					Result.append (Open_parenthesis)
 				end
@@ -185,7 +185,7 @@ feature {NONE} -- Implementation
 				Result.append (a_field_descriptor.name)
 				Result.append (Close_parenthesis)
 				Result.append (Close_parenthesis)
-				if a_data_visitor.is_structure or a_data_visitor.is_interface then
+				if a_data_visitor.is_interface then
 					Result.append (Close_parenthesis)
 				end
 			end

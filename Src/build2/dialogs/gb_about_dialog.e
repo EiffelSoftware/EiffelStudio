@@ -57,7 +57,7 @@ feature -- Initialization
 			disable_user_resize
 
 				-- Create controls.
-			eiffel_image := clone ((create {GB_SHARED_PIXMAPS}).Help_about_pixmap)
+			eiffel_image := ((create {GB_SHARED_PIXMAPS}).Help_about_pixmap).twin
 			eiffel_image.set_minimum_size (eiffel_image.width, eiffel_image.height)
 			eiffel_image.set_background_color (White)
 			create info_label.make_with_text (t_info)

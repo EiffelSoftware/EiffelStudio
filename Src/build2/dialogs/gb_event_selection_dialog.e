@@ -369,7 +369,7 @@ feature {NONE} -- Implementation
 				feature_name := feature_name_of_object_event (info)
 					-- Display text before the check button.
 					
-				action_sequence_comment := clone (an_action_sequence.comments @ counter)
+				action_sequence_comment := (an_action_sequence.comments @ counter).twin
 					-- We prune the `comment_start_string' from the start of the action sequence
 					-- for a description of what the action sequence does.
 					-- We check here, as if this is not the case, our output may not be correct

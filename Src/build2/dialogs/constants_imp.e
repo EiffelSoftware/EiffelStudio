@@ -53,7 +53,7 @@ feature -- Access
 		Once
 			create Result
 			create a_file_name.make_from_string (pixmap_location)
-			a_file_name.extend ("icon_component_build_view_color.png")
+			a_file_name.set_file_name ("icon_component_build_view_color.png")
 			set_with_named_file (Result, a_file_name)
 		end
 
@@ -111,7 +111,7 @@ feature -- Access
 		Once
 			create Result
 			create a_file_name.make_from_string (pixmap_location)
-			a_file_name.extend ("icon_component_viewer_color.png")
+			a_file_name.set_file_name ("icon_component_viewer_color.png")
 			set_with_named_file (Result, a_file_name)
 		end
 
@@ -121,7 +121,7 @@ feature -- Access
 		Once
 			create Result
 			create a_file_name.make_from_string (pixmap_location)
-			a_file_name.extend ("lightbulb.png")
+			a_file_name.set_file_name ("lightbulb.png")
 			set_with_named_file (Result, a_file_name)
 		end
 
@@ -173,7 +173,7 @@ feature -- Access
 		Once
 			create Result
 			create a_file_name.make_from_string (pixmap_location)
-			a_file_name.extend ("icon_component_display_view_color.png")
+			a_file_name.set_file_name ("icon_component_display_view_color.png")
 			set_with_named_file (Result, a_file_name)
 		end
 
@@ -220,7 +220,7 @@ feature -- Access
 			name_valid: a_name /= Void and not a_name.is_empty
 			has_constant (a_name)
 		do
-			Result := clone (all_constants.item (a_name))
+			Result := (all_constants.item (a_name)).twin
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -234,7 +234,7 @@ feature -- Access
 		local
 			l_string: STRING
 		do
-			l_string := clone (all_constants.item (a_name))
+			l_string := (all_constants.item (a_name)).twin
 			check
 				is_integer: l_string.is_integer
 			end
@@ -316,7 +316,7 @@ feature {NONE} -- Implementation
 				Result := content.substring (1, new_line_index)
 				content.keep_tail (content.count - new_line_index)
 			else
-				Result := clone (content)
+				Result := content.twin
 				content.keep_head (0)
 			end
 		ensure

@@ -17,20 +17,13 @@ inherit
 		redefine
 			initialize,
 			interface
-		select
-			interface
 		end
 
 	EV_DYNAMIC_LIST_IMP [G, EV_ITEM_IMP]
 		redefine
-			interface,
 			insert_i_th,
-			remove_i_th
-		end
-
-	EV_PICK_AND_DROPABLE_ITEM_HOLDER_IMP
-		rename
-			interface as old_interface
+			remove_i_th,
+			interface
 		end
 
 feature {NONE} -- Initialization
@@ -105,6 +98,23 @@ feature -- Event handling
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_ITEM_LIST [G]
+	
+feature {EV_PICK_AND_DROPABLE_IMP} -- Implementation
+
+	find_item_at_position (x_pos, y_pos: INTEGER): EV_ITEM_IMP is
+			-- `Result' is item at pixel position `x_pos', `y_pos'.
+		deferred
+		end
+		
+	screen_x: INTEGER is
+			-- Horizontal offset of `Current' relative to screen.
+		deferred
+		end
+
+	screen_y: INTEGER is
+			-- Vertical offset of `Current' relative to screen.
+		deferred
+		end
 
 invariant
 	new_item_actions_not_void: is_usable implies new_item_actions /= Void

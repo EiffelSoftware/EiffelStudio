@@ -1351,7 +1351,7 @@ end:
 			stagval = tagval;
 			head_type = last->type & SK_HEAD;
 			if (head_type != SK_BIT) {
-				switch (last->type) {
+				switch (head_type) {
 				case SK_BOOL:
 					new_obj = RTLN(bool_ref_dtype);
 					*new_obj = last->it_char;

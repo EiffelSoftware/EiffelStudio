@@ -27,17 +27,19 @@ inherit
 feature {ICOR_EXPORTER} -- Initialisation
 
 	make_by_pointer (an_item: POINTER) is
-			-- 
+			-- Make Current by pointer.
 		do
 			Precursor (an_item)
-			init_icor
+			debug ("debugger_icor_data")
+				init_icor
+			end
 		end
 		
 	init_icor is
 			-- Initialize special field
 			-- to be redefined
 		do
-		end		
+		end
 
 feature -- Equality
 

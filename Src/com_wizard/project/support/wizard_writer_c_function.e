@@ -75,8 +75,7 @@ feature -- Element Change
 			-- Set `body' with `a_body'.
 		require
 			non_void_body: a_body /= Void
-			valid_syntax: not (a_body.item (1) = '%N') and not (a_body.item (1) = '{') and
-							not (a_body.item (a_body.count) = '%N') and not (a_body.item (a_body.count) = '}')
+			valid_syntax: not (a_body.item (1) = '%N') and not (a_body.item (1) = '{')
 		do
 			body := a_body
 		ensure

@@ -16,10 +16,10 @@ create {SHARED_DEBUG}
 
 feature -- Transformation
 
-	object_full_output: STRING is
+	object_type_and_value: STRING is
 			-- Full ouput representation for related object
 		do
-			Result := (create {DUMP_VALUE}.make_object (address, dtype)).full_output
+			Result := (create {DUMP_VALUE}.make_object (address, dtype)).type_and_value
 		end
 
 feature {EB_SET_SLICE_SIZE_CMD} -- Refreshing
@@ -27,7 +27,8 @@ feature {EB_SET_SLICE_SIZE_CMD} -- Refreshing
 	refresh is
 			-- Reload attributes (useful if `Current' represents a special object)
 		local
-			list: LIST [ABSTRACT_DEBUG_VALUE]
+			list: DS_LIST [ABSTRACT_DEBUG_VALUE]
+			list_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]
 			obj: DEBUGGED_OBJECT
 		do
 			debug ("debug_recv")
@@ -38,15 +39,16 @@ feature {EB_SET_SLICE_SIZE_CMD} -- Refreshing
 			attr_item.collapse_actions.wipe_out
 			attributes_loaded := True
 			create {DEBUGGED_OBJECT_CLASSIC} obj.make (address, spec_lower, spec_higher)
-			list := obj.attributes
+			list := obj.sorted_attributes
 			if not list.is_empty then
 				from
-					list.start
+					list_cursor := list.new_cursor
+					list_cursor.start
 				until
-					list.after
+					list_cursor.after
 				loop
-					attr_item.extend (debug_value_to_item (list.item))
-					list.forth
+					attr_item.extend (debug_value_to_item (list_cursor.item))
+					list_cursor.forth
 				end
 				if obj.is_special then
 					if spec_lower > 0 then
@@ -69,21 +71,23 @@ feature {NONE} -- Specific Implementation
 	load_attributes_under (parent: EV_TREE_NODE_LIST) is
 			-- Fill in `parent' with the once functions associated object.
 		local
-			list: LIST [ABSTRACT_DEBUG_VALUE]
+			list: DS_LIST [ABSTRACT_DEBUG_VALUE]
+			list_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]
 			obj: DEBUGGED_OBJECT
 		do
 			debug ("debug_recv")
 				print ("EB_OBJECT_DISPLAY_PARAMETERS.load_attributes_under%N")
 			end
 			create {DEBUGGED_OBJECT_CLASSIC} obj.make (address, spec_lower, spec_higher)
-			list := obj.attributes
+			list := obj.sorted_attributes
 			from
-				list.start
+				list_cursor := list.new_cursor
+				list_cursor.start
 			until
-				list.after
+				list_cursor.after
 			loop
-				parent.extend (debug_value_to_item (list.item))
-				list.forth
+				parent.extend (debug_value_to_item (list_cursor.item))
+				list_cursor.forth
 			end
 			parent.start
 			parent.remove

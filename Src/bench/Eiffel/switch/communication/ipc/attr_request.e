@@ -9,6 +9,8 @@ inherit
 			{NONE} all
 		end	
 
+	SHARED_ABSTRACT_DEBUG_VALUE_SORTER
+
 	EWB_REQUEST
 		rename
 			make as old_make
@@ -62,7 +64,7 @@ feature -- Properites
 	object_address: STRING;
 			-- Hector address of object being inspected
 
-	attributes: LINKED_LIST [ABSTRACT_DEBUG_VALUE];
+	attributes: DS_ARRAYED_LIST [ABSTRACT_DEBUG_VALUE];
 			-- Attributes of object being inspected (sorted by name)
 
 	object_type_id: INTEGER
@@ -76,6 +78,7 @@ feature -- Update
 		local
 			count: INTEGER
 			address: POINTER
+			l_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]
 		do
 			object_type_id := 0
 			send_rqst_3 (Rqst_sp_lower, 0, sp_lower, sp_upper)
@@ -102,7 +105,7 @@ feature -- Update
 						io.error.put_string ("Oh oooh. This is a special object...%N")
 					end
 				end;
-				create attributes.make
+				create attributes.make (capacity)
 				debug("DEBUG_RECV")
 					io.error.put_string ("Getting the attributes from object...%N")
 					io.error.put_string ("Capacity is ")
@@ -121,29 +124,30 @@ feature -- Update
 					io.error.put_string ("And being back again in `send'.%N")
 				end
 			else
-				create {SORTED_TWO_WAY_LIST [ABSTRACT_DEBUG_VALUE]} attributes.make
-
+				create attributes.make (capacity)
 				if Eiffel_system.valid_dynamic_id (object_type_id) then
 					recv_attributes (attributes, Eiffel_system.class_of_dynamic_id (object_type_id))
 				else
 					recv_attributes (attributes, Void)
 				end;
-			end;
+				sort_debug_values (attributes)
+			end
 				-- Convert the physical addresses received from
 				-- the application to hector addresses.
 			from
-				attributes.start
+				l_cursor := attributes.new_cursor
+				l_cursor.start
 			until
-				attributes.after
+				l_cursor.after
 			loop
-				attributes.item.set_hector_addr
-				attributes.forth
+				l_cursor.item.set_hector_addr
+				l_cursor.forth
 			end
 		end
 
 feature {NONE} -- Implementation
 
-	recv_attributes (attr_list: LINKED_LIST [ABSTRACT_DEBUG_VALUE]; e_class: CLASS_C) is
+	recv_attributes (attr_list: DS_ARRAYED_LIST [ABSTRACT_DEBUG_VALUE]; e_class: CLASS_C) is
 			-- Receive `e_class attribute info from application and 
 			-- store it in `attr_list'.
 		local
@@ -156,6 +160,9 @@ feature {NONE} -- Implementation
 			type_id: INTEGER;
 		do
 			attr_nb := to_integer (c_tread)
+			if attr_list.capacity <= attr_nb then
+				attr_list.resize (attr_nb)
+			end
 			debug("DEBUG_RECV")
 				io.error.put_string ("Getting ")
 				io.error.put_integer (attr_nb)
@@ -209,6 +216,9 @@ feature {NONE} -- Implementation
 					else
 						recv_attributes (exp_attr.attributes, Void)
 					end;
+					--| FIXME JFIAT: we need to sort it right away to keep same behavior
+					sort_debug_values (exp_attr.attributes)
+					
 				when Sk_ref then
 						-- Is this a special object?
 					if to_boolean (c_tread) then
@@ -267,8 +277,8 @@ feature {NONE} -- Implementation
 					io.error.put_string ("Putting `attr' in `attr_list'.%N")
 				end;
 				attr.set_item_number(i-1)
-				attr_list.extend (attr);
-				attr_list.forth
+				attr_list.put_last (attr);
+--				attr_list.forth
 				i := i + 1
 			end
 		end;

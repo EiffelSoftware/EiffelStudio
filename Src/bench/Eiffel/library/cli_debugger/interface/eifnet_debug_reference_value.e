@@ -163,7 +163,7 @@ feature {NONE} -- Output
 		
 feature -- Output
 		
-	children: LIST [ABSTRACT_DEBUG_VALUE] is
+	children: DS_LIST [ABSTRACT_DEBUG_VALUE] is
 			-- List of all sub-items of `Current'. 
 			-- May be void if there are no children.
 			-- Generated on demand.
@@ -174,9 +174,12 @@ feature -- Output
 			else
 				Result := children_from_eiffel_type
 			end
+			-- SORT IT : FIXME JFIAT
 		end
+		
+feature {NONE} -- Children implementation
 
-	children_from_eiffel_type: LIST [ABSTRACT_DEBUG_VALUE] is
+	children_from_eiffel_type: DS_LIST [ABSTRACT_DEBUG_VALUE] is
 			-- List of all sub-items of `Current'. 
 			-- May be void if there are no children.
 			-- Generated on demand.
@@ -187,8 +190,7 @@ feature -- Output
 
 			l_att_debug_value: ABSTRACT_DEBUG_VALUE
 			l_icd_class: ICOR_DEBUG_CLASS
-		do
-			create {SORTED_TWO_WAY_LIST [ABSTRACT_DEBUG_VALUE]} Result.make
+		do	
 			if object_value /= Void then
 				l_icd_class := object_value.get_class
 				if 
@@ -196,6 +198,7 @@ feature -- Output
 					and l_icd_class /= Void
 				then
 					l_feature_table := dynamic_class.feature_table
+					create {DS_ARRAYED_LIST [ABSTRACT_DEBUG_VALUE]} Result.make (l_feature_table.count)
 					from
 						l_feature_table.start
 					until
@@ -214,7 +217,7 @@ feature -- Output
 						if l_feature_i.is_attribute then
 							l_att_debug_value := attribute_value (l_icd_class, l_feature_i)
 							if l_att_debug_value /= Void then
-								Result.extend (l_att_debug_value)
+								Result.put_last (l_att_debug_value)
 							end
 						end
 						l_feature_table.forth
@@ -255,6 +258,8 @@ feature -- Output
 			end
 		end
 		
+feature -- Status
+
 	kind: INTEGER is
 			-- Actual type of `Current'. cf possible codes underneath.
 			-- Used to display the corresponding icon.

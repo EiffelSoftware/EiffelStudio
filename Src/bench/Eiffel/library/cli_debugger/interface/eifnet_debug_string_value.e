@@ -121,7 +121,7 @@ feature -- Output
 			Result :=(icd_value_info.interface_debug_object_value /= Void)
 		end
 
-	children: LIST [ABSTRACT_DEBUG_VALUE] is
+	children: DS_LIST [ABSTRACT_DEBUG_VALUE] is
 			-- List of all sub-items of `Current'. May be void if there are no children.
 			-- Generated on demand.
 		do

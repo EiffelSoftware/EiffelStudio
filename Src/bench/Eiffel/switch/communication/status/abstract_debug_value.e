@@ -15,7 +15,13 @@ inherit
 			{NONE} all
 		undefine
 			is_equal
-		end;
+		end
+
+	SHARED_ABSTRACT_DEBUG_VALUE_SORTER
+		undefine
+			is_equal
+		end	
+		
 	COMPARABLE
 		export
 			{NONE} all
@@ -26,7 +32,7 @@ inherit
 			{NONE} all
 		undefine
 			is_equal
-		end;
+		end
 
 feature -- Properties
 
@@ -127,10 +133,21 @@ feature -- Output
 		deferred
 		end
 
-	children: LIST [ABSTRACT_DEBUG_VALUE] is
+	children: DS_LIST [ABSTRACT_DEBUG_VALUE] is
 			-- List of all sub-items of `Current'. May be void if there are no children.
 			-- Generated on demand.
 		deferred
+		end
+		
+	sorted_children: DS_LIST [ABSTRACT_DEBUG_VALUE] is
+			-- sort `children' and return it.
+		do
+			Result := children
+			if
+				Result /= Void
+			then
+				sort_debug_values (Result)
+			end
 		end
 
 	address: STRING is

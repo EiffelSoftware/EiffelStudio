@@ -33,7 +33,7 @@ feature -- Properties
 			--| application for the hector address during the object
 			--| inspection. This should be done latter with `set_hector_addr'.)
 
-	items: LINKED_LIST [ABSTRACT_DEBUG_VALUE]
+	items: DS_ARRAYED_LIST [ABSTRACT_DEBUG_VALUE]
 			-- List of SPECIAL items
 
 	capacity: INTEGER
@@ -65,6 +65,7 @@ feature -- Output
 			status: APPLICATION_STATUS
 			is_special_of_char: BOOLEAN
 			char_value: CHARACTER_VALUE
+			l_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]
 		do
 			append_tabs (st, indent);
 			st.add_feature_name (name, e_class);
@@ -86,34 +87,36 @@ feature -- Output
 				append_tabs (st, indent + 2);
 				st.add_string ("... Items skipped ...");
 				st.add_new_line
-			end;
+			end
+			
+			l_cursor := items.new_cursor
 			if items.count /= 0 then
-				items.start
-				char_value ?= items.item
+				l_cursor.start
+				char_value ?= l_cursor.item
 				is_special_of_char := char_value /= Void
 			end 
 			if not is_special_of_char then
 				from
-					items.start
+					l_cursor.start
 				until
-					items.after
+					l_cursor.after
 				loop
-					items.item.append_to (st, indent + 2);
-					items.forth
+					l_cursor.item.append_to (st, indent + 2);
+					l_cursor.forth
 				end;
 			else
 				st.add_string ("%"")
 				from
-					items.start
+					l_cursor.start
 				until
-					items.after
+					l_cursor.after
 				loop
-					char_value ?= items.item
+					char_value ?= l_cursor.item
 					check
 						valid_character_element: char_value /= Void
 					end
 					st.add_char (char_value.value)
-					items.forth
+					l_cursor.forth
 				end;
 				st.add_string ("%"")
 				st.add_new_line

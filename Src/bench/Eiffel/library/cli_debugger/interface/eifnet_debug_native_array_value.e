@@ -119,14 +119,18 @@ feature {ABSTRACT_DEBUG_VALUE} -- Output
 		
 feature -- Output	
 
-	children: LIST [ABSTRACT_DEBUG_VALUE] is
+	children: DS_LIST [ABSTRACT_DEBUG_VALUE] is
 			-- List of all sub-items of `Current'. May be void if there are no children.
 			-- Generated on demand.
+		local
+			l_max, l_min: INTEGER
 		do
 			Result := items
 			if Result = Void then
-				create items.make
-				fill_items (Min_slice_ref.item, Max_slice_ref.item)
+				l_min := Min_slice_ref.item
+				l_max := Max_slice_ref.item
+				create {DS_ARRAYED_LIST [ABSTRACT_DEBUG_VALUE]} items.make (l_max - l_min + 1)
+				fill_items (l_min, l_max)
 				Result := items
 			end
 		end
@@ -153,7 +157,7 @@ feature -- Output
 						if l_elt /= Void then
 							l_att_debug_value := debug_value_from_icdv (l_elt)
 							l_att_debug_value.set_name (i.out)
-							items.extend (l_att_debug_value)
+							items.put_last (l_att_debug_value)
 						end
 						i := i + 1
 					end

@@ -857,7 +857,7 @@ feature -- Concrete evaluation
 	evaluate_attribute (a_addr: STRING; a_target: DUMP_VALUE; f: E_FEATURE) is
 			-- Evaluate attribute feature
 		local
-			lst: LIST [ABSTRACT_DEBUG_VALUE]
+			lst: DS_LIST [ABSTRACT_DEBUG_VALUE]
 			dobj: DEBUGGED_OBJECT
 			dv: ABSTRACT_DEBUG_VALUE
 			dump: DUMP_VALUE
@@ -1369,21 +1369,26 @@ feature {NONE} -- Utility Implementation
 		
 feature {NONE} -- List helpers
 
-	find_item_in_list (n: STRING; lst: LIST [ABSTRACT_DEBUG_VALUE]): ABSTRACT_DEBUG_VALUE is
+	find_item_in_list (n: STRING; lst: DS_LIST [ABSTRACT_DEBUG_VALUE]): ABSTRACT_DEBUG_VALUE is
 			-- Try to find an item named `n' in list `lst'.
 		require
 			not_void: n /= Void
+		local
+			l_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]
+			l_item: ABSTRACT_DEBUG_VALUE
 		do
 			if lst /= Void then
 				from
-					lst.start
+					l_cursor := lst.new_cursor
+					l_cursor.start
 				until
-					lst.after or Result /= Void
+					l_cursor.after or Result /= Void
 				loop
-					if lst.item.name /= Void and then lst.item.name.is_equal (n) then
-						Result := lst.item
+					l_item := l_cursor.item
+					if l_item.name /= Void and then l_item.name.is_equal (n) then
+						Result := l_item
 					end
-					lst.forth
+					l_cursor.forth
 				end
 			end
 		ensure

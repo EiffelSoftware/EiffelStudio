@@ -113,7 +113,7 @@ feature {EB_OBJECT_TOOL,EB_SET_SLICE_SIZE_CMD} -- Status report
 
 feature -- Transformation
 
-	object_full_output: STRING is
+	object_type_and_value: STRING is
 			-- Full ouput representation for related object
 		deferred
 		ensure
@@ -138,9 +138,7 @@ feature -- Transformation
 			attributes_loaded := False
 			onces_loaded := False
 			create title.make (50)
-			title.append (dtype.external_class_name)
-			title.append_character (' ')
-			title.append (object_full_output)
+			title.append (object_type_and_value)
 			create main_item.make_with_text (title)
 			create ost.make (address, " ", dtype)
 			main_item.set_accept_cursor (ost.stone_cursor)
@@ -367,25 +365,27 @@ feature {NONE} -- Implementation
 			dv: ABSTRACT_DEBUG_VALUE
 			folder_item: EV_TREE_ITEM
 			new_item: EV_TREE_ITEM
-			list: LIST [ABSTRACT_DEBUG_VALUE]
+			list: DS_LIST [ABSTRACT_DEBUG_VALUE]
+			list_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]
 			flist: LIST [E_FEATURE]
 		do
 			item.expand_actions.wipe_out
 			dv ?= item.data
 			if dv /= Void then
-				list := dv.children
+				list := dv.sorted_children
 				if list /= Void and then not list.is_empty then
 					create folder_item.make_with_text (Interface_names.l_Object_attributes)
 					folder_item.set_pixmap (Pixmaps.Icon_attributes)
 					item.extend (folder_item)
 
 					from
-						list.start
+						list_cursor := list.new_cursor
+						list_cursor.start
 					until
-						list.after
+						list_cursor.after
 					loop
-						folder_item.extend (debug_value_to_item (list.item))
-						list.forth
+						folder_item.extend (debug_value_to_item (list_cursor.item))
+						list_cursor.forth
 					end
 					conv_abs_spec ?= dv
 					if conv_abs_spec /= Void then
@@ -397,10 +397,8 @@ feature {NONE} -- Implementation
 							folder_item.extend (create {EV_TREE_ITEM}.make_with_text (
 								Interface_names.l_More_items))
 						end
-						folder_item.expand
-					else
-						folder_item.expand
 					end
+					folder_item.expand					
 				end
 				if dv.dynamic_class = Void then
 					--| Why do we have Void dynamic_class ?

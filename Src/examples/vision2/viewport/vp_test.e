@@ -15,23 +15,62 @@ create
 
 feature -- Initialization
 
+	sb_x, sb_y: EV_SPIN_BUTTON
+
+	vp: EV_VIEWPORT
+
 	prepare is
 			-- Pack `first_window'.
 		local
 			vb: EV_VERTICAL_BOX
-			vp: EV_VIEWPORT
 			sa: EV_SCROLLABLE_AREA
+			hb: EV_HORIZONTAL_BOX
 		do
 			create vb
 			first_window.extend (vb)
-			vb.extend (create {EV_LABEL}.make_with_text ("EV_VIEWPORT"))
+
+			create hb
+			hb.set_minimum_size (350, 20)
+			hb.extend (create {EV_LABEL}.make_with_text ("EV_VIEWPORT"))
+			create sb_x
+			sb_x.change_actions.extend (~on_sb_x_changed)
+			hb.extend (create {EV_LABEL}.make_with_text ("x_offset:"))
+			hb.extend (sb_x)
+			create sb_y
+			sb_y.change_actions.extend (~on_sb_y_changed)
+			hb.extend (create {EV_LABEL}.make_with_text ("y_offset:"))
+			hb.extend (sb_y)
+			vb.extend (hb)
 			vb.disable_item_expand (vb.last)
+
 			create vp.make_for_test
 			vb.extend (vp)
 			vb.extend (create {EV_LABEL}.make_with_text ("EV_SCROLLABLE_AREA"))
 			vb.disable_item_expand (vb.last)
 			create sa.make_for_test
 			vb.extend (sa)
+			first_window.resize_actions.extend (~on_geometry)
+		end
+
+	on_geometry (x, y, w, h: INTEGER) is
+			-- Window resized/moved.
+		do
+			sb_x.set_value (0)
+			sb_x.set_maximum ((vp.item.width - vp.client_width).max (0))
+			sb_y.set_value (0)
+			sb_y.set_maximum ((vp.item.height - vp.client_height).max (0))
+		end
+
+	on_sb_x_changed is
+			-- Horizontal value changed.
+		do
+			vp.set_x_offset (sb_x.value)
+		end
+
+	on_sb_y_changed is
+			-- Vertical value changed.
+		do
+			vp.set_y_offset (sb_y.value)
 		end
 
 	first_window: EV_TITLED_WINDOW is

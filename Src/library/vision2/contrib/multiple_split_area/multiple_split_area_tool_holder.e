@@ -95,136 +95,6 @@ feature {NONE} -- Initialization
 			parent_area_set: parent_area = a_parent
 		end
 		
-	docking_started is
-			-- Respond to dock starting on `Current'.
-		do
-			parent_area.initialize_docking_areas (Current)
-			if parent_dockable_dialog (main_box) = Void then
-				original_height := height
-				original_width := width
-			end
-		end
-	
-	original_height, original_width: INTEGER
-		-- Original width and height before dock.
-		
-	docking_ended is
-			-- A dock has ended, so close dialog, and restore `Current'
-		local
-			dialog: EV_DOCKABLE_DIALOG
-			original_position, new_position: INTEGER
-			original_parent_window: EV_WINDOW
-			locked_in_here: BOOLEAN
-			minimized_count: INTEGER
-			tool_holder: like Current
-			parent_rep: LINEAR [EV_WIDGET]
-		do
-			parent_area.store_positions
-			original_position := parent_area.all_holders.index_of (Current, 1)
-			locked_in_here := (create {EV_ENVIRONMENT}).application.locked_window = Void
-			if locked_in_here then
-				original_parent_window := parent_window (parent_area)
-				if original_parent_window /= Void then
-					original_parent_window.lock_update
-				end
-			end		
-
-			dialog := parent_dockable_dialog (tool)
-			if dialog /= Void then
-				check
-					parent_area_not_void: parent_area /= Void
-				end
-				if is_minimized then
-						-- Remove minimized state from `Current' as it has
-						-- been docked out of the multiple split area.
-					disable_minimized
-					minimize_button.set_pixmap (parent_area.minimize_pixmap)
-					tool.show
-					dialog.set_height (default_external_docked_height)
-				end
-
-				dialog.close_request_actions.wipe_out
-				dialog.close_request_actions.extend (agent destroy_dialog_and_restore (dialog))
-				position_docked_from := parent_area.linear_representation.index_of (tool, 1)
-				parent_area.linear_representation.prune_all (tool)
-				if not parent_area.is_item_external (tool) then
-					parent_area.external_representation.extend (tool)
-				end
-					-- Now must check that the number of minimized items is not equal
-					-- to the number of items still remaining. If this is the case,
-					-- one must be removed from its minimized state.
-				parent_rep := parent_area.linear_representation
-				from
-					parent_rep.start
-				until
-					parent_rep.off
-				loop
-					if parent_area.holder_of_widget (parent_rep.item).is_minimized then
-						minimized_count := minimized_count + 1
-					end
-					parent_rep.forth
-				end
-				if minimized_count = parent_area.count then
-					parent_rep.start
-					tool_holder := parent_area.holder_of_widget (parent_rep.item)
-					tool_holder.disable_minimized
-					tool_holder.minimize_button.set_pixmap (parent_area.minimize_pixmap)
-					tool_holder.tool.show
-				end
-				
-					-- This ensures that we only set the height when `Current' has just been docked from
-					-- `parent_area'.
-				if not (original_height = 0 and original_width = 0) then
-					dialog.set_width (original_width + (dialog.width - dialog.item.width))
-					dialog.set_height (original_height + (dialog.height - dialog.item.height))	
-				end			
-				minimize_button.disable_sensitive
-				maximize_button.disable_sensitive
-				parent_area.store_positions
-				parent_area.rebuild
-				parent_area.restore_stored_positions
-				if not (original_height = 0 and original_width = 0) then
-					parent_area.docked_out_actions.call (Void)
-				end
-			end
-			if parent /= Void then
-				parent.prune (Current)
-			end
-				-- `main_box' is moved during a transport, so we must re-insert it
-				-- in `Current'
-			if dialog = Void then
-				if main_box.parent /= Void then
-					check
-						data_is_integer: main_box.parent.data.out.is_integer
-					end
-					new_position := main_box.parent.data.out.to_integer
-					check
-						position_retrieved: new_position > 0					
-					end
-					main_box.parent.prune_all (main_box)
-					extend (main_box)
-				end
-				parent_area.update_for_holder_position_change (original_position, new_position)
-				parent_area.rebuild
-				parent_area.restore_stored_positions
-				parent_area.docked_in_actions.call (Void)
-			end
-			parent_area.remove_docking_areas
-			if original_parent_window /= Void then
-				original_parent_window.unlock_update	
-			end
-			
-				-- Reset `original_width' and `original_height' so that we no longer assume that
-				-- we have just been docked from `parent_area'.
-			original_height := 0
-			original_width := 0
-		end
-		
-	position_docked_from: INTEGER
-		-- Position of `Current' at time it was docked from `parent_area'.
-		-- Used as the index within `parent_area' to restore `Current' when a dockable
-		-- dialog containing `Current' is closed.
-		
 feature {MULTIPLE_SPLIT_AREA, MULTIPLE_SPLIT_AREA_TOOL_HOLDER}-- Access
 	
 	lower_box, upper_box: EV_VERTICAL_BOX
@@ -250,6 +120,11 @@ feature {MULTIPLE_SPLIT_AREA, MULTIPLE_SPLIT_AREA_TOOL_HOLDER}-- Access
 		
 	is_maximized: BOOLEAN
 		-- Is `Current' maximized?
+		
+	position_docked_from: INTEGER
+		-- Position of `Current' at time it was docked from `parent_area'.
+		-- Used as the index within `parent_area' to restore `Current' when a dockable
+		-- dialog containing `Current' is closed.
 
 feature {MULTIPLE_SPLIT_AREA, MULTIPLE_SPLIT_AREA_TOOL_HOLDER}-- Access
 
@@ -365,6 +240,17 @@ feature {MULTIPLE_SPLIT_AREA} -- Implemnetation
 			minimum_size_removed: minimum_size_cell.minimum_height = 0
 		end
 		
+	set_position_docked_from (a_position: INTEGER) is
+			-- Assign `a_position' to `position_docked_from'.
+		require
+			a_position >= 1
+		do
+			position_docked_from := a_position	
+		ensure
+			position_set: position_docked_from = a_position
+		end
+		
+		
 feature {MULTIPLE_SPLIT_AREA} -- Implementation
 		
 	destroy_dialog_and_restore (dialog: EV_DOCKABLE_DIALOG) is
@@ -437,6 +323,132 @@ feature {MULTIPLE_SPLIT_AREA} -- Implementation
 		-- the name label and minimize maximize tool bar.
 		
 feature {NONE} -- Implementation
+
+	docking_started is
+			-- Respond to dock starting on `Current'.
+		do
+			parent_area.initialize_docking_areas (Current)
+			if parent_dockable_dialog (main_box) = Void then
+				original_height := height
+				original_width := width
+			end
+		end
+	
+	original_height, original_width: INTEGER
+		-- Original width and height before dock.
+		
+	docking_ended is
+			-- A dock has ended, so close dialog, and restore `Current'
+		local
+			dialog: EV_DOCKABLE_DIALOG
+			original_position, new_position: INTEGER
+			original_parent_window: EV_WINDOW
+			locked_in_here: BOOLEAN
+			minimized_count: INTEGER
+			tool_holder: like Current
+			parent_rep: LINEAR [EV_WIDGET]
+		do
+			parent_area.store_positions
+			original_position := parent_area.all_holders.index_of (Current, 1)
+			locked_in_here := (create {EV_ENVIRONMENT}).application.locked_window = Void
+			if locked_in_here then
+				original_parent_window := parent_window (parent_area)
+				if original_parent_window /= Void then
+					original_parent_window.lock_update
+				end
+			end		
+
+			dialog := parent_dockable_dialog (tool)
+			if dialog /= Void then
+				check
+					parent_area_not_void: parent_area /= Void
+				end
+				if is_minimized then
+						-- Remove minimized state from `Current' as it has
+						-- been docked out of the multiple split area.
+					disable_minimized
+					minimize_button.set_pixmap (parent_area.minimize_pixmap)
+					tool.show
+					dialog.set_height (default_external_docked_height)
+				end
+
+				dialog.close_request_actions.wipe_out
+				dialog.close_request_actions.extend (agent destroy_dialog_and_restore (dialog))
+				position_docked_from := parent_area.linear_representation.index_of (tool, 1)
+				parent_area.linear_representation.prune_all (tool)
+				if not parent_area.is_item_external (tool) then
+					parent_area.external_representation.extend (tool)
+				end
+					-- Now must check that the number of minimized items is not equal
+					-- to the number of items still remaining. If this is the case,
+					-- one must be removed from its minimized state.
+				parent_rep := parent_area.linear_representation
+				from
+					parent_rep.start
+				until
+					parent_rep.off
+				loop
+					if parent_area.holder_of_widget (parent_rep.item).is_minimized then
+						minimized_count := minimized_count + 1
+					end
+					parent_rep.forth
+				end
+				if parent_area.count > 0 and then minimized_count = parent_area.count then
+					parent_rep.start
+						-- Ensure that we select the first item
+					tool_holder := parent_area.holder_of_widget (parent_rep.item)
+					tool_holder.disable_minimized
+					tool_holder.minimize_button.set_pixmap (parent_area.minimize_pixmap)
+					tool_holder.tool.show
+				end
+				
+					-- This ensures that we only set the height when `Current' has just been docked from
+					-- `parent_area'.
+				if not (original_height = 0 and original_width = 0) then
+					dialog.set_width (original_width + (dialog.width - dialog.item.width))
+					dialog.set_height (original_height + (dialog.height - dialog.item.height))	
+				end			
+				minimize_button.disable_sensitive
+				maximize_button.disable_sensitive
+				parent_area.store_positions
+				parent_area.rebuild
+				parent_area.restore_stored_positions
+				if not (original_height = 0 and original_width = 0) then
+					parent_area.docked_out_actions.call (Void)
+				end
+			end
+			if parent /= Void then
+				parent.prune (Current)
+			end
+				-- `main_box' is moved during a transport, so we must re-insert it
+				-- in `Current'
+			if dialog = Void then
+				if main_box.parent /= Void then
+					check
+						data_is_integer: main_box.parent.data.out.is_integer
+					end
+					new_position := main_box.parent.data.out.to_integer
+					check
+						position_retrieved: new_position > 0					
+					end
+					main_box.parent.prune_all (main_box)
+					extend (main_box)
+				end
+				parent_area.update_for_holder_position_change (original_position, new_position)
+				parent_area.rebuild
+				parent_area.restore_stored_positions
+				parent_area.docked_in_actions.call (Void)
+			end
+			parent_area.remove_docking_areas
+			if original_parent_window /= Void then
+				original_parent_window.unlock_update	
+			end
+			
+				-- Reset `original_width' and `original_height' so that we no longer assume that
+				-- we have just been docked from `parent_area'.
+			original_height := 0
+			original_width := 0
+		end
 		
 	parent_window (widget: EV_WIDGET): EV_WINDOW is
 			-- `Result' is window parent of `widget'.

@@ -133,7 +133,7 @@ feature -- Basic operations
 		do
 			cwin_set_window_pos (item, default_pointer,
 				a_x, a_y, 0, 0,
-				Swp_nosize + Swp_nozorder + Swp_noactivate)
+				Swp_nosize | Swp_nozorder | Swp_noactivate)
 		end
 
 feature {NONE} -- Implementation
@@ -141,7 +141,7 @@ feature {NONE} -- Implementation
 	default_style: INTEGER is
 			-- Child and visible style
 		once
-			Result := Ws_child + Ws_visible
+			Result := Ws_child | Ws_visible
 		end
 
 	class_background: WEL_BRUSH is

@@ -21,7 +21,7 @@ feature	-- Initialization
 		end
 		
 	initialize is
-			-- 
+			-- Initialization
 		do
 			check 
 				False
@@ -29,6 +29,14 @@ feature	-- Initialization
 		end
 
 feature -- Access
+
+	exists: BOOLEAN is
+			-- Does interface exist?
+		do
+			check
+				False
+			end
+		end
 
 	assembly_name: STRING is
 			-- Name of assembly at 'item'

@@ -34,6 +34,8 @@ feature {NONE} -- Initialization
 		require
 			a_dc_not_void: a_dc /= Void
 			a_dc_exists: a_dc.exists
+			positive_width: a_width >= 0
+			positive_height: a_height >= 0
 		do
 			item := cwin_create_compatible_bitmap (a_dc.item,
 				a_width, a_height)

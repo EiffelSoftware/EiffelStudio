@@ -256,7 +256,7 @@ feature {GB_CODE_GENERATOR} -- Output
 					row_position.prune_all_leading ('0')
 					column_span.prune_all_leading ('0')
 					row_span.prune_all_leading ('0')
-					Result := Result + indent + info.name + ".put (" + current_child_name + ", " + column_position + ", " +
+					Result := Result + indent + info.name + ".put_at_position (" + current_child_name + ", " + column_position + ", " +
 						row_position + ", " + column_span + ", " + row_span + ")"			
 					counter := counter + 1
 				end			

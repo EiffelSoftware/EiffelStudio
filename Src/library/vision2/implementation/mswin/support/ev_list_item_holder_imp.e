@@ -68,8 +68,10 @@ feature {NONE} -- Implementation
 			-- All the items containers contain items which are
 			-- pixmap container, then, we need this feature to
 			-- call the `on_draw' feature of the items.
+			-- the list must not be empty, otherwise windows can
+			-- send -1.
 		do
-			if not ev_children.empty then
+			if count /= 0 then
 				(ev_children @ (struct.item_id + 1)).on_draw (struct)
 			end
 		end
@@ -105,6 +107,10 @@ feature {EV_LIST_ITEM_IMP} -- Deferred features
 		end
 
 	foreground_color: EV_COLOR_IMP is
+		deferred
+		end
+
+	count: INTEGER is
 		deferred
 		end
 

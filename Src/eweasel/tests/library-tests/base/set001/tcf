@@ -4,6 +4,8 @@ test_description New implementation of SUBSET.disjoint tested with different des
 define OUTPUT $TEST
 copy_sub 	Ace $TEST Ace
 copy_raw 	test.e $CLUSTER test.e
+copy_raw 	sample_object.e $CLUSTER sample_object.e
+copy_raw 	sample_object_comparable.e $CLUSTER sample_object_comparable.e
 compile_frozen
 compile_result ok
 

@@ -342,6 +342,11 @@ feature -- Update
 		do
 		end;
 
+	replace_text (s, r: STRING; replace_all: BOOLEAN) is
+			-- Replace next occurence of `s' with `r'.
+		do
+		end;
+
 	update_after_transport (but_data: BUTTON_DATA) is
 			-- Update Current stone and related information
 			-- before transport using button data `but_data'.

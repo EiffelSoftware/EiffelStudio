@@ -192,6 +192,14 @@ feature -- Update
 		deferred
 		end
 
+	replace_text (s, r: STRING; replace_all: BOOLEAN) is
+			-- Replace next occurence of `s' with `r'.
+		require
+			valid_s: s /= Void;
+			valid_r: r /= Void
+		deferred
+		end;
+
 	update_clickable_from_stone (a_stone: STONE) is
 			-- Update the clickable information from tool's stone.
 			-- click list if text uses character position.

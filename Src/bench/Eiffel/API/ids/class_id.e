@@ -46,11 +46,11 @@ feature {COMPILER_EXPORTER} -- Access
 			end
 		end
 
-	generated_id (f: INDENT_FILE) is
+	generated_id (buffer: GENERATION_BUFFER) is
 			-- Generate textual representation of class id
 			-- in generated C code
 		do
-			f.putint (id)
+			buffer.putint (id)
 		end
 
 	associated_class: CLASS_C is

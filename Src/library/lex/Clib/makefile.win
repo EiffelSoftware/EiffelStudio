@@ -1,5 +1,5 @@
 CC= wcc386
-CFLAGS = -onealtimr -zq -zW -zp4 -bt=windows -3r -I$(%EIFFEL3)\bench\spec\$(%PLATFORM)\include
+CFLAGS = -onealtimr -zq -zW -zp4 -bt=windows -3r -I$(%EIFEL4)\bench\spec\$(%PLATFORM)\include
 LDFLAGS = 
 LIBS = 
 MAKE = wmake
@@ -14,10 +14,10 @@ OBJECTS= buffer.obj rou.obj
 lex.lib: $(OBJECTS)
 	$(RM) lex.lib
 	wlib -n lex.lib +buffer.obj +rou.obj
-	mkdir $(%EIFFEL3)\library\lex\spec
-	mkdir $(%EIFFEL3)\library\lex\spec\$(%PLATFORM)
-	mkdir $(%EIFFEL3)\library\lex\spec\$(%PLATFORM)\lib
-	$(MV) lex.lib $(%EIFFEL3)\library\lex\spec\$(%PLATFORM)\lib\lex.lib
+	mkdir $(%EIFEL4)\library\lex\spec
+	mkdir $(%EIFEL4)\library\lex\spec\$(%PLATFORM)
+	mkdir $(%EIFEL4)\library\lex\spec\$(%PLATFORM)\lib
+	$(MV) lex.lib $(%EIFEL4)\library\lex\spec\$(%PLATFORM)\lib\lex.lib
 
 clean:
 	$(RM) lex.lib

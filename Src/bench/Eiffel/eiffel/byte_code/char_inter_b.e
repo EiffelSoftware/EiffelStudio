@@ -115,7 +115,6 @@ feature -- IL code generation
 				il_generator.put_character_constant (lo)
 				il_generator.generate_binary_operator (il_minus)
 				il_generator.put_integer_32_constant (up |-| lo)
-				il_generator.branch_on_condition (feature {MD_OPCODES}.ble_un, label)
 				if label = Void then
 					il_generator.branch_on_condition (feature {MD_OPCODES}.bgt_un, else_label)
 				else

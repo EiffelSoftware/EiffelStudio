@@ -136,6 +136,7 @@ feature -- C code generation
 			buf.exdent
 			buf.putchar ('}')
 			buf.new_line
+			context.inherited_assertion.wipe_out
 		end
 		
 	generate_compound is

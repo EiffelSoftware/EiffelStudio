@@ -431,7 +431,7 @@ rt_public char *rt_nmake(EIF_CONTEXT long int objectCount)
 		if (newadd == (char *) 0)
 			xraise(EN_MEM);
 
-		/* Stop in the garbage collector because we have know an unstable
+		/* Stop in the garbage collector because we have now an unstable
 		 * object. */
 		g_data.status |= GC_STOP;
 

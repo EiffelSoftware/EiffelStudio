@@ -265,9 +265,16 @@ feature {NONE} -- C code generation
 			rout_id := real_ty.base_class.feature_table.item ("make").rout_id_set.first;
 			entry := Eiffel_table.poly_table (rout_id);
 			rout_table ?= entry;
+
+				-- Generate the signature of the function
 			internal_name := clone (rout_table.feature_name (real_ty.type_id))
+			buffer.putstring ("(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))")
 			buffer.putstring (internal_name);
+			buffer.putstring (")")
+
+				-- Generate the arguments
 			generate_array_make_arguments;
+
 				-- Remember extern routine declaration
 				-- Since `make' from ARRAY is a procedure, the return type is `Void_c_type'
 				--| Note: it used to be `real_ty.c_type' but it was the C type of

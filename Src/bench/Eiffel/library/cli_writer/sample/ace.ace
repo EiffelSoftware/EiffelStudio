@@ -25,7 +25,8 @@ default
 	array_optimization (no)
 	dead_code_removal (yes)
 	exception_trace (no)
-	inlining (no)
+	inlining (yes)
+	inlining_size ("0")
 
 cluster
 	all base:		"$EIFFEL_SRC\library\base"
@@ -39,6 +40,11 @@ cluster
 		end
 
 	all cli_writer:		"$EIFFEL_SRC\Eiffel\library\cli_writer"
+		exclude
+			"EIFGEN"
+		end
+
+	all helpers: 		"$EIFFEL_SRC\Eiffel\eiffel\il_generation\windows"
 
 external
 

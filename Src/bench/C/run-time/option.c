@@ -66,7 +66,7 @@ char *last_name;		/* when we deal with a so called terminal feature (a feature w
 typedef struct
 {
 	long	seconds;
-	double	micro_seconds;
+	long	micro_seconds;
 } time_struct;
 
 struct prof_rusage
@@ -563,7 +563,7 @@ void exitprf(void)
 						features = (struct prof_info *) f_values[i].htab->h_values;
 						
 #ifdef HAS_GETRUSAGE
-						percentage = (real_time(features[j].all_total_time)) / (real_time(execution_time)) / 10000.0; 
+						percentage = (real_time(features[j].all_total_time)) / (real_time(execution_time)) * 100; 
 #elif defined(HAS_TIMES)
 						percentage = features[j].all_total_time / (double) execution_time * 100.;
 #elif defined(EIF_WIN32)

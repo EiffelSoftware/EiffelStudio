@@ -12,7 +12,9 @@ inherit
 		undefine
 			propagate_foreground_color,
 			propagate_background_color,
-			dialog_key_press_action
+			dialog_key_press_action,
+			lock_update,
+			unlock_update
 		redefine
 			interface
 		end

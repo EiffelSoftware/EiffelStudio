@@ -159,14 +159,6 @@ feature -- Properties
 	system: E_SYSTEM;
 			-- Eiffel system
 
-	lace_click_list: CLICK_LIST is
-			-- Click list for the lace file
-		obsolete
-			"Use click_list from E_ACE"
-		do
-			Result := Ace.click_list
-		end;
-
 	name: DIRECTORY_NAME is
 			-- Path of eiffel project
 		do

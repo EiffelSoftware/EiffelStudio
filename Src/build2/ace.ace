@@ -20,7 +20,7 @@ default
 	disabled_debug ("wel_gdi_references")
 	disabled_debug ("win_dispatcher")
 	debug (no)
-	line_generation (yes)
+	line_generation (no)
 	profile (no)
 	trace (no)
 	override_cluster ("preferences")

@@ -5,7 +5,9 @@ class SHOW_FLAT
 
 inherit
 
-	FORMATTER
+	FILTERABLE
+		rename
+			filter_context as flat_context
 		redefine
 			dark_symbol
 		end;
@@ -42,9 +44,9 @@ feature {NONE}
 	title_part: STRING is do Result := l_Flat_form_of end;
 
 	display_info (i: INTEGER; c: CLASSC_STONE) is
-			-- Display flat form pf 'c'.
+			-- Display flat form of 'c'.
 		do
 			text_window.process_text (flat_context (c).text)
 		end;
- 
+
 end

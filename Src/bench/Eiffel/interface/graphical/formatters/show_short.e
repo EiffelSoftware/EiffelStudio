@@ -4,7 +4,9 @@ class SHOW_SHORT
 
 inherit
 
-	FORMATTER
+	FILTERABLE
+		rename
+			filter_context as short_context
 		redefine
 			dark_symbol
 		end;

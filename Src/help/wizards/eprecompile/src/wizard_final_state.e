@@ -156,14 +156,12 @@ feature {NONE} -- Implementation
 			lib_exists: lib_name /= Void and then lib_ace /= Void
 		local
 			to_end: BOOLEAN
-			progress_file: RAW_FILE
 			time_left, n_dir: INTEGER
 			new_time_left: INTEGER
 			proj_path, command: STRING
 			total_prog: INTEGER
 			progress_file_path: FILE_NAME
 			eifgen_path: DIRECTORY_NAME
-			eifgen_dir: DIRECTORY
 			finish_freezing_command: FILE_NAME
 		do
 				-- We need to find the path, the exact name and the full name of the Ace file

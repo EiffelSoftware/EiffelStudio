@@ -546,6 +546,11 @@ feature -- External features
 		deferred
 		end
 
+	is_null_data (no_descriptor: INTEGER; ind: INTEGER): BOOLEAN is
+			-- Is last retrieved data null? 
+		deferred
+		end
+
 	get_date_data (no_descriptor: INTEGER; ind: INTEGER): INTEGER is
 			-- Function used to get data from structure SQLDA filled  by FETCH clause.
 		deferred

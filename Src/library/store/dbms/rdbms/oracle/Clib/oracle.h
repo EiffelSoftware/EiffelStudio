@@ -153,6 +153,7 @@ int ora_get_integer_data (int, int);
 double ora_get_float_data (int, int);
 float ora_get_real_data (int, int);
 int ora_get_boolean_data (int, int);
+int ora_is_null_data();
 int ora_get_date_data (int no_des, int i);
 char *ora_get_year(void);
 char *ora_get_month(void);

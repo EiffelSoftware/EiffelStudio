@@ -62,7 +62,7 @@ feature -- Element change
 		do
 			g := field_count (object)
 			if map_table = Void then
-				!! map_table.make (1, count)
+				create map_table.make (1, count)
 			elseif map_table.count < count then
 				map_table.resize (1, count)
 			end
@@ -103,16 +103,16 @@ feature -- Element change
 			get_metadata : BOOLEAN
 		do
 			if database_string = Void then
-				!! database_string.make (selection_string_size)
+				create database_string.make (selection_string_size)
 			end
 			count := db_spec.get_count (no_descriptor)
 			get_metadata := False  -- do not get metadata
 			if value = Void then
-				!! value.make (1, count)
-				!! value_size.make (1, count)
-				!! value_max_size.make (1, count)
-				!! value_type.make (1, count)
-				!! select_name.make (1, count)
+				create value.make (1, count)
+				create value_size.make (1, count)
+				create value_max_size.make (1, count)
+				create value_type.make (1, count)
+				create select_name.make (1, count)
 				get_metadata := True --PGC
 			elseif value.count < count then
 				value.resize (1, count)
@@ -133,7 +133,7 @@ feature -- Element change
 					value_type.put (db_spec.get_col_type (no_descriptor, ind), ind)
 					f_string := select_name.item (ind)
 					if f_string = Void then
-						!! f_string.make (1)
+						create f_string.make (1)
 						select_name.put (f_string, ind)
 					else
 						f_string.wipe_out
@@ -147,15 +147,17 @@ feature -- Element change
 
 				f_any := value.item (ind)
 
+				if not db_spec.is_null_data (no_descriptor, ind) then
+
 				-- INTEGER type
-				if value_type.item (ind) = Integer_type_database then
+				if value_type.item (ind) = Integer_type_database then		
 					if f_any = Void then
-						!! f_integer
+						create f_integer
 						value.put (f_integer, ind)
 					else
 						f_integer ?= f_any
 						if f_integer = Void then
-							!! f_integer
+							create f_integer
 							value.put (f_integer, ind)
 						end
 					end
@@ -164,12 +166,12 @@ feature -- Element change
 				-- DOUBLE type
 				elseif value_type.item (ind) = Float_type_database then
 					if f_any = Void then
-						!! f_double
+						create f_double
 						value.put (f_double, ind)
 					else
 						f_double ?= f_any
 						if f_double = Void then
-							!! f_double
+							create f_double
 							value.put (f_double, ind)
 						end
 					end
@@ -178,26 +180,26 @@ feature -- Element change
                 -- REAL type
                 elseif value_type.item (ind) = Real_type_database then
                     if f_any = Void then
-                        !! f_real
+                        create f_real
                         value.put (f_real, ind)
                     else
                         f_real ?= f_any
                         if f_real = Void then
-                            !! f_real
+                            create f_real
                             value.put (f_real, ind)
                         end
                     end
-                    f_real.set_item (db_spec.get_real_data (no_descriptor, ind))
+					f_real.set_item (db_spec.get_real_data (no_descriptor, ind))
 
 				-- BOOLEAN type
 				elseif value_type.item (ind) = Boolean_type_database then
 					if f_any = Void then
-						!! f_boolean
+						create f_boolean
 						value.put (f_boolean, ind)
 					else
 						f_boolean ?= f_any
 						if f_boolean = Void then
-							!! f_boolean
+							create f_boolean
 							value.put (f_boolean, ind)
 						end
 					end
@@ -206,18 +208,18 @@ feature -- Element change
 				-- DATE type
 				elseif value_type.item (ind) = Date_type_database then
 					if f_any = Void then
-						!! f_date.make_now
+						create f_date.make_now
 						value.put (f_date, ind)
 					else
 						f_date ?= f_any
 						if f_date = Void then
-							!! f_date.make_now
+							create f_date.make_now
 							value.put (f_date, ind)
 						end
 					end
 					if db_spec.get_date_data (no_descriptor, ind) = 1 then
-						!! time.make (db_spec.get_hour (no_descriptor, ind), db_spec.get_min (no_descriptor, ind), db_spec.get_sec (no_descriptor, ind))
-						!! date.make_month_day_year (db_spec.get_month (no_descriptor, ind), db_spec.get_day (no_descriptor, ind), db_spec.get_year (no_descriptor, ind))
+						create time.make (db_spec.get_hour (no_descriptor, ind), db_spec.get_min (no_descriptor, ind), db_spec.get_sec (no_descriptor, ind))
+						create date.make_month_day_year (db_spec.get_month (no_descriptor, ind), db_spec.get_day (no_descriptor, ind), db_spec.get_year (no_descriptor, ind))
 						f_date.set_time (time)
 						f_date.set_date (date)
 					end
@@ -229,12 +231,16 @@ feature -- Element change
 					end
 					f_string ?= f_any
 					if f_string = Void then
-						!! f_string.make (1)
+						create f_string.make (1)
 						value.put (f_string, ind)
 					else
 						f_string.wipe_out
 					end
 					f_string.append (database_string)
+				end
+
+				else
+					value.put (Void, ind)
 				end
 
 				ind := ind + 1
@@ -258,7 +264,7 @@ feature {NONE} -- Status report
 	buffer: STRING is
 			-- String buffer.
 		once
-			!! Result.make (50)
+			create Result.make (50)
 		ensure
 			result_not_void: Result /= Void
 		end

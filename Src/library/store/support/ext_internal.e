@@ -127,6 +127,47 @@ feature -- Basic operations
 
 		end
 
+	field_clean (i: INTEGER; object: ANY): BOOLEAN is
+			-- Clean `i'-th field of `object'.
+		require
+			object_exists: object /= Void
+		local
+			ftype, local_int: INTEGER
+			fname: STRING
+			int_ref: INTEGER_REF
+			local_real: REAL
+			real_ref: REAL_REF
+			double_ref: DOUBLE_REF
+			local_double: DOUBLE
+			local_boolean: BOOLEAN
+			boolean_ref: BOOLEAN_REF
+			local_string1: STRING
+			local_char: CHARACTER
+			char_ref: CHARACTER_REF
+			adr_tmp: ANY
+		do
+			ftype := field_type (i, object)
+			fname := field_name (i, object)
+			Result := True
+
+			if ftype = Integer_type then
+				set_integer_field (i, object, 0)
+			elseif ftype = Real_type then
+				set_real_field (i, object, 0.0)
+			elseif ftype = Double_type then
+				set_double_field (i, object, 0.0)
+			elseif ftype = Character_type then
+				set_character_field (i, object, ' ')
+			elseif ftype = Boolean_type then
+				set_boolean_field (i, object, False)
+			elseif ftype = Reference_type then
+				set_reference_field (i, object, Void)
+			else
+				Result := false
+			end
+
+		end
+
 	mark (obj: ANY) is
 			-- Mark object `obj'
 		require
@@ -303,6 +344,11 @@ feature -- Basic operations
 		end
 
 feature {NONE} -- Status report
+
+	is_void (obj: ANY): BOOLEAN is
+		do
+			Result := (obj = Void)
+		end
 
 	is_integer (obj: ANY): BOOLEAN is
 			-- Is `obj' an integer value?

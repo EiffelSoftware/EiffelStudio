@@ -19,7 +19,7 @@ creation
 
 	make
 
-feature {NONE} -- Initialization
+feature {EB_TOOL_MANAGER} -- Initialization
 
 	build_interface is
 		local

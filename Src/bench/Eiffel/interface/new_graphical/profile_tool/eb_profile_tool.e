@@ -47,6 +47,7 @@ feature {NONE} -- Initialization
 			precursor {EB_TOOL} (man)			
 		end
 
+feature {EB_TOOL_MANAGER} -- Initialization
 
 	build_interface is
 		local

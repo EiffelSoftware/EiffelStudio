@@ -73,7 +73,7 @@ What WEL does not include yet?
 
 o Some Windows 95 common controls: Animation Controls,
   Drag List Boxes, Header Controls, Hot-Key Controls, Image Lists,
-  List View Controls, Property Sheets, Tab Controls.
+  List View Controls, Property Sheets.
 
 o Find and replace common dialog box.
 

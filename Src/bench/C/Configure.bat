@@ -166,7 +166,7 @@ echo cd platform>> make.bat
 echo call make>> make.bat
 echo cd ..\bench >> make.bat
 echo call make >> make.bat
-echo cd ..\..\desc>> make.bat
+echo cd ..\desc>> make.bat
 echo call make>> make.bat
 echo cd ..>> make.bat
 call make

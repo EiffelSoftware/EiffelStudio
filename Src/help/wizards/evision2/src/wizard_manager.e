@@ -28,7 +28,7 @@ feature -- Initialization
 	Wizard_title: STRING is 
 			-- Window title for this wizard.
 		once
-			Result := "New WEL Application Wizard"
+			Result := "New Vision2 Application Wizard"
 		end
 	
 end -- class WIZARD_MANAGER

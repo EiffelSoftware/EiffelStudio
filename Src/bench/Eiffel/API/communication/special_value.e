@@ -82,7 +82,7 @@ feature -- Output
 			st.add_string (" [");
 			status := Application.status;
 			if status /= Void and status.is_stopped then
-				st.add_address (name, address, dynamic_class)
+				st.add_address (address, name, dynamic_class)
 			else
 				st.add_string (address)
 			end

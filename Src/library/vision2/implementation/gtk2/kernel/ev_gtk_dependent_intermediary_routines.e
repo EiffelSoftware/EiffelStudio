@@ -24,6 +24,41 @@ feature {EV_GTK_CALLBACK_MARSHAL, EV_ANY_IMP} -- Tuple optimizations
 
 feature {EV_ANY_I} -- Implementation
 
+	mcl_column_click_callback (a_object_id: INTEGER; int: TUPLE [INTEGER]) is
+		local
+			temp_int: INTEGER_REF
+			a_mcl: EV_MULTI_COLUMN_LIST_IMP
+		do
+			a_mcl ?= eif_id_object (a_object_id)
+			if a_mcl /= Void and then a_mcl.column_title_click_actions_internal /= Void then
+				temp_int ?= int.item (1)
+				a_mcl.column_title_click_actions_internal.call ([temp_int.item + 1])
+			end
+		end
+
+	mcl_column_resize_callback (a_object_id: INTEGER; int: TUPLE [INTEGER]) is
+		local
+			temp_col: INTEGER_REF
+			a_column_ptr: POINTER
+			temp_width: INTEGER
+			a_mcl: EV_MULTI_COLUMN_LIST_IMP
+		do
+			a_mcl ?= eif_id_object (a_object_id)
+			if a_mcl /= Void and then a_mcl.column_resized_actions_internal /= Void then
+				temp_col ?= int.item (1)
+				if temp_col.item > 0 then
+					a_column_ptr := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_column (a_mcl.tree_view, temp_col.item - 1)
+					temp_width := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_get_width (a_column_ptr)
+					if (temp_col.item) <= a_mcl.column_count and a_mcl.column_widths /= Void then
+						a_mcl.update_column_width (temp_width, temp_col.item)
+						if a_mcl.column_resized_actions_internal /= Void then
+							a_mcl.column_resized_actions_internal.call ([temp_col.item + 1])
+						end
+					end
+				end
+			end
+		end
+
 	text_buffer_mark_set_intermediary (a_object_id: INTEGER; nargs: INTEGER; args: POINTER) is
 			-- Used for caret positioning events
 		local

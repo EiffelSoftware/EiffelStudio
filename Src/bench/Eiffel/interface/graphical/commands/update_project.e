@@ -11,7 +11,8 @@ inherit
 	SHARED_DEBUG;
 	SHARED_RESCUE_STATUS;
 	SHARED_FORMAT_TABLES;
-	SHARED_RESOURCES
+	SHARED_RESOURCES;
+	SHARED_MELT_ONLY
 
 creation
 
@@ -23,7 +24,8 @@ feature
 		do
 			init (c, a_text_window);
 			set_action ("!c<Btn1Down>", Current, generate_code_only)
-			!!request
+			!!request;
+			request.pass_address
 		end;
 
 feature {NONE}
@@ -243,22 +245,22 @@ feature {NONE}
 			arg2: STRING;
 			cmd_string: STRING;
 			uf: RAW_FILE;
+			file_name: FILE_NAME;
+			app_name: STRING;
 		do
-			if System.uses_precompiled then
+			if not melt_only and then System.uses_precompiled then
 					-- Target
-				arg2 := build_path (Workbench_generation_path,
-									System.system_name);
+				!!file_name.make_from_string (Workbench_generation_path);
+				app_name := clone (System.system_name);
+				app_name.append (Executable_suffix);
+				file_name.set_file_name (app_name);
+
+				arg2 := file_name.path;
+
 				!!uf.make (arg2);
 				if not uf.exists then
-						-- Request
-					!!cmd_string.make (200);
-					cmd_string.append
-							("$EIFFEL3/bench/spec/$PLATFORM/bin/prelink ");
-					cmd_string.append (Precompilation_driver);
-					cmd_string.append_character (' ');
-					cmd_string.append (arg2);
-					request.set_command_name (cmd_string);
-					request.send
+					eif_gr_link_driver (request, Workbench_generation_path.to_c, System.system_name.to_c,
+						Prelink_command_name.to_c, Precompilation_driver.to_c);
 				end;
 			end;
 		end;
@@ -320,35 +322,26 @@ feature {NONE}
 feature
 
 	finish_freezing is
-		local
-			d: DIRECTORY;
-			cmd, cp_cmd: STRING;
 		do
-			!!cmd.make (50);
-			cmd.append ("cd ");
-			cmd.append (c_code_directory);
-			cmd.append ("; ");
-			cmd.append (Finish_freezing_script);
-
-			!!d.make (c_code_directory);
-			if not d.has_entry (Finish_freezing_script) then
-				!!cp_cmd.make (50);
-				cp_cmd.append (Copy_cmd);
-				cp_cmd.extend (' ');
-				cp_cmd.append (freeze_command_name);
-				cp_cmd.extend (' ');
-				cp_cmd.append (c_code_directory);
-				cp_cmd.append ("; ");
-				cmd.prepend (cp_cmd);
-			end;
-			request.set_command_name (cmd);
-			request.send;
+			eif_gr_call_finish_freezing (request, c_code_directory.to_c, freeze_command_name.to_c);
 		end;
 
 	symbol: PIXMAP is
 		once
 			Result := bm_Update
 		end;
+
+feature {NONE} -- Externals
+
+	eif_gr_call_finish_freezing(rqst: ANY; c_code_dir, freeze_cmd: ANY) is
+		external
+			"C"
+		end
+
+	eif_gr_link_driver (rqst: ANY; c_code_dir, syst_name, prelink_cmd, driver_name: ANY) is
+		external
+			"C"
+		end
 
 feature {NONE}
 

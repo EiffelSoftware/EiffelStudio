@@ -1281,7 +1281,15 @@ feature {WEL_DISPATCHER}
 				on_wm_show_window (wparam, lparam)
 			elseif msg = Wm_destroy then
 				on_wm_destroy
+			else
+				default_process_message (msg, wparam, lparam)
 			end
+		end
+
+	default_process_message (msg, wparam, lparam: INTEGER) is
+			-- Process `msg' which has not been processed by
+			-- `process_message'.
+		do
 		end
 
 	call_default_window_procedure (msg, wparam, lparam: INTEGER): INTEGER is

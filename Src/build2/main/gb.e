@@ -82,7 +82,6 @@ feature {NONE} -- Initialization
 			shared_preferences: GB_SHARED_PREFERENCES
 		do
 			create shared_preferences
-			shared_preferences.preferences.initialize_preferences
 			if command_line.argument_array.count = 1 then
 					-- If `argument_array' has one element,
 					-- then no argument was specified, only the

@@ -25,7 +25,8 @@ feature {EV_ANY_I} -- Implementation
 
 	create_dock_started_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Create a pick action sequence.
-		deferred
+		do
+			create Result
 		end
 
 	dock_started_actions_internal: EV_NOTIFY_ACTION_SEQUENCE

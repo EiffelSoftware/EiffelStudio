@@ -12,7 +12,8 @@ class
 create
 	make,
 	make_empty,
-	make_by_pointer
+	make_by_pointer,
+	make_by_pointer_and_count
 
 feature --{NONE} -- Initialization
 
@@ -43,22 +44,43 @@ feature --{NONE} -- Initialization
 			lth: INTEGER
 		do
 			lth := cwel_string_length (a_ptr)
-			create managed_data.make (2 * (lth + 1))
-			managed_data.item.memory_copy (a_ptr, lth * 2)
+			make_by_pointer_and_count (a_ptr, lth)
+		end
+
+	make_by_pointer_and_count (a_ptr: POINTER; a_count: INTEGER) is
+			-- Make a copy of first `a_count' characters of
+			-- unicode string pointed by `a_ptr'.
+		require
+			a_ptr_not_null: a_ptr /= default_pointer
+			a_count_non_negative: a_count >= 0
+		do
+			count := a_count
+			create managed_data.make (2 * (a_count + 1))
+			managed_data.item.memory_copy (a_ptr, a_count * 2)
 		end
 	
 feature -- Access
 
 	string: STRING is
 			-- Eiffel string
+		do
+			Result := string_with_count (length)
+		end
+		
+	string_with_count (a_count: INTEGER): STRING is
+			-- Retrieve first `a_count' characters of Current to create a new Eiffel string
+		require
+			a_count_non_negative: a_count >= 0
+			a_count_less_than_capacity: a_count <= count
 		local
 			u_string: UNI_STRING
 			nb: INTEGER
 		do
-			create u_string.make_empty (length)
+			create u_string.make_empty (a_count)
 			nb := cwel_wide_char_to_multi_byte (feature {WEL_CP_CONSTANTS}.Cp_acp, 0, item,
-				length, u_string.item, u_string.capacity, default_pointer, default_pointer)
-			create Result.make_from_c (u_string.item)
+				a_count, u_string.item, u_string.capacity, default_pointer, default_pointer)
+			create Result.make (a_count + 1)
+			Result.from_c_substring (u_string.item, 1, a_count)
 		end
 
 	item: POINTER is

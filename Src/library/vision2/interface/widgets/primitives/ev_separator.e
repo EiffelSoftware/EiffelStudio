@@ -4,11 +4,18 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	EV_SEPARATOR
 
---inherit
---	EV_PRIMITIVE
+inherit 
+	EV_PRIMITIVE
+		redefine
+			implementation
+		end
+
+feature {NONE} -- Implementation
+
+	implementation: EV_SEPARATOR_I
 
 end -- class EV_SEPARATOR
 

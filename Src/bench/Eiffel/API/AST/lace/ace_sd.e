@@ -831,7 +831,7 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 			free_option_sd: FREE_OPTION_SD
 			l_val: OPT_VAL_SD
 			l_has_value: BOOLEAN
-			l_installed_runtimes: LINEAR [STRING]
+			l_installed_runtimes: DS_LINEAR [STRING]
 			l_il_env: IL_ENVIRONMENT
 		do
 			create l_il_env

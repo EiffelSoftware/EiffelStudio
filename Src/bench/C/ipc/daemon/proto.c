@@ -14,6 +14,7 @@
 #include "portable.h"
 
 #ifdef EIF_WIN32
+#include <file.h>
 #define print_err_msg fprintf
 #else
 #include "err_msg.h"
@@ -421,7 +422,11 @@ rt_private void run_command(int s)
 	char *cmd;			/* Command to be run */
 	int status;			/* Command status, as returned by system() */
     char *meltpath, *appname, *envstring;   /* set MELT_PATH */
-#ifndef EIF_WIN32
+#ifdef  EIF_WIN32
+	STARTUPINFO				siStartInfo;
+	PROCESS_INFORMATION		procinfo;
+	char 					*current_dir;
+#else
 	STREAM *sp;			/* Stream to be used for communications */
 
 	sp = stream_by_fd[s];				/* Fetch associated stream */
@@ -453,7 +458,34 @@ rt_private void run_command(int s)
 #elif defined (SIGCLD)
 	signal (SIGCLD, SIG_DFL);
 #endif
+
+#ifdef EIF_WIN32
+	current_dir = (char *) getcwd(NULL, PATH_MAX);
+
+	memset (&siStartInfo, 0, sizeof(STARTUPINFO));
+	siStartInfo.cb = sizeof(STARTUPINFO);
+	siStartInfo.lpTitle = NULL;
+	siStartInfo.lpReserved = NULL;
+	siStartInfo.lpReserved2 = NULL;
+	siStartInfo.cbReserved2 = 0;
+	siStartInfo.lpDesktop = NULL;
+	siStartInfo.dwFlags = 0;
+	siStartInfo.hStdOutput = GetStdHandle (STD_OUTPUT_HANDLE);
+	siStartInfo.hStdInput =  GetStdHandle (STD_INPUT_HANDLE);
+	siStartInfo.hStdError = GetStdHandle (STD_ERROR_HANDLE);
+
+	status = -1;
+	if (CreateProcess (NULL, cmd, NULL, NULL, TRUE, DETACHED_PROCESS, NULL, current_dir, &siStartInfo, &procinfo)) {
+		CloseHandle (procinfo.hProcess);
+		CloseHandle (procinfo.hThread);
+		status = 0;
+	}
+	chdir(current_dir);
+	free(current_dir);
+#else
 	status = system(cmd);				/* Run command via /bin/sh */
+#endif
+
 #ifdef BSD
     signal (SIGCHLD, SIG_IGN);
 #elif defined (SIGCLD)
@@ -492,8 +524,11 @@ rt_private void run_asynchronous(int s, Request *rqst)
 	int jobnum;			/* Job number assigned to comamnd */
 	Request dans;		/* Answer (status of comamnd) */
     char *meltpath, *appname, *envstring;   /* set MELT_PATH */
-
-#ifndef EIF_WIN32
+#ifdef  EIF_WIN32
+	STARTUPINFO				siStartInfo;
+	PROCESS_INFORMATION		procinfo;
+	char 					*current_dir;
+#else
 	STREAM *sp;			/* Stream to be used for communications */
 
 	sp = stream_by_fd[s];				/* Fetch associated stream */
@@ -506,8 +541,28 @@ rt_private void run_asynchronous(int s, Request *rqst)
 	dans.rq_opaque.op_first = jobnum;	/* Anwser is tagged with job number */
 
 #ifdef EIF_WIN32
-	status = system(cmd);				/* Run command via /bin/sh */
-	/* NOTREACHED */
+	current_dir = (char *) getcwd(NULL, PATH_MAX);
+
+	memset (&siStartInfo, 0, sizeof(STARTUPINFO));
+	siStartInfo.cb = sizeof(STARTUPINFO);
+	siStartInfo.lpTitle = NULL;
+	siStartInfo.lpReserved = NULL;
+	siStartInfo.lpReserved2 = NULL;
+	siStartInfo.cbReserved2 = 0;
+	siStartInfo.lpDesktop = NULL;
+	siStartInfo.dwFlags = 0;
+	siStartInfo.hStdOutput = GetStdHandle (STD_OUTPUT_HANDLE);
+	siStartInfo.hStdInput =  GetStdHandle (STD_INPUT_HANDLE);
+	siStartInfo.hStdError = GetStdHandle (STD_ERROR_HANDLE);
+
+	status = -1;
+	if (CreateProcess (NULL, cmd, NULL, NULL, TRUE, DETACHED_PROCESS, NULL, current_dir, &siStartInfo, &procinfo)) {
+		CloseHandle (procinfo.hProcess);
+		CloseHandle (procinfo.hThread);
+		status = 0;
+	}
+	chdir(current_dir);
+	free(current_dir);
 #else
 	switch (fork()) {
 	case -1:				/* Cannot fork */

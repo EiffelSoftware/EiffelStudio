@@ -158,16 +158,6 @@ set_normal_state
 set_icon_mask
 set_icon_pixmap
 =========================================================================
-CLASS: ev_progress_bar_imp
-DATE:	19990909
-WHO:	king
-step
-minimum
-maximum
-set_step
-set_minimum
-set_maximum
-=========================================================================
 CLASS: ev_static_menu_bar_imp
 DATE:	19990909
 WHO:	king
@@ -178,6 +168,12 @@ DATE: 19990915
 WHO: Alex
 character_format
 font
+=========================================================================
+CLASS: EV_LIST_IMP 
+DATE: 19990916
+WHO: Alex
+insert_item
+
 
 
 

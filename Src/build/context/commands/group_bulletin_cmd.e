@@ -32,6 +32,7 @@ feature
 		do
 			context := a_context;
 			group_c := a_group;
+			context.set_grouped (False)
 		end;
 
 	work (argument: ANY) is

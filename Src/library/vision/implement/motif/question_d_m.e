@@ -15,9 +15,9 @@ inherit
 
 	MESSAGE_D_M
 		undefine
-			clean_up, create_widget
+			create_widget
 		redefine
-			make, dialog_shell, screen_object
+			make, parent
 		end;
 
 	MEL_QUESTION_DIALOG
@@ -32,11 +32,11 @@ inherit
 			set_background_pixmap as mel_set_background_pixmap,
 			destroy as mel_destroy,
 			screen as mel_screen,
-            is_shown as shown
+			is_shown as shown
 		undefine
 			raise, lower, show, hide
 		redefine
-			dialog_shell, screen_object
+			parent
 		select
 			mel_quest_make, mel_quest_make_no_auto
 		end
@@ -49,22 +49,20 @@ feature {NONE} -- Initialization
 
 	make (a_question_dialog: QUESTION_D; oui_parent: COMPOSITE) is
 			-- Create a motif question dialog.
+		local
+			mc: MEL_COMPOSITE
 		do
+			mc ?= oui_parent.implementation;
 			widget_index := widget_manager.last_inserted_position;
-			mel_quest_make_no_auto (a_question_dialog.identifier,
-				mel_parent (a_question_dialog, widget_index));
+			mel_quest_make_no_auto (a_question_dialog.identifier, mc);
 			a_question_dialog.set_dialog_imp (Current);
-			action_target := screen_object;
-			initialize (dialog_shell)
+			initialize (parent)
 		end;
 
 feature -- Access
 
-	dialog_shell: MEL_DIALOG_SHELL
+	parent: MEL_DIALOG_SHELL
 			-- Dialog shell of the working dialog
-
-	screen_object: POINTER
-			-- Associated widget C pointer
 
 end -- class QUESTION_D_M
 

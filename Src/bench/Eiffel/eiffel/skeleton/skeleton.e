@@ -98,10 +98,10 @@ feature
 		require
 			level <= Expanded_level and then level >= Reference_level;
 		local
-			old_pos: INTEGER;
+			old_cursor: CURSOR;
 		do
 			from
-				old_pos := index;
+				old_cursor := cursor;
 				goto (level);
 			until
 				after or else item.level > level
@@ -109,7 +109,7 @@ feature
 				Result := Result + 1;
 				forth;
 			end;
-			go_i_th (old_pos);
+			go_to (old_cursor);
 		end;
 
 	go_reference is
@@ -350,8 +350,7 @@ feature
 				file.putchar (',');
 				file.putint (nb_flt);
 				file.putstring (") + PTRACS(");
-				file.putint
-						(index - nb_ref - nb_char - nb_int - nb_flt - 1);
+				file.putint (index - nb_ref - nb_char - nb_int - nb_flt - 1);
 				file.putchar (')');
 			when Double_level then
 				nb_ref := nb_reference;
@@ -371,8 +370,7 @@ feature
 				file.putchar (',');
 				file.putint (nb_ptr);
 				file.putstring (") + DBLACS(");
-				file.putint
-				(index - nb_ref - nb_char - nb_int - nb_flt - nb_ptr -1);
+				file.putint (index - nb_ref - nb_char - nb_int - nb_flt - nb_ptr -1);
 				file.putchar (')');
 			else
 				nb_ref := nb_reference;

@@ -1,1 +1,1 @@
-@make /f makefile.bcc
+make /f makefile.bcc

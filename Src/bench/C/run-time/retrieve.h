@@ -69,6 +69,12 @@ extern char rt_kind;
 extern int old_retrieve_read();
 extern int retrieve_read();
 
+extern int old_retrieve_read_with_compression();
+extern int retrieve_read_with_compression();
+
+extern void rt_init_retrieve();
+extern void rt_reset_retrieve();
+
 extern int (*retrieve_read_func)();
 
 #ifdef __cplusplus

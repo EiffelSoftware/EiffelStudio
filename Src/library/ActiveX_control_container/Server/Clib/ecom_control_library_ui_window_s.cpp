@@ -62,6 +62,7 @@ STDMETHODIMP ecom_control_library::ui_window::GetWindow(  /* [out] */ HWND * phw
   EIF_OBJECT tmp_phwnd = NULL;
   if (phwnd != NULL)
   {
+    * phwnd = NULL;
     tmp_phwnd = eif_protect (rt_ce.ccom_ce_pointed_pointer ((void **)phwnd, NULL));
   }
   

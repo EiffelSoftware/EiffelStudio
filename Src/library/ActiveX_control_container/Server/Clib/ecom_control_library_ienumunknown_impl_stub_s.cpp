@@ -30,7 +30,9 @@ ecom_control_library::IEnumUnknown_impl_stub::~IEnumUnknown_impl_stub()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_control_library::IEnumUnknown_impl_stub::Next(  /* [in] */ ULONG celt, /* [out] */ IUnknown * * rgelt, /* [out] */ ULONG * pcelt_fetched )
+STDMETHODIMP ecom_control_library::IEnumUnknown_impl_stub::Next(  /* [in] */ ULONG celt, 
+                                                                  /* [out] */ IUnknown * * rgelt, 
+                                                                  /* [out] */ ULONG * pcelt_fetched )
 
 /*-----------------------------------------------------------
   No description available.
@@ -42,9 +44,7 @@ STDMETHODIMP ecom_control_library::IEnumUnknown_impl_stub::Next(  /* [in] */ ULO
   EIF_OBJECT tmp_rgelt = NULL;
   if (rgelt != NULL)
   {
-    tmp_rgelt = eif_protect (grt_ce_control_interfaces2.ccom_ce_pointed_cell_193 (rgelt, NULL));
-    if (*rgelt != NULL)
-      (*rgelt)->AddRef ();
+    tmp_rgelt = eif_protect (rt_ce.ccom_ce_array_unknown (rgelt, 1, (int*)&celt, NULL));
   }
   EIF_OBJECT tmp_pcelt_fetched = NULL;
   if (pcelt_fetched != NULL)
@@ -57,11 +57,7 @@ STDMETHODIMP ecom_control_library::IEnumUnknown_impl_stub::Next(  /* [in] */ ULO
 
   (FUNCTION_CAST (void, (EIF_REFERENCE, EIF_INTEGER, EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), (EIF_INTEGER)tmp_celt, ((tmp_rgelt != NULL) ? eif_access (tmp_rgelt) : NULL), ((tmp_pcelt_fetched != NULL) ? eif_access (tmp_pcelt_fetched) : NULL));
   
-  if (*rgelt != NULL)
-    (*rgelt)->Release ();
-  grt_ec_control_interfaces2.ccom_ec_pointed_cell_193 (((tmp_rgelt != NULL) ? eif_wean (tmp_rgelt) : NULL), rgelt);
-  if (*rgelt != NULL)
-    (*rgelt)->AddRef ();
+  rt_ec.ccom_ec_array_unknown (((tmp_rgelt != NULL) ? eif_wean (tmp_rgelt) : NULL), 1, *rgelt);
   rt_ec.ccom_ec_pointed_unsigned_long (((tmp_pcelt_fetched != NULL) ? eif_wean (tmp_pcelt_fetched) : NULL), pcelt_fetched);
   
   END_ECATCH;
@@ -117,9 +113,8 @@ STDMETHODIMP ecom_control_library::IEnumUnknown_impl_stub::Clone(  /* [out] */ :
   EIF_OBJECT tmp_ppenum = NULL;
   if (ppenum != NULL)
   {
+    *ppenum = NULL;
     tmp_ppenum = eif_protect (grt_ce_control_interfaces2.ccom_ce_pointed_cell_191 (ppenum, NULL));
-    if (*ppenum != NULL)
-      (*ppenum)->AddRef ();
   }
   
   EIF_PROCEDURE eiffel_procedure = 0;
@@ -127,9 +122,7 @@ STDMETHODIMP ecom_control_library::IEnumUnknown_impl_stub::Clone(  /* [out] */ :
 
   (FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_ppenum != NULL) ? eif_access (tmp_ppenum) : NULL));
   
-  if (*ppenum != NULL)
-    (*ppenum)->Release ();
-  grt_ec_control_interfaces2.ccom_ec_pointed_cell_191 (((tmp_ppenum != NULL) ? eif_wean (tmp_ppenum) : NULL), ppenum);
+ grt_ec_control_interfaces2.ccom_ec_pointed_cell_191 (((tmp_ppenum != NULL) ? eif_wean (tmp_ppenum) : NULL), ppenum);
   if (*ppenum != NULL)
     (*ppenum)->AddRef ();
   
@@ -169,6 +162,7 @@ STDMETHODIMP ecom_control_library::IEnumUnknown_impl_stub::QueryInterface( REFII
   Query Interface
 -----------------------------------------------------------*/
 {
+  *ppv = NULL;
   if (riid == IID_IUnknown)
     *ppv = static_cast<::IEnumUnknown*>(this);
   else if (riid == IID_IEnumUnknown_)

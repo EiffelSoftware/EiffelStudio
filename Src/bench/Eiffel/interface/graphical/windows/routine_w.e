@@ -242,7 +242,7 @@ feature -- Update
 	set_mode_for_editing is
 			-- Set the text mode to be editable.
 		do
-			text_window.set_editable
+			text_window.set_read_only
 		end;
  
 	close_windows is

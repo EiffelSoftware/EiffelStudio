@@ -52,7 +52,7 @@ feature -- Basic operations
 				-- needs to have its drop actions set.
 			do
 				Result := Precursor {EB_STANDARD_CMD} (display_text, use_gray_icons)
-				Result.drop_actions.extend (agent new_object_editor (?))
+				Result.drop_actions.extend (agent update_object_editor (?, Result))
 				Result.drop_actions.set_veto_pebble_function (agent do_not_allow_object_type (?))
 			end
 	
@@ -72,6 +72,41 @@ feature {NONE} -- Implementation
 					-- we are not currently picking a type.
 				if transported_object.object /= Void then
 					Result := True
+				end
+			end
+			
+		update_object_editor (an_object: GB_OBJECT; button: EB_COMMAND_TOOL_BAR_BUTTON) is
+				-- If `button' is parented (at any level) in a GB_OBJECT_EDITOR then assign `object' to
+				-- the parent object editor, otherwise create a new object_editor containing `object'.
+			require
+				an_object_not_void: an_object /= Void
+				button_not_void: button /= Void
+				button_parented: button.parent /= Void
+				button_tool_bar_parented: button.parent.parent /= Void
+			local
+				container: EV_CONTAINER
+				widget: EV_WIDGET
+				an_object_editor: GB_OBJECT_EDITOR
+				tool_bar: EV_TOOL_BAR
+				found: BOOLEAN
+			do
+				tool_bar := button.parent
+				from
+					container ?= tool_bar.parent
+				until
+					container = Void or found
+				loop
+					an_object_editor ?= container
+					if an_object_editor /= Void then
+						an_object_editor.set_object (an_object)
+						found := True
+					end
+					container ?= container.parent
+				end
+					-- If `button' was not parented at some level in a GB_OBJECT_EDITOR
+					-- then we must generate a new object editor.
+				if not found then
+					new_object_editor (an_object)
 				end
 			end
 

@@ -19,7 +19,7 @@ inherit
 			internal_conform_to
 		end
 
-feature -- Access
+feature -- Property
 
 	is_character: BOOLEAN is
 			-- Is the current type a character type ?
@@ -27,15 +27,21 @@ feature -- Access
 			Result := True;
 		end;
 
+feature -- Access
+
+	same_as (other: TYPE_A): BOOLEAN is
+			-- Is the current type the same as `other' ?
+		do
+			Result := other.is_character;
+		end;
+
 	associated_eclass: E_CLASS is
 			-- Associated eiffel class
 		once
-			Result := associated_class.e_class;
-				--- **** TO BE FIXED System should not
-				-- have COMPILED class but E_CLASS
+			Result := System.character_class.compiled_eclass;
 		end;
 
-feature 
+feature {COMPILER_EXPORTER}
 
 	internal_conform_to (other: TYPE_A; in_generics: BOOLEAN): BOOLEAN is
 			-- Does `other' conform to Current ?
@@ -59,12 +65,6 @@ feature
 			System.character_class.compiled;
 		once
 			Result := System.character_class.compiled_class;
-		end;
-
-	same_as (other: TYPE_A): BOOLEAN is
-			-- Is the current type the same as `other' ?
-		do
-			Result := other.is_character;
 		end;
 
 end

@@ -83,18 +83,7 @@ else
 	mv cdrom/Eiffel51 Eiffel51
 
 
-	remtrace Preparing Student version
-	cp -r home_rt/* $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib
-	gunzip -c $EXPORT_DIR/ecs/ec_student.gz > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
-	chmod a+rx $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
-	chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec 
-	remtrace Building Student CD image
-	mv Eiffel51 cdrom
-	cp cdrom/Eiffel51/INSTALL cdrom	
-	make_cd_image Eiffel51_student Eiffel51_student.iso cdrom
-	mv cdrom/Eiffel51 Eiffel51
-
-
+	
 	if [ -f build_deliv.tgz ]; then
 		remtrace copying EiffelBuild delivery
 		cd $INSTALL_DIR
@@ -111,6 +100,18 @@ else
 	mv Eiffel51 cdrom
 	cp cdrom/Eiffel51/INSTALL cdrom	
 	make_cd_image Eiffel51_eval Eiffel51_eval.iso cdrom
+	mv cdrom/Eiffel51 Eiffel51
+
+
+	remtrace Preparing Student version
+	cp -r home_rt/* $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib
+	gunzip -c $EXPORT_DIR/ecs/ec_student.gz > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
+	chmod a+rx $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
+	chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec 
+	remtrace Building Student CD image
+	mv Eiffel51 cdrom
+	cp cdrom/Eiffel51/INSTALL cdrom	
+	make_cd_image Eiffel51_student Eiffel51_student.iso cdrom
 	mv cdrom/Eiffel51 Eiffel51
 
 

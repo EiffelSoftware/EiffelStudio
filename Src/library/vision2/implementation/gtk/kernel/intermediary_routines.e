@@ -334,8 +334,11 @@ feature {EV_ANY_IMP} -- Pointer intermediary agent routines
 			widget: EV_WIDGET_IMP
 		do
 			widget ?= c_get_eif_reference_from_object_id (a_c_object)
-			widget.pointer_motion_actions_internal.call 
-				([a_screen_x - widget.screen_x, a_screen_y - widget.screen_y, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y])
+			if widget /= Void then
+				widget.pointer_motion_actions_internal.call 
+					([a_screen_x - widget.screen_x, a_screen_y - widget.screen_y, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y])
+				
+			end
 		end
 
 	pointer_button_release_action_intermediary (a_c_object: POINTER; a_x, a_y, a_button: INTEGER;
@@ -345,7 +348,9 @@ feature {EV_ANY_IMP} -- Pointer intermediary agent routines
 			widget: EV_WIDGET_IMP
 		do
 			widget ?= c_get_eif_reference_from_object_id (a_c_object)
-			widget.on_button_release (a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)				
+			if widget /= Void then
+				widget.on_button_release (a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
+			end
 		end
 		
 	pointer_leave_action_intermediary (a_c_object: POINTER) is
@@ -354,7 +359,9 @@ feature {EV_ANY_IMP} -- Pointer intermediary agent routines
 			widget: EV_WIDGET_IMP
 		do
 			widget ?= c_get_eif_reference_from_object_id (a_c_object)
-			widget.pointer_leave_actions_internal.call (Void)
+			if widget /= Void then
+				widget.pointer_leave_actions_internal.call (Void)
+			end
 		end
 		
 	pointer_enter_actions_intermediary (a_c_object: POINTER) is
@@ -363,7 +370,9 @@ feature {EV_ANY_IMP} -- Pointer intermediary agent routines
 			widget: EV_WIDGET_IMP
 		do
 			widget ?= c_get_eif_reference_from_object_id (a_c_object)
-			widget.pointer_enter_actions_internal.call (Void)
+			if widget /= Void then
+				widget.pointer_enter_actions_internal.call (Void)
+			end
 		end
 		
 feature {EV_ANY_IMP} -- Dialog intermediary agent routines			

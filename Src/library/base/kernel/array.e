@@ -61,6 +61,11 @@ feature -- Creation
 
 feature -- Access
 
+	array_is_equal (array: like Current): BOOLEAN is
+		do
+			Result := area.is_equal (array.area);
+		end;
+
 	item, infix "@" (i: INTEGER): G is
 			-- Entry at index `i', if in index interval.
 		do

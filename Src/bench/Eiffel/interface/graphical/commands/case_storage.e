@@ -55,7 +55,7 @@ feature {NONE} -- Implementation
 			mp: MOUSE_PTR
 		do
 			!! mp.set_watch_cursor;
-			!! format_storage.make_with_window (Error_window);
+			!! format_storage.make (Error_window, Reverse_engineering_window);
 			format_storage.execute;
 			mp.restore
 		end;

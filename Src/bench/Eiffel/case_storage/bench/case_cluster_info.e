@@ -79,7 +79,7 @@ feature {FORMAT_CASE_STORAGE, CASE_CLUSTER_INFO}
 			clusters.extend (cluster)
 		end;
 
-	storage_info: S_CLUSTER_DATA_R332 is
+	storage_info (window: DEGREE_OUTPUT): S_CLUSTER_DATA_R332 is
 		local
 			clust_l: FIXED_LIST [S_CLUSTER_DATA];
 			sorted_clust_l: SORTED_TWO_WAY_LIST [S_CLUSTER_DATA];
@@ -142,8 +142,8 @@ feature {FORMAT_CASE_STORAGE, CASE_CLUSTER_INFO}
 				end;
 				classes_i := Void;
 				if not classes.empty then
-					Degree_output.put_case_cluster_message (name);
-					Result.set_classes (class_storage_information (classes))
+					window.put_case_cluster_message (name);
+					Result.set_classes (class_storage_information (classes, window))
 				end;
 				classes := Void;
 			end
@@ -155,7 +155,7 @@ feature {FORMAT_CASE_STORAGE, CASE_CLUSTER_INFO}
 				until
 					clusters.after
 				loop
-					sorted_clust_l.put_front (clusters.item.storage_info);
+					sorted_clust_l.put_front (clusters.item.storage_info (window));
 					clusters.forth
 				end;
 				sorted_clust_l.sort;
@@ -283,7 +283,7 @@ feature {FORMAT_CASE_STORAGE, CASE_CLUSTER_INFO} -- Debug
 
 feature {NONE} -- Class information
 
-	class_storage_information (classes: LINKED_LIST [CLASS_C]): 
+	class_storage_information (classes: LINKED_LIST [CLASS_C]; window: DEGREE_OUTPUT): 
 			FIXED_LIST [S_CLASS_DATA] is
 			-- Storage information for `classes'
 		require
@@ -302,9 +302,7 @@ feature {NONE} -- Class information
 			view_id: INTEGER;
 			re_class: BOOLEAN;
 			c_name: STRING;
-			deg_output: DEGREE_OUTPUT
 		do
-			deg_output := Degree_output;
 			old_classes := Old_case_info.old_classes_with_cluster_name (name);
 			!! stored_classes.make;
 			!! format_reg.initialize;
@@ -347,7 +345,7 @@ end
 					end;
 				end;
 				if re_class then
-					deg_output.put_case_class_message (classc);
+					window.put_case_class_message (classc);
 						-- Need to reverse engineer class for eiffelcase.
 					!! class_info.make (classc);
 					class_info.formulate_class_data (format_reg);
@@ -365,7 +363,7 @@ end
 					end;
 					Error_handler.checksum
 				else
-					deg_output.skip_case_class
+					window.skip_case_class
 				end;	
 debug ("CASE_ID")
 	if view_id /= Void then

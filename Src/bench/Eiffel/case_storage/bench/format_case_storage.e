@@ -21,17 +21,21 @@ creation
 
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
-	make (ow: like output_window) is
+	make (ow: like output_window; rew: like reverse_engineering_window) is
 			-- Set `output_window' to `ow'.
 		do
 			output_window := ow
+			reverse_engineering_window := rew
 		end;
 
-feature -- Property
+feature -- Access
 
 	output_window: OUTPUT_WINDOW;
+
+	reverse_engineering_window: DEGREE_OUTPUT
+			-- Reverse engineering window
 
 feature -- Execution
 
@@ -69,7 +73,7 @@ feature -- Execution
 							set_order_same_as_text;
 							initialize_view_ids;
 							process_clusters;
-							Degree_output.put_start_reverse_engineering
+							Reverse_engineering_window.put_start_reverse_engineering
 								(System.nb_of_classes);
 							convert_to_case_format;
 							remove_old_classes;
@@ -99,7 +103,7 @@ feature -- Execution
 		rescue
 			Case_file_server.remove_tmp_files;
 			clear_shared_case_information;
-			Degree_output.finish_degree_output;
+			Reverse_engineering_window.finish_degree_output;
 			if Rescue_status.is_error_exception then
 				Rescue_status.set_is_error_exception (False);
 				Error_handler.trace;
@@ -121,20 +125,20 @@ feature {NONE} -- Implementation
 			view_id: INTEGER
 		do
 			Case_file_server.init (Case_storage_path);
-			root_cluster := root_cluster_info.storage_info;
+			root_cluster := root_cluster_info.storage_info (Reverse_engineering_window);
 			!! s_system_data;
 			s_system_data.set_root_cluster (root_cluster);
 			s_system_data.set_class_view_number (Old_case_info.class_view_number);
 			s_system_data.set_class_id_number (System.class_counter.total_count);
 			s_system_data.set_cluster_view_number (Old_case_info.cluster_view_number);
 			Case_file_server.tmp_save_system (s_system_data);
-			Degree_output.put_case_message 
+			Reverse_engineering_window.put_case_message 
 				("Saving EiffelCase project to CASEGEN directory.");
 			Case_file_server.save_eiffelcase_format;
-			Degree_output.put_case_message 
+			Reverse_engineering_window.put_case_message 
 				("Updating EiffelBench project.");
 			update_eiffel_project;
-			Degree_output.finish_degree_output
+			Reverse_engineering_window.finish_degree_output
 		rescue
 			if Case_file_server.had_io_problems then
 				output_window.put_string ("Cannot store EiffelCase format to CASEGEN directory.");
@@ -197,7 +201,7 @@ feature {NONE} -- Implementation
 			root_file_name, file_name: STRING;
 			full_path: DIRECTORY_NAME
 		do
-			Degree_output.put_case_message ("Reverse engineering project.");
+			Reverse_engineering_window.put_case_message ("Reverse engineering project.");
 			!! root_cluster_info.make;
 				-- Need to covert to a string since
 				-- the dynamic type of cluster name

@@ -114,6 +114,13 @@ void c_gtk_signal_disconnect (GtkObject *widget,
 			      EIF_OBJ object,
 			      EIF_OBJ argument);
 
+/*==============================================================================
+ Key Event function
+==============================================================================*/
+
+int c_gtk_event_keys_state (GdkEventMotion *p);
+
+void gtk_widget_set_all_events (GtkWidget *w);
 
 /*==============================================================================
  gtk_widget functions
@@ -358,7 +365,26 @@ void c_gtk_box_set_child_options (GtkWidget *box, GtkWidget *child,
 EIF_INTEGER c_gtk_window_x (GtkWidget *w);
 EIF_INTEGER c_gtk_window_y (GtkWidget *w);
 
+/*Information about the window. */
+typedef struct {
+	GdkGeometry    geometry;
+	GdkWindowHints mask;
+	GtkWidget     *widget;
+	gint           width;
+	gint           height;
+	gint           last_width;
+	gint           last_height;
+} GtkWindowGeometryInfo;
+
+/* Give the maximum sizes of a window. */
+EIF_INTEGER c_gtk_window_maximum_height (GtkWidget *w);
+EIF_INTEGER c_gtk_window_maximum_width  (GtkWidget *w);
+
 void c_gtk_window_set_modal(GtkWindow* window, gboolean modal);
+
+/* Title of the window */
+char* c_gtk_window_title(GtkWindow* window);
+
 
 
 /*==============================================================================

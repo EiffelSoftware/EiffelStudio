@@ -103,24 +103,26 @@ feature {EV_ANY_IMP} -- Access
 			p: POINTER
 			keyval: INTEGER
 			key: EV_KEY
+			local_c: EV_C_EXTERNALS
 		do
+			local_c := C
 			gdk_event := gtk_value_pointer (args)
-			--print (C.gdk_event_any_struct_type (gdk_event).out + "%N");
-			if C.gdk_event_any_struct_type (gdk_event) < 100000 then
+			
+			if local_C.gdk_event_any_struct_type (gdk_event) < 100000 then
 			inspect
-				C.gdk_event_any_struct_type (gdk_event)
+				local_C.gdk_event_any_struct_type (gdk_event)
 			when
 				Gdk_motion_notify_enum
 			then
 					-- gdk_event type GdkEventMotion
 				Result := [
-					C.gdk_event_motion_struct_x (gdk_event).truncated_to_integer,
-					C.gdk_event_motion_struct_y (gdk_event).truncated_to_integer,
-					C.gdk_event_motion_struct_xtilt (gdk_event),
-					C.gdk_event_motion_struct_ytilt (gdk_event),
-					C.gdk_event_motion_struct_pressure (gdk_event),
-					C.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer,
-					C.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer
+					local_C.gdk_event_motion_struct_x (gdk_event).truncated_to_integer,
+					local_C.gdk_event_motion_struct_y (gdk_event).truncated_to_integer,
+					local_C.gdk_event_motion_struct_xtilt (gdk_event),
+					local_C.gdk_event_motion_struct_ytilt (gdk_event),
+					local_C.gdk_event_motion_struct_pressure (gdk_event),
+					local_C.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer,
+					local_C.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer
 				]
 			when
 				Gdk_nothing_enum,
@@ -137,12 +139,12 @@ feature {EV_ANY_IMP} -- Access
 				Gdk_expose_enum
 			then
 					-- gdk_event type GdkEventExpose
-				p := C.gdk_event_expose_struct_area (gdk_event)
+				p := local_C.gdk_event_expose_struct_area (gdk_event)
 				Result := [
-					C.gdk_rectangle_struct_x (p),
-					C.gdk_rectangle_struct_y (p),
-					C.gdk_rectangle_struct_width (p),
-					C.gdk_rectangle_struct_height (p)
+					local_C.gdk_rectangle_struct_x (p),
+					local_C.gdk_rectangle_struct_y (p),
+					local_C.gdk_rectangle_struct_width (p),
+					local_C.gdk_rectangle_struct_height (p)
 				]
 			when
 				Gdk_button_press_enum,
@@ -150,15 +152,15 @@ feature {EV_ANY_IMP} -- Access
 			then
 					-- gdk_event type GdkEventButton
 				Result := [
-					C.gdk_event_button_struct_type (gdk_event),
-					C.gdk_event_button_struct_x (gdk_event).truncated_to_integer,
-					C.gdk_event_button_struct_y (gdk_event).truncated_to_integer,
-					C.gdk_event_button_struct_button (gdk_event),
-					C.gdk_event_button_struct_xtilt (gdk_event),
-					C.gdk_event_button_struct_ytilt (gdk_event),
-					C.gdk_event_button_struct_pressure (gdk_event),
-					C.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer,
-					C.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer
+					local_C.gdk_event_button_struct_type (gdk_event),
+					local_C.gdk_event_button_struct_x (gdk_event).truncated_to_integer,
+					local_C.gdk_event_button_struct_y (gdk_event).truncated_to_integer,
+					local_C.gdk_event_button_struct_button (gdk_event),
+					local_C.gdk_event_button_struct_xtilt (gdk_event),
+					local_C.gdk_event_button_struct_ytilt (gdk_event),
+					local_C.gdk_event_button_struct_pressure (gdk_event),
+					local_C.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer,
+					local_C.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer
 				]
 
 			when
@@ -166,14 +168,14 @@ feature {EV_ANY_IMP} -- Access
 			then
 					-- gdk_event type GdkEventButton
 				Result := [
-					C.gdk_event_button_struct_x (gdk_event).truncated_to_integer,
-					C.gdk_event_button_struct_y (gdk_event).truncated_to_integer,
-					C.gdk_event_button_struct_button (gdk_event),
-					C.gdk_event_button_struct_xtilt (gdk_event),
-					C.gdk_event_button_struct_ytilt (gdk_event),
-					C.gdk_event_button_struct_pressure (gdk_event),
-					C.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer,
-					C.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer
+					local_C.gdk_event_button_struct_x (gdk_event).truncated_to_integer,
+					local_C.gdk_event_button_struct_y (gdk_event).truncated_to_integer,
+					local_C.gdk_event_button_struct_button (gdk_event),
+					local_C.gdk_event_button_struct_xtilt (gdk_event),
+					local_C.gdk_event_button_struct_ytilt (gdk_event),
+					local_C.gdk_event_button_struct_pressure (gdk_event),
+					local_C.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer,
+					local_C.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer
 				]
 
 			when
@@ -187,7 +189,7 @@ feature {EV_ANY_IMP} -- Access
 				Gdk_key_release_enum
 			then
 					-- gdk_event type GdkEventKey
-				keyval := C.gdk_event_key_struct_keyval (gdk_event)
+				keyval := local_C.gdk_event_key_struct_keyval (gdk_event)
 				if valid_gtk_code (keyval) then
 					create key.make_with_code (key_code_from_gtk (keyval))
 				end
@@ -204,10 +206,10 @@ feature {EV_ANY_IMP} -- Access
 			then
 					-- gdk_event type GdkEventConfigure
 				Result := [
-					C.gdk_event_configure_struct_x (gdk_event),
-					C.gdk_event_configure_struct_y (gdk_event),
-					C.gdk_event_configure_struct_width (gdk_event),
-					C.gdk_event_configure_struct_height (gdk_event)
+					local_C.gdk_event_configure_struct_x (gdk_event),
+					local_C.gdk_event_configure_struct_y (gdk_event),
+					local_C.gdk_event_configure_struct_width (gdk_event),
+					local_C.gdk_event_configure_struct_height (gdk_event)
 				]
 
 			when
@@ -301,13 +303,15 @@ feature {EV_ANY_IMP} -- Access
 			-- Convert GtkAllocation to tuple.
 		local
 			gtk_alloc: POINTER
+			local_C: EV_C_EXTERNALS
 		do
 			gtk_alloc := gtk_value_pointer (p)
+			local_C := C
 			Result := [
-				C.gtk_allocation_struct_x (gtk_alloc),
-				C.gtk_allocation_struct_y (gtk_alloc),
-				C.gtk_allocation_struct_width (gtk_alloc),
-				C.gtk_allocation_struct_height (gtk_alloc)
+				local_C.gtk_allocation_struct_x (gtk_alloc),
+				local_C.gtk_allocation_struct_y (gtk_alloc),
+				local_C.gtk_allocation_struct_width (gtk_alloc),
+				local_C.gtk_allocation_struct_height (gtk_alloc)
 			]
 		end
 

@@ -49,15 +49,21 @@ feature {NONE} -- Initialization
 	make_shell (a_shell: EB_SHELL) is
 			-- Create an object tool.
 		do
-			show_menus := True;
+			create_menus := True;
 			old_make_shell (a_shell);
 			set_default_sp_bounds
 		end;
 
-	form_create (a_form: FORM) is
-			-- Create Current as a form.
+	form_create (a_form: FORM; edit_m, format_m, special_m: MENU_PULL) is
+			-- Create a feature tool from a form.
+		require
+			valid_args: a_form /= Void and then edit_m /= Void and then
+				format_m /= Void and then special_m /= Void
 		do
-			show_menus := False;
+			create_menus := False;
+			edit_menu := edit_m;
+			format_menu := format_m;
+			special_menu := special_m;
 			make_form (a_form);
 			set_composite_attributes (a_form)
 		end;
@@ -266,15 +272,15 @@ feature -- Settings
 			set_last_format (default_format);
 		end;
 
-    set_default_size is
-            -- Set the size of Current to its default.
-        do
-            if eb_shell /= Void then
-                eb_shell.set_size 
-                    (Object_tool_resources.tool_width.actual_value,
-                    Object_tool_resources.tool_height.actual_value)
-            end
-        end;
+	set_default_size is
+			-- Set the size of Current to its default.
+		do
+			if eb_shell /= Void then
+				eb_shell.set_size 
+					(Object_tool_resources.tool_width.actual_value,
+					Object_tool_resources.tool_height.actual_value)
+			end
+		end;
 		
 feature -- Commands
 
@@ -321,15 +327,10 @@ feature {NONE} -- Implementation; Graphical Interface
 			hole_holder.set_button (hole_button);
 			!! search_cmd.make (Current);
 			!! search_button.make (search_cmd, edit_bar);
-			if show_menus then
-				!! search_menu_entry.make (search_cmd, edit_menu);
-				!! search_cmd_holder.make (search_cmd, search_button, search_menu_entry);
-			else
-				!! search_cmd_holder.make_plain (search_cmd);
-				search_cmd_holder.set_button (search_button)
-			end;
+			!! search_menu_entry.make (search_cmd, edit_menu);
+			!! search_cmd_holder.make (search_cmd, search_button, search_menu_entry);
 			!! change_font_cmd.make (text_window);
-			if show_menus then
+			if create_menus then
 				!! change_font_menu_entry.make (change_font_cmd, preference_menu);
 				!! change_font_cmd_holder.make_plain (change_font_cmd);
 				change_font_cmd_holder.set_menu_entry (change_font_menu_entry)
@@ -338,16 +339,11 @@ feature {NONE} -- Implementation; Graphical Interface
 			end;
 			!! quit_cmd.make (text_window);
 			!! quit_button.make (quit_cmd, edit_bar);
-			if show_menus then
-				!! quit_menu_entry.make (quit_cmd, file_menu);
-				!! quit.make (quit_cmd, quit_button, quit_menu_entry);
-				!! exit_menu_entry.make (Project_tool.quit_cmd_holder.associated_command, file_menu);
-				!! exit_cmd_holder.make_plain (Project_tool.quit_cmd_holder.associated_command);
-				exit_cmd_holder.set_menu_entry (exit_menu_entry);
-			else
-				!! quit.make_plain (quit_cmd);
-				quit.set_button (quit_button)
-			end
+			!! quit_menu_entry.make (quit_cmd, file_menu);
+			!! quit.make (quit_cmd, quit_button, quit_menu_entry);
+			!! exit_menu_entry.make (Project_tool.quit_cmd_holder.associated_command, file_menu);
+			!! exit_cmd_holder.make_plain (Project_tool.quit_cmd_holder.associated_command);
+			exit_cmd_holder.set_menu_entry (exit_menu_entry);
 
 				-- Attachments are done here, because of speed.
 				-- I know it's not really maintainable.
@@ -374,22 +370,12 @@ feature {NONE} -- Implementation; Graphical Interface
 				-- First we create all objects.
 			!! once_cmd.make (text_window);
 			!! once_button.make (once_cmd, format_bar);
-			if show_menus then
-				!! once_menu_entry.make (once_cmd, format_menu);
-				!! showonce_frmt_holder.make (once_cmd, once_button, once_menu_entry)
-			else
-				!! showonce_frmt_holder.make_plain (once_cmd);
-				showonce_frmt_holder.set_button (once_button)
-			end;
+			!! once_menu_entry.make (once_cmd, format_menu);
+			!! showonce_frmt_holder.make (once_cmd, once_button, once_menu_entry)
 			!! attr_cmd.make (Current);
 			!! attr_button.make (attr_cmd, format_bar);
-			if show_menus then
-				!! attr_menu_entry.make (attr_cmd, format_menu);
-				!! showattr_frmt_holder.make (attr_cmd, attr_button, attr_menu_entry);
-			else
-				!! showattr_frmt_holder.make_plain (attr_cmd);
-				showattr_frmt_holder.set_button (attr_button)
-			end;
+			!! attr_menu_entry.make (attr_cmd, format_menu);
+			!! showattr_frmt_holder.make (attr_cmd, attr_button, attr_menu_entry);
 
 				-- Now we do the attachments (for reason of speed).
 			format_bar.attach_top (attr_button, 0);
@@ -410,7 +396,7 @@ feature {NONE} -- Implementation; Graphical Interface
 			create_toolbar_parent (global_form);
 
 			build_text_windows;
-			if show_menus then
+			if create_menus then
 				build_menus
 			end
 			!! edit_bar.make (l_Command_bar_name, toolbar_parent);
@@ -419,10 +405,10 @@ feature {NONE} -- Implementation; Graphical Interface
 			!! format_bar.make (l_Format_bar_name, toolbar_parent);
 			build_format_bar;
 			build_command_bar;
-			if show_menus then
+			if create_menus then
 				fill_menus;
-				build_toolbar_menu
-			end
+			end;
+			build_toolbar_menu
 			set_last_format (default_format);
 
 			if Object_tool_resources.command_bar.actual_value = False then
@@ -437,7 +423,7 @@ feature {NONE} -- Implementation; Graphical Interface
 
 	attach_all is
 		do
-			if show_menus then
+			if create_menus then
 				global_form.attach_left (menu_bar, 0);
 				global_form.attach_right (menu_bar, 0);
 				global_form.attach_top (menu_bar, 0)
@@ -445,7 +431,7 @@ feature {NONE} -- Implementation; Graphical Interface
 
 			global_form.attach_left (toolbar_parent, 0);
 			global_form.attach_right (toolbar_parent, 0);
-			if show_menus then
+			if create_menus then
 				global_form.attach_top_widget (menu_bar, toolbar_parent, 0)
 			else
 				global_form.attach_top (toolbar_parent, 0)
@@ -477,41 +463,22 @@ feature {NONE} -- Implementation; Graphical Interface
 			!! slice_cmd.make (format_bar, Current);
 			!! slice_button.make (slice_cmd, format_bar);
 			slice_button.add_third_button_action;
-			if show_menus then
-				!! slice_menu_entry.make_button_only (slice_cmd, special_menu);
-				slice_menu_entry.add_activate_action (slice_cmd, Void);
-				!! slice_cmd_holder.make (slice_cmd, slice_button, slice_menu_entry)
-			else
-				!! slice_cmd_holder.make_plain (slice_cmd);
-				slice_cmd_holder.set_button (slice_button)
-			end;
+			!! slice_menu_entry.make_button_only (slice_cmd, special_menu);
+			slice_menu_entry.add_activate_action (slice_cmd, Void);
+			!! slice_cmd_holder.make (slice_cmd, slice_button, slice_menu_entry)
 			!! current_target_cmd.make (text_window);
-			if show_menus then
-				!! sep.make (new_name, special_menu);
-				!! current_target_menu_entry.make (current_target_cmd, special_menu);
-				!! current_target_cmd_holder.make_plain (current_target_cmd);
-				current_target_cmd_holder.set_menu_entry (current_target_menu_entry)
-			else
-				!! current_target_cmd_holder.make_plain (current_target_cmd)
-			end;
+			!! sep.make (new_name, special_menu);
+			!! current_target_menu_entry.make (current_target_cmd, special_menu);
+			!! current_target_cmd_holder.make_plain (current_target_cmd);
+			current_target_cmd_holder.set_menu_entry (current_target_menu_entry)
 			!! next_target_cmd.make (text_window);
 			!! next_target_button.make (next_target_cmd, edit_bar);
-			if show_menus then
-				!! next_target_menu_entry.make (next_target_cmd, special_menu);
-				!! next_target_cmd_holder.make (next_target_cmd, next_target_button, next_target_menu_entry);
-			else
-				!! next_target_cmd_holder.make_plain (next_target_cmd);
-				next_target_cmd_holder.set_button (next_target_button)
-			end;
+			!! next_target_menu_entry.make (next_target_cmd, special_menu);
+			!! next_target_cmd_holder.make (next_target_cmd, next_target_button, next_target_menu_entry);
 			!! previous_target_cmd.make (text_window);
 			!! previous_target_button.make (previous_target_cmd, edit_bar);
-			if show_menus then
-				!! previous_target_menu_entry.make (previous_target_cmd, special_menu);
-				!! previous_target_cmd_holder.make (previous_target_cmd, previous_target_button, previous_target_menu_entry);
-			else
-				!! previous_target_cmd_holder.make_plain (previous_target_cmd);
-				previous_target_cmd_holder.set_button (previous_target_button)
-			end;
+			!! previous_target_menu_entry.make (previous_target_cmd, special_menu);
+			!! previous_target_cmd_holder.make (previous_target_cmd, previous_target_button, previous_target_menu_entry);
 
 			!! history_list_cmd.make (text_window);
 			next_target_button.add_button_press_action (3, history_list_cmd, next_target_button);
@@ -536,7 +503,7 @@ feature {NONE} -- Properties
 			Result := showattr_frmt_holder
 		end;
 
-	show_menus: BOOLEAN
-			-- Should the menus be shown?
+	create_menus: BOOLEAN
+			-- Did the menus get created for this tool?
 
 end -- class OBJECT_W

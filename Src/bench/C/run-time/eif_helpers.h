@@ -112,10 +112,10 @@ rt_private EIF_WIDE_CHAR eif_twc_wide_char (EIF_WIDE_CHAR i, EIF_WIDE_CHAR j) {
 	return (i < j ? -1 : (j < i) ? 1 : 0);
 }
 rt_private EIF_REAL eif_twc_real (EIF_REAL i, EIF_REAL j) {
-	return (i < j ? -1 : (j < i) ? 1 : 0);
+	return (i < j ? -1.0f : (j < i) ? 1.0f : 0.0f);
 }
 rt_private EIF_DOUBLE eif_twc_double (EIF_DOUBLE i, EIF_DOUBLE j) {
-	return (i < j ? -1 : (j < i) ? 1 : 0);
+	return (i < j ? -1.0 : (j < i) ? 1.0 : 0.0);
 }
 
 

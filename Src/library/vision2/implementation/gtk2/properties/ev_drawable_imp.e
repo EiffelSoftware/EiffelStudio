@@ -347,27 +347,26 @@ feature -- Drawing operations
 			-- Draw `a_text' at (`x', `y') using `font'.
 		local
 			a_cs: EV_GTK_C_STRING
-			pango_layout, pango_iter: POINTER
+			a_pango_layout: POINTER
 			a_baseline: INTEGER
 			a_y: INTEGER
 		do
 			if drawable /= default_pointer then
 				create a_cs.make (a_text)
-				pango_layout := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_create_pango_layout (app_implementation.default_gtk_window, a_cs.item)
-				pango_iter := feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_get_iter (pango_layout)
+				a_pango_layout := App_implementation.pango_layout
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_text (a_pango_layout, a_cs.item, -1)
 				if draw_from_baseline then
-					a_baseline := feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_iter_get_baseline (pango_iter) // feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_scale
+					a_baseline := feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_iter_get_baseline (App_implementation.pango_iter) // feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_scale
 					a_y := y - a_baseline
 				else
 					a_y := y - 3 -- This takes the spacing in to account
 				end
 				if internal_font_imp /= Void then
-					feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_font_description (pango_layout, internal_font_imp.font_description_from_values)
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_font_description (a_pango_layout, internal_font_imp.font_description)
 				end
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_draw_layout (drawable, gc, x, a_y, pango_layout)
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.object_unref (pango_layout)
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_draw_layout (drawable, gc, x, a_y, a_pango_layout)
 			end
-		end
+		end		
 
 	draw_text_top_left (x, y: INTEGER; a_text: STRING) is
 			-- Draw `a_text' with top left corner at (`x', `y') using `font'.

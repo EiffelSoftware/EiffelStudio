@@ -459,7 +459,6 @@ feature {NONE} -- Implementation
 			-- Change the "running" icon to the next pixmap.
 		local
 			p: EV_PIXMAP
-			op: EV_PIXMAP
 		do
 				--| We do not check every time that the `use_animated_icons'
 				--| preference is still set.

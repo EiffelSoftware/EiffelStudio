@@ -1,0 +1,483 @@
+<HTML>
+<HEAD>
+<TITLE>WEL, the Windows Eiffel Library</TITLE>
+<LINK rev="made" href="mailto:ise@eiffel.com">
+<link rel="stylesheet" type="text/css" href="../styles/tech.css">
+<meta name="Microsoft Border" content="t, default">
+</HEAD>
+
+<BODY><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><table border="0" cellspacing="0" cellpadding="0" width="100%">
+  <tr>
+    <td valign="top" bgcolor="#000063" width="291"><b><font face="Arial" size="4" color="#FFFFFF">Interactive<br>
+      Software Engineering</font></b></td>
+    <td valign="top" bgcolor="#000063" width="720"><b><font face="Arial" size="6" color="#FFFFCC"></font></b></td>
+  </tr>
+  <tr>
+    <td colspan="2" valign="top" width="100%">
+<p align="right">
+    </td>
+  </tr>
+</table></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+<CENTER>
+<H1>
+An overview of WEL, the Windows Eiffel Library
+</H1>
+</CENTER>
+<hr>
+<P>
+NOTICE: This is a working document. It is being made public
+to illustrate our thinking and directions of development, as
+well as some of the benefits of the Eiffel way of doing things,
+but no part of its contents may be construed as implying any specific
+commitment on the part of <A HREF="http://www.eiffel.com/general/ise.html">ISE</A>. The 
+design of WEL as documented here may still change.
+</P><P>
+The document and the software it describes are copyright 
+ISE, 1995. All trademarks cited are the property of their respective owners.
+</P><P>
+The example discussed below was chosen as a testbed for WEL.
+The C and C++/MFC versions were written later on, for purpose of
+comparison; they represent the result of our best efforts to implement
+the example in these approaches, and should not be construed as
+implying any inherent property of any existing commercial product.
+</P>
+<hr>
+<P>
+This note introduces some of the concepts of the new Windows
+Eiffel Library (WEL), which has been designed to make Windows
+programming easier, more reliable, more convenient, and more
+powerful. WEL is the Windows-specific layer of the new architecture
+of <A HREF="../eiffel/manuals/vision/index.html">EiffelVision</A>, the portable Eiffel graphics library.
+</P>
+
+<H2>
+Introduction: more than an encapsulation
+</H2>
+<P>
+The most obvious definition of WEL is that it is an encapsulation
+of Windows primitives, making it possible for users of Graphical
+Eiffel for Windows to have direct access to the Windows graphical API.
+</P><P>
+But this is only part of the truth. What you will see through the
+discussion below is that for someone whose primary interest is Windows
+programming (rather than Eiffel per se), WEL provides considerable benefits
+of its own: the ability to work in a much simpler, move convenient and
+safer way than if you were using the Windows primitives directly,
+for example from C.
+</P><P>
+This advantage comes from the abstraction facilities of Eiffel,
+which make it possible to encapsulate many low-level details
+so that developers can concentrate on the functionality, not
+implementation requirements.
+</P><P>
+So even for specific and OS-dependent tasks such as using a particular
+graphical API, the benefits of the Eiffel method and of reusable
+Eiffel components will show up quickly.
+</P><P>
+Rather than providing an extensive description of WEL, this note will
+illustrate the above points through a commented example, which will
+contrast the C, MFC (C++) and Eiffel ways of achieving the same needs.
+</P>
+<H2>
+A small example application
+</H2>
+<P>
+The examnple application writes the x and y position in the window
+where the user has clicked. Also, the user must be able
+to clear the window by pushing a button. Here is the display:
+</P>
+<CENTER>
+<IMG SRC=../images/xytest.gif ALT="Window Screenshot" width="512" height="329">
+</CENTER>
+<P>
+This application needs to catch two kinds of action:
+<ul>
+<li>
+The mouse click in the window.
+</li><li>
+The `Clear' button activation.
+</li></ul>
+<H2>
+Doing it in C
+</H2>
+<P>
+In C Windows programming, we need to register a class to
+create the application's main window (WNDCLASS structure
+and RegisterClass function). We have also to write the
+application's main loop to get and dispatch the messages
+(functions GetMessage, DispatchMessage). All the messages
+received by a window are sent to a window procedure (WndProc
+function) which must be written by the developper to catch
+the user's events (WM_LBUTTONDOWN and WM_COMMAND).
+</P><P>
+Here is the C program to perform the above:
+</P>
+<PRE>
+#define STRICT
+#include &amp;ltwindows.h&gt;
+#include &amp;ltstring.h&gt;
+#include &amp;ltstdio.h&gt;
+
+LRESULT CALLBACK WndProc (HWND, UINT, WPARAM, LPARAM);
+
+HINSTANCE CurrenthInstance;
+
+#define ID_BUTTON_CLEAR 1
+
+#pragma argsused
+int PASCAL WinMain (HINSTANCE hInstance,
+	HINSTANCE hPrevInstance, LPSTR lpszCmdLine,
+	int nCmdShow)
+{
+	WNDCLASS wClass;
+	MSG msg;
+	HWND hWnd;
+
+	CurrenthInstance = hInstance;
+
+	if (!hPrevInstance)
+	{
+		wClass.style = CS_HREDRAW | CS_VREDRAW;
+		wClass.lpfnWndProc = WndProc;
+		wClass.cbClsExtra = 0;
+		wClass.cbWndExtra = 0;
+		wClass.hInstance = hInstance;
+		wClass.hIcon = LoadIcon (hInstance, IDI_APPLICATION);
+		wClass.hCursor = LoadCursor (NULL, IDC_ARROW);
+		wClass.hbrBackground = GetStockObject (WHITE_BRUSH);
+		wClass.lpszMenuName = NULL;
+		wClass.lpszClassName = &quot;TestClass&quot;;
+
+		if (!RegisterClass (&amp;wClass))
+			return FALSE;
+	}
+
+	/* Make the main window */
+	hWnd = CreateWindow (&quot;TestClass&quot;, &quot;Test&quot;,
+		WS_OVERLAPPEDWINDOW,
+		CW_USEDEFAULT, CW_USEDEFAULT,
+		CW_USEDEFAULT, CW_USEDEFAULT,
+		NULL, NULL, hInstance, NULL);
+
+	ShowWindow (hWnd, nCmdShow);
+	UpdateWindow (hWnd);
+
+	while (GetMessage(&amp;msg, NULL, 0, 0))
+	{
+		TranslateMessage (&amp;msg);
+		DispatchMessage (&amp;msg);
+	}
+	return 0;
+}
+
+LRESULT CALLBACK WndProc (HWND hWnd, UINT Message,
+	WPARAM wParam, LPARAM lParam)
+{
+	int x, y;
+	char buffer[20];
+	HDC dc;
+
+	switch (Message)
+	{
+		case WM_CREATE:
+			/* Make a button */
+			CreateWindow (&quot;BUTTON&quot;, &quot;Clear&quot;,
+				WS_VISIBLE | WS_CHILD,
+				1, 1, 70, 40, hWnd,
+				ID_BUTTON_CLEAR,
+				CurrenthInstance, NULL);
+			break;
+
+		case WM_LBUTTONDOWN:
+			/* Write x and y */
+			x = LOWORD (lParam);
+			y = HIWORD (lParam);
+			sprintf (buffer, &quot;(%i, %i)&quot;, x, y);
+			dc = GetDC (hWnd);
+			TextOut (dc, x, y, buffer, strlen (buffer));
+			ReleaseDC (hWnd, dc);
+			break;
+
+		case WM_COMMAND:
+			/* Clear the window */
+			if (wParam == ID_BUTTON_CLEAR)
+				InvalidateRect (hWnd, NULL, TRUE);
+			break;
+
+		case WM_DESTROY:
+			PostQuitMessage (0);
+			break;
+
+		default:
+			return DefWindowProc (hWnd, Message,
+				wParam, lParam);
+	}
+	return 0;
+}
+</PRE>
+<H2>
+Doing it in C++/MFC
+</H2>
+<P>
+The C++ version (using Microsoft Foundation Class library) is more abstract
+than the C version, but still leaves much to be desired in its encapsulation
+of Windows, in particular for such aspects as window styles and the
+window creation process. 
+</P><P>
+Class CMyWindow inherits from CFrameWnd to create a window and a button.
+To process the messages, some macros must be called to map a C++ method
+into a Windows message (AFX_MESSAGE). The method InitInstance from 
+CWinApp must be defined to create the application's main window and show
+it. Programmers still have to contend with a lot of low-level details.
+This version is slightly longer than the Eiffel-WEL version which follows.
+</P><PRE>
+#include &amp;ltafxwin.h&gt;
+#include &amp;ltstring.h&gt;
+#include &amp;ltstdio.h&gt;
+
+#define ID_BUTTON_CLEAR 1
+
+class CMyWindow: public CFrameWnd
+{
+public:
+	CMyWindow ();
+
+	//{{AFX_MSG (CMyWindow)
+	afx_msg void OnClear ();
+	afx_msg void OnLButtonDown (UINT nFlags, CPoint point);
+	//}}AFX_MSG
+
+	DECLARE_MESSAGE_MAP()
+};
+
+BEGIN_MESSAGE_MAP (CMyWindow, CFrameWnd)
+	//{{AFX_MSG_MAP (CMyWindow)
+	ON_WM_LBUTTONDOWN ()
+	ON_COMMAND (ID_BUTTON_CLEAR, OnClear)
+	//}}AFX_MSG_MAP
+END_MESSAGE_MAP ()
+
+CMyWindow::CMyWindow ()
+{
+	// Make the main window and a button
+	CRect rect (1, 1, 70, 40);
+	CButton * button;
+
+	Create (NULL, &quot;Test&quot;, WS_OVERLAPPEDWINDOW,
+		rectDefault, NULL, NULL);
+	button = new CButton;
+	button-&gt;Create (&quot;Clear&quot;, WS_VISIBLE | WS_CHILD,
+		rect, this, ID_BUTTON_CLEAR);
+}
+
+void CMyWindow::OnClear ()
+{
+	// Clear the window
+	Invalidate (TRUE);
+}
+
+void CMyWindow::OnLButtonDown(UINT nFlags, CPoint point)
+{
+	// Write x and y mouse position
+	CDC * dc;
+	char buffer [20];
+
+	MessageBeep (0);
+	dc = GetDC ();
+	sprintf (buffer, &quot;(%i, %i)&quot;, point.x, point.y);
+	dc-&gt;TextOut (point.x, point.y, buffer, strlen (buffer));
+	ReleaseDC (dc);
+
+	CFrameWnd::OnLButtonDown(nFlags, point);
+}
+
+// Define an application class derived from CWinApp
+class CMyApp: public CWinApp
+{
+public:
+	virtual BOOL InitInstance ();
+};
+
+// Construct the CMyApp's m_pMainWnd data member
+BOOL CMyApp::InitInstance ()
+{
+	m_pMainWnd = new CMyWindow ();
+	m_pMainWnd-&gt;ShowWindow (m_nCmdShow);
+	m_pMainWnd-&gt;UpdateWindow ();
+	return TRUE;
+}
+
+CMyApp MyApp;
+</PRE>
+<H2>
+The Eiffel version
+</H2>
+<P>
+Using WEL, the Eiffel version is a lot simpler, clearer - and easier to
+write.
+</P><P>
+It consists of two simple classes, MY_APPLICATION and MY_MAIN_WINDOW.
+</P><P>
+Class MY_APPLICATION inherits from APPLICATION, a WEL class
+which "knows" how and where to dispatch the messages.
+All MY_APPLICATION needs to do is to define the application's
+main window (routine `init_main_window'). Everything else is taken care
+of automatically by the predefined mechanisms of the reusable
+library class APPLICATION from WEL. 
+</P><P>
+In the class MY_MAIN_WINDOW, an heir of  FRAME_WINDOW, we
+redefine two routines:
+<ul>
+<li>
+We redefine on_wm_command_control so that it will write the
+current cursor position.
+</li><li>
+We redefine on_wm_left_button_down so that it clears the window.
+</li></ul>
+That's it.<P>
+Here is the first class:
+</P><PRE>
+	indexing
+		description: &quot;A small example of WEL programming, %
+					%with a main window, where we can detect %
+					%user clicks, and let users clear the window.&quot;
+	class
+		MY_APPLICATION
+	
+	inherit
+		APPLICATION
+	
+	creation
+		make
+	
+	feature
+	
+		init_main_window is
+				-- Create the main window.
+			do
+				!MY_MAIN_WINDOW! main_window.make
+			end
+	
+	end -- class MY_APPLICATION
+</PRE>
+Here is the second class:
+<PRE>
+	class
+		MY_MAIN_WINDOW
+	
+	inherit
+		FRAME_WINDOW
+			rename
+				make_top as frame_make_top,
+				make as frame_make
+			redefine
+				on_wm_command_control,
+				on_wm_left_button_down
+			end
+	
+	creation
+		make
+	
+	feature {NONE} -- Initialization
+	
+		make is
+				-- Create the main window and a button.
+			local
+				button: BUTTON
+			do
+				frame_make_top (&quot;Test&quot;);
+				!! button.make (Current, &quot;Clear&quot;,
+					1, 1, 70, 40, Id_button_clear)
+			end
+	
+	feature {NONE} -- Behaviors
+	
+		on_wm_command_control (id_control: INTEGER; window: WINDOW) is
+				-- Clear the window.
+			do
+				if id_control = Id_button_clear then
+					invalidate
+				end
+			end
+	
+		on_wm_left_button_down (keys, x_pos, y_pos: INTEGER) is
+				-- Write the values of `x_pos' and `y_pos'
+			do
+				position.wipe_out;
+				position.extend ('(');
+				position.append_integer (x_pos);
+				position.append (&quot;, &quot;);
+				position.append_integer (y_pos);
+				position.extend (')');
+				dc.get;
+				dc.text_out (x_pos, y_pos, position);
+				dc.release
+			end
+	
+	feature {NONE} -- Implementation
+	
+		position: STRING is
+				-- The string that will contain the position indication
+			once
+				!! Result.make (20)
+			ensure
+				result_not_void: Result /= Void
+			end
+	
+		dc: DC is
+				-- Device context used to write the position
+			once
+				!! Result.make_by_window (Current)
+			ensure
+				result_not_void: Result /= Void
+			end
+	
+		Id_button_clear: INTEGER is unique
+	
+	end -- class MY_MAIN_WINDOW
+</PRE>
+<P>
+Even for such a basic and relatively low-level application, the code
+examples speak for themselves.
+</P><P>
+Note that even though the classes of the example merely rely on
+the WEL library mechanisms, they can make some good use of assertions.
+The library classes themselves use assertions more extensively
+for coherence of design, readability and safety.
+</P>
+
+<!-- ICON BAR -->
+<hr>
+<CENTER>
+<TABLE BORDER=3 CELLPADDING=1 CELLSPACING=3>
+<TR>
+<TD>
+<A HREF="http://www.eiffel.com/index.html"><IMG ALT="[Home]" SRC="../Icons/ise_home.gif" width="40" height="40"></A></TD><TD>
+<A HREF="http://www.eiffel.com/quickref.html"><IMG ALT="[QuickRef]" SRC="../Icons/quick.gif" width="40" height="40"></A></TD>
+<TD>
+<A HREF="http://www.eiffel.com/forms/interaction.html"><IMG ALT="[Interact]" SRC="../Icons/feather.gif" width="40" height="40"></A></TD>
+</TR>
+</TABLE>
+</CENTER>
+
+<hr>
+<!-- END ICON BAR -->
+
+<!-- FOOTER -->
+<CENTER>
+<ADDRESS>
+<STRONG>
+- Copyright &copy; 1995 ISE Inc. <A HREF="MAILTO:info@eiffel.com">
+&lt;info@eiffel.com&gt;</A> -</STRONG><BR>
+Please send comments concerning our WWW-service to
+<A HREF="MAILTO:webmaster@eiffel.com">
+&lt;webmaster@eiffel.com&gt;</A>
+</ADDRESS>
+<FONT SIZE=-1>
+LAST UPDATE: 23 August 1995
+</FONT>
+</CENTER>
+<!-- END FOOTER -->
+
+<!--msnavigation--></td></tr><!--msnavigation--></table></BODY>
+</HTML>

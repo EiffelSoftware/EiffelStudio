@@ -18,7 +18,7 @@ inherit
 		undefine
 			is_equal
 		end;
-	SHARED_LICENSE
+	SHARED_BENCH_LICENSES
 		rename
 			class_name as except_class_name
 		end;

@@ -14,7 +14,7 @@ inherit
 	SHARED_EIFFEL_PROJECT;
 	PROJECT_CONTEXT;
 	WINDOWS;
-	SHARED_LICENSE
+	SHARED_BENCH_LICENSES
 		rename
 			class_name as except_class_name
 		end;

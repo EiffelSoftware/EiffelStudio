@@ -5,8 +5,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
 <meta name="GENERATOR" content="Microsoft FrontPage 4.0">
 <meta name="ProgId" content="FrontPage.Editor.Document">
-<LINK REL="stylesheet" HREF="../../../../default.css" TYPE="text/css">
-<TITLE>EiffelStore Generation Cluster</TITLE>
+<LINK REL="stylesheet" HREF="../../../../../default.css" TYPE="text/css">
+<title>Data structures creation</title>
 <style>
 <!--
 .Note        {  }
@@ -19,72 +19,98 @@
 
 <body>
 
-<h1 align="center">EiffelStore Generation Cluster</h1>
-<h2 align="left">1. Introduction</h2>
-<p align="left">The EiffelStore library lets the user associate database
-elements with Eiffel objects. These database elements are basically database
-table rows,&nbsp; database view rows or more generally sets of database
-attribute values. The easiest way to manipulate database elements is to insert
-their content into Eiffel objects and to work on these Eiffel objects as
-database elements.</p>
-<p align="left">A first solution to implement this is to use some adaptable
-structures that will fit to any database element. This is done in EiffelStore
-through the <a href="../../reference/interface/db_tuple_chart.html"> DB_TUPLE</a> class, which contains mainly an
-<a href="../../../base/reference/kernel/array_chart.html"> ARRAY</a> [<a href="../../../base/reference/kernel/string_chart.html">STRING</a>] containing
-element attribute names and an <a href="../../../base/reference/kernel/array_chart.html"> ARRAY</a>
-[<a href="../../../base/reference/kernel/any_chart.html">ANY</a>] containing element attribute values.
-This solution has one major drawback: any static checking is impossible: the
-developer cannot be sure at compile time of the nature of a <a href="../../reference/interface/db_tuple_chart.html"> DB_TUPLE</a>, i.e. what
-it represents, and cannot know if attributes number, names and types are
-correct. To overcome this problem, a second solution is to use data structures
-that statically fits to the expected database element.</p>
-<p align="left">The major problem of this technique is that structures are
-static: one structure, so one class instead of one object, should be created for
-each database element. This problem is overcome by the <a href="../../../../tools/wizards/store/index.html"> EiffelStore
-wizard</a>: the
-wizard automatically creates structures that fits to table or view rows
-specified by the wizard user. These structures can be fully customized by the
-user through a template system.</p>
-<p align="left">This document explains first <a href="#data_struct_creation">how
-to create</a> basic or customized data structures coupled with database data,
-second <a href="#data_struct_use">how to use</a> efficiently these Eiffel
-objects with EiffelStore.</p>
-<h2 align="left">2. <a name="data_struct_creation"></a>Data structures creation</h2>
-<h3 align="left">2.1. Overview</h3>
-<p align="left"> EiffelStore enables to create Eiffel classes that can
-store the content of database table rows or views. The table (or view)
-attributes are mapped into the class through class instance variables (i.e.
-attributes), which names and types correspond to table attributes names and
-types.</p>
-<p align="left">EiffelStore uses a template which gives the basic structure of
-the class to generate, a set of tags used in this template then enables to map
-table (or view) meta-data into the class.</p>
-<p align="left" class="Note"><b>Note</b>: the meta-data that can be mapped into
-the class is not limited to attribute names and types. Take a look at the tags
-description.</p>
-<p align="left">The EiffelStore wizard uses this capability to automatically
-generate Eiffel data structures from templates.</p>
-<p align="left">Let us see first <a href="#generation_system">how to use
-EiffelStore</a> data structures generation system and then <a href="#wizard_generation">what
-the wizard does</a>.</p>
-<h3 align="left">2.2. <a name="generation_system"></a>EiffelStore generation
-system</h3>
-<p align="left">This part describes the class creation in these 3 respects:</p>
+<h1 align="left">Data structures creation</h1>
+<h2 align="left">1. Overview</h2>
+<p align="left"> EiffelStore enables to create data structures mapped to your
+own database. This
+part describes how the <a href="../../../../../tools/wizards/store/index.html">EiffelStore
+wizard</a> generates these structures mapped to your database and how you can
+map your own classes to your database with EiffelStore.</p>
+<p align="left" class="tip"> <b>Tip:</b> We recommend that you read <a href="../../../../../libraries/store/content/30_data_structures_generation/10_data_structures_use/index.html">what
+are and how to use</a> these data structures before reading this section.</p>
+<p align="left">The EiffelStore wizard generates the database-specific classes
+from an EiffelStore generation system based on template files containing tags.</p>
+<p align="left">Let us see first <a href="#generation_system"> how the EiffelStore generation system
+works</a>.
+Let us see then <a href="#wizard_generation"> how the EiffelStore wizard uses this system</a> for the data
+structures generation.</p>
+<h2 align="left">2. <a name="generation_system"></a>EiffelStore generation
+system</h2>
+<p align="left">This part describes the class creation in 4 steps:</p>
 <ul>
   <li>
-    <p align="left"><a href="#mapping_system">General mapping system</a>.</li>
+    <p align="left"><a href="#capabilities">Mapping system possibilities</a></li>
   <li>
-    <p align="left"><a href="#tags_descr">Tags description</a>.</li>
+    <p align="left"><a href="#mapping_system">General mapping system</a></li>
   <li>
-    <p align="left"><a href="#mapping_system_ext">Mapping system extension</a>.</li>
+    <p align="left"><a href="#tags_descr">Tags description</a></li>
   <li>
-    <p align="left"><a href="#gen_impl_overview">Implementation overview</a>.</li>
+    <p align="left"><a href="#gen_impl_overview">Implementation overview</a></li>
 </ul>
-<h4 align="left">2.2.1. <a name="mapping_system"></a>General mapping system </h4>
-<p align="left">The wizard basically follows this sequence of steps: </p>
+    <h3 align="left">2.1. <a name="capabilities"></a>Capabilities</h3>
+<p align="left">Let us see first what information you can map into your classes.<p align="left">2
+kinds of classes can be generated:
+<ul>
+  <li>
+    <p align="left">Classes that represents a database table.</li>
+  <li>
+    <p align="left">Classes that represents the whole database.</li>
+</ul>
+<h4 align="left">2.1.1. Database table classes</h4>
+<p align="left">You can insert information about a database table:</p>
+<ul>
+  <li>
+    <p align="left">The table name</li>
+  <li>
+    <p align="left">The number of attributes of table</li>
+</ul>
+<p align="left">You can also select a piece of code, map it to a table attribute
+and repeat the operation for every attribute. Information that can be inserted
+is:</p>
+<ul>
+  <li>
+    <p align="left">The attribute names</li>
+  <li>
+    <p align="left">The attribute types</li>
+  <li>
+    <p align="left">The attribute default creation values</li>
+  <li>
+    <p align="left">The attribute positions in the table</li>
+</ul>
+<p align="left">Thus you can get for instance class attributes that correspond
+to database attributes:</p>
+<p align="left"><code>class CONTACTS<br>
+<br>
+feature<br>
+<br>
+id: INTEGER<br>
+<br>
+lastname: STRING<br>
+<br>
+firstname: STRING</code></p>
+<p align="left">You can also modify the piece of code to map for the first and
+last attributes, for cosmetics reasons. You can also choose to only map a piece
+of code to attributes of a given type.</p>
+<h4 align="left">2.1.2. Database content classes</h4>
+<p align="left">Database content classes can basically store the list of your
+database tables.</p>
+<p align="left">You can select a piece of code and map it to database table
+information:</p>
+<ul>
+  <li>
+    <p align="left">Database table name.</li>
+  <li>
+    <p align="left">Database table position in the database.</li>
+</ul>
+<p align="left">The mapped pieces of code are then concatenated in your file.</p>
+<h3 align="left">2.2. <a name="mapping_system"></a>General mapping system </h3>
+<p align="left">&nbsp;EiffelStore follows this sequence of steps to generate a
+class: </p>
 <ol>
   <li>
-    <p align="left">It loads meta-data about the table or view</li>
+    <p align="left">You provide meta-data about the table or view</li>
+  <li>
+    <p align="left">You provide the template</li>
   <li>
     <p align="left">It parses the template to find the tags</li>
   <li>
@@ -123,10 +149,11 @@ are mapped to specific table (or view) attributes. </p>
   </tr>
 </table>
 <p align="left">Text contained in the tag 'A' is mapped to each table (or view)
-attribute and the resulting texts are concatenated. Let' us now see the details
+attribute and the resulting texts are concatenated. Let us see now the details
 about each tag. </p>
-<h4 align="left">2.2.2. <a name="tags_descr"></a>Tags description </h4>
-<p align="left">The available tags can be separated into 3 types: </p>
+<h3 align="left">2.3. <a name="tags_descr"></a>Tags description </h3>
+<h4 align="left">2.3.1. Database table tags description </h4>
+<p align="left">The available tags for database table classes generation can be separated into 3 types: </p>
 <ul>
   <li>
     <p align="left">Tags corresponding to <a href="#table_meta-data">table
@@ -137,7 +164,7 @@ about each tag. </p>
   <li>
     <p align="left">Tags to <a href="#enclosing_tag">enclose attribute meta-data</a></li>
 </ul>
-<h5 align="left">2.2.2.1. <a name="table_meta-data"></a>Table meta-data tags</h5>
+<h5 align="left">2.3.1.1. <a name="table_meta-data"></a>Table meta-data tags</h5>
 <table border="1" width="63%">
   <tr>
     <td width="14%" rowspan="2"><b>Tag name</b></td>
@@ -168,7 +195,7 @@ about each tag. </p>
     <td width="52%" colspan="2">N/A</td>
   </tr>
 </table>
-<h5 align="left">2.2.2.2. <a name="attribute_meta-data"></a>Attribute meta-data
+<h5 align="left">2.3.1.2. <a name="attribute_meta-data"></a>Attribute meta-data
 tags</h5>
 <table border="1" width="63%" height="273">
   <tr>
@@ -221,7 +248,7 @@ tags</h5>
 </table>
 <p align="left" class="Note"><b>Note</b>: Attribute tags are only valid within
 an enclosing tag.</p>
-<h5 align="left">2.2.2.3. <a name="enclosing_tag"></a>Enclosing tags</h5>
+<h5 align="left">2.3.1.3. <a name="enclosing_tag"></a>Enclosing tags</h5>
 <p align="left">The tag &lt;A:?:?&gt; &lt;/A&gt; encloses text that will be
 mapped to attributes matching criteria. These criteria are specified by the tag
 options:</p>
@@ -293,10 +320,10 @@ options:</p>
 a valid and nice layout or indentation.</p></ul>
 <p align="left" class="Note"><b>Note</b>: several options can be selected for
 one criterion.&nbsp;</p>
-<h4 align="left">2.2.3. <a name="mapping_system_ext"></a>Mapping system
-extension</h4>
-<p align="left">The mapping system described below can be extended to create a
-class that gathers meta-data on database tables. This class mapping is
+<h4 align="left">2.3.2. <a name="mapping_system_ext"></a>Database content tags
+description</h4>
+<p align="left">The tags described above can be reused for database content:
+database content class mapping is
 equivalent to the previous mapping but within a different scope:</p>
 <ul>
   <li>
@@ -315,7 +342,7 @@ equivalent to the previous mapping but within a different scope:</p>
 </ul>
 <p align="left" class="Note"><b>Note</b>: every tag is not available for this
 mapping.</p>
-<h5 align="left">2.2.3.1. <a name="system_meta-data_ext"></a> System meta-data tags</h5>
+<h5 align="left">2.3.2.1. <a name="system_meta-data_ext"></a> System meta-data tags</h5>
 <table border="1" width="32%">
   <tr>
     <td width="50%"><b>Tag name</b></td>
@@ -326,7 +353,7 @@ mapping.</p>
     <td width="50%">Table count</td>
   </tr>
 </table>
-<h5 align="left">2.2.3.2. <a name="table_meta-data_ext"></a> Table meta-data tags</h5>
+<h5 align="left">2.3.2.2. <a name="table_meta-data_ext"></a>  Table meta-data tags</h5>
 <table border="1" width="63%">
   <tr>
     <td width="14%" rowspan="2"><b>Tag name</b></td>
@@ -357,7 +384,7 @@ mapping.</p>
     <td width="52%" colspan="2">N/A</td>
   </tr>
 </table>
-<h5 align="left">2.2.3.3. <a name="enclosing_tag_ext"></a> Enclosing tags</h5>
+<h5 align="left">2.3.2.3. <a name="enclosing_tag_ext"></a>  Enclosing tags</h5>
 <p align="left">The tag &lt;A:A:?&gt; &lt;/A&gt; encloses text that will be
 mapped to tables matching a position criterion. This criterion is specified by the tag
 options:</p>
@@ -383,42 +410,40 @@ options:</p>
     <td width="37%" height="1">Last table</td>
   </tr>
 </table>
-<h4 align="left">2.2.4. <a name="gen_impl_overview"></a>Implementation overview</h4>
+<h3 align="left">2.4. <a name="gen_impl_overview"></a>Implementation overview</h3>
 <p align="left">The data structure generation system is implemented with 4
 EiffelStore classes:</p>
 <ul>
   <li>
-    <p align="left"><a href="../../reference/generation/generator/db_class_generator_chart.html">DB_CLASS_GENERATOR</a> abstractly generates a class mapped to
+    <p align="left"><a class="eclass" href="../../../reference/generation/generator/db_class_generator_chart.html">DB_CLASS_GENERATOR</a> abstractly generates a class mapped to
     database meta-data.</li>
   <li>
-    <p align="left"><a href="../../reference/generation/generator/db_table_class_generator_chart.html">DB_TABLE_CLASS_GENERATOR</a> generates a class mapped to a
+    <p align="left"><a class="eclass" href="../../../reference/generation/generator/db_table_class_generator_chart.html">DB_TABLE_CLASS_GENERATOR</a> generates a class mapped to a
     database table.</li>
   <li>
-    <p align="left"><a href="../../reference/generation/generator/db_access_class_generator_chart.html">DB_ACCESS_CLASS_GENERATOR</a> generates a class mapped to the
+    <p align="left"><a class="eclass" href="../../../reference/generation/generator/db_access_class_generator_chart.html">DB_ACCESS_CLASS_GENERATOR</a> generates a class mapped to the
     database.</li>
   <li>
-    <p align="left"><a href="../../reference/generation/generator/db_template_tags_chart.html">DB_TEMPLATE_TAGS</a> defines available tags for mapping and
+    <p align="left"><a class="eclass" href="../../../reference/generation/generator/db_template_tags_chart.html">DB_TEMPLATE_TAGS</a> defines available tags for mapping and
     their meaning.</li>
 </ul>
 <p align="left"><img border="0" src="ESTORE_GENERATION.GENERATOR.png" width="449" height="154"></p>
 <p align="left" class="figuretitle">Generation classes BON diagram</p>
-<h3 align="left">2.3.&nbsp;<a name="wizard_generation"></a>EiffelStore wizard </h3>
-<p align="left">The EiffelStore wizard uses the EiffelStore generation system
-described in the <a href="#generation_system">section above</a>. </p>
-<p align="left">It generates data structures as described in the <a href="#data_struct_use">next
-section</a>. This part intent is not to describe the use of the data structures
-but merely to show what the wizard generates. </p>
+<h2 align="left">3.&nbsp;<a name="wizard_generation"></a>EiffelStore wizard </h2>
+<p align="left">The EiffelStore wizard uses the <a href="#generation_system"> EiffelStore generation system</a>
+described above to generate the data structures mapped to your database. </p>
 <p align="left">The wizard generates 3 types of classes: </p>
 <ul>
   <li>
-    <p align="left"><a href="#wiz_table_classes">Classes holding database table rows content</a></li>
+    <p align="left"><a href="#wiz_table_classes">Classes storing database table rows content</a></li>
   <li>
     <p align="left"><a href="#wiz_descr_classes">Classes describing a database table</a></li>
   <li>
     <p align="left"><a href="#wiz_access_class">A class describing the database and giving access to the
     previous types of classes</a></li>
 </ul>
-<h4 align="left">2.3.1. <a name="wiz_table_classes"></a> Table classes</h4>
+    <p align="left">The wizard uses one different template for each class.
+<h3 align="left">3.1. <a name="wiz_table_classes"></a> Table classes</h3>
 <p align="left">For each selected database table, a class is created from the
 same template, mapping the database table. This template is:</p>
 
@@ -474,21 +499,26 @@ feature -- Basic operations<br>
 <br>
 &lt;/A>feature -- Output<br>
 <br>
---FIXME: add this	out: STRING is<br>
---		do<br>
---			Result := ""<br>
---			Result.append (myid.out + "%N")<br>
---		end<br>
+&nbsp;&nbsp;&nbsp; out: STRING is<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -- Printable representation of current object.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; do<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Result := ""<br>
+&lt;A:A:A>&nbsp;&nbsp;&nbsp;&nbsp; if &lt;AN:L> /= Void then<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Result.append ("&lt;AN:I>: " + &lt;AN:L>.out + "%N")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; end<br>
+&lt;/A>&nbsp;&nbsp;&nbsp; end<br>
 <br>
 end -- class CODES</code><br>
 
 <p align="left" class="Note"><b>Note</b>: the template content can be adjusted,
 for instance to add comments or change the indexing. However, the fundamental
-template structure should not be changed if data structures are used as
-described in the next section.&nbsp;</p>
-<h4 align="left">2.3.2. <a name="wiz_descr_classes"></a> Description classes</h4>
+template structure should not be changed to use data structures as
+described in the <a href="../../../../../libraries/store/content/30_data_structures_generation/10_data_structures_use/index.html">corresponding
+section</a>.&nbsp;</p>
+<h3 align="left">3.2. <a name="wiz_descr_classes"></a> Description classes</h3>
 <p align="left">For each selected database table, a class is also created from
-the same template, mapping the database table. This template is:</p>
+an unique template, mapping the database table. This template is:</p>
 
 <br><code>indexing<br>
 &nbsp;&nbsp;&nbsp; description: "Description of class &lt;CN:U>"<br>
@@ -678,8 +708,9 @@ feature {NONE} -- Implementation<br>
 <br>
 end -- class CODES_DESCRIPTION</code><br>
 
-<p align="left" class="Note"><b>Note</b>: the same remark applies for this
-template.</p>
+<p align="left" class="Note"><b>Note</b>: As for the table class generation, the template content can be adjusted,
+for instance to add comments or change the indexing. However, the fundamental
+template structure should not be changed.&nbsp;</p>
 
 <p align="left">Some additional tags are directly replaced by the wizard:</p>
 <ul>
@@ -693,8 +724,8 @@ template.</p>
     <p align="left">The &lt;CI&gt; tag is replaced by the table position in the
     database.</li>
 </ul>
-<h4 align="left">2.3.3. <a name="wiz_access_class"></a> Access class</h4>
-<p align="left">The DB_SPECIFIC_TABLES_ACCESS class is mapped to the database
+<h3 align="left">2.3.3. <a name="wiz_access_class"></a> Access class</h3>
+<p align="left">The <SPAN class="eclass">DB_SPECIFIC_TABLES_ACCESS</SPAN> class is mapped to the database
 from the following template:</p>
 
 <br><code>
@@ -762,223 +793,8 @@ Result := &lt;CN:L>_description<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; end<br>
 <br>
 &lt;/A><br>
-end -- class DB_SPECIFIC_TABLES_ACCESS<br>
-</code><br>
-
-<h2 align="left">3. <a name="data_struct_use"></a>Data structures use</h2>
-
-<h3 align="left">3.1. Overview</h3>
-
-<p align="left"> EiffelStore enables to create Eiffel classes that can
-store the content of database table rows or views. The table (or view)
-attributes are mapped into the class through class instance variables (i.e.
-attributes), which names and types correspond to table attributes names and
-types.</p>
-
-<p align="left">EiffelStore places the generated classes, i.e. the classes
-mapping database content, in a context that
-facilitates their use.</p>
-
-<p align="left">Each generated class inherits from a general class. These
-general classes afford facilities for generated classes that are not specific to
-the generation. Furthermore, they provide a polymorphic type that lets handle
-the generated class objects without checking their type at compile-time. Hence
-non-specific applications or libraries can handle these objects (See for
-instance the DataView cluster).</p>
-
-<p align="left">Let us see general and generated classes relationships:</p>
-<p align="left"><img border="0" src="tables_access_inherit.png" width="570" height="408"></p>
-<p align="left" class="figuretitle">General and generated classes relationships</p>
-<ul>
-  <li>
-    <p align="left">Yellow classes are general.</li>
-  <li>
-    <p align="left">Green classes are generated.</li>
-</ul>
-<p align="left">This BON diagram points out the 3 types of generated
-classes:&nbsp;</p>
-<ul>
-  <li>
-    <p align="left">Classes holding database table rows content (inheriting from
-    <a href="../../reference/generation/tables_access/abstract/db_table_chart.html">
-    DB_TABLE</a>)</li>
-  <li>
-    <p align="left">Classes describing database tables (inheriting from <a href="../../reference/generation/tables_access/abstract/db_table_description_chart.html">
-    DB_TABLE_DESCRIPTION</a>)</li>
-  <li>
-    <p align="left">A class describing the database and giving access to the
-    previous types of classes (inheriting from <a href="../../reference/generation/tables_access/abstract/db_tables_access_chart.html"> DB_TABLES_ACCESS</a>)</li>
-</ul>
-    <p align="left">One database table is associated to one table class and one
-    description class. Both classes are closely <a href="#table-descr_relationship"> interrelated</a> to provide what the
-    developer need. The <a href="#table_access_classes">table access classes</a>
-    describe the database tables
-    and gives access to both table and description classes.
-<h3 align="left">3.2. <a name="table-descr_relationship"></a> Table and description classes relationship</h3>
-<h4 align="left">3.2.1. Table classes</h4>
-<p align="left">Table classes are specific to one database table and enable to
-store table rows attribute values. Their objects can be considered as database
-table rows. These classes inherit from <a href="../../reference/generation/tables_access/abstract/db_table_chart.html"> DB_TABLE</a> so that the type of objects can
-be determined at runtime, which can be interesting for GUI applications for
-instance. </p>
-<p align="left">Each of these classes are associated to a description
-class.&nbsp; </p>
-<h4 align="left">3.2.2. Description classes</h4>
-<p align="left">The descriptions goal is 3-fold: </p>
-<ul>
-  <li>
-    <p align="left"><a href="#use_get_metadata">Getting meta-data</a> about the table represented at
-    run-time.</li>
-  <li>
-    <p align="left"><a href="#use_get_rowdata">Getting table rows data</a> dynamically.</li>
-  <li>
-    <p align="left"><a href="#use_data_management">Facilitating data management</a>.</li>
-</ul>
-<p align="left" class="note"><b>Note</b>: these descriptions inherit from <a href="../../reference/generation/tables_access/abstract/db_table_description_chart.html">
-DB_TABLE_DESCRIPTION</a>.</p>
-<p align="left">Since they only describes a table and provide tools, description objects
-can be unique. EiffelStore ensures their unicity for resources optimization.</p>
-<h4 align="left">3.2.3. Relationship</h4>
-<p align="left">Each table class is associated to the description class
-corresponding to the same database table.</p>
-<p align="left">A table class object provides the associated table description:</p>
-<p align="left">
-<code>
-row: DB_TABLE<br>
-description: DB_TABLE_DESCRIPTION<br>
-...<br>
-row := db_manager.database_result<br>
-description := row.table_description
-</code></p>
-As descriptions are unique, every table row object is associated to the same
-description. The following figure illustrates this:
-<p><img border="0" src="table-descr_objects.png" width="462" height="178"></p>
-<p class="figuretitle">table and description objects relationship</p>
-<h4 align="left">3.2.2. <a name="use_get_metadata"></a> Getting meta-data on the table</h4>
-<p align="left">Meta-data about a table is available dynamically from an object
-that conforms to <a href="../../reference/generation/tables_access/abstract/db_table_chart.html"> DB_TABLE</a> or
-<a href="../../reference/generation/tables_access/abstract/db_table_description_chart.html"> DB_TABLE_DESCRIPTION</a> classes:</p>
-<p align="left">
-<code>
-row: DB_TABLE<br>
-description: DB_TABLE_DESCRIPTION<br>
-...<br>
-row := db_manager.database_result<br>
-description := row.table_description<br>
-io.putstring ("Table name is " + description.Table_name)
-</code></p>
-<h4 align="left">3.2.3. <a name="use_get_rowdata"></a> Getting table rows data</h4>
-<p align="left">Table row data is stored in the table object. 2 ways coexist to
-access the data:</p>
-<ul>
-  <li>
-    <p align="left"><u>Use the table row object</u>: if you want to check type
-    at compile-time.</li>
-  <li>
-    <p align="left"><u>Use the table description object</u>: if you want to
-    round the static type checking system.</li>
-</ul>
-<h5 align="left">3.2.3.1. Using the table row object</h5>
-<p align="left">This is rather simple, access directly the class instance
-variables:</p>
-<p align="left"><code>
-row: CONTACTS<br>
-...<br>
-io.putstring (&quot;Contact row ID: &quot;)<br>
-io.putstring (row.contactid.out)</code></p>
-<h5 align="left">3.2.3.2. Using the table description object</h5>
-<p align="left">You first have to <i>link</i> the description object to your
-table object. Then you can use <a href="../../reference/generation/tables_access/abstract/db_table_description_chart.html"> DB_TABLE_DESCRIPTION</a> features:</p>
-<p align="left">
-<code>
-row: DB_TABLE<br>
-description: DB_TABLE_DESCRIPTION<br>
-...<br>
-&nbsp;&nbsp;&nbsp; -- Link description unique object to `row' content.<br>
-description := row.table_description<br>
-io.putstring (description.attribute (description.id_name) + &quot;: &quot;)<br>
-io.putstring (description.attribute (description.id_code).out)
-</code></p>
-<p align="left" class="Note"><b>Note</b>:&nbsp;This example and the previous one
-perform the same output, but the second one does not require to know that the
-object is a contact at compile time.</p>
-<p align="left" class="warning"><b>Caution</b>: Don't forget to link a
-description to a table row object before accessing table row content! This
-problem can be avoided if you always access description from the table row
-object rather than the tables access class (DB_SPECIFIC_TABLES_ACCESS).</p>
-<h4 align="left">3.2.4. <a name="use_data_management"></a>Facilitating data
-management</h4>
-<p align="left"><a href="../../reference/generation/tables_access/abstract/db_table_description_chart.html">DB_TABLE_DESCRIPTION</a> provides facilities to manage data
-retrieved from a table row.</p>
-<p align="left">You can do for instance:</p>
-<p align="left"><code>
-row: DB_TABLE<br>
-description: DB_TABLE_DESCRIPTION<br>
-...<br>
-row := db_manager.database_result<br>
-&nbsp;&nbsp;&nbsp;
--- Link description unique object to `row' content.<br>
-description := row.table_description<br>
-my_screen_report.fill (description.printable_attribute_list)</code></p>
-<h3 align="left">3.3. <a name="table_access_classes"></a>Table access classes</h3>
-<h4 align="left">3.3.1. Overview</h4>
-<p align="left">Table access classes provide facilities to manage table row and
-table description objects. They also give basic database table meta-data.</p>
-<p align="left">The following figure shows table access classes and their
-relations.</p>
-<ul>
-  <li>
-    <p align="left">Yellow classes are EiffelStore classes</li>
-  <li>
-    <p align="left">Green class is generated</li>
-  <li>
-    <p align="left">Pink class is an application class</li>
-</ul>
-<p align="left"><img border="0" src="DB_SPECIFIC_TABLES_ACCESS_USE.png" width="495" height="377"></p>
-<p align="left" class="figuretitle">Table access classes BON diagram</p>
-<p align="left"><img border="0" src="table-descr-access_objects.png" width="660" height="248"></p>
-<p align="left" class="figuretitle">Relationship between the tables access
-object, description and table objects</p>
-<h4 align="left">3.3.2. DB_SPECIFIC_TABLES_ACCESS class</h4>
-<p align="left">The DB_SPECIFIC_TABLES_ACCESS class stores the unique table
-description object. It also provides the following facilities:</p>
-<ul>
-  <li>
-    <p align="left">Every database table code</li>
-  <li>
-    <p align="left">Table descriptions from a table code</li>
-  <li>
-    <p align="left">Sample table class objects from a table code</li>
-  <li>
-    <p align="left">Table names from a table code</li>
-</ul>
-<p align="left" class="Note"><b>Note</b>: database table codes given in the
-class match the table codes provided by <a href="../../reference/generation/tables_access/abstract/db_table_description_chart.html"> DB_TABLE_DESCRIPTION</a>.</p>
-<h4 align="left">3.3.3. Abstract access class</h4>
-<p align="left">The <a href="../../reference/generation/tables_access/abstract/db_tables_access_chart.html"> DB_TABLES_ACCESS</a> class provides an interface for the
-DB_SPECIFIC_TABLES_ACCESS class which is non-specific to the database. This can
-be used by non database-specific code (for instance the DataView cluster) to
-access database tables.</p>
-<p align="left">Unique table description objects and table codes are of course
-not directly available from this class, but the following features are still
-available:</p>
-<ul>
-  <li>
-    <p align="left">Table descriptions from a table code</li>
-  <li>
-    <p align="left">Sample table class objects from a table code</li>
-  <li>
-    <p align="left">Table names from a table code</li>
-</ul>
-<h4 align="left">3.3.4. Use classes</h4>
-<p align="left">The DB_SPECIFIC_TABLES_ACCESS object can be accessed as a kind
-of &quot;global variable&quot; by any class which inherits from
-DB_SPECIFIC_TABLES_ACCESS_USE. This class also ensures DB_SPECIFIC_TABLES_ACCESS
-object unicity.</p>
-<p align="left">The <a href="../../reference/generation/tables_access/abstract/db_tables_access_use_chart.html"> DB_TABLES_ACCESS_USE</a> class affords the same possibility but
-with no reference to the DB_SPECIFIC_TABLES_ACCESS object. The unique
-DB_SPECIFIC_TABLES_ACCESS should be set to this class as of type <a href="../../reference/generation/tables_access/abstract/db_tables_access_chart.html">
-DB_TABLES_ACCESS</a>.</p>
+end -- class DB_SPECIFIC_TABLES_ACCESS
+</code>
 
 </body>
 

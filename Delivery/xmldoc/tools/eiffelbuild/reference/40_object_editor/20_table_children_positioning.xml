@@ -12,7 +12,7 @@
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.xml#object</url>
 				<label>object</label>
-			</link> in the object editor is of type EV_TABLE,
+			</link> in the object editor is of type <code><class_name>EV_TABLE</class_name></code>,
 			<image>
 				<url>/images/eiffelbuild/screenshots/position_children_button.png</url>
 			</image> will be contained in the object editor. Click this button, to display the following window:

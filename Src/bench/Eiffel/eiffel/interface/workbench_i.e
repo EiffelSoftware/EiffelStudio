@@ -153,7 +153,15 @@ feature -- Commands
 					Lace.recompile;
 				end;
 
-				System.recompile;
+					-- If it was the first compilation and if the ace file
+					-- was incorrect we need to raise again the exception
+					-- which was made first by yacc, since it has been forget
+					-- during the rescue processing within the Lace.
+				if System /= Void and then Lace.successful then
+					System.recompile;
+				else
+					Error_handler.raise_error
+				end
 
 				Compilation_modes.reset_modes;
 
@@ -192,10 +200,10 @@ feature -- Commands
 			end
 		end;
 
-	successfull: BOOLEAN is
-			-- Is the last compilation successfull ?
+	successful: BOOLEAN is
+			-- Is the last compilation successful?
 		do
-			Result := lace.successfull and then system.successfull
+			Result := lace.successful and then system.successful
 		end;
 
 	change_class (cl: CLASS_I) is
@@ -468,7 +476,7 @@ feature -- Automatic backup
 			file.putbool (new_session)
 			file.new_line
 			file.putstring ("successful: ")
-			file.putbool (successfull)
+			file.putbool (successful)
 			file.new_line
 			file.putstring ("Cluster table:")
 			file.new_line

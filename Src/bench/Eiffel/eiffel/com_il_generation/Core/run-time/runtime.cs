@@ -262,7 +262,7 @@ feature -- Status report
 			generic_type = (INTERFACE_TYPE_ATTRIBUTE)
 				Type.GetTypeFromHandle (cl_type.type).
 					GetCustomAttributes (typeof (INTERFACE_TYPE_ATTRIBUTE), false) [0];
-			return Type.GetTypeFromHandle (cl_type.type);
+			return generic_type.class_type;
 		} else {
 			return null;
 		}

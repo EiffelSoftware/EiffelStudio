@@ -179,6 +179,14 @@ feature {TYPE_CONSUMER} -- Element settings
 		
 feature -- Functions used for easy browsing of data from ConsumerWrapper.
 
+	associated_reference_type: CONSUMED_REFERENCED_TYPE is
+			-- Reference type of `Current'.
+		do
+			create Result.make (dotnet_name, 1)
+			-- FIXME IEK The assembly id of 1 has to be checked
+		end
+		
+
 	consumed_constructors: ARRAYED_LIST [CONSUMED_ENTITY] is
 			-- All constructors implemented by type/
 		require
@@ -201,13 +209,14 @@ feature -- Functions used for easy browsing of data from ConsumerWrapper.
 			Result.fill (fields)
 			
 			-- Filter out PROPERTY and EVENT Eiffelized entities.
+			-- Only add members declared in this type.
 
 			from 
 				i := 1
 			until
 				i > functions.count or else functions.item (i) = Void
 			loop
-				if not functions.item (i).is_property_or_event then
+				if not functions.item (i).is_property_or_event and functions.item (i).declared_type.is_equal (associated_reference_type) then
 					Result.extend (functions @ i)
 				end
 				i := i + 1
@@ -218,14 +227,33 @@ feature -- Functions used for easy browsing of data from ConsumerWrapper.
 			until
 				i > procedures.count or else procedures.item (i) = Void
 			loop
-				if not procedures.item (i).is_property_or_event then
+				if not procedures.item (i).is_property_or_event and functions.item (i).declared_type.is_equal (associated_reference_type) then
 					Result.extend (procedures @ i)
 				end
 				i := i + 1
 			end
-		
-			Result.fill (events)
-			Result.fill (properties)
+			
+			from 
+				i := 1
+			until
+				i > events.count or else events.item (i) = Void
+			loop
+				if functions.item (i).declared_type.is_equal (associated_reference_type) then
+					Result.extend (events @ i)
+				end
+				i := i + 1
+			end
+			
+			from 
+				i := 1
+			until
+				i > properties.count or else properties.item (i) = Void
+			loop
+				if properties.item (i).declared_type.is_equal (associated_reference_type) then
+					Result.extend (properties @ i)
+				end
+				i := i + 1
+			end
 		ensure
 			entities_not_void: Result /= Void
 		end		

@@ -113,15 +113,7 @@ feature -- IL code generation
 				end
 			elseif target_type.is_numeric then
 				source_type := context.real_type (expression.type)
-				if not source_type.same_type (target_type) then
-					l_type := source_type.heaviest (target_type)
-					if l_type = target_type then
-						check
-							valid_type: l_type.is_basic
-						end
-						il_generator.convert_to (l_type)
-					end
-				end
+				target_type.il_convert_from (source_type)
 			end
 		end
 

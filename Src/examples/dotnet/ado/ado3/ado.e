@@ -62,15 +62,11 @@ feature -- Initialization
 					-- Close everything
 				reader.close
 				connection.close
-	
-					-- Wait before closing the console
-				io.read_line
 			end
 		rescue
 				-- Rescue any exception and display corresponding error message
 			io.put_string ("%NThe following error occured: ")
 			io.put_string (tag_name)
-			io.read_line
 			retried := True
 			retry
 		end

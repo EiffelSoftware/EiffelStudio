@@ -34,7 +34,6 @@ feature {NONE} -- Initialization
 			return := l_async_operation_done.wait_one
 
 			io.put_string ("Done.")
-			io.read_line
 		end
 
 

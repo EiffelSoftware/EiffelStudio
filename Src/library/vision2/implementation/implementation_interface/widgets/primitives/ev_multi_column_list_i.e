@@ -55,7 +55,7 @@ feature -- Access
 			exists: not destroyed
 			item_exists: index <= rows
 		do
-			Result := ev_children @ index
+			Result ?= (ev_children @ index).interface
 		end
 
 	selected_item: EV_MULTI_COLUMN_LIST_ROW is
@@ -281,7 +281,7 @@ feature -- Event -- removing command association
 
 feature {EV_MULTI_COLUMN_LIST_ROW} -- Implementation
 
-	ev_children: ARRAYED_LIST [EV_MULTI_COLUMN_LIST_ROW]
+	ev_children: ARRAYED_LIST [EV_MULTI_COLUMN_LIST_ROW_IMP]
 			-- We have to store the children because
 			-- neither gtk nor windows does it.
 

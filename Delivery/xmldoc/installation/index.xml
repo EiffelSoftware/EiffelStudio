@@ -1,24 +1,7 @@
 <document title="Software Installation">	
 	<meta_data></meta_data>	
 	<paragraph>			
-		<paragraph>For detailed installation instructions please follow the link for the version number and operating system you are are using.</paragraph>					
-		<heading><size>2</size>EiffelStudio 5.4</heading>			
-		<paragraph>
-			<list ordered="false">
-				<item><link><label>Windows and .NET</label><url>studio54/windows.xml</url></link></item>
-				<item><link><label>Mac OS X (10.3 or higher)</label><url>studio54/mac.xml</url></link></item>
-				<item><link><label>Linux (excluding RedHat 9 or glibc version prior to 2.3.2)</label><url>studio54/linux.xml</url></link></item>
-				<item><link><label>Linux (RedHat 9 or glibc version prior to 2.3.2)</label><url>studio54/linuxrh.xml</url></link></item>
-				<item><link><label>Solaris</label><url>studio54/solaris.xml</url></link></item>
-				<item><link><label>FreeBSD (up to version 4.0)</label><url>studio54/freebsd.xml</url></link></item>
-				<item><link><label>LinuxPPC</label><url>studio54/linuxppc.xml</url></link></item>
-			</list>
-		</paragraph>
-		<heading><size>2</size>ENViSioN! 2.0</heading>
-		<paragraph>
-			<list ordered="false">
-				<item><link><label>Windows and .NET</label><url>envision20/windows.xml</url></link></item>				
-			</list>
-		</paragraph>
+		<paragraph>For detailed installation instructions please follow the link for the product your are installing.</paragraph>					
+		<link><url>studio55/index.xml</url><label><heading><size>2</size>EiffelStudio 5.5</heading></label></link>			
 	</paragraph>
 </document>

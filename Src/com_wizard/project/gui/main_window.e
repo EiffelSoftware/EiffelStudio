@@ -521,7 +521,6 @@ feature {NONE} -- Implementation
 		do
 			set_message_output (create {WIZARD_MESSAGE_OUTPUT}.set_output (Current))
 			set_progress_report (create {WIZARD_PROGRESS_REPORT_GUI}.make (Current))
-	--		set_progress_report (create {WIZARD_PROGRESS_REPORT_CMD})
 		end
 
 feature {WIZARD_FIRST_CHOICE_DIALOG} -- Behavior

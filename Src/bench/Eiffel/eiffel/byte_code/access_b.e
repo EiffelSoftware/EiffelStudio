@@ -26,7 +26,7 @@ inherit
 	
 feature 
 
-	parameters: BYTE_LIST [BYTE_NODE] is
+	parameters: BYTE_LIST [EXPR_B] is
 		do
 			-- no parameters
 		end;
@@ -97,7 +97,7 @@ feature
 					until
 						parameters.after or Result
 					loop
-						expr_b ?= parameters.item;
+						expr_b := parameters.item;
 						Result := expr_b.has_gcable_variable;
 						parameters.forth;
 					end;
@@ -119,7 +119,7 @@ feature
 				until
 					parameters.after or Result
 				loop
-					expr ?= parameters.item;	-- Cannot fail
+					expr := parameters.item;	-- Cannot fail
 					Result := expr.used(r);
 					parameters.forth;
 				end;
@@ -147,7 +147,7 @@ feature
 					until
 						parameters.after or not Result
 					loop
-						expr_b ?= parameters.item;
+						expr_b := parameters.item;
 						Result := not (expr_b.has_call or else expr_b.allocates_memory)
 						parameters.forth;
 					end;
@@ -264,7 +264,7 @@ feature
 				until
 					parameters.after
 				loop
-					expr_b ?= parameters.item;	-- Cannot fail
+					expr_b := parameters.item;	-- Cannot fail
 					expr_b.unanalyze;
 					parameters.forth;
 				end;
@@ -282,7 +282,7 @@ feature
 				until
 					parameters.after
 				loop
-					expr_b ?= parameters.item;	-- Cannot fail
+					expr_b := parameters.item;	-- Cannot fail
 					expr_b.free_register;
 					parameters.forth;
 				end;
@@ -402,6 +402,64 @@ feature -- Conveniences
 			Result := context.real_type (type).is_none and
 				(is_attribute or is_local);
 		end;
+
+feature -- Code generation
+
+	argument_types: ARRAY [STRING] is
+			-- Array of C types for the arguments
+		local
+			p: like parameters
+			i, j, nb: INTEGER
+			expr: EXPR_B
+			param: PARAMETER_B
+			protect: PROTECT_B
+			type_c: TYPE_C
+		do
+			p := parameters
+			if p = Void then
+				if is_external then
+					Result := <<>>
+				else
+					Result := <<"EIF_REFERENCE">>
+				end
+			else
+				from
+					i := 1
+					nb := p.count
+					if is_external then
+						!! Result.make (1, nb)
+						j := 1
+					else
+						!! Result.make (1, nb + 1)
+						Result.put ("EIF_REFERENCE", 1)
+						j := 2
+					end
+				until
+					i > nb
+				loop
+					expr := p @ i
+					param ?= expr
+					if param = Void then
+							-- PROTECT_B
+						protect ?= expr
+						if protect /= Void then
+							param ?= protect.expr
+						else
+								-- Shouldn't happen
+--io.error.putstring ("Unknown type%N%N");
+						end
+					end
+if param = Void then
+	type_c := real_type (expr.type).c_type
+else
+					type_c := real_type (param.attachment_type).c_type
+end
+					Result.put (type_c.c_string, j)
+					i := i +1
+					j := j +1
+				end
+			end
+		end
 
 feature -- Byte code generation
 

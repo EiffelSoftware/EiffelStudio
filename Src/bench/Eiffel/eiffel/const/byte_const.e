@@ -183,4 +183,10 @@ feature {NONE}
 	Bc_sep_pfeature:		CHARACTER is '%/167/'; 
 		-- a separate feature call which is precompiled.
 
-end
+	Bc_java_rtype:			CHARACTER is '%/200/'
+		-- return type of a feature call or attribute access.
+		-- needed for features of formal generic type.
+	Bc_java_external:		CHARACTER is '%/201/'
+		-- name of external routine in an external call.
+
+end -- class BYTE_CONST

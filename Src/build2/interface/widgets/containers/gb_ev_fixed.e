@@ -300,11 +300,12 @@ feature {NONE} -- Implementation
 	layout_window: EV_DIALOG is
 			-- Window for laying out children of fixed.
 		local
-			horizontal_box: EV_HORIZONTAL_BOX
+			horizontal_box, h1: EV_HORIZONTAL_BOX
 			vertical_box, vb1: EV_VERTICAL_BOX
 			ok_button: EV_BUTTON
 			list_item: EV_LIST_ITEM
 			grid_control_holder: EV_FRAME
+			cell: EV_CELL
 		do
 			create Result
 			create vertical_box
@@ -326,10 +327,17 @@ feature {NONE} -- Implementation
 			
 			create scrollable_area
 			scrollable_area.set_minimum_size (200, 200)
-			create ok_button.make_with_text ("OK")
+			create ok_button.make_with_text ("Close")
 			ok_button.select_actions.extend (agent Result.destroy)
-			vertical_box.extend (ok_button)
-			vertical_box.disable_item_expand (ok_button)
+			create h1
+			create cell
+			h1.extend (cell)
+			h1.extend (ok_button)
+			create cell
+			h1.extend (cell)
+			h1.disable_item_expand (ok_button)
+			vertical_box.extend (h1)
+			vertical_box.disable_item_expand (h1)
 			horizontal_box.extend (scrollable_area)
 			scrollable_area.extend (drawing_area)
 			scrollable_area.resize_actions.force_extend (agent set_initial_area_size)

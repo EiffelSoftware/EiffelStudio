@@ -47,7 +47,7 @@ rt_public int    eif_par_table2_size = 0;
 #define par_info(t) (eif_par_table2[(t)])
 
 /*------------------------------------------------------------------*/
-/* Inverse RTUD table.
+/* Inverse RTUD table.												*/
 /*                                                                  */
 /* Access   : Read only                                             */
 /* Indexing : base id; RTUD(yes)                                    */

@@ -370,9 +370,11 @@ rt_public EIF_BOOLEAN eif_dir_exists(char *name)
 	return ( ( (status==RMS$_FNF) && (name[strlen(name)-1]==']') )
 		||(status==RMS$_NORMAL) /* incase subdir.dir */ );
 
-/*#elif defined EIF_WIN32		/* ifdef VMS */
+/*#elif defined EIF_WIN32	*/	
+					/* ifdef VMS */
 
-/*	return (EIF_BOOLEAN) (access(name,0) != -1 ); /* Removed: Does not check if not dir -ET */
+/*	return (EIF_BOOLEAN) (access(name,0) != -1 ); */
+		/* Removed: Does not check if not dir -ET */
 
 #else	/* Unix, Win32, VMS (V7 or later), et. al. */
 

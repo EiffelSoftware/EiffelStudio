@@ -311,7 +311,7 @@ rt_public void eif_rtinit(int argc, char **argv, char **envp)
 
 #ifdef EIF_WIN32
 		/* Get the current working directory, ie the one where we
-		/* are going to save the ouput files */
+		 * are going to save the ouput files */
 	if (getcwd(starting_working_directory, PATH_MAX) == NULL)
 		print_err_msg(stderr, "Unable to get the current working directory.\n");
 

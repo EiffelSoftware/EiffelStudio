@@ -130,6 +130,20 @@ feature -- Basic operation
 				dialog.remove_items_from_position (current_position + 1)
 			end
 		end
+		
+	wipe_out is
+			-- Clear the complete history.
+		do
+			set_current_position (-1)
+			cut_off_at_current_position
+				--| FIXME This seems a little strange, but seems to be required
+				--| when closing a project with an open history window
+				--| containing some history.
+				--| If we do not do this, then when we open the next project the
+				--| redo button is sensitive, which is not allowed. Julian.
+			set_current_position (0)
+		end
+		
 
 	current_position: INTEGER is
 			-- Position `Current' refers to.

@@ -1,6 +1,5 @@
 indexing
 	description: "Intermediary routines between gtk and eiffel."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -233,7 +233,6 @@ feature {NONE} -- Implementation
 					control.id))
 				register_window (control)
 				control.set_default_window_procedure
-				control.set_exists (True)
 				dialog_children.forth
 			end
 			setup_dialog

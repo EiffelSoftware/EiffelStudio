@@ -7,7 +7,7 @@ inherit
 
 	EXPR_AS
 		redefine
-			type_check, byte_node
+			type_check, byte_node, format
 		end;
 	SHARED_ARG_TYPES
 
@@ -256,5 +256,40 @@ feature -- Type check, byte code and dead code removal
 						and then
 						current_context.is_numeric;
 		end;
-							
+	
+	
+	format (ctxt: FORMAT_CONTEXT) is
+			-- Reconstitute text.
+		do
+			ctxt.begin;
+			left.format (ctxt);
+			if not ctxt.last_was_printed then
+				ctxt.rollback;
+			else
+				ctxt.need_dot;
+				ctxt.prepare_for_infix (operator_name, right);
+				ctxt.put_current_feature;
+				if not ctxt.last_was_printed then
+					ctxt.rollback
+				else
+					ctxt.commit;
+				end
+			end
+		end;
+
+	operator_is_keyword: BOOLEAN is
+		do
+			Result := true;
+		end;
+
+	operator_is_special: BOOLEAN is 
+		do
+			Result := false;
+		end;
+
+	operator_name: STRING is
+		do
+			Result := infix_function_name;	
+		end;
+
 end

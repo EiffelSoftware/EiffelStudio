@@ -11,26 +11,59 @@ class
 inherit
 
 	TOE_TREE_FACTORY
+		export
+			{NONE} all
+		end
 	
 	GB_XML_UTILITIES
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_TOOLS
+		export
+			{NONE} all
+		end
 	
 	INTERNAL
+		export
+			{NONE} all
+		end
 	
 	GB_EVENT_UTILITIES
+		export
+			{NONE} all
+		end
 	
 	GB_CONSTANTS
+		export
+			{NONE} all
+		end
 	
 	GB_FILE_CONSTANTS
+		export
+			{NONE} all
+		end
 	
 	GB_NAMING_UTILITIES
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_OBJECT_HANDLER
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_STATUS_BAR
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_SYSTEM_STATUS
+		export
+			{NONE} all
+		end
 	
 feature -- Basic operation
 
@@ -100,6 +133,7 @@ feature {GB_XML_HANDLER, GB_OBJECT_HANDLER} -- Implementation
 						layout_item.forth
 					end
 				end
+				
 			end
 		end
 		
@@ -202,7 +236,10 @@ feature {GB_CODE_GENERATOR} -- Implementation
 			application_element: XML_ELEMENT
 			toe_document: TOE_DOCUMENT
 			window_item: GB_LAYOUT_CONSTRUCTOR_ITEM
-			window_element: XML_ELEMENT
+			window_element, directory_element: XML_ELEMENT
+			window_selector_item: GB_WINDOW_SELECTOR_ITEM
+			new_type_element: XML_ELEMENT
+			window_selector_layout, current_layout_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
 		do
 			object_count := object_handler.objects.count
 			objects_written := 0
@@ -221,16 +258,44 @@ feature {GB_CODE_GENERATOR} -- Implementation
 			document.force_first (application_element)
 			
 
-			window_item ?= layout_constructor.first
-			check
-				window_item /= Void
+			from 
+				window_selector.start
+			until
+				window_selector.off
+			loop
+				window_selector_item ?= window_selector.item
+				 if window_selector_item /= Void then
+				 		-- We ignore directories, although we should add them soon.
+					window_element := create_widget_instance (application_element, Ev_titled_window_string)
+					application_element.force_last (window_element)
+					add_new_object_to_output (window_selector_item.object, window_element, generation_settings)		
+				end
+				window_selector_layout ?= window_selector.item
+				if window_selector_layout /= Void then
+					directory_element := create_widget_instance (application_element, directory_string)	
+					application_element.force_last (directory_element)
+					new_type_element := new_child_element (directory_element, Internal_properties_string, "")
+					directory_element.force_last (new_type_element)
+					window_selector_layout.generate_xml (new_type_element)
+					from
+						window_selector_layout.start
+					until
+						window_selector_layout.off
+					loop
+						window_selector_item ?= window_selector_layout.item
+						if window_selector_item /= Void then
+							window_element := create_widget_instance (directory_element, Ev_titled_window_string)
+							directory_element.force_last (window_element)
+							add_new_object_to_output (window_selector_item.object, window_element, generation_settings)	
+						end
+						window_selector_layout.forth
+					end
+				end
+				check
+					item_is_directory_or_window: window_selector_item /= Void or window_selector_layout /= Void
+				end
+				window_selector.forth
 			end
-			
-				-- We explicitly add the titled window. When we support more than
-				-- one window, then this will need to be updated.
-			window_element := create_widget_instance (application_element, Ev_titled_window_string)
-			application_element.force_last (window_element)
-			add_new_object_to_output (window_item.object, window_element, generation_settings)		
 		end
 		
 	document: XML_DOCUMENT

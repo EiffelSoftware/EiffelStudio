@@ -10,20 +10,99 @@ class
 	EV_MULTI_COLUMN_LIST_ROW
 
 creation
-	make
+	make,
+	make_with_text
 
 feature {NONE} -- Initialization
 
 	make (par: EV_MULTI_COLUMN_LIST) is
-		-- Create an empty row.
+			-- Create an empty row.
 		do
 			!EV_MULTI_COLUMN_LIST_ROW_IMP! implementation.make (par)
-
+			implementation.set_interface (Current)
+			par.implementation.add_item (Current)
 		end
 
-feature {NONE} -- Implementation
+	make_with_text (par: EV_MULTI_COLUMN_LIST; txt: ARRAY [STRING]) is
+			-- Create a row with the given texts.
+		do
+			make (par)
+			set_text (txt)
+		end
+
+feature -- Access
+
+	parent: EV_MULTI_COLUMN_LIST is
+			-- List that container this row
+		do
+			Result := implementation.parent
+		end
+
+	columns: INTEGER is
+			-- Number of columns in the row
+		require
+--			exists: not destroyed
+		do
+			Result := implementation.columns
+		end
+
+feature -- Status report
+	
+	is_selected: BOOLEAN is
+			-- Is the item selected
+		require
+--			exists: not destroyed
+		do
+			Result := implementation.is_selected
+		end
+
+feature -- Status setting
+
+	set_selected (flag: BOOLEAN) is
+			-- Select the item if `flag', unselect it otherwise.
+		require
+--			exists: not destroyed
+		do
+			implementation.set_selected (flag)
+		end
+
+	toggle is
+			-- Change the state of selection of the item.
+		require
+--			exists: not destroyed
+		do
+			implementation.toggle
+		end
+
+feature -- Element Change
+
+	set_cell_text (column: INTEGER; a_text: STRING) is
+			-- Make `text ' the new label of the `column'-th
+			-- cell of the row.
+		require
+--			exists: not destroyed
+			column_exists: column >= 1 and column <= columns
+			text_not_void: a_text /= Void
+		do
+			implementation.set_cell_text (column, a_text)
+		end
+
+	set_text (a_text: ARRAY[STRING]) is
+		require
+--			exists: not destroyed
+			text_not_void: a_text /= Void
+			text_length_ok: a_text.count <= columns
+		do
+			implementation.set_text (a_text)
+		end
+
+feature {EV_MULTI_COLUMN_LIST_I} -- Implementation
 
 	implementation: EV_MULTI_COLUMN_LIST_ROW_I
+
+invariant
+	parent_not_void: parent /= Void
+	parent_exists: not parent.destroyed
 
 end -- class EV_MULTI_COLUMN_LIST_ROW
 

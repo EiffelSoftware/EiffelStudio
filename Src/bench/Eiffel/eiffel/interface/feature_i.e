@@ -221,7 +221,10 @@ feature -- Debugger access
 		do
 				-- Get the number of breakpoint slots in the body + rescue +
 				-- inner preconditions and inner postconditions
-			Result := body.number_of_breakpoint_slots
+			if body /= Void then
+					-- May be Void in case of Invariant_feature_i
+				Result := body.number_of_breakpoint_slots
+			end
 
 				-- Add the number of breakpoint slots for inherited
 				-- pre & postconditions.

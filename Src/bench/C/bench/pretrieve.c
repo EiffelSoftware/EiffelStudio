@@ -14,7 +14,7 @@
 #include "eif_macros.h"
 #include "eif_malloc.h"
 #include "eif_garcol.h"
-#include "eif_store.h"
+#include "rt_store.h"
 #include "eif_error.h"
 #include "eif_globals.h"
 #include "rt_retrieve.h"

@@ -22,6 +22,7 @@
 #include "rt_store.h"
 #include "pstore.h"
 #include "minilzo.h"
+#include "rt_retrieve.h"
 #include "rt_compress.h"
 #include "rt_gen_types.h"
 

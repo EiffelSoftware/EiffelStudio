@@ -16,9 +16,7 @@ feature -- Access
 	text: STRING is
 			-- Text displayed in `Current'.
 		do
-			if text_length > 0 then
-				Result := wel_text
-			end
+			Result := wel_text
 		end
 
 	alignment: EV_TEXT_ALIGNMENT is

@@ -63,9 +63,6 @@ feature -- Access
 			-- Text displayed in label.
 		do
 			Result := wel_text
-			if Result.is_empty then	
-				Result := Void
-			end
 		end 
 
 feature -- Element change

@@ -75,12 +75,12 @@ feature {NONE} -- Initialization
 	make is
 			-- Initialize generator.
 		do
-			standard_twin_rout_id := System.any_class.compiled_class.feature_table.item_id (
-				feature {PREDEFINED_NAMES}.Standard_twin_name_id).rout_id_set.first
-			internal_finalize_rout_id := System.any_class.compiled_class.feature_table.item_id (
-				feature {PREDEFINED_NAMES}.finalize_name_id).rout_id_set.first
-			internal_to_string_rout_id := System.any_class.compiled_class.feature_table.item_id (
-				feature {PREDEFINED_NAMES}.to_string_name_id).rout_id_set.first
+			standard_twin_rout_id := System.any_class.compiled_class.feature_table.
+				item_id (feature {PREDEFINED_NAMES}.Standard_twin_name_id).rout_id_set.first
+			internal_finalize_rout_id := System.system_object_class.compiled_class.feature_table.
+				item_id (feature {PREDEFINED_NAMES}.finalize_name_id).rout_id_set.first
+			internal_to_string_rout_id := System.system_object_class.compiled_class.feature_table.
+				item_id (feature {PREDEFINED_NAMES}.to_string_name_id).rout_id_set.first
 		end
 
 feature -- Access
@@ -5191,9 +5191,11 @@ feature {NONE} -- Mapping between Eiffel compiler and generated tokens
 			-- Insert `a_token' of `a_feature_id' in `a_type_id' in `internal_attributes'.
 		require
 			a_table_not_void: a_table /= Void
-			valid_token: a_token /= 0
-			valid_type_id: a_type_id > 0
-			valid_feature_id: a_feature_id > 0
+			token_valid: a_token /= 0
+			type_id_valid: a_type_id > 0
+			feature_id_valid: a_feature_id > 0
+			not_inserted: a_table.item (a_type_id) /= Void implies
+				not a_table.item (a_type_id).has (a_feature_id)
 		local
 			l_hash: HASH_TABLE [INTEGER, INTEGER]
 		do

@@ -41,7 +41,8 @@ feature -- Access
 		local
 			attribute: XM_ATTRIBUTE
 		do
-			create attribute.make (a_name, create {XM_NAMESPACE}.make_default, a_value, element )
+			create attribute.make (a_name, create {XM_NAMESPACE}.make_default, a_value, element)
+			element.force_last (attribute)
 		end
 	
 	add_element_containing_integer (element: XM_ELEMENT; element_name: STRING; value: INTEGER) is

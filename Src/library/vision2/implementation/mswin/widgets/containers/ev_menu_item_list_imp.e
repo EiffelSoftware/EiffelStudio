@@ -140,14 +140,7 @@ feature {NONE} -- Implementation
 				menu_imp ?= item_imp
 				if menu_imp /= Void then
 					wel_menu ?= menu_imp
-						-- We check that the text of the menu is not empty.
-						-- This stops insert_popup from failing, as text
-						-- returns Void if empty.
-					if menu_imp.text = Void then
-						insert_popup (wel_menu, pos - 1, "")
-					else
-						insert_popup (wel_menu, pos - 1, menu_imp.text)
-					end
+					insert_popup (wel_menu, pos - 1, menu_imp.text)
 				else
 					if menu_item_imp.pixmap_imp /= Void then
 						pix_imp ?= menu_item_imp.pixmap.implementation
@@ -156,15 +149,7 @@ feature {NONE} -- Implementation
 						tmp_bitmap.decrement_reference
 						tmp_bitmap := Void
 					else
-						-- We check that the text of the item is not empty.
-						-- This stops insert_string from failing, as text
-						-- returns Void if empty.
-						if menu_item_imp.text = Void then
-							insert_string ("", pos - 1, menu_item_imp.id)
-						else
-							insert_string
-							(menu_item_imp.text, pos - 1, menu_item_imp.id)
-						end
+						insert_string (menu_item_imp.text, pos - 1, menu_item_imp.id)
 					end
 					check
 						inserted: position_to_item_id (pos - 1) =
@@ -354,14 +339,7 @@ feature {EV_ANY_I, EV_POPUP_MENU_HANDLER} -- Implementation
 			menu_imp ?= an_item
 			if menu_imp /= Void then
 				wel_menu ?= menu_imp
-					-- We check that the text of the menu is not empty.
-					-- This stops insert_popup from failing, as text
-					-- returns Void if empty.
-				if menu_imp.text = Void then
-					insert_popup (wel_menu, pos - 1, "")
-				else
-					insert_popup (wel_menu, pos - 1, menu_imp.text)
-				end
+				insert_popup (wel_menu, pos - 1, menu_imp.text)
 			else
 					if an_item.pixmap_imp /= Void then
 						pix_imp ?= an_item.pixmap.implementation
@@ -370,15 +348,7 @@ feature {EV_ANY_I, EV_POPUP_MENU_HANDLER} -- Implementation
 						tmp_bitmap.decrement_reference
 						tmp_bitmap := Void
 					else
-						-- We check that the text of the item is not empty.
-						-- This stops insert_string from failing, as text
-						-- returns Void if empty.
-						if an_item.text = Void then
-							insert_string ("", pos - 1, an_item.id)
-						else
-							insert_string
-							(an_item.text, pos - 1, an_item.id)
-						end
+						insert_string (an_item.text, pos - 1, an_item.id)
 					end
 				check
 					inserted: position_to_item_id (pos - 1) =

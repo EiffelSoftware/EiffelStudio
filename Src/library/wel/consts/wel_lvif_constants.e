@@ -12,7 +12,7 @@ feature -- Access
 	Lvif_text: INTEGER is
 			-- The pszText member is valid.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"LVIF_TEXT"
 		end
@@ -20,7 +20,7 @@ feature -- Access
 	Lvif_image: INTEGER is
 			-- The iImage member is valid.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"LVIF_IMAGE"
 		end
@@ -28,7 +28,7 @@ feature -- Access
 	Lvif_param: INTEGER is
 			-- The lParam member is valid.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"LVIF_PARAM"
 		end
@@ -36,7 +36,7 @@ feature -- Access
 	Lvif_state: INTEGER is
 			-- The state member is valid
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"LVIF_STATE"
 		end

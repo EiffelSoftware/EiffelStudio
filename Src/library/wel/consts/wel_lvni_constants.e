@@ -15,7 +15,7 @@ feature -- Geometric relation of the requested item to the
 	Lvni_above: INTEGER is
 			-- Searches for an item that is above the specified item.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"LVNI_ABOVE"
 		end
@@ -23,7 +23,7 @@ feature -- Geometric relation of the requested item to the
 	Lvni_all: INTEGER is
 			-- Searches for a subsequent item by index.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"LVNI_ALL"
 		end
@@ -31,23 +31,15 @@ feature -- Geometric relation of the requested item to the
 	Lvni_below: INTEGER is
 			-- Searches for an item that is below the specified item.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"LVNI_BELOW"
 		end
 
---	Lvni_previous: INTEGER is
---			-- Searches for a previous item by index.
---		external
---			"C [macro <cctrl.h>]"
---		alias
---			"LVNI_PREVIOUS"
---		end
-
 	Lvni_toleft: INTEGER is
 			-- Searches for an item to the left of the specified item.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"LVNI_TOLEFT"
 		end
@@ -55,7 +47,7 @@ feature -- Geometric relation of the requested item to the
 	Lvni_toright: INTEGER is
 			-- Searches for an item to the right of the specified item.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"LVNI_TORIGHT"
 		end
@@ -65,7 +57,7 @@ feature -- State of the item
 	Lvni_cut: INTEGER is
 			-- The item has the LVIS_CUT state flag set.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"LVNI_CUT"
 		end
@@ -73,7 +65,7 @@ feature -- State of the item
 	Lvni_drophilited: INTEGER is
 			-- The item has the LVIS_DROPHILITED state flag set.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"LVNI_DROPHILITED"
 		end
@@ -81,7 +73,7 @@ feature -- State of the item
 	Lvni_focused: INTEGER is
 			-- The item has the LVIS_FOCUSED state flag set.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"LVNI_FOCUSED"
 		end
@@ -89,7 +81,7 @@ feature -- State of the item
 	Lvni_selected: INTEGER is
 			-- The item has the LVIS_SELECTED state flag set.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"LVNI_SELECTED"
 		end

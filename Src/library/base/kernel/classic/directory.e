@@ -116,7 +116,7 @@ feature -- Access
 	change_name (new_name: STRING) is
 			-- Change file name to `new_name'
 		require
-			not_new_name_Void: new_name /= Void
+			new_name_not_void: new_name /= Void
 			file_exists: exists
 		local
 			ext_old_name, ext_new_name: ANY
@@ -161,7 +161,11 @@ feature -- Conversion
 			dir_temp: DIRECTORY
 		do
 			create dir_temp.make_open_read (name)
-			create Result.make (count)
+				-- Arbitrary size for arrayed_list creation to avoid
+				-- querying `count' which traverses list of entries
+				-- in current directory as we do here, making current
+				-- less efficient if Current has a lot of entries.
+			create Result.make (16)
 			from
 				dir_temp.start
 				dir_temp.readentry

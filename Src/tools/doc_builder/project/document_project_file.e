@@ -42,6 +42,7 @@ feature -- Initialization
 			include_navigation_links := True
 			generate_dhtml_filter := True
 			process_html_stylesheet := True
+			generate_feature_nodes := True
 		end			
 
 feature -- Access
@@ -166,6 +167,10 @@ feature -- Basic operations
 			l_element.put_first (create {XM_CHARACTER_DATA}.make (l_element, generate_dhtml_filter.out))
 			l_root.put_last (l_element)
 			
+			create l_element.make (l_root, generate_feature_nodes_tag, l_ns)
+			l_element.put_first (create {XM_CHARACTER_DATA}.make (l_element, generate_feature_nodes.out))
+			l_root.put_last (l_element)
+			
 			save_xml_document (document, project.file.name)
 		end
 	
@@ -200,6 +205,9 @@ feature -- Access
 			
 	process_html_stylesheet: BOOLEAN
 			-- Should HTML stylesheet reference be added during transformation?
+			
+	generate_feature_nodes: BOOLEAN
+			-- Should features nodes be generated into the toc?
 			
 	include_navigation_links: BOOLEAN
 			-- Should easy navigation links be generated during transformation?
@@ -327,6 +335,16 @@ feature {PREFERENCES_DIALOG} -- Status Setting
 			flag_set: generate_dhtml_filter = a_flag
 		end	
 	
+	set_generate_feature_nodes (a_flag: BOOLEAN) is
+			-- Set if feature nodes should be generated into the toc
+		require
+			flag_not_void: a_flag /= Void
+		do
+			generate_feature_nodes := a_flag
+		ensure
+			flag_set: generate_feature_nodes = a_flag
+		end	
+	
 feature {NONE} -- Implementation
 
 	process_element (e: XM_ELEMENT) is
@@ -405,6 +423,10 @@ feature {NONE} -- Implementation
 			
 			if e.name.is_equal (use_footer_file_tag) then
 				use_footer_file := e.text.is_equal ("True")
+			end
+			
+			if e.name.is_equal (generate_feature_nodes_tag) then
+				generate_feature_nodes := e.text.is_equal ("True")
 			end
 			
 				-- Process sub_elements

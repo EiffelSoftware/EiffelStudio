@@ -283,7 +283,7 @@ feature -- Queries
 				an := only_file_name_without_extension (an)
 					--| FIXME jfiat 2004/04/02 : maybe having 
 					--| eiffel_universe.class_from_assembly_filename (...
-				ci := eiffel_universe.class_from_assembly (an, cn)
+				ci := eiffel_universe.class_from_assembly (an, cn, True)
 				if ci = Void then
 						-- FIXME JFIAT: Ugly .. but for now .. far enought
 					ci := Eiffel_system.System.system_object_class

@@ -46,10 +46,6 @@ inherit
 	EV_ITEM_LIST_IMP [EV_TREE_NODE]
 		rename
 			interface as il_interface
-		undefine
-			pnd_press,
-			check_drag_and_drop_release,
-			escape_pnd
 		redefine
 			initialize
 		end

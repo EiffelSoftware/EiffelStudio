@@ -1,0 +1,20 @@
+# wel_imm.lib - Makefile for Microsoft
+
+CC = cl
+
+CFLAGS=  -nologo -c -Zi -W4 -I$(ISE_EIFFEL)\studio\spec\windows\include -DNONAMELESSUNION
+
+all:: wel_imm.lib
+	del *.obj
+	
+	
+.c.obj:
+	$(CC) $(CFLAGS) $<
+	
+	
+OBJ = wel_imm.obj
+		
+wel_imm.lib: $(OBJ)
+	if exist $@ del $@
+	lib /NOLOGO /OUT:$@ $(OBJ)
+	copy $@ F:\52dev\examples\unicode\spec

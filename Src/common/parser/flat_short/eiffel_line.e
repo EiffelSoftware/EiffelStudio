@@ -97,13 +97,13 @@ feature -- Debug
 
 	trace is
 		do
-			io.error.putstring ("start pos: ");
-			io.error.putint (start_position);
-			io.error.putstring (" end pos: ");
-			io.error.putint (end_position);
-			io.error.putstring (" ");
-			io.error.putstring (text);
-			io.error.new_line;	
+			io.error.put_string ("start pos: ");
+			io.error.put_integer (start_position);
+			io.error.put_string (" end pos: ");
+			io.error.put_integer (end_position);
+			io.error.put_string (" ");
+			io.error.put_string (text);
+			io.error.put_new_line;	
 		end
 
 invariant

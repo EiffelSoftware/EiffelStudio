@@ -94,18 +94,18 @@ feature -- Saving
 				st.put_character (',')
 				public_key_token.save (st)
 			end
-			st.new_line
+			st.put_new_line
 			if prefix_name /= Void then
 				st.indent
 				st.put_string ("prefix")
-				st.new_line
+				st.put_new_line
 				st.indent
 				prefix_name.save (st)
 				st.exdent
-				st.new_line
+				st.put_new_line
 				st.put_string ("end")
 				st.exdent
-				st.new_line
+				st.put_new_line
 			end
 		end
 		

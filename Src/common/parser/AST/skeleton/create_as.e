@@ -83,11 +83,11 @@ feature -- Access
 --			end
 --			if feature_list /= Void then
 --				ctxt.indent;
---				ctxt.new_line;
+--				ctxt.put_new_line;
 --				ctxt.set_separator (ti_Comma);
 --				ctxt.set_new_line_between_tokens;
 --				feature_list.simple_format (ctxt);
---				ctxt.new_line;
+--				ctxt.put_new_line;
 --			end
 --		end
 			

@@ -61,10 +61,10 @@ feature -- Comparison
 --			ctxt.put_text_item (ti_check_keyword);
 --			if check_list /= void then
 --				ctxt.indent;
---				ctxt.new_line;
+--				ctxt.put_new_line;
 --				ctxt.format_ast (check_list);
 --				ctxt.exdent;
---				ctxt.new_line;
+--				ctxt.put_new_line;
 --			end
 --			ctxt.put_text_item (ti_End_keyword);
 --		end

@@ -171,15 +171,15 @@ feature {PROFILE_CONVERTER} -- Spit Information for debugging.
 			--| Will be called from `PROFILE_CONVERTER'.
 		do
 			if available then
-				io.error.putstring ("Total execution time is: ");
+				io.error.put_string ("Total execution time is: ");
 				io.error.put_real (total_exec_time);
-				io.error.new_line
+				io.error.put_new_line
 			else
-				io.error.putstring ("Total execution time is not available.");
-				io.error.new_line
+				io.error.put_string ("Total execution time is not available.");
+				io.error.put_new_line
 			end
-			io.error.putstring ("Printing information from the `profile_data'.");
-			io.error.new_line;
+			io.error.put_string ("Printing information from the `profile_data'.");
+			io.error.put_new_line;
 			profile_data.spit_info
 		end;
 

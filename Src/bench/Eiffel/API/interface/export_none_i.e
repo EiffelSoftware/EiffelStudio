@@ -69,7 +69,7 @@ feature {COMPILER_EXPORTER}
 	trace is
 			-- Debug purpose
 		do
-			io.error.putstring ("NONE");
+			io.error.put_string ("NONE");
 		end;
 
 feature {COMPILER_EXPORTER}

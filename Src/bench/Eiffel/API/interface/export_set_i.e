@@ -283,7 +283,7 @@ feature {COMPILER_EXPORTER}
 				after
 			loop
 				item.trace
-				io.error.new_line
+				io.error.put_new_line
 				forth
 			end
 		end

@@ -16,15 +16,15 @@ feature -- Validation
 			Result := True;
 
 debug("RESOURCE_VALIDATE")
-	io.error.putstring ("About to validate a resource value.");
-	io.error.new_line;
-	io.error.putstring ("The value is `");
-	io.error.putstring (str);
-	io.error.putstring ("'.");
-	io.error.new_line;
-	io.error.putstring ("The length is ");
-	io.error.putint (str.count);
-	io.error.new_line
+	io.error.put_string ("About to validate a resource value.");
+	io.error.put_new_line;
+	io.error.put_string ("The value is `");
+	io.error.put_string (str);
+	io.error.put_string ("'.");
+	io.error.put_new_line;
+	io.error.put_string ("The length is ");
+	io.error.put_integer (str.count);
+	io.error.put_new_line
 end;
 			from
 				index := 2;
@@ -34,11 +34,11 @@ end;
 				str @ index = '%"'
 			loop
 debug("RESOURCE_VALIDATE")
-	io.error.putstring ("LOOP_START: ");
-	io.error.new_line;
-	io.error.putstring ("Index is: ");
-	io.error.putint(index);
-	io.error.new_line
+	io.error.put_string ("LOOP_START: ");
+	io.error.put_new_line;
+	io.error.put_string ("Index is: ");
+	io.error.put_integer(index);
+	io.error.put_new_line
 end;
 				if str @ index = '%%' then
 					index := index + 1;
@@ -86,32 +86,32 @@ end;
 					index := index + 1
 				end
 debug("RESOURCE_VALIDATE")
-	io.error.putstring ("LOOP_END: ");
-	io.error.new_line;
-	io.error.putstring ("Index is: ");
-	io.error.putint(index);
-	io.error.new_line
+	io.error.put_string ("LOOP_END: ");
+	io.error.put_new_line;
+	io.error.put_string ("Index is: ");
+	io.error.put_integer(index);
+	io.error.put_new_line
 end;
 debug("RESOURCE_VALIDATE")
-	io.error.putstring ("Boolean `until' clause-values:");
-	io.error.new_line;
-	io.error.putstring ("index > str.count: ");
+	io.error.put_string ("Boolean `until' clause-values:");
+	io.error.put_new_line;
+	io.error.put_string ("index > str.count: ");
 	io.error.putbool (index > str.count);
-	io.error.new_line;
-	io.error.putstring ("not Result: ");
+	io.error.put_new_line;
+	io.error.put_string ("not Result: ");
 	io.error.putbool (not Result);
-	io.error.new_line;
+	io.error.put_new_line;
 	if index <= str.count then
-		io.error.putstring ("str @ index = '%"': ");
+		io.error.put_string ("str @ index = '%"': ");
 		io.error.putbool (str @ index = '%"');
-		io.error.new_line
+		io.error.put_new_line
 	else
-		io.error.putstring("Index > str.count! (while evaluating str @ index = '%"')");
-		io.error.new_line;
+		io.error.put_string("Index > str.count! (while evaluating str @ index = '%"')");
+		io.error.put_new_line;
 	end;
-	io.error.putstring ("Total value: ");
+	io.error.put_string ("Total value: ");
 	io.error.putbool (index > str.count or else not Result or else str @ index = '%"');
-	io.error.new_line;
+	io.error.put_new_line;
 end;
 			end;
 
@@ -122,9 +122,9 @@ end;
 				Result := False
 			end;
 debug("RESOURCE_VALIDATE")
-	io.error.putstring ("Result of validation is ");
+	io.error.put_string ("Result of validation is ");
 	io.error.putbool (Result);
-	io.error.new_line
+	io.error.put_new_line
 end
 		end;
 

@@ -365,14 +365,14 @@ feature -- Output
 			if format.space_between_tokens then
 				text.add_space
 			elseif format.new_line_between_tokens then
-				new_line
+			.put_new_line
 			end;
 		end;
 
-	new_line is
+.put_new_line is
 			-- Go to beginning of next line in `text'.
 		do
-			text.add_new_line;
+			text.add.put_new_line;
 			if special_nl_symbol /= Void then
 				text.add (special_nl_symbol)
 			end
@@ -497,7 +497,7 @@ feature -- Output
 				if txt.is_empty or else txt.item (1) /= '|' then
 					put_text_item (ti_Dashdash);
 					put_comment_text (comments.item)
-					new_line;
+				.put_new_line;
 				end;
 				comments.forth
 			end

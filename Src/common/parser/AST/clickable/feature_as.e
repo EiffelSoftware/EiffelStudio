@@ -306,14 +306,14 @@ feature {NONE} -- Implementation
 --			cont := body.content;
 --			is_const_or_att := cont = Void or else cont.is_constant;
 --			if is_const_or_att and then c /= Void then
---				ctxt.new_line;
+--				ctxt.put_new_line;
 --				ctxt.indent;
 --				ctxt.indent;
 --				ctxt.put_comments (c);
 --				ctxt.exdent;
 --				ctxt.exdent;
 --			else
---				ctxt.new_line;
+--				ctxt.put_new_line;
 --			end
 --		end
 
@@ -335,13 +335,13 @@ feature {NONE} -- Implementation
 --
 --	trace is
 --		do
---			io.error.putstring ("FEATURE_AS");
---			io.error.putint (end_position);
---			io.error.new_line;
---			io.error.putint (start_position);
---			io.error.new_line;
---			io.error.putstring (feature_names.first.internal_name);
---			io.error.new_line
+--			io.error.put_string ("FEATURE_AS");
+--			io.error.put_integer (end_position);
+--			io.error.put_new_line;
+--			io.error.put_integer (start_position);
+--			io.error.put_new_line;
+--			io.error.put_string (feature_names.first.internal_name);
+--			io.error.put_new_line
 --		end
 --
 --feature {COMPILER_EXPORTER} -- Conveniences

@@ -124,7 +124,7 @@ feature -- Comparison
 --			end
 --			if end_to_print then
 --				ctxt.indent
---				ctxt.new_line
+--				ctxt.put_new_line
 --				ctxt.put_text_item (ti_End_keyword)
 --				ctxt.exdent
 --			end
@@ -136,10 +136,10 @@ feature -- Comparison
 --			-- Format one of rename, export, undefine, redefine or select clauses.
 --		do
 --			ctxt.indent
---			ctxt.new_line
+--			ctxt.put_new_line
 --			ctxt.put_text_item (a_keyword)
 --			ctxt.indent
---			ctxt.new_line
+--			ctxt.put_new_line
 --			ctxt.set_separator (ti_Comma)
 --			ctxt.set_new_line_between_tokens
 --			ctxt.format_ast (a_clause)

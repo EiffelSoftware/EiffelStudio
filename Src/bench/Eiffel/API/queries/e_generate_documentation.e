@@ -220,7 +220,7 @@ feature {NONE} -- Implementation
 			if not file_window.exists then
 				error_window.put_string ("Cannot create file: ");
 				error_window.put_string (f_name);
-				error_window.new_line;
+				error_window.put_new_line;
 			else
 				if filter /= Void then
 					filter.process_text (st)

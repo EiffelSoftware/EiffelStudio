@@ -59,10 +59,4 @@ feature -- Output
 			retry
 		end;
 
-	put_char (c: CHARACTER) is 
-			-- Put character `c' to current position in file.
-		do 
-			putchar (c) 
-		end;
-
 end -- class FILE_WINDOW

@@ -85,12 +85,12 @@ feature -- Comparison
 --			ctxt.put_text_item_without_tabs (ti_Then_keyword);
 --			if compound /= Void then
 --				ctxt.indent;
---				ctxt.new_line;
+--				ctxt.put_new_line;
 --				ctxt.set_new_line_between_tokens;
 --				ctxt.format_ast (compound);
 --				ctxt.exdent;
 --			end
---			ctxt.new_line;
+--			ctxt.put_new_line;
 --			ctxt.put_breakable 
 --			if elsif_list /= void then
 --				ctxt.set_separator (ti_Empty);
@@ -101,11 +101,11 @@ feature -- Comparison
 --			if else_part /= void then
 --				ctxt.put_text_item (ti_Else_keyword);
 --				ctxt.indent;
---				ctxt.new_line;
+--				ctxt.put_new_line;
 --				ctxt.set_new_line_between_tokens;
 --				ctxt.format_ast (else_part);
 --				ctxt.exdent;
---				ctxt.new_line;
+--				ctxt.put_new_line;
 --				ctxt.put_breakable 
 --			end
 --			ctxt.put_text_item (ti_End_keyword);

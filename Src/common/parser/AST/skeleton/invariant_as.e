@@ -49,13 +49,13 @@ feature -- Comparison
 --		do
 --			ctxt.put_text_item (ti_Invariant_keyword);
 --			ctxt.indent;
---			ctxt.new_line;
+--			ctxt.put_new_line;
 --			ctxt.set_separator (ti_Semi_colon);
 --			ctxt.set_new_line_between_tokens;
 --			if assertion_list /= Void then
 --				simple_format_assertions (ctxt);
---				ctxt.new_line;
---				ctxt.new_line;
+--				ctxt.put_new_line;
+--				ctxt.put_new_line;
 --			end
 --			ctxt.exdent;
 --		end

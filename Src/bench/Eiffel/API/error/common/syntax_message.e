@@ -72,12 +72,12 @@ feature {NONE} -- Output
 				previous_line := current_line
 				start_line_pos := file.position
 				line_number := line_number + 1
-				file.readline
-				current_line := file.laststring.twin
+				file.read_line
+				current_line := file.last_string.twin
 			end
 			if not file.end_of_file then
-				file.readline
-				next_line := file.laststring.twin
+				file.read_line
+				next_line := file.last_string.twin
 			end
 			file.close
 		end

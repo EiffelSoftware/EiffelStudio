@@ -823,23 +823,23 @@ feature {NONE} -- Retrieval
 			file_not_void: file /= Void
 			file_open_write: file.is_open_write
 		do
-			file.putstring (info_flag_begin)
-			file.putstring (System.name)
-			file.new_line
-			file.putstring (version_number_tag)
-			file.putstring (":")
-			file.putstring (version_number)
-			file.new_line
-			file.putstring (precompilation_id_tag)
-			file.putstring (":")
-			file.putstring (Comp_system.compilation_id.out)
-			file.new_line
-			file.putstring (ace_file_path_tag)
-			file.putstring (":")
-			file.putstring (ace.file_name)
-			file.new_line
-			file.putstring (info_flag_end)
-			file.new_line
+			file.put_string (info_flag_begin)
+			file.put_string (System.name)
+			file.put_new_line
+			file.put_string (version_number_tag)
+			file.put_string (":")
+			file.put_string (version_number)
+			file.put_new_line
+			file.put_string (precompilation_id_tag)
+			file.put_string (":")
+			file.put_string (Comp_system.compilation_id.out)
+			file.put_new_line
+			file.put_string (ace_file_path_tag)
+			file.put_string (":")
+			file.put_string (ace.file_name)
+			file.put_new_line
+			file.put_string (info_flag_end)
+			file.put_new_line
 
 				--| To store correctly the information after the project
 				--| header, we need to set the position, otherwise the

@@ -40,10 +40,10 @@ feature -- Initialization
 				until
 					file.end_of_file
 				loop
-					file.readline
+					file.read_line
 					end_pos := file.position
 					if start_pos < end_pos then
-						create line.make (start_pos, end_pos - 1, file.laststring.twin)
+						create line.make (start_pos, end_pos - 1, file.last_string.twin)
 						extend (line)
 					end
 					start_pos := end_pos
@@ -78,10 +78,10 @@ end
 				until
 					file.end_of_file or else start_pos > end_feat_pos
 				loop
-					file.readline
+					file.read_line
 					end_pos := file.position
 					if start_feat_pos <= end_pos then
-						create line.make (start_pos, end_pos - 1, file.laststring.twin)
+						create line.make (start_pos, end_pos - 1, file.last_string.twin)
 						extend (line)
 					end
 					start_pos := end_pos
@@ -199,11 +199,11 @@ feature {NONE} -- Implementation
 			comment: CELL2 [STRING, INTEGER]
 		do
 debug ("COMMENTS")
-	io.error.putstring ("Extracting from start_pos: ")
-	io.error.putint (start_pos)
-	io.error.putstring (" end position: ")
-	io.error.putint (end_pos)
-	io.error.new_line
+	io.error.put_string ("Extracting from start_pos: ")
+	io.error.put_integer (start_pos)
+	io.error.put_string (" end position: ")
+	io.error.put_integer (end_pos)
+	io.error.put_new_line
 end
 			if not item.is_within (start_pos) then
 				if item.start_position > start_pos then
@@ -274,9 +274,9 @@ feature -- Debug
 
 	trace is
 		do
-			io.error.putstring ("Final position: ")
-			io.error.putint (file_end_position)
-			io.error.new_line
+			io.error.put_string ("Final position: ")
+			io.error.put_integer (file_end_position)
+			io.error.put_new_line
 			from
 				start
 			until

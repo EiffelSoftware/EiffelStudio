@@ -73,11 +73,11 @@ feature -- Access
 --			ctxt.indent;
 ---			ctxt.set_separator (ti_Semi_colon);
 --			ctxt.set_new_line_between_tokens;
---			ctxt.new_line;
+--			ctxt.put_new_line;
 --			if compound /= Void then
 --				ctxt.format_ast (compound);
 --			end
---			ctxt.new_line;
+--			ctxt.put_new_line;
 --			ctxt.put_breakable;
 --		end
 

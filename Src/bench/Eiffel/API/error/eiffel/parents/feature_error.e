@@ -42,12 +42,12 @@ feature -- Status report
 					file.position > error_position or else file.end_of_file
 				loop
 					Result := Result + 1
-					file.readline
+					file.read_line
 				end
 				if file.position > error_position then
 						-- It was found
 					if not file.end_of_file then
-						file.readline
+						file.read_line
 					end
 				else
 					Result := 0
@@ -158,14 +158,14 @@ feature {NONE} -- Implementation
 					previous_line := current_line
 					start_line_pos := file.position
 					l_line_number := l_line_number + 1
-					file.readline
-					current_line := file.laststring.twin
+					file.read_line
+					current_line := file.last_string.twin
 				end
 				if file.position > error_position then
 						-- It was found
 					if not file.end_of_file then
-						file.readline
-						next_line := file.laststring.twin
+						file.read_line
+						next_line := file.last_string.twin
 					end
 				else
 					l_line_number := 0

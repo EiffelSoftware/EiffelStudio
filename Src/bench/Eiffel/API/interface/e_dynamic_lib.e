@@ -27,7 +27,7 @@ feature -- Access
 		do
 			if valid_file_name (file_name) then
 				create a_file.make_open_read (file_name)
-				a_file.readstream (a_file.count)
+				a_file.read_stream (a_file.count)
 				a_file.close
 					-- No need to twin `last_string' because it belongs to `a_file'
 					-- which is only used locally.
@@ -270,7 +270,7 @@ feature -- DYNAMIC_LIB Exports processing.
 			until
 				f.end_of_file
 			loop
-				f.readline
+				f.read_line
 				lastline := f.last_string.twin
 
 				lastline.left_adjust

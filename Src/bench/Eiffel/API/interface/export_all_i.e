@@ -81,7 +81,7 @@ feature {COMPILER_EXPORTER}
 	trace is
 			-- Debug purpose
 		do
-			io.error.putstring ("ALL")
+			io.error.put_string ("ALL")
 		end
 
 	format (ctxt: FORMAT_CONTEXT) is

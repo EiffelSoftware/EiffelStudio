@@ -59,7 +59,7 @@ feature -- Saving
 	save (st: GENERATION_BUFFER) is
 			-- Save current in `st'.
 		do
-			st.new_line
+			st.put_new_line
 			language_name.save (st)
 			st.put_string (":%N%T%T")
 			file_names.save_with_interval_separator (st, ",%N%T%T")

@@ -42,7 +42,7 @@ feature -- Basic operations
 			if not output_file.is_closed then
 				open_file
 				output_file.put_string ("6%T100%%")
-				output_file.new_line
+				output_file.put_new_line
 				close_file
 			end
 		end
@@ -73,7 +73,7 @@ feature -- Basic operations
 			open_file
 			if not output_file.is_closed then
 				output_file.put_string (a_message)
-				output_file.new_line
+				output_file.put_new_line
 				close_file
 			end
 		end
@@ -90,7 +90,7 @@ feature -- Basic operations
 			end
 
 			output_file.put_string ("finished")
-			output_file.new_line
+			output_file.put_new_line
 			close_file
 		end
 
@@ -106,7 +106,7 @@ feature -- Basic operations
 				output_file.put_string (deg_nbr)
 				output_file.put_string ("%T")
 				output_file.put_string (percentage_output (to_go))
-				output_file.new_line
+				output_file.put_new_line
 				close_file
 			end
 		end
@@ -160,8 +160,8 @@ feature {NONE} -- Implementation
 			if not output_file.is_closed then
 				output_file.put_integer (-2)
 				output_file.put_string ("%T")
-				output_file.putstring (percentage_output (to_go))
-				output_file.new_line
+				output_file.put_string (percentage_output (to_go))
+				output_file.put_new_line
 				close_file
 			end
 		end

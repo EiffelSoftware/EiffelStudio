@@ -153,57 +153,57 @@ feature -- Saving
 			if dependencies /= Void and then not dependencies.is_empty then
 				need_end := True
 				st.put_string ("depend")
-				st.new_line
+				st.put_new_line
 				st.indent
 				use_name.save (st)
 				st.exdent
-				st.new_line
+				st.put_new_line
 			end
 
 			if use_name /= Void and then not use_name.is_empty then
 				need_end := True
 				st.put_string ("use")
-				st.new_line
+				st.put_new_line
 				st.indent
 				use_name.save (st)
 				st.exdent
-				st.new_line
+				st.put_new_line
 			end
 
 			if include_option /= Void and then not include_option.is_empty then
 				need_end := True
 				st.put_string ("include")
-				st.new_line
+				st.put_new_line
 				st.indent
 				include_option.save_with_separator (st, "; ")
 				st.exdent
-				st.new_line
+				st.put_new_line
 			end
 
 			if exclude_option /= Void and then not exclude_option.is_empty then
 				need_end := True
 				st.put_string ("exclude")
-				st.new_line
+				st.put_new_line
 				st.indent
 				exclude_option.save_with_separator (st, "; ")
 				st.exdent
-				st.new_line
+				st.put_new_line
 			end
 
 			if adapt_option /= Void and then not adapt_option.is_empty then
 				need_end := True
 				st.put_string ("adapt")
-				st.new_line
+				st.put_new_line
 				st.indent
 				adapt_option.save_with_separator (st, "; ")
 				st.exdent
-				st.new_line
+				st.put_new_line
 			end
 
 			if default_option /= Void and then not default_option.is_empty then
 				need_end := True
 				st.put_string ("default")	
-				st.new_line
+				st.put_new_line
 				st.indent
 				default_option.save_with_new_line (st)
 				st.exdent
@@ -212,7 +212,7 @@ feature -- Saving
 			if options /= Void and then not options.is_empty then
 				need_end := True
 				st.put_string ("option")	
-				st.new_line
+				st.put_new_line
 				st.indent
 				options.save_with_new_line (st)
 				st.exdent
@@ -221,7 +221,7 @@ feature -- Saving
 			if visible_option /= Void and then not visible_option.is_empty then
 				need_end := True
 				st.put_string ("visible")
-				st.new_line
+				st.put_new_line
 				st.indent
 				visible_option.save_with_new_line (st)
 				st.exdent

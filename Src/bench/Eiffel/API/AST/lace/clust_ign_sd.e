@@ -50,7 +50,7 @@ feature -- Save
 		do
 			cluster_name.save (st)
 			st.put_string (": ignore")
-			st.new_line
+			st.put_new_line
 		end
 
 feature {COMPILER_EXPORTER}

@@ -44,9 +44,6 @@ feature {NONE} -- Initialization
 			is_recursive := True
 			hide_implementation := True
 			
-				-- Add it to top cluster list of system.
-			Eiffel_system.add_sub_cluster (Current)
-
 				-- Initialize location of XML files representing classes
 				-- of current assembly.
 			create l_env

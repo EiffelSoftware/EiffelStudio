@@ -27,10 +27,16 @@ feature {NONE} -- Initialization
         make is
                         -- Create a gtk toggle button.
 		do
+			-- Create the gtk object.
                         widget := gtk_toggle_button_new
 			gtk_object_ref (widget)
-			initialize 
-                end
+
+			-- Create the `box'.
+			initialize
+
+			-- Create the label with a text set to "".
+			create_text_label ("")
+               end
 	
 feature -- Status report
 	

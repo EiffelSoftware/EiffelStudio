@@ -1173,7 +1173,6 @@ end;
 			i, nb: INTEGER;
 			root_class_c: CLASS_C;
 			marked_classes: SEARCH_TABLE [CLASS_ID];
-			vd31: VD31;
 		do
 				-- First mark all the classes that can be reached
 				-- from the root class
@@ -1191,6 +1190,32 @@ end;
 			array_class.compiled_class.mark_class (marked_classes);
 			bit_class.compiled_class.mark_class (marked_classes);
 			pointer_class.compiled_class.mark_class (marked_classes);
+
+				-- Now mark all classes reachable from visible classes.
+
+			from
+				classes.start
+			until
+				classes.after
+			loop
+				class_array := classes.item_for_iteration;
+				nb := class_counter.item (classes.key_for_iteration).count
+				from
+					i := 1
+				until
+					i > nb
+				loop
+					a_class := class_array.item (i)
+
+					if a_class /= Void and then
+							a_class.has_visible and then
+								not marked_classes.has (a_class.id) then
+						a_class.mark_class (marked_classes)
+					end
+					i := i + 1
+				end
+				classes.forth
+			end;
 
 				-- Mark the descendants of DYNAMIC when compiling
 				-- DLE's DC-set. Do nothing otherwise.
@@ -1211,22 +1236,17 @@ end;
 					i > nb
 				loop
 					a_class := class_array.item (i)
-					if a_class /= Void then
-						if not marked_classes.has (a_class.id) then
-							if a_class.has_visible then
--- NO! That's just what we want   !!vd31;
---                                vd31.set_class_name (a_class.name);
---                                vd31.set_cluster (a_class.cluster);
---                                Error_handler.insert_error (vd31);
-							else
+
+					if
+						a_class /= Void and then
+						not marked_classes.has (a_class.id)
+					then
 debug ("REMOVE_CLASS")
 	io.error.putstring ("Remove useless classes: ");
 	io.error.putstring (a_class.name);
 	io.error.new_line;
 end;
-								remove_class (a_class)
-							end;
-						end
+						remove_class (a_class)
 					end
 					i := i + 1
 				end

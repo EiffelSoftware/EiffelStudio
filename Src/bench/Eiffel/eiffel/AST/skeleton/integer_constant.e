@@ -310,23 +310,23 @@ feature -- Generation
 			inspect compatibility_size
 			when 8 then
 				buf.putstring (integer_8_cast)
-				buf.append_character ('(')
+				buf.putchar ('(')
 				buf.putstring (lower.out)
 			when 16 then
 				buf.putstring (integer_16_cast)
-				buf.append_character ('(')
+				buf.putchar ('(')
 				buf.putstring (lower.out)
 			when 32 then
 				buf.putstring (integer_32_cast)
-				buf.append_character ('(')
+				buf.putchar ('(')
 				buf.putstring (lower.out)
 			when 64 then
 				buf.putstring (integer_64_cast)
-				buf.append_character ('(')
+				buf.putchar ('(')
 				buf.putstring (to_integer_64.out)
 			end
 			buf.putchar ('L')
-			buf.append_character (')')
+			buf.putchar (')')
 		end
 
 	generate_il is

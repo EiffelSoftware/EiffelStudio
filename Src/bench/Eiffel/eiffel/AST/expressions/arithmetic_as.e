@@ -9,8 +9,7 @@ deferred
 inherit
 	BINARY_AS
 		redefine
-			operator_is_keyword, balanced_result,
-			balanced, operator_is_special
+			balanced
 		end
 
 feature -- Properties
@@ -21,13 +20,5 @@ feature -- Properties
 		do
 			Result := True
 		end
-
-	balanced_result: BOOLEAN is True
-			-- is the result of the infix operation subject to the
-			-- balancing rule ?
-
-	operator_is_special: BOOLEAN is True
-
-	operator_is_keyword: BOOLEAN is False
 
 end -- class ARITHMETIC_AS

@@ -10,7 +10,7 @@ inherit
 		rename
 			initialize as initialize_binary_as
 		redefine
-			operator_is_keyword, is_equivalent
+			is_equivalent
 		end
 
 	PREFIX_INFIX_NAMES
@@ -46,8 +46,6 @@ feature -- Properties
 		do
 			Result := infix_feature_name_with_symbol (op_name)
 		end
-
-	operator_is_keyword: BOOLEAN is False
 
 feature -- Comparison
 

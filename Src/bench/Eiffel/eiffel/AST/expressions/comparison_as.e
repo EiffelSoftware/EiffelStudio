@@ -8,7 +8,7 @@ deferred class COMPARISON_AS
 inherit
 	BINARY_AS
 		redefine
-			balanced, operator_is_special, operator_is_keyword
+			balanced
 		end
 
 feature -- Properties
@@ -16,9 +16,5 @@ feature -- Properties
 	balanced: BOOLEAN is True
 			-- Is the current binary operation subject to the balancing
 			-- rule proper to simple numeric types ?
-
-	operator_is_special: BOOLEAN is True
-	
-	operator_is_keyword: BOOLEAN is False
 
 end -- class COMPARISON_AS

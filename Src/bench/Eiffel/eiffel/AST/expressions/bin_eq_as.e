@@ -9,20 +9,13 @@ class
 inherit
 	BINARY_AS
 		redefine
-			type_check, byte_node,
-			operator_is_keyword, operator_is_special
+			type_check, byte_node
 		end
 
 	SHARED_TYPES
 
 	PREFIX_INFIX_NAMES
 
-feature -- Properties
-
-	operator_is_keyword: BOOLEAN is False
-	
-	operator_is_special: BOOLEAN is True
-	
 feature -- Type check, byte code and dead code removal
 
 	infix_function_name: STRING is

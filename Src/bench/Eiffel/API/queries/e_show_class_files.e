@@ -19,7 +19,7 @@ feature -- Execution
 	work is
 		local
 			sorted_class_names: SORTED_TWO_WAY_LIST [STRING]
-			classes: EXTEND_TABLE [CLASS_I, STRING]
+			classes: HASH_TABLE [CLASS_I, STRING]
 			a_classi: CLASS_I
 			a_class: CLASS_C
 		do

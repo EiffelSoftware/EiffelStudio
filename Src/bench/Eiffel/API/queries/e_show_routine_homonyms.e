@@ -30,7 +30,7 @@ feature -- Execution
 			-- Execute Current command.
 		local
 			clusters: LINKED_LIST [CLUSTER_I];
-			classes: EXTEND_TABLE [CLASS_I, STRING];
+			classes: HASH_TABLE [CLASS_I, STRING];
 			e_class: CLASS_C;
 			feat: E_FEATURE;
 			feature_name: STRING;

@@ -13,10 +13,17 @@ feature
 	execution_unit: EXT_EXECUTION_UNIT;
 			-- External execution unit
 
+	is_valid: BOOLEAN is
+		do
+			Result := (execution_unit /= Void)
+		end
+
 	is_cpp: BOOLEAN is
 			-- Is the external represented by Current written in C++?
 		do
-			Result := execution_unit.is_cpp
+			if execution_unit /= Void then
+				Result := execution_unit.is_cpp
+			end
 		end
 
 	add_occurence is
@@ -48,7 +55,7 @@ feature
 	reset_real_body_id is
 			-- Reset `real_body_id' while freezing
 		require
-			execution_unit_exists: execution_unit /= Void
+			is_valid: is_valid
 		do
 			real_body_id := execution_unit.index;
 		end;

@@ -988,6 +988,9 @@ feature -- Warning messages
 
 	w_Class_not_modifiable: STRING is "The text of this class cannot be modified."
 
+	w_Could_not_save_all: STRING is "Some files could not be saved.%N%
+									%Exit was cancelled."
+
 	w_Continue: STRING is "%N%NDo you want to continue anyway?"
 
 	w_Unknown_error: STRING is "This command failed."
@@ -1155,7 +1158,11 @@ feature -- Warning messages
 
 	w_Stop_compilation: STRING is "This command will stop the compilation."
 
-	w_Exiting_stops_compilation: STRING is "Exiting will stop the compilation."
+	w_Exiting_stops_compilation: STRING is "It is not possible to exit EiffelStudio%N%
+											%while the project is being compiled."
+
+	w_Save_before_closing: STRING is "Do you want to save your changes%N%
+									%before closing the window?"
 
 	w_Stop_debugger: STRING is "This command will stop the debugger."
 

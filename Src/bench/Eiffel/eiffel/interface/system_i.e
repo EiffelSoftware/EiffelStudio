@@ -3358,10 +3358,6 @@ feature -- Main file generation
 
 			if has_separate then
 				Main_file.putstring ("#include %"curextern.h%"%N");
-			else
-				Main_file.putstring ("#ifndef CONCURRENT_EIFFEL%N%
-									%fnptr *separate_pattern = 0;%N%
-									%#endif%N");
 			end
 
 			Main_file.generate_function_signature ("void", "main", True, Main_file,
@@ -3547,15 +3543,15 @@ feature -- Main file generation
 				if has_separate then
 					Initialization_file.putstring ("%T%Tif (rcorigin != -1)%N%
 						%%T%T%Tif (rcarg)%N%
-						%%T%T%T%T((void (*)(char *, char *)) RTWPF(rcorigin, rcoffset, rcdt))(root_obj, argarr(argc-1, root_argv));%N%
+						%%T%T%T%T(FUNCTION_CAST(void, (char *, char *)) RTWPF(rcorigin, rcoffset, rcdt))(root_obj, argarr(argc-1, root_argv));%N%
 						%%T%T%Telse%N%
-						%%T%T%T%T((void (*)(char *)) RTWPF(rcorigin, rcoffset, rcdt))(root_obj);%N");
+						%%T%T%T%T(FUNCTION_CAST(void, (char *)) RTWPF(rcorigin, rcoffset, rcdt))(root_obj);%N");
 				else
 					Initialization_file.putstring ("%Tif (rcorigin != -1)%N%
 						%%T%Tif (rcarg)%N%
-						%%T%T%T((void (*)(char *, char *)) RTWPF(rcorigin, rcoffset, rcdt))(root_obj, argarr(argc, argv));%N%
+						%%T%T%T(FUNCTION_CAST(void, (char *, char *)) RTWPF(rcorigin, rcoffset, rcdt))(root_obj, argarr(argc, argv));%N%
 						%%T%Telse%N%
-						%%T%T%T((void (*)(char *)) RTWPF(rcorigin, rcoffset, rcdt))(root_obj);%N");
+						%%T%T%T(FUNCTION_CAST(void, (char *)) RTWPF(rcorigin, rcoffset, rcdt))(root_obj);%N");
 				end
 			end;
 
@@ -4328,8 +4324,11 @@ feature -- Concurrent Eiffel
 
 	Concurrent_eiffel: BOOLEAN is
 			-- Can this compiler generate Concurrent Eiffel code?
+			--| This should be called only during the initial steps
+			--| of the compilation or after retrieving a project
+			--| s this can raise an error
 		do
-			Result := Configure_resources.get_boolean (r_Concurrent_eiffel, False)
+			Result := Concurrency_license.licensed
 		end
 
 	has_separate: BOOLEAN
@@ -4340,7 +4339,20 @@ feature -- Concurrent Eiffel
 		require
 			concurrent_eiffel_allowed: Concurrent_eiffel
 		do
-			has_separate := True
+			if not has_separate then
+				has_separate := True
+					-- We need to link with the Concurrent Eiffel
+					-- run-time
+				set_freeze (True)
+			end
+		end
+
+feature {NONE} -- Concurrent Eiffel
+
+	Concurrency_license: CONCURRENCY_LICENSE is
+			-- License for Concrrent Eiffel
+		Once
+			!! Result.make
 		end
 
 invariant

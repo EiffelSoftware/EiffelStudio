@@ -9,8 +9,8 @@ class
 
 inherit
 	CASE_COMMAND2
-		redefine
-			make
+		rename
+			make as old_make
 		end
 
 creation
@@ -20,7 +20,7 @@ feature -- creation
 
 	make ( w : CASE_INTERFACE ; file_sel : FILE_SEL_D ) is
 		do
-			case_window := w
+			old_make( w )
 			file_s := file_sel
 		end
 
@@ -29,9 +29,10 @@ feature -- creation
 feature -- exec
 
 	execute ( a : ANY ) is
-		require
+		require else
 			case_w_exists : case_window/= Void
 		do
 			case_window.text_field1.set_text ( file_s.selected_file)
+			file_s.popdown
 		end
 end -- class OK_BROWSE

@@ -123,7 +123,7 @@ feature {NONE}  -- Externals
 	ccom_set_active_object (cpp_obj: POINTER; p_active_object: POINTER; psz_obj_name: STRING) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IOleInPlaceUIWindow_impl_proxy %"ecom_control_library_IOleInPlaceUIWindow_impl_proxy_s.h%"](ecom_control_library::IOleInPlaceActiveObject *,EIF_OBJECT)"
+			"C++ [ecom_control_library::IOleInPlaceUIWindow_impl_proxy %"ecom_control_library_IOleInPlaceUIWindow_impl_proxy_s.h%"](::IOleInPlaceActiveObject *,EIF_OBJECT)"
 		end
 
 	ccom_delete_iole_in_place_uiwindow_impl_proxy (a_pointer: POINTER) is

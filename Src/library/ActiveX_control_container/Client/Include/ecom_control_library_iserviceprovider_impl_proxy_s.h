@@ -56,7 +56,7 @@ private:
   /*-----------------------------------------------------------
   Interface pointer
   -----------------------------------------------------------*/
-  ecom_control_library::IServiceProvider * p_IServiceProvider;
+  ::IServiceProvider * p_IServiceProvider;
 
 
   /*-----------------------------------------------------------

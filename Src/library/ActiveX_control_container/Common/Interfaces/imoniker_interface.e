@@ -10,15 +10,15 @@ inherit
 
 feature -- Status Report
 
-	remote_bind_to_object_user_precondition (pbc: IBIND_CTX_INTERFACE; pmk_to_left: IMONIKER_INTERFACE; riid_result: ECOM_GUID; ppv_result: CELL [ECOM_INTERFACE]): BOOLEAN is
-			-- User-defined preconditions for `remote_bind_to_object'.
+	bind_to_object_user_precondition (pbc: IBIND_CTX_INTERFACE; pmk_to_left: IMONIKER_INTERFACE; riid_result: ECOM_GUID; ppv_result: CELL [ECOM_INTERFACE]): BOOLEAN is
+			-- User-defined preconditions for `bind_to_object'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	remote_bind_to_storage_user_precondition (pbc: IBIND_CTX_INTERFACE; pmk_to_left: IMONIKER_INTERFACE; riid: ECOM_GUID; ppv_obj: CELL [ECOM_INTERFACE]): BOOLEAN is
-			-- User-defined preconditions for `remote_bind_to_storage'.
+	bind_to_storage_user_precondition (pbc: IBIND_CTX_INTERFACE; pmk_to_left: IMONIKER_INTERFACE; riid: ECOM_GUID; ppv_obj: CELL [ECOM_INTERFACE]): BOOLEAN is
+			-- User-defined preconditions for `bind_to_storage'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -117,7 +117,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	remote_bind_to_object (pbc: IBIND_CTX_INTERFACE; pmk_to_left: IMONIKER_INTERFACE; riid_result: ECOM_GUID; ppv_result: CELL [ECOM_INTERFACE]) is
+	bind_to_object (pbc: IBIND_CTX_INTERFACE; pmk_to_left: IMONIKER_INTERFACE; riid_result: ECOM_GUID; ppv_result: CELL [ECOM_INTERFACE]) is
 			-- No description available.
 			-- `pbc' [in].  
 			-- `pmk_to_left' [in].  
@@ -127,14 +127,14 @@ feature -- Basic Operations
 			non_void_riid_result: riid_result /= Void
 			valid_riid_result: riid_result.item /= default_pointer
 			non_void_ppv_result: ppv_result /= Void
-			remote_bind_to_object_user_precondition: remote_bind_to_object_user_precondition (pbc, pmk_to_left, riid_result, ppv_result)
+			bind_to_object_user_precondition: bind_to_object_user_precondition (pbc, pmk_to_left, riid_result, ppv_result)
 		deferred
 
 		ensure
 			valid_ppv_result: ppv_result.item /= Void
 		end
 
-	remote_bind_to_storage (pbc: IBIND_CTX_INTERFACE; pmk_to_left: IMONIKER_INTERFACE; riid: ECOM_GUID; ppv_obj: CELL [ECOM_INTERFACE]) is
+	bind_to_storage (pbc: IBIND_CTX_INTERFACE; pmk_to_left: IMONIKER_INTERFACE; riid: ECOM_GUID; ppv_obj: CELL [ECOM_INTERFACE]) is
 			-- No description available.
 			-- `pbc' [in].  
 			-- `pmk_to_left' [in].  
@@ -144,7 +144,7 @@ feature -- Basic Operations
 			non_void_riid: riid /= Void
 			valid_riid: riid.item /= default_pointer
 			non_void_ppv_obj: ppv_obj /= Void
-			remote_bind_to_storage_user_precondition: remote_bind_to_storage_user_precondition (pbc, pmk_to_left, riid, ppv_obj)
+			bind_to_storage_user_precondition: bind_to_storage_user_precondition (pbc, pmk_to_left, riid, ppv_obj)
 		deferred
 
 		ensure

@@ -25,14 +25,14 @@ feature {NONE}  -- Initialization
 
 feature -- Basic Operations
 
-	query_status (pguid_cmd_group: ECOM_GUID; c_cmds: INTEGER; prg_cmds: X_TAG_OLECMD_RECORD; p_cmd_text: X_TAG_OLECMDTEXT_RECORD) is
+	query_status (pguid_cmd_group: ECOM_GUID; c_cmds: INTEGER; prg_cmds: ARRAY [X_TAG_OLECMD_RECORD]; p_cmd_text: X_TAG_OLECMDTEXT_RECORD) is
 			-- No description available.
 			-- `pguid_cmd_group' [in].  
 			-- `c_cmds' [in].  
 			-- `prg_cmds' [in, out].  
 			-- `p_cmd_text' [in, out].  
 		do
-			ccom_query_status (initializer, pguid_cmd_group.item, c_cmds, prg_cmds.item, p_cmd_text.item)
+			ccom_query_status (initializer, pguid_cmd_group.item, c_cmds, prg_cmds, p_cmd_text.item)
 		end
 
 	exec (pguid_cmd_group: ECOM_GUID; n_cmd_id: INTEGER; n_cmdexecopt: INTEGER; pva_in: ECOM_VARIANT; pva_out: ECOM_VARIANT) is
@@ -56,10 +56,10 @@ feature {NONE}  -- Implementation
 
 feature {NONE}  -- Externals
 
-	ccom_query_status (cpp_obj: POINTER; pguid_cmd_group: POINTER; c_cmds: INTEGER; prg_cmds: POINTER; p_cmd_text: POINTER) is
+	ccom_query_status (cpp_obj: POINTER; pguid_cmd_group: POINTER; c_cmds: INTEGER; prg_cmds: ARRAY [X_TAG_OLECMD_RECORD]; p_cmd_text: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IOleCommandTarget_impl_proxy %"ecom_control_library_IOleCommandTarget_impl_proxy_s.h%"](GUID *,EIF_INTEGER,ecom_control_library::_tagOLECMD *,ecom_control_library::_tagOLECMDTEXT *)"
+			"C++ [ecom_control_library::IOleCommandTarget_impl_proxy %"ecom_control_library_IOleCommandTarget_impl_proxy_s.h%"](GUID *,EIF_INTEGER,EIF_OBJECT,ecom_control_library::_tagOLECMDTEXT *)"
 		end
 
 	ccom_exec (cpp_obj: POINTER; pguid_cmd_group: POINTER; n_cmd_id: INTEGER; n_cmdexecopt: INTEGER; pva_in: POINTER; pva_out: POINTER) is

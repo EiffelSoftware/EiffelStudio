@@ -42,25 +42,25 @@ namespace ecom_control_library
 class IQuickActivate : public IUnknown
 {
 public:
-	IQuickActivate () {};
-	~IQuickActivate () {};
+  IQuickActivate () {};
+  ~IQuickActivate () {};
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP RemoteQuickActivate(  /* [in] */ ecom_control_library::tagQACONTAINER * p_qa_container, /* [out] */ ecom_control_library::tagQACONTROL * p_qa_control ) = 0;
-
-
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP SetContentExtent(  /* [in] */ ecom_control_library::tagSIZEL * psizel ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP QuickActivate(  /* [in] */ ecom_control_library::tagQACONTAINER * p_qa_container, /* [out] */ ecom_control_library::tagQACONTROL * p_qa_control ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP GetContentExtent(  /* [out] */ ecom_control_library::tagSIZEL * psizel ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP SetContentExtent(  /* [in] */ ecom_control_library::tagSIZEL * psizel ) = 0;
+
+
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP GetContentExtent(  /* [out] */ ecom_control_library::tagSIZEL * psizel ) = 0;
 
 
 

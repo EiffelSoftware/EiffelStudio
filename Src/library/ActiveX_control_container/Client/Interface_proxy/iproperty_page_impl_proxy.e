@@ -127,7 +127,7 @@ feature {NONE}  -- Externals
 	ccom_set_page_site (cpp_obj: POINTER; p_page_site: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IPropertyPage_impl_proxy %"ecom_control_library_IPropertyPage_impl_proxy_s.h%"](ecom_control_library::IPropertyPageSite *)"
+			"C++ [ecom_control_library::IPropertyPage_impl_proxy %"ecom_control_library_IPropertyPage_impl_proxy_s.h%"](::IPropertyPageSite *)"
 		end
 
 	ccom_activate (cpp_obj: POINTER; hwnd_parent: POINTER; p_rect: POINTER; b_modal: INTEGER) is

@@ -38,37 +38,37 @@ namespace ecom_control_library
 class IPersistMemory : public ecom_control_library::IPersist
 {
 public:
-	IPersistMemory () {};
-	~IPersistMemory () {};
+  IPersistMemory () {};
+  ~IPersistMemory () {};
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP IsDirty( void ) = 0;
-
-
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP RemoteLoad(  /* [in] */ UCHAR * p_mem, /* [in] */ ULONG cb_size ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP IsDirty( void ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP RemoteSave(  /* [out] */ UCHAR * p_mem, /* [in] */ LONG f_clear_dirty, /* [in] */ ULONG cb_size ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP Load(  /* [in] */ UCHAR * p_mem, /* [in] */ ULONG cb_size ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP GetSizeMax(  /* [out] */ ULONG * pcb_size ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP Save(  /* [out] */ UCHAR * p_mem, /* [in] */ LONG f_clear_dirty, /* [in] */ ULONG cb_size ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP InitNew( void ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP GetSizeMax(  /* [out] */ ULONG * pcb_size ) = 0;
+
+
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP InitNew( void ) = 0;
 
 
 

@@ -54,7 +54,7 @@ public:
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP RemoteNext(  /* [in] */ ULONG c_connections, /* [out] */ ecom_control_library::tagCONNECTDATA * rgcd, /* [out] */ ULONG * pc_fetched ) = 0;
+	virtual STDMETHODIMP Next(  /* [in] */ ULONG c_connections, /* [out] */ ecom_control_library::tagCONNECTDATA * rgcd, /* [out] */ ULONG * pc_fetched ) = 0;
 
 
 	/*-----------------------------------------------------------

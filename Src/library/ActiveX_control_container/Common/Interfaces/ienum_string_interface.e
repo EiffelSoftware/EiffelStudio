@@ -10,8 +10,8 @@ inherit
 
 feature -- Status Report
 
-	remote_next_user_precondition (celt: INTEGER; rgelt: CELL [STRING]; pcelt_fetched: INTEGER_REF): BOOLEAN is
-			-- User-defined preconditions for `remote_next'.
+	next_user_precondition (celt: INTEGER; rgelt: ARRAY [STRING]; pcelt_fetched: INTEGER_REF): BOOLEAN is
+			-- User-defined preconditions for `next'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -40,19 +40,18 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	remote_next (celt: INTEGER; rgelt: CELL [STRING]; pcelt_fetched: INTEGER_REF) is
+	next (celt: INTEGER; rgelt: ARRAY [STRING]; pcelt_fetched: INTEGER_REF) is
 			-- No description available.
 			-- `celt' [in].  
 			-- `rgelt' [out].  
 			-- `pcelt_fetched' [out].  
 		require
 			non_void_rgelt: rgelt /= Void
-			non_void_pcelt_fetched: pcelt_fetched /= Void
-			remote_next_user_precondition: remote_next_user_precondition (celt, rgelt, pcelt_fetched)
+			next_user_precondition: next_user_precondition (celt, rgelt, pcelt_fetched)
 		deferred
 
 		ensure
-			valid_rgelt: rgelt.item /= Void
+			valid_rgelt: pcelt_fetched /= Void implies rgelt.count = pcelt_fetched
 		end
 
 	skip (celt: INTEGER) is

@@ -25,7 +25,7 @@ feature {NONE}  -- Initialization
 
 feature -- Basic Operations
 
-	draw (dw_draw_aspect: INTEGER; lindex: INTEGER; pv_aspect: INTEGER; ptd: TAG_DVTARGETDEVICE_RECORD; hdc_target_dev: INTEGER; hdc_draw: INTEGER; lprc_bounds: X_RECTL_RECORD; lprc_wbounds: X_RECTL_RECORD; p_continue: ICONTINUE_INTERFACE) is
+	draw (dw_draw_aspect: INTEGER; lindex: INTEGER; pv_aspect: INTEGER; ptd: TAG_DVTARGETDEVICE_RECORD; hdc_target_dev: INTEGER; hdc_draw: INTEGER; lprc_bounds: X_RECTL_RECORD; lprc_wbounds: X_RECTL_RECORD) is
 			-- No description available.
 			-- `dw_draw_aspect' [in].  
 			-- `lindex' [in].  
@@ -35,21 +35,8 @@ feature -- Basic Operations
 			-- `hdc_draw' [in].  
 			-- `lprc_bounds' [in].  
 			-- `lprc_wbounds' [in].  
-			-- `p_continue' [in].  
-		local
-			p_continue_item: POINTER
-			a_stub: ECOM_STUB
 		do
-			if p_continue /= Void then
-				if (p_continue.item = default_pointer) then
-					a_stub ?= p_continue
-					if a_stub /= Void then
-						a_stub.create_item
-					end
-				end
-				p_continue_item := p_continue.item
-			end
-			ccom_draw (initializer, dw_draw_aspect, lindex, pv_aspect, ptd.item, hdc_target_dev, hdc_draw, lprc_bounds.item, lprc_wbounds.item, p_continue_item)
+			ccom_draw (initializer, dw_draw_aspect, lindex, pv_aspect, ptd.item, hdc_target_dev, hdc_draw, lprc_bounds.item, lprc_wbounds.item)
 		end
 
 	get_color_set (dw_draw_aspect: INTEGER; lindex: INTEGER; pv_aspect: INTEGER; ptd: TAG_DVTARGETDEVICE_RECORD; hic_target_dev: INTEGER; pp_color_set: CELL [TAG_LOGPALETTE_RECORD]) is
@@ -180,10 +167,10 @@ feature {NONE}  -- Implementation
 
 feature {NONE}  -- Externals
 
-	ccom_draw (cpp_obj: POINTER; dw_draw_aspect: INTEGER; lindex: INTEGER; pv_aspect: INTEGER; ptd: POINTER; hdc_target_dev: INTEGER; hdc_draw: INTEGER; lprc_bounds: POINTER; lprc_wbounds: POINTER; p_continue: POINTER) is
+	ccom_draw (cpp_obj: POINTER; dw_draw_aspect: INTEGER; lindex: INTEGER; pv_aspect: INTEGER; ptd: POINTER; hdc_target_dev: INTEGER; hdc_draw: INTEGER; lprc_bounds: POINTER; lprc_wbounds: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IViewObjectEx_impl_proxy %"ecom_control_library_IViewObjectEx_impl_proxy_s.h%"](EIF_INTEGER,EIF_INTEGER,EIF_INTEGER,ecom_control_library::tagDVTARGETDEVICE *,EIF_INTEGER,EIF_INTEGER,ecom_control_library::_RECTL *,ecom_control_library::_RECTL *,ecom_control_library::IContinue *)"
+			"C++ [ecom_control_library::IViewObjectEx_impl_proxy %"ecom_control_library_IViewObjectEx_impl_proxy_s.h%"](EIF_INTEGER,EIF_INTEGER,EIF_INTEGER,ecom_control_library::tagDVTARGETDEVICE *,EIF_INTEGER,EIF_INTEGER,ecom_control_library::_RECTL *,ecom_control_library::_RECTL *)"
 		end
 
 	ccom_get_color_set (cpp_obj: POINTER; dw_draw_aspect: INTEGER; lindex: INTEGER; pv_aspect: INTEGER; ptd: POINTER; hic_target_dev: INTEGER; pp_color_set: CELL [TAG_LOGPALETTE_RECORD]) is
@@ -207,7 +194,7 @@ feature {NONE}  -- Externals
 	ccom_set_advise (cpp_obj: POINTER; aspects: INTEGER; advf: INTEGER; p_adv_sink: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IViewObjectEx_impl_proxy %"ecom_control_library_IViewObjectEx_impl_proxy_s.h%"](EIF_INTEGER,EIF_INTEGER,ecom_control_library::IAdviseSink *)"
+			"C++ [ecom_control_library::IViewObjectEx_impl_proxy %"ecom_control_library_IViewObjectEx_impl_proxy_s.h%"](EIF_INTEGER,EIF_INTEGER,::IAdviseSink *)"
 		end
 
 	ccom_get_advise (cpp_obj: POINTER; p_aspects: INTEGER_REF; p_advf: INTEGER_REF; pp_adv_sink: CELL [IADVISE_SINK_INTERFACE]) is

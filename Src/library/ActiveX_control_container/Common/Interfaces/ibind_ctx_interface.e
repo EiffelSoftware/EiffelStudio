@@ -31,15 +31,15 @@ feature -- Status Report
 			Result := True
 		end
 
-	remote_set_bind_options_user_precondition (pbindopts: TAG_BIND_OPTS2_RECORD): BOOLEAN is
-			-- User-defined preconditions for `remote_set_bind_options'.
+	set_bind_options_user_precondition (pbindopts: TAG_BIND_OPTS2_RECORD): BOOLEAN is
+			-- User-defined preconditions for `set_bind_options'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	remote_get_bind_options_user_precondition (pbindopts: TAG_BIND_OPTS2_RECORD): BOOLEAN is
-			-- User-defined preconditions for `remote_get_bind_options'.
+	get_bind_options_user_precondition (pbindopts: TAG_BIND_OPTS2_RECORD): BOOLEAN is
+			-- User-defined preconditions for `get_bind_options'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -108,24 +108,24 @@ feature -- Basic Operations
 
 		end
 
-	remote_set_bind_options (pbindopts: TAG_BIND_OPTS2_RECORD) is
+	set_bind_options (pbindopts: TAG_BIND_OPTS2_RECORD) is
 			-- No description available.
 			-- `pbindopts' [in].  
 		require
 			non_void_pbindopts: pbindopts /= Void
 			valid_pbindopts: pbindopts.item /= default_pointer
-			remote_set_bind_options_user_precondition: remote_set_bind_options_user_precondition (pbindopts)
+			set_bind_options_user_precondition: set_bind_options_user_precondition (pbindopts)
 		deferred
 
 		end
 
-	remote_get_bind_options (pbindopts: TAG_BIND_OPTS2_RECORD) is
+	get_bind_options (pbindopts: TAG_BIND_OPTS2_RECORD) is
 			-- No description available.
 			-- `pbindopts' [in, out].  
 		require
 			non_void_pbindopts: pbindopts /= Void
 			valid_pbindopts: pbindopts.item /= default_pointer
-			remote_get_bind_options_user_precondition: remote_get_bind_options_user_precondition (pbindopts)
+			get_bind_options_user_precondition: get_bind_options_user_precondition (pbindopts)
 		deferred
 
 		end

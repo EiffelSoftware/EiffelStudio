@@ -67,7 +67,7 @@ void ecom_control_library::IServiceProvider_impl_proxy::ccom_query_service(  /* 
   IUnknown * * tmp_ppv_object = 0;
   tmp_ppv_object = (IUnknown * *)grt_ec_control_interfaces2.ccom_ec_pointed_cell_431 (eif_access (ppv_object), NULL);
   
-  hr = p_IServiceProvider->QueryService(guid_service,riid,tmp_ppv_object);
+  hr = p_IServiceProvider->QueryService(*guid_service, *riid, (void**)tmp_ppv_object);
   if (FAILED (hr))
   {
     if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))

@@ -137,7 +137,7 @@ feature {NONE}  -- Externals
 	ccom_tag_statdata_set_p_adv_sink (a_pointer: POINTER; arg2: POINTER) is
 			-- No description available.
 		external
-			"C++ [macro %"ecom_control_library_tagSTATDATA_s_impl.h%"](ecom_control_library::tagSTATDATA *, ecom_control_library::IAdviseSink *)"
+			"C++ [macro %"ecom_control_library_tagSTATDATA_s_impl.h%"](ecom_control_library::tagSTATDATA *, ::IAdviseSink *)"
 		end
 
 	ccom_tag_statdata_dw_connection (a_pointer: POINTER): INTEGER is

@@ -37,25 +37,25 @@ namespace ecom_control_library
 class IOleCommandTarget_impl_proxy
 {
 public:
-	IOleCommandTarget_impl_proxy (IUnknown * a_pointer);
-	virtual ~IOleCommandTarget_impl_proxy ();
+  IOleCommandTarget_impl_proxy (IUnknown * a_pointer);
+  virtual ~IOleCommandTarget_impl_proxy ();
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_query_status(  /* [in] */ GUID * pguid_cmd_group,  /* [in] */ EIF_INTEGER c_cmds,  /* [in, out] */ ecom_control_library::_tagOLECMD * prg_cmds,  /* [in, out] */ ecom_control_library::_tagOLECMDTEXT * p_cmd_text );
-
-
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_exec(  /* [in] */ GUID * pguid_cmd_group,  /* [in] */ EIF_INTEGER n_cmd_id,  /* [in] */ EIF_INTEGER n_cmdexecopt,  /* [in] */ VARIANT * pva_in,  /* [in, out] */ VARIANT * pva_out );
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_query_status(  /* [in] */ GUID * pguid_cmd_group,  /* [in] */ EIF_INTEGER c_cmds,  /* [in, out] */ EIF_OBJECT prg_cmds,  /* [in, out] */ ecom_control_library::_tagOLECMDTEXT * p_cmd_text );
 
 
-	/*-----------------------------------------------------------
-	IUnknown interface
-	-----------------------------------------------------------*/
-	EIF_POINTER ccom_item();
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_exec(  /* [in] */ GUID * pguid_cmd_group,  /* [in] */ EIF_INTEGER n_cmd_id,  /* [in] */ EIF_INTEGER n_cmdexecopt,  /* [in] */ VARIANT * pva_in,  /* [in, out] */ VARIANT * pva_out );
+
+
+  /*-----------------------------------------------------------
+  IUnknown interface
+  -----------------------------------------------------------*/
+  EIF_POINTER ccom_item();
 
 
 
@@ -63,16 +63,16 @@ protected:
 
 
 private:
-	/*-----------------------------------------------------------
-	Interface pointer
-	-----------------------------------------------------------*/
-	ecom_control_library::IOleCommandTarget * p_IOleCommandTarget;
+  /*-----------------------------------------------------------
+  Interface pointer
+  -----------------------------------------------------------*/
+  ::IOleCommandTarget * p_IOleCommandTarget;
 
 
-	/*-----------------------------------------------------------
-	Default IUnknown interface pointer
-	-----------------------------------------------------------*/
-	IUnknown * p_unknown;
+  /*-----------------------------------------------------------
+  Default IUnknown interface pointer
+  -----------------------------------------------------------*/
+  IUnknown * p_unknown;
 
 
 

@@ -37,37 +37,37 @@ namespace ecom_control_library
 class IOleControl_impl_proxy
 {
 public:
-	IOleControl_impl_proxy (IUnknown * a_pointer);
-	virtual ~IOleControl_impl_proxy ();
+  IOleControl_impl_proxy (IUnknown * a_pointer);
+  virtual ~IOleControl_impl_proxy ();
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_get_control_info(  /* [out] */ ecom_control_library::tagCONTROLINFO * p_ci );
-
-
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_on_mnemonic(  /* [in] */ ecom_control_library::tagMSG * p_msg );
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_get_control_info(  /* [out] */ ecom_control_library::tagCONTROLINFO * p_ci );
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_on_ambient_property_change(  /* [in] */ EIF_INTEGER disp_id );
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_on_mnemonic(  /* [in] */ ecom_control_library::tagMSG * p_msg );
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_freeze_events(  /* [in] */ EIF_INTEGER b_freeze );
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_on_ambient_property_change(  /* [in] */ EIF_INTEGER disp_id );
 
 
-	/*-----------------------------------------------------------
-	IUnknown interface
-	-----------------------------------------------------------*/
-	EIF_POINTER ccom_item();
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_freeze_events(  /* [in] */ EIF_INTEGER b_freeze );
+
+
+  /*-----------------------------------------------------------
+  IUnknown interface
+  -----------------------------------------------------------*/
+  EIF_POINTER ccom_item();
 
 
 
@@ -75,16 +75,16 @@ protected:
 
 
 private:
-	/*-----------------------------------------------------------
-	Interface pointer
-	-----------------------------------------------------------*/
-	ecom_control_library::IOleControl * p_IOleControl;
+  /*-----------------------------------------------------------
+  Interface pointer
+  -----------------------------------------------------------*/
+  ::IOleControl * p_IOleControl;
 
 
-	/*-----------------------------------------------------------
-	Default IUnknown interface pointer
-	-----------------------------------------------------------*/
-	IUnknown * p_unknown;
+  /*-----------------------------------------------------------
+  Default IUnknown interface pointer
+  -----------------------------------------------------------*/
+  IUnknown * p_unknown;
 
 
 

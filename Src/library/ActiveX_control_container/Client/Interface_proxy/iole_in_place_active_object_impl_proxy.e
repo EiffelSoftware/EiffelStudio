@@ -39,10 +39,15 @@ feature -- Basic Operations
 			ccom_context_sensitive_help (initializer, f_enter_mode)
 		end
 
-	remote_translate_accelerator is
-			-- No description available.
+	translate_accelerator (lpmsg: TAG_MSG_RECORD)is
+			-- Processes menu accelerator-key messages 
+			-- from the container's message queue. 
+			-- This method should only be used for 
+			-- objects created by a DLL object application. 
+			-- `lpmsg' [in] Pointer to the message that might 
+			-- need to be translated.
 		do
-			ccom_remote_translate_accelerator (initializer)
+			ccom_translate_accelerator (initializer, lpmsg.item)
 		end
 
 	on_frame_window_activate (f_activate: INTEGER) is
@@ -59,10 +64,9 @@ feature -- Basic Operations
 			ccom_on_doc_window_activate (initializer, f_activate)
 		end
 
-	remote_resize_border (prc_border: TAG_RECT_RECORD; riid: ECOM_GUID; p_uiwindow: IOLE_IN_PLACE_UIWINDOW_INTERFACE; f_frame_window: INTEGER) is
+	resize_border (prc_border: TAG_RECT_RECORD; p_uiwindow: IOLE_IN_PLACE_UIWINDOW_INTERFACE; f_frame_window: INTEGER) is
 			-- No description available.
 			-- `prc_border' [in].  
-			-- `riid' [in].  
 			-- `p_uiwindow' [in].  
 			-- `f_frame_window' [in].  
 		local
@@ -78,7 +82,7 @@ feature -- Basic Operations
 				end
 				p_uiwindow_item := p_uiwindow.item
 			end
-			ccom_remote_resize_border (initializer, prc_border.item, riid.item, p_uiwindow_item, f_frame_window)
+			ccom_resize_border (initializer, prc_border.item, p_uiwindow_item, f_frame_window)
 		end
 
 	enable_modeless (f_enable: INTEGER) is
@@ -110,10 +114,10 @@ feature {NONE}  -- Externals
 			"C++ [ecom_control_library::IOleInPlaceActiveObject_impl_proxy %"ecom_control_library_IOleInPlaceActiveObject_impl_proxy_s.h%"](EIF_INTEGER)"
 		end
 
-	ccom_remote_translate_accelerator (cpp_obj: POINTER) is
+	ccom_translate_accelerator (cpp_obj: POINTER; lpmsg: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IOleInPlaceActiveObject_impl_proxy %"ecom_control_library_IOleInPlaceActiveObject_impl_proxy_s.h%"]()"
+			"C++ [ecom_control_library::IOleInPlaceActiveObject_impl_proxy %"ecom_control_library_IOleInPlaceActiveObject_impl_proxy_s.h%"](MSG *)"
 		end
 
 	ccom_on_frame_window_activate (cpp_obj: POINTER; f_activate: INTEGER) is
@@ -128,10 +132,10 @@ feature {NONE}  -- Externals
 			"C++ [ecom_control_library::IOleInPlaceActiveObject_impl_proxy %"ecom_control_library_IOleInPlaceActiveObject_impl_proxy_s.h%"](EIF_INTEGER)"
 		end
 
-	ccom_remote_resize_border (cpp_obj: POINTER; prc_border: POINTER; riid: POINTER; p_uiwindow: POINTER; f_frame_window: INTEGER) is
+	ccom_resize_border (cpp_obj: POINTER; prc_border: POINTER; p_uiwindow: POINTER; f_frame_window: INTEGER) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IOleInPlaceActiveObject_impl_proxy %"ecom_control_library_IOleInPlaceActiveObject_impl_proxy_s.h%"](ecom_control_library::tagRECT *,GUID *,ecom_control_library::IOleInPlaceUIWindow *,EIF_INTEGER)"
+			"C++ [ecom_control_library::IOleInPlaceActiveObject_impl_proxy %"ecom_control_library_IOleInPlaceActiveObject_impl_proxy_s.h%"](ecom_control_library::tagRECT *,::IOleInPlaceUIWindow *,EIF_INTEGER)"
 		end
 
 	ccom_enable_modeless (cpp_obj: POINTER; f_enable: INTEGER) is

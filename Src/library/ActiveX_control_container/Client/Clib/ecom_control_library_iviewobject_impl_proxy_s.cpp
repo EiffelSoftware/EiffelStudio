@@ -47,7 +47,7 @@ ecom_control_library::IViewObject_impl_proxy::~IViewObject_impl_proxy()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_control_library::IViewObject_impl_proxy::ccom_draw(  /* [in] */ EIF_INTEGER dw_draw_aspect,  /* [in] */ EIF_INTEGER lindex,  /* [in] */ EIF_INTEGER pv_aspect,  /* [in] */ ecom_control_library::tagDVTARGETDEVICE * ptd,  /* [in] */ EIF_INTEGER hdc_target_dev,  /* [in] */ EIF_INTEGER hdc_draw,  /* [in] */ ecom_control_library::_RECTL * lprc_bounds,  /* [in] */ ecom_control_library::_RECTL * lprc_wbounds,  /* [in] */ ecom_control_library::IContinue * p_continue )
+void ecom_control_library::IViewObject_impl_proxy::ccom_draw(  /* [in] */ EIF_INTEGER dw_draw_aspect,  /* [in] */ EIF_INTEGER lindex,  /* [in] */ EIF_INTEGER pv_aspect,  /* [in] */ ecom_control_library::tagDVTARGETDEVICE * ptd,  /* [in] */ EIF_INTEGER hdc_target_dev,  /* [in] */ EIF_INTEGER hdc_draw,  /* [in] */ ecom_control_library::_RECTL * lprc_bounds,  /* [in] */ ecom_control_library::_RECTL * lprc_wbounds )
 
 /*-----------------------------------------------------------
   No description available.
@@ -75,7 +75,7 @@ void ecom_control_library::IViewObject_impl_proxy::ccom_draw(  /* [in] */ EIF_IN
   ULONG tmp_hdc_draw = 0;
   tmp_hdc_draw = (ULONG)hdc_draw;
   
-  hr = p_IViewObject->Draw(tmp_dw_draw_aspect,tmp_lindex,tmp_pv_aspect,ptd,tmp_hdc_target_dev,tmp_hdc_draw,lprc_bounds,lprc_wbounds,p_continue);
+  hr = p_IViewObject->Draw(tmp_dw_draw_aspect, tmp_lindex, (void*)tmp_pv_aspect, (DVTARGETDEVICE *)ptd, (HDC)tmp_hdc_target_dev, (HDC)tmp_hdc_draw, (const LPRECTL)lprc_bounds, (const LPRECTL)lprc_wbounds, NULL, 0);
   if (FAILED (hr))
   {
     if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -115,7 +115,7 @@ void ecom_control_library::IViewObject_impl_proxy::ccom_get_color_set(  /* [in] 
   ecom_control_library::tagLOGPALETTE * * tmp_pp_color_set = 0;
   tmp_pp_color_set = (ecom_control_library::tagLOGPALETTE * *)grt_ec_control_interfaces2.ccom_ec_pointed_cell_384 (eif_access (pp_color_set), NULL);
   
-  hr = p_IViewObject->GetColorSet(tmp_dw_draw_aspect,tmp_lindex,tmp_pv_aspect,ptd,tmp_hic_target_dev,tmp_pp_color_set);
+  hr = p_IViewObject->GetColorSet(tmp_dw_draw_aspect, tmp_lindex, (void*)tmp_pv_aspect, (DVTARGETDEVICE *)ptd, (HDC)tmp_hic_target_dev, (LOGPALETTE **)tmp_pp_color_set);
   if (FAILED (hr))
   {
     if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -155,7 +155,7 @@ void ecom_control_library::IViewObject_impl_proxy::ccom_freeze(  /* [in] */ EIF_
   ULONG * tmp_pdw_freeze = 0;
   tmp_pdw_freeze = (ULONG *)rt_ec.ccom_ec_pointed_unsigned_long (eif_access (pdw_freeze), NULL);
   
-  hr = p_IViewObject->Freeze(tmp_dw_draw_aspect,tmp_lindex,tmp_pv_aspect,tmp_pdw_freeze);
+  hr = p_IViewObject->Freeze(tmp_dw_draw_aspect, tmp_lindex, (void*)tmp_pv_aspect,tmp_pdw_freeze);
   if (FAILED (hr))
   {
     if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -201,7 +201,7 @@ void ecom_control_library::IViewObject_impl_proxy::ccom_unfreeze(  /* [in] */ EI
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_control_library::IViewObject_impl_proxy::ccom_set_advise(  /* [in] */ EIF_INTEGER aspects,  /* [in] */ EIF_INTEGER advf,  /* [in] */ ecom_control_library::IAdviseSink * p_adv_sink )
+void ecom_control_library::IViewObject_impl_proxy::ccom_set_advise(  /* [in] */ EIF_INTEGER aspects,  /* [in] */ EIF_INTEGER advf,  /* [in] */ ::IAdviseSink * p_adv_sink )
 
 /*-----------------------------------------------------------
   No description available.
@@ -256,8 +256,8 @@ void ecom_control_library::IViewObject_impl_proxy::ccom_get_advise(  /* [out] */
   tmp_p_aspects = (ULONG *)rt_ec.ccom_ec_pointed_unsigned_long (eif_access (p_aspects), NULL);
   ULONG * tmp_p_advf = 0;
   tmp_p_advf = (ULONG *)rt_ec.ccom_ec_pointed_unsigned_long (eif_access (p_advf), NULL);
-  ecom_control_library::IAdviseSink * * tmp_pp_adv_sink = 0;
-  tmp_pp_adv_sink = (ecom_control_library::IAdviseSink * *)grt_ec_control_interfaces2.ccom_ec_pointed_cell_388 (eif_access (pp_adv_sink), NULL);
+  ::IAdviseSink * * tmp_pp_adv_sink = 0;
+  tmp_pp_adv_sink = (::IAdviseSink * *)grt_ec_control_interfaces2.ccom_ec_pointed_cell_388 (eif_access (pp_adv_sink), NULL);
   
   hr = p_IViewObject->GetAdvise(tmp_p_aspects,tmp_p_advf,tmp_pp_adv_sink);
   if (FAILED (hr))
@@ -268,7 +268,7 @@ void ecom_control_library::IViewObject_impl_proxy::ccom_get_advise(  /* [out] */
   };
   rt_ce.ccom_ce_pointed_unsigned_long ((ULONG *)tmp_p_aspects, p_aspects);
   rt_ce.ccom_ce_pointed_unsigned_long ((ULONG *)tmp_p_advf, p_advf);
-  grt_ce_control_interfaces2.ccom_ce_pointed_cell_388 ((ecom_control_library::IAdviseSink * *)tmp_pp_adv_sink, pp_adv_sink);
+  grt_ce_control_interfaces2.ccom_ce_pointed_cell_388 ((::IAdviseSink * *)tmp_pp_adv_sink, pp_adv_sink);
   
   grt_ce_control_interfaces2.ccom_free_memory_pointed_386 (tmp_p_aspects);
 grt_ce_control_interfaces2.ccom_free_memory_pointed_387 (tmp_p_advf);

@@ -66,25 +66,25 @@ namespace ecom_control_library
 class IBindHost : public IUnknown
 {
 public:
-	IBindHost () {};
-	~IBindHost () {};
+  IBindHost () {};
+  ~IBindHost () {};
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP CreateMoniker(  /* [in] */ LPWSTR sz_name, /* [in] */ ecom_control_library::IBindCtx * pbc, /* [out] */ ecom_control_library::IMoniker * * ppmk, /* [in] */ ULONG dw_reserved ) = 0;
-
-
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP RemoteMonikerBindToStorage(  /* [in] */ ecom_control_library::IMoniker * pmk, /* [in] */ ecom_control_library::IBindCtx * pbc, /* [in] */ ecom_control_library::IBindStatusCallback * p_bsc, /* [in] */ GUID * riid, /* [out] */ IUnknown * * ppv_obj ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP CreateMoniker(  /* [in] */ LPWSTR sz_name, /* [in] */ ecom_control_library::IBindCtx * pbc, /* [out] */ ecom_control_library::IMoniker * * ppmk, /* [in] */ ULONG dw_reserved ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP RemoteMonikerBindToObject(  /* [in] */ ecom_control_library::IMoniker * pmk, /* [in] */ ecom_control_library::IBindCtx * pbc, /* [in] */ ecom_control_library::IBindStatusCallback * p_bsc, /* [in] */ GUID * riid, /* [out] */ IUnknown * * ppv_obj ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP MonikerBindToStorage(  /* [in] */ ecom_control_library::IMoniker * pmk, /* [in] */ ecom_control_library::IBindCtx * pbc, /* [in] */ ecom_control_library::IBindStatusCallback * p_bsc, /* [in] */ GUID * riid, /* [out] */ IUnknown * * ppv_obj ) = 0;
+
+
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP MonikerBindToObject(  /* [in] */ ecom_control_library::IMoniker * pmk, /* [in] */ ecom_control_library::IBindCtx * pbc, /* [in] */ ecom_control_library::IBindStatusCallback * p_bsc, /* [in] */ GUID * riid, /* [out] */ IUnknown * * ppv_obj ) = 0;
 
 
 

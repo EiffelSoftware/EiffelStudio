@@ -77,23 +77,22 @@ feature -- Basic Operations
 			ccom_on_stop_binding (initializer, hresult, sz_error)
 		end
 
-	remote_get_bind_info (grf_bindf: INTEGER_REF; pbindinfo: X_TAG_REM_BINDINFO_RECORD; p_stgmed: TAG_REM_STGMEDIUM_RECORD) is
+	get_bind_info (grf_bindf: INTEGER_REF; pbindinfo: X_TAG_REM_BINDINFO_RECORD) is
 			-- No description available.
 			-- `grf_bindf' [out].  
 			-- `pbindinfo' [in, out].  
-			-- `p_stgmed' [in, out].  
 		do
-			ccom_remote_get_bind_info (initializer, grf_bindf, pbindinfo.item, p_stgmed.item)
+			ccom_get_bind_info (initializer, grf_bindf, pbindinfo.item)
 		end
 
-	remote_on_data_available (grf_bscf: INTEGER; dw_size: INTEGER; p_formatetc: TAG_REM_FORMATETC_RECORD; p_stgmed: TAG_REM_STGMEDIUM_RECORD) is
+	on_data_available (grf_bscf: INTEGER; dw_size: INTEGER; p_formatetc: TAG_REM_FORMATETC_RECORD; p_stgmed: TAG_REM_STGMEDIUM_RECORD) is
 			-- No description available.
 			-- `grf_bscf' [in].  
 			-- `dw_size' [in].  
 			-- `p_formatetc' [in].  
 			-- `p_stgmed' [in].  
 		do
-			ccom_remote_on_data_available (initializer, grf_bscf, dw_size, p_formatetc.item, p_stgmed.item)
+			ccom_on_data_available (initializer, grf_bscf, dw_size, p_formatetc.item, p_stgmed.item)
 		end
 
 	on_object_available (riid: ECOM_GUID; punk: ECOM_INTERFACE) is
@@ -129,7 +128,7 @@ feature {NONE}  -- Externals
 	ccom_on_start_binding (cpp_obj: POINTER; dw_reserved: INTEGER; pib: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IBindStatusCallback_impl_proxy %"ecom_control_library_IBindStatusCallback_impl_proxy_s.h%"](EIF_INTEGER,ecom_control_library::IBinding *)"
+			"C++ [ecom_control_library::IBindStatusCallback_impl_proxy %"ecom_control_library_IBindStatusCallback_impl_proxy_s.h%"](EIF_INTEGER,::IBinding *)"
 		end
 
 	ccom_get_priority (cpp_obj: POINTER; pn_priority: INTEGER_REF) is
@@ -156,13 +155,13 @@ feature {NONE}  -- Externals
 			"C++ [ecom_control_library::IBindStatusCallback_impl_proxy %"ecom_control_library_IBindStatusCallback_impl_proxy_s.h%"](EIF_OBJECT,EIF_OBJECT)"
 		end
 
-	ccom_remote_get_bind_info (cpp_obj: POINTER; grf_bindf: INTEGER_REF; pbindinfo: POINTER; p_stgmed: POINTER) is
+	ccom_get_bind_info (cpp_obj: POINTER; grf_bindf: INTEGER_REF; pbindinfo: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IBindStatusCallback_impl_proxy %"ecom_control_library_IBindStatusCallback_impl_proxy_s.h%"](EIF_OBJECT,ecom_control_library::_tagRemBINDINFO *,ecom_control_library::tagRemSTGMEDIUM *)"
+			"C++ [ecom_control_library::IBindStatusCallback_impl_proxy %"ecom_control_library_IBindStatusCallback_impl_proxy_s.h%"](EIF_OBJECT,ecom_control_library::_tagRemBINDINFO *)"
 		end
 
-	ccom_remote_on_data_available (cpp_obj: POINTER; grf_bscf: INTEGER; dw_size: INTEGER; p_formatetc: POINTER; p_stgmed: POINTER) is
+	ccom_on_data_available (cpp_obj: POINTER; grf_bscf: INTEGER; dw_size: INTEGER; p_formatetc: POINTER; p_stgmed: POINTER) is
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IBindStatusCallback_impl_proxy %"ecom_control_library_IBindStatusCallback_impl_proxy_s.h%"](EIF_INTEGER,EIF_INTEGER,ecom_control_library::tagRemFORMATETC *,ecom_control_library::tagRemSTGMEDIUM *)"

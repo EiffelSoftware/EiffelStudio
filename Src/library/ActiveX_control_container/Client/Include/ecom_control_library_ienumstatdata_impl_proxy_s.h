@@ -35,37 +35,37 @@ namespace ecom_control_library
 class IEnumSTATDATA_impl_proxy
 {
 public:
-	IEnumSTATDATA_impl_proxy (IUnknown * a_pointer);
-	virtual ~IEnumSTATDATA_impl_proxy ();
+  IEnumSTATDATA_impl_proxy (IUnknown * a_pointer);
+  virtual ~IEnumSTATDATA_impl_proxy ();
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_remote_next(  /* [in] */ EIF_INTEGER celt,  /* [out] */ ecom_control_library::tagSTATDATA * rgelt,  /* [out] */ EIF_OBJECT pcelt_fetched );
-
-
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_skip(  /* [in] */ EIF_INTEGER celt );
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_next(  /* [in] */ EIF_INTEGER celt,  /* [out] */ ecom_control_library::tagSTATDATA * rgelt,  /* [out] */ EIF_OBJECT pcelt_fetched );
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_reset();
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_skip(  /* [in] */ EIF_INTEGER celt );
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_clone1(  /* [out] */ EIF_OBJECT ppenum );
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_reset();
 
 
-	/*-----------------------------------------------------------
-	IUnknown interface
-	-----------------------------------------------------------*/
-	EIF_POINTER ccom_item();
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_clone1(  /* [out] */ EIF_OBJECT ppenum );
+
+
+  /*-----------------------------------------------------------
+  IUnknown interface
+  -----------------------------------------------------------*/
+  EIF_POINTER ccom_item();
 
 
 
@@ -73,16 +73,16 @@ protected:
 
 
 private:
-	/*-----------------------------------------------------------
-	Interface pointer
-	-----------------------------------------------------------*/
-	ecom_control_library::IEnumSTATDATA * p_IEnumSTATDATA;
+  /*-----------------------------------------------------------
+  Interface pointer
+  -----------------------------------------------------------*/
+  ::IEnumSTATDATA * p_IEnumSTATDATA;
 
 
-	/*-----------------------------------------------------------
-	Default IUnknown interface pointer
-	-----------------------------------------------------------*/
-	IUnknown * p_unknown;
+  /*-----------------------------------------------------------
+  Default IUnknown interface pointer
+  -----------------------------------------------------------*/
+  IUnknown * p_unknown;
 
 
 

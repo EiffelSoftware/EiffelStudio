@@ -25,17 +25,14 @@ feature {NONE}  -- Initialization
 
 feature -- Basic Operations
 
-	remote_read (psz_prop_name: STRING; p_var: ECOM_VARIANT; p_error_log: IERROR_LOG_INTERFACE; var_type: INTEGER; p_unk_obj: ECOM_INTERFACE) is
+	read (psz_prop_name: STRING; p_var: ECOM_VARIANT; p_error_log: IERROR_LOG_INTERFACE) is
 			-- No description available.
 			-- `psz_prop_name' [in].  
 			-- `p_var' [out].  
 			-- `p_error_log' [in].  
-			-- `var_type' [in].  
-			-- `p_unk_obj' [in].  
 		local
 			p_error_log_item: POINTER
 			a_stub: ECOM_STUB
-			p_unk_obj_item: POINTER
 		do
 			if p_error_log /= Void then
 				if (p_error_log.item = default_pointer) then
@@ -46,16 +43,7 @@ feature -- Basic Operations
 				end
 				p_error_log_item := p_error_log.item
 			end
-			if p_unk_obj /= Void then
-				if (p_unk_obj.item = default_pointer) then
-					a_stub ?= p_unk_obj
-					if a_stub /= Void then
-						a_stub.create_item
-					end
-				end
-				p_unk_obj_item := p_unk_obj.item
-			end
-			ccom_remote_read (initializer, psz_prop_name, p_var.item, p_error_log_item, var_type, p_unk_obj_item)
+			ccom_read (initializer, psz_prop_name, p_var.item, p_error_log_item)
 		end
 
 	write (psz_prop_name: STRING; p_var: ECOM_VARIANT) is
@@ -76,10 +64,10 @@ feature {NONE}  -- Implementation
 
 feature {NONE}  -- Externals
 
-	ccom_remote_read (cpp_obj: POINTER; psz_prop_name: STRING; p_var: POINTER; p_error_log: POINTER; var_type: INTEGER; p_unk_obj: POINTER) is
+	ccom_read (cpp_obj: POINTER; psz_prop_name: STRING; p_var: POINTER; p_error_log: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IPropertyBag_impl_proxy %"ecom_control_library_IPropertyBag_impl_proxy_s.h%"](EIF_OBJECT,VARIANT *,ecom_control_library::IErrorLog *,EIF_INTEGER,IUnknown *)"
+			"C++ [ecom_control_library::IPropertyBag_impl_proxy %"ecom_control_library_IPropertyBag_impl_proxy_s.h%"](EIF_OBJECT,VARIANT *,::IErrorLog *)"
 		end
 
 	ccom_write (cpp_obj: POINTER; psz_prop_name: STRING; p_var: POINTER) is

@@ -70,61 +70,61 @@ namespace ecom_control_library
 class IDataObject : public IUnknown
 {
 public:
-	IDataObject () {};
-	~IDataObject () {};
+  IDataObject () {};
+  ~IDataObject () {};
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP RemoteGetData(  /* [in] */ ecom_control_library::tagFORMATETC * pformatetc_in, /* [out] */ ecom_control_library::wireSTGMEDIUM * p_remote_medium ) = 0;
-
-
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP RemoteGetDataHere(  /* [in] */ ecom_control_library::tagFORMATETC * p_formatetc, /* [in, out] */ ecom_control_library::wireSTGMEDIUM * p_remote_medium ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP GetData(  /* [in] */ ecom_control_library::tagFORMATETC * pformatetc_in, /* [out] */ ecom_control_library::_userSTGMEDIUM * * p_medium ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP QueryGetData(  /* [in] */ ecom_control_library::tagFORMATETC * p_formatetc ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP GetDataHere(  /* [in] */ ecom_control_library::tagFORMATETC * p_formatetc, /* [in, out] */ ecom_control_library::_userSTGMEDIUM * * p_medium ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP GetCanonicalFormatEtc(  /* [in] */ ecom_control_library::tagFORMATETC * pformatect_in, /* [out] */ ecom_control_library::tagFORMATETC * pformatetc_out ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP QueryGetData(  /* [in] */ ecom_control_library::tagFORMATETC * p_formatetc ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP RemoteSetData(  /* [in] */ ecom_control_library::tagFORMATETC * p_formatetc, /* [in] */ ecom_control_library::wireFLAG_STGMEDIUM * pmedium, /* [in] */ LONG f_release ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP GetCanonicalFormatEtc(  /* [in] */ ecom_control_library::tagFORMATETC * pformatect_in, /* [out] */ ecom_control_library::tagFORMATETC * pformatetc_out ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP EnumFormatEtc(  /* [in] */ ULONG dw_direction, /* [out] */ ecom_control_library::IEnumFORMATETC * * ppenum_format_etc ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP SetData(  /* [in] */ ecom_control_library::tagFORMATETC * p_formatetc, /* [in] */ ecom_control_library::_userFLAG_STGMEDIUM * * pmedium, /* [in] */ LONG f_release ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP DAdvise(  /* [in] */ ecom_control_library::tagFORMATETC * p_formatetc, /* [in] */ ULONG advf, /* [in] */ ecom_control_library::IAdviseSink * p_adv_sink, /* [out] */ ULONG * pdw_connection ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP EnumFormatEtc(  /* [in] */ ULONG dw_direction, /* [out] */ ecom_control_library::IEnumFORMATETC * * ppenum_format_etc ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP DUnadvise(  /* [in] */ ULONG dw_connection ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP DAdvise(  /* [in] */ ecom_control_library::tagFORMATETC * p_formatetc, /* [in] */ ULONG advf, /* [in] */ ecom_control_library::IAdviseSink * p_adv_sink, /* [out] */ ULONG * pdw_connection ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP EnumDAdvise(  /* [out] */ ecom_control_library::IEnumSTATDATA * * ppenum_advise ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP DUnadvise(  /* [in] */ ULONG dw_connection ) = 0;
+
+
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP EnumDAdvise(  /* [out] */ ecom_control_library::IEnumSTATDATA * * ppenum_advise ) = 0;
 
 
 

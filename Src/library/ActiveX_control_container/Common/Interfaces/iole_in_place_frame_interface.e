@@ -17,7 +17,7 @@ feature -- Status Report
 			Result := True
 		end
 
-	set_menu_user_precondition (hmenu_shared: POINTER; holemenu: WIRE_HGLOBAL_ALIAS; hwnd_active_object: POINTER): BOOLEAN is
+	set_menu_user_precondition (hmenu_shared: POINTER; holemenu: POINTER; hwnd_active_object: POINTER): BOOLEAN is
 			-- User-defined preconditions for `set_menu'.
 			-- Redefine in descendants if needed.
 		do
@@ -66,7 +66,7 @@ feature -- Basic Operations
 
 		end
 
-	set_menu (hmenu_shared: POINTER; holemenu: WIRE_HGLOBAL_ALIAS; hwnd_active_object: POINTER) is
+	set_menu (hmenu_shared: POINTER; holemenu: POINTER; hwnd_active_object: POINTER) is
 			-- No description available.
 			-- `hmenu_shared' [in].  
 			-- `holemenu' [in].  

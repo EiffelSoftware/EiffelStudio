@@ -67,13 +67,13 @@ feature -- Basic Operations
 			ccom_init_cache (initializer, p_data_object_item)
 		end
 
-	set_data (p_formatetc: TAG_FORMATETC_RECORD; pmedium: CELL [WIRE_STGMEDIUM_ALIAS]; f_release: INTEGER) is
+	set_data (p_formatetc: TAG_FORMATETC_RECORD; pmedium: STGMEDIUM_RECORD; f_release: INTEGER) is
 			-- No description available.
 			-- `p_formatetc' [in].  
 			-- `pmedium' [in].  
 			-- `f_release' [in].  
 		do
-			ccom_set_data (initializer, p_formatetc.item, pmedium, f_release)
+			ccom_set_data (initializer, p_formatetc.item, pmedium.item, f_release)
 		end
 
 feature {NONE}  -- Implementation
@@ -107,13 +107,13 @@ feature {NONE}  -- Externals
 	ccom_init_cache (cpp_obj: POINTER; p_data_object: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IOleCache_impl_proxy %"ecom_control_library_IOleCache_impl_proxy_s.h%"](ecom_control_library::IDataObject *)"
+			"C++ [ecom_control_library::IOleCache_impl_proxy %"ecom_control_library_IOleCache_impl_proxy_s.h%"](::IDataObject *)"
 		end
 
-	ccom_set_data (cpp_obj: POINTER; p_formatetc: POINTER; pmedium: CELL [WIRE_STGMEDIUM_ALIAS]; f_release: INTEGER) is
+	ccom_set_data (cpp_obj: POINTER; p_formatetc: POINTER; pmedium: POINTER; f_release: INTEGER) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IOleCache_impl_proxy %"ecom_control_library_IOleCache_impl_proxy_s.h%"](ecom_control_library::tagFORMATETC *,EIF_OBJECT,EIF_INTEGER)"
+			"C++ [ecom_control_library::IOleCache_impl_proxy %"ecom_control_library_IOleCache_impl_proxy_s.h%"](ecom_control_library::tagFORMATETC *,STGMEDIUM *,EIF_INTEGER)"
 		end
 
 	ccom_delete_iole_cache_impl_proxy (a_pointer: POINTER) is

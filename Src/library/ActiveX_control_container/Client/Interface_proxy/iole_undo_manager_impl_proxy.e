@@ -195,19 +195,19 @@ feature {NONE}  -- Externals
 	ccom_open (cpp_obj: POINTER; p_puu: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IOleUndoManager_impl_proxy %"ecom_control_library_IOleUndoManager_impl_proxy_s.h%"](ecom_control_library::IOleParentUndoUnit *)"
+			"C++ [ecom_control_library::IOleUndoManager_impl_proxy %"ecom_control_library_IOleUndoManager_impl_proxy_s.h%"](::IOleParentUndoUnit *)"
 		end
 
 	ccom_close (cpp_obj: POINTER; p_puu: POINTER; f_commit: INTEGER) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IOleUndoManager_impl_proxy %"ecom_control_library_IOleUndoManager_impl_proxy_s.h%"](ecom_control_library::IOleParentUndoUnit *,EIF_INTEGER)"
+			"C++ [ecom_control_library::IOleUndoManager_impl_proxy %"ecom_control_library_IOleUndoManager_impl_proxy_s.h%"](::IOleParentUndoUnit *,EIF_INTEGER)"
 		end
 
 	ccom_add (cpp_obj: POINTER; p_uu: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IOleUndoManager_impl_proxy %"ecom_control_library_IOleUndoManager_impl_proxy_s.h%"](ecom_control_library::IOleUndoUnit *)"
+			"C++ [ecom_control_library::IOleUndoManager_impl_proxy %"ecom_control_library_IOleUndoManager_impl_proxy_s.h%"](::IOleUndoUnit *)"
 		end
 
 	ccom_get_open_parent_state (cpp_obj: POINTER; pdw_state: INTEGER_REF) is
@@ -219,19 +219,19 @@ feature {NONE}  -- Externals
 	ccom_discard_from (cpp_obj: POINTER; p_uu: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IOleUndoManager_impl_proxy %"ecom_control_library_IOleUndoManager_impl_proxy_s.h%"](ecom_control_library::IOleUndoUnit *)"
+			"C++ [ecom_control_library::IOleUndoManager_impl_proxy %"ecom_control_library_IOleUndoManager_impl_proxy_s.h%"](::IOleUndoUnit *)"
 		end
 
 	ccom_undo_to (cpp_obj: POINTER; p_uu: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IOleUndoManager_impl_proxy %"ecom_control_library_IOleUndoManager_impl_proxy_s.h%"](ecom_control_library::IOleUndoUnit *)"
+			"C++ [ecom_control_library::IOleUndoManager_impl_proxy %"ecom_control_library_IOleUndoManager_impl_proxy_s.h%"](::IOleUndoUnit *)"
 		end
 
 	ccom_redo_to (cpp_obj: POINTER; p_uu: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IOleUndoManager_impl_proxy %"ecom_control_library_IOleUndoManager_impl_proxy_s.h%"](ecom_control_library::IOleUndoUnit *)"
+			"C++ [ecom_control_library::IOleUndoManager_impl_proxy %"ecom_control_library_IOleUndoManager_impl_proxy_s.h%"](::IOleUndoUnit *)"
 		end
 
 	ccom_enum_undoable (cpp_obj: POINTER; ppenum: CELL [IENUM_OLE_UNDO_UNITS_INTERFACE]) is

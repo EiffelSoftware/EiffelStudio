@@ -97,7 +97,7 @@ feature {NONE}  -- Externals
 	ccom_drag_enter (cpp_obj: POINTER; p_data_obj: POINTER; grf_key_state: INTEGER; pt: POINTER; pdw_effect: INTEGER_REF) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IDropTarget_impl_proxy %"ecom_control_library_IDropTarget_impl_proxy_s.h%"](ecom_control_library::IDataObject *,EIF_INTEGER,ecom_control_library::_POINTL *,EIF_OBJECT)"
+			"C++ [ecom_control_library::IDropTarget_impl_proxy %"ecom_control_library_IDropTarget_impl_proxy_s.h%"](::IDataObject *,EIF_INTEGER,ecom_control_library::_POINTL *,EIF_OBJECT)"
 		end
 
 	ccom_drag_over (cpp_obj: POINTER; grf_key_state: INTEGER; pt: POINTER; pdw_effect: INTEGER_REF) is
@@ -115,7 +115,7 @@ feature {NONE}  -- Externals
 	ccom_drop (cpp_obj: POINTER; p_data_obj: POINTER; grf_key_state: INTEGER; pt: POINTER; pdw_effect: INTEGER_REF) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IDropTarget_impl_proxy %"ecom_control_library_IDropTarget_impl_proxy_s.h%"](ecom_control_library::IDataObject *,EIF_INTEGER,ecom_control_library::_POINTL *,EIF_OBJECT)"
+			"C++ [ecom_control_library::IDropTarget_impl_proxy %"ecom_control_library_IDropTarget_impl_proxy_s.h%"](::IDataObject *,EIF_INTEGER,ecom_control_library::_POINTL *,EIF_OBJECT)"
 		end
 
 	ccom_delete_idrop_target_impl_proxy (a_pointer: POINTER) is

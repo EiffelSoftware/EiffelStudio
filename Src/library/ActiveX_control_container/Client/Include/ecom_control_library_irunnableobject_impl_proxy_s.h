@@ -35,43 +35,43 @@ namespace ecom_control_library
 class IRunnableObject_impl_proxy
 {
 public:
-	IRunnableObject_impl_proxy (IUnknown * a_pointer);
-	virtual ~IRunnableObject_impl_proxy ();
+  IRunnableObject_impl_proxy (IUnknown * a_pointer);
+  virtual ~IRunnableObject_impl_proxy ();
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_get_running_class(  /* [out] */ GUID * lp_clsid );
-
-
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_run(  /* [in] */ ecom_control_library::IBindCtx * pbc );
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_get_running_class(  /* [out] */ GUID * lp_clsid );
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_remote_is_running();
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_run(  /* [in] */ ::IBindCtx * pbc );
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_lock_running(  /* [in] */ EIF_INTEGER f_lock,  /* [in] */ EIF_INTEGER f_last_unlock_closes );
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_is_running();
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_set_contained_object(  /* [in] */ EIF_INTEGER f_contained );
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_lock_running(  /* [in] */ EIF_INTEGER f_lock,  /* [in] */ EIF_INTEGER f_last_unlock_closes );
 
 
-	/*-----------------------------------------------------------
-	IUnknown interface
-	-----------------------------------------------------------*/
-	EIF_POINTER ccom_item();
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_set_contained_object(  /* [in] */ EIF_INTEGER f_contained );
+
+
+  /*-----------------------------------------------------------
+  IUnknown interface
+  -----------------------------------------------------------*/
+  EIF_POINTER ccom_item();
 
 
 
@@ -79,16 +79,16 @@ protected:
 
 
 private:
-	/*-----------------------------------------------------------
-	Interface pointer
-	-----------------------------------------------------------*/
-	ecom_control_library::IRunnableObject * p_IRunnableObject;
+  /*-----------------------------------------------------------
+  Interface pointer
+  -----------------------------------------------------------*/
+  ::IRunnableObject * p_IRunnableObject;
 
 
-	/*-----------------------------------------------------------
-	Default IUnknown interface pointer
-	-----------------------------------------------------------*/
-	IUnknown * p_unknown;
+  /*-----------------------------------------------------------
+  Default IUnknown interface pointer
+  -----------------------------------------------------------*/
+  IUnknown * p_unknown;
 
 
 

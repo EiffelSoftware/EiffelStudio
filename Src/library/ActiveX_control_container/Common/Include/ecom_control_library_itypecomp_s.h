@@ -62,19 +62,19 @@ namespace ecom_control_library
 class ITypeComp : public IUnknown
 {
 public:
-	ITypeComp () {};
-	~ITypeComp () {};
+  ITypeComp () {};
+  ~ITypeComp () {};
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP RemoteBind(  /* [in] */ LPWSTR sz_name, /* [in] */ ULONG l_hash_val, /* [in] */ USHORT w_flags, /* [out] */ ecom_control_library::ITypeInfo_2 * * pp_tinfo, /* [out] */ long * p_desc_kind, /* [out] */ ecom_control_library::tagFUNCDESC * * pp_func_desc, /* [out] */ ecom_control_library::tagVARDESC * * pp_var_desc, /* [out] */ ecom_control_library::ITypeComp * * pp_type_comp, /* [out] */ ecom_control_library::DWORD1 * p_dummy ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP Bind(  /* [in] */ LPWSTR sz_name, /* [in] */ ULONG l_hash_val, /* [in] */ USHORT w_flags, /* [out] */ ecom_control_library::ITypeInfo_2 * * pp_tinfo, /* [out] */ long * p_desc_kind, /* [out] */ ecom_control_library::tagFUNCDESC * * pp_func_desc, /* [out] */ ecom_control_library::tagVARDESC * * pp_var_desc, /* [out] */ ecom_control_library::ITypeComp * * pp_type_comp, /* [out] */ ecom_control_library::DWORD1 * p_dummy ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP RemoteBindType(  /* [in] */ LPWSTR sz_name, /* [in] */ ULONG l_hash_val, /* [out] */ ecom_control_library::ITypeInfo_2 * * pp_tinfo ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP BindType(  /* [in] */ LPWSTR sz_name, /* [in] */ ULONG l_hash_val, /* [out] */ ecom_control_library::ITypeInfo_2 * * pp_tinfo ) = 0;
 
 
 

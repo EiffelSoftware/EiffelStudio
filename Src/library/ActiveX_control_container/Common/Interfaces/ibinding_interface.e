@@ -45,8 +45,8 @@ feature -- Status Report
 			Result := True
 		end
 
-	remote_get_bind_result_user_precondition (pclsid_protocol: ECOM_GUID; pdw_result: INTEGER_REF; psz_result: CELL [STRING]; dw_reserved: INTEGER): BOOLEAN is
-			-- User-defined preconditions for `remote_get_bind_result'.
+	get_bind_result_user_precondition (pclsid_protocol: ECOM_GUID; pdw_result: INTEGER_REF; psz_result: CELL [STRING]; dw_reserved: INTEGER): BOOLEAN is
+			-- User-defined preconditions for `get_bind_result'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -97,7 +97,7 @@ feature -- Basic Operations
 
 		end
 
-	remote_get_bind_result (pclsid_protocol: ECOM_GUID; pdw_result: INTEGER_REF; psz_result: CELL [STRING]; dw_reserved: INTEGER) is
+	get_bind_result (pclsid_protocol: ECOM_GUID; pdw_result: INTEGER_REF; psz_result: CELL [STRING]; dw_reserved: INTEGER) is
 			-- No description available.
 			-- `pclsid_protocol' [out].  
 			-- `pdw_result' [out].  
@@ -108,7 +108,7 @@ feature -- Basic Operations
 			valid_pclsid_protocol: pclsid_protocol.item /= default_pointer
 			non_void_pdw_result: pdw_result /= Void
 			non_void_psz_result: psz_result /= Void
-			remote_get_bind_result_user_precondition: remote_get_bind_result_user_precondition (pclsid_protocol, pdw_result, psz_result, dw_reserved)
+			get_bind_result_user_precondition: get_bind_result_user_precondition (pclsid_protocol, pdw_result, psz_result, dw_reserved)
 		deferred
 
 		ensure

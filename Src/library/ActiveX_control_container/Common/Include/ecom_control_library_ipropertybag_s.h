@@ -46,19 +46,19 @@ namespace ecom_control_library
 class IPropertyBag : public IUnknown
 {
 public:
-	IPropertyBag () {};
-	~IPropertyBag () {};
+  IPropertyBag () {};
+  ~IPropertyBag () {};
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP RemoteRead(  /* [in] */ LPWSTR psz_prop_name, /* [out] */ VARIANT * p_var, /* [in] */ ecom_control_library::IErrorLog * p_error_log, /* [in] */ ULONG var_type, /* [in] */ IUnknown * p_unk_obj ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP Read(  /* [in] */ LPWSTR psz_prop_name, /* [out] */ VARIANT * p_var, /* [in] */ ecom_control_library::IErrorLog * p_error_log, /* [in] */ ULONG var_type, /* [in] */ IUnknown * p_unk_obj ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP Write(  /* [in] */ LPWSTR psz_prop_name, /* [in] */ VARIANT * p_var ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP Write(  /* [in] */ LPWSTR psz_prop_name, /* [in] */ VARIANT * p_var ) = 0;
 
 
 

@@ -70,97 +70,97 @@ namespace ecom_control_library
 class IMoniker : public ecom_control_library::IPersistStream
 {
 public:
-	IMoniker () {};
-	~IMoniker () {};
+  IMoniker () {};
+  ~IMoniker () {};
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP RemoteBindToObject(  /* [in] */ ecom_control_library::IBindCtx * pbc, /* [in] */ ecom_control_library::IMoniker * pmk_to_left, /* [in] */ GUID * riid_result, /* [out] */ IUnknown * * ppv_result ) = 0;
-
-
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP RemoteBindToStorage(  /* [in] */ ecom_control_library::IBindCtx * pbc, /* [in] */ ecom_control_library::IMoniker * pmk_to_left, /* [in] */ GUID * riid, /* [out] */ IUnknown * * ppv_obj ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP BindToObject(  /* [in] */ ecom_control_library::IBindCtx * pbc, /* [in] */ ecom_control_library::IMoniker * pmk_to_left, /* [in] */ GUID * riid_result, /* [out] */ IUnknown * * ppv_result ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP Reduce(  /* [in] */ ecom_control_library::IBindCtx * pbc, /* [in] */ ULONG dw_reduce_how_far, /* [in, out] */ ecom_control_library::IMoniker * * ppmk_to_left, /* [out] */ ecom_control_library::IMoniker * * ppmk_reduced ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP BindToStorage(  /* [in] */ ecom_control_library::IBindCtx * pbc, /* [in] */ ecom_control_library::IMoniker * pmk_to_left, /* [in] */ GUID * riid, /* [out] */ IUnknown * * ppv_obj ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP ComposeWith(  /* [in] */ ecom_control_library::IMoniker * pmk_right, /* [in] */ LONG f_only_if_not_generic, /* [out] */ ecom_control_library::IMoniker * * ppmk_composite ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP Reduce(  /* [in] */ ecom_control_library::IBindCtx * pbc, /* [in] */ ULONG dw_reduce_how_far, /* [in, out] */ ecom_control_library::IMoniker * * ppmk_to_left, /* [out] */ ecom_control_library::IMoniker * * ppmk_reduced ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP Enum(  /* [in] */ LONG f_forward, /* [out] */ ecom_control_library::IEnumMoniker * * ppenum_moniker ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP ComposeWith(  /* [in] */ ecom_control_library::IMoniker * pmk_right, /* [in] */ LONG f_only_if_not_generic, /* [out] */ ecom_control_library::IMoniker * * ppmk_composite ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP IsEqual(  /* [in] */ ecom_control_library::IMoniker * pmk_other_moniker ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP Enum(  /* [in] */ LONG f_forward, /* [out] */ ecom_control_library::IEnumMoniker * * ppenum_moniker ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP Hash(  /* [out] */ ULONG * pdw_hash ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP IsEqual(  /* [in] */ ecom_control_library::IMoniker * pmk_other_moniker ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP IsRunning(  /* [in] */ ecom_control_library::IBindCtx * pbc, /* [in] */ ecom_control_library::IMoniker * pmk_to_left, /* [in] */ ecom_control_library::IMoniker * pmk_newly_running ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP Hash(  /* [out] */ ULONG * pdw_hash ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP GetTimeOfLastChange(  /* [in] */ ecom_control_library::IBindCtx * pbc, /* [in] */ ecom_control_library::IMoniker * pmk_to_left, /* [out] */ ecom_control_library::_FILETIME * pfiletime ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP IsRunning(  /* [in] */ ecom_control_library::IBindCtx * pbc, /* [in] */ ecom_control_library::IMoniker * pmk_to_left, /* [in] */ ecom_control_library::IMoniker * pmk_newly_running ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP Inverse(  /* [out] */ ecom_control_library::IMoniker * * ppmk ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP GetTimeOfLastChange(  /* [in] */ ecom_control_library::IBindCtx * pbc, /* [in] */ ecom_control_library::IMoniker * pmk_to_left, /* [out] */ ecom_control_library::_FILETIME * pfiletime ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP CommonPrefixWith(  /* [in] */ ecom_control_library::IMoniker * pmk_other, /* [out] */ ecom_control_library::IMoniker * * ppmk_prefix ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP Inverse(  /* [out] */ ecom_control_library::IMoniker * * ppmk ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP RelativePathTo(  /* [in] */ ecom_control_library::IMoniker * pmk_other, /* [out] */ ecom_control_library::IMoniker * * ppmk_rel_path ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP CommonPrefixWith(  /* [in] */ ecom_control_library::IMoniker * pmk_other, /* [out] */ ecom_control_library::IMoniker * * ppmk_prefix ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP GetDisplayName(  /* [in] */ ecom_control_library::IBindCtx * pbc, /* [in] */ ecom_control_library::IMoniker * pmk_to_left, /* [out] */ LPWSTR * ppsz_display_name ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP RelativePathTo(  /* [in] */ ecom_control_library::IMoniker * pmk_other, /* [out] */ ecom_control_library::IMoniker * * ppmk_rel_path ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP ParseDisplayName(  /* [in] */ ecom_control_library::IBindCtx * pbc, /* [in] */ ecom_control_library::IMoniker * pmk_to_left, /* [in] */ LPWSTR psz_display_name, /* [out] */ ULONG * pch_eaten, /* [out] */ ecom_control_library::IMoniker * * ppmk_out ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP GetDisplayName(  /* [in] */ ecom_control_library::IBindCtx * pbc, /* [in] */ ecom_control_library::IMoniker * pmk_to_left, /* [out] */ LPWSTR * ppsz_display_name ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP IsSystemMoniker(  /* [out] */ ULONG * pdw_mksys ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP ParseDisplayName(  /* [in] */ ecom_control_library::IBindCtx * pbc, /* [in] */ ecom_control_library::IMoniker * pmk_to_left, /* [in] */ LPWSTR psz_display_name, /* [out] */ ULONG * pch_eaten, /* [out] */ ecom_control_library::IMoniker * * ppmk_out ) = 0;
+
+
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP IsSystemMoniker(  /* [out] */ ULONG * pdw_mksys ) = 0;
 
 
 

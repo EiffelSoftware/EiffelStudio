@@ -11,198 +11,198 @@ extern "C" {
 
 ecom_control_library::IPersistStream_impl_proxy::IPersistStream_impl_proxy( IUnknown * a_pointer )
 {
-	HRESULT hr, hr2;
-	hr = CoInitializeEx (NULL, COINIT_APARTMENTTHREADED);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	hr = a_pointer->QueryInterface(IID_IUnknown, (void **)&p_unknown);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
+  HRESULT hr, hr2;
+  hr = CoInitializeEx (NULL, COINIT_APARTMENTTHREADED);
+  if (FAILED (hr))
+  {
+    if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+      com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+    com_eraise (f.c_format_message (hr), EN_PROG);
+  };
+  hr = a_pointer->QueryInterface(IID_IUnknown, (void **)&p_unknown);
+  if (FAILED (hr))
+  {
+    if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+      com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+    com_eraise (f.c_format_message (hr), EN_PROG);
+  };
 
-	hr = a_pointer->QueryInterface(IID_IPersistStream_, (void **)&p_IPersistStream);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
+  hr = a_pointer->QueryInterface(IID_IPersistStream_, (void **)&p_IPersistStream);
+  if (FAILED (hr))
+  {
+    if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+      com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+    com_eraise (f.c_format_message (hr), EN_PROG);
+  };
 
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
 ecom_control_library::IPersistStream_impl_proxy::~IPersistStream_impl_proxy()
 {
-	p_unknown->Release ();
-	if (p_IPersistStream!=NULL)
-		p_IPersistStream->Release ();
-	CoUninitialize ();
+  p_unknown->Release ();
+  if (p_IPersistStream!=NULL)
+    p_IPersistStream->Release ();
+  CoUninitialize ();
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
 void ecom_control_library::IPersistStream_impl_proxy::ccom_get_class_id(  /* [out] */ GUID * p_class_id )
 
 /*-----------------------------------------------------------
-	No description available.
+  No description available.
 -----------------------------------------------------------*/
 {
-	HRESULT hr;
-	if (p_IPersistStream == NULL)
-	{
-		hr = p_unknown->QueryInterface (IID_IPersistStream_, (void **)&p_IPersistStream);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	};
-	
-	hr = p_IPersistStream->IPersist_GetClassID(p_class_id);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	
-	
+  HRESULT hr;
+  if (p_IPersistStream == NULL)
+  {
+    hr = p_unknown->QueryInterface (IID_IPersistStream_, (void **)&p_IPersistStream);
+  if (FAILED (hr))
+  {
+    if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+      com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+    com_eraise (f.c_format_message (hr), EN_PROG);
+  };
+  };
+  
+  hr = p_IPersistStream->GetClassID(p_class_id);
+  if (FAILED (hr))
+  {
+    if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+      com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+    com_eraise (f.c_format_message (hr), EN_PROG);
+  };
+  
+  
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
 void ecom_control_library::IPersistStream_impl_proxy::ccom_is_dirty()
 
 /*-----------------------------------------------------------
-	No description available.
+  No description available.
 -----------------------------------------------------------*/
 {
-	HRESULT hr;
-	if (p_IPersistStream == NULL)
-	{
-		hr = p_unknown->QueryInterface (IID_IPersistStream_, (void **)&p_IPersistStream);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	};
-	hr = p_IPersistStream->IsDirty ();
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};	
+  HRESULT hr;
+  if (p_IPersistStream == NULL)
+  {
+    hr = p_unknown->QueryInterface (IID_IPersistStream_, (void **)&p_IPersistStream);
+  if (FAILED (hr))
+  {
+    if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+      com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+    com_eraise (f.c_format_message (hr), EN_PROG);
+  };
+  };
+  hr = p_IPersistStream->IsDirty ();
+  if (FAILED (hr))
+  {
+    if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+      com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+    com_eraise (f.c_format_message (hr), EN_PROG);
+  };  
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_control_library::IPersistStream_impl_proxy::ccom_load(  /* [in] */ ecom_control_library::IStream * pstm )
+void ecom_control_library::IPersistStream_impl_proxy::ccom_load(  /* [in] */ ::IStream * pstm )
 
 /*-----------------------------------------------------------
-	No description available.
+  No description available.
 -----------------------------------------------------------*/
 {
-	HRESULT hr;
-	if (p_IPersistStream == NULL)
-	{
-		hr = p_unknown->QueryInterface (IID_IPersistStream_, (void **)&p_IPersistStream);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	};
-	
-	hr = p_IPersistStream->Load(pstm);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	
-	
+  HRESULT hr;
+  if (p_IPersistStream == NULL)
+  {
+    hr = p_unknown->QueryInterface (IID_IPersistStream_, (void **)&p_IPersistStream);
+  if (FAILED (hr))
+  {
+    if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+      com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+    com_eraise (f.c_format_message (hr), EN_PROG);
+  };
+  };
+  
+  hr = p_IPersistStream->Load(pstm);
+  if (FAILED (hr))
+  {
+    if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+      com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+    com_eraise (f.c_format_message (hr), EN_PROG);
+  };
+  
+  
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_control_library::IPersistStream_impl_proxy::ccom_save(  /* [in] */ ecom_control_library::IStream * pstm,  /* [in] */ EIF_INTEGER f_clear_dirty )
+void ecom_control_library::IPersistStream_impl_proxy::ccom_save(  /* [in] */ ::IStream * pstm,  /* [in] */ EIF_INTEGER f_clear_dirty )
 
 /*-----------------------------------------------------------
-	No description available.
+  No description available.
 -----------------------------------------------------------*/
 {
-	HRESULT hr;
-	if (p_IPersistStream == NULL)
-	{
-		hr = p_unknown->QueryInterface (IID_IPersistStream_, (void **)&p_IPersistStream);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	};
-	LONG tmp_f_clear_dirty = 0;
-	tmp_f_clear_dirty = (LONG)f_clear_dirty;
-	
-	hr = p_IPersistStream->Save(pstm,tmp_f_clear_dirty);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	
-	
+  HRESULT hr;
+  if (p_IPersistStream == NULL)
+  {
+    hr = p_unknown->QueryInterface (IID_IPersistStream_, (void **)&p_IPersistStream);
+  if (FAILED (hr))
+  {
+    if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+      com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+    com_eraise (f.c_format_message (hr), EN_PROG);
+  };
+  };
+  LONG tmp_f_clear_dirty = 0;
+  tmp_f_clear_dirty = (LONG)f_clear_dirty;
+  
+  hr = p_IPersistStream->Save(pstm,tmp_f_clear_dirty);
+  if (FAILED (hr))
+  {
+    if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+      com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+    com_eraise (f.c_format_message (hr), EN_PROG);
+  };
+  
+  
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_control_library::IPersistStream_impl_proxy::ccom_get_size_max(  /* [out] */ ecom_control_library::_ULARGE_INTEGER * pcb_size )
+void ecom_control_library::IPersistStream_impl_proxy::ccom_get_size_max(  /* [out] */ ULARGE_INTEGER * pcb_size )
 
 /*-----------------------------------------------------------
-	No description available.
+  No description available.
 -----------------------------------------------------------*/
 {
-	HRESULT hr;
-	if (p_IPersistStream == NULL)
-	{
-		hr = p_unknown->QueryInterface (IID_IPersistStream_, (void **)&p_IPersistStream);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	};
-	
-	hr = p_IPersistStream->GetSizeMax(pcb_size);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	
-	
+  HRESULT hr;
+  if (p_IPersistStream == NULL)
+  {
+    hr = p_unknown->QueryInterface (IID_IPersistStream_, (void **)&p_IPersistStream);
+  if (FAILED (hr))
+  {
+    if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+      com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+    com_eraise (f.c_format_message (hr), EN_PROG);
+  };
+  };
+  
+  hr = p_IPersistStream->GetSizeMax(pcb_size);
+  if (FAILED (hr))
+  {
+    if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+      com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+    com_eraise (f.c_format_message (hr), EN_PROG);
+  };
+  
+  
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
 EIF_POINTER ecom_control_library::IPersistStream_impl_proxy::ccom_item()
 
 /*-----------------------------------------------------------
-	IUnknown interface
+  IUnknown interface
 -----------------------------------------------------------*/
 {
-	return (EIF_POINTER)p_unknown;
+  return (EIF_POINTER)p_unknown;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 

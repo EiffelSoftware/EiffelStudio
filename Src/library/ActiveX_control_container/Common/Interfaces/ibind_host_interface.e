@@ -17,15 +17,15 @@ feature -- Status Report
 			Result := True
 		end
 
-	remote_moniker_bind_to_storage_user_precondition (pmk: IMONIKER_INTERFACE; pbc: IBIND_CTX_INTERFACE; p_bsc: IBIND_STATUS_CALLBACK_INTERFACE; riid: ECOM_GUID; ppv_obj: CELL [ECOM_INTERFACE]): BOOLEAN is
-			-- User-defined preconditions for `remote_moniker_bind_to_storage'.
+	moniker_bind_to_storage_user_precondition (pmk: IMONIKER_INTERFACE; pbc: IBIND_CTX_INTERFACE; p_bsc: IBIND_STATUS_CALLBACK_INTERFACE; riid: ECOM_GUID; ppv_obj: CELL [ECOM_INTERFACE]): BOOLEAN is
+			-- User-defined preconditions for `moniker_bind_to_storage'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	remote_moniker_bind_to_object_user_precondition (pmk: IMONIKER_INTERFACE; pbc: IBIND_CTX_INTERFACE; p_bsc: IBIND_STATUS_CALLBACK_INTERFACE; riid: ECOM_GUID; ppv_obj: CELL [ECOM_INTERFACE]): BOOLEAN is
-			-- User-defined preconditions for `remote_moniker_bind_to_object'.
+	moniker_bind_to_object_user_precondition (pmk: IMONIKER_INTERFACE; pbc: IBIND_CTX_INTERFACE; p_bsc: IBIND_STATUS_CALLBACK_INTERFACE; riid: ECOM_GUID; ppv_obj: CELL [ECOM_INTERFACE]): BOOLEAN is
+			-- User-defined preconditions for `moniker_bind_to_object'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -48,7 +48,7 @@ feature -- Basic Operations
 			valid_ppmk: ppmk.item /= Void
 		end
 
-	remote_moniker_bind_to_storage (pmk: IMONIKER_INTERFACE; pbc: IBIND_CTX_INTERFACE; p_bsc: IBIND_STATUS_CALLBACK_INTERFACE; riid: ECOM_GUID; ppv_obj: CELL [ECOM_INTERFACE]) is
+	moniker_bind_to_storage (pmk: IMONIKER_INTERFACE; pbc: IBIND_CTX_INTERFACE; p_bsc: IBIND_STATUS_CALLBACK_INTERFACE; riid: ECOM_GUID; ppv_obj: CELL [ECOM_INTERFACE]) is
 			-- No description available.
 			-- `pmk' [in].  
 			-- `pbc' [in].  
@@ -59,14 +59,14 @@ feature -- Basic Operations
 			non_void_riid: riid /= Void
 			valid_riid: riid.item /= default_pointer
 			non_void_ppv_obj: ppv_obj /= Void
-			remote_moniker_bind_to_storage_user_precondition: remote_moniker_bind_to_storage_user_precondition (pmk, pbc, p_bsc, riid, ppv_obj)
+			moniker_bind_to_storage_user_precondition: moniker_bind_to_storage_user_precondition (pmk, pbc, p_bsc, riid, ppv_obj)
 		deferred
 
 		ensure
 			valid_ppv_obj: ppv_obj.item /= Void
 		end
 
-	remote_moniker_bind_to_object (pmk: IMONIKER_INTERFACE; pbc: IBIND_CTX_INTERFACE; p_bsc: IBIND_STATUS_CALLBACK_INTERFACE; riid: ECOM_GUID; ppv_obj: CELL [ECOM_INTERFACE]) is
+	moniker_bind_to_object (pmk: IMONIKER_INTERFACE; pbc: IBIND_CTX_INTERFACE; p_bsc: IBIND_STATUS_CALLBACK_INTERFACE; riid: ECOM_GUID; ppv_obj: CELL [ECOM_INTERFACE]) is
 			-- No description available.
 			-- `pmk' [in].  
 			-- `pbc' [in].  
@@ -77,7 +77,7 @@ feature -- Basic Operations
 			non_void_riid: riid /= Void
 			valid_riid: riid.item /= default_pointer
 			non_void_ppv_obj: ppv_obj /= Void
-			remote_moniker_bind_to_object_user_precondition: remote_moniker_bind_to_object_user_precondition (pmk, pbc, p_bsc, riid, ppv_obj)
+			moniker_bind_to_object_user_precondition: moniker_bind_to_object_user_precondition (pmk, pbc, p_bsc, riid, ppv_obj)
 		deferred
 
 		ensure

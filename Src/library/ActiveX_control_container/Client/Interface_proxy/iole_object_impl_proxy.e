@@ -260,7 +260,7 @@ feature {NONE}  -- Externals
 	ccom_set_client_site (cpp_obj: POINTER; p_client_site: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IOleObject_impl_proxy %"ecom_control_library_IOleObject_impl_proxy_s.h%"](ecom_control_library::IOleClientSite *)"
+			"C++ [ecom_control_library::IOleObject_impl_proxy %"ecom_control_library_IOleObject_impl_proxy_s.h%"](::IOleClientSite *)"
 		end
 
 	ccom_get_client_site (cpp_obj: POINTER; pp_client_site: CELL [IOLE_CLIENT_SITE_INTERFACE]) is
@@ -284,7 +284,7 @@ feature {NONE}  -- Externals
 	ccom_set_moniker (cpp_obj: POINTER; dw_which_moniker: INTEGER; pmk: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IOleObject_impl_proxy %"ecom_control_library_IOleObject_impl_proxy_s.h%"](EIF_INTEGER,ecom_control_library::IMoniker *)"
+			"C++ [ecom_control_library::IOleObject_impl_proxy %"ecom_control_library_IOleObject_impl_proxy_s.h%"](EIF_INTEGER,::IMoniker *)"
 		end
 
 	ccom_get_moniker (cpp_obj: POINTER; dw_assign: INTEGER; dw_which_moniker: INTEGER; ppmk: CELL [IMONIKER_INTERFACE]) is
@@ -296,7 +296,7 @@ feature {NONE}  -- Externals
 	ccom_init_from_data (cpp_obj: POINTER; p_data_object: POINTER; f_creation: INTEGER; dw_reserved: INTEGER) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IOleObject_impl_proxy %"ecom_control_library_IOleObject_impl_proxy_s.h%"](ecom_control_library::IDataObject *,EIF_INTEGER,EIF_INTEGER)"
+			"C++ [ecom_control_library::IOleObject_impl_proxy %"ecom_control_library_IOleObject_impl_proxy_s.h%"](::IDataObject *,EIF_INTEGER,EIF_INTEGER)"
 		end
 
 	ccom_get_clipboard_data (cpp_obj: POINTER; dw_reserved: INTEGER; pp_data_object: CELL [IDATA_OBJECT_INTERFACE]) is
@@ -308,7 +308,7 @@ feature {NONE}  -- Externals
 	ccom_do_verb (cpp_obj: POINTER; i_verb: INTEGER; lpmsg: POINTER; p_active_site: POINTER; lindex: INTEGER; hwnd_parent: POINTER; lprc_pos_rect: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IOleObject_impl_proxy %"ecom_control_library_IOleObject_impl_proxy_s.h%"](EIF_INTEGER,ecom_control_library::tagMSG *,ecom_control_library::IOleClientSite *,EIF_INTEGER,EIF_POINTER,ecom_control_library::tagRECT *)"
+			"C++ [ecom_control_library::IOleObject_impl_proxy %"ecom_control_library_IOleObject_impl_proxy_s.h%"](EIF_INTEGER,ecom_control_library::tagMSG *,::IOleClientSite *,EIF_INTEGER,EIF_POINTER,ecom_control_library::tagRECT *)"
 		end
 
 	ccom_enum_verbs (cpp_obj: POINTER; pp_enum_ole_verb: CELL [IENUM_OLEVERB_INTERFACE]) is
@@ -356,7 +356,7 @@ feature {NONE}  -- Externals
 	ccom_advise (cpp_obj: POINTER; p_adv_sink: POINTER; pdw_connection: INTEGER_REF) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IOleObject_impl_proxy %"ecom_control_library_IOleObject_impl_proxy_s.h%"](ecom_control_library::IAdviseSink *,EIF_OBJECT)"
+			"C++ [ecom_control_library::IOleObject_impl_proxy %"ecom_control_library_IOleObject_impl_proxy_s.h%"](::IAdviseSink *,EIF_OBJECT)"
 		end
 
 	ccom_unadvise (cpp_obj: POINTER; dw_connection: INTEGER) is

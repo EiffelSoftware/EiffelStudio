@@ -35,37 +35,37 @@ namespace ecom_control_library
 class IOleUndoUnit_impl_proxy
 {
 public:
-	IOleUndoUnit_impl_proxy (IUnknown * a_pointer);
-	virtual ~IOleUndoUnit_impl_proxy ();
+  IOleUndoUnit_impl_proxy (IUnknown * a_pointer);
+  virtual ~IOleUndoUnit_impl_proxy ();
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_do1(  /* [in] */ ecom_control_library::IOleUndoManager * p_undo_manager );
-
-
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_get_description(  /* [out] */ EIF_OBJECT p_bstr );
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_do1(  /* [in] */ ::IOleUndoManager * p_undo_manager );
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_get_unit_type(  /* [out] */ GUID * p_clsid,  /* [out] */ EIF_OBJECT pl_id );
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_get_description(  /* [out] */ EIF_OBJECT p_bstr );
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_on_next_add();
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_get_unit_type(  /* [out] */ GUID * p_clsid,  /* [out] */ EIF_OBJECT pl_id );
 
 
-	/*-----------------------------------------------------------
-	IUnknown interface
-	-----------------------------------------------------------*/
-	EIF_POINTER ccom_item();
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_on_next_add();
+
+
+  /*-----------------------------------------------------------
+  IUnknown interface
+  -----------------------------------------------------------*/
+  EIF_POINTER ccom_item();
 
 
 
@@ -73,16 +73,16 @@ protected:
 
 
 private:
-	/*-----------------------------------------------------------
-	Interface pointer
-	-----------------------------------------------------------*/
-	ecom_control_library::IOleUndoUnit * p_IOleUndoUnit;
+  /*-----------------------------------------------------------
+  Interface pointer
+  -----------------------------------------------------------*/
+  ::IOleUndoUnit * p_IOleUndoUnit;
 
 
-	/*-----------------------------------------------------------
-	Default IUnknown interface pointer
-	-----------------------------------------------------------*/
-	IUnknown * p_unknown;
+  /*-----------------------------------------------------------
+  Default IUnknown interface pointer
+  -----------------------------------------------------------*/
+  IUnknown * p_unknown;
 
 
 

@@ -78,7 +78,7 @@ feature {NONE}  -- Externals
 	ccom_do1 (cpp_obj: POINTER; p_undo_manager: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IOleUndoUnit_impl_proxy %"ecom_control_library_IOleUndoUnit_impl_proxy_s.h%"](ecom_control_library::IOleUndoManager *)"
+			"C++ [ecom_control_library::IOleUndoUnit_impl_proxy %"ecom_control_library_IOleUndoUnit_impl_proxy_s.h%"](::IOleUndoManager *)"
 		end
 
 	ccom_get_description (cpp_obj: POINTER; p_bstr: CELL [STRING]) is

@@ -17,15 +17,15 @@ feature -- Status Report
 			Result := True
 		end
 
-	remote_load_user_precondition (p_mem: CHARACTER_REF; cb_size: INTEGER): BOOLEAN is
-			-- User-defined preconditions for `remote_load'.
+	load_user_precondition (p_mem: CHARACTER_REF; cb_size: INTEGER): BOOLEAN is
+			-- User-defined preconditions for `load'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	remote_save_user_precondition (p_mem: CHARACTER_REF; f_clear_dirty: INTEGER; cb_size: INTEGER): BOOLEAN is
-			-- User-defined preconditions for `remote_save'.
+	save_user_precondition (p_mem: CHARACTER_REF; f_clear_dirty: INTEGER; cb_size: INTEGER): BOOLEAN is
+			-- User-defined preconditions for `save'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -55,25 +55,25 @@ feature -- Basic Operations
 
 		end
 
-	remote_load (p_mem: CHARACTER_REF; cb_size: INTEGER) is
+	load (p_mem: CHARACTER_REF; cb_size: INTEGER) is
 			-- No description available.
 			-- `p_mem' [in].  
 			-- `cb_size' [in].  
 		require
 			non_void_p_mem: p_mem /= Void
-			remote_load_user_precondition: remote_load_user_precondition (p_mem, cb_size)
+			load_user_precondition: load_user_precondition (p_mem, cb_size)
 		deferred
 
 		end
 
-	remote_save (p_mem: CHARACTER_REF; f_clear_dirty: INTEGER; cb_size: INTEGER) is
+	save (p_mem: CHARACTER_REF; f_clear_dirty: INTEGER; cb_size: INTEGER) is
 			-- No description available.
 			-- `p_mem' [out].  
 			-- `f_clear_dirty' [in].  
 			-- `cb_size' [in].  
 		require
 			non_void_p_mem: p_mem /= Void
-			remote_save_user_precondition: remote_save_user_precondition (p_mem, f_clear_dirty, cb_size)
+			save_user_precondition: save_user_precondition (p_mem, f_clear_dirty, cb_size)
 		deferred
 
 		end

@@ -39,55 +39,55 @@ namespace ecom_control_library
 class IRunningObjectTable_impl_proxy
 {
 public:
-	IRunningObjectTable_impl_proxy (IUnknown * a_pointer);
-	virtual ~IRunningObjectTable_impl_proxy ();
+  IRunningObjectTable_impl_proxy (IUnknown * a_pointer);
+  virtual ~IRunningObjectTable_impl_proxy ();
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_register(  /* [in] */ EIF_INTEGER grf_flags,  /* [in] */ IUnknown * punk_object,  /* [in] */ ecom_control_library::IMoniker * pmk_object_name,  /* [out] */ EIF_OBJECT pdw_register );
-
-
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_revoke(  /* [in] */ EIF_INTEGER dw_register );
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_register(  /* [in] */ EIF_INTEGER grf_flags,  /* [in] */ IUnknown * punk_object,  /* [in] */ ::IMoniker * pmk_object_name,  /* [out] */ EIF_OBJECT pdw_register );
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_is_running(  /* [in] */ ecom_control_library::IMoniker * pmk_object_name );
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_revoke(  /* [in] */ EIF_INTEGER dw_register );
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_get_object(  /* [in] */ ecom_control_library::IMoniker * pmk_object_name,  /* [out] */ EIF_OBJECT ppunk_object );
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_is_running(  /* [in] */ ::IMoniker * pmk_object_name );
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_note_change_time(  /* [in] */ EIF_INTEGER dw_register,  /* [in] */ ecom_control_library::_FILETIME * pfiletime );
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_get_object(  /* [in] */ ::IMoniker * pmk_object_name,  /* [out] */ EIF_OBJECT ppunk_object );
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_get_time_of_last_change(  /* [in] */ ecom_control_library::IMoniker * pmk_object_name,  /* [out] */ ecom_control_library::_FILETIME * pfiletime );
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_note_change_time(  /* [in] */ EIF_INTEGER dw_register,  /* [in] */ ecom_control_library::_FILETIME * pfiletime );
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_enum_running(  /* [out] */ EIF_OBJECT ppenum_moniker );
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_get_time_of_last_change(  /* [in] */ ::IMoniker * pmk_object_name,  /* [out] */ ecom_control_library::_FILETIME * pfiletime );
 
 
-	/*-----------------------------------------------------------
-	IUnknown interface
-	-----------------------------------------------------------*/
-	EIF_POINTER ccom_item();
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_enum_running(  /* [out] */ EIF_OBJECT ppenum_moniker );
+
+
+  /*-----------------------------------------------------------
+  IUnknown interface
+  -----------------------------------------------------------*/
+  EIF_POINTER ccom_item();
 
 
 
@@ -95,16 +95,16 @@ protected:
 
 
 private:
-	/*-----------------------------------------------------------
-	Interface pointer
-	-----------------------------------------------------------*/
-	ecom_control_library::IRunningObjectTable * p_IRunningObjectTable;
+  /*-----------------------------------------------------------
+  Interface pointer
+  -----------------------------------------------------------*/
+  ::IRunningObjectTable * p_IRunningObjectTable;
 
 
-	/*-----------------------------------------------------------
-	Default IUnknown interface pointer
-	-----------------------------------------------------------*/
-	IUnknown * p_unknown;
+  /*-----------------------------------------------------------
+  Default IUnknown interface pointer
+  -----------------------------------------------------------*/
+  IUnknown * p_unknown;
 
 
 

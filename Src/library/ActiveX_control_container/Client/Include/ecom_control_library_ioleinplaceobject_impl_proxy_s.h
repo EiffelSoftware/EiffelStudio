@@ -37,49 +37,49 @@ namespace ecom_control_library
 class IOleInPlaceObject_impl_proxy
 {
 public:
-	IOleInPlaceObject_impl_proxy (IUnknown * a_pointer);
-	virtual ~IOleInPlaceObject_impl_proxy ();
+  IOleInPlaceObject_impl_proxy (IUnknown * a_pointer);
+  virtual ~IOleInPlaceObject_impl_proxy ();
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_get_window(  /* [out] */ EIF_OBJECT phwnd );
-
-
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_context_sensitive_help(  /* [in] */ EIF_INTEGER f_enter_mode );
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_get_window(  /* [out] */ EIF_OBJECT phwnd );
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_in_place_deactivate();
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_context_sensitive_help(  /* [in] */ EIF_INTEGER f_enter_mode );
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_uideactivate();
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_in_place_deactivate();
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_set_object_rects(  /* [in] */ ecom_control_library::tagRECT * lprc_pos_rect,  /* [in] */ ecom_control_library::tagRECT * lprc_clip_rect );
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_uideactivate();
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_reactivate_and_undo();
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_set_object_rects(  /* [in] */ ecom_control_library::tagRECT * lprc_pos_rect,  /* [in] */ ecom_control_library::tagRECT * lprc_clip_rect );
 
 
-	/*-----------------------------------------------------------
-	IUnknown interface
-	-----------------------------------------------------------*/
-	EIF_POINTER ccom_item();
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_reactivate_and_undo();
+
+
+  /*-----------------------------------------------------------
+  IUnknown interface
+  -----------------------------------------------------------*/
+  EIF_POINTER ccom_item();
 
 
 
@@ -87,16 +87,16 @@ protected:
 
 
 private:
-	/*-----------------------------------------------------------
-	Interface pointer
-	-----------------------------------------------------------*/
-	ecom_control_library::IOleInPlaceObject * p_IOleInPlaceObject;
+  /*-----------------------------------------------------------
+  Interface pointer
+  -----------------------------------------------------------*/
+  ::IOleInPlaceObject * p_IOleInPlaceObject;
 
 
-	/*-----------------------------------------------------------
-	Default IUnknown interface pointer
-	-----------------------------------------------------------*/
-	IUnknown * p_unknown;
+  /*-----------------------------------------------------------
+  Default IUnknown interface pointer
+  -----------------------------------------------------------*/
+  IUnknown * p_unknown;
 
 
 

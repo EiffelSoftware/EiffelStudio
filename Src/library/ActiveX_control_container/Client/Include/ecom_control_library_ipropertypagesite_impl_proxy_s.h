@@ -35,37 +35,37 @@ namespace ecom_control_library
 class IPropertyPageSite_impl_proxy
 {
 public:
-	IPropertyPageSite_impl_proxy (IUnknown * a_pointer);
-	virtual ~IPropertyPageSite_impl_proxy ();
+  IPropertyPageSite_impl_proxy (IUnknown * a_pointer);
+  virtual ~IPropertyPageSite_impl_proxy ();
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_on_status_change(  /* [in] */ EIF_INTEGER dw_flags );
-
-
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_get_locale_id(  /* [out] */ EIF_OBJECT p_locale_id );
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_on_status_change(  /* [in] */ EIF_INTEGER dw_flags );
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_get_page_container(  /* [out] */ EIF_OBJECT ppunk );
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_get_locale_id(  /* [out] */ EIF_OBJECT p_locale_id );
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_translate_accelerator(  /* [in] */ ecom_control_library::tagMSG * p_msg );
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_get_page_container(  /* [out] */ EIF_OBJECT ppunk );
 
 
-	/*-----------------------------------------------------------
-	IUnknown interface
-	-----------------------------------------------------------*/
-	EIF_POINTER ccom_item();
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_translate_accelerator(  /* [in] */ ecom_control_library::tagMSG * p_msg );
+
+
+  /*-----------------------------------------------------------
+  IUnknown interface
+  -----------------------------------------------------------*/
+  EIF_POINTER ccom_item();
 
 
 
@@ -73,16 +73,16 @@ protected:
 
 
 private:
-	/*-----------------------------------------------------------
-	Interface pointer
-	-----------------------------------------------------------*/
-	ecom_control_library::IPropertyPageSite * p_IPropertyPageSite;
+  /*-----------------------------------------------------------
+  Interface pointer
+  -----------------------------------------------------------*/
+  ::IPropertyPageSite * p_IPropertyPageSite;
 
 
-	/*-----------------------------------------------------------
-	Default IUnknown interface pointer
-	-----------------------------------------------------------*/
-	IUnknown * p_unknown;
+  /*-----------------------------------------------------------
+  Default IUnknown interface pointer
+  -----------------------------------------------------------*/
+  IUnknown * p_unknown;
 
 
 

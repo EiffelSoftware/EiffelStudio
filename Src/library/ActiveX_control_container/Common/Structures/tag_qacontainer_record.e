@@ -266,7 +266,7 @@ feature {NONE}  -- Externals
 	ccom_tag_qacontainer_set_p_client_site (a_pointer: POINTER; arg2: POINTER) is
 			-- No description available.
 		external
-			"C++ [macro %"ecom_control_library_tagQACONTAINER_s_impl.h%"](ecom_control_library::tagQACONTAINER *, ecom_control_library::IOleClientSite *)"
+			"C++ [macro %"ecom_control_library_tagQACONTAINER_s_impl.h%"](ecom_control_library::tagQACONTAINER *, ::IOleClientSite *)"
 		end
 
 	ccom_tag_qacontainer_p_advise_sink (a_pointer: POINTER): IADVISE_SINK_EX_INTERFACE is
@@ -278,7 +278,7 @@ feature {NONE}  -- Externals
 	ccom_tag_qacontainer_set_p_advise_sink (a_pointer: POINTER; arg2: POINTER) is
 			-- No description available.
 		external
-			"C++ [macro %"ecom_control_library_tagQACONTAINER_s_impl.h%"](ecom_control_library::tagQACONTAINER *, ecom_control_library::IAdviseSinkEx *)"
+			"C++ [macro %"ecom_control_library_tagQACONTAINER_s_impl.h%"](ecom_control_library::tagQACONTAINER *, ::IAdviseSinkEx *)"
 		end
 
 	ccom_tag_qacontainer_p_property_notify_sink (a_pointer: POINTER): IPROPERTY_NOTIFY_SINK_INTERFACE is
@@ -290,7 +290,7 @@ feature {NONE}  -- Externals
 	ccom_tag_qacontainer_set_p_property_notify_sink (a_pointer: POINTER; arg2: POINTER) is
 			-- No description available.
 		external
-			"C++ [macro %"ecom_control_library_tagQACONTAINER_s_impl.h%"](ecom_control_library::tagQACONTAINER *, ecom_control_library::IPropertyNotifySink *)"
+			"C++ [macro %"ecom_control_library_tagQACONTAINER_s_impl.h%"](ecom_control_library::tagQACONTAINER *, ::IPropertyNotifySink *)"
 		end
 
 	ccom_tag_qacontainer_p_unk_event_sink (a_pointer: POINTER): ECOM_INTERFACE is
@@ -362,7 +362,7 @@ feature {NONE}  -- Externals
 	ccom_tag_qacontainer_set_p_undo_mgr (a_pointer: POINTER; arg2: POINTER) is
 			-- No description available.
 		external
-			"C++ [macro %"ecom_control_library_tagQACONTAINER_s_impl.h%"](ecom_control_library::tagQACONTAINER *, ecom_control_library::IOleUndoManager *)"
+			"C++ [macro %"ecom_control_library_tagQACONTAINER_s_impl.h%"](ecom_control_library::tagQACONTAINER *, ::IOleUndoManager *)"
 		end
 
 	ccom_tag_qacontainer_dw_appearance (a_pointer: POINTER): INTEGER is
@@ -392,13 +392,13 @@ feature {NONE}  -- Externals
 	ccom_tag_qacontainer_hpal (a_pointer: POINTER): POINTER is
 			-- No description available.
 		external
-			"C++ [macro %"ecom_control_library_tagQACONTAINER_s_impl.h%"](ecom_control_library::tagQACONTAINER *):EIF_REFERENCE"
+			"C++ [macro %"ecom_control_library_tagQACONTAINER_s_impl.h%"](ecom_control_library::tagQACONTAINER *):EIF_POINTER"
 		end
 
 	ccom_tag_qacontainer_set_hpal (a_pointer: POINTER; arg2: POINTER) is
 			-- No description available.
 		external
-			"C++ [macro %"ecom_control_library_tagQACONTAINER_s_impl.h%"](ecom_control_library::tagQACONTAINER *, ecom_control_library::wireHPALETTE)"
+			"C++ [macro %"ecom_control_library_tagQACONTAINER_s_impl.h%"](ecom_control_library::tagQACONTAINER *, HPALETTE)"
 		end
 
 	ccom_tag_qacontainer_p_bind_host (a_pointer: POINTER): IBIND_HOST_INTERFACE is
@@ -410,7 +410,7 @@ feature {NONE}  -- Externals
 	ccom_tag_qacontainer_set_p_bind_host (a_pointer: POINTER; arg2: POINTER) is
 			-- No description available.
 		external
-			"C++ [macro %"ecom_control_library_tagQACONTAINER_s_impl.h%"](ecom_control_library::tagQACONTAINER *, ecom_control_library::IBindHost *)"
+			"C++ [macro %"ecom_control_library_tagQACONTAINER_s_impl.h%"](ecom_control_library::tagQACONTAINER *, ::IBindHost *)"
 		end
 
 	ccom_tag_qacontainer_p_ole_control_site (a_pointer: POINTER): IOLE_CONTROL_SITE_INTERFACE is
@@ -422,7 +422,7 @@ feature {NONE}  -- Externals
 	ccom_tag_qacontainer_set_p_ole_control_site (a_pointer: POINTER; arg2: POINTER) is
 			-- No description available.
 		external
-			"C++ [macro %"ecom_control_library_tagQACONTAINER_s_impl.h%"](ecom_control_library::tagQACONTAINER *, ecom_control_library::IOleControlSite *)"
+			"C++ [macro %"ecom_control_library_tagQACONTAINER_s_impl.h%"](ecom_control_library::tagQACONTAINER *, ::IOleControlSite *)"
 		end
 
 	ccom_tag_qacontainer_p_service_provider (a_pointer: POINTER): ISERVICE_PROVIDER_INTERFACE is
@@ -434,7 +434,7 @@ feature {NONE}  -- Externals
 	ccom_tag_qacontainer_set_p_service_provider (a_pointer: POINTER; arg2: POINTER) is
 			-- No description available.
 		external
-			"C++ [macro %"ecom_control_library_tagQACONTAINER_s_impl.h%"](ecom_control_library::tagQACONTAINER *, ecom_control_library::IServiceProvider *)"
+			"C++ [macro %"ecom_control_library_tagQACONTAINER_s_impl.h%"](ecom_control_library::tagQACONTAINER *, ::IServiceProvider *)"
 		end
 
 end -- TAG_QACONTAINER_RECORD

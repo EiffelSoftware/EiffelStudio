@@ -10,8 +10,8 @@ inherit
 
 feature -- Status Report
 
-	remote_quick_activate_user_precondition (p_qa_container: TAG_QACONTAINER_RECORD; p_qa_control: TAG_QACONTROL_RECORD): BOOLEAN is
-			-- User-defined preconditions for `remote_quick_activate'.
+	quick_activate_user_precondition (p_qa_container: TAG_QACONTAINER_RECORD; p_qa_control: TAG_QACONTROL_RECORD): BOOLEAN is
+			-- User-defined preconditions for `quick_activate'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -33,7 +33,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	remote_quick_activate (p_qa_container: TAG_QACONTAINER_RECORD; p_qa_control: TAG_QACONTROL_RECORD) is
+	quick_activate (p_qa_container: TAG_QACONTAINER_RECORD; p_qa_control: TAG_QACONTROL_RECORD) is
 			-- No description available.
 			-- `p_qa_container' [in].  
 			-- `p_qa_control' [out].  
@@ -42,7 +42,7 @@ feature -- Basic Operations
 			valid_p_qa_container: p_qa_container.item /= default_pointer
 			non_void_p_qa_control: p_qa_control /= Void
 			valid_p_qa_control: p_qa_control.item /= default_pointer
-			remote_quick_activate_user_precondition: remote_quick_activate_user_precondition (p_qa_container, p_qa_control)
+			quick_activate_user_precondition: quick_activate_user_precondition (p_qa_container, p_qa_control)
 		deferred
 
 		end

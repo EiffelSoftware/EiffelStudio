@@ -37,37 +37,37 @@ namespace ecom_control_library
 class IPersistPropertyBag_impl_proxy
 {
 public:
-	IPersistPropertyBag_impl_proxy (IUnknown * a_pointer);
-	virtual ~IPersistPropertyBag_impl_proxy ();
+  IPersistPropertyBag_impl_proxy (IUnknown * a_pointer);
+  virtual ~IPersistPropertyBag_impl_proxy ();
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_get_class_id(  /* [out] */ GUID * p_class_id );
-
-
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_init_new();
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_get_class_id(  /* [out] */ GUID * p_class_id );
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_load(  /* [in] */ ecom_control_library::IPropertyBag * p_prop_bag,  /* [in] */ ecom_control_library::IErrorLog * p_error_log );
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_init_new();
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_save(  /* [in] */ ecom_control_library::IPropertyBag * p_prop_bag,  /* [in] */ EIF_INTEGER f_clear_dirty,  /* [in] */ EIF_INTEGER f_save_all_properties );
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_load(  /* [in] */ ::IPropertyBag * p_prop_bag,  /* [in] */ ::IErrorLog * p_error_log );
 
 
-	/*-----------------------------------------------------------
-	IUnknown interface
-	-----------------------------------------------------------*/
-	EIF_POINTER ccom_item();
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_save(  /* [in] */ ::IPropertyBag * p_prop_bag,  /* [in] */ EIF_INTEGER f_clear_dirty,  /* [in] */ EIF_INTEGER f_save_all_properties );
+
+
+  /*-----------------------------------------------------------
+  IUnknown interface
+  -----------------------------------------------------------*/
+  EIF_POINTER ccom_item();
 
 
 
@@ -75,16 +75,16 @@ protected:
 
 
 private:
-	/*-----------------------------------------------------------
-	Interface pointer
-	-----------------------------------------------------------*/
-	ecom_control_library::IPersistPropertyBag * p_IPersistPropertyBag;
+  /*-----------------------------------------------------------
+  Interface pointer
+  -----------------------------------------------------------*/
+  ::IPersistPropertyBag * p_IPersistPropertyBag;
 
 
-	/*-----------------------------------------------------------
-	Default IUnknown interface pointer
-	-----------------------------------------------------------*/
-	IUnknown * p_unknown;
+  /*-----------------------------------------------------------
+  Default IUnknown interface pointer
+  -----------------------------------------------------------*/
+  IUnknown * p_unknown;
 
 
 

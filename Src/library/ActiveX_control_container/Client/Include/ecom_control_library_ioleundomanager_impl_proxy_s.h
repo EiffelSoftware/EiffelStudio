@@ -39,85 +39,85 @@ namespace ecom_control_library
 class IOleUndoManager_impl_proxy
 {
 public:
-	IOleUndoManager_impl_proxy (IUnknown * a_pointer);
-	virtual ~IOleUndoManager_impl_proxy ();
+  IOleUndoManager_impl_proxy (IUnknown * a_pointer);
+  virtual ~IOleUndoManager_impl_proxy ();
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_open(  /* [in] */ ecom_control_library::IOleParentUndoUnit * p_puu );
-
-
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_close(  /* [in] */ ecom_control_library::IOleParentUndoUnit * p_puu,  /* [in] */ EIF_INTEGER f_commit );
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_open(  /* [in] */ ::IOleParentUndoUnit * p_puu );
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_add(  /* [in] */ ecom_control_library::IOleUndoUnit * p_uu );
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_close(  /* [in] */ ::IOleParentUndoUnit * p_puu,  /* [in] */ EIF_INTEGER f_commit );
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_get_open_parent_state(  /* [out] */ EIF_OBJECT pdw_state );
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_add(  /* [in] */ ::IOleUndoUnit * p_uu );
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_discard_from(  /* [in] */ ecom_control_library::IOleUndoUnit * p_uu );
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_get_open_parent_state(  /* [out] */ EIF_OBJECT pdw_state );
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_undo_to(  /* [in] */ ecom_control_library::IOleUndoUnit * p_uu );
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_discard_from(  /* [in] */ ::IOleUndoUnit * p_uu );
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_redo_to(  /* [in] */ ecom_control_library::IOleUndoUnit * p_uu );
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_undo_to(  /* [in] */ ::IOleUndoUnit * p_uu );
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_enum_undoable(  /* [out] */ EIF_OBJECT ppenum );
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_redo_to(  /* [in] */ ::IOleUndoUnit * p_uu );
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_enum_redoable(  /* [out] */ EIF_OBJECT ppenum );
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_enum_undoable(  /* [out] */ EIF_OBJECT ppenum );
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_get_last_undo_description(  /* [out] */ EIF_OBJECT p_bstr );
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_enum_redoable(  /* [out] */ EIF_OBJECT ppenum );
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_get_last_redo_description(  /* [out] */ EIF_OBJECT p_bstr );
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_get_last_undo_description(  /* [out] */ EIF_OBJECT p_bstr );
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	void ccom_enable(  /* [in] */ EIF_INTEGER f_enable );
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_get_last_redo_description(  /* [out] */ EIF_OBJECT p_bstr );
 
 
-	/*-----------------------------------------------------------
-	IUnknown interface
-	-----------------------------------------------------------*/
-	EIF_POINTER ccom_item();
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  void ccom_enable(  /* [in] */ EIF_INTEGER f_enable );
+
+
+  /*-----------------------------------------------------------
+  IUnknown interface
+  -----------------------------------------------------------*/
+  EIF_POINTER ccom_item();
 
 
 
@@ -125,16 +125,16 @@ protected:
 
 
 private:
-	/*-----------------------------------------------------------
-	Interface pointer
-	-----------------------------------------------------------*/
-	ecom_control_library::IOleUndoManager * p_IOleUndoManager;
+  /*-----------------------------------------------------------
+  Interface pointer
+  -----------------------------------------------------------*/
+  ::IOleUndoManager * p_IOleUndoManager;
 
 
-	/*-----------------------------------------------------------
-	Default IUnknown interface pointer
-	-----------------------------------------------------------*/
-	IUnknown * p_unknown;
+  /*-----------------------------------------------------------
+  Default IUnknown interface pointer
+  -----------------------------------------------------------*/
+  IUnknown * p_unknown;
 
 
 

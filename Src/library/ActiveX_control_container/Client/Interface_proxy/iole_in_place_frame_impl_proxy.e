@@ -88,7 +88,7 @@ feature -- Basic Operations
 			ccom_insert_menus (initializer, hmenu_shared, lp_menu_widths.item)
 		end
 
-	set_menu (hmenu_shared: POINTER; holemenu: WIRE_HGLOBAL_ALIAS; hwnd_active_object: POINTER) is
+	set_menu (hmenu_shared: POINTER; holemenu: POINTER; hwnd_active_object: POINTER) is
 			-- No description available.
 			-- `hmenu_shared' [in].  
 			-- `holemenu' [in].  
@@ -181,7 +181,7 @@ feature {NONE}  -- Externals
 	ccom_set_menu (cpp_obj: POINTER; hmenu_shared: POINTER; holemenu: POINTER; hwnd_active_object: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IOleInPlaceFrame_impl_proxy %"ecom_control_library_IOleInPlaceFrame_impl_proxy_s.h%"](EIF_POINTER,ecom_control_library::wireHGLOBAL,EIF_POINTER)"
+			"C++ [ecom_control_library::IOleInPlaceFrame_impl_proxy %"ecom_control_library_IOleInPlaceFrame_impl_proxy_s.h%"](EIF_POINTER,ecom_control_library::tag_userHGLOBAL *,EIF_POINTER)"
 		end
 
 	ccom_remove_menus (cpp_obj: POINTER; hmenu_shared: POINTER) is

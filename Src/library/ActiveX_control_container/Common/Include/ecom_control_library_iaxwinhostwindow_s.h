@@ -29,14 +29,6 @@ class IAxWinHostWindow;
 extern "C" {
 #endif
 
-#ifndef __ecom_control_library_IStream_FWD_DEFINED__
-#define __ecom_control_library_IStream_FWD_DEFINED__
-namespace ecom_control_library
-{
-class IStream;
-}
-#endif
-
 
 
 #ifndef __ecom_control_library_IDocHostUIHandlerDispatch_FWD_DEFINED__
@@ -67,7 +59,7 @@ public:
   virtual STDMETHODIMP CreateControl
         (  /* [in] */ LPWSTR lp_trics_data, 
         /* [in] */ ecom_control_library::wireHWND h_wnd, 
-        /* [in] */ ecom_control_library::IStream * p_stream ) = 0;
+        /* [in] */ ::IStream * p_stream ) = 0;
 
 
   /*-----------------------------------------------------------
@@ -76,7 +68,7 @@ public:
   virtual STDMETHODIMP CreateControlEx
       (  /* [in] */ LPWSTR lp_trics_data, 
       /* [in] */ ecom_control_library::wireHWND h_wnd, 
-      /* [in] */ ecom_control_library::IStream * p_stream, 
+      /* [in] */ ::IStream * p_stream, 
       /* [out] */ IUnknown * * ppunk, 
       /* [in] */ REFIID riid_advise, 
       /* [in] */ IUnknown * punk_advise ) = 0;

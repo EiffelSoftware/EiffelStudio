@@ -8,6 +8,12 @@ deferred class
 inherit
 	IOLE_IN_PLACE_SITE_INTERFACE
 
+feature -- Access
+	
+	Activate_windowless: INTEGER is 1
+			-- Indicates whether an object is activated as a
+			-- windowless object. 
+			
 feature -- Status Report
 
 	on_in_place_activate_ex_user_precondition (pf_no_redraw: INTEGER_REF; dw_flags: INTEGER): BOOLEAN is

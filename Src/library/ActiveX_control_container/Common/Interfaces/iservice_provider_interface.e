@@ -10,8 +10,8 @@ inherit
 
 feature -- Status Report
 
-	remote_query_service_user_precondition (guid_service: ECOM_GUID; riid: ECOM_GUID; ppv_object: CELL [ECOM_INTERFACE]): BOOLEAN is
-			-- User-defined preconditions for `remote_query_service'.
+	query_service_user_precondition (guid_service: ECOM_GUID; riid: ECOM_GUID; ppv_object: CELL [ECOM_INTERFACE]): BOOLEAN is
+			-- User-defined preconditions for `query_service'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -30,7 +30,7 @@ feature -- Basic Operations
 			non_void_riid: riid /= Void
 			valid_riid: riid.item /= default_pointer
 			non_void_ppv_object: ppv_object /= Void
-			remote_query_service_user_precondition: remote_query_service_user_precondition (guid_service, riid, ppv_object)
+			query_service_user_precondition: query_service_user_precondition (guid_service, riid, ppv_object)
 		deferred
 
 		ensure

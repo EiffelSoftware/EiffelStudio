@@ -38,7 +38,7 @@ feature -- Basic Operations
 			ccom_is_dirty (initializer)
 		end
 
-	init_new (pstg: ISTORAGE_INTERFACE) is
+	init_new (pstg: ECOM_STORAGE) is
 			-- No description available.
 			-- `pstg' [in].  
 		local
@@ -57,7 +57,7 @@ feature -- Basic Operations
 			ccom_init_new (initializer, pstg_item)
 		end
 
-	load (pstg: ISTORAGE_INTERFACE) is
+	load (pstg: ECOM_STORAGE) is
 			-- No description available.
 			-- `pstg' [in].  
 		local
@@ -76,7 +76,7 @@ feature -- Basic Operations
 			ccom_load (initializer, pstg_item)
 		end
 
-	save (p_stg_save: ISTORAGE_INTERFACE; f_same_as_load: INTEGER) is
+	save (p_stg_save: ECOM_STORAGE; f_same_as_load: INTEGER) is
 			-- No description available.
 			-- `p_stg_save' [in].  
 			-- `f_same_as_load' [in].  
@@ -96,7 +96,7 @@ feature -- Basic Operations
 			ccom_save (initializer, p_stg_save_item, f_same_as_load)
 		end
 
-	save_completed (p_stg_new: ISTORAGE_INTERFACE) is
+	save_completed (p_stg_new: ECOM_STORAGE) is
 			-- No description available.
 			-- `p_stg_new' [in].  
 		local
@@ -146,25 +146,25 @@ feature {NONE}  -- Externals
 	ccom_init_new (cpp_obj: POINTER; pstg: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IPersistStorage_impl_proxy %"ecom_control_library_IPersistStorage_impl_proxy_s.h%"](ecom_control_library::IStorage *)"
+			"C++ [ecom_control_library::IPersistStorage_impl_proxy %"ecom_control_library_IPersistStorage_impl_proxy_s.h%"](IStorage *)"
 		end
 
 	ccom_load (cpp_obj: POINTER; pstg: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IPersistStorage_impl_proxy %"ecom_control_library_IPersistStorage_impl_proxy_s.h%"](ecom_control_library::IStorage *)"
+			"C++ [ecom_control_library::IPersistStorage_impl_proxy %"ecom_control_library_IPersistStorage_impl_proxy_s.h%"](IStorage *)"
 		end
 
 	ccom_save (cpp_obj: POINTER; p_stg_save: POINTER; f_same_as_load: INTEGER) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IPersistStorage_impl_proxy %"ecom_control_library_IPersistStorage_impl_proxy_s.h%"](ecom_control_library::IStorage *,EIF_INTEGER)"
+			"C++ [ecom_control_library::IPersistStorage_impl_proxy %"ecom_control_library_IPersistStorage_impl_proxy_s.h%"](IStorage *,EIF_INTEGER)"
 		end
 
 	ccom_save_completed (cpp_obj: POINTER; p_stg_new: POINTER) is
 			-- No description available.
 		external
-			"C++ [ecom_control_library::IPersistStorage_impl_proxy %"ecom_control_library_IPersistStorage_impl_proxy_s.h%"](ecom_control_library::IStorage *)"
+			"C++ [ecom_control_library::IPersistStorage_impl_proxy %"ecom_control_library_IPersistStorage_impl_proxy_s.h%"](IStorage *)"
 		end
 
 	ccom_hands_off_storage (cpp_obj: POINTER) is

@@ -36,43 +36,43 @@ namespace ecom_control_library
 class IBinding : public IUnknown
 {
 public:
-	IBinding () {};
-	~IBinding () {};
+  IBinding () {};
+  ~IBinding () {};
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP Abort( void ) = 0;
-
-
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP Suspend( void ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP Abort( void ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP Resume( void ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP Suspend( void ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP SetPriority(  /* [in] */ LONG n_priority ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP Resume( void ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP GetPriority(  /* [out] */ LONG * pn_priority ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP SetPriority(  /* [in] */ LONG n_priority ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP RemoteGetBindResult(  /* [out] */ GUID * pclsid_protocol, /* [out] */ ULONG * pdw_result, /* [out] */ LPWSTR * psz_result, /* [in] */ ULONG dw_reserved ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP GetPriority(  /* [out] */ LONG * pn_priority ) = 0;
+
+
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP GetBindResult(  /* [out] */ GUID * pclsid_protocol, /* [out] */ ULONG * pdw_result, /* [out] */ LPWSTR * psz_result, /* [in] */ ULONG dw_reserved ) = 0;
 
 
 

@@ -46,7 +46,7 @@ feature -- Pixmap
 		do
 			Result := implementation.pixmap
 		ensure
-			Result.is_valid
+			valid_result: Result /= Void implies Result.is_valid
 		end;
 
 	set_pixmap (a_pixmap: PIXMAP) is

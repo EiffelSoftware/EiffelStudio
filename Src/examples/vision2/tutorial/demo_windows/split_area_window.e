@@ -25,8 +25,11 @@ feature {NONE} -- Initialization
 		do
 			{EV_VERTICAL_SPLIT_AREA} Precursor (Void)
 			!! hsplit.make (Current)
+			set_position (50)
 			!! button.make_with_text (hsplit, "Hello")
+			hsplit.set_position (100)
 			!! texta.make (Current)
+			set_position (50)
 			set_parent (par)
 		end
 

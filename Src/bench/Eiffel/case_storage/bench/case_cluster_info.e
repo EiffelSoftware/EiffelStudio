@@ -11,7 +11,8 @@ inherit
 	S_CASE_INFO;
 	SHARED_CASE_INFO;
 	COMPILER_EXPORTER;
-	SHARED_EIFFEL_PROJECT
+	SHARED_EIFFEL_PROJECT;
+	SHARED_ERROR_HANDLER
 
 creation
 
@@ -393,7 +394,8 @@ end
 								(old_class_data.explanation)
 						end;
 						old_class_data := Void
-					end
+					end;
+					Error_handler.checksum
 				else
 					deg_output.skip_case_class
 				end;	

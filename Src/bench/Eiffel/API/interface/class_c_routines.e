@@ -46,6 +46,9 @@ feature -- Initialization
 			good_argument: l /= Void
 		do
 			lace_class := l
+				-- Set `is_class_any' and `is_class_none'
+			is_class_any := name_in_upper.is_equal ("ANY")
+			is_class_none := name_in_upper.is_equal ("NONE")
 				-- Creation of the descendant list
 			!! descendants.make
 				-- Creation of the supplier list
@@ -269,6 +272,12 @@ feature -- Access
 		ensure
 			non_void_Result: Result /= Void
 		end
+
+	is_class_any: BOOLEAN
+			-- Is it class ANY?
+
+	is_class_none: BOOLEAN
+			-- Is it class NONE?
 
 feature -- Precompilation Access
 

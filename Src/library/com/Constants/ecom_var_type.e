@@ -303,7 +303,8 @@ feature -- Status report
 	is_character (variable_type: INTEGER): BOOLEAN is
 			-- Is variable character?
 		do
-			Result := binary_and (variable_type, Vt_ui1) = Vt_ui1
+			Result := binary_and (variable_type, Vt_ui1) = Vt_ui1 or
+				binary_and (variable_type, Vt_i1) = Vt_i1
 		end
 
 	is_integer2 (variable_type: INTEGER): BOOLEAN is
@@ -486,6 +487,41 @@ feature -- Status report
 			Result := binary_and (variable_type, Vt_byref) = Vt_byref
 		end
 
+	valid_var_type (a_var_type: INTEGER): BOOLEAN is
+			-- Is `a_var_type' a valid variant type?
+		do
+			Result := is_character (a_var_type) or
+					is_integer2 (a_var_type) or
+					is_integer4 (a_var_type) or
+					is_real4 (a_var_type) or
+					is_real8 (a_var_type) or
+					is_boolean (a_var_type) or
+					is_date (a_var_type) or
+					is_error (a_var_type) or
+					is_variant (a_var_type) or
+					is_currency (a_var_type) or
+					is_bstr (a_var_type) or
+					is_dispatch (a_var_type) or
+					is_unknown (a_var_type) or
+					is_decimal (a_var_type) or
+					is_unsigned_char (a_var_type) or
+					is_unsigned_short (a_var_type) or
+					is_unsigned_long (a_var_type) or
+					is_long_long (a_var_type) or
+					is_unsigned_long_long (a_var_type) or
+					is_int (a_var_type) or
+					is_unsigned_int (a_var_type) or
+					is_void (a_var_type) or
+					is_hresult (a_var_type) or
+					is_ptr (a_var_type) or
+					is_safearray (a_var_type) or
+					is_carray (a_var_type) or
+					is_user_defined (a_var_type) or
+					is_lpstr (a_var_type) or
+					is_lpwstr (a_var_type) or
+					is_array (a_var_type) or
+					is_byref (a_var_type)
+		end
 
 end -- class ECOM_VAR_TYPE
 

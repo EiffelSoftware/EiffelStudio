@@ -7,22 +7,17 @@ deferred class
 
 feature -- Basic Operations
 
-	new_line is
-			-- Begin a new line.
-		deferred
-		end
-		
-	add_text (a_text: STRING) is
-			-- Add `a_text' to output using standard format.
+	add_title (a_text: STRING) is
+			-- Add `a_text' to output using title format.
 		require
 			non_void_text: a_text /= Void
 		deferred
 		end
 
-	add_title (a_text: STRING) is
-			-- Add `a_text' to output using title format.
+	add_message (a_text: STRING) is
+			-- Add `a_text' to output using standard format.
 		require
-			non_void_text: a_text /= Void
+			non_void_message: a_text /= Void
 		deferred
 		end
 

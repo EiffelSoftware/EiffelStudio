@@ -31,7 +31,7 @@ feature -- Access
 			-- Nested TYPEDESC structure
 			-- that specifies safearray element type
 		require 
-			valid_type: is_ptr (var_type) or is_safearray (var_type) or is_carray (var_type)
+			valid_type: is_ptr (var_type) or is_safearray (var_type)
 		do
 			!! Result.make_by_pointer (ccom_typedesc_typedesc (item))
 		end

@@ -1981,7 +1981,6 @@ feature -- IL Generation
 				current_feature_token := l_meth_token
 				start_new_body (l_meth_token)
 
-
 				if is_debug_info_enabled then
 					dbg_writer.open_method (l_meth_token)
 					local_start_offset := method_body.count
@@ -3285,53 +3284,79 @@ feature -- Once management
 
 feature -- Array manipulation
 
-	generate_array_access (kind: INTEGER) is
+	generate_array_access (kind: INTEGER; a_type_id: INTEGER) is
 			-- Generate call to `item' of NATIVE_ARRAY.
+		require
+			kind_positive: kind /= 0
+			type_id_valid: kind = il_expanded implies a_type_id > 0
 		local
 			l_opcode: INTEGER_16
+			l_token: INTEGER
 		do
-			inspect kind
-			when Il_i1 then l_opcode := feature {MD_OPCODES}.Ldelem_i1
-			when Il_i2 then l_opcode := feature {MD_OPCODES}.Ldelem_i2
-			when Il_i4 then l_opcode := feature {MD_OPCODES}.Ldelem_i4
-			when Il_i8, Il_u8 then l_opcode := feature {MD_OPCODES}.Ldelem_i8
-			when Il_r4 then l_opcode := feature {MD_OPCODES}.Ldelem_r4
-			when Il_r8 then l_opcode := feature {MD_OPCODES}.Ldelem_r8
-			when Il_ref then l_opcode := feature {MD_OPCODES}.Ldelem_ref
-			when Il_i then l_opcode := feature {MD_OPCODES}.Ldelem_i
-			when Il_u1 then l_opcode := feature {MD_OPCODES}.Ldelem_u1
-			when Il_u2 then l_opcode := feature {MD_OPCODES}.Ldelem_u2
-			when Il_u4 then l_opcode := feature {MD_OPCODES}.Ldelem_u4
+			if kind = Il_expanded then
+				l_token := class_type_token (a_type_id)
+				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldelema, l_token)
+				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldobj, l_token)
 			else
-				check
-					not_reached: False
+				inspect kind
+				when Il_i1 then l_opcode := feature {MD_OPCODES}.Ldelem_i1
+				when Il_i2 then l_opcode := feature {MD_OPCODES}.Ldelem_i2
+				when Il_i4 then l_opcode := feature {MD_OPCODES}.Ldelem_i4
+				when Il_i8, Il_u8 then l_opcode := feature {MD_OPCODES}.Ldelem_i8
+				when Il_r4 then l_opcode := feature {MD_OPCODES}.Ldelem_r4
+				when Il_r8 then l_opcode := feature {MD_OPCODES}.Ldelem_r8
+				when Il_ref then l_opcode := feature {MD_OPCODES}.Ldelem_ref
+				when Il_i then l_opcode := feature {MD_OPCODES}.Ldelem_i
+				when Il_u1 then l_opcode := feature {MD_OPCODES}.Ldelem_u1
+				when Il_u2 then l_opcode := feature {MD_OPCODES}.Ldelem_u2
+				when Il_u4 then l_opcode := feature {MD_OPCODES}.Ldelem_u4
+				when Il_expanded then
+				else
+					check
+						not_reached: False
+					end
 				end
-				l_opcode := feature {MD_OPCODES}.Nop
+				method_body.put_opcode (l_opcode)
 			end
-			method_body.put_opcode (l_opcode)
 		end
 
-	generate_array_write (kind: INTEGER) is
+	generate_array_write_preparation (a_type_id: INTEGER) is
+			-- Prepare call to `put' from NATIVE_ARRAY in case of expanded elements.
+		require
+			type_id_valid: a_type_id > 0
+		do
+			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldelema,
+				class_type_token (a_type_id))
+		end
+		
+	generate_array_write (kind: INTEGER; a_type_id: INTEGER) is
 			-- Generate call to `put' of NATIVE_ARRAY.
+		require
+			kind_positive: kind /= 0
+			type_id_valid: kind = il_expanded implies a_type_id > 0
 		local
 			l_opcode: INTEGER_16
 		do
-			inspect kind
-			when Il_i1, Il_u1 then l_opcode := feature {MD_OPCODES}.Stelem_i1
-			when Il_i2, Il_u2 then l_opcode := feature {MD_OPCODES}.Stelem_i2
-			when Il_i4, Il_u4 then l_opcode := feature {MD_OPCODES}.Stelem_i4
-			when Il_i8, Il_u8 then l_opcode := feature {MD_OPCODES}.Stelem_i8
-			when Il_r4 then l_opcode := feature {MD_OPCODES}.Stelem_r4
-			when Il_r8 then l_opcode := feature {MD_OPCODES}.Stelem_r8
-			when Il_ref then l_opcode := feature {MD_OPCODES}.Stelem_ref
-			when Il_i then l_opcode := feature {MD_OPCODES}.Stelem_i
+			if kind = il_expanded then
+				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Stobj,
+					class_type_token (a_type_id))
 			else
-				check
-					not_reached: False
+				inspect kind
+				when Il_i1, Il_u1 then l_opcode := feature {MD_OPCODES}.Stelem_i1
+				when Il_i2, Il_u2 then l_opcode := feature {MD_OPCODES}.Stelem_i2
+				when Il_i4, Il_u4 then l_opcode := feature {MD_OPCODES}.Stelem_i4
+				when Il_i8, Il_u8 then l_opcode := feature {MD_OPCODES}.Stelem_i8
+				when Il_r4 then l_opcode := feature {MD_OPCODES}.Stelem_r4
+				when Il_r8 then l_opcode := feature {MD_OPCODES}.Stelem_r8
+				when Il_ref then l_opcode := feature {MD_OPCODES}.Stelem_ref
+				when Il_i then l_opcode := feature {MD_OPCODES}.Stelem_i
+				else
+					check
+						not_reached: False
+					end
 				end
-				l_opcode := feature {MD_OPCODES}.Nop
+				method_body.put_opcode (l_opcode)			
 			end
-			method_body.put_opcode (l_opcode)
 		end
 
 	generate_array_creation (a_type_id: INTEGER) is
@@ -4304,7 +4329,7 @@ feature {NONE} -- Implementation: generation
 					duplicate_top
 					put_integer_32_constant (i - 1)
 					l_gen_type.true_generics.item (i).generate_gen_type_il (Current, True)
-					generate_array_write (feature {IL_CONST}.il_ref)
+					generate_array_write (feature {IL_CONST}.il_ref, 0)
 					i := i + 1
 				end
 

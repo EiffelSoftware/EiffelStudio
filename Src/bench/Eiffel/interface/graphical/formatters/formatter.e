@@ -79,7 +79,7 @@ feature
 			-- if it's clickable; do nothing otherwise.
 		do
 			if 
-				do_format or else
+				do_format or else filtered or else
 				(text_window.last_format /= Current or
 				not equal (stone, text_window.root_stone))
 			then
@@ -89,19 +89,37 @@ feature
 				then
 					set_global_cursor (watch_cursor);
 					text_window.clean;
+					text_window.set_root_stone (stone);
 					display_header (stone);
 					display_info (0, stone);
 					text_window.set_editable;
 					text_window.show_image;
 					text_window.set_read_only;
-					text_window.set_root_stone (stone);
 					text_window.set_last_format (Current);
+					filtered := false;
 					restore_cursors
 				end
 			end
 		end;
 
-	
+feature -- Filters
+
+	filtered: BOOLEAN;
+			-- Has the last action of `current' been a filter action?
+			-- (In other words, do we need to reformat the target)
+
+	filter (filtername: STRING) is
+			-- Filter the `Current' format with `filtername'.
+		require
+			filtername_not_void: filtername /= Void;
+			current_format: text_window.last_format = Current
+		do
+			if text_window.root_stone /= Void then
+				warner.set_window (text_window);
+				warner.gotcha_call (w_Not_a_filterable_format)
+			end
+		end;
+
 feature {NONE}
 
 	post_fix: STRING is

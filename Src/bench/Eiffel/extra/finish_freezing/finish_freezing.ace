@@ -40,19 +40,19 @@ cluster
 	statusbox:		".\spec\windows";
 
 	-- EiffelBase
-	kernel:		"$EIFFEL4\library\base\kernel";
-	support:		"$EIFFEL4\library\base\support";
-	access:		"$EIFFEL4\library\base\structures\access";
-	cursors:		"$EIFFEL4\library\base\structures\cursors";
-	cursor_tree:	"$EIFFEL4\library\base\structures\cursor_tree";
-	dispenser:		"$EIFFEL4\library\base\structures\dispenser";
-	iteration:		"$EIFFEL4\library\base\structures\iteration";
-	list:		"$EIFFEL4\library\base\structures\list";
-	set:		"$EIFFEL4\library\base\structures\set";
-	sort:		"$EIFFEL4\library\base\structures\sort";
-	storage:		"$EIFFEL4\library\base\structures\storage";
-	table:		"$EIFFEL4\library\base\structures\table";
-	traversing:		"$EIFFEL4\library\base\structures\traversing";
-	tree:		"$EIFFEL4\library\base\structures\tree";
+	kernel:		"$EIFFEL_SRC\library\base\kernel";
+	support:		"$EIFFEL_SRC\library\base\support";
+	access:		"$EIFFEL_SRC\library\base\structures\access";
+	cursors:		"$EIFFEL_SRC\library\base\structures\cursors";
+	cursor_tree:	"$EIFFEL_SRC\library\base\structures\cursor_tree";
+	dispenser:		"$EIFFEL_SRC\library\base\structures\dispenser";
+	iteration:		"$EIFFEL_SRC\library\base\structures\iteration";
+	list:		"$EIFFEL_SRC\library\base\structures\list";
+	set:		"$EIFFEL_SRC\library\base\structures\set";
+	sort:		"$EIFFEL_SRC\library\base\structures\sort";
+	storage:		"$EIFFEL_SRC\library\base\structures\storage";
+	table:		"$EIFFEL_SRC\library\base\structures\table";
+	traversing:		"$EIFFEL_SRC\library\base\structures\traversing";
+	tree:		"$EIFFEL_SRC\library\base\structures\tree";
 
 end

@@ -40,7 +40,7 @@ feature -- Command execution
 			conf_load: CONFIGURATION_LOADER
 			prof_invoker: PROFILER_INVOKER
 			error_dlg: EV_ERROR_DIALOG
-			ok_dlg: EB_MESSAGE_WINDOW
+			ok_dlg: EV_WARNING_DIALOG
 		do
 			profinfo := options_dialog.profinfo_file
 			compile := options_dialog.compile_mode
@@ -59,9 +59,7 @@ feature -- Command execution
 					create error_dlg.make_default (tool.parent, "Error", profinfo)
 				elseif prof_converter.is_last_conversion_ok then
 					create ok_dlg.make_default (tool.parent_window,"", "Ready for queries")
-					ok_dlg.set_message ("Ready for queries") 
-					ok_dlg.show
-			 	end 
+				end 
 			end
 		end
 
@@ -91,7 +89,7 @@ feature {NONE} -- Implementation
 			-- Explains that an error occured while loading the
 			-- profiler specific configuration file.
 		local
-			error_dlg: EB_ERROR_WINDOW
+			error_dlg: EV_WARNING_DIALOG
 		do
 			create error_dlg.make_default (tool.parent_window,
 				Interface_names.t_Configuration_error,

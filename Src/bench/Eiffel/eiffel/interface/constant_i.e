@@ -144,7 +144,7 @@ feature -- C code generation
 				file.indent;
 					-- If constant is a string, it is the semantic of a once
 				if is_once then
-					file.putstring ("static int done = 0;");
+					file.putstring ("static int done = 0;%N");
 					file.putstring ("static char *Result;");
 					file.new_line;
 					file.putstring ("if (done)");
@@ -177,6 +177,7 @@ feature -- C code generation
 					file.putchar (';');
 				end;
 				file.new_line;
+				file.putstring ("EDCX%N"); -- ss MT
 				file.exdent;
 				file.putchar ('}');
 				file.new_line;

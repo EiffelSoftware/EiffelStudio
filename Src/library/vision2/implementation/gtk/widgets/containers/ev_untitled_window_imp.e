@@ -31,7 +31,10 @@ inherit
 creation
 	make,
 	make_root,
-	make_with_owner
+	make_with_owner,
+	make_with_position,
+	make_root_with_position,
+	make_with_owner_and_position
 
 feature -- Initialization
 
@@ -62,6 +65,42 @@ feature -- Initialization
 
 			-- Attach the window to `par'.
 			gtk_window_set_transient_for (widget, par_imp.widget)
+		end
+
+	make_with_position (pos: INTEGER) is
+			-- create the untitled window with `pos'
+			-- as the first position.
+			-- choices are:
+			--	- WINDOW_POSITION_NONE
+			--	- WINDOW_POSITION_CENTER
+			--	- WINDOW_POSITION_MOUSE (by default).
+		do
+			make
+			gtk_window_set_position (GTK_WINDOW (widget), pos)
+		end
+
+	make_with_owner_and_position (par: EV_UNTITLED_WINDOW; pos: INTEGER) is
+			-- create the untitled window with `pos'
+			-- as the first position.
+			-- choices are:
+			--	- WINDOW_POSITION_NONE
+			--	- WINDOW_POSITION_CENTER
+			--	- WINDOW_POSITION_MOUSE (by default).
+		do
+			make_with_owner (par)
+			gtk_window_set_position (GTK_WINDOW (widget), pos)
+		end
+
+	make_root_with_position (pos: INTEGER) is
+			-- create the untitled window with `pos'
+			-- as the first position.
+			-- choices are:
+			--	- WINDOW_POSITION_NONE
+			--	- WINDOW_POSITION_CENTER
+			--	- WINDOW_POSITION_MOUSE (by default).
+		do
+			make_root
+			gtk_window_set_position (GTK_WINDOW (widget), pos)
 		end
 
 feature  -- Access
@@ -129,10 +168,11 @@ feature -- Status setting
 			gtk_window_set_policy (widget, True, True, False)
 		end
 
-	set_modal is
-			-- Make the window modal
+	set_modal (flag: BOOLEAN) is
+			-- Make the window modal if `True' or
+			-- non-modal if `False'.
 		do
-			c_gtk_window_set_modal(widget, True)
+			c_gtk_window_set_modal(widget, flag)
 		end
 
 	show is
@@ -383,7 +423,8 @@ feature {NONE} -- Implementation
 			-- changed the settings of his child `the_child'.
 			-- Redefined because the child is placed in a hbox (see `add_child').
 		do
-			c_gtk_box_set_child_options (hbox, child_imp.widget, child_imp.expandable, False)
+--			c_gtk_box_set_child_options (hbox, child_imp.widget, child_imp.expandable, False)
+			c_gtk_box_set_child_options (hbox, child_imp.widget, True, False)
 		end
 
 end -- class EV_UNTITLED_WINDOW_IMP

@@ -13,8 +13,7 @@ inherit
 			init_toolkit
 		end;
 	MEL_COMMAND;
-	EB_CONSTANTS;
-	INTERFACE_W
+	EB_CONSTANTS
 	
 creation
 	make

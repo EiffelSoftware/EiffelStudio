@@ -13,10 +13,6 @@ inherit
 creation
 	make
 
-feature -- Properties
-
-	name: STRING is "Ok"
-
 feature {NONE} -- Useless
 
 	symbol: PIXMAP is
@@ -25,13 +21,6 @@ feature {NONE} -- Useless
 				do_not_call: false
 			end
 		end;
-
-	dark_symbol: PIXMAP is
-		do
-			check
-				do_not_call: false
-			end
-		end
 
 feature {PREFERENCE_COMMAND} -- Execution
 

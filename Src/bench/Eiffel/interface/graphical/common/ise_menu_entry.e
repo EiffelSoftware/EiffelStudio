@@ -29,30 +29,14 @@ feature -- Properties
 		deferred
 		end;
 
-	insensitive: BOOLEAN is
-			-- Is Current insensitive for input from
-			-- the user?
-		deferred
-		end;
-
 	associated_command: COMMAND is
 			-- Command type that menu entry expects
+		require
+			never_be_called: false
 		do
 		end;
 
 feature -- Status setting
-
-	set_sensitive is
-			-- Make Current sensitive for input from
-			-- the user.
-		deferred
-		end;
-
-	set_insensitive is
-			-- Make Current insensitive for input from
-			-- the user.
-		deferred
-		end;
 
 	set_text (a_string: STRING) is
 			-- Set the text to `a_string'.

@@ -50,42 +50,40 @@ feature -- Execution
 		local
 			mp: MOUSE_PTR
 		do
-			if is_sensitive then
-				focus_label.popdown
-				if last_warner /= Void then
-					last_warner.popdown
-				end;
-				if last_confirmer /= Void and argument = last_confirmer then
-						-- The user wants to execute this format,
-						-- even though it's a long format.
-					if not text_window.changed then
-						execute_licenced (formatted);
-					else
-						warner (popup_parent).call (Current, Warning_messages.w_File_changed)
-					end
-				elseif argument = control_click then
-						-- No confirmation required.
-					formatted ?= tool.stone;
-					if not text_window.changed then
-						!! mp.set_watch_cursor;
-						execute_licenced (formatted);
-						mp.restore
-					else
-						warner (popup_parent).call (Current, Warning_messages.w_File_changed)
-					end
+			focus_label.popdown
+			if last_warner /= Void then
+				last_warner.popdown
+			end;
+			if last_confirmer /= Void and argument = last_confirmer then
+					-- The user wants to execute this format,
+					-- even though it's a long format.
+				if not text_window.changed then
+					execute_licenced (formatted);
 				else
-					if argument = tool then
-						formatted ?= tool.stone
-					else
-						formatted ?= argument
-					end;
-					if formatted = Void then
-						execute_licenced (Void)
-					else
-						confirmer (popup_parent).call (Current, 
-							"This format requires exploring the entire%N%
-							%system and may take a long time...", "Continue")
-					end
+					warner (popup_parent).call (Current, Warning_messages.w_File_changed)
+				end
+			elseif argument = control_click then
+					-- No confirmation required.
+				formatted ?= tool.stone;
+				if not text_window.changed then
+					!! mp.set_watch_cursor;
+					execute_licenced (formatted);
+					mp.restore
+				else
+					warner (popup_parent).call (Current, Warning_messages.w_File_changed)
+				end
+			else
+				if argument = tool then
+					formatted ?= tool.stone
+				else
+					formatted ?= argument
+				end;
+				if formatted = Void then
+					execute_licenced (Void)
+				else
+					confirmer (popup_parent).call (Current, 
+						"This format requires exploring the entire%N%
+						%system and may take a long time...", "Continue")
 				end
 			end
 		end;

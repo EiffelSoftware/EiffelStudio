@@ -27,7 +27,7 @@ feature -- Initialization
 		do
 			button_make (menu_entry_name, a_parent);
 			set_text (a_cmd.name);
-			add_activate_action (a_cmd, a_cmd.name)
+			add_activate_action (a_cmd, Void)
 		end
 
 feature -- Status setting
@@ -42,7 +42,7 @@ feature -- Status setting
 			end
 		end
 
-	associated_command: PREFERENCE_COMMAND is
+	associated_command: PREFERENCE_CATEGORY is
 			-- Command type that menu entry expects
 		do
 		end;

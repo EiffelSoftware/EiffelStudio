@@ -13,26 +13,6 @@ inherit
 creation
 	make
 
-feature -- Properties
-
-	name: STRING is "Cancel"
-
-feature {NONE} -- Useless
-
-	symbol: PIXMAP is
-		do
-			check
-				do_not_call: false
-			end
-		end;
-
-	dark_symbol: PIXMAP is
-		do
-			check
-				do_not_call: false
-			end
-		end
-
 feature {PREEFERENCE_COMMAND} -- Execution
 
 	execute (argument: ANY) is

@@ -25,21 +25,6 @@ feature {NONE} -- Initialization
 
 feature -- Properties
 
-	name: STRING is
-			-- Current's name
-		deferred
-		end;
-
-	symbol: PIXMAP is
-			-- Current's symbol
-		deferred
-		end
-
-	dark_symbol: PIXMAP is
-			-- Current's symbol for selected state
-		deferred
-		end
-
 	tool: PREFERENCE_TOOL
 			-- The tool
 

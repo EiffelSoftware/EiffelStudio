@@ -7,7 +7,7 @@ inherit
 			false_state_symbol as full_symbol,
 			init as make
 		redefine
-			holder, full_symbol
+			full_symbol
 		end;
 	HOLE
 		export
@@ -23,9 +23,6 @@ feature -- Initialization
 		end;
 
 feature -- Properties
-
-	holder: HOLE_HOLDER;
-			-- Holder of Current
 
 	target: WIDGET is
 			-- Initialization of the hole is

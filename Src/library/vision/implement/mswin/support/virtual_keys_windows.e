@@ -20,7 +20,7 @@ feature
 			from
 				i := 0
 			variant
-				255 - i
+				256 - i
 			until
 				i > 255
 			loop

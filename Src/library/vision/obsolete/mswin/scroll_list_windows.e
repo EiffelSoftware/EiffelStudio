@@ -177,7 +177,7 @@ feature -- Initialization
 				from
 					i := 1
 				variant
-					private_list.count - i
+					private_list.count + 1 - i
 				until
 					i > private_list.count
 				loop
@@ -198,7 +198,7 @@ feature -- Initialization
 					from
 						private_selected_positions.start
 					variant
-						private_selected_positions.count - private_selected_positions.index
+						private_selected_positions.count + 1 - private_selected_positions.index
 					until
 						private_selected_positions.after
 					loop
@@ -531,7 +531,7 @@ feature {NONE} -- Implementation
 			from
 				i := 1
 			variant
-				private_list.count - i
+				private_list.count + 1 - i
 			until
 				i > n or cursor_index = private_list.count
 			loop
@@ -577,7 +577,7 @@ feature {NONE} -- Implementation
 			from
 				i := cursor_index
 			variant
-				private_list.count - i
+				private_list.count + 1 - i
 			until
 				i = 1 or private_list.isfirst
 			loop
@@ -614,7 +614,7 @@ feature {NONE} -- Implementation
 			from
 				private_list.start
 			variant
-				private_list.count - private_list.index
+				private_list.count + 1 - private_list.index
 			until
 				private_list.after or private_list.empty
 			loop

@@ -420,7 +420,7 @@ feature -- Status setting
 							from
 								i := 1
 							variant
-								c.count - i + 1
+								c.count + 1 - i
 							until
 								i > c.count
 							loop

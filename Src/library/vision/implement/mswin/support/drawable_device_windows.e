@@ -260,7 +260,7 @@ feature -- Status setting
 					c:= clip_list.cursor
 					clip_list.start
 				variant
-					clip_list.count - clip_list.index
+					clip_list.count + 1 - clip_list.index
 				until
 					clip_list.after
 				loop
@@ -506,7 +506,7 @@ feature -- Output
 				c := points.cursor
 				points.start
 			variant
-				points.count - points.index
+				points.count + 1 - points.index
 			until
 				points.after
 			loop
@@ -602,7 +602,7 @@ feature -- Output
 					c := points.cursor
 					points.start
 				variant
-					points.count - points.index
+					points.count + 1 - points.index
 				until
 					points.after
 				loop

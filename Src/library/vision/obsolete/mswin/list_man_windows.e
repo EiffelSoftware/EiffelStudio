@@ -255,7 +255,7 @@ feature -- Element change
 			from
 				other.start
 			variant
-				other.count - other.index
+				other.count + 1 - other.index
 			until
 				other.after
 			loop
@@ -278,7 +278,7 @@ feature -- Element change
 			from
 				other.start
 			variant
-				other.count - other.index
+				other.count + 1 - other.index
 			until
 				other.after
 			loop

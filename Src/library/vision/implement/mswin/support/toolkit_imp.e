@@ -154,7 +154,7 @@ feature {NONE} -- Implementation
 			from
 				tasks.start
 			variant
-				tasks.count - tasks.index
+				tasks.count + 1 - tasks.index
 			until
 				tasks.after
 			loop

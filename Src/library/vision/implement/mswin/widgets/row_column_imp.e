@@ -524,7 +524,7 @@ feature {NONE} -- Implementation
 				i := 1
 				placed := 1
 			variant
-				c.count - i
+				c.count + 1 - i
 			until
 				placed > c.count
 			loop
@@ -534,7 +534,7 @@ feature {NONE} -- Implementation
 					j := 1
 					max_h := 0
 				variant
-					preferred_count - j
+					preferred_count + 1 - j
 				until
 					j > preferred_count or placed > c.count
 				loop
@@ -576,7 +576,7 @@ feature {NONE} -- Implementation
 			from
 				i := 1
 			variant
-				c.count - i
+				c.count + 1 - i
 			until
 				i > c.count
 			loop
@@ -598,7 +598,7 @@ feature {NONE} -- Implementation
 					-- j is the row indicator
 				placed := 1
 			variant
-				c.count - placed	
+				c.count + 1 - placed	
 			until
 				placed > c.count
 			loop

@@ -158,7 +158,15 @@
         <h3>WEL</h3>
         <ul>
           <li>Removed inheritance to <span class="eclass">WEL_STRUCTURE</span> in <span class="eclass">WEL_STRING</span>, it now 
-          inherits from new <span class="eclass">C_STRING</span> class.</li>
+          inherits from new <span class="eclass">C_STRING</span> class. In the 
+          process removed the following features which were inherited from <span class="eclass">WEL_STRUCTURE</span> 
+          and did not make sense to <span class="eclass">WEL_STRING </span>
+          <span class="efeature">memory_copy</span>, <span class="efeature">structure_size</span>,
+          <span class="efeature">dispose</span>, <span class="efeature">set_item</span>, <span class="efeature">set_shared</span>, 
+          <span class="efeature">set_unshared</span>, <span class="efeature">shared</span>, <span class="efeature">to_integer</span>. No replacements have been provided 
+          for those features. Made <span class="efeature">initialize</span> and <span class="efeature">initialize_with_character</span> 
+          obsolete, instead we now provide two features inherited from C_STRING 
+          <span class="efeature">fill_blank</span> and <span class="efeature">fill_value</span>.</li>
         </ul>
         <p>&nbsp;</p>
         <p><a href="Eiffel52.html">Click here to check out what was new in 

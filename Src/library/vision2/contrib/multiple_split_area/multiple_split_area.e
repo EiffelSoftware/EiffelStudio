@@ -143,6 +143,12 @@ feature -- Access
 		once
 			create Result
 		end
+		
+	restore_actions: EV_NEW_ITEM_ACTION_SEQUENCE is
+			-- Actions to be performed after an itme has been restored.
+		once
+			create Result
+		end
 
 	customizeable_area_of_widget (widget: EV_WIDGET): EV_HORIZONTAL_BOX is
 			-- `Result' is an EV_HORIZONTAL_BOX contained in the header of the tool
@@ -526,7 +532,7 @@ feature -- Status setting
 				tool_holder.minimize_button.set_pixmap (minimize_pixmap)
 				tool_holder.minimize_button.set_tooltip ("Minimize")
 			end
-		
+			restore_actions.call ([a_widget])
 			if locked_in_here then
 				parent_window (Current).unlock_update
 			end
@@ -1458,6 +1464,14 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			shown_implies_result_not_void: widget.is_displayed implies Result /= Void
 		end
 		
+	set_holder_tool_height (a_height: INTEGER) is
+			-- Assign `a_height' to `holder_tool_height'.
+		require
+			a_height_positive: a_height > 0
+		do
+			holder_tool_height := a_height
+		end
+		
 feature {NONE} -- Implementation
 
 	docked_out_actions_internal: EV_NOTIFY_ACTION_SEQUENCE
@@ -1755,8 +1769,8 @@ feature {NONE} -- Implementation
 					end
 					linear_representation.back
 				end
-					if height - total_restored > 0 then
-						resize_widget_to (linear_representation.first, height - total_restored - (18 + 6 * (count - 1)))
+					if height - total_restored - (tool_holder_height + splitter_width * (count - 1)) > 0 then
+						resize_widget_to (linear_representation.first, height - total_restored - (tool_holder_height + splitter_width * (count - 1)))
 					end
 			else
 				from
@@ -1821,6 +1835,9 @@ feature {NONE} -- Implementation
 		do
 			Result := (create {EV_ENVIRONMENT}).application
 		end
+		
+	holder_tool_height: INTEGER
+			-- Height of tools that surround each widget within `Current'.
 
 	restore_string: STRING is "Restore"
 	maximize_string: STRING is "Maximize"

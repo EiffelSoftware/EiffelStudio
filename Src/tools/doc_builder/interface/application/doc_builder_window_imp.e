@@ -395,42 +395,33 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_1.disable_item_expand (output_combo)
 			main_toolbar.set_minimum_height (22)
 			toolbar_new.set_tooltip ("New")
-			internal_pixmap.set_with_named_file ("D:\Src\tools\doc_builder\resources\icons\icon_new_doc.ico")
-			toolbar_new.set_pixmap (internal_pixmap)
+			toolbar_new.set_pixmap (icon_new_doc_ico)
 			toolbar_open.set_tooltip ("Open")
-			internal_pixmap.set_with_named_file ("D:\Src\tools\doc_builder\resources\icons\icon_open_file.ico")
-			toolbar_open.set_pixmap (internal_pixmap)
+			toolbar_open.set_pixmap (icon_open_file_ico)
 			toolbar_save.disable_sensitive
 			toolbar_save.set_tooltip ("Save")
-			internal_pixmap.set_with_named_file ("D:\Src\tools\doc_builder\resources\icons\icon_save.ico")
-			toolbar_save.set_pixmap (internal_pixmap)
+			toolbar_save.set_pixmap (icon_save_ico)
 			toolbar_cut.disable_sensitive
 			toolbar_cut.set_tooltip ("Cut")
-			internal_pixmap.set_with_named_file ("D:\Src\tools\doc_builder\resources\icons\icon_cut_color.ico")
-			toolbar_cut.set_pixmap (internal_pixmap)
+			toolbar_cut.set_pixmap (icon_cut_color_ico)
 			toolbar_copy.disable_sensitive
 			toolbar_copy.set_tooltip ("Copy")
-			internal_pixmap.set_with_named_file ("D:\Src\tools\doc_builder\resources\icons\icon_copy_color.ico")
-			toolbar_copy.set_pixmap (internal_pixmap)
+			toolbar_copy.set_pixmap (icon_copy_color_ico)
 			toolbar_paste.disable_sensitive
 			toolbar_paste.set_tooltip ("Paste")
-			internal_pixmap.set_with_named_file ("D:\Src\tools\doc_builder\resources\icons\icon_paste.ico")
-			toolbar_paste.set_pixmap (internal_pixmap)
+			toolbar_paste.set_pixmap (icon_paste_ico)
 			toolbar_xml_format.disable_sensitive
 			toolbar_xml_format.set_tooltip ("Pretty XML")
-			internal_pixmap.set_with_named_file ("D:\Src\tools\doc_builder\resources\icons\icon_format_text_color.ico")
-			toolbar_xml_format.set_pixmap (internal_pixmap)
+			toolbar_xml_format.set_pixmap (icon_format_text_color_ico)
 			toolbar_code_format.disable_sensitive
 			toolbar_code_format.set_tooltip ("Pretty code format")
 			toolbar_code_format.set_pixmap (icon_code_format_ico)
 			toolbar_validate.disable_sensitive
 			toolbar_validate.set_tooltip ("Validate document against schema")
-			internal_pixmap.set_with_named_file ("D:\Src\tools\doc_builder\resources\icons\icon_validate.ico")
-			toolbar_validate.set_pixmap (internal_pixmap)
+			toolbar_validate.set_pixmap (icon_validate_ico)
 			toolbar_properties.disable_sensitive
 			toolbar_properties.set_tooltip ("Document Properties")
-			internal_pixmap.set_with_named_file ("D:\Src\tools\doc_builder\resources\icons\icon_info.ico")
-			toolbar_properties.set_pixmap (internal_pixmap)
+			toolbar_properties.set_pixmap (icon_info_ico)
 			l_ev_label_1.set_text ("Filter ")
 			l_ev_label_1.align_text_left
 			output_combo.set_tooltip ("Output filter transformation")

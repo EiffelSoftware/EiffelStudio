@@ -17,7 +17,8 @@ inherit
 		redefine
 			interface,
 			initialize,
-			on_ok
+			on_ok,
+			show_modal_to_window
 		end
 
 feature {NONE} -- Initialization
@@ -31,7 +32,6 @@ feature {NONE} -- Initialization
 			create a_cs.make ("Select file")
 			set_c_object
 				(feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_dialog_new (a_cs.item, NULL, file_chooser_action))
-			filter := "*.*"
 		end
 
 	initialize is
@@ -41,6 +41,9 @@ feature {NONE} -- Initialization
 		do
 			Precursor {EV_STANDARD_DIALOG_IMP}
 			is_initialized := False
+			
+			filter := "*.*"
+			create filters.make (0)
 			
 			a_cancel_button := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_dialog_add_button (c_object, feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_stock_cancel_enum, feature {EV_GTK_EXTERNALS}.gtk_response_cancel_enum)
 			a_ok_button := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_dialog_add_button (c_object, feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_stock_ok_enum, feature {EV_GTK_EXTERNALS}.gtk_response_accept_enum)
@@ -117,6 +120,7 @@ feature -- Element change
 		local
 			a_cs: EV_GTK_C_STRING
 			filter_name: STRING
+			a_filter_ptr: POINTER
 		do
 			filter := a_filter.twin
 			
@@ -133,12 +137,7 @@ feature -- Element change
 				filter_name.append (")")
 			end
 			
-			if a_filter_ptr /= NULL then
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_remove_filter (c_object, a_filter_ptr)
-			end
-			if all_files_filter /= NULL then
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_remove_filter (c_object, all_files_filter)
-			end
+			remove_file_filters
 			
 			if not a_filter.is_equal ("*.*") then
 				a_filter_ptr := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_filter_new
@@ -150,15 +149,12 @@ feature -- Element change
 			end
 
 			create a_cs.make ("*.*")
-			all_files_filter := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_filter_new
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_filter_add_pattern (all_files_filter, a_cs.item)
+			a_filter_ptr := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_filter_new
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_filter_add_pattern (a_filter_ptr, a_cs.item)
 			create a_cs.make ("All files *.*")
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_filter_set_name (all_files_filter, a_cs.item)
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_add_filter (c_object, all_files_filter)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_filter_set_name (a_filter_ptr, a_cs.item)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_add_filter (c_object, a_filter_ptr)
 		end
-
-	a_filter_ptr, all_files_filter: POINTER
-		-- Pointers to the GtkFileFilters used for file path filtering with `set_filter'
 
 	set_file_name (a_name: STRING) is
 			-- Make `a_name' the selected file.
@@ -204,6 +200,71 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 		end
 
 feature {NONE} -- Implementation
+
+	remove_file_filters is
+			-- Remove current file filters of `Current'
+		local
+			a_filter_list: POINTER
+			a_filter: POINTER
+			i: INTEGER
+		do
+			a_filter_list := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_list_filters (c_object)
+			if a_filter_list /= NULL then
+				from
+					a_filter := feature {EV_GTK_EXTERNALS}.g_slist_nth_data (a_filter_list, i)
+				until
+					a_filter = NULL
+				loop
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_remove_filter (c_object, a_filter)
+					i := i + 1
+					a_filter := feature {EV_GTK_EXTERNALS}.g_slist_nth_data (a_filter_list, i)
+				end
+				feature {EV_GTK_EXTERNALS}.g_slist_free (a_filter_list)
+			end
+		end
+
+	show_modal_to_window (a_window: EV_WINDOW) is
+			-- Show `Current' modal to `a_window' until the user closes it
+		local
+			filter_string_list: LIST [STRING]
+			current_filter_string, current_filter_description: STRING
+			filter_ptr: POINTER
+			a_cs: EV_GTK_C_STRING
+		do
+			if not filters.empty then
+				remove_file_filters
+			end
+			from
+				filters.start
+			until
+				filters.off
+			loop
+				current_filter_string ?= filters.item.item (1)
+				current_filter_description ?= filters.item.item (2)
+				if current_filter_string /= Void then
+					filter_string_list := current_filter_string.split (';')
+					if current_filter_description /= Void then
+						filter_ptr := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_filter_new
+						create a_cs.make (current_filter_description)
+						feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_filter_set_name (filter_ptr, a_cs.item)
+						from
+							filter_string_list.start
+							print ("Filter description " + current_filter_description + "%N")
+						until
+							filter_string_list.off
+						loop
+							print (filter_string_list.item + "%N")
+							create a_cs.make (filter_string_list.item)
+							feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_filter_add_pattern (filter_ptr, a_cs.item)
+							filter_string_list.forth
+						end
+						feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_add_filter (c_object, filter_ptr)
+					end
+				end	
+				filters.forth
+			end
+			Precursor {EV_STANDARD_DIALOG_IMP} (a_window)
+		end	
 
 	file_chooser_action: INTEGER is
 			-- Action constant of the file chooser, ie: to open or save files, etc.

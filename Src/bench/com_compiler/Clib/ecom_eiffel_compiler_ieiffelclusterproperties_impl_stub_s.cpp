@@ -451,7 +451,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::excluded(
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = grt_ec_Eif_compiler.ccom_ec_pointed_interface_137 (eif_access (tmp_object));
+		*return_value = grt_ec_Eif_compiler.ccom_ec_pointed_interface_143 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -612,7 +612,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::subcluste
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = grt_ec_Eif_compiler.ccom_ec_pointed_interface_118 (eif_access (tmp_object));
+		*return_value = grt_ec_Eif_compiler.ccom_ec_pointed_interface_124 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else

@@ -26,6 +26,10 @@ class IEiffelProjectProperties_impl_proxy;
 
 #include "ecom_eiffel_compiler_IEnumImportedAssemblies_s.h"
 
+#include "ecom_eiffel_compiler_IEnumIncludePaths_s.h"
+
+#include "ecom_eiffel_compiler_IEnumObjectFiles_s.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -218,6 +222,42 @@ public:
 	Remove an assembly from the project.
 	-----------------------------------------------------------*/
 	void ccom_remove_assembly(  /* [in] */ EIF_OBJECT assembly_path );
+
+
+	/*-----------------------------------------------------------
+	Included Paths.
+	-----------------------------------------------------------*/
+	EIF_REFERENCE ccom_include_paths(  );
+
+
+	/*-----------------------------------------------------------
+	Add an include path to the project.
+	-----------------------------------------------------------*/
+	void ccom_add_include_path(  /* [in] */ EIF_OBJECT include_path );
+
+
+	/*-----------------------------------------------------------
+	Remove an include path from the project.
+	-----------------------------------------------------------*/
+	void ccom_remove_include_path(  /* [in] */ EIF_OBJECT include_path );
+
+
+	/*-----------------------------------------------------------
+	Object Files.
+	-----------------------------------------------------------*/
+	EIF_REFERENCE ccom_object_files(  );
+
+
+	/*-----------------------------------------------------------
+	Add an object file to the project.
+	-----------------------------------------------------------*/
+	void ccom_add_object_file(  /* [in] */ EIF_OBJECT object_file );
+
+
+	/*-----------------------------------------------------------
+	Remove an object file from the project.
+	-----------------------------------------------------------*/
+	void ccom_remove_object_file(  /* [in] */ EIF_OBJECT object_file );
 
 
 	/*-----------------------------------------------------------

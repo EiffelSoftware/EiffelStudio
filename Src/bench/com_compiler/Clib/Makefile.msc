@@ -38,6 +38,8 @@ ecom_eiffel_compiler_ienumfeature_impl_stub_s.obj \
 ecom_eiffel_compiler_ienumclusterprop_impl_stub_s.obj \
 ecom_eiffel_compiler_ienumclusterexcludes_impl_stub_s.obj \
 ecom_eiffel_compiler_ienumimportedassemblies_impl_stub_s.obj \
+ecom_eiffel_compiler_ienumincludepaths_impl_stub_s.obj \
+ecom_eiffel_compiler_ienumobjectfiles_impl_stub_s.obj \
 c_net_directory.obj
 
 WOBJ = wceiffelcompiler_factory.obj \
@@ -72,6 +74,8 @@ wecom_eiffel_compiler_ienumfeature_impl_stub_s.obj \
 wecom_eiffel_compiler_ienumclusterprop_impl_stub_s.obj \
 wecom_eiffel_compiler_ienumclusterexcludes_impl_stub_s.obj \
 wecom_eiffel_compiler_ienumimportedassemblies_impl_stub_s.obj \
+wecom_eiffel_compiler_ienumincludepaths_impl_stub_s.obj \
+wecom_eiffel_compiler_ienumobjectfiles_impl_stub_s.obj \
 wc_net_directory.obj
 
 all:: ecom.lib ecom_final.lib
@@ -192,6 +196,12 @@ wecom_eiffel_compiler_ienumimportedassemblies_impl_stub_s.obj: ecom_eiffel_compi
 	
 wecom_eiffel_compiler_ienumclusterexcludes_impl_stub_s.obj: ecom_eiffel_compiler_ienumclusterexcludes_impl_stub_s.cpp
 	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
-
+	
+wecom_eiffel_compiler_ienumincludepaths_impl_stub_s.obj: ecom_eiffel_compiler_ienumincludepaths_impl_stub_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+	
+wecom_eiffel_compiler_ienumobjectfiles_impl_stub_s.obj: ecom_eiffel_compiler_ienumobjectfiles_impl_stub_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+	
 wc_net_directory.obj: c_net_directory.c
 	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?

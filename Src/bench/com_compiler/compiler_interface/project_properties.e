@@ -19,6 +19,8 @@ inherit
 			evaluate_invariant,
 			debug_info,
 			clusters,
+			include_paths,
+			object_files,
 			compilation_type,
 			console_application,
 			assemblies,
@@ -36,6 +38,10 @@ inherit
 			set_debug_info,
 			add_assembly,
 			remove_assembly,
+			add_include_path,
+			remove_include_path,
+			add_object_file,
+			remove_object_file,
 			update_project_ace_file,
 			synchronize_with_project_ace_file
 		end
@@ -188,35 +194,81 @@ feature -- Access
 			end
 		end
 		
-	assemblies: IENUM_IMPORTED_ASSEMBLIES_INTERFACE is
+	assemblies: IMPORTED_ASSEMBLIES_ENUMERATOR is
 			-- Imported assemblies.
 			-- Void if none.
 		local
-			res: ARRAY [STRING]
+			res: ARRAYED_LIST [STRING]
 			ace_res: LINKED_LIST [STRING]
-			i: INTEGER
 		do
---			if is_valid then
---				ace_res := ace.assemblies
---				if ace_res /= Void and then not ace_res.is_empty then
---					create res.make (1, ace_res.count)
---					from
---						ace_res.start
---						i := 1
---					until
---						ace_res.after
---					loop
---						res.put (ace_res.item, i)
---						i := i + 1
---						ace_res.forth
---					end
---				end
---				if res /= Void then
---					create Result.make_from_array (res, 1, <<1>>, <<res.count>>)
---				end
---			end
+			if is_valid then
+				ace_res := ace.assemblies
+				if ace_res /= Void and then not ace_res.is_empty then
+					create res.make (ace_res.count)
+					from
+						ace_res.start
+					until
+						ace_res.after
+					loop
+						res.extend (ace_res.item)
+						ace_res.forth
+					end
+				end
+				if res /= Void then
+					create Result.make (res)
+				end
+			end
 		end
-
+		
+	include_paths: INCLUDE_PATHS_ENUMERATOR is
+			-- retrieve a enum of the included paths in the project
+		local
+			res: ARRAYED_LIST [STRING]
+			ace_res: LINKED_LIST [STRING]
+		do
+			if is_valid then
+				ace_res := ace.include_paths
+				if ace_res /= Void and then not ace_res.is_empty then
+					create res.make (ace_res.count)
+					from
+						ace_res.start
+					until
+						ace_res.after
+					loop
+						res.extend (ace_res.item)
+						ace_res.forth
+					end
+				end
+				if res /= Void then
+					create Result.make (res)
+				end
+			end
+		end
+		
+	object_files: OBJECT_FILES_ENUMERATOR is
+			-- retireve a enum of the object files in the project
+		local
+			res: ARRAYED_LIST [STRING]
+			ace_res: LINKED_LIST [STRING]
+		do
+			if is_valid then
+				ace_res := ace.object_files
+				if ace_res /= Void and then not ace_res.is_empty then
+					create res.make (ace_res.count)
+					from
+						ace_res.start
+					until
+						ace_res.after
+					loop
+						res.extend (ace_res.item)
+						ace_res.forth
+					end
+				end
+				if res /= Void then
+					create Result.make (res)
+				end
+			end
+		end
 		
 feature -- Element change
 
@@ -340,6 +392,29 @@ feature -- Element change
 				end				
 			end
 		end
+		
+	add_include_path (include_path: STRING) is
+			-- add an include path to the project
+		do
+		end
+		
+	remove_include_path (include_path: STRING) is
+			-- remove an include path from the project
+		do
+		end
+		
+	add_object_file (object_file: STRING) is
+			-- add an object file to the project
+		do
+		end
+		
+	remove_object_file (object_file: STRING) is
+			-- remove an object file from the project
+		do
+		end
+		
+		
+		
 		
 feature -- Status report
 

@@ -16,11 +16,10 @@ feature -- Access
 	criterium (f: E_FEATURE): BOOLEAN is
 			-- Criterium for feature `f'
 		do
-				-- Only shows attribute. If an attribute is of type NONE
-				-- like `Void' in ANY we do not show them.
-			Result := f.is_attribute and then not f.type.is_none
+				-- Only shows attribute.
+			Result := f.is_attribute
 		ensure then
-			good_criterium: Result = (f.is_attribute and then not f.type.is_none)
+			good_criterium: Result = f.is_attribute
 		end
 	
 end -- class E_SHOW_ATTRIBUTES

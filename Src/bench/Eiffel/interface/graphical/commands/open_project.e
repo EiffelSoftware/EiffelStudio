@@ -175,6 +175,7 @@ feature
 				end;
 				System.server_controler.init;
 				Universe.update_cluster_paths;
+				project_tool.set_icon_name (System.system_name);
 				if is_project_writable then
 					Project_read_only.set_item (false)
 				elseif is_project_readable then

@@ -42,6 +42,8 @@ inherit
 	SHARED_EIFNET_DEBUG_VALUE_FACTORY
 		export
 			{NONE} all
+		undefine
+			error_value
 		end
 		
 	ICOR_EXPORTER -- debug trace purpose

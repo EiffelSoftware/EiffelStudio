@@ -9,6 +9,7 @@ class
 
 inherit
 	ICOR_EXPORTER
+	DEBUG_VALUE_EXPORTER
 
 feature {SHARED_EIFNET_DEBUG_VALUE_FACTORY} -- Initialization
 
@@ -28,6 +29,14 @@ feature {SHARED_EIFNET_DEBUG_VALUE_FACTORY} -- Bridge
 		ensure
 			Result /= Void
 		end
+		
+	error_value (a_name, a_mesg: STRING): DUMMY_MESSAGE_DEBUG_VALUE is
+		do		
+			create Result.make_with_name (a_name)
+			Result.set_message (a_mesg)
+		ensure
+			Result /= Void
+		end		
 
 end -- class SHARED_EIFNET_DEBUG_VALUE_FACTORY
 

@@ -1,9 +1,9 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.	  --
---|	270 Storke Road, Suite 7 Goleta, California 93117		--
---|				   (805) 685-1006							--
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
+indexing
+
+	description:	
+		"The project window.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class PROJECT_W
 
@@ -37,28 +37,7 @@ creation
 
 	make
 
-feature
-
-	popdown: ANY is once !!Result end;
-	remapped: ANY is once !!Result end;
-
-	display: SCREEN is
-		local
-			display_name: STRING;
-		do
-			!!Result.make ("");
-			if not Result.is_valid then
-				io.error.putstring ("Cannot open display %"");
-				display_name := Execution_environment.get ("DISPLAY");
-				if display_name /= Void then
-					io.error.putstring (display_name);
-				end;
-				io.error.putstring ("%"%N%
-					%Check that $DISPLAY is properly set and that you are%N%
-					%authorized to connect to the corresponding server%N");
-				raise_exception ("Invalid display");
-			end;
-		end;
+feature -- Initialization
 
 	make is
 			-- Create a project application.
@@ -89,7 +68,64 @@ feature
 			Application.set_after_stopped_command (app_stopped_cmd);
 		end;
 
-	set_default_size is do end;
+feature -- Properties
+
+	popdown: ANY is
+		once
+			!! Result
+		end;
+
+	remapped: ANY is
+		once
+			!! Result
+		end;
+
+	display: SCREEN is
+		local
+			display_name: STRING;
+		do
+			!! Result.make ("");
+			if not Result.is_valid then
+				io.error.putstring ("Cannot open display %"");
+				display_name := Execution_environment.get ("DISPLAY");
+				if display_name /= Void then
+					io.error.putstring (display_name);
+				end;
+				io.error.putstring ("%"%N%
+					%Check that $DISPLAY is properly set and that you are%N%
+					%authorized to connect to the corresponding server%N");
+				raise_exception ("Invalid display");
+			end;
+		end;
+
+feature -- Window Settings
+
+	set_default_size is
+		do
+		end;
+
+	set_default_position is
+			-- Display the project tool at the 
+			-- upper left corner of the screen.
+		do
+			set_x_y (0, 0)
+		end;
+ 
+	set_initialized is
+			-- Set `initialized' to true.
+		do
+			initialized := true
+		ensure
+			initialized = true
+		end;
+
+	set_changed (f: BOOLEAN) is
+			-- Assign `f' to `changed'.
+		do
+			changed := f
+		end
+
+feature -- Window Implementation
 
 	close_windows is 
 		do 
@@ -101,12 +137,74 @@ feature
 			open_command.execute (text_window);
 		end;
 
+feature -- Window Properties
+
+	changed: BOOLEAN;
+			-- Is or has the window changed?
+
+	initialized: BOOLEAN;
+			-- Is the workbench created?
+
+	is_system_window_hidden: BOOLEAN;
+			-- Is the system window hidden?
+
+	is_name_chooser_hidden: BOOLEAN;
+			-- Is the name chooser hidden?
+
+	is_warner_hidden: BOOLEAN;
+			-- Is the warner window hidden?
+
+	is_confirmer_hidden: BOOLEAN;
+			-- Is the confirmer window hidden?
+
+	is_project_tool_hidden: BOOLEAN;
+			-- Is the project tool hidden?
+
 	eiffel_symbol: PIXMAP is
 		do
 			Result := bm_Project
 		end;
 
-	tool_name: STRING is do Result := l_Project end;
+	tool_name: STRING is
+		do
+			Result := l_Project
+		end;
+
+	text_window: PROJECT_TEXT;
+			-- Text window associated with Current.
+
+feature -- WIndow Holes
+
+	stop_points_hole: DEBUG_STOPIN;
+
+	system_hole: SYSTEM_HOLE;
+
+	class_hole: PROJ_CLASS_HOLE;
+
+	routine_hole: ROUTINE_HOLE;
+
+	object_hole: OBJECT_HOLE;
+
+	explain_hole: EXPLAIN_HOLE;
+
+feature -- Window Forms
+
+	icing: FORM;
+			-- Icing form with global command buttons
+
+	form_manager: FORM;
+			-- Manager of constraints on sub widgets.
+
+	classic_bar: FORM;
+			-- Main menu bar
+
+	format_bar: FORM;
+			-- Format menu bar
+
+feature -- Focus Label
+
+	type_teller: LABEL_G;
+			-- To tell what type of element we are dealing with
 
 	tell_type (a_type_name: STRING) is
 			-- Display `a_type_name' in type teller.
@@ -120,44 +218,33 @@ feature
 			type_teller.set_text (" ")
 		end;
 
-	form_manager: FORM;
-			-- Manager of constraints on sub widgets.
-
-	classic_bar: FORM;
-			-- Main menu bar
-
-	format_bar: FORM;
-			-- Format menu bar
-
-feature -- xterminal
-
-	text_window: PROJECT_TEXT;
+feature -- Execution Implementation
 
 	execute (arg: ANY) is
 			-- Resize xterm window when drawing area is resized
 		do
 			if arg = remapped then
-				if hidden_project_tool then
+				if is_project_tool_hidden then
 						-- The project tool is being deiconified.
-					hidden_project_tool := False;
+					is_project_tool_hidden := False;
 					window_manager.show_all_editors
-					if hidden_system_window then
+					if is_system_window_hidden then
 						system_tool.show
-						hidden_system_window := False;
+						is_system_window_hidden := False;
 					elseif system_tool.text_window.in_use then
 						system_tool.show
 					end;
 					raise
-					if hidden_warner then
-						hidden_warner := false;
+					if is_warner_hidden then
+						is_warner_hidden := false;
 						last_warner.popup
 					end
-					if hidden_confirmer then
-						hidden_confirmer := false;
+					if is_confirmer_hidden then
+						is_confirmer_hidden := false;
 						last_confirmer.popup
 					end
-					if hidden_name_chooser then
-						hidden_name_chooser := false;
+					if is_name_chooser_hidden then
+						is_name_chooser_hidden := false;
 						name_chooser.popup
 					end
 				else
@@ -166,27 +253,27 @@ feature -- xterminal
 					raise_grabbed_popup
 				end
 			elseif arg = popdown then
-				hidden_project_tool := True;
+				is_project_tool_hidden := True;
 				close_windows;
 				window_manager.hide_all_editors;
 				if 	system_tool.realized and then system_tool.shown then
 					system_tool.hide;
 					system_tool.close_windows;
-					hidden_system_window := True;
+					is_system_window_hidden := True;
 				end;
 				if name_chooser.is_popped_up then
-					hidden_name_chooser := true;
+					is_name_chooser_hidden := true;
 					name_chooser.popdown
 				end;	
 				if last_warner /= Void and then last_warner.is_popped_up then
-					hidden_warner := true;
+					is_warner_hidden := true;
 					last_warner.popdown
 				end;
 				if 
 					last_confirmer /= Void and then 
 					last_confirmer.is_popped_up
 				then
-					hidden_confirmer := true;
+					is_confirmer_hidden := true;
 					last_confirmer.popdown
 				end
 			else
@@ -194,64 +281,37 @@ feature -- xterminal
 			end
 		end;
 
-	hidden_system_window: BOOLEAN;
-	hidden_name_chooser: BOOLEAN;
-	hidden_warner: BOOLEAN;
-	hidden_confirmer: BOOLEAN;
-	hidden_project_tool: BOOLEAN;
-
-feature -- rest
-
-	icing: FORM;
-			-- With global command buttons
-
-	type_teller: LABEL_G;
-			-- To tell what type of element we are dealing with
-
-	stop_points_hole: DEBUG_STOPIN;
-			-- To set breakpoints
-	system_hole: SYSTEM_HOLE;
-	class_hole: PROJ_CLASS_HOLE;
-	routine_hole: ROUTINE_HOLE;
-	object_hole: OBJECT_HOLE;
-	explain_hole: EXPLAIN_HOLE;
-
-	set_default_position is
-			-- Display the project tool at the 
-			-- upper left corner of the screen.
-		do
-			set_x_y (0, 0)
-		end;
+feature -- Graphical Interface
 
 	build_widgets is
 			-- Build widget.
 		do
 			set_size (478, 306);
-			!!form_manager.make (new_name, Current);
+			!! form_manager.make (new_name, Current);
 			build_text;
 			build_top;
 			build_icing;
 			build_format_bar;
 			exec_stop.execute (Void);
 			attach_all
-		end; -- build
+		end;
 
 	build_top is
 			-- Build top bar
 		do
-			!!open_command.make (text_window);
-			!!classic_bar.make (new_name, form_manager);
+			!! open_command.make (text_window);
+			!! classic_bar.make (new_name, form_manager);
 
-			!!quit_command.make (classic_bar, text_window);
-			!!change_font_command.make (classic_bar, text_window);
-			!!type_teller.make (new_name, classic_bar);
-				type_teller.set_center_alignment;
-			!!explain_hole.make (classic_bar, Current);
-			!!system_hole.make (classic_bar, Current);
-			!!class_hole.make (classic_bar, Current);
-			!!routine_hole.make (classic_bar, Current);
-			!!object_hole.make (classic_bar, Current);
-			!!stop_points_hole.make (classic_bar, Current);
+			!! quit_command.make (classic_bar, text_window);
+			!! change_font_command.make (classic_bar, text_window);
+			!! type_teller.make (new_name, classic_bar);
+			type_teller.set_center_alignment;
+			!! explain_hole.make (classic_bar, Current);
+			!! system_hole.make (classic_bar, Current);
+			!! class_hole.make (classic_bar, Current);
+			!! routine_hole.make (classic_bar, Current);
+			!! object_hole.make (classic_bar, Current);
+			!! stop_points_hole.make (classic_bar, Current);
 
 			classic_bar.attach_left (explain_hole, 0);
 			classic_bar.attach_top (explain_hole, 0);
@@ -289,7 +349,7 @@ feature -- rest
 			-- Build console text window.
 		do
 			if tabs_disabled then
-				!!text_window.make (new_name, form_manager, Current);
+				!! text_window.make (new_name, form_manager, Current);
 			else
 				!PROJECT_TAB_TEXT! text_window.make (new_name, form_manager, Current)
 			end;
@@ -299,63 +359,37 @@ feature -- rest
 	build_format_bar is
 			-- Build formatting buttons in `format_bar'.
 		do
-			!!format_bar.make (new_name, form_manager);
+			!! format_bar.make (new_name, form_manager);
 
-			!!exec_stop.make (format_bar, text_window);
+			!! exec_stop.make (format_bar, text_window);
 			format_bar.attach_left (exec_stop, 0);
 			format_bar.attach_top (exec_stop, 0);
 			format_bar.attach_bottom (exec_stop, 0);
-			!!exec_step.make (format_bar, text_window);
+			!! exec_step.make (format_bar, text_window);
 			format_bar.attach_top (exec_step, 0);
 			format_bar.attach_bottom (exec_step, 0);
 			format_bar.attach_left_widget (exec_stop, exec_step, 0);
-			!!exec_last.make (format_bar, text_window);
+			!! exec_last.make (format_bar, text_window);
 			format_bar.attach_top (exec_last, 0);
 			format_bar.attach_bottom (exec_last, 0);
 			format_bar.attach_left_widget (exec_step, exec_last, 0);
-			!!exec_nostop.make (format_bar, text_window);
+			!! exec_nostop.make (format_bar, text_window);
 			format_bar.attach_top (exec_nostop, 0);
 			format_bar.attach_bottom (exec_nostop, 0);
 			format_bar.attach_left_widget (exec_last, exec_nostop, 0);
 		end;
 
-	exec_nostop: EXEC_NOSTOP;
-			-- Set execution format so that no stop points will be taken 
-			-- into account
-	exec_stop: EXEC_STOP;
-			-- Set execution format so that user-defined stop points will 
-			-- be taken into account
-	exec_step: EXEC_STEP;
-			-- Set execution format so that each breakable points of the 
-			-- current routine will be taken into account
-	exec_last: EXEC_LAST;
-			-- Set execution format so that only the last breakable point 
-			-- of the current routine will be taken into account
-
-	open_command: OPEN_PROJECT;
-	quit_command: QUIT_PROJECT;
-
-	update_command: UPDATE_PROJECT;
-	debug_run_command: DEBUG_RUN;
-	debug_status_command: DEBUG_STATUS;
-	debug_quit_command: DEBUG_QUIT;
-	special_command: SPECIAL_COMMAND;
-	freeze_command: FREEZE_PROJECT;
-	finalize_command: FINALIZE_PROJECT;
-
-	change_font_command: CHANGE_FONT;
-
 	build_icing is
 			-- Build icing area
 		do
-			!!icing.make (new_name, form_manager);
-				!!update_command.make (icing, text_window);
-				!!debug_run_command.make (icing, text_window);
-				!!debug_status_command.make (icing, text_window);
-				!!debug_quit_command.make (icing, text_window);
-				!!special_command.make (icing, text_window);
-				!!freeze_command.make (icing, text_window);
-				!!finalize_command.make (icing, text_window);
+			!! icing.make (new_name, form_manager);
+			!! update_command.make (icing, text_window);
+			!! debug_run_command.make (icing, text_window);
+			!! debug_status_command.make (icing, text_window);
+			!! debug_quit_command.make (icing, text_window);
+			!! special_command.make (icing, text_window);
+			!! freeze_command.make (icing, text_window);
+			!! finalize_command.make (icing, text_window);
 			icing.attach_top (update_command, 0);
 			icing.attach_left (update_command, 0);
 			icing.attach_right (update_command, 0);
@@ -390,13 +424,13 @@ feature -- rest
 			form_manager.attach_left (text_window, 0);
 			form_manager.attach_top_widget (classic_bar, text_window, 0);
 			form_manager.attach_right_widget (icing, text_window, 0);
-				-- (text_window will resize when window grows)
+			-- (text_window will resize when window grows)
 
-		--	form_manager.attach_left (xterminal, 5);
-		--	form_manager.attach_top_widget (text_window, xterminal, 5);
-		--	form_manager.attach_right_widget (icing, xterminal, 5);
-				-- (xterminal will resize when window grows)
-		--	form_manager.attach_bottom (xterminal, 5);
+			-- form_manager.attach_left (xterminal, 5);
+			-- form_manager.attach_top_widget (text_window, xterminal, 5);
+			-- form_manager.attach_right_widget (icing, xterminal, 5);
+			-- (xterminal will resize when window grows)
+			-- form_manager.attach_bottom (xterminal, 5);
 
 			form_manager.attach_bottom_widget (format_bar, text_window, 0);
 
@@ -409,23 +443,44 @@ feature -- rest
 			form_manager.attach_bottom (format_bar, 0)
 		end;
 
-	initialized: BOOLEAN;
-			-- Is the workbench created?
- 
-	set_initialized is
-			-- Set `initialized' to true.
-		do
-			initialized := true
-		ensure
-			initialized = true
-		end;
+feature -- System Execution Modes
 
-	changed: BOOLEAN;
+	exec_nostop: EXEC_NOSTOP;
+			-- Set execution format so that no stop points will
+			-- be taken into account
 
-	set_changed (f: BOOLEAN) is
-			-- Assign `f' to `changed'.
-		do
-			changed := f
-		end
+	exec_stop: EXEC_STOP;
+			-- Set execution format so that user-defined stop
+			-- points will be taken into account
 
-end
+	exec_step: EXEC_STEP;
+			-- Set execution format so that each breakable points
+			-- of the current routine will be taken into account
+
+	exec_last: EXEC_LAST;
+			-- Set execution format so that only the last					-- breakable point of the current routine will be
+			-- taken into account
+
+feature -- Commands
+
+	open_command: OPEN_PROJECT;
+
+	quit_command: QUIT_PROJECT;
+
+	update_command: UPDATE_PROJECT;
+
+	debug_run_command: DEBUG_RUN;
+
+	debug_status_command: DEBUG_STATUS;
+
+	debug_quit_command: DEBUG_QUIT;
+
+	special_command: SPECIAL_COMMAND;
+
+	freeze_command: FREEZE_PROJECT;
+
+	finalize_command: FINALIZE_PROJECT;
+
+	change_font_command: CHANGE_FONT;
+
+end -- class PROJECT_W

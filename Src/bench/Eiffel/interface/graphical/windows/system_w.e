@@ -1,11 +1,9 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.	  --
---|	270 Storke Road, Suite 7 Goleta, California 93117		--
---|				   (805) 685-1006							--
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
+indexing
 
--- Window describing the assembly of an Eiffel system (Ace, universe, ...)
+	description:	
+		"Window describing the assembly of an Eiffel system (Ace, universe, ...)";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class SYSTEM_W 
 
@@ -33,16 +31,11 @@ creation
 
 	make
 
-feature {NONE}
-
-	tool_name: STRING is do Result := l_System end;
-
-	editable:BOOLEAN is True;
-		-- System window is editable
-
-feature 
+feature -- Window Properties
 
 	text_window: SYSTEM_TEXT;
+
+feature -- Graphical Interface
 
 	display is
 		do
@@ -57,28 +50,28 @@ feature
 			raise;
 		end;
 	
-feature {NONE}
-	
+feature {NONE} -- Implementation; Graphical Interface
+
 	create_edit_buttons is
 		do
-			!!open_command.make (edit_bar, text_window);
-			!!save_command.make (edit_bar, text_window);
-			!!save_as_command.make (edit_bar, text_window);
+			!! open_command.make (edit_bar, text_window);
+			!! save_command.make (edit_bar, text_window);
+			!! save_as_command.make (edit_bar, text_window);
 		end;
 
 	build_widgets is
 		do
 			set_default_size;
 			if tabs_disabled then
-				!!text_window.make (new_name, global_form, Current);
+				!! text_window.make (new_name, global_form, Current);
 			else
-				!SYSTEM_TAB_TEXT!text_window.make (new_name, global_form, Current);
+				!SYSTEM_TAB_TEXT! text_window.make (new_name, global_form, Current);
 			end;
-			!!edit_bar.make (new_name, global_form);
+			!! edit_bar.make (new_name, global_form);
 			build_bar;
-			!!format_bar.make (new_name, global_form);
+			!! format_bar.make (new_name, global_form);
 			build_format_bar;
-			!!command_bar.make (new_name, global_form);
+			!! command_bar.make (new_name, global_form);
 			build_command_bar;
 			text_window.set_last_format (default_format);
 			attach_all
@@ -98,58 +91,86 @@ feature {NONE}
 	build_format_bar is
 			-- Build formatting buttons in `format_bar'.
 		do
-			!!showtext_command.make (format_bar, text_window);
-				format_bar.attach_top (showtext_command, 0);
-				format_bar.attach_left (showtext_command, 0);
-			!!showlist_command.make (format_bar, text_window);
-				format_bar.attach_top (showlist_command, 0);
-				format_bar.attach_left_widget (showtext_command, showlist_command, 0);
-			!!showclasses_command.make (format_bar, text_window);
-				format_bar.attach_top (showclasses_command, 0);
-				format_bar.attach_left_widget (showlist_command, showclasses_command, 0);
-			!!showstatistics_command.make (format_bar, text_window);
-				format_bar.attach_top (showstatistics_command, 0);
-				format_bar.attach_left_widget (showclasses_command, showstatistics_command, 0);
-			!!showmodified_command.make (format_bar, text_window);
-				format_bar.attach_top (showmodified_command, 0);
-				format_bar.attach_left_widget (showstatistics_command, showmodified_command, 0);
-			!!showindexing_command.make (format_bar, text_window);
-				format_bar.attach_top (showindexing_command, 0);
-				format_bar.attach_left_widget (showmodified_command, showindexing_command, 0);
+			!! showtext_command.make (format_bar, text_window);
+			format_bar.attach_top (showtext_command, 0);
+			format_bar.attach_left (showtext_command, 0);
+
+			!! showlist_command.make (format_bar, text_window);
+			format_bar.attach_top (showlist_command, 0);
+			format_bar.attach_left_widget (showtext_command, showlist_command, 0);
+
+			!! showclasses_command.make (format_bar, text_window);
+			format_bar.attach_top (showclasses_command, 0);
+			format_bar.attach_left_widget (showlist_command, showclasses_command, 0);
+
+			!! showstatistics_command.make (format_bar, text_window);
+			format_bar.attach_top (showstatistics_command, 0);
+			format_bar.attach_left_widget (showclasses_command, showstatistics_command, 0);
+
+			!! showmodified_command.make (format_bar, text_window);
+			format_bar.attach_top (showmodified_command, 0);
+			format_bar.attach_left_widget (showstatistics_command, showmodified_command, 0);
+
+			!! showindexing_command.make (format_bar, text_window);
+			format_bar.attach_top (showindexing_command, 0);
+			format_bar.attach_left_widget (showmodified_command, showindexing_command, 0);
 		end;
 
-feature {NONE} -- Command bar
+	build_command_bar is
+		do
+			!! shell_command.make (command_bar, text_window);
+			command_bar.attach_right (shell_command, 0);
+			command_bar.attach_left (shell_command, 0);
+			command_bar.attach_bottom (shell_command, 0);
+
+			!! case_storage_cmd.make (command_bar, text_window);
+			command_bar.attach_left (case_storage_cmd, 0);
+			command_bar.attach_bottom_widget (shell_command, case_storage_cmd, 10)
+		end;
+
+feature {NONE} -- Attributes
+
+	tool_name: STRING is
+			-- Name of the tool representwed by Current.
+		do
+			Result := l_System
+		end;
+
+	editable:BOOLEAN is True;
+			-- Is Current editable?
+
+feature {NONE} -- Attributes; Forms And Holes
 
 	command_bar: FORM;
 			-- Bar with the command buttons
 
-	build_command_bar is
-		do
-			!!shell_command.make (command_bar, text_window);
-				command_bar.attach_right (shell_command, 0);
-				command_bar.attach_left (shell_command, 0);
-				command_bar.attach_bottom (shell_command, 0);
-			!!case_storage_cmd.make (command_bar, text_window);
-				command_bar.attach_left (case_storage_cmd, 0);
-				command_bar.attach_bottom_widget (shell_command, case_storage_cmd, 10)
-		end;
-
-feature {NONE}
-
 	hole: SYSTEM_HOLE;
-			-- Hole caraterizing current
+			-- Hole charaterizing current
+
+feature {NONE} -- Attributes; Commands
 
 	open_command: OPEN_SYSTEM;
+
 	save_command: SAVE_SYSTEM;
+
 	save_as_command: SAVE_AS_SYSTEM;
---	check_command: CHECK_SYSTEM;
+
+	-- check_command: CHECK_SYSTEM;
+
 	quit_command: QUIT_SYSTEM;
+
 	showlist_command: SHOW_CLUSTERS;
+
 	showclasses_command: SHOW_CLASS_LIST;
+
 	showmodified_command: SHOW_MODIFIED;
+
 	showindexing_command: SHOW_INDEXING;
+
 	showstatistics_command: SHOW_STATISTICS;
+
 	shell_command: SHELL_COMMAND;
+
 	case_storage_cmd: CASE_STORAGE
 
-end
+end -- class SYSTEM_W

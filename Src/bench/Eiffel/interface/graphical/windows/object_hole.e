@@ -1,4 +1,9 @@
--- Hole for an object
+indexing
+
+	description:	
+		"Hole for an object.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class OBJECT_HOLE 
 
@@ -14,7 +19,7 @@ creation
 
 	make
 	
-feature 
+feature -- Properties
 
 	symbol: PIXMAP is
 			-- Icon for the object tool
@@ -34,14 +39,16 @@ feature
 			Result := bm_Object_icon
 		end;
 
-	
-feature {NONE}
+	stone_type: INTEGER is
+		do
+			Result := Object_type
+		end
 
-	command_name: STRING is do Result := l_Object end;
+feature {NONE} -- Properties
 
-	
-feature 
+	command_name: STRING is
+		do
+			Result := l_Object
+		end;
 
-	stone_type: INTEGER is do Result := Object_type end
-
-end
+end -- class OBJECT_HOLE

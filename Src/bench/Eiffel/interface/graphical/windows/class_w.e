@@ -1,11 +1,9 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.	  --
---|	270 Storke Road, Suite 7 Goleta, California 93117		--
---|				   (805) 685-1006							--
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
+indexing
 
--- Window describing an Eiffel class.
+	description:	
+		"Window describing an Eiffel class.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class CLASS_W 
 
@@ -41,7 +39,7 @@ creation
 
 	make
 
-feature 
+feature -- Initialization
 
 	make (a_screen: SCREEN) is
 			-- Create a class tool.
@@ -50,7 +48,11 @@ feature
 			set_composite_attributes (Current)
 		end;
 
+feature -- Window Properties
+
 	text_window: CLASS_TEXT;
+
+feature -- Update
 
 	reset is
 			-- Reset the window contents
@@ -58,6 +60,16 @@ feature
 			old_reset;
 			change_class_command.clear
 		end;
+
+	update_class_name (s: STRING) is
+		require
+			valid_arg: s /= Void
+		do
+			s.to_upper;
+			change_class_command.set_text (s);
+		end;
+
+feature -- Window Settings
 
 	close_windows is
 			-- Close sub-windows.
@@ -71,17 +83,13 @@ feature
 			end
 		end;
 
+feature -- Save (FIXME*******************)
+
 	save_new_class (c_name: STRING; f_name: STRING) is
 			-- Create a class with class name `c_name' with
 			-- file name `f_name'.
 		do
--- FIXME !!!!!!
--- FIXME !!!!!!
--- FIXME !!!!!!
--- FIXME !!!!!!
--- FIXME !!!!!!
--- FIXME !!!!!!
-			--!!new_file.make (f_name);
+			--!! new_file.make (f_name);
 			--new_file.open_write;
 			--new_file.putstring ("class ");
 			--c_name.to_upper;
@@ -99,32 +107,61 @@ feature
 			--end
 		end;
 
+feature -- Commands
+
 	change_class_command: CHANGE_CLASS;
+
+feature -- Forms And Holes
+
 	change_class_form: FORM;
 
-	update_class_name (s: STRING) is
-		require
-			valid_arg: s /= Void
-		do
-			s.to_upper;
-			change_class_command.set_text (s);
-		end;
+feature -- Formats
 
-feature
+	showflat_command: SHOW_FLAT;
+
+	showflatshort_command: SHOW_FS;
+
+	showancestors_command: SHOW_ANCESTORS;
+
+	showdescendants_command: SHOW_DESCENDANTS;
+
+	showclients_command: SHOW_CLIENTS;
+
+	showsuppliers_command: SHOW_SUPPLIERS;
+
+	showattributes_command: SHOW_ATTRIBUTES;
+
+	showroutines_command: SHOW_ROUTINES;
+
+	showshort_command: SHOW_SHORT;
+
+	showclick_command: SHOW_CLICK_CL;
+
+	showdeferreds_command: SHOW_DEFERREDS;
+
+	showexternals_command: SHOW_EXTERNALS;
+
+	showonces_command: SHOW_ONCES;
+
+	showexported_command: SHOW_EXPORTED;
+
+	showcustom_command: SHOW_CUSTOM
+
+feature -- Grahpical Interface
 
 	build_widgets is
 		do
 			set_default_size;
 			if tabs_disabled then
-				!!text_window.make (new_name, global_form, Current);
+				!! text_window.make (new_name, global_form, Current);
 			else
-				!CLASS_TAB_TEXT!text_window.make (new_name, global_form, Current);
+				!CLASS_TAB_TEXT! text_window.make (new_name, global_form, Current);
 			end;
-			!!edit_bar.make (new_name, global_form);
+			!! edit_bar.make (new_name, global_form);
 			build_bar;
-			!!format_bar.make (new_name, global_form);
+			!! format_bar.make (new_name, global_form);
 			build_format_bar;
-			!!command_bar.make (new_name, global_form);
+			!! command_bar.make (new_name, global_form);
 			build_command_bar;
 			text_window.set_last_format (default_format);
 			attach_all 
@@ -141,8 +178,6 @@ feature
 			global_form.attach_right (format_bar, 0);
 		end;
 
-feature
-
 	raise_shell_popup is
 			-- Raise the shell command popup window if it is popped up.
 		local
@@ -154,23 +189,39 @@ feature
 			end
 		end;
 			
-feature {NONE}
+feature {NONE} -- Properties; Window Properties
 
 	editable: BOOLEAN is True;
+			-- Is Current editable?
 
-	tool_name: STRING is do Result := l_Class end;
+	tool_name: STRING is
+			-- The name of this tool.
+		do
+			Result := l_Class
+		end;
 
 	hole: CLASS_HOLE;
 			-- Hole caraterizing current
+ 
+	format_label: LABEL;
+
+	class_name_tf: TEXT_FIELD;
+
+feature {NONE} -- Implemetation; Window Settings
 
 	set_default_size is
+			-- Set the size of Current to its default.
 		do
 			set_size (475, 500)
 		end;
 
-	open_command: OPEN_FILE;
-	save_command: SAVE_FILE;
-	save_as_command: SAVE_AS_FILE;
+	set_format_label (s: STRING) is
+			-- Set the format label to `s'.
+		require
+			valid_arg: (s /= Void) and then not s.empty
+		do
+			format_label.set_text (s);
+		end;
 
 	resize_action is 
 			-- If the window is moved or resized, raise
@@ -182,22 +233,44 @@ feature {NONE}
 			change_class_command.choice.update_position
 		end;
 
-	create_edit_buttons is
-		do
-			!!change_class_form.make (new_name, edit_bar);
-			!!change_class_command.make (change_class_form, text_window);
-			!!open_command.make (edit_bar, text_window);
-			!!save_command.make (edit_bar, text_window);
-			!!save_as_command.make (edit_bar, text_window);
-			!!quit_command.make (edit_bar, text_window);
-		end;
+feature {NONE} -- Commands
+
+	open_command: OPEN_FILE;
+
+	save_command: SAVE_FILE;
+
+	save_as_command: SAVE_AS_FILE;
+
+	shell_command: SHELL_COMMAND;
+
+	current_target: CURRENT_CLASS;
+
+	previous_target: PREVIOUS_TARGET;
+
+	next_target: NEXT_TARGET;
+
+	filter_command: FILTER_COMMAND
+
+feature {NONE} -- Forms And Holes
 
 	command_bar: FORM;
 			-- Bar with the command buttons
 
+feature {NONE} -- Implementation; Graphical Interface
+
+	create_edit_buttons is
+		do
+			!! change_class_form.make (new_name, edit_bar);
+			!! change_class_command.make (change_class_form, text_window);
+			!! open_command.make (edit_bar, text_window);
+			!! save_command.make (edit_bar, text_window);
+			!! save_as_command.make (edit_bar, text_window);
+			!! quit_command.make (edit_bar, text_window);
+		end;
+
 	build_command_bar is
 		do
-			!!shell_command.make (command_bar, text_window);
+			!! shell_command.make (command_bar, text_window);
 			command_bar.attach_left (shell_command, 0);
 			command_bar.attach_bottom (shell_command, 10);
 			!! filter_command.make (command_bar, text_window);
@@ -218,69 +291,67 @@ feature {NONE}
 	build_format_bar is
 			-- Build formatting buttons in `format_bar'.
 		do
-			!!showtext_command.make (format_bar, text_window);
-			!!showflat_command.make (format_bar, text_window);
-			!!showflatshort_command.make (format_bar, text_window);
-			!!showshort_command.make (format_bar, text_window);
-			!!showclick_command.make (format_bar, text_window);
-			!!showancestors_command.make (format_bar, text_window);
-			!!showdescendants_command.make (format_bar, text_window);
-			!!showclients_command.make (format_bar, text_window);
-			!!showsuppliers_command.make (format_bar, text_window);
-			!!showattributes_command.make (format_bar, text_window);
-			!!showroutines_command.make (format_bar, text_window);
-			!!showdeferreds_command.make (format_bar, text_window);
-			!!showexternals_command.make (format_bar, text_window);
-			!!showexported_command.make (format_bar, text_window);
-			!!showonces_command.make (format_bar, text_window);
-			!!showcustom_command.make (format_bar, text_window);
-				format_bar.attach_top (showtext_command, 0);
-				format_bar.attach_left (showtext_command, 0);
-				format_bar.attach_top (showflat_command, 0);
-				format_bar.attach_left_widget (showtext_command, showclick_command, 0);
-				format_bar.attach_top (showflatshort_command, 0);
-				format_bar.attach_left_widget (showclick_command, showflat_command, 0);
-				format_bar.attach_top (showshort_command, 0);
-				format_bar.attach_left_widget (showflat_command, showshort_command, 0);
-				format_bar.attach_top (showclick_command, 0);
-				format_bar.attach_left_widget (showshort_command, showflatshort_command, 0);
-				format_bar.attach_top (showancestors_command, 0);
-				format_bar.attach_left_widget (showflatshort_command, showancestors_command, 15);
-				format_bar.attach_top (showdescendants_command, 0);
-				format_bar.attach_left_widget (showancestors_command, showdescendants_command, 0);
-				format_bar.attach_top (showclients_command, 0);
-				format_bar.attach_left_widget (showdescendants_command, showclients_command, 0);
-				format_bar.attach_top (showsuppliers_command, 0);
-				format_bar.attach_left_widget (showclients_command, showsuppliers_command, 0);
-				format_bar.attach_top (showattributes_command, 0);
-				format_bar.attach_right_widget (showroutines_command, showattributes_command, 0);
-				format_bar.attach_top (showroutines_command, 0);
-				format_bar.attach_right_widget (showdeferreds_command, showroutines_command, 0);
-				format_bar.attach_top (showdeferreds_command, 0);
-				format_bar.attach_right_widget (showonces_command, showdeferreds_command, 0);
-				format_bar.attach_top (showonces_command, 0);
-				format_bar.attach_right_widget (showexternals_command, showonces_command, 0);
-				format_bar.attach_top (showexternals_command, 0);
-				format_bar.attach_right_widget (showexported_command, showexternals_command, 0);
-				format_bar.attach_right_widget (showcustom_command, showexported_command, 0);
-				format_bar.attach_top (showcustom_command, 0);
-				format_bar.attach_right (showcustom_command, 0);
+			!! showtext_command.make (format_bar, text_window);
+			!! showflat_command.make (format_bar, text_window);
+			!! showflatshort_command.make (format_bar, text_window);
+			!! showshort_command.make (format_bar, text_window);
+			!! showclick_command.make (format_bar, text_window);
+			!! showancestors_command.make (format_bar, text_window);
+			!! showdescendants_command.make (format_bar, text_window);
+			!! showclients_command.make (format_bar, text_window);
+			!! showsuppliers_command.make (format_bar, text_window);
+			!! showattributes_command.make (format_bar, text_window);
+			!! showroutines_command.make (format_bar, text_window);
+			!! showdeferreds_command.make (format_bar, text_window);
+			!! showexternals_command.make (format_bar, text_window);
+			!! showexported_command.make (format_bar, text_window);
+			!! showonces_command.make (format_bar, text_window);
+			!! showcustom_command.make (format_bar, text_window);
+
+			format_bar.attach_top (showtext_command, 0);
+			format_bar.attach_left (showtext_command, 0);
+			format_bar.attach_top (showflat_command, 0);
+			format_bar.attach_left_widget (showtext_command, showclick_command, 0);
+			format_bar.attach_top (showflatshort_command, 0);
+			format_bar.attach_left_widget (showclick_command, showflat_command, 0);
+			format_bar.attach_top (showshort_command, 0);
+			format_bar.attach_left_widget (showflat_command, showshort_command, 0);
+			format_bar.attach_top (showclick_command, 0);
+			format_bar.attach_left_widget (showshort_command, showflatshort_command, 0);
+			format_bar.attach_top (showancestors_command, 0);
+			format_bar.attach_left_widget (showflatshort_command, showancestors_command, 15);
+			format_bar.attach_top (showdescendants_command, 0);
+			format_bar.attach_left_widget (showancestors_command, showdescendants_command, 0);
+			format_bar.attach_top (showclients_command, 0);
+			format_bar.attach_left_widget (showdescendants_command, showclients_command, 0);
+			format_bar.attach_top (showsuppliers_command, 0);
+			format_bar.attach_left_widget (showclients_command, showsuppliers_command, 0);
+			format_bar.attach_top (showattributes_command, 0);
+			format_bar.attach_right_widget (showroutines_command, showattributes_command, 0);
+			format_bar.attach_top (showroutines_command, 0);
+			format_bar.attach_right_widget (showdeferreds_command, showroutines_command, 0);
+			format_bar.attach_top (showdeferreds_command, 0);
+			format_bar.attach_right_widget (showonces_command, showdeferreds_command, 0);
+			format_bar.attach_top (showonces_command, 0);
+			format_bar.attach_right_widget (showexternals_command, showonces_command, 0);
+			format_bar.attach_top (showexternals_command, 0);
+			format_bar.attach_right_widget (showexported_command, showexternals_command, 0);
+			format_bar.attach_right_widget (showcustom_command, showexported_command, 0);
+			format_bar.attach_top (showcustom_command, 0);
+			format_bar.attach_right (showcustom_command, 0);
 		end;
- 
-	format_label: LABEL;
-	class_name_tf: TEXT_FIELD;
 
 	build_edit_bar is
 			-- Build top bar: editing commands
 		do
 			edit_bar.set_fraction_base (21);
-			!!hole.make (edit_bar, Current);
+			!! hole.make (edit_bar, Current);
 			create_edit_buttons;
-			!!type_teller.make (new_name, edit_bar);
+			!! type_teller.make (new_name, edit_bar);
 			type_teller.set_center_alignment;
 			clean_type
-			!!search_command.make (edit_bar, text_window);
-			!!change_font_command.make (edit_bar, text_window);
+			!! search_command.make (edit_bar, text_window);
+			!! change_font_command.make (edit_bar, text_window);
 
 			edit_bar.attach_left (hole, 0);
 			edit_bar.attach_top (hole, 0);
@@ -288,10 +359,12 @@ feature {NONE}
 			edit_bar.attach_top (type_teller, 0);
 			edit_bar.attach_bottom (type_teller, 0);
 			edit_bar.attach_right_position (type_teller, 7);
+
 			change_class_form.attach_left (change_class_command, 0);
 			change_class_form.attach_right (change_class_command, 0);
 			change_class_form.attach_top (change_class_command, 0);
 			change_class_form.attach_bottom (change_class_command, 0);
+
 			edit_bar.attach_top (change_class_form, 0);
 			edit_bar.attach_left_position (change_class_form, 7);
 			edit_bar.attach_right_widget (open_command, change_class_form, 2);
@@ -308,36 +381,5 @@ feature {NONE}
 			edit_bar.attach_top (open_command, 0);
 			edit_bar.attach_right_widget (save_command, open_command, 0)
 		end;
-
-	set_format_label (s: STRING) is
-		require
-			valid_arg: (s /= Void) and then not s.empty
-		do
-			format_label.set_text (s);
-		end;
-
-	shell_command: SHELL_COMMAND;
-	current_target: CURRENT_CLASS;
-	previous_target: PREVIOUS_TARGET;
-	next_target: NEXT_TARGET;
-	filter_command: FILTER_COMMAND
-
-feature -- Formats
-
-	showflat_command: SHOW_FLAT;
-	showflatshort_command: SHOW_FS;
-	showancestors_command: SHOW_ANCESTORS;
-	showdescendants_command: SHOW_DESCENDANTS;
-	showclients_command: SHOW_CLIENTS;
-	showsuppliers_command: SHOW_SUPPLIERS;
-	showattributes_command: SHOW_ATTRIBUTES;
-	showroutines_command: SHOW_ROUTINES;
-	showshort_command: SHOW_SHORT;
-	showclick_command: SHOW_CLICK_CL;
-	showdeferreds_command: SHOW_DEFERREDS;
-	showexternals_command: SHOW_EXTERNALS;
-	showonces_command: SHOW_ONCES;
-	showexported_command: SHOW_EXPORTED;
-	showcustom_command: SHOW_CUSTOM
 
 end -- class CLASS_W

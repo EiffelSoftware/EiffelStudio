@@ -1,3 +1,9 @@
+indexing
+
+	description:	
+		"Window manager for object tools.";
+	date: "$Date$";
+	revision: "$Revision: "
 
 class OBJECT_WIN_MGR 
 
@@ -12,7 +18,7 @@ creation
 
 	make
 
-feature
+feature -- Properties
 
 	objects_kept: LINKED_SET [STRING] is
 			-- Hector references to objects clickable from object tools
@@ -27,6 +33,8 @@ feature
 				active_editors.forth
 			end
 		end;
+
+feature -- Synchronization
 
 	synchronize is
 			-- Synchronize object tools (after the application stopped).
@@ -67,7 +75,7 @@ feature
 			end
 		end;
 
-feature {WINDOW_MGR}
+feature {WINDOW_MGR} -- Properties
 
 	editor: like editor_type is
 			-- Creates new editor. (Either creates one or
@@ -90,8 +98,8 @@ feature {WINDOW_MGR}
 		end;
 
 
-feature {NONE}
+feature {NONE} -- Properties
 
 	editor_type: OBJECT_W;
 	
-end 
+end -- class OBJECT_WIN_MGR

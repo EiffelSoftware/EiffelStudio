@@ -1,11 +1,9 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.	  --
---|	270 Storke Road, Suite 7 Goleta, California 93117		--
---|				   (805) 685-1006							--
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
+indexing
 
--- Window describing an Eiffel object.
+	description:	
+		"Window describing an Eiffel object.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class OBJECT_W 
 
@@ -32,7 +30,7 @@ creation
 
 	make
 
-feature 
+feature -- Initialization
 
 	make (a_screen: SCREEN) is
 			-- Create an object tool.
@@ -41,7 +39,39 @@ feature
 			text_window.set_read_only;
 		end;
 
+feature -- Window Properties
+
 	text_window: OBJECT_TEXT;
+			-- Window to display the text in.
+
+	tool_name: STRING is
+		do
+			Result := l_Object
+		end;
+
+feature -- Commands
+
+	showattr_command: SHOW_ATTR_VALUES;
+
+	showonce_command: SHOW_ONCE_RESULTS;
+
+	current_target: CURRENT_OBJECT;
+
+	previous_target: PREVIOUS_OBJECT;
+
+	next_target: NEXT_OBJECT;
+
+	slice_command: SLICE_COMMAND;
+
+feature {NONE} -- Properties; Forms And Holes
+
+	hole: OBJECT_HOLE;
+			-- Hole charaterizing current
+
+	command_bar: FORM;
+			-- Bar with the command buttons
+
+feature {NONE} -- Implementation; Window Settings
 
 	close_windows is
 			-- Close sub-windows.
@@ -51,19 +81,14 @@ feature
 				slice_command.slice_window.popdown
 			end
 		end;
-	
-feature {NONE}
 
-	tool_name: STRING is do Result := l_Object end;
-
-	hole: OBJECT_HOLE;
-			-- Hole caraterizing current
+feature {NONE} -- Implementation; Graphical Interface
 
 	build_format_bar is
 			-- Build formatting buttons in `format_bar'.
 		do
-			!!showonce_command.make (format_bar, text_window);
-			!!showattr_command.make (format_bar, text_window);
+			!! showonce_command.make (format_bar, text_window);
+			!! showattr_command.make (format_bar, text_window);
 			format_bar.attach_top (showattr_command, 0);
 			format_bar.attach_left (showattr_command, 0);
 			format_bar.attach_top (showonce_command, 0);
@@ -74,15 +99,15 @@ feature {NONE}
 		do
 			set_default_size;
 			if tabs_disabled then
-				!!text_window.make (new_name, global_form, Current);
+				!! text_window.make (new_name, global_form, Current);
 			else
-				!OBJECT_TAB_TEXT!text_window.make (new_name, global_form, Current);
+				!OBJECT_TAB_TEXT! text_window.make (new_name, global_form, Current);
 			end;
-			!!edit_bar.make (new_name, global_form);
+			!! edit_bar.make (new_name, global_form);
 			build_bar;
-			!!format_bar.make (new_name, global_form);
+			!! format_bar.make (new_name, global_form);
 			build_format_bar;
-			!!command_bar.make (new_name, global_form);
+				!! command_bar.make (new_name, global_form);
 			build_command_bar;
 			text_window.set_last_format (default_format);
 			attach_all
@@ -98,9 +123,6 @@ feature {NONE}
 			global_form.attach_top_widget (edit_bar, command_bar, 0);
 			global_form.attach_right_widget (command_bar, format_bar, 0);
 		end;
-
-	command_bar: FORM;
-			-- Bar with the command buttons
 
 	build_command_bar is
 		do
@@ -128,13 +150,4 @@ feature {NONE}
 			Result := showattr_command
 		end;
 
-feature
-
-	showattr_command: SHOW_ATTR_VALUES;
-	showonce_command: SHOW_ONCE_RESULTS;
-	current_target: CURRENT_OBJECT;
-	previous_target: PREVIOUS_OBJECT;
-	next_target: NEXT_OBJECT;
-	slice_command: SLICE_COMMAND;
-
-end
+end -- class OBJECT_W

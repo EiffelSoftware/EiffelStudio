@@ -1,5 +1,9 @@
+indexing
 
--- Hole for explain element
+	description:	
+		"Hole for explain element.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class EXPLAIN_HOLE 
 
@@ -15,7 +19,7 @@ creation
 
 	make
 	
-feature 
+feature  -- Properties
 
 	symbol: PIXMAP is
 			-- Icon for the explain tool
@@ -44,10 +48,15 @@ feature
 			true_if_not_void: Result = (dropped /= Void)
 		end;
 
-	command_name: STRING is do Result := l_Explain end;
+	command_name: STRING is
+		do
+			Result := l_Explain
+		end;
 	
-feature 
+	stone_type: INTEGER is
+			-- Type of compatible stone.
+		do
+			Result := Explain_type
+		end
 
-	stone_type: INTEGER is do Result := Explain_type end
-
-end
+end -- class EXPLAIN_HOLE

@@ -1,4 +1,9 @@
--- Messages appearing in the warner popup window.
+indexing
+
+	description:	
+		"Messages appearing in the warner popup window.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class WARNING_MESSAGES
 

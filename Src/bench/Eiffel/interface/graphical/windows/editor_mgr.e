@@ -1,3 +1,9 @@
+indexing
+
+	description:	
+		"Manager for all edit windows.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class EDITOR_MGR 
 
@@ -5,13 +11,95 @@ inherit
 
 	CURSOR_W;
 	GRAPHICS;
-	
-feature
+
+feature -- Initialization
+
+	make (a_screen: SCREEN; i: INTEGER) is
+			-- Create a window manager. All editors will be create 
+			-- with `a_screen' as the parent.
+		do
+			free_list_max := i;
+			screen := a_screen;
+			!!active_editors.make;
+			!!free_list.make
+		end;
+
+feature -- Properties
 
 	active_editors: LINKED_LIST [like editor_type];
 			-- Editors currently active 
 
-feature {NONE}
+feature -- Fonts
+
+	set_font_to_default is
+			-- Set the font of all active editors to the default font.
+		do
+			from 
+				active_editors.start
+			until
+				active_editors.after
+			loop
+				active_editors.item.text_window.set_font_to_default;
+				active_editors.forth
+			end
+		end;
+
+feature -- Tabulations
+
+	set_tab_length_to_default is
+			-- Set the tab length of all active editors 
+			-- to the default tab length.
+		local
+			text_window: TEXT_WINDOW;
+			was_changed: BOOLEAN
+		do
+			from 
+				active_editors.start
+			until
+				active_editors.after
+			loop
+				text_window := active_editors.item.text_window;
+				was_changed := text_window.changed;
+				text_window.set_tab_length_to_default;
+				text_window.set_changed (was_changed);
+				active_editors.forth
+			end
+		end;
+
+feature -- Synchronization
+
+	synchronize is
+			-- Synchronize active editors.
+			-- Set them back to their default format.
+		do
+			from 
+				active_editors.start
+			until
+				active_editors.after
+			loop
+				active_editors.item.set_default_format;
+				active_editors.item.synchronize;
+				active_editors.forth
+			end
+		end;
+
+feature -- Modifications
+
+	changed: BOOLEAN is
+			-- Has the text of one of the active editor been edited
+			-- since last display?
+		do
+			from
+				active_editors.start
+			until
+				Result or active_editors.after
+			loop
+				Result := active_editors.item.text_window.changed
+				active_editors.forth
+			end;
+		end;
+
+feature {NONE} -- Properties
 
 	editor_type: BAR_AND_TEXT;
 			-- Abstract window type. Redefined in descendants
@@ -25,17 +113,7 @@ feature {NONE}
 	screen: SCREEN;
 			-- Screen used for window creation
 
-	make (a_screen: SCREEN; i: INTEGER) is
-			-- Create a window manager. All editors will be create 
-			-- with `a_screen' as the parent.
-		do
-			free_list_max := i;
-			screen := a_screen;
-			!!active_editors.make;
-			!!free_list.make
-		end;
-
-feature {WINDOW_MGR}
+feature {WINDOW_MGR} -- Properties
 
 	count: INTEGER is
 		do
@@ -86,6 +164,8 @@ feature {WINDOW_MGR}
 		do
 			Result := active_editors.has (ed)
 		end;
+
+feature {WINDOW_MGR} -- Implementation
 
 	hide_editors is
 			-- Hide all active editors.
@@ -157,74 +237,4 @@ feature {WINDOW_MGR}
 			end
 		end;
 
-feature -- Synchronization
-
-	synchronize is
-			-- Synchronize active editors.
-			-- Set them back to their default format.
-		do
-			from 
-				active_editors.start
-			until
-				active_editors.after
-			loop
-				active_editors.item.set_default_format;
-				active_editors.item.synchronize;
-				active_editors.forth
-			end
-		end;
-
-feature -- Fonts
-
-	set_font_to_default is
-			-- Set the font of all active editors to the default font.
-		do
-			from 
-				active_editors.start
-			until
-				active_editors.after
-			loop
-				active_editors.item.text_window.set_font_to_default;
-				active_editors.forth
-			end
-		end;
-
-feature -- Tabulations
-
-	set_tab_length_to_default is
-			-- Set the tab length of all active editors 
-			-- to the default tab length.
-		local
-			text_window: TEXT_WINDOW;
-			was_changed: BOOLEAN
-		do
-			from 
-				active_editors.start
-			until
-				active_editors.after
-			loop
-				text_window := active_editors.item.text_window;
-				was_changed := text_window.changed;
-				text_window.set_tab_length_to_default;
-				text_window.set_changed (was_changed);
-				active_editors.forth
-			end
-		end;
-
-feature -- Modifications
-
-	changed: BOOLEAN is
-			-- Has the text of one of the active editor been edited
-			-- since last display?
-		do
-			from
-				active_editors.start
-			until
-				Result or active_editors.after
-			loop
-				Result := active_editors.item.text_window.changed
-				active_editors.forth
-			end;
-		end;
-
-end 
+end -- class EDITOR_MGR

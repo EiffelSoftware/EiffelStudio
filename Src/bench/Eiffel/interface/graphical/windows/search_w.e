@@ -1,5 +1,9 @@
+indexing
 
--- Window to search for a string in a text
+	description:	
+		"Window to search for a string in a text.";
+	date: "$Date$";
+	revision: "$Revision: "
 
 class SEARCH_W 
 
@@ -17,7 +21,7 @@ creation
 
 	make
 	
-feature 
+feature -- Initialization
 
 	make (a_composite: COMPOSITE; t_w: TEXT_WINDOW) is
 			-- Create a file selection dialog
@@ -40,6 +44,8 @@ feature
 			set_composite_attributes (Current)
 		end;
 
+feature -- Closing
+
 	close is
 		do
 			if is_popped_up then
@@ -47,13 +53,7 @@ feature
 			end
 		end;
 
-	
-feature {NONE}
-
-	ok_it, cancel_it: ANY;
-			-- Arguments for the command
-
-feature 
+feature -- Access
 
 	call is
 			-- Record calling text_window `a_text_window' and popup current.
@@ -62,7 +62,15 @@ feature
 			raise
 		end;
 
-feature {NONE}
+feature {NONE} -- Properties
+
+	ok_it, cancel_it: ANY;
+			-- Arguments for the command
+
+	text_window: TEXT_WINDOW
+			-- Text_window which popped up current
+
+feature {NONE} -- Implementation
 
 	work (argument: ANY) is
         do
@@ -79,7 +87,4 @@ feature {NONE}
 			end
 		end;
 
-	text_window: TEXT_WINDOW
-			-- Text_window which popped up current
-
-end
+end -- class SEARCH_W

@@ -1,3 +1,9 @@
+indexing
+
+	description:	
+		"Window manager for class tools.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class CLASS_WIN_MGR 
 
@@ -12,11 +18,7 @@ creation
 
 	make
 
-feature {NONE}
-
-	editor_type: CLASS_W;
-
-feature
+feature -- Access
 
 	raise_shell_popup is
 			-- Raise the shell command popup window if it is popped up.
@@ -34,5 +36,9 @@ feature
 			end
 			active_editors.go_to (c)
 		end;
+
+feature {NONE} -- Properties
+
+	editor_type: CLASS_W;
 
 end 

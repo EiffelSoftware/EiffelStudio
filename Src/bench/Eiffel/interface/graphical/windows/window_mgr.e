@@ -1,11 +1,30 @@
+indexing
+
+	description:	
+		"Window manager for tools.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class WINDOW_MGR 
 
 creation
 
 	make
-	
-feature 
+
+feature -- Initialization
+
+	make (a_screen: SCREEN; i: INTEGER) is
+			-- Make a window manager. All editors will be create 
+			-- using `a_screen' as the parent. Allow `i' amount for
+			-- the free list.
+		do
+			!!routine_win_mgr.make (a_screen, i);
+			!!class_win_mgr.make (a_screen, i);
+			!!object_win_mgr.make (a_screen, i);
+			!!explain_win_mgr.make (a_screen, i);
+		end;
+
+feature -- Properties
 
 	routine_win_mgr: ROUTINE_WIN_MGR;
 		-- Manager for routine windows 
@@ -18,19 +37,6 @@ feature
 
 	explain_win_mgr: EXPLAIN_WIN_MGR;
 		-- Manager for explain windows
-	
-feature 
-
-	make (a_screen: SCREEN; i: INTEGER) is
-			-- Make a window manager. All editors will be create 
-			-- using `a_screen' as the parent. Allow `i' amount for
-			-- the free list.
-		do
-			!!routine_win_mgr.make (a_screen, i);
-			!!class_win_mgr.make (a_screen, i);
-			!!object_win_mgr.make (a_screen, i);
-			!!explain_win_mgr.make (a_screen, i);
-		end;
 
 	routine_window: ROUTINE_W is
 			-- Make a routine window 
@@ -55,6 +61,28 @@ feature
 		do
 			Result := explain_win_mgr.editor
 		end;
+
+	class_windows_count: INTEGER is
+		do
+			Result := class_win_mgr.count
+		end;	
+
+	routine_windows_count: INTEGER is
+		do
+			Result := routine_win_mgr.count
+		end;	
+
+	object_windows_count: INTEGER is
+		do
+			Result := object_win_mgr.count
+		end;	
+
+	explain_windows_count: INTEGER is
+		do
+			Result := explain_win_mgr.count
+		end;	
+
+feature -- Displaying
 
 	display (ed: TOOL_W) is
 			-- Display `ed' (or raise `ed' if already
@@ -83,6 +111,8 @@ feature
 				ed.realize
 			end		
 		end;
+
+feature -- Graphical Interface
 
 	close (ed: TOOL_W) is
 			-- Close `ed'. 
@@ -143,24 +173,4 @@ feature
 			routine_win_mgr.raise_editors
 		end;
 
-	class_windows_count: INTEGER is
-		do
-			Result := class_win_mgr.count
-		end;	
-
-	routine_windows_count: INTEGER is
-		do
-			Result := routine_win_mgr.count
-		end;	
-
-	object_windows_count: INTEGER is
-		do
-			Result := object_win_mgr.count
-		end;	
-
-	explain_windows_count: INTEGER is
-		do
-			Result := explain_win_mgr.count
-		end;	
-
-end 
+end -- class WINDOW_MGR

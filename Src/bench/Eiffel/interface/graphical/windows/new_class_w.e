@@ -1,5 +1,9 @@
+indexing
 
--- Model for workbench windows
+	description:	
+		"Model for workbench windows.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class NEW_CLASS_W
 
@@ -16,27 +20,7 @@ creation
 
 	make
 
-feature
-
-	cluster_entry, file_entry: TEXT_FIELD;
-	cluster_form, file_form: FORM;
-	message, class_l: LABEL;
-	cluster_name, file_label: LABEL;
-	create_b, cancel_b: PUSH_B;
-	form: FORM;
-	create: ANY is once !!Result end;
-	cancel: ANY is once !!Result end;
-
-	cluster: CLUSTER_I;
-	class_name: STRING;
-	file_name: STRING;
-
-	class_i: CLASS_I;
-	stone: CLASSI_STONE;
-
-	class_text: CLASS_TEXT;
-
-	aok: BOOLEAN;
+feature -- Initialization
 
 	make (composite: COMPOSITE; text: CLASS_TEXT) is
 		do
@@ -90,6 +74,46 @@ feature
 			set_exclusive_grab
 		end;
 
+feature -- Properties
+
+	cluster_entry, file_entry: TEXT_FIELD;
+
+	cluster_form, file_form: FORM;
+
+	message, class_l: LABEL;
+
+	cluster_name, file_label: LABEL;
+
+	create_b, cancel_b: PUSH_B;
+
+	form: FORM;
+
+	create: ANY is
+		once
+			!!Result
+		end;
+
+	cancel: ANY is
+		once
+			!!Result
+		end;
+
+	cluster: CLUSTER_I;
+
+	class_name: STRING;
+
+	file_name: STRING;
+
+	class_i: CLASS_I;
+
+	stone: CLASSI_STONE;
+
+	class_text: CLASS_TEXT;
+
+	aok: BOOLEAN;
+
+feature -- Access
+
 	call (class_n: STRING; cl: CLUSTER_I) is
 		require
 			valid_args: class_n /= Void 
@@ -115,6 +139,26 @@ feature
 			end
 			popup;
 		end;
+
+	change_cluster is
+			-- Howdy Howdy
+		local
+			clun: STRING;
+			clu: CLUSTER_I; 
+		do
+			clun := cluster_entry.text; 
+			clun.to_lower;
+			clu := Eiffel_universe.cluster_of_name (clun);
+			if clu = Void then
+				aok := False;
+				warner (class_text).gotcha_call (w_Invalid_cluster_name)
+			else
+				aok := True;
+				cluster := clu
+			end;
+		end;
+
+feature -- Execution
 
 	work (argument: ANY) is
 		local
@@ -184,23 +228,4 @@ feature
 			end;
 		end;
 
-	change_cluster is
-			-- Howdy Howdy
-		local
-			clun: STRING;
-			clu: CLUSTER_I; 
-		do
-			clun := cluster_entry.text; 
-			clun.to_lower;
-			clu := Eiffel_universe.cluster_of_name (clun);
-			if clu = Void then
-				aok := False;
-				warner (class_text).gotcha_call (w_Invalid_cluster_name)
-			else
-				aok := True;
-				cluster := clu
-			end;
-		end;
-
-
-end
+end -- class NEW_CLASS_W

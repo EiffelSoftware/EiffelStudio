@@ -1,3 +1,9 @@
+indexing
+
+	description:	
+		"Window to choose a name.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class NAME_CHOOSER_W 
 
@@ -24,7 +30,7 @@ creation
 
 	make
 	
-feature 
+feature -- Initialization
 
 	make (a_composite: COMPOSITE) is
 			-- Create a file selection dialog
@@ -39,6 +45,8 @@ feature
 			set_composite_attributes (Current);
 			realize
 		end;
+
+feature -- Graphical Interface
 
 	popup is
 			-- Popup file selection window.
@@ -83,7 +91,15 @@ feature
 			window ?= wind.tool
 		end;
 
-feature {NONE}
+feature {NONE} -- Properties
+
+	last_caller: COMMAND_W
+			-- Last command which popped up current
+
+	window: WIDGET;
+			-- Window to which the file selection will apply
+
+feature {NONE} -- Implementation
 
 	work (argument: ANY) is
 		do
@@ -100,10 +116,4 @@ feature {NONE}
 			end
 		end;
 
-	last_caller: COMMAND_W
-			-- Last command which popped up current
-
-	window: WIDGET;
-			-- Window to which the file selection will apply
-
-end
+end -- class NAME_CHOOSER_W

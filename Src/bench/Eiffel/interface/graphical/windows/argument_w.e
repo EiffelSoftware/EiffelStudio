@@ -1,5 +1,9 @@
+indexing
 
--- Window to enter arguments 
+	description:	
+		"Window to enter arguments.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class ARGUMENT_W 
 
@@ -16,19 +20,7 @@ creation
 
 	make
 	
-feature 
-
-	argument_list: STRING is
-		once
-			!!Result.make (0);
-		end;
-
-	close is
-		do
-			if is_popped_up then
-				popdown
-			end
-		end;
+feature -- Initialization
 
 	make (a_composite: COMPOSITE; cmd: COMMAND_W) is
 			-- Create a file selection dialog
@@ -49,12 +41,23 @@ feature
 			set_composite_attributes (Current)
 		end;
 	
-feature {NONE}
+feature -- Properties
 
-	apply_it, cancel_it, run_it: ANY;
-			-- Arguments for the command
+	argument_list: STRING is
+		once
+			!!Result.make (0);
+		end;
 
-feature 
+feature -- Graphical Interface
+
+	close is
+		do
+			if is_popped_up then
+				popdown
+			end
+		end;
+
+feature -- Access
 	
 	call is
 		do
@@ -63,9 +66,14 @@ feature
 			raise
 		end;
 
-feature {NONE}
+feature {NONE} -- Properties
+
+	apply_it, cancel_it, run_it: ANY;
+			-- Arguments for the command
 
 	run: COMMAND_W;
+
+feature {NONE} -- Implementation
 
 	work (argument: ANY) is
 		local
@@ -89,4 +97,4 @@ feature {NONE}
 			end
 		end;
 
-end
+end -- class ARGUMENT_W

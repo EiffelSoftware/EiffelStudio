@@ -1,6 +1,10 @@
+indexing
 
--- Hole for an existing class tool.
--- Yes, I know, it's very funny.
+	description:	
+		"Hole for an existing class tool. Yes, I know, %
+					%it's very funny.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class CLASS_HOLE 
 
@@ -16,7 +20,7 @@ creation
 
 	make
 
-feature 
+feature -- Properties
 
 	symbol: PIXMAP is
 			-- Icon for the class tool
@@ -36,9 +40,12 @@ feature
 			Result := bm_Class_icon
 		end;
 
-	stone_type: INTEGER is do Result := Class_type end;
+	stone_type: INTEGER is
+		do
+			Result := Class_type
+		end;
 	
-feature {NONE}
+feature {NONE} -- Properties
 
 	compatible (dropped: STONE): BOOLEAN is
 			-- Can current accept `dropped'?
@@ -47,6 +54,9 @@ feature {NONE}
 				((dropped.stone_type = Class_type) or else (dropped.stone_type = Routine_type))
 		end;
 
-	command_name: STRING is do Result := l_Class end;
+	command_name: STRING is
+		do
+			Result := l_Class
+		end;
 
-end
+end -- class CLASS_HOLE

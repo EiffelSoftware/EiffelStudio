@@ -1,4 +1,9 @@
--- Hole for routine element
+indexing
+
+	description:	
+		"Hole for routine element.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class ROUTINE_HOLE 
 
@@ -14,7 +19,7 @@ creation
 
 	make
 
-feature 
+feature -- Properties
 
 	symbol: PIXMAP is
 			-- Icon for the routine tool
@@ -34,13 +39,16 @@ feature
 			Result := bm_Routine_icon
 		end;
 
-	
-feature {NONE}
+	stone_type: INTEGER is
+		do
+			Result := Routine_type
+		end;
 
-	command_name: STRING is do Result := l_Routine end;
+feature {NONE} -- Properties
 
-feature 
+	command_name: STRING is
+		do
+			Result := l_Routine
+		end;
 
-	stone_type: INTEGER is do Result := Routine_type end;
-
-end
+end -- class ROUTINE_HOLE

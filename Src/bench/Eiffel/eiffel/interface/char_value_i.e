@@ -4,7 +4,8 @@ inherit
 
 	VALUE_I
 		redefine
-			generate, is_character, equiv
+			generate, is_character, equiv,
+			append_clickable_signature
 		end
 	
 feature 
@@ -58,6 +59,15 @@ feature
 	dump: STRING is
 		do
 			Result := char_val.out;
+		end;
+
+	append_clickable_signature (a_clickable: CLICK_WINDOW) is
+		do
+			a_clickable.put_char ('%'');
+--FIXME
+-- %N, ...
+			a_clickable.put_char (char_val);
+			a_clickable.put_char ('%'');
 		end;
 
 end

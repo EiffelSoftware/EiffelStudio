@@ -85,6 +85,11 @@ feature
 		deferred
 		end;
 
+	append_clickable_signature (a_clickable: CLICK_WINDOW) is
+		do
+			a_clickable.put_string (dump)
+		end;
+
 	dump: STRING is
 		deferred
 		end;

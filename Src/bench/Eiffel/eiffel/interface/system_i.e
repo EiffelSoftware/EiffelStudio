@@ -8,7 +8,6 @@ inherit
 
 	BASIC_SYSTEM_I;
 	SHARED_WORKBENCH;
-	SHARED_CONTEXT;
 	SHARED_TMP_SERVER;
 	SHARED_INSTANTIATOR;
 	SHARED_EXPANDED_CHECKER;
@@ -613,16 +612,12 @@ debug ("ACTIVITY")
 end;
 			update_sort := update_sort or else moved;
 			if update_sort then
-					-- New classes have been added: context must be
-					-- modified for order relation of instances of
-					-- CLASS_C
-				context.set_topological_sort;
 					-- Sort
+io.error.putstring ("%NBefore topological_sort%N");
 				sorter.sort;
+io.error.putstring ("%NAfter topological_sort%N");
 					-- Check sum error
 				Error_handler.checksum;
-					-- Reset context
-				context.unset;
 					-- Re-sort the list `changed_classes', because the
 					-- topological sort modified the class ids, and the
 					-- second pass needs it.

@@ -120,9 +120,9 @@ feature -- Type check, byte code and dead code removal
 			first_printed: BOOLEAN;
 		do
 			ctxt.begin;
-			ctxt.put_keyword("strip");
-			ctxt.put_string (" ");
-			ctxt.put_special("(");
+			ctxt.put_text_item (ti_Strip_keyword);
+			ctxt.put_space;
+			ctxt.put_text_item (ti_L_parenthesis);
 			
 			from
 				id_list.start;
@@ -133,20 +133,16 @@ feature -- Type check, byte code and dead code removal
 				ctxt.prepare_for_feature(id_list.item, void);
 				if ctxt.is_feature_visible then	
 					if not first_printed then
-						ctxt.put_special(",");
-						ctxt.put_string(" ");
+						ctxt.put_text_item (ti_Comma);
+						ctxt.put_space
 					end;	
 					ctxt.put_current_feature;
 					first_printed := true;
 				end;
 				id_list.forth
 			end;
-		--	ctxt.same_types;
-			if not first_printed then
-				ctxt.rollback;
-			else
-				ctxt.commit;
-			end;
+			ctxt.put_text_item (ti_R_parenthesis);
+			ctxt.commit
 		end;
 
 feature -- Replication

@@ -15,6 +15,9 @@ feature -- Access
 	import_files: LIST [STRING]
 			-- Imported header files
 
+	import_files_after: LIST [STRING]
+			-- Imported header files
+
 	others_forward: LIST [STRING]
 			-- Forward declarations of C types;
 
@@ -178,6 +181,20 @@ feature -- Basic operations
 			others_source.extend (a_other)
 		ensure
 			added: others_source.last = a_other
+		end
+
+	add_import_after (an_import_file: STRING) is
+			-- Add `an_import_file' to list of imported header files.
+		require
+			non_void_import_file: an_import_file /= Void
+			valid_import_file: not an_import_file.empty
+			valid_syntax: an_import_file.item (1) /= '%N' and an_import_file.item (an_import_file.count) /= '%N'
+		do
+			if not import_files_after.has (an_import_file) then
+				import_files_after.extend (an_import_file)
+			end
+		ensure
+			added: import_files_after.has (an_import_file)
 		end
 
 end -- class WIZARD_WRITER_C

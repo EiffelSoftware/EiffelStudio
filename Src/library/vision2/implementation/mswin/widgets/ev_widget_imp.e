@@ -231,47 +231,47 @@ feature -- Status setting
 			end
 		end
 
-	set_horizontal_resize (flag: BOOLEAN) is
-			-- Adapt `resize_type' to `flag'.
-		do
-			if flag then
-				if vertical_resizable then
-					resize_type := 3
-				else
-					resize_type := 1
-				end
-			else
-				if vertical_resizable then
-					resize_type := 2
-				else
-					resize_type := 0
-				end				
-			end
-			if parent_imp /= Void then
-				parent_ask_resize (child_cell.width, child_cell.height)
-			end
-		end
-
-	set_vertical_resize (flag: BOOLEAN) is
-			-- Adapt `resize_type' to `flag'.
-		do
-			if flag then
-				if horizontal_resizable then
-					resize_type := 3
-			else
-					resize_type := 2
-				end
-			else
-				if horizontal_resizable then
-					resize_type := 1
-				else
-					resize_type := 0
-				end				
-			end
-			if parent_imp /= Void then
-				parent_ask_resize (child_cell.width, child_cell.height)
-			end
-		end
+-- 	set_horizontal_resize (flag: BOOLEAN) is
+-- 			-- Adapt `resize_type' to `flag'.
+-- 		do
+-- 			if flag then
+-- 				if vertical_resizable then
+-- 					resize_type := 3
+-- 				else
+-- 					resize_type := 1
+-- 				end
+-- 			else
+-- 				if vertical_resizable then
+-- 					resize_type := 2
+-- 				else
+-- 					resize_type := 0
+-- 				end				
+-- 			end
+-- 			if parent_imp /= Void then
+-- 				parent_ask_resize (child_cell.width, child_cell.height)
+-- 			end
+-- 		end
+-- 
+-- 	set_vertical_resize (flag: BOOLEAN) is
+-- 			-- Adapt `resize_type' to `flag'.
+-- 		do
+-- 			if flag then
+-- 				if horizontal_resizable then
+-- 					resize_type := 3
+-- 			else
+-- 					resize_type := 2
+-- 				end
+-- 			else
+-- 				if horizontal_resizable then
+-- 					resize_type := 1
+-- 				else
+-- 					resize_type := 0
+-- 				end				
+-- 			end
+-- 			if parent_imp /= Void then
+-- 				parent_ask_resize (child_cell.width, child_cell.height)
+-- 			end
+-- 		end
 
 	set_default_minimum_size is
 			-- Initialize the size of the widget.

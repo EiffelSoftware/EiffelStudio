@@ -19,8 +19,8 @@ feature {NONE}
 		do
 			!BENCH_LICENSE! Result.make
 			Result.set_version (4.0);
-			Result.set_application_name ("eiffelbench")
-			licenses.put (Result, "eiffelbench")
+			Result.set_application_name ("eiffelstudio")
+			licenses.put (Result, "eiffelstudio")
 		end
 
 	concurrency_license: LICENSE is

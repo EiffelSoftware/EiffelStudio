@@ -13,6 +13,8 @@ inherit
 		redefine
 			interface
 		end
+		
+	EV_TITLED_WINDOW_ACTION_SEQUENCES_I
 
 feature {EV_TITLED_WINDOW} -- Accelerators
 

@@ -347,23 +347,22 @@ RT_LNK int fcount;
 #define RTO_TRY                                                              \
 	{                                                                    \
 			/* Declare variables for exception handling. */      \
+		struct ex_vect * exvecto;                                    \
 		jmp_buf exenvo;                                              \
 			/* Save stack contexts. */                           \
 		RTYD;                                                        \
 			/* Record execution vector to catch exception. */    \
-		excatch (&exenvo);                                           \
+		exvecto = extre ();                                          \
 		if (!setjmp(exenvo)) {                                       \
-				/* Provide stack record for rescue/retry. */ \
-			struct ex_vect * EIF_VOLATILE exvect;                \
-			exvect = exft();
+				/* Set catch address. */                     \
+			exvect->ex_jbuf = &exenvo;                           \
+				/* Update routine exception vector. */       \
+			exvect = exvecto;
 
 #define RTO_EXCEPT                                                           \
-				/* Evaluation is completed successfully. */  \
-				/* Remove stack record for rescue/retry. */  \
-			expop(&eif_stack);                                   \
 				/* Remove execution vector to restore    */  \
 				/* previous exception catch point.       */  \
-			expop (&eif_stack);                                  \
+			exvect = extrl();                                    \
 		} else {                                                     \
 				/* Exception occurred. */
 

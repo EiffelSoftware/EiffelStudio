@@ -32,7 +32,7 @@ feature -- Basic Operations
 		do
 			create message_text_field
 			message_text_field.set_background_color (white_color)
-			
+
 			Precursor
 		end
 
@@ -56,18 +56,7 @@ feature -- Access
 			else
 				word := Space
 			end
-			if not wizard_information.selected_assemblies.is_empty then
-				if not wizard_information.local_assemblies.is_empty then
-					message_text := Common_message +
-						l_External_assemblies + Space + New_line + assemblies_string (wizard_information.selected_assemblies) + New_line + New_line + L_local_assemblies + New_line + local_assemblies_string + New_line
-				else
-					message_text := Common_message +
-						l_External_assemblies + Space + New_line + assemblies_string (wizard_information.selected_assemblies)					
-				end
-				message_text_field.set_text (message_text)
-			else
-				message_text_field.set_text (Common_message)			
-			end
+			message_text_field.set_text (Common_message)
 			message.set_text (final_state_message (word))
 		end
 
@@ -114,108 +103,10 @@ feature {NONE} -- Implementation
 			 Result.add_extension (pixmap_extension)
 		end
 
-	assemblies_string (a_list: LINKED_LIST [ASSEMBLY_INFORMATION]): STRING is
-			-- String from `a_list'
-		require
-			non_void_assemblies: a_list /= Void
-			not_empty_assemblies: not a_list.is_empty
-		local
-			an_assembly: ASSEMBLY_INFORMATION
-		do
-			from
-				create Result.make (1024)
-				a_list.start
-			until
-				a_list.after
-			loop
-				an_assembly := a_list.item
-				Result.append (Tab)
-				Result.append (an_assembly.name)
-				Result.append (", ")
-				Result.append (an_assembly.version)
-				Result.append (", ")
-				Result.append (an_assembly.culture)
-				Result.append (", ")
-				Result.append (an_assembly.public_key)
-				Result.append (New_line)
-
-				a_list.forth
-			end
-			Result.right_adjust
-		ensure
-			non_void_text: Result /= Void
-			not_empty_text: not Result.is_empty
-		end
-
-	local_assemblies_string: STRING is
-			-- String from `wizard_information.local_assemblies'
-		require
-			non_void_local_assemblies: wizard_information.local_assemblies /= Void 
-		local
-			local_assemblies: LINKED_LIST [STRING]
-		do
-			create Result.make (1024)
-			local_assemblies := wizard_information.local_assemblies
-			from
-				local_assemblies.start
-			until
-				local_assemblies.after
-			loop
-				Result.append (local_assemblies.item + New_line)
-
-				local_assemblies.forth
-			end
-			Result.right_adjust
-		ensure
-			non_void_text: Result /= Void
-		end
-	
-	is_incremental_compilation_possible: BOOLEAN is
-			-- Is an incremental compilation possible?
-		local
-			epr_file: RAW_FILE
-			project_name_lowercase: STRING
-			project_location: STRING
-		do
-			project_location := wizard_information.project_location
-			if directory_exists (project_location + Back_slash + Eifgen) 
-				and then directory_exists (project_location + Back_slash + Eifgen + Back_slash + W_code) 
-				and directory_exists (project_location + Back_slash + Eifgen + Back_slash + F_code) 
-				and directory_exists (project_location + Back_slash + Eifgen + Back_slash + Comp) 
-				and then directory_exists (project_location + Back_slash + Eifgen + Back_slash + Comp + Back_slash + S1) then
-				
-				project_name_lowercase := clone (wizard_information.project_name)
-				project_name_lowercase.to_lower
-				create epr_file.make (project_location + Back_slash + project_name_lowercase + Epr_extension)
-				Result := epr_file.exists 
-			else
-				Result := False
-			end
-		end
-
-	directory_exists (a_filename: STRING): BOOLEAN is
-			-- Does a directory with filename `a_filename' exist?
-		require
-			non_void_filename: a_filename /= Void
-			not_empty_filename: not a_filename.is_empty
-		do
-			Result := (create {DIRECTORY}.make (a_filename)).exists
-		end
-
 feature {NONE} -- Constants
 
 	h_filename: STRING is "help/wizards/edotnet/docs/reference/40_settings_summary/index.html"
 			-- Path to HTML help file
-
-	ec_location: STRING is
-			-- Path to `ec.exe'
-		once
-			Result := Eiffel_installation_dir_name
-			Result.append ("\bench\spec\windows\bin\ec.exe")
-		ensure
-			non_void_path: Result /= Void
-			not_empty_path: not Result.is_empty
-		end
 
 	Common_message: STRING is 
 			-- Message to the user (no matter if there are selected assemblies)
@@ -231,6 +122,13 @@ feature {NONE} -- Constants
 				Result.append ("Library (.dll)")
 			else
 				Result.append ("Application (.exe)")
+			end
+			Result.append (New_line)
+			Result.append ("Console application: " + Tab)
+			if wizard_information.console_application then
+				Result.append ("Yes")
+			else
+				Result.append ("No")
 			end
 
 			Result.append (New_line + New_line)
@@ -248,44 +146,44 @@ feature {NONE} -- Constants
 	Space: STRING is " "
 			-- Space
 
-	Epr_extension: STRING is ".epr"
-			-- Eiffel projects extension
+--	Epr_extension: STRING is ".epr"
+--			-- Eiffel projects extension
+--
+--	Eifgen: STRING is "EIFGEN"
+--			-- EIFGEN directory
+--
+--	Comp: STRING is "COMP"
+--			-- COMP directory
+--
+--	W_code: STRING is "W_code"
+--			-- W_code directory
+--
+--	F_code: STRING is "F_code"
+--			-- F_code directory
+--
+--	S1: STRING is "S1"
+--			-- S1 directory
+--
+--	Back_slash: STRING is "\"
+--			-- Back slash
 
-	Eifgen: STRING is "EIFGEN"
-			-- EIFGEN directory
-
-	Comp: STRING is "COMP"
-			-- COMP directory
-
-	W_code: STRING is "W_code"
-			-- W_code directory
-
-	F_code: STRING is "F_code"
-			-- F_code directory
-
-	S1: STRING is "S1"
-			-- S1 directory
-
-	Back_slash: STRING is "\"
-			-- Back slash
-
-	Project_compilation_option: STRING is "-project"
-			-- ec option to specify an existing project
-
-	Ace_compilation_option: STRING is "-ace"
-			-- ec option to specify the project Ace file
-
-	Project_path_compilation_option: STRING is "-project_path"
-			-- ec option to specify the path to generate project into
-
-	Ace_extension: STRING is ".ace"
-			-- Ace files extension
-
-	l_External_assemblies: STRING is ".NET assemblies:"
-			-- Label before displaying the selected .NET assemblies
-	
-	l_Local_assemblies: STRING is "Local assemblies:"
-			-- Label before displaying the local assemblies.
+--	Project_compilation_option: STRING is "-project"
+--			-- ec option to specify an existing project
+--
+--	Ace_compilation_option: STRING is "-ace"
+--			-- ec option to specify the project Ace file
+--
+--	Project_path_compilation_option: STRING is "-project_path"
+--			-- ec option to specify the path to generate project into
+--
+--	Ace_extension: STRING is ".ace"
+--			-- Ace files extension
+--
+--	l_External_assemblies: STRING is ".NET assemblies:"
+--			-- Label before displaying the selected .NET assemblies
+--	
+--	l_Local_assemblies: STRING is "Local assemblies:"
+--			-- Label before displaying the local assemblies.
 
 	Text_if_compile: STRING is "and compile"
 			-- Text appended to the current state text in case the user asked for project compilation

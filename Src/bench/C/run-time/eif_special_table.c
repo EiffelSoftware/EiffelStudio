@@ -35,6 +35,7 @@
 		
 */
 
+
 #include <assert.h>
 #include "eif_config.h"
 #include "eif_tools.h"
@@ -47,6 +48,8 @@
 #else
 #include <strings.h>
 #endif
+
+#ifdef EIF_REM_SET_OPTIMIZATION
 
 rt_public int is_in_spt (struct special_table *spt, EIF_REFERENCE object)	
 {
@@ -528,3 +531,4 @@ rt_public void spt_free(struct special_table *spt)
 	free((char *) spt);
 }	/* spt_free () */
 
+#endif /* EIF_REM_SET_OPTIMIZATION */

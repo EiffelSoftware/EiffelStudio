@@ -36,10 +36,8 @@ feature
 	create_oui_widget (a_parent: COMPOSITE) is
 		do
 			!!widget.make_unmanaged (entity_name, a_parent);
---			widget.set_single_line_mode
 		end;
 
---	widget: TEXT;
 	widget: TEXT_FIELD
 
 
@@ -60,7 +58,7 @@ feature {NONE}
 
 feature 
 
-	eiffel_type: STRING is "TEXT";
+	eiffel_type: STRING is "TEXT_FIELD";
 
 	-- ***********************
 	-- * specific attributes *
@@ -110,7 +108,6 @@ feature {CONTEXT}
 	context_initialization (context_name: STRING): STRING is
 		do
 			!!Result.make (0);
-			function_to_string (Result, context_name, "set_single_line_mode");
 			if max_size_modified then
 				function_int_to_string (Result, context_name, "set_maximum_size", maximum_size)
 			end;

@@ -19,12 +19,12 @@ feature {NONE} -- GTK macros for casting types
 	
 	
 	-- Button, Motion
-	c_gdk_event_x  (p: POINTER): DOUBLE is
+	c_gdk_event_x  (p: POINTER): INTEGER is
 		external 
 			"C [macro %"gdk_eiffel.h%"]"
 		end
 	
-	c_gdk_event_y (p: POINTER): DOUBLE is
+	c_gdk_event_y (p: POINTER): INTEGER is
 		external 
 			"C [macro %"gdk_eiffel.h%"]"
 		end	

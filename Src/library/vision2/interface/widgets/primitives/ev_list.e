@@ -32,12 +32,12 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	rows: INTEGER is
+	count: INTEGER is
 			-- Number of rows
 		require
 			exists: not destroyed
 		do
-			Result := implementation.rows
+			Result := implementation.count
 		end
 
 	get_item (index: INTEGER): EV_LIST_ITEM is
@@ -45,7 +45,7 @@ feature -- Access
 			-- `index'.
 		require
 			exists: not destroyed
-			item_exists: index <= rows
+			item_exists: index <= count
 		do
 			Result := implementation.get_item(index)
 		end
@@ -99,7 +99,7 @@ feature -- Status setting
 		require
 			exists: not destroyed
 			index_large_enough: index > 0
-			index_small_enough: index <= rows
+			index_small_enough: index <= count
 		do
 			implementation.select_item (index)
 		end

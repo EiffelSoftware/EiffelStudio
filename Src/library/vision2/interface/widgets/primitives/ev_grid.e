@@ -343,7 +343,7 @@ feature -- Status setting
 		end
 
 	enable_selection_on_click is
-			-- Enable selection handling of items when clicked upon
+			-- Enable selection handling of items when clicked upon.
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -353,7 +353,7 @@ feature -- Status setting
 		end
 
 	disable_selection_on_click is
-			-- Disable selection handling when items are clicked upon
+			-- Disable selection handling when items are clicked upon.
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -735,6 +735,8 @@ feature -- Status report
 
 	is_selection_on_click_enabled: BOOLEAN is
 			-- Will an item be selected if clicked upon?
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.is_selection_on_click_enabled
 		end

@@ -177,7 +177,7 @@ feature -- Access
 				if i < line_count and then wel_line_index (i) > Result.count + wel_line_index (i - 1) then
 					Result.append ("%N")
 				end
-			else
+			elseif i < line_count then
 				Result.append ("%N")
 			end
 		end
@@ -247,7 +247,7 @@ feature -- Status Report
 				Result := first_position_from_line_number (a_line + 1) - 1
 			else
 				new_lines_to_first_position := wel_text.substring (1, wel_line_index (a_line - 1)).occurrences ('%R')
-				Result := wel_text_length - new_lines_to_first_position 
+				Result := wel_text_length - new_lines_to_first_position			
 			end
 		end
 		

@@ -56,6 +56,70 @@ rt_private char *rcsid =
 rt_shared unsigned char eif_ignore_invisible = (unsigned char) 0;
 #endif
 
+/* 
+ * Exception handling
+ */
+
+rt_public void eifvisexp (void) {
+    /* Enable the visible exception */
+
+    EIF_GET_CONTEXT
+    eif_ignore_invisible = (unsigned char) 1;
+    EIF_END_GET_CONTEXT
+}
+
+rt_public void eifuvisexp (void)  {
+    /* Disable visible exception */
+
+    EIF_GET_CONTEXT
+    eif_ignore_invisible = (unsigned char) 0;
+    EIF_END_GET_CONTEXT
+}
+
+/* 
+ * Type checking
+ */
+
+rt_public int eifreturntype (char *routine, EIF_TYPE_ID cid) {
+    /* Return type of `routine' defined in class of type `cid' */
+   
+    EIF_GET_CONTEXT
+    struct cnode *sk;               /* Skeleton entry in system */
+    char **n;                       /* Pointer in cn_names array */
+    int nb_attr;                    /* Number of attributes */
+    int i;
+    uint32 field_type;              /* for scanning type */
+    if (cid == EIF_NO_TYPE)
+        eif_panic ("Unknown dynamic typei\n");  /* Check if dynamic exists */
+
+
+    sk = &System(cid_to_dtype(cid));    /* Fetch skeleton entry */
+    nb_attr = sk->cn_nbattr;        /* Number of attributes */
+
+
+    for (i = 0, n = sk->cn_names; i < nb_attr; i++, n++)
+        if (0 == strcmp(routine, *n))
+            break;                  /* Attribute was found */
+
+    if (i == nb_attr)               /* Attribute not found */
+        return (EIF_INTEGER) -1;                  /* Will certainly raise a bus error */
+
+    field_type = System(cid).cn_types[i];
+    switch (field_type & SK_HEAD)   {
+
+        case SK_REF:    return EIF_REFERENCE_TYPE;
+        case SK_CHAR:   return EIF_CHARACTER_TYPE;
+        case SK_BOOL:   return EIF_BOOLEAN_TYPE;
+        case SK_INT:    return EIF_INTEGER_TYPE;
+        case SK_FLOAT:  return EIF_REAL_TYPE;
+        case SK_DOUBLE: return EIF_DOUBLE_TYPE;
+        case SK_EXP:    return EIF_EXPANDED_TYPE;
+        case SK_BIT:    return EIF_BIT_TYPE;
+        default:        return EIF_POINTER_TYPE;
+    }
+    EIF_END_GET_CONTEXT
+}  
+
 /*
  * Type ID handling
  */

@@ -54,7 +54,7 @@ feature -- Access
 
 	non_removable_metrics: LINKED_LIST [EB_METRIC]
 		-- List of available non basic metrics in current system that have not been
-		-- deleted (before exiting management dialog). They can not be added to importable
+		-- deleted (before exiting management dialog). They cannot be added to importable
 		-- metrics of selected file.
 		
 	importable_metric_list: EV_LIST

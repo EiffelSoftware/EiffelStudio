@@ -24,7 +24,7 @@ feature -- Initialization
 	make (tl: EB_METRIC_TOOL; fm: EB_METRIC_FILE_MANAGER) is
 			-- Initialize attributes `Current' is pointing on.
 		require
-			exisiting_tool: tl /= Void
+			existing_tool: tl /= Void
 			existing_manager: fm /= Void
 		do
 			tool := tl

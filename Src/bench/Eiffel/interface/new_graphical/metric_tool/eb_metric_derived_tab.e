@@ -735,7 +735,7 @@ feature -- Initialization
 		end
 
 	valid_metric_definition: BOOLEAN is
-			-- Whatever user select, metric definition can not be wrong
+			-- Whatever user select, metric definition cannot be wrong
 			-- since it relies on selecting criteria thanks to radio buttons.
 			-- There could not be any syntax error.
 		do
@@ -777,7 +777,7 @@ feature -- Initialization
 				error_dialog.show_modal_to_window (interface.new_metric_definition_dialog)
 			elseif existing_basic_name then
 				create error_dialog.make_with_text ("There is already a basic metric%N%
-											%with the same name. You can not%N%
+											%with the same name. You cannot%N%
 											%overwrite it.")
 				error_dialog.set_position (x_pos, y_pos)
 				error_dialog.show_modal_to_window (interface.new_metric_definition_dialog)

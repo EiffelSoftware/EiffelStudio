@@ -68,7 +68,7 @@ feature -- Basic operations
 			end
 			profiler := information.runtime_information_type
 			create conf_load.make_and_load (profiler)
-			if conf_load.error_occured then
+			if conf_load.error_occurred then
 				add_error_message (Warning_messages.w_Load_configuration)
 				last_operation_successful := False
 			else
@@ -81,7 +81,7 @@ feature -- Basic operations
 					if prof_converter.conf_load_error then
 						error_msg := "Error while generating the execution profile.%N" + profinfo + ": file does not exist"
 					else
-						error_msg := "An unknow error has occurred while generating%Nthe execution profile."
+						error_msg := "An unknown error has occurred while generating%Nthe execution profile."
 					end
 					add_error_message (error_msg)
 					last_operation_successful := False

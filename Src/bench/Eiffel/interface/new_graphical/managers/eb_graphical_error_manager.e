@@ -29,7 +29,7 @@ feature -- Basic operations
 		do
 				-- Set up the error message.
 			if error_messages.is_empty then
-				error_string := "An unknown error has occured%N"
+				error_string := "An unknown error has occurred%N"
 			else
 				from
 					error_messages.start

@@ -7,6 +7,7 @@ class
 	DOCUMENT_SCHEMA_ELEMENT
 
 create
+	default_create,
 	make_from_element,
 	make_from_type
 	
@@ -302,9 +303,11 @@ feature -- Elements
 	type_children: ARRAYED_LIST [like Current] is
 			-- Children elements of Current as type
 		local
+			l_name: STRING
 			elem: DOCUMENT_SCHEMA_ELEMENT
 		do
 			create Result.make (5)
+			l_name := type_name
 			if not type_name.is_empty and then schema_document.has_type (type_name) then
 				create elem.make_from_type (schema_document.get_type_by_name (type_name), schema_document)
 				Result.append (clone (elem.children))
@@ -382,7 +385,7 @@ feature -- Elements
 			end
 		end		
 	
-feature {NONE} -- Implementation
+feature {DOCUMENT_SCHEMA} -- Implementation
 
 	internal_element: XML_XML_SCHEMA_ELEMENT
 

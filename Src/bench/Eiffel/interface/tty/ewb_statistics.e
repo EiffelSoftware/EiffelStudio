@@ -21,7 +21,7 @@ feature {NONE} -- Implementation
 	associated_cmd: E_SHOW_STATISTICS is
 			-- Associated system command to be executed
 		do
-			!! Result.do_nothing
+			!! Result.make
 		end;
 
 end -- class EWB_STATISTICS

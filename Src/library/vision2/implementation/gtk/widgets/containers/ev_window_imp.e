@@ -90,7 +90,7 @@ feature -- Status report
 			-- Is displayed iconified/minimised?
 		do
 			Result := C.c_gdk_window_is_iconified (
-				C.gtk_window_struct_window (c_object)
+				C.gtk_widget_struct_window (c_object)
 			)
 		end
 
@@ -120,7 +120,7 @@ feature -- Status setting
 			-- Display iconified/minimised.
 		do
 			C.c_gdk_window_iconify (
-				C.gtk_window_struct_window (c_object)
+				C.gtk_widget_struct_window (c_object)
 			)
 		end
 
@@ -154,8 +154,8 @@ feature -- Element change
 			-- Assign `an_icon_name' to `icon_name'.
 		do
 			C.gdk_window_set_icon_name (
-				C.gtk_window_struct_window (c_object,
-					eiffel_to_c (an_icon_name)))
+				C.gtk_widget_struct_window (c_object),
+					eiffel_to_c (an_icon_name))
 			icon_name_holder := an_icon_name
 		end
 
@@ -251,6 +251,9 @@ end -- class EV_TITLED_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.40  2000/03/07 19:25:44  brendel
+--| Corrected external call errors
+--|
 --| Revision 1.39  2000/03/07 18:40:31  brendel
 --| Started implementing minimize/is_minimized.
 --|

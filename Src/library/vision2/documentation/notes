@@ -111,7 +111,7 @@ X   complete but found to have bugs
 
   System:
     kernel/ev_application.e                             o    o .5  *     .
-    kernel/ev_environment.e                             *    o .1  *     .
+    kernel/ev_environment.e                             *    *     *     .
     widgets/uncommon_widgets/ev_screen.e                .    .     .     .
 
   Buttons:

@@ -36,7 +36,7 @@ feature -- Access
 
 	output_window: OUTPUT_WINDOW;
 
-	reverse_engineering_window: DEGREE_OUTPUT
+	reverse_engineering_window: GRAPHICAL_DEGREE_OUTPUT
 			-- Reverse engineering window
 
 	generate_all: BOOLEAN
@@ -93,7 +93,11 @@ feature -- Execution
 								else
 									process_specific_clusters
 								end
-								Reverse_engineering_window.put_start_reverse_engineering (System.classes.count);
+								if generate_all then
+									Reverse_engineering_window.put_start_reverse_engineering (System.classes.count);
+								else
+									Reverse_engineering_window.put_start_reverse_engineering (count_classes)
+								end
 								convert_to_case_format;
 								remove_old_classes;
 								clear_shared_case_information;
@@ -134,17 +138,60 @@ feature -- Execution
 			end;
 		end
 
+feature -- calculus
+
+	count_classes: INTEGER is
+		local
+			i : INTEGER
+		do
+			from
+				list_clusters.start
+				i := 0
+			until
+				list_clusters.after
+			loop
+				i:= i+ count_classes2 ( list_clusters.item )
+				list_clusters.forth
+			end
+			Result := i
+		end
+
+	count_classes2( cl : CLUSTER_I ) : INTEGER is
+		local
+			i : INTEGER
+		do
+			i:= 0
+			if cl.classes/= Void then
+				i:= i+cl.classes.count
+			end
+			if cl.sub_clusters/= Void then
+				from
+					cl.sub_clusters.start
+				until
+					cl.sub_clusters.after
+				loop
+					i := i+count_classes2 ( cl.sub_clusters.item )
+					cl.sub_clusters.forth
+				end
+			end
+			Result := i
+		end
+
 feature -- Update
 
 	set_list_clusters (l: LINKED_LIST [CLUSTER_I]) is
+		local
+			i : INTEGER
 		do
 			!! list_clusters.make_filled (l.count)
 			from 
 				l.start
+				i:= 1
 			until 
 				l.after
 			loop
-				list_clusters.extend (l.item)
+				list_clusters.put_i_th (l.item,i)
+				i:= i+1
 				l.forth
 			end
 		end
@@ -175,7 +222,9 @@ feature {NONE} -- Implementation
 			Case_file_server.save_eiffelcase_format;
 			Reverse_engineering_window.put_case_message 
 				("Updating EiffelBench project.");
-			update_eiffel_project;
+			if generate_all then
+				update_eiffel_project;
+			end
 			Reverse_engineering_window.finish_degree_output
 		rescue
 			if Case_file_server.had_io_problems then

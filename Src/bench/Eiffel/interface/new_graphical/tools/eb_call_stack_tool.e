@@ -580,12 +580,14 @@ feature {NONE} -- Implementation
 			l_tooltip: STRING
 			l_nb_stack: INTEGER
 			e_cse: EIFFEL_CALL_STACK_ELEMENT
+			ext_cse: EXTERNAL_CALL_STACK_ELEMENT
 			dotnet_cse: CALL_STACK_ELEMENT_DOTNET
 			l_feature_info: STRING
 			l_class_info: STRING
 			l_orig_class_info: STRING
 			l_breakindex_info: STRING
-			l_obj_address_info: STRING			
+			l_obj_address_info: STRING
+			l_extra_info: STRING
 		do
 			create Result
 			create l_tooltip.make (10)
@@ -634,6 +636,10 @@ feature {NONE} -- Implementation
 
 			else --| It means, this is an EXTERNAL_CALL_STACK_ELEMENT
 				l_orig_class_info := ""
+				ext_cse ?= elem
+				if ext_cse /= Void then
+					l_extra_info := ext_cse.info					
+				end
 --				Result.disable_select
 			end
 
@@ -641,7 +647,10 @@ feature {NONE} -- Implementation
 			l_nb_stack := Application.status.current_call_stack.count
 			l_tooltip.prepend_string ((elem.level_in_stack).out + "/" + l_nb_stack.out + ": ")
 			l_tooltip.append_string ("%N   + break index = " + l_breakindex_info)
-			l_tooltip.append_string ("%N   + address     = <" + l_obj_address_info + ">")			
+			l_tooltip.append_string ("%N   + address     = <" + l_obj_address_info + ">")
+			if l_extra_info /= Void then
+				l_tooltip.append_string ("%N    + " + l_extra_info)
+			end
 			Result.set_tooltip (l_tooltip)
 			
 				--| Fill columns

@@ -9,9 +9,7 @@ indexing
 
 class LEXICAL inherit
 
-	TEXT_FILLER;
-
-	STORABLE
+	TEXT_FILLER
 
 creation
 

@@ -314,8 +314,7 @@ extern int fcount;
 #ifdef WORKBENCH
 #define RTEE RTSO; expop(&eif_stack)
 #define RTEJ current_call_level = trace_call_level; \
-	old_p_stk = prof_stack; \
-	prof_stack_init(); \
+	saved_prof_top = prof_stack->st_top; \
 	start: exvect->ex_jbuf = (char *) exenv; RTES
 #else
 #define RTEE expop(&eif_stack)
@@ -426,7 +425,7 @@ extern int fcount;
  *  RTAL is the access to the saved assertion level variable
  */
 #define RTDA struct eif_opt *opt; int current_call_level;\
-	struct profile_stack *old_p_stk
+	char **saved_prof_top
 #define RTSA(x) opt = eoption + x; check_options(opt, x)
 #define RTAL (~in_assertion & opt->assert_level)
 
@@ -489,8 +488,8 @@ extern int fcount;
 #define RTPR(x,y,z)	start_profile(x,y,z)				/* Start measurement of feature */
 #define RTXP		stop_profile()						/* Stop measurement of feature */
 #define RTLT		int current_call_level				/* Declare local trave variable */
-#define RTLP		struct profile_stack *old_p_stk		/* Declare local profiler variable */
-#define RTPI		old_p_stk = prof_stack; prof_stack_init()		/* Create local profile stack
+#define RTLP		char **saved_prof_rop		/* Declare local profiler variable */
+#define RTPI		saved_prof_top = prof_stack->st_top		/* Create local profile stack
 																	 * during rescue clause
 																	 */
 #define RTTI		current_call_level = trace_call_level			/* Save the tracer call level */
@@ -498,8 +497,7 @@ extern int fcount;
 
 /* Macros needed for profile stack and trace clean up */
 
-#define RTPS		prof_stack_rewind(); \
-					prof_stack_free(); prof_stack = old_p_stk		/* Clean up profiler stack */
-#define RTTS		trace_call_level = current_call_level			/* Clean up trace levels */
+#define RTPS		prof_stack_rewind(saved_prof_top)		/* Clean up profiler stack */
+#define RTTS		trace_call_level = current_call_level	/* Clean up trace levels */
 
 #endif

@@ -30,7 +30,7 @@ public int trace_call_level = 0;	/* call level for E-TRACE
 					 * recursive calls (whether direct or indirect).
 					 */
 
-public struct profile_stack *prof_stack;
+public struct stack *prof_stack;
 
 /* INTERNAL TRACE VARIABLES */
 
@@ -40,38 +40,31 @@ char *last_name;		/* when we deal with a so called terminal feature (a feature w
 
 /* INTERNAL PROFILE STRUCTURES */
 
-/* Stored in both the table and the stack */
-struct profile_information {
-	char		*featurename;		/* Name of feature */
-	int		dtype;			/* DTYPE of feature */
-	int		origin;			/* ORIGIN of feature */
-	unsigned long	pi_hcode;		/* Hash code of the featurename */
-	long		number_of_calls;	/* Number of calls to routine */
-	double		this_total_time;	/* Time spent in the function. (during this execution) */
-	double		all_total_time;		/* Time spent in the function. (summarized) */
-	double		descendent_time;	/* Time spent in the descendents of the functions. */
-	int		is_running;		/* Is the function running? To determine whether this is a recursive call or not. */
+/* Struct to keep the information gathered */
+struct prof_info {
+				char	*featurename;		/* Name of feature */
+				int		dtype;				/* DTYPE of feature */
+				int		origin;				/* ORIGIN of feature */
+	unsigned	long	feature_hcode;		/* Hash code */
+				long	number_of_calls;	/* # calls to feature */
+				double	this_total_time;	/* Time spent in the feature */
+											/* (during this execution) */
+				double	all_total_time;		/* Time spent in the feature */
+											/* (summarized) */
+				double	descendent_time;	/* Time spent in the */
+											/* descendents */
+				int		is_running;			/* Is the feature running? */
+											/* Needed for recursives */
 };
 
-/* Stack items for the profile stack */
-struct prof_item {
-	struct profile_information *info;	/* Actual info */
-	struct prof_item *link;			/* Link to next or previous item */
-};
-
-/* The stack */
-struct profile_stack {
-	struct prof_item *top;	/* End of the SF */
-	struct prof_item *bot;	/* Start of the SF */
-};
+public struct stack *profile_stack;
 
 /* Structure for H table of features.
  * 'hcode' is meant to be the H key of the class
  */
 struct feat_table {
-	char *classname;		/* The class name where the features are written in. */
-	unsigned long hcode;		/* H code of the H key, which is the classname */
-	struct htable *htab;		/* Features of class corresponding to 'hcode' in H tables */
+	int dtype;					/* The dynamic type of the features */
+	struct htable *htab;		/* Features of class corresponding to 'dtype' */
 };
 
 struct htable *class_table;		/* The H table that contains all info */
@@ -82,12 +75,13 @@ struct htable *class_table;		/* The H table that contains all info */
 
 /* INTERNAL PROFILE FUNCTIONS */
 
-void update_class_table();			/* Updates the H table */
-void prof_stack_push();					/* Pushes item on the profile staack */
-void prof_stack_free();					/* Frees the memory allocated for the profile stack */
-void prof_stack_init();					/* Initializes the profile stack */
-struct profile_information* prof_stack_top();		/* Returns the top of the stack */
-void prof_stack_pop();					/* Pops the top item of the profile stack */
+void update_class_table();				/* Update H table */
+void prof_stack_push();					/* Push item on staack */
+void prof_stack_free();					/* Free profile stack memory */
+void prof_stack_init();					/* Initialize stack */
+void prof_time();						/* Get time */
+struct prof_info* prof_stack_top();		/* Top the stack */
+struct prof_info* prof_stack_pop();		/* Pop top off stack */
 
 /* We do debug only in WORKBENCH mode
  * We also need check_options and check_options_stop in WORKBENCH mode
@@ -130,41 +124,52 @@ void check_options(opt, dtype)
 struct eif_opt *opt;	/* Options for the Eiffel feature*/
 int dtype;				/* Dtype of the Eiffel class */
 {
-	/* Checks whether the class 'dtype' has E-TRACE or E-PROFILE options in 'opt' and
-	 * dispatches to the functions start_trace and start_profile if necessary.
-	 * This function is directly called by RTSA in frozen mode; it is called explicitly
-	 * from the interpreter as soon as it determines that a feature is to be executed. -- GLJ
+	/* Check whether the class `dty[e' has E-TRACE or E-PROFILE
+	 * options in `opt' and dispatch to the finctions `start_trace()'
+	 * and `start_profile()' if necessary.
+	 * This function is directly called by RTSA in WORKBENCH mode; it is
+	 * called explicitly from the interpreter as soon as it determines that
+	 * a feature is to be executed.
 	 */
 
 	struct ex_vect *vector = (struct ex_vect *) 0;
 
  	if (opt->trace_level) {
-			/* Vector is not initialized before for efficiency: if both trace and profiling are off,
+			/* Vector is not initialized before for efficiency:
+			 * if both trace and profiling are off,
 			 * there is no need to get the exception vector.
 			 */
 
-		vector = extop(&eif_stack);	/* Get top of the exception stack for the routine name etc. */
+			/* Get top of the exception stack for
+			 * the routine name etc.
+			 */
+		vector = extop(&eif_stack);
 
-		/* User wants tracing. */
+			/* User wants tracing. */
 		start_trace(vector->ex_rout, vector->ex_orig, dtype);
 	}
 
 	if (opt->profile_level) {
-		if (!vector)
-			vector = extop(&eif_stack);	/* Get top of the exception stack for the routine name etc. */
+		if (!vector) {
+				/* Get top of the exception stack for
+			 	* the routine name etc.
+			 	*/
+			vector = extop(&eif_stack);
+		}
 
-		/* User wants profiling. */
+			/* User wants profiling. */
 		start_profile(vector->ex_rout, vector->ex_orig, dtype);
 	}
 }
 
 void check_options_stop()
 {
-	/* Checks whether the feature on top of the 'eif_stack' is E-TRACEd and E-PROFILEd and
-	 * dispatches to the functions stop_trace and stop_profile if necessary.
-	 * This function is called by RTSO, which is called by RTEE. Thus we guarantee that
-	 * at least this part of E-TRACE and E-PROFILE will work for both frozen
-	 * and melted code. -- GLJ
+	/* Checks whether the feature on top of the 'eif_stack' is E-TRACEd
+	 * and E-PROFILEd and dispatches to the functions `stop_trace()' and
+	 * `stop_profile()' if necessary.
+	 * This function is called by RTSO, which is called by RTEE. Thus we
+	 * guarantee that at least this part of E-TRACE and E-PROFILE will
+	 * work for both frozen and melted code.
 	 */
 
 	struct ex_vect *vector;
@@ -176,54 +181,60 @@ void check_options_stop()
 	opt = eoption[dtype];
 
 	if (opt.trace_level) {
-		/* User wants tracing. */
+			/* User wants tracing. */
 		stop_trace(vector->ex_rout, vector->ex_orig, dtype);
 	}
 
 	if (opt.profile_level) {
-		/* User wants profiling. */
+			/* User wants profiling. */
 		stop_profile();
 	}
 }
 
-#endif
-
-#define Classname(x)	System(x).cn_generator
+#endif /* WORKBENCH */
 
 void initprf()
 {
-	/* Creates the table needed for E-PROFILE. This function should only be called if
-	 * internal profiling is specified by the user.
+	/* Creates the table needed for E-PROFILE. This function only
+	 * allocates that table if `eif_profiler_on'.
 	 */
 
 	if(eif_profiler_on) {
+			/* Allocate table */
 		class_table = (struct htable *) xcalloc(1, sizeof(struct htable));
 		if (class_table == (struct htable *) 0)
 			enomem();
 
+			/* Create H table */
 		if (!ht_create(class_table, 10, sizeof(struct feat_table)))
-			ht_zero(class_table);
+			ht_zero(class_table);		/* Lucky! */
 		else
 			eraise("Hashtable creation failure", EN_FATAL);
 
-		prof_stack_init();
+		prof_stack_init();		/* Initialize stack */
 	}
 }
 
 void exitprf()
 {
+	/* Exit profiling. Call this function only at exit of Eiffel system.
+	 * Store information to disk and deallocate structures.
+	 */
+
 	if(eif_profiler_on) {
-		unsigned long *keys;			/* Key values from the class H table */
-		struct feat_table *f_values;		/* Values as stored in the class H table */
-		struct profile_information *features;	/* Features from the feature H tables */
-		int i,					/* Counter for the outer-loop */
-	    	index,				/* Index counter for output */
-	    	j;					/* Counter for the inner-loop */
-		FILE *prof_output;			/* File to write the output in. */
+		unsigned long *keys;		/* Keys from H table */
+		struct feat_table *f_values;	/* Values from class H table */
+		struct prof_info *features;	/* Features from H tables */
+		int i,					/* Outer-loop-counter */
+	    	j,					/* Inner-loop-counter */
+	    	index;				/* Index counter for output */
+		FILE *prof_output;		/* Storage file */
 
 		prof_output = fopen(profile_output_file, "w");
-		if (prof_output == (FILE *) 0)
+		if (!prof_output) {
+				/* Too bad: no file */
 			eraise("Unable to open to output file for profile", EN_FATAL);
+		}
 
 		keys = class_table->h_keys;
 		f_values = (struct feat_table *) class_table->h_values;
@@ -233,92 +244,118 @@ void exitprf()
 			if (keys[i] != 0) {
 				for (j = 0; j < f_values[i].htab->h_size; j++) {
 					if (f_values[i].htab->h_keys[j] != 0) {
-						features = (struct profile_information *) f_values[i].htab->h_values;
-						fprintf(prof_output, "[%d]\t%.2f\t%.2f\t%ld\t%s from %s\t[%d]\n", index,
-		    					features[j].all_total_time,
+						features = (struct prof_info *) f_values[i].htab->h_values;
+						fprintf(prof_output, "[%d]\t%.2f\t%.2f\t%ld\t%s from %d\t[%d]\n", index,
+#ifdef HAS_GETRUSAGE
+		    					features[j].all_total_time / 1000000.,
+								features[j].descendent_time / 1000000.,
+#else
+#ifdef HAS_TIMES
+								features[j].all_total_time / (double)HZ,
+								features[j].descendent_time / (double)HZ,
+#else
+								features[j].all_total_time.
 								features[j].descendent_time,
+#endif /* HAS_TIMES */
+#endif /* HAS_GETRUSAGE */
 		    					features[j].number_of_calls,
-		    					features[j].featurename, f_values[i].classname,
+		    					features[j].featurename,
+								f_values[i].dtype,
 								index);
 						index++;
 					}
 				}
 				ht_free(f_values[i].htab);
-				xfree(f_values[i].classname);
 			}
 		}
 
-		fclose(prof_output);
-		ht_free(class_table);
-		prof_stack_free();
+		fclose(prof_output);		/* Close the file */
+			/* No need to `xfree' the struct: is done by `ht_free()' */
+		ht_free(class_table);		/* Free memory */
+		prof_stack_free();			/* Deallocate stack */
 	}
 }
 
 void start_profile(name, origin, dtype)
-char *name;				/* The routine name */
-int origin;				/* The ancestor where 'name' is written, if and only if not in 'dtype' */
-int dtype;				/* The class in which the routine is defined */
+char *name; /* Feature name */
+int origin; /* Origin of `name' */
+int dtype;  /* Dynamic type of `name'*/
 {
-	/* Initializes the timer, the number of calls and the featurename for a new 'prof_stack' entry (see below). */
+	/* Initialize timer and push `name' on `prof_stack'. */
 
 	if(eif_profiler_on) {
-		struct profile_information *new_p_i;	/* New information */
-		double dummy;				/* User time, returned by getcputime is not of interest here */
+		struct prof_info *new_item;	/* New item for `name' */
+		double dummy;			/* User time */
 
-		/* Create and initialize a new entry for the stack */
-		new_p_i = (struct profile_information *) cmalloc (sizeof(struct profile_information));
-		if (new_p_i == (struct profile_information *) 0)
+			/* Allocate `new_item' */
+		new_item = (struct prof_info *) cmalloc (sizeof(struct prof_info));
+		if (!new_item) {
+				/* Bad Luck! */
 			enomem();
+		}
 
-		new_p_i->number_of_calls = 1;
-		new_p_i->featurename = name;
-		new_p_i->dtype = dtype;
-		new_p_i->origin = origin;
-		new_p_i->pi_hcode = hashcode(name, strlen(name));
-		getcputime(&dummy, &(new_p_i->this_total_time));	/* Record the current time */
-		new_p_i->all_total_time = 0.;				/* Initialize to zero, stop_profile relies on this */
-		new_p_i->descendent_time = 0.;				/* Initialize to zero, so we can always add values */
-		new_p_i->is_running = 1;				/* Mark that the function is running */
+			/* Basic initialization */
+		new_item->number_of_calls = 1;
+		new_item->featurename = name;
+		new_item->dtype = dtype;
+		new_item->origin = origin;
+		new_item->feature_hcode = hashcode(name, strlen(name));
+			/* Record time value */
+		prof_time(&dummy, &(new_item->this_total_time));
+			/* Zero values */
+		new_item->all_total_time = 0.;
+		new_item->descendent_time = 0.;
+			/* Mark running */
+		new_item->is_running = 1;
 
-		prof_stack_push(new_p_i);
+		prof_stack_push(new_item);
 	}
 }
 
 void stop_profile()
 {
-	/* Stops the timer for the feature that is on top of the 'prof_stack'. Then updates the table
-	 * and pops the entry of the stack.
+	/* Stop timer for feature on top of 'prof_stack' and store
+	 * information in `class_table'.
 	 */
 
 	if(eif_profiler_on) {
-		struct profile_information *p_i;	/* The information to change */
-		double dummy, new_value;
+		struct prof_info *item;	/* The information to change */
 
-		if ((p_i = prof_stack_top()) != (struct profile_information *) 0) {
+		if((item = prof_stack_pop())) {	/* Testing against NULL */
+				/* `prof_stack' doesn't contain the finishing
+				 * feature anymore. This makes live easier.
+				 */
+			struct prof_info *stk_item;
+			double dummy, new_value;	/* Timinig */
 
-			getcputime(&dummy, &new_value);					/* Get the new time */
-
-			p_i->all_total_time = new_value - p_i->this_total_time;		/* Compute the difference */
-			p_i->is_running = 0;						/* Mark that the function isn't running anymore */
+			prof_time(&dummy, &new_value);	/* Get CPU Time */
+			item->all_total_time = new_value - item->this_total_time;
+			item->is_running = 0; /* Mark feature is not running */
 
 			if (gc_ran && !gc_running) {
-				p_i->all_total_time -= last_gc_time;
+					/* Get time wasted by GC */
+				item->all_total_time -= last_gc_time;
 				gc_ran = 0;
 			}
 
-			if (prof_stack->top->link->link != prof_stack->bot) {
-				struct profile_information *stk_item;
+			if ((stk_item = prof_stack_top())) {
+					/* There is still a callee, so
+					 * update it.
+					 */
 
-				stk_item = prof_stack->top->link->link->info;
-				stk_item->all_total_time -= p_i->all_total_time;
-				stk_item->descendent_time += p_i->all_total_time;
+				stk_item->all_total_time -= item->all_total_time;
+				stk_item->descendent_time += item->all_total_time;
 			}
 
-			update_class_table(p_i);					/* Record times in the table */
-			prof_stack_pop();							/* Pop feature from the stack */
+			update_class_table(item);		/* Record times */
+		} else {
+				/* Bad Luck! (Profile stack corrupted) */
+			panic("Profile stack coprrupted");
 		}
 	}
 }
+
+#define Classname(x)	System(x).cn_generator
 
 void start_trace(name, origin, dtype)
 char *name;				/* The routine name */
@@ -378,181 +415,206 @@ int dtype;				/* The class in which the routine is defined */
 		fprintf(stderr, " (%s)", Classname(origin));
 }
 
-void prof_stack_pop()
+struct prof_info* prof_stack_pop()
 {
-	/* Pops an item of the 'prof_stack'. */
+	/* Pop the top off `prof_stack'.
+	 * Return NULL if there is no top item to pop.
+	 */
 
 	if(eif_profiler_on) {
-		struct prof_item *old_it;	/* Old stack item */
+		register1 struct prof_info *stk_item;	/* Top item of stack */
 
-		old_it = prof_stack->top->link;		/* Get old item */
-		prof_stack->top->link = prof_stack->top->link->link;	/* Unchain old item */
-
-		xfree(old_it);			/* Free memory used by the stack entry */
+		if((stk_item = prof_stack_top())) {
+				/* Okay, data structure still intact */
+			prof_stack->st_top -= 1;	/* Reset top */
+			if(prof_stack->st_top < prof_stack->st_cur->sk_arena) {
+					/* Oops, current chunk is empty */
+				prof_stack->st_cur = prof_stack->st_cur->sk_prev;
+				prof_stack->st_top = prof_stack->st_cur->sk_end - 1;
+				st_truncate(prof_stack);	/* Reuse memory */
+			}
+			return stk_item;
+		} else {
+				/* Bad Luck! */
+			return 0;
+		}
+	} else {
+		return 0;
 	}
 }
 
-struct profile_information* prof_stack_top()
+struct prof_info* prof_stack_top()
 {
-	/* Returns a NULL pointer if the stack is empty, otherwise the information structure.
-	 * The stack is empty if and only if the next item from the top is the bottom item, i.e. top->link->link == NULL.
+	/* Return top of `prof_stack'.
+	 * NULL if no item is available on `prof_stack'
 	 */
 
-	if(eif_profiler_on)
-		return (prof_stack->top->link->link == (struct prof_item *) 0 ? (struct profile_information *) 0 : prof_stack->top->link->info);
-	else
-		return (struct profile_information *) 0;
+	if(eif_profiler_on) {
+		char **top;
+
+		top = prof_stack->st_top;	/* Next free location */
+		top -= 1;
+		if(top < prof_stack->st_cur->sk_arena) {
+				/* Bad Luck! */
+			return 0;
+		}
+
+		return (struct prof_info *) (*top);
+	} else
+		return 0;
 }
 
 void prof_stack_init()
 {
-	/* Initializes the 'prof_stack' by allocating memory for the stack-structure and the top-item
-	 * of the stack. The bottom item of the stack is a stack item with only NULL pointers.
-	 * Thus we know: `(top->link->link == NULL) implies stack.empty'.
+	/* Initialize `prof_stack' by allocating memory for the
+	 * stack-structure and then calling st_alloc() in `garcol.c'.
 	 *
-	 * We do not use the more intelligent way of using chunks in an arena, because that will be way
-	 * to slow for profiling. The code which manipulates the 'prof_stack' MUST remain highly optimized
-	 * for speed, because we don't want a slow execution when E-PROFILE is working.
-	 * For this simple reason, we use here dynamic (i.e. pointers) rather than static structures, for we
-	 * can copy a pointer in a simple way, and thus fast.
-	 * Another reason for this simple stack structure is that it will be used only when we use it (i.e. for
-	 * those features of a class where the user specified E-PROFILE). This means the stack will
-	 * hopefully, not grow out of bounds and therefore we can just allocate blocks here and there and
-	 * take the risk that a part of the stack will be swapped out by the OS. This, though, will not create
-	 * a slow stack manipulation, and hence a slow system-execution. -- GLJ
+	 * We use one stack for all profiled features. This is because of
+	 * a few reasons:
+	 * A) the previous version was bogus and needed to be optimized
+	 * B) less memory is used.
+	 * C) RAM implemented stack manipulation, so why bother and do it
+	 *    again?
 	 */
 
 	if(eif_profiler_on) {
-		prof_stack = (struct profile_stack *) cmalloc(sizeof(struct profile_stack));			/* Allocate profile stack */
-		if (prof_stack == (struct profile_stack *) 0)							/* Allocated? */
-			enomem();
+			/* Allocate profile stack */
+		prof_stack = (struct stack *) cmalloc(sizeof(struct stack));
+		if(!prof_stack)
+			enomem();	/* Bad Luck! */
 
-		prof_stack->bot = (struct prof_item *) cmalloc(sizeof(struct prof_item));
-		prof_stack->bot->info = (struct profile_information *) 0;
-		prof_stack->bot->link = (struct prof_item *) 0;
-
-		prof_stack->top = (struct prof_item *) cmalloc(sizeof(struct prof_item));	/* Allocate top item */
-		if (prof_stack->top == (struct prof_item *) 0)						/* Allocated? */
-			enomem();
-
-		prof_stack->top->link = prof_stack->bot;							/* Previous item is the bottom ==> Stack is empty */
-
-		prof_stack->top->info = (struct profile_information *) 0;					/* Allocate new item */
+			/* Allocate arena and chunk for memory problem */
+		if(!st_alloc(prof_stack, STACK_CHUNK))
+			enomem();	/* Bad Luck! */
 	}
 }
 
 void prof_stack_free()
 {
-	/* Frees the memory allocated for the 'prof_stack'. */
+	/* Free the memory allocated for `prof_stack'. */
 
 	if(eif_profiler_on) {
-		xfree(prof_stack->top);		/* Free the memory used by the top item */
-		xfree(prof_stack->bot);		/* Free the memory used by the bottom item */
-		xfree(prof_stack);		/* Free the memory used by the stack structure */
+		xfree(prof_stack->st_cur);	/* Free memory used by chunk */
+		xfree(prof_stack);			/* Free memory used by stack */
 	}
 }
 
-void prof_stack_push(new_info)
-struct profile_information *new_info;
+void prof_stack_push(new_item)
+struct prof_info *new_item;
 {
-	/* Pushes a new item on the 'prof_stack'. */
+	/* Push `new_item' on `prof_stack'.
+	 * Painc if not possible.
+	 */
 
 	if(eif_profiler_on) {
-		struct prof_item *new_it;	/* New stack item */
-
-		new_it = (struct prof_item *) cmalloc(sizeof(struct prof_item));	/* Allocate new item */
-		if (new_it == (struct prof_item *) 0)
-			enomem();
-
-		bzero(new_it, sizeof(struct prof_item));
-		new_it->info = new_info;
-		new_it->link = prof_stack->top->link;
-		prof_stack->top->link = new_it;
+		if(epush(prof_stack, (char *) new_item) == -1) {
+				/* Bad Luck! */
+			panic("Push profile info failed.");
+		}
 	}
 }
 
 void update_class_table(item)
-struct profile_information *item;
+struct prof_info *item;
 {
-	/* The `class_table' is a H table containing H tables. This is because of the fact that the only
-	 * precise identification of a feature is its class (whether origin or dtype) plus its name.
-	 * It is possible to concatenate the class id and feature name to produce a unique hash key.
-	 * However, we would have to deal with a humongous H table in the end. This means that it becomes 
-	 * obvious that insertion will have to do several searches empty slots. That would slow down the 
-	 * system... (See above at prof_stack_init)
-	 *
-	 * OK: The way it is done: first we check whether the class id has been inserted already, and hence we know
-	 * if there is a H table for the features of that class.  If we cannot find an entry matching the class id, 
-	 * we create a new H table and insert it into the `class_table'. Second, we search the feature in the found 
-	 * H table and update the information (if it was known) or insert the information (if it was unknown).
-	 */
+	/* The `class_table' is a H table containing H tables. This is
+ 	* because of the fact that the only precise identification of
+ 	* a feature is its class (whether origin or dtype) plus its name.
+ 	* It is possible to concatenate the class id and feature name to
+ 	* produce a unique hash key. However, we would have to deal with
+ 	* a humongous H table in the end. This means that it becomes
+ 	* obvious that insertion will have to do several searches empty
+ 	* slots. That would slow down the profiler...
+ 	*
+ 	* OK: The way it is done: first we check whether the class id has
+ 	* been inserted already, and hence we know if there is a H table
+ 	* for the features of that class.  If we cannot find an entry
+ 	* matching the class id, we create a new H table and insert it
+ 	* into the `class_table'. Second, we search the feature in the
+ 	* found H table and update the information (if it was known)
+ 	* or insert the in formation (if it was unknown).
+ 	*/
 
 	if(eif_profiler_on) {
-		struct feat_table		*f_t;		/* The H table containing features from a certain class */
-		struct profile_information	*p_i;		/* New item for the H table */
-		struct prof_item		*stk_p_i;	/* Item on the stack */
-		char 				*class_name;	/* The name of the class */
-		unsigned long 			class_hcode;	/* The hashcode for the classname */
-		unsigned long 			f_hcode;	/* The hashcode for the feature name */
+		struct feat_table *f_t;		/* Feature table */
+		struct prof_info *p_i;		/* New item */
+		unsigned long f_hcode;		/* Feature H code */
 
-		if (item->dtype == item->origin)
-			class_name = Classname(item->dtype);		/* The class is the origin */
-		else
-			class_name = Classname(item->origin);		/* The feature is written in 'origin' instead of 'dtype' */
-
-		class_hcode = hashcode(class_name, strlen(class_name));		/* Keep the H code, to make things faster */
-
-		f_t = (struct feat_table *) ht_value(class_table,class_hcode);	/* Try to seek the H table for the features */
-
-		if (f_t == (struct feat_table *) 0) {
-			/* Create a new Hash table */
-
+			/* Find the H table of features of class dtype */
+		f_t = (struct feat_table *) ht_value(class_table, item->dtype);
+		if(!f_t) {
+				/* Create a new Hash table */
 			f_t = (struct feat_table *) xcalloc(1, sizeof(struct feat_table));
-			if (f_t == (struct feat_table *) 0)
-				enomem();		/* Out of memory */
+			if(!f_t)
+				enomem();	/* Bad Luck */
 
-			f_t->classname = class_name;		/* Initialize the just created structure */
-			f_t->hcode = class_hcode;
-
+				/* Initialize new feature table for dtype */
+			f_t->dtype = item->dtype;
 			f_t->htab = (struct htable *) xcalloc(1, sizeof(struct htable));
-			if (f_t->htab == (struct htable *) 0)
-				enomem();		/* Out of memory */
+			if(!f_t->htab)
+				enomem();	/* Bad Luck */
 
-			if (!ht_create(f_t->htab, 10, sizeof(struct profile_information)))	/* Create H table for features */
-				ht_zero(f_t->htab);						/* initialize it */
-			else
-				eraise("Hashtable creation failure", EN_FATAL);			/* Something is wrotten */
+				/* Create H table internal structures */
+			if(!ht_create(f_t->htab, 10, sizeof(struct prof_info)))
+				ht_zero(f_t->htab);	/* Zero it out */
+			else {
+					/* Something is wrotten */
+				eraise("Hashtable creation failure", EN_FATAL);
+			}
 
-			ht_force(class_table,f_t->hcode,(char *) f_t);		/* Add feature H table to class H table */
+				/* Add feature table to `class_table'. */
+			ht_force(class_table, f_t->dtype, (char *) f_t);
 		}
 
-		/* OK. Either the class was known and f_t is directly from the class_table, or
-	 	* we were able to create a new one.
-	 	*/
+			/* OK. Either the class was known and `f_t' is directly
+			 * from `class_table', or we were able to create
+			 * a new one.
+			 */
 
-		f_hcode = item->pi_hcode;
-
-		p_i = (struct profile_information *) ht_value(f_t->htab, f_hcode);
-
-		if (p_i == (struct profile_information *) 0) {
+		f_hcode = item->feature_hcode;
+		p_i = (struct prof_info *) ht_value(f_t->htab, f_hcode);
+		if(!p_i) {
 			ht_force(f_t->htab, f_hcode, (char *) item);
 		} else {
+			register struct stchunk *current_chunk;
+			char **address;
+			int found = 0;
+
 			p_i->number_of_calls += item->number_of_calls;
 			p_i->all_total_time += item->all_total_time;
 			p_i->descendent_time += item->descendent_time;
-		
-			if (prof_stack->top->link->link != prof_stack->bot) {
-				for (stk_p_i = prof_stack->top->link->link;
-				    	(!(stk_p_i->info->dtype == item->dtype && stk_p_i->info->origin == item->origin && stk_p_i->info->pi_hcode == f_hcode));
-				    	/* EMPTY */) {
-					if (stk_p_i->link == prof_stack->bot)
+
+				/* Traversal in search of recursive `item' */
+			for(current_chunk = prof_stack->st_cur;
+					current_chunk != (struct stchunk *) 0 && !found;
+					current_chunk = current_chunk->sk_prev) {
+				/* Inspect each chunk */
+
+				/* Starting address is end of chunk for
+				 * full chunks and current insertion position
+				 * for the last one
+				 */
+				if(current_chunk == prof_stack->st_cur)
+					address = prof_stack->st_top - 1;
+				else
+					address = current_chunk->sk_end - 1;
+				for( /* EMPTY */ ;
+						address >= current_chunk->sk_arena;
+						address--) {
+					if(((struct prof_info *)*address)->dtype == p_i->dtype &&
+						((struct prof_info *)*address)->origin == p_i->origin &&
+						((struct prof_info *)*address)->feature_hcode == p_i->feature_hcode){
+								/* Found item looking for */
+						found = 1;
 						break;
-					else
-						stk_p_i = stk_p_i->link;
+					}
 				}
-				if (stk_p_i->link != prof_stack->bot) {
-					stk_p_i->info->this_total_time += p_i->all_total_time;
-				}
+			}
+
+				/* Did we find one? */
+			if(found) {
+					/* Update it */
+				((struct prof_info *)*address)->this_total_time += p_i->all_total_time;
 			}
 
 			xfree(item);
@@ -560,21 +622,67 @@ struct profile_information *item;
 	}
 }
 
-void prof_stack_rewind()
+void prof_stack_rewind(old_top)
+char **old_top;		/* Old top. Just to know where to stop rewinding. */
 {
-	/* Rewinds the 'prof_stack' and thus updates all features in that stack and puts data in the profile table.
-	 *
-	 * This function is useful when the system is interrupted by an exception which is "rescued" and then
-	 * the feature is "retried". We can simple rewind the current profile stack and restore the saved profile stack.
-	 * Thus we must declare a profile_stack structure, store 'prof_stack' in it, and create a new 'prof_stack' (via prof_stack_init)
-	 * every time a feature has a rescue-clause. Then we must rewind the new profile stack and restore the saved
-	 * profile stack into 'prof_stack', which can bo done with a simple C-assignment.
-	 * This guarantees that all information, so far, will be kept EVEN if the system has a caught exception.
-	 * For exceptions which causes the system to stop (i.e. no where was a rescue-clause), we guarantee very
-	 * much useless information, because we always do a 'exitprf' in 'reclaim'. -- GLJ
+	/* Rewinds part of 'prof_stack' and thus updates all features in
+ 	* that part and puts data in the profile table. This function
+ 	* is useful when the system is interrupted by an exception which
+ 	* is "rescued" and then the feature is "retried". We can simple
+ 	* rewind `prof_stack' until we hit `old_top'.
+ 	*
+ 	* Thus we must declare char**, and store 'prof_stack->st_top'
+ 	* in it, every time a feature has a rescue-clause. Then we must
+ 	* rewind the new part of `prof_stack' with this function while
+ 	* passing down the stored top.
+ 	*
+ 	* This guarantees that all information, so far, will be kept even
+ 	* if the system has caught an exception. For exceptions which
+ 	* cause the system to stop (i.e. nowhere was a rescue-clause),
+ 	* we guarantee very much useless information, because we always
+ 	* do a 'exitprf' in 'reclaim'. -- GLJ
+ 	*/
+
+	if(eif_profiler_on) {
+			/* Traverse the stack to a certain point */
+		while(prof_stack->st_top >= old_top) {
+				/* Stop profiling top item */
+			stop_profile();
+		}
+	}
+}
+
+void prof_time(usertime, systime)
+double *usertime;	/* User time */
+double *systime;	/* System time */
+	/* Get the user and system time.
+	 * This function is optimized for the profiler. `getcputime()' in `timer.c'
+	 * always divides the result.
+	 * Quantify told us that that is a bad idea.
 	 */
 
-	if(eif_profiler_on)
-		while(prof_stack->top->link != prof_stack->bot)		/* As long as there are items on the stack ... */
-			stop_profile();					/* ... stop profiling for the top item. */
+#ifdef HAS_GETRUSAGE
+{
+	struct rusage usage;
+
+	getrusage(RUSAGE_SELF, &usage);
+
+	*usertime = (double)usage.ru_utime.tv_sec + (double)usage.ru_utime.tv_usec;
+	*systime = (double)usage.ru_stime.tv_sec + (double)usage.ru_stime.tv_usec;
 }
+#else
+#ifdef HAS_TIMES
+{
+	struct tms time;
+
+	(void) times(&time);
+	*usertime = (double)time.tms_utime;
+	*systime = (double)time.tms_stime;
+}
+#else
+{
+	*user_time = 0;
+	*system_time = 0;
+}
+#endif /* HAS_TIMES */
+#endif /* HAS_GETRUSAGE */

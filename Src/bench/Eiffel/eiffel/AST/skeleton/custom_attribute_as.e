@@ -103,7 +103,6 @@ feature {NONE} -- Type checking
 			tuple_not_void: tuple /= Void
 		local
 			vica: VICA
-			expr: EXPR_AS
 			l_sub: TUPLE_AS
 			l_val: VALUE_AS
 			l_name: STRING_AS

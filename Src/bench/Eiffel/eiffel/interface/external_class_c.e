@@ -185,10 +185,8 @@ feature -- Query
 			a_feat_is_external: a_feat.is_external
 		local
 			l_reader: EIFFEL_XML_DESERIALIZER
-			l_ext: IL_EXTENSION_I
 			l_consumed_type: CONSUMED_TYPE
 			l_properties: ARRAY [CONSUMED_PROPERTY]
-			l_setter: CONSUMED_PROCEDURE
 			l_prop: CONSUMED_PROPERTY
 			i, nb: INTEGER
 			done: BOOLEAN
@@ -577,7 +575,6 @@ feature {NONE} -- Initialization
 			l_assembly: ASSEMBLY_I
 			l_result: CLASS_I
 			l_class: CLASS_C
-			l_name: STRING
 			l_is_array: BOOLEAN
 			l_generics: ARRAY [TYPE_A]
 			l_array_type: CONSUMED_ARRAY_TYPE

@@ -139,7 +139,16 @@ feature {NONE} -- Implementation: Byte node
 						l_feat_not_void: l_feat /= Void
 						l_basic_i_not_void: l_basic_i /= Void
 					end
-					Result := creation_byte_code (l_feat, l_basic_i, l_ref, a_expr)
+					if a_source_type.is_typed_pointer then
+							-- Special case here to ensure that the attachment type is POINTER and 
+							-- not TYPED_POINTER otherwise the C generated code will generate an
+							-- incorrect signature of `set_item'. It fixed C compilation
+							-- warnings/errors (depending on the platform used to run the test)
+							-- in eweasel tests ccomp050.
+						Result := creation_byte_code (l_feat, pointer_type.type_i, l_ref, a_expr)
+					else
+						Result := creation_byte_code (l_feat, l_basic_i, l_ref, a_expr)
+					end
 				end
 			end			
 		end

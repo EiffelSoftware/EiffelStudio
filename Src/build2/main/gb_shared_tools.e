@@ -49,5 +49,10 @@ feature -- Access
 			create Result
 		end
 		
+	main_window: GB_MAIN_WINDOW is
+			-- `Result' is main window of `Current'.
+		once
+			create Result
+		end
 
 end -- class GB_ACCESSIBLE

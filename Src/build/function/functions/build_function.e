@@ -9,7 +9,7 @@ indexing
 	Date: "$Date$"
 	Revision: "$Revision$"
 
-deferred class FUNCTION  
+deferred class BUILD_FUNCTION  
 
 inherit
 
@@ -489,4 +489,4 @@ feature -- data
 		deferred
 		end;
 
-end
+end -- class BUILD_FUNCTION

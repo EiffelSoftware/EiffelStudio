@@ -3,7 +3,7 @@ class BEHAVIOR
 
 inherit
 
-	FUNCTION
+	BUILD_FUNCTION
 		export 
 			{CONTEXT, CONTEXT_TREE} drop_pair
 		redefine

@@ -10,7 +10,7 @@ inherit
 
 feature 
 
-	execute (argument: FUNCTION) is
+	execute (argument: BUILD_FUNCTION) is
 		do
 			edited_function := argument;
 			function_work;
@@ -91,7 +91,7 @@ feature {NONE}
 
 	is_template: BOOLEAN is True;
 
-	edited_function: FUNCTION;
+	edited_function: BUILD_FUNCTION;
 			-- function being edited 
 
 	update_history is

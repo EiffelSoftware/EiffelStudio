@@ -9,7 +9,7 @@ class BUILD_STATE
 
 inherit
 
-	FUNCTION
+	BUILD_FUNCTION
 		redefine
 			func_editor, input_data, output_data,
 			drop_pair

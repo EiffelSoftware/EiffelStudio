@@ -347,42 +347,52 @@ feature -- Search commands
 	find_next is
 			-- Find next occurrence of last searched pattern.
 		do
-			search_tool.go_to_next_found
-			check_cursor_position
+			if search_tool /= Void then
+				search_tool.go_to_next_found
+				check_cursor_position
+			end
 		end
 
 	find_previous is
 			-- Find next occurrence of last searched pattern.
 		do
-			search_tool.go_to_previous_found
-			check_cursor_position
+			if search_tool /= Void then
+				search_tool.go_to_previous_found
+				check_cursor_position
+			end
 		end
 
 	find_selection is
 			-- Find next occurrence of selection.
 		do
-			if not text_displayed.selection_is_empty then
-				search_tool.set_current_searched (text_displayed.selected_string)
+			if search_tool /= Void then
+				if not text_displayed.selection_is_empty then
+					search_tool.set_current_searched (text_displayed.selected_string)
+				end
+				find_next
 			end
-			find_next
 		end
 
 	search is
 			-- Display search tool if necessary.
 		do
-			if not search_tool.mode_is_search then
-				search_tool.set_mode_is_search (True)
+			if search_tool /= Void then
+				if not search_tool.mode_is_search then
+					search_tool.set_mode_is_search (True)
+				end
+				prepare_search_tool
 			end
-			prepare_search_tool
 		end
 
 	replace is
 			-- Display search tool (with Replace field) if necessary.
 		do
-			if search_tool.mode_is_search then
-				search_tool.set_mode_is_search (False)
+			if search_tool /= Void then
+				if search_tool.mode_is_search then
+					search_tool.set_mode_is_search (False)
+				end
+				prepare_search_tool
 			end
-			prepare_search_tool
 		end
 
 	copy_selection is

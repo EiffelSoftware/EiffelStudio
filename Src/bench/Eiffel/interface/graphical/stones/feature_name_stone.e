@@ -13,12 +13,14 @@ inherit
 		rename
 			make as old_make,
 			check_validity as old_check_validity
+		redefine
+			history_name
 		end;
 	FEATURE_STONE
 		rename
 			make as old_make
 		redefine
-			check_validity
+			check_validity, history_name
 		select
 			check_validity 
 		end 
@@ -43,6 +45,15 @@ feature -- Properties
 
 	feature_name: STRING;
 			-- Feature name
+
+	history_name: STRING is
+			-- Name used in the history list
+		do
+			!! Result.make (0);
+			Result.append (feature_name);
+			Result.append (" from ");
+			Result.append (e_class.name_in_upper)
+		end;
 
 feature -- Update
 

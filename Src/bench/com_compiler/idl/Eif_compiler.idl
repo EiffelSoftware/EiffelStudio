@@ -580,10 +580,10 @@ interface IEiffelClusterProperties: IDispatch
   [id (200), propput, helpstring ("Full path to cluster.")]
   HRESULT cluster_path ([in] BSTR path);
   
-  [id (201), propget, helpstring ("Should this cluster classes take priority over other classes with same name.")]
+  [id (201), propget, helpstring ("Should this cluster classes take priority over other classes with same name?")]
   HRESULT override ([out, retval] VARIANT_BOOL * return_value);
   
-  [id (201), propput, helpstring ("Should this cluster classes take priority over other classes with same name.")]
+  [id (201), propput, helpstring ("Should this cluster classes take priority over other classes with same name?")]
   HRESULT override ([in] VARIANT_BOOL a_bool);
   
   [id (202), propget, helpstring ("Should this cluster be treated as library?")]

@@ -25,7 +25,8 @@ inherit
 		end
 
 	EV_DESELECTABLE
-		-- These features may only be called when list item is in parent.
+			-- These features may only be called when `Current' is parented.
+			-- See `is_selectable' from EV_SELECTABLE.
 		undefine
 			initialize
 		redefine

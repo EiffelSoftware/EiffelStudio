@@ -337,6 +337,9 @@ feature {NONE} -- Implementation
 
 	aok: BOOLEAN
 
+	could_not_load_file: BOOLEAN
+			-- Was there an error when attempting to create the class file?
+
 	cluster_preset: BOOLEAN
 			-- Was a target cluster set by `preset_cluster'?
 
@@ -387,11 +390,13 @@ feature {NONE} -- Implementation
 						if not file.exists then
 							destroy
 							load_default_class_text (file)
-							manager.add_class_to_cluster_i (base_name, cluster)
-							class_i := cluster.class_with_base_name (base_name)
-							if set_stone and class_i /= Void then
-								create stone.make (class_i)
-								target.advanced_set_stone (stone)
+							if not could_not_load_file then
+								manager.add_class_to_cluster_i (base_name, cluster)
+								class_i := cluster.class_with_base_name (base_name)
+								if set_stone and class_i /= Void then
+									create stone.make (class_i)
+									target.advanced_set_stone (stone)
+								end
 							end
 						elseif
 							not (file.is_readable and then file.is_plain)
@@ -530,9 +535,11 @@ feature {NONE} -- Implementation
 					output.open_write
 					output.putstring (in_buf)
 					output.close
+					could_not_load_file := False
 				else
 					create wd.make_with_text (Warning_messages.w_cannot_read_file (input.name))
 					wd.show_modal_to_window (target.window)
+					could_not_load_file := True
 				end
 			else
 				if not writing then

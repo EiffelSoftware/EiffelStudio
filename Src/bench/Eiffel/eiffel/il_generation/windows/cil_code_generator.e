@@ -1078,7 +1078,9 @@ feature -- Features info
 				end
 				l_is_static := not l_ext.need_current (l_ext.type)
 			else
-				l_is_static := is_static
+				if not l_class_type.associated_class.is_single then
+					l_is_static := is_static
+				end
 			end
 			if l_feat.feature_name_id /= Names_heap.void_name_id then
 				l_is_attribute := l_feat.is_attribute

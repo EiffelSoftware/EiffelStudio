@@ -1,16 +1,20 @@
 indexing
-
 	description: 
-		"EiffelVision text container. Common features for widgets that can contain text (label, button, menu item)."
+		"EiffelVision text container. Common features for widgets%
+		% that can contain text (label, button, menu item)."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
 	
 deferred class
-
 	EV_TEXT_CONTAINER
 
+inherit
+	EV_ANY
+		redefine
+			implementation
+		end
 	
 feature {NONE} -- Initialization
 
@@ -62,11 +66,6 @@ feature -- Status setting
 			exists: not destroyed
 		do
 			implementation.set_left_alignment
-		end
-
-	destroyed: BOOLEAN is
-			-- Is current object destroyed
-		deferred
 		end
 
 feature -- Element change

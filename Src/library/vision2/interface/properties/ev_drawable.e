@@ -11,10 +11,10 @@ class
 	EV_DRAWABLE
 
 inherit
---	EV_PIXMAP_CONTAINER
---		redefine
---			implementation
---		end
+	EV_ANY
+		redefine
+			implementation
+		end
 
 feature -- Implementation
 

@@ -15,6 +15,12 @@ feature {NONE}
 			!!Result.make
 		end;
 
+	focus_label: FOCUS_LABEL_I is
+			-- Focus label
+		once
+			!FOCUS_LABEL! Result.initialize (Project_tool)
+		end;
+
 	transporter: TRANSPORTER is
 		once
 			!! Result.make (project_tool)

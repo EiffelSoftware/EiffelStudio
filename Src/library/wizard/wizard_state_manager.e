@@ -89,6 +89,14 @@ feature {WIZARD_WINDOW, WIZARD_SMART_TEXT_FIELD} -- Basic Operations
 				end
 				history.wipe_out
 
+				from
+					first_window.close_request_actions.start
+				until
+					first_window.close_request_actions.after
+				loop
+					first_window.close_request_actions.item.call ([])
+					first_window.close_request_actions.forth
+				end
 				first_window.destroy
 				destroying_wizard := False
 			end

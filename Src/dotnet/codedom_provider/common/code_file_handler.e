@@ -12,14 +12,6 @@ inherit
 			{NONE} all
 		end
 
-feature -- Access
-
-	Directory_separator: CHARACTER is
-			-- Platform specific directory separator
-		once
-			Result := (create {OPERATING_ENVIRONMENT}).Directory_separator
-		end
-
 feature -- Status Report
 
 	last_copy_successful: BOOLEAN

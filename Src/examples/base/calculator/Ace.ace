@@ -6,7 +6,7 @@ root
 	calculator (ROOT_CLUSTER): "make"
 
 default
-
+	assertion (all);
 	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/base")
 
 cluster
@@ -17,5 +17,23 @@ cluster
 				-- into one of your directories, and replace
 				-- $EIFFEL4/examples/base/calculator by the name of
 				-- that directory on the above line.
+
+		-- EiffelBase:
+	base:				"$EIFFEL4\library\base"
+	structures(base):		"$\structures"
+
+	kernel(base):		"$\kernel"
+	support(base):		"$\support"
+	access(structures):	"$\access"
+	cursors(structures):	"$\cursors"
+	dispenser(structures):	"$\dispenser"
+	list(structures):		"$\list"
+	set(structures):		"$\set"
+	sort(structures):		"$\sort"
+	storage(structures):	"$\storage"
+	table(structures):		"$\table"
+	traversing(structures):	"$\traversing"
+	tree(structures):		"$\tree"
+
 
 end

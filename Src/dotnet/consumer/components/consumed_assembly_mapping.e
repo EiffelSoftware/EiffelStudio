@@ -29,9 +29,6 @@ feature {NONE} -- Initialization
 				i := i + 1
 				assembly_ids.forth
 			end
---			assemblies := assembly_ids
-		ensure
---			assemblies_set: assemblies = assembly_ids
 		end
 
 feature -- Access

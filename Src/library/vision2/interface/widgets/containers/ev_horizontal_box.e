@@ -19,10 +19,6 @@ create
 	default_create,
 	make_for_test
 	
-feature {EV_ANY_I} -- Implementation
- 	
-	implementation: EV_HORIZONTAL_BOX_I
-
 feature {NONE} -- Implementation
 
 	create_implementation is
@@ -30,6 +26,10 @@ feature {NONE} -- Implementation
 		do
 			create {EV_HORIZONTAL_BOX_IMP} implementation.make (Current)
 		end
+
+feature {EV_ANY_I} -- Implementation
+ 	
+	implementation: EV_HORIZONTAL_BOX_I
  			
 end -- class EV_HORIZONTAL_BOX
 
@@ -54,6 +54,9 @@ end -- class EV_HORIZONTAL_BOX
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2000/03/01 20:07:35  king
+--| Corrected export clauses for implementation and create_imp/act_seq
+--|
 --| Revision 1.11  2000/03/01 19:48:53  king
 --| Corrected export clauses for implementation and create_imp/act_seq
 --|

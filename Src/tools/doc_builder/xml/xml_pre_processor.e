@@ -53,7 +53,6 @@ feature {NONE} -- Processing
 	insert_html_stylesheet_link is
 			-- Insert reference to project or document HTML stylesheet file
 		local
-			l_name,
 			l_path: STRING
 			l_parent,
 			l_stylesheet_tag: XM_ELEMENT
@@ -64,7 +63,7 @@ feature {NONE} -- Processing
 				if l_parent /= Void then
 					l_path := stylesheet_path (internal_xml.name, True)
 					if l_path /= Void then
-						create l_stylesheet_tag.make_child (l_parent, "stylesheet", create {XM_NAMESPACE}.make_default)
+						create l_stylesheet_tag.make (l_parent, "stylesheet", create {XM_NAMESPACE}.make_default)
 						l_stylesheet_tag.put_last (create {XM_CHARACTER_DATA}.make (l_stylesheet_tag, l_path))
 						l_parent.put_last (l_stylesheet_tag)
 					end
@@ -132,9 +131,6 @@ feature {NONE} -- Processing
 			l_toc: TABLE_OF_CONTENTS
 			l_node,
 			l_parent: TABLE_OF_CONTENTS_NODE
-			l_no_higher: BOOLEAN
-			l_links_xml,
-			l_link_xml,
 			l_label,
 			l_url,
 			l_separator: STRING		
@@ -176,12 +172,12 @@ feature {NONE} -- Processing
 						l_node := l_parent
 						l_parent := l_node.parent
 						if l_label /= Void then
-							create l_xm_link.make_child (l_xm_parent, "link", create {XM_NAMESPACE}.make_default)
-							create l_xm_label.make_child (l_xm_link, "label", create {XM_NAMESPACE}.make_default)							
+							create l_xm_link.make (l_xm_parent, "link", create {XM_NAMESPACE}.make_default)
+							create l_xm_label.make (l_xm_link, "label", create {XM_NAMESPACE}.make_default)							
 							l_xm_label.put_first (create {XM_CHARACTER_DATA}.make (l_xm_label, l_label))
 							l_xm_link.put_first (l_xm_label)
 							if l_url /= Void then
-								create l_xm_url.make_child (l_xm_link, "url", create {XM_NAMESPACE}.make_default)
+								create l_xm_url.make (l_xm_link, "url", create {XM_NAMESPACE}.make_default)
 								l_xm_url.put_first (create {XM_CHARACTER_DATA}.make (l_xm_url, l_url))
 								l_xm_link.put_first (l_xm_url)								
 							end

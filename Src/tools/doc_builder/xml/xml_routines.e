@@ -251,7 +251,6 @@ feature -- Status Setting
 			valid_index: start_index > 0
 		local
 			l_elem: XM_ELEMENT
-			l_temp_bool: BOOLEAN
 		do
 			from
 				composite.start
@@ -391,7 +390,7 @@ feature -- Query
 feature -- Storage
 
 	save_xml_document (a_doc: XM_DOCUMENT; a_doc_name: STRING) is
-			-- Save `a_doc' in `ptf'
+			-- Save `a_doc'
 		require
 			doc_not_void: a_doc /= Void
 			doc_name_not_void: a_doc_name /= Void
@@ -407,7 +406,6 @@ feature -- Storage
 				l_formatter.set_output (l_output_file)												
 				l_output_file.open_write
 				if l_output_file.is_open_write then
---					l_output_file.put_string (l_formatter.last_string)
 					l_formatter.process_document (a_doc)
 					l_output_file.flush
 					l_output_file.close

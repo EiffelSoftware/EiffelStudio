@@ -54,30 +54,16 @@ feature -- Search
 	search_item (t: TYPE_I): CLASS_TYPE is
 			-- Is the type `t' present in instances of CLASS_TYPE in the list?
 			-- If not, return the last item found in the list.
-		local
-			l_area: like area
-			l_item: like item
-			i, nb: INTEGER
-			l_found: BOOLEAN
+		require
+			type_not_void: t /= Void
 		do
-			from
-				l_area := area
-				nb := count - 1
-			until
-				i > nb or l_found
-			loop
-				l_item := l_area.item (i)
-				l_found := l_item.type.same_as (t)
-				i := i + 1
-			end
-			
-			if l_found then
-				Result := l_item
+			if has_type (t) then
+				Result := found_item
 			else
 					-- FIXME: the above search should make sure that we have an item
 					-- but some time we don't therefore we return `last', if any, or
 					-- Void otherwise.
-				if nb < 0 then
+				if count = 0 then
 					Result := Void
 				else
 					Result := last				

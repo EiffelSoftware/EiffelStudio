@@ -77,6 +77,7 @@ feature -- Initialization/Checking
 							-- Routine specified twice in Convert_clause.
 						create l_vncp.make ("Routine specified twice in Convert_clause.")
 						l_vncp.set_class (a_class)
+						l_vncp.set_location (l_feat.feature_name.start_location)
 						Error_handler.insert_error (l_vncp)
 						has_error := True
 					else
@@ -104,6 +105,7 @@ feature -- Initialization/Checking
 										-- Not a valid type.
 									create l_vncp.make ("Invalid type: use of anchors.")
 									l_vncp.set_class (a_class)
+									l_vncp.set_location (l_feat.conversion_types.item.start_location)
 									Error_handler.insert_error (l_vncp)
 									has_error := True
 								else
@@ -112,6 +114,7 @@ feature -- Initialization/Checking
 											-- Wrong number of geneneric parameters in parent
 										l_vtug := l_named_type.error_generics
 										l_vtug.set_class (a_class)
+										l_vtug.set_location (l_feat.conversion_types.item.start_location)
 										Error_handler.insert_error (l_vtug)
 										has_error := True
 									else
@@ -121,6 +124,7 @@ feature -- Initialization/Checking
 										if not l_named_type.constraint_error_list.is_empty then
 											create l_vncp.make ("Invalid generic type.")
 											l_vncp.set_class (a_class)
+											l_vncp.set_location (l_feat.conversion_types.item.start_location)
 											Error_handler.insert_error (l_vncp)
 											has_error := True
 										else
@@ -136,6 +140,7 @@ feature -- Initialization/Checking
 														create l_vncp.make
 															("Conversion type already specified.")
 														l_vncp.set_class (a_class)
+														l_vncp.set_location (l_feat.conversion_types.item.start_location)
 														Error_handler.insert_error (l_vncp)
 														has_error := True
 													else
@@ -146,6 +151,7 @@ feature -- Initialization/Checking
 														create l_vncp.make
 															("Conversion type already specified.")
 														l_vncp.set_class (a_class)
+														l_vncp.set_location (l_feat.conversion_types.item.start_location)
 														Error_handler.insert_error (l_vncp)
 														has_error := True
 													else
@@ -474,6 +480,7 @@ feature {NONE} -- Implementation: checking
 								-- Not a creation procedure.
 							create l_vncp.make ("Not a creation procedure.")
 							l_vncp.set_class (a_class)
+							l_vncp.set_location (a_convert_feat.feature_name.start_location)
 							Error_handler.insert_error (l_vncp)
 							has_error := True
 						else
@@ -483,6 +490,7 @@ feature {NONE} -- Implementation: checking
 									-- arguments)
 								create l_vncp.make ("Not just 1 argument.")
 								l_vncp.set_class (a_class)
+								l_vncp.set_location (a_convert_feat.feature_name.start_location)
 								Error_handler.insert_error (l_vncp)
 								has_error := True
 							end
@@ -492,6 +500,7 @@ feature {NONE} -- Implementation: checking
 								-- Not a function without argument
 							create l_vncp.make ("Not a function without argument.")
 							l_vncp.set_class (a_class)
+							l_vncp.set_location (a_convert_feat.feature_name.start_location)
 							Error_handler.insert_error (l_vncp)
 							has_error := True
 						end
@@ -500,6 +509,7 @@ feature {NONE} -- Implementation: checking
 						-- Feature is not an Eiffel routine
 					create l_vncp.make ("Should be a routine, not a once nor an external.")
 					l_vncp.set_class (a_class)
+					l_vncp.set_location (a_convert_feat.feature_name.start_location)
 					Error_handler.insert_error (l_vncp)
 					has_error := True
 				end
@@ -507,6 +517,7 @@ feature {NONE} -- Implementation: checking
 				create l_vncp.make ("Routine not found: " +
 					a_convert_feat.feature_name.internal_name)
 				l_vncp.set_class (a_class)
+				l_vncp.set_location (a_convert_feat.feature_name.start_location)
 				Error_handler.insert_error (l_vncp)
 				has_error := True
 			end
@@ -543,6 +554,7 @@ feature {NONE} -- Implementation: checking
 				if not l_feat.type.actual_type.conform_to (a_type) then
 					create l_vncp.make ("Return type does not conform to SOURCE.")
 					l_vncp.set_class (a_class)
+					l_vncp.set_location (a_convert_feat.feature_name.start_location)
 					Error_handler.insert_error (l_vncp)
 					has_error := True
 				end
@@ -550,6 +562,7 @@ feature {NONE} -- Implementation: checking
 				if not a_type.conform_to (l_feat.arguments.i_th (1).actual_type) then
 					create l_vncp.make ("SOURCE does not conform to argument type.")
 					l_vncp.set_class (a_class)
+					l_vncp.set_location (a_convert_feat.feature_name.start_location)
 					Error_handler.insert_error (l_vncp)
 					has_error := True
 				end

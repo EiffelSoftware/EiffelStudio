@@ -147,6 +147,9 @@ end -- class EV_DYNAMIC_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/04/12 18:51:59  oconnor
+--| formatting
+--|
 --| Revision 1.5  2000/04/12 18:51:34  brendel
 --| Removed invariant. Should be put in individual classes where is does
 --| apply?
@@ -162,7 +165,6 @@ end -- class EV_DYNAMIC_LIST_IMP
 --|
 --| Revision 1.1.2.1  2000/04/05 19:29:26  brendel
 --| Initial.
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

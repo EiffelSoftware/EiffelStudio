@@ -485,7 +485,7 @@ feature -- Update
 				if found or else matcher.found then
 					start_position := matcher.found_at - 1
 					end_position := start_position + s.count
-					highlight_selected (start_position, end_position)
+					set_selection (start_position, end_position)
 					set_cursor_position (end_position)
 				end
 			end;
@@ -525,15 +525,17 @@ feature -- Cursor movement
 			cur: GRAPHICAL_WINDOW_CURSOR;
 			value, new_x, new_y: INTEGER
 		do
-			cur ?= a_cursor;	
-			new_x := cur.x;
-			new_y := cur.y;
-			update_scroll_position (horizontal_scrollbar, new_x);
-			update_scroll_position (vertical_scrollbar, new_y);
-			if x_offset /= horizontal_scrollbar.value or else
-				y_offset /= vertical_scrollbar.value
-			then	
-				update_text
+			cur ?= a_cursor;
+			if cur /= Void then	
+				new_x := cur.x;
+				new_y := cur.y;
+				update_scroll_position (horizontal_scrollbar, new_x);
+				update_scroll_position (vertical_scrollbar, new_y);
+				if x_offset /= horizontal_scrollbar.value or else
+					y_offset /= vertical_scrollbar.value
+				then	
+					update_text
+				end
 			end
 		end
 
@@ -753,6 +755,11 @@ feature {NONE} -- Implementation
 		end;
 
 feature {NONE} -- Selection implementation
+
+	matcher: KMP_MATCHER is
+		once
+			!! Result.make_empty
+		end
 
 	height_offset: INTEGER is
 			-- Height offset of line

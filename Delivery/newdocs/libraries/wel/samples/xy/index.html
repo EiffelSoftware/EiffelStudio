@@ -1,0 +1,42 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<HTML>
+	<HEAD>
+		<TITLE>xy</TITLE>
+		<LINK REL=StyleSheet HREF="/default.css">
+		<META NAME="MS-HKWD" CONTENT="WEL Samples, welxy">
+	</HEAD>
+
+	<BODY>
+		<H1>XY Sample</H1>
+		<CENTER><IMG SRC="xy.png" ALT="xy" /></CENTER><BR><BR>
+		<H2>Compiling</H2>
+		<P>
+			To compile the example:
+		</P>
+		<UL>
+			<LI>Launch [BENCH].
+			<LI>Select <B>Use existing Ace (control file)</B> and click <B>OK</B>.
+			<LI>Browse to <I>Eiffel50\examples\wel\xy\</I>.
+			<LI>Choose <I>Ace.ace</I>
+			<LI>Choose the directory where the project will be compiled, by default the same directory containing the Ace file.
+			<LI>Click <B>OK</B>.
+		</UL>
+		<H2>Running</H2>
+		After launching the sample, you should see a <A CLASS="eclass" HREF="/libraries/wel/reference/windows/wel_frame_window_chart.html">WEL_FRAME_WINDOW</A>
+		displayed. If you click the left mouse button in the client area of the window, the coordinates of the click (Relative to the top left of the client area), will be
+		displayed. Clicking the <A HREF="/libraries/wel/reference/controls/wel_push_button_chart.html">WEL_PUSH_BUTTON</A> marked "Clear" will clear the client area of the window.
+		<P>
+		</P>
+		<H2>Under the Hood</H2>
+		<P>A <A CLASS="eclass" HREF="/libraries/wel/reference/gdi/wel_client_dc_chart.html">WEL_CLIENT_DC</A> is used to display output in the client area of the window during the execution of on_left_button_down which has been redefined
+		in <A CLASS="eclass" HREF="/libraries/wel/samples/xy/root_cluster/main_window_chart.html">MAIN_WINDOW</A>.</P>
+		<P>This sample contains the following classes:
+			<UL>
+				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/xy/root_cluster/xy_demo_chart.html">XY_DEMO</A>
+				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/xy/root_cluster/main_window_chart.html">MAIN_WINDOW</A>
+			</UL>
+		</P>
+		<P CLASS="seealso"><B>See Also</B><BR><A HREF="/libraries/wel/samples/tutorial/step3/index.html">tutorial_step3</A><BR><A HREF="/libraries/wel/controls/wel_push_button.html">WEL_PUSH_BUTTON</A><BR></P>
+	</BODY>
+</HTML>

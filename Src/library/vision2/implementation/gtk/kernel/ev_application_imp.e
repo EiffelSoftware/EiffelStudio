@@ -20,8 +20,6 @@ inherit
 
 	EV_C_UTIL
 
-	INTERNAL
-
 	EV_APPLICATION_ACTION_SEQUENCES_IMP
 
 	EXECUTION_ENVIRONMENT
@@ -69,9 +67,11 @@ feature {NONE} -- Initialization
 				put (previous_gtk_rc_files, "GTK_RC_FILES")
 			end
 			gtk_init
-			C.gdk_rgb_init			
-			-- Initialize the marshaller.
+			C.gdk_rgb_init
+			
+			-- Initialize the marshal object.
 			create gtk_marshal
+			
 			C.gtk_widget_set_default_colormap (C.gdk_rgb_get_cmap)
 			C.gtk_widget_set_default_visual (C.gdk_rgb_get_visual)
 
@@ -109,6 +109,8 @@ feature {NONE} -- Initialization
 			is_in_gtk_main := True
 			C.gtk_main
 			is_in_gtk_main := False
+			
+			-- Unhook marshal object.
 			gtk_marshal.destroy
 			is_destroyed := True
 		end

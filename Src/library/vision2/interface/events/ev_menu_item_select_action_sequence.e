@@ -25,11 +25,11 @@ feature -- Access
 			extend (agent wrapper (?, action))
 		end
 
-	wrapper (a_item: EV_MENU_ITEM; action: PROCEDURE [ANY, TUPLE]) is
+	wrapper (an_item: EV_MENU_ITEM; action: PROCEDURE [ANY, TUPLE]) is
 			-- Use this to circumvent tuple type checking. (at your own risk!)
 			-- Calls `action' passing all other arguments.
 		do
-			action.call ([a_item])
+			action.call ([an_item])
 		end
 end
 

@@ -24,8 +24,7 @@ feature -- Basic operations
 			tmp_assertion: WIZARD_WRITER_ASSERTION
 			visitor: WIZARD_DATA_TYPE_VISITOR
 		do
-			create visitor
-			visitor.visit (a_descriptor.data_type)
+			visitor := a_descriptor.data_type.visitor 
 
 			create changed_names.make (2)
 

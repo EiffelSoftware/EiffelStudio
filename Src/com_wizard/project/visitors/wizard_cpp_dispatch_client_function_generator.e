@@ -43,8 +43,7 @@ feature -- Basic operations
 
 			ccom_feature_writer.set_comment (func_desc.description)
 
-			create result_type_visitor
-			result_type_visitor.visit (a_descriptor.return_type)
+			result_type_visitor := a_descriptor.return_type.visitor
 
 			if result_type_visitor.is_basic_type or result_type_visitor.is_enumeration then
 				if result_type_visitor.cecil_type = Void or result_type_visitor.cecil_type.empty then
@@ -105,8 +104,7 @@ feature {NONE} -- Implementation
 				until
 					arguments.off
 				loop
-					create visitor
-					visitor.visit (arguments.item.type)
+					visitor := arguments.item.type.visitor
 					if  visitor.c_header_file /= Void and then not  visitor.c_header_file.empty then
 						c_header_files.extend (visitor.c_header_file)
 					end
@@ -293,8 +291,7 @@ feature {NONE} -- Implementation
 					arguments.off or else counter = -1
 				loop
 					flag := arguments.item.flags
-					create visitor
-					visitor.visit (arguments.item.type)
+					visitor := arguments.item.type.visitor
 
 					if is_paramflag_fout (arguments.item.flags) then
 						out_variable := True  

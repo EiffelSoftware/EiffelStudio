@@ -48,9 +48,8 @@ feature -- Basic operation
 			visitor: WIZARD_DATA_TYPE_VISITOR
 		do
 			create assertions.make
-			create visitor
 		
-			visitor.visit (type)
+			visitor := type.visitor 
 
 			if not visitor.is_basic_type and not is_boolean (visitor.vt_type) 
 					and not visitor.is_enumeration then
@@ -106,8 +105,7 @@ feature -- Basic operation
 			visitor: WIZARD_DATA_TYPE_VISITOR
 		do
 			create assertions.make
-			create visitor
-			visitor.visit (a_type)
+			visitor := a_type.visitor 
 
 			if not visitor.is_basic_type and not is_boolean (visitor.vt_type)
 					and not visitor.is_enumeration then

@@ -110,8 +110,7 @@ feature -- Access
 			until
 				a_descriptor.fields.after
 			loop
-				create a_data_visitor
-				a_data_visitor.visit (a_descriptor.fields.item.data_type)
+				a_data_visitor := a_descriptor.fields.item.data_type.visitor 
 				struct_def.append (tab)
 				struct_def.append (a_data_visitor.c_type)
 				struct_def.append (Space)
@@ -180,8 +179,7 @@ feature {NONE} -- Implementation
 		do
 			macro_name := macro_accesser_name (a_record_descriptor.name, a_field_descriptor)
 
-			create a_data_visitor
-			a_data_visitor.visit (a_field_descriptor.data_type)
+			a_data_visitor := a_field_descriptor.data_type.visitor 
 
 			create Result.make (1000)
 			Result.append (Sharp)
@@ -289,8 +287,7 @@ feature {NONE} -- Implementation
 			i, array_count: INTEGER
 		do
 			macro_name := macro_setter_name (a_record_descriptor.name, a_field_descriptor)
-			create a_data_visitor
-			a_data_visitor.visit (a_field_descriptor.data_type)
+			a_data_visitor := a_field_descriptor.data_type.visitor 
 
 			create Result.make (1000)
 			Result.append (Sharp)

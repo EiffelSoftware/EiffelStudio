@@ -100,8 +100,7 @@ feature {NONE} -- Implementation
 				until
 					arguments.off
 				loop
-					create visitor
-					visitor.visit (arguments.item.type)
+					visitor := arguments.item.type.visitor 
 
 					if is_paramflag_fretval (arguments.item.flags) then
 						return_type.append (Colon)
@@ -113,8 +112,7 @@ feature {NONE} -- Implementation
 						else
 							pointed_descriptor ?= arguments.item.type
 							if pointed_descriptor /= Void then
-								create visitor
-								visitor.visit (pointed_descriptor.pointed_data_type_descriptor)
+								visitor := pointed_descriptor.pointed_data_type_descriptor.visitor 
 								if visitor.is_basic_type then
 									return_type.append (visitor.cecil_type)
 								else
@@ -185,8 +183,7 @@ feature {NONE} -- Implementation
 				end
 			end
 
-			create visitor
-			visitor.visit (func_desc.return_type)
+			visitor := func_desc.return_type.visitor 
 
 			if not is_void (visitor.vt_type) and not is_hresult (visitor.vt_type) and
 					not is_error (visitor.vt_type) then
@@ -195,8 +192,7 @@ feature {NONE} -- Implementation
 
 				pointed_descriptor ?= func_desc.return_type
 				if pointed_descriptor /= Void then
-					create visitor
-					visitor.visit (pointed_descriptor.pointed_data_type_descriptor)
+					visitor := pointed_descriptor.pointed_data_type_descriptor.visitor 
 					if visitor.is_basic_type then
 						return_type.append (visitor.cecil_type)
 					else
@@ -229,14 +225,12 @@ feature {NONE} -- Implementation
 			until
 				arguments.off
 			loop
-				create visitor
-				visitor.visit (arguments.item.type)
+				visitor := arguments.item.type.visitor 
 
 				if is_paramflag_fretval (arguments.item.flags) then
 					pointed_descriptor ?= arguments.item.type
 					if pointed_descriptor /= Void then
-						create visitor
-						visitor.visit (pointed_descriptor.pointed_data_type_descriptor)
+						visitor := pointed_descriptor.pointed_data_type_descriptor.visitor 
 					end
 					external_feature_writer.set_result_type (visitor.eiffel_type)
 				else
@@ -272,8 +266,7 @@ feature {NONE} -- Implementation
 				arguments.forth
 			end
 
-			create visitor
-			visitor.visit (func_desc.return_type)
+			visitor := func_desc.return_type.visitor 
 
 			if 
 				not is_hresult (visitor.vt_type) and
@@ -315,8 +308,7 @@ feature {NONE} -- Implementation
 						tmp_string.prepend (Result_clause)
 					else
 						tmp_string.append (Comma_space)
-						create visitor
-						visitor.visit (arguments.item.type)
+						visitor := arguments.item.type.visitor 
 
 						if visitor.is_array_basic_type then
 							create local_variable.make (100)
@@ -368,8 +360,7 @@ feature {NONE} -- Implementation
 			end
 			tmp_string.append (Close_parenthesis)
 
-			create visitor
-			visitor.visit (func_desc.return_type)
+			visitor := func_desc.return_type.visitor 
 
 			if 
 				not is_hresult (visitor.vt_type) and

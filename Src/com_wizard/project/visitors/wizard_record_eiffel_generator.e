@@ -125,8 +125,7 @@ feature {NONE} -- Implementation
 			Result.set_name (name_for_feature_with_keyword_check (a_field_descriptor.name))
 			Result.set_comment (a_field_descriptor.description)
 
-			create a_data_type_visitor
-			a_data_type_visitor.visit (a_field_descriptor.data_type)
+			a_data_type_visitor := a_field_descriptor.data_type.visitor 
 
 			if not a_data_type_visitor.is_enumeration then
 				Result.set_result_type (a_data_type_visitor.eiffel_type)
@@ -197,8 +196,7 @@ feature {NONE} -- Implementation
 
 			Result.set_name (a_name)
 
-			create a_data_type_visitor
-			a_data_type_visitor.visit (a_field_descriptor.data_type)
+			a_data_type_visitor := a_field_descriptor.data_type.visitor 
 
 			if a_data_type_visitor.is_array_basic_type then
 				create a_local_var.make (100)
@@ -302,8 +300,7 @@ feature {NONE} -- Implementation
 
 			Result.add_argument (Pointer_variable)
 
-			create a_data_visitor
-			a_data_visitor.visit (a_field_descriptor.data_type)
+			a_data_visitor := a_field_descriptor.data_type.visitor 
 
 			Result.set_result_type (a_data_visitor.eiffel_type)
 
@@ -359,8 +356,7 @@ feature {NONE} -- Implementation
 			Result.set_name (a_macro_setter_name)
 			Result.add_argument (Pointer_variable)
 
-			create a_data_visitor
-			a_data_visitor.visit (a_field_descriptor.data_type)
+			a_data_visitor := a_field_descriptor.data_type.visitor 
 
 			create an_argument.make (100)
 			an_argument.append ("arg2")

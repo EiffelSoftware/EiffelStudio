@@ -38,8 +38,7 @@ feature -- Basic operations
 			an_element_type := a_safearray_descriptor.array_element_descriptor.type
 			vt_type := binary_or (an_element_type, Vt_array)
 
-			create element_visitor
-			element_visitor.visit (a_safearray_descriptor.array_element_descriptor)
+			element_visitor := a_safearray_descriptor.array_element_descriptor.visitor 
 
 			c_type.append ("SAFEARRAY * ")
 			local_counter := counter (a_safearray_descriptor)
@@ -269,8 +268,7 @@ feature -- Basic operations
 			library_guid_str, element_guid_str: STRING
 			major_ver_number, minor_ver_number, a_lcid: INTEGER
 		do
-			create a_visitor
-			a_visitor.visit (a_record_descriptor)
+			a_visitor := a_record_descriptor.visitor
 			check
 				is_structure: a_visitor.is_structure
 			end
@@ -398,8 +396,7 @@ feature -- Basic operations
 			library_guid_str, element_guid_str: STRING
 			major_ver_number, minor_ver_number, a_lcid: INTEGER
 		do
-			create a_visitor
-			a_visitor.visit (a_safearray_descriptor)
+			a_visitor := a_safearray_descriptor.visitor
 			tmp_element_c_type := a_visitor.c_type
 			tmp_element_eiffel_type := a_visitor.eiffel_type
 
@@ -522,8 +519,7 @@ feature -- Basic operations
 			major_ver_number, minor_ver_number, a_lcid: INTEGER
 			an_interface_descriptor: WIZARD_USER_DEFINED_DATA_TYPE_DESCRIPTOR
 		do
-			create a_visitor
-			a_visitor.visit (an_interface_pointer_descriptor)
+			a_visitor := an_interface_pointer_descriptor.visitor
 			check
 				is_interface_pointer: a_visitor.is_interface_pointer
 			end
@@ -647,8 +643,7 @@ feature -- Basic operations
 			tmp_element_c_type, tmp_element_eiffel_type, tmp_element_ce_function: STRING
 			a_visitor: WIZARD_DATA_TYPE_VISITOR
 		do
-			create a_visitor
-			a_visitor.visit (a_interface_descriptor)
+			a_visitor := a_interface_descriptor.visitor
 			check
 				is_interface_pointer: a_visitor.is_interface_pointer
 			end
@@ -770,8 +765,7 @@ feature -- Basic operations
 			tmp_element_c_type, tmp_element_eiffel_type, tmp_element_ce_function: STRING
 			a_visitor: WIZARD_DATA_TYPE_VISITOR
 		do
-			create a_visitor
-			a_visitor.visit (a_record_descriptor)
+			a_visitor := a_record_descriptor.visitor
 			check
 				a_visitor.is_structure_pointer
 			end
@@ -899,8 +893,7 @@ feature -- Basic operations
 			tmp_element_c_type, tmp_element_eiffel_type, tmp_element_ce_function: STRING
 			a_visitor: WIZARD_DATA_TYPE_VISITOR
 		do
-			create a_visitor
-			a_visitor.visit (a_safearray_descriptor)
+			a_visitor := a_safearray_descriptor.visitor
 			check
 				a_visitor.is_structure_pointer
 			end

@@ -31,8 +31,7 @@ feature -- Basic operations
 			ccom_feature_writer.set_name (func_desc.name)
 			ccom_feature_writer.set_comment(func_desc.description)
 
-			create visitor
-			visitor.visit (func_desc.return_type)
+			visitor := func_desc.return_type.visitor 
 
 			if visitor.c_type.is_equal (Hresult) then
 				ccom_feature_writer.set_result_type(Std_method_imp)
@@ -50,8 +49,7 @@ feature -- Basic operations
 				until
 					func_desc.arguments.off
 				loop
-					create visitor
-					visitor.visit (func_desc.arguments.item.type)
+					visitor := func_desc.arguments.item.type.visitor 
 
 					signature.append (visitor.c_type)
 					if visitor.is_array_type then
@@ -106,8 +104,7 @@ feature -- Basic operations
 				until
 					func_desc.arguments.off
 				loop
-					create visitor
-					visitor.visit (func_desc.arguments.item.type)
+					visitor := func_desc.arguments.item.type.visitor 
 
 					signature.append (visitor.c_type)
 					if visitor.is_array_type then
@@ -123,8 +120,7 @@ feature -- Basic operations
 					func_desc.arguments.forth
 				end
 
-				create visitor
-				visitor.visit (a_descriptor.return_type)
+				visitor := a_descriptor.return_type.visitor 
 
 				if visitor.c_type.is_equal (Void_c_keyword) then
 					-- Remove the last comma

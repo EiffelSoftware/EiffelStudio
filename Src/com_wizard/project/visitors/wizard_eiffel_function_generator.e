@@ -53,18 +53,16 @@ feature {NONE} -- Implementation
 			until
 				arguments.off
 			loop
-				create visitor
-				visitor.visit (arguments.item.type)
+				visitor := arguments.item.type.visitor 
 
 				if is_paramflag_fretval (arguments.item.flags) then
 					pointed_descriptor ?= arguments.item.type
-					create visitor
 
 					if pointed_descriptor /= Void then
-						visitor.visit (pointed_descriptor.pointed_data_type_descriptor)
+						visitor := pointed_descriptor.pointed_data_type_descriptor.visitor 
 						add_enumeration_comments ("Result", pointed_descriptor.pointed_data_type_descriptor, visitor)
 					else
-						visitor.visit (arguments.item.type)
+						visitor := arguments.item.type.visitor 
 						add_enumeration_comments ("Result", arguments.item.type, visitor)
 					end
 					feature_writer.set_result_type (visitor.eiffel_type)
@@ -82,8 +80,7 @@ feature {NONE} -- Implementation
 				arguments.forth
 			end
 
-			create visitor
-			visitor.visit (func_desc.return_type)
+			visitor := func_desc.return_type.visitor 
 
 			-- Eiffel will not have result type if the result type is "void" or "HRESULT"
 			if not is_hresult (visitor.vt_type) and not is_error (visitor.vt_type) and not is_void (visitor.vt_type) then

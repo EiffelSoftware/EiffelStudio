@@ -18,12 +18,15 @@ feature {NONE} -- Initialization
 			address_specified: a /= Void and then not a.is_empty
 		do
 			address := a
-			port := default_port
+			port := Default_port
+			proxy_information := Void
 			analyze
 		ensure
 			address_set: address = a
+			default_port_set: port = Default_port
+			no_proxy_set: proxy_information = Void
 		end
-	
+
 feature -- Access
 
 	service: STRING is
@@ -39,11 +42,27 @@ feature -- Access
 		deferred
 		end
 	
-	proxy_host: STRING
-			-- Host name of proxy
+	proxy_host: STRING is
+			-- Name or address of proxy host
+		require
+			proxy_supported: is_proxy_supported
+			has_proxy: is_proxy_used
+		do
+			Result := proxy_information.host
+		ensure
+			result_not_empty: Result /= Void and then not Result.is_empty
+		end
 
-	proxy_port: INTEGER
+	proxy_port: INTEGER is
 			-- Port of proxy
+		require
+			proxy_supported: is_proxy_supported
+			has_proxy: is_proxy_used
+		do
+			Result := proxy_information.port
+		ensure
+			result_non_negative: Result >= 0
+		end
 			
 	location: STRING is
 			-- Full URL of resource
@@ -72,8 +91,7 @@ feature -- Status report
 	 is_proxy_used: BOOLEAN is
 	 		-- Is a proxy used?
 		do
-			Result := is_proxy_supported and then proxy_port > 0 and then
-				proxy_host_ok (proxy_host)
+			Result := (proxy_information /= Void)
 		end
 
 	is_password_accepted: BOOLEAN is
@@ -89,9 +107,9 @@ feature -- Status report
 feature -- Status setting
 
 	set_port (port_no: INTEGER) is
-			-- Set port number.
+			-- Set port to `port_no'.
 		require
-			positive_port_number: port_no > 0
+			port_non_negative: port_no >= 0
 		do
 			port := port_no
 		ensure
@@ -99,18 +117,28 @@ feature -- Status setting
 		end
 
 	set_proxy (host: STRING; port_no: INTEGER) is
-			-- Set proxy information.
+			-- Set proxy host to `host' and proxy port to `port_no'.
 		require
 			proxy_supported: is_proxy_supported
 			non_empty_host: host /= Void and then not host.is_empty
 			host_valid: proxy_host_ok (host)
-			positive_port: port_no > 0
+			non_negative_port: port_no >= 0
 		do
-			proxy_host := host
-			proxy_port := port_no
+			create proxy_information.make (host, port_no)
 		ensure
 			host_set: proxy_host = host
 			port_set: proxy_port = port_no
+		end
+
+	set_proxy_information (pi: PROXY_INFORMATION) is
+			-- Set proxy information to `pi'
+		require
+			proxy_supported: is_proxy_supported
+			proxy_info_exists: pi /= Void
+		do
+			proxy_information := pi
+		ensure
+			proxy_information_set: proxy_information = pi
 		end
 
 	set_username (un: STRING) is
@@ -134,10 +162,9 @@ feature -- Status setting
 		require
 			proxy_supported: is_proxy_supported
 		do
-			proxy_host := Void
-			proxy_port := 0
+			proxy_information := Void
 		ensure
-			host_reset: proxy_host = Void
+			no_proxy_set: not is_proxy_used
 			port_reset: proxy_port = 0
 		end
 
@@ -153,7 +180,16 @@ feature {NONE} -- Basic operations
 feature {NONE} -- Implementation
 
 	address: STRING
+			-- Address string
 
+	proxy_information: PROXY_INFORMATION
+			-- Information about the proxy to be used
+			
+invariant
+
+	proxy_used_definition: is_proxy_used = (proxy_information /= Void)
+	proxy_usage_constraint: is_proxy_used implies is_proxy_supported
+	
 end -- class URL
 
 

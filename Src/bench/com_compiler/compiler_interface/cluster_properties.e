@@ -447,23 +447,23 @@ feature -- Access
 	is_eiffel_library: BOOLEAN is
 			-- Is the cluster part of the Eiffel library
 		local
-			library: STRING
 			path: STRING
+			l_env_var: STRING
 		do
 			if ace.is_valid then
-				library := ace.library_path
-				if library /= Void then
-					path := cluster_path.clone(cluster_path)
-					path.replace_substring_all (ace.ise_eiffel_envvar, ace.ise_eiffel)
+				l_env_var := clone (ace.ise_eiffel_envvar)
+				l_env_var.to_lower
+				path := cluster_path.clone(cluster_path)
+				path.to_lower
+				if ace.library_path /= Void then
+					path.replace_substring_all (l_env_var, ace.ise_eiffel)
 					path.replace_substring_all ("/", "\")
-					Result := (path.substring_index (library, 1) = 1)
+					Result := (path.substring_index (ace.library_path, 1) = 1)
 				else
-					library := ace.library_dotnet_path
-					if library /= Void then
-						path := cluster_path.clone(cluster_path)
-						path.replace_substring_all (ace.ise_eiffel_envvar, ace.ise_eiffel)
+					if ace.library_dotnet_path /= Void then
+						path.replace_substring_all (l_env_var, ace.ise_eiffel)
 						path.replace_substring_all ("/", "\")
-						Result := (path.substring_index (library, 1) = 1)
+						Result := (path.substring_index (ace.library_dotnet_path, 1) = 1)
 					end
 				end
 			else

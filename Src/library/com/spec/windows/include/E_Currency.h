@@ -34,6 +34,9 @@
 // Zero value
 void ccom_currency_value_zero (CY * a_value);
 
+// convert to double value
+EIF_DOUBLE ccom_currency_to_double (CY * a_value);
+
 // One value
 void ccom_currency_value_one (CY * a_value);
 

@@ -22,18 +22,48 @@ feature {NONE} -- Initialization
 			-- Initialize solver
 		do
 			create method_table.make (20)
-			create procedures.make (1, 0)
-			create functions.make (1, 0)
+			create eiffel_names.make (50)
 		end
 
-feature -- Access
 
-	procedures: ARRAY [CONSUMED_PROCEDURE]
-			-- procedures with appropriate (non-overloaded) Eiffel names
-	
-	functions: ARRAY [CONSUMED_FUNCTION]
-			-- Functions with appropriate (non-overloaded) Eiffel names
+feature {NONE} -- Access
 
+	eiffel_names: HASH_TABLE [HASH_TABLE [STRING, STRING], STRING]
+			-- give hash_table of eiffel names for a dotnet type name.
+
+	key_args (args: NATIVE_ARRAY [PARAMETER_INFO]): STRING is
+			-- return signature corresponding to args.
+		local
+			i: INTEGER
+		do
+			create Result.make_empty
+			from
+				i := 0
+			until
+				args = Void or else i = args.count
+			loop
+				Result.append (create {STRING}.make_from_cil (args.item (i).get_name))
+				i := i + 1
+			end
+		ensure
+			non_void_result: Result /= Void
+		end
+		
+
+feature	-- Access
+
+	unique_eiffel_name (a_dotnet_name: SYSTEM_STRING; args: NATIVE_ARRAY [PARAMETER_INFO]): STRING is
+		require
+			non_void_a_dotnet_name: a_dotnet_name /= Void
+			non_void_args: args /= Void
+		local
+			l_dotnet_name: STRING
+		do
+			create l_dotnet_name.make_from_cil (a_dotnet_name)
+			Result := eiffel_names.item (l_dotnet_name).item (key_args (args))
+		end
+		
+		
 feature -- Basic Operations
 
 	solve is
@@ -48,6 +78,8 @@ feature -- Basic Operations
 			name, type: STRING
 			i, index, param_count: INTEGER
 			is_unique, same_param_count: BOOLEAN
+			
+			eiffel_args: HASH_TABLE [STRING, STRING]
 		do
 			from
 				method_table.start
@@ -114,8 +146,6 @@ feature -- Basic Operations
 				end
 				method_table.forth
 			end
-			create functions.make (1, function_index)
-			create procedures.make (1, procedure_index)
 			from
 				method_table.start
 				function_index := 1
@@ -130,12 +160,12 @@ feature -- Basic Operations
 					method_list.after
 				loop
 					method := method_list.item
-					if method.is_function then
-						functions.put (method.consumed_function, function_index)
-						function_index := function_index + 1
+					if eiffel_names.has (method.dotnet_name) then
+						eiffel_names.item (method.dotnet_name).put (method.eiffel_name, key_args (method.internal_method.get_parameters))
 					else
-						procedures.put (method.consumed_procedure, procedure_index)
-						procedure_index := procedure_index + 1						
+						create eiffel_args.make (1)
+						eiffel_args.put (method.eiffel_name, key_args (method.internal_method.get_parameters))
+						eiffel_names.put (eiffel_args, method.dotnet_name)
 					end
 					method_list.forth
 				end
@@ -197,6 +227,8 @@ feature -- Element Settings
 	add_method (meth: METHOD_INFO) is
 			-- Include `meth' in overload solving process.
 			-- Remove `get_' for properties getters.
+		require
+			non_void_meth: meth /= void
 		local
 			name: STRING
 		do
@@ -213,6 +245,48 @@ feature -- Element Settings
 				method_table.found_item.extend (create {METHOD_SOLVER}.make (meth))
 			end
 		end
+
+	add_property (property: PROPERTY_INFO) is
+			-- Include `meth' in overload solving process.
+			-- Remove `get_' for properties getters.
+		require
+			non_void_property: property /= void
+		local
+			l_meth: METHOD_INFO
+		do
+			l_meth := property.get_get_method
+			if l_meth /= Void then
+				add_method (l_meth)
+			end
+			l_meth := property.get_set_method
+			if l_meth /= Void then
+				add_method (l_meth)
+			end
+		end
+		
+	add_event (event: EVENT_INFO) is
+			-- Include `meth' in overload solving process.
+			-- Remove `get_' for properties getters.
+		require
+			non_void_event: event /= void
+		local
+			l_meth: METHOD_INFO
+			property_name: STRING
+		do
+			l_meth := event.get_raise_method
+			if l_meth /= Void then
+				add_method (l_meth)
+			end
+			l_meth := event.get_add_method
+			if l_meth /= Void then
+				add_method (l_meth)
+			end
+			l_meth := event.get_remove_method
+			if l_meth /= Void then
+				add_method (l_meth)
+			end
+		end
+
 		
 feature {NONE} -- Implementation
 

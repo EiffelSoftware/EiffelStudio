@@ -25,6 +25,8 @@ inherit
 		end
 
 	EV_MENU_ITEM_LIST_IMP
+		undefine
+			pnd_press
 		redefine
 			interface,
 			make,
@@ -86,6 +88,27 @@ feature -- Basic operations
 			end
 		end
 
+feature {NONE} -- Implementation
+
+	internal_propagate_pointer_press (keys, x_pos, y_pos, button: INTEGER) is
+		-- Propagate `keys', `x_pos' and `y_pos' to the appropriate item event.
+		do
+			--|FIXME Implement
+			check
+				False
+			end
+		end
+
+	client_to_screen (a_x, a_y: INTEGER): WEL_POINT is
+			-- `Result' is absolute screen coordinates in pixels
+			-- of coordinates `a_x', a_y_' on `Current'.
+		do
+			--|FIXME Implement
+			check
+				False
+			end
+		end
+
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_MENU	
@@ -113,6 +136,9 @@ end -- class EV_MENU_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.20  2000/04/11 16:53:09  rogers
+--| Added internal_propagate_pointer_press and client_to_screen.
+--|
 --| Revision 1.19  2000/04/10 16:27:57  brendel
 --| Modified creation sequence.
 --|

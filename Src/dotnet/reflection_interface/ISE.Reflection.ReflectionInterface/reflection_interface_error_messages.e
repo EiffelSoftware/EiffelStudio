@@ -75,6 +75,32 @@ feature -- Access
 			external_name: "NoAssemblyMessage"
 		end
 		
+
+	No_index: STRING is "No index"
+		indexing
+			description: "Error name: No index"
+			external_name: "NoIndex"
+		end
+
+	No_index_message: STRING is "There is no index file listing the assemblies in the Eiffel Assembly Cache."
+		indexing
+			description: "Error message when there is no index file listing the assemblies in the EAC"
+			external_name: "NoIndexMessage"
+		end
+		
+		
+	No_such_assembly: STRING is "No such assembly"
+		indexing
+			description: "Error name: No such assembly"
+			external_name: "NoSuchAssembly"
+		end
+
+	No_such_assembly_message: STRING is "The Eiffel Assembly Cache does not contain this assembly."
+		indexing
+			description: "Error message when `index.xml' lists assemblies, which are not in the EAC"
+			external_name: "NoSuchAssemblyMessage"
+		end
+		
 		
 	Assembly_retrieval_failed: STRING is "Assembly retrieval failed"
 		indexing
@@ -102,6 +128,19 @@ feature -- Access
 		end	
 
 
+	No_such_type: STRING is "No such type"
+		indexing
+			description: "Error name: No such type"
+			external_name: "NoSuchType"
+		end
+
+	No_such_type_message: STRING is "The Eiffel Assembly Cache does not contain this type."
+		indexing
+			description: "Error message when `assembly_description.xml' lists types, which are not in the EAC"
+			external_name: "NoSuchTypeMessage"
+		end
+		
+		
 	Assembly_removal_failed: STRING is "Assembly removal failed"
 		indexing
 			description: "Error name: Assembly removal failed"

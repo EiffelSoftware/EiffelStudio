@@ -13,6 +13,8 @@ feature -- Status report
 			-- Manager in charge of debugging operations.
 		once
 			create Result.make
+		ensure
+			debugger_manager_not_void: Result /= Void
 		end
 
 end -- class EB_SHARED_DEBUG_TOOLS

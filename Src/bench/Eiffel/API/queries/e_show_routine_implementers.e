@@ -29,7 +29,8 @@ feature -- Execution
 			feat: E_FEATURE;
 			c: E_CLASS;
 			written_cl: E_CLASS;
-			precursors: LIST [E_CLASS]
+			precursors: LIST [E_CLASS];
+			rc: INTEGER
         do
 			written_cl := current_feature.written_class;
 			precursors := current_feature.precursors;
@@ -43,17 +44,20 @@ feature -- Execution
 			end;
 			rout_id_set := current_feature.rout_id_set;
 			from
+				rc := rout_id_set.count;
 				i := 1
 			until
-				i > rout_id_set.count
+				i > rc
 			loop
 				rout_id := rout_id_set.item (i);
-				structured_text.add_new_line;
-				structured_text.add_string ("Class history branch #");
-				structured_text.add_int (i);
-				structured_text.add_new_line;
-				structured_text.add_string ("-----------------------");
-				structured_text.add_new_line;
+				if rc > 1 then
+					structured_text.add_new_line;
+					structured_text.add_string ("Class history branch #");
+					structured_text.add_int (i);
+					structured_text.add_new_line;
+					structured_text.add_string ("-----------------------");
+					structured_text.add_new_line;
+				end;
 				from
 					classes.start;
 				until

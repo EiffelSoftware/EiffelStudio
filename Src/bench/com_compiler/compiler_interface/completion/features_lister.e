@@ -40,7 +40,7 @@ feature -- Basic Operations
 			qualified_call := target.occurrences ('.') > 0
 			if not qualified_call then
 				l_variables_list := identifiers_list
-				l_features := features_list_from_table (feature_table, class_i)
+				l_features := features_list_from_table (feature_table, class_i, use_overloading)
 				l_features_count := l_features.count
 				if l_features_count > 0 then
 					if rename_sources /= Void then
@@ -84,7 +84,7 @@ feature -- Basic Operations
 					l_targets.remove
 					l_feature_table := recursive_lookup (l_target_type, l_targets, feature_table)
 					if l_feature_table /= Void then
-						create found_items.make_from_array (features_list_from_table (l_feature_table, class_i))
+						create found_items.make_from_array (features_list_from_table (l_feature_table, class_i, use_overloading))
 						found := True
 					end
 				end

@@ -1631,8 +1631,8 @@ Delayed_actual: TE_QUESTION
 -- as there will be no way to distinguish it from a Manifest type expression.
 -- To preserve this feature in case it is needed by some of our customers
 -- we have invented the new syntax ? Typed.
-	|	TE_QUESTION Typed
-			{ $$ := new_operand_as ($2, Void, Void) }
+	|	Typed TE_QUESTION
+			{ $$ := new_operand_as ($1, Void, Void) }
 	|	Expression
 			{ $$ := new_operand_as (Void, Void, $1) }
 	;

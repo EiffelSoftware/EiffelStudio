@@ -1086,10 +1086,6 @@ feature -- Assertions
 	generate_assertion_check (assert_type: INTEGER; tag: STRING) is
 			-- Generate test after an assertion is being generated.
 			-- If result of test is False, we raise an exception.
-		local
-			type_assert: STRING
-			l_label: INTEGER
-			l_str_token: INTEGER
 		do
 		end
 

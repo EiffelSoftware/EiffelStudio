@@ -13,10 +13,10 @@ inherit
 
 	MEL_RECT_OBJ_RESOURCES
 		export
-		{NONE} all
+			{NONE} all
 		end;
 
-	MEL_OBJECT
+	MEL_FORM_CHILD
 
 feature -- Access
 
@@ -42,13 +42,13 @@ feature -- Status report
 			Result := get_xt_boolean (screen_object, XmNancestorSensitive)
 		end;
 
-	--is_input_sensitive: BOOLEAN is
-			---- Is Current sensitive?
-		--require
-			--exists: not is_destroyed
-		--do
-			--Result := get_xt_boolean (screen_object, XmNsensitive)
-		--end;
+	is_input_sensitive: BOOLEAN is
+			-- Is Current input sensitive?
+		require
+			exists: not is_destroyed
+		do
+			Result := get_xt_boolean (screen_object, XmNsensitive)
+		end;
 
 	border_width: INTEGER is
 			-- Width of Current's border
@@ -98,25 +98,25 @@ feature -- Status report
 
 feature -- Status setting
 
-	--set_input_sensitive is
-			---- Set `is_input_sensitive' to True.
-		--require
-			--exists: not is_destroyed
-		--do
-			--set_xt_boolean (screen_object, XmNsensitive, True)
-		--ensure
-			--is_sensitive: is_sensitive
-		--end;
+	set_input_sensitive is
+			-- Set `is_input_sensitive' to True.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_boolean (screen_object, XmNsensitive, True)
+		ensure
+			is_sensitive: is_sensitive
+		end;
 
-	--set_input_insensitive is
-			---- Set `is_sensitive' to False.
-		--require
-			--exists: not is_destroyed
-		--do
-			--set_xt_boolean (screen_object, XmNsensitive, False)
-		--ensure
-			--is_not_sensitive: not is_sensitive
-		--end;
+	set_input_insensitive is
+			-- Set `is_sensitive' to False.
+		require
+			exists: not is_destroyed
+		do
+			set_xt_boolean (screen_object, XmNsensitive, False)
+		ensure
+			is_not_sensitive: not is_sensitive
+		end;
 
 	set_border_width (a_width: INTEGER) is
 			-- Set `border_width' to `a_width'.
@@ -136,8 +136,6 @@ feature -- Status setting
 			a_height_large_enough: a_height >= 0
 		do
 			set_xt_dimension (screen_object, XmNheight, a_height)
-		ensure
-			height_set: height = a_height
 		end;
 
 	set_width (a_width: INTEGER) is
@@ -147,8 +145,6 @@ feature -- Status setting
 			a_width_large_enough: a_width >= 0
 		do
 			set_xt_dimension (screen_object, XmNwidth, a_width)
-		ensure
-			width_set: width = a_width
 		end;
 
     set_size (new_width:INTEGER; new_height: INTEGER) is
@@ -160,48 +156,53 @@ feature -- Status setting
         do
             set_xt_dimension (screen_object, XmNwidth, new_width);
             set_xt_dimension (screen_object, XmNheight, new_height)
-		ensure
-			width_set: width = new_width;
-			height_set: height = new_height
         end;
 
 	set_x (a_value: INTEGER) is
 			-- Set `x' to `a_value'.
 		require
-			exists: not is_destroyed;
-			a_value_large_enough: a_value >= 0
+			exists: not is_destroyed
 		do
 			set_xt_position (screen_object, XmNx, a_value)
-		ensure
-			x_set: x = a_value
 		end;
 
 	set_y (a_value: INTEGER) is
 			-- Set `y' to `a_value'.
 		require
-			exists: not is_destroyed;
-			a_value_large_enough: a_value >= 0
+			exists: not is_destroyed
 		do
 			set_xt_position (screen_object, XmNy, a_value)
-		ensure
-			y_set: y = a_value
 		end;
 
 	set_x_y (x_value, y_value: INTEGER) is
 			-- Set `x' to `x_value', and `y' to `y_value'.
 		require
-			exists: not is_destroyed;
-			x_value_large_enough: x_value >= 0;
-			y_value_large_enough: y_value >= 0
+			exists: not is_destroyed
 		do
 			set_xt_position (screen_object, XmNx, x_value);
 			set_xt_position (screen_object, XmNy, y_value)
-		ensure
-			x_set: x = x_value;
-			y_set: y = y_value
 		end
 
+	move_to (x_value, y_value: INTEGER) is
+			-- Move Current widget to x position `x_value' and
+			-- y position to `y_value'. 
+			--| The `x_value' and `y_value' will be written into the widget
+			--| and if it is realized an `XMoveWindow' is issued on its
+			--| window.
+		require
+			exists: not is_destroyed
+		do
+			xt_move_widget (screen_object, x_value, y_value)
+		end;
+
 feature {NONE} -- External features
+
+    xt_move_widget (w: POINTER; x1, y1: INTEGER) is
+        external
+            "C [macro <X11/Intrinsic.h>] (Widget, Position, Position)"
+        alias
+            "XtMoveWidget"
+        end;
 
 	xt_real_y (scr_obj: POINTER): INTEGER is
 		external

@@ -20,7 +20,8 @@ inherit
 	EV_CONTAINER_IMP
 		redefine
 			interface,
-			replace
+			replace,
+			needs_event_box
 		end
 		
 	EV_DOCKABLE_TARGET_IMP
@@ -33,11 +34,13 @@ create
 
 feature -- initialization
 
+	needs_event_box: BOOLEAN is do Result := False end
+
 	make (an_interface: like interface) is
 			-- Connect interface and initialize `c_object'.
 		do
 			base_make (an_interface)
-			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_event_box_new)
+			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_hbox_new (True, 0))
 		end
 
 feature -- Access

@@ -251,7 +251,7 @@ feature {NONE} -- Externals
 	cwin_global_alloc (a_num, a_size: INTEGER): POINTER is
 			-- Global Alloc
 		external
-			"C [macro <windows.h>] (UINT, SIZE_T): EIF_POINTER"
+			"C [macro <windows.h>] (UINT, size_t): EIF_POINTER"
 		alias
 			"GlobalAlloc"
 		end

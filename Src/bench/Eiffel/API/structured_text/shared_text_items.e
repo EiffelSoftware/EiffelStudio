@@ -34,6 +34,20 @@ feature {NONE} -- Filter marks
 			Result.set_after
 		end;
 
+	ti_After_cluster_declaration: FILTER_ITEM is
+			-- Mark of the end of cluster declaration
+		once
+			!!Result.make (f_Cluster_declaration);
+			Result.set_after
+		end;
+
+	ti_After_cluster_header: FILTER_ITEM is
+			-- Mark of the end of cluster header
+		once
+			!!Result.make (f_Cluster_header);
+			Result.set_after
+		end;
+
 	ti_After_creators: FILTER_ITEM is
 			-- Mark of the end of creators
 		once
@@ -115,6 +129,20 @@ feature {NONE} -- Filter marks
 			-- Mark of the beginning of class header
 		once
 			!!Result.make (f_Class_header);
+			Result.set_before
+		end;
+
+	ti_Before_cluster_declaration: FILTER_ITEM is
+			-- Mark of the beginning of cluster declaration
+		once
+			!!Result.make (f_Cluster_declaration);
+			Result.set_before
+		end;
+
+	ti_Before_cluster_header: FILTER_ITEM is
+			-- Mark of the beginning of cluster header
+		once
+			!!Result.make (f_Cluster_header);
 			Result.set_before
 		end;
 

@@ -87,19 +87,10 @@ feature -- Generation
 			f.open_write;
 
 			f.putstring ("#include %"portable.h%"%N%N");
+
 				-- now generate the include files required by externals
-			if shared_include_set /= Void then
-				from 
-					shared_include_set.start
-				until
-					shared_include_set.off
-				loop
-					f.putstring ("#include ");
-					f.putstring (shared_include_set.item);
-					f.new_line;
-					shared_include_set.forth
-				end
-			end;
+			generate_header_files (f)
+
 			from
 				routines.start
 			until

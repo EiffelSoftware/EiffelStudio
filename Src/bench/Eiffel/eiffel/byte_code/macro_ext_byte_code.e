@@ -21,8 +21,8 @@ feature -- Code generation
 		do
 			generate_include_files
 			include_file := special_file_name
-			if not shared_include_set.has (include_file) then
-				shared_include_set.extend (include_file)
+			if not shared_include_queue.has (include_file) then
+				shared_include_queue.extend (include_file)
 				if not context.final_mode then
 					generated_file.putstring ("#include ");
 					generated_file.putstring (include_file);

@@ -39,6 +39,9 @@ feature -- Access
 	size_of_instance: INTEGER
 			-- Size of instance of this type
 
+	type_library_descriptor: WIZARD_TYPE_LIBRARY_DESCRIPTOR
+			-- Type library descriptor
+
 	creation_message: STRING is
 			-- Creation message used for wizard output
 		do
@@ -84,6 +87,16 @@ feature -- Basic operations
 			size_of_instance := a_size
 		ensure
 			valid_size: size_of_instance = a_size
+		end
+
+	set_type_library (a_descriptor: WIZARD_TYPE_LIBRARY_DESCRIPTOR) is
+			-- Set `type_library_descriptor' with `a_descriptor'
+		require
+			non_void_descriptor: a_descriptor /= Void
+		do
+			type_library_descriptor := a_descriptor
+		ensure
+			valid_type_library: type_library_descriptor = a_descriptor
 		end
 
 	visit (a_visitor: WIZARD_TYPE_VISITOR) is

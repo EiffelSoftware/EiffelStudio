@@ -1530,7 +1530,7 @@ debug ("ACTIVITY")
 end
 				-- Count of feature tables to update
 			from
-				class_list := melted_set
+				class_list := freeze_set
 				class_list.start
 			until
 				class_list.after

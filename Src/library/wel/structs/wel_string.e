@@ -86,7 +86,16 @@ feature -- Element change
 		ensure
 			string_set: a_string.is_equal (string)
 		end
-		
+
+	set_size_in_string (n: INTEGER) is
+			-- Set two first bytes of string pointed by `item' to
+			-- value represented by `n' in a two bytes representation.
+		require
+			valid_size: n > 0
+		do
+			cwel_set_size_in_string (item, n)
+		end
+
 feature -- Measurement
 
 	structure_size: INTEGER is
@@ -105,6 +114,11 @@ feature {NONE} -- Implementation
 			"C | %"wel.h%""
 		alias
 			"strlen"
+		end
+
+	cwel_set_size_in_string (ptr: POINTER; n: INTEGER) is
+		external
+			"C [macro %"wel_string.h%"]"
 		end
 
 end -- class WEL_STRING

@@ -1,0 +1,187 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN"><HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=ISO-8859-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+<META NAME="GENERATOR" CONTENT="Adobe FrameMaker 5.5/HTML Export Filter">
+<LINK REL="STYLESHEET" HREF="tour.css" CHARSET="ISO-8859-1" TYPE="text/css">
+<TITLE> 7  EXCEPTIONS </TITLE>
+</HEAD>
+<!--------------------------------------------------->
+<SCRIPT LANGUAGE="Javascript">
+	// Default values
+	var oNewWindow = 0;
+
+	function ImageClick( oImage )
+	{
+		if( oNewWindow == 0 || oNewWindow.closed )
+		{
+			oNewWindow = window.open (oImage.src,"", "status=no, toolbar=no, menubar=no, location=no, resizable=yes");
+		}
+		else
+		{
+			oNewWindow.location = oImage.src;
+		}
+	}
+</SCRIPT>
+<!--------------------------------------------------->
+<body bgcolor="#faf0e6">
+<DIV>
+<p class="top" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a> -- <a href="../index.html">Getting started with Eiffel (local)</a>
+
+<img src="power.gif" ALT="Eiffel Home Page" align="right" border="0"  usemap="#eiffel"><map name="eiffel"><area shape="RECT" alt="Eiffel Home Page" coords="0,0,109,226" HREF="http://www.eiffel.com"><area shape="default" nohref></map>
+
+<p class="top" ALIGN="left"><IMG SRC="normaldoc.gif" ALT="Previous, Up, Next" BORDER="0" WIDTH="300" HEIGHT="40" USEMAP="#navigation"><map name="navigation"><AREA SHAPE="RECT" alt="Previous section" COORDS="0,0,95,40" HREF="invitation-07.html"><AREA SHAPE="RECT" alt="Up" COORDS="96,0,199,40" HREF="invitation.html"><AREA SHAPE="RECT" alt="Next section" COORDS="200,0,300,40" HREF="invitation-09.html"><area shape="default" nohref></MAP>
+</DIV>
+<H1 CLASS="aa-sec2">
+<A NAME="pgfId-445308"></A>7  EXCEPTI<A NAME="marker-445307"></A>ONS </H1>
+<P CLASS="nn-first">
+<A NAME="pgfId-445310"></A>Whenever there is a <A NAME="marker-445309"></A>contract, the risk exists that someone will break it. This is where exceptions come in. 
+<P CLASS="nn-normal">
+<A NAME="pgfId-445311"></A>Exceptions -- contract violations -- may arise from several causes. One is an assertion violation, if you've selected run-time assertion monitoring. Another is a signal triggered by the hardware or operating system to indicate an abnormal condition such as arithmetic overflow, or an attempt to create a new object when there's not enough memory available.
+<P CLASS="nn-normal">
+<A NAME="pgfId-445313"></A>Unless a routine has made specific provision to handle exceptions, it will <SPAN CLASS="ff-bold">
+fail</SPAN>
+<A NAME="marker-445312"></A> if an exception arises during its execution. This in turn provides one more source of exceptions: a routine that fails triggers an exception in its caller. 
+<P CLASS="nn-normal">
+<A NAME="pgfId-445315"></A>A routine may, however, handle an exception through a <SPAN CLASS="ee-keyword">
+rescue</SPAN>
+<A NAME="marker-445314"></A> clause. This optional clause attempts to &quot;patch things up&quot; by bringing the current object to a stable state (one satisfying the class invariant). Then it can terminate in either of two ways: 
+<UL>
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-445318"></A>The <SPAN CLASS="ee-keyword">
+rescue</SPAN>
+<A NAME="marker-445316"></A> clause may execute a <SPAN CLASS="ee-keyword">
+retry</SPAN>
+<A NAME="marker-445317"></A> instruction, which causes the routine to restart its execution from the beginning, attempting again to fulfil its contract, usually through another strategy. This assumes that the instructions of the <SPAN CLASS="ee-keyword">
+rescue</SPAN>
+ clause, before the <SPAN CLASS="ee-keyword">
+retry</SPAN>
+, have attempted to correct the cause of the exception. 
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-445319"></A>If the <SPAN CLASS="ee-keyword">
+rescue</SPAN>
+ clause does not end with <SPAN CLASS="ee-keyword">
+retry</SPAN>
+, then the routine fails: it returns to its caller, immediately triggering an exception. (The caller's <SPAN CLASS="ee-keyword">
+rescue</SPAN>
+ clause will be executed according to the same rules.) 
+</UL>
+<P CLASS="nn-first">
+<A NAME="pgfId-445320"></A>The principle is that <SPAN CLASS="ff-bold">
+a routine must either succeed or fail</SPAN>
+: it either fulfills its contract, or not; in the latter case it must notify its caller by triggering an exception. 
+<P CLASS="nn-normal">
+<A NAME="pgfId-512460"></A>Usually, only a few routines of a system will explicitly include a <SPAN CLASS="ee-keyword">
+rescue</SPAN>
+ clause. A routine that doesn't have an explicit <SPAN CLASS="ee-keyword">
+rescue</SPAN>
+ is considered to have an implicit one, which calls a routine <SPAN CLASS="ee-text">
+default_rescue</SPAN>
+ that by default does nothing, so that an exception will cause the routine to fail immediately, propagating the exception to the caller.
+<P CLASS="nn-normal">
+<A NAME="pgfId-445322"></A>An example using the exception mechanism is a routine <SPAN CLASS="ee-text">
+attempt_transmission</SPAN>
+ that tries to transmit a message over a phone line. The actual transmission is performed by an external, low-level routine <SPAN CLASS="ee-text">
+transmit</SPAN>
+; once started, however, <SPAN CLASS="ee-text">
+transmit</SPAN>
+ may abruptly fail, triggering an exception, if the line is disconnected. Routine <SPAN CLASS="ee-text">
+attempt_transmission</SPAN>
+ tries the transmission at most 50 times; before returning to its caller, it sets a boolean attribute <SPAN CLASS="ee-text">
+successful</SPAN>
+ to <SPAN CLASS="ee-keyword">
+</SPAN>
+<A NAME="marker-445323"></A><SPAN CLASS="ee-text">
+True</SPAN>
+<SPAN CLASS="ee-keyword">
+ </SPAN>
+or <SPAN CLASS="ee-keyword">
+</SPAN>
+<A NAME="marker-445324"></A><SPAN CLASS="ee-text">
+False</SPAN>
+<SPAN CLASS="ee-keyword">
+ </SPAN>
+depending on the outcome. Here is the text of the routine:
+<p><ul><table width="79%">
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-445327"></A>attempt_transmission (message: STRING) <SPAN CLASS="ee-keyword">
+is</SPAN>
+
+<P CLASS="ee-comment">
+<A NAME="pgfId-445328"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-- Try to transmit <SPAN CLASS="ee-text">
+message</SPAN>
+, at most 50 times.
+<P CLASS="ee-comment">
+<A NAME="pgfId-445329"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-- Set <SPAN CLASS="ee-text">
+successful</SPAN>
+ accordingly. 
+<P CLASS="ee-text">
+<A NAME="pgfId-445331"></A><SPAN CLASS="ee-keyword">
+&nbsp;&nbsp;&nbsp;&nbsp;local</SPAN>
+<A NAME="marker-445330"></A> 
+<P CLASS="ee-text">
+<A NAME="pgfId-445332"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;failures: INTEGER
+<P CLASS="ee-text">
+<A NAME="pgfId-445333"></A>&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ee-keyword">
+do</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-445334"></A><SPAN CLASS="ee-keyword">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if</SPAN>
+ failures &lt; 50 <SPAN CLASS="ee-keyword">
+then</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-445335"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;transmit (message); successful := <SPAN CLASS="ee-text">
+True</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-445337"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ee-keyword">
+else</SPAN>
+<A NAME="marker-445336"></A>
+<P CLASS="ee-text">
+<A NAME="pgfId-445338"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;successful := <SPAN CLASS="ee-text">
+False</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-445339"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ee-keyword">
+end</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-445340"></A>&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ee-keyword">
+rescue</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-445341"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;failures := failures + 1; <SPAN CLASS="ee-keyword">
+retry</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-445342"></A><SPAN CLASS="ee-keyword">
+&nbsp;&nbsp;&nbsp;&nbsp;end</SPAN>
+ 
+</TD>
+</TR>
+</table></ul><p>
+<P CLASS="nn-first">
+<A NAME="pgfId-445343"></A>Initialization rules ensure that <SPAN CLASS="ee-text">
+failures</SPAN>
+, a local entity, is set to zero on entry. 
+<P CLASS="nn-normal">
+<A NAME="pgfId-445344"></A>This example illustrates the simplicity of the mechanism: the <SPAN CLASS="ee-keyword">
+rescue</SPAN>
+ clause never attempts to achieve the routine's original intent; this is the sole responsibility of the body (the <SPAN CLASS="ee-keyword">
+do</SPAN>
+ clause). The only role of the <SPAN CLASS="ee-keyword">
+rescue</SPAN>
+ clause is to clean up the objects involved, and then either to fail or to retry. 
+<P CLASS="nn-normal">
+<A NAME="pgfId-445345"></A>This disciplined exception mechanism is essential for software developers, who need protection against unexpected events, but cannot be expected to sacrifice safety and simplicity to pay for this protection.<A NAME="marker-445346"></A> 
+<p class="bottom" ALIGN="left"><IMG SRC="normaldoc.gif" ALT="Previous, Up, Next" BORDER="0" WIDTH="300" HEIGHT="40" USEMAP="#navigation"><map name="navigation"><AREA SHAPE="RECT" alt="Previous section" COORDS="0,0,95,40" HREF="invitation-07.html"><AREA SHAPE="RECT" alt="Up" COORDS="96,0,199,40" HREF="invitation.html"><AREA SHAPE="RECT" alt="Next section" COORDS="200,0,300,40" HREF="invitation-09.html"><area shape="default" nohref></MAP>
+
+<p class="bottom" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a> -- <a href="../index.html">Getting started with Eiffel (local)</a>
+
+<p class="copyright" align="center">Copyright Interactive Software Engineering, 2001
+</BODY>
+</HTML>

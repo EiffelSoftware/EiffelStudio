@@ -1,0 +1,226 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN"><HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=ISO-8859-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+<META NAME="GENERATOR" CONTENT="Adobe FrameMaker 5.5/HTML Export Filter">
+<LINK REL="STYLESHEET" HREF="tour.css" CHARSET="ISO-8859-1" TYPE="text/css">
+<TITLE> 10  INHERITANCE </TITLE>
+</HEAD>
+<!--------------------------------------------------->
+<SCRIPT LANGUAGE="Javascript">
+	// Default values
+	var oNewWindow = 0;
+
+	function ImageClick( oImage )
+	{
+		if( oNewWindow == 0 || oNewWindow.closed )
+		{
+			oNewWindow = window.open (oImage.src,"", "status=no, toolbar=no, menubar=no, location=no, resizable=yes");
+		}
+		else
+		{
+			oNewWindow.location = oImage.src;
+		}
+	}
+</SCRIPT>
+<!--------------------------------------------------->
+<body bgcolor="#faf0e6">
+<DIV>
+<p class="top" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a> -- <a href="../index.html">Getting started with Eiffel (local)</a>
+
+<img src="power.gif" ALT="Eiffel Home Page" align="right" border="0"  usemap="#eiffel"><map name="eiffel"><area shape="RECT" alt="Eiffel Home Page" coords="0,0,109,226" HREF="http://www.eiffel.com"><area shape="default" nohref></map>
+
+<p class="top" ALIGN="left"><IMG SRC="normaldoc.gif" ALT="Previous, Up, Next" BORDER="0" WIDTH="300" HEIGHT="40" USEMAP="#navigation"><map name="navigation"><AREA SHAPE="RECT" alt="Previous section" COORDS="0,0,95,40" HREF="invitation-10.html"><AREA SHAPE="RECT" alt="Up" COORDS="96,0,199,40" HREF="invitation.html"><AREA SHAPE="RECT" alt="Next section" COORDS="200,0,300,40" HREF="invitation-12.html"><area shape="default" nohref></MAP>
+</DIV>
+<H1 CLASS="aa-sec2">
+<A NAME="pgfId-445373"></A>10  INHERITANCE<A NAME="marker-445372"></A> </H1>
+<P CLASS="nn-first">
+<A NAME="pgfId-445374"></A>Inheritance, the other fundamental generalization mechanism, makes it possible to define a new class by combination and specialization of existing classes rather than from scratch.
+<P CLASS="nn-normal">
+<A NAME="pgfId-445376"></A>The following simple example, from the Data Structure Library in <A NAME="marker-445375"></A>EiffelBase, is typical. <SPAN CLASS="ee-text">
+LIST</SPAN>
+, as noted, describes lists in any representation. One such representation if the lists have a fixed number of elements uses an array. We may define the corresponding class by combination of <SPAN CLASS="ee-text">
+LIST</SPAN>
+ and <SPAN CLASS="ee-text">
+ARRAY</SPAN>
+, as follows:
+<p><ul><table width="79%">
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-445380"></A><SPAN CLASS="ee-keyword">
+class</SPAN>
+ ARRAYED_LIST [G] <SPAN CLASS="ee-keyword">
+inherit</SPAN>
+<A NAME="marker-445379"></A>
+<P CLASS="ee-text">
+<A NAME="pgfId-452703"></A>&nbsp;&nbsp;&nbsp;&nbsp;LIST [G]
+<P CLASS="ee-text">
+<A NAME="pgfId-445381"></A>&nbsp;&nbsp;&nbsp;&nbsp;ARRAY [G] 
+<P CLASS="ee-text">
+<A NAME="pgfId-445384"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ee-keyword">
+export</SPAN>
+<A NAME="marker-445383"></A> ... See below ... <SPAN CLASS="ee-keyword">
+end</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-445385"></A><SPAN CLASS="ee-keyword">
+feature</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-445386"></A>&nbsp;&nbsp;&nbsp;&nbsp;... Specific features of fixed-size lists ...
+<P CLASS="ee-text">
+<A NAME="pgfId-445387"></A><SPAN CLASS="ee-keyword">
+end</SPAN>
+ -- class ARRAYED_LIST 
+</TD>
+</TR>
+</table></ul><p>
+<P CLASS="nn-first">
+<A NAME="pgfId-445392"></A>The <SPAN CLASS="ee-keyword">
+inherit</SPAN>
+... clause lists all the &quot;<A NAME="marker-445388"></A><A NAME="marker-445389"></A>parents&quot; of the new class, which is said to be their &quot;<A NAME="marker-445390"></A><A NAME="marker-445391"></A>heir&quot;. (The &quot;<A NAME="marker-445393"></A><A NAME="marker-445394"></A>ancestors&quot; of a class include the class itself, its parents, grandparents etc.; the reverse term is &quot;<A NAME="marker-445395"></A><A NAME="marker-445396"></A>descendant&quot;.) Declaring <SPAN CLASS="ee-text">
+ARRAYED_LIST</SPAN>
+ as shown ensures that all the features and properties of lists and arrays are applicable to arrayed lists as well. Since the class has more than one parent, this is a case of <SPAN CLASS="ff-italics">
+multiple</SPAN>
+ inheritance. 
+<P CLASS="nn-normal">
+<A NAME="pgfId-445420"></A>Standard graphical conventions -- drawn from the Business Object Notation or BON, a graphical object-oriented notation based on concepts close to those of Eiffel, and directly supported by EiffelStudio -- illustrate such inheritance structures: 
+<DIV>
+<MAP NAME="invitation-4">
+</MAP>
+<p>
+<ul>
+<IMG SRC="invitation-4.png" USEMAP="#invitation-4">
+</ul>
+<p>
+</DIV>
+<P CLASS="nn-first">
+<A NAME="pgfId-445421"></A>An heir class such as <SPAN CLASS="ee-text">
+ARRAYED_LIST</SPAN>
+ needs the ability to define its own export policy. By default, inherited features keep their export status (publicly available, secret, available to selected classes only); but this may be changed in the heir. Here, for example, <SPAN CLASS="ee-text">
+ARRAYED_LIST</SPAN>
+ will export only the exported features of <SPAN CLASS="ee-text">
+LIST</SPAN>
+, making those of <SPAN CLASS="ee-text">
+ARRAY</SPAN>
+ unavailable directly to <SPAN CLASS="ee-text">
+ARRAYED_LIST</SPAN>
+'s clients. The syntax to achieve this is straightforward:
+<p><ul><table width="79%">
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-445424"></A><SPAN CLASS="ee-keyword">
+class</SPAN>
+ ARRAYED_LIST [G] <SPAN CLASS="ee-keyword">
+inherit</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-452708"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LIST [G]
+<P CLASS="ee-text">
+<A NAME="pgfId-445425"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ARRAY [G]
+<P CLASS="ee-text">
+<A NAME="pgfId-445428"></A>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ee-keyword">
+export </SPAN>
+{NONE}<SPAN CLASS="ee-keyword">
+ all</SPAN>
+<A NAME="marker-445427"></A> <SPAN CLASS="ee-keyword">
+end</SPAN>
+
+<P CLASS="ee-comment">
+<A NAME="pgfId-445429"></A>&nbsp;&nbsp;&nbsp;&nbsp;... The rest as above ... 
+</TD>
+</TR>
+</table></ul><p>
+<P CLASS="nn-first">
+<A NAME="pgfId-445430"></A>Another example of multiple inheritance comes from a windowing system based on a class <SPAN CLASS="ee-text">
+WINDOW</SPAN>
+, close to actual classes in EiffelVision 2. Windows have <SPAN CLASS="ff-bold">
+graphical</SPAN>
+ features: a height, a width, a position, routines to scale windows, move them, and other graphical operations. The system permits windows to be nested, so that a window also has <SPAN CLASS="ff-bold">
+hierarchical</SPAN>
+ features: access to subwindows and the parent window, adding a subwindow, deleting a subwindow, attaching to another parent and so on. Rather than writing a complex class that would contain specific implementations for all of these features, it is preferable to inherit all hierarchical features from <SPAN CLASS="ee-text">
+TREE</SPAN>
+ (a class in EiffelBase describing trees), and all graphical features from a class <SPAN CLASS="ee-text">
+RECTANGLE</SPAN>
+. 
+<P CLASS="nn-normal">
+<A NAME="pgfId-445431"></A>Inheritance complements the &quot;client&quot; relation by providing another form of reuse that yields remarkable economies of effort -- for analysis, design, implementation, evolution -- and has a profound effect on the entire software development process. 
+<P CLASS="nn-normal">
+<A NAME="pgfId-445432"></A>The very power of inheritance demands adequate means to keep it under control. Multiple inheritance, in particular, raises the question of name conflicts between features inherited from different parents; this case will inevitably arise in practice, especially for classes contributed by independent developers. You may remove such a name conflict through <SPAN CLASS="ff-bold">
+renaming</SPAN>
+<A NAME="marker-445433"></A>, as in
+<p><ul><table width="79%">
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-445436"></A><SPAN CLASS="ee-keyword">
+class</SPAN>
+ C <SPAN CLASS="ee-keyword">
+inherit</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-445439"></A>&nbsp;&nbsp;&nbsp;&nbsp;A <SPAN CLASS="ee-keyword">
+rename</SPAN>
+<A NAME="marker-445437"></A> x <SPAN CLASS="ee-keyword">
+as</SPAN>
+<A NAME="marker-445438"></A> x1, y <SPAN CLASS="ee-keyword">
+as</SPAN>
+ y1 <SPAN CLASS="ee-keyword">
+end</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-445440"></A>&nbsp;&nbsp;&nbsp;&nbsp;B <SPAN CLASS="ee-keyword">
+rename</SPAN>
+ x <SPAN CLASS="ee-keyword">
+as</SPAN>
+ x2, y <SPAN CLASS="ee-keyword">
+as</SPAN>
+ y2 <SPAN CLASS="ee-keyword">
+end</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-445441"></A><SPAN CLASS="ee-keyword">
+feature</SPAN>
+... 
+</TD>
+</TR>
+</table></ul><p>
+<P CLASS="nn-first">
+<A NAME="pgfId-445442"></A>Here, if both <SPAN CLASS="ee-text">
+A </SPAN>
+and <SPAN CLASS="ee-text">
+B</SPAN>
+ have features named <SPAN CLASS="ee-text">
+x</SPAN>
+ and<SPAN CLASS="ee-text">
+ y</SPAN>
+, class <SPAN CLASS="ee-text">
+C</SPAN>
+ would be invalid without the renaming. 
+<P CLASS="nn-normal">
+<A NAME="pgfId-512483"></A>Renaming also serves to provide more appropriate feature names in descendants. For example, class <SPAN CLASS="ee-text">
+WINDOW</SPAN>
+ may inherit a routine <SPAN CLASS="ee-text">
+insert_subtree</SPAN>
+ from <SPAN CLASS="ee-text">
+TREE</SPAN>
+. For clients of <SPAN CLASS="ee-text">
+WINDOW</SPAN>
+, however, such a routine name is no longer appropriate. An application that uses this class needs coherent window terminology, and should have to concern itself with the inheritance structure that led to the class. So you may wish to rename <SPAN CLASS="ee-text">
+insert_subtree</SPAN>
+ as <SPAN CLASS="ee-text">
+add_subwindow</SPAN>
+ in the inheritance clause of <SPAN CLASS="ee-text">
+WINDOW</SPAN>
+. 
+<P CLASS="nn-normal">
+<A NAME="pgfId-445444"></A>As a further protection against misusing multiple inheritance, the invariants of all parent classes automatically apply to a newly defined class. So classes may not be combined if their invariants are incompatible.
+<p class="bottom" ALIGN="left"><IMG SRC="normaldoc.gif" ALT="Previous, Up, Next" BORDER="0" WIDTH="300" HEIGHT="40" USEMAP="#navigation"><map name="navigation"><AREA SHAPE="RECT" alt="Previous section" COORDS="0,0,95,40" HREF="invitation-10.html"><AREA SHAPE="RECT" alt="Up" COORDS="96,0,199,40" HREF="invitation.html"><AREA SHAPE="RECT" alt="Next section" COORDS="200,0,300,40" HREF="invitation-12.html"><area shape="default" nohref></MAP>
+
+<p class="bottom" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a> -- <a href="../index.html">Getting started with Eiffel (local)</a>
+
+<p class="copyright" align="center">Copyright Interactive Software Engineering, 2001
+</BODY>
+</HTML>

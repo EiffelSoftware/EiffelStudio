@@ -1,0 +1,190 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN"><HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=ISO-8859-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+<META NAME="GENERATOR" CONTENT="Adobe FrameMaker 5.5/HTML Export Filter">
+<LINK REL="STYLESHEET" HREF="tour.css" CHARSET="ISO-8859-1" TYPE="text/css">
+<TITLE> 5  A LOOK AT THE PROJECT DIRECTORY</TITLE>
+</HEAD>
+<!--------------------------------------------------->
+<SCRIPT LANGUAGE="Javascript">
+	// Default values
+	var oNewWindow = 0;
+
+	function ImageClick( oImage )
+	{
+		if( oNewWindow == 0 || oNewWindow.closed )
+		{
+			oNewWindow = window.open (oImage.src,"", "status=no, toolbar=no, menubar=no, location=no, resizable=yes");
+		}
+		else
+		{
+			oNewWindow.location = oImage.src;
+		}
+	}
+</SCRIPT>
+<!--------------------------------------------------->
+<body bgcolor="#faf0e6">
+<DIV>
+<p class="top" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a> -- <a href="../index.html">Getting started with Eiffel (local)</a>
+
+<img src="power.gif" ALT="Eiffel Home Page" align="right" border="0"  usemap="#eiffel"><map name="eiffel"><area shape="RECT" alt="Eiffel Home Page" coords="0,0,109,226" HREF="http://www.eiffel.com"><area shape="default" nohref></map>
+
+<p class="top" ALIGN="left"><IMG SRC="normaldoc.gif" ALT="Previous, Up, Next" BORDER="0" WIDTH="300" HEIGHT="40" USEMAP="#navigation"><map name="navigation"><AREA SHAPE="RECT" alt="Previous section" COORDS="0,0,95,40" HREF="index-05.html"><AREA SHAPE="RECT" alt="Up" COORDS="96,0,199,40" HREF="index.html"><AREA SHAPE="RECT" alt="Next section" COORDS="200,0,300,40" HREF="index-07.html"><area shape="default" nohref></MAP>
+</DIV>
+<H1 CLASS="aa-sec2">
+<A NAME="pgfId-3038"></A>5  A LOOK AT THE PROJECT DIRECTORY</H1>
+<P CLASS="nn-first">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="tour-help.html">Help reading this manual</a>
+<P CLASS="nn-first">
+<A NAME="pgfId-437424"></A>Before we proceed with the facilities of the environment, let's take a look at the way EiffelStudio organizes project files.
+<P CLASS="nn-normal">
+<A NAME="pgfId-3077"></A>With EiffelStudio, you build projects. Most projects yield an executable system, although you can also build a project just to define a library for use by such systems.
+<P CLASS="nn-normal">
+<A NAME="pgfId-527857"></A>Every session is relative to a project; you can start a new project from within EiffelStudio by going to the <SPAN CLASS="ee-keyword">
+File </SPAN>
+<SPAN CLASS="ee-symbol">
+--> </SPAN>
+<SPAN CLASS="ee-keyword">
+New Project</SPAN>
+ menu, but please <SPAN CLASS="ff-bold">
+don't select that menu entry now</SPAN>
+ as we have many more things to do with our current project first.
+<P CLASS="nn-normal">
+<A NAME="pgfId-437467"></A>Every project has a <SPAN CLASS="ff-bold">
+project directory</SPAN>
+ which will contain the files generated and managed by EiffelStudio. The project directory may also host some of the source files containing your Eiffel classes, the Ace (control file), and external software written in other languages, but that is not required; the source files may reside anywhere. Some users, in fact, like to put nothing else than the EiffelStudio-generated files in the project directory; this separates user-managed and system-managed files, and can facilitate configuration management, backups and porting.
+<P CLASS="nn-normal">
+<A NAME="pgfId-437468"></A>In this simple Tour, things have been set up so that all the files of interest, source texts as well as generated ones, will appear in the project directory <SPAN CLASS="ee-text">
+YOURDIR</SPAN>
+ (either <SPAN CLASS="ee-keyword">
+$ISE_EIFFEL&#92;examples&#92;bench&#92;tour</SPAN>
+ or the copy that you have made). Go to that project directory using the Windows explorer or a <SPAN CLASS="ee-keyword">
+cd</SPAN>
+ command, and look at its contents (using <SPAN CLASS="ee-keyword">
+ls</SPAN>
+ on Unix/Linux):
+<DIV>
+<p>
+<ul>
+<A TARGET="screenshots" HREF="index-7.png"><IMG WIDTH="100" SRC="index-7.png"></A>
+</ul>
+<p>
+</DIV>
+<P CLASS="nn-first">
+<A NAME="pgfId-437442"></A>The contents of this <SPAN CLASS="ee-text">
+YOURDIR </SPAN>
+directory include the following:
+<UL>
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-437485"></A>First you see a number of files with the extension <SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-keyword">
+e</SPAN>
+, for &quot;Eiffel&quot;: <SPAN CLASS="ee-keyword">
+heir.e</SPAN>
+, <SPAN CLASS="ee-keyword">
+invalid.e</SPAN>
+ and others. These are the Eiffel source files, each containing one class. The recommended convention is to store a class of name <SPAN CLASS="ee-text">
+CLASS_NAME</SPAN>
+ into a file of name <SPAN CLASS="ee-text">
+class_name</SPAN>
+<SPAN CLASS="ee-keyword">
+.e</SPAN>
+, where <SPAN CLASS="ee-text">
+class_name</SPAN>
+ is the lower-case version of <SPAN CLASS="ee-text">
+CLASS_NAME</SPAN>
+; here, file <SPAN CLASS="ee-keyword">
+heir.e</SPAN>
+ contains the class <SPAN CLASS="ee-keyword">
+HEIR </SPAN>
+and so on. As you may remember, Eiffel is case-insensitive, but the standard convention for class names is to write them in all upper case. Calling the file <SPAN CLASS="ee-text">
+class_name</SPAN>
+<SPAN CLASS="ee-keyword">
+.e</SPAN>
+ is only a recommendation, not an obligation; but you <SPAN CLASS="ff-italics">
+are</SPAN>
+ required to store one class per file. This keeps things simple and facilitates project and configuration management.
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-437517"></A>You also notice two files with an <SPAN CLASS="ee-keyword">
+ace</SPAN>
+ extension. These are the compilation control files. The reason there are two is that this example has a Windows version and a Unix/Linux version. As you remember, the Ace files for this example were available as part of the delivery; we used them to compile the project. In most practical cases, however, you won't need to build an Ace; if you use the &quot;<SPAN CLASS="ee-keyword">
+Create a new project</SPAN>
+&quot; option of EiffelStudio (remember the first screen on page <A HREF="index.html#PROJECT START SCREEN" CLASS="XRef"><SPAN CLASS="ww-crossref">
+10</SPAN>
+</A>), EiffelStudio will build the Ace for you; if you change the Preferences during a session, EiffelStudio will update the Ace. When you become an experienced Eiffel developer you can also edit the Ace file directly; Aces are written in a simple Eiffel-like notation called <SPAN CLASS="ff-bold">
+Lace</SPAN>
+ (Language for Assembling Classes in Eiffel). If you like you can take a peek at Lace by opening the relevant <SPAN CLASS="ee-keyword">
+.ace</SPAN>
+ file with a text viewer or editor now (but don't make any change); it shouldn't be hard to understand what it's all about. But that's not really necessary at this stage.
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-555055"></A>Next you see a file called <SPAN CLASS="ee-keyword">
+simple.epr</SPAN>
+. This is the Eiffel Project Repository, hence the extension. Any successful compilation of a project will produce a project of this kind, <SPAN CLASS="ee-text">
+system_name</SPAN>
+<SPAN CLASS="ee-keyword">
+.epr</SPAN>
+. To open an existing project when you start EiffelStudio (this was the option &quot;<SPAN CLASS="ee-keyword">
+Open compiled project</SPAN>
+&quot; in the initial screen on page <A HREF="index.html#PROJECT START SCREEN" CLASS="XRef"><SPAN CLASS="ww-crossref">
+10</SPAN>
+</A>), you will just select the corresponding <SPAN CLASS="ee-keyword">
+.epr</SPAN>
+ file.
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-437541"></A>Finally you will notice a subdirectory called <SPAN CLASS="ee-keyword">
+EIFGEN</SPAN>
+, for &quot;<SPAN CLASS="ee-keyword">
+EIF</SPAN>
+fel <SPAN CLASS="ee-keyword">
+GEN</SPAN>
+eration&quot;. <SPAN CLASS="ee-keyword">
+EIFGEN</SPAN>
+ is created and maintained by the compiler to store information about your project, including generated code for execution. EiffelStudio manages your project in such a way that <SPAN CLASS="ee-keyword">
+EIFGEN</SPAN>
+ can always be re-generated if need be; this means in particular that if things go wrong for any reason and you want to make a fresh start you can always delete this directory and the <SPAN CLASS="ee-keyword">
+.epr</SPAN>
+ file and recompile your system, recreating a new <SPAN CLASS="ee-keyword">
+EIFGEN</SPAN>
+ in the process. This also means that you should not add any files into this directory, or modify any of its files, since a later compilation is free to change or regenerate whatever it chooses in <SPAN CLASS="ee-keyword">
+EIFGEN</SPAN>
+.
+</UL>
+<P CLASS="nn-first">
+<A NAME="pgfId-437648"></A>Later on, we will see that EiffelStudio may generate three more subdirectories of the project directory: <SPAN CLASS="ee-keyword">
+Diagrams</SPAN>
+, if you produce graphical system diagrams; <SPAN CLASS="ee-keyword">
+Documentation</SPAN>
+, if you request system documentation, for example HTML; and <SPAN CLASS="ee-keyword">
+Metrics</SPAN>
+, if you perform measurements on your system. Other than these directories, <SPAN CLASS="ee-keyword">
+EIFGEN</SPAN>
+, and <SPAN CLASS="ee-text">
+system_name</SPAN>
+<SPAN CLASS="ee-keyword">
+.epr</SPAN>
+, EiffelStudio will not touch anything in the project directory, so you may safely add and change whatever files and subdirectories you like.
+<P CLASS="nn-normal">
+<A NAME="pgfId-437617"></A>You seldom need to look into <SPAN CLASS="ee-keyword">
+EIFGEN</SPAN>
+, although you should know that it's there. Right now if you check the contents of the project directory <SPAN CLASS="ee-text">
+YOURDIR</SPAN>
+ (using the Windows Explorer on Windows, the <SPAN CLASS="ee-keyword">
+ls</SPAN>
+ command on Unix, or some equivalent mechanism), you will see that <SPAN CLASS="ee-keyword">
+EIFGEN </SPAN>
+has been created, itself with some subdirectories, including <SPAN CLASS="ee-keyword">
+W_Code </SPAN>
+which contains the generated code (<SPAN CLASS="ee-keyword">
+W</SPAN>
+ for &quot;Workbench&quot; -- we'll see the reason later). Feel free to browse through it if you like, but don't change anything.
+<P CLASS="nn-normal">
+<A NAME="pgfId-3762"></A>By the way, we are now done with any platform-specific instructions. Everything in the rest of this Tour, other than the graphical look-and-feel, will work the same across all EiffelStudio platforms.
+<p class="bottom" ALIGN="left"><IMG SRC="normaldoc.gif" ALT="Previous, Up, Next" BORDER="0" WIDTH="300" HEIGHT="40" USEMAP="#navigation"><map name="navigation"><AREA SHAPE="RECT" alt="Previous section" COORDS="0,0,95,40" HREF="index-05.html"><AREA SHAPE="RECT" alt="Up" COORDS="96,0,199,40" HREF="index.html"><AREA SHAPE="RECT" alt="Next section" COORDS="200,0,300,40" HREF="index-07.html"><area shape="default" nohref></MAP>
+
+<p class="bottom" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a> -- <a href="../index.html">Getting started with Eiffel (local)</a>
+
+<p class="copyright" align="center">Copyright Interactive Software Engineering, 2001
+</BODY>
+</HTML>

@@ -1,0 +1,259 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN"><HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=ISO-8859-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+<META NAME="GENERATOR" CONTENT="Adobe FrameMaker 5.5/HTML Export Filter">
+<LINK REL="STYLESHEET" HREF="tour.css" CHARSET="ISO-8859-1" TYPE="text/css">
+<TITLE> 4  HELLO WORLD</TITLE>
+</HEAD>
+<!--------------------------------------------------->
+<SCRIPT LANGUAGE="Javascript">
+	// Default values
+	var oNewWindow = 0;
+
+	function ImageClick( oImage )
+	{
+		if( oNewWindow == 0 || oNewWindow.closed )
+		{
+			oNewWindow = window.open (oImage.src,"", "status=no, toolbar=no, menubar=no, location=no, resizable=yes");
+		}
+		else
+		{
+			oNewWindow.location = oImage.src;
+		}
+	}
+</SCRIPT>
+<!--------------------------------------------------->
+<body bgcolor="#faf0e6">
+<DIV>
+<p class="top" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a> -- <a href="../index.html">Getting started with Eiffel (local)</a>
+
+<img src="power.gif" ALT="Eiffel Home Page" align="right" border="0"  usemap="#eiffel"><map name="eiffel"><area shape="RECT" alt="Eiffel Home Page" coords="0,0,109,226" HREF="http://www.eiffel.com"><area shape="default" nohref></map>
+
+<p class="top" ALIGN="left"><IMG SRC="normaldoc.gif" ALT="Previous, Up, Next" BORDER="0" WIDTH="300" HEIGHT="40" USEMAP="#navigation"><map name="navigation"><AREA SHAPE="RECT" alt="Previous section" COORDS="0,0,95,40" HREF="tutorial-04.html"><AREA SHAPE="RECT" alt="Up" COORDS="96,0,199,40" HREF="tutorial.html"><AREA SHAPE="RECT" alt="Next section" COORDS="200,0,300,40" HREF="tutorial-06.html"><area shape="default" nohref></MAP>
+</DIV>
+<H1 CLASS="aa-sec2">
+<A NAME="pgfId-514073"></A>4  <A NAME="35212"></A>HELLO WORLD</H1>
+<P CLASS="nn-first">
+<A NAME="pgfId-514074"></A>When discovering any approach to software construction, however ambitious its goals, it is reassuring to see first a small example of the big picture -- a complete program to print the famous &quot;Hello World&quot; string. Here is how to perform this fascinating task in the Eiffel notation.
+<P CLASS="nn-normal">
+<A NAME="pgfId-514075"></A>You write a class <SPAN CLASS="ee-text">
+HELLO</SPAN>
+ with a single procedure, say <SPAN CLASS="ee-text">
+make</SPAN>
+, also serving as creation procedure. If you like short texts, here is a minimal version:
+<p><ul><table width="79%">
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-514078"></A><SPAN CLASS="ee-keyword">
+class</SPAN>
+<A NAME="80381"></A> HELLO <SPAN CLASS="ee-keyword">
+create </SPAN>
+<SPAN CLASS="ee-text">
+make </SPAN>
+<SPAN CLASS="ee-keyword">
+feature</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-514079"></A>&nbsp;&nbsp;&nbsp;&nbsp;make <SPAN CLASS="ee-keyword">
+is</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-514080"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ee-keyword">
+do</SPAN>
+ print <SPAN CLASS="ee-comment">
+(&quot;</SPAN>
+Hello World%N  <SPAN CLASS="ee-comment">
+&quot;)</SPAN>
+ <SPAN CLASS="ee-keyword">
+end</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-514081"></A><SPAN CLASS="ee-keyword">
+end</SPAN>
+
+</TD>
+</TR>
+</table></ul><p>
+<P CLASS="nn-first">
+<A NAME="pgfId-514096"></A>In practice, however, the Eiffel style rules suggest a better documented version:
+<p><ul><table width="79%">
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-514084"></A><SPAN CLASS="ee-keyword">
+indexing</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-514085"></A>&nbsp;&nbsp;&nbsp;&nbsp;description: &quot;Root for trivial system printing a message&quot;
+<P CLASS="ee-text">
+<A NAME="pgfId-526439"></A>&nbsp;&nbsp;&nbsp;&nbsp;author<SPAN CLASS="ee-comment">
+: &quot;</SPAN>
+<SPAN CLASS="ee-text">
+Elizabeth W. Brown</SPAN>
+<SPAN CLASS="ee-comment">
+&quot;</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-514086"></A><SPAN CLASS="ee-keyword">
+class</SPAN>
+ HELLO <SPAN CLASS="ee-keyword">
+create</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-514087"></A>&nbsp;&nbsp;&nbsp;&nbsp;make
+<P CLASS="ee-text">
+<A NAME="pgfId-514088"></A><SPAN CLASS="ee-keyword">
+feature</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-514089"></A>&nbsp;&nbsp;&nbsp;&nbsp;make <SPAN CLASS="ee-keyword">
+is</SPAN>
+
+<P CLASS="ee-comment">
+<A NAME="pgfId-514090"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-- Print a simple message.
+<P CLASS="ee-text">
+<A NAME="pgfId-514091"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ee-keyword">
+do</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-514092"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;io<SPAN CLASS="ee-dot">
+.</SPAN>
+put_string<SPAN CLASS="ee-comment">
+ (&quot;</SPAN>
+Hello World  <SPAN CLASS="ee-comment">
+&quot;)</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-514093"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;io<SPAN CLASS="ee-dot">
+.</SPAN>
+put_new_line
+<P CLASS="ee-text">
+<A NAME="pgfId-514094"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ee-keyword">
+end</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-514095"></A><SPAN CLASS="ee-keyword">
+end</SPAN>
+ -<SPAN CLASS="ee-comment">
+- class</SPAN>
+ HELLO
+</TD>
+</TR>
+</table></ul><p>
+<P CLASS="nn-first">
+<A NAME="pgfId-514097"></A>The two versions perform identically; the following comments will cover the more complete second one.
+<P CLASS="nn-normal">
+<A NAME="pgfId-526974"></A>Note the absence of semicolons and other syntactic clatter or clutter. You may in fact use semicolons to separate instructions and declarations. But the language's syntax is designed to make the semicolon optional (regardless of text layout) and it's best for readability to omit it, except in the special case of successive elements on a single line.
+<P CLASS="nn-normal">
+<A NAME="pgfId-526957"></A>The <SPAN CLASS="ee-keyword">
+indexing</SPAN>
+ clause does not affect execution semantics; you may use it to associate documentation with the class, so that browsers and other indexing and retrieval tools can help users in search of reusable components satisfying certain properties. Here we see two indexing entries, labeled <SPAN CLASS="ee-text">
+description</SPAN>
+ and <SPAN CLASS="ee-text">
+author</SPAN>
+.
+<P CLASS="nn-normal">
+<A NAME="pgfId-514099"></A>The name of the class is <SPAN CLASS="ee-text">
+HELLO</SPAN>
+. Any class may contain &quot;features&quot;; <SPAN CLASS="ee-text">
+HELLO</SPAN>
+<SPAN CLASS="ff-italics">
+ </SPAN>
+has just one, called <SPAN CLASS="ee-text">
+make</SPAN>
+. The <SPAN CLASS="ee-keyword">
+create</SPAN>
+ clause indicates that <SPAN CLASS="ee-text">
+make</SPAN>
+ is a &quot;creation procedure&quot;, that is to say an operation to be executed at class instantiation time. The class could have any number of creation procedures.
+<P CLASS="nn-normal">
+<A NAME="pgfId-527019"></A>The definition of <SPAN CLASS="ee-text">
+make </SPAN>
+appears in a <SPAN CLASS="ee-keyword">
+feature</SPAN>
+ clause. There may be any number of such clauses (to separate features into logical categories), and each may contain any number of feature declarations. Here we have only one.
+<P CLASS="nn-normal">
+<A NAME="pgfId-527020"></A>The line starting with<SPAN CLASS="ee-comment">
+ --</SPAN>
+ (two hyphen signs) is a comment; more precisely it is a &quot;header comment&quot;, which style rules invite software developers to write for every such feature, just after the <SPAN CLASS="ee-keyword">
+is</SPAN>
+. As will be seen in <A HREF="tutorial-09.html#78482" CLASS="XRef"><SPAN CLASS="ww-crossref">
+&quot;The contract form of a class&quot;,  page 44</SPAN>
+</A>, the tools of EiffelStudio know about this convention and use it to include the header comment in the automatically generated class documentation.
+<P CLASS="nn-normal">
+<A NAME="pgfId-514105"></A>The body of the feature is introduced by the <SPAN CLASS="ee-keyword">
+do</SPAN>
+ keyword and terminated by <SPAN CLASS="ee-keyword">
+end</SPAN>
+. It consists of two output instructions. They both use <SPAN CLASS="ee-text">
+io</SPAN>
+, a generally available reference to an object that provides access to standard input and output mechanisms; the notation <SPAN CLASS="ee-text">
+io</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+f</SPAN>
+, for some feature <SPAN CLASS="ee-text">
+f</SPAN>
+ of the corresponding library class (<SPAN CLASS="ee-text">
+STD_FILES</SPAN>
+), means &quot;apply <SPAN CLASS="ee-text">
+f</SPAN>
+ to <SPAN CLASS="ee-text">
+io</SPAN>
+&quot;. Here we use two such features:
+<UL>
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-514106"></A><SPAN CLASS="ee-text">
+put_string</SPAN>
+ outputs a string, passed as argument, here <SPAN CLASS="ee-comment">
+&quot;</SPAN>
+<SPAN CLASS="ee-text">
+Hello World</SPAN>
+<SPAN CLASS="ee-comment">
+&quot;</SPAN>
+.
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-514107"></A><SPAN CLASS="ee-text">
+put_new_line</SPAN>
+ terminates the line.
+</UL>
+<P CLASS="nn-first">
+<A NAME="pgfId-514108"></A>Rather than using a call to <SPAN CLASS="ee-text">
+put_new_line</SPAN>
+, the first version of the class simply includes a new-line character, denoted as <SPAN CLASS="ee-text">
+%N</SPAN>
+, at the end of the string. Either technique is acceptable.
+<P CLASS="nn-normal">
+<A NAME="pgfId-514109"></A>To build the system and execute it:
+<UL>
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-526543"></A>Start EiffelStudio
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-526544"></A>When prompted, ask EiffelStudio to build a system for you; specify <SPAN CLASS="ee-text">
+HELLO</SPAN>
+ as the &quot;root class&quot; and <SPAN CLASS="ee-text">
+make</SPAN>
+ as the &quot;root procedure&quot;.
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-526545"></A>You can either use EiffelStudio to type in the above class text, or you may use any text editor and store the result into a file <SPAN CLASS="ee-keyword">
+hello.e</SPAN>
+ in the current directory.
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-526546"></A>Click the &quot;Compile&quot; icon.
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-526547"></A>Click the &quot;Run&quot; icon.
+</UL>
+<P CLASS="nn-first">
+<A NAME="pgfId-526518"></A>Execution starts and outputs <SPAN CLASS="ee-text">
+Hello World</SPAN>
+ on the appropriate medium: under Windows, a Console; under Unix or VMS, the windows from which you started EiffelStudio.
+<p class="bottom" ALIGN="left"><IMG SRC="normaldoc.gif" ALT="Previous, Up, Next" BORDER="0" WIDTH="300" HEIGHT="40" USEMAP="#navigation"><map name="navigation"><AREA SHAPE="RECT" alt="Previous section" COORDS="0,0,95,40" HREF="tutorial-04.html"><AREA SHAPE="RECT" alt="Up" COORDS="96,0,199,40" HREF="tutorial.html"><AREA SHAPE="RECT" alt="Next section" COORDS="200,0,300,40" HREF="tutorial-06.html"><area shape="default" nohref></MAP>
+
+<p class="bottom" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a> -- <a href="../index.html">Getting started with Eiffel (local)</a>
+
+<p class="copyright" align="center">Copyright Interactive Software Engineering, 2001
+</BODY>
+</HTML>

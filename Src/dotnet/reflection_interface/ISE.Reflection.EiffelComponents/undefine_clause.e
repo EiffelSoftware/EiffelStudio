@@ -30,10 +30,10 @@ feature -- Access
 		
 feature -- Basic Operations
 
-	to_string: STRING is
+	string_representation: STRING is
 		indexing
 			description: "Give a string representation of the inheritance clause."
-			external_name: "ToString"
+			external_name: "StringRepresentation"
 		do
 			Result := source_name
 		end

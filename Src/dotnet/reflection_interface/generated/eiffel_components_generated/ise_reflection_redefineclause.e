@@ -1,7 +1,6 @@
 indexing
-	Generator: "Eiffel Emitter 2.4b2"
+	Generator: "Eiffel Emitter 2.6b2"
 	external_name: "ISE.Reflection.RedefineClause"
-
 external class
 	ISE_REFLECTION_REDEFINECLAUSE
 
@@ -20,25 +19,25 @@ feature {NONE} -- Initialization
 
 feature -- Basic Operations
 
-	RedefineKeyword: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.RedefineClause"
-		alias
-			"RedefineKeyword"
-		end
-
-	ToString: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.RedefineClause"
-		alias
-			"ToString"
-		end
-
-	EiffelKeyword: STRING is
+	eiffel_keyword: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.RedefineClause"
 		alias
 			"EiffelKeyword"
+		end
+
+	string_representation: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.RedefineClause"
+		alias
+			"StringRepresentation"
+		end
+
+	redefine_keyword: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.RedefineClause"
+		alias
+			"RedefineKeyword"
 		end
 
 end -- class ISE_REFLECTION_REDEFINECLAUSE

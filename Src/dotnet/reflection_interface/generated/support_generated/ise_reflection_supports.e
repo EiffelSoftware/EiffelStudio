@@ -1,7 +1,6 @@
 indexing
-	Generator: "Eiffel Emitter 2.4b2"
+	Generator: "Eiffel Emitter 2.6b2"
 	external_name: "ISE.Reflection.Supports"
-
 external class
 	ISE_REFLECTION_SUPPORTS
 
@@ -17,30 +16,30 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	frozen ConversionSupport: ISE_REFLECTION_CONVERSIONSUPPORT is
+	frozen conversion_support: ISE_REFLECTION_CONVERSIONSUPPORT is
 		external
 			"IL field signature :ISE.Reflection.ConversionSupport use ISE.Reflection.Supports"
 		alias
 			"ConversionSupport"
 		end
 
-	frozen ReflectionSupport: ISE_REFLECTION_REFLECTIONSUPPORT is
-		external
-			"IL field signature :ISE.Reflection.ReflectionSupport use ISE.Reflection.Supports"
-		alias
-			"ReflectionSupport"
-		end
-
-	frozen CodeGenerationSupport: ISE_REFLECTION_CODEGENERATIONSUPPORT is
+	frozen code_generation_support: ISE_REFLECTION_CODEGENERATIONSUPPORT is
 		external
 			"IL field signature :ISE.Reflection.CodeGenerationSupport use ISE.Reflection.Supports"
 		alias
 			"CodeGenerationSupport"
 		end
 
+	frozen reflection_support: ISE_REFLECTION_REFLECTIONSUPPORT is
+		external
+			"IL field signature :ISE.Reflection.ReflectionSupport use ISE.Reflection.Supports"
+		alias
+			"ReflectionSupport"
+		end
+
 feature -- Basic Operations
 
-	Make is
+	make is
 		external
 			"IL signature (): System.Void use ISE.Reflection.Supports"
 		alias

@@ -23,13 +23,13 @@ feature -- Access
 		do
 			create Result.make (4)
 			if not retried then
-				a_name := an_assembly_name.name
-				a_version := an_assembly_name.version.tostring
-				a_culture := an_assembly_name.cultureinfo.name
-				if a_culture /= Void and then a_culture.length = 0 then
+				a_name := an_assembly_name.get_name
+				a_version := an_assembly_name.get_version.to_string
+				a_culture := an_assembly_name.get_culture_info.get_name
+				if a_culture /= Void and then a_culture.get_length = 0 then
 					a_culture := Neutral_culture
 				end
-				a_public_key := decode_key (an_assembly_name.getpublickeytoken)	
+				a_public_key := decode_key (an_assembly_name.get_public_key_token)	
 				
 				Result.put (0, a_name)
 				Result.put (1, a_version)
@@ -67,8 +67,8 @@ feature {NONE} -- Implementation
 			until
 				i >= a_key.count
 			loop
-				hex_rep := a_key.item (i).tostring_string2 ("X").tolower
-				if hex_rep.length < 2 then
+				hex_rep := a_key.item (i).to_string_string2 ("X").to_lower
+				if hex_rep.get_length < 2 then
 					hex_rep := hex_rep.concat_string_string ("0", hex_rep)
 				end
 				Result := Result.concat_string_string (Result, hex_rep)

@@ -1,7 +1,6 @@
 indexing
-	Generator: "Eiffel Emitter 2.4b2"
+	Generator: "Eiffel Emitter 2.6b2"
 	external_name: "ISE.Reflection.Dictionary"
-
 external class
 	ISE_REFLECTION_DICTIONARY
 
@@ -17,88 +16,88 @@ feature {NONE} -- Initialization
 
 feature -- Basic Operations
 
-	TrueString: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.Dictionary"
-		alias
-			"TrueString"
-		end
-
-	DtdAssemblyFilename: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.Dictionary"
-		alias
-			"DtdAssemblyFilename"
-		end
-
-	DtdTypeFilename: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.Dictionary"
-		alias
-			"DtdTypeFilename"
-		end
-
-	IndexFilename: STRING is
+	index_filename: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.Dictionary"
 		alias
 			"IndexFilename"
 		end
 
-	EmptyString: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.Dictionary"
-		alias
-			"EmptyString"
-		end
-
-	FalseString: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.Dictionary"
-		alias
-			"FalseString"
-		end
-
-	DotString: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.Dictionary"
-		alias
-			"DotString"
-		end
-
-	Space: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.Dictionary"
-		alias
-			"Space"
-		end
-
-	Comma: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.Dictionary"
-		alias
-			"Comma"
-		end
-
-	DtdExtension: STRING is
+	dtd_extension: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.Dictionary"
 		alias
 			"DtdExtension"
 		end
 
-	XmlExtension: STRING is
+	space: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.Dictionary"
+		alias
+			"Space"
+		end
+
+	xml_extension: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.Dictionary"
 		alias
 			"XmlExtension"
 		end
 
-	Dash: STRING is
+	comma: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.Dictionary"
+		alias
+			"Comma"
+		end
+
+	dot_string: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.Dictionary"
+		alias
+			"DotString"
+		end
+
+	true_string: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.Dictionary"
+		alias
+			"TrueString"
+		end
+
+	dash: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.Dictionary"
 		alias
 			"Dash"
+		end
+
+	dtd_type_filename: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.Dictionary"
+		alias
+			"DtdTypeFilename"
+		end
+
+	false_string: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.Dictionary"
+		alias
+			"FalseString"
+		end
+
+	empty_string: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.Dictionary"
+		alias
+			"EmptyString"
+		end
+
+	dtd_assembly_filename: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.Dictionary"
+		alias
+			"DtdAssemblyFilename"
 		end
 
 end -- class ISE_REFLECTION_DICTIONARY

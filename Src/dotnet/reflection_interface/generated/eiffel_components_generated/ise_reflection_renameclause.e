@@ -1,7 +1,6 @@
 indexing
-	Generator: "Eiffel Emitter 2.4b2"
+	Generator: "Eiffel Emitter 2.6b2"
 	external_name: "ISE.Reflection.RenameClause"
-
 external class
 	ISE_REFLECTION_RENAMECLAUSE
 
@@ -20,7 +19,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	frozen TargetName: STRING is
+	frozen target_name: STRING is
 		external
 			"IL field signature :System.String use ISE.Reflection.RenameClause"
 		alias
@@ -29,53 +28,53 @@ feature -- Access
 
 feature -- Basic Operations
 
-	Space: STRING is
+	eiffel_keyword: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.RenameClause"
 		alias
-			"Space"
+			"EiffelKeyword"
 		end
 
-	SetTargetName (a_target_name: STRING) is
-		external
-			"IL signature (System.String): System.Void use ISE.Reflection.RenameClause"
-		alias
-			"SetTargetName"
-		end
-
-	MakeFromInfo (a_source_name: STRING; a_target_name: STRING) is
-		external
-			"IL signature (System.String, System.String): System.Void use ISE.Reflection.RenameClause"
-		alias
-			"MakeFromInfo"
-		end
-
-	ToString: STRING is
+	string_representation: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.RenameClause"
 		alias
-			"ToString"
+			"StringRepresentation"
 		end
 
-	RenameKeyword: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.RenameClause"
-		alias
-			"RenameKeyword"
-		end
-
-	AsKeyword: STRING is
+	as_keyword: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.RenameClause"
 		alias
 			"AsKeyword"
 		end
 
-	EiffelKeyword: STRING is
+	set_target_name (a_target_name: STRING) is
+		external
+			"IL signature (System.String): System.Void use ISE.Reflection.RenameClause"
+		alias
+			"SetTargetName"
+		end
+
+	make_from_info (a_source_name: STRING; a_target_name: STRING) is
+		external
+			"IL signature (System.String, System.String): System.Void use ISE.Reflection.RenameClause"
+		alias
+			"MakeFromInfo"
+		end
+
+	rename_keyword: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.RenameClause"
 		alias
-			"EiffelKeyword"
+			"RenameKeyword"
+		end
+
+	space: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.RenameClause"
+		alias
+			"Space"
 		end
 
 end -- class ISE_REFLECTION_RENAMECLAUSE

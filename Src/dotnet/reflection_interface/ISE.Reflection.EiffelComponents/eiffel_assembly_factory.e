@@ -74,7 +74,7 @@ feature -- Status Setting
 			external_name: "SetAssemblyName"
 		require
 			non_void_assembly_name: a_name /= Void
-			not_empty_assembly_name: a_name.Length > 0
+			not_empty_assembly_name: a_name.get_length > 0
 		do
 			assembly_name := a_name
 		ensure
@@ -87,7 +87,7 @@ feature -- Status Setting
 			external_name: "SetAssemblyVersion"
 		require
 			non_void_assembly_version: a_version /= Void
-			not_empty_assembly_version: a_version.Length > 0
+			not_empty_assembly_version: a_version.get_length > 0
 		do
 			assembly_version := a_version
 		ensure
@@ -100,7 +100,7 @@ feature -- Status Setting
 			external_name: "SetAssemblyCulture"
 		require
 			non_void_assembly_culture: a_culture /= Void
-			not_empty_assembly_culture: a_culture.Length > 0
+			not_empty_assembly_culture: a_culture.get_length > 0
 		do
 			assembly_culture := a_culture
 		ensure
@@ -113,7 +113,7 @@ feature -- Status Setting
 			external_name: "SetAssemblyPublicKey"
 		require
 			non_void_assembly_public_key: a_public_key /= Void
-			not_empty_assembly_public_key: a_public_key.Length > 0
+			not_empty_assembly_public_key: a_public_key.get_length > 0
 		do
 			assembly_public_key := a_public_key
 		ensure
@@ -126,7 +126,7 @@ feature -- Status Setting
 			external_name: "SetEiffelClusterPath"
 		require
 			non_void_eiffel_cluster_path: a_path /= Void
-			not_empty_eiffel_cluster_path: a_path.Length > 0
+			not_empty_eiffel_cluster_path: a_path.get_length > 0
 		do
 			eiffel_cluster_path := a_path
 		ensure
@@ -139,7 +139,7 @@ feature -- Status Setting
 			external_name: "SetEmitterVersionNumber"
 		require
 			non_void_emitter_version_number: a_value /= Void
-			not_empty_emitter_version_number: a_value.Length > 0
+			not_empty_emitter_version_number: a_value.get_length > 0
 		do
 			emitter_version_number := a_value
 		ensure

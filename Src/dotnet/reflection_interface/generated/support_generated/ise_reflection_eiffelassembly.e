@@ -1,7 +1,6 @@
 indexing
-	Generator: "Eiffel Emitter 2.4b2"
+	Generator: "Eiffel Emitter 2.6b2"
 	external_name: "ISE.Reflection.EiffelAssembly"
-
 external class
 	ISE_REFLECTION_EIFFELASSEMBLY
 
@@ -20,44 +19,37 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	frozen EmitterVersionNumber: STRING is
-		external
-			"IL field signature :System.String use ISE.Reflection.EiffelAssembly"
-		alias
-			"EmitterVersionNumber"
-		end
-
-	frozen AssemblyDescriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR is
-		external
-			"IL field signature :ISE.Reflection.AssemblyDescriptor use ISE.Reflection.EiffelAssembly"
-		alias
-			"AssemblyDescriptor"
-		end
-
-	frozen EiffelClusterPath: STRING is
-		external
-			"IL field signature :System.String use ISE.Reflection.EiffelAssembly"
-		alias
-			"EiffelClusterPath"
-		end
-
-	frozen XmlElements: ISE_REFLECTION_XMLELEMENTS is
+	frozen xml_elements: ISE_REFLECTION_XMLELEMENTS is
 		external
 			"IL field signature :ISE.Reflection.XmlElements use ISE.Reflection.EiffelAssembly"
 		alias
 			"XmlElements"
 		end
 
-feature -- Basic Operations
-
-	Make (a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR; a_path: STRING; a_number: STRING) is
+	frozen eiffel_cluster_path: STRING is
 		external
-			"IL signature (ISE.Reflection.AssemblyDescriptor, System.String, System.String): System.Void use ISE.Reflection.EiffelAssembly"
+			"IL field signature :System.String use ISE.Reflection.EiffelAssembly"
 		alias
-			"Make"
+			"EiffelClusterPath"
 		end
 
-	Types: SYSTEM_COLLECTIONS_ARRAYLIST is
+	frozen assembly_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR is
+		external
+			"IL field signature :ISE.Reflection.AssemblyDescriptor use ISE.Reflection.EiffelAssembly"
+		alias
+			"AssemblyDescriptor"
+		end
+
+	frozen emitter_version_number: STRING is
+		external
+			"IL field signature :System.String use ISE.Reflection.EiffelAssembly"
+		alias
+			"EmitterVersionNumber"
+		end
+
+feature -- Basic Operations
+
+	types: SYSTEM_COLLECTIONS_ARRAYLIST is
 		external
 			"IL signature (): System.Collections.ArrayList use ISE.Reflection.EiffelAssembly"
 		alias
@@ -71,18 +63,25 @@ feature -- Basic Operations
 			"_invariant"
 		end
 
-	TypesRetrievalFailed: STRING is
+	make (a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR; a_path: STRING; a_number: STRING) is
 		external
-			"IL signature (): System.String use ISE.Reflection.EiffelAssembly"
+			"IL signature (ISE.Reflection.AssemblyDescriptor, System.String, System.String): System.Void use ISE.Reflection.EiffelAssembly"
 		alias
-			"TypesRetrievalFailed"
+			"Make"
 		end
 
-	TypesRetrievalFailedMessage: STRING is
+	types_retrieval_failed_message: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.EiffelAssembly"
 		alias
 			"TypesRetrievalFailedMessage"
+		end
+
+	types_retrieval_failed: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelAssembly"
+		alias
+			"TypesRetrievalFailed"
 		end
 
 end -- class ISE_REFLECTION_EIFFELASSEMBLY

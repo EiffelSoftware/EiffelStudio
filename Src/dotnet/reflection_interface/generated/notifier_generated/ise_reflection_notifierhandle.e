@@ -1,7 +1,6 @@
 indexing
-	Generator: "Eiffel Emitter 2.4b2"
+	Generator: "Eiffel Emitter 2.6b2"
 	external_name: "ISE.Reflection.NotifierHandle"
-
 external class
 	ISE_REFLECTION_NOTIFIERHANDLE
 
@@ -17,18 +16,18 @@ feature {NONE} -- Initialization
 
 feature -- Basic Operations
 
-	Make is
-		external
-			"IL signature (): System.Void use ISE.Reflection.NotifierHandle"
-		alias
-			"Make"
-		end
-
-	CurrentNotifier: ISE_REFLECTION_NOTIFIER is
+	current_notifier: ISE_REFLECTION_NOTIFIER is
 		external
 			"IL signature (): ISE.Reflection.Notifier use ISE.Reflection.NotifierHandle"
 		alias
 			"CurrentNotifier"
+		end
+
+	make is
+		external
+			"IL signature (): System.Void use ISE.Reflection.NotifierHandle"
+		alias
+			"Make"
 		end
 
 end -- class ISE_REFLECTION_NOTIFIERHANDLE

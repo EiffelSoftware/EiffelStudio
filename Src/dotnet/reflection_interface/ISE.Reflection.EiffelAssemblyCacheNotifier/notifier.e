@@ -108,9 +108,9 @@ feature -- Basic Operations
 			create arguments.make
 			from
 			until
-				i = add_observers.Count
+				i = add_observers.get_count
 			loop
-				an_observer ?= add_observers.Item (i)
+				an_observer ?= add_observers.get_item (i)
 				if an_observer /= Void then
 					an_observer.invoke (an_observer, arguments)
 				end
@@ -133,9 +133,9 @@ feature -- Basic Operations
 			create arguments.make
 			from
 			until
-				i = remove_observers.Count
+				i = remove_observers.get_count
 			loop
-				an_observer ?= remove_observers.Item (i)
+				an_observer ?= remove_observers.get_item (i)
 				if an_observer /= Void then
 					an_observer.invoke (an_observer, arguments)
 				end
@@ -157,9 +157,9 @@ feature -- Basic Operations
 			create arguments.make
 			from
 			until
-				i = replace_observers.Count
+				i = replace_observers.get_count
 			loop
-				an_observer ?= replace_observers.Item (i)
+				an_observer ?= replace_observers.get_item (i)
 				if an_observer /= Void then
 					an_observer.invoke (an_observer, arguments)
 				end

@@ -22,9 +22,9 @@ feature {NONE} -- Implementation
  			external_name: "MakeFromInfo"
  		require
  			non_void_source_name: a_source_name /= Void
- 			not_empty_source_name: a_source_name.length > 0		
+ 			not_empty_source_name: a_source_name.get_length > 0		
  	 		non_void_target_name: a_target_name /= Void
- 			not_empty_target_name: a_target_name.length > 0		
+ 			not_empty_target_name: a_target_name.get_length > 0		
  		do
  			set_source_name (a_source_name)
  			set_target_name (a_target_name)
@@ -75,7 +75,7 @@ feature -- Status Setting
 			external_name: "SetTargetName"
 		require
 			non_void_target_name: a_target_name /= Void
-			not_empty_target_name: a_target_name.length > 0
+			not_empty_target_name: a_target_name.get_length > 0
 		do
 			target_name := a_target_name
 		ensure
@@ -84,14 +84,14 @@ feature -- Status Setting
 		
 feature -- Basic Operations
 
-	to_string: STRING is
+	string_representation: STRING is
 		indexing
 			description: "Give a string representation of the inheritance clause."
-			external_name: "ToString"
+			external_name: "StringRepresentation"
 		do
 			check
 				non_void_target_name: target_name /= Void
-				not_empty_target_name: target_name.length > 0
+				not_empty_target_name: target_name.get_length > 0
 			end
 			Result := source_name.concat_string_string_string_string (source_name, Space, As_keyword, Space)
 			Result := Result.concat_string_string (Result, target_name)

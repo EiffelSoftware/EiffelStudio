@@ -46,21 +46,21 @@ feature -- Access
 			external_name: "EiffelClassFromXml"
 		require
 			non_void_filename: a_filename /= Void
-			not_empty_filename: a_filename.Length > 0
+			not_empty_filename: a_filename.get_length > 0
 		local
 			retried: BOOLEAN
+			white_space_handling: SYSTEM_XML_WHITESPACEHANDLING
 		do
 			if not retried then
 				create type_description.make_xmltextreader_10 (a_filename)
-					-- WhitespaceHandling = None
-				type_description.set_WhitespaceHandling (2)
+				type_description.set_Whitespace_Handling (white_space_handling.none)
 
 				create eiffel_class.make1
 				eiffel_class.Make
-				type_description.ReadStartElement_String (xml_elements.Class_element)
+				type_description.Read_start_element_String (xml_elements.Class_element)
 				generate_class_header
 				generate_class_body
-				if type_description.Name.Equals_String (xml_elements.Footer_element) then
+				if type_description.get_Name.equals_string (xml_elements.Footer_element) then
 					generate_class_footer
 				end
 				type_description.Close
@@ -84,7 +84,7 @@ feature -- Access
 			external_name: "EiffelAssemblyFromXml"
 		require
 			non_void_filename: a_filename /= Void
-			not_empty_filename: a_filename.Length > 0
+			not_empty_filename: a_filename.get_length > 0
 		local
 			assembly_description: SYSTEM_XML_XMLTEXTREADER
 			assembly_name: STRING
@@ -96,46 +96,46 @@ feature -- Access
 			a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR
 			retried: BOOLEAN
 			reflection_support: REFLECTION_SUPPORT
+			white_space_handling: SYSTEM_XML_WHITESPACEHANDLING
 		do
 			if not retried then
 				create reflection_support.make
 				create assembly_description.make_xmltextreader_10 (a_filename)	
-					-- WhitespaceHandling = None
-				assembly_description.set_WhitespaceHandling (2)
+				assembly_description.set_Whitespace_Handling (white_space_handling.none)
 				
-				assembly_description.ReadStartElement_String (xml_elements.Assembly_element)
+				assembly_description.Read_Start_Element_String (xml_elements.Assembly_element)
 
 					-- Set `assembly_name'.
-				if assembly_description.Name.Equals_String (xml_elements.Assembly_name_element) then
-					assembly_name := assembly_description.ReadElementString_String (xml_elements.Assembly_name_element)
+				if assembly_description.get_name.equals_string (xml_elements.Assembly_name_element) then
+					assembly_name := assembly_description.read_element_string_string (xml_elements.Assembly_name_element)
 				end
 
 					-- Set `assembly_version'.
-				if assembly_description.Name.Equals_String (xml_elements.Assembly_version_element) then
-					assembly_version := assembly_description.ReadElementString_String (xml_elements.Assembly_version_element)
+				if assembly_description.get_name.equals_string (xml_elements.Assembly_version_element) then
+					assembly_version := assembly_description.read_element_string_string (xml_elements.Assembly_version_element)
 				end
 
 					-- Set `assembly_culture'.
-				if assembly_description.Name.Equals_String (xml_elements.Assembly_culture_element) then
-					assembly_culture := assembly_description.ReadElementString_String (xml_elements.Assembly_culture_element)
+				if assembly_description.get_name.equals_string (xml_elements.Assembly_culture_element) then
+					assembly_culture := assembly_description.read_element_string_string (xml_elements.Assembly_culture_element)
 				end
 
 					-- Set `assembly_public_key'.
-				if assembly_description.Name.Equals_String (xml_elements.Assembly_public_key_element) then
-					assembly_public_key := assembly_description.ReadElementString_String (xml_elements.Assembly_public_key_element)
+				if assembly_description.get_name.equals_string (xml_elements.Assembly_public_key_element) then
+					assembly_public_key := assembly_description.read_element_string_string (xml_elements.Assembly_public_key_element)
 				end
 
 					-- Set `eiffel_cluster_path'.
-				if assembly_description.Name.Equals_String (xml_elements.Eiffel_cluster_path_element) then
-					eiffel_cluster_path := assembly_description.ReadElementString_String (xml_elements.Eiffel_cluster_path_element)
-					if eiffel_cluster_path.indexof (reflection_support.Eiffel_key) > - 1 then
+				if assembly_description.get_Name.equals_string (xml_elements.Eiffel_cluster_path_element) then
+					eiffel_cluster_path := assembly_description.read_element_string_string (xml_elements.Eiffel_cluster_path_element)
+					if eiffel_cluster_path.index_of (reflection_support.Eiffel_key) > - 1 then
 						eiffel_cluster_path := eiffel_cluster_path.replace (reflection_support.Eiffel_key, reflection_support.Eiffel_delivery_path)
 					end
 				end
 
 				-- Set `emitter_version_number'.
-				if assembly_description.Name.Equals_String (xml_elements.Emitter_version_number_element) then
-					emitter_version_number := assembly_description.ReadElementString_String (xml_elements.Emitter_version_number_element)
+				if assembly_description.get_Name.equals_string (xml_elements.Emitter_version_number_element) then
+					emitter_version_number := assembly_description.read_element_string_string (xml_elements.Emitter_version_number_element)
 				end
 				create a_descriptor.make1
 				a_descriptor.make (assembly_name, assembly_version, assembly_culture, assembly_public_key)
@@ -158,7 +158,7 @@ feature -- Status Report
 			external_name: "HasWriteLock"
 		require
 			non_void_folder_name: a_folder_name /= Void
-			not_empty_folder_name: a_folder_name.Length > 0
+			not_empty_folder_name: a_folder_name.get_length > 0
 		local
 			file: SYSTEM_IO_FILE
 			retried: BOOLEAN
@@ -180,7 +180,7 @@ feature -- Status Report
 			external_name: "HasReadLock"
 		require
 			non_void_folder_name: a_folder_name /= Void
-			not_empty_folder_name: a_folder_name.Length > 0
+			not_empty_folder_name: a_folder_name.get_length > 0
 		local
 			file: SYSTEM_IO_FILE
 			retried: BOOLEAN
@@ -202,7 +202,7 @@ feature -- Status Report
 			external_name: "ValidPath"
 		require
 			non_void_path: a_path /= Void
-			not_empty_path: a_path.length > 0
+			not_empty_path: a_path.get_length > 0
 		local
 			dir: SYSTEM_IO_DIRECTORY
 		do
@@ -217,7 +217,7 @@ feature -- Basic Operations
 			external_name: "CreateFolder"
 		require
 			non_void_path: a_path /= Void
-			not_empty_path: a_path.length > 0		
+			not_empty_path: a_path.get_length > 0		
 		local
 			i: INTEGER
 			folder_names: SYSTEM_COLLECTIONS_ARRAYLIST
@@ -233,24 +233,24 @@ feature -- Basic Operations
 			create folder_names.make
 			path := a_path.copy (a_path)
 			from
-				slash_index := path.lastindexof ("\") 
+				slash_index := path.last_index_of ("\") 
 			until
 				path_exists or slash_index = -1
 			loop
 				added := folder_names.add (path.substring (slash_index + 1))
 				path_exists := dir.exists (path.substring_int32_int32 (0, slash_index))
 				path := path.substring_int32_int32 (0, slash_index)
-				slash_index := path.lastindexof ("\") 
+				slash_index := path.last_index_of ("\") 
 			end
 			from
-				i := folder_names.count - 1
+				i := folder_names.get_count - 1
 			until
 				i = - 1
 			loop
-				a_folder_name ?= folder_names.item (i)	
+				a_folder_name ?= folder_names.get_item (i)	
 				if a_folder_name /= Void then
 					folder_path := path.concat_string_string_string (path, "\", a_folder_name)
-					info := dir.createdirectory (folder_path)
+					info := dir.create_directory (folder_path)
 				end
 				i := i - 1
 			end
@@ -306,126 +306,134 @@ feature {NONE} -- Implementation
 			assembly_version: STRING
 			assembly_culture: STRING
 			assembly_public_key: STRING
+			enum_type: STRING
 			descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR
 			creation_routines_string: STRING
 			comma_index: INTEGER
 			retried: BOOLEAN
 		do
 			if not retried then
-				type_description.ReadStartElement_String (xml_elements.Header_element)
+				type_description.Read_Start_Element_String (xml_elements.Header_element)
 
 					-- Set `modified'.		
-				if type_description.name.equals_string (xml_elements.Modified_element) then
-					is_modified := type_description.ReadElementString_String (xml_elements.Modified_element)
-					if is_modified.Equals_String (xml_elements.True_string) then
-						eiffel_class.SetModified
+				if type_description.get_name.equals_string (xml_elements.Modified_element) then
+					is_modified := type_description.Read_Element_String_String (xml_elements.Modified_element)
+					if is_modified.equals_string (xml_elements.True_string) then
+						eiffel_class.Set_Modified
 					end
 				end
 				
 					-- Set `is_frozen'.		
-				is_frozen := type_description.ReadElementString_String (xml_elements.Frozen_element)
-				if is_frozen.Equals_String (xml_elements.True_string) then
-					eiffel_class.SetFrozen (True)
-				elseif is_frozen.Equals_String (xml_elements.False_string) then
-					eiffel_class.SetFrozen (False)
+				is_frozen := type_description.Read_Element_String_String (xml_elements.Frozen_element)
+				if is_frozen.equals_string (xml_elements.True_string) then
+					eiffel_class.Set_Frozen (True)
+				elseif is_frozen.equals_string (xml_elements.False_string) then
+					eiffel_class.Set_Frozen (False)
 				end
 
 					-- Set `is_expanded'.
-				is_expanded := type_description.ReadElementString_String (xml_elements.Expanded_element)
-				if is_expanded.Equals_String (xml_elements.True_string) then
-					eiffel_class.SetExpanded (True)
-				elseif is_expanded.Equals_String (xml_elements.False_string) then
-					eiffel_class.SetExpanded (False)
+				is_expanded := type_description.Read_Element_String_String (xml_elements.Expanded_element)
+				if is_expanded.equals_string (xml_elements.True_string) then
+					eiffel_class.Set_Expanded (True)
+				elseif is_expanded.equals_string (xml_elements.False_string) then
+					eiffel_class.Set_Expanded (False)
 				end
 
 					-- Set `is_deferred'.
-				is_deferred := type_description.ReadElementString_String (xml_elements.Deferred_element)
-				if is_deferred.Equals_String (xml_elements.True_string) then
-					eiffel_class.SetDeferred (True)
-				elseif is_deferred.Equals_String (xml_elements.False_string) then
-					eiffel_class.SetDeferred (False)
+				is_deferred := type_description.Read_Element_String_String (xml_elements.Deferred_element)
+				if is_deferred.equals_string (xml_elements.True_string) then
+					eiffel_class.Set_Deferred (True)
+				elseif is_deferred.equals_string (xml_elements.False_string) then
+					eiffel_class.Set_Deferred (False)
 				end
 
 					-- Set `eiffel_name'.
-				class_name := type_description.ReadElementString_String (xml_elements.Class_eiffel_name_element)
-				if class_name /= Void and then class_name.Length > 0 then
-					eiffel_class.SetEiffelName (class_name)
+				class_name := type_description.Read_Element_String_String (xml_elements.Class_eiffel_name_element)
+				if class_name /= Void and then class_name.get_length > 0 then
+					eiffel_class.Set_Eiffel_Name (class_name)
 				end
 
 					-- Set `external_name'.
-				type_description.ReadStartElement_String (xml_elements.Alias_element)
-				simple_name := type_description.ReadElementString_String (xml_elements.Simple_name_element)
-				if simple_name /= Void and then simple_name.Length > 0 then
-					eiffel_class.SetExternalName (simple_name)
+				type_description.Read_Start_Element_String (xml_elements.Alias_element)
+				simple_name := type_description.read_element_string_string (xml_elements.Simple_name_element)
+				if simple_name /= Void and then simple_name.get_length > 0 then
+					eiffel_class.Set_External_Name (simple_name)
 				end		
 					-- Set `namespace'.
-				if type_description.Name.Equals_String (xml_elements.Namespace_element) then
-					namespace := type_description.ReadElementString_String (xml_elements.Namespace_element)
-					if namespace /= Void and then namespace.Length > 0 then
-						eiffel_class.SetNamespace (namespace)
+				if type_description.get_Name.equals_string (xml_elements.Namespace_element) then
+					namespace := type_description.read_element_string_string (xml_elements.Namespace_element)
+					if namespace /= Void and then namespace.get_length > 0 then
+						eiffel_class.Set_Namespace (namespace)
 					end	
 				end
 					-- Set `assembly_descriptor'.
-				assembly_name := type_description.ReadElementString_String (xml_elements.Assembly_name_element)
-				if type_description.Name.Equals_String (xml_elements.Assembly_version_element) then
-					assembly_version := type_description.ReadElementString_String (xml_elements.Assembly_version_element)
+				assembly_name := type_description.Read_Element_String_String (xml_elements.Assembly_name_element)
+				if type_description.get_Name.equals_string (xml_elements.Assembly_version_element) then
+					assembly_version := type_description.read_element_string_string (xml_elements.Assembly_version_element)
 				else
 					assembly_version := xml_elements.Empty_string
 				end
-				if type_description.Name.Equals_String (xml_elements.Assembly_culture_element) then
-					assembly_culture := type_description.ReadElementString_String (xml_elements.Assembly_culture_element)
+				if type_description.get_Name.equals_string (xml_elements.Assembly_culture_element) then
+					assembly_culture := type_description.read_element_string_string (xml_elements.Assembly_culture_element)
 				else
 					assembly_culture := xml_elements.Empty_string
 				end	
-				if type_description.Name.Equals_String (xml_elements.Assembly_public_key_element) then	
-					assembly_public_key := type_description.ReadElementString_String (xml_elements.Assembly_public_key_element)	
+				if type_description.get_Name.equals_string (xml_elements.Assembly_public_key_element) then	
+					assembly_public_key := type_description.read_element_string_string (xml_elements.Assembly_public_key_element)	
 				else
 					assembly_public_key := xml_elements.Empty_string
 				end
-				type_description.ReadEndElement
+					-- Set `enum_type'.
+				if type_description.get_Name.equals_string (xml_elements.Enum_type_element) then
+					enum_type := type_description.read_element_string_string (xml_elements.Enum_type_element)
+					if enum_type /= Void and then enum_type.get_length > 0 then
+						eiffel_class.Set_Enum_Type (enum_type)
+					end	
+				end
+				type_description.read_end_element
 				create descriptor.make1
 				descriptor.Make (assembly_name, assembly_version, assembly_culture, assembly_public_key)
-				eiffel_class.SetAssemblyDescriptor (descriptor)
+				eiffel_class.Set_Assembly_Descriptor (descriptor)
 
 					-- Set `full_external_name'
 				if eiffel_class.namespace /= Void then
-					eiffel_class.SetFullExternalName (namespace.Concat_String_String_String (namespace, xml_elements.Dot_string, simple_name))
+					eiffel_class.Set_Full_External_Name (namespace.Concat_String_String_String (namespace, xml_elements.Dot_string, simple_name))
 				else
-					eiffel_class.SetFullExternalName (simple_name)
+					eiffel_class.Set_Full_External_Name (simple_name)
 				end
 
 					-- Set `parents'.
 				generate_parents
 
 					-- Set `creation_routines'.
-				if type_description.Name.Equals_String (xml_elements.Create_element) then
-					creation_routines_string := type_description.ReadElementString_String (xml_elements.Create_element)
-					if creation_routines_string.Length > 0 then
-						if creation_routines_string.IndexOf_Char (',') = -1 then
-							eiffel_class.AddCreationRoutine (creation_routines_string)
+				if type_description.get_Name.equals_string (xml_elements.Create_element) then
+					creation_routines_string := type_description.read_element_string_string (xml_elements.Create_element)
+					if creation_routines_string.get_length > 0 then
+						if creation_routines_string.Index_Of_Char (',') = -1 then
+							eiffel_class.Add_Creation_Routine (creation_routines_string)
 						else					
 							from
 							until
-								creation_routines_string.IndexOf_Char (',') = -1 
+								creation_routines_string.Index_Of_Char (',') = -1 
 							loop
-								comma_index := creation_routines_string.IndexOf_Char (',')
-								eiffel_class.AddCreationRoutine (creation_routines_string.Substring_Int32_Int32 (0, comma_index))
+								comma_index := creation_routines_string.Index_Of_Char (',')
+								eiffel_class.Add_Creation_Routine (creation_routines_string.Substring_Int32_Int32 (0, comma_index))
 								creation_routines_string := creation_routines_string.Substring (comma_index + 1).Trim
 							end
-							eiffel_class.AddCreationRoutine (creation_routines_string)
+							eiffel_class.Add_Creation_Routine (creation_routines_string)
 						end
 					end
 				end
 
 					-- Set `create_none'.
-				create_none := type_description.ReadElementString_String (xml_elements.Create_none_element)
-				if create_none.Equals_String (xml_elements.True_string) then
-					eiffel_class.SetCreateNone (True)
-				elseif create_none.Equals_String (xml_elements.False_string) then
-					eiffel_class.SetCreateNone (False)
+				create_none := type_description.Read_Element_String_String (xml_elements.Create_none_element)
+				if create_none.equals_string (xml_elements.True_string) then
+					eiffel_class.Set_Create_None (True)
+				elseif create_none.equals_string (xml_elements.False_string) then
+					eiffel_class.Set_Create_None (False)
 				end
 
-				type_description.ReadEndElement
+				type_description.read_end_element
 			end
 		rescue
 			retried := True
@@ -457,32 +465,32 @@ feature {NONE} -- Implementation
 			retried: BOOLEAN
 		do
 			if not retried then
-				if type_description.Name.Equals_String (xml_elements.Inherit_element) then
-					type_description.ReadStartElement_String (xml_elements.Inherit_element)
+				if type_description.get_Name.equals_string (xml_elements.Inherit_element) then
+					type_description.Read_Start_Element_String (xml_elements.Inherit_element)
 					create support
 					from
 					until
-						not type_description.Name.Equals_String (xml_elements.Parent_element)
+						not type_description.get_Name.equals_string (xml_elements.Parent_element)
 					loop
-						type_description.ReadStartElement_String (xml_elements.Parent_element)
-						parent_name := type_description.ReadElementString_String (xml_elements.Parent_name_element)
+						type_description.Read_Start_Element_String (xml_elements.Parent_element)
+						parent_name := type_description.Read_Element_String_String (xml_elements.Parent_name_element)
 						create rename_clauses.make
 						create undefine_clauses.make
 						create redefine_clauses.make
 						create select_clauses.make
 						create export_clauses.make
 
-						if type_description.Name.Equals_String (xml_elements.Rename_element) then
-							rename_clauses_string := type_description.ReadElementString_String (xml_elements.Rename_element)
-							if rename_clauses_string.Length > 0 then
-								if rename_clauses_string.IndexOf_Char (',') = -1 then
+						if type_description.get_Name.equals_string (xml_elements.Rename_element) then
+							rename_clauses_string := type_description.read_element_string_string (xml_elements.Rename_element)
+							if rename_clauses_string.get_length > 0 then
+								if rename_clauses_string.Index_Of_Char (',') = -1 then
 									clause_added := rename_clauses.Add (support.rename_clause_from_text (rename_clauses_string))
 								else					
 									from
 									until
-										rename_clauses_string.IndexOf_Char (',') = -1 
+										rename_clauses_string.Index_Of_Char (',') = -1 
 									loop
-										comma_index := rename_clauses_string.IndexOf_Char (',')
+										comma_index := rename_clauses_string.Index_Of_Char (',')
 										rename_clause_text := rename_clauses_string.Substring_Int32_Int32 (0, comma_index)
 										clause_added := rename_clauses.Add (support.rename_clause_from_text (rename_clause_text))
 										rename_clauses_string := rename_clauses_string.Substring (comma_index + 1).Trim
@@ -491,19 +499,19 @@ feature {NONE} -- Implementation
 								end
 							end					
 						end
-						if type_description.Name.Equals_String (xml_elements.Undefine_element) then
-							undefine_clauses_string := type_description.ReadElementString_String (xml_elements.Undefine_element)
-							if undefine_clauses_string.Length > 0 then
-								if undefine_clauses_string.IndexOf_Char (',') = -1 then
+						if type_description.get_Name.equals_string (xml_elements.Undefine_element) then
+							undefine_clauses_string := type_description.read_element_string_string (xml_elements.Undefine_element)
+							if undefine_clauses_string.get_length > 0 then
+								if undefine_clauses_string.Index_Of_Char (',') = -1 then
 									create undefine_clause.make_undefineclause
 									undefine_clause.make (undefine_clauses_string)
 									clause_added := undefine_clauses.Add (undefine_clause)
 								else					
 									from
 									until
-										undefine_clauses_string.IndexOf_Char (',') = -1 
+										undefine_clauses_string.Index_Of_Char (',') = -1 
 									loop
-										comma_index := undefine_clauses_string.IndexOf_Char (',')
+										comma_index := undefine_clauses_string.Index_Of_Char (',')
 										create undefine_clause.make_undefineclause
 										undefine_clause.make (undefine_clauses_string.Substring_Int32_Int32 (0, comma_index))
 										clause_added := undefine_clauses.Add (undefine_clause)
@@ -515,19 +523,19 @@ feature {NONE} -- Implementation
 								end
 							end						
 						end
-						if type_description.Name.Equals_String (xml_elements.Redefine_element) then
-							redefine_clauses_string := type_description.ReadElementString_String (xml_elements.Redefine_element)
-							if redefine_clauses_string.Length > 0 then
-								if redefine_clauses_string.IndexOf_Char (',') = -1 then
+						if type_description.get_Name.equals_string (xml_elements.Redefine_element) then
+							redefine_clauses_string := type_description.read_element_string_string (xml_elements.Redefine_element)
+							if redefine_clauses_string.get_length > 0 then
+								if redefine_clauses_string.Index_Of_Char (',') = -1 then
 									create redefine_clause.make_redefineclause
 									redefine_clause.make (redefine_clauses_string)
 									clause_added := redefine_clauses.Add (redefine_clause)
 								else					
 									from
 									until
-										redefine_clauses_string.IndexOf_Char (',') = -1 
+										redefine_clauses_string.Index_Of_Char (',') = -1 
 									loop
-										comma_index := redefine_clauses_string.IndexOf_Char (',')
+										comma_index := redefine_clauses_string.Index_Of_Char (',')
 										create redefine_clause.make_redefineclause
 										redefine_clause.make (redefine_clauses_string.Substring_Int32_Int32 (0, comma_index))
 										clause_added := redefine_clauses.Add (redefine_clause)
@@ -539,19 +547,19 @@ feature {NONE} -- Implementation
 								end
 							end						
 						end
-						if type_description.Name.Equals_String (xml_elements.Select_element) then
-							select_clauses_string := type_description.ReadElementString_String (xml_elements.Select_element)
-							if select_clauses_string.Length > 0 then
-								if select_clauses_string.IndexOf_Char (',') = -1 then
+						if type_description.get_Name.equals_string (xml_elements.Select_element) then
+							select_clauses_string := type_description.Read_Element_String_String (xml_elements.Select_element)
+							if select_clauses_string.get_length > 0 then
+								if select_clauses_string.Index_Of_Char (',') = -1 then
 									create select_clause.make_selectclause
 									select_clause.make (select_clauses_string)
 									clause_added := select_clauses.Add (select_clause)
 								else					
 									from
 									until
-										select_clauses_string.IndexOf_Char (',') = -1 
+										select_clauses_string.Index_Of_Char (',') = -1 
 									loop
-										comma_index := select_clauses_string.IndexOf_Char (',')
+										comma_index := select_clauses_string.Index_Of_Char (',')
 										create select_clause.make_selectclause
 										select_clause.make (select_clauses_string.Substring_Int32_Int32 (0, comma_index))
 										clause_added := select_clauses.Add (select_clause)
@@ -563,17 +571,17 @@ feature {NONE} -- Implementation
 								end
 							end						
 						end
-						if type_description.Name.Equals_String (xml_elements.Export_element) then
-							export_clauses_string := type_description.ReadElementString_String (xml_elements.Export_element)
-							if export_clauses_string.Length > 0 then
-								if export_clauses_string.IndexOf_Char (',') = -1 then
+						if type_description.get_Name.equals_string (xml_elements.Export_element) then
+							export_clauses_string := type_description.Read_Element_String_String (xml_elements.Export_element)
+							if export_clauses_string.get_length > 0 then
+								if export_clauses_string.Index_Of_Char (',') = -1 then
 									clause_added := export_clauses.Add (support.export_clause_from_text (export_clauses_string))
 								else					
 									from
 									until
-										export_clauses_string.IndexOf_Char (',') = -1 
+										export_clauses_string.Index_Of_Char (',') = -1 
 									loop
-										comma_index := export_clauses_string.IndexOf_Char (',')
+										comma_index := export_clauses_string.Index_Of_Char (',')
 										export_text := export_clauses_string.Substring_Int32_Int32 (0, comma_index)
 										clause_added := export_clauses.Add (support.export_clause_from_text (export_text))
 										export_clauses_string := export_clauses_string.Substring (comma_index + 1).Trim
@@ -582,10 +590,10 @@ feature {NONE} -- Implementation
 								end
 							end							
 						end
-						eiffel_class.AddParent (parent_name, rename_clauses, undefine_clauses, redefine_clauses, select_clauses, export_clauses)
-						type_description.ReadEndElement
+						eiffel_class.Add_Parent (parent_name, rename_clauses, undefine_clauses, redefine_clauses, select_clauses, export_clauses)
+						type_description.read_end_element
 					end
-					type_description.ReadEndElement
+					type_description.Read_End_Element
 				end	
 			end
 		rescue
@@ -605,49 +613,49 @@ feature {NONE} -- Implementation
 			retried: BOOLEAN
 		do
 			if not retried then
-				type_description.ReadStartElement_String (xml_elements.Body_element)
+				type_description.read_start_element_string (xml_elements.Body_element)
 
-				if type_description.Name.Equals_String (xml_elements.Initialization_element) then
-					type_description.ReadStartElement_String (xml_elements.Initialization_element)
+				if type_description.get_Name.equals_string (xml_elements.Initialization_element) then
+					type_description.read_start_element_string (xml_elements.Initialization_element)
 					generate_features (xml_elements.Initialization_element)
-					type_description.ReadEndElement
+					type_description.read_end_element
 				end
-				if type_description.Name.Equals_String (xml_elements.Access_element) then
-					type_description.ReadStartElement_String (xml_elements.Access_element)
+				if type_description.get_Name.equals_string (xml_elements.Access_element) then
+					type_description.read_start_element_string (xml_elements.Access_element)
 					generate_features (xml_elements.Access_element)
-					type_description.ReadEndElement				
+					type_description.read_end_element				
 				end
-				if type_description.Name.Equals_String (xml_elements.Element_change_element) then
-					type_description.ReadStartElement_String (xml_elements.Element_change_element)
+				if type_description.get_Name.equals_string (xml_elements.Element_change_element) then
+					type_description.read_start_element_string (xml_elements.Element_change_element)
 					generate_features (xml_elements.Element_change_element)
-					type_description.ReadEndElement				
+					type_description.read_end_element				
 				end
-				if type_description.Name.Equals_String (xml_elements.Basic_operations_element) then
-					type_description.ReadStartElement_String (xml_elements.Basic_operations_element)
+				if type_description.get_Name.equals_string (xml_elements.Basic_operations_element) then
+					type_description.read_start_element_string (xml_elements.Basic_operations_element)
 					generate_features (xml_elements.Basic_operations_element)
-					type_description.ReadEndElement
+					type_description.read_end_element
 				end
-				if type_description.Name.Equals_String (xml_elements.Unary_operators_element) then
-					type_description.ReadStartElement_String (xml_elements.Unary_operators_element)
+				if type_description.get_Name.equals_string (xml_elements.Unary_operators_element) then
+					type_description.read_start_element_string (xml_elements.Unary_operators_element)
 					generate_features (xml_elements.Unary_operators_element)
-					type_description.ReadEndElement				
+					type_description.read_end_element				
 				end
-				if type_description.Name.Equals_String (xml_elements.Binary_operators_element) then
-					type_description.ReadStartElement_String (xml_elements.Binary_operators_element)
+				if type_description.get_Name.equals_string (xml_elements.Binary_operators_element) then
+					type_description.read_start_element_string (xml_elements.Binary_operators_element)
 					generate_features (xml_elements.Binary_operators_element)
-					type_description.ReadEndElement				
+					type_description.read_end_element				
 				end
-				if type_description.Name.Equals_String (xml_elements.Specials_element) then
-					type_description.ReadStartElement_String (xml_elements.Specials_element)
+				if type_description.get_Name.equals_string (xml_elements.Specials_element) then
+					type_description.read_start_element_string (xml_elements.Specials_element)
 					generate_features (xml_elements.Specials_element)
-					type_description.ReadEndElement				
+					type_description.read_end_element				
 				end
-				if type_description.Name.Equals_String (xml_elements.Implementation_element) then
-					type_description.ReadStartElement_String (xml_elements.Implementation_element)
+				if type_description.get_Name.equals_string (xml_elements.Implementation_element) then
+					type_description.read_start_element_string (xml_elements.Implementation_element)
 					generate_features (xml_elements.Implementation_element)
-					type_description.ReadEndElement				
+					type_description.read_end_element				
 				end			
-				type_description.ReadEndElement
+				type_description.read_end_element
 			end
 		rescue
 			retried := True
@@ -663,121 +671,104 @@ feature {NONE} -- Implementation
 			non_void_eiffel_class: eiffel_class /= Void
 			non_void_type_description: type_description /= Void	
 			non_void_element_name: element_name /= Void
-			not_empty_element_name: element_name.Length > 0
-			valid_element_name: element_name.Equals_String (xml_elements.Initialization_element) or element_name.Equals_String (xml_elements.Access_element) or element_name.Equals_String (xml_elements.Element_change_element) or element_name.Equals_String (xml_elements.Basic_operations_element) or element_name.Equals_String (xml_elements.Unary_operators_element) or element_name.Equals_String (xml_elements.Binary_operators_element) or element_name.Equals_String (xml_elements.Specials_element) or element_name.Equals_String (xml_elements.Implementation_element)
+			not_empty_element_name: element_name.get_length > 0
+			valid_element_name: element_name.equals_string (xml_elements.Initialization_element) or element_name.equals_string (xml_elements.Access_element) or element_name.equals_string (xml_elements.Element_change_element) or element_name.equals_string (xml_elements.Basic_operations_element) or element_name.equals_string (xml_elements.Unary_operators_element) or element_name.equals_string (xml_elements.Binary_operators_element) or element_name.equals_string (xml_elements.Specials_element) or element_name.equals_string (xml_elements.Implementation_element)
 		local
 			eiffel_name: STRING
 			external_name: STRING
 			return_type: STRING
 			return_type_full_name: STRING
-			is_return_type_enum: STRING
 			signature_type: ISE_REFLECTION_SIGNATURETYPE
 			retried: BOOLEAN
 		do
 			if not retried then
 				from
 				until
-					not type_description.Name.Equals_String (xml_elements.Feature_element)
+					not type_description.get_Name.equals_string (xml_elements.Feature_element)
 				loop
 					signature_type := Void
-					type_description.ReadStartElement_String (xml_elements.Feature_element)
+					type_description.read_start_element_string (xml_elements.Feature_element)
 					create eiffel_feature.make1
 					eiffel_feature.make
 
-						-- Set `is_frozen', `is_static', `is_abstract', `is_method', `is_field', `is_creation_routine'.
+						-- Set `is_frozen', `is_static', `is_abstract', `is_method', `is_field', `is_creation_routine'...
 					set_feature_info
 
 						-- Set `eiffel_name'.
-					eiffel_name := type_description.ReadElementString_String (xml_elements.Feature_eiffel_name_element)
-					if eiffel_name /= Void and then eiffel_name.Length > 0 then
-						eiffel_feature.SetEiffelName (eiffel_name)
+					eiffel_name := type_description.read_element_string_string (xml_elements.Feature_eiffel_name_element)
+					if eiffel_name /= Void and then eiffel_name.get_length > 0 then
+						eiffel_feature.Set_Eiffel_Name (eiffel_name)
 					end	
 		
 						-- Set `external_name'.
-					if type_description.Name.Equals_String (xml_elements.Feature_external_name_element) then
-						external_name := type_description.ReadElementString_String (xml_elements.Feature_external_name_element)
-						if external_name /= Void and then external_name.Length > 0 then
-							eiffel_feature.SetExternalName (external_name)
+					if type_description.get_Name.equals_string (xml_elements.Feature_external_name_element) then
+						external_name := type_description.read_element_string_string (xml_elements.Feature_external_name_element)
+						if external_name /= Void and then external_name.get_length > 0 then
+							eiffel_feature.Set_External_Name (external_name)
 						end
 					end
 
 						-- Add `arguments' (if any).
-					if type_description.Name.Equals_String (xml_elements.Arguments_element) then
+					if type_description.get_Name.equals_string (xml_elements.Arguments_element) then
 						generate_arguments
 					end
 
 						-- Set `return_type'.
-					if type_description.Name.Equals_String (xml_elements.Return_type_element) then
-						return_type := type_description.ReadElementString_String (xml_elements.Return_type_element)
-						if return_type /= Void and then return_type.Length > 0 then
+					if type_description.get_Name.equals_string (xml_elements.Return_type_element) then
+						return_type := type_description.read_element_string_string (xml_elements.Return_type_element)
+						if return_type /= Void and then return_type.get_length > 0 then
 							create signature_type.make1
 							signature_type.make
-							signature_type.settypeeiffelname (return_type)
+							signature_type.set_type_eiffel_name (return_type)
 						end
 					end
 
 						-- Set `return_type_full_name'.
-					if type_description.Name.Equals_String (xml_elements.Return_type_full_name_element) then
-						return_type_full_name := type_description.ReadElementString_String (xml_elements.Return_type_full_name_element) 
-						if return_type_full_name /= Void and then return_type_full_name.Length > 0 then
+					if type_description.get_Name.equals_string (xml_elements.Return_type_full_name_element) then
+						return_type_full_name := type_description.read_element_string_string (xml_elements.Return_type_full_name_element) 
+						if return_type_full_name /= Void and then return_type_full_name.get_length > 0 then
 							if signature_type = Void then
 								create signature_type.make1
 								signature_type.make
 							end
-							signature_type.settypefullexternalname (return_type_full_name)
-						end
-					end
-
-						-- Set `return_type_enum'.
-					if type_description.Name.Equals_String (xml_elements.Return_type_enum_element) then
-						is_return_type_enum := type_description.ReadElementString_String (xml_elements.Return_type_enum_element) 
-						if is_return_type_enum /= Void and then is_return_type_enum.Length > 0 then
-							if signature_type = Void then
-								create signature_type.make1
-								signature_type.make
-							end
-							if is_return_type_enum.equals_string (xml_elements.True_string) then
-								signature_type.SetEnum (True)
-							elseif is_return_type_enum.equals_string (xml_elements.False_string) then
-								signature_type.SetEnum (False)
-							end
-							eiffel_feature.SetReturnType (signature_type)
+							signature_type.set_type_full_external_name (return_type_full_name)
+							eiffel_feature.Set_Return_Type (signature_type)
 						end
 					end
 					
 						-- Add `comments' (if any).
-					if type_description.Name.Equals_String (xml_elements.Comments_element) then
+					if type_description.get_Name.equals_string (xml_elements.Comments_element) then
 						generate_comments
 					end
 
 						-- Add `preconditions' (if any).
-					if type_description.Name.Equals_String (xml_elements.Preconditions_element) then
+					if type_description.get_Name.equals_string (xml_elements.Preconditions_element) then
 						generate_feature_assertions (xml_elements.Precondition_element)
 					end
 
 						-- Add `postconditions' (if any).
-					if type_description.Name.Equals_String (xml_elements.Postconditions_element) then
+					if type_description.get_Name.equals_string (xml_elements.Postconditions_element) then
 						generate_feature_assertions (xml_elements.Postcondition_element)
 					end
 
-					type_description.ReadEndElement
+					type_description.read_end_element
 
-					if element_name.Equals_String (xml_elements.Initialization_element) then
-						eiffel_class.AddInitializationFeature (eiffel_feature)
-					elseif element_name.Equals_String (xml_elements.Access_element) then
-						eiffel_class.AddAccessFeature (eiffel_feature)
-					elseif element_name.Equals_String (xml_elements.Element_change_element) then
-						eiffel_class.AddElementChangeFeature (eiffel_feature)
-					elseif element_name.Equals_String (xml_elements.Basic_operations_element) then
-						eiffel_class.AddBasicOperation (eiffel_feature)
-					elseif element_name.Equals_String (xml_elements.Unary_operators_element) then
-						eiffel_class.AddUnaryOperator (eiffel_feature)
-					elseif element_name.Equals_String (xml_elements.Binary_operators_element) then
-						eiffel_class.AddBinaryOperator (eiffel_feature)
-					elseif element_name.Equals_String (xml_elements.Specials_element) then
-						eiffel_class.AddSpecialFeature (eiffel_feature)
-					elseif element_name.Equals_String (xml_elements.Implementation_element) then
-						eiffel_class.AddImplementationFeature (eiffel_feature)
+					if element_name.equals_string (xml_elements.Initialization_element) then
+						eiffel_class.Add_Initialization_Feature (eiffel_feature)
+					elseif element_name.equals_string (xml_elements.Access_element) then
+						eiffel_class.Add_Access_Feature (eiffel_feature)
+					elseif element_name.equals_string (xml_elements.Element_change_element) then
+						eiffel_class.Add_Element_Change_Feature (eiffel_feature)
+					elseif element_name.equals_string (xml_elements.Basic_operations_element) then
+						eiffel_class.Add_Basic_Operation (eiffel_feature)
+					elseif element_name.equals_string (xml_elements.Unary_operators_element) then
+						eiffel_class.Add_Unary_Operator (eiffel_feature)
+					elseif element_name.equals_string (xml_elements.Binary_operators_element) then
+						eiffel_class.Add_Binary_Operator (eiffel_feature)
+					elseif element_name.equals_string (xml_elements.Specials_element) then
+						eiffel_class.Add_Special_Feature (eiffel_feature)
+					elseif element_name.equals_string (xml_elements.Implementation_element) then
+						eiffel_class.Add_Implementation_Feature (eiffel_feature)
 					end
 				end
 			end
@@ -798,79 +789,93 @@ feature {NONE} -- Implementation
 			modified_feature, frozen_feature, static, abstract: STRING
 			is_method, is_field, is_creation_routine: STRING
 			is_prefix, is_infix: STRING
+			is_new_slot: STRING
+			is_enum_literal: STRING
 			retried: BOOLEAN
 		do
 			if not retried then
 					-- Set `modified'.
-				if type_description.name.equals_string (xml_elements.Modified_feature_element) then
-					modified_feature := type_description.ReadElementString_String (xml_elements.Modified_feature_element)
-					if modified_feature.Equals_String (xml_elements.True_string) then
-						eiffel_feature.SetModified
+				if type_description.get_name.equals_string (xml_elements.Modified_feature_element) then
+					modified_feature := type_description.read_element_string_string (xml_elements.Modified_feature_element)
+					if modified_feature.equals_string (xml_elements.True_string) then
+						eiffel_feature.Set_Modified
 					end
 				end
 				
 					-- Set `is_frozen'.
-				frozen_feature := type_description.ReadElementString_String (xml_elements.Frozen_feature_element)
-				if frozen_feature.Equals_String (xml_elements.True_string) then
-					eiffel_feature.SetFrozen (True)
-				elseif frozen_feature.Equals_String (xml_elements.False_string) then
-					eiffel_feature.SetFrozen (False)
+				frozen_feature := type_description.read_element_string_string (xml_elements.Frozen_feature_element)
+				if frozen_feature.equals_string (xml_elements.True_string) then
+					eiffel_feature.Set_Frozen (True)
+				elseif frozen_feature.equals_string (xml_elements.False_string) then
+					eiffel_feature.Set_Frozen (False)
 				end
 
 					-- Set `is_static'.
-				static := type_description.ReadElementString_String (xml_elements.Static_element)
-				if static.Equals_String (xml_elements.True_string) then
-					eiffel_feature.SetStatic (True)
-				elseif static.Equals_String (xml_elements.False_string) then
-					eiffel_feature.SetStatic (False)
+				static := type_description.read_element_string_string (xml_elements.Static_element)
+				if static.equals_string (xml_elements.True_string) then
+					eiffel_feature.Set_Static (True)
+				elseif static.equals_string (xml_elements.False_string) then
+					eiffel_feature.Set_Static (False)
 				end
 
 					-- Set `is_abstract'.
-				abstract := type_description.ReadElementString_String (xml_elements.Abstract_element)
-				if abstract.Equals_String (xml_elements.True_string) then
-					eiffel_feature.SetAbstract (True)
-				elseif abstract.Equals_String (xml_elements.False_string) then
-					eiffel_feature.SetAbstract (False)
+				abstract := type_description.read_element_string_string (xml_elements.Abstract_element)
+				if abstract.equals_string (xml_elements.True_string) then
+					eiffel_feature.Set_Abstract (True)
+				elseif abstract.equals_string (xml_elements.False_string) then
+					eiffel_feature.Set_Abstract (False)
 				end
 
 					-- Set `is_method'.
-				is_method := type_description.ReadElementString_String (xml_elements.Method_element)
-				if is_method.Equals_String (xml_elements.True_string) then
-					eiffel_feature.SetMethod (True)
-				elseif is_method.Equals_String (xml_elements.False_string) then
-					eiffel_feature.SetMethod (False)
+				is_method := type_description.read_element_string_string (xml_elements.Method_element)
+				if is_method.equals_string (xml_elements.True_string) then
+					eiffel_feature.Set_Method (True)
+				elseif is_method.equals_string (xml_elements.False_string) then
+					eiffel_feature.Set_Method (False)
 				end
 
 					-- Set `is_field'.
-				is_field := type_description.ReadElementString_String (xml_elements.Field_element)
-				if is_field.Equals_String (xml_elements.True_string) then
-					eiffel_feature.SetField (True)
-				elseif is_field.Equals_String (xml_elements.False_string) then
-					eiffel_feature.SetField (False)
+				is_field := type_description.read_element_string_string (xml_elements.Field_element)
+				if is_field.equals_string (xml_elements.True_string) then
+					eiffel_feature.Set_Field (True)
+				elseif is_field.equals_string (xml_elements.False_string) then
+					eiffel_feature.Set_Field (False)
 				end				
 
 					-- Set `is_creation_routine'.
-				is_creation_routine := type_description.ReadElementString_String (xml_elements.Creation_routine_element)
-				if is_creation_routine.Equals_String (xml_elements.True_string) then
-					eiffel_feature.SetCreationRoutine (True)
-				elseif is_creation_routine.Equals_String (xml_elements.False_string) then
-					eiffel_feature.SetCreationRoutine (False)
+				is_creation_routine := type_description.read_element_string_string (xml_elements.Creation_routine_element)
+				if is_creation_routine.equals_string (xml_elements.True_string) then
+					eiffel_feature.Set_Creation_Routine (True)
+				elseif is_creation_routine.equals_string (xml_elements.False_string) then
+					eiffel_feature.Set_Creation_Routine (False)
 				end
 
 					-- Set `is_prefix'.
-				is_prefix := type_description.ReadElementString_String (xml_elements.Prefix_element)
-				if is_prefix.Equals_String (xml_elements.True_string) then
-					eiffel_feature.SetPrefix (True)
-				elseif is_prefix.Equals_String (xml_elements.False_string) then
-					eiffel_feature.SetPrefix (False)
+				is_prefix := type_description.read_element_string_string (xml_elements.Prefix_element)
+				if is_prefix.equals_string (xml_elements.True_string) then
+					eiffel_feature.Set_Prefix (True)
+				elseif is_prefix.equals_string (xml_elements.False_string) then
+					eiffel_feature.Set_Prefix (False)
 				end
 
 					-- Set `is_infix'.
-				is_infix := type_description.ReadElementString_String (xml_elements.Infix_element)
-				if is_infix.Equals_String (xml_elements.True_string) then
-					eiffel_feature.SetInfix (True)
-				elseif is_infix.Equals_String (xml_elements.False_string) then
-					eiffel_feature.SetInfix (False)
+				is_infix := type_description.read_element_string_string (xml_elements.Infix_element)
+				if is_infix.equals_string (xml_elements.True_string) then
+					eiffel_feature.Set_Infix (True)
+				elseif is_infix.equals_string (xml_elements.False_string) then
+					eiffel_feature.Set_Infix (False)
+				end	
+				
+					-- Set `new_slot'.
+				is_new_slot := type_description.read_element_string_string (xml_elements.New_slot_element)
+				if is_new_slot.equals_string (xml_elements.True_string) then
+					eiffel_feature.Set_New_Slot
+				end	
+				
+					-- Set `enum_literal'.
+				is_enum_literal := type_description.read_element_string_string (xml_elements.Enum_literal_element)
+				if is_enum_literal.equals_string (xml_elements.True_string) then
+					eiffel_feature.Set_Enum_Literal
 				end	
 			end
 		rescue
@@ -891,41 +896,34 @@ feature {NONE} -- Implementation
 			external_name: STRING
 			type: STRING
 			type_full_name: STRING
-			is_enum: STRING
 			an_argument: ISE_REFLECTION_NAMEDSIGNATURETYPE
 			retried: BOOLEAN
 		do
 			if not retried then
-				type_description.ReadStartElement_String (xml_elements.Arguments_element)
+				type_description.read_start_element_string (xml_elements.Arguments_element)
 				from
 				until
-					not type_description.Name.Equals_String (xml_elements.Argument_element) 
+					not type_description.get_Name.equals_string (xml_elements.Argument_element) 
 				loop
-					type_description.ReadStartElement_String (xml_elements.Argument_element)
-					eiffel_name := type_description.ReadElementString_String (xml_elements.Argument_eiffel_name_element)
-					external_name := type_description.ReadElementString_String (xml_elements.Argument_external_name_element)
-					type := type_description.ReadElementString_String (xml_elements.Argument_type_element)
-					type_full_name := type_description.ReadElementString_String (xml_elements.Argument_type_full_name_element)
-					is_enum := type_description.ReadElementString_String (xml_elements.Argument_type_enum_element)						
+					type_description.read_start_element_string (xml_elements.Argument_element)
+					eiffel_name := type_description.read_element_string_string (xml_elements.Argument_eiffel_name_element)
+					external_name := type_description.read_element_string_string (xml_elements.Argument_external_name_element)
+					type := type_description.read_element_string_string (xml_elements.Argument_type_element)
+					type_full_name := type_description.read_element_string_string (xml_elements.Argument_type_full_name_element)
 					
 					if eiffel_name /= Void and external_name /= Void and type /= Void and type_full_name /= Void then
-						if eiffel_name.Length > 0 and external_name.Length > 0 and type.Length > 0 and type_full_name.Length > 0 then
+						if eiffel_name.get_length > 0 and external_name.get_length > 0 and type.get_length > 0 and type_full_name.get_length > 0 then
 							create an_argument.make_namedsignaturetype
-							an_argument.seteiffelname (eiffel_name)
-							an_argument.setexternalname (external_name)
-							an_argument.settypeeiffelname (type)
-							an_argument.settypefullexternalname (type_full_name)
-							if is_enum.Equals_String (xml_elements.True_string) then
-								an_argument.SetEnum (True)
-							elseif is_enum.Equals_String (xml_elements.False_string) then
-								an_argument.SetEnum (False)
-							end
-							eiffel_feature.AddArgument (an_argument)	
+							an_argument.set_eiffel_name (eiffel_name)
+							an_argument.set_external_name (external_name)
+							an_argument.set_type_eiffel_name (type)
+							an_argument.set_type_full_external_name (type_full_name)
+							eiffel_feature.Add_Argument (an_argument)	
 						end
 					end
-					type_description.ReadEndElement
+					type_description.read_end_element
 				end
-				type_description.ReadEndElement
+				type_description.read_end_element
 			end
 		rescue
 			retried := True
@@ -946,20 +944,20 @@ feature {NONE} -- Implementation
 			retried: BOOLEAN
 		do
 			if not retried then
-				comments_string := type_description.ReadElementString_String (xml_elements.Comments_element)
-				if comments_string.Length > 0 then
-					if comments_string.IndexOf_Char (',') = -1 then
-						eiffel_feature.AddComment (comments_string)
+				comments_string := type_description.read_element_string_string (xml_elements.Comments_element)
+				if comments_string.get_length > 0 then
+					if comments_string.Index_Of_Char (',') = -1 then
+						eiffel_feature.Add_Comment (comments_string)
 					else					
 						from
 						until
-							comments_string.IndexOf_Char (',') = -1 
+							comments_string.Index_Of_Char (',') = -1 
 						loop
-							comma_index := comments_string.IndexOf_Char (',')
-							eiffel_feature.AddComment (comments_string.Substring_Int32_Int32 (0, comma_index))
+							comma_index := comments_string.Index_Of_Char (',')
+							eiffel_feature.Add_Comment (comments_string.Substring_Int32_Int32 (0, comma_index))
 							comments_string := comments_string.Substring (comma_index + 1).Trim
 						end
-						eiffel_feature.AddComment (comments_string)
+						eiffel_feature.Add_Comment (comments_string)
 					end
 				end
 			end
@@ -977,43 +975,43 @@ feature {NONE} -- Implementation
 			non_void_feature: eiffel_feature /= Void
 			non_void_type_description: type_description /= Void
 			non_void_element_name: element_name /= Void
-			not_empty_element_name: element_name.Length > 0
-			valid_element_name: element_name.Equals_String (xml_elements.Precondition_element) or element_name.Equals_String (xml_elements.Postcondition_element)
+			not_empty_element_name: element_name.get_length > 0
+			valid_element_name: element_name.equals_string (xml_elements.Precondition_element) or element_name.equals_string (xml_elements.Postcondition_element)
 		local
 			tag: STRING
 			text: STRING
 			retried: BOOLEAN
 		do	
 			if not retried then
-				if element_name.Equals_String (xml_elements.Precondition_element) then
-					type_description.ReadStartElement_String (xml_elements.Preconditions_element)
-				elseif element_name.Equals_String (xml_elements.Postcondition_element) then
-					type_description.ReadStartElement_String (xml_elements.Postconditions_element)
+				if element_name.equals_string (xml_elements.Precondition_element) then
+					type_description.read_start_element_string (xml_elements.Preconditions_element)
+				elseif element_name.equals_string (xml_elements.Postcondition_element) then
+					type_description.read_start_element_string (xml_elements.Postconditions_element)
 				end
 				from
 				until
-					not type_description.Name.Equals_String (element_name) 
+					not type_description.get_Name.equals_string (element_name) 
 				loop
-					type_description.ReadStartElement_String (element_name)
-					if element_name.Equals_String (xml_elements.Precondition_element) then
-						tag := type_description.ReadElementString_String (xml_elements.Precondition_tag_element)
-						text := type_description.ReadElementString_String (xml_elements.Precondition_text_element)
-					elseif element_name.Equals_String (xml_elements.Postcondition_element) then
-						tag := type_description.ReadElementString_String (xml_elements.Postcondition_tag_element)
-						text := type_description.ReadElementString_String (xml_elements.Postcondition_text_element)
+					type_description.read_start_element_string (element_name)
+					if element_name.equals_string (xml_elements.Precondition_element) then
+						tag := type_description.read_element_string_string (xml_elements.Precondition_tag_element)
+						text := type_description.read_element_string_string (xml_elements.Precondition_text_element)
+					elseif element_name.equals_string (xml_elements.Postcondition_element) then
+						tag := type_description.read_element_string_string (xml_elements.Postcondition_tag_element)
+						text := type_description.read_element_string_string (xml_elements.Postcondition_text_element)
 					end
 					if tag /= Void and text /= Void then
-						if text.Length > 0 then
-							if element_name.Equals_String (xml_elements.Precondition_element) then
-								eiffel_feature.AddPrecondition (tag, text)
-							elseif element_name.Equals_String (xml_elements.Postcondition_element) then
-								eiffel_feature.AddPostcondition (tag, text)
+						if text.get_length > 0 then
+							if element_name.equals_string (xml_elements.Precondition_element) then
+								eiffel_feature.Add_Precondition (tag, text)
+							elseif element_name.equals_string (xml_elements.Postcondition_element) then
+								eiffel_feature.Add_Postcondition (tag, text)
 							end
 						end
 					end
-					type_description.ReadEndElement
+					type_description.read_end_element
 				end
-				type_description.ReadEndElement
+				type_description.read_end_element
 			end
 		rescue
 			retried := True
@@ -1034,26 +1032,26 @@ feature {NONE} -- Implementation
 			retried: BOOLEAN
 		do
 			if not retried then
-				type_description.ReadStartElement_String (xml_elements.Footer_element)
-				if type_description.Name.Equals_String (xml_elements.Invariants_element) then
-					type_description.ReadStartElement_String (xml_elements.Invariants_element) 
+				type_description.read_start_element_string (xml_elements.Footer_element)
+				if type_description.get_Name.equals_string (xml_elements.Invariants_element) then
+					type_description.read_start_element_string (xml_elements.Invariants_element) 
 					from
 					until
-						not type_description.Name.Equals_String (xml_elements.Invariant_element) 
+						not type_description.get_Name.equals_string (xml_elements.Invariant_element) 
 					loop
-						type_description.ReadStartElement_String (xml_elements.Invariant_element)
-						tag := type_description.ReadElementString_String (xml_elements.Invariant_tag_element)
-						text := type_description.ReadElementString_String (xml_elements.Invariant_text_element)
+						type_description.read_start_element_string (xml_elements.Invariant_element)
+						tag := type_description.read_element_string_string (xml_elements.Invariant_tag_element)
+						text := type_description.read_element_string_string (xml_elements.Invariant_text_element)
 						if tag /= Void and text /= Void then
-							if text.Length > 0 then
-								eiffel_class.AddInvariant (tag, text)
+							if text.get_length > 0 then
+								eiffel_class.Add_Invariant (tag, text)
 							end
 						end
-						type_description.ReadEndElement
+						type_description.read_end_element
 					end
-					type_description.ReadEndElement			
+					type_description.read_end_element			
 				end
-				type_description.ReadEndElement
+				type_description.read_end_element
 			end
 		rescue
 			retried := True

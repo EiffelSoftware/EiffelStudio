@@ -20,9 +20,9 @@ feature {NONE} -- Initialization
 		require
 			valid_code: a_code >= 0
 			non_void_name: a_name /= Void
-			not_empty_name: a_name.length > 0
+			not_empty_name: a_name.get_length > 0
 			non_void_description: a_description /= Void
-			not_empty_description: a_description.length > 0
+			not_empty_description: a_description.get_length > 0
 		do
 			code := a_code
 			name := a_name
@@ -56,8 +56,8 @@ feature -- Access
 invariant
 	valid_code: code >= 0
 	non_void_name: name /= Void
-	not_empty_name: name.length > 0
+	not_empty_name: name.get_length > 0
 	non_void_description: description /= Void
-	not_empty_description: description.length > 0
+	not_empty_description: description.get_length > 0
 			
 end -- class ERROR_INFO

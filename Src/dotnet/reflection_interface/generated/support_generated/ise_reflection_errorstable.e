@@ -1,7 +1,6 @@
 indexing
-	Generator: "Eiffel Emitter 2.4b2"
+	Generator: "Eiffel Emitter 2.6b2"
 	external_name: "ISE.Reflection.ErrorsTable"
-
 external class
 	ISE_REFLECTION_ERRORSTABLE
 
@@ -17,7 +16,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	frozen ErrorsTable: SYSTEM_COLLECTIONS_HASHTABLE is
+	frozen errors_table: SYSTEM_COLLECTIONS_HASHTABLE is
 		external
 			"IL field signature :System.Collections.Hashtable use ISE.Reflection.ErrorsTable"
 		alias
@@ -26,46 +25,46 @@ feature -- Access
 
 feature -- Basic Operations
 
-	Make is
-		external
-			"IL signature (): System.Void use ISE.Reflection.ErrorsTable"
-		alias
-			"Make"
-		end
-
-	ErrorDescription (a_code: INTEGER): STRING is
-		external
-			"IL signature (System.Int32): System.String use ISE.Reflection.ErrorsTable"
-		alias
-			"ErrorDescription"
-		end
-
-	RemoveError (a_code: INTEGER) is
-		external
-			"IL signature (System.Int32): System.Void use ISE.Reflection.ErrorsTable"
-		alias
-			"RemoveError"
-		end
-
-	Errors: SYSTEM_COLLECTIONS_ARRAYLIST is
-		external
-			"IL signature (): System.Collections.ArrayList use ISE.Reflection.ErrorsTable"
-		alias
-			"Errors"
-		end
-
-	ReplaceErrorDescription (a_code: INTEGER; new_description: STRING) is
+	replace_error_description (a_code: INTEGER; new_description: STRING) is
 		external
 			"IL signature (System.Int32, System.String): System.Void use ISE.Reflection.ErrorsTable"
 		alias
 			"ReplaceErrorDescription"
 		end
 
-	ReplaceErrorName (a_code: INTEGER; new_name: STRING) is
+	remove_error (a_code: INTEGER) is
 		external
-			"IL signature (System.Int32, System.String): System.Void use ISE.Reflection.ErrorsTable"
+			"IL signature (System.Int32): System.Void use ISE.Reflection.ErrorsTable"
 		alias
-			"ReplaceErrorName"
+			"RemoveError"
+		end
+
+	make is
+		external
+			"IL signature (): System.Void use ISE.Reflection.ErrorsTable"
+		alias
+			"Make"
+		end
+
+	error_info (a_code: INTEGER): ISE_REFLECTION_ERRORINFO is
+		external
+			"IL signature (System.Int32): ISE.Reflection.ErrorInfo use ISE.Reflection.ErrorsTable"
+		alias
+			"ErrorInfo"
+		end
+
+	error_name (a_code: INTEGER): STRING is
+		external
+			"IL signature (System.Int32): System.String use ISE.Reflection.ErrorsTable"
+		alias
+			"ErrorName"
+		end
+
+	error_description (a_code: INTEGER): STRING is
+		external
+			"IL signature (System.Int32): System.String use ISE.Reflection.ErrorsTable"
+		alias
+			"ErrorDescription"
 		end
 
 	a_invariant is
@@ -75,25 +74,25 @@ feature -- Basic Operations
 			"_invariant"
 		end
 
-	AddError (an_error: ISE_REFLECTION_ERRORINFO) is
+	add_error (an_error: ISE_REFLECTION_ERRORINFO) is
 		external
 			"IL signature (ISE.Reflection.ErrorInfo): System.Void use ISE.Reflection.ErrorsTable"
 		alias
 			"AddError"
 		end
 
-	ErrorName (a_code: INTEGER): STRING is
+	errors: SYSTEM_COLLECTIONS_ARRAYLIST is
 		external
-			"IL signature (System.Int32): System.String use ISE.Reflection.ErrorsTable"
+			"IL signature (): System.Collections.ArrayList use ISE.Reflection.ErrorsTable"
 		alias
-			"ErrorName"
+			"Errors"
 		end
 
-	ErrorInfo (a_code: INTEGER): ISE_REFLECTION_ERRORINFO is
+	replace_error_name (a_code: INTEGER; new_name: STRING) is
 		external
-			"IL signature (System.Int32): ISE.Reflection.ErrorInfo use ISE.Reflection.ErrorsTable"
+			"IL signature (System.Int32, System.String): System.Void use ISE.Reflection.ErrorsTable"
 		alias
-			"ErrorInfo"
+			"ReplaceErrorName"
 		end
 
 end -- class ISE_REFLECTION_ERRORSTABLE

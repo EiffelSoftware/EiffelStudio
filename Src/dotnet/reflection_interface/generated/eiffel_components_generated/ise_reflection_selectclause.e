@@ -1,7 +1,6 @@
 indexing
-	Generator: "Eiffel Emitter 2.4b2"
+	Generator: "Eiffel Emitter 2.6b2"
 	external_name: "ISE.Reflection.SelectClause"
-
 external class
 	ISE_REFLECTION_SELECTCLAUSE
 
@@ -20,25 +19,25 @@ feature {NONE} -- Initialization
 
 feature -- Basic Operations
 
-	SelectKeyword: STRING is
+	eiffel_keyword: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.SelectClause"
+		alias
+			"EiffelKeyword"
+		end
+
+	select_keyword: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.SelectClause"
 		alias
 			"SelectKeyword"
 		end
 
-	ToString: STRING is
+	string_representation: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.SelectClause"
 		alias
-			"ToString"
-		end
-
-	EiffelKeyword: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.SelectClause"
-		alias
-			"EiffelKeyword"
+			"StringRepresentation"
 		end
 
 end -- class ISE_REFLECTION_SELECTCLAUSE

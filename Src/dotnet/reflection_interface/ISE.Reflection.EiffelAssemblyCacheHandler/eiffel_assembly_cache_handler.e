@@ -32,7 +32,7 @@ feature -- Access
 	last_error: ISE_REFLECTION_ERRORINFO
 		indexing
 			description: "Last error"
-			external_name: "LastError"
+			external_name: "last_error"
 		end
 
 	Has_write_lock_code: INTEGER is
@@ -40,7 +40,7 @@ feature -- Access
 			description: "Write lock error code"
 			external_name: "HasWriteLockCode"
 		once
-			Result := support.errorstable.errorstable.count
+			Result := support.errors_table.errors_table.get_count
 		end
 
 	Has_read_lock_code: INTEGER is 
@@ -48,7 +48,7 @@ feature -- Access
 			description: "Read lock error code"
 			external_name: "HasReadLockCode"
 		once
-			Result := support.errorstable.errorstable.count
+			Result := support.errors_table.errors_table.get_count
 		end
 
 	Write_lock_creation_failed_code: INTEGER is
@@ -56,7 +56,7 @@ feature -- Access
 			description: "Write lock creation error code"
 			external_name: "WriteLockCreationFailedCode"
 		once
-			Result := support.errorstable.errorstable.count
+			Result := support.errors_table.errors_table.get_count
 		end
 		
 feature -- Status Report
@@ -82,12 +82,12 @@ feature -- Basic Operations
 			external_name: "StoreAssembly"
 		require
 			non_void_assembly: an_eiffel_assembly /= Void
-			non_void_assembly_name: an_eiffel_assembly.AssemblyName /= Void
-			not_empty_assembly_name: an_eiffel_assembly.AssemblyName.Length > 0
+			non_void_assembly_name: an_eiffel_assembly.Assembly_Name /= Void
+			not_empty_assembly_name: an_eiffel_assembly.Assembly_Name.get_Length > 0
 		do
 			eiffel_assembly := an_eiffel_assembly
 			create assembly_descriptor.make1
-			assembly_descriptor.Make (eiffel_assembly.AssemblyName, eiffel_assembly.AssemblyVersion, eiffel_assembly.AssemblyCulture, eiffel_assembly.AssemblyPublicKey)
+			assembly_descriptor.Make (eiffel_assembly.Assembly_Name, eiffel_assembly.Assembly_Version, eiffel_assembly.Assembly_Culture, eiffel_assembly.Assembly_Public_Key)
 			prepare_assembly_storage
 			create Result.make_type_storer (assembly_folder_path)
 			assembly_folder_path := Void
@@ -107,13 +107,13 @@ feature -- Basic Operations
 		do
 			check
 				non_void_assembly: eiffel_assembly /= Void
-				non_void_assembly_name: eiffel_assembly.AssemblyName /= Void
-				not_empty_assembly_name: eiffel_assembly.AssemblyName.Length > 0
+				non_void_assembly_name: eiffel_assembly.Assembly_Name /= Void
+				not_empty_assembly_name: eiffel_assembly.Assembly_Name.get_Length > 0
 			end
 			generate_assembly_xml_file
 			create notifier_handle.make1
-			notifier := notifier_handle.currentnotifier
-			notifier.notifyadd (assembly_descriptor)
+			notifier := notifier_handle.current_notifier
+			notifier.notify_add (assembly_descriptor)
 			assembly_descriptor := Void
 			eiffel_assembly := Void
 		ensure
@@ -130,7 +130,7 @@ feature -- Basic Operations
 		require
 			non_void_assembly_descriptor: a_descriptor /= Void
 			non_void_assembly_name: a_descriptor.Name /= Void
-			not_empty_assembly_name: a_descriptor.Name.Length > 0
+			not_empty_assembly_name: a_descriptor.Name.get_Length > 0
 		local
 			assembly_path: STRING
 			dir: SYSTEM_IO_DIRECTORY
@@ -150,84 +150,86 @@ feature -- Basic Operations
 			notifier: ISE_REFLECTION_NOTIFIER
 			reflection_support: ISE_REFLECTION_REFLECTIONSUPPORT
 			error_code: INTEGER
-			returned_value: INTEGER
+			returned_value: SYSTEM_WINDOWS_FORMS_DIALOGRESULT
+			message_box_icon: SYSTEM_WINDOWS_FORMS_MESSAGEBOXICON
+			message_box_buttons: SYSTEM_WINDOWS_FORMS_MESSAGEBOXBUTTONS
 			message_box: SYSTEM_WINDOWS_FORMS_MESSAGEBOX
+			white_space_handling: SYSTEM_XML_WHITESPACEHANDLING
+			formatting: SYSTEM_XML_FORMATTING
 		do	
 			create reflection_support.make_reflectionsupport
 			reflection_support.make
-			assembly_path := reflection_support.Eiffeldeliverypath
-			assembly_path := assembly_path.concat_string_string (assembly_path, reflection_support.AssemblyFolderPathFromInfo (a_descriptor))
-			if support.HasWriteLock (assembly_path) then
-				support.createerrorfrominfo (Has_write_lock_code, error_messages.Has_write_lock, error_messages.Has_write_lock_message)
-				last_error := support.lasterror
+			assembly_path := reflection_support.Eiffel_delivery_path
+			assembly_path := assembly_path.concat_string_string (assembly_path, reflection_support.Assembly_Folder_Path_From_Info (a_descriptor))
+			if support.Has_Write_Lock (assembly_path) then
+				support.create_error_from_info (Has_write_lock_code, error_messages.Has_write_lock, error_messages.Has_write_lock_message)
+				last_error := support.last_error
 				last_removal_successful := False
 			else
-				if support.HasReadLock (assembly_path) then
-					support.createerrorfrominfo (Has_read_lock_code, error_messages.Has_read_lock, error_messages.Has_read_lock_message)
-					last_error := support.lasterror
+				if support.Has_Read_Lock (assembly_path) then
+					support.create_error_from_info (Has_read_lock_code, error_messages.Has_read_lock, error_messages.Has_read_lock_message)
+					last_error := support.last_error
 					last_removal_successful := False			
 				else
-					write_lock := file.Create_ (assembly_path.Concat_String_String_String (assembly_path, "\", support.WriteLockFilename))	
+					write_lock := file.Create_ (assembly_path.Concat_String_String_String (assembly_path, "\", support.Write_Lock_Filename))	
 					if write_lock = Void then
-						support.createerrorfrominfo (Write_lock_creation_failed_code, error_messages.Write_lock_creation_failed, error_messages.Write_lock_creation_failed_message)
-						last_error := support.lasterror
+						support.create_error_from_info (Write_lock_creation_failed_code, error_messages.Write_lock_creation_failed, error_messages.Write_lock_creation_failed_message)
+						last_error := support.last_error
 						last_removal_successful := False
 					else
 						write_lock.Close
 							-- Delete Write lock
-						file.Delete (assembly_path.Concat_String_String_String (assembly_path, "\", support.WriteLockFilename))
+						file.Delete (assembly_path.Concat_String_String_String (assembly_path, "\", support.Write_Lock_Filename))
 
 							-- Delete assembly folder.
 						dir.Delete_String_Boolean (assembly_path, True)
 
 							-- Remove assembly folder name from `index.xml'.
-						index_path := reflection_support.Eiffeldeliverypath
-						index_path := index_path.Concat_String_String_String_String (index_path, reflection_support.AssembliesFolderPath, IndexFilename, XmlExtension)
+						index_path := reflection_support.Eiffel_delivery_path
+						index_path := index_path.Concat_String_String_String_String (index_path, reflection_support.Assemblies_Folder_Path, Index_Filename, Xml_Extension)
 						create xml_reader.make_xmltextreader_10 (index_path)
-							-- WhitespaceHandling = None
-						xml_reader.set_WhitespaceHandling (2)
-						xml_reader.ReadStartElement_String (AssembliesElement)
+						xml_reader.set_Whitespace_Handling (white_space_handling.none)
+						xml_reader.Read_Start_Element_String (Assemblies_Element)
 						from
 							create assembly_folders_list.make
 						until
-							not xml_reader.Name.Equals_String (AssemblyFilenameElement)
+							not xml_reader.get_Name.Equals_String (Assembly_Filename_Element)
 						loop
-							a_folder_name := xml_reader.ReadElementString_String (AssemblyFilenameElement)
+							a_folder_name := xml_reader.Read_Element_String_String (Assembly_Filename_Element)
 							assembly_folder_name_added := assembly_folders_list.Add (a_folder_name)
 						end
-						xml_reader.ReadEndElement
+						xml_reader.Read_End_Element
 						xml_reader.Close
 
-						path_to_remove := assembly_path.replace (reflection_support.Eiffeldeliverypath, reflection_support.Eiffelkey)
+						path_to_remove := assembly_path.replace (reflection_support.Eiffel_delivery_path, reflection_support.Eiffel_key)
 						assembly_folders_list.Remove (path_to_remove)
 
-						if assembly_folders_list.Count /= 0 then
+						if assembly_folders_list.get_count /= 0 then
 							create text_writer.make_xmltextwriter_1 (index_path, create {SYSTEM_TEXT_ASCIIENCODING}.make_asciiencoding)
 								-- Set generation options
-								-- `1' for `Formatting.Indented'
-							text_writer.set_Formatting (1)
+							text_writer.set_Formatting (formatting.indented)
 							text_writer.set_Indentation (1)
-							text_writer.set_IndentChar ('%T')
+							text_writer.set_Indent_Char ('%T')
 							text_writer.set_Namespaces (False)
-							text_writer.set_QuoteChar ('%"')
+							text_writer.set_Quote_Char ('%"')
 
 								-- Write `<!DOCTYPE ...>
-							text_writer.WriteDocType (IndexFilename, public_string, IndexFilename.Concat_String_String (IndexFilename, DtdExtension), subset)
+							text_writer.Write_Doc_Type (Index_Filename, public_string, Index_Filename.Concat_String_String (Index_Filename, Dtd_Extension), subset)
 								-- <assemblies>
-							text_writer.writestartelement (AssembliesElement)			
+							text_writer.write_start_element (Assemblies_Element)			
 							from
 							until
-								i = assembly_folders_list.Count
+								i = assembly_folders_list.get_count
 							loop
-								a_folder_name ?= assembly_folders_list.item (i)
+								a_folder_name ?= assembly_folders_list.get_item (i)
 								if a_folder_name /= Void then
 										-- <assembly_folder_name>
-									text_writer.writeelementstring (AssemblyFilenameElement, a_folder_name)
+									text_writer.write_element_string (Assembly_Filename_Element, a_folder_name)
 								end
 								i := i + 1
 							end
 								-- </assemblies>
-							text_writer.WriteEndElement
+							text_writer.write_end_element
 							text_writer.Close
 						else
 							file.Delete (index_path)
@@ -235,25 +237,25 @@ feature -- Basic Operations
 
 							-- Notify assembly removal
 						create notifier_handle.make1
-						notifier := notifier_handle.currentnotifier
-						notifier.NotifyRemove (a_descriptor)
+						notifier := notifier_handle.current_notifier
+						notifier.Notify_Remove (a_descriptor)
 						last_removal_successful := True
 					end
 				end
 			end
 		rescue
-			support.createerror (error_messages.Assembly_removal_failed, error_messages.Assembly_removal_failed_message)
-			last_error := support.lasterror
-			support.createerror (error_messages.Assembly_storage_failed, error_messages.Assembly_storage_failed_message)
-			last_error := support.lasterror
+			support.create_error (error_messages.Assembly_removal_failed, error_messages.Assembly_removal_failed_message)
+			last_error := support.last_error
+			support.create_error (error_messages.Assembly_storage_failed, error_messages.Assembly_storage_failed_message)
+			last_error := support.last_error
 			if not last_removal_successful then
 				error_code := last_error.code
 				if error_code = Has_read_lock_code or error_code = Has_write_lock_code then
-					returned_value := message_box.show_string_string_messageboxbuttons_messageboxicon (Access_violation_error, Error_caption, Abort_retry_ignore_message_box_buttons, Error_icon)
-					if returned_value = Retry_result then
+					returned_value := message_box.show_string_string_message_box_buttons_message_box_icon (Access_violation_error, Error_caption, message_box_buttons.Abort_retry_ignore, message_box_icon.Error)
+					if returned_value = returned_value.Retry_ then
 						retry
-					elseif returned_value = Ignore_result then
-						reflection_support.cleanassembly (a_descriptor)
+					elseif returned_value = returned_value.Ignore then
+						reflection_support.clean_assembly (a_descriptor)
 						retry
 					end						
 				end
@@ -281,7 +283,7 @@ feature -- Basic Operations
 			external_name: "UpdateAssemblyDescription"
 		require
 			non_void_path: new_path /= Void
-			not_empty_path: new_path.length > 0
+			not_empty_path: new_path.get_length > 0
 			non_void_eiffel_assembly: an_eiffel_assembly /= Void
 		local
 			reflection_support: ISE_REFLECTION_REFLECTIONSUPPORT			
@@ -295,12 +297,13 @@ feature -- Basic Operations
 			subset: STRING
 			i: INTEGER
 			file: SYSTEM_IO_FILE 
+			formatting: SYSTEM_XML_FORMATTING
 		do
 			if not retried then
 				create reflection_support.make_reflectionsupport
 				reflection_support.make
-				a_filename := reflection_support.xmlassemblyfilename (an_eiffel_assembly.assemblydescriptor)
-				a_filename := a_filename.replace (reflection_support.Eiffelkey, reflection_support.Eiffeldeliverypath)
+				a_filename := reflection_support.xml_assembly_filename (an_eiffel_assembly.assembly_descriptor)
+				a_filename := a_filename.replace (reflection_support.Eiffel_key, reflection_support.Eiffel_delivery_path)
 				
 				types_list := assembly_types_from_xml (a_filename)	
 				file.delete (a_filename)
@@ -308,70 +311,69 @@ feature -- Basic Operations
 				create text_writer.make_xmltextwriter_1 (a_filename, create {SYSTEM_TEXT_ASCIIENCODING}.make_asciiencoding)
 
 					-- Set generation options
-					-- `1' for `Formatting.Indented'
-				text_writer.set_Formatting (1)
+				text_writer.set_Formatting (formatting.indented)
 				text_writer.set_Indentation (1)
-				text_writer.set_IndentChar ('%T')
+				text_writer.set_Indent_Char ('%T')
 				text_writer.set_Namespaces (False)
-				text_writer.set_QuoteChar ('%"')
+				text_writer.set_Quote_Char ('%"')
 
 					-- Write `<?xml version="1.0">
 				DTD_path := "..\"
-				text_writer.WriteDocType (DtdAssemblyFilename, public_string, DTD_path.Concat_String_String_String (DTD_path, DtdAssemblyFilename, DtdExtension), subset)
+				text_writer.Write_Doc_Type (Dtd_Assembly_Filename, public_string, DTD_path.Concat_String_String_String (DTD_path, Dtd_Assembly_Filename, Dtd_Extension), subset)
 					-- <assembly>
-				text_writer.writestartelement (AssemblyElement)
+				text_writer.write_start_element (Assembly_Element)
 				
 					-- <assembly_name>
-				text_writer.writeelementstring (AssemblyNameElement, an_eiffel_assembly.AssemblyDescriptor.Name)
+				text_writer.write_element_string (Assembly_Name_Element, an_eiffel_assembly.Assembly_Descriptor.Name)
 					-- <assembly_version>
-				if an_eiffel_assembly.AssemblyDescriptor.Version /= Void then
-					if an_eiffel_assembly.AssemblyDescriptor.Version.Length > 0 then
-						text_writer.writeelementstring (AssemblyVersionElement, an_eiffel_assembly.AssemblyDescriptor.Version)
+				if an_eiffel_assembly.Assembly_Descriptor.Version /= Void then
+					if an_eiffel_assembly.Assembly_Descriptor.Version.get_Length > 0 then
+						text_writer.write_element_string (Assembly_Version_Element, an_eiffel_assembly.Assembly_Descriptor.Version)
 					end
 				end
 					-- <assembly_culture>
-				if an_eiffel_assembly.AssemblyDescriptor.Culture /= Void then
-					if an_eiffel_assembly.AssemblyDescriptor.Culture.Length > 0 then
-						text_writer.writeelementstring (AssemblyCultureElement, an_eiffel_assembly.AssemblyDescriptor.Culture)
+				if an_eiffel_assembly.Assembly_Descriptor.Culture /= Void then
+					if an_eiffel_assembly.Assembly_Descriptor.Culture.get_Length > 0 then
+						text_writer.write_element_string (Assembly_Culture_Element, an_eiffel_assembly.Assembly_Descriptor.Culture)
 					end
 				end
 					-- <assembly_public_key>
-				if an_eiffel_assembly.AssemblyDescriptor.PublicKey /= Void then
-					if an_eiffel_assembly.AssemblyDescriptor.PublicKey.Length > 0 then
-						text_writer.writeelementstring (AssemblyPublicKeyElement, an_eiffel_assembly.AssemblyDescriptor.PublicKey)
+				if an_eiffel_assembly.Assembly_Descriptor.Public_Key /= Void then
+					if an_eiffel_assembly.Assembly_Descriptor.Public_Key.get_Length > 0 then
+						text_writer.write_element_string (Assembly_Public_Key_Element, an_eiffel_assembly.Assembly_Descriptor.Public_Key)
 					end
 				end
 					-- <eiffel_cluster_path>
-				text_writer.writeelementstring (EiffelClusterPathElement, new_path)
+				text_writer.write_element_string (Eiffel_Cluster_Path_Element, new_path)
 					-- <emitter_version_number>
-				if an_eiffel_assembly.EmitterVersionNumber /= Void then
-					if an_eiffel_assembly.EmitterVersionNumber.Length > 0 then
-						text_writer.writeelementstring (EmitterVersionNumberElement, an_eiffel_assembly.EmitterVersionNumber)
+				if an_eiffel_assembly.Emitter_Version_Number /= Void then
+					if an_eiffel_assembly.Emitter_Version_Number.get_Length > 0 then
+						text_writer.write_element_string (Emitter_Version_Number_Element, an_eiffel_assembly.Emitter_Version_Number)
 					end
 				end
 					-- <assembly_types>
-				if types_list.Count > 0 then
-					text_writer.writestartelement (AssemblyTypesElement)
+				if types_list.get_count > 0 then
+					text_writer.write_start_element (Assembly_Types_Element)
 					from
 						i := 0
 					until
-						i = types_list.Count
+						i = types_list.get_count
 					loop
-						type_filename ?= types_list.Item (i)
-						if type_filename /= Void and then type_filename.length > 0 then
-							text_writer.writeelementstring (AssemblyTypeFilenameElement, type_filename)
+						type_filename ?= types_list.get_item (i)
+						if type_filename /= Void and then type_filename.get_length > 0 then
+							text_writer.write_element_string (Assembly_Type_Filename_Element, type_filename)
 						end
 						i := i + 1
 					end
 				end
 					-- </assembly>
-				text_writer.WriteEndElement
+				text_writer.write_end_element
 				text_writer.Close	
 			end
 		rescue
 			retried := True
-			support.createerror (error_messages.Assembly_description_update_failed, error_messages.Assembly_description_update_failed_message)
-			last_error := support.lasterror			
+			support.create_error (error_messages.Assembly_description_update_failed, error_messages.Assembly_description_update_failed_message)
+			last_error := support.last_error			
 			retry
 		end
 			
@@ -425,36 +427,38 @@ feature {NONE} -- Implementation
 			retried: BOOLEAN
 			reflection_support: ISE_REFLECTION_REFLECTIONSUPPORT
 			error_code: INTEGER
-			returned_value: INTEGER
+			returned_value: SYSTEM_WINDOWS_FORMS_DIALOGRESULT
 			message_box: SYSTEM_WINDOWS_FORMS_MESSAGEBOX
+			message_box_icon: SYSTEM_WINDOWS_FORMS_MESSAGEBOXICON
+			message_box_buttons: SYSTEM_WINDOWS_FORMS_MESSAGEBOXBUTTONS
 		do
 			check
 				non_void_descriptor: assembly_descriptor /= Void
 				non_void_assembly_name: assembly_descriptor.Name /= Void
-				not_empty_assembly_name: assembly_descriptor.Name.Length > 0
+				not_empty_assembly_name: assembly_descriptor.Name.get_Length > 0
 			end
 			create reflection_support.make_reflectionsupport
 			reflection_support.Make
-			assembly_folder_path := reflection_support.Eiffeldeliverypath
-			assembly_folder_path := assembly_folder_path.concat_string_string (assembly_folder_path, reflection_support.AssemblyFolderPathFromInfo (assembly_descriptor))
+			assembly_folder_path := reflection_support.Eiffel_delivery_path
+			assembly_folder_path := assembly_folder_path.concat_string_string (assembly_folder_path, reflection_support.Assembly_Folder_Path_From_Info (assembly_descriptor))
 
 				-- Check if there is `write_lock' or `a_read_lock' in `assembly_folder_name'.
 				-- Set `last_write_successful' and `last_error_info' if needed.
 			if dir.Exists (assembly_folder_path) then
-				if support.HasWriteLock (assembly_folder_path) then
-					support.createerrorfrominfo (Has_write_lock_code, error_messages.Has_write_lock, error_messages.Has_write_lock_message)
-					last_error := support.lasterror
+				if support.Has_Write_Lock (assembly_folder_path) then
+					support.create_error_from_info (Has_write_lock_code, error_messages.Has_write_lock, error_messages.Has_write_lock_message)
+					last_error := support.last_error
 					last_write_successful := False
 				else
-					if support.HasReadLock (assembly_folder_path) then
-						support.createerrorfrominfo (Has_read_lock_code, error_messages.Has_read_lock, error_messages.Has_read_lock_message)
-						last_error := support.lasterror
+					if support.Has_Read_Lock (assembly_folder_path) then
+						support.create_error_from_info (Has_read_lock_code, error_messages.Has_read_lock, error_messages.Has_read_lock_message)
+						last_error := support.last_error
 						last_write_successful := False
 					else
-						write_lock := file.Create_ (assembly_folder_path.Concat_String_String_String (assembly_folder_path, "\", support.WriteLockFilename))	
+						write_lock := file.Create_ (assembly_folder_path.Concat_String_String_String (assembly_folder_path, "\", support.Write_Lock_Filename))	
 						if write_lock = Void then
-							support.createerrorfrominfo (Write_lock_creation_failed_code, error_messages.Write_lock_creation_failed, error_messages.Write_lock_creation_failed_message)
-							last_error := support.lasterror
+							support.create_error_from_info (Write_lock_creation_failed_code, error_messages.Write_lock_creation_failed, error_messages.Write_lock_creation_failed_message)
+							last_error := support.last_error
 							last_write_successful := False
 						else
 							write_lock.Close
@@ -464,12 +468,12 @@ feature {NONE} -- Implementation
 					end
 				end				
 			else
-				assembly_folder := dir.CreateDirectory (assembly_folder_path)
+				assembly_folder := dir.Create_Directory (assembly_folder_path)
 				if assembly_folder /= Void then
-					write_lock := file.Create_ (assembly_folder_path.Concat_String_String_String (assembly_folder_path, "\", support.WriteLockFilename))
+					write_lock := file.Create_ (assembly_folder_path.Concat_String_String_String (assembly_folder_path, "\", support.Write_Lock_Filename))
 					if write_lock = Void then
-						support.createerrorfrominfo (Write_lock_creation_failed_code, error_messages.Write_lock_creation_failed, error_messages.Write_lock_creation_failed_message)
-						last_error := support.lasterror
+						support.create_error_from_info (Write_lock_creation_failed_code, error_messages.Write_lock_creation_failed, error_messages.Write_lock_creation_failed_message)
+						last_error := support.last_error
 						last_write_successful := False
 					else
 						write_lock.Close
@@ -477,22 +481,22 @@ feature {NONE} -- Implementation
 						last_write_successful := True
 					end
 				else
-					support.createerror (error_messages.Assembly_directory_creation_failed, error_messages.Assembly_directory_creation_failed_message)
-					last_error := support.lasterror
+					support.create_error (error_messages.Assembly_directory_creation_failed, error_messages.Assembly_directory_creation_failed_message)
+					last_error := support.last_error
 					last_write_successful := False
 				end
 			end
 		rescue
-			support.createerror (error_messages.Assembly_storage_failed, error_messages.Assembly_storage_failed_message)
-			last_error := support.lasterror
+			support.create_error (error_messages.Assembly_storage_failed, error_messages.Assembly_storage_failed_message)
+			last_error := support.last_error
 			if not last_write_successful then
 				error_code := last_error.code
 				if error_code = Has_read_lock_code or error_code = Has_write_lock_code then
-					returned_value := message_box.show_string_string_messageboxbuttons_messageboxicon (Access_violation_error, Error_caption, Abort_retry_ignore_message_box_buttons, Error_icon)
-					if returned_value = Retry_result then
+					returned_value := message_box.show_string_string_message_box_buttons_message_box_icon (Access_violation_error, Error_caption, message_box_buttons.Abort_retry_ignore, message_box_icon.Error)
+					if returned_value = returned_value.Retry_ then
 						retry
-					elseif returned_value = Ignore_result then
-						reflection_support.cleanassemblies
+					elseif returned_value = returned_value.Ignore then
+						reflection_support.clean_assemblies
 						retry
 					end						
 				end
@@ -517,91 +521,90 @@ feature {NONE} -- Implementation
 			index_path: STRING
 			relative_folder_path: STRING
 			retried: BOOLEAN
+			white_space_handling: SYSTEM_XML_WHITESPACEHANDLING
+			formatting: SYSTEM_XML_FORMATTING
 		do
 			if not retried then
 				check
 					non_void_assembly_folder_path: assembly_folder_path /= Void
-					not_empty_assembly_folder_path: assembly_folder_path.Length > 0
+					not_empty_assembly_folder_path: assembly_folder_path.get_Length > 0
 				end
 				create reflection_support.make_reflectionsupport
 				reflection_support.make
 
 					-- Add `assembly_folder_path' to `index.xml' located in `$EIFFEL\dotnet\assemblies'.
 					-- Create `index.xml' if it doesn't already exist.
-				index_path := reflection_support.Eiffeldeliverypath
-				index_path := index_path.concat_string_string (index_path, reflection_support.AssembliesFolderPath)
-				index_path := index_path.Concat_String_String_String_String (index_path, "\", IndexFilename, XmlExtension)
+				index_path := reflection_support.Eiffel_delivery_path
+				index_path := index_path.concat_string_string (index_path, reflection_support.Assemblies_Folder_Path)
+				index_path := index_path.Concat_String_String_String_String (index_path, "\", Index_Filename, Xml_Extension)
 				if file.Exists (index_path) then
 					create xml_reader.make_xmltextreader_10 (index_path)
-						-- WhitespaceHandling = None
-					xml_reader.set_WhitespaceHandling (2)
-					xml_reader.ReadStartElement_String (AssembliesElement)
+					xml_reader.set_Whitespace_Handling (white_space_handling.none)
+					xml_reader.Read_Start_Element_String (Assemblies_Element)
 					from
 						create assembly_folders_list.make
 					until
-						not xml_reader.Name.Equals_String (AssemblyFilenameElement)
+						not xml_reader.get_Name.Equals_String (Assembly_Filename_Element)
 					loop
-						an_assembly_folder_name := xml_reader.ReadElementString_String (AssemblyFilenameElement)
+						an_assembly_folder_name := xml_reader.read_element_string_string (Assembly_Filename_Element)
 						assembly_folder_name_added := assembly_folders_list.Add (an_assembly_folder_name)
 					end
-					xml_reader.ReadEndElement
+					xml_reader.Read_End_Element
 					xml_reader.Close
-					relative_folder_path := assembly_folder_path.replace (reflection_support.Eiffeldeliverypath, reflection_support.Eiffelkey)
+					relative_folder_path := assembly_folder_path.replace (reflection_support.Eiffel_delivery_path, reflection_support.Eiffel_key)
 					if not assembly_folders_list.Contains (relative_folder_path) then
 						assembly_folder_name_added := assembly_folders_list.Add (relative_folder_path)				
 						create text_writer.make_xmltextwriter_1 (index_path, create {SYSTEM_TEXT_ASCIIENCODING}.make_asciiencoding)
 							-- Set generation options
-							-- `1' for `Formatting.Indented'
-						text_writer.set_Formatting (1)
+						text_writer.set_Formatting (formatting.indented)
 						text_writer.set_Indentation (1)
-						text_writer.set_IndentChar ('%T')
+						text_writer.set_Indent_Char ('%T')
 						text_writer.set_Namespaces (False)
-						text_writer.set_QuoteChar ('%"')
+						text_writer.set_Quote_Char ('%"')
 
 							-- Write `<!DOCTYPE ...>
-						text_writer.WriteDocType (IndexFilename, public_string, IndexFilename.Concat_String_String (IndexFilename, DtdExtension), subset)
+						text_writer.Write_Doc_Type (Index_Filename, public_string, Index_Filename.Concat_String_String (Index_Filename, Dtd_Extension), subset)
 							-- <assemblies>
-						text_writer.writestartelement (AssembliesElement)			
+						text_writer.write_start_element (Assemblies_Element)			
 						from
 						until
-							i = assembly_folders_list.Count
+							i = assembly_folders_list.get_count
 						loop
-							an_assembly_folder_name ?= assembly_folders_list.item (i)
+							an_assembly_folder_name ?= assembly_folders_list.get_item (i)
 							if an_assembly_folder_name /= Void then
 									-- <assembly_folder_name>
-								text_writer.writeelementstring (AssemblyFilenameElement, an_assembly_folder_name)
+								text_writer.write_element_string (Assembly_Filename_Element, an_assembly_folder_name)
 							end
 							i := i + 1
 						end
 							-- </assemblies>
-						text_writer.WriteEndElement
+						text_writer.write_end_element
 						text_writer.Close
 					end
 				else
 					create text_writer.make_xmltextwriter_1 (index_path, create {SYSTEM_TEXT_ASCIIENCODING}.make_asciiencoding)
 						-- Set generation options
-						-- `1' for `Formatting.Indented'
-					text_writer.set_Formatting (1)
+					text_writer.set_Formatting (formatting.indented)
 					text_writer.set_Indentation (1)
-					text_writer.set_IndentChar ('%T')
+					text_writer.set_Indent_Char ('%T')
 					text_writer.set_Namespaces (False)
-					text_writer.set_QuoteChar ('%"')
+					text_writer.set_Quote_Char ('%"')
 
 						-- Write `<!DOCTYPE ...>
-					text_writer.WriteDocType (IndexFilename, public_string, IndexFilename.Concat_String_String (IndexFilename, DtdExtension), subset)
+					text_writer.Write_Doc_Type (Index_Filename, public_string, Index_Filename.Concat_String_String (Index_Filename, Dtd_Extension), subset)
 						-- <assemblies>
-					text_writer.writestartelement (AssembliesElement)			
+					text_writer.write_start_element (Assemblies_Element)			
 						-- <assembly_folder_name>
-					text_writer.writeelementstring (AssemblyFilenameElement, assembly_folder_path.replace (reflection_support.Eiffeldeliverypath, reflection_support.EiffelKey))
+					text_writer.write_element_string (Assembly_Filename_Element, assembly_folder_path.replace (reflection_support.Eiffel_delivery_path, reflection_support.Eiffel_Key))
 						-- </assemblies>
-					text_writer.WriteEndElement
+					text_writer.write_end_element
 					text_writer.Close
 				end
 			end
 		rescue
 			retried := True
-			support.createerror (error_messages.Index_update_failed, error_messages.Index_update_failed_message)
-			last_error := support.lasterror
+			support.create_error (error_messages.Index_update_failed, error_messages.Index_update_failed_message)
+			last_error := support.last_error
 			retry
 		end
 
@@ -620,87 +623,87 @@ feature {NONE} -- Implementation
 			assembly_type: ISE_REFLECTION_EIFFELCLASS
 			text_writer: SYSTEM_XML_XMLTEXTWRITER
 			retried: BOOLEAN
+			formatting: SYSTEM_XML_FORMATTING
 		do
 			if not retried then
 				check
 					non_void_assembly: eiffel_assembly /= Void
-					non_void_assembly_name: eiffel_assembly.AssemblyName /= Void
-					not_empty_assembly_name: eiffel_assembly.AssemblyName.Length > 0
+					non_void_assembly_name: eiffel_assembly.assembly_name /= Void
+					not_empty_assembly_name: eiffel_assembly.assembly_name.get_Length > 0
 				end
 				create reflection_support.make_reflectionsupport
 				reflection_support.Make
 
-				filename := reflection_support.XmlAssemblyFilename (assembly_descriptor)
-				filename := filename.replace (reflection_support.Eiffelkey, reflection_support.Eiffeldeliverypath)
+				filename := reflection_support.Xml_Assembly_Filename (assembly_descriptor)
+				filename := filename.replace (reflection_support.Eiffel_key, reflection_support.Eiffel_delivery_path)
 				create text_writer.make_xmltextwriter_1 (filename, create {SYSTEM_TEXT_ASCIIENCODING}.make_asciiencoding)
 
 					-- Set generation options
-					-- `1' for `Formatting.Indented'
-				text_writer.set_Formatting (1)
+				text_writer.set_Formatting (formatting.indented)
 				text_writer.set_Indentation (1)
-				text_writer.set_IndentChar ('%T')
+				text_writer.set_Indent_Char ('%T')
 				text_writer.set_Namespaces (False)
-				text_writer.set_QuoteChar ('%"')
+				text_writer.set_Quote_Char ('%"')
 
 					-- XML generation
 
 					-- Write `<?xml version="1.0">
 				DTD_path := "..\"
-				text_writer.WriteDocType (DtdAssemblyFilename, public_string, DTD_path.Concat_String_String_String (DTD_path, DtdAssemblyFilename, DtdExtension), subset)
+				text_writer.Write_Doc_Type (Dtd_Assembly_Filename, public_string, DTD_path.Concat_String_String_String (DTD_path, Dtd_Assembly_Filename, Dtd_Extension), subset)
 
 					-- <assembly>
-				text_writer.writestartelement (AssemblyElement)
+				text_writer.write_start_element (Assembly_Element)
 
 					-- <assembly_name>
-				text_writer.writeelementstring (AssemblyNameElement, eiffel_assembly.AssemblyName)
+				text_writer.write_element_string (Assembly_Name_Element, eiffel_assembly.Assembly_Name)
 
 					-- <assembly_version>
-				if eiffel_assembly.AssemblyVersion /= Void then
-					if eiffel_assembly.AssemblyVersion.Length > 0 then
-						text_writer.writeelementstring (AssemblyVersionElement, eiffel_assembly.AssemblyVersion)
+				if eiffel_assembly.Assembly_Version /= Void then
+					if eiffel_assembly.Assembly_Version.get_Length > 0 then
+						text_writer.write_element_string (Assembly_Version_Element, eiffel_assembly.Assembly_Version)
 					end
 				end
 
 					-- <assembly_culture>
-				if eiffel_assembly.AssemblyCulture /= Void then
-					if eiffel_assembly.AssemblyCulture.Length > 0 then
-						text_writer.writeelementstring (AssemblyCultureElement, eiffel_assembly.AssemblyCulture)
+				if eiffel_assembly.Assembly_Culture /= Void then
+					if eiffel_assembly.Assembly_Culture.get_Length > 0 then
+						text_writer.write_element_string (Assembly_Culture_Element, eiffel_assembly.Assembly_Culture)
 					end
 				end
 
 					-- <assembly_public_key>
-				if eiffel_assembly.AssemblyPublicKey /= Void then
-					if eiffel_assembly.AssemblyPublicKey.Length > 0 then
-						text_writer.writeelementstring (AssemblyPublicKeyElement, eiffel_assembly.AssemblyPublicKey)
+				if eiffel_assembly.Assembly_Public_Key /= Void then
+					if eiffel_assembly.Assembly_Public_Key.get_Length > 0 then
+						text_writer.write_element_string (Assembly_Public_Key_Element, eiffel_assembly.Assembly_Public_Key)
 					end
 				end
 
 					-- <eiffel_cluster_path>
-				if eiffel_assembly.EiffelClusterPath /= Void then
-					if eiffel_assembly.EiffelClusterPath.Length > 0 then
-						text_writer.writeelementstring (EiffelClusterPathElement, eiffel_assembly.EiffelClusterPath)
+				if eiffel_assembly.Eiffel_Cluster_Path /= Void then
+					if eiffel_assembly.Eiffel_Cluster_Path.get_Length > 0 then
+						text_writer.write_element_string (Eiffel_Cluster_Path_Element, eiffel_assembly.Eiffel_Cluster_Path)
 					end
 				end
 
 					-- <emitter_version_number>
-				if eiffel_assembly.EmitterVersionNumber /= Void then
-					if eiffel_assembly.EmitterVersionNumber.Length > 0 then
-						text_writer.writeelementstring (EmitterVersionNumberElement, eiffel_assembly.EmitterVersionNumber)
+				if eiffel_assembly.Emitter_Version_Number /= Void then
+					if eiffel_assembly.Emitter_Version_Number.get_Length > 0 then
+						text_writer.write_element_string (Emitter_Version_Number_Element, eiffel_assembly.Emitter_Version_Number)
 					end
 				end
 
 					-- <assembly_types>
 				assembly_types := eiffel_assembly.Types
 				if assembly_types /= Void then
-					if assembly_types.Count > 0 then
-						text_writer.writestartelement (AssemblyTypesElement)
+					if assembly_types.get_count > 0 then
+						text_writer.write_start_element (Assembly_Types_Element)
 						from
 						until
-							i = assembly_types.Count
+							i = assembly_types.get_count
 						loop
-							assembly_type ?= assembly_types.Item (i)
+							assembly_type ?= assembly_types.get_item (i)
 							if assembly_type /= Void then
-								text_writer.writeelementstring (AssemblyTypeFilenameElement, reflection_support.XmlTypeFilename (assembly_type.assemblydescriptor, assembly_type.FullExternalName))
+								text_writer.write_element_string (Assembly_Type_Filename_Element, reflection_support.Xml_Type_Filename (assembly_type.assembly_descriptor, assembly_type.Full_External_Name))
 							end
 							i := i + 1
 						end
@@ -708,13 +711,13 @@ feature {NONE} -- Implementation
 				end
 
 					-- </assembly>
-				text_writer.WriteEndElement
+				text_writer.write_end_element
 				text_writer.Close
 			end
 		rescue
 			retried := True
-			support.createerror (error_messages.Assembly_description_generation_failed, error_messages.Assembly_description_generation_failed_message)
-			last_error := support.lasterror
+			support.create_error (error_messages.Assembly_description_generation_failed, error_messages.Assembly_description_generation_failed_message)
+			last_error := support.last_error
 			retry
 		end
 	
@@ -732,31 +735,33 @@ feature {NONE} -- Implementation
 			assembly_folder: SYSTEM_IO_DIRECTORYINFO
 			write_lock: SYSTEM_IO_FILESTREAM
 			error_code: INTEGER
-			returned_value: INTEGER
+			returned_value: SYSTEM_WINDOWS_FORMS_DIALOGRESULT
 			message_box: SYSTEM_WINDOWS_FORMS_MESSAGEBOX
+			message_box_icon: SYSTEM_WINDOWS_FORMS_MESSAGEBOXICON
+			message_box_buttons: SYSTEM_WINDOWS_FORMS_MESSAGEBOXBUTTONS
 		do
 			create reflection_support.make_reflectionsupport
 			reflection_support.Make
-			assembly_folder_path := reflection_support.Eiffeldeliverypath
-			assembly_folder_path := assembly_folder_path.concat_string_string (assembly_folder_path, reflection_support.AssemblyFolderPathFromInfo (an_assembly_descriptor))
+			assembly_folder_path := reflection_support.Eiffel_delivery_path
+			assembly_folder_path := assembly_folder_path.concat_string_string (assembly_folder_path, reflection_support.Assembly_Folder_Path_From_Info (an_assembly_descriptor))
 
 				-- Check if there is `write_lock' or `a_read_lock' in `assembly_folder_name'.
 				-- Set `last_write_successful' and `last_error_info' if needed.
 			if dir.Exists (assembly_folder_path) then
-				if support.HasWriteLock (assembly_folder_path) then
-					support.createerrorfrominfo (Has_write_lock_code, error_messages.Has_write_lock, error_messages.Has_write_lock_message)
-					last_error := support.lasterror
+				if support.Has_Write_Lock (assembly_folder_path) then
+					support.create_error_from_info (Has_write_lock_code, error_messages.Has_write_lock, error_messages.Has_write_lock_message)
+					last_error := support.last_error
 					last_write_successful := False
 				else
-					if support.HasReadLock (assembly_folder_path) then
-						support.createerrorfrominfo (Has_read_lock_code, error_messages.Has_read_lock, error_messages.Has_read_lock_message)
-						last_error := support.lasterror
+					if support.Has_Read_Lock (assembly_folder_path) then
+						support.create_error_from_info (Has_read_lock_code, error_messages.Has_read_lock, error_messages.Has_read_lock_message)
+						last_error := support.last_error
 						last_write_successful := False
 					else
-						write_lock := file.Create_ (assembly_folder_path.Concat_String_String_String (assembly_folder_path, "\", support.WriteLockFilename))	
+						write_lock := file.Create_ (assembly_folder_path.Concat_String_String_String (assembly_folder_path, "\", support.Write_Lock_Filename))	
 						if write_lock = Void then
-							support.createerrorfrominfo (Write_lock_creation_failed_code, error_messages.Write_lock_creation_failed, error_messages.Write_lock_creation_failed_message)
-							last_error := support.lasterror
+							support.create_error_from_info (Write_lock_creation_failed_code, error_messages.Write_lock_creation_failed, error_messages.Write_lock_creation_failed_message)
+							last_error := support.last_error
 							last_write_successful := False
 						else
 							write_lock.Close
@@ -768,18 +773,18 @@ feature {NONE} -- Implementation
 				last_write_successful := False
 			end
 		rescue
-			support.createerror (error_messages.Type_storage_failed, error_messages.Type_storage_failed_message)
-			last_error := support.lasterror
-			support.createerror (error_messages.Assembly_storage_failed, error_messages.Assembly_storage_failed_message)
-			last_error := support.lasterror
+			support.create_error (error_messages.Type_storage_failed, error_messages.Type_storage_failed_message)
+			last_error := support.last_error
+			support.create_error (error_messages.Assembly_storage_failed, error_messages.Assembly_storage_failed_message)
+			last_error := support.last_error
 			if not last_write_successful then
 				error_code := last_error.code
 				if error_code = Has_read_lock_code or error_code = Has_write_lock_code then
-					returned_value := message_box.show_string_string_messageboxbuttons_messageboxicon (Access_violation_error, Error_caption, Abort_retry_ignore_message_box_buttons, Error_icon)
-					if returned_value = Retry_result then
+					returned_value := message_box.show_string_string_message_box_buttons_message_box_icon (Access_violation_error, Error_caption, message_box_buttons.Abort_retry_ignore, message_box_icon.Error)
+					if returned_value = returned_value.Retry_ then
 						retry
-					elseif returned_value = Ignore_result then
-						reflection_support.cleanassembly (an_assembly_descriptor)
+					elseif returned_value = returned_value.Ignore then
+						reflection_support.clean_assembly (an_assembly_descriptor)
 						retry
 					end						
 				end
@@ -792,7 +797,7 @@ feature {NONE} -- Implementation
 			external_name: "AssemblyTypesFromXml"
 		require
 			non_void_filename: xml_filename /= Void
-			not_empty_filename: xml_filename.length > 0
+			not_empty_filename: xml_filename.get_length > 0
 		local
 			xml_reader: SYSTEM_XML_XMLTEXTREADER
 			assembly_name: STRING
@@ -804,48 +809,48 @@ feature {NONE} -- Implementation
 			a_type_name: STRING
 			added: INTEGER
 			retried: BOOLEAN
+			white_space_handling: SYSTEM_XML_WHITESPACEHANDLING
 		do
 			if not retried then
 				create xml_reader.make_xmltextreader_10 (xml_filename)	
-					-- WhitespaceHandling = None
-				xml_reader.set_WhitespaceHandling (2)
+				xml_reader.set_Whitespace_Handling (white_space_handling.none)
 
-				xml_reader.ReadStartElement_String (AssemblyElement)
+				xml_reader.Read_Start_Element_String (Assembly_Element)
 					-- Set `assembly_name'.
-				if xml_reader.Name.Equals_String (AssemblyNameElement) then
-					assembly_name := xml_reader.ReadElementString_String (AssemblyNameElement)
+				if xml_reader.get_Name.Equals_String (Assembly_Name_Element) then
+					assembly_name := xml_reader.Read_Element_String_String (Assembly_Name_Element)
 				end
 					-- Set `assembly_version'.
-				if xml_reader.Name.Equals_String (AssemblyVersionElement) then
-					assembly_version := xml_reader.ReadElementString_String (AssemblyVersionElement)
+				if xml_reader.get_Name.Equals_String (Assembly_Version_Element) then
+					assembly_version := xml_reader.Read_Element_String_String (Assembly_Version_Element)
 				end
 					-- Set `assembly_culture'.
-				if xml_reader.Name.Equals_String (AssemblyCultureElement) then
-					assembly_culture := xml_reader.ReadElementString_String (AssemblyCultureElement)
+				if xml_reader.get_Name.Equals_String (Assembly_Culture_Element) then
+					assembly_culture := xml_reader.Read_Element_String_String (Assembly_Culture_Element)
 				end
 					-- Set `assembly_public_key'.
-				if xml_reader.Name.Equals_String (AssemblyPublicKeyElement) then
-					assembly_public_key := xml_reader.ReadElementString_String (AssemblyPublicKeyElement)
+				if xml_reader.get_Name.Equals_String (Assembly_Public_Key_Element) then
+					assembly_public_key := xml_reader.Read_Element_String_String (Assembly_Public_Key_Element)
 				end
 					-- Set `eiffel_cluster_path'.
-				if xml_reader.Name.Equals_String (EiffelClusterPathElement) then
-					eiffel_cluster_path := xml_reader.ReadElementString_String (EiffelClusterPathElement)
+				if xml_reader.get_Name.Equals_String (Eiffel_Cluster_Path_Element) then
+					eiffel_cluster_path := xml_reader.Read_Element_String_String (Eiffel_Cluster_Path_Element)
 				end
 					-- Set `emitter_version_number'.
-				if xml_reader.Name.Equals_String (EmitterVersionNumberElement) then
-					emitter_version_number := xml_reader.ReadElementString_String (EmitterVersionNumberElement)
+				if xml_reader.get_Name.Equals_String (Emitter_Version_Number_Element) then
+					emitter_version_number := xml_reader.Read_Element_String_String (Emitter_Version_Number_Element)
 				end
-				if xml_reader.Name.Equals_String (AssemblyTypesElement) then
-					xml_reader.ReadStartElement_String (AssemblyTypesElement)
+				if xml_reader.get_Name.Equals_String (Assembly_Types_Element) then
+					xml_reader.Read_Start_Element_String (Assembly_Types_Element)
 					from
 						create Result.make
 					until
-						not xml_reader.Name.Equals_String (AssemblyTypeFilenameElement)
+						not xml_reader.get_Name.Equals_String (Assembly_Type_Filename_Element)
 					loop
-						a_type_name := xml_reader.ReadElementString_String (AssemblyTypeFilenameElement)
+						a_type_name := xml_reader.Read_Element_String_String (Assembly_Type_Filename_Element)
 						added := Result.Add (a_type_name)
 					end
-					xml_reader.ReadEndElement
+					xml_reader.Read_End_Element
 				end
 				xml_reader.Close
 			else
@@ -853,39 +858,15 @@ feature {NONE} -- Implementation
 			end
 		rescue
 			retried := True
-			support.createerror (error_messages.Assembly_description_reading_failed, error_messages.Assembly_description_reading_failed_message)
-			last_error := support.lasterror
+			support.create_error (error_messages.Assembly_description_reading_failed, error_messages.Assembly_description_reading_failed_message)
+			last_error := support.last_error
 			retry
 		end
 	
-	Retry_result: INTEGER is 4
-		indexing
-			description: "Returned value in case user clicked on `Retry'"
-			external_name: "RetryResult"
-		end
-
-	Ignore_result: INTEGER is 5
-		indexing
-			description: "Returned value in case user clicked on `Ignore'"
-			external_name: "IgnoreResult"
-		end
-		
 	Error_caption: STRING is "ERROR - ISE Assembly Manager"
 		indexing
 			description: "Caption for error message boxes"
 			external_name: "ErrorCaption"
-		end
-	
-	Error_icon: INTEGER is 16
-		indexing
-			description: "Icon for error message boxes"
-			external_name: "ErrorIcon"
-		end
-
-	Abort_retry_ignore_message_box_buttons: INTEGER is 2
-		indexing
-			description: "Abort/Retry/Ignore message box buttons"
-			external_name: "AbortRetryIgnoreMessageBoxButtons"
 		end
 
 	Access_violation_error: STRING is "[The Eiffel Assembly Cache is currently accessed by another process. Do you want to force access anyway?%N%N%

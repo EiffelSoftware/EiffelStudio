@@ -41,13 +41,13 @@ feature -- Access
 		local
 			env: SYSTEM_ENVIRONMENT
 		do
-			Result := env.GetEnvironmentVariable (Key)
-			if Result.EndsWith ("\") then
-				Result := Result.Substring_int32_int32 (0, Result.Length - 1)
+			Result := env.Get_Environment_Variable (Key)
+			if Result.Ends_With ("\") then
+				Result := Result.Substring_int32_int32 (0, Result.get_Length - 1)
 			end
 		ensure
 			non_void_eiffel_delivery_path: Result /= Void
-			not_emtpy_eiffel_delivery_path: Result.Length > 0
+			not_emtpy_eiffel_delivery_path: Result.get_Length > 0
 		end
 		
 	Assemblies_folder_path: STRING is "\dotnet\assemblies\"
@@ -73,14 +73,14 @@ feature -- Access
 			name := a_descriptor.Name
 			version := a_descriptor.Version
 			culture := a_descriptor.Culture
-			public_key := a_descriptor.PublicKey
+			public_key := a_descriptor.Public_Key
 			string_to_code := name.Concat_String_String_String_String (name, dictionary.Dash, version, dictionary.Dash)
 			string_to_code := string_to_code.Concat_String_String_String_String (string_to_code, culture, dictionary.Dash, public_key)
 			Result := Assemblies_folder_path
 			Result := Result.Concat_String_String (Result, string_to_code)
 		ensure
 			assembly_folder_name_generated: Result /= Void
-			valid_folder_name: Result.Length > 0
+			valid_folder_name: Result.get_Length > 0
 		end			
 
 	xml_assembly_filename (an_assembly_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR): STRING is
@@ -91,7 +91,7 @@ feature -- Access
 			non_void_assembly_descriptor: an_assembly_descriptor /= Void
 			non_void_assembly_version: an_assembly_descriptor.version /= Void
 			non_void_assembly_culture: an_assembly_descriptor.culture /= Void
-			non_void_assembly_public_key: an_assembly_descriptor.publickey /= Void
+			non_void_assembly_public_key: an_assembly_descriptor.public_key /= Void
 		local
 			assembly_folder_path: STRING
 			retried: BOOLEAN
@@ -124,7 +124,7 @@ feature -- Access
 			external_name: "XmlTypeFilename"
 		require
 			non_void_full_external_name: type_full_external_name /= Void
-			not_empty_full_external_name: type_full_external_name.length > 0
+			not_empty_full_external_name: type_full_external_name.get_length > 0
 			non_void_assembly_descriptor: an_assembly_descriptor /= Void
 		local
 			formatter: FORMATTER
@@ -135,7 +135,7 @@ feature -- Access
 				create formatter.make
 				assembly_folder_path := Eiffel_key
 				Result := assembly_folder_path.concat_string_string (assembly_folder_path, assembly_folder_path_from_info (an_assembly_descriptor))
-				Result := Result.Concat_String_String_String_String (Result, "\", formatter.FormatTypeName (type_full_external_name).ToLower, dictionary.Xml_extension)
+				Result := Result.Concat_String_String_String_String (Result, "\", formatter.Format_Type_Name (type_full_external_name).to_lower, dictionary.Xml_extension)
 			else
 				Result := Default_xml_type_filename
 			end
@@ -159,20 +159,20 @@ feature -- Basic Operations
 			assembly_path: STRING
 			file: SYSTEM_IO_FILE
 			retried: BOOLEAN		
+			white_space_handling: SYSTEM_XML_WHITESPACEHANDLING	
 		do
 			if not retried then
 				index_path := Eiffel_delivery_path
 				index_path := index_path.Concat_String_String_String_String (index_path, Assemblies_folder_path, dictionary.Index_filename, dictionary.Xml_extension)
 
 				create xml_reader.make_xmltextreader_10 (index_path)
-					-- WhitespaceHandling = None
-				xml_reader.set_WhitespaceHandling (2)
-				xml_reader.ReadStartElement_String (xml_elements.Assemblies_element)
+				xml_reader.set_Whitespace_Handling (white_space_handling.none)
+				xml_reader.Read_Start_Element_String (xml_elements.Assemblies_element)
 				from
 				until
-					not xml_reader.Name.Equals_String (xml_elements.Assembly_filename_element)
+					not xml_reader.get_Name.Equals_String (xml_elements.Assembly_filename_element)
 				loop
-					assembly_path := xml_reader.ReadElementString_String (xml_elements.Assembly_filename_element)	
+					assembly_path := xml_reader.Read_Element_String_String (xml_elements.Assembly_filename_element)	
 					assembly_path := assembly_path.replace (Eiffel_key, Eiffel_delivery_path)
 					if support.has_read_lock (assembly_path) then
 						file.delete (assembly_path.Concat_String_String_String (assembly_path, "\", support.read_lock_filename))
@@ -180,7 +180,7 @@ feature -- Basic Operations
 						file.delete (assembly_path.Concat_String_String_String (assembly_path, "\", support.write_lock_filename))	
 					end
 				end
-				xml_reader.ReadEndElement
+				xml_reader.Read_End_Element
 				xml_reader.Close
 			end
 		rescue

@@ -34,7 +34,7 @@ feature -- Status Setting
 			external_name: "SetEiffelName"
 		require
 			non_void_name: a_name /= Void
-			not_empty_name: a_name.length > 0
+			not_empty_name: a_name.get_length > 0
 		do
 			eiffel_name := a_name
 		ensure
@@ -47,7 +47,7 @@ feature -- Status Setting
 			external_name: "SetExternalName"
 		require
 			non_void_name: a_name /= Void
-			not_empty_name: a_name.length > 0
+			not_empty_name: a_name.get_length > 0
 		do
 			external_name := a_name
 		ensure

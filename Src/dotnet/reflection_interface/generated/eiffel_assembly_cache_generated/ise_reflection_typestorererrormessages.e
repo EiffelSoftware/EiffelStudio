@@ -1,7 +1,6 @@
 indexing
-	Generator: "Eiffel Emitter 2.4b2"
+	Generator: "Eiffel Emitter 2.6b2"
 	external_name: "ISE.Reflection.TypeStorerErrorMessages"
-
 external class
 	ISE_REFLECTION_TYPESTORERERRORMESSAGES
 
@@ -20,158 +19,158 @@ feature {NONE} -- Initialization
 
 feature -- Basic Operations
 
-	XmlClassBodyGenerationFailedMessage: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.TypeStorerErrorMessages"
-		alias
-			"XmlClassBodyGenerationFailedMessage"
-		end
-
-	XmlClassHeaderGenerationFailedMessage: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.TypeStorerErrorMessages"
-		alias
-			"XmlClassHeaderGenerationFailedMessage"
-		end
-
-	XmlClassHeaderGenerationFailed: STRING is
+	xml_class_header_generation_failed: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.TypeStorerErrorMessages"
 		alias
 			"XmlClassHeaderGenerationFailed"
 		end
 
-	XmlClassFooterGenerationFailed: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.TypeStorerErrorMessages"
-		alias
-			"XmlClassFooterGenerationFailed"
-		end
-
-	FileAccessFailed: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.TypeStorerErrorMessages"
-		alias
-			"FileAccessFailed"
-		end
-
-	XmlClassBodyGenerationFailed: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.TypeStorerErrorMessages"
-		alias
-			"XmlClassBodyGenerationFailed"
-		end
-
-	WriteLockRemovalFailed: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.TypeStorerErrorMessages"
-		alias
-			"WriteLockRemovalFailed"
-		end
-
-	XmlTypeGenerationFailed: STRING is
+	xml_type_generation_failed: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.TypeStorerErrorMessages"
 		alias
 			"XmlTypeGenerationFailed"
 		end
 
-	XmlFeatureArgumentsGenerationFailedMessage: STRING is
+	write_lock_removal_failed: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.TypeStorerErrorMessages"
 		alias
-			"XmlFeatureArgumentsGenerationFailedMessage"
+			"WriteLockRemovalFailed"
 		end
 
-	XmlClassFeaturesGenerationFailed: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.TypeStorerErrorMessages"
-		alias
-			"XmlClassFeaturesGenerationFailed"
-		end
-
-	XmlAliasElementGenerationFailed: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.TypeStorerErrorMessages"
-		alias
-			"XmlAliasElementGenerationFailed"
-		end
-
-	XmlTypeGenerationFailedMessage: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.TypeStorerErrorMessages"
-		alias
-			"XmlTypeGenerationFailedMessage"
-		end
-
-	XmlFeatureAssertionsGenerationFailed: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.TypeStorerErrorMessages"
-		alias
-			"XmlFeatureAssertionsGenerationFailed"
-		end
-
-	XmlInheritElementGenerationFailedMessage: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.TypeStorerErrorMessages"
-		alias
-			"XmlInheritElementGenerationFailedMessage"
-		end
-
-	XmlInheritElementGenerationFailed: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.TypeStorerErrorMessages"
-		alias
-			"XmlInheritElementGenerationFailed"
-		end
-
-	XmlClassFooterGenerationFailedMessage: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.TypeStorerErrorMessages"
-		alias
-			"XmlClassFooterGenerationFailedMessage"
-		end
-
-	XmlAliasElementGenerationFailedMessage: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.TypeStorerErrorMessages"
-		alias
-			"XmlAliasElementGenerationFailedMessage"
-		end
-
-	WriteLockRemovalFailedMessage: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.TypeStorerErrorMessages"
-		alias
-			"WriteLockRemovalFailedMessage"
-		end
-
-	FileAccessFailedMessage: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.TypeStorerErrorMessages"
-		alias
-			"FileAccessFailedMessage"
-		end
-
-	XmlClassFeaturesGenerationFailedMessage: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.TypeStorerErrorMessages"
-		alias
-			"XmlClassFeaturesGenerationFailedMessage"
-		end
-
-	XmlFeatureAssertionsGenerationFailedMessage: STRING is
+	xml_feature_assertions_generation_failed_message: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.TypeStorerErrorMessages"
 		alias
 			"XmlFeatureAssertionsGenerationFailedMessage"
 		end
 
-	XmlFeatureArgumentsGenerationFailed: STRING is
+	xml_class_body_generation_failed: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.TypeStorerErrorMessages"
+		alias
+			"XmlClassBodyGenerationFailed"
+		end
+
+	file_access_failed: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.TypeStorerErrorMessages"
+		alias
+			"FileAccessFailed"
+		end
+
+	xml_class_features_generation_failed_message: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.TypeStorerErrorMessages"
+		alias
+			"XmlClassFeaturesGenerationFailedMessage"
+		end
+
+	xml_feature_assertions_generation_failed: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.TypeStorerErrorMessages"
+		alias
+			"XmlFeatureAssertionsGenerationFailed"
+		end
+
+	xml_class_footer_generation_failed: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.TypeStorerErrorMessages"
+		alias
+			"XmlClassFooterGenerationFailed"
+		end
+
+	file_access_failed_message: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.TypeStorerErrorMessages"
+		alias
+			"FileAccessFailedMessage"
+		end
+
+	xml_class_footer_generation_failed_message: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.TypeStorerErrorMessages"
+		alias
+			"XmlClassFooterGenerationFailedMessage"
+		end
+
+	xml_class_body_generation_failed_message: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.TypeStorerErrorMessages"
+		alias
+			"XmlClassBodyGenerationFailedMessage"
+		end
+
+	xml_alias_element_generation_failed_message: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.TypeStorerErrorMessages"
+		alias
+			"XmlAliasElementGenerationFailedMessage"
+		end
+
+	xml_inherit_element_generation_failed_message: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.TypeStorerErrorMessages"
+		alias
+			"XmlInheritElementGenerationFailedMessage"
+		end
+
+	write_lock_removal_failed_message: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.TypeStorerErrorMessages"
+		alias
+			"WriteLockRemovalFailedMessage"
+		end
+
+	xml_class_header_generation_failed_message: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.TypeStorerErrorMessages"
+		alias
+			"XmlClassHeaderGenerationFailedMessage"
+		end
+
+	xml_inherit_element_generation_failed: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.TypeStorerErrorMessages"
+		alias
+			"XmlInheritElementGenerationFailed"
+		end
+
+	xml_feature_arguments_generation_failed: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.TypeStorerErrorMessages"
 		alias
 			"XmlFeatureArgumentsGenerationFailed"
+		end
+
+	xml_type_generation_failed_message: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.TypeStorerErrorMessages"
+		alias
+			"XmlTypeGenerationFailedMessage"
+		end
+
+	xml_alias_element_generation_failed: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.TypeStorerErrorMessages"
+		alias
+			"XmlAliasElementGenerationFailed"
+		end
+
+	xml_class_features_generation_failed: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.TypeStorerErrorMessages"
+		alias
+			"XmlClassFeaturesGenerationFailed"
+		end
+
+	xml_feature_arguments_generation_failed_message: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.TypeStorerErrorMessages"
+		alias
+			"XmlFeatureArgumentsGenerationFailedMessage"
 		end
 
 end -- class ISE_REFLECTION_TYPESTORERERRORMESSAGES

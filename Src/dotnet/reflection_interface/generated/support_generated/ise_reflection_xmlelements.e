@@ -1,7 +1,6 @@
 indexing
-	Generator: "Eiffel Emitter 2.4b2"
+	Generator: "Eiffel Emitter 2.6b2"
 	external_name: "ISE.Reflection.XmlElements"
-
 external class
 	ISE_REFLECTION_XMLELEMENTS
 
@@ -20,536 +19,543 @@ feature {NONE} -- Initialization
 
 feature -- Basic Operations
 
-	AssemblyTypeFilenameElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"AssemblyTypeFilenameElement"
-		end
-
-	AssemblyNameElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"AssemblyNameElement"
-		end
-
-	EiffelClusterPathElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"EiffelClusterPathElement"
-		end
-
-	AssemblyFilenameElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"AssemblyFilenameElement"
-		end
-
-	FooterElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"FooterElement"
-		end
-
-	PostconditionsElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"PostconditionsElement"
-		end
-
-	PostconditionTagElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"PostconditionTagElement"
-		end
-
-	ReturnTypeElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"ReturnTypeElement"
-		end
-
-	ModifiedElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"ModifiedElement"
-		end
-
-	PreconditionsElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"PreconditionsElement"
-		end
-
-	BasicOperationsElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"BasicOperationsElement"
-		end
-
-	ExpandedElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"ExpandedElement"
-		end
-
-	InfixElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"InfixElement"
-		end
-
-	RedefineElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"RedefineElement"
-		end
-
-	AssembliesElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"AssembliesElement"
-		end
-
-	InitializationElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"InitializationElement"
-		end
-
-	InvariantTextElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"InvariantTextElement"
-		end
-
-	StaticElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"StaticElement"
-		end
-
-	PreconditionTagElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"PreconditionTagElement"
-		end
-
-	AbstractElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"AbstractElement"
-		end
-
-	ExportElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"ExportElement"
-		end
-
-	FeatureEiffelNameElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"FeatureEiffelNameElement"
-		end
-
-	CreationRoutineElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"CreationRoutineElement"
-		end
-
-	ArgumentTypeElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"ArgumentTypeElement"
-		end
-
-	ImplementationElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"ImplementationElement"
-		end
-
-	PostconditionElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"PostconditionElement"
-		end
-
-	ArgumentTypeFullNameElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"ArgumentTypeFullNameElement"
-		end
-
-	CommentsElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"CommentsElement"
-		end
-
-	FieldElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"FieldElement"
-		end
-
-	SpecialsElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"SpecialsElement"
-		end
-
-	ClassEiffelNameElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"ClassEiffelNameElement"
-		end
-
-	PrefixElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"PrefixElement"
-		end
-
-	ArgumentsElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"ArgumentsElement"
-		end
-
-	FrozenFeatureElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"FrozenFeatureElement"
-		end
-
-	InvariantTagElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"InvariantTagElement"
-		end
-
-	AliasElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"AliasElement"
-		end
-
-	DeferredElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"DeferredElement"
-		end
-
-	ReturnTypeEnumElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"ReturnTypeEnumElement"
-		end
-
-	BinaryOperatorsElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"BinaryOperatorsElement"
-		end
-
-	PostconditionTextElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"PostconditionTextElement"
-		end
-
-	FeatureExternalNameElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"FeatureExternalNameElement"
-		end
-
-	NamespaceElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"NamespaceElement"
-		end
-
-	BodyElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"BodyElement"
-		end
-
-	InvariantsElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"InvariantsElement"
-		end
-
-	PreconditionElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"PreconditionElement"
-		end
-
-	FeatureElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"FeatureElement"
-		end
-
-	MethodElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"MethodElement"
-		end
-
-	PreconditionTextElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"PreconditionTextElement"
-		end
-
-	UnaryOperatorsElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"UnaryOperatorsElement"
-		end
-
-	AssemblyTypesElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"AssemblyTypesElement"
-		end
-
-	ArgumentElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"ArgumentElement"
-		end
-
-	AssemblyCultureElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"AssemblyCultureElement"
-		end
-
-	AssemblyElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"AssemblyElement"
-		end
-
-	ParentNameElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"ParentNameElement"
-		end
-
-	EmitterVersionNumberElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"EmitterVersionNumberElement"
-		end
-
-	InvariantElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"InvariantElement"
-		end
-
-	SelectElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"SelectElement"
-		end
-
-	ElementChangeElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"ElementChangeElement"
-		end
-
-	SimpleNameElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"SimpleNameElement"
-		end
-
-	FrozenElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"FrozenElement"
-		end
-
-	AccessElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"AccessElement"
-		end
-
-	ArgumentTypeEnumElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"ArgumentTypeEnumElement"
-		end
-
-	RenameElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"RenameElement"
-		end
-
-	ReturnTypeFullNameElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"ReturnTypeFullNameElement"
-		end
-
-	AssemblyVersionElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"AssemblyVersionElement"
-		end
-
-	CreateNoneElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"CreateNoneElement"
-		end
-
-	ArgumentExternalNameElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"ArgumentExternalNameElement"
-		end
-
-	UndefineElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"UndefineElement"
-		end
-
-	ParentElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"ParentElement"
-		end
-
-	ClassElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"ClassElement"
-		end
-
-	ModifiedFeatureElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"ModifiedFeatureElement"
-		end
-
-	InheritElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"InheritElement"
-		end
-
-	HeaderElement: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.XmlElements"
-		alias
-			"HeaderElement"
-		end
-
-	AssemblyPublicKeyElement: STRING is
+	assembly_public_key_element: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.XmlElements"
 		alias
 			"AssemblyPublicKeyElement"
 		end
 
-	CreateElement: STRING is
+	creation_routine_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"CreationRoutineElement"
+		end
+
+	feature_eiffel_name_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"FeatureEiffelNameElement"
+		end
+
+	undefine_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"UndefineElement"
+		end
+
+	argument_type_full_name_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"ArgumentTypeFullNameElement"
+		end
+
+	arguments_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"ArgumentsElement"
+		end
+
+	create_element: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.XmlElements"
 		alias
 			"CreateElement"
 		end
 
-	ArgumentEiffelNameElement: STRING is
+	create_none_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"CreateNoneElement"
+		end
+
+	field_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"FieldElement"
+		end
+
+	argument_external_name_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"ArgumentExternalNameElement"
+		end
+
+	element_change_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"ElementChangeElement"
+		end
+
+	assembly_version_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"AssemblyVersionElement"
+		end
+
+	argument_type_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"ArgumentTypeElement"
+		end
+
+	unary_operators_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"UnaryOperatorsElement"
+		end
+
+	specials_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"SpecialsElement"
+		end
+
+	assembly_type_filename_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"AssemblyTypeFilenameElement"
+		end
+
+	comments_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"CommentsElement"
+		end
+
+	preconditions_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"PreconditionsElement"
+		end
+
+	infix_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"InfixElement"
+		end
+
+	export_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"ExportElement"
+		end
+
+	enum_literal_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"EnumLiteralElement"
+		end
+
+	assembly_name_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"AssemblyNameElement"
+		end
+
+	precondition_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"PreconditionElement"
+		end
+
+	assemblies_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"AssembliesElement"
+		end
+
+	expanded_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"ExpandedElement"
+		end
+
+	static_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"StaticElement"
+		end
+
+	prefix_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"PrefixElement"
+		end
+
+	return_type_full_name_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"ReturnTypeFullNameElement"
+		end
+
+	body_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"BodyElement"
+		end
+
+	enum_type_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"EnumTypeElement"
+		end
+
+	postcondition_tag_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"PostconditionTagElement"
+		end
+
+	rename_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"RenameElement"
+		end
+
+	assembly_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"AssemblyElement"
+		end
+
+	class_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"ClassElement"
+		end
+
+	parent_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"ParentElement"
+		end
+
+	basic_operations_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"BasicOperationsElement"
+		end
+
+	postcondition_text_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"PostconditionTextElement"
+		end
+
+	redefine_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"RedefineElement"
+		end
+
+	implementation_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"ImplementationElement"
+		end
+
+	return_type_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"ReturnTypeElement"
+		end
+
+	feature_external_name_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"FeatureExternalNameElement"
+		end
+
+	assembly_types_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"AssemblyTypesElement"
+		end
+
+	precondition_tag_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"PreconditionTagElement"
+		end
+
+	invariant_tag_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"InvariantTagElement"
+		end
+
+	invariants_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"InvariantsElement"
+		end
+
+	modified_feature_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"ModifiedFeatureElement"
+		end
+
+	select_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"SelectElement"
+		end
+
+	assembly_filename_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"AssemblyFilenameElement"
+		end
+
+	abstract_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"AbstractElement"
+		end
+
+	modified_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"ModifiedElement"
+		end
+
+	parent_name_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"ParentNameElement"
+		end
+
+	deferred_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"DeferredElement"
+		end
+
+	inherit_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"InheritElement"
+		end
+
+	feature_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"FeatureElement"
+		end
+
+	namespace_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"NamespaceElement"
+		end
+
+	footer_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"FooterElement"
+		end
+
+	simple_name_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"SimpleNameElement"
+		end
+
+	frozen_feature_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"FrozenFeatureElement"
+		end
+
+	alias_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"AliasElement"
+		end
+
+	new_slot_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"NewSlotElement"
+		end
+
+	argument_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"ArgumentElement"
+		end
+
+	eiffel_cluster_path_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"EiffelClusterPathElement"
+		end
+
+	method_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"MethodElement"
+		end
+
+	frozen_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"FrozenElement"
+		end
+
+	initialization_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"InitializationElement"
+		end
+
+	header_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"HeaderElement"
+		end
+
+	invariant_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"InvariantElement"
+		end
+
+	access_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"AccessElement"
+		end
+
+	emitter_version_number_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"EmitterVersionNumberElement"
+		end
+
+	assembly_culture_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"AssemblyCultureElement"
+		end
+
+	postcondition_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"PostconditionElement"
+		end
+
+	class_eiffel_name_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"ClassEiffelNameElement"
+		end
+
+	binary_operators_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"BinaryOperatorsElement"
+		end
+
+	invariant_text_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"InvariantTextElement"
+		end
+
+	argument_eiffel_name_element: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.XmlElements"
 		alias
 			"ArgumentEiffelNameElement"
+		end
+
+	postconditions_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"PostconditionsElement"
+		end
+
+	precondition_text_element: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.XmlElements"
+		alias
+			"PreconditionTextElement"
 		end
 
 end -- class ISE_REFLECTION_XMLELEMENTS

@@ -67,7 +67,7 @@ feature -- Status Setting
 			external_name: "SetExportationList"
 		require
 			non_void_list: a_list /= Void
-			not_empty_list: a_list.count > 0
+			not_empty_list: a_list.get_count > 0
 		do
 			exportation_list := a_list
 		ensure
@@ -82,7 +82,7 @@ feature -- Basic Operations
 			external_name: "AddExportation"
 		require
 			non_void_class_name: a_class_name /= Void
-			not_empty_class_name: a_class_name.length > 0
+			not_empty_class_name: a_class_name.get_length > 0
 		local
 			added: INTEGER
 		do
@@ -94,24 +94,24 @@ feature -- Basic Operations
 			exportation_added: exportation_list.contains (a_class_name)
 		end
 		
-	to_string: STRING is
+	string_representation: STRING is
 		indexing
 			description: "Give a string representation of the inheritance clause."
-			external_name: "ToString"
+			external_name: "StringRepresentation"
 		local
 			i: INTEGER
 			a_class_name: STRING			
 		do
-			if exportation_list /= Void and then exportation_list.count > 0 then
+			if exportation_list /= Void and then exportation_list.get_count > 0 then
 				Result := Opening_curl_bracket
 				from
 				until
-					i = exportation_list.count
+					i = exportation_list.get_count
 				loop
-					a_class_name ?= exportation_list.item (i)
-					if a_class_name /= Void and then a_class_name.length > 0 then
+					a_class_name ?= exportation_list.get_item (i)
+					if a_class_name /= Void and then a_class_name.get_length > 0 then
 						Result := Result.concat_string_string (Result, a_class_name)
-						if i < exportation_list.count - 1 then
+						if i < exportation_list.get_count - 1 then
 							Result := Result.concat_string_string_string (Result, Comma, Space)
 						end
 					end

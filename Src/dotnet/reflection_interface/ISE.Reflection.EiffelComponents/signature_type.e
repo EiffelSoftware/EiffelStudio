@@ -31,14 +31,6 @@ feature -- Access
 			description: "Type external name (full name)"
 			external_name: "TypeFullExternalName"
 		end
-
-feature -- Status Report
-
-	is_enum: BOOLEAN 
-		indexing
-			description: "Is signature type an enum?"
-			external_name: "IsEnum"
-		end
 		
 feature -- Status Setting
 
@@ -48,7 +40,7 @@ feature -- Status Setting
 			external_name: "SetTypeEiffelName"
 		require
 			non_void_name: a_name /= Void
-			not_empty_name: a_name.length > 0
+			not_empty_name: a_name.get_length > 0
 		do
 			type_eiffel_name := a_name
 		ensure
@@ -61,21 +53,11 @@ feature -- Status Setting
 			external_name: "SetTypeFullExternalName"
 		require
 			non_void_name: a_name /= Void
-			not_empty_name: a_name.length > 0
+			not_empty_name: a_name.get_length > 0
 		do
 			type_full_external_name := a_name
 		ensure
 			type_full_external_name_set: type_full_external_name.equals_string (a_name)
-		end
-
-	set_enum (a_value: like is_enum) is
-		indexing
-			description: "Set `is_enum' with `a_value'."
-			external_name: "SetEnum"
-		do
-			is_enum := a_value
-		ensure
-			is_enum_set: is_enum = a_value
 		end
 		
 end -- class SIGNATURE_TYPE

@@ -1,5 +1,7 @@
-class DYNAMIC_FEAT_I inherit
+class
+	DYNAMIC_FEAT_I
 
+inherit
 	DYNAMIC_I
 		redefine
 			is_partial
@@ -26,10 +28,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_partial: BOOLEAN is
-		do
-			Result := true
-		end;
+	is_partial: BOOLEAN is True
 
 	is_dynamic (feat_name: STRING): BOOLEAN is
 		do

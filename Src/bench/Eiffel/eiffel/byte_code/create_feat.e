@@ -70,6 +70,7 @@ feature
 			type_set: ROUT_ID_SET
 		do
 			buffer := context.buffer;
+
 			if context.final_mode then
 				table := Eiffel_table.poly_table (rout_id);
 

@@ -6,7 +6,8 @@ inherit
 
 	PROCEDURE_I
 		rename
-			transfer_to as procedure_transfer_to
+			transfer_to as procedure_transfer_to,
+			equiv as procedure_equiv
 		redefine
 			melt, execution_unit, generate,
 			access, is_external, new_rout_unit, valid_body_id,
@@ -15,12 +16,12 @@ inherit
 
 	PROCEDURE_I
 		redefine
-			transfer_to,
+			transfer_to, equiv,
 			melt, execution_unit, generate,
 			access, is_external, new_rout_unit, valid_body_id,
 			can_be_inlined
 		select
-			transfer_to
+			transfer_to, equiv
 		end;
 	
 feature -- Attributes for externals
@@ -111,6 +112,30 @@ feature -- Routines for externals
 			include_list := a;
 		end;
 
+feature -- Incrementality
+
+	equiv (other: FEATURE_I): BOOLEAN is
+		local
+			other_ext: EXTERNAL_I
+		do
+			Result := procedure_equiv (other);
+			if Result then
+				other_ext ?= other; -- Cannot fail
+				if encapsulated then
+					Result := other_ext.encapsulated and then
+						equal (alias_name, other_ext.alias_name) and then
+						equal (arg_list, other_ext.arg_list) and then
+						equal (dll_arg, other_ext.dll_arg) and then
+						equal (include_list, other_ext.include_list) and then
+						equal (return_type, other_ext.return_type) and then
+						equal (special_file_name, other_ext.special_file_name) and then
+						special_id = other_ext.special_id
+				else
+					Result := equal (alias_name, other_ext.alias_name)
+				end
+			end
+		end
+
 feature 
 
 	alias_name: STRING;
@@ -129,6 +154,15 @@ feature
 			-- Assign `b' to `encapsulated'.
 		do
 			encapsulated := b;
+				-- FIXME
+				-- FIXME
+				-- FIXME
+				-- FIXME
+				-- FIXME
+				-- The test for freezing is done in `equiv' from FEATURE_TABLE
+				-- This is a TEMPORARY solution (3.3 beta bootstrap)!!!!!!
+
+
 				-- for a macro or a signature in an external declaration
 				-- the external is not handled as a `standard' external
 				-- and the system does not freeze by itself. We have to
@@ -137,9 +171,9 @@ feature
 				-- need to freeze the system but no way to tell the 
 				-- system unless we use the same scheme as for the `standard'
 				-- externals.
-			if b then 
-				System.set_freeze (True);
-			end;
+			--if b then 
+				--System.set_freeze (True);
+			--end;
 		end;
 
 	is_external: BOOLEAN is

@@ -23,12 +23,12 @@ feature {NONE} -- Initialization
 
 feature {EV_APPLICATION_IMP} -- Access
 
-	accelerator_table: EV_ACCELERATOR_TABLE_IMP is
+--	accelerator_table: EV_ACCELERATOR_TABLE_IMP is
 			-- Table that memories and passes the accelerators to the
 			-- system. In this table, all the accelerators are unique.
-		once
-			create Result
-		end
+--		once
+--			create Result
+--		end
 
 feature {NONE} -- Status report
 
@@ -100,6 +100,9 @@ end -- class EV_ACCELERATOR_HANDLER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/03/16 22:53:33  brendel
+--| Commented out reference to obsolete class.
+--|
 --| Revision 1.6  2000/02/19 07:13:42  oconnor
 --| removed old command stuff
 --|

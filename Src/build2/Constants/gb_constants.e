@@ -349,6 +349,8 @@ feature -- Warning Dialogs
 		%please select a different component name."
 		
 	Event_feature_name_warning: STRING is "Please correct invalid feature names (highlighted in red).%N%NPossible causes include :-%N   Name already used as object name in system.%N   Name already used as feature name in system%N   Name is an Eiffel reserved word."
+	
+	Duplicate_event_feature_name_warning: STRING is "You have specified two identical feature names.%N All feature names must be unique.%N%NPlease resolve this conflict."
 		
 	Component_identical_name_warning: STRING is " is already used as a component name.%NPlease enter a unique component name."
 	

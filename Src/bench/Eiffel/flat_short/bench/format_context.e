@@ -293,6 +293,11 @@ feature -- Access
 
 feature -- Setting
 
+	set_class_c (c: CLASS_C) is
+		do
+			class_c := c
+		end
+
 	set_separator (s: TEXT_ITEM) is
 			-- Set current separator to `s'.
 		do
@@ -697,22 +702,27 @@ feature -- Element change
 			adapt: like local_adapt
 			type: TYPE_A
 		do
-			if format.dot_needed then
-				adapt := local_adapt.adapt_nested_feature (name, global_adapt)
+			if is_for_case then
+				name_of_current_feature := clone (name)
+				arguments := args
 			else
-				adapt := unnested_local_adapt.adapt_feature (name, global_adapt)
-				type := last_class_printed
-				if type /= Void then
-						-- Need to update type local_adapt for
-						-- ! TYPE ! name.make
-					adapt.set_source_type (type)
-					adapt.set_target_type (type)
-					adapt.set_evaluated_type
+				if format.dot_needed then
+					adapt := local_adapt.adapt_nested_feature (name, global_adapt)
+				else
+					adapt := unnested_local_adapt.adapt_feature (name, global_adapt)
+					type := last_class_printed
+					if type /= Void then
+							-- Need to update type local_adapt for
+							-- ! TYPE ! name.make
+						adapt.set_source_type (type)
+						adapt.set_target_type (type)
+						adapt.set_evaluated_type
+					end
 				end
+				local_adapt := adapt
+				arguments := args
+				was_infix_arguments := False
 			end
-			local_adapt := adapt
-			arguments := args
-			was_infix_arguments := False
 		end
 
 	prepare_for_main_feature is
@@ -725,7 +735,9 @@ feature -- Element change
 	prepare_for_current is
 			-- Prepare for Current.
 		do
-			local_adapt := global_adapt.adapt_current;	
+			if not is_for_case then
+				local_adapt := global_adapt.adapt_current;
+			end
 			arguments := Void
 		end
 
@@ -735,34 +747,52 @@ feature -- Element change
 			adapt: like local_adapt
 			type: TYPE_A
 		do
-			adapt := global_adapt.adapt_result
-			type := last_class_printed
-			if type /= Void then 
-					-- Clone result adaptation.
-					-- Need to update type in result for
-					-- ! TYPE ! Result.make 
-				adapt := clone (adapt)
-				adapt.set_source_type (type)
-				adapt.set_target_type (type)
-				adapt.set_evaluated_type
+			if not is_for_case then
+				adapt := global_adapt.adapt_result
+				type := last_class_printed
+				if type /= Void then 
+						-- Clone result adaptation.
+						-- Need to update type in result for
+						-- ! TYPE ! Result.make 
+					adapt := clone (adapt)
+					adapt.set_source_type (type)
+					adapt.set_target_type (type)
+					adapt.set_evaluated_type
+				end
+				local_adapt := adapt
 			end
-			local_adapt := adapt
 			arguments := Void
 		end
 
 	prepare_for_infix (internal_name: STRING; right: EXPR_AS) is
 			-- Prepare for infix with feature `internal_name'
 			-- and arg `right'.
+		local
+			name: STRING
 		do
-			local_adapt := local_adapt.adapt_infix (internal_name, global_adapt)
+			if is_for_case then
+				name := clone (internal_name);
+				name.tail (name.count - 7);
+				name_of_current_feature := operator_table.name (name);
+			else
+				local_adapt := local_adapt.adapt_infix (internal_name, global_adapt)
+				was_infix_arguments := True
+			end
 			arguments := right
-			was_infix_arguments := True
 		end
 
 	prepare_for_prefix (internal_name: STRING) is
 			-- Prepare for infix with feature `internal_name'.
+		local
+			name: STRING
 		do
-			local_adapt := local_adapt.adapt_prefix (internal_name, global_adapt)
+			if is_for_case then
+				name := clone (internal_name)
+				name.tail (name.count - 8)
+				name_of_current_feature := operator_table.name (name)
+			else
+				local_adapt := local_adapt.adapt_prefix (internal_name, global_adapt)
+			end
 			arguments := Void
 		end
 
@@ -891,13 +921,38 @@ feature -- Output
 
 	put_current_feature is
 			-- Put Current feature.
+		local
+			arg: EIFFEL_LIST [EXPR_AS]
+			item: BASIC_TEXT
+			i, nb: INTEGER
 		do
-			if local_adapt.is_normal then
-				put_normal_feature
-			elseif local_adapt.is_infix then
-				put_infix_feature
+			if is_for_case then
+				if format.dot_needed then
+					text.add (ti_Dot)
+				elseif not tabs_emitted then
+					emit_tabs
+				end
+				text.add_default_string (name_of_current_feature)
+				arg ?= arguments
+				if arg /= Void then
+					begin
+					set_separator (ti_Comma)
+					set_space_between_tokens
+					text.add_space
+					text.add (ti_L_parenthesis)
+					arg.simple_format (Current)
+					text.add (ti_R_parenthesis)
+					commit
+					arg.start
+				end
 			else
-				put_prefix_feature
+				if local_adapt.is_normal then
+					put_normal_feature
+				elseif local_adapt.is_infix then
+					put_infix_feature
+				else
+					put_prefix_feature
+				end
 			end
 		end
 
@@ -1037,56 +1092,91 @@ feature -- Implementation
 			is_key: BOOLEAN
 			c: CLASS_C
 		do
-			adapt := local_adapt
-			f_name := adapt.final_name
-				-- Use source feature for stone.
-			feature_i := adapt.target_feature
-			if f_name.item (1).is_alpha then
-				is_key := True
-			end
-			last_was_printed := True
-			if feature_i /= Void and then in_bench_mode then
-				c := adapt.target_class
-				!! ot.make (feature_i.api_feature (c.id), f_name)
-				if is_key then
-					ot.set_is_keyword
+			if is_for_case then
+				if not tabs_emitted then
+					emit_tabs
 				end
-				item := ot
-				text.insert_two (format.insertion_point, item, ti_Space)
-			else
-				if is_key then
+				f_name := name_of_current_feature
+				if f_name.item (1).is_alpha then
 					!KEYWORD_TEXT! item.make (f_name)
 				else
 					!SYMBOL_TEXT! item.make (f_name)
 				end
-				text.go_to (format.insertion_point)
 				text.add (item)
+			else
+				adapt := local_adapt
+				f_name := adapt.final_name
+					-- Use source feature for stone.
+				feature_i := adapt.target_feature
+				if f_name.item (1).is_alpha then
+					is_key := True
+				end
+				last_was_printed := True
+				if feature_i /= Void and then in_bench_mode then
+					c := adapt.target_class
+					!! ot.make (feature_i.api_feature (c.id), f_name)
+					if is_key then
+						ot.set_is_keyword
+					end
+					item := ot
+					text.insert_two (format.insertion_point, item, ti_Space)
+				else
+					if is_key then
+						!KEYWORD_TEXT! item.make (f_name)
+					else
+						!SYMBOL_TEXT! item.make (f_name)
+					end
+					text.go_to (format.insertion_point)
+					text.add (item)
+				end
+				last_was_printed := True
 			end
-			last_was_printed := True
 		end
-
+	
 	put_infix_feature is
 			-- Put infix feature.
 		local
 			args: like arguments
 			adapt: like local_adapt
+			arg: EXPR_AS
+			item: BASIC_TEXT
+			name: STRING
 		do
-			adapt := local_adapt
-			text.add_space
-			put_infix_name (adapt)
-			text.add_space
-			args := arguments
-			if args /= Void then
-				begin
-				new_expression
-				args.format (Current)
-				if last_was_printed then
-					commit
+			if is_for_case then
+				name := name_of_current_feature
+				if name.item (1).is_alpha then
+					!KEYWORD_TEXT! item.make (name)
 				else
-					rollback
+					!SYMBOL_TEXT! item.make (name)
 				end
-					-- Reestablish adaptations.
-				local_adapt := adapt
+				text.add_space
+				text.add (item)
+				text.add_space
+				arg ?= arguments
+				if arg /= Void then
+					begin
+					new_expression
+					arg.simple_format (Current)
+					commit
+				end
+			else
+				adapt := local_adapt
+				text.add_space
+				put_infix_name (adapt)
+				text.add_space
+				args := arguments
+				if args /= Void then
+					begin
+					new_expression
+					args.format (Current)
+					if last_was_printed then
+						commit
+					else
+						rollback
+					end
+						-- Reestablish adaptations.
+					local_adapt := adapt
+				end
 			end
 		end
 
@@ -1120,117 +1210,6 @@ feature -- Implementation
 			end
 			text.add (item)
 			last_was_printed := true
-		end
-
-feature -- Case format
-
-	case_prepare_for_feature (name: STRING; args: EIFFEL_LIST [EXPR_AS]) is
-		do
-			name_of_current_feature := clone (name)
-			arguments := args
-		ensure
-			arguments = args
-		end
-	
-	case_prepare_for_infix (internal_name: STRING; right: EXPR_AS) is
-			-- Prepare for infix with feature `internal_name'
-			-- and arg `right'.
-		local
-			name: STRING
-		do
-			name := clone (internal_name);
-			name.tail (name.count - 7);
-			name_of_current_feature := operator_table.name (name);
-			arguments := right
-		end
-
-	case_prepare_for_prefix (internal_name: STRING) is
-			-- Prepare for prefix feature.
-		local
-			name: STRING
-		do
-			name := clone (internal_name)
-			name.tail (name.count - 8)
-			name_of_current_feature := operator_table.name (name)
-			arguments := Void
-		end
-
-	case_prepare_for_result, case_prepare_for_current is
-			-- Prepare for Result, Current.
-		do
-			arguments := Void
-		ensure
-			arguments = Void
-		end
-
-	case_put_current_feature is
-			-- Put a normal feature.
-		local
-			arg: EIFFEL_LIST [EXPR_AS]
-			item: BASIC_TEXT
-			i, nb: INTEGER
-		do
-			if format.dot_needed then
-				text.add (ti_Dot)
-			elseif not tabs_emitted then
-				emit_tabs
-			end
-			text.add_default_string (name_of_current_feature)
-			arg ?= arguments
-			if arg /= Void then
-				begin
-				set_separator (ti_Comma)
-				set_space_between_tokens
-				text.add_space
-				text.add (ti_L_parenthesis)
-				arg.simple_format (Current)
-				text.add (ti_R_parenthesis)
-				commit
-				arg.start
-			end
-		end
-
-	case_put_infix_feature is
-			-- Put infix feature in `text'.
-		local
-			arg: EXPR_AS
-			item: BASIC_TEXT
-			name: STRING
-		do
-			name := name_of_current_feature
-			if name.item (1).is_alpha then
-				!KEYWORD_TEXT! item.make (name)
-			else
-				!SYMBOL_TEXT! item.make (name)
-			end
-			text.add_space
-			text.add (item)
-			text.add_space
-			arg ?= arguments
-			if arg /= Void then
-				begin
-				new_expression
-				arg.simple_format (Current)
-				commit
-			end
-		end
-
-	case_put_prefix_feature is
-			-- Put prefix feature in `text'.
-		local
-			item: BASIC_TEXT
-			name: STRING
-		do
-			if not tabs_emitted then
-				emit_tabs
-			end
-			name := name_of_current_feature
-			if name.item (1).is_alpha then
-				!KEYWORD_TEXT! item.make (name)
-			else
-				!SYMBOL_TEXT! item.make (name)
-			end
-			text.add (item)
 		end
 
 feature {NONE} -- Implementation

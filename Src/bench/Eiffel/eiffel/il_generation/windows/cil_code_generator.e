@@ -1225,15 +1225,36 @@ feature -- Class info
 			l_name_ca: MD_CUSTOM_ATTRIBUTE
 			l_class_name: STRING
 			l_meth_attr: INTEGER
+			l_type: GEN_TYPE_I
+			i, nb: INTEGER
 		do
 			l_class_token := actual_class_type_token (class_type.implementation_id)
 			l_class_name := class_type.associated_class.name_in_upper
 
-			create l_name_ca.make
-			l_name_ca.put_string (l_class_name)
-			l_name_ca.put_integer_16 (0)
-			define_custom_attribute (l_class_token,
-				current_module.ise_eiffel_name_attr_ctor_token, l_name_ca)
+			if class_type.is_generic then
+				l_type ?= class_type.type
+				create l_name_ca.make
+				l_name_ca.put_string (l_class_name)
+				from
+					l_name_ca.put_integer_32 (l_type.meta_generic.count)
+					i := l_type.meta_generic.lower
+					nb := l_type.meta_generic.upper
+				until
+					i > nb
+				loop
+					l_name_ca.put_string (l_type.meta_generic.item (i).il_type_name (Void))
+					i := i + 1
+				end
+				l_name_ca.put_integer_16 (0)
+				define_custom_attribute (l_class_token,
+					current_module.ise_eiffel_name_attr_generic_ctor_token, l_name_ca)
+			else
+				create l_name_ca.make
+				l_name_ca.put_string (l_class_name)
+				l_name_ca.put_integer_16 (0)
+				define_custom_attribute (l_class_token,
+					current_module.ise_eiffel_name_attr_ctor_token, l_name_ca)
+			end
 
 			if is_single_inheritance_implementation then
 				l_meth_attr := feature {MD_METHOD_ATTRIBUTES}.Public |
@@ -5381,10 +5402,38 @@ feature -- Unary operator generation
 
 feature -- Basic feature
 
-	generate_is_digit is
-			-- Generate `is_digit' on CHARACTER.
+	generate_upper_lower (is_upper: BOOLEAN) is
+			-- Generate upper if `is_upper', lower otherwise on CHARACTER.
 		local
-			l_is_digit_token: INTEGER
+			l_rout_token: INTEGER
+			l_sig: like method_sig
+		do
+			l_sig := method_sig
+			l_sig.reset
+
+			l_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Default_sig)
+			l_sig.set_parameter_count (1)
+			set_method_return_type (l_sig, Char_c_type)
+			set_signature_type (l_sig, Char_c_type)
+
+			if is_upper then
+				uni_string.set_string ("ToUpper")
+			else
+				uni_string.set_string ("ToLower")
+			end
+			l_rout_token := md_emit.define_member_ref (uni_string,
+				current_module.char_type_token, l_sig)
+
+			method_body.put_static_call (l_rout_token, 1, True)
+		end
+
+	generate_is_query_on_character (query_name: STRING) is
+			-- Generate is_`query_name' on CHARACTER returning a boolean.
+		require
+			query_name_not_void: query_name /= Void
+			query_name_not_empty: not query_name.is_empty
+		local
+			l_query_token: INTEGER
 			l_sig: like method_sig
 		do
 			l_sig := method_sig
@@ -5395,11 +5444,11 @@ feature -- Basic feature
 			set_method_return_type (l_sig, Boolean_c_type)
 			set_signature_type (l_sig, Char_c_type)
 
-			uni_string.set_string ("IsDigit")
-			l_is_digit_token := md_emit.define_member_ref (uni_string,
+			uni_string.set_string (query_name)
+			l_query_token := md_emit.define_member_ref (uni_string,
 				current_module.char_type_token, l_sig)
 
-			method_body.put_static_call (l_is_digit_token, 1, True)
+			method_body.put_static_call (l_query_token, 1, True)
 		end
 
 	generate_min (type: TYPE_I) is

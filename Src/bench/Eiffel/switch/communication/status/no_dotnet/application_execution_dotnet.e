@@ -87,6 +87,11 @@ feature -- Bridge to Debugger
 		do
 		end
 
+feature -- Bridge to Debugger
+
+	eifnet_debugger: EIFNET_DEBUGGER
+			-- Access to the Dotnet Debugger
+	
 feature -- Execution
 
 	run (args, cwd: STRING) is

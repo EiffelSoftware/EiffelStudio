@@ -32,6 +32,8 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
+
+	length: INTEGER
 		
 	dynamic_class: CLASS_C is
 			-- Find corresponding CLASS_C to type represented by `value'.

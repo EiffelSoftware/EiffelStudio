@@ -1,28 +1,37 @@
 remtrace Update the Eiffel libraries source
+iff isdir %EIFFEL_SRC then
+	fullrd %EIFFEL_SRC
+endiff
+safe_md %EIFFEL_SRC
+safe_md %EIFFEL_SRC\library
 cdd %EIFFEL_SRC\library
 remtrace base
-safe_up "Src/library/base" base
-remtrace com
-safe_up "Src/library/com" com
+exprt -r %DEFAULT_CVS_TAG -d base "Src/library/base"
 remtrace encryption
-safe_up "Src/library/encryption" encryption
+exprt -r %DEFAULT_CVS_TAG -d encryption "Src/library/encryption"
+remtrace event
+exprt -r %DEFAULT_CVS_TAG -d event "Src/library/event"
 remtrace exml
-safe_up "Src/library/exml" exml
+exprt -r %DEFAULT_CVS_TAG -d exml "Src/library/exml"
+remtrace gobo
+exprt -r %DEFAULT_CVS_TAG -d gobo "Src/library/gobo"
 remtrace lex
-safe_up "Src/library/lex" lex
+exprt -r %DEFAULT_CVS_TAG -d lex "Src/library/lex"
 remtrace net
-safe_up "Src/library/net" net
+exprt -r %DEFAULT_CVS_TAG -d net "Src/library/net"
 remtrace parse
-safe_up "Src/library/parse" parse
+exprt -r %DEFAULT_CVS_TAG -d parse "Src/library/parse"
+remtrace patterns
+exprt -r %DEFAULT_CVS_TAG -d patterns "Src/library/patterns"
 remtrace time
-safe_up "Src/library/time" time
+exprt -r %DEFAULT_CVS_TAG -d time "Src/library/time"
 remtrace wel
-safe_up "Src/library/wel" wel
+exprt -r %DEFAULT_CVS_TAG -d wel "Src/library/wel"
 remtrace vision2
-safe_up "Src/library/vision2" vision2
+exprt -r %DEFAULT_CVS_TAG -d vision2 "Src/library/vision2"
 remtrace wizard
-safe_up "Src/library/wizard" wizard
-cd ..
+exprt -r %DEFAULT_CVS_TAG -d wizard "Src/library/wizard"
+cd %EIFFEL_SRC
 remtrace Compile the Eiffel libraries C code
 remtrace com_il_generation
 cd Eiffel\eiffel\com_il_generation\Core\clib

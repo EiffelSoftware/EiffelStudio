@@ -6,11 +6,12 @@ REM NB: The following directory must contain a finalization Ace for ec.exe calle
 set FINALIZATION_DIR="D:\Compils\newbench"
 REM NB: The following directory must contain document.exe
 set DOCUMENT_DIR="D:\Delivery"
+REM NB: The following directory will be erased!
+set TMP_EIFFEL_SRC="D:\tmpdev"
 REM Where the new delivery is set up. Warning: if it exists, the directory will be erased!
 set INSTALL_DIR="D:\InstalledEiffel50"
 REM Get where hhc and wfwi are located, to be able to compile the documentation and the delivery.
-set PATH=%PATH;"C:\Program Files\HTML Help Workshop"
-alias WfWI "C:\apps\Wise for Windows Installer Evaluation\WfWI.exe"
+set PATH=%PATH;"C:\Program Files\HTML Help Workshop";"C:\apps\Wise for Windows Installer Evaluation\WfWI.exe"
 
 REM OK The rest is private, no need for you to see it :)
 
@@ -34,12 +35,12 @@ alias remtrace `echo %$ & echo -------------------------------- >>& %INSTALL_LOG
 REM Give info concerning the elapsed time
 alias give_time_to `remtrace time used to %$: & remtrace %@TIMER[1] & TIMER ON /1 >> NUL`
 REM Clean exit
-alias cancel `echo Exiting... & set PATH=%OLD_PATH & cdd %INIT_DIR & *cancel`
+alias cancel `echo Exiting... & set PATH=%OLD_PATH & cdd %INIT_DIR & set EIFFEL_SRC=%OLD_EIFFEL_SRC & *cancel`
 
 REM CVS Commands: up, checkout, export
 alias up `cvs -q up -Pd %$ >>& %INSTALL_LOG`
 alias co `cvs -q co -P %$ >>& %INSTALL_LOG`
-alias export `cvs -q export %$ >>& %INSTALL_LOG`
+alias exprt `cvs -q export %$ >>& %INSTALL_LOG`
 REM Tries to update or check out. %1: CVS path %2: local path
 alias safe_up `iff not isdir %2 then & ^
 iff exist %2 then & fullrf %2 & endiff & ^

@@ -5,11 +5,11 @@ iff isdir com_wizard then
 	iff %? != 0 then
 		echo Couldn't update com_wizard... checking out instead
 		fullrd com_wizard
-		co -r HEAD -d com_wizard "Src/com_wizard"
+		co -r %DEFAULT_CVS_TAG -d com_wizard "Src/com_wizard"
 	endiff
 else
 	if exist com_wizard fullrf com_wizard
-	co -r HEAD -d com_wizard "Src/com_wizard"
+	co -r %DEFAULT_CVS_TAG -d com_wizard "Src/com_wizard"
 endiff
 
 remtrace Compile the COM wizard

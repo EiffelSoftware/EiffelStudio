@@ -104,7 +104,7 @@ feature -- Execution
 					if not Eiffel_project.initialized then
 						open_project_file (project_file_name)
 					else
-						ebench_name := clone ((create {EIFFEL_ENV}).Ebench_command_name)
+						ebench_name := clone ((create {EIFFEL_ENV}).Estudio_command_name)
 						ebench_name.append (" ")
 						ebench_name.append (project_file_name)
 						launch_ebench (ebench_name)
@@ -131,7 +131,7 @@ feature -- Execution
 				-- and we set it on the last opened directory.
 			create environment_variable
 			create fod
-			last_directory_opened := environment_variable.get (Bench_Directory_List)
+			last_directory_opened := environment_variable.get (Studio_Directory_List)
 			if last_directory_opened /= Void then
 				fod.set_start_directory (last_directory_opened.substring (1,last_directory_opened.index_of(';',1) -1 ))
 			end

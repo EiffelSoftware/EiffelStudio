@@ -340,7 +340,7 @@ feature {NONE} -- Callbacks
 				if not Eiffel_Project.initialized then
 					create_project (dir_name, True)
 				else
-					ebench_name := clone (Ebench_command_name)
+					ebench_name := clone (Estudio_command_name)
 					ebench_name.append (" -create ")
 					ebench_name.append (dir_name)
 					launch_ebench (ebench_name)

@@ -1,5 +1,4 @@
 
-
 -- Internal representation of a system.
 
 class SYSTEM_I 
@@ -67,6 +66,7 @@ feature -- Counters
 			-- Initialize various counters.
 		do
 			set_compilation_id;
+			classes.init_server;
 			routine_id_counter.init_counter;
 			class_counter.init_counter;
 			static_type_id_counter.init_counter;
@@ -415,7 +415,7 @@ feature -- Properties
 			!!m_feature_server.make;
 			!!m_rout_id_server.make;
 			!!m_desc_server.make;
-			!! classes.make (System_chunk);
+			!! classes.make;
 				-- Counter creation
 			!! routine_id_counter.make;
 			!! class_counter.make;
@@ -707,7 +707,7 @@ end;
 							-- Cannot propagate for a protected class
 						not supplier.id.protected and then
 							-- A recursion may occur when removing a cluster
-						classes.has (supplier.id)
+						supplier.id.associated_class /= Void
 					then
 						remove_class (supplier);
 					end;
@@ -727,7 +727,7 @@ end;
 		require
 			id_not_void: id /= Void
 		do
-			Result := classes.item (id)
+			Result := id.associated_class
 debug ("CLASS_OF_ID")
 io.error.putstring ("Class of id ");
 id.trace;
@@ -1049,26 +1049,31 @@ end;
 			-- Check generic validity on old classes
 			-- generic parameters cannot be new classes
 		local
+			class_array: ARRAY [CLASS_C];
+			i, nb: INTEGER;
 			a_class: CLASS_C
 		do
 debug ("ACTIVITY")
 	io.error.putstring ("Check generics%N");
 end;
-			from
-				classes.start
-			until
-				classes.after
-			loop
-				a_class := classes.item_for_iteration;
-				if
-					a_class.generics /= Void
-				and then
-						-- If the class is changed then `pass1' has been
-						-- done successfully on the class
-					not a_class.changed
-				then
-					a_class.check_generic_parameters
-				end;
+			from classes.start until classes.after loop
+				class_array := classes.item_for_iteration;
+				nb := class_counter.item (classes.key_for_iteration).count
+				from i := 1 until i > nb loop
+					a_class := class_array.item (i)
+					if a_class /= Void then
+						if
+							a_class.generics /= Void
+						and then
+							-- If the class is changed then `pass1' has been
+							-- done successfully on the class
+							not a_class.changed
+						then
+							a_class.check_generic_parameters
+						end;
+					end
+					i := i + 1
+				end
 				classes.forth
 			end;
 			Error_handler.checksum
@@ -1078,6 +1083,8 @@ end;
 			-- Remove useless classes.
 		local
 			a_class: CLASS_C;
+			class_array: ARRAY [CLASS_C];
+			i, nb: INTEGER;
 			root_class_c: CLASS_C;
 			marked_classes: SEARCH_TABLE [CLASS_ID];
 			vd31: VD31;
@@ -1106,26 +1113,29 @@ end;
 
 				-- Remove all the classes that cannot be reached if they are
 				-- not protected
-			from
-				classes.start
-			until
-				classes.after
-			loop
-				a_class := classes.item_for_iteration;
-				if not marked_classes.has (a_class.id) then
-					if a_class.has_visible then
-						!!vd31;
-						vd31.set_class_name (a_class.class_name);
-						vd31.set_cluster (a_class.cluster);
-						Error_handler.insert_error (vd31);
-					else
+			from classes.start until classes.after loop
+				class_array := classes.item_for_iteration;
+				nb := class_counter.item (classes.key_for_iteration).count
+				from i := 1 until i > nb loop
+					a_class := class_array.item (i)
+					if a_class /= Void then
+						if not marked_classes.has (a_class.id) then
+							if a_class.has_visible then
+								!!vd31;
+								vd31.set_class_name (a_class.class_name);
+								vd31.set_cluster (a_class.cluster);
+								Error_handler.insert_error (vd31);
+							else
 debug ("REMOVE_CLASS")
 	io.error.putstring ("Remove useless classes: ");
 	io.error.putstring (a_class.class_name);
 	io.error.new_line;
 end;
-						remove_class (a_class)
-					end;
+								remove_class (a_class)
+							end;
+						end
+					end
+					i := i + 1
 				end
 				classes.forth
 			end;
@@ -1136,15 +1146,19 @@ end;
 			-- Build the conformance table
 		local
 			a_class: CLASS_C;
+			class_array: ARRAY [CLASS_C];
+			i, nb: INTEGER;
 		do
-			from
-					-- Iteration on the class of the system
-				classes.start
-			until
-				classes.after
-			loop
-				a_class := classes.item_for_iteration;
-				a_class.fill_conformance_table;
+			from classes.start until classes.after loop
+				class_array := classes.item_for_iteration;
+				nb := class_counter.item (classes.key_for_iteration).count
+				from i := 1 until i > nb loop
+					a_class := class_array.item (i)
+					if a_class /= Void then
+						a_class.fill_conformance_table;
+					end
+					i := i + 1
+				end
 				classes.forth
 			end;
 		end;
@@ -1258,21 +1272,26 @@ end;
 
 	check_vtec is
 		local
+			class_array: ARRAY [CLASS_C];
+			i, nb: INTEGER;
 			a_class: CLASS_C
 		do
-			from
-				classes.start
-			until
-				classes.after
-			loop
-				a_class := classes.item_for_iteration;
-				if
-					a_class.has_expanded or else
-					a_class.is_used_as_expanded
-				then
-					set_current_class (a_class);
-					a_class.check_expanded
-				end;
+			from classes.start until classes.after loop
+				class_array := classes.item_for_iteration;
+				nb := class_counter.item (classes.key_for_iteration).count
+				from i := 1 until i > nb loop
+					a_class := class_array.item (i)
+					if a_class /= Void then
+						if
+							a_class.has_expanded or else
+							a_class.is_used_as_expanded
+						then
+							set_current_class (a_class);
+							a_class.check_expanded
+						end;
+					end
+					i := i + 1
+				end
 				classes.forth
 			end;
 		end;
@@ -1692,6 +1711,8 @@ end;
 			-- Finalize a successfull recompilation and update the
 			-- compilation files.
 		local
+			class_array: ARRAY [CLASS_C];
+			i, nb: INTEGER;
 			a_class: CLASS_C
 		do
 				-- Reinitialization of control flags of the topological
@@ -1700,17 +1721,20 @@ end;
 			moved := False;
 
 				-- Reset the classes as unchanged
-			from
-				classes.start
-			until
-				classes.after
-			loop
-				a_class := classes.item_for_iteration;
-				a_class.set_changed (False);
-				a_class.set_changed2 (False);
-				-- FIXME: changed4, changed5, changed6
-				a_class.changed_features.clear_all;
-				a_class.propagators.wipe_out;
+			from classes.start until classes.after loop
+				class_array := classes.item_for_iteration;
+				nb := class_counter.item (classes.key_for_iteration).count
+				from i := 1 until i > nb loop
+					a_class := class_array.item (i)
+					if a_class /= Void then
+						a_class.set_changed (False);
+						a_class.set_changed2 (False);
+						-- FIXME: changed4, changed5, changed6
+						a_class.changed_features.clear_all;
+						a_class.propagators.wipe_out;
+					end
+					i := i + 1
+				end
 				classes.forth
 			end;
 
@@ -2136,24 +2160,27 @@ feature -- Final mode generation
 			-- Process Degree -4.
 		local
 			a_class: CLASS_C;
-			i: INTEGER;
-			deg_output: DEGREE_OUTPUT
+			i, j, nb: INTEGER;
+			deg_output: DEGREE_OUTPUT;
+			class_array: ARRAY [CLASS_C]
 		do
 			i := classes.count;
 			deg_output := Degree_output;
 			deg_output.put_start_degree (-4, i);
-			from 
-				classes.start 
-			until 
-				classes.after 
-			loop
-				a_class := classes.item_for_iteration;
-				deg_output.put_degree_minus_4 (a_class.e_class, i);
-
-				a_class.process_polymorphism;
-				History_control.check_overload;
-				classes.forth;
-				i := i - 1
+			from classes.start until classes.after loop
+				class_array := classes.item_for_iteration;
+				nb := class_counter.item (classes.key_for_iteration).count
+				from j := 1 until j > nb loop
+					a_class := class_array.item (j)
+					if a_class /= Void then
+						deg_output.put_degree_minus_4 (a_class.e_class, i);
+						a_class.process_polymorphism;
+						History_control.check_overload;
+						i := i - 1
+					end
+					j := j + 1
+				end
+				classes.forth
 			end;
 			deg_output.put_end_degree;
 			History_control.transfer;
@@ -2163,28 +2190,33 @@ feature -- Final mode generation
 	degree_minus_5 is
 			-- Process Degree -5.
 		local
+			class_array: ARRAY [CLASS_C];
+			i, nb: INTEGER;
 			a_class: CLASS_C;
-			i: INTEGER;
+			j: INTEGER;
 			deg_output: DEGREE_OUTPUT
 		do
-			i := classes.count;
+			j := classes.count;
 			deg_output := Degree_output;
-			deg_output.put_start_degree (-5, i);
+			deg_output.put_start_degree (-5, j);
 			!FINAL_MAKER! makefile_generator.make;
 			open_log_files;
 				-- Generation of C files associated to the classes of
 				-- the system.
-			from 
-				classes.start 
-			until 
-				classes.after 
-			loop
-				a_class := classes.item_for_iteration;
-				deg_output.put_degree_minus_5 (a_class.e_class, i);
-				current_class := a_class;
-				a_class.pass4;
-				classes.forth;
-				i := i - 1
+			from classes.start until classes.after loop
+				class_array := classes.item_for_iteration;
+				nb := class_counter.item (classes.key_for_iteration).count
+				from i := 1 until i > nb loop
+					a_class := class_array.item (i)
+					if a_class /= Void then
+						deg_output.put_degree_minus_5 (a_class.e_class, j);
+						current_class := a_class;
+						a_class.pass4;
+						j := j - 1
+					end
+					i := i + 1
+				end
+				classes.forth
 			end;
 			deg_output.put_end_degree;
 			close_log_files
@@ -2201,6 +2233,7 @@ feature -- Dead code removal
 	remove_dead_code is
 			-- Dead code removal
 		local
+			class_array: ARRAY [CLASS_C];
 			i, nb: INTEGER;
 			a_class: CLASS_C;
 			root_feat: FEATURE_I;
@@ -2220,19 +2253,22 @@ feature -- Dead code removal
 				remover.record (root_feat, a_class);
 			end;
 
-			from
-				classes.start
-			until
-				classes.after
-			loop
-				a_class := classes.item_for_iteration;
-				a_class.mark_dispose (remover);
-				if a_class.visible_level.has_visible then
-					a_class.mark_visible (remover)
-				end;
-					-- Protection of features of descendants
-					-- of DYNAMIC in the DC-set.
-				mark_dynamic_descendant_used (a_class);
+			from classes.start until classes.after loop
+				class_array := classes.item_for_iteration;
+				nb := class_counter.item (classes.key_for_iteration).count
+				from i := 1 until i > nb loop
+					a_class := class_array.item (i)
+					if a_class /= Void then
+						a_class.mark_dispose (remover);
+						if a_class.visible_level.has_visible then
+							a_class.mark_visible (remover)
+						end;
+							-- Protection of features of descendants
+							-- of DYNAMIC in the DC-set.
+						mark_dynamic_descendant_used (a_class);
+					end
+					i := i + 1
+				end
 				classes.forth
 			end;
 
@@ -2354,6 +2390,7 @@ feature -- Generation
 	process_dynamic_types is
 			-- Processing of the dynamic types.
 		local
+			class_array: ARRAY [CLASS_C];
 			class_list: ARRAY [CLASS_C];
 			a_class: CLASS_C;
 			types: TYPE_LIST;
@@ -2367,18 +2404,21 @@ debug ("ACTIVITY")
 	io.error.putstring ("Process dynamic types%N");
 end;
 				-- Sort the class_list by type id in `class_list'.
-			from
-				classes.start;
-				nb := max_class_id;
-				!!class_list.make (1, nb);
-			until
-				classes.after
-			loop
-				a_class := classes.item_for_iteration;
-				class_list.put (a_class, a_class.topological_id);
+			!!class_list.make (1, max_class_id);
+			from classes.start until classes.after loop
+				class_array := classes.item_for_iteration;
+				nb := class_counter.item (classes.key_for_iteration).count
+				from i := 1 until i > nb loop
+					a_class := class_array.item (i)
+					if a_class /= Void then
+						class_list.put (a_class, a_class.topological_id);
+					end
+					i := i + 1
+				end
 				classes.forth
 			end;
 
+			nb := max_class_id;
 				-- Iteration on `class_list' in order to compute new type
 				-- id's
 			from
@@ -2523,7 +2563,8 @@ end;
 	generate_skeletons is
 			-- Generate skeletons of class types
 		local
-			i, nb, nb_class: INTEGER;
+			class_array: ARRAY [CLASS_C];
+			j, i, nb, nb_class: INTEGER;
 			cl_type: CLASS_TYPE;
 			a_class: CLASS_C;
 			has_attribute, final_mode: BOOLEAN;
@@ -2563,43 +2604,46 @@ end;
 					-- Hash table extern declaration in workbench mode
 				Skeleton_file.putstring ("#include %"macros.h%"%N");
 				Skeleton_file.new_line;
-				from
-					classes.start
-				until
-					classes.after
-				loop
-					a_class := classes.item_for_iteration;
-					i := a_class.id.id;
-					if
-						not Compilation_modes.is_precompiling and
-						not a_class.is_precompiled
-					then
-						Skeleton_file.putstring ("extern int32 ra");
-						Skeleton_file.putint (i);
-						Skeleton_file.putstring ("[];%N");
-					end;
-					if a_class.has_visible then
-						Skeleton_file.putstring ("extern char *cl");
-						Skeleton_file.putint (i);
-						Skeleton_file.putstring ("[];%N");
-						Skeleton_file.putstring ("extern uint32 cr");
-						Skeleton_file.putint (i);
-						Skeleton_file.putstring ("[];%N");
-					end;
-					if not a_class.skeleton.empty then
-						from
-							types := a_class.types;
-							types.start
-						until
-							types.off
-						loop
-							Skeleton_file.putstring ("extern uint32 types");
-							Skeleton_file.putint (types.item.type_id);
-							Skeleton_file.putstring ("[];%N");
-							types.forth
-						end;
-					end;
-
+				from classes.start until classes.after loop
+					class_array := classes.item_for_iteration;
+					nb := class_counter.item (classes.key_for_iteration).count
+					from i := 1 until i > nb loop
+						a_class := class_array.item (i)
+						if a_class /= Void then
+							j := a_class.id.id;
+							if
+								not Compilation_modes.is_precompiling and
+								not a_class.is_precompiled
+							then
+								Skeleton_file.putstring ("extern int32 ra");
+								Skeleton_file.putint (j);
+								Skeleton_file.putstring ("[];%N");
+							end;
+							if a_class.has_visible then
+								Skeleton_file.putstring ("extern char *cl");
+								Skeleton_file.putint (j);
+								Skeleton_file.putstring ("[];%N");
+								Skeleton_file.putstring ("extern uint32 cr");
+								Skeleton_file.putint (j);
+								Skeleton_file.putstring ("[];%N");
+							end;
+							if not a_class.skeleton.empty then
+								from
+									types := a_class.types;
+									types.start
+								until
+									types.off
+								loop
+									Skeleton_file.putstring
+										("extern uint32 types");
+									Skeleton_file.putint (types.item.type_id);
+									Skeleton_file.putstring ("[];%N");
+									types.forth
+								end;
+							end;
+						end
+						i := i + 1
+					end
 					classes.forth
 				end;
 				Skeleton_file.new_line;
@@ -2608,6 +2652,7 @@ end;
 			end;
 
 			from
+				nb := Type_id_counter.value;
 				i := 1;
 			until
 				i > nb
@@ -2706,6 +2751,7 @@ end;
 	generate_cecil is
 			-- Generate Cecil structures
 		local
+			class_array: ARRAY [CLASS_C];
 			i, nb, generic, no_generic: INTEGER;
 			cl_type: CLASS_TYPE;
 			a_class: CLASS_C;
@@ -2725,15 +2771,18 @@ end;
 			end;
 			Cecil_file.putstring ("#include %"struct.h%"%N%N");
 
-			from
-				classes.start
-			until
-				classes.after
-			loop
-				a_class := classes.item_for_iteration;
-				if a_class.has_visible then
-					a_class.generate_cecil;
-				end;
+			from classes.start until classes.after loop
+				class_array := classes.item_for_iteration;
+				nb := class_counter.item (classes.key_for_iteration).count
+				from i := 1 until i > nb loop
+					a_class := class_array.item (i)
+					if a_class /= Void then
+						if a_class.has_visible then
+							a_class.generate_cecil;
+						end;
+					end
+					i := i + 1
+				end
 				classes.forth
 			end;
 
@@ -2784,38 +2833,46 @@ end;
 	make_cecil_tables is
 			-- Prepare cecil tables
 		local
+			class_array: ARRAY [CLASS_C];
+			i, nb: INTEGER;
 			generic, no_generic: INTEGER;
 			a_class: CLASS_C;
 			upper_class_name: STRING;
 		do
-			from
-				classes.start
-			until
-				classes.after
-			loop
-				a_class := classes.item_for_iteration;
-				if a_class.generics = Void then
-					no_generic := no_generic + 1;
-				else
-					generic := generic + 1;
-				end;
+			from classes.start until classes.after loop
+				class_array := classes.item_for_iteration;
+				nb := class_counter.item (classes.key_for_iteration).count
+				from i := 1 until i > nb loop
+					a_class := class_array.item (i)
+					if a_class /= Void then
+						if a_class.generics = Void then
+							no_generic := no_generic + 1;
+						else
+							generic := generic + 1;
+						end;
+					end
+					i := i + 1
+				end
 				classes.forth
 			end;
-			from
-				classes.start;
-				Cecil2.init (no_generic);
-				Cecil3.init (generic);
-			until
-				classes.after
-			loop
-				a_class := classes.item_for_iteration;
-				upper_class_name := clone (a_class.external_name);
-				upper_class_name.to_upper;
-				if a_class.generics = Void then
-					Cecil2.put (a_class, upper_class_name);
-				else
-					Cecil3.put (a_class, upper_class_name);
-				end;
+			Cecil2.init (no_generic);
+			Cecil3.init (generic);
+			from classes.start until classes.after loop
+				class_array := classes.item_for_iteration;
+				nb := class_counter.item (classes.key_for_iteration).count
+				from i := 1 until i > nb loop
+					a_class := class_array.item (i)
+					if a_class /= Void then
+						upper_class_name := clone (a_class.external_name);
+						upper_class_name.to_upper;
+						if a_class.generics = Void then
+							Cecil2.put (a_class, upper_class_name);
+						else
+							Cecil3.put (a_class, upper_class_name);
+						end;
+					end
+					i := i + 1
+				end
 				classes.forth
 			end;
 		end;
@@ -3487,6 +3544,7 @@ feature --Workbench option file generation
 	generate_option_file is
 			-- Generate compialtion option file
 		local
+			class_array: ARRAY [CLASS_C];
 			i, nb: INTEGER;
 			a_class: CLASS_C;
 			partial_debug: DEBUG_TAG_I;
@@ -3497,16 +3555,19 @@ feature --Workbench option file generation
 			Option_file.putstring ("#include %"struct.h%"%N%N");
 
 				-- First debug keys
-			from
-				classes.start
-			until
-				classes.after
-			loop
-				a_class := classes.item_for_iteration;
-				partial_debug ?= a_class.debug_level;
-				if partial_debug /= Void then
-					partial_debug.generate_keys (Option_file, a_class.id);
-				end;
+			from classes.start until classes.after loop
+				class_array := classes.item_for_iteration;
+				nb := class_counter.item (classes.key_for_iteration).count
+				from i := 1 until i > nb loop
+					a_class := class_array.item (i)
+					if a_class /= Void then
+						partial_debug ?= a_class.debug_level;
+						if partial_debug /= Void then
+							partial_debug.generate_keys (Option_file, a_class.id);
+						end;
+					end
+					i := i + 1
+				end
 				classes.forth
 			end;
 
@@ -3843,17 +3904,21 @@ feature -- Debug purpose
 
 	trace is
 		local
+			class_array: ARRAY [CLASS_C];
+			i, nb: INTEGER;
 			a_class: CLASS_C;
-			i: INTEGER
 		do
-			from
-				classes.start
-			until
-				classes.after
-			loop
-				a_class := classes.item_for_iteration;
-					-- Do nothing. Specific debug
-					-- code can be inserted here.
+			from classes.start until classes.after loop
+				class_array := classes.item_for_iteration;
+				nb := class_counter.item (classes.key_for_iteration).count
+				from i := 1 until i > nb loop
+					a_class := class_array.item (i)
+					if a_class /= Void then
+						-- Do nothing. Specific debug
+						-- code can be inserted here.
+					end
+					i := i + 1
+				end
 				classes.forth
 			end;
 		end;

@@ -82,6 +82,8 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 				System.set_makefile_names (file_names)
 			elseif language_name.is_c then
 				System.set_c_file_names (file_names)
+			elseif language_name.is_dotnet_resource then
+				System.set_dotnet_resources_names (file_names)
 			else
 				create vd34
 				vd34.set_language_name (language_name.language_name)

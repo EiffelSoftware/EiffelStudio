@@ -630,41 +630,15 @@ feature -- Generation Structure
 			main_module.save_to_disk
 		end
 
-	define_resource (a_module: IL_MODULE; a_file, a_name: STRING) is
-			-- Add resource file `a_file' with name `a_name' to `a_module'.
+	generate_resources (a_resources: LIST [STRING]) is
+			-- Generate all resources in assembly.
 		require
-			a_module_not_void: a_module /= Void
-			a_file_not_void: a_file /= Void
-			a_file_exists: (create {RAW_FILE}.make (a_file)).exists
-			a_name_not_void: a_name /= Void
+			a_resources_not_void: a_resources /= Void
 		local
-			l_token: INTEGER
-			l_resources: CLI_RESOURCES
-			l_data: MANAGED_POINTER
-			l_raw_file: RAW_FILE
+			l_resource_generator: IL_RESOURCE_GENERATOR
 		do
-				-- Get resources of `a_module' if already initialized,
-				-- otherwise create a new one.
-			if a_module.resources /= Void then
-				l_resources := a_module.resources
-			else
-				create l_resources.make
-				a_module.set_resources (l_resources)
-			end
-
-				-- Read content of `a_file' and add it to the list of known resources
-				-- of `a_module'.
-			create l_raw_file.make_open_read (a_file)
-			create l_data.make (l_raw_file.count)
-			l_raw_file.read_data (l_data.item, l_raw_file.count)
-			l_raw_file.close
-			l_resources.extend (l_data)
-
-				-- Add entry in manifest resource table of current module.
-			l_token := a_module.md_emit.define_manifest_resource (
-				create {UNI_STRING}.make (a_name), 0, 0, feature {MD_RESOURCE_FLAGS}.Public)
-		ensure
-			inserted: a_module.resources /= Void
+			create l_resource_generator.make (main_module, a_resources)
+			l_resource_generator.generate
 		end
 
 	define_file (a_module: IL_MODULE; a_file, a_name: STRING; file_flags: INTEGER): INTEGER is

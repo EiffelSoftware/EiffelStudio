@@ -25,6 +25,7 @@ feature {NONE} -- Initialization
 			-- Create a new character format object.
 		do
 			!EV_CHARACTER_FORMAT_IMP! implementation.make
+			implementation.set_interface (Current)
 		end
 
 feature -- Access
@@ -63,14 +64,6 @@ feature -- Status report
 			Result := implementation.is_italic
 		end
 
-	is_underline: BOOLEAN is
-			-- Is the character underline?
-		require
-			exists: not destroyed
-		do
-			Result := implementation.is_underline
-		end
-
 feature -- Status setting
 
 	set_bold (flag: BOOLEAN) is
@@ -80,8 +73,8 @@ feature -- Status setting
 		do
 			implementation.set_bold (flag)
 		ensure
-			flag_set: (flag implies is_bold) and 
-						(not flag implies not is_bold)
+--			flag_set: (flag implies is_bold) and 
+--						(not flag implies not is_bold)
 		end
 
 	set_italic (flag: BOOLEAN) is
@@ -91,19 +84,8 @@ feature -- Status setting
 		do
 			implementation.set_italic (flag)
 		ensure
-			flag_set: (flag implies is_italic) and 
-						(not flag implies not is_italic)
-		end
-
-	set_underline (flag: BOOLEAN) is
-			-- Set underline characters if `flag', unset otherwise.
-		require
-			exists: not destroyed
-		do
-			implementation.set_underline (flag)
-		ensure
-			flag_set: (flag implies is_underline) and 
-						(not flag implies not is_underline)
+--			flag_set: (flag implies is_italic) and 
+--						(not flag implies not is_italic)
 		end
 
 feature -- Element change

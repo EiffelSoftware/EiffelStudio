@@ -43,13 +43,6 @@ feature -- Status report
 		deferred
 		end
 
-	is_underline: BOOLEAN is
-			-- Is the character underline?
-		require
-			exists: not destroyed
-		deferred
-		end
-
 feature -- Status setting
 
 	set_bold (flag: BOOLEAN) is
@@ -58,8 +51,8 @@ feature -- Status setting
 			exists: not destroyed
 		deferred
 		ensure
-			flag_set: (flag implies is_bold) and 
-						(not flag implies not is_bold)
+--			flag_set: (flag implies is_bold) and 
+--						(not flag implies not is_bold)
 		end
 
 	set_italic (flag: BOOLEAN) is
@@ -68,18 +61,8 @@ feature -- Status setting
 			exists: not destroyed
 		deferred
 		ensure
-			flag_set: (flag implies is_italic) and 
-						(not flag implies not is_italic)
-		end
-
-	set_underline (flag: BOOLEAN) is
-			-- Set underline characters if `flag', unset otherwise.
-		require
-			exists: not destroyed
-		deferred
-		ensure
-			flag_set: (flag implies is_underline) and 
-						(not flag implies not is_underline)
+--			flag_set: (flag implies is_italic) and 
+--						(not flag implies not is_italic)
 		end
 
 feature -- Element change

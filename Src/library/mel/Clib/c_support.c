@@ -1,5 +1,5 @@
 /*
- * Functions to deal with low level C stuff.
+ * Functions to deal with low level C.
  */
 
 #include "macros.h"

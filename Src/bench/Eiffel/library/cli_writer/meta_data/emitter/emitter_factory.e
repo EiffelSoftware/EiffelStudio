@@ -20,7 +20,6 @@ feature -- Initialization
 			p := c_new_ise_cache_manager
 			if p /= default_pointer then
 				create Result.make_by_pointer (p)
-				Result.initialize
 			end
 		end
 

@@ -3573,6 +3573,17 @@ feature -- DLE
 			end
 		end;
 
+	dle_mark_make (remover: REMOVER) is
+			-- Mark the make routine as used if it has been inherited.
+		require
+			is_dynamic: is_dynamic
+			make_exists: creation_feature /= Void
+		do
+			if creation_feature.written_class /= Current then
+				remover.record (creation_feature, Current)
+			end
+		end;
+
 	dle_is_polymorphic (rout_id: INTEGER): BOOLEAN is
 			-- Has the feature identified by `rout_id' been declared to be
 			-- polymorphic (i.e. dynamically bound calls) in the Ace file?

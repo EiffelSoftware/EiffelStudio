@@ -11,9 +11,6 @@ class
 	
 inherit
 	EV_TEXT_FIELD_I
-		undefine
-			build
-		end
 	
 	EV_TEXT_COMPONENT_IMP
 	
@@ -46,7 +43,9 @@ inherit
 		redefine
 			on_key_down
 		end
-	              
+
+	WEL_VK_CONSTANTS
+
 creation
 	make, make_with_text
 
@@ -83,9 +82,10 @@ feature {NONE} -- Implementation
 			-- We check if the enter key is pressed)
 			-- 13 is the number of the return key.
 		do
-			if virtual_key = 13 then
+			if virtual_key = Vk_return then
 				execute_command (Cmd_activate, Void)
 				set_caret_position (0)
+				disable_default_processing
 			end
 		end	
 

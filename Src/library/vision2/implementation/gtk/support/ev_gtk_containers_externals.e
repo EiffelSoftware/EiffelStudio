@@ -14,8 +14,12 @@ feature {NONE} -- GTK C functions for general containers
 		external "C | <gtk/gtk.h>"
 		end
 
-	gtk_container_border_width (container: POINTER; width: INTEGER) is
+	gtk_container_border_width (container: POINTER; border_width: INTEGER) is
 		external "C | <gtk/gtk.h>"
+		end
+
+	c_gtk_container_border_width (container: POINTER): INTEGER is
+		external "C [macro <gtk_eiffel.h>]"
 		end
 
 feature {NONE} -- GTK C functions for windows

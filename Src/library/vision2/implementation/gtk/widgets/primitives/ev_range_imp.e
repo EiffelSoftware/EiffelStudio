@@ -40,25 +40,24 @@ feature -- Access
 			end
 		end
 
-	set_range (a_minimum, a_maximum: INTEGER) is
-			-- Set `maximum' to `a_maximum' and `minimum' to `a_minimum'.
+	set_range (a_range: INTEGER_INTERVAL) is
+			-- Set `range' to `a_range'.
 		do
-			if minimum /= a_minimum or else maximum /= a_maximum then
-				C.set_gtk_adjustment_struct_lower (adjustment, a_minimum)
-				C.set_gtk_adjustment_struct_upper (adjustment, a_maximum + leap)
+			if minimum /= a_range.lower or else maximum /= a_range.upper then
+				C.set_gtk_adjustment_struct_lower (adjustment, a_range.lower)
+				C.set_gtk_adjustment_struct_upper (adjustment, a_range.upper)
 				C.gtk_adjustment_changed (adjustment)
 			end
 		end
 
-	reset_with_range (a_minimum, a_maximum: INTEGER) is
-			-- Re-initialize with `a_maximum' and `a_minimum'.
-			-- Set `value' to `a_minimum'.
+	reset_with_range (a_range: INTEGER_INTERVAL) is
+			-- Set `range' to `a_range'.
+			-- Set `value' to `a_range.lower'.
 		do
-			if minimum /= a_minimum or else maximum /= a_maximum then
-				C.set_gtk_adjustment_struct_lower (adjustment, a_minimum)
-				C.set_gtk_adjustment_struct_upper (adjustment, a_maximum + leap)
-				C.gtk_adjustment_changed (adjustment)
-			end
+			C.set_gtk_adjustment_struct_lower (adjustment, a_range.lower)
+			C.set_gtk_adjustment_struct_upper (adjustment, a_range.upper)
+			C.gtk_adjustment_set_value (adjustment, a_range.lower)
+			C.gtk_adjustment_value_changed (adjustment)
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -88,6 +87,10 @@ end -- class EV_RANGE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/02/14 22:19:51  brendel
+--| Changed range instead of taking two integers to take an INTEGER_INTERVAL.
+--| This is to take advantage of the newly introduced operator |..|.
+--|
 --| Revision 1.5  2000/02/14 11:40:32  oconnor
 --| merged changes from prerelease_20000214
 --|

@@ -233,7 +233,13 @@ end;
 				generated_file.putchar (')');
 				generated_file.putchar ('[');
 				if reg.is_current then
-					context.generate_current_dtype;
+					if precursor_type /= Void then
+						-- Use dynamic type of parent instead 
+						-- of dynamic type of Current.
+						generated_file.putint (precursor_type.type_id - 1);
+					else
+						context.generate_current_dtype;
+					end
 				else
 					generated_file.putstring (gc_upper_dtype_lparan);
 					reg.print_register;

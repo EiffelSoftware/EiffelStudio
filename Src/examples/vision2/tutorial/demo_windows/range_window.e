@@ -26,7 +26,6 @@ feature {NONE} -- Initialization
 			-- is faster.
 		do
 			{EV_HORIZONTAL_RANGE} Precursor (par)
-			make_with_range (par, 0, 100)
 			set_parent (par)
 		end
 

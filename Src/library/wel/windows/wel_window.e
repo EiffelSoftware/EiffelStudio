@@ -1682,13 +1682,6 @@ feature {WEL_DISPATCHER, WEL_WINDOW} -- Implementation
 		require
 			exists: exists
 		do
-			if commands /= Void and then
-			   commands_enabled and then
-			   commands.has (msg)
-			then
-				commands.item (msg).execute (Current, msg, wparam, lparam)
-			end
-
 			inspect msg
 			when Wm_mousemove then
 				on_mouse_move (wparam,
@@ -1769,6 +1762,12 @@ feature {WEL_DISPATCHER, WEL_WINDOW} -- Implementation
 				on_wm_activate (wparam)
 			else
 				default_process_message (msg, wparam, lparam)
+			end
+			if commands /= Void and then
+			   commands_enabled and then
+			   commands.has (msg)
+			then
+				commands.item (msg).execute (Current, msg, wparam, lparam)
 			end
 		end
 

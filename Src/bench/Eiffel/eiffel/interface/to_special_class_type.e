@@ -210,6 +210,7 @@ feature
 						else
 							gen_ptype.generate_cid (buffer, final_mode, True)
 						end
+
 						buffer.putstring ("-1};")
 						buffer.new_line
 						buffer.putstring ("static int16 typcache = -1;")
@@ -224,7 +225,6 @@ feature
 						end
 
 						buffer.putstring ("pdtype = RTCID(&typcache, l[0],")
-
 						buffer.putint (gen_ptype.generated_id (final_mode))
 						buffer.putstring (", typarr);")
 						buffer.new_line

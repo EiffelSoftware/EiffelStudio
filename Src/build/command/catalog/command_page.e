@@ -12,7 +12,8 @@ inherit
 			button
 		end;
 	WINDOWS;
-	ERROR_POPUPER
+	ERROR_POPUPER;
+	SHARED_PREDEF_COMS
 
 feature {CAT_COM_IS}
 

@@ -90,28 +90,8 @@ feature -- Access
 	parent_imp: EV_ITEM_LIST_IMP [EV_ITEM] is
 			-- The parent of the Current widget
 			-- May be void.
-		local
-			c_parent: POINTER
-			Result_imp: EV_ITEM_LIST_IMP [EV_ITEM]
 		do
---			if item_parent_imp /= Void then
 				Result := item_parent_imp
---			else
---				
---				from
---					c_parent := c_object
---				until
---					Result /= Void or c_parent = NULL
---				loop
---					c_parent := C.gtk_widget_struct_parent (c_parent)
---					if c_parent /= NULL then
---						Result_imp ?= eif_object_from_c (c_parent)
---						if Result_imp /= Void then
---							Result := Result_imp
---						end
---					end
---				end
---			end
 		end
 
 feature {EV_ANY_I} -- Implementation

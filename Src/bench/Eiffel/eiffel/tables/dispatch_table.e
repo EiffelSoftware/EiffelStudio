@@ -59,9 +59,12 @@ feature	-- Melting and C Generation
 		local
 			u: DISPATCH_UNIT;
 		do
-				-- Write first the new size of the dispatch table
-			write_int (file.file_pointer, counter);
 debug
+	io.error.putstring ("Updating dispatch_table%NCount: ");
+	io.error.putint (counter);
+	io.error.new_line;
+end;
+debug ("DLE SPY")
 	io.error.putstring ("Updating dispatch_table%NCount: ");
 	io.error.putint (counter);
 	io.error.new_line;
@@ -74,6 +77,18 @@ end;
 			loop
 				u := melted_list.item;
 				if u.is_valid then
+debug ("DLE SPY")
+io.error.put_string ("%Tstatic type #");
+io.error.put_integer (u.class_type.id);
+io.error.put_string (", dtype #");
+io.error.put_integer (u.class_type.type_id);
+io.error.new_line;
+io.error.put_string ("%Tbody_index #");
+io.error.put_integer (u.real_body_index - 1);
+io.error.put_string (", body_id #");
+io.error.put_integer (u.real_body_id - 1);
+io.error.new_line
+end
 					write_int (file.file_pointer, u.real_body_index - 1);
 					write_int (file.file_pointer, u.real_body_id - 1);
 debug
@@ -86,6 +101,12 @@ end;
 			end;
 				-- End of update for the dispatch table
 			write_int (file.file_pointer, -1);
+		end;
+
+	write_dispatch_count (file: RAW_FILE) is
+			-- Write the size of dispatch table on `file'.
+		do
+			write_int (file.file_pointer, counter)
 		end;
 
 	generate (file: INDENT_FILE) is
@@ -114,7 +135,7 @@ end;
 			from
 				i := 1;
 				file.putstring ("#include %"portable.h%"%N%N");
-				file.putstring ("uint32 fdispatch[] = {%N");
+				file.putstring ("uint32 fdispatch[] = {%N")
 			until
 				i > nb
 			loop
@@ -125,6 +146,69 @@ end;
 				i := i + 1;
 			end;
 			file.putstring ("};%N");
+		end;
+
+feature -- DLE
+
+	set_levels is
+			-- Keep track of the different levels after each compilation
+		do
+			if not System.is_dynamic then
+				dle_level := counter;
+                dle_frozen_level := dle_level
+            end
+        end;
+
+	generate_dle (file: INDENT_FILE) is
+			-- Generate the DC-set dispatch units in `file'.
+		require
+			good_argument: file /= Void;
+			is_open: file.is_open_write;
+			dynamic_system: System.is_dynamic
+		local
+			values: ARRAY [INTEGER];
+			unit: DISPATCH_UNIT;
+			i, nb: INTEGER
+		do
+			from
+				nb := counter;
+				!!values.make (1, nb);
+				start
+			until
+				after
+			loop
+				unit := item_for_iteration;
+				if unit.is_valid then
+					values.put (unit.real_body_id - 1, unit.real_body_index);
+				end;
+				forth;
+			end;
+			from
+				i := dle_level + 1;
+				file.putstring ("#include %"struct.h%"");
+				file.new_line;
+				file.putstring ("#include %"portable.h%"");
+				file.new_line;
+				file.new_line;
+				file.putstring ("void dle_edisptch()");
+				file.new_line;
+				file.putchar ('{');
+				file.new_line;
+				file.indent;
+			until
+				i > nb
+			loop
+				file.putstring ("dispatch [");
+				file.putint (i - 1);
+				file.putstring ("] = (uint32) ");
+				file.putint (values.item (i));
+				file.putchar (';');
+				file.new_line;
+				i := i + 1
+			end;
+			file.exdent;
+			file.putchar ('}');
+			file.new_line
 		end;
 
 feature {NONE} -- External features

@@ -15,6 +15,7 @@ inherit
 	SHARED_CODE_FILES;
 	SHARED_TABLE;
 	SHARED_DECLARATIONS;
+	SHARED_DLE
 
 creation
 
@@ -676,6 +677,8 @@ feature
 			loop
 				rout_id := item.rout_id;
 				tbl := Eiffel_table.item_id (rout_id);
+					-- Generate a special prefix when dealing with DLE.
+				Skeleton_file.putstring (Table_prefix);
 				Skeleton_file.putstring (Encoder.table_name (rout_id));
 				Skeleton_file.putstring (" - ");
 				Skeleton_file.putint (tbl.min_type_id - 1);
@@ -697,7 +700,7 @@ feature
                 after
             loop
                 rout_id := item.rout_id;
-                Extern_declarations.add_attribute_table
+                Extern_declarations.add_skeleton_attribute_table
                                 (clone (Encoder.table_name (rout_id)));
 				Eiffel_table.mark_used (rout_id);
                 forth
@@ -722,6 +725,20 @@ feature
 				forth;
 			end;
 			Skeleton_file.putstring ("};%N%N");
+		end;
+
+feature -- DLE
+
+	Table_prefix: STRING is
+			-- Prefix of table names in DLE mode
+		once
+			if System.extendible then
+				Result := static_prefix
+			elseif System.is_dynamic then
+				Result := dynamic_prefix
+			else
+				Result := ""
+			end
 		end;
 
 feature {NONE} -- Externals

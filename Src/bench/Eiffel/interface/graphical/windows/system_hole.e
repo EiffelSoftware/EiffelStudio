@@ -83,7 +83,7 @@ feature {NONE}
 							"Template", "Cancel");
 					end;	
 				else
-					!!system_stone.make (System);
+					!!system_stone.make;
 					system_tool.display;
 					system_tool.receive (system_stone);
 				end;

@@ -96,8 +96,13 @@ feature {NONE}
 						temp.append (" again%N");
 						error_window.put_string (temp);
 					else
+						if System.is_dynamic then
+							dle_link_system
+						end;
 						finalization_actions (argument);
-						launch_c_compilation (argument);
+						if not finalization_error then
+							launch_c_compilation (argument)
+						end
 					end;
 				end;
 				tool_resynchronization (argument)
@@ -158,7 +163,7 @@ feature {NONE}
 				else
 					link_driver
 				end;
-			end
+			end;
 		end;
 
 	freezing_actions is
@@ -166,6 +171,13 @@ feature {NONE}
 		end;
 
 	finalization_actions (argument: ANY) is
+		do
+		end;
+
+	finalization_error: BOOLEAN is
+			-- Has a validity error been detected during the
+			-- finalization? This happens with DLE dealing
+			-- with statically bound feature calls
 		do
 		end;
 
@@ -309,7 +321,11 @@ feature {NONE}
 			file_name: FILE_NAME;
 			app_name: STRING;
 		do
-			if not melt_only and then System.uses_precompiled then
+			if
+				not melt_only and then
+				System.uses_precompiled and then
+				not System.is_dynamic
+			then
 					-- Target
 				!!file_name.make_from_string (Workbench_generation_path);
 				app_name := clone (System.system_name);
@@ -405,5 +421,41 @@ feature {NONE} -- Externals
 feature {NONE}
 
 	command_name: STRING is do Result := l_Update end;
+
+feature -- DLE
+
+	dle_link_system is
+			-- Link executable and melted.eif files from the static system.
+		require
+			dynamic_system: System.is_dynamic
+		local
+			uf: RAW_FILE;
+			file_name: FILE_NAME;
+			app_name: STRING
+		do
+			!!file_name.make_from_string (Workbench_generation_path);
+			app_name := clone (System.system_name);
+			app_name.append (Executable_suffix);
+			file_name.set_file_name (app_name);
+			!!uf.make (file_name);
+			if not uf.exists then
+				!! file_name.make_from_string (Extendible_W_code);
+				app_name := clone (System.dle_system_name);
+				app_name.append (Executable_suffix);
+				file_name.set_file_name (app_name);
+				eif_gr_link_driver (request,
+					Workbench_generation_path.to_c,
+					System.system_name.to_c,
+					Prelink_command_name.to_c,
+					file_name.to_c);
+				!! file_name.make_from_string (Extendible_W_code);
+				file_name.set_file_name (Updt);
+				eif_gr_link_driver (request,
+					Workbench_generation_path.to_c,
+					Updt.to_c,
+					Prelink_command_name.to_c,
+					file_name.to_c);
+			end
+		end;
 
 end

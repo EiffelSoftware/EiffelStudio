@@ -56,18 +56,7 @@ feature -- Pixmaps
 			create l_file.make_from_string (Constants.Icon_resources_directory)
 			l_file.extend ("icon_format_text_color.ico")
 			Result.set_with_named_file (l_file.string)
-		end
-			
-	excluded_node_icon: EV_PIXMAP is
-			-- Excluded node icon
-		local
-			l_file: FILE_NAME
-		once
-			create Result
-			create l_file.make_from_string (Constants.Icon_resources_directory)
-			l_file.extend ("icon_toc_exclude.ico")
-			Result.set_with_named_file (l_file.string)
-		end		
+		end	
 			
 	cluster_icon: STRING is
 			-- Cluster icon

@@ -22,7 +22,7 @@ creation
 
 	make
 
-feature 
+feature {NONE} -- Creation
 
 	make (an_override_shell: OVERRIDE_S) is
 			-- Create an override shell.

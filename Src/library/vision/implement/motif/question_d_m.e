@@ -23,13 +23,11 @@ inherit
 			define_cursor_if_shell, undefine_cursor_if_shell
 		end;
 
-	DIALOG_M
-
 creation
 
 	make
 
-feature -- Creation
+feature {NONE} -- Creation
 
 	make (a_question_dialog: QUESTION_D) is
 			-- Create a motif question dialog.

@@ -93,6 +93,70 @@ extern int fcount;
 #define RTRV(x,y) (RTRA((x),(y)) ? (y) : (char *) 0)
 #define RTRM(x,y) ((x) == (char *) 0 ? 0 : RTAX(x,y))
 
+/* Macros used for array optimization
+ *	RTADTYPE(x) defines the variable for the dynamic type of `x'
+ *	RTADOFFSETS(x) defines the variables for the offsets of area and lower of `x'
+ *	RTAD(x) defines the variables for array optimization on `x'
+ *	RTAITYPE(x,y) initializes the variable for Dtype on `x', `y'
+ *	RTAI(cast,x,y) initializes the variables for array optimization on `x', `y'
+ *	RTAF(x, y) unfreeze `y' if frozen at this level
+ *	RTAA(cast,x,i) gets the value at position `i' from `x' of type `cast'
+ *	RTAP(cast,x,val,i) puts `val' at position `i' from `x' of type `cast'
+ *	RTAUA(cast,x,y,i) gets the value at position `i' from `x' of type `cast' (unsafe version)
+ *	RTAUP(cast,x,y,val,i) puts `val' at position `i' from `x' of type `cast' (unsafe version)
+ */
+
+#define RTADTYPE(x) int CAT2(x,_dtype)
+
+#define RTADOFFSETS(x) long CAT2(x,_area_offset); long CAT2(x,_lower_offset)
+
+#define RTAD(x) char CAT2(x,_freeze) = 0; char* CAT2(x,_area)
+
+#define RTAITYPE(x,y) CAT2(x,_dtype) = Dtype(y)
+
+#define RTAIOFFSETS(x,y) \
+	RTAITYPE(x,y); \
+	CAT2(x,_area_offset) = (eif_area_table) [CAT2(x,_dtype)]; \
+	CAT2(x,_lower_offset) = (eif_lower_table) [CAT2(x,_dtype)]
+
+#define RTAUA(cast,x,y,i) \
+	*(cast*)(*(char**)(y+CAT2(x,_area_offset))+(i-*(long*)(y+CAT2(x,_lower_offset)))*sizeof(cast))
+
+#define RTAUP(cast,x,y,val,i) \
+	*(cast*)(*(char**)(y+CAT2(x,_area_offset))+(i-*(long*)(y+CAT2(x,_lower_offset)))*sizeof(cast)) = val
+
+#define RTAI(cast,x,y) \
+	{ \
+		if (!(HEADER(y)->ov_size & B_C)) { \
+			CAT2(x,_freeze) = 1; \
+			HEADER(y)->ov_size |= B_C; \
+			} \
+		RTAITYPE(x,y); \
+		CAT2(x,_area) = *(char**) ((y)+ (eif_area_table) [CAT2(x,_dtype)]); \
+		CAT2(x,_area) -= (*(long*) ((y)+ (eif_lower_table) [CAT2(x,_dtype)]))*sizeof(cast); \
+	}
+
+#define RTAIOFF(cast,x,y) \
+	{ \
+		if (!(HEADER(y)->ov_size & B_C)) { \
+			CAT2(x,_freeze) = 1; \
+			HEADER(y)->ov_size |= B_C; \
+			} \
+		RTAITYPE(x,y); \
+		CAT2(x,_area) = *(char**) ((y)+CAT2(x,_area_offset)); \
+		CAT2(x,_area) -= (*(long*) ((y)+CAT2(x,_lower_offset)))*sizeof(cast); \
+	}
+
+#define RTAF(x, y) \
+	if (CAT2(x,_freeze)!=0) \
+		HEADER(y)->ov_size &= ~B_C
+
+#define RTAA(cast,x,i) \
+	*(cast*)(CAT2(x,_area)+i*sizeof(cast))
+
+#define RTAP(cast,x,val,i) \
+	*(cast*)(CAT2(x,_area)+i*sizeof(cast)) = val;
+
 /* Macros used for local variable management:
  *  RTLI(x) makes room on the stack for 'x' addresses
  *  RTLE restore the previous stack context

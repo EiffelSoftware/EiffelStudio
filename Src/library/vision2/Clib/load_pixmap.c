@@ -1089,7 +1089,7 @@ unsigned char c_ev_is_ico_file(BufferedFile *pBufFile)
 			/* Read the file enough to be able to reach the 
 			 * location of the InfoHeader Structure
 			 */
-			if (!c_ev_read_n_bytes(iFileOffset+3, pBufFile))
+			if (!c_ev_read_n_bytes(iFileOffset+4, pBufFile))
 				return FALSE;
 
 			if (!(pBuffer[iFileOffset]==ICON_INFOHEADER_SIZE && 

@@ -47,7 +47,7 @@ feature {NONE} -- Implementation
 		do
 			display_object ?= vision2_object_from_type (type)
 			display_object.set_pebble_function (agent retrieve_pebble)
-			display_object.pick_actions.force_extend (agent set_up_drop_actions_for_all_objects)
+			display_object.pick_actions.force_extend (agent object_handler.set_up_drop_actions_for_all_objects)
 			display_object.pick_actions.force_extend (agent create_shift_timer)
 			display_object.pick_ended_actions.force_extend (agent destroy_shift_timer)
 		end

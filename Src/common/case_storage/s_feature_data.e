@@ -39,6 +39,18 @@ feature
 	rename_clause: S_RENAME_DATA;
 			-- String representing where feature comes from
 
+feature -- Modification details
+
+	is_new_since_last_re: BOOLEAN is
+			-- Is current feature new since last reverse engineering ?
+		do
+		end;
+
+	is_deleted_since_last_re: BOOLEAN is
+			-- Is current feature deleted since last reverse engineering ?
+		do
+		end;
+
 feature -- Setting values
 
 	make (s: STRING) is

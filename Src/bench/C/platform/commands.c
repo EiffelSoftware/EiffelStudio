@@ -1,6 +1,8 @@
 /*
 	Commands used by the compiler to link the precompilation driver,
 	to execute `finish_freezing' and other platform dependent actions.
+
+	$Id$
 */
 
 #include "eif_config.h"
@@ -25,6 +27,10 @@
 #ifdef EIF_WIN32
 #include <windows.h>
 #include "..\ipc\shared\stream.h"
+#endif
+
+#ifdef EIF_VMS
+#include <assert.h>
 #endif
 
 #ifdef EIF_OS2
@@ -144,10 +150,11 @@ void eif_call_finish_freezing(EIF_OBJ c_code_dir, EIF_OBJ freeze_cmd_name)
     free(current_dir);
 
 #else
-	DIR *dirp;
-	char *cmd, *current_dir;
+	char *current_dir;
 
-#ifndef __VMS
+#ifndef EIF_VMS
+	char *cmd;
+	DIR *dirp;
 		/* First copy `finish_freezing' if it does not exist */
 	dirp = (DIR *)dir_open(eif_access(c_code_dir));
 
@@ -164,8 +171,8 @@ void eif_call_finish_freezing(EIF_OBJ c_code_dir, EIF_OBJ freeze_cmd_name)
 			free(cmd);
 		}
 	(void) closedir(dirp);
+#endif /* not EIF_VMS */
 
-#endif
 		/* Go to the C code directory and start finish_freezing */
 	current_dir = getcwd(NULL, PATH_MAX);
 	chdir(eif_access(c_code_dir));
@@ -187,7 +194,7 @@ void eif_gr_call_finish_freezing(EIF_OBJ request, EIF_OBJ c_code_dir, EIF_OBJ fr
 	if (cmd == (char *)0)
 		enomem();
 
-#ifdef __VMS	/* skip cd, cp commands for VMS */
+#ifdef EIF_VMS	/* skip cd, cp commands for VMS */
 	strcpy(cmd, "finish_freezing");
 #else
 		/* First copy `finish_freezing' if it does not exist */
@@ -252,17 +259,19 @@ void eif_link_driver (EIF_OBJ c_code_dir, EIF_OBJ system_name, EIF_OBJ prelink_c
 	free (src);
 	free (start_dir);
 	free (system_exe);
-#elif defined __VMS
-	char *cmd;
 
-	cmd = malloc(15 + strlen(eif_access(driver_name)) + strlen(eif_access(c_code_dir)) + strlen(eif_access(system_name)) );
+#elif defined EIF_VMS
+	char *cmd = eif_access(prelink_command_name);
+	size_t len;
+	len = 40 + strlen(eif_access(driver_name)) + strlen(eif_access(c_code_dir)) + strlen(eif_access(system_name));
+	cmd = malloc(len);
 	if (cmd == (char *)0)
 		enomem();
 
-	sprintf(cmd, "COPY %s %s%s", eif_access(driver_name),
-		 eif_access(c_code_dir), eif_access(system_name));
-	printf("%s\n",cmd);
-	(void) eif_system(cmd);
+	sprintf (cmd, "COPY %s %s%s", eif_access(driver_name), eif_access(c_code_dir), eif_access(system_name));
+	assert (strlen(cmd) < len);
+	printf ("$ %s\n",cmd);
+	(void) eif_system (cmd);
 	free(cmd);
 
 #else
@@ -284,7 +293,7 @@ void eif_link_driver (EIF_OBJ c_code_dir, EIF_OBJ system_name, EIF_OBJ prelink_c
 
 void eif_gr_link_driver (EIF_OBJ request, EIF_OBJ c_code_dir, EIF_OBJ system_name, EIF_OBJ prelink_command_name, EIF_OBJ driver_name)
 {
-#if defined EIF_WIN32 || __VMS || defined EIF_OS2
+#if defined EIF_WIN32 || defined EIF_OS2 || defined EIF_VMS
 	eif_link_driver(c_code_dir, system_name, prelink_command_name, driver_name);
 #else
 	char *cmd;
@@ -314,9 +323,9 @@ EIF_BOOLEAN eif_is_os2(void)
 #endif
 }
 
-EIF_BOOLEAN eif_is_vms(void)
+EIF_BOOLEAN eif_is_vms (void)
 {
-#ifdef __VMS
+#ifdef EIF_VMS
 	return EIF_TRUE;
 #else
 	return EIF_FALSE;
@@ -335,7 +344,7 @@ EIF_BOOLEAN eif_is_windows(void)
 EIF_REFERENCE eif_date_string (EIF_INTEGER a_date)
 {
 	EIF_REFERENCE result;
-#ifdef __VMS
+#ifdef EIF_VMS
 	char *date_string = ctime((time_t*)&a_date);
 #else
 	char *date_string = ctime(&a_date);

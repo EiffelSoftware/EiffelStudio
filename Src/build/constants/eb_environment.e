@@ -281,13 +281,15 @@ feature -- Directory creation
 			-- file to the project directory.
 		require
 			Project_dir_defined: Project_directory.count > 0
-		local
-			ace_f: RAW_FILE;
-			proj_ace_f: RAW_FILE;
-			file_name: FILE_NAME;
-			dir_name: DIRECTORY_NAME;
 		do
 			mkdir (Project_directory);
+			mkdir (Storage_directory);
+			mkdir (Restore_directory);
+			create_generated_directories
+		end;
+
+	create_generated_directories is
+		do
 			mkdir (Classes_directory);
 			mkdir (Windows_directory);
 			mkdir (State_directory);
@@ -296,8 +298,15 @@ feature -- Directory creation
 			mkdir (Application_directory);
 			mkdir (Groups_directory);
 			mkdir (Templates_directory);
-			mkdir (Storage_directory);
-			mkdir (Restore_directory)
+		end;
+
+	create_ace_file is
+			-- Create the Ace file in the generated directory
+			-- if it does not exist.
+		local
+			proj_ace_f: RAW_FILE;
+			ace_f: RAW_FILE;
+		do
 			!! proj_ace_f.make (Project_ace_file);
 			if not proj_ace_f.exists then
 				!! ace_f.make (Ace_file);

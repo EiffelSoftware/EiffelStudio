@@ -8,6 +8,9 @@ indexing
 deferred class
 	EV_PIXMAP_I 
 
+inherit
+	EV_DRAWABLE_I
+
 feature {NONE} -- Initialization
 
 	make (par: EV_PIXMAP_CONTAINER) is
@@ -18,10 +21,12 @@ feature {NONE} -- Initialization
 feature -- Meassurement
 
 	width: INTEGER is
+			-- width of the pixmap
 		deferred
 		end
 
 	height: INTEGER is
+			-- height of the pixmap
 		deferred
 		end
 

@@ -17,7 +17,7 @@ creation
 
 feature -- Access
 
-	main_window: MAIN_WINDOW is
+	first_window: MAIN_WINDOW is
 			-- Main window of the example
 		once
 			!! Result.make_top_level 

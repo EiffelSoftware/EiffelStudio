@@ -23,7 +23,7 @@ creation
 
 feature -- Access
 
-	main_widget: EV_TEXT_AREA is
+	main_widget: EV_TEXT is
 			-- The main widget of the demo
 		once
 			!! Result.make (Current)

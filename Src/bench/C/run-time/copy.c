@@ -698,12 +698,14 @@ rt_public EIF_BOOLEAN c_check_assert (EIF_BOOLEAN b)
 	 * `setup'
 	 */
 
+	EIF_GET_CONTEXT
 	EIF_BOOLEAN temp;
 
 	temp = ((in_assertion != (int) 0)?(EIF_BOOLEAN)0:(EIF_BOOLEAN)1);
 	in_assertion = ((b != (EIF_BOOLEAN) 0)?0:~0);
 
 	return ((EIF_BOOLEAN) temp);
+	EIF_END_GET_CONTEXT
 }
 
 rt_public void spsubcopy (EIF_POINTER source, EIF_POINTER target, EIF_INTEGER start, EIF_INTEGER end, EIF_INTEGER strchr)

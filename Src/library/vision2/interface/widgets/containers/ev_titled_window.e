@@ -71,14 +71,6 @@ feature -- Access
 			bridge_ok: Result.is_equal (implementation.icon_pixmap)
 		end
 	
-	icon_mask: EV_PIXMAP is
-			-- Transparency mask for `icon_pixmap'.
-		do
-			Result := implementation.icon_mask
-		ensure
-			valid_result: Result.is_equal (implementation.icon_mask)
-		end
-
 feature -- Status report
 
 	is_minimized: BOOLEAN is
@@ -150,16 +142,6 @@ feature -- Element change
 			icon_name_assigned: icon_name.is_equal (an_icon_name)
 		end
 
-	set_icon_mask (an_icon_mask: EV_PIXMAP) is
-			-- Assign `an_icon_mask' to `icon_mask'.
-		require
-			pixmap_not_void: an_icon_mask /= Void
-		do
-			implementation.set_icon_mask (an_icon_mask)
-		ensure
-			icon_mask_assigned: icon_mask.is_equal (an_icon_mask)
-		end
-
 	set_icon_pixmap (an_icon: EV_PIXMAP) is
 			-- Assign `an_icon' to `icon'.
 		require
@@ -221,6 +203,10 @@ end -- class EV_TITLED_WINDOW
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/04/29 03:39:39  pichery
+--| Removed `icon_mask' & `set_icon_mask'.
+--| Mask are now handled in EV_PIXMAP
+--|
 --| Revision 1.14  2000/03/21 23:06:11  brendel
 --| Added creation procedure make_with_title.
 --|

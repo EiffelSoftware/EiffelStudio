@@ -13,7 +13,55 @@
 
 ecom_runtime_ec rt_ec;
 
+IUnknown * * ecom_runtime_ec::ccom_ec_pointed_pointed_unknown( EIF_REFERENCE eif_ref, IUnknown * * old )
 
+/*-----------------------------------------------------------
+	Convert CELL [ECOM_INTERFACE] to IUnknown * *.
+-----------------------------------------------------------*/
+{
+	EIF_OBJECT eif_object = 0;
+	IUnknown * * result = 0;
+	EIF_REFERENCE cell_item = 0;
+
+	eif_object = eif_protect (eif_ref);
+	if (old != NULL)
+		result = old;
+	else
+		result = (IUnknown * *) CoTaskMemAlloc (sizeof (IUnknown *));
+	cell_item = eif_field (eif_access (eif_object), "item", EIF_REFERENCE);
+	if (cell_item == NULL)
+		*result = NULL;
+	else
+		*result = ccom_ec_unknown (cell_item);
+	eif_wean (eif_object);
+	return result;
+};
+//-------------------------------------------------------------------------
+
+IDispatch * * ecom_runtime_ec::ccom_ec_pointed_pointed_dispatch ( EIF_REFERENCE eif_ref, IDispatch * * old )
+
+/*-----------------------------------------------------------
+	Convert CELL [IFONT_INTERFACE] to IDispatch * *.
+-----------------------------------------------------------*/
+{
+	EIF_OBJECT eif_object = 0;
+	IDispatch * * result = 0;
+	EIF_REFERENCE cell_item = 0;
+
+	eif_object = eif_protect (eif_ref);
+	if (old != NULL)
+		result = old;
+	else
+		result = (IDispatch * *) CoTaskMemAlloc (sizeof (IDispatch *));
+	cell_item = eif_field (eif_access (eif_object), "item", EIF_REFERENCE);
+	if (cell_item == NULL)
+		*result = NULL;
+	else
+		*result = ccom_ec_dispatch (cell_item);
+	eif_wean (eif_object);
+	return result;
+};
+//-------------------------------------------------------------------------
 IFont * ecom_runtime_ec::ccom_ec_pointed_ifont( EIF_REFERENCE eif_ref )
 
 /*-----------------------------------------------------------

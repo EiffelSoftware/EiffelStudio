@@ -19,6 +19,11 @@ feature -- Properties
 		do
 		end;
 
+	is_precursor: BOOLEAN is
+			-- Does the Current AST represent a Precursor construct?
+		do
+		end
+
 feature -- Access
 
 	valid_reference_class (reference_class: E_CLASS): BOOLEAN is

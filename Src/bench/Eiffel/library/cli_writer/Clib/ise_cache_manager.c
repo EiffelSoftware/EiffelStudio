@@ -6,7 +6,7 @@
 
 
  /* File created by MIDL compiler version 6.00.0361 */
-/* at Thu Oct 02 14:48:28 2003
+/* at Wed Oct 08 16:33:53 2003
  */
 /* Compiler settings for ise_cache_manager.idl:
     Oicf, W1, Zp8, env=Win32 (32b run)
@@ -70,7 +70,7 @@ typedef IID CLSID;
 
 #endif !_MIDL_USE_GUIDDEF_
 
-MIDL_DEFINE_GUID(IID, LIBID_emitter,0x3A0E2FF7,0x8B0B,0x369F,0x83,0x36,0xD2,0xBC,0xC8,0x2D,0xF7,0x7B);
+MIDL_DEFINE_GUID(IID, LIBID_emitter,0xCBE2E32B,0x0A86,0x3380,0xA1,0x85,0x2E,0x6D,0x08,0x69,0xC2,0xC5);
 
 
 MIDL_DEFINE_GUID(IID, IID_ISE_Cache_COM_ISE_CACHE_MANAGER,0xE1FFE157,0x2182,0x4C1B,0x8D,0x26,0xAC,0x4B,0xB3,0x34,0xA7,0xC8);
@@ -99,7 +99,7 @@ MIDL_DEFINE_GUID(CLSID, CLSID_ISE_Cache_Impl_COM_ISE_CACHE_MANAGER,0xE1FFE16A,0x
 
 
  /* File created by MIDL compiler version 6.00.0361 */
-/* at Thu Oct 02 14:48:28 2003
+/* at Wed Oct 08 16:33:53 2003
  */
 /* Compiler settings for ise_cache_manager.idl:
     Oicf, W1, Zp8, env=Win64 (32b run,appending)
@@ -163,7 +163,7 @@ typedef IID CLSID;
 
 #endif !_MIDL_USE_GUIDDEF_
 
-MIDL_DEFINE_GUID(IID, LIBID_emitter,0x3A0E2FF7,0x8B0B,0x369F,0x83,0x36,0xD2,0xBC,0xC8,0x2D,0xF7,0x7B);
+MIDL_DEFINE_GUID(IID, LIBID_emitter,0xCBE2E32B,0x0A86,0x3380,0xA1,0x85,0x2E,0x6D,0x08,0x69,0xC2,0xC5);
 
 
 MIDL_DEFINE_GUID(IID, IID_ISE_Cache_COM_ISE_CACHE_MANAGER,0xE1FFE157,0x2182,0x4C1B,0x8D,0x26,0xAC,0x4B,0xB3,0x34,0xA7,0xC8);

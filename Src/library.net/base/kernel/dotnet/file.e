@@ -364,12 +364,12 @@ feature -- Status report
 			-- Is file readable?
 			-- (Checks permission for effective UID.)
 		local
-			perm: FILE_IOPERMISSION
+			perm: FILE_IO_PERMISSION
 			retried: BOOLEAN
 		do
 			if not retried then
 				internal_file.refresh
-				create perm.make_from_access_and_path (feature {FILE_IOPERMISSION_ACCESS}.read,
+				create perm.make_from_access_and_path (feature {FILE_IO_PERMISSION_ACCESS}.read,
 					internal_file.full_name)
 				perm.demand
 			end
@@ -383,12 +383,12 @@ feature -- Status report
 			-- Is file writable?
 			-- (Checks write permission for effective UID.)
 		local
-			perm: FILE_IOPERMISSION
+			perm: FILE_IO_PERMISSION
 			retried: BOOLEAN
 		do
 			if not retried then
 				internal_file.refresh
-				create perm.make_from_access_and_path (feature {FILE_IOPERMISSION_ACCESS}.write,
+				create perm.make_from_access_and_path (feature {FILE_IO_PERMISSION_ACCESS}.write,
 					internal_file.full_name)
 				perm.demand
 			end
@@ -410,13 +410,13 @@ feature -- Status report
 			-- (Uses effective UID to check that parent is writable
 			-- and file does not exist.)
 		local
-			perm: FILE_IOPERMISSION
+			perm: FILE_IO_PERMISSION
 			retried: BOOLEAN
 		do
 			if not retried then
 					-- Is the parent directory writable?
 				internal_file.refresh
-				create perm.make_from_access_and_path (feature {FILE_IOPERMISSION_ACCESS}.read,
+				create perm.make_from_access_and_path (feature {FILE_IO_PERMISSION_ACCESS}.read,
 					internal_file.directory_name)
 				perm.demand
 				Result := not exists or else writable

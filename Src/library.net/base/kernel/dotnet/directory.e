@@ -63,7 +63,7 @@ feature -- Initialization
 				if feature {SYSTEM_DIRECTORY}.exists (l_sub_dir.to_cil) then
 					di := feature {SYSTEM_DIRECTORY}.create_directory (l_full_path.to_cil)
 				else
-					feature {ISE_RUNTIME}.raise (create {IOEXCEPTION}.make)
+					feature {ISE_RUNTIME}.raise (create {IO_EXCEPTION}.make)
 				end
 			end
 		end
@@ -241,13 +241,13 @@ feature -- Status report
 		require
 			directory_exists: exists
 		local
-			pa: FILE_IOPERMISSION
+			pa: FILE_IO_PERMISSION
 			di: DIRECTORY_INFO
 			retried: BOOLEAN
 		do
 			if not retried then
 				create di.make (name.to_cil)
-				create pa.make_from_access_and_path (feature {FILE_IOPERMISSION_ACCESS}.Read,
+				create pa.make_from_access_and_path (feature {FILE_IO_PERMISSION_ACCESS}.Read,
 					di.full_name)
 				pa.demand
 			end
@@ -262,14 +262,14 @@ feature -- Status report
 		require
 			directory_exists: exists
 		local
-			pa: FILE_IOPERMISSION
+			pa: FILE_IO_PERMISSION
 			di: DIRECTORY_INFO
 			retried: BOOLEAN
 		do
 			if not retried then
 				create di.make (name.to_cil)
 				create pa.make_from_access_and_path (
-					feature {FILE_IOPERMISSION_ACCESS}.path_discovery,
+					feature {FILE_IO_PERMISSION_ACCESS}.path_discovery,
 					di.full_name)
 				pa.demand
 			end
@@ -284,13 +284,13 @@ feature -- Status report
 		require
 			directory_exists: exists
 		local
-			pa: FILE_IOPERMISSION
+			pa: FILE_IO_PERMISSION
 			di: DIRECTORY_INFO
 			retried: BOOLEAN
 		do
 			if not retried then
 				create di.make (name.to_cil)
-				create pa.make_from_access_and_path (feature {FILE_IOPERMISSION_ACCESS}.write,
+				create pa.make_from_access_and_path (feature {FILE_IO_PERMISSION_ACCESS}.write,
 					di.full_name)
 				pa.demand
 			end

@@ -593,13 +593,17 @@ feature {NONE} -- Implementation
 			end
 			
 				-- Now we add the button which will bring up the events window.
-			create event_selection_button--.make_with_text ("Select events")
-			update_event_selection_button_text
-			attribute_editor_box.extend (event_selection_button)
-			attribute_editor_box.disable_item_expand (event_selection_button)
-			event_selection_button.select_actions.extend (agent show_event_dialog)
-			
-			
+				-- We do not display the events button if the type is a tool bar separator
+				-- or a menu separator, as the export status of the events is hidden.
+			if not object.type.is_equal ("EV_TOOL_BAR_SEPARATOR") and
+			not object.type.is_equal ("EV_MENU_SEPARATOR") then
+				create event_selection_button
+				update_event_selection_button_text
+				attribute_editor_box.extend (event_selection_button)
+				attribute_editor_box.disable_item_expand (event_selection_button)
+				event_selection_button.select_actions.extend (agent show_event_dialog)
+			end
+
 			if current_window_parent /= Void and locked_in_here then
 				current_window_parent.unlock_update	
 			end

@@ -83,9 +83,6 @@ feature -- Style
 			--
 			-- Declared in Windows as CBS_HASSTRINGS
 
-	Cbs_nointegralheight: INTEGER is 1024
-			-- Declared in Windows as CBS_NOINTEGRALHEIGHT
-
 	Cbs_disablenoscroll: INTEGER is 2048
 			-- Shows a disabled vertical scroll bar in the list box when the
 			-- box does not contain enough items to scroll. Without this

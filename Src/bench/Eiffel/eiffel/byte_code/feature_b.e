@@ -254,7 +254,7 @@ feature -- IL code generation
 					end
 				end
 
-				if class_c.is_special_array then
+				if class_c.is_special then
 					special_array_class_type ?= cl_type.associated_class_type
 					check
 						special_array_class_type_not_void: special_array_class_type /= Void

@@ -2819,7 +2819,7 @@ end
 			end
 			buffer.putstring ("%N};%N")
 
-			!! reference_file.make_open_write (final_file_name (Eref, Dot_c));
+			!! reference_file.make_open_write (final_file_name (Eref, Dot_c, 1));
 			reference_file.put_string (buffer)
 			reference_file.close
 		end
@@ -3729,10 +3729,10 @@ feature -- Pattern table generation
 
 			if license.demo_mode then
 					-- Set egc_type_of_gc = 25 * egc_platform_level + egc_compiler_tag - 1
-				buffer.putstring ("%N%Tegc_type_of_gc = 123166;%N")
+				buffer.putstring ("%N%Tegc_type_of_gc = 123167;%N")
 			else
 					-- Set egc_type_of_gc = 25 * egc_platform_level + egc_compiler_tag
-				buffer.putstring ("%N%Tegc_type_of_gc = 123167;%N")
+				buffer.putstring ("%N%Tegc_type_of_gc = 123168;%N")
 			end
 
 			from

@@ -400,8 +400,8 @@ feature -- Status report
 		EIFFEL_TYPE_INFO l_object = an_obj as EIFFEL_TYPE_INFO;
 		INTERFACE_TYPE_ATTRIBUTE generic_type;
 		object[] l_attributes;
-		GENERIC_TYPE l_gen_type;
-		CLASS_TYPE cl_type;
+		RT_GENERIC_TYPE l_gen_type;
+		RT_CLASS_TYPE cl_type;
 		Type Result = null;
 
 		if (l_object != null) {
@@ -412,7 +412,7 @@ feature -- Status report
 			#endif
 
 			l_gen_type = l_object.____type ();
-			cl_type = (CLASS_TYPE) l_gen_type.generics [pos - 1];
+			cl_type = (RT_CLASS_TYPE) l_gen_type.generics [pos - 1];
 			if (!cl_type.is_basic ()) {
 				if (cl_type.type.Value != (System.IntPtr) 0) {
 					Result = Type.GetTypeFromHandle (cl_type.type);
@@ -427,13 +427,13 @@ feature -- Status report
 					}
 				} else {
 						/* Generic parameter is of type NONE, so we return an instance
-						 * of NONE_TYPE as associated type. It is mostly there to fix
+						 * of RT_NONE_TYPE as associated type. It is mostly there to fix
 						 * assertions violations in TUPLE when one of the elements of
 						 * a manifest tuple is `Void'. */
 					#if ASSERTIONS
-						ASSERTIONS.CHECK ("Is NONE type.", cl_type is NONE_TYPE);
+						ASSERTIONS.CHECK ("Is NONE type.", cl_type is RT_NONE_TYPE);
 					#endif
-					Result = typeof(NONE_TYPE);
+					Result = typeof(RT_NONE_TYPE);
 				}
 			} else {
 				Result = Type.GetTypeFromHandle (cl_type.type);
@@ -445,7 +445,7 @@ feature -- Status report
 	public static Boolean is_eiffel_string (object o)
 		// Is `o' an instance of an Eiffel STRING.
 	{
-		GENERIC_TYPE l_gen_type;
+		RT_GENERIC_TYPE l_gen_type;
 		EIFFEL_TYPE_INFO info = o as EIFFEL_TYPE_INFO;
 		Boolean Result = false;
 
@@ -462,7 +462,7 @@ feature -- Status report
 	public static Boolean is_eiffel_array (object o)
 		// Is `o' an instance of an Eiffel ARRAY.
 	{
-		GENERIC_TYPE l_gen_type;
+		RT_GENERIC_TYPE l_gen_type;
 		EIFFEL_TYPE_INFO info = o as EIFFEL_TYPE_INFO;
 		Boolean Result = false;
 

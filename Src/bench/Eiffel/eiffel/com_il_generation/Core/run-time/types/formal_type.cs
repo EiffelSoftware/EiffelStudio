@@ -10,9 +10,8 @@ using System;
 
 namespace EiffelSoftware.Runtime.Types {
 
-[CLSCompliantAttribute (false)]
 [Serializable]
-public class FORMAL_TYPE: TYPE {
+public class RT_FORMAL_TYPE: RT_TYPE {
 /*
 feature -- Access
 */
@@ -22,7 +21,8 @@ feature -- Access
 /*
 feature -- Status report
 */
-	public override TYPE evaluated_type (EIFFEL_TYPE_INFO context_object)
+	[CLSCompliantAttribute(false)]
+	public override RT_TYPE evaluated_type (EIFFEL_TYPE_INFO context_object)
 		// Evaluate Current in context of `context_object'.
 	{
 			// Get type of formal in context of `a_current' object.

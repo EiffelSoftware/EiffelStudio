@@ -9,9 +9,8 @@ using System;
 
 namespace EiffelSoftware.Runtime.Types {
 
-[CLSCompliantAttribute (false)]
 [Serializable]
-public abstract class TYPE {
+public abstract class RT_TYPE {
 
 /*
 feature -- Status Report
@@ -42,7 +41,8 @@ feature -- Status Report
 		return String.Empty;
 	}
 	
-	public virtual TYPE evaluated_type (EIFFEL_TYPE_INFO context_object)
+	[CLSCompliantAttribute(false)]
+	public virtual RT_TYPE evaluated_type (EIFFEL_TYPE_INFO context_object)
 		// Evaluate Current in context of `context_object'.
 	{
 		return this;

@@ -10,9 +10,8 @@ using System.Collections;
 
 namespace EiffelSoftware.Runtime.Types {
 
-[CLSCompliantAttribute (false)]
 [Serializable]
-public class BASIC_TYPE: CLASS_TYPE {
+public class RT_BASIC_TYPE: RT_CLASS_TYPE {
 
 /*
 feature -- Access

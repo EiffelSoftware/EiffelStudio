@@ -219,7 +219,7 @@ feature -- Resource Update
 --					tool_supervisor.class_win_mgr.set_tab_length (tab_length)
 --					tool_supervisor.object_win_mgr.set_tab_length (tab_length)
 --					tool_supervisor.explain_win_mgr.set_tab_length (tab_length)
---					if system_tool /= void and then not system_tool.destroyed then
+--					if system_tool_is_valid then
 --						System_tool.set_tab_length (tab_length)
 --						System_tool.update_save_symbol
 --					end
@@ -271,7 +271,22 @@ feature -- Access
 feature -- Window Settings
 
 	set_default_size is
+		local
+			default_width, default_height: INTEGER
 		do
+--			if screen.width < 800 then
+--				default_width := 400
+--				default_height := 350
+--				hide_split_windows := True
+--			elseif screen.width = 800 then
+--				default_width := screen.visible_width
+--				default_height := screen.visible_height
+--				set_maximized_state
+--			else
+				default_width := Project_resources.tool_width.actual_value
+				default_height := Project_resources.tool_height.actual_value
+--			end
+			set_size (default_width, default_height)
 		end
 
 	set_initialized is
@@ -391,14 +406,14 @@ feature -- Progress Dialog
 		local
 --			graphical_version: GRAPHICAL_DEGREE_OUTPUT
 		do
---			progress_dialog := new_progress_dialog
---			Eiffel_project.set_degree_output (progress_dialog)
---
---				-- If `process_dialog' is a graphical dialog then
---				-- We need to give him its parent.
+			progress_dialog := new_progress_dialog
+			Eiffel_project.set_degree_output (progress_dialog)
+
+				-- If `process_dialog' is a graphical dialog then
+				-- We need to give him its parent.
 --			graphical_version ?= progress_dialog
 --			if graphical_version /= Void then
---				graphical_version.set_parent_window (implementation)
+--				graphical_version.set_parent (tool.parent_window)
 --			end
 		end
 
@@ -554,7 +569,6 @@ feature -- Graphical Interface
 	build_interface is
 			-- Build widget.
 		local
-			default_width, default_height: INTEGER
 			hide_split_windows: BOOLEAN
 			display_routine_cmd: DISPLAY_ROUTINE_PORTION
 			display_object_cmd: DISPLAY_OBJECT_PORTION
@@ -562,20 +576,6 @@ feature -- Graphical Interface
 			v_split: EV_VERTICAL_SPLIT_AREA
 		do
 			shown_portions := 1
-
---			if screen.width < 800 then
---				default_width := 400
---				default_height := 350
---				hide_split_windows := True
---			elseif screen.width = 800 then
---				default_width := screen.visible_width
---				default_height := screen.visible_height
---				set_maximized_state
---			else
---				default_width := Project_resources.tool_width.actual_value
---				default_height := Project_resources.tool_height.actual_value
---			end
-			set_size (default_width, default_height)
 
 			create container.make (parent)
 
@@ -596,6 +596,8 @@ feature -- Graphical Interface
 			set_debug_tool (debug_part)
 			create object_part.make (Current)
 
+			set_default_size
+
 --			create_toolbar (container)
 --			build_menu
 --			build_text_windows (project_form)
@@ -605,10 +607,10 @@ feature -- Graphical Interface
 --			build_toolbar_menu
 
 -- 			create feature_part.form_create (feature_form, 
- --					menus @ special_feature_menu, 
- --					menus @ edit_feature_menu, 
- --					menus @ format_feature_menu,
- --					menus @ special_feature_menu)
+--					menus @ special_feature_menu, 
+--					menus @ edit_feature_menu, 
+--					menus @ format_feature_menu,
+--					menus @ special_feature_menu)
 --
 
 --			create object_part.form_create ( object_form, 
@@ -1172,17 +1174,17 @@ feature -- Tool management features
 			t.destroy_imp
 		end
 
---	set_size (min_x, min_y: INTEGER) is
---		do
---		end
+	set_tool_size (t: EB_TOOL; min_x, min_y: INTEGER) is
+		do
+		end
 
---	set_width (new_width: INTEGER) is
---		do
---		end
+	set_tool_width (t: EB_TOOL; new_width: INTEGER) is
+		do
+		end
 
---	set_height (new_height: INTEGER) is
---		do
---		end
+	set_tool_height (t: EB_TOOL; new_height: INTEGER) is
+		do
+		end
 
 	tool_title : STRING is
 		do

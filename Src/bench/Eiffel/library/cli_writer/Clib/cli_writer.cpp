@@ -1,7 +1,7 @@
 #define _WIN32_DCOM
 #include "cli_writer.h"
 #include "vs_support.h"
-#include "ise_cache_manager.h"
+#include "metadata_consumer.h"
 #include <objbase.h>
 #include <cor.h>
 #include <CorSym.h>
@@ -65,18 +65,18 @@ rt_public void trace_event_hr (char* mesg,HRESULT hr)
 //	CHECK ((((hr == S_OK) || (hr == S_FALSE)) ? 0 : 1), "CoInitialize failed");
 //}
 
-// ISE_COM_CACHE_MANAGER---------------------------------------------------------------------
+// COM_CACHE_MANAGER---------------------------------------------------------------------
 
-rt_public EIF_POINTER new_ise_cache_manager ()
-	/* Create new instance of ISE_Cache_ISE_COM_CACHE_MANAGER */
+rt_public EIF_POINTER new_cache_manager ()
+	/* Create new instance of IID_EiffelSoftware_MetadataConsumer_COM_CACHE_MANAGER */
 {
 	HRESULT hr;
-	ISE_Cache_COM_ISE_CACHE_MANAGER *pICM = NULL;
+	EiffelSoftware_MetadataConsumer_COM_CACHE_MANAGER *pICM = NULL;
 
-	hr = CoCreateInstance (CLSID_ISE_Cache_Impl_COM_ISE_CACHE_MANAGER, NULL,
-		CLSCTX_INPROC_SERVER, IID_ISE_Cache_COM_ISE_CACHE_MANAGER, (void **) & pICM);
+	hr = CoCreateInstance (CLSID_EiffelSoftware_MetadataConsumer_Impl_COM_CACHE_MANAGER, NULL,
+		CLSCTX_INPROC_SERVER, IID_EiffelSoftware_MetadataConsumer_COM_CACHE_MANAGER, (void **) & pICM);
 
-	CHECK (hr, "Could not instansiate COM Object ISE_Cache_ISE_COM_CACHE_MANAGER")
+	CHECK (hr, "Could not instansiate COM Object EiffelSoftware_MetadataConsumer_ComCacheManager")
 
 	return pICM;
 }

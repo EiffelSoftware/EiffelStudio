@@ -7,8 +7,8 @@
 ?RCS: as explained in the README file which comes with dist.
 ?RCS:
 ?RCS: $Log$
-?RCS: Revision 1.1  1993/03/12 13:08:59  grator
-?RCS: Initial revision
+?RCS: Revision 1.2  1997/10/04 05:36:45  grator
+?RCS: *** empty log message ***
 ?RCS:
 ?MAKE:d_maypanic: cat Myread Oldconfig Setvar
 ?MAKE:	-pick add $@ %<

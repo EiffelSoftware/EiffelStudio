@@ -212,6 +212,19 @@ feature
 			position := new_position;
 		end;
 
+	append_integer_64 (i: INTEGER_64) is
+			-- Append long integer `i' in the array
+		local
+			new_position: INTEGER
+		do
+			new_position := position + Int64_size;
+			if new_position > size then
+				resize (size + Chunk);
+			end;
+			ca_int64 ($area, i, position - 1);
+			position := new_position;
+		end;
+
 	append_real (r: DOUBLE) is
 			-- Append real value `r'.
 		local
@@ -519,6 +532,11 @@ feature {NONE} -- Externals
 		end;
 
 	ca_wlong (ptr: POINTER; val: INTEGER; pos: INTEGER) is
+		external
+			"C"
+		end;
+
+	ca_int64 (ptr: POINTER; val: INTEGER_64; pos: INTEGER) is
 		external
 			"C"
 		end;

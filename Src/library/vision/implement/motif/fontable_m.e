@@ -90,20 +90,17 @@ feature {NONE} -- Implementation
 		require
 			valid_font_imp: font_implementation /= Void
 		local
-			a_font_list: MEL_FONT_LIST;
-			an_entry: MEL_FONT_LIST_ENTRY
+			a_font_list: MEL_FONT_LIST
 		do
 			font_implementation.allocate_font;
 			if font_implementation.is_valid then
-				!! an_entry.make_default_from_font_struct (font_implementation);
-				!! a_font_list.append_entry (an_entry);
+				a_font_list := font_implementation.font_list;
 				if a_font_list.is_valid then
 					set_font_list (a_font_list);
 					a_font_list.destroy
 				else
 					io.error.putstring ("Warning can not allocate font%N");
 				end;
-				an_entry.destroy
 			else
 				io.error.putstring ("Warning can not allocate font%N");
 			end

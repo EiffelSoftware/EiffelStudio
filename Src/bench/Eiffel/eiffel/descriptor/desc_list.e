@@ -125,8 +125,7 @@ feature -- Insertion
 					ri := System.rout_info_table.item (r_id);
 					origin := ri.origin;
 					offset := ri.offset;
-					nb_routines :=
-						System.rout_info_table.descriptor_size (origin);
+					nb_routines := System.rout_info_table.descriptor_size (origin);
 
 						-- For each class type, create the appropriate
 						-- entry, and insert it into the appropriate

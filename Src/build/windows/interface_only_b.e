@@ -59,8 +59,8 @@ feature {NONE}
 
 	reinstate_toggles is
 		do
-			if cont_tree_t_state and then
-				not main_panel.cont_tree_t.armed
+			if cont_cat_t_state and then
+				not main_panel.cont_cat_t.armed
 			then
 				main_panel.cont_cat_t.arm;
 			end;

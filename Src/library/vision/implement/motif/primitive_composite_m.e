@@ -8,7 +8,8 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class PRIMITIVE_COMPOSITE_M 
+deferred class 
+	PRIMITIVE_COMPOSITE_M 
 
 feature -- Access
 

@@ -200,34 +200,36 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES} -- Implementation
 				INTEGER, INTEGER]
 			mouse_wheel_delta: INTEGER
 		do
-			t := [a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure,
-				a_screen_x, a_screen_y]
-			-- Mouse Wheel implementation.
-			if a_type = feature {EV_GTK_EXTERNALS}.GDK_BUTTON_PRESS_ENUM then
-				mouse_wheel_delta := 1
-			elseif a_type = feature {EV_GTK_EXTERNALS}.GDK_2BUTTON_PRESS_ENUM then
-				mouse_wheel_delta := 1
-			elseif a_type = feature {EV_GTK_EXTERNALS}.GDK_3BUTTON_PRESS_ENUM then
-				mouse_wheel_delta := 1
-			end
-			if a_button = 4 and mouse_wheel_delta > 0 then
-				-- This is for scrolling up
-				if mouse_wheel_actions_internal /= Void then
-					mouse_wheel_actions_internal.call ([mouse_wheel_delta])
+			if widget_imp_at_pointer_position = Current then
+				t := [a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure,
+					a_screen_x, a_screen_y]
+				-- Mouse Wheel implementation.
+				if a_type = feature {EV_GTK_EXTERNALS}.GDK_BUTTON_PRESS_ENUM then
+					mouse_wheel_delta := 1
+				elseif a_type = feature {EV_GTK_EXTERNALS}.GDK_2BUTTON_PRESS_ENUM then
+					mouse_wheel_delta := 1
+				elseif a_type = feature {EV_GTK_EXTERNALS}.GDK_3BUTTON_PRESS_ENUM then
+					mouse_wheel_delta := 1
 				end
-			elseif a_button = 5 and mouse_wheel_delta > 0 then
-				-- This is for scrolling down
-				if mouse_wheel_actions_internal /= Void then
-					mouse_wheel_actions_internal.call ([- mouse_wheel_delta])
-				end
-			end	
-			if a_type = feature {EV_GTK_EXTERNALS}.GDK_BUTTON_PRESS_ENUM and not is_transport_enabled then
-				if pointer_button_press_actions_internal /= Void then
-					pointer_button_press_actions_internal.call (t)
-				end
-			elseif a_type = feature {EV_GTK_EXTERNALS}.GDK_2BUTTON_PRESS_ENUM then
-				if pointer_double_press_actions_internal /= Void then
-					pointer_double_press_actions_internal.call (t)
+				if a_button = 4 and mouse_wheel_delta > 0 then
+					-- This is for scrolling up
+					if mouse_wheel_actions_internal /= Void then
+						mouse_wheel_actions_internal.call ([mouse_wheel_delta])
+					end
+				elseif a_button = 5 and mouse_wheel_delta > 0 then
+					-- This is for scrolling down
+					if mouse_wheel_actions_internal /= Void then
+						mouse_wheel_actions_internal.call ([- mouse_wheel_delta])
+					end
+				end	
+				if a_type = feature {EV_GTK_EXTERNALS}.GDK_BUTTON_PRESS_ENUM and not is_transport_enabled then
+					if pointer_button_press_actions_internal /= Void then
+						pointer_button_press_actions_internal.call (t)
+					end
+				elseif a_type = feature {EV_GTK_EXTERNALS}.GDK_2BUTTON_PRESS_ENUM then
+					if pointer_double_press_actions_internal /= Void then
+						pointer_double_press_actions_internal.call (t)
+					end
 				end
 			end
        end

@@ -56,7 +56,8 @@ feature -- Element change
 feature -- Removal
 
 	delete is
-			-- Supress Current
+			-- Supress Current.
+			-- If Current is the only line of `tree', prompt `tree' so.
 		do
 			key.delete
 			unlink
@@ -67,13 +68,20 @@ feature -- Removal
 		do
 			if next /= Void then
 				next.set_previous (previous)
-			else
-				tree.set_last_data (previous)
 			end
 			if previous /= Void then
 				previous.set_next (next)
+			end
+			if Current = last_data then
+				if Current = first_data then
+					tree.wipe_out
+				else
+					tree.set_last_data (previous)
+				end
 			else
-				tree.set_first_data (next)
+				if Current = first_data then
+					tree.set_first_data (next)
+				end
 			end
 		end
 
@@ -107,7 +115,9 @@ feature -- Basic Operations
 			other.set_previous (Current)
 			if next /= Void then
 				next.set_previous (other)
-			else
+			end
+				-- Being last tree data is not the same as having no following data.
+			if Current = tree.last_data then
 				tree.set_last_data (other)
 			end
 			set_next (other)
@@ -123,7 +133,9 @@ feature -- Basic Operations
 			other.set_next (Current)
 			if previous /= Void then
 				previous.set_next (other)
-			else
+			end
+				-- Being first tree data is not the same as having no previous data.
+			if Current = tree.first_data then
 				tree.set_first_data (other)
 			end
 			set_previous (other)

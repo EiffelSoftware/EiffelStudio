@@ -561,6 +561,10 @@ feature -- Generation, Header
 				make_file.putstring ("-DCONCURRENT_EIFFEL ")
 			end
 
+			if not System.uses_ise_gc_runtime then
+				make_file.putstring ("-DNO_ISE_GC ")
+			end
+
 			generate_specific_defines
 			make_file.putstring ("-I%H$(ISE_EIFFEL)/studio/spec/%H$(ISE_PLATFORM)/include -I. %H$(INCLUDE_PATH)%N")
 

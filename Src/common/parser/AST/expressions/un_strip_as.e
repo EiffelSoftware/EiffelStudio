@@ -117,7 +117,7 @@ feature -- Type check, byte code and dead code removal
 	format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		local
-			first_printed: BOOLEAN;
+			print_comma: BOOLEAN;
 		do
 			ctxt.begin;
 			ctxt.put_text_item (ti_Strip_keyword);
@@ -132,12 +132,12 @@ feature -- Type check, byte code and dead code removal
 				ctxt.new_expression;
 				ctxt.prepare_for_feature(id_list.item, void);
 				if ctxt.is_feature_visible then	
-					if not first_printed then
+					if print_comma then
 						ctxt.put_text_item (ti_Comma);
 						ctxt.put_space
 					end;	
 					ctxt.put_current_feature;
-					first_printed := true;
+					print_comma := True;
 				end;
 				id_list.forth
 			end;

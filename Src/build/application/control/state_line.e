@@ -9,6 +9,7 @@ class STATE_LINE
 inherit
 	EB_FIGURE
 		redefine
+			drawing,
 			attach_drawing,
 			select_figure, deselect,
 			contains
@@ -46,6 +47,7 @@ feature -- Removable
 			create cut_line_cmd
 			create arg.make (Current)
 			cut_line_cmd.execute (arg, Void)
+			drawing.active_area.set_transported_data (Void)
 		end
 
 feature -- Editor creation
@@ -73,7 +75,9 @@ feature -- Access
 			-- i.e. is there a bi-directional arrow between source
 			-- and destination ?
 
-	attach_drawing (a_drawing: EV_DRAWABLE) is
+	drawing: APP_DR_AREA
+
+	attach_drawing (a_drawing: like drawing) is
 			-- Attach a_drawing_imp to the figure 
 		do
 			Precursor (a_drawing)
@@ -108,13 +112,27 @@ feature -- Access
 				pt1.rotate (20, source.center)
 				pt2.rotate (340, destination.center)
 			end
-			arrow.set_arrow (pt1, pt2, App_const.arrow_head_w, App_const.arrow_head_h)
-			arrow.set_origin_to_middle
+			set_from_points (pt1, pt2)
 		end
+
+	draw is
+		do
+			arrow.draw
+		end 
 
 	origin: EV_POINT is
 		do
 			Result := arrow.origin
+		end
+
+	head: EV_POINT is
+		do
+			Result := arrow.head
+		end
+
+	tail: EV_POINT is
+		do
+			Result := arrow.tail
 		end
 
 	is_superimposable (other: like Current): BOOLEAN is
@@ -157,14 +175,16 @@ feature -- Status setting
 			bi_directional := b
 		end
 
+	set_from_points (pt1, pt2: EV_POINT) is
+			-- Set the `arrow' starting from `pt1', ending in `pt2'.
+		do
+			arrow.set_arrow (pt1, pt2, App_const.arrow_head_w, App_const.arrow_head_h)
+			arrow.set_origin_to_middle
+		end
+
 feature {STATE_LINE} -- Implementation
 
 	arrow: ARROW_LINE
-
-	draw is
-		do
-			arrow.draw
-		end 
 
 	find_limit_points (pt1, pt2: EV_POINT): FIXED_LIST [EV_POINT] is
 			-- Find the two points of the arrow line from center points pt1 and pt2 

@@ -1,4 +1,3 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
 		"Eiffel Vision frame. Mswindows implementation."
@@ -52,6 +51,8 @@ inherit
 			wel_move_and_resize,
 			wel_set_text
 		end
+
+	WEL_DRAWING_ROUTINES
 
 create
 	make
@@ -223,22 +224,32 @@ feature {NONE} -- WEL Implementation
 
 	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
 			-- Redraw frame with `style'.
+		local
+			wel_style: INTEGER
 		do
 			inspect style
-				when Ev_frame_lowered then check not_yet: False end
-				when Ev_frame_raised then check not_yet: False end
-				when Ev_frame_etched_in then
-					paint_etched_in_frame (paint_dc, invalid_rect)
-				when Ev_frame_etched_out then check not_yet: False end
+				when Ev_frame_lowered then wel_style := Edge_sunken
+				when Ev_frame_raised then wel_style := Edge_raised
+				when Ev_frame_etched_in then wel_style := Edge_etched
+				when Ev_frame_etched_out then wel_style := Edge_bump
 			else
 				check
 					valid_value: False
 				end
 			end
+			paint_dc.select_font (wel_font)
+			paint_dc.set_text_color (foreground_color_imp)
+			paint_dc.set_background_color (background_color_imp)
+			draw_edge (paint_dc, invalid_rect, wel_style, Bf_rect)
+			if is_sensitive then
+				paint_dc.text_out (10, 0, wel_text)
+			else
+				draw_insensitive_text (paint_dc, 10, 0, wel_text)
+			end
 		end
 
 	paint_etched_in_frame (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
-			-- paint frame that looks like a groove.
+			-- Paint frame that looks like a groove.
 		local
 			top: INTEGER
 		do
@@ -343,8 +354,8 @@ end -- class EV_FRAME_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.28  2000/04/27 17:42:35  brendel
---| Started reimplementing on_paint.
+--| Revision 1.29  2000/04/27 18:13:08  brendel
+--| Improved `on_paint'.
 --|
 --| Revision 1.27  2000/04/27 17:15:19  brendel
 --| Started revising.

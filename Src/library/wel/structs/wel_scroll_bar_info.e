@@ -16,7 +16,7 @@ inherit
 
 	WEL_SCROLL_BAR_CONSTANTS
 		export
-			{ANY} valid_sif_constant
+			{ANY} valid_sif_mask
 			{NONE} all
 		end
 
@@ -98,7 +98,7 @@ feature -- Setting
 			-- Assign `i' to `fmask' field of Current.
 		require
 			exists: exists
-			valid_mask: valid_sif_constant (i)
+			valid_mask: valid_sif_mask (i)
 		do
 			cwel_set_fmask (item, i) 
 		end

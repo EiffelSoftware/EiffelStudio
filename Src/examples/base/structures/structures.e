@@ -73,7 +73,7 @@ feature -- Routines
 				io.readchar
 				if io.lastchar = 'y' then
 					saved_demo_file.open_write
-					chosen_demo.general_store (saved_demo_file)
+					chosen_demo.independent_store (saved_demo_file)
 					saved_demo_file.close
 					io.putstring ("%TDemo saved%N")
 				end

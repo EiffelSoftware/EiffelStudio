@@ -16350,13 +16350,13 @@ feature -- External C functions
 			"C (GtkWidget*) | <gtk/gtk.h>"
 		end
 
-	gtk_widget_size_allocate (a_widget: POINTER; a_allocation: POINTER) is
-			-- void	   gtk_widget_size_allocate	  (GtkWidget	       *widget,
-			-- 					   GtkAllocation       *allocation);
-			-- (from C_GTK_WIDGET)
-		external
-			"C (GtkWidget*, GtkAllocation*) | <gtk/gtk.h>"
-		end
+--	gtk_widget_size_allocate (a_widget: POINTER; a_allocation: POINTER) is
+--			-- void	   gtk_widget_size_allocate	  (GtkWidget	       *widget,
+--			-- 					   GtkAllocation       *allocation);
+--			-- (from C_GTK_WIDGET)
+--		external
+--			"C (GtkWidget*, GtkAllocation*) | <gtk/gtk.h>"
+--		end
 
 	gtk_widget_size_request (a_widget: POINTER; a_requisition: POINTER) is
 			-- void	   gtk_widget_size_request	  (GtkWidget	       *widget,

@@ -10,10 +10,27 @@ class
 inherit
 	PRIMITIVE_WINDOWS
 		rename
+			on_right_button_down as widget_on_right_button_down,
+			on_right_button_up as widget_on_right_button_up,
 			set_cursor_position as wel_set_cursor_position
 		redefine
+			set_background_color,
 			realize,
 			unrealize
+		end
+
+	PRIMITIVE_WINDOWS
+		rename
+			set_cursor_position as wel_set_cursor_position
+		redefine
+			set_background_color,
+			on_right_button_down,
+			on_right_button_up,
+			realize,
+			unrealize
+		select
+			on_right_button_down,
+			on_right_button_up
 		end
 
 	TEXT_I
@@ -40,6 +57,7 @@ inherit
 			release_capture as wel_release_capture,
 			parent as wel_parent,
 			text as wel_text,
+			set_background_color as wel_set_background_color,
 			text_length as wel_text_length,
 			set_text as wel_set_text,
 			clear as wel_clear,
@@ -77,18 +95,18 @@ creation
 	make
 
 feature -- Initialization
-	
+
 	make (a_text: TEXT; man: BOOLEAN; oui_parent: COMPOSITE) is
 			-- Create the text_windows
 		do
+			!! private_text.make (0)
+			!! private_attributes;
 			init_common_controls_dll
 			init_rich_edit_dll
-			parent ?= oui_parent.implementation
-			!! private_text.make (0)
-			managed := man
 			a_text.set_font_imp (Current)
+			parent ?= oui_parent.implementation
+			managed := man
 			is_multi_line_mode := true
-			!! private_attributes;
 		end
 
 	init_rich_edit_dll is
@@ -110,6 +128,10 @@ feature -- Initialization
 				resize_for_shell
 				wc ?= parent
 				wel_make (wc, text, x, y, width, height, id_default)
+				enable_standard_notifications
+				if private_background_color /= Void then
+					set_background_color (private_background_color)
+				end
 				if private_font /= Void then
 					set_font (private_font)
 				end
@@ -127,6 +149,9 @@ feature -- Initialization
 				set_cursor_position (private_cursor_position)
 				if margin_width + margin_height > 0 then
 					set_margins (margin_width, margin_height)
+				end
+				if is_multi_line_mode then
+					set_top_character_position (private_top_character_position)
 				end
 			end
 		end
@@ -203,7 +228,7 @@ feature -- Status report
 		end
 
 	horizontal_position: INTEGER is
-			-- Offset in pixels of horizonatl scrollbar
+			-- Offset in pixels of horizontal scrollbar
 		do
 		end
 
@@ -286,113 +311,52 @@ feature -- Status report
 			end
 		end
 
+	coordinate (char_pos: INTEGER): COORD_XY is
+			-- Coordinate relative to the upper left corner
+			-- of Current text widget at character position `char_pos'.
+		local
+			win_point: WEL_POINT
+		do
+			win_point := position_from_character_index (char_pos)
+			!! Result
+			Result.set (win_point.x, win_point.y)
+		end
+
 	x_coordinate (char_pos: INTEGER): INTEGER is
 			-- X coordinate relative to upper left corner
 			-- of current text widget at character position `char_pos'
-		local
-			hp, nb_cr : INTEGER
-			client_dc: WEL_CLIENT_DC
-			local_string: STRING
-			local_char_index, local_line_index: INTEGER
-			tm: WEL_TEXT_METRIC
 		do
 			if exists then
-				nb_cr := eiffel_position_to_windows (char_pos)
-				!! client_dc.make (Current)
-				client_dc.get
-				client_dc.select_font (wel_font)
-				local_line_index := line_from_char (nb_cr)
-				local_char_index := line_index (local_line_index)
-				local_string := line (local_line_index)
-				local_string.head (nb_cr - local_char_index)
-				hp := horizontal_position
-				if hp > 0 then
-					!! tm.make (client_dc)
-					hp := tm.average_character_width * hp
-				end
-				Result := client_dc.tabbed_text_size (local_string).width + formatting_rect.left - hp
-				--Result := client_dc.tabbed_text_size_with_tabulation 
-					--(local_string, <<tab_length>>).width + formatting_rect.left - hp
-				client_dc.release
+				Result := position_from_character_index (char_pos).x
 			end
 		end
 
 	y_coordinate (char_pos: INTEGER): INTEGER is
 			-- Y coordinate relative to upper left corner
 			-- of current text widget at character position `char_pos'
-		local
-			nb_cr : INTEGER
-			text_metric: WEL_TEXT_METRIC
-			client_dc: WEL_CLIENT_DC
 		do
 			if exists then
-				nb_cr := eiffel_position_to_windows (char_pos)
-				!! client_dc.make (Current)
-				client_dc.get
-				client_dc.select_font (wel_font)
-				!! text_metric.make (client_dc)
-				Result := (text_metric.height *
-					(line_from_char (nb_cr) - first_visible_line) + 
-					formatting_rect.top + 
-					text_metric.height // 2)
-				client_dc.release
+				Result := position_from_character_index (char_pos).y
 			end
 		end
 
 	character_position (cx, cy : INTEGER) : INTEGER is
-			-- character position at cursor position `cx' and `cy'.
-		local
-			nb_cr, local_cx : INTEGER
-			client_dc: WEL_CLIENT_DC
-			text_metric: WEL_TEXT_METRIC
-			local_char_index, local_line_index, i: INTEGER
-			local_string: STRING
+			-- character position at position `cx' and `cy'.
 		do
 			if exists then
-				!! client_dc.make (Current)
-				client_dc.get
-				client_dc.select_font (wel_font)
-				!! text_metric.make (client_dc)
-				local_cx := cx + horizontal_position * text_metric.average_character_width
-				local_line_index := first_visible_line + (cy - formatting_rect.top) // text_metric.height
-				if local_line_index >= line_count then
-					local_line_index := line_count - 1
-				end
-				local_string := line (local_line_index)
-				local_char_index := line_index (local_line_index)
-				--if local_cx > client_dc.tabbed_text_size_with_tabulation
-							--(local_string, <<tab_length>>).width then
-				if local_cx > client_dc.tabbed_text_size
-							(local_string).width then
-					Result := local_char_index + line_length (local_line_index)
-				else
-					Result := local_char_index + 1
-					from
-						i := local_string.count
-					variant
-						i
-					until
-						i < 1 or else
-							(client_dc.tabbed_text_size
-								(local_string).width < local_cx)
-							--(client_dc.tabbed_text_size_with_tabulation
-								--(local_string, <<tab_length>>).width < local_cx)
-					loop
-						local_string.head (i)
-						Result := local_char_index + i + 1
-						i := i - 1
-					end
-				end
-				client_dc.release
-				Result := windows_position_to_eiffel (Result)
+				Result := windows_position_to_eiffel
+					(character_index_from_position (cx, cy))
 			end
 		end
 
 	top_character_position: INTEGER is
 			-- Character position of first character displayed
+		local
+			win_pos: INTEGER
 		do
 			if exists then
-				Result := windows_position_to_eiffel (line_index (first_visible_line))
+				win_pos := line_index (first_visible_line)
+				Result := windows_position_to_eiffel (win_pos)
 			end
 		end
 
@@ -407,6 +371,19 @@ feature -- Status report
 
 feature -- Status setting
 
+	set_background_color (a_color: COLOR) is
+			-- Set the background color to `a_color'
+			-- We may need a call to UpdateWindow
+		local
+			win_color: WEL_COLOR_REF
+		do
+			private_background_color := a_color
+			if exists then
+				win_color ?= a_color.implementation
+				wel_set_background_color (win_color)
+			end
+		end
+
 	unrealize is
 			-- Unrealize current widget
 		do
@@ -415,9 +392,8 @@ feature -- Status setting
 		end
 
 	set_margins (a_width, a_height: INTEGER) is
+			-- Set margins for text.
 		do
-			if exists then
-			end
 		end
 
 	allow_action is
@@ -435,11 +411,11 @@ feature -- Status setting
 	clear_selection is
 			-- Clear a selection
 		do
+			private_begin_selection := 0
+			private_end_selection := 0
 			if exists then
 				unselect
 			end
-			private_begin_selection := 0
-			private_end_selection := 0
 		end
 
 	disable_resize is
@@ -504,25 +480,12 @@ feature -- Status setting
 
 	set_cursor_position (pos: INTEGER) is
 			-- Set cursor_position to pos.
-		local
-			a_text: STRING
-			nb_cr: INTEGER
-			start_sel, end_sel : INTEGER
+			--| Will unselect any active selection
+			--| since the cursor is always at the end
+			--| of a selection under Windows
 		do
 			if exists then
-				nb_cr := eiffel_position_to_windows (pos)
-				if is_selection_active then 
-					start_sel := selection_start
-					end_sel := selection_end
-					enable_scroll_caret_at_selection
-					set_caret_position (nb_cr)
-					disable_scroll_caret_at_selection
-					wel_set_selection (start_sel, end_sel)
-				else
-					enable_scroll_caret_at_selection
-					set_caret_position (nb_cr)
-					disable_scroll_caret_at_selection
-				end
+				set_caret_position (eiffel_position_to_windows (pos))
 			else
 				private_cursor_position := pos
 			end
@@ -588,37 +551,24 @@ feature -- Status setting
 			-- Highlight the substring between `first' and `last' positions
 			-- leave the caret at `first'
 		local
-			nb_cr_first, nb_cr_last: INTEGER
+			top_pos: INTEGER
 		do
-			nb_cr_first := eiffel_position_to_windows (first)
-			nb_cr_last := eiffel_position_to_windows (last)
-			if exists then
-				enable_scroll_caret_at_selection
-				set_caret_position (nb_cr_first)				
-				disable_scroll_caret_at_selection
-				wel_set_selection (nb_cr_first, nb_cr_last)
-			end
 			private_begin_selection := first
 			private_end_selection := last
+			if exists then
+				top_pos := top_character_position
+				wel_set_selection (eiffel_position_to_windows
+					(first), eiffel_position_to_windows (last))
+				set_top_character_position (top_pos)
+			end
 		end
 
 	set_text (a_text: STRING) is
 			-- Set window text to `a_text'
 		local
-			ext_text: ANY
 			local_text : STRING
 		do
-			private_text := clone (a_text)
-			special_translation := false
-			if a_text.count > 0 and then a_text.substring_index ("%R%N",1) = 0 then
-				text_translated := true
-			else
-				text_translated := false
-				if a_text.occurrences ('%N') /= a_text.occurrences ('%R') then
-					special_translation := true
-					build_translation_table (a_text)
-				end
-			end
+			update_private_text (a_text)
 			if exists then
 				local_text := clone (a_text)
 				if not a_text.empty then
@@ -633,29 +583,14 @@ feature -- Status setting
 			end
 		end
 
-	set_top_character_position (char_pos : INTEGER) is
+	set_top_character_position (char_pos: INTEGER) is
 			-- Set first character displayed to `char_pos'.
-		local
-			nb_cr, top_line: INTEGER
-			start_sel, end_sel : INTEGER
 		do
+			private_top_character_position := char_pos
 			if exists then
-				nb_cr := eiffel_position_to_windows (char_pos)
-				top_line := line_from_char (nb_cr)
-				nb_cr := line_index (top_line)
-				if is_selection_active then 
-					start_sel := selection_start
-					end_sel := selection_end
-					enable_scroll_caret_at_selection
-					set_caret_position (nb_cr)
-					disable_scroll_caret_at_selection
-					wel_set_selection (start_sel, end_sel)
-				else
-					enable_scroll_caret_at_selection
-					set_caret_position (nb_cr)
-					disable_scroll_caret_at_selection
-				end
-			end			
+				scroll (0, line_from_char (eiffel_position_to_windows
+					(char_pos)) - first_visible_line)
+			end
 		end
 
 	set_single_line_mode is
@@ -694,7 +629,7 @@ feature -- Element change
 		do
 			activate_actions.add (Current, a_command, argument)
 		end
-	
+
 	add_modify_action (a_command: COMMAND; arg: ANY) is
 			-- Add `a_command' to the list of action to execute before
 			-- text is deleted from or inserted in current text widget.
@@ -716,10 +651,17 @@ feature -- Element change
 		do
 			a_text := clone (text)
 			a_text.append (s)
-			set_text (a_text)
+			update_private_text (a_text)
+			if exists then
+				if has_selection then
+					unselect
+				end
+				set_caret_position (eiffel_position_to_windows (text.count))
+				replace_selection (s)
+			end
 		end
 
-	insert (s: STRING; a_position : INTEGER) is
+	insert (s: STRING; a_position: INTEGER) is
                         -- Insert `s' in current text field at `a_position'.
                         -- Same as `replace (a_position, a_position, s)'.
 		local
@@ -731,7 +673,14 @@ feature -- Element change
 			else
 				a_text.insert (s, a_position + 1)
 			end
-			set_text (a_text)
+			update_private_text (a_text)
+			if exists then
+				if has_selection then
+					unselect
+				end
+				set_caret_position (eiffel_position_to_windows (a_position))
+				replace_selection (s)
+			end
 		end
 
 	replace (from_position, to_position: INTEGER; s: STRING) is
@@ -745,7 +694,19 @@ feature -- Element change
 			else
 				a_text.replace_substring (s, from_position + 1, to_position)
 			end
-			set_text (a_text)
+			update_private_text (a_text)
+			if exists then
+				if has_selection then
+					unselect
+				end
+				if from_position = to_position then
+					set_caret_position (eiffel_position_to_windows (from_position))
+					replace_selection (s)
+				else
+					set_selection (from_position, to_position)
+					replace_selection (s)
+				end
+			end
 		end
 
 feature -- Removal
@@ -771,25 +732,11 @@ feature -- Removal
 			motion_actions.remove (Current, a_command, arg)
 		end
 
-feature {NONE} -- Implementation
+feature {NONE} -- Notifications
 
 	on_en_change is
 		do
 			modify_actions.execute (Current, Void)
-		end
-
-	default_style: INTEGER is
-			-- Default style for window control;
-		do
-			Result := Ws_child + Ws_visible + Ws_border
-				   + Es_nohidesel + Es_left
-				   + Es_multiline + Es_autovscroll
-			if not is_word_wrap_mode then
-				Result := Result + Es_autohscroll
-			end
-			if is_read_only then
-				Result := Result + Es_readonly
-			end
 		end
 
 	on_char (virtual_key, key_data: INTEGER) is
@@ -805,12 +752,43 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	on_right_button_down (keys, a_x, a_y: INTEGER) is
+			-- Wm_rbuttondown message
+			-- See class WEL_MK_CONSTANTS for `keys' value
+		do
+			widget_on_right_button_down (keys, a_x, a_y)
+			disable_default_processing
+		end
+
+	on_right_button_up (keys, a_x, a_y: INTEGER) is
+			-- Wm_rbuttonup message
+			-- See class WEL_MK_CONSTANTS for `keys' value
+		do
+			widget_on_right_button_up (keys, a_x, a_y)
+			disable_default_processing
+		end
+
+feature {NONE} -- Implementation
+
+	default_style: INTEGER is
+			-- Default style for window control;
+		do
+			Result := Ws_child + Ws_visible + Ws_border
+				   + Es_nohidesel + Es_left
+				   + Es_multiline + Es_autovscroll
+			if not is_word_wrap_mode then
+				Result := Result + Es_autohscroll
+			end
+			if is_read_only then
+				Result := Result + Es_readonly
+			end
+		end
+
 	windows_position_to_eiffel (pos: INTEGER) : INTEGER is
 			-- Translate a position in a string with %R%N as delimiters 
 			-- to a position in a string with %R as delimiter.
 		local
 			a_text : STRING
-			nb_cr : INTEGER
 			i : INTEGER
 		do
 			Result := pos
@@ -820,8 +798,7 @@ feature {NONE} -- Implementation
 					a_text.replace_substring_all ("%N", "%R%N")
 				end
 				a_text := a_text.substring (1, Result)
-				nb_cr := a_text.occurrences ('%R')
-				Result := Result - nb_cr
+				Result := Result - a_text.occurrences ('%R')
 			elseif special_translation then
 				from
 					i := 1
@@ -856,6 +833,23 @@ feature {NONE} -- Implementation
 					i := i + 1
 				end
 				Result := result + i - 1
+			end
+		end
+
+	update_private_text (a_text: STRING) is
+			-- Update the private text and rebuild the
+			-- `translation_table' if necessary.
+		do
+			private_text := clone (a_text)
+			special_translation := false
+			if a_text.count > 0 and then a_text.substring_index ("%R%N",1) = 0 then
+				text_translated := true
+			else
+				text_translated := false
+				if a_text.occurrences ('%N') /= a_text.occurrences ('%R') then
+					special_translation := true
+					build_translation_table (a_text)
+				end
 			end
 		end
 
@@ -905,6 +899,9 @@ feature {NONE} -- Implementation
 			-- Is this text translated so that "%R%N" are inserted instead of
 			-- just a "%N".  This affects counts etc.
 
+	private_top_character_position: INTEGER
+			-- Fist visible line containing character position.
+
 	private_begin_selection: INTEGER
 			-- Current place selection is to start
 
@@ -931,7 +928,6 @@ feature {NONE} -- Implementation
 			-- Value of current text field
 
 invariant
-
 	translation_property: special_translation implies translation_table /= Void
 
 end -- class TEXT_WINDOWS

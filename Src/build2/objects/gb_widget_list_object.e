@@ -45,7 +45,6 @@ feature -- Basic operation
 					box.disable_item_expand (widget)
 				end
 			end
-				-- Check we need to handle if display_object is a container.
 			widget ?= an_object.display_object
 			display_object.child.go_i_th (position)
 			display_object.child.put_left (widget)
@@ -57,8 +56,17 @@ feature -- Basic operation
 				end
 			end
 			
-			layout_item.go_i_th (position)
-			layout_item.put_left (an_object.layout_item)			
+				-- Perform special processing of `layout_item' children
+				-- as locked instances must not show their children.
+			if system_status.loading_project then
+				if not is_instance_of_top_level_object then
+					layout_item.go_i_th (position)
+					layout_item.put_left (an_object.layout_item)	
+				end			
+			elseif layout_item.data = Void then
+				layout_item.go_i_th (position)
+				layout_item.put_left (an_object.layout_item)
+			end
 			add_child (an_object, position)
 		end
 

@@ -45,27 +45,27 @@ extern char token_str[];
 	} cr_node;
 }
 
-%start		Class_declaration;
+%start		Class_declaration
 
-%nonassoc	TE_DOTDOT;
-%left		TE_IMPLIES;
-%left		TE_OR;
-%left		TE_XOR;
-%left		TE_AND;
+%nonassoc	TE_DOTDOT
+%left		TE_IMPLIES
+%left		TE_OR
+%left		TE_XOR
+%left		TE_AND
 /* %nonassoc	TE_NE TE_EQ TE_LT TE_GT TE_LE TE_GE; */
 /* I'm not convinced of this */
-%left 		TE_NE TE_EQ TE_LT TE_GT TE_LE TE_GE;
-%left		TE_PLUS TE_MINUS;
-%left		TE_STAR TE_SLASH TE_MOD TE_DIV;
-%right		TE_POWER;
-%left		TE_FREE;
-%right		TE_NOT;
-%nonassoc	TE_STRIP;
-%left		TE_OLD;
+%left 		TE_NE TE_EQ TE_LT TE_GT TE_LE TE_GE
+%left		TE_PLUS TE_MINUS
+%left		TE_STAR TE_SLASH TE_MOD TE_DIV
+%right		TE_POWER
+%left		TE_FREE
+%right		TE_NOT
+%nonassoc	TE_STRIP
+%left		TE_OLD
 
-%left		TE_DOT;
+%left		TE_DOT
 
-%right		TE_LPARAN;
+%right		TE_LPARAN
 
 %token 		TE_ALIAS;
 %token		TE_ALL;

@@ -12,7 +12,7 @@ inherit
 		
 feature -- Class stack creation
 
-	create_current_callstack_with (a_stack_max_depth: INTEGER) is
+	new_current_callstack_with (a_stack_max_depth: INTEGER): EIFFEL_CALL_STACK is
 		do
 		end
 

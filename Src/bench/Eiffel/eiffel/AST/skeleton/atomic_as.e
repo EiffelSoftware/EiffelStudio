@@ -89,6 +89,14 @@ feature -- Type check
 			-- Do nothing
 		end
 
+	is_inspect_value (type: TYPE_A): BOOLEAN is
+			-- Is the atomic a good bound for multi-branch of the given `type'?
+		require
+			type_not_void: type /= Void
+		do
+			-- Do nothing
+		end
+
 feature {COMPILER_EXPORTER, INTERVAL_AS} -- Dead code removal
 
 	record_dependances is

@@ -8,12 +8,13 @@ class INTEGER_CONSTANT
 inherit
 	ATOMIC_AS
 		rename
-			context as ast_context
+			context as ast_context,
+			is_inspect_value as valid_type
 		undefine
 			is_character
 		redefine
 			is_integer, good_integer, is_equivalent,
-			type_check, byte_node, value_i, make_integer
+			type_check, byte_node, value_i, make_integer, valid_type
 		end
 
 	VALUE_I

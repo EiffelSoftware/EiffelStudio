@@ -26,7 +26,7 @@ inherit
 		undefine
 			format, byte_node
 		redefine
-			type_check, good_integer, good_character,
+			type_check, good_integer, good_character, is_inspect_value,
 			make_integer, make_character
 		end
 		
@@ -201,6 +201,15 @@ feature -- Conveniences
 		do
 			constant_i := associated_constant
 			Result := constant_i /= Void and then constant_i.value.is_character
+		end
+
+	is_inspect_value (type: TYPE_A): BOOLEAN is
+			-- Is the atomic a good bound for multi-branch of the given `type'?
+		local
+			constant_i: CONSTANT_I
+		do
+			constant_i := associated_constant
+			Result := constant_i /= Void and then constant_i.value.valid_type (type)
 		end
 
 	make_integer: INT_CONST_VAL_B is

@@ -154,6 +154,13 @@ feature -- Basic operations
 			a_window_not_current: a_window /= Current
 		do
 			implementation.show_modal_to_window (a_window)
+		ensure
+				-- When a dialog is displayed modally, execution of code is
+				-- halted until the dialog is closed or destroyed. Therefore,
+				-- this postcondition will only be executed after the dialog
+				-- is closed or destroyed.
+			dialog_closed_so_no_blocking_window:
+				not is_destroyed implies blocking_window = Void
 		end
 
 	show_relative_to_window (a_window: EV_WINDOW) is

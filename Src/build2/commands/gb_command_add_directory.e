@@ -48,6 +48,11 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	GB_NAMING_UTILITIES
+		export
+			{NONE} all
+		end
 	
 create
 	make
@@ -76,31 +81,50 @@ feature -- Basic Operation
 			-- Actually create directory
 		local
 			temp_file_name: FILE_NAME
-			directory: DIRECTORY
+			root_directory, directory: DIRECTORY
 			directory_exists_dialog: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
+			created_directories: ARRAYED_LIST [DIRECTORY]
+			test_file_name, test_directory_name: DIRECTORY_NAME
 		do
+			create created_directories.make (4)
 			create temp_file_name.make_from_string (generated_path.string)
+			create root_directory.make_open_read (generated_path.string)
+			create test_directory_name.make_from_string (generated_path.string)
+			test_directory_name.extend (unique_name_from_array (root_directory.linear_representation, "TEMP"))
+			
 			from
 				parent_directory_path.start
 			until
 				parent_directory_path.off
 			loop
 				temp_file_name.extend (parent_directory_path.item)
-				create directory.make (temp_file_name)
-				if not directory.exists then
-						-- As the current nested directory path in the window selector
-						-- may not actually exist on disk, we must re-create it.
-					create_directory (directory)
-				end
 				parent_directory_path.forth
 			end
 			temp_file_name.extend (directory_name)
 			create directory.make (temp_file_name)
 			if not directory.exists then
-					-- Only create the directory if it is not already present on the disk.
-				create_directory (directory)
+					-- Now temporarily create a temp dir and a file with name matching `directory_name' to see if the
+					-- file name entered is valid. If not, this raises an exception which we catch to prompt a user that
+					-- the name is invalid. After creating the tmeporary dir and file, we delete them both. Directories
+					-- are only actually created when generating the project if actually needed, but we must create a file
+					-- with the correct name to catch if it is valid or not on the current platform.
+				create test_directory.make_open_read (test_directory_name)
+				check
+					test_directory_does_not_exist: not test_directory.exists
+				end
+				test_directory.create_dir
+				test_file_name := test_directory_name.twin
+				test_file_name.extend (directory_name)
+				create directory.make (test_file_name)
+				directory.create_dir
+				directory.delete
+				test_directory.delete
+				test_directory := Void
+					-- If it was not a valid name, then an exception is raised and this 
 				directory_added_succesfully := True
-			else
+			elseif not executed_once then
+					-- `executed_once' checks  that we only show the add to project warning the first time we add it and not when
+					-- undoing or redoing.
 				if not warnings_supressed then
 					create directory_exists_dialog.make_initialized (2, show_adding_existing_directory_warning,
 									"The directory already exists on the disk. Do you wish to include it in the project?", "Always include, and do not show this warning again.")
@@ -120,6 +144,9 @@ feature -- Basic Operation
 
 	directory_added_succesfully: BOOLEAN
 		-- Was last call to `create_directory' successful?
+		
+	test_directory: DIRECTORY
+		-- Temporary directory created and used to check the current file name.
 
 	execute is
 			-- Execute `Current'.
@@ -158,8 +185,6 @@ feature -- Basic Operation
 			-- Calling `execute' followed by `undo' must restore
 			-- the system to its previous state.
 		local
-			temp_file_name: FILE_NAME
-			directory: DIRECTORY
 			directory_item,	parent_directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
 			directory_path: ARRAYED_LIST [STRING]
 		do
@@ -182,20 +207,6 @@ feature -- Basic Operation
 				end
 				window_selector.prune_all (directory_item)
 			end
-			
-			create temp_file_name.make_from_string (generated_path.string)
-			from
-				directory_path.start
-			until
-				directory_path.off
-			loop
-				temp_file_name.extend (directory_path.item)
-				directory_path.forth
-			end
-			create directory.make (temp_file_name)
-			if directory.exists and directory.is_empty then
-				delete_directory (directory)
-			end	
 			command_handler.update
 		end
 	

@@ -80,9 +80,33 @@ int get_eiffel_class_id(MtType att_value_type)
 	}
 }
 
-EIF_OBJ create_container_object(int container_type_id, int pred_oid, int rel_oid, const char * type_name)
+//char * get_eiffel_class_name(MtType att_value_type)
+char *get_eiffel_class_name(MtType att_value_type)
+{
+	switch(att_value_type) {
+	case MT_S32_ARRAY:
+	case MT_U32_ARRAY:
+	case MT_S16_ARRAY:
+	case MT_U16_ARRAY:
+		return "INTEGER";
+	case MT_U8_ARRAY:
+		return "CHARACTER";
+	case MT_FLOAT_ARRAY:
+		return "REAL";
+	case MT_DOUBLE_ARRAY:
+		return "DOUBLE";
+	case MT_ASCII_STRING_ARRAY:
+	case MT_STRING_ARRAY:
+		return "STRING";
+	default:
+		return "";
+	}
+}
+
+EIF_OBJ create_container_object(int pred_oid, int rel_oid, const char * type_name)
 {
 //	EIF_MT_LOG1("
+	char name [1024];
 	if (strcmp(MT_HASH_TABLE, type_name) == 0) {
 		MtKey ht_obj;  /* hash_table object */
 		MtSize num_succs = 1;
@@ -97,9 +121,6 @@ EIF_OBJ create_container_object(int container_type_id, int pred_oid, int rel_oid
 			MtType att_key_type, att_value_type;
 //			MtS32 properties_type = 0;
 //			MtSize size;
-			char * ht_name;  /* hash_table name */
-			int key_type, value_type;
-			int eif_ht_type;
 			int ht_type;
 			int16 typearr[4];
 			
@@ -110,91 +131,80 @@ EIF_OBJ create_container_object(int container_type_id, int pred_oid, int rel_oid
 			
 			if (att_key_type == MT_NIL) {
 				if (att_value_type == MT_NIL) {
-					ht_name = MT_RR_HASH_TABLE;
-					key_type = DTYPE_GEN(eif_type_id(HT_REFERENCE_TYPE));
-					value_type = DTYPE_GEN(eif_type_id(HT_REFERENCE_TYPE));
+					strcpy (name, "MT_RR_HASH_TABLE [MT_OBJECT , HASHABLE]");
 				} else {
-					ht_name = MT_AR_HASH_TABLE;
-					key_type = DTYPE_GEN(eif_type_id(HT_REFERENCE_TYPE));
-					value_type = DTYPE_GEN(get_eiffel_class_id(att_value_type));
+					strcpy (name, "MT_AR_HASH_TABLE [");
+					strcat (name, get_eiffel_class_name (att_value_type));
+					strcat (name, ", HASHABLE]");
 				}
 			} else {
 				if (att_value_type == MT_NIL) {
-					ht_name = MT_RA_HASH_TABLE;
-					key_type = DTYPE_GEN(get_eiffel_class_id(att_key_type));
-					value_type = DTYPE_GEN(eif_type_id(HT_REFERENCE_TYPE));
+					strcpy (name, "MT_RA_HASH_TABLE [MT_OBJECT, ");
+					strcat (name, get_eiffel_class_name (att_key_type));
+					strcat (name, "]");
 				} else {
-					ht_name = MT_AA_HASH_TABLE;
-					key_type = DTYPE_GEN(get_eiffel_class_id(att_key_type));
-					value_type = DTYPE_GEN(get_eiffel_class_id(att_value_type));
+					strcpy (name, "MT_AA_HASH_TABLE [");
+					strcat (name, get_eiffel_class_name (att_value_type));
+					strcat (name, ", ");
+					strcat (name, get_eiffel_class_name (att_key_type));
+					strcat (name, "]");
 				}
 			}
 			
-			ht_type = DTYPE_GEN(eif_type_id (ht_name));
+			ht_type = eif_type_id (name);
 
-			typearr[0] = -1;
-			typearr [1] = ht_type;
-			typearr [2] = value_type;
-			typearr [3] = key_type;
-			typearr [4] = 0;
 //			size = sizeof(MtS32); 			
 //			CHECK_STS(MtGetValue(ht_obj, HASH_TABLE__properties_type, NULL, 
 //					&properties_type, NULL, &size, NULL));
 //			EIF_MT_LOG2("ht_obj = %d, properties_type = %d", ht_obj, properties_type);
 //
 //			if (properties_type == HASH_TABLE_RR_TYPE) {
-//				ht_name = MT_RR_HASH_TABLE;
+//				name = MT_RR_HASH_TABLE;
 //				key_type = eif_type_id(HT_REFERENCE_TYPE);
 //				value_type = eif_type_id(HT_REFERENCE_TYPE);
 //			} else {
 //			if (properties_type == HASH_TABLE_AR_TYPE) {
-//				ht_name = MT_AR_HASH_TABLE;
+//				name = MT_AR_HASH_TABLE;
 //				key_type = eif_type_id(HT_REFERENCE_TYPE);
 //				value_type = get_eiffel_class_id(att_value_type);
 //			} else {
 //			if (properties_type == HASH_TABLE_RA_TYPE) {
-//				ht_name = MT_RA_HASH_TABLE;
+//				name = MT_RA_HASH_TABLE;
 //				key_type = get_eiffel_class_id(att_key_type);
 //				value_type = eif_type_id(HT_REFERENCE_TYPE);
 //			} else {
 //			if (properties_type == HASH_TABLE_AA_TYPE) {
-//				ht_name = MT_AA_HASH_TABLE;
+//				name = MT_AA_HASH_TABLE;
 //				key_type = get_eiffel_class_id(att_key_type);
 //				value_type = get_eiffel_class_id(att_value_type);
 //			} else {
 //			if (properties_type == HASH_TABLE_UNKNOWN_TYPE) {
-//				ht_name = MT_HASH_TABLE;
+//				name = MT_HASH_TABLE;
 //				key_type = get_eiffel_class_id(att_key_type);
 //				value_type = get_eiffel_class_id(att_value_type);
 //			}}}}}
 			
 			EIF_MT_LOG2("key_type_name = %d, value_type_name = %d", key_type, value_type);
-//			eif_ht_type = eif_generic_id(ht_name, eif_type_id("STRING"), eif_type_id("INTEGER"));
-//			eif_ht_type = eif_generic_id(ht_name, eif_type_id(value_type_name), eif_type_id(key_type_name));
+//			eif_ht_type = eif_generic_id(name, eif_type_id("STRING"), eif_type_id("INTEGER"));
+//			eif_ht_type = eif_generic_id(name, eif_type_id(value_type_name), eif_type_id(key_type_name));
 			/* Old way to create a generic class:
-			 * eif_ht_type = eif_generic_id(ht_name, value_type, key_type);*/
-			eif_ht_type = eif_compound_id ((int16 *) 0, (char *)0 , (int16) ht_type, typearr); 
+			 * eif_ht_type = eif_generic_id(name, value_type, key_type);*/
 			EIF_MT_LOG1("eif_ht_type = %d", eif_ht_type);
-			EIF_MT_LOG1("ht_name = %s", ht_name);
+			EIF_MT_LOG1("name = %s", name);
 			/* EIF_MT_LOG1("mt hash_table generic id %d", eif_generic_id("MT_HASH_TABLE", eif_type_id("STRING"), eif_type_id("INTEGER")));
 			EIF_MT_LOG1("aa mt hash_table generic id %d", eif_generic_id("MT_AA_HASH_TABLE", eif_type_id("STRING"), eif_type_id("INTEGER")));
 			EIF_MT_LOG1("ramt hash_table generic id %d", eif_generic_id("HASH_TABLE_SUB_SUB", eif_type_id("STRING"), eif_type_id("REAL")));
 			EIF_MT_LOG1("armt hash_table generic id %d", eif_generic_id("HASH_TABLE_SUB_SUB", eif_type_id("STRING"), eif_type_id("DOUBLE")));
 			EIF_MT_LOG1("rr mt hash_table generic id %d", eif_generic_id("HASH_TABLE_SUB_SUB", eif_type_id("STRING"), eif_type_id("CHARACTER")));
 			EIF_MT_LOG1("hash_table generic id %d", eif_generic_id("HASH_TABLE", eif_type_id("STRING"), eif_type_id("INTEGER"))); */
-			return (henter(RTLN(eif_ht_type)));
+			return (eif_create (ht_type));
 		}
 	/* } else if (strcmp(???, type_name) == 0) {
 	  .... */
 	} else {
-		int16 typearr [4];
-
-		typearr [0] = -1;
-		typearr [1] = DTYPE_GEN(container_type_id);
-		typearr [2] = DTYPE_GEN(eif_type_id("MT_STORABLE"));
-		typearr [3] = -1;
-		
-		return (henter(RTLN(eif_compound_id ((int16 *) 0, (char *)0 , (int16) DTYPE_GEN(container_type_id), typearr))));
+		strcpy (name, type_name);
+		strcat (name, "[MT_STORABLE]");
+		return (eif_create (eif_type_id (name)));
 	}
 }
 
@@ -211,18 +221,16 @@ EIF_OBJ create_container_object(int container_type_id, int pred_oid, int rel_oid
  */
 //EIF_OBJ c_create_empty_rs_container(EIF_INTEGER container_type_id, EIF_OBJ a_rel, EIF_OBJ an_obj)
 //EIF_OBJ c_create_empty_rs_container(EIF_INTEGER container_type_id)
-EIF_OBJ c_create_empty_rs_container(EIF_INTEGER container_type_id, EIF_INTEGER pred_oid, 
+EIF_OBJ c_create_empty_rs_container(char *type_name, EIF_INTEGER pred_oid, 
 			EIF_INTEGER rel_oid)
 {
 	EIF_OBJ obj;//, obj2;
 	EIF_PROC make_proc;//, proc1, proc2;
 	int make_proc_type;
 	//EIF_TYPE_ID an_id;
-	char * type_name;
 	
-	type_name = eifname(container_type_id);
 	//obj = eif_create(container_type_id);
-	obj = create_container_object(container_type_id, pred_oid, rel_oid, type_name);
+	obj = create_container_object(pred_oid, rel_oid, type_name);
 
 	if (obj == NULL) return obj;
 	
@@ -282,7 +290,7 @@ EIF_OBJ c_create_empty_rs_container(EIF_INTEGER container_type_id, EIF_INTEGER p
  */
 EIF_INTEGER c_generic_type_id(char * generic_class_name)
 {
-	return eif_generic_id(generic_class_name);
+	return eif_type_id (generic_class_name);
 }
 
 

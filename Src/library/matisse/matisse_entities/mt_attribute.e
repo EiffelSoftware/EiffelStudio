@@ -28,12 +28,13 @@ inherit
 		end
 	
 creation
-	make, make_from_id
+	make, make_from_names, make_from_id
 
 feature {NONE} -- Initialization
 
 	make (attribute_name: STRING) is
 			-- Get attribute from database.
+			-- If `attribute_name' not unique, an error is raised.
 		require
 			attribute_not_void: attribute_name /= Void
 			attribute_not_empty: not attribute_name.empty
@@ -42,6 +43,22 @@ feature {NONE} -- Initialization
 		do
 			c_attribute_name := attribute_name.to_c
 			oid := c_get_attribute ($c_attribute_name)
+		end
+
+	make_from_names (attribute_name, cl_name: STRING) is
+			-- Get attribute from database.
+		require
+			attribute_not_void: attribute_name /= Void
+			attribute_not_empty: not attribute_name.empty
+			cl_not_void: cl_name /= Void
+			cl_not_empty: not cl_name.empty
+		local
+			c_attribute_name: ANY
+			c_cl_name: ANY
+		do
+			c_attribute_name := attribute_name.to_c
+			c_cl_name := cl_name.to_c
+			oid := c_get_attribute_from_names ($c_attribute_name, $c_cl_name)
 		end
 
 feature {NONE} -- Initialization

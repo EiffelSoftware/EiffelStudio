@@ -143,9 +143,9 @@ feature {MT_HASH_TABLE} -- Loading & storing successors
 						i := i + 1
 					end
 
-					!! has_default_att.make ("HASH_TABLE__has_default")
+					!! has_default_att.make_from_names ("has_default", "HASH_TABLE")
 					if has_default_att.get_boolean (Current) then
-						!! rel.make ("HASH_TABLE__void_key_obj_value")
+						!! rel.make_from_names ("void_key_obj_value", "HASH_TABLE")
 						succ ?= successors (rel)
 						if succ.empty then
 							ht_force (default_value, default_key)
@@ -172,9 +172,9 @@ feature {MT_HASH_TABLE} -- Loading & storing successors
 			!! all_keys.make (count)
 			!! all_values.make (count)
 			!! indexes.make (1, count)
-			!! key_rs.make ("HASH_TABLE__obj_keys")
-			!! value_rs.make ("HASH_TABLE__obj_values")
-			!! index_att.make ("HASH_TABLE__value_index")
+			!! key_rs.make_from_names ("obj_keys", "HASH_TABLE")
+			!! value_rs.make_from_names ("obj_values", "HASH_TABLE")
+			!! index_att.make_from_names ("value_index", "HASH_TABLE")
 			j := 1
 			from 
 				i := keys.lower
@@ -207,10 +207,10 @@ feature {MT_HASH_TABLE} -- Loading & storing successors
 			value_rs.set_successors (Current, all_values)
 			index_att.set_integer_array_value (Current, indexes)
 			
-			!! has_default_att.make ("HASH_TABLE__has_default")
+			!! has_default_att.make_from_names ("has_default", "HASH_TABLE")
 			if has_default then
 				has_default_att.set_boolean_value (Current, True)
-				!! void_key_rs.make ("HASH_TABLE__void_key_obj_value")
+				!! void_key_rs.make_from_names ("void_key_obj_value", "HASH_TABLE")
 				!! a_linear.make (1)
 				if default_key_value /= Void then
 					a_linear.extend (default_key_value)
@@ -227,7 +227,7 @@ feature {NONE}
 		local
 			rel: MT_MULTI_RELATIONSHIP
 		do
-			!! rel.make ("HASH_TABLE__obj_keys")
+			!! rel.make_from_names ("obj_keys", "HASH_TABLE")
 			Result ?= successors (rel)
 		end
 	
@@ -235,7 +235,7 @@ feature {NONE}
 		local
 			rel: MT_MULTI_RELATIONSHIP
 		do
-			!! rel.make ("HASH_TABLE__obj_values")
+			!! rel.make_from_names ("obj_values", "HASH_TABLE")
 			Result ?= successors (rel)
 		end
 

@@ -100,9 +100,9 @@ feature
 			!! all_keys.make (1, count)
 			!! all_values.make (1, count)
 			!! indexes.make (1, count)
-			!! key_att.make ("HASH_TABLE__att_keys")
-			!! value_att.make ("HASH_TABLE__att_values")
-			!! index_att.make ("HASH_TABLE__value_index")
+			!! key_att.make_from_names ("att_keys", "HASH_TABLE")
+			!! value_att.make_from_names ("att_values", "HASH_TABLE")
+			!! index_att.make_from_names ("value_index", "HASH_TABLE")
 			from 
 				j := 1
 				i := keys.lower
@@ -142,7 +142,7 @@ feature {NONE}
 		local
 			att: MT_ATTRIBUTE
 		do
-			!! att.make ("HASH_TABLE__att_keys")
+			!! att.make_from_names ("att_keys", "HASH_TABLE")
 			Result ?= att.get_value (Current)
 		end
 	
@@ -150,7 +150,7 @@ feature {NONE}
 		local
 			att: MT_ATTRIBUTE
 		do
-			!! att.make ("HASH_TABLE__att_values")
+			!! att.make_from_names ("att_values", "HASH_TABLE")
 			Result ?= att.get_value (Current)
 		end
 	

@@ -12,6 +12,12 @@ feature {NONE} -- Implementation MT_ATTRIBUTE
 			"C"
 		end
 
+	c_get_attribute_from_names (name, class_name: POINTER): INTEGER is
+			-- Use MtGetClassAttrinute.
+		external 
+			"C"
+		end
+
 	c_check_attribute (aid, oid: INTEGER)  is
 			-- Use Mt_CheckAttribute.
 		external 

@@ -66,6 +66,7 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			set_c_object (C.gtk_button_new)
+			GTK_WIDGET_SET_FLAGS (button_widget, C.GTK_CAN_DEFAULT_ENUM)
 		end
 
 	initialize is
@@ -107,7 +108,7 @@ feature -- Access
 		do
 			Result := GTK_WIDGET_HAS_DEFAULT (button_widget)
 		end
-
+		
 feature -- Status Setting
 
 	enable_default_push_button is
@@ -142,7 +143,7 @@ feature -- Status Setting
 	enable_can_default is
 			-- Allow the style of the button to be the default push button.
 		do
-			GTK_WIDGET_SET_FLAGS (button_widget, C.GTK_CAN_DEFAULT_ENUM)
+--|			GTK_WIDGET_SET_FLAGS (button_widget, C.GTK_CAN_DEFAULT_ENUM)
 		end
 
 	set_foreground_color (a_color: EV_COLOR) is

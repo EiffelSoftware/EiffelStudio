@@ -110,6 +110,11 @@ inherit
 		export
 			{NONE} All
 		end
+		
+	SHARED_TEXT_ITEMS
+		export
+			{NONE} All
+		end
 
 create {EB_WINDOW_MANAGER}
 	make,
@@ -2359,7 +2364,8 @@ feature {NONE} -- Implementation
 			cluster_st: CLUSTER_STONE
 			feature_stone: FEATURE_STONE
 			conv_ferrst: FEATURE_ERROR_STONE
-			tmp_structured_text: STRUCTURED_TEXT
+			l_format_context: FORMAT_CONTEXT
+			l_indexes: EIFFEL_LIST [INDEX_AS]
 			conv_errst: ERROR_STONE
 			class_file: RAW_FILE
 			class_text_exists: BOOLEAN
@@ -2580,11 +2586,28 @@ feature {NONE} -- Implementation
 					end
 					if cluster_st /= Void then
 --| FIXME XR: Really manage cluster display in the main editor
-						create tmp_structured_text.make
-						tmp_structured_text.add_string ("Cluster: " + cluster_st.cluster_i.cluster_name)
-						tmp_structured_text.add_new_line
-						tmp_structured_text.add_string ("Cluster path: " + cluster_st.cluster_i.path)
-						editor_tool.text_area.process_text (tmp_structured_text)
+						create l_format_context.make_for_case
+						l_format_context.put_text_item (ti_indexing_keyword)
+						l_format_context.put_new_line
+						l_format_context.indent
+						l_format_context.put_text_item (create {INDEXING_TAG_TEXT}.make ("cluster"))
+						l_format_context.put_text_item_without_tabs (ti_colon)
+						l_format_context.put_space
+						l_format_context.put_string ("%"" + cluster_st.cluster_i.cluster_name + "%"")
+						l_format_context.put_new_line
+						l_format_context.put_text_item (create {INDEXING_TAG_TEXT}.make ("cluster_path"))
+						l_format_context.put_text_item_without_tabs (ti_colon)
+						l_format_context.put_space
+						l_format_context.put_string ("%"" + cluster_st.cluster_i.path + "%"")
+						l_format_context.put_new_line
+						l_indexes := cluster_st.cluster_i.indexes
+						if l_indexes /= Void then
+							l_format_context.set_new_line_between_tokens
+							l_format_context.format_ast (l_indexes)
+							l_format_context.exdent
+						end
+						l_format_context.put_new_line
+						editor_tool.text_area.process_text (l_format_context.text)
 --| END FIXME
 					end
 				end

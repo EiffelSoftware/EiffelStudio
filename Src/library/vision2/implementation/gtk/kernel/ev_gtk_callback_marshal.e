@@ -26,6 +26,13 @@ inherit
 			default_create
 		end
 
+	EXCEPTIONS
+		export
+			{NONE} all
+		undefine
+			default_create
+		end
+
 create
 	default_create
 	
@@ -39,6 +46,29 @@ feature {NONE} -- Initialization
 		end
 
 feature {EV_ANY_IMP} -- Access
+
+	enable_exception_handling is
+			-- Enable event exception handling
+		do
+			exception_handling_enabled := True
+		end
+
+	disable_exception_handling is
+			-- Enable event exception handling
+		do
+			last_callback_had_exception := False
+			last_exception_message := Void
+			exception_handling_enabled := False
+		end
+		
+	exception_handling_enabled: BOOLEAN
+			-- Is main loop exception handling enabled?
+
+	last_callback_had_exception: BOOLEAN
+		-- Did the last call to `marshal' raise an exception?
+		
+	last_exception_message: STRING
+		-- Message of last exception encountered by `marshal'
 
 	translate_and_call (
 		an_agent: PROCEDURE [ANY, TUPLE];
@@ -100,7 +130,7 @@ feature {EV_ANY_IMP} -- Access
 			dimension_tuple.put (a_3, 3)
 			dimension_tuple.put (a_4, 4)			
 		end
-
+		
 feature {EV_ANY_IMP, EV_APPLICATION_IMP}
 
 	gdk_event_to_tuple (n_args: INTEGER; args: POINTER): TUPLE is
@@ -287,20 +317,34 @@ feature {NONE} -- Implementation
 			action_not_void: action /= Void
 			n_args_not_negative: n_args >= 0
 			args_not_null: n_args > 0 implies args /= default_pointer
+		local
+			retried: BOOLEAN
 		do
-			if internal.type_conforms_to (internal.dynamic_type (action), f_of_tuple_type_id) then
-				-- `action' isn't a translation agent and the open operands are TUPLE [TUPLE]
-				-- Direct call of ACTION_SEQUENCE.call (?).
-				action.call (Void)
-			else
-				-- `action' is a translation agent, call with TUPLE [INTEGER, POINTER].
-				-- In most cases, translate_and_call (an_agent, translate, ?, ?)
-				check
-					not_for_empty_tuple: not internal.type_conforms_to (internal.dynamic_type (action), f_of_tuple_type_id)
+			if not retried then
+				if internal.type_conforms_to (internal.dynamic_type (action), f_of_tuple_type_id) then
+					-- `action' isn't a translation agent and the open operands are TUPLE [TUPLE]
+					-- Direct call of ACTION_SEQUENCE.call (?).
+					action.call (Void)
+				else
+					-- `action' is a translation agent, call with TUPLE [INTEGER, POINTER].
+					-- In most cases, translate_and_call (an_agent, translate, ?, ?)
+					check
+						not_for_empty_tuple: not internal.type_conforms_to (internal.dynamic_type (action), f_of_tuple_type_id)
+					end
+					integer_pointer_tuple.put (n_args, 1)
+					integer_pointer_tuple.put (args, 2)
+					action.call (integer_pointer_tuple)
 				end
-				integer_pointer_tuple.put (n_args, 1)
-				integer_pointer_tuple.put (args, 2)
-				action.call (integer_pointer_tuple)
+			end
+		rescue
+			if exception_handling_enabled then
+				retried := True
+				last_callback_had_exception := True
+				last_exception_message := tag_name 
+				if last_exception_message /= Void then
+					last_exception_message := last_exception_message + " Code: " + exception.out
+				end
+				retry				
 			end
 		end
 

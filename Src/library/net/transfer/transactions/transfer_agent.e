@@ -3,7 +3,6 @@ indexing
 		"Agents that are able to transfer data"
 
 	status:	"See note at end of class"
-	author: "Patrick Schoenbach"
 	date: "$Date$"
 	revision: "$Revision$"
 

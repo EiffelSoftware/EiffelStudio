@@ -3,7 +3,6 @@ indexing
 		"Comparator for character sets"
 
 	status:	"See note at end of class"
-	author: "Patrick Schoenbach"
 	date: "$Date$"
 	revision: "$Revision$"
 	usage: "The features 'define', 'add' and 'remove' accept a string as%

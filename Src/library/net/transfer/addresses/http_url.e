@@ -3,7 +3,6 @@ indexing
 		"URLs for HTTP resources"
 
 	status:	"See note at end of class"
-	author: "Patrick Schoenbach"
 	date: "$Date$"
 	revision: "$Revision$"
 

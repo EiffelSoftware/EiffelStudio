@@ -3,7 +3,6 @@ indexing
 		"Singleton instance of resource factory"
 
 	status:	"See note at end of class"
-	author: "Patrick Schoenbach"
 	date: "$Date$"
 	revision: "$Revision$"
 

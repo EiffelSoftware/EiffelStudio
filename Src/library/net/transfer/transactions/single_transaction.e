@@ -3,7 +3,6 @@ indexing
 		"Transactions consisting out of a single transfer"
 
 	status:	"See note at end of class"
-	author: "Patrick Schoenbach"
 	date: "$Date$"
 	revision: "$Revision$"
 

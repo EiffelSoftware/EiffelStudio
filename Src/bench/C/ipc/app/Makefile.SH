@@ -39,11 +39,13 @@ DIR = $DIR
 CC = $cc
 CTAGS = ctags
 JCFLAGS = \$(CFLAGS) $optimize $ccflags $large
+JMTCFLAGS = \$(CFLAGS) $optimize $mtccflags $large
 LD = ld
 MAKE = make
 MKDEP = $mkdep \$(DPFLAGS) --
 MV = $mv
 RM = $rm -f
+LN = $ln
 SED = $sed
 
 ########################################################################
@@ -83,21 +85,69 @@ OBJ = \
 	proto.o \
 	server.o 
 
+# Derived object file names for MT lib generation
+MT_OBJ = \
+    MTlisten.o \
+    MTproto.o \
+    MTserver.o
+
+MTlisten.c: listen.c
+	$(RM) $@
+	$(LN) listen.c $@
+remove::
+	$(RM) MTlisten.c
+
+MTproto.c: proto.c
+	$(RM) $@
+	$(LN) proto.c $@
+remove::
+	$(RM) MTproto.c
+
+MTserver.c: server.c
+	$(RM) $@
+	$(LN) server.c $@
+remove::
+	$(RM) MTserver.c
+
+MTlisten.o: MTlisten.c
+	$(CC) -c $(JMTCFLAGS)  $*.c
+	$(RM) $*.c
+
+MTproto.o: MTproto.c
+	$(CC) -c $(JMTCFLAGS)  $*.c
+	$(RM) $*.c
+
+MTserver.o: MTserver.c
+	$(CC) -c $(JMTCFLAGS)  $*.c
+	$(RM) $*.c
+
 # Derived library object file names
 LOBJ = \
 	listen.o \
 	proto.o \
 	server.o 
 
+#derived library object file names for MT libs
+
+MT_LOBJ = \
+    MTlisten.o \
+    MTproto.o \
+    MTserver.o
+
 # Where shared archive is located (path and name)
 LIBDIR = ../shared
 LIBRUN = ../../run-time
 LIBIDR = ../../idrs
 LIBIDRNAME = libidr.a
+MTLIBIDRNAME = libmtidr.a
 LIBNAME = libipc.a
+MTLIBNAME = libmtipc.a
 LIBWKBENCH = libwkbench.a
+LIBMTWKBENCH = libwkbench.a
 LIBARCH = $(LIBDIR)/$(LIBNAME)
+MTLIBARCH = $(LIBDIR)/$(MTLIBNAME)
 LIBIDRARCH = $(LIBIDR)/$(LIBIDRNAME)
+MTLIBIDRARCH = $(LIBIDR)/$(MTLIBIDRNAME)
 
 DPFLAGS = -I$(TOP) -I$(LIBDIR) -I$(LIBRUN) -I$(LIBIDR)
 CFLAGS = $(DPFLAGS) -DWORKBENCH
@@ -118,10 +168,10 @@ depend::
 	cp Makefile.new Makefile
 	$(RM) Makefile.new
 
-all:: $(OBJ)
+all:: $(OBJ) $(MT_OBJ)
 
 local_realclean::
-	$(RM) $(OBJ)
+	$(RM) $(OBJ) $(MT_OBJ)
 
 .FORCE:
 
@@ -147,6 +197,31 @@ local_realclean::
 network.o: $(LOBJ)
 	$(RM) $@
 	$(LD) $(JLKFLAGS) -r $(LOBJ) -o $@ $(LIBARCH) $(LIBIDRARCH)
+
+# for MT
+
+.FORCE:
+
+$(LIBDIR)/$(MTLIBNAME): .FORCE
+	@echo "Checking "$(iMTLIBNAME)" in "$(LIBDIR)"..."
+	cd $(LIBDIR); $(MAKE) $(MTLIBNAME)
+	@echo "Continuing in $(CURRENT)..."
+
+MTnetwork.o: $(LIBDIR)/$(MTLIBNAME)
+
+$(LIBIDR)/$(MTLIBIDRNAME): .FORCE
+	@echo "Checking "$(MTLIBIDRNAME)" in "$(LIBIDR)"..."
+	cd $(LIBIDR); $(MAKE) $(MTLIBIDRNAME)
+	@echo "Continuing in $(CURRENT)..."
+
+MTnetwork.o: $(LIBIDR)/$(MTLIBIDRNAME)
+
+all:: MTnetwork.o
+
+MTnetwork.o: $(MT_LOBJ) $(LIBDIR)/$(MTLIBNAME)  $(LIBIDR)/$(MTLIBIDRNAME)
+	$(RM) $@
+	$(LD) $(JLKFLAGS) $(MTLDFLAGS) -r $(MT_LOBJ) -o $@ $(MTLIBARCH) $(MTLIBIDRARCH)
+
 
 ########################################################################
 # Common rules for all Makefiles -- do not edit

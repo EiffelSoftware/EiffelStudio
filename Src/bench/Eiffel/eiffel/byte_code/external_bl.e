@@ -13,8 +13,7 @@ inherit
 			basic_register,
 			has_call, current_needed_for_access, set_parent, parent,
 			set_register, register, generate_access, generate_on,
-			analyze_on, analyze, generate_end, allocates_memory,
-			generate_metamorphose_end
+			analyze_on, analyze, generate_end, allocates_memory
 		end;
 
 	SHARED_TABLE;
@@ -305,22 +304,6 @@ feature
 				gen_reg.print_register
 				generate_parameters_list
 				buf.putchar (')')
-			end
-		end
-
-	generate_metamorphose_end (gen_reg, meta_reg: REGISTRABLE; class_type: CL_TYPE_I;
-		basic_type: BASIC_I; buf: GENERATION_BUFFER) is
-			-- Generate final portion of C code.
-		do
-			generate_end (gen_reg, class_type)
-
-				-- Now generate the parameters of the call, if needed.
-			buf.putchar (')');
-			basic_type.end_of_metamorphose (basic_register, meta_reg, buf)
-
-			if type.is_boolean then
-					-- macro EIF_TEST was generated
-				buf.putchar (')');
 			end
 		end
 

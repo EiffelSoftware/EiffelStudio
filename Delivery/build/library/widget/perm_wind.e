@@ -244,6 +244,31 @@ feature
 			top_shell.set_height (new_h);
 		end;
 
+	set_min_width (new_w: INTEGER) is
+			-- Set minimum width for the window.
+		do
+			top_shell.set_min_width (new_w)
+		end
+
+	set_min_height (new_h: INTEGER) is
+			-- Set minimum height for the window.
+		do
+			top_shell.set_min_height (new_h)
+
+		end
+
+	set_max_width (new_w: INTEGER) is
+			-- Set maximum width for the window.
+		do
+			top_shell.set_max_width (new_w)
+		end
+
+	set_max_height (new_h: INTEGER) is
+			-- Set maximum height for the window.
+		do
+			top_shell.set_max_height (new_h)
+		end
+
 	realize is
 			-- Create actual screen object of Current
 			-- widget and of all children (recursively).

@@ -218,16 +218,19 @@ feature {EV_LIST_ITEM_IMP} -- Implementation
 			-- Clear all the items of the list.
 		require
 			exists: not destroyed
+		local
+			list: ARRAYED_LIST [EV_LIST_ITEM_IMP]
 		do
 			from
-				ev_children.start
+				list := ev_children
+				list.start
 			until
-				ev_children.after
+				list.after
 			loop
-				ev_children.item.interface.remove_implementation
-				ev_children.forth
+				list.item.interface.remove_implementation
+				list.forth
 			end
-			ev_children.wipe_out
+			list.wipe_out
 		end
 
 end -- class EV_LIST_I

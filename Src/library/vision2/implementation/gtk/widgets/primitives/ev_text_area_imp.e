@@ -184,11 +184,8 @@ feature -- Status setting
 		end
 	
 	insert_text (txt: STRING) is
-		local
-			a: ANY
 		do
-			a := txt.to_c
-			C.c_gtk_text_insert (c_object, $a)
+			C.gtk_text_insert (c_object, NULL, NULL, NULL, eiffel_to_c (txt), -1)
 		end
 	
 	set_text (txt: STRING) is
@@ -296,6 +293,9 @@ end -- class EV_TEXT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.22  2000/04/18 19:53:04  oconnor
+--| Revised to survive without externals.
+--|
 --| Revision 1.21  2000/04/13 23:06:46  brendel
 --| Unreleased.
 --|

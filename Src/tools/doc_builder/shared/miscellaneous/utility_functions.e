@@ -460,23 +460,39 @@ feature -- Document
 	stylesheet_path (a_file: STRING; rel: BOOLEAN): STRING is
 			-- Path to stylesheet from `a_file'
 		local
-			l_name: STRING
+			l_name,
+			a_filename: STRING
 			l_link: DOCUMENT_LINK
 			l_consts: SHARED_OBJECTS
+			l_start, l_cnt: INTEGER
 		do
-			create l_consts		
+			create l_consts					
 			if l_consts.Shared_document_manager.has_stylesheet then
-				l_name := l_consts.Shared_document_manager.stylesheet.name
+				a_filename := a_file.twin
+				l_name := l_consts.Shared_document_manager.stylesheet.name.twin
+					-- Create a project relative link to the stylesheet file
 				if (create {PLATFORM}).is_unix then							
-					Result := l_name
-				else					
-						-- Create a project relative link to the stylesheet file
+							-- Dirty hack for linux
+					l_start := l_name.substring_index (l_consts.shared_project.root_directory, 1)
+					l_name.remove_substring (l_start, l_start + l_consts.shared_project.root_directory.count)
+					l_start := a_filename.substring_index (l_consts.shared_project.root_directory, 1)
+					a_filename.remove_substring (l_start, l_start + l_consts.shared_project.root_directory.count)
+					from	
+						create Result.make_from_string (l_name)
+						l_cnt := a_filename.occurrences ('/')
+					until
+						l_cnt = 0
+					loop
+						Result.prepend ("../")
+						l_cnt := l_cnt - 1
+					end
+				else
 					create l_link.make (a_file, l_name)
 					if rel then
 						Result := l_link.relative_url
 					else
 						Result := l_link.absolute_url
-					end				
+					end
 				end
 			end				
 		end	

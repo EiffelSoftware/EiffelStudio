@@ -51,17 +51,17 @@ feature {NONE} -- Implementation
 			non_void_initialization: Result /= Void
 		end
 	
-	release_interface (a_name: STRING): STRING is
-			-- Code to release interface
+	release_interface (a_variable_name: STRING): STRING is
+			-- Code to release interface pointer held by `a_variable_name'
 		require
-			non_void_name: a_name /= Void
-			valid_name: not a_name.is_empty
+			non_void_name: a_variable_name /= Void
+			valid_name: not a_variable_name.is_empty
 		do
 			create Result.make (500)
-			Result.append ("if (p_")
-			Result.append (a_name)
-			Result.append (" != NULL)%N%T%Tp_")
-			Result.append (a_name)
+			Result.append ("if (")
+			Result.append (a_variable_name)
+			Result.append (" != NULL)%N%T%T")
+			Result.append (a_variable_name)
 			Result.append ("->Release ();%N%T")
 		ensure
 			non_void_release_interface: Result /= Void

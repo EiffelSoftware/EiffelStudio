@@ -10,14 +10,26 @@ class
 inherit
 	WIZARD_COMPONENT_INTERFACE_C_GENERATOR
 
+	WIZARD_VARIABLE_NAME_MAPPER
+		rename
+			Component as Name_mapper_component,
+			Interface as Name_mapper_interface
+		export
+			{NONE} all
+		undefine
+			default_create
+		end
+
 feature -- Basic operations
 
 	process_property (a_property: WIZARD_PROPERTY_DESCRIPTOR) is
 			-- Process property.
 		local
 			l_generator: WIZARD_CPP_CLIENT_PROPERTY_GENERATOR
+			l_interface_name: STRING
 		do
-			create l_generator.generate (component, a_property, interface.name, interface.lcid)
+			l_interface_name := interface.name
+			create l_generator.generate (component, a_property, l_interface_name, variable_name (l_interface_name), interface.lcid)
 			cpp_class_writer.add_function (l_generator.c_access_feature, Public)
 
 			if not a_property.is_read_only then
@@ -31,15 +43,17 @@ feature -- Basic operations
 			l_generator: WIZARD_CPP_VTABLE_CLIENT_FUNCTION_GENERATOR
 			l_disp_generator: WIZARD_CPP_DISPATCH_CLIENT_FUNCTION_GENERATOR
 			l_header_files: LIST [STRING]
+			l_interface_name: STRING
 		do
 			if not a_function.is_renaming_clause then
+				l_interface_name := interface.name
 				if a_function.func_kind = func_dispatch and not a_function.dual then
 					create l_disp_generator
-					l_disp_generator.generate (component, interface.name, interface.guid.to_string, interface.lcid, a_function)
+					l_disp_generator.generate (component, l_interface_name, variable_name (l_interface_name), interface.guid.to_string, interface.lcid, a_function)
 					cpp_class_writer.add_function (l_disp_generator.ccom_feature_writer, Public)
 				else
 					create l_generator
-					l_generator.generate (component, interface.name, a_function)
+					l_generator.generate (component, l_interface_name, variable_name (l_interface_name), a_function)
 					cpp_class_writer.add_function (l_generator.ccom_feature_writer, Public)
 					l_header_files := l_generator.c_header_files
 					from

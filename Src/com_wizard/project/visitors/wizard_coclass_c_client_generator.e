@@ -17,6 +17,11 @@ inherit
 
 	WIZARD_COMPONENT_C_CLIENT_GENERATOR
 
+	WIZARD_VARIABLE_NAME_MAPPER
+		export
+			{NONE} all
+		end
+	
 feature -- Basic operations
 
 	generate (a_descriptor: WIZARD_COCLASS_DESCRIPTOR) is
@@ -124,7 +129,7 @@ feature {NONE} -- Implementation
 			loop
 				l_interface := l_descriptors.item
 				if not l_interface.is_iunknown and not l_interface.is_idispatch and l_interface.is_implementing_coclass (a_coclass_descriptor) then
-					Result.append (release_interface (l_interface.name))
+					Result.append (release_interface (variable_name (l_interface.name)))
 				end
 				l_descriptors.forth
 			end
@@ -214,8 +219,8 @@ feature {NONE} -- Implementation
 					l_constructor.append (l_interface.name)
 					l_constructor.append (" = 0;%N%Thr = a_pointer->QueryInterface(")
 					l_constructor.append (iid_name (l_interface.name))
-					l_constructor.append (", (void**)&p_")
-					l_constructor.append (l_interface.name)
+					l_constructor.append (", (void**)&")
+					l_constructor.append (variable_name (l_interface.name))
 					l_constructor.append (");%N")
 					l_constructor.append (examine_hresult ("hr"))
 					l_constructor.append ("%N")

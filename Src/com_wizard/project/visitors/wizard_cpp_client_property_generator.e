@@ -18,46 +18,45 @@ inherit
 create 
 	generate
 
-feature {NONE} -- Basic operations
+feature {NONE} -- Implementation
 
-	generate (a_component: WIZARD_COMPONENT_DESCRIPTOR; 
-					a_property: WIZARD_PROPERTY_DESCRIPTOR; 
-					interface_name: STRING; 
-					lcid: INTEGER) is
+	generate (a_component: WIZARD_COMPONENT_DESCRIPTOR; a_property: WIZARD_PROPERTY_DESCRIPTOR; a_interface_name, a_variable_name: STRING; a_lcid: INTEGER) is
 			-- Generate C client access and setting features.
 		require
 			non_void_component: a_component /= Void
 			non_void_coclass_name: a_component.name /= Void
 			non_void_property: a_property /= Void
-			non_void_interface_name: interface_name /= Void
-			valid_interface_name: not interface_name.is_empty
+			non_void_interface_name: a_interface_name /= Void
+			valid_interface_name: not a_interface_name.is_empty
+			non_void_variable_name: a_variable_name /= Void
+			valid_variable_name: not a_variable_name.is_empty
 		local
-			visitor: WIZARD_DATA_TYPE_VISITOR
+			l_visitor: WIZARD_DATA_TYPE_VISITOR
 		do
-			visitor := a_property.data_type.visitor
+			l_visitor := a_property.data_type.visitor
 
-			create_access_feature (a_component, interface_name, lcid, a_property, visitor)
+			create_access_feature (a_component, a_interface_name, a_variable_name, a_lcid, a_property, l_visitor)
 
 				-- Setting function
 			if not a_property.is_read_only then
-				create_set_feature (a_component, interface_name, lcid, a_property, visitor)
+				create_set_feature (a_component, a_interface_name, a_variable_name, a_lcid, a_property, l_visitor)
 			end
 		ensure then
 			c_access_feature_exist: c_access_feature /= Void
 			c_setting_feature_exist: not a_property.is_read_only implies c_setting_feature /= Void
 		end
 
-feature {NONE} -- Implementation
-
-	create_access_feature (a_component: WIZARD_COMPONENT_DESCRIPTOR; interface_name: STRING; 
-						lcid: INTEGER; a_property: WIZARD_PROPERTY_DESCRIPTOR;
-						visitor: WIZARD_DATA_TYPE_VISITOR) is
+	create_access_feature (a_component: WIZARD_COMPONENT_DESCRIPTOR; a_interface_name, a_variable_name: STRING; 
+						a_lcid: INTEGER; a_property: WIZARD_PROPERTY_DESCRIPTOR;
+						a_visitor: WIZARD_DATA_TYPE_VISITOR) is
 			-- Create access feature.
 		require
 			non_void_component: a_component /= Void
-			non_void_interface_name: interface_name /= Void
+			non_void_interface_name: a_interface_name /= Void
+			non_void_variable_name: a_variable_name /= Void
 			non_void_property: a_property/= Void
-			valid_interface_name: not interface_name.is_empty
+			valid_interface_name: not a_interface_name.is_empty
+			valid_variable_name: not a_variable_name.is_empty
 		local
 			l_header_file_name: STRING
 		do
@@ -66,14 +65,14 @@ feature {NONE} -- Implementation
 
 			c_access_feature.set_name (external_feature_name (a_property.component_eiffel_name (a_component)))
 
-			l_header_file_name := visitor.c_definition_header_file_name
+			l_header_file_name := a_visitor.c_definition_header_file_name
 			if l_header_file_name /= Void and then not l_header_file_name.is_empty then
 				set_header_file (l_header_file_name)
 			end
 
 			-- Set result type
-			if visitor.is_basic_type or visitor.vt_type = Vt_bool or visitor.is_enumeration then
-				c_access_feature.set_result_type (visitor.cecil_type)
+			if a_visitor.is_basic_type or a_visitor.vt_type = Vt_bool or a_visitor.is_enumeration then
+				c_access_feature.set_result_type (a_visitor.cecil_type)
 			else
 				c_access_feature.set_result_type ("EIF_REFERENCE")
 			end
@@ -82,62 +81,62 @@ feature {NONE} -- Implementation
 			c_access_feature.set_comment (a_property.description)
 
 			-- Set c access body
-			set_access_body (interface_name, lcid, a_property.member_id, a_property.data_type.type, visitor)
+			set_access_body (a_interface_name, a_variable_name, a_lcid, a_property.member_id, a_visitor)
 		end
 
-	create_set_feature (a_component: WIZARD_COMPONENT_DESCRIPTOR; interface_name: STRING; 
-						lcid: INTEGER; a_property: WIZARD_PROPERTY_DESCRIPTOR;
-						visitor: WIZARD_DATA_TYPE_VISITOR) is
+	create_set_feature (a_component: WIZARD_COMPONENT_DESCRIPTOR; a_interface_name, a_variable_name: STRING; 
+						a_lcid: INTEGER; a_property: WIZARD_PROPERTY_DESCRIPTOR;
+						a_visitor: WIZARD_DATA_TYPE_VISITOR) is
 			-- -- Create set feature.
 		require
 			non_void_component: a_component /= Void
-			non_void_interface_name: interface_name /= Void
+			non_void_interface_name: a_interface_name /= Void
 			non_void_property: a_property/= Void
-			valid_interface_name: not interface_name.is_empty
+			valid_interface_name: not a_interface_name.is_empty
 		local
-			a_comment, a_signature, set_feature_name: STRING
+			l_comment, l_signature, l_setter_name: STRING
 		do
 			create c_setting_feature.make
 			
-			create set_feature_name.make (100)
-			set_feature_name.append (Set_clause)
-			set_feature_name.append (a_property.component_eiffel_name (a_component))
-			c_setting_feature.set_name (external_feature_name (set_feature_name))
+			create l_setter_name.make (100)
+			l_setter_name.append (Set_clause)
+			l_setter_name.append (a_property.component_eiffel_name (a_component))
+			c_setting_feature.set_name (external_feature_name (l_setter_name))
 
 			-- Set comment
-			create a_comment.make (200)
-			a_comment.append (a_property.description)
-			a_comment.prepend ("Set ")
-			c_setting_feature.set_comment (a_comment)
+			create l_comment.make (200)
+			l_comment.append (a_property.description)
+			l_comment.prepend ("Set ")
+			c_setting_feature.set_comment (l_comment)
 
 			-- Set signature
-			create a_signature.make (200)
-			if visitor.is_basic_type or visitor.vt_type = Vt_bool or visitor.is_enumeration then
-				a_signature.append (visitor.cecil_type)
-			elseif visitor.is_structure or visitor.is_array_basic_type then
-				a_signature.append (visitor.c_type)
-				a_signature.append (" *")
-			elseif visitor.is_structure_pointer then
-				a_signature.append (visitor.c_type)
-			elseif visitor.is_interface_pointer or visitor.is_coclass_pointer or visitor.is_interface or visitor.is_coclass then
-				a_signature.append ("IUnknown *")
+			create l_signature.make (200)
+			if a_visitor.is_basic_type or a_visitor.vt_type = Vt_bool or a_visitor.is_enumeration then
+				l_signature.append (a_visitor.cecil_type)
+			elseif a_visitor.is_structure or a_visitor.is_array_basic_type then
+				l_signature.append (a_visitor.c_type)
+				l_signature.append (" *")
+			elseif a_visitor.is_structure_pointer then
+				l_signature.append (a_visitor.c_type)
+			elseif a_visitor.is_interface_pointer or a_visitor.is_coclass_pointer or a_visitor.is_interface or a_visitor.is_coclass then
+				l_signature.append ("IUnknown *")
 			else
-				a_signature.append ("EIF_OBJECT")
+				l_signature.append ("EIF_OBJECT")
 			end
-			a_signature.append (" a_value")
-			c_setting_feature.set_signature (a_signature)
+			l_signature.append (" a_value")
+			c_setting_feature.set_signature (l_signature)
 			c_setting_feature.set_result_type ("void")
 
 			-- Set setting feature body
-			set_setting_body (interface_name, lcid, a_property.member_id, visitor)
+			set_setting_body (a_interface_name, a_variable_name, a_lcid, a_property.member_id, a_visitor)
 		end
 
-	set_access_body (interface_name: STRING; lcid, member_id, type: INTEGER; visitor: WIZARD_DATA_TYPE_VISITOR) is
+	set_access_body (a_interface_name, a_variable_name: STRING; a_lcid, a_member_id: INTEGER; a_visitor: WIZARD_DATA_TYPE_VISITOR) is
 			-- Set access body
 		require
-			non_void_visitor: visitor /= Void
-			non_void_interface_name: interface_name /= Void
-			valid_interface_name: not interface_name.is_empty
+			non_void_visitor: a_visitor /= Void
+			non_void_interface_name: a_interface_name /= Void
+			valid_interface_name: not a_interface_name.is_empty
 			non_void_access_feature: c_access_feature /= Void
 		local
 			l_body: STRING
@@ -146,18 +145,18 @@ feature {NONE} -- Implementation
 			create l_var.make (0)
 
 			create l_body.make (4096)
-			l_body.append (check_interface_pointer (interface_name))
+			l_body.append (check_interface_pointer (a_interface_name, a_variable_name))
 
 			-- Set up "invoke" function call
 
 			l_body.append ("%N%TDISPID disp = (DISPID) ")
-			l_body.append_integer (member_id)
+			l_body.append_integer (a_member_id)
 			l_body.append (";%N%TLCID lcid = (LCID) ")
-			l_body.append_integer (lcid)
+			l_body.append_integer (a_lcid)
 			l_body.append (";%N%TDISPPARAMS args = {NULL, NULL, 0, 0};%N%TVARIANT pResult; %N%TVariantInit (&pResult);%N%N")
 			l_body.append (initialize_excepinfo)
-			l_body.append ("%N%Tunsigned int nArgErr;%N%N%Thr = p_")
-			l_body.append (interface_name)
+			l_body.append ("%N%Tunsigned int nArgErr;%N%N%Thr = ")
+			l_body.append (a_variable_name)
 			l_body.append ("->Invoke (disp, IID_NULL, lcid, DISPATCH_PROPERTYGET, &args, &pResult, excepinfo, &nArgErr);%N%T")
 
 			-- if argument error
@@ -168,17 +167,19 @@ feature {NONE} -- Implementation
 			l_body.append ("%N%N%T")
 
 			-- return result from each type
-			l_body.append (retval_return_value_set_up (visitor))
+			l_body.append (retval_return_value_set_up (a_visitor))
 
 			c_access_feature.set_body (l_body)
 		end
 
-	set_setting_body (interface_name: STRING; lcid, member_id: INTEGER; visitor: WIZARD_DATA_TYPE_VISITOR) is
+	set_setting_body (a_interface_name, a_variable_name: STRING; a_lcid, a_member_id: INTEGER; a_visitor: WIZARD_DATA_TYPE_VISITOR) is
 			-- 
 		require
-			non_void_visitor: visitor /= Void
-			non_void_interface_name: interface_name /= Void
-			valid_interface_name: not interface_name.is_empty
+			non_void_visitor: a_visitor /= Void
+			non_void_interface_name: a_interface_name /= Void
+			valid_interface_name: not a_interface_name.is_empty
+			non_void_variable_name: a_variable_name /= Void
+			valid_variable_name: not a_variable_name.is_empty
 			non_void_c_setting_feature: c_setting_feature /= Void
 		local
 			l_body: STRING
@@ -186,39 +187,39 @@ feature {NONE} -- Implementation
 			type: INTEGER
 		do
 			create l_var.make (1)
-			type := visitor.vt_type
-			l_body := check_interface_pointer (interface_name)
+			type := a_visitor.vt_type
+			l_body := check_interface_pointer (a_interface_name, a_variable_name)
 
 			-- Set up "invoke" function call
 			l_body.append ("%N%TDISPID disp = (DISPID) ")
-			l_body.append_integer (member_id)
+			l_body.append_integer (a_member_id)
 			l_body.append (";%N%TLCID lcid = (LCID) ")
-			l_body.append_integer (lcid)
+			l_body.append_integer (a_lcid)
 
 			-- Set up parameter
 			l_body.append (";%N%TDISPPARAMS args;%N%TVARIANTARG arg;%N%N%T")
 
-			if not visitor.is_structure then
-				if visitor.is_interface_pointer or visitor.is_coclass_pointer then
-					if visitor.vt_type = Vt_unknown then
+			if not a_visitor.is_structure then
+				if a_visitor.is_interface_pointer or a_visitor.is_coclass_pointer then
+					if a_visitor.vt_type = Vt_unknown then
 						l_body.append ("IUnknown *")
 					else
 						l_body.append ("IDispatch *")
 					end
 				else
-					l_body.append (visitor.c_type)
+					l_body.append (a_visitor.c_type)
 				end
 				l_body.append (" tmp_value")
 				
-				if visitor.is_interface_pointer or visitor.is_coclass_pointer or visitor.is_structure_pointer then
+				if a_visitor.is_interface_pointer or a_visitor.is_coclass_pointer or a_visitor.is_structure_pointer then
 					l_body.append (" = 0")
 				end
 				l_body.append (";%N%T")
 
-				if visitor.vt_type = Vt_dispatch then
+				if a_visitor.vt_type = Vt_dispatch then
 					l_body.append ("hr = a_value->QueryInterface (IID_IDispatch, (void**)&tmp_value)")
 				elseif
-					visitor.vt_type = Vt_unknown
+					a_visitor.vt_type = Vt_unknown
 				then
 					l_body.append ("tmp_value = a_value")
 				else
@@ -227,19 +228,19 @@ feature {NONE} -- Implementation
 						l_var.extend ("tmp_value")
 					end
 
-					if visitor.is_basic_type or visitor.is_enumeration  or visitor.is_array_basic_type or visitor.is_structure_pointer then
+					if a_visitor.is_basic_type or a_visitor.is_enumeration  or a_visitor.is_array_basic_type or a_visitor.is_structure_pointer then
 						l_body.append ("(")
-						l_body.append (visitor.c_type)
+						l_body.append (a_visitor.c_type)
 						l_body.append (")a_value")
 					else
-						if visitor.need_generate_ec then
-							l_body.append (visitor.ec_mapper.variable_name)
+						if a_visitor.need_generate_ec then
+							l_body.append (a_visitor.ec_mapper.variable_name)
 						else
 							l_body.append ("rt_ec")
 						end
 
 						l_body.append (".")
-						l_body.append (visitor.ec_function_name)
+						l_body.append (a_visitor.ec_function_name)
 						l_body.append (" (a_value)")
 					end
 				end
@@ -250,15 +251,15 @@ feature {NONE} -- Implementation
 			l_body.append_integer (type)
 			l_body.append (";%N%T")
 
-			if visitor.is_structure then
+			if a_visitor.is_structure then
 				l_body.append ("memcpy (&(arg.")
-				l_body.append (vartype_namer.variant_field_name (visitor))
+				l_body.append (vartype_namer.variant_field_name (a_visitor))
 				l_body.append ("), a_value, sizeof (")
-				l_body.append (visitor.c_type)
+				l_body.append (a_visitor.c_type)
 				l_body.append ("))")
 			else
 				l_body.append ("arg.")
-				l_body.append (vartype_namer.variant_field_name (visitor))
+				l_body.append (vartype_namer.variant_field_name (a_visitor))
 				l_body.append (" = tmp_value")
 			end
 			l_body.append (";%N%Targs.rgvarg = &arg;%N%T")
@@ -268,8 +269,8 @@ feature {NONE} -- Implementation
 			l_body.append ("VARIANT pResult; %N%TVariantInit (&pResult);%N%N")
 			l_body.append (initialize_excepinfo)
 			l_body.append ("%N%Tunsigned int nArgErr;")
-			l_body.append ("%N%N%Thr = p_")
-			l_body.append (interface_name)
+			l_body.append ("%N%N%Thr = ")
+			l_body.append (variable_name (a_interface_name))
 			l_body.append ("->Invoke (disp, IID_NULL, lcid, DISPATCH_PROPERTYPUT, &args, &pResult, excepinfo, &nArgErr);%N%T")
 
 			-- if argument error

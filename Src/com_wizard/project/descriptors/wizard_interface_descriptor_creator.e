@@ -88,14 +88,14 @@ feature -- Basic operations
 				type_kind := l_type_info.type_attr.type_kind
 				dispinterface := False
 				create l_creator
-				dispinterface_descriptor := l_creator.create_dispinterface_descriptor (a_documentation, a_type_info)
+				dispinterface_descriptor := l_creator.create_dispinterface_descriptor (a_documentation, a_type_info, c_type_name)
 			else
 				l_type_info := a_type_info
 			end
 			Result := interface_descriptor (l_type_info)
 		end
 
-	create_dispinterface_descriptor  (a_documentation: ECOM_DOCUMENTATION; a_type_info: ECOM_TYPE_INFO): WIZARD_INTERFACE_DESCRIPTOR is
+	create_dispinterface_descriptor  (a_documentation: ECOM_DOCUMENTATION; a_type_info: ECOM_TYPE_INFO; a_c_type_name: STRING): WIZARD_INTERFACE_DESCRIPTOR is
 			-- Create descriptor.
 		require
 			valid_documentation: a_documentation /= Void and then a_documentation.name /= Void
@@ -103,6 +103,7 @@ feature -- Basic operations
 						or a_type_info.type_attr.type_kind = Tkind_dispatch
 		do
 			name := a_documentation.name.twin
+			c_type_name := a_c_type_name
 			description := a_documentation.doc_string.twin
 			type_kind := a_type_info.type_attr.type_kind
 			dispinterface := type_kind = Tkind_dispatch
@@ -143,10 +144,6 @@ feature -- Basic operations
 				name.prepend (Underscore)
 				name.prepend (type_library_descriptor.name)
 			end
-
-			create c_type_name.make (100)
-			c_type_name.append (name)
-			system_descriptor.add_c_type (name)
 
 			if not is_well_known_interface_guid (guid) then
 				namespace := namespace_name (type_library_descriptor.name)

@@ -22,15 +22,17 @@ inherit
 feature -- Basic operations
 
 	generate (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR; 
-				interface_name, guid: STRING; lcid: INTEGER; 
+				a_interface_name, a_variable_name, a_guid: STRING; a_lcid: INTEGER; 
 				a_descriptor: WIZARD_FUNCTION_DESCRIPTOR) is
 			-- Generate function.
 		require
 			non_void_descriptor: a_descriptor /= Void
-			non_void_string: interface_name /= Void and guid /= Void
+			non_void_interface_name: a_interface_name /= Void
+			non_void_guid: a_guid /= Void
+			non_void_variable_name: a_variable_name /= Void
 		local
 			ccom_func_name: STRING
-			result_type_visitor: WIZARD_DATA_TYPE_VISITOR
+			l_visitor: WIZARD_DATA_TYPE_VISITOR
 		do
 			create ccom_feature_writer.make
 			create {ARRAYED_LIST [STRING]} c_header_files.make (20)
@@ -46,10 +48,10 @@ feature -- Basic operations
 
 			ccom_feature_writer.set_comment (func_desc.description)
 
-			result_type_visitor := a_descriptor.return_type.visitor
+			l_visitor := a_descriptor.return_type.visitor
 
 			if does_routine_have_result (a_descriptor) then
-				set_return_type (result_type_visitor)
+				set_return_type (l_visitor)
 			else
 				ccom_feature_writer.set_result_type ("void")
 			end
@@ -58,10 +60,10 @@ feature -- Basic operations
 				set_signature
 			end
 
-			if (result_type_visitor.vt_type = Vt_variant) then
-				result_type_visitor.set_ce_function_name ("ccom_ce_pointed_variant")
+			if (l_visitor.vt_type = Vt_variant) then
+				l_visitor.set_ce_function_name ("ccom_ce_pointed_variant")
 			end
-			ccom_feature_writer.set_body (feature_body (interface_name, guid, lcid, result_type_visitor, a_descriptor.invoke_kind))
+			ccom_feature_writer.set_body (feature_body (a_interface_name, a_variable_name, a_guid, a_lcid, l_visitor, a_descriptor.invoke_kind))
 		ensure
 			function_descriptor_set: func_desc /= Void
 		end
@@ -80,10 +82,15 @@ feature {NONE} -- Implementation
 			ccom_feature_writer.set_signature (cecil_signature (func_desc))
 		end
 
-	feature_body (interface_name, guid: STRING; lcid: INTEGER; result_type_visitor: WIZARD_DATA_TYPE_VISITOR; a_invoke_kind: INTEGER): STRING is
+	feature_body (a_interface_name, a_variable_name, a_guid: STRING; a_lcid: INTEGER; a_visitor: WIZARD_DATA_TYPE_VISITOR; a_invoke_kind: INTEGER): STRING is
 			-- Ccom client feature body for dispatch interface
 		require
-			non_void_string: interface_name /= Void and guid /= Void
+			non_void_interface_name: a_interface_name /= Void
+			valid_interface_name: not a_interface_name.is_empty
+			non_void_variable_name: a_variable_name /= Void
+			valid_variable_name: not a_variable_name.is_empty
+			non_void_guid: a_guid /= Void
+			valid_guid: not a_guid.is_empty
 		local
 			l_arguments: LIST [WIZARD_PARAM_DESCRIPTOR]
 			l_return_value, l_invoke_flag: STRING
@@ -93,14 +100,14 @@ feature {NONE} -- Implementation
 			l_type: WIZARD_DATA_TYPE_DESCRIPTOR
 		do
 			create {ARRAYED_LIST [STRING]} free_arguments.make (20)
-			create l_return_value.make (10000)
-			create Result.make (10000)
+			create l_return_value.make (2000)
+			create Result.make (2000)
 			
-			Result.append (check_interface_pointer (interface_name))
+			Result.append (check_interface_pointer (a_interface_name, a_variable_name))
 			Result.append ("%N%TDISPID disp = (DISPID) ")
 			Result.append_integer (func_desc.member_id)
 			Result.append (";%N%TLCID lcid = (LCID) ")
-			Result.append_integer (lcid)
+			Result.append_integer (a_lcid)
 			Result.append (";%N%TDISPPARAMS args = {NULL, NULL, 0, 0};%N%TVARIANT pResult; %N%TVariantInit (&pResult);%N%T%N")
 			Result.append (initialize_excepinfo)
 			Result.append ("%N%Tunsigned int nArgErr;%N%T")
@@ -155,8 +162,8 @@ feature {NONE} -- Implementation
 				Result.append ("%N%Targs.rgvarg = arguments;")
 			end
 
-			Result.append ("%N%N%Thr = p_")
-			Result.append (interface_name)
+			Result.append ("%N%N%Thr = ")
+			Result.append (variable_name (a_interface_name))
 			if a_invoke_kind = invoke_func then
 				l_invoke_flag := "DISPATCH_METHOD"
 			elseif a_invoke_kind = invoke_propertyget then
@@ -198,7 +205,7 @@ feature {NONE} -- Implementation
 			end
 
 			Result.append ("%N%T")
-			Result.append (retval_return_value_set_up (result_type_visitor))
+			Result.append (retval_return_value_set_up (a_visitor))
 		end
 
 	out_return_value_set_up (name: STRING; position: INTEGER; visitor: WIZARD_DATA_TYPE_VISITOR): STRING is

@@ -15,6 +15,13 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_VARIABLE_NAME_MAPPER
+		rename
+			coclass as Dictionary_coclass
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -23,7 +30,7 @@ feature -- Basic operations
 	generate_interface_features (a_interface: WIZARD_INTERFACE_DESCRIPTOR) is
 			-- Generate interface features.
 		local
-			l_name, l_variable_name, l_type: STRING
+			l_name, l_type: STRING
 			l_member: WIZARD_WRITER_C_MEMBER
 			l_writer: WIZARD_WRITER_CPP_CLASS
 		do
@@ -35,11 +42,7 @@ feature -- Basic operations
 
 				create l_member.make
 				l_member.set_comment (Interface_pointer_comment)
-
-				create l_variable_name.make (100)
-				l_variable_name.append (Interface_variable_prepend)
-				l_variable_name.append (a_interface.c_type_name)
-				l_member.set_name (l_variable_name)
+				l_member.set_name (variable_name (a_interface.c_type_name))
 
 				create l_type.make (100)
 				if a_interface.namespace /= Void and then not a_interface.namespace.is_empty then
@@ -47,8 +50,7 @@ feature -- Basic operations
 					l_type.append ("::")
 				end
 				l_type.append (a_interface.c_type_name)
-				l_type.append (Space)
-				l_type.append (Asterisk)
+				l_type.append (" *")
 				l_member.set_result_type (l_type)
 
 				l_writer.add_member (l_member, Private)

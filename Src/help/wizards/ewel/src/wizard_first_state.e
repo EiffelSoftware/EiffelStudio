@@ -1,11 +1,11 @@
 indexing
-	description: "Page in which the user choose where he wants to generate the sources."
-	author: ""
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "Page in which the user choose between a dialog and frame based application."
+	author		: "Arnaud PICHERY [aranud@mail.dotcom.fr]"
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 class
-	WIZARD_FIRST_STATE
+	WIZARD_SECOND_STATE
 
 inherit
 	BENCH_WIZARD_INTERMEDIARY_STATE_WINDOW
@@ -29,12 +29,6 @@ feature -- Basic Operation
 			create win_application.make_with_text ("Frame application")
 			create dialog_application.make_with_text ("Dialog application")
 
-			if wizard_information.dialog_application then
-				dialog_application.enable_select
-			else
-				win_application.enable_select
-			end
-
 			create radio_box
 			radio_box.extend (win_application)
 			radio_box.disable_item_expand (win_application)
@@ -43,13 +37,20 @@ feature -- Basic Operation
 			radio_box.extend (create {EV_CELL})
 
 			create preview_pixmap
-			change_preview -- set the right pixmap depending on `dialog_information'.
+				-- Set the right pixmap depending on `dialog_information' and 
+				-- select the right radio button
+			if wizard_information.dialog_application then
+				preview_pixmap.set_with_named_file (Preview_dialog_pixmap)
+				dialog_application.enable_select
+			else
+				preview_pixmap.set_with_named_file (Preview_frame_pixmap)
+				win_application.enable_select
+			end
 			preview_pixmap.set_minimum_size (preview_pixmap.width, preview_pixmap.height)
 
 			create hbox
 			hbox.extend (radio_box)
 			hbox.extend (preview_pixmap)
-
 			choice_box.extend (hbox)
 			choice_box.disable_item_expand (hbox)
 
@@ -64,16 +65,20 @@ feature -- Basic Operation
 			-- Change the pixmap used to preview the application.
 		do
 			if dialog_application.is_selected then
-				preview_pixmap.set_with_named_file (wizard_information.wizard_pixmaps_path + "\dialog_application.bmp")
+				preview_pixmap.set_with_named_file (Preview_dialog_pixmap)
 			else
-				preview_pixmap.set_with_named_file (wizard_information.wizard_pixmaps_path + "\frame_application.bmp")
+				preview_pixmap.set_with_named_file (Preview_frame_pixmap)
 			end
 		end
 
 	proceed_with_current_info is 
 		do
 			Precursor
-			proceed_with_new_state (create {WIZARD_SECOND_STATE}.make(wizard_information))
+			if dialog_application.is_selected then
+				proceed_with_new_state (create {WIZARD_FINAL_STATE}.make(wizard_information))
+			else
+				proceed_with_new_state (create {WIZARD_THIRD_STATE}.make(wizard_information))
+			end
 		end
 
 	update_state_information is
@@ -96,6 +101,26 @@ feature {NONE} -- Implementation
 								%%N(This wizard is an example of Dialog-Based Application.)%
 								%")
 		end
+
+feature {NONE} -- Constants
+
+	Preview_dialog_pixmap: FILE_NAME is
+			-- Filename for the pixmap representing a dialog-based application 
+		once
+			create Result.make_from_string (wizard_pixmaps_path)
+			Result.set_file_name ("dialog_application")
+			Result.add_extension ("bmp")
+		end
+
+	Preview_frame_pixmap: FILE_NAME is
+			-- Filename for the pixmap representing a frame-based application 
+		once
+			create Result.make_from_string (wizard_pixmaps_path)
+			Result.set_file_name ("frame_application")
+			Result.add_extension ("bmp")
+		end
+
+feature {NONE} -- Vision2 layout
 
 	dialog_application: EV_RADIO_BUTTON
 			-- When checked, create a Dialog application

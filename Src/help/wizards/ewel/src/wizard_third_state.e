@@ -5,7 +5,7 @@ indexing
 	revision	: "$Revision$"
 
 class
-	WIZARD_THIRD_STATE
+	WIZARD_FOURTH_STATE
 
 inherit
 	BENCH_WIZARD_INTERMEDIARY_STATE_WINDOW
@@ -25,7 +25,7 @@ feature -- Basic Operation
 		do 
 			create location.make (Current)
 			location.set_label_string_and_size ("Project location", 10)
-			location.set_textfield_string_and_capacity (wizard_information.location, 80)
+			location.set_textfield_string_and_capacity (wizard_information.project_location, 80)
 			location.enable_directory_browse_button
 			location.generate
 
@@ -85,7 +85,7 @@ feature -- Basic Operation
 	update_state_information is
 			-- Check User Entries
 		do
-			wizard_information.set_location (location.text)
+			wizard_information.set_project_location (location.text)
 			wizard_information.set_compile_project (to_compile_b.is_selected)
 			Precursor
 		end

@@ -255,13 +255,12 @@ endiff
 
 iff not defined NO_DOCUMENTATION then
 	remtrace Recompile the documentation
-	call make_documentation
+	call make_xml_documentation
 	cdd %INIT_DIR
 	give_time_to compile the main documentation
 else
 	remtrace Retrieve the old documentation
 	quick_move docs\eiffel.chm
-	quick_move rb\bin\resource_bench.chm
 	give_time_to copy the main documentation from the old delivery
 endiff
 cdd %INIT_DIR

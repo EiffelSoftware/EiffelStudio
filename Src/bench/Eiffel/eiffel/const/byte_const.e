@@ -118,6 +118,8 @@ feature {NONE}
 	Bc_cast_long:		CHARACTER is '%/110/';
 	Bc_cast_float:		CHARACTER is '%/111/';
 	Bc_cast_double:		CHARACTER is '%/112/';
+	Bc_inv_null:		CHARACTER is '%/113/';
+	Bc_create_inv:		CHARACTER is '%/114/';
 
 
 end

@@ -1522,13 +1522,13 @@ feature -- PS
 			end
 		end;
 
-	append_clickable_signature (a_clickable: CLICK_WINDOW) is
+	append_clickable_signature (a_clickable: CLICK_WINDOW; c: CLASS_C) is
 			-- Append the signature of current feature in `a_clickable'
 		local
 			error: BOOLEAN
 		do
 			if not Error then
-			append_clickable_name (a_clickable);
+			append_clickable_name (a_clickable, c);
 			if arguments /= Void then
 				a_clickable.put_string (" (");
 				from
@@ -1557,21 +1557,21 @@ feature -- PS
 			retry
 		end;
 
-	append_clickable_name (a_clickable: CLICK_WINDOW) is
+	append_clickable_name (a_clickable: CLICK_WINDOW; c: CLASS_C) is
 			-- Append the name of the feature in `a_clickable'
 		do
-			a_clickable.put_clickable_string (stone, feature_name);
+			a_clickable.put_clickable_string (stone (c), feature_name);
 		end;
 
-	stone: FEATURE_STONE is
+	stone (c: CLASS_C): FEATURE_STONE is
 		local
 			body: FEATURE_AS;
 		do
 			if Body_server.has (body_id) then
 				body := Body_server.item (body_id);
-				!!Result.make (Current, body.start_position, body.end_position);
+				!!Result.make (Current, c, body.start_position, body.end_position);
 			else
-				!!Result.make (Current, 0, 0);
+				!!Result.make (Current, c, 0, 0);
 			end;
 		end;
 

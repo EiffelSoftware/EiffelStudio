@@ -39,4 +39,12 @@ feature -- Debugger
 			position := position + amount;
 		end;
 
+	set_stop (b: BOOLEAN) is
+		do
+			is_set := b;
+		end;
+
+	is_set: BOOLEAN;
+		-- is a breakpoint set at this position
+
 end

@@ -37,6 +37,15 @@ feature
 			-- Class type (instantiated) associated with
 			-- Current descriptor
 
+feature
+
+	set_invariant_entry (e: ENTRY) is
+		do
+			invariant_entry ?= e
+		end;
+
+	invariant_entry: ROUT_ENTRY;
+
 feature -- Generation
 
 	generate is
@@ -57,15 +66,21 @@ feature -- Generation
 	C_string: STRING is
 			-- C code of corresponding to run-time
 			-- structure of Current descriptor
-		local
-			class_id, prev_id: INTEGER;
-			i: INTEGER
 		do
 			!! Result.make (0);
 			Result.append ("#include %"macros.h%"%N");
 			Result.append ("%Nstruct desc_info desc");
 			Result.append_integer (class_type.id);
 			Result.append ("[] = {%N");
+
+			if (invariant_entry = Void) then
+				Result.append ("%T{(int16) -1, (int16) -1},%N")
+			else
+				Result.append ("%T{(int16) ");
+				Result.append_integer (invariant_entry.real_body_index);
+				Result.append (", -1},%N");
+			end;
+
 			from
 				start
 			until
@@ -89,8 +104,18 @@ feature -- Generation
 			Result.append ("%NInit");
 			Result.append_integer (class_type.id);
 			Result.append ("()%N{%N");
+
+				-- Special descriptor unit (invariant)
+			Result.append ("%TIDSC(desc");
+			Result.append_integer (class_type.id);
+			Result.append (", 0, RTUD(");
+			Result.append_integer (class_type.id);
+			Result.append ("-1));%N");	
+
+				-- Descriptor units for origin classes
 			from
-				start
+				start;
+				i := 1
 			until
 				offright
 			loop
@@ -121,7 +146,21 @@ feature -- Melting
 				-- Write the id of the class type
 			ba.append_short_integer (class_type.id);
 				-- Write the number of descriptor units
-			ba.append_short_integer (count);
+				-- +1, for the special routines (invariant...)
+			ba.append_short_integer (count + 1);
+
+				-- Byte code for invariant entry
+				-- Origin class.
+			ba.append_short_integer (0);
+				-- Number of elements.
+			ba.append_short_integer (1);
+				-- body index
+			if (invariant_entry = Void) then
+				ba.append_short_integer (-1)
+			else
+				ba.append_short_integer	(invariant_entry.real_body_index)
+			end;
+			ba.append_short_integer (-1);
 
 				-- Append the individual descriptor units
 			from

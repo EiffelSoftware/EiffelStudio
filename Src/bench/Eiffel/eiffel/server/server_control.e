@@ -77,7 +77,7 @@ feature
 			loop
 				if (i > last_precompiled_id) then
 					f := files.item (i);
-					if f /= Void and then f.file_info.size = 0 then
+					if f /= Void and then f.empty then
 						remove_file (f);
 					end;
 				end;

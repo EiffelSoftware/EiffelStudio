@@ -56,12 +56,6 @@ feature
 	print_register is
 			-- Generate variant tests
 		do
-			expr.generate;
-			new_register.print_register;
-			generated_file.putstring (" = ");
-			expr.print_register;
-			generated_file.putchar (';');
-			generated_file.new_line;
 				-- Assertion recording on stack
 			if tag /= Void then
 				generated_file.putstring ("RTCT(");
@@ -74,6 +68,12 @@ feature
 			end;
 			generate_assertion_code (In_loop_variant);
 			generated_file.putstring(");");
+			generated_file.new_line;
+			expr.generate;
+			new_register.print_register;
+			generated_file.putstring (" = ");
+			expr.print_register;
+			generated_file.putchar (';');
 			generated_file.new_line;
 				-- Variant check
 			generated_file.putstring ("if ((");
@@ -96,12 +96,15 @@ feature
 			generated_file.new_line;
 			generated_file.exdent;
 			generated_file.putchar ('}');
-			generated_file.putstring (" else");
+			generated_file.new_line;
+			generated_file.putstring ("else {");
 			generated_file.new_line;
 			generated_file.indent;
 			generated_file.putstring ("RTCF;");
 			generated_file.new_line;
 			generated_file.exdent;
+			generated_file.putchar ('}');
+			generated_file.new_line;
 		end;
 
 	free_register is

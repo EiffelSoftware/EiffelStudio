@@ -2,7 +2,7 @@ class CHECK_I
 
 inherit
 
-	NO_I
+	LOOP_I
 		redefine
 			check_check, generation_value, byte_code
 		end

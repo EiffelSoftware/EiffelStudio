@@ -189,4 +189,4 @@ feature {NONE} -- Implementation
 			choice.popup (Current, output_list, Interface_names.t_Select_class_version)
 		end
 
-end -- class CLASS_TEXT_FIELD
+end -- class CLASS_VERSIONS

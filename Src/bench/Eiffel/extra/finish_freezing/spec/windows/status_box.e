@@ -90,4 +90,5 @@ feature {NONE} -- Externals
 		alias
 			"MB_TOPMOST"
 		end	
+
 end -- class STATUS_BOX

@@ -9,6 +9,7 @@ inherit
 		redefine
 			proceed_with_current_info,
 			make,
+			fill_message_and_title_box,
 			build
 		end
 	
@@ -24,64 +25,17 @@ feature {NONE} -- Implementation
 			Precursor {BENCH_WIZARD_FINAL_STATE_WINDOW} (an_info) 
 		end
 
-	build is
-			-- Special display box for the first and the last state
-		local
-			vertical_separator: EV_VERTICAL_SEPARATOR
-			local_pixmap: EV_PIXMAP
-			interior_box: EV_HORIZONTAL_BOX
-			message_and_title_box: EV_VERTICAL_BOX
-			tuple: TUPLE
-		do
-			first_window.set_final_state ("Finish")
-			create title
-			title.set_background_color (white_color)
-			title.align_text_left
-			title.set_font (welcome_title_font)
-			title.set_minimum_height (dialog_unit_to_pixels(40))
-
-			create message	
-			message.align_text_left
-			message.set_background_color (white_color)
-			
-			create message_text_field
-			message_text_field.set_background_color (white_color)
-		
-			create choice_box
-			choice_box.set_background_color (white_color)	
-			choice_box.extend (message_text_field)
-
-			display_state_text
-			create message_and_title_box
-			message_and_title_box.set_background_color (white_color)			
-			message_and_title_box.set_border_width (Default_border_size)
-			message_and_title_box.set_padding (Default_padding_size)
-			message_and_title_box.extend (title)
-			message_and_title_box.disable_item_expand (title)
-			message_and_title_box.extend (choice_box)
-			message_and_title_box.extend (message)
-			message_and_title_box.disable_item_expand (message)
-
-			local_pixmap := clone (pixmap)
-			local_pixmap.set_minimum_height (dialog_unit_to_pixels(312))
-			local_pixmap.set_minimum_width (165)
-			local_pixmap.draw_pixmap (91, 9, pixmap_icon)
-
-			create vertical_separator
-
-			create interior_box
-			interior_box.extend (local_pixmap)
-			interior_box.disable_item_expand (local_pixmap)
-			interior_box.extend (vertical_separator)
-			interior_box.disable_item_expand (vertical_separator)
-			interior_box.extend (message_and_title_box) 
-			main_box.extend (interior_box)
-			create tuple.make
-			choice_box.set_help_context (~create_help_context (tuple))
-		end	
-	
 feature -- Basic Operations
 
+	build is
+			-- Special display box for the first and the last state
+		do
+			create message_text_field
+			message_text_field.set_background_color (white_color)
+			
+			Precursor
+		end
+		
 	proceed_with_current_info is
 		local
 			project_name_lowercase: STRING
@@ -121,6 +75,7 @@ feature -- Basic Operations
 feature -- Access
 
 	display_state_text is
+			-- Display message text relative to current state.
 		local
 			word: STRING
 		do
@@ -149,10 +104,7 @@ feature -- Access
 		do
 		end
 
-	h_filename: STRING is "help/wizards/edotnet/docs/reference/40_settings_summary/index.html"
-			-- Path to HTML help file
-			
-feature {NONE} -- Implementation
+feature {NONE} -- Widgets
 
 	message_text_field: EV_TEXT
 			-- Text field summarizing the project settings
@@ -160,6 +112,16 @@ feature {NONE} -- Implementation
 	instruction: EV_LABEL
 			-- Message telling the user how to launch code generation and compilation
 			
+feature {NONE} -- Implementation
+
+	fill_message_and_title_box (message_and_title_box: EV_VERTICAL_BOX) is
+			-- Fill `message_and_title_box' with needed widgets.
+		do
+			message_and_title_box.extend (message_text_field) -- Expandable item
+			message_and_title_box.extend (message)
+			message_and_title_box.disable_item_expand (message)
+		end
+
 	pixmap_icon_location: FILE_NAME is
 			-- Icon for the Eiffel Dotnet Wizard.
 		once
@@ -189,29 +151,6 @@ feature {NONE} -- Implementation
 			non_void_text: Result /= Void
 			not_empty_text: not Result.is_empty
 		end
-
-	ec_location: STRING is
-			-- Path to `ec.exe'
-		once
-			Result := Eiffel_installation_dir_name
-			Result.append ("\bench\spec\windows\bin\ec.exe")
-		ensure
-			non_void_path: Result /= Void
-			not_empty_path: not Result.is_empty
-		end
-	
-	Common_message: STRING is 
-			-- Message to the user (no matter if there are selected assemblies)
-		once
-			Result := "You have specified the following settings:%N%N%
-					%Project name: %T" + wizard_information.project_name + "%N%
-					%Location:     %T" + wizard_information.project_location + "%N%N%
-					%Root class name: %T" + wizard_information.root_class_name + "%N%
-					%Creation routine name: %T" + wizard_information.creation_routine_name + "%N%N"	
-		ensure
-			non_void_message: Result /= Void
-			not_empty_message: not Result.is_empty
-		end			
 
 	is_incremental_compilation_possible: BOOLEAN is
 			-- Is an incremental compilation possible?
@@ -244,5 +183,33 @@ feature {NONE} -- Implementation
 		do
 			Result := (create {DIRECTORY}.make (a_filename)).exists
 		end
+
+feature {NONE} -- Constants
+
+	h_filename: STRING is "help/wizards/edotnet/docs/reference/40_settings_summary/index.html"
+			-- Path to HTML help file
 			
+	ec_location: STRING is
+			-- Path to `ec.exe'
+		once
+			Result := Eiffel_installation_dir_name
+			Result.append ("\bench\spec\windows\bin\ec.exe")
+		ensure
+			non_void_path: Result /= Void
+			not_empty_path: not Result.is_empty
+		end
+	
+	Common_message: STRING is 
+			-- Message to the user (no matter if there are selected assemblies)
+		once
+			Result := "You have specified the following settings:%N%N%
+					%Project name: %T" + wizard_information.project_name + "%N%
+					%Location:     %T" + wizard_information.project_location + "%N%N%
+					%Root class name: %T" + wizard_information.root_class_name + "%N%
+					%Creation routine name: %T" + wizard_information.creation_routine_name + "%N%N"	
+		ensure
+			non_void_message: Result /= Void
+			not_empty_message: not Result.is_empty
+		end			
+
 end -- class WIZARD_FINAL_STATE

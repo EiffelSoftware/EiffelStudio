@@ -75,7 +75,6 @@ feature -- Access
 			new_constant_element.force_last (new_element)
 			add_string_data (new_element, constant)
 		end
-		
 
 	add_element_containing_string (element: XM_ELEMENT; element_name, value: STRING) is
 			-- Add an element named `element' containing string data `value' to `element'.

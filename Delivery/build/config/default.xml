@@ -22,6 +22,7 @@
 			<TEXT DESCRIPTION="Display warning create a new relative pixmap constant with a directory constant that does not already exist">show_create_new_directory_constant_warning<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT DESCRIPTION="Display warning when a constant selection has been rejected due to an out of bounds value">show_invalid_constant_selection_warning<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT DESCRIPTION="Display warning when converting a deleted constant reference to a manifest value">show_constant_manifest_conversion_warning<BOOLEAN>True</BOOLEAN></TEXT>
+			<TEXT DESCRIPTION="Display warning when project location changed">show_project_location_changed_warning<BOOLEAN>True</BOOLEAN></TEXT>
 		</TOPIC>
 	</TOPIC>
 	<TOPIC TOPIC_ID="Dynamic_data" ICON="icon_preferences_folder" VISIBILITY="hidden">

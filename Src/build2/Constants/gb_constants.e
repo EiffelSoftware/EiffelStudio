@@ -712,6 +712,8 @@ feature -- Preferences
 	
 	show_constant_manifest_conversion_warning: STRING is "show_constant_manifest_conversion_warning"
 	
+	show_project_location_changed_warning: STRING is "show_project_location_changed_warning"
+	
 feature -- Prompts
 
 	select_directory_location_modify_string: STRING is "Please select new location for directory constant %""

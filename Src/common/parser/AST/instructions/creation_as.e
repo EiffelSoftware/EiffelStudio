@@ -95,10 +95,10 @@ feature -- Type check, byte code and dead code removal
 				vgcc1.set_type (creation_type);
 				Error_handler.insert_error (vgcc1);
 			elseif 	creation_type.is_none
-					or else
-					creation_type.is_expanded
-					or else
-					not creation_type.type_i.is_reference
+					--or else
+					--creation_type.is_expanded
+					--or else
+					--not creation_type.type_i.is_reference
 			then
 					-- An entity of expanded type cannot be created
 				!!vgcc3;

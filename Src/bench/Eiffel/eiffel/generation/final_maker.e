@@ -6,7 +6,7 @@ inherit
 
 	MAKEFILE_GENERATOR
 		redefine
-			init_objects_baskets
+			init_objects_baskets, generate_additional_rules
 		end;
 
 creation
@@ -173,5 +173,13 @@ feature
 			Result := "$(EIFFEL3)/bench/spec/$(PLATFORM)/lib/libruntime.a"
 		end;
 
+	generate_additional_rules is
+		do
+			Make_file.putstring ("%T$(RM) ");
+			generate_objects_macros;
+			Make_file.putchar (' ');
+			generate_system_objects_macros;
+			Make_file.new_line;
+		end;
 
 end

@@ -1,189 +1,64 @@
 indexing
-	description: "Stringtable representation in the tds"
-	product: "Resource Bench"
+	description: "Objects that ..."
+	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	TDS_STRINGTABLE
+	TDS_PUSHBUTTON_STATEMENT
 
+	-- Replace ANY below by the name of parent class if any (adding more parents
+	-- if necessary); otherwise you can remove inheritance clause altogether.
 inherit
-	TDS_RESOURCE
+	ANY
 		rename
-			make as list_make
+		export
+		undefine
+		redefine
+		select
 		end
 
-creation
-	make
+-- The following Creation_clause can be removed if you need no other
+-- procedure than `default_create':
 
-feature	-- initialization
+create
+	default_create
 
-	make is
-		do
-			list_make
-			!! strings_list.make
-			set_type (R_stringtable)
-		end
+feature -- Initialization
 
 feature -- Access
 
-	current_string: TDS_STRING
-			-- The current parsed string.
-	
-	strings_list: LINKED_LIST [TDS_STRING]
-			-- List of stringtable strings.
+feature -- Measurement
+
+feature -- Status report
+
+feature -- Status setting
+
+feature -- Cursor movement
 
 feature -- Element change
 
-	set_current_string (a_string: TDS_STRING) is
-			-- Set `current_string' to `a_string'.
-		require
-			a_string_not_void: a_string /= Void
-		do
-			current_string := a_string
-		ensure
-			current_string_set: current_string = a_string
-		end
+feature -- Removal
 
-	
-	insert_string (a_string: TDS_STRING) is
-			-- Insert `a_string' into `strings_list'
-		require
-			a_string_not_void: a_string /= Void
-		do
-			strings_list.extend (a_String)
-		ensure
-			a_string_inserted: strings_list.count = old strings_list.count + 1
-		end
+feature -- Resizing
 
-feature -- Code generation
+feature -- Transformation
 
-	display is
-		local
-			stringtable: TDS_STRINGTABLE
-		do
-			from 
-				start
-			until 
-				after
-			loop
-				stringtable ?= item
+feature -- Conversion
 
-				io.putstring ("%N------------------------------------")
-				io.putstring ("%NStringtable : ")
-				
-				if (stringtable.load_and_mem_attributes /= Void) then
-					stringtable.load_and_mem_attributes.display
-				end                
+feature -- Duplication
 
-				if (stringtable.options /= Void) then
-					io.new_line
-					stringtable.options.display
-				end
+feature -- Miscellaneous
 
-				if (stringtable.strings_list /= Void) then
-					from 
-						stringtable.strings_list.start
-					until
-						stringtable.strings_list.after
-			
-					loop
-						stringtable.strings_list.item.display
-						io.new_line
-						stringtable.strings_list.forth
-					end
-				end
+feature -- Basic operations
 
-				io.new_line
-				forth
-			end
-		end
+feature -- Obsolete
 
-	generate_resource_file (a_resource_file: PLAIN_TEXT_FILE) is
-			-- Generate `a_resource_file' from the tds memory structure.
-		local
-			stringtable: TDS_STRINGTABLE
-		do
-			a_resource_file.putstring ("%N////////////////////////////////////////////////////////////////%N")
-			a_resource_file.putstring ("//%N")
-			a_resource_file.putstring ("// STRINGTABLE%N")
-			a_resource_file.putstring ("//%N")
+feature -- Inapplicable
 
-			from 
-				start
-			until 
-				after
-			loop
-				stringtable ?= item
+feature {NONE} -- Implementation
 
-				a_resource_file.putstring ("%NSTRINGTABLE ")
+invariant
+	invariant_clause: -- Your invariant here
 
-				if (stringtable.load_and_mem_attributes /= Void) then
-					stringtable.load_and_mem_attributes.generate_resource_file (a_resource_file)
-				end                
-
-				if (stringtable.options /= Void) then
-					a_resource_file.new_line
-					stringtable.options.generate_resource_file (a_resource_file)
-				end
-
-
-				a_resource_file.putstring ("%NBEGIN")
-				if (stringtable.strings_list /= Void) then
-					from 
-						stringtable.strings_list.start
-					until
-						stringtable.strings_list.after
-			
-					loop
-						a_resource_file.new_line
-						stringtable.strings_list.item.generate_resource_file (a_resource_file)
-						stringtable.strings_list.forth
-					end
-				end
-				a_resource_file.putstring ("%NEND")
-
-				a_resource_file.new_line
-				forth
-			end
-		end
-
-	generate_tree_view (a_tree_view: WEL_TREE_VIEW; a_parent: INTEGER) is
-			-- Generate `a_tree_view' control from the tds memory structure.
-		local
-			tvis: WEL_TREE_VIEW_INSERT_STRUCT
-			tv_item: WEL_TREE_VIEW_ITEM
-			parent: INTEGER
-		do
-			!! tvis.make
-			tvis.set_sort
-			tvis.set_parent (a_parent)
-			!! tv_item.make
-			tv_item.set_text ("Stringtable")
-			tvis.set_tree_view_item (tv_item)
-			a_tree_view.insert_item (tvis)
-
-			!! tvis.make
-			tvis.set_sort
-			tvis.set_parent (a_tree_view.last_item)
-			!! tv_item.make
-			tv_item.set_text ("Stringtable")
-			tvis.set_tree_view_item (tv_item)
-			a_tree_view.insert_item (tvis)
-
-			set_tree_view_item (a_tree_view.last_item)
-		end
-
-	generate_wel_code is
-			-- Generate the eiffel code.
-		do
-		end
-
-end -- class TDS_STRINGTABLE
-
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
+end -- class TDS_PUSHBUTTON_STATEMENT

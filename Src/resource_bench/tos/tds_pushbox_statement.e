@@ -1,124 +1,64 @@
 indexing
-	description: "Treeview statement representation in the tds"
-	product: "Resource Bench"
+	description: "Objects that ..."
+	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	TDS_STATUSBAR_STATEMENT
+	TDS_PUSHBOX_STATEMENT
 
+	-- Replace ANY below by the name of parent class if any (adding more parents
+	-- if necessary); otherwise you can remove inheritance clause altogether.
 inherit
-	TDS_CONTROL_STATEMENT
-
-	TDS_CONTROL_CONSTANTS
+	ANY
+		rename
 		export
-			{NONE} all
+		undefine
+		redefine
+		select
 		end
 
-creation
-	make
+-- The following Creation_clause can be removed if you need no other
+-- procedure than `default_create':
+
+create
+	default_create
 
 feature -- Initialization
 
-	finish_control_setup is
-		do
-			set_variable_name ("status_bar")
-			set_wel_class_name ("WEL_STATUS_WINDOW")
-			set_type (C_statusbar)
-		end
+feature -- Access
 
-feature -- Code Generation
+feature -- Measurement
 
-	display is
-		do
-			from 
-				start
-			until
-				after
+feature -- Status report
 
-			loop
-				io.putstring ("%NCONTROL ")
+feature -- Status setting
 
-				io.putstring (item.class_name)
+feature -- Cursor movement
 
-				if (item.style /= Void) then
-					item.style.display
-				end
+feature -- Element change
 
-				io.putstring (item.text)
+feature -- Removal
 
-				io.putstring (" ")
-				item.id.display
+feature -- Resizing
 
-				io.putstring (" ")
-				io.putint (item.x)
+feature -- Transformation
 
-				io.putstring (" ")
-				io.putint (item.y)
+feature -- Conversion
 
-				io.putstring (" ")
-				io.putint (item.width)
+feature -- Duplication
 
-				io.putstring (" ")
-				io.putint (item.height)
+feature -- Miscellaneous
 
-				if (item.exstyle /= Void) then
-					item.exstyle.display
-				end
+feature -- Basic operations
 
-				forth
-			end
-		end
+feature -- Obsolete
 
-	generate_resource_file (a_resource_file: PLAIN_TEXT_FILE) is
-			-- Generate `a_resource_file' from the tds memory structure.
-		do
-			from 
-				start
-			until
-				after
+feature -- Inapplicable
 
-			loop
-				a_resource_file.putstring ("%N%TCONTROL ")
+feature {NONE} -- Implementation
 
-				a_resource_file.putstring (item.text)
-				a_resource_file.putstring (", ")
-				item.id.generate_resource_file (a_resource_file)
-				a_resource_file.putstring (", ")
+invariant
+	invariant_clause: -- Your invariant here
 
-				a_resource_file.putstring (item.class_name)
-
-				if (item.style /= Void) then
-					a_resource_file.putstring (", ")
-					item.style.generate_resource_file (a_resource_file)
-				end
-
-				a_resource_file.putstring (", ")
-				a_resource_file.putint (item.x)
-
-				a_resource_file.putstring (", ")
-				a_resource_file.putint (item.y)
-
-				a_resource_file.putstring (", ")
-				a_resource_file.putint (item.width)
-
-				a_resource_file.putstring (", ")
-				a_resource_file.putint (item.height)
-
-				if (item.exstyle /= Void) then
-					a_resource_file.putstring (", ")
-					item.exstyle.generate_resource_file (a_resource_file)
-				end
-
-				forth
-			end
-		end
-
-end -- class TDS_STATUSBAR_STATEMENT
-
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
+end -- class TDS_PUSHBOX_STATEMENT

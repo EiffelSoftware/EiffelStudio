@@ -1,121 +1,64 @@
 indexing
-	description: "Ctext statement representation in the tds"
-	product: "Resource Bench"
+	description: "Objects that ..."
+	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	TDS_CTEXT_STATEMENT
+	TDS_AUTOCHECKBOX_STATEMENT
 
+	-- Replace ANY below by the name of parent class if any (adding more parents
+	-- if necessary); otherwise you can remove inheritance clause altogether.
 inherit
-	TDS_CONTROL_STATEMENT
-
-	TDS_CONTROL_CONSTANTS
+	ANY
+		rename
 		export
-			{NONE} all
+		undefine
+		redefine
+		select
 		end
 
-creation
-	make
+-- The following Creation_clause can be removed if you need no other
+-- procedure than `default_create':
+
+create
+	default_create
 
 feature -- Initialization
 
-	finish_control_setup is
-		do
-			set_wel_code (true)
-			set_variable_name ("center_text")
-			set_wel_class_name ("WEL_STATIC")
-			set_type (C_ctext)
-		end
+feature -- Access
 
-feature -- Code Generation
+feature -- Measurement
 
-	display is
-		do
-			from 
-				start
-			until
-				after
+feature -- Status report
 
-			loop
-				io.putstring ("%NCTEXT ")
+feature -- Status setting
 
-				io.putstring (item.text)
+feature -- Cursor movement
 
-				io.putstring (" ")
-				item.id.display
+feature -- Element change
 
-				io.putstring (" ")
-				io.putint (item.x)
+feature -- Removal
 
-				io.putstring (" ")
-				io.putint (item.y)
+feature -- Resizing
 
-				io.putstring (" ")
-				io.putint (item.width)
+feature -- Transformation
 
-				io.putstring (" ")
-				io.putint (item.height)
+feature -- Conversion
 
-				if (item.style /= Void) then
-					item.style.display
-				end
+feature -- Duplication
 
-				if (item.exstyle /= Void) then
-					item.exstyle.display
-				end
+feature -- Miscellaneous
 
-				forth
-			end
-		end
+feature -- Basic operations
 
-	generate_resource_file (a_resource_file: PLAIN_TEXT_FILE) is
-			-- Generate `a_resource_file' from the tds memory structure.
-		do
-			from 
-				start
-			until
-				after
+feature -- Obsolete
 
-			loop
-				a_resource_file.putstring ("%N%TCTEXT ")
+feature -- Inapplicable
 
-				a_resource_file.putstring (item.text)
+feature {NONE} -- Implementation
 
-				a_resource_file.putstring (", ")
-				item.id.generate_resource_file (a_resource_file)
+invariant
+	invariant_clause: -- Your invariant here
 
-				a_resource_file.putstring (", ")
-				a_resource_file.putint (item.x)
-
-				a_resource_file.putstring (", ")
-				a_resource_file.putint (item.y)
-
-				a_resource_file.putstring (", ")
-				a_resource_file.putint (item.width)
-
-				a_resource_file.putstring (", ")
-				a_resource_file.putint (item.height)
-
-				if (item.style /= Void) then
-					a_resource_file.putstring (", ")
-					item.style.generate_resource_file (a_resource_file)
-				end
-
-				if (item.exstyle /= Void) then
-					a_resource_file.putstring (", ")
-					item.exstyle.generate_resource_file (a_resource_file)
-				end
-
-				forth
-			end
-		end
-
-end -- class TDS_CTEXT_STATEMENT
-
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
+end -- class TDS_AUTOCHECKBOX_STATEMENT

@@ -1,100 +1,64 @@
 indexing
-	description: "Style list representation in the tds"
-	product: "Resource Bench"
+	description: "Objects that ..."
+	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	TDS_STYLE_LIST
+	TDS_RESOURCE
 
+	-- Replace ANY below by the name of parent class if any (adding more parents
+	-- if necessary); otherwise you can remove inheritance clause altogether.
 inherit
-	LINKED_LIST [TDS_STYLE]
-
-creation
-	make
-
-feature	-- Query
-
-	is_present (a_style: TDS_STYLE) : BOOLEAN is
-			-- Is `a_style' present in the TDS_STYLE_LIST?
-		require
-			a_style_not_void: a_style /= Void
-		local
-			found: BOOLEAN
-		do
-			from
-				start
-			until
-				after or found
-
-			loop
-				found := item.is_style_equal (a_style)
-				forth
-			end
-
-			Result := found
+	ANY
+		rename
+		export
+		undefine
+		redefine
+		select
 		end
 
-	is_almost_present (a_style: TDS_STYLE) : BOOLEAN is
-			-- Is a part of `a_style' present in the TDS_STYLE_LIST?
-		require
-			a_style_not_void: a_style /= Void
-		local
-			found: BOOLEAN
-		do
-			from
-				start
-			until
-				(after) or (found)
+-- The following Creation_clause can be removed if you need no other
+-- procedure than `default_create':
 
-			loop
-				found := item.is_style_almost_equal (a_style)
-				forth
-			end
+create
+	default_create
 
-			Result := found
-		end
+feature -- Initialization
 
-feature -- Code generation
+feature -- Access
 
-	display is
-		do
-			from
-				start
-			until
-				after
-			loop
-				io.putstring (" ")
-				item.display
-                                				
-				forth
-			end
- 		end
+feature -- Measurement
 
-	generate_resource_file (a_resource_file: PLAIN_TEXT_FILE) is
-			-- Generate `a_resource_file' from the tds memory structure.
-		require
-			a_resource_file_exists: a_resource_file.exists
-		do
-			from
-				start
-			until
-				after
-			loop
-				item.generate_resource_file (a_resource_file)
-				forth
+feature -- Status report
 
-				if (not after) then
-					a_resource_file.putstring (" | ") 
-				end
-			end
- 		end
+feature -- Status setting
 
-end -- class TDS_STYLE_LIST
+feature -- Cursor movement
 
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
+feature -- Element change
+
+feature -- Removal
+
+feature -- Resizing
+
+feature -- Transformation
+
+feature -- Conversion
+
+feature -- Duplication
+
+feature -- Miscellaneous
+
+feature -- Basic operations
+
+feature -- Obsolete
+
+feature -- Inapplicable
+
+feature {NONE} -- Implementation
+
+invariant
+	invariant_clause: -- Your invariant here
+
+end -- class TDS_RESOURCE

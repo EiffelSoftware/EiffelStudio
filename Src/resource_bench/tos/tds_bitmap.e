@@ -1,40 +1,129 @@
 indexing
-	description: "To store the `#define' data";
+	description: "Bitmap representation in the tds"
 	product: "Resource Bench"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	TDS_DEFINE_TABLE
+	TDS_BITMAP
 
-feature -- Access
+inherit
+	TDS_RESOURCE
+		rename
+			make as list_make
+		end
 
-	define_table: HASH_TABLE [COUPLE, STRING] is
-			-- Contain the define name and the define value.
+creation
+	make
+
+feature	-- Initialization
+
+	make is
 		do
-			Result := define_table_cell.item
+			list_make
+			set_type (R_icon)
 		end
 
-feature -- Element change
+feature -- Code generation
 
-	set_define_table (a_define_table: HASH_TABLE [COUPLE, STRING]) is
-			-- Set `define_table' to `a_define_table'.
-		require
-			a_define_table_not_void: a_define_table /= Void
+	display is
+			-- Display the tds.
+		local
+			icon: TDS_BITMAP
 		do
-			define_table_cell.put (a_define_table)
-		ensure
-			define_table_set: define_table = a_define_table
+			from 
+				start
+			until 
+				after
+			loop
+				icon ?= item
+
+				io.putstring ("%N------------------------------------")
+				io.putstring ("%NBitmap ID : ")
+				icon.id.display
+
+				if (icon.load_and_mem_attributes /= Void) then
+					icon.load_and_mem_attributes.display
+				end                
+
+				io.putstring ("%Nfilename = ")
+				io.putstring (icon.filename)
+
+				io.new_line
+				forth
+			end
 		end
 
-feature {NONE} -- Implementation
+	generate_resource_file (a_resource_file: PLAIN_TEXT_FILE) is
+			-- Generate `a_resource_file' from the tds memory structure.
+		local
+			icon: TDS_BITMAP
+		do
+			a_resource_file.putstring ("%N////////////////////////////////////////////////////////////////%N")
+			a_resource_file.putstring ("//%N")
+			a_resource_file.putstring ("// ICON%N")
+			a_resource_file.putstring ("//%N%N")
+			
+			from 
+				start
+			until 
+				after
+			loop
+				icon ?= item
 
-	define_table_cell: CELL [HASH_TABLE [COUPLE, STRING]] is
-			-- The current `define_table'.
-		once
-			!!Result.put (Void)
-		ensure
-			result_not_void: Result /= Void
+				icon.id.generate_resource_file (a_resource_file)
+				a_resource_file.putstring (" ICON ")
+
+
+				if (icon.load_and_mem_attributes /= Void) then
+					icon.load_and_mem_attributes.generate_resource_file (a_resource_file)
+				end                
+
+				a_resource_file.putstring (icon.filename)
+				forth
+			end
+
+			a_resource_file.new_line
 		end
 
-end -- class TDS_DEFINE_TABLE
+	generate_tree_view (a_tree_view: WEL_TREE_VIEW; a_parent: INTEGER) is
+			-- Generate `a_tree_view' control from the tds memory structure.
+		local
+			tvis: WEL_TREE_VIEW_INSERT_STRUCT
+			tv_item: WEL_TREE_VIEW_ITEM
+			parent: INTEGER
+		do
+			!! tvis.make
+			tvis.set_sort
+			tvis.set_parent (a_parent)
+			!! tv_item.make
+			tv_item.set_text ("Bitmap")
+			tvis.set_tree_view_item (tv_item)
+			a_tree_view.insert_item (tvis)
+
+			from
+				parent := a_tree_view.last_item
+				set_tree_view_item (parent)
+				start
+			until
+				after
+			loop
+				item.id.generate_tree_view (a_tree_view, parent)
+				item.set_tree_view_item (a_tree_view.last_item)
+				forth
+			end 
+		end
+
+	generate_wel_code is
+			-- Generate the eiffel code.
+		do
+		end
+
+end -- class TDS_BITMAP
+
+--|---------------------------------------------------------------
+--|   Copyright (C) Interactive Software Engineering, Inc.      --
+--|    270 Storke Road, Suite 7 Goleta, California 93117        --
+--|                   (805) 685-1006                            --
+--| All rights reserved. Duplication or distribution prohibited --
+--|---------------------------------------------------------------

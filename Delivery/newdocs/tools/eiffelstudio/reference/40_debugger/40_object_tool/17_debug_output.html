@@ -1,0 +1,29 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+<html>
+
+<head>
+<TITLE>Debug output</TITLE>
+<META NAME="MS-HKWD" CONTENT="debug_output">
+<META NAME="MS-HKWD" CONTENT="string values">
+<LINK REL=StyleSheet HREF="/default.css">
+</head>
+
+<body>
+
+<h1>Debug output</h1>
+<p>In both trees of the <A HREF="00_introduction.html">object tool</a>, objects
+are displayed. For virtually all objects, it is possible to display a user-definable string value
+next to the object address.<p>To do so, inherit from the class <span class="eclass">DEBUG_OUTPUT</span> in
+the classes that should let their objects display a string value, and implement
+the `debug_output' interface. At run-time, the debugger will automatically query
+the result of this feature on all objects that define it and display it in the
+object tool and the <a href="../50_expression_evaluation/index.html">evaluation tool</a>.<p class="sample"><b>Sample</b>: The <span class="eclass">NUMERIC</span> class inherits
+from the <span class="eclass">DEBUG_OUTPUT</span> one so that it is possible to see the value of *_REF
+objects without expanding them.
+<p class="Tip"><b>Tip</b>: If an object has a long string output or an output
+with carriage returns, for instance, pick-and-drop it to the expanded display
+command <img src="/images/eiffelstudio/icons/icon_expand_string_color.gif" width="8" height="8">
+in the object tool.</p>
+</body>
+
+</html>

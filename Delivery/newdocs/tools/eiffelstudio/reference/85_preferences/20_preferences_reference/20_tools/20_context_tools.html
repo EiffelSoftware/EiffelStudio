@@ -10,7 +10,7 @@
 
 <h1>Context tools</h1>
 This sub-categories gathers the preferences related to context tools.
-<p>There are nine of them :
+<p>There are ten of them :
 <table>
 <tr>
 <td>Label in the preferences window</td>
@@ -94,6 +94,19 @@ The default value is 5 (which corresponds to the ancestors view).</td>
 <td>This is the index of the view that be used by default in the Feature
 tool. To find the index associated with a view, refer to <a href="#featnb">the table below.</a>
 The default value is 2 (which corresponds to the flat view).</td>
+</tr>
+
+<tr>
+<td>Receiver of control-right-click.</td>
+
+<td>This defines the behavior of
+<a href="/tools/eiffelstudio/reference/05_general_interface_description/10_general_interface_mechanisms/20_pick_and_drop_shortcut.html">Control-picking</a>
+items. The possible values are
+  editor, context, new_editor, new_context, new_window and external. The default
+  is new_window, which creates a new window centered on the picked object.
+  Editor and context send the object to the current editor or context tool.
+  New_editor and new_context create a new editor or context window and set the
+  object in it. External sends the object to the <a href="../10_global_preferences.html">external editor</a>.</td>
 </tr>
 </table>
 

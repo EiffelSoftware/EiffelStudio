@@ -9,11 +9,11 @@
 <body>
 
 <h1>Main toolbars</h1>
-At the top of a development tool, two toolbars are displayed by default.
+At the top of a development window, two toolbars are displayed by default.
 They are separated by <a href="../10_browsing_tools/10_address_bars/10_main_address_bar.html">the
-address bar</a>, which contains class and feature fields and view selection
-buttons. The standard toolbar is above the address bar, the project bar
-below :
+address bar</a>, which contains class and feature fields and buttons to select
+the current view. The standard toolbar is above the address bar, the project bar
+below it:
 <p align="center"><IMG SRC="/images/eiffelstudio/browsing_tools/main_toolbars.png"></P>
 <p>You can hide toolbars (or the address bar) by unselecting them in the
 <b>Toolbars</b> sub-menu of the <b>View</b> menu or in the context menu
@@ -21,8 +21,8 @@ that you can get by right-clicking in the empty space on the right
 of the bars. If you want them to be displayed again, just select them in
 the <b>Toolbars</b> sub-menu of the <b>View</b> menu.
 <p>In the standard toolbar, you will find buttons to manage <a href="../10_browsing_tools/00_introduction.html">tools</a>
-and windows or that are related to <a href="../20_editor/00_introduction.html">the
-editor</a>. The complete list of the icons you might see in the toolbar
+and windows or that are related to the <a href="../20_editor/00_introduction.html">
+editor</a>. The complete list of the icons you might see in the standard toolbar
 is presented in the table below.
 <br>&nbsp;
 <center><table>
@@ -31,7 +31,6 @@ is presented in the table below.
 
 <td>Command</td>
 
-<td>Default</td>
 </tr>
 
 <tr>
@@ -39,23 +38,20 @@ is presented in the table below.
 
 <td>Display a new window.</td>
 
-<td>Shown</td>
 </tr>
 
 <tr>
 <td><img SRC="/images/eiffelstudio/icons/icon_new_editor_color.gif" ></td>
 
-<td>Display a new window where the context tool is minimized.</td>
+<td>Display a new window where the editor is maximized.</td>
 
-<td>Hidden</td>
 </tr>
 
 <tr>
 <td><img SRC="/images/eiffelstudio/icons/icon_new_context_window_color.gif" ></td>
 
-<td>Display a new window where the editor is minimized.</td>
+<td>Display a new window where the context tool is maximized.</td>
 
-<td>Hidden</td>
 </tr>
 
 <tr>
@@ -63,40 +59,35 @@ is presented in the table below.
 
 <td>Display the open file dialog window.</td>
 
-<td>Shown</td>
 </tr>
 
 <tr>
 <td><img SRC="/images/eiffelstudio/icons/icon_new_cluster_color.gif" ></td>
 
-<td>Display the dialog window to create a new cluster.</td>
+<td>Display the dialog to create a new cluster.</td>
 
-<td>Hidden</td>
 </tr>
 
 <tr>
 <td><img SRC="/images/eiffelstudio/icons/icon_new_class_color.gif" ></td>
 
-<td>Display the dialog window to create a new classr.</td>
+<td>Display the dialog to create a new class.</td>
 
-<td>Shown</td>
 </tr>
 
 <tr>
 <td><img SRC="/images/eiffelstudio/icons/icon_new_feature_color.gif" ></td>
 
-<td>Display the dialog window to create a new feature.</td>
+<td>Display the dialog to create a new feature.</td>
 
-<td>Shown</td>
 </tr>
 
 <tr>
 <td><img SRC="/images/eiffelstudio/icons/icon_delete_color.gif" ></td>
 
-<td>Delete class or cluster that corresponds to the dropped pebble or delete
-current item if clicked.</td>
+<td>Delete the class or cluster that is selected in the editor. It also accepts
+  dropped development objects.</td>
 
-<td>Hidden</td>
 </tr>
 
 <tr>
@@ -104,7 +95,6 @@ current item if clicked.</td>
 
 <td>Save current file.</td>
 
-<td>Shown</td>
 </tr>
 
 <tr>
@@ -112,7 +102,6 @@ current item if clicked.</td>
 
 <td>Launch the external editor.</td>
 
-<td>Shown</td>
 </tr>
 
 <tr>
@@ -120,7 +109,6 @@ current item if clicked.</td>
 
 <td>Undo last action in the editor.</td>
 
-<td>Shown</td>
 </tr>
 
 <tr>
@@ -128,7 +116,6 @@ current item if clicked.</td>
 
 <td>Redo last undone action in the editor.</td>
 
-<td>Shown</td>
 </tr>
 
 <tr>
@@ -137,7 +124,6 @@ current item if clicked.</td>
 <td>Remove the selected text in the currently focused text area and put
 it in the clipboard (i.e. Cut).</td>
 
-<td>Shown</td>
 </tr>
 
 <tr>
@@ -146,7 +132,6 @@ it in the clipboard (i.e. Cut).</td>
 <td>Copy the selected text in the currently focused text area into the
 clipboard (i.e. Copy).</td>
 
-<td>Shown</td>
 </tr>
 
 <tr>
@@ -154,7 +139,6 @@ clipboard (i.e. Copy).</td>
 
 <td>Insert the clipboard in the editor (i.e. Paste).</td>
 
-<td>Shown</td>
 </tr>
 
 <tr>
@@ -162,7 +146,6 @@ clipboard (i.e. Copy).</td>
 
 <td>Show / Hide the cluster tool.</td>
 
-<td>Shown</td>
 </tr>
 
 <tr>
@@ -170,7 +153,6 @@ clipboard (i.e. Copy).</td>
 
 <td>Show / Hide the feature tool.</td>
 
-<td>Shown</td>
 </tr>
 
 <tr>
@@ -178,7 +160,6 @@ clipboard (i.e. Copy).</td>
 
 <td>Show / Hide the search tool.</td>
 
-<td>Shown</td>
 </tr>
 
 <tr>
@@ -186,7 +167,6 @@ clipboard (i.e. Copy).</td>
 
 <td>Show / Hide the context tool.</td>
 
-<td>Shown</td>
 </tr>
 
 <tr>
@@ -194,7 +174,6 @@ clipboard (i.e. Copy).</td>
 
 <td>Show / Hide the favorites tool.</td>
 
-<td>Hidden</td>
 </tr>
 
 <tr>
@@ -202,7 +181,6 @@ clipboard (i.e. Copy).</td>
 
 <td>Show / Hide the windows tool.</td>
 
-<td>Hidden</td>
 </tr>
 
 <tr>
@@ -210,7 +188,6 @@ clipboard (i.e. Copy).</td>
 
 <td>Center the context tool on the same component as the editor.</td>
 
-<td>Shown</td>
 </tr>
 
 <tr>
@@ -218,7 +195,6 @@ clipboard (i.e. Copy).</td>
 
 <td>(Un)link the editor and the context tool.</td>
 
-<td>Hidden</td>
 </tr>
 
 <tr>
@@ -226,7 +202,6 @@ clipboard (i.e. Copy).</td>
 
 <td>Raise all windows</td>
 
-<td>Hidden</td>
 </tr>
 
 <tr>
@@ -234,7 +209,6 @@ clipboard (i.e. Copy).</td>
 
 <td>Minimize all windows.</td>
 
-<td>Hidden</td>
 </tr>
 
 <tr>
@@ -242,7 +216,6 @@ clipboard (i.e. Copy).</td>
 
 <td>Print current editor content.</td>
 
-<td>Hidden</td>
 </tr>
 </table></center>
 
@@ -252,8 +225,7 @@ clipboard (i.e. Copy).</td>
 <p>The project toolbars gathers the buttons for commands related to <a href="../30_compiler/index.html">compilation</a>,
 <a href="/tools/eiffelstudio/reference/40_debugger/00_introduction.html">debugging
 and running</a>. The following table present all the icons you may find
-in this toolbar. The last column indicates whether the button is shown by default
-or not.
+in this toolbar.
 <br>&nbsp;
 <center><table>
 <tr>
@@ -261,7 +233,6 @@ or not.
 
 <td>Command</td>
 
-<td>Default</td>
 </tr>
 
 <tr>
@@ -269,7 +240,6 @@ or not.
 
 <td>Open the Assembly manager (Windows only)</td>
 
-<td>Hidden</td>
 </tr>
 
 <tr>
@@ -277,7 +247,6 @@ or not.
 
 <td>Display the project configuration tool.</td>
 
-<td>Shown</td>
 </tr>
 
 <tr>
@@ -285,7 +254,6 @@ or not.
 
 <td>Show information about the system in the context tool.</td>
 
-<td>Shown</td>
 </tr>
 
 <tr>
@@ -293,7 +261,13 @@ or not.
 
 <td>Compile current project.</td>
 
-<td>Shown</td>
+</tr>
+
+<tr>
+<td><img SRC="/images/eiffelstudio/icons/icon_quick_compile_color.gif" ></td>
+
+<td>Recompile the classes that have been edited in EiffelStudio since the last compilation.</td>
+
 </tr>
 
 <tr>
@@ -301,7 +275,6 @@ or not.
 
 <td>Freeze current project.</td>
 
-<td>Hidden</td>
 </tr>
 
 <tr>
@@ -309,39 +282,34 @@ or not.
 
 <td>Finalize current project.</td>
 
-<td>Hidden</td>
 </tr>
 
 <tr>
 <td><img SRC="/images/eiffelstudio/icons/icon_enable_bkpt_color.gif" ></td>
 
-<td>Enable all the breakpoints.</td>
+<td>Enable all breakpoints.</td>
 
-<td>Shown</td>
 </tr>
 
 <tr>
 <td><img SRC="/images/eiffelstudio/icons/icon_disable_bkpt_color.gif" ></td>
 
-<td>Disable all the breakpoints.</td>
+<td>Disable all breakpoints.</td>
 
-<td>Shown</td>
 </tr>
 
 <tr>
 <td><img SRC="/images/eiffelstudio/icons/icon_del_bkpt_color.gif" ></td>
 
-<td>Remove all the breakpoints.</td>
+<td>Remove all breakpoints.</td>
 
-<td>Shown</td>
 </tr>
 
 <tr>
 <td><img SRC="/images/eiffelstudio/icons/icon_bkpt_info_color.gif" ></td>
 
-<td>Display inforamtion about the breakpoints in the context tool.</td>
+<td>Display information about the breakpoints in the context tool.</td>
 
-<td>Shown</td>
 </tr>
 
 <tr>
@@ -349,7 +317,6 @@ or not.
 
 <td>Execute the application one line at a time.</td>
 
-<td>Shown</td>
 </tr>
 
 <tr>
@@ -357,7 +324,6 @@ or not.
 
 <td>Step into a routine.</td>
 
-<td>Shown</td>
 </tr>
 
 <tr>
@@ -365,7 +331,6 @@ or not.
 
 <td>Step out of a routine.</td>
 
-<td>Shown</td>
 </tr>
 
 <tr>
@@ -373,7 +338,6 @@ or not.
 
 <td>Run application without stopping at breakpoints.</td>
 
-<td>Shown</td>
 </tr>
 
 <tr>
@@ -381,7 +345,6 @@ or not.
 
 <td>Run application and stop at breakpoints.</td>
 
-<td>Shown</td>
 </tr>
 
 <tr>
@@ -389,7 +352,6 @@ or not.
 
 <td>Run finalized executable.</td>
 
-<td>Hidden</td>
 </tr>
 
 <tr>
@@ -397,7 +359,6 @@ or not.
 
 <td>Pause the application at the current point.</td>
 
-<td>Shown</td>
 </tr>
 
 <tr>
@@ -405,7 +366,6 @@ or not.
 
 <td>Kill the debugged application.</td>
 
-<td>Shown</td>
 </tr>
 </table></center>
 

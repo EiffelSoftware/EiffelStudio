@@ -52,6 +52,7 @@ feature -- Basic operations
 				Result := Precursor {EB_STANDARD_CMD} (display_text, use_gray_icons)
 				Result.drop_actions.extend (agent delete_object)
 				Result.drop_actions.extend (agent delete_component)
+				Result.drop_actions.extend (agent delete_radio_merge)
 				Result.drop_actions.set_veto_pebble_function (agent veto_the_delete)
 			end
 	
@@ -63,6 +64,13 @@ feature -- Basic operations
 			end
 			
 feature {NONE} -- Implementation
+
+	delete_radio_merge (group_link: GB_RADIO_GROUP_LINK) is
+			-- Unmerge the containers referenced in `group_link'.
+		do
+			group_link.gb_ev_container.unlink_group (group_link)
+		end
+		
 
 	delete_object (an_object: GB_OBJECT) is
 			-- Remove `an_object' from the system.

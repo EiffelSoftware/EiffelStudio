@@ -347,25 +347,31 @@ feature {NONE} -- Implementation
 						l_is_value_type := parent.name.is_equal ("System.ValueType")
 						l_is_delegate := parent.name.is_equal ("System.MulticastDelegate") or parent.name.is_equal ("System.Delegate")					
 					end
-					types.put (type.dotnet_name, type.eiffel_name, type.is_interface, type.is_enum, l_is_delegate, l_is_value_type)
-					fn := file_name (type)
-					create s.make (fn.count + destination_path.count + Classes_path.count)
-					s.append (destination_path)
-					s.append (Classes_path)
-					s.append (fn)
-					serializer.serialize (type, s)
-					if not serializer.successful and error_printer /= Void then
-						set_error (Serialization_error, type.eiffel_name + ", " + serializer.error_message)
-						l_string_tuple.put (error_message, 1)
-						error_printer.call (l_string_tuple)
-					else
-						if status_printer /= Void then
-							l_string_tuple.put ("Written " + s, 1)
-							status_printer.call (l_string_tuple)
+					if not is_base_type (type.dotnet_name) then
+						types.put (type.dotnet_name, type.eiffel_name, type.is_interface, type.is_enum, l_is_delegate, l_is_value_type)
+						fn := file_name (type)
+							-- Delete constructor of System.Object for compiler
+						if type.dotnet_name.is_equal ("System.Object") then
+							type.set_constructors (create {ARRAY [CONSUMED_CONSTRUCTOR]}.make (1, 0))
 						end
-						if status_querier /= Void then
-							status_querier.call (l_empty_tuple)
-							done := status_querier.last_result
+						create s.make (fn.count + destination_path.count + Classes_path.count)
+						s.append (destination_path)
+						s.append (Classes_path)
+						s.append (fn)
+						serializer.serialize (type, s)
+						if not serializer.successful and error_printer /= Void then
+							set_error (Serialization_error, type.eiffel_name + ", " + serializer.error_message)
+							l_string_tuple.put (error_message, 1)
+							error_printer.call (l_string_tuple)
+						else
+							if status_printer /= Void then
+								l_string_tuple.put ("Written " + s, 1)
+								status_printer.call (l_string_tuple)
+							end
+							if status_querier /= Void then
+								status_querier.call (l_empty_tuple)
+								done := status_querier.last_result
+							end
 						end
 					end
 				end
@@ -381,6 +387,15 @@ feature {NONE} -- Implementation
 	assembly_ids: LINKED_LIST [CONSUMED_ASSEMBLY]
 			-- Assembly ids
 
+	is_base_type (a_type_name: STRING): BOOLEAN is
+			-- is `a_type_name' a base type?
+		require
+			non_void_a_type_name: a_type_name /= Void
+			not_empty_a_type_name: not a_type_name.is_empty
+		do
+			Result := base_types.has (a_type_name)
+		end
+
 feature {NONE} -- Constants
 
 	empty_tuple: TUPLE is
@@ -395,4 +410,20 @@ feature {NONE} -- Constants
 			create Result.make
 		end
 
+	base_types: ARRAY [STRING] is
+			-- base types.
+		once
+			create Result.make (1, 9)
+			Result.put ("System.Byte", 1)
+			Result.put ("System.Int16", 2)
+			Result.put ("System.Int32", 3)
+			Result.put ("System.Int64", 4)
+			Result.put ("System.IntPtr", 5)
+			Result.put ("System.Single", 6)
+			Result.put ("System.Double", 7)
+			Result.put ("System.Char", 8)
+			Result.put ("System.Boolean", 9)
+			Result.compare_objects
+		end
+		
 end -- class ASSEMBLY_CONSUMER

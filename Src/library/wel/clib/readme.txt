@@ -1,7 +1,7 @@
 How to make the WEL C library `wel.lib'?
 ----------------------------------------
 
-If you have Borland C, run `make_bcc.bat'.
+If you have Borland C, run `make_bcb.bat'.
 If you have Microsoft C, run `make_msc.bat'.
 
 The makefiles assume that the C-compiler is in your $PATH environment

@@ -23,7 +23,23 @@ inherit
 			remove_double_click_commands as old_remove_dblclk
 		end
 
+	EV_ITEM_HOLDER_IMP
+
 	EV_GTK_ITEMS_EXTERNALS
+
+feature -- Element change
+
+	clear_items is
+			-- Clear all the items of the list.
+		do
+		end
+
+feature -- Basic operations
+
+	find_item_by_data (data: ANY): EV_ITEM is
+			-- Find a child with data equal to `data'.
+		do
+		end
 
 feature -- Deferred features
 

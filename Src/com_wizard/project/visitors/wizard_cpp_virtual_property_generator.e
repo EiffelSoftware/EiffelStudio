@@ -37,7 +37,7 @@ feature -- Basic operations
 
 			create visitor
 			visitor.visit (a_descriptor.data_type)
-			if visitor.c_header_file /= Void and then not visitor.c_header_file.empty then
+			if visitor.c_header_file /= Void and then not visitor.c_header_file.is_empty then
 				set_header_file (visitor.c_header_file)
 			end
 

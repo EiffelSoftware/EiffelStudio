@@ -1791,6 +1791,9 @@ feature -- Basic Operations
 			tmp_body.append (Space)
 			tmp_body.append (Zero)
 			tmp_body.append (Close_parenthesis)
+			tmp_body.append (New_line_tab)
+
+			tmp_body.append (Open_curly_brace)
 			tmp_body.append (New_line_tab_tab)
 
 			if dispatch_interface then
@@ -1807,6 +1810,9 @@ feature -- Basic Operations
 			tmp_body.append (Space)
 			tmp_body.append (This)
 			tmp_body.append (Semicolon)
+			tmp_body.append (New_line_tab)
+
+			tmp_body.append (Close_curly_brace)
 			tmp_body.append (New_line_tab)
 
 			tmp_body.append (Return)

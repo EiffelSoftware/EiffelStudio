@@ -511,8 +511,7 @@ feature -- Generation Structure
 		end
 
 	start_module_generation (a_module_id: INTEGER) is
-			-- Create Module `name' within current assembly.
-			-- In debug mode if `debug_mode' is true.
+			-- Start generation of `a_module_id'.
 		do
 			current_module := internal_il_modules.item (a_module_id)
 		end
@@ -696,7 +695,7 @@ feature -- Generation Info
 feature -- Class info
 
 	initialize_class_mappings (class_count: INTEGER) is
-			-- Following calls to current will only be `generate_class_mappings'.
+			-- Initialize structures that holds some system data during code generation.
 		do
 			create internal_il_modules.make (0, class_count)
 			create file_token.make (10)

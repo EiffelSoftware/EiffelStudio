@@ -431,13 +431,11 @@ feature {NONE} -- External features passed out to C
 			callback_exists: wm_protocol_callbacks.has_callback 
 					(a_screen_object, atom)
 		local
-			a_callback_struct: MEL_ANY_CALLBACK_STRUCT;
+			a_callback_struct: MEL_CALLBACK_STRUCT;
 			a_widget: MEL_OBJECT
 		do
 			a_widget := Mel_widgets.item (a_screen_object);
-			!! a_callback_struct.make (a_widget,  a_callback_struct_ptr); 
-			--!! a_callback_struct.make (a_widget, 
-					--c_event (a_callback_struct_ptr)); 
+			!! a_callback_struct.make (a_widget, c_event (a_callback_struct_ptr)); 
 			wm_protocol_callbacks.execute_callback (a_widget, 
 							atom, a_callback_struct)
 		end;
@@ -694,6 +692,11 @@ feature {NONE} -- External features
 		external
 			"C"
 		end;
+
+    c_event (a_callback_struct_ptr: POINTER): POINTER is
+        external
+            "C [macro <callback_struct.h>] (XmAnyCallbackStruct *): EIF_POINTER"
+        end;
 
 end -- class MEL_DISPATCHER
 

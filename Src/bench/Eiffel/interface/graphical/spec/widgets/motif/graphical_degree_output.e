@@ -13,7 +13,7 @@ inherit
 	MEL_FORM_DIALOG;
 	WINDOWS;
 	INTERFACE_W;
-	SET_WINDOW_ATTRIBUTES;
+	WINDOW_ATTRIBUTES;
 	SHARED_CURSORS;
 	G_ANY;
 	MEL_COMMAND;
@@ -77,6 +77,9 @@ feature -- Start output features
 			nbr_of_clusters := 0
 			progress_bar.increase_percentage (100);
 			update_interface (Empty_string, 0, 100);
+			entity_l.set_label_as_string (l_Compilation_class);
+			nbr_to_go_l.set_label_as_string (l_Classes_to_go);
+			degree_l.set_label_as_string (l_Degree);
 		end;
 
 	put_start_degree (degree_nbr: INTEGER; total_nbr: INTEGER) is
@@ -88,10 +91,6 @@ feature -- Start output features
 			total_number := total_nbr;
 			current_degree := degree_nbr;
 			processed := 0;
-
-			entity_l.set_label_as_string (l_Compilation_class);
-			nbr_to_go_l.set_label_as_string (l_Classes_to_go);
-			degree_l.set_label_as_string (l_Degree);
 
 			current_nbr_to_go_l.set_label_as_string (total_nbr.out);
 			current_degree_l.set_label_as_string (degree_nbr.out)
@@ -156,6 +155,7 @@ feature -- Start output features
 				icon_name := Void;
 			end;
 			if not is_destroyed then
+				unrealize;
 				unmanage
 			end;
 		end;
@@ -175,8 +175,8 @@ feature -- Start output features
 		end;
 
 	put_case_message (a_message: STRING) is
-            -- Put `a_message' to the output window.
-        do
+			-- Put `a_message' to the output window.
+		do
 			if is_destroyed then	
 				create_window
 				degree_l.set_label_as_string (Empty_string);
@@ -191,14 +191,14 @@ feature -- Start output features
 				popup_window
 			end;
 			put_non_degree_message (a_message);
-        end;
+		end;
 
-    put_resynchronizing_breakpoints_message is
-            -- Put a message to indicate that the
-            -- breakpoints are being resyncronized.
-        do
+	put_resynchronizing_breakpoints_message is
+			-- Put a message to indicate that the
+			-- breakpoints are being resyncronized.
+		do
 			put_non_degree_message (l_Resynchronizing_breakpoints);
-        end;
+		end;
 
 feature -- Output on per class
 
@@ -208,7 +208,7 @@ feature -- Output on per class
 		local
 			a_per: INTEGER
 		do
-			a_per := 100 - (nbr_of_clusters*100//total_number);
+			a_per := percentage_calcuation (nbr_of_clusters, total_number);
 
 			progress_bar.increase_percentage (a_per);
 			update_interface (a_cluster.cluster_name, nbr_of_clusters, a_per);
@@ -222,7 +222,7 @@ feature -- Output on per class
 		local
 			a_per: INTEGER
 		do
-			a_per := 100 - (nbr_to_go*100//(nbr_to_go + processed));
+			a_per := percentage_calcuation (nbr_to_go, nbr_to_go + processed);
 			progress_bar.update_percentage (a_per);
 			update_interface (a_class.name_in_upper, nbr_to_go, a_per);
 			processed := processed + 1;
@@ -242,8 +242,7 @@ feature -- Output on per class
 		local
 			a_per: INTEGER
 		do
-			a_per := 100 - (nbr_to_go*100//total_number);
-
+			a_per := percentage_calcuation (nbr_to_go, total_number);
 			progress_bar.increase_percentage (a_per);
 			update_interface (a_class.name_in_upper, nbr_to_go, a_per);
 		end;
@@ -253,11 +252,10 @@ feature -- Output on per class
 			-- `features_done' in last cycle with `nbr_to_go'
 			-- features to go.
 		local
-			a_per: INTEGER;
-            a_per_out: STRING
+			a_per: INTEGER
 		do
 			processed := features_done + processed;
-			a_per := (100 * features_done) // (nbr_to_go + features_done);
+			a_per := percentage_calcuation (features_done, features_done + nbr_to_go);
 			progress_bar.update_percentage (a_per);
 			update_interface (processed.out, nbr_to_go, a_per);
 		end;
@@ -274,20 +272,29 @@ feature -- Output on per class
 			process_events
 		end;
 
-    put_case_class_message (a_class: E_CLASS) is
-            -- Put message to indicate that `a_class' is being
-            -- analyzed for case.
+	put_case_class_message (a_class: E_CLASS) is
+			-- Put message to indicate that `a_class' is being
+			-- analyzed for case.
 		local
 			a_per: INTEGER
 		do
-			a_per := (100 * processed) // total_number;
-            processed := processed + 1;
+			a_per := percentage_calcuation (processed, total_number);
+			processed := processed + 1;
 			progress_bar.increase_percentage (a_per);
-            update_interface (a_class.name_in_upper,
-                    total_number - processed, a_per)
-        end;
+			update_interface (a_class.name_in_upper,
+					total_number - processed, a_per)
+		end;
 
 feature {NONE} -- Implementation
+
+	percentage_calcuation (to_go, total: INTEGER): INTEGER is
+			-- Percentage calcuation based on `to_go' and `total'
+		do
+			Result := 100 - (100 * to_go) // total;
+			if Result = 100 and then to_go /= 0 then
+				Result := 99
+			end	
+		end;
 
 	update_interface (a_name: STRING; nbr_to_go: INTEGER; a_per: INTEGER) is
 			-- Update the interface for entity `a_name' with `nbr_to_go'
@@ -396,30 +403,29 @@ feature {NONE} -- Implementation
 			current_degree_l.attach_top;
 			current_degree_l.set_top_offset (10);
 			current_degree_l.attach_left_to_widget (degree_l);
-			current_degree_l.set_left_offset (10);
+			current_degree_l.set_left_offset (5);
 
 			entity_l.attach_left;
 			entity_l.set_left_offset (10);
 			entity_l.attach_top_to_widget (degree_l);
-			entity_l.set_top_offset (10);
+			entity_l.set_top_offset (3);
 			current_entity_l.attach_top_to_widget (current_degree_l);
 			current_entity_l.attach_left_to_widget (entity_l);
-			current_entity_l.set_top_offset (10);
-			current_entity_l.set_left_offset (10);
+			current_entity_l.set_top_offset (3);
+			current_entity_l.set_left_offset (5);
 
 			nbr_to_go_l.attach_left;
 			nbr_to_go_l.attach_top_to_widget (entity_l);
-			nbr_to_go_l.set_top_offset (10);
+			nbr_to_go_l.set_top_offset (3);
 			nbr_to_go_l.set_left_offset (10);
 			current_nbr_to_go_l.attach_top_to_widget (current_entity_l);
 			current_nbr_to_go_l.attach_left_to_widget (nbr_to_go_l);
-			current_nbr_to_go_l.set_top_offset (10);
-			current_nbr_to_go_l.set_left_offset (10);
+			current_nbr_to_go_l.set_top_offset (3);
+			current_nbr_to_go_l.set_left_offset (5);
 
 			percentage_l.attach_bottom;
 			percentage_l.attach_left_to_widget (frame);
 			percentage_l.set_left_offset (5);
-			percentage_l.set_right_offset (10);
 
 			cancel_b.attach_bottom;
 			cancel_b.attach_left_to_position (1);
@@ -431,7 +437,7 @@ feature {NONE} -- Implementation
 			frame.attach_right;
 			frame.set_top_offset (10);
 			frame.set_left_offset (10);
-			frame.set_right_offset (60);
+			frame.set_right_offset (45);
 			frame.set_bottom_offset (5);
 			frame.attach_bottom_to_widget (cancel_b);
 
@@ -448,7 +454,12 @@ feature {NONE} -- Implementation
 			imp: COLOR_X;
 			font_x: FONT_X;
 			a_font_list: MEL_FONT_LIST;
+			bg_color, fg_color: COLOR;
+			global_font: FONT
 		do
+			bg_color := Graphical_resources.background_color.actual_value;
+			fg_color := Graphical_resources.foreground_color.actual_value;
+			global_font := Graphical_resources.font.actual_value;
 			if bg_color /= Void then
 				imp ?= bg_color.implementation;
 				set_background_color (imp);
@@ -494,13 +505,15 @@ feature {NONE} -- Implementation
 			-- Popup the window.
 		local
 			cursor_imp: SCREEN_CURSOR_X;
+			mp: MOUSE_PTR
 		do
+			!! mp.do_nothing;
 			manage;
 			parent.set_max_height (height);
 			parent.set_max_width (width);
 			parent.set_min_height (height);
 			parent.set_min_width (width);
-			cursor_imp ?= cur_Watch.implementation;
+			cursor_imp ?= mp.watch_cursor.implementation;
 			define_cursor (cursor_imp);
 		end;
 

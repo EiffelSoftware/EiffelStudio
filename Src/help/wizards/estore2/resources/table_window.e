@@ -86,10 +86,12 @@ feature {NONE} -- Implementation
 		do
 			create hbox.make_without_borders
 			cont.extend (hbox)
-			factory.insensitive_field (Attribute_field_width, table_description.Id_code)
-			factory.model.set_title ("ID")
-			fields_component.add_field (factory.model)
-			hbox.extend (factory.view)
+			if table_description.is_valid_code (table_description.Id_code) then
+				factory.insensitive_field (Attribute_field_width, table_description.Id_code)
+				factory.model.set_title ("ID")
+				fields_component.add_field (factory.model)
+				hbox.extend (factory.view)
+			end
 			code_list := table_description.attribute_code_list
 			max_col_count := sqrt (code_list.count)
 			from

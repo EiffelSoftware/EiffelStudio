@@ -185,9 +185,8 @@ feature {NONE} -- Implementation
 			Result.append (" ")
 			Result.append ("%"")
 			Result.append (a_string)
-			Result.append ("%" %"")
+			Result.append ("%" ")
 			Result.append (Rpc_library)
-			Result.append ("%"")
 		end
 
 end -- class WIZARD_IDL_COMPILER

@@ -1,66 +1,47 @@
 indexing
 	description: "Assembly description to be persisted in XML"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	CONSUMED_ASSEMBLY
 
 inherit
-	KEY_ENCODER
+	ANY
 		redefine
-			out,
-			is_equal
+			is_equal, out
 		end
+
 create
-	make,
-	make_from_name
+	make
 
 feature {NONE} -- Initialization
 
-	make (ass: ASSEMBLY) is
-			-- Initialize from `ass'.
+	make (n, v, c, k: STRING) is
+			-- Set `name' with `n'.
+			-- Set `version' with `v'.
+			-- Set `culture' with `c'.
+			-- Set `key' with `k'.
 		require
-			non_void_assembly: ass /= Void
-		local
-			aname: ASSEMBLY_NAME
+			non_void_name: name /= Void
+			valid_name: not name.is_empty
+			non_void_version: v /= Void
+			valid_version: not v.is_empty
+			non_void_culture: culture /= Void
+			valid_culture: not culture.is_empty
+			valid_key: key /= Void implies not key.is_empty
 		do
-			aname := ass.get_name
-			if aname.get_public_key_token /= Void then
-				make_from_name (aname)
-			else
-				create name.make_from_cil (ass.get_location)
-				create version.make_from_cil (aname.get_version.to_string)
-				create culture.make_from_cil (aname.get_culture_info.to_string)
-				if culture.is_empty then
-					culture := "neutral"
-				end
-			end
+			name := n
+			version := v
+			culture := c
+			key := k
 		ensure
-			name_set: name /= Void
-			culture_set: culture /= Void
-			version_set: version /= Void
+			name_set: name = n
+			version_set: version = v
+			culture_set: culture = c
+			key_set: key = k
 		end
 
-	make_from_name (aname: ASSEMBLY_NAME) is
-			-- Initialize from `aname'.
-			--| Need to be signed assembly otherwise we can't get the location
-		require
-			non_void_name: aname /= Void
-			signed_assembly: aname.get_public_key_token /= Void
-		do
-			create name.make_from_cil (aname.get_name)
-			key := encoded_key (aname.get_public_key_token)					
-			create version.make_from_cil (aname.get_version.to_string)
-			create culture.make_from_cil (aname.get_culture_info.to_string)
-			if culture.is_empty then
-				culture := "neutral"
-			end
-		ensure
-			name_set: name /= Void
-			culture_set: culture /= Void
-			version_set: version /= Void
-			key_set: key /= Void
-		end
-		
 feature -- Access
 
 	name: STRING
@@ -117,5 +98,7 @@ feature -- Comparison
 		
 invariant
 	non_void_assembly_name: name /= Void
+	non_void_assembly_version: version /= Void
+	non_void_assembly_culture: culture /= Void
 
 end -- class CONSUMED_ASSEMBLY

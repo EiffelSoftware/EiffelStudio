@@ -304,10 +304,7 @@ feature -- Concrete evaluation
 
 			if not error_occurred then
 					-- Get real feature
-				if application.is_dotnet then
-						-- We do this only for dotnet
-					realf := f.ancestor_version (f.written_class)
-				end
+				realf := f.ancestor_version (f.written_class)
 				if realf = Void then
 						--| FIXME JFIAT: 2004-02-01 : why `realf' can be Void in some case ?
 						--| occurred for EV_RICH_TEXT_IMP.line_index (...)
@@ -322,7 +319,7 @@ feature -- Concrete evaluation
 					valid_dyn_type: l_dyntype /= Void
 				end
 
-				last_result_value := effective_evaluate_function (a_addr, a_target, realf, l_dyntype, params)
+				last_result_value := effective_evaluate_function (a_addr, a_target, f, realf, l_dyntype, params)
 				if last_result_value = Void then
 					set_error_evaluation ("Unable to evaluate {" + l_dyntype.associated_class.name_in_upper + "}." + f.name)
 					if a_addr /= Void then
@@ -374,14 +371,14 @@ feature -- Concrete evaluation
 			Result := dobj.class_type
 		end		
 
-	effective_evaluate_function (a_addr: STRING; a_target: DUMP_VALUE; f: E_FEATURE; 
+	effective_evaluate_function (a_addr: STRING; a_target: DUMP_VALUE; f, realf: E_FEATURE; 
 			ctype: CLASS_TYPE; params: LIST [DUMP_VALUE]): DUMP_VALUE is
 		do
 			if Application.is_dotnet then
-				Result := dotnet_evaluate_function (a_addr, a_target, f,
+				Result := dotnet_evaluate_function (a_addr, a_target, f, realf,
 								ctype, params)
 			else
-				Result := classic_evaluate_function (a_addr, a_target, f,
+				Result := classic_evaluate_function (a_addr, a_target, f, realf,
 								ctype, params)
 			end
 		end
@@ -430,7 +427,7 @@ feature {DBG_EXPRESSION_EVALUATOR_B} -- Restricted dotnet
 		
 feature {NONE} -- Implementation classic
 
-	classic_evaluate_function (a_addr: STRING; a_target: DUMP_VALUE; f: E_FEATURE; 
+	classic_evaluate_function (a_addr: STRING; a_target: DUMP_VALUE; f, realf: E_FEATURE; 
 			ctype: CLASS_TYPE; params: LIST [DUMP_VALUE]): DUMP_VALUE is
 		local
 			dmp: DUMP_VALUE
@@ -438,9 +435,9 @@ feature {NONE} -- Implementation classic
 			rout_info: ROUT_INFO
 		do
 			if params /= Void and then not params.is_empty then
-				prepare_parameters (ctype, f, params)
+				prepare_parameters (ctype, realf, params)
 			end
-				-- Send the target object. 
+				-- Send the target object.
 			if a_target = Void then
 				send_ref_value (hex_to_pointer (a_addr))
 			else
@@ -472,7 +469,7 @@ feature {NONE} -- Implementation classic
 
 feature {NONE} -- Implementation dotnet
 
-	dotnet_evaluate_function (a_addr: STRING; a_target: DUMP_VALUE; f: E_FEATURE; 
+	dotnet_evaluate_function (a_addr: STRING; a_target: DUMP_VALUE; f, realf: E_FEATURE; 
 			ctype: CLASS_TYPE; params: LIST [DUMP_VALUE]): DUMP_VALUE is
 		require
 			is_dotnet_system: application.is_dotnet
@@ -480,11 +477,11 @@ feature {NONE} -- Implementation dotnet
 			l_params: ARRAY [DUMP_VALUE]
 		do
 			if params /= Void and then not params.is_empty then
-				prepare_parameters (ctype, f, params)
+				prepare_parameters (ctype, realf, params)
 				l_params := dotnet_parameters
 				dotnet_parameters_reset
 			end
-			Result := dotnet_impl.dotnet_evaluate_function (a_addr, a_target, f.associated_feature_i, ctype, l_params)
+			Result := dotnet_impl.dotnet_evaluate_function (a_addr, a_target, realf.associated_feature_i, ctype, l_params)
 		end
 
 	dotnet_parameters_reset is

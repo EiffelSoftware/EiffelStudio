@@ -22,7 +22,7 @@ feature -- Access
 		--|FIXME, maybe this could go somewhere nicer.
 		-- Need to look into the *accessible* files and
 		-- sort them out.
-	main_window: EV_WINDOW
+	main_window: GB_MAIN_WINDOW--EV_WINDOW
 	
 	project_modified: BOOLEAN
 		-- Has `Current' been modified?
@@ -48,7 +48,7 @@ feature -- Status setting
 		end
 		
 		
-	set_main_window (window: EV_WINDOW) is
+	set_main_window (window: GB_MAIN_WINDOW) is
 			-- Assign `window' to `main_window'.
 		require
 			window_not_void: window /= Void

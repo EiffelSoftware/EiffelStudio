@@ -26,6 +26,8 @@ copy generated\Server\Include Clib
 
 copy generated\Common\Include Clib
 
+rename generated\ISE.tlb ISE.Compiler.tlb
+
 copy generated\ISE.Compiler.tlb ace_file\.
 
 copy generated\ISE.Compiler.tlb .\

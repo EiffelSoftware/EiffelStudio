@@ -186,6 +186,7 @@ feature -- Access
 				functions.forth
 			end
 
+			Result.append (New_line)
 			Result.append (cpp_protector_end)
 		end
 

@@ -14,7 +14,7 @@
 		<paragraph>
 			<image>
 				<alt_text>Assembly References Property Page</alt_text>
-				<url>AssembliesPPG.PNG</url>
+				<url>AssembliesPPG.png</url>
 			</image>
 		</paragraph>
 		<paragraph>There are two types of assembly that can be added to a projects configuration. An assembly that is located in the Global Assembly Cache (GAC) or locally referenced assembly.</paragraph>
@@ -30,7 +30,7 @@
 		<paragraph>
 			<image>
 				<alt_text>Gac Dialog</alt_text>
-				<url>GACDialog.PNG</url>
+				<url>GACDialog.png</url>
 			</image>
 		</paragraph>
 		<paragraph>The Reference GAC Assemblies dialog only shows all of those assemblies that are in the GAC that have not already been added to the current configuration. In multiple configurations the dialog will exclude only those assemblies that are common to all of the configurations. </paragraph>

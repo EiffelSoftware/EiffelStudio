@@ -43,7 +43,7 @@
 		<paragraph>
 			<image>
 				<alt_text>advanced_graphics_wizard</alt_text>
-				<url>advanced_graphics_wizard.PNG</url>
+				<url>advanced_graphics_wizard.png</url>
 			</image>
 		</paragraph>
 		<paragraph>This page allows you to modify features of the main window which will be launched by the application. You may select from the following four options:</paragraph>

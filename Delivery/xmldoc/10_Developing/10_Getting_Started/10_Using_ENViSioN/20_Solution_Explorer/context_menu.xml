@@ -19,7 +19,7 @@
 		<paragraph>
 			<image>
 				<alt_text></alt_text>
-				<url>./solution_explorer_project_node_context_menu.PNG</url>
+				<url>./solution_explorer_project_node_context_menu.png</url>
 			</image>
 		</paragraph>
 		<paragraph>In the image above we can see the context menu for the Eiffel project 'My Eiffel   Project'. The entries available on the context menu perform the following   actions:  </paragraph>
@@ -58,7 +58,7 @@
 		<paragraph>
 			<image>
 				<alt_text></alt_text>
-				<url>./solution_explorer_class_node_context_menu.PNG</url>
+				<url>./solution_explorer_class_node_context_menu.png</url>
 			</image>
 		</paragraph>
 		<paragraph>In the image just above we can see the context menu for the Eiffel class file   'root_class.e'. The entries available on the context menu perform the   following actions:  </paragraph>

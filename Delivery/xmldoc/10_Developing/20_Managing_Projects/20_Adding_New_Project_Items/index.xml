@@ -20,21 +20,21 @@
 		<paragraph>
 			<image>
 				<alt_text>Add new item</alt_text>
-				<url>add_new_item.PNG</url>
+				<url>add_new_item.png</url>
 			</image>
 		</paragraph>
 		<paragraph>A new item may also be added through the project menu:</paragraph>
 		<paragraph>
 			<image>
 				<alt_text>Add new item menu</alt_text>
-				<url>add_new_item_menu.PNG</url>
+				<url>add_new_item_menu.png</url>
 			</image>
 		</paragraph>
 		<paragraph>The Add New Item dialog will then be displayed:</paragraph>
 		<paragraph>
 			<image>
 				<alt_text>Add new item dialog</alt_text>
-				<url>add_new_item_dialog.PNG</url>
+				<url>add_new_item_dialog.png</url>
 			</image>
 		</paragraph>
 		<paragraph>Select the type of item that you wish to add to your project, and click 

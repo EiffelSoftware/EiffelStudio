@@ -46,7 +46,7 @@
 		<paragraph>
 			<image>
 				<alt_text>Editor Window With BreakPoint Set</alt_text>
-				<url>EditorWindowWithBreakPointSet.PNG</url>
+				<url>EditorWindowWithBreakPointSet.png</url>
 			</image>
 		</paragraph>
 		<paragraph>The screenshot above shows sample source code in the  
@@ -66,7 +66,7 @@
 		<paragraph>
 			<image>
 				<alt_text>Editor Window With BreakPoint Hit</alt_text>
-				<url>EditorWindowWithBreakPointHit.PNG</url>
+				<url>EditorWindowWithBreakPointHit.png</url>
 			</image>
 		</paragraph>
 		<paragraph>The screenshot above demonstrates the appearence of the  
@@ -122,7 +122,7 @@
 		<paragraph>
 			<image>
 				<alt_text>Editor Window With BreakPoint Stepped Over</alt_text>
-				<url>EditorWindowWithBreakPointSteppedOver.PNG</url>
+				<url>EditorWindowWithBreakPointSteppedOver.png</url>
 			</image>
 		</paragraph>
 		<paragraph>The screenshot above demonstrates a single stepping from the breakpoint to the  next line of code to be executed. As the line of code with the Break Point did  not contain a  

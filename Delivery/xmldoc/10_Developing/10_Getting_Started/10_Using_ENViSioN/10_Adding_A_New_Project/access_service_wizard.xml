@@ -38,7 +38,7 @@
 		<paragraph>
 			<image>
 				<alt_text>Web service client service</alt_text>
-				<url>web_service_client_service.PNG</url>
+				<url>web_service_client_service.png</url>
 			</image>
 		</paragraph>
 		<note>
@@ -58,7 +58,7 @@
 		<paragraph>
 			<image>
 				<alt_text>Web service client authentication</alt_text>
-				<url>web_service_client_authentication.PNG</url>
+				<url>web_service_client_authentication.png</url>
 			</image>
 		</paragraph>
 		<heading>
@@ -75,7 +75,7 @@
 			<paragraph>
 				<image>
 					<alt_text>Web service client completion</alt_text>
-					<url>web_service_client_complete.PNG</url>
+					<url>web_service_client_complete.png</url>
 				</image>
 			</paragraph>
 			<seealso>

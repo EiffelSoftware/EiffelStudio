@@ -11,14 +11,14 @@
 			<paragraph>
 				<image>
 					<alt_text>Output Window</alt_text>
-					<url>OutputWindow.PNG</url>
+					<url>OutputWindow.png</url>
 				</image>
 			</paragraph>
 			<paragraph>In this case, the compilation failed in class ROOT_CLASS during degree 3. This  however, does not provide enough explicit information to quickly fix the  problem. For more informationregarding the error, you need to view the Task  List, as demonstrated below:</paragraph>
 			<paragraph>
 				<image>
 					<alt_text>Task List Build Error</alt_text>
-					<url>TaskListBuildError.PNG</url>
+					<url>TaskListBuildError.png</url>
 				</image>
 			</paragraph>
 			<paragraph>The current compilation error is listed in the Task List, and if you move the  mouse over the error, additional information will appear in the form of a tool tip as in the  screenshot above. Thistool tip contains detailed information about the error, which simplifies the process of finding and fixing the problem.  </paragraph>

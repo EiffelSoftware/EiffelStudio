@@ -17,7 +17,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	initialize (cr: BOOLEAN; fn: FEATURE_NAME; t: EIFFEL_LIST [TYPE]) is
+	initialize (cr: BOOLEAN; fn: FEATURE_NAME; t: EIFFEL_LIST [EIFFEL_TYPE]) is
 			-- Create a new CONVERT_FEAT_AS clause AST node.
 		do
 			is_creation_procedure := cr
@@ -37,8 +37,16 @@ feature -- Access
 	feature_name: FEATURE_NAME
 			-- Name of conversion feature.
 			
-	conversion_types: EIFFEL_LIST [TYPE]
+	conversion_types: EIFFEL_LIST [AST_EIFFEL]
 			-- Types	 to which we can either convert to or from.
+
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_convert_feat_as (Current)
+		end
 
 feature -- Comparison
 

@@ -141,6 +141,24 @@ feature {NONE} -- WEL Implementation
 			menu_items.item(menu_id).on_activate
 		end
 
+	on_color_control (control: WEL_COLOR_CONTROL; paint_dc: WEL_PAINT_DC) is
+			-- Wm_ctlcolorstatic, Wm_ctlcoloredit, Wm_ctlcolorlistbox 
+			-- and Wm_ctlcolorscrollbar messages.
+			-- To change its default colors, the color-control `control'
+			-- needs :
+			-- 1. a background color and a foreground color to be selected
+			--    in the `paint_dc',
+			-- 2. a backgound brush to be returned to the system.
+		local
+			brush: WEL_BRUSH
+		do
+			paint_dc.set_text_color (control.foreground_color)
+			paint_dc.set_background_color (control.background_color)
+			!! brush.make_solid (control.background_color)
+			set_message_return_value (brush.to_integer)
+			disable_default_processing
+		end
+
    	background_brush: WEL_BRUSH is
    			-- Current window background color used to refresh the window when
    			-- requested by the WM_ERASEBKGND windows message.
@@ -161,6 +179,14 @@ feature {NONE} -- WEL Implementation
 feature {NONE} -- Implementation : deferred features
 
 	client_rect: WEL_RECT is
+		deferred
+		end
+
+	disable_default_processing is
+		deferred
+		end
+
+	set_message_return_value (v: INTEGER) is
 		deferred
 		end
 

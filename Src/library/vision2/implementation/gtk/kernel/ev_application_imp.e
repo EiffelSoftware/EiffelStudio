@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 
-			--put ("display_ip:0", "DISPLAY")
+			--put ("localhost:0", "DISPLAY")
 			-- This line may be uncommented to allow for display redirection to another machine.
 			
 			create locale_str.make_from_c (feature {EV_GTK_EXTERNALS}.gtk_set_locale)
@@ -111,7 +111,7 @@ feature {NONE} -- Initialization
 			-- Initialize timeout for idle actions so call is made after gtk resize.
 		do
 			a_idle_timeout_imp ?= (create {EV_TIMEOUT}).implementation
-			a_idle_timeout_imp.interface.actions.extend (agent internal_idle_actions.call (empty_tuple))
+			a_idle_timeout_imp.interface.actions.extend (agent call_idle_actions)
 			a_idle_timeout_imp.set_interval_kamikaze (75)
 				-- This allows gtk to perform sizing calculations before idle is called.
 		end
@@ -124,6 +124,21 @@ feature {NONE} -- Initialization
 				connect_internal_idle_actions
 			end
 		end
+		
+	call_idle_actions is
+			-- 
+		do
+			-- We do not want nested idle actions called.
+			if not idle_actions_being_called then
+				idle_actions_being_called := True
+				internal_idle_actions.call (empty_tuple)
+				idle_actions_being_called := False
+			end
+			
+		end
+		
+	idle_actions_being_called: BOOLEAN
+		-- Are the idle_actions in the process of being called?
 		
 feature {EV_ANY_IMP} -- Access
 		

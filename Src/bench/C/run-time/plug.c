@@ -441,16 +441,16 @@ uint32 type;							/* Dynamic type */
 		int32 feature_id;              	/* Creation procedure feature id */
 		int32 static_id;               	/* Creation procedure static id */
 
-		feature_id = exp_desc->exp_info.noprecomp.cn_creation_id;
-		static_id = exp_desc->exp_info.noprecomp.static_id;	
+		feature_id = exp_desc->cn_creation_id;
+		static_id = exp_desc->static_id;	
 		if (feature_id)					/* Call creation routine */
 			wexp(static_id, feature_id, type, result);
 	} else {							/* precompiled creation routine */
 		int32 origin;					/* Origin class id */       
 		int32 offset;					/* Offset in origin class */
 
-		origin = exp_desc->exp_info.precomp.origin;
-		offset = exp_desc->exp_info.precomp.offset;
+		origin = exp_desc->cn_creation_id;
+		offset = exp_desc->static_id;
 		if (origin)						/* Call creation routine */
 			wpexp(origin, offset, type, result);
 	}
@@ -526,16 +526,16 @@ char *parent;	/* Parent (enclosing object) */
 				int32 feature_id;			/* Creation procedure feature id */
 				int32 static_id;			/* Creation procedure static id */
 
-				feature_id = exp_desc->exp_info.noprecomp.cn_creation_id;
-				static_id = exp_desc->exp_info.noprecomp.static_id;	
+				feature_id = exp_desc->cn_creation_id;
+				static_id = exp_desc->static_id;	
 				if (feature_id)				/* Call creation routine */
 					wexp(static_id, feature_id, exp_dtype, l[0] + offset);
 			} else {						/* precompiled creation routine */
 				int32 origin;				/* Origin class id */       
 				int32 offset;				/* Offset in origin class */
 		
-				origin = exp_desc->exp_info.precomp.origin;
-				offset = exp_desc->exp_info.precomp.offset;
+				origin = exp_desc->cn_creation_id;
+				offset = exp_desc->static_id;
 				if (origin)					/* Call creation routine */
 					wpexp(origin, offset, exp_dtype, l[0] + offset);
 			}

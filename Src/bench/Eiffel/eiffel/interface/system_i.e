@@ -2547,8 +2547,7 @@ else
 		Skeleton_file.putstring 
 			("{%N0L,%N%"INVALID_TYPE%",%N(char**) 0,%N(int*) 0,%N%
 			%(uint32*) 0,%N(int32*) 0,%N0L,%N0L,%N'\0',%N'\0',%N%
-			%{{(int32) 0,(int32) 0}},%N%
-			%'\0',%N(int32*) 0,%N%
+			%(int32) 0,(int32) 0,'\0',%N(int32*) 0,%N%
 			%{(int32) 0, (int) 0, (char**) 0, (char*) 0}}");
 	end
 end;

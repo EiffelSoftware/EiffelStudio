@@ -167,6 +167,7 @@ feature -- Basic Operation
 			else
 				-- Restore window into original directory.
 				directory_item.extend (window_object.window_selector_item)
+				directory_item.expand
 			end
 				-- Now actually restore the physical files.
 			create file_name.make_from_string (generated_path)

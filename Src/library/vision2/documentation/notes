@@ -97,7 +97,7 @@ X   complete but found to have bugs
   Support:
     support/ev_default_colors.e							*	.	.	.
     kernel/ev_accelerator.e								*	.	.	.
-    kernel/ev_key_constants.e							!	-	-	-
+    kernel/keys.def										o	-	-	-
     kernel/ev_color.e									*	.	.	.
     kernel/ev_coordinates.e								*	.	.	.
     kernel/ev_cursor.e									o	.	.	.
@@ -113,7 +113,6 @@ X   complete but found to have bugs
   System:
     kernel/ev_application.e								o	.	.	.
     kernel/ev_environment.e								*	.	.	.
-    kernel/ev_internal.e								!	-	-	-
     widgets/uncommon_widgets/ev_screen.e				*	.	.	.
 
   Buttons:

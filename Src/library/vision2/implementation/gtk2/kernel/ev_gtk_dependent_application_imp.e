@@ -289,9 +289,12 @@ feature -- Implementation
 			-- Return a GdkCursor constructed from `a_cursor'
 		local
 			a_cursor_imp: EV_PIXMAP_IMP
+			a_pixbuf: POINTER
 		do
 			a_cursor_imp ?= a_cursor.implementation
-			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_cursor_new_from_pixbuf (feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_display_get_default, a_cursor_imp.pixbuf_from_drawable, a_cursor.x_hotspot, a_cursor.y_hotspot)
+			a_pixbuf := a_cursor_imp.pixbuf_from_drawable
+			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_cursor_new_from_pixbuf (feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_display_get_default, a_pixbuf, a_cursor.x_hotspot, a_cursor.y_hotspot)
+			feature {EV_GTK_EXTERNALS}.object_unref (a_pixbuf)
 		end
 
 feature {NONE} -- Externals

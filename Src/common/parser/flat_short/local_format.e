@@ -1,175 +1,93 @@
 class LOCAL_FORMAT
 
-creation
-	make, make_for_case
-
-feature
-
-	make (c: TYPE_A) is
-		do
-			!FEAT1_ADAPTATION!global_types.make (c.associated_class,
-				 c.associated_class);
-			global_types.set_source_type (c);
-			global_types.set_target_type (global_types.source_type);
-			local_types := global_types;
-		end;
-
-	make_for_case (c: TYPE_A) is
-		do
-			!FEAT_ADAPTATION!global_types.make (c.associated_class,
-					c.associated_class);
-			local_types := global_types;
-		end;
-
-	position_in_text: CURSOR;
-		-- end of text at creation
-	
-	insertion_point: CURSOR;
-		-- last position for left parantheses
-	
-	separator: TEXT_ITEM;
-		-- separator between token of the processed EIFFEL_LIST
-
-	indent_between_tokens: BOOLEAN;
-		-- must insert new_line and indent between EIFFEL_LIST token?
-
-	space_between_tokens: BOOLEAN;
-		-- Must insert a space character between EIFFEL_LIST token?
-
-	new_line_before_separator: BOOLEAN;
-		-- must insert new_line and indent before a separator?
-
-	indent_depth : INTEGER;
-		-- number of tab after new_line
-
-	must_abort_on_failure : BOOLEAN;
-		-- rollback all the EIFFEL_LIST if one token cannot be printed?
-
-		--| eg : true for a manifest array: don't print the array at
-		--| all if one item is not exported
-		--| false for an assertion: keep printing the following items even
-		--| if one must be ommited 
-
-	local_types: FEAT_ADAPTATION;
-		-- source and target type when parsing nested calls
-
-	global_types: FEAT_ADAPTATION;
-		-- source and target class for a flat 
-
-	priority: INTEGER is
-			-- operator priority
-		do
-			Result := local_types.priority;
-			if Result  = 0 then
-				Result := 12;
-			end;
-		end;
-
-	call_level: BOOLEAN;
-		-- are feature name to be printed as call (vs declaration)
-		-- if true, write feature name or operator
-		-- if false, write frozen if needed and infix/prefix "operator"
-		
-	illegal_operator: BOOLEAN;
-		-- is an operator illegal here (after $ or like).
-		-- if true, operator must be written (prefix/infix "operator")
-	
+feature {FORMAT_CONTEXT} -- Implementation
 
 	dot_needed: BOOLEAN;
-		-- will a dot be needed before next call
-		
+			-- Will a dot be needed before next call?
 
-	set_position(pos : like position_in_text) is
-		do
-			position_in_text := pos;
-		end;
+	illegal_operator: BOOLEAN;
+			-- Is an operator illegal here?
+			-- True after `$' or `like'.
+			-- If true, operator must be written (prefix/infix "operator")
 
-	set_separator (s: like separator) is
-		do
-			separator := s;
-		end;
+	indent_between_tokens: BOOLEAN;
+			-- Must new line and indent be inserted 
+			-- between EIFFEL_LIST tokens?
 
-	set_must_indent(b : BOOLEAN) is
-		do
-			indent_between_tokens := b;
-		end;
+	indent_depth : INTEGER;
+			-- Number of tabs after new line
 
-	set_space_between_tokens (b: BOOLEAN) is
-		do
-			space_between_tokens := b
-		end;
+	insertion_point: CURSOR;
+			-- Last position for left parantheses
+	
+	new_line_before_separator: BOOLEAN;
+			-- Must new line and indent be inserted
+			-- before a separator?
 
-	set_must_abort (b: BOOLEAN) is
-		do
-			must_abort_on_failure := b;
-		end;
+	position_in_text: CURSOR;
+			-- End of text at creation
+
+	separator: TEXT_ITEM;
+			-- Separator between tokens of the processed EIFFEL_LIST
+
+	space_between_tokens: BOOLEAN;
+			-- Must a space character be inserted 
+			-- between EIFFEL_LIST tokens?
+
+feature {FORMAT_CONTEXT} -- Local formatting control
 
 	indent_one_more is
+			-- Increase `indent_depth'. 
 		do
 			indent_depth := indent_depth + 1;
 		end;
 
 	indent_one_less is
+			-- Decrease `indent_depth'.
 		do
 			indent_depth := indent_depth - 1;
 		end;
 
-	set_classes (source_class, target_class: CLASS_C) is
-			-- flat, text from source class rewritten for target_class
-		require	
-			source_not_void: source_class /= void;
-			target_not_void: target_class /= void;
-		do
-			!FEAT1_ADAPTATION!global_types.make (source_class, target_class);
-			global_types.set_source_type(source_class.actual_type);
-			global_types.set_target_type(target_class.actual_type);
-		end;
-
-	set_context_features (source, target: FEATURE_I) is
-		do
-			global_types.set_context_features (source, target);
-		end;
-
-	set_global_types (f: FEAT_ADAPTATION) is
-			-- set global_types to f
-		do
-			global_types := f;
-		end;
-
-	set_local_types (f: FEAT_ADAPTATION) is
-			-- set local_types to f
-		do
-			local_types := f;
-		end;
-	
-	set_insertion_point (p : like insertion_point) is
-		do
-			insertion_point := p;
-		end;
-
-	set_priority (p: INTEGER) is
-		do
-			local_types.set_priority (p);
-		end;
-
 	set_dot_needed (b: BOOLEAN) is
-			-- set dot_needed to b
+			-- Set `dot_needed' to `b'.
 		do
 			dot_needed := b;
 		end;
 
-	set_call_level is
-			-- set call level to true
-		do
-			call_level := true;
-		end;
-
-
 	set_illegal_operator is
-			-- set illegal operator to true
+			-- Set illegal operator to true.
 		do
 			illegal_operator := true;
 		end;
 	
+	set_insertion_point (p: like insertion_point) is
+			-- Set `insertion_point' to `p'.
+		do
+			insertion_point := p;
+		end;
 
-end
+	set_must_indent (b: BOOLEAN) is
+			-- Set indentation.
+		do
+			indent_between_tokens := b;
+		end;
+
+	set_position(pos: like position_in_text) is
+			-- Set `position_in_text' to `pos'.
+		do
+			position_in_text := pos;
+		end;
+
+	set_separator (s: like separator) is
+			-- Set `separator' to `s'.	
+		do
+			separator := s;
+		end;
+
+	set_space_between_tokens (b: BOOLEAN) is
+			-- Set spacing.
+		do
+			space_between_tokens := b
+		end;
+
+end -- class LOCAL_FORMAT

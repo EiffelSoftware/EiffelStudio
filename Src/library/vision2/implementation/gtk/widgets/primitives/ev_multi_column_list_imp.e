@@ -69,8 +69,21 @@ feature {NONE} -- Initialization
 			-- Create the clist with `a_columns' columns.
 		local
 			i: INTEGER
+			col_titles: ARRAYED_LIST [STRING]
+			col_widths: ARRAYED_LIST [INTEGER]
 		do
 			if list_widget /= Default_pointer then
+				from
+					i := 1
+					create col_titles.make (columns)
+					create col_widths.make (columns)
+				until
+					i > columns
+				loop
+					col_titles.extend (column_title (i))
+					col_widths.extend (column_width (i))
+					i := i + 1
+				end
 				C.gtk_container_remove (c_object, list_widget)
 			end
 
@@ -81,10 +94,7 @@ feature {NONE} -- Initialization
 			real_signal_connect (list_widget, "click_column", ~column_click_callback)
 			
 			if rows_height > 0 then
-				C.gtk_clist_set_row_height (
-					list_widget,
-					rows_height
-				)		
+				set_rows_height (rows_height)		
 			end
 
 			C.gtk_widget_show (list_widget)
@@ -94,15 +104,18 @@ feature {NONE} -- Initialization
 			-- We need to specify a width for the columns
 			-- otherwise the value given by gtk would be wrong.
 			from
-				i := 0
+				i := 1
 			until
-				i = a_columns
+				i > a_columns
 			loop
-				C.gtk_clist_set_column_width (
-					list_widget,
-					i,
-					80
-				)
+				if col_titles /= Void and then col_titles.valid_index (i) then
+					set_column_width (col_widths.i_th (i), i)
+					if col_titles.i_th (i) /= Void then
+						set_column_title (col_titles.i_th (i), i)
+					end
+				else
+					set_column_width (80, i)
+				end
 				i := i + 1
 			end
 			show_title_row
@@ -273,8 +286,16 @@ feature -- Status report
 
 	column_title (a_column: INTEGER): STRING is
 			-- Title of column `a_column'.
+		local
+			p: POINTER
 		do
-			check to_be_implemented: False end
+			p := C.gtk_clist_get_column_title (list_widget, a_column - 1)
+			if p /= Default_pointer then
+				create Result.make_from_c (p)
+				if Result.empty then
+					Result := Void
+				end
+			end
 		end
 
 feature -- Status setting
@@ -374,7 +395,7 @@ feature -- Element change
 		end
 
 	set_rows_height (value: INTEGER) is
-			-- Make`value' the new height of all the rows.
+			-- Make `value' the new height of all the rows.
 		do
 			if list_widget /= Default_pointer then
 				C.gtk_clist_set_row_height (list_widget, value)
@@ -549,6 +570,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.35  2000/03/03 20:10:27  king
+--| Corrected create_list to deal with resetting col wid and titles to prev values
+--|
 --| Revision 1.34  2000/03/03 18:18:49  king
 --| Implemented set_columns
 --|

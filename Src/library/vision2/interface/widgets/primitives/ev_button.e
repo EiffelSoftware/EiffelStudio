@@ -24,9 +24,14 @@ inherit
 			implementation
 		end
 
+	EV_FONTABLE
+		redefine
+			implementation
+		end
+
 creation
-	
 	make, make_with_text
+
 	
 feature {NONE} -- Initialization
 

@@ -23,6 +23,11 @@ inherit
 		redefine
 			implementation
 		end
+
+	EV_FONTABLE
+		redefine
+			implementation
+		end
 		
 creation
 	

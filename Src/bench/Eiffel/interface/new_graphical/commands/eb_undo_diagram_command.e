@@ -26,7 +26,7 @@ feature {EB_DEVELOPMENT_WINDOW} -- Accelerator action
 			-- Undo last action if possible and if the diagram
 			-- has the focus.
 		do
-			if tool.projector.widget.has_focus and then not history.undo_exhausted then
+			if is_sensitive and then tool.projector.widget.has_focus and then not history.undo_exhausted then
 				execute
 			end
 		end

@@ -48,11 +48,6 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-		--| FIXME The same key combination can be added to this list.
-		--| GTK takes only the latest one set. Object-comparison is turned on
-		--| for this list, so that the user can check whether a specific
-		--| accelerator is already installed using `has'.
-
 	accelerators: EV_ACCELERATOR_LIST is
 			-- Key combination shortcuts associated with this window.
 		require
@@ -123,13 +118,12 @@ feature -- Status setting
 
 	minimize is
 			-- Display iconified/minimised.
+			-- It is not possible to guarantee this on some
+			-- platform configurations.
 		require
 			not_destroyed: not is_destroyed
 		do
 			implementation.minimize
-		ensure
-			--| FIXME VB probably impossible for GTK.
-			--| is_minimized: is_minimized
 		end
 
 	maximize is
@@ -149,8 +143,7 @@ feature -- Status setting
 		do
 			implementation.restore
 		ensure
-			--| FIXME VB probably impossible for GTK.
-			--| minimize_restored: old is_minimized implies not is_minimized
+			minimize_restored: old is_minimized implies not is_minimized
 			maximize_restored: old is_maximized implies not is_maximized
 		end
 

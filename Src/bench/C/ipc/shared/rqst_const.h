@@ -39,6 +39,12 @@
 #define ACCESS			23		/* Access object through hector */
 #define WEAN			24		/* Wean adopted object */
 #define ONCE			25		/* Once routines inspection */
+#define EWB_INTERRUPT	26		/* Debugger asking interruption of application*/
+#define APP_INTERRUPT	27		/* Application wondering if it has to stop */
+#define INTERRUPT_OK	28		/* Application must stop its execution */
+#define INTERRUPT_NO	29		/* Application can resume execution */
+#define SP_LOWER		30		/* Bounds for special objects inspection */
+#define SP_UPPER		31		/* Bounds for special objects inspection */
 
 /* Acknowledgments codes */
 #define AK_OK			0       /* Everything is ok */
@@ -58,6 +64,9 @@
 /* Once inspection types */
 #define OUT_CALLED		0		/* Check whether once routine has been called */
 #define OUT_RESULT		1		/* Ask for result of already called once func */
+
+/* Special object inspection */
+#define DEFAULT_SLICE	50		/* Default maximum number of items to be sent */
 
 #endif
 

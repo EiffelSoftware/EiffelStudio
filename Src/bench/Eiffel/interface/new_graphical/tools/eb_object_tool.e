@@ -448,7 +448,7 @@ feature {EB_SET_SLICE_SIZE_CMD}
 			create Result.make_with_text (dv.name + ": " + dv.dump_value.type_and_value)
 			Result.set_pixmap (icons @ (dv.kind))
 			Result.set_data (dv)
-			if dv.expandable then
+			if dv.expandable and not dv.is_external_type then
 				Result.extend (create {EV_TREE_ITEM}.make_with_text ("Bug"))
 				Result.expand_actions.extend (agent fill_item (Result))
 			end
@@ -535,6 +535,15 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	show_text_in_popup (txt: STRING; x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
+			-- 
+		local
+			w_dlg: EB_INFORMATION_DIALOG
+		do
+			create w_dlg.make_with_text (txt)
+			w_dlg.show_modal_to_window (Debugger_manager.debugging_window.window)		
+		end
+		
 	build_local_tree is
 			-- Create the tree that contains locals and parameters.
 		local
@@ -550,10 +559,11 @@ feature {NONE} -- Implementation
 			i: INTEGER
 			dbg_nb: INTEGER
 
---			exception_item: EV_TREE_ITEM
---			l_exception_value: ABSTRACT_DEBUG_VALUE
---			l_exception_info: EIFNET_DEBUG_VALUE_INFO
-			
+			l_exception_detail: TUPLE [STRING, STRING]
+			l_exception_class_detail: STRING
+			l_exception_module_detail: STRING
+			l_exception_to_string: STRING
+			exception_item: EV_TREE_ITEM
 		do
 			local_tree.wipe_out
 			cse := current_stack_element
@@ -563,38 +573,48 @@ feature {NONE} -- Implementation
 
 				create module_item
 				module_item.set_text ("Module = " + cse_dotnet.dotnet_module_filename)
-				module_item.set_pixmap (Pixmaps.Icon_green_arrow)
+				module_item.set_pixmap (Pixmaps.Icon_green_tick)
 				local_tree.extend (module_item)				
 
 --FIXME jfiat [2003/10/08 - 11:54] Do we want to display Exception information ?
 
---				l_eifnet_debugger := Application.imp_dotnet.Eifnet_debugger
---				if l_eifnet_debugger.last_managed_callback_is_exception then
---					l_exception_value := Application.imp_dotnet.status.current_stack_element_dotnet.current_exception
---					create l_exception_info.make (Application.imp_dotnet.eifnet_debugger.active_exception_value)
---
---					debug ("DEBUGGER_TRACE")
---						print ("%N%NException ....%N### => " + l_exception_info.value_class_name + "%N")
---						print ("### => " + l_exception_info.value_module_file_name + "%N%N")
---					end
---					if l_exception_value /= Void then
---						create exception_item
---						exception_item.set_text ("Exception raised")
---						exception_item.set_pixmap (Pixmaps.Icon_red_cross)
---						local_tree.extend (exception_item)
---
---						create item
---						item.set_text ("Class = " + l_exception_info.value_class_name)
---						item.set_pixmap (Pixmaps.Icon_green_arrow)
---						exception_item.extend (item)
---
---						create item
---						item.set_text ("From " + l_exception_info.value_module_file_name)
---						item.set_pixmap (Pixmaps.Icon_green_arrow)
---						exception_item.extend (item)				
---						exception_item.expand
---					end
---				end
+				if Application.imp_dotnet.exception_occured then
+					l_exception_detail := Application.imp_dotnet.exception_details
+					if l_exception_detail /= Void then
+						l_exception_class_detail ?= l_exception_detail.item (1)
+						l_exception_module_detail ?= l_exception_detail.item (2)
+						
+						create exception_item
+						exception_item.set_text ("Exception raised")
+						exception_item.set_pixmap (Pixmaps.Icon_green_tick)
+--						Icon_red_cross)
+						local_tree.extend (exception_item)
+						
+						
+						l_exception_to_string := Application.imp_dotnet.exception_to_string
+						if l_exception_to_string /= Void then
+							create item
+							item.set_text ("Double click to see Exception")-- + l_exception_to_string)
+							item.set_tooltip (l_exception_to_string)
+							item.set_pixmap (Pixmaps.Icon_exception)
+							item.pointer_double_press_actions.extend (agent show_text_in_popup (l_exception_to_string, ?,?,?,?,?,?,?,?))
+							exception_item.extend (item)						
+						end						
+
+						create item
+						item.set_text ("Class = " + l_exception_class_detail)
+						item.set_pixmap (Pixmaps.Icon_exception)
+						exception_item.extend (item)
+
+						create item
+						item.set_text ("Module " + l_exception_module_detail)
+						item.set_pixmap (Pixmaps.Icon_exception)
+						exception_item.extend (item)
+
+
+						exception_item.expand
+					end
+				end
 			end
 			
 				-- Fill in the arguments, if any.

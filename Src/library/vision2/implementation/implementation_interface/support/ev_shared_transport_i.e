@@ -1,5 +1,6 @@
 indexing
 	description: "Objects that provide common attributes for transport mechanisms."
+	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -96,13 +97,14 @@ feature -- Access EV_DRAGABLE_SOURCE.
 			end
 		
 	insert_sep: EV_TOOL_BAR_SEPARATOR is
-			--
+			-- Once access to a separator used to indicate the insertion position
+			-- when moving tool bar items.
 		once
 			Create Result
 		end
 		
 	insert_sep_imp: EV_TOOL_BAR_SEPARATOR_IMP is
-			--
+			-- Once access to implementation of `insert_sep'.
 		once
 			Result ?= insert_sep.implementation
 		ensure
@@ -110,7 +112,7 @@ feature -- Access EV_DRAGABLE_SOURCE.
 		end
 		
 	remove_insert_sep is
-			--
+			-- Ensure `inset_sep' is not parented.
 		do
 			if insert_sep.parent /= Void then
 				insert_sep.parent.prune (insert_sep)
@@ -126,48 +128,29 @@ feature -- Access EV_DRAGABLE_SOURCE.
 	 	-- being garbage collected.
 	 	
 	 internal_screen: EV_SCREEN is
-	 		--
+	 		-- Once access to an EV_SCREEN.
 	 	once
 	 		create Result
 	 	end
-	 	
-	 	
 
 feature -- Access common.
 
 		pointer_x, pointer_y: INTEGER
 
-feature -- Measurement
-
-feature -- Status report
-
-feature -- Status setting
-
-feature -- Cursor movement
-
-feature -- Element change
-
-feature -- Removal
-
-feature -- Resizing
-
-feature -- Transformation
-
-feature -- Conversion
-
-feature -- Duplication
-
-feature -- Miscellaneous
-
-feature -- Basic operations
-
-feature -- Obsolete
-
-feature -- Inapplicable
-
-feature {NONE} -- Implementation
-
-invariant
-	invariant_clause: True -- Your invariant here
-
 end -- class EV_SHARED_TRANSPORT_I
+
+--|----------------------------------------------------------------
+--| EiffelVision2: library of reusable components for ISE Eiffel.
+--| Copyright (C) 1986-2001 Interactive Software Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--| May be used only with ISE Eiffel, under terms of user license. 
+--| Contact ISE for any other use.
+--|
+--| Interactive Software Engineering Inc.
+--| ISE Building
+--| 360 Storke Road, Goleta, CA 93117 USA
+--| Telephone 805-685-1006, Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support: http://support.eiffel.com>
+--| For latest info see award-winning pages: http://www.eiffel.com
+--|----------------------------------------------------------------

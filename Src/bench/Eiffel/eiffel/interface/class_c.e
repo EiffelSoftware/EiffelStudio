@@ -674,6 +674,7 @@ debug ("SEP_DEBUG", "ACTIVITY")
 	io.error.putbool (feature_changed)
 	io.error.new_line
 end
+			
 					f_suppliers := dependances.item (feature_i.body_id)
 
 						-- Feature is considered syntactically changed if
@@ -1293,6 +1294,7 @@ feature -- Melting
 	melt_all is
 			-- Melt all the features written in the class
 		local
+			c_dep: CLASS_DEPENDANCE
 			tbl: FEATURE_TABLE
 			melted_info: FEAT_MELTED_INFO
 			inv_melted_info: INV_MELTED_INFO
@@ -1322,6 +1324,8 @@ feature -- Melting
 				end
 				tbl.forth
 			end
+			c_dep := depend_server.item (id)
+			depend_server.put (c_dep)
 
 				-- Melt possible invariant clause
 			if invariant_feature /= Void then

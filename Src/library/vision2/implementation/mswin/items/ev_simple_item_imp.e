@@ -24,12 +24,47 @@ inherit
 
 	EV_ITEM_EVENTS_CONSTANTS_IMP
 
+feature {NONE} -- Initialization
+
+	make_with_text (txt: STRING) is
+			-- Create an item with `par' as parent and `txt'
+			-- as text.
+		do
+			make
+			set_text (txt)
+		end
+
+	make_with_pixmap (pix: EV_PIXMAP) is
+			-- Create an item with `par' as parent and `pix'
+			-- as pixmap.
+		do
+			make
+--			set_pixmap (pix)
+		end
+
+	make_with_all (txt: STRING; pix: EV_PIXMAP) is
+			-- Create an item with `par' as parent, `txt' as text
+			-- and `pix' as pixmap.
+		do
+			make
+			set_text (txt)
+--			set_pixmap (pix)
+		end
+
 feature -- Access
 
-	parent_widget: EV_WIDGET is
-			-- Parent widget of the current item
+	text: STRING 
+			-- Current label of the item
+
+	id: INTEGER
+		-- Id of the item in its container
+
+feature -- Element change
+
+	set_id (new_id: INTEGER) is
+			-- Set `id' to `new_id'
 		do
-			Result := parent.current_widget
+			id := new_id
 		end
 
 feature -- Event : command association
@@ -64,21 +99,18 @@ feature -- Event -- removing command association
 			remove_command (Cmd_item_deactivate)		
 		end
 
-feature {EV_ITEM_CONTAINER_IMP} -- Implementation
+feature -- Implementation
 
-	id: INTEGER
-		-- Id of the item in its container
-
-	set_id (new_id: INTEGER) is
-			-- Set `id' to `new_id'
-		do
-			id := new_id
+	parent_imp: EV_ITEM_CONTAINER_IMP is
+			-- The current container of the item
+		deferred
 		end
 
-feature {NONE} -- Implementation
-
-	parent: EV_ITEM_CONTAINER_IMP
-		-- The current container of the item
+	parent_widget: EV_WIDGET is
+			-- Parent widget of the current item
+		do
+			Result := parent_imp.current_widget
+		end
 
 	wel_window: WEL_WINDOW is
 			-- Window used to create the related pixmap. It has

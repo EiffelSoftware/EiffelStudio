@@ -22,6 +22,7 @@ feature -- Access
 		
 	veto_dock_function: FUNCTION [ANY, TUPLE [EV_DOCKABLE_SOURCE], BOOLEAN] is
 			-- Function to determine whether the current dock is allowed.
+			-- If `Result' is `True', the dock will be disallowed.
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -30,34 +31,37 @@ feature -- Access
 			bridge_ok: Result = implementation.veto_dock_function
 		end
 		
-	is_dockable: BOOLEAN is
+	is_docking_enabled: BOOLEAN is
 			-- May `Current' be docked to?
+			-- If True, `Current' will accept docking
+			-- from a compatible EV_DOCKABLE_SOURCE.
 		require
 			not_destroyed: not is_destroyed
 		do
-			Result := implementation.is_dockable
+			Result := implementation.is_docking_enabled
 		ensure
-			bridge_ok: Result = implementation.is_dockable
+			bridge_ok: Result = implementation.is_docking_enabled
 		end
 
-	enable_dockable is
-			--
+	enable_docking is
+			-- Ensure `is_docking_enabled' is True.
 		require
 			not_destroyed: not is_destroyed
 		do
-			implementation.enable_dockable
+			implementation.enable_docking
 		ensure
-			is_dockable: is_dockable
+			is_dockable: is_docking_enabled
 		end
 		
-	disable_dockable is
-			--
+	disable_docking is
+			-- Ensure `is_docking_enabled' is False.
+			-- `Current' will not accept docking.
 		require
 			not_destroyed: not is_destroyed
 		do
-			implementation.disable_dockable
+			implementation.disable_docking
 		ensure
-			not_dockable: not is_dockable	
+			not_dockable: not is_docking_enabled	
 		end
 		
 	set_veto_dock_function (a_function: FUNCTION [ANY, TUPLE [EV_DOCKABLE_SOURCE], BOOLEAN]) is

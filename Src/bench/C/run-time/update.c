@@ -426,7 +426,10 @@ rt_public void cnode_updt(void)
 	}
 	parents[nbparents] = -1;
 
-		/* 6. Attribute routine id array */
+		/* 6.: Skeleton flags */
+	node->cn_flags = (uint16) wshort();
+
+		/* 7. Attribute routine id array */
 	if (nbattr > 0) {
 		SAFE_ALLOC(rout_ids, int32, nbattr);
 		node->cn_attr = rout_ids;
@@ -439,30 +442,20 @@ rt_public void cnode_updt(void)
 	} else
 		node->cn_attr = (int32 *) 0;
 
-		/* 7. Reference number */
-	node->nb_ref = wint32();
+		/* 8. Reference number */
+	node->cn_nbref = wint32();
 #ifdef DEBUG
-	dprintf(4)("\n\treference number = %ld\n", node->nb_ref);
+	dprintf(4)("\n\treference number = %ld\n", node->cn_nbref);
 #endif
 
-		/* 8. Node size */
-	node->size = wint32();
+		/* 9. Node size */
+	node->cn_size = wint32();
 #ifdef DEBUG
-	dprintf(4)("\tsize = %ld\n", node->size);
+	dprintf(4)("\tsize = %ld\n", node->cn_size);
 #endif
 
-	wread(&node->cn_deferred, 1);		/* Deferred flag */
-	wread(&node->cn_composite, 1);		/* Composite flag */
 	node->cn_creation_id = wint32();	/* Creation feature id */
-	node->static_id = wint32();			/* Static id of Class */
-	wread(&node->cn_disposed, 1);		/* Dispose flag */ 
-#ifdef DEBUG
-	dprintf(4)("\tdeferred = %ld\n", node->cn_deferred);
-	dprintf(4)("\tcomposite = %ld\n", node->cn_composite);
-	dprintf(4)("\tcreation_id = %ld\n",node->cn_creation_id);
-	dprintf(4)("\tstatic_id = %ld\n", node->static_id);
-	dprintf(4)("\tdispose_id = %ld\n", node->cn_disposed);
-#endif
+	node->cn_static_id = wint32();			/* Static id of Class */
 }
 
 rt_public void routid_updt(void)

@@ -40,8 +40,8 @@ feature -- Processing
 			from i := 1 until nb = 0 loop
 				a_class := classes.item (i)
 				if a_class /= Void and then a_class.degree_3_needed then
-					System.set_current_class (a_class)
 					Degree_output.put_degree_3 (a_class, nb)
+					System.set_current_class (a_class)
 					process_class (a_class)
 					a_class.remove_from_degree_3
 					count := count - 1

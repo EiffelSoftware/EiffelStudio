@@ -70,6 +70,7 @@ feature -- Access
 		once
 			create Result
 			Result.make
+			Result.enable_sensitive
 		end
 		
 	show_hide_display_window_command: GB_SHOW_HIDE_DISPLAY_WINDOW_COMMAND is
@@ -77,6 +78,7 @@ feature -- Access
 		once
 			create Result
 			Result.make
+			Result.enable_sensitive
 		end
 		
 	show_hide_component_viewer_command: GB_SHOW_HIDE_COMPONENT_VIEWER_COMMAND is

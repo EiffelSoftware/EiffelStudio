@@ -82,12 +82,9 @@ feature -- Basic Operations
 					until
 						is_unique or i > method.arguments.count
 					loop
-						type := method.arguments.item (i).type.name
-						index := type.last_index_of ('.', type.count)
-						if index > 0 then
-							type := type.substring (index + 1, type.count) 
-						end
-						name := name + "_" + formatted_variable_name (type)
+						name.append_character ('_')
+						name.append (
+							formatted_variable_type_name (method.arguments.item (i).type.name))
 						is_unique := is_unique_signature (method, method_list, i)
 						i := i + 1
 					end
@@ -106,12 +103,9 @@ feature -- Basic Operations
 					until
 						i > param_count
 					loop
-						type := first_method.arguments.item (i).type.name
-						index := type.last_index_of ('.', type.count)
-						if index > 0 then
-							type := type.substring (index + 1, type.count) 
-						end
-						name := name + "_" + formatted_variable_name (type)
+						name.append_character ('_')
+						name.append (
+							formatted_variable_type_name (first_method.arguments.item (i).type.name))
 						i := i + 1
 					end
 					first_method.set_eiffel_name (unique_feature_name (name))
@@ -152,46 +146,46 @@ feature -- Basic Operations
 			solved: solved
 		end
 			
-		is_unique_signature (method: METHOD_SOLVER; method_list: LIST [METHOD_SOLVER]; index: INTEGER): BOOLEAN is
-				-- Are parameter types starting from index `index' in `method' unique in `method_list'?
-			require
-				non_void_method: method /= Void
-				non_void_list: method_list /= Void
-				valid_list: method_list.has (method)
-				valid_index: index >= 0
-			local
-				meth: METHOD_SOLVER
-				count, i: INTEGER
-				cursor: CURSOR
-			do
-				Result := True
-				if method.arguments.count /= 0 then
-					cursor := method_list.cursor
-					from
-						method_list.start
-					until
-						method_list.after or not Result
-					loop
-						meth := method_list.item
-						count := meth.arguments.count.min (method.arguments.count)
-						if count >= index then
-							from
-								i := index
-							until
-								i > count or not Result
-							loop
-								Result := method_list.item = method or i > 0 and then
-											not method_list.item.arguments.item (i).type.is_equal (method.arguments.item (i).type)
-								i := i + 1
-							end
+	is_unique_signature (method: METHOD_SOLVER; method_list: LIST [METHOD_SOLVER]; index: INTEGER): BOOLEAN is
+			-- Are parameter types starting from index `index' in `method' unique in `method_list'?
+		require
+			non_void_method: method /= Void
+			non_void_list: method_list /= Void
+			valid_list: method_list.has (method)
+			valid_index: index >= 0
+		local
+			meth: METHOD_SOLVER
+			count, i: INTEGER
+			cursor: CURSOR
+		do
+			Result := True
+			if method.arguments.count /= 0 then
+				cursor := method_list.cursor
+				from
+					method_list.start
+				until
+					method_list.after or not Result
+				loop
+					meth := method_list.item
+					count := meth.arguments.count.min (method.arguments.count)
+					if count >= index then
+						from
+							i := index
+						until
+							i > count or not Result
+						loop
+							Result := method_list.item = method or i > 0 and then
+										not method_list.item.arguments.item (i).type.is_equal (method.arguments.item (i).type)
+							i := i + 1
 						end
-						method_list.forth
 					end
-					method_list.go_to (cursor)
+					method_list.forth
 				end
-			ensure
-				method_list_position_identical: method_list.cursor.is_equal (old method_list.cursor)
+				method_list.go_to (cursor)
 			end
+		ensure
+			method_list_position_identical: method_list.cursor.is_equal (old method_list.cursor)
+		end
 
 feature -- Status Report
 

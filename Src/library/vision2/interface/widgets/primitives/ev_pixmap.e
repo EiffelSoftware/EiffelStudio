@@ -45,13 +45,14 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_free: BOOLEAN is
-			-- Is the pixmap free and then can be added in a
-			-- control?
+	is_locked: BOOLEAN is
+			-- Is the pixmap already set in a drawing area?
+			-- If so, we can not set it to other pixmapable
+			-- widgets.
 		require
 			exists: not destroyed
 		do
-			Result := implementation.is_free
+			Result := implementation.is_locked
 		end
 
 feature -- Measurement

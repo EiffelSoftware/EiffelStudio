@@ -110,6 +110,12 @@ feature -- Access
 	type_id: INTEGER
 			-- Identification of the class type
 
+	last_type_token, last_implementation_type_token, last_create_type_token: INTEGER
+			-- Last definition tokens computed for Current. They correspond respectively
+			-- to the associated interface, the associated implementation and the
+			-- factory class.
+			--| Only meaningful in IL code generation.
+
 	skeleton: SKELETON
 			-- Skeleton of the class type
 
@@ -185,6 +191,36 @@ feature -- Settings
 			skeleton := s
 		ensure
 			skeleton_set: skeleton = s
+		end
+
+	set_last_type_token (v: like last_type_token) is
+			-- Assign `v' to `last_type_token'.
+		require
+			v_not_zero: v /= 0
+		do
+			last_type_token := v
+		ensure
+			last_type_token_set: last_type_token = v
+		end
+
+	set_last_implementation_type_token (v: like last_implementation_type_token) is
+			-- Assign `v' to `last_implementation_type_token'.
+		require
+			v_not_zero: v /= 0
+		do
+			last_implementation_type_token := v
+		ensure
+			last_implementation_type_token_set: last_implementation_type_token = v
+		end
+
+	set_last_create_type_token (v: like last_create_type_token) is
+			-- Assign `v' to `last_create_type_token'.
+		require
+			v_not_zero: v /= 0
+		do
+			last_create_type_token := v
+		ensure
+			last_create_type_token_set: last_create_type_token = v
 		end
 
 	set_has_cpp_externals (b: BOOLEAN) is

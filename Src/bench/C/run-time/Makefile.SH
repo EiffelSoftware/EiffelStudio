@@ -215,7 +215,11 @@ ESRC = \
 MT_LOBJ = \
 	MTeif_special_table.o \
 	MTeif_once.o \
+	MTcompress.o \
+	MToption.o	\
 	MTconsole.o \
+	MTdle.o \
+	MTobject_id.o \
 	MTmalloc.o \
 	MTgarcol.o \
 	MTlocal.o \
@@ -261,6 +265,10 @@ MT_LOBJ = \
 LOBJ = \
 	eif_special_table.o \
 	eif_once.o \
+	compress.o \
+	option.o	\
+	dle.o \
+	object_id.o \
 	console.o \
 	malloc.o \
 	garcol.o \

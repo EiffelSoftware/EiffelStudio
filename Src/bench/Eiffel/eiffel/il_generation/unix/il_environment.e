@@ -73,8 +73,6 @@ feature -- Access
 
 	installed_runtimes: LINEAR [STRING] is
 			-- List all installed version of the runtime.
-		require
-			has_dotnet: is_dotnet_installed
 		do
 			create {ARRAYED_LIST [STRING]} Result.make (1)
 		ensure

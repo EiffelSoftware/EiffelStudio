@@ -618,13 +618,18 @@ feature -- Element change
 			if not tabs_emitted then
 				emit_tabs
 			end
-			tmp := clone (s)
-			tmp.to_lower
-			classi := Universe.class_named (tmp, class_c.cluster)
-			if classi = Void then
+
+			if is_for_case then
 				text.add_default_string (s)
 			else
-				text.add_classi (classi, s)
+				tmp := clone (s)
+				tmp.to_lower
+				classi := Universe.class_named (tmp, class_c.cluster)
+				if classi = Void then
+					text.add_default_string (s)
+				else
+					text.add_classi (classi, s)
+				end
 			end
 		end
 

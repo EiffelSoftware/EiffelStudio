@@ -22,6 +22,7 @@
 #include "hashin.h"
 #include "bits.h"
 
+
 #ifndef lint
 private char *rcsid =
 	"$Id$";
@@ -108,6 +109,7 @@ register4 long nbr;
 	char found;
 	int16 curr_dtype;
 	uint32 type, *types;
+	long offset_bis;					/* offset already taken :-) */
 
 	curr_dtype = Dtype(curr);	/* Dynamic type of current object instance */
 	obj_desc = &System(dtype); 	/* Dynamic type where strip is defined */
@@ -126,8 +128,7 @@ register4 long nbr;
 	nstcall = 0;
 	(eif_arrmake)(array, 1L, stripped_nbr);	
 								/* Call feature `make' in class ARRAY[ANY] */
-	sp = *(char **) array;
-	epush (&loc_stack, &sp);	/* Protect address in case it moves */
+	offset_bis = NULL;
 
 	while (nbr_attr--) {
 		found = NULL;
@@ -183,11 +184,18 @@ printf ("bug in metamorphosis for double in final mode\n");
 				panic("unknown attribute type");
 				/* NOTREACHED */
 			}
+	/* It might seem heavy to add the offset each time instead
+	 * of taking a pointer which would move from one address
+	 * to the following one. But `array' can move and such a pointer 
+	 * should be protected. If we push this pointer on the loc_stack,
+	 * it is lost on the first call to the GC. Waiting for a better idea.
+	 * -- Fabrice.
+	 */		
+		sp = *(char **) array + offset_bis;
 		*((char **) sp) = new_obj;
-		sp += sizeof (char *);
+		offset_bis = offset_bis + sizeof (char *);
 		}
 	}
-	epop(&loc_stack, 1);		/* Remove protection for area */
 	epop(&loc_stack, 1);		/* Remove protection for array */
 	return array;
 }

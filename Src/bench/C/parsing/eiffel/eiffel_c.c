@@ -424,8 +424,8 @@ int sign;
 	char *result, *value;
  
 	if (sign) {
-		value = (char *) malloc(strlen(a_real) + 1);
-		strcat(value, "-");
+		value = (char *) malloc((strlen(a_real) + 2) * sizeof(char));
+		strcpy(value, "-");
 		strcat(value, a_real);
 	} else
 		value = a_real;

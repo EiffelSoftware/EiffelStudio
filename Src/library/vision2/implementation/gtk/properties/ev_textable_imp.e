@@ -73,8 +73,6 @@ feature -- Element change
 	
 	set_text (a_text: STRING) is
 			-- Assign `a_text' to `text'.
-		local
-			p: POINTER
 		do
 			C.gtk_widget_show (text_label)
 			C.gtk_label_set_text (text_label, eiffel_to_c (a_text))
@@ -122,6 +120,9 @@ end -- class EV_TEXTABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.25  2000/03/27 18:03:28  brendel
+--| Removed unused local variable.
+--|
 --| Revision 1.24  2000/03/03 20:09:11  king
 --| Corrected incorrect equivalence of pointer to void
 --|

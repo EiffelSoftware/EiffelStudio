@@ -16,7 +16,7 @@ class MSLS
 inherit
 	TWO_WAY_SORTED_SET [INTEGER] 
 
-creation
+create
 	make
 
 feature

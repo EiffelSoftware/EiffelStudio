@@ -18,7 +18,7 @@ class
 inherit
 	BINARY_SEARCH_TREE_SET [INTEGER] 
 
-creation
+create
 	make
 
 feature

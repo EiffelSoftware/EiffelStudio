@@ -15,7 +15,7 @@ inherit
 			cycle, execute, fill_menu
 		end
 
-creation
+create
 	make
 
 feature
@@ -27,8 +27,8 @@ feature
 
 	make is
 		do
-			!! l.make
-			!! driver.make
+			create  l.make
+			create  driver.make
 			driver.new_menu ("SORTED LIST DEMO%N%N[XX] shows element at cursor position%N")
 			fill_menu
 			cycle

@@ -231,10 +231,6 @@ feature -- Execution
 	interrupt is
 			-- Send an interrupt to the application
 			-- which will stop at the next breakable line number
-		local
-			l_enum: ICOR_DEBUG_THREAD_ENUM
-			l_thread: ICOR_DEBUG_THREAD
-			l_array: ARRAY [ICOR_DEBUG_THREAD]
 		do	
 			if eifnet_debugger.icor_debug_process /= Void then
 				debug ("debugger_eifnet_data")
@@ -427,10 +423,9 @@ feature {NONE} -- Stepping
 	step_range (a_bstep_in: BOOLEAN) is
 		local
 			l_current_il_offset: INTEGER
-			l_next_breakable_offset: INTEGER
 			l_call_stack_element: CALL_STACK_ELEMENT_DOTNET
 			do_not_use_range: BOOLEAN
-			l_ranges:  ARRAY[TUPLE[INTEGER,INTEGER]]
+			l_ranges:  ARRAY [TUPLE [INTEGER,INTEGER]]
 		do		
 			do_not_use_range := False
 			if do_not_use_range then
@@ -451,8 +446,9 @@ feature {NONE} -- Stepping
 					end
 
 					l_ranges := Il_debug_info_recorder.next_feature_breakable_il_range_for (
-									l_call_stack_element.routine.associated_feature_i
-									,l_current_il_offset
+									l_call_stack_element.dynamic_type,
+									l_call_stack_element.routine.associated_feature_i,
+									l_current_il_offset
 									)	
 									
 					if l_ranges /= Void then
@@ -575,7 +571,6 @@ feature -- BreakPoints
 			end
 			
 			l_class_c := f.written_class			
-			l_line := Il_debug_info_recorder.feature_breakable_il_line_for (f.associated_feature_i, i)
 
 			l_is_entry_point := is_entry_point (f)
 
@@ -587,6 +582,9 @@ feature -- BreakPoints
 				l_class_type_list.after
 			loop
 				l_class_type := l_class_type_list.item
+
+				l_line := Il_debug_info_recorder.feature_breakable_il_line_for (l_class_type, f.associated_feature_i, i)
+
 				l_module_name := Il_debug_info_recorder.module_file_name_for_class (l_class_type)			
 				l_class_token := l_class_type.last_implementation_type_token
 				l_feature_token := Il_debug_info_recorder.feature_token_for_feat_and_class_type (f.associated_feature_i, l_class_type)
@@ -623,7 +621,6 @@ feature -- BreakPoints
 			end
 			
 			l_class_c := f.written_class			
-			l_line := Il_debug_info_recorder.feature_breakable_il_line_for (f.associated_feature_i, i)
 
 			l_is_entry_point := is_entry_point (f)
 
@@ -635,6 +632,7 @@ feature -- BreakPoints
 				l_class_type_list.after
 			loop
 				l_class_type := l_class_type_list.item
+				l_line := Il_debug_info_recorder.feature_breakable_il_line_for (l_class_type, f.associated_feature_i, i)
 				l_module_name := Il_debug_info_recorder.module_file_name_for_class (l_class_type)
 				
 				l_class_token := l_class_type.last_implementation_type_token
@@ -866,9 +864,9 @@ feature -- Call stack related
 	
 					if l_class_type /= Void and then l_feature_i /= Void then
 						l_il_offset := l_frame_il.get_ip
-						l_eiffel_bp_slot := Il_debug_info_recorder.feature_eiffel_breakable_line_for_il_offset(l_feature_i, l_il_offset)
+						l_eiffel_bp_slot := Il_debug_info_recorder.feature_eiffel_breakable_line_for_il_offset(l_class_type, l_feature_i, l_il_offset)
 						l_output.append_string ("  + <" 
-							+ Il_debug_info_recorder.feature_eiffel_breakable_line_for_il_offset(l_feature_i, l_il_offset).out
+							+ l_eiffel_bp_slot.out
 							+ " | " 
 							+ l_il_offset.out + ":0x" + l_il_offset.to_hex_string + "> "
 							+ l_class_name + "." + l_feature_name + "%N"

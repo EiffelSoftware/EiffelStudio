@@ -149,6 +149,7 @@ feature {NONE} -- debugger behavior
 			l_potential_next_il_offset: INTEGER
 			l_il_debug_info: IL_DEBUG_INFO_RECORDER
 			l_feat: FEATURE_I
+			l_class_type: CLASS_TYPE
 		do
 			if Eifnet_debugger_info.last_control_mode_is_stepping then
 				l_previous_stack_info := Eifnet_debugger_info.previous_stack_info
@@ -163,7 +164,11 @@ feature {NONE} -- debugger behavior
 							l_copy.current_class_token, 
 							l_copy.current_feature_token
 						)
-				l_potential_next_il_offset := l_il_debug_info.next_feature_breakable_il_offset_for (l_feat, l_copy.current_il_offset)
+				l_class_type := l_il_debug_info.class_type_for_module_class_token (
+							l_copy.current_module_name,				
+							l_copy.current_class_token
+						)
+				l_potential_next_il_offset := l_il_debug_info.next_feature_breakable_il_offset_for (l_class_type, l_feat, l_copy.current_il_offset)
 				
 				l_copy.set_current_il_offset (l_potential_next_il_offset)
 				if l_copy.is_equal (l_current_stack_info) then
@@ -193,7 +198,8 @@ feature {NONE} -- debugger behavior
 			
 			l_module_name: STRING
 			l_current_il_offset: INTEGER
-			l_feat: FEATURE_I		
+			l_feat: FEATURE_I
+			l_class_type: CLASS_TYPE
 			l_current_stack_info: EIFNET_DEBUGGER_STACK_INFO
 		do
 			l_current_stack_info := Eifnet_debugger_info.current_stack_info
@@ -234,6 +240,7 @@ feature {NONE} -- debugger behavior
 					end
 					Eifnet_debugger_info.controller.do_step_out
 				else
+					l_class_type := Il_debug_info_recorder.class_type_for_module_class_token (l_module_name, l_class_token)
 					l_feat_token := l_current_stack_info.current_feature_token
 					if l_feat_token > 0 then
 						inside_valid_feature_call_stack_stepping := Il_debug_info_recorder.has_feature_info_about_module_class_token (l_module_name, l_class_token, l_feat_token)
@@ -256,7 +263,7 @@ feature {NONE} -- debugger behavior
 								--| Let's skip the first `nop' , non sense for the eStudio debugger					
 							Eifnet_debugger_info.controller.do_step_into					
 						else
-							is_valid_callstack_offset := Il_debug_info_recorder.is_il_offset_related_to_eiffel_line (l_feat, l_current_il_offset)					
+							is_valid_callstack_offset := Il_debug_info_recorder.is_il_offset_related_to_eiffel_line (l_class_type, l_feat, l_current_il_offset)					
 							if 
 								(not Eifnet_debugger_info.last_control_mode_is_step_out)
 								and then (not is_valid_callstack_offset) 

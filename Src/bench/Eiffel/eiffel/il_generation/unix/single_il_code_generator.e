@@ -74,6 +74,9 @@ feature -- IL Generation
 			set_current_type_id (class_type.implementation_id)
 			current_class_token := class_type_token (current_type_id)
 
+				-- Clean IL recorded information
+			Il_debug_info_recorder.clean_class_type_info_for (class_type)			
+
 				-- Define all features used by ISE runtime.
 			if class_c.simple_conform_to (System.any_class.compiled_class) then
 				define_runtime_features (class_type)

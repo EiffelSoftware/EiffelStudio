@@ -3465,7 +3465,7 @@ feature -- Once management
 				feature {MD_FIELD_ATTRIBUTES}.Public | feature {MD_FIELD_ATTRIBUTES}.Static,
 				done_sig)
 
-			Il_debug_info_recorder.record_once_info (current_class_type, name, done_token, 0)
+			Il_debug_info_recorder.record_once_info (current_class_type, Byte_context.current_feature, name, done_token, 0)
 		end
 
 	generate_once_result_info (name: STRING; type_i: TYPE_I) is
@@ -3487,7 +3487,7 @@ feature -- Once management
 				current_class_token,
 				feature {MD_FIELD_ATTRIBUTES}.Public | feature {MD_FIELD_ATTRIBUTES}.Static, l_sig)
 				
-			Il_debug_info_recorder.record_once_info (current_class_type, name, 0, result_token)
+			Il_debug_info_recorder.record_once_info (current_class_type, Byte_context.current_feature, name, 0, result_token)
 		end
 
 	generate_once_computed is
@@ -4295,7 +4295,7 @@ feature -- Line info
 				dbg_end_columns.force (1000, l_pos)
 				dbg_offsets_count := l_pos + 1
 
-				Il_debug_info_recorder.record_line_info (Byte_context.current_feature, method_body.count, n)
+				Il_debug_info_recorder.record_line_info (current_class_type, Byte_context.current_feature, method_body.count, n)
 				method_body.put_nop
 			end
 		end
@@ -4327,8 +4327,8 @@ feature -- Line info
 				dbg_end_lines.force (location.line_number, l_pos)
 				dbg_end_columns.force (location.end_column_position, l_pos)
 				dbg_offsets_count := l_pos + 1
-
-				Il_debug_info_recorder.record_line_info (Byte_context.current_feature, method_body.count, location.line_number)			
+				
+				Il_debug_info_recorder.record_line_info (current_class_type, Byte_context.current_feature, method_body.count, location.line_number)			
 				method_body.put_nop
 			end
 		end

@@ -8,6 +8,15 @@
 			</image>
 		</paragraph>
 		<paragraph>A directory dialog will be displayed from which you can select the Build project file that you wish to retrieve. All build project files are named 'build_project.bpr' and are qualified by the directory in which they reside.</paragraph>
+<paragraph>You may also a recent EiffelBuild project via the 'Recent Projects' entry of the 'file' menu as shown below:</paragraph>
+<paragraph>
+			<image>
+				<url>/images/eiffelbuild/screenshots/recent_projects.png</url>
+			</image>
+		</paragraph>
+<paragraph>This list contains the most recent projects that have been used within EiffelBuild, and if none are available, this list is empty and the menu option disabled.
+
+</paragraph>
 		<seealso>
 			<bold>See Also</bold>
 			<line_break/>

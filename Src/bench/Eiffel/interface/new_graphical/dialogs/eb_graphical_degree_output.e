@@ -98,9 +98,11 @@ feature -- Start output features
 			dialog.set_current_entity (Empty_string)
 
 			dialog.set_icon_name (Interface_names.d_Degree + " " + current_degree.out)
-			if current_degree = 2 then
-					-- Cannot cancel a compilation after end of degree 3
-					-- because we do not save a compilation context after.
+			if current_degree = 2 or current_degree = -3 then
+					-- Cannot cancel a compilation after end of degree 3, or
+					-- after degree -2 because we need to generate code at
+					-- this stage, and we cannot save what we have generated
+					-- and what we have not generated.
 				dialog.disable_cancel
 			elseif current_degree = -2 or current_degree = 5 then
 					-- A finalization can be stopped at any time since it implies

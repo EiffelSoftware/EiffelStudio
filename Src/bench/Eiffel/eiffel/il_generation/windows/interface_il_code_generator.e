@@ -10,7 +10,7 @@ class
 	INTERFACE_IL_CODE_GENERATOR
 
 inherit
-	IL_CODE_GENERATOR
+	CIL_CODE_GENERATOR
 		redefine
 			make
 		end
@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Initialize generator.
 		do
-			Precursor {IL_CODE_GENERATOR}
+			Precursor {CIL_CODE_GENERATOR}
 			create processed_tbl.make (20)
 			create rout_ids_tbl.make (50)
 		end

@@ -84,12 +84,13 @@ feature -- Status Setting
 			a_success := C.gtk_text_forward_delete (clipboard_widget, C.gtk_text_get_length (clipboard_widget))
 			C.gtk_text_insert (clipboard_widget, NULL, NULL, NULL, $temp_string, -1)
 			C.gtk_editable_select_region (clipboard_widget, 0, -1)
-
-     			a_success := C.gtk_selection_owner_set (
-					clipboard_widget,
-					C.gdk_atom_intern (eiffel_to_c ("CLIPBOARD"), 0),
- 					C.GDK_CURRENT_TIME
-				)
+			
+			temp_string := ("CLIPBOARD").to_c
+     		a_success := C.gtk_selection_owner_set (
+				clipboard_widget,
+				C.gdk_atom_intern ($temp_string, 0),
+ 				C.GDK_CURRENT_TIME
+			)
 		end
 
 feature {EV_ANY_I}

@@ -2,7 +2,6 @@
 
 class INV_MELTED_INFO
 
-
 inherit
 
 	MELTED_INFO

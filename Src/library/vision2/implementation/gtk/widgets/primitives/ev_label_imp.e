@@ -20,8 +20,6 @@ inherit
 	EV_TEXTABLE_IMP
                 rename
                         label_widget as widget
-		redefine
-			make_with_text
                 end
 
 creation

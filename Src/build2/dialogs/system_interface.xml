@@ -7,12 +7,9 @@
 		<Name >modify_pixmap_dialog_title</Name>
 		<Value >Modify Pixmap</Value>
 		</Constant>
-	<Constant ><type >PIXMAP</type>
-		<Name >lightbulb_png</Name>
-		<Value ></Value>
-		<is_absolute >False</is_absolute>
-		<Directory >png_location</Directory>
-		<Filename >lightbulb.png</Filename>
+	<Constant ><type >STRING</type>
+		<Name >close_text</Name>
+		<Value >Close</Value>
 		</Constant>
 	<Constant ><type >STRING</type>
 		<Name >constants_dialog_title</Name>
@@ -23,16 +20,19 @@
 		<Value >80</Value>
 		</Constant>
 	<Constant ><type >STRING</type>
-		<Name >ok_button_text</Name>
-		<Value >OK</Value>
-		</Constant>
-	<Constant ><type >STRING</type>
 		<Name >next_tip_text</Name>
 		<Value >Next tip</Value>
 		</Constant>
 	<Constant ><type >STRING</type>
 		<Name >system_window_title</Name>
 		<Value >Project Configuration</Value>
+		</Constant>
+	<Constant ><type >PIXMAP</type>
+		<Name >lightbulb_png</Name>
+		<Value ></Value>
+		<is_absolute >False</is_absolute>
+		<Directory >png_location</Directory>
+		<Filename >lightbulb.png</Filename>
 		</Constant>
 	<Constant ><type >STRING</type>
 		<Name >new_button_add_text</Name>
@@ -54,13 +54,13 @@
 		<Name >pixmap_settings_dialog_title</Name>
 		<Value >Pixmap Selection</Value>
 		</Constant>
-	<Constant ><type >STRING</type>
-		<Name >modify_button_text</Name>
-		<Value >Modify</Value>
-		</Constant>
 	<Constant ><type >INTEGER</type>
 		<Name >negative</Name>
 		<Value >-100</Value>
+		</Constant>
+	<Constant ><type >STRING</type>
+		<Name >ok_button_text</Name>
+		<Value >OK</Value>
 		</Constant>
 	<Constant ><type >INTEGER</type>
 		<Name >large_spacing_width</Name>
@@ -75,8 +75,8 @@
 		<Value >Cancel</Value>
 		</Constant>
 	<Constant ><type >STRING</type>
-		<Name >close_text</Name>
-		<Value >Close</Value>
+		<Name >modify_button_text</Name>
+		<Value >Modify</Value>
 		</Constant>
 	<Constant ><type >DIRECTORY</type>
 		<Name >png_location</Name>
@@ -1742,6 +1742,7 @@ Please enter the name of a DIRECTORYconstant which will be used.]]></Text>
 					<EV_WIDGET />
 					<EV_TEXT_COMPONENT />
 					<Events ><Event >change_actions EV_TEXT_COMPONENT_ACTION_SEQUENCES text_changed</Event>
+						<Event >return_actions EV_TEXT_FIELD_ACTION_SEQUENCES return_pressed</Event>
 						</Events>
 					</item>
 				</item>
@@ -1781,7 +1782,8 @@ Please enter the name of a DIRECTORYconstant which will be used.]]></Text>
 						</Internal_properties>
 					<EV_COLORIZABLE />
 					<EV_FONTABLE />
-					<EV_SENSITIVE />
+					<EV_SENSITIVE ><Is_sensitive >False</Is_sensitive>
+						</EV_SENSITIVE>
 					<EV_TEXTABLE ><Text ><Constant >ok_button_text</Constant>
 							</Text>
 						</EV_TEXTABLE>

@@ -44,7 +44,9 @@ feature {NONE} -- Initialization
 		do
 			default_create
 			set_foreground_color (create {EV_COLOR}.make_with_rgb (
-				random_real, random_real, random_real))
+				random_real / 2 + 0.5,
+				random_real / 2 + 0.5,
+				random_real / 2 + 0.5))
 			set_line_width (random_from_range (1, 8))
 			set_random_values_for_points
 		end
@@ -94,12 +96,21 @@ feature -- Miscellaneous
 			p: EV_PIXMAP
 			a_world: EV_FIGURE_WORLD
 			a_projector: EV_STANDARD_PROJECTION
+			n: INTEGER
 		do
 			create p.make_with_size (300, 100)
 			create a_world
 			a_world.extend (Current)
 			create a_projector.make (a_world, p)
 			a_projector.project
+			p.set_foreground_color (create {EV_COLOR}.make_with_rgb (0.7, 0.7, 0.7))
+			p.set_font (create {EV_FONT})
+			from n := 1 until n > point_count loop
+				p.draw_text (3, n * 12 + 3,
+					"(" + get_point_by_index (n).x_abs.out +
+					", " + get_point_by_index (n).y_abs.out + ")")
+				n := n + 1
+			end
 			Result := p
 		end
 

@@ -76,7 +76,7 @@ feature -- Basic operations
 			
 			create c_header_file_name.make (100)
 			if not Non_generated_type_libraries.has (type_library_descriptor.guid) then
-				c_header_file_name := header_name (name)
+				c_header_file_name := header_name (namespace, name)
 			end
 
 			create Result.make (Current)

@@ -53,7 +53,7 @@ feature -- Basic operations
 			system_descriptor.add_c_type (name)
 			
 			create c_header_file_name.make (100)
-				c_header_file_name := header_name (name)
+				c_header_file_name := header_name (namespace, name)
 
 		--	create_field_descriptors (a_type_info)
 		--	size_of_instance := a_type_info.type_attr.size_instance

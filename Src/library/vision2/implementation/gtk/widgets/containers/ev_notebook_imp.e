@@ -34,10 +34,26 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	tab_position: STRING is
-		do
-			check
-				this_is_a_broken_feature_it_should_return_int: false
+	tab_position: INTEGER is
+			-- Position of the tabs.
+ 			-- "left" for left position.
+ 			-- "right" for right position.
+ 			-- "top" for top position.
+ 			-- "bottom" for bottom position.
+ 		local
+ 			pos: INTEGER
+ 		do
+ 			pos := c_gtk_notebook_tab_position (widget)
+ 			inspect
+ 				pos
+ 			when 0 then
+ 				Result := Tab_left
+ 			when 1 then
+ 				Result := Tab_right
+ 			when 2 then
+ 				Result := Tab_top
+ 			when 3 then
+ 				Result := Tab_bottom
 			end
 		end
 
@@ -61,13 +77,13 @@ feature -- Status setting
 			gtk_pos: INTEGER
 		do
 			inspect pos
-			when Pos_left then
+			when Tab_left then
 				gtk_pos := 0
-			when Pos_right then
+			when Tab_right then
 				gtk_pos := 1
-			when Pos_top then
+			when Tab_top then
 				gtk_pos := 2
-			when Pos_bottom then
+			when Tab_bottom then
 				gtk_pos := 3
 			end
 			gtk_notebook_set_tab_pos (widget, gtk_pos)

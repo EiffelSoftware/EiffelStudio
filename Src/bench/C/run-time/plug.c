@@ -29,6 +29,7 @@ rt_private char *rcsid =
 	"$Id$";
 #endif
 
+#ifndef EIF_THREADS
 /* The nested call flag is sete to 1 when a feature call is made within a
  * dot expression. We need to check the invariant before and after the call
  * on those features. This global variable is saved immediately in a local
@@ -36,6 +37,7 @@ rt_private char *rcsid =
  * parameter.
  */
 rt_public int nstcall = 0;	/* Is current call a nested one? */ /* %%ss mt */
+#endif /* EIF_THREADS */
 
 rt_private void recursive_chkinv(EIF_CONTEXT int dtype, char *obj, int where);		/* Internal invariant control loop */
 
@@ -293,9 +295,11 @@ rt_public long sp_count(char *spobject)
  * Invariant checking
  */
 
-rt_private char *inv_mark_tablep;	/* Marking table to avoid checking the same 
+#ifndef EIF_THREADS
+rt_private char *inv_mark_tablep = (char *) 0;	/* Marking table to avoid checking the same 
 									 * invariant several times
 									 */ /* %%ss mt renamed conflicting with interp.c */
+#endif /* EIF_THREADS */
 
 rt_public void chkinv (EIF_CONTEXT char *obj, int where)
           

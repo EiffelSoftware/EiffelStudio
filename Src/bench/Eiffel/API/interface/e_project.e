@@ -582,7 +582,7 @@ feature {NONE} -- Implementation
 			set: file_status = status
 		end;
 
-feature {PRECOMP_R} -- Implementation
+feature {PRECOMP_R, EXTENDIBLE_R} -- Implementation
 
 	set_system (s: like system) is
 		do

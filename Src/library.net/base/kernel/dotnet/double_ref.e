@@ -230,7 +230,7 @@ feature -- Basic operations
 			Result.set_item (item / other.item)
 		end
 
-	infix "^" (other: NUMERIC): DOUBLE is
+	infix "^" (other: DOUBLE): DOUBLE is
 			-- Current double to the power `other'
 		do
 			Result := item ^ other

@@ -18,7 +18,7 @@ doc:<file name="bits.c" header="eif_bits.h" version="$Id$" summary="Primitives f
 */
 
 #include "eif_portable.h"
-#include "eif_garcol.h"
+#include "rt_garcol.h"
 #include "rt_malloc.h"
 #include "eif_cecil.h"
 #include "rt_macros.h"					/* for BIT_PACKSIZE, BIT_UNIT */

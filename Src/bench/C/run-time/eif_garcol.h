@@ -57,60 +57,29 @@ RT_LNK struct stack once_set;	/* Once functions */
 /* Exported data-structure declarations */
 RT_LNK EIF_REFERENCE root_obj;	/* Address of `root' object */	
 
-extern int epush(register struct stack *stk, register void *value);	/* Push an addess on a run-time stack */
-
-#ifdef ISE_GC
-
-extern int is_in_rem_set (EIF_REFERENCE obj);	/* Is obj in rem-set? */
-extern int is_in_special_rem_set (EIF_REFERENCE obj);	/* Is obj in special_rem_set? */
 /* General-purpose exported functions */
-#endif
 RT_LNK void plsc(void);					/* Partial scavenging */
-#ifdef ISE_GC
-extern void urgent_plsc(EIF_REFERENCE *object);			/* Partial scavenge with given local root */
-#endif
 RT_LNK void reclaim(void);				/* Reclaim all the objects */
 RT_LNK int collect(void);				/* Generation-based collector */
 #ifdef ISE_GC
-extern int acollect(void);				/* Automatic garbage collection */
-extern int scollect(int (*gc_func) (void), int i);				/* Collection with statistics */
 RT_LNK void eremb(EIF_REFERENCE obj);				/* Remembers old object */
 RT_LNK void erembq(EIF_REFERENCE obj);				/* Quick veersion (no GC call) of eremb */
 RT_LNK void special_erembq(EIF_REFERENCE obj, EIF_INTEGER offst);				
 							/* Quick version (no GC call) of eremb for
 							 *special objects full of references.*/
-#ifdef EIF_REM_SET_OPTIMIZATION
-rt_public int special_rem_remove (EIF_REFERENCE obj);
-extern int special_erembq_replace(EIF_REFERENCE old, EIF_REFERENCE val);				
-							/* Replace `old' by `val' in special_rem_set. */
-extern int eif_promote_special (register EIF_REFERENCE object);		
-							/* Does an special refers to young ones ? */
-extern int is_in_special_rem_set (register EIF_REFERENCE object);
-#endif	/* EIF_REM_SET_OPTIMIZATION */
 #endif
 RT_LNK char *onceset(void);				/* Recording of once function result */
 RT_LNK void new_onceset(EIF_REFERENCE);				/* Recording of once function result */
 #ifdef EIF_THREADS
 RT_LNK void globalonceset(EIF_REFERENCE);			/* Recording of once function result */
 #endif
-#ifdef ISE_GC
-
-extern EIF_REFERENCE *eif_once_set_addr (EIF_REFERENCE once);
-	/* Get stack address of "once" from "once_set". */
-extern int refers_new_object(register EIF_REFERENCE object);		/* Does an object refers to young ones ? */
-#endif
 RT_LNK void gc_stop(void);				/* Stop the garbage collector */
 RT_LNK void gc_run(void);				/* Restart the garbage collector */
-#ifdef ISE_GC
-extern char *to_chunk(void);			/* Base address of partial 'to' chunk */
-extern void gfree(register union overhead *zone);	/* Garbage collector's free routine */
-
-#endif /* ISE_GC */
 
 #ifdef EIF_THREADS
 #define EIF_GLOBAL_ONCE_MUTEX_LOCK 		eif_thr_mutex_lock(eif_global_once_mutex)
 #define EIF_GLOBAL_ONCE_MUTEX_UNLOCK	eif_thr_mutex_unlock(eif_global_once_mutex)
-extern EIF_MUTEX_TYPE *eif_global_once_mutex;	/* Mutex used to protect insertion of global onces in `global_once_set' */
+RT_LNK EIF_MUTEX_TYPE *eif_global_once_mutex;	/* Mutex used to protect insertion of global onces in `global_once_set' */
 #endif
 
 

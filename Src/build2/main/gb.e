@@ -72,7 +72,6 @@ feature {NONE} -- Initialization
 			wizard_manager: WIZARD_PROJECT_MANAGER
 			project_settings: GB_PROJECT_SETTINGS
 			file_handler: GB_SIMPLE_XML_FILE_HANDLER
-			visual_studio_information: VISUAL_STUDIO_INFORMATION
 		do
 			if command_line.argument_array.count = 1 then
 					-- If `argument_array' has one element,
@@ -100,7 +99,6 @@ feature {NONE} -- Initialization
 					launch
 				else
 					system_status.set_current_project (project_settings)
-					create visual_studio_information
 					system_status.enable_wizard_system
 					create wizard_manager.make_and_launch_as_modify_wizard (visual_studio_information.Visual_studio_pixmap_location)
 				end

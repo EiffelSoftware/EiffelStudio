@@ -136,7 +136,6 @@ feature -- Basic operation
 			--| handle any events that may be in its queue.
 		local
 			msg: WEL_MSG
-			done: BOOLEAN
 		do
 			from
 				create msg.make

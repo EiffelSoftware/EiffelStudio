@@ -1,12 +1,10 @@
 indexing
 
-	description: 
-		"Resource file name server.";
+	description: "Resource file name server";
 	date: "$Date$";
 	revision: "$Revision $"
 
 class RESOURCE_FILES
-
 
 inherit
 

@@ -264,6 +264,7 @@ feature {NONE} -- Implementation
 				type_consumers.after or done
 			loop
 				type_consumer := type_consumers.item_for_iteration
+				type_consumers.remove (type_consumers.key_for_iteration)
 				type_consumer.initialize
 				type := type_consumer.consumed_type
 				types.put (type.dotnet_name, type.eiffel_name)
@@ -287,7 +288,6 @@ feature {NONE} -- Implementation
 						done := status_querier.last_result
 					end
 				end
-				type_consumers.forth
 			end
 			create mapping.make (assembly_ids)
 			serializer.serialize (types, destination_path + Assembly_types_file_name)

@@ -510,50 +510,8 @@ feature -- Basic operation
 		
 	clear_all_objects is
 			-- Remove all objects, so we are back in the intial
-			-- state of the system. This relies on the fact that the
-			-- first item in `objects' is the root window.
-			-- This will almost certainly change at some point in the future.
-		local
-			window_object: GB_TITLED_WINDOW_OBJECT
-			window_child: GB_OBJECT
-			layout_item, temp_layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
-		do
-			window_object ?= objects.first
-			check
-				window_found: window_object /= Void
-			end
-				-- A window may only have one child, but the layout item may have up to 2 items.
-				-- One to represent the child, and one to represent a menu bar.
-			if window_object.layout_item /= Void and then not window_object.layout_item.is_empty then
-				layout_item ?= window_object.layout_item
-				
-				from
-					layout_item.start
-				until
-					layout_item.off
-				loop
-					
-					temp_layout_item ?= layout_item.item
-						window_child ?= temp_layout_item.object
-						check
-							window_child_not_void: window_child /= Void
-						end
-						window_object.remove_child (window_child)
-						--window_child.unparent
-					layout_item.forth
-				end
-			end
-			
-				-- Update objects referenced by `window_object'.
-			window_object.update_objects
-			
-				-- Because `window_object' exists throughout
-				-- the execution of the application, we
-				-- must clear the events. Otherwise, every time
-				-- we close and then re-load a project, the
-				-- events recorded for `window_object' are extended.
-			window_object.events.wipe_out
-			
+			-- state of the system.
+		do			
 				-- Wipe `deleted_objects'.
 			deleted_objects.wipe_out
 				-- Wipe out `objects' but restore the

@@ -541,8 +541,8 @@ feature {NONE} -- Implementation
 			if width > 20 then
 				usable_width := width - 20
 				font_names.set_width (usable_width  * 30 // 55)
-				font_styles.set_width (usable_width * 20 // 55)
-				font_sizes.set_width (usable_width * 5 // 55)
+				font_styles.set_width (usable_width * 17 // 55)
+				font_sizes.set_width (usable_width * 8 // 55)
 				font_styles.set_x (font_names.width + 10)
 				font_sizes.set_x (font_styles.x + font_styles.width + 5)
 				example_text.set_width (usable_width)

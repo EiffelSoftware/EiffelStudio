@@ -80,7 +80,8 @@ feature -- Access
 			-- Events
 
 	procedures: ARRAY [CONSUMED_PROCEDURE] is
-			-- Class procedures
+			-- All procedures in type. 
+			-- ie: immediate and inherited procedures, but also procedures associated to a property or an event.
 		local
 			i, nb_prop_event_proc: INTEGER
 			event_or_set_procedures: ARRAY [CONSUMED_PROCEDURE]
@@ -155,7 +156,8 @@ feature -- Access
 		end
 
 	functions: ARRAY [CONSUMED_FUNCTION] is
-			-- Class functions
+			-- All functions in type. 
+			-- ie: immediate and inherited functions, but also functions associated to a property or an event.
 		local
 			i, j, nb_getter: INTEGER
 			get_functions: ARRAY [CONSUMED_FUNCTION]
@@ -331,11 +333,11 @@ feature -- Functions used for easy browsing of data from ConsumerWrapper.
 		end
 		
 	entities: ARRAYED_LIST [CONSUMED_ENTITY] is
-			-- All fields, procedures and functions immediately implemented by type.
+			-- All fields, procedures, functions, properties and events immediately implemented by type.
 		require
 			fields_not_void: fields /= Void
-			functions_not_void: functions /= Void
-			procedures_not_void: procedures /= Void
+--			internal_functions_not_void: internal_functions /= Void
+--			internal_procedures_not_void: internal_procedures /= Void
 		do
 			Result := consumed_type_entities (True)
 			Result.compare_objects
@@ -344,21 +346,21 @@ feature -- Functions used for easy browsing of data from ConsumerWrapper.
 		end
 		
 	inherited_entities: ARRAYED_LIST [CONSUMED_ENTITY] is
-			-- All fields, procedures and functions inherited by type.
+			-- All fields, procedures, functions, properties and events inherited by type.
 		require
 			fields_not_void: fields /= Void
-			functions_not_void: functions /= Void
-			procedures_not_void: procedures /= Void
+--			internal_functions_not_void: internal_functions /= Void
+--			internal_procedures_not_void: internal_procedures /= Void
 		do
 			Result := consumed_type_entities (False)
 		end
 		
 	flat_entities: ARRAYED_LIST [CONSUMED_ENTITY] is
-			-- All field, procedures and functions implemented/inherited by type.
+			-- All fields, procedures, functions, properties and events implemented/inherited by type.
 		require
 			fields_not_void: fields /= Void
-			functions_not_void: functions /= Void
-			procedures_not_void: procedures /= Void
+--			internal_functions_not_void: internal_functions /= Void
+--			internal_procedures_not_void: internal_procedures /= Void
 		do
 			Result := consumed_type_entities (True)
 			Result.fill (consumed_type_entities (False))
@@ -385,25 +387,26 @@ feature {NONE} -- Implementation
 feature {NONE} -- Internal
 
 	consumed_type_entities (a_immediate: BOOLEAN): ARRAYED_LIST [CONSUMED_ENTITY] is
-			-- All fields, procedures and functions implemented by type.
+			-- All fields, procedures, functions, properties and events implemented by type.
 			-- If `a_immediate' then return immediate features, else return inherited.
+		require
+			fields_not_void: fields /= Void
+--			internal_functions_not_void: internal_functions /= Void
+--			internal_procedures_not_void: internal_procedures /= Void
+			properties_not_void: properties /= Void
+			events_not_void: events /= Void
 		local
 			i: INTEGER
 		do
 			create Result.make (0)
-			Result.fill (fields)
-
-			-- Filter out PROPERTY and EVENT Eiffelized entities.
-			-- Only add members declared in this type.
-
+--			Result.fill (fields)
 			from 
 				i := 1
 			until
-				i > functions.count or else functions.item (i) = Void
+				i > fields.count or else fields.item (i) = Void
 			loop
-				if not functions.item (i).is_property_or_event and then
-							(functions.item (i).declared_type.is_equal (associated_reference_type) = a_immediate) then
-					Result.extend (functions @ i)
+				if (fields.item (i).declared_type.is_equal (associated_reference_type) = a_immediate) then
+					Result.extend (fields @ i)
 				end
 				i := i + 1
 			end
@@ -411,22 +414,21 @@ feature {NONE} -- Internal
 			from 
 				i := 1
 			until
-				i > procedures.count or else procedures.item (i) = Void
+				i > internal_functions.count or else internal_functions.item (i) = Void
 			loop
-				if not procedures.item (i).is_property_or_event and then
-					(procedures.item (i).declared_type.is_equal (associated_reference_type) = a_immediate) then
-					Result.extend (procedures @ i)
+				if (internal_functions.item (i).declared_type.is_equal (associated_reference_type) = a_immediate) then
+					Result.extend (internal_functions @ i)
 				end
 				i := i + 1
 			end
-			
+
 			from 
 				i := 1
 			until
-				i > events.count or else events.item (i) = Void
+				i > internal_procedures.count or else internal_procedures.item (i) = Void
 			loop
-				if (events.item (i).declared_type.is_equal (associated_reference_type) = a_immediate) then
-					Result.extend (events @ i)
+				if (internal_procedures.item (i).declared_type.is_equal (associated_reference_type) = a_immediate) then
+					Result.extend (internal_procedures @ i)
 				end
 				i := i + 1
 			end
@@ -438,6 +440,17 @@ feature {NONE} -- Internal
 			loop
 				if (properties.item (i).declared_type.is_equal (associated_reference_type) = a_immediate) then
 					Result.extend (properties @ i)
+				end
+				i := i + 1
+			end
+
+			from 
+				i := 1
+			until
+				i > events.count or else events.item (i) = Void
+			loop
+				if (events.item (i).declared_type.is_equal (associated_reference_type) = a_immediate) then
+					Result.extend (events @ i)
 				end
 				i := i + 1
 			end

@@ -13,9 +13,12 @@ inherit
 			add_signed_assembly,
 			add_unsigned_assembly,
 			remove_assembly,
+			rename_assembly,
 			assemblies,
 			assembly_properties,
 			is_valid_identifier,
+			is_valid_prefix,
+			is_prefix_allocated,
 			contains_assembly,
 			contains_signed_assembly,
 			contains_unsigned_assembly,
@@ -42,8 +45,8 @@ feature {NONE} -- Initialization
 --			-- TODO: Add assembly references into here (pending assembly addition to compiler/ace impl)
 --			
 --			-- TEMP
-			add_signed_assembly("assembly1", "Accessibility", "1.0.3300.0", "neutral", "b03f5f7f11d50a3a")
-			add_unsigned_assembly("assembly2", "c:\accessibility.dll")
+			add_signed_assembly("pref1", "assembly1", "Accessibility", "1.0.3300.0", "neutral", "b03f5f7f11d50a3a")
+			add_unsigned_assembly("pref2", "assembly2", "c:\accessibility.dll")
 		end	
 
 feature -- Basic operations
@@ -52,7 +55,7 @@ feature -- Basic operations
 			-- changes an assemblies identifer
 		do
 			if assemblies_table.has(old_name) then
-				assemblies_table.item(old_name).set_identifier (new_name)
+				assemblies_table.item(old_name).set_assembly_identifier (new_name)
 				assemblies_table.replace_key (new_name, old_name)
 			end	
 		end
@@ -63,27 +66,41 @@ feature -- Access
 	store is
 			-- save the assemblies to the ace file
 		do
+			
+			-- TODO: store the assemblies when ace file can support
+			
+			-- TODO: set all of the clusters to include the set prefixes
+			-- from the assemblies
 		end
 	
-	add_signed_assembly (identifier, name, version, culture, public_key:STRING) is
+	add_signed_assembly (a_prefix, identifier, name, version, culture, public_key:STRING) is
 			-- add an assembly to the ace file
 		local
 			assembly: ASSEMBLY_PROPERTIES
+			name_dup: STRING
 		do
 			if not contains_assembly(identifier) then
-				create assembly.make (identifier, name, version, culture, public_key)
+				
+				-- if the name contains a file extension such as dll or exe
+				name_dup := name.clone(name)
+				if name_dup.substring_index(".dll", name_dup.count-4) > 0 or name_dup.substring_index(".exe", name_dup.count-4) > 0 then
+					create assembly.make_local_signed (a_prefix, identifier, name, version, culture, public_key)
+				else
+					create assembly.make_signed (a_prefix, identifier, name, version, culture, public_key)
+				end
+
 				assemblies_table.put (assembly, identifier)
 				assemblies_impl.extend (assembly)
 			end
 		end
 		
-	add_unsigned_assembly (identifier, path:STRING) is
+	add_unsigned_assembly (a_prefix, identifier, path:STRING) is
 			-- add an assembly to the ace file
 		local
 			assembly: ASSEMBLY_PROPERTIES
 		do
 			if not contains_assembly(identifier) then
-				create assembly.make_local (identifier, path)
+				create assembly.make_local(a_prefix, identifier, path)
 				assemblies_table.put (assembly, identifier)
 				assemblies_impl.extend (assembly)
 			end
@@ -126,9 +143,9 @@ feature -- Access
 		ensure
 			non_void_result: Result /= Void
 		end	
-		
-	is_valid_identifier (identifier: STRING): BOOLEAN is
-			-- is 'indentifier' a valid assembly indentifer name
+
+	is_valid_prefix (a_prefix: STRING): BOOLEAN is
+			-- is 'a_prefix' a valid assembly prefix
 			-- only verifies that the identifier is correct, and not if the
 			-- name is a duplicate
 		local
@@ -139,9 +156,9 @@ feature -- Access
 				i := 1
 				Result := true
 			until
-				i = identifier.count or Result = false
+				i = a_prefix.count or Result = false
 			loop
-				c := identifier.item (i)
+				c := a_prefix.item (i)
 				
 				-- first char can only be alpha
 				if i = 1 then 
@@ -154,6 +171,60 @@ feature -- Access
 					end
 				end
 				i := i + 1
+			end		
+		end
+		
+	is_valid_identifier (identifier: STRING): BOOLEAN is
+			-- is 'indentifier' a valid assembly indentifer name
+			-- only verifies that the identifier is correct, and not if the
+			-- name is a duplicate
+		local
+			identifier_dup: STRING
+			keyword: STRING
+		do
+			Result := is_valid_prefix(identifier)
+			if Result then
+				identifier_dup := identifier.clone(identifier)
+				identifier_dup.to_lower
+				from
+					ace_accesser.reserved_keywords.start
+				until
+					ace_accesser.reserved_keywords.after or (Result = false)
+				loop
+					keyword := ace_accesser.reserved_keywords.item
+					if identifier_dup.is_equal(keyword) then
+						Result := false
+					end
+					ace_accesser.reserved_keywords.forth
+				end
+			end
+		end
+
+	is_prefix_allocated (a_prefix: STRING): BOOLEAN is
+			-- has 'a_prefix' already been allocated to another assembly
+		local
+			new_assembly_prefix: STRING
+			assembly_prefix: STRING
+		do
+			Result := false
+			from
+				assemblies_impl.start
+			until
+				assemblies_impl.after or Result
+			loop
+				assembly_prefix ?= assemblies_impl.item.assembly_prefix
+				if assembly_prefix /= Void then
+					assembly_prefix := assembly_prefix.clone(assembly_prefix)
+					assembly_prefix.to_lower
+					
+					new_assembly_prefix := a_prefix.clone(a_prefix)
+					new_assembly_prefix.to_lower
+					
+					if assembly_prefix.is_equal(new_assembly_prefix) then
+						Result := true
+					end
+				end
+				assemblies_impl.forth
 			end
 		end
 		

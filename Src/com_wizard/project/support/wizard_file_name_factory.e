@@ -368,9 +368,6 @@ feature {NONE} -- Implementation
 			last_created_file_name := clone (shared_wizard_environment.destination_folder)
 			last_created_file_name.append (Server)
 			last_created_file_name.append_character (Directory_separator)
-			last_created_file_name.append (Component)
-			last_created_file_name.append_character (Directory_separator)
-
 			a_definition_file_writer ?= transient_writer
 			if a_definition_file_writer /= Void then
 				last_created_file_name.append (a_definition_file_writer.system_name)

@@ -358,22 +358,8 @@ feature -- Settings: signature
 			is_generated: is_generated
 			valid_sig: a_sig /= Void
 			valid_type: a_type /= Void
-		local
-			l_gen_type: NATIVE_ARRAY_TYPE_I
 		do
-			if a_type.is_basic then
-				a_sig.set_return_type (a_type.element_type, 0)
-			else
-				l_gen_type ?= a_type
-				if l_gen_type /= Void then
-					a_sig.set_return_type (
-						feature {MD_SIGNATURE_CONSTANTS}.Element_type_szarray, 0)
-					set_signature_type (a_sig, l_gen_type.true_generics.item (1))
-				else
-					a_sig.set_return_type (a_type.element_type,
-						class_type_token (a_type.static_type_id))
-				end
-			end
+			set_signature_type (a_sig, a_type)
 		end
 
 	set_signature_type (a_sig: MD_SIGNATURE; a_type: TYPE_I) is
@@ -383,15 +369,42 @@ feature -- Settings: signature
 			valid_sig: a_sig /= Void
 			valid_type: a_type /= Void
 		local
-			l_gen_type: NATIVE_ARRAY_TYPE_I
+			l_is_by_ref: BOOLEAN
+			l_type: TYPE_I
 		do
+				-- If it is an instance of TYPED_POINTER then it corresponds to
+				-- an out type. We need to extract the real type represented by
+				-- TYPED_POINTER.
+			l_is_by_ref := is_by_ref_type (a_type)
+			if l_is_by_ref then
+				l_type := by_ref_type (a_type)
+			else
+				l_type := a_type
+			end
+			set_extended_signature_type (a_sig, l_type, l_is_by_ref)
+		end
+
+feature {NONE} -- Implementations: signatures
+
+	set_extended_signature_type (a_sig: MD_SIGNATURE; a_type: TYPE_I; a_is_by_ref: BOOLEAN) is
+			-- Set `a_type' to return type of `a_sig'.
+		require
+			is_generated: is_generated
+			valid_sig: a_sig /= Void
+			valid_type: a_type /= Void
+		local
+			l_native_array_type: NATIVE_ARRAY_TYPE_I
+		do
+			if a_is_by_ref then
+				a_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_byref, 0)
+			end
 			if a_type.is_basic then
 				a_sig.set_type (a_type.element_type, 0)
 			else
-				l_gen_type ?= a_type
-				if l_gen_type /= Void then
+				l_native_array_type ?= a_type
+				if l_native_array_type /= Void then
 					a_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_szarray, 0)
-					set_signature_type (a_sig, l_gen_type.true_generics.item (1))
+					set_signature_type (a_sig, l_native_array_type.true_generics.item (1))
 				else
 					a_sig.set_type (a_type.element_type,
 						class_type_token (a_type.static_type_id))
@@ -1045,10 +1058,14 @@ feature -- Mapping between Eiffel compiler and generated tokens
 		do
 			Result := internal_external_token_mapping.item (a_type_name)
 			if Result = 0 then
-				l_class_type := il_code_generator.external_class_mapping.item (a_type_name).
-					associated_class_type
-				generate_external_class_mapping (l_class_type)
-				Result := internal_external_token_mapping.item (a_type_name)
+				if a_type_name.item (a_type_name.count) = '&' then
+					Result := external_token_mapping (a_type_name.substring (1, a_type_name.count - 1))
+				else
+					l_class_type := il_code_generator.external_class_mapping.item (a_type_name).
+						associated_class_type
+					generate_external_class_mapping (l_class_type)
+					Result := internal_external_token_mapping.item (a_type_name)
+				end
 			end
 		ensure
 			external_token_mapping_valid:
@@ -2046,6 +2063,41 @@ feature {NONE} -- Once per modules being generated.
 				l_ise_assertion_level_attr_token, l_meth_sig)
 		end
 
+feature {NONE} -- Convenience
+
+	is_by_ref_type (a_type: TYPE_I): BOOLEAN is
+			-- Is `a_type' an out parameter type?
+		require
+			a_type_not_void: a_type /= Void
+		local
+			l_ptr_type: TYPED_POINTER_I
+		do
+			l_ptr_type ?= a_type
+			Result := l_ptr_type /= Void
+		end
+
+	by_ref_type (a_type: TYPE_I): TYPE_I is
+			-- True type represented by `a_type'.
+		require
+			a_type_not_void: a_type /= Void
+			is_by_ref_type: is_by_ref_type (a_type)
+		local
+			l_typed_pointer: TYPED_POINTER_I
+		do
+			l_typed_pointer ?= a_type
+			Result := l_typed_pointer.true_generics.item (1)
+		ensure
+			by_ref_type_not_void: Result /= Void
+		end
+
+	typed_pointer_class_id: INTEGER is
+			-- Class id of TYPED_POINTER class.
+		once
+			Result := System.typed_pointer_class.compiled_class.class_id
+		ensure
+			typed_pointer_class_id_positive: Result > 0
+		end
+		
 feature {NONE} -- Cleaning
 
 	wipe_out is

@@ -139,9 +139,6 @@ feature {IL_CODE_GENERATOR} -- Access
 	is_cls_compliant: BOOLEAN
 			-- Does code generation generate CLS compliant code?
 			
-	any_type_id, object_type_id: INTEGER
-			-- Type id of ANY and SYSTEM_OBJECT class.
-
 	local_count: INTEGER
 			-- Number of meaningful local variables.
 
@@ -286,24 +283,6 @@ feature -- Settings
 			once_generation := v
 		ensure
 			once_generation_set: once_generation = v
-		end
-
-	set_any_type_id (an_id: INTEGER) is
-		require
-			valid_id: an_id > 0
-		do
-			any_type_id := an_id
-		ensure
-			any_type_id_set: any_type_id = an_id
-		end
-
-	set_object_type_id (an_id: INTEGER) is
-		require
-			valid_id: an_id > 0
-		do
-			object_type_id := an_id
-		ensure
-			object_type_id_set: object_type_id = an_id
 		end
 
 feature -- Cleanup
@@ -867,6 +846,16 @@ feature -- Variables access
 		do
 		end
 
+	generate_any_feature_access (type_i: TYPE_I; a_feature_id: INTEGER; nb: INTEGER;
+			is_function, is_virtual: BOOLEAN)
+		is
+			-- Generate access to feature of `a_feature_id' in `type_i'.
+		require
+			type_i_not_void: type_i /= Void
+			positive_feature_id: a_feature_id > 0
+		do
+		end
+
 	generate_feature_access (type_i: TYPE_I; a_feature_id: INTEGER; nb: INTEGER;
 			is_function, is_virtual: BOOLEAN)
 		is
@@ -1317,6 +1306,15 @@ feature -- Constants generation
 		do
 		end
 		
+
+	put_manifest_string_from_system_string_local (n: INTEGER) is
+			-- Create a manifest string by using local at position `n' which 
+			-- should be of type SYSTEM_STRING.
+		require
+			valid_n: n >= 0
+		do
+		end
+
 	put_manifest_string (s: STRING) is
 			-- Put `s' on IL stack.
 		require
@@ -1524,6 +1522,11 @@ feature -- Convenience
 		require
 			valid_implemented_in: implemented_in > 0
 			current_type_not_void: current_type /= Void
+		do
+		end
+
+	generate_call_on_void_target_exception is
+			-- Generate call on void target exception.
 		do
 		end
 

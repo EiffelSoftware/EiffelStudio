@@ -32,12 +32,12 @@ feature -- Access
 	
 feature -- Status setting
 
-	set_font (f: EV_FONT) is
-			-- Set `font' to `f'.
+	set_font (ft: EV_FONT) is
+			-- Make `ft' the new font.
 		local
 			local_font_windows: EV_FONT_IMP
 		do
-			private_font := f;
+			private_font := ft
 			local_font_windows ?= private_font.implementation
 			check
 				valid_font: local_font_windows /= Void

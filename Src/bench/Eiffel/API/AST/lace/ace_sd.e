@@ -15,7 +15,8 @@ inherit
 		end;
 	SHARED_USE;
 	EIFFEL_ENV;
-	SHARED_MELT_ONLY
+	SHARED_MELT_ONLY;
+	SHARED_EIFFEL_PROJECT
 
 feature {NONE} -- Initialization
 
@@ -97,6 +98,7 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 					-- Remove inexistant clusters from the system
 				process_removed_clusters
 			end;
+			Degree_output.put_end_degree_6;
 
 			process_system_level_options;
 
@@ -225,6 +227,7 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 			-- build the clusters
 		do
 			if clusters /= Void then
+				Degree_output.put_start_degree_6 (clusters.count);
 				from
 					clusters.start
 				until

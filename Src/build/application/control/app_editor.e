@@ -49,7 +49,7 @@ feature -- Window attributes
 			set_size (Resources.app_ed_width,
 					Resources.app_ed_height);
 		end;
-
+	
 feature -- Drawing area 
 
 	initial_state_circle: STATE_CIRCLE;
@@ -136,8 +136,8 @@ feature -- Drawing area
 			cut_line_command: APP_CUT_LINE;
 		do
 			if figures.found then
-				!!cut_figure_command;
-				cut_figure_command.execute (figures.element)
+				!! cut_figure_command.make (figures.element)
+				cut_figure_command.execute (Void)
 			elseif lines.found then
 				!!cut_line_command;
 				cut_line_command.execute (lines.line)
@@ -341,7 +341,7 @@ feature -- State and transition list
 				transition_list.wipe_out;
 			end;
 			current_label := Void;
-			transition_list.merge_right (curr_trans);
+			transition_list.append (curr_trans)
 		end;
 
 	display_states is
@@ -352,7 +352,7 @@ feature -- State and transition list
 			if not state_list.empty then
 				state_list.wipe_out;
 			end;
-			state_list.merge_right (states);
+			state_list.append (states)
 			highlight_state;
 		end;
 	
@@ -541,7 +541,6 @@ feature {NONE}
 			!!form.make (Widget_names.form, Current);
             !!form1.make (Widget_names.form1, form);
             !!drawing_sw.make (Widget_names.scroll, form);
-     
 			!!drawing_area.make_visible (Widget_names.drawingarea, drawing_sw);
 		    !! transitions    
               

@@ -12,7 +12,9 @@
 #ifndef __ECOM_RUNTIME_EC_H_INC__
 #define __ECOM_RUNTIME_EC_H_INC__
 
+#ifdef __cplusplus
 class ecom_runtime_ec;
+#endif
 
 #include "eif_com.h"
 #include <string.h>
@@ -27,6 +29,7 @@ class ecom_runtime_ec;
 extern "C" {
 #endif
 
+#ifdef __cplusplus
 class ecom_runtime_ec
 {
 	public:
@@ -112,6 +115,7 @@ class ecom_runtime_ec
 		SAFEARRAY * ccom_ec_safearray_dispatch (EIF_REFERENCE a_ref);
 		SAFEARRAY * ccom_ec_safearray_unknown (EIF_REFERENCE a_ref);
 };
+#endif
 
 #ifdef __cplusplus
 }

@@ -90,7 +90,6 @@ feature -- Code generation
 if is_special or has_signature then
 				-- Generate the header "int foo(Current, args)"
 			type_i := real_type (result_type);
-			type_i.c_type.generate (generated_file);
 
 				-- Function's name
 			internal_name := body_id.feature_name
@@ -100,8 +99,8 @@ if is_special or has_signature then
 
 				-- Generate function signature
 			 generated_file.generate_function_signature
-				(type_i.c_type.c_string, internal_name, "",
-				 Context.extern_declaration_file, argument_names, argument_types)
+				(type_i.c_type.c_string, internal_name, True,
+				 Context.extern_declaration_file, argument_names, std_argument_types)
  
 				-- Starting body of C routine
 			generated_file.putchar ('{');
@@ -129,8 +128,7 @@ if is_special or has_signature then
 elseif encapsulated then
 	old_generate
 end
-end
-
+		end
 
 	generate_basic_body is
 		do
@@ -147,12 +145,14 @@ end
 			if not result_type.is_void or has_return_type then
 				generated_file.putstring ("return ");
 			end;
-			if has_return_type then
-				generated_file.putchar ('(');
-				generated_file.putstring (return_type);
-				generated_file.putchar (')');
-				generated_file.putchar (' ');
-			elseif result_type /= Void then
+				-- next few lines commented out as we want to cast to the Eiffel
+				-- equivalent
+			--if has_return_type then
+			--	generated_file.putchar ('(');
+			--	generated_file.putstring (return_type);
+			--	generated_file.putchar (')');
+			--	generated_file.putchar (' ');
+			if result_type /= Void then
 				result_type.c_type.generate_cast (generated_file);
 			else
 					-- I'm not sure this is really needed

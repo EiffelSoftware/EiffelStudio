@@ -25,7 +25,7 @@ inherit
 			set_editable
 		end
 		
-	WEL_COMBO_BOX_EX
+	WEL_DROP_DOWN_COMBO_BOX_EX
 		rename
 			make as wel_make,
 			parent as wel_parent,
@@ -36,7 +36,8 @@ inherit
 			select_item as wel_select_item,
 			selected_item as wel_selected_item,
 			height as wel_height,
-			insert_item as wel_insert_item
+			insert_item as wel_insert_item,
+			set_limit_text as set_text_limit
 		undefine
 			remove_command,
 			set_width,
@@ -59,7 +60,9 @@ inherit
 			on_cbn_selchange,
 			on_cbn_dblclk,
 			move_and_resize,
-			default_style
+			default_style,
+			text_length,
+			text
 		end
 
 	WEL_EM_CONSTANTS
@@ -97,6 +100,26 @@ feature -- Measurement
 		end
 
 feature -- Status report
+
+	text_length: INTEGER is
+			-- Text length
+		do
+			if is_editable then
+				Result := {WEL_DROP_DOWN_COMBO_BOX_EX} Precursor
+			else
+				Result := selected_string.count
+			end
+		end
+
+	text: STRING is
+			-- Window text
+		do
+			if is_editable then
+				Result := {WEL_DROP_DOWN_COMBO_BOX_EX} Precursor
+			else
+				Result := selected_string
+			end
+		end
 
 	item_height: INTEGER is
 			-- height needed for an item
@@ -142,14 +165,6 @@ feature -- Status setting
 		do
 			set_minimum_height (22)
 			set_minimum_width (30)
-		end
-
-	set_text_limit (value: INTEGER) is
-			-- Make `value' the new maximal length of the text.
-		do
-			if is_editable then
-				cwin_send_message (edit_item, Em_limittext, value, 0)
-			end
 		end
 
 	select_item (index: INTEGER) is

@@ -39,16 +39,15 @@ feature -- Access
 			-- Update status of `attribute_editor' to reflect information
 			-- from `first'.
 		do
-			actual_minimum_width.set_text (first.minimum_width.out)
-			actual_minimum_height.set_text (first.minimum_height.out)
+			minimum_width_entry.set_text (first.minimum_width.out)
 			if first.minimum_width_set_by_user then
-				minimum_width_entry.set_text (first.minimum_width.out)
+				
 				reset_width_button.enable_sensitive
 			else
 				reset_width_button.disable_sensitive
 			end
+			minimum_height_entry.set_text (first.minimum_height.out)	
 			if first.minimum_height_set_by_user then
-				minimum_height_entry.set_text (first.minimum_height.out)	
 				reset_height_button.enable_sensitive
 			else
 				reset_height_button.disable_sensitive
@@ -69,12 +68,6 @@ feature -- Access
 			Result.extend (label)
 			Result.disable_item_expand (label)
 			create horizontal_box
-			create actual_minimum_width
-			actual_minimum_width.disable_edit
-			actual_minimum_width.set_background_color ((create {EV_STOCK_COLORS}).white)
-			actual_minimum_width.set_minimum_width (30)
-			horizontal_box.extend (actual_minimum_width)
-			horizontal_box.disable_item_expand (actual_minimum_width)
 			create minimum_width_entry.make_without_label (Current, horizontal_box, minimum_width_string, gb_ev_widget_minimum_width_tooltip,
 				agent set_minimum_width (?), agent valid_minimum_dimension (?))
 			create reset_width_button.make_with_text ("Reset")
@@ -87,12 +80,6 @@ feature -- Access
 			Result.extend (label)
 			Result.disable_item_expand (label)
 			create horizontal_box
-			create actual_minimum_height
-			actual_minimum_height.disable_edit
-			actual_minimum_height.set_background_color ((create {EV_STOCK_COLORS}).white)
-			actual_minimum_height.set_minimum_width (30)
-			horizontal_box.extend (actual_minimum_height)
-			horizontal_box.disable_item_expand (actual_minimum_height)
 			create minimum_height_entry.make_without_label (Current, horizontal_box, minimum_height_string, gb_ev_widget_minimum_height_tooltip,
 				agent set_minimum_height (?), agent valid_minimum_dimension (?))
 			create reset_height_button.make_with_text ("Reset")
@@ -185,10 +172,7 @@ feature {NONE} -- Implementation
 
 	Minimum_width_string: STRING is "Minimum_width"
 	Minimum_height_string: STRING is "Minimum_height"
-	
-	actual_minimum_width, actual_minimum_height: EV_TEXT_FIELD
-		-- Text fields to display the current minimum width and height.
-		
+
 	reset_width_button, reset_height_button: EV_BUTTON
 		-- Buttons that allow you to reset the minimum sizes on objects.
 		

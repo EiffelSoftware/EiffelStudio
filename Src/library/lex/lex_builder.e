@@ -29,6 +29,7 @@ feature  -- Initialization
 	make is
 			-- Set up the analyzer.
 		do
+			array_make (1, 0)
 			last_character_code := Last_ascii;
 			create tool_list.make;
 			create tool_names.make
@@ -41,6 +42,7 @@ feature  -- Initialization
 		require
 			valid_char_code: char_code > 0
 		do
+			array_make (1, 0)
 			last_character_code := char_code
 			create tool_list.make;
 			create tool_names.make

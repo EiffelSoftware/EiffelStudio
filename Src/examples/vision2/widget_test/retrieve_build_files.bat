@@ -80,7 +80,7 @@ XCOPY /Y Src\Build2\interface\properties\gb_ev_tooltipable_editor_constructor.e 
 
 REM Copy image used for executable icon.
 
-XCOPY %EIFFEL_SRC%\library\vision2\Clib\default_vision2_icon.ico .
+XCOPY /Y %EIFFEL_SRC%\library\vision2\Clib\default_vision2_icon.ico .
 ren default_vision2_icon.ico vision2_tour.ico
 
 

@@ -147,6 +147,7 @@ feature -- Basic Operation
 				if all_children_old.item.is_instance_of_top_level_object then
 					all_children_new.item.set_associated_top_level_object (object_handler.deep_object_from_id (all_children_old.item.associated_top_level_object))
 					all_children_new.item.represent_as_locked_instance
+					all_children_new.item.update_representations_for_name_or_type_change
 				end
 				all_children_old.forth
 				all_children_new.forth

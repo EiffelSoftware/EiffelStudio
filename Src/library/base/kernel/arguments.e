@@ -60,7 +60,7 @@ feature -- Access
 		once
 			Result := arg_option (0)
 		ensure
-			definition: Result = argument (0)
+			definition: Result.is_equal (argument (0))
 		end;
 
 feature -- Status report

@@ -246,8 +246,6 @@ feature -- Resizing
 		require
 			a_buffer_not_void: a_buffer /= Void
 			n_large_enough: n >= a_buffer.count
-		local
-			i: INTEGER
 		do
 			Result := c_str_resize ($a_buffer, n)
 		ensure

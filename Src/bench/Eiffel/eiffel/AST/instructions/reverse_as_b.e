@@ -1,12 +1,28 @@
--- Abstract description of a reverse assignment
+indexing
 
-class REVERSE_AS
+	description:
+		"Abstract description of a reverse assignment. %
+		%Version for Bench.";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class REVERSE_AS_B
 
 inherit
+	
+	REVERSE_AS
+		rename
+			target as old_target,
+			source as old_source
+		end;
 
-	ASSIGN_AS
+	ASSIGN_AS_B
+		undefine
+			assign_symbol
 		redefine
-			check_validity, byte_node, assign_symbol
+			check_validity, byte_node
+		select
+			target, source
 		end
 
 feature
@@ -54,11 +70,4 @@ feature
 			Result.set_source (source.byte_node);
 		end;
 
-feature {} -- Formatter
-	
-	assign_symbol: TEXT_ITEM is 
-		do
-			Result := ti_Reverse_assign
-		end;
-
-end
+end -- class REVERSE_AS_B

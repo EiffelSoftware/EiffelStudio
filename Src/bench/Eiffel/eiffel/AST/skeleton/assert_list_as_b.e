@@ -1,8 +1,17 @@
-class ASSERT_LIST_AS
+class ASSERT_LIST_AS_B
 
 inherit
 
-	AST_EIFFEL
+	ASSERT_LIST_AS
+		redefine
+			assertions, put_clause_keywords,
+			clause_name, format_assertions,
+			reset
+		end;
+
+	AST_EIFFEL_B
+		undefine
+			simple_format
 		redefine
 			type_check, byte_node, format,
 			fill_calls_list, replicate
@@ -10,16 +19,8 @@ inherit
 
 feature -- Attributes
 
-	assertions: EIFFEL_LIST [TAGGED_AS];
+	assertions: EIFFEL_LIST_B [TAGGED_AS_B];
 			-- Assertion list
-
-feature -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			assertions ?= yacc_arg (0);
-		end
 
 feature -- Type check, byte code, dead code removal and formatter
 
@@ -50,7 +51,7 @@ feature -- Incrementality
 
 feature -- Format
 
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: FORMAT_CONTEXT_B) is
 			-- Reconstitute text
 		local
 			source_cl, target_cl: CLASS_C;
@@ -85,7 +86,7 @@ feature -- Format
 			end 			
 		end;
 
-	format_assertions (ctxt: FORMAT_CONTEXT) is
+	format_assertions (ctxt: FORMAT_CONTEXT_B) is
 		local
 			i, l_count: INTEGER;
 			not_first: BOOLEAN
@@ -137,28 +138,21 @@ feature	-- Replication
 		end;
 
 
-feature {ASSERT_LIST_AS} -- Replication
-
-	set_assertions (l: like assertions) is
-		do
-			assertions := l
-		end;
-	
 feature {NONE}
 	
-	clause_name (ctxt: FORMAT_CONTEXT): STRING is
+	clause_name (ctxt: FORMAT_CONTEXT_B): STRING is
 			-- name of the assertion: require, require else, ensure, 
 			-- ensure then, invariant
 		do
 		end;
 
-	put_clause_keywords (ctxt: FORMAT_CONTEXT) is
+	put_clause_keywords (ctxt: FORMAT_CONTEXT_B) is
 			-- Append the assertion keywords ("require", "require else",
 			-- "ensure", "ensure then" or "invariant").
 		do
 		end;
 
-feature {ROUTINE_AS} -- Case Storage
+feature {ROUTINE_AS_B} -- Case Storage
 
 	storage_info (classc: CLASS_C): FIXED_LIST [S_TAG_DATA] is
 			-- Assertion storage info for Case in the 
@@ -166,7 +160,7 @@ feature {ROUTINE_AS} -- Case Storage
 		require
 			 valid_assertions: assertions /= Void
 		local
-			 ctxt: FORMAT_CONTEXT;
+			 ctxt: FORMAT_CONTEXT_B;
 		do
 			!! Result.make (assertions.count);
 			!! ctxt.make_for_case (classc);
@@ -182,4 +176,4 @@ feature {ROUTINE_AS} -- Case Storage
 			end
 		end;
 
-end
+end -- class ASSERT_LIST_AS_B

@@ -1,13 +1,29 @@
--- Access for the address operator
+indexing
 
-class ACCESS_ADDRESS_AS
+	description: "Access for the address operator. Version for Bench.";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class ACCESS_ADDRESS_AS_B
 
 inherit
 
-	ACCESS_ID_AS
+	ACCESS_ADDRESS_AS
+		rename
+			feature_name as old_address_feature_name,
+			parameters as old_address_parameters
+		redefine
+			make
+		end;
+
+	ACCESS_ID_AS_B
+		undefine
+			simple_format
 		redefine
 			feature_access_type, format,
 			fill_calls_list, replicate
+		select
+			feature_name, parameters
 		end
 
 creation
@@ -16,7 +32,7 @@ creation
 
 feature
 
-	make (s: ID_AS) is
+	make (s: ID_AS_B) is
 			-- Initialization
 		do
 			feature_name := s;
@@ -74,7 +90,7 @@ feature -- Type check
 			Error_handler.checksum
 		end;
 
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: FORMAT_CONTEXT_B) is
 			-- Reconstitute text.
 		do
 			ctxt.begin;
@@ -104,4 +120,4 @@ feature	-- Replication
 			ctxt.stop_adaptation;
 		end;
 
-end
+end -- class ACCESS_ADDRESS_AS_B

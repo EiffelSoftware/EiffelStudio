@@ -1,41 +1,44 @@
--- Abstract node for alternative values of a multi-branch instruction
+indexing
 
-class INTERVAL_AS
+	description:
+			"Abstract node for alternative values of a multi-branch %
+			%instruction. Version for Bench.";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class INTERVAL_AS_B
 
 inherit
 
-	AST_EIFFEL
+	INTERVAL_AS
+		redefine
+			lower, upper
+		end;
+
+	AST_EIFFEL_B
+		undefine
+			simple_format
 		redefine
 			byte_node, type_check, format,
 			fill_calls_list, replicate
 		end;
+
 	SHARED_INSPECT;
 
 feature -- Attributes
 
-	lower: ATOMIC_AS;
+	lower: ATOMIC_AS_B;
 			-- Lower bound
 
-	upper: ATOMIC_AS;
+	upper: ATOMIC_AS_B;
 			-- Upper bound
 			-- void if constant rather than interval
 
-feature -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			lower ?= yacc_arg (0);
-			upper ?= yacc_arg (1);
-		ensure then
-			lower_exists: lower /= Void;
-		end;
-
 feature -- Type check and byte code
 
-	check_for_veen (at_as: ATOMIC_AS) is
+	check_for_veen (at_as: ATOMIC_AS_B) is
 		local
-			id_as: ID_AS;
+			id_as: ID_AS_B;
 			veen: VEEN;
 			vomb2: VOMB2;
 		do
@@ -102,22 +105,6 @@ feature -- Type check and byte code
 			end
 		end;
 
-	good_integer_interval: BOOLEAN is
-			-- Is the current interval a good integer interval ?
-		do
-			Result := 	lower.good_integer
-						and then
-						(upper = Void or else upper.good_integer)
-		end;
-
-	good_character_interval: BOOLEAN is
-			-- Is the current interval a good character interval ?
-		do
-			Result := 	lower.good_character
-						and then
-						(upper = Void or else upper.good_character)
-		end;
-
 	byte_node: INTERVAL_B is
 			-- Associated byte code
 		do
@@ -133,7 +120,7 @@ feature -- Type check and byte code
 		end;
 
 
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: FORMAT_CONTEXT_B) is
 			-- Reconstitute text.
 		do
 			lower.format (ctxt);
@@ -161,7 +148,6 @@ feature -- Replication
 			end
 		end;
 
-
 	replicate (ctxt: REP_CONTEXT): like Current is
 			-- Adapt to Replication
 		do
@@ -173,18 +159,4 @@ feature -- Replication
 			end
 		end;
 
-feature {INTERVAL_AS} -- Replication
-
-	set_lower (l: like lower) is
-		do
-			lower := l
-		end;
-
-	set_upper (u: like upper) is
-		require
-			valid_arg: u /= Void
-		do
-			upper := u
-		end;
-
-end
+end -- class INTERVAL_AS_B

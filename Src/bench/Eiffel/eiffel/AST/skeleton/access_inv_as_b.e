@@ -1,14 +1,28 @@
--- Abstract description of an access in an invariant beginning a call
--- expression or instruction or an access after a creation for which there
--- is no standard export validation like in ACCESS_FEAT_AS.
+indexing
 
-class ACCESS_INV_AS
+	description:
+			"Abstract description of an access in an invariant beginning a %
+			%call expression or instruction or an access after a creation for %
+			%which there is no standard export validation like in %
+			%ACCESS_FEAT_AS. Version for Bench.";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class ACCESS_INV_AS_B
 
 inherit
 
-	ACCESS_FEAT_AS
+	ACCESS_INV_AS
+		rename
+			feature_name as old_feature_name,
+			parameters as old_parameters
+		end;
+
+	ACCESS_FEAT_AS_B
 		redefine
 			is_export_valid
+		select
+			feature_name, parameters
 		end
 
 feature
@@ -19,4 +33,4 @@ feature
 			Result := True;
 		end;
 
-end
+end -- class ACCESS_INV_AS_B

@@ -52,7 +52,7 @@ feature
 	
 feature {NONE}
 
-	menu_button: OPTION_MENU
+-- menu_button: OPTION_MENU
 
 	
 feature 
@@ -126,13 +126,13 @@ feature
 			context_hole.make_visible (top_form)
 			!!first_separator.make (S_eparator, top_form)
 			first_separator.set_horizontal (True)
-			!!menu_button.make (G_eometry_form_name, Current)
+--!!menu_button.make (G_eometry_form_name, Current)
 --menu_button.set_insensitive
 			!!second_separator.make (S_eparator, top_form)
 			second_separator.set_horizontal (True)
 			!!close_button.make (Current, Current)
 			close_button.make_visible (top_form)
-			menu_button.set_text ("Options")
+-- menu_button.set_text ("Options")
 			!!formats.make ("formats", top_form) 
 			formats.set_row_layout
 			formats.set_preferred_count (1)
@@ -192,7 +192,7 @@ feature
 
 	realize is
 		do
-			menu_button.set_insensitive
+-- menu_button.set_insensitive
 			shell_realize
 			
 		end
@@ -200,16 +200,16 @@ feature
 	show is
 		do
 			if context_hole.original_stone /= Void then
-				menu_button.set_sensitive
+--menu_button.set_sensitive
 			else
-				menu_button.set_insensitive
+-- menu_button.set_insensitive
 			end
 			shell_show
 		end
 
 	hide is
 		do
-			menu_button.set_insensitive
+--menu_button.set_insensitive
 			shell_hide
 		end
 
@@ -237,28 +237,27 @@ feature
 		do
 			if new_context.editor_form /= Void then
 				other_editor :=	context_catalog.editor (new_context, new_context.editor_form)
-				other_editor := Void
 			end
 			if other_editor = Void then
 				if new_context /= edited_context then
-					menu_button.set_insensitive
+-- menu_button.set_insensitive
 					old_edited_context := edited_context
 					edited_context := new_context
 					context_hole.set_context (edited_context)
 					option_list := edited_context.option_list
-					menu_button.update (option_list)
+-- menu_button.update (option_list)
 					if edited_context.is_bulletin then
-						menu_button.add_button (alignment_form_number)
-						menu_button.add_button (grid_form_number)
+-- menu_button.add_button (alignment_form_number)
+-- menu_button.add_button (grid_form_number)
 					end
 					if not (edited_context.resize_policy = Void) then
-						menu_button.add_button (bulletin_resize_form_number)
+-- menu_button.add_button (bulletin_resize_form_number)
 					end
-					menu_button.add_button (color_form_number)
+-- menu_button.add_button (color_form_number)
 					if edited_context.is_fontable then
-						menu_button.add_button (font_form_number)
+-- menu_button.add_button (font_form_number)
 					end
-						menu_button.add_button (behavior_form_number)
+--menu_button.add_button (behavior_form_number)
 					if edited_context.editor_form = 0 then
 						edited_context.set_editor_form (option_list.item (1))
 					end
@@ -283,9 +282,10 @@ feature
 						end
 						i := i + 1
 					end
-					list := menu_button.additionnal_list
+--	list := menu_button.additionnal_list
+					!!list.make
 					from
-						list.start
+					list.start
 					until
 						list.after or current_form_found
 					loop
@@ -314,7 +314,7 @@ feature
 						set_form (edited_context.editor_form)
 					end
 				end
-				menu_button.set_sensitive
+--				menu_button.set_sensitive
 			else
 				other_editor.raise
 			end
@@ -329,7 +329,7 @@ feature
 			if other_editor = Void then
 				set_form (a_form_number)
 			else
-				menu_button.set_previous_selected_button	
+-- menu_button.set_previous_selected_button	
 				other_editor.raise
 			end
 		end
@@ -344,7 +344,7 @@ feature
 			unmanage
 			current_form_number := a_form_number
 			edited_context.set_editor_form (a_form_number)
-			menu_button.set_form (edited_context.editor_form)
+-- menu_button.set_form (edited_context.editor_form)
 			new_form := form_list.item (edited_context.editor_form)
 			if not new_form.is_initialized then
 				!!mp
@@ -397,7 +397,7 @@ feature -- Reseting
 				reset_behavior_editor
 				edited_context.set_editor_form (current_form_number)
 				edited_context := Void
-				menu_button.option_button.set_insensitive
+-- menu_button.option_button.set_insensitive
 				current_form.hide
 				current_form := Void
 				current_form_number := 0

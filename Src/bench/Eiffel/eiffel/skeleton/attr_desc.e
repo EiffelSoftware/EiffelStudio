@@ -50,6 +50,12 @@ feature
 		deferred
 		end;
 
+	real_sk_value : INTEGER is
+			-- sk_value including the type_id
+		do
+			Result := sk_value
+		end
+
 	infix "<" (other: like Current): BOOLEAN is
 			-- Is `other' greater then Current ?
 		do

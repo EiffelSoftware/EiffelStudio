@@ -204,6 +204,9 @@ feature -- Version Constants
 
 	version_581: INTEGER is 0x00050051
 			-- version_581 (Comctl32.dll)<=> Microsoft Windows 2000
+			
+	version_600: INTEGER is 0x00060000
+			-- version_600 (Comctl32.dll)<=> Microsoft Windows XP
 
 feature {NONE} -- Implementation
 

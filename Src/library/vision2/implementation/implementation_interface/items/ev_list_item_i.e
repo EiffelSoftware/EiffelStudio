@@ -10,13 +10,21 @@ deferred class
 	
 inherit
 	EV_SIMPLE_ITEM_I
+		redefine
+			parent,
+			parent_imp
+		end
 
 feature -- Access
 
-	parent_imp: EV_LIST_ITEM_HOLDER_IMP is
-			-- Parent implementation of the current item.
-		deferred
+	parent: EV_LIST is
+			-- Parent of the current item.
+		do
+			Result ?= {EV_SIMPLE_ITEM_I} Precursor
 		end
+
+	parent_imp: EV_LIST_ITEM_HOLDER_IMP
+			-- Parent implementation of the current item.
 
 feature -- Status report
 

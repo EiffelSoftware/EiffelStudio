@@ -92,9 +92,9 @@ feature -- Tool management
  
 	destroy_tool (t: like tool) is
 		do
+			Project_tool.remove_class_entry (t)			
 			precursor (t)
 --			select_tool.remove_tool_entry (t)
-			Project_tool.remove_class_entry (t)			
 		end
 
 end -- class EB_CLASS_WINDOW

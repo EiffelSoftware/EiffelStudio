@@ -87,6 +87,8 @@ MKDIR dotnet
 CD dotnet
 REM in checkout\head\dotnet
 cvs -z3 export -r%CODEDOM_RELEASE% -d codedom_provider Src/dotnet/codedom_provider
+cvs -z3 export -r%COMPILER_RELEASE% -d consumer Src/dotnet/consumer
+cvs -z3 export -r%COMPILER_RELEASE% -d helpers Src/dotnet/helpers
 
 CD ..\..
 REM in checkout

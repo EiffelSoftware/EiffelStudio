@@ -19,8 +19,6 @@ inherit
 			initialize
 		end
 
-	EV_C_UTIL
-
 create
 	make
 

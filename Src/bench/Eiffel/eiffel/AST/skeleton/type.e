@@ -37,7 +37,7 @@ feature -- Access
 			--| can have a different size but the STRING is still
 			--| the same (problem detected for LIKE_FEATURE). Xavier
 		do
-			Result := other /= Void and then c_same_type ($Current, $other)
+			Result := other /= Void and then other.same_type (Current)
 				and then is_equivalent (other)
 		end;
 

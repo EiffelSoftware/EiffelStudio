@@ -92,6 +92,15 @@ feature {EV_TITLED_WINDOW, EV_APPLICATION_IMP} -- Accelerators
 	accelerators: WEL_ACCELERATORS
 			-- List of accelerators connected to this window.
 
+	wel_acc_size: INTEGER is
+			-- Used to initialize WEL_ARRAY.
+		local
+			wel_acc: WEL_ACCELERATOR
+		once
+			wel_acc ?= (create {EV_ACCELERATOR}).implementation
+			Result := wel_acc.structure_size
+		end
+
 	create_accelerators is
 			-- Recreate the accelerators.
 		local
@@ -104,10 +113,7 @@ feature {EV_TITLED_WINDOW, EV_APPLICATION_IMP} -- Accelerators
 			else
 	 			from
 	 				accel_list.start
-					acc ?= accel_list.item_for_iteration
-		 			create wel_array.make (
-						accel_list.count,
-						acc.structure_size)
+		 			create wel_array.make (accel_list.count, wel_acc_size)
 					n := 0
 				until
 					accel_list.after
@@ -190,14 +196,16 @@ feature -- Status report
 			-- Is the window minimized (iconic state)?
 		do
 			Result := flag_set (style, Ws_minimize) or
-						(not is_show_requested and bit_set (internal_changes, 1028))
+						(not is_show_requested and
+							bit_set (internal_changes, 1028))
 		end
 
 	is_maximized: BOOLEAN is
 			-- Is the window maximized (take the all screen).
 		do
 			Result := (is_show_requested and flag_set (style, Ws_maximize)) or
-						(not is_show_requested and bit_set (internal_changes, 256))
+						(not is_show_requested and
+							bit_set (internal_changes, 256))
 		end
 
 feature -- Status setting
@@ -302,7 +310,8 @@ feature {NONE} -- Implementation
 			mh: INTEGER
 		do
 			-- We calculate the values first
-			mh := title_bar_height + window_border_height + 2 * window_frame_height
+			mh := title_bar_height + window_border_height +
+				2 * window_frame_height
 
 			if child /= Void then
 				mh := mh + child.minimum_height
@@ -325,7 +334,8 @@ feature {NONE} -- Implementation
 		do
 			-- We calculate the values first
 			mw := 2 * window_frame_width
-			mh := title_bar_height + window_border_height + 2 * window_frame_height
+			mh := title_bar_height + window_border_height +
+				2 * window_frame_height
 
 			if child /= Void then
 				mw := mw + child.minimum_width
@@ -390,7 +400,8 @@ feature {NONE} -- WEL Implementation
 					h := 0
 				end
 	
-				wel_resize (w.max (minimum_width).min (maximum_width), h.max (minimum_height).min (maximum_height))
+				wel_resize (w.max (minimum_width).min (maximum_width),
+					h.max (minimum_height).min (maximum_height))
 			end
 		end
 
@@ -435,6 +446,9 @@ end -- class EV_TITLED_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.59  2000/03/21 20:21:09  brendel
+--| Fixed initialization of WEL_ARRAY [WEL_ACCELERATOR].
+--|
 --| Revision 1.58  2000/03/21 02:27:49  brendel
 --| First implementation of accelerators.
 --|
@@ -451,13 +465,16 @@ end -- class EV_TITLED_WINDOW_IMP
 --| Renamed move_and_resize to wel_move_and_resize.
 --|
 --| Revision 1.55  2000/02/29 22:18:27  rogers
---| Redefined initialize, to add the window to the root windows list and to also extend the close_actions with destroy.
+--| Redefined initialize, to add the window to the root windows list and to
+--| also extend the close_actions with destroy.
 --|
 --| Revision 1.54  2000/02/29 17:55:24  rogers
---| Undefined last_call_was_destroy  inherited from EV_TITLED_WINDOW_I as last_call_from_destroy is now re-defined in EV_WINDOW_IMP. Needs fixing.
+--| Undefined last_call_was_destroy  inherited from EV_TITLED_WINDOW_I as
+--| last_call_from_destroy is now re-defined in EV_WINDOW_IMP. Needs fixing.
 --|
 --| Revision 1.53  2000/02/28 19:39:07  rogers
---| During creation, the window is now added to the root_windows list (Still used for windows implementation).
+--| During creation, the window is now added to the root_windows list
+--| (Still used for windows implementation).
 --|
 --| Revision 1.52  2000/02/19 05:45:01  oconnor
 --| released
@@ -478,10 +495,12 @@ end -- class EV_TITLED_WINDOW_IMP
 --| Added (dis)connect_accelerator.
 --|
 --| Revision 1.49.6.3  2000/01/18 00:17:39  rogers
---| Undefined propatae_foreground_color and propagate_background_color from EV_WINDOW_I.
+--| Undefined propatae_foreground_color and propagate_background_color from
+--| EV_WINDOW_I.
 --|
 --| Revision 1.49.6.2  1999/12/17 00:44:22  rogers
---| Altered to fit in with the review branch. Some redefinitions required, make now takes an interface. is_show_requested replaces shown.
+--| Altered to fit in with the review branch. Some redefinitions required,
+--| make now takes an interface. is_show_requested replaces shown.
 --|
 --| Revision 1.49.6.1  1999/11/24 17:30:30  oconnor
 --| merged with DEVEL branch

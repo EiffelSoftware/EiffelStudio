@@ -692,7 +692,8 @@ feature -- Class names completion
 				token := cursor.token.previous
 				if 
 					is_beginning_of_expression (token) or
-					token.image.is_equal (Opening_brace)
+					token.image.is_equal (Opening_brace) or
+					token.image.is_equal (Opening_bracket)
 				then
 					complete := True
 					show_all := True
@@ -702,7 +703,8 @@ feature -- Class names completion
 						token := token.previous
 						if
 							is_beginning_of_expression (token) or
-							token.image.is_equal (Opening_brace)
+							token.image.is_equal (Opening_brace) or
+							token.image.is_equal (Opening_bracket)
 						then
 							-- token is beginning of class name
 							complete := True

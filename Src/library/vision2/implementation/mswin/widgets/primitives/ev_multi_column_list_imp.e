@@ -516,12 +516,9 @@ feature {NONE} -- WEL Implementation
 						not flag_set(info.uoldstate, Lvis_selected) then
 					item_imp := ev_children @ (info.iitem + 1)
 					item_imp.execute_command (Cmd_item_activate, Void)
-					--execute_command (Cmd_selection, Void)
-					check
-						to_be_implemented: FALSE
-					end
+					execute_command (Cmd_select, Void)
 				elseif flag_set(info.uoldstate, Lvis_selected) and
-						not flag_set(info.unewstate, Lvis_selected) then
+					not flag_set(info.unewstate, Lvis_selected) then
 					item_imp := ev_children @ (info.iitem + 1)
 					item_imp.execute_command (Cmd_item_deactivate, Void)
 				end

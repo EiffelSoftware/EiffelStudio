@@ -19,9 +19,9 @@ class
 	ICOR_DEBUG_EVAL
 
 inherit
-	ICOR_OBJECT
+	ICOR_OBJECT_WITH_FRAME
 
-	EIFNET_ICOR_ELEMENT_TYPES
+	EIFNET_ICOR_ELEMENT_TYPES_CONSTANTS
 		export
 			{NONE} all
 			{ANY} cor_element_type_valid
@@ -34,7 +34,7 @@ create
 	
 feature {ICOR_EXPORTER} -- Access
 
-	call_function (a_func: ICOR_DEBUG_FUNCTION; nb_args: INTEGER; a_args: ARRAY [ICOR_DEBUG_VALUE]) is
+	call_function (a_func: ICOR_DEBUG_FUNCTION; a_args: ARRAY [ICOR_DEBUG_VALUE]) is
 			 -- CallFunction sets up a function call.  Note that the given function
 			 -- is called directly; there is no virtual dispatch.  
 			 -- (Use ICorDebugObjectValue::GetVirtualMethod to do virtual dispatch.)
@@ -48,9 +48,8 @@ feature {ICOR_EXPORTER} -- Access
 			l_arg: ICOR_DEBUG_VALUE
 			l_arg_pointer: POINTER
 		do
-
 			l_pointer_size := (create {PLATFORM}).Pointer_bytes
-			create l_mp_args.make (nb_args * l_pointer_size)
+			create l_mp_args.make (a_args.count * l_pointer_size)
 			from
 				i := a_args.lower
 			until
@@ -58,15 +57,15 @@ feature {ICOR_EXPORTER} -- Access
 			loop
 				l_arg := a_args.item (i)
 				if l_arg = Void then
-					l_arg_pointer := Default_pointer
-				else
-					l_arg_pointer := l_arg.item
-				end				
+					l_arg := create_void_reference
+				end
+				l_arg_pointer := l_arg.item
+			
 				l_mp_args.put_pointer (l_arg_pointer, (i - a_args.lower) * l_pointer_size)
 				i := i + 1
 			end
 
-			last_call_success := cpp_call_function (item, a_func.item, nb_args, l_mp_args.item)
+			last_call_success := cpp_call_function (item, a_func.item, a_args.count, l_mp_args.item)
 
 --			print ("ICOR_DEBUG_EVAL.call_function : " +a_func.to_string + "%N%T=> return code = " + last_call_success.out + "%N")
 --		ensure
@@ -108,11 +107,11 @@ feature {ICOR_EXPORTER} -- Access
 			last_call_success := cpp_get_result (item, $p)
 			if p /= default_pointer then
 				create Result.make_by_pointer (p)
+				Result.set_associated_frame (associated_frame)
 			end
 --		ensure
 --			success: last_call_success = 0
 		end
-
 
 	create_value (a_cor_element_type: INTEGER; a_class: ICOR_DEBUG_CLASS): ICOR_DEBUG_VALUE is
 			-- CreateValue creates an ICorDebugValue of the given type for the
@@ -142,18 +141,58 @@ feature {ICOR_EXPORTER} -- Access
 			last_call_success := cpp_create_value (item, a_cor_element_type, l_class_p , $p)
 			if p /= default_pointer then
 				create Result.make_by_pointer (p)
+				Result.set_associated_frame (associated_frame)		
 			end
 --		ensure
 --			success: last_call_success = 0
-		end
+		end		
 
 	new_string (str: STRING) is
 			-- NewString allocates a string object with the given contents.
 		local
-			l_c_string: C_STRING
+			l_uni_string: UNI_STRING
 		do
-			create l_c_string.make (str)
-			last_call_success := cpp_new_string (item, l_c_string.item)
+			create l_uni_string.make (str)
+			last_call_success := cpp_new_string (item, l_uni_string.item)
+		end
+
+	new_object (a_func: ICOR_DEBUG_FUNCTION; a_args: ARRAY [ICOR_DEBUG_VALUE]) is
+			 -- NewObject allocates and calls the constructor for an object.
+		local
+			l_mp_args: MANAGED_POINTER
+			i: INTEGER
+			l_item: ICOR_DEBUG_VALUE
+			l_size: INTEGER
+		do
+			l_size := (create {PLATFORM}).Pointer_bytes
+			create l_mp_args.make (a_args.count * l_size)
+			from
+				i := a_args.lower
+			until
+				i > a_args.upper
+			loop
+				l_item := a_args @ i
+				if l_item = Void then
+					l_item := create_void_reference
+				end				
+				l_mp_args.put_pointer (l_item.item, (i - a_args.lower)*l_size)
+				i := i + 1
+			end		
+			last_call_success := cpp_new_object (item, a_func.item, a_args.count, l_mp_args.item)
+		end
+
+	new_object_no_constructor (a_icd_class: ICOR_DEBUG_CLASS) is
+     		-- NewObjectNoConstructor allocates a new object without
+	 		-- attempting to call any constructor on the object.
+		do
+			last_call_success := cpp_new_object_no_constructor (item, a_icd_class.item)
+		end
+		
+feature {ICOR_EXPORTER} -- Enhanced Access
+
+	create_void_reference: ICOR_DEBUG_VALUE is
+		do
+			Result := create_value (element_type_class, Void)
 		end
 
 feature {NONE} -- Implementation
@@ -216,6 +255,26 @@ feature {NONE} -- Implementation
 			]"
 		alias
 			"NewString"
+		end			
+
+	cpp_new_object (obj: POINTER; a_p_function: POINTER; a_nb_args: INTEGER; a_p_args: POINTER): INTEGER is
+		external
+			"[
+				C++ ICorDebugEval signature(ICorDebugFunction*,ULONG32, ICorDebugValue**): EIF_INTEGER 
+				use "cli_headers.h"
+			]"
+		alias
+			"NewObject"
+		end			
+
+	cpp_new_object_no_constructor (obj: POINTER; a_p_class: POINTER): INTEGER is
+		external
+			"[
+				C++ ICorDebugEval signature(ICorDebugClass*): EIF_INTEGER 
+				use "cli_headers.h"
+			]"
+		alias
+			"NewObjectNoConstructor"
 		end			
 
 end -- class ICOR_DEBUG_EVAL

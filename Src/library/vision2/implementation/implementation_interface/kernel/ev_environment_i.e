@@ -40,6 +40,13 @@ feature {EV_APPLICATION_I, EV_ENVIRONMENT} -- Status report
 			object_comparison_set: Result.object_comparison
 		end
 		
+	fonts: LINEAR [EV_FONT] is
+			-- All fonts available on current platform.
+		deferred
+		ensure
+			Result_not_void: Result /= Void
+		end
+		
 	mouse_wheel_scroll_lines: INTEGER is
 			-- Default number of lines to scroll in response to
 			-- a mouse wheel scroll event.

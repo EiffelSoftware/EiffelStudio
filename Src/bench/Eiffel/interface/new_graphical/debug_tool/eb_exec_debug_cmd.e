@@ -1,7 +1,7 @@
 indexing
 
 	description:	
-		"Set execution format so that no breakable point %
+		"Set execution format so that breakable point %
 			%will be taken into account."
 	date: "$Date$"
 	revision: "$Revision$"

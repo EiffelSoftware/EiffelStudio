@@ -6,19 +6,22 @@ root
 
 default
 	assertion (all)
-	precompiled ("$ISE_EIFFEL\precomp\spec\$ISE_C_COMPILER\wel")
+	precompiled ("$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\wel")
 
 cluster 
 	root_cluster:	"."
 
 		-- EiffelBase
 	all base: 		"ISE_EIFFEL\library\base"
+		exclude
+			"table_eiffel3"
+		end
 
 		-- WEL
 	all wel:		"ISE_EIFFEL\library\wel"
 
 external
-	include_path:	"$(ISE_EIFFEL)\library\wel\spec\windows\include"
+	include_path:	"$(ISE_EIFFEL)\library\wel\spec\$(ISE_PLATFORM)\include"
 	object: 		"$(ISE_EIFFEL)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib"
 
 end -- system h2e

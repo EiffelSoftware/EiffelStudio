@@ -24,7 +24,8 @@ feature -- Access
 		do
 			Result := implementation.pixmap
 		ensure
-			bridge_ok: Result = implementation.pixmap
+			bridge_ok: (Result = Void and implementation.pixmap = Void) or
+				Result.is_equal (implementation.pixmap)
 		end
 
 feature -- Element change
@@ -36,7 +37,7 @@ feature -- Element change
 		do
 			implementation.set_pixmap (a_pixmap)
 		ensure
-			pixmap_assigned: pixmap = a_pixmap
+			pixmap_assigned: pixmap.is_equal (a_pixmap) and pixmap /= a_pixmap
 		end
 
 	remove_pixmap is
@@ -76,6 +77,9 @@ end -- class EV_PIXMAPABLE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/03/01 22:30:26  oconnor
+--| corrected postconditions
+--|
 --| Revision 1.14  2000/02/22 18:39:49  oconnor
 --| updated copyright date and formatting
 --|

@@ -32,11 +32,11 @@ feature {NONE} -- Initialization
 			standard_dialog_make
 			cwel_open_file_name_set_lstructsize (item, structure_size)
 			create str_file_name.make_empty (Max_file_name_length)
-			str_file_name.set_string ("")
+			str_file_name.set_string (create {STRING}.make (0))
 			create str_file_title.make_empty (Max_file_title_length)
-			str_file_title.set_string ("")
+			str_file_title.set_string (create {STRING}.make (0))
 			create str_title.make_empty (Max_title_length)
-			str_title.set_string ("")
+			str_title.set_string (create {STRING}.make (0))
 			cwel_open_file_name_set_lpstrfile (item, str_file_name.item)
 			cwel_open_file_name_set_nmaxfile (item, Max_file_name_length - 10)
 			cwel_open_file_name_set_lpstrfiletitle (item, str_file_title.item)
@@ -228,11 +228,11 @@ feature -- Element change
 			-- Set the title bar with the default value ("Save As"
 			-- or "Open")
 		do
-			str_title.set_string ("")
+			str_title.set_string (create {STRING}.make (0))
 			cwel_open_file_name_set_lpstrtitle (item,
 				default_pointer)
 		ensure
-			default_title_set: title.is_equal ("")
+			default_title_set: title.is_equal (create {STRING}.make (0))
 		end
 
 	set_filter (filter_names, filter_patterns: ARRAY [STRING]) is

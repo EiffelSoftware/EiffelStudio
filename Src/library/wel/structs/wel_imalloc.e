@@ -1,6 +1,5 @@
 indexing
 	description: "IMalloc interface wrapper."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -80,7 +80,9 @@ feature
 				actual_type ?= context.real_type (expr.type);
 				expr.make_byte_code (ba);
 
-				if actual_type.is_basic then 
+				if actual_type = Void then
+					ba.append (Bc_Void)
+				elseif actual_type.is_basic then 
 						-- Simple type objects are metamorphosed
 					ba.append (Bc_metamorphose);
 				end;

@@ -27,4 +27,15 @@ feature {NONE} -- Initialization
 			current_position_set: current_position = 1
 		end
 
+feature -- Reset
+
+	reset is
+			-- Reset content.
+		do
+			internal_put (feature {MD_SIGNATURE_CONSTANTS}.field_sig, 0)
+			current_position := 1
+		ensure
+			current_position_set: current_position = 1
+		end
+		
 end -- class MD_FIELD_SIGNATURE

@@ -30,6 +30,18 @@ feature {NONE} -- Initialization
 			state_set: state = Method_type_setting_state
 		end
 
+feature -- Reset
+
+	reset is
+			-- Reset current for new signature definition
+		do
+			current_position := 0
+			state := Method_type_setting_state
+		ensure
+			current_position_set: current_position = 0
+			state_set: state = Method_type_setting_state
+		end
+		
 feature -- Settings
 
 	set_method_type (t: INTEGER_8) is

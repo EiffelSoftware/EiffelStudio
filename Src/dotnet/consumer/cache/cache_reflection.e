@@ -13,7 +13,7 @@ inherit
 			assembly_types
 		end
 
-create
+create {EMITTER}
 	make
 
 feature -- Redefined

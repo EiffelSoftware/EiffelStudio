@@ -27,7 +27,6 @@ feature -- Initialization
 
 	make is
 			-- Output a welcome message.
-			--| (Automatically generated.)
 		local
 			int1, int2: INTEGER
 		do
@@ -37,18 +36,22 @@ feature -- Initialization
 				!!client
 				client.initialize(Clsctx_inproc_server)
 			
-				print ("Enter integers.")
+				print ("Enter first integer%N.")
 				io.read_integer
 				int1 := io.last_integer
 
+				print ("Enter second integer%N.")
 				io.read_integer
 				int2 := io.last_integer
 
+				print ("The sum equal ")
 				print (client.sum (int1, int2))
+				print ("%N")
 
 			end
 		end;
-feature -- Implementation
+
+feature {NONE}-- Implementation
 
 	client: CLIENT
 

@@ -208,7 +208,6 @@ liman/licence/mkey/dumpkey.c
 liman/licence/mkey/eiflicense.c
 liman/licence/mkey/hostkey.c
 liman/licence/mkey/key.c
-liman/licence/mkey/lexic.c
 liman/licence/mkey/lexic.l
 liman/licence/mkey/mkey.c
 liman/licence/mkey/parser.y
@@ -292,6 +291,8 @@ run-time/debug.c
 run-time/debug.h
 run-time/dir.c
 run-time/dir.h
+run-time/dle.c
+run-time/dle.h
 run-time/eiffel.h
 run-time/equal.c
 run-time/equal.h

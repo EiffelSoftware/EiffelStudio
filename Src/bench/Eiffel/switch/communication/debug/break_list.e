@@ -1,7 +1,7 @@
 -- List of breakpoint setting instructions.
 -- Only one instruction (setting or removal) per breakpoint.
 -- (Breakpoints are equal if they represente the same physical
--- point in the byte code, that's to say tahat they share the 
+-- point in the byte code, that's to say that they share the 
 -- same real_body_id and offset).
 
 class

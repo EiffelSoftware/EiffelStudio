@@ -175,7 +175,7 @@ feature
 		do
 			Result := "\$(EIFFEL4)/bench/spec/\$(PLATFORM)/lib/$prefix"
 
-			if Lace.ace_options.has_multithreaded then
+			if System.has_multithreaded then
 				Result.append ("$mt_prefix")
 			end
 

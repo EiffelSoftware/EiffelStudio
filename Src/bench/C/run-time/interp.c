@@ -4903,6 +4903,7 @@ rt_public struct item *dynamic_eval(int fid, int stype, int is_extern, int is_pr
 		RTXSC;
 		tagval = stagval;
 		in_assertion = saved_assertion; /* Corresponds to RTED */
+		exclear ();
 		return NULL;
 	}
 

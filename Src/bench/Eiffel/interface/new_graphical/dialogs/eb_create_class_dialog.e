@@ -405,19 +405,38 @@ feature {NONE} -- Implementation
 			input: RAW_FILE
 			in_buf: STRING
 			cn: STRING
+			wd: EV_WARNING_DIALOG
+			retried: BOOLEAN
+			writing: BOOLEAN
 		do
-			create input.make (Default_class_file)
-			if input.exists and then input.is_readable then
-				input.open_read
-				input.read_stream (input.count)
-				in_buf := input.last_string
-				cn := class_name
-				cn.to_upper
-				in_buf.replace_substring_all ("$classname", cn)
-				output.open_write
-				output.putstring (in_buf)
-				output.close
+			if not retried then
+				create input.make (Default_class_file)
+				if input.exists and then input.is_readable then
+					input.open_read
+					input.read_stream (input.count)
+					in_buf := input.last_string
+					cn := class_name
+					cn.to_upper
+					in_buf.replace_substring_all ("$classname", cn)
+					writing := True
+					output.open_write
+					output.putstring (in_buf)
+					output.close
+				else
+					create wd.make_with_text (Warning_messages.w_cannot_read_file (Default_class_file))
+					wd.show_modal_to_window (target.window)
+				end
+			else
+				if not writing then
+					create wd.make_with_text (Warning_messages.w_cannot_read_file (Default_class_file))
+				else
+					create wd.make_with_text (Warning_messages.w_cannot_create_file (output.name))
+				end
+				wd.show_modal_to_window (target.window)
 			end
+		rescue
+			retried := True
+			retry
 		end
 
 	on_show_actions is

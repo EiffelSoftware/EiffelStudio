@@ -79,6 +79,7 @@ feature -- Generation
 			
 			from
 				l_resources.start
+				last_resource_offset := 0
 			until
 				l_resources.after
 			loop
@@ -95,6 +96,9 @@ feature -- Access
 			
 	resources: LIST [STRING]
 			-- List of resources.
+			
+	last_resource_offset: INTEGER
+			-- Offset for current inserted resource in `define_resource'.
 
 feature {NONE} -- Implementation
 
@@ -214,7 +218,8 @@ feature {NONE} -- Implementation
 
 				-- Add entry in manifest resource table of current module.
 			l_token := a_module.md_emit.define_manifest_resource (
-				create {UNI_STRING}.make (a_name), 0, 0, feature {MD_RESOURCE_FLAGS}.Public)
+				create {UNI_STRING}.make (a_name), 0, last_resource_offset, feature {MD_RESOURCE_FLAGS}.Public)
+			last_resource_offset := last_resource_offset + l_data.count
 		ensure
 			inserted: a_module.resources /= Void
 		end

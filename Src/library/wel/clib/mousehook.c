@@ -29,7 +29,10 @@ HWND cwel_get_hook_window()
 	
 	get_hook_window_func = GetProcAddress(hLibrary, "get_hook_window");
 	if (get_hook_window_func == NULL)
-		return NULL;		// Unable to locate the function inside the DLL
+		{
+		MessageBox(NULL, "An error occurred while trying to access the function `get_hook_window'\nfrom the DLL `wel_hook.dll'.\nCheck that you have the latest copy of the DLL.", "Unable to access a DLL..", MB_OK | MB_ICONERROR | MB_TOPMOST);
+		return NULL; // Unable to locate the function inside the DLL
+		}
 
 	// Everything went ok, execute the function and return the value returned
 	// by the function.

@@ -19,7 +19,7 @@ feature
 		do
 			associated_class.update_melted_set;
 			if associated_class.has_features_to_melt then
-				degree_output.put_degree_2 (associated_class.e_class, to_go);
+				degree_output.put_degree_2 (associated_class, to_go);
 				associated_class.melt;
 			end;
 		end;
@@ -29,7 +29,7 @@ feature
 		do
 			associated_class.update_melted_set;
 			if associated_class.has_features_to_melt then
-				degree_output.put_degree_2 (associated_class.e_class, to_go);
+				degree_output.put_degree_2 (associated_class, to_go);
 				associated_class.update_dispatch_table;
 			end;
 		end;

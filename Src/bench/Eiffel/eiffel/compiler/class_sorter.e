@@ -4,7 +4,7 @@ class CLASS_SORTER
 
 inherit
 
-	TOPO_SORTER [E_CLASS]
+	TOPO_SORTER [CLASS_C]
 		redefine
 			sort
 		end;
@@ -32,7 +32,6 @@ feature
 	fill_original is
 			-- Fill `original' with the lists `descendants' of classes
 		local
-			e_class: E_CLASS;
 			class_array: ARRAY [CLASS_C];
 			i, nb: INTEGER;
 			a_class: CLASS_C;
@@ -43,17 +42,24 @@ feature
 			end;
 			classes := System.classes;
 			count := 0;
-			from classes.start until classes.after loop
+			from 
+				classes.start 
+			until 
+				classes.after 
+			loop
 				class_array := classes.item_for_iteration;
 				nb := Class_counter.item (classes.key_for_iteration).count
-				from i := 1 until i > nb loop
+				from 
+					i := 1 
+				until 
+					i > nb 
+				loop
 					a_class := class_array.item (i)
 					if a_class /= Void then
-						e_class := a_class.e_class;
 						count := count + 1;
 						a_class.set_topological_id (count);
-						original.put (e_class, count);
-						successors.put (e_class.descendants, count);
+						original.put (a_class, count);
+						successors.put (a_class.descendants, count);
 					end
 					i := i + 1
 				end

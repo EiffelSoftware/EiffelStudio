@@ -320,7 +320,7 @@ feature -- Concurrent Eiffel
 			check
 				is_cl_type_i: cl_type /= Void
 			end;
-			generated_file.putstring (cl_type.associated_class_type.associated_class.e_class.name_in_upper);
+			generated_file.putstring (cl_type.associated_class_type.associated_class.name_in_upper);
 			generated_file.putstring ("%", %"");
 			if call /= Void then
 				feat ?= call.message;

@@ -349,7 +349,7 @@ feature -- Concurrent Eiffel
 			else
 				generated_file.putstring ("), constant_query, %"")
 			end
-			generated_file.putstring(typ.base_class.e_class.name_in_upper)
+			generated_file.putstring(typ.base_class.name_in_upper)
 			generated_file.putstring("%", %"")
 			generated_file.putstring(feature_name)
 			generated_file.putstring ("%", ")

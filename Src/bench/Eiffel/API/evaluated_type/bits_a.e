@@ -1,41 +1,23 @@
 indexing
-
-	description: 
-		"Actual type for bits."
-	date: "$Date$";
+	description: "Actual type for bits."
+	date: "$Date$"
 	revision: "$Revision $"
 
 class BITS_A
 
 inherit
-
-	BASIC_A
-		rename
-			internal_conform_to as old_conform_to
-		redefine
-			is_bits, associated_class, dump,
-			heaviest, same_as, append_to,
-			check_conformance, format, associated_eclass,
-			is_equivalent
-		end;
-
 	BASIC_A
 		redefine
 			is_bits, internal_conform_to, associated_class, dump,
 			heaviest, same_as, append_to,
 			check_conformance, format, associated_eclass,
 			is_equivalent
-		select
-			internal_conform_to
-		end;
+		end
 
 feature -- Property
 
-	is_bits: BOOLEAN is
+	is_bits: BOOLEAN is True
 			-- Is the current actual type a bits type ?
-		do
-			Result := True;
-		end;
 
 feature -- Comparison
 
@@ -52,19 +34,19 @@ feature -- Access
 		local
 			other_bits: BITS_A
 		do
-			other_bits ?= other;
+			other_bits ?= other
 			Result :=	other_bits /= Void
 						and then
 						other_bits.bit_count = bit_count
-		end;
+		end
 
 	associated_eclass: E_CLASS is
 			-- Associated eiffel class
 		once
 			Result := Eiffel_system.bit_class.compiled_eclass
-		end;
+		end
 
-	bit_count: INTEGER;
+	bit_count: INTEGER
 			-- Bit count
 
 feature -- Setting
@@ -80,16 +62,16 @@ feature -- Output
 	dump: STRING is
 			-- Dumped trace
 		do
-			!!Result.make (10);
-			Result.append ("BIT ");
-			Result.append_integer (bit_count);
-		end;
+			!!Result.make (10)
+			Result.append ("BIT ")
+			Result.append_integer (bit_count)
+		end
 
 	append_to (st: STRUCTURED_TEXT) is
 		do
-			st.add_string ("BIT ");
-			st.add_int (bit_count);
-		end;
+			st.add_string ("BIT ")
+			st.add_int (bit_count)
+		end
 
 feature {COMPILER_EXPORTER}
 
@@ -99,70 +81,70 @@ feature {COMPILER_EXPORTER}
 			-- which uses `context' for initialisation of the
 			-- error.
 		local
-			vncb: VNCB;
+			vncb: VNCB
 		do
 			if not conform_to (target_type) then
-				!!vncb;
-				context.init_error (vncb);
-				vncb.set_target_name (target_name);
-				vncb.set_source_type (Current);
-				vncb.set_target_type (target_type);
-				Error_handler.insert_error (vncb);
-			end;
-		end;
+				!!vncb
+				context.init_error (vncb)
+				vncb.set_target_name (target_name)
+				vncb.set_source_type (Current)
+				vncb.set_target_type (target_type)
+				Error_handler.insert_error (vncb)
+			end
+		end
 
 	internal_conform_to (other: TYPE_A; in_generics: BOOLEAN): BOOLEAN is
 			-- Does Current conform to `other' ?
 		local
-			other_bits: BITS_A;
+			other_bits: BITS_A
 		do
-			other_bits ?= other.actual_type;
+			other_bits ?= other.actual_type
 			if other_bits /= Void then
 				if in_generics then
-					Result := other_bits.bit_count = bit_count;
+					Result := other_bits.bit_count = bit_count
 				else
-					Result := other_bits.bit_count >= bit_count;
-				end;
+					Result := other_bits.bit_count >= bit_count
+				end
 			else
-				Result := old_conform_to (other, False);
-			end;
-		end;
+				Result := {BASIC_A} precursor (other, False)
+			end
+		end
 
 	heaviest (type: TYPE_A): TYPE_A is
 			-- Heaviest numeric type for balancing rule
 		require else
-			good_argument: type /= Void;
-			consistency: is_bits and then type.is_bits;
+			good_argument: type /= Void
+			consistency: is_bits and then type.is_bits
 		local
-			other: BITS_A;
+			other: BITS_A
 		do
-			other ?= type;
+			other ?= type
 			if other.bit_count > bit_count then
-				Result := type;
+				Result := type
 			else
-				Result := Current;
-			end;
-		end;
+				Result := Current
+			end
+		end
 
 	associated_class: CLASS_C is
 			-- Associated class
 		require else
-			bit_class_compiled: System.bit_class.compiled;
+			bit_class_compiled: System.bit_class.compiled
 		once
-			Result := System.bit_class.compiled_class;
-		end;
+			Result := System.bit_class.compiled_class
+		end
 
 	type_i: BIT_I is
 			-- C type
 		do
-			!!Result;
-			Result.set_size (bit_count);
-		end;
+			!!Result
+			Result.set_size (bit_count)
+		end
 
 	format (ctxt: FORMAT_CONTEXT_B) is
 		do
-			ctxt.put_string ("BIT ");
-			ctxt.put_string (bit_count.out);
+			ctxt.put_string ("BIT ")
+			ctxt.put_string (bit_count.out)
 		end
 
 end -- class BITS_A

@@ -54,10 +54,7 @@ feature -- Properties
 
 feature -- Access
 
-	is_class: BOOLEAN is
-		do
-			Result := True
-		end;
+	is_class: BOOLEAN is True
 
 	valid_reference_class (reference_class: E_CLASS): BOOLEAN is
 		do

@@ -17,16 +17,10 @@ inherit
 
 feature -- Properties
 
-	option_name: STRING is
-		once
-			Result := "debug"
-		end;
+	option_name: STRING is "debug"
 
-	is_debug: BOOLEAN is
+	is_debug: BOOLEAN is True
 			-- Is the option a debug one ?
-		do
-			Result := True;
-		end;
 
 feature {COMPILER_EXPORTER}
 

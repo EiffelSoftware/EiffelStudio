@@ -14,10 +14,7 @@ inherit
 
 feature -- Properties
 
-	option_name: STRING is
-		once
-			Result := "hide_implementation"
-		end;
+	option_name: STRING is "hide_implementation"
 
 feature {COMPILER_EXPORTER}
 

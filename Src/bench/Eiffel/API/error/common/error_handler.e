@@ -1,15 +1,13 @@
 indexing
-
-	description: 
-		"Error handler that manages warning and error messages.";
-	date: "$Date$";
+	description: "Error handler that manages warning and error messages."
+	date: "$Date$"
 	revision: "$Revision $"
 
 class ERROR_HANDLER
 
 inherit
+	EXCEPTIONS
 
-	EXCEPTIONS;
 	SHARED_RESCUE_STATUS
 
 creation {SHARED_ERROR_HANDLER}
@@ -21,28 +19,28 @@ feature {NONE} -- Initialization
 	make is
 			-- Initialization
 		do
-			!!error_list.make;
-			!!warning_list.make;
-		end;
+			!!error_list.make
+			!!warning_list.make
+		end
 
 feature -- Properties
 
-	error_displayer: ERROR_DISPLAYER;
+	error_displayer: ERROR_DISPLAYER
 			-- Displays warning and error messages when they occur
 
-	error_list: SORTED_TWO_WAY_LIST [ERROR];
+	error_list: SORTED_TWO_WAY_LIST [ERROR]
 			-- Error list
 
-	warning_list: SORTED_TWO_WAY_LIST [WARNING];
+	warning_list: SORTED_TWO_WAY_LIST [WARNING]
 			-- Warning list
 
-	new_error: BOOLEAN;
+	new_error: BOOLEAN
 			-- Boolean for testing if new error since last `mark'
 
-	error_position: INTEGER;
+	error_position: INTEGER
 			-- Position in file where error occurred (during degree 3)?
 
-feature {E_PROJECT, COMPILER_EXPORTER} -- Element change
+feature {E_PROJECT, COMPILER_EXPORTER, DEGREE_OUTPUT} -- Element change
 
 	insert_interrupt_error (is_during_comp: BOOLEAN) is
 			-- Insert an `interrup_error' so that the compilation
@@ -51,12 +49,12 @@ feature {E_PROJECT, COMPILER_EXPORTER} -- Element change
 		local
 			interrupt_error: INTERRUPT_ERROR
 		do
-			!! interrupt_error;
+			!! interrupt_error
 			if is_during_comp then
 				interrupt_error.set_during_compilation
-			end;
-			insert_error (interrupt_error);
-		end;
+			end
+			insert_error (interrupt_error)
+		end
 
 feature {COMPILER_EXPORTER, E_PROJECT} -- Output
 
@@ -98,7 +96,7 @@ feature {COMPILER_EXPORTER} -- Error handling primitives
 			error_position := i
 		ensure
 			set: error_position = i
-		end;
+		end
 
 	insert_error (e: ERROR) is
 			-- Insert `e' in `error_list'.
@@ -107,49 +105,49 @@ feature {COMPILER_EXPORTER} -- Error handling primitives
 		local
 			f_error: FEATURE_ERROR
 		do
-			new_error := True;
-			f_error ?= e;
+			new_error := True
+			f_error ?= e
 			if f_error /= Void then
 				f_error.set_error_position (error_position)
-			end;
-			error_list.extend (e);
-		end;
+			end
+			error_list.extend (e)
+		end
 
 	insert_warning (w: WARNING) is
 			-- Insert `w' in `warning_list'.
 		require
 			good_argument: w /= Void
 		do
-			warning_list.extend (w);
-		end;
+			warning_list.extend (w)
+		end
 
 	mark is
 			-- Mark for testing `new_error'.
 		do
-			new_error := False;
-		end;
+			new_error := False
+		end
 
 	nb_errors: INTEGER is
 		do
-			Result := error_list.count;
-		end;
+			Result := error_list.count
+		end
 
 	has_error: BOOLEAN is
 			-- Has the error handler detected an error so far ?
 		do
-			Result := not error_list.empty;
-		end;
+			Result := not error_list.empty
+		end
 
 	raise_error is
 			-- Raise an exception retrieved by routine `recompile'
 			-- of class SYSTEM_I
 		require
 			non_void_error_displayer: error_displayer /= Void
-			has_error: not error_list.empty;
+			has_error: not error_list.empty
 		do
-			Rescue_status.set_is_error_exception (True);
-			raise ("Compiler error");
-		end;
+			Rescue_status.set_is_error_exception (True)
+			raise ("Compiler error")
+		end
 
 	checksum is
 			-- Check if there are errors in `error_list' and raise
@@ -158,16 +156,16 @@ feature {COMPILER_EXPORTER} -- Error handling primitives
 			non_void_error_displayer: error_displayer /= Void
 		do
 			if not error_list.empty then
-				raise_error;
-			end;
-		end;
+				raise_error
+			end
+		end
 
 	wipe_out is
 			-- Empty `error_list'.
 		do
-			error_list.wipe_out;
-			warning_list.wipe_out;
-		end;
+			error_list.wipe_out
+			warning_list.wipe_out
+		end
 
 feature {E_PROJECT, COMPILER_EXPORTER} -- Setting
 
@@ -179,7 +177,7 @@ feature {E_PROJECT, COMPILER_EXPORTER} -- Setting
 			error_displayer := ed
 		ensure
 			set: error_displayer = ed
-		end;
+		end
 
 feature {COMPILER_EXPORTER} 
 
@@ -195,8 +193,8 @@ feature {COMPILER_EXPORTER}
 									$make_string_empty,
 									$make_id_too_long,
 									$make_basic_generic_type,
-									$make_too_many_generics);
-		end;
+									$make_too_many_generics)
+		end
 
 feature {EXPR_ADDRESS_AS} -- Passed to C
 
@@ -204,12 +202,12 @@ feature {EXPR_ADDRESS_AS} -- Passed to C
 			-- Build a syntax error message
 			-- [Called by the parsers]
 		local
-			syntax_error: SYNTAX_ERROR;
+			syntax_error: SYNTAX_ERROR
 		do
-			!!syntax_error.init;
-			insert_error (syntax_error);
-			raise_error;
-		end;
+			!!syntax_error.init
+			insert_error (syntax_error)
+			raise_error
+		end
 
 feature {COMPILER_EXPORTER}
 
@@ -219,9 +217,9 @@ feature {COMPILER_EXPORTER}
 		local
 			separate_error: SEPARATE_SYNTAX_ERROR
 		do
-			!! separate_error.init;
-			insert_error (separate_error);
-			raise_error;
+			!! separate_error.init
+			insert_error (separate_error)
+			raise_error
 		end
 
 feature {NONE} -- Passed to C
@@ -229,93 +227,93 @@ feature {NONE} -- Passed to C
 	make_string_too_long is
 			-- Build an error message for a too long manifest string.
 		local
-			string_too_long: STRING_TOO_LONG;
+			string_too_long: STRING_TOO_LONG
 		do
-			!!string_too_long.init;
-			insert_error (string_too_long);
-			raise_error;
-		end;
+			!!string_too_long.init
+			insert_error (string_too_long)
+			raise_error
+		end
 
 	make_id_too_long is
 			-- Build an error message for a too long identifier.
 		local
-			id_too_long: ID_TOO_LONG;
+			id_too_long: ID_TOO_LONG
 		do
-			!!id_too_long.init;
-			insert_error (id_too_long);
-			raise_error;
-		end;
+			!!id_too_long.init
+			insert_error (id_too_long)
+			raise_error
+		end
 
 	make_too_many_generics is
 			-- Build an error message for too many generics.
 		local
-			too_many_generics: TOO_MANY_GENERICS;
+			too_many_generics: TOO_MANY_GENERICS
 		do
-			!!too_many_generics.init;
-			insert_error (too_many_generics);
-			raise_error;
-		end;
+			!!too_many_generics.init
+			insert_error (too_many_generics)
+			raise_error
+		end
 
 	make_string_extension is
 			-- Build an error message for a bad string extension.
 		local
-			string_extension: STRING_EXTENSION;
+			string_extension: STRING_EXTENSION
 		do
-			!!string_extension.init;
-			insert_error (string_extension);
-			raise_error;
-		end;
+			!!string_extension.init
+			insert_error (string_extension)
+			raise_error
+		end
 
 	make_string_uncompleted is
 			-- Build an error message for an umcompleted string
 		local
-			string_uncompleted: STRING_UNCOMPLETED;
+			string_uncompleted: STRING_UNCOMPLETED
 		do
-			!!string_uncompleted.init;
-			insert_error (string_uncompleted);
-			raise_error;
-		end;
+			!!string_uncompleted.init
+			insert_error (string_uncompleted)
+			raise_error
+		end
 
 	make_bad_character is
 			-- Build an error message for a bad character
 		local
-			bad_char: BAD_CHARACTER;
+			bad_char: BAD_CHARACTER
 		do
-			!!bad_char.init;
-			insert_error (bad_char);
-			raise_error;
-		end;
+			!!bad_char.init
+			insert_error (bad_char)
+			raise_error
+		end
 
 	make_string_empty is
 			-- Build an error message for an empty string
 		local
-			string_empty: STRING_EMPTY;
+			string_empty: STRING_EMPTY
 		do
-			!!string_empty.init;
-			insert_error (string_empty);
-			raise_error;
-		end;
+			!!string_empty.init
+			insert_error (string_empty)
+			raise_error
+		end
 
 	make_basic_generic_type is
 		local
-			basic_gen_type_error: BASIC_GEN_TYPE_ERR;
+			basic_gen_type_error: BASIC_GEN_TYPE_ERR
 		do
-			!!basic_gen_type_error.init;
-			insert_error (basic_gen_type_error);
-			raise_error;
-		end;
+			!!basic_gen_type_error.init
+			insert_error (basic_gen_type_error)
+			raise_error
+		end
 
 feature {NONE} -- Externals
 
-	error_init (obj: POINTER; ptr1, ptr2, ptr3, ptr4, ptr5, ptr6, ptr7, ptr8, ptr9: POINTER) is
+	error_init (obj: POINTER ptr1, ptr2, ptr3, ptr4, ptr5, ptr6, ptr7, ptr8, ptr9: POINTER) is
 			-- Initialize syntac error handling C primitives.
 		external
 			"C"
-		end;
+		end
 
 invariant
 
-	error_list_exists: error_list /= Void;
-	warning_list_exists: warning_list /= Void;
+	error_list_exists: error_list /= Void
+	warning_list_exists: warning_list /= Void
 
 end -- class ERROR_HANDLER

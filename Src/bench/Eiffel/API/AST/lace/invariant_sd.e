@@ -1,14 +1,12 @@
 indexing
-
-	description: 
-		"";
-	date: "$Date$";
+	description: ""
+	date: "$Date$"
 	revision: "$Revision $"
 
-class INVARIANT_SD
+class
+	INVARIANT_SD
 
 inherit
-
 	OPT_VAL_SD
 		redefine
 			is_invariant
@@ -16,10 +14,7 @@ inherit
 
 feature -- Properties
 
-	is_invariant: BOOLEAN is
+	is_invariant: BOOLEAN is True
 			-- is the option value `invariant' ?
-		do
-			Result := True;
-		end
 
 end -- class INVARIANT_SD

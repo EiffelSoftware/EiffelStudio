@@ -17,16 +17,10 @@ inherit
 
 feature -- Properties
 
-	option_name: STRING is
-		once
-			Result := "trace"
-		end;
+	option_name: STRING is "trace"
 
-	is_trace: BOOLEAN is
+	is_trace: BOOLEAN is True
 			-- Is the option a trace one ?
-		do
-			Result := True;
-		end;
 
 feature {COMPILER_EXPORTER}
 

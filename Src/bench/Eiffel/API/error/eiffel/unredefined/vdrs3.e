@@ -24,7 +24,7 @@ feature -- Properties
 
 	code: STRING is
 			-- Error code
-		do
+		once
 			Result := "VDRS";
 		end;
 

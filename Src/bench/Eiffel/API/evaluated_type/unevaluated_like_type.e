@@ -1,21 +1,20 @@
 indexing
-
-	description: 
-		"Like types that have not been evaluated (has not gone past Degree 4).";
-	date: "$Date$";
+	description: "Like types that have not been evaluated (has not gone past Degree 4)."
+	date: "$Date$"
 	revision: "$Revision $"
 
-class UNEVALUATED_LIKE_TYPE
+class
+	UNEVALUATED_LIKE_TYPE
 
 inherit
-
-	TYPE_A
+	LIKE_TYPE_A
 		redefine
-			has_like, dump, is_like_current, has_associated_class
+			is_like_current, has_associated_class,
+			associated_eclass, type_i, associated_class,
+			internal_conform_to
 		end
 
 creation
-
 	make
 
 feature -- Initialization
@@ -32,29 +31,18 @@ feature -- Initialization
 
 feature -- Properties
 
-	anchor: STRING;
+	anchor: STRING
 			-- Anchor name
 
 	is_like_current: BOOLEAN
 			-- Is Current like Current?
 
-	has_like: BOOLEAN is
-			-- Does Current has likes?
-		do
-			Result := True
-		end;
-
-	has_associated_class: BOOLEAN is
+	has_associated_class: BOOLEAN is False
 			-- Does Current have associated class?
-		do
-			Result := False
-		ensure then
-			false_result: not Result
-		end;
 
 	associated_eclass: E_CLASS is
 		do
-		end;
+		end
 
 feature -- Comparison
 
@@ -73,7 +61,7 @@ feature -- Setting
 			is_like_current := True
 		ensure
 			is_like_current: is_like_current
-		end;
+		end
 
 feature -- Output
 
@@ -81,52 +69,61 @@ feature -- Output
 			-- Append Current type to `st'.
 		do
 			st.add_string (dump)
-		end;
+		end
 
 	dump: STRING is
 		do
-			!! Result.make (0);
-			Result.append ("like ");
+			!! Result.make (0)
+			Result.append ("like ")
 			Result.append (anchor)
-		end;
+		end
 
 feature {NONE} -- Implementation
+
+	same_as (other: TYPE_A): BOOLEAN is
+			-- Is the current type the same as `other' ?
+		do
+		end
+
+	solved_type (feat_table: FEATURE_TABLE f: FEATURE_I): like Current is
+			-- Calculated type in function of the feature `f' which has
+			-- the type Current and the feautre table `feat_table
+		do
+		end
 
 	create_info: CREATE_INFO is
 			-- Byte code information for entity type creation
 		do
-		end;
+		end
 
-	internal_conform_to (other: TYPE_A; in_generics: BOOLEAN): BOOLEAN is
+	internal_conform_to (other: TYPE_A in_generics: BOOLEAN): BOOLEAN is
 			-- Does Current conform to `other' ?
 		do
-		end;
+		end
+	
+	instantiation_in (type: TYPE_A written_id: CLASS_ID): like Current is
+		do
+		end
 
 	associated_class: CLASS_C is
 			-- Class associated to the current type
 		do
-		end;
-
-	storage_info_with_name (classc: CLASS_C): S_TYPE_INFO is
-			-- Storage info for Current type in class `classc'
-			-- and store the name of the class for Current
-		do
-		end;
+		end
 
 	type_i: TYPE_I is
 			-- C type
 		do
-		end;
+		end
 
-	storage_info (classc: CLASS_C): S_TYPE_INFO is
+	storage_info_with_name, storage_info (classc: CLASS_C): S_TYPE_INFO is
 			-- Storage info for Current type in class `classc'
 		do
-		end;
+		end
 
 invariant
 
-	non_void_anchor: anchor /= Void;
+	non_void_anchor: anchor /= Void
 	is_like_current_implies_current_anchor: is_like_current
-				implies anchor.is_equal ("Current");
+				implies anchor.is_equal ("Current")
 
 end -- class UNEVALUATED_LIKE_TYPE

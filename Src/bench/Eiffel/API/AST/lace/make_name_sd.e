@@ -1,14 +1,12 @@
 indexing
-
-	description: 
-		"";
-	date: "$Date$";
+	description: ""
+	date: "$Date$"
 	revision: "$Revision $"
 
-class MAKE_NAME_SD
+class
+	MAKE_NAME_SD
 
 inherit
-
 	LANGUAGE_NAME_SD
 		redefine
 			is_make
@@ -16,10 +14,7 @@ inherit
 
 feature -- Properties
 
-	is_make: BOOLEAN is
+	is_make: BOOLEAN is True
 			-- Is the language name "Make" ?
-		do
-			Result := true;
-		end;
 
 end -- class MAKE_NAME_SD

@@ -1,7 +1,5 @@
 indexing
-
-	description: 
-		"Platform specific constants.";
+	description: "Platform specific constants.";
 	date: "$Date$";
 	revision: "$Revision $"
 

@@ -1,8 +1,6 @@
 indexing
-
-	description: 
-		"";
-	date: "$Date$";
+	description: ""
+	date: "$Date$"
 	revision: "$Revision $"
 
 class VDRS1 
@@ -24,9 +22,9 @@ feature -- Properties
 
 	code: STRING is 
 			-- Error code
-		do
-			Result := "VDRS";
-		end;
+		once
+			Result := "VDRS"
+		end
 
 	subcode: INTEGER is 1;
 

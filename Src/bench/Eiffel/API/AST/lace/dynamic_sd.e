@@ -15,10 +15,7 @@ inherit
 
 feature -- Properties
 
-	option_name: STRING is
-		once
-			Result := "dynamic"
-		end;
+	option_name: STRING is "dynamic"
 
 feature {COMPILER_EXPORTER}
 

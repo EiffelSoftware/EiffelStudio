@@ -14,10 +14,7 @@ inherit
 
 feature -- Properties
 
-	option_name: STRING is
-		once
-			Result := "multithreaded"
-		end
+	option_name: STRING is "multithreaded"
 
 feature {COMPILER_EXPORTER}
 

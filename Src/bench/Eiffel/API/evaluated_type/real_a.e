@@ -1,44 +1,31 @@
 indexing
 
 	description: 
-		"Actual type for real type.";
-	date: "$Date$";
+		"Actual type for real type."
+	date: "$Date$"
 	revision: "$Revision $"
 
 class REAL_A
 
 inherit
-
-	BASIC_A
-		rename
-			internal_conform_to as old_conform_to
-		redefine
-			is_real, associated_class, same_as, is_numeric, heaviest,
-			associated_eclass
-		end;
 	BASIC_A
 		redefine
 			is_real, associated_class, same_as, is_numeric, heaviest,
 			internal_conform_to, associated_eclass
-		select
-			internal_conform_to
 		end
 
 feature -- Property
 
-	is_real: BOOLEAN is
+	is_real: BOOLEAN is True
 			-- Is the current type a real type ?
-		do
-			Result := True;
-		end;
 
 feature -- Access
 
 	associated_eclass: E_CLASS is
 			-- Associated eiffel class
 		once
-			Result := System.real_class.compiled_eclass;
-		end;
+			Result := System.real_class.compiled_eclass
+		end
 
 feature {COMPILER_EXPORTER}
 
@@ -46,19 +33,16 @@ feature {COMPILER_EXPORTER}
 			-- Does `other' conform to Current ?
 		do
 			if in_generics then
-				Result := other.is_real;
+				Result := other.is_real
 			else
-				Result := 	old_conform_to (other, False)
+				Result := 	{BASIC_A} precursor (other, False)
 							or else
 							other.actual_type.is_double
-			end;
-		end;
+			end
+		end
 
-	is_numeric: BOOLEAN is
+	is_numeric: BOOLEAN is True
 			-- Is the current type a numeric type ?
-		do
-			Result := True;
-		end;
 
 	heaviest (type: TYPE_A): TYPE_A is
 			-- Heaviest numeric type for balancing rule
@@ -67,27 +51,27 @@ feature {COMPILER_EXPORTER}
 				Result := type
 			else
 				Result := Current
-			end;
-		end;
+			end
+		end
 
 	type_i: FLOAT_I is
 			-- C type
 		once
-			Result := Float_c_type;
-		end;
+			Result := Float_c_type
+		end
 
 	associated_class: CLASS_C is
 			-- Class REAL
 		require else
 			real_class_compiled: System.real_class.compiled
 		once
-			Result := System.real_class.compiled_class;
-		end;
+			Result := System.real_class.compiled_class
+		end
 
 	same_as (other: TYPE_A): BOOLEAN is
 			-- Is the current type the same as `other' ?
 		do
-			Result := other.is_real;
-		end;
+			Result := other.is_real
+		end
 
 end -- class REAL_A

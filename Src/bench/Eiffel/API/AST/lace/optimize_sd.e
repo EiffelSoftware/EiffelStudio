@@ -8,25 +8,19 @@ indexing
 class OPTIMIZE_SD
 
 inherit
-
 	OPTION_SD
 		redefine
 			is_optimize
-		end;
+		end
+
 	SHARED_OPTIMIZE_LEVEL
 
 feature -- Properties
 
-	option_name: STRING is
-		once
-			Result := "optimize"
-		end;
+	option_name: STRING is "optimize"
 
-	is_optimize: BOOLEAN is
+	is_optimize: BOOLEAN is True
 			-- is the option an optimize one ?
-		do
-			Result := True;
-		end;
 
 feature {COMPILER_EXPORTER}
 

@@ -1,14 +1,12 @@
 indexing
-
-	description: 
-		"";
-	date: "$Date$";
+	description: ""
+	date: "$Date$"
 	revision: "$Revision $"
 
-class ENSURE_SD
+class
+	ENSURE_SD
 
 inherit
-
 	OPT_VAL_SD
 		redefine
 			is_ensure
@@ -16,10 +14,7 @@ inherit
 
 feature -- Properties
 
-	is_ensure: BOOLEAN is
+	is_ensure: BOOLEAN is True
 			-- Is the option value `ensure' ?
-		do
-			Result := true;
-		end
 
 end -- class ENSURE_SD

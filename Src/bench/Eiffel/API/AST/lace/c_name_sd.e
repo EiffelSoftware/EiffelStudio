@@ -1,14 +1,12 @@
 indexing
-
-	description: 
-		"";
-	date: "$Date$";
+	description: ""
+	date: "$Date$"
 	revision: "$Revision $"
 
-class C_NAME_SD
+class
+	C_NAME_SD
 
 inherit
-
 	LANGUAGE_NAME_SD
 		redefine
 			is_c
@@ -16,10 +14,7 @@ inherit
 
 feature -- Properties
 
-	is_c: BOOLEAN is
+	is_c: BOOLEAN is True
 			-- Is the language name "C" ?
-		do
-			Result := True;
-		end
 
 end -- class C_NAME_SD

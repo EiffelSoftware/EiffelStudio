@@ -1,52 +1,37 @@
 indexing
-
-	description: 
-		"Actual type for integer type.";
-	date: "$Date$";
+	description: "Actual type for integer type."
+	date: "$Date$"
 	revision: "$Revision $"
 
-class INTEGER_A
+class
+	INTEGER_A
 
 inherit
-
-	BASIC_A
-		rename
-			internal_conform_to as old_conform_to
-		redefine
-			is_integer, associated_class,
-			same_as, is_numeric, heaviest,
-			associated_eclass
-		end;
 	BASIC_A
 		redefine
 			is_integer, associated_class,
 			same_as, is_numeric, heaviest, internal_conform_to,
 			associated_eclass
-		select
-			internal_conform_to
 		end
 
 feature -- Property
 
-	is_integer: BOOLEAN is
+	is_integer: BOOLEAN is True
 			-- Is the current type an integer type ?
-		do
-			Result := True;
-		end;
 
 feature -- Access
 
 	same_as (other: TYPE_A): BOOLEAN is
 			-- Is the current type the same as `other' ?
 		do
-			Result := other.is_integer;
-		end;
+			Result := other.is_integer
+		end
 
 	associated_eclass: E_CLASS is
 			-- Associated eiffel class
 		once
 			Result := System.integer_class.compiled_eclass
-		end;
+		end
 
 feature {COMPILER_EXPORTER}
 
@@ -54,40 +39,37 @@ feature {COMPILER_EXPORTER}
 			-- Does `other' conform to Current ?
 		do
 			if in_generics then
-				Result := other.is_integer;
+				Result := other.is_integer
 			else
-				Result := 	old_conform_to (other, False)
+				Result := {BASIC_A} precursor (other, False)
 							or else
 							other.is_real
 							or else
-							other.is_double;
-			end;
-		end;
+							other.is_double
+			end
+		end
 
-	is_numeric: BOOLEAN is
+	is_numeric: BOOLEAN is True
 			-- Is the current type a numeric type ?
-		do
-			Result := True;
-		end;
 
 	heaviest (type: TYPE_A): TYPE_A is
 			-- Heaviest numeric type for balancing rule
 		do	
-			Result := type;
-		end;
+			Result := type
+		end
 
 	type_i: LONG_I is
 			-- C type
 		once
-			Result := Long_c_type;
-		end;
+			Result := Long_c_type
+		end
 
 	associated_class: CLASS_C is
 			-- Class INTEGER
 		require else
-			integer_class_compiled: System.integer_class.compiled;
+			integer_class_compiled: System.integer_class.compiled
 		once
-			Result := System.integer_class.compiled_class;
-		end;
+			Result := System.integer_class.compiled_class
+		end
 
 end -- class INTEGER_A

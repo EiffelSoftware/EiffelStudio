@@ -34,10 +34,7 @@ feature -- Properties
 	option_name: ID_SD;
 			-- Free option name
 
-	is_free_option: BOOLEAN is
-		do
-			Result := True
-		end;
+	is_free_option: BOOLEAN is True
 
 feature {COMPILER_EXPORTER}
 

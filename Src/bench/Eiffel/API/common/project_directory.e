@@ -150,6 +150,33 @@ feature -- Access
 					is_base_executable                      
 		end                                                              
 
+	forget_old_project is
+			-- Rename `EIFGEN' to `EIFGEN-old'.
+			-- Will raise an exception if it is not possible.
+			-- This exception will be catch at a higher level
+			--| This is for safety reason and to avoid the user
+			--| to do it by hands.
+		require
+			project_exists: exists
+			is_readable: is_readable
+			is_writable: is_writable
+		local
+			old_name: DIRECTORY_NAME
+			new_name: STRING
+			eifgen_dir: DIRECTORY
+		do
+			!! old_name.make_from_string (name)
+			old_name.set_subdirectory (Eiffelgen)
+
+			new_name ?= clone (old_name)
+			new_name.append ("-old")
+
+				--| Change the name of the directory
+				--| If the directory exists, it will raise an exception
+			!! eifgen_dir.make (old_name)
+			eifgen_dir.change_name (new_name)
+		end
+
 feature -- Update
 
 	set_initialized is

@@ -1,44 +1,29 @@
 indexing
-
-	description: 
-		"Actual type for pointer type.";
-	date: "$Date$";
+	description: "Actual type for pointer type."
+	date: "$Date$"
 	revision: "$Revision $"
 
 class POINTER_A
 
 inherit
-
-	BASIC_A
-		rename
-			internal_conform_to as old_conform_to
-		redefine
-			is_pointer, type_i, associated_class, same_as,
-			associated_eclass
-		end;
 	BASIC_A
 		redefine
 			is_pointer, type_i, associated_class, same_as,
 			internal_conform_to, associated_eclass
-		select
-			internal_conform_to
 		end
 
 feature -- Property
 
-	is_pointer: BOOLEAN is
+	is_pointer: BOOLEAN is True
 			-- Is the current type a pointer type ?
-		do
-			Result := True;
-		end;
 
 feature -- Access
 
 	associated_eclass: E_CLASS is
 			-- Associated eiffel class
 		once
-			Result := System.pointer_class.compiled_eclass;
-		end;
+			Result := System.pointer_class.compiled_eclass
+		end
 
 feature {COMPILER_EXPORTER}
 
@@ -46,30 +31,30 @@ feature {COMPILER_EXPORTER}
 			-- Pointer C type
 		once
 			!!Result
-		end;
+		end
 
 	associated_class: CLASS_C is
 			-- Class POINTER
 		require else
 			pointer_compiled: System.pointer_class.compiled
 		once
-			Result := System.pointer_class.compiled_class;
-		end;
+			Result := System.pointer_class.compiled_class
+		end
 
 	same_as (other: TYPE_A): BOOLEAN is
 			-- Is the current type the same as `other' ?
 		do
-			Result := other.is_pointer;
-		end;
+			Result := other.is_pointer
+		end
 
 	internal_conform_to (other: TYPE_A; in_generics: BOOLEAN): BOOLEAN is
 			-- Does `other' conform to Current ?
 		do
 			if in_generics then
-				Result := other.is_pointer;
+				Result := other.is_pointer
 			else
-				Result := old_conform_to (other, False);
-			end;
-		end;
+				Result := {BASIC_A} precursor (other, False)
+			end
+		end
 
 end -- class POINTER_A

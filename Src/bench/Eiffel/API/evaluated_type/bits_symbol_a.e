@@ -1,21 +1,18 @@
 indexing
-
-	description: 
-		"Actual type for bits_symbol."
-	date: "$Date$";
+	description: "Actual type for bits_symbol."
+	date: "$Date$"
 	revision: "$Revision $"
 
 class BITS_SYMBOL_A
 
 inherit
-
 	BITS_A
 		rename
 			base_class_id as class_id
 		redefine
 			solved_type, dump, append_to,
 			is_equivalent
-		end;
+		end
 
 creation {COMPILER_EXPORTER}
 
@@ -25,16 +22,16 @@ feature {NONE} -- Initialization
 
 	make (f: FEATURE_I) is
 		do
-			feature_name := f.feature_name;
-			class_id := System.current_class.id;
-			rout_id := f.rout_id_set.first;
-		end;
+			feature_name := f.feature_name
+			class_id := System.current_class.id
+			rout_id := f.rout_id_set.first
+		end
 
 feature -- Properties
 
-	feature_name: STRING;
+	feature_name: STRING
 
-	rout_id: ROUTINE_ID;
+	rout_id: ROUTINE_ID
 
 feature -- Comparison
 
@@ -52,16 +49,16 @@ feature -- Output
 	dump: STRING is
 			-- Dumped trace
 		do
-			!!Result.make (9);
-			Result.append ("BIT ");
-			Result.append (feature_name);
-		end;
+			!!Result.make (9)
+			Result.append ("BIT ")
+			Result.append (feature_name)
+		end
 
 	append_to (st: STRUCTURED_TEXT) is
 		do
-			st.add_string ("BIT ");
-			st.add_string (feature_name);
-		end;
+			st.add_string ("BIT ")
+			st.add_string (feature_name)
+		end
 
 feature {COMPILER_EXPORTER}
 
@@ -69,55 +66,55 @@ feature {COMPILER_EXPORTER}
 			-- Calculated type in function of the feauure `f' which has
 			-- the type Current and the feautre table `feat_table
 		local
-			origin_table: HASH_TABLE [FEATURE_I, ROUTINE_ID];
-			anchor_feature: FEATURE_I;
-			vtbt: VTBT;
-			veen: VEEN;
-			constant: CONSTANT_I;
-			bits_value: INTEGER;
-			error: BOOLEAN;
-			int_value: INT_VALUE_I;
+			origin_table: HASH_TABLE [FEATURE_I, ROUTINE_ID]
+			anchor_feature: FEATURE_I
+			vtbt: VTBT
+			veen: VEEN
+			constant: CONSTANT_I
+			bits_value: INTEGER
+			error: BOOLEAN
+			int_value: INT_VALUE_I
 		do
-			origin_table := feat_table.origin_table;
+			origin_table := feat_table.origin_table
 			if not equal (System.current_class.id, class_id) then
 				anchor_feature := System.class_of_id (class_id).feature_table
-								.item (feature_name);
+								.item (feature_name)
 			else
-				anchor_feature := feat_table.item (feature_name);
-			end;
+				anchor_feature := feat_table.item (feature_name)
+			end
 			if anchor_feature = Void then
-				!!veen;
-				veen.set_class (System.current_class);
-				veen.set_feature (f);
-				veen.set_identifier (feature_name);
-				Error_handler.insert_error (veen);
-				Error_handler.raise_error;
+				!!veen
+				veen.set_class (System.current_class)
+				veen.set_feature (f)
+				veen.set_identifier (feature_name)
+				Error_handler.insert_error (veen)
+				Error_handler.raise_error
 			else
-				constant ?= anchor_feature;
-				error := constant = Void;
+				constant ?= anchor_feature
+				error := constant = Void
 				if not error then
-					int_value ?= constant.value;
-					error := int_value = Void;
+					int_value ?= constant.value
+					error := int_value = Void
 					if not error then
-						bits_value := int_value.int_val;
-						error := bits_value <= 0;
-					end;
-				end;
+						bits_value := int_value.int_val
+						error := bits_value <= 0
+					end
+				end
 				if error then
-					!!vtbt;
-					vtbt.set_class (feat_table.associated_class);
-					vtbt.set_feature (f);
+					!!vtbt
+					vtbt.set_class (feat_table.associated_class)
+					vtbt.set_feature (f)
 					if bits_value < 0 then
-						vtbt.set_value (bits_value);
-					end;
-					Error_handler.insert_error (vtbt);
+						vtbt.set_value (bits_value)
+					end
+					Error_handler.insert_error (vtbt)
 					-- Cannot go on here
-					Error_handler.raise_error;
-				end;
-				bit_count := bits_value;
-			end;
-			rout_id := anchor_feature.rout_id_set.first;
-			Result := clone (Current);
-		end;
+					Error_handler.raise_error
+				end
+				bit_count := bits_value
+			end
+			rout_id := anchor_feature.rout_id_set.first
+			Result := clone (Current)
+		end
 
 end -- class BITS_SYMBOL_A

@@ -1,4 +1,7 @@
--- Generator of routine tables
+indexing
+	description: "Generator of routine tables"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class ROUT_GENERATOR 
 
@@ -16,9 +19,10 @@ feature
 
 	init_file (file: INDENT_FILE) is
 			-- Initialization of new file
-		require else
-			current_buffer_exists: current_buffer /= Void;
 		do
+				-- Let's finish C code generation of current block.
+			current_buffer.end_c_specific_code
+
 			file.putstring ("#include %"eif_macros.h%"%N");
 			file.putstring ("#include %"");
 			file.putstring (Epoly);
@@ -50,6 +54,9 @@ feature
 			header_file.close
 
 			current_buffer.clear_all
+			
+				-- Start C code generation for next block
+			current_buffer.start_c_specific_code
 		end;
 
 end

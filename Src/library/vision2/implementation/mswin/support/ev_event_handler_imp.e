@@ -1,6 +1,7 @@
 indexing
-	description: "This class is an ancestor of EV_WIDGET_IMP, EV_ITEM_IMP%
-				% and EV_MESSAGE_DIALOG_IMP"
+	description:
+		" This class gives the attributes and the features needed to handle%
+		% the event on the widgets, items, dialogs..."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,19 +16,14 @@ feature {NONE} -- Initialization
 			-- of command_count.
 		do
 			!! command_list.make (1, command_count)
-			!! argument_list.make (1, command_count)
 		end
 
 feature {NONE} -- Access
 
-	command_list: ARRAY [LINKED_LIST [EV_COMMAND]]
+	command_list: ARRAY [LINKED_LIST [EV_INTERNAL_COMMAND]]
 			-- The list of the commands asociated with the widget
 			-- The command are sort by event_id. For this ids,
 			-- See the class EV_EVENT_CONSTANTS
-
-	argument_list: ARRAY [LINKED_LIST [EV_ARGUMENT]]
-			-- The list of the arguments asociated with the commands
-			-- The arguments follow the same order than the commands.
 
 feature {NONE} -- Status report
 
@@ -42,7 +38,7 @@ feature {NONE} -- Status report
 			end
 		end
 
-feature {NONE} -- status setting
+feature {NONE} -- Element change
 
 	add_command (event_id: INTEGER; cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' and `arg' to the list corresonding to `event_id'
@@ -52,8 +48,8 @@ feature {NONE} -- status setting
 			valid_command: cmd /= Void
 			valid_id: event_id >= 1 and event_id <= command_count
 		local
-			list_com: LINKED_LIST [EV_COMMAND]
-			list_arg: LINKED_LIST [EV_ARGUMENT]
+			list: LINKED_LIST [EV_INTERNAL_COMMAND]
+			com: EV_INTERNAL_COMMAND
 		do
 			-- First, we create the lists if they don't exists.
 			if command_list = Void then
@@ -63,16 +59,14 @@ feature {NONE} -- status setting
 			-- Then, we create the list linked to the given
 			-- `event_id' if it doesn't exists already. 
 			if (command_list @ event_id) = Void then
-				!! list_com.make
-				!! list_arg.make
-				command_list.force (list_com, event_id)
-				argument_list.force (list_arg, event_id)
+				!! list.make
+				command_list.force (list, event_id)
 			end
 
 			-- Finally, we add the command and the argument
 			-- to the list.
-			(command_list @ event_id).extend (cmd)
-			(argument_list @ event_id).extend (arg)
+			!! com.make (cmd, arg)
+			(command_list @ event_id).extend (com)
 		end
 
 	remove_command (event_id: INTEGER) is
@@ -85,11 +79,9 @@ feature {NONE} -- status setting
 			if command_list /= Void then
 				if (command_list @ event_id) /= Void then
 					command_list.force (Void, event_id)
-					argument_list.force (Void, event_id)
 				end
 				if command_list.all_cleared then
 					command_list := Void
-					argument_list := Void
 				end
 			end
 		end
@@ -101,23 +93,20 @@ feature {NONE} -- status setting
 			valid_command: cmd /= Void
 			valid_id: event_id >= 1 and event_id <= command_count
 		local
-			list_com: LINKED_LIST [EV_COMMAND]
-			list_arg: LINKED_LIST [EV_ARGUMENT]
+			list: LINKED_LIST [EV_INTERNAL_COMMAND]
 		do
 			if command_list /= Void and then 
 					(command_list @ event_id) /= Void then
-				list_com := command_list @ event_id
-				list_arg := argument_list @ event_id
+				list := command_list @ event_id
 				from
-					list_com.start
-					list_com.search (cmd)
+					list.start
 				until
-					list_com.exhausted
+					list.after
 				loop
-					list_arg.go_i_th (list_com.index)
-					list_com.remove
-					list_arg.remove
-					list_com.search (cmd)
+					if list.item.command = cmd then
+						list.remove
+					end
+					list.forth
 				end
 			end
 		end
@@ -125,25 +114,22 @@ feature {NONE} -- status setting
 feature {NONE} -- Basic operation
 
 	execute_command (event_id: INTEGER; data: EV_EVENT_DATA) is
-			-- Execute the command that correspond to the event `event_id'.
-			-- Return `True' if the default processing is disabled,
-			-- False otherwise
+			-- Execute the command that correspond to the event
+			-- `event_id'.
 		require
 			valid_id: event_id >= 1 and event_id <= command_count
 		local
-			com_list: LINKED_LIST [EV_COMMAND]
-			arg_list: LINKED_LIST [EV_ARGUMENT]
+			list: LINKED_LIST [EV_INTERNAL_COMMAND]
 			i: INTEGER
 		do
 			if command_list /= Void and then (command_list @ event_id) /= Void then
-				com_list := (command_list @ event_id)
-				arg_list := (argument_list @ event_id)
+				list := (command_list @ event_id)
 				from
 					i := 1
 				until
-					i > com_list.count
+					i > list.count
 				loop
-					(com_list.i_th (i)).execute (arg_list.i_th (i), data)
+					(list @ i).execute (data)
 					i := i + 1
 				end
 			end

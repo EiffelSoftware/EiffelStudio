@@ -17,7 +17,7 @@ inherit
 	ANY
 	
 create
-	make
+	make, make_from_array
 	
 feature {NONE} -- Initialization
 
@@ -34,6 +34,23 @@ feature {NONE} -- Initialization
 			size_set: size = n
 		end
 
+	make_from_array (data: ARRAY [INTEGER_8]) is
+			-- Allocate `item' with `data.count' bytes and copy
+			-- content of `data' into `item'.
+		require
+			data_not_void: data /= Void
+		local
+			l_sp: SPECIAL [INTEGER_8]
+		do
+			size := data.count
+			item := item.memory_alloc (size)
+			l_sp := data.area
+			item.memory_copy ($l_sp, size)
+		ensure
+			item_set: item /= default_pointer
+			size_set: size = data.count
+		end
+		
 feature -- Access
 
 	item: POINTER

@@ -16,10 +16,8 @@ inherit
 
 feature -- Access
 
-	parent: EV_CONTAINER is
-			-- Parent of the popup.
-		require
-			exists: not destroyed
+	parent_imp: EV_CONTAINER_IMP is
+			-- Implementation of the parent.
 		deferred
 		end
 
@@ -30,7 +28,7 @@ feature -- Status setting
 			-- of the mouse.
 		require
 			exists: not destroyed
-			valid_parent: is_valid (parent)
+			valid_parent: parent_imp /= Void
 		deferred
 		end
 
@@ -38,7 +36,7 @@ feature -- Status setting
 			-- Show the popup menu at the given position
 		require
 			exists: not destroyed
-			valid_parent: is_valid (parent)
+			valid_parent: parent_imp /= Void
 		deferred
 		end
 

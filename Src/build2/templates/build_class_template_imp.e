@@ -17,8 +17,7 @@ feature {NONE} -- Initialization
 
 	initialize is
 			-- Initialize `Current'.
-		local
-			<LOCAL>
+		<LOCAL>
 		do
 			Precursor {EV_TITLED_WINDOW}
 			<CREATE>
@@ -41,6 +40,7 @@ feature {NONE} -- Implementation
 			-- for `Current'.
 			Result := True
 		end
+	<ATTRIBUTE>
 	<EVENT_DECLARATION>
 
 end -- class <CLASS_NAME>

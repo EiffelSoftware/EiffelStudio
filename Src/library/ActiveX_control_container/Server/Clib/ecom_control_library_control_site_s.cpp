@@ -41,6 +41,7 @@ extern "C" {
 
 ecom_control_library::control_site::control_site( EIF_TYPE_ID tid )
 {
+  ::OleInitialize (NULL);
   type_id = tid;
   ref_count = 0;
   eiffel_object = eif_create (type_id);
@@ -54,6 +55,7 @@ ecom_control_library::control_site::control_site( EIF_TYPE_ID tid )
 
 ecom_control_library::control_site::control_site( EIF_OBJECT eif_obj )
 {
+  ::OleInitialize (NULL);
   ref_count = 0;
   eiffel_object = eif_adopt (eif_obj);
   type_id = eif_type (eiffel_object);
@@ -71,6 +73,8 @@ ecom_control_library::control_site::~control_site()
   eif_wean (eiffel_object);
   if (pTypeInfo)
     pTypeInfo->Release ();
+  
+  ::OleUninitialize ();
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -230,7 +234,9 @@ STDMETHODIMP ecom_control_library::control_site::GetWindow(  /* [out] */ HWND * 
 
   (FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_phwnd != NULL) ? eif_access (tmp_phwnd) : NULL));
   
-  
+  if ((tmp_phwnd != NULL) && (eif_access (tmp_phwnd) != NULL))
+  rt_ec.ccom_ec_pointed_pointer (eif_wean (tmp_phwnd), (void **)phwnd);
+
   END_ECATCH;
   return S_OK;
 };
@@ -3892,9 +3898,9 @@ STDMETHODIMP ecom_control_library::control_site::QueryInterface( REFIID riid, vo
 -----------------------------------------------------------*/
 {
   if (riid == IID_IUnknown)
-    *ppv = static_cast<IDispatch*>(this);
+    *ppv = static_cast<::IOleClientSite*>(this);
   else if (riid == IID_IDispatch)
-    *ppv = static_cast<IAxWinAmbientDispatch*>(this);
+    *ppv = static_cast<ecom_control_library::IAxWinAmbientDispatch*>(this);
   else if (riid == IID_IOleClientSite_)
     *ppv = static_cast<::IOleClientSite*>(this);
   else if (riid == IID_IOleInPlaceSiteWindowless_)

@@ -585,7 +585,7 @@ feature {NONE} -- Implementation
 			e_cse ?= elem
 
 				--| Routine name
-			l_feature_info := elem.routine_name
+			l_feature_info := elem.routine_name.twin
 			l_tooltip.append_string (l_feature_info)
 			
 					--| Class name
@@ -599,11 +599,6 @@ feature {NONE} -- Implementation
 			l_obj_address_info := elem.object_address
 			
 			if e_cse /= Void then
-					--| Routine name
-				if e_cse.is_melted then
-					l_feature_info.append_string ("*")
-				end
-
 					--| Origin class
 				dc := e_cse.dynamic_class
 				oc := e_cse.origin_class
@@ -612,6 +607,12 @@ feature {NONE} -- Implementation
 					l_tooltip.prepend_string (" (from " + l_orig_class_info + ")")
 				else
 					l_orig_class_info := Interface_names.l_Same_class_name
+				end
+
+					--| Routine name
+				if e_cse.is_melted then
+					l_feature_info.append_string ("*")
+					l_tooltip.append_string ("%N   + compilation = melted")
 				end
 
 					--| Specific GUI behavior
@@ -627,8 +628,8 @@ feature {NONE} -- Implementation
 				--| Tooltip addition
 			l_nb_stack := Application.status.current_call_stack.count
 			l_tooltip.prepend_string ((elem.level_in_stack).out + "/" + l_nb_stack.out + ": ")
-			l_tooltip.append_string (" @ " + l_breakindex_info)
-			l_tooltip.append_string (" <0x" + l_obj_address_info + ">")			
+			l_tooltip.append_string ("%N   + break index = " + l_breakindex_info)
+			l_tooltip.append_string ("%N   + address     = <" + l_obj_address_info + ">")			
 			Result.set_tooltip (l_tooltip)
 			
 				--| Fill columns

@@ -27,9 +27,15 @@ feature {NONE} -- Initialization
         make is
                         -- Create a gtk check button.
 		do
-                        widget := gtk_check_button_new
-			initialize
+ 			-- Create the gtk object.
+			widget := gtk_check_button_new
 			gtk_object_ref (widget)
+
+			-- Create the `box'.
+			initialize
+
+			-- Create the label with a text set to "".
+			create_text_label ("")
                 end
 
 end -- class EV_CHECK_BUTTON_IMP

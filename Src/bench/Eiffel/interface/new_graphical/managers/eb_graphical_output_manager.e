@@ -271,7 +271,7 @@ feature {NONE} -- Implementation
 			-- errors or warnings?
 
 	display_error_error (st: STRUCTURED_TEXT) is
-			-- Display a message telling that an error occured while displaying
+			-- Display a message telling that an error occurred while displaying
 			-- the errors.
 		do
 			st.add_string ("Exception occurred while displaying error message.")

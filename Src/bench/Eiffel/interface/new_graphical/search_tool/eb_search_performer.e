@@ -32,7 +32,7 @@ feature -- Access
 			-- Stores the result of the search computed by `search_text'.
 	
 	current_position: INTEGER
-			-- Number of the current occurence of the searched word in the file.
+			-- Number of the current occurrence of the searched word in the file.
 	
 	editor: EB_EDITOR 
 			-- Editor in which the search is performed.
@@ -76,7 +76,7 @@ feature -- status report
 			-- is the searched word isolated ?
 
 	replace_all: BOOLEAN
-			-- Must all the occurences of the searched word be replaced ?
+			-- Must all the occurrences of the searched word be replaced ?
 
 	use_wildcards: BOOLEAN
 			-- does pattern contain wildcards ?
@@ -107,7 +107,7 @@ feature -- status setting
 		end
 
 	set_replace_all (ra: BOOLEAN) is
-			-- set whether all the occurences of the searched word must be replaced 
+			-- set whether all the occurrences of the searched word must be replaced 
 		do
 			search_again := search_again or (ra /= replace_all)
 			replace_all := ra
@@ -351,7 +351,7 @@ feature {NONE} -- Implementation
 		end
 
 	select_and_show (show: BOOLEAN) is
-			-- select the `current_position'-th occurence of the searched word in the editor
+			-- select the `current_position'-th occurrence of the searched word in the editor
 			-- if `show' is true, center the display on the selection.
 		local
 			pos_in_file: INTEGER

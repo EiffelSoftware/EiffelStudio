@@ -135,9 +135,9 @@ FONT 8, "MS Sans Serif"
 {
  DEFPUSHBUTTON "OK", IDOK, 76, 176, 50, 14
  ICON XCELL_ICON, -1, 5, 7, 18, 20
- LTEXT "Xcell is a cardgame based on the cardgame 'Freecell' which is shipped with Windows 95 and Windows NT.\n\n An extra feature of this game is the ability to select the number of cards you want to play with.", -1, 30, 8, 165, 54
+ LTEXT "Xcell is a cardgame based on the cardgame 'Freecell' which is shipped with Windows 95 and Windows NT.\n\nAn extra feature of this game is the ability to select the number of cards you want to play with.", -1, 30, 8, 165, 54
  LTEXT "The game is written in Eiffel with ISE's Windows Eiffel Library (WEL). By using the facilities of this library it was possible to implement a steady cardgame in a few days. The library also made it very easy to have a good, efficient redrawing mechanism.", -1, 30, 63, 165, 52
- LTEXT "If you want to know more about the WEL, please send a piece of e-mail to <wel@eiffel.com>.\n\nCopyright by ISE Inc. 1995.\n\n Written by Robin van Ommeren.", -1, 30, 116, 165, 53
+ LTEXT "If you want to know more about the WEL, please send a piece of e-mail to <wel@eiffel.com>.\n\nCopyright by ISE Inc. 1995.\n\nWritten by Robin van Ommeren.", -1, 30, 116, 165, 53
 }
 
 HOW_TO_PLAY_DIALOG DIALOG 102, 33, 203, 253

@@ -232,7 +232,8 @@ rt_public void init_bench(int argc, char **argv)
 	}
 
 #ifdef EIF_WIN32
-	sp = spawn_child(ewb_path, NULL, 0, &pid, NULL);	/* Bring workbench to life */
+		/* First argument is 1 because we are launching the Eiffel compiler here. */
+	sp = spawn_child(1, ewb_path, NULL, 0, &pid, NULL);	/* Bring workbench to life */
 #else
 	sp = spawn_child(ewb_path, NULL, 0, &pid);	/* Bring workbench to life */
 #endif

@@ -59,6 +59,13 @@ feature -- Properties
 		deferred
 		end;
 
+feature -- Setting
+
+	set_font_to_default is
+			-- Set font to its default font.
+		do
+		end;
+
 feature -- Access
 
 	transported_stone: STONE is

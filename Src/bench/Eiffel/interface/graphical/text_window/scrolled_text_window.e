@@ -19,7 +19,7 @@ inherit
 			set_background_color as old_set_background_color,
 			set_cursor_position as st_set_cursor_position,
 			set_top_character_position as st_set_top_character_position,
-			set_font as old_set_font
+			set_font as set_text_font
 		export
 			{NONE} st_set_cursor_position, st_set_top_character_position
 		undefine
@@ -50,11 +50,8 @@ inherit
 		redefine
 			clear_window, display, 
 			update_before_transport, initial_x, initial_y,
-			update_after_transport, update_symbol, reset_update_symbol
-		end;
-	SHARED_ACCELERATOR
-		undefine
-			copy, setup, consistent, is_equal
+			update_after_transport, update_symbol, reset_update_symbol,
+			set_font_to_default
 		end;
 	SHARED_APPLICATION_EXECUTION
 		undefine
@@ -100,7 +97,6 @@ feature -- Initialization
 			set_action ("!c<Btn3Down>", Current, new_tooler_action)
 			set_action ("!Shift<Btn3Down>", Current, super_melt_action)
 
-			set_accelerators;
 			!! matcher.make_empty;
 		end;
 
@@ -115,7 +111,7 @@ feature -- Initialization
 				Graphical_resources.text_background_color.actual_value)
 			f := Graphical_resources.text_font.actual_value;
 			if f /= Void then
-				old_set_font (f)
+				set_text_font (f)
 			end
 		end;
 
@@ -133,6 +129,12 @@ feature -- Properties
 			-- Update symbol?
 
 feature -- Access
+
+	default_font: CELL [FONT] is
+			-- Default font
+		once
+			!! Result.put (font)
+		end;
 
 	cursor: SCROLLED_WINDOW_CURSOR is
 			-- Current cursor position in scrolled text 
@@ -163,6 +165,12 @@ feature -- Access
 		end;
 
 feature -- Changing
+
+	set_font_to_default is
+			-- Set font to the default value.
+		do
+			--set_text_font (default_font.item)
+		end;
 
 	reset_update_symbol is
 			-- Set `update_symbol' to False.

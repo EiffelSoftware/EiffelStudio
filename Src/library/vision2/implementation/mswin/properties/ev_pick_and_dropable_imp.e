@@ -14,9 +14,7 @@ inherit
 			initialize_transport
 		end
 
-	EV_EVENT_HANDLER_IMP
-
-	EV_WIDGET_EVENTS_CONSTANTS_IMP
+	EV_PND_EVENTS_CONSTANTS_IMP
 
 feature -- Implementation
 
@@ -36,29 +34,38 @@ feature -- Implementation
 			end
 			mouse_button := args.first
 			if transportable then
-				!! transporter
+				create transporter
 				transporter.transport (Current, args.second)
-				!! arg1.make (2, Current, mouse_button)
-				!! arg2.make (3, Current, mouse_button) 
+				create arg1.make (2, Current, mouse_button)
+				create arg2.make (3, Current, mouse_button) 
 				inspect mouse_button
 				when 1 then
 					remove_single_command (Cmd_button_one_press, args.third)
-					add_command (Cmd_button_one_press, transporter, arg1)
-					add_command (Cmd_button_two_release, transporter, arg2)
-					add_command (Cmd_button_three_release, transporter, arg2)
+					widget_source.add_command (Cmd_button_one_press,
+													transporter, arg1)
+					widget_source.add_command (Cmd_button_two_release,
+													transporter, arg2)
+					widget_source.add_command (Cmd_button_three_release,
+													transporter, arg2)
 				when 2 then
 					remove_single_command (Cmd_button_two_press, args.third)
-					add_command (Cmd_button_two_press, transporter, arg1)
-					add_command (Cmd_button_one_release, transporter, arg2)
-					add_command (Cmd_button_three_release, transporter, arg2)
+					widget_source.add_command (Cmd_button_two_press,
+													transporter, arg1)
+					widget_source.add_command (Cmd_button_one_release,
+													transporter, arg2)
+					widget_source.add_command (Cmd_button_three_release,
+													transporter, arg2)
 				when 3 then
 					remove_single_command (Cmd_button_three_press, args.third)
-					add_command (Cmd_button_three_press, transporter, arg1)
-					add_command (Cmd_button_one_release, transporter, arg2)
-					add_command (Cmd_button_two_release, transporter, arg2)
+					widget_source.add_command (Cmd_button_three_press,
+													transporter, arg1)
+					widget_source.add_command (Cmd_button_one_release,
+													transporter, arg2)
+					widget_source.add_command (Cmd_button_two_release,
+													transporter, arg2)
 				end
-				!! arg1.make (1, Void, mouse_button)
-				add_command (Cmd_motion_notify, transporter, arg1)
+				create arg1.make (1, Current, mouse_button)
+				widget_source.add_command (Cmd_motion_notify, transporter, arg1)
 			end
 		end
 
@@ -68,35 +75,45 @@ feature -- Implementation
 			com: EV_ROUTINE_COMMAND
 			arg: EV_ARGUMENT3 [INTEGER, TUPLE [EV_COMMAND, EV_ARGUMENT], EV_COMMAND]
 		do
-			!! com.make (~initialize_transport)
-			!! arg.make (mouse_button, cmd, com)
+			create com.make (~initialize_transport)
+			create arg.make (mouse_button, cmd, com)
 			inspect mouse_button
 			when 1 then
-				remove_single_command (Cmd_button_one_press, transporter)
-				remove_single_command (Cmd_button_two_release, transporter)
-				remove_single_command (Cmd_button_three_release, transporter)
+				widget_source.remove_single_command (Cmd_button_one_press, transporter)
+				widget_source.remove_single_command (Cmd_button_two_release, transporter)
+				widget_source.remove_single_command (Cmd_button_three_release, transporter)
 				add_command (Cmd_button_one_press, com, arg)
 			when 2 then
-				remove_single_command (Cmd_button_two_press, transporter)
-				remove_single_command (Cmd_button_one_release, transporter)
-				remove_single_command (Cmd_button_three_release, transporter)
+				widget_source.remove_single_command (Cmd_button_two_press, transporter)
+				widget_source.remove_single_command (Cmd_button_one_release, transporter)
+				widget_source.remove_single_command (Cmd_button_three_release, transporter)
 				add_command (Cmd_button_two_press, com, arg)
 			when 3 then
-				remove_single_command (Cmd_button_three_press, transporter)
-				remove_single_command (Cmd_button_one_release, transporter)
-				remove_single_command (Cmd_button_two_release, transporter)
+				widget_source.remove_single_command (Cmd_button_three_press, transporter)
+				widget_source.remove_single_command (Cmd_button_one_release, transporter)
+				widget_source.remove_single_command (Cmd_button_two_release, transporter)
 				add_command (Cmd_button_three_press, com, arg)
 			end
-			remove_single_command (Cmd_motion_notify, transporter)
+			widget_source.remove_single_command (Cmd_motion_notify, transporter)
 		end
 
-feature {EV_PND_TRANSPORTER_IMP} -- Implemented in WIDGET_IMP.
+feature {EV_PND_TRANSPORTER_IMP} -- Implemented in descendants.
 
-	set_capture is
+	widget_source: EV_WIDGET_IMP is
+			-- Widget drag source used for transport
 		deferred
 		end
 
-	release_capture is
+	add_command (event_id: INTEGER; cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' and `arg' to the list corresonding to `event_id'
+			-- in the table of commands and arguments of the widget.
+			-- If the tables don't exist, it creates them.
+		deferred
+		end
+
+	remove_single_command (event_id: INTEGER; cmd: EV_COMMAND) is
+			-- Remove `cmd' from the list of commmands associated
+			-- with the event `event_id'.
 		deferred
 		end
 

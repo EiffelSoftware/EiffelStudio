@@ -44,13 +44,13 @@ feature -- formatter
 					ctxt.new_line;
 					ctxt.set_new_line_between_tokens;
 					ctxt.set_classes (ctxt.class_c, ctxt.class_c);
-					if ctxt.order_same_as_text then
+					if ctxt.is_flat_short then
+						ctxt.set_separator (ti_Semi_Colon);
+						format_features (ctxt, feature_list)
+					else
 						ctxt.set_separator (ti_Comma);
 						feature_list.format (ctxt);
 						ctxt.new_line;
-					else
-						ctxt.set_separator (ti_Semi_Colon);
-						format_features (ctxt, feature_list)
 					end;
 				end;
 				ctxt.commit

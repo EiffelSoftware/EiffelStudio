@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 
 			set_text (doc_name)
 
-			rich_text_box.set_font (create {DRAWING_FONT}.make_from_family_and_em_size (current_font_family, fontSize)) --= new System.Drawing.Font(current_font_family, fontSize)
+			rich_text_box.set_font (create {DRAWING_FONT}.make_from_family_and_em_size (current_font_family, font_size)) --= new System.Drawing.Font(current_font_family, font_size)
 			rich_text_box.set_text (doc_name)
 
 			-- Add File Menu
@@ -83,7 +83,8 @@ feature {NONE} -- Initialization
 			l_array_menu_item.put (2, mmi_large)
 			dummy := mi_format.menu_items.add_string_menu_item_array (("Font &Size").to_cil, l_array_menu_item)
 
-			feature {WINFORMS_APPLICATION}.run_form (Current)
+			--feature {WINFORMS_APPLICATION}.run_form (Current)
+			show
 		end
 
 
@@ -98,7 +99,7 @@ feature -- Access
 	main_menu: WINFORMS_MAIN_MENU
 			-- System.Windows.Forms.MainMenu.
 
-	fontSize: DOUBLE
+	font_size: DOUBLE
 			-- Font face and size.
 
 	mmi_sans_serif, mmi_serif, mmi_mono_space, mmi_small, mmi_medium,
@@ -137,6 +138,9 @@ feature {NONE} -- Implementation
 			create main_menu.make
 			set_menu (main_menu)
 
+			-- Set default font size to Medium.
+			font_size := font_sizes ("Medium")
+			
 			controls.add (rich_text_box)		
 		end
 
@@ -211,7 +215,7 @@ feature {NONE} -- Implementation
 			mi_main_format_font_checked.set_checked (True)
 			mi_context_format_font_checked.set_checked (True)
 
-			rich_text_box.set_font (create {DRAWING_FONT}.make_from_family_and_em_size (current_font_family, fontSize))
+			rich_text_box.set_font (create {DRAWING_FONT}.make_from_family_and_em_size (current_font_family, font_size))
 		end
 
 	format_size_clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS) is
@@ -230,21 +234,21 @@ feature {NONE} -- Implementation
 			if font_size_string.equals (("&Small").to_cil) then
 				mi_main_format_size_checked := mmi_small
 				mi_context_format_size_checked := cmi_small
-				fontSize := font_sizes ("Small")
+				font_size := font_sizes ("Small")
 			elseif font_size_string.equals (("&Large").to_cil) then
 				mi_main_format_size_checked := mmi_large
 				mi_context_format_size_checked := cmi_large
-				fontSize := font_sizes ("Large")
+				font_size := font_sizes ("Large")
 			else
 				mi_main_format_size_checked := mmi_medium
 				mi_context_format_size_checked := cmi_medium
-				fontSize := font_sizes ("Medium")
+				font_size := font_sizes ("Medium")
 			end
 
 			mi_main_format_size_checked.set_checked (True)
 			mi_context_format_size_checked.set_checked (True)
 
-			rich_text_box.set_font (create {DRAWING_FONT}.make_from_family_and_em_size (current_font_family, fontSize))
+			rich_text_box.set_font (create {DRAWING_FONT}.make_from_family_and_em_size (current_font_family, font_size))
 		end
 
 

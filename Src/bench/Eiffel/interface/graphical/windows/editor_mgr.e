@@ -1,6 +1,6 @@
 indexing
 
-	description:	
+	description:
 		"Manager for all edit windows.";
 	date: "$Date$";
 	revision: "$Revision$"
@@ -221,6 +221,8 @@ feature {WINDOW_MGR} -- Properties
 				free_list.start;
 				Result := free_list.item;
 				free_list.remove;
+				Result.show;
+				Result.raise
 			else
 				!! mp.set_watch_cursor;
 				!! Result.make_shell (a_parent);
@@ -305,5 +307,18 @@ feature {WINDOW_MGR} -- Implementation
 				active_editors.forth
 			end
 		end;
+
+	close_editors is
+			-- Close all active editors.
+		do
+			from
+				active_editors.start
+			until
+				active_editors.after
+			loop
+				active_editors.item.close;
+				active_editors.forth
+			end
+		end
 
 end -- class EDITOR_MGR

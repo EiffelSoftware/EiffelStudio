@@ -35,6 +35,16 @@ feature -- Setting
 		deferred
 		end;
 
+	set_iconic_state is
+			-- Iconify Current.
+		deferred
+		end
+
+	set_normal_state is
+			-- Deiconify Current.
+		deferred
+		end
+
 feature -- Properties
 
 	associated_form: FORM is
@@ -49,6 +59,11 @@ feature -- Properties
 
 	icon_name: STRING is
 			-- Icon name of Current
+		deferred
+		end;
+
+	is_iconic_state: BOOLEAN is
+			-- Is Current iconified?
 		deferred
 		end;
 

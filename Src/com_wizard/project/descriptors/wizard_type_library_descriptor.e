@@ -275,11 +275,12 @@ feature -- Basic operations
 		local
 			i: INTEGER
 			alias_descriptor: WIZARD_ALIAS_DESCRIPTOR
-			type_descriptor: WIZARD_USER_DEFINED_DATA_TYPE_DESCRIPTOR
+			user_defined_type_descriptor: WIZARD_USER_DEFINED_DATA_TYPE_DESCRIPTOR
 			a_name: STRING
 			a_lib: WIZARD_TYPE_LIBRARY_DESCRIPTOR
 			an_index: INTEGER
 			aliased_descriptor: WIZARD_TYPE_DESCRIPTOR
+			pointed_data_type: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR
 		do
 			from
 				i := 1
@@ -292,33 +293,34 @@ feature -- Basic operations
 					if (descriptors.item (i).type_kind = Tkind_alias) then
 						alias_descriptor ?= descriptors.item (i)
 						if alias_descriptor /= Void then
-							type_descriptor ?= alias_descriptor.type_descriptor
-							if type_descriptor /= Void then
-								a_lib := type_descriptor.library_descriptor
-								an_index := type_descriptor.type_descriptor_index
+							user_defined_type_descriptor ?= alias_descriptor.type_descriptor
+							if user_defined_type_descriptor /= Void then
+								a_lib := user_defined_type_descriptor.library_descriptor
+								an_index := user_defined_type_descriptor.type_descriptor_index
 								aliased_descriptor := a_lib.descriptors.item (an_index)
 								a_name := clone (aliased_descriptor.name)
 								a_name.to_upper
-								if (a_name.substring_index ("__MIDL___MIDL_", 1) > 0) then
+								if 
+									(a_name.substring_index ("__MIDL___MIDL_", 1) > 0) or
+									(a_name.substring_index ("TAG", 1) > 0)
+								then
 									aliased_descriptor.set_name (descriptors.item (i).name)
 									aliased_descriptor.set_c_type_name (descriptors.item (i).name)
 									aliased_descriptor.set_eiffel_class_name 
 										(name_for_class (descriptors.item (i).name, aliased_descriptor.type_kind, False))
 									aliased_descriptor.set_c_header_file_name (descriptors.item (i).c_header_file_name)
-									
-									from
-										referees.item (i).start
-									until
-										referees.item (i).after
-									loop
-										referees.item (i).item.set_type_descriptor_index (an_index)
-										referees.item (i).item.set_library_descriptor (a_lib)
-										referees.item (i).forth
-									end
-									descriptors.put (Void, i)
-								else
-									alias_descriptor.set_c_header_file_name (clone (Alias_header_file_name))
 								end
+									
+								from
+									referees.item (i).start
+								until
+									referees.item (i).after
+								loop
+									referees.item (i).item.set_type_descriptor_index (an_index)
+									referees.item (i).item.set_library_descriptor (a_lib)
+									referees.item (i).forth
+								end
+								descriptors.put (Void, i)
 							end
 						end
 					end

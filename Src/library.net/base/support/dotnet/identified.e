@@ -33,11 +33,15 @@ feature -- Access
 			-- Object associated with `an_id' (void if no such object)
 		local
 			wr: WEAK_REFERENCE
+			l_cell: CLI_CELL [WEAK_REFERENCE]
 		do
 			if reference_list.valid_index (an_id) then
-				wr := reference_list.i_th (an_id).item
-				if wr /= Void then
-					Result ?= wr.target
+				l_cell := reference_list.i_th (an_id)
+				if l_cell /= Void then
+					wr := l_cell.item
+					if wr /= Void then
+						Result ?= wr.target
+					end
 				end
 			end
 		ensure

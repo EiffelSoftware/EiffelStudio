@@ -51,14 +51,35 @@ feature -- Access
 			-- Directory for meta data.
 		do
 			create Result.make_by_pointer (c_meta_data (item))
+		ensure
+			meta_data_directory_not_void: Result /= Void
+		end
+		
+	strong_name_directory: CLI_DIRECTORY is
+			-- Directory for strong name signature.
+		do
+			create Result.make_by_pointer (c_strong_name_signature (item))
+		ensure
+			strong_name_directory_not_void: Result /= Void
+		end
+		
+	flags: INTEGER is
+			-- Specified flags of header
+		do
+			Result := c_flags (item)
 		end
 		
 feature -- Settings
 
 	set_flags (i: INTEGER) is
 			-- Set `flags' to `i'.
+		require
+			flags_valid: (i & il_only = il_only) or
+				(i & strong_name_signed = strong_name_signed)
 		do
 			c_set_flags (item, i)
+		ensure
+			flags_set: flags = i
 		end
 
 	set_entry_point_token (token: INTEGER) is
@@ -113,6 +134,12 @@ feature {NONE} -- Implementation
 			-- Set `EntryPointToken' to `i'.
 		external
 			"C struct IMAGE_COR20_HEADER access EntryPointToken type DWORD use <windows.h>"
+		end
+
+	c_flags (an_item: POINTER): INTEGER is
+			-- Access `Flags'.
+		external
+			"C struct IMAGE_COR20_HEADER access Flags use <windows.h>"
 		end
 
 	c_resources (an_item: POINTER): POINTER is

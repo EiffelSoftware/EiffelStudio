@@ -62,8 +62,7 @@ feature
 			f.set_position (1)
 			create gen.make (1, 1)
 			gen.put (f, 1)
-			create Result.make (gen)
-			Result.set_base_class_id (System.special_id)
+			create Result.make (System.special_id, gen)
 		end;
 
 	new_type (data: CL_TYPE_I): TO_SPECIAL_CLASS_TYPE is

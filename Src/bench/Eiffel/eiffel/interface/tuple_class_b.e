@@ -124,8 +124,7 @@ feature -- Actual class type
 			else
 				create actual_generic.make (1, 0)
 			end
-			create Result.make (actual_generic)
-			Result.set_base_class_id (class_id)
+			create Result.make (class_id, actual_generic)
 		end
 		
 feature {NONE}
@@ -136,12 +135,10 @@ feature {NONE}
 			any_a: CL_TYPE_A
 			gen: ARRAY [TYPE_A]
 		once
-			create any_a
-			any_a.set_base_class_id (System.any_id)
+			create any_a.make (System.any_id)
 			create gen.make (1, 1)
 			gen.put (any_a, 1)
-			create Result.make (gen)
-			Result.set_base_class_id (System.array_id)
+			create Result.make (System.array_id, gen)
 		end
 
 	Make_signature: DYN_PROC_I is

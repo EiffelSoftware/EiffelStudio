@@ -113,10 +113,23 @@ void toggle_button_state_selection_callback(GtkToggleButton *togglebutton, gpoin
 	//states :   Toggled = 1
 	//	    Selected (toggle on) = 2
 	//	    Unselected (toggle off) = 3
+	//	    Radio toggle button callback = 4
 	gboolean toggled;
+	
 	pcbd = (callback_data_t *)data;
 	signal_type = (int)(pcbd->extra_data);
 	toggled = togglebutton->active;
+
+	if (signal_type == 4)
+	{
+		//if (toggled == 1)
+		{
+		//Radio Toggle button callback	
+		(pcbd->rtn)(eif_access(pcbd->obj),
+		eif_access(pcbd->argument),
+	    	eif_access(pcbd->ev_data));
+		}
+	}
 
 	if (signal_type == 1)
 	{
@@ -126,7 +139,7 @@ void toggle_button_state_selection_callback(GtkToggleButton *togglebutton, gpoin
 	    	eif_access(pcbd->ev_data));
 
 	}
-	else if (signal_type == 2) 
+	else if (signal_type == 2)
 	{
 	//Call selected routine if button is selected (toggle on)
 		if (toggled == 1)
@@ -538,6 +551,13 @@ gint c_gtk_signal_connect_general (GtkObject *widget,
 					GTK_SIGNAL_FUNC(list_selection_child_callback), 
 					(gpointer)pcbd));
 			}
+			if (strcmp(name, "radio_toggle") == 0)
+			{
+				return (gtk_signal_connect (widget, "toggled", 
+					GTK_SIGNAL_FUNC(toggle_button_state_selection_callback), 
+					(gpointer)pcbd));
+
+			}	
 			if (strcmp(name, "toggled_on_off") == 0)
 			{
 				return (gtk_signal_connect (widget, "toggled", 

@@ -30,6 +30,18 @@ feature -- Status report
 				old selection_start = selection_start and old selection_end = selection_end
 		end
 		
+	selected_character_format: EV_CHARACTER_FORMAT is
+			--
+		require
+			has_selection: has_selection
+		deferred
+		ensure
+			result_not_void: Result /= Void
+			caret_not_moved: caret_position = old caret_position
+			selection_not_changed: old has_selection = has_selection and has_selection implies
+				old selection_start = selection_start and old selection_end = selection_end
+		end
+		
 	paragraph_format (caret_index: INTEGER): EV_PARAGRAPH_FORMAT is
 			-- `Result' is paragraph_format at caret position `caret_index'.
 		require
@@ -40,7 +52,21 @@ feature -- Status report
 			caret_not_moved: caret_position = old caret_position
 			selection_not_changed: old has_selection = has_selection and has_selection implies
 				old selection_start = selection_start and old selection_end = selection_end
-		end	
+		end
+		
+	selected_paragraph_format: EV_PARAGRAPH_FORMAT is
+			-- `Result' is paragraph format of current selection.
+			-- If more than one format is contained in the selection, `Result'
+			-- is the first of these formats.
+		require
+			has_selection: has_selection
+		deferred
+		ensure
+			result_not_void: Result /= Void
+			caret_not_moved: caret_position = old caret_position
+			selection_not_changed: old has_selection = has_selection and has_selection implies
+				old selection_start = selection_start and old selection_end = selection_end
+		end
 		
 	character_format_contiguous (start_index, end_index: INTEGER): BOOLEAN is
 			-- Is formatting from caret position `start_index' to `end_index' contiguous?

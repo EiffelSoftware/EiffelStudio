@@ -54,7 +54,7 @@ int main (int argc, char ** argv, char ** envp)
 	initstk();
 	exvect = exset((char *) 0, 0, (char *) 0);
 	exvect->ex_jbuf = &exenv;
-	if (echval = setjmp(exenv))
+	if (setjmp(exenv))
 		default_rescue();
 
 	eif_rtinit(argc, argv, envp);

@@ -25,6 +25,7 @@ feature -- Output
 			actual_type /= Void
 			c_type /= Void
 		do
+			st.add_new_line
 			st.add_string ("For type: ")
 			type.append_to (st)
 			st.add_new_line

@@ -13,7 +13,8 @@ inherit
 
 creation
 	make,
-	make_from_pointer
+	make_from_pointer,
+	make_from_wel_rect
 
 feature {NONE}  -- Initialization
 
@@ -29,6 +30,15 @@ feature {NONE}  -- Initialization
 			make_by_pointer (a_pointer)
 		end
 
+	make_from_wel_rect (a_rect: WEL_RECT) is
+			-- Make from WEL_RECT.
+		require
+			non_void_rect: a_rect /= Void
+		do
+			make
+			set_from_rect (a_rect)
+		end
+		
 feature -- Access
 
 	left: INTEGER is
@@ -55,6 +65,16 @@ feature -- Access
 			Result := ccom_tag_rect_bottom (item)
 		end
 
+	wel_rect: WEL_RECT is
+			-- Equivalent WEL_RECT
+		require
+			exists: exists
+		do
+			create Result.make (left, top, right, bottom)
+		ensure
+			valid_rect: Result /= Void
+		end
+		
 feature -- Measurement
 
 	structure_size: INTEGER is
@@ -64,6 +84,17 @@ feature -- Measurement
 		end
 
 feature -- Basic Operations
+
+	set_from_rect (a_rect: WEL_RECT) is
+			-- Set from WEL_RECT.
+		require
+			non_void_rect: a_rect /= Void
+		do
+			set_left (a_rect.left)
+			set_top (a_rect.top)
+			set_right (a_rect.right)
+			set_bottom (a_rect.bottom)
+		end
 
 	set_left (a_left: INTEGER) is
 			-- Set `left' with `a_left'.

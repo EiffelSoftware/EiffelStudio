@@ -61,6 +61,7 @@ feature -- Initialization
 		require
 			a_format_not_void: a_format /= Void
 			a_filename_not_void: a_filename /= Void
+			a_filename_valid: a_filename.is_valid
 		do
 			a_format.save (raw_image_data, a_filename)
 		end
@@ -114,6 +115,9 @@ end -- class EV_PIXMAP_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.23  2001/06/29 22:39:48  king
+--| Added necessary but useless precondition
+--|
 --| Revision 1.22  2001/06/07 23:08:11  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

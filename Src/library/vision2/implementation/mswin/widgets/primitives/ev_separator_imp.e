@@ -14,8 +14,6 @@ inherit
 	EV_PRIMITIVE_IMP
 		undefine
 			set_default_options
-		redefine
-			on_key_down
 		end
 
 	EV_SYSTEM_PEN_IMP
@@ -43,11 +41,11 @@ inherit
 			on_kill_focus,
 			on_set_cursor,
 			on_paint,
-			on_accelerator_command
+			on_accelerator_command,
+			on_key_down
 		redefine
 			default_style,
-			background_brush,
-			on_key_down
+			background_brush
 		end
 
 feature {NONE} -- Initialization
@@ -75,19 +73,6 @@ feature {NONE} -- WEL Implementation
 			Result := Ws_child + Ws_visible
 		end
 
-	on_key_down (virtual_key, key_data: INTEGER) is
-			-- Executed when a key is pressed.
-			-- We verify that there is indeed a command to avoid
-			-- the creation of an object for nothing.
-		local
-			data: EV_KEY_EVENT_DATA
-		do
-			if has_command (Cmd_key_press) then
-				data := get_key_data (virtual_key, key_data)
-				execute_command (Cmd_key_press, data)
-			end
-		end
-
 feature {NONE} -- Feature that should be directly implemented by externals
 
 	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
@@ -96,7 +81,7 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			-- external feature.
 		do
 			check
-				Inapplicable: False
+				Never_called: False
 			end
 		end
 
@@ -106,7 +91,7 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			-- external feature.
 		do
 			check
-				Inapplicable: False
+				Never_called: False
 			end
 		end
 

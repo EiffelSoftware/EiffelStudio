@@ -11,9 +11,6 @@ inherit
 	EV_PROGRESS_BAR_I
 
 	EV_GAUGE_IMP
-		redefine
-			on_key_down
-		end
 
 	WEL_PROGRESS_BAR
 		rename
@@ -37,11 +34,11 @@ inherit
 			on_mouse_move,
 			on_set_focus,
 			on_kill_focus,
+			on_key_down,
 			on_key_up,
 			on_set_cursor,
 			default_style
 		redefine
-			on_key_down,
 			set_step
 		end
 
@@ -130,19 +127,6 @@ feature {NONE} -- WEL implementation
 		do
 		end
 
-	on_key_down (virtual_key, key_data: INTEGER) is
-			-- Executed when a key is pressed.
-			-- We verify that there is indeed a command to avoid
-			-- the creation of an object for nothing.
-		local
-			data: EV_KEY_EVENT_DATA
-		do
-			if has_command (Cmd_key_press) then
-				data := get_key_data (virtual_key, key_data)
-				execute_command (Cmd_key_press, data)
-			end
-		end
-
 feature {NONE} -- Feature that should be directly implemented by externals
 
 	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
@@ -150,9 +134,7 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			-- because we cannot do a deferred feature become an
 			-- external feature.
 		do
-			check
-				Inapplicable: False
-			end
+			Result := cwin_get_next_dlgtabitem (hdlg, hctl, previous)
 		end
 
 	next_dlggroupitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
@@ -161,7 +143,7 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			-- external feature.
 		do
 			check
-				Inapplicable: False
+				Never_called: False
 			end
 		end
 

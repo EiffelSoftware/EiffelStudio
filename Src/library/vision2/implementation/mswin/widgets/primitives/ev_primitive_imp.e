@@ -15,9 +15,6 @@ inherit
 	EV_PRIMITIVE_I
 
 	EV_WIDGET_IMP
-		redefine
-			on_key_down
-		end
 
 feature -- Access
 
@@ -87,31 +84,39 @@ feature -- Basic operations
 			window.set_focus
 		end
 
-feature {NONE} -- WEL Implementation
-
-	on_key_down (virtual_key, key_data: INTEGER) is
-			-- Use the tab key to jump from one control
-			-- to another. Use also the arrows.
-		local
-			hwnd: POINTER
-			window: WEL_WINDOW
+	process_tab_key (virtual_key: INTEGER) is
+			-- Process a tab or arrow key press to give the focus to the next widget
+			-- Need to be called in the feature on_key_down when the control need to
+			-- process this kind of keys.
 		do
-			{EV_WIDGET_IMP} Precursor (virtual_key, key_data)
+			if virtual_key = Vk_tab and then flag_set (style, Ws_tabstop) then
+				if key_down (Vk_shift) then
+					tab_action (False)
+				else
+					tab_action (True)
+				end
+			end
+		end
+
+	process_tab_and_arrows_keys (virtual_key: INTEGER) is
+			-- Process a tab or arrow key press to give the focus to the next widget
+			-- Need to be called in the feature on_key_down when the control need to
+			-- process this kind of keys.
+			-- We can remove an item from the tab sequence, not from
+			-- the arrows sequence.
+		do
 			if virtual_key = Vk_tab then
-				tab_action (True)
---				hwnd := next_dlgtabitem (top_level_window_imp.item, item, True)
---				window := windows.item (hwnd)
---				window.set_focus
+				if flag_set (style, Ws_tabstop) then
+					if key_down (Vk_shift) then
+						tab_action (False)
+					else
+						tab_action (True)
+					end
+				end
 			elseif virtual_key = Vk_down then
 				arrow_action (True)
---				hwnd := next_dlggroupitem (top_level_window_imp.item, item, True)
---				window := windows.item (hwnd)
---				window.set_focus
 			elseif virtual_key = Vk_up then
 				arrow_action (False)
---				hwnd := next_dlggroupitem (top_level_window_imp.item, item, False)
---				window := windows.item (hwnd)
---				window.set_focus
 			end
 		end
 

@@ -88,7 +88,9 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			-- because we cannot do a deferred feature become an
 			-- external feature.
 		do
-			Result := cwin_get_next_dlggroupitem (hdlg, hctl, previous)
+			check
+				Never_called: False
+			end
 		end
 
 	mouse_message_x (lparam: INTEGER): INTEGER is

@@ -53,7 +53,9 @@ inherit
 		redefine
 			on_key_down,
 			on_en_change,
-			default_style
+			default_style,
+			enable,
+			disable
 		end
 
 creation
@@ -94,13 +96,23 @@ feature -- Event -- removing command association
 			remove_command (Cmd_activate)
 		end
 
-feature {NONE} -- Implementation
+feature {NONE} -- WEL Implementation
+
+	default_style: INTEGER is
+			-- We specified the Es_autovscroll style otherwise
+			-- the system keep on beeping when we press the
+			-- return key.
+		do
+			Result := Ws_child + Ws_visible + Ws_tabstop
+					+ Ws_group + Ws_border + Es_left + Es_autohscroll
+		end
 
 	on_key_down (virtual_key, key_data: INTEGER) is
 			-- We check if the enter key is pressed)
 			-- 13 is the number of the return key.
 		do
 			{EV_TEXT_COMPONENT_IMP} Precursor (virtual_key, key_data)
+			process_tab_key (virtual_key)
 			if virtual_key = Vk_return then
 				set_caret_position (0)
 				execute_command (Cmd_activate, Void)
@@ -114,13 +126,24 @@ feature {NONE} -- Implementation
 			execute_command (Cmd_change, Void)
 		end
 
-	default_style: INTEGER is
-			-- We specified the Es_autovscroll style otherwise
-			-- the system keep on beeping when we press the
-			-- return key.
+	enable is
+			-- Enable mouse and keyboard input.
+		local
+			default_colors: EV_DEFAULT_COLORS
 		do
-			Result := Ws_child + Ws_visible + Ws_tabstop
-						+ Ws_border + Es_left + Es_autohscroll
+			!! default_colors
+			cwin_enable_window (item, True)
+			set_background_color (default_colors.Color_read_write)
+		end
+
+	disable is
+			-- Disable mouse and keyboard input
+		local
+			default_colors: EV_DEFAULT_COLORS
+		do
+			!! default_colors
+			cwin_enable_window (item, False)
+			set_background_color (default_colors.Color_read_only)
 		end
 
 feature {NONE} -- Feature that should be directly implemented by externals

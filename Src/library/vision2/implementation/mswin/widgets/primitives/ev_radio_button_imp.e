@@ -13,7 +13,8 @@ inherit
 		
 	EV_CHECK_BUTTON_IMP
 		redefine
-			default_style
+			default_style,
+			on_key_down
 		end
 
 	WEL_RADIO_BUTTON
@@ -59,6 +60,13 @@ feature {NONE} -- WEL Implementation
 		do
 			Result := Ws_child + Ws_visible + Ws_tabstop
 						+ Bs_autoradiobutton
+		end
+
+	on_key_down (virtual_key, key_data: INTEGER) is
+			-- A key has been pressed
+		do
+			{EV_CHECK_BUTTON_IMP} Precursor (virtual_key, key_data)
+			process_tab_and_arrows_keys (virtual_key)
 		end
 
 end -- class EV_RADIO_BUTTON_IMP

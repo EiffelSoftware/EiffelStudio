@@ -26,6 +26,7 @@ inherit
 			on_middle_button_up,
 			on_middle_button_down,
 			on_mouse_move,
+			on_key_down,
 			destroy
 		end
 
@@ -501,6 +502,13 @@ feature {NONE} -- WEL Implementation
 			end
 		end
 
+	on_key_down (virtual_key, key_data: INTEGER) is
+			-- A key has been pressed
+		do
+			{EV_PRIMITIVE_IMP} Precursor (virtual_key, key_data)
+			process_tab_key (virtual_key)
+		end
+
 feature {NONE} -- Feature that should be directly implemented by externals
 
 	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
@@ -508,9 +516,7 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			-- because we cannot do a deferred feature become an
 			-- external feature.
 		do
-			check
-				Inapplicable: False
-			end
+			Result := cwin_get_next_dlgtabitem (hdlg, hctl, previous)
 		end
 
 	next_dlggroupitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
@@ -519,7 +525,7 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			-- external feature.
 		do
 			check
-				Inapplicable: False
+				Never_called: False
 			end
 		end
 

@@ -83,7 +83,9 @@ inherit
 			on_set_cursor,
 			wel_background_color,
 			wel_foreground_color,
-			on_en_change
+			on_en_change,
+			enable,
+			disable
 		end
 
 creation

@@ -10,6 +10,9 @@ deferred class
 
 inherit
 	EV_PRIMITIVE_IMP
+		redefine
+			on_key_down
+		end
 
 	EV_GAUGE_I
 
@@ -69,6 +72,13 @@ feature -- Deferred
 
 	on_scroll (scroll_code, pos: INTEGER) is
 		deferred
+		end
+
+	on_key_down (virtual_key, key_data: INTEGER) is
+			-- A key has been pressed
+		do
+			{EV_PRIMITIVE_IMP} Precursor (virtual_key, key_data)
+			process_tab_key (virtual_key)
 		end
 
 end -- class EV_GAUGE_IMP

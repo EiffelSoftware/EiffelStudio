@@ -107,6 +107,7 @@ feature -- Access
 		local
 			i: INDEX_AS
 			s: STRING_AS
+			l_id: ID_AS
 			list: EIFFEL_LIST [ATOMIC_AS]
 		do
 			i := find_index_as (Once_status_header)
@@ -120,7 +121,11 @@ feature -- Access
 						list.after or Result
 					loop
 						s ?= list.item
-						Result := s /= Void and then s.value.is_equal ("global")
+						Result := s /= Void and then s.value.is_equal (Global_value)
+						if not Result then
+							l_id ?= list.item
+							Result := l_id /= Void and then l_id.string_value.is_equal (Global_value)
+						end
 						list.forth
 					end
 				end
@@ -185,6 +190,9 @@ feature -- Constants
 			-- Index name of entity holding current indexing clause.
 
 	Enum_type_header: STRING is "enum_type"
+	
+	global_value: STRING is "global"
+			-- Value name of `Once_status_header'.
 
 feature {NONE} -- Implementation
 

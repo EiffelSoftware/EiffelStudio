@@ -25,11 +25,12 @@ feature {NONE} -- Creation
 			-- only if `a_name' not void otherwise identifier
 			-- will be defined as application name or the name
 			-- precised with -name option, and call `set_default'.
-		local
-			nothing: WIDGET
+        require
+            non_void_screen: a_screen /= Void; 
+            valid_screen: a_screen.is_valid
 		do
 			depth := 0;
-			widget_manager.new (Current, nothing);
+			widget_manager.new (Current, Void);
 			if a_name /= Void then
 				identifier:= clone (a_name);
 			end;	

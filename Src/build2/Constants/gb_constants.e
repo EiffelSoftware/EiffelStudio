@@ -209,6 +209,13 @@ feature -- Generation constants
 			Result := "<EVENT_DECLARATION>"
 		end
 		
+	attribute_tab: STRING is
+			-- `Result' is tag used in templates
+			-- for the attribute declarations.
+		once
+			Result := "<ATTRIBUTE>"
+		end
+		
 		
 	indent: STRING is
 			-- String representing standard indent
@@ -246,6 +253,10 @@ feature -- Generation constants
 	class_implementation_extension: STRING is "_IMP"
 		-- Extension to be added to generated class name,
 		-- for the implementation class.
+		
+	connect_events_comment: STRING is "%T--Connect events."
+		-- Comment to be inserted into generated code before
+		-- the event connections are declared.
 		
 feature -- XML saving
 

@@ -1,5 +1,8 @@
 indexing 
-	description: ""
+	description: "A edit control based on EV_RICH_TEXT optimized for%
+					 %source code editing. It supports various advanced %
+					 %editing mechanisms and a rudimentary support for%
+					 %syntax highlighting"
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -29,38 +32,179 @@ feature {NONE} -- Initialization
 			-- parent.
 		do
 			make_key_code
+			create custom_event_handler
 			create {EV_TEXT_EDITOR_HISTORY} history.make
 			{EV_RICH_TEXT} Precursor (par)
 			
 			add_text_editor_commands
---			set_text ("Ln1%R%NLn2")
---			select_all
---			set_character_format (test_font)
---			deselect_all
 		end
+		
+	init_accelerators is
+		require
+			exists: not destroyed
+		local
+			accelerator: EV_ACCELERATOR
+			cmd: EV_COMMAND
+		do
+--			make (code: INTEGER; shift, alt, control: BOOLEAN) is
+
+			create accelerator.make (Key_tab, False, False, False)
+			create {EV_ROUTINE_COMMAND} cmd.make (~accel_on_indent_lines)
+			add_accelerator_command (accelerator, cmd, Void)
+
+			create accelerator.make (Key_tab, True, False, False)
+			create {EV_ROUTINE_COMMAND} cmd.make (~accel_on_deindent_lines)
+			add_accelerator_command (accelerator, cmd, Void)
+
+			create accelerator.make (Key_o, False, False, True)
+			create {EV_ROUTINE_COMMAND} cmd.make (~accel_on_comment_lines)
+			add_accelerator_command (accelerator, cmd, Void)
+
+			create accelerator.make (Key_p, False, False, True)
+			create {EV_ROUTINE_COMMAND} cmd.make (~accel_on_decomment_lines)
+			add_accelerator_command (accelerator, cmd, Void)
+
+		end		
+
+	accel_on_indent_lines (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+		require
+			exists: not destroyed
+		local
+			new_data: EV_EVENT_DATA
+		do
+			if
+				has_selection
+			then
+				new_data := get_line_range_data_from_selection
+				custom_event_handler.execute_command ("indent_lines", new_data)
+			else
+				insert_text_as_command ("%T")
+			end
+		end
+
+	accel_on_deindent_lines (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+		require
+			exists: not destroyed
+		local
+			new_data: EV_EVENT_DATA
+		do
+			if
+				has_selection
+			then
+				new_data := get_line_range_data_from_selection
+				custom_event_handler.execute_command ("deindent_lines", new_data)
+			else
+				insert_text_as_command ("%T")
+			end
+		end
+
+	accel_on_comment_lines (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+		require
+			exists: not destroyed
+		local
+			new_data: EV_EVENT_DATA
+		do
+			if
+				has_selection
+			then
+				new_data := get_line_range_data_from_selection
+				custom_event_handler.execute_command ("comment_lines", new_data)
+			end
+		end
+
+	accel_on_decomment_lines (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+		require
+			exists: not destroyed
+		local
+			new_data: EV_EVENT_DATA
+		do
+			if
+				has_selection
+			then
+				new_data := get_line_range_data_from_selection
+				custom_event_handler.execute_command ("decomment_lines", new_data)
+			end
+		end
+
+
 feature -- Status Report
 
 	syntax_highlighting_enabled: BOOLEAN
+	
+	basic_auto_intending_enabled: BOOLEAN
+			-- If basic auto intending is switched on
+			-- pressing enter will place the cursor
+			-- in the new row at the column that contains
+			-- the first non white character in the
+			-- previous row. The columns between the cursor
+			-- and the newline will be filled with the same
+			-- white characters the previous row contains.
+			 
+			
 
 feature -- Status Settings
 
-	turn_syntax_highlighting_off is
+	enable_syntax_highlighting is
+			-- Enables syntax highlighting
+		require
+			exists: not destroyed
+			syntax_highlighting_disabled: not syntax_highlighting_enabled
+		do
+			syntax_highlighting_enabled := True
+		ensure
+			syntax_highlighting_enabled: syntax_highlighting_enabled
+		end
+	
+	disable_syntax_highlighting is
+			-- Disables syntax highlighting
 		require
 			exists: not destroyed
 			syntax_highlighting_enabled: syntax_highlighting_enabled
 		do
 			syntax_highlighting_enabled := False
-		end
-	
-	turn_syntax_highlighting_on is
-		require
-			exists: not destroyed
-			syntax_highlighting_not_enabled: not syntax_highlighting_enabled
-		do
-			syntax_highlighting_enabled := True
+		ensure
+			syntax_highlighting_disabled: not syntax_highlighting_enabled
 		end
 		
+	enable_basic_auto_intending is
+			-- Enables basic auto intending
+		require
+			exists: not destroyed
+			basic_auto_intending_disabled: not basic_auto_intending_enabled
+		do
+			basic_auto_intending_enabled := True
+		ensure
+			basic_auto_intending_enabled: basic_auto_intending_enabled
+		end
+
+	disable_basic_auto_intending is
+			-- Disables basic auto intending
+		require
+			exists: not destroyed
+			basic_auto_intending_enabled: basic_auto_intending_enabled
+		do
+			basic_auto_intending_enabled := False
+		ensure
+			basic_auto_intending_disabled: not basic_auto_intending_enabled
+		end
+
+
+		
 feature -- Element Change
+
+	insert_text_as_command (a_text: STRING) is
+			-- Inserts `a_text' at the current cursor position and
+			-- adds this change as a undoable command to the history.
+		local
+			cmd: EV_COMMAND
+			data: EV_PUBLIC_INSERT_TEXT_EVENT_DATA
+		do
+			create {EV_INSERT_TEXT_COMMAND} cmd.make (history)
+			create data.make
+			data.set_all (Current, position, a_text)
+			cmd.execute (Void, data)
+			insert_text (a_text)
+		end
 
 	comment_lines (first_line, last_line: INTEGER) is
 			-- Comments lines from `first_line' to `last_line'.
@@ -111,7 +255,7 @@ feature -- Element Change
 		end
 
 	decomment_lines (first_line, last_line: INTEGER) is
-			-- Deindents lines from `first_line' to `last_line' (if possible).
+			-- Decomments lines from `first_line' to `last_line' (if possible).
 			-- If a line has no whitecharacters at the beginning it won't be changed.
 		require
 			exist: not destroyed
@@ -294,7 +438,8 @@ feature -- Event -- removing command association
 		do
 			custom_event_handler.remove_all_commands ("indent_lines")			
 		end
-	
+
+
 	remove_deindent_lines_commands is
 			-- Empty the list of commands to be executed when
 			-- the user inputs wants to decomment the currently selected lines.
@@ -411,14 +556,28 @@ feature {NONE} -- Implementation
 		end
 
 	on_change (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+			-- Called after the text of the widget has been
+			-- changed.
+			-- This function is used to update the syntax 
+			-- highlighting of the text
 		require
 			exists: not destroyed
+		local
+			first_line, last_line: INTEGER
 		do
-			update_highlighting_all
-			--print ("change")
-			--insert_text ("foo")
+			-- update_highlighting_all
+			
+			--history.next_undo_command
+			first_line := current_line_number
+			last_line := current_line_number + 1
+			if
+				valid_line_index (first_line) and
+				valid_line_index (last_line)
+			then
+				update_highlighting_lines (first_line, last_line)
+			end
+			
 		end
-
 
 	on_highlight (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
 		require
@@ -465,69 +624,81 @@ feature {NONE} -- Implementation
 			key_data: EV_KEY_EVENT_DATA
 			new_data: EV_EVENT_DATA
 		do
-			key_data ?= data
-			check
-				valid_cast: key_data /= Void
-			end
-
-			if
-				key_data.keycode = Key_tab
-			then
-				if
-					has_selection
-				then
-						-- Trigger indent or de_indent lines event 
-					if
-						not key_data.shift_key_pressed
-					then
-						if 
-							custom_event_handler.has_command ("indent_lines") 
-						then
-							new_data := get_line_range_data_from_selection
-							custom_event_handler.execute_command ("indent_lines", new_data)
-						end
-					else
-						if 
-							custom_event_handler.has_command ("deindent_lines") 
-						then
-							new_data := get_line_range_data_from_selection
-							custom_event_handler.execute_command ("deindent_lines", new_data)
-						end
-					end
-				end
-			elseif 
-				key_data.keycode = Key_o
-			then
-				if
-					key_data.control_key_pressed and has_selection
-				then
-						-- Trigger comment lines event
-					if 
-						custom_event_handler.has_command ("comment_lines") 
-					then
-						new_data := get_line_range_data_from_selection
-						custom_event_handler.execute_command ("comment_lines", new_data)
-					end
-				end
-			elseif
-				key_data.keycode = Key_p
-			then
-				if
-					key_data.control_key_pressed and has_selection
-				then
-						-- Trigger decomment lines event
-					if 
-						custom_event_handler.has_command ("decomment_lines") 
-					then
-						new_data := get_line_range_data_from_selection
-						custom_event_handler.execute_command ("decomment_lines", new_data)
-					end
-				end
-			end
+--			key_data ?= data
+--			check
+--				valid_cast: key_data /= Void
+--			end
+--
+--			if
+--				key_data.keycode = Key_tab
+--			then
+--				if
+--					has_selection
+--				then
+--						-- Trigger indent or de_indent lines event 
+--					if
+--						not key_data.shift_key_pressed
+--					then
+--						if 
+--							custom_event_handler.has_command ("indent_lines") 
+--						then
+--							new_data := get_line_range_data_from_selection
+--							custom_event_handler.execute_command ("indent_lines", new_data)
+--						end
+--					else
+--						if 
+--							custom_event_handler.has_command ("deindent_lines") 
+--						then
+--							new_data := get_line_range_data_from_selection
+--							custom_event_handler.execute_command ("deindent_lines", new_data)
+--						end
+--					end
+--				end
+--			elseif 
+--				key_data.keycode = Key_o
+--			then
+--				if
+--					key_data.control_key_pressed and has_selection
+--				then
+--						-- Trigger comment lines event
+--					if 
+--						custom_event_handler.has_command ("comment_lines") 
+--					then
+--						new_data := get_line_range_data_from_selection
+--						custom_event_handler.execute_command ("comment_lines", new_data)
+--					end
+--				end
+--			elseif
+--				key_data.keycode = Key_p
+--			then
+--				if
+--					key_data.control_key_pressed and has_selection
+--				then
+--						-- Trigger decomment lines event
+--					if 
+--						custom_event_handler.has_command ("decomment_lines") 
+--					then
+--						new_data := get_line_range_data_from_selection
+--						custom_event_handler.execute_command ("decomment_lines", new_data)
+--					end
+--				end
+--			elseif
+--				key_data.keycode = Key_enter
+--			then
+--				if
+--					not key_data.control_key_pressed and basic_auto_intending_enabled
+--				then
+--					do_basic_auto_intending
+--				end
+--			end
 --			update_highlighting (1, text_length)
 		end
 
 
+	do_basic_auto_intending is
+		do
+			--current_line_number
+		end
 
 end -- class EV_RICH_TEXT
 

@@ -15,7 +15,7 @@ creation
 
 feature -- Access
 
-	is_seperator: BOOLEAN is
+	is_separator: BOOLEAN is
 		local
 			chr: CHARACTER
 		do

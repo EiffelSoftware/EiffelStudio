@@ -430,6 +430,13 @@ rt_private void eif_show_console(void)
 			if (eif_coninfile == INVALID_HANDLE_VALUE)
 				eio();
 
+			if (! SetStdHandle (STD_OUTPUT_HANDLE, eif_conoutfile)) {
+				eio();
+			}
+			if (! SetStdHandle (STD_INPUT_HANDLE, eif_coninfile)) {
+				eio();
+			}
+
 			eif_register_cleanup (eif_console_cleanup);
 		} else {
 			eif_conoutfile = GetStdHandle (STD_OUTPUT_HANDLE);

@@ -38,7 +38,7 @@ private char gc_stopped;
 private void process_request();		/* Dispatch request processing */
 private void inspect();				/* Object inspection */
 private void adopt();				/* Adopt object */
-private void access();				/* Access object through hector */
+private void ipc_access();			/* Access object through hector */
 private void wean();				/* Wean adopted object */
 private void load_bc();				/* Load byte code information */
 private void obj_inspect();
@@ -140,7 +140,7 @@ Request *rqst;				/* The received request to be processed */
 		adopt(writefd(sp), &rqst->rq_opaque);
 		break;
 	case ACCESS:					/* Access object through hector */
-		access(writefd(sp), &rqst->rq_opaque);
+		ipc_access(writefd(sp), &rqst->rq_opaque);
 		break;
 	case WEAN:						/* Wean adopted object */
 		wean(writefd(sp), &rqst->rq_opaque);
@@ -398,7 +398,7 @@ Opaque *what;		/* Generic structure describing request */
 	twrite(hector_addr, strlen(hector_addr));
 }
 
-private void access(s, what)
+private void ipc_access(s, what)
 int s;
 Opaque *what;		/* Generic structure describing request */
 {

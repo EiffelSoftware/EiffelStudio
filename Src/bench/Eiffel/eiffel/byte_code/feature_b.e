@@ -227,6 +227,21 @@ feature -- IL code generation
 					generate_il_metamorphose (cl_type, target_type, real_metamorphose)
 				end
 
+				if
+					System.il_verifiable
+					and then not target_type.is_expanded and then not target_type.is_none
+					and then not cl_type.base_class.is_native_array
+				then
+						-- Generate cast in case we are currently calling the
+						-- creation procedure of a typed creation or a typed
+						-- expression creation. The problem is that the target
+						-- might be an ancestor of created type which does
+						-- not have the called creation routine. In order to
+						-- generate verifiable code, we simply cast to type
+						-- which defines creation routine.
+					il_generator.generate_check_cast (cl_type, target_type)
+				end
+
 				if invariant_checked then
 						-- Need a copy of top to perform invariant checking.
 					il_generator.duplicate_top

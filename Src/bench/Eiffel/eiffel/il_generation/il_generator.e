@@ -48,6 +48,7 @@ feature {NONE} -- Initialization
 		do
 			degree_output := deg_output
 			is_finalizing := System.in_final_mode
+			is_single_module := is_finalizing or else Compilation_modes.is_precompiling
 		end
 
 feature -- Access
@@ -60,6 +61,9 @@ feature -- Access
 
 	is_finalizing: BOOLEAN
 			-- Are we finalizing?
+
+	is_single_module: BOOLEAN
+			-- Are we only generate one module?
 
 	has_root_class: BOOLEAN
 			-- Does current module has a root class specification?
@@ -179,10 +183,10 @@ feature -- Generation
 
 				il_generator.start_assembly_generation (System.name, file_name,
 					l_public_key, location, assembly_info,
-					System.line_generation or not System.in_final_mode)
+					System.line_generation or not is_finalizing)
 
 					-- Split classes into modules
-				prepare_classes (System.classes, is_finalizing)
+				prepare_classes (System.classes, is_single_module)
 
 					-- Generate types metadata description and IL code
 				generate_all_types (sorted_classes (System.classes))
@@ -313,7 +317,7 @@ feature {NONE} -- Type description
 		do
 			generate_class_interfaces (classes)
 
-			if not is_finalizing then
+			if not is_single_module then
 				degree_output.put_start_degree (1, compiled_classes_count)
 			end
 
@@ -327,7 +331,7 @@ feature {NONE} -- Type description
 				Il_generator.end_module_generation (has_root_class)
 				ordered_classes.forth
 			end
-			if not is_finalizing then
+			if not is_single_module then
 				degree_output.put_end_degree
 			end
 		end
@@ -517,8 +521,12 @@ feature {NONE} -- Type description
 				i := classes.lower
 				nb := classes.upper
 				j := compiled_classes_count
-				if is_finalizing then
-					degree_output.put_start_degree (-2, j)
+				if is_single_module then
+					if is_finalizing then
+						degree_output.put_start_degree (-2, j)
+					else
+						degree_output.put_start_degree (1, j)
+					end
 				end
 			variant
 				nb - i + 1
@@ -546,8 +554,12 @@ feature {NONE} -- Type description
 							Il_generator.set_current_module_with (cl_type)
 
 							if not l_class_processed then
-								if is_finalizing then
-									degree_output.put_degree_minus_2 (class_c, j)
+								if is_single_module then
+									if is_finalizing then
+										degree_output.put_degree_minus_2 (class_c, j)
+									else
+										degree_output.put_degree_1 (class_c, j)
+									end
 								end
 								System.set_current_class (class_c)
 								l_class_processed := True
@@ -563,7 +575,7 @@ feature {NONE} -- Type description
 				end
 				i := i + 1
 			end
-			if is_finalizing then
+			if is_single_module then
 				degree_output.put_end_degree
 			end
 		end
@@ -584,8 +596,12 @@ feature {NONE} -- Type description
 				i := classes.lower
 				nb := classes.upper
 				j := compiled_classes_count
-				if is_finalizing then
-					degree_output.put_start_degree (-3, j)
+				if is_single_module then
+					if is_finalizing then
+						degree_output.put_start_degree (-3, j)
+					else
+						degree_output.put_start_degree (-1, j)
+					end
 				end
 			variant
 				nb - i + 1
@@ -612,8 +628,12 @@ feature {NONE} -- Type description
 							Il_generator.set_current_module_with (cl_type)
 
 							if not l_class_processed then
-								if is_finalizing then
-									degree_output.put_degree_minus_3 (class_c, j)
+								if is_single_module then
+									if is_finalizing then
+										degree_output.put_degree_minus_3 (class_c, j)
+									else
+										degree_output.put_degree_minus_1 (class_c, j)
+									end
 								else
 									degree_output.put_degree_1 (class_c, j)
 								end
@@ -635,7 +655,7 @@ feature {NONE} -- Type description
 				end
 				i := i + 1
 			end
-			if is_finalizing then
+			if is_single_module then
 				degree_output.put_end_degree
 			end
 		end

@@ -60,17 +60,17 @@ feature -- Access
 	is_vms: BOOLEAN is
 			-- Is the platform VMS?
 		external
-			"C"
+			"C macro use %"eif_commands.h%""
 		alias
-			"eif_is_vms"
+			"EIF_IS_VMS"
 		end
 
 	is_windows: BOOLEAN is
 			-- Is the platform a windows platform?
 		external
-			"C"
+			"C macro use %"eif_commands.h%""
 		alias
-			"eif_is_windows"
+			"EIF_IS_WINDOWS"
 		end
 
 end -- class PLATFORM_CONSTANTS

@@ -13,7 +13,9 @@ class
 inherit
 	INTERACTIVE_LIST [G]
 		redefine
-			default_create
+			default_create,
+			on_item_added,
+			on_item_removed
 		end
 
 create
@@ -27,55 +29,33 @@ feature {NONE} -- Initialization
 			Precursor
 			create add_actions.make ("add", <<"item">>)
 			create remove_actions.make ("remove", <<"item">>)
-			create added_actions.make ("added", <<"item">>)
-			create removed_actions.make ("removed", <<"item">>)
 		end
 
 feature -- Access
 
 	add_actions: ACTION_SEQUENCE [TUPLE [G]]
-			-- Actions performed when an item is about to be added.
-
-	added_actions: ACTION_SEQUENCE [TUPLE [G]]
 			-- Actions performed when an item has just been added.
 
 	remove_actions: ACTION_SEQUENCE [TUPLE [G]]
-			-- Actions performed when an item is about to be removed.
-
-	removed_actions: ACTION_SEQUENCE [TUPLE [G]]
 			-- Actions performed when an item has just been removed.
 
 feature -- Miscellaneous
 
 	on_item_added (an_item: G) is
-			-- `an_item' is about to be added.
+			-- `an_item' has just been added.
 		do
 			add_actions.call ([an_item])
 		end
 
-	on_item_already_added (an_item: G) is
-			-- `an_item' is about to be added.
-		do
-			added_actions.call ([an_item])
-		end
-
 	on_item_removed (an_item: G) is
-			-- `an_item' is about to be removed.
+			-- `an_item' has just been removed.
 		do
 			remove_actions.call ([an_item])
-		end
-
-	on_item_already_removed (an_item: G) is
-			-- `an_item' is about to be removed.
-		do
-			removed_actions.call ([an_item])
 		end
 
 invariant
 	add_actions_not_void: add_actions /= Void
 	remove_actions_not_void: remove_actions /= Void
-	added_actions_not_void: added_actions /= Void
-	removed_actions_not_void: removed_actions /= Void
 
 end -- class ACTIVE_LIST
 
@@ -100,6 +80,11 @@ end -- class ACTIVE_LIST
 --|-----------------------------------------------------------------------------
 --| 
 --| $Log$
+--| Revision 1.6  2000/06/15 22:52:05  pichery
+--| Removed `on_item_already_xxxx',
+--| now `on_item_xxxx' is executed after the
+--| operation has been done.
+--|
 --| Revision 1.5  2000/06/15 03:30:37  pichery
 --| Added 2 new actions: These actions are called
 --| once the items are added/removed. The other

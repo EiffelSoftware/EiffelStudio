@@ -15,7 +15,8 @@ deferred class LIST [G] inherit
 	CHAIN [G]
 		redefine
 			forth
-		end;
+		end
+
 feature -- Cursor movement
 
 	forth is

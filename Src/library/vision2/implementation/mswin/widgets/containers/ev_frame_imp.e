@@ -14,11 +14,14 @@ inherit
 
 	EV_CONTAINER_IMP
 		redefine
+			plateform_build,
 			client_width,
 			client_height,
 			child_minwidth_changed,
 			child_minheight_changed
 		end
+
+	EV_FONTABLE_IMP
 
 	EV_SYSTEM_PEN_IMP
 
@@ -71,8 +74,15 @@ feature {NONE} -- Initialization
 				parent_not_void: par_imp /= Void
 			end
 			make_with_coordinates (par_imp, txt, 0, 0, 0, 0)
-			!WEL_ANSI_VARIABLE_FONT! private_font.make
+			!WEL_ANSI_VARIABLE_FONT! wel_font.make
 		end
+
+	   	plateform_build (par: EV_CONTAINER_I) is
+   			-- Plateform dependant initializations.
+   		do
+ 			{EV_CONTAINER_IMP} Precursor (par)
+			wel_set_font (wel_font)
+ 		end
 
 feature -- Access
 
@@ -85,7 +95,7 @@ feature -- Access
 	client_height: INTEGER is
 			-- Height of the client area of container
 		do
-			Result := (client_rect.height - box_text_height - 2 * box_height).max (0)
+			Result := (client_rect.height - box_text_height - 2 * box_width).max (0)
 		end
 
 feature {NONE} -- Implementation for automatic size compute.
@@ -107,7 +117,7 @@ feature {NONE} -- Implementation for automatic size compute.
 			-- the one of its child, to change this, just use
 			-- set_minimum_width
 		do
-			set_minimum_height (value + box_text_height + 2 * box_height)
+			set_minimum_height (value + box_text_height + 2 * box_width)
 		end
 
 	move_and_resize (a_x, a_y, a_width, a_height: INTEGER;
@@ -117,7 +127,7 @@ feature {NONE} -- Implementation for automatic size compute.
 		do
 			{WEL_CONTROL_WINDOW} Precursor (a_x, a_y, a_width, a_height, True)
 			if child /= Void then
-				child.set_move_and_size (box_width, box_text_height + box_height, 
+				child.set_move_and_size (box_width, box_text_height + box_width, 
 										client_width, client_height)
 			end
 		end
@@ -139,14 +149,14 @@ feature {NONE} -- WEL Implementation
 		local
 			top: INTEGER
 		do
-			paint_dc.select_font (private_font)
+			paint_dc.select_font (wel_font)
 			paint_dc.set_text_color (foreground_color_imp)
 			paint_dc.set_background_color (background_color_imp)
 			paint_dc.text_out (10, 0, text)
 			if text.empty then
 				top := 0
 			else
-				top := private_font.log_font.height // 2
+				top := wel_font.log_font.height // 2
 			end
 			paint_dc.select_pen (shadow_pen)
 			paint_dc.line (0, top, 0, height - 1)
@@ -171,18 +181,33 @@ feature {NONE} -- WEL Implementation
 			end
 		end
 
-	private_font: WEL_FONT
+	wel_font: WEL_FONT
+			-- Font used for the label of the frame
+
+	wel_set_font (a_font: WEL_FONT) is
+			-- Make `a_font' the new font of the widget.
+		local
+			dc: WEL_CLIENT_DC
+		do
+			wel_font := a_font
+			!! dc.make (Current)
+			dc.get
+			dc.select_font (a_font)
+			set_minimum_height (box_text_height + 2 * box_width)
+			set_minimum_width (dc.string_width (text) + 2 * box_width + 10)
+			dc.release
+		end
 
 	box_width: INTEGER is 4
-
-	box_height: INTEGER is 4
+			-- Width of the border
 
 	box_text_height: INTEGER is
+			-- Height of the label of the frame
 		do
 			if text.empty then
 				Result := 0
 			else
-				Result := private_font.log_font.height
+				Result := wel_font.log_font.height
 			end
 		end
 

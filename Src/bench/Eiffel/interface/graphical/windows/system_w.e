@@ -17,7 +17,7 @@ inherit
 		redefine
 			hole, build_format_bar,
 			open_command, save_as_command, quit_command, save_command,
-			text_window
+			text_window, tool_name, editable, create_edit_buttons
 		end
 
 creation
@@ -28,6 +28,9 @@ feature {NONE}
 
 	tool_name: STRING is do Result := l_System end;
 
+	editable:BOOLEAN is True;
+		-- System window is editable
+
 feature 
 
 	text_window: SYSTEM_TEXT;
@@ -37,8 +40,24 @@ feature
 			quit_command.set_quit_command (c, arg);
 		end;
 
+	display is
+		do
+			if not realized then
+				realize
+			elseif not shown then
+				show
+			end;
+		end;
 	
 feature {NONE}
+	
+	create_edit_buttons is
+		do
+			!!open_command.make (edit_bar, text_window);
+			!!save_command.make (edit_bar, text_window);
+			!!save_as_command.make (edit_bar, text_window);
+			!!quit_command.make (edit_bar, text_window);
+		end;
 
 	build_format_bar is
 			-- Build formatting buttons in `format_bar'.

@@ -64,7 +64,8 @@ feature
 					then
 						Result := True
 					else
-						Result := Body_server.has (body_id);
+						Result := Body_server.has (body_id)
+								or else has_replicated_body;
 if not Result then
 	io.error.putstring ("is_valid: body_server.has FALSE ");
 	io.error.putint (body_id);
@@ -73,6 +74,11 @@ end;
 					end;
 				end;
 			end;
+		end;
+
+	has_replicated_body: BOOLEAN is
+		do
+			-- Do nothing
 		end;
 
 	is_external: BOOLEAN is

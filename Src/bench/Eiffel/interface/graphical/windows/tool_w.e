@@ -19,10 +19,22 @@ feature
 
 feature {NONE}
 
-	tool_name: STRING is deferred end;
+	tool_name: STRING is do end;
 			-- Name of the tool
-	
-feature 
+
+feature -- Window features
+
+	realized: BOOLEAN is deferred end;
+	realize is deferred end;
+	shown: BOOLEAN is deferred end;
+	show is deferred end;
+	raise is deferred end;
+	title: STRING is deferred end;
+	set_title (s: STRING) is deferred end;
+	destroy is deferred end;
+	hide is deferred end
+
+feature
 
 	synchronize is
 		do
@@ -33,6 +45,13 @@ feature
 			-- Deal with element `dropped'.
 		do
 			text_window.receive (dropped)
+		end;
+
+	reset is
+			-- Reset the window contents
+		do
+			set_title (tool_name);
+			text_window.clean
 		end;
 
 	
@@ -154,11 +173,5 @@ feature {NONE}
 	grab (cursor: SCREEN_CURSOR) is deferred end;
 	ungrab is deferred end;
 	
-feature 
-
-	title: STRING is deferred end;
-	set_title (s: STRING) is deferred end;
-	destroy is deferred end;
-	hide is deferred end
 
 end

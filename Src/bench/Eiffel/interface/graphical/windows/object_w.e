@@ -15,7 +15,8 @@ inherit
 		rename
 			make as normal_create
 		redefine
-			text_window, build_format_bar, hole
+			text_window, build_format_bar, hole,
+			tool_name
 		end
 
 creation

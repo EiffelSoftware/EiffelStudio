@@ -15,7 +15,7 @@ inherit
 
 	TOOL_W
 		redefine
-			text_window, work
+			text_window, work, tool_name
 		end;
 	BASE
 		rename
@@ -131,7 +131,8 @@ feature -- rest
 			routine_hole: ROUTINE_HOLE;
 			object_hole: OBJECT_HOLE;
 			explain_hole: EXPLAIN_HOLE;
-			dummy_rc: ROW_COLUMN
+			shell_hole: SHELL_HOLE;
+			dummy_rc: ROW_COLUMN;
 		do
 			!!classic_bar.make (new_name, form_manager);
 				!!open_command.make (classic_bar, text_window);
@@ -143,6 +144,7 @@ feature -- rest
 				!!class_hole.make (classic_bar, Current);
 				!!routine_hole.make (classic_bar, Current);
 				!!object_hole.make (classic_bar, Current);
+				!!shell_hole.make (classic_bar, Current);
 					classic_bar.attach_left (open_command, 0);
 					classic_bar.attach_top (open_command, 0);
 					classic_bar.attach_left_widget (open_command, quit_command, 0);
@@ -161,7 +163,9 @@ feature -- rest
 					classic_bar.attach_top (routine_hole, 0);
 					classic_bar.attach_right_widget (object_hole, routine_hole, 0);
 					classic_bar.attach_top (object_hole, 0);
-					classic_bar.attach_right (object_hole, 23);
+					classic_bar.attach_right_widget (shell_hole, object_hole, 0);
+					classic_bar.attach_top (shell_hole, 0);
+					classic_bar.attach_right (shell_hole, 23);
 		end;
 
 	build_text is

@@ -7,7 +7,8 @@ inherit
 		rename
 			make as make_simple_error
 		redefine
-			code, file_name
+			code, file_name, stone_type, 
+			stone_name, help_text
 		end
 
 creation
@@ -30,6 +31,15 @@ feature
         do
 			Result := syntax_error_i.file_name
         end;
+
+	help_text: STRING is
+		do
+			Result := l_No_help_available
+		end;
+
+	stone_type: INTEGER is do Result := Class_type end;
+
+	stone_name: STRING is do Result := l_Class end;
 
 	start_position: INTEGER is do Result := syntax_error_i.start_position end;
 			-- Stating position of the token involved in the syntax error

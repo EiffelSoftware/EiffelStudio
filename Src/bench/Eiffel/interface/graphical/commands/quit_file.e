@@ -23,13 +23,13 @@ feature {NONE}
 		do
 			if argument = warner then
 				-- The user has been warned that he will lose his stuff
-				text_window.tool.destroy;
+				window_manager.close (text_window.tool);
 			else
 				-- First click on open
 				if text_window.changed then
 					warner.call (Current, l_File_changed)
 				else
-					text_window.tool.destroy;
+					window_manager.close (text_window.tool);
 				end
 			end
 		end;

@@ -11,6 +11,7 @@ feature
 	Object_type: INTEGER is 5;
 	Explain_type: INTEGER is 6;
 	Triangle_type: INTEGER is 7;
-	Custom_type: INTEGER is 8
+	Custom_type: INTEGER is 8;
+	Shell_type: INTEGER is 9
 
 end

@@ -5,7 +5,7 @@ inherit
 	TOOL_W
 		redefine
 			text_window,
-			execute
+			execute, tool_name
 		end;
 	CUSTOM_CONST;
 	CUSTOM_INTERF;

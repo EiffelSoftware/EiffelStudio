@@ -14,17 +14,20 @@ creation
 	
 feature 
 
+	search_window: SEARCH_W;
+
 	make (c: COMPOSITE; a_text_window: TEXT_WINDOW) is
 		do
+			!!search_window.make (c, a_text_window);
 			init (c, a_text_window);
 		end;
 	
 feature {NONE}
 
-	work (a_text_window: TEXT_WINDOW) is
+	work (arg: ANY) is
 			-- Change font in `a_text_window'.
 		do
-			search_window.call (a_text_window)
+			search_window.call 
 		end;
 	
 feature 
@@ -32,7 +35,7 @@ feature
 	symbol: PIXMAP is 
 		once 
 			!!Result.make; 
-			Result.read_from_file (bm_Search) 
+			Result.read_from_file (bm_Search) ;
 		end;
  
 	

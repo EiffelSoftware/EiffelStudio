@@ -12,7 +12,9 @@ feature -- Initialization
 			status_box: STATUS_BOX
 		do
 			create options.make (25)
-			create dependent_directories.make
+			create system_dependent_directories.make (5)
+			create object_dependent_directories.make (50)
+			create dependent_directories.make (55)
 
 			eiffel_dir := env.get ("ISE_EIFFEL")
 			platform := env.get ("ISE_PLATFORM")
@@ -94,7 +96,8 @@ feature -- Access
 	options: RESOURCE_TABLE		
 			-- Options read from config.eif
 
-	dependent_directories: LINKED_LIST[STRING]
+	dependent_directories, system_dependent_directories,
+	object_dependent_directories: ARRAYED_LIST [STRING]
 			-- Subdirs for this compilation
 
 	quick_compilation: BOOLEAN
@@ -595,7 +598,7 @@ feature {NONE} -- Translation
 			dir: STRING -- the directory
 			filename: STRING -- the filename of the sub makefile
 			number: INTEGER -- the number of the Eobj file
-			C_done, is_emain, is_E1_makefile: BOOLEAN
+			is_emain, is_E1_makefile: BOOLEAN
 			emain_line: STRING
 			min: INTEGER
 		do
@@ -656,7 +659,14 @@ feature {NONE} -- Translation
 				else
 					makefile.putstring (dir)
 					makefile.putstring (directory_separator)
-					dependent_directories.extend (dir)
+
+					if dir.item (1) = 'E' then
+						system_dependent_directories.put_front (dir)
+						dependent_directories.put_right (dir)
+					else
+						object_dependent_directories.put_front (dir)
+						dependent_directories.put_front (dir)
+					end
 
 					makefile.putstring (filename)
 					makefile.putstring (".")
@@ -720,14 +730,11 @@ feature {NONE} -- Translation
 				-- Generate the `OBJECTS = ' line
 			from
 				dependent_directories.start
-				if not dependent_directories.after then
-					dir := dependent_directories.item
-				end
-
 				makefile.putstring (options.get_string ("objects_text", Void))
 			until
 				dependent_directories.after
 			loop		
+				dir := dependent_directories.item
 				makefile.putstring (dir)
 				makefile.putstring (directory_separator)
 				makefile.putchar (dir.item (1))
@@ -736,28 +743,18 @@ feature {NONE} -- Translation
 				makefile.putchar ('.')
 				makefile.putstring (options.get_string ("intermediate_file_ext", Void))
 				makefile.putchar (' ')
-
 				dependent_directories.forth
-				if not dependent_directories.after then
-					dir := dependent_directories.item
-				end
 			end
 
 				-- Generate the `x_OBJECTS = ' lines
 			from
-				dependent_directories.start
-				if not dependent_directories.after then
-				dir := dependent_directories.item
-				end
+				object_dependent_directories.start
+				makefile.putstring ("%N%N");
+				makefile.putstring (options.get_string ("c_objects_text", Void))
 			until
-				dir.item (1) = 'E' or else dependent_directories.after
+				object_dependent_directories.after
 			loop		
-				if not C_done and then dir.item (1) = 'C' then
-					C_done := True
-					makefile.putstring ("%N%N");
-					makefile.putstring (options.get_string ("c_objects_text", Void))
-				end
-
+				dir := object_dependent_directories.item
 				makefile.putstring (dir)
 				makefile.putstring (directory_separator)
 				makefile.putchar (dir.item (1))
@@ -767,15 +764,9 @@ feature {NONE} -- Translation
 				makefile.putstring (options.get_string ("intermediate_file_ext", Void))
 				makefile.putchar (' ')
 
-				dependent_directories.forth
-				if not dependent_directories.after then
-					dir := dependent_directories.item
-				end
+				object_dependent_directories.forth
 			end
-
-			if not C_done then
-				makefile.putstring ("%N%N");
-				makefile.putstring (options.get_string ("c_objects_text", Void))
+			if object_dependent_directories.is_empty then
 				makefile.putstring (" %"%" %N")
 			end
 
@@ -783,10 +774,11 @@ feature {NONE} -- Translation
 				makefile.putstring ("%N%N")
 				makefile.putstring (options.get_string ("eobjects_text", Void))
 				number := 0
+				system_dependent_directories.start
 			until
-				dependent_directories.after
+				system_dependent_directories.after
 			loop
-				dir := dependent_directories.item
+				dir := system_dependent_directories.item
 				number := number + 1
 
 				makefile.putstring (dir)
@@ -798,7 +790,7 @@ feature {NONE} -- Translation
 				makefile.putstring (options.get_string ("intermediate_file_ext", Void))
 				makefile.putchar (' ')
 
-				dependent_directories.forth
+				system_dependent_directories.forth
 			end
 
 			makefile.putstring ("%N%N")

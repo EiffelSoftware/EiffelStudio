@@ -272,7 +272,7 @@ feature {NONE} -- Implementation
 			!! cd.make (owner, code, virtual_keys @ code, k);
 			key_release_actions.execute (Current, cd)
 			if code = Vk_shift then
-				shift_pressed := False
+				shift_pressed_cell.set_item (False)
 			end
 		end
 
@@ -296,11 +296,12 @@ feature {NONE} -- Implementation
 				end
 				disable_default_processing
 			elseif code = Vk_shift then
-				shift_pressed := True
+				shift_pressed_cell.set_item (True)
 			end
 		end
 
 	go_to_prev_text_field is
+			-- Go to previous text field in same top window as current text field.
 		local
 			tf: TEXT_FIELD_IMP
 			found: BOOLEAN
@@ -325,7 +326,7 @@ feature {NONE} -- Implementation
 					w.after or else found or else w.item.depth = 0
 				loop
 					tf ?= w.item.implementation
-					if tf /= Void and then top_parent = find_top_parent (tf) then
+					if tf /= Void and then top_parent = find_top_parent (tf) and then tf.wel_shown then
 						found := True
 					else
 						tf := Void
@@ -339,7 +340,7 @@ feature {NONE} -- Implementation
 						found or else w.item.implementation = Current
 					loop
 						tf ?= w.item.implementation
-						if tf /= Void and then top_parent = find_top_parent (tf) then
+						if tf /= Void and then top_parent = find_top_parent (tf) and then tf.wel_shown then
 							found := True
 						else
 							tf := Void
@@ -354,6 +355,7 @@ feature {NONE} -- Implementation
 		end
 
 	go_to_next_text_field is
+			-- Go to next text field in same top window as current text field.
 		local
 			tf: TEXT_FIELD_IMP
 			found: BOOLEAN
@@ -378,7 +380,7 @@ feature {NONE} -- Implementation
 					w.before or else found or else w.item.depth = 0
 				loop
 					tf ?= w.item.implementation
-					if tf /= Void and then top_parent = find_top_parent (tf) then
+					if tf /= Void and then top_parent = find_top_parent (tf) and then tf.wel_shown then
 						found := True
 					else
 						tf := Void
@@ -392,7 +394,7 @@ feature {NONE} -- Implementation
 						found or else w.item.implementation = Current
 					loop
 						tf ?= w.item.implementation
-						if tf /= Void and then top_parent = find_top_parent (tf) then
+						if tf /= Void and then top_parent = find_top_parent (tf) and then tf.wel_shown then
 							found := True
 						else
 							tf := Void
@@ -406,14 +408,25 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	shift_pressed: BOOLEAN
+	shift_pressed: BOOLEAN is
 			-- Is the shift-key pressed?
+		do
+			Result := shift_pressed_cell.item
+		end
+
+	shift_pressed_cell: BOOLEAN_REF is
+			-- Is the shift-key pressed?
+		once
+			!! Result
+		end
 
 	find_top_parent (a_window: WEL_WINDOW): WEL_WINDOW is
+			-- Find the	top most window which contains `a_window'.
 		require
 			a_window_not_void: a_window /= Void
 		local
 			top_parent: WEL_WINDOW
+			i: INTEGER
 		do
 			from
 				Result := a_window

@@ -962,7 +962,6 @@ EIF_INTEGER s;
 	EIF_INTEGER tmp;
 	EIF_BOOLEAN has_sep_obj=0;
 	EIF_POINTER tmp_str;
-	char void_str[] = "Void Ref";
 	
 	char send_buf[constant_command_buffer_len];
 	EIF_INTEGER send_data_len=0;
@@ -1106,10 +1105,10 @@ EIF_INTEGER s;
 					/* free the object from hector so that it can be collected */
 				}
 				else {
-				/* we use <Void_str, -1, -1> stands for a NULL separate object */
-					/* to send the separate object's HOST NAME: length and value */
-					fill_buf_with_int(s, send_buf, send_data_len, strlen(void_str));
-					fill_buf(s, send_buf, send_data_len, void_str, (int)strlen(void_str));
+				/* we use <-1, -1, -1> stands for a NULL separate object */
+					/* to send the separate object's HOST IP address */
+					fill_buf_with_int(s, send_buf, send_data_len, constant_sizeofint);
+					fill_buf_with_int(s, send_buf, send_data_len, -1);
 					/* to send the separate object's PID: length and value */
 					fill_buf_with_int(s, send_buf, send_data_len, constant_sizeofint);
 					fill_buf_with_int(s, send_buf, send_data_len, -1);

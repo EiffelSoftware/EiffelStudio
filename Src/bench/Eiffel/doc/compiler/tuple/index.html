@@ -1,0 +1,61 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>TUPLE implementation</title>
+<link rel="stylesheet" type="text/css" href="../../default.css">
+</head>
+
+<body>
+
+<h1>Tuple implementation</h1>
+<h2>Current state</h2>
+<p>Let's describe how TUPLE is implemented between version 4.3 and 5.3. A tuple 
+object stores its elements through an instance of SPECIAL[ANY]. It has the 
+disadvantages to create dummy reference objects for expanded types. To 
+circumvent this limitation, the runtime keeps track for all tuple types a string 
+representing the basic nature of elements. For example TUPLE [INTEGER, STRING, 
+INTEGER] has an associated &quot;iri&quot; string which tells that we have an integer, a 
+reference and an integer.</p>
+
+<h2>Improving internal data of TUPLE</h2>
+
+<p>Instead of having to keep track of TUPLE types in a special area of the 
+runtime, let's keep it with the TUPLE itself. That is to say, let's have:</p>
+<pre>	// Possible types that a location can hold.
+typedef union {
+	EIF_BOOLEAN	barg;
+	EIF_CHARACTER	carg;
+	EIF_WIDE_CHAR	wcarg;
+	EIF_DOUBLE	darg;
+	EIF_INTEGER_8	i8arg;
+	EIF_INTEGER_16	i16arg;
+	EIF_INTEGER_32	i32arg;
+	EIF_INTEGER_64	i64arg;
+	EIF_POINTER	parg;
+	EIF_REAL		farg;
+	EIF_REFERENCE	rarg;
+} EIF_ARG_UNION;
+
+
+typedef struct {
+	char		type;
+	EIF_ARG_UNION	element;
+} EIF_TYPED_ELEMENT;</pre>
+<p>Now a TUPLE object is a non-resizable object which is basically a SPECIAL [EIF_ARG_UNION]. 
+Which means that marking has to be done in a special way in the GC, that 
+retrieve/store, equal/copy need to take this into account when extracting data 
+from a TUPLE. To take this new type of object into account we have reused 
+EO_CREAT and renamed it into EO_TUPLE to mark tuple objects.</p>
+
+<p>To upgrade the runtime, most of the work consisted in doing a special case 
+under EO_SPEC as tuple objects are allocated like special objects. So we added a 
+check to EO_TUPLE. If check was satisfied, then we were doing a special case for 
+tuple, otherwise we continue as we were doing it before.</p>
+
+</body>
+
+</html>

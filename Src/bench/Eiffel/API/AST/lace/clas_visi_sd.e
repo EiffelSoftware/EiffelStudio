@@ -94,7 +94,7 @@ feature -- Saving
 				st.putstring ("create")
 				st.new_line
 				st.indent
-				creation_restriction.save_with_interval_separator (st, ",")
+				creation_restriction.save_with_interval_separator (st, ", ")
 				st.exdent
 			end
 			if export_restriction /= Void then

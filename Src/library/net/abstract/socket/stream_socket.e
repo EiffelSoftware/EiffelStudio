@@ -49,7 +49,7 @@ feature
 			pass_address: like address;
 			return: INTEGER;
 		do
-			pass_address := clone (address);
+			pass_address := address.twin
 			return := c_accept (descriptor, pass_address.socket_address.item, address.count);
 			if return > 0 then
 				create accepted.create_from_descriptor (return);

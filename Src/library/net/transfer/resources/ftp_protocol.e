@@ -341,7 +341,7 @@ feature {NONE} -- Implementation
 		local
 			packet: STRING
 		do
-			packet := clone (str)
+			packet := str.twin
 			packet.append ("%N")
 			debug Io.error.put_string (packet) end
 			s.put_string (packet)
@@ -364,7 +364,7 @@ feature {NONE} -- Implementation
 				check_socket (s, Read_only)
 				if not error then
 					s.read_line
-					last_reply := clone (s.last_string)
+					last_reply := s.last_string.twin
 					last_reply.append ("%N")
 					debug
 						if not last_reply.is_empty then 
@@ -392,7 +392,7 @@ feature {NONE} -- Implementation
 		do
 			create h_addr.make
 			h_addr.set_address_from_name (h_addr.local_host_name)
-			Result := clone (Ftp_port_command)
+			Result := Ftp_port_command.twin
 			Result.extend (' ')
 			str := byte_list (h_addr.host_number, 4, True)
 			Result.append (str)
@@ -449,7 +449,7 @@ feature {NONE} -- Implementation
 			i: INTEGER
 		do
 			if str.count >= 3 then
-				s := clone (str)
+				s := str.twin
 				s.left_adjust
 				if s.count >=3 then
 					Result := True
@@ -471,7 +471,7 @@ feature {NONE} -- Implementation
 			s: STRING
 		do
 			if str.count >= 4 then
-				s := clone (str)
+				s := str.twin
 				s.left_adjust
 				if s.count >= 4 then Result := (s.item (4) = '-') end
 			end
@@ -488,7 +488,7 @@ feature {NONE} -- Implementation
 			pos: INTEGER
 			str: STRING
 		do
-			str := clone (last_reply)
+			str := last_reply.twin
 			str.left_adjust
 			pos := str.index_of (' ', 1)
 			str.keep_head (pos - 1)
@@ -515,7 +515,7 @@ feature {NONE} -- Implementation
 			tail: STRING
 		do
 			pos := s.index_of ('(', 1)
-			tail := clone (s)
+			tail := s.twin
 			tail.remove_head (pos)
 			pos := tail.index_of (' ', 1)
 			tail.keep_head (pos - 1)
@@ -585,7 +585,7 @@ feature {NONE} -- Implementation
 		local
 			cmd: STRING
 		do
-			cmd := clone (Ftp_user_command)
+			cmd := Ftp_user_command.twin
 			cmd.extend (' ')
 			cmd.append (address.username)
 			send (main_socket, cmd)
@@ -600,7 +600,7 @@ feature {NONE} -- Implementation
 		local
 			cmd: STRING
 		do
-			cmd := clone (Ftp_password_command)
+			cmd := Ftp_password_command.twin
 			cmd.extend (' ')
 			cmd.append (address.password)
 			send (main_socket, cmd)
@@ -681,9 +681,9 @@ feature {NONE} -- Implementation
 
 			if Result then
 				if Read_mode then
-					cmd := clone (Ftp_retrieve_command)
+					cmd := Ftp_retrieve_command.twin
 				elseif Write_mode then
-					cmd := clone (Ftp_store_command)
+					cmd := Ftp_store_command.twin
 				end
 					check
 						command_set: cmd /= Void

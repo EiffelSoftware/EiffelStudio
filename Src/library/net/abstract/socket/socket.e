@@ -566,7 +566,7 @@ feature -- Input
 				if return_val > 0 then
 					create recv_packet.make_from_pointer (ext_data, return_val)
 					if l_data = Void then
-						l_data := clone (recv_packet)
+						l_data := recv_packet.twin
 					else
 						l_data.append (recv_packet)
 					end
@@ -603,7 +603,7 @@ feature -- Input
 				if return_val > 0 then
 					create recv_packet.make_from_pointer (ext_data, return_val)
 					if l_data = Void then
-						l_data := clone (recv_packet)
+						l_data := recv_packet.twin
 					else
 						l_data.append (recv_packet)
 					end

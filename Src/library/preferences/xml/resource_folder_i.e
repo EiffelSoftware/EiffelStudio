@@ -261,8 +261,7 @@ feature {NONE} -- Implementation
 				resource_description := el.attribute_by_name ("DESCRIPTION").value
 			end
 			if el.has_attribute_by_name ("IMMEDIATE_EFFECT") then
-				val := clone (el.attribute_by_name ("IMMEDIATE_EFFECT").value)
-				val.to_lower
+				val := el.attribute_by_name ("IMMEDIATE_EFFECT").value.as_lower
 				effect_is_delayed := val.is_equal ("no")
 			end
 			cursor := el.new_cursor

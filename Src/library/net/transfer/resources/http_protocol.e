@@ -121,7 +121,7 @@ feature -- Status setting
 		local
 			str: STRING
 		do
-			str := clone (Http_get_command)
+			str := Http_get_command.twin
 			str.extend (' ')
 			if address.is_proxy_used then
 				str.append (location)
@@ -187,7 +187,7 @@ feature {NONE} -- Implementation
 				check_socket (main_socket, Read_only)
 				if not error then
 					main_socket.read_line
-					str := clone (main_socket.last_string)
+					str := main_socket.last_string.twin
 						debug
 							Io.error.put_string (str)
 							Io.error.put_new_line
@@ -217,7 +217,7 @@ feature {NONE} -- Implementation
 				headers.forth
 			end
 			if not headers.after then
-				str := clone (headers.item)
+				str := headers.item.twin
 				pos := str.index_of (' ', 1)
 				str.remove_head (pos)
 					-- Remove trailing and heading white spaces.

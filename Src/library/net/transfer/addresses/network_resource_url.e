@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 		do
 			create username.make (0)
 			create password.make (0)
-			path_charset := clone (Host_charset)
+			path_charset := Host_charset.twin
 			path_charset.add ("%%/_")
 			Precursor (a)
 		end
@@ -49,7 +49,7 @@ feature -- Access
 	location: STRING is
 			-- Full URL of resource
 		do
-			Result := clone (service)
+			Result := service.twin
 			Result.append ("://")
 			Result.append (host)
 			Result.extend ('/')
@@ -63,7 +63,7 @@ feature -- Access
 		local
 			str: STRING
 		do
-			str := clone (host)
+			str := host.twin
 			if not username.is_empty then
 				str.precede (':')
 				str.prepend (username)
@@ -151,13 +151,13 @@ feature {NONE} -- Basic operations
 				address.substring_index (Service + ":", 1) = 0 then
 				host := address.substring (1, pos - 1)
 				address.remove_head (pos)
-				path := clone (address)
+				path := address.twin
 			elseif address.substring_index ("//", 1) > 0 and 
 				address.substring_index (Service + ":", 1) > 0 then
 				pos2 := address.index_of ('/', pos + 2)
 				host := address.substring (pos + 2, pos2 - 1)
 				address.remove_head (pos2)
-				path := clone (address)					
+				path := address.twin
 			end		
 			
 			host.to_lower

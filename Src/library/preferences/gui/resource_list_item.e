@@ -27,9 +27,9 @@ feature {NONE} -- Initialization
 			resource := res
 			description := res.description
 			if description /= Void and then not description.is_empty then
-				s := clone (description)
+				s := description.twin
 			else
-				s := clone (res.name)
+				s := res.name.twin
 				s.replace_substring_all ("_", " ")
 			end
 			s.prune_all ('%N')
@@ -40,8 +40,7 @@ feature {NONE} -- Initialization
 			extend (s)
 			l_array_res ?= resource
 			if l_array_res /= Void and then l_array_res.selected_value /= Void then
-				s := clone (l_array_res.selected_value)
-				extend (s)
+				extend (l_array_res.selected_value.twin)
 			else
 				extend (resource.value)
 			end

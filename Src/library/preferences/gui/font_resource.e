@@ -88,7 +88,7 @@ feature -- Status Setting
 			i: INTEGER
 		do
 			value := new_value
-			s := clone (value)
+			s := new_value.twin
 			i := s.index_of('-', 1)
 			if i > 0 then
 				faces := s.substring (1, i - 1)
@@ -151,7 +151,7 @@ feature {NONE} -- Implementation
 					v.append (",")
 				end
 			end
-			faces := clone (v)
+			faces := v.twin
 			v.append ("-")
 			inspect shape
 			when shape_italic then

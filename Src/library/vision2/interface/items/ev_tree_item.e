@@ -46,6 +46,17 @@ feature -- Status report
 			Result := implementation.is_expanded
 		end
 
+feature -- Event : command association
+
+	add_subtree_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+			-- Add 'command' to the list of commands to be
+			-- executed when the menu item is activated
+		require
+			exists: not destroyed
+		do
+			implementation.add_subtree_command (a_command, arguments)
+		end
+
 feature {EV_TREE_ITEM_CONTAINER, EV_TREE_ITEM_CONTAINER_I} -- Implementation
 
 	implementation: EV_TREE_ITEM_I

@@ -20,7 +20,6 @@ default
 cluster 
 		-- Root cluster
 	root_cluster					:	"d:\50dev\Eiffel\interface\new_graphical\editor"
-	main 			(root_cluster)	:	"$\main";
 	balanced_tree	(root_cluster)	:	"$\struct"
 	lexer			(root_cluster)	:	"$\lexer"
 	editor			(root_cluster)	:	"$\editor"

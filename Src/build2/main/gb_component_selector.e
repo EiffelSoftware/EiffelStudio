@@ -27,6 +27,16 @@ inherit
 		undefine
 			default_create, is_equal, copy
 		end
+		
+	GB_ACCESSIBLE_SYSTEM_STATUS
+		undefine
+			default_create, is_equal, copy
+		end
+		
+	GB_ACCESSIBLE_XML_HANDLER
+		undefine
+			default_create, is_equal, copy
+		end
 
 create
 	default_create
@@ -40,6 +50,8 @@ feature {NONE} -- Initialization
 			drop_actions.extend (agent add_new_component)
 			drop_actions.set_veto_pebble_function (agent is_valid_object)
 		end
+
+feature -- Basic operation
 		
 	add_new_component (an_object: GB_OBJECT) is
 			-- Add a new component representing `an_object'.
@@ -58,6 +70,42 @@ feature {NONE} -- Initialization
 			end
 		end
 		
+	delete_component (component_name: STRING) is
+			-- Remove component with name `component_name'.
+		require
+			vaid_component_name: component_name /= Void and not component_name.is_empty
+		local
+			dialog: EV_CONFIRMATION_DIALOG
+			found: BOOLEAN
+			item_to_delete: EV_LIST_ITEM
+		do
+			create dialog.make_with_text (Delete_component_warning)
+			dialog.show_modal_to_window (system_status.main_window)
+			if dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_ok) then
+				xml_handler.remove_component (component_name)
+					-- We must now remove the child of `Current' representing
+					-- the component named `component_name'.
+				from
+					start
+				until
+					off or found
+				loop
+					if item.text.is_equal (component_name) then
+						found := True
+						remove
+					end
+						-- We need this protection, as otherwise, if we
+						-- remove the last item, `forth' will fail.
+					if not found then
+						forth
+					end
+				end
+				check
+					component_matched_correctly: found
+				end
+			end
+		end
+
 	is_valid_object (an_object: GB_OBJECT): BOOLEAN is
 			-- Is `an_object' a valid object which may be dropped
 			-- in Current?
@@ -73,6 +121,8 @@ feature {NONE} -- Initialization
 				Result := False
 			end
 		end
+
+
 		
 feature {GB_XML_HANDLER} -- Basic operation
 

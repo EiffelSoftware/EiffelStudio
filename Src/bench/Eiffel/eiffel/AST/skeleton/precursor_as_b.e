@@ -55,12 +55,12 @@ feature -- Type check, byte code and dead code removal
 			parent_c: CLASS_C
 			feat_ast: FEATURE_AS
 		do
-			-- Check that we're in the body of a routine (vupr1).
-
-			if context.level1 or else -- postcondition
-				   context.level2 or else -- invariant
-					   context.level4 then    -- precondition
-
+				-- Check that we're in the body of a routine (vupr1).
+			if
+				context.level1 -- postcondition
+				or else context.level2 -- invariant
+				or else context.level4 -- precondition
+			then
 				!!vupr1
 				context.init_error (vupr1)
 				Error_handler.insert_error (vupr1)
@@ -68,12 +68,11 @@ feature -- Type check, byte code and dead code removal
 				Error_handler.raise_error
 			end
 
-			--  Check that feature has a unique name (vupr2)
-
+				--  Check that feature has a unique name (vupr2)
 			feat_ast := context.a_class.feature_with_name (context.a_feature.feature_name).ast
 
 			if feat_ast.feature_names.count > 1 then
-				-- feature has multiple names.
+					-- feature has multiple names.
 				!!vupr2
 				context.init_error (vupr2)
 				Error_handler.insert_error (vupr2)
@@ -88,16 +87,16 @@ feature -- Type check, byte code and dead code removal
 				-- Check that current feature is a redefinition.
 			if pre_table.count = 0 then
 				if parent_name /= Void then
-					-- The specified parent does not have
-					-- an effective precursor.
+						-- The specified parent does not have
+						-- an effective precursor.
 					!!vupr5
 					context.init_error (vupr5)
 					Error_handler.insert_error (vupr5)
 						-- Cannot go on here.
 					Error_handler.raise_error
 				else
-					-- No parent has an effective precursor
-					-- (not a redefinition)
+						-- No parent has an effective precursor
+						-- (not a redefinition)
 					!!vupr3
 					context.init_error (vupr3)
 					Error_handler.insert_error (vupr3)
@@ -109,7 +108,7 @@ feature -- Type check, byte code and dead code removal
 				-- Check that an unqualified precursor construct
 				-- is not ambiguous.
 			if parent_name = Void and then pre_table.count > 1 then
-				-- Ambiguous construct
+					-- Ambiguous construct
 				!!vupr4
 				context.init_error (vupr4)
 				Error_handler.insert_error (vupr4)
@@ -120,11 +119,9 @@ feature -- Type check, byte code and dead code removal
 				-- Table has exactly one entry.
 			pre_table.start
 			parent_type := pre_table.item_for_iteration
-			parent_c    := parent_type.associated_class
-			e_feature   := parent_c.feature_with_rout_id (
-								pre_table.key_for_iteration
-														 )
-			feature_i   := e_feature.associated_feature_i
+			parent_c := parent_type.associated_class
+			e_feature := parent_c.feature_with_rout_id (pre_table.key_for_iteration)
+			feature_i := e_feature.associated_feature_i
 
 				-- Update type stack.
 			context.replace (access_type (parent_type, feature_i))
@@ -170,17 +167,17 @@ feature -- Type check, byte code and dead code removal
 			end
 
 			last_constrained := context.last_constrained_type
-			last_class       := last_constrained.associated_class
-			last_id          := last_class.id
+			last_class := last_constrained.associated_class
+			last_id := last_class.id
 
 				-- Supplier dependances update
-			!!depend_unit.make (last_id, a_feature.feature_id)
+			!! depend_unit.make (last_id, a_feature.feature_id)
 			context.supplier_ids.extend (depend_unit)
 			
 				-- Attachments type check
 			count := parameter_count
 			if count /= a_feature.argument_count then
-				!!vuar1
+				!! vuar1
 				context.init_error (vuar1)
 				vuar1.set_called_feature (a_feature)
 				vuar1.set_argument_count (count)
@@ -249,17 +246,16 @@ feature -- Type check, byte code and dead code removal
 			Result := Result.conformance_type
 			context.pop (count)
 			Result := Result.instantiation_in (last_type, last_id).actual_type
+
 			if
 				a_feature.is_obsolete
-			and then
 					-- If the obsolete call is in an obsolete class,
 					-- no message is displayed
-				not context.a_class.is_obsolete
-			and then
+				and then not context.a_class.is_obsolete
 					-- The current feature is whether the invariant or
 					-- a non obsolete feature
-				(context.a_feature = Void or else
-				not context.a_feature.is_obsolete)
+				and then (context.a_feature = Void or else
+					not context.a_feature.is_obsolete)
 			then
 				!!obs_warn
 				obs_warn.set_class (context.a_class)
@@ -270,7 +266,7 @@ feature -- Type check, byte code and dead code removal
 			end
 
 				-- Access managment
-			access_b ?= a_feature.access (Result.type_i)  -- Cannot fail.
+			access_b ?= a_feature.access (Result.type_i) -- Cannot fail
 			access_b.set_precursor_type (p_type.type_i)
 			context.access_line.insert (access_b)
 		end
@@ -291,7 +287,7 @@ feature -- Type check, byte code and dead code removal
 				until
 					i > nb
 				loop
-					!!p
+					!! p
 					p.set_expression (parameters.i_th (i).byte_node)
 					params.put_i_th (p, i)
 					i := i + 1
@@ -326,11 +322,13 @@ feature -- Type check, byte code and dead code removal
 			type_a: TYPE_A
 			like_arg: LIKE_ARGUMENT
 			pos: INTEGER
+			local_attachments: like Attachments
 		do
 			args := feat.arguments
 				-- Attachment types are inserted in the reversal
 				-- order in `Attachments' during type check
-			pos := Attachments.cursor
+			local_attachments := Attachments
+			pos := local_attachments.cursor
 			from
 				i := 1
 				nbr := args.count 
@@ -342,23 +340,23 @@ feature -- Type check, byte code and dead code removal
 					arg_pos := pos - like_arg.position + 1
 						--| Retrieve type in which like_argument is
 						--| referring to.
-					Attachments.go_i_th (arg_pos)
-					type_a := Attachments.item
+					local_attachments.go_i_th (arg_pos)
+					type_a := local_attachments.item
 						--| Replace item in like argument
-					Attachments.go_i_th (pos - i + 1)
+					local_attachments.go_i_th (pos - i + 1)
 					if metamorphosis_disabled then
-						if Attachments.item.is_basic then
+						if local_attachments.item.is_basic then
 								--| Replace item in like argument
-							Attachments.change_item (type_a)
+							local_attachments.change_item (type_a)
 						end
 					else
 							--| Replace item in like argument
-						Attachments.change_item (type_a)
+						local_attachments.change_item (type_a)
 					end
 				end
 				i := i + 1
 			end
-			Attachments.go_i_th (pos)
+			local_attachments.go_i_th (pos)
 		end
 		
 	Attachments: LINE [TYPE_A] is

@@ -1,6 +1,5 @@
 indexing
-	description: "Objects that ..."
-	author: ""
+	description: "Representation of an Eiffel developer exception."
 	date: "$Date$"
 	revision: "$Revision$"
 

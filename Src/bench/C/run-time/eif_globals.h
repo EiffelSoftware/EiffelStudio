@@ -74,7 +74,8 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 
 		/* main.c */
 	EIF_REFERENCE *EIF_once_values_cx;	/* Once values for a thread */
-    int in_assertion_cx ;    /* Is an assertion evaluated? */
+	EIF_REFERENCE **EIF_oms_cx;		/* Once manifest strings for a thread */
+	int in_assertion_cx ;    /* Is an assertion evaluated? */
 
 		/* garcol.c */
 #ifdef ISE_GC
@@ -82,6 +83,7 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 	struct stack loc_set_cx;	/* Local variable stack */
 #endif
 	struct stack once_set_cx;	/* Once functions */
+	struct stack oms_set_cx;	/* Once manifest strings */
 
 		/* hector.c */
 #ifdef ISE_GC
@@ -163,6 +165,7 @@ rt_private eif_global_context_t * eif_thr_getspecific (EIF_TSD_TYPE global_key) 
 #define nstcall				(eif_globals->nstcall_cx)			/* rt_public */
 
 #define EIF_once_values		(eif_globals->EIF_once_values_cx)	/* rt_public */
+#define EIF_oms			(eif_globals->EIF_oms_cx)	/* rt_public */
 #define in_assertion		(eif_globals->in_assertion_cx)	/* rt_public */
 
 #ifdef ISE_GC
@@ -170,6 +173,7 @@ rt_private eif_global_context_t * eif_thr_getspecific (EIF_TSD_TYPE global_key) 
 #define loc_stack			(eif_globals->loc_stack_cx) /* rt_public */
 #endif
 #define once_set			(eif_globals->once_set_cx) /* rt_public */
+#define oms_set				(eif_globals->oms_set_cx) /* rt_public */
 
 #ifdef ISE_GC
 #define hec_stack			(eif_globals->hec_stack_cx)		/* rt_public */

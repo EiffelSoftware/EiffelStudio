@@ -119,6 +119,7 @@ extern uint32 overflow_stack_limit;
 extern struct stack_list loc_stack_list;	/* List of all `loc_stack' allocated in each thread */
 extern struct stack_list loc_set_list;		/* List of all `loc_set' allocated in each thread */
 extern struct stack_list once_set_list;		/* List of all `once_set' allocated in each thread */
+extern struct stack_list oms_set_list;		/* List of all `oms_set' allocated in each thread */
 extern struct stack_list hec_stack_list;	/* List of all `hec_stack' allocted in each thread */
 extern struct stack_list hec_saved_list;	/* List of all `hec_saved' allocted in each thread */
 extern struct stack_list eif_stack_list;	/* List of all `eif_stack' allocted in each thread */
@@ -147,6 +148,8 @@ extern void st_truncate(register struct stack *stk);	/* Truncate stack if necess
 extern void st_wipe_out(register struct stchunk *chunk);/* Remove unneeded chunk from stack */
 extern void st_reset(register struct stack *stk);/* Clean stack */
 
+extern EIF_REFERENCE **alloc_oms ();
+extern void free_oms (EIF_REFERENCE **oms_array);
 
 #ifdef __cplusplus
 }

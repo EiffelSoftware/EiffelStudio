@@ -187,6 +187,7 @@ rt_public void update(char ignore_updt)
 
 	count = wint32();			/* Read the count of class types */
 	ccount = wint32();			/* Read the count of classes */
+	eif_nb_org_routines = wint32();		/* Read the number of original routine bodies */
 #ifdef DEBUG
 	dprintf(1)("New class type count: %ld\n", count);
 #endif

@@ -32,6 +32,7 @@ RT_LNK struct stack loc_stack;	/* Local indirection stack */
 RT_LNK struct stack loc_set;	/* Local variable stack */
 #endif
 RT_LNK struct stack once_set;	/* Once functions */
+RT_LNK struct stack oms_set;	/* Once manifest strings */
 #endif
 
 /*
@@ -70,6 +71,7 @@ RT_LNK void new_onceset(EIF_REFERENCE);				/* Recording of once function result 
 #ifdef EIF_THREADS
 RT_LNK void globalonceset(EIF_REFERENCE);			/* Recording of once function result */
 #endif
+RT_LNK void register_oms (EIF_REFERENCE *address);	/* Register an address of a once manifest string */
 RT_LNK void gc_stop(void);				/* Stop the garbage collector */
 RT_LNK void gc_run(void);				/* Restart the garbage collector */
 

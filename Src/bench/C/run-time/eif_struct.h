@@ -149,6 +149,12 @@ struct rout_info {						/* Routine information */
 
 typedef char *(*fnptr)(EIF_REFERENCE, ...); /* The function pointer type */
 
+/*
+ * Number of original routine bodies, i.e. routine bodies
+ * as declared in classes, not those generated for generic derivations.
+ */
+RT_LNK uint32 eif_nb_org_routines;
+
 #ifdef WORKBENCH
 
 /* Flags for for raising an exception when a precondition is violated */

@@ -2844,6 +2844,60 @@ rt_private void interpret(int flag, int where)
 		}
 
 	/*
+	 * Once manifest string.
+	 */
+	case BC_ONCE_STRING:
+#ifdef DEBUG
+		dprintf(2)("BC_ONCE_STRING\n");
+#endif
+		{
+			unsigned long stagval;
+			int32 body_index;	/* routine body index */
+			int32 number;	/* number of the once manifest string in routine body */
+			int32 length;	/* length of once manifest string */
+ 
+			stagval = tagval;
+			body_index = get_long ();	/* Get routine body index */
+			number = get_long ();	/* Get number of the once manifest string in the routine body */
+			length = get_long ();	/* Get the length of the manifest string */
+			string = IC;
+			IC += (length + 1);		/* Increment the byte code pointer to
+									 * the end of the string */
+
+			last = iget();
+			last->type = SK_REF;
+			RTCOMS (last->it_ref, body_index, number, string, length);
+
+			if (tagval != stagval) {
+				sync_registers(MTC scur,stop);
+			}
+			break;
+		}
+ 
+	/*
+	 * Allocate space to store once manifest strings.
+	 */
+	case BC_ALLOCATE_ONCE_STRINGS:
+#ifdef DEBUG
+		dprintf(2)("BC_ALLOCATE_ONCE_STRINGS\n");
+#endif
+		{
+			unsigned long stagval;
+			int32 body_index;	/* routine body index */
+			int32 count;	/* total number of the once manifest strings in routine body */
+ 
+			stagval = tagval;
+			body_index = get_long ();	/* Get routine body index */
+			count = get_long ();	/* Get total number of the once manifest string in the routine body */
+
+			RTAOMS (body_index, count);
+			if (tagval != stagval) {
+				sync_registers(MTC scur,stop);
+			}
+			break;
+		}
+ 
+	/*
 	 * Manifest string.
 	 */
 	case BC_STRING:

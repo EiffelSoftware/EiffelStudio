@@ -199,6 +199,10 @@ extern struct opstack op_stack;               /* Operational stack */
 /* Conversion */
 #define BC_CAST_CHAR		(unsigned char) 143
 
+/* Once manifest strings */
+#define BC_ONCE_STRING		(unsigned char) 144
+#define BC_ALLOCATE_ONCE_STRINGS	(unsigned char) 145
+
 #ifdef CONCURRENT_EIFFEL
 /* Instructions for Concurrent Eiffel */
 #define BC_SEP_SET			(unsigned char) 150

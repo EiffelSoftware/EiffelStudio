@@ -180,7 +180,7 @@ feature -- Query
 			-- Time taken for last complete execution of `generation_routine'	
 
 	last_output_report: STRING
-			-- Textual descirption of last execution of `generation_routine'	
+			-- Textual description of last execution of `generation_routine'	
 	
 feature -- Access
 

@@ -41,7 +41,7 @@ feature
 					--full_name := c.group_name;
 				--end;
 				if c.group_name = Void then
-					full_name := clone (c.entity_name);
+					full_name := clone (c.entity_name_in_lower_case);
 					full_name.append ("_");
 				else
 					full_name := c.group_name;

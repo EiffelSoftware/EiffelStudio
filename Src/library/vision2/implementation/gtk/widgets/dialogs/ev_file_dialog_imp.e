@@ -36,9 +36,18 @@ feature {NONE} -- Initialization
 
 	initialize is
 			-- Setup action sequences.
+		local
+			a_child_list, a_label: POINTER
 		do
 			Precursor {EV_STANDARD_DIALOG_IMP}
 			is_initialized := False
+			a_child_list := C.gtk_container_children (C.gtk_file_selection_struct_ok_button (c_object))
+			a_label := C.g_list_nth_data (
+				a_child_list,
+				0)
+			C.g_list_free (a_child_list)
+			C.gtk_label_set_text (a_label, eiffel_to_c (internal_accept))
+			
 			real_signal_connect (
 				C.gtk_file_selection_struct_ok_button (c_object),
 				"clicked",

@@ -205,8 +205,8 @@ feature {NONE} -- Implementation
 			!! label.make ("Where do you want to save the resources?", form);
 
 			!! general_button.make ("General resource file", box_2);
-			general_button.set_toggle_on;
 			!! platform_button.make ("Platform specific resource file", box_2);
+			platform_button.set_toggle_on;
 
 			!! resource_files.make ("bench");
 

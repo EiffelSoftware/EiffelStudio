@@ -17,7 +17,7 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -26,41 +26,27 @@ feature {NONE} -- Initialization
 			-- Initialization
 		do
 			Precursor {PASS_CONTROL}
-			create old_externals.make
-			old_externals.compare_objects
+			create old_externals.make (50)
+			create new_externals.make (50)
 		end
-
-feature -- Access
-
-	old_externals: LINKED_LIST [INTEGER]
-			-- Old externals written in a class
-			-- | Processed by feature `pass2_control' of FEATURE_TABLE
-
-	new_externals: LINKED_LIST [INTEGER]
-			-- New externals written in a class
-			-- | Processed by feature `feature_unit' of INHERIT_TABLE 
 
 feature -- Settings
 
-	set_new_externals (l: like new_externals) is
-			-- Assign `l' to `new_externals'.
+	add_external (an_external: EXTERNAL_I) is
+			-- Assign `an_external' to `new_externals'.
 		require
-			l_not_void: l /= Void
+			an_external_not_void: an_external /= Void
 		do
-			new_externals := l
-		ensure
-			new_externals_set: new_externals = l
+			new_externals.extend (an_external)
 		end
 
-	remove_external (s: INTEGER) is
-			-- Add `s' to `old_externals'.
+	remove_external (an_external: EXTERNAL_I) is
+			-- Add `an_external' to `old_externals'.
 		require
-			s_valid: s > 0
+			an_external_not_void: an_external /= Void
 		do
-			old_externals.start
-			old_externals.search (s)
-			if old_externals.after then
-				old_externals.put_front (s)
+			if not old_externals.has (an_external) then
+				old_externals.extend (an_external)
 			end
 		end
 
@@ -70,13 +56,19 @@ feature -- Processing
 			-- Update the system external feature controler
 		require
 			new_externals_exists: new_externals /= Void
+		local
+			l_is_il_generation: BOOLEAN
 		do
+			l_is_il_generation := System.il_generation
 			from
 				old_externals.start
 			until
 				old_externals.after
 			loop
-				Externals.remove_occurrence (old_externals.item)
+				Externals.remove_occurrence (old_externals.item.external_name_id)
+				if l_is_il_generation then
+					Il_c_externals.remove_external (old_externals.item)
+				end
 				old_externals.forth
 			end
 
@@ -85,7 +77,10 @@ feature -- Processing
 			until
 				new_externals.after
 			loop
-				Externals.add_occurrence (new_externals.item)
+				Externals.add_occurrence (new_externals.item.external_name_id)
+				if l_is_il_generation then
+					Il_c_externals.add_external (new_externals.item)
+				end
 				new_externals.forth
 			end
 		end
@@ -97,7 +92,17 @@ feature -- Removal
 		do
 			Precursor {PASS_CONTROL}
 			old_externals.wipe_out
-			new_externals := Void
+			new_externals.wipe_out
 		end
+
+feature -- Access
+
+	old_externals: ARRAYED_LIST [EXTERNAL_I]
+			-- Old externals written in a class
+			-- | Processed by feature `pass2_control' of FEATURE_TABLE
+
+	new_externals: ARRAYED_LIST [EXTERNAL_I]
+			-- New externals written in a class
+			-- | Processed by feature `feature_unit' of INHERIT_TABLE
 
 end -- class PASS2_CONTROL

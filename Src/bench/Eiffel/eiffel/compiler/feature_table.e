@@ -75,7 +75,7 @@ inherit
 			copy, is_equal
 		end
 
-creation
+create
 	make
 	
 feature -- Access
@@ -221,16 +221,6 @@ end
 			end
 		end
 
-	pass2_control (other: like Current): PASS2_CONTROL is
-			-- Process the interface changes between the new feature table
-			-- `other' and the current one.
-		require
-			good_argument: other /= Void
-		do
-			!!Result.make
-			fill_pass2_control (Result, other)
-		end
-
 	fill_pass2_control (pass_control: PASS2_CONTROL; other: like Current) is
 			-- Process the interface changes between the new feature table
 			-- `other' and the current one.
@@ -320,16 +310,13 @@ end
 							io.error.putstring (old_feature_i.feature_name)
 							io.error.new_line
 						end
-						if System.il_generation then
-							Il_c_externals.remove_external (old_feature_i)
-						end
 							-- Delete one occurrence of an external feature
 						external_i ?= old_feature_i
-						if not external_i.encapsulated then
+						if not external_i.encapsulated or System.il_generation then
 								-- If the external is encapsulated then it was not added to
 								-- the list of new externals in inherit_table. Same thing
 								-- if it has to be removed
-							pass_control.remove_external (external_i.external_name_id)
+							pass_control.remove_external (external_i)
 						end						
 					end
 					if 	new_feature_i = Void

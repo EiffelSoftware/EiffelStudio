@@ -79,10 +79,9 @@ inherit
 			copy, is_equal
 		end
 
-creation
+create
 	make
 
-	
 feature
 
 	inherited_features: FEATURE_TABLE;
@@ -143,8 +142,9 @@ feature
 			!!Result.make
 		end;
 
-	new_externals: LINKED_LIST [INTEGER];
-			-- New externals introduced into the class
+	pass2_control: PASS2_CONTROL
+			-- Second pass controler, needs to be an attribute since
+			-- used by `pass2' and `feature_unit'.
 
 	make (n: INTEGER) is
 			-- Hash table creation
@@ -154,7 +154,6 @@ feature
 			create body_table.make (50)
 			create changed_features.make (100)
 			create origins.make (100)
-			create new_externals.make
 		end
 
 	pass2 (pass_c: CLASS_C; is_supplier_status_modified: BOOLEAN) is
@@ -167,7 +166,6 @@ feature
 			class_id: INTEGER;
 			resulting_table: like inherited_features;
 			a_cluster: CLUSTER_I;
-			pass2_control: PASS2_CONTROL;
 			pass3_control: PASS3_CONTROL;
 			depend_unit: DEPEND_UNIT;
 			old_creators, new_creators: HASH_TABLE [EXPORT_I, STRING];
@@ -175,6 +173,7 @@ feature
 			equiv_tables: BOOLEAN;
 		do
 			a_class := pass_c
+			create pass2_control.make
 
 			if System.il_generation then
 				a_class.init_class_interface
@@ -291,7 +290,7 @@ feature
 			end;
 
 				-- Pass2 controler evaluation
-			pass2_control := feature_table.pass2_control (resulting_table);
+			feature_table.fill_pass2_control (pass2_control, resulting_table);
 			if previous_feature_table /= Void then
 					-- Add the modifications done since the last unsuccessful compilation
 				previous_feature_table.fill_pass2_control (pass2_control, resulting_table);
@@ -299,7 +298,6 @@ feature
 
 				-- Process externals
 			if a_class.changed then
-				pass2_control.set_new_externals (new_externals)
 				pass2_control.process_externals
 			end;
 
@@ -934,12 +932,9 @@ debug ("ACTIVITY")
 end;
 			elseif Result.is_c_external then
 					-- Track new externals introduced in the class
-				if system.il_generation then
-					Il_c_externals.add_external (Result)	
-				end
-				external_i ?= Result;
-				if not external_i.encapsulated then
-					new_externals.put_front (external_i.external_name_id);
+				external_i ?= Result
+				if not external_i.encapsulated or System.il_generation then
+					pass2_control.add_external (external_i)
 				end;
 			end
 
@@ -1082,7 +1077,6 @@ end;
 			adaptations.wipe_out;
 			changed_features.wipe_out;
 			origins.wipe_out;
-			new_externals.wipe_out;
 			invariant_changed := False;
 			invariant_removed := False;
 			assert_prop_list := Void; 

@@ -66,6 +66,7 @@ feature -- Save
 feature -- Definition: access
 
 	define_assembly_ref (assembly_name: UNI_STRING; assembly_info: MD_ASSEMBLY_INFO): INTEGER is
+			-- Get token reference on referenced assembly `assembly_name'.
 		require
 			assembly_name_not_void: assembly_name /= Void
 			assembly_info_not_void: assembly_info /= Void
@@ -87,7 +88,7 @@ feature -- Definition: access
 	define_member_ref (method_name: UNI_STRING; in_class_token: INTEGER;
 			signature: MD_SIGNATURE): INTEGER
 		is
-			-- Creat reference to member in class `in_class_token'.
+			-- Create reference to member in class `in_class_token'.
 		require
 			method_name_not_void: method_name /= Void
 			signature_not_void: signature /= Void
@@ -104,7 +105,10 @@ feature -- Definition: access
 		
 feature -- Definition: creation
 
-	define_assembly (assembly_name: UNI_STRING; assembly_flags: INTEGER; assembly_info: MD_ASSEMBLY_INFO): INTEGER is
+	define_assembly (assembly_name: UNI_STRING; assembly_flags:
+			INTEGER; assembly_info: MD_ASSEMBLY_INFO): INTEGER
+		is
+			-- Define a new assembly.
 		require
 			assembly_name_not_void: assembly_name /= Void
 			assembly_info_not_void: assembly_info /= Void
@@ -141,7 +145,7 @@ feature -- Definition: creation
 	define_method (method_name: UNI_STRING; in_class_token: INTEGER;
 			method_flags: INTEGER; signature: MD_SIGNATURE; impl_flags: INTEGER): INTEGER
 		is
-			-- Creat new method in class `in_class_token'.
+			-- Create new method in class `in_class_token'.
 		require
 			method_name_not_void: method_name /= Void
 			signature_not_void: signature /= Void
@@ -152,6 +156,25 @@ feature -- Definition: creation
 			last_call_success := c_define_method (item, in_class_token,
 				method_name.item, method_flags, signature.item.item, signature.size,
 				0, impl_flags, $Result)
+		ensure
+			success: last_call_success = 0
+			result_valid: Result > 0
+		end
+
+	define_field (field_name: UNI_STRING; in_class_token: INTEGER;
+			field_flags: INTEGER; signature: MD_SIGNATURE): INTEGER
+		is
+			-- Create a new field in class `in_class_token'.
+		require
+			field_name_not_void: field_name /= Void
+			signature_not_void: signature /= Void
+		do
+			if not signature.is_written then
+				signature.update_item
+			end
+			last_call_success := c_define_field (item, in_class_token,
+				field_name.item, field_flags, signature.item.item, signature.size,
+				0, default_pointer, 0, $Result)
 		ensure
 			success: last_call_success = 0
 			result_valid: Result > 0
@@ -277,6 +300,23 @@ feature {NONE} -- Implementation
 			]"
 		alias
 			"DefineMethod"
+		end
+
+	c_define_field (an_item: POINTER; type_token: INTEGER; name: POINTER;
+			flags: INTEGER; signature: POINTER; sig_length: INTEGER;
+			default_value_type: INTEGER; data: POINTER; data_length: INTEGER;
+			method_token: POINTER): INTEGER
+		is
+			-- Call `IMetaDataEmit->DefineMethod'.
+		external
+			"[
+				C++ IMetaDataEmit signature
+					(mdTypeDef, LPCWSTR, DWORD, PCCOR_SIGNATURE, ULONG,
+					DWORD, void *, ULONG, mdFieldDef *): EIF_INTEGER
+				use <cor.h>
+			]"
+		alias
+			"DefineField"
 		end
 
 	c_define_member_ref (an_item: POINTER; type_token: INTEGER; name: POINTER;

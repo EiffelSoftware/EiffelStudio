@@ -77,7 +77,7 @@ feature -- IL code generation
 			gen_type_i: GEN_TYPE_I
 		do
 			cl_type_i ?= context.creation_type (type)
-			il_generator.create_object (cl_type_i)
+			il_generator.create_object (cl_type_i.implementation_id)
 
 			gen_type_i ?= cl_type_i
 			if gen_type_i /= Void then

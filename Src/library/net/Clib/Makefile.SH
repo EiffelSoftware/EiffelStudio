@@ -37,8 +37,6 @@ NET_LIBS = libnet.a libmtnet.a libnet.so libmtnet.so
 # New suffixes and associated building rules -- edit with care
 
 
-.c.o:
-	\$(CC) -c \$(CFLAGS) \$<
 all: \$(NET_LIBS)
 !GROK!THIS!
 $spitshell >>Makefile <<'!NO!SUBS!'
@@ -65,22 +63,22 @@ OBJECTS = \
 
 ALL_OBJECTS = $(OBJECTS) $(MT_OBJECTS)
 MTlocal.o: local.c
-	$(CC) -c $(MTCFLAGS) $< -o $@
+	$(CC) -c $(MTCFLAGS) $? -o $@
 
 MTnetwork.o: network.c
-	$(CC) -c $(MTCFLAGS) $< -o $@
+	$(CC) -c $(MTCFLAGS) $? -o $@
 
 MTnetwork_r.o: network_r.c
-	$(CC) -c $(MTCFLAGS) $< -o $@
+	$(CC) -c $(MTCFLAGS) $? -o $@
 
 MTsyncpoll.o: syncpoll.c
-	$(CC) -c $(MTCFLAGS) $< -o $@
+	$(CC) -c $(MTCFLAGS) $? -o $@
 
 MThostname.o: hostname.c
-	$(CC) -c $(MTCFLAGS) $< -o $@
+	$(CC) -c $(MTCFLAGS) $? -o $@
 
 MTstorable.o: storable.c
-	$(CC) -c $(MTCFLAGS) $< -o $@
+	$(CC) -c $(MTCFLAGS) $? -o $@
 
 libmtnet.a: $(MT_OBJECTS)
 	$(RM) $@

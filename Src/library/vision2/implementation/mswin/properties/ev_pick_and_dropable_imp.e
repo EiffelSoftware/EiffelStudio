@@ -145,7 +145,7 @@ feature {EV_ANY_I} -- Implementation
 					pick_x := a_screen_x
 					pick_y := a_screen_y
 				end
-					set_capture_type (Capture_normal)--heavy)
+					set_capture_type (Capture_heavy)
 				enable_capture
 	
 				press_action := Ev_pnd_end_transport
@@ -502,8 +502,8 @@ end -- class EV_PICK_AND_DROPABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.25  2000/04/14 16:55:22  rogers
---| Added pre-condition on start_transport.
+--| Revision 1.26  2000/04/14 23:27:10  rogers
+--| start transport sets capture type to Capture_heavy.
 --|
 --| Revision 1.24  2000/04/07 22:41:43  rogers
 --| set normal capture as default.

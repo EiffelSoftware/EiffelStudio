@@ -1,12 +1,12 @@
 indexing
-	description:""
+	description:"Representation of a customer."
 	
 class
 	CUSTOMER
 
-
 create
-	make
+	make,
+	make_with_data
 
 feature {NONE} -- Initialization
 
@@ -19,7 +19,7 @@ feature {NONE} -- Initialization
 			create first_name.make_empty
 			create last_name.make_empty
 			create address.make_empty
---			create date_of_birth.make_from_year_and_month_and_day (2002, 01, 01)
+			create date_of_birth.make_from_year_and_month_and_day (2002, 01, 01)
 		ensure
 			non_void_id: id /= Void
 			non_void_title: title /= Void
@@ -57,7 +57,6 @@ feature {NONE} -- Initialization
 			date_of_birth_set: date_of_birth = a_date_of_birth
 		end
 
-
 feature -- Access
 
 	id: STRING
@@ -66,7 +65,6 @@ feature -- Access
 	last_name: STRING
 	address: STRING
     date_of_birth: SYSTEM_DATE_TIME
-
 
 feature -- Status Setting
 
@@ -134,7 +132,6 @@ feature -- Status Setting
 		ensure
 			date_of_birth_set: date_of_birth = a_date_of_birth
 		end
-		
 
 invariant
 	non_void_id: id /= Void

@@ -7,6 +7,13 @@ indexing
 deferred class
 	EV_ANY_I
 
+feature -- Access
+
+	interface: EV_ANY
+			-- The interface of the current implementation
+			-- Used to give the parent of a widget to the user
+			-- and in the implementation of some widgets
+
 feature -- Status report
 
 	destroyed: BOOLEAN is
@@ -27,6 +34,18 @@ feature -- Status setting
 		require
 			exist: not destroyed
 		deferred
+		end
+
+feature -- Element change
+
+	set_interface (the_interface: EV_ANY) is
+			-- Make `interface' the interface of the current object.
+		require
+			valid_interface: the_interface /= Void
+		do
+			interface := the_interface
+		ensure
+			interface_set: interface = the_interface
 		end
 
 end -- class EV_ANY_I

@@ -39,6 +39,12 @@ feature {EV_APPLICATION_I, EV_ENVIRONMENT} -- Status report
 			result_not_void: Result /= Void
 			object_comparison_set: Result.object_comparison
 		end
+		
+	mouse_wheel_scroll_lines: INTEGER is
+			-- Default number of lines to scroll in response to
+			-- a mouse wheel scroll event.
+		deferred
+		end
 
 feature {EV_ANY_I} -- Implementation
 

@@ -183,7 +183,7 @@ feature {EV_ANY_IMP} -- Button intermediary agent routines
 	connect_button_press_switch_intermediary (a_c_object: POINTER) is
 			-- Connect button switch 
 		local
-			a_widget: EV_WIDGET_IMP
+			a_widget: EV_GTK_WIDGET_IMP
 		do
 			a_widget ?= c_get_eif_reference_from_object_id (a_c_object)
 			a_widget.connect_button_press_switch
@@ -194,7 +194,7 @@ feature {EV_ANY_IMP} -- Button intermediary agent routines
 			a_screen_x, a_screen_y: INTEGER) is
 			--  Call to switch between type of button press event
 		local
-			a_widget: EV_WIDGET_IMP
+			a_widget: EV_PICK_AND_DROPABLE_IMP
 		do
 			a_widget ?= c_get_eif_reference_from_object_id (a_c_object)
 			if a_type = feature {EV_GTK_EXTERNALS}.gdk_button_press_enum and then a_widget.is_transport_enabled and then (a_button = 1 or a_button = 3) then

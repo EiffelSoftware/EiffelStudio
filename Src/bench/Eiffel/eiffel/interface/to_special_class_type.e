@@ -251,8 +251,8 @@ feature
 		local
 			area_feature: FEATURE_I;
 			rout_id: ROUTINE_ID;
-			table: POLY_TABLE [ENTRY];
 			table_name: STRING;
+			array_index: INTEGER
 			rout_info: ROUT_INFO
 		do
 			buffer.putstring ("*(char **) (l[0]");
@@ -261,15 +261,15 @@ feature
 
 			rout_id := area_feature.rout_id_set.first;
 			if byte_context.final_mode then
-				table := Eiffel_table.poly_table (rout_id);
+				array_index := Eiffel_table.is_polymorphic (rout_id, type_id, False);
 			
-				if table.is_polymorphic (type_id) then
+				if array_index >= 0 then
 						-- Access to area is polymorphic
 					table_name := rout_id.table_name;
 					buffer.putstring (" + (");
 					buffer.putstring (table_name);
 					buffer.putchar ('-');
-					buffer.putint (table.min_type_id - 1);
+					buffer.putint (array_index);
 					buffer.putchar (')');
 					buffer.putstring ("[Dtype(l[0])]");
 						-- Remember extern declaration

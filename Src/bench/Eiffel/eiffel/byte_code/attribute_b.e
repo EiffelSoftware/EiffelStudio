@@ -39,7 +39,14 @@ feature
 			attribute_name_id := a.feature_name_id
 			attribute_id := a.feature_id
 			routine_id := a.rout_id_set.first
-			written_in := a.written_in
+			if System.il_generation then
+				written_in := a.implemented_in
+				if written_in = 0 then
+					print ("Attribute not implemented!%N")
+				end
+			else
+				written_in := a.written_in
+			end
 		end
 
 	is_attribute: BOOLEAN is True
@@ -90,6 +97,9 @@ feature -- IL code generation
 		local
 			r_type: TYPE_I
 			cl_type: CL_TYPE_I
+			feat_tbl: FEATURE_TABLE
+			feat: FEATURE_I
+			class_c: CLASS_C
 		do
 				-- Type of attribute in current context
 			r_type := Context.real_type (type)
@@ -125,11 +135,20 @@ feature -- IL code generation
 						-- If `need_real_metamorphose (cl_type)' a box operation will
 						-- occur meaning that current attribute was written in a
 						-- non-expanded class.
-					generate_il_metamorphose (cl_type, need_real_metamorphose (cl_type))
+					generate_il_metamorphose (cl_type, Void, need_real_metamorphose (cl_type))
 				end
 
 					-- We push code to access Current attribute.
-				il_generator.generate_attribute (cl_type, attribute_id)
+				class_c := System.class_of_id (written_in)
+				feat_tbl := class_c.feature_table
+				feat := feat_tbl.item_id (attribute_name_id)
+				if class_c.is_frozen then
+					il_generator.generate_attribute (
+						il_generator.implemented_type (written_in, cl_type), feat.feature_id)
+				else
+					il_generator.generate_feature_access (
+						il_generator.implemented_type (written_in, cl_type), feat.feature_id, True)
+				end
 
 					-- Generate cast if we have to generate verifiable code
 					-- since attribute might have been redefined and in this

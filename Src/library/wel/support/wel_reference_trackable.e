@@ -59,6 +59,13 @@ feature -- Status Setting
 
 				-- Give a unique number to this object, to follow it.
 			internal_number_id := internal_number_id_cell.item
+			debug ("WEL_GDI_REFERENCES")
+				io.putstring ("references are enabled for object #"+internal_number_id.out+"%N")
+				internal_id_list.extend (internal_number_id)
+				if internal_number_id = 162 then
+					internal_number_id := 162
+				end
+			end
 			internal_number_id_cell.put (internal_number_id + 1)
 		end
 
@@ -75,6 +82,28 @@ feature -- Status Setting
 				references_count := references_count - 1
 				if references_count = 0 then
 					destroy_item
+					debug ("WEL_GDI_REFERENCES")
+						internal_id_list.prune_all (internal_number_id)
+						io.putstring ("Object #"+internal_number_id.out+" destroyed%N")
+						io.putstring ("Objects currently tracked: ")
+						from
+							internal_id_list.start
+						until
+							internal_id_list.after
+						loop
+							io.putstring (internal_id_list.item.out+" ")
+							internal_id_list.forth
+						end
+						io.putstring ("%N%N")
+					end
+				end
+			else
+				debug ("WEL_GDI_REFERENCES")
+					if references_count = 0 then
+						io.putstring ("Error: `decrement_reference' was called with an invalid object%N")
+						io.putstring ("Object: %N")
+						print (Current)
+					end
 				end
 			end
 		end
@@ -166,6 +195,11 @@ feature {ANY} -- Implementation
 			create Result.put (0)
 		end
 
+	internal_id_list: LINKED_LIST[INTEGER] is
+			-- Cell to give a unique integer to each new object.
+		once
+			create Result.make
+		end
 end -- class WEL_REFERENCE_TRACKABLE
 
 --|----------------------------------------------------------------

@@ -201,9 +201,13 @@ feature {NONE}
 				format_bar.attach_top (showfuture_command, 0);
 				format_bar.attach_left_widget (showpast_command, showfuture_command, 0);
 
+			!!showsynonyms_command.make (format_bar, text_window);
+				format_bar.attach_top (showsynonyms_command, 0);
+				format_bar.attach_left_widget (showfuture_command, showsynonyms_command, 0);
+
 			!!showstop_command.make (format_bar, text_window);
 				format_bar.attach_top (showstop_command, 0);
-				format_bar.attach_left_widget (showfuture_command, showstop_command, 10);
+				format_bar.attach_left_widget (showsynonyms_command, showstop_command, 10);
 		end;
 
 	build_bar is
@@ -277,6 +281,7 @@ feature {NONE}
 --	unbreak_command: DEBUG_NOSTOPIN;	
 --	debug_quit_command: DEBUG_QUIT;
 	showroutclients_command: SHOW_ROUTCLIENTS;
+	showsynonyms_command: SHOW_SYNONYMS;
 --	debug_showbreak: DEBUG_SHOWBREAK;
 	showpast_command: SHOW_PAST;
 	showhistory_command: SHOW_ROUT_HIST;

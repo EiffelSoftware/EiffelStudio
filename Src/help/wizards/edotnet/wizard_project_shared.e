@@ -1,5 +1,5 @@
 indexing
-	description	: "This class is inherit by all the application"
+	description	: "This class is inherited by all the application"
 	author		: "Arnaud PICHERY [aranud@mail.dotcom.fr]"
 	date		: "$Date$"
 	revision	: "$Revision$"

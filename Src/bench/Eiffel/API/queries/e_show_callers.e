@@ -130,7 +130,7 @@ feature {NONE} -- Implementation
 			descendants: PART_SORTED_TWO_WAY_LIST [CLASS_C];
 			a_feat: E_FEATURE;
 			a_class: CLASS_C;
-			a_list: FIXED_LIST [CELL2 [CLASS_C,E_FEATURE]];
+			a_list: ARRAYED_LIST [CELL2 [CLASS_C,E_FEATURE]];
 			cell: CELL2 [CLASS_C,E_FEATURE];
 			rid: INTEGER;
 			st: like structured_text
@@ -139,23 +139,28 @@ feature {NONE} -- Implementation
 			create descendants.make; 
 			record_descendants (descendants, current_class);
 			from
-				create a_list.make_filled (descendants.count);
-				a_list.start;
+				create a_list.make (descendants.count)
+				a_list.start
 				descendants.start
 			until
 				descendants.after
 			loop
 				a_class := descendants.item;
-				a_feat := a_class.feature_with_rout_id (rid);
-				create cell.make (a_class, a_feat);
-				a_list.replace (cell);
-				a_list.forth;
+				a_feat := a_class.feature_with_rout_id (rid)
+					-- FIXME: Manu: 03/25/2004:
+					-- Temporary fix for .NET as .NET classes don't have yet
+					-- the routine of ANY
+				debug ("FIXME") check fixme: False end end
+				if a_feat /= Void then
+					create cell.make (a_class, a_feat)
+					a_list.extend (cell)
+				end
 				descendants.forth
 			end;
 
 			from
-				a_list.start;
-				st := structured_text;
+				a_list.start
+				st := structured_text
 			until
 				a_list.after
 			loop

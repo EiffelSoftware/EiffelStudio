@@ -82,6 +82,11 @@ feature {NONE} -- GTK C functions for windows
 			"C | <gtk/gtk.h>"
 		end
 	
+	gtk_window_set_transient_for (window:POINTER; parent_window: POINTER) is
+		external
+			"C | <gtk/gtk.h>"
+		end
+
 	gtk_window_set_title (widget: POINTER; t: POINTER) is
 		external
 			"C | <gtk/gtk.h>"

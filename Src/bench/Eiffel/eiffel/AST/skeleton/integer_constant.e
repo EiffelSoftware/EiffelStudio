@@ -61,7 +61,7 @@ feature -- Initialization
 			read_integer_value (is_negative , s)
 		end
 
-	initialize_from_hexa (s: STRING) is
+	initialize_from_hexa (is_negative: BOOLEAN; s: STRING) is
 			-- Create a new INTEGER AST node from `s' string representing
 			-- an integer in hexadecimal starting with the following sequence
 			-- "0x".
@@ -70,7 +70,7 @@ feature -- Initialization
 			s_not_empty: not s.is_empty
 			s_not_too_big: s.count <= 18
 		do
-			read_hexa_value (s)
+			read_hexa_value (is_negative, s)
 		end
 
 feature -- Visitor
@@ -143,12 +143,19 @@ feature {INTEGER_CONSTANT} -- Operations
 			i: INTEGER_64
 		do
 			if size <= 32 then
-				lower := -lower
+					-- Test for overflow
+				if lower = -lower then
+					upper := 0
+				else
+					lower := -lower
+				end
 			else
 				i := -to_integer_64
 				lower := (i & 0x00000000FFFFFFFF).to_integer
 				upper := ((i |>> 32) & 0x00000000FFFFFFFF).to_integer
 			end
+				-- Size might be changed.
+			compute_size
 		end
 	
 feature -- Comparison
@@ -221,7 +228,7 @@ feature -- Conveniences
 			
 			l_lower := lower
 			
-			if (l_lower & 0x80000000 = 0x80000000) then
+			if l_lower < 0 then
 					-- Let's clear the sign bit.
 				l_lower := l_lower & 0x7FFFFFFF
 					
@@ -247,8 +254,14 @@ feature -- Settings
 			-- Assign `i' to `lower'.
 		do
 			lower := i
+			if i > 0 then
+				upper := 0
+			else
+				upper := -1
+			end
 		ensure
 			lower_set: lower = i
+			upper_set: (i >= 0 implies upper = 0) and then (i < 0 implies upper = -1)
 		end
 
 	set_real_type (t: INTEGER_A) is
@@ -261,8 +274,20 @@ feature -- Settings
 			end
 			size := t.size
 			inspect	size
-			when 8 then lower := lower.to_integer_8
-			when 16 then lower := lower.to_integer_16
+			when 8 then
+				lower := lower.to_integer_8
+				if lower >= 0 then
+					upper := 0
+				else
+					upper := -1
+				end
+			when 16 then
+				lower := lower.to_integer_16
+				if lower >= 0 then
+					upper := 0
+				else
+					upper := -1
+				end
 			else
 			end
 		ensure then
@@ -400,7 +425,7 @@ feature {NONE} -- Code generation string constants
 
 feature {NONE} -- Translation
 
-	read_hexa_value (s: STRING) is
+	read_hexa_value (is_negative: BOOLEAN; s: STRING) is
 			-- Convert `s' hexadecimal value into an integer representation.
 		require
 			s_not_void: s /= Void
@@ -472,6 +497,9 @@ feature {NONE} -- Translation
 				upper := last_integer
 				size := 64
 				compatibility_size := 64
+				if is_negative then
+					negate
+				end
 			else
 					-- Force size of integer constant depending on number
 					-- of hexadecimal character in hex string.
@@ -486,6 +514,17 @@ feature {NONE} -- Translation
 					compatibility_size := 32
 				end
 				size := 32
+				if is_negative then
+					lower := - lower
+				end
+				if lower >= 0 then
+					upper := 0
+				else
+					upper := -1
+				end
+				if is_negative then
+					compute_size
+				end
 			end
 		end
 
@@ -515,6 +554,7 @@ feature {NONE} -- Translation
 						compatibility_size := 32
 						size := 32
 						lower := 0x80000000
+						upper := -1
 					end
 				else
 					is_32bits := s < largest_integer_32
@@ -530,8 +570,11 @@ feature {NONE} -- Translation
 						last_integer := (last_integer * 10) + area.item (i).code - 48
 						i := i + 1
 					end
-					if is_negative then
+					if is_negative and then last_integer > 0 then
 						last_integer := -last_integer
+						upper := -1
+					else
+						upper := 0
 					end
 					lower := last_integer
 
@@ -563,6 +606,23 @@ feature {NONE} -- Translation
 					lower := (last_int_64 & 0x00000000FFFFFFFF).to_integer
 					upper := ((last_int_64 |>> 32) & 0x00000000FFFFFFFF).to_integer
 				end
+			end
+		end
+
+	compute_size is
+			-- Compute `size' and `compatibility_size' from the value of the constant.
+		do
+			size := 32
+			if upper /= lower |>> 31 then
+					-- Value does not fit 32 bits
+				size := 64
+				compatibility_size := 64
+			elseif -128 <= lower and then lower <= 127 then
+				compatibility_size := 8
+			elseif -32768 <= lower and then lower <= 32767 then
+				compatibility_size := 16
+			else
+				compatibility_size := 32
 			end
 		end
 

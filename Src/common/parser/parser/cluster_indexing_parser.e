@@ -769,7 +769,7 @@ end
 					token_buffer.item (1) = '0' and then
 					token_buffer.item (2).lower = 'x'
 				then
-					yyval8 := new_integer_as_from_hexa (token_buffer)
+					yyval8 := new_integer_as_from_hexa (false, token_buffer)
 				else
 					report_integer_too_large_error (token_buffer)
 						-- Dummy code (for error recovery) follows:
@@ -800,7 +800,7 @@ end
 					token_buffer.item (1) = '0' and then
 					token_buffer.item (2).lower = 'x'
 				then
-					yyval8 := new_integer_as_from_hexa (token_buffer)
+					yyval8 := new_integer_as_from_hexa (false, token_buffer)
 				else
 					report_integer_too_large_error (token_buffer)
 						-- Dummy code (for error recovery) follows:
@@ -832,7 +832,7 @@ end
 					token_buffer.item (1) = '0' and then
 					token_buffer.item (2).lower = 'x'
 				then
-					yyval8 := new_integer_as_from_hexa (token_buffer)	
+					yyval8 := new_integer_as_from_hexa (true, token_buffer)
 				else
 					token_buffer.precede ('-')
 					report_integer_too_small_error (token_buffer)

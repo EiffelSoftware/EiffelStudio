@@ -438,10 +438,6 @@ feature {NONE} -- Implementation
 				not type_combo_box.selected_item.text.is_equal (Pixmap_constant_type)then
 				new_button.disable_sensitive	
 			end
-			
-				-- Update system to reflect a change.
-			system_status.enable_project_modified
-			command_handler.update
 		end
 		
 

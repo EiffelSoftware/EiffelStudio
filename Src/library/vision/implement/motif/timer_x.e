@@ -65,6 +65,12 @@ feature {NONE} -- Implementation
 				command_clone := command
 			end;
 			command_clone.set_context_data (context_data);
+			if not is_regular_call_back then
+                    -- Callback set by next. Identifier is
+                    -- automatically removed add the end of this
+                    -- callback.
+				identifier := Void
+			end;
 			command_clone.execute (argument);
 			if is_regular_call_back then
 					-- Identifier will be automatically removed from the
@@ -72,12 +78,7 @@ feature {NONE} -- Implementation
 					-- Now add the callback again and retrieve the identifier.
 				ac := application_context;
 				ac.set_time_out_callback (regular_time, Current, argument);
-				identifier := ac.last_id;
-			else
-					-- Callback set by next. Identifier is
-					-- automatically removed add the end of this
-					-- callback.
-				identifier := Void
+				identifier := ac.last_id
 			end
 		end;
 

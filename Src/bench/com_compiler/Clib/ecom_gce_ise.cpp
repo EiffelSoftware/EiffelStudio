@@ -5214,6 +5214,52 @@ void ecom_gce_ISE::ccom_free_memory_pointed_226( VARIANT_BOOL * a_pointer )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
+void ecom_gce_ISE::ccom_free_memory_pointed_227( VARIANT_BOOL * a_pointer )
+
+/*-----------------------------------------------------------
+	Free memory of VARIANT_BOOL *.
+-----------------------------------------------------------*/
+{
+	if (a_pointer != NULL)
+		CoTaskMemFree (a_pointer);
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_gce_ISE::ccom_free_memory_pointed_228( VARIANT_BOOL * a_pointer )
+
+/*-----------------------------------------------------------
+	Free memory of VARIANT_BOOL *.
+-----------------------------------------------------------*/
+{
+	if (a_pointer != NULL)
+		CoTaskMemFree (a_pointer);
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+EIF_REFERENCE ecom_gce_ISE::ccom_ce_pointed_interface_230( ecom_eiffel_compiler::IEiffelHTMLDocEvents * a_interface_pointer )
+
+/*-----------------------------------------------------------
+	Convert ecom_eiffel_compiler::IEiffelHTMLDocEvents *  to IEIFFEL_HTMLDOC_EVENTS_INTERFACE.
+-----------------------------------------------------------*/
+{
+	if (a_interface_pointer != NULL)
+		return rt_ce.ccom_ce_pointed_interface (a_interface_pointer, "IEIFFEL_HTMLDOC_EVENTS_IMPL_PROXY");
+	else
+		return NULL;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_gce_ISE::ccom_free_memory_pointed_231( VARIANT_BOOL * a_pointer )
+
+/*-----------------------------------------------------------
+	Free memory of VARIANT_BOOL *.
+-----------------------------------------------------------*/
+{
+	if (a_pointer != NULL)
+		CoTaskMemFree (a_pointer);
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
 
 #ifdef __cplusplus
 }

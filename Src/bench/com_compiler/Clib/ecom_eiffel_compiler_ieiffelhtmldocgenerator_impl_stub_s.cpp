@@ -30,6 +30,129 @@ ecom_eiffel_compiler::IEiffelHTMLDocGenerator_impl_stub::~IEiffelHTMLDocGenerato
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
+STDMETHODIMP ecom_eiffel_compiler::IEiffelHTMLDocGenerator_impl_stub::is_loaded(  /* [out, retval] */ VARIANT_BOOL * return_value )
+
+/*-----------------------------------------------------------
+	Is the project loaded?
+-----------------------------------------------------------*/
+{
+	ECATCH;
+
+	
+	EIF_BOOLEAN_FUNCTION eiffel_function = 0;
+	eiffel_function = eif_boolean_function ("is_loaded", type_id);
+	EIF_BOOLEAN tmp_value = 0;
+	if (eiffel_function != NULL)
+		tmp_value = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
+	else
+		tmp_value = eif_field (eif_access (eiffel_object), "is_loaded", EIF_BOOLEAN);
+	*return_value = rt_ec.ccom_ec_boolean (tmp_value);
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+STDMETHODIMP ecom_eiffel_compiler::IEiffelHTMLDocGenerator_impl_stub::is_corrupted(  /* [out, retval] */ VARIANT_BOOL * return_value )
+
+/*-----------------------------------------------------------
+	Is the project oorrupted?
+-----------------------------------------------------------*/
+{
+	ECATCH;
+
+	
+	EIF_BOOLEAN_FUNCTION eiffel_function = 0;
+	eiffel_function = eif_boolean_function ("is_corrupted", type_id);
+	EIF_BOOLEAN tmp_value = 0;
+	if (eiffel_function != NULL)
+		tmp_value = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
+	else
+		tmp_value = eif_field (eif_access (eiffel_object), "is_corrupted", EIF_BOOLEAN);
+	*return_value = rt_ec.ccom_ec_boolean (tmp_value);
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+STDMETHODIMP ecom_eiffel_compiler::IEiffelHTMLDocGenerator_impl_stub::is_incompatible(  /* [out, retval] */ VARIANT_BOOL * return_value )
+
+/*-----------------------------------------------------------
+	Is the project incompatible with the current version of the compiled?
+-----------------------------------------------------------*/
+{
+	ECATCH;
+
+	
+	EIF_BOOLEAN_FUNCTION eiffel_function = 0;
+	eiffel_function = eif_boolean_function ("is_incompatible", type_id);
+	EIF_BOOLEAN tmp_value = 0;
+	if (eiffel_function != NULL)
+		tmp_value = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
+	else
+		tmp_value = eif_field (eif_access (eiffel_object), "is_incompatible", EIF_BOOLEAN);
+	*return_value = rt_ec.ccom_ec_boolean (tmp_value);
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+STDMETHODIMP ecom_eiffel_compiler::IEiffelHTMLDocGenerator_impl_stub::add_status_callback(  /* [in] */ ecom_eiffel_compiler::IEiffelHTMLDocEvents * new_callback )
+
+/*-----------------------------------------------------------
+	Add a callback interface.
+-----------------------------------------------------------*/
+{
+	ECATCH;
+
+	EIF_OBJECT tmp_new_callback = NULL;
+	if (new_callback != NULL)
+	{
+		tmp_new_callback = eif_protect (grt_ce_ISE.ccom_ce_pointed_interface_230 (new_callback));
+		new_callback->AddRef ();
+	}
+	
+	EIF_PROCEDURE eiffel_procedure = 0;
+	eiffel_procedure = eif_procedure ("add_status_callback", type_id);
+
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_new_callback != NULL) ? eif_access (tmp_new_callback) : NULL));
+	if (tmp_new_callback != NULL)
+		eif_wean (tmp_new_callback);
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+STDMETHODIMP ecom_eiffel_compiler::IEiffelHTMLDocGenerator_impl_stub::remove_status_callback(  /* [in] */ ecom_eiffel_compiler::IEiffelHTMLDocEvents * old_callback )
+
+/*-----------------------------------------------------------
+	Remove a callback interface.
+-----------------------------------------------------------*/
+{
+	ECATCH;
+
+	EIF_OBJECT tmp_old_callback = NULL;
+	if (old_callback != NULL)
+	{
+		tmp_old_callback = eif_protect (grt_ce_ISE.ccom_ce_pointed_interface_230 (old_callback));
+		old_callback->AddRef ();
+	}
+	
+	EIF_PROCEDURE eiffel_procedure = 0;
+	eiffel_procedure = eif_procedure ("remove_status_callback", type_id);
+
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_old_callback != NULL) ? eif_access (tmp_old_callback) : NULL));
+	if (tmp_old_callback != NULL)
+		eif_wean (tmp_old_callback);
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
 STDMETHODIMP ecom_eiffel_compiler::IEiffelHTMLDocGenerator_impl_stub::add_excluded_cluster(  /* [in] */ BSTR cluster_full_name )
 
 /*-----------------------------------------------------------
@@ -59,7 +182,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelHTMLDocGenerator_impl_stub::add_exclud
 STDMETHODIMP ecom_eiffel_compiler::IEiffelHTMLDocGenerator_impl_stub::remove_excluded_cluster(  /* [in] */ BSTR cluster_full_name )
 
 /*-----------------------------------------------------------
-	Exclude a cluster from being generated.
+	Include a cluster to be generated.
 -----------------------------------------------------------*/
 {
 	ECATCH;
@@ -85,7 +208,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelHTMLDocGenerator_impl_stub::remove_exc
 STDMETHODIMP ecom_eiffel_compiler::IEiffelHTMLDocGenerator_impl_stub::generate(  /* [in] */ BSTR path )
 
 /*-----------------------------------------------------------
-	Exclude a cluster from being generated.
+	Generate the HTML documents into path.
 -----------------------------------------------------------*/
 {
 	ECATCH;

@@ -21,10 +21,6 @@ Component registration code
 
 #include "CEiffelCompletionInfo_factory.h"
 
-#include "ecom_eiffel_compiler_CEiffelHTMLDocGenerator_s.h"
-
-#include "CEiffelHTMLDocGenerator_factory.h"
-
 #ifdef __cplusplus
 extern "C" {
 #endif

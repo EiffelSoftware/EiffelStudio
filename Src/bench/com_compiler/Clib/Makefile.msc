@@ -20,9 +20,12 @@ ecom_eiffel_compiler_ceiffelcompletioninfo_s.obj \
 ecom_eiffel_compiler_ieiffelcompletioninfo_impl_stub_s.obj \
 ecom_eiffel_compiler_ienumcompletionentry_impl_stub_s.obj \
 ecom_eiffel_compiler_ieiffelcompletionentry_impl_stub_s.obj \
-ecom_eiffel_compiler_ceiffelhtmldocgenerator_s.obj \
+#ecom_eiffel_compiler_ceiffelhtmldocgenerator_s.obj \
 ecom_eiffel_compiler_ieiffelhtmldocgenerator_impl_stub_s.obj \
 ecom_eiffel_compiler_ieiffelhtmldocgenerator_impl_proxy_s.obj \
+#ecom_eiffel_compiler_ceiffelhtmldocevents_s.obj \
+ecom_eiffel_compiler_ieiffelhtmldocevents_impl_stub_s.obj \
+ecom_eiffel_compiler_ieiffelhtmldocevents_impl_proxy_s.obj \
 ecom_eiffel_compiler_ieiffelclassdescriptor_impl_stub_s.obj \
 ecom_eiffel_compiler_ieiffelclassdescriptor_impl_proxy_s.obj \
 ecom_eiffel_compiler_ieiffelclusterdescriptor_impl_stub_s.obj \
@@ -66,9 +69,12 @@ wecom_eiffel_compiler_ceiffelcompletioninfo_s.obj \
 wecom_eiffel_compiler_ieiffelcompletioninfo_impl_stub_s.obj \
 wecom_eiffel_compiler_ienumcompletionentry_impl_stub_s.obj \
 wecom_eiffel_compiler_ieiffelcompletionentry_impl_stub_s.obj \
-wecom_eiffel_compiler_ceiffelhtmldocgenerator_s.obj \
+#wecom_eiffel_compiler_ceiffelhtmldocgenerator_s.obj \
 wecom_eiffel_compiler_ieiffelhtmldocgenerator_impl_stub_s.obj \
 wecom_eiffel_compiler_ieiffelhtmldocgenerator_impl_proxy_s.obj \
+#wecom_eiffel_compiler_ceiffelhtmldocevents_s.obj \
+wecom_eiffel_compiler_ieiffelhtmldocevents_impl_stub_s.obj \
+wecom_eiffel_compiler_ieiffelhtmldocevents_impl_proxy_s.obj \
 wecom_eiffel_compiler_ieiffelclassdescriptor_impl_stub_s.obj \
 wecom_eiffel_compiler_ieiffelclassdescriptor_impl_proxy_s.obj \
 wecom_eiffel_compiler_ieiffelclusterdescriptor_impl_stub_s.obj \
@@ -136,8 +142,11 @@ wecom_eiffel_compiler_ceiffelcompiler_s.obj: ecom_eiffel_compiler_ceiffelcompile
 wecom_eiffel_compiler_ceiffelproject_s.obj: ecom_eiffel_compiler_ceiffelproject_s.cpp
 	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
 	
-wecom_eiffel_compiler_ceiffelhtmldocgenerator_s.obj: ecom_eiffel_compiler_ceiffelhtmldocgenerator_s.cpp
-	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+#wecom_eiffel_compiler_ceiffelhtmldocgenerator_s.obj: ecom_eiffel_compiler_ceiffelhtmldocgenerator_s.cpp
+#	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+#wecom_eiffel_compiler_ceiffelhtmldocgevents_s.obj: ecom_eiffel_compiler_ceiffelhtmldocevents_s.cpp
+#	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
 	
 wecom_eiffel_compiler_ceiffelcompletioninfo_s.obj: ecom_eiffel_compiler_ceiffelcompletioninfo_s.cpp
 	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
@@ -165,6 +174,9 @@ wecom_eiffel_compiler_ieiffelcompiler_impl_stub_s.obj: ecom_eiffel_compiler_ieif
 	
 wecom_eiffel_compiler_ieiffelhtmldocgenerator_impl_stub_s.obj: ecom_eiffel_compiler_ieiffelhtmldocgenerator_impl_stub_s.cpp
 	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+	
+wecom_eiffel_compiler_ieiffelhtmldocevents_impl_stub_s.obj: ecom_eiffel_compiler_ieiffelhtmldocevents_impl_stub_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?	
 	
 wecom_eiffel_compiler_ieiffelfeaturedescriptor_impl_stub_s.obj: ecom_eiffel_compiler_ieiffelfeaturedescriptor_impl_stub_s.cpp
 	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
@@ -206,6 +218,9 @@ wecom_eiffel_compiler_ieiffelcompiler_impl_proxy_s.obj: ecom_eiffel_compiler_iei
 	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
 
 wecom_eiffel_compiler_ieiffelhtmldocgenerator_impl_proxy_s.obj: ecom_eiffel_compiler_ieiffelhtmldocgenerator_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+	
+wecom_eiffel_compiler_ieiffelhtmldocevents_impl_proxy_s.obj: ecom_eiffel_compiler_ieiffelhtmldocevents_impl_proxy_s.cpp
 	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
 	
 wecom_eiffel_compiler_ieiffelfeaturedescriptor_impl_proxy_s.obj: ecom_eiffel_compiler_ieiffelfeaturedescriptor_impl_proxy_s.cpp

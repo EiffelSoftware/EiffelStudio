@@ -10,6 +10,41 @@ inherit
 
 feature -- Status Report
 
+	is_loaded_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `is_loaded'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	is_corrupted_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `is_corrupted'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	is_incompatible_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `is_incompatible'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	add_status_callback_user_precondition (new_callback: IEIFFEL_HTMLDOC_EVENTS_INTERFACE): BOOLEAN is
+			-- User-defined preconditions for `add_status_callback'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	remove_status_callback_user_precondition (old_callback: IEIFFEL_HTMLDOC_EVENTS_INTERFACE): BOOLEAN is
+			-- User-defined preconditions for `remove_status_callback'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
 	add_excluded_cluster_user_precondition (cluster_full_name: STRING): BOOLEAN is
 			-- User-defined preconditions for `add_excluded_cluster'.
 			-- Redefine in descendants if needed.
@@ -33,6 +68,48 @@ feature -- Status Report
 
 feature -- Basic Operations
 
+	is_loaded: BOOLEAN is
+			-- Is the project loaded?
+		require
+			is_loaded_user_precondition: is_loaded_user_precondition
+		deferred
+
+		end
+
+	is_corrupted: BOOLEAN is
+			-- Is the project oorrupted?
+		require
+			is_corrupted_user_precondition: is_corrupted_user_precondition
+		deferred
+
+		end
+
+	is_incompatible: BOOLEAN is
+			-- Is the project incompatible with the current version of the compiled?
+		require
+			is_incompatible_user_precondition: is_incompatible_user_precondition
+		deferred
+
+		end
+
+	add_status_callback (new_callback: IEIFFEL_HTMLDOC_EVENTS_INTERFACE) is
+			-- Add a callback interface.
+			-- `new_callback' [in].  
+		require
+			add_status_callback_user_precondition: add_status_callback_user_precondition (new_callback)
+		deferred
+
+		end
+
+	remove_status_callback (old_callback: IEIFFEL_HTMLDOC_EVENTS_INTERFACE) is
+			-- Remove a callback interface.
+			-- `old_callback' [in].  
+		require
+			remove_status_callback_user_precondition: remove_status_callback_user_precondition (old_callback)
+		deferred
+
+		end
+
 	add_excluded_cluster (cluster_full_name: STRING) is
 			-- Exclude a cluster from being generated.
 			-- `cluster_full_name' [in].  
@@ -43,7 +120,7 @@ feature -- Basic Operations
 		end
 
 	remove_excluded_cluster (cluster_full_name: STRING) is
-			-- Exclude a cluster from being generated.
+			-- Include a cluster to be generated.
 			-- `cluster_full_name' [in].  
 		require
 			remove_excluded_cluster_user_precondition: remove_excluded_cluster_user_precondition (cluster_full_name)
@@ -52,7 +129,7 @@ feature -- Basic Operations
 		end
 
 	generate (path: STRING) is
-			-- Exclude a cluster from being generated.
+			-- Generate the HTML documents into path.
 			-- `path' [in].  
 		require
 			generate_user_precondition: generate_user_precondition (path)

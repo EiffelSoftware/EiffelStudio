@@ -13,15 +13,15 @@ feature -- Access
 	attempt (an_object: ANY): G is
 		-- Attempt to return an object of type `G' from `an_object'
 		do
---			Result := generize (an_object)
+			Result := generize (an_object)
 		end
 
 feature {NONE} -- External
 
---	generize (an_object: ANY): G is
---		external
---			"C (EIF_OBJECT): EIF_REFERENCE| <disptchr.h>"
---		end
+	generize (an_object: ANY): G is
+		external
+			"C (EIF_OBJECT): EIF_REFERENCE| <disptchr.h>"
+		end
 		
 end -- class ASSIGN_ATTEMPT
 
@@ -40,4 +40,3 @@ end -- class ASSIGN_ATTEMPT
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!-----------------------------------------------------------------------------
-------------------------------------------------

@@ -87,11 +87,9 @@ feature -- Status Report
 		local
 			l_assembly: ASSEMBLY
 		do
-			if feature {SYSTEM_FILE}.exists (a_file_name) then
-				l_assembly := feature {ASSEMBLY}.load_from (a_file_name)
-				if l_assembly /= Void then
-					Result := has (l_assembly.get_name)
-				end
+			l_assembly := assembly_from_file (a_file_name)
+			if l_assembly /= Void then
+				Result := has (l_assembly.get_name)
 			end
 		ensure
 			cusor_unchanged: Referenced_assemblies.index = old Referenced_assemblies.index

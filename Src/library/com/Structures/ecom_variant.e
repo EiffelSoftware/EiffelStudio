@@ -1550,7 +1550,9 @@ feature -- Output
 				Result.append (real8.out)
 			elseif (variable_type = Vt_bstr) then
 				Result.append_character ('%"')
-				Result.append (string_value.out)
+				if string_value /= Void then
+					Result.append (string_value.out)
+				end
 				Result.append_character ('%"')
 			elseif (variable_type = Vt_ui1) then
 				Result.append (unsigned_character_value.out)
@@ -1561,7 +1563,9 @@ feature -- Output
 			elseif (variable_type = Vt_ui4) then
 				Result.append (unsigned_integer4.out)
 			elseif (variable_type = Vt_date) then
-				Result.append (date_value.out)
+				if date_value /= Void then
+					Result.append (date_value.out)
+				end
 			end
 		end;
 

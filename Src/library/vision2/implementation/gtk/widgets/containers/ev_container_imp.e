@@ -39,7 +39,7 @@ feature -- Access
 
 	container_widget: POINTER is
 		do
-			Result := c_object
+			Result := visual_widget
 		end
 	
 	client_width: INTEGER is

@@ -16,9 +16,9 @@ function pageLoad()
 function clearPreLoadPage()
 //Clear the 'please wait...' loading screen once loading has finished
 {
-	if (document.getelementbyid) //dom
+	if (document.getElementById) //dom
 	{
-		document.getelementbyid('prepage').style.visibility='hidden';
+		document.getElementById('prepage').style.visibility='hidden';
 	}
 	else
 	{
@@ -26,9 +26,13 @@ function clearPreLoadPage()
 		{
 			document.prepage.visibility = 'hidden';
 		}
-		else //ie4
+		else if (document.all) //ie4
 		{
 			document.all.prepage.style.visibility = 'hidden';
+		}
+		else
+		{
+			document.prepage.style.visibility = 'hidden';
 		}
 	}
 }

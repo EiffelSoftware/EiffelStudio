@@ -9,8 +9,7 @@ body
 
 img 
 {
-	border: none; 
-	margin: 2px 2px 2px 2px;
+	border: 0px; 
 }
 
 /* level 0 outer */
@@ -38,5 +37,18 @@ a
 a:hover
 {
 	text-decoration : none;
-	color: gray;
+	color: red;
+}
+
+td.header_filler
+{	
+	text-align: right;
+	background-color: #6699cc;
+	color: white;	
+	font-size: 70%;
+}
+
+table.outer_table
+{		
+	width: 100%;
 }

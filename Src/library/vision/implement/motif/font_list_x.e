@@ -6,23 +6,8 @@ class FONT_LIST_X
 
 inherit
 
-	FONT_LIST_I
-		undefine
-			copy,
-			is_equal,
-			consistent,
-			setup
-		end;
+	FONT_LIST_I;
 
-	G_ANY_I
-		export
-			{NONE} all
-		undefine
-			copy,
-			is_equal,
-			consistent,
-			setup
-		end;
 
 	FIXED_LIST [FONT]
 		rename

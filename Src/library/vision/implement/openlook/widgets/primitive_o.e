@@ -75,6 +75,18 @@ feature {COLOR_X}
 						$forg_name)
 		end;
 
+	is_stackable: BOOLEAN is 
+			-- is the widget stackable.
+		do
+			Result := True;
+		end;
+
+
+	window: POINTER is
+				-- the window pointer of the widget
+		do
+			Result := Xt_window (screen_object);
+		end;
 
 end 
 

@@ -23,6 +23,26 @@ feature
 		deferred
 		end;
 
+	circulate_up is
+		--circulate the children of the bulletin up
+		deferred
+		end;
+
+
+	circulate_down is
+		--circulate the children of the bulletin down
+		deferred
+		end;
+
+	restack_children (a_stackable_array: ARRAY [STACKABLE]) is
+		-- Stack the children of the bulletin in the 
+		-- order that they are in the array.
+		-- Each item in the argument array must have the same
+		--parent
+		deferred
+		end;
+
+
 end -- class BULLETIN_I
 
 

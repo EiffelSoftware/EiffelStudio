@@ -56,7 +56,19 @@ feature {COLOR_X}
 			ext_name := Mforeground.to_c;
 			color_implementation ?= foreground.implementation;
 			c_set_color (screen_object, color_implementation.pixel (screen), $ext_name)
-		end
+		end;
+
+feature
+
+	is_stackable: BOOLEAN is 
+		do
+			Result := True;
+		end;
+
+	window: POINTER is
+		do
+			Result := Xt_window(screen_object);
+		end;
 
 end
 

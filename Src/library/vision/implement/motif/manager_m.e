@@ -57,6 +57,19 @@ feature {COLOR_X}
 			c_set_color (screen_object, color_implementation.pixel (screen), $ext_name)
 		end
 
+
+feature
+
+	is_stackable: BOOLEAN is 
+		do
+			Result := True;
+		end;
+
+	window: POINTER is
+		do
+			Result := Xt_window(screen_object);
+		end;
+
 end
 
 

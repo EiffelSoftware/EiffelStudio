@@ -15,11 +15,6 @@ inherit
 
 	IO_HANDLER_I;
 
-	G_ANY_I
-		export
-			{NONE} all
-		end;
-
 	EVENT_HDL
 
 

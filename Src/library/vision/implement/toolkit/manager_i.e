@@ -11,7 +11,9 @@ deferred class MANAGER_I
 
 inherit
 
-	COMPOSITE_I
+	COMPOSITE_I;
+
+	STACKABLE_I;
 
 feature 
 

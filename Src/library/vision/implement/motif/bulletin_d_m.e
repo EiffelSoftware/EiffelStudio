@@ -40,7 +40,8 @@ inherit
 		undefine
 			make
 		redefine
-            define_cursor_if_shell, undefine_cursor_if_shell
+           	 	define_cursor_if_shell, undefine_cursor_if_shell,
+			is_stackable
 		end
 
 creation
@@ -60,6 +61,8 @@ feature -- Creation
             a_bulletin_d.set_dialog_imp (Current);
             forbid_resize
         end;
+
+	is_stackable: BOOLEAN is do end;
 
 	set_title (a_title: STRING) is
 			-- Set `title' to `a_title'.

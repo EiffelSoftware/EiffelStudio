@@ -16,6 +16,11 @@ deferred class IO_HANDLER_I
 inherit
 
 
+	G_ANY_I
+		export
+			{NONE} all
+		end;
+
 
 	
 feature 

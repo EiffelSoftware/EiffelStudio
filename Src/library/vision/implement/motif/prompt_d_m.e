@@ -18,7 +18,7 @@ inherit
 			make
         redefine
             define_cursor_if_shell, undefine_cursor_if_shell,
-            set_x, set_y, set_x_y
+            set_x, set_y, set_x_y, is_stackable
 		end;
 
 	DIALOG_M
@@ -57,6 +57,8 @@ feature -- Creation
 		end;
 
 feature
+
+	is_stackable: BOOLEAN is do end;
 
 	define_cursor_if_shell (a_cursor: SCREEN_CURSOR) is
 			-- Define `cursor' if the current widget is a shell.

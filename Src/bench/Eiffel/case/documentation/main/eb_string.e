@@ -10,29 +10,6 @@ class
 
 inherit
 	STRING
-		select
-			is_equal, out, copy, has,
-			changeable_comparison_criterion, object_comparison,
-			linear_representation, empty
-		end
-
-	LINEAR [EB_STRING]
-		rename
-			item as word_item,
-			has as has_word,
-			linear_representation as word_list,
-			occurrences as word_occurrences,
-			index_of as index_of_word,
-			empty as old_empty,
-			out as old_out,
-			copy as old_copy,
-			changeable_comparison_criterion as old_changeable_comparison_criterion,
-			is_equal as old_is_equal,
-			object_comparison as old_object_comparison
-		undefine
-			compare_references,
-			compare_objects
-		end
 
 create
 	make,

@@ -63,8 +63,8 @@ feature {NONE}-- Initialization
 			create l_cell_4
 			create l_horizontal_box_7
 			create l_cell_5
-			create new_button_holder
-			create add_button
+			create new_button
+			create modify_button
 			create remove_button
 			create l_vertical_box_6
 			create ok_button
@@ -102,8 +102,8 @@ feature {NONE}-- Initialization
 			l_vertical_box_2.extend (l_cell_4)
 			l_vertical_box_2.extend (l_horizontal_box_7)
 			l_horizontal_box_7.extend (l_cell_5)
-			l_horizontal_box_7.extend (new_button_holder)
-			l_horizontal_box_7.extend (add_button)
+			l_horizontal_box_7.extend (new_button)
+			l_horizontal_box_7.extend (modify_button)
 			l_horizontal_box_7.extend (remove_button)
 			l_horizontal_box_1.extend (l_vertical_box_6)
 			l_vertical_box_6.extend (ok_button)
@@ -156,13 +156,15 @@ feature {NONE}-- Initialization
 			l_label_3.align_text_left
 			l_cell_4.set_minimum_height (5)
 			l_horizontal_box_7.set_padding_width (5)
-			l_horizontal_box_7.disable_item_expand (new_button_holder)
-			l_horizontal_box_7.disable_item_expand (add_button)
+			l_horizontal_box_7.disable_item_expand (new_button)
+			l_horizontal_box_7.disable_item_expand (modify_button)
 			l_horizontal_box_7.disable_item_expand (remove_button)
-			add_button.set_text ("Add")
-			add_button.set_minimum_width (default_button_width)
+			new_button.set_text (new_button_text)
+			new_button.set_minimum_width (default_button_width)
+			modify_button.set_text (modify_button_text)
+			modify_button.set_minimum_width (default_button_width)
 			remove_button.disable_sensitive
-			remove_button.set_text ("Remove")
+			remove_button.set_text (remove_button_text)
 			remove_button.set_minimum_width (default_button_width)
 			l_vertical_box_6.set_border_width (10)
 			l_vertical_box_6.disable_item_expand (ok_button)
@@ -179,7 +181,8 @@ feature {NONE}-- Initialization
 			file_name_item.select_actions.extend (agent file_name_item_selected)
 			pixmap_item.select_actions.extend (agent pixmap_item_selected)
 			name_field.change_actions.extend (agent validate_constant_name)
-			add_button.select_actions.extend (agent add_constant)
+			new_button.select_actions.extend (agent new_button_selected)
+			modify_button.select_actions.extend (agent modify_button_selected)
 			remove_button.select_actions.extend (agent remove_selected_constant)
 			ok_button.select_actions.extend (agent ok_pressed)
 				-- Close the application when an interface close
@@ -211,13 +214,12 @@ feature {NONE} -- Implementation
 	constants_list: EV_MULTI_COLUMN_LIST
 	display_all_types: EV_CHECK_BUTTON
 	l_horizontal_separator_1: EV_HORIZONTAL_SEPARATOR
-	l_cell_1, l_cell_2, l_cell_3, entry_selection_parent, l_cell_4, l_cell_5, new_button_holder, 
-	l_cell_6: EV_CELL
+	l_cell_1, l_cell_2, l_cell_3, entry_selection_parent, l_cell_4, l_cell_5, l_cell_6: EV_CELL
 	l_label_1, l_label_2, l_label_3: EV_LABEL
 	type_combo_box: EV_COMBO_BOX
 	string_item, integer_item, directory_item, file_name_item, pixmap_item: EV_LIST_ITEM
 	name_field: EV_TEXT_FIELD
-	add_button, remove_button, ok_button: EV_BUTTON
+	new_button, modify_button, remove_button, ok_button: EV_BUTTON
 	
 	item_selected_in_list (an_item: EV_MULTI_COLUMN_LIST_ROW) is
 			-- Called by `select_actions' of `constants_list'.
@@ -269,8 +271,13 @@ feature {NONE} -- Implementation
 		deferred
 		end
 	
-	add_constant is
-			-- Called by `select_actions' of `add_button'.
+	new_button_selected is
+			-- Called by `select_actions' of `new_button'.
+		deferred
+		end
+	
+	modify_button_selected is
+			-- Called by `select_actions' of `modify_button'.
 		deferred
 		end
 	

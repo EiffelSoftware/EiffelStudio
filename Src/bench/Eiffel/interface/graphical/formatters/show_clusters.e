@@ -6,9 +6,9 @@ class SHOW_CLUSTERS
 inherit
 
 	SHARED_WORKBENCH;
-	FORMATTER
+	LONG_FORMATTER
 		redefine
-			file_name, dark_symbol
+			file_name, dark_symbol, display_temp_header
 		end
 
 creation
@@ -61,6 +61,12 @@ feature {NONE}
 			!! ewb_clusters;
 			ewb_clusters.set_output_window (text_window)
 			ewb_clusters.display
+		end;
+
+	display_temp_header (stone: STONE) is
+			-- Display a temporary header during the format processing.
+		do
+			text_window.display_header ("Exploring the system's clusters...")
 		end;
 
 end

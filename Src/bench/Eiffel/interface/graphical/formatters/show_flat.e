@@ -9,7 +9,7 @@ inherit
 		rename
 			filter_context as flat_context
 		redefine
-			dark_symbol
+			dark_symbol, display_temp_header
 		end;
 	SHARED_SERVER;
 	SHARED_FORMAT_TABLES
@@ -49,4 +49,10 @@ feature {NONE}
 			text_window.process_text (flat_context (c).text)
 		end;
 
+	display_temp_header (stone: STONE) is
+			-- Display a temporary header during the format processing.
+		do
+			text_window.display_header ("Exploring ancestors to produce flat form...")
+		end;
+	
 end

@@ -6,7 +6,7 @@ inherit
 
 	FORMATTER
 		redefine
-			dark_symbol
+			dark_symbol, display_temp_header
 		end;
 	SHARED_SERVER
 
@@ -45,6 +45,12 @@ feature {NONE}
 			!!ewb_history.null;
 			ewb_history.set_output_window (text_window);
 			ewb_history.display (f.feature_i, f.class_c);
+		end;
+
+	display_temp_header (stone: STONE) is
+			-- Display a temporary header during the format processing.
+		do
+			text_window.display_header ("Searching system for implementers...")
 		end;
 
 end

@@ -9,7 +9,7 @@ inherit
 		rename
 			filter_context as clickable_context
 		redefine
-			dark_symbol, text_window, format
+			dark_symbol, text_window, format, display_temp_header
 		end;
 	SHARED_FORMAT_TABLES
 
@@ -54,9 +54,10 @@ feature
 					stone /= Void and then
 					(stone.is_valid and stone.clickable)
 				then
+					display_temp_header (stone);
 					set_global_cursor (watch_cursor);
 					text_window.clean;
-					display_header (stone);
+					text_window.set_file_name (file_name (stone));
 					display_info (0, stone);
 					if 
 						text_window.last_format = text_window.tool.showtext_command
@@ -81,6 +82,7 @@ feature
 					text_window.set_root_stone (stone);
 					text_window.set_last_format (Current);
 					filtered := false;
+					display_header (stone);
 					restore_cursors
 				end
 			end
@@ -97,5 +99,11 @@ feature {NONE}
 		do
 			text_window.process_text (clickable_context (c).text);	
 		end
+
+	display_temp_header (stone: STONE) is
+			-- Display a temporary header during the format processing.
+		do
+			text_window.display_header ("Switching to clickable format...")
+		end;
 
 end

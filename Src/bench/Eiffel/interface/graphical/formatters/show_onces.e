@@ -6,7 +6,7 @@ inherit
 
 	FORMATTER
 		redefine
-			dark_symbol
+			dark_symbol, display_temp_header
 		end
 
 creation
@@ -43,6 +43,12 @@ feature {NONE}
 			!!cmd.null;
 			cmd.set_output_window (text_window);
 			cmd.display (c.class_c);
-		end
+		end;
+
+	display_temp_header (stone: STONE) is
+			-- Display a temporary header during the format processing.
+		do
+			text_window.display_header ("Searching for once routines...")
+		end;
 
 end

@@ -229,8 +229,8 @@ feature {NONE} -- Text processing
 			d_name: FILE_NAME;
 			i, format_item_count: INTEGER
 		do
-			if format_table.has (f_Class_name) then
-				format := format_table.item (f_Class_name);
+			if format_table.has (f_Cluster_name) then
+				format := format_table.item (f_Cluster_name);
 				from
 					format_item := format.item1;
 					format_item_count := format_item.count;

@@ -54,7 +54,7 @@ feature -- Initialization
 				create translator.make (mapped_path)
 
 				translator.translate
-				if index_of_word_option ("vs") = 0 and translator.has_makefile_sh then
+				if translator.has_makefile_sh then
 						-- We do not want to run nmake if launched from VS.Net
 						-- Nor to be launched when there was not Makefile.SH file
 					translator.run_make

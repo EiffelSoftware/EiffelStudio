@@ -148,7 +148,7 @@ feature -- Code generation
 				end
 				if has_arg_list then
 					buf.putchar ('(')
-					buf.putstring (l_names_heap.item (argument_types.item (i)))
+					buf.putstring (l_names_heap.item (argument_types.item (j)))
 					buf.putstring (") ")
 				end
 				buf.putstring ("arg")

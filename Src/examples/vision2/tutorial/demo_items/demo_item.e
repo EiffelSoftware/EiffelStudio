@@ -57,12 +57,6 @@ feature -- Access
 			!! Result.make (Void)
 		end
 
-	event_box: EV_LIST is
-			-- A list to display the events that occurs
-		once
-			!! Result.make (Void)
-		end
-
 	current_demo: CELL [EV_WIDGET] is
 			-- Demo currently in action
 		once
@@ -71,9 +65,6 @@ feature -- Access
 
 	demo_window: EV_WIDGET
 		-- Demo window associated to the item
-
-	control_window: CONTROL_WINDOW
-		-- Window to control the options of the widgets.
 
 feature {DEMO_ITEM} -- Execution commands
 

@@ -30,14 +30,15 @@ feature -- basic Operations
 		local
 			h1,h2,h3,h4,h5,h6: EV_HORIZONTAL_BOX
 		do 
-			Create db_name.make("Handle",state_information.handle,10,20,Current)
+			Create db_name.make("Data Source Name",state_information.handle,10,20,Current)
 			Create username.make("username",state_information.username,10,20,Current)
 			Create password.make("Password",state_information.password,10,20,Current)
-			main_box.extend(db_name)
 			main_box.extend(Create {EV_HORIZONTAL_BOX})
 			main_box.extend(username)
 			main_box.extend(Create {EV_HORIZONTAL_BOX})
 			main_box.extend(password)
+			main_box.extend(Create {EV_HORIZONTAL_BOX})
+			main_box.extend(db_name)
 			main_box.extend(Create {EV_HORIZONTAL_BOX})
 			main_box.disable_child_expand(username)
 			main_box.disable_child_expand(password)
@@ -56,10 +57,11 @@ feature -- basic Operations
 			precursor
 			if not b then
 				Create db_generation.make(state_information)
+				set_database(odbc)
 				if db_manager.connected then
 					db_manager.disconnect
 				end
-				db_manager.log_and_connect (username.text,password.text)
+				db_manager.log_and_connect (username.text,password.text,db_name.text)
 			end
 			if not b and then db_manager.connected then
 				proceed_with_new_state(db_generation)

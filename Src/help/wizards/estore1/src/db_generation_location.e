@@ -35,6 +35,9 @@ feature -- basic Operations
 			main_box.extend(location)
 			main_box.extend(Create {EV_HORIZONTAL_BOX})
 			main_box.extend(project_location)
+			main_box.disable_child_expand(location)
+			main_box.disable_child_expand(project_location)
+			main_box.extend(Create {EV_HORIZONTAL_BOX})
 		end
 
 	proceed_with_current_info is 

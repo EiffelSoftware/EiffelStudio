@@ -54,7 +54,7 @@ feature -- basic Operations
 				proceed_with_new_state(db_generation_type)
 				--proceed_with_new_state(Create {DB_GENERATION_TYPE}.make(state_information))
 			else
-				--proceed_with_new_state(Create {DB_TABLE_SELECTION}.make(state_information))
+				proceed_with_new_state(Create {DB_TABLE_SELECTION}.make(state_information))
 			end
 		end
 
@@ -65,12 +65,14 @@ feature -- basic Operations
 			cl_name: CLASS_NAME
 		do
 			Create cl_name.make
-			table_list := db_manager.load_list_from_select("select TABLE_NAME from USER_TABLES",cl_name)
-			if generate_all_tables.is_selected then
-				state_information.set_table_list(table_list)
-			--else
-
+			if is_oracle then
+				table_list := db_manager.load_list_from_select("select TABLE_NAME from USER_TABLES",cl_name)
+			elseif is_odbc then
+				table_list := db_manager.load_list_from_select("Sqltables()",cl_name)
+			else
+				Create table_list.make
 			end
+			state_information.set_table_list(table_list)
 			precursor
 		end
 

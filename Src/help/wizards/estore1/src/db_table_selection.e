@@ -1,6 +1,6 @@
 indexing
-	description: "Objects that ..."
-	author: ""
+	description: "Table Selection page."
+	author: "pascalf"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -11,7 +11,8 @@ class
 inherit
 	STATE_WINDOW
 		redefine
-			update_state_information
+			update_state_information,
+			proceed_with_current_info
 		end
 
 creation
@@ -25,16 +26,49 @@ feature -- basic Operations
 			build
 		end
 
-	build is 
+	build is
+			-- Build interface 
 		local
 			h1: EV_HORIZONTAL_BOX
 		do 
 			Create selected_items
 			Create unselected_items
 			Create h1
-			main_box.extend(h1)
 			h1.extend(selected_items)
+			selected_items.select_actions.extend(~unselect_item)
+			unselected_items.select_actions.extend(~select_item)
 			h1.extend(unselected_items)
+			main_box.extend(h1)
+			fill_lists
+		end
+
+	fill_lists is
+			-- Fill the list with table names.
+		local
+			it: EV_LIST_ITEM
+		do
+			from
+				state_information.table_list.start
+			until
+				state_information.table_list.after
+			loop
+				Create it.make_with_text(state_information.table_list.item.table_name)
+				it.set_data(state_information.table_list.item)
+				selected_items.extend(it)				
+				state_information.table_list.forth
+			end
+		end
+
+	unselect_item(i: INTEGER;it: EV_LIST_ITEM) is
+		do
+			selected_items.prune(it)
+			unselected_items.extend(it)
+		end
+
+	select_item(i: INTEGER;it: EV_LIST_ITEM) is
+		do
+			unselected_items.prune(it)
+			selected_items.extend(it)
 		end
 
 	proceed_with_current_info is 
@@ -50,6 +84,17 @@ feature -- basic Operations
 			cl_name: CLASS_NAME
 		do
 			precursor
+			from
+				Create li.make
+				selected_items.start
+			until
+				selected_items.after
+			loop
+				cl_name ?= selected_items.item.data
+				li.extend(cl_name)
+				selected_items.forth
+			end
+			state_information.set_table_list(li)
 		end
 
 feature -- Implementation

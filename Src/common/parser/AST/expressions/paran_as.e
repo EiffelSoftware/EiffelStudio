@@ -39,6 +39,7 @@ feature {AST_EIFFEL} -- Output
 feature {PARAN_AS}	-- Replication
 
 	set_expr (e: like expr) is
+			-- FIXME: move to bench specific???
 		require
 			valid_arg: e /= Void
 		do

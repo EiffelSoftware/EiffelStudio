@@ -208,6 +208,15 @@ feature -- Output
 /*
 feature -- Equality
 */
+	public static Boolean standard_equal (EIFFEL_TYPE_INFO o1, EIFFEL_TYPE_INFO o2) 
+		// Is `o1' equal to `o2'?
+	{
+			// FIXME: Manu 4/16/2002 we should not do a `deep_equal' here, but
+			// don't have time to implement it right now.
+		return deep_equal (o1, o2);
+	}
+
+
 	public static Boolean deep_equal (EIFFEL_TYPE_INFO o1, EIFFEL_TYPE_INFO o2) 
 		// Is `o1' recursively equal to `o2'?
 	{

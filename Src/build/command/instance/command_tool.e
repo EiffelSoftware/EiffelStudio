@@ -131,7 +131,7 @@ feature {NONE} -- Initialization
 			set_close_callback (Void)
 			create cmd.make (~close)
 			exit_tool_entry.add_select_command (cmd, Void) 
-			create cmd.make (~exit_build)
+			create cmd.make (main_window~close)
 			exit_entry.add_select_command (cmd, Void)
 			details_button.add_toggle_command (Current, Void)
 		end

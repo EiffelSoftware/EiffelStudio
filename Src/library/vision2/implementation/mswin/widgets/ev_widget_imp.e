@@ -457,8 +457,7 @@ feature -- Implementation
 	on_first_display is
 			-- Called by the top_level window when it is displayed
 			-- for the first time.
-			-- Do nothing in general
-		do
+		deferred
 		end
 
 feature {NONE} -- Implementation, mouse button events

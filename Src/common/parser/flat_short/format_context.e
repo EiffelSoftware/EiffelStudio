@@ -319,13 +319,11 @@ feature -- Output
 			-- Append `s' to `text'.
 		require
 			s_exists: s /= Void;
-		local
-			item: BASIC_TEXT	
 		do
 			if not tabs_emitted then
 				emit_tabs;
 			end;
-			text.add_string (s);
+			text.add_default_string (s);
 		end;
 
 	put_space is

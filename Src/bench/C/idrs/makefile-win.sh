@@ -80,86 +80,86 @@ mtidr.$lib: $(MT_OBJECTS)
 	$link_mtline
 
 MTidr_double.$obj: idr_double.c
-	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD) -c $?
+	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $?
 
 MTidr_float.$obj: idr_float.c
-	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD) -c $?
+	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $?
 
 MTidr_array.$obj: idr_array.c
-	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD) -c $?
+	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $?
 
 MTidr_char.$obj: idr_char.c
-	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD) -c $?
+	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $?
 
 MTidr_getpos.$obj: idr_getpos.c
-	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD) -c $?
+	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $?
 
 MTidr_int.$obj: idr_int.c
-	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD) -c $?
+	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $?
 
 MTidrm_dstry.$obj: idrm_dstry.c
-	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD) -c $?
+	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $?
 
 MTidrm_creat.$obj: idrm_creat.c
-	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD) -c $?
+	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $?
 
 MTidrf_pos.$obj: idrf_pos.c
-	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD) -c $?
+	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $?
 
 MTidrf_dstry.$obj: idrf_dstry.c
-	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD) -c $?
+	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $?
 
 MTidrf_creat.$obj: idrf_creat.c
-	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD) -c $?
+	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $?
 
 MTidr_write.$obj: idr_write.c
-	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD) -c $?
+	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $?
 
 MTidr_void.$obj: idr_void.c
-	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD) -c $?
+	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $?
 
 MTidr_vector.$obj: idr_vector.c
-	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD) -c $?
+	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $?
 
 MTidr_ushort.$obj: idr_ushort.c
-	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD) -c $?
+	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $?
 
 MTidr_union.$obj: idr_union.c
-	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD) -c $?
+	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $?
 
 MTidr_ulong.$obj: idr_ulong.c
-	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD) -c $?
+	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $?
 
 MTidr_uint.$obj: idr_uint.c
-	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD) -c $?
+	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $?
 
 MTidr_uchar.$obj: idr_uchar.c
-	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD) -c $?
+	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $?
 
 MTidr_string.$obj: idr_string.c
-	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD) -c $?
+	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $?
 
 MTidr_stack.$obj: idr_stack.c
-	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD) -c $?
+	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $?
 
 MTidr_size.$obj: idr_size.c
-	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD) -c $?
+	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $?
 
 MTidr_short.$obj: idr_short.c
-	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD) -c $?
+	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $?
 
 MTidr_setpos.$obj: idr_setpos.c
-	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD) -c $?
+	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $?
 
 MTidr_read.$obj: idr_read.c
-	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD) -c $?
+	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $?
 
 MTidr_poly.$obj: idr_poly.c
-	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD) -c $?
+	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $?
 
 MTidr_opaque.$obj: idr_opaque.c
-	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD) -c $?
+	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $?
 
 MTidr_long.$obj: idr_long.c
-	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD) -c $?
+	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $?
 

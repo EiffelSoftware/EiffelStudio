@@ -24,7 +24,7 @@ inherit
 			popup
 		end;
 	SHARED_LICENSE;
-	SET_WINDOW_ATTRIBUTES
+	WINDOW_ATTRIBUTES
 
 creation
 
@@ -47,6 +47,22 @@ feature -- Initialization
 		end;
 
 feature -- Graphical Interface
+
+	call (a_command: COMMAND_W) is
+			-- Record calling command `a_command' and popup current.
+		do
+			last_caller := a_command;
+			popup
+		ensure
+			last_caller_recorded: last_caller = a_command
+		end;
+
+	set_window (wind: COMPOSITE) is
+		do
+			window := wind
+		end;
+
+feature {PROJECT_W} -- Re mapping
 
 	popup is
 			-- Popup file selection window.
@@ -75,20 +91,6 @@ feature -- Graphical Interface
 			end;
 			set_x_y (new_x, new_y);
 			file_sel_d_popup
-		end;
-
-	call (a_command: COMMAND_W) is
-			-- Record calling command `a_command' and popup current.
-		do
-			last_caller := a_command;
-			popup
-		ensure
-			last_caller_recorded: last_caller = a_command
-		end;
-
-	set_window (wind: COMPOSITE) is
-		do
-			window := wind
 		end;
 
 feature {NONE} -- Properties

@@ -1,10 +1,10 @@
 indexing
 
 	description:
-			"Converts the output of the profiler-tool of %
-			% the latest run into an internal representation.";
-	date:		"$Date$";
-	revision:	"$Revision $"
+		"Converts the output of the profiler-tool of %
+		%the latest run into an internal representation.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class EWB_GENERATE
 
@@ -56,7 +56,7 @@ feature {NONE} -- Execution
 			if conf_load.error_occured then
 				raise_config_error;
 			else
-				!! prof_invoker.make (conf_load.profiler, arguments, proffile_dir, compile_type);
+				!! prof_invoker.make (conf_load.profiler_type, arguments, proffile_dir, compile_type);
 				if prof_invoker.must_invoke_profiler then
 					prof_invoker.invoke_profiler;
 				end;

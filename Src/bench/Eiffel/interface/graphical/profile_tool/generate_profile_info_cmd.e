@@ -34,7 +34,7 @@ feature -- Command execution
 					--| Grep the information.
 				profinfo := dlg.profinfo_file;
 				compile := dlg.compile_mode;
-				profiler := dlg.profiler;
+				profiler := dlg.profiler_type;
 
 					--| Destroy the dialog's interface
 				dlg.destroy;

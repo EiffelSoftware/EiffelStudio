@@ -60,7 +60,7 @@ feature -- Access
 			end
 		end;
 
-	profiler: STRING is
+	profiler_type: STRING is
 			-- The profiler that's been used to
 			-- generate `profinfo_file'.
 		do

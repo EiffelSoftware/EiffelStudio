@@ -2,7 +2,7 @@ system
 	"EiffelSoftware.Compiler"
 
 root
-	ECOM_EIFFEL_SOFTWARE_REGISTRATION: make
+	ECOM_EIFFEL_SOFTWARE_COMPILER_REGISTRATION: make
 
 default
 	assertion (no)

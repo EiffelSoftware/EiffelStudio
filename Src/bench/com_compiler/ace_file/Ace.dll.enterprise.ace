@@ -2,7 +2,7 @@ system
 	"EiffelSoftware.Compiler"
 
 root
-	ecom_eiffel_software_registration: make
+	ECOM_EIFFEL_SOFTWARE_COMPILER_REGISTRATION: make
 
 default
 	shared_library_definition ("EiffelSoftware.def")

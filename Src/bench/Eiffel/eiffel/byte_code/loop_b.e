@@ -98,15 +98,6 @@ feature -- Byte code generation
 				ba.append (Bc_init_variant);
 				ba.append_short_integer (variant_local_number);
 			end;
-				-- Generate byte code for exit expression
-			ba.mark_backward;
-			stop.make_byte_code (ba);
-
-				-- Generate a test
-			ba.append (Bc_jmp_t);
-
-				-- Deferred writing of the jump relative value
-			ba.mark_forward;
 
 			if not (invariant_part = Void and then variant_part = Void) then
 					-- Set the assertion type
@@ -133,10 +124,45 @@ feature -- Byte code generation
 				ba.write_forward;
 			end;
 
+				-- Generate byte code for exit expression
+			ba.mark_backward;
+			stop.make_byte_code (ba);
+
+				-- Generate a test
+			ba.append (Bc_jmp_t);
+
+				-- Deferred writing of the jump relative value
+			ba.mark_forward;
+
 			if compound /= Void then
 				compound.make_byte_code (ba);
 			end;
 			make_breakable (ba)
+
+			if not (invariant_part = Void and then variant_part = Void) then
+					-- Set the assertion type
+				context.set_assertion_type (In_loop_invariant);
+
+				ba.append (Bc_loop);
+					-- In case the loop assertion are not checked, we
+					-- have to put a jump value.
+				ba.mark_forward;
+
+					-- Invariant loop byte code
+				if invariant_part /= Void then
+					context.set_assertion_type (In_loop_invariant);
+					invariant_part.make_byte_code (ba);
+				end;
+					-- Variant loop byte code
+				if variant_part /= Void then
+					context.set_assertion_type (In_loop_variant);
+					variant_part.make_byte_code (ba);
+					ba.append_short_integer (variant_local_number);
+				end;
+
+					-- Evaluation of the jump value
+				ba.write_forward;
+			end;
 
 				-- Generate an unconditional jump
 			ba.append (Bc_jmp);

@@ -48,6 +48,8 @@ feature
 	c_string: STRING is "EIF_CHARACTER"
 			-- String generated for the type.
 
+	union_tag: STRING is "carg"
+
 	hash_code: INTEGER is
 			-- Hash code for current type
 		do

@@ -33,8 +33,7 @@ feature
 	insert_derivation (an_id: CLASS_ID; a_type: GEN_TYPE_I) is
 		local
 			derivations: FILTER_LIST;
-			tuple_type: TUPLE_TYPE_I
-			is_new: BOOLEAN
+			tuple_i: TUPLE_TYPE_I
 		do
 debug
 	io.error.putstring ("Inserting a new derivation ");
@@ -48,13 +47,13 @@ end;
 				!!derivations.make;
 				derivations.compare_objects
 				put (derivations, an_id);
-				is_new := True
 			end;
-			tuple_type ?= a_type
 
-			-- Do not create multiple derivations for TUPLEs
+			tuple_i ?= a_type
 
-			if is_new or else tuple_type = Void then
+			-- Do not add any TUPLE derivations
+
+			if tuple_i = Void then
 				derivations.put_front (a_type);
 			end
 		end;

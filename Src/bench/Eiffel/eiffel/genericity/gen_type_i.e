@@ -8,6 +8,7 @@ inherit
 			meta_generic,
 			true_generics,
 			same_as, is_equal,
+			is_identical,
 			is_valid,
 			is_explicit,
 			has_formal,
@@ -16,39 +17,38 @@ inherit
 			append_signature,
 			type_a,
 			generate_cid,
-			make_gen_type_byte_code,
-			is_identical
+			make_gen_type_byte_code
 		end
 
 feature -- Comparison
 
 	is_identical (other: TYPE_I): BOOLEAN is
 			-- Is `other' identical to Current ?
-			-- Takes `true_generics' into account!
-       local
-            i, count: INTEGER
-            local_copy: like true_generics
-            other_gen: like true_generics
-            gen_type_i: GEN_TYPE_I
-        do
-            gen_type_i ?= other
-            if gen_type_i /= Void then
-                Result := equal (base_id, gen_type_i.base_id)
-                        and then is_expanded = gen_type_i.is_expanded
-                        and then is_separate = gen_type_i.is_separate
-                        and then meta_generic.same_as (gen_type_i.meta_generic)
-                from
-                    i := 1
-                    local_copy := true_generics
-                    count := local_copy.count
-                    other_gen := gen_type_i.true_generics
-                until
-                    i > count or else not Result
-                loop
-                    Result := local_copy.item (i).is_identical (other_gen.item (i))
-                    i := i + 1
-                end
-            end
+			-- Also compare `true_generics'!
+		local
+			i, count: INTEGER
+			local_copy: like true_generics
+			other_gen: like true_generics
+			gen_type_i: GEN_TYPE_I
+		do
+			gen_type_i ?= other
+			if gen_type_i /= Void then
+				Result := equal (base_id, gen_type_i.base_id)
+						and then is_expanded = gen_type_i.is_expanded
+						and then is_separate = gen_type_i.is_separate
+						and then meta_generic.same_as (gen_type_i.meta_generic)
+				from
+					i := 1
+					local_copy := true_generics
+					count := local_copy.count
+					other_gen := gen_type_i.true_generics
+				until
+					i > count or else not Result
+				loop
+					Result := local_copy.item (i).is_identical (other_gen.item (i))
+					i := i + 1
+				end
+			end
 		end
 
 	same_as (other: TYPE_I): BOOLEAN is
@@ -181,53 +181,60 @@ feature
 
 	dump (buffer: GENERATION_BUFFER) is
 		local
-			i, count, meta_type: INTEGER
+			i, count: INTEGER
 			s: STRING
 		do
-			from
-				if is_expanded then
-					buffer.putstring ("expanded ")
-				end
-				s := clone (base_class.name)
-				s.to_upper
-				buffer.putstring (s)
-				buffer.putstring (" [")
-				i := 1
-				count := meta_generic.count
-			until
-				i > count
-			loop
-				meta_generic.item (i).dump (buffer)
-				if i < count then
-					buffer.putstring (", ")
-				end
-				i := i + 1
+			if is_expanded then
+				buffer.putstring ("expanded ")
 			end
-			buffer.putchar (']')
+			s := clone (base_class.name)
+			s.to_upper
+			buffer.putstring (s)
+			count := meta_generic.count
+
+			if count > 0 then
+				from
+					buffer.putstring (" [")
+					i := 1
+				until
+					i > count
+				loop
+					meta_generic.item (i).dump (buffer)
+
+					if i < count then
+						buffer.putstring (", ")
+					end
+					i := i + 1
+				end
+				buffer.putchar (']')
+			end
 		end
 
 	append_signature (st: STRUCTURED_TEXT) is
 		local
-			i, count, meta_type: INTEGER
+			i, count: INTEGER
 		do
-			from
-				if is_expanded then
-					st.add_string ("expanded ")
-				end
-				base_class.append_name (st)
-				st.add_string (" [")
-				i := 1
-				count := meta_generic.count
-			until
-				i > count
-			loop
-				meta_generic.item (i).append_signature (st)
-				if i < count then
-					st.add_string (", ")
-				end
-				i := i + 1
+			if is_expanded then
+				st.add_string ("expanded ")
 			end
-			st.add_char (']')
+			base_class.append_name (st)
+			count := meta_generic.count
+
+			if count > 0 then
+				from
+					st.add_string (" [")
+					i := 1
+				until
+					i > count
+				loop
+					meta_generic.item (i).append_signature (st)
+					if i < count then
+						st.add_string (", ")
+					end
+					i := i + 1
+				end
+				st.add_char (']')
+			end
 		end
 
 	type_a: GEN_TYPE_A is
@@ -235,19 +242,19 @@ feature
 			i: INTEGER
 			array: ARRAY [TYPE_A]
 		do
-			!!Result
-			Result.set_base_class_id (base_id)
-			Result.set_is_expanded (is_expanded)
 			from
 				i := meta_generic.count
 				!!array.make (1, i)
-				Result.set_generics (array)
 			until
 				i = 0
 			loop
 				array.put (meta_generic.item (i).type_a, i)
 				i := i - 1
 			end
+			!!Result
+			Result.set_base_class_id (base_id)
+			Result.set_is_expanded (is_expanded)
+			Result.set_generics (array)
 		end
 
 feature -- Generic conformance

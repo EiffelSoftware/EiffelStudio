@@ -48,6 +48,8 @@ feature
 	c_string: STRING is "EIF_POINTER"
 			-- String generated for the type.
 
+	union_tag: STRING is "parg"
+
 	separate_get_macro: STRING is "CURGP"
 			-- String generated to access the argument to a separate call
 

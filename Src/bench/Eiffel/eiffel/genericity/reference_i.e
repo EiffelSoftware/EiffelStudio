@@ -68,6 +68,8 @@ feature
 	c_string: STRING is "EIF_REFERENCE"
 			-- String generated for the type.
 
+	union_tag: STRING is "rarg"
+
 	separate_get_macro: STRING is "CURGSO"
 			-- String generated to access the argument to a separate call
 

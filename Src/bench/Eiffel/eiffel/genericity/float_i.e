@@ -8,7 +8,7 @@ inherit
 			is_numeric,
 			same_as,
 			description, sk_value, generate_cecil_value, hash_code,
-			byte_code_cast, generated_id
+			byte_code_cast, generated_id, heaviest
 		end
 
 	BYTE_CONST
@@ -32,6 +32,16 @@ feature
 
 	is_numeric: BOOLEAN is True
 			-- Is the type a numeric one ?
+
+	heaviest (other : TYPE_I) : TYPE_I is
+
+		do
+			if other.is_double then
+				Result := other
+			else
+				Result := Current
+			end
+		end
 
 	same_as (other: TYPE_I): BOOLEAN is
 			-- Is `other' equal to Current ?
@@ -59,6 +69,8 @@ feature
 
 	c_string: STRING is "EIF_REAL"
 			-- String generated for the type.
+
+	union_tag: STRING is "farg"
 
 	separate_get_macro: STRING is "CURGR"
 			-- String generated to access the argument to a separate call

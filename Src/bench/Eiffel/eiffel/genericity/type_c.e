@@ -124,6 +124,11 @@ feature
 		deferred
 		end
 
+	union_tag: STRING is
+			-- Union tag name for type in EIF_ARG_UNIONs.
+		deferred
+		end
+
 	separate_get_macro: STRING is
 			-- String generated to access the argument to a separate call
 		deferred

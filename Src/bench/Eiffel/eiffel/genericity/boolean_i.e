@@ -48,6 +48,8 @@ feature
 	c_string: STRING is "EIF_BOOLEAN"
 			-- String generated for the type.
 
+	union_tag: STRING is "barg"
+
 	hash_code: INTEGER is
 			-- Hash code for current type
 		once

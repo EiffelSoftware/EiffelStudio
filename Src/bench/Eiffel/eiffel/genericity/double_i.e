@@ -61,6 +61,8 @@ feature
 	c_string: STRING is "EIF_DOUBLE"
 			-- String generated for the type.
 
+	union_tag: STRING is "darg"
+
 	separate_get_macro: STRING is "CURGD"
 			-- String generated to access the argument to a separate call
 

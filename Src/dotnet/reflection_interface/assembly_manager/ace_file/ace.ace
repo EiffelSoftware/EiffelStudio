@@ -10,22 +10,76 @@ default
 	il_generation ("exe")
 
 cluster	
-	root_cluster: "F:\Src\dotnet\reflection_interface\assembly_manager\gui"
+	root_cluster: "$EIFFEL_SRC\dotnet\reflection_interface\assembly_manager\gui"
+		exclude
+			"CVS";
+		end
+		
+	dictionaries: "$EIFFEL_SRC\dotnet\reflection_interface\assembly_manager\dictionaries"
+		exclude
+			"CVS";
+		end
+		
+	gac_browser: "$EIFFEL_SRC\dotnet\reflection_interface\assembly_manager\gac_browser"
+		exclude
+			"CVS";
+		end
+		
+	support: "$EIFFEL_SRC\dotnet\reflection_interface\assembly_manager\support"
+		exclude
+			"CVS";
+		end
+		
+	folder_dialog: "$EIFFEL_SRC\dotnet\reflection_interface\assembly_manager\folder_dialog"
+		exclude
+			"CVS";
+		end
+		
+	modifications: "$EIFFEL_SRC\dotnet\reflection_interface\assembly_manager\modifications_interface"
+		exclude
+			"CVS";
+		end
+		
+	all generated: "$EIFFEL_SRC\dotnet\reflection_interface\generated"
+		exclude
+			"CVS";
+		end
+		
+	all dot_net_base: "$ISE_EIFFEL\library.net\base.net"
+		exclude
+			"CVS";
+		end
 	
-	dictionaries: "F:\Src\dotnet\reflection_interface\assembly_manager\dictionaries"
-	
-	gac_browser: "F:\Src\dotnet\reflection_interface\assembly_manager\gac_browser"
-	
-	support: "F:\Src\dotnet\reflection_interface\assembly_manager\support"
-	
-	folder_dialog: "F:\Src\dotnet\reflection_interface\assembly_manager\folder_dialog"
-	
-	modifications: "F:\Src\dotnet\reflection_interface\assembly_manager\modifications_interface"
-	
-	all generated: "F:\Src\dotnet\reflection_interface\generated"
+	system_generated: "$ISE_EIFFEL\library.net\System"
+		exclude
+			"CVS";
+		end	
 
-	all dot_net_base: "F:\Src\dotnet\library.net"
-	
+	system_drawing_generated: "$ISE_EIFFEL\library.net\System.Drawing"
+		exclude
+			"CVS";
+		end
+
+	system_xml_generated: "$ISE_EIFFEL\library.net\System.Xml"
+		exclude
+			"CVS";
+		end
+
+	system_windows_forms_generated: "$ISE_EIFFEL\library.net\System.Windows.Forms"
+		exclude
+			"CVS";
+		end
+
+	system_data_generated: "$ISE_EIFFEL\library.net\System.Data"
+		exclude
+			"CVS";
+		end
+
+	accessibility_generated: "$ISE_EIFFEL\library.net\Accessibility"
+		exclude
+			"CVS";
+		end
+		
 external
 	assembly: 	
 			"C:\WINNT\Microsoft.NET\Framework\v1.0.2728\System.dll",
@@ -34,15 +88,14 @@ external
 			"C:\WINNT\Microsoft.NET\Framework\v1.0.2728\SYSTEM.WINDOWS.FORMS.DLL",
 			"C:\WINNT\Microsoft.NET\Framework\v1.0.2728\Accessibility.dll",
 			"C:\WINNT\Microsoft.NET\Framework\v1.0.2728\System.Data.dll",
-			"F:\Src\dotnet\reflection_interface\generated\reflection_interface_generated\ISE.Reflection.ReflectionInterface.dll",
-			"F:\Src\dotnet\reflection_interface\generated\eiffel_components_generated\ISE.Reflection.EiffelComponents.dll",
-	 		"F:\Src\dotnet\reflection_interface\generated\emitter_generated\emitter.exe",
-	 		"F:\Src\dotnet\reflection_interface\generated\new_emitter_generated\ISE.Reflection.Emitter.exe",
-	 		"F:\Src\dotnet\reflection_interface\generated\eiffel_assembly_cache_generated\ISE.Reflection.EiffelAssemblyCacheHandler.dll",
-	 		"F:\Src\dotnet\reflection_interface\generated\notifier_generated\ISE.Reflection.EiffelAssemblyCacheNotifier.dll",
-	 		"F:\Src\dotnet\reflection_interface\generated\support_generated\ISE.Reflection.Support.dll",
-	 		"F:\Src\dotnet\reflection_interface\generated\code_generator_generated\ISE.Reflection.CodeGenerator.dll",
-	 		"F:\Src\dotnet\reflection_interface\assembly_manager\gac_browser\ISE.AssemblyManager.WindowsDirectoryExtractor.dll",
-	 		--"F:\Src\dotnet\reflection_interface\assembly_manager\folder_dialog\Core\ISE.AssemblyManager.FolderDialog.dll"
-	 		"F:\Src\dotnet\reflection_interface\assembly_manager\folder_dialog\Core\FolderDialog.dll"
+			"..\..\bin\ISE.Reflection.ReflectionInterface.dll",
+			"..\..\bin\ISE.Reflection.EiffelComponents.dll",
+	 		"..\..\bin\ISE.Reflection.Formatter.dll",
+	 		"..\..\bin\ISE.Reflection.Emitter.exe",
+	 		"..\..\bin\ISE.Reflection.EiffelAssemblyCacheHandler.dll",
+	 		"..\..\bin\ISE.Reflection.EiffelAssemblyCacheNotifier.dll",
+	 		"..\..\bin\ISE.Reflection.Support.dll",
+	 		"..\..\bin\ISE.Reflection.CodeGenerator.dll",
+	 		"..\..\bin\ISE.AssemblyManager.WindowsDirectoryExtractor.dll",
+	 		"..\..\bin\FolderDialog.dll"
 end

@@ -10,6 +10,8 @@ inherit
 	XM_CALLBACKS_FILTER_FACTORY
 		export {NONE} all end
 
+	OUTPUT_CONSTANTS
+
 create
 	make
 
@@ -55,6 +57,24 @@ feature -- Status setting
 			filter_set: filter = a_filter
 		end		
 
+	set_filter_by_description (a_desc: STRING) is
+			-- Set filter to one match `a_desc'
+		require
+			a_desc_not_void: a_desc /= Void
+			a_desc_not_empty: not a_desc.is_empty
+		do
+			from
+				filters.start
+			until
+				filters.after
+			loop
+				if filters.item.description.is_equal (a_desc) then
+					set_filter (filters.item)
+				end
+				filters.forth
+			end				
+		end	
+
 	add_filtered_document (a_doc: FILTERED_DOCUMENT) is
 			-- Add `a_doc' to `filtered_documents'
 		require
@@ -64,6 +84,24 @@ feature -- Status setting
 				Filtered_documents.extend (a_doc, a_doc.name)
 			end
 		end		
+
+	set_studio_filtered is
+			-- Set EiffelStudio filtered
+		local
+			l_studio_filter: STUDIO_OUTPUT_FILTER
+		do
+			create l_studio_filter.make (next_unique_id, Studio_flag)
+			set_filter (l_studio_filter)			
+		end
+		
+	set_envision_filtered is
+			-- Set ENViSioN! filtered
+		local
+			l_env_filter: ENVISION_OUTPUT_FILTER
+		do
+			create l_env_filter.make (next_unique_id, Envision_flag)
+			set_filter (l_env_filter)			
+		end
 
 feature {NONE} -- Status setting
 
@@ -142,8 +180,8 @@ feature {NONE} -- Implementation
 		do
 			create l_unfiltered_filter.make (next_unique_id, "")
 			create l_html_filter.make (next_unique_id)
-			create l_studio_output_filter.make (next_unique_id, "studio")
-			create l_envision_output_filter.make (next_unique_id, "envision")
+			create l_studio_output_filter.make (next_unique_id, Studio_flag)
+			create l_envision_output_filter.make (next_unique_id, Envision_flag)
 			add_filter (l_unfiltered_filter)
 			add_filter (l_html_filter)
 			add_filter (l_studio_output_filter)

@@ -115,7 +115,7 @@ feature {NONE} -- Implementation
 		end
 	
 	c_memmove (destination, source: POINTER; count: INTEGER): POINTER is
-			-- C memcpy
+			-- C memmove
 		external
 			"C (void *, const void *, size_t): EIF_POINTER | <string.h>"
 		alias

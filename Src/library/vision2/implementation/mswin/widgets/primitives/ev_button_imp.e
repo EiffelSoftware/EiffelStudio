@@ -264,7 +264,6 @@ feature -- Element change
 	set_pixmap (pix: EV_PIXMAP) is
 			-- Make `pix' the pixmap of `Current'.
 		local
-			wel_icon: WEL_ICON
 			internal_pixmap_state: EV_PIXMAP_IMP_STATE
 			font_imp: EV_FONT_IMP
 			size_difference: INTEGER

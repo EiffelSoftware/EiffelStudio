@@ -51,8 +51,7 @@ feature -- Basic Operations
 			-- Analysis of debug compound
 		do
 			if compound /= Void then
-				if context.workbench_mode or else generate_for_final_mode
-				then
+				if context.workbench_mode or else is_debug_clause_enabled then
 					compound.analyze;
 				end
 			end
@@ -60,7 +59,7 @@ feature -- Basic Operations
 
 feature -- C Code generation 
 
-	generate_for_final_mode: BOOLEAN is
+	is_debug_clause_enabled: BOOLEAN is
 			-- Has the debug compound to be generated in final mode?
 		local
 			debug_level: DEBUG_I
@@ -89,7 +88,7 @@ feature -- C Code generation
 			generate_line_info
 			if compound /= Void then
 				if context.final_mode then
-					if generate_for_final_mode then
+					if is_debug_clause_enabled then
 						compound.generate
 					end
 				else
@@ -143,7 +142,7 @@ feature -- IL code generation
 	generate_il is
 			-- Generate IL code for debug clause
 		do
-			if compound /= Void then
+			if compound /= Void and then is_debug_clause_enabled then
 				generate_il_line_info
 				compound.generate_il
 			end

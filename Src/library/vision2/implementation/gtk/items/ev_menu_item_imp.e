@@ -103,7 +103,7 @@ feature -- Element change
 			real_text := clone (a_text)
 			
 			if a_text.has ('&') then
-				temp_string := a_text
+				temp_string := clone (a_text)
 				filter_ampersand (temp_string, '_')
 				dummy_string := temp_string.to_c
 				key := C.gtk_label_parse_uline (text_label,

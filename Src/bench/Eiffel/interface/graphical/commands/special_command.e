@@ -35,7 +35,7 @@ feature -- Properties
 	name: STRING is
 			-- Name of the command.
 		once
-			Result := "ISE Eiffel 3 (v";
+			Result := "ISE Eiffel 4 (v";
 			Result.append (Version_number);
 			Result.extend (')');
 		end;

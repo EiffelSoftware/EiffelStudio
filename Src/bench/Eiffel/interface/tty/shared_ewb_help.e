@@ -93,7 +93,7 @@ feature {NONE}
 
 	Language_help: STRING is "specify language (eiffel, c, cycles)";
 
-	loop_help: STRING is "run es3 as a command loop";
+	loop_help: STRING is "run es4 as a command loop";
 
 	loop_help_help: STRING is "show list of commands";
 

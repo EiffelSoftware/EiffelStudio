@@ -14,7 +14,7 @@ feature -- Initialization
 			icon: INTEGER
 			
 		do
-			title := ("Es3sh Status").to_c
+			title := ("Es4sh Status").to_c
 			
 			if error then
 				icon := Mb_iconexclamation

@@ -1,4 +1,4 @@
-eiffel3: "$(EIFFEL3)"
+eiffel4: "$(EIFFEL4)"
 
 platform: "w32bcc"
 
@@ -32,10 +32,10 @@ appl_make: "$appl.exe: $appl.res $appl.lnk%N%
 %%Ttlink32 @$appl.lnk%N%
 %#%N%
 %..\..\$appl.rc:%N%
-%%Tif not exist ..\..\$appl.rc copy $(EIFFEL3)\bench\spec\w32bcc\es3sh\eiffel.rc ..\..\$appl.rc%N%
+%%Tif not exist ..\..\$appl.rc copy $(EIFFEL4)\bench\spec\w32bcc\es3sh\eiffel.rc ..\..\$appl.rc%N%
 %#%N%
-%$appl.rc: ..\..\$appl.rc $(EIFFEL3)\bench\spec\w32bcc\es3sh\except.rc%N%
-%%Tcopy ..\..\$appl.rc+$(EIFFEL3)\bench\spec\w32bcc\es3sh\except.rc $appl.rc%N%
+%$appl.rc: ..\..\$appl.rc $(EIFFEL4)\bench\spec\w32bcc\es3sh\except.rc%N%
+%%Tcopy ..\..\$appl.rc+$(EIFFEL4)\bench\spec\w32bcc\es3sh\except.rc $appl.rc%N%
 %#%N%
 %$appl.res: $appl.rc working.ico appl.ico Makefile $appl.ico%N%
 %%Tif exist ..\..\*.ico xcopy ..\..\*.ico .%N%
@@ -46,17 +46,17 @@ appl_make: "$appl.exe: $appl.res $appl.lnk%N%
 %#%N%
 %working.ico:%N%
 %%Tif exist ..\..\working.ico copy ..\..\working.ico .%N%
-%%Tif not exist working.ico copy $(EIFFEL3)\bench\spec\w32bcc\es3sh\working.ico .%N%
+%%Tif not exist working.ico copy $(EIFFEL4)\bench\spec\w32bcc\es3sh\working.ico .%N%
 %#%N%
 %..\..\$appl.ico:%N%
-%%Tcopy $(EIFFEL3)\bench\spec\w32bcc\es3sh\appl.ico ..\..\$appl.ico%N%
+%%Tcopy $(EIFFEL4)\bench\spec\w32bcc\es3sh\appl.ico ..\..\$appl.ico%N%
 %#%N%
 %$appl.ico: ..\..\$appl.ico%N%
 %%Tcopy ..\..\$appl.ico .%N%
 %#%N%
 %appl.ico:%N%
 %%Tif exist ..\..\appl.ico copy ..\..\appl.ico .%N%
-%%Tif not exist appl.ico copy $(EIFFEL3)\bench\spec\w32bcc\es3sh\appl.ico .%N%
+%%Tif not exist appl.ico copy $(EIFFEL4)\bench\spec\w32bcc\es3sh\appl.ico .%N%
 %#%N%
 %object.lnk: $(OBJECTS) $(EOBJECTS) $(EXTERNALS)%N%
 %%Tdel $@%N%
@@ -89,21 +89,21 @@ precompile: "driver.exe: driver.lnk driver.rc appl.ico working.ico%N%
 %%T$(RM) Makefile.SH%N%
 %%T$(RM) *.bak%N%
 %%Tcopy Melted.eif preobj.obj%N%
-%%Tcopy $(EIFFEL3)\bench\spec\w32bcc\es3sh\version.eif .%N%
+%%Tcopy $(EIFFEL4)\bench\spec\w32bcc\es3sh\version.eif .%N%
 %%Tfor  in ($(SUBDIRS)) do del %%i /s /q%N%
 %%Tfor  in ($(SUBDIRS)) do rd %%i%N%
 %#%N%
 %appl.ico:%N%
 %%Tif exist ..\..\console.ico copy ..\..\appl.ico .%N%
-%%Tif not exist console.ico copy  $(EIFFEL3)\bench\spec\w32bcc\es3sh\appl.ico%N%
+%%Tif not exist console.ico copy  $(EIFFEL4)\bench\spec\w32bcc\es3sh\appl.ico%N%
 %#%N%
 %working.ico:%N%
 %%Tif exist ..\..\working.ico copy ..\..\working.ico .%N%
-%%Tif not exist working.ico copy $(EIFFEL3)\bench\spec\w32bcc\es3sh\working.ico .%N%
+%%Tif not exist working.ico copy $(EIFFEL4)\bench\spec\w32bcc\es3sh\working.ico .%N%
 %#%N%
-%driver.rc: $(EIFFEL3)\bench\spec\w32bcc\es3sh\eiffel.rc%N%
-%%Tcopy $(EIFFEL3)\bench\spec\w32bcc\es3sh\eiffel.rc+$(EIFFEL3)\bench\spec\w32bcc\es3sh\except.rc driver.rc%N%
-%%Tcopy $(EIFFEL3)\bench\spec\w32bcc\es3sh\appl.ico .%N%
+%driver.rc: $(EIFFEL4)\bench\spec\w32bcc\es3sh\eiffel.rc%N%
+%%Tcopy $(EIFFEL4)\bench\spec\w32bcc\es3sh\eiffel.rc+$(EIFFEL4)\bench\spec\w32bcc\es3sh\except.rc driver.rc%N%
+%%Tcopy $(EIFFEL4)\bench\spec\w32bcc\es3sh\appl.ico .%N%
 %#%N%
 %driver.res: driver.rc appl.ico working.ico%N%
 %%Tbrc32 -i$(INCLUDE_PATH) -r driver.rc%N%
@@ -123,7 +123,7 @@ precompile: "driver.exe: driver.lnk driver.rc appl.ico working.ico%N%
 %%Techo $precompilelib\precomp.lib + >> $@ %N%
 %%Techo CW32+IMPORT32.lib+ >> $@%N%
 %%Techo eobject.lib+ >> $@%N%
-%%Techo $(EIFFEL3)\bench\spec\w32bcc\lib\wkbench.lib + >> $@%N%
+%%Techo $(EIFFEL4)\bench\spec\w32bcc\lib\wkbench.lib + >> $@%N%
 %%Techo ,,driver.res >> $@"
 
 cecil_make: "cecil.lib: $(OBJECTS) $(EXTERNALS) $(EOBJECTS)%N%
@@ -147,7 +147,7 @@ make_intermediate: "%Tdel $@%N%
 %%T@del t.cmp%N%
 %#%N%
 %.x.obj:%N%
-%%T$(EIFFEL3)\bench\spec\w32bcc\bin\x2c $< $*.c%N%
+%%T$(EIFFEL4)\bench\spec\w32bcc\bin\x2c $< $*.c%N%
 %%Tif exist t.cmp del t.cmp%N%
 %%Tfor %%i in ($(CFLAGS)) do echo %%i >> t.cmp%N%
 %%Tfor %%i in ($(INCLUDE_PATH)) do echo %%i >> t.cmp%N%

@@ -469,7 +469,7 @@ feature -- Output
 
 	display_header is
 		do
-			io.putstring ("==== ISE Eiffel3 - Interactive Batch Version (v");
+			io.putstring ("==== ISE Eiffel4 - Interactive Batch Version (v");
 			io.putstring (Version_number);
 			io.putstring (") ====%N%N");
 		end;

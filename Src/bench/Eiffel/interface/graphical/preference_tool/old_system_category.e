@@ -35,9 +35,9 @@ feature {TTY_RESOURCES} -- Initialization
 			!! temporary_dir.make (r_Tmp_directory,
 					rt.get_string (r_Tmp_directory, "/tmp"));
 			!! profiler_dir.make (r_Profiler_path,
-					rt.get_string (r_Profiler_path, "$EIFFEL3/bench/profiler"));
+					rt.get_string (r_Profiler_path, "$EIFFEL4/bench/profiler"));
 			!! filter_dir.make (r_Filter_path,
-					rt.get_string (r_Filter_path, "$EIFFEL3/bench/filters"));
+					rt.get_string (r_Filter_path, "$EIFFEL4/bench/filters"));
 			!! history_size.make (r_History_size,
 					rt.get_integer (r_History_size, 10))
 		end

@@ -170,10 +170,10 @@ feature
 		do
 			if System.has_separate then
 				Result := "%
-					%$(EIFFEL3)/bench/spec/$(PLATFORM)/lib/libcwkbench.a %
-					%$(EIFFEL3)/library/net/spec/$(PLATFORM)/lib/libnet.a"
+					%$(EIFFEL4)/bench/spec/$(PLATFORM)/lib/libcwkbench.a %
+					%$(EIFFEL4)/library/net/spec/$(PLATFORM)/lib/libnet.a"
 			else
-				Result := "$(EIFFEL3)/bench/spec/$(PLATFORM)/lib/libwkbench.a"
+				Result := "$(EIFFEL4)/bench/spec/$(PLATFORM)/lib/libwkbench.a"
 			end
 		end;
 

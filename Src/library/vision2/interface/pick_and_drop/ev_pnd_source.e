@@ -33,7 +33,7 @@ feature -- Access
 			Result := implementation.transportable
 		end
 
-	activate_pick_and_drop (mouse_button: INTEGER; dt: EV_PND_DATA; dt_type: EV_PND_TYPE) is
+	default_activate_pnd (mouse_button: INTEGER; dt: EV_PND_DATA; dt_type: EV_PND_TYPE) is
 			-- Activate the mechanism through which
 			-- the current stone may be dragged and
 			-- dropped, when right clicking.
@@ -41,18 +41,37 @@ feature -- Access
 			valid_data: dt /= Void
 			valid_type: dt_type /= Void
 		do
-			default_activate_pnd (Void, mouse_button, dt, dt_type)
+			implementation.activate_pick_and_drop (mouse_button, dt, dt_type, Void, Void)
 		end
 
-	default_activate_pnd (pt: EV_POINT; mouse_button: INTEGER; dt: EV_PND_DATA; dt_type: EV_PND_TYPE) is
-			-- Activate the pick and drop mechanism.
-			-- Draw a line from the point `pt'
-			-- to the current cursor position.
+	activate_pick_and_drop (mouse_button: INTEGER; dt: EV_PND_DATA; dt_type: EV_PND_TYPE; cmd: EV_COMMAND; args: EV_ARGUMENT) is
+			-- Activate the mechanism through which the current stone
+			-- may be dragged and dropped, when right clicking.
+			-- Add `cmd' (if not Void) to the list of commands to be
+			-- executed when initializing the transport.
 		require
 			valid_data: dt /= Void
 			valid_type: dt_type /= Void
 		do
-			implementation.activate_pick_and_drop (pt, mouse_button, dt, dt_type)
+			implementation.activate_pick_and_drop (mouse_button, dt, dt_type, cmd, args)
+		end
+
+	set_pick_position (a_x, a_y: INTEGER) is
+			-- Set the initial position for the pick and drop.
+		do
+			implementation.set_pick_position (a_x, a_y)
+		end
+
+	set_transported_data (dt: EV_PND_DATA) is
+			-- Set the `transported_data'.
+		do
+			implementation.set_transported_data (dt)
+		end
+
+	set_data_type (dt_type: EV_PND_TYPE) is
+			-- Make `dt_type' the new data type.
+		do
+			implementation.set_data_type (dt_type)
 		end
 
 feature {NONE} -- Implementation

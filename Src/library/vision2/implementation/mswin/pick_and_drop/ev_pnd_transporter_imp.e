@@ -57,16 +57,17 @@ feature {EV_PND_TARGET_IMP} -- Access
 
 feature -- Transport
 
-	transport (data_source: EV_PND_SOURCE_IMP; pt: EV_POINT) is
+	transport (data_source: EV_PND_SOURCE_IMP; cmd: TUPLE [EV_COMMAND, EV_ARGUMENT]) is
 			-- Start the transport and
 			-- draw the line from the point `pt'.
 			-- If Void, start the line from the current cursor position. 
 		local
 			wel_point: WEL_POINT
 		do
-			if pt /= Void then
-				x0 := pt.x
-				y0 := pt.y
+			default_command := cmd
+			if data_source.initial_point /= Void then
+				x0 := data_source.initial_point.x
+				y0 := data_source.initial_point.y
 			else
 				!! wel_point.make (0, 0)
 				wel_point.set_cursor_position
@@ -81,6 +82,10 @@ feature -- Transport
 --			end
 			dropped.set_item (False)
 		end
+
+feature {EV_PND_SOURCE_IMP} -- Default command
+
+	default_command: TUPLE [EV_COMMAND, EV_ARGUMENT]
 
 feature {NONE}
 
@@ -141,7 +146,7 @@ feature {NONE}
 				-- Drop the data in a target.
 				dropped.set_item (True)
 				target := pointed_target
-				args.second.terminate_transport (Current, args.third)
+				args.second.terminate_transport (Current, args.third, default_command)
 				args.second.release_capture
 --				unset_cursor
 				draw_segment (x0, y0, x1, y1)
@@ -151,7 +156,7 @@ feature {NONE}
 			elseif args.first = 3 then
 				-- Drag canceled.
 				dropped.set_item (True)
-				args.second.terminate_transport (Current, args.third)
+				args.second.terminate_transport (Current, args.third, default_command)
 				args.second.release_capture
 --				unset cursor
 				draw_segment (x0, y0, x1, y1)

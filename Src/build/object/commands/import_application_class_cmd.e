@@ -26,7 +26,10 @@ feature
 			description_name: DIRECTORY_NAME
 			line: STRING
 			dot_index: INTEGER
+			mp: MOUSE_PTR
 		do
+			!! mp
+			mp.set_watch_shape
 			!! directory.make_open_read (Common_directory)
 			from
 				directory.start
@@ -62,48 +65,63 @@ feature
 				end
 				directory.readentry
 			end
+			mp.restore
 		end
 
 feature {NONE} -- Implementation
+
+	get_class_name, get_feature, get_precondition: BOOLEAN
 
 	process_line (a_line: STRING) is
 			-- Add a command or a query, or create a new application class
 			-- object according to the value of the line.
 		local
 			i: INTEGER
-			key_value, value: STRING
 		do
-			if a_line.has (':') then
+			if not a_line.empty then
 				a_line.left_adjust
-				a_line.right_adjust
-				i := a_line.index_of (':', 1)
-				key_value := a_line.substring (1, i - 1)
-				value := a_line.substring (i + 1, a_line.count)
-				if key_value.substring_index (classname_keyword, 1) > 0 then
-					process_class_name (value)
-				elseif key_value.substring_index (infix_keyword, 1) > 0 then
-				elseif key_value.substring_index (precondition_keyword, 1) > 0 then
-					process_precondition (value)
-				elseif key_value.substring_index (postcondition_keyword, 1) > 0  
-					or else key_value.substring_index (creation_keyword, 1) > 0
-				then
-					--| do nothing
-				elseif a_line.has ('(') and then a_line.has (')') then
-					i := a_line.index_of (')', 1)
-					if i = a_line.count then
-							--| not a fonction
-						if a_line.has (',') or else a_line.has (';') then
-							process_routine (a_line)
-						else
-							process_command (a_line)
+				if a_line.substring_index (comment_keyword, 1) /= 1
+					and then a_line.substring_index (infix_keyword, 1) < 1
+				then --| not a comment line or an infix
+					a_line.right_adjust
+					if a_line.item(1).is_equal ('#') then
+						if a_line.substring_index (classname_keyword, 1) > 0 then
+							get_class_name := True
+						elseif a_line.substring_index (feature_keyword, 1) > 0 then
+							get_feature := True
+							get_precondition := False
+						elseif a_line.substring_index (precondition_keyword, 1) > 0 then
+							get_precondition := True
+						elseif a_line.substring_index (postcondition_keyword, 1) > 0 then
+							get_precondition := False
 						end
+					elseif get_class_name then
+						process_class_name (a_line)
+						get_class_name := False
+					elseif get_feature then
+						if not a_line.has (':') then
+							process_routine (a_line)
+						elseif a_line.has ('(') and then a_line.has (')') then
+							i := a_line.index_of (')', 1)
+							if i = a_line.count then
+									--| not a fonction
+								if a_line.has (',') or else a_line.has (';') then
+									process_routine (a_line)
+								else
+									process_command (a_line)
+								end
+							end
+						else
+							if a_line.substring_index (" is ", 1) < 1 then
+									--| not a constant
+								process_query (a_line)
+							end
+						end
+						get_feature := False
+					elseif get_precondition then
+						process_precondition (a_line)
 					end
-				elseif a_line.substring_index (" is ", 1) < 1 then
-						--| not a constant
-					process_query (a_line)
 				end
-			elseif not a_line.empty then
-				process_routine (a_line)
 			end
 		end
 
@@ -280,7 +298,7 @@ feature {NONE} -- Implementation
 			if current_application_method /= Void then
 				from
 				until
-					upper > expression.count
+					upper >= expression.count
 				loop
 					lower := upper + 1
 					upper := expression.index_of (';', lower)
@@ -365,19 +383,22 @@ feature {NONE} -- Attributes
 feature {NONE} -- Constants
 
 
-	classname_keyword: STRING is "<class>"
-			-- Keyword "<class_name>"
+	classname_keyword: STRING is "#class#"
+			-- Keyword "class"
 
-	creation_keyword: STRING is "<creation>"
-			-- Keyword "<creation>"
+	comment_keyword: STRING is "--"
+			-- Keyword "--"
 
-	infix_keyword: STRING is "<infix>"
-			-- Keyword "<infix>"
+	feature_keyword: STRING is "#feature#"
+			-- Keyword "feature"
 
-	precondition_keyword: STRING is "<require>"
-			-- Keyword "<require>"
+	infix_keyword: STRING is "#infix#"
+			-- Keyword "infix"
 
-	postcondition_keyword: STRING is "<ensure>"
-			-- Keyword "<ensure>"
+	precondition_keyword: STRING is "#require#"
+			-- Keyword "require"
+
+	postcondition_keyword: STRING is "#ensure#"
+			-- Keyword "ensure"
 
 end -- class IMPORT_APPLICATION_CLASS_CMD	

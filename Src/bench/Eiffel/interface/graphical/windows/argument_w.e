@@ -93,6 +93,7 @@ feature {NONE}
 				else
 					set_selection_text (arg_list);
 				end;
+				popdown
 			elseif argument = cancel_it then
 				popdown
 			elseif argument = Void then

@@ -6,6 +6,15 @@ creation
 
 feature
 
+	lines: FIXED_LIST [EIFFEL_LINE];
+			-- the content of the file, stripped of comments
+
+	comments: FIXED_LIST [EIFFEL_COMMENTS];
+			-- extracted comments
+
+	between_lines: BOOLEAN;
+			-- is the current position between two lines
+
 	make_for_feature_comments (f: UNIX_FILE; start_pos, end_pos:INTEGER) is
 			-- Just fill in the comment structures for file between
 			-- `start_pos' and `end_pos'.
@@ -16,11 +25,13 @@ feature
 			p_line,comment_line: EIFFEL_LINE;
 			comment: EIFFEL_COMMENTS;	-- a comment
 			p: INTEGER;
+			l_list: LINKED_LIST [EIFFEL_LINE];
+			c_list: LINKED_LIST [EIFFEL_COMMENTS];	
 		do
 			from
 				f.open_read;
-				!!lines.make;
-				!!comments.make;
+				!!l_list.make;
+				!!c_list.make;
 			until
 				f.end_of_file or else p > end_pos
 			loop
@@ -39,14 +50,30 @@ feature
 						end;
 						comment.add (comment_line.text);
 					else
-						comments.add (comment);
+						c_list.add (comment);
 						comment := void;
 					end;
 				end;
 			end;
+			from
+				c_list.start
+			until
+				c_list.after
+			loop
+				if 
+					c_list.item = void
+					or else c_list.item.text.empty  
+				then
+					c_list.remove
+				else
+					c_list.forth;
+				end;
+			end;
+			create_lists (l_list, c_list);
+			l_list.start;
+			c_list.start;
 			position_in_line := 1;
 			f.close;
-			clean;
 		end;
 	
 	make (f: UNIX_FILE) is
@@ -59,11 +86,13 @@ feature
 			p_line,comment_line: EIFFEL_LINE;
 			comment: EIFFEL_COMMENTS;	-- a comment
 			p: INTEGER;
+			l_list: LINKED_LIST [EIFFEL_LINE];
+			c_list: LINKED_LIST [EIFFEL_COMMENTS];	
 		do
 			from
 				f.open_read;
-				!!lines.make;
-				!!comments.make;
+				!! l_list.make;
+				!! c_list.make;
 			until
 				f.end_of_file
 			loop
@@ -81,75 +110,101 @@ feature
 					end;
 					comment.add (comment_line.text);
 				else
-					comments.add (comment);
+					c_list.add (comment);
 					comment := void;
 				end;
 				if not p_line.empty then
-					lines.add (p_line);
+					l_list.add (p_line);
 				end;
 			end;
 			from
-				lines.start;
+				l_list.start
 			until
-				lines.after
+				l_list.after
 			loop
-				if  line.empty then
-					lines.remove;
+				if 
+					l_list.item = void
+					or else l_list.item.empty
+				then
+					l_list.remove
 				else
-					lines.forth;	
+					l_list.forth;
 				end;
 			end;
+			from
+				c_list.start
+			until
+				c_list.after
+			loop
+				if 
+					c_list.item = void
+					or else c_list.item.text.empty  
+				then
+					c_list.remove
+				else
+					c_list.forth;
+				end;
+			end;
+				
+			create_lists (l_list, c_list);
 			lines.start;
 			comments.start;
 			position_in_line := 1;
 			f.close;
-			clean
+debug ("FS_COMMENT")
+	trace;
+end;
 		ensure
 			file_closed: f.is_closed
 		end;
 			
-
-	lines: TWO_WAY_LIST [EIFFEL_LINE];
-			-- the content of the file, stripped of comments
-
-	comments: TWO_WAY_LIST [EIFFEL_COMMENTS];
-			-- extracted comments
-
-	between_lines: BOOLEAN;
-			-- is the current position between two lines
-
-
-
 	go_after (pos: INTEGER) is
-			-- make current position greater than or equal to pos
+			-- Make current position greater than or equal to pos
+		local
+			item: EIFFEL_LINE
 		do
+debug ("FS_COMMENT")
+	io.error.putstring ("in go after for pos: ");
+	io.error.putint (pos);
+	io.error.new_line;
+end;
 			from
 				lines.start;
 				position_in_line := 1;
 				between_lines := true;
 			until
 				lines.after
-					or else line.position + position_in_line - 1 >= pos
+					or else lines.item.position + position_in_line - 1 >= pos
 			loop
-				if line.text.count + line.position - 1 >= pos then
-					position_in_line := pos - line.position + 1;
+				item := lines.item;
+				if item.text.count + item.position - 1 >= pos then
+					position_in_line := pos - item.position + 1;
 					between_lines := false;
 				else
 					lines.forth;
 				end;
 			end;
-		ensure
-			lines.after or else position >= pos;
-			between_lines or position = pos	
+debug ("FS_COMMENT")
+	io.error.putstring ("position: ");
+	io.error.putint (position);
+	io.error.new_line;
+end
 		end;
 
 	go_before (pos: INTEGER) is
 			-- make current position less than or equal to pos
 		do
+debug ("FS_COMMENT")
+	io.error.putstring ("in go before for pos: ");
+	io.error.putint (pos);
+	io.error.new_line;
+end;
 			from
 				lines.finish;
 				between_lines := true;
-				if not lines.off then position_in_line :=  line.text.count end
+				if not lines.off then 
+					position_in_line :=  line.text.count 
+				end
 			until
 				lines.before
 					or else (line.position + position_in_line - 1) <= pos
@@ -164,9 +219,11 @@ feature
 					end;
 				end;
 			end;
-		ensure
-			lines.offleft or else position <= pos;
-			between_lines or position = pos
+debug ("FS_COMMENT")
+	io.error.putstring ("position: ");
+	io.error.putint (position);
+	io.error.new_line;
+end;
 		end;
 			
 	find_first_match (pattern: STRING; stop: INTEGER; context: BOOLEAN) is
@@ -203,62 +260,53 @@ feature
 		
 								
 	find_last_match (pattern: STRING; stop: INTEGER; context: BOOLEAN) is
-  		          -- find last occurence of pattern between current position
-  		          -- and stop, checking pattern context if context is true.
- 		          -- if found, position is the last character of pattern
-		          -- else, offleft or position < stop
+  				  -- find last occurence of pattern between current position
+  				  -- and stop, checking pattern context if context is true.
+ 				  -- if found, position is the last character of pattern
+				  -- else, before or position < stop
 		local
 			seeker: MATCH;
 			found: BOOLEAN;
 		do
 			from
-               				 !!seeker.make (line.text, pattern, context);
-                				seeker.go (position_in_line);
-                				found :=  false;
-            			until
-                				lines.after or position > stop or found
-            			loop
-                				seeker.find_previous;
-                				found := not seeker.offleft;
-                				if not found then
-                    				lines.back;
-                    				if not lines.offleft and then position <= stop then
+				!!seeker.make (line.text, pattern, context);
+			   			seeker.go (position_in_line);
+			   			found :=  false;
+			until
+				lines.after or position > stop or found
+			loop
+				seeker.find_previous;
+			   	found := not seeker.before;
+			   	if not found then
+			   		lines.back;
+			   		if not lines.before and then position <= stop then
 						position_in_line := line.text.count;
-                        					seeker.make (line.text, pattern, context);
+			   			seeker.make (line.text, pattern, context);
 						seeker.go (position_in_line);
-                    				end;
-               			 	else
-                    				position_in_line := seeker.position;
-                				end;
-        
-            			end;
-        		end;
-
+			   		end;
+			   	else
+			   		position_in_line := seeker.position;
+			   	end;
+			end;
+		end;
 
 	position: INTEGER is
 			-- current position in the text
 		do
-			if lines.offleft then 
+			if lines.before then 
 				Result := 0
 			elseif lines.after then
 				Result := lines.last.position + lines.last.text.count;
 			else
-				Result := line.position + position_in_line - 1;
+				Result := lines.item.position + position_in_line - 1;
 			end;
 		end;
-
-
-
-
-feature
-	
 
 	position_in_line: INTEGER;
 		-- current position in line
 
 	comment_position: INTEGER;
 
-			
 	forth is
 			-- go to next character
 		do
@@ -283,38 +331,43 @@ feature
 			Result := lines.item
 		end;
 
-
 feature
 
 	trailing_comment: EIFFEL_COMMENTS is
 			-- return the trailing comment after current
 			-- position, if any (void if none)
+		local
+			stop: BOOLEAN;
+			pos: INTEGER
 		do
 			if between_lines then
+				pos := position;
 				from
 					comments.start;
 				until	
-					comments.off or else
-					comments.item.position >=  position
+					comments.after or else
+					stop
 				loop	
-					comments.forth;
+					stop := comments.item.position >= pos;
+					if not stop then
+						comments.forth;
+					end;
 				end;
-				if not comments.off then
+				if stop then
 					comment_position := comments.item.position
 				end;
 				if not lines.after then
 					lines.forth
 				end;
 				if 
-					not comments.off
-					and then (lines.off
+					not comments.after
+					and then (lines.after
 						or else lines.item.position  > comment_position)
 				then
 					Result := comments.item;
 				end;
 			end;
 		end;
-				
 				
 	next_comment: EIFFEL_COMMENTS is
 			-- must be called after trailing comment or
@@ -337,40 +390,57 @@ feature
 
 feature {}
 
-	clean is
-			-- remove void or empty lines and comments
+	create_lists (l_list: LINKED_LIST [EIFFEL_LINE]; 
+					c_list: LINKED_LIST [EIFFEL_COMMENTS]) is
+			-- Create lines and comments using `l_list' and	
+			-- `c_list'.
 		do
 			from
-				lines.start
+				l_list.start;
+				!! lines.make (l_list.count);
+				lines.start;
 			until
-				lines.off
+				l_list.after
 			loop
-				if 
-					lines.item = void
-					or else lines.item.empty
-				then
-					lines.remove
-				else
-					lines.forth;
-				end;
+				lines.replace (l_list.item);
+				lines.forth;	
+				l_list.forth
 			end;
 			from
-				comments.start
+				c_list.start;
+				!! comments.make (c_list.count);
+				comments.start;
 			until
-				comments.off
+				c_list.after
 			loop
-				if 
-					comments.item = void
-					or else comments.item.text.empty  
-				then
-					comments.remove
-				else
-					comments.forth;
-				end;
+				comments.replace (c_list.item);
+				comments.forth;
+				c_list.forth
 			end;
-		end;
-				
-				
+		end
+
+	trace is
+		do
+			io.error.putstring ("*** LINES ****%N")
+			from
+				lines.start;
+			until
+				lines.after
+			loop
+				lines.item.trace;
+				lines.forth;	
+			end;
+			io.error.putstring ("*** COMMENTS ****%N")
+			from
+				comments.start;
+			until
+				comments.after
+			loop
+				comments.item.trace;
+				comments.forth;	
+			end;
+		end
+
 end
 
 			

@@ -286,6 +286,9 @@ feature -- formatter
 			end;
 			if type /= void then
 				ctxt.put_special (": ");
+				if type.has_like then
+					ctxt.new_expression;
+				end;
 				type.format (ctxt);	
 		 	end;
 			if content /= void then
@@ -328,7 +331,7 @@ feature -- Replication
 			end
 		end;
 		
-feature {BODY_AS}	-- Replication
+feature {BODY_AS, FEATURE_FSAS}	-- Replication & Flat/short
 
 	set_arguments (a: like arguments) is
 		do

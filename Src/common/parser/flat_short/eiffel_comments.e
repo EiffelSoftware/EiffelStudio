@@ -104,6 +104,9 @@ feature
 		local
 			i: INTEGER
 		do
+			io.error.putstring ("position: ");
+			io.error.putint (position);
+			io.error.new_line;
 			from
 				i := 1
 			until
@@ -112,6 +115,7 @@ feature
 				io.error.putstring (text.item(i));
 				i := i + 1;
 			end
+			io.error.new_line;
 		end
 
 

@@ -142,11 +142,9 @@ feature -- Implementation of inherited deferred features
 			-- Reconstitute text.
 		do
 			ctxt.begin;
-			ctxt.put_keyword("like ");
-			ctxt.put_string(anchor);
-				-- should be changed: name adaptations, and 
-				-- effective type if anchor is hidden 
-				-- careful with like argument
+			ctxt.put_keyword ("like ");
+			ctxt.prepare_for_feature (anchor, Void);
+			ctxt.put_current_feature;
 			ctxt.commit;
 		end;
 

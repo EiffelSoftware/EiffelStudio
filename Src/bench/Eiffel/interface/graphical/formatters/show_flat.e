@@ -49,7 +49,7 @@ feature {NONE}
 			ctxt: FORMAT_CONTEXT;
 		do
 			!!ctxt.make (c.class_c, false);
-			text_window.process_text (ctxt.text );	
+			text_window.process_text (ctxt.text);	
 		end;
  
 end

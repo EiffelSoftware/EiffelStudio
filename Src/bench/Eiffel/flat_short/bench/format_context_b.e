@@ -20,6 +20,7 @@ feature -- commit / rollback system
 			first_format: LOCAL_FORMAT;
 			ast: CLASS_AS;
 			name: STRING;
+			file: UNIX_FILE;
 		do
 			class_c := c;
 			!!previous.make;
@@ -34,15 +35,24 @@ feature -- commit / rollback system
 			end;
 			!!flat_struct.make (c, client, no_internals);
 			flat_struct.fill;
-			if flat_struct.ast /= void then
-				prepare_class_text;
-				System.set_current_class (class_c);
-				Inst_context.set_cluster (class_c.cluster);
-				flat_struct.ast.format (Current);
-				System.set_current_class (Void);
-				Inst_context.set_cluster (Void);
-				end_class_text;
-			end;
+			--!!file.make ("FLAT.FILE");
+			--if not file.exists then
+				if flat_struct.ast /= void then
+					prepare_class_text;
+					System.set_current_class (class_c);
+					Inst_context.set_cluster (class_c.cluster);
+					flat_struct.ast.format (Current);
+					System.set_current_class (Void);
+					Inst_context.set_cluster (Void);
+					--file.open_write;
+					--text.basic_store (file);
+					--file.close;
+				end
+			--else
+				--file.open_read;
+				--text ?= text.retrieved (file);
+				--file.close;
+			--end;
 		end;
 
 	class_c: CLASS_C;
@@ -50,10 +60,10 @@ feature -- commit / rollback system
 	upper_name: STRING; 
 
 	previous: LINKED_STACK[LOCAL_FORMAT];
-		-- previous  format (push at begin, pop at commit and rollback)
+			-- previous  format (push at begin, pop at commit and rollback)
 
- 	format : LOCAL_FORMAT is
-		-- Current internal formatting directives
+ 	format: LOCAL_FORMAT is
+			-- Current internal formatting directives
 		do
 			Result := previous.item;
 		end;
@@ -123,7 +133,7 @@ feature -- text construction
 			first_assertion := b;
 		end;
 
-	text : STRUCTURED_TEXT;
+	text: STRUCTURED_TEXT;
 		-- formatted text
 
 	put_string, put_identifier (s : STRING) is
@@ -351,6 +361,7 @@ feature -- type control
 
 	prepare_for_feature (name: STRING; arg: EIFFEL_LIST [EXPR_AS]) is
 		do
+			old_types := format.local_types;
 			new_types := format.local_types.new_adapt_feat (name);
 			format.set_local_types (new_types);
 			arguments := arg;
@@ -373,21 +384,18 @@ feature -- type control
 
 	put_current_feature is
 		do
-			if is_feature_visible then
-				if priority < format.local_types.priority then
-					insert_special ("(");
-					put_special (")");
-				end;
-				if format.local_types.is_normal then
-					put_normal_feature
-				elseif format.local_types.is_infix then
-					put_infix
-				else
-					put_prefix
-				end
-			else
-				last_was_printed := false;
+			if priority < format.local_types.priority then
+				insert_special ("(");
+				put_special (")");
 			end;
+			if format.local_types.is_normal then
+				put_normal_feature
+			elseif format.local_types.is_infix then
+				put_infix
+			else
+				put_prefix
+			end
+			old_types := Void
 		end;
 
 	index_feature is
@@ -400,7 +408,6 @@ feature -- type control
 		local
 			feature_i: FEATURE_I;
 			stone: FEATURE_STONE;
-			feature_as: FEATURE_AS;
 			arg: EIFFEL_LIST [EXPR_AS];
 			item: BASIC_TEXT;
 			i, nb: INTEGER;
@@ -412,9 +419,7 @@ feature -- type control
 			end;
 			f_name := format.local_types.final_name;
 			if feature_i /= void then
-				feature_as := body_server.item (feature_i.body_id);
-				!!stone.make (feature_i, class_c, feature_as.start_position,
-						feature_as.end_position);
+				stone := feature_i.stone (old_types.target_class);
 				!CLICKABLE_TEXT!item.make (f_name, stone);
 			else			
 				!!item.make (f_name)
@@ -529,7 +534,7 @@ feature -- type control
 				or else format.local_types.is_visible (client)
 		end;
 
-	new_types: FEAT_ADAPTATION;
+	old_types, new_types: FEAT_ADAPTATION;
 	new_priority: INTEGER;
 	
 	set_source_class (c: CLASS_C) is
@@ -629,7 +634,7 @@ feature -- comments
 
 	put_comment (comment: EIFFEL_COMMENTS) is
 		local
-			i: INTEGER;
+				i: INTEGER;
 		do
 			begin;
 			if comment /= void then

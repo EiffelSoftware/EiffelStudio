@@ -342,14 +342,16 @@ feature
 							else
 								generated_file.putstring (" = RTLN(");
 								generated_file.putint (exp_type_id);
-								generated_file.putstring (");%N%T");
 								class_type := cl_type_i.associated_class_type;
 								creation_feature := class_type.associated_class.creation_feature;
-								c_name := Encoder.feature_name
-									(class_type.id, creation_feature.body_id);
-								generated_file.putstring (c_name.duplicate);
-								generated_file.putchar ('(');
-								context.local_var.print_register_by_name;
+								if creation_feature /= Void then
+									generated_file.putstring (");%N%T");
+									c_name := Encoder.feature_name
+										(class_type.id, creation_feature.body_id);
+									generated_file.putstring (c_name.duplicate);
+									generated_file.putchar ('(');
+									context.local_var.print_register_by_name;
+								end;
 							end;
 							generated_file.putstring (");");
 							generated_file.new_line;
@@ -380,14 +382,16 @@ feature
 					else
 						generated_file.putstring (" = RTLN(");
 						generated_file.putint (exp_type_id);
-						generated_file.putstring (");%N%T");
 						class_type := cl_type_i.associated_class_type;
 						creation_feature := class_type.associated_class.creation_feature;
-						c_name := Encoder.feature_name
-							(class_type.id, creation_feature.body_id);
-						generated_file.putstring (c_name.duplicate);
-						generated_file.putchar ('(');
-						context.local_var.print_register_by_name;
+						if creation_feature /= Void then
+							generated_file.putstring (");%N%T");
+							c_name := Encoder.feature_name
+								(class_type.id, creation_feature.body_id);
+							generated_file.putstring (c_name.duplicate);
+							generated_file.putchar ('(');
+							context.local_var.print_register_by_name;
+						end;
 					end;
 					generated_file.putstring (");");
 					generated_file.new_line;

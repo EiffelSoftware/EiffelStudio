@@ -181,6 +181,7 @@ feature -- Formatter
 		do
 			ctxt.begin;
 			ctxt.begin;
+			ctxt.next_line;
 			ctxt.set_separator(",");
 			ctxt.no_new_line_between_tokens;
 			ctxt.abort_on_failure;
@@ -218,7 +219,7 @@ feature -- Replication
 		end;
 
 
-feature {FEATURE_AS}	-- Replication
+feature {FEATURE_AS, NAMES_ADAPTER}	-- Replication
 
 	set_feature_names (f: like feature_names) is
 		do

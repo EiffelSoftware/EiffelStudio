@@ -9,7 +9,7 @@ inherit
 			is_require_else, is_ensure_then,
 			has_precondition, has_postcondition, has_rescue,
 			type_check, byte_node, check_local_names,
-			find_breakable, format,
+			find_breakable, 
 			fill_calls_list, replicate, local_table
 		end;
 	SHARED_INSTANTIATOR;
@@ -256,10 +256,7 @@ feature -- Type check, byte code and dead code removal
 			vrrr2: VRRR2
 		do
 			context_class := context.a_class;
-			if 
-				(is_deferred or is_external)
-				and then not locals.empty 
-			then
+			if (is_deferred or is_external) then
 				!!vrrr2;
 				context.init_error (vrrr2);
 				vrrr2.set_is_deferred (is_deferred);
@@ -470,62 +467,6 @@ feature -- Equivalent
 		do
 			Result :=   deep_equal (precondition, other.precondition) and then
 				deep_equal (postcondition, other.postcondition)
-		end;
-
-
-
-feature -- Formatter
-
-	format (ctxt: FORMAT_CONTEXT) is
-		do
-			ctxt.begin;
-			if not ctxt.no_internals then
-				ctxt.put_keyword(" is");
-				ctxt.put_breakable; -- record in body_as, should be here
-			end;
-				-- Put feature comments (if there are any)
-			ctxt.put_feature_comments;
-			ctxt.indent_one_more;
-			ctxt.next_line;
-
-			if precondition /= void then
-				precondition.format (ctxt);
-				if ctxt.last_was_printed then
-					ctxt.next_line;
-				end;
-			end;
-			if not ctxt.no_internals and locals /= void then
-				ctxt.put_keyword ("local");
-				ctxt.set_separator (";");
-				ctxt.indent_one_more;
-				ctxt.next_line;
-				ctxt.new_line_between_tokens;
-				locals.format (ctxt);
-				ctxt.indent_one_less;
-				ctxt.next_line;
-			end;
-			if not ctxt.no_internals then
-				routine_body.format (ctxt);
-				ctxt.next_line;
-			end;
-			if postcondition /= void then
-				postcondition.format (ctxt);
-				if ctxt.last_was_printed then
-					ctxt.next_line;
-				end;
-			end;
-			if rescue_clause /= void and not ctxt.no_internals then
-				ctxt.put_keyword ("rescue");
-				ctxt.indent_one_more;
-				ctxt.next_line;
-				rescue_clause.format (ctxt);
-				ctxt.indent_one_less;
-				ctxt.next_line;
-			end;
-			if not ctxt.no_internals then
-				ctxt.put_keyword("end");
-			end;
-			ctxt.commit;
 		end;
 
 feature	-- Replication

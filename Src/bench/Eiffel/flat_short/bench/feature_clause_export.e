@@ -46,9 +46,7 @@ feature
 	infix "<" (other: like Current): BOOLEAN is
 			-- is other more export restrictive than current
 		do
-			Result := other.comment = comment
-			and then other.reference.equiv (reference);
-			Result := False
+			Result := other.reference.equiv (reference);
 		end;
 						
 			
@@ -64,7 +62,7 @@ feature
 
 	can_include (names: NAMES_LIST): BOOLEAN is
 		do
-			Result := reference.same_as(names.feature_i.export_status);
+			Result := reference.same_as (names.feature_i.export_status);
 		end;
 
 	merge (other: like Current) is

@@ -1635,8 +1635,7 @@ feature {NONE} -- Implementation
 			end
 			a_class.invalidate
 			refresh
-			context_editor.projector.project
-			context_editor.projector.update
+			update_display
 		end
 
 	remove_dropped_class_in_cluster (a_class: CLASS_FIGURE; new_cluster: CLUSTER_FIGURE) is
@@ -1659,8 +1658,7 @@ feature {NONE} -- Implementation
 			end
 			parent_group.invalidate
 			refresh
-			context_editor.projector.project
-			context_editor.projector.update
+			update_display
 		end
 		
 feature {NONE} -- Events

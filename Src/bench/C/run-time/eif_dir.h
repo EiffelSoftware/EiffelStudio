@@ -35,7 +35,7 @@ extern "C" {
 #include <sys/ndir.h>
 #define DIRENTRY struct direct
 #else
-#ifdef __VMS
+#ifdef EIF_VMS_V6_ONLY
 #include <descrip.h>
 #include "eif_vmsdirent.h"		/* local to run-time */
 #define DIRENTRY struct dirent
@@ -48,15 +48,11 @@ extern "C" {
 #endif
 #endif
 
-#ifdef __VMS
-extern char *   dir_dot_dir (char * dir);
-#endif
-
 #ifdef EIF_WIN32		/* %%zs moved this block to here from dir.c for EIF_WN_DIRENT definition */
 #include <windef.h>
 
 typedef struct tagEIF_WIN_DIRENT {
-	char	name [PATH_MAX + 1];
+	char	name [MAX_PATH];
 	HANDLE	handle;
 } EIF_WIN_DIRENT;
 #endif
@@ -65,11 +61,12 @@ RT_LNK EIF_POINTER dir_open(char *name);
 RT_LNK EIF_OBJECT dir_current(void);
 RT_LNK EIF_CHARACTER eif_dir_separator (void);
 RT_LNK EIF_INTEGER eif_chdir (EIF_OBJECT path);
-RT_LNK EIF_BOOLEAN eif_dir_exists(char *name);
-RT_LNK EIF_BOOLEAN eif_dir_is_readable(char *name);
-RT_LNK EIF_BOOLEAN eif_dir_is_writable(char *name);
-RT_LNK EIF_BOOLEAN eif_dir_is_executable(char *name);
-RT_LNK void eif_dir_delete(char *name);
+RT_LNK EIF_BOOLEAN eif_dir_exists (char *name);
+RT_LNK EIF_BOOLEAN eif_dir_is_readable (char *name);
+RT_LNK EIF_BOOLEAN eif_dir_is_writable (char *name);
+RT_LNK EIF_BOOLEAN eif_dir_is_executable (char *name);
+RT_LNK EIF_BOOLEAN eif_dir_is_deletable (char *name);
+RT_LNK void eif_dir_delete (char *name);
 
 #ifdef EIF_WIN32					/* %%zs added if..elif..else -> DIR definition... */
 RT_LNK void dir_rewind(EIF_WIN_DIRENT *dirp);
@@ -95,4 +92,4 @@ RT_LNK void dir_close(DIR *dirp);
 }
 #endif
 
-#endif
+#endif  /* _eif_dir_h_ */

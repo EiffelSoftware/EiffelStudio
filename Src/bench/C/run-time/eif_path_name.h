@@ -33,6 +33,13 @@ extern EIF_REFERENCE eif_root_directory_name(void);
 extern EIF_REFERENCE eif_volume_name(EIF_POINTER p);
 extern EIF_REFERENCE eif_extracted_paths(EIF_POINTER p);
 
+#ifdef EIF_VMS
+#ifdef EIF_VMS_V6_ONLY
+RT_LNK char * dir_dot_dir (char * dir);
+#endif
+RT_LNK char * eifrt_vms_directory_file_name (const char* dir, char* buf);
+#endif
+
 #ifdef __cplusplus
 }
 #endif

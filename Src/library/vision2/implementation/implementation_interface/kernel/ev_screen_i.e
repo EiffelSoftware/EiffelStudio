@@ -53,22 +53,6 @@ feature -- Basic operation
 		deferred
 		end
 
-feature -- Measurement
-
-	width: INTEGER is
-		-- Horizontal size in pixels.
-	deferred
-        ensure
-            positive: Result > 0
-        end
-
-	height: INTEGER is
-		-- Vertical size in pixels.
-	deferred
-	ensure
-		positive: Result > 0
-	end
-
 feature {NONE} -- Implementation
 
 	interface: EV_SCREEN

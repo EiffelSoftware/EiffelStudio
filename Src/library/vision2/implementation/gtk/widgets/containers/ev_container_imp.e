@@ -13,7 +13,7 @@ deferred class
 	
 inherit
 	EV_CONTAINER_I
-	
+
 	EV_WIDGET_IMP
 
 	EV_GTK_CONTAINERS_EXTERNALS
@@ -72,17 +72,21 @@ feature {NONE} -- Implementation
 
 feature {EV_WIDGET_IMP} -- Implementation
 
-	child_expand_changed (the_child: EV_WIDGET_IMP) is
+	child_packing_changed (the_child: EV_WIDGET_IMP) is
 		do
 		end
 
-	child_vertresize_changed (the_child: EV_WIDGET_IMP) is
-		do
-		end
+--	child_expand_changed (the_child: EV_WIDGET_IMP) is
+--		deferred	
+ --		end
 
-	child_horiresize_changed (the_child: EV_WIDGET_IMP) is
-		do
-		end
+--	child_vertresize_changed (the_child: EV_WIDGET_IMP) is
+--		deferred	
+--		end
+
+--	child_horiresize_changed (the_child: EV_WIDGET_IMP) is
+--		deferred	
+--		end
 
 end -- class EV_CONTAINER_IMP
 

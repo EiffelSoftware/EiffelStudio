@@ -56,8 +56,8 @@ feature {NONE} -- Initialization
 	make is
 			-- Create `Current'.
 		do
-			create modules_debugger_info.make (50)
-			create class_types_debugger_info.make (100)	
+			create dbg_info_modules.make (50)
+			create dbg_info_class_types.make (100)	
 			entry_point_token := 0
 
 			create internal_requested_class_tokens.make (10)
@@ -66,8 +66,8 @@ feature {NONE} -- Initialization
 	reset is
 			-- Reset value of Current
 		do
-			modules_debugger_info.wipe_out
-			class_types_debugger_info.wipe_out
+			dbg_info_modules.wipe_out
+			dbg_info_class_types.wipe_out
 			entry_point_token := 0
 			
 			internal_reset
@@ -77,10 +77,13 @@ feature {NONE} -- Initialization
 			-- Reset temporary values
 		do
 			internal_requested_class_tokens.wipe_out
-
+			ignoring_next_debug_info := False
 			last_class_type_recorded := Void
 			last_info_from_class_type := Void
 			last_info_from_module := Void			
+
+			last_module_info_cleaned := Void
+
 		end		
 
 feature -- Access
@@ -513,7 +516,7 @@ feature -- line debug exploitation
 				Result := <<l_interval>>
 			end
 
-			debug ("DEBUGGER_EIFNET_DATA")
+			debug ("debugger_il_info_trace")
 				if Result /= Void then
 					from 
 						i := Result.lower
@@ -542,8 +545,6 @@ feature -- Recorder Once
 			if l_info_from_class_type /= Void then
 				Result := l_info_from_class_type.once_tokens (a_feat)
 			end
---		ensure
---			Result /= Void
 		end
 
 	record_once_info (a_class_type: CLASS_TYPE; a_feature: FEATURE_I; a_once_name: STRING; a_once_done_token, a_once_result_token: INTEGER;) is
@@ -674,7 +675,7 @@ feature {NONE} -- Class Specific info
 			l_info := info_from_module (a_module_name, True)
 			l_info.record_class_type (a_class_type, a_class_token)
 		ensure
-			modules_debugger_info.has (module_key (a_module_name))
+			dbg_info_modules.has (module_key (a_module_name))
 		end		
 
 feature {NONE} -- Internal access
@@ -692,104 +693,41 @@ feature {NONE} -- Internal access
 
 feature {IL_CODE_GENERATOR} -- Cleaning
 
+	last_module_info_cleaned: IL_DEBUG_INFO_FROM_MODULE
+			-- Last cleaned Module
+
 	clean_class_type_info_for (a_class_type: CLASS_TYPE) is
+			-- Clean info related to this `a_class_type'.
 		require
 			class_type_not_void: a_class_type /= Void
 		local
 			l_class_type: CLASS_TYPE
-			l_class_c: CLASS_C
 			l_info_from_class_type: IL_DEBUG_INFO_FROM_CLASS_TYPE
 			l_info_from_module: IL_DEBUG_INFO_FROM_MODULE
-			l_feat_token: INTEGER
-			l_feat_table: FEATURE_TABLE
-			l_feat_cursor: CURSOR
-			l_feat_i: FEATURE_I
 		do
 			l_class_type := a_class_type
-			l_class_c := l_class_type.associated_class
 
-			l_feat_table := l_class_type.associated_class.feature_table
-			l_feat_cursor := l_feat_table.cursor
-			from
-				l_feat_table.start
-			until
-				l_feat_table.after
-			loop
-				l_feat_i := l_feat_table.item_for_iteration
-
-				if l_feat_i.written_class = l_class_c then
-					debug ("debugger_il_info_trace")
-						print ("Cleaning for " + l_class_c.name_in_upper + "." + l_feat_i.feature_name + "%N")
-					end
-			
-					l_feat_token := feature_token_for_feat_and_class_type (l_feat_i, l_class_type)
-					if l_feat_token > 0 then
-							--| Otherwise this means this is a new feature
-
-						l_info_from_module := info_from_module (module_file_name_for_class (l_class_type), False)
-						if l_info_from_module /= Void then
-
-								--| CLEAN class_type_impl_id_by_token_and_module
-								--|		HashTable[class_type_id, class_token ] <= module_name
-								-- No Need to clean the CLASS info
-
-								--| CLEAN feature_id_by_token
-								--|		[class_id, root_id] <= [module_name, feature_token]
-
-							if l_info_from_module.know_feature_from_token (l_feat_token) then
-								l_info_from_module.clean_feature_token (l_feat_token)
-							end
-						end
-
-						l_info_from_class_type := info_from_class_type (l_class_type, False)
-						if l_info_from_class_type /= Void then
-								--| CLEAN feature_token_by_id
-								--|		[feature_token] <= [class_id, rout_id]
-							if l_info_from_class_type.know_feature_token_from_feature (l_feat_i) then
-								l_info_from_class_type.clean_feature_token (l_feat_i)
-							end
-
-								--| CLEAN once_feature_tokens_by_id
-								--|		feature_tokens[_done|_result] <= [class_id, rout_id]
-							if l_info_from_class_type.know_once_tokens_from_feature (l_feat_i) then
-								l_info_from_class_type.clean_once_tokens (l_feat_i)
-							end
-
-								--| CLEAN feature_breakable_il_line_by_id
-								--|		[List [Line IL] ] <= [class_id, rout_id]
-							if l_info_from_class_type.know_il_offset_from_feature (l_feat_i) then
-								l_info_from_class_type.clean_breakable_il_offset (l_feat_i)
-							end
-						end
-					end
+				--| Clean Class Type Info |--
+			l_info_from_class_type := info_from_class_type (l_class_type, False)
+			if l_info_from_class_type /= Void then
+				debug ("debugger_il_info_trace")
+					print ("Cleaning " + l_info_from_class_type.class_type.associated_class.name_in_upper + "%N")
 				end
-				l_feat_table.forth
+				l_info_from_class_type.reset (a_class_type)
 			end
-			l_feat_table.go_to (l_feat_cursor)
-		end
 
---	clean_info_for (a_class_c: CLASS_C) is
---			-- Clean stored info about `a_class_c'
---		require
---			class_c_not_void: a_class_c /= Void
---		local
---			l_class_types: TYPE_LIST
---			l_class_type: CLASS_TYPE
---			l_class_cursor: CURSOR
---		do
---			l_class_types := a_class_c.types
---			l_class_cursor := l_class_types.cursor
---			from
---				l_class_types.start
---			until
---				l_class_types.after
---			loop
---				l_class_type := l_class_types.item
---				clean_class_type_info_for (l_class_type)
---				l_class_types.forth
---			end
---			l_class_types.go_to (l_class_cursor)
---		end
+				--| Clean Module Info     |--
+			l_info_from_module := info_from_module (module_file_name_for_class (l_class_type), False)
+			if l_info_from_module /= Void then
+				if last_module_info_cleaned /= l_info_from_module then
+					last_module_info_cleaned := l_info_from_module
+					debug ("debugger_il_info_trace")
+						print ("Cleaning " + l_info_from_module.module_name + "%N")
+					end
+					l_info_from_module.reset (l_info_from_module.module_name)
+				end
+			end
+		end
 
 feature {NONE} -- Debugger Info List Access
 
@@ -810,16 +748,34 @@ feature {NONE} -- Debugger Info List Access
 			then
 				Result := last_info_from_class_type
 			else
-				Result := class_types_debugger_info.item (l_class_static_type_id)
+				Result := dbg_info_class_types.item (l_class_static_type_id)
 				if a_create_if_not_found and Result = Void then
 					create Result.make (l_class_static_type_id)
-					class_types_debugger_info.put (Result, l_class_static_type_id)
+					dbg_info_class_types.put (Result, l_class_static_type_id)
 				end
 				last_info_from_class_type := Result
 			end
 		ensure
 			(Result = Void) implies (not a_create_if_not_found)
 		end
+
+--	remove_info_for_class_type (a_class_type: CLASS_TYPE) is
+--			-- remove Info for Class_type.
+--		require
+--			class_type_not_void: a_class_type /= Void
+--		local
+--			l_class_static_type_id: INTEGER
+--		do
+--			last_info_from_class_type := Void
+--			l_class_static_type_id := a_class_type.static_type_id
+--			dbg_info_class_types.remove (l_class_static_type_id)
+--
+--			check
+--				removed: not dbg_info_class_types.has (l_class_static_type_id)
+--			end
+--		ensure
+--			removed: not dbg_info_class_types.has (a_class_type.static_type_id)
+--		end
 
 	last_info_from_module: like info_from_module
  			-- Last IL_DEBUG_INFO_FROM_MODULE used
@@ -838,10 +794,10 @@ feature {NONE} -- Debugger Info List Access
 			then
 				Result := last_info_from_module
 			else			
-				Result := modules_debugger_info.item (l_module_key)
+				Result := dbg_info_modules.item (l_module_key)
 				if a_create_if_not_found and Result = Void then
 					create Result.make (l_module_key)
-					modules_debugger_info.put (Result, l_module_key)
+					dbg_info_modules.put (Result, l_module_key)
 				end
 				last_info_from_module := Result
 			end
@@ -851,10 +807,10 @@ feature {NONE} -- Debugger Info List Access
 
 feature {NONE} -- Debugger Info List
 
-	modules_debugger_info: HASH_TABLE [IL_DEBUG_INFO_FROM_MODULE, STRING]
+	dbg_info_modules: HASH_TABLE [IL_DEBUG_INFO_FROM_MODULE, STRING]
 			-- [module_key] => [IL_DEBUG_INFO_FROM_MODULE]
 
-	class_types_debugger_info: HASH_TABLE [IL_DEBUG_INFO_FROM_CLASS_TYPE, INTEGER]
+	dbg_info_class_types: HASH_TABLE [IL_DEBUG_INFO_FROM_CLASS_TYPE, INTEGER]
 			-- [CLASS_TYPE.static_type_id] => [IL_DEBUG_INFO_FROM_CLASS_TYPE]
 
 feature {SHARED_IL_DEBUG_INFO_RECORDER} -- Persistence
@@ -873,8 +829,8 @@ feature {SHARED_IL_DEBUG_INFO_RECORDER} -- Persistence
 					--| Prepare object to be saved
 				create l_object_to_save.make
 
-				l_object_to_save.set_modules_debugger_info (modules_debugger_info)
-				l_object_to_save.set_class_types_debugger_info (class_types_debugger_info)
+				l_object_to_save.set_modules_debugger_info (dbg_info_modules)
+				l_object_to_save.set_class_types_debugger_info (dbg_info_class_types)
 				l_object_to_save.set_entry_point_token (entry_point_token)
 
 					--| Save into file
@@ -927,8 +883,8 @@ feature {SHARED_IL_DEBUG_INFO_RECORDER} -- Persistence
 			l_retrieved: ANY
 			l_retrieved_object: IL_DEBUG_INFO_STORAGE
 
-			l_modules_debugger_info: like modules_debugger_info
-			l_class_types_debugger_info: like class_types_debugger_info
+			l_dbg_info_modules: like dbg_info_modules
+			l_dbg_info_class_types: like dbg_info_class_types
 			l_entry_point_token: like entry_point_token		
 			l_il_info_file: RAW_FILE
 
@@ -954,8 +910,8 @@ feature {SHARED_IL_DEBUG_INFO_RECORDER} -- Persistence
 						--| Get values
 					l_retrieved_object ?= l_retrieved
 					if l_retrieved_object /= Void then
-						l_modules_debugger_info     := l_retrieved_object.modules_debugger_info
-						l_class_types_debugger_info := l_retrieved_object.class_types_debugger_info
+						l_dbg_info_modules     := l_retrieved_object.modules_debugger_info
+						l_dbg_info_class_types := l_retrieved_object.class_types_debugger_info
 						l_entry_point_token         := l_retrieved_object.entry_point_token
 					end
 					
@@ -966,24 +922,24 @@ feature {SHARED_IL_DEBUG_INFO_RECORDER} -- Persistence
 							--| since we move assemblies/precompilation module under
 							--| W_code/assemblies/..
 						from
-							l_modules_debugger_info.start
+							l_dbg_info_modules.start
 						until
-							l_modules_debugger_info.after
+							l_dbg_info_modules.after
 						loop
-							l_info_module := l_modules_debugger_info.item_for_iteration
+							l_info_module := l_dbg_info_modules.item_for_iteration
 							update_imported_info_module (a_system_name, l_info_module)
-							modules_debugger_info.force (l_info_module, l_info_module.module_name)
+							dbg_info_modules.force (l_info_module, l_info_module.module_name)
 							check
-								info_module_inserted: modules_debugger_info.inserted
+								info_module_inserted: dbg_info_modules.inserted
 							end
-							l_modules_debugger_info.forth
+							l_dbg_info_modules.forth
 						end
 					else
-						modules_debugger_info.merge (l_modules_debugger_info)
+						dbg_info_modules.merge (l_dbg_info_modules)
 						entry_point_token := l_entry_point_token
 					end
 
-					class_types_debugger_info.merge (l_class_types_debugger_info)
+					dbg_info_class_types.merge (l_dbg_info_class_types)
 				end			
 			else
 				io.put_string ("ERROR: Unable to load IL INFO data from file [" + a_fn + "]%N")

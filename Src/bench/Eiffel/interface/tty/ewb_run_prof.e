@@ -27,28 +27,30 @@ feature {NONE} -- Execute
 		end;
 
 	execute is
-			-- don't know exactly how, but that comes.
-			-- maybe this is good, maybe not ( ;-) / :-( )
 		local
-			executer: E_SHOW_PROFILE_QUERY
+			executer: E_SHOW_PROFILE_QUERY;
+			st: STRUCTURED_TEXT
 		do
 			create_profiler_query;
 			create_profiler_options;
 
+			!! st.make;
 			if any_active_query then
-				print_active_query;
+				print_active_query (st);
 					-- Do the computation.
-				!! executer.make (output_window, profiler_query, profiler_options);
+				!! executer.make (st, profiler_query, profiler_options);
 				if last_output /= Void then
 					executer.set_last_output (last_output);
 				end;
 				executer.execute;
-				last_output := executer.last_output;
+				last_output := executer.last_output
 			else
-				output_window.put_string ("No active queries");
-				output_window.new_line;
-				io.putstring ("You should first manipulate the subqueries%N");
+				st.add_string ("No active queries");
+				st.add_new_line;
+				st.add_string ("You should first manipulate the subqueries%N")
 			end;
+			output_window.put_string (st.image);
+			output_window.new_line
 		end;
 
 feature {NONE} -- Attributes
@@ -88,28 +90,28 @@ feature {NONE} -- Implementation
 			profiler_options.set_language_names (language_names);
 		end;
 
-	print_active_query is
+	print_active_query (st: STRUCTURED_TEXT) is
 		do
 			from
-				output_window.put_string ("Query:%N======%N%N");
+				st.add_string ("Query:%N======%N%N");
 				subqueries.start;
 				subquery_operators.start;
 			until
 				subqueries.after
 			loop
 				if subqueries.item.is_active then
-					output_window.put_string (subqueries.item.column);
-					output_window.put_char (' ');
-					output_window.put_string (subqueries.item.operator);
-					output_window.put_char (' ');
-					output_window.put_string (subqueries.item.value);
+					st.add_string (subqueries.item.column);
+					st.add_char (' ');
+					st.add_string (subqueries.item.operator);
+					st.add_char (' ');
+					st.add_string (subqueries.item.value);
 					if not subquery_operators.after then
 						if subquery_operators.item.is_active then
-							output_window.put_char (' ');
-							output_window.put_string (subquery_operators.item.actual_operator);
+							st.add_char (' ');
+							st.add_string (subquery_operators.item.actual_operator);
 						end;
 					end;
-					output_window.put_char ('%N');
+					st.add_char ('%N');
 				end;
 				subqueries.forth;
 				if not subquery_operators.after then

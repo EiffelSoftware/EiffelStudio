@@ -9,15 +9,31 @@ class EWB_SHORT
 
 inherit
 
-	EWB_FILTER
+	EWB_COMPILED_CLASS
+		rename
+			make as class_make
 		redefine
-			help_message, name, abbreviation,
-			set_format_attributes
+			help_message, name, abbreviation
 		end;
 
 creation
 
 	make, do_nothing
+
+feature -- Initialization
+
+	make (cn, fn: STRING) is
+			-- Initialization
+		require
+			cn_not_void: cn /= Void;
+			fn_not_void: fn /= Void
+		do
+			class_make (cn);
+			init (fn);
+		ensure
+			filter_name_set: filter_name = fn;
+			class_name_set: class_name = cn
+		end;
 
 feature -- Properties
 
@@ -36,13 +52,11 @@ feature -- Properties
 			Result := short_help
 		end;
 
-feature {NONE} -- Implementation
+feature {NONE} -- Execution
 
-	set_format_attributes (ctxt: CLASS_TEXT_FORMATTER) is
-			-- Set context attributes `ctxt'.
+	associated_cmd: E_SHOW_SHORT is
 		do
-			ctxt.set_is_short;
-			ctxt.set_order_same_as_text;
+			!! Result.do_nothing
 		end;
 
 end -- class EWB_SHORT

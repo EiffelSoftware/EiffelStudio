@@ -40,7 +40,7 @@ feature {NONE} -- Implementation
 			text: STRING;
 		do
 			if e_class.file_name /= Void then
-				text := e_feature.text;
+				text := e_feature.text.image;
 			end;
 			if text /= Void then
 				output_window.put_string (text);

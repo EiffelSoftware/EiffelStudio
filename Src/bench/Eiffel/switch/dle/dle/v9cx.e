@@ -9,7 +9,7 @@ inherit
 
 feature
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 		do
 		end;
 

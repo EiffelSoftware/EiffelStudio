@@ -21,11 +21,11 @@ feature
 			path := s;
 		end;
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 		do
-			ow.put_string ("Extending path: ");
-			ow.put_string (path);
-			ow.new_line
+			st.add_string ("Extending path: ");
+			st.add_string (path);
+			st.add_new_line
 		end;
 
 end

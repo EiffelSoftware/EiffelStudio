@@ -11,6 +11,9 @@ inherit
 	EV_TREE_I
 
 	EV_PRIMITIVE_IMP
+		undefine
+			show
+		end
 
 	EV_TREE_ITEM_CONTAINER_IMP
 
@@ -46,6 +49,7 @@ feature {EV_TREE_ITEM} -- Implementation
 				correct_imp: item_imp /= Void
 			end
 			gtk_tree_append (widget, item_imp.widget)
+			gtk_widget_show (item_imp.widget)
 		end
 
 end -- class EV_TREE_IMP

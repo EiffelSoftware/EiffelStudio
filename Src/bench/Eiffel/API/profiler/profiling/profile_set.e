@@ -218,7 +218,7 @@ end;
 				percentage_avg_eiffel := percentage_avg_eiffel / count;
 				total_avg_eiffel := total_avg_eiffel / count;
 				self_avg_eiffel := self_avg_eiffel / count;
-				descendents_avg_eiffel := descendents_avg_eiffel / count;
+				descendants_avg_eiffel := descendants_avg_eiffel / count;
 				calls_avg_eiffel_real := calls_avg_eiffel / count;
 				calls_avg_eiffel := calls_avg_eiffel_real.truncated_to_integer;
 			end;
@@ -228,7 +228,7 @@ end;
 				percentage_avg_c := percentage_avg_c / count;
 				total_avg_c := total_avg_c / count;
 				self_avg_c := self_avg_c / count;
-				descendents_avg_c := descendents_avg_eiffel / count;
+				descendants_avg_c := descendants_avg_eiffel / count;
 				calls_avg_c_real := calls_avg_c / count;
 				calls_avg_c := calls_avg_c_real.truncated_to_integer;
 			end;
@@ -238,7 +238,7 @@ end;
 				percentage_avg_cycle := percentage_avg_cycle / count;
 				total_avg_cycle := total_avg_cycle / count;
 				self_avg_cycle := self_avg_cycle / count;
-				descendents_avg_cycle := descendents_avg_cycle / count;
+				descendants_avg_cycle := descendants_avg_cycle / count;
 				calls_avg_cycle_real := calls_avg_cycle / count;
 				calls_avg_cycle := calls_avg_cycle_real.truncated_to_integer;
 			end;
@@ -313,9 +313,9 @@ feature {NONE} -- Implementation
 			percentage_min_eiffel := data.percentage;
 			percentage_max_eiffel := data.percentage;
 			percentage_avg_eiffel := data.percentage;
-			descendents_min_eiffel := data.descendents_sec;
-			descendents_max_eiffel := data.descendents_sec;
-			descendents_avg_eiffel := data.descendents_sec;
+			descendants_min_eiffel := data.descendants_sec;
+			descendants_max_eiffel := data.descendants_sec;
+			descendants_avg_eiffel := data.descendants_sec;
 			self_min_eiffel := data.self_sec;
 			self_max_eiffel := data.self_sec;
 			self_avg_eiffel := data.self_sec;
@@ -334,9 +334,9 @@ feature {NONE} -- Implementation
 			percentage_min_c := data.percentage;
 			percentage_max_c := data.percentage;
 			percentage_avg_c := data.percentage;
-			descendents_min_c := data.descendents_sec;
-			descendents_max_c := data.descendents_sec;
-			descendents_avg_c := data.descendents_sec;
+			descendants_min_c := data.descendants_sec;
+			descendants_max_c := data.descendants_sec;
+			descendants_avg_c := data.descendants_sec;
 			self_min_c := data.self_sec;
 			self_max_c := data.self_sec;
 			self_avg_c := data.self_sec;
@@ -355,9 +355,9 @@ feature {NONE} -- Implementation
 			percentage_min_cycle := data.percentage;
 			percentage_max_cycle := data.percentage;
 			percentage_avg_cycle := data.percentage;
-			descendents_min_cycle := data.descendents_sec;
-			descendents_max_cycle := data.descendents_sec;
-			descendents_avg_cycle := data.descendents_sec;
+			descendants_min_cycle := data.descendants_sec;
+			descendants_max_cycle := data.descendants_sec;
+			descendants_avg_cycle := data.descendants_sec;
 			self_min_cycle := data.self_sec;
 			self_max_cycle := data.self_sec;
 			self_avg_cycle := data.self_sec;
@@ -380,13 +380,13 @@ feature {NONE} -- Implementation
 					calls_max_eiffel := data.number_of_calls;
 				end;
 				calls_avg_eiffel := calls_avg_eiffel + data.number_of_calls;
-				if data.descendents_sec < descendents_min_eiffel then
-					descendents_min_eiffel := data.descendents_sec;
+				if data.descendants_sec < descendants_min_eiffel then
+					descendants_min_eiffel := data.descendants_sec;
 				end;
-				if data.descendents_sec > descendents_max_eiffel then
-					descendents_max_eiffel := data.descendents_sec;
+				if data.descendants_sec > descendants_max_eiffel then
+					descendants_max_eiffel := data.descendants_sec;
 				end;
-				descendents_avg_eiffel := descendents_avg_eiffel + data.descendents_sec;
+				descendants_avg_eiffel := descendants_avg_eiffel + data.descendants_sec;
 				if data.self_sec < self_min_eiffel then
 					self_min_eiffel := data.self_sec;
 				end;
@@ -424,13 +424,13 @@ feature {NONE} -- Implementation
 					calls_max_c := data.number_of_calls;
 				end;
 				calls_avg_c := calls_avg_c + data.number_of_calls;
-				if data.descendents_sec < descendents_min_c then
-					descendents_min_c := data.descendents_sec;
+				if data.descendants_sec < descendants_min_c then
+					descendants_min_c := data.descendants_sec;
 				end;
-				if data.descendents_sec > descendents_max_c then
-					descendents_max_c := data.descendents_sec;
+				if data.descendants_sec > descendants_max_c then
+					descendants_max_c := data.descendants_sec;
 				end;
-				descendents_avg_c := descendents_avg_eiffel + data.descendents_sec;
+				descendants_avg_c := descendants_avg_eiffel + data.descendants_sec;
 				if data.self_sec < self_min_c then
 					self_min_c := data.self_sec;
 				end;
@@ -468,13 +468,13 @@ feature {NONE} -- Implementation
 					calls_max_cycle := data.number_of_calls;
 				end;
 				calls_avg_cycle := calls_avg_cycle + data.number_of_calls;
-				if data.descendents_sec < descendents_min_cycle then
-					descendents_min_cycle := data.descendents_sec;
+				if data.descendants_sec < descendants_min_cycle then
+					descendants_min_cycle := data.descendants_sec;
 				end;
-				if data.descendents_sec > descendents_max_cycle then
-					descendents_max_cycle := data.descendents_sec;
+				if data.descendants_sec > descendants_max_cycle then
+					descendants_max_cycle := data.descendants_sec;
 				end;
-				descendents_avg_cycle := descendents_avg_cycle + data.descendents_sec;
+				descendants_avg_cycle := descendants_avg_cycle + data.descendants_sec;
 				if data.self_sec < self_min_cycle then
 					self_min_cycle := data.self_sec;
 				end;
@@ -530,9 +530,9 @@ feature {E_SHOW_PROFILE_QUERY} -- Column-Attributes
 	percentage_min_eiffel,
 	percentage_max_eiffel,
 	percentage_avg_eiffel,
-	descendents_min_eiffel,
-	descendents_max_eiffel,
-	descendents_avg_eiffel,
+	descendants_min_eiffel,
+	descendants_max_eiffel,
+	descendants_avg_eiffel,
 	self_min_eiffel,
 	self_max_eiffel,
 	self_avg_eiffel,
@@ -542,9 +542,9 @@ feature {E_SHOW_PROFILE_QUERY} -- Column-Attributes
 	percentage_min_c,
 	percentage_max_c,
 	percentage_avg_c,
-	descendents_min_c,
-	descendents_max_c,
-	descendents_avg_c,
+	descendants_min_c,
+	descendants_max_c,
+	descendants_avg_c,
 	self_min_c,
 	self_max_c,
 	self_avg_c,
@@ -554,9 +554,9 @@ feature {E_SHOW_PROFILE_QUERY} -- Column-Attributes
 	percentage_min_cycle,
 	percentage_max_cycle,
 	percentage_avg_cycle,
-	descendents_min_cycle,
-	descendents_max_cycle,
-	descendents_avg_cycle,
+	descendants_min_cycle,
+	descendants_max_cycle,
+	descendants_avg_cycle,
 	self_min_cycle,
 	self_max_cycle,
 	self_avg_cycle,

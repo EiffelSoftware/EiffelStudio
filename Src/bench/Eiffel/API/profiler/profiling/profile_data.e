@@ -22,7 +22,7 @@ feature -- Creation feature
 		do
 			calls := num_call;
 			self := self_s;
-			descendent := descen;
+			descendant := descen;
 			per_cent_time := time;
 		end;
 
@@ -37,7 +37,7 @@ feature -- Output
 			Result.append_string ("%T|%T");
 			Result.append_string (self.out);
 			Result.append_string ("%T|%T");
-			Result.append_string (descendent.out);
+			Result.append_string (descendant.out);
 			Result.append_string ("%T|%T");
 			Result.append_string (per_cent_time.out);
 			Result.append_string ("%T|%T");
@@ -51,7 +51,7 @@ feature -- Compare
 		do
 			Result := number_of_calls = other.number_of_calls and then
 					self = other.self and then
-					descendent = other.descendent and then
+					descendant = other.descendant and then
 					per_cent_time = other.per_cent_time and then
 					int_function.is_equal (other.int_function);
 		end;
@@ -83,17 +83,17 @@ feature -- Status report
 			Result := self;
 		end;
 
-	descendents_sec: REAL is
-			-- Time spent in the descendents of the function.
+	descendants_sec: REAL is
+			-- Time spent in the descendants of the function.
 		do
-			Result := descendent;
+			Result := descendant;
 		end;
 
 	total_sec: REAL is
 			-- Time spent in both the function itself and
-			-- its descendents.
+			-- its descendants.
 		do
-			Result := self + descendent;
+			Result := self + descendant;
 		end;
 
 	percentage: REAL is
@@ -111,8 +111,8 @@ feature {PROFILE_DATA} -- attributes
 	self,
 		-- Total amount of seconds spent in the function itself.
 
-	descendent,
-		-- Total amount of seconds spent in the descendents of the function.
+	descendant,
+		-- Total amount of seconds spent in the descendants of the function.
 
 	per_cent_time: REAL
 		-- Percentage of time spent in the function and the descendants.

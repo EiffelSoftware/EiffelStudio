@@ -35,7 +35,7 @@ feature -- Copy features
 		do
 			calls := other.calls;
 			self := other.self;
-			descendent := other.descendent;
+			descendant := other.descendant;
 			per_cent_time := other.per_cent_time;
 			int_function.copy (other.int_function);
 		end;

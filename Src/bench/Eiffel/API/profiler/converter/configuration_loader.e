@@ -50,7 +50,7 @@ feature {NONE} -- Implementation
 					get_number_of_columns;
 					get_index_column;
 					get_function_time_column;
-					get_descendent_time_column;
+					get_descendant_time_column;
 					get_number_of_calls_column;
 					get_function_name_column;
 					get_percentage_column;
@@ -105,8 +105,8 @@ feature {NONE} -- Implementation
 			end;
 		end
 
-	get_descendent_time_column is
-			-- Retrieves the column of the descendent_time field.
+	get_descendant_time_column is
+			-- Retrieves the column of the descendant_time field.
 		local
 			i: INTEGER
 		do
@@ -114,7 +114,7 @@ feature {NONE} -- Implementation
 			if i = -1 then
 				error_occured := true;
 			else
-				shared_prof_config.set_descendent_time_column (i);
+				shared_prof_config.set_descendant_time_column (i);
 			end;
 		end
 
@@ -259,8 +259,8 @@ feature {NONE} -- Constants
 	FTC_string: STRING is "function_time_column";
 		-- functin_time_column
 
-	DTC_string: STRING is "descendent_time_column";
-		-- descendent_time_column
+	DTC_string: STRING is "descendant_time_column";
+		-- descendant_time_column
 
 	NOCC_string: STRING is "number_of_calls_column";
 		-- number_of_calls_column

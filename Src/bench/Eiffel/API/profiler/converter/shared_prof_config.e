@@ -33,10 +33,10 @@ feature {CONFIGURATION_LOADER} -- Status setting
 			function_time_column := i;
 		end;
 
-	set_descendent_time_column (i: INTEGER) is
+	set_descendant_time_column (i: INTEGER) is
 			-- Set the column to `i'.
 		do
-			descendent_time_column := i;
+			descendant_time_column := i;
 		end;
 
 	set_number_of_calls_column (i: INTEGER) is
@@ -85,9 +85,9 @@ feature -- Status report
 			Result := function_time_column;
 		end;
 
-	get_descendent_time_column: INTEGER is
+	get_descendant_time_column: INTEGER is
 		do
-			Result := descendent_time_column;
+			Result := descendant_time_column;
 		end;
 
 	get_number_of_calls_column: INTEGER is
@@ -120,7 +120,7 @@ feature -- Status report
 			if function_time_column /= 0 then
 				Result := Result + 1;
 			end;
-			if descendent_time_column /= 0 then
+			if descendant_time_column /= 0 then
 				Result := Result + 1;
 			end;
 			if number_of_calls_column /= 0 then
@@ -152,9 +152,9 @@ feature {NONE} -- Attributes
 		-- Zero indicates that there is no function time field in
 		-- the output file.
 
-	descendent_time_column: INTEGER
-		-- Column number where the descendent time is to be found.
-		-- Zero indicates that there is no descendent time field in
+	descendant_time_column: INTEGER
+		-- Column number where the descendant time is to be found.
+		-- Zero indicates that there is no descendant time field in
 		-- the output file.
 
 	number_of_calls_column: INTEGER
@@ -195,8 +195,8 @@ feature {PROFILE_CONVERTER} -- Spit Information (for debugging)
 			io.error.putstring ("Function time column: ");
 			io.error.putint (function_time_column);
 			io.error.new_line;
-			io.error.putstring ("Descendent time column: ");
-			io.error.putint (descendent_time_column);
+			io.error.putstring ("descendant time column: ");
+			io.error.putint (descendant_time_column);
 			io.error.new_line;
 			io.error.putstring ("Number of calls column: ");
 			io.error.putint (number_of_calls_column);

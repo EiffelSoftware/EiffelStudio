@@ -89,10 +89,12 @@ feature -- C code generation
 			type_i: TYPE_I
 			cl_type_i: CL_TYPE_I
 			internal_name: STRING
+			local_byte_context: BYTE_CONTEXT
 		do
-			if 	class_type.associated_class = written_class
-				and then
-				(	byte_context.workbench_mode
+			local_byte_context := byte_context
+			if
+				class_type.associated_class = written_class
+				and then (local_byte_context.workbench_mode
 					or else
 						-- Polymorphic function redefined as a constant
 						-- or a constant string implies the generation
@@ -109,9 +111,9 @@ feature -- C code generation
 
 -- c must be generated even if it is an origin !!!
 
---					(	(is_once or else not is_origin)
+--					((is_once or else not is_origin)
 --						and then
-					(	System.is_used (Current)))
+					(System.is_used (Current)))
 			then
 				generate_header (file)
 				type_i := type.actual_type.type_i
@@ -119,7 +121,7 @@ feature -- C code generation
 				add_in_log (class_type, internal_name)
 					-- Generation of function's header
 				file.generate_function_signature ( type_i.c_type.c_string,
-						internal_name, True, byte_context.extern_declaration_file,
+						internal_name, True, local_byte_context.extern_declaration_file,
 						<<"Current">>, <<"EIF_REFERENCE">>)
 
 					-- Function's body
@@ -127,18 +129,18 @@ feature -- C code generation
 				if is_once then
 					file.putstring ("%TEIF_REFERENCE *PResult;%N%
 						%%Tif (MTOG((EIF_REFERENCE *),*(EIF_once_values + EIF_oidx_off + ")
-					file.putint (byte_context.once_index)
+					file.putint (local_byte_context.once_index)
 					file.putstring ("),PResult)) return *PResult;")
 					file.putstring (";%N%
 						%%TPResult = (EIF_REFERENCE *) RTOC(0);%N%
 						%%TMTOS(*(EIF_once_values + EIF_oidx_off + ")
-					file.putint (byte_context.once_index)
+					file.putint (local_byte_context.once_index)
 					file.putstring ("),PResult);%N%
 						%%T*PResult = ")
 					value.generate (file)
 					file.putchar (';')
 
-					if byte_context.workbench_mode then
+					if local_byte_context.workbench_mode then
 							-- Real body id to be stored in the id list of 
 							-- already called once routines.
 						file.putstring ("%TRTWO(")
@@ -151,7 +153,7 @@ feature -- C code generation
 					value.generate (file)
 				end
 				file.putstring (";%N}%N%N")
-			elseif  not System.is_used (Current) then
+			elseif not System.is_used (Current) then
 				System.removed_log_file.add (class_type, feature_name)
 			end
 		end

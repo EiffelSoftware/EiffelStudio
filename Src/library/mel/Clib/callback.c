@@ -12,11 +12,17 @@ private EIF_PROC e_handle_wm_protocol;	/* Eiffel routine that dispatches wm prot
 private EIF_PROC e_handle_input;	/* Eiffel routine that dispatches input events */
 private EIF_PROC e_handle_timer;	/* Eiffel routine that dispatches timer events */
 private EIF_PROC e_handle_work_proc;/* Eiffel routine that dispatches work procedures */
+private EIF_PROC e_handle_lose_callback;/* Eiffel routine that dispatches 
+											lose selection callback */
+private EIF_PROC e_handle_done_callback;/* Eiffel routine that dispatches 
+											done selection callback */
+private EIF_PROC e_handle_requestor_callback;/* Eiffel routine that dispatches 
+											the requestor callback */
 
 /* Functions */
 
 struct work_struct {
-    XtWorkProcId id;
+	XtWorkProcId id;
 };
 
 void handle_callback (scr_obj, resource_name, call_data)
@@ -64,14 +70,11 @@ XEvent *an_event;
 String *params;
 Cardinal *num_params;
 {
-	EIF_OBJ trans;
-
 	if (*num_params) {
-		sscanf (params [0], "0x%lX", &trans);
 		(e_handle_translation) (
 				(EIF_OBJ) eif_access (dispatcher),
 				(EIF_POINTER) scr_obj,			/* Widget which invoked callback */
-				(EIF_POINTER) eif_access (trans),/* Pass the translation as a argument */
+				(EIF_POINTER) params [0],		/* Pass the translation as a argument */
 				(EIF_POINTER) an_event			/* Pass the Xevent structure */
 				);
 	}
@@ -198,7 +201,7 @@ char *trans;
 	XtOverrideTranslations ((Widget) w, trans_ptr);
 }
 
-void c_add_wm_protocol (scr_obj, atom)
+void c_add_wm_protocol_callback (scr_obj, atom)
 EIF_POINTER scr_obj;
 EIF_POINTER atom;
 {
@@ -208,7 +211,7 @@ EIF_POINTER atom;
 				(XtPointer) atom);
 }
 
-void c_remove_wm_protocol (scr_obj, atom)
+void c_remove_wm_protocol_callback (scr_obj, atom)
 EIF_POINTER scr_obj;
 EIF_POINTER atom;
 {
@@ -227,13 +230,136 @@ EIF_POINTER id;
 	xfree (ws);
 }
 
+/*
+ * Selection mechanism
+ */
+
+private char *string_passed; /* String value selected. */
+private Atom target_atom;/* 
+						  * Target Atom of the selection.
+						  * This value can be used to identify the string representation
+						  * between Eiffel applications. (Note: Eiffel will only
+						  * support string data).
+						  */
+
+void free_string()
+{
+	if (string_passed) {
+		XtFree (string_passed);
+	}
+	string_passed = NULL;
+}
+
+/*
+ * The following routines deals with requesting the data.
+ */
+
+private void requestor_callback (w, client_data, selection, 
+		type, value, length, format)
+Widget w;
+XtPointer client_data;
+Atom *selection;
+Atom *type;
+XtPointer value;
+unsigned long *length;
+int *format;
+{
+	if ((*value == NULL) && (*length == 0)) 
+		return; /* Return immediately if there is no value. */
+
+	(e_handle_requestor_callback) (
+				(EIF_OBJ) eif_access (dispatcher),
+				(EIF_POINTER) value,
+				(EIF_INTEGER) *length
+				);
+	XtFree (value); 	/* Must always free the value. */
+}
+
+public void xt_get_selection_value (w, target, time)
+EIF_POINTER w;
+EIF_POINTER target;
+EIF_INTEGER time;
+{
+	XtGetSelectionValue ((Widget) w, XA_PRIMARY, (Atom) target,	
+			requestor_callback, NULL, time);
+}
+
+/*
+ * The following routines deals with ownership.
+ */
+
+private Boolean convert_proc (w, selection, target, type_return, 
+		value_return, length_return, format_return)
+Widget w;
+Atom *selection;
+Atom *target;
+Atom *type_return;
+XtPointer *value_return;
+unsigned long *length_return;
+int *format_return;
+{
+	if ((*target) == target_atom) {
+		*value_return = string_passed;
+		*length_return = strlen (string_passed);
+		*type_return = target_atom;
+		*format_return = 8;
+		return (True);
+	}
+	return (False);
+}
+
+private void lose_ownership_proc (w, selection)
+Widget w;
+Atom *selection;
+{
+	(e_handle_lose_callback) (
+				(EIF_OBJ) eif_access (dispatcher)
+				);
+	free_string();
+}
+
+private void transfer_done_proc (w, selection, target)
+Widget w;
+Atom *selection;
+Atom *target;
+{
+	if ((*target==target_atom) || (*target==XA_STRING)) {
+		(e_handle_done_callback) (
+					(EIF_OBJ) eif_access (dispatcher)
+					);
+	}
+}
+
+public void xt_own_selection (w, target, time, a_string)
+EIF_POINTER w;
+EIF_POINTER target;
+EIF_INTEGER time;
+EIF_POINTER a_string;
+{
+	if (XtOwnSelection ((Widget) w, XA_PRIMARY, (Time) time, 
+			convert_proc, lose_ownership_proc, transfer_done_proc) == False)
+		XtWarning ("Failed attempting to become selection owner.\n \
+			Try to select again.\n");	
+	else {
+		target_atom = (Atom) target;
+		free_string();
+		string_passed = XtNewString ((char *) a_string);
+	}
+}
+
+/*
+ * Setting callback routines into Eiffel.
+ */
 void set_procedures (hndl_callback_addr, 
 					hndl_event_addr, 
 					hndl_trans_addr,	
 					hndl_wmprot_addr,
 					hndl_input_addr,
 					hndl_timer_addr,
-					hndl_work_proc_addr)
+					hndl_work_proc_addr,
+					hndl_lose_callback_addr,
+					hndl_done_callback_addr,
+					hndl_requestor_callback_addr)
 EIF_PROC hndl_callback_addr;
 EIF_PROC hndl_event_addr;
 EIF_PROC hndl_trans_addr;
@@ -241,6 +367,9 @@ EIF_PROC hndl_wmprot_addr;
 EIF_PROC hndl_input_addr;
 EIF_PROC hndl_timer_addr;
 EIF_PROC hndl_work_proc_addr;
+EIF_PROC hndl_lose_callback_addr;
+EIF_PROC hndl_done_callback_addr;
+EIF_PROC hndl_requestor_callback_addr;
 {
 		/*
 		 * Initialize the Eiffel procedure addresses so
@@ -253,6 +382,9 @@ EIF_PROC hndl_work_proc_addr;
 	e_handle_input = hndl_input_addr;
 	e_handle_timer = hndl_timer_addr;
 	e_handle_work_proc = hndl_work_proc_addr;
+	e_handle_lose_callback = hndl_lose_callback_addr;
+	e_handle_done_callback = hndl_done_callback_addr;
+	e_handle_requestor_callback = hndl_requestor_callback_addr;
 }
 
 void set_dispatcher_object (dispatcher_address)

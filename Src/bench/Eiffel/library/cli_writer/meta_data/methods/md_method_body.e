@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 			create labels.make (1, 5)
 			create labels_stack_depth.make (1, 5)
 			create exception_block.make
-			create once_fault_block.make
+			create once_catch_block.make
 			create once_finally_block.make
 			remake (token)
 		ensure
@@ -55,7 +55,7 @@ feature -- Reset
 			local_token := 0
 			nb_labels := 0
 			exception_block.reset
-			once_fault_block.reset
+			once_catch_block.reset
 			once_finally_block.reset
 			is_written := False
 		ensure
@@ -96,8 +96,8 @@ feature -- Access
 	exception_block: MD_EXCEPTION_CATCH
 			-- Exception clause for current feature.
 
-	once_fault_block: MD_EXCEPTION_FAULT
-			-- Exception clause for fault wrapper of once feature.
+	once_catch_block: MD_EXCEPTION_CATCH
+			-- Exception clause for catch wrapper of once feature.
 
 	once_finally_block: MD_EXCEPTION_FINALLY
 			-- Exception clause for finally wrapper of once feature.
@@ -113,7 +113,7 @@ feature -- Status report
 	has_exceptions_handling: BOOLEAN is
 			-- Has an exception block completely defined?
 		do
-			Result := exception_block.is_defined or else once_fault_block.is_defined or else once_finally_block.is_defined
+			Result := exception_block.is_defined or else once_catch_block.is_defined or else once_finally_block.is_defined
 		end
 		
 	is_written: BOOLEAN
@@ -592,7 +592,7 @@ invariant
 	current_position_valid: current_position >= 0 and current_position <= item.count
 	valid_max_stack: max_stack >= 0 and then max_stack < 65535
 	exception_block_not_void: exception_block /= Void
-	once_fault_block_not_void: once_fault_block /= Void
+	once_catch_block_not_void: once_catch_block /= Void
 	once_finally_block_not_void: once_finally_block /= Void
 
 end -- class MD_METHOD_BODY

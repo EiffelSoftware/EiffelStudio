@@ -32,7 +32,8 @@ inherit
 			set_foreground_color
 		redefine
 			make, on_key_down, on_mouse_move, set_default_minimum_size,
-			initialize, interface, on_size, enable_sensitive, disable_sensitive, background_color
+			initialize, interface, on_size, enable_sensitive, disable_sensitive, background_color,
+			on_char
 		end
 
  	WEL_LIST_VIEW
@@ -858,6 +859,15 @@ feature {NONE} -- Implementation
 			loop
 				Result := a_selected_items.has(good_selected_items.item)
 				good_selected_items.forth
+			end
+		end
+		
+	on_char (character_code, key_data: INTEGER) is
+			-- Executed when a key is pressed. 
+		do
+			Precursor {EV_PRIMITIVE_IMP} (character_code, key_data)
+			if default_key_processing_disabled then
+				disable_default_processing
 			end
 		end
 

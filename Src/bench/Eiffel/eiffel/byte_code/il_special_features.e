@@ -188,7 +188,7 @@ feature -- IL code generation
 				il_generator.generate_out (type)
 
 			when hash_code_type then
-				il_generator.convert_to_integer_32
+				generate_hash_code (type)
 
 			when to_character_type then
 				il_generator.convert_to_character
@@ -316,6 +316,26 @@ feature {NONE} -- IL code generation
 				check
 					not_implemented_yet: False
 				end
+			end
+		end
+
+	generate_hash_code (type: CL_TYPE_I) is
+			-- Generate hash-code for current basic type at top of evaluation stack.
+		require
+			type_not_void: type /= Void
+		do
+			inspect
+				type_of (type)
+			when boolean_type then
+					-- Remove top of type (i.e. boolean value)
+					-- and put `1' instead.
+				il_generator.pop
+				il_generator.put_integer_32_constant (1)
+				
+			else
+					-- Convert type on stack to an integer and applies
+					-- proper computation to get a positive hash-code.
+				il_generator.generate_hash_code
 			end
 		end
 

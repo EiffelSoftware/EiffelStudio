@@ -160,8 +160,6 @@ feature {NONE} -- Basic operations
 				path := address.twin
 			end		
 			
-			host.to_lower
-						
 			if not host.is_empty and has_username and 
 				host.occurrences ('@') = 1 then
 				pos := host.index_of ('@', 1)
@@ -174,7 +172,9 @@ feature {NONE} -- Basic operations
 					username.keep_head (pos - 1)
 				end
 			end
-			if not host.is_empty and host.occurrences (':') <= 1 then
+
+			host.to_lower
+			if not host.is_empty and host.occurrences (':') = 1 then
 				pos := host.index_of (':', 1)
 				if pos = host.count then
 					host.remove_tail (1)
@@ -182,7 +182,7 @@ feature {NONE} -- Basic operations
 				elseif pos > 0 and 
 					host.substring (pos + 1, host.count).is_integer then
 					port := host.substring (pos + 1, host.count).to_integer
-					host.remove_head (pos)
+					host.keep_head (pos - 1)
 				end
 			end
 		end

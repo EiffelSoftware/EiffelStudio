@@ -42,19 +42,16 @@ feature -- Code generation
 	generate is
 		local
 			buf: GENERATION_BUFFER
+			queue: like shared_include_queue
 		do
 			generate_include_files
-			if not shared_include_queue.has (special_file_name) then
-				shared_include_queue.extend (special_file_name)
-				if not context.final_mode then
-					buf := header_generation_buffer
-					buf.putstring ("#include ");
-					buf.putstring (special_file_name);
-					buf.new_line;
-				end
+			queue := shared_include_queue
+			if not queue.has (special_file_name) then
+				queue.extend (special_file_name)
 			end
 			generate_signature
 		end
+
 
 	generate_body is
 			-- Generate the body for an external of type macro

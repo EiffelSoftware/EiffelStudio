@@ -80,6 +80,7 @@ feature
 			end;
 			if not encapsulated and then extension /= Void and then extension.has_signature then
 				real_type (type).c_type.generate_external_function_cast (buf, extension);
+				extension.generate_header_files
 			else
 				real_type (type).c_type.generate_function_cast (buf, argument_types);
 			end

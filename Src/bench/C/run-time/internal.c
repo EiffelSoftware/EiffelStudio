@@ -10,6 +10,7 @@
 	Routines to implement class INTERNAL
 */
 
+#include "eif_project.h" /* for egc_..._ref_dtype */
 #include "eif_config.h"
 #include "eif_internal.h"
 
@@ -56,7 +57,7 @@ rt_public char *ei_field (long i, char *object)
 		{
 			char val = *(char *) o_ref;
 
-			new_obj = RTLN(char_ref_dtype);
+			new_obj = RTLN(egc_char_ref_dtype);
 			*(char *) new_obj = val;
 			return new_obj;
 		}
@@ -64,7 +65,7 @@ rt_public char *ei_field (long i, char *object)
 		{
 			char val = *(char *) o_ref;
 
-			new_obj = RTLN(bool_ref_dtype);
+			new_obj = RTLN(egc_bool_ref_dtype);
 			*(char *) new_obj = val;
 			return new_obj;
 		}
@@ -72,7 +73,7 @@ rt_public char *ei_field (long i, char *object)
 		{
 			long val = *(long *) o_ref;
 
-			new_obj = RTLN(int_ref_dtype);
+			new_obj = RTLN(egc_int_ref_dtype);
 			*(long *) new_obj = val;
 			return new_obj;
 		}
@@ -80,7 +81,7 @@ rt_public char *ei_field (long i, char *object)
 		{
 			float val = *(float *) o_ref;
 
-			new_obj = RTLN(real_ref_dtype);
+			new_obj = RTLN(egc_real_ref_dtype);
 			*(float *) new_obj = val;
 			return new_obj;
 		}
@@ -88,7 +89,7 @@ rt_public char *ei_field (long i, char *object)
 		{
 			fnptr val = *(fnptr *) o_ref;
 
-			new_obj = RTLN(point_ref_dtype);
+			new_obj = RTLN(egc_point_ref_dtype);
 			*(fnptr *) new_obj = val;
 			return new_obj;
 		}
@@ -96,7 +97,7 @@ rt_public char *ei_field (long i, char *object)
 		{
 			double val = *(double *) o_ref;
 
-			new_obj = RTLN(doub_ref_dtype);
+			new_obj = RTLN(egc_doub_ref_dtype);
 			*(double *) new_obj = val;
 			return new_obj;
 		}

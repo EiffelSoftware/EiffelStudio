@@ -321,10 +321,10 @@ invariant
 	maximum_greater_or_equal_minimum: 
 		is_usable implies minimum_split_position <= maximum_split_position
 		
-	splitter_in_valid_position__minimum:
+	splitter_in_valid_position_minimum:
 		full implies split_position >= minimum_split_position
 		
-	splitter_in_valid_position__maximum:
+	splitter_in_valid_position_maximum:
 		full implies split_position <= maximum_split_position
 
 end -- class EV_SPLIT_AREA

@@ -21,27 +21,9 @@ feature -- Access
 			Result := processed_text
 		end
 		
-	children_nodes: ARRAYED_LIST [TABLE_OF_CONTENTS_NODE]
+	children_nodes: INTEGER
 			-- Children nodes
 		
-feature -- Status Setting
-
-	set_parent_url (a_url: STRING) is
-			-- Parent url
-		require
-			url_not_void: a_url /= Void
-		do
-			parent_url := a_url
-		end		
-
-	set_children_nodes (a_children_with_parents: ARRAYED_LIST [TABLE_OF_CONTENTS_NODE]) is
-			-- Set children nodes
-		require
-			list_not_void: a_children_with_parents /= Void
-		do
-			children_nodes := a_children_with_parents	
-		end		
-
 feature -- Processing
 
 	node_text (a_node: TABLE_OF_CONTENTS_NODE): STRING is
@@ -59,7 +41,8 @@ feature -- Processing
 			
 				-- Add parent link
 			if a_node.has_parent then
-				Result.append ("<tr><td><a href=%"" + (parent_url.to_integer - 1).out + ".html" + "%"><img src=%"../go_up.gif%" align=%"center%">Up one level</a></td></tr>%N")
+				Result.append ("<tr><td><a href=%"" + a_node.parent.id.out + ".html" + "%"><img src=%"../go_up.gif%" align=%"center%"></a></td>")
+				Result.append ("<td><a href=%"" + a_node.parent.id.out + ".html" + "%">&nbsp;Up one level</a></td></tr>%N")
 			end
 
 				-- Child links
@@ -92,12 +75,9 @@ feature -- Processing
 		
 					Result.append ("<tr><td><a href=%"../" + l_url + "%" target=%"content_frame%"")
 					if l_item.has_child then						
-						Result.append (" onClick=%"changeSubTOC('")
-						if parent_url /= Void then							
-							Result.append ((parent_url.to_integer + children_nodes.index).out + ".html")	
-						end
-						children_nodes.forth
-						Result.append ("')%"")	
+						Result.append (" onClick=%"changeSubTOC('")						
+						Result.append (l_item.id.out + ".html")			
+						Result.append ("')%"")
 					end
 					Result.append ("><img src=%"")
 					if l_item.has_child then
@@ -105,7 +85,9 @@ feature -- Processing
 					else
 						Result.append ("../file.gif")
 					end			
-					Result.append ("%" align=%"center%">&nbsp;")			 	
+					Result.append ("%" align=%"center%"></a></td>")
+					
+					Result.append ("<td><a href=%"../" + l_url + "%" target=%"content_frame%">&nbsp;")			 	
 					
 					if l_item.title /= Void then
 						Result.append (l_item.title)	
@@ -116,10 +98,5 @@ feature -- Processing
 				end
 			end			
 		end		
-
-feature {NONE} -- Implmentation
-
-	parent_url: STRING
-			-- Parent url
 
 end -- class TABLE_OF_CONTENTS_SIMPLE_WEB_HELP_FORMATTER

@@ -172,6 +172,7 @@ feature -- Basic operations
 			dynamic_content_function: FUNCTION [ANY, TUPLE [INTEGER, INTEGER], EV_GRID_ITEM]
 			internal_client_width, internal_client_height: INTEGER
 			current_tree_indent: INTEGER
+			skipped_rows: INTEGER
 		do
 			dynamic_content_function := grid.dynamic_content_function
 			printing_values := False
@@ -240,10 +241,39 @@ feature -- Basic operations
 					-- Compute the virtual positions of the invalidated area.
 				invalid_y_start := internal_client_y + a_y - vertical_buffer_offset
 				invalid_y_end := internal_client_y + a_y - vertical_buffer_offset + a_height
-				if grid.is_row_height_fixed then
+				if grid.is_row_height_fixed and not grid.is_tree_enabled then
 						-- If row heights are fixed we can calculate instead of searching.
 					first_row_index := ((invalid_y_start) // grid.row_height) + 1
 					last_row_index := (((invalid_y_end) // grid.row_height) + 1).min (grid.row_count)
+				elseif grid.is_row_height_fixed and grid.is_tree_enabled then
+					from
+						row_counter := 1
+						i := 0
+					until
+						last_row_index_set or row_counter > grid.grid_rows.count
+					loop
+						i := i + grid.row_height
+						current_row := grid.grid_rows.i_th (row_counter)
+
+						if not first_row_index_set and then i > invalid_y_start then
+							first_row_index := row_counter
+							first_row_index_set := True
+						end
+						if not last_row_index_set and then invalid_y_end < i then
+							last_row_index := row_counter
+							last_row_index_set := True
+						end
+						if current_row.subrow_count > 0 and not current_row.is_expanded then
+							if not first_row_index_set then
+								skipped_rows := skipped_rows + current_row.subnode_count_recursive	
+							end
+						end
+
+						if current_row.subrow_count > 0 and not current_row.is_expanded then
+							row_counter := row_counter + current_row.subnode_count_recursive
+						end
+						row_counter := row_counter + 1
+					end
 				else
 					fixme ("implement using a binary search")
 					from
@@ -270,16 +300,23 @@ feature -- Basic operations
 					first_row_index := grid.row_count
 				end
 				
-				
+				print ("First row : " + first_row_index.out + " " + last_row_index.out + "%N")
+				print ("Skipped rows : " + skipped_rows.out + "%N")
 				
 				if printing_values then
 					print ("Columns : " + first_column_index.out + " " + last_column_index.out + "%N")
 					print ("Rows : " + first_row_index.out + " " + last_row_index.out + "%N")
 				end
 
+				current_item_y_position := 0
+				if grid.is_row_height_fixed then
+					current_item_y_position := (grid.row_height * (first_row_index - 1 - skipped_rows)) - (internal_client_y - vertical_buffer_offset)
+					current_row_height := grid.row_height
+				end
+
 				from
 					row_counter := first_row_index
-					current_item_y_position := 0
+					
 					current_index_in_column := first_row_index
 				until
 					row_counter > last_row_index or
@@ -296,10 +333,7 @@ feature -- Basic operations
 					current_row := grid.grid_rows @ row_counter
 					
 					current_index_in_row := first_column_index
-					if grid.is_row_height_fixed then
-						current_item_y_position := (grid.row_height * (current_index_in_column - 1)) - (internal_client_y - vertical_buffer_offset)
-						current_row_height := grid.row_height
-					else
+					if not grid.is_row_height_fixed then
 						current_item_y_position := (row_offsets @ (current_index_in_column)) - (internal_client_y - vertical_buffer_offset)
 						current_row_height := row_offsets @ (row_counter + 1) - row_offsets @ (row_counter)
 					end
@@ -358,10 +392,20 @@ feature -- Basic operations
 							if column_counter = 1 and grid.is_tree_enabled then
 									-- Now draw tree node for root tree items if any.
 								current_tree_indent := tree_indent * current_row.depth_in_tree
-								
-								grid.drawable.set_foreground_color (grid.background_color)
-								grid.drawable.fill_rectangle (current_item_x_position, current_item_y_position, current_tree_indent, current_row_height)
-								grid_item.redraw (current_item_x_position + current_tree_indent, current_item_y_position, current_column_width - current_tree_indent, current_row_height, grid.drawable)
+								if current_tree_indent < current_column_width then
+									grid.drawable.set_foreground_color (grid.background_color)
+									grid.drawable.fill_rectangle (current_item_x_position, current_item_y_position, current_tree_indent, current_row_height)
+									if current_row.subrow_count > 0 then
+										if current_row.is_expanded then
+											grid.drawable.draw_pixmap (current_tree_indent - tree_node_button_dimension - (current_row_height - tree_node_button_dimension) // 2, current_item_y_position + (current_row_height - tree_node_button_dimension) // 2, collapse_pixmap)
+										else
+											grid.drawable.draw_pixmap (current_tree_indent - tree_node_button_dimension - (current_row_height - tree_node_button_dimension) // 2, current_item_y_position + (current_row_height - tree_node_button_dimension) // 2, expand_pixmap)
+										end
+									end
+								end
+								if current_item_x_position + current_tree_indent < current_column_width then
+									grid_item.redraw (current_item_x_position + current_tree_indent, current_item_y_position, current_column_width - current_tree_indent, current_row_height, grid.drawable)
+								end
 								fixme ("Must handle tree nodes that are not only in the first column")
 							else
 								grid_item.redraw (current_item_x_position, current_item_y_position, current_column_width, current_row_height, grid.drawable)
@@ -379,6 +423,15 @@ feature -- Basic operations
 					bool := True
 					row_counter := row_counter + 1
 					current_index_in_column := current_index_in_column + 1
+					print ("current_row_index : " + current_row.index.out + "%N")
+					print ("subnode_count_recursive : " + current_row.subnode_count_recursive.out + "%N")
+					print ("expanded_subnode_count_recursive : " + current_row.expanded_subnode_count_recursive.out + "%N")
+					if current_row.subnode_count_recursive > 0 and not current_row.is_expanded then
+						row_counter := row_counter + current_row.subnode_count_recursive
+					end
+					if grid.is_row_height_fixed then
+						current_item_y_position := current_item_y_position + current_row_height
+					end
 				end
 				-- Now draw in the background area where no items were displayed if required.
 				-- Note that we perform the vertical and horizontal drawing seperately so there may be overlap if both are
@@ -396,7 +449,7 @@ feature -- Basic operations
 			if last_row_index = grid.row_count then
 				if grid.is_row_height_fixed then
 						-- Special handling for fixed row heights as `row_offsets' does not exist.
-					rectangle_height := internal_client_height - ((grid.row_height * grid.row_count) - internal_client_y)
+					rectangle_height := internal_client_height - ((grid.row_height * (grid.row_count - skipped_rows)) - internal_client_y)
 				else
 					rectangle_height := internal_client_height - (row_offsets @ (row_offsets.count) - internal_client_y)
 				end
@@ -431,12 +484,51 @@ feature -- Basic operations
 			Result := (create {EV_STOCK_COLORS}).black
 		end
 		
+	expand_pixmap: EV_PIXMAP is
+			-- A pixmap representing the image used for the expand pixmap.
+		local
+			start_offset, end_offset, middle_offset: INTEGER
+		once
+			start_offset := 2
+			end_offset := tree_node_button_dimension - start_offset - 1
+			middle_offset := tree_node_button_dimension // 2
+			create Result
+			Result.set_size (tree_node_button_dimension, tree_node_button_dimension)
+			Result.set_foreground_color (white)
+			Result.clear
+			Result.set_foreground_color (black)
+			Result.draw_rectangle (0, 0, tree_node_button_dimension, tree_node_button_dimension)
+			Result.draw_segment (start_offset, middle_offset, end_offset, middle_offset)
+			Result.draw_segment (middle_offset, start_offset, middle_offset, end_offset)
+		ensure
+			result_not_void: Result /= Void
+		end
+		
+	collapse_pixmap: EV_PIXMAP is
+			-- A pixmap representing the image used for the collapse pixmap.
+		local
+			start_offset, end_offset, middle_offset: INTEGER
+		once
+			start_offset := 2
+			end_offset := tree_node_button_dimension - start_offset - 1
+			middle_offset := tree_node_button_dimension // 2
+			create Result
+			Result.set_size (tree_node_button_dimension, tree_node_button_dimension)
+			Result.set_foreground_color (white)
+			Result.clear
+			Result.set_foreground_color (black)
+			Result.draw_rectangle (0, 0, tree_node_button_dimension, tree_node_button_dimension)
+			Result.draw_segment (start_offset, middle_offset, end_offset, middle_offset)
+		end
+	
+	tree_node_button_dimension: INTEGER is 9	
+		-- Dimension of the expand/collapse node used in the tree.
+		
 	horizontal_border_width: INTEGER is 3
 		-- Border from edge of text to edge of grid items.
 		
 	tree_indent: INTEGER is 16
-	
-	tree_square: INTEGER is 6
+		-- The indent used for each subsequent depth in the tree.
 
 feature {NONE} -- Implementation
 

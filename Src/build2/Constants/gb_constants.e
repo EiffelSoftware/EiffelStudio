@@ -59,6 +59,8 @@ feature -- String representations of class names.
 	Ev_titled_window_string: STRING is "EV_TITLED_WINDOW"
 	
 	Ev_menu_bar_string: STRING is "EV_MENU_BAR"
+	
+	Ev_widget_string: STRING is "EV_WIDGET"
 
 feature -- Miscellaneous
 

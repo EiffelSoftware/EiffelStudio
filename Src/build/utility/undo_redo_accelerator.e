@@ -10,7 +10,7 @@ class
 
 feature {NONE} -- Implementation
 
-	add_undo_redo_accelerator (arg: COMPOSITE) is
+	add_undo_redo_accelerator (arg: WIDGET) is
 			-- Add accelerators on `arg'.
 		local
 			undo_cmd: UNDO_ACCELERATOR_CMD
@@ -18,8 +18,8 @@ feature {NONE} -- Implementation
 		do
 			!! undo_cmd
 			!! redo_cmd
-			arg.set_action ("CTRL<Key>z", undo_cmd, Void)
-			arg.set_action ("CTRL<Key>r", redo_cmd, Void)
+			arg.set_action ("Ctrl<Key>z", undo_cmd, Void)
+			arg.set_action ("Ctrl<Key>r", redo_cmd, Void)
 		end
 
 

@@ -24,13 +24,6 @@ inherit
 			copy
 		end
 
-	IDENTIFIED
-		undefine
-			default_create,
-			is_equal,
-			copy
-		end
-
 feature {NONE} -- Initialization
 
 	default_create is
@@ -453,7 +446,7 @@ feature -- Events
 			not_void: Result /= Void
 		end
 
-feature -- Contract support
+feature {NONE} -- Contract support
 
 	all_points_exist (list: like points): BOOLEAN is
 			-- Are all items in `list' non-`Void'?

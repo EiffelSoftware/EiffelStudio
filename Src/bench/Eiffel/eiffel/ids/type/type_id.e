@@ -44,6 +44,26 @@ feature -- Access
 			Result.append (buff)
 		end
 
+	generated_id: STRING is
+			-- Textual representation of static type id
+			-- used in generated C code
+		do
+			!! Result.make (5);
+			Result.append_integer (id - 1)
+		ensure
+			generated_id_not_void: Result /= Void
+		end
+
+	init_name: STRING is
+			-- Name of the descriptors Init function associated
+			-- with current type
+		do
+			!! Result.make (15);
+			Result.append (prefix_name);
+			Result.append ("Init");
+			Result.append_integer (internal_id)
+		end
+
 feature {BODY_ID} -- Access
 
 	prefix_name: STRING is

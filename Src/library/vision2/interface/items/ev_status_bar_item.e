@@ -83,7 +83,8 @@ feature -- Status setting
 			-- bar.
 		require
 			exists: not destroyed
-			valid_value: value >= 0 or value = -1
+			valid_value: value >= -1
+			maximise_ok: value = -1 implies (parent.count = index)
 		do
 			implementation.set_width (value)
 		ensure

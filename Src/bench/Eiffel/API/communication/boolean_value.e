@@ -31,11 +31,11 @@ feature {NONE} -- Initialization
 
 feature -- Output
 
-	 append_type_and_value (cw: CLICK_WINDOW) is 
+	 append_type_and_value (ow: OUTPUT_WINDOW) is 
 		do 
-			dynamic_class.append_clickable_name (cw)
-			cw.put_string (" = ");
-			cw.put_string (value.out)
+			dynamic_class.append_name (ow)
+			ow.put_string (" = ");
+			ow.put_string (value.out)
 		end;
 
 feature -- Property

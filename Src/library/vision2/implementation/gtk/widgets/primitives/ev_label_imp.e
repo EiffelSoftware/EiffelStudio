@@ -46,6 +46,7 @@ feature {NONE} -- Initialization
 			set_c_object (C.gtk_event_box_new)
 			textable_imp_initialize
 			C.gtk_container_add (c_object, text_label)
+			set_font (font)
 		end
 
 feature {NONE} -- Implementation

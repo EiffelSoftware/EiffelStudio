@@ -205,8 +205,7 @@ feature -- Project Initialization
 		do
 			!! e_displayer.make (Error_window);
 			Eiffel_project.set_error_displayer (e_displayer);
-			Application.set_interrupt_number (
-				Project_resources.interrupt_every_n_instructions.actual_value);
+			Application.set_interrupt_number (Project_resources.interrupt_every_n_instructions.actual_value);
 			if not Project_resources.graphical_output_disabled.actual_value then
 				!! g_degree_output;
 				Eiffel_project.set_degree_output (g_degree_output)

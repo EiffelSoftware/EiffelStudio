@@ -228,11 +228,11 @@ feature -- Status setting
 			mp: MENU_PULL_WINDOWS
 		do
 			private_attributes.set_insensitive (flag)
-			if exists then
-				if in_menu then
-					mp ?= parent
-					mp.set_insensitive_widget (Current, flag)
-				else
+			if in_menu then
+				mp ?= parent
+				mp.set_insensitive_widget (Current, flag)
+			else
+				if exists then
 					if flag then
 						disable
 					else

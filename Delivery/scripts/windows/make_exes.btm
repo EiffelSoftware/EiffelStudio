@@ -174,32 +174,12 @@ remtrace CLI writer
 cd %EIFFEL_SRC\Eiffel\library\cli_writer\Clib
 call nmake
 
-remtrace Copying .NET components
-cd %EIFFEL_SRC\Eiffel\eiffel\com_il_generation\core\run-time
-call nmake
-copy ISE.Runtime.dll %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin
-
-remtrace Creating Eiffel Assembly Cache
-cdd %EIFFEL_SRC\dotnet\consumer\ace
-compile_dotnet emitter.ace
-wff
-iff not exist EIFGEN\W_code\emitter.exe then
-	remtrace Could not compile emitter.exe
-	CANCEL
-endiff
-move EIFGEN\W_code\emitter.exe %INSTALL_DIR\dotnet\assemblies
-cdd %INSTALL_DIR\dotnet\assemblies
-set TMP_EIFFEL=%ISE_EIFFEL
-set ISE_EIFFEL=%INSTALL_DIR
-call build.bat
-set ISE_EIFFEL=%TMP_EIFFEL
-fullrf build.bat
-fullrf System.Object.xml
-fullrf types.xml
-unset TMP_EIFFEL
+remtrace Compiling .NET components
+cdd %INIT_DIR
+call make_dotnet.btm
 cdd %EIFFEL_SRC
 
-
+REM Compiling EiffelStudio stuff
 iff defined BUILD_ENTERPRISE_ONLY then
 	remtrace Recompile EiffelStudio
 	cdd %FINALIZATION_DIR

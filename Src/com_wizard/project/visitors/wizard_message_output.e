@@ -96,7 +96,7 @@ feature -- Basic operations
 	refresh is
 			-- Refresh message output.
 		do
---			output_window.refresh
+			output_window.refresh
 		end
 
 	set_forced_display is

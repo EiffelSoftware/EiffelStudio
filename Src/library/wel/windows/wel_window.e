@@ -47,6 +47,11 @@ inherit
 			{NONE} all
 		end
 
+	WEL_WA_CONSTANTS
+		export
+			{NONE} all
+		end
+
 	WEL_SWP_CONSTANTS
 		export
 			{NONE} all
@@ -1453,6 +1458,16 @@ feature -- Messages
 			end
 		end
 
+	on_desactivate is
+			-- Called when window loses activation.
+		do
+		end
+
+	on_activate is
+			-- Called when window gains activation (alt-tab or mouse click on title bar)
+		do
+		end
+
 feature {WEL_WINDOW} -- Implementation
 
 	default_window_procedure: POINTER
@@ -1592,6 +1607,18 @@ feature {WEL_WINDOW} -- Implementation
 			on_erase_background (paint_dc, client_rect)
 		end
 
+	on_wm_activate (wparam: INTEGER) is
+			-- Wm_activate message
+		require
+			exists: exists
+		do
+			if wparam = Wa_inactivate then
+				on_desactivate
+			else
+				on_activate
+			end
+		end
+
 	default_process_message (msg, wparam, lparam: INTEGER) is
 			-- Process `msg' which has not been processed by
 			-- `process_message'.
@@ -1690,6 +1717,8 @@ feature {WEL_DISPATCHER, WEL_WINDOW}
 				on_wm_destroy
 			when Wm_erasebkgnd then
 				on_wm_erase_background (wparam)
+			when Wm_activate then
+				on_wm_activate (wparam)
 			else
 				default_process_message (msg, wparam, lparam)
 			end

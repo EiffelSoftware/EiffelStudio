@@ -37,7 +37,7 @@
       <h2>Document format and contents</h2>
       <p>The text is in Acrobat PDF format, so you will need the Acrobat Reader
       plug-in to read it from within your browser.
-      <p>This document is written in the form of an addition to the book <b><i><font color="#0000a0"><a href="http://eiffel.com/doc/page.html#etl">Eiffel:
+      <p>This document is written in the form of an addition to the book <b><i><font color="#0000a0"><a href="../books.html#etl">Eiffel:
       The Language</a></font></i></b>. Note that internal hypertext links will
       work, but not the links to other chapters. Consider the chapter number
       (23) arbitrary.</p>
@@ -46,27 +46,28 @@
       release 4.3 of ISE Eiffel. Almost everything is supported as described in
       the document; here are the exceptions:
       <ul>
-        <p><img alt="+" src="http://eiffel.com/icons/greenball.gif" width="10" height="10">
+        <li>
         The associated feature of a call expression may not belong to a base
         type; for example <font color="#0000a0">{<i>REAL</i>}<b>~</b><i>abs </i></font>will
         not work. In the rare cases in which this is needed, encapsulate the
         feature in a routine of your class, which takes the intended target as
-        argument.
-        <p><img alt="+" src="http://eiffel.com/icons/greenball.gif" width="10" height="10">
+        argument.</li>
+        <li>
         The mechanism is not yet applicable to operator features (infix or
         prefix, see top of page 578). If you want to use an operator feature in
         an active expression, encapsulate it in an identifier feature for that
-        purpose.
-        <p><img alt="+" src="http://eiffel.com/icons/greenball.gif" width="10" height="10">
+        purpose.</li>
+        <li>
         The <font color="#0000a0"><i>TYPE </i></font>class has no useful
         feature, and <font color="#0000a0"><i>generator </i></font>returns a
-        string.
-        <p><img alt="+" src="http://eiffel.com/icons/greenball.gif" width="10" height="10">
+        string.</li>
+        <li>
         The 4.3 version of EiffelBase has not been updated to take advantage of
         agents. A forthcoming version will integrate iterator mechanisms in
         classes such as <font color="#0000a0"><i>TRAVERSAL</i></font>, as
-        described in the document. <!--
-<p><img src="/icons/greenball.gif" alt="+">
+        described in the document.</li>
+<!--
+<li>
 A temporary syntactical constraint: if a
 <font color="#aa00ff">Type_operator</font> is used
 as target, as in <font color="#0000a0">{<i>T</i>}<b>~</b><i>f</i> (<i>x</i>)</font>,
@@ -74,20 +75,19 @@ there must be no space between the closing brace
 <font color="#0000a0">}</font> 
 and the dot that immediately follows it. (This corresponds to the suggested
 style anyway, but since the brace and the dot are two separate operators
-intervening spaces will be permitted in future releases.)
+intervening spaces will be permitted in future releases.)</li>
 -->
         </p>
       </ul>
       <h2>Credits</h2>
       <p>Major non-ISE contributions to the mechanisms described in the chapter
       came from
-      <p>&nbsp;
       <ul>
-        <p><img src="http://eiffel.com/icons/greenball.gif" width="10" height="10">
-        Paul Dubois (Lawrence Livermore National Laboratory, &lt;dubois1@llnl.gov&gt;.
-        <p><img src="http://eiffel.com/icons/greenball.gif" width="10" height="10">
+        <li>
+        Paul Dubois (Lawrence Livermore National Laboratory, &lt;dubois1@llnl.gov&gt;.</li>
+        <li>
         Mark Howard (Axa Rosenberg, formerly Rosenberg Institutional Equity
-        Management)</p>
+        Management)</li>
       </ul>
       <p>We are very grateful to them for their essential insights.</p>
       <p>&nbsp;</td>

@@ -197,8 +197,14 @@ feature -- Access
 							if current_data_element /= Void then
 								char_data := ucstring_to_latin_1 (current_data_element.content)
 								char_data.replace_substring_all ("%T","")
+									-- If we are loading a multiple line text, then we must
+									-- keep appending a new line character and the new text.
 								if data_valid (char_data) then
-									info.set_data (char_data)
+									if info.data = Void then
+										info.set_data (char_data)
+									else
+										info.set_data (info.data + "%N" + char_data)
+									end
 								end
 							end
 							current_element.forth

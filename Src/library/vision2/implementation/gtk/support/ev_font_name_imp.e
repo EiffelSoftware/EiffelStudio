@@ -11,6 +11,7 @@ class
 
 creation
 	make_empty,
+	make_default,
 	make_by_name,
 	make_by_system_name
 
@@ -21,30 +22,48 @@ feature -- Initialization
 		do
 		end
 
+	make_default is
+			-- Create the default font.
+		do
+			foundry := "*"
+			family := "helvetica"
+			weight := "Medium"
+			slant := "R"
+			setwidth := "*"
+			add_style := "*"
+			pixel_size := "*"
+			point_size := "120"
+			resolution_x := "*"
+			resolution_y := "*"
+			spacing := "*"
+			average_width := "*"
+			charset := "*"
+		end
+
 	make_by_name (str: STRING) is
 			-- Create the default font with name
 		do
-			foundry := ""
-			family := ""
-			weight := "medium"
-			slant := "roman"
-			set_width := "normal"
-			add_style := "(nil)"
-			pixel_size := 14
-			point_size := 140
-			resolution_x := 75
-			resolution_y := 75
-			spacing := "proportional"
-			average_width := 74
-			charset := "iso8859-1"
+			foundry := "*"
+			family := str
+			weight := "Medium"
+			slant := "R"
+			setwidth := "*"
+			add_style := "*"
+			pixel_size := "*"
+			point_size := "140"
+			resolution_x := "*"
+			resolution_y := "*"
+			spacing := "*"
+			average_width := "*"
+			charset := "*"
 		end
 
 	make_by_system_name (str: STRING) is
 			-- Create the object with empty attributes.
-		do
+		do	
 			parse_name (str)
 		end
-			
+
 feature -- Access
 
 	foundry: STRING
@@ -55,36 +74,52 @@ feature -- Access
 
 	weight: STRING
 		-- Weight of the font (normal, medium, bold...)
+		-- Must be `*` for any value.
 
 	slant: STRING
 		-- Slant of the font
+		-- Must be `*` for any value.
 
-	set_width: STRING
-		-- ??
+	setwidth: STRING
+		-- Has an integer value.
+		-- Can be `*` for any value.
 
 	add_style: STRING
-		-- ??
+		-- Has an integer value.
+		-- Can be `*` for any value.
 
-	pixel_size: INTEGER
+	pixel_size: STRING
 		-- Size in pixel of the font
+		-- Has an integer value.
+		-- Can be `*` for any value.
 
-	point_size: INTEGER
+	point_size: STRING
 		-- Size in points of the font
+		-- Has an integer value.
+		-- Must be specified
 
-	resolution_x: INTEGER
+	resolution_x: STRING
 		-- Horizontal resolution of the font
+		-- Has an integer value.
+		-- Can be `*` for any value.
 
-	resolution_y: INTEGER
+	resolution_y: STRING
 		-- Vertical resolution of the font
+		-- Has an integer value.
+		-- Can be `*` for any value.
 
 	spacing: STRING
 		-- Spacing in the font
+		-- Can be `*` for any value.
 
-	average_width: INTEGER
-		-- average_width of the font
+	average_width: STRING
+		-- average_width of a character in the font
+		-- Has an integer value.
+		-- Can be `*` for any value.
 
 	charset: STRING
 		-- Current charset of the font
+		-- Can be `*` for any value.
 
 feature -- Element change
 
@@ -112,10 +147,10 @@ feature -- Element change
 			slant := str
 		end
 
-	set_set_width (str: STRING) is
+	set_setwidth (str: STRING) is
 			-- Make 'str' the new width.
 		do
-			set_width:= str
+			setwidth:= str
 		end
 
 	set_add_style (str: STRING) is
@@ -124,28 +159,28 @@ feature -- Element change
 			add_style := str
 		end
 
-	set_pixel_size (value: INTEGER) is
-			-- Make 'value' the new pixel_size.
+	set_pixel_size (str: STRING) is
+			-- Make 'str' the new pixel_size.
 		do
-			pixel_size := value
+			pixel_size := str
 		end
 
-	set_point_size (value: INTEGER) is
-			-- Make 'value' the new point_size.
+	set_point_size (str: STRING) is
+			-- Make 'str' the new point_size.
 		do
-			point_size := value
+			point_size := str
 		end
 
-	set_resolution_x (value: INTEGER) is
-			-- Make 'value' the new resolution_x.
+	set_resolution_x (str: STRING) is
+			-- Make 'str' the new resolution_x.
 		do
-			resolution_x := value
+			resolution_x := str
 		end
 
-	set_resolution_y (value: INTEGER) is
-			-- Make 'value' the new resolution_y.
+	set_resolution_y (str: STRING) is
+			-- Make 'str' the new resolution_y.
 		do
-			resolution_y := value
+			resolution_y := str
 		end
 
 	set_spacing (str: STRING) is
@@ -154,19 +189,51 @@ feature -- Element change
 			spacing := str
 		end
 
-	set_average_width (value: INTEGER) is
-			-- Make 'value' the new width.
+	set_average_width (str: STRING) is
+			-- Make 'str' the new width.
 		do
-			average_width := value
+			average_width := str
 		end
 
 	set_charset (str: STRING) is
-			-- Make 'value' the new charset.
+			-- Make 'str' the new charset.
 		do
 			charset := str
 		end
 
 feature -- Basic operations
+
+	basic_name: STRING is
+			-- A basic name with the minimum of information to
+			-- retrieve a font.
+		do
+			Result := "-"
+			Result.append (foundry)
+			Result.append ("-")
+			Result.append (family)
+			Result.append ("-")
+			Result.append (weight)
+			Result.append ("-")
+			Result.append (slant)
+			Result.append ("-")
+			Result.append ("*")
+			Result.append ("-")
+			Result.append ("*")
+			Result.append ("-")
+			Result.append ("*")
+			Result.append ("-")
+			Result.append (point_size)
+			Result.append ("-")
+			Result.append ("*")
+			Result.append ("-")
+			Result.append ("*")
+			Result.append ("-")
+			Result.append ("*")
+			Result.append ("-")
+			Result.append ("*")
+			Result.append ("-")
+			Result.append ("*")
+		end
 
 	system_name: STRING is
 			-- Return the system name of the font.
@@ -180,21 +247,21 @@ feature -- Basic operations
 			Result.append ("-")
 			Result.append (slant)
 			Result.append ("-")
-			Result.append (set_width) --To change
+			Result.append (setwidth)
 			Result.append ("-")
 			Result.append (add_style)
 			Result.append ("-")
-			Result.append (pixel_size.out)
+			Result.append (pixel_size)
 			Result.append ("-")
-			Result.append (point_size.out)
+			Result.append (point_size)
 			Result.append ("-")
-			Result.append (resolution_x.out)
+			Result.append (resolution_x)
 			Result.append ("-")
-			Result.append (resolution_y.out)
+			Result.append (resolution_y)
 			Result.append ("-")
 			Result.append (spacing)
 			Result.append ("-")
-			Result.append (average_width.out)
+			Result.append (average_width)
 			Result.append ("-")
 			Result.append (charset)
 		end
@@ -223,7 +290,7 @@ feature -- Basic operations
 
 			pos := pos_end + 1
 			pos_end := str.index_of ('-', pos)
-			set_width := str.substring (pos, pos_end - 1)
+			setwidth := str.substring (pos, pos_end - 1)
 
 			pos := pos_end + 1
 			pos_end := str.index_of ('-', pos)
@@ -231,19 +298,19 @@ feature -- Basic operations
 
 			pos := pos_end + 1
 			pos_end := str.index_of ('-', pos)
-			pixel_size := (str.substring (pos, pos_end - 1)).to_integer
+			pixel_size := str.substring (pos, pos_end - 1)
 
 			pos := pos_end + 1
 			pos_end := str.index_of ('-', pos)
-			point_size := (str.substring (pos, pos_end - 1)).to_integer
+			point_size := str.substring (pos, pos_end - 1)
 
 			pos := pos_end + 1
 			pos_end := str.index_of ('-', pos)
-			resolution_x := (str.substring (pos, pos_end - 1)).to_integer
+			resolution_x := str.substring (pos, pos_end - 1)
 
 			pos := pos_end + 1
 			pos_end := str.index_of ('-', pos)
-			resolution_y := (str.substring (pos, pos_end - 1)).to_integer
+			resolution_y := str.substring (pos, pos_end - 1)
 
 			pos := pos_end + 1
 			pos_end := str.index_of ('-', pos)
@@ -251,44 +318,11 @@ feature -- Basic operations
 
 			pos := pos_end + 1
 			pos_end := str.index_of ('-', pos)
-			average_width := (str.substring (pos, pos_end - 1)).to_integer
+			average_width := str.substring (pos, pos_end - 1)
 
 			pos := pos_end + 1
 			pos_end := str.count + 1
 			charset := str.substring (pos, pos_end - 1)
-		end
-
-feature -- Assertion features
-
-	valid_weight (str: STRING): BOOLEAN is
-			-- Is 'str' a valid weight value?
-		do
-			Result := (str = "(nil)") or (str = "black") or (str = "bold")
-						or (str = "demibold") or (str = "medium")
-						or (str = "regular")
-		end
-
-	valid_slant (str: STRING): BOOLEAN is
-			-- Is 'str' a valid slant value?
-		do
-			Result := (str = "(nil)") or (str = "italic") or (str = "oblique")
-						or (str = "roman")
-		end
-
-	valid_set_width (str: STRING): BOOLEAN is
-			-- Is 'str' a valid set_width value?
-
-		do
-			Result := (str = "(nil)") or (str = "normal")
-						or (str = "semicondensed")
-		end
-
-
-	valid_spacing (str: STRING): BOOLEAN is
-			-- Is 'str' a valid spacing value?
-		do
-			Result := (str = "char cell") or (str = "monospaced")
-						or (str = "proportional")
 		end
 
 end -- class EV_FONT_NAME_IMP

@@ -58,7 +58,7 @@ feature {NONE}
 			Result := True
 		end
 
-	previous_context_data: CONTEXT_DATA
+	previous_context: CONTEXT
 
 feature 
 
@@ -82,7 +82,7 @@ feature {NONE}
 
 	grabbed: BOOLEAN
 
-	selected: BOOLEAN
+	button_pressed: BOOLEAN	
 
 	shift_selected: BOOLEAN
 
@@ -142,7 +142,7 @@ feature {NONE}
 				parent.widget.set_cursor (cursor_shape)
 			end
 			widget.grab (cursor_shape)
-			grabbed := true
+			grabbed := True
 		end
 
 	end_mvt is
@@ -569,15 +569,17 @@ feature {NONE} -- Display Section
 			end
 		end
 
-feature {NONE} -- Cursor shape
-
-	cursor_shape: SCREEN_CURSOR
+feature {CONTEXT} -- Resize squares size
 
 	corner_side: INTEGER is 10
 			-- Lenght of the sensitive squares
 			-- If the cursor is on the squares, the mode
 			-- is resize, otherwise it is move
- 
+
+ feature {NONE} -- Cursor shape
+
+	cursor_shape: SCREEN_CURSOR
+
 	set_cursor (movable: BOOLEAN) is
 			-- Set the cursor shape
 		local
@@ -586,29 +588,51 @@ feature {NONE} -- Cursor shape
 		do
 			if movable then
 				cursor_shape := Cursors.move_cursor
+				x_pos := eb_screen.x
+				y_pos := eb_screen.y
+				real_x := context.real_x
+				real_y := context.real_y
+				if x_pos < real_x + corner_side then
+					if y_pos < real_y + corner_side then
+						cursor_shape := Cursors.top_left_corner_cursor
+					elseif y_pos > real_y + context.height - corner_side then
+						cursor_shape := Cursors.bottom_left_corner_cursor
+					end
+				elseif x_pos > real_x + context.width - corner_side then
+					if y_pos < real_y + corner_side then
+						cursor_shape := Cursors.top_right_corner_cursor
+					elseif y_pos > real_y + context.height - corner_side then
+						cursor_shape := Cursors.bottom_right_corner_cursor
+					end
+				end
 			else
 				cursor_shape := Cursors.arrow_cursor
 			end
-			x_pos := eb_screen.x
-			y_pos := eb_screen.y
-
-			real_x := context.real_x
-			real_y := context.real_y
-			if x_pos < real_x + corner_side then
-				if y_pos < real_y + corner_side then
-					cursor_shape := Cursors.top_left_corner_cursor
-				elseif y_pos > real_y + context.height - corner_side then
-					cursor_shape := Cursors.bottom_left_corner_cursor
-				end
-			elseif x_pos > real_x + context.width - corner_side then
-				if y_pos < real_y + corner_side then
-					cursor_shape := Cursors.top_right_corner_cursor
-				elseif y_pos > real_y + context.height - corner_side then
-					cursor_shape := Cursors.bottom_right_corner_cursor
-				end
-			end
 				context_data.widget.set_cursor (cursor_shape)
 		end
+
+ 	refresh_selection is
+ 			-- Redisplay corner squares.
+ 		do
+			if context.is_selected then
+				if context.grouped then
+					from
+						group.start
+					until
+						group.after
+					loop
+						if group.item.is_selected then
+							group.item.display_resize_squares (0)
+						else
+							group.item.set_selected_color
+						end
+						group.forth
+					end
+ 				else
+					context.display_resize_squares (0)
+				end
+			end
+	end
 
 feature {PERM_WIND_C}
 
@@ -621,21 +645,29 @@ feature {PERM_WIND_C}
 		do
 			if (argument = First) then
 					-- Pointer motion
-				if not selected then
-					set_cursor (context.is_movable)
-				elseif ctrl_selected then
-					move_group
-				elseif context.is_movable then
-					if not grabbed then
-						-- First call
-						-- Keep track of old values
--- (Initially)			context.set_insensitive
-						begin_mvt
-					elseif cursor_shape = Cursors.move_cursor then
-						move_rectangle
-					elseif cursor_shape /= Void or else cursor_shape = Cursors.arrow_cursor then
-						resize_rectangle
+				if context /= Void then
+					if not button_pressed then
+						refresh_selection
+						set_cursor (context.is_movable)
+					elseif ctrl_selected then
+						move_group
+					elseif context.is_movable and then not abort_button_release then
+						if not grabbed then
+							-- First call
+							-- Keep track of old values
+							begin_mvt
+						elseif cursor_shape = Cursors.move_cursor then
+							move_rectangle
+						elseif cursor_shape = Cursors.top_left_corner_cursor
+							or cursor_shape = Cursors.top_right_corner_cursor
+							or cursor_shape = Cursors.bottom_left_corner_cursor
+							or cursor_shape = Cursors.bottom_right_corner_cursor
+						then
+							resize_rectangle
+						end
 					end
+				else
+					set_cursor (False)
 				end
 			elseif (argument = Second) then
 				-- Button release
@@ -651,35 +683,49 @@ feature {PERM_WIND_C}
 						end_shift_action
 					elseif ctrl_selected then
 						end_group_action
--- 					elseif context.is_group_composite and then
--- 						cursor_shape = Cursors.move_cursor 
--- 					then
--- 						end_group_composite
-					elseif selected then
+					elseif button_pressed then
 						end_mvt
 					end
 				end
-				selected := False
--- (Initially)	context.set_sensitive
-			elseif (argument = Third) then
-					-- Button press
-				if context.is_selectionable and then not selected then
-					selected := True
+				button_pressed := False
+ 			elseif (argument = Third) then
+ 					-- Button press
+				if not button_pressed then
+					button_pressed := True
 					widget.ungrab
 					grabbed := False
 				end
+				abort_button_release := False
+				set_cursor (context.is_movable)
+				if context /= previous_context then
+					if previous_context /= Void and then previous_context.is_selectionable then
+						previous_context.set_selected (False)
+						previous_context.widget.set_cursor (cursors.arrow_cursor)
+							if previous_context.widget.managed then
+									--| redisplay previous context if not deleted
+								previous_context.widget.unmanage
+								previous_context.widget.manage
+							end
+					end
+					previous_context := context
+				end
+				if context.is_selectionable and then not context.is_selected then
+					context.set_selected (True)
+					refresh_selection
+				end
 			elseif (argument = Fourth) then
 				-- Shift press
-				if cursor_shape /= Cursors.move_cursor then
-					selected := True
+				if context.is_selected and then
+					cursor_shape /= Cursors.move_cursor
+				then
 					shift_selected := True
 				else
 					abort_button_release := True
 				end
 			elseif (argument = Fifth) then
 				-- Group (control selected)
-				if not (ctrl_selected or selected) then
-					selected := True
+				if not ctrl_selected then
+					button_pressed := True
 					ctrl_selected := True
 					motion := False
 					bd ?= context_data
@@ -695,31 +741,25 @@ feature {PERM_WIND_C}
 			elseif argument = Sixth then
 					-- Left arrow
 				!! arrow_cmd
-				arrow_cmd.execute (context)
+				arrow_cmd.execute (previous_context)
 				arrow_cmd.move_context (-1, 0)
 			elseif argument = Seventh then
 					-- Right arrow
 				!! arrow_cmd
-				arrow_cmd.execute (context)
+				arrow_cmd.execute (previous_context)
 				arrow_cmd.move_context (1, 0)
 			elseif argument = Eighth then
 					-- Up arrow
 				!! arrow_cmd
-				arrow_cmd.execute (context)
+				arrow_cmd.execute (previous_context)
 				arrow_cmd.move_context (0, -1)
 			elseif argument = Nineth then
 					-- Down arrow
 				!! arrow_cmd
-				arrow_cmd.execute (context)
+				arrow_cmd.execute (previous_context)
 				arrow_cmd.move_context (0, 1)
 			elseif not (grabbed or ctrl_selected) then
-					-- Enter event
-				selected := False;
-				abort_button_release := False;
-				if previous_context_data /= Void then
-					previous_context_data.widget.set_cursor (cursors.arrow_cursor)
-				end
-				previous_context_data := context_data
+					-- Enter event 
 				a_context ?= argument
 				if not a_context.deleted then
 					context := a_context
@@ -731,9 +771,10 @@ feature {PERM_WIND_C}
 							context := bull.group_context
 						end
 					end
-					set_cursor (context.is_movable)
+				end
+				if context.is_selected then
+					refresh_selection
 				end
 			end
 		end
-
 end

@@ -3,7 +3,7 @@
 EIFFEL_SRC=C:/Eiffel50
 EIFFEL_SRC2=C:/Eiffel50
 CC = gcc
-CFLAGS = -c -O2 -I$(EIFFEL_SRC)/library/wel/spec/windows/include -I$(EIFFEL_SRC2)/bench/spec/windows/include
+CFLAGS = -c -O2 -I$(EIFFEL_SRC)/library/wel/spec/windows/include -I$(EIFFEL_SRC2)/studio/spec/windows/include
 RM = rm
 
 .c.o:

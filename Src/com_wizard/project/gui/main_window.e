@@ -32,6 +32,11 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_BROWSE_DIRECTORY
+		export
+			{NONE} all
+		end
+
 	WIZARD_RESCUABLE
 		export
 			{NONE} all

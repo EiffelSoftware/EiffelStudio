@@ -442,12 +442,13 @@ feature -- Generation, Header
 	generate_customization is
 			-- Customize generic Makefile
 		do
+			generate_include_path;
 			Make_file.putstring ("%
 				%SHELL = /bin/sh%N%
 				%CC = $cc%N%
 				%CFLAGS = $optimize $ccflags $large ");
 			generate_specific_defines;
-			Make_file.putstring ("-I%H$(EIFFEL3)/bench/spec/%H$(PLATFORM)/include%N%
+			Make_file.putstring ("-I%H$(EIFFEL3)/bench/spec/%H$(PLATFORM)/include %H$(INCLUDE_PATH)%N%
 				%LDFLAGS = $ldflags%N%
 				%LIBS = $libs%N%
 				%MAKE = make%N%
@@ -575,6 +576,32 @@ feature -- Generation, External archives and object files.
 					i := i + 1
 				end;
 				Make_file.new_line;
+				Make_file.new_line;
+			end
+		end;
+
+	generate_include_path is
+			-- Generate declaration fo the include_paths
+		local
+			include_paths: FIXED_LIST [STRING];
+			i, nb: INTEGER;
+		do
+			include_paths := System.include_paths;
+			if include_paths /= Void then
+				Make_file.putstring ("INCLUDE_PATH = ");
+				from
+					i := 1;
+					nb := include_paths.count;
+				until
+					i > nb
+				loop
+					Make_file.putstring ("-I");
+					Make_file.putstring (include_paths.i_th (i));
+					if i /= nb then
+						Make_file.putchar (' ');
+					end
+					i := i + 1
+				end;
 				Make_file.new_line;
 			end
 		end;

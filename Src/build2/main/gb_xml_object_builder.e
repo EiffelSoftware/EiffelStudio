@@ -37,7 +37,7 @@ inherit
 
 feature -- Access
 
-	new_object (element: XML_ELEMENT; is_component: BOOLEAN): GB_OBJECT is
+	new_object (element: XM_ELEMENT; is_component: BOOLEAN): GB_OBJECT is
 			-- `Result' is an object generated from `xml_element'.
 			-- This object has no parent, is not included in the
 			-- objects list and has all representations built.
@@ -45,15 +45,15 @@ feature -- Access
 			element_not_void: element /= Void
 		local
 			a_new_object: GB_OBJECT
-			current_element: XML_ELEMENT
+			current_element: XM_ELEMENT
 			current_name: STRING
 			gb_ev_any: GB_EV_ANY
 			display_object: GB_DISPLAY_OBJECT
-			xml_element: XML_ELEMENT
+			xml_element: XM_ELEMENT
 		do
 			xml_element ?= element.first	
 			
-			a_new_object := object_handler.build_object_from_string (xml_element.attribute_by_name (type_string).value.to_utf8)
+			a_new_object := object_handler.build_object_from_string (xml_element.attribute_by_name (type_string).value)
 			object_handler.build_object (a_new_object)
 			object_handler.add_object_to_objects (a_new_object)
 			from
@@ -63,7 +63,7 @@ feature -- Access
 			loop
 				current_element ?= xml_element.item_for_iteration
 				if current_element /= Void then
-					current_name := current_element.name.to_utf8
+					current_name := current_element.name
 					if current_name.is_equal (Item_string) then
 						-- Add the new objects as children.
 						build_new_object (current_element, a_new_object, is_component)
@@ -105,24 +105,23 @@ feature -- Access
 			end
 			Result := a_new_object
 		end
-		
 
-	build_new_object (element: XML_ELEMENT; object: GB_OBJECT; is_component: BOOLEAN) is
+	build_new_object (element: XM_ELEMENT; object: GB_OBJECT; is_component: BOOLEAN) is
 			-- Build a new object from information in `element'.
 		require
 			element_not_void: element /= Void
-			element_type_is_item: element.name.to_utf8.is_equal (Item_string)
+			element_type_is_item: element.name.is_equal (Item_string)
 		local
 			a_new_object: GB_OBJECT
-			current_element: XML_ELEMENT
+			current_element: XM_ELEMENT
 			gb_ev_any: GB_EV_ANY
 			current_name: STRING
 			display_object: GB_DISPLAY_OBJECT
 		do
 			if is_component then
-				a_new_object := object_handler.build_object_from_string (element.attribute_by_name (type_string).value.to_utf8)
+				a_new_object := object_handler.build_object_from_string (element.attribute_by_name (type_string).value)
 			else
-				a_new_object := object_handler.build_object_from_string_and_assign_id (element.attribute_by_name (type_string).value.to_utf8)
+				a_new_object := object_handler.build_object_from_string_and_assign_id (element.attribute_by_name (type_string).value)
 			end
 			
 			object_handler.add_object (object, a_new_object, object.layout_item.count + 1)
@@ -133,7 +132,7 @@ feature -- Access
 			loop
 				current_element ?= element.item_for_iteration
 				if current_element /= Void then
-					current_name := current_element.name.to_utf8
+					current_name := current_element.name
 					if current_name.is_equal (Item_string) then
 						-- The element represents an item, so we must add new objects.
 						build_new_object (current_element, a_new_object, is_component)
@@ -172,6 +171,5 @@ feature -- Access
 				element.forth
 			end
 		end
-		
 
 end -- class GB_XML_OBJECT_BUILDER

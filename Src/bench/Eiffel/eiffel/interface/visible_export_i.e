@@ -16,9 +16,16 @@ feature
 
 	is_visible (feat: FEATURE_I): BOOLEAN is
 			-- Is the feature `feat' visible for external code ?
+		local
+			creators: EXTEND_TABLE [EXPORT_I, STRING]
 		do
 			Result := feat.export_status.is_all
-				or else feat.access_class.creators.has (feat.feature_name)
+			if not Result then
+				creators := feat.access_class.creators
+				if creators /= Void then
+					Result := creators.has (feat.feature_name)
+				end
+			end
 		end;
 
 	has_visible: BOOLEAN is True

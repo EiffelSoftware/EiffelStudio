@@ -51,7 +51,7 @@ feature -- Generation
 			re: ROUT_ENTRY
 			ae: ATTR_ENTRY
 			entry_item: ENTRY
-			local_copy: like Current
+			local_copy: ARRAY [ENTRY]
 		do
 			from
 				local_copy := Current
@@ -133,9 +133,20 @@ feature -- Generation
 			ae: ATTR_ENTRY
 			nb: INTEGER
 			entry_item: ENTRY
-			local_copy: like Current
+			local_copy: ARRAY [ENTRY]
+			info, desc1, desc2, gen_type, type: STRING
+			non_generic, gen_type_string, end_of_line: STRING
 		do
 			from
+					-- Initialize all the constant string used during this generation
+				info := "].info = (uint16) ("
+				desc1 := "%Tdesc["
+				desc2 := ");%N%Tdesc["
+				type := "].type = (int16) ("
+				gen_type := "].gen_type = "
+				non_generic := "(int16 *) 0;%N"
+				gen_type_string := " gen_type"
+				end_of_line := ";%N"
 				local_copy := Current
 				i := lower
 			until
@@ -150,26 +161,25 @@ feature -- Generation
 							-- Write the body index of the routine (index
 							-- into the run-time dispatch table) and the type
 							-- of the feature.
-						f.putstring ("%Tdesc[");
+						f.putstring (desc1);
 						f.putint (nb);
-						f.putstring ("].info = (uint16) (");
-						f.putstring (re.real_body_index.generated_id);
-						f.putstring (");%N%Tdesc[");
+						f.putstring (info);
+						re.real_body_index.generated_id (f);
+						f.putstring (desc2);
 						f.putint (nb);
-						f.putstring ("].type = (int16) (");
-						f.putstring (re.generated_static_feature_type_id);
-						f.putstring (");%N")
-						f.putstring ("%Tdesc[");
+						f.putstring (type);
+						re.generated_static_feature_type_id (f)
+						f.putstring (desc2);
 						f.putint (nb);
-						f.putstring ("].gen_type = ");
+						f.putstring (gen_type);
 
 						if re.is_generic then
-							f.putstring (" gen_type");
+							f.putstring (gen_type_string);
 							f.putint (cnt.value);
-							f.putstring (";%N")
+							f.putstring (end_of_line)
 							j := cnt.next
 						else
-							f.putstring ("(int16 *) 0;%N")
+							f.putstring (non_generic)
 						end
 					else
 						ae ?= entry_item
@@ -178,42 +188,44 @@ feature -- Generation
 								-- Write the offset of the attribute in the 
 								-- run-time structure (object) and the type of
 								-- the feature.
-							f.putstring ("%Tdesc[");
+							f.putstring (desc1);
 							f.putint (nb);
-							f.putstring ("].info = (uint16) ");
+							f.putstring (info);
 							f.putint (ae.workbench_offset);
-							f.putstring (";%N%Tdesc[");
+							f.putstring (desc2);
 							f.putint (nb);
-							f.putstring ("].type = (int16) (");
-							f.putstring (ae.generated_static_feature_type_id);
-							f.putstring (");%N")
-							f.putstring ("%Tdesc[");
+							f.putstring (type);
+							ae.generated_static_feature_type_id (f)
+							f.putstring (desc2);
 							f.putint (nb);
-							f.putstring ("].gen_type = ");
+							f.putstring (gen_type);
 
 							if ae.is_generic then
-								f.putstring (" gen_type");
+								f.putstring (gen_type_string);
 								f.putint (cnt.value);
-								f.putstring (";%N")
+								f.putstring (end_of_line)
 								j := cnt.next
 							else
-								f.putstring ("(int16 *) 0;%N")
+								f.putstring (non_generic)
 							end
 						end
 					end;
 				else
 						-- The entry corresponds to a routine that
 						-- is not polymorphic.
-					f.putstring ("%Tdesc[");
+					f.putstring (desc1);
 					f.putint (nb);
-					f.putstring ("].info = (uint16) ");
+					f.putstring (info);
 					f.putint (Invalid_index);
-					f.putstring (";%N%Tdesc[");
+					f.putstring (desc2);
 					f.putint (nb);
-					f.putstring ("].type = (int16) -1;%N")
-					f.putstring ("%Tdesc[");
+					f.putstring (type)
+					f.putint (-1)
+					f.putstring (desc2);
 					f.putint (nb);
-					f.putstring ("].gen_type = (int16 *) 0;%N")
+					f.putstring (gen_type)
+					f.putint (0)
+					f.new_line
 				end;
 				i := i + 1
 			end;
@@ -230,7 +242,7 @@ feature -- Generation
 			re: ROUT_ENTRY;
 			ae: ATTR_ENTRY
 			entry_item: ENTRY
-			local_copy: like Current
+			local_copy: ARRAY [ENTRY]
 		do
 			from
 				local_copy := Current
@@ -278,7 +290,7 @@ feature -- Melting
 			re: ROUT_ENTRY;
 			ae: ATTR_ENTRY
 			entry_item: ENTRY
-			local_copy: like Current
+			local_copy: ARRAY [ENTRY]
 		do
 				-- Append the id of the origin class
 			ba.append_short_integer (class_id.id);

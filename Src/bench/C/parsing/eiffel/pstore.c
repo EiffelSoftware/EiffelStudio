@@ -86,11 +86,11 @@ long store_append(EIF_INTEGER f_desc, char *o, fnptr mid, fnptr nid, char *s)
 
 		if (obj_nb != nb_stored) {
 			printf("obj_nb = %ld nb_stored = %ld\n", obj_nb, nb_stored);
-			panic("Eiffel partial store");
+			eiffel_panic("Eiffel partial store");
 		}
 	}
 	if (obj_nb != nomark(o))
-		panic("Partial store inconsistency");
+		eiffel_panic("Partial store inconsistency");
 #endif
 
 	flush_st_buffer();				/* Flush the buffer */

@@ -22,10 +22,11 @@
 #include "except.h"
 #include "eif_globals.h"
 
-/* #define ASIZE	256 *//* The alphabet's size */ /* %%ss moved to eif_contants.h */
 
-rt_private uint32 delta[ASIZE];	/* Records shifting deltas */ /* %%ss mt */
-rt_private uint32 **darray;		/* Pointer to array recording shifting tables */ /* %%ss mt */
+#ifndef EIF_THREADS
+rt_private uint32 delta[ASIZE];				/* Records shifting deltas */ /* %%ss mt */
+rt_private uint32 **darray = (uint32 **) 0;	/* Pointer to array recording shifting tables */ /* %%ss mt */
+#endif /* EIF_THREADS */
 
 rt_private void compile(char *pattern, register int plen, uint32 *dtable);			/* Regular pattern compilation */
 rt_private void fuz_compile(EIF_OBJ pattern, register int plen, int fuzzy);		/* Fuzzy pattern compilation */

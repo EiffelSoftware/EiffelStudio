@@ -8,7 +8,7 @@ deferred class
 	EV_COLOR_SELECTION_DIALOG_I
 
 inherit
-	EV_STANDARD_DIALOG_I
+	EV_SELECTION_DIALOG_I
 
 feature -- Access
 
@@ -26,6 +26,27 @@ feature -- Element change
 		require
 			exists: not destroyed
 			valid_color: is_valid (color)
+		deferred
+		end
+
+feature -- Event - command association
+
+	add_help_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed when
+			-- the "Help" button is pressed.
+		require
+			exists: not destroyed
+			valid_command: cmd /= Void
+		deferred
+		end
+
+feature -- Event -- removing command association
+
+	remove_help_commands is
+			-- Empty the list of commands to be executed when
+			-- "Help" button is pressed.
+		require
+			exists: not destroyed
 		deferred
 		end
 

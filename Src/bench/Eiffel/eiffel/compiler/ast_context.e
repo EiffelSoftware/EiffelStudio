@@ -7,9 +7,9 @@ class
 	AST_CONTEXT 
 
 inherit
-	EXTEND_STACK [TYPE_A]
+	ARRAYED_STACK [TYPE_A]
 		rename
-			make as extend_stack_make
+			make as stack_make
 		export
 			{ACCESS_FEAT_AS, PRECURSOR_AS} i_th
 		end
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Create instance of AST_CONTEXT.	
 		do
-			extend_stack_make
+			stack_make (50)
 			create locals.make (10)
 			create access_line.make
 			create array_line.make
@@ -66,7 +66,7 @@ feature -- Access
 	current_feature: FEATURE_I
 			-- Current analyzed feature.
 
-	locals: EXTEND_TABLE [LOCAL_INFO, STRING]
+	locals: HASH_TABLE [LOCAL_INFO, STRING]
 			-- Current local variables of the analyzed feature
 
 	has_loop: BOOLEAN

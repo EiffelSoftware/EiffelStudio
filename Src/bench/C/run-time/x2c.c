@@ -10,7 +10,7 @@
 	Pre-computes offsets in generated C code to avoid cpp indigestion.
 */
 
-#include "eif_portable.h"
+#include "eif_eiffel.h"
 #include "x2c.h"
 #ifdef EIF_WINDOWS
 #define print_err_msg fprintf
@@ -26,30 +26,30 @@
 #define NON_RECURSIVE	'0'
 #define RECURSIVE		'1'
 
-extern long chroff(char recursive_call);
-extern long i16off(char recursive_call);
-extern long lngoff(char recursive_call);
-extern long fltoff(char recursive_call);
-extern long ptroff(char recursive_call);
-extern long dbloff(char recursive_call);
-extern long objsiz(char recursive_call);
-extern long i64off(char recursive_call);
-extern long bitoff(char recursive_call);
+rt_private long chroff(char recursive_call);
+rt_private long i16off(char recursive_call);
+rt_private long lngoff(char recursive_call);
+rt_private long fltoff(char recursive_call);
+rt_private long ptroff(char recursive_call);
+rt_private long dbloff(char recursive_call);
+rt_private long objsiz(char recursive_call);
+rt_private long i64off(char recursive_call);
+rt_private long bitoff(char recursive_call);
 
-extern long refacs (char recursive_call);
-extern long chracs (char recursive_call);
-extern long i16acs (char recursive_call);
-extern long lngacs (char recursive_call);
-extern long fltacs (char recursive_call);
-extern long dblacs (char recursive_call);
-extern long i64acs (char recursive_call);
-extern long ptracs (char recursive_call);
+rt_private long refacs (char recursive_call);
+rt_private long chracs (char recursive_call);
+rt_private long i16acs (char recursive_call);
+rt_private long lngacs (char recursive_call);
+rt_private long fltacs (char recursive_call);
+rt_private long dblacs (char recursive_call);
+rt_private long i64acs (char recursive_call);
+rt_private long ptracs (char recursive_call);
 
-extern long remainder(long int x);
-extern long padding(long int x, long int y);
+rt_private long remainder(long int x);
+rt_private long padding(long int x, long int y);
 
-extern long nextarg(void);
-extern void getarg(int n, char *name);
+rt_private long nextarg(void);
+rt_private void getarg(int n, char *name);
 
 long a[8];		/* Parameters array */
 
@@ -80,10 +80,12 @@ struct parse {
 } parser[] = {
 	{ "REFACS", 1, refacs },
 	{ "CHRACS", 1, chracs },
+	{ "I16ACS", 1, i16acs },
 	{ "LNGACS", 1, lngacs },
 	{ "FLTACS", 1, fltacs },
 	{ "PTRACS", 1, ptracs },
 	{ "DBLACS", 1, dblacs },
+	{ "I64ACS", 1, i64acs },
 	{ "CHROFF", 2, chroff },
 	{ "I16OFF", 3, i16off },
 	{ "LNGOFF", 4, lngoff },
@@ -95,15 +97,11 @@ struct parse {
 	{ "BITOFF", 1, bitoff },
 };
 
-struct parse *locate(char *name);
+rt_private struct parse *locate (char *name);
+rt_private void print_usage (void);
+rt_private FILE *input_file, *output_file;
 
-void	print_usage(void);
-
-FILE *input_file, *output_file;
-
-int main(int argc, char **argv)	/* DEC C will complain if declared as type void */
-
-
+int main(int argc, char **argv)
 {
 	/* Pre-process input (stdin) and outputs new form with resolved offset
 	 * macros (introduced by '@') on stdout. C strings and C chars are skipped
@@ -121,15 +119,6 @@ int main(int argc, char **argv)	/* DEC C will complain if declared as type void 
 	char xfilename[255];
 	char cfilename[255];
 	char * suffix;
-
-/* 950405/TomH	modified run string argument processing
- *	Usage:	x2c	file.x	[file.c]
- *		Second file name and suffixes are now optional.
- *		If file.c is not supplied, default is to strip .x from
- *		first file and add .c suffix.
- *		Default suffix for first file is ".x"
- *		If incorrect run string, usage is displayed to user.
- */
 
 	if (( argc < 2 ) || ( argc > 3 )){
 		print_err_msg(stdout, "x2c: wrong number of arguments.\n");
@@ -240,14 +229,14 @@ int main(int argc, char **argv)	/* DEC C will complain if declared as type void 
 	exit(0);
 }
 
-void print_usage(void) {
+rt_private void print_usage(void) {
 	printf("Usage:    x2c    xfile   [cfile]\n");
 	printf("    where        xfile is an input X file (.x suffix is optional)\n");
 	printf("    and          cfile is optional output C file.\n");
 	printf("    Default suffix for xfile is .x, default suffix for cfile is .c\n");
 }	/* print usage */
 
-struct parse *locate(char *name)
+rt_private struct parse *locate(char *name)
 {
 	/* Locate macro in parsing array and return the structure corresponding
 	 * to that macro. If the macro is not recognized, return a null pointer.
@@ -264,7 +253,7 @@ struct parse *locate(char *name)
 	return (struct parse *) 0;
 }
 
-void getarg(int n, char *name)
+rt_private void getarg(int n, char *name)
       				/* Expected number of arguments */
            			/* Macro name (used only for error message) */
 {
@@ -295,7 +284,7 @@ void getarg(int n, char *name)
 		ungetc(c, input_file);
 }
 
-long nextarg(void)
+rt_private long nextarg(void)
 {
 	/* Extract the next argument from the macro. Arguments are separated by
 	 * a ',' and the argument list ends with a ')'. The numerical value of
@@ -333,7 +322,7 @@ long nextarg(void)
  * Offset-calculation routines (take their arguments from a[] arary).
  */
 
-long chroff(char recursive_call)
+rt_private long chroff(char recursive_call)
 {
 	long to_add = nb_ref * REFSIZ;
 	if (recursive_call == RECURSIVE)
@@ -342,7 +331,7 @@ long chroff(char recursive_call)
 		return to_add + padding(to_add, (long) CHRSIZ) + CHRACS(second_argument);
 }
 
-long i16off(char recursive_call)
+rt_private long i16off(char recursive_call)
 {
 	long to_add = chroff(RECURSIVE) + nb_char *CHRSIZ;
 	if (recursive_call == RECURSIVE)
@@ -351,7 +340,7 @@ long i16off(char recursive_call)
 		return to_add + padding(to_add,(long)  I16SIZ) + I16ACS(third_argument);
 }
 
-long lngoff(char recursive_call)
+rt_private long lngoff(char recursive_call)
 {
 	long to_add = i16off(RECURSIVE) + nb_i16 *I16SIZ;
 	if (recursive_call == RECURSIVE)
@@ -360,7 +349,7 @@ long lngoff(char recursive_call)
 		return to_add + padding(to_add,(long)  LNGSIZ) + LNGACS(fourth_argument);
 }
 
-long fltoff(char recursive_call)
+rt_private long fltoff(char recursive_call)
 {
 	long to_add = lngoff(RECURSIVE) + nb_int * LNGSIZ;
 	if (recursive_call == RECURSIVE)
@@ -369,7 +358,7 @@ long fltoff(char recursive_call)
 		return to_add + padding(to_add, (long) FLTSIZ) + FLTACS(fifth_argument);
 }
 
-long ptroff(char recursive_call)
+rt_private long ptroff(char recursive_call)
 {
 	long to_add = fltoff(RECURSIVE) + nb_flt * FLTSIZ;
 	if (recursive_call == RECURSIVE)
@@ -378,7 +367,7 @@ long ptroff(char recursive_call)
 		return to_add + padding(to_add, (long) PTRSIZ) + PTRACS(sixth_argument);
 }
 
-long i64off(char recursive_call)
+rt_private long i64off(char recursive_call)
 {
 	long to_add = ptroff(RECURSIVE) + nb_ptr * PTRSIZ;
 	if (recursive_call == RECURSIVE)
@@ -387,7 +376,7 @@ long i64off(char recursive_call)
 		return to_add + padding(to_add, (long) I64SIZ) + I64ACS(seventh_argument);
 }
 
-long dbloff(char recursive_call)
+rt_private long dbloff(char recursive_call)
 {
 	long to_add = i64off(RECURSIVE) + nb_i64 * PTRSIZ;
 	if (recursive_call == RECURSIVE)
@@ -396,26 +385,35 @@ long dbloff(char recursive_call)
 		return to_add + padding(to_add, (long) DBLSIZ) + DBLACS(eigth_argument);
 }
 
-long objsiz(char recursive_call)
+rt_private long objsiz(char recursive_call)
 {
 	long to_add = dbloff(RECURSIVE) + nb_dbl * DBLSIZ;
 	return to_add + remainder(to_add);
 }
 
-long bitoff (char recursive_call) { return BITOFF(first_argument); }
-long refacs (char recursive_call) { return REFACS(first_argument); } 
-long chracs (char recursive_call) { return CHRACS(first_argument); }
-long i16acs (char recursive_call) { return I16ACS(first_argument); }
-long lngacs (char recursive_call) { return LNGACS(first_argument); }
-long fltacs (char recursive_call) { return FLTACS(first_argument); }
-long dblacs (char recursive_call) { return DBLACS(first_argument); }
-long i64acs (char recursive_call) { return I64ACS(first_argument); }
-long ptracs (char recursive_call) { return PTRACS(first_argument); }
+rt_private long bitoff (char recursive_call) { return BITOFF(first_argument); }
+rt_private long refacs (char recursive_call) { return REFACS(first_argument); } 
+rt_private long chracs (char recursive_call) { return CHRACS(first_argument); }
+rt_private long i16acs (char recursive_call) { return I16ACS(first_argument); }
+rt_private long lngacs (char recursive_call) { return LNGACS(first_argument); }
+rt_private long fltacs (char recursive_call) { return FLTACS(first_argument); }
+rt_private long dblacs (char recursive_call) { return DBLACS(first_argument); }
+rt_private long i64acs (char recursive_call) { return I64ACS(first_argument); }
+rt_private long ptracs (char recursive_call) { return PTRACS(first_argument); }
 
 /*
  * Private functions definitions
  */
 
-long remainder(long int x) { return ((x % ALIGN) ? (ALIGN -(x % ALIGN)) : 0); }
-long padding(long int x, long int y) { return remainder(x) % y; }
+rt_private long remainder (long int x) {
+		/* if `x' is aligned on ALIGN boundaries then nothing, if not,
+		 * we return what is missing to reach the alignment. */
+	return ((x % ALIGN) ? (ALIGN -(x % ALIGN)) : 0);
+}
+
+rt_private long padding (long int x, long int y) {
+		/* Find how much we need to pad to put next attribute of size `y' after
+		 * all previous attribute which have a size of `x'. */
+	return remainder(x) % y;
+}
 

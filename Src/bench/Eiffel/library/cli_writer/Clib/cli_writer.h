@@ -21,6 +21,32 @@ extern EIF_POINTER c_query_assembly_emit (EIF_POINTER);
 extern EIF_POINTER new_sym_writer ();
 
 
+/* Defined an Eiffel specific version of IMAGE_COR20_HEADER in case one does not
+ * have the latest version of the platform SDK. */
+typedef struct EIF_IMAGE_COR20_HEADER {
+	// Header versioning
+	DWORD	cb;
+	WORD	MajorRuntimeVersion;
+	WORD	MinorRuntimeVersion;
+	
+	// Symbol table and startup information
+	IMAGE_DATA_DIRECTORY	MetaData;	
+	DWORD	Flags;	
+	DWORD	EntryPointToken;
+	
+	// Binding information
+	IMAGE_DATA_DIRECTORY	Resources;
+	IMAGE_DATA_DIRECTORY	StrongNameSignature;
+
+	// Regular fixup and binding information
+	IMAGE_DATA_DIRECTORY	CodeManagerTable;
+	IMAGE_DATA_DIRECTORY	VTableFixups;
+	IMAGE_DATA_DIRECTORY	ExportAddressTableJumps;
+
+	// Precompiled image info (internal use only - set to zero)
+	IMAGE_DATA_DIRECTORY	ManagedNativeHeader;
+} EIF_IMAGE_COR20_HEADER;
+
 typedef struct _CLI_IMPORT_TABLE {
   DWORD ImportLookupTable;// RVA to ImportLookupTable
   DWORD TimeDateStamp;  // 0

@@ -91,7 +91,8 @@ feature -- Status setting
 		do
 			implementation.minimize
 		ensure
-	--		is_minimized: is_minimized
+			--| FIXME VB probably impossible for GTK.
+			--| is_minimized: is_minimized
 		end
 
 	maximize is
@@ -99,7 +100,7 @@ feature -- Status setting
 		do
 			implementation.maximize
 		ensure
-	--		is_maximized: is_maximized
+			is_maximized: is_maximized
 		end
 
 	restore is
@@ -107,8 +108,9 @@ feature -- Status setting
 		do
 			implementation.restore
 		ensure
-	--		minimize_restored: old is_minimized implies not is_minimized
-	--		maximize_restored: old is_maximized implies not is_maximized
+			--| FIXME VB probably impossible for GTK.
+			--| minimize_restored: old is_minimized implies not is_minimized
+			maximize_restored: old is_maximized implies not is_maximized
 		end
 
 feature -- Element change
@@ -193,6 +195,10 @@ end -- class EV_TITLED_WINDOW
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/03/08 02:57:04  brendel
+--| Commented out postconditions regarding is_minimized, because GTK window
+--| is not actually minimized until the end of the event.
+--|
 --| Revision 1.8  2000/03/08 02:30:21  brendel
 --| Fully implemented is_minimized, is_maximized, maximize, minimize, restore.
 --|

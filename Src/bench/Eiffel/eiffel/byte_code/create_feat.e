@@ -201,17 +201,16 @@ feature -- IL code generation
 		local
 			feat_tbl: FEATURE_TABLE
 			feat: FEATURE_I
-			target_type: CL_TYPE_I
+			l_decl_type: CL_TYPE_I
 		do
 				-- FIXME: Manu 10/24/2001. Code is not efficient at all and could be
-				-- improved if more data were stored in Current.
+				-- improved if more data were stored in Current. But this is not possible
+				-- as the data we need is not present when Current is created.
 			feat_tbl := Context.class_type.associated_class.feature_table
 			feat := feat_tbl.item_id (feature_name_id)
-			feat_tbl := System.class_of_id (feat.written_in).feature_table
-			feat := feat_tbl.feature_of_rout_id_set (feat.rout_id_set)
-			target_type := il_generator.implemented_type (feat.written_in,
+			l_decl_type := il_generator.implemented_type (feat.origin_class_id,
 				context.current_type)
-			il_generator.create_attribute_object (target_type, feat.feature_id)
+			il_generator.create_attribute_object (l_decl_type, feat.origin_feature_id)
 		end
 
 feature -- Byte code generation

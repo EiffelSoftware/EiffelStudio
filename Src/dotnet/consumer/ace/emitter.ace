@@ -18,7 +18,7 @@ default
 	use_all_cluster_name_as_namespace (no)
 	msil_generation_type ("exe")
 	namespace ("ISE.Cache")
-	version ("5.2.812.0")
+	version ("5.3.409.0")
 	msil_key_file_name ("$EIFFEL_SRC\dotnet\helpers\isekey.snk")
 	msil_assembly_compatibility ("None")
 	check_vape (yes)
@@ -59,14 +59,14 @@ cluster
 		end
 
 assembly
-	mscorlib:	"mscorlib","1.0.3300.0","neutral","b77a5c561934e089"
+	"mscorlib":	"mscorlib","1.0.3300.0","neutral","b77a5c561934e089"
 
-	system_:	"System","1.0.3300.0","neutral","b77a5c561934e089"
+	"system_":	"System","1.0.3300.0","neutral","b77a5c561934e089"
 		prefix
 			system_dll_
 		end
 
-	system_xml:	"System.Xml","1.0.3300.0","neutral","b77a5c561934e089"
+	"system_xml":	"System.Xml","1.0.3300.0","neutral","b77a5c561934e089"
 		prefix
 			xml_
 		end

@@ -1,6 +1,5 @@
 indexing
-	description: "Objects that ..."
-	author: ""
+	description: "Gtk implementation of dockable source."
 	date: "$Date$"
 	revision: "$Revision$"
 

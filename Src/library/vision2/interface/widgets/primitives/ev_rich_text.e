@@ -278,12 +278,12 @@ feature -- Status setting
 		end
 		
 	format_paragraph (start_position, end_position: INTEGER; format: EV_PARAGRAPH_FORMAT) is
-			-- Apply paragraph formatting `format' to character positions `start_position', `end_position' inclusive.
+			-- Apply paragraph formatting `format' to caret positions `start_position', `end_position' inclusive.
 			-- Formatting applies to complete lines as seperated by new line characters that `start_position' and
 			-- `end_position' fall on.
 		require
 			not_destroyed: not is_destroyed
-			valid_positions: start_position < end_position and start_position >= 1 and end_position <= text_length + 1
+			valid_positions: start_position <= end_position and start_position >= 1 and end_position <= text_length + 1
 			format_not_void: format /= Void
 		do
 			implementation.format_paragraph (start_position, end_position, format)
@@ -310,8 +310,8 @@ feature -- Status setting
 		end
 		
 	modify_region (start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT; applicable_attributes: EV_CHARACTER_FORMAT_RANGE_INFORMATION) is
-			-- Modify formatting from `start_position' to `end_position' applying all attributes of `format' that are set to
-			-- `True' within `applicable_attributes', ignoring others.
+			-- Modify formatting from caret positions `start_position' to `end_position' applying all attributes
+			-- of `format' that are set to `True' within `applicable_attributes', ignoring others.
 		require
 			not_destroyed: not is_destroyed
 			applicable_attributes_not_void: applicable_attributes /= Void
@@ -327,13 +327,13 @@ feature -- Status setting
 		end
 		
 	modify_paragraph (start_position, end_position: INTEGER; format: EV_PARAGRAPH_FORMAT; applicable_attributes: EV_PARAGRAPH_FORMAT_RANGE_INFORMATION) is
-			-- Modify paragraph formatting from lines `start_position' to `end_position' applying all attributes of `format' that are set to
-			-- `True' within `applicable_attributes', ignoring others. Modification applies to complete lines as seperated by
-			-- new line characters that `start_position' and `end_position' fall on.
+			-- Modify paragraph formatting `format' from caret positions `start_position' to `end_position' inclusive.
+			-- Formatting applies to complete lines as seperated by new line characters that `start_position' and
+			-- `end_position' fall on. All attributes of `format' that are set to `True' within `applicable_attributes' are applied.
 		require
 			not_destroyed: not is_destroyed
 			applicable_attributes_not_void: applicable_attributes /= Void
-			valid_positions: start_position < end_position and start_position >= 1 and end_position <= text_length + 1
+			valid_positions: start_position <= end_position and start_position >= 1 and end_position <= text_length + 1
 			format_not_void: format /= Void
 		do
 			implementation.modify_paragraph (start_position, end_position, format, applicable_attributes)

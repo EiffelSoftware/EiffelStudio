@@ -110,7 +110,7 @@ feature -- C Code generation
 					buffer.putint (dtype)
 				else
 					buffer.putstring("RTUD(")
-					buffer.generate_type_id (non_expanded_type.static_type_id)
+					buffer.generate_type_id (non_expanded_type.associated_class_type.static_type_id)
 					buffer.putchar (')')
 				end
 				buffer.putstring (") + OVERHEAD);")
@@ -225,7 +225,7 @@ feature -- C Code generation
 						buffer.putint (dtype)
 					else
 						buffer.putstring("RTUD(")
-						buffer.generate_type_id (non_expanded_type.static_type_id)
+						buffer.generate_type_id (non_expanded_type.associated_class_type.static_type_id)
 						buffer.putchar (')')
 					end
 					buffer.putchar (';')

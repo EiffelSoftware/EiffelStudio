@@ -246,27 +246,17 @@ feature -- Incrementality
 		require
 			good_argument: other /= Void
 		do
-			Result :=	written_in.is_equal (other.written_in)
-						and then
-						is_selected = other.is_selected
-						and then	
-						rout_id_set.same_as (other.rout_id_set)
-						and then
-						is_origin = other.is_origin
-						and then
-						is_frozen = other.is_frozen
-						and then
-						is_deferred = other.is_deferred
-						and then
-						is_external = other.is_external
-						and then
-						export_status.same_as (other.export_status)
-						and then
-						same_signature (other)
-						and then
-						has_precondition = other.has_precondition
-						and then
-						has_postcondition = other.has_postcondition
+			Result := written_in.is_equal (other.written_in)
+				and then is_selected = other.is_selected
+				and then rout_id_set.same_as (other.rout_id_set)
+				and then is_origin = other.is_origin
+				and then is_frozen = other.is_frozen
+				and then is_deferred = other.is_deferred
+				and then is_external = other.is_external
+				and then export_status.same_as (other.export_status)
+				and then same_signature (other)
+				and then has_precondition = other.has_precondition
+				and then has_postcondition = other.has_postcondition
 debug ("ACTIVITY")
 	if not Result then
 			io.error.putbool (written_in.is_equal (other.written_in)) io.error.new_line;
@@ -733,10 +723,12 @@ feature -- Check
 				bid := Body_index_table.item (body_index)
 				if is_code_replicated then
 					Result := Rep_feat_server.item (bid)
-				elseif
-					Tmp_body_server.has (bid) or else Body_server.has (bid)
-				then
-					Result := Body_server.item (bid)
+				else
+					if Tmp_body_server.has (bid) then
+						Result := Tmp_body_server.item (bid)
+					elseif Body_server.server_has (bid) then
+						Result := Body_server.server_item (bid)
+					end
 				end
 			end
 			if Result = Void then

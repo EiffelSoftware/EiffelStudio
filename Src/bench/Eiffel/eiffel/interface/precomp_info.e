@@ -38,6 +38,7 @@ feature {NONE} -- Initialization
 			end
 			compiler_version := Version_number;
 			compilation_id := System.compilation_id
+			compilation_size := System.body_index_table.count
 		end
 
 feature -- Access
@@ -47,5 +48,8 @@ feature -- Access
 
 	compiler_version: STRING
 			-- Compiler version
+
+	compilation_size: INTEGER
+			-- Approximative size of the compilation unit
 
 end -- class PRECOMP_INFO

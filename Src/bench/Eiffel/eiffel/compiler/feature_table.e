@@ -707,7 +707,7 @@ end
 					then
 							-- We do not take IL static fields, only attributes of a class.
 						attr_type := attribute_type.type_i
-						if attr_type.has_formal or attr_type.is_true_expanded then
+						if attr_type.has_formal then
 							create generic_desc
 							generic_desc.set_type_i (attr_type)
 							desc := generic_desc

@@ -827,8 +827,8 @@ feature {NONE} -- WEL Implementation
 		do
 			it ?= find_item_at_position (x_pos, y_pos)
 			pt := client_to_screen (x_pos, y_pos)
-			if it /= Void then
-				it.interface.pointer_motion_actions.call
+			if it /= Void and then it.pointer_motion_actions_internal /= Void then
+				it.pointer_motion_actions_internal.call
 				([x_pos - child_x (it.interface),
 				y_pos, 0.0, 0.0, 0.0,
 				pt.x, pt.y])

@@ -114,6 +114,12 @@ feature -- Access
 			Result := (create {GB_SHARED_HISTORY}).history.history_dialog
 		end
 		
+	constants_dialog: GB_CONSTANTS_DIALOG is
+			-- `Result' is constants dialog used in EiffelBuild.
+		once
+			create Result
+		end
+
 	multiple_split_area: MULTIPLE_SPLIT_AREA is
 			-- `Result' is multiple slit area to hold tools.
 		once
@@ -129,6 +135,7 @@ feature -- Access
 			Result.extend (display_window)
 			Result.extend (component_viewer)
 			Result.extend (history_dialog)
+			Result.extend (constants_dialog)
 		end
 		
 	all_storable_tools: ARRAYED_LIST [GB_STORABLE_TOOL] is
@@ -191,8 +198,6 @@ feature -- Access
 			-- Used in the preferences representation.
 		require
 			a_widget_not_void: a_widget /= Void
-		local
-			tool: GB_STORABLE_TOOL
 		do
 			Result := a_widget.storable_name
 		ensure

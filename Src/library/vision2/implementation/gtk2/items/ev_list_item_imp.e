@@ -5,7 +5,7 @@ indexing
 	revision: "$Revision$"
 
 class 
-	EV_NEW_LIST_ITEM_IMP
+	EV_LIST_ITEM_IMP
 
 inherit
 	EV_LIST_ITEM_I
@@ -16,27 +16,11 @@ inherit
 			pointer_double_press_actions_internal
 		end
 
-	EV_ITEM_IMP
-		undefine
-			parent,
-			pixmap_equal_to
-		redefine
-			interface,
-			initialize,
-			pointer_motion_actions_internal,
-			pointer_button_press_actions_internal,
-			pointer_double_press_actions_internal,
-			make,
-			set_parent_imp
-		end
+	EV_ITEM_ACTION_SEQUENCES_IMP
 
-	EV_TEXTABLE_IMP
-		redefine
-			interface,
-			set_text
-		end
-
-	EV_TOOLTIPABLE_IMP
+	EV_PICK_AND_DROPABLE_ACTION_SEQUENCES_IMP
+	
+	EV_PND_DEFERRED_ITEM
 		redefine
 			interface
 		end
@@ -52,178 +36,202 @@ feature {NONE} -- Initialization
 			-- Create a list item with an empty name.
 		do
 			base_make (an_interface)
-			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_list_item_new)
 		end
 
 	initialize is
-			-- Set up action sequence connection and `Precursor' initialization,
-			-- create list item box to hold label and pixmap.
-		local
-			item_box: POINTER
+			-- Initialize `Current'
 		do
-			Precursor {EV_ITEM_IMP}
-			textable_imp_initialize
-			pixmapable_imp_initialize
-			checkable_imp_initialize
-			item_box := feature {EV_GTK_EXTERNALS}.gtk_hbox_new (False, 0)
-			feature {EV_GTK_EXTERNALS}.gtk_container_add (c_object, item_box)
-			feature {EV_GTK_EXTERNALS}.gtk_widget_show (item_box)
-				-- Add the pixmap box to the item but hide it so it
-				-- takes up no space in the item.
-				
-			feature {EV_GTK_EXTERNALS}.gtk_box_pack_start (item_box, check_box, False, False, 0)
-				-- The check box is only shown in an EV_CHECKABLE_LIST
-			real_signal_connect (check_box, "toggled", agent (App_implementation.gtk_marshal).list_item_check_intermediary (c_object), Void)
-
-			feature {EV_GTK_EXTERNALS}.gtk_box_pack_start (item_box, pixmap_box, False, False, 2)
-				-- Padding of 2 pixels used for pixmap
-			feature {EV_GTK_EXTERNALS}.gtk_box_pack_start (item_box, text_label, True, True, 0)
-
-			--feature {EV_GTK_EXTERNALS}.gtk_widget_hide (pixmap_box)	
+			text := ""
 			is_initialized := True
 		end
-		
-	checkable_imp_initialize is
-			-- 
+
+feature -- PND
+
+	enable_transport is 
 		do
-			check_box := feature {EV_GTK_EXTERNALS}.gtk_check_button_new
-			gtk_widget_unset_flags (check_box, feature {EV_GTK_EXTERNALS}.gTK_CAN_FOCUS_ENUM)
-		end
-		
-	set_parent_imp (a_container: EV_CONTAINER_IMP) is
-			-- 
-		do
-			Precursor {EV_ITEM_IMP} (a_container)
-			if a_container = Void then
-				feature {EV_GTK_EXTERNALS}.gtk_widget_hide (check_box) 				
+			is_transport_enabled := True
+			if parent_imp /= Void then
+			--	parent_imp.update_pnd_connection (True)
 			end
+		end
+
+	disable_transport is
+		do
+			is_transport_enabled := False
+			if parent_imp /= Void then
+			--	parent_imp.update_pnd_status
+			end
+		end
+
+	draw_rubber_band is
+		do
+			check
+				do_not_call: False
+			end
+		end
+
+	erase_rubber_band is
+		do
+			check
+				do_not_call: False
+			end
+		end
+
+	enable_capture is
+		do
+			check
+				do_not_call: False
+			end
+		end
+
+	disable_capture is
+		do
+			check
+				do_not_call: False
+			end
+		end
+
+	start_transport (
+        	a_x, a_y, a_button: INTEGER;
+        	a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
+        	a_screen_x, a_screen_y: INTEGER) is 
+		do
+			check
+				do_not_call: False
+			end
+		end
+
+	end_transport (a_x, a_y, a_button: INTEGER;
+		a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
+		a_screen_x, a_screen_y: INTEGER) is
+		do
+			check
+				do_not_call: False
+			end
+		end
+
+	set_pointer_style, internal_set_pointer_style (curs: EV_CURSOR) is
+		do
+			check
+				do_not_call: False
+			end
+		end
+
+	real_pointed_target: EV_PICK_AND_DROPABLE is
+		do
+			check do_not_call: False end
 		end
 		
 feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 
-	check_callback is
-			-- 
-		local
-			check_list_par: EV_CHECKABLE_LIST_IMP
-		do
-			check_list_par ?= parent_imp
-			if
-				check_list_par /= Void
-			then
-				if check_list_par.is_item_checked (interface) then
-					if check_list_par.check_actions_internal /= Void then
-						check_list_par.check_actions_internal.call ([interface])
-					end
-				else
-					if check_list_par.uncheck_actions_internal /= Void then
-						check_list_par.uncheck_actions_internal.call ([interface])
-					end
-				end
-			end
-		end
-		
-
-feature {EV_CHECKABLE_LIST_IMP} -- Implementation
-		
-	check_box: POINTER
-		-- Pointer to the check box used in EV_CHECKABLE_LIST_IMP
-
-feature -- Access
-
-	index: INTEGER is
-			-- Index of the current item.
-		local
-			par: POINTER
-		do
-			par := parent_imp.list_widget
-			if par /= NULL then
-				Result := 1 + feature {EV_GTK_EXTERNALS}.gtk_list_child_position (par, c_object)
-			end
-		end
+--	check_callback is
+--			-- 
+--		local
+--			check_list_par: EV_CHECKABLE_LIST_IMP
+--		do
+--			check_list_par ?= parent_imp
+--			if
+--				check_list_par /= Void
+--			then
+--				if check_list_par.is_item_checked (interface) then
+--					if check_list_par.check_actions_internal /= Void then
+--						check_list_par.check_actions_internal.call ([interface])
+--					end
+--				else
+--					if check_list_par.uncheck_actions_internal /= Void then
+--						check_list_par.uncheck_actions_internal.call ([interface])
+--					end
+--				end
+--			end
+--		end
 
 feature -- Status report
 
 	is_selected: BOOLEAN is
 			-- Is the item selected.
-		local
-			par: POINTER
 		do
-			par := parent_imp.list_widget
-			if par /= NULL then
-				Result := feature {EV_GTK_EXTERNALS}.g_list_find (
-					feature {EV_GTK_EXTERNALS}.gtk_list_struct_selection (par),
-					c_object
-				) /= NULL
-			end
 		end
 
 feature -- Status setting
 
 	enable_select is
 			-- Select the item.
-		local
-			par: POINTER
 		do
-			if not is_selected then
-				par := parent_imp.list_widget
-				if par /= NULL then
-					feature {EV_GTK_EXTERNALS}.gtk_list_select_child (par, c_object);
-	--| FIXME hack to ensure the element is selected.				
-					if
-						feature {EV_GTK_EXTERNALS}.g_list_find (
-							feature {EV_GTK_EXTERNALS}.gtk_list_struct_selection (par),
-							c_object
-						) = NULL
-					then
-						feature {EV_GTK_EXTERNALS}.gtk_list_select_child (par, c_object);
-					end
-				end				
-			end
+			parent_imp.select_item (parent_imp.index_of (interface, 1))
 		end
 
 	disable_select is
 			-- Deselect the item.
-		local
-			par: POINTER
 		do
-			if is_selected then
-				par := parent_imp.list_widget
-				if par /= NULL then
-					feature {EV_GTK_EXTERNALS}.gtk_list_unselect_child (par, c_object);
-				end				
-			end
-
+			parent_imp.deselect_item (parent_imp.index_of (interface, 1))
 		end
 
-feature {EV_ANY_I} -- Implementation
 
-	pointer_motion_actions_internal: EV_POINTER_MOTION_ACTION_SEQUENCE
-
-	pointer_button_press_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE
-
-	pointer_double_press_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE
+	text: STRING
 
 feature -- Element change
 
+	set_tooltip (a_tooltip: STRING) is
+			-- Assign `a_tooltip' to `tooltip'.
+		do
+		end
+
+	tooltip: STRING
+			-- Tooltip displayed on `Current'.
+
 	set_text (txt: STRING) is
 			-- Set current button text to `txt'.
-		local
-			combo_par: EV_NEW_COMBO_BOX_IMP
-			a_cs: C_STRING
 		do
-			Precursor (txt)
-			create a_cs.make (txt)
-			-- the gtk part if the parent is a combo_box
-			combo_par ?= parent_imp
-			if (combo_par /= Void) then
-				feature {EV_GTK_EXTERNALS}.gtk_combo_set_item_string (
-					combo_par.container_widget,
-					c_object, a_cs.item
-				)
+			text := txt.twin
+			if parent_imp /= Void then
+				
+			end
+		end
+		
+	set_pixmap (a_pix: EV_PIXMAP) is
+			-- Set the rows `pixmap' to `a_pix'.
+		do
+			pixmap := a_pix.twin
+			if parent_imp /= Void then
+			--	parent_imp.set_row_pixmap (index, internal_pixmap)
 			end
 		end
 
-feature {EV_NEW_LIST_ITEM_LIST_IMP, EV_LIST_ITEM_LIST_I} -- Implementation
+	remove_pixmap is
+			-- Remove the rows pixmap.
+		do
+			--internal_pixmap := Void
+			if parent_imp /= Void then
+			--	parent_imp.remove_row_pixmap (index)
+			end
+		end
+	
+	pixmap: EV_PIXMAP
+
+	destroy is
+			-- 
+		do
+			pixmap := Void
+		end
+
+	set_list_iter (a_iter: EV_GTK_TREE_ITER_STRUCT) is
+			-- Set `list_iter' to `a_iter'
+		do
+			list_iter := a_iter
+		end
+
+	list_iter: EV_GTK_TREE_ITER_STRUCT
+		-- Object representing position of `Current' in parent tree model
+
+	parent_imp: EV_LIST_ITEM_LIST_IMP
+	
+	set_parent_imp (a_parent_imp: EV_LIST_ITEM_LIST_IMP) is
+			-- 
+		do
+			parent_imp := a_parent_imp
+		end
+
+feature {EV_LIST_ITEM_LIST_IMP, EV_LIST_ITEM_LIST_I} -- Implementation
 
 	interface: EV_LIST_ITEM
 

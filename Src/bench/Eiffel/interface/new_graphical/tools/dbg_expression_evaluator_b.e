@@ -577,27 +577,30 @@ feature -- EXPR_B evaluation
 				set_error_evaluation ("Error: Call on void target " + a_external_b.feature_name)
 			else
 				ef := cl.feature_with_name (a_external_b.feature_name)
-				fi := ef.associated_feature_i
-		
-				if fi.is_external then
-						--| parameters ...
-					params := parameter_values_from_parameters_b (a_external_b.parameters)
-					if tmp_target /= Void then
-						evaluate_function (tmp_target.value_address, tmp_target, ef, params)
-					elseif context_address /= Void then
-						evaluate_function (context_address, Void, ef, params)
-					else
-						evaluate_static_function (ef, params)
-					end
-				elseif fi.is_attribute then
-					if tmp_target /= Void then
-						evaluate_attribute (tmp_target.value_address, tmp_target, ef)
-					else
-						evaluate_attribute (context_address, tmp_target, ef)
-					end				
+				if ef = Void then
+					set_error_expression (a_external_b.generator +  " => ERROR during evaluation of external call : " + a_external_b.feature_name)
 				else
-					set_error_expression (a_external_b.generator +  " => ERROR during evaluation of external call " + a_external_b.feature_name)
-				end	
+					fi := ef.associated_feature_i
+					if fi.is_external then
+							--| parameters ...
+						params := parameter_values_from_parameters_b (a_external_b.parameters)
+						if tmp_target /= Void then
+							evaluate_function (tmp_target.value_address, tmp_target, ef, params)
+						elseif context_address /= Void then
+							evaluate_function (context_address, Void, ef, params)
+						else
+							evaluate_static_function (ef, params)
+						end
+					elseif fi.is_attribute then
+						if tmp_target /= Void then
+							evaluate_attribute (tmp_target.value_address, tmp_target, ef)
+						else
+							evaluate_attribute (context_address, tmp_target, ef)
+						end				
+					else
+						set_error_expression (a_external_b.generator +  " => ERROR during evaluation of external call : " + a_external_b.feature_name)
+					end					
+				end
 			end
 		end		
 

@@ -33,7 +33,7 @@ feature {NONE}
 		do
 			if project_tool.initialized then
 				-- Project_file is not void
-				if argument = confirmer then
+				if last_confirmer /= Void and argument = last_confirmer then
 					set_global_cursor (watch_cursor);
 					project_tool.set_changed (false);
 					restore_cursors;
@@ -41,8 +41,8 @@ feature {NONE}
 					discard_licence;
 					exit
 				else
-					confirmer.set_window (text_window);
-					confirmer.call (Current, "Do you really want to exit ?", "Exit");
+					confirmer (text_window).call (Current, 
+						"Do you really want to exit ?", "Exit");
 				end
 			else
 				discard_licence;

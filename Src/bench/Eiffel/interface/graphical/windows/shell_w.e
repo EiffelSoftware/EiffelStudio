@@ -56,9 +56,11 @@ feature {NONE}
 
 	work (argument: ANY) is
 		local
-			cmd_name: STRING;
+			cmd_name: STRING
         do
-			warner.popdown;
+			if last_warner /= Void then
+				last_warner.popdown
+			end;
 			if argument = ok_it then
 				cmd_name := associcated_command.command_shell_name;
 				cmd_name.wipe_out;

@@ -136,7 +136,9 @@ feature {NONE}
 			sp_lower, sp_upper: INTEGER;
 			lower_string, upper_string: STRING
         do
-			warner.popdown;
+			if last_warner /= Void then
+				last_warner.popdown
+			end;
 			if argument = cancel_it then
 				sp_lower := last_lower;
 				sp_upper := last_upper

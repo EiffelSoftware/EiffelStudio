@@ -53,11 +53,9 @@ feature {NONE}
 			is_special: BOOLEAN
 		do
 			if not Run_info.is_running then
-				warner.set_window (text_window);
-				warner.gotcha_call (w_System_not_running)
+				warner (text_window).gotcha_call (w_System_not_running)
 			elseif not Run_info.is_stopped then
-				warner.set_window (text_window);
-				warner.gotcha_call (w_System_not_stopped)
+				warner (text_window).gotcha_call (w_System_not_stopped)
 			else
 				!! attr_request.make (object.object_address);
 				attr_request.set_sp_bounds (text_window.sp_lower, text_window.sp_upper);

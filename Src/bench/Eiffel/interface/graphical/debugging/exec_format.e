@@ -24,7 +24,9 @@ feature
 	execute (argument: ANY) is
 		do
 			if argument /= get_in and argument /= get_out then
-				warner.popdown
+				if last_warner /= Void then
+					last_warner.popdown
+				end
 			end;
 			if argument = get_in then
 				text_window.tool.tell_type (command_name)

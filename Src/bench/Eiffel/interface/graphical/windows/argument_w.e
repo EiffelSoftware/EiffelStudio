@@ -69,9 +69,11 @@ feature {NONE}
 
 	work (argument: ANY) is
 		local
-			arg_list: STRING;
+			arg_list: STRING
 		do
-			warner.popdown;
+			if last_warner /= Void then
+				last_warner.popdown
+			end;
 			if argument = apply_it then
 				arg_list := argument_list;
 				arg_list.wipe_out;

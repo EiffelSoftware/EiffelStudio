@@ -39,19 +39,18 @@ feature {NONE}
 			-- for now, purge system
 			-- lengthy confirmation needed
 		do
-			if argument = warner then
-				confirmer.set_window (project_tool.text_window);
-				confirmer.call (Current, "Think again%NAre you really sure ?", "OK");
-			elseif argument = confirmer then
+			if last_warner /= Void and argument = last_warner then
+				confirmer (project_tool.text_window).call (Current, 
+					"Think again%NAre you really sure ?", "OK");
+			elseif last_confirmer /= Void and argument = last_confirmer then
 				system.purge
 			elseif workbench.successfull then
-					warner.set_window (project_tool.text_window);
-					warner.call (Current,"Compress system%NIt could take quite a long%N%
-									%Go on ?");
+				warner (project_tool.text_window).call (Current,
+					"Compress system%NIt could take quite a long%NGo on ?");
 			else
-				warner.set_window (project_tool.text_window);
-				warner.custom_call (void ,"A compilation must complete%N%
-						%succesfully before compressing", void, void, "OK");
+				warner (project_tool.text_window).custom_call (Void,
+						"A compilation must complete%N%
+						%succesfully before compressing", Void, Void, "OK");
 			end;
 		end;
  

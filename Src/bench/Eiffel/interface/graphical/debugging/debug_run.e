@@ -118,7 +118,7 @@ end;
 				then
 					if argument = specify_args then
 						argument_window.call
-					elseif argument = warner then
+					elseif last_warner /= Void and argument = last_warner then
 						project_tool.update_command.finish_freezing
 					else
 						!!application_name.make (50);
@@ -137,8 +137,7 @@ end;
 						if uf.exists then
 							if make_f.exists and then make_f.date > uf.date then
 									-- The Makefile file is more recent than the application
-								warner.set_window (text_window);
-								warner.custom_call (Current, 
+								warner (text_window).custom_call (Current, 
 										w_Makefile_more_recent (Makefile_SH), 
 										" OK ", Void, "Cancel")
 							else
@@ -149,12 +148,11 @@ end;
 							end;
 						elseif make_f.exists then
 								-- There is no application
-							warner.set_window (text_window);
-							warner.custom_call (Current, w_No_system_generated,
-										" OK ", Void, "Cancel");
+							warner (text_window).custom_call (Current, 
+								w_No_system_generated, " OK ", Void, "Cancel");
 						else
-							warner.set_window (text_window);
-							warner.gotcha_call (w_Must_compile_first)
+							warner (text_window).gotcha_call 
+								(w_Must_compile_first)
 						end;
 					end
 				end;

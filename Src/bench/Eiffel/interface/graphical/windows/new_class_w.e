@@ -123,13 +123,11 @@ feature
 					class_i.set_date;
 					if cluster.classes.has (fname) then
 						fname.wipe_out;
-						warner.set_window (class_text);
-						warner.gotcha_call (w_Class_already_in_cluster (class_name));
+						warner (class_text).gotcha_call (w_Class_already_in_cluster (class_name));
 					elseif
 						(not file.exists and then not file.is_creatable)
 					then
-						warner.set_window (class_text);
-						warner.gotcha_call (w_Cannot_create_file (fname))
+						warner (class_text).gotcha_call (w_Cannot_create_file (fname))
 					else 
 						stone := class_i.stone;
 						if not file.exists then
@@ -146,8 +144,7 @@ feature
 						elseif
 							not (file.is_readable and then file.is_plain)
 						then
-							warner.set_window (class_text);
-							warner.gotcha_call (w_Cannot_read_file (fname))
+							warner (class_text).gotcha_call (w_Cannot_read_file (fname))
 						else
 								--| Reading in existing file (created outside
 								--| ebench).
@@ -176,8 +173,7 @@ feature
 			clu := Universe.cluster_of_name (clun);
 			if clu = Void then
 				aok := False;
-				warner.set_window (class_text);
-				warner.gotcha_call (w_Invalid_cluster_name)
+				warner (class_text).gotcha_call (w_Invalid_cluster_name)
 			else
 				aok := True;
 				cluster := clu

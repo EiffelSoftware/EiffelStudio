@@ -29,15 +29,12 @@ feature {NONE}
 		do
 			address := Run_info.object_address;
 			if not Run_info.is_running then
-				warner.set_window (text_window);
-				warner.gotcha_call (w_System_not_running)
+				warner (text_window).gotcha_call (w_System_not_running)
 			elseif not Run_info.is_stopped then
-				warner.set_window (text_window);
-				warner.gotcha_call (w_System_not_stopped)
+				warner (text_window).gotcha_call (w_System_not_stopped)
 			elseif address = Void or Run_info.class_type = Void then
 					-- Should never happen.
-				warner.set_window (text_window);
-				warner.gotcha_call (w_Unknown_object)
+				warner (text_window).gotcha_call (w_Unknown_object)
 			else
 				class_c := Run_info.class_type.associated_class;
 				!! stone.make (address, class_c);

@@ -61,7 +61,7 @@ feature {NONE}
 			if argument = Void then
 					-- 3rd button pressed
 				filter_window.call 
-			elseif argument = warner then
+			elseif argument = last_warner then
 					-- If it comes here this means ok has
 					-- been pressed in the warner window
 					-- for text modification.
@@ -69,8 +69,7 @@ feature {NONE}
 			elseif argument = filter_window then
 					-- Display the filter output in `text_window'
 				if text_window.changed then
-					warner.set_window (text_window);
-					warner.call (Current, l_File_changed)
+					warner (text_window).call (Current, l_File_changed)
 				else
 					text_window.last_format.filter (filter_name)
 				end
@@ -78,8 +77,7 @@ feature {NONE}
 					-- Execute the shell command
 				filterable_format ?= text_window.last_format;
 				if filterable_format = Void then
-					warner.set_window (text_window);
-					warner.gotcha_call (w_Not_a_filterable_format)
+					warner (text_window).gotcha_call (w_Not_a_filterable_format)
 				else
 					filename := filterable_format.filtered_file_name
 										(text_window.root_stone, filter_name);
@@ -122,14 +120,14 @@ feature {NONE}
 			if not a_filename.empty then
 				!!new_file.make (a_filename);
 				if new_file.exists and then not new_file.is_plain then
-					warner.set_window (text_window);
-					warner.gotcha_call (w_Not_a_plain_file (new_file.name))
+					warner (text_window).gotcha_call 
+						(w_Not_a_plain_file (new_file.name))
 				elseif new_file.exists and then not new_file.is_writable then
-					warner.set_window (text_window);
-					warner.gotcha_call (w_Not_writable (new_file.name))
+					warner (text_window).gotcha_call 
+						(w_Not_writable (new_file.name))
 				elseif not new_file.exists and then not new_file.is_creatable then
-					warner.set_window (text_window);
-					warner.gotcha_call (w_Not_creatable (new_file.name))
+					warner (text_window).gotcha_call 
+						(w_Not_creatable (new_file.name))
 				else
 					new_file.open_write;
 					if not a_text.empty then

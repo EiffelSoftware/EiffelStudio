@@ -262,9 +262,13 @@ rt_public EIF_REFERENCE_FUNCTION eifref(char *routine, EIF_TYPE_ID cid)
 
 #ifndef WORKBENCH
 	ref = (EIF_REFERENCE_FUNCTION *) ct_value(ptr_table, routine);	/* Code location */
-	if (!ref && !eif_ignore_invisible)
-		eraise ("Unknown routine (visible?)", EN_PROG);
-	return *ref;
+	if (!ref)	/* Was function found? */
+		if (!eif_ignore_invisible)	/* Is Visible exception enabled? */
+			eraise ("Unknown routine (visible?)", EN_PROG);	
+		else
+			return (EIF_REFERENCE_FUNCTION) 0;
+
+	return *ref;	/* Return address of function. */
 #else
 	if ((feature_ptr = (int32 *) ct_value(ptr_table, routine)) == (int32*)0) {
 		if (!eif_ignore_invisible)

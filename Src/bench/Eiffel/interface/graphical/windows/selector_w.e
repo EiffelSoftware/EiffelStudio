@@ -1,7 +1,6 @@
 indexing
 
-	description:	
-		"Window describing an Eiffel object."
+	description: "Selector for the class_tool windows."
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -21,15 +21,6 @@
 #define NEED_TIMER_H
 #endif
 
-#ifndef HAS_INDEX
-#ifndef index
-#define index strchr
-#endif
-#ifndef rindex
-#define rindex strrchr
-#endif
-#endif
-
 /* Are we using ISE GC? By default, yes. */
 #ifndef NO_ISE_GC
 #define ISE_GC

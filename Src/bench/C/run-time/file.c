@@ -1605,7 +1605,7 @@ rt_public EIF_BOOLEAN file_creatable(char *path, EIF_INTEGER length)
 	return (EIF_BOOLEAN) '\1';
 
 /* Manu: 09/10/2001: commented out non-executed code */
-/*	ptr = rindex(temp, ']') + 1;	locate the end of the dir path */
+/*	ptr = strrchr (temp, ']') + 1;	locate the end of the dir path */
 /*	if (ptr != (char *) 0)
 		*ptr = '\0';		now truncate the file name */
 /*	else
@@ -1616,9 +1616,9 @@ rt_public EIF_BOOLEAN file_creatable(char *path, EIF_INTEGER length)
 	temp = (char *) eif_malloc (length + 1);
 	strcpy (temp, path);
 #if defined EIF_WINDOWS || defined EIF_OS2
-	ptr = rindex(temp, '\\');
+	ptr = strrchr (temp, '\\');
 #else
-	ptr = rindex(temp, '/');
+	ptr = strrchr (temp, '/');
 #endif
 	if (ptr != (char *) 0) {
 		*ptr = '\0';

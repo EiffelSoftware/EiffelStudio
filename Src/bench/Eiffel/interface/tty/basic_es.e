@@ -436,7 +436,7 @@ feature -- Update
 						filter_name := argument (current_option)
 						current_option := current_option + 1;
 						cn := argument (current_option);
-						!EWB_FILTER!command.make (cn, filter_name)
+--						!EWB_FILTER!command.make (cn, filter_name)
 					end;
 				else
 					option_error := True

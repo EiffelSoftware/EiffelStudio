@@ -64,6 +64,17 @@ feature -- Status report
 			Result := implementation.selected_item
 		end
 
+	menu: EV_MENU is
+			-- The menu which is affected to the
+			-- option button.
+		do
+			if (implementation.menu /= Void) then
+				Result ?= implementation.menu.interface
+			else
+				Result := Void
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	implementation: EV_OPTION_BUTTON_I

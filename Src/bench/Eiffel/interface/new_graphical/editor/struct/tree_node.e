@@ -520,9 +520,11 @@ feature -- Conversion
 	merge_right (other: like Current) is
 			-- Add `other' at the right of Current.
 		local
-			dummy: like item
-			current_node, child: like Current
-			pos: INTEGER
+			dummy		: like item
+			current_node: like Current
+			child		: like Current
+			pos			: INTEGER
+			i			: INTEGER
 		do
 			create dummy.make (Void)
 			child := other.children @ 1
@@ -537,7 +539,7 @@ feature -- Conversion
 				i = other.arity
 			loop
 				child := other.children @ (i + 1)
-				current_node.insert_key_and_right_child (other.key @ i, child, pos)
+				current_node.insert_key_and_right_child (other.keys @ i, child, pos)
 					--| Node organisation may have changed if `current_node'
 					--| has been split due to rebalancing. We are looking for the
 					--| place the last child inserted is, to attach others after it.
@@ -551,9 +553,11 @@ feature -- Conversion
 	merge_left (other: like Current) is
 			-- Add `other' at the left of Current.
 		local
-			dummy: like item
-			current_node, child: like Current
-			pos: INTEGER
+			dummy		: like item
+			current_node: like Current
+			child		: like Current
+			pos			: INTEGER
+			i			: INTEGER
 		do
 			create dummy.make (Void)
 			child := other.children @ arity
@@ -568,7 +572,7 @@ feature -- Conversion
 				i = 0
 			loop
 				child := other.children @ i
-				insert_key_and_left_child (key @ i, child, pos)
+				insert_key_and_left_child (other.keys @ i, child, pos)
 				current_node := child.parent
 				pos := child.pos_in_parent
 				i := i - 1

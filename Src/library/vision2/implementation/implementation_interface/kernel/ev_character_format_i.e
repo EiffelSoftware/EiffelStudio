@@ -178,7 +178,7 @@ feature {EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Implementation
 		deferred
 		end
 
-feature {EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Implementation
+feature {EV_ANY_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Implementation
 
 	interface: EV_CHARACTER_FORMAT
 

@@ -97,7 +97,6 @@ feature
 			not t.has_formal
 		do
 			type := t
-			!!skeleton.make
 			is_changed := True
 			type_id := System.type_id_counter.next
 			id := Static_type_id_counter.next_id
@@ -509,7 +508,7 @@ feature -- Generation
 			has_creation_routine
 		local
 			sub_skel: SKELETON
-			i, nb_ref: INTEGER
+			i, nb_ref, position: INTEGER
 			exp_desc: EXPANDED_DESC
 			class_type, sub_class_type: CLASS_TYPE
 			old_cursor: CURSOR
@@ -581,9 +580,9 @@ feature -- Generation
 				buffer.indent
 				buffer.putstring("l[0]")
 					-- There is a side effect with generation
-				old_cursor := skeleton.cursor
+				position := skeleton.position
 				skeleton.generate(buffer, False)
-				skeleton.go_to (old_cursor)
+				skeleton.go_to (position)
 				buffer.putchar (';')
 				buffer.new_line
 				buffer.exdent
@@ -592,7 +591,7 @@ feature -- Generation
 					-- Initialize dynaminc type of the expanded object
 				buffer.putstring ("HEADER(l[0]")
 				skeleton.generate(buffer, False)
-				skeleton.go_to (old_cursor)
+				skeleton.go_to (position)
 				buffer.putstring(")->ov_flags = ")
 				buffer.putint(exp_desc.type_id - 1)
 				buffer.putchar (';')
@@ -601,15 +600,15 @@ feature -- Generation
 					-- Mark expanded object
 				buffer.putstring ("HEADER(l[0]")
 				skeleton.generate(buffer, False)
-				skeleton.go_to (old_cursor)
+				skeleton.go_to (position)
 				buffer.putstring(")->ov_flags |= EO_EXP;")
 				buffer.new_line
 				buffer.putstring ("HEADER(l[0]")
 				skeleton.generate(buffer, False)
-				skeleton.go_to (old_cursor)
+				skeleton.go_to (position)
 				buffer.putstring(")->ov_size = ")
 				skeleton.generate(buffer, False)
-				skeleton.go_to (old_cursor)
+				skeleton.go_to (position)
 				buffer.putstring (" + (l[0] - l[1]);")
 				buffer.new_line
 
@@ -623,7 +622,7 @@ feature -- Generation
 					buffer.putstring (creat_name)
 					buffer.putstring ("(l[0]")
 					skeleton.generate(buffer, False)
-					skeleton.go_to (old_cursor)
+					skeleton.go_to (position)
 					buffer.putstring (");");	
 					buffer.new_line
 				end
@@ -854,7 +853,7 @@ feature -- Skeleton generation
 				if byte_context.final_mode then	
 	
 						-- Generate attribute offset table pointer array
-					buffer.putstring ("static long *offsets")
+					buffer.putstring ("static long offsets")
 					buffer.putint (type_id)
 					buffer.putstring (" [] =%N")
 					skeleton.generate_offset_array
@@ -952,7 +951,7 @@ feature -- Skeleton generation
 					buffer.new_line
 				else
 					buffer.putstring
-						("(long **) 0%N")
+						("(long *) 0%N")
 				end
 			else
 					-- Routine id array of attributes

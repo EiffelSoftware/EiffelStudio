@@ -124,8 +124,8 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	rebuild_associated_editors (vision2_object: EV_ANY) is
-			-- For all editors referencing `vision2_object', rebuild any associated object editors.
+	rebuild_associated_editors (object_id: INTEGER) is
+			-- For all editors referencing an object with id `object_id', rebuild any associated object editors.
 		local
 			local_all_editors: ARRAYED_LIST [GB_OBJECT_EDITOR]
 			local_item: GB_OBJECT_EDITOR
@@ -142,7 +142,7 @@ feature {NONE} -- Implementation
 				local_item := local_all_editors.item
 					-- We must only update the other editors referencing `vision2_object', not `calling_object_editor'.
 					-- If `local_item' `object' is `Void' then the editor is empty, so there is nothing to do.
-				if local_item.object /= Void and then local_item.object.object = vision2_object then
+				if local_item.object /= Void and then local_item.object.id = object_id then
 					an_object ?= local_all_editors.item.object
 					current_parent_window := local_all_editors.item.parent_window (local_all_editors.item)
 					if current_parent_window /= Void and ((create {EV_ENVIRONMENT}).application.locked_window = Void) then

@@ -15,18 +15,39 @@ inherit
 		end
 
 	GB_SHARED_TOOLS
+		export
+			{NONE} all
+		end
 	
 	GB_WIDGET_UTILITIES
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_SYSTEM_STATUS
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_XML_HANDLER
+		export
+			{NONE} all
+		end
 	
 	GB_CONSTANTS
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_SYSTEM_STATUS
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_OBJECT_HANDLER
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_PIXMAPS
 		export
@@ -34,6 +55,9 @@ inherit
 		end
 		
 	GB_SHARED_PREFERENCES
+		export
+			{NONE} all
+		end
 	
 
 creation

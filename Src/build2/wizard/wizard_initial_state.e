@@ -14,10 +14,19 @@ inherit
 		end
 		
 	GB_SHARED_TOOLS
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_SYSTEM_STATUS
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_XML_HANDLER
+		export
+			{NONE} all
+		end
 
 creation
 	make

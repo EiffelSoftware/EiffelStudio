@@ -1840,6 +1840,8 @@ feature -- Basic Operations
 		require
 			non_void_descriptor: a_data_type_descriptor /= Void
 			non_void_visitor: a_visitor /= void
+		local
+			pointed_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR
 		do
 			if a_visitor.c_type.substring_index (iunknown_type, 1) /= 0 then
 				Result := clone (iunknown_type)
@@ -1850,7 +1852,11 @@ feature -- Basic Operations
 					interface_type: a_visitor.is_interface_pointer or a_visitor.is_interface_pointer_pointer or
 						a_visitor.is_coclass_pointer or a_visitor.is_coclass_pointer_pointer					
 				end
-				Result := interface_descriptor (a_data_type_descriptor, a_visitor).c_type_name
+				pointed_descriptor ?= a_data_type_descriptor
+				check
+					non_void_pointed_descriptor: pointed_descriptor /= Void
+				end
+				Result := pointed_descriptor.interface_descriptor.c_type_name
 			end
 		ensure
 			non_void_name: Result /= Void
@@ -1863,6 +1869,8 @@ feature -- Basic Operations
 		require
 			non_void_descriptor: a_data_type_descriptor /= Void
 			non_void_visitor: a_visitor /= void
+		local
+			pointed_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR
 		do
 			if a_visitor.c_type.substring_index (iunknown_type, 1) /= 0 then
 				create Result.make_from_string (iunknown_guid_string)
@@ -1873,68 +1881,14 @@ feature -- Basic Operations
 					interface_type: a_visitor.is_interface_pointer or a_visitor.is_interface_pointer_pointer or
 						a_visitor.is_coclass_pointer or a_visitor.is_coclass_pointer_pointer					
 				end
-				Result := interface_descriptor (a_data_type_descriptor, a_visitor).guid
+				pointed_descriptor ?= a_data_type_descriptor
+				check
+					non_void_pointed_descriptor: pointed_descriptor /= Void
+				end
+				Result := pointed_descriptor.interface_descriptor.guid
 			end
 		ensure
 			non_void_guid: Result /= Void
-		end
-
-	interface_descriptor (a_data_type_descriptor: WIZARD_DATA_TYPE_DESCRIPTOR;
-					a_visitor: WIZARD_DATA_TYPE_VISITOR): WIZARD_INTERFACE_DESCRIPTOR is
-			-- Interface descriptor.
-		require
-			interface_type: a_visitor.is_interface_pointer or a_visitor.is_interface_pointer_pointer or
-						a_visitor.is_coclass_pointer or a_visitor.is_coclass_pointer_pointer
-			non_unknown: a_visitor.c_type.substring_index (iunknown_type, 1) = 0
-			non_dispatch: a_visitor.c_type.substring_index (idispatch_type, 1) = 0
-		local
-			pointed_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR
-			user_defined: WIZARD_USER_DEFINED_DATA_TYPE_DESCRIPTOR
-			alias_descriptor: WIZARD_ALIAS_DESCRIPTOR
-			tmp_coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR
-			tmp_interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR
-			a_type_descriptor: WIZARD_TYPE_DESCRIPTOR
-			an_index: INTEGER
-		do
-			pointed_descriptor ?= a_data_type_descriptor
-			if (pointed_descriptor /= Void) then
-				if a_visitor.is_interface_pointer_pointer or a_visitor.is_coclass_pointer_pointer then
-					pointed_descriptor ?= pointed_descriptor.pointed_data_type_descriptor
-					check
-						non_void_pointed_descriptor: pointed_descriptor /= Void
-					end
-				end
-				user_defined ?= pointed_descriptor.pointed_data_type_descriptor
-				if (user_defined /= Void) then
-					an_index := user_defined.type_descriptor_index
-					a_type_descriptor := user_defined.library_descriptor.descriptors.item (an_index)
-					from
-						alias_descriptor ?= a_type_descriptor
-					until
-						alias_descriptor = Void
-					loop
-						user_defined ?= alias_descriptor.type_descriptor
-						if (user_defined /= Void) then
-							an_index := user_defined.type_descriptor_index
-							a_type_descriptor := user_defined.library_descriptor.descriptors.item (an_index)
-							alias_descriptor ?= a_type_descriptor
-						else
-							alias_descriptor := Void
-						end
-					end
-					if a_visitor.is_interface_pointer or a_visitor.is_interface_pointer_pointer then
-						tmp_interface_descriptor ?= a_type_descriptor
-					else
-						tmp_coclass_descriptor ?= a_type_descriptor
-						if tmp_coclass_descriptor /= Void then
-							tmp_interface_descriptor := tmp_coclass_descriptor.default_interface_descriptor
-						end
-					end
-				end
-			end
-			Result := tmp_interface_descriptor
-		ensure
-			non_void_interface_descriptor: Result /= Void
 		end
 
 	default_dispinterface_name (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR): STRING is

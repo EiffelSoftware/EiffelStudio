@@ -34,6 +34,7 @@ no,				LAC_NO
 object,			LAC_OBJECT
 optimize,		LAC_OPTIMIZE
 option,			LAC_OPTION
+precompiled,	LAC_PRECOMPILED
 rename,			LAC_RENAME
 require,		LAC_REQUIRE
 root,			LAC_ROOT

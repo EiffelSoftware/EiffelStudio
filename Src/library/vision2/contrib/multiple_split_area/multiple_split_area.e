@@ -24,9 +24,6 @@ feature {NONE} -- Initialization
 
 	initialize is
 			-- Initialize `Current'.
-		local
-			split_area, parent_split_area: GB_VERTICAL_SPLIT_AREA
-			counter: INTEGER
 		do
 			Precursor {GB_VERTICAL_SPLIT_AREA}
 			create linear_representation.make (4)
@@ -57,8 +54,7 @@ feature -- Access
 			holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
 		do
 			holder ?= all_holders.i_th (linear_representation.index_of (a_widget, 1))
-			Result := holder.minimized
-			--minimized_states @ linear_representation.index_of (a_widget, 1)
+			Result := holder.is_minimized
 		end
 		
 	is_item_maximized (a_widget: EV_WIDGET): BOOLEAN is
@@ -200,8 +196,6 @@ feature -- Status setting
 			name_not_void: name /= Void
 		local
 			holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
-			all_splitters: ARRAYED_LIST [INTEGER]
-			split_area: EV_SPLIT_AREA
 		do
 			create holder.make_with_tool (widget, name, Current)
 			linear_representation.go_i_th (position)
@@ -430,7 +424,7 @@ feature -- Status setting
 		end
 	
 	restore_item (a_widget: EV_WIDGET) is
-			--
+			-- Restore representation of `a_widget' within `Current'.
 		require
 			has_widget: linear_representation.has (a_widget)
 			widget_maximized_or_minimized: is_item_maximized (a_widget) or
@@ -444,14 +438,13 @@ feature -- Status setting
 				parent_window (Current).lock_update	
 			end		
 			tool_holder := holder_of_widget (a_widget)
-			if tool_holder.maximized then
-				tool_holder.disable_maximized
+			
+			if tool_holder.is_maximized then
 				restore_maximized_tool (tool_holder)
 				tool_holder.maximize_button.set_pixmap (maximize_pixmap)
 				tool_holder.label.enable_dockable
 			else
-				restore_tool (tool_holder)
-				tool_holder.disable_minimized
+				restore_minimized_tool (tool_holder)
 				tool_holder.minimize_button.set_pixmap (minimize_pixmap)
 				tool_holder.minimize_button.set_tooltip ("Minimize")
 				tool_holder.label.enable_dockable
@@ -460,6 +453,8 @@ feature -- Status setting
 			if locked_in_here then
 				parent_window (Current).unlock_update
 			end
+		ensure
+			widget_normal_state: not is_item_maximized (a_widget) and not is_item_minimized (a_widget)
 		end
 		
 		
@@ -491,7 +486,6 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			-- Rebuild complete widget structure of `Current'.
 		local
 			split_area: GB_VERTICAL_SPLIT_AREA
-			old_parent: EV_CONTAINER
 			current_split_area: EV_SPLIT_AREA
 			current_holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
 		do
@@ -604,7 +598,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			--
 		local
 			index_of_tool: INTEGER
-			vertical_box, vb: EV_VERTICAL_BOX
+			vertical_box: EV_VERTICAL_BOX
 			cell: EV_CELL
 		do
 			index_of_tool := all_holders.index_of (a_holder, 1)
@@ -651,8 +645,6 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 	
 	maximize_tool (a_tool: MULTIPLE_SPLIT_AREA_TOOL_HOLDER) is
 			-- Maximize `a_tool'.
-		local
-			must_store_positions: BOOLEAN
 		do
 			if maximized_tool /= Void then
 				maximized_tool.silent_set_minimized
@@ -670,7 +662,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 				until
 					all_holders.off
 				loop
-					if all_holders.item.minimized then
+					if all_holders.item.is_minimized then
 						minimized_states.extend (True)
 					else
 						minimized_states.extend (False)
@@ -693,15 +685,20 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			maximized_tool := a_tool
 		end
 		
-	restore_maximized_tool (a_tool: MULTIPLE_SPLIT_AREA_TOOL_HOLDER) is
-			--
+	restore_maximized_tool (tool_holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER) is
+			-- Ensure maximized tool `tool_holder' is no longer maximized,
+			-- and update state of `Current' to reflect this.
+		require
+			tool_holder_not_void: tool_holder /= Void
+			tool_holder_maximized: tool_holder.is_maximized
 		do
+			tool_holder.disable_maximized
 			from
 				all_holders.start
 			until
 				all_holders.off
 			loop
-				if all_holders.item /= a_tool then
+				if all_holders.item /= tool_holder then
 					all_holders.item.silent_remove_minimized
 					all_holders.item.enable_minimize_button
 					all_holders.item.tool.show
@@ -716,6 +713,9 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			rebuild
 			restore_stored_positions
 			maximized_tool := Void
+		ensure
+			not_maximized: not tool_holder.is_maximized
+			no_maximized_tool: maximized_tool = Void
 		end
 		
 	store_positions is
@@ -783,7 +783,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 	minimize_tool (a_tool: MULTIPLE_SPLIT_AREA_TOOL_HOLDER) is
 			-- Ensure that `a_tool' is displayed minimized in `Current'.
 		local
-			lower_holder, upper_holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
+			lower_holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
 			position_of_tool: INTEGER
 			cursor: CURSOR
 		do
@@ -817,16 +817,17 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			index_of_holders_not_changed: all_holders.index = old all_holders.index
 		end
 		
-	restore_tool (a_tool: MULTIPLE_SPLIT_AREA_TOOL_HOLDER) is
+	restore_minimized_tool (a_tool: MULTIPLE_SPLIT_AREA_TOOL_HOLDER) is
 			-- Ensure that `a_tool' is no longer displayed as minimized.
 		require
+			tool_not_void: a_tool /= Void
 			tool_parented: a_tool.parent /= Void
+			tool_minimized: a_tool.is_minimized
 		local
 			index_of_tool: INTEGER
 			parent_split_area: EV_SPLIT_AREA
 			original_parent: EV_BOX
 			current_holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
-			parent_index: INTEGER
 			widgets: ARRAYED_LIST [EV_WIDGET]
 		do
 				-- Firstly show the widget of the tool, as it was
@@ -879,6 +880,8 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			
 			a_tool.simulate_minimum_height (a_tool.restore_height)
 			a_tool.remove_simulated_height
+		ensure
+			not_minimized: not a_tool.is_minimized
 		end
 		
 	transfer_box_contents (original_box, new_box: EV_BOX) is
@@ -994,7 +997,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			until
 				all_holders.off or Result /= 0
 			loop
-				if not all_holders.item.minimized and not external_representation.has (all_holders.item.tool) then
+				if not all_holders.item.is_minimized and not external_representation.has (all_holders.item.tool) then
 					Result := all_holders.index
 				end
 				all_holders.forth
@@ -1014,7 +1017,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			until
 				all_holders.off
 			loop
-				if all_holders.item.minimized then
+				if all_holders.item.is_minimized then
 					minimize_tool (all_holders.item)
 				end
 				all_holders.forth
@@ -1040,7 +1043,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			until
 				all_holders.off
 			loop
-				if all_holders.item.minimized then
+				if all_holders.item.is_minimized then
 					minimized_count := minimized_count + 1
 				else
 					non_minimized_holder := all_holders.item
@@ -1070,7 +1073,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			until
 				all_holders.index > upper
 			loop
-				if not all_holders.item.minimized then
+				if not all_holders.item.is_minimized then
 					Result := False
 				end
 				all_holders.forth
@@ -1090,7 +1093,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			until
 				all_holders.index > upper
 			loop
-				if not all_holders.item.maximized then
+				if not all_holders.item.is_maximized then
 					Result := False
 				end
 				all_holders.forth

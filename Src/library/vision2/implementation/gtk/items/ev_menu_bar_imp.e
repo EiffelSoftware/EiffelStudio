@@ -16,7 +16,7 @@ inherit
 	EV_MENU_ITEM_LIST_IMP
 		redefine
 			interface,
-			gtk_reorder_child
+			insert_menu_item
 		end
 	
 create
@@ -38,17 +38,11 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	gtk_reorder_child (a_container, a_child: POINTER; a_position: INTEGER) is
-			-- Move `a_child' to `a_position' in `a_container'.
+	insert_menu_item (an_item_imp: EV_ITEM_IMP; pos: INTEGER) is
+			-- Generic menu item insertion.
 		do
-			--C.gtk_menu_reorder_child (a_container, a_child, a_position)
-
-			C.gtk_container_remove (a_container, a_child)
-			C.gtk_menu_shell_insert (a_container, a_child, a_position)
-
-			if needs_radio_regrouping (eif_object_from_c (a_child)) then
-				reset_radio_groups
-			end
+			an_item_imp.set_parent_imp (Current)
+			C.gtk_menu_shell_insert (c_object, an_item_imp.c_object, pos + 1)
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -78,6 +72,9 @@ end -- class EV_MENU_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/04/25 19:01:09  king
+--| Removed gtk_reorder_child, added insert_menu_item
+--|
 --| Revision 1.9  2000/04/06 23:57:35  brendel
 --| Added redefinition gtk_reorder_child because a gtk_menu_bar is not a menu,
 --| so gtk_menu_reorder_child does not work.

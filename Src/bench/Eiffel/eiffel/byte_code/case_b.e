@@ -6,7 +6,8 @@ inherit
 
 	BYTE_NODE
 		redefine
-			analyze, generate, enlarge_tree, make_byte_code
+			analyze, generate, enlarge_tree, make_byte_code,
+			has_loop, assigns_to
 		end;
 	
 feature 
@@ -106,6 +107,18 @@ feature -- Byte code generation
 				-- To end of inspect
 			ba.append (Bc_jmp);
 			ba.mark_forward;
+		end;
+
+feature -- Array optimization
+
+	has_loop: BOOLEAN is
+		do
+			Result := compound /= void and then compound.has_loop
+		end;
+
+	assigns_to (i: INTEGER): BOOLEAN is
+		do
+			Result := compound /= void and then compound.assigns_to (i)
 		end;
 
 end

@@ -6,7 +6,8 @@ inherit
 
 	INSTR_B
 		redefine
-			need_enlarging, enlarged, make_byte_code, has_loop
+			need_enlarging, enlarged, make_byte_code,
+			has_loop, assigns_to
 		end;
 	ASSERT_TYPE
 		export
@@ -146,5 +147,11 @@ feature -- Byte code generation
 feature -- Array optimization
 
 	has_loop: BOOLEAN is True
+
+	assigns_to (i: INTEGER): BOOLEAN is
+		do
+			Result := (from_part /= Void and then from_part.assigns_to (i))
+				or else (compound /= Void and then compound.assigns_to (i))
+		end
 
 end

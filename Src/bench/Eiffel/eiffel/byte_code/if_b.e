@@ -7,7 +7,8 @@ inherit
 	INSTR_B
 		redefine
 			analyze, generate, enlarge_tree,
-			find_assign_result, last_all_in_result, make_byte_code
+			find_assign_result, last_all_in_result, make_byte_code,
+			has_loop, assigns_to
 		end;
 	VOID_REGISTER
 		export
@@ -262,6 +263,24 @@ feature -- Byte code generation
 				ba.write_forward2;
 				i := i + 1
 			end;
+		end;
+
+feature -- Array optimization
+
+	has_loop: BOOLEAN is
+		do
+			Result :=
+				(compound /= Void and then compound.has_loop) or else
+				(else_part /= Void and then else_part.has_loop) or else
+				(elsif_list /= Void and then elsif_list.has_loop)
+		end;
+
+	assigns_to (i: INTEGER): BOOLEAN is
+		do
+			Result :=
+				(compound /= Void and then compound.assigns_to (i)) or else
+				(else_part /= Void and then else_part.assigns_to (i)) or else
+				(elsif_list /= Void and then elsif_list.assigns_to (i))
 		end;
 
 end

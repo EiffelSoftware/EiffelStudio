@@ -5,7 +5,8 @@ inherit
 
 	INSTR_B
 		redefine
-			make_byte_code, enlarge_tree, analyze, generate
+			make_byte_code, enlarge_tree, analyze, generate,
+			has_loop, assigns_to
 		end
 	
 feature 
@@ -151,5 +152,17 @@ feature -- Byte code generation
 				ba.write_forward;
 			end
 		end;
+
+feature -- Array optimization
+
+	has_loop: BOOLEAN is
+		do
+			Result := compound /= Void and then compound.has_loop
+		end;
+
+	assigns_to (i: INTEGER): BOOLEAN is
+		do
+			Result := compound /= Void and then compound.assigns_to (i)
+		end
 
 end

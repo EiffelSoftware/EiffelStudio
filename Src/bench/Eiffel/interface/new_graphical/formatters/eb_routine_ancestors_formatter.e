@@ -10,7 +10,8 @@ class
 inherit
 	EB_FEATURE_TEXT_FORMATTER
 		redefine
-			feature_cmd
+			feature_cmd,
+			is_dotnet_formatter
 		end
 
 creation
@@ -45,6 +46,12 @@ feature {NONE} -- Properties
 
 	post_fix: STRING is "ran"
 			-- String symbol of the command, used as an extension when saving.
+
+	is_dotnet_formatter: BOOLEAN is
+			-- Is Current able to format .NET XML types?
+		do
+			Result := True
+		end
 
 feature {NONE} -- Implementation
 

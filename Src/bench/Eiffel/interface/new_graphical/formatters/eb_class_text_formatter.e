@@ -32,7 +32,16 @@ feature -- Access
 			else
 				Result := internal_widget
 			end
+		end	
+	
+	is_dotnet_formatter: BOOLEAN is 
+			-- Is Current formatter also a .NET formatter?
+		do
+			Result := False
 		end
+
+	is_dotnet_mode: BOOLEAN
+			-- Is Current class a .NET class? 		
 
 feature -- Status setting
 
@@ -45,6 +54,16 @@ feature -- Status setting
 			editor := an_editor
 			internal_widget := an_editor.widget
 --			editor.drop_actions.extend (~on_class_drop)
+		end
+
+	set_dotnet_mode (a_flag: BOOLEAN) is
+			-- Set whether formatting in .NET mode to 'a_flag'
+		require
+			flag_not_void: a_flag /= Void
+		do
+			is_dotnet_mode := a_flag
+		ensure
+			mode_is_flag: is_dotnet_mode = a_flag
 		end
 
 feature -- Formatting

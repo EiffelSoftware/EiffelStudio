@@ -19,6 +19,11 @@ feature -- Properties
 	associated_class: CLASS_C
 			-- Class about which information is displayed.
 
+	is_dotnet_formatter: BOOLEAN is
+			-- Is Current able to format .NET class texts?
+		deferred
+		end
+
 feature -- Status setting
 
 	enable_breakpoints is
@@ -39,8 +44,10 @@ feature -- Status setting
 			a_stone: CLASSC_STONE
 		do
 			a_stone ?= new_stone
-			if a_stone /= Void then --and not a_stone.class_i.is_external_class then
-				set_class (a_stone.e_class)
+			if a_stone /= Void then
+				if (not a_stone.class_i.is_external_class) or is_dotnet_formatter then
+					set_class (a_stone.e_class)
+				end
 			else
 				associated_class := Void
 				class_cmd := Void

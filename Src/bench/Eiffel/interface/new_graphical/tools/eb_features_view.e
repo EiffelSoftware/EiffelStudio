@@ -82,55 +82,47 @@ feature -- Status setting
 	set_stone (new_stone: STONE) is
 			-- Send a stone to feature formatters.
 		local
-			st: FEATURE_STONE
-			l_external_c: EXTERNAL_CLASS_C
-			l_dotnet_feature_formatter: EB_DOTNET_FEATURE_FORMATTER
-			l_flag, l_quit: BOOLEAN
+			fst: FEATURE_STONE
+			type_changed: BOOLEAN
 		do
-			st ?= new_stone
-			if st = Void then
+			fst ?= new_stone	
+			if fst /= Void then
+				type_changed := (fst.e_class.is_true_external and not is_stone_external) or
+					(not fst.e_class.is_true_external and is_stone_external)
+				if type_changed then
+						-- Toggle stone flag and update formatters if necessary.
+	            	is_stone_external := not is_stone_external
+	            	if is_stone_external then
+						enable_dotnet_formatters (True)
+					else
+						enable_dotnet_formatters (False)
+					end
+            	end 	
+			end
+			
+			if fst = Void then
 				managed_formatters.first.enable_sensitive
 				from
 					managed_formatters.start
 				until
 					managed_formatters.after
 				loop
-					managed_formatters.item.set_stone (st)
+					managed_formatters.item.set_stone (fst)
 					managed_formatters.forth
 				end
 			elseif
 				internal_stone /= Void and then
-				internal_stone.e_feature /= st.e_feature or else
+				internal_stone.e_feature /= fst.e_feature or else
 				internal_stone = Void then
-				l_external_c ?= st.e_class
-				if l_external_c /= Void then
-					-- A .NET feature so only format as so.
-					set_dotnet_formatting (True)
-					l_flag := True
-				else
-					l_flag := False
-					set_dotnet_formatting (False)	
-				end
 				from
 					managed_formatters.start
 				until
-					managed_formatters.after or l_quit
+					managed_formatters.after
 				loop
-					l_dotnet_feature_formatter ?= managed_formatters.item
-					if l_flag then
-						managed_formatters.i_th (3).enable_select
-						managed_formatters.i_th (3).set_stone (st)
-						l_quit := True
-					else
-						if l_dotnet_feature_formatter /= Void then
-							managed_formatters.forth
-						else
-							managed_formatters.item.set_stone (st)
-							managed_formatters.forth
-						end
-					end
+					managed_formatters.item.set_stone (fst)
+					managed_formatters.forth
 				end
-				internal_stone := st				
+				internal_stone := fst				
 			end
 		end
 
@@ -326,20 +318,6 @@ feature -- Status setting
 			shared_editor.set_focus
 		end
 
-	set_dotnet_formatting (a_flag: BOOLEAN) is
-			-- Set whether Current is displaying an Eiffel or a .NET class.
-		do
-			if a_flag then
-				managed_formatters.i_th (1).disable_sensitive
-				managed_formatters.i_th (2).disable_sensitive
-				managed_formatters.i_th (3).enable_sensitive
-			else
-				managed_formatters.i_th (1).enable_sensitive
-				managed_formatters.i_th (2).enable_sensitive
-				managed_formatters.i_th (3).disable_sensitive
-			end
-		end		
-
 feature -- Memory management
 
 	recycle is
@@ -350,6 +328,29 @@ feature -- Memory management
 		end
 
 feature {NONE} -- Implementation
+
+	enable_dotnet_formatters (a_flag: BOOLEAN) is
+			-- Set sensitivity of formatters to 'a_flag'.
+		do
+			from
+				managed_formatters.start
+			until
+				managed_formatters.after
+			loop
+				if 
+					(managed_formatters.item.is_dotnet_formatter and a_flag) or
+					(not a_flag)
+				then
+					managed_formatters.item.enable_sensitive
+				else
+					managed_formatters.item.disable_sensitive
+				end
+				managed_formatters.forth
+			end
+		end
+	
+	is_stone_external: BOOLEAN
+			-- Does Current stone represent a .NET class feature?
 
 	flat_format_index: INTEGER is 2
 			-- Index of the flat format in the managed formatters.

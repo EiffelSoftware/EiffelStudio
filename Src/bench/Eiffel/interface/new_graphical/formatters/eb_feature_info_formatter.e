@@ -17,6 +17,11 @@ feature -- Properties
 	associated_feature: E_FEATURE
 			-- Feature about which information is displayed.
 
+	is_dotnet_formatter: BOOLEAN is
+			-- Is Current able to format .NET class texts?
+		deferred
+		end
+
 feature -- Status setting
 
 	enable_breakpoints is
@@ -35,7 +40,9 @@ feature -- Status setting
 			-- Associate current formatter with feature contained in `new_stone'.
 		do
 			if new_stone /= Void then
-				set_feature (new_stone.e_feature)
+				if (not new_stone.class_i.is_external_class) or is_dotnet_formatter then
+					set_feature (new_stone.e_feature)
+				end
 			else
 				associated_feature := Void
 				feature_cmd := Void

@@ -193,9 +193,10 @@ feature -- Properties
 		end
 		
 	short_dotnet_text (a_consumed: CONSUMED_TYPE; a_classi: CLASS_I): STRUCTURED_TEXT is
-			-- Format .NET consumed type, short with inheritance.
+			-- Format .NET consumed type, short (no inheritance).
 		require
 			a_consumed_void: a_consumed /= Void
+			a_classi_not_void: a_classi /= Void
 		local
 			dntxt: DOTNET_TEXT_FORMATTER
 		do
@@ -207,15 +208,16 @@ feature -- Properties
 			end
 		end
 		
-	rout_flat_dotnet_text (a_feature: E_FEATURE; c: CONSUMED_TYPE): STRUCTURED_TEXT is
-			-- Format .NET feature text, flat short.
+	rout_flat_dotnet_text (a_feature: E_FEATURE; a_consumed: CONSUMED_TYPE): STRUCTURED_TEXT is
+			-- Format .NET feature text, flat short (include inheritance).
 		require
 			a_feature_not_void: a_feature /= Void
+			a_consumed_void: a_consumed /= Void
 		local
 			dntxt: DOTNET_FEATURE_TEXT_FORMATTER
 		do
 			create dntxt
-			dntxt.format (a_feature, c)
+			dntxt.format (a_feature, a_consumed)
 			if not dntxt.error then
 				Result := dntxt.text
 			end

@@ -34,6 +34,12 @@ feature -- Access
 			end
 		end
 
+	is_dotnet_formatter: BOOLEAN is 
+			-- Is Current formatter also a .NET formatter?
+		do
+			Result := False
+		end
+
 feature -- Status setting
 
 	set_editor (an_editor: EB_CLICKABLE_EDITOR) is
@@ -44,6 +50,14 @@ feature -- Status setting
 		do
 			editor := an_editor
 			internal_widget := an_editor.widget
+		end
+
+	set_dotnet_mode (a_flag: BOOLEAN) is
+			-- Set whether formatting in .NET mode to 'a_flag'
+		require
+			flag_not_void: a_flag /= Void
+		do
+			is_dotnet_mode := a_flag
 		end
 
 feature -- Formatting
@@ -85,6 +99,9 @@ feature -- Formatting
 		end
 
 feature {NONE} -- Implementation
+
+	is_dotnet_mode: BOOLEAN
+			-- Is Current class a .NET class?		
 
 	reset_display is
 			-- Clear all graphical output.

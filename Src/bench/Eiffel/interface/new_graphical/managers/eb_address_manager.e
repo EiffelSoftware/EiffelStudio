@@ -219,51 +219,6 @@ feature -- Element change
 			widget.extend (formatters_combo)
 			widget.disable_item_expand (formatters_combo)
 		end
-		
-	change_formatters (a_flag: BOOLEAN) is
-			-- Set Current 'known_formatters' to 'a_to_external'.  If true set for external
-			-- classes, if false, for Eiffel classes.
-		require
-			a_flag_non_void: a_flag /= Void
-			for_development_window: not mode
-		local
-			tb: EV_TOOL_BAR
-			but: EV_TOOL_BAR_BUTTON
-			new_formatters: like known_formatters
-		do
-			-- Initialize the new formatters
-			create new_formatters.make (5)
-			new_formatters.extend (known_formatters.i_th (1))
-			new_formatters.extend (known_formatters.i_th (2))
-			new_formatters.extend (known_formatters.i_th (3))
-			if a_flag then
-				-- Enable .NET text formatters only (Contract and Interface View).				
-				new_formatters.extend (known_formatters.i_th (6))
-				new_formatters.extend (known_formatters.i_th (7))
-				new_formatters.i_th (1).disable_sensitive
-				new_formatters.i_th (2).disable_sensitive
-				new_formatters.i_th (3).disable_sensitive
-			else				
-				new_formatters.extend (known_formatters.i_th (4))
-				new_formatters.extend (known_formatters.i_th (5))
-			end			
-			
-			formatters_combo.destroy
-			create tb
-			from
-				new_formatters.start
-			until
-				new_formatters.after
-			loop
-				but := new_formatters.item.new_button
-				but.drop_actions.set_veto_pebble_function (~is_not_feature_stone (?))
-				tb.extend (but)
-				new_formatters.forth
-			end
-			formatters_combo := tb
-			widget.extend (tb)
-			widget.disable_item_expand (tb)
-		end
 
 	formatters_combo: EV_TOOL_BAR
 			-- Tool bar containing class format option buttons.

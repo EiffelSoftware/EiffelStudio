@@ -131,11 +131,17 @@ feature {NONE}
 
 	project_extension: STRING is "epr"
 
-	Debug_info_extension: STRING is ".edb"
+	Debug_info_extension: STRING is "edb"
 			-- breakpoints file (extension)
 
 	Debug_info_name: STRING is "options"
 			-- breakpoints file (core name)	
+
+	Il_info_extension: STRING is "edb"
+			-- Il Info file (extension)
+
+	Il_info_name: STRING is "il_info"
+			-- IL Info file (core name)	
 
 	info_flag_begin: STRING is "-- System name is "
 

@@ -8,11 +8,11 @@ default
 
 cluster
 	
-	ROOT_CLUSTER:       "$ISE_EIFFEL/examples/bench/debuggin";
+	ROOT_CLUSTER:       "$ISE_EIFFEL/examples/studio/debuggin";
 				-- If you intend to modify any part of the example,
-				-- copy all the files of $ISE_EIFFEL/examples/bench/debuggin
+				-- copy all the files of $ISE_EIFFEL/examples/studio/debuggin
 				-- into one of your directories, and replace
-				-- $ISE_EIFFEL/examples/bench/debuggin by the name of
+				-- $ISE_EIFFEL/examples/studio/debuggin by the name of
 				-- that directory on the above line.
 
 

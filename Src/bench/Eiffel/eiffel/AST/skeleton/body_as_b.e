@@ -6,7 +6,8 @@ inherit
 
 	AST_EIFFEL
 		redefine
-			type_check, byte_node
+			type_check, byte_node,
+			find_breakable
 		end
 
 feature -- Attributes
@@ -170,4 +171,15 @@ feature -- New feature description
 			end;
 		end;
 				
+feature -- Debugger
+ 
+	find_breakable is
+			-- Look for breakable instructions.
+		do
+			if content /= Void then
+				record_break_node;  -- We want a breakpoint on routine entrance
+				content.find_breakable;
+			end;
+		end
+ 
 end

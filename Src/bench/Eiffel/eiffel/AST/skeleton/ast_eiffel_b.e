@@ -39,4 +39,18 @@ feature -- Type check, byte code and dead code removal
 			-- Do nothing
 		end;
 
+feature -- Debugger
+ 
+	find_breakable is
+			-- Recursive traversal of the AST to record breakable points.
+		do
+			-- Do nothing
+		end;
+ 
+	record_break_node is
+			-- Record node in instruction FIFO stack.
+		do
+			context.instruction_line.insert (Current);
+		end
+
 end

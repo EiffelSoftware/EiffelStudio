@@ -6,7 +6,8 @@ inherit
 
 	INSTRUCTION_AS
 		redefine
-			type_check, byte_node
+			type_check, byte_node,
+			find_breakable
 		end
 
 feature -- Attributes
@@ -98,5 +99,18 @@ feature -- Type check, byte code and dead code removal
 				Result.set_compound (compound.byte_node);
 			end;
 		end;
+
+feature -- Debugger
+
+	find_breakable is
+			-- Look for breakable instruction
+		do
+			if from_part /= Void then
+				from_part.find_breakable;
+			end;
+			if compound /= Void then
+				compound.find_breakable;
+			end;
+		end
 
 end

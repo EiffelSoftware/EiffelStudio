@@ -37,6 +37,12 @@ feature
 			-- Record calling command `a_command' and popup current with
 			-- the message `a_message'.
 		do
+			hide_help_button;
+			show_cancel_button;
+			show_ok_button;
+			set_ok_label (" Ok ");
+			set_cancel_label ("Cancel");
+			set_help_label ("Help");
 			last_caller := a_command;
 			set_message (a_message);
 			set_exclusive_grab;
@@ -62,6 +68,12 @@ feature
 			-- in which the callback only pops the window down. 
 			-- (a void a_command implies a gotcha warner)
 		do
+			hide_help_button;
+			show_cancel_button;
+			show_ok_button;
+			set_ok_label (" Ok ");
+			set_cancel_label ("Cancel");
+			set_help_label ("Help");
 			last_caller := a_command;
 			set_message (a_message);
 			if ok_text = void then

@@ -8,6 +8,122 @@ class
 
 feature -- Externals
 
+	frozen gtk_separator_tool_item_new: POINTER is
+		external
+			"C signature (): GtkToolItem* use <gtk/gtk.h>"
+		end
+
+	frozen gtk_separator_tool_item_set_draw (a_tool_item: POINTER; a_draw: BOOLEAN) is
+		external
+			"C signature (GtkSeparatorToolItem*, gboolean) use <gtk/gtk.h>"
+		end
+
+	frozen gtk_toolbar_set_show_arrow (a_toolbar: POINTER; show_arrow: BOOLEAN) is
+		external
+			"C signature (GtkToolbar*, gboolean) use <gtk/gtk.h>"
+		end
+
+	frozen gtk_toggle_tool_button_set_active (a_button: POINTER; a_active: BOOLEAN) is
+		external
+			"C signature (GtkToggleToolButton*, gboolean) use <gtk/gtk.h>"
+		end
+
+	frozen gtk_toggle_tool_button_get_active (a_button: POINTER): BOOLEAN is
+		external
+			"C signature (GtkToggleToolButton*): gboolean use <gtk/gtk.h>"
+		end
+
+	frozen gtk_toolbar_set_tooltips (a_toolbar: POINTER; a_enable: BOOLEAN) is
+		external
+			"C signature (GtkToolbar*, gboolean) use <gtk/gtk.h>"
+		end
+
+	frozen gtk_toolbar_set_style (a_toolbar: POINTER; a_style: INTEGER) is
+		external
+			"C signature (GtkToolbar*, GtkToolbarStyle) use <gtk/gtk.h>"
+		end
+
+	frozen gtk_toolbar_new: POINTER is
+		external
+			"C signature () use <gtk/gtk.h>"
+		end
+
+	frozen gtk_tool_button_new (icon_widget, a_label_text: POINTER): POINTER is
+		external
+			"C signature (GtkWidget*, gchar*): GtkToolItem* use <gtk/gtk.h>"
+		end
+
+	frozen gtk_radio_tool_button_new (a_radio_group: POINTER): POINTER is
+		external
+			"C signature (GSList*): GtkToolItem* use <gtk/gtk.h>"
+		end
+
+	frozen gtk_radio_tool_button_set_group (a_radio_button, a_radio_group: POINTER) is
+		external
+			"C signature (GtkRadioToolButton*, GSList*) use <gtk/gtk.h>"
+		end
+
+	frozen gtk_radio_tool_button_get_group (a_radio_button: POINTER): POINTER is
+		external
+			"C signature (GtkRadioToolButton*): GSList* use <gtk/gtk.h>"
+		end
+
+	frozen gtk_toolbar_icons_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GTK_TOOLBAR_ICONS"
+		end
+
+	frozen gtk_toolbar_text_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GTK_TOOLBAR_TEXT"
+		end
+
+	frozen gtk_toolbar_both_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GTK_TOOLBAR_BOTH"
+		end
+
+	frozen gtk_toolbar_both_horiz_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GTK_TOOLBAR_BOTH_HORIZ"
+		end
+
+	frozen gtk_toggle_tool_button_new: POINTER is
+		external
+			"C signature (): GtkToolItem* use <gtk/gtk.h>"
+		end
+
+	frozen gtk_tool_button_set_icon_widget (tool_button, icon_widget: POINTER) is
+		external
+			"C signature (GtkToolButton*, GtkWidget*) use <gtk/gtk.h>"
+		end
+
+	frozen gtk_tool_button_set_label_widget (tool_button, label_widget: POINTER) is
+		external
+			"C signature (GtkToolButton*, GtkWidget*) use <gtk/gtk.h>"
+		end
+
+	frozen gtk_toolbar_get_nth_item (a_toolbar: POINTER; a_index: INTEGER): POINTER is
+		external
+			"C signature (GtkToolbar*, gint): GtkToolItem* use <gtk/gtk.h>"
+		end
+
+	frozen gtk_toolbar_insert (a_toolbar, a_toolitem: POINTER; a_pos: INTEGER) is
+		external
+			"C signature (GtkToolbar*, GtkToolItem*, gint) use <gtk/gtk.h>"
+		end
+		
+		
+		
+
 	frozen gtk_file_filter_new: POINTER is
 		external
 			"C signature () use <gtk/gtk.h>"

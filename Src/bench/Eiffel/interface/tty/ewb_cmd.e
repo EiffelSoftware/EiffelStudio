@@ -53,7 +53,7 @@ feature -- Comparison
 			Result := name < other.name
 		end;
 
-feature {BASIC_ES, EWB_BASIC_LOOP} -- Setting
+feature {ES, EWB_BASIC_LOOP} -- Setting
 
 	set_output_window (display: OUTPUT_WINDOW) is
 			-- Set the output window to `display'
@@ -63,7 +63,7 @@ feature {BASIC_ES, EWB_BASIC_LOOP} -- Setting
 			command_line_io.output_window = display
 		end;
 
-feature {BASIC_ES} -- Execution
+feature {ES} -- Execution
 
 	execute is
 			-- Action performed when invoked from the
@@ -71,7 +71,7 @@ feature {BASIC_ES} -- Execution
 		deferred
 		end;
 
-feature {BASIC_EWB_LOOP} -- Execution
+feature {EWB_LOOP} -- Execution
 
 	loop_action is
 			-- Action performed when invoked from the

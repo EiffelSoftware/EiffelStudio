@@ -20,11 +20,6 @@ inherit
 
 	GB_EV_PIXMAPABLE_EDITOR_CONSTRUCTOR
 		
-	CONSTANTS
-		undefine
-			default_create
-		end
-		
 	GB_SHARED_DEFERRED_BUILDER
 		undefine
 			default_create

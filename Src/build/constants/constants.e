@@ -4,47 +4,48 @@ feature
 
 	App_const: APPLICATION_CONSTANTS is
 		once
-			!! Result
-		end;
+			create Result
+		end
 
 	Context_const: CONTEXT_CONSTANTS is
 		once
-			!! Result
-		end;
+			create Result
+		end
 
 	Cursors: CURSORS is
 		once
-			!! Result
-		end;
+			create Result
+		end
 
 	Environment: EB_ENVIRONMENT is
 		once
-			!! Result
-		end;
+			create Result
+		end
 
 	Menu_names: MENU_NAMES is
 		once
-			!! Result
+			create Result
 		end
 
 	Pixmaps: PIXMAPS is
 		once
-			!! Result
-		end;
+			create Result
+		end
 
 	Resources: RESOURCES is
 		once
-			!! Result.initialize
-		end;
+			create Result.initialize
+		end
 
-	Stone_types: STONE_TYPES is
+	Pnd_types: PND_TYPES is
 		once
-			!! Result
-		end;
+			create Result
+		end
 
 	Widget_names: WIDGET_NAMES is
 		once
-			!! Result
-		end;
+			create Result
+		end
 	
-end
+end -- class CONSTANTS
+

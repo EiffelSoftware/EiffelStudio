@@ -8,4 +8,6 @@ test	disjoint-sets							set001 tcf set
 test	symdif-sets								set002 tcf set
 test	prune-tree-set							set003 tcf set
 
+test	tree-is-equal							tree001 tcf tree
+
 test	insert-default-key						table001 tcf table

@@ -121,7 +121,7 @@ feature {NONE} -- Generation
 								create doc_file.make (l_file)
 								create l_doc.make_from_file (doc_file)								
 							end
-							if not is_code_document (l_doc) and l_doc.is_valid_xml and l_doc.can_transform then 
+							if not is_code_document (l_doc) and l_doc.is_valid_xml (l_doc.text) and l_doc.can_transform then 
 								generate_file (l_doc, target)											
 							end
 						elseif not file_type (l_file).is_equal ("xml") and then shared_constants.application_constants.allowed_file_types.has (file_type (l_file)) then
@@ -224,7 +224,7 @@ feature {NONE} -- Implementation
 			l_image_url: STRING
 			l_src, l_target: RAW_FILE
 		do
-			if a_doc.is_valid_xml then				
+			if a_doc.is_valid_xml (a_doc.text) then				
 				create l_link_manager
 				l_images := l_link_manager.document_images (a_doc)
 				from

@@ -43,7 +43,7 @@ feature -- Initialization
 			open_read;
 		end;
 
-	create is
+	create_dir is
 			-- Create a physical directory.
 		require
 			physical_not_exists: not exists

@@ -20,7 +20,7 @@ feature -- Initialization
 			make_default (default_file)
 			create file_name.make_from_string (normal_file)
 			if root_folder_i /= Void then
-				update_from_file_name (file_name)
+				update (file_name)
 			else
 				make_from_file_name (file_name)
 			end
@@ -29,11 +29,6 @@ feature -- Initialization
 	make_from_file_name (file_name: FILE_NAME) is
 				-- Initialize Current from file
 				-- named `file_name'.
-		local
-			file: RAW_FILE
-			s: STRING
-			p: XML_TREE_PARSER
-			error_message: STRING
 		do
 			location := file_name
 			create table.make (100)
@@ -43,14 +38,9 @@ feature -- Initialization
 
 feature -- Update
 
-	update_from_file_name (file_name: FILE_NAME) is
+	update (file_name: FILE_NAME) is
 				-- Initialize Current from file
 				-- named `file_name'.
-		local
-			file: RAW_FILE
-			s: STRING
-			p: XML_TREE_PARSER
-			error_message: STRING
 		do
 			location := file_name
 			root_folder_i.update_root (file_name)

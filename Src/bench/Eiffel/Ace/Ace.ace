@@ -7,7 +7,7 @@ default
 	assertion (no);
 	exception_trace (yes);
 	dead_code_removal (no);
---	inlining_size ("16");
+--	inlining_size ("8");
 	inlining (no);
 
 	--trace(yes)
@@ -120,7 +120,7 @@ cluster
 	liman_bench_graphical(liman):	"$/bench_graphical";
 	liman_abstract(liman):		"$/abstract";
 	liman_graphical(liman):		"$/graphical";
-	--win time_lock(liman):        	"$/time_lock";--win
+--	win time_lock(liman):        	"$/time_lock";--win
 	liman_shared(liman):		"$/shared";--unix
 	liman_client(liman):		"$/client";--unix
 
@@ -297,21 +297,21 @@ cluster
 external
 	
 	include_path:
-		"\$(BENCH)/C.ANSI/parsing/shared",
+		"\$(BENCH)/C/parsing/shared",
 		"\$(EIFFEL4)/library/mel/Clib";
 
 	object:
-		"\$(BENCH)/C.ANSI/parsing/eiffel/libweiffel.a",
-		"\$(BENCH)/C.ANSI/parsing/lace/liblace.a",
-		"\$(BENCH)/C.ANSI/parsing/shared/libparsing.a",
-		"\$(BENCH)/C.ANSI/platform/libplatform.a",
+		"\$(BENCH)/C/parsing/eiffel/libweiffel.a",
+		"\$(BENCH)/C/parsing/lace/liblace.a",
+		"\$(BENCH)/C/parsing/shared/libparsing.a",
+		"\$(BENCH)/C/platform/libplatform.a",
 		"\$(EIFFEL4)/library/mel/spec/$(PLATFORM)/lib/libMel.a",
 		"\$(EIFFEL4)/library/mel/spec/$(PLATFORM)/lib/libXpm.a",
 		"\$(EIFFEL4)/library/net/spec/$(PLATFORM)/lib/libnet.a",
-		"\$(BENCH)/C.ANSI/ipc/ewb/libewb.a",
-		"\$(BENCH)/C.ANSI/ipc/shared/libipc.a",
-		"\$(BENCH)/C.ANSI/liman/lm/liblm.a",
-		"\$(BENCH)/C.ANSI/liman/shared/libshared.a",
-		"\$(BENCH)/C.ANSI/idrs/libidr.a",
+		"\$(BENCH)/C/ipc/ewb/libewb.a",
+		"\$(BENCH)/C/ipc/shared/libipc.a",
+		"\$(BENCH)/C/liman/lm/liblm.a",
+		"\$(BENCH)/C/liman/shared/libshared.a",
+		"\$(BENCH)/C/idrs/libidr.a",
 		"-lXm -lXt -lX11"	
 end

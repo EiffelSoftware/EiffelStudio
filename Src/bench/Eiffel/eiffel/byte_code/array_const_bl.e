@@ -286,7 +286,7 @@ feature {NONE} -- C code generation
 			feat_i := f_table.item ("make");
 			generated_file.putstring ("(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))");
 			if 
-				Compilation_modes.is_precompiling or
+				Compilation_modes.is_precompiling or else
 				base_class.is_precompiled
 			then
 				generated_file.putstring ("RTWPF(");

@@ -29,7 +29,8 @@ inherit
 			set_height,
 			set_size,
 			set_width,
-			unrealize
+			unrealize,
+			default_style
 		select
 			unrealize
 		end;
@@ -112,9 +113,13 @@ feature -- Status setting
 			if not exists then
 				realize_current
 				shown := true
-				updating := true
+				realized := true
+				updating := True
 				realize_children
 				if not fixed_size_flag then
+					updating := False
+					update_all
+					updating := True
 					set_enclosing_size
 				end
 				h := form_child_list.height (Current)
@@ -127,8 +132,6 @@ feature -- Status setting
 				end
 				updating := false
 			end
-			realized := true
-			update_all
 			if grab_style = modal then
 				set_windows_insensitive
 			end
@@ -139,7 +142,8 @@ feature -- Status setting
 				ypos := ypos.max (0)
 				set_x_y (xpos, ypos)
 			end
-			wel_show
+			show
+			update_all
 		end
 
 	realize is
@@ -172,7 +176,7 @@ feature -- Status setting
 	set_height (new_height: INTEGER) is
 			-- Set height to `new_height'.
 		do
-			if height /= new_height then
+			if private_attributes.height /= new_height then
 				private_attributes.set_height (new_height)
 				if exists then 
 					wel_set_height (new_height + shell_height)
@@ -186,7 +190,8 @@ feature -- Status setting
 	set_size (new_width, new_height: INTEGER) is
 			-- Set size to `new_width' and `new_height'.
 		do
-			if width /= new_width or height /= new_height then
+			if private_attributes.width /= new_width
+			or else private_attributes.height /= new_height then
 				private_attributes.set_height (new_height)
 				private_attributes.set_width (new_width)
 				if exists then 
@@ -199,7 +204,7 @@ feature -- Status setting
 	set_width (new_width: INTEGER) is
 			-- Set width to `new_width'.
 		do
-			if width /= new_width then
+			if private_attributes.width /= new_width then
 				private_attributes.set_width (new_width)
 				if exists then 
 					wel_set_width (new_width + shell_width)
@@ -239,7 +244,13 @@ feature -- Status setting
 				if not updating then
 					update_all
 				end
-			end				
+			end
+		end
+
+	default_style: INTEGER is
+			-- Deafult style for a dialog
+		once
+			Result := Ws_overlapped + Ws_dlgframe + Ws_thickframe
 		end
 
 end -- class FORM_DIALOG_WINDOWS

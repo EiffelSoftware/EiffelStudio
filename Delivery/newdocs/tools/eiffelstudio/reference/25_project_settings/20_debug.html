@@ -16,20 +16,53 @@
 <p>&nbsp;</p>
 
 <p>Here is what the debug tab looks like when you have not yet compiled the system
-you just created.</p>
+you just created.  It comprises two tabs, the first and default tab for debugging
+options and the second for program execution options.</p>
 
-<p align="center"><img border="0" src="../../../../images/eiffelstudio/project_settings/debug_tab.png"></p>
+<p align="center"><img border="0" src="../../../../images/eiffelstudio/project_settings/debug_debug.png"></p>
 
 <p>&nbsp;</p>
-<h2>Execution parameters</h2>
+<h2>Debug options</h2>
+<p>By default all debug clauses are turned off.</p>
+
+<p>The first step to enable them is to select the `Enable debug' check box. Then right-click on
+the debug clauses you want to enable/disable and a
+contextual menu will appear to let you do so.</p>
+
+<p class="tip"><b>Tip</b>: You can select several debug clauses at a time by using the Ctrl
+and Shift keys.  </p>
+
+<p>Before you compile for the first time your project with an Ace file that has
+been automatically created, you
+won't see any debug clauses. They will be automatically added by the compiler at
+the end of your first compilation. When this is done, you can
+enable/disable each one of them.</p>
+
+
+<h2>Program Execution</h2>
 <p>You can specify the location from where your program will run. By default the
 location is `your_project_path/EIFGEN/W_code'. Use this option when your
 application relies on the use of resource files located at a different location.</p>
-<p>You can also specify one or more command line arguments. To add one, simply
-type your command line arguments in the combo box and press enter. To remove
-one, select it from the combo box and then click on the red cross. To select
-one, simply choose it from the combo box, and when you click on Apply or Ok
-they will be automatically taken into account, even before you recompile.</p>
+<p>You can also specify one or more command line arguments. The first step is to enable them
+by selecting the 'Enable arguments' check box.  If this box is not checked the
+system will run without any arguments.  Selecting it will enable the arguments notebook which
+provides two type of arguments, 'Program Arguments' and 'My Arguments'.  
+Program Arguments are those that reside in the project Ace file and are therefore system-wide.
+My Arguments are user specific and are stored in a separate file from the Ace.&nbsp;
+Below is the debug tab with the arguments tab selected.</p>  
+
+<p align="center"><img border="0" src="../../../../images/eiffelstudio/project_settings/debug_args.png"></p>
+
+<p>To add 
+a new argument select the desired tab, type the arguments into the Current Argument text box and then
+click 'Add'.  To select an argument simply click the argument as it appears in the list or select
+it from the drop-down combo box.  Once selected the argument can be set by clicking 'Apply' or
+'OK', or it can be removed by clicking 'Remove'.  To edit an existing argument double-click the
+corresponding argument in the list box.  This will display an editable text field whereby the argument
+can be edited.  The same execution options are also accessible from any of the program debugging and 
+launching toolbar buttons in the main EiffelStudio development window.  To display them right-click
+on any of these buttons, or for more information click here.
+</p>
 <p>&nbsp;</p>
 <h2>Miscellaneous options</h2>
 <ul>
@@ -46,21 +79,6 @@ they will be automatically taken into account, even before you recompile.</p>
 </ul>
 <p class="Note"><b>Note</b>: The profiler is only available in the Enterprise edition of
 EiffelStudio.</p>
-<h2>Debug options</h2>
-<p>By default all debug clauses are turned off.</p>
-
-<p>The first step to enable them is to select the `Enable debug' check box. Then right-click on
-the debug clauses you want to enable/diable and a
-contextual menu will appear to let you do so.</p>
-
-<p class="tip"><b>Tip</b>: You can select several debug clauses at a time by using the Ctrl
-and Shift keys.  </p>
-
-<p>Before you compile for the first time your project with an Ace file that has
-been automatically created, you
-won't see any debug clauses. They will be automatically added by the compiler at
-the end of your first compilation. When this is done, you can
-enable/disable each one of them.</p>
 
 </body>
 

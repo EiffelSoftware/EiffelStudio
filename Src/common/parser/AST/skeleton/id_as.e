@@ -82,7 +82,7 @@ feature {AST_EIFFEL} -- Output
             Result.append (Current)
         end
 
-feature {YACE_LACE}
+feature {COMPILER_EXPORTER}
 
 	pass_address (n: INTEGER) is
 			-- Eiffel-Yacc interface

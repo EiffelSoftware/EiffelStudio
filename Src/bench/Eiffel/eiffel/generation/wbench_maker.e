@@ -126,7 +126,7 @@ feature
 								-- Descriptor file
 							!!file_name.make (16);
 							file_name.append (object_name);
-							file_name.append (Descriptor_suffix);
+							file_name.append_character (Descriptor_file_suffix);
 							file_name.append (Dot_o);
 							descriptor_baskets.item (cl_type.packet_number).put (file_name);
 						end;
@@ -140,7 +140,7 @@ feature
 						!!file_name.make (16);
 						file_name.append (object_name);
 						file_name.append_integer (i);
-						file_name.append (Feature_table_suffix);
+						file_name.append_character (Feature_table_file_suffix);
 						file_name.append (Dot_o);
 						feat_table_baskets.item (a_class.packet_number).put (file_name);
 					end;

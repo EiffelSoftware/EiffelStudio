@@ -8,7 +8,7 @@ class M_FEATURE_CACHE
 inherit
 	CACHE [MELT_FEATURE]
 
-creation
+create
 	make
 
 feature 

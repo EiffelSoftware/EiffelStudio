@@ -14,7 +14,7 @@ inherit
 			flush, make
 		end
 
-creation
+create
 	make
 
 feature
@@ -31,21 +31,21 @@ feature
 	make is
 			-- Hash table creation
 		do
-			{DELAY_SERVER} Precursor;
-			!!to_remove.make;
+			Precursor {DELAY_SERVER};
+			create to_remove.make;
 			to_remove.compare_objects
 		end;
 
 	cache: INV_BYTE_CACHE is
 			-- Cache for routine tables
 		once	
-			!! Result.make
+			create Result.make
 		end
 
 	Delayed: SEARCH_TABLE [INTEGER] is
 			-- Cache for delayed items
 		once
-			!!Result.make ((3 * Cache.cache_size) // 2)
+			create Result.make ((3 * Cache.cache_size) // 2)
 		end
 
 	remove_id (i: INTEGER) is
@@ -59,7 +59,7 @@ feature
 	flush is
 			-- Finalization after a successful recompilation.
 		do
-			{DELAY_SERVER} Precursor;
+			Precursor {DELAY_SERVER};
 			from
 				to_remove.start;
 			until

@@ -8,7 +8,7 @@ class M_DESC_SERVER
 inherit
 	COMPILER_SERVER [MELTED_DESC]
 
-creation
+create
 	make
 
 feature -- Access
@@ -21,7 +21,7 @@ feature -- Access
 
 	cache: M_DESC_CACHE is
 		once
-			!! Result.make
+			create Result.make
 		end
 		
 feature -- Server size configuration

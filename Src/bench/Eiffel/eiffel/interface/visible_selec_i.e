@@ -132,7 +132,7 @@ feature
 	trace is
 			-- Debug purpose
 		do
-			{VISIBLE_I} Precursor
+			Precursor {VISIBLE_I}
 			io.error.putstring (" for ");
 			from
 				visible_features.start;

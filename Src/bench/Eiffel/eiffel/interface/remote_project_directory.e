@@ -31,7 +31,7 @@ inherit
 	SHARED_ENV;
 	COMPILER_EXPORTER
 
-creation
+create
 
 	make
 	
@@ -92,7 +92,7 @@ feature -- Access
 	compilation_path: DIRECTORY_NAME is
 			-- Path of the COMP directory
 		do
-			!! Result.make_from_string (name);
+			create Result.make_from_string (name);
 			Result.extend_from_array (<<Eiffelgen, Comp>>)
 		end;
 
@@ -103,21 +103,21 @@ feature -- Access
 			-- Full name of the file where the
 			-- workbench is stored
 		do
-			!! Result.make_from_string (name);
+			create Result.make_from_string (name);
 			Result.set_file_name (Dot_workbench);
 		end
 
 	project_eif_file: PROJECT_EIFFEL_FILE is
 			-- File where the workbench is stored
 		do
-			!! Result.make (project_eif)
+			create Result.make (project_eif)
 		end
 
 	precomp_eif: FILE_NAME is
 			-- Full name of the file where the
 			-- precompilation information is stored
 		do
-			!! Result.make_from_string (name);
+			create Result.make_from_string (name);
 			Result.extend (Eiffelgen);
 			Result.set_file_name (Shared_precomp_eif)
 		end
@@ -125,7 +125,7 @@ feature -- Access
 	precomp_eif_file: PROJECT_EIFFEL_FILE is
 			-- File where the precompilation information is stored
 		do
-			!! Result.make (precomp_eif)
+			create Result.make (precomp_eif)
 		end
 
 	precompiled_preobj: FILE_NAME is
@@ -134,7 +134,7 @@ feature -- Access
 			makefile_name: STRING
 		do
 			makefile_name := Environ.translated_string (dollar_name);
-			!! Result.make_from_string (makefile_name);
+			create Result.make_from_string (makefile_name);
 			Result.extend_from_array (<<Eiffelgen, W_code>>);
 			Result.set_file_name (Platform_constants.Preobj)
 		end
@@ -142,7 +142,7 @@ feature -- Access
 	precompiled_driver: FILE_NAME is
 			-- Full name of the precompilation driver
 		do
-			!! Result.make_from_string (name);
+			create Result.make_from_string (name);
 			Result.extend_from_array (<<Eiffelgen, W_code>>);
 			Result.set_file_name (Platform_constants.Driver)
 		end
@@ -191,14 +191,14 @@ feature -- Check
 			file.check_version_number (precomp_id);
 			file.close
 			if file.is_incompatible then
-				!! vd52;
+				create vd52;
 				vd52.set_path (compilation_path);
 				vd52.set_precompiled_version (file.project_version_number);
 				vd52.set_compiler_version (version_number);
 				Error_handler.insert_error (vd52);
 				Error_handler.raise_error
 			elseif file.is_invalid_precompilation then
-				!! vd53;
+				create vd53;
 				vd53.set_path (compilation_path);
 				if file.precompilation_id = 0 then
 					vd53.set_precompiled_date ("unknown")
@@ -290,7 +290,7 @@ feature {NONE} -- Implementation
 			i: INTEGER
 		do
 			if is_valid then
-				!!dn.make_from_string (name);
+				create dn.make_from_string (name);
 				from
 					i := directories.lower
 				until
@@ -299,13 +299,13 @@ feature {NONE} -- Implementation
 					dn.extend (directories.item (i))
 					i := i + 1
 				end
-				!! d.make (dn);
+				create d.make (dn);
 				is_valid :=
 					d.exists and then
 					d.is_readable and then
 					d.is_executable
 				if not is_valid and then is_precompile then
-					!! vd42;
+					create vd42;
 					vd42.set_path (dn);
 					vd42.set_is_directory;
 					Error_handler.insert_error (vd42);
@@ -323,7 +323,7 @@ feature {NONE} -- Implementation
 			i: INTEGER
 		do
 			if is_valid then
-				!!fn.make_from_string (name);
+				create fn.make_from_string (name);
 				from
 					i := directories.lower
 				until
@@ -333,13 +333,13 @@ feature {NONE} -- Implementation
 					i := i + 1
 				end
 				fn.set_file_name (rn);
-				!! f.make (fn);
+				create f.make (fn);
 				is_valid :=
 					f.exists and then
 					f.is_plain and then
 					f.is_readable
 				if not is_valid and then is_precompile then
-					!! vd42;
+					create vd42;
 					vd42.set_path (fn);
 					Error_handler.insert_error (vd42);
 				end

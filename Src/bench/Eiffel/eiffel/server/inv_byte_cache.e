@@ -8,7 +8,7 @@ class INV_BYTE_CACHE
 inherit
 	CACHE [INVARIANT_B]
 
-creation
+create
 	make
 	
 feature 

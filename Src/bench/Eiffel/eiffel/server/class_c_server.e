@@ -27,7 +27,7 @@ inherit
 			is_equal, copy
 		end
 
-creation
+create
 
 	make
 
@@ -37,7 +37,7 @@ feature -- Initialization
 			-- Create a new class server.
 		do
 			array_make (1, Chunk)
-			!! sorted_classes.make (1, Chunk)
+			create sorted_classes.make (1, Chunk)
 		end
 
 feature -- Access

@@ -12,7 +12,7 @@ inherit
 			has, item
 		end
 
-creation
+create
 	make
 	
 feature -- Access
@@ -20,7 +20,7 @@ feature -- Access
 	cache: FEAT_TBL_CACHE is
 			-- Cache for routine tables
 		once
-			!! Result.make
+			create Result.make
 		end
 		
 	has (an_id: INTEGER): BOOLEAN is

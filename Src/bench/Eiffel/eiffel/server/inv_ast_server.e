@@ -16,7 +16,7 @@ inherit
 			has, item
 		end
 
-creation
+create
 	make
 
 feature 
@@ -24,7 +24,7 @@ feature
 	cache: INV_AST_CACHE is
 			-- Cache for routine tables
 		once
-			!! Result.make
+			create Result.make
 		end
 		
 	has (an_id: INTEGER): BOOLEAN is

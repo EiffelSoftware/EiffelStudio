@@ -9,7 +9,7 @@ inherit
 
 	COMPILER_EXPORTER
 
-creation
+create
 
 	make
 
@@ -21,7 +21,7 @@ feature
 
 	make is
 		do
-			!!tags.make;
+			create tags.make;
 			tags.compare_objects
 		end;
 

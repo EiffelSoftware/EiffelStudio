@@ -8,7 +8,7 @@ class M_ROUT_ID_CACHE
 inherit
 	CACHE [MELTED_ROUTID_ARRAY]
 
-creation
+create
 	make
 
 feature

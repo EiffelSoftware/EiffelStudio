@@ -33,7 +33,7 @@ feature {NONE}
 	primes: PRIMES is
 			-- Prime number evaluator
 		once
-			!!Result;
+			create Result;
 		end;
 
 	prime_size (i: INTEGER): INTEGER is

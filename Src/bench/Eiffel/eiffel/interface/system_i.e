@@ -1746,9 +1746,9 @@ feature -- Freeezing
 			Workbench.set_melted_file_name (Void)
 			
 			if Compilation_modes.is_precompiling then
-				!PRECOMP_MAKER!makefile_generator.make
+				create {PRECOMP_MAKER} makefile_generator.make
 			else
-				!WBENCH_MAKER!makefile_generator.make
+				create {WBENCH_MAKER} makefile_generator.make
 			end
 				-- Re-process dynamic types
 			-- FIXME
@@ -2330,7 +2330,7 @@ feature {NONE} -- Finalization implementation
 			deg_output: DEGREE_OUTPUT
 		do
 			Eiffel_project.delete_generation_directory (Final_generation_path, Void, Void) -- No agent
-			!FINAL_MAKER! makefile_generator.make
+			create {FINAL_MAKER} makefile_generator.make
 			open_log_files
 			j := classes.count
 			deg_output := Degree_output

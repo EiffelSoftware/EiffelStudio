@@ -46,7 +46,7 @@ inherit
 			copy, is_equal
 		end
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -291,7 +291,7 @@ feature -- C code generation
 
 			from
 				nb := counter.count
-				!!values.make (1, nb)
+				create values.make (1, nb)
 				start
 			until
 				after

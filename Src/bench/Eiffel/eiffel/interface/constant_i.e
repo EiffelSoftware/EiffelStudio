@@ -448,7 +448,7 @@ feature {NONE} -- Implementation
 			t: TYPE_A
 		do
 			t ?= type
-			!! Result.make (feature_name, feature_id)
+			create Result.make (feature_name, feature_id)
 			if t = Void then
 				t := type.actual_type
 			end

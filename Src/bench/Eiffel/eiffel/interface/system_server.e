@@ -9,7 +9,7 @@ class
 inherit
 	SHARED_TMP_SERVER
 
-creation
+create
 	make
 
 feature -- Initialization

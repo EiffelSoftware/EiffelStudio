@@ -11,7 +11,7 @@ inherit
 			make, item, has
 		end
 
-creation
+create
 	make
 
 feature -- Initialisation
@@ -19,8 +19,8 @@ feature -- Initialisation
 	make is
 		-- Creation
 		do
-			{COMPILER_SERVER}Precursor
-			!! bindex_cid_table.make (200)
+			Precursor{COMPILER_SERVER}
+			create bindex_cid_table.make (200)
 		end
 
 	
@@ -35,7 +35,7 @@ feature -- Access
 	cache: DEPEND_CACHE is
 			-- Cache for routine tables
 		once
-			!! Result.make
+			create Result.make
 		end
 
 	bindex_cid_table: HASH_TABLE [INTEGER, INTEGER]

@@ -128,7 +128,7 @@ debug ("SERVER")
 end
 
 			pos := store_append (server_file.descriptor, $t, $make_index, $need_index, $Current)
-			!! info.make (pos, server_file.file_id)
+			create info.make (pos, server_file.file_id)
 			server_file.add_occurrence
 
 			old_info := tbl_item (an_id)
@@ -252,7 +252,7 @@ end
 				forth
 			end
 			file_ids.wipe_out
-			{ISE_SERVER} Precursor
+			Precursor {ISE_SERVER}
 				-- Take a new file
 			set_current_file_id
 		end
@@ -431,8 +431,8 @@ end
 			flush
 
 			from
-				!! live_ids.make
-				!! dead_files.make
+				create live_ids.make
+				create dead_files.make
 				start
 			until
 				after

@@ -6,7 +6,7 @@ indexing
 class
 	INIT_SERVERS
 
-creation
+create
 	make
 
 feature -- Initialization

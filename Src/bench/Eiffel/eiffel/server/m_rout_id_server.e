@@ -8,7 +8,7 @@ class M_ROUT_ID_SERVER
 inherit
 	COMPILER_SERVER [MELTED_ROUTID_ARRAY]
 
-creation
+create
 	make
 
 feature -- Access
@@ -22,7 +22,7 @@ feature -- Access
 	cache: M_ROUT_ID_CACHE is
 			-- Cache for routine tables
 		once
-			!! Result.make
+			create Result.make
 		end
 		
 feature -- Server size configuration

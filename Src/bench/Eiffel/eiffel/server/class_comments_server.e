@@ -15,7 +15,7 @@ inherit
 			clear, take_control, remove
 		end
 
-creation
+create
 	make
 
 

@@ -36,7 +36,7 @@ inherit
 			debug_output as name_in_upper
 		end
 
-creation {COMPILER_EXPORTER}
+create {COMPILER_EXPORTER}
 	make
 
 feature {NONE} -- Initialization

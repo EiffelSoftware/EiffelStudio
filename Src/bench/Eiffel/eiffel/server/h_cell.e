@@ -5,7 +5,7 @@ indexing
 
 class H_CELL[T]
 
-creation
+create
 		make
 
 feature

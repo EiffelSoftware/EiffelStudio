@@ -18,7 +18,7 @@ inherit
 
 	IL_CONST
 	
-creation
+create
 	make
 
 feature -- Status
@@ -69,7 +69,7 @@ feature -- C code generation
 				generate_item (feat, buffer);
 			else
 					-- Basic generation
-				{CLASS_TYPE} Precursor (feat, buffer);
+				Precursor {CLASS_TYPE} (feat, buffer);
 			end;
 		end;
 

@@ -64,7 +64,7 @@ feature
 		require else
 			has_to_be_generated: generate_in > 0
 		do
-			!!Result
+			create Result
 			Result.set_body_index (body_index)
 			Result.set_type_a (type.actual_type)
 			Result.set_written_in (generate_in)
@@ -368,7 +368,7 @@ feature {NONE} -- Implementation
 			if t = Void then
 				t := type.actual_type
 			end
-			!! Result.make (feature_name, feature_id)
+			create Result.make (feature_name, feature_id)
 			Result.set_type (t)
 		end
 

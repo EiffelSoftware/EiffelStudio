@@ -125,7 +125,7 @@ feature -- Initialization
 				i := i + 1
 			end
 				-- Creation of data structures
-			!!arguments.make (nb_arg)
+			create arguments.make (nb_arg)
 				-- Fill the data structures
 			nb_arg := 1
 			from

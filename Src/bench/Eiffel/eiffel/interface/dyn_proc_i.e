@@ -18,7 +18,7 @@ feature
 		local
 			rep: R_DYN_PROC_I
 		do
-			!!rep;
+			create rep;
 			transfer_to (rep);
 			rep.set_code_id (new_code_id);
 			Result := rep;
@@ -29,7 +29,7 @@ feature
 		local
 			unselect: D_DYN_PROC_I
 		do
-			!!unselect;
+			create unselect;
 			transfer_to (unselect);
 			unselect.set_access_in (in);
 			Result := unselect;

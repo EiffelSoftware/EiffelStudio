@@ -17,7 +17,7 @@ inherit
 			is_equal
 		end
 
-creation
+create
 	make
 	
 feature -- Access
@@ -165,7 +165,7 @@ feature -- Generation
 					buffer.putstring (external_name)
 					buffer.putstring ("();%N")
 				else
-					{EXECUTION_UNIT} Precursor (buffer)
+					Precursor {EXECUTION_UNIT} (buffer)
 				end
 			end
 		end

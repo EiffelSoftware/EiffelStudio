@@ -11,7 +11,7 @@ inherit
 
 	SPECIAL_CONST
 
-creation
+create
 	make
 	
 feature 
@@ -27,7 +27,7 @@ feature
 		do
 			-- First check if current class has one formal generic parameter
 			if (generics = Void) or else generics.count /= 1 then
-				!!special_error.make (Case_7, Current);
+				create special_error.make (Case_7, Current);
 				Error_handler.insert_error (special_error);
 			end;
 
@@ -45,7 +45,7 @@ feature
 				parents.forth;
 			end;
 			if not stop then
-				!!special_error.make (Case_8, Current);
+				create special_error.make (Case_8, Current);
 				Error_handler.insert_error (special_error);
 			end;
 			
@@ -54,7 +54,7 @@ feature
 			if 
 				types.first.skeleton.nb_reference /= 1
 			then
-				!!special_error.make (Case_9, Current);
+				create special_error.make (Case_9, Current);
 				Error_handler.insert_error (special_error);
 			end;
 
@@ -80,7 +80,7 @@ feature
 				error := not done
 			end;
 			if error then
-				!! special_error.make (Case_10, Current);
+				create special_error.make (Case_10, Current);
 				Error_handler.insert_error (special_error);
 			end;
 				
@@ -106,10 +106,10 @@ feature {NONE}
 		local
 			args: FEAT_ARG;
 		once
-			!! args.make (2);
+			create args.make (2);
 			args.put_i_th (Integer_type, 1);
 			args.put_i_th (Integer_type, 2);
-			!! Result;
+			create Result;
 			Result.set_arguments (args);
 			Result.set_feature_name_id (Names_heap.make_name_id)
 		end;

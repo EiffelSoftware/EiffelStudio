@@ -8,7 +8,7 @@ class DEPEND_CACHE
 inherit
 	CACHE [CLASS_DEPENDANCE]
 
-creation
+create
 	make
 	
 feature 

@@ -18,7 +18,7 @@ inherit
 			copy, is_equal
 		end
 
-creation
+create
 	make
 	
 feature 
@@ -41,14 +41,14 @@ feature
 	make is
 			-- Initialization
 		do
-			{COMPILER_SERVER} Precursor
-			!!index.make (100)
+			Precursor {COMPILER_SERVER}
+			create index.make (100)
 		end
 
 	cache: AST_CACHE is
 			-- Cache for routine tables
 		once
-			!! Result.make
+			create Result.make
 		end
 		
 	id (t: CLASS_AS): INTEGER is
@@ -63,7 +63,7 @@ feature
 			index.clear_all
 			last_id := t.class_id
 				-- Write data structure in file `file'
-			{COMPILER_SERVER} Precursor (t)
+			Precursor {COMPILER_SERVER} (t)
 		end
 
 	make_index (obj: ANY; file_position, object_count: INTEGER) is

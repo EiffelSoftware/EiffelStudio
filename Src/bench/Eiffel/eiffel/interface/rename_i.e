@@ -2,7 +2,7 @@
 
 class RENAME_I 
 
-creation
+create
 
 	make
 
@@ -17,7 +17,7 @@ feature
 
 	make is
 		do
-			!!renamings.make (1);
+			create renamings.make (1);
 			renamings.compare_objects
 		end;
 

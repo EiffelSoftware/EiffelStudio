@@ -8,7 +8,7 @@ class INV_AST_CACHE
 inherit
 	CACHE [INVARIANT_AS]
 
-creation
+create
 	make
 	
 feature 

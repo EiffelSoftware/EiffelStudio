@@ -1523,8 +1523,10 @@ feature -- Skeleton generation
 				end
 				buffer.putstring (",%N")
 
-					-- Generate cecil structure if any
-				generate_cecil (buffer)
+				if a_class.has_visible then
+						-- Generate cecil structure if any
+					generate_cecil (buffer)
+				end
 			end
 
 			buffer.putchar ('}')

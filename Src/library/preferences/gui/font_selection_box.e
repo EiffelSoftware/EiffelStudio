@@ -23,11 +23,7 @@ feature -- Display
 			-- Display Current with title 'txt' and content 'new_value'.
 		do
 			Precursor (new_resource)
-			example.clear
-			example.set_font (resource.actual_value)
-			example.set_minimum_width (example.font.string_width("Example"))
-			example.set_size (example.font.string_width("Example"), example.height)
-			example.draw_text_top_left (0, 0, "Example")
+			display_font (resource.actual_value)
 		end
 
 feature {NONE} -- Commands
@@ -56,13 +52,24 @@ feature {NONE} -- Commands
 			font := font_tool.font
 			resource.set_actual_value (font)
 			update_resource
-			example.clear
-			example.set_font (font)
-			example.set_minimum_width (font.string_width("Example"))
-			example.set_size (font.string_width("Example"), example.height)
-			example.draw_text_top_left (0, 0, "Example")
+			display_font (font)
 			caller.update (resource)
 		end
+
+	display_font (a_font: EV_FONT) is
+			-- 
+		local
+			string_size: TUPLE [INTEGER, INTEGER, INTEGER, INTEGER]
+		do
+			example.clear
+			example.set_font (a_font)
+			string_size := a_font.string_size("Example")
+			example.set_minimum_size (string_size.integer_32_item (1), string_size.integer_32_item (2))
+			example.set_size (string_size.integer_32_item (1), string_size.integer_32_item (2))
+			example.draw_text_top_left (0, 0, "Example")
+			change_item_widget.set_minimum_height (string_size.integer_32_item (2).max (change_b.minimum_height))
+		end
+		
 		
 feature {NONE} -- Implementation
 
@@ -75,6 +82,7 @@ feature {NONE} -- Implementation
 			create h2
 			
 			create change_b.make_with_text_and_action ("Change ...", agent change)
+			change_b.set_minimum_height (change_b.height)
 
 			create example
 			example.set_size (Layout_constants.Dialog_unit_to_pixels(120), change_b.height)

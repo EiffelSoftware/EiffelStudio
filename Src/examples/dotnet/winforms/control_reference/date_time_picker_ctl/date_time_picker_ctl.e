@@ -4,13 +4,18 @@ indexing
 class
 	DATE_TIME_PICKER_CTL
 
---inherit 
---	WINFORMS_FORM
---		redefine
---			make,
---			dispose
---		end
+inherit 
+	WINFORMS_FORM
+		rename
+			make as make_form
+		undefine
+			to_string, finalize, equals, get_hash_code
+		redefine
+			dispose_boolean
+		end
 
+	ANY
+	
 create
 	make
 
@@ -22,16 +27,12 @@ feature {NONE} -- Initialization
 		local
 			dummy: SYSTEM_OBJECT
 		do
---			Precursor {WINFORMS_FORM}
 			initialize_components
 			
-			dummy := my_window.show_dialog
+			feature {WINFORMS_APPLICATION}.run_form (Current)
 		end
 
 feature -- Access
-
-	my_window: WINFORMS_FORM
-			-- Main window.
 
 	components: SYSTEM_DLL_SYSTEM_CONTAINER	
 			-- System.ComponentModel.Container
@@ -91,8 +92,6 @@ feature -- Implementation
 			l_point: DRAWING_POINT
 			l_size: DRAWING_SIZE
 		do
-			create my_window.make
-			
 			create components.make
 			create label_3.make
 			create error_min.make
@@ -110,13 +109,13 @@ feature -- Implementation
 			create dtp_max_date.make
 			create chk_show_up_down.make
 			
-			my_window.set_text (("DateTimePicker").to_cil)
---			my_window.set_auto_scale_base_size (create {DRAWING_SIZE}.make_from_width_and_height (5, 13))
---			my_window.set_client_size_size (create {DRAWING_SIZE}.make_from_width_and_height (504, 293))
+			set_text (("DateTimePicker").to_cil)
+--			set_auto_scale_base_size (create {DRAWING_SIZE}.make_from_width_and_height (5, 13))
+--			set_client_size_size (create {DRAWING_SIZE}.make_from_width_and_height (504, 293))
 			l_size.make_from_width_and_height (5, 13)
-			my_window.set_auto_scale_base_size (l_size)
+			set_auto_scale_base_size (l_size)
 			l_size.make_from_width_and_height (504, 293)
-			my_window.set_client_size (l_size)
+			set_client_size (l_size)
 			
 			tool_tip.set_active (True)
 			
@@ -302,21 +301,30 @@ feature -- Implementation
 			my_group_box.controls.add (label_1)
 			my_group_box.controls.add (cmb_format)
 			
-			my_window.controls.add (date_time_picker)
-			my_window.controls.add (my_group_box)
+			controls.add (date_time_picker)
+			controls.add (my_group_box)
 		end
 
 
 feature {NONE} -- Implementation
 
-	dispose is
-			-- method call when form is disposed.
+	dispose_boolean (a_disposing: BOOLEAN) is
+			-- method called when form is disposed.
 		local
 			dummy: WINFORMS_DIALOG_RESULT
+			retried: BOOLEAN
 		do
-			dummy := feature {WINFORMS_MESSAGE_BOX}.show (("Disposed !").to_cil)
+			if not retried then
+				if components /= Void then
+					components.dispose	
+				end
+			end
+			Precursor {WINFORMS_FORM}(a_disposing)
+		rescue
+			retried := true
+			retry
 		end
-	
+
 	btn_change_font_click (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
 			-- feature performed when `btn_change_font' is clicked.
 		local

@@ -242,7 +242,11 @@ feature -- Basic operations
 		do
 			if Shared_wizard_environment.abort then
 				message_output.add_message (Current, Generation_Aborted)
-			elseif shared_wizard_environment.server then
+			elseif 
+				shared_wizard_environment.server and
+				not system_descriptor.coclasses.empty
+			then
+				
 				if shared_wizard_environment.out_of_process_server then
 					create outproc_reg_gen
 					outproc_reg_gen.generate
@@ -309,7 +313,10 @@ feature -- Basic operations
 				if Shared_wizard_environment.server then
 					ace_generator.generate (Server)
 					resource_generator.generate (Server)
-					if shared_wizard_environment.in_process_server then
+					if 
+						shared_wizard_environment.in_process_server and
+						not system_descriptor.coclasses.empty
+					then
 						create definition_file_generator
 						definition_file_generator.generate
 					end

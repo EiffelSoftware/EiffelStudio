@@ -2,9 +2,6 @@ indexing
 	description: "COM visible class representing an assemblies information"
 	date: "$Date$"
 	revision: "$Revision$"
-	interface_metadata:
-		create {COM_VISIBLE_ATTRIBUTE}.make (True) end,
-		create {GUID_ATTRIBUTE}.make ("E1FFE100-F122-4DD9-914E-E37ED8FF236C") end
 
 class
 	COM_ASSEMBLY_INFORMATION
@@ -13,6 +10,17 @@ inherit
 	SAFE_ASSEMBLY_LOADER
 		export 
 			{NONE} all
+		end
+	
+	I_COM_ASSEMBLY_INFORMATION
+		redefine
+			name,
+			version,
+			culture,
+			public_key_token,
+			is_in_gac,
+			is_consumed,
+			consumed_folder_name
 		end
 	
 create
@@ -38,27 +46,18 @@ feature -- Access
 			-- assembly name
 		do
 			Result := impl.name.to_cil
-		ensure
-			non_void_result: Result /= Void
-			non_empty_result: Result.length > 0
 		end
 		
 	version: SYSTEM_STRING is
 			-- assembly version
 		do
 			Result := impl.version.to_cil
-		ensure
-			non_void_result: Result /= Void
-			non_empty_result: Result.length > 0
 		end
 		
 	culture: SYSTEM_STRING is
 			-- assembly culture
 		do
 			Result := impl.culture.to_cil
-		ensure
-			non_void_result: Result /= Void
-			non_empty_result: Result.length > 0
 		end
 		
 	public_key_token: SYSTEM_STRING is
@@ -69,8 +68,6 @@ feature -- Access
 			else
 				Result := ("").to_cil
 			end
-		ensure
-			non_void_result: Result /= Void
 		end
 		
 	is_in_gac: BOOLEAN is

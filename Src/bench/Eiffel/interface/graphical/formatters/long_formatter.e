@@ -12,26 +12,26 @@ inherit
 
 	FILTERABLE
 		rename
-			init as formatter_init
+			make as formatter_make
 		redefine
 			execute
 		end;
 
 	FILTERABLE
 		redefine
-			execute, init
+			execute, make
 		select
-			init
+			make
 		end;
 
 feature -- Initialization
 
-	init (a_text_window: TEXT_WINDOW) is
+	make (a_tool: TOOL_W) is
 			-- Initialize the format button  with its bitmap.
 			-- Set up the mouse click and control-click actions
 			-- (click requires a confirmation, control-click doesn't).
 		do
-			formatter_init (a_text_window);
+			formatter_make (a_tool);
 			set_action ("!c<Btn1Down>", Current, control_click)
 		end;
 
@@ -48,16 +48,10 @@ feature -- Execution
 	execute (argument: ANY) is
 			-- Ask for a confirmation before executing the format.
 		local
-			mp: MOUSE_PTR;
-			f: FOCUSABLE
+			mp: MOUSE_PTR
 		do
 			if is_sensitive then
-				if holder /= Void then
-					f ?= holder.associated_button
-				end;
-				if f /= Void then
-					f.popdown
-				end;
+				focus_label.popdown
 				if last_warner /= Void then
 					last_warner.popdown
 				end;

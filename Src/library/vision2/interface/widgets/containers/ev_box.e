@@ -40,7 +40,7 @@ feature -- Status report
 			positive: Result >= 0
 		end
 
-	padding: INTEGER is
+	padding_width, padding: INTEGER is
 			-- Space between children in pixels.
 		require
 			not_destroyed: not is_destroyed
@@ -97,8 +97,8 @@ feature -- Status setting
 			border_width_assigned: border_width = value
 		end
 
-	set_padding (value: INTEGER) is
-			-- Assign `value' to `padding'.
+	set_padding_width, set_padding (value: INTEGER) is
+			-- Assign `value' to `padding_width'.
 		require
 			not_destroyed: not is_destroyed
 			positive_value: value >= 0

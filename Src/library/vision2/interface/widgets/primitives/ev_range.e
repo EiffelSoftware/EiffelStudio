@@ -7,8 +7,42 @@ indexing
 deferred class
 	EV_RANGE
 
---inherit
---	EV_PRIMITIVE
+inherit
+	EV_GAUGE
+		redefine
+			implementation
+		end
+
+feature -- Access
+
+	leap: INTEGER is
+			-- Leap of the scrolling
+			-- ie : the user clicks on the scroll bar
+		require
+			exists: not destroyed
+		do
+			Result := implementation.leap
+		ensure
+			positive_result: Result >= 0
+		end
+
+feature -- Element change
+
+	set_leap (val: INTEGER) is
+			-- Make `val' the new leap.
+		require
+			exists: not destroyed
+			positive_val: val >= 0
+		do
+			implementation.set_leap (val)
+		ensure
+			val_set: leap = val
+		end
+
+feature -- Implementation
+
+	implementation: EV_RANGE_I
+			-- Platform dependent access.
 
 end -- class EV_RANGE
 

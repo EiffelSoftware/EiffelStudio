@@ -419,6 +419,7 @@ feature -- Basic Operations
 			cls_c				: CLASS_C
 			type				: TYPE_A
 			crtrs				: EXTEND_TABLE [EXPORT_I, STRING]
+			externals			: ARRAYED_LIST [E_FEATURE]
 			par_cnt				: INTEGER
 			par_token			: EDITOR_TOKEN
 			blnk				: EDITOR_TOKEN_BLANK
@@ -453,6 +454,7 @@ feature -- Basic Operations
 							else
 								insertion.put (token.image.out, 1)
 								is_create := create_before_position (cursor.line, token)
+								is_static := static_call_before_position (cursor.line, token)
 							end
 						else
 								-- token is beginning of feature name
@@ -474,13 +476,14 @@ feature -- Basic Operations
 									else
 										insertion.put (token.image.out, 1)
 										is_create := create_before_position (cursor.line, token)
+										is_static := static_call_before_position (cursor.line, token)
 									end
 								else
 									token := Void
 								end
 							end
 						end
-						if token /= Void and not is_create then
+						if token /= Void and not is_create and not is_static then
 							token := token.previous
 							if token /= Void then
 								if token_image_is_same_as_word (token, ")") then
@@ -528,6 +531,9 @@ feature -- Basic Operations
 				if is_create and then found_class /= Void then 
 					cls_c := found_class
 				end
+				if is_static and then found_class /= Void then 
+					cls_c := found_class
+				end
 				if cls_c /= Void and then cls_c.has_feature_table then
 					feat_table := cls_c.api_feature_table
 					if is_create then
@@ -543,6 +549,37 @@ feature -- Basic Operations
 									add_feature_to_completion_possibilities	(feat_table.item (crtrs.key_for_iteration))
 								end								
 								crtrs.forth
+							end
+						end
+					elseif is_static then
+							-- we consider only the externals
+						externals := external_features (cls_c)
+						show_any_features := 	Editor_preferences.show_any_features
+													or else
+												cls_c.name_in_upper.is_equal (Any_name)
+						if externals /= Void then
+							from
+								externals.start
+							until
+								externals.after
+							loop
+							feat := externals.item
+							if 
+								(
+									exploring_current_class
+										or else
+									feat.is_exported_to (current_class_c)
+								)
+									and then
+								(
+									show_any_features
+										or else
+									not feat.written_class.name_in_upper.is_equal (Any_name)
+								)
+							then
+								add_feature_to_completion_possibilities (feat)
+							end
+								externals.forth
 							end
 						end
 					else
@@ -633,7 +670,7 @@ feature -- Class names completion
 		local
 			cname: STRING
 			clusters: LINKED_LIST [CLUSTER_I]
-			class_list: LINKED_LIST [EB_NAME_FOR_COMPLETION]
+			class_list: ARRAYED_LIST [EB_NAME_FOR_COMPLETION]
 			matcher: KMP_WILD
 			classes: EXTEND_TABLE [CLASS_I, STRING]
 			token				: EDITOR_TOKEN
@@ -655,7 +692,8 @@ feature -- Class names completion
 			then
 				token := cursor.token.previous
 				if 
-					is_beginning_of_expression (token)
+					is_beginning_of_expression (token) or
+					token.image.is_equal (Opening_brace)
 				then
 					complete := True
 					show_all := True
@@ -663,7 +701,10 @@ feature -- Class names completion
 					if not token_image_is_in_array (token, Feature_call_separators) then
 						insertion.put (token.image.out, 2)
 						token := token.previous
-						if is_beginning_of_expression (token) then
+						if
+							is_beginning_of_expression (token) or
+							token.image.is_equal (Opening_brace)
+						then
 							-- token is beginning of class name
 							complete := True
 						end
@@ -678,36 +719,40 @@ feature -- Class names completion
 						cname.right_adjust
 					end
 					cname.to_lower
-					cname.append_character ('*')
-					create matcher.make_empty
-					matcher.set_pattern (cname)
 				end
 				from
-					create class_list.make
+					create class_list.make (100)
 					clusters := Universe.clusters
 					clusters.start
 				until
 					clusters.after
 				loop
-					from
-						classes := clusters.item.classes
-						classes.start
-					until
-						classes.after
-					loop
-						if show_all then
+					if show_all then
+						from
+							classes := clusters.item.classes
+							classes.start
+						until
+							classes.after
+						loop
 							create class_name.make_with_name (clone (classes.key_for_iteration))
 							class_name.to_upper
 						 	class_list.extend (class_name)
-						else
-							matcher.set_text (classes.key_for_iteration)
-							if matcher.pattern_matches then
+							classes.forth
+						end
+					else
+						from
+							classes := clusters.item.classes
+							classes.start
+						until
+							classes.after
+						loop
+							if matches (classes.key_for_iteration, cname) then
 								create class_name.make_with_name (clone (classes.key_for_iteration))
 								class_name.to_upper
 							 	class_list.extend (class_name)
 							end
+							classes.forth
 						end
-						classes.forth
 					end
 					clusters.forth
 				end
@@ -775,6 +820,9 @@ feature {NONE} -- Private Status
 
 	is_create: BOOLEAN
 			-- was auto-complete called after "create" ?
+
+	is_static: BOOLEAN
+			-- was auto-complete called after "feature {class}" ?
 
 feature {NONE} -- Completion implementation
 
@@ -1020,6 +1068,57 @@ feature {NONE} -- Completion implementation
 			end
 		end
 
+	matches (str, pat: STRING): BOOLEAN is
+			-- Is `pat' the beginning of `str'?
+		require
+			valid_strings: str /= Void and pat /= Void
+		local
+			i: INTEGER
+			minc: INTEGER
+			pat_area, str_area: SPECIAL [CHARACTER]
+		do
+			str_area := str.area
+			pat_area := pat.area
+			minc := pat.count
+			if str.count >= minc then
+				from
+					Result := True
+				until
+					i = minc or not Result
+				loop
+					Result := (pat_area.item (i)) = (str_area.item (i))
+					i := i + 1
+				end
+			end
+		ensure
+			Result = str.substring (1, pat.count).is_equal (pat)
+		end
+
+	external_features (cl: CLASS_C): ARRAYED_LIST [E_FEATURE] is
+			-- List of the external features of `cl'.
+		require
+			valid_class: cl /= Void
+		local
+			ft: FEATURE_TABLE
+			feat: FEATURE_I
+		do
+			if cl.has_feature_table then
+				ft := cl.feature_table
+				create Result.make (20)
+				from
+					ft.start
+				until
+					ft.after
+				loop
+					feat := ft.item_for_iteration
+					if feat.has_static_access then
+						Result.extend (feat.api_feature (ft.feat_tbl_id))
+					end
+					ft.forth
+				end
+			end
+		end
+
 feature {NONE}-- Implementation
 
 	insert_in_completion_possibilities (name: EB_NAME_FOR_COMPLETION) is
@@ -1080,17 +1179,17 @@ feature {NONE}-- Implementation
 			token := current_token
 			current_token := a_token
 			go_to_previous_token
-			Result := token_image_is_same_as_word (current_token, "create")
-			if not Result and then token_image_is_same_as_word (current_token, "}") then
+			Result := token_image_is_same_as_word (current_token, Create_word)
+			if not Result and then token_image_is_same_as_word (current_token, Closing_brace) then
 				from
-					par_cnt:= 1
+					par_cnt := 1
 				until
 					par_cnt = 0 or else current_token = Void
 				loop
 					go_to_previous_token
-					if token_image_is_same_as_word (current_token, "{") then
+					if token_image_is_same_as_word (current_token, Opening_brace) then
 						par_cnt:= par_cnt - 1
-					elseif token_image_is_same_as_word (current_token, "}") then
+					elseif token_image_is_same_as_word (current_token, Closing_brace) then
 						par_cnt:= par_cnt + 1
 					end
 				end
@@ -1099,7 +1198,44 @@ feature {NONE}-- Implementation
 				if not error then
 					go_to_previous_token
 					go_to_previous_token
-					Result := token_image_is_same_as_word (current_token, "create")
+					Result := token_image_is_same_as_word (current_token, Create_word)
+				end
+			end
+			current_token := token
+			current_line := line			
+		end
+
+	static_call_before_position (a_line: EDITOR_LINE; a_token: EDITOR_TOKEN): BOOLEAN is
+			-- Is "feature" preceeding current position ?
+		local
+			line: EDITOR_LINE
+			token: EDITOR_TOKEN
+			par_cnt: INTEGER
+		do
+			line := current_line
+			current_line := a_line
+			token := current_token
+			current_token := a_token
+			go_to_previous_token
+			if token_image_is_same_as_word (current_token, Closing_brace) then
+				from
+					par_cnt := 1
+				until
+					par_cnt = 0 or else current_token = Void
+				loop
+					go_to_previous_token
+					if token_image_is_same_as_word (current_token, Opening_brace) then
+						par_cnt:= par_cnt - 1
+					elseif token_image_is_same_as_word (current_token, Closing_brace) then
+						par_cnt:= par_cnt + 1
+					end
+				end
+				go_to_next_token
+				error := error or else current_token = Void or else type_of_class_corresponding_to_current_token = Void
+				if not error then
+					go_to_previous_token
+					go_to_previous_token
+					Result := token_image_is_same_as_word (current_token, Feature_word)
 				end
 			end
 			current_token := token

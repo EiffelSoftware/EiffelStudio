@@ -135,8 +135,6 @@ feature {NONE} -- Implementation
 							found_local_keyword := True
 						elseif
 							(lgth = 2 and then token_image_is_same_as_word (kw, is_word))
-								or else
-							(lgth = 7 and then token_image_is_same_as_word (kw, feature_word))
 						then
 							stop := True
 						end
@@ -217,8 +215,6 @@ feature {NONE} -- Implementation
 										lgth := img.count
 										if 
 											(lgth = 3 and then img.is_equal (end_word))
-												or else
-											(lgth = 7 and then img.is_equal (feature_word))
 										then
 											stop := True
 										elseif par_found then
@@ -241,10 +237,6 @@ feature {NONE} -- Implementation
 									end
 								end -- loop
 							end
-						elseif
-							lgth = 7 and then token_image_is_same_as_word (kw, feature_word)
-						then
-							stop := True
 						end
 					end
 					internal_token := internal_token.previous

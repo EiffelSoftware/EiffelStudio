@@ -11,13 +11,10 @@ class
         
 inherit
     EV_BUTTON_I
-		redefine
-			build
-		end
- 
+
 	EV_PRIMITIVE_IMP
 		redefine
-			build
+			plateform_build
 		end
        
 	EV_BAR_ITEM_IMP
@@ -92,11 +89,11 @@ feature {NONE} -- Initialization
 			extra_width := 10
 		end
 
-	build is
+	plateform_build (par: EV_CONTAINER_IMP) is
 			-- Called after creation. Set the current size and
 			-- notify the parent.
 		do
-			{EV_PRIMITIVE_IMP} Precursor
+			{EV_PRIMITIVE_IMP} Precursor (par)
 			set_font (font)
 			set_default_size
 		end

@@ -9,29 +9,28 @@ default
  	msil_generation (yes)
  	il_verifiable (yes)
  	cls_compliant (yes)
- 	dotnet_naming_convention (no)
- 	msil_generation_type ("dll")
-	msil_clr_version ("v1.0.3705")
  	use_all_cluster_name_as_namespace (yes)
  	use_cluster_name_as_namespace (yes)
+ 	msil_generation_type ("dll")
+	check_vape (yes)
  
 cluster 
- 
- 	all base_net:		"$ISE_EIFFEL\library.net\base"
- 
  	all base:		"$ISE_EIFFEL\library\base"
  		exclude
  			"table_eiffel3"; "desc"; "classic";
  		end
+
+ 	all base_net:		"$ISE_EIFFEL\library.net\base"
  
 assembly
-	mscorlib:   "mscorlib",   "1.0.3300.0", "neutral", "b77a5c561934e089"
+	mscorlib:	"$ISE_DOTNET_FRAMEWORK\mscorlib.dll"
 
-	system_:    "System",     "1.0.3300.0", "neutral", "b77a5c561934e089"
+	system_:	"$ISE_DOTNET_FRAMEWORK\System.dll"
 		prefix
 			"SYSTEM_DLL_"
 		end
-	system_xml: "System.Xml", "1.0.3300.0", "neutral", "b77a5c561934e089"
+
+	system_xml:	"$ISE_DOTNET_FRAMEWORK\System.Xml.dll"
 		prefix
 			"XML_"
 		end

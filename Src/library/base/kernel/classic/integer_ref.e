@@ -1,14 +1,13 @@
 indexing
-
-	description:
-		"References to objects containing an integer value"
-
+	description: "References to objects containing an integer value coded on 32 bits"
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class INTEGER_REF inherit
+class
+	INTEGER_REF
 
+inherit
 	NUMERIC
 		rename
 			infix "/" as infix "//"
@@ -71,7 +70,7 @@ feature -- Access
 		require
 			valid_character_code: is_valid_character_code
 		do
-			Result := c_ascii_char (item) 
+			Result := item.to_character
 		end
 
 	Min_value: INTEGER is -2147483648
@@ -110,6 +109,8 @@ feature -- Element change
 			-- Make `i' the `item' value.
 		do
 			item := i
+		ensure
+			item_set: item = i
 		end
 
 feature -- Status report
@@ -153,10 +154,8 @@ feature -- Status report
 
 	is_valid_character_code: BOOLEAN is
 			-- Does current object represent a character?
-		local
-			ch: CHARACTER
 		do
-			Result := item >= ch.Min_value and item <= ch.Max_value
+			Result := item >= feature {CHARACTER}.Min_value and item <= feature {CHARACTER}.Max_value
 		end
 
 feature -- Basic operations
@@ -214,7 +213,6 @@ feature -- Basic operations
 			Result.set_item (- item)
 		end
 
-
 	infix "//" (other: like Current): like Current is
 			-- Integer division of Current by `other'
 		do
@@ -262,13 +260,13 @@ feature -- Basic operations
 
 feature -- Conversion
 
-	to_boolean: BOOLEAN is
+	frozen to_boolean: BOOLEAN is
 			-- True if not `zero'.
 		do
 			Result := item /= 0
 		end
 
-	to_integer_8: INTEGER_8 is
+	frozen to_integer_8: INTEGER_8 is
 			-- Convert `item' into an INTEGER_8 value.
 		require
 			not_too_small: item >= feature {INTEGER_8}.Min_value
@@ -277,7 +275,7 @@ feature -- Conversion
 			Result := item.to_integer_8
 		end
 		
-	to_integer_16: INTEGER_16 is
+	frozen to_integer_16: INTEGER_16 is
 			-- Convert `item' into an INTEGER_16 value.
 		require
 			not_too_small: item >= feature {INTEGER_16}.Min_value
@@ -286,13 +284,13 @@ feature -- Conversion
 			Result := item.to_integer_16
 		end
 
-	to_integer, to_integer_32: INTEGER is
+	frozen to_integer, frozen to_integer_32: INTEGER is
 			-- Return `item'.
 		do
 			Result := item
 		end
 
-	to_integer_64: INTEGER_64 is
+	frozen to_integer_64: INTEGER_64 is
 			-- Convert `item' into an INTEGER_64 value.
 		do
 			Result := item.to_integer_64
@@ -331,53 +329,67 @@ feature -- Conversion
 		do
 			tmp := item
 			if tmp <= 9 then
-				Result := c_ascii_char(tmp + ('0').code)
+				Result := (tmp + ('0').code).to_character
 			else
-				Result := c_ascii_char(('A').code + (tmp - 10))
+				Result := (('A').code + (tmp - 10)).to_character
 			end
 		ensure
 			valid_character: ("0123456789ABCDEF").has (Result)
 		end
 
-	to_character: CHARACTER is
+	frozen to_character: CHARACTER is
 			-- Returns corresponding ASCII character to `item' value.
 		require
 			valid_character: is_valid_character_code
 		do
-			Result := c_ascii_char (item) 
+			Result := item.to_character
 		end
 
 feature -- Bit operations
 
-	infix "&", bit_and (i: like Current): like Current is
+	frozen infix "&", frozen bit_and (i: like Current): like Current is
 			-- Bitwise and between Current' and `i'.
+		require
+			i_not_void: i /= Void
 		do
 			create Result
-			Result.set_item (eif_bit_and (item, i.item))
+			Result.set_item (item & i.item)
+		ensure
+			bitwise_and_not_void: Result /= Void
 		end
 
-	infix "|", bit_or (i: like Current): like Current is
+	frozen infix "|", frozen bit_or (i: like Current): like Current is
 			-- Bitwise or between Current' and `i'.
+		require
+			i_not_void: i /= Void
 		do
 			create Result
-			Result.set_item (eif_bit_or (item, i.item))
+			Result.set_item (item | i.item)
+		ensure
+			bitwise_or_not_void: Result /= Void
 		end
 
-	bit_xor (i: like Current): like Current is
+	frozen bit_xor (i: like Current): like Current is
 			-- Bitwise xor between Current' and `i'.
+		require
+			i_not_void: i /= Void
 		do
 			create Result
-			Result.set_item (eif_bit_xor (item, i.item))
+			Result.set_item (item.bit_xor (i.item))
+		ensure
+			bitwise_xor_not_void: Result /= Void
 		end
 
-	bit_not: like Current is
+	frozen bit_not: like Current is
 			-- One's complement of Current.
 		do
 			create Result
-			Result.set_item (eif_bit_not (item))
+			Result.set_item (item.bit_not)
+		ensure
+			bit_not_not_void: Result /= Void
 		end
 
-	bit_shift (n: INTEGER): like Current is
+	frozen bit_shift (n: INTEGER): like Current is
 			-- Shift Current from `n' position to right if `n' positive,
 			-- to left otherwise.
 		require
@@ -389,38 +401,44 @@ feature -- Bit operations
 			else
 				Result := bit_shift_left (- n)
 			end	
+		ensure
+			bit_shift_not_void: Result /= Void
 		end
 
-	infix "|<<", bit_shift_left (n: INTEGER): like Current is
+	frozen infix "|<<", frozen bit_shift_left (n: INTEGER): like Current is
 			-- Shift Current from `n' position to left.
 		require
 			n_nonnegative: n >= 0
 			n_less_or_equal_to_32: n <= 32
 		do
 			create Result
-			Result.set_item (eif_bit_shift_left (item, n))
+			Result.set_item (item |<< n)
+		ensure
+			bit_shift_left_not_void: Result /= Void
 		end
 
-	infix "|>>", bit_shift_right (n: INTEGER): like Current is
+	frozen infix "|>>", frozen bit_shift_right (n: INTEGER): like Current is
 			-- Shift Current from `n' position to right.
 		require
 			n_nonnegative: n >= 0
 			n_less_or_equal_to_32: n <= 32
 		do
 			create Result
-			Result.set_item (eif_bit_shift_right (item, n))
+			Result.set_item (item |>> n)
+		ensure
+			bit_shift_right_not_void: Result /= Void
 		end
 
-	bit_test (n: INTEGER): BOOLEAN is
+	frozen bit_test (n: INTEGER): BOOLEAN is
 			-- Test `n'-th position of Current.
 		require
 			n_nonnegative: n >= 0
 			n_less_than_32: n < 32
 		do
-			Result := eif_bit_test (item, n)
+			Result := item & (1 |<< n) /= 0
 		end
 
-	set_bit (b: BOOLEAN; n: INTEGER): INTEGER is
+	frozen set_bit (b: BOOLEAN; n: INTEGER): INTEGER is
 			-- Copy of current with `n'-th position
 			-- set to 1 if `b', 0 otherwise.
 		require
@@ -428,13 +446,13 @@ feature -- Bit operations
 			n_less_than_32: n < 32
 		do
 			if b then
-				Result := item | ((1).to_integer_32 |<< n)
+				Result := item | (1 |<< n)
 			else
-				Result := item & ((1).to_integer_32 |<< n).bit_not
+				Result := item & (1 |<< n).bit_not
 			end
 		end
 
-	set_bit_with_mask (b: BOOLEAN; m: INTEGER): INTEGER is
+	frozen set_bit_with_mask (b: BOOLEAN; m: INTEGER): INTEGER is
 			-- Copy of current with all 1 bits of m set to 1
 			-- if `b', 0 otherwise.
 		do
@@ -450,24 +468,10 @@ feature -- Output
 	out: STRING is
 			-- Printable representation of integer value
 		do
-			Result := c_outi (item)
+			Result := item.out
 		end
 
 feature {NONE} -- Implementation
-
-	c_outi (i: INTEGER): STRING is
-			-- Printable representation of integer value
-		external
-			"C | %"eif_out.h%""
-		end
-
-	c_ascii_char (code: INTEGER): CHARACTER is
-			-- Character associated to integer value
-		external
-			"C [macro %"eif_misc.h%"]"
-		alias
-			"chconv"
-		end
 
 	abs_ref: INTEGER_REF is
 			-- Absolute value
@@ -480,50 +484,6 @@ feature {NONE} -- Implementation
 		ensure
 			result_exists: Result /= Void
 			same_absolute_value: equal (Result, Current) or equal (Result, - Current)
-		end
-
-feature {NONE} -- Bit operations implementation
-
-	eif_bit_and (i, j: INTEGER): INTEGER is
-			-- Bitwise and between `i' and `j'.
-		external
-			"C [macro %"eif_misc.h%"]"
-		end
-
-	eif_bit_or (i, j: INTEGER): INTEGER is
-			-- Bitwise or between `i' and `j'.
-		external
-			"C [macro %"eif_misc.h%"]"
-		end
-
-	eif_bit_xor (i, j: INTEGER): INTEGER is
-			-- Bitwise xor between `i' and `j'.
-		external
-			"C [macro %"eif_misc.h%"]"
-		end
-
-	eif_bit_not (i: INTEGER): INTEGER is
-			-- One's complement of `i'.
-		external
-			"C [macro %"eif_misc.h%"]"
-		end
-
-	eif_bit_shift_left (i, n: INTEGER): INTEGER is
-			-- Shift `i' from `n' position to left.
-		external
-			"C [macro %"eif_misc.h%"]"
-		end
-
-	eif_bit_shift_right (i, n: INTEGER): INTEGER is
-			-- Shift `i' from `n' position to right.
-		external
-			"C [macro %"eif_misc.h%"]"
-		end
-
-	eif_bit_test (i, n: INTEGER): BOOLEAN is
-			-- Test `n'-th bit from `i'.
-		external
-			"C [macro %"eif_misc.h%"]"
 		end
 
 invariant

@@ -23,29 +23,49 @@ feature -- Status report
 
 feature -- Basic operation
 
-	set_pointer_position (x, y: INTEGER) is
-			-- Set `pointer_position' to (`x',`y`).		
+	set_pointer_position (a_x, a_y: INTEGER) is
+			-- Set `pointer_position' to (`a_x',`a_y`).		
 		deferred
 		ensure
-			pointer_position_set:
-				pointer_position.x = x and pointer_position.y = y
+			--pointer_position_set:
+				--pointer_position.x = x and pointer_position.y = y
+		end
+
+	fake_pointer_button_press (a_button: INTEGER) is
+			-- Simulate the user pressing a `a_button' on the pointing device.
+		deferred
+		end
+
+	fake_pointer_button_release (a_button: INTEGER) is
+			-- Simulate the user releasing a `a_button' on the pointing device.
+		deferred
+		end
+
+	fake_key_press (a_key: EV_KEY) is
+			-- Simulate the user pressing a `key'.
+		deferred
+		end
+
+	fake_key_release (a_key: EV_KEY) is
+			-- Simulate the user releasing a `key'.
+		deferred
 		end
 
 feature -- Measurement
 
-    width: INTEGER is
-            -- Horizontal size in pixels.
-		deferred
+	width: INTEGER is
+		-- Horizontal size in pixels.
+	deferred
         ensure
             positive: Result > 0
         end
 
-    height: INTEGER is
-            -- Vertical size in pixels.
-		deferred
-        ensure
-            positive: Result > 0
-        end
+	height: INTEGER is
+		-- Vertical size in pixels.
+	deferred
+	ensure
+		positive: Result > 0
+	end
 
 feature {NONE} -- Implementation
 
@@ -74,6 +94,9 @@ end -- class EV_SCREEN_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/04/11 18:53:04  king
+--| Added pointer manipulation deferrals
+--|
 --| Revision 1.5  2000/04/06 20:12:30  oconnor
 --| added pointer position features
 --|

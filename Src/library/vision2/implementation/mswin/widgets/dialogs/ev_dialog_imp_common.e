@@ -103,6 +103,10 @@ feature {NONE} -- Initialization
 			other_imp := a_other_imp
 			base_make (other_imp.interface)
 			copy_attributes
+				-- Now remove the menu from `a_other_imp'.
+				-- If we do not do this, then we are unable
+				-- to set the menu in `Current'.
+			a_other_imp.interface.remove_menu_bar
 		end
 
 feature -- Status Report
@@ -333,6 +337,7 @@ feature {NONE} -- Implementation
 			lower_bar := other_imp.lower_bar
 			maximum_height := other_imp.maximum_height
 			maximum_width := other_imp.maximum_width
+			menu_bar := other_imp.menu_bar
 			move_actions_internal := other_imp.move_actions_internal
 			new_item_actions_internal := other_imp.new_item_actions_internal
 			pebble := other_imp.pebble

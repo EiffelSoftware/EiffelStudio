@@ -11,9 +11,6 @@ inherit
 	EV_VERTICAL_BOX
 	
 	GB_ACCESSIBLE_OBJECT_EDITOR
-		undefine
-			default_create, copy, is_equal
-		end
 	
 create
 

@@ -62,8 +62,8 @@ feature {NONE} -- Initialization
 			parent ?= oui_parent.implementation;
 			private_text := clone (a_button.identifier);
 			a_button.set_font_imp (Current);
-			set_default_size;
 			managed := man;
+			set_default_size
 			set_center_alignment
 		end
 
@@ -100,7 +100,7 @@ feature -- Status setting
 					if private_font /= Void then
 						set_font (private_font)
 					end
-					if not fixed_size then
+					if not fixed_size_flag then
 						set_default_size
 					end
 					if private_attributes.insensitive then

@@ -78,7 +78,7 @@ public EIF_BOOLEAN eif_valid_class_file_extension (c)
 EIF_CHARACTER c;
 {
 #if defined EIF_WINDOWS || defined EIF_OS2
-	return (EIF_TEST(tolower(c)=='e');
+	return (EIF_TEST(tolower(c)=='e'));
 #elif defined __VMS
 	return (EIF_TEST(c=='E'));
 #else

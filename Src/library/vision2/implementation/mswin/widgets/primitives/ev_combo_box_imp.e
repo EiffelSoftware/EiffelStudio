@@ -226,8 +226,6 @@ feature -- Status setting
 			if (not selected) or (selected and then not equal (wel_selected_item, an_index - 1)) then
 					-- Only select an item if it is not already selected.
 				if selected then
-					--|FIXME Old event system
-					--|execute_command (Cmd_unselect, Void)
 					interface.deselect_actions.call ([old_selected_item.index, (ev_children @ old_selected_item.index).interface])--([index, (ev_children @ index).interface])
 				end
 				wel_select_item (an_index - 1)
@@ -237,8 +235,6 @@ feature -- Status setting
 					-- it as specified by user.
 					cwin_send_message (parent_item, Wm_command, Cbn_selchange * 65536 + id,
 					cwel_pointer_to_integer (wel_item))
-					--|FIXME Old event system
-					--|execute_command (Cmd_select, Void)
 					interface.select_actions.call ([an_index, (ev_children @ an_index).interface])
 				-- Must now manually inform the combo box that a selection is taking place.
 			end
@@ -334,54 +330,6 @@ feature -- Basic operation
 			cwin_send_message (edit_item, Em_replacesel, 0,
 				cwel_pointer_to_integer (wel_str.item))
 		end
-
-feature -- Event : command association
-
---|FIXME	add_select_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	
---|FIXME			-- Add `cmd' to the list of commands to be executed
---|FIXME			-- when an item has been selected.
---|FIXME		do
---|FIXME			add_command (Cmd_select, cmd, arg)
---|FIXME		end
-
---|FIXME	add_unselect_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	
---|FIXME			-- Add `cmd' to the list of commands to be executed
---|FIXME			-- when an item has been unselected.
---|FIXME		do
---|FIXME			add_command (Cmd_unselect, cmd, arg)
---|FIXME		end
-
---|FIXME	add_return_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
---|FIXME			-- Add `cmd' to the list of commands to be executed
---|FIXME			-- when the text in the field is activated, i.e. the
---|FIXME			-- user press the enter key.
---|FIXME		do
---|FIXME			add_command (Cmd_activate, cmd, arg)
---|FIXME		end
-
-feature -- Event -- removing command association
-
---|FIXME	remove_select_commands is	
---|FIXME			-- Empty the list of commands to be executed
---|FIXME			-- when an item has been selected.
---|FIXME		do
---|FIXME			remove_command (Cmd_select)
---|FIXME		end
-
---|FIXME	remove_unselect_commands is	
---|FIXME			-- Empty the list of commands to be executed
---|FIXME			-- when an item has been unselected.
---|FIXME		do
---|FIXME			remove_command (Cmd_unselect)	
---|FIXME		end	
-
---|FIXME	remove_return_commands is
---|FIXME			-- Empty the list of commands to be executed
---|FIXME			-- when the text in the field is activated, i.e. the
---|FIXME			-- user press the enter key.
---|FIXME		do
---|FIXME			remove_command (Cmd_activate)
---|FIXME		end
 
 feature {NONE} -- Implementation
 
@@ -486,9 +434,6 @@ feature {EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP} -- WEL Implemen
 			else
 				if selected and equal (text, selected_item.text) and (virtual_key /= 9) and
 					(virtual_key /= 40) and (virtual_key /= 38) then
-					--clear_selection
-					--|FIXME Old event system
-					--|execute_command (Cmd_unselect, Void)
 					t_item ?= selected_item.implementation
 					unselect
 					interface.deselect_actions.call ([t_item.index, (ev_children @ t_item.index).interface])
@@ -518,8 +463,6 @@ feature {NONE} -- WEL Implementation
 		do
 			if info.why = Cbenf_return then
 				set_caret_position (1)
-				--|FIXME Old event system
-				--| exectue_command (Cmd_activate, Void)
 			end
 		end
 
@@ -529,20 +472,12 @@ feature {NONE} -- WEL Implementation
 			if selected and then wel_selected_item /= Void then
 				if selected and then not equal (old_selected_item, ev_children.i_th (wel_selected_item + 1)) then
 					if old_selected_item /= Void then
-						--|FIXME The events have changed
-						--old_selected_item.execute_command (Cmd_item_deactivate, Void)
-						--|FIXME Old event system
-						--|execute_command (Cmd_unselect, Void)
 						interface.deselect_actions.call ([old_selected_item.index, (ev_children @ old_selected_item.index).interface])
 					end
 	
 						-- Only performed if an item is selected and the new selection is not equal to
 						-- the current selection.
 					old_selected_item := ev_children.i_th (wel_selected_item + 1)
-					--|FIXME The events have changed
-					--old_selected_item.execute_command (Cmd_item_activate, Void)
-					--|FIXME Old event system
-					--|execute_command (Cmd_select, Void)
 					interface.select_actions.call ([wel_selected_item + 1, (ev_children @ (wel_selected_item + 1)).interface])
 						-- Must now manually inform combo box that a selection is taking place
 				elseif wel_selected_item/= Void and then not equal (old_selected_item, ev_children.i_th (wel_selected_item + 1)) then
@@ -567,8 +502,7 @@ feature {NONE} -- WEL Implementation
 			s1,s2: STRING
 		do
 			if not equal (text, last_edit_change) then
-				--|FIXME Old event system
-				--|execute_command (Cmd_change, Void)
+				interface.change_actions.call ([])
 			end
 			last_edit_change := text
 		end
@@ -682,6 +616,9 @@ end -- class EV_COMBO_BOX_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.56  2000/03/02 17:18:05  rogers
+--| Connected change_actions event, removed old command association, removed the commented calls to the old event system.
+--|
 --| Revision 1.55  2000/03/02 16:38:35  rogers
 --| Is selected and selected_item have had checks added, to limit the wel calls when unecessary. Fixed the call to deselect_actions in on_key_down.
 --|

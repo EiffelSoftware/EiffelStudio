@@ -9,7 +9,7 @@ class PROGRESS_BAR
 
 inherit
 
-	GRAPHICAL_CONSTANTS;
+	EB_CONSTANTS;
 	MEL_ROW_COLUMN
 		rename
 			make as old_make
@@ -24,13 +24,15 @@ feature {NONE} -- Initialization
 	make (a_name: STRING; a_parent: MEL_COMPOSITE) is
 		do
 			old_make (a_name, a_parent, True);
-			set_spacing (2);
+			--set_spacing (2);
+			set_spacing (0);
 			create_labels;
 			set_horizontal;
 			set_num_columns (1);
 			set_margin_height (1);
 			set_margin_width (1);
-			set_entry_border (1);
+		--	set_entry_border (1);
+			set_entry_border (0);
 		end;
 
 feature -- Access
@@ -142,7 +144,8 @@ feature {NONE} -- Implementation
 			color_x: COLOR_X;
 			t, i: INTEGER
 		do
-			color_x ?= g_Progress_bar_color.implementation;
+			color_x ?= 
+				Graphical_resources.progress_bar_color.actual_value.implementation;
 			color_x.allocate_pixel;
 			!! array.make (1, Total_units);
 			from
@@ -155,7 +158,7 @@ feature {NONE} -- Implementation
 				mel_label.set_margin_height (0);
 				mel_label.set_margin_width (0);
 				mel_label.set_background_color (color_x);
-				mel_label.set_size (15, 25);
+				mel_label.set_size (12, 15);
 				mel_label.forbid_recompute_size;
 				array.put (mel_label, i);
 				i := i + 1

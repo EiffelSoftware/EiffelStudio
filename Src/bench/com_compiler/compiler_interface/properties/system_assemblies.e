@@ -70,7 +70,6 @@ feature -- Access
 	add_assembly (a_prefix, a_cluster_name, a_path: STRING; a_copy: BOOLEAN) is
 			-- add an assembly to ace
 		require else
-			valid_prefix: a_prefix /= Void implies is_valid_prefix (a_prefix)
 			non_void_cluster_name: a_cluster_name /= Void
 			valid_cluster_name: is_valid_cluster_name (a_cluster_name)
 			non_void_path: a_path /= Void
@@ -95,7 +94,6 @@ feature -- Access
 	add_fusion_assembly (a_prefix, a_cluster_name, a_name, a_version, a_culture, a_public_key_token: STRING; a_copy: BOOLEAN) is
 			-- add an assembly to ace
 		require else
-			valid_prefix: a_prefix /= Void implies is_valid_prefix (a_prefix)
 			non_void_cluster_name: a_cluster_name /= Void
 			valid_cluster_name: is_valid_cluster_name (a_cluster_name)
 			non_void_name: a_name /= Void

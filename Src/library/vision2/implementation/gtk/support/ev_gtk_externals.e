@@ -759,13 +759,13 @@ feature {NONE} -- GTK C functions for progress bar
 			"C | <gtk/gtk.h>"
 		end
 
-	c_gtk_progressbar_set_step (val: REAL) is
+	c_gtk_progressbar_set_step (pbar: POINTER; val: REAL) is
 			-- Make 'val' the new step.
 		external
 			"C | %"gtk_eiffel.h%""
 		end
 
-	c_gtk_progressbar_set_minimum (val: REAL) is
+	c_gtk_progressbar_set_minimum (pbar: POINTER; val: REAL) is
 		external
 			"C | %"gtk_eiffel.h%""
 		end
@@ -775,7 +775,7 @@ feature {NONE} -- GTK C functions for progress bar
 			"C | <gtk/gtk.h>"
 		end
 
-	c_gtk_progressbar_set_maximum (val: REAL) is
+	c_gtk_progressbar_set_maximum (pbar: POINTER; val: REAL) is
 			-- Make 'val' the new step.
 		external
 			"C | %"gtk_eiffel.h%""

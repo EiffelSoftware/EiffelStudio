@@ -328,9 +328,10 @@ feature {NONE} -- Initialization
 		do
 			create Result
 			Result.set_border_width (Layout_constants.Small_border_size)
-			Result.set_padding (Layout_constants.Small_padding_size)		
+			Result.set_padding (Layout_constants.Small_padding_size)
+			Result.enable_homogeneous
 			Result.extend (options_frame ("Options"))
-			Result.extend (name_options_frame ("Naming"))
+			Result.extend (name_options_frame ("Class and feature naming"))
 		end
 
 	msil_info_frame (st: STRING): EV_FRAME is

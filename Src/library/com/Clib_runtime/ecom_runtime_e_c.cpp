@@ -697,7 +697,7 @@ DATE * ecom_runtime_ec::ccom_ec_array_date (EIF_REFERENCE a_ref, int dimension, 
 		return date_array;
 };
 //----------------------------------------------------------------------------
-char * ccom_ec_array_character (EIF_REFERENCE a_ref, int dimension, char * old)
+char * ecom_runtime_ec::ccom_ec_array_character (EIF_REFERENCE a_ref, int dimension, char * old)
 
 // Create C array of char from Eiffel array.
 {
@@ -739,7 +739,7 @@ char * ccom_ec_array_character (EIF_REFERENCE a_ref, int dimension, char * old)
 };
 //----------------------------------------------------------------------------
 
-long * ccom_ec_array_long (EIF_REFERENCE a_ref, int dimension, long * old)
+long * ecom_runtime_ec::ccom_ec_array_long (EIF_REFERENCE a_ref, int dimension, long * old)
 
 // Create C array of long from Eiffel array.
 {
@@ -781,7 +781,7 @@ long * ccom_ec_array_long (EIF_REFERENCE a_ref, int dimension, long * old)
 };
 //----------------------------------------------------------------------------
 
-float * ccom_ec_array_float (EIF_REFERENCE a_ref, int dimension, float * old)
+float * ecom_runtime_ec::ccom_ec_array_float (EIF_REFERENCE a_ref, int dimension, float * old)
 
 // Create C array of float from Eiffel array.
 {
@@ -823,7 +823,7 @@ float * ccom_ec_array_float (EIF_REFERENCE a_ref, int dimension, float * old)
 };
 //----------------------------------------------------------------------------
 
-double * ccom_ec_array_double (EIF_REFERENCE a_ref, int dimension, double * old)
+double * ecom_runtime_ec::ccom_ec_array_double (EIF_REFERENCE a_ref, int dimension, double * old)
 
 // Create C array of double from Eiffel array.
 {

@@ -384,7 +384,7 @@ feature {NONE} -- Externals
 			"C [macro <ofn.h>]"
 		end
 
-	cwel_open_file_name_set_nfileextension (ptr, value: POINTER) is
+	cwel_open_file_name_set_nfileextension (ptr: POINTER; value: INTEGER) is
 		external
 			"C [macro <ofn.h>]"
 		end

@@ -17,7 +17,9 @@ inherit
 		redefine
 			add_child,
 			add_child_ok,
-			child_added
+			child_added,
+			set_foreground_color,
+			set_background_color
 		end
 	  
 creation
@@ -30,6 +32,9 @@ feature {NONE} -- Initialization
 		do
 			widget := gtk_notebook_new ()
 			gtk_object_ref (widget)
+
+			-- Create the list of Gtklabel.
+			create labels_list.make
 		end	
 
 feature -- Status report
@@ -115,6 +120,10 @@ feature -- Element change
 			gtk_notebook_append_page (widget, 
 						  c.widget, 
 						  p)
+
+			-- Add the GtkLabel in the list.
+			labels_list.force (p)
+			
 		end	
 
 	add_child (child_imp: EV_WIDGET_IMP) is
@@ -126,6 +135,46 @@ feature -- Element change
 			gtk_object_ref (child_imp.widget)
 		end
 
+	set_background_color (color: EV_COLOR) is
+			-- Make `color' the new `background_color'.
+			-- Redefine because EV_NOTEBOOK are made of GtkNotebook
+			-- and GtkLabel.
+		local
+			list: LINKED_LIST [POINTER]
+		do
+			{EV_CONTAINER_IMP} Precursor (color)
+
+			list := labels_list
+			from
+				list.start
+			until
+				list.after
+			loop
+				c_gtk_widget_set_bg_color (list.item, color.red, color.green, color.blue)
+				list.forth
+			end
+		end
+
+	set_foreground_color (color: EV_COLOR) is
+			-- Make `color' the new `foreground_color'
+			-- Redefine because EV_NOTEBOOK are made of GtkNotebook
+			-- and GtkLabel.
+		local
+			list: LINKED_LIST [POINTER]
+		do
+			{EV_CONTAINER_IMP} Precursor (color)
+
+			list := labels_list
+			from
+				list.start
+			until
+				list.after
+			loop
+				c_gtk_widget_set_fg_color (list.item, color.red, color.green, color.blue)
+				list.forth
+			end
+		end
+	
 feature -- Event - command association
 	
 	add_switch_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
@@ -160,14 +209,10 @@ feature -- Assertion test
 			Result := True
 		end
 
---feature {EV_CONTAINER} -- Element change
-	
---	add_child (child_imp: EV_WIDGET_IMP) is
---			-- Add child into container
---		do
---			child := child_imp
---			--gtk_container_add (widget, child_imp.widget)
---		end
+feature -- Implementation
+
+	labels_list: LINKED_LIST [POINTER]
+			-- The list of Gtklabel.
 
 end -- class EV_NOTEBOOK_IMP
 

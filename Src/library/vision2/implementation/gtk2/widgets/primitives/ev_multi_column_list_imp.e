@@ -43,21 +43,15 @@ inherit
 		end
 
 	EV_ITEM_LIST_IMP [EV_MULTI_COLUMN_LIST_ROW]
-		rename
-			list_widget as tree_view
 		redefine
 			i_th,
 			count,
 			insert_i_th,
 			remove_i_th,
-			reorder_child,
-			add_to_container,
 			destroy,
-			tree_view,
 			interface,
 			wipe_out,
-			initialize,
-			visual_widget
+			initialize
 		end
 
 	EV_MULTI_COLUMN_LIST_ACTION_SEQUENCES_IMP
@@ -802,11 +796,13 @@ feature -- Implementation
 		end
 
 	enable_transport is
+			-- Enable PND transport to occur
 		do
 			connect_pnd_callback
 		end
 
 	connect_pnd_callback is
+			-- Connect Pick event for PND
 		do
 			check
 				button_release_not_connected: button_release_connection_id = 0
@@ -823,6 +819,7 @@ feature -- Implementation
 		end
 
 	disable_transport is
+			-- Disable PND transport
 		do
 			Precursor
 			update_pnd_status
@@ -916,7 +913,6 @@ feature -- Implementation
 	pre_pick_steps (a_x, a_y, a_screen_x, a_screen_y: INTEGER) is
 			-- Steps to perform before transport initiated.
 		do
-
 			temp_accept_cursor := accept_cursor
 			temp_deny_cursor := deny_cursor
 			app_implementation.on_pick (pebble)
@@ -1009,7 +1005,6 @@ feature -- Implementation
 			pnd_row_imp := Void
 		end
 
-
 feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- Implementation
 
 	row_index_from_y_coord (a_y: INTEGER): INTEGER is
@@ -1052,14 +1047,19 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP}
 			--create a_cs.make (a_text)
 			a_cs := a_text
 				-- Replace when we have UTF16 support
-			str_value := feature {EV_GTK_DEPENDENT_EXTERNALS}.c_g_value_struct_allocate
+			str_value := g_value_string_struct
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.g_value_init_string (str_value)
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.g_value_set_string (str_value, a_cs.item)
 
 			a_list_iter := ev_children.i_th (a_row).list_iter.item
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_set_value (list_store, a_list_iter, a_column, str_value)				
-			
-			str_value.memory_free
+		end
+
+	g_value_string_struct: POINTER is
+			-- Optimization for GValue struct access
+		once
+			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.c_g_value_struct_allocate
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.g_value_init_string (Result)
 		end
 
 	set_row_pixmap (a_row: INTEGER; a_pixmap: EV_PIXMAP) is
@@ -1189,30 +1189,6 @@ feature {NONE} -- Implementation
 			child_array.go_i_th (a_position)
 			child_array.remove
 			update_pnd_status
-		end
-		
-	add_to_container (v: EV_MULTI_COLUMN_LIST_ROW; v_imp: EV_ITEM_IMP) is
-			-- Add `v' to the list.
-		do
-			check
-				do_not_call: False
-			end
-		end
-
-	reorder_child (v: like item; v_imp: EV_ITEM_IMP; a_position: INTEGER) is
-			-- Move `v' to `a_position' in Current.
-		do
-			check
-				do_not_call: False
-			end
-		end
-
-	gtk_reorder_child (a_container, a_child: POINTER; a_position: INTEGER) is
-			-- Move `a_child' to `a_position' in `a_container'.
-		do
-			check
-				do_not_call: False
-			end
 		end
 
 	row_height: INTEGER is

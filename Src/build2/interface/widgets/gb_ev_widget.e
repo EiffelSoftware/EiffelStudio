@@ -19,7 +19,7 @@ inherit
 		end
 
 
-	XML_UTILITIES
+	GB_XML_UTILITIES
 		undefine
 			default_create
 		end

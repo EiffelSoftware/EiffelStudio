@@ -22,7 +22,7 @@ inherit
 			modify_from_xml_after_build
 		end
 		
-	XML_UTILITIES
+	GB_XML_UTILITIES
 		undefine
 			default_create
 		end

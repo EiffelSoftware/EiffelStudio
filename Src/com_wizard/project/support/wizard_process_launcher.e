@@ -103,7 +103,7 @@ feature -- Basic Operations
 			output_pipe.close_input
 			from
 				output_pipe.read_stream (Block_size)
-				create a_output.make (0)
+				create a_output.make (10000)
 			until
 				not output_pipe.last_read_successful or Shared_wizard_environment.abort
 			loop
@@ -177,7 +177,7 @@ feature {NONE} -- Implementation
 		once
 			create Result.make (50)
 			Result.append ("%"")
-			Result.append (execution_environment.get ("EIFFEL4"))
+			Result.append (Eiffel4_location)
 			Result.append ( "\wizards\com\conspawn.exe")
 			Result.append ("%"")			
 		end

@@ -80,6 +80,9 @@ feature -- Access
 	ace_file_generated: BOOLEAN
 			-- Was generated project ace file generated?
 
+	resource_file_generated: BOOLEAN
+			-- Was generated project resource file generated?
+
 feature -- Basic Operations
 
 	compile_idl is
@@ -150,6 +153,7 @@ feature -- Basic Operations
 			non_void_folder: a_folder /= Void
 			valid_folder: a_folder.is_equal (Client) or a_folder.is_equal (Server)
 			ace_file_generated: ace_file_generated
+			resource_file_generated: resource_file_generated			
 		local
 			displayed: BOOLEAN
 			a_directory: DIRECTORY
@@ -273,6 +277,24 @@ feature -- Basic Operations
 			ace_file_generated := True
 		end
 
+	generate_resource_file (a_folder: STRING) is
+			-- Generate resource file in `a_folder'.
+		require
+			non_void_folder: a_folder /= Void
+			valid_folder: a_folder.is_equal (Client) or a_folder.is_equal (Server)
+		local
+			a_string: STRING
+			a_file: RAW_FILE
+		do
+			a_string := clone (a_folder)
+			a_string.append_character (Directory_separator)
+			a_string.append (Resource_file_name)
+			create a_file.make_create_read_write (a_string)
+			a_file.put_string (generated_resource_file)
+			a_file.close
+			resource_file_generated := True
+		end
+	
 feature {NONE} -- Implementation
 
 	proxy_stub_file_name: STRING is
@@ -618,5 +640,22 @@ feature {NONE} -- Implementation
 
 	Visible: STRING is "visible"
 			-- Lace `visible' keyword
+
+	Generated_resource_file: STRING is 
+			-- Resource file content
+		do
+			Result := "1 typelib "
+			Result.append (Shared_wizard_environment.type_library_file_name)
+		end
+
+	Resource_file_name: STRING is
+			-- Resource file name
+		do
+			Result := clone (Shared_wizard_environment.project_name)
+			Result.append (Resource_file_extension)
+		end
+
+	Resource_file_extension: STRING is ".rc"
+			-- Resource file extension
 
 end -- class WIZARD_IDL_COMPILER

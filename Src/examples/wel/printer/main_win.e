@@ -31,25 +31,34 @@ feature {NONE} -- Implementation
 	on_menu_command (menu_id: INTEGER) is
 		local
 			rect: WEL_RECT
-			msg_box: WEL_MSG_BOX
+			print_dialog: WEL_PRINT_DIALOG
+			printer_dc: WEL_PRINTER_DC
+			i: INTEGER
 		do
 			inspect
 				menu_id
 			when Cmd_exit then
 				destroy
 			when Cmd_print then
-				!! printer_dc.make
-				if printer_dc.exists then
+				!! print_dialog.make
+				print_dialog.disable_selection
+				print_dialog.disable_selection
+				print_dialog.activate (Current)
+				if print_dialog.selected then
+					printer_dc := print_dialog.dc
 					printer_dc.start_document ("WEL Print Test")
-					printer_dc.start_page
-					!! rect.make (0, 0, printer_dc.width, printer_dc.height)
-					draw (printer_dc, rect)
-					printer_dc.end_page
+					from
+						i := print_dialog.copies
+					until
+						i <= 0
+					loop
+						printer_dc.start_page
+						!! rect.make (0, 0, printer_dc.width, printer_dc.height)
+						draw (printer_dc, rect)
+						printer_dc.end_page
+						i := i - 1
+					end
 					printer_dc.end_document
-				else
-					!!msg_box.make
-					msg_box.error_message_box (Current, "Unable to print. %
-						%There is no default printer.", "No default printer")
 				end
 			end
 		end
@@ -70,9 +79,6 @@ feature {NONE} -- Implementation
 			a_dc.line_to (0, a_rect.height)
 			a_dc.draw_centered_text ("Hello, Printer!", a_rect)
 		end
-
-	printer_dc: WEL_DEFAULT_PRINTER_DC
-			-- DC used to print
 
 	class_icon: WEL_ICON is
 			-- Window's icon

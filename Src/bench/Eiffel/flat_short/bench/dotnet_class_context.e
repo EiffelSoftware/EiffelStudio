@@ -23,7 +23,7 @@ inherit
 creation
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (a_consumed_type: CONSUMED_TYPE; a_classi: CLASS_I) is
 			-- Initialize Current
@@ -38,26 +38,10 @@ feature -- Initialization
 			initialize
 		ensure
 			analyze_ancestors: not current_class_only
-			do_flat: not is_short
 			class_i_set: class_i = a_classi
 			class_c_set: class_c = Void or else class_c = a_classi.compiled_class
+			ast_not_void: ast /= Void
 		end
-
-feature -- Property
-
-	declared_type: CONSUMED_REFERENCED_TYPE
-			-- The type in which 'current_feature' was declared.
-
-	arguments: ARRAY [CONSUMED_ARGUMENT]
-			-- The arguments for the feature being formatted.
-			
-	return_type: CONSUMED_REFERENCED_TYPE
-			-- Return value of feature, if any.
-
-	feature_context: DOTNET_FEATURE_CONTEXT
-
-	ast: DOTNET_CLASS_AS
-			-- .NET ast.
 
 feature -- Execution
 
@@ -93,13 +77,20 @@ feature -- Element change
 
 	format_feature (a_dn_entity: CONSUMED_ENTITY) is
 			-- Format feature found in 'dn_entity'
+		require
+			a_entity_not_void: a_dn_entity /= Void
 		local
 			ftxt: DOTNET_FEATURE_CONTEXT
 		do
 			create ftxt.make_from_entity (a_dn_entity, consumed_t, class_i)
 			ftxt.prepare_for_feature (a_dn_entity)
 			if not (not is_flat_short and ftxt.is_inherited) then
-				ftxt.put_normal_feature
+				if not ftxt.current_feature.is_property_or_event then
+					ftxt.put_normal_feature
+				else
+					-- FIXME: Neil 08/01/2002: Special case processing for events.
+					--ftxt.put_property_or_event_feature
+				end
 				from
 					ftxt.text.start
 				until
@@ -113,6 +104,8 @@ feature -- Element change
 		
 	parse_summary (a_summary: STRING): ARRAYED_LIST [STRING] is
 				-- Strip 'a_summary' of all unwanted whites space
+			require
+				a_summary_not_void: a_summary /= Void
 			local
 				l_num_new_lines,
 				l_space_index,
@@ -128,11 +121,13 @@ feature -- Element change
 				until
 					l_counter > l_num_new_lines
 				loop
-					l_space_index := l_temp_string.index_of (' ', 50)
-					if l_space_index /= 0 then
-						Result.extend (l_temp_string.substring (1, l_space_index))
-						l_temp_string := l_temp_string.substring (l_space_index, l_temp_string.count)
-						l_temp_string.prune_all_leading (' ')
+					if not l_temp_string.is_empty then
+						l_space_index := l_temp_string.index_of (' ', l_temp_string.count.min (Maximum_line_count))
+						if l_space_index /= 0 then
+							Result.extend (l_temp_string.substring (1, l_space_index))
+							l_temp_string := l_temp_string.substring (l_space_index, l_temp_string.count)
+							l_temp_string.prune_all_leading (' ')
+						end
 					end
 					l_counter := l_counter + 1
 				end
@@ -140,5 +135,20 @@ feature -- Element change
 					Result.extend (l_temp_string)
 				end			
 			end
+			
+feature {NONE} -- Implmentation
+		
+	ast: DOTNET_CLASS_AS
+		-- .NET ast.
+		
+	Maximum_line_count: INTEGER is 70
+		-- Numbers of characters after which we will go to a new line once the 
+		-- next white space is found.
+			
+invariant
+	analyze_ancestors: not current_class_only
+	class_i_not_void: class_i /= Void
+	class_c_set: class_c = Void or else class_c = class_i.compiled_class
+	ast_not_void: ast /= Void
 
 end	-- class DOTNET_CLASS_CONTEXT

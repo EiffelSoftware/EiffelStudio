@@ -18,7 +18,7 @@ inherit
 			set_is_short as format_set_is_short
 		end
 
-feature -- Properties
+feature {NONE} -- Properties
 
 	is_short: BOOLEAN
 			-- Is the format doing a short?

@@ -1543,11 +1543,11 @@ feature {NONE} -- Implementation
 
 					Result.append (struct_creator (tchar_creator (string_one), Zero, tchar_creator (string_two), C_true))
 
-					if shared_wizard_environment.use_universal_marshaller then
-						Result.append (universal_marshaling_registration_code)
+				--	if shared_wizard_environment.use_universal_marshaller then
+				--		Result.append (universal_marshaling_registration_code)
 				--	else
 				--		Result.append (standard_marshaling_registration_code)
-					end
+				--	end
 				end
 				system_descriptor.coclasses.forth
 			end

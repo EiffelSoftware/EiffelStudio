@@ -38,6 +38,7 @@ feature -- Basic operations
 		local
 			function_generator: WIZARD_CPP_CLIENT_FUNCTION_GENERATOR
 			disp_func_generator: WIZARD_CPP_DISPATCH_CLIENT_FUNCTION_GENERATOR
+			dual_func_generator: WIZARD_CPP_DUAL_CLIENT_FUNCTION_GENERATOR
 			property_generator: WIZARD_CPP_CLIENT_PROPERTY_GENERATOR
 		do
 			if not a_desc.properties.empty then
@@ -64,8 +65,21 @@ feature -- Basic operations
 				loop
 					if not is_propertyputref (a_desc.functions.item.invoke_kind) then
 
-					--	if a_desc.functions.item.func_kind =  Func_dispatch then
-						if a_desc.dispinterface and then not a_desc.dual then
+						if a_desc.dual then
+							create dual_func_generator
+							dual_func_generator.generate (a_desc.name, a_desc.functions.item)
+							cpp_class_writer.add_function (dual_func_generator.ccom_feature_writer, Public)
+							from
+								dual_func_generator.c_header_files.start
+							until
+								dual_func_generator.c_header_files.after
+							loop
+								if not cpp_class_writer.import_files.has (dual_func_generator.c_header_files.item) then
+									cpp_class_writer.add_import (dual_func_generator.c_header_files.item)
+								end
+								dual_func_generator.c_header_files.forth
+							end
+						elseif a_desc.dispinterface then
 							create disp_func_generator
 							disp_func_generator.generate (a_desc.name, a_desc.guid.to_string, a_desc.lcid, a_desc.functions.item)
 							cpp_class_writer.add_function (disp_func_generator.ccom_feature_writer, Public)

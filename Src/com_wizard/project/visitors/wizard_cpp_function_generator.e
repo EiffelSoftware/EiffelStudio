@@ -20,131 +20,134 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	set_client_result_type_and_signature is
-			-- Set ccom client feature signature
+	set_result_type_and_signature: STRING is
+			-- Result type and signature of feature
 		require
 			non_void_feature_writer: ccom_feature_writer /= Void
+			non_void_arguments: func_desc.arguments /= Void
+			has_arguments: not func_desc.arguments.empty
 		local
 			arguments: LINKED_LIST[WIZARD_PARAM_DESCRIPTOR]
-			tmp_string: STRING
 			pointed_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR
 			visitor: WIZARD_DATA_TYPE_VISITOR
 		do
-			create tmp_string.make (0)
+			create Result.make (0)
 			arguments := func_desc.arguments
-			if arguments /= Void and not arguments.empty then
-				from
-					arguments.start
-				until
-					arguments.off
-				loop
-					create visitor
-					visitor.visit (arguments.item.type)
+			from
+				arguments.start
+			until
+				arguments.off
+			loop
+				create visitor
+				visitor.visit (arguments.item.type)
 
-					if is_paramflag_fretval (arguments.item.flags) then
-						if visitor.is_basic_type then
-							message_output.add_warning (Current, message_output.Not_pointer_type)
-						else
-							pointed_descriptor ?= arguments.item.type
-							if pointed_descriptor /= Void then
-								create visitor
-								visitor.visit (pointed_descriptor.pointed_data_type_descriptor)
-								if visitor.is_basic_type or visitor.is_enumeration then
-									ccom_feature_writer.set_result_type (visitor.cecil_type)
-								else
-									ccom_feature_writer.set_result_type (Eif_reference)
-								end
+				if is_paramflag_fretval (arguments.item.flags) then
+					if visitor.is_basic_type then
+						message_output.add_warning (Current, message_output.Not_pointer_type)
+					else
+						pointed_descriptor ?= arguments.item.type
+						if pointed_descriptor /= Void then
+							create visitor
+							visitor.visit (pointed_descriptor.pointed_data_type_descriptor)
+							if visitor.is_basic_type or visitor.is_enumeration then
+								ccom_feature_writer.set_result_type (visitor.cecil_type)
 							else
 								ccom_feature_writer.set_result_type (Eif_reference)
 							end
-						end
-
-					elseif is_paramflag_fout (arguments.item.flags) then
-						tmp_string.append (Beginning_comment_paramflag)
-						if is_paramflag_fin (arguments.item.flags) then
-							tmp_string.append ("in, ")
-						end
-						tmp_string.append ("out")
-						tmp_string.append (End_comment_paramflag)
-
-						if visitor.is_basic_type then
-							message_output.add_warning (Current, message_output.Not_pointer_type)
-
-						elseif 
-							visitor.is_array_basic_type or 
-							visitor.is_interface_pointer or 
-							visitor.is_coclass_pointer or 
-							visitor.is_structure_pointer 
-						then
-							tmp_string.append (visitor.c_type)
-							tmp_string.append (Space)
-							tmp_string.append (arguments.item.name)
-							tmp_string.append (visitor.c_post_type)
-
-						elseif visitor.is_interface or visitor.is_structure then
-							tmp_string.append (Eif_pointer)
-							tmp_string.append (Space)
-							tmp_string.append (arguments.item.name)
-
 						else
-							tmp_string.append (Eif_object)
-							tmp_string.append (Space)
-							tmp_string.append (arguments.item.name)
+							ccom_feature_writer.set_result_type (Eif_reference)
+						end
+					end
 
-						end
-						if not (visitor.c_header_file = Void or else visitor.c_header_file.empty) then
-							c_header_files.extend (visitor.c_header_file)
-						end
-						tmp_string.append (Comma_space)
+				elseif is_paramflag_fout (arguments.item.flags) then
+					Result.append (Beginning_comment_paramflag)
+					if is_paramflag_fin (arguments.item.flags) then
+						Result.append ("in, ")
+					end
+					Result.append ("out")
+					Result.append (End_comment_paramflag)
+					if visitor.is_basic_type then
+						message_output.add_warning (Current, message_output.Not_pointer_type)
+					elseif 
+						visitor.is_array_basic_type or 
+						visitor.is_interface_pointer or 
+						visitor.is_coclass_pointer or 
+						visitor.is_structure_pointer 
+					then
+						Result.append (visitor.c_type)
+						Result.append (Space)
+						Result.append (arguments.item.name)
+						Result.append (visitor.c_post_type)
+					elseif visitor.is_interface or visitor.is_structure then
+						Result.append (Eif_pointer)
+						Result.append (Space)
+						Result.append (arguments.item.name)
 
 					else
-						tmp_string.append (Beginning_comment_paramflag)
-						tmp_string.append ("in")
-						tmp_string.append (End_comment_paramflag)
-						if visitor.is_basic_type or visitor.is_enumeration then
-							tmp_string.append (visitor.cecil_type)
-
-						elseif 
-							visitor.is_array_basic_type or 
-							visitor.is_interface_pointer or 
-							visitor.is_coclass_pointer or 
-							visitor.is_structure_pointer 
-						then
-							tmp_string.append (visitor.c_type)
-	
-						elseif visitor.is_interface or visitor.is_structure then
-							tmp_string.append (visitor.c_type)
-							tmp_string.append (Space)
-							tmp_string.append (Asterisk)
-
-						else
-							tmp_string.append (Eif_object)
-						end
-
-						tmp_string.append (Space)
-						tmp_string.append (arguments.item.name)
-
-						if visitor.is_array_basic_type then
-							tmp_string.append (visitor.c_post_type)
-						end
-
-						if not (visitor.c_header_file = Void or else visitor.c_header_file.empty) then
-							c_header_files.extend (visitor.c_header_file)
-						end
-
-						tmp_string.append (Comma_space)
-
+						Result.append (Eif_object)
+						Result.append (Space)
+						Result.append (arguments.item.name)
 					end
-					visitor := Void
-					arguments.forth
-				end
+					if not (visitor.c_header_file = Void or else visitor.c_header_file.empty) then
+						c_header_files.extend (visitor.c_header_file)
+					end
+					Result.append (Comma_space)
 
-				if tmp_string.count > 0  then
-					tmp_string.remove (tmp_string.count)
-					tmp_string.remove (tmp_string.count)
+				else
+					Result.append (Beginning_comment_paramflag)
+					Result.append ("in")
+					Result.append (End_comment_paramflag)
+					if visitor.is_basic_type or visitor.is_enumeration then
+						Result.append (visitor.cecil_type)
+					elseif 
+						visitor.is_array_basic_type or 
+						visitor.is_interface_pointer or 
+						visitor.is_coclass_pointer or 
+						visitor.is_structure_pointer 
+					then
+						Result.append (visitor.c_type)
+
+					elseif visitor.is_interface or visitor.is_structure then
+						Result.append (visitor.c_type)
+						Result.append (Space)
+						Result.append (Asterisk)
+
+					else
+						Result.append (Eif_object)
+					end
+
+					Result.append (Space)
+					Result.append (arguments.item.name)
+
+					if visitor.is_array_basic_type then
+						Result.append (visitor.c_post_type)
+					end
+
+					if not (visitor.c_header_file = Void or else visitor.c_header_file.empty) then
+						c_header_files.extend (visitor.c_header_file)
+					end
+
+					Result.append (Comma_space)
+
 				end
+				visitor := Void
+				arguments.forth
 			end
-			ccom_feature_writer.set_signature (tmp_string)
+
+			if Result.count > 0  then
+				Result.remove (Result.count)
+				Result.remove (Result.count)
+			end
+		ensure
+			valid_result: Result /= Void and then not Result.empty
+		end
+
+	set_client_result_type_and_signature is
+			-- Set ccom client feature signature
+		do
+			if func_desc.arguments /= Void and not func_desc.arguments.empty then
+				ccom_feature_writer.set_signature (set_result_type_and_signature)
+			end
 		end
 
 	cecil_feature_set_up (arg_name, cecil_feature_type, feature_name, object_type: STRING): STRING is

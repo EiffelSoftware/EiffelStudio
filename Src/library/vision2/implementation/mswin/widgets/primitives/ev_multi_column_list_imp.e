@@ -220,6 +220,14 @@ feature -- Status report
 
 feature -- Status setting
 
+	set_columns (i: INTEGER)is
+			-- Assign `i' to `columns'.
+		do
+			Check
+				to_be_implemented: False
+			end
+		end
+
 	select_item (an_index: INTEGER) is
 			-- Select an item at the one-based `an_index' the list.
 		do
@@ -478,14 +486,14 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 			from
 				list.start
 				create litem.make_with_attributes (
-					Lvif_text, index - 1, 0, 0, list.item)
+					Lvif_text, an_index - 1, 0, 0, list.item)
 				wel_insert_item (litem)
 				list.forth
 			until
 				list.after
 			loop
 				create litem.make_with_attributes (
-					Lvif_text, index - 1, list.index - 1, 0, list.item)
+					Lvif_text, an_index - 1, list.index - 1, 0, list.item)
 				cwin_send_message (wel_item, Lvm_setitem, 0,
 					litem.to_integer)
 				list.forth
@@ -809,6 +817,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.39  2000/03/03 17:13:49  rogers
+--| Added set_columns. Fixed use of wrong index within insert_item.
+--|
 --| Revision 1.38  2000/03/03 00:54:20  brendel
 --| set_selected -> en/dis-able_select.
 --|

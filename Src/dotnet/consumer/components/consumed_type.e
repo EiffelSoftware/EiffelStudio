@@ -236,8 +236,6 @@ feature -- Functions used for easy browsing of data from ConsumerWrapper.
 
 	ancestors: ARRAYED_LIST [CONSUMED_REFERENCED_TYPE] is
 			-- All interfaces and base classes implemented/inherited by `Current'.
-		local
-			i: INTEGER
 		do
 			create Result.make (0)
 			if interfaces /= Void then

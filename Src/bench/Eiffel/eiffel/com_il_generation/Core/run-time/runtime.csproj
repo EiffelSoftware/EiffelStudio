@@ -84,22 +84,27 @@
         <Files>
             <Include>
                 <File
+                    RelPath = "agent_proxy.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "any.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "assertions.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "eiffel_derivation.cs"
+                    RelPath = "eiffel_exception.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
                     RelPath = "eiffel_type_info.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "exception.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -124,7 +129,12 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "custom_attributes\eiffel_class_name_attribute.cs"
+                    RelPath = "custom_attributes\eiffel_name_attribute.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "custom_attributes\interface_type_attribute.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

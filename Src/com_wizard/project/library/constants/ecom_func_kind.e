@@ -11,7 +11,8 @@ feature -- Access
 
 	Func_purevirtual: INTEGER is
 			-- Function is accessed via virtual function table
-			-- and takes implicit 'this' pointer		
+			-- and takes implicit 'this' pointer.	
+			-- 1	
 		external
 			"C [macro <oaidl.h>]"
 		alias
@@ -20,7 +21,8 @@ feature -- Access
 		
 	Func_virtual: INTEGER is
 			-- Function is accessed same as PUREVIRTUAL,
-			-- except function has implementation
+			-- except function has implementation.
+			-- 0
 		external
 			"C [macro <oaidl.h>]"
 		alias
@@ -29,7 +31,8 @@ feature -- Access
 		
 	Func_nonvirtual: INTEGER is
 			-- Function is accessed by static address and takes
-			-- implicit 'this' pointer		
+			-- implicit 'this' pointer.
+			-- 2	
 		external
 			"C [macro <oaidl.h>]"
 		alias
@@ -38,7 +41,8 @@ feature -- Access
 		
 	Func_static: INTEGER is
 			-- Function is accessed by static address
-			-- and does not take implicit 'this' pointer
+			-- and does not take implicit 'this' pointer.
+			-- 3
 		external
 			"C [macro <oaidl.h>]"
 		alias
@@ -46,11 +50,30 @@ feature -- Access
 		end
 		
 	Func_dispatch: INTEGER is
-			-- Function can be accessed only via IDispatch
+			-- Function can be accessed only via IDispatch.
+			-- 4
 		external
 			"C [macro <oaidl.h>]"
 		alias
 			"FUNC_DISPATCH"
+		end
+
+feature -- Status Report
+
+	to_string (kind: INTEGER): STRING is
+			-- String representation.
+		do
+			if kind = Func_purevirtual then
+				Result := "Pure virtual"
+			elseif kind = Func_virtual then
+				Result := "Virtual"
+			elseif kind = Func_nonvirtual then
+				Result := "Nonvirtual"
+			elseif kind = Func_static then
+				Result := "Static"
+			elseif kind = Func_dispatch then
+				Result := "Dispatch"
+			end
 		end
 
 feature -- Status setting

@@ -14,8 +14,8 @@
 	'cc -I' commands to really grasp how painful that could be--RAM.
 */
 
-#ifndef _signal_h_
-#define _signal_h_
+#ifndef _eif_signal_h_
+#define _eif_signal_h_
 
 #ifdef __cplusplus
 extern "C" {

@@ -10,8 +10,8 @@
 	General purpose utility functions.
 */
 
-#ifndef _tools_h_
-#define _tools_h_
+#ifndef _eif_tools_h_
+#define _eif_tools_h_
 
 #ifdef __cplusplus
 extern "C" {

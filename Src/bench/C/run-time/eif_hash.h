@@ -10,8 +10,8 @@
 	Include file for hash table.
 */
 
-#ifndef _hash_h_
-#define _hash_h_
+#ifndef _eif_hash_h_
+#define _eif_hash_h_
 
 #ifdef __cplusplus
 extern "C" {

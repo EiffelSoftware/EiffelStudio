@@ -10,8 +10,8 @@
 	Search table routines.
 */
 
-#ifndef _search_h_
-#define _search_h_
+#ifndef _eif_search_h_
+#define _eif_search_h_
 
 #ifdef __cplusplus
 extern "C" {

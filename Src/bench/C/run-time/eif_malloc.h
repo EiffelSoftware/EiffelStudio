@@ -10,8 +10,8 @@
 	Declarations for malloc routines
 */
 
-#ifndef _malloc_h_
-#define _malloc_h_
+#ifndef _eif_malloc_h_
+#define _eif_malloc_h_
 
 #ifdef __cplusplus
 extern "C" {

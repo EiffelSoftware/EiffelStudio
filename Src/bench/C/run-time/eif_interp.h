@@ -10,8 +10,8 @@
 	Interpreter declarations and definitions.
 */
 
-#ifndef _interp_h_
-#define _interp_h_
+#ifndef _eif_interp_h_
+#define _eif_interp_h_
 
 #ifdef __cplusplus
 extern "C" {

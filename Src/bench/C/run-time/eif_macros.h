@@ -10,8 +10,8 @@
 	Macros used by C code at run time.
 */
 
-#ifndef _macros_h_
-#define _macros_h_
+#ifndef _eif_macros_h_
+#define _eif_macros_h_
 
 #include "eif_config.h"
 #include "eif_globals.h"

@@ -11,8 +11,8 @@
 
 */
 
-#ifndef _store_h_
-#define _store_h_
+#ifndef _eif_store_h_
+#define _eif_store_h_
 
 #ifdef __cplusplus
 extern "C" {

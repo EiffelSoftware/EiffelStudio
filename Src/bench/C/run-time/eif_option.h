@@ -10,8 +10,8 @@
 	Include file for options queries in workbench mode
 */
 
-#ifndef _option_h_
-#define _option_h_
+#ifndef _eif_option_h_
+#define _eif_option_h_
 
 #ifdef __cplusplus
 extern "C" {

@@ -10,8 +10,8 @@
 	Declaration of public directory functions.
 */
 
-#ifndef _dir_h_
-#define _dir_h_
+#ifndef _eif_dir_h_
+#define _eif_dir_h_
 
 #ifdef __cplusplus
 extern "C" {

@@ -11,8 +11,8 @@
 
 */
 
-#ifndef _wbench_h_
-#define _wbench_h_
+#ifndef _eif_wbench_h_
+#define _eif_wbench_h_
 
 #include "eif_debug.h"			/* for onceadd() */
 #include "eif_update.h"			/* for update() */

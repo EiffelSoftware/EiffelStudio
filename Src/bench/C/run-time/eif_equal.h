@@ -10,8 +10,8 @@
 	Include file for Eiffel equality
 */
 
-#ifndef _equal_h_
-#define _equal_h_
+#ifndef _eif_equal_h_
+#define _eif_equal_h_
 
 #ifdef __cplusplus
 extern "C" {

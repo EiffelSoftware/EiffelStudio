@@ -10,8 +10,8 @@
 	Declarations for local variable stack handling.
 */
 
-#ifndef _local_h_
-#define _local_h_
+#ifndef _eif_local_h_
+#define _eif_local_h_
 
 #ifdef __cplusplus
 extern "C" {

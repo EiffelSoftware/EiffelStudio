@@ -10,8 +10,8 @@
 	Declarations for Hector.
 */
 
-#ifndef _hector_h_
-#define _hector_h_
+#ifndef _eif_hector_h_
+#define _eif_hector_h_
 
 #ifdef __cplusplus
 extern "C" {

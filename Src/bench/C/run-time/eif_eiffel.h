@@ -10,8 +10,8 @@
 	Some configured inclusions/definitions.
 */
 
-#ifndef _eiffel_h_
-#define _eiffel_h_
+#ifndef _eif_eiffel_h_
+#define _eif_eiffel_h_
 
 #ifdef __cplusplus
 extern "C" {

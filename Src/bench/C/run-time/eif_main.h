@@ -9,8 +9,8 @@
 
 */
 
-#ifndef _main_h_
-#define _main_h_
+#ifndef _eif_main_h_
+#define _eif_main_h_
 
 #ifdef __cplusplus
 extern "C" {

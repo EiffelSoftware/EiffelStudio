@@ -11,8 +11,8 @@
 
 */
 
-#ifndef _retrieve_h_
-#define _retrieve_h_
+#ifndef _eif_retrieve_h_
+#define _eif_retrieve_h_
 
 #ifdef __cplusplus
 extern "C" {

@@ -9,8 +9,8 @@
 
 */
 
-#ifndef _lmalloc_h_
-#define _lmalloc_h_
+#ifndef _eif_lmalloc_h_
+#define _eif_lmalloc_h_
 
 #ifdef __cplusplus
 extern "C" {
@@ -22,4 +22,4 @@ extern Malloc_t eif_malloc(register unsigned int nbytes);
 }
 #endif
 
-#endif /* _lmalloc_h_ */
+#endif /* _eif_lmalloc_h_ */

@@ -9,8 +9,8 @@
 	Externals for class BOOL_STRING.
 */
 
-#ifndef _boolstr_h_
-#define _boolstr_h_
+#ifndef _eif_boolstr_h_
+#define _eif_boolstr_h_
 
 #ifdef __cplusplus
 extern "C" {

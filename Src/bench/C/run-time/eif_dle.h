@@ -10,8 +10,8 @@
 	Dynamic Linking in Eiffel primitives declarations
 */
 
-#ifndef _dle_h_
-#define _dle_h_
+#ifndef _eif_dle_h_
+#define _eif_dle_h_
 
 #ifdef __cplusplus
 extern "C" {

@@ -18,12 +18,14 @@ inherit
 			default_style,
 			on_key_down,
 			on_bn_clicked,
-			process_message
+			process_message,
+			default_alignment
 		redefine
 			interface,
 			initialize,
 			update_current_push_button,
-			redraw_current_push_button
+			redraw_current_push_button,
+			internal_default_height
 		select
 			wel_make
 		end
@@ -109,7 +111,7 @@ feature {NONE} -- Initalization
 		do
 			Precursor
 			set_checked
-			text_alignment := Text_alignment_left
+			text_alignment := default_alignment
 		end			
 
 feature -- Status setting
@@ -160,6 +162,13 @@ feature {NONE} -- Implementation
 		end
 
 feature {NONE} -- Implementation, focus event
+
+	internal_default_height: INTEGER is
+			-- The default minimum height of `Current' with no text.
+			-- This is used in set_default_size.
+		do
+			Result := 12
+		end
 
 	update_current_push_button is
 			-- Update the current push button

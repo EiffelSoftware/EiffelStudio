@@ -52,18 +52,18 @@ feature -- Access
 	parent_imp: EV_MENU_HOLDER_IMP
 		-- Parent of the current menu.
 
-	count: INTEGER is
-			-- Number of items in the menu.
-		do
-			Result := ev_children.count
-		end
+--	count: INTEGER is
+--			-- Number of items in the menu.
+--		do
+--			Result := ev_children.count
+--		end
 
-	get_item (index: INTEGER): EV_MENU_ITEM is
-			-- Give the item of the list at the zero-base
-			-- `index'.
-		do
-			Result ?= (ev_children.i_th (index)).interface
-		end
+--	get_item (index: INTEGER): EV_MENU_ITEM is
+--			-- Give the item of the list at the zero-base
+--			-- `index'.
+--		do
+--			Result ?= (ev_children.i_th (index)).interface
+--		end
 
 feature -- Status report
 

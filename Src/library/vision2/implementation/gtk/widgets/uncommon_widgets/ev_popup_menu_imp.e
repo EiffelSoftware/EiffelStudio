@@ -23,6 +23,9 @@ feature {NONE} -- Initialization
 	make is         
 			-- Create an empty popup menu with `par' as parent.
 		do
+			check
+				To_be_implemented: False
+			end
 		end	
 
 feature -- Access
@@ -30,17 +33,9 @@ feature -- Access
 	parent: EV_CONTAINER is
 			-- Parent of the popup.
 		do
-		end
-
-	count: INTEGER is
-			-- Number of direct children of the holder.
-		do
-		end
-
-	get_item (index: INTEGER): EV_ITEM is
-			-- Give the item of the list at the zero-base
-			-- `index'.
-		do
+			check
+				To_be_implemented: False
+			end
 		end
 
 feature -- Status setting
@@ -48,6 +43,9 @@ feature -- Status setting
 	show_at_position (x_coord, y_coord: INTEGER) is
 			-- Show the popup menu at the given position
 		do
+			check
+				To_be_implemented: False
+			end
 		end
 
 feature -- Element change
@@ -55,26 +53,41 @@ feature -- Element change
 	add_menu (menu_imp: EV_MENU_IMP) is
 			-- Add `menu_imp' in the container.
 		do
+			check
+				To_be_implemented: False
+			end
 		end
 
 	remove_menu (menu_imp: EV_MENU_IMP) is
 			-- Remove `menu_imp' from the container.
 		do
+			check
+				To_be_implemented: False
+			end
 		end
 
 	add_item (item_imp: EV_MENU_ITEM_IMP) is
 			-- Add `item_imp' into container.
 		do
+			check
+				To_be_implemented: False
+			end
 		end
 
 	remove_item (item_imp: EV_MENU_ITEM_IMP) is
 			-- Add `item_imp' into container.
 		do
+			check
+				To_be_implemented: False
+			end
 		end
 
 	set_parent (par: EV_CONTAINER) is
 			-- Make `par' the new parent of the popup.
 		do
+			check
+				To_be_implemented: False
+			end
 		end
 
 end -- class EV_POPUP_MENU_IMP

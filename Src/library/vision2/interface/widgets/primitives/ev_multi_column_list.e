@@ -301,8 +301,7 @@ feature -- Contract support
 				until
 					j > 4
 				loop
-					last.go_i_th (j)
-					last.replace ("Row" + i.out + " Col" + j.out)
+					last.extend ("Row" + i.out + " Col" + j.out)
 					last.select_actions.extend (~prune (last))
 					last.select_actions.extend (~put_front (last))
 					j := j + 1
@@ -375,6 +374,9 @@ end -- class EV_MULTI_COLUMN_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.49  2000/03/27 19:31:27  brendel
+--| Fixed `make_for_text'.
+--|
 --| Revision 1.48  2000/03/27 18:38:58  oconnor
 --| added fixme
 --|

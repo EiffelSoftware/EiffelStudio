@@ -150,11 +150,16 @@ feature -- Access
 			external_name: "Invariants"
 		end
 	
-	generic_derivations: SYSTEM_COLLECTIONS_ARRAYLIST
-			-- | SYSTEM_COLLECTIONS_ARRAYLIST [GENERIC_DERIVATION]
+	generic_derivations: ARRAY [GENERIC_DERIVATION]
 		indexing
 			description: "List of derivations of the class if it is generic"
 			external_name: "GenericDerivations"
+		end
+	
+	constraints: ARRAY [STRING]
+		indexing
+			description: "Constraints corresponding to the generic types"
+			external_name: "Constraints"
 		end
 		
 feature -- Eiffel names from .NET reflection info
@@ -508,6 +513,32 @@ feature -- Status Setting
 		ensure
 			parents_set: parents = a_table
 		end
+
+	set_generic_derivations (derivations_table: like generic_derivations) is
+		indexing
+			description: "Set `generic_derivations' with `derivations_table'."
+			external_name: "SetGenericDerivations"
+		require
+			is_generic: is_generic
+			non_void_derivations_table: derivations_table /= Void
+		do
+			generic_derivations := derivations_table
+		ensure
+			generic_derivations_set: generic_derivations = derivations_table
+		end
+	
+	set_constraints (constraints_table: like constraints) is
+		indexing
+			description: "Set `constraints' with `constraints_table'."
+			external_name: "SetConstraints"
+		require
+			is_generic
+			non_void_constraints_table: constraints_table /= Void
+		do
+			constraints	:= constraints_table
+		ensure
+			constraints_set: constraints = constraints_table
+		end
 		
 feature -- Basic Operations
 
@@ -671,26 +702,7 @@ feature -- Basic Operations
 			an_invariant.put (1, a_text)
 			invariant_added := invariants.extend (an_invariant)	
 		end
-
-	add_generic_derivation (a_derivation: GENERIC_DERIVATION) is
-		indexing
-			description: "Add `a_derivation' to `generic_derivations'."
-			external_name: "AddGenericDerivation"
-		require
-			is_generic: is_generic
-			non_void_derivation: a_derivation /= Void
-		local
-			added: INTEGER
-		do
-			if generic_derivations = Void then
-				create generic_derivations.make
-			end
-			added := generic_derivations.extend (a_derivation)
-		ensure
-			non_void_generic_derivations: generic_derivations /= Void
-			derivation_set: generic_derivations.has (a_derivation)
-		end
-			
+		
 feature {NONE} -- Implementation
 		
 	has_creation_routine (info: SYSTEM_REFLECTION_CONSTRUCTORINFO): BOOLEAN is
@@ -896,5 +908,5 @@ invariant
 	is_expanded_implies_no_creation_routine: is_expanded implies initialization_features.get_count = 0
 	not_generic_implies_no_generic_derivations: not is_generic implies generic_derivations = Void
 	generic_derivations_implies_generic: generic_derivations /= Void implies is_generic
-
+	
 end -- class EIFFEL_CLASS

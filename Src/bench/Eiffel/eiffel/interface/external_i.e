@@ -10,7 +10,7 @@ inherit
 		redefine
 			transfer_to, equiv, update_api,
 			melt, generate, duplicate, extension,
-			access_for_feature, is_external, new_rout_entry, valid_body_id,
+			access_for_feature, is_external,
 			set_renamed_name, set_renamed_name_id, external_name_id, undefinable,
 			init_arg
 		end;
@@ -55,48 +55,6 @@ feature -- Attributes for externals
 
 feature -- Routines for externals
 
-	is_special: BOOLEAN is
-			-- Does the external declaration include a macro or a Dll --JOCE--
-		do
-			Result := extension.is_macro or extension.is_struct or extension.is_dll or extension.is_inline
-		end;
-
-	has_signature: BOOLEAN is
-			-- Does the external declaration include a signature ?
-		do
-			Result := extension.has_signature
-		end;
-
-	is_cpp: BOOLEAN is
-			-- Is the external declaration a C++ feature ?
-		do
-			Result := extension.is_cpp
-		end;
-
-	has_arg_list: BOOLEAN is
-			-- Does the signature include arguments ?
-		do
-			Result := extension.has_arg_list
-		end;
-
-	has_return_type: BOOLEAN is
-			-- Does the signature include a result type ?
-		do
-			Result := extension.has_return_type
-		end;
-
-	has_include_list: BOOLEAN is
-			-- Does the external declaration include a list of include files ?
-		do
-			Result := extension.has_include_list
-		end;
-
-	include_list: ARRAY [INTEGER] is
-			-- Include list
-		do
-			Result := extension.header_files
-		end
-
 	undefinable: BOOLEAN is
 			-- Is an external undefinable?
 		do
@@ -133,7 +91,7 @@ feature -- Incrementality
 
 	equiv (other: FEATURE_I): BOOLEAN is
 		do
-			Result := {PROCEDURE_I} Precursor (other) and then freezing_equiv (other)
+			Result := Precursor {PROCEDURE_I} (other) and then freezing_equiv (other)
 		end
 
 feature 
@@ -233,20 +191,6 @@ feature
 			other.set_extension (extension);
 		end;
 
-	new_rout_entry: EXTERN_ENTRY is
-			-- New external unit
-		do
-			create Result;
-			Result.set_body_index (body_index);
-			Result.set_type_a (type.actual_type);
-			Result.set_written_in (written_in);
-			Result.set_pattern_id (pattern_id);
-			Result.set_external_name (external_name);
-			Result.set_encapsulated (encapsulated);
-			Result.set_feature_id (feature_id)
-			Result.set_include_list (include_list)
-		end;
-
 	replicated: FEATURE_I is
 			-- Replication
 		local
@@ -275,43 +219,8 @@ feature
 			byte_code: BYTE_CODE
 		do
 			if used then
-					-- if the external declaration has a macro or a signature
-					-- then encapsulated is True; otherwise do nothing
-				if encapsulated then
-					generate_header (buffer);
-					byte_code := Byte_server.disk_item (body_index)
-					check
-						byte_code_not_void: byte_code /= Void
-					end
-						-- Generation of C code for an Eiffel feature written in
-						-- the associated class of the current type.
-					byte_context.set_byte_code (byte_code)
-						-- Generation of the C routine
-					byte_context.set_current_feature (Current)
-					byte_code.analyze
-					byte_code.set_real_body_id (real_body_id)
-					byte_code.generate
-					byte_context.clear_all
-				else
-					add_in_log (class_type, external_name)
-				end
-			else
-				system.removed_log_file.add (class_type, feature_name)				
-			end
-		end
-
-	generate_c_il (buffer: GENERATION_BUFFER) is
-				-- Generate current feature in `buffer'.
-		require
-			is_c_external: is_c_external
-		local
-			byte_code: EXT_BYTE_CODE
-		do
-			if used then
-					-- if the external declaration has a macro or a signature
-					-- then encapsulated is True; otherwise do nothing
-				generate_header (buffer)
-				byte_code ?= Byte_server.disk_item (body_index)
+				generate_header (buffer);
+				byte_code := Byte_server.disk_item (body_index)
 				check
 					byte_code_not_void: byte_code /= Void
 				end
@@ -322,18 +231,12 @@ feature
 				byte_context.set_current_feature (Current)
 				byte_code.analyze
 				byte_code.set_real_body_id (real_body_id)
-				byte_code.generate_c_il
+				byte_code.generate
 				byte_context.clear_all
+			else
+				system.removed_log_file.add (class_type, feature_name)				
 			end
 		end
-		
-	valid_body_id: BOOLEAN is
-			-- if the external is encapsulated then an EXECUTION_UNIT
-			-- has been defined instead of an EXT_EXECUTION_UNIT
-			-- and real_body_id can be called
-		do
-			Result := System.il_generation or else encapsulated;
-		end;
 
 	melt (exec: EXECUTION_UNIT) is
 			-- Generate byte code for the current feature

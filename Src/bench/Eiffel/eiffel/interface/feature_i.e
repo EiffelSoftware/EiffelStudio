@@ -2157,13 +2157,9 @@ feature -- Debugging
 		end
 
 	valid_body_id: BOOLEAN is
-			-- use of this routine as precondition for real_body_id
-			-- allows enhancement of external functions
-			-- Indeed, if an external has to be encapsulated (macro, signature)
-			-- an EXECUTION_UNIT is created instead of an EXT_EXECUTION_UNIT
+			-- Use of this routine as precondition for real_body_id.
 		do
-			Result := (	(not is_external)
-						and then (not is_attribute)
+			Result := ((not is_attribute)
 						and then (not is_constant)
 						and then (not is_deferred)
 						and then (not is_unique)

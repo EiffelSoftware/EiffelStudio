@@ -36,6 +36,7 @@ feature {NONE} -- Initialization
 		do
 			is_initialized := True
 			internal_height := 16
+			depth_in_tree := 1
 		end
 
 feature {EV_GRID_I} -- Initialization
@@ -83,7 +84,7 @@ feature -- Access
 			a_row_not_void: a_row /= Void
 			is_parented: parent /= Void
 		do
-			to_implement ("EV_GRID_ROW.has_subrow")
+			Result := subrows.has (a_row.implementation)
 		ensure
 			has_subrow_same_parent: Result implies
 				((a_row.parent /= Void and parent /= Void) and then a_row.parent = parent)
@@ -256,11 +257,13 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 				-- parent.row (i).parent_row = Current
 		local
 			row_imp: EV_GRID_ROW_I
+			parent_row_imp: EV_GRID_ROW_I
 		do
 			--to_implement ("EV_GRID_ROW.add_subrow")
 			row_imp := a_row.implementation
 			subrows.extend (row_imp)
 			row_imp.internal_set_parent_row (Current)
+			parent_grid_i.redraw_client_area
 		ensure
 			added: a_row.parent_row = interface
 			subrow (subrow_count) = a_row
@@ -319,8 +322,8 @@ feature {EV_GRID_ROW_I} -- Implementation
 			--
 		do
 			parent_row_i := a_parent_row
+			depth_in_tree := a_parent_row.depth_in_tree + 1
 		end
-		
 
 feature {EV_GRID_ITEM_I} -- Implementation
 
@@ -351,13 +354,16 @@ feature {EV_GRID_ITEM_I} -- Implementation
 	subrows: EV_GRID_ARRAYED_LIST [EV_GRID_ROW_I]
 		-- All subrows of `Current'.
 
-feature {EV_GRID_I, EV_GRID_DRAWER_I} -- Implementation
+feature {EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I} -- Implementation
 
 	parent_grid_i: EV_GRID_I
 		-- Grid that `Current' resides in.
 		
 	parent_row_i: EV_GRID_ROW_I
 		-- Row in which `Current' is parented.
+		
+	depth_in_tree: INTEGER
+		-- Depth of `Current' within a tree structure.
 		
 feature {EV_ANY_I, EV_GRID_ROW} -- Implementation
 

@@ -112,6 +112,27 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			--| consistent interface to users.
 			--| (See bridge pattern description below)
 
+	replace_implementation (new_implementation: like implementation) is
+			-- Replace `implementation' with `new_implementation'.
+			-- The old `implementation' is marked as not initialized but the
+			-- caller has complete responsibility for releasing any resources
+			-- that it holds.
+			--| See `clone' for useage of `c_check_assert'.
+		require
+			implementation_not_void: implementation /= Void
+			new_implementation_not_void: new_implementation /= Void
+		local
+			temp: BOOLEAN
+		do
+			temp := c_check_assert (False)
+			implementation.set_interface (Void)
+			implementation.set_initialized (False)
+			new_implementation.set_interface(Current)
+			implementation := new_implementation
+			implementation.set_initialized (True)
+			temp := c_check_assert (temp)
+		end
+
 feature {EV_ANY} -- Implementation
 
 	create_action_sequences is 
@@ -278,6 +299,9 @@ end -- class EV_ANY
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2000/04/11 17:29:06  oconnor
+--| added replace_implementation
+--|
 --| Revision 1.15  2000/03/16 01:08:34  oconnor
 --| added comments about bridge pattern
 --|

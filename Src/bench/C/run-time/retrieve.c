@@ -89,15 +89,15 @@ rt_public char *portable_retrieve(int (*char_read_function)(char *, int));
 
 rt_public char *irt_make(void);			/* Do the independant retrieve */
 rt_public char *grt_make(void);			/* Do the general retrieve (3.3 and later) */
-rt_public char *irt_nmake(EIF_CONTEXT long int objectCount);			/* Retrieve n objects independent form*/
-rt_public char *grt_nmake(EIF_CONTEXT long int objectCount);			/* Retrieve n objects general form*/
+rt_public char *irt_nmake(long int objectCount);			/* Retrieve n objects independent form*/
+rt_public char *grt_nmake(long int objectCount);			/* Retrieve n objects general form*/
 rt_private void iread_header(EIF_CONTEXT_NOARG);		/* Read independent header */
 rt_private void rt_clean(void);			/* Clean data structure */
 rt_private void rt_update1(register char *old, register EIF_OBJECT new);			/* Reference correspondance update */
 rt_private void rt_update2(char *old, char *new, char *parent);			/* Fields updating */
 rt_public char *rt_make(void);				/* Do the retrieve */
-rt_public char *rt_nmake(EIF_CONTEXT long int objectCount);			/* Retrieve n objects */
-rt_private void read_header(EIF_CONTEXT char rt_type);			/* Read general header */
+rt_public char *rt_nmake(long int objectCount);			/* Retrieve n objects */
+rt_private void read_header(char rt_type);			/* Read general header */
 rt_private void object_read (char *object, char *parent);		/* read the individual attributes of the object*/
 rt_private void gen_object_read (char *object, char *parent);	/* read the individual attributes of the object*/
 rt_private long get_expanded_pos (uint32 o_type, uint32 num_attrib);
@@ -247,11 +247,11 @@ rt_public char *portable_retrieve(int (*char_read_function)(char *, int))
 		iread_header(MTC_NOARG);			/* Make correspondance table */
 		retrieved = irt_make();
 	} else if (rt_type == GENERAL_STORE_4_0) {
-		read_header(MTC rt_type);					/* Make correspondance table */
+		read_header(rt_type);					/* Make correspondance table */
 		retrieved = grt_make();
 	} else {
 		if (rt_kind)
-			read_header(MTC rt_type);			/* Make correspondance table */
+			read_header(rt_type);			/* Make correspondance table */
 
 		/* Retrieve */
 		retrieved = rt_make();
@@ -313,30 +313,24 @@ rt_private void independent_retrieve_reset (void) {
 
 rt_public char *rt_make(void)
 {
-	/* Make the retrieve of all objects in file */
+		/* Make the retrieve of all objects in file */
 	long objectCount;
 
-	/* Read the object count in the file header */
-	buffer_read((char *)(&objectCount), (sizeof(long)));
+		/* Read the object count in the file header */
+	buffer_read((char *) &objectCount, (sizeof(long)));
 
-#if DEBUG & 2
-		printf ("\n %ld", objectCount);
-#endif
-
-
-	return rt_nmake(MTC objectCount);
+	return rt_nmake(objectCount);
 }
 
-
-rt_public char *rt_nmake(EIF_CONTEXT long int objectCount)
+rt_public EIF_REFERENCE rt_nmake(long int objectCount)
 {
 	/* Make the retrieve of `objectCount' objects.
 	 * Return pointer on retrived object.
 	 */
 	EIF_GET_CONTEXT
-	long nb_char;
-	char *oldadd;
-	char *newadd = (char *) 0;
+	long nb_byte;
+	EIF_REFERENCE oldadd;
+	EIF_REFERENCE newadd = (EIF_REFERENCE) 0;
 	EIF_OBJECT new_hector;
 	uint32 crflags, fflags, flags;
 	uint32 spec_size = 0;
@@ -344,20 +338,16 @@ rt_public char *rt_nmake(EIF_CONTEXT long int objectCount)
 	jmp_buf exenv;
 	RTXD;
 
-#if DEBUG & 2
-/*	long saved_objectCount = objectCount;
+	assert (objectCount /= 0);
 
-	if (objectCount == 0)
-		eif_panic("no object to retrieve");*/
-#endif
-	excatch(MTC (char *) exenv);	/* Record pseudo execution vector */
+	excatch((char *) exenv);	/* Record pseudo execution vector */
 	if (setjmp(exenv)) {
 		RTXSC;					/* Restore stack contexts */
 		rt_clean();				/* Clean data structure */
 		ereturn(MTC_NOARG);				/* Propagate exception */
 	}
 
-	/* Initialization of the hash table */
+		/* Initialization of the hash table */
 	nb_recorded = 0;
 	rt_table = (struct htable *) xmalloc(sizeof(struct htable), C_T, GC_OFF);
 	if (rt_table == (struct htable *) 0)
@@ -365,98 +355,69 @@ rt_public char *rt_nmake(EIF_CONTEXT long int objectCount)
 	if (-1 == ht_create(rt_table, objectCount, sizeof(struct rt_struct)))
 		xraise(EN_MEM);
 	ht_zero(rt_table);
-
 	for (;objectCount > 0; objectCount--) {
 		/* Read object address */
 
-		buffer_read((char *)(&oldadd), (sizeof(char *)));
+		buffer_read((char *) &oldadd, sizeof(EIF_REFERENCE));
 
 #if DEBUG & 2
 		printf ("\n  %lx", oldadd);
 #endif
 
-
 		/* Read object flags (dynamic type) */
-		buffer_read((char *)(&flags), (sizeof(uint32)));
+		buffer_read((char *) &flags, (sizeof(uint32)));
 		rt_read_cid (&crflags, &fflags, flags);
 
 #if DEBUG & 2
 		printf (" %x", flags);
 #endif
 
-
 		/* Read a possible size */
 		if (flags & EO_SPEC) {
-			/*uint32 count, elm_size;*/ /* %%ss unused */
-
-			/* Special object: read the saved size */
-			buffer_read((char *)(&spec_size), (sizeof(uint32)));
-			nb_char = (spec_size & B_SIZE) * sizeof(char);
-			newadd = spmalloc(nb_char);
+				/* Special object: read the saved size */
+			buffer_read((char *) &spec_size, (sizeof(uint32)));
+			nb_byte = spec_size & B_SIZE;
+			newadd = spmalloc(nb_byte);
 			HEADER(newadd)->ov_flags |= crflags & (EO_REF|EO_COMP|EO_TYPE);
 		} else {
-			/* Normal object */
+				/* Normal object */
 			if (rt_kind) {
-				nb_char = EIF_Size((uint16)(dtypes[flags & EO_TYPE]));
+				nb_byte = EIF_Size((uint16)(dtypes[flags & EO_TYPE]));
 				newadd = emalloc(crflags & EO_TYPE); 
 			} else {
-				nb_char = EIF_Size((uint16)(flags & EO_TYPE));
+				nb_byte = EIF_Size((uint16)(flags & EO_TYPE));
 				newadd = emalloc(crflags & EO_TYPE);
 			}
 		}
 		
-		/* Creation of the Eiffel object */	
-		if (newadd == (char *) 0)
+			/* Creation of the Eiffel object */	
+		if (newadd == (EIF_REFERENCE) 0)
 			xraise(EN_MEM);
 
-		/* Stop in the garbage collector because we have now an unstable
-		 * object. */
+			/* Stop in the garbage collector because we have now an unstable
+			 * object. */
 		g_data.status |= GC_STOP;
 
-		/* Record the new object in hector table */
+			/* Record the new object in hector table */
 		new_hector = hrecord(newadd);
 		nb_recorded++;
 
-		/* Update unsolved references on `newadd' */
+			/* Update unsolved references on `newadd' */
 		rt_update1 (oldadd, new_hector);
 
-		/* Read the object's body */
-		buffer_read(newadd, (int)(sizeof(char) * nb_char));
+			/* Read the object's body */
+		buffer_read(newadd, nb_byte);
 
-		/* Update fileds: the garbage collector should not be called
-		 * during `rt_update2' because the object is in a very unstable
-		 * state.
-		 */
+			/* Update fileds: the garbage collector should not be called
+			 * during `rt_update2' because the object is in a very unstable
+			 * state.
+			 */
 		rt_update2(oldadd, newadd, newadd);
 
-		/* Restore garbage collector status */
+			/* Restore garbage collector status */
 		g_data.status = g_status;
 	}
 	expop(&eif_stack);
-#if DEBUG & 2
-		/* Consistency check: no more unsolved references and
-		 * `objectCount' solved references. */
-/*
-	{
-		long nb_retrieved = 0L;
-		struct rt_struct *rt_info = (struct rt_struct *) rt_table->h_values;
-		int32 count = rt_table->h_size;
-
-		for (; count > 0; count--, rt_info++) {
-			if (
-					rt_info->rt_status == UNSOLVED &&
-					rt_info->rt_list != (struct rt_cell *) 0) {
-				eif_panic("retrieve incomplete");
-			}
-			if (rt_info->rt_status == SOLVED)
-				nb_retrieved++;
-		}
-		if (nb_retrieved != saved_objectCount)
-			eif_panic("retrieve failure");
-		if (saved_objectCount != nomark(newadd))
-			eif_panic("retrieve inconsistecy");
-	} */
-#endif
 	return newadd;
 
 	EIF_END_GET_CONTEXT
@@ -464,26 +425,22 @@ rt_public char *rt_nmake(EIF_CONTEXT long int objectCount)
 
 rt_public char *grt_make(void)
 {
-	/* Make the retrieve of all objects in file */
+		/* Make the retrieve of all objects in file */
 	long objectCount;
 
-	/* Read the object count in the file header */
-	buffer_read((char *)(&objectCount), sizeof(long));
+		/* Read the object count in the file header */
+	buffer_read((char *) &objectCount, sizeof(long));
 
-#if DEBUG & 1
-		printf ("\n %ld", objectCount);
-#endif
-
-	return grt_nmake(MTC objectCount);
+	return grt_nmake(objectCount);
 }
 
-rt_public char *grt_nmake(EIF_CONTEXT long int objectCount)
+rt_public char *grt_nmake(long int objectCount)
 {
 	/* Make the retrieve of `objectCount' objects.
 	 * Return pointer on retrived object.
 	 */
 	EIF_GET_CONTEXT
-	long nb_char;
+	long nb_byte;
 	char *oldadd;
 	char *newadd = (char *) 0;
 	EIF_OBJECT new_hector;
@@ -493,7 +450,7 @@ rt_public char *grt_nmake(EIF_CONTEXT long int objectCount)
 	jmp_buf exenv;
 	RTXD;
 
-	excatch(MTC (char *) exenv);	/* Record pseudo execution vector */
+	excatch((char *) exenv);	/* Record pseudo execution vector */
 	if (setjmp(exenv)) {
 		RTXSC;					/* Restore stack contexts */
 		rt_clean();				/* Clean data structure */
@@ -511,14 +468,14 @@ rt_public char *grt_nmake(EIF_CONTEXT long int objectCount)
 
 	for (;objectCount > 0; objectCount--) {
 		/* Read object address */
-		buffer_read((char *)(&oldadd), sizeof(EIF_REFERENCE));
+		buffer_read((char *) &oldadd, sizeof(EIF_REFERENCE));
 
 #if DEBUG & 1
 		printf ("\n  %lx", oldadd);
 #endif
 
 		/* Read object flags (dynamic type) */
-		buffer_read((char *)(&flags), sizeof(uint32));
+		buffer_read((char *) &flags, sizeof(uint32));
 		rt_read_cid (&crflags, &fflags, flags);
 
 #if DEBUG & 1
@@ -587,15 +544,15 @@ rt_public char *grt_nmake(EIF_CONTEXT long int objectCount)
 			} else {
 				spec_size = EIF_Size((uint16)(dgen & SK_DTYPE)) + OVERHEAD;
 			}
-			buffer_read((char *)(&count), sizeof(uint32));
-			nb_char = CHRPAD(count * spec_size ) + LNGPAD_2;
-			buffer_read((char *)(&elm_size), sizeof(uint32));
+			buffer_read((char *) &count, sizeof(uint32));
+			nb_byte = CHRPAD(count * spec_size ) + LNGPAD_2;
+			buffer_read((char *) &elm_size, sizeof(uint32));
 
 #if DEBUG & 1
 		printf (" %x", count);
 		printf (" %x", elm_size);
 #endif
-			newadd = spmalloc(nb_char);
+			newadd = spmalloc(nb_byte);
 			{
 				long * o_ref;
 
@@ -607,12 +564,12 @@ rt_public char *grt_nmake(EIF_CONTEXT long int objectCount)
 			HEADER(newadd)->ov_flags |= crflags & (EO_REF|EO_COMP|EO_TYPE);
 		} else {
 			/* Normal object */
-			nb_char = EIF_Size((uint16)(dtypes[flags & EO_TYPE]));
+			nb_byte = EIF_Size((uint16)(dtypes[flags & EO_TYPE]));
 			newadd = emalloc(crflags & EO_TYPE); 
 		}
 		
 		/* Creation of the Eiffel object */	
-		if (newadd == (char *) 0)
+		if (newadd == (EIF_REFERENCE) 0)
 			xraise(EN_MEM);
 
 		/* Stop in the garbage collector because we have know an unstable
@@ -657,16 +614,16 @@ rt_public char *irt_make(void)
 		printf ("\n %ld", objectCount);
 #endif
 
-	return irt_nmake(MTC objectCount);
+	return irt_nmake(objectCount);
 }
 
-rt_public char *irt_nmake(EIF_CONTEXT long int objectCount)
+rt_public char *irt_nmake(long int objectCount)
 {
 	/* Make the retrieve of `objectCount' objects.
 	 * Return pointer on retrived object.
 	 */
 	EIF_GET_CONTEXT
-	long nb_char;
+	long nb_byte;
 	char *oldadd;
 	char *newadd = (char *) 0;
 	EIF_OBJECT new_hector;
@@ -682,7 +639,7 @@ rt_public char *irt_nmake(EIF_CONTEXT long int objectCount)
 	if (objectCount == 0)
 		eif_panic("no object to retrieve");*/
 #endif
-	excatch(MTC (char *) exenv);	/* Record pseudo execution vector */
+	excatch((char *) exenv);	/* Record pseudo execution vector */
 	if (setjmp(exenv)) {
 		RTXSC;					/* Restore stack contexts */
 		rt_clean();				/* Clean data structure */
@@ -782,14 +739,14 @@ rt_public char *irt_nmake(EIF_CONTEXT long int objectCount)
 				spec_size = EIF_Size((uint16)(dgen & SK_DTYPE)) + OVERHEAD;
 			}
 			ridr_norm_int (&count);
-			nb_char = CHRPAD(count * spec_size ) + LNGPAD_2;
+			nb_byte = CHRPAD(count * spec_size ) + LNGPAD_2;
 			ridr_norm_int (&elm_size);
 
 #if DEBUG & 1
 		printf (" %x", count);
 		printf (" %x", elm_size);
 #endif
-			newadd = spmalloc(nb_char);
+			newadd = spmalloc(nb_byte);
 			{
 				long * o_ref;
 
@@ -801,62 +758,38 @@ rt_public char *irt_nmake(EIF_CONTEXT long int objectCount)
 			HEADER(newadd)->ov_flags |= crflags & (EO_REF|EO_COMP|EO_TYPE);
 		} else {
 			/* Normal object */
-			nb_char = EIF_Size((uint16)(dtypes[flags & EO_TYPE]));
+			nb_byte = EIF_Size((uint16)(dtypes[flags & EO_TYPE]));
 			newadd = emalloc(crflags & EO_TYPE); 
 		}
 		
-		/* Creation of the Eiffel object */	
-		if (newadd == (char *) 0)
+			/* Creation of the Eiffel object */	
+		if (newadd == (EIF_REFERENCE) 0)
 			xraise(EN_MEM);
 
-		/* Stop in the garbage collector because we have know an unstable
-		 * object. */
+			/* Stop in the garbage collector because we have know an unstable
+			 * object. */
 		g_data.status |= GC_STOP;
 
-		/* Record the new object in hector table */
+			/* Record the new object in hector table */
 		new_hector = hrecord(newadd);
 		nb_recorded++;
 
-		/* Update unsolved references on `newadd' */
+			/* Update unsolved references on `newadd' */
 		rt_update1 (oldadd, new_hector);
 
-		/* Read the object's body */
+			/* Read the object's body */
 		object_read (newadd, newadd);
 
-		/* Update fileds: the garbage collector should not be called
-		 * during `rt_update2' because the object is in a very unstable
-		 * state.
-		 */
+			/* Update fileds: the garbage collector should not be called
+			 * during `rt_update2' because the object is in a very unstable
+			 * state.
+			 */
 		rt_update2(oldadd, newadd, newadd);
 
-		/* Restore garbage collector status */
+			/* Restore garbage collector status */
 		g_data.status = g_status;
 	}
 	expop(&eif_stack);
-#if DEBUG & 1
-		/* Consistency check: no more unsolved references and
-		 * `objectCount' solved references. */
-/*
-	{
-		long nb_retrieved = 0L;
-		struct rt_struct *rt_info = (struct rt_struct *) rt_table->h_values;
-		int32 count = rt_table->h_size;
-
-		for (; count > 0; count--, rt_info++) {
-			if (
-					rt_info->rt_status == UNSOLVED &&
-					rt_info->rt_list != (struct rt_cell *) 0) {
-				eif_panic("retrieve incomplete");
-			}
-			if (rt_info->rt_status == SOLVED)
-				nb_retrieved++;
-		}
-		if (nb_retrieved != saved_objectCount)
-			eif_panic("retrieve failure");
-		if (saved_objectCount != nomark(newadd))
-			eif_panic("retrieve inconsistecy");
-	} */
-#endif
 	return newadd;
 
 	EIF_END_GET_CONTEXT
@@ -924,7 +857,7 @@ rt_private void rt_clean(void)
 	EIF_END_GET_CONTEXT
 }
 
-rt_private void rt_update1 (register char *old, register EIF_OBJECT new)
+rt_private void rt_update1 (register EIF_REFERENCE old, register EIF_OBJECT new)
 {
 	/* `new' is hector pointer to a retrieved object. We have to solve
 	 * possible references with it, before putting it in the hash table.
@@ -935,7 +868,7 @@ rt_private void rt_update1 (register char *old, register EIF_OBJECT new)
 	long offset;
 	struct rt_struct *rt_info, *rt_solved;
 	struct rt_cell *rt_unsolved, *next;
-	char *client, *supplier;
+	EIF_REFERENCE  client, supplier;
 	
 
 	rt_info = (struct rt_struct *) ht_first(rt_table, key);
@@ -966,14 +899,11 @@ rt_private void rt_update1 (register char *old, register EIF_OBJECT new)
 		client = eif_access(rt_solved->rt_obj);
 		supplier = eif_access(new);
 
-		*(char **)(client + offset) = supplier;	/* Attachment */
+		*(EIF_REFERENCE *)(client + offset) = supplier;	/* Attachment */
 #ifdef EIF_REM_SET_OPTIMIZATION
-		if (((HEADER(client))->ov_flags & (EO_SPEC | EO_REF)) == (EO_SPEC | EO_REF))
-		{
+		if (((HEADER(client))->ov_flags & (EO_SPEC | EO_REF)) == (EO_SPEC | EO_REF)) {
 			RTAS_OPT (supplier, offset >> EIF_REFERENCE_BITS, client);	
-		}
-		else	
-		{
+		} else	{
 			RTAS(supplier, client);					/* Age check */
 		}
 	
@@ -990,7 +920,7 @@ rt_private void rt_update1 (register char *old, register EIF_OBJECT new)
 	rt_info->rt_obj = new;
 }
 
-rt_private void rt_update2(char *old, char *new, char *parent)
+rt_private void rt_update2(EIF_REFERENCE old, EIF_REFERENCE new, EIF_REFERENCE parent)
 {
 	/* Reference field updating: record new unsolved references.
 	 * The third argument is needed because of expanded objects:
@@ -998,9 +928,8 @@ rt_private void rt_update2(char *old, char *new, char *parent)
 
 	long nb_references;
 	uint32 flags, fflags;
-	char *reference;
+	EIF_REFERENCE reference, addr;
 	union overhead *zone = HEADER(new);
-	char* addr;
 	long size;				/* New object size */
 	/* struct rt_struct *rt_info;*/ /* %%ss unused */
 
@@ -1011,22 +940,22 @@ rt_private void rt_update2(char *old, char *new, char *parent)
 	flags = Mapped_flags(fflags);
 
 	if (flags & EO_SPEC) {				/* Special object */
-		char *o_ref;
-		long count, elem_size, old_elem_size;
+		EIF_REFERENCE o_ref;
+		EIF_INTEGER count, elem_size, old_elem_size;
 
 		if (!(flags & EO_REF))			/* Special without references */
 			return;
 
 		size = zone->ov_size & B_SIZE;	
-		o_ref = (char *) (new + size - LNGPAD_2);
-		count = *(long *) o_ref; 		
+		o_ref = (EIF_REFERENCE) (new + size - LNGPAD_2);
+		count = *(EIF_INTEGER *) o_ref; 		
 		if (!(flags & EO_COMP)) {		/* Special of references */
 			nb_references = count;
 			goto update;
 		} else {						/* Special of expanded objects */
-			char *old_addr;
+			EIF_REFERENCE  old_addr;
 
-			elem_size = *(long *) (o_ref + sizeof(long));
+			elem_size = *(EIF_INTEGER *) (o_ref + sizeof(EIF_INTEGER));
 			if (rt_kind != INDEPENDENT_STORE) {
 				old_overhead = OVERHEAD;
 				old_elem_size = elem_size;
@@ -1121,7 +1050,7 @@ update:
 				new_cell->next = old_cell;
 				rt_info->rt_list = new_cell;
 				rt_info->rt_status = UNSOLVED;
-				*(char **) addr = (char *) 0; 
+				*(EIF_REFERENCE *) addr = (char *) 0; 
 						/* Set to zero the unsolved reference
 						 * in order to put the object in a
 						 * stable state. */
@@ -1129,7 +1058,6 @@ update:
 		}
 	}
 }
-
 
 rt_private char *next_item (char *ptr)
 {
@@ -1145,7 +1073,7 @@ rt_private char *next_item (char *ptr)
 	return (ptr);
 }
 
-rt_private void read_header(EIF_CONTEXT char rt_type)
+rt_private void read_header(char rt_type)
 {
 	/* Read header and make the dynamic type correspondance table */
 	EIF_GET_CONTEXT
@@ -1160,7 +1088,7 @@ rt_private void read_header(EIF_CONTEXT char rt_type)
 
 	errno = 0;
 
-	excatch(MTC (char *) exenv);	/* Record pseudo execution vector */
+	excatch((char *) exenv);	/* Record pseudo execution vector */
 	if (setjmp(exenv)) {
 		RTXSC;					/* Restore stack contexts */
 		rt_clean();				/* Clean data structure */
@@ -1298,7 +1226,7 @@ rt_private void iread_header(EIF_CONTEXT_NOARG)
 
 	errno = 0;
 
-	excatch(MTC (char *) exenv);	/* Record pseudo execution vector */
+	excatch((char *) exenv);	/* Record pseudo execution vector */
 	if (setjmp(exenv)) {
 		RTXSC;					/* Restore stack contexts */
 		rt_clean();				/* Clean data structure */
@@ -1536,7 +1464,7 @@ rt_private int direct_read (register char *object, int size)
 	EIF_END_GET_CONTEXT
 }
 
-rt_private int buffer_read (register char *object, int size)
+rt_private int buffer_read (register char *ptr, int size)
 {
 	register int i;
  
@@ -1551,48 +1479,15 @@ rt_private int buffer_read (register char *object, int size)
 			if (current_position >= end_of_buffer)
 				if ((retrieve_read_func() == 0) && size != i + 1)
 					eraise("incomplete file" , EN_RETR);
-			*(object++) = *(general_buffer + current_position++);
+			*(ptr++) = *(general_buffer + current_position++);
 		}
 	} else {
 
 		for (i = 0; i < size ; i++) {
-			*(object++) = *(general_buffer + current_position++);
+			*(ptr++) = *(general_buffer + current_position++);
 		}
 	}
 	return (i);
-}
-
-rt_private int new_buffer_read (register char *object, int size)
-{
-	register int read;
-
-	if (current_position + size > end_of_buffer) {
-		read = end_of_buffer - current_position;
-		if (read) {
-			memcpy (object, general_buffer + current_position, read);
-				/* This line is useless since current_position is set to `0'
-				 * after retrieve_read_func */
-			/* current_position += read; */
-			object += read;
-		}
-		if ((retrieve_read_func() == 0) && size != read + 1)
-			eraise("incomplete file" , EN_RETR);
-
-		if (size - read > end_of_buffer) {
-			memcpy (object, general_buffer, end_of_buffer);
-			read += end_of_buffer;
-			current_position = end_of_buffer;
-			return read + buffer_read (object + end_of_buffer, size - read);
-		} else {
-			current_position = size - read;
-			memcpy (object, general_buffer, current_position);
-			return size;
-		}
-	} else {
-		memcpy (object, general_buffer + current_position, size);
-		current_position += size;
-		return size;
-	}
 }
 
 rt_public int retrieve_read (void)
@@ -1709,7 +1604,7 @@ rt_private void gen_object_read (char *object, char *parent)
 							struct bit *bptr = (struct bit *)(object + attrib_offset);
 
 							HEADER(bptr)->ov_flags = egc_bit_dtype;
-							buffer_read((char *) (&old_flags), sizeof(uint32));
+							buffer_read((char *)&old_flags, sizeof(uint32));
 							rt_read_cid ((uint32 *) 0, &hflags, old_flags);
 							HEADER(bptr)->ov_flags = hflags & (EO_COMP | EO_REF);
 
@@ -1724,7 +1619,7 @@ rt_private void gen_object_read (char *object, char *parent)
 					long size_count;
 
 					buffer_read(object + attrib_offset, sizeof(EIF_REFERENCE));
-					buffer_read((char *) (&old_flags), sizeof(uint32));
+					buffer_read((char *) &old_flags, sizeof(uint32));
 					rt_read_cid ((uint32 *) 0, &hflags, old_flags);
 					/* FIXME size_count = get_expanded_pos (o_type, attrib_order[--num_attrib]);*/
 					size_count = get_expanded_pos (o_type, --num_attrib);
@@ -1745,7 +1640,7 @@ rt_private void gen_object_read (char *object, char *parent)
 		} 
 	} else {
 		if (flags & EO_SPEC) {		/* Special object */
-			long count, elem_size;
+			EIF_INTEGER count, elem_size;
 			char *ref, *o_ptr;
 			char *vis_name;
 			uint32 dgen;
@@ -1778,23 +1673,23 @@ rt_private void gen_object_read (char *object, char *parent)
 			if (!(flags & EO_REF)) {			/* Special of simple types */
 				switch (dgen & SK_HEAD) {
 					case SK_INT:
-						buffer_read((char *)object, count*sizeof(EIF_INTEGER));
+						buffer_read(object, count*sizeof(EIF_INTEGER));
 						break;
 					case SK_BOOL:
 					case SK_CHAR:
 						buffer_read(object, count*sizeof(EIF_CHARACTER));
 						break;
 					case SK_FLOAT:
-						buffer_read((char *)object, count*sizeof(EIF_REAL));
+						buffer_read(object, count*sizeof(EIF_REAL));
 						break;
 					case SK_DOUBLE:
-						buffer_read((char *)object, count*sizeof(EIF_DOUBLE));
+						buffer_read(object, count*sizeof(EIF_DOUBLE));
 						break;
 					case SK_EXP: {
 						uint32 old_flags, hflags;
 
-						elem_size = *(long *) (o_ptr + sizeof(long));
-						buffer_read((char *) (&old_flags), sizeof(uint32));
+						elem_size = *(EIF_INTEGER *) (o_ptr + sizeof(EIF_INTEGER));
+						buffer_read((char *) &old_flags, sizeof(uint32));
 						rt_read_cid ((uint32 *) 0, &hflags, old_flags);
 						for (ref = object + OVERHEAD; count > 0;
 							count --, ref += elem_size) {
@@ -1808,8 +1703,8 @@ rt_private void gen_object_read (char *object, char *parent)
 					case SK_BIT: {
 						/* uint32 l;*/ /* %%ss removed */
 
-						elem_size = *(long *) (o_ptr + sizeof(long));
-						buffer_read((char *)object, count*elem_size); /* %%ss cast was struct bit* */
+						elem_size = *(EIF_INTEGER *) (o_ptr + sizeof(EIF_INTEGER));
+						buffer_read(object, count*elem_size); /* %%ss cast was struct bit* */
 						}
 						break;
 					case SK_POINTER:
@@ -1825,9 +1720,9 @@ rt_private void gen_object_read (char *object, char *parent)
 				} else {						/* Special of composites */
 					uint32  old_flags, hflags;
 
-					buffer_read((char *) (&old_flags), sizeof(uint32));
+					buffer_read((char *) &old_flags, sizeof(uint32));
 					rt_read_cid ((uint32 *) 0, &hflags, old_flags);
-					elem_size = *(long *) (o_ptr + sizeof(long));
+					elem_size = *(EIF_INTEGER *) (o_ptr + sizeof(EIF_INTEGER));
 					for (ref = object + OVERHEAD; count > 0;
 							count --, ref += elem_size) {
 						HEADER(ref)->ov_flags = (hflags & (EO_REF|EO_COMP|EO_TYPE));
@@ -1956,7 +1851,7 @@ rt_private void object_read (char *object, char *parent)
 		} 
 	} else {
 		if (flags & EO_SPEC) {		/* Special object */
-			long count, elem_size;
+			EIF_INTEGER count, elem_size;
 			char *ref, *o_ptr;
 			char *vis_name;
 			uint32 dgen;
@@ -2039,7 +1934,7 @@ rt_private void object_read (char *object, char *parent)
 					case SK_EXP: {
 						uint32  old_flags, hflags;
 
-						elem_size = *(long *) (o_ptr + sizeof(long));
+						elem_size = *(EIF_INTEGER *) (o_ptr + sizeof(EIF_INTEGER));
 						ridr_norm_int (&old_flags);
 						rt_id_read_cid ((uint32 *) 0, &hflags, old_flags);
 						for (ref = object + OVERHEAD; count > 0;
@@ -2060,7 +1955,7 @@ rt_private void object_read (char *object, char *parent)
 #if DEBUG & 1
 						uint32 l; /* %%ss read but never initialized */
 #endif
-						elem_size = *(long *) (o_ptr + sizeof(long));
+						elem_size = *(EIF_INTEGER *) (o_ptr + sizeof(EIF_INTEGER));
 						ridr_multi_bit ((struct bit *)object, count, elem_size);
 #if DEBUG & 1
 						printf (" %x", l);
@@ -2113,7 +2008,7 @@ rt_private void object_read (char *object, char *parent)
 #if DEBUG & 1
 					printf (" %x", old_flags);
 #endif
-					elem_size = *(long *) (o_ptr + sizeof(long));
+					elem_size = *(EIF_INTEGER *) (o_ptr + sizeof(EIF_INTEGER));
 					for (ref = object + OVERHEAD; count > 0;
 							count --, ref += elem_size) {
 						HEADER(ref)->ov_flags = (hflags & (EO_REF|EO_COMP|EO_TYPE));
@@ -2210,7 +2105,6 @@ rt_private int stream_read(char *pointer, int size)
 }
 
 rt_private void rt_read_cid (uint32 *crflags, uint32 *nflags, uint32 oflags)
-
 {
 	int16 count, dftype;
 
@@ -2245,7 +2139,6 @@ rt_private void rt_read_cid (uint32 *crflags, uint32 *nflags, uint32 oflags)
 }
 
 rt_private void rt_id_read_cid (uint32 *crflags, uint32 *nflags, uint32 oflags)
-
 {
 	uint32 count, val;
 	int16 dftype, *ip;

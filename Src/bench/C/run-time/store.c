@@ -895,6 +895,7 @@ rt_private void object_write(char *object)
 rt_private void make_header(EIF_CONTEXT_NOARG)
 {
 	/* Generate header for stored hiearchy retrivable by other systems. */
+	EIF_GET_CONTEXT
 	int i;
 	char *vis_name;			/* Visible name of a class */
 	struct gt_info *info;
@@ -1064,6 +1065,7 @@ printf ("Freeing s_attr %lx\n", s_attr);
 rt_private void imake_header(EIF_CONTEXT_NOARG)
 {
 	/* Generate header for stored hiearchy retrivable by other systems. */
+	EIF_GET_CONTEXT
 	int i;
 	char *vis_name;			/* Visible name of a class */
 	struct gt_info *info;

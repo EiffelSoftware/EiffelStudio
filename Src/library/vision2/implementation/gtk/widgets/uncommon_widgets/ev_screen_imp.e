@@ -303,6 +303,9 @@ feature {NONE} -- Implementation
 			Result := feature {EV_GTK_EXTERNALS}.gdk_root_parent
 		end
 
+	mask: POINTER
+			-- Mask of `Current', which is always NULL
+
 	interface: EV_SCREEN
 
 end -- class EV_SCREEN_IMP

@@ -33,9 +33,7 @@ feature {NONE} -- Initialization
 			--| widgets that inherit twice from EV_WIDGET_IMP,
 			--| so initialize does not have to be called again.
 		do
-			real_signal_connect (adjustment, "changed",
-				(interface.change_actions)~call)
-			real_signal_connect (adjustment, "value_changed",
+			real_signal_connect (adjustment, "value-changed",
 				(interface.change_actions)~call)
 		end
 
@@ -196,6 +194,9 @@ end -- class EV_GAUGE_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/02/15 00:43:40  brendel
+--| Removed connection to "changed" signal, since we only want the "value-changed".
+--|
 --| Revision 1.7  2000/02/14 22:19:51  brendel
 --| Changed range instead of taking two integers to take an INTEGER_INTERVAL.
 --| This is to take advantage of the newly introduced operator |..|.

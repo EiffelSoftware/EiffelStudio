@@ -25,7 +25,8 @@ inherit
 	SYSTEM_CONSTANTS
 		rename
 			Descriptor_suffix as Static_suffix
-		end
+		end;
+	SHARED_EIFFEL_PROJECT
 
 creation
 
@@ -43,6 +44,23 @@ feature
 	type: CL_TYPE_I;
 			-- Type of the class: it includes meta-instantiation of
 			-- possible generic parameters
+
+	dynamic_type_id: INTEGER is
+			-- Identification of the class type at run-time
+			-- (Useful when debugging)
+		do
+			Result := type_id
+		end;
+
+	associated_eclass: E_CLASS is
+			-- Associated class
+		require
+			type_exists: type /= Void;
+		do
+			Result := Eiffel_system.class_of_id (type.base_id);
+		end;
+
+feature 
 
 	type_id: INTEGER;
 			-- Identification of the class type

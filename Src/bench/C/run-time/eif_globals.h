@@ -252,11 +252,16 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 	/* cecil.c */
 #define eif_ignore_invisible (eif_globals->ign_invisible_cx)
 
+#ifdef WORKBENCH
+
 	/* debug.c */
 #define db_stack		(eif_globals->db_stack_cx)		/* rt_shared */
 #define once_list		(eif_globals->once_list_cx)		/* rt_shared */
 #define d_data			(eif_globals->d_data_cx)		/* rt_shared */
 #define d_cxt			(eif_globals->d_cxt_cx)		/* rt_shared */
+
+#endif	/* WORKBENCH */
+
 
 	/* eif_threads.c */
 #define eif_thr_context	(eif_globals->eif_thr_context_cx)	/* rt_public */

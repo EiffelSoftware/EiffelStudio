@@ -24,9 +24,6 @@ feature {NONE} -- Implementation
 			-- Set up the blank ace builder to work with a system named
 			-- `a_system_name' and a project located in `a_project_directory'.
 			-- `a_root_class_name', `a_root_cluster_name' and `a_root_feature_name' are the root attribute names.
-		local
-			system_name_lower: STRING
-			cl: STRING
 		do
 			system_name := a_system_name
 			root_class_name := a_root_class_name
@@ -36,16 +33,12 @@ feature {NONE} -- Implementation
 
 				-- Create the pathname of the ace file
 			create ace_filename.make_from_string (project_directory)
-			system_name_lower := clone(system_name)
-			system_name_lower.to_lower
-			ace_filename.set_file_name (system_name_lower)
+			ace_filename.set_file_name (system_name.as_lower)
 			ace_filename.add_extension ("ace")
 
 				-- Create the pathname of the root class.
 			create root_class_filename.make_from_string (project_directory)
-			cl := clone (a_root_class_name)
-			cl.to_lower
-			root_class_filename.set_file_name (cl)
+			root_class_filename.set_file_name (a_root_class_name.as_lower)
 			root_class_filename.add_extension ("e")
 		end
 

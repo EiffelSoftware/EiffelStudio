@@ -22,7 +22,7 @@
 typedef struct {
 	int op_type;
 	int op_cmd;
-	long op_size;
+	rt_uint_ptr op_size;
 } Opaque;
 
 #define op_first	op_type
@@ -37,7 +37,7 @@ typedef struct {			/* Acknowledgment */
 
 typedef struct {			/* Position in program execution flow */
 	char *wh_name;			/* Feature name */
-	long wh_obj;			/* Object address (can't use (char *) with XDR) */
+	rt_int_ptr wh_obj;		/* Object address (can't use (char *) with XDR) */
 	int wh_origin;			/* Where feature comes from */
 	int wh_type;			/* Dynamic type of Current */
 	long wh_offset;			/* Offset within byte code (-1 if none) */

@@ -31,7 +31,7 @@ extern int recv_packet(int s, Request *rqst);	/* Receive data from client */
 #endif
 
 extern int send_str(STREAM *sp, char *buffer);				/* Send string to the remote process */
-extern char *recv_str(STREAM *sp, int *sizeptr);			/* Receive string from the remote process */
+extern char *recv_str(STREAM *sp, size_t *sizeptr);			/* Receive string from the remote process */
 extern void trace_request(char *status, Request *rqst);		/* Trace received request */
 
 #endif

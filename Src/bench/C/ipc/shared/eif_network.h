@@ -25,11 +25,11 @@ extern "C" {
 #endif
 
 #ifdef EIF_WIN32
-extern int net_send(STREAM *cs, char *buffer, int size);
-extern int net_recv(STREAM *cs, char *buf, int size, BOOL reset);
+extern int net_send(STREAM *cs, char *buffer, size_t size);
+extern int net_recv(STREAM *cs, char *buf, size_t size, BOOL reset);
 #else
-extern int net_send(int cs, char *buffer, int size);
-extern int net_recv(int cs, char *buf, int size);
+extern int net_send(int cs, char *buffer, size_t size);
+extern int net_recv(int cs, char *buf, size_t size);
 #endif
 
 #ifdef __cplusplus

@@ -21,6 +21,7 @@
 #include "stream.h"
 #include <stdio.h>				/* To get BUFSIZ */
 #include <string.h>
+#include "rt_assert.h"
 
 #ifdef EIF_WIN32
 rt_shared STREAM *sp;				/* Stream used for communications */
@@ -28,7 +29,7 @@ rt_shared STREAM *sp;				/* Stream used for communications */
 rt_private STREAM *sp;				/* Stream used for communications */
 #endif
 rt_private char* reading_buffer;		/* Buffer used for communication, grows as needed */
-rt_private int allocated_buffer_size; 	/* Currently allocated size for buffer */
+rt_private size_t allocated_buffer_size; 	/* Currently allocated size for buffer */
 
 rt_public void tpipe(STREAM *stream)
 {
@@ -88,7 +89,7 @@ rt_public char *tread(int *size)
 #endif
 	
 		/* + 1 to prevent errors if we need a 0-sized buffer and no buffer has been allocated yet */
-	if (allocated_buffer_size < rqst.rq_ack.ak_type + 1) {
+	if (allocated_buffer_size < (size_t) rqst.rq_ack.ak_type + 1) {
 			/* We need to allocate a bigger buffer */
 		if (reading_buffer != NULL) free (reading_buffer);
 		reading_buffer = (char *) malloc(rqst.rq_ack.ak_type + 1);
@@ -132,18 +133,21 @@ rt_public char *tread(int *size)
 	return reading_buffer;
 }
 
-rt_public int twrite(void *buffer, int size)
+rt_public int twrite(void *buffer, size_t size)
 {
 	/* Write 'size' bytes held in 'buffer' into the "pipe". Return the number
 	 * of bytes effectively written or -1 if an error occurred.
 	 */
 
 	Request rqst;		/* Leading request */
-	int t;
+	size_t t;
+
+	REQUIRE("Valid size", size <= INT32_MAX);
 
 	Request_Clean (rqst);
 	rqst.rq_type = TRANSFER;
-	rqst.rq_ack.ak_type = size;
+		/* Safe cast since `size' is less than INT32_MAX. */
+	rqst.rq_ack.ak_type = (int) size;
 
 #ifdef DEBUG
 #ifdef USE_ADD_LOG
@@ -172,19 +176,22 @@ rt_public int twrite(void *buffer, int size)
 	t = net_send(writefd(sp), buffer, size);
 #endif
 
-	return t;
+		/* Cast safe since size is less than INT32_MAX. */
+	return (int) t;
 }
 
 #ifdef EIF_WIN32
-rt_public void swallow(STREAM *fd, int size)
+rt_public void swallow(STREAM *fd, size_t size)
 #else
-rt_public void swallow(int fd, int size)
+rt_public void swallow(int fd, size_t size)
 #endif
 {
 	/* Swallow 'size' bytes from 'fd' and discard them */
 
 	char buf[BUFSIZ];
-	int amount;
+	size_t amount;
+
+	REQUIRE("Valid size", size <= INT32_MAX);
 
 	while (size > 0) {
 		amount = size;

@@ -27,6 +27,7 @@
 #include <setjmp.h>
 #include <sys/types.h>
 #include "eif_globals.h"
+#include "rt_assert.h"
 
 #ifdef EIF_WIN32
 #include <windows.h>
@@ -57,10 +58,6 @@ extern unsigned TIMEOUT;		/* Time out on reads */
 
 #endif
 
-#ifndef lint
-rt_private char *rcsid = "$Id$";
-#endif
-
 rt_private jmp_buf env;		/* Environment saving for longjmp() */
 
 #ifdef EIF_WIN32
@@ -74,13 +71,13 @@ extern int errno;	/* shouldn't this be #include <errno.h> for all platforms??? *
 #endif
 
 #ifdef EIF_WIN32
-rt_public int net_recv(STREAM *cs, char *buf, int size, BOOL reset)
+rt_public int net_recv(STREAM *cs, char *buf, size_t size, BOOL reset)
 			/* The connected socket descriptor */
 			/* Where data are to be stored */
 			/* Amount of data to be read */
 			/* Reset event associated with cs reader? */
 #else
-rt_public int net_recv(int cs, char *buf, int size)
+rt_public int net_recv(int cs, char *buf, size_t size)
        				/* The connected socket descriptor */
           			/* Where data are to be stored */
          			/* Amount of data to be read */
@@ -88,15 +85,23 @@ rt_public int net_recv(int cs, char *buf, int size)
 {
 	/* Read from network */
 
-	volatile int len = 0;		/* Total amount of bytes read */
+	volatile size_t len = 0;		/* Total amount of bytes read */
 
 #ifdef EIF_WIN32
 	DWORD length;			/* Amount read by last system call */
-	DWORD timer = 0;
+	UINT_PTR timer = 0;
 	BOOL fSuccess;
 #ifdef USE_ADD_LOG
 		add_log(2, "in net_recv");
 #endif
+#else
+	Signal_t (*oldalrm)();
+	int length;
+#endif
+
+	REQUIRE("Valid size", size <= INT32_MAX);
+
+#ifdef EIF_WIN32
 	if (0 != setjmp(env)) {
 		KillTimer (NULL, timer);        /* Stop alarm clock */
 		errno = EPIPE;                          /* Signal timeout on read */
@@ -105,7 +110,7 @@ rt_public int net_recv(int cs, char *buf, int size)
 
 	while (len < size) {
 		timer = SetTimer(NULL, timer, TIMEOUT*1000, (TIMERPROC) timeout);   /* Give read only TIMEOUT seconds to succeed */
-		fSuccess = ReadFile(readfd(cs), buf + len, size - len, &length, NULL);
+		fSuccess = ReadFile(readfd(cs), buf + len, (DWORD) (size - len), &length, NULL);
 		KillTimer (NULL, timer);
 
 		if (fSuccess)
@@ -156,9 +161,6 @@ closed:
   	return -1;
 
 #else
-	int length;
-
-	Signal_t (*oldalrm)();
 	oldalrm = signal(SIGALRM, (void (*)(int)) timeout);	/* Trap SIGALRM within this function */
 
 	if (0 != setjmp(env)) {
@@ -178,11 +180,13 @@ closed:
 		if (length == 0)	/* connection closed */
 			goto closed;
 
-		if (length == -1)
-			if (errno != EINTR)
+		if (length == -1) {
+			if (errno != EINTR) {
 				return -1;		/* failed */
-			else
+			} else {
 				length = 0;
+			}
+		}
 
 		len += length;
 	}
@@ -208,9 +212,9 @@ closed:
 }
 
 #ifdef EIF_WIN32
-rt_public int net_send(STREAM *cs, char *buffer, int size)
+rt_public int net_send(STREAM *cs, char *buffer, size_t size)
 #else
-rt_public int net_send(int cs, char *buffer, int size)
+rt_public int net_send(int cs, char *buffer, size_t size)
 #endif
        				/* The connected socket descriptor */
           			/* Where data are stored */
@@ -218,18 +222,26 @@ rt_public int net_send(int cs, char *buffer, int size)
 {
 	/* Write to network */
 
-	int amount;
+	size_t amount;
 	char * volatile buf = buffer;
 
 #ifdef EIF_WIN32
 	DWORD error;
-	DWORD length;
+	size_t length;
 	BOOL fSuccess;
+#else
+	size_t length;
+	int error;
+	Signal_t (*oldpipe)();
+#endif
 
 #ifdef USE_ADD_LOG
 		add_log(2, "in net_send %d bytes on fd %d", size, writefd(cs));
 #endif
 
+	REQUIRE("Valid size", size <= INT32_MAX);
+
+#ifdef EIF_WIN32
 	if (0 != setjmp(env)) {
 		errno = EPIPE;
 		fprintf (stderr, "net_send: setjmp /= 0\n");
@@ -237,22 +249,18 @@ rt_public int net_send(int cs, char *buffer, int size)
 	}
 
 	ReleaseSemaphore (writeev(cs),1,NULL);
-	for (length = 0; length < (DWORD) size; buf += error, length += error) {
+	for (length = 0; length < size; buf += error, length += error) {
 		amount = size - length;
 		if (amount > BUFSIZ)    /* do not write more than BUFSIZ */
 			amount = BUFSIZ;
-		fSuccess = WriteFile(writefd(cs), buf, amount, &error, NULL);
+		fSuccess = WriteFile(writefd(cs), buf, (DWORD) amount, &error, NULL);
 		if (!fSuccess){
-			fprintf (stderr, "net_send: write failed. fdesc = %i, errno = %i\n", writefd(cs),  GetLastError());
+			fprintf (stderr, "net_send: write failed. fdesc = %p, errno = %i\n", writefd(cs),  GetLastError());
 			return -1;
 		}
 	}
 
 #else  /* (not) EIF_WIN32 */
-	int length;
-	int error;
-
-	Signal_t (*oldpipe)();
 
 	oldpipe = signal(SIGPIPE, (void (*)(int)) broken);	/* Trap SIGPIPE within this function */
 	if (0 != setjmp(env)) {

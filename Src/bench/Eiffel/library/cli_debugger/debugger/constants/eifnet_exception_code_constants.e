@@ -5,7 +5,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	EIFNET_EXCEPTION_CODE
+	EIFNET_EXCEPTION_CODE_CONSTANTS
 
 feature {NONE} -- Exception code
 
@@ -264,4 +264,4 @@ feature
 			end
 		end
 
-end -- class EIFNET_EXCEPTION_CODE
+end

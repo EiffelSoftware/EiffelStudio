@@ -5,7 +5,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	EIFNET_ICOR_ELEMENT_TYPES
+	EIFNET_ICOR_ELEMENT_TYPES_CONSTANTS
 
 inherit
 	MD_SIGNATURE_CONSTANTS
@@ -126,6 +126,4 @@ feature
 			end
 		end		
 
-
-
-end -- class EIFNET_ICOR_ELEMENT_TYPES
+end

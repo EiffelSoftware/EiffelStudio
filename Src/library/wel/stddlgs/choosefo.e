@@ -93,7 +93,7 @@ feature -- Access
 	flags: INTEGER is
 			-- Dialog box creation flags.
 			-- Can be a combination of the values defined in 
-			-- class WEL_CHOOSE_COLOR_CONSTANTS.
+			-- class WEL_CF_CONSTANTS.
 		require
 			exists: exists
 		do
@@ -172,8 +172,7 @@ feature -- Element change
 
 	set_flags (a_flags: INTEGER) is
 			-- Set `flags' with `a_flags'.
-			-- See class WEL_CHOOSE_COLOR_CONSTANTS for `a_flags'
-			-- values.
+			-- See class WEL_CF_CONSTANTS for `a_flags' values.
 		require
 			exists: exists
 		do
@@ -184,8 +183,7 @@ feature -- Element change
 
 	add_flag (a_flags: INTEGER) is
 			-- Add `a_flags' to `flags'.
-			-- See class WEL_CHOOSE_COLOR_CONSTANTS for `a_flags'
-			-- values.
+			-- See class WEL_CF_CONSTANTS for `a_flags' values.
 		require
 			exists: exists
 		do
@@ -196,8 +194,7 @@ feature -- Element change
 
 	remove_flag (a_flags: INTEGER) is
 			-- Remove `a_flags' from `flags'.
-			-- See class WEL_CHOOSE_COLOR_CONSTANTS for `a_flags'
-			-- values.
+			-- See class WEL_CF_CONSTANTS for `a_flags' values.
 		require
 			exists: exists
 		do
@@ -210,8 +207,7 @@ feature -- Status report
 
 	has_flag (a_flags: INTEGER): BOOLEAN is
 			-- Is `a_flags' set in `flags'?
-			-- See class WEL_CHOOSE_COLOR_CONSTANTS for `a_flags'
-			-- values.
+			-- See class WEL_CF_CONSTANTS for `a_flags' values.
 		require
 			exists: exists
 		do

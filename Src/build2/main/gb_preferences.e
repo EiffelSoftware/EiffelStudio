@@ -9,10 +9,16 @@ class
 	
 inherit
 	RESOURCES_STRING_CONSTANTS
+		export
+			{NONE} all
+		end
 	
 	SHARED_RESOURCES
 	
 	EIFFEL_ENV
+		export
+			{NONE} all
+		end
 
 feature -- Access
 
@@ -33,6 +39,10 @@ feature -- Access
 	external_tool_order: STRING is "external_tool_order"
 	
 	show_tip_of_the_day: STRING is "show_tip_of_the_day"
+	
+	recent_projects_string: STRING is "recent_projects"
+	
+	number_of_recent_projects: STRING is "number_of_recent_projects"
 			
 feature -- Basic operations
 
@@ -59,25 +69,45 @@ feature -- Basic operations
 				Pixmaps_path_cell.put (directory)
 				Pixmaps_extension_cell.put ("png")
 			end
+			create referenced_close_agents.make (1)
 		end
 
 	show_preference_window is
 			-- Ensure that `preference_window' is displayed.
 		do
 			create preference_window.make
+			from
+				referenced_close_agents.start
+			until
+				referenced_close_agents.off
+			loop
+				preference_window.post_close_actions.extend (referenced_close_agents.item)
+				referenced_close_agents.forth
+			end
 			preference_window.show
 		end
 		
-feature -- Obsolete
-
-feature -- Inapplicable
+	register_preference_window_post_display_event (an_agent: PROCEDURE [ANY, TUPLE[]]) is
+			-- Add `an_agent' to `referenced_close_agents' which will be exeucted
+			-- when `preference_window' is closed.
+		require
+			an_agent_not_void: an_agent /= Void
+		do
+			referenced_close_agents.extend (an_agent)
+		ensure
+			count_increased: referenced_close_agents.count = old referenced_close_agents.count + 1
+		end
 
 feature {NONE} -- Implementation
 
+	referenced_close_agents: ARRAYED_LIST [PROCEDURE [ANY, TUPLE[]]]
+		-- A list of agents executed post close of `preference_window'. Used
+		-- to perform immediate updating of preference settings.
+
 	preference_window: PREFERENCE_WINDOW
 			-- Preference window used to allow editing of the preferences.
-
+			
 invariant
-	invariant_clause: True -- Your invariant here
+	referenced_close_agents_not_void: referenced_close_agents /= Void
 
 end -- class GB_RESOURCES

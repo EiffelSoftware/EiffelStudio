@@ -60,8 +60,6 @@ feature {NONE} -- Initialization
 			dummy := miWindow.menu_items.add_string_event_handler (("Tile &Vertical").to_cil, create {EVENT_HANDLER}.make (Current, $window_tileV_clicked))
 			miWindow.set_mdi_list (True)  -- Adds the MDI Window List to the bottom of the menu
 
---			add_document -- Add an initial doc
-
 			feature {WINFORMS_APPLICATION}.run_form (Current)
 		end
 
@@ -183,7 +181,6 @@ feature {NONE} -- Implementation
 		do
 			layout_mdi (feature {WINFORMS_MDI_LAYOUT}.tile_vertical)
 		end
-
 
 end -- Class MAIN_FORM
 

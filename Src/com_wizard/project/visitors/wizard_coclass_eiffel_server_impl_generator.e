@@ -24,22 +24,22 @@ feature -- Basic operation
 	generate (a_coclass: WIZARD_COCLASS_DESCRIPTOR) is
 			-- Generate eiffel class for coclass.
 		local
-			a_description: STRING
-			a_visible: WIZARD_WRITER_VISIBLE_CLAUSE
+			l_description: STRING
+			l_visible: WIZARD_WRITER_VISIBLE_CLAUSE
 		do
 			coclass_descriptor := a_coclass
 
-			create a_visible.make
-			a_visible.set_name (implemented_coclass_name (a_coclass.eiffel_class_name))
-			system_descriptor.add_visible_class_server (a_visible)
+			create l_visible.make
+			l_visible.set_name (implemented_coclass_name (a_coclass.eiffel_class_name))
+			system_descriptor.add_visible_class_server (l_visible)
 			create eiffel_writer.make
 
 			eiffel_writer.set_class_name (implemented_coclass_name (a_coclass.eiffel_class_name))
 
-			create a_description.make (1000)
-			a_description.append (a_coclass.eiffel_class_name)
-			a_description.append (" Implementation.")
-			eiffel_writer.set_description (a_description)
+			create l_description.make (1000)
+			l_description.append (a_coclass.eiffel_class_name)
+			l_description.append (" Implementation.")
+			eiffel_writer.set_description (l_description)
 			set_default_ancestors (eiffel_writer)
 
 			add_creation

@@ -132,6 +132,14 @@ feature -- Element change
 			attach_drawing (a_drawing)
 		end
 
+	attach_drawing_imp_with_parent (parent: EV_FIGURE; a_drawing: EV_DRAWABLE) is
+		--| FIXME IEK 14101999 Needs implementing
+		do
+			check
+				to_be_implemented: False
+			end
+		end
+
 feature -- Basic operations
 
 	draw is

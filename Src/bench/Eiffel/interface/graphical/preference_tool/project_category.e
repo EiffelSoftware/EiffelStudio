@@ -53,27 +53,6 @@ feature -- Validation
 			Result := True
 		end
 
-feature -- Access
-
-	linear_representation: LINKED_LIST [RESOURCE] is
-			-- All resources within Current
-		do
-			!! Result.make;
-			Result.extend (tool_x);
-			Result.extend (tool_y);
-			Result.extend (tool_width);
-			Result.extend (tool_height);
-			Result.extend (debugger_feature_height);
-			Result.extend (debugger_object_height);
-			Result.extend (debugger_show_all_callers);
-			Result.extend (debugger_do_flat_in_breakpoints);
-			Result.extend (bottom_offset);
-			Result.extend (command_bar);
-			Result.extend (format_bar);
-			Result.extend (raise_on_error);
-			Result.extend (graphical_output_disabled)
-		end
-
 feature -- Resources
 
 	tool_x: INTEGER_RESOURCE;

@@ -81,6 +81,9 @@ feature -- Access
 
 	Tb_hittest: INTEGER is 1093
 			-- Determines where a point lies in a toolbar control. 
+			
+	Tb_setdrawtextflags: INTEGER is 1094
+			-- Sets the text drawing flags for the toolbar.
 
 	Tb_indeterminate: INTEGER is 1029
 			-- Sets or clears the indeterminate state of the specified button 

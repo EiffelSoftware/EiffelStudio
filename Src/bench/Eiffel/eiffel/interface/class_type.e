@@ -272,23 +272,29 @@ feature -- Generation
 						-- generated
 					byte_context.set_has_cpp_externals_calls (False)
 
-	
-					if not final_mode then
+					if final_mode then
+							-- Write header
+						buffer.putstring ("/*%N * Code for class ")
+						type.dump (buffer)
+						buffer.putstring ("%N */%N%N")
+							-- Includes wanted
+						buffer.putstring ("#include %"eif_eiffel.h%"%N%N")
+					else
+							-- Write header
+						header_buffer.putstring ("/*%N * Code for class ")
+						type.dump (header_buffer)
+						header_buffer.putstring ("%N */%N%N")
+							-- Includes wanted
+						header_buffer.putstring ("#include %"eif_eiffel.h%"%N%N")
 						header_buffer := buffer
 					end
 
-						-- Write header
-					buffer.putstring ("/*%N * Code for class ")
-					type.dump (buffer)
-					buffer.putstring ("%N */%N%N")
-						-- Includes wanted
-					buffer.putstring ("#include %"eif_eiffel.h%"%N")
 					if final_mode then
-						buffer.putstring ("#include %"")
+						buffer.putstring ("%N#include %"")
 						buffer.putstring (base_file_name)
 						buffer.putstring (".h%"%N%N")
 	
-						-- Generation of extern declarations
+							-- Generation of extern declarations
 						Extern_declarations.generate_header (header_buffer)
 					elseif Compilation_modes.is_precompiling then
 						Class_counter.generate_extern_offsets (buffer)
@@ -360,9 +366,11 @@ feature -- Generation
 					buffer.close_c
 
 					file := open_generation_file (byte_context.has_cpp_externals_calls)
+					if not final_mode then
+						file.put_string (header_generation_buffer)
+					end
 					file.put_string (buffer)
 					file.close
-
 				else
 						-- The file hasn't been generated
 					System.makefile_generator.record_empty_class_type (id)

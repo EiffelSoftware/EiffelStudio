@@ -38,10 +38,7 @@ inherit
 		rename
 			label as full_label
 		end;
-	DRAG_SOURCE
-		rename
-			source as widget
-		end;
+	DRAG_SOURCE;
 	TYPE_DATA
 	
 feature -- Editable
@@ -102,7 +99,17 @@ feature -- Editable
 		deferred
 		end;
 
-feature {NONE}
+	is_valid_parent (parent_context: COMPOSITE_C): BOOLEAN is
+			-- Is `parent_context' a valid parent?
+			--| Valid if parent is not MENU_C
+		local
+			menu_c: MENU_C
+		do
+			menu_c ?= parent_context;
+			Result := menu_c = Void
+		end;
+
+feature {NONE, CONTEXT}
 
 	update_tree_element is
 		do
@@ -245,6 +252,12 @@ feature
 				Result.append (eiffel_type);
 				Result.extend (')');	
 			end;
+		end;
+
+	source: WIDGET is
+			-- Source of drag
+		do
+			Result := widget
 		end;
 
 	data: CONTEXT is
@@ -414,7 +427,6 @@ feature
 			set_x_y (new_x, new_y);
 		end;
 
-	
 feature {NONE}
 
 	add_widget_callbacks is
@@ -449,30 +461,7 @@ feature {NONE}
 			a_widget.add_pointer_motion_action (Eb_selection_mgr, first_arg);
 		end;
 
-	
-feature {NONE}
-
-	reset_widget_callbacks is
-		do
-			add_widget_callbacks;
-			initialize_transport
-		end;
-
-	
 feature 
-
-	reset_callbacks is
-		do
-			reset_widget_callbacks;
-			from
-				child_start
-			until
-				child_offright
-			loop
-				child.reset_callbacks;
-				child_forth
-			end;
-		end;
 
 	create_context (a_parent: COMPOSITE_C): like Current is
 			-- Create a context of the same type
@@ -678,7 +667,7 @@ feature
 
 	hide is
 		do
-			if widget.realized and then widget.shown then
+			if widget.realized then
 				widget.hide
 			end
 		end;
@@ -832,11 +821,11 @@ feature -- Foreground color
 		deferred
 		end;
 
-    reset_default_foreground_color is
-        require
-            valid_default_foreground_color: default_foreground_color /= Void
+	reset_default_foreground_color is
+		require
+			valid_default_foreground_color: default_foreground_color /= Void
 		deferred
-        end;
+		end;
 
 	save_default_foreground_color is
 		require
@@ -974,19 +963,28 @@ feature
 		end;
 
 	is_a_group: BOOLEAN is
+			-- Is Current context a group?
 		do
 		end;
 
 	is_in_a_group: BOOLEAN is
+			-- Is Current context in a group?
 		do
-			Result := parent.is_in_a_group
+			Result := parent.is_a_group;
+			if not Result then
+				Result := parent.is_in_a_group
+			end
 		end;
 
-	-- ***********
-	-- * Edition *
-	-- ***********
+	is_able_to_be_grouped: BOOLEAN is
+			-- Is Current context able to be grouped?
+		do
+			Result := not is_in_a_group
+		end;
 
-	is_selectionnable: BOOLEAN is
+feature {SELECTION_MANAGER}
+
+	is_selectionable: BOOLEAN is
 			-- Is current context selectionnable
 		do
 			Result := True
@@ -998,6 +996,13 @@ feature {NONE}
 			-- Selection manager
 		once
 			!!Result.make
+		end;
+
+feature {GROUP_CMD}
+
+	remove_tree_element is
+		do
+			Tree.cut (tree_element)
 		end;
 
 feature 
@@ -1048,7 +1053,7 @@ feature
 					a_context.tree_element.set_children_visibility (True);
 					a_context := a_context.parent
 				end;
-			else
+			elseif grouped then
 				tree_element.deselect;
 			end;
 			grouped := flag;
@@ -1210,12 +1215,33 @@ feature
 			end;
 		end;
 
-	-- **********************
-	-- * Generation section *
-	-- **********************
+feature {GROUP, CONTEXT} -- Update group name in context tree
 
-	
-feature {CONTEXT}
+	update_group_name_in_tree (g: GROUP) is
+			-- Update the eiffel_type for group_c in context
+			-- tree using group `g'.
+		require
+			valid_g: g /= Void
+		local
+			group_c: GROUP_C
+		do
+			from
+				child_start
+			until
+				child_offright
+			loop
+				if child.is_a_group then
+					group_c ?= child;
+					if group_c.group_type = g then
+						group_c.update_tree_element
+					end;
+				end;
+				child.update_group_name_in_tree (g);
+				child_forth
+			end;
+		end;
+
+feature {CONTEXT} -- Code Generation
 
 	children_declaration: STRING is
 			-- Generated string for the declaration of the
@@ -1299,8 +1325,7 @@ feature {CONTEXT}
 			end;
 		end;
 
-	
-feature 
+feature -- Code Generation
 
 	full_name: STRING is
 			-- full name of the context i.e. with root, group, ...
@@ -1312,8 +1337,7 @@ feature
 			Result.append (entity_name_in_lower_case);
 		end;
 
-	
-feature {CONTEXT}
+feature {CONTEXT} -- Code Generation
 
 	intermediate_name: STRING is
 			-- Intermediate name redefined for the elements
@@ -1695,7 +1719,7 @@ feature
 			visual_name := clone (s);
 		end;
 
-	retrieve_oui_group_child_widget, retrieve_oui_widget is
+	retrieve_oui_widget is
 		local
 			parent_widget: COMPOSITE;
 			temp_w: TEMP_WIND_C

@@ -24,9 +24,9 @@ feature {NONE} -- Initialization
 		do
 			Precursor (a_tool)
 			
-			Create {EB_ATTRIBUTE_VALUES_FORMATTER} f.make (tool)
+			create {EB_ATTRIBUTE_VALUES_FORMATTER} f.make (tool)
 			add_formatter (f)
-			Create {EB_ONCE_RESULTS_FORMATTER} f.make (tool)
+			create {EB_ONCE_RESULTS_FORMATTER} f.make (tool)
 			add_formatter (f)
 		end
 

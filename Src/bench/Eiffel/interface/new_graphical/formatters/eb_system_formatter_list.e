@@ -26,19 +26,19 @@ feature {NONE} -- Initialization
 		do
 			Precursor (a_tool)
 			
-			Create {EB_TEXT_FORMATTER} f.make (tool)
+			create {EB_TEXT_FORMATTER} f.make (tool)
 			add_formatter (f)
-			Create {EB_CLUSTERS_FORMATTER} f.make (tool)
+			create {EB_CLUSTERS_FORMATTER} f.make (tool)
 			add_formatter (f)
-			Create {EB_CLASS_LIST_FORMATTER} f.make (tool)
+			create {EB_CLASS_LIST_FORMATTER} f.make (tool)
 			add_formatter (f)
-			Create {EB_CLUSTER_HIERARCHY_FORMATTER} f.make (tool)
+			create {EB_CLUSTER_HIERARCHY_FORMATTER} f.make (tool)
 			add_formatter (f)
-			Create {EB_STATISTICS_FORMATTER} f.make (tool)
+			create {EB_STATISTICS_FORMATTER} f.make (tool)
 			add_formatter (f)
-			Create {EB_MODIFIED_CLASSES_FORMATTER} f.make (tool)
+			create {EB_MODIFIED_CLASSES_FORMATTER} f.make (tool)
 			add_formatter (f)
-			Create {EB_INDEXATION_FORMATTER} f.make (tool)
+			create {EB_INDEXATION_FORMATTER} f.make (tool)
 			add_formatter (f)
 		end
 

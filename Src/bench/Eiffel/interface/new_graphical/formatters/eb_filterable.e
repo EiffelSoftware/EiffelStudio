@@ -25,7 +25,7 @@ feature -- Filtering Implementation
 		do
 			root_stone := tool.stone
 			if root_stone /= Void then
---				!! mp.set_watch_cursor
+--				create mp.set_watch_cursor
 				new_text := filtered_text (root_stone, filtername)
 				if new_text /= Void then
 					tool.text_area.clear_text
@@ -63,12 +63,12 @@ feature -- Filtering Properties
 				create wd.make_default (tool.parent, Interface_names.t_Warning,
 					Warning_messages.w_No_filter_selected)
 			else
-				!! full_pathname.make_from_string (filter_path)
+				create full_pathname.make_from_string (filter_path)
 				full_pathname.set_file_name (filtername)
 				full_pathname.add_extension ("fil")
-				!! filter_file.make (full_pathname)
+				create filter_file.make (full_pathname)
 				if filter_file.exists and then filter_file.is_readable then
-					!!text_filter.make_from_filename (full_pathname)
+					create text_filter.make_from_filename (full_pathname)
 					file_suffix := text_filter.file_suffix
 					tmp_text := create_structured_text (stone)
 					text_filter.process_text (tmp_text)
@@ -107,7 +107,7 @@ feature -- Filtering Properties
 					Result.head (i - 1)
 				end
 
-				!!fname.make_from_string (Result)
+				create fname.make_from_string (Result)
 				if file_suffix /= Void then
 					if not file_suffix.empty then
 						fname.add_extension (file_suffix)
@@ -122,7 +122,7 @@ feature -- Filtering Properties
 				end
 				Result := fname
 			else
-				!!Result.make (0)
+				create Result.make (0)
 			end
 		end
 
@@ -141,7 +141,7 @@ feature -- Filtering Properties
 		do
 			class_stone ?= stone
 			if class_stone /= Void then
-				!! fname.make_from_string (tmp_directory)
+				create fname.make_from_string (tmp_directory)
 				temp_name := clone (class_stone.e_class.name)
 				if not fname.is_file_name_valid (temp_name) then
 						-- Truncate the class name to 8 characters
@@ -166,7 +166,7 @@ feature -- Filtering Properties
 				end
 				Result := fname
 			else
-				!! Result.make (0)
+				create Result.make (0)
 			end
 		end
 
@@ -202,7 +202,7 @@ feature {NONE} -- Implementation
 		local
 			new_title: STRING
 		do
-			!! new_title.make (50)
+			create new_title.make (50)
 			new_title.append (title_part)
 			new_title.append (stone.stone_signature)
 			new_title.append (" (")

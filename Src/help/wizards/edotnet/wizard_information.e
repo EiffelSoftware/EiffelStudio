@@ -47,24 +47,18 @@ feature -- Setting
 
 	set_root_class_name (a_name: like root_class_name) is
 			-- Set `root_class_name' with `a_name'.
-		require
-			non_void_name: a_name /= Void
-			not_empty_name: not a_name.is_empty
 		do
 			root_class_name := a_name
 		ensure
-			root_class_name_set: root_class_name.is_equal (a_name)
+			root_class_name_set: root_class_name = a_name
 		end
 
 	set_creation_routine_name (a_name: like creation_routine_name) is
 			-- Set `creation_routine_name' with `a_name'.
-		require
-			non_void_name: a_name /= Void
-			not_empty_name: not a_name.is_empty
 		do
 			creation_routine_name := a_name
 		ensure
-			creation_routine_name_set: creation_routine_name.is_equal (a_name)
+			creation_routine_name_set: creation_routine_name = a_name
 		end
 		
 feature -- Access

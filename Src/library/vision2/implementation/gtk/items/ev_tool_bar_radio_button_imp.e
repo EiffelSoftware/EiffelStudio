@@ -38,7 +38,10 @@ feature {NONE} -- Initialization
 			-- Make a radio button with a default of selected.
 		do
 			Precursor (an_interface)
+			avoid_reselection := True
+				-- Needed to prevent calling of action sequence.
 			enable_select
+			avoid_reselection := False
 		end
 
 feature {NONE} -- Implementation
@@ -133,6 +136,9 @@ end -- class EV_TOOL_BAR_RADIO_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.21  2000/04/20 16:34:37  king
+--| Prevented action sequence from being called on initialization
+--|
 --| Revision 1.20  2000/04/17 23:39:30  king
 --| Changed from press_actions -> select_actions
 --|

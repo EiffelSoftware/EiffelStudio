@@ -1,7 +1,7 @@
-Indexing
+indexing
 	authors: "Emmanuel STAPF & Jerome BOUAZIZ"
-	date: "$date $"
-	version: "$version: $"
+	date: "$Date$"
+	version: "$Revision$"
 
 A Standard Eiffel Compilation:
 ------------------------------

@@ -53,7 +53,6 @@ feature
 			-- Receive a message, extend it, and send it back.
 		local
 			our_new_list: OUR_MESSAGE
-			str: STRING
 		do
 			soc1.accept
 			soc2 ?= soc1.accepted

@@ -181,7 +181,7 @@ feature -- Status setting
 		do
 			pix_imp ?= pixmap.implementation
 
-			C.c_gtk_container_set_bg_pixmap (c_object, pix_imp.c_object)
+--|FIXME			C.c_gtk_container_set_bg_pixmap (c_object, pix_imp.c_object)
 			C.gtk_widget_show (pix_imp.c_object)
 
 			background_pixmap := pixmap
@@ -229,6 +229,9 @@ end -- class EV_CONTAINER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.32  2000/04/18 18:44:23  oconnor
+--| removed reference to obsolete C external in set_bg_pixmap
+--|
 --| Revision 1.31  2000/04/06 01:55:00  brendel
 --| Removed gs_list_to_eiffel.
 --|

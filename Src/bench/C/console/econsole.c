@@ -161,7 +161,7 @@ rt_public void eif_show_console(void)
 #endif
 
 
-			hCrt = _open_osfhandle ((long) eif_conin, _O_RDONLY);
+			hCrt = _open_osfhandle ((long) eif_conin, _O_TEXT | _O_RDONLY);
 #ifdef EIF_BORLAND
 			dup2 (hCrt, _fileno(stdin));
 #else

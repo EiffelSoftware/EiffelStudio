@@ -301,6 +301,7 @@ feature {NONE} -- Implementation
 			hb.disable_item_expand (okb)
 			hb.extend (cb)
 			hb.disable_item_expand (cb)
+			hb.extend (create {EV_CELL})
 			
 			create vb
 			vb.set_padding (Layout_constants.Small_padding_size)

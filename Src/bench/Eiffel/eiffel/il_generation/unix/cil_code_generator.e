@@ -1475,7 +1475,7 @@ feature -- Basic feature
 		do
 		end
 
-	generate_upper_lower (is_upper: STRING) is
+	generate_upper_lower (is_upper: BOOLEAN) is
 		do
 		end
 

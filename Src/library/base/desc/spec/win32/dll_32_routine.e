@@ -202,6 +202,7 @@ feature {NONE} -- Implementation
 			s6: ARRAY [POINTER]
 			s7: ARRAY [ANY]
 			array_area: ANY
+			l_data: POINTER
 		do
 			from
 				i := args.lower
@@ -248,7 +249,8 @@ feature {NONE} -- Implementation
 					else
 						array_area := s1.area
 					end
-					desc_copy_arg ($area, $array_area, position * 4, arg_size)
+					l_data := $array_area
+					desc_copy_arg ($area, $l_data, position * 4, arg_size)
 				when T_boolean then
 					b_ref ?= args @ i
 					b := b_ref.item
@@ -277,14 +279,16 @@ feature {NONE} -- Implementation
 				when T_pointer then
 					p_ref ?= args @ i
 					p := p_ref.item
-					desc_copy_arg ($area, p, position * 4, arg_size)
+					desc_copy_arg ($area, $p, position * 4, arg_size)
 				when T_reference then
 					a := args @ i
-					desc_copy_arg ($area, $a, position * 4, arg_size)
+					l_data := $a
+					desc_copy_arg ($area, $l_data, position * 4, arg_size)
 				when T_string then
 					s ?= args @ i
 					a := s.to_c
-					desc_copy_arg ($area, $a, position * 4, arg_size)
+					l_data := $a
+					desc_copy_arg ($area, $l_data, position * 4, arg_size)
 				end
 				i := i + 1
 				j := j + 1
@@ -407,10 +411,8 @@ feature {NONE} -- Externals
 	desc_copy_arg (target, source: POINTER; offset, size: INTEGER) is
 			-- Copy `size' characters from `source'
 			-- to `target' + `offset'
-		external
-			"C [macro %"eif_desc.h%"]"
-		alias
-			"DESC_BCOPY"
+		do
+			(target + offset).memory_copy (source, size)
 		end
 
 	desc_get_function_index_pointer (m_p: POINTER; r_index: INTEGER): POINTER is

@@ -34,52 +34,54 @@ feature -- Access
 
 			a_descriptor.functions.sort
 
-			if not a_descriptor.dispinterface then
-				if a_descriptor.functions /= Void and then not a_descriptor.functions.empty then
-					from
-						a_descriptor.functions.start
-					until
-						a_descriptor.functions.off
-					loop
-						func_generator.generate (a_descriptor.functions.item)
+			if a_descriptor.functions /= Void and then not a_descriptor.functions.empty then
+				from
+					a_descriptor.functions.start
+				until
+					a_descriptor.functions.off
+				loop
+					func_generator.generate (a_descriptor.functions.item)
+					if not a_descriptor.dispinterface then
 						cpp_class_writer.add_function (func_generator.ccom_feature_writer, Public)
-						if 
-							func_generator.c_header_files /= Void and then 
-							not func_generator.c_header_files.empty
-						then
-							from
-								func_generator.c_header_files.start
-							until
-								func_generator.c_header_files.off
-							loop
-								if func_generator.c_header_files.item /= Void and then not func_generator.c_header_files.item.empty then
-									if cpp_class_writer.import_files.occurrences (func_generator.c_header_files.item) = 0 then
-										cpp_class_writer.add_import (func_generator.c_header_files.item)
-									end
-								end
-								func_generator.c_header_files.forth
-							end
-						end
-						a_descriptor.functions.forth
 					end
+					if 
+						func_generator.c_header_files /= Void and then 
+						not func_generator.c_header_files.empty
+					then
+						from
+							func_generator.c_header_files.start
+						until
+							func_generator.c_header_files.off
+						loop
+							if func_generator.c_header_files.item /= Void and then not func_generator.c_header_files.item.empty then
+								if cpp_class_writer.import_files.occurrences (func_generator.c_header_files.item) = 0 then
+									cpp_class_writer.add_import (func_generator.c_header_files.item)
+								end
+							end
+							func_generator.c_header_files.forth
+						end
+					end
+					a_descriptor.functions.forth
 				end
+			end
 
-				if not a_descriptor.dual and then a_descriptor.properties /= Void and then not a_descriptor.properties.empty then
-					from
-						a_descriptor.properties.start
-					until
-						a_descriptor.properties.off
-					loop
-						prop_generator.generate (a_descriptor.properties.item)
+			if not a_descriptor.dual and then a_descriptor.properties /= Void and then not a_descriptor.properties.empty then
+				from
+					a_descriptor.properties.start
+				until
+					a_descriptor.properties.off
+				loop
+					prop_generator.generate (a_descriptor.properties.item)
+					if not a_descriptor.dispinterface then
 						cpp_class_writer.add_function (prop_generator.c_setting_feature, Public)
 						cpp_class_writer.add_function (prop_generator.c_access_feature, Public)
-						if prop_generator.c_header_file /= Void and then not prop_generator.c_header_file.empty then
-							if cpp_class_writer.import_files.occurrences (prop_generator.c_header_file) = 0 then
-								cpp_class_writer.add_import (prop_generator.c_header_file)
-							end
-						end
-						a_descriptor.properties.forth
 					end
+					if prop_generator.c_header_file /= Void and then not prop_generator.c_header_file.empty then
+						if cpp_class_writer.import_files.occurrences (prop_generator.c_header_file) = 0 then
+							cpp_class_writer.add_import (prop_generator.c_header_file)
+						end
+					end
+					a_descriptor.properties.forth
 				end
 			end
 			Shared_file_name_factory.create_file_name (Current, cpp_class_writer)

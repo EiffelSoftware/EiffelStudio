@@ -64,7 +64,7 @@ feature -- Status report
 			Result := binary_and (flag, Invoke_propertyput) = Invoke_propertyput
 		end
 
-	is_propertyputef (flag: INTEGER): BOOLEAN is
+	is_propertyputref (flag: INTEGER): BOOLEAN is
 			-- Is property reference assignment syntax?
 		do
 			Result := binary_and (flag, Invoke_propertyputref) = Invoke_propertyputref
@@ -76,7 +76,7 @@ feature -- Status report
 			Result := is_func (kind) or
 			is_propertyget (kind) or
 			is_propertyput (kind) or
-			is_propertyputef (kind)
+			is_propertyputref (kind)
 		end
 		
 end -- class EOLE_INVOKEKIND

@@ -82,6 +82,7 @@ feature -- Element change
 	set_text_id (an_id: INTEGER) is
 			-- Set `text' with a string resource identifier `an_id'.
 		do
+			set_instance (main_args.current_instance)
 			cwel_tooltiptext_set_lpsztext (item,
 				cwin_make_int_resource (an_id))
 		ensure
@@ -96,6 +97,16 @@ feature -- Element change
 			cwel_tooltiptext_set_hinst (item, an_instance.item)
 		ensure
 			instance_set: instance.item = an_instance.item
+		end
+
+	set_flags (a_flags: INTEGER) is
+			-- Set `flags' with `a_flags'.
+		require
+			positive_flags: a_flags >= 0
+		do
+			cwel_tooltiptext_set_uflags (item, a_flags)
+		ensure
+			flags_set: flags = a_flags
 		end
 
 feature -- Status report
@@ -151,6 +162,11 @@ feature {NONE} -- Externals
 		end
 
 	cwel_tooltiptext_set_hinst (ptr: POINTER; value: POINTER) is
+		external
+			"C [macro <tooltipt.h>]"
+		end
+
+	cwel_tooltiptext_set_uflags (ptr: POINTER; value: INTEGER) is
 		external
 			"C [macro <tooltipt.h>]"
 		end

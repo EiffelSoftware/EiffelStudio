@@ -120,19 +120,18 @@ feature -- IL code generation
 	generate_il is
 			-- Generate IL code for a class invariant clause.
 		local
-			end_of_assertion: IL_LABEL
+			end_of_invariant: IL_LABEL
 		do
 			context.local_list.wipe_out
 			context.set_assertion_type (In_invariant);
 
-			end_of_assertion := il_label_factory.new_label
-			il_generator.generate_in_assertion_test (end_of_assertion)
-			il_generator.generate_set_assertion_status
+			end_of_invariant := il_label_factory.new_label
 
+			il_generator.generate_invariant_checked_for (end_of_invariant)
 			byte_list.generate_il
+			il_generator.generate_inherited_invariants
 
-			il_generator.generate_restore_assertion_status
-			il_generator.mark_label (end_of_assertion)
+			il_generator.mark_label (end_of_invariant)
 			il_generator.generate_return
 		end
 

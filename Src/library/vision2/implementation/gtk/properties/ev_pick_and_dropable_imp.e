@@ -481,7 +481,10 @@ feature -- Implementation
 				if widget_target_imp /= Void and then widget_target_imp.pointer_over_widget (gdkwin, x, y) then
 						Result := widget_target_imp.interface
 				elseif gdkwin = last_gdkwin then
-					--	Result := Void
+					if pointer_over_widget (gdkwin, x, y) then
+						Result := interface
+					end
+					--	if not then Result := Void
 				else	
 					Result := app_implementation.pnd_target_from_gdk_window (gdkwin, x, y)
 				end			

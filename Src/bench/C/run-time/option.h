@@ -16,7 +16,9 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
- 
+
+#include "eif_globals.h"
+
 /*
  * Options in workbench mode
  */
@@ -82,8 +84,8 @@ extern int trace_call_level;			/* Call level to report at E-TRACE output */
 
 extern struct stack *prof_stack;		/* Stack that maintains profile information */
 
-extern void check_options(struct eif_opt *opt, int dtype);			/* Dispatches to start_profile and start_trace */
-extern void check_options_stop(void);		/* Dispatches to stop_profile and stop_trace */
+extern void check_options(EIF_CONTEXT struct eif_opt *opt, int dtype);			/* Dispatches to start_profile and start_trace */
+extern void check_options_stop(EIF_CONTEXT_NOARG);		/* Dispatches to stop_profile and stop_trace */
 
 extern void start_trace(char *name, int origin, int dtype);			/* Prints entering feature ... */
 extern void stop_trace(char *name, int origin, int dtype);			/* Prints leaving feature ... */

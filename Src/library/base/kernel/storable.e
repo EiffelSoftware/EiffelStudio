@@ -85,7 +85,7 @@ feature -- Element change
 			file_not_void: file /= Void;
 			file_exists: file.exists;
 			file_is_open_write: file.is_open_write
-			file_is_binary: file.is_plain_text
+			file_is_binary: not file.is_plain_text
 		do
 			c_general_store (file.handle, $Current)
 		end

@@ -11,7 +11,7 @@ inherit
 
 	BULLETIN_O
 
-feature {TERMINAL}
+feature {TERMINAL_OUI}
 
 	build is
 			-- Build the terminal.

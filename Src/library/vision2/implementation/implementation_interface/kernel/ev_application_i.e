@@ -39,7 +39,7 @@ feature {EV_APPLICATION} -- Initialization
 			set_contextual_help_accelerator (create {EV_ACCELERATOR}.make_with_key_combination (f1_key, False, False, True))
 			create {EV_SIMPLE_HELP_ENGINE} help_engine
 			create pnd_targets.make (8)
-			create dragable_targets.make (8)
+			create dockable_targets.make (8)
 			create internal_idle_actions
 			create once_idle_actions
 			do_once_idle_actions_agent := agent do_once_idle_actions
@@ -53,7 +53,7 @@ feature {EV_APPLICATION} -- Initialization
 		
 feature {EV_DOCKABLE_SOURCE_I, EV_DOCKABLE_TARGET_I, EV_SHARED_TRANSPORT_I} -- Access
 
-	dragable_targets: ARRAYED_LIST [INTEGER]
+	dockable_targets: ARRAYED_LIST [INTEGER]
 
 feature -- Access
 
@@ -464,7 +464,7 @@ feature {NONE} -- Implementation
 		end
 			
 invariant
-	dragable_targets_not_void: is_usable implies dragable_targets /= Void
+	dockable_targets_not_void: is_usable implies dockable_targets /= Void
 	pnd_targets_not_void: is_usable implies pnd_targets /= void
 	windows_not_void: is_usable implies windows /= void
 	internal_idle_actions_not_void: is_usable implies

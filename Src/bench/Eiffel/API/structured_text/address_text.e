@@ -25,8 +25,8 @@ feature -- Initialization
 			-- Initialize Current with address is `addr' and
 			-- `e_class' is `eclass' referenced by `a_name'.
 		do
-			name := a_name;
 			address := addr;
+			name := a_name;
 			e_class := eclass
 		end;
 

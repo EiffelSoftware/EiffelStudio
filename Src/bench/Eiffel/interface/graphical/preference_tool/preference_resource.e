@@ -90,7 +90,8 @@ feature {NONE} -- Implementation
 			-- string "Resource <name> must be <message>.".
 		local
 			warning_d: WARNING_D;
-			msg: STRING
+			msg: STRING;
+			att: WINDOW_ATTRIBUTES;
 		do
 			!! warning_d.make ("Warning", Current);
 			!! msg.make (0);
@@ -103,6 +104,8 @@ feature {NONE} -- Implementation
 			warning_d.hide_help_button;
 			warning_d.hide_cancel_button;
 			warning_d.add_ok_action (Current, warning_d);
+			!! att;
+			att.set_composite_attributes (warning_d);
 			warning_d.popup;
 			warning_d.raise
 		end;

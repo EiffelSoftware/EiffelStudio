@@ -157,6 +157,10 @@ feature -- Generic conformance
 	make_gen_type_byte_code (ba : BYTE_ARRAY; use_info : BOOLEAN) is
 		do
 			ba.append_short_integer (generated_id (False))
+				-- FIXME: Manu 08/06/2003: There is no limitation about the size
+				-- of a BIT to 2^15, therefore when `size' is greater than 2^15
+				-- we have a problem!!!!. It not only applies to current routine
+				-- but to all the generic conformance stuff.
 			ba.append_short_integer (size)
 		end
 

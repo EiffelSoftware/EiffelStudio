@@ -30,17 +30,17 @@ feature {NONE} -- Basic operation
 			temp_height: INTEGER
 		do
 			temp_height := minimum_height.max (new_height)
-			if not children.empty then
+			if not ev_children.empty then
 				from
-					children.start
+					ev_children.start
 				until
-					children.after
+					ev_children.after
 				loop
-					children.item.parent_ask_resize(children.item.width, temp_height)
-					children.forth
+					ev_children.item.parent_ask_resize(ev_children.item.width, temp_height)
+					ev_children.forth
 				end
 			end
-			wel_window.resize (width, temp_height)
+			resize (width, temp_height)
 		end
 
 	set_local_width (new_width: INTEGER) is
@@ -49,68 +49,89 @@ feature {NONE} -- Basic operation
 			mark, temp_width: INTEGER
 		do
 			temp_width := minimum_width.max (new_width)
-			if not children.empty then
+			if not ev_children.empty then
 				from
-					children.start
+					mark := spacing // 2
+					ev_children.start
 				until
-					children.islast
+					ev_children.islast
 				loop
-					adapt_child (children.item, temp_width, height, mark)
-					mark := mark + children.item.width + spacing
-					children.forth
+					adapt_child (ev_children.item, temp_width, height, mark)
+					if is_homogeneous then
+						mark := mark + spacing + (temp_width - total_spacing) // ev_children.count
+					else
+						mark := mark + spacing + ev_children.item.width
+					end
+					ev_children.forth
 				end
-				adapt_last_child_size (children.item, temp_width, height, mark)
+				adapt_last_child_size (ev_children.item, temp_width, height, mark)
 			end
-			wel_window.resize (temp_width, height) 
+			resize (temp_width, height) 
 		end
 		
 	adapt_child (a_child: EV_WIDGET_IMP; a_width, a_height, a_mark:INTEGER) is
 			-- Adapt the attributes of the child according to the options of the box and the child :
-			-- homogeneous, expand, fill, spacing.
+			-- (`homogeneous',`spacing') and of the child (`automatic_position',
+			-- `automatic_resize').
 			-- `a_width', `a_height' are the size of the container.
 		local
 			temp_width: INTEGER
+			temp_mark: INTEGER
 		do
---			if a_child.is_expand then
---				if is_homogeneous and a_child.is_fill then
-					temp_width := (a_width - total_spacing) // children.count
---				elseif is_homogeneous and not a_child.is_fill then
---					temp_width := (minimum_width - total_spacing - total_children_padding)// children.count  -- max of minimum size of children
---				elseif not is_homogeneous and a_child.is_fill then
---					temp_width := a_child.widget.minimum_width + (a_width - minimum_width) // children.count 
---				end
-				a_child.set_move_and_size (a_mark, 0, temp_width, a_height)
---			end
+			if is_homogeneous then
+				if a_child.automatic_resize then
+					temp_width := (a_width - total_spacing) // ev_children.count
+					temp_mark := a_mark
+				elseif a_child.automatic_position then
+					temp_width := a_child.width
+					temp_mark := a_mark + ((a_width - total_spacing) // ev_children.count - a_child.width)//2
+				else
+					temp_width := a_child.width
+					temp_mark := a_mark
+				end
+			else
+				if a_child.automatic_resize then
+					temp_width := a_child.minimum_width + (a_width - minimum_width) // ev_children.count 
+					temp_mark := a_mark
+				else
+					temp_width := a_child.width
+					temp_mark := a_mark
+				end
+			end
+			a_child.set_move_and_size (temp_mark, 0, temp_width, a_height)
 		end
-
 
 	adapt_last_child_size (a_child: EV_WIDGET_IMP; a_width, a_height, a_mark:INTEGER) is
 			-- Adapt the attributes of the last child according to the options of the box.
-		local
+	local
 			temp_width: INTEGER
+			temp_mark: INTEGER
 		do
---			if a_child.is_expand then
---				if a_child.is_fill then
-					temp_width := a_width - a_mark
---				elseif is_homogeneous then
---					temp_width := (minimum_width - total_spacing - total_children_padding)// children.count  -- max of minimum size of children
---				end
-				a_child.set_move_and_size (a_mark, 0, temp_width, a_height)
---			end
+			if a_child.automatic_resize then
+				temp_width := a_width - a_mark - (spacing // 2)
+				temp_mark := a_mark
+			elseif is_homogeneous and a_child.automatic_position then
+				temp_width := a_child.width
+				temp_mark := a_mark + ((a_width - total_spacing) // ev_children.count - a_child.width)//2
+			else
+				temp_width := a_child.width
+				temp_mark := a_mark
+			end
+			a_child.set_move_and_size (temp_mark, 0, temp_width, a_height)
 		end
 
 	add_children_width: INTEGER is
 			-- Give the sum of the `width' of all the children
 			-- Maybe not necessary
 		do
-			if not children.empty then
+			if not ev_children.empty then
 				from
-					children.start
+					ev_children.start
 				until
-					children.after
+					ev_children.after
 				loop
-					Result := Result + children.item.width
-					children.forth
+					Result := Result + ev_children.item.width
+					ev_children.forth
 				end
 			end
 		end
@@ -118,14 +139,14 @@ feature {NONE} -- Basic operation
 	add_children_minimum_width: INTEGER is
 			-- Give the sum of the `minimum_width' of all the children
 		do
-			if not children.empty then
+			if not ev_children.empty then
 				from
-					children.start
+					ev_children.start
 				until
-					children.after
+					ev_children.after
 				loop
-					Result := Result + children.item.minimum_width
-					children.forth
+					Result := Result + ev_children.item.minimum_width
+					ev_children.forth
 				end
 			end
 		end
@@ -148,8 +169,8 @@ feature {NONE} -- Implementation
 			-- Resize and replace all its children according
 			-- to the resize of one of them.
 		do
-			if shown and child_width >= (minimum_width - total_spacing) // children.count then
-					set_local_width ((child_width * children.count) + total_spacing)
+			if shown and child_width >= (minimum_width - total_spacing) // ev_children.count then
+					set_local_width ((child_width * ev_children.count) + total_spacing)
 					parent_imp.child_width_changed (width, Current)
 			end
 		end
@@ -165,8 +186,8 @@ feature {NONE} -- Implementation
 	child_minwidth_changed (child_new_minimum: INTEGER) is
 			-- Change the current minimum_height because the child did.
 		do
-			if is_homogeneous and child_new_minimum > (minimum_width - total_spacing) // children.count then
-				set_minimum_width (child_new_minimum * children.count + total_spacing)
+			if is_homogeneous and child_new_minimum > (minimum_width - total_spacing) // ev_children.count then
+				set_minimum_width (child_new_minimum * ev_children.count + total_spacing)
 			else
 				set_minimum_width (add_children_minimum_width + total_spacing)
 			end

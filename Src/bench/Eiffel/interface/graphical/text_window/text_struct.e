@@ -26,7 +26,7 @@ feature
 		ensure
 			position_set: position = old position + 1
 			clickable_count_set: clickable_count = old clickable_count + 1
-			sorted_insertion: p.start_position > item(position - 1).end_position
+			sorted_insertion: position > 1 implies p.start_position > item(position - 1).end_position
 		end
 
 	trace is

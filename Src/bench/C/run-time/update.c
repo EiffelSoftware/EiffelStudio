@@ -536,6 +536,12 @@ rt_private void parents_updt(void)
 	short dtype, max_dtype;
 	long tsize, i;
 	struct  eif_par_types *pt, **pt2, **pt1;
+	int16 *parents_id;
+	int16 *empty_parents;
+
+		/* Initialize empty parents list */
+	SAFE_ALLOC(empty_parents, int16, 1);
+	empty_parents [0] = -1;
 
 		/* Dynamic types are coded on 2 bytes so we are sure
 		 * we are not loosing any data by casting it to a short */
@@ -579,7 +585,15 @@ rt_private void parents_updt(void)
 
 		/* Parent types */
 
-		pt->parents = wtype_array ((int16 *)0);
+			/* We cannot have a Void parents lists in
+			 * melted mode since the code expect an
+			 * array with one element of value -1. */
+		parents_id  = wtype_array ((int16 *)0);
+		if (parents_id) {
+			pt->parents = parents_id;
+		} else {
+			pt->parents = empty_parents;
+		}
 
 		if (dtype >= max_dtype)
 			max_dtype = dtype;

@@ -240,9 +240,10 @@ feature {NONE} -- Implementation / QueryInterface HEAP
 			"((ICorDebugValue *) $obj)->QueryInterface (IID_ICorDebugArrayValue, (void **) $a_p)"
 		end
 		
-feature -- test
+feature -- only for test purpose (evaluation in debugger)
 
 	query: TUPLE [STRING, ICOR_DEBUG_VALUE, STRING, ICOR_DEBUG_VALUE, STRING, ICOR_DEBUG_VALUE, STRING, ICOR_DEBUG_VALUE, STRING, ICOR_DEBUG_VALUE] is
+			-- To be removed.
 		local
 			i_obj: like query_interface_icor_debug_object_value
 			i_ref: like query_interface_icor_debug_reference_value

@@ -65,7 +65,7 @@ feature {NONE} -- Creation
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
 			identifier := clone (a_name);
-			implementation := toolkit.text_field (Current, man);
+			implementation := toolkit.text_field (Current, man, a_parent);
 			implementation.set_widget_default;
 			set_default
 		end;
@@ -82,7 +82,7 @@ feature -- Text size
 			Valid_command: a_command /= Void
 		do
 			implementation.add_activate_action (a_command, argument)
-		end; -- add_modify_action
+		end;
 
 	remove_activate_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to be executed 
@@ -92,7 +92,7 @@ feature -- Text size
 			not_a_command_void: a_command /= Void
 		do
 			implementation.remove_activate_action (a_command, argument)
-		end; -- remove_modify_action
+		end;
 
 	maximum_size: INTEGER is
 			-- Maximum number of characters in current

@@ -42,7 +42,7 @@ feature {NONE} -- Access
 			until
 				args = Void or else i = args.count
 			loop
-				Result.append (create {STRING}.make_from_cil (args.item (i).get_name))
+				Result.append (create {STRING}.make_from_cil (args.item (i).get_parameter_type.get_name))
 				i := i + 1
 			end
 		ensure

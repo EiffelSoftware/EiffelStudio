@@ -14,12 +14,23 @@ feature {AST_FACTORY} -- Initialization
 			-- Create a new CREATION AST node.
 		require
 			tg_not_void: tg /= Void
+		local
+			dcr_id: ID_AS
 		do
 			type := tp
 			target := tg
 			call := c
 			start_position := s
 			line_number := l
+
+				-- If there is no call we create `default_call'
+			if call = Void then
+					-- Create id. True name set later.
+				!! dcr_id.make (0)
+				dcr_id.make_from_string ("")
+				!ACCESS_ID_AS! default_call
+				default_call.set_feature_name (dcr_id)
+			end
 		ensure
 			type_set: type = tp
 			target_set: target = tg
@@ -32,12 +43,23 @@ feature {NONE} -- Initialization
 
 	set is
 			-- Yacc initialization
+		local
+			dcr_id : ID_AS
 		do
 			type ?= yacc_arg (0)
 			target ?= yacc_arg (1)
 			call ?= yacc_arg (2)
 			start_position := yacc_position
 			line_number    := yacc_line_number
+
+				-- If there's no call we create 'default_call'
+			if call = Void then
+					-- Create id. True name set later.
+				!! dcr_id.make (0)
+				dcr_id.make_from_string ("")
+				!ACCESS_ID_AS! default_call
+				default_call.set_feature_name (dcr_id)
+			end
 		ensure then
 			target_exists: target /= Void
 		end
@@ -54,6 +76,9 @@ feature -- Attributes
 			-- Routine call: it is an instance of ACCESS_INV_AS because
 			-- only procedure and functions are valid and no export validation
 			-- is made.
+
+	default_call: ACCESS_INV_AS
+			-- Default creation call
 
 feature -- Comparison
 
@@ -101,6 +126,9 @@ feature -- Type check, byte code and dead code removal
 			formal_position: INTEGER
 			constraint_type: TYPE_A
 			is_formal_creation: BOOLEAN
+			dcr_feat: FEATURE_I
+			dcr_id: ID_AS
+			the_call: like call
 		do
 				-- Init the type stack
 			context.begin_expression
@@ -244,11 +272,28 @@ feature -- Type check, byte code and dead code removal
 					Error_handler.raise_error
 				end
 
-				if call /= Void then
+				if call = Void and then 
+						creation_class.allows_default_creation then
+					-- Use default_create
+					-- if it actually does something.
+					dcr_feat := creation_class.default_create_feature
+
+					if not dcr_feat.empty_body then
+						dcr_id := default_call.feature_name
+						dcr_id.load (dcr_feat.feature_name)
+						the_call := default_call
+					end
+				else
+					the_call := call
+				end
+
+				creators := creation_class.creators
+
+				if the_call /= Void then
 						-- Type check the call: note that the creation
 						-- type is on the type stack
-					call.type_check
-					feature_name := call.feature_name
+					the_call.type_check
+					feature_name := the_call.feature_name
 
 					if not is_formal_creation then
 							-- Check if creation routine is non-once procedure
@@ -262,8 +307,8 @@ feature -- Type check, byte code and dead code removal
 							a_feature := creation_class.feature_table.item (feature_name)
 							vgcc5.set_creation_feature (a_feature)
 							Error_handler.insert_error (vgcc5)
-						else
-							export_status := creation_class.creators.item (feature_name)
+						elseif creators /= Void then
+							export_status := creators.item (feature_name)
 							if not export_status.valid_for (context.a_class) then
 									-- Creation procedure is not exported
 								!!vgcc5
@@ -290,7 +335,6 @@ feature -- Type check, byte code and dead code removal
 					end
 				else
 					if not is_formal_creation then
-						creators := creation_class.creators
 						if (creators = Void) then
 						elseif creators.empty then
 							!!vgcc5
@@ -367,6 +411,7 @@ feature -- Type check, byte code and dead code removal
 			create_feat: CREATE_FEAT
 			rout_id: ROUTINE_ID
 			type_set: ROUT_ID_SET
+			the_call: like call
 		do
 			!!Result
 			access := target.byte_node
@@ -385,8 +430,15 @@ feature -- Type check, byte code and dead code removal
 				end
 			end
 
-			if call /= Void then
-				call_access := call.byte_node
+			if default_call = Void or else 
+						default_call.feature_name.empty then
+				the_call := call
+			else
+				the_call := default_call
+			end
+
+			if the_call /= Void then
+				call_access := the_call.byte_node
 				!!nested
 				nested.set_target (access)
 				access.set_parent (nested)

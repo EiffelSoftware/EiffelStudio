@@ -52,52 +52,64 @@ feature -- Basic operations
 		local
 			l_ctxt: FEATURE_TEXT_FORMATTER;
 			l_file_name, l_docs: STRING
+			l_dm: IDM_DOCUMENTATION_MANAGER_INTERFACE
 			l_description: IDM_FEATURE_DESCRIPTION_INTERFACE
 			l_dictionary: IDM_DICTIONARY_INTERFACE
 			l_external_class: EXTERNAL_CLASS_I
 			l_extracted_description, l_first_line: STRING
 			l_index: INTEGER
+			retried: BOOLEAN
 		do
-			create l_extracted_description.make (256)
-			if a_feature_i.written_class.is_true_external then
-				l_extracted_description.append (external_signature (a_feature_i, a_feature_name))
-				l_extracted_description.append ("%N")
-				l_external_class ?= a_feature_i.written_class.lace_class
-				check
-					non_void_external_class: l_external_class /= Void
-				end
-				l_file_name := path_from_assembly (l_external_class.assembly)
-				if (create {RAW_FILE}.make (l_file_name)).exists then
-					if Documentation_manager /= Void then -- i.e. if Documentation manager is properly registered
-						l_dictionary := Documentation_manager.dictionary (l_file_name)
-						if l_dictionary /= Void then
-							l_description := l_dictionary.feature_documentation (l_external_class.external_name, a_feature_i.external_name, dotnet_arguments (a_feature_i))
-							if l_description /= Void then
-								l_docs := l_description.summary
-								if l_docs /= Void and then not l_docs.is_empty then
-									l_extracted_description.append_character ('%N')
-									l_extracted_description.append (l_docs)
+			if not retried then
+				create l_extracted_description.make (256)
+				if a_feature_i.written_class.is_true_external then
+					l_extracted_description.append (external_signature (a_feature_i, a_feature_name))
+					l_extracted_description.append ("%N")
+					l_external_class ?= a_feature_i.written_class.lace_class
+					check
+						non_void_external_class: l_external_class /= Void
+					end
+					l_file_name := path_from_assembly (l_external_class.assembly)
+					if (create {RAW_FILE}.make (l_file_name)).exists then
+						l_dm := documentation_manager
+						if l_dm /= Void then -- i.e. if Documentation manager is properly registered
+							l_dictionary := l_dm.dictionary (l_file_name)
+							if l_dictionary /= Void then
+								l_description := l_dictionary.feature_documentation (l_external_class.external_name, a_feature_i.external_name, dotnet_arguments (a_feature_i))
+								if l_description /= Void then
+									l_docs := l_description.summary
+									if l_docs /= Void and then not l_docs.is_empty then
+										l_extracted_description.append_character ('%N')
+										l_extracted_description.append (l_docs)
+									end
 								end
 							end
 						end
 					end
+				else
+					create l_ctxt
+					l_ctxt.format_short (a_feature_i.api_feature (a_class_i.compiled_class.class_id), False)
+					l_extracted_description := formatted (l_ctxt.text)
+					l_extracted_description.replace_substring_all ("%T%T-- ", "")
+				end
+				l_extracted_description.replace_substring_all ("%T", "  ")
+				l_index := l_extracted_description.index_of ('%N', 1)
+				if l_index > 0 then -- Keep first line unwrapped since it's the signature
+					create extracted_description.make (l_extracted_description.count)
+					l_first_line := l_extracted_description.substring (1, l_index)
+					extracted_description.append (l_first_line)
+					extracted_description.append (wrapped (l_extracted_description.substring (l_index + 1, l_extracted_description.count), Line_count.max (l_first_line.count)))
+				else
+					extracted_description := l_extracted_description
 				end
 			else
-				create l_ctxt
-				l_ctxt.format_short (a_feature_i.api_feature (a_class_i.compiled_class.class_id), False)
-				l_extracted_description := formatted (l_ctxt.text)
-				l_extracted_description.replace_substring_all ("%T%T-- ", "")
+				if extracted_description = Void then
+					create extracted_description.make_empty
+				end
 			end
-			l_extracted_description.replace_substring_all ("%T", "  ")
-			l_index := l_extracted_description.index_of ('%N', 1)
-			if l_index > 0 then -- Keep first line unwrapped since it's the signature
-				create extracted_description.make (l_extracted_description.count)
-				l_first_line := l_extracted_description.substring (1, l_index)
-				extracted_description.append (l_first_line)
-				extracted_description.append (wrapped (l_extracted_description.substring (l_index + 1, l_extracted_description.count), Line_count.max (l_first_line.count)))
-			else
-				extracted_description := l_extracted_description
-			end
+		rescue
+			retried := True
+			retry
  		end
  
 	features_list_from_table (table: FEATURE_TABLE; class_i: CLASS_I; use_overloading: BOOLEAN): SORTABLE_ARRAY [FEATURE_DESCRIPTOR] is

@@ -45,6 +45,8 @@ feature {NONE} -- Initialization
 			temp_int: INTEGER
 		do
 			base_make (an_interface)
+			create C
+			
 			-- Set Debug mode from environment variable.
 			temp_string := get ("ISE_GTK_DEBUG")
 			if temp_string /= Void then
@@ -52,11 +54,11 @@ feature {NONE} -- Initialization
 			end
 			if temp_int = 1 or temp_int = 2 then
 				(create {EV_C_UTIL}).enable_ev_gtk_log (temp_int)
+				C.gdk_set_show_events (True)	
 			else
 				(create {EV_C_UTIL}).enable_ev_gtk_log (0)
+				C.gdk_set_show_events (False)
 			end
-			
-			create C
 
 			temp_string := get ("ISE_EIFFEL")
 			
@@ -475,6 +477,9 @@ end -- class EV_APPLICATION_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.35  2001/06/19 16:54:20  king
+--| Added extra debug functionality
+--|
 --| Revision 1.34  2001/06/16 01:11:06  king
 --| Integrated resource file handling
 --|

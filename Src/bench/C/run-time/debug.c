@@ -87,9 +87,6 @@ public void drun();				/* Starting execution of debugged feature */
 /* Step by step execution control */
 public void dnext();			/* Breakable point reached */
 
-/* Breakpoint handling */
-shared void dbreak();			/* Program execution stopped */
-
 /* Debugging stack handling routines */
 public struct dcall *dpush();			/* Push value on stack */
 public struct dcall *dpop();			/* Pop value off stack */

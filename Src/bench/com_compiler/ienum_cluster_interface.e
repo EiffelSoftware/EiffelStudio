@@ -55,7 +55,7 @@ feature -- Status Report
 feature -- Basic Operations
 
 	next (pp_ieiffel_cluster_descriptor: CELL [IEIFFEL_CLUSTER_DESCRIPTOR_INTERFACE]; pul_count: INTEGER_REF) is
-			-- No description available.
+			-- Go to next item in enumerator
 			-- `pp_ieiffel_cluster_descriptor' [out].  
 			-- `pul_count' [out].  
 		require
@@ -69,7 +69,7 @@ feature -- Basic Operations
 		end
 
 	skip (ul_count: INTEGER) is
-			-- No description available.
+			-- Skip `ulCount' items.
 			-- `ul_count' [in].  
 		require
 			skip_user_precondition: skip_user_precondition (ul_count)
@@ -78,7 +78,7 @@ feature -- Basic Operations
 		end
 
 	reset is
-			-- No description available.
+			-- Reset enumerator.
 		require
 			reset_user_precondition: reset_user_precondition
 		deferred
@@ -86,7 +86,7 @@ feature -- Basic Operations
 		end
 
 	clone1 (pp_ienum_cluster: CELL [IENUM_CLUSTER_INTERFACE]) is
-			-- No description available.
+			-- Clone enumerator.
 			-- `pp_ienum_cluster' [out].  
 		require
 			non_void_pp_ienum_cluster: pp_ienum_cluster /= Void
@@ -98,7 +98,7 @@ feature -- Basic Operations
 		end
 
 	ith_item (ul_index: INTEGER; pp_ieiffel_cluster_descriptor: CELL [IEIFFEL_CLUSTER_DESCRIPTOR_INTERFACE]) is
-			-- No description available.
+			-- Retrieve enumerators ith item at `ulIndex'.
 			-- `ul_index' [in].  
 			-- `pp_ieiffel_cluster_descriptor' [out].  
 		require
@@ -111,7 +111,7 @@ feature -- Basic Operations
 		end
 
 	count: INTEGER is
-			-- No description available.
+			-- Retrieve enumerator item count.
 		require
 			count_user_precondition: count_user_precondition
 		deferred

@@ -13,7 +13,7 @@ inherit
 feature -- Access
 
 	count: INTEGER is
-			-- No description available.
+			-- Retrieve enumerator item count.
 		do
 			-- Put Implementation here.
 		end
@@ -21,7 +21,7 @@ feature -- Access
 feature -- Basic Operations
 
 	next (pp_ieiffel_cluster_descriptor: CELL [IEIFFEL_CLUSTER_DESCRIPTOR_INTERFACE]; pul_count: INTEGER_REF) is
-			-- No description available.
+			-- Go to next item in enumerator
 			-- `pp_ieiffel_cluster_descriptor' [out].  
 			-- `pul_count' [out].  
 		do
@@ -29,27 +29,27 @@ feature -- Basic Operations
 		end
 
 	skip (ul_count: INTEGER) is
-			-- No description available.
+			-- Skip `ulCount' items.
 			-- `ul_count' [in].  
 		do
 			-- Put Implementation here.
 		end
 
 	reset is
-			-- No description available.
+			-- Reset enumerator.
 		do
 			-- Put Implementation here.
 		end
 
 	clone1 (pp_ienum_cluster: CELL [IENUM_CLUSTER_INTERFACE]) is
-			-- No description available.
+			-- Clone enumerator.
 			-- `pp_ienum_cluster' [out].  
 		do
 			-- Put Implementation here.
 		end
 
 	ith_item (ul_index: INTEGER; pp_ieiffel_cluster_descriptor: CELL [IEIFFEL_CLUSTER_DESCRIPTOR_INTERFACE]) is
-			-- No description available.
+			-- Retrieve enumerators ith item at `ulIndex'.
 			-- `ul_index' [in].  
 			-- `pp_ieiffel_cluster_descriptor' [out].  
 		do

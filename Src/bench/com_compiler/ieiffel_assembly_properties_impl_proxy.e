@@ -67,12 +67,6 @@ feature -- Access
 			Result := ccom_prefix1 (initializer)
 		end
 
-	is_prefix_read_only: BOOLEAN is
-			-- Is assembly prefix read only.
-		do
-			Result := ccom_is_prefix_read_only (initializer)
-		end
-
 feature -- Status Report
 
 	last_error_code: INTEGER is
@@ -164,12 +158,6 @@ feature {NONE}  -- Externals
 			-- Prefix.
 		external
 			"C++ [ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_proxy %"ecom_EiffelComCompiler_IEiffelAssemblyProperties_impl_proxy_s.h%"](EIF_OBJECT)"
-		end
-
-	ccom_is_prefix_read_only (cpp_obj: POINTER): BOOLEAN is
-			-- Is assembly prefix read only.
-		external
-			"C++ [ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_proxy %"ecom_EiffelComCompiler_IEiffelAssemblyProperties_impl_proxy_s.h%"](): EIF_BOOLEAN"
 		end
 
 	ccom_delete_ieiffel_assembly_properties_impl_proxy (a_pointer: POINTER) is

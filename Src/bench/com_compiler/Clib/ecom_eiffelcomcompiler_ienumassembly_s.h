@@ -60,37 +60,37 @@ public:
 	~IEnumAssembly () {};
 
 	/*-----------------------------------------------------------
-	No description available.
+	Go to next item in enumerator
 	-----------------------------------------------------------*/
 	virtual STDMETHODIMP Next(  /* [out] */ ecom_EiffelComCompiler::IEiffelAssemblyProperties * * pp_ieiffel_assembly_properties, /* [out] */ ULONG * pul_fetched ) = 0;
 
 
 	/*-----------------------------------------------------------
-	No description available.
+	Skip `ulCount' items.
 	-----------------------------------------------------------*/
 	virtual STDMETHODIMP Skip(  /* [in] */ ULONG ul_count ) = 0;
 
 
 	/*-----------------------------------------------------------
-	No description available.
+	Reset enumerator.
 	-----------------------------------------------------------*/
 	virtual STDMETHODIMP Reset( void ) = 0;
 
 
 	/*-----------------------------------------------------------
-	No description available.
+	Clone enumerator.
 	-----------------------------------------------------------*/
 	virtual STDMETHODIMP Clone(  /* [out] */ ecom_EiffelComCompiler::IEnumAssembly * * pp_ienum_assembly ) = 0;
 
 
 	/*-----------------------------------------------------------
-	No description available.
+	Retrieve enumerators ith item at `ulIndex'.
 	-----------------------------------------------------------*/
 	virtual STDMETHODIMP IthItem(  /* [in] */ ULONG ul_count, /* [out] */ ecom_EiffelComCompiler::IEiffelAssemblyProperties * * pp_ieiffel_assembly_properties ) = 0;
 
 
 	/*-----------------------------------------------------------
-	No description available.
+	Retrieve enumerator item count.
 	-----------------------------------------------------------*/
 	virtual STDMETHODIMP Count(  /* [out, retval] */ ULONG * pul_count ) = 0;
 

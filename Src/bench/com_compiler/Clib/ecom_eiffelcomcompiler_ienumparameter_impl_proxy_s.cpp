@@ -35,22 +35,67 @@ ecom_EiffelComCompiler::IEnumParameter_impl_proxy::IEnumParameter_impl_proxy( IU
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 
+	excepinfo = (EXCEPINFO*)CoTaskMemAlloc (sizeof (EXCEPINFO));
+	if (excepinfo != NULL)
+		memset (excepinfo, '\0', sizeof (EXCEPINFO));
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
 ecom_EiffelComCompiler::IEnumParameter_impl_proxy::~IEnumParameter_impl_proxy()
 {
 	p_unknown->Release ();
+	
+	CoTaskMemFree ((void *)excepinfo);
 	if (p_IEnumParameter!=NULL)
 		p_IEnumParameter->Release ();
 	CoUninitialize ();
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
+EIF_INTEGER ecom_EiffelComCompiler::IEnumParameter_impl_proxy::ccom_last_error_code()
+
+/*-----------------------------------------------------------
+	Last error code
+-----------------------------------------------------------*/
+{
+	return (EIF_INTEGER) excepinfo->wCode;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+EIF_REFERENCE ecom_EiffelComCompiler::IEnumParameter_impl_proxy::ccom_last_source_of_exception()
+
+/*-----------------------------------------------------------
+	Last source of exception
+-----------------------------------------------------------*/
+{
+	return (EIF_REFERENCE) rt_ce.ccom_ce_bstr (excepinfo->bstrSource);
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+EIF_REFERENCE ecom_EiffelComCompiler::IEnumParameter_impl_proxy::ccom_last_error_description()
+
+/*-----------------------------------------------------------
+	Last error description
+-----------------------------------------------------------*/
+{
+	return (EIF_REFERENCE) rt_ce.ccom_ce_bstr (excepinfo->bstrDescription);
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+EIF_REFERENCE ecom_EiffelComCompiler::IEnumParameter_impl_proxy::ccom_last_error_help_file()
+
+/*-----------------------------------------------------------
+	Last error help file
+-----------------------------------------------------------*/
+{
+	return (EIF_REFERENCE) rt_ce.ccom_ce_bstr (excepinfo->bstrHelpFile);
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
 void ecom_EiffelComCompiler::IEnumParameter_impl_proxy::ccom_next(  /* [out] */ EIF_OBJECT pp_ieiffel_parameter_descriptor,  /* [out] */ EIF_OBJECT pul_fetched )
 
 /*-----------------------------------------------------------
-	No description available.
+	Go to next item in enumerator
 -----------------------------------------------------------*/
 {
 	HRESULT hr;
@@ -88,7 +133,7 @@ grt_ce_ISE.ccom_free_memory_pointed_122 (tmp_pul_fetched);
 void ecom_EiffelComCompiler::IEnumParameter_impl_proxy::ccom_skip(  /* [in] */ EIF_INTEGER ul_count )
 
 /*-----------------------------------------------------------
-	No description available.
+	Skip `ulCount' items.
 -----------------------------------------------------------*/
 {
 	HRESULT hr;
@@ -120,7 +165,7 @@ void ecom_EiffelComCompiler::IEnumParameter_impl_proxy::ccom_skip(  /* [in] */ E
 void ecom_EiffelComCompiler::IEnumParameter_impl_proxy::ccom_reset()
 
 /*-----------------------------------------------------------
-	No description available.
+	Reset enumerator.
 -----------------------------------------------------------*/
 {
 	HRESULT hr;
@@ -147,7 +192,7 @@ void ecom_EiffelComCompiler::IEnumParameter_impl_proxy::ccom_reset()
 void ecom_EiffelComCompiler::IEnumParameter_impl_proxy::ccom_clone1(  /* [out] */ EIF_OBJECT pp_ienum_parameter )
 
 /*-----------------------------------------------------------
-	No description available.
+	Clone enumerator.
 -----------------------------------------------------------*/
 {
 	HRESULT hr;
@@ -181,7 +226,7 @@ void ecom_EiffelComCompiler::IEnumParameter_impl_proxy::ccom_clone1(  /* [out] *
 void ecom_EiffelComCompiler::IEnumParameter_impl_proxy::ccom_ith_item(  /* [in] */ EIF_INTEGER ul_index,  /* [out] */ EIF_OBJECT pp_ieiffel_parameter_descriptor )
 
 /*-----------------------------------------------------------
-	No description available.
+	Retrieve enumerators ith item at `ulIndex'.
 -----------------------------------------------------------*/
 {
 	HRESULT hr;
@@ -217,7 +262,7 @@ void ecom_EiffelComCompiler::IEnumParameter_impl_proxy::ccom_ith_item(  /* [in] 
 EIF_INTEGER ecom_EiffelComCompiler::IEnumParameter_impl_proxy::ccom_count(  )
 
 /*-----------------------------------------------------------
-	No description available.
+	Retrieve enumerator item count.
 -----------------------------------------------------------*/
 {
 	HRESULT hr;

@@ -129,7 +129,7 @@ feature -- Basic Operations
 
 	compile (mode: INTEGER) is
 			-- Compile.
-			-- `mode' [out]. See ECOM_EIF_COMPILATION_MODE_ENUM for possible `mode' values. 
+			-- `mode' [in]. See ECOM_EIF_COMPILATION_MODE_ENUM for possible `mode' values. 
 		require
 			compile_user_precondition: compile_user_precondition (mode)
 		deferred
@@ -138,8 +138,8 @@ feature -- Basic Operations
 
 	compile_to_pipe (mode: INTEGER; bstr_pipe_name: STRING) is
 			-- Compile to an already established named pipe.
-			-- `mode' [out]. See ECOM_EIF_COMPILATION_MODE_ENUM for possible `mode' values. 
-			-- `bstr_pipe_name' [out].  
+			-- `mode' [in]. See ECOM_EIF_COMPILATION_MODE_ENUM for possible `mode' values. 
+			-- `bstr_pipe_name' [in].  
 		require
 			compile_to_pipe_user_precondition: compile_to_pipe_user_precondition (mode, bstr_pipe_name)
 		deferred

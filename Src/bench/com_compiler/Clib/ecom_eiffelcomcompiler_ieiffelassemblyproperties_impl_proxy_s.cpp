@@ -362,39 +362,6 @@ void ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_proxy::ccom_set_pref
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_BOOLEAN ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_proxy::ccom_is_prefix_read_only(  )
-
-/*-----------------------------------------------------------
-	Is assembly prefix read only.
------------------------------------------------------------*/
-{
-	HRESULT hr;
-	if (p_IEiffelAssemblyProperties == NULL)
-	{
-		hr = p_unknown->QueryInterface (IID_IEiffelAssemblyProperties_, (void **)&p_IEiffelAssemblyProperties);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	};
-	VARIANT_BOOL ret_value = 0;
-	
-	hr = p_IEiffelAssemblyProperties->IsPrefixReadOnly( &ret_value);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	
-	
-	EIF_BOOLEAN eiffel_result =  (EIF_BOOLEAN)rt_ce.ccom_ce_boolean (ret_value);
-	return (eiffel_result);
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
 EIF_POINTER ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_proxy::ccom_item()
 
 /*-----------------------------------------------------------

@@ -113,6 +113,18 @@ public:
 
 
 	/*-----------------------------------------------------------
+	Version of CLR compiler should target
+	-----------------------------------------------------------*/
+	STDMETHODIMP TargetClrVersion(  /* [out, retval] */ BSTR * pbstr_version );
+
+
+	/*-----------------------------------------------------------
+	Version of CLR compiler should target
+	-----------------------------------------------------------*/
+	STDMETHODIMP set_TargetClrVersion(  /* [in] */ BSTR pbstr_version );
+
+
+	/*-----------------------------------------------------------
 	.NET Naming convention
 	-----------------------------------------------------------*/
 	STDMETHODIMP DotNetNamingConvention(  /* [out, retval] */ VARIANT_BOOL * pvb_naming_convention );

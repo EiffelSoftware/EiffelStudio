@@ -39,6 +39,30 @@ public:
 	virtual ~IEiffelCompletionInfo_impl_proxy ();
 
 	/*-----------------------------------------------------------
+	Last error code
+	-----------------------------------------------------------*/
+	EIF_INTEGER ccom_last_error_code();
+
+
+	/*-----------------------------------------------------------
+	Last source of exception
+	-----------------------------------------------------------*/
+	EIF_REFERENCE ccom_last_source_of_exception();
+
+
+	/*-----------------------------------------------------------
+	Last error description
+	-----------------------------------------------------------*/
+	EIF_REFERENCE ccom_last_error_description();
+
+
+	/*-----------------------------------------------------------
+	Last error help file
+	-----------------------------------------------------------*/
+	EIF_REFERENCE ccom_last_error_help_file();
+
+
+	/*-----------------------------------------------------------
 	Add a local variable used for solving member completion list
 	-----------------------------------------------------------*/
 	void ccom_add_local(  /* [in] */ EIF_OBJECT bstr_name,  /* [in] */ EIF_OBJECT bstr_type );
@@ -95,6 +119,12 @@ private:
 	Default IUnknown interface pointer
 	-----------------------------------------------------------*/
 	IUnknown * p_unknown;
+
+
+	/*-----------------------------------------------------------
+	Exception information
+	-----------------------------------------------------------*/
+	EXCEPINFO * excepinfo;
 
 
 

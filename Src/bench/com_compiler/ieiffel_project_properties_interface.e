@@ -94,6 +94,20 @@ feature -- Status Report
 			Result := True
 		end
 
+	target_clr_version_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `target_clr_version'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	set_target_clr_version_user_precondition (pbstr_version: STRING): BOOLEAN is
+			-- User-defined preconditions for `set_target_clr_version'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
 	dot_net_naming_convention_user_precondition: BOOLEAN is
 			-- User-defined preconditions for `dot_net_naming_convention'.
 			-- Redefine in descendants if needed.
@@ -420,6 +434,23 @@ feature -- Basic Operations
 			-- `penum_project_type' [in]. See ECOM_EIF_PROJECT_TYPES_ENUM for possible `penum_project_type' values. 
 		require
 			set_project_type_user_precondition: set_project_type_user_precondition (penum_project_type)
+		deferred
+
+		end
+
+	target_clr_version: STRING is
+			-- Version of CLR compiler should target
+		require
+			target_clr_version_user_precondition: target_clr_version_user_precondition
+		deferred
+
+		end
+
+	set_target_clr_version (pbstr_version: STRING) is
+			-- Version of CLR compiler should target
+			-- `pbstr_version' [in].  
+		require
+			set_target_clr_version_user_precondition: set_target_clr_version_user_precondition (pbstr_version)
 		deferred
 
 		end

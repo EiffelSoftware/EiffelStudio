@@ -475,7 +475,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemClusters_impl_stub::Invoke( DI
 	switch (dispID)
 	{
 		
-		case 10025:
+		case 10156:
 			{
 				if (pDispParams->cArgs != 0)
 					return DISP_E_BADPARAMCOUNT;
@@ -511,7 +511,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemClusters_impl_stub::Invoke( DI
 			}
 			break;
 
-		case 10026:
+		case 10157:
 			{
 				if (pDispParams->cArgs != 0)
 					return DISP_E_BADPARAMCOUNT;
@@ -547,7 +547,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemClusters_impl_stub::Invoke( DI
 			}
 			break;
 
-		case 10029:
+		case 10158:
 			{
 				if (pDispParams->cArgs != 1)
 					return DISP_E_BADPARAMCOUNT;
@@ -613,7 +613,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemClusters_impl_stub::Invoke( DI
 			}
 			break;
 
-		case 10027:
+		case 10159:
 			{
 				if (pDispParams->cArgs != 1)
 					return DISP_E_BADPARAMCOUNT;
@@ -679,7 +679,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemClusters_impl_stub::Invoke( DI
 			}
 			break;
 
-		case 10028:
+		case 10160:
 			{
 				if (pDispParams->cArgs != 1)
 					return DISP_E_BADPARAMCOUNT;
@@ -745,7 +745,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemClusters_impl_stub::Invoke( DI
 			}
 			break;
 
-		case 10030:
+		case 10161:
 			{
 				if (pDispParams->cArgs != 2)
 					return DISP_E_BADPARAMCOUNT;
@@ -816,7 +816,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemClusters_impl_stub::Invoke( DI
 			}
 			break;
 
-		case 10031:
+		case 10162:
 			{
 				if (pDispParams->cArgs != 3)
 					return DISP_E_BADPARAMCOUNT;
@@ -900,7 +900,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemClusters_impl_stub::Invoke( DI
 			}
 			break;
 
-		case 10032:
+		case 10163:
 			{
 				if (pDispParams->cArgs != 1)
 					return DISP_E_BADPARAMCOUNT;
@@ -958,7 +958,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemClusters_impl_stub::Invoke( DI
 			}
 			break;
 
-		case 10033:
+		case 10164:
 			{
 				if (pDispParams->cArgs != 0)
 					return DISP_E_BADPARAMCOUNT;
@@ -986,7 +986,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemClusters_impl_stub::Invoke( DI
 			}
 			break;
 
-		case 10034:
+		case 10165:
 			{
 				if (pDispParams->cArgs != 1)
 					return DISP_E_BADPARAMCOUNT;
@@ -1052,7 +1052,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemClusters_impl_stub::Invoke( DI
 			}
 			break;
 
-		case 10035:
+		case 10166:
 			{
 				if (pDispParams->cArgs != 1)
 					return DISP_E_BADPARAMCOUNT;

@@ -63,6 +63,12 @@ feature -- Access
 			Result := ccom_project_type (initializer)
 		end
 
+	target_clr_version: STRING is
+			-- Version of CLR compiler should target
+		do
+			Result := ccom_target_clr_version (initializer)
+		end
+
 	dot_net_naming_convention: BOOLEAN is
 			-- .NET Naming convention
 		do
@@ -233,6 +239,13 @@ feature -- Basic Operations
 			-- `penum_project_type' [in]. See ECOM_EIF_PROJECT_TYPES_ENUM for possible `penum_project_type' values. 
 		do
 			ccom_set_project_type (initializer, penum_project_type)
+		end
+
+	set_target_clr_version (pbstr_version: STRING) is
+			-- Version of CLR compiler should target
+			-- `pbstr_version' [in].  
+		do
+			ccom_set_target_clr_version (initializer, pbstr_version)
 		end
 
 	set_dot_net_naming_convention (pvb_naming_convention: BOOLEAN) is
@@ -419,6 +432,18 @@ feature {NONE}  -- Externals
 			-- Project type
 		external
 			"C++ [ecom_EiffelComCompiler::IEiffelProjectProperties_impl_proxy %"ecom_EiffelComCompiler_IEiffelProjectProperties_impl_proxy_s.h%"](EIF_INTEGER)"
+		end
+
+	ccom_target_clr_version (cpp_obj: POINTER): STRING is
+			-- Version of CLR compiler should target
+		external
+			"C++ [ecom_EiffelComCompiler::IEiffelProjectProperties_impl_proxy %"ecom_EiffelComCompiler_IEiffelProjectProperties_impl_proxy_s.h%"](): EIF_REFERENCE"
+		end
+
+	ccom_set_target_clr_version (cpp_obj: POINTER; pbstr_version: STRING) is
+			-- Version of CLR compiler should target
+		external
+			"C++ [ecom_EiffelComCompiler::IEiffelProjectProperties_impl_proxy %"ecom_EiffelComCompiler_IEiffelProjectProperties_impl_proxy_s.h%"](EIF_OBJECT)"
 		end
 
 	ccom_dot_net_naming_convention (cpp_obj: POINTER): BOOLEAN is

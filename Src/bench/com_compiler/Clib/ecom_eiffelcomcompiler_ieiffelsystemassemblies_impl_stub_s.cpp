@@ -239,7 +239,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemAssemblies_impl_stub::Invoke( 
 	switch (dispID)
 	{
 		
-		case 10038:
+		case 10196:
 			{
 				if (pDispParams->cArgs != 0)
 					return DISP_E_BADPARAMCOUNT;
@@ -267,7 +267,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemAssemblies_impl_stub::Invoke( 
 			}
 			break;
 
-		case 10037:
+		case 10197:
 			{
 				if (pDispParams->cArgs != 4)
 					return DISP_E_BADPARAMCOUNT;
@@ -364,7 +364,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemAssemblies_impl_stub::Invoke( 
 			}
 			break;
 
-		case 10036:
+		case 10195:
 			{
 				if (pDispParams->cArgs != 0)
 					return DISP_E_BADPARAMCOUNT;
@@ -392,7 +392,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelSystemAssemblies_impl_stub::Invoke( 
 			}
 			break;
 
-		case 10024:
+		case 10007:
 			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
 			{
 				if (pDispParams->cArgs != 0)

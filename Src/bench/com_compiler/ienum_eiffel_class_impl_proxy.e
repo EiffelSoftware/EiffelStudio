@@ -26,15 +26,41 @@ feature {NONE}  -- Initialization
 feature -- Access
 
 	count: INTEGER is
-			-- No description available.
+			-- Retrieve enumerator item count.
 		do
 			Result := ccom_count (initializer)
+		end
+
+feature -- Status Report
+
+	last_error_code: INTEGER is
+			-- Last error code.
+		do
+			Result := ccom_last_error_code (initializer)
+		end
+
+	last_error_description: STRING is
+			-- Last error description.
+		do
+			Result := ccom_last_error_description (initializer)
+		end
+
+	last_error_help_file: STRING is
+			-- Last error help file.
+		do
+			Result := ccom_last_error_help_file (initializer)
+		end
+
+	last_source_of_exception: STRING is
+			-- Last source of exception.
+		do
+			Result := ccom_last_source_of_exception (initializer)
 		end
 
 feature -- Basic Operations
 
 	next (pp_ieiffel_class_descriptor: CELL [IEIFFEL_CLASS_DESCRIPTOR_INTERFACE]; pul_fetched: INTEGER_REF) is
-			-- No description available.
+			-- Go to next item in enumerator
 			-- `pp_ieiffel_class_descriptor' [out].  
 			-- `pul_fetched' [out].  
 		do
@@ -42,27 +68,27 @@ feature -- Basic Operations
 		end
 
 	skip (ul_count: INTEGER) is
-			-- No description available.
+			-- Skip `ulCount' items.
 			-- `ul_count' [in].  
 		do
 			ccom_skip (initializer, ul_count)
 		end
 
 	reset is
-			-- No description available.
+			-- Reset enumerator.
 		do
 			ccom_reset (initializer)
 		end
 
 	clone1 (pp_ienum_eiffel_class: CELL [IENUM_EIFFEL_CLASS_INTERFACE]) is
-			-- No description available.
+			-- Clone enumerator.
 			-- `pp_ienum_eiffel_class' [out].  
 		do
 			ccom_clone1 (initializer, pp_ienum_eiffel_class)
 		end
 
 	ith_item (ul_index: INTEGER; pp_ieiffel_class_descriptor: CELL [IEIFFEL_CLASS_DESCRIPTOR_INTERFACE]) is
-			-- No description available.
+			-- Retrieve enumerators ith item at `ulIndex'.
 			-- `ul_index' [in].  
 			-- `pp_ieiffel_class_descriptor' [out].  
 		do
@@ -80,37 +106,37 @@ feature {NONE}  -- Implementation
 feature {NONE}  -- Externals
 
 	ccom_next (cpp_obj: POINTER; pp_ieiffel_class_descriptor: CELL [IEIFFEL_CLASS_DESCRIPTOR_INTERFACE]; pul_fetched: INTEGER_REF) is
-			-- No description available.
+			-- Go to next item in enumerator
 		external
 			"C++ [ecom_EiffelComCompiler::IEnumEiffelClass_impl_proxy %"ecom_EiffelComCompiler_IEnumEiffelClass_impl_proxy_s.h%"](EIF_OBJECT,EIF_OBJECT)"
 		end
 
 	ccom_skip (cpp_obj: POINTER; ul_count: INTEGER) is
-			-- No description available.
+			-- Skip `ulCount' items.
 		external
 			"C++ [ecom_EiffelComCompiler::IEnumEiffelClass_impl_proxy %"ecom_EiffelComCompiler_IEnumEiffelClass_impl_proxy_s.h%"](EIF_INTEGER)"
 		end
 
 	ccom_reset (cpp_obj: POINTER) is
-			-- No description available.
+			-- Reset enumerator.
 		external
 			"C++ [ecom_EiffelComCompiler::IEnumEiffelClass_impl_proxy %"ecom_EiffelComCompiler_IEnumEiffelClass_impl_proxy_s.h%"]()"
 		end
 
 	ccom_clone1 (cpp_obj: POINTER; pp_ienum_eiffel_class: CELL [IENUM_EIFFEL_CLASS_INTERFACE]) is
-			-- No description available.
+			-- Clone enumerator.
 		external
 			"C++ [ecom_EiffelComCompiler::IEnumEiffelClass_impl_proxy %"ecom_EiffelComCompiler_IEnumEiffelClass_impl_proxy_s.h%"](EIF_OBJECT)"
 		end
 
 	ccom_ith_item (cpp_obj: POINTER; ul_index: INTEGER; pp_ieiffel_class_descriptor: CELL [IEIFFEL_CLASS_DESCRIPTOR_INTERFACE]) is
-			-- No description available.
+			-- Retrieve enumerators ith item at `ulIndex'.
 		external
 			"C++ [ecom_EiffelComCompiler::IEnumEiffelClass_impl_proxy %"ecom_EiffelComCompiler_IEnumEiffelClass_impl_proxy_s.h%"](EIF_INTEGER,EIF_OBJECT)"
 		end
 
 	ccom_count (cpp_obj: POINTER): INTEGER is
-			-- No description available.
+			-- Retrieve enumerator item count.
 		external
 			"C++ [ecom_EiffelComCompiler::IEnumEiffelClass_impl_proxy %"ecom_EiffelComCompiler_IEnumEiffelClass_impl_proxy_s.h%"](): EIF_INTEGER"
 		end
@@ -131,6 +157,30 @@ feature {NONE}  -- Externals
 			-- Item
 		external
 			"C++ [ecom_EiffelComCompiler::IEnumEiffelClass_impl_proxy %"ecom_EiffelComCompiler_IEnumEiffelClass_impl_proxy_s.h%"]():EIF_POINTER"
+		end
+
+	ccom_last_error_code (cpp_obj: POINTER): INTEGER is
+			-- Last error code
+		external
+			"C++ [ecom_EiffelComCompiler::IEnumEiffelClass_impl_proxy %"ecom_EiffelComCompiler_IEnumEiffelClass_impl_proxy_s.h%"]():EIF_INTEGER"
+		end
+
+	ccom_last_error_description (cpp_obj: POINTER): STRING is
+			-- Last error description
+		external
+			"C++ [ecom_EiffelComCompiler::IEnumEiffelClass_impl_proxy %"ecom_EiffelComCompiler_IEnumEiffelClass_impl_proxy_s.h%"]():EIF_REFERENCE"
+		end
+
+	ccom_last_error_help_file (cpp_obj: POINTER): STRING is
+			-- Last error help file
+		external
+			"C++ [ecom_EiffelComCompiler::IEnumEiffelClass_impl_proxy %"ecom_EiffelComCompiler_IEnumEiffelClass_impl_proxy_s.h%"]():EIF_REFERENCE"
+		end
+
+	ccom_last_source_of_exception (cpp_obj: POINTER): STRING is
+			-- Last source of exception
+		external
+			"C++ [ecom_EiffelComCompiler::IEnumEiffelClass_impl_proxy %"ecom_EiffelComCompiler_IEnumEiffelClass_impl_proxy_s.h%"]():EIF_REFERENCE"
 		end
 
 end -- IENUM_EIFFEL_CLASS_IMPL_PROXY

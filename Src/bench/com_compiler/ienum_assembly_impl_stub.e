@@ -13,7 +13,7 @@ inherit
 feature -- Access
 
 	count: INTEGER is
-			-- No description available.
+			-- Retrieve enumerator item count.
 		do
 			-- Put Implementation here.
 		end
@@ -21,7 +21,7 @@ feature -- Access
 feature -- Basic Operations
 
 	next (pp_ieiffel_assembly_properties: CELL [IEIFFEL_ASSEMBLY_PROPERTIES_INTERFACE]; pul_fetched: INTEGER_REF) is
-			-- No description available.
+			-- Go to next item in enumerator
 			-- `pp_ieiffel_assembly_properties' [out].  
 			-- `pul_fetched' [out].  
 		do
@@ -29,27 +29,27 @@ feature -- Basic Operations
 		end
 
 	skip (ul_count: INTEGER) is
-			-- No description available.
+			-- Skip `ulCount' items.
 			-- `ul_count' [in].  
 		do
 			-- Put Implementation here.
 		end
 
 	reset is
-			-- No description available.
+			-- Reset enumerator.
 		do
 			-- Put Implementation here.
 		end
 
 	clone1 (pp_ienum_assembly: CELL [IENUM_ASSEMBLY_INTERFACE]) is
-			-- No description available.
+			-- Clone enumerator.
 			-- `pp_ienum_assembly' [out].  
 		do
 			-- Put Implementation here.
 		end
 
 	ith_item (ul_count: INTEGER; pp_ieiffel_assembly_properties: CELL [IEIFFEL_ASSEMBLY_PROPERTIES_INTERFACE]) is
-			-- No description available.
+			-- Retrieve enumerators ith item at `ulIndex'.
 			-- `ul_count' [in].  
 			-- `pp_ieiffel_assembly_properties' [out].  
 		do

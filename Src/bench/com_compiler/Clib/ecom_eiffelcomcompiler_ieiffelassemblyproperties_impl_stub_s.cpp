@@ -264,29 +264,6 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_stub::set_Pr
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_stub::IsPrefixReadOnly(  /* [out, retval] */ VARIANT_BOOL * pvb_read_only )
-
-/*-----------------------------------------------------------
-	Is assembly prefix read only.
------------------------------------------------------------*/
-{
-	ECATCH;
-
-	
-	EIF_BOOLEAN_FUNCTION eiffel_function = 0;
-	eiffel_function = eif_boolean_function ("is_prefix_read_only", type_id);
-	EIF_BOOLEAN tmp_value = 0;
-	if (eiffel_function != NULL)
-		tmp_value = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
-	else
-		tmp_value = eif_field (eif_access (eiffel_object), "is_prefix_read_only", EIF_BOOLEAN);
-	*pvb_read_only = rt_ec.ccom_ec_boolean (tmp_value);
-	
-	END_ECATCH;
-	return S_OK;
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
 STDMETHODIMP ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_stub::GetTypeInfo( unsigned int itinfo, LCID lcid, ITypeInfo **pptinfo )
 
 /*-----------------------------------------------------------
@@ -386,43 +363,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_stub::Invoke
 	switch (dispID)
 	{
 		
-		case 10069:
-			{
-				if (pDispParams->cArgs != 0)
-					return DISP_E_BADPARAMCOUNT;
-
-				VARIANT_BOOL result = 0;
-				
-				hr = IsPrefixReadOnly (&result);
-				
-				if (FAILED (hr))
-				{
-					if (pExcepInfo != NULL)
-					{
-						WCHAR * wide_string = 0;
-						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
-						BSTR b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("ISE");
-						b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrSource = b_string;
-						pExcepInfo->wCode = HRESULT_CODE (hr);
-					}
-					return DISP_E_EXCEPTION;
-				}
-				if (pVarResult != NULL)
-				{
-					VariantClear (pVarResult);
-					pVarResult->vt = 11;
-					pVarResult->boolVal = result;
-				}
-					
-			}
-			break;
-
-		case 10065:
+		case 10033:
 			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
 			{
 				if (pDispParams->cArgs != 0)
@@ -430,7 +371,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_stub::Invoke
 
 				BSTR result = 0;
 				
-				hr = PublicKeyToken (&result);
+				hr = Version (&result);
 				
 				if (FAILED (hr))
 				{
@@ -459,7 +400,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_stub::Invoke
 			}
 			break;
 
-		case 10066:
+		case 10199:
 			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
 			{
 				if (pDispParams->cArgs != 0)
@@ -496,7 +437,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_stub::Invoke
 			}
 			break;
 
-		case 10067:
+		case 10200:
 			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
 			{
 				if (pDispParams->cArgs != 0)
@@ -533,7 +474,44 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_stub::Invoke
 			}
 			break;
 
-		case 10068:
+		case 10036:
+			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
+			{
+				if (pDispParams->cArgs != 0)
+					return DISP_E_BADPARAMCOUNT;
+
+				BSTR result = 0;
+				
+				hr = Culture (&result);
+				
+				if (FAILED (hr))
+				{
+					if (pExcepInfo != NULL)
+					{
+						WCHAR * wide_string = 0;
+						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
+						BSTR b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrDescription = b_string;
+						wide_string = ccom_create_from_string ("ISE");
+						b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrSource = b_string;
+						pExcepInfo->wCode = HRESULT_CODE (hr);
+					}
+					return DISP_E_EXCEPTION;
+				}
+				if (pVarResult != NULL)
+				{
+					VariantClear (pVarResult);
+					pVarResult->vt = 8;
+					pVarResult->bstrVal = result;
+				}
+					
+			}
+			break;
+
+		case 10201:
 			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
 			{
 				if (pDispParams->cArgs != 0)
@@ -626,7 +604,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_stub::Invoke
 			}
 			break;
 
-		case 10062:
+		case 10094:
 			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
 			{
 				if (pDispParams->cArgs != 0)
@@ -663,7 +641,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_stub::Invoke
 			}
 			break;
 
-		case 10063:
+		case 10198:
 			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
 			{
 				if (pDispParams->cArgs != 0)
@@ -671,44 +649,7 @@ STDMETHODIMP ecom_EiffelComCompiler::IEiffelAssemblyProperties_impl_stub::Invoke
 
 				BSTR result = 0;
 				
-				hr = Version (&result);
-				
-				if (FAILED (hr))
-				{
-					if (pExcepInfo != NULL)
-					{
-						WCHAR * wide_string = 0;
-						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
-						BSTR b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("ISE");
-						b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrSource = b_string;
-						pExcepInfo->wCode = HRESULT_CODE (hr);
-					}
-					return DISP_E_EXCEPTION;
-				}
-				if (pVarResult != NULL)
-				{
-					VariantClear (pVarResult);
-					pVarResult->vt = 8;
-					pVarResult->bstrVal = result;
-				}
-					
-			}
-			break;
-
-		case 10064:
-			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
-			{
-				if (pDispParams->cArgs != 0)
-					return DISP_E_BADPARAMCOUNT;
-
-				BSTR result = 0;
-				
-				hr = Culture (&result);
+				hr = PublicKeyToken (&result);
 				
 				if (FAILED (hr))
 				{

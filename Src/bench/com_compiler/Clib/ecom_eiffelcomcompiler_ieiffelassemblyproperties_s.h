@@ -87,12 +87,6 @@ public:
 	virtual STDMETHODIMP set_Prefix(  /* [in] */ BSTR pbstr_prefix ) = 0;
 
 
-	/*-----------------------------------------------------------
-	Is assembly prefix read only.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP IsPrefixReadOnly(  /* [out, retval] */ VARIANT_BOOL * pvb_read_only ) = 0;
-
-
 
 protected:
 

@@ -490,6 +490,73 @@ void ecom_EiffelComCompiler::IEiffelProjectProperties_impl_proxy::ccom_set_proje
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
+EIF_REFERENCE ecom_EiffelComCompiler::IEiffelProjectProperties_impl_proxy::ccom_target_clr_version(  )
+
+/*-----------------------------------------------------------
+	Version of CLR compiler should target
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_IEiffelProjectProperties == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_IEiffelProjectProperties_, (void **)&p_IEiffelProjectProperties);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	BSTR ret_value = 0;
+	
+	hr = p_IEiffelProjectProperties->TargetClrVersion( &ret_value);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	
+	
+	EIF_OBJECT eiffel_result = eif_protect ((EIF_REFERENCE)rt_ce.ccom_ce_bstr (ret_value));
+	rt_ce.free_memory_bstr (ret_value);
+	return eif_wean (eiffel_result);
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_EiffelComCompiler::IEiffelProjectProperties_impl_proxy::ccom_set_target_clr_version(  /* [in] */ EIF_OBJECT pbstr_version )
+
+/*-----------------------------------------------------------
+	Version of CLR compiler should target
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_IEiffelProjectProperties == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_IEiffelProjectProperties_, (void **)&p_IEiffelProjectProperties);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	BSTR tmp_pbstr_version = 0;
+	tmp_pbstr_version = (BSTR)rt_ec.ccom_ec_bstr (eif_access (pbstr_version));
+	
+	hr = p_IEiffelProjectProperties->set_TargetClrVersion(tmp_pbstr_version);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	
+	rt_ce.free_memory_bstr (tmp_pbstr_version);
+
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
 EIF_BOOLEAN ecom_EiffelComCompiler::IEiffelProjectProperties_impl_proxy::ccom_dot_net_naming_convention(  )
 
 /*-----------------------------------------------------------

@@ -23,6 +23,11 @@ inherit
         EV_GTK_CONSTANTS
 	EV_GDK_EXTERNALS
 
+	MEMORY
+		redefine
+			dispose
+		end
+
 feature {NONE} -- Initialization	
 
 	widget_make (an_interface: EV_WIDGET) is
@@ -216,14 +221,14 @@ feature -- Status setting
 			gtk_widget_set_sensitive (widget, not flag)
 		end
 
-	set_expand (flag: BOOLEAN) is
-			-- Make `flag' the new expand option.
-		do
-			expandable := flag
-			if parent_imp /= Void then
-				parent_imp.child_packing_changed (Current)
-			end
-		end
+--	set_expand (flag: BOOLEAN) is
+--			-- Make `flag' the new expand option.
+--		do
+--			expandable := flag
+--			if parent_imp /= Void then
+--				parent_imp.child_packing_changed (Current)
+--			end
+--		end
 
 	set_horizontal_resize (flag: BOOLEAN) is
 			-- Adapt `resize_type' to `flag'.
@@ -716,6 +721,24 @@ feature -- Implementation
 		do
 			box_widget := box_wid
 		end
+
+feature -- Removal
+
+	dispose is
+			-- Action to be executed just before garbage collection
+			-- reclaims an object.
+			-- Default version does nothing; redefine in descendants
+			-- to perform specific dispose actions. Those actions
+			-- should only take care of freeing external resources;
+			-- they should not perform remote calls on other objects
+			-- since these may also be dead and reclaimed.
+		do
+			-- Destroy the gtkwidget.
+			if (gtk_is_widget (widget)) then
+				gtk_widget_destroy (widget)
+			end
+-- Check for each widget if there are other gtk object than `widget'.
+		end	
 
 end -- class EV_WIDGET_IMP
 

@@ -65,7 +65,8 @@ feature -- Access
 							end
 							l_toc_url.extend (l_toc_name)
 							l_toc_url.extend (l_util.short_name (tocs_directory.name))
-							l_toc_url.extend (l_util.short_name (default_toc_file_name))
+							l_toc_url.extend (l_util.file_no_extension (default_toc_file_name))
+							l_toc_url.add_extension ("html")
 							l_toc_url_string := l_toc_url.string
 							l_toc_url_string.replace_substring_all ("\", "/")
 							Result.append ("<option value=%"" + l_toc_url_string + "%"")
@@ -231,8 +232,10 @@ feature {NONE} -- Implementation
 			create Result.make (3)			
 			Result.extend ("file.gif")
 			Result.extend ("folder.gif")	
+			Result.extend ("folder_open.gif")
 			Result.extend ("go_up.gif")
-			Result.extend ("sync_button.gif")
+			Result.extend ("sync_button.gif")			
+			Result.extend ("spacer.gif")
 		end
 		
 end -- class WEB_HELP_PROJECT_SIMPLE

@@ -39,10 +39,15 @@ feature -- Processing
 			create Result.make_empty
 			create l_util
 			
-				-- Add parent link
+				-- Add parent links
 			if a_node.has_parent then
-				Result.append ("<tr><td><a href=%"" + a_node.parent.id.out + ".html" + "%"><img src=%"../go_up.gif%" align=%"center%"></a></td>")
-				Result.append ("<td><a href=%"" + a_node.parent.id.out + ".html" + "%">&nbsp;Up one level</a></td></tr>%N")
+				Result.append ("<tr><td>You are in:<br><br></td></tr>")
+				Result.append (parent_hierarchy_text (a_node))
+				Result.append ("<tr><td>" + spacer_html (number_of_parents (a_node)))
+				Result.append ("<a href=%"" + a_node.parent.id.out + ".html" + "%"><img src=%"../folder_open.gif%" align=%"center%"></a>&nbsp;" + a_node.title)
+--				Result.append ("<a href=%"" + a_node.id.out + ".html" + "%">&nbsp;" + l_title "</a></td></tr>%N")				
+				Result.append ("<tr><td><br></td></tr>")
+				Result.append ("<tr><td>Topics:<br><br></td></tr>")
 			end
 
 				-- Child links
@@ -85,9 +90,9 @@ feature -- Processing
 					else
 						Result.append ("../file.gif")
 					end			
-					Result.append ("%" align=%"center%"></a></td>")
+					Result.append ("%" align=%"center%"></a>")
 					
-					Result.append ("<td><a href=%"../" + l_url + "%" target=%"content_frame%">&nbsp;")			 	
+					Result.append ("<a href=%"../" + l_url + "%" target=%"content_frame%">&nbsp;")			 	
 					
 					if l_item.title /= Void then
 						Result.append (l_item.title)	
@@ -98,5 +103,68 @@ feature -- Processing
 				end
 			end			
 		end		
+
+feature {NONE} -- Implementation
+
+	parent_hierarchy_text (a_node: TABLE_OF_CONTENTS_NODE): STRING is
+			-- Hierarchy text
+		require
+			node_has_parent: a_node.has_parent
+		local
+			l_parent: like a_node
+			l_title,
+			l_url,
+			l_name,
+			l_anchor: STRING
+			l_util: UTILITY_FUNCTIONS
+		do
+			create Result.make_empty
+			l_parent := a_node.parent
+			
+				-- Process parents of parent
+			if l_parent.has_parent then
+				Result.append (parent_hierarchy_text (l_parent))
+			end
+			
+			Result.append ("<tr><td>")
+			
+				-- Add spacers for tree effect
+			Result.append (spacer_html (number_of_parents (l_parent)))
+			
+				-- Add parent node
+			l_title := l_parent.title.twin
+			if l_parent.has_parent then
+				l_parent := l_parent.parent
+			end
+			if not l_title.is_equal ("table_of_contents") then
+				Result.append ("<a href=%"" + l_parent.id.out + ".html" + "%" align=%"center%"><img src=%"../folder_open.gif%" align=%"center%">&nbsp;</a>" + l_title)
+--				Result.append ("<a href=%"" + l_url + "%" target=%"content_frame%">&nbsp;" + l_title + "</a></td></tr>%N")	
+			end			
+		end		
+
+	spacer_html (cnt: INTEGER): STRING is
+			-- Spacer html
+		local
+			l_cnt: INTEGER
+		do
+			create Result.make_empty
+			from
+				l_cnt := cnt
+			until
+				l_cnt = 0
+			loop				
+				Result.append ("<img src=%"../spacer.gif%">")
+				l_cnt := l_cnt - 1
+			end
+		end
+
+	number_of_parents (a_node: TABLE_OF_CONTENTS_NODE): INTEGER is
+			-- Number of parents that `a_node' has
+		do
+			if a_node.has_parent then				
+				Result := Result + 1
+				Result := Result + number_of_parents (a_node.parent)
+			end
+		end
 
 end -- class TABLE_OF_CONTENTS_SIMPLE_WEB_HELP_FORMATTER

@@ -94,7 +94,7 @@ feature {NONE}
 		local
 			new_table: HASH_TABLE [INTEGER, STRING];
 			subtab: HASH_TABLE [GRAPH_ELEMENT, STRING];
-			s: STATE;
+			s: BUILD_STATE;
 			g: GRAPH_ELEMENT
 		do
 			!!stored_graph.make (Shared_app_graph.count);

@@ -11,7 +11,7 @@ creation
 	
 feature 
 
-	make (s: STATE) is
+	make (s: BUILD_STATE) is
 		local
 			stored_input: S_CONTEXT_ELMT;
 			stored_output: S_BEHAVIOR;
@@ -57,7 +57,7 @@ feature {NONE}
 	
 feature 
 
-	state: STATE is
+	state: BUILD_STATE is
 		local
 			b: BEHAVIOR;
 			c: CONTEXT;

@@ -184,11 +184,11 @@ feature -- Status setting
 			
 			if pixmap_imp /= Void then
 				if text.is_empty then
-					w := internal_pixmap.width + pixmap_border * 2
+					w := private_pixmap.width + pixmap_border * 2
 				else
-					w := w + internal_pixmap.width + pixmap_border
+					w := w + private_pixmap.width + pixmap_border
 				end
-				h := h.max (internal_pixmap.height + pixmap_border * 2)
+				h := h.max (private_pixmap.height + pixmap_border * 2)
 			end
 			if text.is_empty and pixmap_imp = Void then
 				w := w + extra_width
@@ -270,9 +270,11 @@ feature -- Element change
 			font_imp: EV_FONT_IMP
 			size_difference: INTEGER
 		do
-			Precursor {EV_PIXMAPABLE_IMP} (pix)
-			
-			internal_pixmap := clone (pix)
+			if internal_icon /= Void or internal_bitmap /= Void then
+				unset_bitmap
+			end
+		
+			private_pixmap := clone (pix)
 			if not text.is_empty then
 				if private_font /= Void then
 
@@ -285,17 +287,17 @@ feature -- Element change
 					size_difference := private_wel_font.string_width (wel_text)
 				end
 			end
-			
-			internal_pixmap_state ?= internal_pixmap.implementation
+
+			internal_pixmap_state ?= private_pixmap.implementation
 			wel_icon := internal_pixmap_state.icon
 			if wel_icon /= Void then
 				set_icon (internal_pixmap_state.icon)
 			else
-				a_wel_bitmap := internal_pixmap_state.get_bitmap
-				set_bitmap (a_wel_bitmap)
-				a_wel_bitmap.decrement_reference
+				internal_bitmap := internal_pixmap_state.get_bitmap
+				internal_bitmap.decrement_reference
 			end
 			set_default_minimum_size
+			invalidate
 		end
 	
 	set_font (ft: EV_FONT) is
@@ -305,16 +307,12 @@ feature -- Element change
 			set_default_minimum_size
 		end
 
-	internal_pixmap: EV_PIXMAP
-
 	remove_pixmap is
 			-- Remove `pixmap' from `Current'.
 		do
 			Precursor {EV_PIXMAPABLE_IMP}
 			unset_bitmap
 			set_default_minimum_size
-				-- Why was this not done before?
-			internal_pixmap := Void
 			invalidate
 		end
 
@@ -575,8 +573,8 @@ feature {EV_ANY_I} -- Drawing implementation
 				
 				-- If there is a pixmap on `Current', then assign its implementation to
 				--`internal_pixmap_state' and store its width in `image_width'.
-			if internal_pixmap /= Void then
-				internal_pixmap_state ?= internal_pixmap.implementation				
+			if private_pixmap /= Void then
+				internal_pixmap_state ?= private_pixmap.implementation				
 					-- Compute values for re-sizing
 				image_width := internal_pixmap_state.width	
 			end
@@ -595,7 +593,7 @@ feature {EV_ANY_I} -- Drawing implementation
 				combined_width := image_width
 				right_spacing := pixmap_border
 				left_spacing := pixmap_border
-			elseif internal_pixmap = Void then
+			elseif private_pixmap = Void then
 				combined_width := text_width
 				right_spacing := image_pixmap_space
 				left_spacing := image_pixmap_space
@@ -619,7 +617,7 @@ feature {EV_ANY_I} -- Drawing implementation
 				-- Now assign the left edge of the text rectangle.
 				-- Note that if there is no image, `image_width' is 0, and we do not
 				-- add on `image_pixmap_space'.
-			text_rect.set_left (left_position + image_width + ((internal_pixmap /= Void).to_integer * image_pixmap_space))
+			text_rect.set_left (left_position + image_width + ((private_pixmap /= Void).to_integer * image_pixmap_space))
 		
 				-- If the `button_in' flag is set in `state', then we must move the text one pixel
 				-- to the right and one pixel down to simulate the depression.
@@ -635,7 +633,7 @@ feature {EV_ANY_I} -- Drawing implementation
 					-- Compute distance from top of button to display image.
 				height_offset := (height - internal_pixmap_state.height - pixmap_border * 2) // 2
 					-- Retrieve the image of `Current'.
-				wel_bitmap := internal_pixmap_state.get_bitmap
+				wel_bitmap := internal_bitmap
 					-- Perform the drawing.
 				if internal_pixmap_state.has_mask then
 					mask_bitmap := internal_pixmap_state.get_mask_bitmap

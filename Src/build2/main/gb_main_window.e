@@ -144,7 +144,7 @@ feature -- Basic operation
 			command_handler.show_hide_builder_window_command.safe_disable_selected
 			command_handler.show_hide_component_viewer_command.safe_disable_selected
 			command_handler.show_hide_display_window_command.safe_disable_selected
-			command_handler.show_history_command.disable_selected
+			command_handler.show_hide_history_command.safe_disable_selected
 			destroy_floating_editors
 		end	
 		
@@ -215,7 +215,7 @@ feature {NONE} -- Implementation
 			
 			create menu_separator
 			view_menu.extend (menu_separator)
-			view_menu.extend (command_handler.show_history_command.new_menu_item)
+			view_menu.extend (command_handler.show_hide_history_command.new_menu_item)
 
 				-- Initialize the project menu.
 			create project_menu.make_with_text (Gb_project_menu_text)
@@ -323,7 +323,7 @@ feature {NONE} -- Implementation
 			create separator
 			Result.extend (separator)
 			Result.extend (command_handler.undo_command.new_toolbar_item (True, False))
-			Result.extend (command_handler.show_history_command.new_toolbar_item (True, False))
+			Result.extend (command_handler.show_hide_history_command.new_toolbar_item (True, False))
 			Result.extend (command_handler.redo_command.new_toolbar_item (True, False))
 			create separator
 			Result.extend (separator)

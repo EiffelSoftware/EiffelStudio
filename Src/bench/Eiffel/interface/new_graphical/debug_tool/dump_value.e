@@ -488,6 +488,11 @@ feature {DUMP_VALUE} -- string_representation Implementation
 					count_attribute_found: True
 					area_attribute_found: True
 				end
+				if Result /= Void then
+						--| We now have retrieved the full `area' of STRING object. Let's check
+						--| if we need to display the complete area, or just part of it.
+					Result.keep_head (l_count.min (Result.count))
+				end
 				last_string_representation_length := l_count
 			else
 				Result := classic_debug_output_evaluated_string (min, max)

@@ -260,16 +260,6 @@ feature -- Element change
 		end
 		--| FIXME IEK This needs a postcondition!
 
-	set_row_height (a_height: INTEGER) is
-			-- Set all rows to `a_height'.
-		obsolete
-				"Not implemented. Please let us know why you need this feature."
-			do
-				check
-					not_implemented: False
-				end
-			end
-
 feature -- Event handling
 
 	select_actions: EV_MULTI_COLUMN_LIST_ROW_SELECT_ACTION_SEQUENCE
@@ -373,6 +363,17 @@ feature -- Obsolete
 			Result := implementation.column_count
 		end
 
+
+	set_row_height (a_height: INTEGER) is
+			-- Set all rows to `a_height'.
+		obsolete
+				"Not implemented. Please let us know why you need this feature."
+			do
+				check
+					not_implemented: False
+				end
+			end
+
 end -- class EV_MULTI_COLUMN_LIST
 
 --!-----------------------------------------------------------------------------
@@ -396,6 +397,9 @@ end -- class EV_MULTI_COLUMN_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.57  2000/04/25 18:43:05  king
+--| Moved set_row_height in to obsolete feature clause
+--|
 --| Revision 1.56  2000/04/21 16:27:29  rogers
 --| Added a check False to set_row_height.
 --|

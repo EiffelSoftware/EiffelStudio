@@ -19,6 +19,10 @@
 #include "eif_rtlimits.h"
 #include <ctype.h>
 
+#ifdef EIF_WIN32
+#include <io.h>
+#endif
+
 /* private functions for lex */
 static int get_string();
 static int eif_char(char);
@@ -49,18 +53,6 @@ rt_public int zzwrap()
 {
 	return 1;
 }
-
-rt_public int init_lace()
-{
-	/* This function must be called prior any invocation of the lexical
-	 * analyzer. Its purpose is to put the automaton in the known INIT
-	 * state. I could have used the undocumented INITIAL state, but this
-	 * is not supported everywhere (which is why it's undocumented)--RAM.
-	 */
-
-	BEGIN INIT;
-}
-
 
 static int get_string()
 {
@@ -167,8 +159,14 @@ char  *c_clname(FILE *file_pointer)
 
 	zzin = file_pointer;
 
-	/* Parsing */
-	init_lace();
+		/* This function must be called prior any invocation of the lexical
+	 	* analyzer. Its purpose is to put the automaton in the known INIT
+	 	* state. I could have used the undocumented INITIAL state, but this
+	 	* is not supported everywhere (which is why it's undocumented)--RAM.
+	 	*/
+	BEGIN INIT;
+
+		/* Parsing */
 	reset_class_name_parser();
 	result = zzlex();
 

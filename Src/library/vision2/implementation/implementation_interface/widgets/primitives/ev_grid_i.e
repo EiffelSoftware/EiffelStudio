@@ -313,6 +313,9 @@ feature -- Status setting
 			-- Ensure horizontal scrolling is performed on a per-item basis.
 		do
 			is_horizontal_scrolling_per_item := True
+			has_horizontal_scrolling_per_item_just_changed := True
+			recompute_horizontal_scroll_bar
+			has_horizontal_scrolling_per_item_just_changed := False
 		ensure
 			horizontal_scrolling_performed_per_item: is_horizontal_scrolling_per_item
 		end
@@ -321,14 +324,24 @@ feature -- Status setting
 			-- Ensure horizontal scrolling is performed on a per-pixel basis.
 		do
 			is_horizontal_scrolling_per_item := False
+			has_horizontal_scrolling_per_item_just_changed := True
+			recompute_horizontal_scroll_bar
+			has_horizontal_scrolling_per_item_just_changed := False
 		ensure
 			horizontal_scrolling_performed_per_pixel: not is_horizontal_scrolling_per_item
 		end
-		
+	
+	has_horizontal_scrolling_per_item_just_changed: BOOLEAN
+			-- Has the horizontal scrolling method just been changed between
+			-- per item and per pixel? This is used to adjust the scroll bar's position
+			-- to approximate it's original position during the recomputation of it's
+			-- settings in `recompute_horizontal_scroll_bar'.
+
 	enable_vertical_scrolling_per_item is
 			-- Ensure vertical scrolling is performed on a per-item basis.
 		do
 			is_vertical_scrolling_per_item := True
+			recompute_vertical_scroll_bar
 		ensure
 			vertical_scrolling_performed_per_item: is_vertical_scrolling_per_item
 		end
@@ -337,6 +350,7 @@ feature -- Status setting
 			-- Ensure vertical scrolling is performed on a per-pixel basis.
 		do
 			is_vertical_scrolling_per_item := False
+			recompute_vertical_scroll_bar
 		ensure
 			vertical_scrolling_performed_per_pixel: not is_vertical_scrolling_per_item
 		end
@@ -673,17 +687,11 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 	drawable: EV_DRAWING_AREA
 		-- Drawing area for `Current' on which all drawing operations are performed.
 		
-	virtual_x_position: INTEGER is
+	virtual_x_position: INTEGER
 			-- Virtual X coordinate of `viewport' relative to left hand edge of grid.
-		do
-			Result := horizontal_scroll_bar.value
-		end
 		
-	virtual_y_position: INTEGER is
+	virtual_y_position: INTEGER
 			-- Virtual Y coordinate of `viewport' relative to top edge of grid.
-		do
-			Result := vertical_scroll_bar.value
-		end
 		
 	vertical_item_ofFset: INTEGER is
 			--
@@ -874,6 +882,8 @@ feature {NONE} -- Drawing implementation
 		local
 			l_total_header_width: INTEGER
 			l_client_width: INTEGER
+			average_column_width: INTEGER
+			previous_scroll_bar_value: INTEGER
 		do
 				-- Retrieve the 
 			l_total_header_width := total_header_width
@@ -891,9 +901,30 @@ feature {NONE} -- Drawing implementation
 					update_scroll_bar_spacer
 				end
 					-- Update the range and leap of `horizontal_scroll_bar' to reflect the relationship between
-					-- `l_total_header_width' and `l_client_width'.
-				horizontal_scroll_bar.value_range.adapt (create {INTEGER_INTERVAL}.make (0, l_total_header_width - l_client_width))
-				horizontal_scroll_bar.set_leap (width)
+					-- `l_total_header_width' and `l_client_width'. Note that the behavior depends on the state of
+					-- `is_horizontal_scrolling_per_item'.
+				if has_horizontal_scrolling_per_item_just_changed then
+					previous_scroll_bar_value := horizontal_scroll_bar.value
+				end
+				if is_horizontal_scrolling_per_item then					
+					horizontal_scroll_bar.value_range.adapt (create {INTEGER_INTERVAL}.make (0, column_count - 1))
+					average_column_width := (l_total_header_width // column_count)
+					horizontal_scroll_bar.set_leap (l_client_width // average_column_width)
+					if has_horizontal_scrolling_per_item_just_changed then
+							-- If we are just switching from per pixel to per item horizontal
+							-- scrolling, we must approximate the previous position of the scroll bar.
+						horizontal_scroll_bar.set_value (previous_scroll_bar_value // average_column_width)
+					end
+				else
+					horizontal_scroll_bar.value_range.adapt (create {INTEGER_INTERVAL}.make (0, l_total_header_width - l_client_width))
+					horizontal_scroll_bar.set_leap (width)
+					if has_horizontal_scrolling_per_item_just_changed then
+							-- If we are just switching from per item to per pixel horizontal
+							-- scrolling, we can set the position of the scroll bar exactly to match it's
+							-- previous position.
+						horizontal_scroll_bar.set_value (column_offsets @ (previous_scroll_bar_value + 1))
+					end
+				end
 			else
 					-- The headers are not as wide as the visible client area.
 				if horizontal_scroll_bar.is_show_requested then
@@ -932,21 +963,26 @@ feature {NONE} -- Drawing implementation
 			buffer_space: INTEGER
 			current_buffer_position: INTEGER
 		do
+			if is_horizontal_scrolling_per_item then
+				virtual_x_position := column_offsets.i_th (a_value + 1)
+			else
+				virtual_x_position := a_value
+			end
 			buffer_space := (buffered_drawable_size - viewport.width)
 			current_buffer_position := viewport.x_offset
 			
-			if (a_value > last_value) and ((a_value - last_value) + (current_buffer_position)) >= buffer_space then
+			if (virtual_x_position > last_value) and ((virtual_x_position - last_value) + (current_buffer_position)) >= buffer_space then
 				viewport.set_x_offset (0)
 				drawable.redraw
-			elseif (a_value < last_value) and ((a_value - last_value) + (current_buffer_position)) <= 0 then
+			elseif (virtual_x_position < last_value) and ((virtual_x_position - last_value) + (current_buffer_position)) <= 0 then
 				viewport.set_x_offset (buffer_space)
 				drawable.redraw
 			else
-				viewport.set_x_offset (current_buffer_position + a_value - last_value)
+				viewport.set_x_offset (current_buffer_position + virtual_x_position - last_value)
 			end
-			header_viewport.set_x_offset (a_value)
+			header_viewport.set_x_offset (virtual_x_position)
 			
-			last_value := a_value			
+			last_value := virtual_x_position
 		end
 		
 		

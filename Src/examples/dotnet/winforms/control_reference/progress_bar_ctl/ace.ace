@@ -15,6 +15,7 @@ default
 	dotnet_naming_convention (yes)
 	msil_generation_type ("exe")
 	msil_assembly_compatibility ("None")
+	msil_clr_version ("v1.0.3705")
 	check_vape (yes)
 	console_application (no)
 

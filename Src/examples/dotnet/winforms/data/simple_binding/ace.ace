@@ -15,6 +15,7 @@ default
 	cls_compliant (yes)
 	dotnet_naming_convention (yes)
 	msil_generation_type ("exe")
+	msil_clr_version ("v1.0.3705")
 	msil_culture ("n/a")
 	msil_assembly_compatibility ("None")
 	check_vape (yes)

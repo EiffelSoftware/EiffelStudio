@@ -293,14 +293,6 @@ feature -- Settings
 			object_type_id_set: object_type_id = an_id
 		end
 
-	set_public_key_token (assembly_info: ASSEMBLY_INFO) is
-			-- Set `public_key_token' of `assembly_info' to
-			-- public key token of current generated assembly.
-		require
-			assembly_info_not_void: assembly_info /= Void
-		do
-		end
-
 feature -- Generation Structure
 
 	start_assembly_generation (

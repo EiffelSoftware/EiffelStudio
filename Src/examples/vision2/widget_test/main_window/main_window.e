@@ -29,6 +29,7 @@ feature {NONE} -- Initialization
 			editor: GB_OBJECT_EDITOR
 			controller: TEST_CONTROLLER
 			event_selector: EVENT_SELECTOR
+			documentation_display: DOCUMENTATION_DISPLAY
 		do
 				-- Create the editor and parent.
 			create editor
@@ -41,6 +42,10 @@ feature {NONE} -- Initialization
 				-- Create the test controller.
 			create controller.make_with_text_control (test_class_display)
 			controller_parent.extend (controller)
+			
+				-- Create the documentation display
+			create documentation_display.make_with_text (flat_short_display)
+			register_type_change_agent (agent documentation_display.update_for_type_change)
 			
 			create event_selector.make_with_list (event_selector_list, event_output)
 			register_type_change_agent (agent event_selector.rebuild)

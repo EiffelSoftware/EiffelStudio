@@ -117,7 +117,7 @@ feature -- Access
 		alias
 			"get_EiffelAssembly"
 		end
-
+		
 feature -- Basic Operations
 
 	access_violation_error: STRING is
@@ -232,11 +232,11 @@ feature -- Basic Operations
 			"UpdateAssemblyDescription"
 		end
 
-	replace_type (an_assembly_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR; an_eiffel_class: ISE_REFLECTION_EIFFELCLASS): ISE_REFLECTION_TYPESTORER is
+	type_storer_from_class (an_eiffel_class: ISE_REFLECTION_EIFFELCLASS): ISE_REFLECTION_TYPESTORER is
 		external
-			"IL signature (ISE.Reflection.AssemblyDescriptor, ISE.Reflection.EiffelClass): ISE.Reflection.TypeStorer use ISE.Reflection.EiffelAssemblyCacheHandler"
+			"IL signature (ISE.Reflection.EiffelClass): ISE.Reflection.TypeStorer use ISE.Reflection.EiffelAssemblyCacheHandler"
 		alias
-			"ReplaceType"
+			"TypeStorerFromClass"
 		end
 
 end -- class ISE_REFLECTION_EIFFELASSEMBLYCACHEHANDLER

@@ -564,5 +564,8 @@ feature {NONE} -- Implementation
 			"C | %"eif_gen_conf.h%""
 		end
 
+invariant
+	lower_is_one: lower = 1
+
 end -- class TUPLE
 

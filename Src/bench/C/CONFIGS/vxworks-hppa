@@ -11,7 +11,7 @@
 # Target system: hp-ux rio a.09.05 a 9000712 2005001273 two-user license 
 
 lngpad_2='8'
-command_makefile='make'
+command_makefile='make -f'
 d_bsdsig='undef'
 sh='/bin/sh'
 cc='cchppa'
@@ -24,16 +24,20 @@ mtccflags='-ansi -Wall -Wno-comment -Wno-unused -Wno-trigraphs -I$(VXWORKS)/targ
 
 cppflags=''
 ldflags=''
+mtldsharedflags='-shared -o'
+ldsharedflags='-shared -o'
 
 libs=''
 mtlibs=''
 
 prefix='lib'
+shared_prefix='lib'
 mt_prefix='mt'
 concurrent_prefix='c'
 eiflib='finalized'
 wkeiflib='wkbench'
 suffix='.a'
+shared_suffix='.so'
 
 optimize='-g'
 large=''

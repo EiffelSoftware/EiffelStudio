@@ -74,6 +74,8 @@ feature -- Access
 	
 	generate_empty_directories: STRING is "generate_empty_directories"
 	
+	show_changing_client_type_warning: STRING is "show_changing_client_type_warning"
+	
 	tools_on_top:STRING is "tools_on_top"
 			
 feature -- Basic operations

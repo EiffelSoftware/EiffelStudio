@@ -51,8 +51,12 @@ feature -- Execution
 			c_comments: CLASS_COMMENTS;
 			source_feat: FEATURE_I;
 			target_feat: FEATURE_I;
+			prev_class: CLASS_C;
+			prev_cluster: CLUSTER_I
 		do
 			if not rescued then
+				prev_class := System.current_class;
+				prev_cluster := Inst_context.cluster;
 				target_feat := a_target_feat.associated_feature_i;
 				execution_error := false;
 				Error_handler.wipe_out;
@@ -111,14 +115,17 @@ feature -- Execution
 				!! assert_server.make_for_feature (target_feat, f_ast);
 				init_feature_context (source_feat, target_feat, f_ast);
 				indent;
+				if written_in_class.lace_class.hide_implementation then	
+					set_is_short
+				end;
 				f_ast.format (Current);
 				commit;
-				System.set_current_class (Void);
-				Inst_context.set_cluster (Void);
 			else
 				execution_error := True;
 				rescued := False
 			end
+			System.set_current_class (prev_class);
+			Inst_context.set_cluster (prev_cluster);
 		rescue
 			if Rescue_status.is_error_exception then
 				Rescue_status.set_is_error_exception (False);

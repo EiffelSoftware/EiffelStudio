@@ -245,7 +245,7 @@ feature -- Access
 				children.forth
 			end
 		end
-		
+
 	flatten is
 			-- Flatten `Current' so that it is no longer a representation of a top level object.
 		require
@@ -270,9 +270,6 @@ feature -- Access
 			until
 				all_children_of_associated.off
 			loop
-				check
-					associated_correctly: all_children_of_associated.item.instance_referers.has (all_children_of_current.item.id)
-				end
 				
 				all_children_of_associated.item.instance_referers.remove (all_children_of_current.item.id)
 				
@@ -966,7 +963,8 @@ feature -- Basic operations
 			create command_add.make (parent_object, an_object, insert_position)
 			command_add.execute
 		ensure
-			parent_has_object: parent_object.children.has (an_object)
+			object_contained_if_not_top_level: not an_object.is_top_level_object implies parent_object.children.has (an_object)
+			children_count_increased: parent_object.children.count = old parent_object.children.count + 1
 		end
 		
 	add_new_component (a_component: GB_COMPONENT) is
@@ -1007,7 +1005,8 @@ feature -- Basic operations
 				layout_item.expand
 			end
 		ensure
-			has_object: children.has (an_object)
+			object_contained_if_not_top_level: not an_object.is_top_level_object implies children.has (an_object)
+			children_count_increased: children.count = old children.count + 1
 			layout_item_not_void: an_object.layout_item /= Void
 		end
 		

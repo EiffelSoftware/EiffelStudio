@@ -47,10 +47,11 @@ done
 cd ..
 cvs -d :pserver:$USER@cvs:/home/cvs export -r $1 base
 cvs -d :pserver:$USER@cvs:/home/cvs export -r $1 gel
+cvs -d :pserver:$USER@cvs:/home/cvs export -r $1 wel
 cvs -d :pserver:$USER@cvs:/home/cvs export -r $1 event
 grep -v -- "--|" event/action_sequence.e > vision2/interface/support/action_sequence.e
 grep -v -- "--|" event/active_list.e > vision2/interface/support/active_list.e
-tar czf $1.tgz vision2 base gel
-rm -rf base gel event vision2
+tar czf $1.tgz vision2 base gel wel
+rm -rf base gel event vision2 wel
 echo "Done!"
 exit 0

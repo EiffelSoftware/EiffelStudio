@@ -390,7 +390,7 @@ feature {COMPILER_EXPORTER}
 			s_clusters.prune (Current);
 		end;
 
-	copy_old_cluster (old_cluster_i: CLUSTER_I) is
+	copy_old_cluster (old_cluster_i: like Current) is
 			-- Copy all the information except the ignore
 			-- and renaming clauses
 		local

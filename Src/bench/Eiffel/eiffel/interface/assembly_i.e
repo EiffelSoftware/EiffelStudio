@@ -13,11 +13,19 @@ class
 inherit
 	CLUSTER_I
 		redefine
-			classes
+			classes, copy_old_cluster
 		end
-	
+
+	ASSEMBLY_INFO
+		rename
+			make as assembly_info_make
+		export
+			{NONE} assembly_info_make, set_culture, set_version, set_public_key_token
+		end
+
 create
-	make_from_ast
+	make_from_ast,
+	make_from_precompiled_cluster
 	
 feature {NONE} -- Initialization
 
@@ -32,14 +40,15 @@ feature {NONE} -- Initialization
 		do
 				-- Initialize assembly info.
 			cluster_name := a.cluster_name
-			assembly_name := a.assembly_name
+			assembly_info_make (a.assembly_name)
+			set_version (a.version)
+			set_culture (a.culture)
+			set_public_key_token (a.public_key_token)
 			prefix_name := a.prefix_name
 			if prefix_name /= Void then
 				prefix_name := prefix_name.as_lower
 			end
-			version := a.version
-			culture := a.culture
-			public_key_token := a.public_key_token
+
 			is_library := True
 			is_recursive := True
 			hide_implementation := True
@@ -82,14 +91,8 @@ feature -- Comparison
 		
 feature -- Access
 
-	assembly_name: STRING
-			-- Assembly name or file location of assembly if local assembly.
-
 	prefix_name: STRING
 			-- Prefix to all class names in current assembly.
-
-	version, culture, public_key_token: STRING
-			-- Specification of current assembly.
 
 	classes: HASH_TABLE [EXTERNAL_CLASS_I, STRING]
 			-- List all classes available in current assembly
@@ -103,6 +106,20 @@ feature -- Access
 			-- List of referenced assemblies in Current assembly. 
 			-- Indexed by assembly ID.
 
+feature -- Copy
+
+	copy_old_cluster (old_assembly: like Current) is
+			-- Copy all information of `old_assembly' into Current
+			-- except ignore and renaming clauses.
+		do
+			Precursor {CLUSTER_I} (old_assembly)
+			assembly_name := old_assembly.assembly_name
+			prefix_name := old_assembly.prefix_name
+			version := old_assembly.version
+			culture := old_assembly.culture
+			public_key_token := old_assembly.public_key_token
+		end
+		
 feature -- Initialization
 
 	import_data is

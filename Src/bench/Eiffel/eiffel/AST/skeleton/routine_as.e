@@ -329,6 +329,8 @@ feature -- Type check, byte code and dead code removal
 			if rescue_clause /= Void then
 				Result.set_rescue_clause (rescue_clause.byte_node)
 			end
+			
+			Result.set_start_line_number (Context.current_feature.body.location.line_number)
 			Result.set_end_location (end_location)
 		end
 

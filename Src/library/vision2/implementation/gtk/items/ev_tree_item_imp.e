@@ -225,6 +225,10 @@ feature {NONE} -- Implementation
 			item_imp ?= interface.i_th (a_position).implementation
 			item_imp.set_parent_imp (Void)
 			--| FIXME Add code for dealing with subtree.
+			item_imp.set_dummy_list_widget (item_imp.list_widget)
+			if item_imp.list_widget /= Default_pointer then
+				C.gtk_widget_ref (item_imp.list_widget)
+			end	
 			Precursor (a_position)
 		end
 
@@ -326,6 +330,9 @@ end -- class EV_TREE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.47  2000/03/10 23:51:57  king
+--| Fixed dereferencing of list widget
+--|
 --| Revision 1.46  2000/03/08 22:21:41  king
 --| Added set_parent_imp in addition/removal
 --|

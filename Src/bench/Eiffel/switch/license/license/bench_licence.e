@@ -11,7 +11,7 @@ inherit
 
 	SHARED_CODES
 		rename
-			Bench_key_45_unix as Product_key,
+			Studio_unix_enterprise_key_51 as Product_key,
 			Bench_key_45 as Non_commercial_product_key
 		export
 			{NONE} all

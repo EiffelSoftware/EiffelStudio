@@ -1,14 +1,22 @@
+indexing
+	description: "Icon stone representing an event that has been %
+				% paired with a command in a behavior editor %
+				% used in an EV_BOX."
+	Id: "$Id$"
+	Date: "$Date$"
+	Revision: "$Revision$"
 
 class FUNC_EV_IS 
 
 inherit
 
 	EV_ICON_STONE
-		-- added by samik
 		undefine
 			init_toolkit
-		-- end of samik     
-		end;
+		redefine
+			is_centered
+		end
+
 	FUNCTION_ELEMENT
 		rename
 			target as source
@@ -16,7 +24,8 @@ inherit
 			{NONE} all
 		redefine
 			associated_editor
-		end;
+		end
+
 	REMOVABLE
 
 creation
@@ -26,24 +35,27 @@ creation
 	
 feature {NONE}
 
-	associated_editor: BEHAVIOR_EDITOR;
+	associated_editor: BEHAVIOR_EDITOR
 
-	
 feature 
 
 	make (ed: like associated_editor) is
 		do
-			initialize (ed);	
+			initialize (ed)	
 			register
-		end; -- Create
+		end -- Create
 
 	
 feature {NONE}
 
 	remove_yourself is
 		do
-			associated_editor.edited_function.remove_element_line (data, True);
+			associated_editor.edited_function.remove_element_line (data, True)
 			App_editor.update_transitions_list (Void)
-		end;
+		end
  
+feature
+
+	is_centered: BOOLEAN is False
+
 end

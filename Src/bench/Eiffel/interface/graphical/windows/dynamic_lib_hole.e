@@ -39,7 +39,6 @@ feature -- Callbacks
 		do
 			fn := clone(eiffel_system.name)
 			fn.append_string(".def")
-			io.put_string(fn)
 			!! f.make_create_read_write(fn)
 
 			if 

@@ -239,11 +239,15 @@
 						</ul>
 					<LI>
 						<B>EV_LIST</B>
-					- Calling `disable_sensitive' when already non sensitive would loose the 
+						<UL>
+					<li>Calling `disable_sensitive' when already non sensitive would loose the 
 					original selection, and calling `enable_sensitive' when already sensitive would 
 					alter the selected item. The features will no longer alter the selection if 
 					called twice.
-					<LI>
+					</LI>
+					<li>Fixed result of `background_color' which was returning gray instead of white before a color was assigned</li>
+						
+					</ul>
 						<B>EV_CELL</B>
 					- If you removed the item, the minimum size was not updated to reflect this, 
 					thereby retaining the minimum size as constrained by the minimum size of the 
@@ -291,6 +295,7 @@
 					<li>
 						<B>EV_PRINT_DIALOG</B> - Querying `print_context' from a print dialog if a user 
 						selected "Cancel" would previously crash.</li>
+					<LI><B>EV_TREE</B> and <B>EV_MULTI_COLUMN_LIST</B> - Fixed result of `background_color' which was returning gray instead of white before a color was assigned</li>
 				</ul>
 			<li>
 				<b>Gtk</b>

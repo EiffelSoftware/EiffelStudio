@@ -158,6 +158,7 @@ feature -- Element Change
 		do
 			co_revoke_class_object (token)
 			if not status.succeeded then
+				!! revoke_exception
 				revoke_exception.raise ("co_revoke_class_object error")
 			end
 			dispatch_interface.release

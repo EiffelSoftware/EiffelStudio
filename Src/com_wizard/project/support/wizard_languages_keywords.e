@@ -113,6 +113,8 @@ feature -- Eiffel keywords
 
 	Prefix_keyword: STRING is "prefix"
 
+	Reference_keyword: STRING is "reference"
+
 	Rescue_keyword: STRING is "rescue"
 
 	Retry_keyword: STRING is "retry"

@@ -116,7 +116,7 @@ feature -- Store/Retrieve
 
 			defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.line_generation, Void, line_generation.is_selected))
 
-			if profile_check.is_sensitive then
+			if Has_profiler and then profile_check.is_sensitive then
 				defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.profile, Void, profile_check.is_selected))
 			end
 
@@ -224,8 +224,8 @@ feature {NONE} -- Filling GUI
 			-- Initialize check buttons and text field associated with `a_opt'.
 		require
 			a_opt_not_void: a_opt /= Void
-			a_opt_not_precompiled_option: not a_opt.conforms_to (create {D_PRECOMPILED_SD})
-			a_opt_not_optional_option: not a_opt.conforms_to (create {O_OPTION_SD})
+			a_opt_not_precompiled_option: not a_opt.is_precompiled
+			a_opt_not_optional_option: not a_opt.is_optional
 			a_opt_has_option: a_opt.option /= Void
 			a_opt_has_no_precompiled_option: not a_opt.option.is_precompiled
 			a_opt_has_value: a_opt.value /= Void
@@ -279,7 +279,9 @@ feature {NONE} -- Filling GUI
 					working_directory.set_path (val.value)
 
 				when feature {FREE_OPTION_SD}.profile then
-					set_selected (profile_check, val.is_yes)
+					if Has_profiler then
+						set_selected (profile_check, val.is_yes)
+					end
 				else
 					is_item_removable := False
 				end
@@ -408,17 +410,17 @@ feature {NONE} -- Filling AST
 			debug_sd: DEBUG_SD
 			v: OPT_VAL_SD
 		do
-			debug_sd := new_debug_sd (enabled)
+			create debug_sd.initialize (enabled)
 			if a_name /= Void then
 				if not a_name.is_empty then
-					v := new_name_sd (new_id_sd (a_name, True))
+					create v.make (new_id_sd (a_name, True))
 				else
-					v := new_yes_sd (new_id_sd ("yes", False))
+					create v.make_yes
 				end
 			else
-				v := new_no_sd (new_id_sd ("no", False))
+				create v.make_no
 			end
-			Result := new_d_option_sd (debug_sd, v)
+			create Result.initialize (debug_sd, v)
 		end
 
 feature -- Checking
@@ -440,7 +442,9 @@ feature -- Initialization
 			disable_select (debug_check)
 			clean_debug_list
 			disable_select (line_generation)
-			disable_select (profile_check)
+			if Has_profiler then
+				disable_select (profile_check)
+			end
 			disable_select (trace_check)
 			working_directory.remove_path
 		end
@@ -471,7 +475,9 @@ feature {NONE} -- Graphical initialization
 
 				-- Add C specific widgets
 			c_specific_widgets.extend (trace_check)
-			c_specific_widgets.extend (profile_check)
+			if Has_profiler then
+				c_specific_widgets.extend (profile_check)
+			end
 		end
 
 	miscellaneous_frame (st: STRING): EV_FRAME is
@@ -486,12 +492,14 @@ feature {NONE} -- Graphical initialization
 			vbox.set_border_width (Layout_constants.Small_border_size)
 
 			line_generation := new_check_button (vbox, "Line number generation")
-			trace_check := new_check_button (vbox, "Call tracing")
-			create profile_check.make_with_text ("Profiling")
+
 			if Has_profiler then
+				create profile_check.make_with_text ("Profiling")
 				vbox.extend (profile_check)
 				vbox.disable_item_expand (profile_check)
 			end
+
+			trace_check := new_check_button (vbox, "Call tracing")
 
 			Result.extend (vbox)
 		end
@@ -753,7 +761,7 @@ invariant
 	debug_list_not_void: debug_list /= Void
 	debug_list_not_empty: not debug_list.is_empty
 	line_generation_not_void: line_generation /= Void
-	profile_check_not_void: profile_check /= Void
+	profile_check_not_void: Has_profiler implies profile_check /= Void
 	trace_check_not_void: trace_check /= Void
 	working_directory_not_void: working_directory /= Void
 

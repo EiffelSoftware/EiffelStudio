@@ -12,7 +12,7 @@ inherit
 --			license_checked
 --		end
 	SYSTEM_CONSTANTS
-
+	EB_GENERAL_DATA
 	NEW_EB_CONSTANTS
 
 creation
@@ -103,7 +103,6 @@ feature {EB_SAVE_FILE_CMD} -- Implementation
 	execute (argument: EV_ARGUMENT1 [EV_FILE_SAVE_DIALOG]; data: EV_EVENT_DATA) is
 			-- Save a file with the chosen name.
 		local
-			chooser: NAME_CHOOSER_W
 			fsd: EV_FILE_SAVE_DIALOG
 			arg: EV_ARGUMENT1 [EV_FILE_SAVE_DIALOG]
 		do

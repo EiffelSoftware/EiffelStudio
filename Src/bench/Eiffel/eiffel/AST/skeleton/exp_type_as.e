@@ -40,6 +40,9 @@ feature {NONE} -- Initialization
 			-- local variables
 		do
 			System.set_has_expanded
+			check
+				system_initialized: System.current_class /= Void
+			end
 			System.current_class.set_has_expanded
 		end
 

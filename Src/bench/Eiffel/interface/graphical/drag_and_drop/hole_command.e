@@ -5,7 +5,7 @@ inherit
 		rename
 			true_state_symbol as symbol,
 			false_state_symbol as full_symbol,
-			init_from_tool as make
+			init as make
 		redefine
 			holder, full_symbol
 		end;

@@ -69,10 +69,10 @@ end;
 
 	set_default_color is
 		local
-			set_colors: SET_WINDOW_ATTRIBUTES_COM
+--			set_colors: SET_WINDOW_ATTRIBUTES_COM
 		do
-			!! set_colors;
-			set_colors.execute (Current)
+--			!! set_colors;
+--			set_colors.execute (Current)
 		end;
 
 	set_x_y (x0, y0: INTEGER) is

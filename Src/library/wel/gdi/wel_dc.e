@@ -1510,22 +1510,19 @@ feature -- Basic operations
 			cwin_poly_bezier_to (item, a.item, points.count // 2)
 		end
 
-feature -- Removal
+feature {NONE} -- Removal
 
-	delete is
+	destroy_item is
 			-- Delete the current device context.
-		require
-			exists: exists
+		local
+			p: POINTER	-- Default_pointer
 		do
-				-- Protect the call to DeleteDC, because
-				-- delete can be called by the GC so without
-				-- assertions.
-			if item /= Void then
+				-- Protect the call to DeleteDC, because `destroy_item' can 
+				-- be called by the GC so without assertions.
+			if item /= p then
 				cwin_delete_dc (item)
+				item := p
 			end
-			item := default_pointer
-		ensure
-			not_exists: not exists
 		end
 
 feature {NONE} -- Implementation

@@ -105,7 +105,7 @@ feature -- Project file/directory warnings
 		do
 			if incomp_version.is_empty then
 				create Result.make (30)
-				Result.append ("File `project.txt' does not exist in the EIFGEN directory of project:%N")
+				Result.append ("No version information about project found in:%N")
 				Result.append (dir_name)
 				Result.append (".")
 			else

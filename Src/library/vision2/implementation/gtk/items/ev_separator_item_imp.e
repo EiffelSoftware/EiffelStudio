@@ -1,3 +1,4 @@
+--| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
@@ -47,6 +48,9 @@ end -- class EV_SEPARATOR_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2000/04/10 16:13:30  brendel
+--| Unreleased.
+--|
 --| Revision 1.4  2000/02/22 18:39:34  oconnor
 --| updated copyright date and formatting
 --|

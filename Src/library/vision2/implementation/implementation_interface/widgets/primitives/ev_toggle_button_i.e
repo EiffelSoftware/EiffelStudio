@@ -45,7 +45,7 @@ feature -- Status setting
                 end
 
 	
-end -- class EV_BUTTON_I
+end -- class EV_TOGGLE_BUTTON_I
 
 
 --|----------------------------------------------------------------

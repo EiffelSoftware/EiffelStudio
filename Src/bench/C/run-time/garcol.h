@@ -13,14 +13,14 @@
 #ifndef _garcol_h_
 #define _garcol_h_
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include "portable.h"
 #include "struct.h"
 #ifndef TEST
 #include "plug.h"		/* Not wanted when runnning tests */
+#endif
+
+#ifdef __cplusplus
+extern "C" {
 #endif
 
 #define STACK_CHUNK		1000	/* Size of a stack chunk */

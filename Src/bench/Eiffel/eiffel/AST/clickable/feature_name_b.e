@@ -54,7 +54,8 @@ feature -- Formatting
 
 	format (ctxt: FORMAT_CONTEXT_B) is
 			-- Reconstitute text features calls within main features.
-			-- Called by parent ast structures (ignore arguments).
+			-- Called by parent ast structures and by 
+			-- feature that doesn't have a feature_i (not compiled).
 		do
 			if is_frozen then
 				ctxt.put_text_item (ti_Frozen_keyword);

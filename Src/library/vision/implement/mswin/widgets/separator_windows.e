@@ -74,7 +74,8 @@ inherit
 			on_left_button_up, on_right_button_down,
 			on_mouse_move, on_destroy, on_set_cursor,
 			on_key_up,
-			on_key_down
+			on_key_down,
+			class_background
 		redefine
 			on_paint,
 			class_name

@@ -86,15 +86,19 @@ feature -- basic Operations
 			-- Process user entries.
 		local
 			dir: DIRECTORY
-		do 
-			create dir.make (location.text)
-			if not dir.exists then
+		do
+			if location.text /= Void then
+				create dir.make (location.text)
+				if not dir.exists then
+					Precursor
+					proceed_with_new_state (create {DB_ERROR_LOCATION}.make (wizard_information))
+				else
+					Precursor
+					proceed_with_new_state (create {DB_FINISH}.make (wizard_information))
+				end
+			else
 				Precursor
 				proceed_with_new_state (create {DB_ERROR_LOCATION}.make (wizard_information))
-				
-			else
-				precursor
-				proceed_with_new_state (create {DB_FINISH}.make (wizard_information))
 			end
 		end
 

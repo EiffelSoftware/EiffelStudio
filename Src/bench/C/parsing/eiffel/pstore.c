@@ -22,8 +22,10 @@
 #include "eif_error.h"
 #include "eif_compress.h"
 
-#ifdef EIF_OS2
+#ifdef EIF_WIN32
 #include <io.h>
+#else
+#include "unistd.h"
 #endif
 
 rt_private fnptr make_index;	/* Index building routine */
@@ -216,7 +218,7 @@ rt_private void partial_store_write(void)
 		ptr += number_writen;
 		}
 		
-	if (ptr - cmps_general_buffer == cmps_out_size + EIF_CMPS_HEAD_SIZE)
+	if ((unsigned int) (ptr - cmps_general_buffer) == cmps_out_size + EIF_CMPS_HEAD_SIZE)
 		current_position = 0;
 	else
 		eio();		

@@ -1,5 +1,4 @@
 indexing
-
 	description: 
 		" EiffelVision dynamic table. Invisible container that allows%
 		% unlimited number of other widgets to be packed inside it.%
@@ -26,6 +25,7 @@ inherit
 			{NONE} set_child_position
 		redefine
 			make,
+			set_child_position,
 			implementation
 		end
 
@@ -34,7 +34,7 @@ creation
 
 feature {NONE} -- Initialization
 
-        make (par: EV_CONTAINER) is
+	make (par: EV_CONTAINER) is
 			-- Create a table widget with `par' as
 			-- parent.
 		do
@@ -180,6 +180,16 @@ feature -- Resizing
 --		ensure
 --			Spacing_set: spacing = new_spacing
 --		end
+
+feature {NONE} -- Inapplicable
+
+	set_child_position (the_child: EV_WIDGET; top, left, bottom, right: INTEGER) is
+			-- Not applicable to this kind of table.
+		do
+			check
+				not_applicable: False
+			end
+		end
 
 feature {NONE} -- Implementation
 	

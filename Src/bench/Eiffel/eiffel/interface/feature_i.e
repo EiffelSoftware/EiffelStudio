@@ -1149,8 +1149,14 @@ end;
 			elseif is_external then
 				old_ext ?= old_feature;
 				new_ext ?= Current;
-				new_ext.set_encapsulated
-						(new_ext.encapsulated or else old_ext.encapsulated);
+					-- This was the previous implementation:
+					-- new_ext.set_encapsulated
+					--              (new_ext.encapsulated or else old_ext.encapsulated);
+					-- In the case where a class redefines a routine that 
+					-- requires encapsulation (is_special or has_signature is True)
+					-- into a `standard' external that doesn't need to be encapsulated
+					-- the previous implementation led this `standard' external to
+					-- be encapsulated. Bad. -- Fabrice.
 			end;
 
 				-- Check if an effective feature is not redefined in a

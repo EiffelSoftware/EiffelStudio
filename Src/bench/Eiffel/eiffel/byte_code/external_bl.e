@@ -12,7 +12,7 @@ inherit
 			release_hector_protection, basic_register, has_hector_variables,
 			has_call, current_needed_for_access, set_parent, parent,
 			set_register, register, generate_access, generate_on,
-			analyze_on, analyze
+			analyze_on, analyze, generate_end
 		end;
 	EXTERNAL_B
 		redefine
@@ -21,13 +21,14 @@ inherit
 			release_hector_protection, basic_register, has_hector_variables,
 			has_call, current_needed_for_access, set_parent, parent,
 			set_register, register, generate_access, generate_on,
-			analyze_on, analyze
+			analyze_on, analyze, generate_end
 		select
 			free_register
 		end;
 	SHARED_ENCODER;
 	SHARED_TABLE;
 	SHARED_DECLARATIONS;
+	EXTERNAL_CONSTANTS;
 
 feature 
 
@@ -219,6 +220,30 @@ feature
 				end;
 			end;
 		end;
+
+	generate_end (gen_reg: REGISTRABLE; class_type: CL_TYPE_I; meta: BOOLEAN) is
+			-- Generate final portion of C code.
+		do
+			generate_access_on_type (gen_reg, class_type);
+				-- Now generate the parameters of the call, if needed.
+			if not is_attribute and not (special_id = macro_id and parameters = Void) then
+				generated_file.putchar ('(');
+			end;
+			if is_feature_call then
+				gen_reg.print_register;
+			end;
+			if parameters /= Void then
+				generate_parameters_list;
+			end;
+			if not is_attribute and not (special_id = macro_id and parameters = Void) then
+				generated_file.putchar (')');
+			end;
+			if meta then
+					-- Close parenthesis opened by metamorphosis code
+				generated_file.putchar (')');
+			end;
+			release_hector_protection;
+		end;
 		
 	generate_parameters_list is
 			-- Generate the parameters list for C function call
@@ -298,11 +323,12 @@ feature
 			encapsulated := e.encapsulated;
 			feature_id := e.feature_id;
 			feature_name := e.feature_name;
-			special_type := e.special_type;
+			special_id := e.special_id;
 			special_file_name := e.special_file_name;
 			include_list := e.include_list;
 			arg_list := e.arg_list;
 			return_type := e.return_type;
+			dll_arg := e.dll_arg;
 			if parameters /= Void then
 				from parameters.start;
 				until parameters.after

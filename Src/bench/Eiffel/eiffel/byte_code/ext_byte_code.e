@@ -21,19 +21,39 @@ inherit
 			generate
 		end
 
-	SHARED_INCLUDE
+	SHARED_INCLUDE;
+	EXTERNAL_CONSTANTS
 	
-feature 
+feature -- Attributes for externals
 
 	external_name: STRING;
 			-- External name to call
 
 	encapsulated: BOOLEAN;
-			-- Has the call to `external_name' to be 
-			-- encapsulated ?
+			-- Has the call to `external_name' to be encapsulated?
+
+	special_id: INTEGER;
+			-- Id of special external
+
+	special_file_name: STRING;
+			-- File name including the macro definition
+
+	arg_list: ARRAY[STRING];
+			-- List of arguments for the signature
+
+	return_type: STRING;
+			-- Return type of signature
+
+	include_list: ARRAY[STRING];
+			-- List of include files
+
+	dll_arg: STRING;
+			-- Extra arg for dll (Windows)
+
+feature -- Routines for externals
 
 	is_special: BOOLEAN is
-			-- Does the external declaration include a macro
+			-- Does the external declaration include a macro/dll16/dll32
 		do
 			Result := (special_file_name /= Void);
 		end;
@@ -62,21 +82,6 @@ feature
 			Result := (include_list /= Void) and then (include_list.count > 0);
 		end;
 
-	special_type: STRING;
-			-- Type of macro; the name shoud be changed into special_type or type_name
-
-	special_file_name: STRING;
-			-- File name including the macro definition
-
-	arg_list: ARRAY[STRING];
-			-- List of arguments for the signature
-
-	return_type: STRING;
-			-- Return type of signature
-
-	include_list: ARRAY[STRING];
-			-- List of include files
-
 	set_external_name (s: STRING) is
 			-- Assign `s' to `external_name'.
 		do
@@ -89,11 +94,17 @@ feature
 			encapsulated := e;
 		end;
 
-	set_special_type (s: STRING) is
-			-- Assign `s' to `special_type'
+	set_special_id (i: INTEGER) is
+			-- Assign `i' to `special_id'
 		do
-			special_type := s;
-	end;
+			special_id := i;
+		end;
+
+	set_dll_arg (s: STRING) is
+			-- set `dll_arg' to s
+		do
+			dll_arg := s;
+		end;
 
 	set_special_file_name (s: STRING) is
 			-- Assign `s' to `special_file_name'
@@ -126,6 +137,8 @@ feature
 			Result := True;
 		end;
 
+feature -- Byte code generation
+
 	generate is
 			-- Byte code generation
 		local
@@ -138,9 +151,11 @@ feature
 				-- required by the feature
 			if is_special or has_include_list then
 				if is_special and then not shared_include_set.has (special_file_name) then
-					generated_file.putstring ("#include ");
-					generated_file.putstring (special_file_name);
-					generated_file.new_line;
+					if not context.final_mode then
+						generated_file.putstring ("#include ");
+						generated_file.putstring (special_file_name);
+						generated_file.new_line;
+					end;
 					shared_include_set.extend (special_file_name);
 				end;
 				if has_include_list then
@@ -150,9 +165,11 @@ feature
 						i > include_list.upper
 					loop
 						if not shared_include_set.has (include_list.item (i)) then
-							generated_file.putstring ("#include ");
-							generated_file.putstring (include_list.item (i));
-							generated_file.new_line;
+							if not context.final_mode then
+								generated_file.putstring ("#include ");
+								generated_file.putstring (include_list.item (i));
+								generated_file.new_line;
+							end;
 							shared_include_set.extend (include_list.item (i));
 						end;
 						i := i + 1;
@@ -193,7 +210,7 @@ feature
 					-- Generate local expanded variable creations
 				generate_expanded_variables;
 					-- Now we want the body
-				generate_call;
+				generate_body;
 				generated_file.exdent;
 				generated_file.putchar ('}');
 				generated_file.new_line;
@@ -222,10 +239,123 @@ feature
 			generated_file.new_line;
 		end;
 
-	generate_call is 
+	generate_body is 
 			-- Generates the return macro/function with casts if needed
+		do
+			inspect
+				special_id
+			when macro_id then
+				generate_macro_body;
+			when dll16_id then
+				generate_dll16_body;
+			when dll32_id then
+				generate_dll32_body;
+			else
+			end
+		end;
+
+	generate_macro_body is
+			-- Generate the body for an external of type macro
 		local
 			i, count: INTEGER;
+		do
+			generate_half_call;
+			generated_file.putstring (external_name);
+			if arguments /= Void then
+				generated_file.putchar ('(');
+				generate_arguments_with_cast;
+				generated_file.putchar (')');
+			end;
+			generated_file.putchar (';');
+			generated_file.new_line;
+		end;
+
+	generate_dll16_body is
+			-- Generate body for dll16 (Windows)
+		do
+				-- Declare local variables required by the call
+			generated_file.putstring ("HANDLE a_result;%N");
+			generated_file.putstring ("FARPROC fp;%N");
+			generated_file.putstring ("HINDIR handle;%N");
+			if result_type /= Void then
+				result_type.c_type.generate (generated_file);
+				generated_file.putstring (" Result;%N");
+			end;
+			generated_file.new_line;
+				-- Now comes the body
+			generated_file.putstring ("a_result = LoadLibrary (");
+			generated_file.putstring (special_file_name);
+			generated_file.putstring (");%N");
+			generated_file.putstring ("fp = GetProcAddress (a_result, ");
+			generated_file.putstring (dll_arg);
+			generated_file.putstring (");%N");
+			generated_file.putstring ("handle = GetIndirectFunctionHandle (fp,");
+			generate_arguments_with_cast;
+			generated_file.putstring (",INDIR_ENDLIST);%N");
+			if result_type /= Void then
+				generated_file.putstring ("Result = InvokeIndirectFunction (handle, ???);%N");
+				generated_file.putstring ("FreeLibrary (a_result);%N");
+				generated_file.putstring ("return ");
+				if has_return_type then
+					generated_file.putchar ('(');
+					generated_file.putstring (return_type);
+					generated_file.putchar (')');
+					generated_file.putchar (' ');
+				end;
+				generated_file.putstring ("Result;%N");
+			else
+				generated_file.putstring ("InvokeIndirectFunction (handle, ???);%N");
+				generated_file.putstring ("FreeLibrary (a_result);%N");
+			end;
+		end;
+
+	generate_dll32_body is
+			-- Generate body for an external of type dll32
+		do
+				-- Declare local variables required by the call
+			generated_file.putstring ("HANDLE a_result;%N");
+			if result_type /= Void then
+				result_type.c_type.generate (generated_file);
+				generated_file.putstring (" Result;%N");
+			end;
+			generated_file.new_line;
+				-- Now comes the body
+			generated_file.putstring ("a_result = LoadLibrary (");
+			generated_file.putstring (special_file_name);
+			generated_file.putstring (");%N");
+			generated_file.putstring ("fp = GetProcAddress (a_result, ");
+			generated_file.putstring (dll_arg);
+			generated_file.putstring (");%N");
+			if result_type /= Void then
+				generated_file.putstring ("Result = ");
+			end;
+			generated_file.putstring ("fp (");
+			generate_arguments_with_cast;
+			generated_file.putstring (");%N");
+			generated_file.putstring ("FreeLibrary (a_result);%N");
+			if result_type /= Void then
+				generated_file.putstring ("return ");
+				if has_return_type then
+					generated_file.putchar ('(');
+					generated_file.putstring (return_type);
+					generated_file.putchar (')');
+					generated_file.putchar (' ');
+				end;
+				generated_file.putstring ("Result;%N");
+			end;
+		end;
+
+	generate_return_exp is
+			-- Generate the final return
+		do
+			if context.result_used or postcondition /= Void or context.has_invariant then
+				generated_file.putstring ("return Result;");
+				generated_file.new_line;
+			end;
+		end;
+
+	generate_half_call is
+			-- Generate half call for macro
 		do
 			if result_type /= Void or has_return_type then
 				generated_file.putstring ("return ");
@@ -238,45 +368,8 @@ feature
 			elseif result_type /= Void then
 				result_type.c_type.generate_cast (generated_file);
 			else
+					-- I'm not sure this is really needed
 				generated_file.putstring ("(void) ");
-			end;
-			generated_file.putstring (external_name);
-			if arguments /= Void or has_signature then
-				generated_file.putchar ('(');
-			end;
-			if arguments /= Void then
-				from
-					i := arguments.lower;
-					count := arguments.count;
-				until
-					i > count
-				loop
-					if has_arg_list then
-						generated_file.putchar ('(');
-						generated_file.putstring (arg_list.item (i));
-						generated_file.putstring (") ");
-					end;
-					generated_file.putstring ("arg");
-					generated_file.putint (i);
-					i := i + 1;
-					if i <= count then
-						generated_file.putstring (", ");
-					end;
-				end;
-			end;
-			if arguments /= Void or has_signature then
-				generated_file.putchar (')');
-			end;
-			generated_file.putchar (';');
-			generated_file.new_line;
-		end;
-
-	generate_return_exp is
-			-- Generate the final return
-		do
-			if context.result_used or postcondition /= Void or context.has_invariant then
-				generated_file.putstring ("return Result;");
-				generated_file.new_line;
 			end;
 		end;
 
@@ -292,6 +385,33 @@ feature
 				until
 					i > count
 				loop
+					generated_file.putstring ("arg");
+					generated_file.putint (i);
+					i := i + 1;
+					if i <= count then
+						generated_file.putstring (", ");
+					end;
+				end;
+			end;
+		end;
+
+	generate_arguments_with_cast is
+			-- Generate C arguments, if any, with casts if there's a signature
+		local
+			i,count: INTEGER;
+		do
+			if arguments /= Void then
+				from
+					i := arguments.lower;
+					count := arguments.count;
+				until
+					i > count
+				loop
+					if has_arg_list then
+						generated_file.putchar ('(');
+						generated_file.putstring (arg_list.item (i));
+						generated_file.putstring (") ");
+					end;
 					generated_file.putstring ("arg");
 					generated_file.putint (i);
 					i := i + 1;
@@ -325,5 +445,5 @@ feature
 				end;
 			end;
 		end;
-			
+
 end

@@ -73,6 +73,7 @@ inherit
 	GB_SHARED_DIGIT_CHECKER
 		export
 			{NONE} all
+			{ANY} generating_type
 		end
 
 feature {GB_OBJECT_HANDLER} -- Initialization
@@ -80,12 +81,15 @@ feature {GB_OBJECT_HANDLER} -- Initialization
 	make_with_type (a_type: STRING) is
 			-- Create `Current' with type `a_type'.
 			-- Do not instantiate `object' from type.
+		require
+			a_type_not_void: a_type /= Void
 		do
 			type := a_type
 				-- The names should never be `Void'.
 			create name.make (0)
 			create events.make (0)
 			create constants.make (0)
+			create instance_referers.make (0)
 			create edited_name.make (0)
 			expanded_in_box := True
 			create children.make (0)
@@ -97,6 +101,7 @@ feature {GB_OBJECT_HANDLER} -- Initialization
 			-- Create `Current', attach `an_object' to `object' and
 			-- `a_type' to `type'.
 		require
+			a_type_not_void: a_type /= Void
 			an_object_not_void: an_object /= Void
 			type_matches_object: type_matches_object (a_type, an_object)
 		do
@@ -120,6 +125,26 @@ feature -- Access
 	id: INTEGER
 		-- A unique id representing `Current'.
 		-- This is stored in the XML.
+		
+	is_top_level_object: BOOLEAN is
+			-- Is `Current' a top level object in the structure?
+			-- i.e. is it represented by an individual class?
+		do
+			Result := window_selector_item /= Void
+		end
+		
+	is_instance_of_top_level_object: BOOLEAN is
+			-- Does `Current' represent a top level object within the system.
+		do
+			Result := associated_top_level_object > 0
+		end
+
+	associated_top_level_object: INTEGER
+		-- The id of the top level object `Current' represents,
+		-- or `0' if NONE.
+		
+	window_selector_item: GB_WINDOW_SELECTOR_ITEM
+		-- Representation of `Current' in `window_selector'.
 
 	object: EV_ANY
 		-- The vision2 object that `Current' represents.
@@ -136,8 +161,20 @@ feature -- Access
 	events: ARRAYED_LIST [GB_ACTION_SEQUENCE_INFO]
 		-- All events connected to `Current'.
 		
+	children: ARRAYED_LIST [GB_OBJECT]
+			-- `Result' is all children of `Current', ordered
+			-- as encountered within `Current'.
+		
 	constants: HASH_TABLE [GB_CONSTANT_CONTEXT, STRING]
 		-- All constants connected to `Current'.
+		
+	instance_referers: HASH_TABLE [INTEGER, INTEGER]
+		-- All instances of `Current' that exist in the current system.
+		-- Only valid for top level objects. The data and the key are both
+		-- the id of the object that is represented. As the objects object may be rebuilt,
+		-- we must not store the GB_OBJECT, but instead the id so we can simply look up the
+		-- object from this id whenever needed. If the actual associated object has changed,
+		-- this does not matter.
 		
 	type: STRING
 		-- A type corresponding to the current vision2 object.
@@ -204,33 +241,381 @@ feature -- Access
 			end
 		end
 		
-	children: ARRAYED_LIST [GB_OBJECT]
-			-- `Result' is all children of `Current', ordered
-			-- as encountered within `Current'.
+	flatten is
+			-- Flatten `Current' so that it is no longer a representation of a top level object.
+		require
+			is_instance_of_top_level_object: is_instance_of_top_level_object
+		local
+			associated_object: GB_OBJECT
+			all_children_of_current, all_children_of_associated: ARRAYED_LIST [GB_OBJECT]
+		do
+			associated_object := object_handler.deep_object_from_id (associated_top_level_object)
+			create all_children_of_associated.make (50)
+			associated_object.all_children_recursive (all_children_of_associated)
+			create all_children_of_current.make (50)
+			all_children_recursive (all_children_of_current)
+			check
+				recursive_children_count_consistent: all_children_of_associated.count = all_children_of_current.count
+			end
+			associated_top_level_object := 0
+			associated_object.instance_referers.remove (id)
+			from
+				all_children_of_associated.start
+				all_children_of_current.start
+			until
+				all_children_of_associated.off
+			loop
+				check
+					associated_correctly: all_children_of_associated.item.instance_referers.has (all_children_of_current.item.id)
+				end
+				all_children_of_associated.item.instance_referers.remove (all_children_of_current.item.id)
+				
+					-- Reconnect the events for all objects comprising `Current' recursively as they may be
+					-- once again built into as no longer locked.
+				all_children_of_current.item.connect_display_object_events
+				
+				all_children_of_associated.forth
+				all_children_of_current.forth
+			end
+			
+				-- Reconnect events for `display_object' of `Current'.
+			connect_display_object_events
+				-- Update graphical representation.
+			represent_as_non_locked_instance
+				-- Ensure the text of the layout item is up to date as the type of `Current' has now changed
+				-- to the actual widget type.
+			update_representations_for_name_or_type_change
+		ensure
+			not_is_instance_of_top_level_object: not is_instance_of_top_level_object
+		end
+
+	new_top_level_representation: GB_OBJECT is
+			-- `Result' is a copy of `Current' with a new set of id's, representing
+			-- an instance of a top level widget.
+		local
+			xml_store: GB_XML_STORE
+			a_list: ARRAYED_LIST [GB_OBJECT]
+		do
+			create xml_store
+			xml_store.store_individual_object (Current)
+			Result := new_object (xml_store.last_stored_individual_object, True)
+			
+				-- Modify id of `Result' so that it is not the same as that of `Current'.
+			create a_list.make (20)
+			Result.all_children_recursive (a_list)
+			Result.set_id (new_id)
+				-- Only add `Result' to objects now that we have the new id.
+			object_handler.add_object_to_objects (Result)
+			
+				-- Ensure that the new locked object cannot have objects inserted through it's `display_object'.
+				-- Note that you can still pick the object as we do not unconnect the pick events are we do for all
+				-- children recursively.
+			Result.unconnect_display_object_drop_events
+			from
+				a_list.start
+			until
+				a_list.off
+			loop
+				a_list.item.set_id (new_id)
+				object_handler.add_object_to_objects (a_list.item)
+				
+					-- Now unconnect events from the display object to prevent users
+					-- from modifying the structure of a locked representation.
+				a_list.item.unconnect_display_object_drop_events
+				a_list.item.unconnect_display_object_pick_events
+				a_list.forth
+			end
+				-- Remove the old name.
+			Result.set_name ("")
+				-- Set the text for `layout_item'.
+			Result.represent_as_locked_instance
+			
+				-- We must check that we are actually a top level object, as otherwise if
+				-- we have nested representations, it does not need to be done.
+			if is_top_level_object then
+				Result.set_associated_top_level_object (Current)
+					-- Ensure that all representations of `Result' reflect this change.
+				Result.update_representations_for_name_or_type_change
+			end
+		ensure
+--| FIXME is this not implementable/true?
+--			bi_directional_reference: Result.associated_top_level_object /= Void and instance_referers.has (Result.id) and Result.associated_top_level_object = Current
+		end
 		
+	represent_as_locked_instance is
+			-- Ensure pixmap representation of `Current' is that of a locked type.
+		local
+			pixmap, l_pixmap: EV_PIXMAP
+		do
+			pixmap := (create {GB_SHARED_PIXMAPS}).pixmap_by_name ("icon_locked_color")
+			l_pixmap := (create {GB_SHARED_PIXMAPS}).pixmap_by_name (type.as_lower).twin
+			l_pixmap.draw_sub_pixmap (0, 0, pixmap, create {EV_RECTANGLE}.make (0, 0, pixmap.width, pixmap.height))
+			layout_item.set_pixmap (l_pixmap)
+			layout_item.wipe_out
+			layout_item.set_data ("Represents a top level object, so no children may be added.")
+		ensure
+			layout_item_empty: layout_item.count = 0
+			layout_item_has_data: layout_item.data /= Void
+		end
+		
+	represent_as_non_locked_instance is
+			-- Ensure pixmap representation of `Current' is not that of a locked type.
+		do
+			layout_item.set_pixmap ((create {GB_SHARED_PIXMAPS}).pixmap_by_name (type.as_lower).twin)
+			layout_item.set_data (Void)
+			from
+				children.start
+			until
+				children.off
+			loop
+				layout_item.extend (children.item.layout_item)
+				children.forth
+			end
+		ensure
+			layout_item_children_set: layout_item.count = children.count
+			laytou_item_has_not_data: layout_item.data = Void
+		end
+
+	connect_instance_referers (original_object, an_object:GB_OBJECT) is
+			-- Recursively
+			-- add a similar referring link from evey child in `Current'
+			-- to every child of `an_object'.
+		require
+			objects_differ: original_object /= an_object
+			objects_not_void: original_object /= Void and an_object /= Void
+		local
+			original_linear_representation, new_linear_representation: ARRAYED_LIST [GB_OBJECT]
+		do
+			create new_linear_representation.make (20)
+			create original_linear_representation.make (20)
+			an_object.all_children_recursive (new_linear_representation)
+			original_object.all_children_recursive (original_linear_representation)
+			check
+				same_object_count: new_linear_representation.count = original_linear_representation.count
+			end
+			from
+				new_linear_representation.start
+				original_linear_representation.start
+			until
+				new_linear_representation.off
+			loop
+				original_linear_representation.item.instance_referers.extend (new_linear_representation.item.id, new_linear_representation.item.id)
+				if is_top_level_object then
+					original_linear_representation.item.layout_item.set_data ("pop")
+				end
+				original_linear_representation.forth
+				new_linear_representation.forth
+			end
+		end
+		
+	unconnect_instance_referers (original_object, an_object:GB_OBJECT) is
+			-- Recursively remove a referring link from evey child in `Current'
+			-- to every child of `an_object'.
+		require
+			objects_differ: original_object /= an_object
+			objects_not_void: original_object /= Void and an_object /= Void
+		local
+			original_linear_representation, new_linear_representation: ARRAYED_LIST [GB_OBJECT]
+		do
+			create new_linear_representation.make (20)
+			create original_linear_representation.make (20)
+			an_object.all_children_recursive (new_linear_representation)
+			original_object.all_children_recursive (original_linear_representation)
+			check
+				same_object_count: new_linear_representation.count = original_linear_representation.count
+			end
+			from
+				new_linear_representation.start
+				original_linear_representation.start
+			until
+				new_linear_representation.off
+			loop
+				original_linear_representation.item.instance_referers.remove (new_linear_representation.item.id)
+				original_linear_representation.forth
+				new_linear_representation.forth
+			end
+		end
+		
+	update_instances (p: PROCEDURE [EV_ANY, TUPLE]) is
+			-- For all `instance_refers' of `Current', call `p' on
+			-- all representations.
+		require
+			p_not_void: p /= Void
+		local
+			l_display: GB_DISPLAY_OBJECT
+			current_object: GB_OBJECT
+		do
+			from
+				instance_referers.start
+			until
+				instance_referers.off
+			loop
+				current_object := object_handler.deep_object_from_id (instance_referers.item_for_iteration)
+				p.call ([current_object.object])
+				l_display ?= current_object.display_object
+				if l_display /= Void then
+					p.call ([l_display.item])
+				else
+					p.call ([current_object.display_object])
+				end
+				current_object.update_instances (p)
+				instance_referers.forth
+			end
+		end
+		
+	update_first_instances (p: PROCEDURE [EV_ANY, TUPLE]) is
+			-- For all `instance_refers' of `Current', call `p' on
+			-- the first representation only.
+		require
+			p_not_void: p /= Void
+		local
+			current_object: GB_OBJECT
+		do
+			from
+				instance_referers.start
+			until
+				instance_referers.off
+			loop
+				current_object := object_handler.deep_object_from_id (instance_referers.item_for_iteration)
+				p.call ([current_object.object])
+				current_object.update_instances (p)
+				instance_referers.forth
+			end
+		end
+		
+	actual_type: STRING is
+			-- `Result' is type of `an_object'.
+		do
+			if is_instance_of_top_level_object then
+				Result := object_handler.deep_object_from_id (associated_top_level_object).name.as_upper	
+			else
+				Result := type.substring (4, type.count)
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+		
+	destroy_recursive is
+			-- Destroy `Current' and recursively destroy all children.
+		local
+			all_children: ARRAYED_LIST [GB_OBJECT]
+		do
+			destroy
+			create all_children.make (50)
+			all_children_recursive (all_children)
+			from
+				all_children.start
+			until
+				all_children.off
+			loop
+				all_children.item.destroy
+				all_children.forth
+			end
+		end
+
+	destroy is
+			-- Destroy `Current'.
+		do
+				-- Note that both `layout_item' or `window_selector_item' may be reparented to
+				-- another object, so if this is the case, do nothing.
+			if layout_item.object = Current then
+				layout_item.destroy
+			end
+			if window_selector_item /= Void and then window_selector_item.object = Current then
+				window_selector_item.destroy
+			end
+			
+			children.wipe_out
+			parent_object := Void
+			events.wipe_out
+			instance_referers.clear_all
+			from
+				constants.start
+			until
+				constants.off
+			loop
+					-- Note that `destroy' removes the current item so there is
+					-- no need to explicitly iterate.
+				constants.item_for_iteration.destroy
+			end
+		ensure
+			children_empty: children.is_empty
+			constants_empty: constants.is_empty
+			instance_referers_empty: instance_referers.is_empty
+		end
+
+feature {GB_COMMAND_ADD_OBJECT, GB_OBJECT_HANDLER} -- Basic operation
+		
+	build_objects is
+			-- Create display and build objects for `Current'.
+		require
+			object_void: object = Void
+			display_object = Void
+		do
+			if object = Void then
+				create_object_from_type
+				build_display_object
+				
+					-- We must only set up these events for widgets, as items do not have the correct
+					-- events that we can hook to.
+				if type_conforms_to (dynamic_type_from_string (type), dynamic_type_from_string (Ev_widget_string)) then
+					set_up_display_object_events (display_object, object)	
+				end
+			end
+		ensure
+			object_not_void: object /= Void
+			display_object_not_void: display_object /= Void
+		end		
+
 feature {GB_EV_BOX_EDITOR_CONSTRUCTOR, GB_COMMAND_CHANGE_TYPE} -- Basic operation
 
 	enable_expanded_in_box is
 			-- Ensure `expanded_in_box' is `True'.
 		do
 			expanded_in_box := True
+		ensure
+			is_expanded: expanded_in_box
 		end
 		
 	disable_expanded_in_box is
 			-- Ensure `expanded_in_box' is `False'.
 		do
 			expanded_in_box := False
+		ensure
+			not_expanded: not expanded_in_box
 		end
 		
-feature {GB_OBJECT} -- Status Setting
+feature {GB_OBJECT, GB_OBJECT_HANDLER, GB_COMMAND_ADD_OBJECT, GB_COMMAND_CONVERT_TO_TOP_LEVEL} -- Status Setting
 
 	set_parent (a_parent_object: GB_OBJECT) is
 			-- Assign `a_parent_object' to `parent_object'.
 			-- `a_parent_object' may be Void, when removing from a parent.
 		do
 			parent_object := a_parent_object
+		ensure
+			parent_set: parent_object = a_parent_object
 		end
 		
+	set_associated_top_level_object (an_object: GB_OBJECT) is
+			-- Set `an_object' as `associated_top_level_object'.
+		require
+			an_object_not_void: an_object /= Void
+			an_object_is_top_level_object: an_object.is_top_level_object
+		do
+			associated_top_level_object := an_object.id
+		ensure
+			object_associated: associated_top_level_object = an_object.id
+		end
+		
+	remove_associated_top_level_object is
+			-- Reset associated top level object.
+		require
+			has_associated_top_level_object: is_instance_of_top_level_object
+		do
+			associated_top_level_object := 0
+		ensure
+			no_association: not is_instance_of_top_level_object
+		end
 
 feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_COMMAND_CHANGE_TYPE} -- Deletion
 			
@@ -255,6 +640,9 @@ feature {GB_XML_STORE, GB_XML_LOAD, GB_XML_OBJECT_BUILDER, GB_XML_IMPORT}
 				add_element_containing_string (element, name_string, name)
 			end
 			add_element_containing_integer (element, "Expanded", is_expanded.to_integer)
+			if is_instance_of_top_level_object then
+				add_element_containing_integer (element, reference_id_string, associated_top_level_object)
+			end
 		end
 		
 	modify_from_xml (element: XM_ELEMENT) is
@@ -282,6 +670,12 @@ feature {GB_XML_STORE, GB_XML_LOAD, GB_XML_OBJECT_BUILDER, GB_XML_IMPORT}
 					is_expanded := True
 				end
 			end
+			element_info := full_information @ reference_id_string
+			if element_info /= Void then
+				temp_top_level_id := element_info.data.to_integer
+			else
+				temp_top_level_id := -1
+			end
 		end
 
 feature {GB_LAYOUT_CONSTRUCTOR_ITEM, GB_OBJECT_HANDLER, GB_WINDOW_SELECTOR, GB_COMMAND_DELETE_OBJECT, GB_COMMAND_ADD_OBJECT} -- Status setting
@@ -302,6 +696,7 @@ feature {GB_LAYOUT_CONSTRUCTOR_ITEM, GB_OBJECT_HANDLER, GB_WINDOW_SELECTOR, GB_C
 	remove_child (an_object: GB_OBJECT) is
 			-- Removed `an_object' and all its representations from `Current'.
 		require
+			object_not_void: an_object /= Void
 			contained: children.has (an_object)
 		do
 			unparent_ev_object (an_object.object)
@@ -327,7 +722,7 @@ feature {GB_OBJECT_HANDLER, GB_ID_COMPRESSOR} -- Status setting
 		do
 			id := new_id
 		ensure
-			id_set: id /= 0
+			id_set: id >= 0
 		end
 
 feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_BUILDER_WINDOW} -- Element change
@@ -349,16 +744,17 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_BUILDER_WINDOW} -- Element change
 			-- GB_OBJECT. We do not just create an object from the component and use that,
 			-- as this can be very slow, and this feature is called many times during
 			-- a pick and drop.
+		require
+			object_representation_not_void: object_representation /= Void
 		local
 			env: EV_ENVIRONMENT
-			local_parent_object: GB_OBJECT
-			an_object: GB_OBJECT
+			an_object, local_parent_object: GB_OBJECT
 			a_component: GB_COMPONENT
-			new_type: STRING
-			new_short_type: STRING
+			new_short_type, new_type: STRING
 			funct_result: BOOLEAN
 			color_stone: GB_COLOR_STONE
 			colorizeable: EV_COLORIZABLE
+			all_dependents: HASH_TABLE [GB_OBJECT, INTEGER]
 		do
 			color_stone ?= object_representation
 			if color_stone /= Void then
@@ -383,56 +779,86 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_BUILDER_WINDOW} -- Element change
 				end
 				Result := True
 				create env
+					-- If shift is pressed `object_representation' must be added to the parent.
 				if env.application.shift_pressed then
 					local_parent_object := parent_object
-						-- If we are at the top level. i.e. a window,
-						-- there will be no parent.
-					if local_parent_object /= Void then
-						Result := not local_parent_object.is_full
-						if local_parent_object /= Void then
-								-- We only need to check this if we are not a component,
-								-- as this means there is no way we could be contained in `Current'.
-							if an_object /= Void then
-								funct_result := parent_object.override_drop_on_child (an_object)
-								if not funct_result then
-										-- Now display output if we are attempting to insert the object in itself
-										-- or one of its children.
-									display_parent_in_child_message (an_object, parent_object, new_type)			
-								end
-								Result := Result and funct_result
-							end
-							funct_result := local_parent_object.accepts_child (new_type)
-								-- We now display information in status bar regarding full status.
-							display_invalid_drop_message (parent_object, new_type, funct_result)
-							Result := Result and funct_result
-						end
-					else
-						Result := False
-					end
 				else
-					Result := not is_full
-	
-					funct_result := accepts_child (new_type)
-						-- We now display information in status bar regarding full status.
-					display_invalid_drop_message (Current, new_type, funct_result)					
-					Result := Result and funct_result
-						-- We only need to check this if we are not a component,
-						-- as this means there is no way we could be contained in `Current'.
+					local_parent_object := Current
+				end
+					-- Firstly, ensure that we do not drop an object into a representation of a top level object.
+				if local_parent_object.is_instance_of_top_level_object then
+					Result := False
+					set_status_text ("Cannot parent object in locked instance of " + object_handler.deep_object_from_id (local_parent_object.associated_top_level_object).name)
+				end
+				
+					-- Now restrict the dropping of top level structures into other top level structures
+					-- that would cause a cyclic inheritance hierarchy.
+				if Result and an_object /= Void and then an_object.window_selector_item /= Void then
+					create all_dependents.make (4)
+					all_dependents_recursive (an_object, all_dependents)
+					all_dependents.extend (an_object, an_object.id)
+					Result := not all_dependents.has (Current.id)
+					if not Result then
+						set_status_text (cyclic_inheritance_error)
+					end
+				end
+					-- If we are at the top level and shift is pressed, there is no parent.
+				if Result and local_parent_object /= Void then
+					Result := not local_parent_object.is_full
+							-- We only need to check this if we are not a component,
+							-- as this means there is no way we could be contained in `Current'.
 					if an_object /= Void then
-						funct_result := override_drop_on_child (an_object)
+						funct_result := local_parent_object.override_drop_on_child (an_object)
 						if not funct_result then
 								-- Now display output if we are attempting to insert the object in itself
 								-- or one of its children.
-							display_parent_in_child_message (an_object, Current, new_type)
+							display_parent_in_child_message (an_object, local_parent_object, new_type)			
 						end
 						Result := Result and funct_result
 					end
+					funct_result := local_parent_object.accepts_child (new_type)
+						-- We now display information in status bar regarding full status.
+					display_invalid_drop_message (local_parent_object, new_type, funct_result)
+					Result := Result and funct_result
+				else
+					Result := False
 				end
 				if Result then
 					status_bar_label.remove_text
 				end
 			end
 		end
+		
+	all_dependents_recursive (an_object: GB_OBJECT; dependents: HASH_TABLE [GB_OBJECT, INTEGER]) is
+			-- Add all top level objects which `an_object' is dependent on to `dependents'. Does not
+			-- include `an_object' itself.
+		require
+			object_not_void: an_object /= Void
+			dependents_not_void: dependents /= Void
+		local
+			current_object, dependent_object: GB_OBJECT
+		do
+			from
+				an_object.children.start
+			until
+				an_object.children.off
+			loop
+				current_object := an_object.children.item
+				
+				if current_object.is_instance_of_top_level_object then
+					dependent_object := object_handler.deep_object_from_id (current_object.associated_top_level_object)
+					if not dependents.has (dependent_object.id) then
+							-- Only add if it is not already contained as an object may rely on another
+							-- object multiple times in it's structure.
+						dependents.extend (dependent_object, dependent_object.id)
+					end
+					all_dependents_recursive (dependent_object, dependents)
+				else
+					all_dependents_recursive (current_object, dependents)
+				end
+				an_object.children.forth
+			end
+		end		
 
 	create_layout_item is
 			-- Create a layout_item associated with `Current'.
@@ -446,12 +872,14 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_BUILDER_WINDOW} -- Element change
 			layout_item_not_parented: layout_item.parent = Void
 		end
 		
-feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_TYPE_SELECTOR_ITEM} -- Access
+feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_TYPE_SELECTOR_ITEM, GB_COMMAND_ADD_OBJECT} -- Access
 		
 	accepts_child (a_type: STRING):BOOLEAN is
 			-- Does `Current' accept `an_object'.
 			-- Redefine in descendents to allow children
 			-- of correct type to be added.
+		require
+			type_not_void: a_type /= Void
 		do
 			Result := False
 		end
@@ -481,7 +909,9 @@ feature -- Basic operations
 	add_new_component_in_parent (a_component: GB_COMPONENT) is
 			-- Add `a_component' to parent of `Current', before `Current'.
 		require
+			has_parent_object: parent_object /= Void
 			object_parent_not_full: not parent_object.is_full
+			component_not_void: a_component /= Void
 		local
 			an_object: GB_OBJECT
 		do
@@ -489,11 +919,15 @@ feature -- Basic operations
 			object_handler.recursive_do_all (an_object, agent ensure_names_unique (?))
 			ensure_names_unique (an_object)
 			add_new_object_in_parent (an_object)
+		ensure
+			parent_count_increased: parent_object.children.count = old parent_object.children.count + 1
 		end
 
 	add_new_object_in_parent (an_object: GB_OBJECT) is
 			-- Add `an_object' to parent of `Current', before `Current'.
 		require
+			has_parent_object: parent_object /= Void
+			object_not_void: an_object /= Void
 			object_parent_not_full: not parent_object.is_full		
 		local
 			command_add: GB_COMMAND_ADD_OBJECT
@@ -510,11 +944,14 @@ feature -- Basic operations
 			end
 			create command_add.make (parent_object, an_object, insert_position)
 			command_add.execute
+		ensure
+			parent_has_object: parent_object.children.has (an_object)
 		end
 		
 	add_new_component (a_component: GB_COMPONENT) is
 			-- Add object representation of `a_component' to `Current'.
 		require
+			component_not_void: a_component /= Void
 			object_not_full: not is_full
 		local
 			an_object: GB_OBJECT
@@ -523,12 +960,15 @@ feature -- Basic operations
 			object_handler.recursive_do_all (an_object, agent ensure_names_unique (?))
 			ensure_names_unique (an_object)
 			add_new_object (an_object)
+		ensure
+			count_increased: children.count = old children.count + 1
 		end
 
 	add_new_object (an_object: GB_OBJECT) is
 			-- Add `an_object' to `Current'.
 		require
-			object_not_full: not is_full
+			object_not_void: an_object /= Void
+			not_full: not is_full
 		local
 			command_add: GB_COMMAND_ADD_OBJECT
 		do
@@ -542,10 +982,11 @@ feature -- Basic operations
 			end
 			command_add.execute
 				-- Now we expand the layout item.
-			if not layout_item.is_expanded then
+			if layout_item.is_expandable and not layout_item.is_expanded then
 				layout_item.expand
 			end
 		ensure
+			has_object: children.has (an_object)
 			layout_item_not_void: an_object.layout_item /= Void
 		end
 		
@@ -559,31 +1000,70 @@ feature -- Basic operations
 			id_assigned: id = a_new_id
 		end
 		
-feature {GB_ID_COMPRESSOR}
+feature {GB_ID_COMPRESSOR, GB_OBJECT}
 
 	update_internal_id_references (conversion_data: HASH_TABLE [INTEGER, INTEGER]) is
 			-- For all ids, used in `Current', including `id', and ids used in any
 			-- properties, convert from their current_value  to hash_table [current_value] value.
+		require
+			conversion_data_not_void: conversion_data /= Void
+			conversion_data_has_entry: conversion_data.item (id) /= 0
+		local
+			linear: LINEAR [INTEGER]
 		do
 			id := conversion_data @ id
+			
+			linear := instance_referers.linear_representation
+			instance_referers.clear_all
+			from
+				linear.start
+			until
+				linear.off
+			loop
+				instance_referers.extend (conversion_data @ linear.item, conversion_data @ linear.item)
+				linear.forth
+			end
+			if is_instance_of_top_level_object then
+				associated_top_level_object := conversion_data @ associated_top_level_object
+			end
+		ensure
+			conversion_completed: id = conversion_data.item (old id)
+			-- All instance referers converted also. Not easy to write as a postcondition.
 		end
 
-feature {GB_COMMAND_NAME_CHANGE, GB_COMPONENT, GB_OBJECT_HANDLER, GB_OBJECT, GB_COMMAND_CHANGE_TYPE} -- Basic operation
+feature {GB_COMMAND_NAME_CHANGE, GB_OBJECT_HANDLER, GB_OBJECT, GB_COMMAND_CHANGE_TYPE, GB_WINDOW_SELECTOR, GB_COMMAND_CONVERT_TO_TOP_LEVEL} -- Basic operation
 
 	set_name (new_name: STRING) is
 			-- Assign `new_name' to `name'.
 		require
 			name_not_void: new_name /= Void
-			no_object_has_name: not object_handler.name_in_use (new_name, Current)
+			--| FIXME while building a new top level representation of an object,
+			--| we temporarily set the name to one already in use as we load it from XML.
+			--| it is changed after, but prevents the following precondition from being permitted.
+			--no_object_has_name: not object_handler.name_in_use (new_name, Current)
 		do
 			name := new_name
 			edited_name := new_name
-			layout_item.set_text (name_and_type_from_object (Current))
+			update_representations_for_name_or_type_change
 		ensure
 			name_assigned: name.is_equal (new_name)
+			edited_name_set: name.is_equal (new_name)
+		end
+		
+	update_representations_for_name_or_type_change is
+			-- Update all representations of `Current' to reflect a change
+			-- of name or type.
+		local
+			name_and_type: STRING
+		do
+			name_and_type := name_and_type_from_object (Current)
+			layout_item.set_text (name_and_type)
+			if is_top_level_object then
+				window_selector_item.set_text (name_and_type)
+			end
 		end
 
-feature {GB_OBJECT_HANDLER, GB_TITLED_WINDOW_OBJECT} -- Implementation
+feature {GB_OBJECT_HANDLER, GB_TITLED_WINDOW_OBJECT, GB_OBJECT} -- Implementation
 
 	build_display_object is
 			-- Build `display_object' from type of `Current'
@@ -595,23 +1075,68 @@ feature {GB_OBJECT_HANDLER, GB_TITLED_WINDOW_OBJECT} -- Implementation
 		do
 			display_object ?= vision2_object_from_type (type)
 			pick_and_dropable ?= display_object
+			connect_display_object_events
+		ensure
+			display_object_not_void: display_object /= Void
+		end
+		
+	connect_display_object_events is
+			-- Connect events to `display_object' to permit interactive building.
+		require
+			has_display_object: display_object /= Void
+		local
+			pick_and_dropable: EV_PICK_AND_DROPABLE
+		do
+			pick_and_dropable ?= display_object
 			if pick_and_dropable /= Void then
+					-- Firstly remove any previous events
+				pick_and_dropable.drop_actions.wipe_out
+				
+					-- Now connect the new events
 				pick_and_dropable.set_pebble_function (agent retrieve_pebble)
 				pick_and_dropable.drop_actions.extend (agent add_new_component_wrapper (?))
 				pick_and_dropable.drop_actions.extend (agent add_new_object_wrapper (?))
 				pick_and_dropable.drop_actions.set_veto_pebble_function (agent can_add_child (?))
 				pick_and_dropable.drop_actions.extend (agent set_color)
 			end
-		ensure
-			display_object_not_void: display_object /= Void
 		end
 		
+	unconnect_display_object_pick_events is
+			-- Unconnect pick events from `display_object' to restrict interactive building.
+			-- For example we do not permit a user to modify the structure if the object is
+			-- part of a representation of a top level object.
+		require
+			has_display_object: display_object /= Void
+		local
+			pick_and_dropable: EV_PICK_AND_DROPABLE
+		do
+			pick_and_dropable ?= display_object
+			if pick_and_dropable /= Void then
+				pick_and_dropable.remove_pebble
+			end
+		end
+		
+	unconnect_display_object_drop_events is
+			-- Unconnect drop events from `display_object' to restrict interactive building.
+			-- For example we do not permit a user to modify the structure if the object is
+			-- part of a representation of a top level object.
+		require
+			has_display_object: display_object /= Void
+		local
+			pick_and_dropable: EV_PICK_AND_DROPABLE
+		do
+			pick_and_dropable ?= display_object
+			if pick_and_dropable /= Void then
+				pick_and_dropable.drop_actions.wipe_out
+				pick_and_dropable.drop_actions.set_veto_pebble_function (Void)
+			end
+		end
+
 	retrieve_pebble: ANY is
 			-- Retrieve pebble for transport.
 			-- A convenient was of setting up the drop
 			-- actions for GB_TYPE_SELECTOR_ITEM.
 		do
-				
 			if application.ctrl_pressed and application.shift_pressed then
 					-- If ctrl and shift is pressed, we must highlight
 					-- the object in the layout constructor.
@@ -625,7 +1150,6 @@ feature {GB_OBJECT_HANDLER, GB_TITLED_WINDOW_OBJECT} -- Implementation
 				type_selector.update_drop_actions_for_all_children (Current)
 				Result := Current
 			end
-			
 		end
 
 	set_up_display_object_events (a_display_object, an_object: EV_ANY) is
@@ -635,6 +1159,9 @@ feature {GB_OBJECT_HANDLER, GB_TITLED_WINDOW_OBJECT} -- Implementation
 			-- on `display_object' so that we can notify the system that the
 			-- change has taken place. There are only a few such events
 			-- like these, but we need to be able to handle them.
+		require
+			display_object_not_void: a_display_object /= Void
+			object_not_void: an_object /= Void
 		local
 			handler: GB_EV_HANDLER
 			supported_types: ARRAYED_LIST [STRING]
@@ -664,6 +1191,8 @@ feature {GB_OBJECT} -- Implementation
 	override_drop_on_child (an_object: GB_OBJECT): BOOLEAN is
 			-- If `Current' is held within `an_object' or
 			-- `Current' is `an_object' then do not allow drop.
+		require
+			an_object_not_void: an_object /= Void
 		do
 			Result := True
 				
@@ -691,17 +1220,19 @@ feature {GB_OBJECT_EDITOR, GB_GENERAL_UTILITIES} -- Implementation
 			name_not_void: a_name /= Void
 		do
 			edited_name := a_name
+			update_representations_for_name_or_type_change
 		ensure
 			name_set: edited_name.is_equal (a_name)
 		end
-		
 
 	cancel_edited_name is
 			-- Assign `name' to `edited_name'.
 		do
 			edited_name := name
-			layout_item.set_text (name_and_type_from_object (Current))
+			update_representations_for_name_or_type_change
 		end
+		
+feature {GB_WINDOW_SELECTOR_ITEM, GB_GENERAL_UTILITIES} -- Implementation
 
 	output_name: STRING is
 			-- Representation of `name' of `Current'
@@ -715,23 +1246,30 @@ feature {GB_OBJECT_EDITOR, GB_GENERAL_UTILITIES} -- Implementation
 			else
 				Result := edited_name
 			end
+		ensure
+			result_not_void: Result /= Void
 		end
-		
-		
+	
 feature {GB_CODE_GENERATOR} -- Implementation
 
 	extend_xml_representation (child_name: STRING): STRING is
 			-- `Result' is XML representation of code required to extend
 			-- the current_object_type.
+		require
+			name_not_void: child_name /= Void
 		do
 			Result := "extend (" + child_name + ")"
+		ensure
+			result_not_void: Result /= Void
 		end
 		
-feature {GB_LAYOUT_CONSTRUCTOR} -- Implementation
+feature {GB_LAYOUT_CONSTRUCTOR, GB_OBJECT_HANDLER} -- Implementation
 
 	build_drop_actions_for_layout_item is
 			-- Build the drop actions for the layout item.
 			-- Wipe out any existing actions.
+		require
+			layout_item_not_void: layout_item /= Void
 		do
 			layout_item.drop_actions.wipe_out
 			layout_item.drop_actions.extend (agent add_new_object_wrapper (?))
@@ -744,6 +1282,8 @@ feature {GB_BUILDER_WINDOW} -- Implementation
 	add_new_object_wrapper (an_object: GB_OBJECT) is
 			-- If shift pressed then add `an_object' to
 			-- parent of `Current', else add to `Current'.
+		require
+			object_not_void: an_object /= Void
 		local
 			env: EV_ENVIRONMENT
 			new_type: STRING
@@ -790,11 +1330,10 @@ feature {GB_BUILDER_WINDOW} -- Implementation
 	add_new_component_wrapper (a_component: GB_COMPONENT) is
 			-- If shift pressed then add `a_component' to
 			-- parent of `Current', else add to `Current'.
-		local
-			env: EV_ENVIRONMENT
+		require
+			component_not_void: a_component /= Void
 		do
-			create env
-			if not env.application.shift_pressed then
+			if not environment.application.shift_pressed then
 				check
 					object_not_full: not is_full
 				end
@@ -842,12 +1381,30 @@ feature {GB_LAYOUT_CONSTRUCTOR_ITEM} -- Implementation
 			-- Assign `True' to `is_expanded'.
 		do
 			is_expanded := True
+		ensure
+			is_expanded: is_expanded
 		end
 		
 	register_collapse is
 			-- Assign `False' to `is_expanded'.
 		do
 			is_expanded := False
+		ensure
+			not_expanded: not is_expanded
+		end
+		
+feature {GB_WINDOW_SELECTOR_ITEM, GB_OBJECT_HANDLER} -- Implementation
+		
+	set_window_selector_item (a_window_selector_item: GB_WINDOW_SELECTOR_ITEM) is
+			-- Assign `a_window_selector_item' to `window_selector_item'.
+		require
+			item_not_void: a_window_selector_item /= Void
+		do
+			window_selector_item := a_window_selector_item
+			window_selector_item.set_object (Current)
+		ensure
+			item_set: window_selector_item = a_window_selector_item
+			window_selector_item_object_set: window_selector_item.object = Current
 		end
 		
 feature -- Contract Support
@@ -855,6 +1412,7 @@ feature -- Contract Support
 	type_matches_object (a_type: STRING; an_object: ANY): BOOLEAN is
 			-- Is `an_object' an instance of `a_type'?
 		require
+			a_type_not_void: a_type /= Void
 			an_object_not_void: an_object /= Void
 		do
 			Result := is_instance_of (an_object, dynamic_type_from_string (a_type))
@@ -864,6 +1422,8 @@ feature {NONE} -- Implementation
 
 	vision2_object_from_type (a_type: STRING): EV_ANY is
 			-- `Result' is a vision2 object of type `a_type'
+		require
+			a_type_not_void: a_type /= Void
 		local
 			passed: BOOLEAN
 			an_object: EV_ANY
@@ -908,6 +1468,10 @@ feature {NONE} -- Implementation
 	display_parent_in_child_message (obj1, obj2: GB_OBJECT; new_type: STRING) is
 			-- Display message in status bar indicating that `ob1' cannot be parented
 			-- in `obj2' as `ob2' is `obj1' or is parent of `obj1'.
+		require
+			obj1_not_void: obj1 /= Void
+			obj2_not_void: obj2 /= Void
+			new_type_not_void: new_type /= Void
 		do
 			if obj1 = obj2 then
 				set_status_text ("Cannot parent " + new_type + " in itself.")
@@ -916,36 +1480,11 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	layout_items_consistent_with_children: BOOLEAN is
-			-- This is a temporary function, used in the change from
-			-- replying on the layout items to the newly added `children'
-			-- for accessing children of an object.
-			-- This ensures that the handling of children is exactly in line
-			-- with `layout_item' which we used previously.
-		local
-			local_children: ARRAYED_LIST [GB_OBJECT]
-			a_layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
-		do
-			local_children := children
-			if layout_item = Void then
-				Result := local_children.is_empty
-			else
-				Result := local_children.count = layout_item.count
-				from
-					local_children.start
-				until
-					local_children.off or not Result
-				loop
-					a_layout_item ?= layout_item.i_th (local_children.index)
-					Result := local_children.item = a_layout_item.object
-					local_children.forth
-				end
-			end
-		end
-		
 	add_child (an_object: GB_OBJECT; position: INTEGER) is
 			-- Add `an_object' to child list of `Current'.
 		require
+			an_object_not_void: an_object /= Void
+			valid_insert_position: position >= 0 and position <= children.count + 1
 			not_contained: not children.has (an_object)
 		do
 			children.go_i_th (position)
@@ -958,6 +1497,8 @@ feature {NONE} -- Implementation
 	ensure_names_unique (an_object: GB_OBJECT) is
 			-- Ensure that name of `an_object' is unique, and does not
 			-- clash with any feature names also.
+		require
+			object_not_void: an_object /= Void
 		local
 			temp_name, original_name: STRING
 			counter: INTEGER
@@ -982,13 +1523,120 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 
 	remove_child_from_children (an_object: GB_OBJECT) is
 			-- Remove `an_object' from `Current'.
+		require
+			object_not_void: an_object /= Void
 		do
 			children.prune_all (an_object)
 			an_object.set_parent (Void)
+		ensure
+			object_not_parented: an_object.parent_object = Void
+		end
+		
+	update_object_as_instance_representation is
+			-- Update `Current' to reflect the fact that it is a representation
+			-- of another top level object, only if `temp_top_level_id' >=0.
+		local
+			l_object: GB_OBJECT
+			l_id: INTEGER
+			all_children: ARRAYED_LIST [GB_OBJECT]
+		do
+			if temp_top_level_id >= 0 then
+				l_id := temp_top_level_id
+					-- Retrieve the object which `Current' represents.
+				l_object := object_handler.object_from_id (temp_top_level_id)
+				check
+					object_not_void: object /= Void
+				end
+					-- Add `Current' as an instance referer of `l_object'.
+				l_object.instance_referers.extend (Current.id, Current.id)
+					-- Set `l_object' as the top object `Current' represents.
+				set_associated_top_level_object (l_object)
+				represent_as_locked_instance
+				update_representations_for_name_or_type_change
+				connect_instance_referers (l_object, Current)
+					-- Reset `temp_top_level_id' so that it is no longer used in
+					-- subsequent updates, for example while importing a system.
+				temp_top_level_id := -1
+				
+					-- Now update the builder window representations of all children recursively so that
+					-- a user may not build directly within them as they should be locked.
+				unconnect_display_object_drop_events
+				create all_children.make (50)
+				all_children_recursive (all_children)
+				from
+					all_children.start
+				until
+					all_children.off
+				loop
+					all_children.item.unconnect_display_object_drop_events
+					all_children.item.unconnect_display_object_pick_events
+					all_children.forth
+				end
+			end
+		ensure
+			temp_id_reset: temp_top_level_id = -1
+		end
+		
+	temp_top_level_id: INTEGER
+		-- A temporary id used to reference the top level object which `Current' represents.
+		--| FIXME, why can we not use associated_top_level_object?
+		
+feature {NONE} -- Contract support
+
+	instance_referers_recursively_unique (an_object: GB_OBJECT; current_result: BOOLEAN_REF; ids: HASH_TABLE [INTEGER, INTEGER]): BOOLEAN is
+			-- Are all instance referers reachable recursively from `an_object' all unique? Pass `current_result' as False and an empty `ids'
+			-- to use
+		require
+			object_not_void: an_object /= Void
+			current_result_not_void: current_result /= Void
+			ids_not_void: ids /= Void
+		local
+			list: ARRAYED_LIST [INTEGER]
+			referred_object: GB_OBJECT
+		do
+			list := an_object.instance_referers.linear_representation
+			from
+				list.start
+			until
+				list.off
+			loop
+				if ids.has (list.item) then
+					current_result.set_item (False)
+				else
+					ids.extend (list.item, list.item)
+				end
+				referred_object := object_handler.deep_object_from_id (list.item)
+				if referred_object /= Void then
+					Result := instance_referers_recursively_unique (referred_object, current_result, ids)
+				end
+				list.forth
+			end
+			Result := current_result
+		end
+		
+feature {GB_EV_EDITOR_CONSTRUCTOR} -- Implementation
+
+	real_display_object: EV_ANY is
+			-- Actual Vision2 obejct used by `display_object'. We need this query,
+			-- as some descendents redefined `display_object' and build a small widget
+			-- structure to represent it.
+		do
+			Result := display_object
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 invariant
 	children_not_void: children /= Void
-	children_constant: layout_items_consistent_with_children
+	instance_referers_not_void: instance_referers /= Void
+	constants_not_void: constants /= Void
+	events_not_void: events /= Void
+	top_level_object_has_window_selector_item: is_top_level_object implies (window_selector_item /= Void)
+	instance_referers_recursively_unique: object_handler.objects.has (id) implies instance_referers_recursively_unique (Current, True, create {HASH_TABLE [INTEGER, INTEGER]}.make (10))
+-- Cannot check this at the moment as when the `associated_top_level_object' is set, the other link is performed seperately. Check calls of `new_top_level_representation'.
+--	bi_directional_top_level_object_link: is_instance_of_top_level_object and object_handler.deep_object_from_id (associated_top_level_object) /= Void implies object_handler.deep_object_from_id (associated_top_level_object).instance_referers.has (id)
+
+-- Not True, any object within the structure may have instance referers, as properties must be updated.
+--	only_top_level_objects_have_instance_referers: not is_top_level_object implies instance_referers.is_empty
 
 end -- class GB_OBJECT

@@ -18,7 +18,8 @@ inherit
  			make as wel_make
 		redefine
 			init_application,
-			message_loop
+			message_loop,
+			run
  		end
 
 	WEL_ICC_CONSTANTS
@@ -245,6 +246,24 @@ feature {NONE} -- Message loop, we redefine it because the user
 			end
 		end
 
+	run is
+			-- Create `main_window' and start the message loop.
+			--| Redefined as Vision2 requires explicit showing of each window
+			--| Precursor automatically shows the main window.
+		require else
+			runable: runable
+			main_window_not_void: application_main_window /= Void
+			parent_main_window_is_void: application_main_window.parent = Void
+		local
+			d: WEL_MAIN_DIALOG
+		do
+			d ?= application_main_window
+			if d /= Void then
+				d.activate
+			end
+			message_loop
+		end
+
 feature {NONE} -- Inapplicable
 
 	iterate is
@@ -323,6 +342,10 @@ end -- class EV_APPLICATION_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.27  2000/04/03 17:50:13  rogers
+--| Redefined run from WEL_APPLICATION to avoid `first_window'
+--| being shown automatically.
+--|
 --| Revision 1.26  2000/03/29 20:33:48  brendel
 --| Implemented post_launch_actions.
 --|

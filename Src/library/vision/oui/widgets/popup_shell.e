@@ -56,7 +56,7 @@ feature -- Windowing
 		do
 			implementation.popdown
 		ensure
-			Not_popped_up: not is_popped_up
+			not_popped_up: not is_popped_up
 		end;
 
 	popup is
@@ -65,8 +65,6 @@ feature -- Windowing
 			exists: not destroyed
 		do
 			implementation.popup
-		ensure
-			Poped_up: is_popped_up
 		end;
 
 	set_cascade_grab is

@@ -72,8 +72,6 @@ feature -- Basic Operations
 			get_moniker_user_precondition: get_moniker_user_precondition (dw_assign, dw_which_moniker, ppmk)
 		deferred
 
-		ensure
-			valid_ppmk: ppmk.item /= Void
 		end
 
 	get_container (pp_container: CELL [IOLE_CONTAINER_INTERFACE]) is

@@ -107,7 +107,6 @@ feature -- Basic operation
 	recursive_do_all (action: PROCEDURE [ANY, TUPLE [EV_TREE_NODE]]) is
 			-- Apply `action' to every item.
 			-- Semantics not guaranteed if `action' changes the structure;
-			-- in such a case, apply iterator to clone of structure instead.
 		do
 			implementation.recursive_do_all (action)
 		end

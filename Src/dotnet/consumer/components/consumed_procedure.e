@@ -11,7 +11,7 @@ inherit
 		rename
 			make as member_make
 		redefine
-			has_arguments, arguments
+			has_arguments, arguments, is_static, is_deferred
 		end
 create
 	make
@@ -61,7 +61,7 @@ feature -- Status report
 		end
 
 	is_static: BOOLEAN is
-		-- Is .NET member static?
+			-- Is .NET member static?
 		do
 			Result := internal_flags & Is_static_mask = Is_static_mask
 		end

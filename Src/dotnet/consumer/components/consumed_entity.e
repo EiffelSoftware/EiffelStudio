@@ -48,7 +48,22 @@ feature -- Status report
 			-- Does current entity returns a value?
 		do
 		end
+		
+	is_static: BOOLEAN is
+			-- Is current entity static?
+		do
+		end
+	
+	is_attribute: BOOLEAN is
+			-- Is current entity an attribute?
+		do
+		end
 
+	is_deferred: BOOLEAN is
+			-- Is current entity abstract?
+		do
+		end
+		
 invariant
 	non_void_eiffel_name: eiffel_name /= Void
 	valid_eiffel_name: not eiffel_name.is_empty

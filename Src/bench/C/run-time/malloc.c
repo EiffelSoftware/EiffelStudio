@@ -274,9 +274,8 @@ rt_public long eiffel_usage = 0;
 doc:	<attribute name="eif_max_mem" return_type="int" export="shared">
 doc:		<summary>This variable is the maximum amount of memory the run-time can allocate. If it is null or negative, there is no limit.</summary>
 doc:		<access>Read/Write</access>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Updates made in `memory.c' are not protected through a mutex.</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Use `eif_memory_mutex' when updating its value in `memory.c'.</synchronization>
 doc:	</attribute>
 */
 rt_shared int eif_max_mem = 0;

@@ -7,7 +7,7 @@ inherit
 	INT_CONSTANT
 		redefine
 			action
-		end;
+		end
 
 	POLYNOM
 		undefine
@@ -15,7 +15,6 @@ inherit
 		end
 
 create
-
 	make
 
 feature {NONE}

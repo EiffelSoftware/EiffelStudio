@@ -1,10 +1,11 @@
 -- Identifiers
 
-class IDENTIFIER 
+class
+	IDENTIFIER 
 
 inherit
 
-	TERMINAL;
+	TERMINAL
 
 	CONSTANTS
 		undefine
@@ -12,7 +13,6 @@ inherit
 		end
 
 create
-
 	make
 
 feature {NONE}
@@ -20,7 +20,7 @@ feature {NONE}
 	default_identifier_name: STRING is 
 		once
 			Result := "IDENTIFIER"
-		end; -- default_identifier_name
+		end -- default_identifier_name
 
 	construct_name: STRING is
 		do

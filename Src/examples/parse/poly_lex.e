@@ -4,7 +4,7 @@ class POLY_LEX
 	
 inherit
 
-	L_INTERFACE;
+	L_INTERFACE
 
 	CONSTANTS
 		undefine
@@ -16,42 +16,42 @@ feature {NONE}
 	obtain_analyzer is
 			-- Create lexical analyzer for the Polynomial language
 		do
-			ignore_case;
-			keywords_ignore_case;
-			build_expressions;
-			build_keywords;
+			ignore_case
+			keywords_ignore_case
+			build_expressions
+			build_keywords
 			set_separator_type (Blanks)
-		end; -- obtain_analyzer
+		end -- obtain_analyzer
 
 	build_expressions is
 			-- Define regular expressions
 			-- for the Polynomial language
 		do
-			put_expression (special_expression, Special, "Special");
-			put_expression ("*('a'..'z')", Simple_identifier, "Simple_identifier");
-			put_expression ("+('0'..'9')", Integer_constant, "Integer_constant");
-			put_expression ("+('\t'|'\n'|' ')", Blanks, "Blanks");
-		end; -- build_expressions
+			put_expression (special_expression, Special, "Special")
+			put_expression ("*('a'..'z')", Simple_identifier, "Simple_identifier")
+			put_expression ("+('0'..'9')", Integer_constant, "Integer_constant")
+			put_expression ("+('\t'|'\n'|' ')", Blanks, "Blanks")
+		end -- build_expressions
 
 	special_expression: STRING is
 			-- Regular expression describing `Special'
 		once
-			create Result.make (80);
-			Result.append ("('\050'..'\057')|");
-			Result.append ("('\072'..'\076')|");
+			create Result.make (80)
+			Result.append ("('\050'..'\057')|")
+			Result.append ("('\072'..'\076')|")
 			Result.append ("'['|']'|'|'|'{'|'}'|%"->%"|%":=%"")
-		end; -- special_expression
+		end -- special_expression
 
 	build_keywords is
 			-- Define keywords (special symbols)
 			-- for the Polynomial language
 		do
-			put_keyword ("+", Special);
-			put_keyword ("-", Special);
-			put_keyword (";", Special);
-			put_keyword (":", Special);
-			put_keyword ("(", Special);
-			put_keyword (")", Special);
+			put_keyword ("+", Special)
+			put_keyword ("-", Special)
+			put_keyword (";", Special)
+			put_keyword (":", Special)
+			put_keyword ("(", Special)
+			put_keyword (")", Special)
 			put_keyword ("*", Special)
 		end -- build_keywords
  

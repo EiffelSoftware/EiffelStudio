@@ -1,6 +1,7 @@
 -- Semantic information for constructs of the Polynomial language
 
-class POLYNOM
+class
+	POLYNOM
 
 feature {NONE}
 

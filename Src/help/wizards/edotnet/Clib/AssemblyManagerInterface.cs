@@ -61,26 +61,33 @@ public class AssemblyManagerInterface: IAssemblyManagerInterface
 		Assembly assembly;
 		String Location;
 		
-		Descriptor = new AssemblyDescriptor();
-		Descriptor.Make( Name, Version, Culture, PublicKey );
-		if( !( ( Descriptor.Name.Equals( "Microsoft.VisualC" ) )&&( Descriptor.Version.Equals( "7.0.9249.59748" ) ) ) )
+		try
 		{
-			Support = new ConversionSupport();
-			AName = Support.AssemblyNameFromDescriptor( Descriptor );
-			if( AName != null )
+			Descriptor = new AssemblyDescriptor();
+			Descriptor.Make( Name, Version, Culture, PublicKey );
+			if( !( ( Descriptor.Name.Equals( "Microsoft.VisualC" ) )&&( Descriptor.Version.Equals( "7.0.9249.59748" ) ) ) )
 			{
-				assembly = Assembly.Load( AName );
-				Location = assembly.Location;
-				if( Location != null )
-					return Location;
+				Support = new ConversionSupport();
+				AName = Support.AssemblyNameFromDescriptor( Descriptor );
+				if( AName != null )
+				{
+					assembly = Assembly.Load( AName );
+					Location = assembly.Location;
+					if( Location != null )
+						return Location;
+					else
+						return "";
+				}
 				else
-					return "";
+					return "";	
 			}
 			else
-				return "";	
+				return "";
 		}
-		else
+		catch
+		{
 			return "";
+		}
 	}
 	
 	// Dependencies of local assemblies with filename `Filename'

@@ -28,6 +28,7 @@ feature {NONE} -- Initialization
 			add_transparent_pixmap -- First image is transparent.
 			create image_list_info.make (4)
 			create filenames_index.make (4)
+			create bitmap_ids_index.make (4)
 		end
 
 	add_transparent_pixmap is
@@ -86,6 +87,10 @@ feature -- Status report
 				   filenames_index.has (pixmap_filename)
 				then
 					last_position := filenames_index.item (pixmap_filename)
+				elseif pixmap_imp.private_bitmap /= Void and then
+					bitmap_ids_index.has (pixmap_imp.private_bitmap.object_id)
+				then
+					last_position := bitmap_ids_index.item (pixmap_imp.private_bitmap.object_id)
 				end
 			end
 
@@ -114,6 +119,11 @@ feature -- Element change
 				   filenames_index.has (pixmap_filename)
 				then
 					last_position := filenames_index.item (pixmap_filename)
+					pixmap_already_present := True
+				elseif pixmap_imp.private_bitmap /= Void and then
+					bitmap_ids_index.has (pixmap_imp.private_bitmap.object_id)
+				then
+					last_position := bitmap_ids_index.item (pixmap_imp.private_bitmap.object_id)
 					pixmap_already_present := True
 				else
 					internal_add_pixmap (a_pixmap)
@@ -144,6 +154,8 @@ feature -- Element change
 
 			if pixmap_filename /= Void then
 				filenames_index.put (last_position, pixmap_filename)
+			elseif pixmap_imp /= Void and then pixmap_imp.private_bitmap /= Void then
+				bitmap_ids_index.put (last_position, pixmap_imp.private_bitmap.object_id)
 			end
 		end
 
@@ -324,6 +336,9 @@ feature {NONE} -- Implementation (Attributes, Constants, ...)
 
 	filenames_index: HASH_TABLE [INTEGER, STRING]
 			-- Table indexing image indexes in imagelist with the image name.
+
+	bitmap_ids_index: HASH_TABLE [INTEGER, INTEGER]
+			-- Table indexing image indexes in images list to bitmap object id
 
 	raster_constants: WEL_RASTER_OPERATIONS_CONSTANTS is
 			-- Raster operations constants.

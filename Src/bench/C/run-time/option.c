@@ -346,6 +346,10 @@ void prof_time(SYSTEMTIME *a_time);
 struct prof_info* prof_stack_top(void);		/* Top the stack */
 struct prof_info* prof_stack_pop(void);		/* Pop top off stack */
 
+
+/* Computation of the percentage, it returns a number between 0 and 1 */
+rt_private double compute_percentage (double, double);
+
 /* We do debug only in WORKBENCH mode
  * We also need check_options and check_options_stop in WORKBENCH mode
  */
@@ -573,12 +577,12 @@ void exitprf(void)
 						features = (struct prof_info *) f_values[i].htab->h_values;
 						
 #ifdef HAS_GETRUSAGE
-						percentage = (real_time(features[j].all_total_time)) / (real_time(execution_time)) * 100; 
+						percentage = 100.0 * compute_percentage (real_time(features[j].all_total_time), real_time(execution_time)); 
 #elif defined(HAS_TIMES)
-						percentage = features[j].all_total_time / (double) execution_time * 100.;
+						percentage = 100.0 * compute_percentage (features[j].all_total_time, execution_time);
 #elif defined(EIF_WIN32)
-						percentage = (real_time(features[j].all_total_time)) / (real_time(execution_time)) * 100.0; 
-#endif						
+						percentage = 100.0 * compute_percentage (real_time(features[j].all_total_time), real_time(execution_time)); 
+#endif
 						
 						fprintf(prof_output, "[%d]\t%.2f\t%.2f\t%ld\t%.2f\t%s from %d\n", index,
 #ifdef HAS_GETRUSAGE
@@ -1025,6 +1029,14 @@ void prof_stack_rewind(char **old_top)
 			}
 		}
 	}
+}
+/* Computation of the percentage, it returns a number between 0 and 1 */
+rt_private double compute_percentage (double feature_time, double total_time)
+{
+	if (total_time == 0.0)
+		return 1.0;
+	else
+		return feature_time / total_time;
 }
 
 /* Get the user and system time.

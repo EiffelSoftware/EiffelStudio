@@ -108,7 +108,10 @@ feature -- Basic operations
 				test_file: RAW_FILE
 				error_dialog: EV_ERROR_DIALOG
 				dialog_constants: EV_DIALOG_CONSTANTS
+				temp_file_name, retrieved_file_name: FILE_NAME
 			do
+					-- Reset this value.
+				location_update_cancelled := False
 				create dialog
 				dialog.set_filter (project_file_filter)
 				create file_handler
@@ -145,19 +148,37 @@ feature -- Basic operations
 									project_settings.set_project_location (dialog.file_path)
 								end
 								system_status.set_current_project (project_settings)
-								create test_file.make (filename)
-								if test_file.exists then
-									xml_handler.load
-									main_window.show_tools
-									command_handler.update
-										-- Compress all used ids.
-									id_compressor.compress_all_id
+									-- We must now check to see if the build project is in a different location
+									-- to the location referenced in the file. If it is, we need to update the
+									-- location, so we can find `system_interface.xml' correctly in the new location.
+								if not dialog.file_path.is_equal (project_settings.project_location) then								
+									create error_dialog.make_with_text ("The location of the .bpr file has changed from " + project_settings.project_location + " to " + dialog.file_path + ".%NPlease ensure that the file `system_interface.xml' has also been relocated to this new directory.%NBuild will now update the reference to `system_interface.xml' and attempt to load the file.")
+									create dialog_constants
+										-- Hide unwanted buttons from the dialog
+									error_dialog.button (dialog_constants.ev_retry).set_text ("Continue")--.hide;
+									error_dialog.button (dialog_constants.ev_retry).select_actions.extend (agent update_location (dialog.file_path))
+									error_dialog.button (dialog_constants.ev_ignore).hide
+									error_dialog.button (dialog_constants.ev_abort).select_actions.extend (agent cancel_update_location)
+									error_dialog.show_modal_to_window (main_window)
+								end
+								
+								if not location_update_cancelled then
+										-- Do not load the project, as the used selected "abort" from
+										-- the previous dialog.
+									create test_file.make (filename)
+									if test_file.exists then
+										xml_handler.load
+										main_window.show_tools
+										command_handler.update
+											-- Compress all used ids.
+										id_compressor.compress_all_id
+									end
 								end
 							end
 						end	
 					end
 				end
-				if test_file /= Void and then not test_file.exists then
+				if test_file /= Void and then not test_file.exists and not location_update_cancelled then
 					create error_dialog.make_with_text ("The system interface file '" + filename + "' (referenced by the specified .BPR file) is missing.%NIf the file has been moved, please restore the file and try again.%NIf you no longer have a copy of the file, please start a new project.")
 					create dialog_constants
 						-- Hide unwanted buttons from the dialog
@@ -169,6 +190,27 @@ feature -- Basic operations
 			end
 
 feature {NONE} -- Implementation
+	
+	update_location (new_location: STRING) is
+			-- Assign `new_location' to `project_location' in the
+			-- system settings, and save the current settings.
+		do
+			system_status.current_project_settings.set_project_location (new_location)
+			system_status.current_project_settings.save
+		end
+		
+	cancel_update_location is
+			-- Assign `True' to `location_update_cancelled', so that
+			-- we know a user selected cancel, from the lcoation update
+			-- dialog.
+		do
+			location_update_cancelled := True
+			system_status.close_current_project
+		end
+	
+	location_update_cancelled: BOOLEAN
+		-- Has the response to the out of synch project location in the .bpr file
+		-- to abort the loading process?
 
 	valid_file_name (file_name: STRING): BOOLEAN is
 			-- Is `file_name' the name of an existing file?

@@ -174,7 +174,11 @@ feature {NONE} -- Access
 
 	done_sig: MD_FIELD_SIGNATURE
 			-- Precomputed signature of `done_token' so that we do not have
-			-- to compute it too often.
+			-- to compute it too often
+
+	sync_sig: MD_FIELD_SIGNATURE
+			-- Precomputed signature of `sync_token' so that we do not have
+			-- to compute it too often
 
 	default_sig: MD_METHOD_SIGNATURE
 			-- Precomputed signature of a feature with no arguments and no return type.
@@ -541,9 +545,11 @@ feature -- Generation Structure
 			create md_dispenser.make
 
 
-				-- Create signature for `done' in once computation.
+				-- Create signature for `done' and `sync' in once computation.
 			create done_sig.make
 			done_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_boolean, 0)
+			create sync_sig.make
+			sync_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_object, 0)
 
 				-- Create default signature.
 			create default_sig.make
@@ -4025,6 +4031,38 @@ feature -- Return statements
 			end
 		end
 
+feature {NONE} -- Once management
+
+	once_done_name (feature_name: STRING): STRING is
+			-- Name of the field that indicates whether once routine has been executed or not
+		require
+			feature_name_not_void: feature_name /= Void
+		do
+			Result := feature_name + "_done"
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	once_result_name (feature_name: STRING): STRING is
+			-- Name of the field that stores result of a once function
+		require
+			feature_name_not_void: feature_name /= Void
+		do
+			Result := feature_name + "_result"
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	once_sync_name (feature_name: STRING): STRING is
+			-- Name of the field that is used to synchronize access to once routine data
+		require
+			feature_name_not_void: feature_name /= Void
+		do
+			Result := feature_name + "_sync"
+		ensure
+			result_not_void: Result /= Void
+		end
+
 feature -- Once management
 
 	generate_once_data (class_c: CLASS_C) is
@@ -4034,11 +4072,14 @@ feature -- Once management
 		local
 			feature_table: FEATURE_TABLE
 			feature_i: FEATURE_I
+			class_constructor_token: INTEGER
+			l_method_sig: like method_sig
 		do
 				-- Set current module and class
 			set_current_module_for_class (class_c)
 			current_class := class_c
 			current_class_token := current_module.class_data_token (class_c)
+			method_body := Void
 				-- Generate data for once features in class `class_c'
 				-- (they are either immediate or replicated in it)
 			from
@@ -4049,15 +4090,44 @@ feature -- Once management
 			loop
 				feature_i := feature_table.item_for_iteration
 				if feature_i.is_once and then feature_i.access_in = class_c.class_id then
+					sync_token := 0
 					generate_once_data_info (feature_i)
+					if sync_token /= 0 then
+							-- Static field has to be initialized in a class constructor
+						if class_constructor_token = 0 then
+							l_method_sig := method_sig
+							l_method_sig.reset
+							l_method_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.default_sig)
+							l_method_sig.set_parameter_count (0)
+							l_method_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.element_type_void, 0)
+							uni_string.set_string (".cctor")
+							class_constructor_token := md_emit.define_method (
+								uni_string,
+								current_class_token,
+								feature {MD_METHOD_ATTRIBUTES}.private |
+								feature {MD_METHOD_ATTRIBUTES}.static |
+								feature {MD_METHOD_ATTRIBUTES}.special_name |
+								feature {MD_METHOD_ATTRIBUTES}.rt_special_name |
+								feature {MD_METHOD_ATTRIBUTES}.hide_by_signature,
+								l_method_sig,
+								feature {MD_METHOD_ATTRIBUTES}.il | feature {MD_METHOD_ATTRIBUTES}.managed)
+							method_body := method_writer.new_method_body (class_constructor_token)
+						end
+						method_body.put_opcode_mdtoken (feature {MD_OPCODES}.newobj, constructor_token (current_module.object_type_id))
+						method_body.put_opcode_mdtoken (feature {MD_OPCODES}.stsfld, sync_token)
+					end
 				end
 				feature_table.forth
 			end
+			if method_body /= Void then
+				generate_return (false)
+				method_writer.write_current_body
+			end
 		end
 
-	done_token, result_token: INTEGER
+	done_token, result_token, sync_token: INTEGER
 			-- Token for static fields holding value if once has been computed,
-			-- and its value if computed.
+			-- its value if computed and synchronization object.
 			-- Ok to use token in a non-module specific code here, because they
 			-- are only local to current feature generation.
 
@@ -4073,7 +4143,7 @@ feature -- Once management
 			name := feat.feature_name
 
 				-- Generate field that indicates whether result is calculated or not
-			uni_string.set_string (name + "_done")
+			uni_string.set_string (once_done_name (name))
 			done_token := md_emit.define_field (uni_string,
 				current_class_token,
 				feature {MD_FIELD_ATTRIBUTES}.Public | feature {MD_FIELD_ATTRIBUTES}.Static,
@@ -4081,7 +4151,6 @@ feature -- Once management
 			if not feat.is_process_relative then
 				current_module.define_thread_static_attribute (done_token)
 			end
-
 			fixme ("Generate debug info for readiness flag of once routine as required")
 			-- Il_debug_info_recorder.record_once_info (current_class_type, Byte_context.current_feature, name, done_token, 0)
 
@@ -4091,16 +4160,25 @@ feature -- Once management
 				result_sig.reset
 				set_signature_type (result_sig, feat.type.actual_type.type_i)
 
-				uni_string.set_string (name + "_result")
+				uni_string.set_string (once_result_name (name))
 				result_token := md_emit.define_field (uni_string,
 					current_class_token,
 					feature {MD_FIELD_ATTRIBUTES}.Public | feature {MD_FIELD_ATTRIBUTES}.Static, result_sig)
 				if not feat.is_process_relative then
 					current_module.define_thread_static_attribute (result_token)
 				end
-
 				fixme ("Generate debug info for result of once function as required")
 				-- Il_debug_info_recorder.record_once_info (current_class_type, Byte_context.current_feature, name, 0, result_token)
+			end
+
+			if feat.is_process_relative then
+					-- Generate field to synchronize access to other data fields
+				uni_string.set_string (once_sync_name (name))
+				sync_token := md_emit.define_field (
+					uni_string,
+					current_class_token,
+					feature {MD_FIELD_ATTRIBUTES}.Public | feature {MD_FIELD_ATTRIBUTES}.Static,
+					sync_sig)
 			end
 		end
 
@@ -4111,7 +4189,7 @@ feature -- Once management
 			name_not_void: name /= Void
 			name_not_empty: not name.is_empty
 		do
-			uni_string.set_string (name + "_done")
+			uni_string.set_string (once_done_name (name))
 			done_token := md_emit.define_member_ref (
 				uni_string,
 				current_module.class_data_token (current_class),
@@ -4132,7 +4210,7 @@ feature -- Once management
 			l_sig.reset
 			set_signature_type (l_sig, type_i)
 
-			uni_string.set_string (name + "_result")
+			uni_string.set_string (once_result_name (name))
 			result_token := md_emit.define_member_ref (
 				uni_string,
 				current_module.class_data_token (current_class),

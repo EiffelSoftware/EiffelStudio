@@ -826,11 +826,9 @@ feature {NONE} -- Implementation
 						last_name.extend ('@')
 						last_name.append (last_class.cluster.cluster_name)
 					end
-					cname.to_upper
 					cname.extend ('@')
 					cname.append (classi.cluster.cluster_name)
 				else
-					cname.to_upper
 					first_ambiguous := False
 				end
 				class_names.extend (cname)

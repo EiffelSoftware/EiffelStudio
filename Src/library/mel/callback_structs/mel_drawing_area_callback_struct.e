@@ -48,7 +48,7 @@ feature {NONE} -- Implementation
 
 	c_window (a_callback_struct_ptr: POINTER): POINTER is
 		external
-			"C [macro <callback_struct.h>] (XmDrawingAreaCallbackStruct *): EIF_POINTER"
+			"C [macro %"callback_struct.h%"] (XmDrawingAreaCallbackStruct *): EIF_POINTER"
 		end;
 
 end -- class MEL_DRAWN_BUTTON_CALLBACK_STRUCT

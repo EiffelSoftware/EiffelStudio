@@ -59,21 +59,21 @@ feature {NONE} -- External features
 
 	xm_intern_atom (display_ptr, str: POINTER; b: BOOLEAN): POINTER is
 		external
-			 "C [macro <Xm/AtomMgr.h>] (Display *, String, Boolean): EIF_POINTER"
+			 "C (Display *, String, Boolean): EIF_POINTER | <Xm/AtomMgr.h>"
 		alias
 			"XmInternAtom"
 		end;
 
 	xm_get_atom_name (display_ptr, id: POINTER): POINTER is
 		external
-			 "C [macro <Xm/AtomMgr.h>] (Display *, Atom): EIF_POINTER"
+			 "C (Display *, Atom): EIF_POINTER | <Xm/AtomMgr.h>"
 		alias
 			"XmGetAtomName"
 		end;
 
 	xt_free (obj: POINTER) is
 		external
-			"C [macro <X11/Intrinsic.h>] (XtPointer)"
+			"C (XtPointer) | <X11/Intrinsic.h>"
 		alias
 			"XtFree"
 		end;

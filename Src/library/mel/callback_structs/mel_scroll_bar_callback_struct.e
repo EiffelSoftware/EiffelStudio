@@ -50,12 +50,12 @@ feature {NONE} -- Implementation
 
 	c_value (a_callback_struct_ptr: POINTER): INTEGER is
 		external
-			"C [macro <callback_struct.h>] (XmScrollBarCallbackStruct *): EIF_INTEGER"
+			"C [macro %"callback_struct.h%"] (XmScrollBarCallbackStruct *): EIF_INTEGER"
 		end;
 
 	c_pixel (a_callback_struct_ptr: POINTER): INTEGER is
 		external
-			"C [macro <callback_struct.h>] (XmScrollBarCallbackStruct *): EIF_INTEGER"
+			"C [macro %"callback_struct.h%"] (XmScrollBarCallbackStruct *): EIF_INTEGER"
 		end;
 
 end -- class MEL_SCROLL_BAR_CALLBACK_STRUCT

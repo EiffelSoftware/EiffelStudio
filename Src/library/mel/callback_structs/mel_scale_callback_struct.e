@@ -40,7 +40,7 @@ feature {NONE} -- Implementation
 
 	c_value (a_callback_struct_ptr: POINTER): INTEGER is
 		external
-			"C [macro <callback_struct.h>] (XmScaleCallbackStruct *): EIF_INTEGER"
+			"C [macro %"callback_struct.h%"] (XmScaleCallbackStruct *): EIF_INTEGER"
 		end;
 
 end -- class MEL_SCALE_CALLBACK_STRUCT

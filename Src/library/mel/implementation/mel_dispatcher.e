@@ -608,14 +608,14 @@ feature {NONE} -- External features
 	eif_adopt (object: ANY): POINTER is
 			-- Eiffel macro to adopt an object
 		external
-			"C [macro <eiffel.h>] (EIF_OBJ): EIF_POINTER"
+			"C [macro %"macros.h%"] (EIF_OBJ): EIF_POINTER"
 		alias
 			"eif_adopt"
 		end;
 
 	c_reason (a_callback_struct_ptr: POINTER): INTEGER is
 		external
-			"C [macro <callback_struct.h>] (XmAnyCallbackStruct *): EIF_INTEGER"
+			"C [macro %"callback_struct.h%"] (XmAnyCallbackStruct *): EIF_INTEGER"
 		end;
 
 	c_add_callback (scr_obj: POINTER; resource_name: POINTER) is
@@ -670,14 +670,14 @@ feature {NONE} -- External features
 
 	xt_remove_input (id: POINTER) is
 		external
-			"C [macro <X11/Intrinsic.h>] (XtInputId)"
+			"C (XtInputId) | <X11/Intrinsic.h>"
 		alias
 			"XtRemoveInput"
 		end;
 
 	xt_remove_time_out (id: POINTER) is
 		external
-			"C [macro <X11/Intrinsic.h>] (XtIntervalId)"
+			"C (XtIntervalId) | <X11/Intrinsic.h>"
 		alias
 			"XtRemoveTimeOut"
 		end;
@@ -689,7 +689,7 @@ feature {NONE} -- External features
 
     c_event (a_callback_struct_ptr: POINTER): POINTER is
         external
-            "C [macro <callback_struct.h>] (XmAnyCallbackStruct *): EIF_POINTER"
+            "C [macro %"callback_struct.h%"] (XmAnyCallbackStruct *): EIF_POINTER"
         end;
 
 end -- class MEL_DISPATCHER

@@ -126,9 +126,8 @@ feature {NONE} -- Implementation
 			pixmap_return, shapemask_return: POINTER; 
 			atts: POINTER): INTEGER is
 		external
-			"C"
-			--"C (Display *, Drawable, char *, %
-				--%Pixmap *, Pixmap *, XpmAttributes *): EIF_INTEGER | <xpm.h>"
+			"C (Display *, Drawable, char *, %
+				%Pixmap *, Pixmap *, XpmAttributes *): EIF_INTEGER | %"xpm.h%""
 		alias
 			"XpmReadFileToPixmap"
 		end;
@@ -137,9 +136,8 @@ feature {NONE} -- Implementation
 			path: POINTER; pixmap_return, shapemask_return: POINTER; 
 			atts: POINTER): INTEGER is
 		external
-			"C"
-			--"C (Display *, char *, %
-				--%Pixmap, Pixmap, XpmAttributes *): EIF_INTEGER | <xpm.h>"
+			"C (Display *, char *, %
+				%Pixmap, Pixmap, XpmAttributes *): EIF_INTEGER | %"xpm.h%""
 		alias
 			"XpmWriteFileFromPixmap"
 		end;

@@ -44,17 +44,17 @@ feature {NONE} -- Implementation
 
 	c_event_message_type (event_ptr: POINTER): POINTER is
 		external
-			"C [macro <events.h>] (XClientMessageEvent *): EIF_POINTER"
+			"C [macro %"events.h%"] (XClientMessageEvent *): EIF_POINTER"
 		end;
 
 	c_event_format (event_ptr: POINTER): INTEGER is
 		external
-			"C [macro <events.h>] (XClientMessageEvent *): EIF_INTEGER"
+			"C [macro %"events.h%"] (XClientMessageEvent *): EIF_INTEGER"
 		end;
 
 	c_event_data (event_ptr: POINTER): POINTER is
 		external
-			"C [macro <events.h>] (XClientMessageEvent *): EIF_POINTER"
+			"C [macro %"events.h%"] (XClientMessageEvent *): EIF_POINTER"
 		end;
 
 end -- class MEL_CLIENT_MESSAGE_EVENT

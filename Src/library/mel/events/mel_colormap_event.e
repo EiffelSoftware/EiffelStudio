@@ -59,17 +59,17 @@ feature {NONE} -- Implementation
 
 	c_event_colormap (event_ptr: POINTER): POINTER is
 		external
-			"C [macro <events.h>] (XColormapEvent *): EIF_POINTER"
+			"C [macro %"events.h%"] (XColormapEvent *): EIF_POINTER"
 		end;
 
 	c_event_new (event_ptr: POINTER): BOOLEAN is
 		external
-			"C [macro <events.h>] (XColormapEvent *): EIF_BOOLEAN"
+			"C [macro %"events.h%"] (XColormapEvent *): EIF_BOOLEAN"
 		end;
 
 	c_event_state (event_ptr: POINTER): INTEGER is
 		external
-			"C [macro <events.h>] (XColormapEvent *): EIF_INTEGER"
+			"C [macro %"events.h%"] (XColormapEvent *): EIF_INTEGER"
 		end;
 
 end -- class MEL_COLORMAP_EVENT

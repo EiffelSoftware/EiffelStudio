@@ -181,7 +181,7 @@ feature {NONE} -- Implementation
 
 	xm_create_cascade_button (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER is
 		external
-			"C [macro <Xm/CascadeB.h>] (Widget, String, ArgList, Cardinal): EIF_POINTER"
+			"C (Widget, String, ArgList, Cardinal): EIF_POINTER | <Xm/CascadeB.h>"
 		alias
 			"XmCreateCascadeButton"
 		end;

@@ -88,37 +88,37 @@ feature {NONE} -- Implementation
 
 	c_item (a_callback_struct_ptr: POINTER): POINTER is
 		external
-			"C [macro <callback_struct.h>] (XmListCallbackStruct *): EIF_POINTER"
+			"C [macro %"callback_struct.h%"] (XmListCallbackStruct *): EIF_POINTER"
 		end;
 
 	c_item_length (a_callback_struct_ptr: POINTER): INTEGER is
 		external
-			"C [macro <callback_struct.h>] (XmListCallbackStruct *): EIF_INTEGER"
+			"C [macro %"callback_struct.h%"] (XmListCallbackStruct *): EIF_INTEGER"
 		end;
 
 	c_item_position (a_callback_struct_ptr: POINTER): INTEGER is
 		external
-			"C [macro <callback_struct.h>] (XmListCallbackStruct *): EIF_INTEGER"
+			"C [macro %"callback_struct.h%"] (XmListCallbackStruct *): EIF_INTEGER"
 		end;
 
 	c_selected_items (a_callback_struct_ptr: POINTER): POINTER is
 		external
-			"C [macro <callback_struct.h>] (XmListCallbackStruct *): EIF_POINTER"
+			"C [macro %"callback_struct.h%"] (XmListCallbackStruct *): EIF_POINTER"
 		end;
 
 	c_selected_item_count (a_callback_struct_ptr: POINTER): INTEGER is
 		external
-			"C [macro <callback_struct.h>] (XmListCallbackStruct *): EIF_INTEGER"
+			"C [macro %"callback_struct.h%"] (XmListCallbackStruct *): EIF_INTEGER"
 		end;
 
 	c_selected_item_positions (a_callback_struct_ptr: POINTER): POINTER is
 		external
-			"C [macro <callback_struct.h>] (XmListCallbackStruct *): EIF_POINTER"
+			"C [macro %"callback_struct.h%"] (XmListCallbackStruct *): EIF_POINTER"
 		end;
 
 	c_selection_type (a_callback_struct_ptr: POINTER): INTEGER is
 		external
-			"C [macro <callback_struct.h>] (XmListCallbackStruct *): EIF_INTEGER"
+			"C [macro %"callback_struct.h%"] (XmListCallbackStruct *): EIF_INTEGER"
 		end;
 
 	XmINITIAL: INTEGER is

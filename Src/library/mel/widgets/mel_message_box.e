@@ -543,14 +543,14 @@ feature {NONE} -- Implementation
 
 	xm_create_message_box (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER is
 		external
-			"C [macro <Xm/MessageB.h>] (Widget, String, ArgList, Cardinal): EIF_POINTER"
+			"C (Widget, String, ArgList, Cardinal): EIF_POINTER | <Xm/MessageB.h>"
 		alias
 			"XmCreateMessageBox"
 		end;
 
 	xm_message_box_get_child (scr_obj: POINTER; value: INTEGER): POINTER is
 		external
-			"C [macro <Xm/MessageB.h>] (Widget, unsigned char): EIF_POINTER"
+			"C (Widget, unsigned char): EIF_POINTER | <Xm/MessageB.h>"
 		alias
 			"XmMessageBoxGetChild"
 		end;

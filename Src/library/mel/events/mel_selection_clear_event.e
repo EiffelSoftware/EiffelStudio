@@ -36,12 +36,12 @@ feature {NONE} -- Implementation
 
 	c_event_time (event_ptr: POINTER): INTEGER is
 		external
-			"C [macro <events.h>] (XSelectionClearEvent *): EIF_INTEGER"
+			"C [macro %"events.h%"] (XSelectionClearEvent *): EIF_INTEGER"
 		end;
 
 	c_event_selection (event_ptr: POINTER): POINTER is
 		external
-			"C [macro <events.h>] (XSelectionClearEvent *): EIF_POINTER"
+			"C [macro %"events.h%"] (XSelectionClearEvent *): EIF_POINTER"
 		end;
 
 end -- class MEL_SELECTION_CLEAR_EVENT

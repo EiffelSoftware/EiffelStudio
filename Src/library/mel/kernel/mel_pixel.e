@@ -248,7 +248,7 @@ feature {NONE} -- Implementation
 
 	last_color_alloc_status: INTEGER is
 		external
-			"C [macro <pixel.h>]: EIF_INTEGER"
+			"C : EIF_INTEGER | %"pixel.h%""
 		alias
 			"last_color_alloc_status"
 		end;
@@ -260,14 +260,14 @@ feature {NONE} -- Implementation
 
 	BAD_COLOR_NAME: INTEGER is
 		external
-			"C [macro <pixel.h>]: EIF_INTEGER"
+			"C [macro %"pixel.h%"]: EIF_INTEGER"
 		alias
 			"BAD_COLOR_NAME"
 		end;
 
 	NO_FREE_CELL_AVAILABLE: INTEGER is
 		external
-			"C [macro <pixel.h>]: EIF_INTEGER"
+			"C [macro %"pixel.h%"]: EIF_INTEGER"
 		alias
 			"NO_FREE_CELL_AVAILABLE"
 		end;

@@ -176,7 +176,7 @@ end
 
 	c_event_type (event_ptr: POINTER): INTEGER is
 		external
-			"C [macro <events.h>] (XEvent *): EIF_INTEGER"
+			"C [macro %"events.h%"] (XEvent *): EIF_INTEGER"
 		end;
 
 end -- class MEL_CALLBACK_STRUCT

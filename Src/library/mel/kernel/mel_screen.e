@@ -65,6 +65,8 @@ feature -- Access
 
 	default_gc: MEL_GC is
 			-- Default graphic context for current screen
+		require
+			is_valid: is_valid
 		do
 			!! Result.make_from_existing
 					(display, default_gc_of_screen (handle))
@@ -72,6 +74,8 @@ feature -- Access
 
 	white_pixel: MEL_PIXEL is
 			-- White pixel of this screen
+		require
+			is_valid: is_valid
 		do
 			!! Result.make_from_existing
 					(display, white_pixel_of_screen (handle));
@@ -83,6 +87,8 @@ feature -- Access
 
 	black_pixel: MEL_PIXEL is
 			-- Black pixel of this screen
+		require
+			is_valid: is_valid
 		do
 			!! Result.make_from_existing
 					(display, black_pixel_of_screen (handle))
@@ -94,6 +100,8 @@ feature -- Access
 
 	default_colormap: MEL_COLORMAP is
 			-- Default color map for Current screen
+		require
+			is_valid: is_valid
 		do
 			!! Result.make_default (Current)
 		end;
@@ -107,6 +115,8 @@ feature -- Access
 	widgets_pointed: LINKED_LIST [POINTER] is
 			-- List of C Widgets currently pointed by the mouse pointer
 			-- (Order is based from parent to child)
+		require
+			is_valid: is_valid
 		local
 			dp: POINTER;
 			widget_c: POINTER;
@@ -128,6 +138,8 @@ feature -- Access
 	mel_widgets_pointed: LINKED_LIST [MEL_OBJECT] is
 			-- List of mel widgets currently pointed by the mouse pointer
 			-- (Order is based from parent to child)
+		require
+			is_valid: is_valid
 		local
 			l: like widgets_pointed;
 			w: POINTER;
@@ -155,6 +167,7 @@ feature -- Access
 	query_button_pointer (i: INTEGER): BOOLEAN is
 			-- Query the state of the `i' th button.
 		require
+			is_valid: is_valid;
 			valid_i: i >= 1 and then i <= 5
 		do
 			Result := x_query_button_pointer (display.handle, 
@@ -315,7 +328,7 @@ feature {NONE} -- Implementation
 
 	xt_window_to_widget (a_display: POINTER; a_target: POINTER): POINTER is
 		external
-			"C [macro <X11/Intrinsic.h>] (Display *, Window): EIF_POINTER"
+			"C (Display *, Window): EIF_POINTER |  <X11/Intrinsic.h>"
 		alias
 			"XtWindowToWidget"
 		end;
@@ -339,10 +352,6 @@ feature {NONE} -- Implementation
 		external
 			"C"
 		end;
-
-invariant
-
-	handle_not_null: handle /= default_pointer
 
 end -- class MEL_SCREEN
 

@@ -51,12 +51,12 @@ feature {NONE} -- Implementation
 
 	c_value (a_callback_struct_ptr: POINTER): POINTER is
 		external
-			"C [macro <callback_struct.h>] (XmCommandCallbackStruct *): EIF_POINTER"
+			"C [macro %"callback_struct.h%"] (XmCommandCallbackStruct *): EIF_POINTER"
 		end;
 
 	c_length (a_callback_struct_ptr: POINTER): INTEGER is
 		external
-			"C [macro <callback_struct.h>] (XmCommandCallbackStruct *): EIF_INTEGER"
+			"C [macro %"callback_struct.h%"] (XmCommandCallbackStruct *): EIF_INTEGER"
 		end;
 
 end -- class MEL_COMMAND_CALLBACK_STRUCT

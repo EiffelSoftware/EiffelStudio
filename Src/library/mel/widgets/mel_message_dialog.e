@@ -100,7 +100,7 @@ feature {NONE} -- Implementation
 
 	xm_create_message_dialog (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER is
 		external
-			"C [macro <Xm/MessageB.h>] (Widget, String, ArgList, Cardinal): EIF_POINTER"
+			"C (Widget, String, ArgList, Cardinal): EIF_POINTER | <Xm/MessageB.h>"
 		alias
 			"XmCreateMessageDialog"
 		end;

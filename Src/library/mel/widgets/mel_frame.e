@@ -182,7 +182,7 @@ feature {NONE} -- Implementation
 
 	xm_create_frame (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER is
 		external
-			"C [macro <Xm/Label.h>] (Widget, String, ArgList, Cardinal): EIF_POINTER"
+			"C (Widget, String, ArgList, Cardinal): EIF_POINTER | <Xm/Label.h>"
 		alias
 			"XmCreateFrame"
 		end;

@@ -701,14 +701,14 @@ feature {NONE} -- External Features
 
 	xm_create_selection_box (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER is
 		external
-			"C [macro <Xm/SelectioB.h>] (Widget, String, ArgList, Cardinal): EIF_POINTER"
+			"C (Widget, String, ArgList, Cardinal): EIF_POINTER | <Xm/SelectioB.h>"
 		alias
 			"XmCreateSelectionBox"
 		end;
 
 	xm_selection_box_get_child (scr_obj: POINTER; value: INTEGER): POINTER is
 		external
-			"C [macro <Xm/SelectioB.h>] (Widget, unsigned char): EIF_POINTER"
+			"C (Widget, unsigned char): EIF_POINTER | <Xm/SelectioB.h>"
 		alias
 			"XmSelectionBoxGetChild"
 		end;

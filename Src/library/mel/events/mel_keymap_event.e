@@ -28,7 +28,7 @@ feature {NONE} -- Implementation
 
 	c_event_key_vector (event_ptr: POINTER): POINTER is
 		external
-			"C [macro <events.h>] (XKeymapEvent *): EIF_POINTER"
+			"C [macro %"events.h%"] (XKeymapEvent *): EIF_POINTER"
 		end;
 
 end -- class MEL_KEYMAP_EVENT

@@ -145,27 +145,27 @@ feature {NONE} -- Implementation
 
 	c_event_type (event_ptr: POINTER): INTEGER is
 		external
-			"C [macro <events.h>] (XAnyEvent *): EIF_INTEGER"
+			"C [macro %"events.h%"] (XAnyEvent *): EIF_INTEGER"
 		end;
 
 	c_event_serial (event_ptr: POINTER): INTEGER is
 		external
-			"C [macro <events.h>] (XAnyEvent *): EIF_INTEGER"
+			"C [macro %"events.h%"] (XAnyEvent *): EIF_INTEGER"
 		end;
 
 	c_event_send_event (event_ptr: POINTER): BOOLEAN is
 		external
-			"C [macro <events.h>] (XAnyEvent *): EIF_BOOLEAN"
+			"C [macro %"events.h%"] (XAnyEvent *): EIF_BOOLEAN"
 		end;
 
 	c_event_display (event_ptr: POINTER): POINTER is
 		external
-			"C [macro <events.h>] (XAnyEvent *): EIF_POINTER"
+			"C [macro %"events.h%"] (XAnyEvent *): EIF_POINTER"
 		end;
 
     c_event_window (event_ptr: POINTER): POINTER is
         external
-            "C [macro <events.h>] (XAnyEvent *): EIF_POINTER"
+            "C [macro %"events.h%"] (XAnyEvent *): EIF_POINTER"
         end;
 
 invariant

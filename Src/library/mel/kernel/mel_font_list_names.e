@@ -73,21 +73,21 @@ feature {NONE} -- External features
 
 	mel_font_list_name (a_font_list: POINTER; a_pos: INTEGER): POINTER is
 		external
-			"C [macro <font.h>] (char **, int): EIF_POINTER"
+			"C [macro %"font.h%"] (char **, int): EIF_POINTER"
 		alias
 			"mel_font_list_name"
 		end;
 
 	x_free_font_names (a_font_list: POINTER) is
 		external
-			"C [macro <X11/Xlib.h>] (char **)"
+			"C (char **) | <X11/Xlib.h>"
 		alias
 			"XFreeFontNames"
 		end;
 
 	x_list_fonts (a_display, a_pattern: POINTER; max: INTEGER; a_count: POINTER): POINTER is
 		external
-			"C [macro <X11/Xlib.h>] (Display *, char *, int, int *): EIF_POINTER"
+			"C (Display *, char *, int, int *): EIF_POINTER | <X11/Xlib.h>"
 		alias
 			"XListFonts"
 		end;

@@ -99,42 +99,42 @@ feature {NONE} -- Implementation
 
 	c_value (a_callback_struct_ptr: POINTER): POINTER is
 		external
-			"C [macro <callback_struct.h>] (XmFileSelectionBoxCallbackStruct *): EIF_POINTER"
+			"C [macro %"callback_struct.h%"] (XmFileSelectionBoxCallbackStruct *): EIF_POINTER"
 		end;
 
 	c_length (a_callback_struct_ptr: POINTER): INTEGER is
 		external
-			"C [macro <callback_struct.h>] (XmFileSelectionBoxCallbackStruct *): EIF_INTEGER"
+			"C [macro %"callback_struct.h%"] (XmFileSelectionBoxCallbackStruct *): EIF_INTEGER"
 		end;
 
 	c_mask (a_callback_struct_ptr: POINTER): POINTER is
 		external
-			"C [macro <callback_struct.h>] (XmFileSelectionBoxCallbackStruct *): EIF_POINTER"
+			"C [macro %"callback_struct.h%"] (XmFileSelectionBoxCallbackStruct *): EIF_POINTER"
 		end;
 
 	c_mask_length (a_callback_struct_ptr: POINTER): INTEGER is
 		external
-			"C [macro <callback_struct.h>] (XmFileSelectionBoxCallbackStruct *): EIF_INTEGER"
+			"C [macro %"callback_struct.h%"] (XmFileSelectionBoxCallbackStruct *): EIF_INTEGER"
 		end;
 
 	c_dir (a_callback_struct_ptr: POINTER): POINTER is
 		external
-			"C [macro <callback_struct.h>] (XmFileSelectionBoxCallbackStruct *): EIF_POINTER"
+			"C [macro %"callback_struct.h%"] (XmFileSelectionBoxCallbackStruct *): EIF_POINTER"
 		end;
 
 	c_dir_length (a_callback_struct_ptr: POINTER): INTEGER is
 		external
-			"C [macro <callback_struct.h>] (XmFileSelectionBoxCallbackStruct *): EIF_INTEGER"
+			"C [macro %"callback_struct.h%"] (XmFileSelectionBoxCallbackStruct *): EIF_INTEGER"
 		end;
 
 	c_pattern (a_callback_struct_ptr: POINTER): POINTER is
 		external
-			"C [macro <callback_struct.h>] (XmFileSelectionBoxCallbackStruct *): EIF_POINTER"
+			"C [macro %"callback_struct.h%"] (XmFileSelectionBoxCallbackStruct *): EIF_POINTER"
 		end;
 
 	c_pattern_length (a_callback_struct_ptr: POINTER): INTEGER is
 		external
-			"C [macro <callback_struct.h>] (XmFileSelectionBoxCallbackStruct *): EIF_INTEGER"
+			"C [macro %"callback_struct.h%"] (XmFileSelectionBoxCallbackStruct *): EIF_INTEGER"
 		end;
 
 end -- class MEL_FILE_SELECTION_BOX_CALLBACK_STRUCT

@@ -366,98 +366,91 @@ feature {NONE} -- Implementation
 
 	xt_destroy_widget (scr_obj: POINTER) is
 		external
-			"C [macro <X11/Intrinsic.h>] (Widget)"
+			"C (Widget) | <X11/Intrinsic.h>"
 		alias
 			"XtDestroyWidget"
 		end;
 
 	xt_realize_widget (scr_obj: POINTER) is
 		external
-			"C [macro <X11/Intrinsic.h>] (Widget)"
+			"C (Widget) | <X11/Intrinsic.h>"
 		alias
 			"XtRealizeWidget"
 		end;
 
 	xt_unrealize_widget (scr_obj: POINTER) is
 		external
-			"C [macro <X11/Intrinsic.h>] (Widget)"
+			"C (Widget) | <X11/Intrinsic.h>"
 		alias
 			"XtUnrealizeWidget"
 		end;
 
 	xt_manage_child (scr_obj: POINTER) is
 		external
-			"C [macro <X11/Intrinsic.h>] (Widget)"
+			"C (Widget) | <X11/Intrinsic.h>"
 		alias
 			"XtManageChild"
 		end;
 
 	xt_unmanage_child (scr_obj: POINTER) is
 		external
-			"C [macro <X11/Intrinsic.h>] (Widget)"
+			"C (Widget) | <X11/Intrinsic.h>"
 		alias
 			"XtUnmanageChild"
 		end;
 
 	xt_set_sensitive (scr_obj: POINTER; bool: BOOLEAN) is
 		external
-			"C [macro <X11/Intrinsic.h>] (Widget, Boolean)"
+			"C (Widget, Boolean) | <X11/Intrinsic.h>"
 		alias
 			"XtSetSensitive"
 		end;
 
 	xt_map_widget (scr_obj: POINTER) is
 		external
-			"C [macro <X11/Intrinsic.h>] (Widget)"
+			"C (Widget) | <X11/Intrinsic.h>"
 		alias
 			"XtMapWidget"
 		end;
 
 	xt_unmap_widget (scr_obj: POINTER) is
 		external
-			"C [macro <X11/Intrinsic.h>] (Widget)"
+			"C (Widget) | <X11/Intrinsic.h>"
 		alias
 			"XtUnmapWidget"
 		end;
 
 	xt_free (obj: POINTER) is
 		external
-			"C [macro <X11/Intrinsic.h>] (XtPointer)"
+			"C (XtPointer) | <X11/Intrinsic.h>"
 		alias
 			"XtFree"
 		end;
 
 	xt_display (scr_obj: POINTER): POINTER is
 		external
-			"C [macro <X11/Intrinsic.h>] (Widget): EIF_POINTER"
+			"C (Widget): EIF_POINTER | <X11/Intrinsic.h>"
 		alias
 			"XtDisplay"
 		end;
 
-	xt_va_get_values (scr_obj, resource, var, end_ptr: POINTER) is
-		external
-			"C [macro <X11/Intrinsic.h>] (Widget, String, XtPointer, XtPointer)"
-		alias
-			"XtVaGetValues"
-		end;
-
 	xt_is_realized (scr_obj: POINTER): BOOLEAN is
 		external
-			"C [macro <X11/Intrinsic.h>] (Widget): EIF_BOOLEAN"
+			"C (Widget): EIF_BOOLEAN | <X11/Intrinsic.h>"
 		alias
 			"XtIsRealized"
 		end;
 
 	xt_is_managed (scr_obj: POINTER): BOOLEAN is
 		external
-			"C [macro <X11/Intrinsic.h>] (Widget): EIF_BOOLEAN"
+			"C (Widget): EIF_BOOLEAN | <X11/Intrinsic.h>"
 		alias
 			"XtIsManaged"
 		end;
 
 	xt_is_sensitive (scr_obj: POINTER): BOOLEAN is
 		external
-			"C [macro <X11/Intrinsic.h>] (Widget): EIF_BOOLEAN"
+			"C (Widget): EIF_BOOLEAN | <X11/Intrinsic.h>"
 		alias
 			"XtIsSensitive"
 		end;
@@ -469,28 +462,28 @@ feature {NONE} -- Implementation
 
 	xt_window (a_target: POINTER): POINTER is
 		external
-			"C [macro <X11/Intrinsic.h>] (Widget): EIF_POINTER"
+			"C (Widget): EIF_POINTER | <X11/Intrinsic.h>"
 		alias
 			"XtWindow"
 		end;
 
 	xt_parent (a_target: POINTER): POINTER is
 		external
-			"C [macro <X11/Intrinsic.h>] (Widget): EIF_POINTER"
+			"C (Widget): EIF_POINTER | <X11/Intrinsic.h>"
 		alias
 			"XtParent"
 		end;
 
 	xt_name (a_target: POINTER): POINTER is
 		external
-			"C [macro <X11/Intrinsic.h>] (Widget): EIF_POINTER"
+			"C (Widget): EIF_POINTER | <X11/Intrinsic.h>"
 		alias
 			"XtName"
 		end;
 
 	xt_widget_to_application_context (a_target: POINTER): POINTER is
 		external
-			"C [macro <X11/Intrinsic.h>] (Widget): EIF_POINTER"
+			"C (Widget): EIF_POINTER | <X11/Intrinsic.h>"
 		alias
 			"XtWidgetToApplicationContext"
 		end;

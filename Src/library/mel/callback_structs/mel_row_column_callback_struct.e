@@ -61,17 +61,17 @@ feature {NONE} -- Implementation
 
 	c_widget (a_callback_struct_ptr: POINTER): POINTER is
 		external
-			"C [macro <callback_struct.h>] (XmRowColumnCallbackStruct *): EIF_POINTER"
+			"C [macro %"callback_struct.h%"] (XmRowColumnCallbackStruct *): EIF_POINTER"
 		end;
 
 	c_data (a_callback_struct_ptr: POINTER): POINTER is
 		external
-			"C [macro <callback_struct.h>] (XmRowColumnCallbackStruct *): EIF_POINTER"
+			"C [macro %"callback_struct.h%"] (XmRowColumnCallbackStruct *): EIF_POINTER"
 		end;
 
 	c_callback_struct (a_callback_struct_ptr: POINTER): POINTER is
 		external
-			"C [macro <callback_struct.h>] (XmRowColumnCallbackStruct *): EIF_POINTER"
+			"C [macro %"callback_struct.h%"] (XmRowColumnCallbackStruct *): EIF_POINTER"
 		end;
 
 end -- class MEL_ROW_COLUMN_CALLBACK_STRUCT

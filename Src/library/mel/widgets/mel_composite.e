@@ -378,21 +378,21 @@ feature {NONE} -- External features
 
 	x_circulate_up (display_ptr: POINTER; a_window: POINTER) is
 		external
-			"C [macro <X11/Xlib.h>] (Display *, Window)"
+			"C (Display *, Window) | <X11/Xlib.h>"
 		alias
 			"XCirculateSubwindowsUp"
 		end;
 
 	x_circulate_down (display_ptr: POINTER; a_window: POINTER) is
 		external
-			"C [macro <X11/Xlib.h>] (Display *, Window)"
+			"C (Display *, Window) | <X11/Xlib.h>"
 		alias
 			"XCirculateSubwindowsDown"
 		end;
 
 	x_restack_windows (display_ptr: POINTER; w_list: POINTER; n: INTEGER) is
 		external
-			"C [macro <X11/Xlib.h>] (Display *, Window *, int)"
+			"C (Display *, Window *, int) | <X11/Xlib.h>"
 		alias
 			"XRestackWindows"
 		end;

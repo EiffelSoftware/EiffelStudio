@@ -40,7 +40,7 @@ feature {NONE} -- Implementation
 
 	c_set (a_callback_struct_ptr: POINTER): INTEGER is
 		external
-			"C [macro <callback_struct.h>] (XmToggleButtonCallbackStruct *): EIF_INTEGER"
+			"C [macro %"callback_struct.h%"] (XmToggleButtonCallbackStruct *): EIF_INTEGER"
 		end;
 
 end -- class MEL_TOGGLE_BUTTON_CALLBACK_STRUCT

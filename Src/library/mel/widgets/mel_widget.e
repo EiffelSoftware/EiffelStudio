@@ -338,7 +338,7 @@ feature {NONE} -- External features
 
 	x_define_cursor (display_ptr: POINTER; a_window: POINTER; cursor: POINTER) is
 		external
-			"C [macro <X11/Xlib.h>] (Display *, Window, Cursor)"
+			"C (Display *, Window, Cursor) | <X11/Xlib.h>"
 		alias
 			"XDefineCursor"
 		end;
@@ -346,42 +346,42 @@ feature {NONE} -- External features
 	x_check_window_event (display_ptr: POINTER; a_window: POINTER; 
 				an_event_mask: INTEGER; event_ptr: POINTER): BOOLEAN is
 		external
-			"C [macro <X11/Xlib.h>] (Display *, Window, long, XEvent *): Bool"
+			"C (Display *, Window, long, XEvent *): EIF_BOOLEAN" 
 		alias
 			"XCheckWindowEvent"
 		end;
 
 	x_undefine_cursor (display_ptr: POINTER; a_window: POINTER) is
 		external
-			"C [macro <X11/Xlib.h>] (Display *, Window)"
+			"C (Display *, Window) | <X11/Xlib.h>"
 		alias
 			"XUndefineCursor"
 		end;
 
 	xt_ungrab_pointer (w: POINTER; time: INTEGER) is
 		external
-			"C [macro <X11/Intrinsic.h>] (Widget, Time)"
+			"C (Widget, Time) | <X11/Intrinsic.h>"
 		alias
 			"XtUngrabPointer"
 		end;
 
 	x_lower_window (display_ptr: POINTER; a_window: POINTER) is
 		external
-			"C [macro <X11/Xlib.h>] (Display *, Window)"
+			"C (Display *, Window) | <X11/Xlib.h>"
 		alias
 			"XLowerWindow"
 		end;
 
 	x_raise_window (display_ptr: POINTER; a_window: POINTER) is
 		external
-			"C [macro <X11/Xlib.h>] (Display *, Window)"
+			"C (Display *, Window) | <X11/Xlib.h>"
 		alias
 			"XRaiseWindow"
 		end;
 
 	global_xevent_ptr: POINTER is
 		external
-			"C [macro <mel.h>]: EIF_POINTER"
+			"C : EIF_POINTER | %"mel.h%""
 		end;
 
 end -- class MEL_WIDGET

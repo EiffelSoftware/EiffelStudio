@@ -42,7 +42,7 @@ feature {NONE} -- Implementation
 
 	xm_create_prompt_dialog (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER is
 	   external
-			"C [macro <Xm/SelectioB.h>] (Widget, String, ArgList, Cardinal): EIF_POINTER"
+			"C (Widget, String, ArgList, Cardinal): EIF_POINTER | <Xm/SelectioB.h>"
 		alias
 			"XmCreatePromptDialog"
 		end;

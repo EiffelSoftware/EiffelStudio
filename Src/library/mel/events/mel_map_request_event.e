@@ -36,7 +36,7 @@ feature {NONE} -- Implementation
 
 	c_event_parent (event_ptr: POINTER): POINTER is
 		external
-			"C [macro <events.h>] (XMapRequestEvent *): EIF_POINTER"
+			"C [macro %"events.h%"] (XMapRequestEvent *): EIF_POINTER"
 		end;
 
 end -- class MEL_MAP_REQUEST_EVENT

@@ -43,12 +43,12 @@ feature {NONE} -- Implementation
 
 	c_event_event (event_ptr: POINTER): POINTER is
 		external
-			"C [macro <events.h>] (XMapEvent *): EIF_POINTER"
+			"C [macro %"events.h%"] (XMapEvent *): EIF_POINTER"
 		end;
 
 	c_event_override_redirect (event_ptr: POINTER): BOOLEAN is
 		external
-			"C [macro <events.h>] (XMapEvent *): EIF_BOOLEAN"
+			"C [macro %"events.h%"] (XMapEvent *): EIF_BOOLEAN"
 		end;
 
 end -- class MEL_MAP_EVENT

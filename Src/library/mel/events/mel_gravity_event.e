@@ -48,17 +48,17 @@ feature {NONE} -- Implementation
 
 	c_event_event (event_ptr: POINTER): POINTER is
 		external
-			"C [macro <events.h>] (XGravityEvent *): EIF_POINTER"
+			"C [macro %"events.h%"] (XGravityEvent *): EIF_POINTER"
 		end;
 
 	c_event_x (event_ptr: POINTER): INTEGER is
 		external
-			"C [macro <events.h>] (XGravityEvent *): EIF_INTEGER"
+			"C [macro %"events.h%"] (XGravityEvent *): EIF_INTEGER"
 		end;
 
 	c_event_y (event_ptr: POINTER): INTEGER is
 		external
-			"C [macro <events.h>] (XGravityEvent *): EIF_INTEGER"
+			"C [macro %"events.h%"] (XGravityEvent *): EIF_INTEGER"
 		end;
 
 end -- class MEL_GRAVITY_EVENT

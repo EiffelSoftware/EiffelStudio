@@ -203,7 +203,7 @@ feature {NONE} -- External features
 
     xt_move_widget (w: POINTER; x1, y1: INTEGER) is
         external
-            "C [macro <X11/Intrinsic.h>] (Widget, Position, Position)"
+            "C (Widget, Position, Position) | <X11/Intrinsic.h>"
         alias
             "XtMoveWidget"
         end;

@@ -115,7 +115,7 @@ feature {NONE} -- Implementation
 
 	x_create_font_cursor (a_display: POINTER; a_type: INTEGER): POINTER is
 		external
-			"C [macro <X11/Xlib.h>] (Display *, unsigned int): EIF_POINTER"
+			"C (Display *, unsigned int): EIF_POINTER | <X11/Xlib.h>"
 		alias
 			"XCreateFontCursor"
 		end;
@@ -131,7 +131,7 @@ feature {NONE} -- Implementation
 
 	x_free_cursor (a_display: POINTER; a_cursor: POINTER) is
 		external
-			"C [macro <X11/Xlib.h>] (Display *, Cursor)"
+			"C (Display *, Cursor) | <X11/Xlib.h> "
 		alias
 			"XFreeCursor"
 		end;

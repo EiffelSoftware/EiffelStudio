@@ -556,21 +556,21 @@ feature {NONE} -- Implementation
 
 	xm_create_scale (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER is
 		external
-			"C [macro <Xm/Scale.h>] (Widget, String, ArgList, Cardinal): EIF_POINTER"
+			"C (Widget, String, ArgList, Cardinal): EIF_POINTER | <Xm/Scale.h>"
 		alias
 			"XmCreateScale"
 		end;
 
 	xm_scale_get_value (widget, value_return: POINTER) is
 		external
-			"C [macro <Xm/Scale.h>] (Widget, int *)"
+			"C (Widget, int *) | <Xm/Scale.h>"
 		alias
 			"XmScaleGetValue"
 		end
 
 	xm_scale_set_value (widget: POINTER; a_value: INTEGER) is
 		external
-			"C [macro <Xm/Scale.h>] (Widget, int)"
+			"C (Widget, int) | <Xm/Scale.h>"
 		alias
 			"XmScaleSetValue"
 		end;

@@ -42,12 +42,12 @@ feature {NONE} -- Implementation
 
 	c_event_event (event_ptr: POINTER): POINTER is
 		external
-			"C [macro <events.h>] (XUnmapEvent *): EIF_POINTER"
+			"C [macro %"events.h%"] (XUnmapEvent *): EIF_POINTER"
 		end;
 
 	c_event_from_configure (event_ptr: POINTER): BOOLEAN is
 		external
-			"C [macro <events.h>] (XUnmapEvent *): EIF_BOOLEAN"
+			"C [macro %"events.h%"] (XUnmapEvent *): EIF_BOOLEAN"
 		end;
 
 end -- class MEL_UNMAP_EVENT

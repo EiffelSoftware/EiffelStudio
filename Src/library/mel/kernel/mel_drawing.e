@@ -280,7 +280,7 @@ feature {NONE} -- Implementation
 
 	x_clear_window (a_display: POINTER; drawable: POINTER) is
 		external
-			"C [macro <X11/Xlib.h>] (Display *, Window)"
+			"C [macro <X11/Xlib.h>] (Display *, Window) | <X11/Xlib.h>"
 		alias
 			"XClearWindow"
 		end;
@@ -288,50 +288,50 @@ feature {NONE} -- Implementation
 	x_clear_area (a_display: POINTER; w: POINTER; a_x, a_y, width, height: INTEGER;
 				exposure: BOOLEAN) is
 		external
-			"C [macro <X11/Xlib.h>] (Display *, Window, int, int,%
-				%unsigned int, unsigned int, Bool)"
+			"C (Display *, Window, int, int,%
+				%unsigned int, unsigned int, Bool) | <X11/Xlib.h>"
 		alias
 			"XClearArea"
 		end;
 
 	x_draw_point (a_display: POINTER; drawable: POINTER; gc_ptr: POINTER; x, y: INTEGER) is
 		external
-			"C [macro <X11/Xlib.h>] (Display *, Drawable, GC, int, int)"
+			"C (Display *, Drawable, GC, int, int) | <X11/Xlib.h>"
 		alias
 			"XDrawPoint"
 		end;
 
 	x_draw_line (a_display: POINTER; drawable: POINTER; gc_ptr: POINTER; x1, y1, x2, y2: INTEGER) is
 		external
-			"C [macro <X11/Xlib.h>] (Display *, Drawable, GC, int, int, int, int)"
+			"C (Display *, Drawable, GC, int, int, int, int) | <X11/Xlib.h>"
 		alias
 			"XDrawLine"
 		end;
 
 	x_draw_rectangle (a_display: POINTER; drawable: POINTER; gc_ptr: POINTER; x, y, width, height: INTEGER) is
 		external
-			"C [macro <X11/Xlib.h>] (Display *, Drawable, GC, int, int, int, int)"
+			"C (Display *, Drawable, GC, int, int, int, int) | <X11/Xlib.h>"
 		alias
 			"XDrawRectangle"
 		end;
 
 	x_draw_arc (a_display: POINTER; drawable: POINTER; gc_ptr: POINTER; x, y, width, height, angle1, angle2: INTEGER) is
 		external
-			"C [macro <X11/Xlib.h>] (Display *, Drawable, GC, int, int, int, int, int, int)"
+			"C (Display *, Drawable, GC, int, int, int, int, int, int) | <X11/Xlib.h>"
 		alias
 			"XDrawArc"
 		end;
 
 	x_fill_rectangle (a_display: POINTER; drawable: POINTER; gc_ptr: POINTER; x, y, width, height: INTEGER) is
 		external
-			"C [macro <X11/Xlib.h>] (Display *, Drawable, GC, int, int, int, int)"
+			"C (Display *, Drawable, GC, int, int, int, int) | <X11/Xlib.h>"
 		alias
 			"XFillRectangle"
 		end;
 
 	x_fill_arc (a_display: POINTER; drawable: POINTER; gc_ptr: POINTER; x, y, width, height, angle1, angle2: INTEGER) is
 		external
-			"C [macro <X11/Xlib.h>] (Display *, Drawable, GC, int, int, int, int, int, int)"
+			"C (Display *, Drawable, GC, int, int, int, int, int, int) | <X11/Xlib.h>"
 		alias
 			"XFillArc"
 		end;
@@ -339,7 +339,7 @@ feature {NONE} -- Implementation
 	x_draw_lines (a_display, w, gc, arr_pt: POINTER; count,
 					val: INTEGER) is
 		external
-			"C [macro <X11/Xlib.h>] (Display *, Drawable, GC, XPoint *, int, int)"
+			"C (Display *, Drawable, GC, XPoint *, int, int) | <X11/Xlib.h>"
 		alias
 			"XDrawLines"
 		end;
@@ -347,7 +347,7 @@ feature {NONE} -- Implementation
 	x_fill_polygon (a_display, w, a_gc, arr_pt: POINTER;
 				count, a_shape, a_mode: INTEGER) is
 		external
-			"C [macro <X11/Xlib.h>] (Display *, Drawable, GC, XPoint *, int, int, int)"
+			"C (Display *, Drawable, GC, XPoint *, int, int, int) | <X11/Xlib.h>"
 		alias
 			"XFillPolygon"
 		end;
@@ -355,7 +355,7 @@ feature {NONE} -- Implementation
 	x_draw_image_string (a_display, w, a_gc: POINTER; x1,
 					y1: INTEGER; t_name: POINTER; count: INTEGER) is
 		external
-			"C [macro <X11/Xlib.h>] (Display *, Drawable, GC, int, int, char *, int)"
+			"C (Display *, Drawable, GC, int, int, char *, int) | <X11/Xlib.h>"
 		alias
 			"XDrawImageString"
 		end;
@@ -363,7 +363,7 @@ feature {NONE} -- Implementation
 	x_draw_string (a_display, w, a_gc: POINTER; x1,
 					y1: INTEGER; t_name: POINTER; count: INTEGER) is
 		external
-			"C [macro <X11/Xlib.h>] (Display *, Drawable, GC, int, int, char *, int)"
+			"C (Display *, Drawable, GC, int, int, char *, int) | <X11/Xlib.h>"
 		alias
 			"XDrawString"
 		end;

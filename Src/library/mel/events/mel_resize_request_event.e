@@ -34,12 +34,12 @@ feature {NONE} -- Implementation
 
 	c_event_width (event_ptr: POINTER): INTEGER is
 		external
-			"C [macro <events.h>] (XResizeRequestEvent *): EIF_INTEGER"
+			"C [macro %"events.h%"] (XResizeRequestEvent *): EIF_INTEGER"
 		end;
 
 	c_event_height (event_ptr: POINTER): INTEGER is
 		external
-			"C [macro <events.h>] (XResizeRequestEvent *): EIF_INTEGER"
+			"C [macro %"events.h%"] (XResizeRequestEvent *): EIF_INTEGER"
 		end;
 
 end -- class MEL_RESIZE_REQUEST_EVENT

@@ -799,168 +799,168 @@ feature {NONE} -- Implementation
 
 	xm_create_list (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER is
 		external
-			"C [macro <Xm/List.h>] (Widget, String, ArgList, Cardinal): EIF_POINTER"
+			"C (Widget, String, ArgList, Cardinal): EIF_POINTER | <Xm/List.h>"
 		alias
 			"XmCreateList"
 		end;
 
 	xm_list_add_item (a_target: POINTER; an_item: POINTER; a_position: INTEGER) is
 		external
-			"C [macro <Xm/List.h>] (Widget, XmString, int)"
+			"C (Widget, XmString, int) | <Xm/List.h>"
 		alias
 			"XmListAddItem"
 		end;
 
 	xm_list_add_item_unselected (a_target: POINTER; an_item: POINTER; a_position: INTEGER) is
 		external
-			"C [macro <Xm/List.h>] (Widget, XmString, int)"
+			"C (Widget, XmString, int) | <Xm/List.h>"
 		alias
 			"XmListAddItemUnselected"
 		end;
 
 	xm_list_add_items (a_target: POINTER; an_item_list: POINTER; an_item_count: INTEGER; a_position: INTEGER) is
 		external
-			"C [macro <Xm/List.h>] (Widget, XmStringTable, int, int)"
+			"C (Widget, XmStringTable, int, int) | <Xm/List.h>"
 		alias
 			"XmListAddItems"
 		end;
 
 	xm_list_add_items_unselected (a_target: POINTER; an_item_list: POINTER; an_item_count: INTEGER; a_position: INTEGER) is
 		external
-			"C [macro <Xm/List.h>] (Widget, XmStringTable, int, int)"
+			"C (Widget, XmStringTable, int, int) | <Xm/List.h>"
 		alias
 			"XmListAddItemsUnselected"
 		end;
 
 	xm_list_item_exists (a_target: POINTER; an_item: POINTER): BOOLEAN is
 		external
-			"C [macro <Xm/List.h>] (Widget, XmString): EIF_BOOLEAN"
+			"C (Widget, XmString): EIF_BOOLEAN | <Xm/List.h>"
 		alias
 			"XmListItemExists"
 		end;
 
 	xm_list_item_pos (a_target: POINTER; an_item: POINTER): INTEGER is
 		external
-			"C [macro <Xm/List.h>] (Widget, XmString): EIF_INTEGER"
+			"C (Widget, XmString): EIF_INTEGER | <Xm/List.h>"
 		alias
 			"XmListItemPos"
 		end;
 
 	xm_list_replace_items_pos (a_target: POINTER; an_item_list: POINTER; an_item_count: INTEGER; a_position: INTEGER) is
 		external
-			"C [macro <Xm/List.h>] (Widget, XmStringTable, int, int)"
+			"C (Widget, XmStringTable, int, int) | <Xm/List.h>"
 		alias
 			"XmListReplaceItemsPos"
 		end;
 
 	xm_list_replace_items_pos_unselected (a_target: POINTER; an_item_list: POINTER; an_item_count: INTEGER; a_position: INTEGER) is
 		external
-			"C [macro <Xm/List.h>] (Widget, XmStringTable, int, int)"
+			"C (Widget, XmStringTable, int, int) | <Xm/List.h>"
 		alias
 			"XmListReplaceItemsPosUnselected"
 		end;
 
 	 xm_list_replace_items (a_target: POINTER; old_item_list: POINTER; an_item_count: INTEGER; new_item_list: POINTER) is
 		external
-			"C [macro <Xm/List.h>] (Widget, XmStringTable, int, XmStringTable)"
+			"C (Widget, XmStringTable, int, XmStringTable) | <Xm/List.h>"
 		alias
 			"XmListReplaceItems"
 		end;
 
 	 xm_list_replace_items_unselected (a_target: POINTER; old_item_list: POINTER; an_item_count: INTEGER; new_item_list: POINTER) is
 		external
-			"C [macro <Xm/List.h>] (Widget, XmStringTable, int, XmStringTable)"
+			"C (Widget, XmStringTable, int, XmStringTable) | <Xm/List.h>"
 		alias
 			"XmListReplaceItemsUnselected"
 		end;
 
 	xm_list_delete_item (a_target: POINTER; an_item: POINTER) is
 		external
-			"C [macro <Xm/List.h>] (Widget, XmString)"
+			"C (Widget, XmString) | <Xm/List.h>"
 		alias
 			"XmListDeleteItem"
 		end;
 
 	xm_list_delete_pos (a_target: POINTER; a_position: INTEGER) is
 		external
-			"C [macro <Xm/List.h>] (Widget, int)"
+			"C (Widget, int) | <Xm/List.h>"
 		alias
 			"XmListDeletePos"
 		end;
 
 	xm_list_delete_items (a_target: POINTER; an_item_list: POINTER; an_item_count: INTEGER) is
 		external
-			"C [macro <Xm/List.h>] (Widget, XmStringTable, int)"
+			"C (Widget, XmStringTable, int) | <Xm/List.h>"
 		alias
 			"XmListDeleteItems"
 		end;
 
 	xm_list_delete_items_pos (a_target: POINTER; an_item_count: INTEGER; a_position: INTEGER) is
 		external
-			"C [macro <Xm/List.h>] (Widget, int, int)"
+			"C (Widget, int, int) | <Xm/List.h>"
 		alias
 			"XmListDeleteItemsPos"
 		end;
 
 	xm_list_delete_all_items (a_target: POINTER) is
 		external
-			"C [macro <Xm/List.h>] (Widget)"
+			"C (Widget) | <Xm/List.h>"
 		alias
 			"XmListDeleteAllItems"
 		end;
 
 	xm_list_select_item (a_target: POINTER; an_item: POINTER; notify: BOOLEAN) is
 		external
-			"C [macro <Xm/List.h>] (Widget, XmString, Boolean)"
+			"C (Widget, XmString, Boolean) | <Xm/List.h>"
 		alias
 			"XmListSelectItem"
 		end;
 
 	xm_list_select_pos (a_target: POINTER; a_position: INTEGER; notify: BOOLEAN) is
 		external
-			"C [macro <Xm/List.h>] (Widget, int, Boolean)"
+			"C (Widget, int, Boolean) | <Xm/List.h>"
 		alias
 			"XmListSelectPos"
 		end;
 
 	xm_list_deselect_item (a_target: POINTER; an_item: POINTER) is
 		external
-			"C [macro <Xm/List.h>] (Widget, XmString)"
+			"C (Widget, XmString) | <Xm/List.h>"
 		alias
 			"XmListDeselectItem"
 		end;
 
 	xm_list_deselect_pos (a_target: POINTER; a_position: INTEGER) is
 		external
-			"C [macro <Xm/List.h>] (Widget, int)"
+			"C (Widget, int) | <Xm/List.h>"
 		alias
 			"XmListDeselectPos"
 		end;
 
 	xm_list_deselect_all_items (a_target: POINTER) is
 		external
-			"C [macro <Xm/List.h>] (Widget)"
+			"C (Widget) | <Xm/List.h>"
 		alias
 			"XmListDeselectAllItems"
 		end;
 
 	xm_list_pos_selected (a_target: POINTER; a_position: INTEGER): BOOLEAN is
 		external
-			"C [macro <Xm/List.h>] (Widget, int): EIF_BOOLEAN"
+			"C  (Widget, int): EIF_BOOLEAN | <Xm/List.h>"
 		alias
 			"XmListPosSelected"
 		end;
 
 	xm_list_set_pos (a_target: POINTER; a_position: INTEGER) is
 		external
-			"C [macro <Xm/List.h>] (Widget, int)"
+			"C (Widget, int) | <Xm/List.h>"
 		alias
 			"XmListSetPos"
 		end;
 
 	xm_list_set_bottom_pos (a_target: POINTER; a_position: INTEGER) is
 		external
-			"C [macro <Xm/List.h>] (Widget, int)"
+			"C (Widget, int) | <Xm/List.h>"
 		alias
 			"XmListSetBottomPos"
 		end;

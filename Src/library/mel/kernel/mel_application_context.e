@@ -350,7 +350,7 @@ feature {NONE} -- Implementation
 
 	xt_destroy_application_context (app_contxt: POINTER) is
 		external
-			"C [macro <X11/Intrinsic.h>] (XtAppContext)"
+			"C (XtAppContext) | <X11/Intrinsic.h>"
 		alias
 			"XtDestroyApplicationContext"
 		end;
@@ -362,7 +362,7 @@ feature {NONE} -- Implementation
 
 	xt_app_main_loop (app_contxt: POINTER) is
 		external
-			"C [macro <X11/Intrinsic.h>] (XtAppContext)"
+			"C (XtAppContext) | <X11/Intrinsic.h>"
 		alias
 			"XtAppMainLoop"
 		end;
@@ -374,35 +374,35 @@ feature {NONE} -- Implementation
 
 	xt_app_pending (app_contxt: POINTER): INTEGER is
 		external
-			"C [macro <X11/Intrinsic.h>] (XtAppContext): EIF_INTEGER"
+			"C(XtAppContext): EIF_INTEGER | <X11/Intrinsic.h>"
 		alias
 			"XtAppPending"
 		end;
 
 	xt_app_process_event (app_contxt: POINTER; a_mask: INTEGER) is
 		external
-			"C [macro <X11/Intrinsic.h>] (XtAppContext, XtInputMask)"
+			"C (XtAppContext, XtInputMask) | <X11/Intrinsic.h>"
 		alias
 			"XtAppProcessEvent"
 		end;
 
 	xt_dispatch_event (an_event: POINTER): BOOLEAN is
 		external
-			"C [macro <X11/Intrinsic.h>] (XEvent *): EIF_BOOLEAN"
+			"C (XEvent *): EIF_BOOLEAN | <X11/Intrinsic.h>"
 		alias
 			"XtDispatchEvent"
 		end;
 
 	xt_app_next_event (app_context: POINTER; an_event: POINTER) is
 		external
-			"C [macro <X11/Intrinsic.h>] (XtAppContext, XEvent *)"
+			"C (XtAppContext, XEvent *) | <X11/Intrinsic.h>"
 		alias
 			"XtAppNextEvent"
 		end;
 
  	global_xevent_ptr: POINTER is
         external
-            "C [macro <mel.h>]: XEvent *"
+            "C : XEvent * | %"mel.h%""
         end;
 
 end -- class MEL_APPLICATION_CONTEXT

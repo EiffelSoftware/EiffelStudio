@@ -758,6 +758,8 @@ rt_public char *eif_gen_typecode_str (char *obj)
 	if (strp == (char *) 0)
 		enomem();
 
+	strcpy (strp, tstr);
+
 	return makestr(strp, strlen(strp));
 }
 /*------------------------------------------------------------------*/

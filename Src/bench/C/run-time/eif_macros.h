@@ -68,8 +68,9 @@ extern "C" {
 
 /* Macro used for allocation:
  *  RTLN(x) allocates a new object of type 'x'
- *  RTLNR(x,y) allocates a new routine object of type 'x' and
- *  initializes it with the routine pointer 'y'
+ *  RTLNR(x,y,t,a,p) allocates a new routine object of type 'x' and
+ *  initializes it with the routine pointer 'y', target 't', argument
+ *  tuple 'a' and target position 'p'
  *  RTLB(x) allocated a new bit object of size 'x'
  *  RTUD keep dynamic type  for refreezing
  *  RTCB(x) clones bit `x'
@@ -80,7 +81,7 @@ extern "C" {
  *  RTEB(x,y) are bits `x' and `y' equal?
  */
 #define RTLN(x) emalloc(x)
-#define RTLNR(x,y) rout_obj_create((x),(y))
+#define RTLNR(x,y,t,a,p) rout_obj_create((x),(y),(t),(a),(p))
 #define RTLB(x)	bmalloc(x)
 #define RTMB(x,y) makebit(x,y)
 #define RTCB(x) b_clone(x)

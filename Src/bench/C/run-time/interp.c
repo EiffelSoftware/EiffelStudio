@@ -1455,13 +1455,29 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 		{
 			char *new_obj;						/* New object */
 			unsigned long stagval;
-			struct item *addr;
+			short tgtpos, has_tgt, has_args;
+			struct item *addr, *atgt, *atup;
+			char *tgt, *tup;
 
+			tgt = tup = (char *) 0;
+			has_tgt = get_short();  /* Do we have a call target? */
+			has_args = get_short(); /* Do we have an argument tuple? */
+			tgtpos = get_short();
 			type = get_short();
 			type = get_compound_id(MTC icurrent->it_ref,(short)type);
 			addr = opop();  /* Address of routine */
+			if (has_args)
+			{
+				atup = opop();
+				tup = (char *) (atup->it_ref);
+			}
+			if (has_tgt)
+			{
+				atgt = opop();
+				tgt = (char *) (atgt->it_ref);
+			}
 			stagval = tagval;
-			new_obj = RTLNR((int16)type, addr->it_ptr);		/* Create new object */
+			new_obj = RTLNR((int16)type, addr->it_ptr, tgt, tup, tgtpos);		/* Create new object */
 			last = iget();				/* Push a new value onto the stack */
 			last->type = SK_REF;
 			last->it_ref = new_obj;		/* Now it's safe for GC to see it */

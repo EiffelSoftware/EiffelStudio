@@ -29,6 +29,7 @@
 *  XPM library                                                                *
 *  Include file                                                               *
 *                                                                             *
+*  Developed by Arnaud Le Hors                                                *
 \*****************************************************************************/
 
 /*
@@ -53,7 +54,7 @@
  */
 #define XpmFormat 3
 #define XpmVersion 4
-#define XpmRevision 7
+#define XpmRevision 8
 #define XpmIncludeVersion ((XpmFormat * 100 + XpmVersion) * 100 + XpmRevision)
 
 #ifndef XPM_NUMBERS
@@ -168,7 +169,7 @@ typedef struct {
                                          * index */
 
     /* Color Allocation Directives */
-    unsigned int exactColors;		/* Only use exact colors for visual */
+    Bool exactColors;			/* Only use exact colors for visual */
     unsigned int closeness;		/* Allowable RGB deviation */
     unsigned int red_closeness;		/* Allowable red deviation */
     unsigned int green_closeness;	/* Allowable green deviation */
@@ -177,8 +178,14 @@ typedef struct {
 
     Pixel *alloc_pixels;		/* Returns the list of alloc'ed color
 					   pixels */
-    unsigned int nalloc_pixels;		/* Returns the number of alloc'ed
+    Bool nalloc_pixels;			/* Returns the number of alloc'ed
 					   color pixels */
+
+    Bool alloc_close_colors;    	/* Specify whether close colors should
+					   be allocated using XAllocColor
+					   or not */
+    int bitmap_format;			/* Specify the format of 1bit depth
+					   images: ZPixmap or XYBitmap */
 
 }      XpmAttributes;
 
@@ -208,6 +215,8 @@ typedef struct {
 #define XpmReturnColorTable XpmColorTable
 
 #define XpmReturnAllocPixels (1L<<16)
+#define XpmAllocCloseColors (1L<<17)
+#define XpmBitmapFormat    (1L<<18)
 
 /* XpmInfo value masks bits */
 #define XpmComments        XpmInfos
@@ -223,7 +232,7 @@ typedef struct {
 
 /*
  * color keys for visual type, they must fit along with the number key of
- * each related element in xpmColorKeys[] defined in xpmP.h
+ * each related element in xpmColorKeys[] defined in XpmI.h
  */
 #define XPM_MONO	2
 #define XPM_GREY4	3

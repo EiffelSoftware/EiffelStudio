@@ -53,42 +53,41 @@ feature {NONE} -- Recording information for eiffelcase
 			until
 				parents.after
 			loop
-				parent_id := parents.item.parent_id;
-				if not parent_id.is_equal (System.any_id) then
+				parent_id := parents.item.parent_id
+				if not parents.item.parent.is_class_any then
 					no_repeated_parents.extend (parent_id)
-				end;
-
-				if
-					parents.item.parent_type /= Void 
-					and then parents.item.parent_type.generics /= Void and then
-					not parents.item.parent_type.generics.empty
-				then
+					if
+						parents.item.parent_type /= Void 
+						and then parents.item.parent_type.generics /= Void and then
+						not parents.item.parent_type.generics.empty
+					then
 						-- the link carries genericity
-					!! list_tmp.make (0,15)
-					list_tmp := parents.item.parent_type.generics
-					!! list_gene.make
-					from 
-						i := list_tmp.lower
-					until
-						i > list_tmp.upper
-					loop
-						e_class := list_tmp.item(i).associated_class
-						if e_class /= Void then
-							!! gene.make ( e_class.name, Void )
-						else
-							!! gene.make ( "G", Void )
-						end
-						list_gene.extend (gene)
-						i := i + 1
-					end 
+						!! list_tmp.make (0,15)
+						list_tmp := parents.item.parent_type.generics
+						!! list_gene.make
+						from 
+							i := list_tmp.lower
+						until
+							i > list_tmp.upper
+						loop
+							e_class := list_tmp.item(i).associated_class
+							if e_class /= Void then
+								!! gene.make ( e_class.name, Void )
+							else
+								!! gene.make ( "G", Void )
+							end
+							list_gene.extend (gene)
+							i := i + 1
+						end 
+					end	
+					-- let's record it now
+					!! inherit_data
+					inherit_data.set_class_links ( classc.id.id, parent_id.id )
+					if list_gene /= Void then
+						inherit_data.set_generics ( list_gene )
+					end
+					p_l.extend ( inherit_data )
 				end
-
-				!! inherit_data
-				inherit_data.set_class_links ( classc.id.id, parent_id.id )
-				if list_gene /= Void then
-					inherit_data.set_generics ( list_gene )
-				end
-				p_l.extend ( inherit_data )
 				parents.forth
 			end
 

@@ -13,9 +13,12 @@ inherit
 	STRING
 
 	SCROLLABLE_LIST_ELEMENT
-		rename
-			setup as scrollable_list_element_setup
-			consistent as scrollable_list_element_consistent
+		undefine
+			setup,
+			consistent,
+			copy,
+			out,
+			is_equal
 		end
 
 feature -- Access

@@ -154,7 +154,8 @@ feature -- Access
 	is_removable: BOOLEAN is
 			-- May current class be removed from system?
 		do
-			Result := not is_precompiled
+				-- It should not be precompiled, nor already removed from system.
+			Result := not is_precompiled and System.class_of_id (class_id) /= Void
 		end
 
 	is_in_system: BOOLEAN

@@ -193,6 +193,16 @@ feature -- Implementation : deferred features of WEL_EDIT that
 		deferred
 		end
 
+	wel_background_color: WEL_COLOR_REF is
+		do
+			Result := background_color_imp
+		end
+
+	wel_foreground_color: WEL_COLOR_REF is
+		do
+			Result := foreground_color_imp
+		end
+
 end -- class EV_TEXT_COMPONENT_IMP
 
 --|----------------------------------------------------------------

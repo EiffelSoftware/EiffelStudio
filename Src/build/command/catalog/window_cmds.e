@@ -42,7 +42,11 @@ feature {NONE}
 		do
 			extend (popup_cmd)
 			extend (popdown_cmd)
+			extend (open_window_cmd)
+			extend (close_window_cmd)
+			extend (minimize_window_cmd)
+			extend (maximize_window_cmd)
+			extend (restore_window_cmd)
 		end
-
 
 end -- class WINDOW_CMDS

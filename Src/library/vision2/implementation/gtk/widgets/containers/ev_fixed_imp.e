@@ -28,7 +28,6 @@ feature {NONE} -- Initialization
 			-- Create the fixed container.
 		do
 			base_make (an_interface)
-			ev_wel_control_container_make
 		end
 
 feature -- Status setting
@@ -36,20 +35,37 @@ feature -- Status setting
 	set_item_position (a_widget: EV_WIDGET; an_x, a_y: INTEGER) is
 			-- Set `a_widget.x_position' to `an_x'.
 			-- Set `a_widget.y_position' to `a_y'.
+		local
+			w_imp: EV_WIDGET_IMP
+		do
+			w_imp ?= a_widget
+			C.gtk_widget_set_uposition (w_imp.c_object, an_x, a_y)
+		end
+
+	set_item_size (a_widget: EV_WIDGET; a_width, a_height: INTEGER) is
+			-- Set `a_widget.width' to `a_width'.
+			-- Set `a_widget.height' to `a_height'.
+		local
+			w_imp: EV_WIDGET_IMP
+		do
+			w_imp ?= a_widget
+			C.gtk_fixed_move (c_object, w_imp.c_object, a_width, a_height)
+		end
+
+feature {EV_ANY_I} -- Implementation
+
+	gtk_reorder_child (a_container, a_child: POINTER; a_position: INTEGER) is
+			-- Move `a_child' to `a_position' in `a_container'.
+			--| Do nothing more than calling gtk-reorder.
 		do
 			check
 				to_be_implemented: False
 			end
 		end
 
-	set_item_size (a_widget: EV_WIDGET; a_width, a_height: INTEGER) is
-			-- Set `a_widget.width' to `a_width'.
-			-- Set `a_widget.height' to `a_height'.
-		do
-			check
-				to_be_implemented: False
-			end
-		end
+	interface: EV_FIXED
+			-- Provides a common user interface to platform dependent
+			-- functionality implemented by `Current'
 
 end -- class EV_FIXED
 
@@ -74,6 +90,9 @@ end -- class EV_FIXED
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/05/02 16:32:34  brendel
+--| Implemented.
+--|
 --| Revision 1.9  2000/05/02 00:40:28  brendel
 --| Reintroduced EV_FIXED.
 --| Complete revision.

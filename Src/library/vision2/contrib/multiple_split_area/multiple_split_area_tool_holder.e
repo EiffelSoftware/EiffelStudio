@@ -121,6 +121,8 @@ feature {NONE} -- Initialization
 				end
 				dialog.set_width (original_width)
 				dialog.set_height (original_height)
+				minimize_button.disable_sensitive
+				maximize_button.disable_sensitive
 			--	parent_area.rebuild
 			end
 			if parent /= Void then

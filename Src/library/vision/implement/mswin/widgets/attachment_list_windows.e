@@ -1,7 +1,7 @@
 indexing
 	description: "Container to hold attachments for forms";
 	status: "See notice at end of class"; 
-	date: "$Date$"; 
+	date: "$Date$";
 	revision: "$Revision$" 
  
 class
@@ -13,7 +13,7 @@ inherit
 creation
 	make 
 
-feature  -- Status setting
+feature -- Access
 
 	find_widget (w: WIDGET_WINDOWS): ATTACHMENT_WINDOWS is
 			-- Find the attachment that contains widget `w'
@@ -40,6 +40,17 @@ feature  -- Status setting
 
 
 feature -- Status setting
+
+	add (w: WIDGET_WINDOWS) is
+		local
+			a: ATTACHMENT_WINDOWS
+		do
+			a := find_widget (w)
+			if a = Void then
+				!!a.make (w)
+				extend (a)
+			end
+		end				
 
 	attach_left (w,l : WIDGET_WINDOWS; pos: INTEGER;
 			relative: BOOLEAN) is
@@ -123,8 +134,7 @@ feature -- Status setting
 			-- Height of all the widgets in this
 			-- list, includes sizing based on positioning
 		local
-			child_array: ARRAY [WIDGET_WINDOWS] 
-			i: INTEGER
+			child_list: ARRAYED_LIST [WIDGET_WINDOWS] 
 			c: CURSOR
 		do
 			if count > 0 then
@@ -144,14 +154,14 @@ feature -- Status setting
 				end
 				go_to (c)
 			else
-				child_array := form.children
+				child_list := form.children_list
 				from
-					i := child_array.lower
+					child_list.start
 				until
-					i > child_array.upper
+					child_list.after
 				loop
-					Result := (Result).max (child_array.item(i).y + child_array.item(i).height)
-					i := i + 1
+					Result := (Result).max (child_list.item.y + child_list.item.height)
+					child_list.forth
 				end
 			end
 		end
@@ -160,8 +170,7 @@ feature -- Status setting
 			-- Width of all the widgets in this
 			-- list, includes sizing based on positioning
 		local
-			child_array: ARRAY [WIDGET_WINDOWS] 
-			i: INTEGER
+			child_list: ARRAYED_LIST [WIDGET_WINDOWS] 
 			c: CURSOR
 		do
 			if count > 0 then
@@ -181,14 +190,14 @@ feature -- Status setting
 				end
 				go_to (c)
 			else
-				child_array := form.children
+				child_list := form.children_list
 				from
-					i := child_array.lower
+					child_list.start
 				until
-					i > child_array.upper
+					child_list.after
 				loop
-					Result := (Result).max (child_array.item(i).x + child_array.item(i).width)
-					i := i + 1
+					Result := (Result).max (child_list.item.x + child_list.item.width)
+					child_list.forth
 				end
 			end
 		end

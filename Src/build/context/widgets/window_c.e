@@ -75,11 +75,8 @@ feature -- Setting values
 			resize_policy_modified := True
 			resize_policy_disabled := flag
 			if flag then
-				widget_forbid_resize
 					-- The current size must be saved
 				size_modified := True
-			else
-				widget_allow_resize
 			end
 		end
 
@@ -100,14 +97,6 @@ feature -- File names
 feature {NONE}
 
 	widget_set_title (s: STRING) is
-		deferred
-		end
-
-	widget_forbid_resize is
-		deferred
-		end
-
-	widget_allow_resize is
 		deferred
 		end
 

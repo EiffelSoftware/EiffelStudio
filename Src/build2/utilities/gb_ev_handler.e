@@ -36,6 +36,7 @@ feature -- Access
 			Result.extend ("gb_ev_fixed")
 			Result.extend ("gb_ev_viewport")
 			Result.extend ("gb_ev_table")
+			Result.extend ("gb_ev_container")
 		end
 	
 	--| FIXME This version has been commented, so that we do not need to have

@@ -93,6 +93,29 @@ pointed_target: EV_PICK_AND_DROPABLE is do check to_be_implemented: False end en
 
 set_pointer_style (curs: EV_CURSOR) is do end
 
+pebble_over_widget (a_gdk_window: POINTER; a_x, a_y: INTEGER): BOOLEAN is
+	local
+		gdkwin_parent, clist_parent, v_adjust: POINTER
+	do
+
+		if parent_imp /= Void then
+			gdkwin_parent := C.gdk_window_get_parent (a_gdk_window)
+			clist_parent := C.gdk_window_get_parent (
+				C.gtk_clist_struct_clist_window (parent_imp.list_widget)
+			)
+			if gdkwin_parent = clist_parent then
+				print ("X = "+a_x.out + " Y = " + a_y.out + "%N")
+				print ("Over row " + parent_imp.row_from_y_coord (a_y).out + "%N")
+				v_adjust := C.gtk_scrolled_window_get_vadjustment (parent_imp.scroll_window)
+				print ("Scroll value = "+ C.gtk_adjustment_struct_value (v_adjust).out + "%N")
+				if parent_imp.row_from_y_coord (a_y) = index then
+					print ("Over row " + index.out + "%N")
+					Result := True
+				end	
+			end
+		end
+	end
+
 feature {EV_ANY_I} -- Implementation
 
 	set_parent_imp (par_imp: EV_MULTI_COLUMN_LIST_IMP) is
@@ -145,6 +168,9 @@ end -- class EV_MULTI_COLUMN_LIST_ROW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.43  2000/03/30 19:33:33  king
+--| Half implemented pebble_over_widget
+--|
 --| Revision 1.42  2000/03/29 01:41:22  king
 --| Moved pixmapping features up
 --|

@@ -341,7 +341,7 @@ feature {NONE} -- Implementation
 				l_children.off or Result /= Void
 			loop
 				current_window_item ?= l_children.item
-				if l_children.item.name.is_equal (current_text) or else (current_window_item /= Void and current_text.is_equal (name_and_type_from_object (current_window_item.object))) then
+				if l_children.item.name.is_equal (current_text) or else (current_window_item /= Void and current_text.is_equal (current_window_item.object.name.as_upper)) then
 					if texts.index = texts.count then
 						Result ?= l_children.item
 					else

@@ -29,7 +29,7 @@ inherit
 		 	is_equal
 		end
 	
-creation
+create
 	make, make_by_handle
 
 feature {NONE} -- Initialization

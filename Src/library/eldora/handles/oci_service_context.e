@@ -11,7 +11,7 @@ class
 inherit
 	OCI_CHILD_HANDLE
 
-creation
+create
 	make, logon
 
 feature -- Access

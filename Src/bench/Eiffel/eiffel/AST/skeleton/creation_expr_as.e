@@ -267,6 +267,11 @@ feature -- Type check
 					dcr_id := default_call.feature_name
 					dcr_id.load (dcr_feat.feature_name)
 					the_call := default_call
+				else
+						-- We insert creation without call to creation procedure
+						-- in list of dependences of current feature.
+					create depend_unit.make_emtpy_creation_unit (creation_class.class_id, dcr_feat)
+					context.supplier_ids.extend (depend_unit)
 				end
 			else
 				the_call := call
@@ -374,12 +379,6 @@ feature -- Type check
 
 				-- Check for errors
 			Error_handler.checksum
-
-				-- Insert the creation without creation routine
-				-- (feature id = -1) in the dependance of the
-				-- current feature
-			create depend_unit.make_creation_unit (creation_class.class_id)
-			context.supplier_ids.extend (depend_unit)
 
 				-- Compute creation information
 			if is_formal_creation then

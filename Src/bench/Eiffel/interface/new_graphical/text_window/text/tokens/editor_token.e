@@ -244,8 +244,8 @@ feature {EB_TOKEN_TOOLKIT, SMART_TEXT} -- implementation of clickable and editab
 
 invariant
 	image_not_void: image /= Void
-	length_positive: length > 0
-	width_positive_or_null: width >= 0
+	length_non_negative: length >= 0
+	width_non_negative: width >= 0
 	previous = Void implies position = 0
 
 end -- class EDITOR_TOKEN

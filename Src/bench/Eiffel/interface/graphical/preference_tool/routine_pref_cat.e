@@ -29,18 +29,15 @@ feature {NONE} -- Initialization
 		do
 			!! tool_width.make (associated_category.tool_width);
 			!! tool_height.make (associated_category.tool_height);
-			!! command_bar.make (associated_category.command_bar);
-			!! format_bar.make (associated_category.format_bar);
-			!! show_all_callers.make (
-				associated_category.show_all_callers);
-			!! do_flat_in_breakpoints.make (
-				associated_category.do_flat_in_breakpoints);
-
+			!! keep_toolbar.make (associated_category.keep_toolbar)
+			!! double_line_toolbar.make (associated_category.double_line_toolbar)
+			!! show_all_callers.make (associated_category.show_all_callers);
+			!! do_flat_in_breakpoints.make (associated_category.do_flat_in_breakpoints);
 
 			resources.extend (tool_width);
 			resources.extend (tool_height);
-			resources.extend (command_bar);
-			resources.extend (format_bar)
+			resources.extend (keep_toolbar);
+			resources.extend (double_line_toolbar);
 			resources.extend (show_all_callers);
 			resources.extend (do_flat_in_breakpoints)
 		end;
@@ -81,7 +78,7 @@ feature -- Properties
 feature {NONE} -- Resources
 
 	tool_width, tool_height: INTEGER_PREF_RES;
-	command_bar, format_bar: BOOLEAN_PREF_RES;
+	double_line_toolbar, keep_toolbar: BOOLEAN_PREF_RES;
 	show_all_callers: BOOLEAN_PREF_RES;
 	do_flat_in_breakpoints: BOOLEAN_PREF_RES;
 

@@ -77,6 +77,7 @@ feature {GB_OBJECT_HANDLER} -- Initialization
 			create events.make (0)
 			create constants.make (0)
 			create edited_name.make (0)
+			expanded_in_box := True
 		ensure
 			type_assigned: type = a_type
 		end
@@ -95,6 +96,7 @@ feature {GB_OBJECT_HANDLER} -- Initialization
 			create events.make (0)
 			create constants.make (0)
 			create edited_name.make (0)
+			expanded_in_box := True
 			id := new_id
 		ensure
 			type_assigned: type = a_type
@@ -129,6 +131,9 @@ feature -- Access
 		-- A type corresponding to the current vision2 object.
 		-- Contains "EV_" at start.
 		
+	expanded_in_box: BOOLEAN
+		-- Does `Current' expand while parented in an EV_BOX?
+		
 	is_expanded: BOOLEAN
 		-- Is representation of `Current' currently expanded?
 		-- Used to expand and collapse `layout_constructor_item' as required
@@ -143,7 +148,6 @@ feature -- Access
 		ensure
 			Result_correct : ("EV_" + Result).is_equal (type)
 		end
-		
 		
 	parent_object: GB_OBJECT is
 			-- `Result' is object containing `Current'.
@@ -206,6 +210,20 @@ feature -- Access
 				current_item.object.all_children_recursive (a_list)
 				layout_item.forth
 			end
+		end
+		
+feature {GB_EV_BOX_EDITOR_CONSTRUCTOR} -- Basic operation
+
+	enable_expanded_in_box is
+			-- Ensure `expanded_in_box' is `True'.
+		do
+			expanded_in_box := True
+		end
+		
+	disable_expanded_in_box is
+			-- Ensure `expanded_in_box' is `False'.
+		do
+			expanded_in_box := False
 		end
 
 feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_COMMAND_CHANGE_TYPE} -- Deletion

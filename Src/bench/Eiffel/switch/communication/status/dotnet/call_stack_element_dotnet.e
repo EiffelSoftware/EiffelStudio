@@ -240,148 +240,161 @@ feature {NONE} -- Implementation
 
 			l_list: LIST [ABSTRACT_DEBUG_VALUE]
 			l_dotnet_ref_value: EIFNET_DEBUG_REFERENCE_VALUE
+			
 		do
-			debug ("DEBUGGER_TRACE_CALLSTACK_DATA") 
-				io.putstring ("  @-> Initializing stack (CALL_STACK_ELEMENT_DOTNET): "+routine_name+" from: "+dynamic_class.name+"%N")
-			end
-			rout := routine
-			if rout /= Void then
-
-				--| ARGUMENTS |--
-				l_list := internal_arg_list
-
-				--| Get Current Object
-				l_list.start
+			if application.imp_dotnet.exit_process_occurred then
+				debug ("DEBUGGER_TRACE_CALLSTACK_DATA") 
+					print ("EXIT_PROCESS OCCURRED !!!%N")
+				end
+				initialized := True
+			else
+				debug ("DEBUGGER_TRACE_CALLSTACK_DATA") 
+					io.putstring ("  @-> Initializing stack (CALL_STACK_ELEMENT_DOTNET): "+routine_name+" from: "+dynamic_class.name+"%N")
+				end
+				rout := routine
+				if rout /= Void then
+	
+					--| ARGUMENTS |--
+					l_list := internal_arg_list
+	
+					--| Get Current Object
+					l_list.start
+					
+					set_private_current_object (l_list.first)				
+					private_current_object.set_name ("Current")
+	
+					object_address := private_current_object.address
+					display_object_address := object_address
+	
+					l_list.remove
+	
+					l_count := rout.argument_count
+	--				check
+	--					l_list.count = l_count
+	--				end
+					if l_count > 0 then
+						create args_list.make_filled (l_count)	
+						arg_names := rout.argument_names
+						from
+							arg_names.start
+							args_list.start
+							l_list.start
+						until
+							args_list.after
+						loop
+							value := l_list.item
+							value.set_name (arg_names.item)
+							args_list.replace (value)
+							args_list.forth
+							arg_names.forth
+							l_list.forth
+						end
+					end
+	
+					--| LOCAL |--
+	
+					-- First Local is the Result value, so we take it first
+					l_list := internal_local_list
+					if 
+						rout.is_function 
+					then
+						if not rout.is_once then
+							--| In IL generated code .. for once function 
+							--| no local variable to store the Result
+							--| using directly  "ret value"
+							l_list.start
+							private_result := l_list.first
+							l_list.remove
+							private_result.set_name ("Result")
+						else
+							--| at this stæge, the private_current_object is known
+							l_dotnet_ref_value ?= private_current_object
+							if l_dotnet_ref_value /= Void then
+								private_result := l_dotnet_ref_value.once_function_value (rout)
+								if private_result /= Void then
+									private_result.set_name ("Result")
+								end
+							else
+								private_result := Void
+							end
+						end
+					end
+	
+					--| Then real Local variables |--
+					local_decl_grps := rout.locals
+					if local_decl_grps /= Void then
+						l_count := l_list.count
+						create locals_list.make (l_count)
+						from
+							l_index := 0
+							local_decl_grps.start
+							l_names_heap := Names_heap
+							l_list.start
+						until
+							local_decl_grps.after 
+							or l_index > l_count
+						loop 
+							from
+								id_list := local_decl_grps.item.id_list
+								id_list.start
+							until
+								id_list.after or
+								l_index > l_count
+							loop
+								value := l_list.item
+								value.set_name (l_names_heap.item (id_list.item))
+								locals_list.extend (value)
+								id_list.forth
+								l_list.forth
+								l_index := l_index + 1
+							end
+							local_decl_grps.forth
+						end
+					end
+				end
 				
-				set_private_current_object (l_list.first)				
-				private_current_object.set_name ("Current")
-
-				object_address := private_current_object.address
-				display_object_address := object_address
-
-				l_list.remove
-
-				l_count := rout.argument_count
---				check
---					l_list.count = l_count
---				end
-				if l_count > 0 then
-					create args_list.make_filled (l_count)	
-					arg_names := rout.argument_names
+					--| initialize item numbers for arguments
+				if args_list /= Void then
 					from
-						arg_names.start
 						args_list.start
-						l_list.start
+						counter := 1
 					until
 						args_list.after
 					loop
-						value := l_list.item
-						value.set_name (arg_names.item)
-						args_list.replace (value)
+						args_list.item.set_item_number(counter)
 						args_list.forth
-						arg_names.forth
-						l_list.forth
+						counter := counter + 1
 					end
 				end
-
-				--| LOCAL |--
-
-				-- First Local is the Result value, so we take it first
-				l_list := internal_local_list
-				if 
-					rout.is_function 
-				then
-					if not rout.is_once then
-						--| In IL generated code .. for once function 
-						--| no local variable to store the Result
-						--| using directly  "ret value"
-						l_list.start
-						private_result := l_list.first
-						l_list.remove
-						private_result.set_name ("Result")
-					else
-						--| at this stæge, the private_current_object is known
-						l_dotnet_ref_value ?= private_current_object
-						if l_dotnet_ref_value /= Void then
-							private_result := l_dotnet_ref_value.once_function_value (rout)
-							if private_result /= Void then
-								private_result.set_name ("Result")
-							end
-						else
-							private_result := Void
-						end
-					end
-				end
-
-				--| Then real Local variables |--
-				local_decl_grps := rout.locals
-				if local_decl_grps /= Void then
-					l_count := l_list.count
-					create locals_list.make (l_count)
+	
+					--| initialize item numbers for locals
+				if locals_list /= Void then
 					from
-						l_index := 0
-						local_decl_grps.start
-						l_names_heap := Names_heap
-						l_list.start
+						locals_list.start
+						counter := 1
 					until
-						local_decl_grps.after 
-						or l_index > l_count
-					loop 
-						from
-							id_list := local_decl_grps.item.id_list
-							id_list.start
-						until
-							id_list.after or
-							l_index > l_count
-						loop
-							value := l_list.item
-							value.set_name (l_names_heap.item (id_list.item))
-							locals_list.extend (value)
-							id_list.forth
-							l_list.forth
-							l_index := l_index + 1
-						end
-						local_decl_grps.forth
+						locals_list.after
+					loop
+						locals_list.item.set_item_number(counter)
+						locals_list.forth
+						counter := counter + 1
 					end
 				end
-			end
-			
-				--| initialize item numbers for arguments
-			if args_list /= Void then
-				from
-					args_list.start
-					counter := 1
-				until
-					args_list.after
-				loop
-					args_list.item.set_item_number(counter)
-					args_list.forth
-					counter := counter + 1
+	
+					--| Associate to private list |--
+				private_arguments := args_list
+				private_locals := locals_list
+				initialized := True
+				
+				debug ("DEBUGGER_TRACE_CALLSTACK_DATA"); 
+					io.put_string ("  @-> Finished initializating stack: "+routine_name+"%N"); 
+					io.put_string ("%N-------------------------------------------------%N"); 
 				end
-			end
-
-				--| initialize item numbers for locals
-			if locals_list /= Void then
-				from
-					locals_list.start
-					counter := 1
-				until
-					locals_list.after
-				loop
-					locals_list.item.set_item_number(counter)
-					locals_list.forth
-					counter := counter + 1
-				end
-			end
-
-				--| Associate to private list |--
-			private_arguments := args_list
-			private_locals := locals_list
-			initialized := True
-			
-			debug ("DEBUGGER_TRACE_CALLSTACK_DATA"); 
-				io.put_string ("  @-> Finished initializating stack: "+routine_name+"%N"); 
-				io.put_string ("%N-------------------------------------------------%N"); 
+--			else
+--				debug ("DEBUGGER_TRACE_CALLSTACK_DATA") 
+--					io.putstring ("  Error occurred during CALL_STACK_ELEMENT_DOTNET Initialisation : "+routine_name+" from: "+dynamic_class.name+"%N")
+--				end
+--				initialized := True
 			end
 		end
 

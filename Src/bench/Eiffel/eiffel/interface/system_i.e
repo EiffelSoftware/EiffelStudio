@@ -347,11 +347,11 @@ feature -- Properties
 			local_workbench: WORKBENCH_I
 			local_universe: UNIVERSE_I
 			local_root_cluster: CLUSTER_I
-			a_cluster_list    : LINKED_LIST [CLUSTER_I]
-			a_cluster         : CLUSTER_I
-			a_class_table     : EXTEND_TABLE [CLASS_I, STRING]
-			a_class_i         : CLASS_I
-			a_visible_i       : VISIBLE_I
+			a_cluster_list: LINKED_LIST [CLUSTER_I]
+			a_cluster: CLUSTER_I
+			a_class_table: EXTEND_TABLE [CLASS_I, STRING]
+			a_class_i: CLASS_I
+			a_visible_i: VISIBLE_I
 		do
 			first_compilation := True
 
@@ -371,6 +371,8 @@ feature -- Properties
 			local_workbench.change_class (integer_class)
 			local_workbench.change_class (boolean_class)
 			local_workbench.change_class (character_class)
+			local_workbench.change_class (special_class)
+			local_workbench.change_class (to_special_class)
 			local_workbench.change_class (array_class)
 			local_workbench.change_class (bit_class)
 			local_workbench.change_class (pointer_class)
@@ -1046,6 +1048,8 @@ end
 			integer_class.compiled_class.mark_class (marked_classes)
 			boolean_class.compiled_class.mark_class (marked_classes)
 			character_class.compiled_class.mark_class (marked_classes)
+			special_class.compiled_class.mark_class (marked_classes)
+			to_special_class.compiled_class.mark_class (marked_classes)
 			array_class.compiled_class.mark_class (marked_classes)
 			bit_class.compiled_class.mark_class (marked_classes)
 			pointer_class.compiled_class.mark_class (marked_classes)

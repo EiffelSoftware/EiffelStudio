@@ -7,7 +7,10 @@ inherit
 		rename
 			label as color_name
 		end;
-	PICT_COLOR_B
+
+		--| Guillaume
+--	PICT_COLOR_B
+	DRAW_B
 		rename 
 			make as pict_color_make
 		end;
@@ -40,7 +43,9 @@ feature
 			hole.process_color (Current)
 		end;
 
-	source: PICT_COLOR_B is
+		--| Guillaume
+--	source: PICT_COLOR_B is
+	source: DRAW_B is
 		do
 			Result := Current
 		end;

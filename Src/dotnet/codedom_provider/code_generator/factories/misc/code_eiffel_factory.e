@@ -40,9 +40,11 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			until
 				i = l_count
 			loop
-				add_referenced_assembly (l_referenced_assemblies.item (i))
-				if not assembly_added then
-					Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_reference, [l_referenced_assemblies.item (i)])
+				if not has (l_referenced_assemblies.item (i)) then
+					add_referenced_assembly (l_referenced_assemblies.item (i))
+					if not assembly_added then
+						Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_reference, [l_referenced_assemblies.item (i)])
+					end
 				end
 				i := i + 1
 			end

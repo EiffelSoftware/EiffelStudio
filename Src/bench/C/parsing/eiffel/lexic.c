@@ -244,7 +244,7 @@ typedef unsigned char YY_CHAR;
 typedef int yy_state_type;
 
 #define YY_USES_REJECT
-FILE *yyin = stdin, *yyout = stdout;
+FILE *yyin = NULL, *yyout = NULL;
 extern int yylineno;
 int yylineno = 1;
 extern char yytext[];

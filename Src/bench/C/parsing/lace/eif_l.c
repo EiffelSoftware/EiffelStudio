@@ -246,7 +246,7 @@ typedef unsigned char YY_CHAR;
 typedef int zz_state_type;
 
 #define YY_USES_REJECT
-FILE *zzin = stdin, *zzout = stdout;
+FILE *zzin = NULL, *zzout = NULL;
 extern int zzlineno;
 int zzlineno = 1;
 extern char zztext[];

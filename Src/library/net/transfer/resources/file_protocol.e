@@ -95,6 +95,9 @@ feature -- Status report
 	Is_local: BOOLEAN is True
 			-- Is protocol not networked? (Answer: yes)
 	
+	is_proxy_used: BOOLEAN is False
+			-- Does resource use a proxy? (Answer: no)
+
 	valid_mode (n: INTEGER): BOOLEAN is
 			-- Is mode `n' valid?
 		do

@@ -12,6 +12,7 @@ feature -- Initialization
 		local
 			l_mem: MEMORY
 		do
+			create l_mem
 			l_mem.allocate_tiny
 			create o1.make ("o1")
 			create o2.make ("o2")

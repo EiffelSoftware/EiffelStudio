@@ -13,16 +13,7 @@ inherit
 			make as wrong_make
 		end
 
-feature -- Status report
-
-	count: INTEGER is
-			-- Current number of parts
-		require
-			exists: not destroyed
-		deferred
-		ensure
-			positive_result: Result > 0
-		end
+	EV_ITEM_HOLDER_I
 
 feature {NONE} -- Inapplicable
 

@@ -76,7 +76,7 @@ feature -- Initialization
 			l_factory: CLR_HOST_FACTORY
 		once
 			(create {CLI_COM}).initialize_com
-			l_host := (create {CLR_HOST_FACTORY}).runtime_host (Eiffel_system.System.clr_runtime_version, 0)			
+			l_host := (create {CLR_HOST_FACTORY}).runtime_host (Eiffel_system.System.clr_runtime_version)			
 		end
 		
 	initialize_debugger_session is

@@ -109,9 +109,9 @@ feature {NONE} -- Implementation
 						return_type.append (Colon)
 						return_type.append (Space)
 						if visitor.is_basic_type then
-							message_output.add_warning (Current, message_output.Not_pointer_type)
+							Result.append (visitor.cecil_type)
 						elseif visitor.is_enumeration then
-							message_output.add_warning (Current, message_output.Invalid_use_of_enumeration)
+							Result.append (visitor.cecil_type)
 						else
 							pointed_descriptor ?= arguments.item.type
 							if pointed_descriptor /= Void then
@@ -128,9 +128,9 @@ feature {NONE} -- Implementation
 						end		
 					elseif is_paramflag_fout (arguments.item.flags) then
 						if visitor.is_basic_type then
-							message_output.add_warning (Current, message_output.Not_pointer_type)
+							Result.append (visitor.cecil_type)
 						elseif visitor.is_enumeration then
-							message_output.add_warning (Current, message_output.Invalid_use_of_enumeration)
+							Result.append (visitor.cecil_type)
 						elseif visitor.is_structure or visitor.is_interface or visitor.is_array_basic_type then
 							Result.append (visitor.c_type)
 							Result.append (Space)
@@ -151,7 +151,7 @@ feature {NONE} -- Implementation
 						if visitor.is_basic_type then
 							Result.append (visitor.cecil_type)
 
-						elseif is_boolean (visitor.vt_type) and not visitor.is_pointed then
+						elseif (visitor.vt_type = Vt_bool) then
 							Result.append (Eif_boolean)
 
 						elseif visitor.is_enumeration then

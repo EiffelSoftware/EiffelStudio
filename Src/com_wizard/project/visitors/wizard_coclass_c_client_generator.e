@@ -210,8 +210,6 @@ feature {NONE} -- Implementation
 			constructor_body.append (Hresult)
 			constructor_body.append (Space)
 			constructor_body.append (Hresult_variable_name)
-			constructor_body.append (Comma_space)
-			constructor_body.append (Hresult_variable_name_2)
 			constructor_body.append (Semicolon)
 			constructor_body.append (New_line)
 			constructor_body.append (co_initialize_ex_function)
@@ -350,6 +348,8 @@ feature {NONE} -- Implementation
 			-- CoCreateInstanceEx function call
 		require
 			non_void_coclass_descriptor: a_coclass_descriptor /= Void
+		local
+			tmp_string: STRING
 		do
 			create Result.make (0)
 			Result.append (Tab)
@@ -381,7 +381,8 @@ feature {NONE} -- Implementation
 			Result.append (New_line)
 			Result.append (examine_hresult (Hresult_variable_name))
 			Result.append (New_line)
-			Result.append (examine_hresult (Hresult_variable_name_2))
+			tmp_string := clone ("a_qi.hr")
+			Result.append (examine_hresult (tmp_string))
 			Result.append (New_line_tab)
 			Result.append (Iunknown_variable_name)
 			Result.append (Space_equal_space)
@@ -406,7 +407,7 @@ feature {NONE} -- Implementation
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
 
-			-- MULTI_QI a_qi = {&IID_IUnknown, NULL, hr2};
+			-- MULTI_QI a_qi = {&IID_IUnknown, NULL, 0};
 			Result.append (Multi_qi)
 			Result.append (Space)
 			Result.append ("a_qi")
@@ -417,7 +418,7 @@ feature {NONE} -- Implementation
 			Result.append (Comma_space)
 			Result.append (Null)
 			Result.append (Comma_space)
-			Result.append (Hresult_variable_name_2)
+			Result.append (Zero)
 			Result.append (Close_curly_brace)
 			Result.append (Semicolon)
 			Result.append (New_line)

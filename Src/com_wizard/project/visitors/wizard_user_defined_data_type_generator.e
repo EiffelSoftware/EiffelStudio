@@ -109,7 +109,7 @@ feature -- Processing
 
 			else
 				ce_function_body := ce_function_body_alias 
-					(eiffel_type, a_type_visitor.ce_function_name, a_type_visitor.need_generate_ce)
+					(eiffel_type, a_type_visitor.ce_function_name, a_type_visitor.need_generate_ce, a_type_visitor.writable)
 
 				create ce_function_return_type.make (0)
 				ce_function_return_type.append (Eif_reference)
@@ -324,6 +324,18 @@ feature -- Processing
 			ec_function_signature.append (Eif_ref_variable)
 
 			ec_function_body := ec_function_body_wrapper (eiffel_type, c_type)
+			if 
+				record_descriptor.name.is_equal ("RemotableHandle") or 
+				record_descriptor.name.is_equal ("_RemotableHandle") 
+			then
+				is_structure := False
+				is_basic_type := True
+				vt_type := Vt_i4
+				need_generate_ce := False
+				need_generate_ec := False
+				c_header_file := clone ("")
+				cecil_type := clone ("EIF_INTEGER")
+			end
 		end
 
  
@@ -543,7 +555,7 @@ feature {NONE} -- Implementation
 		end
 
 	ce_function_body_alias (a_class_name, ce_function_for_alias: STRING; 
-					need_generate_alias: BOOLEAN): STRING is
+					need_generate_alias, a_writable: BOOLEAN): STRING is
 			-- ce function body for aliases
 		require
 			non_void_class_name: a_class_name /= Void
@@ -599,7 +611,9 @@ feature {NONE} -- Implementation
 			Result.append (Eif_type_id_function_name)
 			Result.append (Space)
 			Result.append (Open_parenthesis)
+			Result.append (Double_quote)
 			Result.append (a_class_name)
+			Result.append (Double_quote)
 			Result.append (Close_parenthesis)
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
@@ -663,6 +677,10 @@ feature {NONE} -- Implementation
 			Result.append (Space)
 			Result.append (Open_parenthesis)
 			Result.append ("an_alias")
+			if a_writable then
+				Result.append (Comma_space)
+				Result.append (Null)
+			end
 			Result.append (Close_parenthesis)
 			Result.append (Close_parenthesis)
 			Result.append (Semicolon)

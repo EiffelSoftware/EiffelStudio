@@ -67,7 +67,10 @@ feature {NONE} -- Implementation
 					Result.append ("out")
 					Result.append (End_comment_paramflag)
 					if visitor.is_basic_type then
-						message_output.add_warning (Current, message_output.Not_pointer_type)
+						Result.append (visitor.cecil_type)
+						Result.append (Space)
+						Result.append (arguments.item.name)
+
 					elseif 
 						visitor.is_array_basic_type or 
 						visitor.is_interface_pointer or 

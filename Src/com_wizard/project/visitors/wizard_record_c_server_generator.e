@@ -28,8 +28,8 @@ feature -- Access
 	generate (a_descriptor: WIZARD_RECORD_DESCRIPTOR) is
 			-- Generate c server for record.
 		do
-			Precursor (a_descriptor)
 			if not standard_structures.has (a_descriptor.c_type_name) then
+				Precursor (a_descriptor)
 				Shared_file_name_factory.create_file_name (Current, c_writer)
 				c_writer.save_header_file (Shared_file_name_factory.last_created_header_file_name)
 			end

@@ -376,7 +376,7 @@ feature {NONE} -- Implementation
 				Result.append (Open_parenthesis)
 				Result.append (visitor.c_type)
 				Result.append (Close_parenthesis)
-				Result.append (Return_value_name)
+				Result.append (Tmp_variable_name)
 			else
 				if visitor.need_generate_ec then
 					Result.append (Generated_ec_mapper)
@@ -387,7 +387,7 @@ feature {NONE} -- Implementation
 				Result.append (visitor.ec_function_name)
 				Result.append (Space_open_parenthesis)
 
-				Result.append (Return_value_name)
+				Result.append (Tmp_variable_name)
 				if visitor.writable then
 					Result.append (Comma_space)
 					Result.append (Null)

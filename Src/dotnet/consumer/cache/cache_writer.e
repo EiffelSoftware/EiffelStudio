@@ -74,27 +74,29 @@ feature -- Basic Operations
 			l_names: NATIVE_ARRAY [ASSEMBLY_NAME]
 			l_info: CACHE_INFO
 			l_consumed_path: STRING
+			l_assembly_info_updated: BOOLEAN
+			l_lower_path: like a_path
 			l_retried: BOOLEAN
 			i: INTEGER
 		do
 			guard.lock
 			if not l_retried then
-				l_assembly := load_from_gac_or_path (a_path)
+				l_lower_path := a_path.as_lower
+				l_assembly := load_from_gac_or_path (l_lower_path)
 				
-
 					-- For assemblies that are in the GAC but are consumed
 					-- from a local path, when the version number changes that assembly
 					-- needs to be updated, regardless of the GAC path. Using ASSEMBLY.location
 					-- when an instance of ASSEMBLY is created my using feature{ASSEMLBY}.load
 					-- will alway return a different path if the version number changes. Whereas
 					-- feature{ASSEMLBY}.load_from/.location will always return the same path.
-				if cache_reader.is_assembly_in_cache (a_path, False) then
-					l_consumed_path := a_path
+				if cache_reader.is_assembly_in_cache (l_lower_path, False) then
+					l_consumed_path := l_lower_path
 				else
 					if cache_reader.is_assembly_in_cache (l_assembly.location, False) then
 						l_consumed_path := l_assembly.location
 					else
-						l_consumed_path := a_path	
+						l_consumed_path := l_lower_path	
 					end
 				end
 				
@@ -109,24 +111,38 @@ feature -- Basic Operations
 				create l_consumer.make (Current)
 				
 				l_ca := consumed_assembly_from_path (l_consumed_path)
-				if not l_ca.gac_path.is_equal (l_assembly.location) then
-						-- Assembly has been added or removed from GAC, so lets update it.
+				if l_ca /= Void then
+						-- The assembly information may require updating, so update what needs to be.
 					l_info := cache_reader.info
-					l_ca.set_gac_path (l_assembly.location)
-					l_ca.set_is_in_gac (l_assembly.global_assembly_cache)
-					l_info.update_assembly (l_ca)
-					update_info (l_info)
-					update_client_assembly_mappings (l_ca)
-				end
-				if cache_reader.is_assembly_in_cache (l_assembly.location, True) then
-					if not l_ca.location.is_equal (a_path.as_lower) and then l_ca.location.is_equal (l_ca.gac_path) then
-							-- update path information if a better path is found
-						l_ca.set_location (a_path)
-						l_info := cache_reader.info
+					
+					if l_assembly.global_assembly_cache then
+						if not l_ca.gac_path.is_equal (l_assembly.location) then
+							l_ca.set_gac_path (l_assembly.location)
+							l_ca.set_is_in_gac (True)
+							l_assembly_info_updated := True
+						end
+						if not l_ca.gac_path.is_equal (l_lower_path) and then not l_ca.location.is_equal (l_lower_path) then
+							l_ca.set_location (l_lower_path)
+							l_ca.set_is_in_gac (True)
+							l_assembly_info_updated := True
+						end
+					end
+					if not l_assembly.global_assembly_cache and then not l_ca.location.is_equal (l_assembly.location) then
+						l_ca.set_location (l_assembly.location)
+						l_ca.set_is_in_gac (False)
+						l_assembly_info_updated := True
+							-- Do not reset GAC path, because it really does not affect anything.
+							-- Plus it should be preserved for future look ups, just because a GAC assembly in no longer
+							-- present doesn't mean that we cannot still look at it's consumed metadata
+					end
+					
+					if l_assembly_info_updated then
 						l_info.update_assembly (l_ca)
 						update_info (l_info)
-						update_client_assembly_mappings (l_ca)
+						update_client_assembly_mappings (l_ca)	
 					end
+				end
+				if cache_reader.is_assembly_in_cache (l_assembly.location, True) then
 					if status_printer /= Void then
 						create l_string_tuple
 						l_string_tuple.put ("Up-to-date check: '" +	a_path +
@@ -134,9 +150,6 @@ feature -- Basic Operations
 						status_printer.call (l_string_tuple)
 					end
 				else
-					if not l_ca.has_same_path (a_path) then
-						l_ca.set_location (a_path)
-					end
 					l_assembly_folder := cache_reader.absolute_assembly_path_from_consumed_assembly (l_ca)
 					create l_dir.make (l_assembly_folder)
 					if not l_dir.exists then

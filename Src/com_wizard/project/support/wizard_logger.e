@@ -110,7 +110,9 @@ feature -- Basic operations
 			a_string.append (a_log_text)
 			a_string.append (New_line)
 			a_string.append (New_line)
-			log_file.put_string (a_string)
+			if log_file /= Void then
+				log_file.put_string (a_string)
+			end
 		end
 
 feature {NONE} -- Implementation

@@ -81,9 +81,7 @@ feature {NONE} -- Parse operations
 				if lines.count >= 2 then
 					formatted_prev_str := prune_redundant_whitespace (lines.i_th (lines.count - 1))
 					formatted_str := prune_redundant_whitespace (lines.last)
-					if (not formatted_str.is_empty and formatted_str.item (1) = '.') or 
-							(not formatted_str.is_empty and formatted_str.item (1) = '}') or 
-							(not formatted_prev_str.is_empty and formatted_prev_str.item (formatted_prev_str.count) = '.') then
+					if not formatted_str.is_empty and then formatted_str.item (1) = '.' or formatted_str.item (1) = '}' or formatted_prev_str.item (formatted_prev_str.count) = '.' then
 						parse_res.prepend (lines.last)
 						lines.finish
 						lines.remove
@@ -453,7 +451,7 @@ feature {NONE} -- Implementation
 
 			-- now check all matching pair of parenthsis.
 			-- If there aren't matches then retrieve the previous buffer line up
-			Result := not (is_in_quote or is_in_parenthesis or is_in_brases or is_in_tuple or is_in_array) and can_stop
+			Result := not (is_in_quote or is_in_parenthesis or is_in_brases or is_in_tuple or is_in_array) or can_stop
 		end
 
 	is_in_double_quote: BOOLEAN

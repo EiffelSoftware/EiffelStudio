@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'.
 			-- Fill with supported Widgets.
 		local
-			tree_item1, tree_item2, tree_item3, tree_item4: EV_TREE_ITEM
+			tree_item1, tree_item2, tree_item3: EV_TREE_ITEM
 				--	shared_pixmaps: GB_SHARED_PIXMAPS
 		do
 			Precursor {EV_TREE}
@@ -91,7 +91,6 @@ feature {NONE} -- Implementation
 		require
 			a_type_not_void: a_type /= Void
 		local
-			environment: EV_ENVIRONMENT
 			filename: FILE_NAME
 			extension: STRING
 		do

@@ -110,7 +110,11 @@ feature -- Status setting
 			ptr: ANY
 			file: PLAIN_TEXT_FILE
 			vd21: VD21
+			d1, d2: DATE_TIME
 		do
+			debug ("Timing")
+				create d1.make_now
+			end
 			if not full_degree_6_needed then
 				ptr := file_name.to_c
 				create file.make (file_name)
@@ -137,6 +141,12 @@ feature -- Status setting
 				end
 			else
 				force_recompile
+			end
+			debug ("Timing")
+				create d2.make_now
+				print ("Degree 6 duration: ")
+				print (d2.relative_duration (d1).fine_seconds_count)
+				print ("%N")
 			end
 		end
 

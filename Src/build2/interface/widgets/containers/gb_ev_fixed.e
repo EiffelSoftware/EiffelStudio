@@ -637,7 +637,7 @@ feature {NONE} -- Implementation
 			last_y := y
 				-- We only need to perform this operation if a widget representation
 				-- is selected for manipulation.
-			if selected_item_index > 0  then
+			if selected_item_index > 0  and not resizing_widget and not moving_widget then
 				widget := first.i_th (selected_item_index)
 				if close_to (x, y, widget.x_position + widget.width, widget.y_position + widget.height) or
 					close_to (x, y, widget.x_position, widget.y_position) then

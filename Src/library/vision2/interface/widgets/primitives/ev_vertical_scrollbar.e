@@ -5,10 +5,10 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class EV_VERTICAL_SCROLLBAR
+class
+	EV_VERTICAL_SCROLLBAR
 
 inherit
-
 	EV_SCROLLBAR
 
 end -- class EV_VERTICAL_SCROLLBAR

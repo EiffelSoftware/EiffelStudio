@@ -5,11 +5,11 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class EV_SCROLLBAR
+class
+	EV_SCROLLBAR
 
-inherit
-
-	EV_RANGE
+--inherit
+--	EV_RANGE
 
 end -- class EV_SCROLLBAR
 

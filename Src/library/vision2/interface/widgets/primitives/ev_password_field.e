@@ -1,16 +1,17 @@
 indexing 
-	description: "EiffelVision separator."
+	description: "EiffelVision widget. Most general notion of%
+				% widget (i.e. user interface object)."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	EV_SEPARATOR
+	EV_PASSWORD_FIELD
 
 --inherit
---	EV_PRIMITIVE
+--	EV_TEXT_FIELD
 
-end -- class EV_SEPARATOR
+end -- class EV_PASSWORD_FIELD
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

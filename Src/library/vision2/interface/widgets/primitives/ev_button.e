@@ -17,7 +17,7 @@ inherit
 		
 	EV_BAR_ITEM
 		redefine
-			make, implementation
+			implementation
 		end
 	
 	EV_TEXT_CONTAINER
@@ -36,7 +36,8 @@ inherit
 		end
 
 creation
-	make, make_with_text
+	make,
+	make_with_text
 	
 feature {NONE} -- Initialization
 	
@@ -58,8 +59,8 @@ feature {NONE} -- Initialization
 feature -- Event - command association
 	
 	add_click_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
-			-- Make 'cmd' the executed command when the button
-			-- is pressed.
+			-- Add 'cmd' to the list of commands to be executed
+			-- the button is pressed.
 		require
 			exists: not destroyed
 			valid_command: cmd /= Void

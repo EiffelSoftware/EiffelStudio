@@ -12,7 +12,8 @@ class
 inherit
 	EV_TOGGLE_BUTTON
 		redefine
-			make, make_with_text, 
+			make,
+			make_with_text, 
 			implementation
 		end
 

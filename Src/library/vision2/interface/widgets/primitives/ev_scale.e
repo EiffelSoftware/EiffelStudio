@@ -5,11 +5,11 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class EV_SCALE
+class
+	EV_SCALE
 
-inherit
-
-	EV_RANGE
+--inherit
+--	EV_RANGE
 
 end -- class EV_SCALE
 

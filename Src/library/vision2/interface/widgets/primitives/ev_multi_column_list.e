@@ -211,8 +211,8 @@ feature -- Element change
 feature -- Event : command association
 
 	add_selection_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is	
-			-- Make `cmd' the executed command when the selection
-			-- has changed.
+			-- Add `cmd' to the list of commands to be executed
+			-- when the selection has changed.
 		require
 			exists: not destroyed
 			valid_command: cmd /= Void
@@ -221,7 +221,8 @@ feature -- Event : command association
 		end
 
 	add_column_click_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
-			-- Make `cmd' the executed command when a column is clicked.
+			-- Add `cmd' to the list of commands to be executed
+			-- when a column is clicked.
 		require
 			exists: not destroyed
 			valid_command: cmd /= Void

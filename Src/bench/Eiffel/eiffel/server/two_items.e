@@ -16,7 +16,7 @@ feature -- Element change
 	swap is
 			-- Swap `first' and `second'.
 		local
-			temp: like Current
+			temp: T
 		do
 			temp := first
 			first := second

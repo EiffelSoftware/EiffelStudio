@@ -15,7 +15,11 @@
 #include "macros.h"
 
 #ifdef I_DIRENT
+#ifdef __WATCOMC__
+#include <direct.h>
+#else
 #include <dirent.h>
+#endif
 #define DIRENTRY struct dirent
 #else
 #ifdef I_SYS_DIR

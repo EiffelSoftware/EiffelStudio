@@ -15,7 +15,9 @@
 
 #include "config.h"
 #include <sys/types.h>
+#ifndef __WATCOMC__
 #include <sys/param.h>		/* For value of HZ */
+#endif
 
 #ifdef I_TIME
 # include <time.h>
@@ -28,7 +30,7 @@
 # include <sys/time.h>
 # undef KERNEL
 #endif
-#ifdef I_SYS_SELECT
+#ifdef I_TMVAL_SYS_SELECT
 #include <sys/select.h>
 #endif
 

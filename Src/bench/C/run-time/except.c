@@ -721,7 +721,7 @@ int code;
 {
 	/* Raises an Eiffel exception of the given code with no associated tag */
 
-	eraise((char *) 0, code);
+	eraise((char *) 0, (long) code);
 }
 
 public void eraise(tag, num)

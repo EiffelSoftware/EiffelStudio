@@ -22,13 +22,15 @@
 #include "update.h"
 #endif
 #include <stdio.h>
+#ifdef __WATCOMC__
+#include <stdlib.h>
+#include <fcntl.h>
+#endif
 #ifdef I_STRING
 #include <string.h>
 #else
 #include <strings.h>
 #endif
-
-#include "confmagic.h"
 
 #define null (char *) 0					/* Null pointer */
 
@@ -81,7 +83,14 @@ char **envp;
 	 * formatting purpose).
 	 */
 
+#ifdef __WATCOMC__
+		_fmode = O_BINARY;
+		_grow_handles (25);
+		ename = rindex(argv[0], '\\');		/* Only last name if '\' found */
+#else
 	ename = rindex(argv[0], '/');		/* Only last name if '/' found */
+#endif
+
 	if (ename++ == (char *) 0)			/* There was no '/' in the name */
 		ename = argv[0];				/* Program name is the filename */
 

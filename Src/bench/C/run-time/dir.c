@@ -63,7 +63,9 @@ DIR *dirp;
 public void dir_rewind(dirp)
 DIR *dirp;
 {
+#ifndef __WATCOMC__
 	rewinddir(dirp);
+#endif
 }
 
 /*
@@ -83,7 +85,11 @@ char *name;		/* Entry we are looking for */
 #ifdef DIRNAMLEN
 	int len = strlen(name);		/* Avoid unncessary calls to strcmp() */
 #endif
+#ifdef __WATCOMC__
+	DIR *dp;
+#else
 	DIRENTRY *dp;
+#endif
 
 	for (dp = readdir(dirp); dp != (DIRENTRY *) 0; dp = readdir(dirp))
 #ifdef DIRNAMLEN

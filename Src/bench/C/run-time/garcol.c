@@ -381,7 +381,9 @@ int i;					/* Index in g_stat array where statistics are kept */
 
 	if (gc_monitor) {
 		gettime(&realtime);					/* Get current time stamp */
+#ifndef __WATCOMC__
 		getcputime(&usertime, &systime);	/* Current CPU usage */
+#endif
 	}
 
 #ifdef MEMCHK
@@ -401,7 +403,9 @@ int i;					/* Index in g_stat array where statistics are kept */
 	 */
 
 	if (gc_monitor) {
+#ifndef __WATCOMC__
 		getcputime(&usertime2, &systime2);	/* Current CPU usage */
+#endif
 		gettime(&realtime2);				/* Get current time stamp */
 	}
 	
@@ -2853,9 +2857,9 @@ private void update_moved_set()
 				if (zone->ov_size & B_FWD) {		/* Object forwarded? */
 					zone = HEADER(zone->ov_fwd);	/* Look at fwd object */
 					if (zone->ov_flags & EO_NEW)	/* It's a new one */
-						epush(&new_stack, zone+1);	/* Update reference */
+						epush(&new_stack, (char *)(zone+1));	/* Update reference */
 				} else if (EO_MOVED == (zone->ov_flags & EO_MOVED))
-					epush(&new_stack, zone+1);	/* Remain as is */
+					epush(&new_stack, (char *)(zone+1));	/* Remain as is */
 			}
 		}
 	} else if (g_data.status & GC_FAST) {	/* Generation collection */
@@ -2872,7 +2876,7 @@ private void update_moved_set()
 				flags = zone->ov_flags;			/* Get Eiffel flags */
 				if (flags & EO_MARK) {			/* Object is alive? */
 					if (flags & EO_NEW) {				/* Not tenrured */
-						epush(&new_stack, zone+1);		/* Remains "as is" */
+						epush(&new_stack, (char *)(zone+1));		/* Remains "as is" */
 						zone->ov_flags &= ~EO_MARK;		/* Unmark object */
 					} else if (!(flags & EO_REM))		/* Not remembered */
 						zone->ov_flags &= ~EO_MARK;		/* Unmark object */
@@ -2892,7 +2896,7 @@ private void update_moved_set()
 			for (; i > 0; i--, obj++) {			/* Stack viewed as an array */
 				zone = HEADER(*obj);			/* Referenced object */
 				if (EO_MOVED == (zone->ov_flags & EO_MOVED))
-					epush(&new_stack, zone+1);	/* Remains "as is" */
+					epush(&new_stack,(char *)(zone+1));	/* Remains "as is" */
 			}
 		}
 	}

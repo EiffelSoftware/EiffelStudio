@@ -20,7 +20,7 @@ feature -- Initialization
 		require
 			a_text_valid: a_text /= Void
 			x_valid: x >= 0
-			y_valid: y >= 0
+			y_valid: y >= 1
 		do
 			whole_text := a_text
 			set_y_in_lines (y)

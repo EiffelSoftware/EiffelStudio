@@ -124,6 +124,9 @@ feature -- Access
 			end
 		end
 
+	select_table_descr: DB_TABLE_DESCRIPTION
+			-- Table description of select query to execute. Execute with `load_result_list'.
+
 feature -- Basic operations
 
 	load_result is
@@ -725,9 +728,6 @@ feature {NONE} -- Implementation
 			-- with database.
 
 feature {NONE} -- Implementation
-
-	select_table_descr: DB_TABLE_DESCRIPTION
-			-- Table description of select query to execute. Execute with `load_result_list'.
 
 	select_columns: STRING
 			-- Columns to select from a selection statement.

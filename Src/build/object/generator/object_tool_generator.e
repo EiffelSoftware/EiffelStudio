@@ -50,10 +50,10 @@ feature -- Creation
 			!! included_label.make ("Included queries", top_form)
 			!! included_list.make ("", top_form)
 			!! excluded_list.make ("", top_form)
---			!! default_label.make ("Default:", arrow_form)
---			!! select_radio_box.make ("", arrow_form)	
---			!! precondition_test.make("Test preconditions", select_radio_box)
---			!! no_precondition_test.make ("No preconditions test", select_radio_box)
+			!! default_label.make ("Default:", arrow_form)
+			!! select_radio_box.make ("", arrow_form)	
+			!! precondition_test.make("Test preconditions", select_radio_box)
+			!! no_precondition_test.make ("No preconditions test", select_radio_box)
 			!! scrolled_w.make ("", bottom_form)
 			!! separator.make ("", bottom_form)
 			!! properties_rc.make ("", scrolled_w)
@@ -69,28 +69,45 @@ feature -- Creation
 		local
 			set_colors: SET_WINDOW_ATTRIBUTES_COM
 			temp_title: STRING
+			a_color: COLOR
 		do
 			set_title ("Object tool generator: ")
 			set_size (resources.object_tool_generator_width, resources.object_tool_generator_height)
 			set_x_y (resources.object_tool_generator_x, resources.object_tool_generator_y)
-			split_window.set_proportion (20)
-			include_button.set_down
-			include_all_button.set_down
-			exclude_button.set_up
-			exclude_all_button.set_up
+			split_window.set_proportion (30)
 			included_list.set_multiple_selection
 			excluded_list.set_multiple_selection
---			precondition_test.arm
+			default_label.set_left_alignment
+			precondition_test.arm
 			scrolled_w.set_working_area (properties_rc)
 			!! set_colors
 			set_colors.execute (Current)
+			!! a_color.make
+			a_color.set_name ("white")
+			include_button.set_right
+			include_button.set_width (25)
+			include_button.set_foreground_color (a_color)
+			exclude_button.set_left
+			exclude_button.set_width (25)
+			exclude_button.set_foreground_color (a_color)
+			include_all_button.set_right
+			include_all_button.set_width (25)
+			exclude_all_button.set_left
+			exclude_all_button.set_width (25)
 		end
 
 	attach_all is
 			-- Perform attachments.
 		do
-			arrow_form.attach_top (include_button, 15)
-			arrow_form.attach_top (include_label, 18)
+			arrow_form.attach_top (default_label, 10)
+			arrow_form.attach_left (default_label, 3)
+			arrow_form.attach_right (default_label, 0)
+			arrow_form.attach_top_widget (default_label, select_radio_box, 0)
+			arrow_form.attach_left (select_radio_box, 0)
+			arrow_form.attach_right (select_radio_box, 0)
+
+			arrow_form.attach_top_widget (select_radio_box, include_button, 7)
+			arrow_form.attach_top_widget (select_radio_box, include_label, 10)
 			arrow_form.attach_left (include_button, 2)
 			arrow_form.attach_left_widget (include_button, include_label, 3)
 			arrow_form.attach_right (include_label, 2)
@@ -101,7 +118,7 @@ feature -- Creation
 			arrow_form.attach_left_widget (exclude_button, exclude_label, 3)
 			arrow_form.attach_right (exclude_label, 2)
 
-			arrow_form.attach_top_widget (exclude_button, include_all_button, 10)
+			arrow_form.attach_top_widget (exclude_button, include_all_button, 9)
 			arrow_form.attach_top_widget (exclude_label, include_all_label, 18)
 			arrow_form.attach_left (include_all_button, 2)
 			arrow_form.attach_left_widget (include_all_button, include_all_label, 3)
@@ -198,7 +215,7 @@ feature {NONE} -- GUI attributes
 	exclude_all_label: LABEL
 			-- Exclude all button label
 
---	default_label: LABEL
+	default_label: LABEL
 			-- default label	
 
 	include_button,
@@ -213,7 +230,7 @@ feature {NONE} -- GUI attributes
 	exclude_all_button: ARROW_B
 			-- Exclude all button
 
---	select_radio_box: RADIO_BOX
+	select_radio_box: RADIO_BOX
 			-- Radio box used to select the preconditions test by default
 
 	scrolled_w: SCROLLED_W
@@ -235,12 +252,12 @@ feature {NONE} -- GUI attributes
 	separator: THREE_D_SEPARATOR
 			-- Separators between the `scrolled_w' and the `generate_button' 
 
--- feature {QUERY_EDITOR_FORM}
+feature {QUERY_EDITOR_FORM}
 
---	no_precondition_test,
+	no_precondition_test,
 			-- No preconditions test by default field
 
---	precondition_test: TOGGLE_B
+	precondition_test: TOGGLE_B
 			-- Preconditions test by default field
 
 
@@ -431,7 +448,7 @@ feature -- Closeable
 			else
 				show
 			end
-			if previous_class = Void or else not edited_class.class_name.is_equal (previous_class.class_name) then
+			if previous_class = Void or else edited_class /= previous_class then
 				update_interface
 			end
 			mp.restore
@@ -448,7 +465,6 @@ feature {NONE} -- Implementation
 		local
 			query_list: LINKED_LIST [APPLICATION_QUERY]
 			temp_title: STRING
-			a_query: APPLICATION_QUERY
 		do
 			!! temp_title.make (0)
 			temp_title.append ("Object tool generator: ")
@@ -463,11 +479,7 @@ feature {NONE} -- Implementation
 			until
 				query_list.after
 			loop
-				a_query ?= query_list.item
-				if a_query /= Void then
-					add_query_editor_form (a_query)
-					included_list.extend (a_query)
-				end
+				excluded_list.extend (query_list.item)
 				query_list.forth
 			end
 		end

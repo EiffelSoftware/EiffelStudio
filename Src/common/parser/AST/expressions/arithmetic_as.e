@@ -1,4 +1,8 @@
--- Binary arithmetic operation
+indexing
+
+	description: "Binary arithmetic operation";
+	date: "$Date$";
+	revision: "$Revision$"
 
 deferred class ARITHMETIC_AS
 
@@ -7,7 +11,7 @@ inherit
 	BINARY_AS
 		redefine
 			balanced, balanced_result, operator_is_special,
-			operator_is_keyword
+			operator_is_keyword 
 		end
 
 feature
@@ -26,8 +30,8 @@ feature
 			Result := True;
 		end;
 
-	operator_is_special: BOOLEAN is true;
+	operator_is_special: BOOLEAN is True;
 
-	operator_is_keyword: BOOLEAN is false;
+	operator_is_keyword: BOOLEAN is False;
 
-end
+end -- class ARITHMETIC_AS

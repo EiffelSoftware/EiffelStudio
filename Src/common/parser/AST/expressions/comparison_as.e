@@ -1,4 +1,8 @@
--- Binary comparison operation
+indexing
+
+	description: "Binary comparison operation";
+	date: "$Date$";
+	revision: "$Revision$"
 
 deferred class COMPARISON_AS
 
@@ -22,4 +26,4 @@ feature
 	
 	operator_is_keyword: BOOLEAN is false;
 
-end
+end -- class COMPARISON_AS

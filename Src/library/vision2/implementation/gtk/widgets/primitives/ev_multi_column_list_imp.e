@@ -15,7 +15,6 @@ inherit
 			initialize,
 			item,
 			call_pebble_function,
-			update_child,
 			wipe_out,
 			append,
 			pixmaps_size_changed
@@ -75,6 +74,8 @@ feature {NONE} -- Initialization
 				feature {EV_GTK_EXTERNALS}.GTK_POLICY_AUTOMATIC_ENUM,
 				feature {EV_GTK_EXTERNALS}.GTK_POLICY_AUTOMATIC_ENUM
 			)
+			
+			update_children_agent := agent update_children
 			
 			create ev_children.make (0)
 
@@ -545,7 +546,7 @@ feature -- Status setting
 			)
 			if sel_item /= Void then
 				sel_item.enable_select
-				sel_item.select_actions.call ([])
+				sel_item.select_actions.call (Void)
 			end	
 			ignore_select_callback := False
 		
@@ -719,14 +720,8 @@ feature {EV_APPLICATION_IMP} -- Implementation
 
 feature -- Implementation
 
-	update_child (child: EV_MULTI_COLUMN_LIST_ROW_IMP; a_row: INTEGER) is
-		do
-			feature {EV_GTK_EXTERNALS}.gtk_clist_freeze (list_widget)
-			Precursor {EV_MULTI_COLUMN_LIST_I} (child, a_row)
-			feature {EV_GTK_EXTERNALS}.gtk_clist_thaw (list_widget)
-		end
-
 	set_to_drag_and_drop: BOOLEAN is
+			-- Set transport mode to drag and drop.
 		do
 			if pnd_row_imp /= Void then
 				Result := pnd_row_imp.mode_is_drag_and_drop
@@ -988,6 +983,8 @@ feature {NONE} -- Implementation
 			"columns"
 		end
 
+feature {EV_MULTI_COLUMN_LIST_ROW_IMP}
+
 	set_text_on_position (a_column, a_row: INTEGER; a_text: STRING) is
 			-- Set cell text at (a_column, a_row) to `a_text'.
 		local
@@ -995,10 +992,9 @@ feature {NONE} -- Implementation
 			pixmap_imp: EV_PIXMAP_IMP
 			a_cs: C_STRING
 		do
-			row_imp := ev_children.i_th (a_row)
 			create a_cs.make (a_text)
-			if row_imp.pixmap /= Void and a_column = 1 then
-				pixmap_imp ?= row_imp.pixmap.implementation
+			if  a_column = 1 and then ev_children.i_th (a_row).internal_pixmap /= Void then
+				pixmap_imp ?= ev_children.i_th (a_row).internal_pixmap.implementation
 				
 				feature {EV_GTK_EXTERNALS}.gtk_clist_set_pixtext (
 					list_widget,
@@ -1022,10 +1018,91 @@ feature {NONE} -- Implementation
 	set_row_pixmap (a_row: INTEGER; a_pixmap: EV_PIXMAP) is
 			-- Set row `a_row' pixmap to `a_pixmap'.
 		do
-			--| Do nothing, implementation not needed for GTK.
+			--| Do nothing, implementation not needed for GTK as it is done when the
 		end
 
 feature {NONE} -- Implementation
+
+	update_children is
+			-- Update all children with `update_needed' True.
+			--| We are on an idle action now. At least one item has marked
+			--| itself `update_needed'.
+		local
+			cur: CURSOR
+			new_column_count: INTEGER
+		do
+			cur := ev_children.cursor
+			from
+				ev_children.start
+			until
+				ev_children.after
+			loop
+				if ev_children.item.interface.count > column_count then
+					new_column_count := ev_children.item.interface.count
+				end
+				ev_children.forth
+			end
+
+			if new_column_count > column_count then
+				expand_column_count_to (new_column_count)
+			end
+
+			from
+				ev_children.start
+			until
+				ev_children.after
+			loop
+				if ev_children.item.update_needed then
+					update_child (ev_children.item, ev_children.index)
+				end
+				ev_children.forth
+			end
+			ev_children.go_to (cur)
+		end
+
+	update_child (child: EV_MULTI_COLUMN_LIST_ROW_IMP; a_row: INTEGER) is
+			-- Update `child'.
+		require
+			child_exists: child /= Void
+			child_dirty: child.update_needed
+			room_for_child: child.interface.count <= column_count
+		local
+			cur: CURSOR
+			txt: STRING
+			list: EV_MULTI_COLUMN_LIST_ROW
+			column_counter: INTEGER
+		do
+			list := child.interface
+			cur := list.cursor
+			from
+				column_counter := 1
+				list.start
+			until
+				column_counter > column_count
+			loop
+					-- Set the text in the cell
+				if list.after then
+					txt := ""
+				else
+					txt := list.item
+					if txt = Void then
+						txt := ""
+					end
+				end
+				set_text_on_position (column_counter, a_row, txt)
+					-- Pixmap gets updated when the text does.
+
+					-- Prepare next iteration
+				if not list.after then
+					list.forth
+				end
+				column_counter := column_counter + 1
+			end
+			list.go_to (cur)
+			child.update_performed
+		ensure
+			child_updated: not child.update_needed
+		end
 
 	selection_mode_is_single: BOOLEAN
 			-- Is selection mode set to SINGLE?
@@ -1109,8 +1186,9 @@ feature {NONE} -- Implementation
 			item_imp ?= v.implementation
 			item_imp.set_parent_imp (Current)
 
-			-- update the list of rows of the column list:
-			ev_children.force (item_imp)
+			-- update the list of rows of the column list:			
+			ev_children.go_i_th (i)
+			ev_children.put_left (item_imp)
 
 			if v.count > column_count then
 				create_list (v.count)
@@ -1137,10 +1215,6 @@ feature {NONE} -- Implementation
 					item_imp.index - 1,
 					i - 1
 				)
-				-- Reinsert `v' in to ev_children list at position `i'.
-				ev_children.prune_all (item_imp)
-				ev_children.go_i_th (i)
-				ev_children.put_left (item_imp)
 			end
 		end
 
@@ -1213,6 +1287,9 @@ feature {EV_ANY_I} -- Implementation
 	list_widget: POINTER
 
 	interface: EV_MULTI_COLUMN_LIST
+	
+	update_children_agent: PROCEDURE [EV_MULTI_COLUMN_LIST_I, TUPLE]
+			-- Agent object for update_children
 
 end -- class EV_MULTI_COLUMN_LIST_IMP
 

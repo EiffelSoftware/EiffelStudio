@@ -10,7 +10,8 @@ class
 inherit
 	WEL_EDIT
 		redefine
-			scroll
+			scroll,
+			set_selection
 		end
 
 	WEL_ES_CONSTANTS
@@ -23,6 +24,19 @@ creation
 	make_by_id
 
 feature -- Basic operations
+
+	set_selection (start_position, end_position: INTEGER) is
+			-- Set the selection between `start_position'
+			-- and `end_position'.
+			-- If `scroll_caret_at_selection' is True, the
+			-- caret will be scrolled to `start_position'.
+		do
+			cwel_set_selection_edit (item, start_position,
+				end_position, scroll_caret_at_selection)
+			if scroll_caret_at_selection then
+				cwel_scroll_caret (item)
+			end
+		end
 
 	scroll (horizontal, vertical: INTEGER) is
 			-- Scroll the text vertically and horizontally.
@@ -75,6 +89,32 @@ feature -- Status setting
 			exists: exists
 		do
 			cwin_send_message (item, Em_settabstops, 0, 0)
+		end
+
+	enable_scroll_caret_at_selection is
+			-- Set `scroll_caret_at_selection' to True.
+			-- The caret will be scrolled at the selection after
+			-- a call to `set_selection'.
+		require
+			exists: exists
+		do
+			scroll_caret_at_selection := True
+		ensure
+			scroll_caret_at_selection_enabled:
+				scroll_caret_at_selection
+		end
+
+	disable_scroll_caret_at_selection is
+			-- Set `scroll_caret_at_selection' to False.
+			-- The caret will not be scrolled at the selection
+			-- after a call to `set_selection'.
+		require
+			exists: exists
+		do
+			scroll_caret_at_selection := False
+		ensure
+			scroll_caret_at_selection_disabled: not
+				scroll_caret_at_selection
 		end
 
 feature -- Status report
@@ -186,6 +226,10 @@ feature -- Status report
 			positive_result: Result >= 0
 		end
 
+	scroll_caret_at_selection: BOOLEAN
+			-- Will the caret be scrolled at the selection after
+			-- a call to `set_selection'?
+
 feature {NONE} -- Implementation
 
 	default_style: INTEGER is
@@ -195,6 +239,13 @@ feature {NONE} -- Implementation
 				Ws_tabstop + Ws_border + Es_left +
 				Es_autohscroll + Es_autovscroll +
 				Ws_vscroll + Ws_hscroll + Es_multiline
+		end
+
+feature {NONE} -- Externals
+
+	cwel_scroll_caret (hwnd: POINTER) is
+		external
+			"C [macro <wel.h>]"
 		end
 
 end -- class WEL_MULTIPLE_LINE_EDIT

@@ -27,11 +27,19 @@ inherit
 
 	EV_GTK_ITEMS_EXTERNALS
 
+feature -- Access
+ 
+ 	ev_children: ARRAYED_LIST [EV_MENU_ITEM_IMP]
+ 			-- List of the children.
+
 feature -- Element change
 
 	clear_items is
 			-- Clear all the items of the list.
 		do
+			check
+				To_be_implemented: False
+			end
 		end
 
 feature -- Basic operations
@@ -39,6 +47,9 @@ feature -- Basic operations
 	find_item_by_data (data: ANY): EV_ITEM is
 			-- Find a child with data equal to `data'.
 		do
+			check
+				To_be_implemented: False
+			end
 		end
 
 feature -- Deferred features

@@ -18,6 +18,11 @@ inherit
 
 	EV_GTK_ITEMS_EXTERNALS
 
+feature -- Access
+ 
+ 	ev_children: ARRAYED_LIST [EV_MENU_ITEM_IMP]
+ 			-- List of the children.
+
 feature -- Element change	
 	
 	add_menu (menu_imp: EV_MENU_IMP) is

@@ -109,6 +109,7 @@ feature {NONE} -- Initalization
 		do
 			Precursor
 			set_checked
+			text_alignment := Text_alignment_left
 		end			
 
 feature -- Status setting

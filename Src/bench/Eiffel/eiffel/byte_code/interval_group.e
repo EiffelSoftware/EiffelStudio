@@ -200,8 +200,8 @@ feature -- Element change
 
 feature -- IL code generation
 
-	generate_il (min, max: like lower; is_min_included, is_max_included: BOOLEAN; labels: ARRAY [IL_LABEL]) is
-			-- Generate code for group assuming that inspect value is in range `min'..`max'
+	generate_il (min, max: like lower; is_min_included, is_max_included: BOOLEAN; labels: ARRAY [IL_LABEL]; instruction: INSPECT_B) is
+			-- Generate code for group of intervals in `instruction' assuming that inspect value is in range `min'..`max'
 			-- where bounds are included in interval according to values of `is_min_included' and `is_max_included'.
 			-- Use `labels' to branch to the corresponding code.
 		local
@@ -213,13 +213,14 @@ feature -- IL code generation
 			generate_default_label: PROCEDURE [ANY, TUPLE]
 			case_index: INTEGER
 			case_label: IL_LABEL
+			cases: LINKED_LIST [INTEGER]
 		do
 					-- Generate switch instruction for all intervals and gaps in group
 			from
 				i := lower
 				is_included := is_lower_included
 				interval := lower_interval
-				il_generator.duplicate_top
+				instruction.generate_il_load_value
 				i.generate_il_subtract (is_included)
 				switch_count := i.distance (upper).truncated_to_integer - 1
 				if is_included then
@@ -230,6 +231,7 @@ feature -- IL code generation
 				end
 				il_generator.put_switch_start (switch_count)
 				generate_default_label := agent il_generator.put_switch_label (labels.item (0))
+				create cases.make
 			until
 				interval = Void
 			loop
@@ -240,6 +242,7 @@ feature -- IL code generation
 				if case_label = Void then
 					case_label := il_label_factory.new_label
 					labels.put (case_label, case_index)
+					cases.extend (case_index)
 				end
 				interval_b.lower.do_all (true, interval.item.upper, true, agent il_generator.put_switch_label (case_label))
 				if interval = upper_interval then
@@ -262,19 +265,27 @@ feature -- IL code generation
 					-- There are cases for Else_part
 				il_generator.branch_to (labels.item (0))
 			end
+				-- Generate code for referenced When_part's
+			from
+				cases.start
+			until
+				cases.after
+			loop
+				instruction.generate_il_when_part (cases.item, labels)
+				cases.forth
+			end
 		end
 
 feature {NONE} -- Status report
 
-	density: DOUBLE is 0.5
+	density: DOUBLE is 0.25
 			-- Minimum number of distinct elements (intervals and gaps) per their range of values
 			-- Smaller values result in more table-driven (potentially faster, but longer) code: 0 means only tables are used
 			-- Higher values result in more decision-tree (potentially shorter, but slower) code: 1 means only conditional instructions are used
+			-- If calculated density is higher than some value (0.5 for average IL code), switch instruction is shorter,
+			-- so it does not make sense to set `density' above this value, switch instruction is better both in speed and memory in this case
+			-- and 1/2 of this value will only double the table size
 	
-	minimum_density_count: INTEGER is 3
-			-- Minimum number of different consecutive items in group
-			-- for which switch statement is generated
-
 feature {NONE} -- Element change
 
 	extend (lb, ub: like lower; is_lb_included, is_ub_included: like is_lower_included; li, ui: like lower_interval; c: like count) is

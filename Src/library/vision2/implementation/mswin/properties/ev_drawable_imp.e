@@ -326,6 +326,34 @@ feature -- Drawing operations
 			dc.draw_text (a_text, create {WEL_RECT}.make (x, y, 10, 10), Dt_expandtabs | dt_noclip | Dt_noprefix)
 			release_dc
 		end
+		
+	draw_ellipsed_text (x, y: INTEGER; a_text: STRING; clipping_width: INTEGER) is
+			-- Draw `a_text' with left of baseline at (`x', `y') using `font'.
+			-- Text is clipped to `clipping_width' in pixels and ellipses are displayed
+			-- to show truncated characters if any.
+		do
+			draw_ellipsed_text_top_left (x, y - internal_font.ascent, a_text, clipping_width)
+		end
+
+	draw_ellipsed_text_top_left (x, y: INTEGER; a_text: STRING; clipping_width: INTEGER) is
+			-- Draw `a_text' with top left corner at (`x', `y') using `font'.
+			-- Text is clipped to `clipping_width' in pixels and ellipses are displayed
+			-- to show truncated characters if any.
+		do
+			get_dc
+			if not internal_initialized_text_color then
+				dc.set_text_color (wel_fg_color)
+				internal_initialized_text_color := True
+			end
+
+			if not internal_initialized_font then
+				dc.select_font (wel_font)
+				internal_initialized_font := True
+			end
+				-- Note that the size of the rectange does not matter as we use the `dt_noclip' flag.
+			dc.draw_text (a_text, create {WEL_RECT}.make (x, y, x + clipping_width, 10), Dt_word_ellipsis | Dt_noprefix | dt_noclip)
+			release_dc	
+		end
 
 	draw_segment (x1, y1, x2, y2: INTEGER) is
 			-- Draw line segment from (`x1', 'y1') to (`x2', 'y2').

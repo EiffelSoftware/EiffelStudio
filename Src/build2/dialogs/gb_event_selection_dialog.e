@@ -33,6 +33,11 @@ inherit
 		undefine
 			default_create, copy
 		end
+		
+	GB_SHARED_OBJECT_HANDLER
+		undefine
+			copy, default_create
+		end
 
 
 create
@@ -83,6 +88,12 @@ feature {NONE} -- Initialization
 				end
 				action_sequences_list.forth
 			end
+
+				-- We now wipe out the events for the object. When we check for valid
+				-- names, we will not check the current names. The events must be
+				-- wiped out when the window is closed anyway to be re-filled with
+				-- the current info from `Current'.
+			object.events.wipe_out
 			
 				-- Now add a cell which will expand.
 			create cell
@@ -215,6 +226,8 @@ feature {NONE} -- Implementation
 				
 					-- Connect an event to `check_button'.
 				check_button.select_actions.extend (agent check_button_selected (building_counter))
+					-- Connect event to `text_field'.
+				text_field.change_actions.force_extend (agent validate_name_change (building_counter))
 				
 					-- Store information locally, for easy updating
 					-- without having to perform interations and
@@ -229,6 +242,20 @@ feature {NONE} -- Implementation
 				counter := counter + 1
 			end
 		end
+		
+	validate_name_change (index: INTEGER) is
+			--
+		local
+			current_text_field: EV_TEXT_FIELD
+		do
+			current_text_field := all_text_fields @ index
+			if object_handler.name_in_use (current_text_field.text, Void) then
+				current_text_field.set_foreground_color ((create {EV_STOCK_COLORS}).red)
+			else
+				current_text_field.set_foreground_color ((create {EV_STOCK_COLORS}).black)
+			end
+		end
+		
 		
 	feature_name_of_object_event (info: GB_ACTION_SEQUENCE_INFO): STRING is
 			-- Does `object' have an event matching `info'. If so, then
@@ -346,9 +373,6 @@ feature {NONE} -- Implementation
 			
 
 			if not invalid_state then
-					-- We must now save the information into `object'.
-					-- First wipe out the old information from `object',
-				object.events.wipe_out
 				
 					-- Then insert the new info.
 				from

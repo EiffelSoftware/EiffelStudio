@@ -10,7 +10,8 @@ inherit
 
 	BOOL_TYPE_AS
 		undefine
-			is_deep_equal, same_as
+			is_deep_equal, same_as, associated_eiffel_class,
+			append_to
 		end;
 
 	BASIC_TYPE_B

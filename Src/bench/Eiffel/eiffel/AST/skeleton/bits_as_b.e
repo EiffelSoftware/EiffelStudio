@@ -4,7 +4,8 @@ inherit
 
 	BITS_AS
 		undefine
-			is_deep_equal, same_as
+			is_deep_equal, same_as, associated_eiffel_class,
+			append_to
 		redefine
 			bits_value
 		end;
@@ -13,7 +14,7 @@ inherit
 		undefine
 			set
 		redefine
-			set, append_clickable_signature
+			set
 		end
 
 feature -- Attributes
@@ -46,12 +47,6 @@ feature
 		do
 			!!Result;
 			Result.set_base_type (bits_value.value);
-		end;
-
-	append_clickable_signature (a_clickable: CLICK_WINDOW) is
-		do
-			a_clickable.put_string ("BIT ");
-			a_clickable.put_int (bits_value.value);
 		end;
 
 end -- class BITS_AS_B

@@ -12,7 +12,7 @@ inherit
 
 	FORMAL_DEC_AS
 		undefine
-			same_as
+			same_as, associated_eiffel_class
 		redefine
 			formal_name, constraint, is_deep_equal
 		end;

@@ -38,11 +38,6 @@ feature
 		deferred
 		end;
 
-	append_clickable_signature (a_clickable: CLICK_WINDOW) is
-		do
-			a_clickable.put_string (dump)
-		end;
-
 	same_as (other: TYPE_B): BOOLEAN is
 			-- Is `other' the same as Current ?
 			--|Note: implemented only for descendants of TYPE_A

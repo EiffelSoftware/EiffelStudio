@@ -30,6 +30,7 @@ inherit
 			on_key_up,
 			on_set_focus,
 			on_kill_focus,
+			on_set_cursor,
 			on_draw_item,
 			background_brush,
 			on_menu_command,

@@ -21,9 +21,21 @@ feature -- Access
 	public RuntimeTypeHandle type;
 		// Current associated System.Type.
 
+	public Type dotnet_type ()
+		// Associated .NET type of `type'.
+	{
+		return Type.GetTypeFromHandle (type);
+	}
+
 /*
 feature -- Status Report
 */
+	public override int GetHashCode()
+		// Associated hash_code
+	{
+		return (int) type.Value;
+	}
+
 	public override String class_name ()
 		// Name of object's generating type who has Current as an EIFFEL_DERIVATION
 		// (type of which it is a direct instance)
@@ -63,6 +75,17 @@ feature -- Status Report
 		return class_name ();
 	}
 
+/*
+feature -- Comparison
+*/
+
+	public override bool Equals (object other)
+		// Is Current equal to `other'?
+	{
+		RT_CLASS_TYPE l_other = other as RT_CLASS_TYPE;
+
+		return (l_other != null && (type.Value == l_other.type.Value));
+	}
 /*
 feature -- Setting
 */

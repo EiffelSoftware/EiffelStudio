@@ -8,7 +8,6 @@ indexing
 class EIFFEL_LIST [T->AST_EIFFEL]
 
 inherit
-
 	AST_EIFFEL
 		rename
 			position as text_position
@@ -29,7 +28,6 @@ inherit
 		end;
 
 creation {ARRAY_AS, PARENT_AS, UN_STRIP_AS, YACC_EIFFEL, COMPILER_EXPORTER}
-
 	make
 
 feature {NONE} -- Initialization

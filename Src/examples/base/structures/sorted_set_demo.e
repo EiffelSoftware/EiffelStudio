@@ -131,7 +131,7 @@ feature -- Routines
 			elseif new_command = empty then
 				set1 := get_set
 				if set1 /= Void then
-					driver.putbool (set1.empty)
+					driver.putbool (set1.is_empty)
 				end
 			elseif new_command = item_count then
 				set1 := get_set
@@ -141,7 +141,7 @@ feature -- Routines
 			elseif new_command = minmax then
 				set1 := get_set
 				if set1 /= Void then
-					if set1.empty then
+					if set1.is_empty then
 						driver.signal_error ("Cannot execute: set empty")
 					else
 						driver.putint (set1.min.item)
@@ -229,8 +229,6 @@ feature -- Routines
 		end
 
 	get_el: INTEGER is
-		local
-			v: INTEGER
 		do
 			Result := driver.get_integer ("element")
 		end

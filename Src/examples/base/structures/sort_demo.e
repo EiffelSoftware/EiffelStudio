@@ -81,7 +81,7 @@ feature
 	execute (new_command: INTEGER) is
 			-- Execute operation corresponding to the user's command.
 		local
-			comp, occ : INTEGER
+			comp: INTEGER
 		do
 			if new_command = put then
 				l.extend (get_comparable)
@@ -162,7 +162,7 @@ feature
 				l.forth
 			end 
 			l.go_to (c)
-			if l.after and not l.empty then
+			if l.after and not l.is_empty then
 				driver.putstring ("[]")
 				driver.new_line
 			else

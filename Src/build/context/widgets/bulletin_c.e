@@ -27,7 +27,7 @@ feature
 			set_size (40, 40)
 		end
 
-	widget: EB_BULLETIN
+	widget: EB_BULLETIN_EXT
 
 feature {NONE}
 

@@ -285,104 +285,183 @@ feature -- Resizing
 
 feature -- Event - command association
 	
-	add_button_press_command (mouse_button: INTEGER; 
-				  command: EV_COMMAND; 
-				  arguments: EV_ARGUMENTS) is
+	add_button_press_command (mouse_button: INTEGER; cmd: EV_COMMAND; 
+			arg: EV_ARGUMENT) is
 		local
 			ev_data: EV_EVENT_DATA
 		do
 			!EV_BUTTON_EVENT_DATA!ev_data.make
-			add_command_with_event_data ("button_press_event", command, arguments, ev_data, mouse_button, False)
+			add_command_with_event_data ("button_press_event", cmd, arg, ev_data, mouse_button, False)
 		end
 	
-	
-	add_button_release_command (mouse_button: INTEGER; 
-				    command: EV_COMMAND; 
-				    arguments: EV_ARGUMENTS) is
+	add_button_release_command (mouse_button: INTEGER; cmd: EV_COMMAND; 
+				    arg: EV_ARGUMENT) is
 		local
 			ev_data: EV_EVENT_DATA
 		do
 			!EV_BUTTON_EVENT_DATA!ev_data.make
-			add_command_with_event_data ("button_release_event", command, arguments, ev_data, mouse_button, False)
+			add_command_with_event_data ("button_release_event", cmd, arg, ev_data, mouse_button, False)
 		end
 	
-	add_double_click_command (mouse_button: INTEGER; 
-				  command: EV_COMMAND; 
-				  arguments: EV_ARGUMENTS) is
+	add_double_click_command (mouse_button: INTEGER; cmd: EV_COMMAND; 
+				  arg: EV_ARGUMENT) is
 		local
 			ev_data: EV_EVENT_DATA
 		do
 			!EV_BUTTON_EVENT_DATA!ev_data.make
-			add_command_with_event_data ("button_press_event", command, arguments, ev_data, mouse_button, True)
+			add_command_with_event_data ("button_press_event", cmd, arg, ev_data, mouse_button, True)
 		end		
 	
-	add_motion_notify_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+	add_motion_notify_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 		local
 			ev_data: EV_EVENT_DATA
 		do
 			!EV_MOTION_EVENT_DATA!ev_data.make
-			add_command_with_event_data ("motion_notify_event", command, arguments, ev_data, 0, False)
+			add_command_with_event_data ("motion_notify_event", cmd, arg, ev_data, 0, False)
 		end
 	
-	add_destroy_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+	add_destroy_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 		do
-			add_command ("destroy", command, arguments)
+			add_command ("destroy", cmd, arg)
 		end
 	
-	add_expose_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+	add_expose_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 		local
 			ev_data: EV_EVENT_DATA
 		do
 			!EV_EXPOSE_EVENT_DATA!ev_data.make
-			add_command_with_event_data ("expose_event", command, arguments, ev_data, 0, False)
+			add_command_with_event_data ("expose_event", cmd, arg, ev_data, 0, False)
 		end
 	
-	add_key_press_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+	add_key_press_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 		local
 			ev_data: EV_EVENT_DATA
 		do
 			!EV_KEY_EVENT_DATA!ev_data.make
-			add_command_with_event_data ("key_press_event", command, arguments, ev_data, 0, False)
+			add_command_with_event_data ("key_press_event", cmd, arg, ev_data, 0, False)
 		end
 			
-	add_key_release_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+	add_key_release_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 		local
 			ev_data: EV_EVENT_DATA
 		do
 			!EV_KEY_EVENT_DATA!ev_data.make
-			add_command_with_event_data ("key_release_event", command, arguments, ev_data, 0, False)
+			add_command_with_event_data ("key_release_event", cmd, arg, ev_data, 0, False)
 		end	
 	
-	add_enter_notify_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+	add_enter_notify_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 		local
 			ev_data: EV_EVENT_DATA		
 		do
 			!EV_EVENT_DATA!ev_data.make-- temporary, craeta a correct object here XX
-			add_command_with_event_data ("enter_notify_event", command, arguments, ev_data, 0, False)
+			add_command_with_event_data ("enter_notify_event", cmd, arg, ev_data, 0, False)
 		end
 	
-	add_leave_notify_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+	add_leave_notify_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 		local
 			ev_data: EV_EVENT_DATA		
 		do
 			!EV_EVENT_DATA!ev_data.make  -- temporary, craeta a correct object here XX
-			add_command_with_event_data ("leave_notify_event", command, arguments, ev_data, 0, False)
+			add_command_with_event_data ("leave_notify_event", cmd, arg, ev_data, 0, False)
 		end
 
-	remove_command (command_id: INTEGER) is
-			-- Remove the command associated with
-			-- 'command_id' from the list of actions for
-			-- this context. If there is no command
-			-- associated with 'command_id', nothing
-			-- happens.
-		do		
-			gtk_signal_disconnect (widget, command_id)
+	add_get_focus_command  (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed
+			-- when the widget get the focus.
+		local
+			ev_data: EV_EVENT_DATA		
+		do
+			!EV_EVENT_DATA!ev_data.make  -- temporary, craeta a correct object here XX
+			add_command_with_event_data ("focus_in_event", cmd, arg, ev_data, 0, False)
 		end
-	
-	last_command_id: INTEGER
-			-- Id of the last command added by feature
-			-- 'add_command' or 'add_command_with_event_data'
-	
+
+	add_loose_focus_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed
+			-- when the widget loose the focus.
+		local
+			ev_data: EV_EVENT_DATA		
+		do
+			!EV_EVENT_DATA!ev_data.make  -- temporary, craeta a correct object here XX
+			add_command_with_event_data ("focus_out_event", cmd, arg, ev_data, 0, False)
+		end
+
+feature -- Event -- removing command association
+
+	remove_button_press_commands (mouse_button: INTEGER) is
+			-- Empty the list of commands to be executed when
+			-- button number 'mouse_button' is pressed.
+		do
+		end
+
+	remove_button_release_commands (mouse_button: INTEGER) is
+			-- Empty the list of commands to be executed when
+			-- button number 'mouse_button' is released.
+		do
+		end
+
+	remove_double_click_commands (mouse_button: INTEGER) is
+			-- Empty the list of commands to be executed when
+			-- button number 'mouse_button' is double clicked.
+		do
+		end
+
+	remove_motion_notify_commands is
+			-- Empty the list of commands to be executed when
+			-- the mouse move.
+		do
+		end
+
+	remove_destroy_commands is
+			-- Empty the list of commands to be executed when
+			-- the widget is destroyed.
+		do
+		end
+
+	remove_expose_commands is
+			-- Empty the list of commands to be executed when
+			-- the widget has to be redrawn because it was exposed from
+			-- behind another widget.
+		do
+		end
+
+	remove_key_press_commands is
+			-- Empty the list of commands to be executed when
+			-- a key is pressed on the keyboard while the widget has the
+			-- focus.
+		do
+		end
+
+	remove_key_release_commands is
+			-- Empty the list of commands to be executed when
+			-- a key is released on the keyboard while the widget has the
+			-- focus.
+		do
+		end
+
+	remove_enter_notify_commands is
+			-- Empty the list of commands to be executed when
+			-- the cursor of the mouse enter the widget.
+		do
+		end
+
+	remove_leave_notify_commands is
+			-- Empty the list of commands to be executed when
+			-- the cursor of the mouse leave the widget.
+		do
+		end
+
+	remove_get_focus_commands is
+			-- Empty the list of commands to be executed when
+			-- the widget get the focus.
+		do
+		end
+
+	remove_loose_focus_commands is
+			-- Empty the list of commands to be executed when
+			-- the widget loose the focus.
+		do
+		end
+
 feature -- Postconditions
 	
 	dimensions_set (new_width, new_height: INTEGER): BOOLEAN is
@@ -418,22 +497,22 @@ feature -- Postconditions
 
 feature {NONE} -- Implementation
 
-	add_command_with_event_data (event: STRING; command: EV_COMMAND; 
-		     arguments: EV_ARGUMENTS; ev_data: EV_EVENT_DATA;
+	add_command_with_event_data (event: STRING; cmd: EV_COMMAND; 
+		     arg: EV_ARGUMENT; ev_data: EV_EVENT_DATA;
 		     mouse_button: INTEGER; double_click: BOOLEAN) is
-			-- Add `command' at the end of the list of
+			-- Add `cmd' at the end of the list of
 			-- actions to be executed when the 'event'
-			-- happens `arguments' will be passed to
-			-- `command' whenever it is invoked as a
-			-- callback. 'arguments' can be Void, which
+			-- happens `arg' will be passed to
+			-- `cmd' whenever it is invoked as a
+			-- callback. 'arg' can be Void, which
 			-- means that no arguments are passed to the
-			-- command. 'ev_data' is an empty object 
+			-- cmd. 'ev_data' is an empty object 
 			-- which will be filled by gtk (in C library) 
 			-- when the event happens.
 		
 		require		
 			valid_event: event /= Void
-			valid_command: command /= Void
+			valid_command: cmd /= Void
 		local
 			ev_str: ANY
 			ev_d_imp: EV_EVENT_DATA_IMP
@@ -447,9 +526,9 @@ feature {NONE} -- Implementation
 			con_id := c_gtk_signal_connect (
 				widget,
 				$ev_str,
-				command.execute_address,
-				$command,
-				$arguments,
+				cmd.execute_address,
+				$cmd,
+				$arg,
 				$ev_data,
 				$ev_d_imp,
 				ev_d_imp.initialize_address,
@@ -459,22 +538,22 @@ feature {NONE} -- Implementation
 			check
 				successfull_connect: con_id > 0
 			end
-			last_command_id := con_id
+--			last_command_id := con_id
 		end
         
-	add_command (event: STRING; command: EV_COMMAND; 
-		     arguments: EV_ARGUMENTS) is
-			-- Add `command' at the end of the list of
+	add_command (event: STRING; cmd: EV_COMMAND; 
+		     arg: EV_ARGUMENT) is
+			-- Add `cmd' at the end of the list of
 			-- actions to be executed when the 'event'
-			-- happens `arguments' will be passed to
-			-- `command' whenever it is invoked as a
-			-- callback. 'arguments' can be Void, which
+			-- happens `arg' will be passed to
+			-- `cmd' whenever it is invoked as a
+			-- callback. 'arg' can be Void, which
 			-- means that no arguments are passed to the
 			-- command. 
 			
 		require		
 			valid_event: event /= Void
-			valid_command: command /= Void
+			valid_command: cmd /= Void
 		local
 			ev_str: ANY
 			con_id: INTEGER
@@ -483,9 +562,9 @@ feature {NONE} -- Implementation
 			con_id := c_gtk_signal_connect (
 				widget,
 				$ev_str,
-				command.execute_address,
-				$command,
-				$arguments,
+				cmd.execute_address,
+				$cmd,
+				$arg,
 				Default_pointer,
 				Default_pointer,
 				Default_pointer,
@@ -495,8 +574,19 @@ feature {NONE} -- Implementation
 			check
 				successfull_connect: con_id > 0		
 			end
-			last_command_id := con_id
+--			last_command_id := con_id
 		end
+
+	remove_command (command_id: INTEGER) is
+			-- Remove the command associated with
+			-- 'command_id' from the list of actions for
+			-- this context. If there is no command
+			-- associated with 'command_id', nothing
+			-- happens.
+		do		
+			gtk_signal_disconnect (widget, command_id)
+		end
+
 
 feature {EV_WIDGET_IMP} -- Implementation
 	

@@ -60,7 +60,7 @@
 #define ST_MODE		0x0fff		/* Keep only permission mode */
 #define NAME_MAX	10			/* Maximum length for user/group name */
 
-private char *file_open_mode();		/* Open file */
+public char *file_open_mode();		/* Open file */
 private char *file_fopen();		/* Open file */
 private char *file_fdopen();	/* Open file descriptor (UNIX specific) */
 private char *file_freopen();	/* Reopen file */

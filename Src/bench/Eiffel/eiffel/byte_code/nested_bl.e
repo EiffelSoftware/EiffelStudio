@@ -250,6 +250,18 @@ end;
 						-- of the expression, which we cannot do--RAM. This
 						-- of course applies only when the current call is a
 						-- polymorphic one...
+				and then
+					-- This test leads to an optimization for t.f (ref).
+					-- The generated_code was E_f (E_t (l[0]), ref)
+					-- Possible problems for the GC depending on the order
+					-- of evaluation of the parameters of a C function
+					-- The C standard doesn't specify anything
+					-- Problem discovered during the DOS port.
+					-- The optimization can still be done for calls like t.f:
+					-- E_f (E_t (l[0])) is valid and does not need a register
+					-- Xavier
+
+					message.target.parameters = Void
 				and then not
 					(target.is_attribute
 					or

@@ -208,7 +208,6 @@ feature
 			file: UNIX_FILE;
 			class_file_name: STRING;
 			vd21: VD21;
-			gc_on: BOOLEAN;
 		do
 			!!file.make (file_name);
 				-- Check if the file to parse is readable
@@ -237,20 +236,15 @@ feature
 
 				-- Call Yacc
 			class_file_name := file_name;
-			gc_on := collecting;
 			collection_off;
 			Result := c_parse (file.file_pointer, $class_file_name);
-			if gc_on then
-				collection_on;
-			end;
+			collection_on;
 			file.close;
 			Error_handler.checksum;
 		rescue
 			if Rescue_status.is_error_exception then
 					-- Error happened
-				if gc_on then
-					collection_on;
-				end;
+				collection_on;
 				if not (file = Void or else file.is_closed) then
 					file.close;
 				end;

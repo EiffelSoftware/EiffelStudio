@@ -157,10 +157,10 @@
 			</code> is correct.  In contrast, dynamically typed object-oriented languages defer checks until run-time and hope for the best: if an object "sends a message" to another (that is to say, calls one of its routines) one just expects that the corresponding class, or one of its ancestors, will happen to include an appropriate routine; if not, a run-time error will occur.  Such errors will not happen during the execution of a type-checked Eiffel system.
 		</paragraph>
 		<paragraph>In other words, the language reconciles dynamic 
-			<span>binding</span> with static 
-			<span>typing</span>.  Dynamic binding guarantees that whenever more than one version of a routine is applicable the 
-			<span>right</span> version (the one most directly adapted to the target object) will be selected.  Static typing means that the compiler makes sure there is 
-			<span>at least one</span> such version.
+			binding with static 
+			typing.  Dynamic binding guarantees that whenever more than one version of a routine is applicable the 
+			right version (the one most directly adapted to the target object) will be selected.  Static typing means that the compiler makes sure there is 
+			at least one such version.
 		</paragraph>
 		<paragraph>This policy also yields an important performance benefit: in contrast with the costly run-time searches that may be needed with dynamic typing (since a requested routine may not be defined in the class of the target object but inherited from a possibly remote ancestor), the EiffelStudio implementation always finds the appropriate routine in constant-bounded time.  </paragraph>
 		<paragraph>Assertions provide a further mechanism for controlling the power of redefinition.  In the absence of specific precautions, redefinition may be dangerous: how can a client be sure that evaluation of 
@@ -172,7 +172,7 @@
 			</code> will not in some cases return, say, the area? Preconditions and postconditions provide the answer by limiting the amount of freedom granted to eventual redefiners.  The rule is that any redefined version must satisfy a weaker or equal precondition and ensure a stronger or equal postcondition than in the original.  This means that it must stay within the semantic boundaries set by the original assertions.
 		</paragraph>
 		<paragraph>The rules on redefinition and assertions are part of the Design by Contract&amp;#153; theory, where redefinition and dynamic binding introduce 
-			<span>subcontracting</span>. 
+			subcontracting. 
 			<code>
 				<class_name>POLYGON</class_name>
 			</code>, for example, subcontracts the implementation of perimeter to 

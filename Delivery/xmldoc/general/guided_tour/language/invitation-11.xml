@@ -43,7 +43,7 @@
 			<code>
 				<class_name>ARRAYED_LIST</class_name>
 			</code> as shown ensures that all the features and properties of lists and arrays are applicable to arrayed lists as well.  Since the class has more than one parent, this is a case of 
-			<span>multiple</span> inheritance.
+			multiple inheritance.
 		</paragraph>
 		<paragraph>Standard graphical conventions -- drawn from the Business Object Notation or BON, a graphical object-oriented notation based on concepts close to those of Eiffel, and directly supported by EiffelStudio -- illustrate such inheritance structures:</paragraph>
 		<image>

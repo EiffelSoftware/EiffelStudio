@@ -124,7 +124,7 @@
 			</code> is a function returning a boolean; the other three-routines called are procedures.
 		</paragraph>
 		<info>A note on syntax: you may separate instructions by semicolons, and indeed you should when, as on the next-to-last line of the example, two or more instructions appear on a line.  But the language's syntax has been designed so that the semicolon is almost always 
-			<span> optional</span>, regardless of the layout.  Indeed the practice is to omit it between instructions or declarations on separate lines, as this results in lighter, clearer software texts.
+			 optional, regardless of the layout.  Indeed the practice is to omit it between instructions or declarations on separate lines, as this results in lighter, clearer software texts.
 		</info>
 		<paragraph>In class 
 			<code>
@@ -145,7 +145,7 @@
 			<code>
 				<class_name>ACCOUNT</class_name>
 			</code>, not anybody else's.  Because such implementation choices are often changed over the lifetime of a project, it is essential to protect clients against their effects.  This is known as the 
-			<anchor>Uniform Access Principle</anchor><bold>Uniform Access Principle</bold>, stating that the choice between representing a property through memory (an attribute) or through an algorithm (function) shall not affect how clients use it.
+			<bold>Uniform Access Principle</bold>, stating that the choice between representing a property through memory (an attribute) or through an algorithm (function) shall not affect how clients use it.
 		</paragraph>
 		<paragraph>So much for how client classes will typically use 
 			<code>
@@ -187,7 +187,7 @@
 			<code>
 				<local_variable>acc</local_variable>
 			</code>
-			<span>.  </span>
+			.  
 			<code>
 				<feature_name>add</feature_name>
 			</code> (

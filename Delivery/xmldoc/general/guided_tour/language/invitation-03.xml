@@ -10,12 +10,12 @@
 	</meta_data>
 	<paragraph>
 		<paragraph>The aim of Eiffel is to help specify, design, implement and modify quality software.  This goal of quality in software is a combination of many factors; the language design concentrated on the three factors which, in the current state of the industry, are in direct need of improvements: 
-			<span>reusability</span>, 
-			<span> extendibility</span>and 
-			<span> reliability</span>.  Also important were other factors such as 
-			<span>efficiency</span>, 
-			<span>openness </span>and 
-			<span>portability</span>.  
+			reusability, 
+			 extendibilityand 
+			 reliability.  Also important were other factors such as 
+			efficiency, 
+			openness and 
+			portability.  
 		</paragraph>
 		<paragraph>
 			<bold>Reusability</bold> is the ability to produce components that may serve in many different applications.  Central to the Eiffel approach is the presence of predefined libraries such as EiffelBase, and the language's support for the production of new libraries.  
@@ -24,7 +24,7 @@
 			<bold>Extendibility</bold> is the ability to produce easily modifiable software.  "Soft" as software is supposed to be, it is notoriously hard to modify software systems, especially large ones.  
 		</paragraph>
 		<paragraph>Among quality factors, reusability and extendibility play a special role: satisfying them means having 
-			<span> less</span> software to write -- and hence more time to devote to other important goals such as efficiency, ease of use or integrity.  
+			 less software to write -- and hence more time to devote to other important goals such as efficiency, ease of use or integrity.  
 		</paragraph>
 		<paragraph>The third fundamental factor is 
 			<bold>reliability, </bold> the ability to produce software that is correct and robust -- that is to say, bug-free.  Eiffel techniques such as static typing, assertions, disciplined exception handling and automatic garbage collection are essential here.  

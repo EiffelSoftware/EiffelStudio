@@ -14,7 +14,7 @@
 		<paragraph>Eiffel software texts are free-format: distribution into lines is not semantically significant, and any number of successive space and line-return characters is equivalent to just one space.  The style rules suggest indenting software texts as illustrated by the examples in this chapter.  </paragraph>
 		<paragraph>Successive declarations or instructions may be separated by semicolons.  Eiffel's syntax has been so designed, however, that (except in rare cases) 
 			<bold>the semicolon is optional</bold>.  Omitting semicolons for elements appearing on separate lines lightens text and is the recommended practice since semicolons, as used by most programming languages, just obscure the text by distracting attention from the actual contents.  
-			<span>Do</span> use semicolons if you occasionally include successive elements on a single line.  
+			Do use semicolons if you occasionally include successive elements on a single line.  
 		</paragraph>
 		<paragraph>63 names -- all unabbreviated single English words, except for 
 			<code>

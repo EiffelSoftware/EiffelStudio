@@ -20,6 +20,11 @@ inherit
 			is_equal
 		end
 
+	WEL_SYSTEM_METRICS
+		export
+			{NONE} all
+		end
+
 	WEL_WORD_OPERATIONS
 		export
 			{NONE} all
@@ -228,10 +233,10 @@ feature -- Status report
 
 	maximal_width: INTEGER is
 			-- Maximal width allowed for the window
-			-- Zero by default.
 		require
 			exists: exists
 		do
+			Result := screen_width
 		ensure
 			positive_result: Result >= 0
 		end
@@ -248,10 +253,10 @@ feature -- Status report
 
 	maximal_height: INTEGER is
 			-- Maximal height allowed for the window
-			-- Zero by default.
 		require
 			exists: exists
 		do
+			Result := screen_height
 		ensure
 			positive_result: Result >= 0
 		end
@@ -499,6 +504,18 @@ feature -- Element change
 			height_set: height = a_height
 		end
 
+	set_timer (timer_id, time_out: INTEGER) is
+			-- Set a timer idenfied by `timer_id' with a
+			-- `time_out' value (in milliseconds).
+		require
+			exists: exists
+			positive_timer_id: timer_id > 0
+			positive_time_out: time_out > 0
+		do
+			cwin_set_timer (item, timer_id, time_out,
+				default_pointer)
+		end
+
 feature -- Basic operations
 
 	destroy is
@@ -696,6 +713,14 @@ feature -- Basic operations
 			cwin_validate_rgn (item, region.item)
 		end
 
+	kill_timer (timer_id: INTEGER) is
+		require
+			exists: exists
+			positive_timer_id: timer_id > 0
+		do
+			cwin_kill_timer (item, timer_id)
+		end
+
 feature {NONE} -- Messages
 
 	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
@@ -830,8 +855,11 @@ feature {NONE} -- Messages
 		do
 		end
 
-	on_set_cursor is
-			-- Wm_setcursor message
+	on_set_cursor (hit_code: INTEGER): BOOLEAN is
+			-- Wm_setcursor message.
+			-- See class WEL_HT_CONSTANTS for valid `hit_code' values.
+			-- If True further processing is halted.
+			-- (False by default)
 		require
 			exists: exists
 		do
@@ -842,6 +870,15 @@ feature {NONE} -- Messages
 			-- The window is about to be destroyed.
 		require
 			exists: exists
+		do
+		end
+
+	on_timer (timer_id: INTEGER) is
+			-- Wm_timer message.
+			-- A Wm_timer has been received from `timer_id'
+		require
+			exists: exists
+			positive_timer_id: timer_id > 0
 		do
 		end
 
@@ -921,9 +958,10 @@ feature {WEL_DISPATCHER}
 
 	frozen window_process_message, process_message (hwnd: POINTER; msg,
 			wparam, lparam: INTEGER): INTEGER is
+			-- Call the routine `on_*' corresponding to the
+			-- message `msg'.
 		require
 			exists: exists
-			-- Call the routine `on_*' corresponding to the message.
 		do
 			--| Unfortunately, we can not use inspect since
 			--| Wm_* are not real constants.
@@ -934,7 +972,9 @@ feature {WEL_DISPATCHER}
 			elseif msg = Wm_paint then
 				on_wm_paint
 			elseif msg = Wm_setcursor then
-				on_set_cursor
+				if on_set_cursor (cwin_lo_word (lparam)) then
+					Result := -1
+				end
 			elseif msg = Wm_size then
 				on_size (wparam,
 					cwin_lo_word (lparam),
@@ -963,6 +1003,8 @@ feature {WEL_DISPATCHER}
 				on_right_button_double_click (wparam,
 					cwin_lo_word (lparam),
 					cwin_hi_word (lparam))
+			elseif msg = Wm_timer then
+				on_timer (wparam)
 			elseif msg = wm_setfocus then
 				on_set_focus
 			elseif msg = wm_killfocus then
@@ -1044,8 +1086,8 @@ feature {NONE} -- Externals
 				param: POINTER): POINTER is
 			-- SDK CreateWindowEx
 		external
-			"C [macro <wel.h>] (DWORD, LPCSTR, LPCSTR, DWORD, int,%
-				%int, int, int, HWND, HMENU, HINSTANCE,%
+			"C [macro <wel.h>] (DWORD, LPCSTR, LPCSTR, DWORD, int, %
+				%int, int, int, HWND, HMENU, HINSTANCE, %
 				%LPVOID): EIF_POINTER"
 		alias
 			"CreateWindowEx"
@@ -1097,6 +1139,23 @@ feature {NONE} -- Externals
 			"C [macro <wel.h>] (HWND)"
 		alias
 			"SetFocus"
+		end
+
+	cwin_set_timer (hwnd: POINTER; timer_id, time_out: INTEGER;
+				proc: POINTER) is
+			-- SDK SetTimer
+		external
+			"C [macro <wel.h>] (HWND, UINT, UINT, TIMERPROC)"
+		alias
+			"SetTimer"
+		end
+
+	cwin_kill_timer (hwnd: POINTER; timer_id: INTEGER) is
+			-- SDK KillTimer
+		external
+			"C [macro <wel.h>] (HWND, UINT)"
+		alias
+			"KillTimer"
 		end
 
 	cwin_get_focus: POINTER is
@@ -1175,7 +1234,7 @@ feature {NONE} -- Externals
 			a_style: INTEGER): INTEGER is
 			-- SDK MessageBox (with result)
 		external
-			"C [macro <wel.h>] (HWND, LPCSTR, LPCSTR,%
+			"C [macro <wel.h>] (HWND, LPCSTR, LPCSTR, %
 				%UINT): EIF_INTEGER"
 		alias
 			"MessageBox"
@@ -1194,7 +1253,7 @@ feature {NONE} -- Externals
 			lparam: INTEGER): INTEGER is
 			-- SDK DefWindowProc
 		external
-			"C [macro <wel.h>] (HWND, UINT, WPARAM,%
+			"C [macro <wel.h>] (HWND, UINT, WPARAM, %
 				%LPARAM): EIF_INTEGER"
 		alias
 			"DefWindowProc"
@@ -1238,7 +1297,7 @@ feature {NONE} -- Externals
 				lparam: INTEGER): INTEGER is
 			-- SDK SendMessage (with the result)
 		external
-			"C [macro <wel.h>] (HWND, UINT,%
+			"C [macro <wel.h>] (HWND, UINT, %
 				%WPARAM, LPARAM): EIF_INTEGER"
 		alias
 			"SendMessage"
@@ -1283,7 +1342,7 @@ feature {NONE} -- Externals
 				flags: INTEGER) is
 			-- SDK SetWindowPos
 		external
-			"C [macro <wel.h>] (HWND, HWND, int, int, int,%
+			"C [macro <wel.h>] (HWND, HWND, int, int, int, %
 				%int, int)"
 		alias
 			"SetWindowPos"

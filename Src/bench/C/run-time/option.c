@@ -127,27 +127,33 @@ char *key;
 }
 
 void check_options(opt, dtype)
-struct eif_opt opt;		/* Options for the Eiffel feature*/
-int dtype;			/* Dtype of the Eiffel class */
+struct eif_opt *opt;	/* Options for the Eiffel feature*/
+int dtype;				/* Dtype of the Eiffel class */
 {
-
 	/* Checks whether the class 'dtype' has E-TRACE or E-PROFILE options in 'opt' and
 	 * dispatches to the functions start_trace and start_profile if necessary.
 	 * This function is directly called by RTSA in frozen mode; it is called explicitly
 	 * from the interpreter as soon as it determines that a feature is to be executed. -- GLJ
 	 */
 
-	struct ex_vect *vector;
-	vector = extop(&eif_stack);	/* Get top of the exception stack
-					 * for the routine name etc. */
+	struct ex_vect *vector = (struct ex_vect *) 0;
 
- 	if (opt.trace_level) {
+return;
+
+ 	if (opt->trace_level) {
+			/* Vector is not initialized before for efficiency: if both trace and profiling are off,
+			 * there is no need to get the exception vector.
+			 */
+
+		vector = extop(&eif_stack);	/* Get top of the exception stack for the routine name etc. */
 
 		/* User wants tracing. */
 		start_trace(vector->ex_rout, vector->ex_orig, dtype);
 	}
 
-	if (opt.profile_level) {
+	if (opt->profile_level) {
+		if (!vector)
+			vector = extop(&eif_stack);	/* Get top of the exception stack for the routine name etc. */
 
 		/* User wants profiling. */
 		start_profile(vector->ex_rout, vector->ex_orig, dtype);

@@ -42,6 +42,11 @@ inherit
 		export
 			{NONE} all
 		end
+
+	OPERATING_ENVIRONMENT
+		export
+			{NONE} all
+		end
 	
 create
 	make
@@ -51,20 +56,32 @@ feature {NONE} -- Initialization
 	make is
 			-- Create `Current'.
 		do
-			reset
+			create modules_debugger_info.make (50)
+			create class_types_debugger_info.make (100)	
+			entry_point_token := 0
+
+			create internal_requested_class_tokens.make (10)
 		end
 		
 	reset is
 			-- Reset value of Current
 		do
-			create modules_debugger_info.make (50)
-			create class_types_debugger_info.make (100)	
+			modules_debugger_info.wipe_out
+			class_types_debugger_info.wipe_out
 			entry_point_token := 0
 			
+			internal_reset
+		end
+		
+	internal_reset is
+			-- Reset temporary values
+		do
+			internal_requested_class_tokens.wipe_out
+
 			last_class_type_recorded := Void
 			last_info_from_class_type := Void
-			last_info_from_module := Void
-		end
+			last_info_from_module := Void			
+		end		
 
 feature -- Access
 
@@ -80,9 +97,7 @@ feature -- Access
 			is_debug_info_enabled := debug_mode
 
 				--| Reset Internal attributes used for optimisation 
-			last_class_type_recorded := Void
-			last_info_from_class_type := Void
-			last_info_from_module := Void
+			internal_reset			
 		end
 		
 feature -- Access from debugger
@@ -146,7 +161,39 @@ feature -- Access from debugger
 			end
 		end
 
-feature -- Access from eStudio
+feature -- Class token access from eStudio
+
+	class_token (a_module_name: STRING; a_class_type: CLASS_TYPE): INTEGER is
+			-- Class token for CLASS_TYPE.
+		local
+			l_info_from_module: IL_DEBUG_INFO_FROM_MODULE
+			l_id: INTEGER
+		do
+			Result := a_class_type.last_implementation_type_token	
+			if Result = 0 then --| Precompilated class_type for instance
+				l_id := a_class_type.static_type_id
+				
+				Result := internal_requested_class_tokens.item (l_id)
+				if Result = 0 then --| Not yet known, no requested yet
+				
+					l_info_from_module := info_from_module (a_module_name, False)
+					if l_info_from_module /= Void then --| no module known for it .. (external)
+					
+						Result := l_info_from_module.class_token_for_class_type (a_class_type)
+						
+							--| Save the result
+						internal_requested_class_tokens.put (Result, l_id)
+					end
+				end
+			end
+		ensure
+			class_token_positive: Result /= 0
+		end
+
+	internal_requested_class_tokens: HASH_TABLE [INTEGER, INTEGER]
+			-- [Class token] <= [Class type]
+	
+feature -- Feature token access from eStudio
 
 	feature_token_for_feat_and_class_type (a_feat: FEATURE_I; a_class_type: CLASS_TYPE): INTEGER is
 			-- Feature token identified for `a_feat'
@@ -176,6 +223,13 @@ feature -- Access from eStudio
 
 feature -- From compiler world
 
+	precompilation_module_name (a_system_name: STRING): FILE_NAME is
+		do
+			create Result.make_from_string (Workbench_bin_generation_path)
+			Result.set_file_name (a_system_name)
+			Result.add_extension ("dll")
+		end
+
 	module_file_name_for_class (a_class_type: CLASS_TYPE): STRING is
 			-- Computed module name for `a_class_type'
 			--| we use CLASS_TYPE for the precompiled case .
@@ -195,23 +249,27 @@ feature -- From compiler world
 
 --			l_is_single_module := System.in_final_mode or else Compilation_modes.is_precompiling
 -- We assume, we are debugging only Workbench application for now.
-			l_is_single_module := a_class_type.is_precompiled  --System.in_final_mode or else Compilation_modes.is_precompiling
 			
-			
-			l_assembly_name := System.name
--- MEGA BIG FIX HERE !!!! how can one know if we are in wb or final ?
--- FOR NOW WE ASSUME WE DEBUG ONLY WORKBENCH PROGR
-			l_location_path := Workbench_generation_path
-
-			if l_is_single_module then
-				l_type_id := 1
+			if a_class_type.is_precompiled then
+				l_is_single_module := True
+				l_output := precompilation_module_name (a_class_type.assembly_info.assembly_name)
 			else
-				l_type_id := a_class_type.associated_class.class_id // System.msil_classes_per_module + 1
+				l_assembly_name := System.name
+
+					-- MEGA BIG FIX HERE !!!! how can one know if we are in wb or final ?
+					-- FOR NOW WE ASSUME WE DEBUG ONLY WORKBENCH PROGR
+				l_location_path := Workbench_generation_path
+
+				if l_is_single_module then
+					l_type_id := 1
+				else
+					l_type_id := a_class_type.associated_class.class_id // System.msil_classes_per_module + 1
+				end
+				create l_output.make_from_string (l_location_path)
+				l_module_name := l_assembly_name + "_module_" + l_type_id.out + ".dll"
+				l_output.set_file_name (l_module_name)
 			end
 
-			create l_output.make_from_string (l_location_path)
-			l_module_name := l_assembly_name + "_module_" + l_type_id.out + ".dll"
-			l_output.set_file_name (l_module_name)
 			Result := l_output
 		end
 		
@@ -414,7 +472,10 @@ feature -- line debug exploitation
 			l_index := a_line + 1
 			l_list := feature_breakable_il_offsets (a_class_type, a_feat)
 			
-			if l_list.valid_index (l_index) then
+			if 
+				l_list /= Void 
+				and then l_list.valid_index (l_index) 
+			then
 				Result := l_list.i_th (l_index)
 			else
 				Result:= -1
@@ -645,55 +706,115 @@ feature {SHARED_IL_DEBUG_INFO_RECORDER} -- Persistence
 	load is
 			-- Load info from saved file.
 		local
-			l_il_info_file: RAW_FILE
-			l_data_to_save: TUPLE[ANY,ANY,INTEGER]
+			l_succeed: BOOLEAN
+			l_precomp_dirs: HASH_TABLE [REMOTE_PROJECT_DIRECTORY, INTEGER]
+			l_remote_project_directory: REMOTE_PROJECT_DIRECTORY
+			l_pfn: FILE_NAME
+		do
+			debug ("debugger_il_info_trace")
+				print ("Loading IL Info  %N")
+			end
+
+			reset
+			l_succeed := import_file_data (Il_info_file_name, System.name, False)
+			check l_succeed end
+
+			l_precomp_dirs := System.precompilation_directories
+			if not l_precomp_dirs.is_empty then
+				from
+					l_precomp_dirs.start
+				until
+					l_precomp_dirs.after
+				loop
+					l_remote_project_directory := l_precomp_dirs.item_for_iteration
+					l_pfn := l_remote_project_directory.precomp_eid_file
+					debug ("debugger_il_info_trace")
+						print (l_pfn)
+						io.put_new_line
+					end
+					l_succeed := import_file_data (l_remote_project_directory.precomp_eid_file, l_remote_project_directory.system_name, True)
+					l_precomp_dirs.forth
+				end
+			end
+		end
+
+	import_file_data (a_fn: STRING; a_system_name: STRING; is_from_precompiled: BOOLEAN): BOOLEAN is
+			-- Add data contained in `a_fn' into current structure
+		local
 			retried: BOOLEAN
+			l_data_to_save: TUPLE[ANY,ANY,INTEGER]
 			l_modules_debugger_info: like modules_debugger_info
 			l_class_types_debugger_info: like class_types_debugger_info
-			l_entry_point_token: like entry_point_token
-		do
+			l_entry_point_token: like entry_point_token		
+			l_il_info_file: RAW_FILE
 
-			debug ("debugger_il_info_trace")
-				print ("Loading IL Tokens (retry:" + retried.out + ") %N")
-			end
+			l_info_module: IL_DEBUG_INFO_FROM_MODULE
+		do
 			if not retried then
-				create l_il_info_file.make (Il_info_file_name)
+				debug ("debugger_il_info_trace")
+					print ("Importing IL Info from [" + a_fn.out + "] %N")
+				end
+				Result := True
+
+				create l_il_info_file.make (a_fn)
 				if not l_il_info_file.exists then
-						-- Create new arguments file.
-					l_il_info_file.create_read_write
-					l_il_info_file.close					
+						--| File does not exists !
 				else
 					l_il_info_file.open_read
 					l_data_to_save ?= l_il_info_file.retrieved
 					l_il_info_file.close
 					
-						--| Reset attribute values
-					reset
-					
 						--| Get values
 					l_modules_debugger_info ?= l_data_to_save.item (1)
 					l_class_types_debugger_info ?= l_data_to_save.item (2)
 					l_entry_point_token := l_data_to_save.integer_item (3)
-					
+
 						--| Assign values
-					modules_debugger_info := l_modules_debugger_info
-					class_types_debugger_info := l_class_types_debugger_info
-					entry_point_token := l_entry_point_token
-						
+					if is_from_precompiled then
+							--| Update and Merge data
+							--| regarding about module name
+							--| since we move assemblies/precompilation module under
+							--| W_code/assemblies/..
+						from
+							l_modules_debugger_info.start
+						until
+							l_modules_debugger_info.after
+						loop
+							l_info_module := l_modules_debugger_info.item_for_iteration
+							update_imported_info_module (a_system_name, l_info_module)
+							modules_debugger_info.force (l_info_module, l_info_module.module_name)
+							check
+								info_module_inserted: modules_debugger_info.inserted
+							end
+							l_modules_debugger_info.forth
+						end
+					else
+						modules_debugger_info.merge (l_modules_debugger_info)
+						entry_point_token := l_entry_point_token
+					end
+
+					class_types_debugger_info.merge (l_class_types_debugger_info)
 				end			
 			else
-				io.put_string ("ERROR: Unable to load IL INFO data from file [" + Il_info_file_name + "]%N")
+				io.put_string ("ERROR: Unable to load IL INFO data from file [" + a_fn + "]%N")
 			end
 		rescue
 			retried := True
 			retry
 		end
 
+	update_imported_info_module (a_system_name: STRING; a_info_module: IL_DEBUG_INFO_FROM_MODULE) is
+			-- Update imported module name to effective module name.
+		do
+			a_info_module.update_module_name (module_key (precompilation_module_name (a_system_name)))
+		end
+
 	Il_info_file_name: FILE_NAME is
 			-- Filename for IL info storage
 		once
 			create Result.make_from_string (Workbench_generation_path)
-			Result.set_file_name ("il_info.eid");
+			Result.set_file_name (System.name)
+			Result.add_extension ("eid")	
 		end	
 
 feature {NONE} -- Class Specific info

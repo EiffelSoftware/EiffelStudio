@@ -38,6 +38,16 @@ feature {NONE} -- Initialization
 			create list_feature_info.make (100)
 		end
 
+feature {IL_DEBUG_INFO_RECORDER} -- Update Module Name
+
+	update_module_name (a_mod_name: STRING) is
+			-- Update Current module name with `a_mod_name'.
+		require
+			a_mod_name_not_empty: a_mod_name /= Void and then not a_mod_name.is_empty
+		do
+			module_name := a_mod_name
+		end
+
 feature -- Properties
 
 	module_name: STRING
@@ -64,6 +74,35 @@ feature -- Queries Class
 			-- Know class from token `a_class_token' ?
 		do
 			Result := list_class_type_id.has (a_class_token)
+		end
+
+feature -- Reverse Queries Class
+
+	class_token_for_class_type (a_class_type: CLASS_TYPE): INTEGER is
+		require
+			class_type_not_void: a_class_type /= Void
+		local
+			l_id: INTEGER
+			l_cursor: CURSOR
+		do
+			debug ("il_info_trace")
+				print ("Reverse Search ..%N")
+			end
+			l_id := a_class_type.static_type_id
+			l_cursor := list_class_type_id.cursor
+			from
+				list_class_type_id.start
+			until
+				list_class_type_id.after or Result > 0
+			loop
+				if list_class_type_id.item_for_iteration = l_id then
+					Result := list_class_type_id.key_for_iteration
+				end
+				list_class_type_id.forth
+			end
+			list_class_type_id.go_to (l_cursor)
+		ensure
+			result_positive: Result > 0
 		end
 
 feature -- Queries Feature
@@ -98,6 +137,8 @@ feature -- Queries Feature
 feature -- Recording Operation
 
 	record_class_type (a_class_type: CLASS_TYPE; a_class_token: INTEGER) is
+		require
+			class_type_not_void: a_class_type /= Void
 		local
 			l_class_static_type_id: INTEGER
 		do
@@ -106,7 +147,7 @@ feature -- Recording Operation
 				list_class_type_id.put (l_class_static_type_id , a_class_token)
 			else
 				debug ("il_info_trace")
-					print (">> CONFLICT record_class_token <<%N")
+					print (">> CONFLICT record_class_token : "+a_class_type.associated.name_in_upper+" <<%N")
 					print ("  - key : class_token =" + a_class_token.to_hex_string + "%N")
 					print ("  - already           = " + list_class_type_id.item (a_class_token).out + "%N")
 					print ("  - replace           = " + l_class_static_type_id.out + "%N")

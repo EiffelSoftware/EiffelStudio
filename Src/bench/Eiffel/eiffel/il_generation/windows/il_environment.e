@@ -62,10 +62,19 @@ feature -- Access
 	default_version: STRING is
 			-- Default runtime version if `version' was not specified.
 			-- Semantic is to take the most recent version of the run-time.
+		local
+			l_runtimes: like installed_runtimes
 		do
-				-- Take the most recent version from `installed_runtimes' which is the
-				-- last one in the list since it is alphabetically sorted.
-			Result := installed_runtimes.last.twin
+			l_runtimes := installed_runtimes
+			if not l_runtimes.is_empty then
+					-- Take the most recent version from `installed_runtimes' which is the
+					-- last one in the list since it is alphabetically sorted.
+				Result := l_runtimes.last.twin
+			else
+					-- No .NET runtime found, we simply return a fake version
+					-- number.
+				Result := v1_0.twin
+			end
 		ensure
 			default_version_not_void: Result /= Void
 		end

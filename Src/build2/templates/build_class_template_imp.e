@@ -21,17 +21,9 @@ feature {NONE} -- Initialization
 			<LOCAL>
 		do
 			Precursor {EV_TITLED_WINDOW}
-
-				-- Create all widgets.
 			<CREATE>
-
-				-- Build widget structure.
 			<BUILD>
-
-				-- Initialize properties of all widgets.<SET>
-
-
-				-- Connect events.
+			<SET>
 			<EVENT_CONNECTION>
 
 				-- Close the application when an interface close
@@ -49,7 +41,6 @@ feature {NONE} -- Implementation
 			-- for `Current'.
 			Result := True
 		end
-
-	<EVENT_DECLARATION>	
+	<EVENT_DECLARATION>
 
 end -- class <CLASS_NAME>

@@ -339,6 +339,7 @@ feature {NONE} -- Implementation
 
 						-- Compiling Eiffel
 						if not Shared_wizard_environment.abort and Shared_wizard_environment.compile_eiffel then
+							message_output.set_forced_display
 							if Shared_wizard_environment.client then
 								progress_report.set_title (Eiffel_compilation_title)
 								progress_report.set_range (1)

@@ -248,8 +248,9 @@ feature {NONE} -- Implementation
 			update_style
 			compute_minimum_size
 			if is_displayed then
-				hide
-				show
+				-- Not needed for Build.
+				--hide
+				--interface.implementation.show
 			end
 		end
 		

@@ -35,6 +35,24 @@ feature {WEL_DISPATCHER}
 				end
 				html_document_generator.item.generate_docs
 				Result := 0
+			when compile_melt_msg then
+				check
+					non_void_compiler: compiler /= Void
+				end
+				compiler.item.compile
+				Result := 0
+			when compile_finalize_msg then
+				check
+					non_void_compiler: compiler /= Void
+				end
+				compiler.item.finalize
+				Result := 0
+			when compile_precompile_msg then
+				check
+					non_void_compiler: compiler /= Void
+				end
+				compiler.item.precompile
+				Result := 0
 			else
 				Result := Precursor (hwnd, msg, wparam, lparam)
 			end
@@ -49,6 +67,25 @@ feature {HTML_DOC_GENERATOR}
 		do
 			cwin_post_message (item, generate_html_docs_msg, 0, 0)
 		end
+
+feature {COMPILER}
 		
+	process_compile is
+			-- process melt compile system message
+		do
+			cwin_post_message (item, compile_melt_msg, 0, 0)
+		end
+		
+	process_finalize is
+			-- process finalize compile system message
+		do
+			cwin_post_message (item, compile_finalize_msg, 0, 0)
+		end
+		
+	process_precompile is
+			-- process precompile compile system message
+		do
+			cwin_post_message (item, compile_precompile_msg, 0, 0)
+		end
 
 end -- class MAIN_WINDOW

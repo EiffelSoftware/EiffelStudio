@@ -17,9 +17,52 @@ feature -- Initialization
 
 	prepare is
 		do
-			make_world
-			io.put_string ("prepared!%N")
-			projector.project
+--			make_world
+--			io.put_string ("prepared!%N")
+--			projector.project
+--			io.put_string ("projected!%N")
+			test_drawing_area
+		end
+
+	test_drawing_area is
+			-- Calls all drawing primitives.
+		local
+			my_device: EV_DRAWING_AREA
+		do
+			create my_device
+			first_window.extend (my_device)
+			my_device.set_minimum_size (300, 300)
+
+			my_device.set_fill_color (create {EV_COLOR}.make_with_rgb (1, 0, 0))
+
+			my_device.clear
+
+			my_device.enable_dashed_line_style
+
+			my_device.set_line_color (create {EV_COLOR}.make_with_rgb (0, 1, 0))
+
+			my_device.fill_rectangle (10, 110, 10, 15)
+			my_device.fill_ellipse (50, 110, 10, 15)
+			my_device.fill_polygon (<<create {EV_COORDINATES}.set (80, 110),
+				create {EV_COORDINATES}.set (90, 120),
+				create {EV_COORDINATES}.set (90, 130)>>)
+			my_device.fill_pie_slice (100, 100, 20, 20, 0.1, 0.25 * 3.14)
+
+			my_device.set_line_color (create {EV_COLOR}.make_with_rgb (0, 0, 0))
+
+			my_device.draw_point (10, 10)
+			my_device.draw_text (10, 200, "Text-primitive")
+			my_device.draw_segment (5, 5, 100, 50)
+			my_device.draw_straight_line (100, 30, 120, 35)
+			--my_device.draw_pixmap (80, 16, Void)
+			my_device.draw_arc (90, 25, 20, 30, 0, 0.75 * 3.14)
+			my_device.draw_rectangle (10, 110, 10, 15)
+			my_device.draw_ellipse (50, 110, 10, 15)
+			my_device.draw_polyline (<<create {EV_COORDINATES}.set (80, 110),
+				create {EV_COORDINATES}.set (90, 120),
+				create {EV_COORDINATES}.set (90, 130)>>, True)
+			my_device.draw_pie_slice (100, 100, 20, 20, 0.1, 0.25 * 3.14)
+
 		end
 
 	make_world is
@@ -149,7 +192,7 @@ feature -- Initialization
 			Result.show
 		end
 
-	on_click (x, y, z: INTEGER; s,w,e:DOUBLE) is
+	on_click (x, y, z: INTEGER; s,w,e:DOUBLE; sx,sy:INTEGER) is
 			-- Test something.
 		do
 			projector.ray_trace (rectangle)
@@ -161,7 +204,7 @@ feature -- Initialization
 			projector.project
 		end
 
-	on_mouse_move (x, y: INTEGER; s,w,e:DOUBLE) is
+	on_mouse_move (x, y: INTEGER; s,w,e:DOUBLE; sx,sy:INTEGER) is
 			-- Mouse moved on world. Do something funny.
 		do
 			controlled_position.set_x (x)

@@ -116,9 +116,6 @@ end
 			end
 				-- Array optimization
 			array_optimizer.process (written_class_id.associated_class, original_body_index, original_body_id, depend_list)
-
-				-- Inlining
-			--inliner.process (original_body_id)
 		end
 
 	features: INTEGER

@@ -26,7 +26,9 @@ inherit
 		redefine
 			add_item,
 			insert_item,
-			remove_item
+			remove_item,
+			insert_separator,
+			remove_separator
 		end
 
 	EV_ID_IMP
@@ -184,6 +186,38 @@ feature -- Element change
 		do
 			-- First, we call the precursor
 			{EV_MENU_ITEM_HOLDER_IMP} Precursor (item_imp)
+
+			-- If there is no more children, it becomes a normal item.
+			if children = Void then
+				if parent_imp /= Void then
+					parent_imp.internal_delete_item (Current)
+					parent_imp.internal_insert_item (Current)
+				end
+				menu := Void
+			end
+		end
+
+	insert_separator (sep_imp: EV_MENU_SEPARATOR_IMP; pos: INTEGER) is
+			-- Insert `sep_imp' at the position `pos' in the menu.
+		do
+			-- First, we transform the item into a menu.
+			if menu = Void then
+				!! menu.make
+				if parent_imp /= Void then
+					parent_imp.internal_delete_item (Current)
+					parent_imp.internal_insert_menu (Current)
+				end
+			end
+
+			-- Then we normaly add the item.
+			{EV_MENU_ITEM_HOLDER_IMP} Precursor (sep_imp, pos)
+		end
+
+	remove_separator (sep_imp: EV_MENU_SEPARATOR_IMP) is
+			-- Remove `sep_imp' from the menu.
+		do
+			-- First, we call the precursor
+			{EV_MENU_ITEM_HOLDER_IMP} Precursor (sep_imp)
 
 			-- If there is no more children, it becomes a normal item.
 			if children = Void then

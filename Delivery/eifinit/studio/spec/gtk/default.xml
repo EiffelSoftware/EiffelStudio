@@ -490,6 +490,7 @@
 			<TEXT>class_color<COLOR>0;0;255</COLOR></TEXT>
 			<TEXT>cluster_color<COLOR>128;0;0</COLOR></TEXT>
 			<TEXT>feature_color<COLOR>0;128;0</COLOR></TEXT>
+			<TEXT>error_color<COLOR>255;0;0</COLOR></TEXT>
 			<TEXT>object_color<COLOR>0;0;255</COLOR></TEXT>
 			<TEXT>progress_bar_color<COLOR>0;0;128</COLOR></TEXT>
 		</TOPIC>

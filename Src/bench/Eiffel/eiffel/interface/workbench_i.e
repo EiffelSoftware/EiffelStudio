@@ -76,7 +76,7 @@ feature -- Initialization
 	init is
 			-- Create an eiffel workbench.
 		local
-			eiffel_init: YACC_EIFFEL;
+			eiffel_init: EBENCH_YACC_EIFFEL;
 			lace_init: YACC_LACE;
 			feature_as: FEATURE_AS_B;
 			invariant_as: INVARIANT_AS_B;

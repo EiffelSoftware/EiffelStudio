@@ -11,7 +11,7 @@ inherit
 	E_CMD
 
 	SHARED_EIFFEL_PROJECT
-
+	
 	SHARED_TEXT_ITEMS
 
 	EB_FLAT_SHORT_DATA
@@ -130,10 +130,7 @@ feature -- Execution
 			end
 		rescue
 			error_window.put_string (
-				"'" + dir.name +
-				"' is not a valid directory and/or cannot be created")
-			error_window.new_line
-			error_window.put_string ("Please choose a valid and writable directory.")
+				(create {WARNING_MESSAGES}).w_invalid_directory_or_cannot_be_created (dir.name))
 			retried := True
 			retry
 		end

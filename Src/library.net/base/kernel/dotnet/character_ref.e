@@ -194,7 +194,7 @@ feature {NONE} -- Implementation
 	chcode (c: like item): INTEGER is
 			-- Associated integer value
 		do
-			Result := feature {CONVERT}.to_int32_char (c)
+			Result := feature {CONVERT}.to_int_32_character (c)
 		end
 
 indexing

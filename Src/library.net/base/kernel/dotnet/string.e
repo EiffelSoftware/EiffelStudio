@@ -53,7 +53,7 @@ feature -- Initialization
 		require
 			non_negative_size: n >= 0
 		do
-			create internal_string_builder.make_1 (n)
+			create internal_string_builder.make_from_capacity (n)
 		ensure
 			empty_string: count = 0
 			area_allocated: capacity >= n
@@ -83,7 +83,7 @@ feature -- Initialization
 	make_from_cil (s: SYSTEM_STRING) is
 			-- Initialize from a .NET string.
 		do
-			create internal_string_builder.make_2 (s)
+			create internal_string_builder.make_from_value (s)
 		end
 
 	remake (n: INTEGER) is
@@ -116,8 +116,8 @@ feature -- Initialization
 		local
 			sys: SYSTEM_STRING
 		do
-			sys := create {SYSTEM_STRING}.make_1 (arr)
-			create internal_string_builder.make_2 (sys)
+			sys := create {SYSTEM_STRING}.make (arr)
+			create internal_string_builder.make_from_value (sys)
 		end
 
 	make_from_c (c_string: POINTER) is
@@ -147,7 +147,7 @@ feature -- Initialization
 	from_cil (s: SYSTEM_STRING) is
 			-- Initialize from a .NET string.
 		do
-			create internal_string_builder.make_2 (s)
+			create internal_string_builder.make_from_value (s)
 		end
 
 	from_c_substring (c_string: POINTER; start_pos, end_pos: INTEGER) is
@@ -161,7 +161,7 @@ feature -- Initialization
 			new_ptr: POINTER
 		do
 			new_ptr := c_string + (start_pos - 1)
-			make_from_cil (feature {MARSHAL}.ptr_to_string_ansi_int_ptr_int32 (new_ptr,
+			make_from_cil (feature {MARSHAL}.ptr_to_string_ansi_pointer_integer_32 (new_ptr,
 				end_pos - start_pos + 1))
 		ensure
 			valid_count: count = end_pos - start_pos + 1
@@ -171,7 +171,7 @@ feature -- Initialization
 
 	adapt (s: STRING): like Current is
 			-- Object of a type conforming to the type of `s',
-			-- initialized with attributes from `s'
+			-- initialized with attributes from `s'aracter
 		do
 			create Result.make (0)
 			Result.share (s)
@@ -299,7 +299,7 @@ feature -- Access
 			start_large_enough: start >= 1
 			start_small_enough: start <= count
 		do
-			Result := to_cil.index_of_string_int32 (other.to_cil, start - 1) + 1
+			Result := to_cil.index_of_string_integer_32 (other.to_cil, start - 1) + 1
 		ensure
 			correct_place: Result > 0 implies
 				substring (Result, Result + other.count - 1).is_equal (other)
@@ -405,7 +405,7 @@ feature -- Status report
 			i: INTEGER
 		do
 			if not retried then
-				i := feature {CONVERT}.to_int32_string (to_cil)
+				i := feature {CONVERT}.to_int_32_string (to_cil)
 			end
 			Result := not retried
 		rescue
@@ -507,7 +507,8 @@ feature -- Element change
 		require
 			argument_not_void: t /= Void
 		do
-			create internal_string_builder.make_2 (t.internal_string_builder.to_string_int32 (n1 - 1, n2 - n1 + 1))
+			create internal_string_builder.make_from_value (
+				t.internal_string_builder.to_string_integer_32 (n1 - 1, n2 - n1 + 1))
 		ensure
 			is_substring: is_equal (t.substring (n1, n2))
 		end
@@ -516,7 +517,7 @@ feature -- Element change
 			-- Reinitialize by copying the characters of `other'.
 			-- (This is also used by `clone'.)
 		do
-			create internal_string_builder.make_2 (other.to_cil)
+			create internal_string_builder.make_from_value (other.to_cil)
 		ensure then
 			new_result_count: count = other.count
 			-- same_characters: For every `i' in 1..`count', `item' (`i') = `other'.`item' (`i')
@@ -803,7 +804,7 @@ feature -- Element change
 	precede (c: CHARACTER) is
 			-- Add `c' at front.
 		do
-			internal_string_builder := internal_string_builder.insert_int32_char (0, c)
+			internal_string_builder := internal_string_builder.insert_integer_32_character (0, c)
 		ensure
 			new_count: count = old count + 1
 		end
@@ -813,7 +814,7 @@ feature -- Element change
 		require
 			argument_not_void: s /= Void
 		do
-			internal_string_builder := internal_string_builder.insert_int32_string (0, s.to_cil)
+			internal_string_builder := internal_string_builder.insert_integer_32_string (0, s.to_cil)
 		ensure
 			new_count: count = old count + s.count
 		end
@@ -910,7 +911,7 @@ feature -- Element change
 	append_character, extend (c: CHARACTER) is
 			-- Append `c' at end.
 		do
-			internal_string_builder := internal_string_builder.append_char (c)
+			internal_string_builder := internal_string_builder.append_character (c)
 		ensure then
 			item_inserted: item (count) = c
 			new_count: count = old count + 1
@@ -943,7 +944,7 @@ feature -- Element change
 			index_small_enough: i <= count
 			index_large_enough: i > 0
 		do
-			internal_string_builder := internal_string_builder.insert_int32_string (i - 1, s.to_cil)
+			internal_string_builder := internal_string_builder.insert_integer_32_string (i - 1, s.to_cil)
 		ensure
 			new_count: count = old count + s.count
 		end
@@ -1061,7 +1062,7 @@ feature -- Removal
 	wipe_out is
 			-- Remove all characters.
 		do
-			create internal_string_builder.make_1 (0)
+			create internal_string_builder.make_from_capacity (0)
 		ensure then
 			is_empty: count = 0
 		end
@@ -1278,7 +1279,7 @@ feature -- Conversion
 		require
 			is_integer: is_integer
 		do
-			Result := feature {CONVERT}.to_int32_string (to_cil)
+			Result := feature {CONVERT}.to_int_32_string (to_cil)
 		end
 
 	to_real: REAL is
@@ -1438,7 +1439,7 @@ feature -- Duplication
 			-- Copy of substring containing all characters at indices
 			-- between `n1' and `n2'
 		do
-			create Result.make_from_cil (internal_string_builder.to_string_int32 (n1 - 1, n2 - n1 + 1))
+			create Result.make_from_cil (internal_string_builder.to_string_integer_32 (n1 - 1, n2 - n1 + 1))
 		ensure
 			new_result_count: Result.count = n2 - n1 + 1 or Result.count = 0
 			-- original_characters: For every `i' in 1..`n2'-`n1', `Result'.`item' (`i') = `item' (`n1'+`i'-1)

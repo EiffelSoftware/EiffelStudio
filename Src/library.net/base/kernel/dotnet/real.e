@@ -16,14 +16,8 @@ inherit
 			memberwise_clone
 		end
 	ICOMPARABLE
-		undefine
-			memberwise_clone
-		end
 
 	IFORMATTABLE
-		undefine
-			memberwise_clone
-		end
 
 	REAL_REF
 	

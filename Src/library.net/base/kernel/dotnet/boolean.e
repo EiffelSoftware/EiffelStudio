@@ -16,9 +16,6 @@ inherit
 			memberwise_clone
 		end
 	ICOMPARABLE
-		undefine
-			memberwise_clone
-		end
 
 	BOOLEAN_REF
 

@@ -32,7 +32,7 @@ feature -- Initialization
 			string_exists: fn /= Void
 			string_not_empty: not fn.is_empty
 		do
-			create internal_file.make_file_info (fn.to_cil)
+			create internal_file.make (fn.to_cil)
 			mode := Closed_file
 			create last_string.make (256)
 			name := fn
@@ -356,7 +356,7 @@ feature -- Status report
 			retried: BOOLEAN
 		do
 			if not retried then
-				create perm.make_file_iopermission_1 (feature {FILE_IOPERMISSION_ACCESS}.read, name.to_cil)
+				create perm.make_from_access_and_path (feature {FILE_IOPERMISSION_ACCESS}.read, name.to_cil)
 				perm.demand
 			end
 			Result := not retried
@@ -373,7 +373,7 @@ feature -- Status report
 			retried: BOOLEAN
 		do
 			if not retried then
-				create perm.make_file_iopermission_1 (feature {FILE_IOPERMISSION_ACCESS}.write, name.to_cil)
+				create perm.make_from_access_and_path (feature {FILE_IOPERMISSION_ACCESS}.write, name.to_cil)
 				perm.demand
 			end
 			Result := not retried
@@ -399,7 +399,7 @@ feature -- Status report
 		do
 			if not retried then
 					-- Is the parent directory writable?
-				create perm.make_file_iopermission_1 (feature {FILE_IOPERMISSION_ACCESS}.read, internal_file.get_directory_name)
+				create perm.make_from_access_and_path (feature {FILE_IOPERMISSION_ACCESS}.read, internal_file.get_directory_name)
 				perm.demand
 				Result := not exists or else writable
 			else
@@ -687,7 +687,7 @@ feature -- Status setting
 			hdl: POINTER
 		do
 			hdl := hdl + fd
-			internal_stream := create {FILE_STREAM}.make_file_stream_5 (hdl, feature {FILE_ACCESS}.read)
+			internal_stream := create {FILE_STREAM}.make (hdl, feature {FILE_ACCESS}.read)
 			mode := Read_file
 		ensure
 			exists: exists
@@ -700,7 +700,7 @@ feature -- Status setting
 			hdl: POINTER
 		do
 			hdl := hdl + fd
-			internal_stream := create {FILE_STREAM}.make_file_stream_5 (hdl, feature {FILE_ACCESS}.write)
+			internal_stream := create {FILE_STREAM}.make (hdl, feature {FILE_ACCESS}.write)
 			mode := Write_file
 		ensure
 			exists: exists
@@ -713,7 +713,7 @@ feature -- Status setting
 			hdl: POINTER
 		do
 			hdl := hdl + fd
-			internal_stream := create {FILE_STREAM}.make_file_stream_5 (hdl, feature {FILE_ACCESS}.write)
+			internal_stream := create {FILE_STREAM}.make (hdl, feature {FILE_ACCESS}.write)
 			mode := Append_file
 		ensure
 			exists: exists
@@ -726,7 +726,7 @@ feature -- Status setting
 			hdl: POINTER
 		do
 			hdl := hdl + fd
-			internal_stream := create {FILE_STREAM}.make_file_stream_5 (hdl, feature {FILE_ACCESS}.read_write)
+			internal_stream := create {FILE_STREAM}.make (hdl, feature {FILE_ACCESS}.read_write)
 			mode := Read_write_file
 		ensure
 			exists: exists
@@ -741,7 +741,7 @@ feature -- Status setting
 			hdl: POINTER
 		do
 			hdl := hdl + fd
-			internal_stream := create {FILE_STREAM}.make_file_stream_5 (hdl, feature {FILE_ACCESS}.read_write)
+			internal_stream := create {FILE_STREAM}.make (hdl, feature {FILE_ACCESS}.read_write)
 			mode := Append_read_file
 		ensure
 			exists: exists
@@ -1053,7 +1053,7 @@ feature -- Element change
 	put_character, putchar (c: CHARACTER) is
 			-- Write `c' at current position.
 		do
-			writer.write_char (c)
+			writer.write (c)
 		end
 
 	put_new_line, new_line is
@@ -1329,7 +1329,7 @@ feature -- Input
 		do
 			last_string.grow (nb_char)
 			str_area := last_string.area.native_array
-			new_count := reader.read_array_char (str_area, 0, nb_char)
+			new_count := reader.read_character_array (str_area, 0, nb_char)
 			last_string.make_from_special (str_area)
 		end
 
@@ -1420,7 +1420,7 @@ feature {FILE} -- Implementation
 			-- Stream reader used to read in `Current' (if possible).
 		do
 			if internal_sread = Void and internal_stream.get_can_read then
-				create {STREAM_READER} internal_sread.make_stream_reader (internal_stream)
+				create {STREAM_READER} internal_sread.make_from_stream (internal_stream)
 			end
 			Result := internal_sread
 		end
@@ -1429,7 +1429,7 @@ feature {FILE} -- Implementation
 			-- Stream writer used to write in `Current' (if possible).
 		do
 			if internal_swrite = Void and internal_stream.get_can_write then
-				create {STREAM_WRITER} internal_swrite.make_stream_writer (internal_stream)
+				create {STREAM_WRITER} internal_swrite.make_from_stream (internal_stream)
 			end
 			Result := internal_swrite
 		end

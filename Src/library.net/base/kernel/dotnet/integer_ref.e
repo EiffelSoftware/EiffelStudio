@@ -440,7 +440,7 @@ feature -- Output
 	out: STRING is
 			-- Printable representation of integer value
 		do
-			create Result.make_from_cil (feature {CONVERT}.to_string_int32 (item))
+			create Result.make_from_cil (feature {CONVERT}.to_string_integer_32 (item))
 		end
 
 feature {NONE} -- Implementation
@@ -450,7 +450,7 @@ feature {NONE} -- Implementation
 		require
 			valid_character: code.is_valid_character_code
 		do
-			Result := feature {CONVERT}.to_char_int32 (code)
+			Result := feature {CONVERT}.to_char_integer_32 (code)
 		end
 
 	abs_ref: INTEGER_REF is

@@ -675,7 +675,7 @@ feature {NONE} -- Implementation
 	reverse_lookup: HASHTABLE is
 			-- Given a TYPE object, returns its associated `typecode'.
 		once
-			create Result.make_1 (10)
+			create Result.make_from_capacity (10)
 			Result.set_item (feature {TYPE}.get_type_string (("System.Boolean").to_cil), boolean_code)
 			Result.set_item (feature {TYPE}.get_type_string (("System.Char").to_cil), character_code)
 			Result.set_item (feature {TYPE}.get_type_string (("System.Double").to_cil), double_code)

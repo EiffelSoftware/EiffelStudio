@@ -223,11 +223,10 @@ feature -- Status report
 		local
 			l_name: SYSTEM_STRING
 			pa: FILE_IOPERMISSION
-			sa: SECURITY_ACTION
 			retried: BOOLEAN
 		do
 			if not retried then
-				create pa.make_file_iopermission_1 (feature {FILE_IOPERMISSION_ACCESS}.Read, name.to_cil)
+				create pa.make_from_access_and_path (feature {FILE_IOPERMISSION_ACCESS}.Read, name.to_cil)
 				pa.demand
 			end
 			Result := not retried
@@ -243,11 +242,10 @@ feature -- Status report
 		local
 			l_name: SYSTEM_STRING
 			pa: FILE_IOPERMISSION
-			sa: SECURITY_ACTION
 			retried: BOOLEAN
 		do
 			if not retried then
-				create pa.make_file_iopermission_1 (feature {FILE_IOPERMISSION_ACCESS}.path_discovery, name.to_cil)
+				create pa.make_from_access_and_path (feature {FILE_IOPERMISSION_ACCESS}.path_discovery, name.to_cil)
 				pa.demand
 			end
 			Result := not retried
@@ -263,11 +261,10 @@ feature -- Status report
 		local
 			l_name: SYSTEM_STRING
 			pa: FILE_IOPERMISSION
-			sa: SECURITY_ACTION
 			retried: BOOLEAN
 		do
 			if not retried then
-				create pa.make_file_iopermission_1 (feature {FILE_IOPERMISSION_ACCESS}.write, name.to_cil)
+				create pa.make_from_access_and_path (feature {FILE_IOPERMISSION_ACCESS}.write, name.to_cil)
 				pa.demand
 			end
 			Result := not retried

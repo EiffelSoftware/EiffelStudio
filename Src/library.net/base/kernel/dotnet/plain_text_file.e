@@ -39,7 +39,7 @@ feature -- Output
 	put_integer, putint (i: INTEGER) is
 			-- Write ASCII value of `i' at current position.
 		do
-			writer.write_int32 (i)
+			writer.write_integer_32 (i)
 		end
 
 	put_boolean, putbool (b: BOOLEAN) is
@@ -51,7 +51,7 @@ feature -- Output
 	put_real, putreal (r: REAL) is
 			-- Write ASCII value of `r' at current position.
 		do
-			writer.write_single (r)
+			writer.write_real (r)
 		end
 
 	put_double, putdouble (d: DOUBLE) is

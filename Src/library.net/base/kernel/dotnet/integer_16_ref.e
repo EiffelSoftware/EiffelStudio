@@ -76,7 +76,7 @@ feature -- Access
 		local
 			cv: CONVERT
 		do
-			Result := cv.to_char_int16 (item)
+			Result := cv.to_char_integer_16 (item)
 		end
 
 feature -- Comparison
@@ -389,7 +389,7 @@ feature -- Output
 		local
 			cv: CONVERT
 		do
-			create Result.make_from_cil (cv.to_string_int16 (item))
+			create Result.make_from_cil (cv.to_string_integer_16 (item))
 		end
 
 

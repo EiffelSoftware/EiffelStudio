@@ -15,15 +15,10 @@ inherit
 			to_string,
 			memberwise_clone
 		end
+
 	ICOMPARABLE
-		undefine
-			memberwise_clone
-		end
 
 	IFORMATTABLE
-		undefine
-			memberwise_clone
-		end
 
 	INTEGER_16_REF
 

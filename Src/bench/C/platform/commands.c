@@ -73,7 +73,7 @@ void eif_call_finish_freezing(EIF_OBJ c_code_dir, EIF_OBJ freeze_cmd_name)
 	cmd = malloc (45 + strlen (eiffel_dir));
 	if (cmd == (char *)0)
 		enomem();
-	sprintf (cmd, "%s\\bench\\spec\\", eiffel_dir);
+	sprintf (cmd, "%s\\studio\\spec\\", eiffel_dir);
 	strcat (cmd, eif_getenv("ISE_PLATFORM"));
 	strcat (cmd, "\\bin\\finish_freezing.exe");
 
@@ -125,7 +125,7 @@ void eif_call_finish_freezing(EIF_OBJ c_code_dir, EIF_OBJ freeze_cmd_name)
 	cmd = malloc (45 + strlen (eiffel_dir));
 	if (cmd == (char *)0)
 		enomem();
-	sprintf (cmd, "%s\\bench\\spec\\", eiffel_dir);
+	sprintf (cmd, "%s\\studio\\spec\\", eiffel_dir);
 	strcat (cmd, eif_getenv("ISE_PLATFORM"));
     strcat (cmd, "\\bin\\finish_freezing.exe");
     rc = DosExecPgm(LoadError,           /* Object name buffer           */

@@ -30,6 +30,7 @@ feature -- Initialization
 			resources.register_type (create {ARRAY_GRAPHICAL_RESOURCE_TYPE}.make)
 			resources.register_type (create {COLOR_GRAPHICAL_RESOURCE_TYPE}.make)
 			resources.register_type (create {FONT_GRAPHICAL_RESOURCE_TYPE}.make)
+			resources.register_type (create {SINGLE_ARRAY_ITEM_GRAPHICAL_RESOURCE_TYPE}.make)
 		ensure
 			basic_types_registered: basic_types_registered
 		end
@@ -146,6 +147,22 @@ feature -- Access
 				Result := r.actual_value
 			else
 				Result := da
+			end
+		end
+		
+	selected_array_resource_value (s: STRING; ds: STRING): STRING is
+			-- Get the value of selected item of array resource named `s'.
+			-- Default to `ds' if `s' could not be found.
+		require
+			initialized: initialized
+		local
+			r: ARRAY_RESOURCE
+		do
+			r ?= resources.item (s)
+			if r /= Void and then r.selected_value /= Void then
+				Result := r.selected_value
+			else
+				Result := ds
 			end
 		end
 

@@ -52,12 +52,18 @@ feature -- Access
 
 	selected_item: EV_MULTI_COLUMN_LIST_ROW is
 			-- Item which is currently selected, for a multiple
-			-- selection, it gives the item which has the focus.
+			-- selection.
 		local
 			index: INTEGER
 		do
-			index := c_gtk_clist_ith_selected_item (widget, c_gtk_clist_selection_length (widget))
-			Result ?= (ev_children @ (index + 1)).interface
+			if (c_gtk_clist_selection_length (widget) = 0 ) then
+				-- there is no selected item
+				Result := Void
+			else
+				-- there is one selected item
+				index := c_gtk_clist_ith_selected_item (widget, 0)
+				Result ?= (ev_children @ (index + 1)).interface
+			end
 		end
 
 	selected_items: LINKED_LIST [EV_MULTI_COLUMN_LIST_ROW] is
@@ -146,7 +152,7 @@ feature -- Status setting
 		end
 
 	select_item (index: INTEGER) is
-			-- Select an item at the one-based `index' the list.
+			-- Select an item at the one-based `index' of the list.
 		do
 			(ev_children @ index).set_selected (True)
 		end
@@ -215,16 +221,27 @@ feature -- Event : command association
 	add_selection_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	
 			-- Add `cmd' to the list of commands to be executed
 			-- when the selection has changed.
+		local
+			ev_data: EV_EVENT_DATA
 		do
-			add_command ("select_row", cmd, arg)
-			add_command ("unselect_row", cmd, arg)
+			check
+				Not_yet_implemented: False
+			end
+
+--			!EV_EVENT_DATA!ev_data.make
+--			add_command_with_event_data ("start_selection", cmd, arg, ev_data, 0, False)
+--			add_command ("select_row", cmd, arg)
 		end
 
 	add_column_click_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed
 			-- when a column is clicked.
 		do
-			add_command ("click_column", cmd, arg)
+			check
+				Not_yet_implemented: False
+			end
+
+			add_command (widget, "click_column", cmd, arg)
 		end
 
 feature -- Event -- removing command association
@@ -233,15 +250,15 @@ feature -- Event -- removing command association
 			-- Empty the list of commands to be executed
 			-- when the selection has changed.
 		do
-			remove_commands (select_row_id)
-			remove_commands (unselect_row_id)
+			remove_commands (widget, select_row_id)
+			remove_commands (widget, unselect_row_id)
 		end
 
 	remove_column_click_commands is
 			-- Empty the list of commands to be executed
 			-- when a column is clicked.
 		do
-			remove_commands (click_column_id)
+			remove_commands (widget, click_column_id)
 		end
 
 feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- Implementation
@@ -275,7 +292,12 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- Implementation
 
 	remove_item (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP) is
 		do
+			-- Remove the gtk clist row from the gtk clist
 			gtk_clist_remove (widget, item_imp.index)
+
+			-- remove the row from the `ev_children'
+			ev_children.search (item_imp)
+			ev_children.remove
 		end
 
 feature {NONE} -- Inapplicable

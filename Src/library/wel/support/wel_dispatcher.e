@@ -52,35 +52,37 @@ feature {NONE} -- Implementation
 			has_return_value: BOOLEAN
 		do
 			window := window_of_item (hwnd)
-			debug ("win_dispatcher")
-				if window /= Void then
-					io.print (" after look at windows table ")
-					io.print (window.generating_type)
-					io.new_line
-				end
-			end
-			if window /= Void and then window.exists then
-				window.increment_level
-
-				Result := window.process_message (hwnd, msg, wparam, lparam)
-					--| Store `message_return_value' and `has_return_value' for later
-					--| use, since `call_default_window_procedure' can reset their value.
-				if
-					window.has_return_value
-				then
-					returned_value := window.message_return_value
-					has_return_value := window.has_return_value
-				end
-
-				if window.default_processing then
+			if window /= Void then
+				if window.exists then
+					debug ("win_dispatcher")
+						print ("After look at windows table ")
+						print (window.generating_type)
+						io.new_line
+					end
+					window.increment_level
+	
+					Result := window.process_message (hwnd, msg, wparam, lparam)
+						--| Store `message_return_value' and `has_return_value' for later
+						--| use, since `call_default_window_procedure' can reset their value.
+					if
+						window.has_return_value
+					then
+						returned_value := window.message_return_value
+						has_return_value := window.has_return_value
+					end
+	
+					if window.default_processing then
+						Result := window.call_default_window_procedure (hwnd, msg, wparam, lparam)
+					end
+	
+					if has_return_value then
+						Result := returned_value
+					end
+	
+					window.decrement_level
+				else
 					Result := window.call_default_window_procedure (hwnd, msg, wparam, lparam)
 				end
-
-				if has_return_value then
-					Result := returned_value
-				end
-
-				window.decrement_level
 			else
 				Result := cwin_def_window_proc (hwnd, msg, wparam, lparam)
 			end

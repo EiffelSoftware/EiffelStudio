@@ -3,6 +3,13 @@ deferred class NAMABLE
 	
 feature 
 
+	title_label: STRING is
+			-- Text representing current data for namer window title.
+			-- (By default returns label)
+		do
+			Result := label
+		end;
+
 	label: STRING is
 			-- Text representing
 			-- current data

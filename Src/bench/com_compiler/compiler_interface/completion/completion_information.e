@@ -98,54 +98,48 @@ feature -- Access
             create Result.make (class_descs)
         end
 
- 	target_feature (target: STRING; location_name: STRING; file_name: STRING; use_overloading: BOOLEAN; feature_name: CELL [STRING]; descriptions: ECOM_VARIANT; return_types: ECOM_VARIANT; params: ECOM_VARIANT) is
+ 	target_feature (target: STRING; location_name: STRING; file_name: STRING; use_overloading: BOOLEAN; feature_name: CELL [STRING]; description: CELL [STRING]; return_types: ECOM_VARIANT; params: ECOM_VARIANT) is
  			-- Feature information
-			-- `target' [in].  
-			-- `location_name' [in].  
-			-- `file_name' [in].  
-			-- `use_overloading' [in].  
-			-- `feature_name' [out].  
+			-- `target' [in].
+			-- `location_name' [in].
+			-- `file_name' [in].
+			-- `use_overloading' [in].
+			-- `feature_name' [out].
 			-- `descriptions' [out].  
 			-- `return_types' [out].  
-			-- `params' [out].  
+			-- `params' [out].
         local
             l_feature: COMPLETION_FEATURE
-            l_descriptions: ECOM_ARRAY [STRING]
-			l_return_types: ECOM_ARRAY [STRING]
+  			l_return_types: ECOM_ARRAY [STRING]
 			l_params: ECOM_ARRAY [PARAMETER_ENUMERATOR]
 			l_overloads_count: INTEGER
-			l_overload_descriptions: LIST [STRING]
 			l_overload_return_types: LIST [STRING]
 			l_overload_params: LIST [PARAMETER_ENUMERATOR]
 		do
 			l_feature := internal_target_feature (target, location_name, file_name, use_overloading)
 			if l_feature /= Void then
 				l_overloads_count := l_feature.overloads_count + 1
-				create l_descriptions.make (1, <<1>>, <<l_overloads_count>>)
 				create l_return_types.make (1, <<1>>, <<l_overloads_count>>)
 				create l_params.make (1, <<1>>, <<l_overloads_count>>)
-				l_descriptions.put (l_feature.description, <<1>>)
 				l_return_types.put (l_feature.return_type, <<1>>)
 				l_params.put (l_feature.parameters, <<1>>)
-				l_overload_descriptions := l_feature.overloads_descriptions
 				l_overload_return_types := l_feature.overloads_return_types
 				l_overload_params := l_feature.overloads_parameters
 				append_list_to_com_array (l_overload_return_types, l_return_types, 2)
-				append_list_to_com_array (l_overload_descriptions, l_descriptions, 2)
 				append_list_to_com_array (l_feature.overloads_parameters, l_params, 2)
 				feature_name.put (l_feature.name)
-				descriptions.set_string_array (l_descriptions)
+				description.put (l_feature.description)
 				return_types.set_string_array (l_return_types)
 				params.set_unknown_array (l_params)
 			else
 				feature_name.put ("")
-                descriptions.set_string_array (create {ECOM_ARRAY [STRING]}.make_empty)
+                description.put ("")
                 return_types.set_string_array (create {ECOM_ARRAY [STRING]}.make_empty)
                 params.set_unknown_array (create {ECOM_ARRAY [ECOM_INTERFACE]}.make_empty)
 			end				
 		end
 
-    target_features (target, location_name: STRING; location_type: INTEGER; file_name: STRING; use_overloading: BOOLEAN; return_names, return_signatures, return_image_indexes: ECOM_VARIANT) is
+    target_features (target, location_name: STRING; location_type: INTEGER; file_name: STRING; use_overloading: BOOLEAN; return_names: ECOM_VARIANT; descriptions: CELL [IEIFFEL_ENUM_STRING_INTERFACE]; return_image_indexes: ECOM_VARIANT) is
             -- Features accessible from target.
             -- `target' [in]. 
             -- `feature_name' [in].
@@ -155,38 +149,39 @@ feature -- Access
             -- `return_image_indexes' [out].
 		local
 			l_lister: FEATURES_LISTER
-			l_entries: LIST [COMPLETION_ENTRY]
+			l_entries: ARRAYED_LIST [COMPLETION_ENTRY]
 			l_class_i: CLASS_I
 		do
-            if location_type = feature {ECOM_EIF_COMPLETION_LOCATION_ENUM}.Eif_completion_location_feature then
+			if location_type = feature {ECOM_EIF_COMPLETION_LOCATION_ENUM}.Eif_completion_location_feature then
                 l_lister := lister (file_name)
-                l_lister.set_locals (locals)
-                l_lister.set_arguments (arguments)
-                l_lister.set_completion_features (completion_features)
-                l_lister.set_feature_name (location_name)
-                l_lister.reset_renames
+				if l_lister.is_initialized then
+					l_lister.set_locals (locals)
+					l_lister.set_arguments (arguments)
+					l_lister.set_completion_features (completion_features)
+					l_lister.set_feature_name (location_name)
+					l_lister.reset_renames
+				end
             else
-                l_class_i := class_from_name (location_name)
-                if l_class_i /= Void then
-                    l_lister := lister (l_class_i.file_name)
-                    l_lister.reset_feature_name
-                    l_lister.set_renames (rename_sources, rename_targets)
-                end
-            end
-            if l_lister /= Void and then l_lister.is_initialized then
-                l_lister.find (target, use_overloading)
-                if l_lister.found then
-                    l_entries := l_lister.found_items
-                    extract_variants_from_list (l_entries, return_names, return_signatures, return_image_indexes)
-                else
-                    return_names.set_string_array (create {ECOM_ARRAY [STRING]}.make_empty)
-                    return_signatures.set_string_array (create {ECOM_ARRAY [STRING]}.make_empty)
-                    return_image_indexes.set_integer_array (create {ECOM_ARRAY [INTEGER]}.make_empty)
-                end
+				l_class_i := class_from_name (location_name)
+				if l_class_i /= Void then
+					l_lister := lister (l_class_i.file_name)
+					if l_lister.is_initialized then
+						l_lister.reset_feature_name
+						l_lister.set_renames (rename_sources, rename_targets)
+					end
+				end
+			end
+			if l_lister /= Void and then l_lister.is_initialized then
+				l_lister.find (target, use_overloading)
+				if l_lister.found then
+					l_entries := l_lister.found_items
+					extract_variants_from_list (l_entries, return_names, return_image_indexes)
+					descriptions.put (create {DESCRIPTIONS_ENUMERATOR}.make (l_entries))
+				else
+					set_empty_results (return_names, return_image_indexes, descriptions)
+				end
             else
-                return_names.set_string_array (create {ECOM_ARRAY [STRING]}.make_empty)
-                return_signatures.set_string_array (create {ECOM_ARRAY [STRING]}.make_empty)
-                return_image_indexes.set_integer_array (create {ECOM_ARRAY [INTEGER]}.make_empty)
+ 				set_empty_results (return_names, return_image_indexes, descriptions)
             end
         end
 
@@ -417,9 +412,9 @@ feature -- Basic Operations
                         end
                     end
                     if a_return_type = Void then
-                        create l_feature.make (a_name, l_arguments, a_feature_type, a_file_name, a_row)
+                        create l_feature.make (a_name, l_arguments, a_feature_type, "", a_file_name, a_row)
                     else
-                        create l_feature.make_with_return_type (a_name, l_arguments, a_return_type, a_feature_type, a_file_name, a_row)
+                        create l_feature.make_with_return_type (a_name, l_arguments, a_return_type, a_feature_type, "", a_file_name, a_row)
                     end
                     completion_features.search (a_file_name.as_lower)
                     if completion_features.found then
@@ -472,21 +467,19 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-    extract_variants_from_list (entries: LIST [COMPLETION_ENTRY]; return_names, return_signatures, return_image_indexes: ECOM_VARIANT) is
+    extract_variants_from_list (entries: LIST [COMPLETION_ENTRY]; return_names, return_image_indexes: ECOM_VARIANT) is
             -- Setup `return_names', `return_signatures' and `return_image_indexes' according to `entries'.
         require
             non_void_entries: entries /= Void
         local
-            l_index, l_count: INTEGER
-            l_names: ECOM_ARRAY [STRING]
-            l_signatures: ECOM_ARRAY [STRING]
-            l_image_indexes: ECOM_ARRAY [INTEGER]
-            l_entry: COMPLETION_ENTRY
+			l_index, l_count: INTEGER
+			l_names: ECOM_ARRAY [STRING]
+			l_image_indexes: ECOM_ARRAY [INTEGER]
+			l_entry: COMPLETION_ENTRY
         do  
             l_count := entries.count
             if l_count > 0 then
                 create l_names.make (1, <<1>>, <<l_count>>)
-                create l_signatures.make (1, <<1>>, <<l_count>>)
                 create l_image_indexes.make (1, <<1>>, <<l_count>>)
                 from 
                     l_index := 1
@@ -495,21 +488,17 @@ feature {NONE} -- Implementation
                 loop
                     l_entry := entries.i_th (l_index)
                     l_names.put (clone (l_entry.name), <<l_index>>)
-                    l_signatures.put (clone (l_entry.signature), <<l_index>>)
                     l_image_indexes.put (image_index (l_entry), <<l_index>>)
                     l_index := l_index + 1
                 end
             else
                 create l_names.make_empty
-                create l_signatures.make_empty
                 create l_image_indexes.make_empty
             end
             return_names.set_string_array (l_names)
-            return_signatures.set_string_array (l_signatures)
             return_image_indexes.set_integer_array (l_image_indexes)
         ensure then
             non_void_names: return_names.string_array /= Void
-            non_void_signatures: return_signatures.string_array /= Void
             non_void_image_indexes: return_image_indexes.integer_array /= Void
         end
 
@@ -569,61 +558,63 @@ feature {NONE} -- Implementation
                     Result = eif_entity_images_variable
         end
 
-    class_from_name (a_name: STRING): CLASS_I is
-            -- CLASS_I instance corresponding to class with name `a_name' if any
-        require
-            non_void_name: a_name /= Void
-            valid_name: not a_name.is_empty
-        local
-            classes: LIST [CLASS_I]
-        do
-            classes := Eiffel_universe.classes_with_name (a_name)
-            if classes /= Void then
-                from
-                    classes.start
-                until
-                    classes.after or (Result /= Void and then Result.is_compiled)
-                loop
-                    Result := classes.item
-                    classes.forth
-                end
-            end
-        end
+	class_from_name (a_name: STRING): CLASS_I is
+			-- CLASS_I instance corresponding to class with name `a_name' if any
+		require
+			non_void_name: a_name /= Void
+			valid_name: not a_name.is_empty
+		local
+			classes: LIST [CLASS_I]
+		do
+			classes := Eiffel_universe.classes_with_name (a_name)
+			if classes /= Void then
+				from
+					classes.start
+				until
+					classes.after or (Result /= Void and then Result.is_compiled)
+				loop
+					Result := classes.item
+					classes.forth
+				end
+			end
+		end
 
-    lister (a_file_name: STRING): FEATURES_LISTER is
-            -- Lister for class in file `a_file_name'
-        require
-            non_void_file_name: a_file_name /= Void
-            valid_file_name: not a_file_name.is_empty
-        do
-            listers_table.search (a_file_name)
-            if listers_table.found then
-                Result := listers_table.found_item
-            else
-                create Result.make (a_file_name)
-                listers_table.put (Result, a_file_name)
-            end
-        ensure
-            non_void_lister: Result /= Void
-        end
+	lister (a_file_name: STRING): FEATURES_LISTER is
+			-- Lister for class in file `a_file_name'
+		require
+			non_void_file_name: a_file_name /= Void
+			valid_file_name: not a_file_name.is_empty
+		do
+			listers_table.search (a_file_name)
+			if listers_table.found then
+				Result := listers_table.found_item
+			else
+				create Result.make (a_file_name)
+				listers_table.put (Result, a_file_name)
+			end
+		ensure
+			non_void_lister: Result /= Void
+		end
 
- 	internal_target_feature (target: STRING; feature_name: STRING; file_name: STRING; use_overloading: BOOLEAN): COMPLETION_FEATURE is
-            -- Feature information
-            -- `target' [in].
-            -- `feature_name' [in].
-            -- `file_name' [in].
-        local
-            l_retriever: FEATURE_RETRIEVER
-        do
-            create l_retriever.make (file_name)
-            l_retriever.set_locals (locals)
-            l_retriever.set_arguments (arguments)
-            l_retriever.set_completion_features (completion_features)
-            l_retriever.set_feature_name (feature_name)
-            l_retriever.find (target, use_overloading)
-            if l_retriever.found then
-                Result := l_retriever.found_item
-            end
+	internal_target_feature (target: STRING; feature_name: STRING; file_name: STRING; use_overloading: BOOLEAN): COMPLETION_FEATURE is
+			-- Feature information
+			-- `target' [in].
+			-- `feature_name' [in].
+			-- `file_name' [in].
+		local
+			l_retriever: FEATURE_RETRIEVER
+		do
+			create l_retriever.make (file_name)
+			if l_retriever.is_initialized then
+				l_retriever.set_locals (locals)
+				l_retriever.set_arguments (arguments)
+				l_retriever.set_completion_features (completion_features)
+				l_retriever.set_feature_name (feature_name)
+				l_retriever.find (target, use_overloading)
+				if l_retriever.found then
+					Result := l_retriever.found_item
+				end
+			end
         end
 
 	append_list_to_com_array (a_list: LIST [ANY]; a_com_array: ECOM_ARRAY [ANY]; start_index: INTEGER) is
@@ -645,6 +636,18 @@ feature {NONE} -- Implementation
 				i := i + 1
 				a_list.forth
 			end
+		end
+
+	set_empty_results (a_return_names, a_return_image_indexes: ECOM_VARIANT; a_descriptions: CELL [IEIFFEL_ENUM_STRING_INTERFACE]) is
+			-- Put empty values in arguments.
+		require
+			non_void_return_names: a_return_names /= Void
+			non_void_return_image_indexes: a_return_image_indexes /= Void
+			non_void_descriptions: a_descriptions /= Void
+		do
+			a_return_names.set_string_array (create {ECOM_ARRAY [STRING]}.make_empty)
+			a_return_image_indexes.set_integer_array (create {ECOM_ARRAY [INTEGER]}.make_empty)
+			a_descriptions.put (create {DESCRIPTIONS_ENUMERATOR}.make_empty)
 		end
 
 invariant

@@ -47,7 +47,7 @@
 		</image>
 		<paragraph>Each field is a 
 			<bold>value</bold>.  A value can be either an object or an object reference:
-		</paragraph>
+		<line_break/>
 		<list ordered="false">
 			<item> When a field is an object, it will in most cases be an atomic object, as on the figure where the first field from the top is an integer and the third a character.  But a field can also be a composite object, in which case it is called a 
 				<bold>subobject</bold>.
@@ -57,6 +57,7 @@
 				<bold>attached</bold>.  In the preceding figure the second field from the top is a reference -- attached in this case, as represented by the arrow, to the enclosing object itself.  The bottom field is a void reference.
 			</item>
 		</list>
+		</paragraph>
 		<heading>
 			<size>2</size>
 			<content>Features</content>

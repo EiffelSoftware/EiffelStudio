@@ -133,7 +133,9 @@ feature -- Context output
 					not_first := True;
 					ctxt.put_separator
 				end;
-				features.item.format (ctxt);
+				if not features.item.source_feature.written_class.is_true_external then
+					features.item.format (ctxt);		
+				end
 				features.forth;
 			end;
 			ctxt.put_text_item (ti_After_feature_clause)

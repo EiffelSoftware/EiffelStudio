@@ -114,7 +114,10 @@ feature {NONE} -- Implementation
 					Externals.has (external_unit.external_name_id)
 				end
 				info := Externals.item (external_unit.external_name_id)
-				info.set_execution_unit (external_unit)
+				if info /= Void then
+						-- Not Void means it is a C externals.
+					info.set_execution_unit (external_unit)
+				end
 			end
 		end
 

@@ -76,12 +76,12 @@ feature {NONE} -- Behaviors
 			end
 		end
 
-	on_set_cursor (hit_test: INTEGER): BOOLEAN is
+	on_set_cursor (hit_test: INTEGER) is
 			-- Set the cursor only in the client area.
 		do
 			if hit_test = Htclient then
 				cursor.set
-				Result := True
+				disable_default_processing
 			end
 		end
 

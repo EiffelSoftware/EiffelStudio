@@ -13,7 +13,7 @@
 		<br>
 
 				<a name = eiffel_assembly></a>
-				<h3>2.1 <SPAN CLASS = "eclass">EiffelAssembly</SPAN></h3>
+				<h3>2.1 <SPAN CLASS = "eclass">EIFFEL_ASSEMBLY</SPAN> (<SPAN CLASS = "eclass">EiffelAssembly</SPAN>)</h3>
 
 						<p>
 								This class gives a representation of a .NET assembly in Eiffel. It has six attributes and the corresponding setters.
@@ -27,18 +27,18 @@
 								<SPAN CLASS = "efeature">emitter_version_number</SPAN><SPAN CLASS = "esymbol">:</SPAN> <SPAN CLASS = "eclass">STRING</SPAN><BR>
 						</P>
 						<p>
-								The emitter generates instance of <SPAN CLASS = "eclass">EiffelAssembly</SPAN> and passes it as argument to the appropriate generator (depending on the feature you have called), which uses it to generate either Eiffel or XML files. See <a href = "./emitter.html" target = "_parent">5. ISE.Reflection.Emitter.exe</a> for more information.
+								The emitter generates instance of <SPAN CLASS = "eclass">EIFFEL_ASSEMBLY</SPAN> (<SPAN CLASS = "eclass">EiffelAssembly</SPAN>) and passes it as argument to the appropriate generator (depending on the feature you have called), which uses it to generate either Eiffel or XML files. See <a href = "./emitter.html">5. ISE.Reflection.Emitter.exe</a> for more information.
 						</p>
 						<p>
-								ISE reflection interface also uses <SPAN CLASS = "eclass">EiffelAssembly</SPAN>. In fact, when you ask the database for a representation of an assembly, it returns an instance of <SPAN CLASS = "eclass">EiffelAssembly</SPAN>, which is user-friendlier than the underlying XML file describing assembly. See <a href = "./reflection_interface.html" target = "_parent">3. ISE.Reflection.ReflectionInterface.dll</a> for more information.
+								ISE reflection interface also uses <SPAN CLASS = "eclass">EIFFEL_ASSEMBLY</SPAN> (<SPAN CLASS = "eclass">EiffelAssembly</SPAN>). In fact, when you ask the database for a representation of an assembly, it returns an instance of <SPAN CLASS = "eclass">EIFFEL_ASSEMBLY</SPAN> (<SPAN CLASS = "eclass">EiffelAssembly</SPAN>), which is user-friendlier than the underlying XML file describing assembly. See <a href = "./reflection_interface.html">3. ISE.Reflection.ReflectionInterface.dll</a> for more information.
 						</p>
 				<br>
 
 				<a name = eiffel_class></a>
-				<h3>2.2 <SPAN CLASS = "eclass">EiffelClass</SPAN> </h3>
+				<h3>2.2 <SPAN CLASS = "eclass">EIFFEL_CLASS</SPAN> (<SPAN CLASS = "eclass">EiffelClass</SPAN>) </h3>
 
 					<p>
-							This class gives a representation of an Eiffel class generated from a .NET type. It keeps useful information to connect .NET names with Eiffel names, such as <SPAN CLASS = "efeature">dot_net_name</SPAN>. The attributes of class <SPAN CLASS = "eclass">EiffelClass</SPAN> are listed below:
+							This class gives a representation of an Eiffel class generated from a .NET type. It keeps useful information to connect .NET names with Eiffel names, such as <SPAN CLASS = "efeature">dot_net_name</SPAN>. The attributes of class <SPAN CLASS = "eclass">EIFFEL_CLASS</SPAN> (<SPAN CLASS = "eclass">EiffelClass</SPAN>) are listed below:
 					</p>
 					<P CLASS = "code">
 							<SPAN CLASS = "efeature">eiffel_name</SPAN><SPAN CLASS = "esymbol">:</SPAN> <SPAN CLASS = "eclass">STRING</SPAN><BR>
@@ -113,18 +113,18 @@
 					</P>
 
 					<p>
-							The emitter generates instance of <SPAN CLASS = "eclass">EiffelClass</SPAN> for each type of the assembly and passes it as argument to the appropriate generator (depending on the feature you have called), which uses it to generate either Eiffel or Xml files. See <a href = "./emitter.dll" target = "_parent">5. ISE.Reflection.Emitter.exe</a> for more information.
+							The emitter generates instance of <SPAN CLASS = "eclass">EIFFEL_CLASS</SPAN> (<SPAN CLASS = "eclass">EiffelClass</SPAN>) for each type of the assembly and passes it as argument to the appropriate generator (depending on the feature you have called), which uses it to generate either Eiffel or Xml files. See <a href = "./emitter.dll">5. ISE.Reflection.Emitter.exe</a> for more information.
 					</p>
 					<p>
-							ISE reflection interface also uses <SPAN CLASS = "eclass">EiffelClass</SPAN>. In fact, when you ask the database for a representation of a type, it returns an instance of <SPAN CLASS = "eclass">EiffelClass</SPAN>, which is user-friendlier than the underlying XML file describing type. See <a href = "./reflection_interface.dll" target = "_parent">3. ISE.Reflection.ReflectionInterface.dll</a> for more information.
+							ISE reflection interface also uses <SPAN CLASS = "eclass">EIFFEL_CLASS</SPAN> (<SPAN CLASS = "eclass">EiffelClass</SPAN>). In fact, when you ask the database for a representation of a type, it returns an instance of <SPAN CLASS = "eclass">EIFFEL_CLASS</SPAN> (<SPAN CLASS = "eclass">EiffelClass</SPAN>), which is user-friendlier than the underlying XML file describing type. See <a href = "./reflection_interface.dll">3. ISE.Reflection.ReflectionInterface.dll</a> for more information.
 					</p>
 				<br>
 
 				<a name = eiffel_feature></a>
-				<h3>2.3 <SPAN CLASS = "eclass">EiffelFeature</SPAN> </h3>
+				<h3>2.3 <SPAN CLASS = "eclass">EIFFEL_FEATURE</SPAN> (<SPAN CLASS = "eclass">EiffelFeature</SPAN>)</h3>
 
 					<p>
-							This class gives a representation of an Eiffel feature generated from a .NET member. It keeps useful information to connect .NET feature names with Eiffel names, such as <SPAN CLASS = "efeature">dot_net_name</SPAN>. The attributes of class <SPAN CLASS = "eclass">EiffelFeature</SPAN> are listed below:
+							This class gives a representation of an Eiffel feature generated from a .NET member. It keeps useful information to connect .NET feature names with Eiffel names, such as <SPAN CLASS = "efeature">dot_net_name</SPAN>. The attributes of class <SPAN CLASS = "eclass">EIFFEL_FEATURE</SPAN> (<SPAN CLASS = "eclass">EiffelFeature</SPAN>) are listed below:
 					</p>
 					<P CLASS = "code">
 							<SPAN CLASS = "efeature">eiffel_name</SPAN><SPAN CLASS = "esymbol">:</SPAN> <SPAN CLASS = "eclass">STRING</SPAN><BR>

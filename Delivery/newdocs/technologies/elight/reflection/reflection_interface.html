@@ -37,7 +37,7 @@
 												key</SPAN><SPAN CLASS = "esymbol">:</SPAN> <SPAN CLASS = "eclass">STRING</SPAN><SPAN CLASS = "esymbol">)</SPAN><br>
 										</P>
 
-										As mentioned earlier, the point is to specify the assembly you will work on. So you can either give an instance of <SPAN CLASS = "eclass">SYSTEM_TYPE</SPAN> or the assembly version, culture and public key, knowing that only this information will be internally used by the database.
+										As mentioned earlier, the point is to specify the assembly you will work on. So you can either give an instance of <SPAN CLASS = "eclass">SYSTEM_TYPE</SPAN> (<SPAN CLASS = "eclass">System.Type</SPAN>) or the assembly version, culture and public key, knowing that only this information will be internally used by the database.
 										<br><br>
 
 										Several processes may use this database at the same time. Therefore it provides a synchronization mechanism between concurrent processes. Actually, each time a user asks for storage, a write lock file is generated, and each time a user asks for retrieval, a read lock file is created. When you call one the two previous features to start assembly storage, you cannot be aware other users are currently reading or writing. The reflection interface will check whether storage is possible and make result available in <SPAN CLASS = "efeature">last_write_successful</SPAN>. <br>
@@ -105,7 +105,7 @@
 									<SPAN CLASS = "efeature">type</SPAN> <SPAN CLASS = "esymbol">(</SPAN><SPAN CLASS = "elocal">a_type</SPAN><SPAN CLASS = "esymbol">:</SPAN> <SPAN CLASS = "eclass">SYSTEM_TYPE</SPAN><SPAN CLASS = "esymbol">)</SPAN><SPAN CLASS = "esymbol">:</SPAN> <SPAN CLASS = "eclass">EIFFEL_CLASS</SPAN>
 							</P>
 							<P>
-									First, the database looks for the assembly defining this type by using type assembly qualified name. Then, it uses type full name to find location of type description XML file. At last, it uses XML file to generate a more user-friendly representation that is an instance of <SPAN CLASS = "eclass">EIFFEL_CLASS</SPAN>.<br>
+									First, the database looks for the assembly defining this type by using type assembly qualified name. Then, it uses type full name to find location of type description XML file. At last, it uses XML file to generate a more user-friendly representation that is an instance of <SPAN CLASS = "eclass">EIFFEL_CLASS</SPAN> (<SPAN CLASS = "eclass">EiffelClass</SPAN>).<br>
 									This class provides useful information to match .NET names and Eiffel names (cf. <a href = "./Eiffel_components.html">2. ISE.Reflection.EiffelComponents.dll</a>).
 							</p>
 					<br>
@@ -114,8 +114,8 @@
 					<h4>3.2.3 Retrieve all the assemblies...</h4>
 
 							<p>
-									ISE reflection interface also provides a query called <SPAN CLASS = "efeature">assemblies</SPAN>, which enables you to get all the assemblies stored in the database. The result is an instance of <SPAN CLASS = "eclass">SYSTEM_COLLECTIONS_ARRAYLIST</SPAN>, which is in fact a list of <SPAN CLASS = "eclass">EIFFEL_ASSEMBLY</SPAN> (cf. <a href = "./Eiffel_components.html">2. ISE.Reflection.EiffelComponents.dll</a>).<br>
-									A point that has not been mentioned yet is that database keeps a kind of index in XML format with paths to assembly description XML files, that is used to build this list of <SPAN CLASS = "eclass">EIFFEL_ASSEMBLY</SPAN>. This index is updated each time feature <SPAN CLASS = "efeature">end_assembly_storage</SPAN> is called (not earlier to be sure that no error has occurred during storage).
+									ISE reflection interface also provides a query called <SPAN CLASS = "efeature">assemblies</SPAN>, which enables you to get all the assemblies stored in the database. The result is an instance of <SPAN CLASS = "eclass">SYSTEM_COLLECTIONS_ARRAYLIST</SPAN> (<SPAN CLASS = "eclass">System.Collections.ArrayList</SPAN>), which is in fact a list of <SPAN CLASS = "eclass">EIFFEL_ASSEMBLY</SPAN> (cf. <a href = "./Eiffel_components.html">2. ISE.Reflection.EiffelComponents.dll</a>).<br>
+									A point that has not been mentioned yet is that database keeps a kind of index in XML format with paths to assembly description XML files, that is used to build this list of <SPAN CLASS = "eclass">EIFFEL_ASSEMBLY</SPAN> (<SPAN CLASS = "eclass">EiffelAssembly</SPAN>). This index is updated each time feature <SPAN CLASS = "efeature">end_assembly_storage</SPAN> is called (not earlier to be sure that no error has occurred during storage).
 							</p>
 					<br>
 

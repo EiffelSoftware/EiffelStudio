@@ -6,7 +6,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-external frozen class
+frozen external class
 	NATIVE_ARRAY [G -> SYSTEM_OBJECT]
 
 inherit

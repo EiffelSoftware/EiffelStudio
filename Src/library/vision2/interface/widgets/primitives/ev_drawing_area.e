@@ -98,9 +98,8 @@ feature {EV_ANY} -- Contract support
 			t: EV_TIMEOUT
 		do
 			default_create
-			create p
+			create p.make_for_test
 			create t
-			p.set_with_named_file ("test_pixmap")
 			t.actions.extend (~draw_pixmap (10, 10, p))
 			t.set_interval (1000)
 			set_minimum_size (100, 100)
@@ -152,6 +151,9 @@ end -- class EV_DRAWING_AREA
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.21  2000/04/20 22:23:29  brendel
+--| Uses {EV_PIXMAP}.make_for_test.
+--|
 --| Revision 1.20  2000/04/19 18:44:50  brendel
 --| Added make_for_test.
 --|

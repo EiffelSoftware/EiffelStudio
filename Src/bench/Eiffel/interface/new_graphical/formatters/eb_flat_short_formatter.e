@@ -59,8 +59,6 @@ feature {NONE} -- Implementation
 			associated_class_non_void: associated_class /= Void
 		do
 			create class_cmd.do_nothing
---			class_cmd.set_feature_clause_order 
---				(feature_clause_order)
 		end
 
 	generate_text is

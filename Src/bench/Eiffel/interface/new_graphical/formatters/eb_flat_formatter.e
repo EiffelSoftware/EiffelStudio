@@ -10,6 +10,7 @@ inherit
 	EB_CLASS_TEXT_FORMATTER
 		redefine
 			class_cmd,
+			set_class,
 			generate_text,
 			formatted_text,
 			make
@@ -25,8 +26,8 @@ feature {NONE} -- Initialization
 	make (a_manager: like manager) is
 			-- Initialize `Current'.
 		do
-			Precursor (a_manager)
-			has_breakpoints := True
+			Precursor (a_manager)	
+			has_breakpoints := True	
 		end
 
 feature -- Properties
@@ -58,6 +59,17 @@ feature {NONE} -- Properties
 
 	formatted_text: STRUCTURED_TEXT
 
+feature -- Status Setting
+
+	set_class (a_class: CLASS_C) is
+			-- Associate current formatter with `a_class'.  Redefined to prevent
+			-- attempted formatting of external class type.
+		do
+			if a_class /= Void and not a_class.is_external then
+				Precursor (a_class)
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	class_cmd: E_SHOW_FLAT
@@ -69,8 +81,6 @@ feature {NONE} -- Implementation
 			associated_class_non_void: associated_class /= Void
 		do
 			create class_cmd.do_nothing
---			class_cmd.set_feature_clause_order 
---				(feature_clause_order)
 		end
 
 	generate_text is

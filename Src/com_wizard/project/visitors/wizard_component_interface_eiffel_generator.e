@@ -9,6 +9,9 @@ deferred class
 
 inherit
 	WIZARD_COMPONENT_INTERFACE_GENERATOR
+		redefine
+			default_create
+		end
 
 	WIZARD_WRITER_FEATURE_CLAUSES
 		rename
@@ -16,6 +19,8 @@ inherit
 			component as dictionary_component
 		export
 			{NONE} all
+		redefine
+			default_create
 		end
 
 	WIZARD_VARIABLE_NAME_MAPPER
@@ -24,17 +29,28 @@ inherit
 			component as dictionary_component
 		export
 			{NONE} all
+		redefine
+			default_create
 		end
 
+feature {NONE} -- Initialization
+
+	default_create is
+			-- Initialize instance.
+		do
+			create generated_coclasses.make (10)
+		end
+		
 feature -- Initialization
 
-	make (a_component: WIZARD_COMPONENT_DESCRIPTOR; a_interface: WIZARD_INTERFACE_DESCRIPTOR; a_eiffel_writer: WIZARD_WRITER_EIFFEL_CLASS; a_inherit_clause: WIZARD_WRITER_INHERIT_CLAUSE) is
+	initialize (a_component: WIZARD_COMPONENT_DESCRIPTOR; a_interface: WIZARD_INTERFACE_DESCRIPTOR; a_eiffel_writer: WIZARD_WRITER_EIFFEL_CLASS; a_inherit_clause: WIZARD_WRITER_INHERIT_CLAUSE) is
 			-- Initialize
 		do
 			component := a_component
 			interface := a_interface
 			eiffel_writer := a_eiffel_writer
 			inherit_clause := a_inherit_clause
+			finished := False
 		end
 
 feature -- Access

@@ -17,6 +17,10 @@ inherit
 
 	WIZARD_COMPONENT_C_CLIENT_GENERATOR
 
+	WIZARD_SHARED_GENERATORS
+		export
+			{NONE} all
+		end
 
 feature -- Basic operations
 
@@ -25,7 +29,6 @@ feature -- Basic operations
 		local
 			l_member: WIZARD_WRITER_C_MEMBER
 			l_name, l_type, l_namespace: STRING
-			l_generator: WIZARD_COMPONENT_INTERFACE_C_CLIENT_GENERATOR
 		do
 			create cpp_class_writer.make
 			a_descriptor.set_impl_names (True)
@@ -78,8 +81,8 @@ feature -- Basic operations
 				cpp_class_writer.add_function (ccom_last_error_help_file_function, Public)
 			end
 
-			create l_generator.make (a_descriptor, a_descriptor.interface_descriptor, cpp_class_writer)
-			l_generator.generate_functions_and_properties (a_descriptor.interface_descriptor)
+			C_client_generator.initialize (a_descriptor, a_descriptor.interface_descriptor, cpp_class_writer)
+			C_client_generator.generate_functions_and_properties (a_descriptor.interface_descriptor)
 
 			add_default_function
 			cpp_class_writer.set_destructor (destructor (a_descriptor))

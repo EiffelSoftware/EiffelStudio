@@ -10,9 +10,6 @@ class
 inherit
 	WIZARD_COMPONENT_INTERFACE_EIFFEL_GENERATOR
 
-create
-	make
-
 feature -- Basic operations
 
 	process_property (a_property: WIZARD_PROPERTY_DESCRIPTOR) is

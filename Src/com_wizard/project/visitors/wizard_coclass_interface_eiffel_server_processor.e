@@ -10,6 +10,11 @@ class
 inherit
 	WIZARD_COCLASS_INTERFACE_EIFFEL_PROCESSOR 
 
+	WIZARD_SHARED_GENERATORS
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -29,11 +34,9 @@ feature -- Basic operations
 	generate_functions_and_properties (an_interface: WIZARD_INTERFACE_DESCRIPTOR;
 				an_inherit_clause: WIZARD_WRITER_INHERIT_CLAUSE) is
 			-- Generate functions and properties for interface.
-		local
-			interface_generator: WIZARD_COCLASS_INTERFACE_EIFFEL_SERVER_GENERATOR
 		do
-			create interface_generator.make (coclass, an_interface, eiffel_writer, an_inherit_clause)
-			interface_generator.generate_functions_and_properties (an_interface)
+			Eiffel_coclass_server_generator.initialize (coclass, an_interface, eiffel_writer, an_inherit_clause)
+			Eiffel_coclass_server_generator.generate_functions_and_properties (an_interface)
 		end
 
 end -- class WIZARD_COCLASS_INTERFACE_EIFFEL_SERVER_PROCESSOR

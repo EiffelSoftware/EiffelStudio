@@ -13,10 +13,6 @@ inherit
 			process_function
 		end
 
-create
-	make
-
-
 feature -- Basic operations
 
 	process_function (a_function: WIZARD_FUNCTION_DESCRIPTOR) is

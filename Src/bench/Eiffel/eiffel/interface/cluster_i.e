@@ -219,7 +219,7 @@ end;
 			end;
 		end;
 
-	insert_renaming (cl: CLUSTER_I; old_name,new_name: STRING) is
+	insert_renaming (cl: CLUSTER_I; old_name, new_name: STRING) is
 			-- Insert renaming of a class of `cl' named `old_name' 
 			-- into `new_name'.
 		require
@@ -236,7 +236,7 @@ end;
 				rename_clause.set_cluster (cl);
 				renamings.put_front (rename_clause);
 			end;
-			rename_clause.renamings.put (new_name, old_name);
+			rename_clause.renamings.put (old_name, new_name);
 		end;
 
 	rename_clause_for (cl: CLUSTER_I): RENAME_I is
@@ -816,28 +816,21 @@ end;
 			loop
 				rename_clause := renamings.item;
 				a_cluster := rename_clause.cluster;
-				from
-					table := rename_clause.renamings;
-					table.start;
-				until
-					table.after
-				loop
-					if table.item_for_iteration.is_equal (class_name) then
-						if not found then
-							Universe.set_last_class
-							(a_cluster.classes.item (table.key_for_iteration));
-							found := True;
-						else
-								-- Name clash
-							!!vscn;
-							vscn.set_first (Universe.last_class);
-							vscn.set_second  
-							(a_cluster.classes.item (table.key_for_iteration));
-							vscn.set_cluster (Current);
-							Error_handler.insert_error (vscn);
-						end;
-					end;
-					table.forth;
+				table := rename_clause.renamings;
+				if table.has (class_name) then
+					if not found then
+						Universe.set_last_class
+						(a_cluster.classes.item (table.item (class_name)));
+						found := True;
+					else
+							-- Name clash
+						!!vscn;
+						vscn.set_first (Universe.last_class);
+						vscn.set_second  
+						(a_cluster.classes.item (table.item (class_name)));
+						vscn.set_cluster (Current);
+						Error_handler.insert_error (vscn);
+					end
 				end;
 				renamings.forth;
 			end;
@@ -861,17 +854,9 @@ end;
 			loop
 				rename_clause := renamings.item;
 				a_cluster := rename_clause.cluster;
-				from
-					table := rename_clause.renamings;
-					table.start;
-				until
-					table.after
-				loop
-					if table.item_for_iteration.is_equal (class_name) then
-						Result := a_cluster.classes.item
-													(table.key_for_iteration);
-					end;
-					table.forth;
+				table := rename_clause.renamings;
+				if table.has (class_name) then
+					Result := a_cluster.classes.item (table.item (class_name))
 				end;
 				renamings.forth;
 			end;

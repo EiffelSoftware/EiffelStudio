@@ -143,7 +143,7 @@ feature -- IL code generation
 				if class_c.is_frozen then
 					il_generator.generate_attribute (target_type, attribute_id)
 				else
-					il_generator.generate_feature_access (target_type, attribute_id, True)
+					il_generator.generate_feature_access (target_type, attribute_id, 0, True, True)
 				end
 
 					-- Generate cast if we have to generate verifiable code

@@ -105,7 +105,8 @@ feature -- IL generation
 			il_generator.generate_local (local_array)
 			il_generator.put_integer_32_constant (1)
  			il_generator.put_integer_32_constant (expressions.count)
- 			il_generator.generate_feature_access (l_decl_type, make_feat.origin_feature_id, True)
+ 			il_generator.generate_feature_access (l_decl_type, make_feat.origin_feature_id,
+ 				make_feat.argument_count, make_feat.has_return_value, True)
 
 				-- Find `put' from ARRAY
 			put_feat := feat_tbl.item_id (put_name_id)
@@ -135,7 +136,8 @@ feature -- IL generation
 
  				il_generator.put_integer_32_constant (i)
  
- 				il_generator.generate_feature_access (l_decl_type, put_feat.origin_feature_id, True)
+ 				il_generator.generate_feature_access (l_decl_type, put_feat.origin_feature_id,
+ 					put_feat.argument_count, put_feat.has_return_value, True)
  				i := i + 1
  				expressions.forth
  			end

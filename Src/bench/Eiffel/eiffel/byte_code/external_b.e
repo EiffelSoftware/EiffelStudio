@@ -219,6 +219,7 @@ feature -- IL code generation
 			real_metamorphose: BOOLEAN
 			basic_type: BASIC_I
 			need_generation: BOOLEAN
+			l_count: INTEGER
 		do
 				-- Get type on which call will be performed.
 			cl_type ?= context_type
@@ -278,6 +279,7 @@ feature -- IL code generation
 			if parameters /= Void then
 					-- Generate parameters if any.
 				parameters.generate_il
+				l_count := parameters.count
 			end
 
 			return_type := real_type (type)
@@ -295,11 +297,11 @@ feature -- IL code generation
 						-- call to Precursor feature.
 					il_generator.generate_feature_access (
 						il_generator.implemented_type (written_in, cl_type),
-						feature_id, False)
+						feature_id, l_count, not return_type.is_void, False)
 				else
 					il_generator.generate_feature_access (
 						il_generator.implemented_type (written_in, cl_type),
-						feature_id,
+						feature_id, l_count, not return_type.is_void,
 						cl_type.is_reference or else real_metamorphose)
 				end
 				if System.il_verifiable then

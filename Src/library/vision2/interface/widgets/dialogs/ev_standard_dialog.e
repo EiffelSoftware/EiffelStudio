@@ -36,6 +36,8 @@ feature {NONE} -- Initialization
 		do
 			default_create
 			set_title (a_title)
+		ensure
+			title_set: title = a_title
 		end
 
 feature -- Access
@@ -77,19 +79,28 @@ feature -- Status report
 feature -- Status setting
 
 	show_modal_to_window (a_window: EV_WINDOW) is
-			-- Show `Current' modal with respect to `a_window'.
+			-- Show and wait until `Current' is closed.
+			-- `Current' is shown modal with respect to `a_window'.
 		require
 			not_destroyed: not is_destroyed
 			a_window_not_void: a_window /= Void
 			dialog_modeless: blocking_window = Void
 		do
 			implementation.show_modal_to_window (a_window)
+		ensure
+				-- When a dialog is displayed modally, execution of code is
+				-- halted until the dialog is closed or destroyed. Therefore,
+				-- this postcondition will only be executed after the dialog
+				-- is closed or destroyed.
+			dialog_closed_so_no_blocking_window:
+				not is_destroyed implies blocking_window = Void
 		end
 
 	set_title (a_title: STRING) is
 			-- Assign `a_title' to `title'.
 		require
 			not_destroyed: not is_destroyed
+			a_title_not_void: a_title /= Void
 		do
 			implementation.set_title (a_title)
 		ensure

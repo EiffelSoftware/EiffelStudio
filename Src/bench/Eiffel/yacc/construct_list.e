@@ -13,7 +13,7 @@ inherit
 
 	FIXED_LIST [T]
 		redefine
-			sequential_index_of
+			index_of
 		end
 
 creation
@@ -33,14 +33,16 @@ feature
 			-- Do nothing
 		end;
 
-	sequential_index_of (v: like item; i: INTEGER): INTEGER is
+	index_of (v: like item; i: INTEGER): INTEGER is
 			-- Index of `i'-th occurrence of item identical to `v'.
 			-- (According to the discrimination rule used by `search')
 			-- 0 if none.
 		local
 			a_occurrences, pos: INTEGER
+			previous_pos: INTEGER
 		do
 			from
+				previous_pos := index
 				start;
 				pos := 1;
 			until
@@ -55,6 +57,7 @@ feature
 			if a_occurrences = i then
 				Result := pos - 1
 			end
+			index := previous_pos
 		end;
 
 feature {NONE} -- Externals

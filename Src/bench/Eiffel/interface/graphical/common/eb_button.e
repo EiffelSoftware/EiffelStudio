@@ -8,32 +8,25 @@ indexing
 class EB_BUTTON
 
 inherit
-	PICT_COLOR_B
+	ISE_BUTTON
 		rename
 			make as button_make
-		redefine
-			set_sensitive, set_insensitive
 		end;
-	FOCUSABLE
+	WINDOWS
 
 creation
 	make
 
 feature {NONE} -- Initialization
 
-	make (cmd: like associated_command; a_parent: COMPOSITE) is
+	make (cmd: ICONED_COMMAND; a_parent: COMPOSITE) is
 		do
 			associated_command := cmd;
 			button_make (button_name, a_parent);
-			set_symbol (cmd.symbol)
+			set_symbol (cmd.symbol);
 			add_activate_action (cmd, cmd.text_window);
-			initialize_focus;
+			initialize_focus (a_parent)
 		end;
-
-feature -- Properties
-
-	associated_command: ICONED_COMMAND;
-			-- The associated command.
 
 feature -- Access
 
@@ -53,12 +46,6 @@ feature -- Access
 			-- Insensitive version of `symbol'
 		do
 			Result := associated_command.grey_symbol
-		end;
-
-	focus_source: WIDGET is
-			-- Widget representing Current on the screen.
-		do
-			Result := Current
 		end;
 
 	focus_string: STRING is
@@ -92,16 +79,22 @@ feature -- Status Setting
 
 	set_symbol (p: PIXMAP) is
 			-- Set the pixmap if it it valid
-		require
-			non_void_arg: p /= Void
 		do
 			if p.is_valid then
 				set_pixmap (p)
 			end;
 		end;
 
+feature {NONE} -- Implementation
+
+	focus_label: FOCUS_LABEL_I is
+			-- Focus label for Current.
+		once
+			!FOCUS_LABEL! Result.initialize (Project_tool)
+		end
+
 feature {NONE} -- Properties
 
-	button_name: STRING is "push_b"
+	associated_command: ICONED_COMMAND
 
 end -- class EB_BUTTON

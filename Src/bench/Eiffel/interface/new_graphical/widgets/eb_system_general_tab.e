@@ -78,9 +78,6 @@ feature -- Generation type
 			
 	standard_code: INTEGER is 1
 	msil_code: INTEGER is 2
-	java_code: INTEGER is 3
-			-- Types of generation.
-
 feature -- Assertion access
 
 	check_check, require_check, ensure_check,
@@ -115,8 +112,9 @@ feature -- Store/Retrieve
 			root_ast.set_system_name (new_id_sd (safe_name, False))
 
 				-- Set name of root class and creation procedure if any.
-			create root_sd
-			root_sd.set_root_name (new_id_sd (to_upper(root_class_field.text), False))
+			create root_sd.initialize (
+				new_id_sd (to_upper(root_class_field.text), False),
+				Void, Void)
 			if root_creation_field.text /= Void then
 				root_sd.set_creation_procedure_name (new_id_sd (root_creation_field.text, False))
 			end
@@ -128,10 +126,6 @@ feature -- Store/Retrieve
 				-- Store special compilation type
 			if generation_combo.index_of (generation_combo.selected_item, 1) = msil_code then
 				defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.msil_generation, Void, True))
---			elseif generation_combo.index_of (generation_combo.selected_item, 1) = java_code then
---				defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.java_generation, Void, True))
---			else
---				defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.java_generation, Void, False))
 			end
 		end
 
@@ -237,8 +231,8 @@ feature {NONE} -- Filling
 			-- Initialize check buttons and text field associated with `a_opt'.
 		require
 			a_opt_not_void: a_opt /= Void
-			a_opt_not_precompiled_option: not a_opt.conforms_to (create {D_PRECOMPILED_SD})
-			a_opt_not_optional_option: not a_opt.conforms_to (create {O_OPTION_SD})
+			a_opt_not_precompiled_option: not a_opt.is_precompiled
+			a_opt_not_optional_option: not a_opt.is_optional
 			a_opt_has_option: a_opt.option /= Void
 			a_opt_has_no_precompiled_option: not a_opt.option.is_precompiled
 			a_opt_has_value: a_opt.value /= Void
@@ -280,11 +274,6 @@ feature {NONE} -- Filling
 						generation_combo.disable_sensitive
 					end
 					is_item_removable := True
---				elseif free_option.code = feature {FREE_OPTION_SD}.java_generation then
---					if generation_combo.is_sensitive then
---						enable_select (generation_combo.i_th (java_code))
---					end
---					is_item_removable := True
 				end
 			end
 		end
@@ -306,9 +295,9 @@ feature {NONE} -- Filling AST
 			if
 				not title.is_equal ("None")
 			then
-				pre := new_precompiled_sd
-				v := new_name_sd (new_id_sd (title, True))
-				d_option := new_d_option_sd (pre, v)
+				create pre
+				create v.make (new_id_sd (title, True))
+				create d_option.initialize (pre, v)
 				root_ast.defaults.extend (d_option)
 			end
 		end
@@ -326,43 +315,43 @@ feature {NONE} -- Filling AST
 		do
 			if check_check.is_selected then
 				had_assertion := True
-				v := new_check_sd (new_id_sd ("check", False))
-				ass := new_assertion_sd
-				d_option := new_d_option_sd (ass, v)
+				create v.make_check
+				create ass
+				create d_option.initialize (ass, v)
 				root_ast.defaults.extend (d_option)
 			end
 			if require_check.is_selected then
 				had_assertion := True
-				v := new_require_sd (new_id_sd ("require", False))
-				ass := new_assertion_sd
-				d_option := new_d_option_sd (ass, v)
+				create v.make_require
+				create ass
+				create d_option.initialize (ass, v)
 				root_ast.defaults.extend (d_option)
 			end
 			if ensure_check.is_selected then
 				had_assertion := True
-				v := new_ensure_sd (new_id_sd ("ensure", False))
-				ass := new_assertion_sd
-				d_option := new_d_option_sd (ass, v)
+				create v.make_ensure
+				create ass
+				create d_option.initialize (ass, v)
 				root_ast.defaults.extend (d_option)
 			end
 			if loop_check.is_selected then
 				had_assertion := True
-				v := new_loop_sd (new_id_sd ("loop", False))
-				ass := new_assertion_sd
-				d_option := new_d_option_sd (ass, v)
+				create v.make_loop
+				create ass
+				create d_option.initialize (ass, v)
 				root_ast.defaults.extend (d_option)
 			end
 			if invariant_check.is_selected then
 				had_assertion := True
-				v := new_invariant_sd (new_id_sd ("invariant", False))
-				ass := new_assertion_sd
-				d_option := new_d_option_sd (ass, v)
+				create v.make_invariant
+				create ass
+				create d_option.initialize (ass, v)
 				root_ast.defaults.extend (d_option)
 			end
 			if not had_assertion then
-				v := new_no_sd (new_id_sd ("no", False))
-				ass := new_assertion_sd
-				d_option := new_d_option_sd (ass, v)
+				create v.make_no
+				create ass
+				create d_option.initialize (ass, v)
 				root_ast.defaults.extend (d_option)
 			end
 		end
@@ -418,7 +407,6 @@ feature {NONE} -- Initialization
 			hbox: EV_HORIZONTAL_BOX
 			vbox: EV_VERTICAL_BOX
 			label: EV_LABEL
-			sep: EV_HORIZONTAL_SEPARATOR
 			frame: EV_FRAME
 			item_box: EV_VERTICAL_BOX
 		do
@@ -427,7 +415,7 @@ feature {NONE} -- Initialization
 			
 			default_create
 			set_border_width (Layout_constants.Small_border_size)
-			set_padding (Layout_constants.Small_padding_size)
+			set_padding (Layout_constants.Tiny_padding_size)
 
 				-- Application information entry.
 			create frame.make_with_text ("Application information ")
@@ -479,15 +467,11 @@ feature {NONE} -- Initialization
 			extend (frame)
 			disable_item_expand (frame)
 
-			create sep
-			extend (sep)
-			disable_item_expand (sep)
-
-			create hbox
-			hbox.extend (assertion_frame ("Default assertions"))
-			hbox.extend (generation_type_frame ("Generation output"))
-			hbox.set_padding (Layout_constants.Small_padding_size)
-			extend (hbox)
+			create item_box
+			item_box.extend (generation_type_frame ("Generation output"))
+			item_box.extend (assertion_frame ("Default assertions"))
+			item_box.set_padding (Layout_constants.Small_padding_size)
+			extend (item_box)
 
 			create frame.make_with_text ("Precompiled library")
 			create hbox
@@ -570,18 +554,27 @@ feature {NONE} -- Initialization
 			st_not_void: st /= Void
 		local
 			vbox: EV_VERTICAL_BOX
+			hbox: EV_HORIZONTAL_BOX
 		do
 			create Result.make_with_text (st)
-			create vbox
-			vbox.set_border_width (Layout_constants.Small_border_size)
+			create hbox
+			hbox.set_border_width (Layout_constants.Small_border_size)
 
+			create vbox
 			check_check := new_check_button (vbox, "check")
 			require_check := new_check_button (vbox, "require")
+			hbox.extend (vbox)
+			
+			create vbox
 			ensure_check := new_check_button (vbox, "ensure")
 			loop_check := new_check_button (vbox, "loop")
-			invariant_check := new_check_button (vbox, "class invariant")
+			hbox.extend (vbox)
 
-			Result.extend (vbox)
+			create vbox
+			invariant_check := new_check_button (vbox, "class invariant")
+			hbox.extend (vbox)
+			
+			Result.extend (hbox)
 		end
 
 feature {NONE} -- Standard precompiled libraries

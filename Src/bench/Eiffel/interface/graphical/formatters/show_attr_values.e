@@ -49,7 +49,13 @@ feature {NONE}
 			attributes: LIST [ATTRIBUTE];
 			type_name: STRING
 		do
-			if Run_info.is_running and Run_info.is_stopped then
+			if not Run_info.is_running then
+				warner.set_window (text_window);
+				warner.gotcha_call ("Application is not running")
+			elseif not Run_info.is_stopped then
+				warner.set_window (text_window);
+				warner.gotcha_call ("Application is not stopped")
+			else
 				!! attr_request.make (object.object_address);
 				attr_request.send;
 				dynamic_class := object.dynamic_class;

@@ -324,7 +324,7 @@ feature -- Basic operation
 		end
 
 	add_new_window (window_object: GB_TITLED_WINDOW_OBJECT) is
-			-- Perform necessary initialzation for new window,
+			-- Perform necessary initialization for new window,
 			-- `window_object'.
 		local
 			layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
@@ -343,9 +343,7 @@ feature -- Basic operation
 			create display_win
 			titled_window ?= display_win
 			window_object.set_object (titled_window)
-			set_display_window (display_win)
 			create builder_win
-			set_builder_window (builder_win)
 			window_object.set_display_object (builder_win)
 		end
 

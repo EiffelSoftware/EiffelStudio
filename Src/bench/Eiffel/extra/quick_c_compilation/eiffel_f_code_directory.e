@@ -26,7 +26,7 @@ feature
 			l_file_name, tag: STRING
 			l_file: X_FILE
 			l_directory: EIFFEL_F_CODE_DIRECTORY
-			l_start: INTEGER
+			l_start, string_count: INTEGER
 			finished_file: PLAIN_TEXT_FILE
 			finished_file_name: FILE_NAME
 		do
@@ -97,12 +97,22 @@ feature
 						create makefile_sh.make (l_file_name)
 					else
 						if not has_finished_file then
-							if (l_files.item.substring_index (".c",1)) > 0 then
+							l_file_name := l_files.item
+							string_count := l_file_name.count
+							if
+								l_file_name.substring_index (".c",1) = string_count - 1 or else
+								l_file_name.substring_index (".cpp",1) = string_count - 3
+							then
 								c_files.extend (l_file)
 								c_files.forth
-							elseif (l_files.item.substring_index (".x",1)) > 0 then
-								x_files.extend (l_file)
-								x_files.forth
+							else
+								if
+									l_file_name.substring_index (".x",1) = string_count - 1 or else
+									l_file_name.substring_index (".xpp",1) = string_count - 3
+								then
+									x_files.extend (l_file)
+									x_files.forth
+								end
 							end
 						end
 					end
@@ -121,7 +131,9 @@ feature
 			l_makefile_sh: PLAIN_TEXT_FILE
 			is_x_file: BOOLEAN
 			is_cpp_file: BOOLEAN
+			input_string: STRING
 		do
+			input_string := buffered_input_string
 			l_files := c_files
 			if l_files /= Void then
 				l_files.append (x_files)
@@ -159,10 +171,10 @@ end
 						is_cpp_file := l_file.name.substring_index ("pp", 1) = l_file.name.count - 1
 					end
 					l_file.open_read
-					l_file.read_all
+					l_file.read_all (input_string)
 						-- Generate the `line' statement for the C debugger.
 					big_file.put_string ("#line 1 %"" + generate_name (l_file.name) + "%"%N")
-					big_file.put_string (l_file.last_string)
+					big_file.put_string (input_string)
 					l_file.close
 					l_files.forth
 				end
@@ -189,30 +201,16 @@ end
 			l_old_name := clone  (makefile_sh.name)
 			l_old_name.append ("old")
 			makefile_sh.change_name (l_old_name)
-			create l_makefile_sh.make_open_write (l_makefile_sh_name)
-			from
-				makefile_sh.open_read
-			until
-				makefile_sh.off
-			loop
-				makefile_sh.read_line
-				if
-					makefile_sh.last_string.count > 0 and then
-					makefile_sh.last_string.substring_index ("OBJECTS =",1) = 1
-				then
-					l_makefile_sh.put_string ("OBJECTS = " + big_file_name + ".")
-					l_makefile_sh.put_string (object_extension + "%N%N")
-					l_makefile_sh.put_string ("OLD")
-				end
-				l_makefile_sh.put_string (makefile_sh.last_string)
-debug ("OUTPUT")
-				print (makefile_sh.last_string)
-				io.new_line
-end
-				l_makefile_sh.put_string ("%N")
-			end
-			l_makefile_sh.close
+			makefile_sh.open_read
+			makefile_sh.read_stream (makefile_sh.count)
 			makefile_sh.close
+
+			makefile_sh.last_string.replace_substring_all ("OBJECTS =",
+					"OBJECTS = " + big_file_name + "." + object_extension + "%N%N" + "OLDOBJECTS =")
+			create l_makefile_sh.make_open_write (l_makefile_sh_name)
+			l_makefile_sh.put_string (makefile_sh.last_string)
+			l_makefile_sh.put_string ("%N")
+			l_makefile_sh.close
 
 debug ("OUTPUT")
 		print ("Directories%N")
@@ -299,6 +297,12 @@ feature {NONE} -- Implementation
 			else
 				Result := file_name
 			end
+		end
+
+	buffered_input_string: STRING is
+			-- Buffer string filled by reading into a file.
+		once
+			create Result.make (2_000_000)
 		end
 
 end -- class EIFFEL_F_CODE_DIRECTORY

@@ -13,14 +13,15 @@
 		<heading><size>2</size>Improvements</heading>
 		<list ordered="false">
 			<item>Reduced, in classic mode, size of finalized executables by 10 to 50%.</item>
-			<item>Improved speed of evaluation of global onces by having a lock-free mechanism when a once has been evaluated.</item>
+			<item>Improved speed of evaluation of global onces, in a multithreaded system, by having a lock-free mechanism after a once has been evaluated.</item>
 		</list>
 		<heading>
 			<size>2</size>Changes
 		</heading>
 		<list ordered="false">
 			<item>In multithreaded mode, fixed dead lock on Unix plaforms when evaluating global onces.</item>
-			<item>Removed obsolete <feature_name>eifcid</feature_name>, <feature_name>eif_expand</feature_na,e> and <feature_name>eifexp</feature_name> from the CECIL interface, one has to use <feature_name>eif_type_id</feature_name> instead.</item>
+			<item>Removed obsolete <feature_name>eifcid</feature_name>, <feature_name>eif_expand</feature_name> and <feature_name>eifexp</feature_name> from the CECIL interface, one has to use <feature_name>eif_type_id</feature_name> instead.</item>
+			<item>In .NET, changed the naming conventions of resources included in an assembly. The extension `.resources' is appended for resources that are originally provided as `.resx' or `.txt' files. Other files are embedded as is in the assembly and the name of the resource is the name of the file.</item>
 		</list>
 		<heading>
 			<size>2</size>Bug fixes
@@ -49,6 +50,7 @@
 		<keyword>end</keyword>
 			</code_block>
 			</item>
+			<item>Fixed incrementality issues with <keyword>strip</keyword> and static calls on external routines which could fail after a class has been added to or removed from the system.</item>
 		</list>
 		<heading>
 			<size>3</size>Runtime/code generation issues

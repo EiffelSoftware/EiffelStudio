@@ -11,7 +11,7 @@ inherit
 		rename
 --			edit_bar as project_toolbar,
 --			Project_resources as resources,
---			progress_dialog as shared_progress_dialog
+--			progress_dialog as shared_progress_dialog,
 
 			empty_tool_name as tool_name
 				-- Provisoire
@@ -34,9 +34,9 @@ inherit
 --	WINDOW_ATTRIBUTES
 
 	EB_SHARED_INTERFACE_TOOLS
---		undefine
---			progress_dialog
---		end
+		undefine
+			progress_dialog
+		end
 
 	SHARED_APPLICATION_EXECUTION
 
@@ -69,7 +69,8 @@ feature -- Initialization
 			create history.make
 			precursor (man)
 			set_title (Interface_names.t_Project)
-			set_icon_name (tool_name)
+--			set_icon_name (tool_name)
+
 --			if Pixmaps.bm_Project_icon.is_valid then
 --				set_icon_pixmap (Pixmaps.bm_Project_icon)
 --			end
@@ -1186,20 +1187,63 @@ feature -- Tool management features
 		do
 		end
 
-	tool_title : STRING is
+	feature_title, object_title, selector_title, debug_title: STRING
+	feature_icon_name, object_icon_name, selector_icon_name, debug_icon_name: STRING
+
+	tool_title (t: EB_TOOL): STRING is
+			-- does not work!
 		do
+			if t = debug_part then
+				Result := debug_title
+			elseif t = feature_part then
+				Result := feature_title
+			elseif t = object_part then
+				Result := object_title
+			else
+				Result := selector_title
+			end
 		end
 
-	tool_icon_name : STRING is
+	tool_icon_name (t: EB_TOOL): STRING is
+			-- does not work!
 		do
+			if t = debug_part then
+				Result := debug_icon_name
+			elseif t = feature_part then
+				Result := feature_icon_name
+			elseif t = object_part then
+				Result := object_icon_name
+			else
+				Result := selector_icon_name
+			end
 		end
 
 	set_tool_title (t: EB_TOOL; s: STRING) is
+			-- does not work!
 		do
+			if t = debug_part then
+				debug_title := s
+			elseif t = feature_part then
+				feature_title := s
+			elseif t = object_part then
+				object_title := s
+			else
+				selector_title := s
+			end
 		end
 
 	set_tool_icon_name (t: EB_TOOL; s: STRING) is
+			-- does not work!
 		do
+			if t = debug_part then
+				debug_icon_name := s
+			elseif t = feature_part then
+				feature_icon_name := s
+			elseif t = object_part then
+				object_icon_name := s
+			else
+				selector_icon_name := s
+			end
 		end
 
 end -- class EB_PROJECT_TOOL

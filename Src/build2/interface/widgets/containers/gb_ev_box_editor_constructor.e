@@ -155,7 +155,7 @@ feature {NONE} -- Implementation
 				update_object_expansion (True, box_parent.index_of (w, 1))
 			else
 				box_parent.disable_item_expand (w)
-				update_object_expansion (True, box_parent.index_of (w, 1))
+				update_object_expansion (False, box_parent.index_of (w, 1))
 			end
 			
 			enable_project_modified

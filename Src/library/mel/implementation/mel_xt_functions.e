@@ -155,7 +155,7 @@ feature {NONE} -- Implementation
 			not_a_resource_name_void: a_resource_name /= Void
 			not_a_resource_name_null: a_resource_name /= default_pointer
 		external
-			"C"
+			"C (EIF_POINTER, char *): EIF_REFERENCE"
 		alias
 			"c_get_string_no_free"
 		end;
@@ -167,7 +167,7 @@ feature {NONE} -- Implementation
 			not_a_resource_name_void: a_resource_name /= Void
 			not_a_resource_name_null: a_resource_name /= default_pointer
 		external
-			"C"
+			"C (EIF_POINTER, char *): EIF_REFERENCE"
 		alias
 			"c_get_string"
 		end;

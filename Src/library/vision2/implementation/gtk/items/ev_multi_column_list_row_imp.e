@@ -69,13 +69,7 @@ feature {NONE} -- Initialization
 	make_with_index (par:EV_MULTI_COLUMN_LIST; value: INTEGER) is
 			-- Create a row at the given `value' index in the list.
 		do
-			-- Create the text of the row
-			create internal_text.make (0)
-			internal_text.extend ("")
-
-			-- create the arrayed_list where the pixmaps will be stored.
-			create internal_pixmaps.make (0)
-			internal_pixmaps.extend (Void)
+			make
 
 			if par /= Void then
 				set_columns (par.columns)
@@ -343,32 +337,32 @@ feature -- Element Change
 
 feature -- Event : command association
 
-	add_activate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+	add_select_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed
-			-- when the item is activated.
+			-- when the item is selected.
 		do
 			check false end
 		end	
 
-	add_deactivate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+	add_unselect_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed
-			-- when the item is deactivated.
+			-- when the item is unselected.
 		do
 			check false end
 		end
 
 feature -- Event -- removing command association
 
-	remove_activate_commands is
+	remove_select_commands is
 			-- Empty the list of commands to be executed
-			-- when the item is activated.
+			-- when the item is selected.
 		do			
 			check false end
 		end	
 
-	remove_deactivate_commands is
+	remove_unselect_commands is
 			-- Empty the list of commands to be executed
-			-- when the item is deactivated.
+			-- when the item is unselected.
 		do
 			check false end
 		end

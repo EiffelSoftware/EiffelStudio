@@ -26,7 +26,6 @@ feature {NONE} -- Implementation
 			-- `Result' is pixmap named "image" + a_number.out.
 		local
 			filename: FILE_NAME
-			file_location: STRING
 		do
 			if all_loaded_pixmaps = Void then
 				create all_loaded_pixmaps.make (2)

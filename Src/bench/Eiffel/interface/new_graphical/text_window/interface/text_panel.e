@@ -296,17 +296,14 @@ feature {NONE} -- Graphical interface
 
 	font: EV_FONT is
 			-- Font used to display the text
-		once
-			create Result
+		do
+			Result := shared_editor_font.font
 		end
 
 	line_height: INTEGER is
 			-- Height of lines in pixels.
-		once
-				-- Check code of `line_height_cell' in EB_SHARED_EDITOR_FONT
-				-- for compuation explanation.
-			Result := font.height
-			Result := Result + (Result // 4) + 1
+		do
+			Result := shared_editor_font.line_height
 		end
 
 	normal_background_color: EV_COLOR is
@@ -907,6 +904,12 @@ feature {NONE} -- Text loading
 		end
 
 feature {NONE} -- implementation
+
+	shared_editor_font: EB_SHARED_EDITOR_FONT is
+			-- Access to the default editor font
+		once
+			create Result
+		end
 
 	in_resize: BOOLEAN
 			-- Are we a call to on_resize that was not triggered by the function itself.

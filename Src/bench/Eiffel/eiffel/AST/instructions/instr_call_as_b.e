@@ -57,8 +57,8 @@ feature -- Type check, byte code and dead code removal
 	format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
-			call.format (ctxt);
 			ctxt.put_breakable;
+			call.format (ctxt);
 		end;
 
 feature	-- Replication

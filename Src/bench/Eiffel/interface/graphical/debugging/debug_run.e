@@ -68,6 +68,7 @@ end;
 						cont_request.send_breakpoints
 					end;
 					debug_info.tenure;
+					hide_stopped_mark;
 					cont_request.send_rqst_1 (Rqst_resume, Resume_cont);
 				end;
 			else
@@ -123,6 +124,30 @@ end;
 			end;
 			Run_info.set_is_stopped (False);
 		end;
+
+	 hide_stopped_mark is
+			-- Remove the stopped mark in the routine tools containing the 
+			-- related routine and set with the `show_breakpoints' format.
+		local
+			 rout_wnds: LINKED_LIST [ROUTINE_W];
+			 rout_text: ROUTINE_TEXT
+		do
+			from
+				rout_wnds := window_manager.routine_win_mgr.active_editors;
+				rout_wnds.start
+			until
+				rout_wnds.after
+			loop
+				rout_text := rout_wnds.item.text_window;
+				if
+					rout_text.root_stone.feature_i.body_id = Run_info.feature_i.body_id
+					and rout_text.in_debug_format
+				then
+					rout_text.redisplay_breakable_mark (Run_info.break_index, False)
+				end;
+				rout_wnds.forth
+			end
+		end; -- hide_stopped_mark
 
 feature 
 

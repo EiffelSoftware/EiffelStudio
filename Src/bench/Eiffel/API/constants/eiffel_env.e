@@ -194,6 +194,11 @@ feature {NONE}
 		do
 			Result := pixmap_file_content ("setstop.bm");
 		end;
+
+	bm_Setstop_cur: PIXMAP is
+		do
+			Result := pixmap_file_content ("setstop_cur.bm");
+		end; -- bm_Setstop_cur
 	
 	bm_Shell: PIXMAP is
 		do

@@ -24,7 +24,7 @@ feature -- Debugger
 	
 	ast_node: AST_EIFFEL;
 			-- The AST node which is associated with the break-point (that is
-			-- the ast node which precedes the break-point at `position'.
+			-- the ast node which follows the break-point at `position'.
 
 	make (pos: INTEGER; node: AST_EIFFEL) is
 			-- Initialization

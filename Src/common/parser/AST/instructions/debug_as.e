@@ -81,10 +81,11 @@ feature -- Debugger
 			-- Record each instruction in the debug compound as being breakable,
 			-- as well as the end of the debug compound itself.
 		do
+ 			record_break_node;  
  			if compound /= Void then
 				compound.find_breakable;
+ 				record_break_node
 			end;
- 			record_break_node;      -- Breakpoint also after end of debug.
 		end;
 
 feature -- Formatter
@@ -93,6 +94,7 @@ feature -- Formatter
 			-- Reconstitute text.
 		do
 			ctxt.begin;
+			ctxt.put_breakable;
 			ctxt.put_keyword ("debug ");
 			if keys /= void and then not keys.empty then
 				ctxt.set_separator(",");
@@ -105,11 +107,11 @@ feature -- Formatter
 				ctxt.set_separator(";");
 				ctxt.new_line_between_tokens;
 				compound.format (ctxt);
+				ctxt.put_breakable;
 				ctxt.indent_one_less;
 			end;
 			ctxt.next_line;
 			ctxt.put_keyword ("end");
-			ctxt.put_breakable;
 			ctxt.commit;
 		end;
 

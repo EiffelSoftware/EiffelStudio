@@ -102,6 +102,7 @@ feature -- Byte code generation
 			if compound /= Void then
 				compound.make_byte_code (ba);
 			end;
+			make_breakable (ba);
 				-- To end of inspect
 			ba.append (Bc_jmp);
 			ba.mark_forward;

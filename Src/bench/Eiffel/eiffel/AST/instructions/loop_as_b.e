@@ -104,16 +104,19 @@ feature -- Type check, byte code and dead code removal
 feature -- Debugger
 
 	find_breakable is
-			-- Look for breakable instruction
+			-- Look for breakable instruction;
+			-- Put a breakable point on each compound exit.
 		do
+			record_break_node;
 			if from_part /= Void then
 				from_part.find_breakable;
 			end;
+			record_break_node;
 			if compound /= Void then
 				compound.find_breakable;
 			end;
-			record_break_node
-		end
+			record_break_node;
+		end;
 
 
 
@@ -123,6 +126,7 @@ feature -- Formatter
 			-- Reconstitute text.
 		do
 			ctxt.begin;
+			ctxt.put_breakable;
 			ctxt.put_keyword ("from");
 			ctxt.set_separator(";");
 			ctxt.separator_is_special;
@@ -133,6 +137,7 @@ feature -- Formatter
 				from_part.format (ctxt);
 				ctxt.indent_one_less;
 			end;
+			ctxt.put_breakable;
 			if invariant_part /= void then
 				ctxt.next_line;
 				ctxt.put_keyword("invariant");
@@ -164,8 +169,8 @@ feature -- Formatter
 				ctxt.indent_one_less;
 			end;
 			ctxt.next_line;
-			ctxt.put_keyword("end");
 			ctxt.put_breakable;
+			ctxt.put_keyword("end");
 			ctxt.commit
 		end;
 

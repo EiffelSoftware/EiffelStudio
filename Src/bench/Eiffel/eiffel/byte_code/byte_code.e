@@ -485,6 +485,7 @@ feature -- Byte code generation
 				ba.write_forward;
 				ba.append (Bc_rescue);
 				rescue_clause.make_byte_code (ba);
+				make_breakable (ba);
 				ba.append (Bc_end_rescue);
 			end;
 

@@ -381,11 +381,7 @@ feature -- text construction
 		end;
 
 	put_breakable is
-		local
-			mark: BREAKABLE_MARK;
 		do
-			!!mark;
-			text.add (mark);
 		end;
 			
 

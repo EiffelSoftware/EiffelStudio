@@ -936,10 +936,10 @@ feature -- Byte code generation
 			end;
 				-- Go to point for old expressions
 
-			context.record_breakable (ba);	-- Breakpoint on body entrance
 			if compound /= Void then
 				compound.make_byte_code (ba);
 			end;
+			make_breakable (ba);
 
 				-- Make byte code for postcondition
 			if have_assert then

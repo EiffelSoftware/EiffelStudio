@@ -41,8 +41,8 @@ feature
 	make_byte_code (ba: BYTE_ARRAY) is
 			-- Generate byte code for an intruction call
 		do
-			call.make_byte_code (ba);
 			make_breakable (ba);
+			call.make_byte_code (ba);
 		end;
 
 end

@@ -110,7 +110,7 @@ feature -- Licence managment
 			Result := licence.is_alive;
 		end;
 	
-feature {NONE}
+feature {TEXT_WINDOW}
 
 	command_name: STRING is deferred end;
 

@@ -6,10 +6,12 @@ inherit
 	CURSOR_W;
 	GRAPHICS;
 	
-feature {NONE}
+feature
 
 	active_editors: LINKED_LIST [like editor_type];
 			-- Editors currently active 
+
+feature {NONE}
 
 	editor_type: BAR_AND_TEXT;
 			-- Abstract window type. Redefined in descendants

@@ -103,13 +103,14 @@ feature -- Debugger
 	find_breakable is
 			-- Look for breakable instructions.
 		do
+			record_break_node;
 			if case_list /= Void then
 				case_list.find_breakable;
 			end;
 			if else_part /= Void then
 				else_part.find_breakable;
+				record_break_node;
 			end;
-			record_break_node
 		end;
 
 feature -- Formatter
@@ -118,6 +119,7 @@ feature -- Formatter
 			-- Reconstitute text.
 		do
 			ctxt.begin;
+			ctxt.put_breakable;	
 			ctxt.put_keyword ("inspect ");
 			ctxt.indent_one_more;
 			switch.format (ctxt);
@@ -140,9 +142,9 @@ feature -- Formatter
 				else_part.format(ctxt);
 				ctxt.indent_one_less;
 				ctxt.next_line;
+				ctxt.put_breakable;	
 			end;
 			ctxt.put_keyword("end");
-			ctxt.put_breakable;	
 			ctxt.commit;
 		end;
 

@@ -78,10 +78,13 @@ feature -- Byte code generation
 			local_list: LINKED_LIST [TYPE_I];
 			variant_local_number: INTEGER;
 		do
+			make_breakable (ba)
+
 			if from_part /= Void then
 					-- Generate byte code for the from part
 				from_part.make_byte_code (ba);
 			end;
+			make_breakable (ba)
 
 			if variant_part /= Void then
 					-- Initialization of the variant control variable
@@ -129,6 +132,7 @@ feature -- Byte code generation
 			if compound /= Void then
 				compound.make_byte_code (ba);
 			end;
+			make_breakable (ba)
 
 				-- Generate an unconditional jump
 			ba.append (Bc_jmp);
@@ -137,7 +141,6 @@ feature -- Byte code generation
 
 				-- Write jump value for conditional exit
 			ba.write_forward;
-			make_breakable (ba)
 		end;
 
 end

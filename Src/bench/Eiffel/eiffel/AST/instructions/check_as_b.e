@@ -46,6 +46,7 @@ feature -- Type check, byte code and dead code removal
 			-- Reconstitute Text
 		do
 			ctxt.begin;
+			ctxt.put_breakable;
 			ctxt.put_keyword("check");
 			if check_list /= void then
 				ctxt.indent_one_more;
@@ -55,7 +56,6 @@ feature -- Type check, byte code and dead code removal
 				ctxt.next_line;
 			end;
 			ctxt.put_keyword ("end");
-			ctxt.put_breakable;
 			ctxt.commit;
 		end;
 

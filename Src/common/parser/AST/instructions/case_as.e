@@ -44,7 +44,8 @@ feature -- Type check, byte code production, dead code removal
 	byte_node: CASE_B is
 			-- Associated byte code
 		local
-			tmp, tmp2: BYTE_LIST [BYTE_NODE]
+			tmp: BYTE_LIST [BYTE_NODE];
+			tmp2: BYTE_LIST [BYTE_NODE]
 		do
 			tmp := interval.byte_node;
 			tmp := tmp.remove_voids;
@@ -67,7 +68,8 @@ feature -- Debugging
 		do
 			if compound /= Void then
 				compound.find_breakable
-			end
+			end;
+			record_break_node
 		end
 
 feature -- Formatter
@@ -88,6 +90,7 @@ feature -- Formatter
 				ctxt.new_line_between_tokens;
 				compound.format(ctxt)
 			end;	
+			ctxt.put_breakable;
 			ctxt.commit
 		end;			
 

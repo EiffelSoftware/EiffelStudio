@@ -107,6 +107,8 @@ feature -- Byte code generation
 			i: INTEGER;
 			case: CASE_B;
 		do
+			make_breakable (ba)
+
 				-- Generate switch expression byte code
 			switch.make_byte_code (ba);
 			if case_list /= Void then
@@ -126,6 +128,7 @@ feature -- Byte code generation
 			end;
 			if else_part /= Void then
 				else_part.make_byte_code (ba);
+				make_breakable (ba);
 			else
 				ba.append (Bc_inspect_excep);
 			end;
@@ -141,7 +144,6 @@ feature -- Byte code generation
 				end;
 			end;
 			ba.append (Bc_inspect);
-			make_breakable (ba)
 		end;
 
 end

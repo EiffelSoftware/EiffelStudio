@@ -12,6 +12,7 @@ feature
 	Explain_type: INTEGER is 6;
 	Triangle_type: INTEGER is 7;
 	Custom_type: INTEGER is 8;
-	Shell_type: INTEGER is 9
+	Shell_type: INTEGER is 9;
+	Breakable_type: INTEGER is 10
 
 end

@@ -153,6 +153,38 @@ feature {CACHE_WRITER} -- Status Setting
 		ensure
 			is_in_gac_set: is_in_gac = a_in_gac
 		end
+		
+	set_version (a_ver: like version) is
+			-- Sets `version' with `a_ver'
+		require
+			a_ver_not_void: a_ver /= Void
+			not_a_Ver_is_empty: not a_ver.is_empty
+		do
+			version := a_ver
+		ensure
+			version_set: version = a_ver
+		end
+		
+	set_culture (a_culture: like culture) is
+			-- Sets `culture' with `a_culture'
+		require
+			a_culture_not_void: a_culture /= Void
+			not_a_culture_is_empty: not a_culture.is_empty
+		do
+			culture := a_culture
+		ensure
+			culture_set: culture = a_culture
+		end
+		
+	set_key (a_key: like key) is
+			-- Sets `key' with `a_key'
+		require
+			a_key_not_void: a_key /= Void
+		do
+			key := a_key
+		ensure
+			key_set: key = a_key
+		end
 
 feature -- Comparison
 

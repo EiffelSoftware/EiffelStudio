@@ -86,34 +86,18 @@ feature -- Status Setting
 			non_void_name: a_file_name /= Void
 			not_has_assembly: not has_file (a_file_name)
 		local
-			l_path: STRING
 			l_assembly: ASSEMBLY
-			l_retried: BOOLEAN
 		do
 			assembly_added := False
-			if not l_retried then
-				if feature {SYSTEM_FILE}.exists (a_file_name) then
-					l_assembly := feature {ASSEMBLY}.load_from (a_file_name)
-				else
-					l_path := feature {RUNTIME_ENVIRONMENT}.get_runtime_directory
-					l_path.append (a_file_name)
-					if feature {SYSTEM_FILE}.exists (l_path) then
-						l_assembly := feature {ASSEMBLY}.load_from (l_path)
-					end
-				end
-				if l_assembly /= Void then
-					if not has (l_assembly.get_name) then
-						Referenced_assemblies.extend (create {CODE_REFERENCED_ASSEMBLY}.make (l_assembly))
-						assembly_added := True
-					end
+			l_assembly := loaded_assembly (a_file_name)
+			if l_assembly /= Void then
+				if not has (l_assembly.get_name) then
+					Referenced_assemblies.extend (create {CODE_REFERENCED_ASSEMBLY}.make (l_assembly))
+					assembly_added := True
 				end
 			end
 		ensure
 			added: assembly_added implies referenced_assemblies.count = old referenced_assemblies.count + 1
-		rescue
-			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Rescued_exception, [(create {EXCEPTIONS}).exception_trace])
-			l_retried := True
-			retry
 		end
 
 	add_default_assemblies is
@@ -145,6 +129,32 @@ feature -- Status Setting
 
 feature -- Basic Operations
 
+	loaded_assembly (a_file_name: STRING): ASSEMBLY is
+			-- Load assembly at location `a_file_name'.
+			-- `a_file_name' can be relative to framework path (e.g. `System.dll')
+		require
+			non_void_file_name: a_file_name /= Void
+		local
+			l_retried: BOOLEAN
+			l_path: STRING
+		do
+			if not l_retried then
+				if feature {SYSTEM_FILE}.exists (a_file_name) then
+					Result := feature {ASSEMBLY}.load_from (a_file_name)
+				else
+					l_path := feature {RUNTIME_ENVIRONMENT}.get_runtime_directory
+					l_path.append (a_file_name)
+					if feature {SYSTEM_FILE}.exists (l_path) then
+						Result := feature {ASSEMBLY}.load_from (l_path)
+					end
+				end
+			end
+		rescue
+			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Rescued_exception, [(create {EXCEPTIONS}).exception_trace])
+			l_retried := True
+			retry
+		end
+	
 	complete is
 			-- Complete `Referenced_assemblies' with all assembly references
 		local

@@ -1,12 +1,8 @@
 indexing
-
-	description:
-		"[
-		Access to internal object properties.
-		This class may be used as ancestor by classes needing its
-		facilities.
+	description: "[
+			Access to internal object properties.
+			This class may be used as ancestor by classes needing its facilities.
 		]"
-
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -83,6 +79,49 @@ feature -- Creation
 			end
 		end
 
+	new_special_any_instance (type_id, count: INTEGER): SPECIAL [ANY] is
+			-- New instance of dynamic `type_id' that represents
+			-- a SPECIAL with `count' element. To create a SPECIAL of
+			-- basic type, use `TO_SPECIAL'.
+		require
+			count_valid: count >= 0
+			type_id_positive: type_id > 0
+			special_type: is_special_any_type (type_id)
+		do
+			check
+				False
+			end
+		ensure
+			special_type: is_special (Result)
+			dynamic_type_set: dynamic_type (Result) = type_id
+			count_set: Result.count = count
+		end
+
+feature -- Status report
+
+	is_special_any_type (type_id: INTEGER): BOOLEAN is
+			-- Is type represented by `type_id' represent
+			-- a SPECIAL [XX] where XX is a reference type.
+		require
+			type_id_valid: type_id > 0
+		do
+			check
+				False
+			end
+		end
+
+	is_special_type (type_id: INTEGER): BOOLEAN is
+			-- Is type represented by `type_id' represent
+			-- a SPECIAL [XX] where XX is a reference type
+			-- or a basic type.
+		require
+			type_id_valid: type_id > 0
+		do
+			check
+				False
+			end
+		end
+
 feature -- Access
 
 	Pointer_type: INTEGER is 0
@@ -135,18 +174,9 @@ feature -- Access
 		do
 			check
 				False
-				-- Not supported.
 			end
 		end
 	
-	generic_parameter_count (object: ANY): INTEGER is
-			-- Number of generic parameters. 0 if none.
-		require
-			object_not_void: object /= Void
-		do
-			Result := feature {ISE_RUNTIME}.generic_parameter_count (object)
-		end
-
 	field (i: INTEGER; object: ANY): ANY is
 			-- Object attached to the `i'-th field of `object'
 			-- (directly or through a reference)
@@ -157,92 +187,6 @@ feature -- Access
 			not_special: not is_special (object)
 		do
 			Result := field_of_type (i, object, dynamic_type (object))
-		end
-
-	field_of_type (i: INTEGER; object: ANY; type_id: INTEGER): ANY is
-			-- Object attached to the `i'-th field of `object'
-			-- (directly or through a reference)
-		require
-			object_not_void: object /= Void
-			index_large_enough: i >= 1
-			index_small_enough: i <= field_count (object)
-			not_special: not is_special (object)
-			valid_type: dynamic_type (object) = type_id
-		local
-			m: ARRAYED_LIST [CLI_CELL [MEMBER_INFO]]
-			a: MEMBER_INFO
-			cv_f: FIELD_INFO
-			cv_p: PROPERTY_INFO
-			an_obj: SYSTEM_OBJECT
-			an_int8: INTEGER_8
-			an_int16: INTEGER_16
-			an_int32: INTEGER
-			an_int64: INTEGER_64
-			a_char: CHARACTER
-			a_boolean: BOOLEAN
-			a_real: REAL
-			a_double: DOUBLE
-			a_pointer: POINTER
-		do
-			m := get_members (type_id)
-			if m /= Void and then m.valid_index (i) then
-				a := m.i_th (i).item
-				cv_f ?= a
-				cv_p ?= a
-				if cv_f /= Void then
-					an_obj := cv_f.get_value (object)
-				elseif cv_p /= Void then
-					an_obj := cv_p.get_value (object, Void)
-				end
-				
-				Result ?= an_obj
-				if an_obj /= Void and then Result = Void then
-						-- We are most likely facing a basic type or a non-Eiffel type
-					inspect
-						field_type (i, object)
-					when Pointer_type then
-						a_pointer ?= an_obj
-						Result := a_pointer
-						
-					when Character_type then
-						a_char ?= an_obj
-						Result := a_char
-						
-					when Boolean_type then
-						a_boolean ?= an_obj
-						Result := a_boolean
-						
-					when Integer_8_type then
-						an_int8 ?= an_obj
-						Result := an_int8
-						
-					when Integer_16_type then
-						an_int16 ?= an_obj
-						Result := an_int16
-						
-					when Integer_32_type then
-						an_int32 ?= an_obj
-						Result := an_int32
-						
-					when Integer_64_type then
-						an_int64 ?= an_obj
-						Result := an_int64
-						
-					when Real_type then
-						a_real ?= an_obj
-						Result := a_real
-						
-					when Double_type then
-						a_double ?= an_obj
-						Result := a_double
-						
-					else
-						check
-							not_supported: False
-						end
-					end
-				end
-			end
 		end
 
 	field_name (i: INTEGER; object: ANY): STRING is
@@ -359,12 +303,8 @@ feature -- Access
 			index_large_enough: i >= 1
 			index_small_enough: i <= field_count (object)
 			boolean_field: field_type (i, object) = Boolean_type
--- TEMPORARY HACK until compiler is fixed and Result ?= field (i, object) works properly
-		local
-			bref: BOOLEAN_REF
 		do
-			bref ?= field (i, object)
-			Result := bref.item
+			Result ?= field (i, object)
 		end
 
 	integer_8_field (i: INTEGER; object: ANY): INTEGER_8 is
@@ -615,6 +555,92 @@ feature {NONE} -- Implementation
 			-- ID for new stored type
 		once
 			Result := (14).to_integer
+		end
+
+	field_of_type (i: INTEGER; object: ANY; type_id: INTEGER): ANY is
+			-- Object attached to the `i'-th field of `object'
+			-- (directly or through a reference)
+		require
+			object_not_void: object /= Void
+			index_large_enough: i >= 1
+			index_small_enough: i <= field_count (object)
+			not_special: not is_special (object)
+			valid_type: dynamic_type (object) = type_id
+		local
+			m: ARRAYED_LIST [CLI_CELL [MEMBER_INFO]]
+			a: MEMBER_INFO
+			cv_f: FIELD_INFO
+			cv_p: PROPERTY_INFO
+			an_obj: SYSTEM_OBJECT
+			an_int8: INTEGER_8
+			an_int16: INTEGER_16
+			an_int32: INTEGER
+			an_int64: INTEGER_64
+			a_char: CHARACTER
+			a_boolean: BOOLEAN
+			a_real: REAL
+			a_double: DOUBLE
+			a_pointer: POINTER
+		do
+			m := get_members (type_id)
+			if m /= Void and then m.valid_index (i) then
+				a := m.i_th (i).item
+				cv_f ?= a
+				cv_p ?= a
+				if cv_f /= Void then
+					an_obj := cv_f.get_value (object)
+				elseif cv_p /= Void then
+					an_obj := cv_p.get_value (object, Void)
+				end
+				
+				Result ?= an_obj
+				if an_obj /= Void and then Result = Void then
+						-- We are most likely facing a basic type or a non-Eiffel type
+					inspect
+						field_type (i, object)
+					when Pointer_type then
+						a_pointer ?= an_obj
+						Result := a_pointer
+						
+					when Character_type then
+						a_char ?= an_obj
+						Result := a_char
+						
+					when Boolean_type then
+						a_boolean ?= an_obj
+						Result := a_boolean
+						
+					when Integer_8_type then
+						an_int8 ?= an_obj
+						Result := an_int8
+						
+					when Integer_16_type then
+						an_int16 ?= an_obj
+						Result := an_int16
+						
+					when Integer_32_type then
+						an_int32 ?= an_obj
+						Result := an_int32
+						
+					when Integer_64_type then
+						an_int64 ?= an_obj
+						Result := an_int64
+						
+					when Real_type then
+						a_real ?= an_obj
+						Result := a_real
+						
+					when Double_type then
+						a_double ?= an_obj
+						Result := a_double
+						
+					else
+						check
+							not_supported: False
+						end
+					end
+				end
+			end
 		end
 
 	field_dynamic_type_of_type (i: INTEGER; type_id: INTEGER): INTEGER is

@@ -19,7 +19,7 @@ all:: lace.lib
 
 lace.lib: $(OBJECTS)
 	$(RM) $@
-	$link_list
+	$link_line
 
 lace_y.c: lace_y.cwn
 	copy lace_y.cwn lace_y.c

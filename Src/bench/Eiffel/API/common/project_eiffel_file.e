@@ -85,8 +85,7 @@ feature -- Access
 			-- Retrieve project
 			-- (Note: error cannot be invalid_precompilation)
 		do
-				--| True because a project file has a header
-			Result ?= retrieved_object (True)
+			Result ?= retrieved_object
 		ensure
 			valid_result: not error implies Result /= Void
 			version_number_exists: project_version_number /= Void
@@ -96,8 +95,7 @@ feature -- Access
 			-- Retrieve the precompile info of project
 			-- (Note: error cannot be invalid_precompilation)
 		do
-				--| False because a precompiled project file has no header
-			Result ?= retrieved_object (False)
+			Result ?= retrieved_object
 		ensure
 			valid_result: not error implies Result /= Void
 		end;
@@ -136,16 +134,14 @@ feature {NONE} -- Implementation
 	incompatible_value, interrupt_value: INTEGER is unique
 			-- Error values
 
-	retrieved_object (has_header: BOOLEAN): ANY is
+	retrieved_object: ANY is
 			-- Retrieve project
 		local
 			retried: BOOLEAN
 		do
 			if not retried then
 				open_read
-				if has_header then
-					check_version_number (0);
-				end
+				check_version_number (0);
 				if not error then
 						--| To add the storable part after the project header
 						--| we need to set the position in the file

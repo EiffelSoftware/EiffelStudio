@@ -39,7 +39,7 @@ feature -- IL code generation
 			-- Generate IL byte code
 		local
 			has_result: BOOLEAN
-			il_label_compute, il_label_end, il_return_result: IL_LABEL
+			il_label_compute: IL_LABEL
 			r_type: TYPE_I
 		do
 			r_type := context.real_type(result_type)
@@ -53,16 +53,13 @@ feature -- IL code generation
 			end
 
 			il_label_compute := il_label_factory.new_label
-			il_label_end := il_label_factory.new_label
 			il_generator.generate_once_test
 			il_generator.branch_on_false (il_label_compute)
 			if has_result then
-				il_return_result := il_label_factory.new_label
 				il_generator.generate_once_result
-				il_generator.branch_to (il_return_result)
-			else
-				il_generator.branch_to (il_label_end)
 			end
+			il_generator.generate_return
+
 			il_generator.mark_label (il_label_compute)
 
 				-- Mark once as being computed from now on.
@@ -70,18 +67,9 @@ feature -- IL code generation
 			generate_il_body
 			if has_result then
 				il_generator.generate_result
-				il_generator.generate_once_store_result
 			end
-			il_generator.branch_to (il_label_end)
-
-			if has_result then
-				il_generator.mark_label (il_return_result)
-				il_generator.generate_result_assignment
-			end
-
-			il_generator.mark_label (il_label_end)
-			generate_il_return (has_result)
-
+			il_generator.generate_return
+			
 			il_generator.set_once_generation (False)
 		end
 

@@ -48,16 +48,21 @@ feature -- C code generation
 
 	print_register is
 			-- Print expression value
+		local
+			l_buf: like buffer
 		do
-			if left.type.is_long and then right.type.is_long then
-				buffer.put_string (" ((EIF_REAL_64)");
-				left.print_register;
-				generate_operator;
-				right.print_register;
-				buffer.put_character (')');
-			else
-				Precursor {NUM_BINARY_B}
-			end;
+			l_buf := buffer
+			type.c_type.generate_cast (l_buf)
+			l_buf.put_character ('(')
+			left.type.c_type.generate_conversion_to_real_64 (l_buf)
+			left.print_register
+			l_buf.put_character (')')
+			generate_operator
+			l_buf.put_character (' ')
+			right.type.c_type.generate_conversion_to_real_64 (l_buf)
+			right.print_register
+			l_buf.put_character (')')
+			l_buf.put_character (')')
 		end;
 
 end

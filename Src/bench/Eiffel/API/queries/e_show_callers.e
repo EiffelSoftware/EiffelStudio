@@ -10,7 +10,6 @@ class E_SHOW_CALLERS
 inherit
 
 	E_FEATURE_CMD;
-	SHARED_SERVER
 
 creation
 
@@ -20,25 +19,15 @@ feature -- Execution
 
 	execute is
 		local
-			fid: INTEGER;
-			clients: LINKED_LIST [CLASS_C];
-			dep: CLASS_DEPENDANCE;
-			fdep: FEATURE_DEPENDANCE;
+			clients: LINKED_LIST [E_CLASS];
 			cfeat: STRING;
-			client: CLASS_C;
-			found, first_time: BOOLEAN
-			feat: FEATURE_I;
-			class_id: INTEGER;
-			current_d: DEPEND_UNIT;
+			client: E_CLASS;
+			feat: E_FEATURE;
 			classes: PART_SORTED_TWO_WAY_LIST [CLASS_I];
-			list: PART_SORTED_TWO_WAY_LIST [STRING];
-			ftable: FEATURE_TABLE
-			table: EXTEND_TABLE [PART_SORTED_TWO_WAY_LIST [STRING], INTEGER];
+			list: SORTED_LIST [STRING];
+			table: EXTEND_TABLE [SORTED_LIST [STRING], INTEGER];
 		do
-			fid := current_feature.feature_id;
 			clients := current_class.clients;
-			class_id := current_class.id;
-			!! current_d.make (class_id, fid);
 			!! table.make (5);
 			!! classes.make;
 			from
@@ -46,29 +35,11 @@ feature -- Execution
 			until
 				clients.after
 			loop
-				dep := Depend_server.item (clients.item.id);
-				from
-						-- Loop through the features of each client
-						-- of current_class.
-					first_time := True;
-					dep.start
-				until
-					dep.after
-				loop
-					fdep := dep.item_for_iteration;
-					if fdep.has (current_d) then
-						client := clients.item;
-						if first_time then
-								-- Print out client name once.
-							classes.put_front (client.lace_class);
-							!! list.make;
-							table.put (list, client.id);
-						end;
-						first_time := False;
-						cfeat := dep.key_for_iteration;
-						list.put_front (cfeat);
-					end;
-					dep.forth;
+				client := clients.item;
+				list := current_feature.callers (current_class, client)
+				if list /= Void then
+					table.put (list, client.id);
+					classes.put_front (client.lace_class)
 				end;
 				clients.forth;
 			end;
@@ -78,20 +49,18 @@ feature -- Execution
 			until
 				classes.after
 			loop
-				client := classes.item.compiled_class;	
+				client := classes.item.compiled_eclass;	
 					-- Print out client name once.
 				client.append_clickable_name (output_window);
 				output_window.new_line;
-				ftable := client.feature_table;
 				list := table.item (client.id);
-				list.sort;
 				from
 					list.start
 				until
 					list.after
 				loop
 					cfeat := list.item;
-					feat := ftable.item (cfeat);
+					feat := current_class.feature_with_name (cfeat);
 					output_window.put_char ('%T');
 					if feat = Void then
 						output_window.put_string ("invariant")

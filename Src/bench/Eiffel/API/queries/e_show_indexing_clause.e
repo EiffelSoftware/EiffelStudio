@@ -45,7 +45,7 @@ feature -- Execution
 			sorted_class_names: SORTED_TWO_WAY_LIST [STRING];
 			classes: EXTEND_TABLE [CLASS_I, STRING];
 			a_classi: CLASS_I;
-			a_classc: CLASS_C;
+			a_class: E_CLASS;
 		do
 			!!sorted_class_names.make;
 			classes := cluster.classes;
@@ -71,10 +71,10 @@ feature -- Execution
 			loop
 				output_window.put_string ("%T");
 				a_classi := classes.item (sorted_class_names.item);
-				a_classc := a_classi.compiled_class;
-				if a_classc /= Void then
-					a_classc.append_clickable_signature (output_window);
-					display_indexing (a_classc)
+				a_class := a_classi.compiled_eclass;
+				if a_class /= Void then
+					a_class.append_clickable_signature (output_window);
+					display_indexing (a_class)
 				else
 					a_classi.append_clickable_name (output_window);
 					output_window.put_string ("  (not in system)")
@@ -84,18 +84,24 @@ feature -- Execution
 			end
 		end;
 
-	display_indexing (classc: CLASS_C) is
+	display_indexing (e_class: E_CLASS) is
 			-- Display the indexing clause of `classc' if any.
 		local
-			indexes: EIFFEL_LIST_B [INDEX_AS_B];
-			index_list: EIFFEL_LIST_B [ATOMIC_AS_B];
+			indexes: EIFFEL_LIST [INDEX_AS];
+			index_list: EIFFEL_LIST [ATOMIC_AS];
 			index_tag: STRING;
-			index: INDEX_AS_B
+			index: INDEX_AS;
+			ast: CLASS_AS
 		do
-			if Ast_server.has (classc.id) then
-				indexes := Ast_server.item (classc.id).indexes;
+			ast := e_class.ast;
+			if ast /= Void then
+				indexes := ast.indexes;
 				if indexes /= Void then
-					from indexes.start until indexes.after loop
+					from 
+						indexes.start 
+					until 
+						indexes.after 
+					loop
 						index := indexes.item;
 						index_tag := index.tag;
 						if 
@@ -108,7 +114,11 @@ feature -- Execution
 							output_window.put_string (index_tag);
 							output_window.put_string (": ")
 							index_list := index.index_list;
-							from index_list.start until index_list.after loop
+							from 
+								index_list.start 
+							until 
+								index_list.after 
+							loop
 								output_window.put_string (index_list.item.string_value);
 								if not index_list.islast then
 									output_window.put_string (", ")
@@ -122,4 +132,4 @@ feature -- Execution
 			end
 		end;
 
-end -- class EWB_INDEXING
+end -- class E_SHOW_INDEXING_CLAUSE

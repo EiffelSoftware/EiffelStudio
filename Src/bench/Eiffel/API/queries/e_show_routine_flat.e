@@ -31,10 +31,10 @@ feature -- Execution
 
 	execute is
 		local
-			ctxt: FORMAT_FEAT_CONTEXT
+			ctxt: ROUTINE_TEXT_FORMATTER
 		do
-			!! ctxt.make (current_class);
-			ctxt.execute (current_feature);
+			!! ctxt;
+			ctxt.format (current_feature, current_class);
 			output_window.put_string (ctxt.text.image);
 			output_window.new_line;
 		end;

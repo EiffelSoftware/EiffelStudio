@@ -20,7 +20,7 @@ creation
 
 feature -- Access
 
-	criterium (f: FEATURE_I): BOOLEAN is
+	criterium (f: E_FEATURE): BOOLEAN is
 		do
 			Result := any_criterium (f);
 			Result := Result and then (f.is_once or else
@@ -29,20 +29,34 @@ feature -- Access
 
 feature -- Output
 
-	display_feature (f: FEATURE_I; c: CLASS_C) is
+	display_feature (f: E_FEATURE; c: E_CLASS) is
 		local
-			const: CONSTANT_I
+			const: E_CONSTANT;
+			ec: E_CLASS;
+			str: STRING
 		do
 			f.append_clickable_signature (output_window, c);
 			if f.is_constant then
 				output_window.put_string (" is ");
 				const ?= f;	--| Cannot fail
+				ec := const.type.associated_eclass;
+				if equal (ec.name, "character") then
+					str := "%""
+				elseif equal (ec.name, "string") then
+					str := "'"
+				else
+					str := ""
+				end;
 				if const.is_unique then
 					output_window.put_string ("unique (");
-					const.value.append_clickable_signature (output_window);
+					output_window.put_string (str);
+					output_window.put_string (const.value);
+					output_window.put_string (str);
 					output_window.put_char (')')
 				else
-					const.value.append_clickable_signature (output_window);
+					output_window.put_string (str);
+					output_window.put_string (const.value);
+					output_window.put_string (str);
 				end
 			end
 		end;

@@ -20,11 +20,11 @@ feature -- Execution
 
 	execute is
 		local
-			classes: PART_SORTED_TWO_WAY_LIST [CLASS_C];
+			classes: PART_SORTED_TWO_WAY_LIST [E_CLASS];
 			rout_id_set: ROUT_ID_SET;
 			rout_id, i: INTEGER;
-			select_table: SELECT_TABLE;
-			other_feature: FEATURE_I
+			other_feature: E_FEATURE;
+			c: E_CLASS
 		do
 			!! classes.make;
 			rec_add_parents (classes, current_class);
@@ -35,7 +35,7 @@ feature -- Execution
 			until
 				i > rout_id_set.count
 			loop
-				rout_id := rout_id_set.item (i).abs;
+				rout_id := rout_id_set.item (i);
 				output_window.put_string ("%NHistory branch #");
 				output_window.put_int (i);
 				output_window.put_string ("%N-----------------%N");
@@ -44,8 +44,8 @@ feature -- Execution
 				until
 					classes.after
 				loop
-					select_table := classes.item.feature_table.origin_table;
-					other_feature := select_table.item (rout_id);;
+					c := classes.item;
+					other_feature := c.feature_with_rout_id (rout_id);
 					if other_feature /= Void then
 						classes.item.append_clickable_name (output_window);
 						output_window.put_string (" ");
@@ -60,22 +60,23 @@ feature -- Execution
 			end;
 		end;
 
-	rec_add_parents (classes: PART_SORTED_TWO_WAY_LIST [CLASS_C]; class_c: CLASS_C) is
+	rec_add_parents (classes: PART_SORTED_TWO_WAY_LIST [E_CLASS]; 
+			e_class: E_CLASS) is
 			-- Record parents of `class_c' to `classes'.	
 		local
 			parents: FIXED_LIST [CL_TYPE_A];
-			parent_c: CLASS_C
+			e_parent: E_CLASS
 		do
-			parents := class_c.parents;
-			classes.extend (class_c);
+			parents := e_class.parents;
+			classes.extend (e_class);
 			from
 				parents.start
 			until
 				parents.after
 			loop
-				parent_c := parents.item.associated_class;
-				if not classes.has (parent_c) then
-					rec_add_parents (classes, parent_c);
+				e_parent := parents.item.associated_eclass;
+				if not classes.has (e_parent) then
+					rec_add_parents (classes, e_parent);
 				end;
 				parents.forth;
 			end;	

@@ -10,7 +10,7 @@ class E_SHOW_MODIFIED_CLASSES
 inherit
 
 	E_CMD;
-	SHARED_WORKBENCH
+	SHARED_EIFFEL_PROJECT
 
 creation
 
@@ -24,7 +24,7 @@ feature -- Execution
 			clusters: LINKED_LIST [CLUSTER_I];
 			cursor: CURSOR;
 		do
-			clusters := Universe.clusters;
+			clusters := Eiffel_universe.clusters;
 			if not clusters.empty then
 					--| Skip precompile clusters for now
 				from
@@ -54,9 +54,9 @@ feature {NONE} -- Implementation
 			sorted_class_names: SORTED_TWO_WAY_LIST [STRING];
 			classes: EXTEND_TABLE [CLASS_I, STRING];
 			a_classi: CLASS_I;
-			a_classc: CLASS_C
+			a_classe: E_CLASS
 		do
-			!!sorted_class_names.make;
+			!! sorted_class_names.make;
 			classes := cluster.classes;
 			from 
 				classes.start 
@@ -83,9 +83,9 @@ feature {NONE} -- Implementation
 				loop
 					output_window.put_string ("%T");
 					a_classi := classes.item (sorted_class_names.item);
-					a_classc := a_classi.compiled_class;
-					if a_classc /= Void then
-						a_classc.append_clickable_signature (output_window)
+					a_classe := a_classi.compiled_eclass;
+					if a_classe /= Void then
+						a_classe.append_clickable_signature (output_window)
 					else
 						a_classi.append_clickable_name (output_window);
 						output_window.put_string ("  (not in system)")

@@ -10,7 +10,7 @@ class E_SHOW_STATISTICS
 inherit
 
 	E_CMD;
-	SHARED_WORKBENCH
+	SHARED_EIFFEL_PROJECT
 
 creation
 
@@ -21,9 +21,8 @@ feature -- Execution
 	execute is
 			-- Show system statistics.
 		do
-			if System.id_array /= Void then
-					-- The system has to be compiled.
-				output_window.put_int (System.nb_of_classes);
+			if Eiffel_project.initialized then
+				output_window.put_int (Eiffel_system.number_of_classes);
 				output_window.put_string (" classes in the system.");
 				output_window.new_line
 			end

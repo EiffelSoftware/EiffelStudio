@@ -56,6 +56,7 @@ feature -- Basic Operations
 		end
 
 	display_state_text is
+			-- Display message text relative to current state.
 		require
 			texts_exists: title /= Void and message /= Void
 		deferred

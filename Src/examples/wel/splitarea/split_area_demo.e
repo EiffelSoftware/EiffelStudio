@@ -68,7 +68,7 @@ feature {NONE} -- Implementation
 	background_brush: WEL_BRUSH is
 			-- Dialog boxes background color is the same than
 			-- button color.
-		once
+		do
 			create Result.make_by_sys_color (Color_btnface + 1)
 		end
 
@@ -79,7 +79,7 @@ feature {NONE} -- Implementation
 			split_area.move_and_resize (0, 0, a_width, a_height, True)
 		end
 
-	Title: STRING is "WEL SplitArea Example (c) ISE 2000"
+	Title: STRING is "WEL SplitArea Example (c) ISE 2000-2001"
 			-- Window's title
 
 end -- class SPLIT_AREA_WINDOW

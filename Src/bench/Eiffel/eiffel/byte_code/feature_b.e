@@ -8,7 +8,9 @@ inherit
 		redefine
 			is_feature, set_parameters, 
 			parameters, enlarged,
-			is_feature_special, make_special_byte_code
+			is_feature_special, make_special_byte_code,
+			is_unsafe, optimized_byte_node,
+			calls_special_features, is_special_feature
 		end;
 
 feature 
@@ -118,5 +120,72 @@ feature -- Byte code generation
 		do
 			Result := Bc_feature_inv
 		end;
+
+feature -- Array optimization
+
+	is_special_feature: BOOLEAN is
+		local
+			cl_type: CL_TYPE_I;
+			base_class: CLASS_C;
+			f: FEATURE_I;
+			dep: DEPEND_UNIT
+		do
+			cl_type ?= context_type; -- Cannot fail
+			base_class := cl_type.base_class;
+			f := base_class.feature_table.item (feature_name);
+			!!dep.make (base_class.id, f.feature_id);
+			Result := optimizer.special_features.has (dep);
+		end;
+
+	is_unsafe: BOOLEAN is
+		local
+			cl_type: CL_TYPE_I;
+			base_class: CLASS_C;
+			f: FEATURE_I
+		do
+			cl_type ?= context_type; -- Cannot fail
+			base_class := cl_type.base_class;
+			f := base_class.feature_table.item (feature_name);
+debug ("OPTIMIZATION")
+	io.error.putstring ("%N%N%NTESTING is_unsafe for ");
+	io.error.putstring (feature_name);
+	io.error.putstring (" from ")
+	io.error.putstring (base_class.class_name);
+	io.error.putstring (" is NOT safe%N");
+end;
+			optimizer.test_safety (f, base_class);
+			Result := (not optimizer.is_safe (f))
+				or else (parameters /= Void and then parameters.is_unsafe)
+debug ("OPTIMIZATION")
+	if result then
+		io.error.putstring (f.feature_name);
+		io.error.putstring (" from ")
+		io.error.putstring (base_class.class_name);
+		io.error.putstring (" is NOT safe%N");
+	end;
+end
+		end
+
+	optimized_byte_node: like Current is
+		do
+			Result := Current;
+			if parameters /= Void then
+				parameters := parameters.optimized_byte_node
+			end
+		end;
+
+	calls_special_features (array_desc: INTEGER): BOOLEAN is
+		do
+			if parameters /= Void then
+				Result := parameters.calls_special_features (array_desc)
+			end
+		end
+
+feature {NONE} -- Array optimization
+
+	optimizer: ARRAY_OPTIMIZER is
+		do
+			Result := System.remover.array_optimizer
+		end
 
 end

@@ -10,7 +10,9 @@ inherit
 			print_register, propagate,
 			free_register, enlarged, used,
 			has_gcable_variable, has_call,
-			make_byte_code
+			make_byte_code, is_unsafe,
+			calls_special_features,
+			optimized_byte_node
 		end;
 	
 feature 
@@ -121,5 +123,23 @@ feature -- Byte code generation
 			end;
 			expr.make_byte_code (ba);
 		end;
+
+feature -- Array optimization
+
+	calls_special_features (array_desc: INTEGER): BOOLEAN is
+		do
+			Result := expr.calls_special_features (array_desc)
+		end
+
+	is_unsafe: BOOLEAN is
+		do
+			Result := expr.is_unsafe
+		end
+
+	optimized_byte_node: like Current is
+		do
+			Result := Current;
+			expr := expr.optimized_byte_node
+		end
 
 end

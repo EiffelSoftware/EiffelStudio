@@ -10,7 +10,8 @@ inherit
 			copy, setup, is_equal, consistent
 		redefine
 			enlarge_tree, analyze, generate, make_byte_code,
-			has_loop, assigns_to
+			has_loop, assigns_to, is_unsafe, optimized_byte_node,
+			calls_special_features
 		end;
 	FIXED_LIST [T]
 
@@ -100,6 +101,43 @@ feature -- Array optimization
 				Result := item.assigns_to (i);
 				forth;
 			end;
+		end
+
+	calls_special_features (array_desc: INTEGER): BOOLEAN is
+		do
+			from
+				start
+			until
+				Result or else after
+			loop
+				Result := item.calls_special_features (array_desc)
+				forth
+			end
+		end
+
+	is_unsafe: BOOLEAN is
+		do
+			from
+				start
+			until
+				Result or else after
+			loop
+				Result := item.is_unsafe
+				forth;
+			end;
+		end
+
+	optimized_byte_node: like Current is
+		do
+			Result := Current
+			from
+				start
+			until
+				after
+			loop
+				replace (item.optimized_byte_node)
+				forth
+			end
 		end
 
 feature -- Convenience

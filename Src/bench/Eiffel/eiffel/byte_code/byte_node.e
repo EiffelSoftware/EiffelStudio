@@ -101,7 +101,11 @@ feature
 
 feature -- Array optimization
 
-	calls_forbidden_features (s: FORBIDDEN_FEATURES): BOOLEAN is
+	calls_special_features (array_desc: INTEGER): BOOLEAN is
+		do
+		end
+
+	is_unsafe: BOOLEAN is
 		do
 		end;
 
@@ -116,6 +120,12 @@ feature -- Array optimization
 			-- i = 0:	Does this byte node assign something to `Result'
 			-- i < 0:	Does this byte node assign something to the local # <-n>
 		do
+		end
+
+	optimized_byte_node: like Current is
+			-- Modify the byte code if the loop optimization is safe
+		do
+			Result := Current
 		end
 
 end

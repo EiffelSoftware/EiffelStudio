@@ -7,7 +7,9 @@ inherit
 	CALL_B
 		redefine
 			enlarged, make_byte_code, make_creation_byte_code,
-			need_invariant, set_need_invariant
+			need_invariant, set_need_invariant,
+			is_unsafe, calls_special_features, optimized_byte_node,
+			is_special_feature
 		end
 	
 feature 
@@ -109,6 +111,101 @@ feature -- Byte code generation
 		do
 			target.make_byte_code (ba);
 			message.make_creation_byte_code (ba);
+		end;
+
+feature -- Array optimization
+
+	is_special_feature: BOOLEAN is
+		do
+			Result := target.is_special_feature
+		end
+
+	calls_special_features (array_desc: INTEGER): BOOLEAN is
+		local
+			local_b: LOCAL_B;
+			arg_b: ARGUMENT_B;
+			result_b: RESULT_B
+		do
+			if target.conforms_to_array_opt and then
+				(target.array_descriptor = array_desc)
+			then
+					-- The target of the message matches `array_desc'
+					-- Check the message
+				Result := check_message
+			end;
+			Result := Result or else
+				target.calls_special_features (array_desc) or else
+				message.calls_special_features (array_desc)
+		end
+
+	is_unsafe: BOOLEAN is
+		do
+			Result := target.is_unsafe or else
+				message.is_unsafe
+		end
+
+	optimized_byte_node: CALL_B is
+		local
+			opt_context: OPTIMIZATION_CONTEXT;
+			array_desc: INTEGER;
+			optimize: BOOLEAN;
+			optimizer: ARRAY_OPTIMIZER;
+			opt_feat_b: OPT_FEAT_B;
+			m: CALL_B;
+			t: ACCESS_B;
+			nested_b: NESTED_B
+		do
+			if target.conforms_to_array_opt then
+				optimizer := System.remover.array_optimizer;
+				array_desc := target.array_descriptor;
+				opt_context := optimizer.optimization_context;
+				if opt_context.generated_array_desc.has (array_desc) then
+					if check_message then
+						optimize := True
+					end;
+				end;
+			end;
+			if optimize then
+				optimizer.set_current_feature_optimized;
+
+				!!opt_feat_b;
+				opt_feat_b.set_array_target (array_desc);
+				m := message;
+				t := m.target;
+
+				opt_feat_b.set_parameters (t.parameters.optimized_byte_node)
+				opt_feat_b.set_type (t.type)
+					-- if `parameters.count' = 1 then it is `item'
+				opt_feat_b.set_special_feature_type;
+
+				if t = m then
+						-- Last nested call
+						-- The OPT_FEAT_B node is the optimized node
+					Result := opt_feat_b;
+					opt_feat_b.set_parent (parent);
+				else
+						-- Create a nested node
+					Result := Current
+					target := opt_feat_b;
+					opt_feat_b.set_parent (Current);
+					nested_b ?= message; -- Cannot fail
+					message := nested_b.message;
+						-- Re-attach the message
+					message.set_parent (Current)
+				end;
+
+				io.error.putstring ("NOT IMPLEMENTED%N");
+			else
+				Result := Current;
+				message := message.optimized_byte_node
+				target := target.optimized_byte_node
+			end;
+		end;
+
+	check_message: BOOLEAN is
+			-- Check to see if the message is a special feature
+		do
+			Result := message.is_special_feature
 		end;
 
 end

@@ -4,7 +4,8 @@ inherit
 
 	EXPR_B
 		redefine
-			analyze, generate, unanalyze, enlarged, make_byte_code
+			analyze, generate, unanalyze, enlarged, make_byte_code,
+			is_unsafe, optimized_byte_node, calls_special_features
 		end;
 	ASSERT_TYPE
 		export
@@ -194,5 +195,23 @@ feature
 		do
 			Result := Bc_end_assert;
 		end;
+
+feature -- Array optimization
+
+	calls_special_features (array_desc: INTEGER): BOOLEAN is
+		do
+			Result := expr.calls_special_features (array_desc)
+		end
+
+	is_unsafe: BOOLEAN is
+		do
+			Result := expr.is_unsafe
+		end
+
+	optimized_byte_node: like Current is
+		do
+			Result := Current
+			expr := expr.optimized_byte_node
+		end
 
 end

@@ -11,7 +11,7 @@ inherit
 			creation_access,
 			assign_code, expanded_assign_code, reverse_code,
 			make_end_assignment, make_end_reverse_assignment,
-			bit_assign_code, assigns_to
+			bit_assign_code, assigns_to, array_descriptor
 		end
 	
 feature 
@@ -126,6 +126,11 @@ feature -- Array optimization
 	assigns_to (i: INTEGER): BOOLEAN is
 		do
 			Result := position = - i
+		end;
+
+	array_descriptor: INTEGER is
+		do
+			Result := -position
 		end;
 
 end

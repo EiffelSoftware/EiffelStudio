@@ -118,10 +118,6 @@ feature
 	m_desc_server: M_DESC_SERVER;
 			-- Server for class type descriptors
 
-	poly_server: POLY_SERVER;
-			-- Server of polymorphic unit tables
-			--|SHOULD eventually be removed.
-
 	id_array: ARRAY [CLASS_C];
 			-- Array of classes indexed by their class `id's
 
@@ -1898,6 +1894,7 @@ end;
 				io.error.putstring ("Removing dead code%N");
 				remove_dead_code;
 			end;
+			tmp_opt_byte_server.flush;
 
 			!FINAL_MAKER!makefile_generator.make;
 
@@ -1945,6 +1942,7 @@ end;
 				-- Clean Eiffel table
 			Eiffel_table.wipe_out;
 			Tmp_poly_server.clear;
+			Tmp_opt_byte_server.clear;
 
 			remover := Void;
 			remover_off := old_remover_off;
@@ -1970,7 +1968,7 @@ feature -- Dead code removal
 			!!remover.make;
 
 				-- record the descendants of ARRAY;
-			if array_optimization_level > 0 then
+			if array_optimization_on then
 				remover.record_array_descendants
 			end;
 
@@ -2044,17 +2042,13 @@ feature -- Dead code removal
 
 feature -- In-lining optimization
 
-	array_optimization_level: INTEGER;
-			-- Level of array optimization
+	array_optimization_on: BOOLEAN;
+			-- Is array optimization on?
 
-	set_array_optimization_level (i: INTEGER) is
+	set_array_optimization_on (b: BOOLEAN) is
 		do
-			array_optimization_level := i;
+			array_optimization_on := b;
 		end;
-
-	optimizer: OPTIMIZER is
-		once
-		end
 
 feature
 
@@ -3381,7 +3375,7 @@ feature -- Conveniences
 	reset_system_level_options is
 		do
 			remover_off := False;
-			array_optimization_level := 0;
+			array_optimization_on := False;
 			code_replication_off := True;
 			exception_stack_managed := False; 
 			Rescue_status.set_fail_on_rescue (False)

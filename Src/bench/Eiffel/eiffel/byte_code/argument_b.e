@@ -7,7 +7,7 @@ inherit
 	ACCESS_B
 		redefine
 			enlarged, type, is_argument, is_local, is_creatable,
-			make_byte_code, register_name
+			make_byte_code, register_name, array_descriptor
 		end;
 	
 feature 
@@ -71,5 +71,12 @@ feature -- Byte code generation
 			ba.append (Bc_arg);
 			ba.append_short_integer (position);
 		end;
+
+feature -- Array optimization
+
+	array_descriptor: INTEGER is
+		do
+			Result := position
+		end
 
 end

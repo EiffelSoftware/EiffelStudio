@@ -6,7 +6,8 @@ inherit
 
 	INSTR_B
 		redefine
-			enlarge_tree, analyze, generate, make_byte_code
+			enlarge_tree, analyze, generate, make_byte_code,
+			is_unsafe, optimized_byte_node, calls_special_features
 		end
 	
 feature 
@@ -44,5 +45,23 @@ feature
 			make_breakable (ba);
 			call.make_byte_code (ba);
 		end;
+
+feature -- Array optimization
+
+	calls_special_features (array_desc: INTEGER): BOOLEAN is
+		do
+			Result := call.calls_special_features (array_desc)
+		end
+
+	is_unsafe: BOOLEAN is
+		do
+			Result := call.is_unsafe
+		end;
+
+	optimized_byte_node: like Current is
+		do
+			Result := Current
+			call := call.optimized_byte_node
+		end
 
 end

@@ -8,7 +8,8 @@ inherit
 		redefine
 			analyze, generate, enlarge_tree,
 			find_assign_result, last_all_in_result,
-			has_loop, assigns_to
+			has_loop, assigns_to, is_unsafe,
+			optimized_byte_node, calls_special_features
 		end;
 	VOID_REGISTER
 		export
@@ -106,5 +107,27 @@ feature -- Array optimization
 		do
 			Result := compound /= Void and then compound.assigns_to (i)
 		end;
+
+	calls_special_features (array_desc: INTEGER): BOOLEAN is
+		do
+			Result := (compound /= Void and then
+							compound.calls_special_features (array_desc))
+				or else expr.calls_special_features (array_desc)
+		end
+
+	is_unsafe: BOOLEAN is
+		do
+			Result := (compound /= Void and then compound.is_unsafe)
+				or else expr.is_unsafe
+		end
+
+	optimized_byte_node: like Current is
+		do
+			Result := Current;
+			if compound /= Void then
+				compound := compound.optimized_byte_node
+			end
+			expr := expr.optimized_byte_node
+		end
 
 end

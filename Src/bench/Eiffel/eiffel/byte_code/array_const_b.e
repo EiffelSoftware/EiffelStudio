@@ -6,7 +6,8 @@ inherit
 
 	EXPR_B
 		redefine
-			make_byte_code, enlarged, enlarge_tree
+			make_byte_code, enlarged, enlarge_tree, is_unsafe,
+			optimized_byte_node, calls_special_features
 		end
 	
 feature 
@@ -105,5 +106,23 @@ feature
 			ba.append_short_integer (feat_id);
 			ba.append_integer (expressions.count);
 		end;
+
+feature -- Array optimization
+
+	calls_special_features (array_desc: INTEGER): BOOLEAN is
+		do
+			Result := expressions.calls_special_features (array_desc)
+		end
+
+	is_unsafe: BOOLEAN is
+		do
+			Result := expressions.is_unsafe
+		end
+
+	optimized_byte_node: like Current is
+		do
+			Result := Current
+			expressions := expressions.optimized_byte_node
+		end
 
 end

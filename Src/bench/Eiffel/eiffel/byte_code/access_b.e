@@ -9,12 +9,14 @@ inherit
 			print_register as old_print_register,
 			free_register as old_free_register
 		redefine
-			has_gcable_variable, propagate, generate, unanalyze
+			has_gcable_variable, propagate, generate, unanalyze,
+			optimized_byte_node
 		end;
 	CALL_B
 		redefine
 			free_register, print_register,
-			has_gcable_variable, propagate, generate, unanalyze
+			has_gcable_variable, propagate, generate, unanalyze,
+			optimized_byte_node
 		select
 			print_register, free_register
 		end;
@@ -546,5 +548,25 @@ feature -- Byte code generation
 							(parent.parent = Void)
 						)
 		end;
+
+feature -- Array optimization
+
+	optimized_byte_node: like Current is
+			-- Redefined for type check
+		do
+			Result := Current
+		end;
+
+	conforms_to_array_opt: BOOLEAN is
+		do
+			Result := (is_argument or else is_local or else is_result)
+				and then type.conforms_to_array
+		end
+
+	array_descriptor: INTEGER is
+			-- Array description
+			-- argument:<0; Result:0; local:>0
+		do
+		end
 
 end

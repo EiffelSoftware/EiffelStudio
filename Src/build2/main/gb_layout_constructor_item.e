@@ -54,8 +54,7 @@ feature {NONE} -- Initialization
 			default_create
 			set_object (an_object)
 			set_text (object.short_type)
-			create pixmaps
-			set_pixmap (pixmaps.pixmap_by_name (object.type))
+			update_pixmap
 		ensure
 			object_assigned: object = an_object
 			text_assigned: text.is_equal (object.type.substring (4, object.type.count))
@@ -91,6 +90,20 @@ feature {GB_OBJECT} -- Implementation
 			-- Assign `an_object' to `object'
 		do
 			object := an_object
+		end
+		
+feature {GB_COMMAND_CHANGE_TYPE} -- Implementation
+
+	update_pixmap is
+			-- Set pixmap of `Current' to match type
+			-- of `object'
+		require
+			object_not_void: Object /= Void
+		local
+			pixmaps: GB_SHARED_PIXMAPS
+		do
+			create pixmaps
+			set_pixmap (pixmaps.pixmap_by_name (object.type))
 		end
 
 feature {NONE} -- Implementation

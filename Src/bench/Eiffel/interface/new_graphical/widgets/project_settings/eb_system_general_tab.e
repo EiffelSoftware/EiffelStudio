@@ -107,9 +107,7 @@ feature -- Store/Retrieve
 
 				-- Set name of system.
 			safe_name := app_name_field.text
-			safe_name.prepend_character ('%"')
-			safe_name.append_character ('%"')
-			root_ast.set_system_name (new_id_sd (safe_name, False))
+			root_ast.set_system_name (new_id_sd (safe_name, True))
 
 				-- Set name of root class and creation procedure if any.
 			create root_sd.initialize (

@@ -24,18 +24,18 @@ inherit
 	
 feature -- Access
 
-        text: STRING is
-                        -- Text in component
-                require
-                        exists: not destroyed
-                do
-                        Result:= implementation.text
-                end 
+	text: STRING is
+			-- Text in component
+		require
+			exists: not destroyed
+		do
+			Result:= implementation.text
+		end 
 	
 feature -- Status setting
 	
 	set_text (txt: STRING) is
-			-- set text in component to 'txt'
+			-- Make `txt' the new `text'.
 		require
 			exist: not destroyed			
 			not_void: txt /= Void
@@ -46,7 +46,7 @@ feature -- Status setting
 		end
 	
 	append_text (txt: STRING) is
-			-- append 'txt' into component
+			-- Append `txt' into component.
 		require
 			exist: not destroyed			
 			not_void: txt /= Void
@@ -57,7 +57,7 @@ feature -- Status setting
 		end
 	
 	prepend_text (txt: STRING) is
-			-- prepend 'txt' into component
+			-- Prepend `txt' into component.
 		require
 			exist: not destroyed			
 			not_void: txt /= Void
@@ -68,7 +68,7 @@ feature -- Status setting
 		end
 	
 	set_position (pos: INTEGER) is
-			-- set current insertion position
+			-- Set current insertion position.
 		require
 			exist: not destroyed			
 			valid_pos: pos > 0 and pos <= text.count
@@ -77,8 +77,8 @@ feature -- Status setting
 		end
 	
 	set_maximum_line_lenght (len: INTEGER) is
-			-- Maximum number of charachters on line
-			-- If len < text.cout then the text is truncated
+			-- Make `len' the new number of characters on a line.
+			-- If `len' < `text.cout' then the text is truncated
 		require
 			exist: not destroyed			
 		do
@@ -87,7 +87,7 @@ feature -- Status setting
 	
 	select_region (start_pos, end_pos: INTEGER) is
 			-- Select (hilight) the text between 
-			-- 'start_pos' and 'end_pos'
+			-- `start_pos' and `end_pos'
 		require
 			exist: not destroyed
 			valid_start: start_pos > 0 and start_pos <= text.count
@@ -96,6 +96,54 @@ feature -- Status setting
 			implementation.select_region (start_pos, end_pos)
 		ensure
 			-- region selected
+		end
+
+feature -- Basic operation
+
+	search (str: STRING): INTEGER is
+			-- Search the string `str' in the text.
+			-- If `str' is find, it returns its start
+			-- index in the text, otherwise, it returns
+			-- `Void'
+		require
+			exists: not destroyed
+			valid_string: str /= Void
+		do
+			Result := implementation.search (str)
+		end
+
+	cut_selection is
+			-- Cut the `selected_region' by erasing it from
+			-- the text and putting it in the Clipboard 
+			-- to paste it later.
+			-- If the `selectd_region' is empty, it does
+			-- nothing.
+		require
+			exists: not destroyed
+		do
+			implementation.cut_selection
+		end
+
+	copy_selection is
+			-- Copy the `selected_region' in the Clipboard
+			-- to paste it later.
+			-- If the `selected_region' is empty, it does
+			-- nothing.
+		require
+			exists: not destroyed
+		do
+			implementation.copy_selection
+		end
+
+	paste (index: INTEGER) is
+			-- Insert the string which is in the 
+			-- Clipboard at the `index' postion in the
+			-- text.
+			-- If the Clipboard is empty, it does nothing. 
+		require
+			exists: not destroyed
+		do
+			implementation.paste (index)
 		end
 	
 feature {NONE} -- Implementation

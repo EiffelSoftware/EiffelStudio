@@ -13,35 +13,22 @@ inherit
 
 feature -- Status report
 
-	tab_positions: ARRAY [INTEGER] is
-			-- Positions of tabs.
+	tab_length: INTEGER is
+			-- Size of tabulation
 		deferred
+		ensure
+			result_greater_than_one: Result > 1
 		end
 
 feature -- Status setting
 
-	set_no_tabs is
-				-- Turn off tabulation
-		deferred
-		end
-	
-	set_tab_position (tab_position: INTEGER) is
-				-- Set tabs at every `tab_position'
+	set_tab_length (new_length: INTEGER) is
+			-- Set `tab_length' to `new_length'.
 		require
-			valid_tab_position: tab_position > 1
+			valid_new_length: new_length > 1
 		deferred
 		ensure
-			tab_position_set: tab_positions.item (1) = tab_position
-		end
-
-	set_tab_positions (tab_position_array: ARRAY [INTEGER]) is
-				-- Set tabs at positions specified in `tab_position_array'
-		require
-			tab_position_array_exists: tab_position_array /= Void
-			tab_position_array_filled: not tab_position_array.empty
-		deferred
-		ensure
-			tabs_set: tab_positions.is_equal (tab_position_array)
+			set: tab_length = new_length
 		end
 
 end -- class TABBED_TEXT_I

@@ -1,12 +1,13 @@
 indexing
-
-	description: "References to objects containing an integer value coded on 16 bits"
+	description: "References to objects containing an integer value coded on 64 bits"
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class INTEGER_16_REF inherit
+class
+	INTEGER_64_REF
 
+inherit
 	NUMERIC
 		rename
 			infix "/" as infix "//"
@@ -26,13 +27,15 @@ class INTEGER_16_REF inherit
 
 feature -- Access
 
-	item: INTEGER_16
+	item: INTEGER_64
 			-- Integer value
 
 	hash_code: INTEGER is
 			-- Hash code value
 		do
-			Result := item.to_integer.hash_code
+				-- Get the positive value of `item' and then do
+				-- a modulo on the maximum INTEGER_32 value.
+			Result := (item & 0x000000007FFFFFFF).to_integer_32
 		end
 
 	sign: INTEGER is
@@ -51,33 +54,29 @@ feature -- Access
 			-- Neutral element for "*" and "/"
 		do
 			create Result
---			Result.set_item (1)
+			Result.set_item (1)
 		end
 
 	zero: like Current is
 			-- Neutral element for "+" and "-"
 		do
 			create Result
---			Result.set_item (0)
+			Result.set_item (0)
 		end
 
 	ascii_char: CHARACTER is
 			-- Returns corresponding ASCII character to `item' value.
 		obsolete
 			"Use to_character instead"
+		require
+			valid_character_code: is_valid_character_code
 		do
-			Result := to_character 
+			Result := item.to_character
 		end
 
-	to_character: CHARACTER is
-			-- Returns ASCII character corresponding to `item' value.
-		require
-			valid_character: is_valid_character_code
-		local
-			cv: CONVERT
-		do
-			Result := cv.to_char_integer_16 (item)
-		end
+	Min_value: INTEGER_64 is -9223372036854775808
+	Max_value: INTEGER_64 is 9223372036854775807
+			-- Minimum and Maximum value hold in `item'.
 
 feature -- Comparison
 
@@ -94,7 +93,7 @@ feature -- Comparison
 			Result := other.item = item
 		end
 
-	three_way_comparison (other: INTEGER_16_REF): INTEGER is
+	three_way_comparison (other: INTEGER_64_REF): INTEGER is
 			-- If current object equal to `other', 0
 			-- if smaller, -1; if greater, 1
 		do
@@ -107,15 +106,17 @@ feature -- Comparison
 
 feature -- Element change
 
-	frozen set_item (i: INTEGER_16) is
+	set_item (i: INTEGER_64) is
 			-- Make `i' the `item' value.
 		do
 			item := i
+		ensure
+			item_set: item = i
 		end
 
 feature -- Status report
 
-	divisible (other: INTEGER_16_REF): BOOLEAN is
+	divisible (other: INTEGER_64_REF): BOOLEAN is
 			-- May current object be divided by `other'?
 		do
 			Result := other.item /= 0
@@ -154,15 +155,13 @@ feature -- Status report
 
 	is_valid_character_code: BOOLEAN is
 			-- Does current object represent a character?
-		local
-			ch: CHARACTER
 		do
-			Result := item >= ch.Min_value and item <= ch.Max_value
+			Result := item >= feature {CHARACTER}.Min_value and item <= feature {CHARACTER}.Max_value
 		end
 
 feature -- Basic operations
 
-	abs: INTEGER_16 is
+	abs: INTEGER_64 is
 			-- Absolute value
 		do
 			Result := abs_ref.item
@@ -215,7 +214,6 @@ feature -- Basic operations
 			Result.set_item (- item)
 		end
 
-
 	infix "//" (other: like Current): like Current is
 			-- Integer division of Current by `other'
 		do
@@ -254,124 +252,163 @@ feature -- Basic operations
 			end
 		end
 
-	infix "|..|" (other: INTEGER_16): INTEGER_INTERVAL is
-			-- Interval from current element to `other'
-			-- (empty if `other' less than current integer)
-		do
-			create Result.make (item, other)
-		end
-
 feature -- Conversion
 
-	to_integer_8: INTEGER_8 is
+	frozen to_boolean: BOOLEAN is
+			-- True if not `zero'.
+		do
+			Result := item /= 0
+		end
+
+	frozen to_integer_8: INTEGER_8 is
 			-- Convert `item' into an INTEGER_8 value.
 		require
-			not_too_small: item >= -128
-			not_too_big: item <= 127
+			not_too_small: item >= feature {INTEGER_8}.Min_value
+			not_too_big: item <= feature {INTEGER_8}.Max_value
 		do
 			Result := item.to_integer_8
 		end
 
-	to_integer, to_integer_32: INTEGER is
+	frozen to_integer_16: INTEGER_16 is
+			-- Convert `item' into an INTEGER_16 value.
+		require
+			not_too_small: item >= feature {INTEGER_16}.Min_value
+			not_too_big: item <= feature {INTEGER_16}.Max_value
+		do
+			Result := item.to_integer_16
+		end
+
+	frozen to_integer, frozen to_integer_32: INTEGER is
 			-- Convert `item' into an INTEGER_32 value.
+		require
+			not_too_small: item >= feature {INTEGER}.Min_value
+			not_too_big: item <= feature {INTEGER}.Max_value
 		do
 			Result := item.to_integer
 		end
-
-	to_integer_16: INTEGER_16 is
+		
+	frozen to_integer_64: INTEGER_64 is
 			-- Return `item'.
 		do
 			Result := item
 		end
 
-	to_integer_64: INTEGER_64 is
-			-- Convert `item' into an INTEGER_64 value.
+	frozen to_character: CHARACTER is
+			-- Returns corresponding ASCII character to `item' value.
+		require
+			valid_character: is_valid_character_code
 		do
-			Result := item.to_integer_64
+			Result := item.to_character
 		end
 
 feature -- Bit operations
 
-	infix "&", bit_and (i: like Current): like Current is
+	frozen infix "&", frozen bit_and (i: like Current): like Current is
 			-- Bitwise and between Current' and `i'.
+		require
+			i_not_void: i /= Void
 		do
-			-- Built-in.
+			create Result
+			Result.set_item (item & i.item)
+		ensure
+			bitwise_and_not_void: Result /= Void
 		end
 
-	infix "|", bit_or (i: like Current): like Current is
+	frozen infix "|", frozen bit_or (i: like Current): like Current is
 			-- Bitwise or between Current' and `i'.
+		require
+			i_not_void: i /= Void
 		do
-			-- Built-in.
+			create Result
+			Result.set_item (item | i.item)
+		ensure
+			bitwise_or_not_void: Result /= Void
 		end
 
-	bit_xor (i: like Current): like Current is
+	frozen bit_xor (i: like Current): like Current is
 			-- Bitwise xor between Current' and `i'.
+		require
+			i_not_void: i /= Void
 		do
-			-- Built-in.
+			create Result
+			Result.set_item (item.bit_xor (i.item))
+		ensure
+			bitwise_xor_not_void: Result /= Void
 		end
 
-	bit_not: like Current is
+	frozen bit_not: like Current is
 			-- One's complement of Current.
 		do
-			-- Built-in.
+			create Result
+			Result.set_item (item.bit_not)
+		ensure
+			bit_not_not_void: Result /= Void
 		end
 
-	bit_shift (n: INTEGER): like Current is
+	frozen bit_shift (n: INTEGER): like Current is
 			-- Shift Current from `n' position to right if `n' positive,
 			-- to left otherwise.
 		require
-			n_less_or_equal_to_16: n <= 16
-			n_greater_or_equal_to_minus_16: n >= -16
+			n_less_or_equal_to_64: n <= 64
+			n_greater_or_equal_to_minus_64: n >= -64
 		do
 			if n > 0 then
 				Result := bit_shift_right (n)
 			else
 				Result := bit_shift_left (- n)
 			end	
+		ensure
+			bit_shift_not_void: Result /= Void
 		end
 
-	infix "|<<", bit_shift_left (n: INTEGER): like Current is
+	frozen infix "|<<", frozen bit_shift_left (n: INTEGER): like Current is
 			-- Shift Current from `n' position to left.
 		require
 			n_nonnegative: n >= 0
-			n_less_or_equal_to_16: n <= 16
+			n_less_or_equal_to_64: n <= 64
 		do
-			-- Built-in.
+			create Result
+			Result.set_item (item |<< n)
+		ensure
+			bit_shift_left_not_void: Result /= Void
 		end
 
-	infix "|>>", bit_shift_right (n: INTEGER): like Current is
+	frozen infix "|>>", frozen bit_shift_right (n: INTEGER): like Current is
 			-- Shift Current from `n' position to right.
 		require
 			n_nonnegative: n >= 0
-			n_less_or_equal_to_16: n <= 16
+			n_less_or_equal_to_64: n <= 64
 		do
-			-- Built-in.
+			create Result
+			Result.set_item (item |>> n)
+		ensure
+			bit_shift_right_not_void: Result /= Void
 		end
 
-	bit_test (n: INTEGER): BOOLEAN is
+	frozen bit_test (n: INTEGER): BOOLEAN is
 			-- Test `n'-th position of Current.
 		require
 			n_nonnegative: n >= 0
-			n_less_than_16: n < 16
+			n_less_than_64: n < 64
 		do
-			Result := item & (one.item |<< n) /= 0
+			Result := item & (1 |<< n) /= 0
 		end
 
-	set_bit (b: BOOLEAN; n: INTEGER): INTEGER_16 is
+	frozen set_bit (b: BOOLEAN; n: INTEGER): INTEGER_64 is
 			-- Copy of current with `n'-th position
 			-- set to 1 if `b', 0 otherwise.
 		require
 			n_nonnegative: n >= 0
-			n_less_than_16: n < 16
+			n_less_than_64: n < 64
 		do
 			if b then
-				Result := item | ((1).to_integer_16 |<< n)
+				Result := item | (1 |<< n)
 			else
-				Result := item & ((1).to_integer_16 |<< n).bit_not
+				Result := item & (1 |<< n).bit_not
 			end
 		end
 
-	set_bit_with_mask (b: BOOLEAN; m: INTEGER_16): INTEGER_16 is
+	frozen set_bit_with_mask (b: BOOLEAN; m: INTEGER_64): INTEGER_64 is
 			-- Copy of current with all 1 bits of m set to 1
 			-- if `b', 0 otherwise.
 		do
@@ -386,16 +423,13 @@ feature -- Output
 
 	out: STRING is
 			-- Printable representation of integer value
-		local
-			cv: CONVERT
 		do
-			create Result.make_from_cil (cv.to_string_integer_16 (item))
+			Result := item.out
 		end
-
 
 feature {NONE} -- Implementation
 
-	abs_ref: INTEGER_16_REF is
+	abs_ref: INTEGER_64_REF is
 			-- Absolute value
 		do
 			if item >= 0 then
@@ -444,7 +478,7 @@ indexing
 			For latest info see award-winning pages: http://eiffel.com
 			]"
 
-end -- class INTEGER_16_REF
+end -- class INTEGER_64_REF
 
 
 

@@ -1,6 +1,6 @@
 #include <sys/types.h>
 #include <stdio.h>
-#include <eif_eiffel.h>
+#include "eif_eiffel.h"
 #include <time.h>
 #include <sys/timeb.h>
 

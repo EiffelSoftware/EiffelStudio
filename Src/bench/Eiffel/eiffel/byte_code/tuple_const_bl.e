@@ -36,8 +36,6 @@ feature
 			expr_type: TYPE_I
 			expr: EXPR_B
 			i: INTEGER
-			reg : REGISTER
-			ref_i: REFERENCE_I
 			require_meta: BOOLEAN
 		do
 			-- We need 'Current'
@@ -90,9 +88,6 @@ feature
 
 	free_register is
 			-- Free the registers.
-		local
-			i   : INTEGER
-			reg : REGISTER
 		do
 			Precursor {TUPLE_CONST_B}
 			if array_area_reg /= Void then

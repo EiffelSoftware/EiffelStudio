@@ -10,21 +10,26 @@ indexing
 deferred class
 	EV_ITEM_CONTAINER_IMP
 
-feature -- Initialization
+inherit
+	EV_ANY_I
 
-	initialize is
-			-- Initilize all the parameters of the container.
-		do
-			!! ev_children.make
-		end
+	EV_ITEM_EVENTS_CONSTANTS_IMP
 
-feature {NONE} -- Access
+feature {NONE} -- Initialization
 
-	ev_children: LINKED_LIST [EV_ITEM_IMP]
-			-- List of all the children of the container
-			-- In most case, the index of the child is its id.
+--	initialize is
+--			-- Initilize all the parameters of the container.
+--		do
+--			!! ev_children.make
+--		end
 
 feature {NONE} -- Implementation
+
+	ev_children: LINKED_LIST [EV_ITEM_IMP] is
+			-- List of all the children of the container
+			-- In most case, the index of the child is its id.
+		deferred
+		end
 
 	name_item: STRING
 			-- Name of the item that is going to be add
@@ -44,6 +49,15 @@ feature {EV_ITEM_IMP} -- Implementation
 			new_name /= Void
 		do
 			name_item := new_name
+		end
+
+feature {EV_CONTAINER_IMP} -- Implementation
+
+	on_draw (struct: WEL_DRAW_ITEM_STRUCT) is
+			-- All the items containers contain items which are
+			-- pixmap container, then, we need this feature to
+			-- call the `on_draw' feature of the items.
+		do
 		end
 
 end -- class EV_ITEM_CONTAINER_IMP

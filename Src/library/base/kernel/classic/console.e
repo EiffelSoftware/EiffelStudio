@@ -120,6 +120,9 @@ feature -- Input
 			done: BOOLEAN
 		do
 			from
+				if last_string = Void then
+					create last_string.make (default_last_string_size)
+				end
 				str_area := last_string.area
 				str_cap := last_string.capacity
 			until
@@ -161,6 +164,9 @@ feature -- Input
 			new_count: INTEGER
 			str_area: ANY
 		do
+			if last_string = Void then
+				create last_string.make (default_last_string_size)
+			end
 			last_string.resize (nb_char)
 			str_area := last_string.area
 			new_count := console_readstream (file_pointer, $str_area, nb_char)
@@ -177,6 +183,9 @@ feature -- Input
 			read: INTEGER
 		do
 			from
+				if last_string = Void then
+					create last_string.make (default_last_string_size)
+				end
 				str_area := last_string.area
 				str_cap := last_string.capacity
 			until

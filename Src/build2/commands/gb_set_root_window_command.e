@@ -46,7 +46,7 @@ feature -- Access
 	executable: BOOLEAN is
 			-- May `execute' be called on `Current'?
 		do
-			Result := not window_selector.objects.is_empty
+			Result := not window_selector.objects.is_empty and not Layout_constructor.is_empty
 		end
 
 feature -- Basic operations

@@ -26,7 +26,6 @@ inherit
 		undefine
 			default_create, copy
 		end
-		
 
 create
 	make, default_create --, make_with_window
@@ -89,6 +88,7 @@ feature -- Details
 		end
 		
 	display_exception_tag_and_message is
+			-- Display Exception's tag and message
 		local
 			s: STRING
 		do
@@ -131,6 +131,7 @@ feature {NONE} -- Initialization
 feature {NONE} -- Implementation
 
 	tag, message: STRING
+			-- Exception tag and message
 
 	save_exception_message is
 			-- Save exception trace into a file
@@ -155,13 +156,13 @@ feature {NONE} -- Implementation
 		end
 	
 	close_dialog is
-			-- Called by `select_actions' of `l_ev_button_2'.
+			-- Close dialog
 		do
 			window.destroy
 		end
 		
 	set_wrapping_mode is
-			-- Called by `select_actions' of `l_ev_check_button_1'.
+			-- update wrapping mode for exception message
 		do
 			if wrapping_button.is_selected then
 				message_text.enable_word_wrapping

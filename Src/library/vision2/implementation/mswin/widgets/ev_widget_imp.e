@@ -122,18 +122,14 @@ feature -- Access
 			Result ?= top_level_window_imp.interface
 		end
 
-	default_parent: CELL [WEL_FRAME_WINDOW] is
+	default_parent: EV_INTERNAL_SILLY_WINDOW_IMP is
 			-- A default parent for creation of the widgets.
-			-- It is the main window because it exists as long
-			-- as the application exists.
-		local
-			ww: WEL_FRAME_WINDOW
 		once
-			!! ww.make_top ("Eiffel Vision default parent window")
-			ww.set_style (clear_flag (ww.style, Ws_visible))
-			!! Result.put (ww)
+			!! Result.make_top ("Eiffel Vision default parent window")
+--			!! Result.put (ww)
+--			ww.set_style (clear_flag (ww.style, Ws_visible))
 		ensure
-			valid_parent: Result.item /= Void
+			valid_parent: Result /= Void
 		end
 
 	focus_on_widget: CELL [EV_WIDGET_IMP] is
@@ -544,7 +540,7 @@ feature -- Implementation
 			-- Parent container of this widget. The same than
 			-- parent but with a different type.
 		do
-			if wel_parent = default_parent.item then
+			if wel_parent = default_parent then
 				Result := Void
 			else
 				Result ?= wel_parent

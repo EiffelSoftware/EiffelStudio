@@ -446,6 +446,7 @@ feature {NONE} -- Initialization
 			l_none_export: EXPORT_NONE_I
 			l_feat_arg: FEAT_ARG
 			l_names_heap: like Names_heap
+			l_arg_type_name: STRING
 			l_list: ARRAYED_LIST [INTEGER]
 			l_name: STRING
 		do
@@ -620,7 +621,6 @@ feature {NONE} -- Initialization
 						if j >= l_record_pos then
 							l_external_type := internal_type_from_consumed_type (True,
 								l_arg.type)
-							l_external_type.set_is_out (l_arg.is_out)
 							l_feat_arg.put_i_th (l_external_type, m + 1)
 							l_names_heap.put (l_arg.eiffel_name)
 							l_feat_arg.argument_names.put (l_names_heap.found_item, m)
@@ -954,7 +954,13 @@ feature {NONE} -- Implementation
 			l_array_type: CONSUMED_ARRAY_TYPE
 			l_type_a: CL_TYPE_A
 			vtct: VTCT
+			l_type_name: STRING
 		do
+			if c.is_by_ref then
+				l_type_name := c.name.substring (1, c.name.count - 1)
+			else
+				l_type_name := c.name
+			end
 			l_array_type ?= c
 			l_is_array := l_array_type /= Void
 			if l_is_array then
@@ -967,14 +973,14 @@ feature {NONE} -- Implementation
 						System.native_array_class.compiled_class.class_id, l_generics)				
 				end
 			else
-				l_result := an_assembly.dotnet_classes.item (c.name)
+				l_result := an_assembly.dotnet_classes.item (l_type_name)
 				if l_result = Void then
 						-- Case where this is a class from `mscorlib' that is in fact
 						-- written as an Eiffel class, e.g. INTEGER, ....
 					check
-						has_basic: Basic_type_mapping.has (c.name)
+						has_basic: Basic_type_mapping.has (l_type_name)
 					end
-					l_result := Basic_type_mapping.item (c.name)
+					l_result := Basic_type_mapping.item (l_type_name)
 				end
 				
 				if l_result = Void then
@@ -982,7 +988,7 @@ feature {NONE} -- Implementation
 						-- this assembly.
 					create vtct
 					vtct.set_class (Current)
-					vtct.set_dotnet_class_name (c.name)
+					vtct.set_dotnet_class_name (l_type_name)
 					Error_handler.insert_error (vtct)
 					Error_handler.raise_error
 				else
@@ -995,10 +1001,24 @@ feature {NONE} -- Implementation
 					end
 				end
 			end
+			if c.is_by_ref then
+					-- We need to create an instance of TYPED_POINTER here.
+				Result := new_typed_pointer (Result)
+			end
 		ensure
 			result_not_void: force_compilation implies Result /= Void
 		end
 
+	new_typed_pointer (a_type: TYPE_A): GEN_TYPE_A is
+			-- New instance of a TYPED_POINTER.
+		local
+			l_generics: ARRAY [TYPE_A]
+		do
+			create l_generics.make (1, 1)
+			l_generics.put (a_type, 1)
+			create Result.make (System.typed_pointer_class.compiled_class.class_id, l_generics)
+		end
+	
 	basic_type_mapping: HASH_TABLE [CLASS_I, STRING] is
 			-- Mapping between name of basic class in mscorlib and Eiffel CLASS_I.
 		once

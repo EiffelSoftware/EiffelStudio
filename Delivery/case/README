@@ -1,6 +1,18 @@
-EiffelCase 4.2A advice and warnings:
+EiffelCase 4.2B advice and warnings:
 
-1. Printing
+0) Installation
+
+You need to set $EIFFEL4 to the installation directory of ISE Eiffel 4.
+You need to also set $PLATFORM.
+
+Include into the path:
+        $EIFFEL4/case/spec/$PLATFORM/bin
+
+To run eiffelcase type:
+        ecase
+	
+
+1) Printing
 
 On Windows, make sure to set up the printer as GREY SCALE
 and to use the LPT1 port.
@@ -8,7 +20,7 @@ and to use the LPT1 port.
 On Unix, select color printer only if the printer is a
 color printer.
 
-2. Resizing the work area
+2) Resizing the work area
 
 For better results,avoid resizing the work area by
 adding clusters and classes close to the border. Instead,

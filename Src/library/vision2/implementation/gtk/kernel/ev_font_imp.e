@@ -15,7 +15,7 @@ class
 inherit
  	EV_FONT_I
 
-	EV_GDK_EXTERNALS
+	EV_GDK_FONT_EXTERNALS
 
 creation
 	make,
@@ -44,12 +44,12 @@ feature {NONE} -- Initialization
 
 	make_by_system_name (str: STRING) is
 			-- Create a font thanks to the system
-			--name.	
+			--name.
 		local
 			a: ANY
 		do
 			!! system_name.make_by_system_name (str)
-			a := system_name.c_string
+			a := full_name.to_c
 			widget := gdk_font_load ($a)
 		end
 
@@ -145,6 +145,55 @@ feature -- Status setting
 			widget := default_pointer		
 		end
 
+	set_bold (flag: BOOLEAN) is
+			-- Set bold characters if `flag', unset otherwise.
+		local
+			old_weight: STRING
+			a: ANY
+		do
+			old_weight := system_name.weight
+			if flag then
+				system_name.set_weight ("Bold")
+			else
+				system_name.set_weight ("Medium")
+			end
+			a := full_name.to_c
+			widget := gdk_font_load ($a)
+			if widget = default_pointer then
+				io.put_string ("The bold format is not availbale for this font.%N")
+				system_name.set_weight (old_weight)
+				a := full_name.to_c
+				widget := gdk_font_load ($a)
+			end
+		end
+
+	set_italic (flag: BOOLEAN) is
+			-- Set italic characters if `flag', unset otherwise.
+		local
+			old_slant: STRING
+			a: ANY
+		do
+			old_slant := system_name.slant
+			if flag then
+				system_name.set_slant ("I")
+			else
+				system_name.set_slant ("R")
+			end
+			a := full_name.to_c
+			widget := gdk_font_load ($a)
+			if widget = default_pointer then
+				io.put_string ("The italic format is not available for this font.%N")
+				system_name.set_slant (old_slant)
+				a := full_name.to_c
+				widget := gdk_font_load ($a)
+			end
+		end
+
+	set_underline (flag: BOOLEAN) is
+			-- Set underline characters if `flag', unset otherwise.
+		do
+		end
+
 feature -- Element change
 
 	set_name (str: STRING) is
@@ -172,9 +221,17 @@ feature -- Implementation
 	widget: POINTER
 		-- A pointer on a GdkFont
 
+feature {NONE} -- Implementation
+
 	system_name: EV_FONT_NAME_IMP
 		-- System name of the font
 
+	full_name: STRING is
+			-- The full name of the string.
+		do
+			Result := system_name.system_name
+		end
+	
 end -- class EV_FONT_IMP
 
 --|----------------------------------------------------------------

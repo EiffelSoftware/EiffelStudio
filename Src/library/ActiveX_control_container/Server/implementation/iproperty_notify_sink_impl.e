@@ -3,7 +3,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	IPROPERTY_NOTIFY_SINK_IMPL
 
 inherit

@@ -12,7 +12,7 @@ inherit
 
 feature -- Basic Operations
 
-	remote_query_service (guid_service: ECOM_GUID; riid: ECOM_GUID; ppv_object: CELL [ECOM_INTERFACE]) is
+	query_service (guid_service: ECOM_GUID; riid: ECOM_GUID; ppv_object: CELL [ECOM_INTERFACE]) is
 			-- No description available.
 			-- `guid_service' [in].  
 			-- `riid' [in].  

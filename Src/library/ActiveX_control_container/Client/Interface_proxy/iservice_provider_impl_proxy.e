@@ -25,13 +25,13 @@ feature {NONE}  -- Initialization
 
 feature -- Basic Operations
 
-	remote_query_service (guid_service: ECOM_GUID; riid: ECOM_GUID; ppv_object: CELL [ECOM_INTERFACE]) is
+	query_service (guid_service: ECOM_GUID; riid: ECOM_GUID; ppv_object: CELL [ECOM_INTERFACE]) is
 			-- No description available.
 			-- `guid_service' [in].  
 			-- `riid' [in].  
 			-- `ppv_object' [out].  
 		do
-			ccom_remote_query_service (initializer, guid_service.item, riid.item, ppv_object)
+			ccom_query_service (initializer, guid_service.item, riid.item, ppv_object)
 		end
 
 feature {NONE}  -- Implementation
@@ -44,7 +44,7 @@ feature {NONE}  -- Implementation
 
 feature {NONE}  -- Externals
 
-	ccom_remote_query_service (cpp_obj: POINTER; guid_service: POINTER; riid: POINTER; ppv_object: CELL [ECOM_INTERFACE]) is
+	ccom_query_service (cpp_obj: POINTER; guid_service: POINTER; riid: POINTER; ppv_object: CELL [ECOM_INTERFACE]) is
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IServiceProvider_impl_proxy %"ecom_control_library_IServiceProvider_impl_proxy_s.h%"](GUID *,GUID *,EIF_OBJECT)"

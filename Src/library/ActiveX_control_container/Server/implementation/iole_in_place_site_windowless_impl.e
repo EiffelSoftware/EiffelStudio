@@ -3,7 +3,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	IOLE_IN_PLACE_SITE_WINDOWLESS_IMPL
 
 inherit
@@ -165,9 +165,18 @@ feature -- Basic Operations
 		end
 
 	invalidate_rect (p_rect: TAG_RECT_RECORD; f_erase: INTEGER) is
-			-- No description available.
-			-- `p_rect' [in].  
-			-- `f_erase' [in].  
+			-- Enables an object to invalidate a specified 
+			-- rectangle of its in-place image on the screen.
+			-- 
+			-- `p_rect' [in]. Rectangle to invalidate, in client
+			-- coordinates of the containing window. If this 
+			-- parameter is Void, the object's full extent is
+			-- invalidated. 
+			-- `f_erase' [in]. Specifies whether the background 
+			-- within the update region is to be erased when the 
+			-- region is updated. If this parameter is TRUE, the
+			-- background is erased. If this parameter is FALSE, 
+			-- the background remains unchanged. 
 		do
 			-- Put Implementation here.
 		end

@@ -38,13 +38,13 @@ namespace ecom_control_library
 class IAdviseSinkEx : public ecom_control_library::IAdviseSink
 {
 public:
-	IAdviseSinkEx () {};
-	~IAdviseSinkEx () {};
+  IAdviseSinkEx () {};
+  ~IAdviseSinkEx () {};
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP RemoteOnViewStatusChange(  /* [in] */ ULONG dw_view_status ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP OnViewStatusChange(  /* [in] */ ULONG dw_view_status ) = 0;
 
 
 

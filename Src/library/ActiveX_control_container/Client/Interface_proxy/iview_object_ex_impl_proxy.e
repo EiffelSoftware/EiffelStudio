@@ -25,7 +25,7 @@ feature {NONE}  -- Initialization
 
 feature -- Basic Operations
 
-	remote_draw (dw_draw_aspect: INTEGER; lindex: INTEGER; pv_aspect: INTEGER; ptd: TAG_DVTARGETDEVICE_RECORD; hdc_target_dev: INTEGER; hdc_draw: INTEGER; lprc_bounds: X_RECTL_RECORD; lprc_wbounds: X_RECTL_RECORD; p_continue: ICONTINUE_INTERFACE) is
+	draw (dw_draw_aspect: INTEGER; lindex: INTEGER; pv_aspect: INTEGER; ptd: TAG_DVTARGETDEVICE_RECORD; hdc_target_dev: INTEGER; hdc_draw: INTEGER; lprc_bounds: X_RECTL_RECORD; lprc_wbounds: X_RECTL_RECORD; p_continue: ICONTINUE_INTERFACE) is
 			-- No description available.
 			-- `dw_draw_aspect' [in].  
 			-- `lindex' [in].  
@@ -49,10 +49,10 @@ feature -- Basic Operations
 				end
 				p_continue_item := p_continue.item
 			end
-			ccom_remote_draw (initializer, dw_draw_aspect, lindex, pv_aspect, ptd.item, hdc_target_dev, hdc_draw, lprc_bounds.item, lprc_wbounds.item, p_continue_item)
+			ccom_draw (initializer, dw_draw_aspect, lindex, pv_aspect, ptd.item, hdc_target_dev, hdc_draw, lprc_bounds.item, lprc_wbounds.item, p_continue_item)
 		end
 
-	remote_get_color_set (dw_draw_aspect: INTEGER; lindex: INTEGER; pv_aspect: INTEGER; ptd: TAG_DVTARGETDEVICE_RECORD; hic_target_dev: INTEGER; pp_color_set: CELL [TAG_LOGPALETTE_RECORD]) is
+	get_color_set (dw_draw_aspect: INTEGER; lindex: INTEGER; pv_aspect: INTEGER; ptd: TAG_DVTARGETDEVICE_RECORD; hic_target_dev: INTEGER; pp_color_set: CELL [TAG_LOGPALETTE_RECORD]) is
 			-- No description available.
 			-- `dw_draw_aspect' [in].  
 			-- `lindex' [in].  
@@ -61,17 +61,17 @@ feature -- Basic Operations
 			-- `hic_target_dev' [in].  
 			-- `pp_color_set' [out].  
 		do
-			ccom_remote_get_color_set (initializer, dw_draw_aspect, lindex, pv_aspect, ptd.item, hic_target_dev, pp_color_set)
+			ccom_get_color_set (initializer, dw_draw_aspect, lindex, pv_aspect, ptd.item, hic_target_dev, pp_color_set)
 		end
 
-	remote_freeze (dw_draw_aspect: INTEGER; lindex: INTEGER; pv_aspect: INTEGER; pdw_freeze: INTEGER_REF) is
+	freeze (dw_draw_aspect: INTEGER; lindex: INTEGER; pv_aspect: INTEGER; pdw_freeze: INTEGER_REF) is
 			-- No description available.
 			-- `dw_draw_aspect' [in].  
 			-- `lindex' [in].  
 			-- `pv_aspect' [in].  
 			-- `pdw_freeze' [out].  
 		do
-			ccom_remote_freeze (initializer, dw_draw_aspect, lindex, pv_aspect, pdw_freeze)
+			ccom_freeze (initializer, dw_draw_aspect, lindex, pv_aspect, pdw_freeze)
 		end
 
 	unfreeze (dw_freeze: INTEGER) is
@@ -102,13 +102,13 @@ feature -- Basic Operations
 			ccom_set_advise (initializer, aspects, advf, p_adv_sink_item)
 		end
 
-	remote_get_advise (p_aspects: INTEGER_REF; p_advf: INTEGER_REF; pp_adv_sink: CELL [IADVISE_SINK_INTERFACE]) is
+	get_advise (p_aspects: INTEGER_REF; p_advf: INTEGER_REF; pp_adv_sink: CELL [IADVISE_SINK_INTERFACE]) is
 			-- No description available.
 			-- `p_aspects' [out].  
 			-- `p_advf' [out].  
 			-- `pp_adv_sink' [out].  
 		do
-			ccom_remote_get_advise (initializer, p_aspects, p_advf, pp_adv_sink)
+			ccom_get_advise (initializer, p_aspects, p_advf, pp_adv_sink)
 		end
 
 	get_extent (dw_draw_aspect: INTEGER; lindex: INTEGER; ptd: TAG_DVTARGETDEVICE_RECORD; lpsizel: TAG_SIZEL_RECORD) is
@@ -180,19 +180,19 @@ feature {NONE}  -- Implementation
 
 feature {NONE}  -- Externals
 
-	ccom_remote_draw (cpp_obj: POINTER; dw_draw_aspect: INTEGER; lindex: INTEGER; pv_aspect: INTEGER; ptd: POINTER; hdc_target_dev: INTEGER; hdc_draw: INTEGER; lprc_bounds: POINTER; lprc_wbounds: POINTER; p_continue: POINTER) is
+	ccom_draw (cpp_obj: POINTER; dw_draw_aspect: INTEGER; lindex: INTEGER; pv_aspect: INTEGER; ptd: POINTER; hdc_target_dev: INTEGER; hdc_draw: INTEGER; lprc_bounds: POINTER; lprc_wbounds: POINTER; p_continue: POINTER) is
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IViewObjectEx_impl_proxy %"ecom_control_library_IViewObjectEx_impl_proxy_s.h%"](EIF_INTEGER,EIF_INTEGER,EIF_INTEGER,ecom_control_library::tagDVTARGETDEVICE *,EIF_INTEGER,EIF_INTEGER,ecom_control_library::_RECTL *,ecom_control_library::_RECTL *,ecom_control_library::IContinue *)"
 		end
 
-	ccom_remote_get_color_set (cpp_obj: POINTER; dw_draw_aspect: INTEGER; lindex: INTEGER; pv_aspect: INTEGER; ptd: POINTER; hic_target_dev: INTEGER; pp_color_set: CELL [TAG_LOGPALETTE_RECORD]) is
+	ccom_get_color_set (cpp_obj: POINTER; dw_draw_aspect: INTEGER; lindex: INTEGER; pv_aspect: INTEGER; ptd: POINTER; hic_target_dev: INTEGER; pp_color_set: CELL [TAG_LOGPALETTE_RECORD]) is
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IViewObjectEx_impl_proxy %"ecom_control_library_IViewObjectEx_impl_proxy_s.h%"](EIF_INTEGER,EIF_INTEGER,EIF_INTEGER,ecom_control_library::tagDVTARGETDEVICE *,EIF_INTEGER,EIF_OBJECT)"
 		end
 
-	ccom_remote_freeze (cpp_obj: POINTER; dw_draw_aspect: INTEGER; lindex: INTEGER; pv_aspect: INTEGER; pdw_freeze: INTEGER_REF) is
+	ccom_freeze (cpp_obj: POINTER; dw_draw_aspect: INTEGER; lindex: INTEGER; pv_aspect: INTEGER; pdw_freeze: INTEGER_REF) is
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IViewObjectEx_impl_proxy %"ecom_control_library_IViewObjectEx_impl_proxy_s.h%"](EIF_INTEGER,EIF_INTEGER,EIF_INTEGER,EIF_OBJECT)"
@@ -210,7 +210,7 @@ feature {NONE}  -- Externals
 			"C++ [ecom_control_library::IViewObjectEx_impl_proxy %"ecom_control_library_IViewObjectEx_impl_proxy_s.h%"](EIF_INTEGER,EIF_INTEGER,ecom_control_library::IAdviseSink *)"
 		end
 
-	ccom_remote_get_advise (cpp_obj: POINTER; p_aspects: INTEGER_REF; p_advf: INTEGER_REF; pp_adv_sink: CELL [IADVISE_SINK_INTERFACE]) is
+	ccom_get_advise (cpp_obj: POINTER; p_aspects: INTEGER_REF; p_advf: INTEGER_REF; pp_adv_sink: CELL [IADVISE_SINK_INTERFACE]) is
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IViewObjectEx_impl_proxy %"ecom_control_library_IViewObjectEx_impl_proxy_s.h%"](EIF_OBJECT,EIF_OBJECT,EIF_OBJECT)"

@@ -48,25 +48,25 @@ namespace ecom_control_library
 class IOleItemContainer : public ecom_control_library::IOleContainer
 {
 public:
-	IOleItemContainer () {};
-	~IOleItemContainer () {};
+  IOleItemContainer () {};
+  ~IOleItemContainer () {};
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP GetObject(  /* [in] */ LPWSTR psz_item, /* [in] */ ULONG dw_speed_needed, /* [in] */ ecom_control_library::IBindCtx * pbc, /* [in] */ GUID * riid, /* [out] */ void * * ppv_object ) = 0;
-
-
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP GetObjectStorage(  /* [in] */ LPWSTR psz_item, /* [in] */ ecom_control_library::IBindCtx * pbc, /* [in] */ GUID * riid, /* [out] */ void * * ppv_storage ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP GetObject(  /* [in] */ LPWSTR psz_item, /* [in] */ ULONG dw_speed_needed, /* [in] */ ecom_control_library::IBindCtx * pbc, /* [in] */ REFIID riid, /* [out] */ void * * ppv_object ) = 0;
 
 
-	/*-----------------------------------------------------------
-	No description available.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP IsRunning(  /* [in] */ LPWSTR psz_item ) = 0;
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP GetObjectStorage(  /* [in] */ LPWSTR psz_item, /* [in] */ ecom_control_library::IBindCtx * pbc, /* [in] */ REFIID riid, /* [out] */ void * * ppv_storage ) = 0;
+
+
+  /*-----------------------------------------------------------
+  No description available.
+  -----------------------------------------------------------*/
+  virtual STDMETHODIMP IsRunning(  /* [in] */ LPWSTR psz_item ) = 0;
 
 
 

@@ -10,22 +10,22 @@ inherit
 
 feature -- Status Report
 
-	remote_draw_user_precondition (dw_draw_aspect: INTEGER; lindex: INTEGER; pv_aspect: INTEGER; ptd: TAG_DVTARGETDEVICE_RECORD; hdc_target_dev: INTEGER; hdc_draw: INTEGER; lprc_bounds: X_RECTL_RECORD; lprc_wbounds: X_RECTL_RECORD; p_continue: ICONTINUE_INTERFACE): BOOLEAN is
-			-- User-defined preconditions for `remote_draw'.
+	draw_user_precondition (dw_draw_aspect: INTEGER; lindex: INTEGER; pv_aspect: INTEGER; ptd: TAG_DVTARGETDEVICE_RECORD; hdc_target_dev: INTEGER; hdc_draw: INTEGER; lprc_bounds: X_RECTL_RECORD; lprc_wbounds: X_RECTL_RECORD; p_continue: ICONTINUE_INTERFACE): BOOLEAN is
+			-- User-defined preconditions for `draw'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	remote_get_color_set_user_precondition (dw_draw_aspect: INTEGER; lindex: INTEGER; pv_aspect: INTEGER; ptd: TAG_DVTARGETDEVICE_RECORD; hic_target_dev: INTEGER; pp_color_set: CELL [TAG_LOGPALETTE_RECORD]): BOOLEAN is
-			-- User-defined preconditions for `remote_get_color_set'.
+	get_color_set_user_precondition (dw_draw_aspect: INTEGER; lindex: INTEGER; pv_aspect: INTEGER; ptd: TAG_DVTARGETDEVICE_RECORD; hic_target_dev: INTEGER; pp_color_set: CELL [TAG_LOGPALETTE_RECORD]): BOOLEAN is
+			-- User-defined preconditions for `get_color_set'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	remote_freeze_user_precondition (dw_draw_aspect: INTEGER; lindex: INTEGER; pv_aspect: INTEGER; pdw_freeze: INTEGER_REF): BOOLEAN is
-			-- User-defined preconditions for `remote_freeze'.
+	freeze_user_precondition (dw_draw_aspect: INTEGER; lindex: INTEGER; pv_aspect: INTEGER; pdw_freeze: INTEGER_REF): BOOLEAN is
+			-- User-defined preconditions for `freeze'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -45,8 +45,8 @@ feature -- Status Report
 			Result := True
 		end
 
-	remote_get_advise_user_precondition (p_aspects: INTEGER_REF; p_advf: INTEGER_REF; pp_adv_sink: CELL [IADVISE_SINK_INTERFACE]): BOOLEAN is
-			-- User-defined preconditions for `remote_get_advise'.
+	get_advise_user_precondition (p_aspects: INTEGER_REF; p_advf: INTEGER_REF; pp_adv_sink: CELL [IADVISE_SINK_INTERFACE]): BOOLEAN is
+			-- User-defined preconditions for `get_advise'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -54,7 +54,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	remote_draw (dw_draw_aspect: INTEGER; lindex: INTEGER; pv_aspect: INTEGER; ptd: TAG_DVTARGETDEVICE_RECORD; hdc_target_dev: INTEGER; hdc_draw: INTEGER; lprc_bounds: X_RECTL_RECORD; lprc_wbounds: X_RECTL_RECORD; p_continue: ICONTINUE_INTERFACE) is
+	draw (dw_draw_aspect: INTEGER; lindex: INTEGER; pv_aspect: INTEGER; ptd: TAG_DVTARGETDEVICE_RECORD; hdc_target_dev: INTEGER; hdc_draw: INTEGER; lprc_bounds: X_RECTL_RECORD; lprc_wbounds: X_RECTL_RECORD; p_continue: ICONTINUE_INTERFACE) is
 			-- No description available.
 			-- `dw_draw_aspect' [in].  
 			-- `lindex' [in].  
@@ -72,12 +72,12 @@ feature -- Basic Operations
 			valid_lprc_bounds: lprc_bounds.item /= default_pointer
 			non_void_lprc_wbounds: lprc_wbounds /= Void
 			valid_lprc_wbounds: lprc_wbounds.item /= default_pointer
-			remote_draw_user_precondition: remote_draw_user_precondition (dw_draw_aspect, lindex, pv_aspect, ptd, hdc_target_dev, hdc_draw, lprc_bounds, lprc_wbounds, p_continue)
+			draw_user_precondition: draw_user_precondition (dw_draw_aspect, lindex, pv_aspect, ptd, hdc_target_dev, hdc_draw, lprc_bounds, lprc_wbounds, p_continue)
 		deferred
 
 		end
 
-	remote_get_color_set (dw_draw_aspect: INTEGER; lindex: INTEGER; pv_aspect: INTEGER; ptd: TAG_DVTARGETDEVICE_RECORD; hic_target_dev: INTEGER; pp_color_set: CELL [TAG_LOGPALETTE_RECORD]) is
+	get_color_set (dw_draw_aspect: INTEGER; lindex: INTEGER; pv_aspect: INTEGER; ptd: TAG_DVTARGETDEVICE_RECORD; hic_target_dev: INTEGER; pp_color_set: CELL [TAG_LOGPALETTE_RECORD]) is
 			-- No description available.
 			-- `dw_draw_aspect' [in].  
 			-- `lindex' [in].  
@@ -89,14 +89,14 @@ feature -- Basic Operations
 			non_void_ptd: ptd /= Void
 			valid_ptd: ptd.item /= default_pointer
 			non_void_pp_color_set: pp_color_set /= Void
-			remote_get_color_set_user_precondition: remote_get_color_set_user_precondition (dw_draw_aspect, lindex, pv_aspect, ptd, hic_target_dev, pp_color_set)
+			get_color_set_user_precondition: get_color_set_user_precondition (dw_draw_aspect, lindex, pv_aspect, ptd, hic_target_dev, pp_color_set)
 		deferred
 
 		ensure
 			valid_pp_color_set: pp_color_set.item /= Void
 		end
 
-	remote_freeze (dw_draw_aspect: INTEGER; lindex: INTEGER; pv_aspect: INTEGER; pdw_freeze: INTEGER_REF) is
+	freeze (dw_draw_aspect: INTEGER; lindex: INTEGER; pv_aspect: INTEGER; pdw_freeze: INTEGER_REF) is
 			-- No description available.
 			-- `dw_draw_aspect' [in].  
 			-- `lindex' [in].  
@@ -104,7 +104,7 @@ feature -- Basic Operations
 			-- `pdw_freeze' [out].  
 		require
 			non_void_pdw_freeze: pdw_freeze /= Void
-			remote_freeze_user_precondition: remote_freeze_user_precondition (dw_draw_aspect, lindex, pv_aspect, pdw_freeze)
+			freeze_user_precondition: freeze_user_precondition (dw_draw_aspect, lindex, pv_aspect, pdw_freeze)
 		deferred
 
 		end
@@ -129,7 +129,7 @@ feature -- Basic Operations
 
 		end
 
-	remote_get_advise (p_aspects: INTEGER_REF; p_advf: INTEGER_REF; pp_adv_sink: CELL [IADVISE_SINK_INTERFACE]) is
+	get_advise (p_aspects: INTEGER_REF; p_advf: INTEGER_REF; pp_adv_sink: CELL [IADVISE_SINK_INTERFACE]) is
 			-- No description available.
 			-- `p_aspects' [out].  
 			-- `p_advf' [out].  
@@ -138,7 +138,7 @@ feature -- Basic Operations
 			non_void_p_aspects: p_aspects /= Void
 			non_void_p_advf: p_advf /= Void
 			non_void_pp_adv_sink: pp_adv_sink /= Void
-			remote_get_advise_user_precondition: remote_get_advise_user_precondition (p_aspects, p_advf, pp_adv_sink)
+			get_advise_user_precondition: get_advise_user_precondition (p_aspects, p_advf, pp_adv_sink)
 		deferred
 
 		ensure

@@ -10,8 +10,8 @@ inherit
 
 feature -- Status Report
 
-	remote_on_view_status_change_user_precondition (dw_view_status: INTEGER): BOOLEAN is
-			-- User-defined preconditions for `remote_on_view_status_change'.
+	on_view_status_change_user_precondition (dw_view_status: INTEGER): BOOLEAN is
+			-- User-defined preconditions for `on_view_status_change'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -19,11 +19,11 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	remote_on_view_status_change (dw_view_status: INTEGER) is
+	on_view_status_change (dw_view_status: INTEGER) is
 			-- No description available.
 			-- `dw_view_status' [in].  
 		require
-			remote_on_view_status_change_user_precondition: remote_on_view_status_change_user_precondition (dw_view_status)
+			on_view_status_change_user_precondition: on_view_status_change_user_precondition (dw_view_status)
 		deferred
 
 		end

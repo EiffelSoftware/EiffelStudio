@@ -10,21 +10,13 @@ class
 
 inherit
 	EV_LIST_I
-		rename
-			selected_items as old_selected_items
-		redefine
-			interface
-		end
-		
-	EV_LIST_I
 		redefine
 			interface,
-			selected_items
-		select
+			selected_item,
 			selected_items
 		end
 		
-	EV_LIST_ITEM_LIST_IMP
+	EV_ITEM_LIST_IMP [EV_LIST_ITEM]
 		redefine
 			initialize,
 			interface
@@ -45,295 +37,135 @@ inherit
 			interface
 		end
 
-	WEL_LBS_CONSTANTS
+ 	WEL_LIST_VIEW
+		rename
+			make as wel_make,
+			parent as wel_window_parent,
+			destroy as wel_destroy,
+			shown as is_displayed,
+			set_parent as wel_set_parent,
+			font as wel_font,
+			set_font as wel_set_font,
+			move as wel_move,
+			item as wel_item,
+			enabled as is_sensitive,
+			width as wel_width,
+			height as wel_height,
+			x as x_position,
+			y as y_position,
+			resize as wel_resize,
+			move_and_resize as wel_move_and_resize,
+			count as wel_count,
+			selected_items as wel_selected_items,
+			insert_item as wel_insert_item
+		undefine
+			window_process_message,
+			remove_command,
+			set_width,
+			set_height,
+			on_left_button_down,
+			on_right_button_down,
+			on_left_button_up,
+			on_right_button_up,
+			on_left_button_double_click,
+			on_right_button_double_click,
+			on_mouse_move,
+			on_key_down,
+			on_key_up,
+			on_set_focus,
+			on_kill_focus,
+			on_set_cursor,
+			show,
+			hide
+		redefine
+			on_lvn_itemchanged,
+			on_size,
+			default_ex_style,
+			default_style
+		end
+
+	WEL_LVHT_CONSTANTS
 		export
 			{NONE} all
 		end
 
 creation
 	make
-
-feature {NONE} -- Implementation
-	
-	single_selection_list: EV_WEL_SS_LISTBOX
-	multiple_selection_list:  EV_WEL_MS_LISTBOX
-	current_list: EV_WEL_LISTBOX
 	
 feature {NONE} -- Initialization
 	
 	make (an_interface: like interface) is         
 			-- Create list as single selection.
+		local
+			wel_lv_column: WEL_LIST_VIEW_COLUMN
 		do
 			base_make (an_interface)
-			create single_selection_list.make (default_parent, 0, 0, 1, 1, 0)
-			current_list := single_selection_list
 			create ev_children.make (2)
+
+				-- Create the WEL LISTVIEW.
+			wel_make (Default_parent, 0, 0, 0, 0, 0)
+			create wel_lv_column.make
+			append_column (wel_lv_column)
 		end	
 
 	initialize is
 		do
 			{EV_PRIMITIVE_IMP} Precursor
-			{EV_LIST_ITEM_LIST_IMP} Precursor
-		end
-
-feature -- Delegated feature
-
-	wel_width: INTEGER is
-			-- Window width
-		do
-			Result := current_list.width
-		end
-
-	insert_string_at (a_string: STRING; an_index: INTEGER) is
-			-- Add `a_string' at the zero-based `index'.
-		do
-			current_list.insert_string_at (a_string, an_index)
-		end	
-
-	add_string (a_string: STRING) is
-			-- Add `a_string' in the list box.
-			-- If the list box does not have the
-			-- `Lbs_sort' style, `a_string' is added
-			-- to the end of the list otherwise it is
-			-- inserted into the list and the list is
-			-- sorted.
-		do
-			current_list.add_string (a_string)
-		end
-
-	exists: BOOLEAN is
-			-- Does the window exist?
-		do
-			Result := current_list.exists
-		end
-
-	enable is
-			-- Enable mouse and keyboard input.
-		do
-			current_list.enable
-		end
-
-	on_wm_show_window (wparam, lparam: INTEGER) is
-			-- Wm_showwindow message
-		do
-			current_list.on_wm_show_window (wparam, lparam)
-		end
-
-	on_wm_notify (wparam, lparam: INTEGER) is
-			-- Wm_notify message
-		do
-			current_list.on_wm_notify (wparam, lparam)
-		end
-
-	on_timer (timer_id: INTEGER) is
-			-- Wm_timer message.
-		do
-			current_list.on_timer (timer_id)
-		end
-
-	set_style (a_style: INTEGER) is
-		do
-			current_list.set_style (a_style)
-		end
-
-	item_height: INTEGER is
-			-- Height in pixels of each list item.
-		do
-			Result := current_list.item_height
-		end
-
-	wel_destroy is
-		do
-			current_list.destroy
-		end	
-
-	invalidate is
-		do
-			current_list.invalidate
-		end
-
-	wel_item: POINTER is
-		do
-			Result := current_list.item
-		end
-
-	disable_default_processing is
-		do
-			current_list.disable_default_processing
-		end
-
-	delete_string (an_index: INTEGER) is
-			-- Delete the zero-based `index' item.
-		do
-			current_list.delete_string (an_index)
-		end
-
-	windows: HASH_TABLE [WEL_WINDOW, POINTER] is
-		do
-			Result := current_list.windows
-		end
-
-	top_index: INTEGER is
-			-- Index of item at displayed at top of list.
-		do
-			Result := current_list.top_index
-		end
-
-	wel_height: INTEGER is
-		do
-			Result := current_list.height
-		end
-
-	disable is
-		do
-			current_list.disable
-		end
-
-	on_move (x_pos: INTEGER; y_pos: INTEGER) is
-		do
-			current_list.on_move (x_pos, y_pos)
-		end
-
-	on_wm_destroy is
-		do
-			current_list.on_wm_destroy
-		end
-
-	default_process_message (msg: INTEGER; wparam: INTEGER; lparam: INTEGER) is
-		do
-			current_list.default_process_message (msg, wparam, lparam)
-		end
-
-	wel_set_parent (a_parent: WEL_WINDOW) is
-		do
-			current_list.set_parent (a_parent)
-		end
-
-	style: INTEGER is
-		do
-			Result := current_list.style
-		end
-
-	client_rect: WEL_RECT is
-		do
-			Result := current_list.client_rect
-		end
-
-	set_message_return_value (v: INTEGER) is
-		do
-			current_list.set_message_return_value (v)
-		end
-
-	x_position: INTEGER is
-		do
-			Result := current_list.x
-		end
-
-	y_position: INTEGER is
-		do
-			Result := current_list.y
-		end
-
-	wel_move (a_x_position: INTEGER; a_y_position: INTEGER) is
-		do
-			current_list.move (a_x_position, a_y_position)
-		end
-
-	wel_move_and_resize (
-			a_x_position: INTEGER
-			a_y_position: INTEGER
-			a_width: INTEGER
-			a_height: INTEGER
-			repaint: BOOLEAN
-			) is
-		do
-			current_list.move_and_resize (
-				a_x_position, 
-				a_y_position, 
-				a_width, 
-				a_height, 
-				repaint
-				)
-		end
-
-	wel_resize (a_width: INTEGER; a_height: INTEGER) is
-		do
-			current_list.resize (a_width, a_height)
-		end
-
-	is_sensitive: BOOLEAN is
-		do
-			Result := current_list.enabled
-		end
-
-	is_displayed: BOOLEAN is
-		do
-			Result := current_list.shown
-		end
-
-	has_focus: BOOLEAN is
-		do
-			Result := current_list.has_focus
-		end
-
-	set_focus is
-		do
-			current_list.set_focus
-		end
-
-	set_heavy_capture is
-		do
-			current_list.set_heavy_capture
-		end
-
-	release_heavy_capture is
-		do
-			current_list.release_heavy_capture
-		end
-
-	set_capture is
-		do
-			current_list.set_capture
-		end
-
-	release_capture is
-		do
-			current_list.release_capture
-		end
-
-	wel_parent: WEL_WINDOW is
-		do
-			Result := current_list.parent
+			{EV_ITEM_LIST_IMP} Precursor
 		end
 
 feature -- Access
 
+	wel_parent: WEL_WINDOW is
+			--|---------------------------------------------------------------
+			--| FIXME ARNAUD
+			--|---------------------------------------------------------------
+			--| Small hack in order to avoid a SEGMENTATION VIOLATION
+			--| with Compiler 4.6.008. To remove the hack, simply remove
+			--| this feature and replace "parent as wel_window_parent" with
+			--| "parent as wel_parent" in the inheritance clause of this class
+			--|---------------------------------------------------------------
+		do
+			Result := wel_window_parent
+		end
+
 	multiple_selection_enabled: BOOLEAN
 			-- Can more than one item be selected?
+
+	selected_item: EV_LIST_ITEM is
+			-- Currently selected item.
+			-- Topmost selected item if multiple items are selected.
+			-- (For multiple selections see `selected_items')
+			--
+			-- Void if there is no selection
+		local
+			local_selected_items: like selected_items
+		do
+			local_selected_items := selected_items
+			if not local_selected_items.empty then
+				Result ?= selected_items.first
+			end
+		end
 
 	selected_items: LINKED_LIST [EV_LIST_ITEM] is
 			-- Currently selected items.
 		local
 			i: INTEGER
-			wel_selected_items: ARRAY [INTEGER]
+			interf: EV_LIST_ITEM
+			c: ARRAYED_LIST [EV_LIST_ITEM_IMP]
 		do
 			create Result.make
-			if multiple_selection_enabled then
-				wel_selected_items := multiple_selection_list.selected_items
-				from
-					i := wel_selected_items.lower
-				until
-					i > wel_selected_items.upper
-				loop
-					Result.extend (i_th(wel_selected_items @ i + 1))
-					Result.finish
-					i := i + 1
-				end
-			elseif single_selection_list.selected then
-				Result.extend (i_th(single_selection_list.selected_item + 1))
-			end
-		ensure then
-			valid_implementation: validate_selected_items (Result)
+			c := ev_children
+			from
+				i := 0
+			until
+				i = selected_count
+			loop
+				interf ?= (c @ (wel_selected_items @ i + 1)).interface
+				Result.extend (interf)
+				Result.finish
+				i := i + 1
+			end			
 		end
 
 feature -- Status setting
@@ -341,33 +173,28 @@ feature -- Status setting
 	select_item (an_index: INTEGER) is
 			-- Select item at `an_index'.
 		do
-			if multiple_selection_enabled then
-				multiple_selection_list.select_item (an_index - 1)
-			else
-				single_selection_list.select_item (an_index - 1)
-			end
+			(ev_children @ an_index).enable_select
 		end
 
 	deselect_item (an_index: INTEGER) is
 			-- Deselect item at `an_index'.
 		do
-			if multiple_selection_enabled then
-				multiple_selection_list.unselect_item (index - 1)
-			else
-				if single_selection_list.selected and then 
-				single_selection_list.selected_item = an_index - 1 then
-					single_selection_list.unselect
-				end
-			end
+			(ev_children @ an_index).disable_select
 		end
 
 	clear_selection is
-			-- Ensure there are no `selected_items'.
+			-- Make `selected_items' empty.
+		local
+			local_selected_items: LINKED_LIST [EV_LIST_ITEM]
 		do
-			if multiple_selection_enabled then
-				multiple_selection_list.unselect_all
-			else
-				single_selection_list.unselect
+			local_selected_items := selected_items
+			from
+				local_selected_items.start
+			until
+				local_selected_items.after
+			loop
+				local_selected_items.item.disable_select
+				local_selected_items.forth
 			end
 		end
 
@@ -375,135 +202,34 @@ feature -- Status setting
 			-- Allow more than one item to be selected.
 		do
 			if not multiple_selection_enabled then
+				set_style (default_style - Lvs_singlesel)
 				multiple_selection_enabled := True
-				last_selected_item := Void
-				recreate_list
 			end
 		end
 
 	disable_multiple_selection is
 			-- Allow only one item to be selected.
-		do
-			if multiple_selection_enabled then
-				multiple_selection_enabled := False
-				recreate_list
-			end
-		end
-
-feature {NONE} -- Implementation
-
-	recreate_list is
-			-- Re-initialize object.
-			--| enable_multiple_selection has been changed.
 		local
-			wel_win: WEL_WINDOW
-			old_x_position, old_y_position, old_width, old_height: INTEGER
+			old_selected_item: EV_LIST_ITEM
 		do
-				-- We store existing attributes required to re-create `Current'.
-			wel_win ?= parent_imp
-			old_x_position := x_position
-			old_y_position := y_position
-			old_width := width
-			old_height := height
-
-				-- Destroy the old windows object.
-			wel_destroy
-
-				-- Create a new windows object with the stored attributes.
 			if multiple_selection_enabled then
-				create multiple_selection_list.make (
-					Default_parent,
-					old_x_position, 
-					old_y_position, 
-					old_width, 
-					old_height,
-					0
-					)
-				current_list := multiple_selection_list
-				single_selection_list := Void
-			else
-				create single_selection_list.make (
-					Default_parent,
-					old_x_position, 
-					old_y_position, 
-					old_width, 
-					old_height,
-					0
-					)
-				current_list := multiple_selection_list
-				multiple_selection_list := Void
-			end
-				
-				-- Update the contents of the new windows object.
-			internal_copy_list
+					-- Unselect all selected and remember the top
+					-- most selected item.
+				old_selected_item := selected_item
+				clear_selection
 
-				-- Set the parent.
-				--| Note ARNAUD - April 2000.
-				--| Do not use `wel_win' in `internal_window_make' because
-				--| Windows may not be able to register the window.
-			wel_set_parent (wel_win)
+					-- Set the new style
+				set_style (default_style)
+				multiple_selection_enabled := False
+
+					-- Reselect the top most item
+				if old_selected_item /= Void then
+					old_selected_item.enable_select
+				end
+			end
 		end
 
 feature {EV_LIST_ITEM_IMP} -- Implementation
-
-	is_item_imp_selected (li_imp: EV_LIST_ITEM_IMP): BOOLEAN is
-			-- Is `li_imp' selected?
-		local
-			pos: INTEGER
-		do
-			pos := index_of_item_imp (li_imp)
-			if multiple_selection_enabled then
-				if multiple_selection_list.selected then
-					Result := multiple_selection_list.selected_items.has (
-						pos - 1
-						)
-				end
-			else
-				if single_selection_list.selected then
-					Result := single_selection_list.selected_item = (pos - 1)
-				end
-			end
-		end
-
-	select_item_imp (li_imp: EV_LIST_ITEM_IMP) is
-			-- Set `li_imp' selected.
-		local
-			pos: INTEGER
-		do
-			pos := index_of_item_imp (li_imp)
-			if multiple_selection_enabled then
-				multiple_selection_list.select_item (pos - 1)
-			else
-				single_selection_list.select_item (pos - 1)
-			end
-		end
-
-	deselect_item_imp (li_imp: EV_LIST_ITEM_IMP) is
-			-- Set `li_imp' deselected.
-		local
-			pos: INTEGER
-		do
-			pos := index_of_item_imp (li_imp)
-			if multiple_selection_enabled then
-				multiple_selection_list.unselect_items (pos - 1, pos - 1)
-			else
-				single_selection_list.unselect
-			end
-		end
-
-	set_item_imp_text (li_imp: EV_LIST_ITEM_IMP; a_text: STRING) is
-			-- Set `li_imp'.`text' to `a_text'.
-		local
-			pos: INTEGER
-		do
-			pos := index_of_item_imp (li_imp)
-			delete_string (pos - 1)
-			insert_string_at (a_text, pos - 1)
-		ensure then
-			a_text_set:
-				a_text.is_equal
-					(current_list.i_th_text (index_of_item_imp (li_imp) - 1))
-		end
 
 	internal_propagate_pointer_press (keys, x_pos, y_pos, button: INTEGER) is
 			-- Propagate `keys', `x_pos' and `y_pos' to the appropriate
@@ -526,55 +252,101 @@ feature {EV_LIST_ITEM_IMP} -- Implementation
 			end
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_LIST_ITEM_I} -- Implementation
 
-	validate_selected_items (new_result: like selected_items): BOOLEAN is
+	insert_item (item_imp: EV_LIST_ITEM_IMP; an_index: INTEGER) is
+			-- Insert `item_imp' at `an_index'.
 		local
-			old_result: like selected_items
+			list: LINKED_LIST [STRING]
+			litem: WEL_LIST_VIEW_ITEM
+			rw: INTEGER
+			first_string: STRING
 		do
-			old_result := old_selected_items
-
-				-- by default, the new implementation is correct if the
-				-- list have the same size
-			Result := (old_result.count = new_result.count)
-
-				-- Validate the new algorithm
-			from
-				old_result.start
-				new_result.start
-			until
-				(not Result) or (old_result.after and new_result.after)
-			loop
-				if not old_result.item.is_equal(new_result.item) then
-					Result := False
-				end
-				old_result.forth
-				new_result.forth
-			end
-			new_result.start
+			create litem.make
+			litem.set_text (item_imp.text)
+			litem.set_iitem (an_index - 1)
+			wel_insert_item (litem)
 		end
+
+	remove_item (item_imp: EV_LIST_ITEM_IMP) is
+			-- Remove `item' from the list
+		local
+			an_index: INTEGER
+		do
+			an_index := ev_children.index_of (item_imp, 1) - 1
+			delete_item (an_index)
+		end
+
+	internal_get_index (item_imp: EV_LIST_ITEM_IMP): INTEGER is
+			-- Return the index of `item' in the list.
+		do
+			Result := ev_children.index_of (item_imp, 1)
+		end
+
+	internal_is_selected (item_imp: EV_LIST_ITEM_IMP): BOOLEAN is
+			-- Is `item_imp' selected in the list?
+		local
+			i: INTEGER
+		do
+			i := ev_children.index_of (item_imp, 1) - 1
+			i := get_item_state (i, Lvis_selected)
+			Result := flag_set (i, Lvis_selected)
+		end
+
+	internal_select (item_imp: EV_LIST_ITEM_IMP) is
+			-- Select `item_imp' in the list.
+		local
+			i, flags: INTEGER
+			litem: WEL_LIST_VIEW_ITEM
+		do
+			i := ev_children.index_of (item_imp, 1) - 1
+			create litem.make_with_attributes (Lvif_state, i, 0, 0, "")
+			litem.set_state (Lvis_selected)
+			litem.set_statemask (Lvis_selected)	
+			cwin_send_message (wel_item, Lvm_setitemstate, i,
+				litem.to_integer)
+		end
+
+	internal_deselect (item_imp: EV_LIST_ITEM_IMP) is
+			-- Deselect `item_imp' in the list.
+		local
+			i, flags: INTEGER
+			litem: WEL_LIST_VIEW_ITEM
+		do
+			i := ev_children.index_of (item_imp, 1) - 1
+			create litem.make_with_attributes (Lvif_state, i, 0, 0, "")
+			litem.set_state (0)
+			litem.set_statemask (Lvis_selected)	
+			cwin_send_message (wel_item, Lvm_setitemstate, i,
+				litem.to_integer)
+		end
+
+feature {EV_ANY_I} -- Implementation
 
 	find_item_at_position (x_pos, y_pos: INTEGER): EV_LIST_ITEM_IMP is
 			-- Result is list item at pixel position `x_pos', `y_pos'.
 		local
-			temporary_position: INTEGER
+			pt: WEL_POINT
+			info: WEL_LV_HITTESTINFO
 		do
-			temporary_position := (y_pos // item_height) + 1
-			if top_index > 0 then
-				temporary_position := top_index + temporary_position
-			end
-			if temporary_position <= count and temporary_position > 0 then
-				Result := ev_children @ temporary_position
+			create pt.make (x_pos, y_pos)
+			create info.make_with_point (pt)
+			cwin_send_message (wel_item, Lvm_hittest, 0, info.to_integer)
+			if flag_set (info.flags, Lvht_onitemlabel)
+			or flag_set (info.flags, Lvht_onitemicon)
+			then
+				Result := ev_children @ (info.iitem + 1)
 			end
 		end
 
 	default_style: INTEGER is
 			-- Default style of the list.
-		do
-			check
-				not_called: False
-			end
-			Result := Lbs_hasstrings + Lbs_nointegralheight
+		once
+			Result := Ws_visible + Ws_child + Ws_group + Ws_tabstop
+				+ Ws_border + Ws_clipchildren + Lvs_showselalways
+				+ Lvs_nocolumnheader
+				+ Lvs_report
+				+ Lvs_singlesel
 		end
 
 	default_ex_style: INTEGER is
@@ -583,66 +355,27 @@ feature {EV_ANY_I} -- Implementation
 			Result := Ws_ex_clientedge
 		end
 
-	last_selected_item: EV_LIST_ITEM_IMP
-			-- Item was last selected as notified by `on_lbn_selchange'.
-
-	on_lbn_selchange is
-			-- The selection is about to change.
+	on_lvn_itemchanged (info: WEL_NM_LIST_VIEW) is
+			-- An item has changed
 		local
-			li_imp: EV_LIST_ITEM_IMP
+			item_imp: EV_LIST_ITEM_IMP
 		do
-			if multiple_selection_enabled then
-				li_imp := ev_children @ 
-					(multiple_selection_list.caret_index + 1)
-				if li_imp.is_selected then
-					notify_select (li_imp.interface)
-				else
-					notify_deselect (li_imp.interface)
-				end
-			else
-				if single_selection_list.selected then
-					li_imp := ev_children @ 
-						(single_selection_list.selected_item + 1)
-					if last_selected_item /= Void and then li_imp /=
-							last_selected_item then
-						notify_deselect (last_selected_item.interface)
-					end
-					notify_select (li_imp.interface)
-					last_selected_item := li_imp
-				else
-					if last_selected_item /= Void then
-						notify_deselect (last_selected_item.interface)
-						last_selected_item := Void
-					end
+			if info.uchanged = Lvif_state and info.isubitem = 0 then
+				if flag_set(info.unewstate, Lvis_selected) and
+						not flag_set(info.uoldstate, Lvis_selected) then
+						-- Item is being selected
+					item_imp := ev_children @ (info.iitem + 1)
+					item_imp.interface.select_actions.call ([])
+					interface.select_actions.call ([item_imp.interface])
+
+				elseif flag_set(info.uoldstate, Lvis_selected) and
+					not flag_set(info.unewstate, Lvis_selected) then
+						-- Item is being unselected
+					item_imp := ev_children @ (info.iitem + 1)
+					item_imp.interface.deselect_actions.call ([])
+					interface.deselect_actions.call ([item_imp.interface])
 				end
 			end
-		end
-
-	on_lbn_selcancel is
-			-- Cancel the selection.
-		do
-			if not multiple_selection_enabled then
-				notify_deselect (last_selected_item.interface)
-				last_selected_item := Void
-			end
-		end
-
-	notify_deselect (i: EV_LIST_ITEM) is
-			-- Call action sequences related to deselection of `i'.
-		require
-			i_not_void: i /= Void
-		do
-			i.deselect_actions.call ([])
-			interface.deselect_actions.call ([i])
-		end
-
-	notify_select (i: EV_LIST_ITEM) is
-			-- Call action sequences related to selection of `i'.
-		require
-			i_not_void: i /= Void
-		do
-			i.select_actions.call ([])
-			interface.select_actions.call ([i])
 		end
 
 	on_key_down (virtual_key, key_data: INTEGER) is
@@ -652,10 +385,13 @@ feature {EV_ANY_I} -- Implementation
 			process_tab_key (virtual_key)
 		end
 
-	on_size (size_type, a_height, a_width: INTEGER) is
+	on_size (size_type, a_width, a_height: INTEGER) is
 			-- List resized.
 		do
-			current_list.on_size (size_type, a_height, a_width)
+			set_column_width (-1, 0) -- Autosize
+
+				-- Resize the first and only column.
+			Precursor (size_type, a_width, a_height)
 			interface.resize_actions.call ([screen_x, screen_y, a_width,
 				height])
 		end
@@ -679,16 +415,6 @@ feature {EV_ANY_I} -- Implementation
 			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
 		end 
 
-	wel_background_color: WEL_COLOR_REF is
-		do
-			Result := background_color_imp
-		end
-
-	wel_foreground_color: WEL_COLOR_REF is
-		do
-			Result := foreground_color_imp
-		end
-
 feature {NONE} -- Feature that should be directly implemented by externals
 
 	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
@@ -696,7 +422,7 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			-- because we cannot do a deferred feature become an
 			-- external feature.
 		do
-			Result := current_list.cwin_get_next_dlgtabitem (hdlg, hctl, previous)
+			Result := cwin_get_next_dlgtabitem (hdlg, hctl, previous)
 		end
 
 	next_dlggroupitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
@@ -715,7 +441,7 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			-- c_mouse_message_x deferred but it does not wotk because
 			-- it would be implemented by an external.
 		do
-			Result := current_list.c_mouse_message_x (lparam)
+			Result := c_mouse_message_x (lparam)
 		end
 
 	mouse_message_y (lparam: INTEGER): INTEGER is
@@ -724,7 +450,7 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			-- c_mouse_message_x deferred but it does not wotk because
 			-- it would be implemented by an external.
 		do
-			Result := current_list.c_mouse_message_y (lparam)
+			Result := c_mouse_message_y (lparam)
 		end
 
 	show_window (hwnd: POINTER; cmd_show: INTEGER) is
@@ -733,7 +459,7 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			-- c_mouse_message_x deferred but it does not wotk because
 			-- it would be implemented by an external.
 		do
-			current_list.cwin_show_window (hwnd, cmd_show)
+			cwin_show_window (hwnd, cmd_show)
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -763,16 +489,14 @@ end -- class EV_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.68  2000/04/18 02:34:07  pichery
---| Formatting...
---| I can commit file with more than 80 columns...
---| he he he :O)
+--| Revision 1.69  2000/04/18 21:22:45  pichery
+--| MAJOR CHANGE:
+--| - Changed the implementation of EV_LIST_IMP. It now
+--| inherit from WEL_LIST_VIEW instead of WEL_LIST_BOX.
 --|
---| Revision 1.67  2000/04/18 02:30:19  pichery
---| Refactored class. Replaced Inheritance by Delegation.
---| Inheriting from WEL_SINGLE_SELECTION_LIST_BOX
---| and WEL_MULTIPLE_SELECTION_LIST_BOX at the
---| same time in not possible due to invariant conflict.
+--| - fixed all waiting problems.
+--|
+--| --> Ready for review
 --|
 --| Revision 1.66  2000/04/17 23:32:02  rogers
 --| Fixed bug in find_item_at_position.

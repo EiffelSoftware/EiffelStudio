@@ -77,6 +77,7 @@ feature -- Code generation
 			end
 			internal_generate_inline (Void, l_ret_type)
 			l_buffer.putchar (';')
+			l_buffer.new_line
 		end
 
 	generate_access (parameters: BYTE_LIST [EXPR_B]; a_ret_type: TYPE_I) is

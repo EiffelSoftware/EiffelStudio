@@ -45,7 +45,7 @@ feature -- Access
 				end
 			end
 		ensure
-			no_ending_directory_separator: Result /= Void implies Result.item (Result.count) /= (create {OPERATING_ENVIRONMENT}).Directory_separator
+			no_ending_directory_separator: Result /= Void implies Result.item (Result.count) /= Directory_separator
 		end
 
 	Default_metadata_cache_path: STRING is
@@ -57,7 +57,7 @@ feature -- Access
 				Result.append ("assemblies")
 			end
 		ensure
-			do_not_end_with_directory_separator: Result /= Void implies Result.item (Result.count) /= (create {OPERATING_ENVIRONMENT}).Directory_separator
+			do_not_end_with_directory_separator: Result /= Void implies Result.item (Result.count) /= Directory_separator
 		end
 
 	Default_precompile_cache: STRING is
@@ -66,10 +66,10 @@ feature -- Access
 			if Codedom_installation_path /= Void then
 				create Result.make_from_string (Codedom_installation_path)
 				Result.append_character (Directory_separator)
-				Result.append ("precomp")
+				Result.append ("precompile")
 			end
 		ensure
-			do_not_end_with_directory_separator: Result /= Void implies Result.item (Result.count) /= (create {OPERATING_ENVIRONMENT}).Directory_separator
+			do_not_end_with_directory_separator: Result /= Void implies Result.item (Result.count) /= Directory_separator
 		end
 
 	Default_precompile_ace_file: STRING is
@@ -85,7 +85,7 @@ feature -- Access
 				Result.append ("ace.ace")
 			end
 		ensure
-			do_not_end_with_directory_separator: Result /= Void implies Result.item (Result.count) /= (create {OPERATING_ENVIRONMENT}).Directory_separator
+			do_not_end_with_directory_separator: Result /= Void implies Result.item (Result.count) /= Directory_separator
 		end
 
 	Default_configs_directory: STRING is
@@ -147,8 +147,22 @@ feature -- Access
 				end
 			end
 		ensure
-			no_ending_directory_separator: Result /= Void implies Result.item (Result.count) /= (create {OPERATING_ENVIRONMENT}).Directory_separator
+			no_ending_directory_separator: Result /= Void implies Result.item (Result.count) /= Directory_separator
 		end
+
+	Documentation_path: STRING is
+			-- Path to documentation file
+		once
+			create Result.make (Codedom_installation_path.count + 1 + 13 + 1 + Documentation_file_name.count)
+			Result.append (Codedom_installation_path)
+			Result.append (Directory_separator.out)
+			Result.append ("Documentation")
+			Result.append (Directory_separator.out)
+			Result.append (Documentation_file_name)
+		end
+
+	Documentation_file_name: STRING is "ecdp.chm"
+			-- Documentation chm file name
 
 end -- class CODE_DOM_PATH
 

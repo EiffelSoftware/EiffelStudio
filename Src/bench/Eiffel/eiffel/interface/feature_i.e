@@ -102,7 +102,11 @@ inherit
 		rename
 			same_type as general_same_type
 		end;
-	
+	COMPILER_EXPORTER
+		rename
+			same_type as general_same_type
+		end
+			
 feature 
 
 	feature_name: STRING;
@@ -1754,7 +1758,7 @@ feature -- Debug purpose
 
 	trace_signature is
 			-- Trace signature of current feature
-		obsolete "Use append_clickable_signature"
+		obsolete "Use append_signature"
 		local
 			i, nb: INTEGER;
 		do
@@ -1812,20 +1816,20 @@ feature -- PS
 			Result_exists: Result /= Void
 		end;
 
-	append_clickable_signature (a_clickable: CLICK_WINDOW; c: CLASS_C) is
+	append_signature (a_clickable: OUTPUT_WINDOW; c: CLASS_C) is
 			-- Append the signature of current feature in `a_clickable'
 		obsolete
-			"Use e_feature `append_clickable_signature'"
+			"Use e_feature `append_signature'"
 		do
-			api_feature.append_clickable_signature (a_clickable, c.e_class)
+			api_feature.append_signature (a_clickable, c.e_class)
 		end;
 
-	append_clickable_name (a_clickable: CLICK_WINDOW; c: CLASS_C) is
+	append_name (a_clickable: OUTPUT_WINDOW; c: CLASS_C) is
 			-- Append the name of the feature in `a_clickable'
 		obsolete
-			"Use e_feature `append_clickable_name'"
+			"Use e_feature `append_name'"
 		do
-			api_feature.append_clickable_name (a_clickable, c.e_class)
+			api_feature.append_name (a_clickable, c.e_class)
 		end;
 
 feature -- Debugging

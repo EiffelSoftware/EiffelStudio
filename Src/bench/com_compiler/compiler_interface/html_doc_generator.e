@@ -140,21 +140,20 @@ feature -- Basic operations
 		do
 			if not retried then
 				create doc_generator.make
-				create du.make_all
+				create du.make
 				doc_generator.set_filter ("html-stylesheet")
 				doc_generator.set_directory (create {DIRECTORY}.make (generation_path))
-				doc_generator.set_all_universe
 				doc_generator.set_cluster_formats (true, false)
 				doc_generator.set_system_formats (true, true, true)
 				doc_generator.set_class_formats (false, false, false, true, false, false)
 				
-				-- set the excluded clusters
+				-- set the included clusters
 				from
 					excluded_clusters.start
 				until
 					excluded_clusters.after
 				loop
-					du.exclude_cluster (doc_generator.Universe.cluster_of_name (excluded_clusters.item), true)
+					du.include_cluster (doc_generator.Universe.cluster_of_name (excluded_clusters.item), true)
 					excluded_clusters.forth
 				end
 				doc_generator.set_universe (du)
@@ -202,19 +201,19 @@ feature {NONE} -- Basic Operations
 			cluster: CLUSTER_I
 			assembly: ASSEMBLY_I
 		do
-			clusters := Eiffel_universe.clusters
-			from 
-				clusters.start
-			until
-				clusters.after
-			loop
-				cluster := clusters.item
-				assembly ?= cluster
-				if assembly /= Void then
-					add_excluded_cluster (cluster.cluster_name)	
-				end
-				clusters.forth
-			end
+--			clusters := Eiffel_universe.clusters
+--			from 
+--				clusters.start
+--			until
+--				clusters.after
+--			loop
+--				cluster := clusters.item
+--				assembly ?= cluster
+--				if assembly /= Void then
+--					add_excluded_cluster (cluster.cluster_name)	
+--				end
+--				clusters.forth
+--			end
 		end
 
 feature {NONE} -- Implementation

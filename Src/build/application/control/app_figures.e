@@ -3,7 +3,7 @@ class APP_FIGURES
 
 inherit
 
-	DRAWING_BOX [STATE_CIRCLE] 
+	EB_DRAWING_BOX [STATE_CIRCLE] 
 		rename
 			make as box_make, 
 			select_figure as old_select,
@@ -19,7 +19,7 @@ inherit
 			set_stone, release_action,
 			move_action, previous_point, figure
 		end;
-	DRAWING_BOX [STATE_CIRCLE]
+	EB_DRAWING_BOX [STATE_CIRCLE]
 		rename
 			make as box_make,
 			selected_element as selected_figure

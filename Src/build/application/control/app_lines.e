@@ -3,7 +3,7 @@ class APP_LINES
 
 inherit
 
-	DRAWING_BOX [STATE_LINE] 
+	EB_DRAWING_BOX [STATE_LINE] 
 		rename
 			make as box_make, 
 			selected_element as selected_line,
@@ -17,7 +17,7 @@ inherit
 		select
 			line, set_stone_action
 		end;
-	DRAWING_BOX [STATE_LINE]
+	EB_DRAWING_BOX [STATE_LINE]
 		rename
 			make as box_make,
 			selected_element as selected_line

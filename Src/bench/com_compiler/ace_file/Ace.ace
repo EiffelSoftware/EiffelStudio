@@ -1,5 +1,5 @@
 system
-	"ISE.Compiler.exe"
+	"ISE.Compiler"
 
 root
 	ECOM_ISE_REGISTRATION: make

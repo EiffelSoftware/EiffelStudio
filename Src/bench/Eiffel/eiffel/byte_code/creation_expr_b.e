@@ -188,24 +188,21 @@ feature -- IL code generation
 		do
 			if type.is_external then
 					-- Creation call on external class.
-
-				check
-					call_not_void: call /= Void
-				end
-					-- An external class has always a feature call
-					-- as `default_create' can't be called on them.
-				call.set_parent (nested_b)
-
-				ext_call ?= call
-				if ext_call /= Void then
-					ext_call.generate_il_creation
+				if call /= Void then
+					call.set_parent (nested_b)
+					ext_call ?= call
+					if ext_call /= Void then
+						ext_call.generate_il_creation
+					else
+							-- External class with a standard Eiffel feature can
+							-- only be a NATIVE_ARRAY.
+						call.generate_il_call (False)
+					end
+					call.set_parent (Void)
 				else
-						-- External class with a standard Eiffel feature can
-						-- only be a NATIVE_ARRAY.
-					call.generate_il_call (False)
+						-- We called `default_create' on an external class.
+					info.generate_il
 				end
-
-				call.set_parent (Void)
 			else
 				if real_type (type).is_basic then
 					il_generator.put_default_value (real_type (type))

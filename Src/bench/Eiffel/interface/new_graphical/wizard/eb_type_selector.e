@@ -195,7 +195,7 @@ feature {NONE} -- Implementation
 				generic_box.extend (new_label ("]"))
 				generic_box.disable_item_expand (generic_box.last)
 			else
-				gen_count := generics_count (selector.text)
+				gen_count := generics_count (selector.text.as_upper)
 				if generic_count /= gen_count 
 					or (generic_count = 0 and not generic_box.is_empty) then
 						generic_count := gen_count

@@ -49,8 +49,10 @@ feature -- Type check, byte code and dead code removal
 					context.init_error (veen2a);
 					Error_handler.insert_error (veen2a);
 				end;
+
 					-- Update the type stack
 				context.replace (feat_type);
+
 					-- Update the access line
 				!!access_result;
 				context.access_line.insert (access_result);

@@ -12,13 +12,14 @@ inherit
 			putstring as file_putstring,
 			putreal as file_putreal,
 			putdouble as file_putdouble
-		end;
+		end
+
 	PLAIN_TEXT_FILE
 		redefine
 			putdouble, putreal, putstring, putint, new_line, putchar	
 		select
 			putdouble, putreal, putstring, putint, new_line, putchar
-		end;
+		end
 
 creation
 

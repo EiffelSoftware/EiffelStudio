@@ -28,15 +28,18 @@ feature -- Access
 	check_validity is
 			-- Check validity of the reverse assignment
 		local
-			target_type: TYPE_A
+			target_type, source_type: TYPE_A
 			vjrv1: VJRV1
 			vjrv2: VJRV2
 		do
+			conversion_info := Void
+			
 				-- Stack managment
+			source_type := context.item
 			context.pop (1)
+			target_type := context.item
 			
 			if not System.il_generation then
-				target_type := context.item
 				if target_type.is_expanded then
 					create vjrv1
 					context.init_error (vjrv1)
@@ -49,6 +52,18 @@ feature -- Access
 					vjrv2.set_target_name (target.access_name)
 					vjrv2.set_target_type (target_type)
 					Error_handler.insert_error (vjrv2)
+				else
+						-- Special case `t ?= exp' where we convert
+						-- `exp' to its associated reference before
+						-- doing the assignment.
+					if
+						source_type.is_expanded and then
+						source_type.convert_to (context.current_class,
+							source_type.reference_actual_type)
+					then
+						conversion_info := context.last_conversion_info
+						context.supplier_ids.extend (conversion_info.depend_unit)
+					end
 				end
 			end
 				-- Update type stack
@@ -67,7 +82,12 @@ feature -- Access
 			create Result
 			l_access := target.byte_node
 			Result.set_target (l_access)
-			Result.set_source (source.byte_node)
+			if conversion_info /= Void then
+				Result.set_source (conversion_info.byte_node (source.byte_node))
+				conversion_info := Void
+			else
+				Result.set_source (source.byte_node)
+			end
 			Result.set_line_number (line_number)
 			
 			if l_access.is_result then

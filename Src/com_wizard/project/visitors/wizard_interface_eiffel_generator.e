@@ -42,28 +42,28 @@ feature -- Access
 				process_properties (a_descriptor.properties)
 			end
 
-			if a_descriptor.functions /= Void and then not a_descriptor.functions.empty then
-				process_functions (a_descriptor.functions)
+			if not a_descriptor.functions_empty then
+				process_functions (a_descriptor)
 			end
 		end
 
 feature {NONE} -- Implementation
 
-	process_functions (functions:LINKED_LIST[WIZARD_FUNCTION_DESCRIPTOR]) is
+	process_functions (a_descriptor: WIZARD_INTERFACE_DESCRIPTOR) is
 			-- Process functions
 		require
-			non_void_list: functions /= Void
-			not_empty_list: not functions.empty
+			non_void_descriptor: a_descriptor /= Void
+			not_empty_list: not a_descriptor.functions_empty
 			non_void_eiffel_writer: eiffel_writer /= Void
 		local
 			func_generator: WIZARD_EIFFEL_DEFERRED_FUNCTION_GENERATOR
 		do
 			from
-				functions.start
+				a_descriptor.functions_start
 			until
-				functions.off
+				a_descriptor.functions_after
 			loop
-				create func_generator.generate (functions.item)
+				create func_generator.generate (a_descriptor.functions_item)
 				if func_generator.feature_writer.result_type /= Void and then func_generator.feature_writer.result_type.empty 
 						and func_generator.feature_writer.arguments.empty then
 					eiffel_writer.add_feature (func_generator.feature_writer, Access)
@@ -71,11 +71,11 @@ feature {NONE} -- Implementation
 					eiffel_writer.add_feature (func_generator.feature_writer, Basic_operations)
 				end
 				eiffel_writer.add_feature (func_generator.precondition_feature_writer, Status_report)
-				functions.forth
+				a_descriptor.functions_forth
 			end
 		end
 
-	process_properties (properties:LINKED_LIST[WIZARD_PROPERTY_DESCRIPTOR]) is
+	process_properties (properties: LINKED_LIST [WIZARD_PROPERTY_DESCRIPTOR]) is
 			-- Process properties
 		require
 			non_void_list: properties /= Void

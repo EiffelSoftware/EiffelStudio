@@ -425,6 +425,8 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 				loop
 					l_assembly := assemblies.item
 					create l_compiled_assembly.make_from_ast (l_assembly)
+					Error_handler.checksum
+					
 					l_old_assembly ?= Lace.old_universe.
 						cluster_of_name (l_compiled_assembly.cluster_name)
 						

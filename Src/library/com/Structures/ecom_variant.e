@@ -228,8 +228,6 @@ feature -- Access
 			-- Date value
 		require
 			is_date: variable_type = Vt_date
-		local
-			tmp_double: DOUBLE
 		do
 			Result := ccom_date (item)
 		end

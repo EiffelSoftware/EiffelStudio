@@ -74,7 +74,6 @@ feature -- Initialization
 		local
 			i: INTEGER
 			a_referee_list: LINKED_LIST [WIZARD_USER_DEFINED_DATA_TYPE_DESCRIPTOR]
-			a_component_list: LINKED_LIST [WIZARD_COCLASS_DESCRIPTOR]
 		do
 			create descriptors.make (1, a_type_lib.type_info_count)
 			create referees.make (1, a_type_lib.type_info_count)
@@ -210,7 +209,7 @@ feature -- Basic operations
 	generate  is
 			-- Create `descriptors' array.
 		local
-			i, a_descriptor: INTEGER
+			i: INTEGER
 		do
 			progress_report.set_range (progress_report.range + type_lib.type_info_count)
 			from
@@ -232,7 +231,7 @@ feature -- Basic operations
 		require
 			complete: complete
 		local
-			i, local_counter: INTEGER
+			i: INTEGER
 			interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR
 		do
 			from
@@ -264,7 +263,7 @@ feature -- Basic operations
 		require
 			complete: complete
 		local
-			i, local_counter: INTEGER
+			i: INTEGER
 			interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR
 		do
 			from
@@ -343,7 +342,6 @@ feature -- Basic operations
 			a_lib: WIZARD_TYPE_LIBRARY_DESCRIPTOR
 			an_index: INTEGER
 			aliased_descriptor: WIZARD_TYPE_DESCRIPTOR
-			pointed_data_type: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR
 		do
 			from
 				i := 1
@@ -456,7 +454,6 @@ feature -- Basic operations
 			i: INTEGER
 			interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR
 			implemented_interface_descriptor: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR
-			type_descriptor: WIZARD_USER_DEFINED_DATA_TYPE_DESCRIPTOR
 		do
 			from
 				i := 1

@@ -36,7 +36,6 @@ feature -- Basic operations
 			Record_creator: WIZARD_RECORD_DESCRIPTOR_CREATOR 
 			Interface_creator: WIZARD_INTERFACE_DESCRIPTOR_CREATOR 
 			Coclass_creator: WIZARD_COCLASS_DESCRIPTOR_CREATOR 
-			Union_creator: WIZARD_UNION_DESCRIPTOR_CREATOR 
 		do
 			type := a_type_info.type_attr.type_kind
 			if type = Tkind_enum then

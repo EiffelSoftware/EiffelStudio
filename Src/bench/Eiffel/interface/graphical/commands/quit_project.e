@@ -112,7 +112,6 @@ feature {NONE} -- Attributes
 	accelerator: STRING is
 			-- Accelerator action for menu entry
 		do
-			Result := Interface_names.a_Exit_project;
 		end;
 
 end -- class QUIT_PROJECT

@@ -152,55 +152,56 @@ feature {GB_XML_STORE} -- Output
 		
 feature {GB_CODE_GENERATOR} -- Output
 
-	generate_code (element: XML_ELEMENT; a_name: STRING; children_names: ARRAYED_LIST [STRING]): STRING is
+	generate_code (element: XML_ELEMENT; a_name, a_type: STRING; children_names: ARRAYED_LIST [STRING]): STRING is
 			-- `Result' is string representation of
 			-- settings held in `Current' which is
 			-- in a compilable format.
 		local
 			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
 			element_info: ELEMENT_INFORMATION
+			temp_x_position_string, temp_y_position_string,
+			temp_width_string, temp_height_string: STRING
+			counter: INTEGER
+			lower, upper: INTEGER
 		do
---			Result := ""
---			full_information := get_unique_full_info (element)
---			element_info := full_information @ (Is_homogeneous_string)
---			if element_info /= Void then
---				if element_info.data.is_equal (True_string) then
---					Result := a_name + ".enable_homgeneous"
---				else
---					Result := a_name + ".disable_homogeneous"
---				end
---			end
---			
---			
---			element_info := full_information @ (Padding_string)
---			if element_info /= Void then
---				Result := Result + indent + a_name + ".set_padding_width (" + element_info.data + ")"
---			end
---			
---			element_info := full_information @ (Border_string)
---			if element_info /= Void then
---				Result := Result + indent + a_name + ".set_border_width (" + element_info.data + ")"
---			end
---			
---				-- This is always saved, so there is no check.
---			element_info := full_information @ (Is_item_expanded_string)
---			check
---				consistent: children_names.count = element_info.data.count
---			end
---			from
---				children_names.start
---			until
---				children_names.off
---			loop
---					-- We only generate code for all the children that are disabled as they
---					-- are expanded by default.
---				if element_info.data @ children_names.index /= '1' then
---					Result := Result + indent + a_name + ".disable_item_expand (" + children_names.item + ")"
---				end
---				children_names.forth
---			end
---	
---			Result := strip_leading_indent (Result)
+			Result := ""
+			full_information := get_unique_full_info (element)
+			element_info := full_information @ (x_position_string)
+			if element_info /= Void then
+				temp_x_position_string := element_info.data
+			end
+			element_info := full_information @ (y_position_string)
+			if element_info /= Void then
+				temp_y_position_string := element_info.data
+			end
+			element_info := full_information @ (width_string)
+			if element_info /= Void then
+				temp_width_string := element_info.data
+			end
+			element_info := full_information @ (height_string)
+			if element_info /= Void then
+				temp_height_string := element_info.data
+			end
+			check
+				strings_equal_in_length: temp_x_position_string.count = temp_y_position_string.count and
+					temp_x_position_string.count = temp_width_string.count and
+					temp_x_position_string.count = temp_height_string.count
+				strings_divisible_by_4: temp_x_position_string.count \\ 4 = 0
+				strings_correct_length: temp_x_position_string.count // 4 = first.count			
+			end
+			from
+				counter := 1
+			until
+				counter = temp_x_position_string.count // 4 + 1
+			loop
+				lower := (counter - 1) * 4 + 1
+				upper := (counter - 1) * 4 + 4
+				Result := Result + indent + a_name + ".set_item_x_position (" + a_name + ".i_th (" + counter.out + "), " + temp_x_position_string.substring (lower, upper) + ")"
+				Result := Result + indent + a_name + ".set_item_y_position (" + a_name + ".i_th (" + counter.out + "), " + temp_y_position_string.substring (lower, upper) + ")"
+				Result := Result + indent + a_name + ".set_item_width (" + a_name + ".i_th (" + counter.out + "), " + temp_width_string.substring (lower, upper) + ")"
+				Result := Result + indent + a_name + ".set_item_height (" + a_name + ".i_th (" + counter.out + "), " + temp_height_string.substring (lower, upper) + ")"
+				counter := counter + 1
+			end			
 		end
 		
 feature {GB_DEFERRED_BUILDER} -- Status setting

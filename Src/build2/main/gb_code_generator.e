@@ -15,57 +15,88 @@ inherit
 	GB_XML_UTILITIES
 		export
 			{NONE} all
+		redefine
+			default_create
 		end
 	
 	GB_SHARED_OBJECT_HANDLER
 		export
 			{NONE} all
+		undefine
+			default_create
 		end
 	
 	GB_SHARED_SYSTEM_STATUS
 		export
 			{NONE} all
+		undefine
+			default_create
 		end
 	
 	GB_EVENT_UTILITIES
 		export
 			{NONE} all
+		undefine
+			default_create
 		end
 	
 	INTERNAL
 		export
 			{NONE} all
+		undefine
+			default_create
 		end
 	
 	EIFFEL_ENV
 		export
 			{NONE} all
+		undefine
+			default_create
 		end
 	
 	GB_FILE_CONSTANTS
 		export
 			{NONE} all
+		undefine
+			default_create
 		end
 		
 	GB_SHARED_TOOLS
 		export
 			{NONE} all
+		undefine
+			default_create
 		end
 		
 	GB_SHARED_CONSTANTS
 		export
 			{NONE} all
+		undefine
+			default_create
 		end
 		
 	GB_WIDGET_UTILITIES
 		export
 			{NONE} all
+		undefine
+			default_create
 		end
 		
 	GB_NAMING_UTILITIES
 		export
 			{NONE} all
+		undefine
+			default_create
 		end
+		
+feature {NONE} -- Creation
+
+	default_create is
+			--
+		do
+			reset_generation_constants
+		end
+		
 
 feature -- Basic operation
 
@@ -760,7 +791,7 @@ feature {NONE} -- Implementation
 				a_class_text.replace_substring_all (tag, "")
 					-- Prune the "%N" following the tag, as we do not want
 					-- a new line added anymore.
-				a_class_text.remove_substring (temp_index, temp_index + 1)
+				a_class_text.remove_substring (temp_index, temp_index)
 			end
 		end
 		
@@ -1278,7 +1309,7 @@ feature {NONE} -- Implementation
 		do
 			if not generated_info.is_root_object then
 				temp_string := indent + Create_command_string + generated_info.name
-				if create_string = Void then
+				if create_string.is_empty then
 					create_string := create_widgets_comment + temp_string
 				else
 					create_string := create_string + temp_string
@@ -1292,7 +1323,7 @@ feature {NONE} -- Implementation
 			temp_string: STRING
 		do
 			temp_string := indent + constructor
-			if build_string = Void then
+			if build_string.is_empty then
 				build_string := build_widgets_comment + temp_string
 			else
 				build_string := build_string + temp_string
@@ -1303,7 +1334,7 @@ feature {NONE} -- Implementation
 			-- Add `indent' and `event' to `event_connection_string'.
 			-- Create `event_connection_string' if empty.
 		do
-			if event_connection_string = Void then
+			if event_connection_string.is_empty then
 				event_connection_string := connect_events_comment
 			end
 			event_connection_string := event_connection_string + indent + event
@@ -1313,9 +1344,6 @@ feature {NONE} -- Implementation
 			-- Add `indent' and `event' to `event_declaration_string'.
 			-- Create `event_declaration_string' if empty.
 		do
-			if event_declaration_string = Void then
-				event_declaration_string := ""
-			end
 			event_declaration_string := event_declaration_string + indent_less_two + event
 		end
 		
@@ -1323,9 +1351,6 @@ feature {NONE} -- Implementation
 			-- Add `indent' and `event' to `event_implementation_string.
 			-- Create `event_implementation_string' if empty.
 		do
-			if event_implementation_string = Void then
-				event_implementation_string := ""
-			end
 			event_implementation_string := event_implementation_string + indent_less_two + event
 		end
 		
@@ -1491,5 +1516,13 @@ feature {NONE} -- Implementation
 		once
 			create Result.make (0)
 		end
+		
+invariant
+	event_connection_string_not_void: event_connection_string /= Void
+	create_string_not_void: create_string /= Void
+	build_string_not_void: build_string /= Void
+	set_string_not_void: set_string /= Void
+	event_implementation_string_not_void: event_implementation_string /= Void
+	event_declaration_string_not_void: event_declaration_string /= Void
 
 end -- class GB_CODE_GENERATOR

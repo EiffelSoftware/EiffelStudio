@@ -412,8 +412,6 @@ feature {NONE} -- Implementation; Graphical Interface
 		end;
 
 	build_widgets is
-		local
-			sep: SEPARATOR
 		do
 			create_toolbar (global_form);
 

@@ -938,7 +938,7 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			cwin_show_window (hwnd, cmd_show)
 		end
 
-feature {EV_ANY_I}
+feature {EV_ANY_I} -- Implementation
 
 	interface: EV_BUTTON
 

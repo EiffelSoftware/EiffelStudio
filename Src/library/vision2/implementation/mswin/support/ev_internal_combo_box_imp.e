@@ -12,8 +12,9 @@ class
 
 inherit
 	WEL_COMBO_BOX
+		rename 
+			parent as wel_parent
 		redefine
-			parent,
 			on_left_button_down,
 			on_middle_button_down,
 			on_right_button_down,
@@ -57,7 +58,7 @@ feature {NONE} -- Initialization
 	make_with_combo (combo: EV_COMBO_BOX_IMP) is
 			-- Create the text-field from `combo'.
 		do
-			parent := combo
+			wel_parent := combo
 			make_by_pointer (combo.combo_item)
 			if item /= default_pointer then
 				register_current_window
@@ -67,8 +68,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	parent: EV_COMBO_BOX_IMP
+	parent: EV_COMBO_BOX_IMP is
 			-- Parent of `Current'.
+		do
+			Result ?= parent
+		ensure
+			parent_not_void: parent /= Void
+		end
 
 feature {NONE} -- Implementation
 

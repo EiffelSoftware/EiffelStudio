@@ -15,14 +15,16 @@ inherit
 	
 	EV_TREE_NODE
 		export
-			{EV_DYNAMIC_TREE_ITEM} sequential_occurrences, fill, is_inserted, dl_force, readable,
+			{EV_DYNAMIC_TREE_ITEM} sequential_occurrences, fill, is_inserted, dl_force,
 			writable, first, index_set, infix "@", isfirst, islast, last, put, valid_cursor,
-			valid_index, extendible, prunable, prune_all, before, is_equal, append, back, count,
+			valid_index, prunable, prune_all, before, is_equal, append, back, count,
 			cursor, extend, force, full, go_i_th, go_to, i_th, index_of, merge_left, merge_right,
 			move, prune, put_front, put_i_th, put_left, put_right, remove, remove_left,
 			remove_right, replace, retrieve_item_by_data, retrieve_items_by_data, same, swap,
 			wipe_out, item_by_data, find_item_recursively_by_data, has_recursively,
 			recursive_do_all, retrieve_item_recursively_by_data, retrieve_items_recursively_by_data
+			{ANY}
+			readable, extendible
 		undefine
 			forth, finish, start, is_empty, index, after, item
 		redefine
@@ -45,7 +47,7 @@ feature {NONE} -- Initialization
 			set_subtree_function (a_subtree_function)
 		end
 
-feature -- Access
+feature {EV_ANY}-- Access
 
 	item: EV_TREE_NODE is
 			-- Item at current position

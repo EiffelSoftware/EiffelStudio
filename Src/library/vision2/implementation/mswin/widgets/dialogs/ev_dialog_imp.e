@@ -47,8 +47,8 @@ feature {NONE} -- Initialization
 			create accel_list.make (10)
 			apply_center_dialog := True
 		end
-
-	make_with_real_dialog (other_imp: EV_DIALOG_IMP_COMMON) is
+		
+	make_with_real_dialog (other_imp: like common_dialog_imp) is
 			-- Create `Current' using attributes of `other_imp'.
 		require
 			other_imp_not_void: other_imp /= Void
@@ -209,9 +209,6 @@ feature {EV_DIALOG_I} -- Implementation
 	parent_window: EV_WINDOW
 			-- Parent window if any, Void otherwise
 
-	interface: EV_DIALOG
-			-- Interface for `Current'
-
 	destroy_implementation is
 			-- Destroy `Current' but does not wipe out the children.
 		local
@@ -241,7 +238,7 @@ feature {EV_BUTTON_IMP} -- Implementation
 	
 feature {NONE} -- Implementation
 
-	move_children (other_imp: EV_DIALOG_IMP_COMMON) is
+	move_children (other_imp: like common_dialog_imp) is
 			-- Move the children to the dialog or the window, depending
 			-- on which is currently selected in `wel_item'.
 		local
@@ -333,7 +330,7 @@ feature {NONE} -- Implementation
 			interface.replace_implementation (modeless_dialog_imp)
 		end
 
-	copy_from_real_dialog (other_imp: EV_DIALOG_IMP_COMMON) is
+	copy_from_real_dialog (other_imp: like common_dialog_imp) is
 			-- Fill current with `other_imp' content.
 		local
 			other_menu_bar: EV_MENU_BAR
@@ -481,6 +478,16 @@ feature {NONE} -- Implementation
 				widget_imp.redraw_current_push_button (a_button)
 			end
 		end
+		
+	common_dialog_imp: EV_DIALOG_IMP_COMMON is
+			-- Dialog implementation type common to all descendents.
+		do
+		end
+		
+feature {EV_ANY, EV_ANY_I}
+		
+	interface: EV_DIALOG
+			-- Interface for `Current'
 
 end -- class EV_DIALOG_IMP
 

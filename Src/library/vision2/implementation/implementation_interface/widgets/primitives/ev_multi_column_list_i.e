@@ -120,7 +120,7 @@ feature -- Status report
 			end
 		end
 
-feature -- Status setting
+feature {EV_ANY, EV_ANY_I} -- Status setting
 
 	ensure_item_visible (an_item: EV_MULTI_COLUMN_LIST_ROW) is
 			-- Ensure `an_item' is visible in `Current'.
@@ -217,7 +217,7 @@ feature -- Status setting
 			set_column_alignment (an_alignment, a_column)
 		end
 
-feature -- Element change
+feature {EV_ANY, EV_ANY_I}-- Element change
 
 	set_column_title (a_title: STRING; a_column: INTEGER) is
 			-- Assign `a_title' to the `column_title'(`a_column').

@@ -16,7 +16,7 @@ inherit
 			wipe_out as split_area_wipe_out
 		export
 			{MULTIPLE_SPLIT_AREA_TOOL_HOLDER, MULTIPLE_SPLIT_AREA} all
-			{ANY} parent, width, height, resize_actions, set_minimum_height, is_show_requested
+			{ANY} parent, width, height, resize_actions, set_minimum_height, is_show_requested, is_destroyed
 		redefine
 			initialize
 		end

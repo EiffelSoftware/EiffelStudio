@@ -14,7 +14,7 @@ class
 inherit
 	EV_MENU_ITEM
 		export
-			{EV_MENU_ITEM} all
+			{EV_MENU_ITEM, EV_MENU_ITEM_I} all
 		redefine
 			implementation,
 			create_implementation
@@ -23,7 +23,7 @@ inherit
 create
 	default_create
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_MENU_SEPARATOR_I
 		-- Responsible for interaction with native graphics toolkit.

@@ -71,7 +71,7 @@ feature -- Status Report
 			end
 		end
 
-feature -- Status Setting
+feature {EV_ANY, EV_ANY_I} -- Status Setting
 
 	set_default_push_button (a_button: EV_BUTTON) is
 			-- Set the default push button to `a_button'.
@@ -230,7 +230,7 @@ feature {EV_WIDGET_I} -- Implementation
 			current_push_button_set: internal_current_push_button = a_button
 		end
 		
-feature -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: EV_DIALOG
 			-- Provides a common user interface to platform dependent

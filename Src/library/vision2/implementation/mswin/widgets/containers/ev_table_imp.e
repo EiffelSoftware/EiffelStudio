@@ -88,7 +88,7 @@ feature {NONE} -- Initialization
 			row_spacing := Default_row_spacing
 		end
 
-feature {EV_TABLE_I} -- Access
+feature {EV_ANY_I} -- Access
 
 	is_homogeneous: BOOLEAN
 			-- Are all the cells equal in size ?
@@ -189,7 +189,7 @@ feature {EV_TABLE_I} -- Status report
 			end
 		end
 
-feature -- Status settings
+feature {EV_ANY_I} -- Status settings
 
 	disable_sensitive is
 			-- Set `Current' insensitive.

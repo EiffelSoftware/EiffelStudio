@@ -198,7 +198,7 @@ feature -- Status report
 				old selection_start = selection_start and old selection_end = selection_end
 		end
 
-feature -- Status setting
+feature {EV_ANY, EV_ANY_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Status setting
 
 	set_current_format (format: EV_CHARACTER_FORMAT) is
 			-- apply `format' to current caret position, applicable

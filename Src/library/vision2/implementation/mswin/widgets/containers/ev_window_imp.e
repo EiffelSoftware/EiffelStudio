@@ -865,7 +865,7 @@ feature {EV_ANY_I} -- Implementation
 			wel_window: WEL_WINDOW
 			wel_point: WEL_POINT
 			widget_imp: EV_WIDGET_IMP
-			item_list_imp: EV_ITEM_LIST_IMP [EV_ITEM]
+			item_list_imp: EV_ITEM_LIST_IMP [EV_ITEM, EV_ITEM_IMP]
 			an_item_imp: EV_ITEM_IMP
 			sensitive: EV_SENSITIVE
 			combo_field: EV_INTERNAL_COMBO_FIELD_IMP

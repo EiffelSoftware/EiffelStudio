@@ -146,7 +146,7 @@ feature -- Resizing
 		deferred
 		end
 
-feature -- Basic operation
+feature {EV_ANY, EV_ANY_I} -- Basic operation
 
 	select_region (start_pos, end_pos: INTEGER) is
 			-- Select (hilight) the text between 

@@ -19,6 +19,8 @@ inherit
 				conforms_to, generating_type, print,
 				destroy, is_destroyed, set_data, data,
 				id_object, object_id
+			{EV_ANY_I, EV_ABSTRACT_PICK_AND_DROPABLE}
+				init_drop_actions, pointer_motion_actions
 		redefine
 			implementation
 		end
@@ -27,7 +29,7 @@ inherit
 create
 	default_create
 
-feature {EV_ANY_I, EV_SHARED_TRANSPORT_I} -- Implementation
+feature {EV_ANY, EV_ANY_I, EV_SHARED_TRANSPORT_I} -- Implementation
 
 	implementation: EV_TOOL_BAR_SEPARATOR_I
 			-- Responsible for interaction with native graphics toolkit.

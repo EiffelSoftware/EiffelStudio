@@ -121,7 +121,7 @@ feature -- Access
 	non_expandable_children: ARRAYED_LIST [INTEGER]
 			-- Position of the non expandable children in growing order.
 
-feature -- Status report
+feature {EV_ANY, EV_ANY_I}-- Status report
 
 	is_item_expanded (child: EV_WIDGET): BOOLEAN is
 			-- Is the `child' expandable. ie: does it
@@ -141,7 +141,7 @@ feature -- Status report
 			end
 		end
 
-feature -- Status setting
+feature {EV_ANY, EV_ANY_I}-- Status setting
 
 	set_child_expandable (child: EV_WIDGET; flag: BOOLEAN) is
 			-- Make `child' expandable if `flag',

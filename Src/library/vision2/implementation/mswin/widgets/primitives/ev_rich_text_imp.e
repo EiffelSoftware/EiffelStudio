@@ -710,6 +710,28 @@ feature -- Status report
 		do
 			Result := wel_selection_end.min (text_length)
 		end
+		
+	wel_text_length, text_length: INTEGER is
+			-- Number of characters comprising `text'. This is an optimized
+			-- version, which only recomputes the length if not `text_up_to_date'.
+		local
+			l_length: INTEGER
+		do
+			if has_word_wrapping then				
+				l_length := cwin_get_window_text_length (wel_item)
+				if not text_up_to_date or l_length /= private_windows_text_length then
+					private_windows_text_length := l_length
+					internal_text_length := text.count
+					Result := internal_text_length
+					text_up_to_date := True
+				else
+					Result := internal_text_length
+				end
+			else
+				-- If no wrapping we can calculate this the quick way.
+				Result := cwin_get_window_text_length (wel_item) - line_count + 1
+			end
+		end
 
 feature -- Status setting
 
@@ -1518,28 +1540,6 @@ feature {NONE} -- Implementation
 		
 	text_up_to_date: BOOLEAN
 		-- Is `text' of `Current' up to date? Used to buffer calls to `text' and `text_length'.
-		
-	wel_text_length, text_length: INTEGER is
-			-- Number of characters comprising `text'. This is an optimized
-			-- version, which only recomputes the length if not `text_up_to_date'.
-		local
-			l_length: INTEGER
-		do
-			if has_word_wrapping then				
-				l_length := cwin_get_window_text_length (wel_item)
-				if not text_up_to_date or l_length /= private_windows_text_length then
-					private_windows_text_length := l_length
-					internal_text_length := text.count
-					Result := internal_text_length
-					text_up_to_date := True
-				else
-					Result := internal_text_length
-				end
-			else
-				-- If no wrapping we can calculate this the quick way.
-				Result := cwin_get_window_text_length (wel_item) - line_count + 1
-			end
-		end
 		
 	private_windows_text_length: INTEGER
 		-- The last value that windows returned as being the text length.

@@ -25,7 +25,7 @@ inherit
 
 	EV_TREE_ACTION_SEQUENCES_I
 
-feature {NONE} -- Initialization
+feature {EV_ANY} -- Initialization
 
 	initialize is
 			-- Initialize `Current'.

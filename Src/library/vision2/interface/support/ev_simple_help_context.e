@@ -20,6 +20,9 @@ inherit
 
 create
 	make_from_string
+	
+create {EV_SIMPLE_HELP_CONTEXT}
+	make
 
 end -- class EV_SIMPLE_HELP_CONTEXT
 

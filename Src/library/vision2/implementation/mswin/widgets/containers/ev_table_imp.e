@@ -172,57 +172,20 @@ feature -- Status settings
 			-- the child, otherwise, the child won't appear in
 			-- the table.
 		local
-			cm: ARRAYED_LIST [FIXED_LIST [INTEGER]]
-			rw: ARRAYED_LIST [FIXED_LIST [INTEGER]]
 			table_child: EV_TABLE_CHILD_IMP
 			child_imp: EV_WIDGET_IMP
-			fix: FIXED_LIST [INTEGER]
-			index: INTEGER
 		do
-			cm := columns_value
-			rw := rows_value
-			-- First, we change the number of cells of the table if it is too small.
-			if right >= cm.count then
-				from
-					index := cm.count
-				until
-					index = right + 1
-				loop
-					!! fix.make_filled (4)
-					if the_child.expandable then
-						fix.put_i_th (1, 1)
-						cm.first.put_i_th (cm.first.first + 1, 1)
-					else
-						fix.put_i_th (0, 1)
-					end
-					cm.extend (fix)
-					index := index + 1
-				end
-			end
-			if bottom >= rw.count then
-				from
-					index := rw.count
-				until
-					index = bottom + 1
-				loop
-					!! fix.make_filled (4)
-					if the_child.expandable then
-						fix.put_i_th (1, 1)
-						rw.first.put_i_th (rw.first.first + 1, 1)
-					else
-						fix.put_i_th (0, 1)
-					end
-					rw.extend (fix)
-					index := index + 1
-				end
-			end
-
-			-- Then, we check if the children has already been placed in the table,
-			-- if not, we create a table child with the given information.
 			child_imp ?= the_child.implementation
 			check
 				valid_child: child_imp /= Void
 			end
+
+			-- First, we change the number of cells of the table if it is too small.
+			expand_line (columns_value, right, child_imp.expandable)
+			expand_line (rows_value, bottom, child_imp.expandable)
+
+			-- Then, we check if the children has already been placed in the table,
+			-- if not, we create a table child with the given information.
 			table_child := find_widget_child (child_imp)
 			if table_child = Void then
 				!! table_child.make (child_imp, Current)
@@ -233,9 +196,11 @@ feature -- Status settings
 
 			-- We show the child and resize the container
 			child_imp.show
-			child_minwidth_changed (child_imp.minimum_width, child_imp)
-			child_minheight_changed (child_imp.minimum_height, child_imp)
-			initialize_at_minimum
+			if already_displayed then
+				child_minwidth_changed (child_imp.minimum_width, child_imp)
+				child_minheight_changed (child_imp.minimum_height, child_imp)
+				initialize_at_minimum
+			end
 		end
 
 feature -- Element change
@@ -307,6 +272,31 @@ feature {NONE} -- Implementation attributes
 			--		In the forth field of the 0 index, there is the value of the border.
 
 feature {NONE} -- Basic operation
+
+	expand_line (line: ARRAYED_LIST [FIXED_LIST [INTEGER]]; last: INTEGER; childexpand: BOOLEAN) is
+				-- Expand a list to have `last' for last index.
+		local
+			index: INTEGER
+			fix: FIXED_LIST [INTEGER]
+		do
+			if last >= line.count then
+				from
+					index := line.count
+				until
+					index = last + 1
+				loop
+					!! fix.make_filled (4)
+					if childexpand then
+						fix.put_i_th (1, 1)
+						line.first.put_i_th (line.first.first + 1, 1)
+					else
+						fix.put_i_th (0, 1)
+					end
+					line.extend (fix)
+					index := index + 1
+				end
+			end
+		end
 
 	find_widget_child (a_child: EV_WIDGET_IMP): EV_TABLE_CHILD_IMP is
 				-- Find the table child corresponding to a given widget
@@ -566,7 +556,6 @@ feature {NONE} -- Implementation to resize the table when it comes from the bott
 		do
 			if value > (line @ last) @ 2 then
 				(line @ last).put_i_th (value, 2)
-		--		(line @ last).put_i_th (0, 3)
 				if value > line.first @ 2 then
 					line.first.put_i_th (value, 2)
 				end

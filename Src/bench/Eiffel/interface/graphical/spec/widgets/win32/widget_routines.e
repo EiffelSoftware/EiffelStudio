@@ -11,20 +11,17 @@ class WIDGET_ROUTINES
 
 feature -- Setting
 
-	--set_scrolled_text_background_color (a_widget: SCROLLED_T_IMP; a_color: COLOR) is
-	set_scrolled_text_background_color (a_widget: SCROLLED_T_I; a_color: COLOR) is -- VISIONLITE
+	set_scrolled_text_background_color (a_widget: SCROLLED_T_I; a_color: COLOR) is
 			-- Set the scrolled text widget `a_widget' background color
 			-- to `a_color'
 		local
-			--text_windows: TEXT_IMP
-			text_windows: TEXT_I -- VISIONLITE
+			text_windows: TEXT_I
 		do
 			text_windows ?= a_widget;
 			text_windows.set_background_color (a_color)
 		end;
 
-	--copy_text_from_widget (a_widget: SCROLLED_T_IMP) is
-	copy_text_from_widget (a_widget: SCROLLED_T_I) is -- VISIONLITE
+	copy_text_from_widget (a_widget: SCROLLED_T_I) is
 			-- Copy the text from `a_widget'.
 		local
 			wel_edit: WEL_EDIT
@@ -35,8 +32,7 @@ feature -- Setting
 			end
 		end;
 
-	--cut_text_from_widget (a_widget: SCROLLED_T_IMP) is
-	cut_text_from_widget (a_widget: SCROLLED_T_I) is -- VISIONLITE
+	cut_text_from_widget (a_widget: SCROLLED_T_I) is
 			-- Cut the text from `a_widget'.
 		local
 			wel_edit: WEL_EDIT

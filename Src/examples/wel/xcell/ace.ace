@@ -11,6 +11,7 @@ default
 cluster 
 	root_cluster:		"$EIFFEL4\examples\wel\xcell";
 
+
 	-- WEL
 	wel_constants:		"$EIFFEL4\library\wel\consts";
 	wel_controls:		"$EIFFEL4\library\wel\controls";
@@ -27,7 +28,7 @@ cluster
 	support:		"$EIFFEL4\library\base\support";
 	access: 		"$EIFFEL4\library\base\structures\access";
 	cursors:		"$EIFFEL4\library\base\structures\cursors";
-	cursor_trees:		"$EIFFEL4\library\base\structures\cursor_tree";
+	cursor_tree:		"$EIFFEL4\library\base\structures\cursor_tree";
 	dispenser:		"$EIFFEL4\library\base\structures\dispenser";
 	iteration:		"$EIFFEL4\library\base\structures\iteration";
 	list:			"$EIFFEL4\library\base\structures\list";
@@ -40,6 +41,6 @@ cluster
 
 external
 	include_path:		"$(EIFFEL4)\library\wel\spec\windows\include";
-	object: 		"$(EIFFEL4)\library\wel\spec\$(PLATFORM)\lib\wel.lib"
+	object: 		"$(EIFFEL4)\library\wel\spec\$(COMPILER)\lib\wel.lib"
 
 end -- system app

@@ -74,8 +74,6 @@ feature {NONE} -- Initialization
 			gc := C.gdk_gc_new (C.gtk_pixmap_struct_pixmap (gtk_pixmap))
 			C.gdk_gc_set_function (gc, C.GDK_COPY_ENUM)
 			initialize_graphical_context
-			gcvalues := C.c_gdk_gcvalues_struct_allocate
-			C.gdk_gc_get_values (gc, gcvalues)
 			init_default_values
 		end
 
@@ -128,8 +126,11 @@ feature -- Element change
 			-- May raise `Ev_unknown_image_format' or `Ev_corrupt_image_data'
 			-- exceptions.
 			--|FIXME do this!
+		local
+			temp_string: ANY
 		do
-			c_ev_load_pixmap ($Current, eiffel_to_c (file_name), $update_fields)
+			temp_string := file_name.to_c
+			c_ev_load_pixmap ($Current, $temp_string, $update_fields)
 		end
 
 	set_with_default is
@@ -175,12 +176,22 @@ feature -- Element change
 		do
 			Precursor
 			C.gdk_gc_unref (gc)
+			gc := NULL
 		end
 		
 	dispose is
 			-- 
 		do
+--			if gc /= NULL then
+--				C.gdk_gc_unref (gc)
+--			end
 			Precursor
+		end
+		
+	gdk_gc_unref (a_gc: POINTER) is 
+			-- void   gdk_gc_unref		  (GdkGC	    *gc);
+		external
+			"C (GdkGC*) | <gtk/gtk.h>"
 		end
 
 feature -- Access

@@ -39,8 +39,8 @@ feature -- Basic Operation
 			else
 				to_compile_b.disable_select
 			end
-
-			choice_box.set_padding (10)
+			
+			choice_box.set_padding (dialog_unit_to_pixels(10))
 			choice_box.extend (wizard_name.widget)
 			choice_box.disable_item_expand (wizard_name.widget)
 			choice_box.extend (location.widget)

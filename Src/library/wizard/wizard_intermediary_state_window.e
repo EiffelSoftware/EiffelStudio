@@ -40,9 +40,9 @@ feature {NONE} -- Basic Operations
 				-- Create the box that will receive the title and the icon.
 				-----------------------------------------------------------
 			create title_white_box
-			title_white_box.set_border_width (5)
+			title_white_box.set_border_width (dialog_unit_to_pixels(5))
 			title_white_box.set_background_color (white_color)
-			title_white_box.set_minimum_height (58)
+			title_white_box.set_minimum_height (dialog_unit_to_pixels(58))
 
 				-- Empty space on the left of the title
 			create cell
@@ -70,7 +70,7 @@ feature {NONE} -- Basic Operations
 
 			create vb
 			vb.set_background_color (white_color)
-			vb.set_padding (3)
+			vb.set_padding (dialog_unit_to_pixels(3))
 			vb.extend (title)
 			vb.disable_item_expand (title)
 			vb.extend (hb)
@@ -88,8 +88,8 @@ feature {NONE} -- Basic Operations
 
 				-- Icon Pixmap
 			icon_pixmap := pixmap.ev_clone
-			icon_pixmap.set_minimum_width (48)
-			icon_pixmap.set_minimum_height (48)
+			icon_pixmap.set_minimum_width (dialog_unit_to_pixels(48))
+			icon_pixmap.set_minimum_height (dialog_unit_to_pixels(48))
 			title_white_box.extend (icon_pixmap)
 			title_white_box.disable_item_expand (icon_pixmap)
 
@@ -118,7 +118,7 @@ feature {NONE} -- Basic Operations
 
 				-- Empty space between message box and actions box --------
 			create empty_space
-			empty_space.set_minimum_height (2)
+			empty_space.set_minimum_height (dialog_unit_to_pixels(2))
 
 				-- Actions box --------------------------------------------
 			create actions_box
@@ -135,8 +135,8 @@ feature {NONE} -- Basic Operations
 			display_state_text
 
 			create interior_box
-			interior_box.set_border_width (7)
-			interior_box.set_padding (14)
+			interior_box.set_border_width (Default_border_size)
+			interior_box.set_padding (Default_padding_size)
 			interior_box.extend (message_box)
 			interior_box.disable_item_expand (message_box)
 			interior_box.extend (actions_box)

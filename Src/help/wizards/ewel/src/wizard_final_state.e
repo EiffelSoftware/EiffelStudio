@@ -90,37 +90,14 @@ feature -- Process
 			map_list: LINKED_LIST [TUPLE [STRING, STRING]]
 			tuple: TUPLE [STRING, STRING]
 			directory_name: STRING
-			project_name_uppercase: STRING
-			project_name: STRING
+			main_dialog_id: STRING
 			project_name_lowercase: STRING
 		do
-			project_name := wizard_information.project_name
-			project_name_uppercase := clone (project_name)
-			project_name_uppercase.to_upper
-			project_name_lowercase := clone (project_name)
-			project_name_lowercase.to_lower
-
-				-- Create the replacement strings.
 			create map_list.make
-			create tuple.make
-			tuple.put ("<FL_PROJECT_NAME>", 1)
-			tuple.put (project_name, 2)
-			map_list.extend (tuple)
+			add_common_parameters (map_list)
 
-			create tuple.make
-			tuple.put ("<FL_PROJECT_NAME_UPPERCASE>", 1)
-			tuple.put (project_name_uppercase, 2)
-			map_list.extend (tuple)
-
-			create tuple.make
-			tuple.put ("<FL_PROJECT_NAME_LOWERCASE>", 1)
-			tuple.put (project_name_lowercase, 2)
-			map_list.extend (tuple)
-
-			create tuple.make
-			tuple.put ("<FL_LOCATION>", 1)
-			tuple.put (wizard_information.location, 2)
-			map_list.extend (tuple)
+			project_name_lowercase := clone (wizard_information.project_name)
+			project_name_lowercase.to_lower
 
 			create tuple.make
 			tuple.put ("<FL_MAIN_CLASS>", 1)
@@ -131,10 +108,15 @@ feature -- Process
 			tuple.put ("<FL_APPLICATION_TYPE>", 1)
 			tuple.put ("WEL_MAIN_DIALOG", 2)
 			map_list.extend (tuple)
-
+			
+			create main_dialog_id.make (0)
+			main_dialog_id.append (wizard_information.project_name)
+			main_dialog_id.to_lower
+			main_dialog_id.prepend ("Idd_")
+			main_dialog_id.append ("_dialog")
 			create tuple.make
 			tuple.put ("<FL_CREATION>", 1)
-			tuple.put ("make_by_id (Idd_"+project_name_lowercase+"_dialog)", 2)
+			tuple.put ("make_by_id ("+main_dialog_id+")", 2)
 			map_list.extend (tuple)
 
 			from_template_to_project (wizard_resources_path, "ace.ace", wizard_information.location, project_name_lowercase + ".ace", map_list)
@@ -157,37 +139,14 @@ feature -- Process
 		local
 			map_list: LINKED_LIST [TUPLE [STRING, STRING]]
 			tuple: TUPLE [STRING, STRING]
-			project_name_uppercase: STRING
-			project_name: STRING
 			project_name_lowercase: STRING
 		do
-			project_name := wizard_information.project_name
-			project_name_uppercase := clone (project_name)
-			project_name_uppercase.to_upper
-			project_name_lowercase := clone (project_name)
-			project_name_lowercase.to_lower
-
 				-- Create the replacement strings.
 			create map_list.make
-			create tuple.make
-			tuple.put ("<FL_PROJECT_NAME>", 1)
-			tuple.put (project_name, 2)
-			map_list.extend (tuple)
+			add_common_parameters (map_list)
 
-			create tuple.make
-			tuple.put ("<FL_PROJECT_NAME_UPPERCASE>", 1)
-			tuple.put (project_name_uppercase, 2)
-			map_list.extend (tuple)
-
-			create tuple.make
-			tuple.put ("<FL_PROJECT_NAME_LOWERCASE>", 1)
-			tuple.put (project_name_lowercase, 2)
-			map_list.extend (tuple)
-
-			create tuple.make
-			tuple.put ("<FL_LOCATION>", 1)
-			tuple.put (wizard_information.location, 2)
-			map_list.extend (tuple)
+			project_name_lowercase := clone (wizard_information.project_name)
+			project_name_lowercase.to_lower
 
 			create tuple.make
 			tuple.put ("<FL_ICON_NAME>", 1)
@@ -200,11 +159,6 @@ feature -- Process
 			map_list.extend (tuple)
 
 			create tuple.make
-			tuple.put ("<FL_CREATION>", 1)
-			tuple.put ("make_top (%"Wizard generated%")", 2)
-			map_list.extend (tuple)
-
-			create tuple.make
 			tuple.put ("<FL_MAIN_CLASS>", 1)
 			tuple.put ("MAIN_WINDOW", 2)
 			map_list.extend (tuple)
@@ -213,6 +167,7 @@ feature -- Process
 			from_template_to_project (wizard_resources_path, "root_template.e", wizard_information.location, "root_class.e", map_list)
 			from_template_to_project (wizard_resources_path, "frame_main_window.e", wizard_information.location, "main_window.e", map_list)
 			from_template_to_project (wizard_resources_path, "frame_template.rc", wizard_information.location, project_name_lowercase + ".rc", map_list)
+			from_template_to_project (wizard_resources_path, "frame_resource.h", wizard_information.location, "resource.h", map_list)
 			from_template_to_project (wizard_resources_path, "frame_application_ids.e", wizard_information.location, "application_ids.e", map_list)
 
 			copy_icon

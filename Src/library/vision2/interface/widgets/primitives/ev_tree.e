@@ -39,6 +39,14 @@ inherit
 			implementation,
 			is_in_default_state
 		end
+		
+	EV_ITEM_PIXMAP_SCALER
+		undefine
+			is_equal
+		redefine
+			implementation,
+			is_in_default_state
+		end
 
 	EV_TREE_ACTION_SEQUENCES
 		undefine
@@ -81,45 +89,6 @@ feature -- Status report
 			not_destroyed: not is_destroyed
 		do
 			Result := implementation.selected
-		end
-
-	pixmaps_width: INTEGER is
-			-- Width in pixels of pixmaps displayed in `Current'.
-			-- Note: The default value is 16.
-		require
-			not_destroyed: not is_destroyed
-		do
-			Result := implementation.pixmaps_width
-		ensure
-			bridge_ok: Result = implementation.pixmaps_width
-		end
-
-	pixmaps_height: INTEGER is
-			-- Height in pixels of pixmaps displayed in `Current'.
-			-- Note: The default value is 16.
-		require
-			not_destroyed: not is_destroyed
-		do
-			Result := implementation.pixmaps_height
-		ensure
-			bridge_ok: Result = implementation.pixmaps_height
-		end
-		
-feature -- Status setting
-
-	set_pixmaps_size (a_width: INTEGER; a_height: INTEGER) is
-			-- Set the size of displayed pixmaps in `Current' to
-			-- `a_width' by `a_height' pixels.
-			-- Note: The Default value is 16x16.
-		require
-			not_destroyed: not is_destroyed
-			valid_width: a_width > 0
-			valid_height: a_height > 0
-		do
-			implementation.set_pixmaps_size (a_width, a_height)
-		ensure
-			width_set: pixmaps_width = a_width
-			height_set: pixmaps_height = a_height
 		end
 
 feature {NONE} -- Contract support

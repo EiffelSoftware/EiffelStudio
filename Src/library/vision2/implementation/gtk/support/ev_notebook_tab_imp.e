@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that represent a tab associated with a notebook item. MsWindows implementation."
+	description: "Objects that represent a tab associated with a notebook item."
 	date: "$Date$"
 	revision: "$Revision$"
 

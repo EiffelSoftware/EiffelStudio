@@ -41,6 +41,7 @@ feature -- Access
 			Result.extend (label)
 			Result.disable_item_expand (label)
 			create horizontal_box
+			horizontal_box.set_padding_width (object_editor_padding_width)
 			create font_entry.make (Current, horizontal_box, font_string, "", gb_ev_fontable_font_tooltip,
 				agent set_font (?), agent valid_font (?))
 			create reset_button.make_with_text ("Reset")

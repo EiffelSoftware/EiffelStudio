@@ -11,10 +11,10 @@ inherit
 	EV_DIALOG_I
 		undefine
 			propagate_foreground_color,
-			propagate_background_color
+			propagate_background_color,
+			dialog_key_press_action
 		redefine
-			interface,
-			current_push_button
+			interface
 		end
 
 	EV_TITLED_WINDOW_IMP
@@ -117,19 +117,31 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	current_push_button: EV_BUTTON is
-			-- Currently focused push button.
-			-- This is the button that is pushed when the user
-			-- presses the enter key when a push button is focused.
+	dialog_key_press_action (a_key: EV_KEY) is
+		local
+			a_key_code: INTEGER
 		do
-			if internal_default_cancel_button /= Void then
-				if internal_default_cancel_button.has_focus then
-					Result := internal_default_cancel_button
-				else
-					Result := default_push_button
+			if a_key /= Void then
+				a_key_code := a_key.code
+
+				if a_key_code = Key_constants.Key_escape and then
+					default_cancel_button /= Void then
+						-- We now check if `default_cancel_button' is sensitive
+						-- as we only call its select_actions if it is sensitive.
+					if default_cancel_button.is_sensitive then
+							-- Escape key pressed and `default_cancel_button' is
+							-- sensitive so simulate a press.
+						default_cancel_button.select_actions.call ([])
+					end
+	
+				elseif a_key_code = Key_constants.Key_enter and then
+					current_push_button /= Void then
+					if current_push_button.is_sensitive and not current_push_button.has_focus then
+							-- Enter key pressed and `current_push_button' is
+							-- sensitive so simulate a press.
+						current_push_button.select_actions.call ([])
+					end
 				end
-			else
-				Result := default_push_button
 			end
 		end
 

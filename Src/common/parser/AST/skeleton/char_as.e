@@ -7,7 +7,7 @@ inherit
 	ATOMIC_AS
 		redefine
 			is_character, type_check, byte_node, value_i,
-			good_character, make_character
+			good_character, make_character, format
 		end
 
 feature -- Attributes
@@ -63,4 +63,10 @@ feature -- Conveniences
 		   !!Result.make (value);
 		end;
 
+
+	format (ctxt : FORMAT_CONTEXT) is
+		do
+			ctxt.always_succeed;
+			ctxt.put_string("%'@%'");
+		end;
 end

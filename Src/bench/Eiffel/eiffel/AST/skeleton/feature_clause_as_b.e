@@ -2,7 +2,10 @@ class FEATURE_CLAUSE_AS
 
 inherit
 
-	AST_EIFFEL;
+	AST_EIFFEL
+		redefine
+			format
+		end;
 	SHARED_EXPORT_STATUS;
 
 feature -- Attributes
@@ -34,6 +37,26 @@ feature -- Export status computing
 			else
 				Result := Export_all;
 			end;
+		end;
+
+feature -- Formatting
+
+	format (ctxt: FORMAT_CONTEXT) is
+		do
+			ctxt.begin;
+			ctxt.put_keyword ("feature ");
+			if  clients /= void then
+				ctxt.set_separator (",");
+				ctxt.no_new_line_between_tokens;
+				clients.format (ctxt);
+			end;
+			ctxt.next_line;
+			ctxt.indent_one_more;
+			ctxt.next_line;
+			ctxt.new_line_between_tokens;
+			ctxt.set_separator (void);
+			features.format (ctxt);
+			ctxt.commit;
 		end;
 
 end

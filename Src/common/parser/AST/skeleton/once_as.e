@@ -24,4 +24,8 @@ feature
 			end;
 		end;
 
+feature {}
+
+	begin_keyword: STRING is "once";
+
 end

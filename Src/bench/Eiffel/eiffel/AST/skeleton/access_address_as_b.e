@@ -6,7 +6,7 @@ inherit
 
 	ACCESS_ID_AS
 		redefine
-			feature_access_type
+			feature_access_type, format
 		end
 
 creation
@@ -58,6 +58,23 @@ feature -- Type check
 				access_b := a_feature.access (Result.type_i);
 				context.access_line.insert (access_b);
 			end;
+		end;
+
+	
+
+	format (ctxt: FORMAT_CONTEXT) is
+			-- Reconstitute text.
+		do
+			ctxt.begin;
+			ctxt.new_expression;
+			ctxt.prepare_for_feature (feature_name, void);
+			ctxt.put_special("$");
+			ctxt.put_current_feature;
+			if ctxt.last_was_printed then
+				ctxt.commit;
+			else
+				ctxt.rollback
+			end
 		end;
 
 end

@@ -4,7 +4,7 @@ inherit
 
 	ATOMIC_AS
 		redefine
-			type_check, byte_node
+			type_check, byte_node, format
 		end
 
 feature -- Attributes
@@ -22,7 +22,7 @@ feature -- Initialization
 			expressions_exists: expressions /= Void;
 		end;
 
-feature -- Type check, byte code and dead code removal
+feature -- Type check, byte code, dead code removal and formatter
 
 	type_check is
 			-- Type check a manifest array
@@ -67,4 +67,25 @@ feature -- Type check, byte code and dead code removal
 			Result := context.multi_line;
 		end;
 
+
+	format(ctxt : FORMAT_CONTEXT) is
+			-- Reconstitute text.
+		do
+			ctxt.begin;
+			ctxt.put_special ("<<");
+			ctxt.set_separator (", ");
+			ctxt.separator_is_special;
+			ctxt.abort_on_failure;
+			ctxt.no_new_line_between_tokens;
+			expressions.format (ctxt);
+			if ctxt.last_was_printed then
+				ctxt.put_special(">>");
+				ctxt.commit
+			else
+				ctxt.rollback;
+			end;
+		end;	
+
+			
+			
 end

@@ -9,7 +9,7 @@ inherit
 			is_require_else, is_ensure_then,
 			has_precondition, has_postcondition, has_rescue,
 			type_check, byte_node,
-			find_breakable
+			find_breakable, format
 		end;
 	SHARED_INSTANTIATOR;
 	SHARED_CONSTRAINT_ERROR;
@@ -369,6 +369,55 @@ feature -- Debugger
 			if rescue_clause /= Void then
 				rescue_clause.find_breakable;
 			end;
+		end;
+
+
+feature -- Formatter
+
+	format (ctxt: FORMAT_CONTEXT) is
+			-- Reconstitute text.
+		do
+			ctxt.begin;
+			if not ctxt.no_internals then
+				ctxt.put_keyword(" is");
+			end;
+			ctxt.indent_one_more;
+			ctxt.next_line;
+
+			if precondition /= void then
+				precondition.format (ctxt);
+				if ctxt.last_was_printed then
+					ctxt.next_line;
+				end;
+			end;
+			if not ctxt.no_internals and locals /= void then
+				ctxt.put_keyword ("local");
+				ctxt.set_separator (";");
+				ctxt.indent_one_more;
+				ctxt.next_line;
+				ctxt.new_line_between_tokens;
+				locals.format (ctxt);
+				ctxt.indent_one_less;
+				ctxt.next_line;
+			end;
+			if not ctxt.no_internals then
+				routine_body.format (ctxt);
+				ctxt.next_line;
+			end;
+			if postcondition /= void then
+				postcondition.format (ctxt);
+				if ctxt.last_was_printed then
+					ctxt.next_line;
+				end;
+			end;
+			if rescue_clause /= void then
+				rescue_clause.format (ctxt);
+				ctxt.next_line;
+			end;
+			if not ctxt.no_internals then
+				ctxt.put_keyword("end");
+			end;
+			ctxt.commit;
 		end;
 
 end

@@ -5,6 +5,8 @@ class TYPE_DEC_AS
 inherit
 
 	AST_EIFFEL
+		redefine format
+	end
 
 feature -- Attributes
 
@@ -25,5 +27,17 @@ feature -- Initialization
 			good_list: id_list /= Void;
 			type_exists: type /= Void
 		end;
+
+	format (ctxt: FORMAT_CONTEXT) is
+			-- Reconstitute text.
+		do
+			ctxt.begin;
+			ctxt.set_separator(",");
+			ctxt.no_new_line_between_tokens;
+			id_list.format (ctxt);
+			ctxt.put_special(": ");
+			type.format(ctxt);
+			ctxt.commit;
+		end;	
 
 end

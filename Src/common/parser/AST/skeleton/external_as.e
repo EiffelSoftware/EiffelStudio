@@ -4,7 +4,7 @@ inherit
 
 	ROUT_BODY_AS
 		redefine
-			is_external, byte_node
+			is_external, byte_node, format
 		end
 
 feature -- Attributes
@@ -82,6 +82,27 @@ feature -- Byte code
 			Result.set_c_type_desc (type_string);
 		ensure then
 			Result.external_name /= Void;
+		end;
+
+feature -- Formatter
+
+	format (ctxt: FORMAT_CONTEXT) is
+			-- Reconstitute text
+		do
+			ctxt.always_succeed;
+			ctxt.put_keyword ("external");
+			ctxt.indent_one_more;
+			ctxt.next_line;
+			ctxt.indent_one_less;
+			language_name.format (ctxt);
+			if external_name /= void then
+				ctxt.next_line;
+				ctxt.put_keyword ("alias");
+				ctxt.indent_one_more;
+				ctxt.next_line;
+				ctxt.indent_one_less;
+				alias_name.format (ctxt);
+			end;
 		end;
 
 end

@@ -4,7 +4,7 @@ inherit
 
 	AST_EIFFEL
 		redefine
-			type_check, byte_node
+			type_check, byte_node, format
 		end
 
 feature -- Attributes
@@ -20,7 +20,7 @@ feature -- Initialization
 			assertions ?= yacc_arg (0);
 		end
 
-feature -- Type check, byte code and dead code removal
+feature -- Type check, byte code, dead code removal and formatter
 
 	type_check is
 			-- Type check assertion list
@@ -37,5 +37,41 @@ feature -- Type check, byte code and dead code removal
 				Result := assertions.byte_node;
 			end;
 		end;
+
+	format(ctxt: FORMAT_CONTEXT) is
+			-- Reconstitute text
+		do
+			ctxt.begin;
+			if assertions /= void then
+				ctxt.put_keyword (clause_name);
+				ctxt.indent_one_more; 
+				ctxt.next_line;
+				ctxt.set_separator (";");
+				ctxt.new_line_between_tokens;
+				ctxt.continue_on_failure;
+				assertions.format (ctxt);
+				if ctxt.last_was_printed then
+					ctxt.commit;
+					io.putstring("written%N");
+				else
+					io.putstring ("failed%N");
+					ctxt.rollback;
+				end;
+			else
+				ctxt.rollback;
+			end 			
+		end;
+
+	
+feature {}
+	
+	clause_name: STRING is
+			-- name of the assertion: require, require else, ensure, 
+			-- ensure then, invariant
+		do
+		end;
+
+
+
 
 end

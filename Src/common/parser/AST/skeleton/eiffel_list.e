@@ -9,7 +9,8 @@ inherit
 			pass_address, twin
 		redefine
 			byte_node, type_check,
-			find_breakable
+			find_breakable,
+			format
 		end;
 	CONSTRUCT_LIST [T]
 
@@ -70,6 +71,51 @@ feature -- Debugger
 				i := i + 1
 			end;
 		end;
- 
+
+
+feature -- Formatter
+	
+	format (ctxt : FORMAT_CONTEXT) is
+		local
+			i: INTEGER;
+			failure: BOOLEAN;
+			not_first:  BOOLEAN;
+			must_abort: BOOLEAN;
+		do
+			ctxt.begin;
+			must_abort := ctxt.must_abort_on_failure;
+			from	
+				i := 1;
+			until
+				i > count or failure
+			loop
+				ctxt.begin;
+				if not_first then
+					ctxt.put_separator
+				end;
+				ctxt.new_expression;
+				i_th(i).format(ctxt);
+				if not ctxt.last_was_printed then
+					ctxt.rollback;
+					if must_abort then
+						failure := true;	
+						not_first := false;
+					end;
+				else
+					ctxt.commit;
+					not_first := true;
+				end;	
+				i := i + 1
+			end;
+			if not not_first then
+				ctxt.rollback;
+			else
+				ctxt.commit;
+			end;
+		end;	
+
 end
+
+
+
 			

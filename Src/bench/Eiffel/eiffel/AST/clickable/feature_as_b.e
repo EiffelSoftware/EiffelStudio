@@ -7,7 +7,7 @@ inherit
 	AST_EIFFEL
 		redefine
 			is_feature_obj, type_check, byte_node,
-			find_breakable
+			find_breakable, format
 		end;
 	IDABLE
 		rename
@@ -121,5 +121,27 @@ feature -- Debugger
 			context.start_lines;	-- Initialize instruction FIFO stack
 			body.find_breakable;	-- Traverse tree to record instructions
 		end;
+
+feature -- Formatter
+
+	format (ctxt: FORMAT_CONTEXT) is
+			-- Reconstitute text.
+		do
+			ctxt.begin;
+			ctxt.begin;
+			ctxt.set_separator(",");
+			ctxt.no_new_line_between_tokens;
+			ctxt.abort_on_failure;
+			feature_names.format (ctxt);
+			if not ctxt.last_was_printed then
+				ctxt.rollback;
+				ctxt.rollback;
+			else
+				ctxt.commit;
+				body.format (ctxt);
+				ctxt.commit;
+			end;
+		end;
+				
 
 end

@@ -6,7 +6,7 @@ inherit
 
 	TYPE
 		redefine
-			has_like
+			has_like, format
 		end;
 
 feature
@@ -40,4 +40,13 @@ feature
             Result.set_actual_type (feat_table.associated_class.actual_type);
         end;
 		
+
+	format (ctxt: FORMAT_CONTEXT) is
+			-- Reconstitute text.
+		do
+			ctxt.put_keyword("like");
+			ctxt.put_string(" Current");
+			ctxt.always_succeed;
+		end;
+
 end

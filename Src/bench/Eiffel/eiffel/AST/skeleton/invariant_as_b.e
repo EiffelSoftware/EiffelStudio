@@ -6,7 +6,7 @@ inherit
 
 	AST_EIFFEL
 		redefine
-			is_invariant_obj, type_check, byte_node
+			is_invariant_obj, type_check, byte_node, format
 		end;
 	IDABLE;
 
@@ -70,5 +70,22 @@ feature -- Type check and byte code
 				Result := assertion_list.byte_node;
 			end;
 		end;
+
+	
+feature -- Formatter
+
+	format (ctxt: FORMAT_CONTEXT) is
+			-- Reconstitute text.
+		do
+			ctxt.begin;
+			ctxt.put_keyword("invariant");
+			ctxt.indent_one_more;
+			ctxt.continue_on_failure;
+			ctxt.next_line;
+			ctxt.set_separator (";");
+			assertion_list.format (ctxt);
+			ctxt.commit;
+		end;
+
 
 end

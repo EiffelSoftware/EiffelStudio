@@ -6,7 +6,7 @@ inherit
 
 	TYPE
 		redefine
-			has_like
+			has_like, format
 		end;
 	SHARED_LIKE_CONTROLER;
 
@@ -126,4 +126,16 @@ feature -- Implementation of inherited deferred features
 			end;
 		end;
 
+
+	format (ctxt: FORMAT_CONTEXT) is
+			-- Reconstitute text.
+		do
+			ctxt.begin;
+			ctxt.put_keyword("like ");
+			ctxt.put_string(anchor);
+				-- should be changed: name adaptations, and 
+				-- effective type if anchor is hidden 
+				-- careful with like argument
+			ctxt.commit;
+		end;
 end

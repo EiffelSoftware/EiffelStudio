@@ -628,6 +628,7 @@ feature {NONE} -- Implementation
 		%	-- COM%N%
 		%	all ecom:						%"$EIFFEL4\library\com%"%N%
 		%		visible%N%
+		%			ECOM_DECIMAL;%N%
 		%			ECOM_CURRENCY;%N%
 		%			ECOM_ARRAY;%N%
 		%			ECOM_VARIANT;%N%

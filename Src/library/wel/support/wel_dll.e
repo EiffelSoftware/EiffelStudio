@@ -13,7 +13,7 @@ inherit
 	WEL_ANY
 
 create
-	make
+	make, make_permanent
 
 feature {NONE} -- Initialization
 
@@ -27,6 +27,21 @@ feature {NONE} -- Initialization
 		do
 			create a_wel_string.make (dll_name)
 			item := cwin_load_library (a_wel_string.item)
+		end
+
+	make_permanent (dll_name: STRING) is
+			-- Load the DLL `dll_name' permanentely.
+			-- It will be unloaded at the very end of the execution
+			-- of current system.
+		require
+			dll_name_not_void: dll_name /= Void
+			dll_name_not_empty: not dll_name.is_empty
+		local
+			a_wel_string: WEL_STRING
+		do
+			create a_wel_string.make (dll_name)
+			item := cwin_permanent_load_library (a_wel_string.item)
+			is_loaded_at_all_time := True
 		end
 
 feature -- Access
@@ -51,6 +66,9 @@ feature -- Access
 			result_not_empty: not Result.is_empty
 		end
 
+	is_loaded_at_all_time: BOOLEAN
+			-- Is current dll to be loaded at all time?
+
 feature {NONE} -- Removal
 
 	destroy_item is
@@ -58,7 +76,9 @@ feature {NONE} -- Removal
 		local
 			a_default_pointer: POINTER
 		do
-			cwin_free_library (item)
+			if not is_loaded_at_all_time then
+				cwin_free_library (item)
+			end
 			item := a_default_pointer
 		end
 
@@ -75,6 +95,15 @@ feature {NONE} -- Externals
 			"C [macro <wel.h>] (LPCSTR): EIF_POINTER"
 		alias
 			"LoadLibrary"
+		end
+
+	cwin_permanent_load_library (dll_name: POINTER): POINTER is
+			-- Wrapper around LoadLibrary which will automatically
+			-- free the dll at the end of system execution.
+		external
+			"C [macro <wel.h>] (LPCSTR): EIF_POINTER"
+		alias
+			"eif_load_dll"
 		end
 
 	cwin_free_library (a_item: POINTER) is

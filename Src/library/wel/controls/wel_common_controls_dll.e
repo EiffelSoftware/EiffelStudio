@@ -20,7 +20,7 @@ feature
 	make is
 			-- Load the common controls DLL.
 		do
-			dll_make (common_controls_dll_name)
+			make_permanent (common_controls_dll_name)
 		end
 
 feature {NONE} -- Implementation

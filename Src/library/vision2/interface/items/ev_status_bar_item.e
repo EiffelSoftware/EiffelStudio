@@ -9,63 +9,111 @@ indexing
 class
 	EV_STATUS_BAR_ITEM
 
+obsolete
+	"Use any widget as status bar item."
+
 inherit
-	EV_ITEM
+	EV_FRAME
 		redefine
-			implementation,
-			create_implementation,
-			parent
+			initialize,
+			set_text,
+			remove_text,
+			align_text_center,
+			align_text_left,
+			align_text_right,
+			text
 		end
 
-	EV_TEXTABLE
-		redefine
-			implementation
+	EV_FRAME_CONSTANTS
+		undefine
+			default_create
 		end
 
 create
 	default_create,
 	make_with_text
 
-feature -- Access
+feature {NONE} -- Initialization
 
-	parent: EV_STATUS_BAR is
-			-- Contains `Current'.
+	initialize is
+			-- Set up container.
+		local
+			vb: EV_HORIZONTAL_BOX
 		do
-			Result ?= {EV_ITEM} Precursor
+			Precursor
+			set_style (Ev_frame_lowered)
+			create vb
+			extend (vb)
+			create pixmap_cell
+			vb.extend (pixmap_cell)
+			create label
+			vb.extend (label)
 		end
 
-feature -- Measurement
+feature -- Access
 
-	width: INTEGER is
-			-- Horizontal size in pixels.
+	text: STRING is
+			-- Text displayed in textable.
 		do
-			Result := implementation.width
-		ensure
-			bridge_ok: Result = implementation.width
+			Result:= implementation.text
+		end 
+
+	pixmap: EV_PIXMAP is
+			-- Image displayed on `Current'.
+		do
+			Result ?= pixmap_cell.item
 		end
 
 feature -- Status setting
 
+	align_text_center is
+			-- Display `text' centered.
+		do
+			label.align_text_center
+		end
+
+	align_text_right is
+			-- Display `text' right aligned.
+		do
+			label.align_text_right
+		end
+        
+	align_text_left is
+			-- Display `text' left aligned.
+		do
+			label.align_text_left
+		end
+
+feature -- Element change
+
+	set_text (a_text: STRING) is
+			-- Assign `a_text' to `text'.
+		do
+			label.set_text (a_text)
+		end
+
+	remove_text is
+			-- Make `text' `Void'.
+		do
+			label.remove_text
+		end
+	
+feature -- Obsolete
+
 	set_width (a_width: INTEGER) is
 			-- Assign `a_width' to `width'.
-		require
-			a_width_non_negative: a_width >= 0
+		obsolete
+			"Manipulate the width from the container it is in."
 		do
-			implementation.set_width (a_width)
-		ensure
-			width_assigned: a_width = width
 		end
 
 feature {NONE} -- Implementation
 
-	implementation: EV_STATUS_BAR_ITEM_I
-			-- Responsible for interaction with the native graphics toolkit.
+	pixmap_cell: EV_CELL
+			-- Container of `pixmap;.
 
-	create_implementation is
-			-- See `{EV_ANY}.create_implementation'.
-		do
-			create {EV_STATUS_BAR_ITEM_IMP} implementation.make (Current)
-		end
+	label: EV_LABEL
+			-- Container of `text'.
 
 end -- class EV_STATUS_BAR_ITEM
 
@@ -90,6 +138,9 @@ end -- class EV_STATUS_BAR_ITEM
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.20  2000/04/28 21:47:06  brendel
+--| Made platform independent.
+--|
 --| Revision 1.19  2000/04/26 21:19:01  brendel
 --| Revised.
 --|

@@ -12,6 +12,35 @@ inherit
 			{NONE} all
 		end
 
+feature -- Access
+
+	max_count: INTEGER is
+			-- Maximum number of items to be saved per combo box
+		do
+			if internal_max_count = Void then
+				create internal_max_count
+				internal_max_count.set_item (Default_max_combo_count)
+			end
+			Result := internal_max_count.item
+		ensure
+			valid_count: Result > 0
+		end
+
+feature -- Element Change
+
+	set_max_count (a_max_count: INTEGER) is
+			-- Set `max_count' with `a_max_count'.
+		require
+			valid_max_count: a_max_count > 0
+		do
+			if internal_max_count = Void then
+				create internal_max_count
+			end
+			internal_max_count.set_item (a_max_count)
+		ensure
+			max_count_set: max_count = a_max_count
+		end
+		
 feature -- Basic Operations
 
 	initialize_combo (a_combo: EV_COMBO_BOX; a_name: STRING) is
@@ -35,30 +64,54 @@ feature -- Basic Operations
 		local
 			l_save_routine: ROUTINE [ANY, TUPLE [LIST [STRING]]]
 			l_list, l_new_list: LIST [STRING]
+			l_item: EV_LIST_ITEM
+			l_entry: STRING
 		do
 			if not a_entry.is_empty then
-				l_list := a_combo.strings
+				from
+					create {ARRAYED_LIST [STRING]} l_list.make (a_combo.count)
+					a_combo.start
+				until
+					a_combo.after
+				loop
+					l_list.extend (a_combo.item.text.as_lower)
+					a_combo.forth
+				end
+				l_entry := a_entry.as_lower
 				l_list.compare_objects
-				if not l_list.has (a_entry) then
-					if a_combo.count >= Max_combo_count then
+				if not l_list.has (l_entry) then
+					if a_combo.count >= max_count then
 						a_combo.finish
 						a_combo.remove
 					end
-					a_combo.put_front (create {EV_LIST_ITEM}.make_with_text (a_entry))
-					l_save_routine ?= a_combo.data
-					if l_save_routine /= Void then
-						l_save_routine.call ([a_combo.strings])
-					end
+					create l_item.make_with_text (a_entry)
+					a_combo.put_front (l_item)
+					l_item.enable_select
 				else
-					if not a_combo.strings.first.is_equal (a_entry) then
+					if not a_combo.first.text.as_lower.is_equal (l_entry) then
 						create {ARRAYED_LIST [STRING]} l_new_list.make (l_list.count)
 						l_new_list.extend (a_entry)
-						l_list.prune (a_entry)
+						from
+							l_list.start
+						until
+							l_list.after
+						loop
+							if l_list.item.as_lower.is_equal (l_entry) then
+								l_list.remove
+								l_list.finish
+							end
+							l_list.forth
+						end
 						l_new_list.append (l_list)
 						a_combo.change_actions.block
 						a_combo.set_strings (l_new_list)
 						a_combo.change_actions.resume
 					end
+					a_combo.first.enable_select
+				end
+				l_save_routine ?= a_combo.data
+				if l_save_routine /= Void then
+					l_save_routine.call ([a_combo.strings])
 				end
 			end
 		end
@@ -87,7 +140,10 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Private Access
 
-	Max_combo_count: INTEGER is 10
+	internal_max_count: INTEGER_REF
+			-- Cell storing value for `max_count'
+
+	Default_max_combo_count: INTEGER is 10
 			-- Maximum combo entries
 
 end -- class WIZARD_SAVED_SETTINGS

@@ -64,6 +64,7 @@
 /* For debugging */
 #define dprintf(n)		if (DEBUG & (n)) printf
 
+#ifndef EIF_THREADS
 /* Stack of current execution. On entrance, each routine pushes the address
  * of its own execution vector structure (held in the process's stack).
  * The exception trace records all the unresolved exceptions. For the case where
@@ -124,6 +125,8 @@ rt_public unsigned char db_ign[EN_NEX];	/* Item set to 1 to ignore exception */ 
  */
 rt_private struct exprint except;		/* Where exception has been raised */ /* %%zmt */
 
+#endif /* EIF_THREADS */
+
 /* Exception handling mechanism */
 rt_public void enomem(EIF_CONTEXT_NOARG);			/* A critical "No more memory" exception */
 rt_public struct ex_vect *exret(EIF_CONTEXT register1 struct ex_vect *rout_vect);	/* Retries execution of routine */
@@ -147,7 +150,10 @@ rt_private void excur(EIF_CONTEXT_NOARG);			/* Current exception code in previou
 rt_private void exorig(EIF_CONTEXT_NOARG);			/* Original exception code in previous level */
 rt_private char *extag(EIF_CONTEXT struct ex_vect *trace);			/* Recompute exception tag */
 rt_private void exception(EIF_CONTEXT int how);		/* Debugger hook */
-rt_private int print_history_table = ~0;   /* Enable/disable printing of hist. table */ /* %%zs added 'int' type */
+
+#ifndef EIF_THREADS
+rt_private int print_history_table = ~0;   /* Enable/disable printing of hist. table */ /* %%zmt added 'int' type */
+#endif /* EIF_THREADS */
 
 /* Eiffel interface */
 rt_private char eedefined(long ex);		  /* Is exception code valid? */
@@ -176,11 +182,16 @@ rt_private void ds_stderr(char *line);			/* Wrapper to dump stack to stderr */
 rt_private void ds_string(char *line);			/* Wrapper to dump stack to a string */
 rt_public EIF_REFERENCE stack_trace_string(EIF_CONTEXT_NOARG);	/* Exception trace string */
 rt_private void extend_trace_string(EIF_CONTEXT char *line);	/* Extend exception trace string */
+
+#ifndef EIF_THREADS
+
 rt_public SMART_STRING ex_string = {	/* Container of the exception trace */ /* %%zmt */
 	NULL,	/* No area */
 	0L,		/* No byte used yet */
 	0L		/* Null length */
 };
+
+#endif /* EIF_THREADS */
 
 /* Pre-defined exception tags (29 chars max please, otherwise truncated).
  * A final point is added at the end. Here is a 29 chars string template:
@@ -236,9 +247,11 @@ rt_private int ex_tagc[] = {
 	EN_OSTK,		/* EX_OSTK */
 };
 
+#ifndef EIF_THREADS
 #ifdef EIF_WINDOWS
 char *exception_trace_string = NULL;	/* %%zmt */
 #endif
+#endif /* EIF_THREADS */
 
 
 /* Strings used as separator for Eiffel stack dumps */
@@ -2648,12 +2661,14 @@ rt_public char *eename(long ex)
 {
 	/* Return the english description for exeception `ex' */
 
-	char *ex_string;
+	EIF_GET_CONTEXT
+	char *e_string;
 
 	if (eedefined(ex) == (char) 1){
-		ex_string = exception_string(ex);
-		return makestr(ex_string, strlen(ex_string));
+		e_string = exception_string(ex);
+		return makestr(e_string, strlen(e_string));
 	}
+	EIF_END_GET_CONTEXT
 }
 
 rt_public void eecatch(EIF_CONTEXT long ex)		/* %%zmt never called in C dir. */

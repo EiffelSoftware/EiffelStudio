@@ -334,14 +334,17 @@ feature {NONE} -- Implementation
 			-- Do nothing if there already was a syntax error.
 		require
 			valid_fn: fn /= Void
+		local
+			l_fn: STRING
 		do
-			fn.left_adjust
-			fn.right_adjust
-			fn.to_lower
-			if fn.is_empty then
+			l_fn := fn.twin
+			l_fn.left_adjust
+			l_fn.right_adjust
+			l_fn.to_lower
+			if l_fn.is_empty then
 				syntax_error := True
-			elseif fn.item (1) = '%"' then
-				if fn.item (fn.count) = '%"' then
+			elseif l_fn.item (1) = '%"' then
+				if l_fn.item (l_fn.count) = '%"' then
 					is_constant := True
 					constant_result_type := System.string_class.compiled_class
 					constant_result_value := create {DUMP_VALUE}.make_manifest_string (
@@ -351,41 +354,41 @@ feature {NONE} -- Implementation
 				else
 					syntax_error := True
 				end
-			elseif fn.is_integer then
+			elseif l_fn.is_integer then
 				is_constant := True
 				constant_result_type := System.integer_32_class.compiled_class
-				constant_result_value := create {DUMP_VALUE}.make_integer (fn.to_integer, constant_result_type)
-			elseif fn.is_real then
+				constant_result_value := create {DUMP_VALUE}.make_integer (l_fn.to_integer, constant_result_type)
+			elseif l_fn.is_real then
 				is_constant := True
 				constant_result_type := System.real_class.compiled_class
-				constant_result_value := create {DUMP_VALUE}.make_real (fn.to_real, constant_result_type)
-			elseif fn.is_double then
+				constant_result_value := create {DUMP_VALUE}.make_real (l_fn.to_real, constant_result_type)
+			elseif l_fn.is_double then
 				is_constant := True
 				constant_result_type := System.double_class.compiled_class
-				constant_result_value := create {DUMP_VALUE}.make_double (fn.to_double, constant_result_type)
-			elseif fn.is_boolean then
+				constant_result_value := create {DUMP_VALUE}.make_double (l_fn.to_double, constant_result_type)
+			elseif l_fn.is_boolean then
 				is_constant := True
 				constant_result_type := System.boolean_class.compiled_class
-				constant_result_value := create {DUMP_VALUE}.make_boolean (fn.to_boolean, constant_result_type)
-			elseif fn.is_equal (infix_feature_name_with_symbol ("=")) then
+				constant_result_value := create {DUMP_VALUE}.make_boolean (l_fn.to_boolean, constant_result_type)
+			elseif l_fn.is_equal (infix_feature_name_with_symbol ("=")) then
 				is_equality_test := True
-			elseif fn.is_equal (infix_feature_name_with_symbol ("/=")) then
+			elseif l_fn.is_equal (infix_feature_name_with_symbol ("/=")) then
 				is_non_equality_test := True
-			elseif Syntax_checker.is_valid_feature_name (fn) then
+			elseif Syntax_checker.is_valid_feature_name (l_fn) then
 				-- Nothing special.
 			else
 				syntax_error := True
 			end
 			if not syntax_error then
-				feature_name := fn
+				feature_name := l_fn
 			end
 		ensure
 			set_if_valid: (not syntax_error) implies (
 							(Syntax_checker.is_valid_feature_name (feature_name) or
 							 Syntax_checker.is_constant (feature_name) or
 							 is_equality_test or is_non_equality_test
-							) and
-							(feature_name = fn)
+							) 
+--							and (feature_name = fn)
 						  )
 			valid_flags: (not syntax_error) implies (
 						 (is_identity = feature_name.is_equal (Identity)) and

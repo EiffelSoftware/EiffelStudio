@@ -24,7 +24,7 @@ inherit
 		undefine
 			default_create
 		end
-		
+
 feature {NONE} -- Initialization
 
 	default_create is
@@ -44,10 +44,9 @@ feature {NONE} -- Initialization
 			-- Initialize `Current' with `model'.
 		do
 			Precursor {EG_RESIZABLE_CLUSTER_FIGURE}
-			set_pebble (create {CLUSTER_STONE}.make (model.cluster_i))
+			pebble_function := agent on_pebble_request
 			model.needed_on_diagram_changed_actions.extend (agent on_needed_on_diagram_changed)
 		end
-		
 
 feature -- Status report
 
@@ -151,7 +150,6 @@ feature {EIFFEL_CLUSTER_FIGURE} -- Expand/Collapse
 		local
 			linkable_figure: EG_LINKABLE_FIGURE
 			cluster_figure: EIFFEL_CLUSTER_FIGURE
-			e_item: ES_ITEM
 		do
 			from
 				start
@@ -160,18 +158,17 @@ feature {EIFFEL_CLUSTER_FIGURE} -- Expand/Collapse
 			loop
 				linkable_figure ?= item			
 				if linkable_figure /= Void then
-					e_item ?= linkable_figure.model
-					if e_item = Void or else e_item.is_needed_on_diagram then
+					if linkable_figure.is_show_requested then
 						linkable_figure.hide
 						linkable_figure.disable_sensitive
 						from
-							linkable_figure.links.start
+							linkable_figure.internal_links.start
 						until
-							linkable_figure.links.after
+							linkable_figure.internal_links.after
 						loop
-							linkable_figure.links.item.hide
-							linkable_figure.links.item.disable_sensitive
-							linkable_figure.links.forth
+							linkable_figure.internal_links.item.hide
+							linkable_figure.internal_links.item.disable_sensitive
+							linkable_figure.internal_links.forth
 						end
 						cluster_figure ?= linkable_figure
 						if cluster_figure /= Void and then not cluster_figure.is_iconified then
@@ -208,11 +205,11 @@ feature {EIFFEL_CLUSTER_FIGURE} -- Expand/Collapse
 						linkable_figure.show
 						linkable_figure.enable_sensitive
 						from
-							linkable_figure.links.start
+							linkable_figure.internal_links.start
 						until
-							linkable_figure.links.after
+							linkable_figure.internal_links.after
 						loop
-							l_link := linkable_figure.links.item
+							l_link := linkable_figure.internal_links.item
 							if l_link.source = linkable_figure then
 								l_other := l_link.target
 							else
@@ -222,7 +219,7 @@ feature {EIFFEL_CLUSTER_FIGURE} -- Expand/Collapse
 								l_link.show
 								l_link.enable_sensitive
 							end
-							linkable_figure.links.forth
+							linkable_figure.internal_links.forth
 						end
 						cluster_figure ?= linkable_figure
 						if cluster_figure /= Void and then not cluster_figure.is_iconified then
@@ -380,4 +377,12 @@ feature {NONE} -- Implementation
 			end
 		end
 		
+	on_pebble_request: CLUSTER_STONE is
+			-- Pebble request.
+		do
+			if model /= Void then
+				create Result.make (model.cluster_i)
+			end
+		end
+
 end -- class EIFFEL_CLUSTER_FIGURE

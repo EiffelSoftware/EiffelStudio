@@ -21,13 +21,19 @@ feature -- initialization
 
 	make (an_interface: like interface) is
 			-- Connect interface and initialize `c_object'.
+		local
+			b: EV_AGGREGATE_BOX_IMP
 		do
 			base_make (an_interface)
 			create {EV_AGGREGATE_BOX} box
+			create cell
+			box.extend (cell)
+			b ?= box.implementation
+			b.set_real_parent (Current)
 			--| FIXME need to arrange for `box' to appear in current.
-			check
-				not_implemented: false
-			end
+			--check
+			--	not_implemented: false
+			--end
 		end
 
 	cell: EV_CELL
@@ -96,7 +102,7 @@ feature --
 			-- Container widget that contains `Current'.
 			-- (Void if `Current' is not in a container)
 		do
-			Result := cell.parent
+			Result := parent
 		end
 
 	pointer_position: EV_COORDINATES is
@@ -305,6 +311,7 @@ feature --
 			-- initialize may remain more general.
 			--| Called from EV_ANY.default_create
 		do
+			is_initialized := True
 		end
 
 	destroy is
@@ -370,6 +377,9 @@ end -- class EV_AGGREGATE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.4  2000/02/15 19:26:44  rogers
+--| In make, now extend the internal box with the cell. Altered parent to return parent, instead of cell.parent.
+--|
 --| Revision 1.3  2000/02/14 22:26:33  oconnor
 --| merged from HACK-O-RAMA
 --|

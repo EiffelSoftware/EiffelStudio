@@ -1310,6 +1310,11 @@ feature -- Basic feature
 		do
 		end
 
+	generate_is_digit is
+			-- Generate `is_digit' on CHARACTER.
+		do
+		end
+
 	generate_max (type: TYPE_I) is
 			-- Generate `max' on basic types.
 		require

@@ -15,6 +15,8 @@ inherit
 		redefine
 			target_features,
 			target_feature,
+			parse_source_for_expr,
+			find_definition,
 			add_local,
 			add_argument,
 			flush_completion_features,
@@ -34,6 +36,16 @@ inherit
 	SHARED_INST_CONTEXT
 	
 	SHARED_EIFFEL_PARSER
+	
+	ECOM_EXCEPTION
+		export {NONE}
+			all
+		end
+		
+	ECOM_EXCEPTION_CODES
+		export {NONE}
+			all
+		end
 
 create
 	make
@@ -50,6 +62,41 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
+
+	target_classes (target: STRING): CLASS_ENUMERATOR is
+		local
+			retried: BOOLEAN
+			class_descs: ARRAYED_LIST [CLASS_DESCRIPTOR]
+			clusters: ARRAYED_LIST [CLUSTER_I]
+			classes: HASH_TABLE [CLASS_I, STRING]
+		do
+			if not retried then
+				clusters := Eiffel_universe.clusters
+				create class_descs.make (0)
+				from
+					clusters.start
+				until
+					clusters.after
+				loop
+					classes := clusters.item.classes
+					from
+						classes.start
+					until
+						classes.after
+					loop
+						--if classes.item_for_iteration.name_in_upper.substring_index (target, 1) = 1 then
+							class_descs.extend (create {CLASS_DESCRIPTOR}.make_with_class_i (classes.item_for_iteration))							
+						--end
+						classes.forth
+					end
+					clusters.forth
+				end
+				create Result.make (class_descs)
+			end
+		rescue
+			retried := True
+			retry
+		end
 
 	target_feature (target: STRING; feature_name: STRING; file_name: STRING; use_overloading: BOOLEAN): FEATURE_DESCRIPTOR is
 			-- Feature information
@@ -113,6 +160,8 @@ feature -- Access
 								cf := completion_feature (targets.first, file_name)
 								if cf /= Void then
 									target_type := type_from_type_name (cf.return_type)
+								else
+									target_type := type_of_target (targets.first, feature_table, ids)
 								end
 							end
 							if target_type /= Void and then not target_type.is_void then
@@ -266,6 +315,87 @@ feature -- Access
 			retried := True
 			retry
 		end
+		
+	parse_source_for_expr (source_text: STRING; source_row, source_col: INTEGER; expr, feat: CELL [STRING]; is_class_expr: BOOLEAN_REF) is
+			-- parse `source_text' where caret is at `source_row', `source_col' and find the complete expression text
+		require else
+			non_void_source_text: source_text /= Void
+			valid_source_text: not source_text.is_empty
+			valid_source_row: source_row > 0
+			valid_source_col: source_col > 0
+			non_void_expr: expr /= Void
+			expr_is_empty: expr.item.is_empty
+			non_void_feat: feat /= Void
+			feat_is_empty: feat.item.is_empty
+			non_void_is_class_expr: is_class_expr /= Void
+		local
+			def_parser: DEFINITION_PARSER
+		do
+			create def_parser.make
+			def_parser.parse (source_text, source_row, source_col)
+			if def_parser.parse_successful then
+				is_class_expr.set_item (def_parser.is_class)
+				expr.put (def_parser.parsed_result)
+				feat.put (def_parser.parsed_result_feature)
+			end
+		end
+		
+		
+	find_definition (class_text, target_file_name: STRING; target_row, target_col: INTEGER; source_file_name: CELL [STRING]; source_row: INTEGER_REF) is
+			-- find `target' file name and location
+		require else
+			non_void_class_text: class_text /= Void
+			valid_class_text: not class_text.is_empty
+			non_void_target_file_name: target_file_name /= Void
+			valid_target_file_name: not target_file_name.is_empty
+			target_row_big_enough: target_row >= 1
+			target_col_big_enough: target_col >= 1
+			non_void_source_file_name: source_file_name /= Void
+			source_file_name_is_empty: source_file_name.item.is_empty
+			non_void_source_row: source_row /= Void
+		local
+			def_parser: DEFINITION_PARSER
+			retried: BOOLEAN
+			classes: LIST [CLASS_I]
+			fd: FEATURE_DESCRIPTOR
+			ecom_var: ECOM_VARIANT
+		do
+			if not retried then
+				create def_parser.make
+				def_parser.parse (class_text, target_row, target_col)
+				if def_parser.parse_successful then
+					if def_parser.is_class then
+						classes := Eiffel_universe.classes_with_name (def_parser.parsed_result)
+						if classes /= Void then
+							from
+								classes.start
+							until
+								classes.after
+							loop
+								if classes.item.is_compiled then
+									source_file_name.put (classes.item.file_name)
+									source_row.set_item (1)
+								end
+								classes.forth
+							end
+						end
+					elseif def_parser.is_feature_call then
+						-- creates empty arguments and init feature
+						create ecom_var.make
+						ecom_var.set_string_array (create {ECOM_ARRAY [STRING]}.make_empty)
+						initialize_feature (def_parser.parsed_result_feature, ecom_var, ecom_var, def_parser.parsed_result_return_type, feature {ECOM_EIF_FEATURE_TYPES_ENUM}.eif_feature_types_function, target_file_name)
+						fd := target_feature (def_parser.parsed_result, def_parser.parsed_result_feature, target_file_name, false)
+						if fd /= Void then
+							fd.feature_location (source_file_name, source_row)
+						end
+					end
+				end
+			end
+		rescue
+			retried := True
+			retry
+		end
+		
 		
 feature -- Basic Operations
 

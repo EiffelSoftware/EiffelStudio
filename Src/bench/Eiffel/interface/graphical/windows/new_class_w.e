@@ -34,7 +34,6 @@ feature -- Initialization
 			form_d_make ("New Class", composite);
 			set_title ("New Class");
 			!! class_l.make ("", Current);
-			!! message.make ("", Current);
 			!! cluster_form.make ("", Current);
 			!! cluster_name.make ("", cluster_form);
 			!! cluster_list.make ("", cluster_form);
@@ -55,11 +54,9 @@ feature -- Initialization
 			attach_left (class_l, 10);
 			attach_left (file_form, 10);
 			attach_left (cluster_form, 10);
-			attach_left (message, 10);
 			attach_top_widget (class_l, file_form, 5);
 			attach_top_widget (file_form, cluster_form, 5);
-			attach_top_widget (cluster_form, message, 5);
-			attach_top_widget (message, form, 5);
+			attach_top_widget (cluster_form, form, 5);
 			form.attach_left (create_b, 5);
 			form.attach_top (create_b, 5);
 			form.attach_bottom (create_b, 5);
@@ -73,8 +70,6 @@ feature -- Initialization
 			attach_bottom (form, 10);
 			cluster_name.set_text ("Cluster: ");
 			file_label.set_text ("File name: ");
-			message.set_text ("No such class in system");
-			--cluster_list.add_selection_action (Current, create);
 			file_entry.add_activate_action (Current, create);
 			cancel_b.add_activate_action (Current, cancel);
 			create_b.add_activate_action (Current, create);
@@ -106,7 +101,7 @@ feature -- Properties
 
 	cluster_form, file_form: FORM;
 
-	message, class_l: LABEL;
+	class_l: LABEL;
 
 	cluster_name, file_label: LABEL;
 
@@ -159,7 +154,8 @@ feature -- Access
 			file_name := clone (class_name);
 			file_name.append (".e");
 			file_entry.set_text (file_name);
-			if cluster = Void then
+			clus := Eiffel_universe.clusters;
+			if not clus.empty then
 				from
 					clus := Eiffel_universe.clusters;
 					clus.start
@@ -170,11 +166,11 @@ feature -- Access
 					clus.forth
 				end;
 				cluster_list.select_i_th (1);
-				if cluster_list.empty then
-					create_b.set_insensitive
+				if cluster_list.count < 10 then
+					cluster_list.set_visible_item_count (cluster_list.count)
 				end
 			else
-				cluster_list.put_left(cluster.cluster_name)
+				create_b.set_insensitive
 			end;
 			popup
 		end;
@@ -210,7 +206,7 @@ feature -- Execution
 				change_cluster;
 				file_name := file_entry.text;
 				if aok then
-					!!f_name.make_from_string (cluster.path);
+					!! f_name.make_from_string (cluster.path);
 					f_name.set_file_name (file_name);
 					base_name := file_name;
 					!! file.make (f_name);

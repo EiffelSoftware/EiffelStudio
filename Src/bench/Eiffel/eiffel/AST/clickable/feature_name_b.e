@@ -12,15 +12,13 @@ inherit
 
 	FEATURE_NAME
 		redefine
-			internal_name, temp_name
+			internal_name, temp_name, associated_feature_name
 		end;
 
 	AST_EIFFEL_B
 		redefine
 			format
 		end;
-
-	STONABLE;
 
 feature -- Stoning
 
@@ -35,9 +33,9 @@ feature -- Stoning
 			!! Result.make (25)
 		end;
  
-	stone (reference_class: E_CLASS): FEATURE_NAME_STONE is
+	associated_feature_name: STRING is
 		do
-			!! Result.make (internal_name, reference_class)
+			Result := internal_name
 		end
 
 feature -- Formatting
@@ -84,19 +82,19 @@ feature {NONE} -- Implementation
 			adapt: LOCAL_FEAT_ADAPTATION
 		do
 			adapt := ctxt.local_adapt;
-            if adapt.is_infix then
-                ctxt.put_text_item (ti_Infix_keyword);
-                ctxt.put_space;
-                ctxt.put_text_item_without_tabs (ti_Double_quote);
-            elseif adapt.is_prefix then
-                ctxt.put_text_item (ti_Prefix_keyword);
-                ctxt.put_space;
-                ctxt.put_text_item_without_tabs (ti_Double_quote);
-            end;
-            ctxt.put_main_feature_name;
-            if not adapt.is_normal then
-                ctxt.put_text_item_without_tabs (ti_Double_quote);
-            end;
+			if adapt.is_infix then
+				ctxt.put_text_item (ti_Infix_keyword);
+				ctxt.put_space;
+				ctxt.put_text_item_without_tabs (ti_Double_quote);
+			elseif adapt.is_prefix then
+				ctxt.put_text_item (ti_Prefix_keyword);
+				ctxt.put_space;
+				ctxt.put_text_item_without_tabs (ti_Double_quote);
+			end;
+			ctxt.put_main_feature_name;
+			if not adapt.is_normal then
+				ctxt.put_text_item_without_tabs (ti_Double_quote);
+			end;
 		end;
 
 end -- class FEATURE_NAME_B

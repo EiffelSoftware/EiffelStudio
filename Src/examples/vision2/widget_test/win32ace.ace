@@ -1,5 +1,5 @@
 system
-	"VISION2_WIDGET_TEST"
+	"EiffelVision2_widget_test"
 
 root
 	vision2_application: make_and_launch
@@ -40,6 +40,9 @@ default
 
 cluster
 	all root_cluster:		"."
+		exclude
+			"templates"
+		end
 
 
 	all base:		"$ISE_EIFFEL\library\base"

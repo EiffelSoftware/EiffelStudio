@@ -9,7 +9,8 @@ class
 inherit
 	GEN_TYPE_I
 		redefine
-			same_as, il_type_name, duplicate, instantiation_in, copy
+			same_as, il_type_name, duplicate, instantiation_in, copy,
+			generic_derivation
 		end
 	
 create
@@ -58,6 +59,16 @@ feature -- Access
 			deep_il_element_type_not_void: Result /= Void
 		end
 
+	generic_derivation: like Current is
+			-- Precise generic derivation of current type.
+			-- That is to say given a type, it gives the associated TYPE_I
+			-- which can be used to search its associated CLASS_TYPE.
+		do
+				-- For native arrays, we need to keep track of all generic
+				-- derivation, thus we can keep current as a valid generic derivation.
+			Result := Current
+		end
+
 feature -- Duplication
 
 	duplicate: NATIVE_ARRAY_TYPE_I is
@@ -86,14 +97,9 @@ feature -- Status report
 			l_type: TYPE_I
 		do
 			Result := duplicate
-			l_type := meta_generic.item (1)
+			l_type := meta_generic.item (1).complete_instantiation_in (other)
 			if l_type.is_formal then
-				l_type := l_type.complete_instantiation_in (other)
-				if l_type.is_formal then
-					l_type := object_type
-				end
-			else
-				l_type := l_type.complete_instantiation_in (other)
+				l_type := object_type
 			end
 			Result.meta_generic.put (l_type, 1)
 		end

@@ -1,0 +1,17 @@
+<document title="Debugging preferences" output="studio">
+	<meta_data/>
+	<paragraph>
+		<paragraph>Two main preferences are available for the debugger, in order to speed up the objects display :</paragraph>
+		<list ordered="false" >
+			<item>Enable/disable the debug_output display 
+			(see 
+			<link><url>40_object_tool/17_debug_output.xml</url><label>debug output</label></link>)
+			</item>
+			<item>Enable/disable the full generic type display (for instance see  <code><class_name>ARRAY [INTEGER] </class_name></code>instead of only <code><class_name>ARRAY</class_name></code></item>
+
+		</list>
+		<image>
+			<url>/images/eiffelstudio/debugger/debugging_tools_preferences.png</url>
+		</image>
+	</paragraph>
+</document>

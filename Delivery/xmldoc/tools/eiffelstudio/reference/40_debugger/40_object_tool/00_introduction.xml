@@ -48,4 +48,6 @@
 			</image> switch the display of integer values between decimal and hexa format.
 
 		</paragraph>
+		By default, the object tool displays the full generating type for object, but this can be changed for speed concern in the <link><url>../70_debugger_preferences.xml</url><label>preferences</label></link>. The same way, throught the <link><url>../70_debugger_preferences.xml</url><label>preferences</label></link>, the user can enable or disable the evaluation of the <link><url>17_debug_output.xml</url><label>Debug Output</label></link> feature .
+		
 	</paragraph></document>

@@ -16,19 +16,6 @@ inherit
 			parent
 		end
 
-	EV_ITEM
-		redefine
-			implementation,
-			is_in_default_state,
-			parent
-		end
-
-	EV_PICK_AND_DROPABLE
-		redefine
-			is_in_default_state,
-			implementation
-		end
-
 	EV_TEXTABLE
 		undefine
 			initialize

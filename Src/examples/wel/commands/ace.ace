@@ -10,9 +10,6 @@ default
 cluster 
 	root_cluster:	"$ISE_EIFFEL\examples\wel\commands"
 
-		-- WEL
-	all wel: 		"$ISE_EIFFEL\library\wel"
-
 		-- EiffelBase
 	all base: 		"$ISE_EIFFEL\library\base"
 		exclude
@@ -20,8 +17,15 @@ cluster
 			"desc"
 		end
 
+		-- WEL
+	all wel: 		"$ISE_EIFFEL\library\wel"
+		exclude
+			"spec"
+			"clib"
+		end
+
 external
 	include_path:	"$(ISE_EIFFEL)\library\wel\spec\windows\include"
-	object: 		"$(ISE_EIFFEL)\library\wel\spec\$(ISE_COMPILER)\lib\wel.lib"
+	object: 		"$(ISE_EIFFEL)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib"
 
 end -- commands_demo
